@@ -2,138 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DCEC325DEBB
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Sep 2020 17:56:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0642925DF83
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Sep 2020 18:14:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgIDP4N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 4 Sep 2020 11:56:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45480 "EHLO
+        id S1727037AbgIDQNl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 4 Sep 2020 12:13:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgIDP4K (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Sep 2020 11:56:10 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B924EC061244
-        for <linux-nfs@vger.kernel.org>; Fri,  4 Sep 2020 08:56:09 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id A28CE2403; Fri,  4 Sep 2020 11:56:08 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org A28CE2403
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1599234968;
-        bh=KsjAyd+xfK7a0mx4bX6URfo3cL4U50aCO/beFcK2O0M=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=TzLfIvzy9MbTUuwbcj4RU0YYfZyEZMB+WMyjZXnyH990fWHjqmfAa3ptYDE2f0eju
-         N3jdLG/snY9zgGK2Mt++G8Te7SFzeIHqAjTtFIGExxTLCoq5bmtSmIK4l8k41/1Uh4
-         3ffGlg+0zrcm4eKSsxzw/qdLm+hEkClsdZVtMDrU=
-Date:   Fri, 4 Sep 2020 11:56:08 -0400
-To:     Anna Schumaker <schumaker.anna@gmail.com>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] NFSD: Add support for the v4.2 READ_PLUS operation
-Message-ID: <20200904155608.GA2158@fieldses.org>
-References: <20200817165310.354092-1-Anna.Schumaker@Netapp.com>
- <20200826215437.GD62682@pick.fieldses.org>
- <CAFX2JfnEhgr4_CP4rJVsm37+Zo2uFs+zePAENtmPWx-Fmm-HfA@mail.gmail.com>
+        with ESMTP id S1726259AbgIDQNj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Sep 2020 12:13:39 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F5A0C061244
+        for <linux-nfs@vger.kernel.org>; Fri,  4 Sep 2020 09:13:38 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id z23so9303723ejr.13
+        for <linux-nfs@vger.kernel.org>; Fri, 04 Sep 2020 09:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HZJBOp0s8Ej6xn/QCTIW1FaE/rY1pxAB8yxD9eVx014=;
+        b=pOyg5ca6iWaNGCMAjZXWcWJdasBHoMbKcIifoRtx70nktzuPmI7FZHQj0LA0FqwlHF
+         DhSE8m1Ctppf4q0vwuTZk/lX0ZEYEEj2sQeTTU319ildoHII9vj1zacycZCh8gikDxHR
+         B1BIj3bgUAwQmXOKvVWvebIBiC3JpTg+wGzcIk8eHwiOe11shJd8T0UDaOgqyXVYSkl4
+         H6vnmCKLiepuudOHvEQNntU+8zEz/qBUi0DHXmjLZTNNLXqVVxuqbzbPATJXChZN0QNF
+         kR9YYX7+5CRXz8FRcE8bVtA2WkYTULItsYBG+coPmKiMWimmSeNiARH3jTJbRnImI0yH
+         0C7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HZJBOp0s8Ej6xn/QCTIW1FaE/rY1pxAB8yxD9eVx014=;
+        b=nbZL17v9EtSvCpeg4dK5NJQQNtrPbL+Ai/KUHdJkUXfUgfmXYlgoEdtRSZ/TIYTWNf
+         yMIhTJO91JURILuAbK2nEnbvJmXYhi/zAZg/N9fXw5S12WvoBnHLvk9lKYjedu7TJfpT
+         k8+qT4Z8+SB6pN8T7cbHPCfsYQYJpt0q8Fmxh72RgtxCyNI3qK6FAbTqecl73smT2+Gv
+         5mYCYFArs0jqOQ7cbSzvqM1vsbeYgDNhKyfb/hszBoOWgk9VFmv3E1KZ45bG+rRSEzI0
+         qqEMYvK2E0jRRNC9CgMs0DBcVpGfJHhKS4ac/WnC+pszHvgXlGUR1CDfvlTEVXLXLb9V
+         eXEw==
+X-Gm-Message-State: AOAM531fcCiHLHl/xkaAglGmmgesP2Vs2LaGss/mISlXJsJz0Dc28K9M
+        MFLkOvNNPIBnPan+HDXzNpEKJY9pxX8d05Q4cJ0=
+X-Google-Smtp-Source: ABdhPJyE6DaPeubnRcko9Y5mjOPwNkJEGetUeYSBNQQyFxLqO+7hmGscOiLXemLXG6eR2gXirRsN67rQN5fXH4wmq8k=
+X-Received: by 2002:a17:906:cc4a:: with SMTP id mm10mr7941001ejb.451.1599236017141;
+ Fri, 04 Sep 2020 09:13:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFX2JfnEhgr4_CP4rJVsm37+Zo2uFs+zePAENtmPWx-Fmm-HfA@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+References: <20191010074020.o2uwtuyegtmfdlze@XZHOUW.usersys.redhat.com>
+ <f81d80f09c59d78c32fddd535b5604bc05c2a2b5.camel@hammerspace.com>
+ <20191011084910.joa3ptovudasyo7u@xzhoux.usersys.redhat.com>
+ <cbe6a84f9cd61a8f60e70c05a07b3247030a262f.camel@hammerspace.com> <6AAFBD30-1931-49A8-8120-B7171B0DA01C@redhat.com>
+In-Reply-To: <6AAFBD30-1931-49A8-8120-B7171B0DA01C@redhat.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Fri, 4 Sep 2020 12:13:25 -0400
+Message-ID: <CAN-5tyH8xZmJ3Qsrh-Va8Mo1jALgZeg4DC01QPLc9+=XTr_Ozg@mail.gmail.com>
+Subject: Re: [PATCH] NFSv4: fix stateid refreshing when CLOSE racing with OPEN
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Murphy Zhou <jencce.kernel@gmail.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 02:33:30PM -0400, Anna Schumaker wrote:
-> On Wed, Aug 26, 2020 at 5:54 PM J. Bruce Fields <bfields@redhat.com> wrote:
-> > On Mon, Aug 17, 2020 at 12:53:05PM -0400, schumaker.anna@gmail.com wrote:
-> > > I tested by reading various 2G files from a few different underlying
-> > > filesystems and across several NFS versions. I used the `vmtouch` utility
-> > > to make sure files were only cached when we wanted them to be. In addition
-> > > to 100% data and 100% hole cases, I also tested with files that alternate
-> > > between data and hole segments. These files have either 4K, 8K, 16K, or 32K
-> > > segment sizes and start with either data or hole segments. So the file
-> > > mixed-4d has a 4K segment size beginning with a data segment, but mixed-32h
-> > > has 32K segments beginning with a hole. The units are in seconds, with the
-> > > first number for each NFS version being the uncached read time and the second
-> > > number is for when the file is cached on the server.
+On Thu, Sep 3, 2020 at 1:55 PM Benjamin Coddington <bcodding@redhat.com> wrote:
+>
+>
+> On 11 Oct 2019, at 10:14, Trond Myklebust wrote:
+> > On Fri, 2019-10-11 at 16:49 +0800, Murphy Zhou wrote:
+> >> On Thu, Oct 10, 2019 at 02:46:40PM +0000, Trond Myklebust wrote:
+> >>> On Thu, 2019-10-10 at 15:40 +0800, Murphy Zhou wrote:
+> ...
+> >>>> @@ -3367,14 +3368,16 @@ static bool
+> >>>> nfs4_refresh_open_old_stateid(nfs4_stateid *dst,
+> >>>>                    break;
+> >>>>            }
+> >>>>            seqid_open = state->open_stateid.seqid;
+> >>>> -          if (read_seqretry(&state->seqlock, seq))
+> >>>> -                  continue;
+> >>>>
+> >>>>            dst_seqid = be32_to_cpu(dst->seqid);
+> >>>> -          if ((s32)(dst_seqid - be32_to_cpu(seqid_open)) >= 0)
+> >>>> +          if ((s32)(dst_seqid - be32_to_cpu(seqid_open)) > 0)
+> >>>>                    dst->seqid = cpu_to_be32(dst_seqid + 1);
+> >>>
+> >>> This negates the whole intention of the patch you reference in the
+> >>> 'Fixes:', which was to allow us to CLOSE files even if seqid bumps
+> >>> have
+> >>> been lost due to interrupted RPC calls e.g. when using 'soft' or
+> >>> 'softerr' mounts.
+> >>> With the above change, the check could just be tossed out
+> >>> altogether,
+> >>> because dst_seqid will never become larger than seqid_open.
+> >>
+> >> Hmm.. I got it wrong. Thanks for the explanation.
 > >
-> > The only numbers that look really strange are in the btrfs uncached
-> > case, in the data-only case and the mixed case that start with a hole.
-> > Do we have any idea what's up there?
-> 
-> I'm not really sure. BTRFS does some work to make sure the page cache
-> is synced up with their internal extent representation as part of
-> llseek, so my guess is something related to that (But it's been a
-> while since I looked into that code, so I'm not sure if that's still
-> how it works)
+> > So to be clear: I'm not saying that what you describe is not a problem.
+> > I'm just saying that the fix you propose is really no better than
+> > reverting the entire patch. I'd prefer not to do that, and would rather
+> > see us look for ways to fix both problems, but if we can't find such as
+> > fix then that would be the better solution.
+>
+> Hi Trond and Murphy Zhou,
+>
+> Sorry to resurrect this old thread, but I'm wondering if any progress was
+> made on this front.
+>
+> I'm seeing this race manifest when process is never able to escape from the
+> loop in nfs_set_open_stateid_locked() if CLOSE comes through first and
+> clears out the state.  We can play bit-fiddling games to fix that, but I
+> feel like we'll just end up breaking it again later with another fix.
+>
+> Either we should revert 0e0cb35b417f, or talk about how to fix it.  Seems
+> like we should be able to put the CLOSE on the nfs4_state->waitq as well,
+> and see if we can't just take that approach anytime our operations get out
+> of sequence.  Do you see any problems with this approach?
+>
 
-Adding linux-btrfs in case they have any updates--are btrfs developers
-aware of known performances issues with SEEK_HOLE/SEEK_DATA, and is it
-something anyone's working on?
+I'm not sure reverting the patch is the solution? Because I'm running
+into the infinite ERR_OLD_STATEID loop on CLOSE on SLE15SP2 machines
+which don't have this patch at all.
 
-Anna's implementing a read optimization where the server uses seek to
-identify holes to save transmitting all those zeroes back to the client,
-and it's working as expected for ext4 and xfs but performing weirdly for
-btrfs.
-
-Original message:
-	https://lore.kernel.org/linux-nfs/20200817165310.354092-1-Anna.Schumaker@Netapp.com/
-
---b.
-
-
-> > > Read Plus Results (btrfs):
-> > >   data
-> > >    :... v4.1 ... Uncached ... 21.317 s, 101 MB/s, 0.63 s kern, 2% cpu
-> > >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.67 s kern, 3% cpu
-> > >    :... v4.2 ... Uncached ... 28.665 s,  75 MB/s, 0.65 s kern, 2% cpu
-> > >         :....... Cached ..... 18.253 s, 118 MB/s, 0.66 s kern, 3% cpu
-> > >   hole
-> > >    :... v4.1 ... Uncached ... 18.256 s, 118 MB/s, 0.70 s kern,  3% cpu
-> > >    :    :....... Cached ..... 18.254 s, 118 MB/s, 0.73 s kern,  4% cpu
-> > >    :... v4.2 ... Uncached ...  0.851 s, 2.5 GB/s, 0.72 s kern, 84% cpu
-> > >         :....... Cached .....  0.847 s, 2.5 GB/s, 0.73 s kern, 86% cpu
-> > >   mixed-4d
-> > >    :... v4.1 ... Uncached ... 56.857 s,  38 MB/s, 0.76 s kern, 1% cpu
-> > >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern, 3% cpu
-> > >    :... v4.2 ... Uncached ... 54.455 s,  39 MB/s, 0.73 s kern, 1% cpu
-> > >         :....... Cached .....  9.215 s, 233 MB/s, 0.68 s kern, 7% cpu
-> > >   mixed-8d
-> > >    :... v4.1 ... Uncached ... 36.641 s,  59 MB/s, 0.68 s kern, 1% cpu
-> > >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
-> > >    :... v4.2 ... Uncached ... 33.205 s,  65 MB/s, 0.67 s kern, 2% cpu
-> > >         :....... Cached .....  9.172 s, 234 MB/s, 0.65 s kern, 7% cpu
-> > >   mixed-16d
-> > >    :... v4.1 ... Uncached ... 28.653 s,  75 MB/s, 0.72 s kern, 2% cpu
-> > >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
-> > >    :... v4.2 ... Uncached ... 25.748 s,  83 MB/s, 0.71 s kern, 2% cpu
-> > >         :....... Cached .....  9.150 s, 235 MB/s, 0.64 s kern, 7% cpu
-> > >   mixed-32d
-> > >    :... v4.1 ... Uncached ... 28.886 s,  74 MB/s, 0.67 s kern, 2% cpu
-> > >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
-> > >    :... v4.2 ... Uncached ... 24.724 s,  87 MB/s, 0.74 s kern, 2% cpu
-> > >         :....... Cached .....  9.140 s, 235 MB/s, 0.63 s kern, 6% cpu
-> > >   mixed-4h
-> > >    :... v4.1 ... Uncached ...  52.181 s,  41 MB/s, 0.73 s kern, 1% cpu
-> > >    :    :....... Cached .....  18.252 s, 118 MB/s, 0.66 s kern, 3% cpu
-> > >    :... v4.2 ... Uncached ... 150.341 s,  14 MB/s, 0.72 s kern, 0% cpu
-> > >         :....... Cached .....   9.216 s, 233 MB/s, 0.63 s kern, 6% cpu
-> > >   mixed-8h
-> > >    :... v4.1 ... Uncached ... 36.945 s,  58 MB/s, 0.68 s kern, 1% cpu
-> > >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.65 s kern, 3% cpu
-> > >    :... v4.2 ... Uncached ... 79.781 s,  27 MB/s, 0.68 s kern, 0% cpu
-> > >         :....... Cached .....  9.172 s, 234 MB/s, 0.66 s kern, 7% cpu
-> > >   mixed-16h
-> > >    :... v4.1 ... Uncached ... 28.651 s,  75 MB/s, 0.73 s kern, 2% cpu
-> > >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.66 s kern, 3% cpu
-> > >    :... v4.2 ... Uncached ... 47.428 s,  45 MB/s, 0.71 s kern, 1% cpu
-> > >         :....... Cached .....  9.150 s, 235 MB/s, 0.67 s kern, 7% cpu
-> > >   mixed-32h
-> > >    :... v4.1 ... Uncached ... 28.618 s,  75 MB/s, 0.69 s kern, 2% cpu
-> > >    :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
-> > >    :... v4.2 ... Uncached ... 38.813 s,  55 MB/s, 0.67 s kern, 1% cpu
-> > >         :....... Cached .....  9.140 s, 235 MB/s, 0.61 s kern, 6% cpu
-> >
+> Ben
+>
