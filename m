@@ -2,134 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABCA625CF8E
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Sep 2020 05:04:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59A7F25D6AB
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Sep 2020 12:44:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgIDDEV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Sep 2020 23:04:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39460 "EHLO
+        id S1726415AbgIDKny (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 4 Sep 2020 06:43:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729620AbgIDDEU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Sep 2020 23:04:20 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05D11C061244
-        for <linux-nfs@vger.kernel.org>; Thu,  3 Sep 2020 20:04:19 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e33so3608107pgm.0
-        for <linux-nfs@vger.kernel.org>; Thu, 03 Sep 2020 20:04:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kIE4YTR0d3lzNKd5ZEgHf8nCQthQ7AQl9cM6behkAGk=;
-        b=kg8NTWrBtlEUXCjrPObhEe8oY63cUJVs5zILw8NmEnkSjwrFPuYusHryUdNI24ZG6k
-         SFObHST+a41HZWuLG1qLAn0l/Yt3S8E3MON7JljAx+EOFhusohOux7klJkKigS+rTFRv
-         mS8gTINUYeDpVSPWMpNtjkTv7q5XjluABwkvW0D5Idajp9rgZNuJJ6N4rIzo6/LW2nSS
-         ms1+jzgKKjOerAGCM7Rt2bfO9ORvUycd1TFiZkkVxKFzA5eJlUG2PWnI7p8cBfpUhXms
-         x7ev8ZbtCsx7SaxF00ds76CQTTfLbJKfzes8+FZvpX7rkmuoQSth0l9RVT/1RxuOkXog
-         Ayvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kIE4YTR0d3lzNKd5ZEgHf8nCQthQ7AQl9cM6behkAGk=;
-        b=oiN+jMQHlu32xK5rV9+SfnhXdRoET2K4BLfsGgZqFp7vlX2vxSjr1GNd3T9GPh776B
-         vmm2A8UDHB9yvJIThrbqspPdxgUNuLhW9Yl3pcx7IsbF2IGmGt99UlZ1nf9lhQNnT0jp
-         NwLhRkpUtRAqz54voqlZsO/SCM0nnCVSO610fMh8DuYfP6pWwLjmO/g9dNew2i5cnL6J
-         CLthQWPqcLM+bbH9vvVLJYK0aolcGKQDyuCdL8Tdbf9w+Zv2tTksjIR1OZ2P926crNld
-         1LBhYzKLsnEVGgnd/6a7WuD+lLSbkDstc/kDAqxBLRM6OefhqpPvPZqTkKU+VHPg6NB6
-         hZBQ==
-X-Gm-Message-State: AOAM530f+auW/DB+VSXx6DmZH9daMN7QeEehwB+D8uUxaiyYlOi44pqt
-        pa+/CDaFUX5Ynzi4Gzo4U+Q=
-X-Google-Smtp-Source: ABdhPJxRxSW6arGx/4d+vUBPLaywws5zg/Zsv+u5FwfWNLKKRaRtCTPs/DPzRe8DQbrz2UbVJaM+Hg==
-X-Received: by 2002:aa7:92c7:: with SMTP id k7mr6585980pfa.239.1599188659423;
-        Thu, 03 Sep 2020 20:04:19 -0700 (PDT)
-Received: from localhost ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id t5sm3685039pji.51.2020.09.03.20.04.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 20:04:18 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 11:04:11 +0800
-From:   Murphy Zhou <jencce.kernel@gmail.com>
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>, jencce.kernel@gmail.com,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] NFSv4: fix stateid refreshing when CLOSE racing with OPEN
-Message-ID: <20200904030411.enioqeng4wxftucd@xzhoux.usersys.redhat.com>
-References: <20191010074020.o2uwtuyegtmfdlze@XZHOUW.usersys.redhat.com>
- <f81d80f09c59d78c32fddd535b5604bc05c2a2b5.camel@hammerspace.com>
- <20191011084910.joa3ptovudasyo7u@xzhoux.usersys.redhat.com>
- <cbe6a84f9cd61a8f60e70c05a07b3247030a262f.camel@hammerspace.com>
- <6AAFBD30-1931-49A8-8120-B7171B0DA01C@redhat.com>
+        with ESMTP id S1726171AbgIDKnu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Sep 2020 06:43:50 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E95C061244;
+        Fri,  4 Sep 2020 03:43:50 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599216228;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MnGIfosYk6cuOJ5u1p3Q4PQ2dvvUjoREuzlxSo4dxaU=;
+        b=npUgoxul9PeKnpU46ohfOIOenC8OyKgAAAuF84mB0KxUTVR6zXC/G8rLE9mWnUL+URwNbg
+        4WFwC1yAfM1Cii3LGhQrjWj3jICfT8lleYwAdj+jOwZc4R4pYXxlDuC0hizto+evJhULwd
+        R/TjQ1cVa/ZP5qXw4Cp9UJoQDUBczJCesM65sR8sGE59pj39gs97c2IZI6lmezd5GAiADB
+        D9mRKLaPeiMM3ZhQfUQRKYiCXUjWzhr/VOMj2J8eMj6xwtLgKsXiitvJq7XIjuSzYpbl8O
+        rCnyQWvzIT3zxWHO4/DgBqLtLfw9dSPSVOiVySD501sJBD292ddzYBM/oRFAow==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599216228;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MnGIfosYk6cuOJ5u1p3Q4PQ2dvvUjoREuzlxSo4dxaU=;
+        b=tO8UNn6rGH+CSrtxAn8YdA2fKMBnK+kSk+arlcDrSMt1DdcT4Ph7T2vp7h6QyqWTEoOOKW
+        /oJcLxg+Z3fLDcBQ==
+To:     syzbot <syzbot+91923aae0b157bd6c0c5@syzkaller.appspotmail.com>,
+        elver@google.com, linux-kernel@vger.kernel.org,
+        miaoqinglang@huawei.com, syzkaller-bugs@googlegroups.com
+Cc:     trond.myklebust@hammerspace.com,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: WARNING: ODEBUG bug in process_one_work (2)
+In-Reply-To: <0000000000001c3dac05ae58a990@google.com>
+References: <0000000000001c3dac05ae58a990@google.com>
+Date:   Fri, 04 Sep 2020 12:43:47 +0200
+Message-ID: <87h7sd4yak.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6AAFBD30-1931-49A8-8120-B7171B0DA01C@redhat.com>
+Content-Type: text/plain
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Benjamin,
+On Wed, Sep 02 2020 at 11:18, syzbot wrote:
 
-On Thu, Sep 03, 2020 at 01:54:26PM -0400, Benjamin Coddington wrote:
-> 
-> On 11 Oct 2019, at 10:14, Trond Myklebust wrote:
-> > On Fri, 2019-10-11 at 16:49 +0800, Murphy Zhou wrote:
-> >> On Thu, Oct 10, 2019 at 02:46:40PM +0000, Trond Myklebust wrote:
-> >>> On Thu, 2019-10-10 at 15:40 +0800, Murphy Zhou wrote:
-> ...
-> >>>> @@ -3367,14 +3368,16 @@ static bool
-> >>>> nfs4_refresh_open_old_stateid(nfs4_stateid *dst,
-> >>>>  			break;
-> >>>>  		}
-> >>>>  		seqid_open = state->open_stateid.seqid;
-> >>>> -		if (read_seqretry(&state->seqlock, seq))
-> >>>> -			continue;
-> >>>>
-> >>>>  		dst_seqid = be32_to_cpu(dst->seqid);
-> >>>> -		if ((s32)(dst_seqid - be32_to_cpu(seqid_open)) >= 0)
-> >>>> +		if ((s32)(dst_seqid - be32_to_cpu(seqid_open)) > 0)
-> >>>>  			dst->seqid = cpu_to_be32(dst_seqid + 1);
-> >>>
-> >>> This negates the whole intention of the patch you reference in the
-> >>> 'Fixes:', which was to allow us to CLOSE files even if seqid bumps
-> >>> have
-> >>> been lost due to interrupted RPC calls e.g. when using 'soft' or
-> >>> 'softerr' mounts.
-> >>> With the above change, the check could just be tossed out
-> >>> altogether,
-> >>> because dst_seqid will never become larger than seqid_open.
-> >>
-> >> Hmm.. I got it wrong. Thanks for the explanation.
-> >
-> > So to be clear: I'm not saying that what you describe is not a problem.
-> > I'm just saying that the fix you propose is really no better than
-> > reverting the entire patch. I'd prefer not to do that, and would rather
-> > see us look for ways to fix both problems, but if we can't find such as
-> > fix then that would be the better solution.
-> 
-> Hi Trond and Murphy Zhou,
-> 
-> Sorry to resurrect this old thread, but I'm wondering if any progress was
-> made on this front.
+Cc+: Relevant maintainers
 
-This failure stoped showing up since v5.6-rc1 release cycle
-in my records. Can you reproduce this on latest upstream kernel?
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    4d41ead6 Merge tag 'block-5.9-2020-08-28' of git://git.ker..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1196ce61900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
+> dashboard link: https://syzkaller.appspot.com/bug?extid=91923aae0b157bd6c0c5
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11b1cbb6900000
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+91923aae0b157bd6c0c5@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> ODEBUG: free active (active state 0) object type: timer_list hint: xprt_init_autodisconnect+0x0/0x150 include/linux/refcount.h:274
+> WARNING: CPU: 1 PID: 8854 at lib/debugobjects.c:485 debug_print_object+0x160/0x250 lib/debugobjects.c:485
 
-Thanks!
+xprt->timer is still armed at the time when RCU frees xprt....
 
-> 
-> I'm seeing this race manifest when process is never able to escape from the
-> loop in nfs_set_open_stateid_locked() if CLOSE comes through first and
-> clears out the state.  We can play bit-fiddling games to fix that, but I
-> feel like we'll just end up breaking it again later with another fix.
-> 
-> Either we should revert 0e0cb35b417f, or talk about how to fix it.  Seems
-> like we should be able to put the CLOSE on the nfs4_state->waitq as well,
-> and see if we can't just take that approach anytime our operations get out
-> of sequence.  Do you see any problems with this approach?
-> 
-> Ben
-> 
-
--- 
-Murphy
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 8854 Comm: kworker/1:10 Not tainted 5.9.0-rc2-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Workqueue: events kfree_rcu_work
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  panic+0x2e3/0x75c kernel/panic.c:231
+>  __warn.cold+0x20/0x4a kernel/panic.c:600
+>  report_bug+0x1bd/0x210 lib/bug.c:198
+>  handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+>  exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+>  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+> RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:485
+> Code: dd a0 26 94 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48 8b 14 dd a0 26 94 88 48 c7 c7 00 1c 94 88 e8 52 38 a6 fd <0f> 0b 83 05 53 4f 13 07 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
+> RSP: 0018:ffffc9000b68fb28 EFLAGS: 00010082
+> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+> RDX: ffff8880a216c300 RSI: ffffffff815dafc7 RDI: fffff520016d1f57
+> RBP: 0000000000000001 R08: 0000000000000001 R09: ffff8880ae720f8b
+> R10: 0000000000000000 R11: 0000000035383854 R12: ffffffff89be2ea0
+> R13: ffffffff81638450 R14: dead000000000100 R15: dffffc0000000000
+>  __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
+>  debug_check_no_obj_freed+0x301/0x41c lib/debugobjects.c:998
+>  kmem_cache_free_bulk+0x9e/0x190 mm/slab.c:3718
+>  kfree_bulk include/linux/slab.h:411 [inline]
+>  kfree_rcu_work+0x506/0x8c0 kernel/rcu/tree.c:3150
+>  process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+>  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+>  kthread+0x3b5/0x4a0 kernel/kthread.c:292
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this issue, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
