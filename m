@@ -2,109 +2,170 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0374A25E364
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Sep 2020 23:39:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A533025E38F
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Sep 2020 00:01:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbgIDVjR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 4 Sep 2020 17:39:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41832 "EHLO
+        id S1727990AbgIDWBJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 4 Sep 2020 18:01:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727020AbgIDVjQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Sep 2020 17:39:16 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7096C061244
-        for <linux-nfs@vger.kernel.org>; Fri,  4 Sep 2020 14:39:15 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id 60so5827857qtc.9
-        for <linux-nfs@vger.kernel.org>; Fri, 04 Sep 2020 14:39:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=2LI8ZS6thsnmwtkE94coF3xSF8n1VrowAa+YD7V2zn0=;
-        b=nBVnYxfNYQSWux6R89VF0B21WHV4S3e93+xpW2SjiqpNMKBdKvZscLu6Boyz1/iaeA
-         BO8XeuUmdxFUfW9t+2g0/g10L7yJl/X/dFwNumnfdKL8tP8BNvsJExeX/glbXyCR6pAe
-         Lx7QWYVmATTGQfkjRZyZQXI88bXCv487cQMG+/KU0C6BFyXd+T5OEiamCnvYgDQx27Yq
-         tLuqc+ojugPPoB/LE7/RkGVlrgsqg9b3yQ85W6DOJL3DJ0Ps3sLxOmTiRsMbvCjvUgfd
-         bJOrBkq16ODkhG8cqXd0ge7RPGCXJ7uPn5znl28zgtelnXAHjv9JxbhPlW2AeNCMFoCz
-         jvXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=2LI8ZS6thsnmwtkE94coF3xSF8n1VrowAa+YD7V2zn0=;
-        b=VL1UEjIhnGk7oELH7UIUnIDpZlXhCPQPzIbSfNaZvJPYy+pxJcLJLwvVNzhRNPiEK0
-         JjcPaZ+BkWpdEeP9N5Xa2omXKwEuc3oia1kM8Y6ERH5STYdPnrk0k/rIs13fo1aUuDNP
-         EqRxXBNF8IPYgybsdWK2b7ms7FAlIq1ZYNX5q9RMFBksMO5aRhe2B9K9NojsY8Qpp+cY
-         6Ujh68XV7Vs9Gig/m04T2wTDImdLdjO76Oljyo5ZgwbGhFKfxCwdm7MWMsYeTN6TJII9
-         rMoiL6DswELT4kw4mO1X9dzn5SLG04zD4ofnNCo7x9viuBZVe4wrqT6ucvw0SteK3Vsd
-         qm+A==
-X-Gm-Message-State: AOAM533zp7TRKkZ6K/2WA6Q/lADX0YTxfQbk0FHtvuv8nZYfBczIcD/P
-        GbSRgt+Oa7qGXtP2YSnFUMyLQXyd1iA=
-X-Google-Smtp-Source: ABdhPJz6sLY8yz1KCleEzlW9q70ww/qaFmsLdcgVstHcYmYy4jyao2uXhUPJhNE/pFgCTZXouTTKiQ==
-X-Received: by 2002:ac8:44b5:: with SMTP id a21mr10303557qto.314.1599255555127;
-        Fri, 04 Sep 2020 14:39:15 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id 16sm5475901qks.102.2020.09.04.14.39.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Sep 2020 14:39:14 -0700 (PDT)
-Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 084LdCAf013974;
-        Fri, 4 Sep 2020 21:39:12 GMT
-Subject: [PATCH v3] NFS: Zero-stateid SETATTR should first return delegation
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     trondmy@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Date:   Fri, 04 Sep 2020 17:39:12 -0400
-Message-ID: <159925549303.442575.12094515313356787546.stgit@manet.1015granger.net>
-User-Agent: StGit/0.23
+        with ESMTP id S1727057AbgIDWBI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Sep 2020 18:01:08 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF120C061244
+        for <linux-nfs@vger.kernel.org>; Fri,  4 Sep 2020 15:01:08 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C18E36EEB; Fri,  4 Sep 2020 18:01:04 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C18E36EEB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1599256864;
+        bh=zY5P2L/P0iOF9UtqYYHbkfouQUqmjkH5sBNxhzajB38=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VP40/OqMJWKC6LUqMPgai/ti67nP1nX4RYvs+PW/+nnzQyUwiLXviWacqV0Kl1Xhi
+         t1qSasMdvxI+gLm5mVverBYYq3EOL6f+lO3kmryVuSxyIopgql9TIE47dO/+xK5Byo
+         lMycGinwkO5XA1tAxhOszhB6sul5GwpduBmGl29U=
+Date:   Fri, 4 Sep 2020 18:01:04 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Jeff Layton <jlayton@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: still seeing single client NFS4ERR_DELAY / CB_RECALL
+Message-ID: <20200904220104.GA7212@fieldses.org>
+References: <00CAA5B7-418E-4AB5-AE08-FE2F87B06795@oracle.com>
+ <20200810201001.GC13266@fieldses.org>
+ <CA3288FC-8B9A-4F19-A51C-E1169726E946@oracle.com>
+ <F20E4EC5-71DD-4A92-A583-41BEE177F53C@oracle.com>
+ <20200817222034.GA6390@fieldses.org>
+ <CD4B80B9-4F58-46B4-872C-F2F139AFB231@oracle.com>
+ <20200819212927.GB30476@fieldses.org>
+ <5D346E9E-C7C5-49F7-9694-8DD98AF1149A@oracle.com>
+ <20200824142237.GA29837@fieldses.org>
+ <A3CDC823-B550-4F7A-B592-4B8871131227@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <A3CDC823-B550-4F7A-B592-4B8871131227@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If a write delegation isn't available, the Linux NFS client uses
-a zero-stateid when performing a SETATTR.
+On Mon, Aug 24, 2020 at 11:42:18AM -0400, Chuck Lever wrote:
+> 
+> 
+> > On Aug 24, 2020, at 10:22 AM, Bruce Fields <bfields@fieldses.org> wrote:
+> > 
+> > On Mon, Aug 24, 2020 at 09:39:31AM -0400, Chuck Lever wrote:
+> >> 
+> >> 
+> >>> On Aug 19, 2020, at 5:29 PM, Bruce Fields <bfields@fieldses.org> wrote:
+> >>> 
+> >>> On Tue, Aug 18, 2020 at 05:26:26PM -0400, Chuck Lever wrote:
+> >>>> 
+> >>>>> On Aug 17, 2020, at 6:20 PM, Bruce Fields <bfields@fieldses.org> wrote:
+> >>>>> 
+> >>>>> On Sun, Aug 16, 2020 at 04:46:00PM -0400, Chuck Lever wrote:
+> >>>>> 
+> >>>>>> In order of application:
+> >>>>>> 
+> >>>>>> 5920afa3c85f ("nfsd: hook nfsd_commit up to the nfsd_file cache")
+> >>>>>> 961.68user 5252.40system 20:12.30elapsed 512%CPU, 2541 DELAY errors
+> >>>>>> These results are similar to v5.3.
+> >>>>>> 
+> >>>>>> fd4f83fd7dfb ("nfsd: convert nfs4_file->fi_fds array to use nfsd_files")
+> >>>>>> Does not build
+> >>>>>> 
+> >>>>>> eb82dd393744 ("nfsd: convert fi_deleg_file and ls_file fields to nfsd_file")
+> >>>>>> 966.92user 5425.47system 33:52.79elapsed 314%CPU, 1330 DELAY errors
+> >>>>>> 
+> >>>>>> Can you take a look and see if there's anything obvious?
+> >>>>> 
+> >>>>> Unfortunately nothing about the file cache code is very obvious to me.
+> >>>>> I'm looking at it....
+> >>>>> 
+> >>>>> It adds some new nfserr_jukebox returns in nfsd_file_acquire.  Those
+> >>>>> mostly look like kmalloc failures, the one I'm not sure about is the
+> >>>>> NFSD_FILE_HASHED check.
+> >>>>> 
+> >>>>> Or maybe it's the lease break there.
+> >>>> 
+> >>>> nfsd_file_acquire() always calls fh_verify() before it invokes nfsd_open().
+> >>>> Replacing nfs4_get_vfs_file's nfsd_open() call with nfsd_file_acquire() adds
+> >>>> almost 10 million fh_verify() calls to my test run.
+> >>> 
+> >>> Checking out the code as of fd4f83fd7dfb....
+> >>> 
+> >>> nfsd_file_acquire() calls nfsd_open_verified().
+> >>> 
+> >>> And nfsd_open() is basically just fh_verify()+nfsd_open_verified().
+> >>> 
+> >>> So it doesn't look like the replacement of nfsd_open() by
+> >>> nfsd_file_acquire() should have changed the number of fh_verify() calls.
+> >> 
+> >> I see a lot more vfs_setlease() failures after fd4f83fd7dfb.
+> >> check_conflicting_open() fails because "inode is open for write":
+> >> 
+> >> 1780         if (arg == F_RDLCK)
+> >> 1781                 return inode_is_open_for_write(inode) ? -EAGAIN : 0;
+> >> 
+> >> The behavior on the wire is that the server simply doesn't hand out
+> >> many delegations.
+> >> 
+> >> NFSv4 OPEN uses nfsd_file_acquire() now, but I don't see CLOSE
+> >> releasing the cached file descriptor. Wouldn't that cached
+> >> descriptor conflict with subsequent OPENs?
+> > 
+> > Could be, yes.
+> > 
+> > That also reminds me of this patch, did I already send it to you?
+> 
+> I don't have this one. I can try it.
 
-NFSv4.0 provides no mechanism for an NFS server to match such a
-request to a particular client. It recalls all delegations for that
-file, even delegations held by the client issuing the request. If
-that client happens to hold a read delegation, the server will
-recall it immediately, resulting in an NFS4ERR_DELAY/CB_RECALL/
-DELEGRETURN sequence.
+No difference, I take it?
 
-Optimize out this pipeline bubble by having the client return any
-delegations it may hold on a file before it issues a
-SETATTR(zero-stateid) on that file.
+There could also be something wrong with nfsd4_check_conflicting_opens()
+that's preventing delegations when it shouldn't.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfs/nfs4proc.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+There might also be some way fh_verify() could be smarter.  There's a
+big comment there explaining why we repeat the permission checks each
+time, but maybe we could keep a flag somewhere that tracks whether we
+really need to call nfsd_setuser again.
 
-Changes since v2:
-- Return the delegation only for NFSv4.0 non-truncate cases
+Based on your and Frank's experiences I'm also sympathetic to the idea
+that maybe the filehandle cache just gets in the way in the v4 case.
 
-Changes since v1:
-- Return the delegation only for NFSv4.0 mounts
+--b.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index f8946b9468ef..099ae32981a2 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -3293,8 +3293,10 @@ static int _nfs4_do_setattr(struct inode *inode,
- 
- 	/* Servers should only apply open mode checks for file size changes */
- 	truncate = (arg->iap->ia_valid & ATTR_SIZE) ? true : false;
--	if (!truncate)
-+	if (!truncate) {
-+		nfs4_inode_make_writeable(inode);
- 		goto zero_stateid;
-+	}
- 
- 	if (nfs4_copy_delegation_stateid(inode, FMODE_WRITE, &arg->stateid, &delegation_cred)) {
- 		/* Use that stateid */
-
-
+> > Author: J. Bruce Fields <bfields@redhat.com>
+> > Date:   Fri Jul 17 18:54:54 2020 -0400
+> > 
+> >    nfsd: Cache R, RW, and W opens separately
+> > 
+> >    The nfsd open code has always kept separate read-only, read-write, and
+> >    write-only opens as necessary to ensure that when a client closes or
+> >    downgrades, we don't retain more access than necessary.
+> > 
+> >    Honestly, I'm not sure if that's completely necessary, but I'd rather
+> >    stick to that behavior.
+> > 
+> >    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> > 
+> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > index 82198d747c4c..4b6f70e0d987 100644
+> > --- a/fs/nfsd/filecache.c
+> > +++ b/fs/nfsd/filecache.c
+> > @@ -891,7 +891,7 @@ nfsd_file_find_locked(struct inode *inode, unsigned int may_flags,
+> > 
+> > 	hlist_for_each_entry_rcu(nf, &nfsd_file_hashtbl[hashval].nfb_head,
+> > 				 nf_node, lockdep_is_held(&nfsd_file_hashtbl[hashval].nfb_lock)) {
+> > -		if ((need & nf->nf_may) != need)
+> > +		if (nf->nf_may != need)
+> > 			continue;
+> > 		if (nf->nf_inode != inode)
+> > 			continue;
+> 
+> --
+> Chuck Lever
+> 
+> 
