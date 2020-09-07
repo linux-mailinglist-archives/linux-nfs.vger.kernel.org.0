@@ -2,127 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E8A825E927
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Sep 2020 18:55:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79E452602EA
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Sep 2020 19:38:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgIEQzQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 5 Sep 2020 12:55:16 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36812 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726468AbgIEQzP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 5 Sep 2020 12:55:15 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 085GsWQM030336;
-        Sat, 5 Sep 2020 16:55:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=jnuxqMOv4q692rY336s7eKMn93zUhbMwKt2gi5yMTqg=;
- b=atpGs/G5Dc2AEzUq1m3G3jmGwEbJUNydj3f5oYndLnvwPK0O4rGHn1kAt9jnNgu1xr9J
- qiAnqQjUlK2kwacjH+5neBidvwRkoZtdMWHCGyMh4+ajvt3aE7YWAJb2Ito+EIyc3iqp
- 65j6g6psftn3d9Yhf7C47tobBA2XxwFwnKrHRn/1TPED4VZMiTslr8T+mUfUOszjELp1
- NLwXdlStn0ljFekeAjab3HJ/A9lKRDft1cxOQf7e36OhyFIr6TqINUdEkZQDtTBPtrIt
- YhvnjfNc+ozFu62PP7aieNVgMihRxfAwWo9682Owjr0NeykD3qluwAhGANw+mJcNqQ7e Kw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 33c2mkhhfp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 05 Sep 2020 16:55:08 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 085Gsnou088519;
-        Sat, 5 Sep 2020 16:55:08 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 33c2g0tn2t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 05 Sep 2020 16:55:08 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 085Gt4HI027400;
-        Sat, 5 Sep 2020 16:55:07 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 05 Sep 2020 09:55:04 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH] SUNRPC: stop printk reading past end of string
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200905140326.GA26625@fieldses.org>
-Date:   Sat, 5 Sep 2020 12:55:03 -0400
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A3447F02-7A1F-4D6D-A8B7-C051BE732736@oracle.com>
-References: <20200905140326.GA26625@fieldses.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <schumakeranna@gmail.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9735 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 bulkscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009050165
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9735 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
- phishscore=0 adultscore=0 bulkscore=0 clxscore=1011 mlxlogscore=999
- malwarescore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009050165
+        id S1729437AbgIGRir convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Mon, 7 Sep 2020 13:38:47 -0400
+Received: from natter.dneg.com ([193.203.89.68]:34474 "EHLO natter.dneg.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729466AbgIGRih (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 7 Sep 2020 13:38:37 -0400
+X-Greylist: delayed 452 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Sep 2020 13:38:36 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by natter.dneg.com (Postfix) with ESMTP id 20FCE2848C90;
+        Mon,  7 Sep 2020 18:31:01 +0100 (BST)
+X-Virus-Scanned: amavisd-new at mx-dneg
+Received: from natter.dneg.com ([127.0.0.1])
+        by localhost (natter.dneg.com [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id dV6jUbHGbBsO; Mon,  7 Sep 2020 18:31:01 +0100 (BST)
+Received: from zrozimbrai.dneg.com (zrozimbrai.dneg.com [10.11.20.12])
+        by natter.dneg.com (Postfix) with ESMTPS id 002DD2848C89;
+        Mon,  7 Sep 2020 18:31:00 +0100 (BST)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 58C1881476B4;
+        Mon,  7 Sep 2020 18:31:00 +0100 (BST)
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id BWVtRn1HPtxC; Mon,  7 Sep 2020 18:31:00 +0100 (BST)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 3D9BB81476B7;
+        Mon,  7 Sep 2020 18:31:00 +0100 (BST)
+X-Virus-Scanned: amavisd-new at zimbra-dneg
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 1EglrZDnGaXS; Mon,  7 Sep 2020 18:31:00 +0100 (BST)
+Received: from zrozimbra1.dneg.com (zrozimbra1.dneg.com [10.11.16.16])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 26DB381476B5;
+        Mon,  7 Sep 2020 18:31:00 +0100 (BST)
+Date:   Mon, 7 Sep 2020 18:31:00 +0100 (BST)
+From:   Daire Byrne <daire@dneg.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     linux-cachefs@redhat.com
+Message-ID: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
+Subject: Adventures in NFS re-exporting
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Mailer: Zimbra 8.7.11_GA_1854 (ZimbraWebClient - GC78 (Linux)/8.7.11_GA_1854)
+Thread-Index: fNDm/l4o9cYx5Rz5g0S1EO4zMAtIRw==
+Thread-Topic: Adventures in NFS re-exporting
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi,
 
+Apologies for this rather long email, but I thought there may be some interest out there in the community in how and why we've been doing something unsupported and barely documented - NFS re-exporting! And I'm not sure I can tell our story well in just a few short sentences so please bear with me (or stop now!).
 
-> On Sep 5, 2020, at 10:03 AM, bfields@fieldses.org wrote:
->=20
-> From: "J. Bruce Fields" <bfields@redhat.com>
->=20
-> Since p points at raw xdr data, there's no guarantee that it's NULL
-> terminated, so we should give a length.  And probably escape any =
-special
-> characters too.
->=20
-> Reported-by: Zhi Li <yieli@redhat.com>
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Full disclosure - I am also rather hoping that this story piques some interest amongst developers to help make our rather niche setup even better and perhaps a little better documented. I also totally understand if this is something people wouldn't want to touch with a very long barge pole....
 
-I sent a patch a couple months ago to remove this dprintk:
+First a quick bit of history (I hope I have this right). Late in 2015, Jeff Layton proposed a patch series allowing knfsd to re-export a NFS client mount. The rationale then was to provide a "proxy" server that could mount an NFSv4 only server and re-export it to older clients that only supported NFSv3. One of the main sticking points then (as now), was around the 63 byte limit of filehandles for NFSv3 and how it couldn't be guaranteed that all re-exported filehandles would fit within that (in my experience it mostly works with "no_subtree_check"). There are also the usual locking and coherence concerns with NFSv3 too but I'll get to that in a bit.
 
-=
-https://lore.kernel.org/linux-nfs/20200708201029.22129.31971.stgit@manet.1=
-015granger.net/T/#u
+Then almost two years later, v4.13 was released including parts of the patch series that actually allowed the re-export and since then other relevant bits (such as the open file cache) have also been merged. I soon became interested in using this new functionality to both accelerate our on-premises NFS storage and use it as a "WAN cache" to provide cloud compute instances locally cached proxy access to our on-premises storage.
 
-However you might want to apply Bruce's patch first, so it can
-be backported to stable.
+Cut to a brief introduction to us and what we do... DNEG is an award winning VFX company which uses large compute farms to generate complex final frame renders for movies and TV. This workload mostly consists of reads of common data shared between many render clients (e.g textures, geometry) and a little unique data per frame. All file writes are to unique files per process (frames) and there is very little if any writing over existing files. Hence it's not very demanding on locking and coherence guarantees.
 
+When our on-premises NFS storage is being overloaded or the server's network is maxed out, we can place multiple re-export servers in between them and our farm to improve performance. When our on-premises render farm is not quite big enough to meet a deadline, we spin up compute instances with a (reasonably local) cloud provider. Some of these cloud instances are Linux NFS servers which mount our on-premises NFS storage servers (~10ms away) and re-export these to the other cloud (render) instances. Since we know that the data we are reading doesn't change often, we can increase the actimeo and even use nocto to reduce the network chatter back to the on-prem servers. These re-export servers also use fscache/cachefiles to cache data to disk so that we can retain TBs of previously read data locally in the cloud over long periods of time. We also use NFSv4 (less network chatter) all the way from our on-prem storage to the re-export server and then on to the clients.
 
-> ---
-> net/sunrpc/rpcb_clnt.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/net/sunrpc/rpcb_clnt.c b/net/sunrpc/rpcb_clnt.c
-> index c27123e6ba80..4a67685c83eb 100644
-> --- a/net/sunrpc/rpcb_clnt.c
-> +++ b/net/sunrpc/rpcb_clnt.c
-> @@ -982,8 +982,8 @@ static int rpcb_dec_getaddr(struct rpc_rqst *req, =
-struct xdr_stream *xdr,
-> 	p =3D xdr_inline_decode(xdr, len);
-> 	if (unlikely(p =3D=3D NULL))
-> 		goto out_fail;
-> -	dprintk("RPC: %5u RPCB_%s reply: %s\n", req->rq_task->tk_pid,
-> -			req->rq_task->tk_msg.rpc_proc->p_name, (char =
-*)p);
-> +	dprintk("RPC: %5u RPCB_%s reply: %*pE\n", req->rq_task->tk_pid,
-> +			req->rq_task->tk_msg.rpc_proc->p_name, len, =
-(char *)p);
->=20
-> 	if (rpc_uaddr2sockaddr(req->rq_xprt->xprt_net, (char *)p, len,
-> 				sap, sizeof(address)) =3D=3D 0)
-> --=20
-> 2.26.2
->=20
+The re-export server(s) quickly builds up both a memory cache and disk backed fscache/cachefiles storage cache of our working data set so the data being pulled from on-prem lessens over time. Data is only ever read once over the WAN network from on-prem storage and then read multiple times by the many render client instances in the cloud. Recent NFS features such as "nconnect" help to speed up the initial reading of data from on-prem by using multiple connections to offset TCP latency. At the end of the render, we write the files back through the re-export server to our on-prem storage. Our average read bandwidth is many times higher than our write bandwidth.
 
---
-Chuck Lever
+Rather surprisingly, this mostly works for our particular workloads. We've completed movies using this setup and saved money on commercial caching systems (e.g Avere, GPFS, etc). But there are still some remaining issues with doing something that is very much not widely supported (or recommended). In most cases we have worked around them, but it would be great if we didn't have to so others could also benefit. I will list the main problems quickly now and provide more information and reproducers later if anyone is interested.
 
+1) The kernel can drop entries out of the NFS client inode cache (under memory cache churn) when those filehandles are still being used by the knfsd's remote clients resulting in sporadic and random stale filehandles. This seems to be mostly for directories from what I've seen. Does the NFS client not know that knfsd is still using those files/dirs? The workaround is to never drop inode & dentry caches on the re-export servers (vfs_cache_pressure=1). This also helps to ensure that we actually make the most of our actimeo=3600,nocto mount options for the full specified time.
 
+2) If we cache metadata on the re-export server using actimeo=3600,nocto we can cut the network packets back to the origin server to zero for repeated lookups. However, if a client of the re-export server walks paths and memory maps those files (i.e. loading an application), the re-export server starts issuing unexpected calls back to the origin server again, ignoring/invalidating the re-export server's NFS client cache. We worked around this this by patching an inode/iversion validity check in inode.c so that the NFS client cache on the re-export server is used. I'm not sure about the correctness of this patch but it works for our corner case.
 
+3) If we saturate an NFS client's network with reads from the server, all client metadata lookups become unbearably slow even if it's all cached in the NFS client's memory and no network RPCs should be required. This is the case for any NFS client regardless of re-exporting but it affects this case more because when we can't serve cached metadata we also can't serve the cached data. It feels like some sort of bottleneck in the client's ability to parallelise requests? We work around this by not maxing out our network.
+
+4) With an NFSv4 re-export, lots of open/close requests (hundreds per second) quickly eat up the CPU on the re-export server and perf top shows we are mostly in native_queued_spin_lock_slowpath. Does NFSv4 also need an open file cache like that added to NFSv3? Our workaround is to either fix the thing doing lots of repeated open/closes or use NFSv3 instead.
+
+If you made it this far, I've probably taken up way too much of your valuable time already. If nobody is interested in this rather niche application of the Linux client & knfsd, then I totally understand and I will not mention it here again. If your interest is piqued however, I'm happy to go into more detail about any of this with the hope that this could become a better documented and understood type of setup that others with similar workloads could reference.
+
+Also, many thanks to all the Linux NFS developers for the amazing work you do which, in turn, helps us to make great movies. :)
+
+Daire (Head of Systems DNEG)
