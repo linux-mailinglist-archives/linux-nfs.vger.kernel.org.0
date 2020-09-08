@@ -2,202 +2,283 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 679A1261077
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Sep 2020 13:08:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52A4726148A
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Sep 2020 18:25:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgIHLIH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Sep 2020 07:08:07 -0400
-Received: from natter.dneg.com ([193.203.89.68]:35976 "EHLO natter.dneg.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729799AbgIHLGu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:06:50 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by natter.dneg.com (Postfix) with ESMTP id 38ACB1DB1282;
-        Tue,  8 Sep 2020 12:06:45 +0100 (BST)
-X-Virus-Scanned: amavisd-new at mx-dneg
-Received: from natter.dneg.com ([127.0.0.1])
-        by localhost (natter.dneg.com [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id g2eLEF3P0BXr; Tue,  8 Sep 2020 12:06:45 +0100 (BST)
-Received: from zrozimbrai.dneg.com (zrozimbrai.dneg.com [10.11.20.12])
-        by natter.dneg.com (Postfix) with ESMTPS id 05B239C88F3;
-        Tue,  8 Sep 2020 12:06:45 +0100 (BST)
-Received: from localhost (localhost [127.0.0.1])
-        by zrozimbrai.dneg.com (Postfix) with ESMTP id 41AD881475E6;
-        Tue,  8 Sep 2020 12:06:44 +0100 (BST)
-Received: from zrozimbrai.dneg.com ([127.0.0.1])
-        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id yhNO6k2_G9XV; Tue,  8 Sep 2020 12:06:44 +0100 (BST)
-Received: from localhost (localhost [127.0.0.1])
-        by zrozimbrai.dneg.com (Postfix) with ESMTP id 249968146AFC;
-        Tue,  8 Sep 2020 12:06:44 +0100 (BST)
-X-Virus-Scanned: amavisd-new at zimbra-dneg
-Received: from zrozimbrai.dneg.com ([127.0.0.1])
-        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Fe0ZnO9CPmRQ; Tue,  8 Sep 2020 12:06:44 +0100 (BST)
-Received: from zrozimbra1.dneg.com (zrozimbra1.dneg.com [10.11.16.16])
-        by zrozimbrai.dneg.com (Postfix) with ESMTP id 0CE2281475E6;
-        Tue,  8 Sep 2020 12:06:44 +0100 (BST)
-Date:   Tue, 8 Sep 2020 12:06:44 +0100 (BST)
-From:   Daire Byrne <daire@dneg.com>
-To:     "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
-        linux-cachefs <linux-cachefs@redhat.com>
-Message-ID: <767326930.31952012.1599563204539.JavaMail.zimbra@dneg.com>
-In-Reply-To: <1642729052.4237865.1599558047149.JavaMail.zimbra@desy.de>
-References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com> <1642729052.4237865.1599558047149.JavaMail.zimbra@desy.de>
-Subject: Re: Adventures in NFS re-exporting
+        id S1731936AbgIHQZm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Sep 2020 12:25:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731429AbgIHQZQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Sep 2020 12:25:16 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E159BC061573
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Sep 2020 09:25:15 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id l4so15987282ilq.2
+        for <linux-nfs@vger.kernel.org>; Tue, 08 Sep 2020 09:25:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9eqY2VgLNiH4Wvt02/zDamwhTEN0QgqZSAfqhEkVnDg=;
+        b=tB1h238PAv+ZVO59RHkHB5OqbA7LiJq6rxsFCkZsxJgbODZqWIsoOgtQKzq7nP2Zk4
+         bp5EEy4hjnsD/NuEZK4FI3JbR78nUilOBW1bBR8ZwR0NgBcHjFxLPDplySRZdhJdX1T7
+         0yUjsrtoCpB+k5h9ZSk5Z44PreVSPOuR9o4SV3+amZ9o6b2GtRMiFPIbjppGf2MPp8MZ
+         ozJ425pb7VZCqN0b6TQhNntuhFsBG1xSDN1eeBDZb7EFy+w9I9+nReswh3bsOlHBd3cx
+         JyCEqFZ+FapjKFjO5ytMGVakxAX23EAz1z9Ti5empI+OjieojlalYMTY+XamyzbZNWvG
+         ct3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=9eqY2VgLNiH4Wvt02/zDamwhTEN0QgqZSAfqhEkVnDg=;
+        b=gmGBxfA32AlbYll3N9vuf1hUGm0UiKXU0/dRQ93+s9a8rUiXMXFX0HXH/p5lfaDj0e
+         q1Zzlu95XJ5WsipSktK9BagptwniuPUyLEbDT24T6N6/b5DyN4uj2IIL4MMUzNG2Eukt
+         8P9D+2rCMKEtCO7Z8SRZoWLHqZL7TqLaO7z69TQ8KJK6UQyQ8gUmgvOx/pqe+oyf5m6o
+         rZcWyEEflbngH8Tqx0G3zgLoZmbMaf9AC1/Mv11onhhQ86o0/z6IpG2SPv6LdHn+g/uO
+         zxfkIzUNhDjT/YxiBOLEy6nVLpgtZmyvd14sxn7kwrrFRynqLxQkBB1jMLpmGJMotUFO
+         lsWg==
+X-Gm-Message-State: AOAM531eNzWmF5SDhrysOrHl0YcQ8mLWLQPUlKv1jvk0RM/pacEHeXSF
+        l8cu5T9Oy7unRoMcidg0lHasWIOk7RM=
+X-Google-Smtp-Source: ABdhPJzsnMoZzll9vpjEKBfCzYKlbXLlC4P1JXVUQww2kvVrPdtMhONSI4E1L6rS+7LbxXzJX+3QVQ==
+X-Received: by 2002:a92:9f53:: with SMTP id u80mr24015569ili.42.1599582314526;
+        Tue, 08 Sep 2020 09:25:14 -0700 (PDT)
+Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
+        by smtp.gmail.com with ESMTPSA id 2sm10291375ilj.24.2020.09.08.09.25.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 09:25:13 -0700 (PDT)
+From:   schumaker.anna@gmail.com
+X-Google-Original-From: Anna.Schumaker@Netapp.com
+To:     linux-nfs@vger.kernel.org
+Cc:     Anna.Schumaker@Netapp.com
+Subject: [PATCH v5 00/10] NFS: Add support for the v4.2 READ_PLUS operation
+Date:   Tue,  8 Sep 2020 12:25:03 -0400
+Message-Id: <20200908162513.508991-1-Anna.Schumaker@Netapp.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.7.11_GA_1854 (ZimbraWebClient - GC78 (Linux)/8.7.11_GA_1854)
-Thread-Topic: Adventures in NFS re-exporting
-Thread-Index: fNDm/l4o9cYx5Rz5g0S1EO4zMAtIR5PHKb0Pjd1zDnQ=
+Content-Transfer-Encoding: 8bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Tigran,
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-I guess I never really considered overlayfs because we still want to seamlessly write through to the original servers from time to time and post processing the copies from upper to lower seems like it might be hard to make reliable or do with low latency? I would also worry that our lower filesystem is being actively updated by processes outside of the overlay clients and how overlayfs would deal with that. And ultimately, the COW nature of overlayfs is a somewhat wasted feature for our workloads whereby it's the caching of file reads (and metadata) we care most about.
+These patches add client support for the READ_PLUS operation, which
+breaks read requests into several "data" and "hole" segments when
+replying to the client.
 
-I must confess to not having looked at overlayfs in a few years so there may be lots of new tricks and options that would help our case. I'm aware that it gained the ability to NFS (re-)export a couple of years back.
+- Changes since v4i:
+  - Fixups for the xattr patches
+  - Update to v5.9-rc4
 
-But I'm certainly now interested to know if that NFS re-export implementation fares any better with the issues I experience with a direct knfsd re-export of an NFS client. So I will do some testing with overlayfs and see how it stacks up (see what I did there?).
+Here are the results of some performance tests I ran on some lab
+machines. I tested by reading various 2G files from a few different underlying
+filesystems and across several NFS versions. I used the `vmtouch` utility
+to make sure files were only cached when we wanted them to be. In addition
+to 100% data and 100% hole cases, I also tested with files that alternate
+between data and hole segments. These files have either 4K, 8K, 16K, or 32K
+segment sizes and start with either data or hole segments. So the file
+mixed-4d has a 4K segment size beginning with a data segment, but mixed-32h
+has 32K segments beginning with a hole. The units are in seconds, with the
+first number for each NFS version being the uncached read time and the second
+number is for when the file is cached on the server.
 
-Thanks for the suggestion!
+I added some extra data collection (client cpu percentage and sys time),
+but the extra data means I couldn't figure out a way to break this down
+into a concise table. I cut out v3 and v4.0 performance numbers to get
+the size down, but I kept v4.1 for comparison because it uses the same
+code that v4.2 without read plus uses.
 
-Daire
 
------ On 8 Sep, 2020, at 10:40, Mkrtchyan, Tigran tigran.mkrtchyan@desy.de wrote:
+Read Plus Results (ext4):
+  data
+   :... v4.1 ... Uncached ... 20.540 s, 105 MB/s, 0.65 s kern, 3% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 20.605 s, 104 MB/s, 0.65 s kern, 3% cpu
+        :....... Cached ..... 18.253 s, 118 MB/s, 0.67 s kern, 3% cpu
+  hole
+   :... v4.1 ... Uncached ... 18.255 s, 118 MB/s, 0.72 s kern,  3% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern,  3% cpu
+   :... v4.2 ... Uncached ...  0.847 s, 2.5 GB/s, 0.73 s kern, 86% cpu
+        :....... Cached .....  0.845 s, 2.5 GB/s, 0.72 s kern, 85% cpu
+  mixed-4d
+   :... v4.1 ... Uncached ... 54.691 s,  39 MB/s, 0.75 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 51.587 s,  42 MB/s, 0.75 s kern, 1% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.67 s kern, 7% cpu
+  mixed-8d
+   :... v4.1 ... Uncached ... 37.072 s,  58 MB/s, 0.67 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 33.259 s,  65 MB/s, 0.68 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.67 s kern, 7% cpu
+  mixed-16d
+   :... v4.1 ... Uncached ... 27.138 s,  79 MB/s, 0.73 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 23.042 s,  93 MB/s, 0.73 s kern, 3% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.66 s kern, 7% cpu
+  mixed-32d
+   :... v4.1 ... Uncached ... 25.326 s,  85 MB/s, 0.68 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 21.125 s, 102 MB/s, 0.69 s kern, 3% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.67 s kern, 7% cpu
+  mixed-4h
+   :... v4.1 ... Uncached ... 58.317 s,  37 MB/s, 0.75 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 51.878 s,  41 MB/s, 0.74 s kern, 1% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.68 s kern, 7% cpu
+  mixed-8h
+   :... v4.1 ... Uncached ... 36.855 s,  58 MB/s, 0.68 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 29.457 s,  73 MB/s, 0.68 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.67 s kern, 7% cpu
+  mixed-16h
+   :... v4.1 ... Uncached ... 26.460 s,  81 MB/s, 0.74 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 19.587 s, 110 MB/s, 0.74 s kern, 3% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.67 s kern, 7% cpu
+  mixed-32h
+   :... v4.1 ... Uncached ... 25.495 s,  84 MB/s, 0.69 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.65 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 17.634 s, 122 MB/s, 0.69 s kern, 3% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.68 s kern, 7% cpu
 
-> Just out of curiosity:
-> 
-> did you have tries instead of re-exporting nfs mount directly
-> re-export an overlayfs mount on top of the original nfs mount?
-> Such setup should cover most of your issues.
-> 
-> Regards,
->   Tigran.
-> 
-> ----- Original Message -----
->> From: "Daire Byrne" <daire@dneg.com>
->> To: "linux-nfs" <linux-nfs@vger.kernel.org>
->> Cc: linux-cachefs@redhat.com
->> Sent: Monday, September 7, 2020 7:31:00 PM
->> Subject: Adventures in NFS re-exporting
-> 
->> Hi,
->> 
->> Apologies for this rather long email, but I thought there may be some interest
->> out there in the community in how and why we've been doing something
->> unsupported and barely documented - NFS re-exporting! And I'm not sure I can
->> tell our story well in just a few short sentences so please bear with me (or
->> stop now!).
->> 
->> Full disclosure - I am also rather hoping that this story piques some interest
->> amongst developers to help make our rather niche setup even better and perhaps
->> a little better documented. I also totally understand if this is something
->> people wouldn't want to touch with a very long barge pole....
->> 
->> First a quick bit of history (I hope I have this right). Late in 2015, Jeff
->> Layton proposed a patch series allowing knfsd to re-export a NFS client mount.
->> The rationale then was to provide a "proxy" server that could mount an NFSv4
->> only server and re-export it to older clients that only supported NFSv3. One of
->> the main sticking points then (as now), was around the 63 byte limit of
->> filehandles for NFSv3 and how it couldn't be guaranteed that all re-exported
->> filehandles would fit within that (in my experience it mostly works with
->> "no_subtree_check"). There are also the usual locking and coherence concerns
->> with NFSv3 too but I'll get to that in a bit.
->> 
->> Then almost two years later, v4.13 was released including parts of the patch
->> series that actually allowed the re-export and since then other relevant bits
->> (such as the open file cache) have also been merged. I soon became interested
->> in using this new functionality to both accelerate our on-premises NFS storage
->> and use it as a "WAN cache" to provide cloud compute instances locally cached
->> proxy access to our on-premises storage.
->> 
->> Cut to a brief introduction to us and what we do... DNEG is an award winning VFX
->> company which uses large compute farms to generate complex final frame renders
->> for movies and TV. This workload mostly consists of reads of common data shared
->> between many render clients (e.g textures, geometry) and a little unique data
->> per frame. All file writes are to unique files per process (frames) and there
->> is very little if any writing over existing files. Hence it's not very
->> demanding on locking and coherence guarantees.
->> 
->> When our on-premises NFS storage is being overloaded or the server's network is
->> maxed out, we can place multiple re-export servers in between them and our farm
->> to improve performance. When our on-premises render farm is not quite big
->> enough to meet a deadline, we spin up compute instances with a (reasonably
->> local) cloud provider. Some of these cloud instances are Linux NFS servers
->> which mount our on-premises NFS storage servers (~10ms away) and re-export
->> these to the other cloud (render) instances. Since we know that the data we are
->> reading doesn't change often, we can increase the actimeo and even use nocto to
->> reduce the network chatter back to the on-prem servers. These re-export servers
->> also use fscache/cachefiles to cache data to disk so that we can retain TBs of
->> previously read data locally in the cloud over long periods of time. We also
->> use NFSv4 (less network chatter) all the way from our on-prem storage to the
->> re-export server and then on to the clients.
->> 
->> The re-export server(s) quickly builds up both a memory cache and disk backed
->> fscache/cachefiles storage cache of our working data set so the data being
->> pulled from on-prem lessens over time. Data is only ever read once over the WAN
->> network from on-prem storage and then read multiple times by the many render
->> client instances in the cloud. Recent NFS features such as "nconnect" help to
->> speed up the initial reading of data from on-prem by using multiple connections
->> to offset TCP latency. At the end of the render, we write the files back
->> through the re-export server to our on-prem storage. Our average read bandwidth
->> is many times higher than our write bandwidth.
->> 
->> Rather surprisingly, this mostly works for our particular workloads. We've
->> completed movies using this setup and saved money on commercial caching systems
->> (e.g Avere, GPFS, etc). But there are still some remaining issues with doing
->> something that is very much not widely supported (or recommended). In most
->> cases we have worked around them, but it would be great if we didn't have to so
->> others could also benefit. I will list the main problems quickly now and
->> provide more information and reproducers later if anyone is interested.
->> 
->> 1) The kernel can drop entries out of the NFS client inode cache (under memory
->> cache churn) when those filehandles are still being used by the knfsd's remote
->> clients resulting in sporadic and random stale filehandles. This seems to be
->> mostly for directories from what I've seen. Does the NFS client not know that
->> knfsd is still using those files/dirs? The workaround is to never drop inode &
->> dentry caches on the re-export servers (vfs_cache_pressure=1). This also helps
->> to ensure that we actually make the most of our actimeo=3600,nocto mount
->> options for the full specified time.
->> 
->> 2) If we cache metadata on the re-export server using actimeo=3600,nocto we can
->> cut the network packets back to the origin server to zero for repeated lookups.
->> However, if a client of the re-export server walks paths and memory maps those
->> files (i.e. loading an application), the re-export server starts issuing
->> unexpected calls back to the origin server again, ignoring/invalidating the
->> re-export server's NFS client cache. We worked around this this by patching an
->> inode/iversion validity check in inode.c so that the NFS client cache on the
->> re-export server is used. I'm not sure about the correctness of this patch but
->> it works for our corner case.
->> 
->> 3) If we saturate an NFS client's network with reads from the server, all client
->> metadata lookups become unbearably slow even if it's all cached in the NFS
->> client's memory and no network RPCs should be required. This is the case for
->> any NFS client regardless of re-exporting but it affects this case more because
->> when we can't serve cached metadata we also can't serve the cached data. It
->> feels like some sort of bottleneck in the client's ability to parallelise
->> requests? We work around this by not maxing out our network.
->> 
->> 4) With an NFSv4 re-export, lots of open/close requests (hundreds per second)
->> quickly eat up the CPU on the re-export server and perf top shows we are mostly
->> in native_queued_spin_lock_slowpath. Does NFSv4 also need an open file cache
->> like that added to NFSv3? Our workaround is to either fix the thing doing lots
->> of repeated open/closes or use NFSv3 instead.
->> 
->> If you made it this far, I've probably taken up way too much of your valuable
->> time already. If nobody is interested in this rather niche application of the
->> Linux client & knfsd, then I totally understand and I will not mention it here
->> again. If your interest is piqued however, I'm happy to go into more detail
->> about any of this with the hope that this could become a better documented and
->> understood type of setup that others with similar workloads could reference.
->> 
->> Also, many thanks to all the Linux NFS developers for the amazing work you do
->> which, in turn, helps us to make great movies. :)
->> 
-> > Daire (Head of Systems DNEG)
+
+
+Read Plus Results (xfs):
+  data
+   :... v4.1 ... Uncached ... 20.230 s, 106 MB/s, 0.65 s kern, 3% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.68 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 20.724 s, 104 MB/s, 0.65 s kern, 3% cpu
+        :....... Cached ..... 18.253 s, 118 MB/s, 0.67 s kern, 3% cpu
+  hole
+   :... v4.1 ... Uncached ... 18.255 s, 118 MB/s, 0.68 s kern,  3% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.69 s kern,  3% cpu
+   :... v4.2 ... Uncached ...  0.904 s, 2.4 GB/s, 0.72 s kern, 79% cpu
+        :....... Cached .....  0.908 s, 2.4 GB/s, 0.73 s kern, 80% cpu
+  mixed-4d
+   :... v4.1 ... Uncached ... 57.553 s,  37 MB/s, 0.77 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 37.162 s,  58 MB/s, 0.73 s kern, 1% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.67 s kern, 7% cpu
+  mixed-8d
+   :... v4.1 ... Uncached ... 36.754 s,  58 MB/s, 0.69 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.68 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 24.454 s,  88 MB/s, 0.69 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.66 s kern, 7% cpu
+  mixed-16d
+   :... v4.1 ... Uncached ... 27.156 s,  79 MB/s, 0.73 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 22.934 s,  94 MB/s, 0.72 s kern, 3% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.68 s kern, 7% cpu
+  mixed-32d
+   :... v4.1 ... Uncached ... 27.849 s,  77 MB/s, 0.68 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 23.670 s,  91 MB/s, 0.67 s kern, 2% cpu
+        :....... Cached .....  9.139 s, 235 MB/s, 0.64 s kern, 7% cpu
+  mixed-4h
+   :... v4.1 ... Uncached ... 57.639 s,  37 MB/s, 0.72 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.69 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 35.503 s,  61 MB/s, 0.72 s kern, 2% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.66 s kern, 7% cpu
+  mixed-8h
+   :... v4.1 ... Uncached ... 37.044 s,  58 MB/s, 0.71 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.68 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 23.779 s,  90 MB/s, 0.69 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.65 s kern, 7% cpu
+  mixed-16h
+   :... v4.1 ... Uncached ... 27.167 s,  79 MB/s, 0.73 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.67 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 19.088 s, 113 MB/s, 0.75 s kern, 3% cpu
+        :....... Cached .....  9.159 s, 234 MB/s, 0.66 s kern, 7% cpu
+  mixed-32h
+   :... v4.1 ... Uncached ... 27.592 s,  78 MB/s, 0.71 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.68 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 19.682 s, 109 MB/s, 0.67 s kern, 3% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.67 s kern, 7% cpu
+
+
+
+Read Plus Results (btrfs):
+  data
+   :... v4.1 ... Uncached ... 21.317 s, 101 MB/s, 0.63 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.67 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 28.665 s,  75 MB/s, 0.65 s kern, 2% cpu
+        :....... Cached ..... 18.253 s, 118 MB/s, 0.66 s kern, 3% cpu
+  hole
+   :... v4.1 ... Uncached ... 18.256 s, 118 MB/s, 0.70 s kern,  3% cpu
+   :    :....... Cached ..... 18.254 s, 118 MB/s, 0.73 s kern,  4% cpu
+   :... v4.2 ... Uncached ...  0.851 s, 2.5 GB/s, 0.72 s kern, 84% cpu
+        :....... Cached .....  0.847 s, 2.5 GB/s, 0.73 s kern, 86% cpu
+  mixed-4d
+   :... v4.1 ... Uncached ... 56.857 s,  38 MB/s, 0.76 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 54.455 s,  39 MB/s, 0.73 s kern, 1% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.68 s kern, 7% cpu
+  mixed-8d
+   :... v4.1 ... Uncached ... 36.641 s,  59 MB/s, 0.68 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 33.205 s,  65 MB/s, 0.67 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.65 s kern, 7% cpu
+  mixed-16d
+   :... v4.1 ... Uncached ... 28.653 s,  75 MB/s, 0.72 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 25.748 s,  83 MB/s, 0.71 s kern, 2% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.64 s kern, 7% cpu
+  mixed-32d
+   :... v4.1 ... Uncached ... 28.886 s,  74 MB/s, 0.67 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 24.724 s,  87 MB/s, 0.74 s kern, 2% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.63 s kern, 6% cpu
+  mixed-4h
+   :... v4.1 ... Uncached ...  52.181 s,  41 MB/s, 0.73 s kern, 1% cpu
+   :    :....... Cached .....  18.252 s, 118 MB/s, 0.66 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 150.341 s,  14 MB/s, 0.72 s kern, 0% cpu
+        :....... Cached .....   9.216 s, 233 MB/s, 0.63 s kern, 6% cpu
+  mixed-8h
+   :... v4.1 ... Uncached ... 36.945 s,  58 MB/s, 0.68 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.65 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 79.781 s,  27 MB/s, 0.68 s kern, 0% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.66 s kern, 7% cpu
+  mixed-16h
+   :... v4.1 ... Uncached ... 28.651 s,  75 MB/s, 0.73 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.66 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 47.428 s,  45 MB/s, 0.71 s kern, 1% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.67 s kern, 7% cpu
+  mixed-32h
+   :... v4.1 ... Uncached ... 28.618 s,  75 MB/s, 0.69 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 38.813 s,  55 MB/s, 0.67 s kern, 1% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.61 s kern, 6% cpu
+
+
+
+Thoughts?
+Anna
+
+
+Anna Schumaker (10):
+  SUNRPC: Split out a function for setting current page
+  SUNRPC: Implement a xdr_page_pos() function
+  NFS: Use xdr_page_pos() in NFSv4 decode_getacl()
+  NFS: Add READ_PLUS data segment support
+  SUNRPC: Split out xdr_realign_pages() from xdr_align_pages()
+  SUNRPC: Split out _shift_data_right_tail()
+  SUNRPC: Add the ability to expand holes in data pages
+  NFS: Add READ_PLUS hole segment decoding
+  SUNRPC: Add an xdr_align_data() function
+  NFS: Decode a full READ_PLUS reply
+
+ fs/nfs/nfs42xdr.c          | 167 ++++++++++++++++++++
+ fs/nfs/nfs4proc.c          |  43 +++++-
+ fs/nfs/nfs4xdr.c           |   7 +-
+ include/linux/nfs4.h       |   2 +-
+ include/linux/nfs_fs_sb.h  |   1 +
+ include/linux/nfs_xdr.h    |   2 +-
+ include/linux/sunrpc/xdr.h |   3 +
+ net/sunrpc/xdr.c           | 309 ++++++++++++++++++++++++++++++++-----
+ 8 files changed, 486 insertions(+), 48 deletions(-)
+
+-- 
+2.28.0
+
