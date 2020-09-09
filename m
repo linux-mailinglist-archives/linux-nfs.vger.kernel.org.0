@@ -2,104 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E86B2637D2
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Sep 2020 22:50:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25014263801
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Sep 2020 22:56:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgIIUuW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Sep 2020 16:50:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgIIUuV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Sep 2020 16:50:21 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E9E2C061573
-        for <linux-nfs@vger.kernel.org>; Wed,  9 Sep 2020 13:50:21 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 4A4DFAB6; Wed,  9 Sep 2020 16:50:20 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 4A4DFAB6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1599684620;
-        bh=2ix9RkHtZ/mniV9tR4ZtFJYe5pudgL3JZFVw0YB81N4=;
+        id S1729692AbgIIU4F (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Sep 2020 16:56:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726534AbgIIU4E (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 9 Sep 2020 16:56:04 -0400
+Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2AC920BED;
+        Wed,  9 Sep 2020 20:56:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599684963;
+        bh=HOi/gRnNWCADuH3C2tuPouagH6ACKRSW8Me9mQGESc8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YlEKOQY0fYkNMUKSGAmNwtZN7rscNgDefhOWAZn2x7+UOhMhxIFAuHmlXzktgtBLi
-         cG0eBmY4c8CtK2Oc8vMBz3I1PY5Ll+pJsHTv5xD/fx/Bq0OMWCJ1Su6sUP+DRFCpc1
-         McoRXpIzdkEigh5MXVSRqugwkuhrFgczaL6/G+oE=
-Date:   Wed, 9 Sep 2020 16:50:20 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Anna Schumaker <schumaker.anna@gmail.com>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v5 2/5] NFSD: Add READ_PLUS data support
-Message-ID: <20200909205020.GE3894@fieldses.org>
-References: <20200908162559.509113-1-Anna.Schumaker@Netapp.com>
- <20200908162559.509113-3-Anna.Schumaker@Netapp.com>
- <20200908194245.GB6256@pick.fieldses.org>
- <CAFX2Jfkt0Qv1oO6iEr21N3zjkvE7VyKQQ47g2vQ4PHV6xmgrSg@mail.gmail.com>
- <20200909202534.GC3894@fieldses.org>
+        b=MIR0n2v6jYMLvL9ylCeswSmSkNjM38pD+hUWnq3QNBxdxavUAFW1nFlTLHe2pybfD
+         odrRmpSK6VaBtY4y/JW5mI6voxGDP7xP7wyaKsNWcxcK7TIQVymwmw1HPj8MEaIJrr
+         wYpwdfF4aTXncxhcjdHkCnRIxxiQ6/mo+8A6FHH4=
+Date:   Wed, 9 Sep 2020 13:55:58 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jiri Kosina <trivial@kernel.org>,
+        Kees Cook <kees.cook@canonical.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, linux-input@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-rdma@vger.kernel.org,
+        iommu@lists.linux-foundation.org, dm-devel@redhat.com,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
+        oss-drivers@netronome.com, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        storagedev@microchip.com, sparclinux@vger.kernel.org,
+        linux-serial@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-parisc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, bpf@vger.kernel.org,
+        dccp@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, linux-sctp@vger.kernel.org,
+        alsa-devel <alsa-devel@alsa-project.org>
+Subject: Re: [trivial PATCH] treewide: Convert switch/case fallthrough; to
+ break;
+Message-ID: <20200909205558.GA3384631@dhcp-10-100-145-180.wdl.wdc.com>
+References: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200909202534.GC3894@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 04:25:34PM -0400, bfields wrote:
-> On Wed, Sep 09, 2020 at 12:53:18PM -0400, Anna Schumaker wrote:
-> > On Tue, Sep 8, 2020 at 3:42 PM J. Bruce Fields <bfields@redhat.com> wrote:
-> > >
-> > > On Tue, Sep 08, 2020 at 12:25:56PM -0400, schumaker.anna@gmail.com wrote:
-> > > > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > > >
-> > > > This patch adds READ_PLUS support for returning a single
-> > > > NFS4_CONTENT_DATA segment to the client. This is basically the same as
-> > > > the READ operation, only with the extra information about data segments.
-> > > >
-> > > > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > > >
-> > > > ---
-> > > > v5: Fix up nfsd4_read_plus_rsize() calculation
-> > > > ---
-> > > >  fs/nfsd/nfs4proc.c | 20 +++++++++++
-> > > >  fs/nfsd/nfs4xdr.c  | 83 ++++++++++++++++++++++++++++++++++++++++++++--
-> > > >  2 files changed, 101 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > > > index eaf50eafa935..0a3df5f10501 100644
-> > > > --- a/fs/nfsd/nfs4proc.c
-> > > > +++ b/fs/nfsd/nfs4proc.c
-> > > > @@ -2591,6 +2591,19 @@ static inline u32 nfsd4_read_rsize(struct svc_rqst *rqstp, struct nfsd4_op *op)
-> > > >       return (op_encode_hdr_size + 2 + XDR_QUADLEN(rlen)) * sizeof(__be32);
-> > > >  }
-> > > >
-> > > > +static inline u32 nfsd4_read_plus_rsize(struct svc_rqst *rqstp, struct nfsd4_op *op)
-> > > > +{
-> > > > +     u32 maxcount = svc_max_payload(rqstp);
-> > > > +     u32 rlen = min(op->u.read.rd_length, maxcount);
-> > > > +     /*
-> > > > +      * Worst case is a single large data segment, so make
-> > > > +      * sure we have enough room to encode that
-> > > > +      */
-> > >
-> > > After the last patch we allow an unlimited number of segments.  So a
-> > > zillion 1-byte segments is also possible, and is a worse case.
-> > >
-> > > Possible ways to avoid that kind of thing:
-> > >
-> > >         - when encoding, stop and return a short read if the xdr-encoded
-> > >           result would exceed the limit calculated here.
-> > 
-> > Doesn't this happen automatically through calls to xdr_reserve_space()?
-> 
-> No, xdr_reserve_space() will keep us from running out of buffer
-> completely, but it won't check that ops come in under the estimates made
-> in read_plus_rsize().
+On Wed, Sep 09, 2020 at 01:06:39PM -0700, Joe Perches wrote:
+> diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
+> index eea0f453cfb6..8aac5bc60f4c 100644
+> --- a/crypto/tcrypt.c
+> +++ b/crypto/tcrypt.c
+> @@ -2464,7 +2464,7 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
+>  		test_hash_speed("streebog512", sec,
+>  				generic_hash_speed_template);
+>  		if (mode > 300 && mode < 400) break;
+> -		fallthrough;
+> +		break;
+>  	case 399:
+>  		break;
 
-If it's easier, another option might be just: if we ever get a "small"
-hole (say, less than 512 bytes), just give up and encode the rest of the
-result as a single big data segment.
-
---b.
+Just imho, this change makes the preceding 'if' look even more
+pointless. Maybe the fallthrough was a deliberate choice? Not that my
+opinion matters here as I don't know this module, but it looked a bit
+odd to me.
