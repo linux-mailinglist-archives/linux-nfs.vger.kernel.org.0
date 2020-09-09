@@ -2,159 +2,245 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E94DB263289
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Sep 2020 18:45:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFDFD2632D4
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Sep 2020 18:52:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730446AbgIIQpt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Sep 2020 12:45:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53990 "EHLO
+        id S1731155AbgIIQwJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Sep 2020 12:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730435AbgIIQMj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Sep 2020 12:12:39 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 681CAC061343
-        for <linux-nfs@vger.kernel.org>; Wed,  9 Sep 2020 06:47:35 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id CC49A648C; Wed,  9 Sep 2020 09:47:27 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CC49A648C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1599659247;
-        bh=ePN74+LcWaPXJfFtcN/i2VJ2z16oL1HQ4dydA/f92eE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HI2bpG8kW/7EVAWW5ZbTUia/bVrOazlT95pFFtPCt9+lVNyWfGQtR22gs8djQZ9YV
-         phh4XXtOriXEWwqL9WxDTV6hJH9+N8bKVbAltgSxLLuNHCtpqTQHt9eJhjih14ou97
-         heQi0xQe7dil+IijIQRQpF3fTMY28nBA/FBtXGbY=
-Date:   Wed, 9 Sep 2020 09:47:27 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Alberto Gonzalez Iniesta <alberto.gonzalez@udima.es>
-Cc:     linux-nfs@vger.kernel.org,
-        Miguel Rodriguez <miguel.rodriguez@udima.es>,
-        Isaac Marco Blancas <isaac.marco@udima.es>
-Subject: Re: Random IO errors on nfs clients running linux > 4.20
-Message-ID: <20200909134727.GA3894@fieldses.org>
-References: <20200429171527.GG2531021@var.inittab.org>
- <20200430173200.GE29491@fieldses.org>
- <20200909092900.GO189595@var.inittab.org>
+        with ESMTP id S1730734AbgIIQv5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Sep 2020 12:51:57 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 972EDC061573
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Sep 2020 09:51:55 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id g4so3409448edk.0
+        for <linux-nfs@vger.kernel.org>; Wed, 09 Sep 2020 09:51:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zvOo3oJFcVpJ9ipZjz6SsRrAD9j++6JYFmORTmpel5Y=;
+        b=bq07DMdIjaSLItqc/q5U/0ua0d0PnbUuctFvqXVFDJOnicjCywkrWeHCCHKZq0v5A5
+         0wKWiCKjgum6ivBLmXF1t91iC610x+4+gb3cOcnidE0bgJo5/EKm6M5HudviEjKcU0m2
+         yhgO5Hoc4DQdDx7zsd8wSJ7b5UkGFuAl2WhEzzz1TgWYmUv6ZpSQf8dZUbA+Sa6lKoJN
+         whfDf0W45gcSjiCtlcn8DfPX+HNeQJher7CtpZWc9iiqC5LLCbRNH6ZtNDsmlY8wenVx
+         JuxGts+0B/0/0/MMkuJR5ya1X3fyS7V/DrNCAMgrkqv+qpyqBqiNVhcCIDhZcb1+0Yne
+         PBSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zvOo3oJFcVpJ9ipZjz6SsRrAD9j++6JYFmORTmpel5Y=;
+        b=OlYGo9EY2U6NrX1FyRnll02J2GfwjWYiPpyChc0O8RYaraub70AcNtRIhFs7q7IQFJ
+         m7ZJCBwwxuVE3CTt3KRr0WLkJFXmXG7yzG3dql3Yper1EVlaQ/nDqXEvjX4oXpn/79mL
+         3wReFiTBqTT0AYY/8slYlZ9cmlMQDiYRB1nd5dCJnS4j7168/iKO9nToW2yUYcFm4Xt2
+         4ZdKvm9Z1Jbp9rXKf2yGK3O7ywoPIwM9xPEYOAFPmAoe7yZFEA0zg/xeCEOkl3sF3ODv
+         45Me5LH/u2qvtKpvudlEdGVgSrdI3+ApE9rZqocBBniACRtYcYcm63AlGYliMzecdae7
+         0hqw==
+X-Gm-Message-State: AOAM5338BLC7BEElz+hmfbKdzP3d+11X54lRus6DRhIsdZ1JhBh2vocF
+        v7LoUCx2yLw74DSiZfOyG58riSyMVNHyuLUuerrx6L1V
+X-Google-Smtp-Source: ABdhPJx6D7dT9ZlEJ3PxwDwpiEUbEZXDuXFcYy1SbJQp+pPdoCyxAj1XiqRKzrdUtjMMx1143Gi/9EIOaE3ACk2Aef0=
+X-Received: by 2002:a05:6402:6d3:: with SMTP id n19mr4917771edy.381.1599670314182;
+ Wed, 09 Sep 2020 09:51:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200909092900.GO189595@var.inittab.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20200908162559.509113-1-Anna.Schumaker@Netapp.com>
+ <20200908162559.509113-5-Anna.Schumaker@Netapp.com> <20200908194944.GC6256@pick.fieldses.org>
+In-Reply-To: <20200908194944.GC6256@pick.fieldses.org>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Wed, 9 Sep 2020 12:51:38 -0400
+Message-ID: <CAFX2Jfn7Fb=e2Sigf0xEZ4tw5h0KMnyOQWi5MCvdfq+GFXj+-A@mail.gmail.com>
+Subject: Re: [PATCH v5 4/5] NFSD: Return both a hole and a data segment
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 11:29:00AM +0200, Alberto Gonzalez Iniesta wrote:
-> On Thu, Apr 30, 2020 at 01:32:00PM -0400, J. Bruce Fields wrote:
-> > On Wed, Apr 29, 2020 at 07:15:27PM +0200, Alberto Gonzalez Iniesta wrote:
-> > > I'm sorry for reporting this (a little bit) late, but it took us (Miguel
-> > > in Cc:) some time to track this issue to an exact kernel update.
-> > > 
-> > > We're running a +200 clients NFS server with Ubuntu 16.04 and 18.04
-> > > clients. The server runs Debian 8.11 (jessie) with Linux 3.16.0 and
-> > > nfs-kernel-server 1:1.2.8-9+deb8u1. It has been working some years now
-> > > without issues.
-> > > 
-> > > But since we started moving clients from Ubuntu 16.04 to Ubuntu 18.04
-> > > some of them started experiencing failures while working on NFS mounts.
-> > > The failures are arbitrary and sometimes it may take more than 20 minutes
-> > > to come out (which made finding out which kernel version introduced
-> > > this a pain). We are almost sure that some directories are more prone to
-> > > suffer from this than others (maybe related to path length/chars?).
-> > > 
-> > > The error is also not very "verbose", from an strace:
-> > > 
-> > > execve("/bin/ls", ["ls", "-lR", "Becas y ayudas/"], 0x7ffccb7f5b20 /* 16 vars */) = 0
-> > > [lots of uninteresting output]
-> > > openat(AT_FDCWD, "Becas y ayudas/", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3
-> > > fstat(3, {st_mode=S_IFDIR|0775, st_size=4096, ...}) = 0
-> > > fstat(3, {st_mode=S_IFDIR|0775, st_size=4096, ...}) = 0
-> > > fstat(1, {st_mode=S_IFCHR|0666, st_rdev=makedev(1, 3), ...}) = 0
-> > > ioctl(1, TCGETS, 0x7ffd8b725c80)        = -1 ENOTTY (Inappropriate ioctl for device)
-> > > getdents(3, /* 35 entries */, 32768)    = 1936
-> > > [lots of lstats)
-> > > lstat("Becas y ayudas/Convocatorias", {st_mode=S_IFDIR|0775, st_size=4096, ...}) = 0
-> > > getdents(3, 0x561af78de890, 32768)      = -1 EIO (Input/output error)
-> > 
-> > Ideas off the top of my head....
-> > 
-> > It'd be really useful to get a network trace--something like tcpdump -s0
-> > -wtmp.pcap -i<interface>, then reproduce the problem, then look through
-> > it to see if you can find the READDIR or STAT or whatever that results
-> > in the unexpected EIO.  But if takes a while to reproduce, that may be
-> > difficult.
-> > 
-> > Is there anything in the logs?
-> > 
-> > It might be worth turning on some more debug logging--see the "rpcdebug"
-> > command.
-> 
-> Hi, Bruce et at.
-> 
-> I'm sorry this reply took so long, but with debugging enabled the error
-> was harder to reproduce.
-> 
-> I'm attaching 3 log files (2 with just "nfs" debugging and one with
-> "nfs" and "rpc" debugging modules enabled).
-> 
-> I'm also attaching a pcap file, don't know if it would be useful since
-> we run "sec=krb5p".
+On Tue, Sep 8, 2020 at 3:49 PM J. Bruce Fields <bfields@redhat.com> wrote:
+>
+> On Tue, Sep 08, 2020 at 12:25:58PM -0400, schumaker.anna@gmail.com wrote:
+> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> >
+> > But only one of each right now. We'll expand on this in the next patch.
+> >
+> > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> > ---
+> > v5: If we've already encoded a segment, then return a short read if
+> >     later segments return an error for some reason.
+> > ---
+> >  fs/nfsd/nfs4xdr.c | 54 ++++++++++++++++++++++++++++++++++-------------
+> >  1 file changed, 39 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> > index 45159bd9e9a4..856606263c1d 100644
+> > --- a/fs/nfsd/nfs4xdr.c
+> > +++ b/fs/nfsd/nfs4xdr.c
+> > @@ -4603,7 +4603,7 @@ nfsd4_encode_offload_status(struct nfsd4_compoundres *resp, __be32 nfserr,
+> >  static __be32
+> >  nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
+> >                           struct nfsd4_read *read,
+> > -                         unsigned long maxcount,  u32 *eof)
+> > +                         unsigned long *maxcount, u32 *eof)
+> >  {
+> >       struct xdr_stream *xdr = &resp->xdr;
+> >       struct file *file = read->rd_nf->nf_file;
+> > @@ -4614,19 +4614,19 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
+> >       __be64 tmp64;
+> >
+> >       if (hole_pos > read->rd_offset)
+> > -             maxcount = min_t(unsigned long, maxcount, hole_pos - read->rd_offset);
+> > +             *maxcount = min_t(unsigned long, *maxcount, hole_pos - read->rd_offset);
+> >
+> >       /* Content type, offset, byte count */
+> >       p = xdr_reserve_space(xdr, 4 + 8 + 4);
+> >       if (!p)
+> >               return nfserr_resource;
+> >
+> > -     read->rd_vlen = xdr_reserve_space_vec(xdr, resp->rqstp->rq_vec, maxcount);
+> > +     read->rd_vlen = xdr_reserve_space_vec(xdr, resp->rqstp->rq_vec, *maxcount);
+> >       if (read->rd_vlen < 0)
+> >               return nfserr_resource;
+> >
+> >       nfserr = nfsd_readv(resp->rqstp, read->rd_fhp, file, read->rd_offset,
+> > -                         resp->rqstp->rq_vec, read->rd_vlen, &maxcount, eof);
+> > +                         resp->rqstp->rq_vec, read->rd_vlen, maxcount, eof);
+> >       if (nfserr)
+> >               return nfserr;
+> >
+> > @@ -4634,7 +4634,7 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
+> >       write_bytes_to_xdr_buf(xdr->buf, starting_len,      &tmp,   4);
+> >       tmp64 = cpu_to_be64(read->rd_offset);
+> >       write_bytes_to_xdr_buf(xdr->buf, starting_len + 4,  &tmp64, 8);
+> > -     tmp = htonl(maxcount);
+> > +     tmp = htonl(*maxcount);
+> >       write_bytes_to_xdr_buf(xdr->buf, starting_len + 12, &tmp,   4);
+> >       return nfs_ok;
+> >  }
+> > @@ -4642,11 +4642,19 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
+> >  static __be32
+> >  nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp,
+> >                           struct nfsd4_read *read,
+> > -                         unsigned long maxcount, u32 *eof)
+> > +                         unsigned long *maxcount, u32 *eof)
+> >  {
+> >       struct file *file = read->rd_nf->nf_file;
+> > +     loff_t data_pos = vfs_llseek(file, read->rd_offset, SEEK_DATA);
+> > +     unsigned long count;
+> >       __be32 *p;
+> >
+> > +     if (data_pos == -ENXIO)
+> > +             data_pos = i_size_read(file_inode(file));
+> > +     else if (data_pos <= read->rd_offset)
+> > +             return nfserr_resource;
+>
+> I think there's still a race here:
+>
+>         vfs_llseek(.,0,SEEK_HOLE) returns 1024
+>         read 1024 bytes of data
+>                                         another process fills the hole
+>         vfs_llseek(.,1024,SEEK_DATA) returns 1024
+>         code above returns nfserr_resource
+>
+> We end up returning an error to the client when we should have just
+> returned more data.
 
-Yeah, not too useful.
+As long as we've encoded at least one segment successfully, we'll
+actually return a short read in this case (as of the most recent
+patches). I tried implementing a check for what each segment actually
+was before encoding, but it lead to a lot of extra lseeks (so
+potential for races / performance problems on btrfs). Returning a
+short read seemed like a better approach to me.
 
-> Let me know if there's anything else I can test/provide.
-> These tests were done with Ubuntu's 5.3.0-53-generic.
-> 
-> Thanks,
-> 
-> Alberto
-> 
-> > > (I can send you the full output if you need it)
-> > > 
-> > > We can run the previous "ls -lR" 20 times and get no error, or get
-> > > this "ls: leyendo el directorio 'Becas y ayudas/': Error de entrada/salida"
-> > > (ls: reading directorio 'Becas y ayudas/': Input/Output Error") every
-> > > now and then.
-> > > 
-> > > The error happens (obviously?) with ls, rsync and the users's GUI tools.
-> > > 
-> > > There's nothing in dmesg (or elsewhere).
-> > > These are the kernels with tried:
-> > > 4.18.0-25   -> Can't reproduce
-> > > 4.19.0      -> Can't reproduce
-> > > 4.20.17     -> Happening (hard to reproduce)
-> > > 5.0.0-15    -> Happening (hard to reproduce)
-> > > 5.3.0-45    -> Happening (more frequently)
-> > > 5.6.0-rc7   -> Reproduced a couple of times after boot, then nothing
-> > > 
-> > > We did long (as in daylong) testing trying to reproduce this with all
-> > > those kernel versions, so we are pretty sure 4.18 and 4.19 don't
-> > > experience this and our Ubuntu 16.04 clients don't have any issue.
-> > > 
-> > > I know we aren't providing much info but we are really looking forward
-> > > to doing all the testing required (we already spent lots of time in it).
-> > > 
-> > > Thanks for your work.
+Anna
 
-So all I notice from this one is the readdir EIO came from call_decode.
-I suspect that means it failed in the xdr decoding.  Looks like xdr
-decoding of the actual directory data (which is the complicated part) is
-done later, so this means it failed decoding the header or verifier,
-which is a little odd:
-
-> Sep  8 16:03:23 portatil264 kernel: [15033.016276] RPC:  3284 call_decode result -5
-> Sep  8 16:03:23 portatil264 kernel: [15033.016281] nfs41_sequence_process: Error 1 free the slot 
-> Sep  8 16:03:23 portatil264 kernel: [15033.016286] RPC:       wake_up_first(00000000d3f50f4d "ForeChannel Slot table")
-> Sep  8 16:03:23 portatil264 kernel: [15033.016288] nfs4_free_slot: slotid 0 highest_used_slotid 4294967295
-> Sep  8 16:03:23 portatil264 kernel: [15033.016290] RPC:  3284 return 0, status -5
-> Sep  8 16:03:23 portatil264 kernel: [15033.016291] RPC:  3284 release task
-> Sep  8 16:03:23 portatil264 kernel: [15033.016295] RPC:       freeing buffer of size 4144 at 00000000a3649daf
-> Sep  8 16:03:23 portatil264 kernel: [15033.016298] RPC:  3284 release request 0000000079df89b2
-> Sep  8 16:03:23 portatil264 kernel: [15033.016300] RPC:       wake_up_first(00000000c5ee49ee "xprt_backlog")
-> Sep  8 16:03:23 portatil264 kernel: [15033.016302] RPC:       rpc_release_client(00000000b930c343)
-> Sep  8 16:03:23 portatil264 kernel: [15033.016304] RPC:  3284 freeing task
-> Sep  8 16:03:23 portatil264 kernel: [15033.016309] _nfs4_proc_readdir: returns -5
-> Sep  8 16:03:23 portatil264 kernel: [15033.016318] NFS: readdir(departamentos/innovacion) returns -5
-
---b.
+>
+> --b.
+>
+> > +     count = data_pos - read->rd_offset;
+> > +
+> >       /* Content type, offset, byte count */
+> >       p = xdr_reserve_space(&resp->xdr, 4 + 8 + 8);
+> >       if (!p)
+> > @@ -4654,9 +4662,10 @@ nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp,
+> >
+> >       *p++ = htonl(NFS4_CONTENT_HOLE);
+> >        p   = xdr_encode_hyper(p, read->rd_offset);
+> > -      p   = xdr_encode_hyper(p, maxcount);
+> > +      p   = xdr_encode_hyper(p, count);
+> >
+> > -     *eof = (read->rd_offset + maxcount) >= i_size_read(file_inode(file));
+> > +     *eof = (read->rd_offset + count) >= i_size_read(file_inode(file));
+> > +     *maxcount = min_t(unsigned long, count, *maxcount);
+> >       return nfs_ok;
+> >  }
+> >
+> > @@ -4664,7 +4673,7 @@ static __be32
+> >  nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
+> >                      struct nfsd4_read *read)
+> >  {
+> > -     unsigned long maxcount;
+> > +     unsigned long maxcount, count;
+> >       struct xdr_stream *xdr = &resp->xdr;
+> >       struct file *file;
+> >       int starting_len = xdr->buf->len;
+> > @@ -4687,6 +4696,7 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
+> >       maxcount = min_t(unsigned long, maxcount,
+> >                        (xdr->buf->buflen - xdr->buf->len));
+> >       maxcount = min_t(unsigned long, maxcount, read->rd_length);
+> > +     count    = maxcount;
+> >
+> >       eof = read->rd_offset >= i_size_read(file_inode(file));
+> >       if (eof)
+> > @@ -4695,24 +4705,38 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
+> >       pos = vfs_llseek(file, read->rd_offset, SEEK_DATA);
+> >       if (pos == -ENXIO)
+> >               pos = i_size_read(file_inode(file));
+> > +     else if (pos < 0)
+> > +             pos = read->rd_offset;
+> >
+> > -     if (pos > read->rd_offset) {
+> > -             maxcount = pos - read->rd_offset;
+> > -             nfserr = nfsd4_encode_read_plus_hole(resp, read, maxcount, &eof);
+> > +     if (pos == read->rd_offset) {
+> > +             maxcount = count;
+> > +             nfserr = nfsd4_encode_read_plus_data(resp, read, &maxcount, &eof);
+> > +             if (nfserr)
+> > +                     goto out;
+> > +             count -= maxcount;
+> > +             read->rd_offset += maxcount;
+> >               segments++;
+> > -     } else {
+> > -             nfserr = nfsd4_encode_read_plus_data(resp, read, maxcount, &eof);
+> > +     }
+> > +
+> > +     if (count > 0 && !eof) {
+> > +             maxcount = count;
+> > +             nfserr = nfsd4_encode_read_plus_hole(resp, read, &maxcount, &eof);
+> > +             if (nfserr)
+> > +                     goto out;
+> > +             count -= maxcount;
+> > +             read->rd_offset += maxcount;
+> >               segments++;
+> >       }
+> >
+> >  out:
+> > -     if (nfserr)
+> > +     if (nfserr && segments == 0)
+> >               xdr_truncate_encode(xdr, starting_len);
+> >       else {
+> >               tmp = htonl(eof);
+> >               write_bytes_to_xdr_buf(xdr->buf, starting_len,     &tmp, 4);
+> >               tmp = htonl(segments);
+> >               write_bytes_to_xdr_buf(xdr->buf, starting_len + 4, &tmp, 4);
+> > +             nfserr = nfs_ok;
+> >       }
+> >
+> >       return nfserr;
+> > --
+> > 2.28.0
+> >
+>
