@@ -2,104 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B51B52650F0
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Sep 2020 22:36:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 366122652C9
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Sep 2020 23:24:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgIJUgr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Sep 2020 16:36:47 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:61364 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbgIJUb2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Sep 2020 16:31:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1599769887; x=1631305887;
-  h=date:from:to:subject:message-id:references:mime-version:
-   in-reply-to;
-  bh=GnEwkxhugnPrYPCFbMdMmPwSq72WqSjPuDvNLdjzQCg=;
-  b=SVbJKMvbCSqezgXBR9sEahR9gmmprn4nbD1duNjP8GyolMpvTRwPqIsp
-   /EWMwcX9JnBn8GNVk8AuHhIsXv1zhJdsp0KzgODY1Vju5SjgVI5oYLqIn
-   7Sq5hx4qBFEoiZGe6qkqnDE4TjhXohMil1ysKdstVLp06wFntPAvjVXaL
-   U=;
-X-IronPort-AV: E=Sophos;i="5.76,413,1592870400"; 
-   d="scan'208";a="53089658"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 10 Sep 2020 20:31:26 +0000
-Received: from EX13MTAUEE001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
-        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id C3D9BA07F6;
-        Thu, 10 Sep 2020 20:31:24 +0000 (UTC)
-Received: from EX13D05UEE003.ant.amazon.com (10.43.62.168) by
- EX13MTAUEE001.ant.amazon.com (10.43.62.226) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 10 Sep 2020 20:31:24 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
- EX13D05UEE003.ant.amazon.com (10.43.62.168) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 10 Sep 2020 20:31:23 +0000
-Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Thu, 10 Sep 2020 20:31:23 +0000
-Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id 9FDC4C1400; Thu, 10 Sep 2020 20:31:23 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 20:31:23 +0000
-From:   Frank van der Linden <fllinden@amazon.com>
-To:     <linux-nfs@vger.kernel.org>, <anna.schumaker@netapp.com>,
-        <trond.myklebust@hammerspace.com>, <dhowells@redhat.com>
-Subject: Re: [PATCH] nfs: round down reported block numbers in statfs
-Message-ID: <20200910203123.GA8274@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-References: <20200910200644.8165-1-fllinden@amazon.com>
+        id S1728169AbgIJVYh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Sep 2020 17:24:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:37282 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731004AbgIJOXM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:23:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3BEB11B3;
+        Thu, 10 Sep 2020 07:21:17 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B4783F66E;
+        Thu, 10 Sep 2020 07:21:08 -0700 (PDT)
+Subject: Re: [trivial PATCH] treewide: Convert switch/case fallthrough; to
+ break;
+To:     Joe Perches <joe@perches.com>, LKML <linux-kernel@vger.kernel.org>,
+        Jiri Kosina <trivial@kernel.org>
+Cc:     linux-wireless@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        oss-drivers@netronome.com, nouveau@lists.freedesktop.org,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        dri-devel@lists.freedesktop.org, linux-ide@vger.kernel.org,
+        dm-devel@redhat.com, linux-mtd@lists.infradead.org,
+        linux-i2c@vger.kernel.org, sparclinux@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, linux-rtc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        dccp@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, coreteam@netfilter.org,
+        intel-wired-lan@lists.osuosl.org, linux-serial@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
+        Kees Cook <kees.cook@canonical.com>,
+        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-sctp@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-nvme@lists.infradead.org,
+        storagedev@microchip.com, ceph-devel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-mips@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netfilter-devel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Will Deacon <will@kernel.org>
+References: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <9372456a-8dcf-2735-57a4-e126aa5df3a6@arm.com>
+Date:   Thu, 10 Sep 2020 15:21:05 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200910200644.8165-1-fllinden@amazon.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 08:06:44PM +0000, Frank van der Linden wrote:
-> nfs_statfs rounds up the numbers of blocks as computed
-> from the numbers the server return values.
+On 2020-09-09 21:06, Joe Perches wrote:
+> fallthrough to a separate case/default label break; isn't very readable.
 > 
-> This works out well if the client block size, which is
-> the same as wrsize, is smaller than or equal to the actual
-> filesystem block size on the server.
+> Convert pseudo-keyword fallthrough; statements to a simple break; when
+> the next label is case or default and the only statement in the next
+> label block is break;
 > 
-> But, for NFS4, the size is usually larger (1M), meaning
-> that statfs reports more free space than actually is
-> available. This confuses, for example, fstest generic/103.
+> Found using:
 > 
-> Given a choice between reporting too much or too little
-> space, the latter is the safer option, so don't round
-> up the number of blocks. This also simplifies the code.
+> $ grep-2.5.4 -rP --include=*.[ch] -n "fallthrough;(\s*(case\s+\w+|default)\s*:\s*){1,7}break;" *
 > 
-> Signed-off-by: Frank van der Linden <fllinden@amazon.com>
+> Miscellanea:
+> 
+> o Move or coalesce a couple label blocks above a default: block.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+> 
+> Compiled allyesconfig x86-64 only.
+> A few files for other arches were not compiled.
+> 
 
-I doubted whether I should send this in as an RFC, since this
-is one of those things that might generate more discussion.
+[...]
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> index c192544e874b..743db1abec40 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> @@ -3777,7 +3777,7 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+>   	switch (FIELD_GET(IDR0_TTF, reg)) {
+>   	case IDR0_TTF_AARCH32_64:
+>   		smmu->ias = 40;
+> -		fallthrough;
+> +		break;
+>   	case IDR0_TTF_AARCH64:
+>   		break;
+>   	default:
 
-In any case, let me add some details here:
+I have to say I don't really agree with the readability argument for 
+this one - a fallthrough is semantically correct here, since the first 
+case is a superset of the second. It just happens that anything we would 
+do for the common subset is implicitly assumed (there are other 
+potential cases we simply haven't added support for at the moment), thus 
+the second case is currently empty.
 
-generic/103 is a test that sees if adding an xattr to a full
-filesystem correctly returns ENOSPC. To achieve that, it gets
-the number of free blocks (f_bavail), uses fallocate to allocate that
-space minus some slack (512k), and then fills it up with 64k-sized
-xattrs.
+This change actively obfuscates that distinction.
 
-For NFS (4.2) this fails, because the filesystem rounds the free
-blocks up to f_bsize (1M). So even f_bavail minus 512k can
-be more than is actually available. The fallocate fails, and
-the test fails before it gets to the xattr part.
-
-Other client implementations simply use the lowest common
-denominator for f_bsize (512), so the space reporting always
-works out. But since wrsize is used here, you have to make
-a choice between rounding up or rounding down, and the latter
-seems safer.
-
-Sure, all the caveats apply: the stats are just a snapshot, applications
-shouldn't rely on the exact data, etc, but I think the xfstest
-in question is a decent example of why rounding down is a bit better.
-
-It also simplifies the code.
-
-- Frank
+Robin.
