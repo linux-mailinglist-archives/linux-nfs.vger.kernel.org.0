@@ -2,53 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D75B263ACF
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Sep 2020 04:46:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9203263D5F
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Sep 2020 08:28:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbgIJCAq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Sep 2020 22:00:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53992 "EHLO mail.kernel.org"
+        id S1729129AbgIJG2d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Sep 2020 02:28:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729913AbgIJBpa (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 9 Sep 2020 21:45:30 -0400
-Subject: Re: [GIT PULL] Please pull NFS client bugfixes for Linux 5.9
+        id S1726440AbgIJG21 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 10 Sep 2020 02:28:27 -0400
+Received: from coco.lan (ip5f5ad5ac.dynamic.kabel-deutschland.de [95.90.213.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79CF6206A1;
+        Thu, 10 Sep 2020 06:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599697641;
-        bh=+pELd07/280JmbhhDuSKygrcDaXRXO5RrfpzlIHVRSc=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=pABgYAD69O9vkBvzgD23PaNjc2UPntZTekQ5XBqrMvZasKIxx2atDqocugjRX4uPk
-         JYLlZv6bmwkjGkCt4Gfv4r+PICUjn3BOZDnNOlel+MruyTwVqyqKP7WjKfpfSOlGuF
-         1cZkASHeFzmpn34z/ScQbM6xViI2Tn+aC1DyYbZw=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <f96776cef2b96ae904dd7f0c58a96c964cb9a950.camel@hammerspace.com>
-References: <f96776cef2b96ae904dd7f0c58a96c964cb9a950.camel@hammerspace.com>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <f96776cef2b96ae904dd7f0c58a96c964cb9a950.camel@hammerspace.com>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.9-2
-X-PR-Tracked-Commit-Id: 8c6b6c793ed32b8f9770ebcdf1ba99af423c303b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ab29a807a7ddaa7c84d2f4cb8d29e74e33759072
-Message-Id: <159969764095.607.16894359992610448637.pr-tracker-bot@kernel.org>
-Date:   Thu, 10 Sep 2020 00:27:20 +0000
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        s=default; t=1599719306;
+        bh=DjrBPnz1BgCnBYG/64IiUxKEJrMJGKb1A3mRWVpncJk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KppkCOGGex5Td4qsjLzCFk1NCf4XHbXpibLJsQYMVVaT0bkaAFQjn+ZuEeXf2o77m
+         UyE3jBNOXTpotfoeco2l+h7jkiCeDQm7I+A6v3H6sCfl0zDTboY8/bNQu+oaB5Un+6
+         r8LmWMYkPZepovOPOzqdHyn81ea3fXGQ2O9gVUL8=
+Date:   Thu, 10 Sep 2020 08:28:12 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jiri Kosina <trivial@kernel.org>,
+        Kees Cook <kees.cook@canonical.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, linux-input@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-rdma@vger.kernel.org,
+        iommu@lists.linux-foundation.org, dm-devel@redhat.com,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
+        oss-drivers@netronome.com, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        storagedev@microchip.com, sparclinux@vger.kernel.org,
+        linux-serial@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-parisc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, bpf@vger.kernel.org,
+        dccp@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, linux-sctp@vger.kernel.org,
+        alsa-devel <alsa-devel@alsa-project.org>
+Subject: Re: [trivial PATCH] treewide: Convert switch/case fallthrough; to
+ break;
+Message-ID: <20200910082812.057a04e6@coco.lan>
+In-Reply-To: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
+References: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Wed, 9 Sep 2020 17:52:01 +0000:
+Em Wed, 09 Sep 2020 13:06:39 -0700
+Joe Perches <joe@perches.com> escreveu:
 
-> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.9-2
+> fallthrough to a separate case/default label break; isn't very readable.
+> 
+> Convert pseudo-keyword fallthrough; statements to a simple break; when
+> the next label is case or default and the only statement in the next
+> label block is break;
+> 
+> Found using:
+> 
+> $ grep-2.5.4 -rP --include=*.[ch] -n "fallthrough;(\s*(case\s+\w+|default)\s*:\s*){1,7}break;" *
+> 
+> Miscellanea:
+> 
+> o Move or coalesce a couple label blocks above a default: block.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+> 
+> Compiled allyesconfig x86-64 only.
+> A few files for other arches were not compiled.
+> 
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ab29a807a7ddaa7c84d2f4cb8d29e74e33759072
 
-Thank you!
+>  drivers/media/dvb-frontends/drxd_hard.c                   |  2 +-
+>  drivers/media/i2c/ov5640.c                                |  2 +-
+>  drivers/media/i2c/ov6650.c                                |  5 ++---
+>  drivers/media/i2c/smiapp/smiapp-core.c                    |  2 +-
+>  drivers/media/i2c/tvp5150.c                               |  2 +-
+>  drivers/media/pci/ddbridge/ddbridge-core.c                |  2 +-
+>  drivers/media/usb/cpia2/cpia2_core.c                      |  2 +-
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+For media drivers:
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+
+Thanks,
+Mauro
