@@ -2,79 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1430A26589E
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Sep 2020 07:13:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC23F2659BC
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Sep 2020 08:58:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725535AbgIKFM7 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 11 Sep 2020 01:12:59 -0400
-Received: from mail.flex.co.jp ([211.8.82.123]:43788 "EHLO www.flex.co.jp"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725497AbgIKFM6 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 11 Sep 2020 01:12:58 -0400
-Received: from live.com.mx ([103.89.89.225])
-        (authenticated bits=0)
-        by www.flex.co.jp (MTA) with ESMTP id 0898nZws009284
-        for <linux-nfs@vger.kernel.org>; Wed, 9 Sep 2020 17:49:54 +0900
-Reply-To: powerinthewords@yahoo.co.jp
-From:   piyin.crhe@live.com.mx
-To:     linux-nfs@vger.kernel.org
-Subject: =?utf-8?Q?=5BSpam=5D?=
- We are still waiting for your email...
-Date:   09 Sep 2020 01:49:52 -0700
-Message-ID: <20200909014952.49279063100114EE@live.com.mx>
+        id S1725763AbgIKG6N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 11 Sep 2020 02:58:13 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:58982 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbgIKG6L (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 11 Sep 2020 02:58:11 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1kGd0F-0007u4-89; Fri, 11 Sep 2020 16:57:48 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 11 Sep 2020 16:57:47 +1000
+Date:   Fri, 11 Sep 2020 16:57:47 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v3 0/7] crypto: mark ecb(arc4) skcipher as obsolete
+Message-ID: <20200911065747.GF32150@gondor.apana.org.au>
+References: <20200831151649.21969-1-ardb@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-SpamInfo: FortiGuard-AntiSpam ip, connection black ip 103.89.89.225
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831151649.21969-1-ardb@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dear Beneficiary,
+On Mon, Aug 31, 2020 at 06:16:42PM +0300, Ard Biesheuvel wrote:
+> RC4 hasn't aged very well, and is a poor fit for the skcipher API so it
+> would be good if we could get rid of the ecb(arc4) drivers in the kernel
+> at some point in the future. This prevents new users from creeping in, and
+> allows us to improve the skcipher API without having to care too much about
+> obsolete algorithms that may be difficult to support going forward.
+> 
+> So let's get rid of any remaining in-kernel users, either by switching them
+> to the arc4 library API (for cases which simply cannot change algorithms,
+> e.g., WEP), or dropping the code entirely. Also remove the remaining h/w
+> accelerated implementations, and mark the generic s/w implementation as
+> obsolete in Kconfig.
+> 
+> Changes since v2:
+> - depend on CRYPTO_USER_API not CRYPTO_USER
+> - rename CRYPTO_USER_ENABLE_OBSOLETE to CRYPTO_USER_API_ENABLE_OBSOLETE for
+>   clarity
+> 
+> Changes since RFC [0]:
+> - keep ecb(arc4) generic C implementation, and the associated test vectors,
+>   but print a warning about ecb(arc4) being obsolete so we can identify
+>   remaining users
+> - add a Kconfig option to en/disable obsolete algorithms that are only kept
+>   around to prevent breaking users that rely on it via the socket interface
+> - add a patch to clean up some bogus Kconfig dependencies
+> - add acks to patches #1, #2 and #3
+> 
+> [0] https://lore.kernel.org/driverdev-devel/20200702101947.682-1-ardb@kernel.org/
+> 
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Cc: Anna Schumaker <anna.schumaker@netapp.com>
+> Cc: "J. Bruce Fields" <bfields@fieldses.org>
+> Cc: Chuck Lever <chuck.lever@oracle.com>
+> Cc: Eric Biggers <ebiggers@google.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-crypto@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: devel@driverdev.osuosl.org
+> Cc: linux-nfs@vger.kernel.org
+> 
+> Ard Biesheuvel (7):
+>   staging/rtl8192e: switch to RC4 library interface
+>   staging/rtl8192u: switch to RC4 library interface
+>   SUNRPC: remove RC4-HMAC-MD5 support from KerberosV
+>   crypto: n2 - remove ecb(arc4) support
+>   crypto: bcm-iproc - remove ecb(arc4) support
+>   net: wireless: drop bogus CRYPTO_xxx Kconfig selects
+>   crypto: arc4 - mark ecb(arc4) skcipher as obsolete
+> 
+>  crypto/Kconfig                                |  10 +
+>  crypto/arc4.c                                 |  10 +
+>  drivers/crypto/bcm/cipher.c                   |  96 +-----
+>  drivers/crypto/bcm/cipher.h                   |   1 -
+>  drivers/crypto/bcm/spu.c                      |  23 +-
+>  drivers/crypto/bcm/spu.h                      |   1 -
+>  drivers/crypto/bcm/spu2.c                     |  12 +-
+>  drivers/crypto/bcm/spu2.h                     |   1 -
+>  drivers/crypto/n2_core.c                      |  46 ---
+>  drivers/net/wireless/intel/ipw2x00/Kconfig    |   4 -
+>  drivers/net/wireless/intersil/hostap/Kconfig  |   4 -
+>  drivers/staging/rtl8192e/Kconfig              |   4 +-
+>  drivers/staging/rtl8192e/rtllib_crypt_tkip.c  |  70 +----
+>  drivers/staging/rtl8192e/rtllib_crypt_wep.c   |  72 +----
+>  drivers/staging/rtl8192u/Kconfig              |   1 +
+>  .../rtl8192u/ieee80211/ieee80211_crypt_tkip.c |  81 +----
+>  .../rtl8192u/ieee80211/ieee80211_crypt_wep.c  |  64 +---
+>  include/linux/sunrpc/gss_krb5.h               |  11 -
+>  include/linux/sunrpc/gss_krb5_enctypes.h      |   9 +-
+>  net/sunrpc/Kconfig                            |   1 -
+>  net/sunrpc/auth_gss/gss_krb5_crypto.c         | 276 ------------------
+>  net/sunrpc/auth_gss/gss_krb5_mech.c           |  95 ------
+>  net/sunrpc/auth_gss/gss_krb5_seal.c           |   1 -
+>  net/sunrpc/auth_gss/gss_krb5_seqnum.c         |  87 ------
+>  net/sunrpc/auth_gss/gss_krb5_unseal.c         |   1 -
+>  net/sunrpc/auth_gss/gss_krb5_wrap.c           |  65 +----
+>  26 files changed, 97 insertions(+), 949 deletions(-)
 
-We wish to inform you that a power of attorney was forwarded to 
-our office  by two gentlemen regarding your unclaimed fund of $56 
-Million Dollar. One of them is an American citizen named Mr. 
-Robert Porter and the other is Mr. Wilhelm Berg a Swedish 
-citizen.We have be waiting for you to contact us since last year.
-
-The document claims these gentlemen to be your authorized 
-representatives, and the power of attorney states that you are 
-already deceased.  It further states that your death was due to 
-lung cancer, with your date of death being January 27th, 2020.
-
-They have now submitted a new account to replace the receiving 
-account that was in the original claim of funds. These funds have 
-remained unclaimed for quite some time and the need for 
-resolution is pressing. Below is the new account they have 
-submitted.
-
-Account Name's :  Robert Porter /Wilhelm Berg
-Account: 5007-29 438 66
-IBAN-nr: SE4150000000050072943866
-Bic-kod: ESSESESS
-Skandinaviska Enskilda Banken. (SEB :)
-SWEDEN .
-
-In the event that you are in fact still alive, we ask that you 
-confirm your existence by responding to this email. You are to 
-view this as a matter requiring immediate attention and response. 
-We have 48 hr monitoring of all activities within Federal Reserve 
-Bank.On this regard,you will be directed to any of our office 
-center that you will go in person to sign the final papers,
-because we have our payment center in Europe,Asia,America and 
-Canada.You will go to any of the office that you will be directed 
-to with the copy of the documents of your fund.
-
-We have contacted the bank in the Sweden asking them to wait for 
-further directives from Federal Reserve Bank, prior to 
-authorizing any withdrawals in any form.  Our request is based 
-entirely on our attempt to verify that you are in fact deceased, 
-before money is wrongly disbursed.
-
-Your in Service,
-
-Robert Steven Kaplan
-2200 N Pearl St, Dallas, TX 75201, United States
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
