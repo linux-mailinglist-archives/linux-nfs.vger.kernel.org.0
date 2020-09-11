@@ -2,100 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A8472663BD
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Sep 2020 18:23:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09423266864
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Sep 2020 20:47:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgIKQWb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 11 Sep 2020 12:22:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33870 "EHLO
+        id S1725730AbgIKSrv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 11 Sep 2020 14:47:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgIKP2F (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Sep 2020 11:28:05 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24C13C06134C
-        for <linux-nfs@vger.kernel.org>; Fri, 11 Sep 2020 07:22:15 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id l126so7462769pfd.5
-        for <linux-nfs@vger.kernel.org>; Fri, 11 Sep 2020 07:22:15 -0700 (PDT)
+        with ESMTP id S1725770AbgIKSrt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Sep 2020 14:47:49 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 889A9C061573
+        for <linux-nfs@vger.kernel.org>; Fri, 11 Sep 2020 11:47:49 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id o5so10848490qke.12
+        for <linux-nfs@vger.kernel.org>; Fri, 11 Sep 2020 11:47:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
          :content-transfer-encoding;
-        bh=VifusxB0z2FBdukbKoauPP3oFHy9njJc8lzss3NuhW0=;
-        b=un9H8KCq3X42dAtcRlHU8IVGVKjfzD5DvYou0B/7IK0rRvVCaT7ILZvF6LBNnsdZ72
-         2NRRfWSAVLj3qY6DGPceO5iSAn0v9Fe6OMgpCFJ7Kjtis3V+cjiMp6BEJLtVemUiWLYF
-         atInnfn9xJton8d/HOv1iF4Qevh1TtYjqVECY1ZydIybkrSFtTZpuRr0JiVb1R7wiF6d
-         T7XivX9kZQ7D+oDSsab7MiHCwIMQYg0fXo1p9Zr10ysa8JGx0lTIRgCm6vWC6n8y69+i
-         +R1gCRr8trw6tx5wROl7ZeGoHSw3Jf/Wmw47FDS4S8eMnU1If4kEzodjZ40JAkK12mk8
-         2BFw==
+        bh=70MiMVltxNyxkABCOwKDTP+EQ1ZPOHXxwXBcX43cI3w=;
+        b=ofH4aF1ByERsuoBs0rxS5m59LFXtDmsXLuLZaJB9mzmRE+COOQDrZT1O7nGoAO1PTY
+         LGLDLzRReck+JzmpoC53BPAC17GYo4FalCESoPpBZnG7XVzdJm5BX4HGaW1QuL/BwU77
+         /Qr7oQu7F3M8jpnM0RlLcPxhwBoR2AMk8ZFLp/ApJwK9vaI+j663emw27q8220zu+4BP
+         lbe/leWV8VDNYxmMFdEJRlChDW/2VNuXS7pGZ4LeBarREqA0NH54dvpRwKFWHUxY9vHQ
+         ix6Z5kkXEkfB0XCfe21tFy1HXz9h6nn8ykxNpMA6dpn+8mt9bDJFBWHu9/Z6hf5xH8kA
+         V/Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VifusxB0z2FBdukbKoauPP3oFHy9njJc8lzss3NuhW0=;
-        b=dStBmGBFFCRM/bhbSi/H21XxzAQ/MmSeNtcdbQqSBEln1LHEob20ygmfLBC5lYYPoC
-         BAf1DRDlfYlYHqnHgZ/p7e69mbhx5xLTSMgYNcES4eJfeOyXjmqMYz8Bq9kyrAEwpEr/
-         yGaa5a/RStNDJyPCox9/Sa4zKLa3u8AY2e0BLchcGlyFGVlxRma8mytcE1c8XyDByVAN
-         mHnXmgKhkMMS/3/vJD3wOIQBFRjvji893xvRJnj+5X9g/EXIs9fjT1dVR8sSr52tcQCV
-         rR9J+2cTwW1ix34UZVAaf1Iw+1Uxu95YiQ/ZTyKIg/95iqQ4IMXnmgfw8D0WW9QF/5uw
-         XQdw==
-X-Gm-Message-State: AOAM531R9E8P03TGv+KORdqCTcLRS7dCMytbEMYgZei0u3vzT3vQJ/Ck
-        LijGyyVlV0mKvsW1JAgB1sGkBVswLc5g3Q==
-X-Google-Smtp-Source: ABdhPJxNsIzE2OFYqcwbcR5Y3V3bWxdIjolIyIfLJKP+Ec5jTLuRkKmJtETI9sImmTwaY6JcZNvf+g==
-X-Received: by 2002:a63:b47:: with SMTP id a7mr1829977pgl.57.1599834134407;
-        Fri, 11 Sep 2020 07:22:14 -0700 (PDT)
-Received: from localhost.localdomain ([192.146.154.242])
-        by smtp.gmail.com with ESMTPSA id z23sm2015356pgv.57.2020.09.11.07.22.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 07:22:13 -0700 (PDT)
-From:   Srikrishan Malik <srikrishanmalik@gmail.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     Srikrishan Malik <srikrishanmalik@gmail.com>
-Subject: [PATCH] nfsidmap:umich_ldap return success only if attributes are found in ldap resp.
-Date:   Fri, 11 Sep 2020 07:22:02 -0700
-Message-Id: <20200911142202.84696-1-srikrishanmalik@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=70MiMVltxNyxkABCOwKDTP+EQ1ZPOHXxwXBcX43cI3w=;
+        b=AoXb+mtPiZ3m0RQ/Xf5WyQ/k77bxjG/BOhZ8TCKDyxwW4L5l537MCKWP6jihMixQH6
+         0YikTcKKM1WDCUf8SjU30yL0q6TJ4Rbb9QN9mt5DOTBbmroTm86GmwK93D4EvLw9lDUG
+         JkzD2bi7D00iUfAsio9MLJvXBkiXslKdvrfusD0LW2GQP2g54Ve4el491W+HKLhk8JJZ
+         L7CVNKINvbfI+MzK8ic/wA3RqtQc4gQNIgB6+Dr8IZx2/dSvMVSEaMKpiI8ECPUbx3ym
+         OmNz/QKm09BZIGdi8byEw3kW6F6Jyq1pLJqmetdhFz97yVu46hR8HvGYsGiuUoE77OYI
+         SG6A==
+X-Gm-Message-State: AOAM530BvU7pEM9D+lvhIELj2F8RQxEAJEUg6R2QilSJYNh3YTLvftEO
+        WplqEo9Nruh9CcFPU+4gnL1JdLd3REg=
+X-Google-Smtp-Source: ABdhPJwmPZL5dd2MUP0Hxna+lNU5DbNWxp5v9pOtdyZkKnc58SwzdE/lKqYczfq9CYw3aSmX86pJsQ==
+X-Received: by 2002:a05:620a:9c1:: with SMTP id y1mr2665472qky.241.1599850067276;
+        Fri, 11 Sep 2020 11:47:47 -0700 (PDT)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id y30sm3883564qth.7.2020.09.11.11.47.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 11 Sep 2020 11:47:45 -0700 (PDT)
+Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08BIlhNx000606;
+        Fri, 11 Sep 2020 18:47:43 GMT
+Subject: [PATCH 0/3] Address sparse warnings
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org
+Date:   Fri, 11 Sep 2020 14:47:43 -0400
+Message-ID: <159985000766.2942.3348280669087987448.stgit@klimt.1015granger.net>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Return ENOENT if the UID/GID attributes are not found in ldap response.
+Hi Bruce-
 
-Signed-off-by: Srikrishan Malik <srikrishanmalik@gmail.com>
+I was going to send a v5.9-rc PR for these, but they are not urgent.
+Would you take them for v5.10 ?
+
 ---
- support/nfsidmap/umich_ldap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/support/nfsidmap/umich_ldap.c b/support/nfsidmap/umich_ldap.c
-index c475d379..1aa2af49 100644
---- a/support/nfsidmap/umich_ldap.c
-+++ b/support/nfsidmap/umich_ldap.c
-@@ -643,6 +643,7 @@ umich_name_to_ids(char *name, int idtype, uid_t *uid, gid_t *gid,
- 				goto out_memfree;
- 			}
- 			*uid = tmp_uid;
-+			err = 0;
- 		} else if (strcasecmp(attr_res, ldap_map.NFSv4_gid_attr) == 0) {
- 			tmp_g = strtoul(*idstr, (char **)NULL, 10);
- 			tmp_gid = tmp_g;
-@@ -656,6 +657,7 @@ umich_name_to_ids(char *name, int idtype, uid_t *uid, gid_t *gid,
- 				goto out_memfree;
- 			}
- 			*gid = tmp_gid;
-+			err = 0;
- 		} else {
- 			IDMAP_LOG(0, ("umich_name_to_ids: received attr "
- 				"'%s' ???", attr_res));
-@@ -667,7 +669,6 @@ umich_name_to_ids(char *name, int idtype, uid_t *uid, gid_t *gid,
- 		ldap_value_free(idstr);
- 	}
- 
--	err = 0;
- out_memfree:
- 	ber_free(ber, 0);
- out_unbind:
--- 
-2.26.2
+Chuck Lever (3):
+      NFSD: Correct type annotations in user xattr helpers
+      NFSD: Correct type annotations in user xattr XDR functions
+      NFSD: Correct type annotations in COPY XDR functions
+
+
+ fs/nfsd/nfs4xdr.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+--
+Chuck Lever
 
