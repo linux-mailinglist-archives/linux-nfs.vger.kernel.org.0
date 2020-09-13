@@ -2,146 +2,126 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F147926805B
-	for <lists+linux-nfs@lfdr.de>; Sun, 13 Sep 2020 18:56:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ADAB268088
+	for <lists+linux-nfs@lfdr.de>; Sun, 13 Sep 2020 19:22:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725876AbgIMQ4W (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 13 Sep 2020 12:56:22 -0400
-Received: from out20-73.mail.aliyun.com ([115.124.20.73]:39011 "EHLO
-        out20-73.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725964AbgIMQ4R (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 13 Sep 2020 12:56:17 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07447656|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.401913-0.00103094-0.597056;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07440;MF=guan@eryu.me;NM=1;PH=DS;RN=3;RT=3;SR=0;TI=SMTPD_---.IWaa4Sp_1600016171;
-Received: from localhost(mailfrom:guan@eryu.me fp:SMTPD_---.IWaa4Sp_1600016171)
-          by smtp.aliyun-inc.com(10.147.42.135);
-          Mon, 14 Sep 2020 00:56:11 +0800
-Date:   Mon, 14 Sep 2020 00:56:11 +0800
-From:   Eryu Guan <guan@eryu.me>
-To:     Frank van der Linden <fllinden@amazon.com>
-Cc:     fstests@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/3] common/attr: make _require_attrs more fine-grained
-Message-ID: <20200913165611.GM3853@desktop>
-References: <20200910194355.5977-1-fllinden@amazon.com>
+        id S1725939AbgIMRWq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 13 Sep 2020 13:22:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgIMRWk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 13 Sep 2020 13:22:40 -0400
+Received: from chicago.messinet.com (chicago.messinet.com [IPv6:2603:300a:134:50e0::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BAD6C06174A
+        for <linux-nfs@vger.kernel.org>; Sun, 13 Sep 2020 10:22:40 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by chicago.messinet.com (Postfix) with ESMTP id A69E9D2567
+        for <linux-nfs@vger.kernel.org>; Sun, 13 Sep 2020 12:22:31 -0500 (CDT)
+X-Virus-Scanned: amavisd-new at messinet.com
+Received: from chicago.messinet.com ([127.0.0.1])
+        by localhost (chicago.messinet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id ypt7tN_8mFTt for <linux-nfs@vger.kernel.org>;
+        Sun, 13 Sep 2020 12:22:30 -0500 (CDT)
+Received: from linux-ws1.messinet.com (unknown [IPv6:2603:300a:134:50e0:a1d3:7883:f6d4:805a])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by chicago.messinet.com (Postfix) with ESMTPSA id D25A6D2566
+        for <linux-nfs@vger.kernel.org>; Sun, 13 Sep 2020 12:22:30 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 chicago.messinet.com D25A6D2566
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=messinet.com;
+        s=20170806; t=1600017750;
+        bh=bYmAkuTcHNd6Uk/8O+jJZLs7GjwBFqsWkKT5KMdtZd4=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=EV/JxUVOjCOVUEOUU31/ZRNAloSfTfKu7R28jiFENlzgpz469lTGdHEwXpy7CDtgN
+         RtO4voDC6EcL/60j7rVxNNg8B5yCvzOxiqfUlfm4qoHRy0rkBBivTyzUf4fFHHtmUy
+         GEpXiLbHzYXihRRWk2V+mB+Kk/36b9CRQA/9KCSsCzSE1Pw2eV7XnAOeC6v29ZOUFD
+         AR9K5JGuZa6j5NsyqXTg1em7hCQMpZLDhuDYs/Jt2ZooZLxL4ztijj+ZKnjOJ1lnnC
+         AOo3KD1WM0hziv4ioBjoundVk7aflvXguEQj/7waw1byBACSY+IGEMHYCX37VxUJtd
+         AHq3wqGjUxcng==
+From:   Anthony Joseph Messina <amessina@messinet.com>
+To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: NFS client cannot "see" files or directories in /home/<username>
+Date:   Sun, 13 Sep 2020 12:22:25 -0500
+Message-ID: <5949391.lOV4Wx5bFT@linux-ws1.messinet.com>
+In-Reply-To: <12603973.uLZWGnKmhe@linux-ws1.messinet.com>
+References: <12603973.uLZWGnKmhe@linux-ws1.messinet.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910194355.5977-1-fllinden@amazon.com>
+Content-Type: multipart/signed; boundary="nextPart4900104.31r3eYUQgx"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 07:43:53PM +0000, Frank van der Linden wrote:
-> Filesystems may not support all xattr types. But, _require_attr assumes
-> that being able to use "user" namespace xattrs means that all namespaces
-> ("trusted", "system", etc) are supported. This breaks on NFS, that only
-> supports the "user" namespace, and a few cases in the "system" namespace.
+--nextPart4900104.31r3eYUQgx
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+On Saturday, August 29, 2020 5:52:19 PM CDT Anthony Joseph Messina wrote:
+> I've reported this issue to Fedora:
+> https://lists.fedoraproject.org/archives/list/users@lists.fedoraproject.org/
+> thread/YECR5Q4LLTEQO3RNSXXKOCZUZF53UAST/
+> https://bugzilla.redhat.com/show_bug.cgi?id=1873720
 > 
-> Change _require_attrs to optionally take namespace arguments that specify
-> the namespaces to check for. The default behavior (no arguments) is still
-> to check for the "user" namespace only.
+> I've got an NFS client that mounts /home via NFSv4.2 with sec=krb5p.  Any
+> kernel since 5.7.17 through 5.8.4 is unable to "see" files or directories in
+> the mounted /home/<username> directory with the exception of the first
+> "dot" directory.
 > 
-> Signed-off-by: Frank van der Linden <fllinden@amazon.com>
-
-This patchset looks great to me, thanks!
-
-Some minor nits below (and I've fixed them on commit, so there's no need
-to resend :)
-
-> ---
->  common/attr | 49 +++++++++++++++++++++++++++++++------------------
->  1 file changed, 31 insertions(+), 18 deletions(-)
+> While I cannot see /home/<username>/subdirectory, if I manually cd into
+> /home/ <username>/subdirectory, I can list that subdirectory's contents as
+> normal.
 > 
-> diff --git a/common/attr b/common/attr
-> index 20049de0..c60cb6ed 100644
-> --- a/common/attr
-> +++ b/common/attr
-> @@ -175,30 +175,43 @@ _list_acl()
->  
->  _require_attrs()
->  {
-> +    local args
-> +    local nsp
-> +
-> +    if [ $# -eq 0 ];
-> +    then
+> If I mv "/home/<username>/.dotdir" to "/home/<username>/.dotdir.old", I can
+> no longer see it, and I can see "/home/<username>/.dotnextdir".
+> 
+> If I then mv "/home/<username>/.dotdir.old" back to "/home/
+> <username>/.dotdir", I am not able to see it and can still only see "/home/
+> <username>/.dotnextdir"
+> 
+> My last NFS client that can "see" /home/<username> directory contents
+> (normal operation) is kernel-5.7.15 (I was unable to test 5.7.16)
+> 
+> NFS server upgrades from kernel-5.7.15 through kernel-5.8.4 didn't seem to
+> have any affect.
+> 
+> I understand this list is for developers, but I'm wondering if any of the
+> NFS experts can point me in the right direction...  Thank you.
 
-We prefer the following coding style in fstests
+The Fedora bugzilla provides additional information:
 
-	if [ $# -eq 0 ]; then
-		args="user"
-	else
-		args="$*"
-	fi
+In https://bugzilla.redhat.com/show_bug.cgi?id=1873720#c7 a user reports the commit that creates the issue:
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=b4487b93545214a9db8cbf32e86411677b0cca21
 
-> +      args="user"
-> +    else
-> +      args="$*"
-> +    fi
+In https://bugzilla.redhat.com/show_bug.cgi?id=1873720#c12 another user reports the relationship with exports using the "security_label" option
 
-And you've almost re-written the whole _require_attrs(), it's better to
-use tab as indention instead of 4 spaces (we're in the (very slow)
-progress converting all 4-spaces indention to tab, except there're old
-code using 4-spaces around).
+-- 
+Anthony - https://messinet.com
+F9B6 560E 68EA 037D 8C3D  D1C9 FF31 3BDB D9D8 99B6
 
-> +
->      [ -n "$ATTR_PROG" ] || _notrun "attr command not found"
->      [ -n "$GETFATTR_PROG" ] || _notrun "getfattr command not found"
->      [ -n "$SETFATTR_PROG" ] || _notrun "setfattr command not found"
->  
-> -    #
-> -    # Test if chacl is able to write an attribute on the target filesystems.
-> -    # On really old kernels the system calls might not be implemented at all,
-> -    # but the more common case is that the tested filesystem simply doesn't
-> -    # support attributes.  Note that we can't simply list attributes as
-> -    # various security modules generate synthetic attributes not actually
-> -    # stored on disk.
-> -    #
-> -    touch $TEST_DIR/syscalltest
-> -    attr -s "user.xfstests" -V "attr" $TEST_DIR/syscalltest > $TEST_DIR/syscalltest.out 2>&1
-> -    cat $TEST_DIR/syscalltest.out >> $seqres.full
-> +    for nsp in $args
-> +    do
+--nextPart4900104.31r3eYUQgx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-Same here, use the format below
+-----BEGIN PGP SIGNATURE-----
 
-	for nsp in $args; do
-		<do things here>
-	done
+iQIzBAABCAAdFiEE+bZWDmjqA32MPdHJ/zE729nYmbYFAl9eVVEACgkQ/zE729nY
+mbYEWBAAp/1JaeMUOx5sIuEbVv/xU/8aJS9bHBgDmoAKlyheuW/sEqHcBFlwUHAD
+SsIuKzBCnbZRrYGD/+FT+panBzlHnG2R4TobEerX+p8XWUgHnxZspZT0T2v98Av6
+3bvu0Te/PJifg3OWqEn408D/uIhrSS42gO+e7oWG9W1wpdybOf/VwkX5JmtRgSwh
+ZQ++C64sFCkMhJeC54c1mqTZubtr0t7UvbEbb/PpLsH2owZ5fI0akWbq041jzr00
+9g4mCHkYe6msvB9tgXudL7snXwPVWVlr09URYRaaUl4l46AwS6qAHqdc8DgdGYb1
+Fn5hOVm9yuprufpJZlZShkBvzKmjvYMqHj8Hm4pOJce0IZNPHBTRfZ1aRMlekyPc
+lRQyvyXz4swaUrwD5B8BnTtKWHPZkcO4Va0WGeQZZ72rngW0/UHolAZn/oaOCUf3
+geiaHgsAadBn2uGmUtqY94+GzZjymfQ8kE9MWLRwciX17hs9xoikKiCCYlrSzhIl
+rItBajLUY6rj0OyUm8dVDtCv50rUbIKI3lM+N7t7U4mPnAfC3pqt2pYlatMiYxyh
+WLjSdahaY2x57IdQfRuMJjnxJ1ni7b5TY/rzyStBNNcDGF70hT9S5MIhhhcaZYp7
+acg1bEWk8qLMpfMTlkqjx1iSldB09sarZqciNIK+viCUhwRKHPs=
+=hXtG
+-----END PGP SIGNATURE-----
 
-Thanks,
-Eryu
+--nextPart4900104.31r3eYUQgx--
 
-> +      #
-> +      # Test if chacl is able to write an attribute on the target filesystems.
-> +      # On really old kernels the system calls might not be implemented at all,
-> +      # but the more common case is that the tested filesystem simply doesn't
-> +      # support attributes.  Note that we can't simply list attributes as
-> +      # various security modules generate synthetic attributes not actually
-> +      # stored on disk.
-> +      #
-> +      touch $TEST_DIR/syscalltest
-> +      $SETFATTR_PROG -n "$nsp.xfstests" -v "attr" $TEST_DIR/syscalltest > $TEST_DIR/syscalltest.out 2>&1
-> +      cat $TEST_DIR/syscalltest.out >> $seqres.full
->  
-> -    if grep -q 'Function not implemented' $TEST_DIR/syscalltest.out; then
-> -      _notrun "kernel does not support attrs"
-> -    fi
-> -    if grep -q 'Operation not supported' $TEST_DIR/syscalltest.out; then
-> -      _notrun "attrs not supported by this filesystem type: $FSTYP"
-> -    fi
-> +      if grep -q 'Function not implemented' $TEST_DIR/syscalltest.out; then
-> +        _notrun "kernel does not support attrs"
-> +      fi
-> +      if grep -q 'Operation not supported' $TEST_DIR/syscalltest.out; then
-> +        _notrun "attr namespace $nsp not supported by this filesystem type: $FSTYP"
-> +      fi
->  
-> -    rm -f $TEST_DIR/syscalltest.out
-> +      rm -f $TEST_DIR/syscalltest.out
-> +    done
->  }
->  
->  _require_attr_v1()
-> -- 
-> 2.16.6
+
+
