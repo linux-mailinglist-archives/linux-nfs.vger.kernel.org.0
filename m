@@ -2,38 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0666268BAC
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Sep 2020 15:04:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29747268C0C
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Sep 2020 15:18:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgINNEr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Sep 2020 09:04:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59518 "EHLO mail.kernel.org"
+        id S1726667AbgINNR6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Sep 2020 09:17:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbgINNEC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 14 Sep 2020 09:04:02 -0400
+        id S1726701AbgINNHL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 14 Sep 2020 09:07:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEE9C21741;
-        Mon, 14 Sep 2020 13:04:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9788E2222A;
+        Mon, 14 Sep 2020 13:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600088641;
-        bh=lej9QhMUZOEJoSIhmR5Ga6B7vctYMZVw0Fpwlb1LJ90=;
+        s=default; t=1600088753;
+        bh=9HbgiSXTTYuKOPK7+OSiQPwOJsg8dQyJD9HsgqPvPss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FMoHRNSDJpJTxFCieQI1AMUNzLTs3+KoEK2irw27N3WBT1PxsUZD0mFf4F2dIIy5r
-         ZlmKMkZrR0GAbkYgJDpt4sTswjPIN9vtb8m4bwmp2Coc/bMjVLoq6xzx7hxrHhMnGg
-         jMRRAc7/GCyUFgD2RzDVLkqOhoKdej9M4Y+bHT0s=
+        b=H8hBLEhbBbVDRrkRwr3yAFF2uD8oZQMXMFeD2TLVz39BMeKPHwDC8YavrPwB3sx83
+         F7hYbuZqNdCRDXqpb8/zjEJDd+MdpwFyotCWQ/FPj4LCIXFYcgDY8rLlwwd7tWywKL
+         xayJrjO4VOe1fl2Kh/Nt98RWfnUbSgD+M1rb43T0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <kolga@netapp.com>,
+Cc:     "J. Bruce Fields" <bfields@redhat.com>, Zhi Li <yieli@redhat.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 02/29] NFSv4.1 handle ERR_DELAY error reclaiming locking state on delegation recall
-Date:   Mon, 14 Sep 2020 09:03:31 -0400
-Message-Id: <20200914130358.1804194-2-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 06/10] SUNRPC: stop printk reading past end of string
+Date:   Mon, 14 Sep 2020 09:05:41 -0400
+Message-Id: <20200914130545.1805084-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200914130358.1804194-1-sashal@kernel.org>
-References: <20200914130358.1804194-1-sashal@kernel.org>
+In-Reply-To: <20200914130545.1805084-1-sashal@kernel.org>
+References: <20200914130545.1805084-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,42 +44,37 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-[ Upstream commit 3d7a9520f0c3e6a68b6de8c5812fc8b6d7a52626 ]
+[ Upstream commit 8c6b6c793ed32b8f9770ebcdf1ba99af423c303b ]
 
-A client should be able to handle getting an ERR_DELAY error
-while doing a LOCK call to reclaim state due to delegation being
-recalled. This is a transient error that can happen due to server
-moving its volumes and invalidating its file location cache and
-upon reference to it during the LOCK call needing to do an
-expensive lookup (leading to an ERR_DELAY error on a PUTFH).
+Since p points at raw xdr data, there's no guarantee that it's NULL
+terminated, so we should give a length.  And probably escape any special
+characters too.
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Reported-by: Zhi Li <yieli@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/sunrpc/rpcb_clnt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 45e0585e0667c..7f337188a2829 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -7271,7 +7271,12 @@ int nfs4_lock_delegation_recall(struct file_lock *fl, struct nfs4_state *state,
- 	err = nfs4_set_lock_state(state, fl);
- 	if (err != 0)
- 		return err;
--	err = _nfs4_do_setlk(state, F_SETLK, fl, NFS_LOCK_NEW);
-+	do {
-+		err = _nfs4_do_setlk(state, F_SETLK, fl, NFS_LOCK_NEW);
-+		if (err != -NFS4ERR_DELAY)
-+			break;
-+		ssleep(1);
-+	} while (err == -NFS4ERR_DELAY);
- 	return nfs4_handle_delegation_recall_error(server, state, stateid, fl, err);
- }
+diff --git a/net/sunrpc/rpcb_clnt.c b/net/sunrpc/rpcb_clnt.c
+index eafc78e063f1d..185441d7a2814 100644
+--- a/net/sunrpc/rpcb_clnt.c
++++ b/net/sunrpc/rpcb_clnt.c
+@@ -975,8 +975,8 @@ static int rpcb_dec_getaddr(struct rpc_rqst *req, struct xdr_stream *xdr,
+ 	p = xdr_inline_decode(xdr, len);
+ 	if (unlikely(p == NULL))
+ 		goto out_fail;
+-	dprintk("RPC: %5u RPCB_%s reply: %s\n", req->rq_task->tk_pid,
+-			req->rq_task->tk_msg.rpc_proc->p_name, (char *)p);
++	dprintk("RPC: %5u RPCB_%s reply: %*pE\n", req->rq_task->tk_pid,
++			req->rq_task->tk_msg.rpc_proc->p_name, len, (char *)p);
  
+ 	if (rpc_uaddr2sockaddr(req->rq_xprt->xprt_net, (char *)p, len,
+ 				sap, sizeof(address)) == 0)
 -- 
 2.25.1
 
