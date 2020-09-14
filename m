@@ -2,37 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 666412692BD
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Sep 2020 19:14:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA6CE269294
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Sep 2020 19:10:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgINRNu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Sep 2020 13:13:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59498 "EHLO mail.kernel.org"
+        id S1726112AbgINRJj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Sep 2020 13:09:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726580AbgINNEC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 14 Sep 2020 09:04:02 -0400
+        id S1726595AbgINNEt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 14 Sep 2020 09:04:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F5D8206B2;
-        Mon, 14 Sep 2020 13:03:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83F26221EB;
+        Mon, 14 Sep 2020 13:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600088640;
-        bh=J3gXBR/Gjl3DzX0hS0PTmUv2pIWLYi4Gy2GOp/A5aj8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ibpqat+v98TEks1nzT76lEahgOWNEOrkmYdVvGTdHzUtrkSJkyddYXw4iUwkWUfmm
-         qJk+n5zzwU1qJ3vlreb9UJd5pceP6AgNPQ55FrMLXtfmTkyzG4FYhKf/xrky5y0qCf
-         odeaYzv6DsDmUD2AQzXf5/OuTCL+JJPpEC2sitFU=
+        s=default; t=1600088654;
+        bh=4VDGPZbOkg6QfLEfi1JhpBbDvYsDwUwHOlmUDXP8ahc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Umv0NfyuB+rR8ugU9Ul9oxAHQ7CdtF7RFqIMMOI9fDJI+Qb39yb/s9seQhggk63Pp
+         sjneyOGb2zkbffEPMCDNeDNOT86NUsL6gu08nGDwBQ2HTQZfa9zcgRCe6G8cyoD4/H
+         60FOhTcTS0Ok+0cEJNJuoF0lShhm5BwvxCDhvup8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>, Dan Aloni <dan@kernelim.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 01/29] xprtrdma: Release in-flight MRs on disconnect
-Date:   Mon, 14 Sep 2020 09:03:30 -0400
-Message-Id: <20200914130358.1804194-1-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 13/29] NFS: Zero-stateid SETATTR should first return delegation
+Date:   Mon, 14 Sep 2020 09:03:42 -0400
+Message-Id: <20200914130358.1804194-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200914130358.1804194-1-sashal@kernel.org>
+References: <20200914130358.1804194-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,38 +45,45 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 5de55ce951a1466e31ff68a7bc6b0a7ce3cb5947 ]
+[ Upstream commit 644c9f40cf71969f29add32f32349e71d4995c0b ]
 
-Dan Aloni reports that when a server disconnects abruptly, a few
-memory regions are left DMA mapped. Over time this leak could pin
-enough I/O resources to slow or even deadlock an NFS/RDMA client.
+If a write delegation isn't available, the Linux NFS client uses
+a zero-stateid when performing a SETATTR.
 
-I found that if a transport disconnects before pending Send and
-FastReg WRs can be posted, the to-be-registered MRs are stranded on
-the req's rl_registered list and never released -- since they
-weren't posted, there's no Send completion to DMA unmap them.
+NFSv4.0 provides no mechanism for an NFS server to match such a
+request to a particular client. It recalls all delegations for that
+file, even delegations held by the client issuing the request. If
+that client happens to hold a read delegation, the server will
+recall it immediately, resulting in an NFS4ERR_DELAY/CB_RECALL/
+DELEGRETURN sequence.
 
-Reported-by: Dan Aloni <dan@kernelim.com>
+Optimize out this pipeline bubble by having the client return any
+delegations it may hold on a file before it issues a
+SETATTR(zero-stateid) on that file.
+
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/verbs.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/nfs/nfs4proc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 75c646743df3e..ca89f24a1590b 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -933,6 +933,8 @@ static void rpcrdma_req_reset(struct rpcrdma_req *req)
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 7f337188a2829..08b1fb0a9225a 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -3272,8 +3272,10 @@ static int _nfs4_do_setattr(struct inode *inode,
  
- 	rpcrdma_regbuf_dma_unmap(req->rl_sendbuf);
- 	rpcrdma_regbuf_dma_unmap(req->rl_recvbuf);
-+
-+	frwr_reset(req);
- }
+ 	/* Servers should only apply open mode checks for file size changes */
+ 	truncate = (arg->iap->ia_valid & ATTR_SIZE) ? true : false;
+-	if (!truncate)
++	if (!truncate) {
++		nfs4_inode_make_writeable(inode);
+ 		goto zero_stateid;
++	}
  
- /* ASSUMPTION: the rb_allreqs list is stable for the duration,
+ 	if (nfs4_copy_delegation_stateid(inode, FMODE_WRITE, &arg->stateid, &delegation_cred)) {
+ 		/* Use that stateid */
 -- 
 2.25.1
 
