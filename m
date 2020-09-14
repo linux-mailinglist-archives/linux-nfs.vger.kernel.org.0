@@ -2,72 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DB5A2692D9
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Sep 2020 19:17:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13F4D2694E7
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Sep 2020 20:31:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725984AbgINRRj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Sep 2020 13:17:39 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:47246 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgINRQo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Sep 2020 13:16:44 -0400
-X-Greylist: delayed 558 seconds by postgrey-1.27 at vger.kernel.org; Mon, 14 Sep 2020 13:16:43 EDT
-Received: from [2603:3005:d05:2b00:6e0b:84ff:fee2:98bb] (helo=imladris.surriel.com)
-        by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1kHrwn-0006gu-1u; Mon, 14 Sep 2020 13:07:21 -0400
-Date:   Mon, 14 Sep 2020 13:07:19 -0400
-From:   Rik van Riel <riel@surriel.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: [PATCH] silence nfscache allocation warnings with kvzalloc
-Message-ID: <20200914130719.247cccb0@imladris.surriel.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1726019AbgINSbq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Sep 2020 14:31:46 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44361 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725994AbgINSbn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Sep 2020 14:31:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600108301;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pIFnuPDlG5hszC4H8lhN5Q+Zuo/8/QCGJAcqf/vsv2U=;
+        b=Xd8F8PoJMXgYMiDOlUaVMoS3FwxVoJqN12lEzuTJpy0hKr7EpujvV5IbTcjPBVyz037cuN
+        kpAbkMSyQoG0UBv7I/uVpm1jUigHrpkEbKYuXwBXX22A6RaJncF23rRzst/Ng7vEhNYQi3
+        IcdxQ8IPpkRPikCMcb2fLDi4RyP6uYg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-24-yipqUDPKPnGwqI7Oz7NTsQ-1; Mon, 14 Sep 2020 14:31:39 -0400
+X-MC-Unique: yipqUDPKPnGwqI7Oz7NTsQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C190EA1C9;
+        Mon, 14 Sep 2020 18:30:36 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-112-247.phx2.redhat.com [10.3.112.247])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A879827BCC;
+        Mon, 14 Sep 2020 18:30:35 +0000 (UTC)
+Subject: Re: mount.nfs4 and logging
+To:     Chris Hall <linux-nfs@gmch.uk>, linux-nfs@vger.kernel.org
+References: <S1725851AbgIKKt5/20200911104957Z+185@vger.kernel.org>
+ <a38a1249-c570-9069-a498-5e17d85a418a@gmch.uk>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <f06f86ef-08bd-3974-3d92-1fbda700cc11@RedHat.com>
+Date:   Mon, 14 Sep 2020 14:30:35 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <a38a1249-c570-9069-a498-5e17d85a418a@gmch.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-silence nfscache allocation warnings with kvzalloc
+Hello,
 
-Currently nfsd_reply_cache_init attempts hash table allocation through
-kmalloc, and manually falls back to vzalloc if that fails. This makes
-the code a little larger than needed, and creates a significant amount
-of serial console spam if you have enough systems.
+On 9/11/20 7:45 AM, Chris Hall wrote:
+> 
+> I have a client and server configured for nfs4 only.
+Would you mind sharing this configuration? Privately if
+that works better... 
 
-Switching to kvzalloc gets rid of the allocation warnings, and makes
-the code a little cleaner too as a side effect.
+I'm thinking that is a good direction to go towards
+so maybe we make this configuration the default?? 
 
-Freeing of nn->drc_hashtbl is already done using kvfree currently.
+> 
+> The configuration used to work.
+> 
+> I have just upgraded from Fedora 31 to 32 on the client.  I now get:
+> 
+>   # mount /foo
+>   mount.nfs4: Protocol not supported
+I've been trying to keep the versions the same... hopefully 
+nothing has broken in f31... ;-( 
 
-Signed-off-by: Rik van Riel <riel@surriel.com>
----
-diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-index 96352ab7bd81..5125b5ef25b6 100644
---- a/fs/nfsd/nfscache.c
-+++ b/fs/nfsd/nfscache.c
-@@ -164,14 +164,10 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
- 	if (!nn->drc_slab)
- 		goto out_shrinker;
- 
--	nn->drc_hashtbl = kcalloc(hashsize,
--				sizeof(*nn->drc_hashtbl), GFP_KERNEL);
--	if (!nn->drc_hashtbl) {
--		nn->drc_hashtbl = vzalloc(array_size(hashsize,
--						 sizeof(*nn->drc_hashtbl)));
--		if (!nn->drc_hashtbl)
--			goto out_slab;
--	}
-+	nn->drc_hashtbl = kvzalloc(array_size(hashsize,
-+				   sizeof(*nn->drc_hashtbl)), GFP_KERNEL);
-+	if (!nn->drc_hashtbl)
-+		goto out_slab;
- 
- 	for (i = 0; i < hashsize; i++) {
- 		INIT_LIST_HEAD(&nn->drc_hashtbl[i].lru_head);
+> 
+> Wireshark does not detect any attempt by the client to talk to the server.
+> 
+> I get the same result if I do mount.nfs4 directly.
+> 
+> Can I wind up the logging for mount.nfs4 ?  
+What server are you using?
+
+> Or otherwise find a way to discover why the "Protocol not supported" message is being issued ?
+Does rpcdebug -m nfs -s mount and mount -vvv show anything?
+
+steved.
 
