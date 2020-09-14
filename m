@@ -2,146 +2,195 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF283269737
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Sep 2020 22:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 744AD269760
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Sep 2020 23:05:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbgINUz1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Sep 2020 16:55:27 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42326 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbgINUzY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Sep 2020 16:55:24 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08EKdYUQ005208;
-        Mon, 14 Sep 2020 20:55:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=Kc+wSOIut5+iLA/XkKwKfdAvKeE1dUVJvDc2m/eq2fg=;
- b=b6h471cT7Il7M35IOCTJMyOdkC5zRsfUV0137JJ6FIBfikFtrjn40tv/176IAoSlIE5n
- Ey0aIxQN8BYHJcKF2Gm8oiUWVl026qRtUqvgpN+mEDSnWCV/IQ+g3EMcwL94hTdM6jsz
- SCILtIF3AN/2ZwSmJfrfoD1s1hmtPC8lKPdPguUq9XyrWOFf8PkbSsAZyJCnnvVMiZrB
- hPkZTjorIUO4tRt8CCUHyutfPY51zOw7KXHxlZZv4mUKCR6nHzSyUwxVVMLQj/7xdoWQ
- sErj04UI36TkGZDIbnI7dSJO1TII2RN97KwPqggORODcHGNbFSjEbyPAKhpi1rk5bufM RA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 33gnrqs3tp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 14 Sep 2020 20:55:17 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08EKeddZ141687;
-        Mon, 14 Sep 2020 20:53:17 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 33h88wpcxw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Sep 2020 20:53:17 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08EKrGe1012907;
-        Mon, 14 Sep 2020 20:53:16 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 14 Sep 2020 20:53:16 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH RFC] NFSD: synchronously unhash a file on NFSv4 CLOSE
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200914205127.GD30007@fieldses.org>
-Date:   Mon, 14 Sep 2020 16:53:15 -0400
-Cc:     Trond Myklebust <trond.myklebust@primarydata.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <18B8C7A0-CDF9-4B5F-AABF-43189CE84CEC@oracle.com>
-References: <159976711218.1334.14422329830210182280.stgit@klimt.1015granger.net>
- <20200914205127.GD30007@fieldses.org>
-To:     Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9744 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- suspectscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009140163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9744 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
- lowpriorityscore=0 malwarescore=0 mlxscore=0 bulkscore=0 suspectscore=0
- clxscore=1011 mlxlogscore=999 adultscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009140163
+        id S1726023AbgINVFN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Sep 2020 17:05:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbgINVFJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Sep 2020 17:05:09 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17119C06174A
+        for <linux-nfs@vger.kernel.org>; Mon, 14 Sep 2020 14:05:08 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id j2so1677382ioj.7
+        for <linux-nfs@vger.kernel.org>; Mon, 14 Sep 2020 14:05:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0nMpJFd+2Kdqf7SuiuZEkUcCzcE7XnMWFUAV8vqCbTo=;
+        b=mu2BkvCoBhnlhxDAqWy2H056P4Qf11b6Co1E2Y33ePOrbc0U7CWrz9hHtnXjE6rUdT
+         2lmTUWeUiWtFqEQjodcoThWUjs2pLevP/T1h9bVSUZc30EOvBFSuuiqtL5lkka/G4LvE
+         /XT1Dqp62IrqdSPNngER3u3gcGPuk7uDE2T0y4oQlD4PU4x4feHsX2dODnB1tZwdnVv4
+         YDBb2gKg9b1Bt9STbm4DAg1ZmeyWxiNCXJkCRSHWuTfBtbXc6GPzAiol8rJa+cxCmg1M
+         H29xXcG/JGOHDlceNkNwYGhEhJVYf44UQ1v5KThhGzebda7rMRestBItT38iRKi9bXrX
+         jddQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0nMpJFd+2Kdqf7SuiuZEkUcCzcE7XnMWFUAV8vqCbTo=;
+        b=uhEbY+SZOxLp+yNI405V8gTkN/1o4T6wIq1h/howbbf7+RqxcIhhPa/0w1smM7ElyR
+         fHf6bwPgEB15D3CQIowO8+qzq8okpsO5Q3hL6h3AB0s1JGjh7BqgoCSfrYPAyXvfI/fK
+         tbGn/Qg0X8PIxdsxASfC0/rPGWVOKCgqmpltvaDAt41o5I2JTTxQ+GjGSsAC/cVy1pYw
+         VQuR+Ulpgt6dmVYKong2iL8QX0pKPWAnlhnMKHy2NaeCx5VyVIzlAhdmVyy0yE8BBmTV
+         3mwQ6vjb+TK9JJdOh84RIn01mwNB5zbP1zla7EISD6kyoEexaXKw80xnbBVYcX4UJvut
+         K1RQ==
+X-Gm-Message-State: AOAM533trABTlgxOhAdzmsYf0aqxkMO/KeFs+2wPI7cIydvPN+ljkDWK
+        62JwyaMOfrzCoQ44Is1EOG8=
+X-Google-Smtp-Source: ABdhPJyHoFdFgj0CoHFARwzI5ftwlHc21AiNRX/XJHU0rY3D8JR0d/62Z7MuJfUvyUmq0QzxHaAYGg==
+X-Received: by 2002:a05:6638:d4e:: with SMTP id d14mr14802232jak.107.1600117507376;
+        Mon, 14 Sep 2020 14:05:07 -0700 (PDT)
+Received: from Olgas-MBP-286.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
+        by smtp.gmail.com with ESMTPSA id v14sm6529869iol.17.2020.09.14.14.05.06
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Mon, 14 Sep 2020 14:05:06 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] NFSv4: make cache consistency bitmask dynamic
+Date:   Mon, 14 Sep 2020 17:05:08 -0400
+Message-Id: <20200914210508.7701-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+From: Olga Kornievskaia <kolga@netapp.com>
 
+Client uses static bitmask for GETATTR on CLOSE/WRITE/DELEGRETURN
+and ignores the fact that it might have some attributes marked
+invalid in its cache. Compared to v3 where all attributes are
+retrieved in postop attributes, v4's cache is frequently out of
+sync and leads to standalone GETATTRs being sent to the server.
 
-> On Sep 14, 2020, at 4:51 PM, J. Bruce Fields <bfields@fieldses.org> =
-wrote:
->=20
-> On Thu, Sep 10, 2020 at 03:45:12PM -0400, Chuck Lever wrote:
->> I recently observed a significant slowdown in a long-running
->> test on NFSv4.0 mounts.
->>=20
->> An OPEN for write seems to block the NFS server from offering
->> delegations on that file for a few seconds. The problem is that
->> when that file is closed, the filecache retains an open-for-write
->> file descriptor until the laundrette runs. That keeps the inode's
->> i_writecount positive until the cached file is finally unhashed
->> and closed.
->>=20
->> Force the NFSv4 CLOSE logic to call filp_close() to eliminate
->> the underlying cached open-for-write file as soon as the client
->> closes the file.
->>=20
->> This minor change claws back about 80% of the performance
->> regression.
->=20
-> That's really useful to know.  But mainly this makes me think that
-> nfsd4_check_conflicting_opens() is wrong.
->=20
-> I'm trying to determine whether a given file has a non-nfsd writer by
-> counting the number of write opens nfsd holds on a given file and
-> subtracting that from i_writecount.
->=20
-> But the way I'm counting write opens probably isn't correct.
+Instead, in addition to the minimum cache consistency attributes
+also check cache_validity and adjust the GETATTR request accordingly.
 
-I entertained that possibility, but I couldn't figure out
-a better way to count opens-for-write.
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ fs/nfs/nfs4proc.c       | 45 ++++++++++++++++++++++++++++++++++++++---
+ include/linux/nfs_xdr.h |  6 +++---
+ 2 files changed, 45 insertions(+), 6 deletions(-)
 
-
-> --b.
->=20
->>=20
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->> ---
->> fs/nfsd/nfs4state.c |    8 ++++++--
->> 1 file changed, 6 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
->> index 3ac40ba7efe1..0b3059b8b36c 100644
->> --- a/fs/nfsd/nfs4state.c
->> +++ b/fs/nfsd/nfs4state.c
->> @@ -613,10 +613,14 @@ static void __nfs4_file_put_access(struct =
-nfs4_file *fp, int oflag)
->> 		if (atomic_read(&fp->fi_access[1 - oflag]) =3D=3D 0)
->> 			swap(f2, fp->fi_fds[O_RDWR]);
->> 		spin_unlock(&fp->fi_lock);
->> -		if (f1)
->> +		if (f1) {
->> +			=
-nfsd_file_close_inode_sync(locks_inode(f1->nf_file));
->> 			nfsd_file_put(f1);
->> -		if (f2)
->> +		}
->> +		if (f2) {
->> +			=
-nfsd_file_close_inode_sync(locks_inode(f2->nf_file));
->> 			nfsd_file_put(f2);
->> +		}
->> 	}
->> }
-
---
-Chuck Lever
-
-
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 6e95c85fe395..d7434a3697d9 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -107,6 +107,9 @@ static int nfs41_test_stateid(struct nfs_server *, nfs4_stateid *,
+ static int nfs41_free_stateid(struct nfs_server *, const nfs4_stateid *,
+ 		const struct cred *, bool);
+ #endif
++static void nfs4_bitmask_adjust(__u32 *bitmask, struct inode *inode,
++		struct nfs_server *server,
++		struct nfs4_label *label);
+ 
+ #ifdef CONFIG_NFS_V4_SECURITY_LABEL
+ static inline struct nfs4_label *
+@@ -3632,9 +3635,10 @@ static void nfs4_close_prepare(struct rpc_task *task, void *data)
+ 
+ 	if (calldata->arg.fmode == 0 || calldata->arg.fmode == FMODE_READ) {
+ 		/* Close-to-open cache consistency revalidation */
+-		if (!nfs4_have_delegation(inode, FMODE_READ))
++		if (!nfs4_have_delegation(inode, FMODE_READ)) {
+ 			calldata->arg.bitmask = NFS_SERVER(inode)->cache_consistency_bitmask;
+-		else
++			nfs4_bitmask_adjust(calldata->arg.bitmask, inode, NFS_SERVER(inode), NULL);
++		} else
+ 			calldata->arg.bitmask = NULL;
+ 	}
+ 
+@@ -5360,6 +5364,38 @@ bool nfs4_write_need_cache_consistency_data(struct nfs_pgio_header *hdr)
+ 	return nfs4_have_delegation(hdr->inode, FMODE_READ) == 0;
+ }
+ 
++static void nfs4_bitmask_adjust(__u32 *bitmask, struct inode *inode,
++				struct nfs_server *server,
++				struct nfs4_label *label)
++{
++
++	unsigned long cache_validity = READ_ONCE(NFS_I(inode)->cache_validity);
++
++	if ((cache_validity & NFS_INO_INVALID_DATA) ||
++		(cache_validity & NFS_INO_REVAL_PAGECACHE) ||
++		(cache_validity & NFS_INO_REVAL_FORCED) ||
++		(cache_validity & NFS_INO_INVALID_OTHER))
++		nfs4_bitmap_copy_adjust(bitmask, nfs4_bitmask(server, label), inode);
++
++	if (cache_validity & NFS_INO_INVALID_ATIME)
++		bitmask[1] |= FATTR4_WORD1_TIME_ACCESS;
++	if (cache_validity & NFS_INO_INVALID_ACCESS)
++		bitmask[0] |= FATTR4_WORD1_MODE | FATTR4_WORD1_OWNER |
++				FATTR4_WORD1_OWNER_GROUP;
++	if (cache_validity & NFS_INO_INVALID_ACL)
++		bitmask[0] |= FATTR4_WORD0_ACL;
++	if (cache_validity & NFS_INO_INVALID_LABEL)
++		bitmask[2] |= FATTR4_WORD2_SECURITY_LABEL;
++	if (cache_validity & NFS_INO_INVALID_CTIME)
++		bitmask[0] |= FATTR4_WORD0_CHANGE;
++	if (cache_validity & NFS_INO_INVALID_MTIME)
++		bitmask[1] |= FATTR4_WORD1_TIME_MODIFY;
++	if (cache_validity & NFS_INO_INVALID_SIZE)
++		bitmask[0] |= FATTR4_WORD0_SIZE;
++	if (cache_validity & NFS_INO_INVALID_BLOCKS)
++		bitmask[1] |= FATTR4_WORD1_SPACE_USED;
++}
++
+ static void nfs4_proc_write_setup(struct nfs_pgio_header *hdr,
+ 				  struct rpc_message *msg,
+ 				  struct rpc_clnt **clnt)
+@@ -5369,8 +5405,10 @@ static void nfs4_proc_write_setup(struct nfs_pgio_header *hdr,
+ 	if (!nfs4_write_need_cache_consistency_data(hdr)) {
+ 		hdr->args.bitmask = NULL;
+ 		hdr->res.fattr = NULL;
+-	} else
++	} else {
+ 		hdr->args.bitmask = server->cache_consistency_bitmask;
++		nfs4_bitmask_adjust(hdr->args.bitmask, hdr->inode, server, NULL);
++	}
+ 
+ 	if (!hdr->pgio_done_cb)
+ 		hdr->pgio_done_cb = nfs4_write_done_cb;
+@@ -6406,6 +6444,7 @@ static int _nfs4_proc_delegreturn(struct inode *inode, const struct cred *cred,
+ 	data->args.fhandle = &data->fh;
+ 	data->args.stateid = &data->stateid;
+ 	data->args.bitmask = server->cache_consistency_bitmask;
++	nfs4_bitmask_adjust(data->args.bitmask, inode, server, NULL);
+ 	nfs_copy_fh(&data->fh, NFS_FH(inode));
+ 	nfs4_stateid_copy(&data->stateid, stateid);
+ 	data->res.fattr = &data->fattr;
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index 9408f3252c8e..bafbf6695796 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -525,7 +525,7 @@ struct nfs_closeargs {
+ 	struct nfs_seqid *	seqid;
+ 	fmode_t			fmode;
+ 	u32			share_access;
+-	const u32 *		bitmask;
++	u32 *			bitmask;
+ 	struct nfs4_layoutreturn_args *lr_args;
+ };
+ 
+@@ -608,7 +608,7 @@ struct nfs4_delegreturnargs {
+ 	struct nfs4_sequence_args	seq_args;
+ 	const struct nfs_fh *fhandle;
+ 	const nfs4_stateid *stateid;
+-	const u32 * bitmask;
++	u32 * bitmask;
+ 	struct nfs4_layoutreturn_args *lr_args;
+ };
+ 
+@@ -648,7 +648,7 @@ struct nfs_pgio_args {
+ 	union {
+ 		unsigned int		replen;			/* used by read */
+ 		struct {
+-			const u32 *		bitmask;	/* used by write */
++			u32 *			bitmask;	/* used by write */
+ 			enum nfs3_stable_how	stable;		/* used by write */
+ 		};
+ 	};
+-- 
+2.18.1
 
