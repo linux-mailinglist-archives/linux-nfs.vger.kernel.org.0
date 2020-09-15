@@ -2,104 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0428226ABC8
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Sep 2020 20:26:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8622326AC03
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Sep 2020 20:33:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgIOS0P (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Sep 2020 14:26:15 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:24074 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbgIOS0L (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Sep 2020 14:26:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1600194371; x=1631730371;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=kJMkYQ5mUgUe6/LCH7hCqrkAXoDDE6Iuab8BgTClL6g=;
-  b=NzoCSDd07Ywd8Nbor+MiFBTkZyu7JGqihbV8kg0IIoy03a43/nW9rhWu
-   OLjhMh8e45hi8MtQCh6IJPGexASkNnrx+eVSg8o9R+/3MdBX06dhfPtFg
-   EkyqsLnqE/LYzAJHYFcqTqF9UhNv1VT3qNR3loW+3nrFsZrG6hBu4zYyt
-   o=;
-X-IronPort-AV: E=Sophos;i="5.76,430,1592870400"; 
-   d="scan'208";a="75174976"
-Subject: Re: [PATCH 1/1] NFSv4.2: fix client's attribute cache management for
- copy_file_range
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 15 Sep 2020 18:19:45 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
-        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id A1D6DA1FF7;
-        Tue, 15 Sep 2020 18:19:42 +0000 (UTC)
-Received: from EX13D07UWA003.ant.amazon.com (10.43.160.35) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 15 Sep 2020 18:19:41 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D07UWA003.ant.amazon.com (10.43.160.35) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 15 Sep 2020 18:19:41 +0000
-Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Tue, 15 Sep 2020 18:19:41 +0000
-Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id CB0E9C1400; Tue, 15 Sep 2020 18:19:41 +0000 (UTC)
-Date:   Tue, 15 Sep 2020 18:19:41 +0000
-From:   Frank van der Linden <fllinden@amazon.com>
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-CC:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
-        <linux-nfs@vger.kernel.org>, <jencce.kernel@gmail.com>
-Message-ID: <20200915181932.GA27779@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-References: <20200914202334.7536-1-olga.kornievskaia@gmail.com>
+        id S1727961AbgIOSdS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Sep 2020 14:33:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgIOSdO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Sep 2020 14:33:14 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DC14C06174A;
+        Tue, 15 Sep 2020 11:33:11 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 769F2425E; Tue, 15 Sep 2020 14:33:10 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 769F2425E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1600194790;
+        bh=Gzs0g7lW696ivl7ubWpdXh2/Wk4Ipx8dGRXKZd2l9RE=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=bW7m9iDz5Y4O1XoA29QxZDV1G6WuqJ1223x3/+QIHuVEkUK+HjpDUvjRsEeWAx5pF
+         +ntKDBlKmaugVxJWU67WddvR3cPAZkbWrOvEK693RrimM9VtDtBEVyz08tfX1lJDDd
+         /xaJAq3zWanpZFfuujis97ADehMctwrs5amDpNxw=
+Date:   Tue, 15 Sep 2020 14:33:10 -0400
+To:     Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nfs: Fix security label length not being reset
+Message-ID: <20200915183310.GB32632@fieldses.org>
+References: <20200914154958.55451-1-jeffrey.mitchell@starlab.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200914202334.7536-1-olga.kornievskaia@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20200914154958.55451-1-jeffrey.mitchell@starlab.io>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Sep 14, 2020 at 04:23:34PM -0400, Olga Kornievskaia wrote:
+On Mon, Sep 14, 2020 at 10:49:57AM -0500, Jeffrey Mitchell wrote:
+> nfs_readdir_page_filler() iterates over entries in a directory, reusing
+> the same security label buffer, but does not reset the buffer's length.
+> This causes decode_attr_security_label() to return -ERANGE if an entry's
+> security label is longer than the previous one's. This error, in
+> nfs4_decode_dirent(), only gets passed up as -EAGAIN, which causes another
+> failed attempt to copy into the buffer. The second error is ignored and
+> the remaining entries do not show up in ls, specifically the getdents64()
+> syscall.
 > 
-> 
-> From: Olga Kornievskaia <kolga@netapp.com>
-> 
-> After client is done with the COPY operation, it needs to invalidate
-> its pagecache (as it did no reading or writing of the data locally)
-> and it needs to invalidate it's attributes just like it would have
-> for a read on the source file and write on the destination file.
-> 
-> Once the linux server started giving out read delegations to
-> read+write opens, the destination file of the copy_file range
-> started having delegations and not doing syncup on close of the
-> file leading to xfstest failures for generic/430,431,432,433,565.
-> 
-> Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
-> Fixes: 2e72448b07dc ("NFS: Add COPY nfs operation")
-> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> ---
->  fs/nfs/nfs42proc.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-> index 142225f0af59..a9074f3366fa 100644
-> --- a/fs/nfs/nfs42proc.c
-> +++ b/fs/nfs/nfs42proc.c
-> @@ -356,7 +356,11 @@ static ssize_t _nfs42_proc_copy(struct file *src,
-> 
->         truncate_pagecache_range(dst_inode, pos_dst,
->                                  pos_dst + res->write_res.count);
-> -
-> +       NFS_I(dst_inode)->cache_validity |= (NFS_INO_REVAL_PAGECACHE |
-> +                       NFS_INO_REVAL_FORCED | NFS_INO_INVALID_SIZE |
-> +                       NFS_INO_INVALID_ATTR | NFS_INO_INVALID_DATA);
-> +       NFS_I(src_inode)->cache_validity |= (NFS_INO_REVAL_PAGECACHE |
-> +                       NFS_INO_REVAL_FORCED | NFS_INO_INVALID_ATIME);
->         status = res->write_res.count;
->  out:
->         if (args->sync)
-> --
-> 2.18.1
+> Reproduce by creating multiple files in NFS and giving one of the later
+> files a longer security label. ls will not see that file nor any that are
+> added afterwards, though they will exist on the backend.
 
-Should this be copied to stable@ ?
+Please include these paragraphs in the changelog.
 
-- Frank
+--b.
+
+> 
+> - Jeffrey
+> 
+> Jeffrey Mitchell (1):
+>   nfs: Fix security label length not being reset
+> 
+>  fs/nfs/dir.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> -- 
+> 2.25.1
