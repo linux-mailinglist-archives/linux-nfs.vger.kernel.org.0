@@ -2,158 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0B4F26AB85
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Sep 2020 20:09:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C33D026AB90
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Sep 2020 20:11:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgIOSJG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Sep 2020 14:09:06 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42312 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727887AbgIOSIZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Sep 2020 14:08:25 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08FDFdHl085509;
-        Tue, 15 Sep 2020 13:18:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=uNesw8fleIIrcs6tSs/ZH+DJHN905jHUiWGcQuQyrO4=;
- b=NRChyMAK4L/0a0Goj3QCYzYpF/zgEqTehYSA0xby8oNTLn7QNtcmJ1KNCgKBD5jT/uwm
- mnG1T6JI5I65l9Uq9GFMt73cA7KtQmIEz9PL2JJUvGsZx30CL312fXAoDY1/1jD4HYPm
- /xXThEOHP7HMd3IOZZtr007vivbZPnfxD6Y8wNQQYvR+IrDAsll5IB4R2Ai0w5l3t2z1
- LZaqYmlMLBlr45dFDGMcO6YpBr+eTrnPZSW/2GoWggl6Ivj0Q/oE7Gdad31joxRQa7Cu
- ABFLhJfbKmXeG7py4K0qtYcUyEnnZwURUibfJcPZAB5t0caka0iotyWkYF0EzyrCVGRD xQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 33gp9m4wb8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 15 Sep 2020 13:18:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08FDFQPK121929;
-        Tue, 15 Sep 2020 13:18:37 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 33h884uv9w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Sep 2020 13:18:37 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08FDIYEG008003;
-        Tue, 15 Sep 2020 13:18:35 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Sep 2020 13:18:34 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH RFC] NFSD: synchronously unhash a file on NFSv4 CLOSE
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <18B8C7A0-CDF9-4B5F-AABF-43189CE84CEC@oracle.com>
-Date:   Tue, 15 Sep 2020 09:18:31 -0400
-Cc:     Trond Myklebust <trond.myklebust@primarydata.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+        id S1727753AbgIOSLT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Sep 2020 14:11:19 -0400
+Received: from mail-eopbgr1300095.outbound.protection.outlook.com ([40.107.130.95]:1233
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727723AbgIOSJR (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 15 Sep 2020 14:09:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FsXBc2s7uYfkEzUa5OHDLdnaHJ0pNk24zA85D8J8Y91vNXyLPpsZqbKATO6FoZYvRlTxFUk3siBRcEAzj9+GrAoO6F7IyvXPZAKX8HUlFaa8B9JMZk5xqHDDlu2Lg6Tbuv/HdhPIfh6uem+YPTGKecKtHx1pQoxOk35v64QFIsWygc4UU1WA6AeSxP6cuARWU1AqFF8bp8YBmh9K1xaFpmrwaUqF2JKIrGb7C9Cqn4THNZJdSP8xvnSLOfAhvd/zWxRUugk59QOFawRaAdmkKUEYp2S4z3Zcyb0/TtS2KEAOWQHsB450lYRT1v8wowO8aBm/Q19MwMyxeL57sz5cEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iXown2goUmZ1oY6gz3TvdwAmKixqXI1if3BkEXXppxM=;
+ b=Yh/wiVnB/wexqFNF3fkQdoqanbHbAT6z4xCPpnSd/1Tx42lKkwd8HjUwBqMLvHxiap/vCZ7E/0zEEieSzYmrvn7WZ7WlTUiMx+hOa9hwIK3wsaXy61N6nJs/Yd1WqZvuo1KoNXMEc9hBS2TX2dhgrSgJzxaqICAP1jDh/DSzC4Vo0WP5yy4/+nQuVaqK5ARU1qewHxBZjd54lr3QneTzCs4juTok9WFSsalJft7u/Swi3B9mK8u9z0fxebeB6Y0miQvkwJn85cpmTxh2Mi+yBNcl5VyZ2wfKYu16HopuxDUCVQ0b/QYsemPb8r09V9JuxQK5mTaPZpzA/Xyy6Gy85Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iXown2goUmZ1oY6gz3TvdwAmKixqXI1if3BkEXXppxM=;
+ b=ArO1fiQnmzXyJXEp3DTQMX1wk0zIvLRb3e42K0rkUXCtOaOOTf8q6PBzXgMIhEwjxLj/VtwezdBNTCJLQeo1vYHJSqNW0rudJJDM0HEKAmjlXwbioVJrBSEEgnnX3lMXEZ4hgwYQtj1Z62YOvhsIw9z5B3p7Taht3tYoEuapyT4=
+Received: from SG2P153MB0231.APCP153.PROD.OUTLOOK.COM (2603:1096:4:8c::20) by
+ SG2P153MB0380.APCP153.PROD.OUTLOOK.COM (2603:1096:0:6::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3412.1; Tue, 15 Sep 2020 15:33:06 +0000
+Received: from SG2P153MB0231.APCP153.PROD.OUTLOOK.COM
+ ([fe80::8d7a:7c12:788:af5]) by SG2P153MB0231.APCP153.PROD.OUTLOOK.COM
+ ([fe80::8d7a:7c12:788:af5%6]) with mapi id 15.20.3412.003; Tue, 15 Sep 2020
+ 15:33:06 +0000
+From:   Nagendra Tomar <Nagendra.Tomar@microsoft.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+CC:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Subject: [PATCH] nfs: reset cookieverf even when no cached pages
+Thread-Topic: [PATCH] nfs: reset cookieverf even when no cached pages
+Thread-Index: AdaLdYAHSfC4FmukRxSfbPzbpNbQ4Q==
+Date:   Tue, 15 Sep 2020 15:33:04 +0000
+Message-ID: <SG2P153MB02316AF481EB246AED91DCB69E200@SG2P153MB0231.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=abd93397-bde9-47d9-851c-d3337636c9a0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-15T15:28:14Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [122.179.61.23]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cc02c067-ac79-47ff-b2c0-08d8598ca467
+x-ms-traffictypediagnostic: SG2P153MB0380:
+x-microsoft-antispam-prvs: <SG2P153MB0380576AED7B535BB2A0FF7D9E200@SG2P153MB0380.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:923;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xD/jo74PFzNFwVJ75CgyYSt711iSFeq9P12pWGzmVXJmUvAISRQU+xT2BkiIt7Et8htu/T4utt3tnnq5hmko2c4BsRvgPwvQ77fa3D/D14nrRM8hUuf03NOd1mCW5RvBP5wy5NjyNWqGINXjMC/Y8sWJRrE5OO0llpduJEsE6c0kYTWwjkeikjH6No24WVb+R2hVVpopYDpuVHtI9AJuagZ5My5hF4j3q24kMXFi4sULoHTcqe7aW5oODuv5ZSYeeq5mu/XD54BnWMuPUkmBTTCOuYKjK3N/JrWT7nVSApN2WAHwxNY5exwXXmmKM55kR/qOdCLhg37IHXVmEHIPTqFCrR+cZpm9IJQilwAw/oTpgmrqMb51NRrznqjfLEj/
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2P153MB0231.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(346002)(39860400002)(136003)(396003)(366004)(376002)(6506007)(186003)(2906002)(8936002)(55016002)(9686003)(316002)(7696005)(26005)(33656002)(6916009)(10290500003)(478600001)(8990500004)(54906003)(8676002)(4326008)(82960400001)(82950400001)(83380400001)(71200400001)(76116006)(52536014)(66556008)(5660300002)(66476007)(66946007)(66446008)(64756008)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: U8eIlTPVhCy9xg93Rz/HiW7YDIfQKGvtDDjzT1hndFWBPF1vuJ0YbeEz1juSFTi9uBufdfBraOnAlOZSf9yccb9N232bTKdVQvvABzfRJVT/w52E5oa7/IDecoh1pityj3zJ+9haDcJLtsh7Bk0ILXp3z2wk/DjXYLOsJpVCbQX328KXkENTU8QzNwH+TI5z3Lfjp8HbBt7Y2Z+Qjlu3z1CX4+SxECPn1xgbOJ9GSyqu/davyz3VhGbDolTEq0mo9c56Jle0LTDZ7dWgbHebD9cyH2S7Z1mJ5gwsW8e9VNNa7PSIrdZFyxxuD5miFz5j3c+ZNPOFJKKIBGNyC1wIKX1bi+KmnmG7a/b6akcE51kWc7cJojZVhBf8lu/R5M23nYtY8sCXY9Di7zWXpNnO3oCPYIFl0ktTRkJgoifQsgJ+JmWrLifkNdI38xvNh63gnx1/tB1j7FS8OWslTlOjftu5IAtgBHxU5eZXOcvlbX5ZRJ9m2afrH28DYrj76coNOPHx76sfGOHd45OAcyNzzA1S8QxcRJOFNOYc+Ei+cT+yNwzD/nL8uFHMzuHrlUTS3AA2btAjXX0QeISvYreDdH1WC6Q1P/qUPLZBV6sjwN0itOmzRnZbiSNDyyii272JUu2dhIyjUUCzX60OaBtdzQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <25B85F11-E8AA-444B-85F8-039135A43D39@oracle.com>
-References: <159976711218.1334.14422329830210182280.stgit@klimt.1015granger.net>
- <20200914205127.GD30007@fieldses.org>
- <18B8C7A0-CDF9-4B5F-AABF-43189CE84CEC@oracle.com>
-To:     Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9744 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
- suspectscore=0 phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009150111
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9744 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
- adultscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- spamscore=0 priorityscore=1501 suspectscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009150111
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SG2P153MB0231.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc02c067-ac79-47ff-b2c0-08d8598ca467
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Sep 2020 15:33:04.2818
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: g6gVaOwks7JmGvBfW7dLaZHDTtlUXg1hGE8bR0MChCulpjFvEC3Vkoo22iO3GYP+GipU4KWUZ6WgAqE6Th7LYw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0380
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+From: Nagendra S Tomar <natomar@microsoft.com>
 
+If NFS_INO_INVALID_DATA cache_validity flag is set, a subsequent call
+to nfs_invalidate_mapping() does the following two things:
 
-> On Sep 14, 2020, at 4:53 PM, Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->=20
->=20
->=20
->> On Sep 14, 2020, at 4:51 PM, J. Bruce Fields <bfields@fieldses.org> =
-wrote:
->>=20
->> On Thu, Sep 10, 2020 at 03:45:12PM -0400, Chuck Lever wrote:
->>> I recently observed a significant slowdown in a long-running
->>> test on NFSv4.0 mounts.
->>>=20
->>> An OPEN for write seems to block the NFS server from offering
->>> delegations on that file for a few seconds. The problem is that
->>> when that file is closed, the filecache retains an open-for-write
->>> file descriptor until the laundrette runs. That keeps the inode's
->>> i_writecount positive until the cached file is finally unhashed
->>> and closed.
->>>=20
->>> Force the NFSv4 CLOSE logic to call filp_close() to eliminate
->>> the underlying cached open-for-write file as soon as the client
->>> closes the file.
->>>=20
->>> This minor change claws back about 80% of the performance
->>> regression.
->>=20
->> That's really useful to know.  But mainly this makes me think that
->> nfsd4_check_conflicting_opens() is wrong.
->>=20
->> I'm trying to determine whether a given file has a non-nfsd writer by
->> counting the number of write opens nfsd holds on a given file and
->> subtracting that from i_writecount.
->>=20
->> But the way I'm counting write opens probably isn't correct.
->=20
-> I entertained that possibility, but I couldn't figure out
-> a better way to count opens-for-write.
+ 1. Clears mapping.
+ 2. Resets cookieverf to 0, if inode refers to a directory.
 
-Also, the regression started long before nfsd4_check_conflicting_opens
-was added.
+If there are no mapped pages, we don't need #1, but we still need #2.
 
+Signed-off-by: Nagendra S Tomar <natomar@microsoft.com>
+---
+ fs/nfs/inode.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
->> --b.
->>=20
->>>=20
->>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->>> ---
->>> fs/nfsd/nfs4state.c |    8 ++++++--
->>> 1 file changed, 6 insertions(+), 2 deletions(-)
->>>=20
->>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
->>> index 3ac40ba7efe1..0b3059b8b36c 100644
->>> --- a/fs/nfsd/nfs4state.c
->>> +++ b/fs/nfsd/nfs4state.c
->>> @@ -613,10 +613,14 @@ static void __nfs4_file_put_access(struct =
-nfs4_file *fp, int oflag)
->>> 		if (atomic_read(&fp->fi_access[1 - oflag]) =3D=3D 0)
->>> 			swap(f2, fp->fi_fds[O_RDWR]);
->>> 		spin_unlock(&fp->fi_lock);
->>> -		if (f1)
->>> +		if (f1) {
->>> +			=
-nfsd_file_close_inode_sync(locks_inode(f1->nf_file));
->>> 			nfsd_file_put(f1);
->>> -		if (f2)
->>> +		}
->>> +		if (f2) {
->>> +			=
-nfsd_file_close_inode_sync(locks_inode(f2->nf_file));
->>> 			nfsd_file_put(f2);
->>> +		}
->>> 	}
->>> }
->=20
-> --
-> Chuck Lever
-
---
-Chuck Lever
-
-
-
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index aa6493905bbe..40f2bfaa4e46 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -209,8 +209,13 @@ static void nfs_set_cache_invalid(struct inode *inode,=
+ unsigned long flags)
+ 				| NFS_INO_INVALID_XATTR);
+ 	}
+=20
+-	if (inode->i_mapping->nrpages =3D=3D 0)
++	if (inode->i_mapping->nrpages =3D=3D 0) {
++		if (S_ISDIR(inode->i_mode) &&
++		    (flags & (NFS_INO_INVALID_DATA | NFS_INO_DATA_INVAL_DEFER)))
++			memset(nfsi->cookieverf, 0, sizeof(nfsi->cookieverf));
+ 		flags &=3D ~(NFS_INO_INVALID_DATA|NFS_INO_DATA_INVAL_DEFER);
++	}
++
+ 	nfsi->cache_validity |=3D flags;
+ 	if (flags & NFS_INO_INVALID_DATA)
+ 		nfs_fscache_invalidate(inode);
