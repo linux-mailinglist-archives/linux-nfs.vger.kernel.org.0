@@ -2,129 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60A6126AFCF
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Sep 2020 23:44:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 447C926B305
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Sep 2020 00:58:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgIOVoW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Sep 2020 17:44:22 -0400
-Received: from mail-dm3gcc02on2104.outbound.protection.outlook.com ([40.107.91.104]:22176
-        "EHLO GCC02-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727845AbgIOVnq (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 15 Sep 2020 17:43:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gP59+M9kP3ZEQtpnFruwMJTxipkpx5mXy/SAn2tLXN3JL4qzMJ1ovTpHbiAiF/nRgN+JWCDnMI8WCCcRMUXjnFduBiNpgILfXKaDFIuooiqrtNQxzbDEq+ZXqd/6dyBNj6iD6CmIZdrBoo6eEZJhIR2gVWzt1Zu1x2I8WkY2+RjJDlgZrfvNwRcw/4U3TdF97r5ksdewF0BlNby6ZExrsumudCVvW+WO8hM/di5362QOMxgKtlaqtFHQX4/sqqgAZs6qXS1WZMpGBjKNYO3kZhTdRl0X06MFZ2UnBUMt/P9Vh4IpyS3dUHF9DQWGbOXmF9OR97gJSP4UYP6Vo+NIvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5XTZZ/aS36tpTnR5M4LBDQk4eW6LhdJERW6/8ZQBdjg=;
- b=AEMkmqRUg3UZV5ehyVTDA4QkihRZ0LrGTYP4+eEdl+HOkLUjAoN3uBVLLoJlH2fPtc1OtuPBOe6RA6OE3dr3FKkRGBU86TJAfPr8Mr8nkNHkKcK2wXE2uMFPinGFNIq8DVH2P5c8qKxMSe/e48ddMFm/cKT/T6YCQHAtxWOBQSrZM9Gm3Dci1Vc6xbAceeaIrV7uqIAt+aSmcu7+HnZT3PDT1IsxxgdT5xexteAv8RKROzjmpwlzYCMuMeLNN2zV7TMVCaqZUkMQEe6MjAsvnvQ4erXTZ1441TMna1uCIsttHHrkV3rb9UABF9g5P5ffrbNzUXeKwEMYjUjUFq6SXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starlab.io; dmarc=pass action=none header.from=starlab.io;
- dkim=pass header.d=starlab.io; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=starlab.io;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5XTZZ/aS36tpTnR5M4LBDQk4eW6LhdJERW6/8ZQBdjg=;
- b=aJuHPsEZcvYEP98mtq2JKo/LbYpT9T2mpgQahKfEPFXnrB3ajaaj7edTDPFd88SsdHU/wC7pVNVj0g8Ybc9hBn483uen/K+fV2fNe2IiND7jJO/8+jusNVQEVcBbNcaGNFA1idd4Us3/7XC9AqnJ7uKjYcLlkpDC5MooQ2ALKLA=
-Authentication-Results: starlab.io; dkim=none (message not signed)
- header.d=none;starlab.io; dmarc=none action=none header.from=starlab.io;
-Received: from SA9PR09MB5246.namprd09.prod.outlook.com (2603:10b6:806:4b::9)
- by SA9PR09MB5376.namprd09.prod.outlook.com (2603:10b6:806:44::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Tue, 15 Sep
- 2020 21:43:23 +0000
-Received: from SA9PR09MB5246.namprd09.prod.outlook.com
- ([fe80::e90f:c1b7:2964:d2ac]) by SA9PR09MB5246.namprd09.prod.outlook.com
- ([fe80::e90f:c1b7:2964:d2ac%7]) with mapi id 15.20.3370.019; Tue, 15 Sep 2020
- 21:43:23 +0000
-From:   Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
+        id S1727340AbgIOW6c (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Sep 2020 18:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbgIOW5z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Sep 2020 18:57:55 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F12B9C061788
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Sep 2020 15:57:54 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id j20so5056864ybt.10
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Sep 2020 15:57:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=GbEYlGiQU5dPzFhiYeMOq8enMUbU6ivz9OjjRiaMQaI=;
+        b=qyuZI04ZdZ6O+ylRxRptQeEM5MQiA/Gw+ItC9/XnP6AWdQeiIZLXG+0iN66Put9MFX
+         ZeqoUzQagxKRXtb5Uo2rFdzUsckyo/GfbbkByHNkiQRF4pNh/qNCMP9bt7jHY2E9H8jW
+         BSVO5zvhrDy70beNbWsN+DDx3n4Z06zE1grpEtjE+whsoPRODqWkb3fLbv5Ikh0oFwnI
+         spzeoVUImbVLgVF6sklXpxtGLxJjQ+5U39z8VDozAV4Cm+bP7PieXvuaEv9dNcFdHxBB
+         tZ5E+ROSWr9cG7bNpPgXJMEgga/h+iH8hu5gWt++SErMBn0uFvF8yhB4xw3hIhdO43B/
+         E0JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=GbEYlGiQU5dPzFhiYeMOq8enMUbU6ivz9OjjRiaMQaI=;
+        b=guAxXlzmepZp4A56o6C1JWwGRi7gHhOOsMqW+BHSA2M/ODFrCTQxMk9JRaWAAjjbUc
+         /LksEDbkFgrP97w/rUOSi9fITNGnGJfuDzWjNkplrTEtQusRxaYUoEWvJnjmoDkrGO88
+         gXX/lF8Dv4+h0l3MJNndRlDiIzhRdQnQryBdqfzj+dj1FB3Kz7sHZpH/pyUN99oq1zYl
+         zcj7Yt3MHXs81bjAIb8sAtxzGmkOqNVvDHK5TR0Oj0FK9ps87UBwWBMaWiYRn8Jh/12p
+         rhAc40O8ykO4d7jfz1CDWBlLIz4Nf5VjtvvB76cmona8PsJlEgoNgCkqQLePaiTH9kSu
+         v5oQ==
+X-Gm-Message-State: AOAM530hpfWTVRiV7kr1YcZOn/AvtyFIHEcfMqmNxAzWrA6bqDTZz3es
+        9slNB6dQM8+2siwPdBhwlbmg13ph+z1j8SnJPVc=
+X-Google-Smtp-Source: ABdhPJzklPzjBdwFwagsx1j0BJVPOolAFb+q29cI9UUblXp8L02aslKhDquxj6JdqFLlM4n4E6bXgwK0+HoHH26p6vg=
+X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:15c:211:202:f693:9fff:fef4:4d25])
+ (user=ndesaulniers job=sendgmr) by 2002:a25:3453:: with SMTP id
+ b80mr32029892yba.237.1600210674093; Tue, 15 Sep 2020 15:57:54 -0700 (PDT)
+Date:   Tue, 15 Sep 2020 15:57:50 -0700
+Message-Id: <20200915225751.274531-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.618.gf4bc123cb7-goog
+Subject: [PATCH] nfs: remove incorrect fallthrough label
+From:   Nick Desaulniers <ndesaulniers@google.com>
 To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J . Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
-Subject: [PATCH v2] nfs: Fix security label length not being reset
-Date:   Tue, 15 Sep 2020 16:42:52 -0500
-Message-Id: <20200915214252.262881-1-jeffrey.mitchell@starlab.io>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200914154958.55451-1-jeffrey.mitchell@starlab.io>
-References: <20200914154958.55451-1-jeffrey.mitchell@starlab.io>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SN4PR0701CA0023.namprd07.prod.outlook.com
- (2603:10b6:803:28::33) To SA9PR09MB5246.namprd09.prod.outlook.com
- (2603:10b6:806:4b::9)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jeffrey-work-20 (75.1.70.238) by SN4PR0701CA0023.namprd07.prod.outlook.com (2603:10b6:803:28::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Tue, 15 Sep 2020 21:43:22 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [75.1.70.238]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f6b6cbb7-73d3-494f-9182-08d859c05e6a
-X-MS-TrafficTypeDiagnostic: SA9PR09MB5376:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA9PR09MB537678871DE105834C46ED4BF8200@SA9PR09MB5376.namprd09.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ve0rVm2dgAEEJAHk636eMFSzbaG54N1EjudpqWLYW0DylXWpm1XPdYOKGIJ7OQAUpYFiKRVvvCCHJyBpHbHzGKC4nG5t9P4JC8cVt7aPrOwpeaPSxWzUaFp0k9bOYDPZUOJ8XLYLs7IY1pk2rtYoLLTdDcfG5Kzzo2J3bIaePbV3MKzQ0UsODbgcJZlEpmQscx6xeqDlu+uG1mYjrtw5UiZLSQAD5lbkudMm2EmmZLEYqmYHzwFZpOujih7ONUEwBPmwH3cgEdqhdth5H9fRA5RelGwfRwMIn7uLA+/xqi7XnIvhkfvfdF/IyPz3eBCA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA9PR09MB5246.namprd09.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39830400003)(346002)(136003)(376002)(366004)(16526019)(186003)(107886003)(4326008)(8676002)(8936002)(36756003)(6496006)(66946007)(2906002)(15650500001)(52116002)(66556008)(66476007)(316002)(6666004)(86362001)(26005)(5660300002)(1076003)(44832011)(83380400001)(478600001)(2616005)(110136005)(956004)(6486002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: q4wBhvrjMzSF6Plz5Ht6sf9Uu69ig8LJutAd8jEyaoRDqKTewYyNQQYzV/bQE3XEV4LlM1hb3ypXtn2UD9kZ/IWTmgpl/Y1MFe+L1ElTHVh//V3w7gSJ81b08ickMgWfthsYiUVGueTLp5bDY8dzcUXctkSBIycLijlMk9+jcS/InJxM/w8oiMk/mNtfX7EFuhtrsvQyWRN5ixKH/jgHOhkH7+r8SK5ywKJUxitBRQHXKyBbJ9wi7nEbTIzYCW4WKtrnhYoNWNvKgjBUWA0LPrhxeO1sXAk5oq+Vuw0Oo4uzI4RtN84ucfhZCYEh5tbZXN7/hZ7VucAojcwKizYByZwF9Y7Tms+Qu6o+0mYEg8rv3674tDIbW55gvLpoClnMmUgAKEzNg3gEgaTkoYgW2ASPlIsKNy1rO+ukeMT7BSsbPQRBapQYtCSIs/TsmQcBp2XuuNqtXEhKJNwc+yV3tT3/D7hfCg9JfhdCwpS03f5o4OZPzwW+O0EF3E4KpZkQ81iTRmt6v5H+6f57VRofr6IckSvmbX+Mwbis7sXKBegIgGp8/a87r847npRq68Rao6ZDV+Z7R7M5FYP/bzJZOIWJmmn8EIoY/0as0nZmCFPxewig4O+RKwxixWqNxIYAEZZWR96si8n53nHTsMOJHQ==
-X-OriginatorOrg: starlab.io
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6b6cbb7-73d3-494f-9182-08d859c05e6a
-X-MS-Exchange-CrossTenant-AuthSource: SA9PR09MB5246.namprd09.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2020 21:43:22.8388
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e611933-986f-4838-a403-4acb432ce224
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: chYVMMkYAvfiR0om1oU7hkRD1vHWk8vWKpUFgxhDUxbYALnkAu4ki99P8nO5pZmG5IsEx33nXgcNyg9tcTPVyxPI/upgYllWlX/Q0iCwT6Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA9PR09MB5376
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Joe Perches <joe@perches.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Hongxiang Lou <louhongxiang@huawei.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nfs_readdir_page_filler() iterates over entries in a directory, reusing
-the same security label buffer, but does not reset the buffer's length.
-This causes decode_attr_security_label() to return -ERANGE if an entry's
-security label is longer than the previous one's. This error, in
-nfs4_decode_dirent(), only gets passed up as -EAGAIN, which causes another
-failed attempt to copy into the buffer. The second error is ignored and
-the remaining entries do not show up in ls, specifically the getdents64()
-syscall.
+There is no case after the default from which to fallthrough to. Clang
+will error in this case (unhelpfully without context, see link below)
+and GCC will with -Wswitch-unreachable.
 
-Reproduce by creating multiple files in NFS and giving one of the later
-files a longer security label. ls will not see that file nor any that are
-added afterwards, though they will exist on the backend.
+The previous commit should have just removed the comment.
 
-In nfs_readdir_page_filler(), reset security label buffer length before
-every reuse
-
-Signed-off-by: Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
+Fixes: 2a1390c95a69 ("nfs: Convert to use the preferred fallthrough macro")
+Link: https://bugs.llvm.org/show_bug.cgi?id=47539
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
-v2: Added explanation from cover letter as requested by J. Bruce Fields
-    <bfields@fieldses.org>
+ fs/nfs/super.c | 1 -
+ 1 file changed, 1 deletion(-)
 
- fs/nfs/dir.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index e732580fe47b..cb52db9a0cfb 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -579,6 +579,9 @@ int nfs_readdir_page_filler(nfs_readdir_descriptor_t *desc, struct nfs_entry *en
- 	xdr_set_scratch_buffer(&stream, page_address(scratch), PAGE_SIZE);
- 
- 	do {
-+		if (entry->label)
-+			entry->label->len = NFS4_MAXLABELLEN;
-+
- 		status = xdr_decode(desc, entry, &stream);
- 		if (status != 0) {
- 			if (status == -EAGAIN)
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index d20326ee0475..7de4e0b03be0 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -889,7 +889,6 @@ static struct nfs_server *nfs_try_mount_request(struct fs_context *fc)
+ 		default:
+ 			if (rpcauth_get_gssinfo(flavor, &info) != 0)
+ 				continue;
+-			fallthrough;
+ 		}
+ 		dfprintk(MOUNT, "NFS: attempting to use auth flavor %u\n", flavor);
+ 		ctx->selected_flavor = flavor;
 -- 
-2.25.1
+2.28.0.618.gf4bc123cb7-goog
 
