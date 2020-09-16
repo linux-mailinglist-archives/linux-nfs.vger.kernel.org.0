@@ -2,116 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5183E26B8DC
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Sep 2020 02:51:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0211226BBEB
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Sep 2020 07:41:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgIPAvk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Sep 2020 20:51:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46768 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgIPAvi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Sep 2020 20:51:38 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 360F4C06174A
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Sep 2020 17:51:38 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id o20so2927813pfp.11
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Sep 2020 17:51:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gIytwv4XTDks1RzUVPSw8zLP11VLG9XBEFCA97ER3Eg=;
-        b=bIpGCEMBLxgMLj6cugFwT7fqAe+ucN5t5wrKk3qq1a6s3wEYCLPFNgPrShq0c9CqWa
-         OaezzBApKMG130xcl5zRjZzJP+c1b2hff01hi83LcQ564BUAEt/QexN8QIERsANiw/X6
-         mqxZN3HhVHSPGjZMHjUYFKSlMXzdgzDzC4qFJfxP6C6Ei0YdtQ6xBNMTjjzg3Bb1ZYe7
-         4EdX+xQAwlC5aQc/SQjulOxOD6MWYGp5vQbXfXHg/7Vzlk/LdSSRwmPZtnDsaswdkHKL
-         voxXm2DPnQqAIFJCWy9sRx2Ari5B2g+MTkmaHaTWjevwWWWWRG7L5FRDD++RNSQS6d3M
-         gU+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gIytwv4XTDks1RzUVPSw8zLP11VLG9XBEFCA97ER3Eg=;
-        b=K6458wbZlh7G/EqH9faWXry8dFXUxB/F0JtIWW+bjRsXXKXXNQwL+45MKfoGScYQUW
-         pSzkSShsqRTrjXFD5TEK4LnvrgmOzG4TnqJ4l4iP4Ymi+Zi7oIkP10daRxrdfitdawCx
-         cu9ZXKjcSNTyj05k5EUw5ZZa0LPiaC9zqF+LuyxWqexthIvlIE6X3UnJUw7Qa0rsHVMv
-         Dua+nCWNEJteOO1Qr3GccyeuwXo2vIqZ5aspp5BttmV9WFuzelEmxZW3xz4vTu0NZl92
-         XxSQUVSI8jS5z7GyCAXfF32P4ywK8W4lFnpBjQxvdbHC+HilE2BGRA5E/+Jqe+Vnl/vx
-         +Npg==
-X-Gm-Message-State: AOAM530qTxL0mmY/osarJldWQmxCcaZfxhIeyrodW5BGzF4Dv3HBbupP
-        jg+aGsB/AwxYO74K01AdnIE=
-X-Google-Smtp-Source: ABdhPJzb3QRJlpMgy8xrW2wFCyOxWQYMA/ThW8ucpJYsm6GuvOuST/43fkSAQ/ELyFMMUeUBnOFIJA==
-X-Received: by 2002:a63:1d5c:: with SMTP id d28mr15767944pgm.82.1600217497585;
-        Tue, 15 Sep 2020 17:51:37 -0700 (PDT)
-Received: from localhost ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id md10sm603055pjb.45.2020.09.15.17.51.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2020 17:51:36 -0700 (PDT)
-Date:   Wed, 16 Sep 2020 08:51:29 +0800
-From:   Murphy Zhou <jencce.kernel@gmail.com>
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        linux-nfs@vger.kernel.org, jencce.kernel@gmail.com
-Subject: Re: [PATCH 1/1] NFSv4.2: fix client's attribute cache management for
- copy_file_range
-Message-ID: <20200916005129.ferojvuzniecdsbm@xzhoux.usersys.redhat.com>
-References: <20200914202334.7536-1-olga.kornievskaia@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200914202334.7536-1-olga.kornievskaia@gmail.com>
+        id S1726180AbgIPFlg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Sep 2020 01:41:36 -0400
+Received: from smtp23.cstnet.cn ([159.226.251.23]:38510 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726068AbgIPFlg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 16 Sep 2020 01:41:36 -0400
+Received: from localhost (unknown [159.226.5.99])
+        by APP-03 (Coremail) with SMTP id rQCowAAnnRUMpWFfe1tFAg--.2699S2;
+        Wed, 16 Sep 2020 13:39:24 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        bfields@fieldses.org, chuck.lever@oracle.com, davem@davemloft.net,
+        kuba@kernel.org, linux-nfs@vger.kernel.org, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
+Subject: [PATCH] sunrpc: cache : Replace seq_printf with seq_puts
+Date:   Wed, 16 Sep 2020 05:39:18 +0000
+Message-Id: <20200916053918.25741-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: rQCowAAnnRUMpWFfe1tFAg--.2699S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrur4UGr48WFW7JFWrWryrCrg_yoWxuFcE9a
+        4fCF1UWFs3XF1UCFnrJrsxG3ykZa4qvFs5KwnrtrW7tr1Utr1jvwn3uFn3G3W5GFWkKF97
+        CrykuFyxXw1akjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+        0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
+        628vn2kIc2xKxwCY02Avz4vE14v_GrWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+        v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+        1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+        AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0D
+        MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+        VFxhVjvjDU0xZFpf9x0JUdDGOUUUUU=
+X-Originating-IP: [159.226.5.99]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCwUBA1z4jcHRVQAAsg
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Sep 14, 2020 at 04:23:34PM -0400, Olga Kornievskaia wrote:
-> From: Olga Kornievskaia <kolga@netapp.com>
-> 
-> After client is done with the COPY operation, it needs to invalidate
-> its pagecache (as it did no reading or writing of the data locally)
-> and it needs to invalidate it's attributes just like it would have
-> for a read on the source file and write on the destination file.
-> 
-> Once the linux server started giving out read delegations to
-> read+write opens, the destination file of the copy_file range
-> started having delegations and not doing syncup on close of the
-> file leading to xfstest failures for generic/430,431,432,433,565.
+seq_puts is a lot cheaper than seq_printf, so use that to print
+literal strings.
 
-Tested OK. ltp and xfstests on v3/v4.* looks fine.
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ net/sunrpc/cache.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The other issue generic/464 warning I reported before is still
-there with Olga's patch. For the record.
+diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+index baef5ee43dbb..9e68e443f497 100644
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -1436,10 +1436,10 @@ static int c_show(struct seq_file *m, void *p)
+ 	cache_get(cp);
+ 	if (cache_check(cd, cp, NULL))
+ 		/* cache_check does a cache_put on failure */
+-		seq_printf(m, "# ");
++		seq_puts(m, "# ");
+ 	else {
+ 		if (cache_is_expired(cd, cp))
+-			seq_printf(m, "# ");
++			seq_puts(m, "# ");
+ 		cache_put(cp, cd);
+ 	}
  
-Thanks!
-> 
-> Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
-> Fixes: 2e72448b07dc ("NFS: Add COPY nfs operation")
-> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> ---
->  fs/nfs/nfs42proc.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-> index 142225f0af59..a9074f3366fa 100644
-> --- a/fs/nfs/nfs42proc.c
-> +++ b/fs/nfs/nfs42proc.c
-> @@ -356,7 +356,11 @@ static ssize_t _nfs42_proc_copy(struct file *src,
->  
->  	truncate_pagecache_range(dst_inode, pos_dst,
->  				 pos_dst + res->write_res.count);
-> -
-> +	NFS_I(dst_inode)->cache_validity |= (NFS_INO_REVAL_PAGECACHE |
-> +			NFS_INO_REVAL_FORCED | NFS_INO_INVALID_SIZE |
-> +			NFS_INO_INVALID_ATTR | NFS_INO_INVALID_DATA);
-> +	NFS_I(src_inode)->cache_validity |= (NFS_INO_REVAL_PAGECACHE |
-> +			NFS_INO_REVAL_FORCED | NFS_INO_INVALID_ATIME);
->  	status = res->write_res.count;
->  out:
->  	if (args->sync)
-> -- 
-> 2.18.1
-> 
-
 -- 
-Murphy
+2.17.1
+
