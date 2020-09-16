@@ -2,116 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 209F626B800
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Sep 2020 02:34:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5183E26B8DC
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Sep 2020 02:51:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgIPAeF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Sep 2020 20:34:05 -0400
-Received: from smtprelay0130.hostedemail.com ([216.40.44.130]:55218 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726661AbgIPAd5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Sep 2020 20:33:57 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 3DD4D837F24C;
-        Wed, 16 Sep 2020 00:33:55 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 30,2,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:960:967:968:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2198:2199:2393:2525:2560:2563:2682:2685:2693:2828:2859:2898:2902:2933:2937:2939:2942:2945:2947:2951:2954:3022:3138:3139:3140:3141:3142:3354:3622:3865:3866:3867:3868:3870:3871:3872:3873:3874:3934:3936:3938:3941:3944:3947:3950:3953:3956:3959:4250:4321:5007:6119:6691:9025:10010:10400:10848:11026:11232:11658:11914:12043:12048:12050:12295:12296:12297:12438:12555:12663:12679:12698:12737:12740:12760:12895:13069:13311:13357:13439:14181:14659:14721:14777:21080:21324:21433:21627:21740:21939:30012:30054:30070:30075:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:1:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: corn68_1c0caec27115
-X-Filterd-Recvd-Size: 3131
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 16 Sep 2020 00:33:53 +0000 (UTC)
-Message-ID: <2786f88508b99c8e1ebee62ea955c4026368c878.camel@perches.com>
-Subject: Re: [PATCH] nfs: remove incorrect fallthrough label
-From:   Joe Perches <joe@perches.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Hongxiang Lou <louhongxiang@huawei.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Date:   Tue, 15 Sep 2020 17:33:52 -0700
-In-Reply-To: <de27c65b-ae7d-a2ba-3ab8-717c10f297c3@embeddedor.com>
-References: <20200915225751.274531-1-ndesaulniers@google.com>
-         <9441ed0f247d0cac6e85f3847e1b4c32a199dd8f.camel@perches.com>
-         <55f1ff08-fc3c-62ed-429d-c9ae285a3a49@embeddedor.com>
-         <de27c65b-ae7d-a2ba-3ab8-717c10f297c3@embeddedor.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        id S1726524AbgIPAvk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Sep 2020 20:51:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbgIPAvi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Sep 2020 20:51:38 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 360F4C06174A
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Sep 2020 17:51:38 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id o20so2927813pfp.11
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Sep 2020 17:51:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gIytwv4XTDks1RzUVPSw8zLP11VLG9XBEFCA97ER3Eg=;
+        b=bIpGCEMBLxgMLj6cugFwT7fqAe+ucN5t5wrKk3qq1a6s3wEYCLPFNgPrShq0c9CqWa
+         OaezzBApKMG130xcl5zRjZzJP+c1b2hff01hi83LcQ564BUAEt/QexN8QIERsANiw/X6
+         mqxZN3HhVHSPGjZMHjUYFKSlMXzdgzDzC4qFJfxP6C6Ei0YdtQ6xBNMTjjzg3Bb1ZYe7
+         4EdX+xQAwlC5aQc/SQjulOxOD6MWYGp5vQbXfXHg/7Vzlk/LdSSRwmPZtnDsaswdkHKL
+         voxXm2DPnQqAIFJCWy9sRx2Ari5B2g+MTkmaHaTWjevwWWWWRG7L5FRDD++RNSQS6d3M
+         gU+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gIytwv4XTDks1RzUVPSw8zLP11VLG9XBEFCA97ER3Eg=;
+        b=K6458wbZlh7G/EqH9faWXry8dFXUxB/F0JtIWW+bjRsXXKXXNQwL+45MKfoGScYQUW
+         pSzkSShsqRTrjXFD5TEK4LnvrgmOzG4TnqJ4l4iP4Ymi+Zi7oIkP10daRxrdfitdawCx
+         cu9ZXKjcSNTyj05k5EUw5ZZa0LPiaC9zqF+LuyxWqexthIvlIE6X3UnJUw7Qa0rsHVMv
+         Dua+nCWNEJteOO1Qr3GccyeuwXo2vIqZ5aspp5BttmV9WFuzelEmxZW3xz4vTu0NZl92
+         XxSQUVSI8jS5z7GyCAXfF32P4ywK8W4lFnpBjQxvdbHC+HilE2BGRA5E/+Jqe+Vnl/vx
+         +Npg==
+X-Gm-Message-State: AOAM530qTxL0mmY/osarJldWQmxCcaZfxhIeyrodW5BGzF4Dv3HBbupP
+        jg+aGsB/AwxYO74K01AdnIE=
+X-Google-Smtp-Source: ABdhPJzb3QRJlpMgy8xrW2wFCyOxWQYMA/ThW8ucpJYsm6GuvOuST/43fkSAQ/ELyFMMUeUBnOFIJA==
+X-Received: by 2002:a63:1d5c:: with SMTP id d28mr15767944pgm.82.1600217497585;
+        Tue, 15 Sep 2020 17:51:37 -0700 (PDT)
+Received: from localhost ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id md10sm603055pjb.45.2020.09.15.17.51.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Sep 2020 17:51:36 -0700 (PDT)
+Date:   Wed, 16 Sep 2020 08:51:29 +0800
+From:   Murphy Zhou <jencce.kernel@gmail.com>
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        linux-nfs@vger.kernel.org, jencce.kernel@gmail.com
+Subject: Re: [PATCH 1/1] NFSv4.2: fix client's attribute cache management for
+ copy_file_range
+Message-ID: <20200916005129.ferojvuzniecdsbm@xzhoux.usersys.redhat.com>
+References: <20200914202334.7536-1-olga.kornievskaia@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200914202334.7536-1-olga.kornievskaia@gmail.com>
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2020-09-15 at 19:01 -0500, Gustavo A. R. Silva wrote:
+On Mon, Sep 14, 2020 at 04:23:34PM -0400, Olga Kornievskaia wrote:
+> From: Olga Kornievskaia <kolga@netapp.com>
 > 
-> On 9/15/20 18:51, Gustavo A. R. Silva wrote:
-> > 
-> > On 9/15/20 18:29, Joe Perches wrote:
-> > > On Tue, 2020-09-15 at 15:57 -0700, Nick Desaulniers wrote:
-> > > > There is no case after the default from which to fallthrough to. Clang
-> > > > will error in this case (unhelpfully without context, see link below)
-> > > > and GCC will with -Wswitch-unreachable.
-> > > > 
-> > > > The previous commit should have just removed the comment.
-> > > []
-> > > > diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-> > > []
-> > > > @@ -889,7 +889,6 @@ static struct nfs_server *nfs_try_mount_request(struct fs_context *fc)
-> > > >  		default:
-> > > >  			if (rpcauth_get_gssinfo(flavor, &info) != 0)
-> > > >  				continue;
-> > > > -			fallthrough;
-> > > 
-> > > My preference would be to convert the fallthrough
-> > > to a break here so if someone ever adds another
-> > > label after default: for any reason, the code would
-> > > still work as expected.
-> > 
-> > I agree with Joe.
+> After client is done with the COPY operation, it needs to invalidate
+> its pagecache (as it did no reading or writing of the data locally)
+> and it needs to invalidate it's attributes just like it would have
+> for a read on the source file and write on the destination file.
 > 
-> Actually, this is part of the work I plan to do to enable -Wimplicit-fallthrough
-> for Clang: audit every place where we could use a break instead of a fallthrough.
+> Once the linux server started giving out read delegations to
+> read+write opens, the destination file of the copy_file range
+> started having delegations and not doing syncup on close of the
+> file leading to xfstest failures for generic/430,431,432,433,565.
+
+Tested OK. ltp and xfstests on v3/v4.* looks fine.
+
+The other issue generic/464 warning I reported before is still
+there with Olga's patch. For the record.
+ 
+Thanks!
 > 
-> I'm on vacation this week. So, I'll get back to this next week.
+> Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
+> Fixes: 2e72448b07dc ("NFS: Add COPY nfs operation")
+> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> ---
+>  fs/nfs/nfs42proc.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+> index 142225f0af59..a9074f3366fa 100644
+> --- a/fs/nfs/nfs42proc.c
+> +++ b/fs/nfs/nfs42proc.c
+> @@ -356,7 +356,11 @@ static ssize_t _nfs42_proc_copy(struct file *src,
+>  
+>  	truncate_pagecache_range(dst_inode, pos_dst,
+>  				 pos_dst + res->write_res.count);
+> -
+> +	NFS_I(dst_inode)->cache_validity |= (NFS_INO_REVAL_PAGECACHE |
+> +			NFS_INO_REVAL_FORCED | NFS_INO_INVALID_SIZE |
+> +			NFS_INO_INVALID_ATTR | NFS_INO_INVALID_DATA);
+> +	NFS_I(src_inode)->cache_validity |= (NFS_INO_REVAL_PAGECACHE |
+> +			NFS_INO_REVAL_FORCED | NFS_INO_INVALID_ATIME);
+>  	status = res->write_res.count;
+>  out:
+>  	if (args->sync)
+> -- 
+> 2.18.1
+> 
 
-Nice, thanks Gustavo.
-
-As part of that work, perhaps you could also find all the
-
-	switch (<foo>) {
-	[cases...]
-		[code...];
-		break;
-
-	default:
-		[code...]
-		(no break)
-	}
-
-uawa where the last label/default block does _not_ have a break
-statement and add one too.
-
-Also see:  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91432
-
-gcc does _not_ warn on
-
-	switch (<foo>) {
-	case BAR:
-		[code];
-		(no fallthrough)
-
-	case BAZ:
-		break;
-	}
-
-It might be good to add the appropriate fallthrough
-for those case blocks too.
-
-
+-- 
+Murphy
