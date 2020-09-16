@@ -2,273 +2,136 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F030126C704
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Sep 2020 20:15:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC80D26CAD2
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Sep 2020 22:15:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgIPSPZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Sep 2020 14:15:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:34388 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727824AbgIPSPE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Sep 2020 14:15:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600280102;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6UnNlOYpanNlZdupp7e84OafUkKZpzeNPRa0LsuTYtE=;
-        b=GRpobmA6dsli64CJheQ3MJ8SMc5Bp5fZIt5NMPy7N6uOditbV1a9k/ZTrJaaqR2i6TUWtm
-        uxZ7kSVCvkjh5E1PZH4uzB/QIlh7EU/3b7YLEPxSQDbjpCwjJpFMdj/LAMClbBD/A2eMz1
-        xa8S1BZBG2dOruqtAlM2b1jk5q1i25M=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-434-sys-7lSMMC2ybEP1VxtQuA-1; Wed, 16 Sep 2020 08:52:58 -0400
-X-MC-Unique: sys-7lSMMC2ybEP1VxtQuA-1
-Received: by mail-qv1-f72.google.com with SMTP id t7so4476426qvz.5
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Sep 2020 05:52:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6UnNlOYpanNlZdupp7e84OafUkKZpzeNPRa0LsuTYtE=;
-        b=YnGOnXElbdMa6daIidz/z7UceUdtKnleXvXryIGuNJ2d3kpNAIHiJJGwyd+jAmKCiG
-         uwOGtvg+ir2nHkXrHSMGEjChZbuxa1vrjvzGVI3BCtt+z72f3NdorD0d2cHeqI1XHzwQ
-         G+PJJTSQsFRpBUJ0RmvewFUsQ1d74FJH2EGdVq2Z7Fb9AJoFbC+NPznXDcFHdLe6sc01
-         8YRSc9Vw72rMZ3lM9erL4pwzWJVAc4vCkBLCkpedVjpevC0AXSrFQfhAzFnLi+glvOHo
-         I+qwkhfqZY3wSvZ7blZw0e7G4OgjSKxgjJm6vsfz7W9G2I2+BXDCGbQZV/Wuy3txgwDf
-         zHig==
-X-Gm-Message-State: AOAM531vU9nIQEk/fN9yEE6asAkBtVFXnJ94qRFUGoHxY5mcPL4kHWPt
-        be5/TzD6+tvGPiK/yHSlO6uP9tgVoB5CfxK1sdIk3eN0+aWjdRuBfWdQ2qvZbStM4RGA4JPXiob
-        zkZh4/OXavwsvG6UeyEXaIBhHzCxTvV28O+yY
-X-Received: by 2002:ac8:376d:: with SMTP id p42mr10250733qtb.288.1600260777226;
-        Wed, 16 Sep 2020 05:52:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzWE+ho8hO3eqYZExQtYfhu/4Im8aObe+BQAMSsxVjvAyUcgKL8JoONQHytbGlqz/scP+r6CwabyPl2mCsmgeI=
-X-Received: by 2002:ac8:376d:: with SMTP id p42mr10250690qtb.288.1600260776754;
- Wed, 16 Sep 2020 05:52:56 -0700 (PDT)
+        id S1727145AbgIPUM7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Sep 2020 16:12:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727061AbgIPRdO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Sep 2020 13:33:14 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA66EC02C2AD;
+        Wed, 16 Sep 2020 09:03:24 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 30C2D689F; Wed, 16 Sep 2020 12:03:16 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 30C2D689F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1600272196;
+        bh=AhbQil9hi1jajqnwwBoDpoEkSw6sqlLr283ReFc5xQg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oGFyz4comJG6R79ISTIV5cstLTo7DBCtV3gmkUf2vHJHQue7W9VeVwmdy+Dqp2ucR
+         gc1fU3CQra+Ebnqq67PfhQ2EkkLC5VhhQcXeZdIQb3xyWM1iBUU7TXG+MbbMZiejrz
+         E1/Wi9MFGcYe+jJfw4dnRGXPvS+jDFiftMA3szxs=
+Date:   Wed, 16 Sep 2020 12:03:16 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     syzbot <syzbot+1594adb1b44e354153d8@syzkaller.appspotmail.com>
+Cc:     anna.schumaker@netapp.com, chuck.lever@oracle.com,
+        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, trond.myklebust@hammerspace.com
+Subject: Re: general protection fault in cache_clean
+Message-ID: <20200916160316.GA4560@fieldses.org>
+References: <0000000000002b3ac605af559958@google.com>
 MIME-Version: 1.0
-References: <S1725851AbgIKKt5/20200911104957Z+185@vger.kernel.org>
- <a38a1249-c570-9069-a498-5e17d85a418a@gmch.uk> <f06f86ef-08bd-3974-3d92-1fbda700cc11@RedHat.com>
- <f7b9c8b4-29a6-2f28-b1d9-739c546fd557@gmch.uk>
-In-Reply-To: <f7b9c8b4-29a6-2f28-b1d9-739c546fd557@gmch.uk>
-From:   Kenneth Dsouza <kdsouza@redhat.com>
-Date:   Wed, 16 Sep 2020 18:22:45 +0530
-Message-ID: <CAA_-hQJ4KfvSm042oW5Lw46mPdQR0XmAS4m2VHC1aatHbJLrrQ@mail.gmail.com>
-Subject: Re: mount.nfs4 and logging
-To:     Chris Hall <linux-nfs@gmch.uk>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000002b3ac605af559958@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-nfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I had come across a similar issue in the past.
-I had debugged the issue by checking what mount options were passed by
-doing the below:
+On Tue, Sep 15, 2020 at 01:04:20AM -0700, syzbot wrote:
+> syzbot found the following issue on:
+> 
+> HEAD commit:    581cb3a2 Merge tag 'f2fs-for-5.9-rc5' of git://git.kernel...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11f5c011900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=a9075b36a6ae26c9
+> dashboard link: https://syzkaller.appspot.com/bug?extid=1594adb1b44e354153d8
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+1594adb1b44e354153d8@syzkaller.appspotmail.com
+> 
+> general protection fault, probably for non-canonical address 0xdffffc0012e34a9a: 0000 [#1] PREEMPT SMP KASAN
+> KASAN: probably user-memory-access in range [0x00000000971a54d0-0x00000000971a54d7]
+> CPU: 1 PID: 19990 Comm: kworker/1:11 Not tainted 5.9.0-rc4-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Workqueue: events_power_efficient do_cache_clean
+> RIP: 0010:cache_clean+0x119/0x7f0 net/sunrpc/cache.c:444
 
-# LIBMOUNT_DEBUG=0xffff mount -t nfs nfs-server:/example /mnt  -o
-vers=4.0 | less
-:
-19709: libmount:      CXT: [0x556249623030]: fixed options [rc=0]:
-vfs: 'rw' fs: 'vers=4.0,mountvers=4' user: '(null)', optstr:
-'rw,vers=4.0,mountvers=4' <----
-19709: libmount:      CXT: [0x556249623030]: preparing source path
-19709: libmount:      CXT: [0x556249623030]: preparing target path
-19709: libmount:      CXT: [0x556249623030]: final target '/mnt'
-19709: libmount:      CXT: [0x556249623030]: FS type: nfs [rc=0]
-mount.nfs: Protocol not supported <----
+That's in cache_clean():
+	spin_lock(&cache_list_lock);
+	...
+	current_detail = list_entry(next, struct cache_detail, others)
+444:	if (current_detail->nextcheck > seconds_since_boot())
 
-The mountvers option is only applicable for nfsv3 and is not supported
-for nfsv4. Whenever mount command is called explicitly with mount.nfs4
-or vers=4.0,4.1 or 4.2 it will fail.
-I finally removed the setting from /etc/nfsmount.conf to fix the issue.
-I had a patch to add debugging to make the end user aware of what was
-going wrong.
+It suggests cache_list or current_detail (both globals) are corrupted
+somehow.
 
-[PATCH] mount.nfs: Do not retry if Mountd related options are passed for nfs4
+Those are manipulated only by cache_clean() and
+sunrpc_{init,destroy}_cache_detail(), always under the cache_list_lock.
 
-When Mountd related options are passed with mount.nfs4
-or -t nfs vers=4 we fallback and retry with below version.
-As these options are not supported we should fail at first
-try and error out.
+All the callers have to do to get this right is make sure the
+cache_detail they pass in is allocated before calling
+sunrpc_init_cache_detail() and not freed till after calling
+sunrpc_destroy_cache_detail().  I think they all get that right.
 
-This patch also adds mountport to the unsupported list for NFSv4.
+So I'm assuming this is a random memory scribble from somewhere else or
+something, unless it pops up again....
 
-Signed-off-by: Kenneth D'souza <kdsouza@redhat.com>
----
- utils/mount/stropts.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+(The one thing I'm a little unsure of here is the
+list_empty(&cache_list) checks used to decide when to stop the
+cache_cleaner.  But that's a separate problem, if it is a problem.)
 
-diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
-index 901f995a..cad64bd8 100644
---- a/utils/mount/stropts.c
-+++ b/utils/mount/stropts.c
-@@ -86,6 +86,7 @@ extern int nfs_mount_data_version;
- extern char *progname;
- extern int verbose;
- extern int sloppy;
-+int failure =0;
+--b.
 
- struct nfsmount_info {
-        const char              *spec,          /* server:/path */
-@@ -756,13 +757,19 @@ static int nfs_do_mount_v4(struct nfsmount_info *mi,
-        if (po_contains(options, "mounthost") ||
-                po_contains(options, "mountaddr") ||
-                po_contains(options, "mountvers") ||
-+               po_contains(options, "mountport") ||
-                po_contains(options, "mountproto")) {
-        /*
-         * Since these mountd options are set assume version 3
-         * is wanted so error out with EPROTONOSUPPORT so the
-         * protocol negation starts with v3.
-         */
-+               if (verbose) {
-+                printf(_("%s: Unsupported nfs4 mount option passed '%s'\n"),
-+                        progname, *mi->extra_opts);
-+               }
-                errno = EPROTONOSUPPORT;
-+               failure = 1;
-                goto out_fail;
-        }
 
-@@ -892,6 +899,8 @@ static int nfs_autonegotiate(struct nfsmount_info *mi)
-        int result, olderrno;
-
-        result = nfs_try_mount_v4(mi);
-+       if (failure == 1 && errno == EPROTONOSUPPORT)
-+               goto fall_back;
- check_result:
-        if (result)
-                return result;
--- 
-
-On Wed, Sep 16, 2020 at 6:09 AM Chris Hall <linux-nfs@gmch.uk> wrote:
->
-> On 14/09/2020 19:30, Steve Dickson wrote:
-> > Hello,
-> >
-> > On 9/11/20 7:45 AM, Chris Hall wrote:
->
-> >> I have a client and server configured for nfs4 only.
->
-> > Would you mind sharing this configuration? Privately if
-> > that works better...
->
-> The client /etc/nfsmount.conf has:
->
->    [ NFSMount_Global_Options ]
->    Defaultvers=4
->    Nfsvers=4
->    Defaultproto=tcp
->    Proto=tcp
->
-> and (now, see below) nothing else.
->
-> FWIW, I guess setting the 'Defaultvers' and 'Defaultproto' is
-> redundant... but does not appear to stop anything from working.
->
-> Also FWIW, I gather that this is configuration for the client-side
-> 'mount' of nfs exports, *only*.  I suppose it should be obvious that
-> this has absolutely nothing to do with configuring (server-side)
-> 'mountd'.  Speaking as a fully paid up moron-in-a-hurry, it has taken me
-> a while to work that out :-(  [I suggest that the comments in the .conf
-> files and the man-page could say that nfs.conf is server-side and
-> nfsmount.conf is client-side -- just a few words, for the avoidance of
-> doubt.]
->
-> The server /etc/nfs.conf has only:
->
->    [nfsd]
->    debug=0
->    threads=8
->    host=cerberus2
->    port=1001
->    # grace-time=90
->    # lease-time=90
->    udp=n
->    tcp=y
->    vers2=n
->    vers3=n
->    vers4=y
->    vers4.0=y
->    vers4.1=y
->    vers4.2=y
->
-> I wish I knew whether the 'vers4.X' settings make the slightest
-> difference.  This server is my firewall, hence the funky port number.
->
-> > I'm thinking that is a good direction to go towards
-> > so maybe we make this configuration the default??
->
-> I don't use nfs very much, but every time I have tangled with it I have
-> come way limping :-(
->
-> Given that NFSv4 is going on 20 years old now, I do wonder why the
-> earlier versions are not treated a "legacy".  When trying to discover
-> how to configure and use nfs I find I am still wading through stuff
-> which does not apply to NFSv4.  Much of what the "wisdom of the
-> Internet" has to offer seems firmly routed in the past, and often NFSv4
-> is describe in terms of its difference from NFSv3 and v2.
->
-> For example: I run nfs on my firewall machine so that I can configure it
-> from elsewhere on the network.  Naturally, the firewall machine is
-> firmly wrapped so that it may only be accessed by particular machines
-> inside the network.  I also try to ensure that the absolute minimum
-> number of daemons are running and the absolute minumum number of ports
-> are open.  In that context, (a) is there a way to persuade 'systemctl
-> start nfs-service' to be "nfs4 only", and to *not* start 'rpcbind' (and
-> *not* open port 111), and (b) are rpc.idmapd, rpc.mountd and rpc.statd
-> required for nfs4 ?  (ie, is nfsdcld sufficient ?)
->
-> >> The configuration used to work.
-> >>
-> >> I have just upgraded from Fedora 31 to 32 on the client.  I now get:
-> >>
-> >>    # mount /foo
-> >>    mount.nfs4: Protocol not supported
->
-> > I've been trying to keep the versions the same... hopefully
-> > nothing has broken in f31... ;-(
->
-> Rest easy: my problem was entirely self inflicted -- it had nothing
-> directly to do with the upgrade from Fedora 31 to 32.
->
-> Since the client 'mount' and 'mount.nfs4' were not even attempting to
-> speak to the server, I downloaded the source and the debug symbols and
-> had a go at it with strace and gdb...
->
-> ...and discovered that I had caused the problem by setting:
->
->    mountproto=tcp
->    mountvers=4
->
-> in /etc/nfsmount.conf at the client end.  [Full disclosure: I am
-> building a replacement for the server and was reviewing all
-> configuration at both ends, updating Fedora all round and generally
-> tidying up.]
->
-> It turns out that mount.nfs4 takes a dim view of the existence of these
-> settings and declines to do the mount(2) call; instead it sets
-> errno=EPROTONOSUPPORT and returns as if the mount(2) had failed.  [See
-> nfs_do_mount_v4() in stropts.c of utils/mount/.  I note in passing that
-> it worries about "mounthost", "mountaddr", "mountvers" and "mountproto",
-> where "mountaddr" is not mentioned in the man-page for nfs.  But it does
-> not worry about "mountport", which is mentioned in the man-page.]
->
-> Having checked carefully, I now know that mountport, mountproto,
-> mounthost and mountvers are all "Options for NFS versions 2 and 3 only".
->   But I don't know if their presence with 'nfsvers=4' would cause
-> mount(2) to fail.
->
-> In any case, frankly, I think that mount is being singularly obtuse.
-> Since it knows that these options do not apply, it could IMHO simply
-> discard them.  If that's a step too far, it could produce a rather more
-> informative message -- in particular *not* the standard system message
-> for EPROTONOSUPPORT, which a quick search of POSIX.1-2017 tells me is
-> returned only by socket() and socketpair() !
->
-> Thanks,
->
-> Chris
->
-
+> Code: 81 fb 20 eb 94 8a 0f 84 b8 00 00 00 e8 80 df 33 fa 48 8d 83 40 ff ff ff 48 8d 7b 10 48 89 05 8e 8e 13 06 48 89 f8 48 c1 e8 03 <42> 80 3c 28 00 0f 85 e0 05 00 00 48 8d 6c 24 38 4c 8b 63 10 48 89
+> RSP: 0018:ffffc90008e1fc48 EFLAGS: 00010206
+> RAX: 0000000012e34a9a RBX: 00000000971a54c0 RCX: ffffffff87406dbb
+> RDX: ffff88804358a000 RSI: ffffffff87406e00 RDI: 00000000971a54d0
+> RBP: 0000000000000100 R08: 0000000000000001 R09: 0000000000000003
+> R10: 0000000000000100 R11: 0000000000000000 R12: 0000000000000100
+> R13: dffffc0000000000 R14: ffff88803451b200 R15: ffff8880ae735600
+> FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000000004ef310 CR3: 000000009ca1b000 CR4: 00000000001526e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  do_cache_clean+0xd/0xd0 net/sunrpc/cache.c:502
+>  process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+>  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+>  kthread+0x3b5/0x4a0 kernel/kthread.c:292
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+> Modules linked in:
+> ---[ end trace 4c54bbd0e20d734b ]---
+> RIP: 0010:cache_clean+0x119/0x7f0 net/sunrpc/cache.c:444
+> Code: 81 fb 20 eb 94 8a 0f 84 b8 00 00 00 e8 80 df 33 fa 48 8d 83 40 ff ff ff 48 8d 7b 10 48 89 05 8e 8e 13 06 48 89 f8 48 c1 e8 03 <42> 80 3c 28 00 0f 85 e0 05 00 00 48 8d 6c 24 38 4c 8b 63 10 48 89
+> RSP: 0018:ffffc90008e1fc48 EFLAGS: 00010206
+> RAX: 0000000012e34a9a RBX: 00000000971a54c0 RCX: ffffffff87406dbb
+> RDX: ffff88804358a000 RSI: ffffffff87406e00 RDI: 00000000971a54d0
+> RBP: 0000000000000100 R08: 0000000000000001 R09: 0000000000000003
+> R10: 0000000000000100 R11: 0000000000000000 R12: 0000000000000100
+> R13: dffffc0000000000 R14: ffff88803451b200 R15: ffff8880ae735600
+> FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000000004ef310 CR3: 000000009ca1b000 CR4: 00000000001526e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
