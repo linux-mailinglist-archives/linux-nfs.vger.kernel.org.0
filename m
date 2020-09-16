@@ -2,62 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68CE026CEA9
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Sep 2020 00:23:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 217B726CEB1
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Sep 2020 00:23:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgIPWXc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Sep 2020 18:23:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50362 "EHLO
+        id S1726422AbgIPWXo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Sep 2020 18:23:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgIPWXC (ORCPT
+        with ESMTP id S1726419AbgIPWXC (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Sep 2020 18:23:02 -0400
 Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAF46C0698C0
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Sep 2020 14:43:18 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id h11so243441ilj.11
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Sep 2020 14:43:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A31C0698C1
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Sep 2020 14:43:24 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id u18so230641iln.13
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Sep 2020 14:43:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=2V0cWFloxSr2HwFHlJuVbFbY8N1g5HU2uyUXmgJD/58=;
-        b=ndE17coyXoz7RwjF5vC3lLLk6ZllT80KQ/m4PtwY9FeawMoUX1Ohk6VV3q+BjFYHI6
-         u9aHqdD8oFxMR2oWfjT8emU3RXIbSuZ6W42hsWsFX/ilMd9ZxxeXLSbfZ8YPvQE6SFJ/
-         BgqNd9qY3FcvuYoE490h2Ibx0rEg7QPc14IF5Gpzxoy4vIE7zx58AhOaMHqoDrDlLak1
-         M7DSz4VcSrsM0TPegRHtvVnWblYsM39ePsDf3bKQHx8x3YTvRl67eNXS7b3TemP7WCah
-         e7kYKBXDtHB84dpUvXclBQkv1QBrQguFWSqFlPoJVSmJc7XlMPzit/QPf/dD/Q/VyAdd
-         msuw==
+        bh=Xnim2Q4YvX+w1VQp9KT2rA97PP0KL+1kSWsKdOfhxT0=;
+        b=FWFmUKyyaWtVku/s4VEUhxOBniwbGsEBt7B+tRlh13NYfA4M8DMGnR7HPDZMM8jfOa
+         weEkA8nyxrNwTLyr2fyevmWNUz56BD7ukL6Mt5KO9+LwIm6kXzFRxZrcBBSVwUfiVBE/
+         F3+dBFQfQ5Fl7Oo05/9wV1FPbxqaSyQBueWxO++KXx9T44QkdsHeeOcQna1X5RtewERF
+         XyX3hAi9T2vD4TL/ebl47M+NI2dnMOPpxzRWITqjqDUAE4u5iaYCVSvkJUYUrlRJfOOF
+         qZL6Y0Tm4PRoqzNouSPhPIHpTrCR4LBejoFMSL8GVOEu9T2aQJxpx9qqx+qIXcfuW1i4
+         hH8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=2V0cWFloxSr2HwFHlJuVbFbY8N1g5HU2uyUXmgJD/58=;
-        b=q5Rn4O0TWuSU11ivdIyofovOXN2aXzelV8l4hJGqAfujFaGcGk0ZbT8HZlw8rdqiHV
-         1f0kDG9xpyZJl4NTDz+t3xqSMwWJBZH2q+zahy8SnV/SwyvP4FPbSBWqUpg6bMgAkvY3
-         o+As9C+UoSQCBUgdRqDVS1T3wyDvjY1k3VbYFjNzjp198UY2RS3fbYJVZjOvDPUmlCky
-         7s2Q91Pl0JA/+FACS6n9Pwa1yT3hgAONArud67SjOVPmxIlFJkibxD5bqNRVDt8cHp+S
-         tF+rACpOlsMXRcE6VqwQj4e9KI61WaFWsgiT4U1/4XH4WsQh5+CqwPNBLBPor3VGTIdJ
-         25fA==
-X-Gm-Message-State: AOAM5318XdKouuH7kFOMk+jiogRoS9k2HGuXRNFLHhLKuHZs9i7QNu9w
-        GZ8mJIBOBfzdv5WCcAw/s9U=
-X-Google-Smtp-Source: ABdhPJw43kGFs4AjaR5WDINOACeXNs0hCvNSVU6ecR465B+P7qVPtvxdVHnWO9fHLB5K2H1Lgn3wfw==
-X-Received: by 2002:a92:3302:: with SMTP id a2mr1091466ilf.84.1600292598216;
-        Wed, 16 Sep 2020 14:43:18 -0700 (PDT)
+        bh=Xnim2Q4YvX+w1VQp9KT2rA97PP0KL+1kSWsKdOfhxT0=;
+        b=A3+DB7W8JKeY5yYDN34OUZG7KKmRZxZFbnB4tQzIPQa/iX/gOEbyBrEvzBN/lJistc
+         o2bvqaZsQKNeoirwK6BX5oMvAK+qPgvj+lo4ovVpvc0ixrXc8Iy1iYzghdftJVKbSxP/
+         5mfGCTkzPZrtuujHV6revO9I22viDoVoJgnKMl0fIGM+QL+DJBH/8GgRjCyN8pzIuC5k
+         iqI+tBnWOjX4AVGf3XM0K+qvIDlXjquzz9Myd/eXvBGJWgeOj+65y/stL31sjZ5XkrMM
+         s+2whByCt3shHdjoUbT/1sWN3RBqa3lOUbQFM3qrkLg5mKKUcwXmP9G8z88vK+ASzXWs
+         z4qQ==
+X-Gm-Message-State: AOAM5310M/whxdTTdIB4VWQFOoPKmzmAxWbLgm1HLH1zHFH2PI15tyee
+        y1Vh+VxJN3HCR7+LWvi2mQI0gC867MI=
+X-Google-Smtp-Source: ABdhPJz2JLft3OZLRnTiWsKuV4uSJHzD2cADqSccOE8BfGLbo9V5XnuaG5VOMCIrc9fbQ7PxxI2l5g==
+X-Received: by 2002:a05:6e02:c07:: with SMTP id d7mr23495753ile.301.1600292603907;
+        Wed, 16 Sep 2020 14:43:23 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id z72sm9817781iof.29.2020.09.16.14.43.17
+        by smtp.gmail.com with ESMTPSA id s2sm11854112ili.49.2020.09.16.14.43.22
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Sep 2020 14:43:17 -0700 (PDT)
+        Wed, 16 Sep 2020 14:43:22 -0700 (PDT)
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08GLhGAY023014;
-        Wed, 16 Sep 2020 21:43:16 GMT
-Subject: [PATCH RFC 12/21] NFSD: Add a tracepoint to report the current
- filehandle
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08GLhLT7023017;
+        Wed, 16 Sep 2020 21:43:21 GMT
+Subject: [PATCH RFC 13/21] NFSD: Add GETATTR tracepoint
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org, Bill.Baker@oracle.com
 Cc:     linux-nfs@vger.kernel.org
-Date:   Wed, 16 Sep 2020 17:43:16 -0400
-Message-ID: <160029259649.29208.5584223073609480101.stgit@klimt.1015granger.net>
+Date:   Wed, 16 Sep 2020 17:43:21 -0400
+Message-ID: <160029260189.29208.3666127728510734668.stgit@klimt.1015granger.net>
 In-Reply-To: <160029169954.29208.8757662600714736320.stgit@klimt.1015granger.net>
 References: <160029169954.29208.8757662600714736320.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23
@@ -68,137 +67,179 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Expose the "current_fh", which is an implicit argument in many NFSv4
-operations. I've tried to insert this tracepoint at each place that
-can change the current filehandle. Typically:
+Record the set of attributes requested by an NFSv4 client in an
+NFSv4 GETATTR request.
 
-nfsd-1034  [000]   165.214516: nfsd_compound:        xid=0x012e9610 opcnt=3
-nfsd-1034  [000]   165.214518: nfsd_fh_current:      xid=0x012e9610 fh_hash=0x90351828 name=Makefile
-nfsd-1034  [000]   165.214581: nfsd_compound_status: xid=0x012e9610 op=1/3 OP_PUTFH status=0
+nfsd-1034  [002]   164.067026: nfsd_get_fattr4:      xid=0xcb4c4e33 bm[0]=TYPE|CHANGE|SIZE|FSID|FILEID bm[1]=MODE|NUMLINKS|OWNER|OWNER_GROUP|RAWDEV|SPACE_USED|TIME_ACCESS|TIME_METADATA|TIME_MODIFY|MOUNTED_ON_FILEID bm[2]=
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4proc.c |   22 ++++++++++++++++++----
- fs/nfsd/trace.h    |   30 ++++++++++++++++++++++++++++++
- 2 files changed, 48 insertions(+), 4 deletions(-)
+ fs/nfsd/nfs4proc.c |    2 +
+ fs/nfsd/trace.h    |  143 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 145 insertions(+)
 
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 3d6ca1bfb730..a718097b5330 100644
+index a718097b5330..6206ba7b1ac7 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -467,6 +467,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	}
- 	nfsd4_cleanup_open_state(cstate, open);
- 	nfsd4_bump_seqid(cstate, status);
-+	trace_nfsd4_fh_current(rqstp, &cstate->current_fh);
- 	return status;
- }
+@@ -706,6 +706,8 @@ nfsd4_getattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	struct nfsd4_getattr *getattr = &u->getattr;
+ 	__be32 status;
  
-@@ -517,6 +518,7 @@ nfsd4_putfh(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		ret = 0;
- 	}
- #endif
-+	trace_nfsd4_fh_current(rqstp, &cstate->current_fh);
- 	return ret;
- }
- 
-@@ -528,6 +530,7 @@ nfsd4_putrootfh(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 
- 	fh_put(&cstate->current_fh);
- 	status = exp_pseudoroot(rqstp, &cstate->current_fh);
-+	trace_nfsd4_fh_current(rqstp, &cstate->current_fh);
- 	return status;
- }
- 
-@@ -543,6 +546,7 @@ nfsd4_restorefh(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		memcpy(&cstate->current_stateid, &cstate->save_stateid, sizeof(stateid_t));
- 		SET_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
- 	}
-+	trace_nfsd4_fh_current(rqstp, &cstate->current_fh);
- 	return nfs_ok;
- }
- 
-@@ -687,6 +691,7 @@ nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	fh_unlock(&cstate->current_fh);
- 	set_change_info(&create->cr_cinfo, &cstate->current_fh);
- 	fh_dup2(&cstate->current_fh, &resfh);
-+	trace_nfsd4_fh_current(rqstp, &cstate->current_fh);
- out:
- 	fh_put(&resfh);
- out_umask:
-@@ -751,16 +756,24 @@ static __be32
- nfsd4_lookupp(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	      union nfsd4_op_u *u)
- {
--	return nfsd4_do_lookupp(rqstp, &cstate->current_fh);
-+	__be32 status;
++	trace_nfsd4_getattr(rqstp, getattr->ga_bmval);
 +
-+	status = nfsd4_do_lookupp(rqstp, &cstate->current_fh);
-+	trace_nfsd4_fh_current(rqstp, &cstate->current_fh);
-+	return status;
- }
- 
- static __be32
- nfsd4_lookup(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	     union nfsd4_op_u *u)
- {
--	return nfsd_lookup(rqstp, &cstate->current_fh,
--			   u->lookup.lo_name, u->lookup.lo_len,
--			   &cstate->current_fh);
-+	__be32 status;
-+
-+	status = nfsd_lookup(rqstp, &cstate->current_fh,
-+			     u->lookup.lo_name, u->lookup.lo_len,
-+			     &cstate->current_fh);
-+	trace_nfsd4_fh_current(rqstp, &cstate->current_fh);
-+	return status;
- }
- 
- static __be32
-@@ -928,6 +941,7 @@ nfsd4_secinfo_no_name(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstat
- 		err = nfsd4_do_lookupp(rqstp, &cstate->current_fh);
- 		if (err)
- 			return err;
-+		trace_nfsd4_fh_current(rqstp, &cstate->current_fh);
- 		break;
- 	default:
- 		return nfserr_inval;
+ 	status = fh_verify(rqstp, &cstate->current_fh, 0, NFSD_MAY_NOP);
+ 	if (status)
+ 		return status;
 diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index dbbc45f22a80..8da691b642ac 100644
+index 8da691b642ac..48250610dfa4 100644
 --- a/fs/nfsd/trace.h
 +++ b/fs/nfsd/trace.h
-@@ -888,6 +888,36 @@ TRACE_EVENT(nfsd_cb_done,
- 		__entry->status)
+@@ -918,6 +918,149 @@ TRACE_EVENT(nfsd4_fh_current,
+ 		__entry->xid, __entry->fh_hash, __get_str(name))
  );
  
-+TRACE_EVENT(nfsd4_fh_current,
++/*
++ * from include/linux/nfs4.h
++ */
++#define FATTR4_WORD0_FLAGS					\
++	fattr4_word0_bit(SUPPORTED_ATTRS)			\
++	fattr4_word0_bit(TYPE)					\
++	fattr4_word0_bit(FH_EXPIRE_TYPE)			\
++	fattr4_word0_bit(CHANGE)				\
++	fattr4_word0_bit(SIZE)					\
++	fattr4_word0_bit(LINK_SUPPORT)				\
++	fattr4_word0_bit(SYMLINK_SUPPORT)			\
++	fattr4_word0_bit(NAMED_ATTR)				\
++	fattr4_word0_bit(FSID)					\
++	fattr4_word0_bit(UNIQUE_HANDLES)			\
++	fattr4_word0_bit(LEASE_TIME)				\
++	fattr4_word0_bit(RDATTR_ERROR)				\
++	fattr4_word0_bit(ACL)					\
++	fattr4_word0_bit(ACLSUPPORT)				\
++	fattr4_word0_bit(ARCHIVE)				\
++	fattr4_word0_bit(CANSETTIME)				\
++	fattr4_word0_bit(CASE_INSENSITIVE)			\
++	fattr4_word0_bit(CASE_PRESERVING)			\
++	fattr4_word0_bit(CHOWN_RESTRICTED)			\
++	fattr4_word0_bit(FILEHANDLE)				\
++	fattr4_word0_bit(FILEID)				\
++	fattr4_word0_bit(FILES_AVAIL)				\
++	fattr4_word0_bit(FILES_FREE)				\
++	fattr4_word0_bit(FILES_TOTAL)				\
++	fattr4_word0_bit(FS_LOCATIONS)				\
++	fattr4_word0_bit(HIDDEN)				\
++	fattr4_word0_bit(HOMOGENEOUS)				\
++	fattr4_word0_bit(MAXFILESIZE)				\
++	fattr4_word0_bit(MAXLINK)				\
++	fattr4_word0_bit(MAXNAME)				\
++	fattr4_word0_bit(MAXREAD)				\
++	fattr4_word0_bit_end(MAXWRITE)
++
++#undef fattr4_word0_bit
++#undef fattr4_word0_bit_end
++#define fattr4_word0_bit(x)		TRACE_DEFINE_ENUM(FATTR4_WORD0_##x);
++#define fattr4_word0_bit_end(x)		TRACE_DEFINE_ENUM(FATTR4_WORD0_##x);
++
++FATTR4_WORD0_FLAGS
++
++#undef fattr4_word0_bit
++#undef fattr4_word0_bit_end
++#define fattr4_word0_bit(x)		{ FATTR4_WORD0_##x, #x },
++#define fattr4_word0_bit_end(x)		{ FATTR4_WORD0_##x, #x }
++
++#define show_fattr4_bm_word0(x)	__print_flags(x, "|", FATTR4_WORD0_FLAGS)
++
++#define FATTR4_WORD1_FLAGS					\
++	fattr4_word1_bit(MIMETYPE)				\
++	fattr4_word1_bit(MODE)					\
++	fattr4_word1_bit(NO_TRUNC)				\
++	fattr4_word1_bit(NUMLINKS)				\
++	fattr4_word1_bit(OWNER)					\
++	fattr4_word1_bit(OWNER_GROUP)				\
++	fattr4_word1_bit(QUOTA_HARD)				\
++	fattr4_word1_bit(QUOTA_SOFT)				\
++	fattr4_word1_bit(QUOTA_USED)				\
++	fattr4_word1_bit(RAWDEV)				\
++	fattr4_word1_bit(SPACE_AVAIL)				\
++	fattr4_word1_bit(SPACE_FREE)				\
++	fattr4_word1_bit(SPACE_TOTAL)				\
++	fattr4_word1_bit(SPACE_USED)				\
++	fattr4_word1_bit(SYSTEM)				\
++	fattr4_word1_bit(TIME_ACCESS)				\
++	fattr4_word1_bit(TIME_ACCESS_SET)			\
++	fattr4_word1_bit(TIME_BACKUP)				\
++	fattr4_word1_bit(TIME_CREATE)				\
++	fattr4_word1_bit(TIME_DELTA)				\
++	fattr4_word1_bit(TIME_METADATA)				\
++	fattr4_word1_bit(TIME_MODIFY)				\
++	fattr4_word1_bit(TIME_MODIFY_SET)			\
++	fattr4_word1_bit(MOUNTED_ON_FILEID)			\
++	fattr4_word1_bit_end(FS_LAYOUT_TYPES)
++
++#undef fattr4_word1_bit
++#undef fattr4_word1_bit_end
++#define fattr4_word1_bit(x)		TRACE_DEFINE_ENUM(FATTR4_WORD1_##x);
++#define fattr4_word1_bit_end(x)		TRACE_DEFINE_ENUM(FATTR4_WORD1_##x);
++
++FATTR4_WORD1_FLAGS
++
++#undef fattr4_word1_bit
++#undef fattr4_word1_bit_end
++#define fattr4_word1_bit(x)		{ FATTR4_WORD1_##x, #x },
++#define fattr4_word1_bit_end(x)		{ FATTR4_WORD1_##x, #x }
++
++#define show_fattr4_bm_word1(x)	__print_flags(x, "|", FATTR4_WORD1_FLAGS)
++
++#define FATTR4_WORD2_FLAGS					\
++	fattr4_word2_bit(LAYOUT_TYPES)				\
++	fattr4_word2_bit(LAYOUT_BLKSIZE)			\
++	fattr4_word2_bit(MDSTHRESHOLD)				\
++	fattr4_word2_bit(SUPPATTR_EXCLCREAT)			\
++	fattr4_word2_bit(CLONE_BLKSIZE)				\
++	fattr4_word2_bit(CHANGE_ATTR_TYPE)			\
++	fattr4_word2_bit(SECURITY_LABEL)			\
++	fattr4_word2_bit(MODE_UMASK)				\
++	fattr4_word2_bit_end(XATTR_SUPPORT)
++
++#undef fattr4_word2_bit
++#undef fattr4_word2_bit_end
++#define fattr4_word2_bit(x)		TRACE_DEFINE_ENUM(FATTR4_WORD2_##x);
++#define fattr4_word2_bit_end(x)		TRACE_DEFINE_ENUM(FATTR4_WORD2_##x);
++
++FATTR4_WORD2_FLAGS
++
++#undef fattr4_word2_bit
++#undef fattr4_word2_bit_end
++#define fattr4_word2_bit(x)		{ FATTR4_WORD2_##x, #x },
++#define fattr4_word2_bit_end(x)		{ FATTR4_WORD2_##x, #x }
++
++#define show_fattr4_bm_word2(x)	__print_flags(x, "|", FATTR4_WORD2_FLAGS)
++
++TRACE_EVENT(nfsd4_getattr,
 +	TP_PROTO(
 +		const struct svc_rqst *rqstp,
-+		const struct svc_fh *fhp
++		const u32 *bitmask
 +	),
-+	TP_ARGS(rqstp, fhp),
++	TP_ARGS(rqstp, bitmask),
 +	TP_STRUCT__entry(
 +		__field(u32, xid)
-+		__field(u32, fh_hash)
-+		__dynamic_array(unsigned char, name,
-+				fhp->fh_dentry ?
-+				fhp->fh_dentry->d_name.len + 1 : 0)
++		__field(unsigned long, bm0)
++		__field(unsigned long, bm1)
++		__field(unsigned long, bm2)
 +	),
 +	TP_fast_assign(
-+		const struct dentry *dentry = fhp->fh_dentry;
-+
 +		__entry->xid = be32_to_cpu(rqstp->rq_xid);
-+		__entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
-+		if (dentry) {
-+			memcpy(__get_str(name), dentry->d_name.name,
-+			       dentry->d_name.len);
-+			__get_str(name)[dentry->d_name.len] = '\0';
-+		} else {
-+			__get_str(name)[0] = '\0';
-+		}
++		__entry->bm0 = bitmask[0];
++		__entry->bm1 = bitmask[1];
++		__entry->bm2 = bitmask[2];
 +	),
-+	TP_printk("xid=0x%08x fh_hash=0x%08x name=%s",
-+		__entry->xid, __entry->fh_hash, __get_str(name))
++	TP_printk("xid=0x%08x bm[0]=%s bm[1]=%s bm[2]=%s",
++		__entry->xid,
++		show_fattr4_bm_word0(__entry->bm0),
++		show_fattr4_bm_word1(__entry->bm1),
++		show_fattr4_bm_word2(__entry->bm2)
++	)
 +);
 +
  TRACE_EVENT(nfsd_setattr_args,
