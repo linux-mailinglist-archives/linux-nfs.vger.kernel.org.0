@@ -2,124 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3BB126E516
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Sep 2020 21:10:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F3CC26E631
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Sep 2020 22:05:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgIQTKK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Sep 2020 15:10:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgIQTKD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Sep 2020 15:10:03 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63D39C06174A
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Sep 2020 12:09:37 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id CBBA86196; Thu, 17 Sep 2020 15:09:31 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CBBA86196
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1600369771;
-        bh=92ekXl9FnEULlC8FIfYrbodzh6YuqTXj8b4Q23bGaho=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=njcQJ9zNMcz5b/ds+a8bhSShifn8rPyXJ+sSywZJHNWS/FjqHoCrNIZ/FYKuBnRaf
-         ZSKDdDK2Jp9RvX2FZ1NDJab43YEQEnlitAy7vJMH0CG2l01iUAG/Uz7tK2C6MGMJqc
-         99wofdlTizyv2g8O+jUOkTmh9lXUsSC5aCfS7eT0=
-Date:   Thu, 17 Sep 2020 15:09:31 -0400
-From:   bfields <bfields@fieldses.org>
-To:     Daire Byrne <daire@dneg.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
-        linux-cachefs <linux-cachefs@redhat.com>,
-        Frank van der Linden <fllinden@amazon.com>
-Subject: Re: Adventures in NFS re-exporting
-Message-ID: <20200917190931.GA6858@fieldses.org>
-References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
- <20200915172140.GA32632@fieldses.org>
- <2001715792.39705019.1600358470997.JavaMail.zimbra@dneg.com>
+        id S1726596AbgIQUFe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Sep 2020 16:05:34 -0400
+Received: from mga06.intel.com ([134.134.136.31]:35244 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726438AbgIQUFc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 17 Sep 2020 16:05:32 -0400
+IronPort-SDR: 1EqDDV9SWySMMXQjgrHW1/Tq43ZTXe22s50bgNybd15hjg4bWdlaVn0ZUNNKZFGLILKPh0ZVw+
+ 9up+rZjLo4DQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9747"; a="221336979"
+X-IronPort-AV: E=Sophos;i="5.77,271,1596524400"; 
+   d="scan'208";a="221336979"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 12:40:16 -0700
+IronPort-SDR: OJtaUmUU2VRk9KtKnU2JOdZ0Wx6lNOu+0+CFBjlBeB4odozE5Gxp9wTpGmmaUJi2k6Nfsj2iiR
+ 1ryN5FpIrCvQ==
+X-IronPort-AV: E=Sophos;i="5.77,271,1596524400"; 
+   d="scan'208";a="483882946"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.212.151.155]) ([10.212.151.155])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 12:40:13 -0700
+Subject: Re: [trivial PATCH] treewide: Convert switch/case fallthrough; to
+ break;
+To:     Keith Busch <kbusch@kernel.org>, Joe Perches <joe@perches.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jiri Kosina <trivial@kernel.org>,
+        Kees Cook <kees.cook@canonical.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, linux-input@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-rdma@vger.kernel.org,
+        iommu@lists.linux-foundation.org, dm-devel@redhat.com,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
+        oss-drivers@netronome.com, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        storagedev@microchip.com, sparclinux@vger.kernel.org,
+        linux-serial@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-parisc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, bpf@vger.kernel.org,
+        dccp@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, linux-sctp@vger.kernel.org,
+        alsa-devel <alsa-devel@alsa-project.org>
+References: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
+ <20200909205558.GA3384631@dhcp-10-100-145-180.wdl.wdc.com>
+From:   Jacob Keller <jacob.e.keller@intel.com>
+Organization: Intel Corporation
+Message-ID: <321069c8-a4c1-56ff-49fb-4c2bce1e6352@intel.com>
+Date:   Thu, 17 Sep 2020 12:40:13 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2001715792.39705019.1600358470997.JavaMail.zimbra@dneg.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200909205558.GA3384631@dhcp-10-100-145-180.wdl.wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Sep 17, 2020 at 05:01:11PM +0100, Daire Byrne wrote:
-> 
-> ----- On 15 Sep, 2020, at 18:21, bfields bfields@fieldses.org wrote:
-> 
-> >> 4) With an NFSv4 re-export, lots of open/close requests (hundreds per
-> >> second) quickly eat up the CPU on the re-export server and perf top
-> >> shows we are mostly in native_queued_spin_lock_slowpath.
-> > 
-> > Any statistics on who's calling that function?
-> 
-> I've always struggled to reproduce this with a simple open/close simulation, so I suspect some other operations need to be mixed in too. But I have one production workload that I know has lots of opens & closes (buggy software) included in amongst the usual reads, writes etc.
-> 
-> With just 40 clients mounting the reexport server (v5.7.6) using NFSv4.2, we see the CPU of the nfsd threads increase rapidly and by the time we have 100 clients, we have maxed out the 32 cores of the server with most of that in native_queued_spin_lock_slowpath.
 
-That sounds a lot like what Frank Van der Linden reported:
 
-	https://lore.kernel.org/linux-nfs/20200608192122.GA19171@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com/
+On 9/9/2020 1:55 PM, Keith Busch wrote:
+> On Wed, Sep 09, 2020 at 01:06:39PM -0700, Joe Perches wrote:
+>> diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
+>> index eea0f453cfb6..8aac5bc60f4c 100644
+>> --- a/crypto/tcrypt.c
+>> +++ b/crypto/tcrypt.c
+>> @@ -2464,7 +2464,7 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
+>>  		test_hash_speed("streebog512", sec,
+>>  				generic_hash_speed_template);
+>>  		if (mode > 300 && mode < 400) break;
+>> -		fallthrough;
+>> +		break;
+>>  	case 399:
+>>  		break;
+> 
+> Just imho, this change makes the preceding 'if' look even more
+> pointless. Maybe the fallthrough was a deliberate choice? Not that my
+> opinion matters here as I don't know this module, but it looked a bit
+> odd to me.
+> 
 
-It looks like a bug in the filehandle caching code.
-
---b.
-
-> 
-> The perf top summary looks like this:
-> 
-> # Overhead  Command          Shared Object                 Symbol                                                 
-> # ........  ...............  ............................  .......................................................
-> #
->     82.91%  nfsd             [kernel.kallsyms]             [k] native_queued_spin_lock_slowpath
->      8.24%  swapper          [kernel.kallsyms]             [k] intel_idle
->      4.66%  nfsd             [kernel.kallsyms]             [k] __list_lru_walk_one
->      0.80%  nfsd             [kernel.kallsyms]             [k] nfsd_file_lru_cb
-> 
-> And the call graph (not sure how this will format):
-> 
-> - nfsd
->    - 89.34% svc_process
->       - 88.94% svc_process_common
->          - 88.87% nfsd_dispatch
->             - 88.82% nfsd4_proc_compound
->                - 53.97% nfsd4_open
->                   - 53.95% nfsd4_process_open2
->                      - 53.87% nfs4_get_vfs_file
->                         - 53.48% nfsd_file_acquire
->                            - 33.31% nfsd_file_lru_walk_list
->                               - 33.28% list_lru_walk_node                    
->                                  - 33.28% list_lru_walk_one                  
->                                     - 30.21% _raw_spin_lock
->                                        - 30.21% queued_spin_lock_slowpath
->                                             30.20% native_queued_spin_lock_slowpath
->                                       2.46% __list_lru_walk_one
->                            - 19.39% list_lru_add
->                               - 19.39% _raw_spin_lock
->                                  - 19.39% queued_spin_lock_slowpath
->                                       19.38% native_queued_spin_lock_slowpath
->                - 34.46% nfsd4_close
->                   - 34.45% nfs4_put_stid
->                      - 34.45% nfs4_free_ol_stateid
->                         - 34.45% release_all_access
->                            - 34.45% nfs4_file_put_access
->                               - 34.45% __nfs4_file_put_access.part.81
->                                  - 34.45% nfsd_file_put
->                                     - 34.44% nfsd_file_lru_walk_list
->                                        - 34.40% list_lru_walk_node
->                                           - 34.40% list_lru_walk_one
->                                              - 31.27% _raw_spin_lock
->                                                 - 31.27% queued_spin_lock_slowpath
->                                                      31.26% native_queued_spin_lock_slowpath
->                                                2.50% __list_lru_walk_one
->                                                0.50% nfsd_file_lru_cb
-> 
-> 
-> The original NFS server is mounted by the reexport server using NFSv4.2. As soon as we switch the clients to mount the reexport server with NFSv3, the high CPU usage goes away and we start to see expected performance for this workload and server hardware.
-> 
-> I'm happy to share perf data or anything else that is useful and I can repeatedly run this production load as required.
-> 
-> Cheers,
-> 
-> Daire
+Yea this does look very odd..
