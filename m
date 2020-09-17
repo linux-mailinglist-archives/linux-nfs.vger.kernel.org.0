@@ -2,69 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36C2326D3BD
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Sep 2020 08:36:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB29226D623
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Sep 2020 10:13:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgIQGgm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Sep 2020 02:36:42 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3544 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726106AbgIQGgl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 17 Sep 2020 02:36:41 -0400
-X-Greylist: delayed 924 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Sep 2020 02:36:40 EDT
-Received: from dggeme752-chm.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 5402E246117BD6188804;
-        Thu, 17 Sep 2020 14:21:14 +0800 (CST)
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme752-chm.china.huawei.com (10.3.19.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 17 Sep 2020 14:21:14 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
- Thu, 17 Sep 2020 14:21:13 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-CC:     "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Subject: Re: [PATCH v2] nfs: remove incorrect fallthrough label
-Thread-Topic: [PATCH v2] nfs: remove incorrect fallthrough label
-Thread-Index: AdaMuodnVDGlupKbQBWadlZPzzQK5g==
-Date:   Thu, 17 Sep 2020 06:21:13 +0000
-Message-ID: <5de6c6d3ced340ac80702c527bb38d12@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.176.109]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726476AbgIQINf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Sep 2020 04:13:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbgIQING (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Sep 2020 04:13:06 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA721C0611C1
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Sep 2020 01:03:40 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id z9so1053507wmk.1
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Sep 2020 01:03:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TUShtxADeMIRUv08jDyFnIdO2h4AVdi1g89uLOtrWXw=;
+        b=Xm9muXpLMfdw+3JTaQ5+6nxJDSneO0K8th2wgQ0VLh2VI2BmK+XWoQ9cDtIn8+KaRJ
+         B45Xbntr5JjNU8mF7nIZd8VP+CTHviEtF1Um5VazOhr6GEQCgh9bbRNIM6C+XWioNjmk
+         ImuOo8Gi8eD0FtSQ7hHZ1yPAo82BLFHJwGGg0UxKCYs0oMSSpMWIe45dJUN+DzUELaKQ
+         JzvvcS8KVPQMZJTfgm/lLBewbBl9UGKGHM3XV6hYGQwunOqgCSfJKO8sQaLl1M6X9BRD
+         K+XM2hJttDJQqNZl5Xftk9yd2fnhmTZR2ol6vfSH0itoQkT2+o/FcX7saxpuLl0f47l5
+         EzpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TUShtxADeMIRUv08jDyFnIdO2h4AVdi1g89uLOtrWXw=;
+        b=FJM7uXvBef8o+qY74umqQJQF5O8CLzzaMqdXQdqhpaa6ZgF6GgTP2fOWWb+hQVgwjt
+         yMzLOYUCZaih3eVfQnkfSL3izrGtmlZiK19vED7hbHUM+9bwr91tUIjJ2ql3TzdoI/vl
+         vqSYHoFcD4h9d2bRwNct5NIvectey+ElPt4qs+cc6ghHhStOBlf89Zf7HP+Jx/jsZAsb
+         whHxZTQ8yxdgUaGHm5cGW37KHP9ke97gbMjkaQxxz25g/51Lowe3VTITiYTpbCEObS5g
+         bfUfKs2UEn9e7oPfZ6jjgQ5zqASfHdd2lZmXLxmL//4FCHDWq/YmkEieVQBKMczLK+Zk
+         OsOQ==
+X-Gm-Message-State: AOAM532V0cFgS5X00ZSeFzH04Dh0SQ3lTPZHdpYaa6uoxxyuxtIJwlAE
+        bAo4hdPM8IIFBSX1cFEi8IwI5mo/MGj4lQXs
+X-Google-Smtp-Source: ABdhPJzTwzfeJOnCQh65prZummqH9JR09Yxja+zvv2OTSAZpPcom4k7xuvXSyH3Yv50qn/8+2aIWyQ==
+X-Received: by 2002:a1c:e256:: with SMTP id z83mr8793930wmg.33.1600329817598;
+        Thu, 17 Sep 2020 01:03:37 -0700 (PDT)
+Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
+        by smtp.gmail.com with ESMTPSA id a13sm9836030wme.26.2020.09.17.01.03.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Sep 2020 01:03:36 -0700 (PDT)
+Date:   Thu, 17 Sep 2020 10:03:35 +0200
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jiri Kosina <trivial@kernel.org>,
+        Kees Cook <kees.cook@canonical.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, linux-input@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-rdma@vger.kernel.org,
+        iommu@lists.linux-foundation.org, dm-devel@redhat.com,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
+        oss-drivers@netronome.com, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        storagedev@microchip.com, sparclinux@vger.kernel.org,
+        linux-serial@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-parisc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, bpf@vger.kernel.org,
+        dccp@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, linux-sctp@vger.kernel.org,
+        alsa-devel <alsa-devel@alsa-project.org>
+Subject: Re: [oss-drivers] [trivial PATCH] treewide: Convert switch/case
+ fallthrough; to break;
+Message-ID: <20200917080334.GB5769@netronome.com>
+References: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-TmljayBEZXNhdWxuaWVycyA8bmRlc2F1bG5pZXJzQGdvb2dsZS5jb20+IHdyb3RlOg0KPiBUaGVy
-ZSBpcyBubyBjYXNlIGFmdGVyIHRoZSBkZWZhdWx0IGZyb20gd2hpY2ggdG8gZmFsbHRocm91Z2gg
-dG8uIENsYW5nIHdpbGwgZXJyb3IgaW4gdGhpcyBjYXNlICh1bmhlbHBmdWxseSB3aXRob3V0IGNv
-bnRleHQsIHNlZSBsaW5rIGJlbG93KSBhbmQgR0NDIHdpbGwgd2l0aCAtV3N3aXRjaC11bnJlYWNo
-YWJsZS4NCj4NCj5UaGUgcHJldmlvdXMgY29tbWl0IHNob3VsZCBoYXZlIGp1c3QgcmVwbGFjZWQg
-dGhlIGNvbW1lbnQgd2l0aCBhIGJyZWFrIHN0YXRlbWVudC4NCj4NCj5JZiB3ZSBjb25zaWRlciBp
-bXBsaWNpdCBmYWxsdGhyb3VnaCB0byBiZSBhIGRlc2lnbiBtaXN0YWtlIG9mIEMsIHRoZW4gYWxs
-IGNhc2Ugc3RhdGVtZW50cyBzaG91bGQgYmUgdGVybWluYXRlZCB3aXRoIG9uZSBvZiB0aGUgZm9s
-bG93aW5nDQo+c3RhdGVtZW50czoNCj4qIGJyZWFrDQo+KiBjb250aW51ZQ0KPiogcmV0dXJuDQo+
-KiBfX2F0dHJpYnV0ZV9fKF9fZmFsbHRocm91Z2hfXykNCj4qIGdvdG8gKHBseiBubykNCj4qIChj
-YWxsIG9mIGZ1bmN0aW9uIHdpdGggX19hdHRyaWJ1dGVfXyhfX25vcmV0dXJuX18pKQ0KPg0KPkZp
-eGVzOiAyYTEzOTBjOTVhNjkgKCJuZnM6IENvbnZlcnQgdG8gdXNlIHRoZSBwcmVmZXJyZWQgZmFs
-bHRocm91Z2ggbWFjcm8iKQ0KPkxpbms6IGh0dHBzOi8vYnVncy5sbHZtLm9yZy9zaG93X2J1Zy5j
-Z2k/aWQ9NDc1MzkNCj5TdWdnZXN0ZWQtYnk6IEpvZSBQZXJjaGVzIDxqb2VAcGVyY2hlcy5jb20+
-DQo+U2lnbmVkLW9mZi1ieTogTmljayBEZXNhdWxuaWVycyA8bmRlc2F1bG5pZXJzQGdvb2dsZS5j
-b20+DQo+LS0tDQoNClJldmlld2VkLWJ5OiBNaWFvaGUgTGluIDxsaW5taWFvaGVAaHVhd2VpLmNv
-bT4NCg0KDQo=
+On Wed, Sep 09, 2020 at 01:06:39PM -0700, Joe Perches wrote:
+> fallthrough to a separate case/default label break; isn't very readable.
+> 
+> Convert pseudo-keyword fallthrough; statements to a simple break; when
+> the next label is case or default and the only statement in the next
+> label block is break;
+> 
+> Found using:
+> 
+> $ grep-2.5.4 -rP --include=*.[ch] -n "fallthrough;(\s*(case\s+\w+|default)\s*:\s*){1,7}break;" *
+> 
+> Miscellanea:
+> 
+> o Move or coalesce a couple label blocks above a default: block.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+
+...
+
+> diff --git a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000_pcie.c b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000_pcie.c
+> index 252fe06f58aa..1d5b87079104 100644
+> --- a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000_pcie.c
+> +++ b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000_pcie.c
+> @@ -345,7 +345,7 @@ static int matching_bar(struct nfp_bar *bar, u32 tgt, u32 act, u32 tok,
+>  		baract = NFP_CPP_ACTION_RW;
+>  		if (act == 0)
+>  			act = NFP_CPP_ACTION_RW;
+> -		fallthrough;
+> +		break;
+>  	case NFP_PCIE_BAR_PCIE2CPP_MapType_FIXED:
+>  		break;
+>  	default:
+
+This is a cascading fall-through handling all map types.
+I don't think this change improves readability.
+
+...
