@@ -2,120 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBEE126D2B0
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Sep 2020 06:35:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D30D26D37C
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Sep 2020 08:13:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726064AbgIQEf0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Sep 2020 00:35:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51428 "EHLO
+        id S1726205AbgIQGNY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Sep 2020 02:13:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbgIQEfZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Sep 2020 00:35:25 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5949C06174A;
-        Wed, 16 Sep 2020 21:35:24 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id p65so916306qtd.2;
-        Wed, 16 Sep 2020 21:35:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8Zpj6VNYB1ijfsr3LbH3mcMe7G5qplkFLWfuclz0cxc=;
-        b=VmK4WCobellFuhyIrcbPQIcR010JSu/T6FWoLObSAlKIMNCI4F+701ka2to1Q0FNeH
-         CVdAGvwMUdGLbe++OsvqNPYRQyZ/5BOkkXJp1RWquC1rW08NZfye4UK0dpX3c/teJQxn
-         tqftQgLVUjDswDau3e9yc6xtArTRAMZ7fNtD3qe/5yw8Ljn9ujupFNYMIXSA4JDxvI/p
-         22TBlpTLXspeNL9lkEVQE2S0AJuE3VftZY94vUOPWnpIZa/NnFcTcqLia40djdMK1yHQ
-         1grKazy1MjwuMVUEDLuIPwTX2OZOJyVuW72AAk12ux8JAr1xg09n0OQjh6hNqUaFXTnw
-         qYuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8Zpj6VNYB1ijfsr3LbH3mcMe7G5qplkFLWfuclz0cxc=;
-        b=RNbEYYgs21zCijEtyhPYWgOrVcnja6FhJi+mjreNnOeFToBhX/HAANZywMdOM6KLb3
-         7UAb/VaV9vP35fxQQUnAY175ravDufk4NGZDJLdW2F4pDUsCAnANjU8dX9VNjJDOAfdH
-         v2BCgewqcBOFOX34haFeqZrrhoNApaIFWso5IMfoBC8r0gYk87aidO2QmwT4IMQQXo7g
-         UQDOVU6w8SJ8FW6z3JIR9s6u7dfJAxgI8x6lXiBYdEUMdYCnsvoEoRBCDRIDUIZHxqu2
-         Ubye+VCDLRktfbvnuIuGEm34TV28NYdujvCr0nD8xR8C1T5Bja2neR5IFCGozOjWp0y7
-         j2Bw==
-X-Gm-Message-State: AOAM530qpogbA25gMG3Rc0rXCYnncw4k3KH/g8LtO0ew5O6/dhdvZxo1
-        rBgpJ3qJKmnNzudWVoVzw7A=
-X-Google-Smtp-Source: ABdhPJw+GVhv2RdCY2tcZg+MQREljzpzBgFDmXhaOeohJBw31zX7qee7qh2F76HewU8pFXupCLwprg==
-X-Received: by 2002:ac8:319d:: with SMTP id h29mr24991731qte.32.1600317323724;
-        Wed, 16 Sep 2020 21:35:23 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id 192sm21437979qkn.9.2020.09.16.21.35.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2020 21:35:22 -0700 (PDT)
-Date:   Wed, 16 Sep 2020 21:35:21 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>,
-        Hongxiang Lou <louhongxiang@huawei.com>,
-        Miaohe Lin <linmiaohe@huawei.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] nfs: remove incorrect fallthrough label
-Message-ID: <20200917043521.GA3355283@ubuntu-n2-xlarge-x86>
-References: <9441ed0f247d0cac6e85f3847e1b4c32a199dd8f.camel@perches.com>
- <20200916200255.1382086-1-ndesaulniers@google.com>
+        with ESMTP id S1726106AbgIQGNX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Sep 2020 02:13:23 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E0C8C06174A
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Sep 2020 23:13:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=X9s2zoOnf9eH4HyQdnv8XgIzfYS5l5/tGszcKQwmTs4=; b=mVQTm/a/K90G1gktABDszQzrHD
+        rZD+hSRSL0AIK/Gf+qXHtHwjGmEKHmIPxMQSN8znD9Kfl+agwUz0Nhvg1Vi3A1wJ+1Nzee7hQkG0f
+        wsG6YnNcLmmkajHUOnBDfFrnu0g3AfC/BfneHLt4g6qZI1f7hRnWLkBnUD7ERLCjK4j3ZucKIRTBC
+        41S2G8QFGupLE/3MOHRl/2AlvF+E4oBT1ch+JILFIX+SCcIZ4rTQi46k08EyrmFlDnf4MYbQMpzRC
+        4yNep+wGalMaJH9ZdBToG5czBl0fS6A4CKJhI+2mrfPln9CHcnIis6ocPRRGvDf5JeqwdMkA6LrA3
+        twiic4Ug==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kInAR-0000yd-64; Thu, 17 Sep 2020 06:13:15 +0000
+Date:   Thu, 17 Sep 2020 07:13:15 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     bfields@fieldses.org, Bill.Baker@oracle.com,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH RFC 01/21] NFSD: Add SPDK header for fs/nfsd/trace.c
+Message-ID: <20200917061315.GA625@infradead.org>
+References: <160029169954.29208.8757662600714736320.stgit@klimt.1015granger.net>
+ <160029253817.29208.3156039915028547893.stgit@klimt.1015granger.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200916200255.1382086-1-ndesaulniers@google.com>
+In-Reply-To: <160029253817.29208.3156039915028547893.stgit@klimt.1015granger.net>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Sep 16, 2020 at 01:02:55PM -0700, Nick Desaulniers wrote:
-> There is no case after the default from which to fallthrough to. Clang
-> will error in this case (unhelpfully without context, see link below)
-> and GCC will with -Wswitch-unreachable.
+On Wed, Sep 16, 2020 at 05:42:18PM -0400, Chuck Lever wrote:
+> Clean up.
 > 
-> The previous commit should have just replaced the comment with a break
-> statement.
-> 
-> If we consider implicit fallthrough to be a design mistake of C, then
-> all case statements should be terminated with one of the following
-> statements:
-> * break
-> * continue
-> * return
-> * __attribute__(__fallthrough__)
-> * goto (plz no)
-> * (call of function with __attribute__(__noreturn__))
-> 
-> Fixes: 2a1390c95a69 ("nfs: Convert to use the preferred fallthrough macro")
-> Link: https://bugs.llvm.org/show_bug.cgi?id=47539
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> The file was contributed in 2014 by Christoph Helwig in commit
+> 31ef83dc0538 ("nfsd: add trace events").
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-
-> ---
-> Changes v2:
-> * add break rather than no terminating statement as per Joe.
-> * add Joe's suggested by tag.
-> * add blurb about acceptable terminal statements.
-> 
->  fs/nfs/super.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-> index d20326ee0475..eb2401079b04 100644
-> --- a/fs/nfs/super.c
-> +++ b/fs/nfs/super.c
-> @@ -889,7 +889,7 @@ static struct nfs_server *nfs_try_mount_request(struct fs_context *fc)
->  		default:
->  			if (rpcauth_get_gssinfo(flavor, &info) != 0)
->  				continue;
-> -			fallthrough;
-> +			break;
->  		}
->  		dfprintk(MOUNT, "NFS: attempting to use auth flavor %u\n", flavor);
->  		ctx->selected_flavor = flavor;
-> -- 
-> 2.28.0.618.gf4bc123cb7-goog
-> 
+s/SPDK/SPDX/
