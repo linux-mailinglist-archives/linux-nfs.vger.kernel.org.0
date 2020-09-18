@@ -2,36 +2,36 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FCD326F2FD
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Sep 2020 05:03:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B687F26F2D7
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Sep 2020 05:02:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgIRCE7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Sep 2020 22:04:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52496 "EHLO mail.kernel.org"
+        id S1728956AbgIRDA6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Sep 2020 23:00:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbgIRCEt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 17 Sep 2020 22:04:49 -0400
+        id S1727556AbgIRCFc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 17 Sep 2020 22:05:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AACEF23888;
-        Fri, 18 Sep 2020 02:04:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0B0320872;
+        Fri, 18 Sep 2020 02:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600394688;
-        bh=FFz3mBP//7vV97rdHl7Ku4Uwuvm8WgXdO/JNGDtfwlQ=;
+        s=default; t=1600394731;
+        bh=/ySKV8YltLBzBdxYlotqiaNymuxI1/8UQNeR0WNNiyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ri6r3TRFBfXwFufX+x1NF7eU9IlSYYZIuEe+cQIYvpt5BvBiZNZ6i3kAMC/0/Yd5K
-         lzZF6OB2fdoD+Bma0Nmq8uELo5r3dyKsLQridtdAReatUQRUHlDoFxT3Si4xFAZbiW
-         rxmP/1POAuki4fWsqG7K/GlJ+szpRVwF9x54ZBTw=
+        b=xKEkVXJejOtG5vmAR5uJJ8goIjjPLEnxjJfHQumshSpySjZfUpUpw1ZGDO6hbAIbz
+         tMdxNkrjLJwDp4Tsce1jCehbNLQxmC+k1bJkr3A5TZQZSsm5tsu3HvxGZc51zpyQ3b
+         wF0Y1DuWfwhUk82qxWkPPyQXhfetcw25thzcCWDw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Chuck Lever <chuck.lever@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 177/330] nfsd: Don't add locks to closed or closing open stateids
-Date:   Thu, 17 Sep 2020 21:58:37 -0400
-Message-Id: <20200918020110.2063155-177-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 213/330] SUNRPC: Fix a potential buffer overflow in 'svc_print_xprts()'
+Date:   Thu, 17 Sep 2020 21:59:13 -0400
+Message-Id: <20200918020110.2063155-213-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200918020110.2063155-1-sashal@kernel.org>
 References: <20200918020110.2063155-1-sashal@kernel.org>
@@ -43,211 +43,73 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit a451b12311aa8c96c6f6e01c783a86995dc3ec6b ]
+[ Upstream commit b25b60d7bfb02a74bc3c2d998e09aab159df8059 ]
 
-In NFSv4, the lock stateids are tied to the lockowner, and the open stateid,
-so that the action of closing the file also results in either an automatic
-loss of the locks, or an error of the form NFS4ERR_LOCKS_HELD.
+'maxlen' is the total size of the destination buffer. There is only one
+caller and this value is 256.
 
-In practice this means we must not add new locks to the open stateid
-after the close process has been invoked. In fact doing so, can result
-in the following panic:
+When we compute the size already used and what we would like to add in
+the buffer, the trailling NULL character is not taken into account.
+However, this trailling character will be added by the 'strcat' once we
+have checked that we have enough place.
 
- kernel BUG at lib/list_debug.c:51!
- invalid opcode: 0000 [#1] SMP NOPTI
- CPU: 2 PID: 1085 Comm: nfsd Not tainted 5.6.0-rc3+ #2
- Hardware name: VMware, Inc. VMware7,1/440BX Desktop Reference Platform, BIOS VMW71.00V.14410784.B64.1908150010 08/15/2019
- RIP: 0010:__list_del_entry_valid.cold+0x31/0x55
- Code: 1a 3d 9b e8 74 10 c2 ff 0f 0b 48 c7 c7 f0 1a 3d 9b e8 66 10 c2 ff 0f 0b 48 89 f2 48 89 fe 48 c7 c7 b0 1a 3d 9b e8 52 10 c2 ff <0f> 0b 48 89 fe 4c 89 c2 48 c7 c7 78 1a 3d 9b e8 3e 10 c2 ff 0f 0b
- RSP: 0018:ffffb296c1d47d90 EFLAGS: 00010246
- RAX: 0000000000000054 RBX: ffff8ba032456ec8 RCX: 0000000000000000
- RDX: 0000000000000000 RSI: ffff8ba039e99cc8 RDI: ffff8ba039e99cc8
- RBP: ffff8ba032456e60 R08: 0000000000000781 R09: 0000000000000003
- R10: 0000000000000000 R11: 0000000000000001 R12: ffff8ba009a4abe0
- R13: ffff8ba032456e8c R14: 0000000000000000 R15: ffff8ba00adb01d8
- FS:  0000000000000000(0000) GS:ffff8ba039e80000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 00007fb213f0b008 CR3: 00000001347de006 CR4: 00000000003606e0
- Call Trace:
-  release_lock_stateid+0x2b/0x80 [nfsd]
-  nfsd4_free_stateid+0x1e9/0x210 [nfsd]
-  nfsd4_proc_compound+0x414/0x700 [nfsd]
-  ? nfs4svc_decode_compoundargs+0x407/0x4c0 [nfsd]
-  nfsd_dispatch+0xc1/0x200 [nfsd]
-  svc_process_common+0x476/0x6f0 [sunrpc]
-  ? svc_sock_secure_port+0x12/0x30 [sunrpc]
-  ? svc_recv+0x313/0x9c0 [sunrpc]
-  ? nfsd_svc+0x2d0/0x2d0 [nfsd]
-  svc_process+0xd4/0x110 [sunrpc]
-  nfsd+0xe3/0x140 [nfsd]
-  kthread+0xf9/0x130
-  ? nfsd_destroy+0x50/0x50 [nfsd]
-  ? kthread_park+0x90/0x90
-  ret_from_fork+0x1f/0x40
+So, there is a off-by-one issue and 1 byte of the stack could be
+erroneously overwridden.
 
-The fix is to ensure that lock creation tests for whether or not the
-open stateid is unhashed, and to fail if that is the case.
+Take into account the trailling NULL, when checking if there is enough
+place in the destination buffer.
 
-Fixes: 659aefb68eca ("nfsd: Ensure we don't recognise lock stateids after freeing them")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+While at it, also replace a 'sprintf' by a safer 'snprintf', check for
+output truncation and avoid a superfluous 'strlen'.
+
+Fixes: dc9a16e49dbba ("svc: Add /proc/sys/sunrpc/transport files")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+[ cel: very minor fix to documenting comment
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 73 ++++++++++++++++++++++++++-------------------
- 1 file changed, 43 insertions(+), 30 deletions(-)
+ net/sunrpc/svc_xprt.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 68cf116607645..8cb2f744dde6b 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -495,6 +495,8 @@ find_any_file(struct nfs4_file *f)
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index dc74519286be5..fe4cd0b4c4127 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -104,8 +104,17 @@ void svc_unreg_xprt_class(struct svc_xprt_class *xcl)
+ }
+ EXPORT_SYMBOL_GPL(svc_unreg_xprt_class);
+ 
+-/*
+- * Format the transport list for printing
++/**
++ * svc_print_xprts - Format the transport list for printing
++ * @buf: target buffer for formatted address
++ * @maxlen: length of target buffer
++ *
++ * Fills in @buf with a string containing a list of transport names, each name
++ * terminated with '\n'. If the buffer is too small, some entries may be
++ * missing, but it is guaranteed that all lines in the output buffer are
++ * complete.
++ *
++ * Returns positive length of the filled-in string.
+  */
+ int svc_print_xprts(char *buf, int maxlen)
  {
- 	struct nfsd_file *ret;
+@@ -118,9 +127,9 @@ int svc_print_xprts(char *buf, int maxlen)
+ 	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
+ 		int slen;
  
-+	if (!f)
-+		return NULL;
- 	spin_lock(&f->fi_lock);
- 	ret = __nfs4_get_fd(f, O_RDWR);
- 	if (!ret) {
-@@ -1273,6 +1275,12 @@ static void nfs4_put_stateowner(struct nfs4_stateowner *sop)
- 	nfs4_free_stateowner(sop);
- }
- 
-+static bool
-+nfs4_ol_stateid_unhashed(const struct nfs4_ol_stateid *stp)
-+{
-+	return list_empty(&stp->st_perfile);
-+}
-+
- static bool unhash_ol_stateid(struct nfs4_ol_stateid *stp)
- {
- 	struct nfs4_file *fp = stp->st_stid.sc_file;
-@@ -1343,9 +1351,11 @@ static bool unhash_lock_stateid(struct nfs4_ol_stateid *stp)
- {
- 	lockdep_assert_held(&stp->st_stid.sc_client->cl_lock);
- 
-+	if (!unhash_ol_stateid(stp))
-+		return false;
- 	list_del_init(&stp->st_locks);
- 	nfs4_unhash_stid(&stp->st_stid);
--	return unhash_ol_stateid(stp);
-+	return true;
- }
- 
- static void release_lock_stateid(struct nfs4_ol_stateid *stp)
-@@ -1410,13 +1420,12 @@ static void release_open_stateid_locks(struct nfs4_ol_stateid *open_stp,
- static bool unhash_open_stateid(struct nfs4_ol_stateid *stp,
- 				struct list_head *reaplist)
- {
--	bool unhashed;
--
- 	lockdep_assert_held(&stp->st_stid.sc_client->cl_lock);
- 
--	unhashed = unhash_ol_stateid(stp);
-+	if (!unhash_ol_stateid(stp))
-+		return false;
- 	release_open_stateid_locks(stp, reaplist);
--	return unhashed;
-+	return true;
- }
- 
- static void release_open_stateid(struct nfs4_ol_stateid *stp)
-@@ -6267,21 +6276,21 @@ alloc_init_lock_stateowner(unsigned int strhashval, struct nfs4_client *clp,
- }
- 
- static struct nfs4_ol_stateid *
--find_lock_stateid(struct nfs4_lockowner *lo, struct nfs4_file *fp)
-+find_lock_stateid(const struct nfs4_lockowner *lo,
-+		  const struct nfs4_ol_stateid *ost)
- {
- 	struct nfs4_ol_stateid *lst;
--	struct nfs4_client *clp = lo->lo_owner.so_client;
- 
--	lockdep_assert_held(&clp->cl_lock);
-+	lockdep_assert_held(&ost->st_stid.sc_client->cl_lock);
- 
--	list_for_each_entry(lst, &lo->lo_owner.so_stateids, st_perstateowner) {
--		if (lst->st_stid.sc_type != NFS4_LOCK_STID)
--			continue;
--		if (lst->st_stid.sc_file == fp) {
--			refcount_inc(&lst->st_stid.sc_count);
--			return lst;
-+	/* If ost is not hashed, ost->st_locks will not be valid */
-+	if (!nfs4_ol_stateid_unhashed(ost))
-+		list_for_each_entry(lst, &ost->st_locks, st_locks) {
-+			if (lst->st_stateowner == &lo->lo_owner) {
-+				refcount_inc(&lst->st_stid.sc_count);
-+				return lst;
-+			}
- 		}
--	}
- 	return NULL;
- }
- 
-@@ -6297,11 +6306,11 @@ init_lock_stateid(struct nfs4_ol_stateid *stp, struct nfs4_lockowner *lo,
- 	mutex_lock_nested(&stp->st_mutex, OPEN_STATEID_MUTEX);
- retry:
- 	spin_lock(&clp->cl_lock);
--	spin_lock(&fp->fi_lock);
--	retstp = find_lock_stateid(lo, fp);
-+	if (nfs4_ol_stateid_unhashed(open_stp))
-+		goto out_close;
-+	retstp = find_lock_stateid(lo, open_stp);
- 	if (retstp)
--		goto out_unlock;
--
-+		goto out_found;
- 	refcount_inc(&stp->st_stid.sc_count);
- 	stp->st_stid.sc_type = NFS4_LOCK_STID;
- 	stp->st_stateowner = nfs4_get_stateowner(&lo->lo_owner);
-@@ -6310,22 +6319,26 @@ retry:
- 	stp->st_access_bmap = 0;
- 	stp->st_deny_bmap = open_stp->st_deny_bmap;
- 	stp->st_openstp = open_stp;
-+	spin_lock(&fp->fi_lock);
- 	list_add(&stp->st_locks, &open_stp->st_locks);
- 	list_add(&stp->st_perstateowner, &lo->lo_owner.so_stateids);
- 	list_add(&stp->st_perfile, &fp->fi_stateids);
--out_unlock:
- 	spin_unlock(&fp->fi_lock);
- 	spin_unlock(&clp->cl_lock);
--	if (retstp) {
--		if (nfsd4_lock_ol_stateid(retstp) != nfs_ok) {
--			nfs4_put_stid(&retstp->st_stid);
--			goto retry;
--		}
--		/* To keep mutex tracking happy */
--		mutex_unlock(&stp->st_mutex);
--		stp = retstp;
--	}
- 	return stp;
-+out_found:
-+	spin_unlock(&clp->cl_lock);
-+	if (nfsd4_lock_ol_stateid(retstp) != nfs_ok) {
-+		nfs4_put_stid(&retstp->st_stid);
-+		goto retry;
-+	}
-+	/* To keep mutex tracking happy */
-+	mutex_unlock(&stp->st_mutex);
-+	return retstp;
-+out_close:
-+	spin_unlock(&clp->cl_lock);
-+	mutex_unlock(&stp->st_mutex);
-+	return NULL;
- }
- 
- static struct nfs4_ol_stateid *
-@@ -6340,7 +6353,7 @@ find_or_create_lock_stateid(struct nfs4_lockowner *lo, struct nfs4_file *fi,
- 
- 	*new = false;
- 	spin_lock(&clp->cl_lock);
--	lst = find_lock_stateid(lo, fi);
-+	lst = find_lock_stateid(lo, ost);
- 	spin_unlock(&clp->cl_lock);
- 	if (lst != NULL) {
- 		if (nfsd4_lock_ol_stateid(lst) == nfs_ok)
+-		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, xcl->xcl_max_payload);
+-		slen = strlen(tmpstr);
+-		if (len + slen > maxlen)
++		slen = snprintf(tmpstr, sizeof(tmpstr), "%s %d\n",
++				xcl->xcl_name, xcl->xcl_max_payload);
++		if (slen >= sizeof(tmpstr) || len + slen >= maxlen)
+ 			break;
+ 		len += slen;
+ 		strcat(buf, tmpstr);
 -- 
 2.25.1
 
