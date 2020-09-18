@@ -2,94 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4A4126F2D9
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Sep 2020 05:02:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4128C27005E
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Sep 2020 17:00:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727571AbgIRDA6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Sep 2020 23:00:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgIRCFd (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 17 Sep 2020 22:05:33 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A1BB2376F;
-        Fri, 18 Sep 2020 02:05:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600394732;
-        bh=zxErcgS1+K4ChJIZil+KpRkv08EjIJEwkac6PNqxhA8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n/P1sxm88DWWNJkiO9wvoRG/Q4v3AeoTTW8/eh5Ks5iDEfo/7YnsvCXxpvF4CUij2
-         pzUQMOFYUy7sf3MfvfAppVzbibSkjFp/kJP4FqM2xDWDgWZQS+L+Pjsms6Ql+Rz+pv
-         D5s4qVaCddBSYy5IYLIXD4V4vKvCbgT153VoQG9M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 214/330] svcrdma: Fix leak of transport addresses
-Date:   Thu, 17 Sep 2020 21:59:14 -0400
-Message-Id: <20200918020110.2063155-214-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200918020110.2063155-1-sashal@kernel.org>
-References: <20200918020110.2063155-1-sashal@kernel.org>
+        id S1726154AbgIRPA0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 18 Sep 2020 11:00:26 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:61950 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgIRPA0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Sep 2020 11:00:26 -0400
+X-Greylist: delayed 7316 seconds by postgrey-1.27 at vger.kernel.org; Fri, 18 Sep 2020 11:00:12 EDT
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 08ICvm7X029634
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Fri, 18 Sep 2020 05:57:49 -0700 (PDT)
+Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
+ ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 18 Sep 2020 05:57:27 -0700
+From:   <zhe.he@windriver.com>
+To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>,
+        <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>,
+        <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <zhe.he@windriver.com>
+Subject: [PATCH] SUNRPC: Flush dcache only when receiving more seeking
+Date:   Fri, 18 Sep 2020 20:50:52 +0800
+Message-ID: <20200918125052.2493006-1-zhe.he@windriver.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: He Zhe <zhe.he@windriver.com>
 
-[ Upstream commit 1a33d8a284b1e85e03b8c7b1ea8fb985fccd1d71 ]
+commit ca07eda33e01 ("SUNRPC: Refactor svc_recvfrom()") introduces
+svc_flush_bvec to after sock_recvmsg, but sometimes we receive less than we
+seek, which triggers the following warning.
 
-Kernel memory leak detected:
+WARNING: CPU: 0 PID: 18266 at include/linux/bvec.h:101 bvec_iter_advance+0x44/0xa8
+Attempted to advance past end of bvec iter
+Modules linked in: sch_fq_codel openvswitch nsh nf_conncount nf_nat
+nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
+CPU: 1 PID: 18266 Comm: nfsd Not tainted 5.9.0-rc5 #1
+Hardware name: Xilinx Zynq Platform
+[<80112ec0>] (unwind_backtrace) from [<8010c3a8>] (show_stack+0x18/0x1c)
+[<8010c3a8>] (show_stack) from [<80755214>] (dump_stack+0x9c/0xd0)
+[<80755214>] (dump_stack) from [<80125e64>] (__warn+0xdc/0xf4)
+[<80125e64>] (__warn) from [<80126244>] (warn_slowpath_fmt+0x84/0xac)
+[<80126244>] (warn_slowpath_fmt) from [<80c88514>] (bvec_iter_advance+0x44/0xa8)
+[<80c88514>] (bvec_iter_advance) from [<80c88940>] (svc_tcp_read_msg+0x10c/0x1bc)
+[<80c88940>] (svc_tcp_read_msg) from [<80c895d4>] (svc_tcp_recvfrom+0x98/0x63c)
+[<80c895d4>] (svc_tcp_recvfrom) from [<80c97bf4>] (svc_handle_xprt+0x48c/0x4f8)
+[<80c97bf4>] (svc_handle_xprt) from [<80c98038>] (svc_recv+0x94/0x1e0)
+[<80c98038>] (svc_recv) from [<804747cc>] (nfsd+0xf0/0x168)
+[<804747cc>] (nfsd) from [<80148a0c>] (kthread+0x144/0x154)
+[<80148a0c>] (kthread) from [<80100114>] (ret_from_fork+0x14/0x20)
 
-unreferenced object 0xffff888849cdf480 (size 8):
-  comm "kworker/u8:3", pid 2086, jiffies 4297898756 (age 4269.856s)
-  hex dump (first 8 bytes):
-    30 00 cd 49 88 88 ff ff                          0..I....
-  backtrace:
-    [<00000000acfc370b>] __kmalloc_track_caller+0x137/0x183
-    [<00000000a2724354>] kstrdup+0x2b/0x43
-    [<0000000082964f84>] xprt_rdma_format_addresses+0x114/0x17d [rpcrdma]
-    [<00000000dfa6ed00>] xprt_setup_rdma_bc+0xc0/0x10c [rpcrdma]
-    [<0000000073051a83>] xprt_create_transport+0x3f/0x1a0 [sunrpc]
-    [<0000000053531a8e>] rpc_create+0x118/0x1cd [sunrpc]
-    [<000000003a51b5f8>] setup_callback_client+0x1a5/0x27d [nfsd]
-    [<000000001bd410af>] nfsd4_process_cb_update.isra.7+0x16c/0x1ac [nfsd]
-    [<000000007f4bbd56>] nfsd4_run_cb_work+0x4c/0xbd [nfsd]
-    [<0000000055c5586b>] process_one_work+0x1b2/0x2fe
-    [<00000000b1e3e8ef>] worker_thread+0x1a6/0x25a
-    [<000000005205fb78>] kthread+0xf6/0xfb
-    [<000000006d2dc057>] ret_from_fork+0x3a/0x50
-
-Introduce a call to xprt_rdma_free_addresses() similar to the way
-that the TCP backchannel releases a transport's peer address
-strings.
-
-Fixes: 5d252f90a800 ("svcrdma: Add class for RDMA backwards direction transport")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ca07eda33e01 ("SUNRPC: Refactor svc_recvfrom()")
+Cc: <stable@vger.kernel.org> # 5.8+
+Signed-off-by: He Zhe <zhe.he@windriver.com>
 ---
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/sunrpc/svcsock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-index cf80394b2db33..325eef1f85824 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-@@ -252,6 +252,7 @@ xprt_rdma_bc_put(struct rpc_xprt *xprt)
- {
- 	dprintk("svcrdma: %s: xprt %p\n", __func__, xprt);
+diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+index d5805fa1d066..ea3bc9635448 100644
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@ -277,7 +277,7 @@ static ssize_t svc_tcp_read_msg(struct svc_rqst *rqstp, size_t buflen,
+ 		buflen -= seek;
+ 	}
+ 	len = sock_recvmsg(svsk->sk_sock, &msg, MSG_DONTWAIT);
+-	if (len > 0)
++	if (len > (seek & PAGE_MASK))
+ 		svc_flush_bvec(bvec, len, seek);
  
-+	xprt_rdma_free_addresses(xprt);
- 	xprt_free(xprt);
- }
- 
+ 	/* If we read a full record, then assume there may be more
 -- 
-2.25.1
+2.17.1
 
