@@ -2,103 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1364627041F
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Sep 2020 20:32:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9843270597
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Sep 2020 21:32:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgIRSc0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 18 Sep 2020 14:32:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32050 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726414AbgIRScV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Sep 2020 14:32:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600453939;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WMCt82vydAOuMxr21i5VIzabIgO00NuRNotKhmjTrn4=;
-        b=Lz1mOe7lqf2GI9cRfDFa37lZmcH/iO8wdGRGXSzIek5PePZ+UPUkVwIcFmwP+k2y9ittYB
-        LfZm/RUE8OyEwn0ocQOLbE85D90nFD1acb9+b+6jcUgfMMGZeOcbYyBNovwVDND1bX9fhd
-        zx+Eik/C6coO6+AIEblj3LkQ2w5pEbc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-493-AY_nnCZbOaeyjOm4f2XkCg-1; Fri, 18 Sep 2020 14:32:17 -0400
-X-MC-Unique: AY_nnCZbOaeyjOm4f2XkCg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726157AbgIRTcI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 18 Sep 2020 15:32:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbgIRTcI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 18 Sep 2020 15:32:08 -0400
+Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D20AD808245;
-        Fri, 18 Sep 2020 18:32:16 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-112-247.phx2.redhat.com [10.3.112.247])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8BE3D19728;
-        Fri, 18 Sep 2020 18:32:16 +0000 (UTC)
-Subject: Re: [PATCH] mountd: Ignore transient and non-fatal filesystem errors
- in nfsd_export
-To:     trondmy@kernel.org
-Cc:     linux-nfs@vger.kernel.org
-References: <20200908211958.38741-1-trondmy@kernel.org>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <33492131-a396-9f6c-30bd-fac8de9c9e6d@RedHat.com>
-Date:   Fri, 18 Sep 2020 14:32:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D2D121734
+        for <linux-nfs@vger.kernel.org>; Fri, 18 Sep 2020 19:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600457527;
+        bh=sYAusMtH0+K8xt8xTSvEfpOziA5PCCZ/peniVhC0/S8=;
+        h=From:To:Subject:Date:From;
+        b=cgd/KdnmaGkRovuIjzrQRiZsWxemrH3eb7vGiKfdVcoKLEMyZr0LgbC6LdBft5afS
+         yjaBzFJ+KS/nliX8PMBaxdaGjkZxK+kAPC98SrIFQPDxaV6GTalkT19NKKjllOj/jY
+         Au+fM5jHwuPbhkJ/htZTgtY79cYsJ0L/dkRQ8BHQ=
+From:   trondmy@kernel.org
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/2] pNFS/flexfiles: Ensure we initialise the mirror bsizes correctly on read
+Date:   Fri, 18 Sep 2020 15:29:58 -0400
+Message-Id: <20200918192959.14270-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200908211958.38741-1-trondmy@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
+While it is true that reading from an unmirrored source always uses
+index 0, that is no longer true for mirrored sources when we fail over.
 
-On 9/8/20 5:19 PM, trondmy@kernel.org wrote:
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> 
-> If the mount point check in nfsd_export fails due to a transient error,
-> then ignore it to avoid spurious NFSERR_STALE errors being returned by
-> knfsd.
-> 
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Committed... (tag: nfs-utils-2-5-2-rc5)
+Fixes: 563c53e73b8b ("NFS: Fix flexfiles read failover")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/flexfilelayout/flexfilelayout.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-steved.
-> ---
->  utils/mountd/cache.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/utils/mountd/cache.c b/utils/mountd/cache.c
-> index 6cba2883026f..93e868341d15 100644
-> --- a/utils/mountd/cache.c
-> +++ b/utils/mountd/cache.c
-> @@ -1411,7 +1411,10 @@ static void nfsd_export(int f)
->  
->  		if (mp && !*mp)
->  			mp = found->m_export.e_path;
-> -		if (mp && !is_mountpoint(mp))
-> +		errno = 0;
-> +		if (mp && !is_mountpoint(mp)) {
-> +			if (errno != 0 && !path_lookup_error(errno))
-> +				goto out;
->  			/* Exportpoint is not mounted, so tell kernel it is
->  			 * not available.
->  			 * This will cause it not to appear in the V4 Pseudo-root
-> @@ -1420,9 +1423,12 @@ static void nfsd_export(int f)
->  			 * And filehandle for this mountpoint from an earlier
->  			 * mount will block in nfsd.fh lookup.
->  			 */
-> +			xlog(L_WARNING,
-> +			     "Cannot export path '%s': not a mountpoint",
-> +			     path);
->  			dump_to_cache(f, buf, sizeof(buf), dom, path,
->  				      NULL, 60);
-> -		else if (dump_to_cache(f, buf, sizeof(buf), dom, path,
-> +		} else if (dump_to_cache(f, buf, sizeof(buf), dom, path,
->  					 &found->m_export, 0) < 0) {
->  			xlog(L_WARNING,
->  			     "Cannot export %s, possibly unsupported filesystem"
-> 
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index ff8965d1a4d4..1edeebd51937 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -838,6 +838,7 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
+ 	struct nfs4_ff_layout_mirror *mirror;
+ 	struct nfs4_pnfs_ds *ds;
+ 	int ds_idx;
++	u32 i;
+ 
+ retry:
+ 	ff_layout_pg_check_layout(pgio, req);
+@@ -863,14 +864,14 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
+ 		goto retry;
+ 	}
+ 
+-	mirror = FF_LAYOUT_COMP(pgio->pg_lseg, ds_idx);
++	for (i = 0; i < pgio->pg_mirror_count; i++) {
++		mirror = FF_LAYOUT_COMP(pgio->pg_lseg, i);
++		pgm = &pgio->pg_mirrors[i];
++		pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].rsize;
++	}
+ 
+ 	pgio->pg_mirror_idx = ds_idx;
+ 
+-	/* read always uses only one mirror - idx 0 for pgio layer */
+-	pgm = &pgio->pg_mirrors[0];
+-	pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].rsize;
+-
+ 	if (NFS_SERVER(pgio->pg_inode)->flags &
+ 			(NFS_MOUNT_SOFT|NFS_MOUNT_SOFTERR))
+ 		pgio->pg_maxretrans = io_maxretrans;
+-- 
+2.26.2
 
