@@ -2,213 +2,134 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 539E0270598
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Sep 2020 21:32:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AA65270961
+	for <lists+linux-nfs@lfdr.de>; Sat, 19 Sep 2020 02:14:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgIRTcJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 18 Sep 2020 15:32:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39226 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbgIRTcJ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 18 Sep 2020 15:32:09 -0400
-Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726097AbgISAOw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 18 Sep 2020 20:14:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbgISAOw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Sep 2020 20:14:52 -0400
+Received: from chicago.messinet.com (chicago.messinet.com [IPv6:2603:300a:134:50e0::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E302C0613CE
+        for <linux-nfs@vger.kernel.org>; Fri, 18 Sep 2020 17:14:52 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by chicago.messinet.com (Postfix) with ESMTP id 609ABE147D
+        for <linux-nfs@vger.kernel.org>; Fri, 18 Sep 2020 19:14:50 -0500 (CDT)
+X-Virus-Scanned: amavisd-new at messinet.com
+Received: from chicago.messinet.com ([127.0.0.1])
+        by localhost (chicago.messinet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id ZxQrjvV_fKO9 for <linux-nfs@vger.kernel.org>;
+        Fri, 18 Sep 2020 19:14:47 -0500 (CDT)
+Received: from linux-ws1.messinet.com (linux-ws1.messinet.com [IPv6:2603:300a:134:50e0:2919:56d7:b5c5:da82])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08DAB22211
-        for <linux-nfs@vger.kernel.org>; Fri, 18 Sep 2020 19:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600457528;
-        bh=IxOyqarwUuA8dvKvpvDIQlqQGVMpUuPMLpJByu5iZbQ=;
+        by chicago.messinet.com (Postfix) with ESMTPSA id BFFD7E147C
+        for <linux-nfs@vger.kernel.org>; Fri, 18 Sep 2020 19:14:47 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 chicago.messinet.com BFFD7E147C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=messinet.com;
+        s=20170806; t=1600474487;
+        bh=WLNEaG4HANv1HjqLj7DfeS41yl1yOEgr6dk5GJ7xYj8=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=tLaE/J53mCWwOmQDCd+MaLAaRR48+VPYXJvbPRWFNaa/hpkSm1HmA+2nfwPCfjZB/
-         TR1GUq/eNjk0vuQj+TQAZ2gV7spx/ii0HGieA2Vnc/MMazQvkHvg5f1W7jjoJ+jINM
-         EELXVvyiXSvvwZA2eugUg+oBktnYdh2sCjg11IVI=
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] pNFS/flexfiles: Be consistent about mirror index types
-Date:   Fri, 18 Sep 2020 15:29:59 -0400
-Message-Id: <20200918192959.14270-2-trondmy@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200918192959.14270-1-trondmy@kernel.org>
-References: <20200918192959.14270-1-trondmy@kernel.org>
+        b=JBGh4TeG6C3vL3NgC70nYEF8aR+eaWZQqmc8QPWmMeWQ8k5yG1qred7rOT2FVEN6n
+         wGtBSqkgEdP6t0qu549vx/WxEctxlqOrNFBU7hBDbPG3wDO6GxBks2InRhp8IJ8xWF
+         stWa6oy9ZMvIq0NU4dBXvy1YUI0sPTkIQZRJYZo5DnAB5xLzPVnvZGcmaDtWzZ+XSE
+         H4swtwzF26o1zDBZRoj5c4XdevWPv4MQJvgtA+BPRJWbDmLL0eMWAqB1H+9hNuzaC4
+         VbkizUPmnU0ApLAIWuUNTglbOCBPGg5OjvkyxQVf0w3m54y1zFCoNbm/MkvR6j1rfG
+         hr7MN7SO1HrKQ==
+From:   Anthony Joseph Messina <amessina@messinet.com>
+To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: NFS client cannot "see" files or directories in /home/<username>
+Date:   Fri, 18 Sep 2020 19:14:41 -0500
+Message-ID: <5391825.DvuYhMxLoT@linux-ws1.messinet.com>
+In-Reply-To: <5949391.lOV4Wx5bFT@linux-ws1.messinet.com>
+References: <12603973.uLZWGnKmhe@linux-ws1.messinet.com> <5949391.lOV4Wx5bFT@linux-ws1.messinet.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="nextPart5638496.lOV4Wx5bFT"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+--nextPart5638496.lOV4Wx5bFT
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-A mirror index is always of type u32.
+On Sunday, September 13, 2020 12:22:25 PM CDT Anthony Joseph Messina wrote:
+> On Saturday, August 29, 2020 5:52:19 PM CDT Anthony Joseph Messina wrote:
+> > I've reported this issue to Fedora:
+> > https://lists.fedoraproject.org/archives/list/users@lists.fedoraproject.or
+> > g/ thread/YECR5Q4LLTEQO3RNSXXKOCZUZF53UAST/
+> > https://bugzilla.redhat.com/show_bug.cgi?id=1873720
+> > 
+> > I've got an NFS client that mounts /home via NFSv4.2 with sec=krb5p.  Any
+> > kernel since 5.7.17 through 5.8.4 is unable to "see" files or directories
+> > in the mounted /home/<username> directory with the exception of the first
+> > "dot" directory.
+> > 
+> > While I cannot see /home/<username>/subdirectory, if I manually cd into
+> > /home/ <username>/subdirectory, I can list that subdirectory's contents as
+> > normal.
+> > 
+> > If I mv "/home/<username>/.dotdir" to "/home/<username>/.dotdir.old", I
+> > can
+> > no longer see it, and I can see "/home/<username>/.dotnextdir".
+> > 
+> > If I then mv "/home/<username>/.dotdir.old" back to "/home/
+> > <username>/.dotdir", I am not able to see it and can still only see
+> > "/home/
+> > <username>/.dotnextdir"
+> > 
+> > My last NFS client that can "see" /home/<username> directory contents
+> > (normal operation) is kernel-5.7.15 (I was unable to test 5.7.16)
+> > 
+> > NFS server upgrades from kernel-5.7.15 through kernel-5.8.4 didn't seem to
+> > have any affect.
+> > 
+> > I understand this list is for developers, but I'm wondering if any of the
+> > NFS experts can point me in the right direction...  Thank you.
+> 
+> The Fedora bugzilla provides additional information:
+> 
+> In https://bugzilla.redhat.com/show_bug.cgi?id=1873720#c7 a user reports the
+> commit that creates the issue:
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id
+> =b4487b93545214a9db8cbf32e86411677b0cca21
+> 
+> In https://bugzilla.redhat.com/show_bug.cgi?id=1873720#c12 another user
+> reports the relationship with exports using the "security_label" option
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/flexfilelayout/flexfilelayout.c | 34 +++++++++++++-------------
- include/linux/nfs_xdr.h                |  4 +--
- 2 files changed, 19 insertions(+), 19 deletions(-)
+This has been resolved with the patch in:
+https://marc.info/?l=linux-nfs&m=160020628625265&w=2
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 1edeebd51937..a163533446fa 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -715,7 +715,7 @@ nfs4_ff_layout_stat_io_end_write(struct rpc_task *task,
- }
- 
- static void
--ff_layout_mark_ds_unreachable(struct pnfs_layout_segment *lseg, int idx)
-+ff_layout_mark_ds_unreachable(struct pnfs_layout_segment *lseg, u32 idx)
- {
- 	struct nfs4_deviceid_node *devid = FF_LAYOUT_DEVID_NODE(lseg, idx);
- 
-@@ -724,7 +724,7 @@ ff_layout_mark_ds_unreachable(struct pnfs_layout_segment *lseg, int idx)
- }
- 
- static void
--ff_layout_mark_ds_reachable(struct pnfs_layout_segment *lseg, int idx)
-+ff_layout_mark_ds_reachable(struct pnfs_layout_segment *lseg, u32 idx)
- {
- 	struct nfs4_deviceid_node *devid = FF_LAYOUT_DEVID_NODE(lseg, idx);
- 
-@@ -734,14 +734,14 @@ ff_layout_mark_ds_reachable(struct pnfs_layout_segment *lseg, int idx)
- 
- static struct nfs4_pnfs_ds *
- ff_layout_choose_ds_for_read(struct pnfs_layout_segment *lseg,
--			     int start_idx, int *best_idx,
-+			     u32 start_idx, u32 *best_idx,
- 			     bool check_device)
- {
- 	struct nfs4_ff_layout_segment *fls = FF_LAYOUT_LSEG(lseg);
- 	struct nfs4_ff_layout_mirror *mirror;
- 	struct nfs4_pnfs_ds *ds;
- 	bool fail_return = false;
--	int idx;
-+	u32 idx;
- 
- 	/* mirrors are initially sorted by efficiency */
- 	for (idx = start_idx; idx < fls->mirror_array_cnt; idx++) {
-@@ -766,21 +766,21 @@ ff_layout_choose_ds_for_read(struct pnfs_layout_segment *lseg,
- 
- static struct nfs4_pnfs_ds *
- ff_layout_choose_any_ds_for_read(struct pnfs_layout_segment *lseg,
--				 int start_idx, int *best_idx)
-+				 u32 start_idx, u32 *best_idx)
- {
- 	return ff_layout_choose_ds_for_read(lseg, start_idx, best_idx, false);
- }
- 
- static struct nfs4_pnfs_ds *
- ff_layout_choose_valid_ds_for_read(struct pnfs_layout_segment *lseg,
--				   int start_idx, int *best_idx)
-+				   u32 start_idx, u32 *best_idx)
- {
- 	return ff_layout_choose_ds_for_read(lseg, start_idx, best_idx, true);
- }
- 
- static struct nfs4_pnfs_ds *
- ff_layout_choose_best_ds_for_read(struct pnfs_layout_segment *lseg,
--				  int start_idx, int *best_idx)
-+				  u32 start_idx, u32 *best_idx)
- {
- 	struct nfs4_pnfs_ds *ds;
- 
-@@ -791,7 +791,8 @@ ff_layout_choose_best_ds_for_read(struct pnfs_layout_segment *lseg,
- }
- 
- static struct nfs4_pnfs_ds *
--ff_layout_get_ds_for_read(struct nfs_pageio_descriptor *pgio, int *best_idx)
-+ff_layout_get_ds_for_read(struct nfs_pageio_descriptor *pgio,
-+			  u32 *best_idx)
- {
- 	struct pnfs_layout_segment *lseg = pgio->pg_lseg;
- 	struct nfs4_pnfs_ds *ds;
-@@ -837,8 +838,7 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 	struct nfs_pgio_mirror *pgm;
- 	struct nfs4_ff_layout_mirror *mirror;
- 	struct nfs4_pnfs_ds *ds;
--	int ds_idx;
--	u32 i;
-+	u32 ds_idx, i;
- 
- retry:
- 	ff_layout_pg_check_layout(pgio, req);
-@@ -895,7 +895,7 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 	struct nfs4_ff_layout_mirror *mirror;
- 	struct nfs_pgio_mirror *pgm;
- 	struct nfs4_pnfs_ds *ds;
--	int i;
-+	u32 i;
- 
- retry:
- 	ff_layout_pg_check_layout(pgio, req);
-@@ -1039,7 +1039,7 @@ static void ff_layout_reset_write(struct nfs_pgio_header *hdr, bool retry_pnfs)
- static void ff_layout_resend_pnfs_read(struct nfs_pgio_header *hdr)
- {
- 	u32 idx = hdr->pgio_mirror_idx + 1;
--	int new_idx = 0;
-+	u32 new_idx = 0;
- 
- 	if (ff_layout_choose_any_ds_for_read(hdr->lseg, idx + 1, &new_idx))
- 		ff_layout_send_layouterror(hdr->lseg);
-@@ -1076,7 +1076,7 @@ static int ff_layout_async_handle_error_v4(struct rpc_task *task,
- 					   struct nfs4_state *state,
- 					   struct nfs_client *clp,
- 					   struct pnfs_layout_segment *lseg,
--					   int idx)
-+					   u32 idx)
- {
- 	struct pnfs_layout_hdr *lo = lseg->pls_layout;
- 	struct inode *inode = lo->plh_inode;
-@@ -1150,7 +1150,7 @@ static int ff_layout_async_handle_error_v4(struct rpc_task *task,
- /* Retry all errors through either pNFS or MDS except for -EJUKEBOX */
- static int ff_layout_async_handle_error_v3(struct rpc_task *task,
- 					   struct pnfs_layout_segment *lseg,
--					   int idx)
-+					   u32 idx)
- {
- 	struct nfs4_deviceid_node *devid = FF_LAYOUT_DEVID_NODE(lseg, idx);
- 
-@@ -1185,7 +1185,7 @@ static int ff_layout_async_handle_error(struct rpc_task *task,
- 					struct nfs4_state *state,
- 					struct nfs_client *clp,
- 					struct pnfs_layout_segment *lseg,
--					int idx)
-+					u32 idx)
- {
- 	int vers = clp->cl_nfs_mod->rpc_vers->number;
- 
-@@ -1212,7 +1212,7 @@ static int ff_layout_async_handle_error(struct rpc_task *task,
- }
- 
- static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
--					int idx, u64 offset, u64 length,
-+					u32 idx, u64 offset, u64 length,
- 					u32 *op_status, int opnum, int error)
- {
- 	struct nfs4_ff_layout_mirror *mirror;
-@@ -1810,7 +1810,7 @@ ff_layout_write_pagelist(struct nfs_pgio_header *hdr, int sync)
- 	loff_t offset = hdr->args.offset;
- 	int vers;
- 	struct nfs_fh *fh;
--	int idx = hdr->pgio_mirror_idx;
-+	u32 idx = hdr->pgio_mirror_idx;
- 
- 	mirror = FF_LAYOUT_COMP(lseg, idx);
- 	ds = nfs4_ff_layout_prepare_ds(lseg, mirror, true);
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index 9408f3252c8e..69cb46f7b8d2 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -1611,8 +1611,8 @@ struct nfs_pgio_header {
- 	__u64			mds_offset;	/* Filelayout dense stripe */
- 	struct nfs_page_array	page_array;
- 	struct nfs_client	*ds_clp;	/* pNFS data server */
--	int			ds_commit_idx;	/* ds index if ds_clp is set */
--	int			pgio_mirror_idx;/* mirror index in pgio layer */
-+	u32			ds_commit_idx;	/* ds index if ds_clp is set */
-+	u32			pgio_mirror_idx;/* mirror index in pgio layer */
- };
- 
- struct nfs_mds_commit_info {
 -- 
-2.26.2
+Anthony - https://messinet.com
+F9B6 560E 68EA 037D 8C3D  D1C9 FF31 3BDB D9D8 99B6
+
+--nextPart5638496.lOV4Wx5bFT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE+bZWDmjqA32MPdHJ/zE729nYmbYFAl9lTXIACgkQ/zE729nY
+mbbL7hAAtVuMrVULPycoVRL+EKCiliict12OyO+uV8vRGfFdfymbg4VTw1wXpes6
+M7eESRjAORB7t0hJLLBZIt0IaxSEhZZgzUNRfljEFu3t9Jd2oeKLLndz1WPUqN2K
+vgSVBLZMBlXBMoQDBSs1Rlfwqdi09WoXu67QLXXynA1Jl9U9Kt6rdM6oUbAn2Hrv
+Uf6tuwoMrhCgqB9pehElwClz4SmGop8lRnbEoqAds5r08efP9gPL6aeF+Kt7W1FA
+jzcWrDZhM6LX58vnw4aUOlWmbSSRpEVid7AEMLfHuz8dUEHaZmdVGKmXnyLkmptv
+ezU9KwAwD6LQzIUjke4JDaMpmLL6IQhjjIkLc+8/T2Q9PPn0kgR4nOm3HdYicXUR
+Rm/7S4zuqV8qcjJeGofwLE2uRtEIO87z1XiIhieVo2Jz7rCaMAgzVfHDBkCfrvFZ
+/apftg1LFLyGxpsmxJ+86t3uJ64DxxVwPyb89JSSOfS1GD5OMEhTF/FUJg2eL62f
+wHtsnXuXBVM2memkMHBc0MZhtN6VVx0+R7gMF7yw2/nB7x5ctX9d0EGpYm9NuMve
+sRAbWBvRHhRuyotQNVXWEempi6Kaw7spbE45ftnibREA/eQf8h5KmAYyY/Lj8USN
+CC3yiwYKBtoqlWWVMQaJp0QA6WaIsXDIhVyUwELNbKBFJ5capRc=
+=UDv2
+-----END PGP SIGNATURE-----
+
+--nextPart5638496.lOV4Wx5bFT--
+
+
 
