@@ -2,134 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AA65270961
-	for <lists+linux-nfs@lfdr.de>; Sat, 19 Sep 2020 02:14:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 267A0270D74
+	for <lists+linux-nfs@lfdr.de>; Sat, 19 Sep 2020 13:08:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbgISAOw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 18 Sep 2020 20:14:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbgISAOw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Sep 2020 20:14:52 -0400
-Received: from chicago.messinet.com (chicago.messinet.com [IPv6:2603:300a:134:50e0::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E302C0613CE
-        for <linux-nfs@vger.kernel.org>; Fri, 18 Sep 2020 17:14:52 -0700 (PDT)
+        id S1726159AbgISLIa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 19 Sep 2020 07:08:30 -0400
+Received: from natter.dneg.com ([193.203.89.68]:51986 "EHLO natter.dneg.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726041AbgISLI3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 19 Sep 2020 07:08:29 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by chicago.messinet.com (Postfix) with ESMTP id 609ABE147D
-        for <linux-nfs@vger.kernel.org>; Fri, 18 Sep 2020 19:14:50 -0500 (CDT)
-X-Virus-Scanned: amavisd-new at messinet.com
-Received: from chicago.messinet.com ([127.0.0.1])
-        by localhost (chicago.messinet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id ZxQrjvV_fKO9 for <linux-nfs@vger.kernel.org>;
-        Fri, 18 Sep 2020 19:14:47 -0500 (CDT)
-Received: from linux-ws1.messinet.com (linux-ws1.messinet.com [IPv6:2603:300a:134:50e0:2919:56d7:b5c5:da82])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by chicago.messinet.com (Postfix) with ESMTPSA id BFFD7E147C
-        for <linux-nfs@vger.kernel.org>; Fri, 18 Sep 2020 19:14:47 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 chicago.messinet.com BFFD7E147C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=messinet.com;
-        s=20170806; t=1600474487;
-        bh=WLNEaG4HANv1HjqLj7DfeS41yl1yOEgr6dk5GJ7xYj8=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=JBGh4TeG6C3vL3NgC70nYEF8aR+eaWZQqmc8QPWmMeWQ8k5yG1qred7rOT2FVEN6n
-         wGtBSqkgEdP6t0qu549vx/WxEctxlqOrNFBU7hBDbPG3wDO6GxBks2InRhp8IJ8xWF
-         stWa6oy9ZMvIq0NU4dBXvy1YUI0sPTkIQZRJYZo5DnAB5xLzPVnvZGcmaDtWzZ+XSE
-         H4swtwzF26o1zDBZRoj5c4XdevWPv4MQJvgtA+BPRJWbDmLL0eMWAqB1H+9hNuzaC4
-         VbkizUPmnU0ApLAIWuUNTglbOCBPGg5OjvkyxQVf0w3m54y1zFCoNbm/MkvR6j1rfG
-         hr7MN7SO1HrKQ==
-From:   Anthony Joseph Messina <amessina@messinet.com>
-To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: NFS client cannot "see" files or directories in /home/<username>
-Date:   Fri, 18 Sep 2020 19:14:41 -0500
-Message-ID: <5391825.DvuYhMxLoT@linux-ws1.messinet.com>
-In-Reply-To: <5949391.lOV4Wx5bFT@linux-ws1.messinet.com>
-References: <12603973.uLZWGnKmhe@linux-ws1.messinet.com> <5949391.lOV4Wx5bFT@linux-ws1.messinet.com>
+        by natter.dneg.com (Postfix) with ESMTP id C4CCA1D7D5FB;
+        Sat, 19 Sep 2020 12:08:27 +0100 (BST)
+X-Virus-Scanned: amavisd-new at mx-dneg
+Received: from natter.dneg.com ([127.0.0.1])
+        by localhost (natter.dneg.com [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id 4btvWuSo5uF1; Sat, 19 Sep 2020 12:08:27 +0100 (BST)
+Received: from zrozimbrai.dneg.com (zrozimbrai.dneg.com [10.11.20.12])
+        by natter.dneg.com (Postfix) with ESMTPS id 9D9A21D7D5D5;
+        Sat, 19 Sep 2020 12:08:27 +0100 (BST)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id BBA73826AA9C;
+        Sat, 19 Sep 2020 12:08:23 +0100 (BST)
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id CYc1nayDwO9A; Sat, 19 Sep 2020 12:08:23 +0100 (BST)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id A0DB3831F92D;
+        Sat, 19 Sep 2020 12:08:23 +0100 (BST)
+X-Virus-Scanned: amavisd-new at zimbra-dneg
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 1OiEi2AI0dWA; Sat, 19 Sep 2020 12:08:23 +0100 (BST)
+Received: from zrozimbra1.dneg.com (zrozimbra1.dneg.com [10.11.16.16])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 617BF826AA9C;
+        Sat, 19 Sep 2020 12:08:23 +0100 (BST)
+Date:   Sat, 19 Sep 2020 12:08:26 +0100 (BST)
+From:   Daire Byrne <daire@dneg.com>
+To:     bfields <bfields@fieldses.org>
+Cc:     Frank van der Linden <fllinden@amazon.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        linux-cachefs <linux-cachefs@redhat.com>
+Message-ID: <427784057.40882901.1600513706581.JavaMail.zimbra@dneg.com>
+In-Reply-To: <20200917215729.GA18980@fieldses.org>
+References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com> <20200915172140.GA32632@fieldses.org> <2001715792.39705019.1600358470997.JavaMail.zimbra@dneg.com> <20200917190931.GA6858@fieldses.org> <20200917202303.GA29892@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com> <20200917215729.GA18980@fieldses.org>
+Subject: Re: Adventures in NFS re-exporting
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5638496.lOV4Wx5bFT"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.7.11_GA_1854 (ZimbraWebClient - GC78 (Linux)/8.7.11_GA_1854)
+Thread-Topic: Adventures in NFS re-exporting
+Thread-Index: Dne055AM7RY0WXsKN8UYB1awgeuonw==
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---nextPart5638496.lOV4Wx5bFT
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
 
-On Sunday, September 13, 2020 12:22:25 PM CDT Anthony Joseph Messina wrote:
-> On Saturday, August 29, 2020 5:52:19 PM CDT Anthony Joseph Messina wrote:
-> > I've reported this issue to Fedora:
-> > https://lists.fedoraproject.org/archives/list/users@lists.fedoraproject.or
-> > g/ thread/YECR5Q4LLTEQO3RNSXXKOCZUZF53UAST/
-> > https://bugzilla.redhat.com/show_bug.cgi?id=1873720
-> > 
-> > I've got an NFS client that mounts /home via NFSv4.2 with sec=krb5p.  Any
-> > kernel since 5.7.17 through 5.8.4 is unable to "see" files or directories
-> > in the mounted /home/<username> directory with the exception of the first
-> > "dot" directory.
-> > 
-> > While I cannot see /home/<username>/subdirectory, if I manually cd into
-> > /home/ <username>/subdirectory, I can list that subdirectory's contents as
-> > normal.
-> > 
-> > If I mv "/home/<username>/.dotdir" to "/home/<username>/.dotdir.old", I
-> > can
-> > no longer see it, and I can see "/home/<username>/.dotnextdir".
-> > 
-> > If I then mv "/home/<username>/.dotdir.old" back to "/home/
-> > <username>/.dotdir", I am not able to see it and can still only see
-> > "/home/
-> > <username>/.dotnextdir"
-> > 
-> > My last NFS client that can "see" /home/<username> directory contents
-> > (normal operation) is kernel-5.7.15 (I was unable to test 5.7.16)
-> > 
-> > NFS server upgrades from kernel-5.7.15 through kernel-5.8.4 didn't seem to
-> > have any affect.
-> > 
-> > I understand this list is for developers, but I'm wondering if any of the
-> > NFS experts can point me in the right direction...  Thank you.
+----- On 17 Sep, 2020, at 22:57, bfields bfields@fieldses.org wrote:
+
+> On Thu, Sep 17, 2020 at 08:23:03PM +0000, Frank van der Linden wrote:
+>> On Thu, Sep 17, 2020 at 03:09:31PM -0400, bfields wrote:
+>> > 
+>> > On Thu, Sep 17, 2020 at 05:01:11PM +0100, Daire Byrne wrote:
+>> > >
+>> > > ----- On 15 Sep, 2020, at 18:21, bfields bfields@fieldses.org wrote:
+>> > >
+>> > > >> 4) With an NFSv4 re-export, lots of open/close requests (hundreds per
+>> > > >> second) quickly eat up the CPU on the re-export server and perf top
+>> > > >> shows we are mostly in native_queued_spin_lock_slowpath.
+>> > > >
+>> > > > Any statistics on who's calling that function?
+>> > >
+>> > > With just 40 clients mounting the reexport server (v5.7.6) using NFSv4.2, we see
+>> > > the CPU of the nfsd threads increase rapidly and by the time we have 100
+>> > > clients, we have maxed out the 32 cores of the server with most of that in
+>> > > native_queued_spin_lock_slowpath.
+>> > 
+>> > That sounds a lot like what Frank Van der Linden reported:
+>> > 
+>> >         https://lore.kernel.org/linux-nfs/20200608192122.GA19171@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com/
+>> > 
+>> > It looks like a bug in the filehandle caching code.
+>> > 
+>> > --b.
+>> 
+>> Yes, that does look like the same one.
+>> 
+>> I still think that not caching v4 files at all may be the best way to go
+>> here, since the intent of the filecache code was to speed up v2/v3 I/O,
+>> where you end up doing a lot of opens/closes, but it doesn't make as
+>> much sense for v4.
+>> 
+>> However, short of that, I tested a local patch a few months back, that
+>> I never posted here, so I'll do so now. It just makes v4 opens in to
+>> 'long term' opens, which do not get put on the LRU, since that doesn't
+>> make sense (they are in the hash table, so they are still cached).
 > 
-> The Fedora bugzilla provides additional information:
+> That makes sense to me.  But I'm also not opposed to turning it off for
+> v4 at this point.
 > 
-> In https://bugzilla.redhat.com/show_bug.cgi?id=1873720#c7 a user reports the
-> commit that creates the issue:
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id
-> =b4487b93545214a9db8cbf32e86411677b0cca21
-> 
-> In https://bugzilla.redhat.com/show_bug.cgi?id=1873720#c12 another user
-> reports the relationship with exports using the "security_label" option
+> --b.
 
-This has been resolved with the patch in:
-https://marc.info/?l=linux-nfs&m=160020628625265&w=2
+Thank you both, that's absolutely the issue with our (broken) production workload. I totally missed that thread while researching the archives.
 
--- 
-Anthony - https://messinet.com
-F9B6 560E 68EA 037D 8C3D  D1C9 FF31 3BDB D9D8 99B6
+I tried both of Frank's patches and the CPU returned to normal levels, native_queued_spin_lock_slowpath went from 88% to 2% usage and the server performed pretty much the same as it does for an NFSv3 export.
 
---nextPart5638496.lOV4Wx5bFT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+So, ultimately this had nothing to do with NFS re-exporting; it's just that I was using a newer kernel with filecache to do it. All our other NFSv4 originating servers are running older kernels, hence why our (broken) workload never caused us any problems before. Thanks for clearing that up for me.
 
------BEGIN PGP SIGNATURE-----
+With regards to dropping the filecache feature completely for NFSv4, I do wonder if it does still save a few precious network round-trips (which is especially important for my re-export scenario)? We want to be able to choose the level of caching on the re-export server and minimise expensive lookups to originating servers that may be many milliseconds away (coherency be damned).
 
-iQIzBAABCAAdFiEE+bZWDmjqA32MPdHJ/zE729nYmbYFAl9lTXIACgkQ/zE729nY
-mbbL7hAAtVuMrVULPycoVRL+EKCiliict12OyO+uV8vRGfFdfymbg4VTw1wXpes6
-M7eESRjAORB7t0hJLLBZIt0IaxSEhZZgzUNRfljEFu3t9Jd2oeKLLndz1WPUqN2K
-vgSVBLZMBlXBMoQDBSs1Rlfwqdi09WoXu67QLXXynA1Jl9U9Kt6rdM6oUbAn2Hrv
-Uf6tuwoMrhCgqB9pehElwClz4SmGop8lRnbEoqAds5r08efP9gPL6aeF+Kt7W1FA
-jzcWrDZhM6LX58vnw4aUOlWmbSSRpEVid7AEMLfHuz8dUEHaZmdVGKmXnyLkmptv
-ezU9KwAwD6LQzIUjke4JDaMpmLL6IQhjjIkLc+8/T2Q9PPn0kgR4nOm3HdYicXUR
-Rm/7S4zuqV8qcjJeGofwLE2uRtEIO87z1XiIhieVo2Jz7rCaMAgzVfHDBkCfrvFZ
-/apftg1LFLyGxpsmxJ+86t3uJ64DxxVwPyb89JSSOfS1GD5OMEhTF/FUJg2eL62f
-wHtsnXuXBVM2memkMHBc0MZhtN6VVx0+R7gMF7yw2/nB7x5ctX9d0EGpYm9NuMve
-sRAbWBvRHhRuyotQNVXWEempi6Kaw7spbE45ftnibREA/eQf8h5KmAYyY/Lj8USN
-CC3yiwYKBtoqlWWVMQaJp0QA6WaIsXDIhVyUwELNbKBFJ5capRc=
-=UDv2
------END PGP SIGNATURE-----
+Seeing as there was some interest in issue #1 (drop caches = estale re-exports) and this #4 issue (NFSv4 filecache vs ridiculous open/close counts), I'll post some more detail & reproducers next week for #2 (invalidating the re-export server's NFS client cache) and #3 (cached client metadata lookups not returned quickly enough when the client is busy with reads).
 
---nextPart5638496.lOV4Wx5bFT--
+That way anyone trying to follow in my (re-exporting) footsteps is fully aware of all the potential performance pitfalls I have discovered so far.
 
+Many thanks,
 
-
+Daire
