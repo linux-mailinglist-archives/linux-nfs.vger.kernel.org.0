@@ -2,35 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 905C4271436
-	for <lists+linux-nfs@lfdr.de>; Sun, 20 Sep 2020 14:16:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8444927144C
+	for <lists+linux-nfs@lfdr.de>; Sun, 20 Sep 2020 14:16:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgITMQX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 20 Sep 2020 08:16:23 -0400
+        id S1726415AbgITMQk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 20 Sep 2020 08:16:40 -0400
 Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:33987 "EHLO
         mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726273AbgITMQX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 20 Sep 2020 08:16:23 -0400
+        by vger.kernel.org with ESMTP id S1726456AbgITMQi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 20 Sep 2020 08:16:38 -0400
 X-Greylist: delayed 431 seconds by postgrey-1.27 at vger.kernel.org; Sun, 20 Sep 2020 08:16:20 EDT
 X-IronPort-AV: E=Sophos;i="5.77,282,1596492000"; 
-   d="scan'208";a="468612186"
+   d="scan'208";a="468612194"
 Received: from palace.lip6.fr ([132.227.105.202])
   by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES256-SHA256; 20 Sep 2020 14:08:58 +0200
 From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     linux-spi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-rdma@vger.kernel.org, Yossi Leybovich <sleybo@amazon.com>,
-        netdev@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH 00/14] drop double zeroing
-Date:   Sun, 20 Sep 2020 13:26:12 +0200
-Message-Id: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     kernel-janitors@vger.kernel.org,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 08/14] xprtrdma: drop double zeroing
+Date:   Sun, 20 Sep 2020 13:26:20 +0200
+Message-Id: <1600601186-7420-9-git-send-email-Julia.Lawall@inria.fr>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
+References: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -38,20 +38,38 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 sg_init_table zeroes its first argument, so the allocation of that argument
 doesn't have to.
 
----
+the semantic patch that makes this change is as follows:
+(http://coccinelle.lip6.fr/)
 
- block/bsg-lib.c                                  |    2 +-
- drivers/dma/sh/rcar-dmac.c                       |    2 +-
- drivers/dma/sh/shdma-base.c                      |    2 +-
- drivers/infiniband/hw/efa/efa_verbs.c            |    2 +-
- drivers/media/common/saa7146/saa7146_core.c      |    2 +-
- drivers/misc/mic/scif/scif_nodeqp.c              |    2 +-
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c |    2 +-
- drivers/net/wireless/intel/iwlwifi/fw/dbg.c      |    2 +-
- drivers/pci/p2pdma.c                             |    2 +-
- drivers/spi/spi-topcliff-pch.c                   |    4 ++--
- drivers/target/target_core_rd.c                  |    2 +-
- drivers/tty/serial/pch_uart.c                    |    2 +-
- net/rds/rdma.c                                   |    2 +-
- net/sunrpc/xprtrdma/frwr_ops.c                   |    2 +-
- 14 files changed, 15 insertions(+), 15 deletions(-)
+// <smpl>
+@@
+expression x,n,flags;
+@@
+
+x = 
+- kcalloc
++ kmalloc_array
+  (n,sizeof(*x),flags)
+...
+sg_init_table(x,n)
+// </smpl>
+
+Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+
+---
+ net/sunrpc/xprtrdma/frwr_ops.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff -u -p a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
+--- a/net/sunrpc/xprtrdma/frwr_ops.c
++++ b/net/sunrpc/xprtrdma/frwr_ops.c
+@@ -124,7 +124,7 @@ int frwr_mr_init(struct rpcrdma_xprt *r_
+ 	if (IS_ERR(frmr))
+ 		goto out_mr_err;
+ 
+-	sg = kcalloc(depth, sizeof(*sg), GFP_NOFS);
++	sg = kmalloc_array(depth, sizeof(*sg), GFP_NOFS);
+ 	if (!sg)
+ 		goto out_list_err;
+ 
+
