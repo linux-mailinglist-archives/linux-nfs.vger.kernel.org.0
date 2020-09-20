@@ -2,134 +2,161 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA11D27156A
-	for <lists+linux-nfs@lfdr.de>; Sun, 20 Sep 2020 17:38:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 135A5271795
+	for <lists+linux-nfs@lfdr.de>; Sun, 20 Sep 2020 21:32:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgITPi1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 20 Sep 2020 11:38:27 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44640 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgITPi1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 20 Sep 2020 11:38:27 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08KFUwUh176600;
-        Sun, 20 Sep 2020 15:38:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=K+0SzXgpoWzXCGxoZDrD7xWy3jeNjxytHxViKP+/Y8M=;
- b=sZCkOODJjtJ5rTv/JewSzfUbHXCedk47yd3pBMTqy/5i+IBLcTP0y3XvRbMZSdcz4bGh
- HzJ0Xq+g28zku330+tWu30ASPNqBw89XCZ3p9zXE6z4DxbQ0AX1bXYdEUiEiL8V+vzBh
- nzNe9XW5MpOItYRGDFBdJ8fN8rlYvo/4gkGSm8sPwkSg8HzmO9uNyizy3ImgrEB3zPzn
- e53GnaQwFXxQ8wC4K9sV2U0uEwc9TWnbBZQT+n4n/EgJYLiCxjVSwL/cXXg5rE4+rEmT
- feIOwCVO+PpAcON1v70KLatOpNamuSFpVojPSPGY0fk81j2CEMFs5v1ItNvHljLxasTJ aw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 33n9dqtm3q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 20 Sep 2020 15:38:08 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08KFZjYB043005;
-        Sun, 20 Sep 2020 15:38:07 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 33nuvx8p09-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 20 Sep 2020 15:38:07 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08KFbvKD020432;
-        Sun, 20 Sep 2020 15:37:58 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 20 Sep 2020 08:37:57 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH 08/14] xprtrdma: drop double zeroing
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <1600601186-7420-9-git-send-email-Julia.Lawall@inria.fr>
-Date:   Sun, 20 Sep 2020 11:37:56 -0400
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        kernel-janitors@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CC88D365-0362-4CD8-9B72-0EE8B51BF481@oracle.com>
-References: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
- <1600601186-7420-9-git-send-email-Julia.Lawall@inria.fr>
-To:     Julia Lawall <Julia.Lawall@inria.fr>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9750 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009200136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9750 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
- phishscore=0 priorityscore=1501 malwarescore=0 mlxscore=0 impostorscore=0
- clxscore=1011 lowpriorityscore=0 suspectscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009200135
+        id S1726148AbgITTcs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 20 Sep 2020 15:32:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbgITTcr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 20 Sep 2020 15:32:47 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6319C061755
+        for <linux-nfs@vger.kernel.org>; Sun, 20 Sep 2020 12:32:47 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id CEBF71C15; Sun, 20 Sep 2020 15:32:45 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CEBF71C15
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1600630365;
+        bh=xVzUnc6SfnhfZS+0QOQMLGDYvpjRIEhgZoSBY3y8Puc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A1bYD+rJfU5QCdOLZNB1aseVUr6OBD4P2WO6eVl6QgkqnrAISksutcz+863KXngeu
+         nhT0nwKuC5VFfKp/DdKWF/iGmJTarev0ZLt2oPRGYFnB4Sj2SHGeeEP4cSYhPTiUcT
+         xjuT9hquIyl7c3FahI1uu30zyMtYGKhTa0wnyMw8=
+Date:   Sun, 20 Sep 2020 15:32:45 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Chris Hall <chris.hall@gmch.uk>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: mount.nfs4 and logging
+Message-ID: <20200920193245.GC28449@fieldses.org>
+References: <S1725851AbgIKKt5/20200911104957Z+185@vger.kernel.org>
+ <a38a1249-c570-9069-a498-5e17d85a418a@gmch.uk>
+ <f06f86ef-08bd-3974-3d92-1fbda700cc11@RedHat.com>
+ <f7b9c8b4-29a6-2f28-b1d9-739c546fd557@gmch.uk>
+ <20200919163353.GA15785@fieldses.org>
+ <20200919164020.GB15785@fieldses.org>
+ <12298172-f830-4f22-8612-dfbbc74b8a40@gmch.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <12298172-f830-4f22-8612-dfbbc74b8a40@gmch.uk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Thanks, Julia!
+On Sun, Sep 20, 2020 at 10:56:28AM +0100, Chris Hall wrote:
+> On 19/09/2020 17:40, J. Bruce Fields wrote:
+> >On Sat, Sep 19, 2020 at 12:33:53PM -0400, J. Bruce Fields wrote:
+> >>For the server, you don't need rpcbind or rpc.statd for v4, but you do
+> >>need rpc.idmapd, rpc.mountd and nfsdcld.
+> >>
+> >>rpc.mountd is the only one of those three that needs to listen on a
+> >>network port, but that's only in the NFSv2/v3 case.  I'm not sure if
+> >>we're getting that right.
+> 
+> >Looking at the code, it looks correct--I see mountd starting those
+> >listeners only when v2 or v3 are configured.
+> 
+> Well, on the machine in question, after a reboot I have:
+> 
+> [root@cerberus ~]# netstat ...
+> Proto Local Address           Foreign Address    State  PID/Prog
+> tcp   10.25.54.61:1022        0.0.0.0:*          LISTEN 767/sshd
+> tcp   10.25.54.61:1022        79.xx.xx.xx:57456  ESTAB. 770/sshd root
+> [root@cerberus ~]# pstree
+> systemd─┬─agetty
+>         ├─atd
+>         ├─auditd───{auditd}
+>         ├─crond
+>         ├─dbus-broker-lau───dbus-broker
+>         ├─gssproxy───5*[{gssproxy}]
+>         ├─mcelog
+>         ├─rngd───4*[{rngd}]
+>         ├─rsyslogd───2*[{rsyslogd}]
+>         ├─sshd───sshd───sshd───bash───pstree
+>         ├─systemd-homed
+>         ├─systemd-journal
+>         ├─systemd-logind
+>         └─systemd-udevd
+> 
+> where the only port which is open is the "obscure" sshd.
+> 
+> Then I start nfs-server and:
+> 
+> [root@cerberus ~]# systemctl start nfs-server
+> [root@cerberus ~]# netstat ...
+> Proto Local Address           Foreign Address    State  PID/Prog
+> tcp   10.25.54.61:1022        0.0.0.0:*          LISTEN 767/sshd
+> tcp   79.xx.xx.xx:1001        0.0.0.0:*          LISTEN -
+> tcp   0.0.0.0:46921           0.0.0.0:*          LISTEN 817/rpc.statd
+> tcp   0.0.0.0:111             0.0.0.0:*          LISTEN 1/systemd
+> tcp   10.25.54.61:1022        79.xx.xx.xx:57456  ESTAB. 770/sshd:
+> tcp6  :::35545                :::*               LISTEN 817/rpc.statd
+> tcp6  :::111                  :::*               LISTEN 1/systemd
+> udp   0.0.0.0:54902           0.0.0.0:*                 817/rpc.statd
+> udp   0.0.0.0:111             0.0.0.0:*                 1/systemd
+> udp   0.0.0.0:62840           0.0.0.0:*                 815/rpcbind
+> udp6  :::61316                :::*                      815/rpcbind
+> udp6  :::111                  :::*                      1/systemd
+> udp6  :::58536                :::*                      817/rpc.statd
+> [root@cerberus ~]# pstree
+> systemd─┬─agetty
+>         ├─atd
+>         ├─auditd───{auditd}
+>         ├─crond
+>         ├─dbus-broker-lau───dbus-broker
+>         ├─gssproxy───5*[{gssproxy}]
+>         ├─mcelog
+>         ├─nfsdcld
+>         ├─rngd───4*[{rngd}]
+>         ├─rpc.idmapd
+>         ├─rpc.mountd
+>         ├─rpc.statd
+>         ├─rpcbind
+>         ├─rsyslogd───2*[{rsyslogd}]
+>         ├─sshd───sshd───sshd───bash───pstree
+>         ├─systemd-homed
+>         ├─systemd-journal
+>         ├─systemd-logind
+>         └─systemd-udevd
+> 
+> Where nfsdcld, rpc.idmapd and rpc.mountd have indeed been started
+> but are not bound to any ports.
 
-> On Sep 20, 2020, at 7:26 AM, Julia Lawall <Julia.Lawall@inria.fr> =
-wrote:
->=20
-> sg_init_table zeroes its first argument, so the allocation of that =
-argument
-> doesn't have to.
->=20
-> the semantic patch that makes this change is as follows:
-> (http://coccinelle.lip6.fr/)
->=20
-> // <smpl>
-> @@
-> expression x,n,flags;
-> @@
->=20
-> x =3D=20
-> - kcalloc
-> + kmalloc_array
->  (n,sizeof(*x),flags)
-> ...
-> sg_init_table(x,n)
-> // </smpl>
->=20
-> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+That looks good.  (And rpc.mountd does still serve a purpose in the
+NFSv4 case, answering requests from the kernel for information related
+to exported filesystems.)
 
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> But rpc.statd and rpcbind have also been started, and various ports
+> have been opened, including port 111 which is bound to systemd.  Is
+> there a way to inhibit that for nfs4 only ?
 
-This one goes to Anna.
+Unlike rpc.mountd, there's no reason for those to be running at all.
+You can mask thoe corresponding systemd units.
 
+It'd be nice if there was a way to make that happen automatically if v2
+and v3 are configured out in the configuration files, but I don't know
+how to make that happen.
 
-> ---
-> net/sunrpc/xprtrdma/frwr_ops.c |    2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff -u -p a/net/sunrpc/xprtrdma/frwr_ops.c =
-b/net/sunrpc/xprtrdma/frwr_ops.c
-> --- a/net/sunrpc/xprtrdma/frwr_ops.c
-> +++ b/net/sunrpc/xprtrdma/frwr_ops.c
-> @@ -124,7 +124,7 @@ int frwr_mr_init(struct rpcrdma_xprt *r_
-> 	if (IS_ERR(frmr))
-> 		goto out_mr_err;
->=20
-> -	sg =3D kcalloc(depth, sizeof(*sg), GFP_NOFS);
-> +	sg =3D kmalloc_array(depth, sizeof(*sg), GFP_NOFS);
-> 	if (!sg)
-> 		goto out_list_err;
->=20
->=20
-
---
-Chuck Lever
-
-
-
+--b.
+> 
+> The /etc/nfs.conf says:
+> 
+> [nfsd]
+> debug=0
+> threads=8
+> host=cerberus
+> port=1001
+> udp=n
+> tcp=y
+> vers2=n
+> vers3=n
+> vers4=y
+> vers4.0=y
+> vers4.1=y
+> vers4.2=y
+> 
+> And nothing else.  And yes, the port is intended to be "obscure".
