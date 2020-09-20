@@ -2,59 +2,170 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 114FB270F93
-	for <lists+linux-nfs@lfdr.de>; Sat, 19 Sep 2020 18:40:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73F89271376
+	for <lists+linux-nfs@lfdr.de>; Sun, 20 Sep 2020 13:16:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgISQkV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 19 Sep 2020 12:40:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgISQkV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 19 Sep 2020 12:40:21 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 761A4C0613CE
-        for <linux-nfs@vger.kernel.org>; Sat, 19 Sep 2020 09:40:21 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id CA309689F; Sat, 19 Sep 2020 12:40:20 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CA309689F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1600533620;
-        bh=cuuMLu4lFSYrn7CgFivDw/N8Db9Dj4yGiM60G/tQmys=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Jdq8y3OLux9r5/Bl+iW57v6lwEgPhc8Zp5bftJGAUiOhUJgQxLeO9vWtCGzcHNh4D
-         DwkaVFNIM7EAmB9rksoAvRH+T9IKaCsEAi6U44IX+AIOuWHUSIw5n69n0ofndi0BVn
-         F4wSZQWlIHY5OL3GcLR1cm00hvgFBypNa50HRYv0=
-Date:   Sat, 19 Sep 2020 12:40:20 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Chris Hall <linux-nfs@gmch.uk>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: mount.nfs4 and logging
-Message-ID: <20200919164020.GB15785@fieldses.org>
-References: <S1725851AbgIKKt5/20200911104957Z+185@vger.kernel.org>
- <a38a1249-c570-9069-a498-5e17d85a418a@gmch.uk>
- <f06f86ef-08bd-3974-3d92-1fbda700cc11@RedHat.com>
- <f7b9c8b4-29a6-2f28-b1d9-739c546fd557@gmch.uk>
- <20200919163353.GA15785@fieldses.org>
+        id S1726314AbgITLQN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 20 Sep 2020 07:16:13 -0400
+Received: from cerberus.halldom.com ([79.135.97.241]:56749 "EHLO
+        cerberus.halldom.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbgITLQM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 20 Sep 2020 07:16:12 -0400
+X-Greylist: delayed 4412 seconds by postgrey-1.27 at vger.kernel.org; Sun, 20 Sep 2020 07:16:12 EDT
+Received: from ceres.halldom.com ([79.135.97.244]:53301)
+        by cerberus.halldom.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+        (Exim 4.94)
+        (envelope-from <chris.hall@gmch.uk>)
+        id 1kJwB3-00025N-Tu; Sun, 20 Sep 2020 11:02:37 +0100
+Subject: Fwd: Re: mount.nfs4 and logging
+References: <20200919214707.GC22544@fieldses.org>
+To:     steved@redhat.com
+Cc:     linux-nfs@vger.kernel.org, "J. Bruce Fields" <bfields@fieldses.org>
+From:   Chris Hall <chris.hall@gmch.uk>
+X-Forwarded-Message-Id: <20200919214707.GC22544@fieldses.org>
+Message-ID: <8c44e6ce-7810-bba1-8779-127938fed1ab@gmch.uk>
+Date:   Sun, 20 Sep 2020 11:02:44 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200919163353.GA15785@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200919214707.GC22544@fieldses.org>
+Content-Type: multipart/mixed;
+ boundary="------------919966CE451F944E35489939"
+Content-Language: en-GB
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Sep 19, 2020 at 12:33:53PM -0400, J. Bruce Fields wrote:
-> For the server, you don't need rpcbind or rpc.statd for v4, but you do
-> need rpc.idmapd, rpc.mountd and nfsdcld.
+This is a multi-part message in MIME format.
+--------------919966CE451F944E35489939
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+
+
+Steve,
+
+Forwarded to you as suggested by Bruce Fields -- see below.
+
+Chris
+
+
+-------- Forwarded Message --------
+
+On Sat, Sep 19, 2020 at 06:49:40PM +0100, Chris Hall wrote:
+> On 19/09/2020 17:33, J. Bruce Fields wrote:
+> >On Tue, Sep 15, 2020 at 02:06:23PM +0100, Chris Hall wrote:
+> >>Also FWIW, I gather that this is configuration for the client-side
+> >>'mount' of nfs exports, *only*.  I suppose it should be obvious that
+> >>this has absolutely nothing to do with configuring (server-side)
+> >>'mountd'.  Speaking as a fully paid up moron-in-a-hurry, it has
+> >>taken me a while to work that out :-(  [I suggest that the comments
+> >>in the .conf files and the man-page could say that nfs.conf is
+> >>server-side and nfsmount.conf is client-side -- just a few words,
+> >>for the avoidance of doubt.]
+> >
+> >That sounds sensible.  If you're feeling industrious, you can
+> >
+> >	git clone git://linux-nfs.org/~steved/nfs-utils
+> >
+> >and patch those files and mail us a patch....
 > 
-> rpc.mountd is the only one of those three that needs to listen on a
-> network port, but that's only in the NFSv2/v3 case.  I'm not sure if
-> we're getting that right.
+> Enclosed are suggested updates.
 
-Looking at the code, it looks correct--I see mountd starting those
-listeners only when v2 or v3 are configured.
-
-The documentation could be better, though.
+Oh, great, thanks.  Steve Dickson handles these, so send it to
+steved@redhat.com, cc: linux-nfs@vger.kernel.org, and he should pick it
+up.
 
 --b.
+
+> Chris
+
+
+
+--------------919966CE451F944E35489939
+Content-Type: text/plain; charset=UTF-8;
+ name="gmch-nfs-patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="gmch-nfs-patch"
+
+diff --git a/nfs.conf b/nfs.conf
+index 186a5b19..9bfa0302 100644
+--- a/nfs.conf
++++ b/nfs.conf
+@@ -2,6 +2,8 @@
+ # This is a general configuration for the
+ # NFS daemons and tools
+ #
++# Note that this is configuration for server-side NFS, only.
++#
+ [general]
+ # pipefs-directory=/var/lib/nfs/rpc_pipefs
+ #
+diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
+index 3f1c7261..a647a29b 100644
+--- a/systemd/nfs.conf.man
++++ b/systemd/nfs.conf.man
+@@ -3,6 +3,9 @@
+ nfs.conf \- general configuration for NFS daemons and tools
+ .SH SYNOPSIS
+ .I /etc/nfs.conf
++.PP
++Note that this is configuration for server-side NFS, only.  See 
++nfsmount.conf for the configuration of client-side NFS.
+ .SH DESCRIPTION
+ .PP
+ This file contains site-specific configuration for various NFS daemons
+diff --git a/utils/mount/nfsmount.conf b/utils/mount/nfsmount.conf
+index 6bdc225a..79d23caa 100644
+--- a/utils/mount/nfsmount.conf
++++ b/utils/mount/nfsmount.conf
+@@ -1,6 +1,8 @@
+ #
+ # /etc/nfsmount.conf - see nfsmount.conf(5) for details
+ #
++# Note that this is configuration for client-side mount operations, only.
++#
+ # This is an NFS mount configuration file. This file can be broken
+ # up into three different sections: Mount, Server and Global
+ # 
+@@ -115,16 +117,20 @@
+ # Sets all attributes times to the same time (in seconds)
+ # actimeo=30
+ #
+-# Server Mountd port mountport
++# Server Mountd port mountport - do *not* set this if *any* server
++#                                being used only supports nfs4
+ # mountport=4001
+ #
+-# Server Mountd Protocol
++# Server Mountd Protocol       - do *not* set this if *any* server
++#                                being used only supports nfs4
+ # mountproto=tcp
+ #
+-# Server Mountd Version
++# Server Mountd Version        - do *not* set this if *any* server
++#                                being used only supports nfs4
+ # mountvers=3
+ #
+-# Server Mountd Host
++# Server Mountd Host           - do *not* set this if *any* server
++#                                being used only supports nfs4
+ # mounthost=hostname
+ #
+ # Server Port
+diff --git a/utils/mount/nfsmount.conf.man b/utils/mount/nfsmount.conf.man
+index 3aa34564..f8dfb7d6 100644
+--- a/utils/mount/nfsmount.conf.man
++++ b/utils/mount/nfsmount.conf.man
+@@ -5,6 +5,9 @@ nfsmount.conf - Configuration file for NFS mounts
+ .SH SYNOPSIS
+ Configuration file for NFS mounts that allows options
+ to be set globally, per server or per mount point.
++.PP
++Note that this is configuration for client-side mount operations,
++only.  See nfs.conf for the configuration of server-side NFS.
+ .SH DESCRIPTION
+ The configuration file is made up of multiple sections 
+ followed by variables associated with that section.
+
+--------------919966CE451F944E35489939--
