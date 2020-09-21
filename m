@@ -2,63 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CBE527319F
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Sep 2020 20:11:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E8E92731A0
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Sep 2020 20:11:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgIUSLp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Sep 2020 14:11:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47672 "EHLO
+        id S1728148AbgIUSLw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Sep 2020 14:11:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728046AbgIUSLp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Sep 2020 14:11:45 -0400
-Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CB65C061755
-        for <linux-nfs@vger.kernel.org>; Mon, 21 Sep 2020 11:11:45 -0700 (PDT)
-Received: by mail-il1-x131.google.com with SMTP id f82so14669230ilh.8
-        for <linux-nfs@vger.kernel.org>; Mon, 21 Sep 2020 11:11:45 -0700 (PDT)
+        with ESMTP id S1728046AbgIUSLu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Sep 2020 14:11:50 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F88C061755
+        for <linux-nfs@vger.kernel.org>; Mon, 21 Sep 2020 11:11:50 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id d190so16462572iof.3
+        for <linux-nfs@vger.kernel.org>; Mon, 21 Sep 2020 11:11:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=eSvVKyosHRV+Br87fyyqZwO0P0fXfteskPGR0M1m5Hs=;
-        b=vSQ4RtDt9yl3XQXynk2h9Erwlt8O14FMxW7ScqJtJP0mHEoUW2B+nbvwyc4lfGuW5D
-         rVIcASLOlejg74cykw19px5Nxf/fff8Y6pQAb+pTF6j/ZsjXD9U+wYCgZlVmY03eSL+u
-         YO7ETXe2vcSRvJIA5iVywUUSMmj35CWKduheRCLRLfwIqVviYKCjUiLNYpC6DypQoGvX
-         oVQcEe4jxla0x1dW7SrED0oxZVjFradQy8M6Xj8WR+L1sLBIatCk1kbrbWJS2mII8H5y
-         v1/S41FG2vJKObdcyPkKOghTVdu9od+BQF5H8a6c8ma+cKQg54F/uAO4zArciGEH54kP
-         SAvg==
+        bh=bz731S6wZQA+1qpFznGE8eQlmK/fBClUt6HbiD7bfaQ=;
+        b=Gtp+CzwWABSxW/m8b0ZgCz9qac4MkiGsuAfioDE42YHuDPv+Bzr0742gxVkb888Tu0
+         mZ7SYm4jEyn6X8v6DbNXBb9eSLWF44kD2xag09Sm8JPB6TzT3f/TLemIGes6uW298mG8
+         eB+o1mYXxIN8eMtyJhQyOjm3cOpCgu8F5SRn9K3Y6Dd3b61FECUJL++QVj4yY5G/zH2M
+         nmbO8/slrwRZ8oK3ARNYMGxY/uJk+XSObJGCCJ1XIRV6ntfnANIR7R1kOgktJUcXx5Zd
+         c87detxiAOzrWY/yvao6u7NiHbPIvDMWeyUzH9FxwuL4Wck3ikLQR+Ne2EISyGV7Mw40
+         SExA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=eSvVKyosHRV+Br87fyyqZwO0P0fXfteskPGR0M1m5Hs=;
-        b=YaamhzT4ia/M1+CguGmcNQoXgxnzXsp2rHWvAeTXOqrtQNm4dRPCVBJid8fy4JURaC
-         QCuug6qxv43o5W0GI2byirSiJewjXN0VFjdS1vkAfDE04PsiJixn+cytk4Gy/p9z/ejT
-         bVLHi/hMzT/L3s0dSn66EzM6w6Y4++mun1OHpp8WFzZf92VmiD5yz8si4ya0o5SVdld+
-         ZIsbYb/mkJHjYKENMFbfTzFIX9rjt6S+y/ptuXia5qKxXjKaFnVXiOxz63YrlUeNsWHL
-         e3hb4jTpJrKGwm/31Cldjx956QjTLsW4Aw3z2ZjUV7UTi9gBB3e/dgvZqsZNORrhqkgv
-         Uxkg==
-X-Gm-Message-State: AOAM531UP4KHLu2DSM0YLHedZfOTlc2cnrBxu7d+k6hHfNG/P7Q+bQIQ
-        1taQgohzQ6LWAYgaJIAg+pE=
-X-Google-Smtp-Source: ABdhPJwZ2ickE5i3z8ezxGnBcwmawqZAgZTuqwylHIk2XF+HJ6+Gvwdt204RlADo4+l18/aMCha8aQ==
-X-Received: by 2002:a92:2411:: with SMTP id k17mr1036733ilk.55.1600711904264;
-        Mon, 21 Sep 2020 11:11:44 -0700 (PDT)
+        bh=bz731S6wZQA+1qpFznGE8eQlmK/fBClUt6HbiD7bfaQ=;
+        b=cSGALnTy2eb35mOUfHYkUWUpr7k+PUvK6RRTL30AT6HOfzyyklanBkHsVCQeha2xje
+         MAxV4jLamPjzWnhDKuRnfOyA+XLaRThQWnXTwzWGCXIRFd1M5FdlUHSwlly2EiHkkqGN
+         PUeYF2bb9XT2Ma8+zJEU4kbN/BMezkaWt/PEcl0CADKa83mMlgKDvF+LkCkcMqm61u3W
+         UC8grgs92p1qE3T/PHiVC3Nx/Mh+k1dep9Jo4Ykq0eoAfBr36tNeSdGZBv7JwkE1X/S6
+         kY9Lf7uUkBGpBmnsOLVIJ7MUSl/2++9LcQIXEU9ZlUshE1CrjvK0/+Tl4AGny1vRJvhn
+         MxNA==
+X-Gm-Message-State: AOAM530J9fug/WTeE2GvgtFlBjTrG19qKLwx3C5/Ha2QCpw1a4QacWy2
+        RoYvSazXInx9osyx0j8owiM=
+X-Google-Smtp-Source: ABdhPJySlu5d4avJuOnkxaKi/R3URW0oqhS7JGxNxEA+52wQi9nKDhAa1EKt+X6FzXtywXrLlYY1bQ==
+X-Received: by 2002:a05:6638:16c5:: with SMTP id g5mr1073688jat.112.1600711909606;
+        Mon, 21 Sep 2020 11:11:49 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id y10sm7565173ilq.39.2020.09.21.11.11.43
+        by smtp.gmail.com with ESMTPSA id d8sm7748299ilu.2.2020.09.21.11.11.48
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Sep 2020 11:11:43 -0700 (PDT)
+        Mon, 21 Sep 2020 11:11:48 -0700 (PDT)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08LIBgb3003872;
-        Mon, 21 Sep 2020 18:11:42 GMT
-Subject: [PATCH v2 10/27] NFSD: Remove extra "0x" in tracepoint format
- specifier
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08LIBlvP003875;
+        Mon, 21 Sep 2020 18:11:47 GMT
+Subject: [PATCH v2 11/27] NFSD: Constify @fh argument of knfsd_fh_hash()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org, Bill.Baker@oracle.com
 Cc:     linux-nfs@vger.kernel.org
-Date:   Mon, 21 Sep 2020 14:11:42 -0400
-Message-ID: <160071190266.1468.2338772497526165386.stgit@klimt.1015granger.net>
+Date:   Mon, 21 Sep 2020 14:11:47 -0400
+Message-ID: <160071190796.1468.14661699780965024213.stgit@klimt.1015granger.net>
 In-Reply-To: <160071167664.1468.1365570508917640511.stgit@klimt.1015granger.net>
 References: <160071167664.1468.1365570508917640511.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23
@@ -69,52 +68,35 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up: %p adds its own 0x already.
+Refactor: Enable knfsd_fh_hash() to be invoked in functions where
+the FH is const.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/trace.h |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/nfsd/nfsfh.h |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 8d72829f15ac..62bf57a8d03c 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -474,7 +474,7 @@ DECLARE_EVENT_CLASS(nfsd_file_class,
- 		__entry->nf_may = nf->nf_may;
- 		__entry->nf_file = nf->nf_file;
- 	),
--	TP_printk("hash=0x%x inode=0x%p ref=%d flags=%s may=%s file=%p",
-+	TP_printk("hash=0x%x inode=%p ref=%d flags=%s may=%s file=%p",
- 		__entry->nf_hashval,
- 		__entry->nf_inode,
- 		__entry->nf_ref,
-@@ -525,7 +525,7 @@ TRACE_EVENT(nfsd_file_acquire,
- 		__entry->status = be32_to_cpu(status);
- 	),
- 
--	TP_printk("xid=0x%x hash=0x%x inode=0x%p may_flags=%s ref=%d nf_flags=%s nf_may=%s nf_file=0x%p status=%u",
-+	TP_printk("xid=0x%x hash=0x%x inode=%p may_flags=%s ref=%d nf_flags=%s nf_may=%s nf_file=%p status=%u",
- 			__entry->xid, __entry->hash, __entry->inode,
- 			show_nfsd_may_flags(__entry->may_flags),
- 			__entry->nf_ref, show_nf_flags(__entry->nf_flags),
-@@ -546,7 +546,7 @@ DECLARE_EVENT_CLASS(nfsd_file_search_class,
- 		__entry->hash = hash;
- 		__entry->found = found;
- 	),
--	TP_printk("hash=0x%x inode=0x%p found=%d", __entry->hash,
-+	TP_printk("hash=0x%x inode=%p found=%d", __entry->hash,
- 			__entry->inode, __entry->found)
- );
- 
-@@ -574,7 +574,7 @@ TRACE_EVENT(nfsd_file_fsnotify_handle_event,
- 		__entry->mode = inode->i_mode;
- 		__entry->mask = mask;
- 	),
--	TP_printk("inode=0x%p nlink=%u mode=0%ho mask=0x%x", __entry->inode,
-+	TP_printk("inode=%p nlink=%u mode=0%ho mask=0x%x", __entry->inode,
- 			__entry->nlink, __entry->mode, __entry->mask)
- );
- 
+diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+index 56cfbc361561..1a2e28369d04 100644
+--- a/fs/nfsd/nfsfh.h
++++ b/fs/nfsd/nfsfh.h
+@@ -219,15 +219,12 @@ static inline bool fh_fsid_match(struct knfsd_fh *fh1, struct knfsd_fh *fh2)
+  * returns a crc32 hash for the filehandle that is compatible with
+  * the one displayed by "wireshark".
+  */
+-
+-static inline u32
+-knfsd_fh_hash(struct knfsd_fh *fh)
++static inline u32 knfsd_fh_hash(const struct knfsd_fh *fh)
+ {
+ 	return ~crc32_le(0xFFFFFFFF, (unsigned char *)&fh->fh_base, fh->fh_size);
+ }
+ #else
+-static inline u32
+-knfsd_fh_hash(struct knfsd_fh *fh)
++static inline u32 knfsd_fh_hash(const struct knfsd_fh *fh)
+ {
+ 	return 0;
+ }
 
 
