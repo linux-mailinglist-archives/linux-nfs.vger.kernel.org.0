@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9352B2731B0
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Sep 2020 20:13:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 165172731B1
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Sep 2020 20:13:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbgIUSNG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Sep 2020 14:13:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47906 "EHLO
+        id S1727338AbgIUSNJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Sep 2020 14:13:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgIUSNG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Sep 2020 14:13:06 -0400
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6CB8C061755
-        for <linux-nfs@vger.kernel.org>; Mon, 21 Sep 2020 11:13:05 -0700 (PDT)
-Received: by mail-io1-xd29.google.com with SMTP id m17so16488147ioo.1
-        for <linux-nfs@vger.kernel.org>; Mon, 21 Sep 2020 11:13:05 -0700 (PDT)
+        with ESMTP id S1726501AbgIUSNJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Sep 2020 14:13:09 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 840D9C061755
+        for <linux-nfs@vger.kernel.org>; Mon, 21 Sep 2020 11:13:09 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id z25so16425611iol.10
+        for <linux-nfs@vger.kernel.org>; Mon, 21 Sep 2020 11:13:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=x8zg4HJzl0OLfsGFLbEiuov1V+gjwdNQwD9XKe+yg14=;
-        b=iScPCph7DWXWSCjRc4vT82iX4+3ra3QXG6p9oka+8ZIkEclRnG1JMyJYNM2C5/PhOY
-         +PtePVh4WAdxKrQlKw+sEd8j19+suEEsnuuiPrGr7vqTj1cHXZUC7WdDbjGOxsBYQBoP
-         hGiviwbEF1NWpscEs4HX74XQZMWKrK47BG9cO6UtldB5bast3X0bRcKdKzSD7a2BTLS0
-         Z9pf7ABhwKpdD1m/OKVEV8Ra96De/1U2yjX2zXGf1A3wE4DRpZne6cWawQD9G627h8pX
-         RopR51MMHmMvkRWwMs8W5wICbv5lMRwzVr6thmUftqwlNG6W1HinO6fTBmihEs6DDiZh
-         k0Eg==
+        bh=/2Q3elhH00r9aUMUVsPp9Kp/w14b9Y+65fXKNeC47fc=;
+        b=LPvRI7171nAR8NrLu6PUWGRuIkpBUjsztCXXwLEW2ywhG+q8xolW4NIhNyOdRO4VPy
+         oFEFNtOZnra/MqxTAXD96JLD+turqx/CZH0AfLNw4KBNIFMmL/OnHd9bTxfyjnQQrVNb
+         hU30P1qReAI4gCpSBcAySbhK2gN87CMTdu6W30beTbX95jsYAWV2D+nGN8AlJQexxzV6
+         MBLruDqFRywyaozG378l+cY4kl5VSVg9f+2f2hNjadEdUvhOv1e7Zow0hb3pl+WTPz+o
+         YZy4vypTFu6OrfIEDOEk4CAl/n7IzKgFP4nLOV3UapL09d/Xb8xPD4KtHf2/Ky8A3Fks
+         mlpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=x8zg4HJzl0OLfsGFLbEiuov1V+gjwdNQwD9XKe+yg14=;
-        b=qQMzdBM0eHWZGeFLE8/xwavqydl0swZc1CeE36wSbNyyzUlXmhS7YvgfK49egoLGkt
-         5GDfCXKi4+mj0MiyRqLWGDrbGu4V8xGFj5sfDRXCzxjKbhJwzAjQXfRGdCdZ54KeE28b
-         0Rz/kHjR8p8L7Pm/Q5uUmGydEc6qCpHzwHTgV/8fbMEfWjI+1r6UMSoiet7YiJ/OJ5on
-         QDTNruoY0YSHheAFup9nsaZZOmPGahkJQL/CR8pmzro1+kmJ25mJLOu+oMbG3FHvYVb8
-         hkF9e0B2mlht8uJJWjXmuKo2lYtyVBtj82L3JQyOC6PGwvaj85yROhE8lYFDk5miKTYD
-         8buw==
-X-Gm-Message-State: AOAM531YWVDZnVshp9u0Oc6eg3K7m12gQg9r2jJfBZEVR6aQZUp6L2Kl
-        zl5vv/6fsxzGeXPIJ1SoBbE=
-X-Google-Smtp-Source: ABdhPJweoopwnWHoPgL2RK/BlpgtrU40H5ly/71aoW+gyAkPYtKRAPGgjxjGUzUJTVmaMdCCPhgSDg==
-X-Received: by 2002:a6b:908:: with SMTP id t8mr517901ioi.124.1600711983576;
-        Mon, 21 Sep 2020 11:13:03 -0700 (PDT)
+        bh=/2Q3elhH00r9aUMUVsPp9Kp/w14b9Y+65fXKNeC47fc=;
+        b=cCiM2veiDAX99jIS8uzFrB2moLBhlYfpy2ZBMqpuM80mYTCJMcBM2sAStGjzeCEnHc
+         r6kdqdSruiGisDEqyVK529SQBIv86vLCXl0o60VkdIpZ5AH8wDRTgUQOHAjasi0ilH7v
+         a9/zErBGd1UsnjkYKSwQzKXufolOdVXNV/3hA19wjK1Wn/FR/ALdBtJQX6eItVG7fKNA
+         zabJKdHL9TVho/yyhy9UCn5K+OY3C+l4oC88xG1tSu3btTh+VDE3fZy5ay24m5XwarUv
+         zhFMEhr/a04yVtQjzkSBygfHFUqwIjK1VQpwPOi7Gr/1bSANrP7eg2xsuyhXtnVt4lKH
+         KeNw==
+X-Gm-Message-State: AOAM530aHjAjbbcD5dHkTNHWuTGzITmHVaPy4eX6uC9GoVKeY7ntnHyX
+        xwfB+06rU9yKGQqI3QAOXUTKrf38KMw=
+X-Google-Smtp-Source: ABdhPJwAUbpx9898z/c3bcNmo8J7/Bb9tbLNLFVHZYbKmeSVjp0FNt0NFWljx70d7SUeEYeepDKqrQ==
+X-Received: by 2002:a02:cf22:: with SMTP id s2mr1046814jar.29.1600711988793;
+        Mon, 21 Sep 2020 11:13:08 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id k1sm6179439iop.42.2020.09.21.11.13.02
+        by smtp.gmail.com with ESMTPSA id i6sm3903134ils.55.2020.09.21.11.13.07
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Sep 2020 11:13:02 -0700 (PDT)
+        Mon, 21 Sep 2020 11:13:08 -0700 (PDT)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08LID1ap003917;
-        Mon, 21 Sep 2020 18:13:01 GMT
-Subject: [PATCH v2 25/27] NFSD: Rename nfsd_ tracepoints to nfsd4_
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08LID7E2003920;
+        Mon, 21 Sep 2020 18:13:07 GMT
+Subject: [PATCH v2 26/27] NFSD: Add tracepoints in the NFS dispatcher
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org, Bill.Baker@oracle.com
 Cc:     linux-nfs@vger.kernel.org
-Date:   Mon, 21 Sep 2020 14:13:01 -0400
-Message-ID: <160071198185.1468.9304540772685242936.stgit@klimt.1015granger.net>
+Date:   Mon, 21 Sep 2020 14:13:07 -0400
+Message-ID: <160071198717.1468.14262284967190973528.stgit@klimt.1015granger.net>
 In-Reply-To: <160071167664.1468.1365570508917640511.stgit@klimt.1015granger.net>
 References: <160071167664.1468.1365570508917640511.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23
@@ -68,377 +68,386 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Allow administrators to enable just NFS4-related or non-NFSv4-related
-server tracepoints by changing the prefix of NFSv4-related
-tracepoints.
+This is follow-on work to the tracepoints added in the NFS server's
+duplicate reply cache. Here, tracepoints are introduced that report
+replies from cache as well as encoding and decoding errors.
+
+The NFSv2, v3, and v4 dispatcher requirements have diverged over
+time, leaving us with a little bit of technical debt. In addition,
+I wanted to add a tracepoint for NFSv2 and NFSv3 similar to the
+nfsd4_compound/compoundstatus tracepoints. Lastly, removing some
+conditional branches from this hot path helps optimize CPU
+utilization. So, I've duplicated the nfsd_dispatcher function.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4callback.c |   28 ++++++++++++++--------------
- fs/nfsd/nfs4layouts.c  |   16 ++++++++--------
- fs/nfsd/nfs4proc.c     |    4 ++--
- fs/nfsd/nfs4state.c    |   14 +++++++-------
- fs/nfsd/trace.h        |   16 ++++++++--------
- 5 files changed, 39 insertions(+), 39 deletions(-)
+ fs/nfsd/nfs2acl.c  |    2 -
+ fs/nfsd/nfs3acl.c  |    2 -
+ fs/nfsd/nfs4proc.c |    2 -
+ fs/nfsd/nfsd.h     |    1 
+ fs/nfsd/nfssvc.c   |  198 ++++++++++++++++++++++++++++++++++------------------
+ fs/nfsd/trace.h    |   50 +++++++++++++
+ 6 files changed, 183 insertions(+), 72 deletions(-)
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 052be5bf9ef5..65675c0158ed 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -906,7 +906,7 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
- 	if (clp->cl_minorversion == 0) {
- 		if (!clp->cl_cred.cr_principal &&
- 		    (clp->cl_cred.cr_flavor >= RPC_AUTH_GSS_KRB5)) {
--			trace_nfsd_cb_setup_err(clp, -EINVAL);
-+			trace_nfsd4_cb_setup_err(clp, -EINVAL);
- 			return -EINVAL;
- 		}
- 		args.client_name = clp->cl_cred.cr_principal;
-@@ -916,7 +916,7 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
- 		clp->cl_cb_ident = conn->cb_ident;
- 	} else {
- 		if (!conn->cb_xprt) {
--			trace_nfsd_cb_setup_err(clp, -EINVAL);
-+			trace_nfsd4_cb_setup_err(clp, -EINVAL);
- 			return -EINVAL;
- 		}
- 		clp->cl_cb_conn.cb_xprt = conn->cb_xprt;
-@@ -930,18 +930,18 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
- 	/* Create RPC client */
- 	client = rpc_create(&args);
- 	if (IS_ERR(client)) {
--		trace_nfsd_cb_setup_err(clp, PTR_ERR(client));
-+		trace_nfsd4_cb_setup_err(clp, PTR_ERR(client));
- 		return PTR_ERR(client);
- 	}
- 	cred = get_backchannel_cred(clp, client, ses);
- 	if (!cred) {
--		trace_nfsd_cb_setup_err(clp, -ENOMEM);
-+		trace_nfsd4_cb_setup_err(clp, -ENOMEM);
- 		rpc_shutdown_client(client);
- 		return -ENOMEM;
- 	}
- 	clp->cl_cb_client = client;
- 	clp->cl_cb_cred = cred;
--	trace_nfsd_cb_setup(clp);
-+	trace_nfsd4_cb_setup(clp);
- 	return 0;
- }
+diff --git a/fs/nfsd/nfs2acl.c b/fs/nfsd/nfs2acl.c
+index 54e597918822..894b8f0594e2 100644
+--- a/fs/nfsd/nfs2acl.c
++++ b/fs/nfsd/nfs2acl.c
+@@ -416,6 +416,6 @@ const struct svc_version nfsd_acl_version2 = {
+ 	.vs_nproc	= 5,
+ 	.vs_proc	= nfsd_acl_procedures2,
+ 	.vs_count	= nfsd_acl_count2,
+-	.vs_dispatch	= nfsd_dispatch,
++	.vs_dispatch	= nfsd4_dispatch,
+ 	.vs_xdrsize	= NFS3_SVC_XDRSIZE,
+ };
+diff --git a/fs/nfsd/nfs3acl.c b/fs/nfsd/nfs3acl.c
+index 7f512dec7460..924ebb19c59c 100644
+--- a/fs/nfsd/nfs3acl.c
++++ b/fs/nfsd/nfs3acl.c
+@@ -282,7 +282,7 @@ const struct svc_version nfsd_acl_version3 = {
+ 	.vs_nproc	= 3,
+ 	.vs_proc	= nfsd_acl_procedures3,
+ 	.vs_count	= nfsd_acl_count3,
+-	.vs_dispatch	= nfsd_dispatch,
++	.vs_dispatch	= nfsd4_dispatch,
+ 	.vs_xdrsize	= NFS3_SVC_XDRSIZE,
+ };
  
-@@ -950,7 +950,7 @@ static void nfsd4_mark_cb_down(struct nfs4_client *clp, int reason)
- 	if (test_bit(NFSD4_CLIENT_CB_UPDATE, &clp->cl_flags))
- 		return;
- 	clp->cl_cb_state = NFSD4_CB_DOWN;
--	trace_nfsd_cb_state(clp);
-+	trace_nfsd4_cb_state(clp);
- }
- 
- static void nfsd4_mark_cb_fault(struct nfs4_client *clp, int reason)
-@@ -958,19 +958,19 @@ static void nfsd4_mark_cb_fault(struct nfs4_client *clp, int reason)
- 	if (test_bit(NFSD4_CLIENT_CB_UPDATE, &clp->cl_flags))
- 		return;
- 	clp->cl_cb_state = NFSD4_CB_FAULT;
--	trace_nfsd_cb_state(clp);
-+	trace_nfsd4_cb_state(clp);
- }
- 
- static void nfsd4_cb_probe_done(struct rpc_task *task, void *calldata)
- {
- 	struct nfs4_client *clp = container_of(calldata, struct nfs4_client, cl_cb_null);
- 
--	trace_nfsd_cb_done(clp, task->tk_status);
-+	trace_nfsd4_cb_done(clp, task->tk_status);
- 	if (task->tk_status)
- 		nfsd4_mark_cb_down(clp, task->tk_status);
- 	else {
- 		clp->cl_cb_state = NFSD4_CB_UP;
--		trace_nfsd_cb_state(clp);
-+		trace_nfsd4_cb_state(clp);
- 	}
- }
- 
-@@ -996,7 +996,7 @@ static const struct rpc_call_ops nfsd4_cb_probe_ops = {
- void nfsd4_probe_callback(struct nfs4_client *clp)
- {
- 	clp->cl_cb_state = NFSD4_CB_UNKNOWN;
--	trace_nfsd_cb_state(clp);
-+	trace_nfsd4_cb_state(clp);
- 	set_bit(NFSD4_CLIENT_CB_UPDATE, &clp->cl_flags);
- 	nfsd4_run_cb(&clp->cl_cb_null);
- }
-@@ -1013,7 +1013,7 @@ void nfsd4_change_callback(struct nfs4_client *clp, struct nfs4_cb_conn *conn)
- 	spin_lock(&clp->cl_lock);
- 	memcpy(&clp->cl_cb_conn, conn, sizeof(struct nfs4_cb_conn));
- 	spin_unlock(&clp->cl_lock);
--	trace_nfsd_cb_state(clp);
-+	trace_nfsd4_cb_state(clp);
- }
- 
- /*
-@@ -1170,7 +1170,7 @@ static void nfsd4_cb_done(struct rpc_task *task, void *calldata)
- 	struct nfsd4_callback *cb = calldata;
- 	struct nfs4_client *clp = cb->cb_clp;
- 
--	trace_nfsd_cb_done(clp, task->tk_status);
-+	trace_nfsd4_cb_done(clp, task->tk_status);
- 
- 	if (!nfsd4_cb_sequence_done(task, cb))
- 		return;
-@@ -1275,7 +1275,7 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
- 	 * kill the old client:
- 	 */
- 	if (clp->cl_cb_client) {
--		trace_nfsd_cb_shutdown(clp);
-+		trace_nfsd4_cb_shutdown(clp);
- 		rpc_shutdown_client(clp->cl_cb_client);
- 		clp->cl_cb_client = NULL;
- 		put_cred(clp->cl_cb_cred);
-@@ -1321,7 +1321,7 @@ nfsd4_run_cb_work(struct work_struct *work)
- 	struct rpc_clnt *clnt;
- 	int flags;
- 
--	trace_nfsd_cb_work(clp, cb->cb_msg.rpc_proc->p_name);
-+	trace_nfsd4_cb_work(clp, cb->cb_msg.rpc_proc->p_name);
- 
- 	if (cb->cb_need_restart) {
- 		cb->cb_need_restart = false;
-diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-index a97873f2d22b..7daa553abba4 100644
---- a/fs/nfsd/nfs4layouts.c
-+++ b/fs/nfsd/nfs4layouts.c
-@@ -158,7 +158,7 @@ nfsd4_free_layout_stateid(struct nfs4_stid *stid)
- 	struct nfs4_client *clp = ls->ls_stid.sc_client;
- 	struct nfs4_file *fp = ls->ls_stid.sc_file;
- 
--	trace_nfsd_layoutstate_free(&ls->ls_stid.sc_stateid);
-+	trace_nfsd4_layoutstate_free(&ls->ls_stid.sc_stateid);
- 
- 	spin_lock(&clp->cl_lock);
- 	list_del_init(&ls->ls_perclnt);
-@@ -257,7 +257,7 @@ nfsd4_alloc_layout_stateid(struct nfsd4_compound_state *cstate,
- 	list_add(&ls->ls_perfile, &fp->fi_lo_states);
- 	spin_unlock(&fp->fi_lock);
- 
--	trace_nfsd_layoutstate_alloc(&ls->ls_stid.sc_stateid);
-+	trace_nfsd4_layoutstate_alloc(&ls->ls_stid.sc_stateid);
- 	return ls;
- }
- 
-@@ -327,7 +327,7 @@ nfsd4_recall_file_layout(struct nfs4_layout_stateid *ls)
- 	if (list_empty(&ls->ls_layouts))
- 		goto out_unlock;
- 
--	trace_nfsd_layout_recall(&ls->ls_stid.sc_stateid);
-+	trace_nfsd4_layout_recall(&ls->ls_stid.sc_stateid);
- 
- 	refcount_inc(&ls->ls_stid.sc_count);
- 	nfsd4_run_cb(&ls->ls_recall);
-@@ -500,7 +500,7 @@ nfsd4_return_file_layouts(struct svc_rqst *rqstp,
- 						false, lrp->lr_layout_type,
- 						&ls);
- 	if (nfserr) {
--		trace_nfsd_layout_return_lookup_fail(&lrp->lr_sid);
-+		trace_nfsd4_layout_return_lookup_fail(&lrp->lr_sid);
- 		return nfserr;
- 	}
- 
-@@ -516,7 +516,7 @@ nfsd4_return_file_layouts(struct svc_rqst *rqstp,
- 			nfs4_inc_and_copy_stateid(&lrp->lr_sid, &ls->ls_stid);
- 		lrp->lrs_present = 1;
- 	} else {
--		trace_nfsd_layoutstate_unhash(&ls->ls_stid.sc_stateid);
-+		trace_nfsd4_layoutstate_unhash(&ls->ls_stid.sc_stateid);
- 		nfs4_unhash_stid(&ls->ls_stid);
- 		lrp->lrs_present = 0;
- 	}
-@@ -686,7 +686,7 @@ nfsd4_cb_layout_done(struct nfsd4_callback *cb, struct rpc_task *task)
- 		/*
- 		 * Unknown error or non-responding client, we'll need to fence.
- 		 */
--		trace_nfsd_layout_recall_fail(&ls->ls_stid.sc_stateid);
-+		trace_nfsd4_layout_recall_fail(&ls->ls_stid.sc_stateid);
- 
- 		ops = nfsd4_layout_ops[ls->ls_layout_type];
- 		if (ops->fence_client)
-@@ -695,7 +695,7 @@ nfsd4_cb_layout_done(struct nfsd4_callback *cb, struct rpc_task *task)
- 			nfsd4_cb_layout_fail(ls);
- 		return 1;
- 	case -NFS4ERR_NOMATCHING_LAYOUT:
--		trace_nfsd_layout_recall_done(&ls->ls_stid.sc_stateid);
-+		trace_nfsd4_layout_recall_done(&ls->ls_stid.sc_stateid);
- 		task->tk_status = 0;
- 		return 1;
- 	}
-@@ -708,7 +708,7 @@ nfsd4_cb_layout_release(struct nfsd4_callback *cb)
- 		container_of(cb, struct nfs4_layout_stateid, ls_recall);
- 	LIST_HEAD(reaplist);
- 
--	trace_nfsd_layout_recall_release(&ls->ls_stid.sc_stateid);
-+	trace_nfsd4_layout_recall_release(&ls->ls_stid.sc_stateid);
- 
- 	nfsd4_return_all_layouts(ls, &reaplist);
- 	nfsd4_free_layouts(&reaplist);
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index c4fa121560ae..49109645af24 100644
+index 49109645af24..61302641f651 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -1973,7 +1973,7 @@ nfsd4_layoutget(struct svc_rqst *rqstp,
- 	nfserr = nfsd4_preprocess_layout_stateid(rqstp, cstate, &lgp->lg_sid,
- 						true, lgp->lg_layout_type, &ls);
- 	if (nfserr) {
--		trace_nfsd_layout_get_lookup_fail(&lgp->lg_sid);
-+		trace_nfsd4_layout_get_lookup_fail(&lgp->lg_sid);
- 		goto out;
- 	}
+@@ -3320,7 +3320,7 @@ const struct svc_version nfsd_version4 = {
+ 	.vs_nproc		= 2,
+ 	.vs_proc		= nfsd_procedures4,
+ 	.vs_count		= nfsd_count3,
+-	.vs_dispatch		= nfsd_dispatch,
++	.vs_dispatch		= nfsd4_dispatch,
+ 	.vs_xdrsize		= NFS4_SVC_XDRSIZE,
+ 	.vs_rpcb_optnl		= true,
+ 	.vs_need_cong_ctrl	= true,
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index cb742e17e04a..7fa4b19dd2f7 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -78,6 +78,7 @@ extern const struct seq_operations nfs_exports_op;
+  */
+ int		nfsd_svc(int nrservs, struct net *net, const struct cred *cred);
+ int		nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp);
++int		nfsd4_dispatch(struct svc_rqst *rqstp, __be32 *statp);
  
-@@ -2042,7 +2042,7 @@ nfsd4_layoutcommit(struct svc_rqst *rqstp,
- 						false, lcp->lc_layout_type,
- 						&ls);
- 	if (nfserr) {
--		trace_nfsd_layout_commit_lookup_fail(&lcp->lc_sid);
-+		trace_nfsd4_layout_commit_lookup_fail(&lcp->lc_sid);
- 		/* fixup error code as per RFC5661 */
- 		if (nfserr == nfserr_bad_stateid)
- 			nfserr = nfserr_badlayout;
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index eaad1763d33a..690483e0b933 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2893,12 +2893,12 @@ gen_callback(struct nfs4_client *clp, struct nfsd4_setclientid *se, struct svc_r
- 	conn->cb_prog = se->se_callback_prog;
- 	conn->cb_ident = se->se_callback_ident;
- 	memcpy(&conn->cb_saddr, &rqstp->rq_daddr, rqstp->rq_daddrlen);
--	trace_nfsd_cb_args(clp, conn);
-+	trace_nfsd4_cb_args(clp, conn);
- 	return;
- out_err:
- 	conn->cb_addr.ss_family = AF_UNSPEC;
- 	conn->cb_addrlen = 0;
--	trace_nfsd_cb_nodelegs(clp);
-+	trace_nfsd4_cb_nodelegs(clp);
- 	return;
+ int		nfsd_nrthreads(struct net *);
+ int		nfsd_nrpools(struct net *);
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index f7f6473578af..d626eea1c78a 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -28,6 +28,7 @@
+ #include "vfs.h"
+ #include "netns.h"
+ #include "filecache.h"
++#include "trace.h"
+ 
+ #define NFSDDBG_FACILITY	NFSDDBG_SVC
+ 
+@@ -964,7 +965,7 @@ static __be32 map_new_errors(u32 vers, __be32 nfserr)
+ {
+ 	if (nfserr == nfserr_jukebox && vers == 2)
+ 		return nfserr_dropit;
+-	if (nfserr == nfserr_wrongsec && vers < 4)
++	if (nfserr == nfserr_wrongsec)
+ 		return nfserr_acces;
+ 	return nfserr;
+ }
+@@ -980,18 +981,6 @@ static __be32 map_new_errors(u32 vers, __be32 nfserr)
+ static bool nfs_request_too_big(struct svc_rqst *rqstp,
+ 				const struct svc_procedure *proc)
+ {
+-	/*
+-	 * The ACL code has more careful bounds-checking and is not
+-	 * susceptible to this problem:
+-	 */
+-	if (rqstp->rq_prog != NFS_PROGRAM)
+-		return false;
+-	/*
+-	 * Ditto NFSv4 (which can in theory have argument and reply both
+-	 * more than a page):
+-	 */
+-	if (rqstp->rq_vers >= 4)
+-		return false;
+ 	/* The reply will be small, we're OK: */
+ 	if (proc->pc_xdrressize > 0 &&
+ 	    proc->pc_xdrressize < XDR_QUADLEN(PAGE_SIZE))
+@@ -1000,81 +989,152 @@ static bool nfs_request_too_big(struct svc_rqst *rqstp,
+ 	return rqstp->rq_arg.len > PAGE_SIZE;
  }
  
-@@ -3954,7 +3954,7 @@ nfsd4_setclientid(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		if (clp_used_exchangeid(conf))
- 			goto out;
- 		if (!same_creds(&conf->cl_cred, &rqstp->rq_cred)) {
--			trace_nfsd_clid_inuse_err(conf);
-+			trace_nfsd4_clid_inuse_err(conf);
- 			goto out;
- 		}
+-int
+-nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
++/**
++ * nfsd_dispatch - Process an NFSv2 or NFSv3 request
++ * @rqstp: incoming NFS request
++ * @statp: OUT: RPC accept_stat value
++ *
++ * Return values:
++ *  %0: Processing complete; do not send a Reply
++ *  %1: Processing complete; send a Reply
++ */
++int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+ {
+-	const struct svc_procedure *proc;
+-	__be32			nfserr;
+-	__be32			*nfserrp;
+-
+-	dprintk("nfsd_dispatch: vers %d proc %d\n",
+-				rqstp->rq_vers, rqstp->rq_proc);
+-	proc = rqstp->rq_procinfo;
+-
+-	if (nfs_request_too_big(rqstp, proc)) {
+-		dprintk("nfsd: NFSv%d argument too large\n", rqstp->rq_vers);
+-		*statp = rpc_garbage_args;
+-		return 1;
++	const struct svc_procedure *proc = rqstp->rq_procinfo;
++	struct kvec *argv = &rqstp->rq_arg.head[0];
++	struct kvec *resv = &rqstp->rq_res.head[0];
++	__be32 nfserr, *nfserrp;
++
++	if (nfs_request_too_big(rqstp, proc))
++		goto out_too_large;
++
++	if (proc->pc_decode && !procp->pc_decode(rqstp, argv->iov_base))
++		goto out_decode_err;
++
++	rqstp->rq_cachetype = proc->pc_cachetype;
++	switch (nfsd_cache_lookup(rqstp)) {
++	case RC_DROPIT:
++		goto out_dropit;
++	case RC_REPLY:
++		goto out_cached_reply;
++	case RC_DOIT:
++		break;
  	}
-@@ -4578,7 +4578,7 @@ nfsd_break_deleg_cb(struct file_lock *fl)
- 	struct nfs4_delegation *dp = (struct nfs4_delegation *)fl->fl_owner;
- 	struct nfs4_file *fp = dp->dl_stid.sc_file;
- 
--	trace_nfsd_deleg_break(&dp->dl_stid.sc_stateid);
-+	trace_nfsd4_deleg_break(&dp->dl_stid.sc_stateid);
- 
+-	rqstp->rq_lease_breaker = NULL;
++
++	nfserrp = resv->iov_base + resv->iov_len;
++	resv->iov_len += sizeof(__be32);
++	nfserr = proc->pc_func(rqstp);
++	nfserr = map_new_errors(rqstp->rq_vers, nfserr);
++	if (nfserr == nfserr_dropit || test_bit(RQ_DROPME, &rqstp->rq_flags))
++		goto out_update_drop;
++	if (rqstp->rq_proc)
++		*nfserrp++ = nfserr;
++
++	/* For NFSv2, additional info is never returned in case of an error. */
++	if (!(nfserr && rqstp->rq_vers == 2))
++		if (proc->pc_encode && !proc->pc_encode(rqstp, nfserrp))
++			goto out_encode_err;
++
++	nfsd_cache_update(rqstp, proc->pc_cachetype, statp + 1);
++	trace_nfsd_svc_status(rqstp, proc, nfserr);
++	return 1;
++
++out_too_large:
++	trace_nfsd_svc_too_large_err(rqstp);
++	*statp = rpc_garbage_args;
++	return 1;
++
++out_decode_err:
++	trace_nfsd_svc_decode_err(rqstp);
++	*statp = rpc_garbage_args;
++	return 1;
++
++out_update_drop:
++	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
++out_dropit:
++	trace_nfsd_svc_dropit(rqstp);
++	return 0;
++
++out_cached_reply:
++	trace_nfsd_svc_cached_reply(rqstp);
++	return 1;
++
++out_encode_err:
++	trace_nfsd_svc_encode_err(rqstp);
++	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
++	*statp = rpc_system_err;
++	return 1;
++}
++
++/**
++ * nfsd4_dispatch - Process an NFSv4 or NFSACL request
++ * @rqstp: incoming NFS request
++ * @statp: OUT: RPC accept_stat value
++ *
++ * Return values:
++ *  %0: Processing complete; do not send a Reply
++ *  %1: Processing complete; send a Reply
++ */
++int nfsd4_dispatch(struct svc_rqst *rqstp, __be32 *statp)
++{
++	const struct svc_procedure *proc = rqstp->rq_procinfo;
++	struct kvec *argv = &rqstp->rq_arg.head[0];
++	struct kvec *resv = &rqstp->rq_res.head[0];
++	__be32 nfserr, *nfserrp;
++
  	/*
- 	 * We don't want the locks code to timeout the lease for us;
-@@ -5145,7 +5145,7 @@ nfs4_open_delegation(struct svc_fh *fh, struct nfsd4_open *open,
+ 	 * Give the xdr decoder a chance to change this if it wants
+ 	 * (necessary in the NFSv4.0 compound case)
+ 	 */
+ 	rqstp->rq_cachetype = proc->pc_cachetype;
+-	/* Decode arguments */
+-	if (proc->pc_decode &&
+-	    !proc->pc_decode(rqstp, (__be32*)rqstp->rq_arg.head[0].iov_base)) {
+-		dprintk("nfsd: failed to decode arguments!\n");
+-		*statp = rpc_garbage_args;
+-		return 1;
+-	}
++	rqstp->rq_lease_breaker = NULL;
++
++	if (proc->pc_decode && !procp->pc_decode(rqstp, argv->iov_base))
++		goto out_decode_err;
  
- 	memcpy(&open->op_delegate_stateid, &dp->dl_stid.sc_stateid, sizeof(dp->dl_stid.sc_stateid));
+-	/* Check whether we have this call in the cache. */
+ 	switch (nfsd_cache_lookup(rqstp)) {
+ 	case RC_DROPIT:
+-		return 0;
++		goto out_dropit;
+ 	case RC_REPLY:
+-		return 1;
+-	case RC_DOIT:;
+-		/* do it */
++		goto out_cached_reply;
++	case RC_DOIT:
++		break;
+ 	}
  
--	trace_nfsd_deleg_open(&dp->dl_stid.sc_stateid);
-+	trace_nfsd4_deleg_open(&dp->dl_stid.sc_stateid);
- 	open->op_delegate_type = NFS4_OPEN_DELEGATE_READ;
- 	nfs4_put_stid(&dp->dl_stid);
- 	return;
-@@ -5262,7 +5262,7 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 	nfs4_open_delegation(current_fh, open, stp);
- nodeleg:
- 	status = nfs_ok;
--	trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
-+	trace_nfsd4_deleg_none(&stp->st_stid.sc_stateid);
- out:
- 	/* 4.1 client trying to upgrade/downgrade delegation? */
- 	if (open->op_delegate_type == NFS4_OPEN_DELEGATE_NONE && dp &&
-@@ -7804,7 +7804,7 @@ nfsd_recall_delegations(struct list_head *reaplist)
- 		list_del_init(&dp->dl_recall_lru);
- 		clp = dp->dl_stid.sc_client;
+-	/* need to grab the location to store the status, as
+-	 * nfsv4 does some encoding while processing 
+-	 */
+-	nfserrp = rqstp->rq_res.head[0].iov_base
+-		+ rqstp->rq_res.head[0].iov_len;
+-	rqstp->rq_res.head[0].iov_len += sizeof(__be32);
+-
+-	/* Now call the procedure handler, and encode NFS status. */
++	nfserrp = resv->iov_base + resv->iov_len;
++	resv->iov_len += sizeof(__be32);
+ 	nfserr = proc->pc_func(rqstp);
+-	nfserr = map_new_errors(rqstp->rq_vers, nfserr);
+-	if (nfserr == nfserr_dropit || test_bit(RQ_DROPME, &rqstp->rq_flags)) {
+-		dprintk("nfsd: Dropping request; may be revisited later\n");
+-		nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
+-		return 0;
+-	}
+-
+-	if (rqstp->rq_proc != 0)
++	if (test_bit(RQ_DROPME, &rqstp->rq_flags))
++		goto out_update_drop;
++	if (rqstp->rq_proc)
+ 		*nfserrp++ = nfserr;
  
--		trace_nfsd_deleg_recall(&dp->dl_stid.sc_stateid);
-+		trace_nfsd4_deleg_recall(&dp->dl_stid.sc_stateid);
+-	/* Encode result.
+-	 * For NFSv2, additional info is never returned in case of an error.
+-	 */
+-	if (!(nfserr && rqstp->rq_vers == 2)) {
+-		if (proc->pc_encode && !proc->pc_encode(rqstp, nfserrp)) {
+-			/* Failed to encode result. Release cache entry */
+-			dprintk("nfsd: failed to encode result!\n");
+-			nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
+-			*statp = rpc_system_err;
+-			return 1;
+-		}
+-	}
++	if (proc->pc_encode && !proc->pc_encode(rqstp, nfserrp))
++		goto out_encode_err;
  
- 		/*
- 		 * We skipped all entries that had a zero dl_time before,
+-	/* Store reply in cache. */
+ 	nfsd_cache_update(rqstp, rqstp->rq_cachetype, statp + 1);
+ 	return 1;
++
++out_decode_err:
++	trace_nfsd_svc_decode_err(rqstp);
++	*statp = rpc_garbage_args;
++	return 1;
++
++out_update_drop:
++	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
++out_dropit:
++	trace_nfsd_svc_dropit(rqstp);
++	return 0;
++
++out_cached_reply:
++	trace_nfsd_svc_cached_reply(rqstp);
++	return 1;
++
++out_encode_err:
++	trace_nfsd_svc_encode_err(rqstp);
++	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
++	*statp = rpc_system_err;
++	return 1;
+ }
+ 
+ int nfsd_pool_stats_open(struct inode *inode, struct file *file)
 diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 10927da9d016..53115fbc00b2 100644
+index 53115fbc00b2..50ab4a84c25f 100644
 --- a/fs/nfsd/trace.h
 +++ b/fs/nfsd/trace.h
-@@ -889,7 +889,7 @@ DECLARE_EVENT_CLASS(nfsd_stateid_class,
- )
+@@ -32,6 +32,56 @@
+ 		{ NFSD_MAY_READ_IF_EXEC,	"READ_IF_EXEC" },	\
+ 		{ NFSD_MAY_64BIT_COOKIE,	"64BIT_COOKIE" })
  
- #define DEFINE_STATEID_EVENT(name) \
--DEFINE_EVENT(nfsd_stateid_class, nfsd_##name, \
-+DEFINE_EVENT(nfsd_stateid_class, nfsd4_##name, \
- 	TP_PROTO(stateid_t *stp), \
- 	TP_ARGS(stp))
- 
-@@ -985,7 +985,7 @@ DEFINE_EVENT(nfsd_net_class, nfsd_##name, \
- DEFINE_NET_EVENT(grace_start);
- DEFINE_NET_EVENT(grace_complete);
- 
--TRACE_EVENT(nfsd_clid_inuse_err,
-+TRACE_EVENT(nfsd4_clid_inuse_err,
- 	TP_PROTO(const struct nfs4_client *clp),
- 	TP_ARGS(clp),
- 	TP_STRUCT__entry(
-@@ -1208,7 +1208,7 @@ TRACE_EVENT(nfsd_drc_mismatch,
- 		__entry->ingress)
- );
- 
--TRACE_EVENT(nfsd_cb_args,
-+TRACE_EVENT(nfsd4_cb_args,
++DECLARE_EVENT_CLASS(nfsd_simple_class,
++	TP_PROTO(
++		const struct svc_rqst *rqstp
++	),
++	TP_ARGS(rqstp),
++	TP_STRUCT__entry(
++		__field(u32, xid)
++	),
++	TP_fast_assign(
++		__entry->xid = be32_to_cpu(rqstp->rq_xid);
++	),
++	TP_printk("xid=0x%08x", __entry->xid)
++);
++
++#define DEFINE_NFSD_SIMPLE_EVENT(name)			\
++DEFINE_EVENT(nfsd_simple_class, nfsd_##name,		\
++	TP_PROTO(const struct svc_rqst *rqstp),		\
++	TP_ARGS(rqstp))
++
++DEFINE_NFSD_SIMPLE_EVENT(svc_too_large_err);
++DEFINE_NFSD_SIMPLE_EVENT(svc_decode_err);
++DEFINE_NFSD_SIMPLE_EVENT(svc_dropit);
++DEFINE_NFSD_SIMPLE_EVENT(svc_cached_reply);
++DEFINE_NFSD_SIMPLE_EVENT(svc_encode_err);
++
++TRACE_EVENT(nfsd_svc_status,
++	TP_PROTO(
++		const struct svc_rqst *rqstp,
++		const struct svc_procedure *proc,
++		__be32 status
++	),
++	TP_ARGS(rqstp, proc, status),
++	TP_STRUCT__entry(
++		__field(u32, xid)
++		__field(u32, version)
++		__field(unsigned long, status)
++		__string(procedure, rqstp->rq_procinfo->pc_name)
++	),
++	TP_fast_assign(
++		__entry->xid = be32_to_cpu(rqstp->rq_xid);
++		__entry->version = rqstp->rq_vers;
++		__entry->status = be32_to_cpu(status);
++		__assign_str(procedure, rqstp->rq_procinfo->pc_name);
++	),
++	TP_printk("xid=0x%08x version=%u procedure=%s status=%s",
++		__entry->xid, __entry->version, __get_str(procedure),
++		show_nfs_status(__entry->status)
++	)
++);
++
+ TRACE_EVENT(nfsd_access,
  	TP_PROTO(
- 		const struct nfs4_client *clp,
- 		const struct nfs4_cb_conn *conn
-@@ -1234,7 +1234,7 @@ TRACE_EVENT(nfsd_cb_args,
- 		__entry->addr, __entry->prog, __entry->ident)
- );
- 
--TRACE_EVENT(nfsd_cb_nodelegs,
-+TRACE_EVENT(nfsd4_cb_nodelegs,
- 	TP_PROTO(const struct nfs4_client *clp),
- 	TP_ARGS(clp),
- 	TP_STRUCT__entry(
-@@ -1282,7 +1282,7 @@ DECLARE_EVENT_CLASS(nfsd_cb_class,
- );
- 
- #define DEFINE_NFSD_CB_EVENT(name)			\
--DEFINE_EVENT(nfsd_cb_class, nfsd_cb_##name,		\
-+DEFINE_EVENT(nfsd_cb_class, nfsd4_cb_##name,		\
- 	TP_PROTO(const struct nfs4_client *clp),	\
- 	TP_ARGS(clp))
- 
-@@ -1290,7 +1290,7 @@ DEFINE_NFSD_CB_EVENT(setup);
- DEFINE_NFSD_CB_EVENT(state);
- DEFINE_NFSD_CB_EVENT(shutdown);
- 
--TRACE_EVENT(nfsd_cb_setup_err,
-+TRACE_EVENT(nfsd4_cb_setup_err,
- 	TP_PROTO(
- 		const struct nfs4_client *clp,
- 		long error
-@@ -1313,7 +1313,7 @@ TRACE_EVENT(nfsd_cb_setup_err,
- 		__entry->addr, __entry->cl_boot, __entry->cl_id, __entry->error)
- );
- 
--TRACE_EVENT(nfsd_cb_work,
-+TRACE_EVENT(nfsd4_cb_work,
- 	TP_PROTO(
- 		const struct nfs4_client *clp,
- 		const char *procedure
-@@ -1337,7 +1337,7 @@ TRACE_EVENT(nfsd_cb_work,
- 		__get_str(procedure))
- );
- 
--TRACE_EVENT(nfsd_cb_done,
-+TRACE_EVENT(nfsd4_cb_done,
- 	TP_PROTO(
- 		const struct nfs4_client *clp,
- 		int status
+ 		const struct svc_rqst *rqstp,
 
 
