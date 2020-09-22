@@ -2,162 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FD9427438C
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Sep 2020 15:52:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A02572743C9
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Sep 2020 16:03:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgIVNwb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 22 Sep 2020 09:52:31 -0400
-Received: from mail-bn8nam11on2094.outbound.protection.outlook.com ([40.107.236.94]:39125
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726667AbgIVNwa (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 22 Sep 2020 09:52:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P+CaSgPBxcbKU8/godpEzpYbMeWmKayKTk9a7mkXBMdtEVCMJMs3ic/4zj3G39duuSVSG4GFe4i6bJpg8tNf5U5sDD0wLkLAmFdnp4000585vxDm2JmcLnPW6FF9yVkk43E+RE+4cyZ+29Dlh75MlXlAukxG1/m2oD4iP1R8HPbjUJum/Y6BGFc0CSxGI+MNfW857EWJ2rn6i4CjeQAA0UCCNtJdqgUl4+sBU1aNZoB5wB/dsujK8nQTgXkz3d8RkTMjH0LIGObCqLnHrfd2weTmcE3yQitmntE1cAQQDTfnw3Y3rcwT/NaNFkezpZLVP7Fh/NxZF1UOew+h6CbYjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SC/dLiTEED5Bd8hgk5gn3heS4LkeVXUj3pknq5xfCw0=;
- b=HjszXd0TlMKka5qMQOcxn/1eoWm0Wje60rsC69vDIjmceGtISSUHNVPfiD1h8aM5C+DIZrAr1NKMePB3xwYkqQ+EMy6CVBO7pC/ZGFulvjgPKl4IOBCUZ9ILgeJmQ87SxDRbvaEOok16qO1mxcptnbNiUHutRbT+h+jJQ+DqNYC4LrznJ584N/ormPXpbiq7pdtWEU0IrN/yY8aPQtiazPdiViEoOdBK+1B5DYs3WwHJxfKkZnyL05G+4uk7WQmfTnZb4pCCn9LPt/q4lm4wzAcC8DeNGY6MAHS1joqmLu+s4KVFnxGKJmBqokxjSKnK4Jnk6z9alNy0rnKTU6Fmtw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SC/dLiTEED5Bd8hgk5gn3heS4LkeVXUj3pknq5xfCw0=;
- b=Pp692nilKQFjJjxKbZFc4tZTQgjeuyX+FqwCOHNi5FJLiA9a7xYDu7kFO4qJNZAk0Dz12fYDoPYi7lATEhzibON8kCERdoO4ynASmRcr4W31jwJjNyorVuaIQBeLYi7eyusf2obtxyx6c3HQ/GNry921hQ9ybvYlJLItujww3GE=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB3326.namprd13.prod.outlook.com (2603:10b6:208:15a::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.8; Tue, 22 Sep
- 2020 13:52:26 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e8a1:6acc:70f0:ef39]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e8a1:6acc:70f0:ef39%6]) with mapi id 15.20.3412.020; Tue, 22 Sep 2020
- 13:52:26 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "daire@dneg.com" <daire@dneg.com>
-CC:     "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>
-Subject: Re: Adventures in NFS re-exporting
-Thread-Topic: Adventures in NFS re-exporting
-Thread-Index: fNDm/l4o9cYx5Rz5g0S1EO4zMAtIR1/IOmk+iFWQowA=
-Date:   Tue, 22 Sep 2020 13:52:25 +0000
-Message-ID: <ecd78fe32a1d5a3c6cf3c5a77b1841293b3f5cb1.camel@hammerspace.com>
-References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
-         <1155061727.42788071.1600777874179.JavaMail.zimbra@dneg.com>
-In-Reply-To: <1155061727.42788071.1600777874179.JavaMail.zimbra@dneg.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2d960834-834b-4b18-718a-08d85efebd5a
-x-ms-traffictypediagnostic: MN2PR13MB3326:
-x-microsoft-antispam-prvs: <MN2PR13MB33268A3DD71CE85DE43E5FF4B83B0@MN2PR13MB3326.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: I9YlHPxJlaDgn5VTZ01fSl7MWbogWeevH9P2s7QaZm0K6sRlmYUAOhCCeV/MJDMTiPyFnK8tUkTsSu8p8PTs9iCuwNdW6R2bTEF4FGN85XMDvLwgjnRfUC3swz7fEnVbUezYzmydu3/KPGtkXvxSP3HdvcZm6IfKJ7Tgokhr1f0MoD2hIn916lCBFt77C/zeSGAdSQ5eOyuF6OshBSBe0Jk1leZBElGddu2+u+9yjT/DvD1DfooVA/bsDFnOzrE007I7+3OrA8tdpwIaZeYZqARUvd/CtumtwH4Gl588HDwoBo1pV0eT1yeHFZnSiodFGmiwZXNjQB5lYtVgcNnJUGdIXUXlQVjsQbro1MA/bjETiiclUkecsylCVhu6DKRR
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(376002)(346002)(39840400004)(366004)(396003)(66446008)(66946007)(91956017)(6512007)(8936002)(186003)(6486002)(26005)(8676002)(76116006)(316002)(5660300002)(2906002)(478600001)(66476007)(64756008)(66556008)(2616005)(110136005)(83380400001)(53546011)(6506007)(71200400001)(86362001)(4326008)(36756003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: eVWbm2Xl7gj6BpVEk8P80pP8Gz/7XA0NJERM5veIXIL8nxjdecQ3659Ea4JvYu9l4RYr8Zw2mwdd/ABnqJsFfxPwcYx8ETahLLSblp6BybpaG55juqS7avY5nBPNPjuLhfanOqvSkIfvUBAQ4DMDAo67TssYZDI/vkttUgBYGwGISXAfFUZVZxH90eIHDiK6fRvsMtEecj5K8YMXsRlGwYpO7nEMtoM7niBuG2FgcepTdy8soLggPqzIhAAqVyKQD6/zrG8aiD3ey8VpAT8K1YaBS9C9kiZnwcbBrbRooFXKh7Kdw4AmxoSOVWLYinVGA281Z5gIkRCS9OJ96y78ishLOaLRqFDoy7NSY79GM0y+e+EHecHoXTCsqM53cvUIiLSykp69Dch9PNf4FRRFzQRUDdnpKABTBJTE4MWnP/XU+eQXxNaobfQh6m4LSgpN18Xyzwln7RoHrgSRIe8L9sIcj8PrQ8YZ3VdDOuOV5lIlj7/CCiYJ3S/VhduoyLFfXBqs1/wqZ2hgza6hYgyz4fp0ujFC1/FffQsr7WKMsXXaavl7LQ+UB9GQ5wpHrGTMl+xcqzOPsGdAz8ao3wBvYak1Dh0zNiK3da1zHY864jEfbkHOO2qAEKN520iNioyJ9rHFGwUqgQrUIy8x6svDRQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DDD5AAE8460C654A8119C3E9E01651BE@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726609AbgIVODW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 22 Sep 2020 10:03:22 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:43258 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbgIVODV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 22 Sep 2020 10:03:21 -0400
+Received: by mail-ej1-f67.google.com with SMTP id o8so23030536ejb.10
+        for <linux-nfs@vger.kernel.org>; Tue, 22 Sep 2020 07:03:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5m3K2VwtK5Gbjy4UVPinYuo2D4zLEmK8B0scDz5TX8Y=;
+        b=PchaNe7Wgtus0I4xyH3VhSmW2R29/HoozEY0Mhnmb20k4T454KfG62drBXFJF//i33
+         47lzmOerk9hsdhyFPnvlg90FPphrfdDK5gJZ8q1BFwiamjJEgoPTbjhPM0bOvz2DtxYn
+         KoAJdWMtV8Wt8sgYFQFx2+bEvbFCFjiZxOUiJVXjhuDAWR3PwBhROk+ln9o/PwZuqvMX
+         peVOAum7+QYEFA/d6zwLKUg7mIRqEYQmL8SwuGhL++l8SqOOTQILL0iyJnmv/2qPp588
+         Bt03mJKecGK3hH2JmwDJFZvHIsCSjACDedeI/mh3Bxe7VlNVddJ9EzGJq1VsVxlFJpKd
+         u/MQ==
+X-Gm-Message-State: AOAM531dDXl58m/xfvMc6zGQGPKbhPKUXn2wjJ2d8wm3klHaj/c0NoLo
+        805qIVzHhK6r2t+3bQ85U9oNF+7p04cNqLTn+76hb5CsUQU=
+X-Google-Smtp-Source: ABdhPJzFl1B3ODwDgTTOLBP8al7WVPxh19BhOEWBgIL4DXSEgWLXvj7bSsK+JHJ4lYS40uYxizrIRfoNfB3YmkUXlZc=
+X-Received: by 2002:a17:906:3ca2:: with SMTP id b2mr5227232ejh.460.1600783399583;
+ Tue, 22 Sep 2020 07:03:19 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d960834-834b-4b18-718a-08d85efebd5a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Sep 2020 13:52:26.0448
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YFnL6RWd4lfQxxMYz1PndGL9+tvGdAvDo4Pfyl4NUVfSh32S6uGzI64oI9E2jmHuM/OKG2NJfoRQ1PlUsasCBw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3326
+References: <5a7f6bbf4cf2038634a572f42ad80e95a8d0ae9c.1600686204.git.bcodding@redhat.com>
+In-Reply-To: <5a7f6bbf4cf2038634a572f42ad80e95a8d0ae9c.1600686204.git.bcodding@redhat.com>
+From:   Anna Schumaker <anna.schumaker@netapp.com>
+Date:   Tue, 22 Sep 2020 10:03:03 -0400
+Message-ID: <CAFX2JfmeOm+-cpq6aTGnBNZLmAOwp8dykTWe7L6OU3mmnSw6rw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] NFSv4: Fix a livelock when CLOSE pre-emptively bumps
+ state sequence
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA5LTIyIGF0IDEzOjMxICswMTAwLCBEYWlyZSBCeXJuZSB3cm90ZToNCj4g
-SGksIA0KPiANCj4gSSBqdXN0IHRob3VnaHQgSSdkIGZsZXNoIG91dCB0aGUgb3RoZXIgdHdvIGlz
-c3VlcyBJIGhhdmUgZm91bmQgd2l0aA0KPiByZS1leHBvcnRpbmcgdGhhdCBhcmUgdWx0aW1hdGVs
-eSByZXNwb25zaWJsZSBmb3IgdGhlIGJpZ2dlc3QNCj4gcGVyZm9ybWFuY2UgYm90dGxlbmVja3Mu
-IEFuZCBib3RoIG9mIHRoZW0gcmV2b2x2ZSBhcm91bmQgdGhlIGNhY2hpbmcNCj4gb2YgbWV0YWRh
-dGEgZmlsZSBsb29rdXBzIGluIHRoZSBORlMgY2xpZW50Lg0KPiANCj4gRXNwZWNpYWxseSBmb3Ig
-dGhlIGNhc2Ugd2hlcmUgd2UgYXJlIHJlLWV4cG9ydGluZyBhIHNlcnZlciBtYW55DQo+IG1pbGxp
-c2Vjb25kcyBhd2F5IChpLmUuIG9uLXByZW1pc2UgLT4gY2xvdWQpLCB3ZSB3YW50IHRvIGJlIGFi
-bGUgdG8NCj4gY29udHJvbCBob3cgbXVjaCB0aGUgY2xpZW50IGNhY2hlcyBtZXRhZGF0YSBhbmQg
-ZmlsZSBkYXRhIHNvIHRoYXQNCj4gaXQncyBtYW55IExBTiBjbGllbnRzIGFsbCBiZW5lZml0IGZy
-b20gdGhlIHJlLWV4cG9ydCBzZXJ2ZXIgb25seQ0KPiBoYXZpbmcgdG8gZG8gdGhlIFdBTiBsb29r
-dXBzIG9uY2UgKHdpdGhpbiBhIHNwZWNpZmllZCBjb2hlcmVuY3kNCj4gdGltZSkuDQo+IA0KPiBL
-ZWVwaW5nIHRoZSBmaWxlIGRhdGEgaW4gdGhlIHZmcyBwYWdlIGNhY2hlIG9yIG9uIGRpc2sgdXNp
-bmcNCj4gZnNjYWNoZS9jYWNoZWZpbGVzIGlzIGZhaXJseSBzdHJhaWdodGZvcndhcmQsIGJ1dCBr
-ZWVwaW5nIHRoZQ0KPiBtZXRhZGF0YSBjYWNoZWQgaXMgcGFydGljdWxhcmx5IGRpZmZpY3VsdC4g
-QW5kIHdpdGhvdXQgdGhlIGNhY2hlZA0KPiBtZXRhZGF0YSB3ZSBpbnRyb2R1Y2UgbG9uZyBkZWxh
-eXMgYmVmb3JlIHdlIGNhbiBzZXJ2ZSB0aGUgYWxyZWFkeQ0KPiBwcmVzZW50IGFuZCBsb2NhbGx5
-IGNhY2hlZCBmaWxlIGRhdGEgdG8gbWFueSB3YWl0aW5nIGNsaWVudHMuDQo+IA0KPiAtLS0tLSBP
-biA3IFNlcCwgMjAyMCwgYXQgMTg6MzEsIERhaXJlIEJ5cm5lIGRhaXJlQGRuZWcuY29tIHdyb3Rl
-Og0KPiA+IDIpIElmIHdlIGNhY2hlIG1ldGFkYXRhIG9uIHRoZSByZS1leHBvcnQgc2VydmVyIHVz
-aW5nDQo+ID4gYWN0aW1lbz0zNjAwLG5vY3RvIHdlIGNhbg0KPiA+IGN1dCB0aGUgbmV0d29yayBw
-YWNrZXRzIGJhY2sgdG8gdGhlIG9yaWdpbiBzZXJ2ZXIgdG8gemVybyBmb3INCj4gPiByZXBlYXRl
-ZCBsb29rdXBzLg0KPiA+IEhvd2V2ZXIsIGlmIGEgY2xpZW50IG9mIHRoZSByZS1leHBvcnQgc2Vy
-dmVyIHdhbGtzIHBhdGhzIGFuZCBtZW1vcnkNCj4gPiBtYXBzIHRob3NlDQo+ID4gZmlsZXMgKGku
-ZS4gbG9hZGluZyBhbiBhcHBsaWNhdGlvbiksIHRoZSByZS1leHBvcnQgc2VydmVyIHN0YXJ0cw0K
-PiA+IGlzc3VpbmcNCj4gPiB1bmV4cGVjdGVkIGNhbGxzIGJhY2sgdG8gdGhlIG9yaWdpbiBzZXJ2
-ZXIgYWdhaW4sDQo+ID4gaWdub3JpbmcvaW52YWxpZGF0aW5nIHRoZQ0KPiA+IHJlLWV4cG9ydCBz
-ZXJ2ZXIncyBORlMgY2xpZW50IGNhY2hlLiBXZSB3b3JrZWQgYXJvdW5kIHRoaXMgdGhpcyBieQ0K
-PiA+IHBhdGNoaW5nIGFuDQo+ID4gaW5vZGUvaXZlcnNpb24gdmFsaWRpdHkgY2hlY2sgaW4gaW5v
-ZGUuYyBzbyB0aGF0IHRoZSBORlMgY2xpZW50DQo+ID4gY2FjaGUgb24gdGhlDQo+ID4gcmUtZXhw
-b3J0IHNlcnZlciBpcyB1c2VkLiBJJ20gbm90IHN1cmUgYWJvdXQgdGhlIGNvcnJlY3RuZXNzIG9m
-DQo+ID4gdGhpcyBwYXRjaCBidXQNCj4gPiBpdCB3b3JrcyBmb3Igb3VyIGNvcm5lciBjYXNlLg0K
-PiANCj4gSWYgd2UgdXNlIGFjdGltZW89MzYwMCxub2N0byAoc2F5KSB0byBtb3VudCBhIHJlbW90
-ZSBzb2Z0d2FyZSB2b2x1bWUNCj4gb24gdGhlIHJlLWV4cG9ydCBzZXJ2ZXIsIHdlIGNhbiBzdWNj
-ZXNzZnVsbHkgY2FjaGUgdGhlIGxvYWRpbmcgb2YNCj4gYXBwbGljYXRpb25zIGFuZCB3YWxraW5n
-IG9mIHBhdGhzIGRpcmVjdGx5IG9uIHRoZSByZS1leHBvcnQgc2VydmVyDQo+IHN1Y2ggdGhhdCBh
-ZnRlciBhIGNvdXBsZSBvZiBydW5zLCB0aGVyZSBhcmUgcHJhY3RpY2FsbHkgemVybyBwYWNrZXRz
-DQo+IGJhY2sgdG8gdGhlIG9yaWdpbmF0aW5nIE5GUyBzZXJ2ZXIgKGdyZWF0ISkuIEJ1dCwgaWYg
-d2UgdGhlbiBkbyB0aGUNCj4gc2FtZSB0aGluZyBvbiBhIGNsaWVudCB3aGljaCBpcyBtb3VudGlu
-ZyB0aGF0IHJlLWV4cG9ydCBzZXJ2ZXIsIHRoZQ0KPiByZS1leHBvcnQgc2VydmVyIG5vdyBzdGFy
-dHMgaXNzdWluZyBsb3RzIG9mIGNhbGxzIGJhY2sgdG8gdGhlDQo+IG9yaWdpbmF0aW5nIHNlcnZl
-ciBhbmQgaW52YWxpZGF0aW5nIGl0J3MgY2xpZW50IGNhY2hlIChiYWQhKS4NCj4gDQo+IEknbSBu
-b3QgZXhhY3RseSBzdXJlIHdoeSwgYnV0IHRoZSBpdmVyc2lvbiBvZiB0aGUgaW5vZGUgZ2V0cyBj
-aGFuZ2VkDQo+IGxvY2FsbHkgKGR1ZSB0byBhdGltZSBtb2RpZmljYXRpb24/KSBtb3N0IGxpa2Vs
-eSB2aWEgaW52b2NhdGlvbiBvZg0KPiBtZXRob2QgaW5vZGVfaW5jX2l2ZXJzaW9uX3Jhdy4gRWFj
-aCB0aW1lIGl0IGdldHMgaW5jcmVtZW50ZWQgdGhlDQo+IGZvbGxvd2luZyBjYWxsIHRvIHZhbGlk
-YXRlIGF0dHJpYnV0ZXMgZGV0ZWN0cyBjaGFuZ2VzIGNhdXNpbmcgaXQgdG8NCj4gYmUgcmVsb2Fk
-ZWQgZnJvbSB0aGUgb3JpZ2luYXRpbmcgc2VydmVyLg0KPiANCj4gVGhpcyBwYXRjaCBoZWxwcyB0
-byBhdm9pZCB0aGlzIHdoZW4gYXBwbGllZCB0byB0aGUgcmUtZXhwb3J0IHNlcnZlcg0KPiBidXQg
-dGhlcmUgbWF5IGJlIG90aGVyIHBsYWNlcyB3aGVyZSB0aGlzIGhhcHBlbnMgdG9vLiBJIGFjY2Vw
-dCB0aGF0DQo+IHRoaXMgcGF0Y2ggaXMgcHJvYmFibHkgbm90IHRoZSByaWdodC9nZW5lcmFsIHdh
-eSB0byBkbyB0aGlzLCBidXQgaXQNCj4gaGVscHMgdG8gaGlnaGxpZ2h0IHRoZSBpc3N1ZSB3aGVu
-IHJlLWV4cG9ydGluZyBhbmQgaXQgd29ya3Mgd2VsbCBmb3INCj4gb3VyIHVzZSBjYXNlOg0KPiAN
-Cj4gLS0tIGxpbnV4LTUuNS4wLTEuZWw3Lng4Nl82NC9mcy9uZnMvaW5vZGUuYyAgICAgMjAyMC0w
-MS0yNw0KPiAwMDoyMzowMy4wMDAwMDAwMDAgKzAwMDANCj4gKysrIG5ldy9mcy9uZnMvaW5vZGUu
-YyAgMjAyMC0wMi0xMyAxNjozMjowOS4wMTMwNTUwNzQgKzAwMDANCj4gQEAgLTE4NjksNyArMTg2
-OSw3IEBADQo+ICANCj4gICAgICAgICAvKiBNb3JlIGNhY2hlIGNvbnNpc3RlbmN5IGNoZWNrcyAq
-Lw0KPiAgICAgICAgIGlmIChmYXR0ci0+dmFsaWQgJiBORlNfQVRUUl9GQVRUUl9DSEFOR0UpIHsN
-Cj4gLSAgICAgICAgICAgICAgIGlmICghaW5vZGVfZXFfaXZlcnNpb25fcmF3KGlub2RlLCBmYXR0
-ci0NCj4gPmNoYW5nZV9hdHRyKSkgew0KPiArICAgICAgICAgICAgICAgaWYgKGlub2RlX3BlZWtf
-aXZlcnNpb25fcmF3KGlub2RlKSA8IGZhdHRyLQ0KPiA+Y2hhbmdlX2F0dHIpIHsNCj4gICAgICAg
-ICAgICAgICAgICAgICAgICAgLyogQ291bGQgaXQgYmUgYSByYWNlIHdpdGggd3JpdGViYWNrPyAq
-Lw0KPiAgICAgICAgICAgICAgICAgICAgICAgICBpZiAoIShoYXZlX3dyaXRlcnMgfHwgaGF2ZV9k
-ZWxlZ2F0aW9uKSkgew0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludmFsaWQg
-fD0gTkZTX0lOT19JTlZBTElEX0RBVEENCg0KDQpUaGVyZSBpcyBub3RoaW5nIGluIHRoZSBiYXNl
-IE5GU3Y0LCBhbmQgTkZTdjQuMSBzcGVjcyB0aGF0IGFsbG93IHlvdSB0bw0KbWFrZSBhc3N1bXB0
-aW9ucyBhYm91dCBob3cgdGhlIGNoYW5nZSBhdHRyaWJ1dGUgYmVoYXZlcyBvdmVyIHRpbWUuDQoN
-ClRoZSBvbmx5IHNhZmUgd2F5IHRvIGRvIHNvbWV0aGluZyBsaWtlIHRoZSBhYm92ZSBpcyBpZiB0
-aGUgc2VydmVyDQpzdXBwb3J0cyBORlN2NC4yIGFuZCBhbHNvIGFkdmVydGlzZXMgc3VwcG9ydCBm
-b3IgdGhlICdjaGFuZ2VfYXR0cl90eXBlJw0KYXR0cmlidXRlLiBJbiB0aGF0IGNhc2UsIHlvdSBj
-YW4gY2hlY2sgYXQgbW91bnQgdGltZSBmb3Igd2hldGhlciBvciBub3QNCnRoZSBjaGFuZ2UgYXR0
-cmlidXRlIG9uIHRoaXMgZmlsZXN5c3RlbSBpcyBvbmUgb2YgdGhlIG1vbm90b25pYyB0eXBlcw0K
-d2hpY2ggd291bGQgYWxsb3cgdGhlIGFib3ZlIG9wdGltaXNhdGlvbi4NCg0KDQotLSANClRyb25k
-IE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJv
-bmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+Hi Ben,
+
+On Mon, Sep 21, 2020 at 7:05 AM Benjamin Coddington <bcodding@redhat.com> wrote:
+>
+> Since commit 0e0cb35b417f ("NFSv4: Handle NFS4ERR_OLD_STATEID in
+> CLOSE/OPEN_DOWNGRADE") the following livelock may occur if a CLOSE races
+> with the update of the nfs_state:
+>
+> Process 1         Process 2        Server
+> =========         =========        ========
+>  OPEN file
+>                   OPEN file
+>                                    Reply OPEN (1)
+>                                    Reply OPEN (2)
+>  Update state (1)
+>  CLOSE file (1)
+>                                    Reply OLD_STATEID (1)
+>  CLOSE file (2)
+>                                    Reply CLOSE (-1)
+>                   Update state (2)
+>                   wait for state change
+>  OPEN file
+>                   wake
+>  CLOSE file
+>  OPEN file
+>                   wake
+>  CLOSE file
+>  ...
+>                   ...
+>
+> As long as the first process continues updating state, the second process
+> will fail to exit the loop in nfs_set_open_stateid_locked().  This livelock
+> has been observed in generic/168.
+
+Once I apply this patch I have trouble with generic/478 doing lock reclaim:
+
+[  937.460505] run fstests generic/478 at 2020-09-22 09:59:14
+[  937.607990] NFS: __nfs4_reclaim_open_state: Lock reclaim failed!
+
+And the test just hangs until I kill it.
+
+Just thought you should know!
+Anna
+
+>
+> Fix this by detecting the case in nfs_need_update_open_stateid() and
+> then exit the loop if:
+>  - the state is NFS_OPEN_STATE, and
+>  - the stateid sequence is > 1, and
+>  - the stateid doesn't match the current open stateid
+>
+> Fixes: 0e0cb35b417f ("NFSv4: Handle NFS4ERR_OLD_STATEID in CLOSE/OPEN_DOWNGRADE")
+> Cc: stable@vger.kernel.org # v5.4+
+> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+> ---
+>  fs/nfs/nfs4proc.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 45e0585e0667..9ced7a62c05e 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -1570,10 +1570,14 @@ static bool nfs_need_update_open_stateid(struct nfs4_state *state,
+>  {
+>         if (test_bit(NFS_OPEN_STATE, &state->flags) == 0 ||
+>             !nfs4_stateid_match_other(stateid, &state->open_stateid)) {
+> -               if (stateid->seqid == cpu_to_be32(1))
+> +               if (stateid->seqid == cpu_to_be32(1)) {
+>                         nfs_state_log_update_open_stateid(state);
+> -               else
+> -                       set_bit(NFS_STATE_CHANGE_WAIT, &state->flags);
+> +               } else {
+> +                       if (!nfs4_stateid_match_other(stateid, &state->open_stateid))
+> +                               return false;
+> +                       else
+> +                               set_bit(NFS_STATE_CHANGE_WAIT, &state->flags);
+> +               }
+>                 return true;
+>         }
+>
+> --
+> 2.20.1
+>
