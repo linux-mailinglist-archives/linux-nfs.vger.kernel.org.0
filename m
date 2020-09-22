@@ -2,152 +2,162 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53E14274216
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Sep 2020 14:31:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FD9427438C
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Sep 2020 15:52:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgIVMbT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 22 Sep 2020 08:31:19 -0400
-Received: from natter.dneg.com ([193.203.89.68]:33150 "EHLO natter.dneg.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbgIVMbT (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 22 Sep 2020 08:31:19 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by natter.dneg.com (Postfix) with ESMTP id 148635E6ABF9;
-        Tue, 22 Sep 2020 13:31:16 +0100 (BST)
-X-Virus-Scanned: amavisd-new at mx-dneg
-Received: from natter.dneg.com ([127.0.0.1])
-        by localhost (natter.dneg.com [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id 6LO8-9Iu2dk2; Tue, 22 Sep 2020 13:31:15 +0100 (BST)
-Received: from zrozimbrai.dneg.com (zrozimbrai.dneg.com [10.11.20.12])
-        by natter.dneg.com (Postfix) with ESMTPS id E22455E6A50C;
-        Tue, 22 Sep 2020 13:31:15 +0100 (BST)
-Received: from localhost (localhost [127.0.0.1])
-        by zrozimbrai.dneg.com (Postfix) with ESMTP id CE969814BA89;
-        Tue, 22 Sep 2020 13:31:12 +0100 (BST)
-Received: from zrozimbrai.dneg.com ([127.0.0.1])
-        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id wwkA6G5Y0ZBX; Tue, 22 Sep 2020 13:31:12 +0100 (BST)
-Received: from localhost (localhost [127.0.0.1])
-        by zrozimbrai.dneg.com (Postfix) with ESMTP id 5C830814BA9D;
-        Tue, 22 Sep 2020 13:31:12 +0100 (BST)
-X-Virus-Scanned: amavisd-new at zimbra-dneg
-Received: from zrozimbrai.dneg.com ([127.0.0.1])
-        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id x8peC81ZtDnG; Tue, 22 Sep 2020 13:31:12 +0100 (BST)
-Received: from zrozimbra1.dneg.com (zrozimbra1.dneg.com [10.11.16.16])
-        by zrozimbrai.dneg.com (Postfix) with ESMTP id 4BE35814C2CB;
-        Tue, 22 Sep 2020 13:31:11 +0100 (BST)
-Date:   Tue, 22 Sep 2020 13:31:14 +0100 (BST)
-From:   Daire Byrne <daire@dneg.com>
-To:     linux-nfs <linux-nfs@vger.kernel.org>
-Cc:     linux-cachefs <linux-cachefs@redhat.com>
-Message-ID: <1155061727.42788071.1600777874179.JavaMail.zimbra@dneg.com>
-In-Reply-To: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
-References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
+        id S1726604AbgIVNwb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 22 Sep 2020 09:52:31 -0400
+Received: from mail-bn8nam11on2094.outbound.protection.outlook.com ([40.107.236.94]:39125
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726667AbgIVNwa (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 22 Sep 2020 09:52:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P+CaSgPBxcbKU8/godpEzpYbMeWmKayKTk9a7mkXBMdtEVCMJMs3ic/4zj3G39duuSVSG4GFe4i6bJpg8tNf5U5sDD0wLkLAmFdnp4000585vxDm2JmcLnPW6FF9yVkk43E+RE+4cyZ+29Dlh75MlXlAukxG1/m2oD4iP1R8HPbjUJum/Y6BGFc0CSxGI+MNfW857EWJ2rn6i4CjeQAA0UCCNtJdqgUl4+sBU1aNZoB5wB/dsujK8nQTgXkz3d8RkTMjH0LIGObCqLnHrfd2weTmcE3yQitmntE1cAQQDTfnw3Y3rcwT/NaNFkezpZLVP7Fh/NxZF1UOew+h6CbYjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SC/dLiTEED5Bd8hgk5gn3heS4LkeVXUj3pknq5xfCw0=;
+ b=HjszXd0TlMKka5qMQOcxn/1eoWm0Wje60rsC69vDIjmceGtISSUHNVPfiD1h8aM5C+DIZrAr1NKMePB3xwYkqQ+EMy6CVBO7pC/ZGFulvjgPKl4IOBCUZ9ILgeJmQ87SxDRbvaEOok16qO1mxcptnbNiUHutRbT+h+jJQ+DqNYC4LrznJ584N/ormPXpbiq7pdtWEU0IrN/yY8aPQtiazPdiViEoOdBK+1B5DYs3WwHJxfKkZnyL05G+4uk7WQmfTnZb4pCCn9LPt/q4lm4wzAcC8DeNGY6MAHS1joqmLu+s4KVFnxGKJmBqokxjSKnK4Jnk6z9alNy0rnKTU6Fmtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SC/dLiTEED5Bd8hgk5gn3heS4LkeVXUj3pknq5xfCw0=;
+ b=Pp692nilKQFjJjxKbZFc4tZTQgjeuyX+FqwCOHNi5FJLiA9a7xYDu7kFO4qJNZAk0Dz12fYDoPYi7lATEhzibON8kCERdoO4ynASmRcr4W31jwJjNyorVuaIQBeLYi7eyusf2obtxyx6c3HQ/GNry921hQ9ybvYlJLItujww3GE=
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
+ by MN2PR13MB3326.namprd13.prod.outlook.com (2603:10b6:208:15a::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.8; Tue, 22 Sep
+ 2020 13:52:26 +0000
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e8a1:6acc:70f0:ef39]) by MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e8a1:6acc:70f0:ef39%6]) with mapi id 15.20.3412.020; Tue, 22 Sep 2020
+ 13:52:26 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "daire@dneg.com" <daire@dneg.com>
+CC:     "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>
 Subject: Re: Adventures in NFS re-exporting
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.7.11_GA_1854 (ZimbraWebClient - GC78 (Linux)/8.7.11_GA_1854)
 Thread-Topic: Adventures in NFS re-exporting
-Thread-Index: fNDm/l4o9cYx5Rz5g0S1EO4zMAtIR1/IOmk+
+Thread-Index: fNDm/l4o9cYx5Rz5g0S1EO4zMAtIR1/IOmk+iFWQowA=
+Date:   Tue, 22 Sep 2020 13:52:25 +0000
+Message-ID: <ecd78fe32a1d5a3c6cf3c5a77b1841293b3f5cb1.camel@hammerspace.com>
+References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
+         <1155061727.42788071.1600777874179.JavaMail.zimbra@dneg.com>
+In-Reply-To: <1155061727.42788071.1600777874179.JavaMail.zimbra@dneg.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2d960834-834b-4b18-718a-08d85efebd5a
+x-ms-traffictypediagnostic: MN2PR13MB3326:
+x-microsoft-antispam-prvs: <MN2PR13MB33268A3DD71CE85DE43E5FF4B83B0@MN2PR13MB3326.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: I9YlHPxJlaDgn5VTZ01fSl7MWbogWeevH9P2s7QaZm0K6sRlmYUAOhCCeV/MJDMTiPyFnK8tUkTsSu8p8PTs9iCuwNdW6R2bTEF4FGN85XMDvLwgjnRfUC3swz7fEnVbUezYzmydu3/KPGtkXvxSP3HdvcZm6IfKJ7Tgokhr1f0MoD2hIn916lCBFt77C/zeSGAdSQ5eOyuF6OshBSBe0Jk1leZBElGddu2+u+9yjT/DvD1DfooVA/bsDFnOzrE007I7+3OrA8tdpwIaZeYZqARUvd/CtumtwH4Gl588HDwoBo1pV0eT1yeHFZnSiodFGmiwZXNjQB5lYtVgcNnJUGdIXUXlQVjsQbro1MA/bjETiiclUkecsylCVhu6DKRR
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(376002)(346002)(39840400004)(366004)(396003)(66446008)(66946007)(91956017)(6512007)(8936002)(186003)(6486002)(26005)(8676002)(76116006)(316002)(5660300002)(2906002)(478600001)(66476007)(64756008)(66556008)(2616005)(110136005)(83380400001)(53546011)(6506007)(71200400001)(86362001)(4326008)(36756003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: eVWbm2Xl7gj6BpVEk8P80pP8Gz/7XA0NJERM5veIXIL8nxjdecQ3659Ea4JvYu9l4RYr8Zw2mwdd/ABnqJsFfxPwcYx8ETahLLSblp6BybpaG55juqS7avY5nBPNPjuLhfanOqvSkIfvUBAQ4DMDAo67TssYZDI/vkttUgBYGwGISXAfFUZVZxH90eIHDiK6fRvsMtEecj5K8YMXsRlGwYpO7nEMtoM7niBuG2FgcepTdy8soLggPqzIhAAqVyKQD6/zrG8aiD3ey8VpAT8K1YaBS9C9kiZnwcbBrbRooFXKh7Kdw4AmxoSOVWLYinVGA281Z5gIkRCS9OJ96y78ishLOaLRqFDoy7NSY79GM0y+e+EHecHoXTCsqM53cvUIiLSykp69Dch9PNf4FRRFzQRUDdnpKABTBJTE4MWnP/XU+eQXxNaobfQh6m4LSgpN18Xyzwln7RoHrgSRIe8L9sIcj8PrQ8YZ3VdDOuOV5lIlj7/CCiYJ3S/VhduoyLFfXBqs1/wqZ2hgza6hYgyz4fp0ujFC1/FffQsr7WKMsXXaavl7LQ+UB9GQ5wpHrGTMl+xcqzOPsGdAz8ao3wBvYak1Dh0zNiK3da1zHY864jEfbkHOO2qAEKN520iNioyJ9rHFGwUqgQrUIy8x6svDRQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DDD5AAE8460C654A8119C3E9E01651BE@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d960834-834b-4b18-718a-08d85efebd5a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Sep 2020 13:52:26.0448
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YFnL6RWd4lfQxxMYz1PndGL9+tvGdAvDo4Pfyl4NUVfSh32S6uGzI64oI9E2jmHuM/OKG2NJfoRQ1PlUsasCBw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3326
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi, 
-
-I just thought I'd flesh out the other two issues I have found with re-exporting that are ultimately responsible for the biggest performance bottlenecks. And both of them revolve around the caching of metadata file lookups in the NFS client.
-
-Especially for the case where we are re-exporting a server many milliseconds away (i.e. on-premise -> cloud), we want to be able to control how much the client caches metadata and file data so that it's many LAN clients all benefit from the re-export server only having to do the WAN lookups once (within a specified coherency time).
-
-Keeping the file data in the vfs page cache or on disk using fscache/cachefiles is fairly straightforward, but keeping the metadata cached is particularly difficult. And without the cached metadata we introduce long delays before we can serve the already present and locally cached file data to many waiting clients.
-
------ On 7 Sep, 2020, at 18:31, Daire Byrne daire@dneg.com wrote:
-> 2) If we cache metadata on the re-export server using actimeo=3600,nocto we can
-> cut the network packets back to the origin server to zero for repeated lookups.
-> However, if a client of the re-export server walks paths and memory maps those
-> files (i.e. loading an application), the re-export server starts issuing
-> unexpected calls back to the origin server again, ignoring/invalidating the
-> re-export server's NFS client cache. We worked around this this by patching an
-> inode/iversion validity check in inode.c so that the NFS client cache on the
-> re-export server is used. I'm not sure about the correctness of this patch but
-> it works for our corner case.
-
-If we use actimeo=3600,nocto (say) to mount a remote software volume on the re-export server, we can successfully cache the loading of applications and walking of paths directly on the re-export server such that after a couple of runs, there are practically zero packets back to the originating NFS server (great!). But, if we then do the same thing on a client which is mounting that re-export server, the re-export server now starts issuing lots of calls back to the originating server and invalidating it's client cache (bad!).
-
-I'm not exactly sure why, but the iversion of the inode gets changed locally (due to atime modification?) most likely via invocation of method inode_inc_iversion_raw. Each time it gets incremented the following call to validate attributes detects changes causing it to be reloaded from the originating server.
-
-This patch helps to avoid this when applied to the re-export server but there may be other places where this happens too. I accept that this patch is probably not the right/general way to do this, but it helps to highlight the issue when re-exporting and it works well for our use case:
-
---- linux-5.5.0-1.el7.x86_64/fs/nfs/inode.c     2020-01-27 00:23:03.000000000 +0000
-+++ new/fs/nfs/inode.c  2020-02-13 16:32:09.013055074 +0000
-@@ -1869,7 +1869,7 @@
- 
-        /* More cache consistency checks */
-        if (fattr->valid & NFS_ATTR_FATTR_CHANGE) {
--               if (!inode_eq_iversion_raw(inode, fattr->change_attr)) {
-+               if (inode_peek_iversion_raw(inode) < fattr->change_attr) {
-                        /* Could it be a race with writeback? */
-                        if (!(have_writers || have_delegation)) {
-                                invalid |= NFS_INO_INVALID_DATA
-
-With this patch, the re-export server's NFS client attribute cache is maintained and used by all the clients that then mount it. When many hundreds of clients are all doing similar things at the same time, the re-export server's NFS client cache is invaluable in accelerating the lookups (getattrs).
-
-Perhaps a more correct approach would be to detect when it is knfsd that is accessing the client mount and change the cache consistency checks accordingly?
-
-> 3) If we saturate an NFS client's network with reads from the server, all client
-> metadata lookups become unbearably slow even if it's all cached in the NFS
-> client's memory and no network RPCs should be required. This is the case for
-> any NFS client regardless of re-exporting but it affects this case more because
-> when we can't serve cached metadata we also can't serve the cached data. It
-> feels like some sort of bottleneck in the client's ability to parallelise
-> requests? We work around this by not maxing out our network.
-
-I spent a bit more time testing this issue and it's not quite as I've written it. Again the issue is that we have very little control over preserving complete metadata caches to avoid expensive contact with the originating NFS server. Even though we can use actimeo,nocto mount options, these provide no guarantees that we can keep all the required metadata in cache when the page cache is under constant churn (e.g. NFS reads).
-
-This has very little to do with the re-export of an NFS client mount and is more a general observation of how the NFS client works. It is probably relevant to anyone who wants to cache metadata for long periods of time (e.g. read-only, non-changing, over the WAN).
-
-Let's consider how we might try to keep as much metadata cached in memory....
-
-nfsclient # echo 0 >/proc/sys/vm/vfs_cache_pressure
-nfsclient # mount -o vers=3,actimeo=7200,nocto,ro,nolock nfsserver:/usr /mnt/nfsserver
-nfsclient # for x in {1..3}; do /usr/bin/time -f %e ls -hlR /mnt/nfsserver/share > /dev/null; sleep 5; done
-53.23 <- first time so lots of network traffic
-2.82 <- now cached for actimeo=7200 with almost no packets between nfsserver & nfsclient
-2.85
-
-This is ideal and as long as we don't touch the page cache then repeated walks of the remote server will all come from cache until the attribute cache times out.
-
-We can even read from the remote server using either directio or fadvise so that we don't upset the client's page cache and we will keep the complete metadata cache intact. e.g.
-
-nfsclient # find /mnt/nfsserver -type f -size +1M -print | shuf | xargs -n1 -P8 -iX bash -c 'dd if="X" iflag=direct of=/dev/null bs=1M &>/dev/null'
-nfsclient # find /mnt/nfsserver -type f -size +1M -print | shuf | xargs -n1 -P8 -iX bash -c 'nocache dd if="X" of=/dev/null bs=1M &>/dev/null'
-nfsclient # /usr/bin/time -f %e ls -hlR /mnt/nfsserver/share > /dev/null
-2.82 <- still showing good complete cached metadata
-
-But as soon as we switch to the more normal reading of file data which then populates the page cache, we lose portions of our cached metadata (readdir?) even when there is plenty of RAM available.
-
-nfsclient # find /mnt/nfsserver -type f -size +1M -print | shuf | xargs -n1 -P8 -iX bash -c 'dd if="X" of=/dev/null bs=1M &>/dev/null'
-nfsclient # /usr/bin/time -f %e ls -hlR /mnt/nfsserver/share > /dev/null
-10.82 <- still mostly cached metadata but we had to do some fresh lookups
-
-Now once our NFS client starts doing lots of sustained reads such that it maxes out the network, we end up in a situation where we are both dropping useful cached metadata (before actimeo) and we are making it harder to get the new metadata lookups back in a timely fashion because the reads are so much more dominant (and require less round trips to get more done).
-
-So if we do the reads and try to do the filesystem walk at the same time, we get even slower performance:
-
-nfsclient # (find /mnt/nfsserver -type f -size +1M -print | shuf | xargs -n1 -P8 -iX bash -c 'dd if="X" of=/dev/null bs=1M &>/dev/null') &
-nfsclient # /usr/bin/time -f %e ls -hlR /mnt/nfsserver/share > /dev/null
-30.12
-
-As we increase the number of simultaneous threads for the reads (e.g knfsd threads), the single thread of metadata lookups gets slower and slower.
-
-So even when setting vfs_cache_pressure=0 (to keep nfs inodes in memory), setting actimeo=large and using nocto to avoid more lookups, we still can't keep a complete metadata cache in memory for any specified time when the server is doing lots of reads and churning through the page cache.
-
-So, while I am not able to provide many answers or solutions to any of the issues I have highlighted in this email thread, hopefully I have described in enough detail all the main performance hurdles others will likely run into if they attempt this in production as we have.
-
-And like I said from the outset, it's already stable enough for us to use in production and it's definitely better than nothing... ;)
-
-Regards,
-
-Daire
+T24gVHVlLCAyMDIwLTA5LTIyIGF0IDEzOjMxICswMTAwLCBEYWlyZSBCeXJuZSB3cm90ZToNCj4g
+SGksIA0KPiANCj4gSSBqdXN0IHRob3VnaHQgSSdkIGZsZXNoIG91dCB0aGUgb3RoZXIgdHdvIGlz
+c3VlcyBJIGhhdmUgZm91bmQgd2l0aA0KPiByZS1leHBvcnRpbmcgdGhhdCBhcmUgdWx0aW1hdGVs
+eSByZXNwb25zaWJsZSBmb3IgdGhlIGJpZ2dlc3QNCj4gcGVyZm9ybWFuY2UgYm90dGxlbmVja3Mu
+IEFuZCBib3RoIG9mIHRoZW0gcmV2b2x2ZSBhcm91bmQgdGhlIGNhY2hpbmcNCj4gb2YgbWV0YWRh
+dGEgZmlsZSBsb29rdXBzIGluIHRoZSBORlMgY2xpZW50Lg0KPiANCj4gRXNwZWNpYWxseSBmb3Ig
+dGhlIGNhc2Ugd2hlcmUgd2UgYXJlIHJlLWV4cG9ydGluZyBhIHNlcnZlciBtYW55DQo+IG1pbGxp
+c2Vjb25kcyBhd2F5IChpLmUuIG9uLXByZW1pc2UgLT4gY2xvdWQpLCB3ZSB3YW50IHRvIGJlIGFi
+bGUgdG8NCj4gY29udHJvbCBob3cgbXVjaCB0aGUgY2xpZW50IGNhY2hlcyBtZXRhZGF0YSBhbmQg
+ZmlsZSBkYXRhIHNvIHRoYXQNCj4gaXQncyBtYW55IExBTiBjbGllbnRzIGFsbCBiZW5lZml0IGZy
+b20gdGhlIHJlLWV4cG9ydCBzZXJ2ZXIgb25seQ0KPiBoYXZpbmcgdG8gZG8gdGhlIFdBTiBsb29r
+dXBzIG9uY2UgKHdpdGhpbiBhIHNwZWNpZmllZCBjb2hlcmVuY3kNCj4gdGltZSkuDQo+IA0KPiBL
+ZWVwaW5nIHRoZSBmaWxlIGRhdGEgaW4gdGhlIHZmcyBwYWdlIGNhY2hlIG9yIG9uIGRpc2sgdXNp
+bmcNCj4gZnNjYWNoZS9jYWNoZWZpbGVzIGlzIGZhaXJseSBzdHJhaWdodGZvcndhcmQsIGJ1dCBr
+ZWVwaW5nIHRoZQ0KPiBtZXRhZGF0YSBjYWNoZWQgaXMgcGFydGljdWxhcmx5IGRpZmZpY3VsdC4g
+QW5kIHdpdGhvdXQgdGhlIGNhY2hlZA0KPiBtZXRhZGF0YSB3ZSBpbnRyb2R1Y2UgbG9uZyBkZWxh
+eXMgYmVmb3JlIHdlIGNhbiBzZXJ2ZSB0aGUgYWxyZWFkeQ0KPiBwcmVzZW50IGFuZCBsb2NhbGx5
+IGNhY2hlZCBmaWxlIGRhdGEgdG8gbWFueSB3YWl0aW5nIGNsaWVudHMuDQo+IA0KPiAtLS0tLSBP
+biA3IFNlcCwgMjAyMCwgYXQgMTg6MzEsIERhaXJlIEJ5cm5lIGRhaXJlQGRuZWcuY29tIHdyb3Rl
+Og0KPiA+IDIpIElmIHdlIGNhY2hlIG1ldGFkYXRhIG9uIHRoZSByZS1leHBvcnQgc2VydmVyIHVz
+aW5nDQo+ID4gYWN0aW1lbz0zNjAwLG5vY3RvIHdlIGNhbg0KPiA+IGN1dCB0aGUgbmV0d29yayBw
+YWNrZXRzIGJhY2sgdG8gdGhlIG9yaWdpbiBzZXJ2ZXIgdG8gemVybyBmb3INCj4gPiByZXBlYXRl
+ZCBsb29rdXBzLg0KPiA+IEhvd2V2ZXIsIGlmIGEgY2xpZW50IG9mIHRoZSByZS1leHBvcnQgc2Vy
+dmVyIHdhbGtzIHBhdGhzIGFuZCBtZW1vcnkNCj4gPiBtYXBzIHRob3NlDQo+ID4gZmlsZXMgKGku
+ZS4gbG9hZGluZyBhbiBhcHBsaWNhdGlvbiksIHRoZSByZS1leHBvcnQgc2VydmVyIHN0YXJ0cw0K
+PiA+IGlzc3VpbmcNCj4gPiB1bmV4cGVjdGVkIGNhbGxzIGJhY2sgdG8gdGhlIG9yaWdpbiBzZXJ2
+ZXIgYWdhaW4sDQo+ID4gaWdub3JpbmcvaW52YWxpZGF0aW5nIHRoZQ0KPiA+IHJlLWV4cG9ydCBz
+ZXJ2ZXIncyBORlMgY2xpZW50IGNhY2hlLiBXZSB3b3JrZWQgYXJvdW5kIHRoaXMgdGhpcyBieQ0K
+PiA+IHBhdGNoaW5nIGFuDQo+ID4gaW5vZGUvaXZlcnNpb24gdmFsaWRpdHkgY2hlY2sgaW4gaW5v
+ZGUuYyBzbyB0aGF0IHRoZSBORlMgY2xpZW50DQo+ID4gY2FjaGUgb24gdGhlDQo+ID4gcmUtZXhw
+b3J0IHNlcnZlciBpcyB1c2VkLiBJJ20gbm90IHN1cmUgYWJvdXQgdGhlIGNvcnJlY3RuZXNzIG9m
+DQo+ID4gdGhpcyBwYXRjaCBidXQNCj4gPiBpdCB3b3JrcyBmb3Igb3VyIGNvcm5lciBjYXNlLg0K
+PiANCj4gSWYgd2UgdXNlIGFjdGltZW89MzYwMCxub2N0byAoc2F5KSB0byBtb3VudCBhIHJlbW90
+ZSBzb2Z0d2FyZSB2b2x1bWUNCj4gb24gdGhlIHJlLWV4cG9ydCBzZXJ2ZXIsIHdlIGNhbiBzdWNj
+ZXNzZnVsbHkgY2FjaGUgdGhlIGxvYWRpbmcgb2YNCj4gYXBwbGljYXRpb25zIGFuZCB3YWxraW5n
+IG9mIHBhdGhzIGRpcmVjdGx5IG9uIHRoZSByZS1leHBvcnQgc2VydmVyDQo+IHN1Y2ggdGhhdCBh
+ZnRlciBhIGNvdXBsZSBvZiBydW5zLCB0aGVyZSBhcmUgcHJhY3RpY2FsbHkgemVybyBwYWNrZXRz
+DQo+IGJhY2sgdG8gdGhlIG9yaWdpbmF0aW5nIE5GUyBzZXJ2ZXIgKGdyZWF0ISkuIEJ1dCwgaWYg
+d2UgdGhlbiBkbyB0aGUNCj4gc2FtZSB0aGluZyBvbiBhIGNsaWVudCB3aGljaCBpcyBtb3VudGlu
+ZyB0aGF0IHJlLWV4cG9ydCBzZXJ2ZXIsIHRoZQ0KPiByZS1leHBvcnQgc2VydmVyIG5vdyBzdGFy
+dHMgaXNzdWluZyBsb3RzIG9mIGNhbGxzIGJhY2sgdG8gdGhlDQo+IG9yaWdpbmF0aW5nIHNlcnZl
+ciBhbmQgaW52YWxpZGF0aW5nIGl0J3MgY2xpZW50IGNhY2hlIChiYWQhKS4NCj4gDQo+IEknbSBu
+b3QgZXhhY3RseSBzdXJlIHdoeSwgYnV0IHRoZSBpdmVyc2lvbiBvZiB0aGUgaW5vZGUgZ2V0cyBj
+aGFuZ2VkDQo+IGxvY2FsbHkgKGR1ZSB0byBhdGltZSBtb2RpZmljYXRpb24/KSBtb3N0IGxpa2Vs
+eSB2aWEgaW52b2NhdGlvbiBvZg0KPiBtZXRob2QgaW5vZGVfaW5jX2l2ZXJzaW9uX3Jhdy4gRWFj
+aCB0aW1lIGl0IGdldHMgaW5jcmVtZW50ZWQgdGhlDQo+IGZvbGxvd2luZyBjYWxsIHRvIHZhbGlk
+YXRlIGF0dHJpYnV0ZXMgZGV0ZWN0cyBjaGFuZ2VzIGNhdXNpbmcgaXQgdG8NCj4gYmUgcmVsb2Fk
+ZWQgZnJvbSB0aGUgb3JpZ2luYXRpbmcgc2VydmVyLg0KPiANCj4gVGhpcyBwYXRjaCBoZWxwcyB0
+byBhdm9pZCB0aGlzIHdoZW4gYXBwbGllZCB0byB0aGUgcmUtZXhwb3J0IHNlcnZlcg0KPiBidXQg
+dGhlcmUgbWF5IGJlIG90aGVyIHBsYWNlcyB3aGVyZSB0aGlzIGhhcHBlbnMgdG9vLiBJIGFjY2Vw
+dCB0aGF0DQo+IHRoaXMgcGF0Y2ggaXMgcHJvYmFibHkgbm90IHRoZSByaWdodC9nZW5lcmFsIHdh
+eSB0byBkbyB0aGlzLCBidXQgaXQNCj4gaGVscHMgdG8gaGlnaGxpZ2h0IHRoZSBpc3N1ZSB3aGVu
+IHJlLWV4cG9ydGluZyBhbmQgaXQgd29ya3Mgd2VsbCBmb3INCj4gb3VyIHVzZSBjYXNlOg0KPiAN
+Cj4gLS0tIGxpbnV4LTUuNS4wLTEuZWw3Lng4Nl82NC9mcy9uZnMvaW5vZGUuYyAgICAgMjAyMC0w
+MS0yNw0KPiAwMDoyMzowMy4wMDAwMDAwMDAgKzAwMDANCj4gKysrIG5ldy9mcy9uZnMvaW5vZGUu
+YyAgMjAyMC0wMi0xMyAxNjozMjowOS4wMTMwNTUwNzQgKzAwMDANCj4gQEAgLTE4NjksNyArMTg2
+OSw3IEBADQo+ICANCj4gICAgICAgICAvKiBNb3JlIGNhY2hlIGNvbnNpc3RlbmN5IGNoZWNrcyAq
+Lw0KPiAgICAgICAgIGlmIChmYXR0ci0+dmFsaWQgJiBORlNfQVRUUl9GQVRUUl9DSEFOR0UpIHsN
+Cj4gLSAgICAgICAgICAgICAgIGlmICghaW5vZGVfZXFfaXZlcnNpb25fcmF3KGlub2RlLCBmYXR0
+ci0NCj4gPmNoYW5nZV9hdHRyKSkgew0KPiArICAgICAgICAgICAgICAgaWYgKGlub2RlX3BlZWtf
+aXZlcnNpb25fcmF3KGlub2RlKSA8IGZhdHRyLQ0KPiA+Y2hhbmdlX2F0dHIpIHsNCj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgLyogQ291bGQgaXQgYmUgYSByYWNlIHdpdGggd3JpdGViYWNrPyAq
+Lw0KPiAgICAgICAgICAgICAgICAgICAgICAgICBpZiAoIShoYXZlX3dyaXRlcnMgfHwgaGF2ZV9k
+ZWxlZ2F0aW9uKSkgew0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludmFsaWQg
+fD0gTkZTX0lOT19JTlZBTElEX0RBVEENCg0KDQpUaGVyZSBpcyBub3RoaW5nIGluIHRoZSBiYXNl
+IE5GU3Y0LCBhbmQgTkZTdjQuMSBzcGVjcyB0aGF0IGFsbG93IHlvdSB0bw0KbWFrZSBhc3N1bXB0
+aW9ucyBhYm91dCBob3cgdGhlIGNoYW5nZSBhdHRyaWJ1dGUgYmVoYXZlcyBvdmVyIHRpbWUuDQoN
+ClRoZSBvbmx5IHNhZmUgd2F5IHRvIGRvIHNvbWV0aGluZyBsaWtlIHRoZSBhYm92ZSBpcyBpZiB0
+aGUgc2VydmVyDQpzdXBwb3J0cyBORlN2NC4yIGFuZCBhbHNvIGFkdmVydGlzZXMgc3VwcG9ydCBm
+b3IgdGhlICdjaGFuZ2VfYXR0cl90eXBlJw0KYXR0cmlidXRlLiBJbiB0aGF0IGNhc2UsIHlvdSBj
+YW4gY2hlY2sgYXQgbW91bnQgdGltZSBmb3Igd2hldGhlciBvciBub3QNCnRoZSBjaGFuZ2UgYXR0
+cmlidXRlIG9uIHRoaXMgZmlsZXN5c3RlbSBpcyBvbmUgb2YgdGhlIG1vbm90b25pYyB0eXBlcw0K
+d2hpY2ggd291bGQgYWxsb3cgdGhlIGFib3ZlIG9wdGltaXNhdGlvbi4NCg0KDQotLSANClRyb25k
+IE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJv
+bmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
