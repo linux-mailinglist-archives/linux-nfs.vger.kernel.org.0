@@ -2,86 +2,186 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42FD1275B67
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Sep 2020 17:17:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16B1B275E42
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Sep 2020 19:07:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgIWPRQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Sep 2020 11:17:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726156AbgIWPRP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 23 Sep 2020 11:17:15 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6077C2075B;
-        Wed, 23 Sep 2020 15:17:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600874234;
-        bh=/QQofHRADGAYxOtJIce3d38QkMvme+6u661AK0sTIww=;
+        id S1726634AbgIWRHg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Sep 2020 13:07:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbgIWRHg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Sep 2020 13:07:36 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C0AC0613D1
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Sep 2020 10:07:36 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 109FAC56; Wed, 23 Sep 2020 13:07:35 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 109FAC56
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1600880855;
+        bh=RuUaHIcD6ERJPmJEia7PDbV0GjJv4uex9CD9KVpU5N0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qaL+99AxNSM+PUkApT/4Pupcbe3cWXnIOAQs/ZT35oiBfgpa53MHX/m6TMpBock3a
-         fQSnODIgnUVdnSkWJ0pBplNyHoTqkHuo7hhaFUgOEQ4u+Awe/y3f+CYmaRRBSsJrRv
-         ycipz9I2nQvfISAkNRMDRLNIxu8SAq09SP1ymhKs=
-Date:   Wed, 23 Sep 2020 16:16:20 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rolf Reintjes <lists2.rolf@reintjes.nrw>
-Cc:     linux-spi@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>,
-        linux-serial@vger.kernel.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-block@vger.kernel.org,
-        Yossi Leybovich <sleybo@amazon.com>,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-rdma@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        rds-devel@oss.oracle.com
-Subject: Re: [PATCH 00/14] drop double zeroing
-Message-ID: <20200923151620.GC5707@sirena.org.uk>
-References: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
- <160070750168.56292.17961674601916397869.b4-ty@kernel.org>
- <c3b33526-936d-ffa4-c301-4d0485822be1@reintjes.nrw>
+        b=Sk7oj9YcnbjgOrPArn23Eh7NpYIRviDguGFTkb6e55D+WjF6wwqdLttftBgvjqVQh
+         685eAUbbzzdDuNBD7bntCmc+TBwIgBPpcSt6xfysneLgx0XdFYhg/sPJrrsZv9GWO9
+         gwkvQywjNmTVWjeUSNgi4SyeEcJj4qwfVsj8EVQw=
+Date:   Wed, 23 Sep 2020 13:07:35 -0400
+From:   "bfields@fieldses.org" <bfields@fieldses.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "daire@dneg.com" <daire@dneg.com>
+Subject: Re: Adventures in NFS re-exporting
+Message-ID: <20200923170735.GC4691@fieldses.org>
+References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
+ <1155061727.42788071.1600777874179.JavaMail.zimbra@dneg.com>
+ <ecd78fe32a1d5a3c6cf3c5a77b1841293b3f5cb1.camel@hammerspace.com>
+ <20200923124038.GA4691@fieldses.org>
+ <a47553497db7c9ae9f68cbe703a12a4e4051aef2.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NU0Ex4SbNnrxsi6C"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c3b33526-936d-ffa4-c301-4d0485822be1@reintjes.nrw>
-X-Cookie: This report is filled with omissions.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a47553497db7c9ae9f68cbe703a12a4e4051aef2.camel@hammerspace.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Wed, Sep 23, 2020 at 01:09:01PM +0000, Trond Myklebust wrote:
+> On Wed, 2020-09-23 at 08:40 -0400, J. Bruce Fields wrote:
+> > On Tue, Sep 22, 2020 at 01:52:25PM +0000, Trond Myklebust wrote:
+> > > On Tue, 2020-09-22 at 13:31 +0100, Daire Byrne wrote:
+> > > > Hi, 
+> > > > 
+> > > > I just thought I'd flesh out the other two issues I have found
+> > > > with
+> > > > re-exporting that are ultimately responsible for the biggest
+> > > > performance bottlenecks. And both of them revolve around the
+> > > > caching
+> > > > of metadata file lookups in the NFS client.
+> > > > 
+> > > > Especially for the case where we are re-exporting a server many
+> > > > milliseconds away (i.e. on-premise -> cloud), we want to be able
+> > > > to
+> > > > control how much the client caches metadata and file data so that
+> > > > it's many LAN clients all benefit from the re-export server only
+> > > > having to do the WAN lookups once (within a specified coherency
+> > > > time).
+> > > > 
+> > > > Keeping the file data in the vfs page cache or on disk using
+> > > > fscache/cachefiles is fairly straightforward, but keeping the
+> > > > metadata cached is particularly difficult. And without the cached
+> > > > metadata we introduce long delays before we can serve the already
+> > > > present and locally cached file data to many waiting clients.
+> > > > 
+> > > > ----- On 7 Sep, 2020, at 18:31, Daire Byrne daire@dneg.com wrote:
+> > > > > 2) If we cache metadata on the re-export server using
+> > > > > actimeo=3600,nocto we can
+> > > > > cut the network packets back to the origin server to zero for
+> > > > > repeated lookups.
+> > > > > However, if a client of the re-export server walks paths and
+> > > > > memory
+> > > > > maps those
+> > > > > files (i.e. loading an application), the re-export server
+> > > > > starts
+> > > > > issuing
+> > > > > unexpected calls back to the origin server again,
+> > > > > ignoring/invalidating the
+> > > > > re-export server's NFS client cache. We worked around this this
+> > > > > by
+> > > > > patching an
+> > > > > inode/iversion validity check in inode.c so that the NFS client
+> > > > > cache on the
+> > > > > re-export server is used. I'm not sure about the correctness of
+> > > > > this patch but
+> > > > > it works for our corner case.
+> > > > 
+> > > > If we use actimeo=3600,nocto (say) to mount a remote software
+> > > > volume
+> > > > on the re-export server, we can successfully cache the loading of
+> > > > applications and walking of paths directly on the re-export
+> > > > server
+> > > > such that after a couple of runs, there are practically zero
+> > > > packets
+> > > > back to the originating NFS server (great!). But, if we then do
+> > > > the
+> > > > same thing on a client which is mounting that re-export server,
+> > > > the
+> > > > re-export server now starts issuing lots of calls back to the
+> > > > originating server and invalidating it's client cache (bad!).
+> > > > 
+> > > > I'm not exactly sure why, but the iversion of the inode gets
+> > > > changed
+> > > > locally (due to atime modification?) most likely via invocation
+> > > > of
+> > > > method inode_inc_iversion_raw. Each time it gets incremented the
+> > > > following call to validate attributes detects changes causing it
+> > > > to
+> > > > be reloaded from the originating server.
+> > > > 
+> > > > This patch helps to avoid this when applied to the re-export
+> > > > server
+> > > > but there may be other places where this happens too. I accept
+> > > > that
+> > > > this patch is probably not the right/general way to do this, but
+> > > > it
+> > > > helps to highlight the issue when re-exporting and it works well
+> > > > for
+> > > > our use case:
+> > > > 
+> > > > --- linux-5.5.0-1.el7.x86_64/fs/nfs/inode.c     2020-01-27
+> > > > 00:23:03.000000000 +0000
+> > > > +++ new/fs/nfs/inode.c  2020-02-13 16:32:09.013055074 +0000
+> > > > @@ -1869,7 +1869,7 @@
+> > > >  
+> > > >         /* More cache consistency checks */
+> > > >         if (fattr->valid & NFS_ATTR_FATTR_CHANGE) {
+> > > > -               if (!inode_eq_iversion_raw(inode, fattr-
+> > > > > change_attr)) {
+> > > > +               if (inode_peek_iversion_raw(inode) < fattr-
+> > > > > change_attr) {
+> > > >                         /* Could it be a race with writeback? */
+> > > >                         if (!(have_writers || have_delegation)) {
+> > > >                                 invalid |= NFS_INO_INVALID_DATA
+> > > 
+> > > There is nothing in the base NFSv4, and NFSv4.1 specs that allow
+> > > you to
+> > > make assumptions about how the change attribute behaves over time.
+> > > 
+> > > The only safe way to do something like the above is if the server
+> > > supports NFSv4.2 and also advertises support for the
+> > > 'change_attr_type'
+> > > attribute. In that case, you can check at mount time for whether or
+> > > not
+> > > the change attribute on this filesystem is one of the monotonic
+> > > types
+> > > which would allow the above optimisation.
+> > 
+> > Looking at https://tools.ietf.org/html/rfc7862#section-12.2.3 .... I
+> > think that would be anything but NFS4_CHANGE_TYPE_IS_UNDEFINED ?
+> > 
+> > The Linux server's ctime is monotonic and will advertise that with
+> > change_attr_type since 4.19.
+> > 
+> > So I think it would be easy to patch the client to check
+> > change_attr_type and set an NFS_CAP_MONOTONIC_CHANGE flag in
+> > server->caps, the hard part would be figuring out which optimisations
+> > are OK.
+> > 
+> 
+> The ctime is *not* monotonic. It can regress under server reboots and
+> it can regress if someone deliberately changes the time.
 
---NU0Ex4SbNnrxsi6C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+So, anything other than IS_UNDEFINED or IS_TIME_METADATA?
 
-On Wed, Sep 23, 2020 at 05:10:33PM +0200, Rolf Reintjes wrote:
-> On 21.09.20 18:58, Mark Brown wrote:
+Though the linux server is susceptible to some of that even when it
+returns MONTONIC_INCR.  If the admin replaces the filesystem by an older
+snapshot, there's not much we can do.  I'm not sure what degree of
+gaurantee we need.
 
-> I do not understand which of the 14 patches you applied. Your mail responds
-> to the 00/14 mail.
+--b.
 
-As the mail you're replying to says:
+> We have code
+> that tries to handle all these issues (see fattr->gencount and nfsi-
+> >attr_gencount) because we've hit those issues before...
 
-> > [1/1] spi/topcliff-pch: drop double zeroing
-> >        commit: ca03dba30f2b8ff45a2972c6691e4c96d8c52b3b
 
---NU0Ex4SbNnrxsi6C
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9rZsMACgkQJNaLcl1U
-h9AxAgf/UlZBlBEQmArmMghyqM+HNmgNqZcFWWNnNQSmBBrgl8128+pLwAgIeZLw
-0l6J3hL0JAr1ozAMpm1RGS/xj2CD8a6QFiRw+9wAgL9eY3DAdognRwtwLJlW6zq3
-nj2VF+7+R6LhZGxqub8TnxUZLSdlop3wn9ZuAnTRZjjhPq2iidr4iYPWYsGqo+j5
-svVy+eYILC3/Y6X31PpT2OXujQXkrrCGlONZz2ieOMTLSLNQhL8pZh8tkJB9s/F5
-U60+SPDeI7yrVh6k5/iCldI5JHQyjXAmHza4R6BzKTc6kgSDvUlzrVOZxw1aaGy+
-EFLE4qdwQYEPaeRMZ+XVpSUbf3dGUw==
-=Rrao
------END PGP SIGNATURE-----
-
---NU0Ex4SbNnrxsi6C--
