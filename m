@@ -2,98 +2,103 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48A7D275A7B
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Sep 2020 16:41:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6DF9275BA6
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Sep 2020 17:22:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgIWOlC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Sep 2020 10:41:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbgIWOk5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Sep 2020 10:40:57 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AB5EC0613CE
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Sep 2020 07:40:57 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id C0B7B425E; Wed, 23 Sep 2020 10:40:56 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C0B7B425E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1600872056;
-        bh=wQ3ySGQ3qI9b/NbrCMX0I7wrhr4hVkVvhoRW64zTCYc=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=hiHp4vDxF3twvp3DyhDbGy2GB3DAp9U/YBNBtVREk2jruYG8VxaXAusSXU51Yc5QR
-         0qHQFZ2WhyV9G78I4ttIgzSTHvX7pZcLYDaptcEganQ+jBVO1QUbSNM05siL0uVatY
-         tMgKf7Vw3ZP4fGj9rlEroWXWLuxSEZj86Pgqrc/8=
-Date:   Wed, 23 Sep 2020 10:40:56 -0400
-To:     Chris Hall <linux-nfs@gmch.uk>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: mount.nfs4 and logging
-Message-ID: <20200923144056.GB4691@fieldses.org>
-References: <S1725851AbgIKKt5/20200911104957Z+185@vger.kernel.org>
- <a38a1249-c570-9069-a498-5e17d85a418a@gmch.uk>
- <f06f86ef-08bd-3974-3d92-1fbda700cc11@RedHat.com>
- <f7b9c8b4-29a6-2f28-b1d9-739c546fd557@gmch.uk>
- <20200919163353.GA15785@fieldses.org>
- <20200919164020.GB15785@fieldses.org>
- <12298172-f830-4f22-8612-dfbbc74b8a40@gmch.uk>
- <20200920193245.GC28449@fieldses.org>
- <eb64e66e-0328-f9e6-7511-1b73f67c49c1@gmch.uk>
+        id S1726864AbgIWPWn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Sep 2020 11:22:43 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:34512 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbgIWPWm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Sep 2020 11:22:42 -0400
+X-Greylist: delayed 713 seconds by postgrey-1.27 at vger.kernel.org; Wed, 23 Sep 2020 11:22:39 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1600874558;
+        s=strato-dkim-0002; d=reintjes.nrw;
+        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=R7hI6d/NmZuNcg1vUXN4expafaD5dS9k1NOlJgVsfQ0=;
+        b=mKq3yxzIBoK6eXKDjSaCRr3BwBIqpDKeJr75f5YQmPBPRRn9qdkRISKeudlw+eJUaN
+        i9j0YoD7Nd07ieGLh8UqSmYZ1Ccml4PGsZ2Mglopdz9Hz5rLCJkN670J1l7AKyk9w16x
+        a5x5cVcgZWQk6FXpa0G8mlW7WSJEKPFpozzrnE9Mqlay09jPyJDrOXyUKIYtt6nlhpnO
+        Iws66XTKRoaWIH3voDt0xHa2loKeKKkr2KuI9gRfjll43rW7LApn0Q1chdN5eLyO3daW
+        Z1KVrRhdU65Y8/6yfAJtnadI1+vhAkdCKhH0qGquacG5znElBXtRT3qPa76R5ygpIUbq
+        FhJQ==
+X-RZG-AUTH: ":IGUXYVP6Ne1lB7nQNv+YSUx4qaxF0YAcTeeZr8criwvl+4OoAsy1YB7b8FzONHo5ckdw3KGGkZZ/Zu8="
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.0.198]
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id Y04b60w8NFAYy22
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 23 Sep 2020 17:10:34 +0200 (CEST)
+Subject: Re: [PATCH 00/14] drop double zeroing
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     linux-serial@vger.kernel.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-block@vger.kernel.org,
+        Yossi Leybovich <sleybo@amazon.com>,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        rds-devel@oss.oracle.com
+References: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
+ <160070750168.56292.17961674601916397869.b4-ty@kernel.org>
+From:   Rolf Reintjes <lists2.rolf@reintjes.nrw>
+Message-ID: <c3b33526-936d-ffa4-c301-4d0485822be1@reintjes.nrw>
+Date:   Wed, 23 Sep 2020 17:10:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb64e66e-0328-f9e6-7511-1b73f67c49c1@gmch.uk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+In-Reply-To: <160070750168.56292.17961674601916397869.b4-ty@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Sep 21, 2020 at 03:40:01PM +0100, Chris Hall wrote:
-> On 20/09/2020 20:32, J. Bruce Fields wrote:
-> >On Sun, Sep 20, 2020 at 10:56:28AM +0100, Chris Hall wrote:
-> ...
-> >>Where nfsdcld, rpc.idmapd and rpc.mountd have indeed been started
-> >>but are not bound to any ports.
-> 
-> >That looks good.  (And rpc.mountd does still serve a purpose in the
-> >NFSv4 case, answering requests from the kernel for information related
-> >to exported filesystems.)
-> 
-> >>But rpc.statd and rpcbind have also been started, and various ports
-> >>have been opened, including port 111 which is bound to systemd.  Is
-> >>there a way to inhibit that for nfs4 only ?
-> 
-> >Unlike rpc.mountd, there's no reason for those to be running at all.
-> >You can mask thoe corresponding systemd units.
-> 
-> I tried masking all of: rpcbind.socket, rpcbind.service,
-> statd.service and statd-notify.service.  systemctl start
-> nfs-server.service (eventually) gives, according to the logging:
-> 
->  nfs-mountd.service: start operation timed out. Terminating.
->  nfs-mountd.service: State 'stop-sigterm' timed out. Killing.
->  nfs-mountd.service: Killing process x (rpc.mountd) with signal SIGKILL.
->  nfs-mountd.service: Control process exited, code=killed, status=9/KILL
+Hello Mark,
 
-Huh, that suggests rpc.mountd is trying to contact rpcbind, but if
-you've got v2/v3 turned off in the configuration files, it shouldn't be
-trying to register anything.
-
-Looking at the code....  I wonder if the problem is the unregistration
-added by 849b7072a049 "mountd: Clear mountd registrations at start up"?
-
-> If I unmask rpcbind.service, I can start nfs-server.  It no longer
-> starts rpc.statd.  But I still have rpcbind running and port 111
-> open.
+On 21.09.20 18:58, Mark Brown wrote:
+> On Sun, 20 Sep 2020 13:26:12 +0200, Julia Lawall wrote:
+>> sg_init_table zeroes its first argument, so the allocation of that argument
+>> doesn't have to.
 > 
-> >It'd be nice if there was a way to make that happen automatically if v2
-> >and v3 are configured out in the configuration files, but I don't know
-> >how to make that happen.
+> Applied to
 > 
-> It would and me neither.
+>     https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+> 
+> Thanks!
 
-I suppose they could check the configuration and exit on startup if they
-see they're not needed.  Will systemd notice they died and try to
-restart them or something?
+I do not understand which of the 14 patches you applied. Your mail 
+responds to the 00/14 mail.
 
---b.
+Rolf
+
+> 
+> [1/1] spi/topcliff-pch: drop double zeroing
+>        commit: ca03dba30f2b8ff45a2972c6691e4c96d8c52b3b
+> 
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted.
+> 
+> You may get further e-mails resulting from automated or manual testing
+> and review of the tree, please engage with people reporting problems and
+> send followup patches addressing any issues that are reported if needed.
+> 
+> If any updates are required or you are submitting further changes they
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+> 
+> Please add any relevant lists and maintainers to the CCs when replying
+> to this mail.
+> 
+> Thanks,
+> Mark
+> 
+
