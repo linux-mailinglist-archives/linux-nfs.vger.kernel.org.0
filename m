@@ -2,189 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22155275865
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Sep 2020 15:09:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48A7D275A7B
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Sep 2020 16:41:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgIWNJH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Sep 2020 09:09:07 -0400
-Received: from mail-eopbgr750129.outbound.protection.outlook.com ([40.107.75.129]:6785
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726476AbgIWNJH (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 23 Sep 2020 09:09:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iNDfgVm0inakhgrvxOsyuVk8StXYRLORVOXZ4Tf4/BS9ZiYGduvLsds6UzAcrlczbaBgmGnWTQiJ4aQRL42WGPC2YNddgg2njbqDSGAQsPIn2kniSC7OiAZmDJnS1ui/a8uGPISjufhawh6245ENtskKWR4hUXw8bXC8iWU0nGfR5BItVEv9isF001h1/CGR2srO1qA78p1EDJfZlINtvPG9/5hq6CkZvo3VuLDixz0MqelDqtCTEaPdYX9qo0fOSSXKgBfHfYKj6UC76E2clyExZ7AALejhJALTTS7ksd5N+iU682zMXpshSKsKDXGIEXMaGvfVT3q+iyhaKfdcEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GlxlM+hxJ3a8RaViZw3gJ1R6sQa3DQnPnGzePaWSX3A=;
- b=KMMO7V1BBPVqOBDxyD/gB+s81UTq55rhLlpb0iheYq6ww1oL93MkAl2gT4qgB+RlauGdV3h80rg+CKB9Msd27G4rECcht/Sb692yK4ZB22s2XBQ7uzoTeo+/lT5ypjqHy2Z2oq8C+xnnsIK/t3+VaqdFAS/97kEpmRh+ME5p7yloS9Va9h99iuMaN1os3aObVafrFuRw8t7d/g33jUrWcHX9bciHkb4XfqAq0ySWadb9XACKfGNgJG993jvzyLhRH8XYD355WJ85g9/d7168jOiKXvk4z0f883Ci6BHjUOvM7JrkwEn310bLaKzxcYzbEpQ55WiJ6eSkN6K7ea3kjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GlxlM+hxJ3a8RaViZw3gJ1R6sQa3DQnPnGzePaWSX3A=;
- b=MomHGgVGOPPXYCcZH3JKYGV8MrXNWrln16rKJpfc3+MMznfaRPcUCkAPNVp2jUZTxH1aAJImHuBkiXXjr8BIlCszoW6jHX93FagKIZYY+1pmV0OHfoLZadAAAJn4s4DJS6QziL+fNTJ0Jbylj8le4KnPzcy7HTPKSpWpc8PaF9w=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB3807.namprd13.prod.outlook.com (2603:10b6:208:1eb::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.13; Wed, 23 Sep
- 2020 13:09:01 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e8a1:6acc:70f0:ef39]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e8a1:6acc:70f0:ef39%6]) with mapi id 15.20.3433.013; Wed, 23 Sep 2020
- 13:09:01 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bfields@fieldses.org" <bfields@fieldses.org>
-CC:     "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "daire@dneg.com" <daire@dneg.com>
-Subject: Re: Adventures in NFS re-exporting
-Thread-Topic: Adventures in NFS re-exporting
-Thread-Index: fNDm/l4o9cYx5Rz5g0S1EO4zMAtIR1/IOmk+iFWQowAAL8j+AAAA/XiA
-Date:   Wed, 23 Sep 2020 13:09:01 +0000
-Message-ID: <a47553497db7c9ae9f68cbe703a12a4e4051aef2.camel@hammerspace.com>
-References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
-         <1155061727.42788071.1600777874179.JavaMail.zimbra@dneg.com>
-         <ecd78fe32a1d5a3c6cf3c5a77b1841293b3f5cb1.camel@hammerspace.com>
-         <20200923124038.GA4691@fieldses.org>
-In-Reply-To: <20200923124038.GA4691@fieldses.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: fieldses.org; dkim=none (message not signed)
- header.d=none;fieldses.org; dmarc=none action=none
- header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 85bae308-f96c-46db-c8a1-08d85fc1d6fd
-x-ms-traffictypediagnostic: MN2PR13MB3807:
-x-microsoft-antispam-prvs: <MN2PR13MB3807B19F83A89EE80B9E415EB8380@MN2PR13MB3807.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 97JW/pYNLqaODPnaxe0pSToMa7ojUuk5iwR+Esd0N4S+stPoCkqrumBusjLXzqR6QD+4MTwBXqU8/cj8hZ7n8GwjVc4BkOQOyFkKYRd5f2wJV6Dpb2RT8Tt/FhA4jC4Wi3dSk5s5g/eFGulj7FLKtfiIepVvaih43EAZdsNoVRCGWjAGU6srmzgnwqoe/3pMa4YahjNN0x2sWEkWVmGD1ApAuzmPA7vUoOPSRMRB/DkVw8ejLE/5el91IsCVv/h8d0hXeKwB3H0Vj+ZgXpDzw5QSc6t5mI9M2+9JBHw8MOMmYE2/tz0Lx/VAllX1up1fkriDH49W+jV6CM28QZvnF7VfDwzlFRS6ey3C8MKK4Fim2Ut7N9IsO6WPpmIqaQDondxqTihcHfBByr5McGvFMA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(136003)(346002)(396003)(39830400003)(376002)(966005)(54906003)(2906002)(66946007)(66476007)(66556008)(91956017)(76116006)(36756003)(316002)(2616005)(71200400001)(186003)(478600001)(6512007)(83080400001)(83380400001)(4326008)(5660300002)(6916009)(6486002)(64756008)(8676002)(26005)(66446008)(8936002)(6506007)(53546011)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 8hP3rwmcJFNL8jVhb4t9pjxZ8Cw1MbEvHBFutNcKXM6DU5aJVGZcv5zEgoDomsgDbV/p2RiYmdxNCbIClAV1Q2xF/GZZ2Hi+A0QE+1SSzvIb6FjZhC8qWJSn/FW/UuBSuB21+6zV+MZ3wHVOPbEBA/CgAskIRMwzDMl/KG+LjcFx7zu0mnufBPe5c3Vk7XoSFpslolGC+j7Z8pQLpyAykUW6Lr+I5M4Faw71TwkSvBmcAigDTW4NGlNpHhhC+VwRZs1iIhdkmQpEMCKp13pQ1YNglCBygvmHxXNjqdRkrORngL266f5qWPTeQ7chaQGiIhlPm9RU0I7HR8dh8LCMm2vBTkrbNdPLNe2OY5ieevALh8AhsVVQyafPn6uAj8xtEwjc0hvcE9mYTu5nh0bpbUm4k9lHj5gQM9iioOhDqEPHgKHhGO/0NAIErvyabTSnqi9CgXJBZwD7ZeM5+Cda0232MtUKrQLxAHDJ7nFaEu0i3OfL6ob5bya9L5B+01NlTsv126umcunabT9T7oYQUrEBuRV+fVp/XKCEs/niXbbnlxSqtlU6JZmGnHOUS4J/FSGiocPUmE4lEDHOWC5CgRBsIc67lQkfUzVqBZ395DXfzghLlSwKwCsARjmDDd4oKVYOZ63GsH6HnVW2YzFbiQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B6C9BA3F208C8B439457AF7B3062893B@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726825AbgIWOlC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Sep 2020 10:41:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbgIWOk5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Sep 2020 10:40:57 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AB5EC0613CE
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Sep 2020 07:40:57 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C0B7B425E; Wed, 23 Sep 2020 10:40:56 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C0B7B425E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1600872056;
+        bh=wQ3ySGQ3qI9b/NbrCMX0I7wrhr4hVkVvhoRW64zTCYc=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=hiHp4vDxF3twvp3DyhDbGy2GB3DAp9U/YBNBtVREk2jruYG8VxaXAusSXU51Yc5QR
+         0qHQFZ2WhyV9G78I4ttIgzSTHvX7pZcLYDaptcEganQ+jBVO1QUbSNM05siL0uVatY
+         tMgKf7Vw3ZP4fGj9rlEroWXWLuxSEZj86Pgqrc/8=
+Date:   Wed, 23 Sep 2020 10:40:56 -0400
+To:     Chris Hall <linux-nfs@gmch.uk>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: mount.nfs4 and logging
+Message-ID: <20200923144056.GB4691@fieldses.org>
+References: <S1725851AbgIKKt5/20200911104957Z+185@vger.kernel.org>
+ <a38a1249-c570-9069-a498-5e17d85a418a@gmch.uk>
+ <f06f86ef-08bd-3974-3d92-1fbda700cc11@RedHat.com>
+ <f7b9c8b4-29a6-2f28-b1d9-739c546fd557@gmch.uk>
+ <20200919163353.GA15785@fieldses.org>
+ <20200919164020.GB15785@fieldses.org>
+ <12298172-f830-4f22-8612-dfbbc74b8a40@gmch.uk>
+ <20200920193245.GC28449@fieldses.org>
+ <eb64e66e-0328-f9e6-7511-1b73f67c49c1@gmch.uk>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85bae308-f96c-46db-c8a1-08d85fc1d6fd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2020 13:09:01.1147
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5Rz8qZaJucsAGpHoaZyHjcq7lfpugChjUKthdvaQTcoFpPw/LqCChAS+6lw1KdY7ozIDN5ssXy6CSoc2uCKXyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3807
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb64e66e-0328-f9e6-7511-1b73f67c49c1@gmch.uk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA5LTIzIGF0IDA4OjQwIC0wNDAwLCBKLiBCcnVjZSBGaWVsZHMgd3JvdGU6
-DQo+IE9uIFR1ZSwgU2VwIDIyLCAyMDIwIGF0IDAxOjUyOjI1UE0gKzAwMDAsIFRyb25kIE15a2xl
-YnVzdCB3cm90ZToNCj4gPiBPbiBUdWUsIDIwMjAtMDktMjIgYXQgMTM6MzEgKzAxMDAsIERhaXJl
-IEJ5cm5lIHdyb3RlOg0KPiA+ID4gSGksIA0KPiA+ID4gDQo+ID4gPiBJIGp1c3QgdGhvdWdodCBJ
-J2QgZmxlc2ggb3V0IHRoZSBvdGhlciB0d28gaXNzdWVzIEkgaGF2ZSBmb3VuZA0KPiA+ID4gd2l0
-aA0KPiA+ID4gcmUtZXhwb3J0aW5nIHRoYXQgYXJlIHVsdGltYXRlbHkgcmVzcG9uc2libGUgZm9y
-IHRoZSBiaWdnZXN0DQo+ID4gPiBwZXJmb3JtYW5jZSBib3R0bGVuZWNrcy4gQW5kIGJvdGggb2Yg
-dGhlbSByZXZvbHZlIGFyb3VuZCB0aGUNCj4gPiA+IGNhY2hpbmcNCj4gPiA+IG9mIG1ldGFkYXRh
-IGZpbGUgbG9va3VwcyBpbiB0aGUgTkZTIGNsaWVudC4NCj4gPiA+IA0KPiA+ID4gRXNwZWNpYWxs
-eSBmb3IgdGhlIGNhc2Ugd2hlcmUgd2UgYXJlIHJlLWV4cG9ydGluZyBhIHNlcnZlciBtYW55DQo+
-ID4gPiBtaWxsaXNlY29uZHMgYXdheSAoaS5lLiBvbi1wcmVtaXNlIC0+IGNsb3VkKSwgd2Ugd2Fu
-dCB0byBiZSBhYmxlDQo+ID4gPiB0bw0KPiA+ID4gY29udHJvbCBob3cgbXVjaCB0aGUgY2xpZW50
-IGNhY2hlcyBtZXRhZGF0YSBhbmQgZmlsZSBkYXRhIHNvIHRoYXQNCj4gPiA+IGl0J3MgbWFueSBM
-QU4gY2xpZW50cyBhbGwgYmVuZWZpdCBmcm9tIHRoZSByZS1leHBvcnQgc2VydmVyIG9ubHkNCj4g
-PiA+IGhhdmluZyB0byBkbyB0aGUgV0FOIGxvb2t1cHMgb25jZSAod2l0aGluIGEgc3BlY2lmaWVk
-IGNvaGVyZW5jeQ0KPiA+ID4gdGltZSkuDQo+ID4gPiANCj4gPiA+IEtlZXBpbmcgdGhlIGZpbGUg
-ZGF0YSBpbiB0aGUgdmZzIHBhZ2UgY2FjaGUgb3Igb24gZGlzayB1c2luZw0KPiA+ID4gZnNjYWNo
-ZS9jYWNoZWZpbGVzIGlzIGZhaXJseSBzdHJhaWdodGZvcndhcmQsIGJ1dCBrZWVwaW5nIHRoZQ0K
-PiA+ID4gbWV0YWRhdGEgY2FjaGVkIGlzIHBhcnRpY3VsYXJseSBkaWZmaWN1bHQuIEFuZCB3aXRo
-b3V0IHRoZSBjYWNoZWQNCj4gPiA+IG1ldGFkYXRhIHdlIGludHJvZHVjZSBsb25nIGRlbGF5cyBi
-ZWZvcmUgd2UgY2FuIHNlcnZlIHRoZSBhbHJlYWR5DQo+ID4gPiBwcmVzZW50IGFuZCBsb2NhbGx5
-IGNhY2hlZCBmaWxlIGRhdGEgdG8gbWFueSB3YWl0aW5nIGNsaWVudHMuDQo+ID4gPiANCj4gPiA+
-IC0tLS0tIE9uIDcgU2VwLCAyMDIwLCBhdCAxODozMSwgRGFpcmUgQnlybmUgZGFpcmVAZG5lZy5j
-b20gd3JvdGU6DQo+ID4gPiA+IDIpIElmIHdlIGNhY2hlIG1ldGFkYXRhIG9uIHRoZSByZS1leHBv
-cnQgc2VydmVyIHVzaW5nDQo+ID4gPiA+IGFjdGltZW89MzYwMCxub2N0byB3ZSBjYW4NCj4gPiA+
-ID4gY3V0IHRoZSBuZXR3b3JrIHBhY2tldHMgYmFjayB0byB0aGUgb3JpZ2luIHNlcnZlciB0byB6
-ZXJvIGZvcg0KPiA+ID4gPiByZXBlYXRlZCBsb29rdXBzLg0KPiA+ID4gPiBIb3dldmVyLCBpZiBh
-IGNsaWVudCBvZiB0aGUgcmUtZXhwb3J0IHNlcnZlciB3YWxrcyBwYXRocyBhbmQNCj4gPiA+ID4g
-bWVtb3J5DQo+ID4gPiA+IG1hcHMgdGhvc2UNCj4gPiA+ID4gZmlsZXMgKGkuZS4gbG9hZGluZyBh
-biBhcHBsaWNhdGlvbiksIHRoZSByZS1leHBvcnQgc2VydmVyDQo+ID4gPiA+IHN0YXJ0cw0KPiA+
-ID4gPiBpc3N1aW5nDQo+ID4gPiA+IHVuZXhwZWN0ZWQgY2FsbHMgYmFjayB0byB0aGUgb3JpZ2lu
-IHNlcnZlciBhZ2FpbiwNCj4gPiA+ID4gaWdub3JpbmcvaW52YWxpZGF0aW5nIHRoZQ0KPiA+ID4g
-PiByZS1leHBvcnQgc2VydmVyJ3MgTkZTIGNsaWVudCBjYWNoZS4gV2Ugd29ya2VkIGFyb3VuZCB0
-aGlzIHRoaXMNCj4gPiA+ID4gYnkNCj4gPiA+ID4gcGF0Y2hpbmcgYW4NCj4gPiA+ID4gaW5vZGUv
-aXZlcnNpb24gdmFsaWRpdHkgY2hlY2sgaW4gaW5vZGUuYyBzbyB0aGF0IHRoZSBORlMgY2xpZW50
-DQo+ID4gPiA+IGNhY2hlIG9uIHRoZQ0KPiA+ID4gPiByZS1leHBvcnQgc2VydmVyIGlzIHVzZWQu
-IEknbSBub3Qgc3VyZSBhYm91dCB0aGUgY29ycmVjdG5lc3Mgb2YNCj4gPiA+ID4gdGhpcyBwYXRj
-aCBidXQNCj4gPiA+ID4gaXQgd29ya3MgZm9yIG91ciBjb3JuZXIgY2FzZS4NCj4gPiA+IA0KPiA+
-ID4gSWYgd2UgdXNlIGFjdGltZW89MzYwMCxub2N0byAoc2F5KSB0byBtb3VudCBhIHJlbW90ZSBz
-b2Z0d2FyZQ0KPiA+ID4gdm9sdW1lDQo+ID4gPiBvbiB0aGUgcmUtZXhwb3J0IHNlcnZlciwgd2Ug
-Y2FuIHN1Y2Nlc3NmdWxseSBjYWNoZSB0aGUgbG9hZGluZyBvZg0KPiA+ID4gYXBwbGljYXRpb25z
-IGFuZCB3YWxraW5nIG9mIHBhdGhzIGRpcmVjdGx5IG9uIHRoZSByZS1leHBvcnQNCj4gPiA+IHNl
-cnZlcg0KPiA+ID4gc3VjaCB0aGF0IGFmdGVyIGEgY291cGxlIG9mIHJ1bnMsIHRoZXJlIGFyZSBw
-cmFjdGljYWxseSB6ZXJvDQo+ID4gPiBwYWNrZXRzDQo+ID4gPiBiYWNrIHRvIHRoZSBvcmlnaW5h
-dGluZyBORlMgc2VydmVyIChncmVhdCEpLiBCdXQsIGlmIHdlIHRoZW4gZG8NCj4gPiA+IHRoZQ0K
-PiA+ID4gc2FtZSB0aGluZyBvbiBhIGNsaWVudCB3aGljaCBpcyBtb3VudGluZyB0aGF0IHJlLWV4
-cG9ydCBzZXJ2ZXIsDQo+ID4gPiB0aGUNCj4gPiA+IHJlLWV4cG9ydCBzZXJ2ZXIgbm93IHN0YXJ0
-cyBpc3N1aW5nIGxvdHMgb2YgY2FsbHMgYmFjayB0byB0aGUNCj4gPiA+IG9yaWdpbmF0aW5nIHNl
-cnZlciBhbmQgaW52YWxpZGF0aW5nIGl0J3MgY2xpZW50IGNhY2hlIChiYWQhKS4NCj4gPiA+IA0K
-PiA+ID4gSSdtIG5vdCBleGFjdGx5IHN1cmUgd2h5LCBidXQgdGhlIGl2ZXJzaW9uIG9mIHRoZSBp
-bm9kZSBnZXRzDQo+ID4gPiBjaGFuZ2VkDQo+ID4gPiBsb2NhbGx5IChkdWUgdG8gYXRpbWUgbW9k
-aWZpY2F0aW9uPykgbW9zdCBsaWtlbHkgdmlhIGludm9jYXRpb24NCj4gPiA+IG9mDQo+ID4gPiBt
-ZXRob2QgaW5vZGVfaW5jX2l2ZXJzaW9uX3Jhdy4gRWFjaCB0aW1lIGl0IGdldHMgaW5jcmVtZW50
-ZWQgdGhlDQo+ID4gPiBmb2xsb3dpbmcgY2FsbCB0byB2YWxpZGF0ZSBhdHRyaWJ1dGVzIGRldGVj
-dHMgY2hhbmdlcyBjYXVzaW5nIGl0DQo+ID4gPiB0bw0KPiA+ID4gYmUgcmVsb2FkZWQgZnJvbSB0
-aGUgb3JpZ2luYXRpbmcgc2VydmVyLg0KPiA+ID4gDQo+ID4gPiBUaGlzIHBhdGNoIGhlbHBzIHRv
-IGF2b2lkIHRoaXMgd2hlbiBhcHBsaWVkIHRvIHRoZSByZS1leHBvcnQNCj4gPiA+IHNlcnZlcg0K
-PiA+ID4gYnV0IHRoZXJlIG1heSBiZSBvdGhlciBwbGFjZXMgd2hlcmUgdGhpcyBoYXBwZW5zIHRv
-by4gSSBhY2NlcHQNCj4gPiA+IHRoYXQNCj4gPiA+IHRoaXMgcGF0Y2ggaXMgcHJvYmFibHkgbm90
-IHRoZSByaWdodC9nZW5lcmFsIHdheSB0byBkbyB0aGlzLCBidXQNCj4gPiA+IGl0DQo+ID4gPiBo
-ZWxwcyB0byBoaWdobGlnaHQgdGhlIGlzc3VlIHdoZW4gcmUtZXhwb3J0aW5nIGFuZCBpdCB3b3Jr
-cyB3ZWxsDQo+ID4gPiBmb3INCj4gPiA+IG91ciB1c2UgY2FzZToNCj4gPiA+IA0KPiA+ID4gLS0t
-IGxpbnV4LTUuNS4wLTEuZWw3Lng4Nl82NC9mcy9uZnMvaW5vZGUuYyAgICAgMjAyMC0wMS0yNw0K
-PiA+ID4gMDA6MjM6MDMuMDAwMDAwMDAwICswMDAwDQo+ID4gPiArKysgbmV3L2ZzL25mcy9pbm9k
-ZS5jICAyMDIwLTAyLTEzIDE2OjMyOjA5LjAxMzA1NTA3NCArMDAwMA0KPiA+ID4gQEAgLTE4Njks
-NyArMTg2OSw3IEBADQo+ID4gPiAgDQo+ID4gPiAgICAgICAgIC8qIE1vcmUgY2FjaGUgY29uc2lz
-dGVuY3kgY2hlY2tzICovDQo+ID4gPiAgICAgICAgIGlmIChmYXR0ci0+dmFsaWQgJiBORlNfQVRU
-Ul9GQVRUUl9DSEFOR0UpIHsNCj4gPiA+IC0gICAgICAgICAgICAgICBpZiAoIWlub2RlX2VxX2l2
-ZXJzaW9uX3Jhdyhpbm9kZSwgZmF0dHItDQo+ID4gPiA+IGNoYW5nZV9hdHRyKSkgew0KPiA+ID4g
-KyAgICAgICAgICAgICAgIGlmIChpbm9kZV9wZWVrX2l2ZXJzaW9uX3Jhdyhpbm9kZSkgPCBmYXR0
-ci0NCj4gPiA+ID4gY2hhbmdlX2F0dHIpIHsNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
-IC8qIENvdWxkIGl0IGJlIGEgcmFjZSB3aXRoIHdyaXRlYmFjaz8gKi8NCj4gPiA+ICAgICAgICAg
-ICAgICAgICAgICAgICAgIGlmICghKGhhdmVfd3JpdGVycyB8fCBoYXZlX2RlbGVnYXRpb24pKSB7
-DQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludmFsaWQgfD0gTkZTX0lO
-T19JTlZBTElEX0RBVEENCj4gPiANCj4gPiBUaGVyZSBpcyBub3RoaW5nIGluIHRoZSBiYXNlIE5G
-U3Y0LCBhbmQgTkZTdjQuMSBzcGVjcyB0aGF0IGFsbG93DQo+ID4geW91IHRvDQo+ID4gbWFrZSBh
-c3N1bXB0aW9ucyBhYm91dCBob3cgdGhlIGNoYW5nZSBhdHRyaWJ1dGUgYmVoYXZlcyBvdmVyIHRp
-bWUuDQo+ID4gDQo+ID4gVGhlIG9ubHkgc2FmZSB3YXkgdG8gZG8gc29tZXRoaW5nIGxpa2UgdGhl
-IGFib3ZlIGlzIGlmIHRoZSBzZXJ2ZXINCj4gPiBzdXBwb3J0cyBORlN2NC4yIGFuZCBhbHNvIGFk
-dmVydGlzZXMgc3VwcG9ydCBmb3IgdGhlDQo+ID4gJ2NoYW5nZV9hdHRyX3R5cGUnDQo+ID4gYXR0
-cmlidXRlLiBJbiB0aGF0IGNhc2UsIHlvdSBjYW4gY2hlY2sgYXQgbW91bnQgdGltZSBmb3Igd2hl
-dGhlciBvcg0KPiA+IG5vdA0KPiA+IHRoZSBjaGFuZ2UgYXR0cmlidXRlIG9uIHRoaXMgZmlsZXN5
-c3RlbSBpcyBvbmUgb2YgdGhlIG1vbm90b25pYw0KPiA+IHR5cGVzDQo+ID4gd2hpY2ggd291bGQg
-YWxsb3cgdGhlIGFib3ZlIG9wdGltaXNhdGlvbi4NCj4gDQo+IExvb2tpbmcgYXQgaHR0cHM6Ly90
-b29scy5pZXRmLm9yZy9odG1sL3JmYzc4NjIjc2VjdGlvbi0xMi4yLjMgLi4uLiBJDQo+IHRoaW5r
-IHRoYXQgd291bGQgYmUgYW55dGhpbmcgYnV0IE5GUzRfQ0hBTkdFX1RZUEVfSVNfVU5ERUZJTkVE
-ID8NCj4gDQo+IFRoZSBMaW51eCBzZXJ2ZXIncyBjdGltZSBpcyBtb25vdG9uaWMgYW5kIHdpbGwg
-YWR2ZXJ0aXNlIHRoYXQgd2l0aA0KPiBjaGFuZ2VfYXR0cl90eXBlIHNpbmNlIDQuMTkuDQo+IA0K
-PiBTbyBJIHRoaW5rIGl0IHdvdWxkIGJlIGVhc3kgdG8gcGF0Y2ggdGhlIGNsaWVudCB0byBjaGVj
-aw0KPiBjaGFuZ2VfYXR0cl90eXBlIGFuZCBzZXQgYW4gTkZTX0NBUF9NT05PVE9OSUNfQ0hBTkdF
-IGZsYWcgaW4NCj4gc2VydmVyLT5jYXBzLCB0aGUgaGFyZCBwYXJ0IHdvdWxkIGJlIGZpZ3VyaW5n
-IG91dCB3aGljaCBvcHRpbWlzYXRpb25zDQo+IGFyZSBPSy4NCj4gDQoNClRoZSBjdGltZSBpcyAq
-bm90KiBtb25vdG9uaWMuIEl0IGNhbiByZWdyZXNzIHVuZGVyIHNlcnZlciByZWJvb3RzIGFuZA0K
-aXQgY2FuIHJlZ3Jlc3MgaWYgc29tZW9uZSBkZWxpYmVyYXRlbHkgY2hhbmdlcyB0aGUgdGltZS4g
-V2UgaGF2ZSBjb2RlDQp0aGF0IHRyaWVzIHRvIGhhbmRsZSBhbGwgdGhlc2UgaXNzdWVzIChzZWUg
-ZmF0dHItPmdlbmNvdW50IGFuZCBuZnNpLQ0KPmF0dHJfZ2VuY291bnQpIGJlY2F1c2Ugd2UndmUg
-aGl0IHRob3NlIGlzc3VlcyBiZWZvcmUuLi4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4
-IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1t
-ZXJzcGFjZS5jb20NCg0KDQo=
+On Mon, Sep 21, 2020 at 03:40:01PM +0100, Chris Hall wrote:
+> On 20/09/2020 20:32, J. Bruce Fields wrote:
+> >On Sun, Sep 20, 2020 at 10:56:28AM +0100, Chris Hall wrote:
+> ...
+> >>Where nfsdcld, rpc.idmapd and rpc.mountd have indeed been started
+> >>but are not bound to any ports.
+> 
+> >That looks good.  (And rpc.mountd does still serve a purpose in the
+> >NFSv4 case, answering requests from the kernel for information related
+> >to exported filesystems.)
+> 
+> >>But rpc.statd and rpcbind have also been started, and various ports
+> >>have been opened, including port 111 which is bound to systemd.  Is
+> >>there a way to inhibit that for nfs4 only ?
+> 
+> >Unlike rpc.mountd, there's no reason for those to be running at all.
+> >You can mask thoe corresponding systemd units.
+> 
+> I tried masking all of: rpcbind.socket, rpcbind.service,
+> statd.service and statd-notify.service.  systemctl start
+> nfs-server.service (eventually) gives, according to the logging:
+> 
+>  nfs-mountd.service: start operation timed out. Terminating.
+>  nfs-mountd.service: State 'stop-sigterm' timed out. Killing.
+>  nfs-mountd.service: Killing process x (rpc.mountd) with signal SIGKILL.
+>  nfs-mountd.service: Control process exited, code=killed, status=9/KILL
+
+Huh, that suggests rpc.mountd is trying to contact rpcbind, but if
+you've got v2/v3 turned off in the configuration files, it shouldn't be
+trying to register anything.
+
+Looking at the code....  I wonder if the problem is the unregistration
+added by 849b7072a049 "mountd: Clear mountd registrations at start up"?
+
+> If I unmask rpcbind.service, I can start nfs-server.  It no longer
+> starts rpc.statd.  But I still have rpcbind running and port 111
+> open.
+> 
+> >It'd be nice if there was a way to make that happen automatically if v2
+> >and v3 are configured out in the configuration files, but I don't know
+> >how to make that happen.
+> 
+> It would and me neither.
+
+I suppose they could check the configuration and exit on startup if they
+see they're not needed.  Will systemd notice they died and try to
+restart them or something?
+
+--b.
