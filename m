@@ -2,170 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1C40278F53
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Sep 2020 19:05:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CDD9278FA2
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Sep 2020 19:30:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgIYRFE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Sep 2020 13:05:04 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:46028 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728038AbgIYRFE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Sep 2020 13:05:04 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08PH1Yb9183523;
-        Fri, 25 Sep 2020 17:05:00 GMT
+        id S1728843AbgIYRav (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Sep 2020 13:30:51 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33076 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729477AbgIYRav (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Sep 2020 13:30:51 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08PHOxAN193036;
+        Fri, 25 Sep 2020 17:30:49 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
  mime-version : subject : from : in-reply-to : date : cc :
  content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=VOYMSgF5AFNOKJrux52N9rmpg22qkzLXEY38VlpxfX4=;
- b=k6zDKDevpKU4OFu4aDeB7AcS0otAg1EKzE4WR+t8CjxShU+CECd9oALZvBZzNE6qXgYU
- LVs5WUYxtcLfJ2Xi4b1PRA45GChXND2YkqtffDsgc3/D7zJeGe0nIOHs3J3wr20uusrs
- puFTUoWgqh4Gniq+4tdkNlKAe1k1lodcEWErfKZNqrdF4Pr3puG+Aa7VKro5rDTnztz8
- bnztJv60cs1pA8IHrPbfMjNkk5Xs5QpoRIPG3/4huddZi0FwmScpcYsZNoT0MHde3rAO
- XJ6MsJJTRStCnI/vVhj3p5jAXtD1UpJNn+qZ8Whb75nJbKQWb7gZ7IGYVw4cfro6488b JA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 33q5rgw523-1
+ s=corp-2020-01-29; bh=0goo4OHmRzZIaCRulucpY/K0d9Eyltoceyg66Olw1cs=;
+ b=Po5ZPWGG6Eu3K+PCcTfTV0rC0WfG21IppoWDSddztwJ1MyUT1m+QBSFaQy8QwKi+hI6v
+ QTKmp1RPHVx9uTePlQ2eZc70z9zD6xTul/BSaGZhWRxurR4qLJ+5x6w1rQUgNY52Kf2v
+ PzzzU+X29Y6LJJi7Fsn4angqoANEd94lmVX8aH08AKzxmjl/vLCa8vj1iX0jLYMpIlOi
+ VONj/zWJZtUxL7qrH7die3+093En7f61zZ4eO4lKOZE95hq0p85jCtPFZ1pSqilnUpia
+ NBg4DaydaNDDvvnCYBz/CWkP09pb3BIYbCGr/uanl5/JOq9/RRRZXd2It+zRqVhDfKNB pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 33ndnuxy46-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 25 Sep 2020 17:05:00 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08PGtXv4148320;
-        Fri, 25 Sep 2020 17:04:59 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 33nux4ruk2-1
+        Fri, 25 Sep 2020 17:30:49 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08PHUa1o088200;
+        Fri, 25 Sep 2020 17:30:48 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 33s75k4384-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Sep 2020 17:04:59 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08PH4ufe001335;
-        Fri, 25 Sep 2020 17:04:58 GMT
+        Fri, 25 Sep 2020 17:30:48 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08PHUk1w030071;
+        Fri, 25 Sep 2020 17:30:47 GMT
 Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 25 Sep 2020 10:04:56 -0700
+        with ESMTP ; Fri, 25 Sep 2020 10:30:46 -0700
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH v2 00/27] NFSD operation monitoring tracepoints
+Subject: Re: [PATCH 1/9] nfsd: rq_lease_breaker cleanup
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <BEF0E50C-A658-4AAA-BCBD-49F442A338B5@oracle.com>
-Date:   Fri, 25 Sep 2020 13:04:55 -0400
-Cc:     Bill Baker <Bill.Baker@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+In-Reply-To: <160105319858.19706.8351588171501305958.stgit@klimt.1015granger.net>
+Date:   Fri, 25 Sep 2020 13:30:45 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <551339D6-2109-487D-8279-746BCA106893@oracle.com>
-References: <160071167664.1468.1365570508917640511.stgit@klimt.1015granger.net>
- <20200924213617.GA12407@fieldses.org>
- <945A7DE6-909D-4177-852F-F80EF7DFE6B3@oracle.com>
- <20200925143218.GD1096@fieldses.org>
- <23DF63F3-44AC-4DDE-AAB9-E178F4B68103@oracle.com>
- <20200925150038.GF1096@fieldses.org>
- <BEF0E50C-A658-4AAA-BCBD-49F442A338B5@oracle.com>
+Message-Id: <67B5B38F-AFB1-484A-AC20-3D54430B0B5A@oracle.com>
+References: <160105295313.19706.13224584458290743895.stgit@klimt.1015granger.net>
+ <160105319858.19706.8351588171501305958.stgit@klimt.1015granger.net>
 To:     Bruce Fields <bfields@fieldses.org>
 X-Mailer: Apple Mail (2.3608.120.23.2.1)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9755 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 adultscore=0
- bulkscore=0 mlxlogscore=762 phishscore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009250117
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
+ malwarescore=0 adultscore=0 phishscore=0 spamscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009250122
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9755 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 impostorscore=0
- clxscore=1015 suspectscore=0 phishscore=0 malwarescore=0
- priorityscore=1501 mlxlogscore=765 adultscore=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009250117
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 suspectscore=0 bulkscore=0
+ clxscore=1015 impostorscore=0 mlxlogscore=999 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009250121
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Sep 25, 2020, at 11:05 AM, Chuck Lever <chuck.lever@oracle.com> =
+> On Sep 25, 2020, at 12:59 PM, Chuck Lever <chuck.lever@oracle.com> =
 wrote:
 >=20
+> From: J. Bruce Fields <bfields@redhat.com>
 >=20
+> Since only the v4 code cares about it, maybe it's better to leave
+> rq_lease_breaker out of the common dispatch code?
 >=20
->> On Sep 25, 2020, at 11:00 AM, Bruce Fields <bfields@fieldses.org> =
-wrote:
->>=20
->> On Fri, Sep 25, 2020 at 10:36:42AM -0400, Chuck Lever wrote:
->>>=20
->>>=20
->>>> On Sep 25, 2020, at 10:32 AM, Bruce Fields <bfields@fieldses.org> =
-wrote:
->>>>=20
->>>> On Fri, Sep 25, 2020 at 09:59:51AM -0400, Chuck Lever wrote:
->>>>> Thanks Bruce, for your time, attention, and comments!
->>>>>=20
->>>>>> On Sep 24, 2020, at 5:36 PM, J. Bruce Fields =
-<bfields@fieldses.org> wrote:
->>>>>>=20
->>>>>> On Mon, Sep 21, 2020 at 02:10:49PM -0400, Chuck Lever wrote:
->>>>>>> As I've been working on various server bugs, I've been adding
->>>>>>> tracepoints that record NFS operation arguments. Here's an =
-updated
->>>>>>> snapshot of this work for your review and comment.
->>>>>>>=20
->>>>>>> The idea here is to provide a degree of NFS traffic =
-observability
->>>>>>> without needing network capture. Tracepoints are generally =
-lighter-
->>>>>>> weight than full network capture, allowing effective =
-capture-time
->>>>>>> data reduction:
->>>>>>=20
->>>>>> I do wonder when tracepoints seem to duplicate information you =
-could get
->>>>>> from network traces, so thanks for taking the time to explain =
-this.  It
->>>>>> makes sense to me.
->>>>>>=20
->>>>>> The patches look fine.  The only one I'm I'm on the fence about =
-is the
->>>>>> last with the split up of the dispatch functions.  I'll ask some
->>>>>> questions there....
->>>>>=20
->>>>> To be clear to everyone, this series is still "preview". I expect
->>>>> more churn in these patches, thus I don't consider the series =
-ready
->>>>> to be merged by any stretch.
->>>>=20
->>>> OK!
->>>>=20
->>>> One thing I was wondering about: how would you limit tracing to a =
-single
->>>> client, say if you wanted to see all DELEGRETURNs from a single =
-client?
->>>> I guess you'd probably turn on a tracepoint in the receive code, =
-look
->>>> for your client's IP address, then mask the task id to match later
->>>> nfs-level tracepoints.  Is there enough information in those =
-tracepoints
->>>> (including network namespace) to uniquely identify a client?
->>>=20
->>> Client IP address information is in the RPC layer trace data. The
->>> DELEGRETURN trace record includes client ID. So maybe not as
->>> straightforward as it could be.
->>=20
->> I guess what I meant was "limit tracing to a single network =
-endpoint",
->> not exactly limt to a single NFSv4 client....  So, we can do that as
->> long as all the relevant information is in rpc-layer tracepoints, and =
-as
->> long as task id is a reliable way to match up trace points.
->>=20
->> Is the network namespace in there anywhere?  It looks like there'd be =
-no
->> way to distinguish clients in different namespaces if they had the =
-same
->> address.
+> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+> fs/nfsd/nfs4state.c |    3 +++
+> fs/nfsd/nfssvc.c    |    1 -
+> 2 files changed, 3 insertions(+), 1 deletion(-)
 >=20
-> The client ID has the boot verifier for the net namespace.
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index c09a2a4281ec..d9325dea0b74 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -4596,6 +4596,9 @@ static bool nfsd_breaker_owns_lease(struct =
+file_lock *fl)
 >=20
-> None of this helps NFSv3, though.
+> 	if (!i_am_nfsd())
+> 		return NULL;
+> +	/* Note rq_prog =3D=3D NFS_ACL_PROGRAM is also possible: */
+> +	if (rqst->rq_prog !=3D NFS_PROGRAM || rqst->rq_vers < 4)
+> +		return NULL;
+> 	rqst =3D kthread_data(current);
 
-It probably wouldn't be difficult to stuff the client IP address
-and the boot verifier in the trace record for each procedure.
+I had to apply this one by hand, and as usual, got it wrong.
 
-Do you think that would be sufficient?
 
+> 	if (!rqst->rq_lease_breaker)
+> 		return NULL;
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index f7f6473578af..f6bc94cab9da 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -1016,7 +1016,6 @@ nfsd_dispatch(struct svc_rqst *rqstp, __be32 =
+*statp)
+> 		*statp =3D rpc_garbage_args;
+> 		return 1;
+> 	}
+> -	rqstp->rq_lease_breaker =3D NULL;
+> 	/*
+> 	 * Give the xdr decoder a chance to change this if it wants
+> 	 * (necessary in the NFSv4.0 compound case)
+>=20
+>=20
 
 --
 Chuck Lever
