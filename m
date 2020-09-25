@@ -2,554 +2,205 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7FFD278A32
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Sep 2020 16:00:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D404278A44
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Sep 2020 16:01:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbgIYOAF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Sep 2020 10:00:05 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:59236 "EHLO
+        id S1728365AbgIYOB4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Sep 2020 10:01:56 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33366 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbgIYOAF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Sep 2020 10:00:05 -0400
+        with ESMTP id S1728330AbgIYOB4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Sep 2020 10:01:56 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08PDxJTG179294;
-        Fri, 25 Sep 2020 13:59:58 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08PDxJpY179266;
+        Fri, 25 Sep 2020 14:01:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
  mime-version : subject : from : in-reply-to : date : cc :
  content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=JQhssQx+bJLQRlLt5qmE+dAovqhtAKMIFyxEog2FuYM=;
- b=TfQX82mbr2lhDU6q6WB3MJY3013bG7b0F3RAF9ngFvusJ6cRn2WnGra2UwsaretL0/ok
- sS8qzpJLFbZymVgPZpVLOeP2cwwb7Ps1kpw+7U2eWV3IHlTJI8D0RI8uiIAHFq1zeS4C
- t62S0nR9ilAMLaevkUVxUUqHc3Ma6c1WsXdpn+YRIL6Vw8m/Y77eF08eBYsHABXhb5Gp
- ix7lSWRewXMUZ47wKjtncY1yL+tIlzhchOjiEbFxBx8TuJaCsv6n8usdS127x40zploE
- MszeCuhsUiPhMsi2WK/6K7bgVR/pyIv9nI07tOcC7HkVeunTGZSV7nY6opzd/ID8Pvrt JQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 33q5rgv6mc-1
+ s=corp-2020-01-29; bh=OP4zlzxTaclddHnnMchV4FmyqlBomTtuF5gSG1jMMaQ=;
+ b=fCUPtVaPABvJsJPIwLKBUEvVmLejwTzG4BCjKooUwasR0BZIgl0krlECa29JhNZzzrj0
+ VvzNbYXBraG98YHJYwItrjT2QKDQZxOJR9iI6KRK2UG5LNJzF/E71D2+Lkc6BOHOsDOx
+ Qa3DY7Jk95x/CPVuHqGkEK5RY89qPPUznORnON1Q2+oJpS0jE+X5nTJK3exJiCHkvlLP
+ 0iFkyhEqXXcqJ/QEjB6Kw2e1JKuDJxp32CGBvycMvm+fTGD70zejk43N+9+KXiYDRM6M
+ kMGhRDPwGfc6mgwpTEDJVYAHdYN4l6dOQdkMOrEF8hK+kbARL7NmyPBtyC0rl2bJt1jz sw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 33q5rgv74s-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 25 Sep 2020 13:59:58 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08PDuDK8159651;
-        Fri, 25 Sep 2020 13:59:57 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 33r28yeebu-1
+        Fri, 25 Sep 2020 14:01:54 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08PDxXh2001958;
+        Fri, 25 Sep 2020 13:59:54 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 33nux4g3tg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Sep 2020 13:59:57 +0000
+        Fri, 25 Sep 2020 13:59:53 +0000
 Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08PDxtF2028652;
-        Fri, 25 Sep 2020 13:59:56 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08PDxqdZ013608;
+        Fri, 25 Sep 2020 13:59:52 GMT
 Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 25 Sep 2020 06:59:54 -0700
+        with ESMTP ; Fri, 25 Sep 2020 06:59:52 -0700
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH v2 26/27] NFSD: Add tracepoints in the NFS dispatcher
+Subject: Re: [PATCH v2 00/27] NFSD operation monitoring tracepoints
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200924234526.GB12407@fieldses.org>
-Date:   Fri, 25 Sep 2020 09:59:54 -0400
+In-Reply-To: <20200924213617.GA12407@fieldses.org>
+Date:   Fri, 25 Sep 2020 09:59:51 -0400
 Cc:     Bill Baker <Bill.Baker@oracle.com>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <801F3A94-4668-4DF6-9CAF-27171EEBA17A@oracle.com>
+Message-Id: <945A7DE6-909D-4177-852F-F80EF7DFE6B3@oracle.com>
 References: <160071167664.1468.1365570508917640511.stgit@klimt.1015granger.net>
- <160071198717.1468.14262284967190973528.stgit@klimt.1015granger.net>
- <20200924234526.GB12407@fieldses.org>
+ <20200924213617.GA12407@fieldses.org>
 To:     Bruce Fields <bfields@fieldses.org>
 X-Mailer: Apple Mail (2.3608.120.23.2.1)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9754 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 adultscore=0 bulkscore=0 malwarescore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009250098
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 adultscore=0
+ bulkscore=0 mlxlogscore=949 phishscore=0 suspectscore=2 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009250099
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9754 signatures=668680
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 impostorscore=0
- clxscore=1015 suspectscore=0 phishscore=0 malwarescore=0
- priorityscore=1501 mlxlogscore=999 adultscore=0 bulkscore=0 mlxscore=0
+ clxscore=1015 suspectscore=2 phishscore=0 malwarescore=0
+ priorityscore=1501 mlxlogscore=963 adultscore=0 bulkscore=0 mlxscore=0
  lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2009250099
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Thanks Bruce, for your time, attention, and comments!
 
-
-> On Sep 24, 2020, at 7:45 PM, J. Bruce Fields <bfields@fieldses.org> =
+> On Sep 24, 2020, at 5:36 PM, J. Bruce Fields <bfields@fieldses.org> =
 wrote:
 >=20
-> On Mon, Sep 21, 2020 at 02:13:07PM -0400, Chuck Lever wrote:
->> This is follow-on work to the tracepoints added in the NFS server's
->> duplicate reply cache. Here, tracepoints are introduced that report
->> replies from cache as well as encoding and decoding errors.
+> On Mon, Sep 21, 2020 at 02:10:49PM -0400, Chuck Lever wrote:
+>> As I've been working on various server bugs, I've been adding
+>> tracepoints that record NFS operation arguments. Here's an updated
+>> snapshot of this work for your review and comment.
 >>=20
->> The NFSv2, v3, and v4 dispatcher requirements have diverged over
->> time, leaving us with a little bit of technical debt. In addition,
->> I wanted to add a tracepoint for NFSv2 and NFSv3 similar to the
->> nfsd4_compound/compoundstatus tracepoints. Lastly, removing some
->> conditional branches from this hot path helps optimize CPU
->> utilization. So, I've duplicated the nfsd_dispatcher function.
+>> The idea here is to provide a degree of NFS traffic observability
+>> without needing network capture. Tracepoints are generally lighter-
+>> weight than full network capture, allowing effective capture-time
+>> data reduction:
 >=20
-> Comparing current nfsd_dispatch to the nfsv2/v3 nfsd_dispatch: the =
-only
-> thing I spotted removed from the v2/v3-specific dispatch is the
-> rq_lease_breaker =3D NULL.  (I think that's not correct, actually.  We
-> could remove the need for that to be set in the v2/v3 case, but with =
-the
-> current code it does need to be set.)
-
-Noted with thanks.
-
-
-> Comparing current nfsd_dispatch to the nfsv4 nfsd4_dispatch, the
-> v4-specific dispatch does away with nfs_request_too_big() and the
-> v2-specific shortcut in the error encoding case.
+> I do wonder when tracepoints seem to duplicate information you could =
+get
+> from network traces, so thanks for taking the time to explain this.  =
+It
+> makes sense to me.
 >=20
-> So these still look *very* similar.  I don't feel like we're getting a
-> lot of benefit out of splitting these out.
+> The patches look fine.  The only one I'm I'm on the fence about is the
+> last with the split up of the dispatch functions.  I'll ask some
+> questions there....
 
-I don't disagree with that at all. At this point I'm just noodling
-to see what's possible. I'm now toying with other ways to add high-
-value tracing in the legacy ULPs. In the end I might end up avoiding
-significant changes in the dispatchers in order to add tracing.
-
-However, a few thoughts I had while learning how the dispatcher
-code works.
-
-There are some opportunities for reducing instruction path length
-and the number of conditional branches in here. It's a hot path,
-so I think we should consider some careful micro-optimizations
-even if they don't add significant new features or do add some
-code duplication.
-
-In user space, the library (iirc) assumes each ULP provides it's
-own dispatcher function. I'd consider duplicating and removing
-svc_generic_dispatcher() to simplify the pasta in svc_process(),
-again as a micro-optimization and for better code legibility.
-
-lockd's pc_func returns an RPC accept_stat, but the NFSD pc_func
-methods return an NFS status. The latter feels like a layering
-violation for the sake of reducing a small amount of code
-duplication. I'd rather see encoding of the NFS status handled in
-the NFS Reply encoders, since that is an XDR function, and because
-that logic seems slightly different for NFSv2, support for which
-we'd like to deprecate at some point.
-
-Note also that *statp in nfsd_dispatch is never explicitly set to
-rpc_success in the normal execution flow. It relies on the
-equivalence of rpc_success and nfs_ok, which is convenient, but
-confusing to read. It might be cleaner if *statp was made an enum
-to make it explicit what set of values go in that return variable.
-
-
-> By the way, the combination of copying a bunch of code, doing some
-> common cleanup, and dropping version-specific stuff makes it a little
-> hard to sort out what's going on.  If it were me, I'd do this as:
->=20
-> 	- one patch to do common cleanup (dropping some redundant
-> 	  comments, using argv/resv variables to cleanup calculations,
-> 	  etc.)
-> 	- a second patch that just duplicates the one nfsd_dispatch into
-> 	  nfsd_dispatch and nfsd4_dispatch
-> 	- a third patch that just removes the stuff we don't need from
-> 	  the newly duplicated dispatchers.
->=20
-> and then it'd be obvious what's changed.
-
-Good points. The series is still immature, and I tend to maintain
-larger checkpoint patches that get broken down over time to make
-it more obvious what is changing and why. I'll keep your comments
-in mind as this work evolves. Feel free to make similar suggestions
-about my future work.
+To be clear to everyone, this series is still "preview". I expect
+more churn in these patches, thus I don't consider the series ready
+to be merged by any stretch.
 
 
 > --b.
 >=20
 >>=20
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>> - One or a handful of these can be enabled at a time
+>> - Each tracepoint records much less data per operation than capture
+>> - Extra capture-time filtering can reduce data amount even further
+>> - Some of these operations are infrequent enough that their
+>> tracepoint could be enabled persistently without a significant
+>> performance impact (for example, for security auditing)
+>>=20
+>> The topic branch has been updated as well:
+>>=20
+>> git://git.linux-nfs.org/projects/cel/cel-2.6.git =
+nfsd-more-tracepoints
+>>=20
+>>=20
+>> Changes since RFC:
+>> * s/SPDK/SPDX and corrected the spelling of Christoph's surname
+>> * Fixed a build error noticed by <lkp@intel.com>
+>> * Introduced generic headers for VFS and NFS protocol display macros
+>> * nfsd4_compoundstatus now displays NFS4ERR codes symbolically
+>> * The svc_process tracepoint now displays the RPC procedure =
+symbolically
+>> * NFSD dispatcher now displays procedure names and status codes =
+symbolically
+>> * fh_verify tracepoint tentatively included; it adds a lot of noise, =
+but perhaps not much value
+>> * Cleaned up the remaining PROC() macros in the server code
+>> * Removed trace_printk's that were introduced during the RFC series
+>> * Removed redundant nfsd4_close tracepoint
+>>=20
 >> ---
->> fs/nfsd/nfs2acl.c  |    2 -
->> fs/nfsd/nfs3acl.c  |    2 -
->> fs/nfsd/nfs4proc.c |    2 -
->> fs/nfsd/nfsd.h     |    1=20
->> fs/nfsd/nfssvc.c   |  198 =
-++++++++++++++++++++++++++++++++++------------------
->> fs/nfsd/trace.h    |   50 +++++++++++++
->> 6 files changed, 183 insertions(+), 72 deletions(-)
 >>=20
->> diff --git a/fs/nfsd/nfs2acl.c b/fs/nfsd/nfs2acl.c
->> index 54e597918822..894b8f0594e2 100644
->> --- a/fs/nfsd/nfs2acl.c
->> +++ b/fs/nfsd/nfs2acl.c
->> @@ -416,6 +416,6 @@ const struct svc_version nfsd_acl_version2 =3D {
->> 	.vs_nproc	=3D 5,
->> 	.vs_proc	=3D nfsd_acl_procedures2,
->> 	.vs_count	=3D nfsd_acl_count2,
->> -	.vs_dispatch	=3D nfsd_dispatch,
->> +	.vs_dispatch	=3D nfsd4_dispatch,
->> 	.vs_xdrsize	=3D NFS3_SVC_XDRSIZE,
->> };
->> diff --git a/fs/nfsd/nfs3acl.c b/fs/nfsd/nfs3acl.c
->> index 7f512dec7460..924ebb19c59c 100644
->> --- a/fs/nfsd/nfs3acl.c
->> +++ b/fs/nfsd/nfs3acl.c
->> @@ -282,7 +282,7 @@ const struct svc_version nfsd_acl_version3 =3D {
->> 	.vs_nproc	=3D 3,
->> 	.vs_proc	=3D nfsd_acl_procedures3,
->> 	.vs_count	=3D nfsd_acl_count3,
->> -	.vs_dispatch	=3D nfsd_dispatch,
->> +	.vs_dispatch	=3D nfsd4_dispatch,
->> 	.vs_xdrsize	=3D NFS3_SVC_XDRSIZE,
->> };
+>> Chuck Lever (27):
+>>      NFS: Move generic FS show macros to global header
+>>      NFS: Move NFS protocol display macros to global header
+>>      NFSD: Add SPDX header for fs/nfsd/trace.c
+>>      SUNRPC: Move the svc_xdr_recvfrom() tracepoint
+>>      SUNRPC: Add svc_xdr_authenticate tracepoint
+>>      lockd: Replace PROC() macro with open code
+>>      NFSACL: Replace PROC() macro with open code
+>>      SUNRPC: Make trace_svc_process() display the RPC procedure =
+symbolically
+>>      NFSD: Clean up the show_nf_may macro
+>>      NFSD: Remove extra "0x" in tracepoint format specifier
+>>      NFSD: Constify @fh argument of knfsd_fh_hash()
+>>      NFSD: Add tracepoint in nfsd_setattr()
+>>      NFSD: Add tracepoint for nfsd_access()
+>>      NFSD: nfsd_compound_status tracepoint should record XID
+>>      NFSD: Add client ID lifetime tracepoints
+>>      NFSD: Add tracepoints to report NFSv4 session state
+>>      NFSD: Add a tracepoint to report the current filehandle
+>>      NFSD: Add GETATTR tracepoint
+>>      NFSD: Add tracepoint in nfsd4_stateid_preprocess()
+>>      NFSD: Add tracepoint to report arguments to NFSv4 OPEN
+>>      NFSD: Add a tracepoint for DELEGRETURN
+>>      NFSD: Add a lookup tracepoint
+>>      NFSD: Add lock and locku tracepoints
+>>      NFSD: Add tracepoints to record the result of TEST_STATEID and =
+FREE_STATEID
+>>      NFSD: Rename nfsd_ tracepoints to nfsd4_
+>>      NFSD: Add tracepoints in the NFS dispatcher
+>>      NFSD: Replace dprintk callsites in fs/nfsd/nfsfh.c
 >>=20
->> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
->> index 49109645af24..61302641f651 100644
->> --- a/fs/nfsd/nfs4proc.c
->> +++ b/fs/nfsd/nfs4proc.c
->> @@ -3320,7 +3320,7 @@ const struct svc_version nfsd_version4 =3D {
->> 	.vs_nproc		=3D 2,
->> 	.vs_proc		=3D nfsd_procedures4,
->> 	.vs_count		=3D nfsd_count3,
->> -	.vs_dispatch		=3D nfsd_dispatch,
->> +	.vs_dispatch		=3D nfsd4_dispatch,
->> 	.vs_xdrsize		=3D NFS4_SVC_XDRSIZE,
->> 	.vs_rpcb_optnl		=3D true,
->> 	.vs_need_cong_ctrl	=3D true,
->> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
->> index cb742e17e04a..7fa4b19dd2f7 100644
->> --- a/fs/nfsd/nfsd.h
->> +++ b/fs/nfsd/nfsd.h
->> @@ -78,6 +78,7 @@ extern const struct seq_operations nfs_exports_op;
->>  */
->> int		nfsd_svc(int nrservs, struct net *net, const struct cred =
-*cred);
->> int		nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp);
->> +int		nfsd4_dispatch(struct svc_rqst *rqstp, __be32 *statp);
 >>=20
->> int		nfsd_nrthreads(struct net *);
->> int		nfsd_nrpools(struct net *);
->> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
->> index f7f6473578af..d626eea1c78a 100644
->> --- a/fs/nfsd/nfssvc.c
->> +++ b/fs/nfsd/nfssvc.c
->> @@ -28,6 +28,7 @@
->> #include "vfs.h"
->> #include "netns.h"
->> #include "filecache.h"
->> +#include "trace.h"
+>> fs/lockd/svc4proc.c           | 263 +++++++++--
+>> fs/lockd/svcproc.c            | 265 +++++++++--
+>> fs/nfs/callback_xdr.c         |   2 +
+>> fs/nfs/nfs4trace.h            | 387 ++--------------
+>> fs/nfs/nfstrace.h             | 113 +----
+>> fs/nfs/pnfs.h                 |   4 -
+>> fs/nfsd/nfs2acl.c             |  79 +++-
+>> fs/nfsd/nfs3acl.c             |  54 ++-
+>> fs/nfsd/nfs3proc.c            |  25 +
+>> fs/nfsd/nfs4callback.c        |  28 +-
+>> fs/nfsd/nfs4layouts.c         |  16 +-
+>> fs/nfsd/nfs4proc.c            |  43 +-
+>> fs/nfsd/nfs4state.c           | 100 ++--
+>> fs/nfsd/nfsd.h                |   1 +
+>> fs/nfsd/nfsfh.c               |  36 +-
+>> fs/nfsd/nfsfh.h               |   7 +-
+>> fs/nfsd/nfsproc.c             |  21 +
+>> fs/nfsd/nfssvc.c              | 198 +++++---
+>> fs/nfsd/trace.c               |   1 +
+>> fs/nfsd/trace.h               | 844 =
+++++++++++++++++++++++++++++++----
+>> fs/nfsd/vfs.c                 |  18 +-
+>> fs/nfsd/xdr4.h                |   3 +-
+>> include/linux/nfs4.h          |   4 +
+>> include/linux/sunrpc/svc.h    |   1 +
+>> include/trace/events/fs.h     |  30 ++
+>> include/trace/events/nfs.h    | 511 ++++++++++++++++++++
+>> include/trace/events/sunrpc.h |  33 +-
+>> include/uapi/linux/nfsacl.h   |   2 +
+>> net/sunrpc/svc_xprt.c         |   4 +-
+>> net/sunrpc/svcauth.c          |   5 +-
+>> 30 files changed, 2187 insertions(+), 911 deletions(-)
+>> create mode 100644 include/trace/events/nfs.h
 >>=20
->> #define NFSDDBG_FACILITY	NFSDDBG_SVC
->>=20
->> @@ -964,7 +965,7 @@ static __be32 map_new_errors(u32 vers, __be32 =
-nfserr)
->> {
->> 	if (nfserr =3D=3D nfserr_jukebox && vers =3D=3D 2)
->> 		return nfserr_dropit;
->> -	if (nfserr =3D=3D nfserr_wrongsec && vers < 4)
->> +	if (nfserr =3D=3D nfserr_wrongsec)
->> 		return nfserr_acces;
->> 	return nfserr;
->> }
->> @@ -980,18 +981,6 @@ static __be32 map_new_errors(u32 vers, __be32 =
-nfserr)
->> static bool nfs_request_too_big(struct svc_rqst *rqstp,
->> 				const struct svc_procedure *proc)
->> {
->> -	/*
->> -	 * The ACL code has more careful bounds-checking and is not
->> -	 * susceptible to this problem:
->> -	 */
->> -	if (rqstp->rq_prog !=3D NFS_PROGRAM)
->> -		return false;
->> -	/*
->> -	 * Ditto NFSv4 (which can in theory have argument and reply both
->> -	 * more than a page):
->> -	 */
->> -	if (rqstp->rq_vers >=3D 4)
->> -		return false;
->> 	/* The reply will be small, we're OK: */
->> 	if (proc->pc_xdrressize > 0 &&
->> 	    proc->pc_xdrressize < XDR_QUADLEN(PAGE_SIZE))
->> @@ -1000,81 +989,152 @@ static bool nfs_request_too_big(struct =
-svc_rqst *rqstp,
->> 	return rqstp->rq_arg.len > PAGE_SIZE;
->> }
->>=20
->> -int
->> -nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
->> +/**
->> + * nfsd_dispatch - Process an NFSv2 or NFSv3 request
->> + * @rqstp: incoming NFS request
->> + * @statp: OUT: RPC accept_stat value
->> + *
->> + * Return values:
->> + *  %0: Processing complete; do not send a Reply
->> + *  %1: Processing complete; send a Reply
->> + */
->> +int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
->> {
->> -	const struct svc_procedure *proc;
->> -	__be32			nfserr;
->> -	__be32			*nfserrp;
->> -
->> -	dprintk("nfsd_dispatch: vers %d proc %d\n",
->> -				rqstp->rq_vers, rqstp->rq_proc);
->> -	proc =3D rqstp->rq_procinfo;
->> -
->> -	if (nfs_request_too_big(rqstp, proc)) {
->> -		dprintk("nfsd: NFSv%d argument too large\n", =
-rqstp->rq_vers);
->> -		*statp =3D rpc_garbage_args;
->> -		return 1;
->> +	const struct svc_procedure *proc =3D rqstp->rq_procinfo;
->> +	struct kvec *argv =3D &rqstp->rq_arg.head[0];
->> +	struct kvec *resv =3D &rqstp->rq_res.head[0];
->> +	__be32 nfserr, *nfserrp;
->> +
->> +	if (nfs_request_too_big(rqstp, proc))
->> +		goto out_too_large;
->> +
->> +	if (proc->pc_decode && !procp->pc_decode(rqstp, argv->iov_base))
->> +		goto out_decode_err;
->> +
->> +	rqstp->rq_cachetype =3D proc->pc_cachetype;
->> +	switch (nfsd_cache_lookup(rqstp)) {
->> +	case RC_DROPIT:
->> +		goto out_dropit;
->> +	case RC_REPLY:
->> +		goto out_cached_reply;
->> +	case RC_DOIT:
->> +		break;
->> 	}
->> -	rqstp->rq_lease_breaker =3D NULL;
->> +
->> +	nfserrp =3D resv->iov_base + resv->iov_len;
->> +	resv->iov_len +=3D sizeof(__be32);
->> +	nfserr =3D proc->pc_func(rqstp);
->> +	nfserr =3D map_new_errors(rqstp->rq_vers, nfserr);
->> +	if (nfserr =3D=3D nfserr_dropit || test_bit(RQ_DROPME, =
-&rqstp->rq_flags))
->> +		goto out_update_drop;
->> +	if (rqstp->rq_proc)
->> +		*nfserrp++ =3D nfserr;
->> +
->> +	/* For NFSv2, additional info is never returned in case of an =
-error. */
->> +	if (!(nfserr && rqstp->rq_vers =3D=3D 2))
->> +		if (proc->pc_encode && !proc->pc_encode(rqstp, nfserrp))
->> +			goto out_encode_err;
->> +
->> +	nfsd_cache_update(rqstp, proc->pc_cachetype, statp + 1);
->> +	trace_nfsd_svc_status(rqstp, proc, nfserr);
->> +	return 1;
->> +
->> +out_too_large:
->> +	trace_nfsd_svc_too_large_err(rqstp);
->> +	*statp =3D rpc_garbage_args;
->> +	return 1;
->> +
->> +out_decode_err:
->> +	trace_nfsd_svc_decode_err(rqstp);
->> +	*statp =3D rpc_garbage_args;
->> +	return 1;
->> +
->> +out_update_drop:
->> +	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
->> +out_dropit:
->> +	trace_nfsd_svc_dropit(rqstp);
->> +	return 0;
->> +
->> +out_cached_reply:
->> +	trace_nfsd_svc_cached_reply(rqstp);
->> +	return 1;
->> +
->> +out_encode_err:
->> +	trace_nfsd_svc_encode_err(rqstp);
->> +	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
->> +	*statp =3D rpc_system_err;
->> +	return 1;
->> +}
->> +
->> +/**
->> + * nfsd4_dispatch - Process an NFSv4 or NFSACL request
->> + * @rqstp: incoming NFS request
->> + * @statp: OUT: RPC accept_stat value
->> + *
->> + * Return values:
->> + *  %0: Processing complete; do not send a Reply
->> + *  %1: Processing complete; send a Reply
->> + */
->> +int nfsd4_dispatch(struct svc_rqst *rqstp, __be32 *statp)
->> +{
->> +	const struct svc_procedure *proc =3D rqstp->rq_procinfo;
->> +	struct kvec *argv =3D &rqstp->rq_arg.head[0];
->> +	struct kvec *resv =3D &rqstp->rq_res.head[0];
->> +	__be32 nfserr, *nfserrp;
->> +
->> 	/*
->> 	 * Give the xdr decoder a chance to change this if it wants
->> 	 * (necessary in the NFSv4.0 compound case)
->> 	 */
->> 	rqstp->rq_cachetype =3D proc->pc_cachetype;
->> -	/* Decode arguments */
->> -	if (proc->pc_decode &&
->> -	    !proc->pc_decode(rqstp, =
-(__be32*)rqstp->rq_arg.head[0].iov_base)) {
->> -		dprintk("nfsd: failed to decode arguments!\n");
->> -		*statp =3D rpc_garbage_args;
->> -		return 1;
->> -	}
->> +	rqstp->rq_lease_breaker =3D NULL;
->> +
->> +	if (proc->pc_decode && !procp->pc_decode(rqstp, argv->iov_base))
->> +		goto out_decode_err;
->>=20
->> -	/* Check whether we have this call in the cache. */
->> 	switch (nfsd_cache_lookup(rqstp)) {
->> 	case RC_DROPIT:
->> -		return 0;
->> +		goto out_dropit;
->> 	case RC_REPLY:
->> -		return 1;
->> -	case RC_DOIT:;
->> -		/* do it */
->> +		goto out_cached_reply;
->> +	case RC_DOIT:
->> +		break;
->> 	}
->>=20
->> -	/* need to grab the location to store the status, as
->> -	 * nfsv4 does some encoding while processing=20
->> -	 */
->> -	nfserrp =3D rqstp->rq_res.head[0].iov_base
->> -		+ rqstp->rq_res.head[0].iov_len;
->> -	rqstp->rq_res.head[0].iov_len +=3D sizeof(__be32);
->> -
->> -	/* Now call the procedure handler, and encode NFS status. */
->> +	nfserrp =3D resv->iov_base + resv->iov_len;
->> +	resv->iov_len +=3D sizeof(__be32);
->> 	nfserr =3D proc->pc_func(rqstp);
->> -	nfserr =3D map_new_errors(rqstp->rq_vers, nfserr);
->> -	if (nfserr =3D=3D nfserr_dropit || test_bit(RQ_DROPME, =
-&rqstp->rq_flags)) {
->> -		dprintk("nfsd: Dropping request; may be revisited =
-later\n");
->> -		nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
->> -		return 0;
->> -	}
->> -
->> -	if (rqstp->rq_proc !=3D 0)
->> +	if (test_bit(RQ_DROPME, &rqstp->rq_flags))
->> +		goto out_update_drop;
->> +	if (rqstp->rq_proc)
->> 		*nfserrp++ =3D nfserr;
->>=20
->> -	/* Encode result.
->> -	 * For NFSv2, additional info is never returned in case of an =
-error.
->> -	 */
->> -	if (!(nfserr && rqstp->rq_vers =3D=3D 2)) {
->> -		if (proc->pc_encode && !proc->pc_encode(rqstp, nfserrp)) =
-{
->> -			/* Failed to encode result. Release cache entry =
-*/
->> -			dprintk("nfsd: failed to encode result!\n");
->> -			nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
->> -			*statp =3D rpc_system_err;
->> -			return 1;
->> -		}
->> -	}
->> +	if (proc->pc_encode && !proc->pc_encode(rqstp, nfserrp))
->> +		goto out_encode_err;
->>=20
->> -	/* Store reply in cache. */
->> 	nfsd_cache_update(rqstp, rqstp->rq_cachetype, statp + 1);
->> 	return 1;
->> +
->> +out_decode_err:
->> +	trace_nfsd_svc_decode_err(rqstp);
->> +	*statp =3D rpc_garbage_args;
->> +	return 1;
->> +
->> +out_update_drop:
->> +	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
->> +out_dropit:
->> +	trace_nfsd_svc_dropit(rqstp);
->> +	return 0;
->> +
->> +out_cached_reply:
->> +	trace_nfsd_svc_cached_reply(rqstp);
->> +	return 1;
->> +
->> +out_encode_err:
->> +	trace_nfsd_svc_encode_err(rqstp);
->> +	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
->> +	*statp =3D rpc_system_err;
->> +	return 1;
->> }
->>=20
->> int nfsd_pool_stats_open(struct inode *inode, struct file *file)
->> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
->> index 53115fbc00b2..50ab4a84c25f 100644
->> --- a/fs/nfsd/trace.h
->> +++ b/fs/nfsd/trace.h
->> @@ -32,6 +32,56 @@
->> 		{ NFSD_MAY_READ_IF_EXEC,	"READ_IF_EXEC" },	=
-\
->> 		{ NFSD_MAY_64BIT_COOKIE,	"64BIT_COOKIE" })
->>=20
->> +DECLARE_EVENT_CLASS(nfsd_simple_class,
->> +	TP_PROTO(
->> +		const struct svc_rqst *rqstp
->> +	),
->> +	TP_ARGS(rqstp),
->> +	TP_STRUCT__entry(
->> +		__field(u32, xid)
->> +	),
->> +	TP_fast_assign(
->> +		__entry->xid =3D be32_to_cpu(rqstp->rq_xid);
->> +	),
->> +	TP_printk("xid=3D0x%08x", __entry->xid)
->> +);
->> +
->> +#define DEFINE_NFSD_SIMPLE_EVENT(name)			\
->> +DEFINE_EVENT(nfsd_simple_class, nfsd_##name,		\
->> +	TP_PROTO(const struct svc_rqst *rqstp),		\
->> +	TP_ARGS(rqstp))
->> +
->> +DEFINE_NFSD_SIMPLE_EVENT(svc_too_large_err);
->> +DEFINE_NFSD_SIMPLE_EVENT(svc_decode_err);
->> +DEFINE_NFSD_SIMPLE_EVENT(svc_dropit);
->> +DEFINE_NFSD_SIMPLE_EVENT(svc_cached_reply);
->> +DEFINE_NFSD_SIMPLE_EVENT(svc_encode_err);
->> +
->> +TRACE_EVENT(nfsd_svc_status,
->> +	TP_PROTO(
->> +		const struct svc_rqst *rqstp,
->> +		const struct svc_procedure *proc,
->> +		__be32 status
->> +	),
->> +	TP_ARGS(rqstp, proc, status),
->> +	TP_STRUCT__entry(
->> +		__field(u32, xid)
->> +		__field(u32, version)
->> +		__field(unsigned long, status)
->> +		__string(procedure, rqstp->rq_procinfo->pc_name)
->> +	),
->> +	TP_fast_assign(
->> +		__entry->xid =3D be32_to_cpu(rqstp->rq_xid);
->> +		__entry->version =3D rqstp->rq_vers;
->> +		__entry->status =3D be32_to_cpu(status);
->> +		__assign_str(procedure, rqstp->rq_procinfo->pc_name);
->> +	),
->> +	TP_printk("xid=3D0x%08x version=3D%u procedure=3D%s status=3D%s",
->> +		__entry->xid, __entry->version, __get_str(procedure),
->> +		show_nfs_status(__entry->status)
->> +	)
->> +);
->> +
->> TRACE_EVENT(nfsd_access,
->> 	TP_PROTO(
->> 		const struct svc_rqst *rqstp,
->>=20
+>> --
+>> Chuck Lever
 
 --
 Chuck Lever
