@@ -2,91 +2,173 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76D60278F44
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Sep 2020 19:00:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1C40278F53
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Sep 2020 19:05:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbgIYRAo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Sep 2020 13:00:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgIYRAn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Sep 2020 13:00:43 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B947C0613CE
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Sep 2020 10:00:43 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id t13so3001988ile.9
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Sep 2020 10:00:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=oSMLUsNfPgnswhogYws/CMy7vk2sJ4X5VkIdA6Og8TM=;
-        b=JHX1uhytGLQt5aRNxIWalcLfVsoao5jmKb1vE3fBj8Z9tQ54njoxc7+a0V2y1MUh0W
-         qJHmvGrR120muhi47kcV3sE+4WJaPQXDzk3h+ogS0Nbc6BPqwb5FIJwrAyLs7hOVec6g
-         GYHqUutDt1d/5CrAllbY9AbQtY6rbxs8R4rSQxd7fTQQhzZ/J+UV93fFwWPiG1UxfNPw
-         vt8FeJtIltlg1qjaEuB1dga0hNaky6QT4NODIghM3HYZDMekZVP/1jXS8IiSJfMi+NJ5
-         +DDITHWheKkxN1t3O4gUetbBDW1IUQbHfjSHcjBPZXsiu4H62dVRA7GRM0hvnnYomB0v
-         NzJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :in-reply-to:references:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=oSMLUsNfPgnswhogYws/CMy7vk2sJ4X5VkIdA6Og8TM=;
-        b=AJIa0Kbtx2BqeKRu8thNxq303eccruhrnS3DObUlYpLbH0bpCY8g2imnNC1Ppa615W
-         9O2c4DoQE85CaUmeGcLNE3zvgxOb0LgYChgrRMlkA1iyLWPo83q8iLZl7npMPXZl5933
-         p5jMlWCIj3+DFAD0gMV6vRuEuFWO9jzBG+261YHHd0ZIFxNjbBpfRwuaWMChHpFhcI7V
-         /1mZlgZVeHVy3KkjtX/OCTwzd3tjjpwemefbW/8hpYgWeJdpYGFRL0JivEICeuDu9kb6
-         lXFe5ZGbhTpuB1IsIu2Vo10NCv+wMHYtYhFsr3mTFOZJUHjQwIGvLw3al5SDezjcv293
-         Aq2w==
-X-Gm-Message-State: AOAM533x8JpkW1Jxh2wgmKKkVj8Ko1jFIEtXf4WR9XhfoGXcN2NSGAmq
-        DV67sO5z1Bg1h7sznpgqHNWINAlvq5fpjQ==
-X-Google-Smtp-Source: ABdhPJwfMJ9oLTPxHXYP4yXfBK/XgHXoglpVWcHFNv/JrFUQk3kBp3S1qj2uG0l7navWuu1A6Nm9Xg==
-X-Received: by 2002:a05:6e02:df1:: with SMTP id m17mr955842ilj.276.1601053242450;
-        Fri, 25 Sep 2020 10:00:42 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id e14sm1322474iow.16.2020.09.25.10.00.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Sep 2020 10:00:41 -0700 (PDT)
-Sender: Chuck Lever <chucklever@gmail.com>
-Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08PH0e6J014545;
-        Fri, 25 Sep 2020 17:00:40 GMT
-Subject: [PATCH 9/9] NFSD: Set *statp in success path
+        id S1728353AbgIYRFE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Sep 2020 13:05:04 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46028 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728038AbgIYRFE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Sep 2020 13:05:04 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08PH1Yb9183523;
+        Fri, 25 Sep 2020 17:05:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=VOYMSgF5AFNOKJrux52N9rmpg22qkzLXEY38VlpxfX4=;
+ b=k6zDKDevpKU4OFu4aDeB7AcS0otAg1EKzE4WR+t8CjxShU+CECd9oALZvBZzNE6qXgYU
+ LVs5WUYxtcLfJ2Xi4b1PRA45GChXND2YkqtffDsgc3/D7zJeGe0nIOHs3J3wr20uusrs
+ puFTUoWgqh4Gniq+4tdkNlKAe1k1lodcEWErfKZNqrdF4Pr3puG+Aa7VKro5rDTnztz8
+ bnztJv60cs1pA8IHrPbfMjNkk5Xs5QpoRIPG3/4huddZi0FwmScpcYsZNoT0MHde3rAO
+ XJ6MsJJTRStCnI/vVhj3p5jAXtD1UpJNn+qZ8Whb75nJbKQWb7gZ7IGYVw4cfro6488b JA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 33q5rgw523-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 25 Sep 2020 17:05:00 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08PGtXv4148320;
+        Fri, 25 Sep 2020 17:04:59 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 33nux4ruk2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Sep 2020 17:04:59 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08PH4ufe001335;
+        Fri, 25 Sep 2020 17:04:58 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 25 Sep 2020 10:04:56 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [PATCH v2 00/27] NFSD operation monitoring tracepoints
 From:   Chuck Lever <chuck.lever@oracle.com>
-To:     bfields@fieldses.org
-Cc:     linux-nfs@vger.kernel.org
-Date:   Fri, 25 Sep 2020 13:00:40 -0400
-Message-ID: <160105324081.19706.8622937614272635909.stgit@klimt.1015granger.net>
-In-Reply-To: <160105295313.19706.13224584458290743895.stgit@klimt.1015granger.net>
-References: <160105295313.19706.13224584458290743895.stgit@klimt.1015granger.net>
-User-Agent: StGit/0.23-29-ga622f1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <BEF0E50C-A658-4AAA-BCBD-49F442A338B5@oracle.com>
+Date:   Fri, 25 Sep 2020 13:04:55 -0400
+Cc:     Bill Baker <Bill.Baker@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <551339D6-2109-487D-8279-746BCA106893@oracle.com>
+References: <160071167664.1468.1365570508917640511.stgit@klimt.1015granger.net>
+ <20200924213617.GA12407@fieldses.org>
+ <945A7DE6-909D-4177-852F-F80EF7DFE6B3@oracle.com>
+ <20200925143218.GD1096@fieldses.org>
+ <23DF63F3-44AC-4DDE-AAB9-E178F4B68103@oracle.com>
+ <20200925150038.GF1096@fieldses.org>
+ <BEF0E50C-A658-4AAA-BCBD-49F442A338B5@oracle.com>
+To:     Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9755 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 adultscore=0
+ bulkscore=0 mlxlogscore=762 phishscore=0 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009250117
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9755 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 impostorscore=0
+ clxscore=1015 suspectscore=0 phishscore=0 malwarescore=0
+ priorityscore=1501 mlxlogscore=765 adultscore=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009250117
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-*statp is supposed to be set in every path through nfsd_dispatch().
-The success case appears to leave *statp uninitialized.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfssvc.c |    1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index d389b276aa5e..2117cc70b493 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -1063,6 +1063,7 @@ int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
- 
- 	nfsd_cache_update(rqstp, rqstp->rq_cachetype, statp + 1);
- out_cached_reply:
-+	*statp = rpc_success;
- 	return 1;
- 
- out_too_large:
+> On Sep 25, 2020, at 11:05 AM, Chuck Lever <chuck.lever@oracle.com> =
+wrote:
+>=20
+>=20
+>=20
+>> On Sep 25, 2020, at 11:00 AM, Bruce Fields <bfields@fieldses.org> =
+wrote:
+>>=20
+>> On Fri, Sep 25, 2020 at 10:36:42AM -0400, Chuck Lever wrote:
+>>>=20
+>>>=20
+>>>> On Sep 25, 2020, at 10:32 AM, Bruce Fields <bfields@fieldses.org> =
+wrote:
+>>>>=20
+>>>> On Fri, Sep 25, 2020 at 09:59:51AM -0400, Chuck Lever wrote:
+>>>>> Thanks Bruce, for your time, attention, and comments!
+>>>>>=20
+>>>>>> On Sep 24, 2020, at 5:36 PM, J. Bruce Fields =
+<bfields@fieldses.org> wrote:
+>>>>>>=20
+>>>>>> On Mon, Sep 21, 2020 at 02:10:49PM -0400, Chuck Lever wrote:
+>>>>>>> As I've been working on various server bugs, I've been adding
+>>>>>>> tracepoints that record NFS operation arguments. Here's an =
+updated
+>>>>>>> snapshot of this work for your review and comment.
+>>>>>>>=20
+>>>>>>> The idea here is to provide a degree of NFS traffic =
+observability
+>>>>>>> without needing network capture. Tracepoints are generally =
+lighter-
+>>>>>>> weight than full network capture, allowing effective =
+capture-time
+>>>>>>> data reduction:
+>>>>>>=20
+>>>>>> I do wonder when tracepoints seem to duplicate information you =
+could get
+>>>>>> from network traces, so thanks for taking the time to explain =
+this.  It
+>>>>>> makes sense to me.
+>>>>>>=20
+>>>>>> The patches look fine.  The only one I'm I'm on the fence about =
+is the
+>>>>>> last with the split up of the dispatch functions.  I'll ask some
+>>>>>> questions there....
+>>>>>=20
+>>>>> To be clear to everyone, this series is still "preview". I expect
+>>>>> more churn in these patches, thus I don't consider the series =
+ready
+>>>>> to be merged by any stretch.
+>>>>=20
+>>>> OK!
+>>>>=20
+>>>> One thing I was wondering about: how would you limit tracing to a =
+single
+>>>> client, say if you wanted to see all DELEGRETURNs from a single =
+client?
+>>>> I guess you'd probably turn on a tracepoint in the receive code, =
+look
+>>>> for your client's IP address, then mask the task id to match later
+>>>> nfs-level tracepoints.  Is there enough information in those =
+tracepoints
+>>>> (including network namespace) to uniquely identify a client?
+>>>=20
+>>> Client IP address information is in the RPC layer trace data. The
+>>> DELEGRETURN trace record includes client ID. So maybe not as
+>>> straightforward as it could be.
+>>=20
+>> I guess what I meant was "limit tracing to a single network =
+endpoint",
+>> not exactly limt to a single NFSv4 client....  So, we can do that as
+>> long as all the relevant information is in rpc-layer tracepoints, and =
+as
+>> long as task id is a reliable way to match up trace points.
+>>=20
+>> Is the network namespace in there anywhere?  It looks like there'd be =
+no
+>> way to distinguish clients in different namespaces if they had the =
+same
+>> address.
+>=20
+> The client ID has the boot verifier for the net namespace.
+>=20
+> None of this helps NFSv3, though.
+
+It probably wouldn't be difficult to stuff the client IP address
+and the boot verifier in the trace record for each procedure.
+
+Do you think that would be sufficient?
+
+
+--
+Chuck Lever
+
 
 
