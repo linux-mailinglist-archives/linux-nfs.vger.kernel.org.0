@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14121278F3D
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Sep 2020 19:00:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5173278F3E
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Sep 2020 19:00:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgIYRAM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Sep 2020 13:00:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49046 "EHLO
+        id S1728887AbgIYRAR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Sep 2020 13:00:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728887AbgIYRAM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Sep 2020 13:00:12 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3802C0613CE
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Sep 2020 10:00:11 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id v8so3523887iom.6
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Sep 2020 10:00:11 -0700 (PDT)
+        with ESMTP id S1727151AbgIYRAR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Sep 2020 13:00:17 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2C02C0613CE
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Sep 2020 10:00:16 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id f82so3001123ilh.8
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Sep 2020 10:00:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=AziyCTg3ikJfk50903sKb1UZF3qV939G6EeX6uDucTA=;
-        b=Oa4uqtdjiAN2qqAJkNagDNa1dyxj+p0gLFs4qbv5E+Jk9/bhNvelfyuN77toSZWXou
-         dNMXxP9cLHufr7bamyInM4jOEe++Ns1B0KkrmUL2l43fH+lZp+ASpg4ZRkMao9vSqzyu
-         LzArKGHCBQPmPw6bouZ5lIDVxRrt9tEBFfj0o8K1C7x7KsdiOGpbynyajR7E1GA00Uv8
-         XmH6BzW7SM+6uDFd8HmFX9rYY65LVVPQbGFClHZ5N1ifZxiRTapRkc+raFLPwR80Jm+M
-         Zyy0ePFW0jIiALV0gUsAs6WOJSW6q5lHFiGa6i/aN0yP7l7/nxxgJUxUYFVJxBhvwmiP
-         7rug==
+        bh=9eru6TCH8A/SxVGfCWaAVftPwzuy040w+RrOjebf6Dk=;
+        b=iEy3Llr4oRKhdAOSjvB0S1WvXkuQXP+CNsAkxCYFFDRMcvqC7h9RYHvSmaGlHQvERM
+         yNHgBD7WiXGpab/DkbPi6Mzc/+demMa1l9J/U1NPp4VweJd6uf5Bbm3iVGYr+XghDVOI
+         GHIRFRoCukOWT/NISRDLGktTnmApwSwbL8P6HdmXVHVKA1WlMW4D6Q9bE7kzKOvYv7D/
+         fx3QbHILY8UYjal/QQoOMgUDj0WY3hOvc1FdHAufZpH7f7e94Prk/c48vpDdycQk319f
+         Gv5nl3se2C2ZBRwTwrZrAhL3qdiP5iKnAqR4Tenf3uLNwSToGDB22m08eCfWCfkKdsx9
+         d91A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=AziyCTg3ikJfk50903sKb1UZF3qV939G6EeX6uDucTA=;
-        b=pnP8EAGeSo5DqbiMId4CBqLXXpmcmjECMRSf6bpsjf5o8da77c+qk5gtCG7SYCvWiQ
-         BSkKnLroHI/Z81SEEh8w+2M8slzANPzZ8jSOYlm15ljhojqnmghFEE23oMn3TrZ6GIFf
-         EgGTXVgEhSoLPT6bLMuVxOsQWYAqE+ZboiXqMJvNmUgRFJzNcjKlbEao6NEpFvqdC0Kv
-         KsERvhzfpmh1V3zeX9mfct1ebVD0Pc1EYsudKu+YgsX6IRihA3Y8E3g81/s7R6TTyCgl
-         OEKqcjFcWkIzERzWcBMw4VSdTq5E3LmTOn3DqthLcWYq3bb2oY/26lW3eDNp0Lo/1DNz
-         avyA==
-X-Gm-Message-State: AOAM533z/qHQf6o/r+CF13TqY86gQayvMF9KYi5jVK02hj0g71KSe5jH
-        Bbcgw68VGYwPjQB16t/OCwJIef/bVteXUw==
-X-Google-Smtp-Source: ABdhPJyw8RwzMLC1YgWADwlb6jEcF7tIL13RbIQJMqeGn08JVLAD9K/fE6jWji21Ef2yvAqhT0dGAw==
-X-Received: by 2002:a05:6602:2f0c:: with SMTP id q12mr980603iow.76.1601053211026;
-        Fri, 25 Sep 2020 10:00:11 -0700 (PDT)
+        bh=9eru6TCH8A/SxVGfCWaAVftPwzuy040w+RrOjebf6Dk=;
+        b=hK77uC9otXs0se+6+cnlrqBgHVJSF7qzkbwYwHslcX6BfI/RhXafZKfgxjDmGBp56N
+         ZIHzTP+TwPQpyV3aWPWyzB1gcaqYzNSSPIL59K7LxwwqusfzcBLZMWa4ICYlz/YhJLNh
+         q3MyNrtpKhdt8nCgMttJYYjtiFwE1WcFcIlZMUZint4O/FiO5nVIEruPC+OHCQ7nK7ad
+         Oz66SnRssMq2ExR/CmE2IYR1drF8HEJRLr6TN6wT5TLwqOMyQp2akkMx6QmUHKDtQfgz
+         qBNYiqOQrytnKdN/3Q1h6/YSpJakAWbddvQYd0YrQPl88GyKkF1eFZhrPmknXWqIFlwC
+         Y8WQ==
+X-Gm-Message-State: AOAM531bLWbGcbMjWIJKUaUYMjgNhIQGs3G2Hk8tQ9ASgllvS0enbPXp
+        +LAftbnNNnKobgcRjuccWuVv3aroy+s+DA==
+X-Google-Smtp-Source: ABdhPJwqd4RF5eusonQ/FP4Hb/+Ox0RDfmwGCLjLoSWeNIPbd1PVcBnBLUlQjeDOXj3yg7Ay6H1W9g==
+X-Received: by 2002:a92:c60d:: with SMTP id p13mr952128ilm.272.1601053216260;
+        Fri, 25 Sep 2020 10:00:16 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id a5sm1715649ilr.64.2020.09.25.10.00.09
+        by smtp.gmail.com with ESMTPSA id x1sm1708036ilo.50.2020.09.25.10.00.15
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Sep 2020 10:00:10 -0700 (PDT)
+        Fri, 25 Sep 2020 10:00:15 -0700 (PDT)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08PH09YB014527;
-        Fri, 25 Sep 2020 17:00:09 GMT
-Subject: [PATCH 3/9] NFSACL: Replace PROC() macro with open code
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08PH0E3M014530;
+        Fri, 25 Sep 2020 17:00:14 GMT
+Subject: [PATCH 4/9] NFSD: Encoder and decoder functions are always present
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org
-Date:   Fri, 25 Sep 2020 13:00:09 -0400
-Message-ID: <160105320922.19706.14276678028472291314.stgit@klimt.1015granger.net>
+Date:   Fri, 25 Sep 2020 13:00:14 -0400
+Message-ID: <160105321454.19706.10273478072142776781.stgit@klimt.1015granger.net>
 In-Reply-To: <160105295313.19706.13224584458290743895.stgit@klimt.1015granger.net>
 References: <160105295313.19706.13224584458290743895.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -68,192 +68,163 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up: Follow-up on ten-year-old commit b9081d90f5b9 ("NFS: kill
-off complicated macro 'PROC'") by performing the same conversion in
-the NFSACL code. To reduce the chance of error, I copied the original
-C preprocessor output and then made some minor edits.
+nfsd_dispatch() is a hot path. Let's optimize the XDR method calls
+for the by-far common case, which is that the methods are indeed
+present.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs2acl.c           |   72 +++++++++++++++++++++++++++++--------------
- fs/nfsd/nfs3acl.c           |   49 +++++++++++++++++------------
- include/uapi/linux/nfsacl.h |    2 +
- 3 files changed, 80 insertions(+), 43 deletions(-)
+ fs/nfsd/nfs2acl.c  |    6 ++++++
+ fs/nfsd/nfs3acl.c  |    1 +
+ fs/nfsd/nfs3proc.c |    1 +
+ fs/nfsd/nfs3xdr.c  |    6 ++++++
+ fs/nfsd/nfs4proc.c |    1 +
+ fs/nfsd/nfs4xdr.c  |    6 ++++++
+ fs/nfsd/nfssvc.c   |    5 ++---
+ fs/nfsd/xdr3.h     |    1 +
+ fs/nfsd/xdr4.h     |    1 +
+ 9 files changed, 25 insertions(+), 3 deletions(-)
 
 diff --git a/fs/nfsd/nfs2acl.c b/fs/nfsd/nfs2acl.c
-index cbab1d2d8a75..8d20e0d74417 100644
+index 8d20e0d74417..3c8b9250dc4a 100644
 --- a/fs/nfsd/nfs2acl.c
 +++ b/fs/nfsd/nfs2acl.c
-@@ -347,36 +347,62 @@ static void nfsaclsvc_release_access(struct svc_rqst *rqstp)
- 	fh_put(&resp->fh);
- }
- 
--#define nfsaclsvc_decode_voidargs	NULL
--#define nfsaclsvc_release_void		NULL
--#define nfsd3_fhandleargs	nfsd_fhandle
--#define nfsd3_attrstatres	nfsd_attrstat
--#define nfsd3_voidres		nfsd3_voidargs
- struct nfsd3_voidargs { int dummy; };
- 
--#define PROC(name, argt, rest, relt, cache, respsize)			\
--{									\
--	.pc_func	= nfsacld_proc_##name,				\
--	.pc_decode	= nfsaclsvc_decode_##argt##args,		\
--	.pc_encode	= nfsaclsvc_encode_##rest##res,			\
--	.pc_release	= nfsaclsvc_release_##relt,	\
--	.pc_argsize	= sizeof(struct nfsd3_##argt##args),		\
--	.pc_ressize	= sizeof(struct nfsd3_##rest##res),		\
--	.pc_cachetype	= cache,					\
--	.pc_xdrressize	= respsize,					\
--}
--
- #define ST 1		/* status*/
- #define AT 21		/* attributes */
- #define pAT (1+AT)	/* post attributes - conditional */
- #define ACL (1+NFS_ACL_MAX_ENTRIES*3)  /* Access Control List */
- 
--static const struct svc_procedure nfsd_acl_procedures2[] = {
--  PROC(null,	void,		void,		void,	  RC_NOCACHE, ST),
--  PROC(getacl,	getacl,		getacl,		getacl,	  RC_NOCACHE, ST+1+2*(1+ACL)),
--  PROC(setacl,	setacl,		attrstat,	attrstat, RC_NOCACHE, ST+AT),
--  PROC(getattr, fhandle,	attrstat,	attrstat, RC_NOCACHE, ST+AT),
--  PROC(access,	access,		access,		access,   RC_NOCACHE, ST+AT+1),
-+static const struct svc_procedure nfsd_acl_procedures2[5] = {
-+	[ACLPROC2_NULL] = {
-+		.pc_func = nfsacld_proc_null,
-+		.pc_encode = nfsaclsvc_encode_voidres,
-+		.pc_argsize = sizeof(struct nfsd3_voidargs),
-+		.pc_ressize = sizeof(struct nfsd3_voidargs),
-+		.pc_cachetype = RC_NOCACHE,
-+		.pc_xdrressize = ST,
-+	},
-+	[ACLPROC2_GETACL] = {
-+		.pc_func = nfsacld_proc_getacl,
-+		.pc_decode = nfsaclsvc_decode_getaclargs,
-+		.pc_encode = nfsaclsvc_encode_getaclres,
-+		.pc_release = nfsaclsvc_release_getacl,
-+		.pc_argsize = sizeof(struct nfsd3_getaclargs),
-+		.pc_ressize = sizeof(struct nfsd3_getaclres),
-+		.pc_cachetype = RC_NOCACHE,
-+		.pc_xdrressize = ST+1+2*(1+ACL),
-+	},
-+	[ACLPROC2_SETACL] = {
-+		.pc_func = nfsacld_proc_setacl,
-+		.pc_decode = nfsaclsvc_decode_setaclargs,
-+		.pc_encode = nfsaclsvc_encode_attrstatres,
-+		.pc_release = nfsaclsvc_release_attrstat,
-+		.pc_argsize = sizeof(struct nfsd3_setaclargs),
-+		.pc_ressize = sizeof(struct nfsd_attrstat),
-+		.pc_cachetype = RC_NOCACHE,
-+		.pc_xdrressize = ST+AT,
-+	},
-+	[ACLPROC2_GETATTR] = {
-+		.pc_func = nfsacld_proc_getattr,
-+		.pc_decode = nfsaclsvc_decode_fhandleargs,
-+		.pc_encode = nfsaclsvc_encode_attrstatres,
-+		.pc_release = nfsaclsvc_release_attrstat,
-+		.pc_argsize = sizeof(struct nfsd_fhandle),
-+		.pc_ressize = sizeof(struct nfsd_attrstat),
-+		.pc_cachetype = RC_NOCACHE,
-+		.pc_xdrressize = ST+AT,
-+	},
-+	[ACLPROC2_ACCESS] = {
-+		.pc_func = nfsacld_proc_access,
-+		.pc_decode = nfsaclsvc_decode_accessargs,
-+		.pc_encode = nfsaclsvc_encode_accessres,
-+		.pc_release = nfsaclsvc_release_access,
-+		.pc_argsize = sizeof(struct nfsd3_accessargs),
-+		.pc_ressize = sizeof(struct nfsd3_accessres),
-+		.pc_cachetype = RC_NOCACHE,
-+		.pc_xdrressize = ST+AT+1,
-+	},
- };
- 
- static unsigned int nfsd_acl_count2[ARRAY_SIZE(nfsd_acl_procedures2)];
+@@ -183,6 +183,11 @@ static __be32 nfsacld_proc_access(struct svc_rqst *rqstp)
+ /*
+  * XDR decode functions
+  */
++static int nfsaclsvc_decode_voidarg(struct svc_rqst *rqstp, __be32 *p)
++{
++	return 1;
++}
++
+ static int nfsaclsvc_decode_getaclargs(struct svc_rqst *rqstp, __be32 *p)
+ {
+ 	struct nfsd3_getaclargs *argp = rqstp->rq_argp;
+@@ -357,6 +362,7 @@ struct nfsd3_voidargs { int dummy; };
+ static const struct svc_procedure nfsd_acl_procedures2[5] = {
+ 	[ACLPROC2_NULL] = {
+ 		.pc_func = nfsacld_proc_null,
++		.pc_decode = nfsaclsvc_decode_voidarg,
+ 		.pc_encode = nfsaclsvc_encode_voidres,
+ 		.pc_argsize = sizeof(struct nfsd3_voidargs),
+ 		.pc_ressize = sizeof(struct nfsd3_voidargs),
 diff --git a/fs/nfsd/nfs3acl.c b/fs/nfsd/nfs3acl.c
-index 13bca4a2f89d..292acb2e529c 100644
+index 292acb2e529c..614168675c17 100644
 --- a/fs/nfsd/nfs3acl.c
 +++ b/fs/nfsd/nfs3acl.c
-@@ -235,33 +235,42 @@ static void nfs3svc_release_getacl(struct svc_rqst *rqstp)
- 	posix_acl_release(resp->acl_default);
+@@ -245,6 +245,7 @@ struct nfsd3_voidargs { int dummy; };
+ static const struct svc_procedure nfsd_acl_procedures3[3] = {
+ 	[ACLPROC3_NULL] = {
+ 		.pc_func = nfsd3_proc_null,
++		.pc_decode = nfs3svc_decode_voidarg,
+ 		.pc_encode = nfs3svc_encode_voidres,
+ 		.pc_argsize = sizeof(struct nfsd3_voidargs),
+ 		.pc_ressize = sizeof(struct nfsd3_voidargs),
+diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+index 288bc76b4574..3d09959c7042 100644
+--- a/fs/nfsd/nfs3proc.c
++++ b/fs/nfsd/nfs3proc.c
+@@ -716,6 +716,7 @@ struct nfsd3_voidargs { int dummy; };
+ static const struct svc_procedure nfsd_procedures3[22] = {
+ 	[NFS3PROC_NULL] = {
+ 		.pc_func = nfsd3_proc_null,
++		.pc_decode = nfs3svc_decode_voidarg,
+ 		.pc_encode = nfs3svc_encode_voidres,
+ 		.pc_argsize = sizeof(struct nfsd3_voidargs),
+ 		.pc_ressize = sizeof(struct nfsd3_voidres),
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index aae514d40b64..e540fd1a29d8 100644
+--- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -304,6 +304,12 @@ void fill_post_wcc(struct svc_fh *fhp)
+ /*
+  * XDR decode functions
+  */
++int
++nfs3svc_decode_voidarg(struct svc_rqst *rqstp, __be32 *p)
++{
++	return 1;
++}
++
+ int
+ nfs3svc_decode_fhandle(struct svc_rqst *rqstp, __be32 *p)
+ {
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index eaf50eafa935..b99c050797db 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -3279,6 +3279,7 @@ struct nfsd4_voidargs { int dummy; };
+ static const struct svc_procedure nfsd_procedures4[2] = {
+ 	[NFSPROC4_NULL] = {
+ 		.pc_func = nfsd4_proc_null,
++		.pc_decode = nfs4svc_decode_voidarg,
+ 		.pc_encode = nfs4svc_encode_voidres,
+ 		.pc_argsize = sizeof(struct nfsd4_voidargs),
+ 		.pc_ressize = sizeof(struct nfsd4_voidres),
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 259d5ad0e3f4..4449d9858bdc 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -5156,6 +5156,12 @@ void nfsd4_release_compoundargs(struct svc_rqst *rqstp)
+ 	}
  }
  
--#define nfs3svc_decode_voidargs		NULL
--#define nfs3svc_release_void		NULL
--#define nfsd3_setaclres			nfsd3_attrstat
--#define nfsd3_voidres			nfsd3_voidargs
- struct nfsd3_voidargs { int dummy; };
++int
++nfs4svc_decode_voidarg(struct svc_rqst *rqstp, __be32 *p)
++{
++	return 1;
++}
++
+ int
+ nfs4svc_decode_compoundargs(struct svc_rqst *rqstp, __be32 *p)
+ {
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index f6bc94cab9da..b2d20920a998 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -1022,8 +1022,7 @@ nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+ 	 */
+ 	rqstp->rq_cachetype = proc->pc_cachetype;
+ 	/* Decode arguments */
+-	if (proc->pc_decode &&
+-	    !proc->pc_decode(rqstp, (__be32*)rqstp->rq_arg.head[0].iov_base)) {
++	if (!proc->pc_decode(rqstp, (__be32 *)rqstp->rq_arg.head[0].iov_base)) {
+ 		dprintk("nfsd: failed to decode arguments!\n");
+ 		*statp = rpc_garbage_args;
+ 		return 1;
+@@ -1062,7 +1061,7 @@ nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+ 	 * For NFSv2, additional info is never returned in case of an error.
+ 	 */
+ 	if (!(nfserr && rqstp->rq_vers == 2)) {
+-		if (proc->pc_encode && !proc->pc_encode(rqstp, nfserrp)) {
++		if (!proc->pc_encode(rqstp, nfserrp)) {
+ 			/* Failed to encode result. Release cache entry */
+ 			dprintk("nfsd: failed to encode result!\n");
+ 			nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
+diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
+index 4155fd71714c..ae6fa6c9cb46 100644
+--- a/fs/nfsd/xdr3.h
++++ b/fs/nfsd/xdr3.h
+@@ -273,6 +273,7 @@ union nfsd3_xdrstore {
  
--#define PROC(name, argt, rest, relt, cache, respsize)			\
--{									\
--	.pc_func	= nfsd3_proc_##name,				\
--	.pc_decode	= nfs3svc_decode_##argt##args,			\
--	.pc_encode	= nfs3svc_encode_##rest##res,			\
--	.pc_release	= nfs3svc_release_##relt,			\
--	.pc_argsize	= sizeof(struct nfsd3_##argt##args),		\
--	.pc_ressize	= sizeof(struct nfsd3_##rest##res),		\
--	.pc_cachetype	= cache,					\
--	.pc_xdrressize	= respsize,					\
--}
--
- #define ST 1		/* status*/
- #define AT 21		/* attributes */
- #define pAT (1+AT)	/* post attributes - conditional */
- #define ACL (1+NFS_ACL_MAX_ENTRIES*3)  /* Access Control List */
+ #define NFS3_SVC_XDRSIZE		sizeof(union nfsd3_xdrstore)
  
--static const struct svc_procedure nfsd_acl_procedures3[] = {
--  PROC(null,	void,		void,		void,	  RC_NOCACHE, ST),
--  PROC(getacl,	getacl,		getacl,		getacl,	  RC_NOCACHE, ST+1+2*(1+ACL)),
--  PROC(setacl,	setacl,		setacl,		fhandle,  RC_NOCACHE, ST+pAT),
-+static const struct svc_procedure nfsd_acl_procedures3[3] = {
-+	[ACLPROC3_NULL] = {
-+		.pc_func = nfsd3_proc_null,
-+		.pc_encode = nfs3svc_encode_voidres,
-+		.pc_argsize = sizeof(struct nfsd3_voidargs),
-+		.pc_ressize = sizeof(struct nfsd3_voidargs),
-+		.pc_cachetype = RC_NOCACHE,
-+		.pc_xdrressize = ST,
-+	},
-+	[ACLPROC3_GETACL] = {
-+		.pc_func = nfsd3_proc_getacl,
-+		.pc_decode = nfs3svc_decode_getaclargs,
-+		.pc_encode = nfs3svc_encode_getaclres,
-+		.pc_release = nfs3svc_release_getacl,
-+		.pc_argsize = sizeof(struct nfsd3_getaclargs),
-+		.pc_ressize = sizeof(struct nfsd3_getaclres),
-+		.pc_cachetype = RC_NOCACHE,
-+		.pc_xdrressize = ST+1+2*(1+ACL),
-+	},
-+	[ACLPROC3_SETACL] = {
-+		.pc_func = nfsd3_proc_setacl,
-+		.pc_decode = nfs3svc_decode_setaclargs,
-+		.pc_encode = nfs3svc_encode_setaclres,
-+		.pc_release = nfs3svc_release_fhandle,
-+		.pc_argsize = sizeof(struct nfsd3_setaclargs),
-+		.pc_ressize = sizeof(struct nfsd3_attrstat),
-+		.pc_cachetype = RC_NOCACHE,
-+		.pc_xdrressize = ST+pAT,
-+	},
- };
++int nfs3svc_decode_voidarg(struct svc_rqst *, __be32 *);
+ int nfs3svc_decode_fhandle(struct svc_rqst *, __be32 *);
+ int nfs3svc_decode_sattrargs(struct svc_rqst *, __be32 *);
+ int nfs3svc_decode_diropargs(struct svc_rqst *, __be32 *);
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index 66499fb6b567..679d40af1bbb 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -781,6 +781,7 @@ set_change_info(struct nfsd4_change_info *cinfo, struct svc_fh *fhp)
  
- static unsigned int nfsd_acl_count3[ARRAY_SIZE(nfsd_acl_procedures3)];
-diff --git a/include/uapi/linux/nfsacl.h b/include/uapi/linux/nfsacl.h
-index ca9a8501ff30..2c2ad204d3b0 100644
---- a/include/uapi/linux/nfsacl.h
-+++ b/include/uapi/linux/nfsacl.h
-@@ -9,11 +9,13 @@
  
- #define NFS_ACL_PROGRAM	100227
- 
-+#define ACLPROC2_NULL		0
- #define ACLPROC2_GETACL		1
- #define ACLPROC2_SETACL		2
- #define ACLPROC2_GETATTR	3
- #define ACLPROC2_ACCESS		4
- 
-+#define ACLPROC3_NULL		0
- #define ACLPROC3_GETACL		1
- #define ACLPROC3_SETACL		2
- 
+ bool nfsd4_mach_creds_match(struct nfs4_client *cl, struct svc_rqst *rqstp);
++int nfs4svc_decode_voidarg(struct svc_rqst *, __be32 *);
+ int nfs4svc_encode_voidres(struct svc_rqst *, __be32 *);
+ int nfs4svc_decode_compoundargs(struct svc_rqst *, __be32 *);
+ int nfs4svc_encode_compoundres(struct svc_rqst *, __be32 *);
 
 
