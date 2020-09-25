@@ -2,32 +2,32 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74F4D2788D6
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Sep 2020 14:58:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D73D27890D
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Sep 2020 15:08:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbgIYM6P (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Sep 2020 08:58:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39656 "EHLO
+        id S1728632AbgIYNH7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Sep 2020 09:07:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728935AbgIYM6P (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Sep 2020 08:58:15 -0400
+        with ESMTP id S1728466AbgIYNH7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Sep 2020 09:07:59 -0400
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E033DC0613CE
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Sep 2020 05:58:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E0D5C0613CE
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Sep 2020 06:07:59 -0700 (PDT)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id C5766448D; Fri, 25 Sep 2020 08:58:13 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C5766448D
+        id CE690C56; Fri, 25 Sep 2020 09:07:58 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CE690C56
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1601038693;
-        bh=gCCJxb/0DquHJNEPu1djqUX+jjr0NPycxUSjLaHNxjM=;
+        s=default; t=1601039278;
+        bh=fOeRm4EL2TuNfi2z68lm6oxqa0/ztau0G/0o1CNKvOc=;
         h=Date:To:Subject:From:From;
-        b=b1ab3B9j3hPkibXoPduB4XawuyqtaAN0LGOroFcSeSglKlZOruGPep868YPiUz5w9
-         FoeKv4Ytp4Xpjk0O+d3V22zKhwRYi+iwlq9GWEmVVeeb+2v3pkFlx6ucZtt9pJZSgn
-         QOgsv4FiZhaQcC+1LkWiZM1SU0GVZYSvhWYjrvy0=
-Date:   Fri, 25 Sep 2020 08:58:13 -0400
+        b=yfYVVqE2+E8uGLwhCzXc8o5L9KpgTEfMaSL3K7pSe2kZ6QsJiOUk/F9u2RyWevBYa
+         VR/zfgAG0zUcsFXuCpxCmiGHpxaLbXljkBU7CSzjf8GeSKctOwmG9wk6qk+9RbQyBm
+         6g+BCLrzsaZRxa/19GxXwCPY33e/BhnghdsGxQYQ=
+Date:   Fri, 25 Sep 2020 09:07:58 -0400
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH] sunrpc: simplify do_cache_clean
-Message-ID: <20200925125813.GA1096@fieldses.org>
+Subject: [PATCH] nfsd: Cache R, RW, and W opens separately
+Message-ID: <20200925130758.GB1096@fieldses.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -39,44 +39,37 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: "J. Bruce Fields" <bfields@redhat.com>
 
-Is it just me, or is the logic written in a slightly convoluted way?
+The nfsd open code has always kept separate read-only, read-write, and
+write-only opens as necessary to ensure that when a client closes or
+downgrades, we don't retain more access than necessary.
 
-I find it a little easier to read this way.
+Also, I didn't realize the cache behaved this way when I wrote
+94415b06eb8a "nfsd4: a client's own opens needn't prevent delegations".
+There I assumed fi_fds[O_WRONLY] and fi_fds[O_RDWR] would always be
+distinct.  The violation of that assumption is triggering a
+WARN_ON_ONCE() and could also cause the server to give out a delegation
+when it shouldn't.
 
+Fixes: 94415b06eb8a ("nfsd4: a client's own opens needn't prevent delegations")
+Tested-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 ---
- net/sunrpc/cache.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ fs/nfsd/filecache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index 9e68e443f497..2990a7ab9e2a 100644
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -498,16 +498,17 @@ static int cache_clean(void)
-  */
- static void do_cache_clean(struct work_struct *work)
- {
--	int delay = 5;
--	if (cache_clean() == -1)
--		delay = round_jiffies_relative(30*HZ);
-+	int delay;
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index c8b9d2667ee6..3c6c2f7d1688 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -889,7 +889,7 @@ nfsd_file_find_locked(struct inode *inode, unsigned int may_flags,
  
- 	if (list_empty(&cache_list))
--		delay = 0;
-+		return;
-+
-+	if (cache_clean() == -1)
-+		delay = round_jiffies_relative(30*HZ);
-+	else
-+		delay = 5;
- 
--	if (delay)
--		queue_delayed_work(system_power_efficient_wq,
--				   &cache_cleaner, delay);
-+	queue_delayed_work(system_power_efficient_wq, &cache_cleaner, delay);
- }
- 
- 
+ 	hlist_for_each_entry_rcu(nf, &nfsd_file_hashtbl[hashval].nfb_head,
+ 				 nf_node, lockdep_is_held(&nfsd_file_hashtbl[hashval].nfb_lock)) {
+-		if ((need & nf->nf_may) != need)
++		if (nf->nf_may != need)
+ 			continue;
+ 		if (nf->nf_inode != inode)
+ 			continue;
 -- 
 2.26.2
 
