@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEF61278F42
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Sep 2020 19:00:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B48DF278F43
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Sep 2020 19:00:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgIYRAd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Sep 2020 13:00:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49110 "EHLO
+        id S1728843AbgIYRAi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Sep 2020 13:00:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgIYRAc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Sep 2020 13:00:32 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B83B8C0613CE
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Sep 2020 10:00:32 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id q4so3543506iop.5
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Sep 2020 10:00:32 -0700 (PDT)
+        with ESMTP id S1727151AbgIYRAi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Sep 2020 13:00:38 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF695C0613CE
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Sep 2020 10:00:37 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id y13so3537471iow.4
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Sep 2020 10:00:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=LT0d43XqDPFQ2igY6aAK/AJnS7eJ9FKHSrKkT4SX47c=;
-        b=sWOFV8pjfIMkSRfxnLV5v5Vp9yMmdsUohax5s2S++MR7yycKHiXUGij1PcPc3HcXzA
-         rUHWFy+b9yG7WoCn0MBesGno+sJniOX46E7fxK+EkSsfug1P/fJH4JJB2jkdwnSf1Q5a
-         DvAbIx+X4j1yxKM1T93kchbLtFITMZS6AXEa4jUTxq2TTXFinkwTN9QUMW77krucJQV5
-         Ew/O5Csj1jmfg0c9eBiErrMjHqeerSsEjnnh0PmWgs8I4mIjipqkTQlmx2rH/zW8wi7E
-         cZRjUJ+1lxl7QZ6Unz6pzggcPrpC2Rf7aO8eFLMFVwb6Azi6UDiJ+1lWfDljj7OP6TV6
-         zqeg==
+        bh=+yTv7eTXBEq4HoQ7tn4eqVMa0bjmmSQdI3afPBQcOu0=;
+        b=nGusW9NOlzykeEVXezpSNopK4aVPyW3+nWCNzyYWM626KkXwmwjXriJHeiUvcp5eOs
+         EKbLl3NDDmjP97WXM1deUvLAZ2geLMxLG7yxnlAr+LbIQy7NQQSQ7qu+dHc2MM04SKtb
+         V0EA/SGbMS4FdNZd08qj/9x5yU7U80/xeQgtSgk7UMJu39MBMO7CLURl2EJ8Z5tWI0PY
+         H7klBU548EdOU8EyvJJRxAk7hi99OWH2kUpyLnKej4rhlyD7nRPdBi+nH+FKljt6PivW
+         1JPqnc5dIArUN3CJiZglI/jaBWk1uTxIFJN7pjlXm59KHKWImxua8JiogjJoVNaGFFeu
+         dMcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=LT0d43XqDPFQ2igY6aAK/AJnS7eJ9FKHSrKkT4SX47c=;
-        b=doYmWeoA5XyhotmRxb9nT8UbpUL7JGTgNWeSqQYOYBApELOhPU0MtJxbzYlmWMp4K1
-         7pHcmTyEqc5ovWLZVFvzinpVeSKJ0/cEVVHDeXyfg0ClJtcUnxsUaSC09M8YrgKJJrUm
-         M3u5bS5RB/sf6/gZ8KxDpVqgSJrveaY7rH88JHgXJTShciUBnmAk2pe/OCb54exrTYuj
-         /4bKJagIRkxUea6nPUz36rEr/JGIUNCeSfQRSVGsfVmEFnyc+VOPTi7Y0fDYx7umzHc6
-         +RzYaw11K3OBOGu98praT6MJB3ZGJmvLXdIu0pkil9ryeEf4/yvaT9rx9dcE+MaaMyS/
-         IeFg==
-X-Gm-Message-State: AOAM531sv7p4KyIEjRI5huHr3EjE3G0NUKEuLWKW1F8XwoLyjwMeCnOY
-        xGq4biy/LiH4R9C5aoLOh1gojcUJNNTqjA==
-X-Google-Smtp-Source: ABdhPJzPNZG8DX8jM4d2E2gghV/2KR0RxiqftIlxS0H0MMenDl/qLReitR8k5QMPnpj/cIkfgYsNZA==
-X-Received: by 2002:a02:cb99:: with SMTP id u25mr215jap.99.1601053232140;
-        Fri, 25 Sep 2020 10:00:32 -0700 (PDT)
+        bh=+yTv7eTXBEq4HoQ7tn4eqVMa0bjmmSQdI3afPBQcOu0=;
+        b=kTt0jc01Roj1ac5czAe48+Ue9ahIxVkrD4nnHFd/N/2Df2et3kHFkBrCNiAx4QRt01
+         h9yXGAliQ0GLB3N3eyMsjOMFUl+bFgy5xdnkuusZDMrfFLkyxrltuljw8uR9WhbGpIWO
+         cOC8k46VN0NpNQIuPORzr5pJ2yFMfAxomtpqKNmVq6uMhdY/z+o4M9Cx5wKQ90CWdJIA
+         LF5Z+LwXCJdJ6Xus5gOaoBbgeDaCDE3B3ZwcuqRfSNtFyHku3hoWmUcJ+dMYcE6jSL2u
+         gARJlQOIoFBoT2uQG0k/F139y31q05LeUlzrZRWtI8qTiw61J8VCwRRrvfoaBsiDGKuV
+         2opQ==
+X-Gm-Message-State: AOAM532mgGPtkVKcm9mrkaeR8aLFBBzIwZ3ZdIffLJI4yjO3L7uSFHMI
+        iw9asKASKM530IGhs9OWiirB7euAlBsxLw==
+X-Google-Smtp-Source: ABdhPJw9alu2qQv86ia/oq6No3cMJwN/B6qGDHxJaKsnGCBJ1Pc51qpeUFHPI1O4YEBVvY9O8bYVBw==
+X-Received: by 2002:a02:7654:: with SMTP id z81mr36135jab.80.1601053237174;
+        Fri, 25 Sep 2020 10:00:37 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id e22sm1418514ioc.43.2020.09.25.10.00.31
+        by smtp.gmail.com with ESMTPSA id f22sm1802598ilf.56.2020.09.25.10.00.36
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Sep 2020 10:00:31 -0700 (PDT)
+        Fri, 25 Sep 2020 10:00:36 -0700 (PDT)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08PH0UGd014539;
-        Fri, 25 Sep 2020 17:00:30 GMT
-Subject: [PATCH 7/9] NFSD: Clean up nfsd_dispatch() variables
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08PH0ZCq014542;
+        Fri, 25 Sep 2020 17:00:35 GMT
+Subject: [PATCH 8/9] NFSD: Refactor nfsd_dispatch() error paths
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org
-Date:   Fri, 25 Sep 2020 13:00:30 -0400
-Message-ID: <160105323037.19706.9936685667225383297.stgit@klimt.1015granger.net>
+Date:   Fri, 25 Sep 2020 13:00:35 -0400
+Message-ID: <160105323573.19706.6751036475347020759.stgit@klimt.1015granger.net>
 In-Reply-To: <160105295313.19706.13224584458290743895.stgit@klimt.1015granger.net>
 References: <160105295313.19706.13224584458290743895.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -68,56 +68,111 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-For consistency and code legibility, use a similar organization of
-variables as svc_generic_dispatch().
+nfsd_dispatch() is a hot path. Ensure the compiler takes the
+processing of infrequent errors out of line.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfssvc.c |   15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ fs/nfsd/nfssvc.c |   59 +++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 34 insertions(+), 25 deletions(-)
 
 diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index b2581bcbd81c..2eb20cbf590f 100644
+index 2eb20cbf590f..d389b276aa5e 100644
 --- a/fs/nfsd/nfssvc.c
 +++ b/fs/nfsd/nfssvc.c
-@@ -1011,13 +1011,13 @@ static bool nfs_request_too_big(struct svc_rqst *rqstp,
-  */
- int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
- {
--	const struct svc_procedure *proc;
--	__be32			nfserr;
--	__be32			*nfserrp;
-+	const struct svc_procedure *proc = rqstp->rq_procinfo;
-+	struct kvec *argv = &rqstp->rq_arg.head[0];
-+	struct kvec *resv = &rqstp->rq_res.head[0];
-+	__be32 nfserr, *nfserrp;
- 
+@@ -1019,30 +1019,24 @@ int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
  	dprintk("nfsd_dispatch: vers %d proc %d\n",
  				rqstp->rq_vers, rqstp->rq_proc);
--	proc = rqstp->rq_procinfo;
  
- 	if (nfs_request_too_big(rqstp, proc)) {
- 		dprintk("nfsd: NFSv%d argument too large\n", rqstp->rq_vers);
-@@ -1030,7 +1030,7 @@ int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+-	if (nfs_request_too_big(rqstp, proc)) {
+-		dprintk("nfsd: NFSv%d argument too large\n", rqstp->rq_vers);
+-		*statp = rpc_garbage_args;
+-		return 1;
+-	}
++	if (nfs_request_too_big(rqstp, proc))
++		goto out_too_large;
+ 
+ 	/*
+ 	 * Give the xdr decoder a chance to change this if it wants
  	 * (necessary in the NFSv4.0 compound case)
  	 */
  	rqstp->rq_cachetype = proc->pc_cachetype;
--	if (!proc->pc_decode(rqstp, (__be32 *)rqstp->rq_arg.head[0].iov_base)) {
-+	if (!proc->pc_decode(rqstp, argv->iov_base)) {
- 		dprintk("nfsd: failed to decode arguments!\n");
- 		*statp = rpc_garbage_args;
- 		return 1;
-@@ -1049,9 +1049,8 @@ int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
- 	 * Need to grab the location to store the status, as
- 	 * NFSv4 does some encoding while processing
- 	 */
--	nfserrp = rqstp->rq_res.head[0].iov_base
--		+ rqstp->rq_res.head[0].iov_len;
--	rqstp->rq_res.head[0].iov_len += sizeof(__be32);
-+	nfserrp = resv->iov_base + resv->iov_len;
-+	resv->iov_len += sizeof(__be32);
+-	if (!proc->pc_decode(rqstp, argv->iov_base)) {
+-		dprintk("nfsd: failed to decode arguments!\n");
+-		*statp = rpc_garbage_args;
+-		return 1;
+-	}
++	if (!proc->pc_decode(rqstp, argv->iov_base))
++		goto out_decode_err;
+ 
+ 	switch (nfsd_cache_lookup(rqstp)) {
+ 	case RC_DOIT:
+ 		break;
+ 	case RC_REPLY:
+-		return 1;
++		goto out_cached_reply;
+ 	case RC_DROPIT:
+-		return 0;
++		goto out_dropit;
+ 	}
+ 
+ 	/*
+@@ -1054,11 +1048,8 @@ int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
  
  	nfserr = proc->pc_func(rqstp);
  	nfserr = map_new_errors(rqstp->rq_vers, nfserr);
+-	if (nfserr == nfserr_dropit || test_bit(RQ_DROPME, &rqstp->rq_flags)) {
+-		dprintk("nfsd: Dropping request; may be revisited later\n");
+-		nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
+-		return 0;
+-	}
++	if (nfserr == nfserr_dropit || test_bit(RQ_DROPME, &rqstp->rq_flags))
++		goto out_update_drop;
+ 
+ 	if (rqstp->rq_proc != 0)
+ 		*nfserrp++ = nfserr;
+@@ -1066,16 +1057,34 @@ int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+ 	/*
+ 	 * For NFSv2, additional info is never returned in case of an error.
+ 	 */
+-	if (!(nfserr && rqstp->rq_vers == 2)) {
+-		if (!proc->pc_encode(rqstp, nfserrp)) {
+-			dprintk("nfsd: failed to encode result!\n");
+-			nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
+-			*statp = rpc_system_err;
+-			return 1;
+-		}
+-	}
++	if (!(nfserr && rqstp->rq_vers == 2))
++		if (!proc->pc_encode(rqstp, nfserrp))
++			goto out_encode_err;
+ 
+ 	nfsd_cache_update(rqstp, rqstp->rq_cachetype, statp + 1);
++out_cached_reply:
++	return 1;
++
++out_too_large:
++	dprintk("nfsd: NFSv%d argument too large\n", rqstp->rq_vers);
++	*statp = rpc_garbage_args;
++	return 1;
++
++out_decode_err:
++	dprintk("nfsd: failed to decode arguments!\n");
++	*statp = rpc_garbage_args;
++	return 1;
++
++out_update_drop:
++	dprintk("nfsd: Dropping request; may be revisited later\n");
++	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
++out_dropit:
++	return 0;
++
++out_encode_err:
++	dprintk("nfsd: failed to encode result!\n");
++	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
++	*statp = rpc_system_err;
+ 	return 1;
+ }
+ 
 
 
