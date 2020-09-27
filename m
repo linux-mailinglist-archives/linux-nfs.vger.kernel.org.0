@@ -2,99 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E809027F299
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Sep 2020 21:30:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AEE527F2EF
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Sep 2020 22:04:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbgI3TaY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Sep 2020 15:30:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729925AbgI3TaY (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 30 Sep 2020 15:30:24 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 610D120709;
-        Wed, 30 Sep 2020 19:30:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601494223;
-        bh=sr8l+h0loEx/Nka344oH3IdSkTwQ7DK50ztRrGIRvA8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=esABQH5Ct/K+xhBTVN+SAqfBHIhfWA9rMZ1OHm0P7YZxFSdeVecLh/2z8gwRpRw1c
-         hEqWB79ZS5t/Uq+NhYRw+4TbRqh4YiawBfmNV//nabh+wkd38087JRk8JnK4G7XYv5
-         a+96IipVpBnvPhLUrrWaV/WshEElj0JrbhOBZEfQ=
-Message-ID: <97eff1ee2886c14bcd7972b17330f18ceacdef78.camel@kernel.org>
-Subject: Re: [Linux-cachefs] Adventures in NFS re-exporting
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Daire Byrne <daire@dneg.com>, linux-nfs <linux-nfs@vger.kernel.org>
-Cc:     linux-cachefs <linux-cachefs@redhat.com>
-Date:   Wed, 30 Sep 2020 15:30:22 -0400
-In-Reply-To: <1155061727.42788071.1600777874179.JavaMail.zimbra@dneg.com>
-References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
-         <1155061727.42788071.1600777874179.JavaMail.zimbra@dneg.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        id S1725814AbgI3UEi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Sep 2020 16:04:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbgI3UEh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Sep 2020 16:04:37 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF3AC061755;
+        Wed, 30 Sep 2020 13:04:37 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z19so1942542pfn.8;
+        Wed, 30 Sep 2020 13:04:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fRxlphcyV5L+6kzJRgkcYTmAPfhDSCJRy7uL810DHvg=;
+        b=JJJ4LUE2HM8QngeFWwn/lYALkew4LFitz+FSL4qyj48kRgIApIpUgB3erfhMXSwVVY
+         HVnISKtaZyCK3FdsnQcIYfMaZK4uFrd4+ojb2RH0H93PfK45mkv1ZJpSsojbFiwz7oZL
+         EHch64HQhcJaON1RqgVUGVCd5NDMZOQn+lmD67p1/TZPzjfL3vA5GmvHqdXpIkENo/L2
+         2+KBTBHAqDKgCcb1atmtJwtic4ZAHe0CeysGLBTauTj2B19TkG52P9L+uvQ5BI4jtk0R
+         xn1W/SV6P4CxFvtmGglN09Wf4FvhPKPNIamltClC7IyS9RMZxZEoikJGo8VsG/ss6NvK
+         SLsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fRxlphcyV5L+6kzJRgkcYTmAPfhDSCJRy7uL810DHvg=;
+        b=GiRcK1zDS37p4PeExfpxOrKKrfE2u4MXa3QZUp6eCeVBuBjhZdw6ezt+nkGf2zRVNZ
+         Q5UePbuMpXAnjd7OR4eT01VvAj5L0SBgIeju7AoJZwj0hoMrtkV8Kz8z6B8Ae/NMrxtT
+         pk0CkLhFQltg/lBogXDNad6Vr0yckaDX8/uADJdoxThfJ6QVzNuED59Y6dwpQkmSNp6b
+         xMfW4ASYb05Me7SXrQKnXIBpEa4o8RGp4cH/NbX7uGgGZWP9HzL0oe/5uWfXpISP6YJL
+         boyd9e4/DEdodt6QE4SVYtdlAlMLKmIwJ8QOzmW84EQLll9+xalVXo/LbNr3l6pGgwxD
+         +OTA==
+X-Gm-Message-State: AOAM533R0MMfg6PZt6eym0sUw0z5GtVu37gAnITufynF9w5dIc5vhUcq
+        +01wnLhX+1C1W9shFAqKkRw=
+X-Google-Smtp-Source: ABdhPJzNEfUPI/vsckvfZ/3Qh6VsaBOY5er1Qfs/1HH6uA0+ftRR4Ae3Fcc9D6fUiwTjF5I3P/fUEg==
+X-Received: by 2002:aa7:8812:0:b029:13c:1611:6537 with SMTP id c18-20020aa788120000b029013c16116537mr4350626pfo.9.1601496277332;
+        Wed, 30 Sep 2020 13:04:37 -0700 (PDT)
+Received: from localhost.localdomain (c-107-3-138-210.hsd1.ca.comcast.net. [107.3.138.210])
+        by smtp.gmail.com with ESMTPSA id v21sm2992881pgl.39.2020.09.30.13.04.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Sep 2020 13:04:36 -0700 (PDT)
+From:   Yang Shi <shy828301@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        fllinden@amazon.com
+Cc:     shy828301@gmail.com, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: nfs: return per memcg count for xattr shrinkers
+Date:   Sun, 27 Sep 2020 04:42:20 -0700
+Message-Id: <20200927114220.141530-1-shy828301@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2020-09-22 at 13:31 +0100, Daire Byrne wrote:
-> Hi, 
-> 
-> I just thought I'd flesh out the other two issues I have found with re-exporting that are ultimately responsible for the biggest performance bottlenecks. And both of them revolve around the caching of metadata file lookups in the NFS client.
-> 
-> Especially for the case where we are re-exporting a server many milliseconds away (i.e. on-premise -> cloud), we want to be able to control how much the client caches metadata and file data so that it's many LAN clients all benefit from the re-export server only having to do the WAN lookups once (within a specified coherency time).
-> 
-> Keeping the file data in the vfs page cache or on disk using fscache/cachefiles is fairly straightforward, but keeping the metadata cached is particularly difficult. And without the cached metadata we introduce long delays before we can serve the already present and locally cached file data to many waiting clients.
-> 
-> ----- On 7 Sep, 2020, at 18:31, Daire Byrne daire@dneg.com wrote:
-> > 2) If we cache metadata on the re-export server using actimeo=3600,nocto we can
-> > cut the network packets back to the origin server to zero for repeated lookups.
-> > However, if a client of the re-export server walks paths and memory maps those
-> > files (i.e. loading an application), the re-export server starts issuing
-> > unexpected calls back to the origin server again, ignoring/invalidating the
-> > re-export server's NFS client cache. We worked around this this by patching an
-> > inode/iversion validity check in inode.c so that the NFS client cache on the
-> > re-export server is used. I'm not sure about the correctness of this patch but
-> > it works for our corner case.
-> 
-> If we use actimeo=3600,nocto (say) to mount a remote software volume on the re-export server, we can successfully cache the loading of applications and walking of paths directly on the re-export server such that after a couple of runs, there are practically zero packets back to the originating NFS server (great!). But, if we then do the same thing on a client which is mounting that re-export server, the re-export server now starts issuing lots of calls back to the originating server and invalidating it's client cache (bad!).
-> 
-> I'm not exactly sure why, but the iversion of the inode gets changed locally (due to atime modification?) most likely via invocation of method inode_inc_iversion_raw. Each time it gets incremented the following call to validate attributes detects changes causing it to be reloaded from the originating server.
-> 
+The list_lru_count() returns the pre node count, but the new xattr
+shrinkers are memcg aware, so the shrinkers should return per memcg
+count by calling list_lru_shrink_count() instead.  Otherwise over-shrink
+might be experienced.  The problem was spotted by visual code
+inspection.
 
-I'd expect the change attribute to track what's in actual inode on the
-"home" server. The NFS client is supposed to (mostly) keep the raw
-change attribute in its i_version field.
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna.schumaker@netapp.com>
+Cc: Frank van der Linden <fllinden@amazon.com>
+Signed-off-by: Yang Shi <shy828301@gmail.com>
+---
+ fs/nfs/nfs42xattr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The only place we call inode_inc_iversion_raw is in
-nfs_inode_add_request, which I don't think you'd be hitting unless you
-were writing to the file while holding a write delegation.
-
-What sort of server is hosting the actual data in your setup?
-
-
-> This patch helps to avoid this when applied to the re-export server but there may be other places where this happens too. I accept that this patch is probably not the right/general way to do this, but it helps to highlight the issue when re-exporting and it works well for our use case:
-> 
-> --- linux-5.5.0-1.el7.x86_64/fs/nfs/inode.c     2020-01-27 00:23:03.000000000 +0000
-> +++ new/fs/nfs/inode.c  2020-02-13 16:32:09.013055074 +0000
-> @@ -1869,7 +1869,7 @@
->  
->         /* More cache consistency checks */
->         if (fattr->valid & NFS_ATTR_FATTR_CHANGE) {
-> -               if (!inode_eq_iversion_raw(inode, fattr->change_attr)) {
-> +               if (inode_peek_iversion_raw(inode) < fattr->change_attr) {
->                         /* Could it be a race with writeback? */
->                         if (!(have_writers || have_delegation)) {
->                                 invalid |= NFS_INO_INVALID_DATA
-> 
-> With this patch, the re-export server's NFS client attribute cache is maintained and used by all the clients that then mount it. When many hundreds of clients are all doing similar things at the same time, the re-export server's NFS client cache is invaluable in accelerating the lookups (getattrs).
-> 
-> Perhaps a more correct approach would be to detect when it is knfsd that is accessing the client mount and change the cache consistency checks accordingly? 
-
-Yeah, I don't think you can do this for the reasons Trond outlined.
+diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
+index 86777996cfec..6e5f34916937 100644
+--- a/fs/nfs/nfs42xattr.c
++++ b/fs/nfs/nfs42xattr.c
+@@ -882,7 +882,7 @@ nfs4_xattr_cache_count(struct shrinker *shrink, struct shrink_control *sc)
+ {
+ 	unsigned long count;
+ 
+-	count = list_lru_count(&nfs4_xattr_cache_lru);
++	count = list_lru_shrink_count(&nfs4_xattr_cache_lru, sc);
+ 	return vfs_pressure_ratio(count);
+ }
+ 
+@@ -976,7 +976,7 @@ nfs4_xattr_entry_count(struct shrinker *shrink, struct shrink_control *sc)
+ 	lru = (shrink == &nfs4_xattr_large_entry_shrinker) ?
+ 	    &nfs4_xattr_large_entry_lru : &nfs4_xattr_entry_lru;
+ 
+-	count = list_lru_count(lru);
++	count = list_lru_shrink_count(lru, sc);
+ 	return vfs_pressure_ratio(count);
+ }
+ 
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.26.2
 
