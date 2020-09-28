@@ -2,105 +2,277 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E66C27B173
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Sep 2020 18:10:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E848227B2B6
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Sep 2020 19:09:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgI1QKb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 28 Sep 2020 12:10:31 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:52506 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgI1QKb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Sep 2020 12:10:31 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08SG9kSs138085;
-        Mon, 28 Sep 2020 16:10:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=HNQq/zN9ayqpTbzS7onlq5lp0HRZ/lucYE/BgjXlXXU=;
- b=TzHzVeSlOhH0jKqdCHrVSTZIxoCjIzytVJVDppp0bkoaCpXVSiL5jMfB3U2ffJ690Epn
- +1grJClDYX/opeVLct7EyAfgNWa5MsMLlRGtpEP6M3MfFoA+f50/U5NvIwI4ejOBgq0M
- 1t/oeRjAKn6zdapLuoIAIRjER+fIqM7Rnssb7eFDvXcw8Z5EUMFb2J3gdo9i1QkOlohV
- H87p52Q56c/PXqwkf1q1sOXobOIxfK67sONoA3Tuwl+3bQw+6I7IDldh2fQOqkX19lVs
- BjRK0mlSEOYDYsyevT2AKYXq6jSYQz4kSMFWLf8HzshqPKsKVXmfgukt9Dtw7+ZXxmca Ww== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 33su5ap2th-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 28 Sep 2020 16:10:20 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08SG4hnU040906;
-        Mon, 28 Sep 2020 16:08:19 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 33tfdqc93m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Sep 2020 16:08:19 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08SG8BTN011123;
-        Mon, 28 Sep 2020 16:08:12 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 28 Sep 2020 09:08:10 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: Adventures in NFS re-exporting
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200928154949.GA14702@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-Date:   Mon, 28 Sep 2020 12:08:09 -0400
-Cc:     Daire Byrne <daire@dneg.com>, Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-cachefs <linux-cachefs@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B38FC84D-2658-47A6-9531-EFB6D0A64D4A@oracle.com>
-References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
- <20200915172140.GA32632@fieldses.org>
- <2001715792.39705019.1600358470997.JavaMail.zimbra@dneg.com>
- <20200917190931.GA6858@fieldses.org>
- <20200917202303.GA29892@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
- <76A4DC7D-D4F7-4A17-A67D-282E8522132A@oracle.com>
- <1790619463.44171163.1600892707423.JavaMail.zimbra@dneg.com>
- <20200923210157.GA1650@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
- <108670779.52656705.1601110822013.JavaMail.zimbra@dneg.com>
- <20200928154949.GA14702@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-To:     Frank van der Linden <fllinden@amazon.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9758 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- adultscore=0 malwarescore=0 spamscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009280123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9758 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- lowpriorityscore=0 spamscore=0 clxscore=1015 mlxscore=0 impostorscore=0
- malwarescore=0 phishscore=0 adultscore=0 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009280124
+        id S1726348AbgI1RJF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 28 Sep 2020 13:09:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbgI1RJF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Sep 2020 13:09:05 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB484C061755
+        for <linux-nfs@vger.kernel.org>; Mon, 28 Sep 2020 10:09:04 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id v123so1636796qkd.9
+        for <linux-nfs@vger.kernel.org>; Mon, 28 Sep 2020 10:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YcQ8rra3NPnXWY406yj7ihQd6xlsIOxNSWD2vGesaj0=;
+        b=HzhAY1+AD13++DGgXeh8M3cPq8KOFlZun8yyKfy94ImqNdhTzVnA/1OKCxF9Jk/XU3
+         ZYKxuS+knURAnAX3f9FPYdvRgtN6+Dge3lHOs9hJwsPiU7Shpu9F9uM9+6MTNyTmzixy
+         U0al6GzHeG39RA+AeCllWdP3GR10wiAN/pQugXXou9Oy8HpjQn5byjyr4eOHNw/6RQZ3
+         TbJcIVztyHHrXRTXVO2gtxFivXPnM8Luxb3I62DhkX5Ohb1iVTepDwKkk7z1iYirWyWm
+         zlr1Rb8Tw5SW964ImPKnPqmAsJoG8VTCUzUH3AlJjRDNFw+1/Go9gDcQ/VCvEA0vwLsb
+         hiqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=YcQ8rra3NPnXWY406yj7ihQd6xlsIOxNSWD2vGesaj0=;
+        b=WSoLmqB/fFBbo8X3JZSs8zUGRkBQbUYwqyqGeZHh4bzIF2FHNj4zrIX85G8bW/j7Nr
+         xKZ0QnPUtlVgcH+1lWmWVdxf3+HuaAvjbL+e4rlGcgyhCSpUi2sNaxaT3kuML0UvoLZQ
+         b9Y3QZtmuQb+EzxCfadlxF+Oiss2kxAKGAnhW6ln8+kA3v9tOetycLh4j/kzcWdPlgdX
+         YSXXLObgO1+LWOZvyfrs8YNmpYSLGmN6nP2acZooDiWm9RgYo+2mLveyy7ZzqmdBNZJU
+         duD0TnZGafEQi+ESlKyUuQZ5N4o4mfewNEZDg58oeZN/EJguqlseaIyoLC4HsTh/ou61
+         /XJA==
+X-Gm-Message-State: AOAM530pjCwIqYkpc+F7yfuXAIPOPNmF5Nakpe0FsXoJTn06ranIPfwI
+        Dx7yKSkIRoX0fXgRSxbUlEk=
+X-Google-Smtp-Source: ABdhPJwPMvYhDHGC0LHLja8L287ATT/DTsp35ooduLMxstx7+U6EyUeZTksLxra0FDw2LyrUJ6peVQ==
+X-Received: by 2002:a05:620a:148:: with SMTP id e8mr470849qkn.186.1601312943816;
+        Mon, 28 Sep 2020 10:09:03 -0700 (PDT)
+Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
+        by smtp.gmail.com with ESMTPSA id k20sm2011631qtb.34.2020.09.28.10.09.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Sep 2020 10:09:03 -0700 (PDT)
+Sender: Anna Schumaker <schumakeranna@gmail.com>
+From:   schumaker.anna@gmail.com
+X-Google-Original-From: Anna.Schumaker@Netapp.com
+To:     bfields@redhat.com, chuck.lever@oracle.com,
+        linux-nfs@vger.kernel.org
+Cc:     Anna.Schumaker@Netapp.com
+Subject: [PATCH v6 0/5] NFSD: Add support for the v4.2 READ_PLUS operation
+Date:   Mon, 28 Sep 2020 13:08:56 -0400
+Message-Id: <20200928170901.707554-1-Anna.Schumaker@Netapp.com>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+
+These patches add server support for the READ_PLUS operation, which
+breaks read requests into several "data" and "hole" segments when
+replying to the client.
+
+- Changes since v5:
+  - Set the right buffer size through svc_reserve()
+  - Fix up nfsd4_read_plus_rsize() to make sure we have enough buffer
+  - Limit maxcount to the amount of buffer space when encoding data
+  - Bail out of unexpected hole values by encoding a data segment
+  - Rebase to v5.9-rc7
+
+Here are the results of some performance tests I ran on some lab
+machines. I tested by reading various 2G files from a few different underlying
+filesystems and across several NFS versions. I used the `vmtouch` utility
+to make sure files were only cached when we wanted them to be. In addition
+to 100% data and 100% hole cases, I also tested with files that alternate
+between data and hole segments. These files have either 4K, 8K, 16K, or 32K
+segment sizes and start with either data or hole segments. So the file
+mixed-4d has a 4K segment size beginning with a data segment, but mixed-32h
+has 32K segments beginning with a hole. The units are in seconds, with the
+first number for each NFS version being the uncached read time and the second
+number is for when the file is cached on the server.
+
+I added some extra data collection (client cpu percentage and sys time),
+but the extra data means I couldn't figure out a way to break this down
+into a concise table. I cut out v3 and v4.0 performance numbers to get
+the size down, but I kept v4.1 for comparison because it uses the same
+code that v4.2 without read plus uses.
 
 
-> On Sep 28, 2020, at 11:49 AM, Frank van der Linden =
-<fllinden@amazon.com> wrote:
->=20
-> Bruce - if you want me to 'formally' submit a version of the patch, =
-let me
-> know. Just disabling the cache for v4, which comes down to reverting a =
-few
-> commits, is probably simpler - I'd be able to test that too.
+Read Plus Results (ext4):
+  data
+   :... v4.1 ... Uncached ... 20.540 s, 105 MB/s, 0.65 s kern, 3% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 20.605 s, 104 MB/s, 0.65 s kern, 3% cpu
+        :....... Cached ..... 18.253 s, 118 MB/s, 0.67 s kern, 3% cpu
+  hole
+   :... v4.1 ... Uncached ... 18.255 s, 118 MB/s, 0.72 s kern,  3% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern,  3% cpu
+   :... v4.2 ... Uncached ...  0.847 s, 2.5 GB/s, 0.73 s kern, 86% cpu
+        :....... Cached .....  0.845 s, 2.5 GB/s, 0.72 s kern, 85% cpu
+  mixed-4d
+   :... v4.1 ... Uncached ... 54.691 s,  39 MB/s, 0.75 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 51.587 s,  42 MB/s, 0.75 s kern, 1% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.67 s kern, 7% cpu
+  mixed-8d
+   :... v4.1 ... Uncached ... 37.072 s,  58 MB/s, 0.67 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 33.259 s,  65 MB/s, 0.68 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.67 s kern, 7% cpu
+  mixed-16d
+   :... v4.1 ... Uncached ... 27.138 s,  79 MB/s, 0.73 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 23.042 s,  93 MB/s, 0.73 s kern, 3% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.66 s kern, 7% cpu
+  mixed-32d
+   :... v4.1 ... Uncached ... 25.326 s,  85 MB/s, 0.68 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 21.125 s, 102 MB/s, 0.69 s kern, 3% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.67 s kern, 7% cpu
+  mixed-4h
+   :... v4.1 ... Uncached ... 58.317 s,  37 MB/s, 0.75 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 51.878 s,  41 MB/s, 0.74 s kern, 1% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.68 s kern, 7% cpu
+  mixed-8h
+   :... v4.1 ... Uncached ... 36.855 s,  58 MB/s, 0.68 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 29.457 s,  73 MB/s, 0.68 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.67 s kern, 7% cpu
+  mixed-16h
+   :... v4.1 ... Uncached ... 26.460 s,  81 MB/s, 0.74 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 19.587 s, 110 MB/s, 0.74 s kern, 3% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.67 s kern, 7% cpu
+  mixed-32h
+   :... v4.1 ... Uncached ... 25.495 s,  84 MB/s, 0.69 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.65 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 17.634 s, 122 MB/s, 0.69 s kern, 3% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.68 s kern, 7% cpu
 
-I'd be interested in seeing that. =46rom what I saw, the mechanics of
-unhooking the cache from NFSv4 simply involve reverting patches, but
-there appear to be some recent changes that depend on the open
-filecache that might be difficult to deal with, like
-
-b66ae6dd0c30 ("nfsd: Pass the nfsd_file as arguments to =
-nfsd4_clone_file_range()")
 
 
---
-Chuck Lever
+Read Plus Results (xfs):
+  data
+   :... v4.1 ... Uncached ... 20.230 s, 106 MB/s, 0.65 s kern, 3% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.68 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 20.724 s, 104 MB/s, 0.65 s kern, 3% cpu
+        :....... Cached ..... 18.253 s, 118 MB/s, 0.67 s kern, 3% cpu
+  hole
+   :... v4.1 ... Uncached ... 18.255 s, 118 MB/s, 0.68 s kern,  3% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.69 s kern,  3% cpu
+   :... v4.2 ... Uncached ...  0.904 s, 2.4 GB/s, 0.72 s kern, 79% cpu
+        :....... Cached .....  0.908 s, 2.4 GB/s, 0.73 s kern, 80% cpu
+  mixed-4d
+   :... v4.1 ... Uncached ... 57.553 s,  37 MB/s, 0.77 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 37.162 s,  58 MB/s, 0.73 s kern, 1% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.67 s kern, 7% cpu
+  mixed-8d
+   :... v4.1 ... Uncached ... 36.754 s,  58 MB/s, 0.69 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.68 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 24.454 s,  88 MB/s, 0.69 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.66 s kern, 7% cpu
+  mixed-16d
+   :... v4.1 ... Uncached ... 27.156 s,  79 MB/s, 0.73 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 22.934 s,  94 MB/s, 0.72 s kern, 3% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.68 s kern, 7% cpu
+  mixed-32d
+   :... v4.1 ... Uncached ... 27.849 s,  77 MB/s, 0.68 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 23.670 s,  91 MB/s, 0.67 s kern, 2% cpu
+        :....... Cached .....  9.139 s, 235 MB/s, 0.64 s kern, 7% cpu
+  mixed-4h
+   :... v4.1 ... Uncached ... 57.639 s,  37 MB/s, 0.72 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.69 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 35.503 s,  61 MB/s, 0.72 s kern, 2% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.66 s kern, 7% cpu
+  mixed-8h
+   :... v4.1 ... Uncached ... 37.044 s,  58 MB/s, 0.71 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.68 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 23.779 s,  90 MB/s, 0.69 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.65 s kern, 7% cpu
+  mixed-16h
+   :... v4.1 ... Uncached ... 27.167 s,  79 MB/s, 0.73 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.67 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 19.088 s, 113 MB/s, 0.75 s kern, 3% cpu
+        :....... Cached .....  9.159 s, 234 MB/s, 0.66 s kern, 7% cpu
+  mixed-32h
+   :... v4.1 ... Uncached ... 27.592 s,  78 MB/s, 0.71 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.68 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 19.682 s, 109 MB/s, 0.67 s kern, 3% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.67 s kern, 7% cpu
 
 
+
+Read Plus Results (btrfs):
+  data
+   :... v4.1 ... Uncached ... 21.317 s, 101 MB/s, 0.63 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.67 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 28.665 s,  75 MB/s, 0.65 s kern, 2% cpu
+        :....... Cached ..... 18.253 s, 118 MB/s, 0.66 s kern, 3% cpu
+  hole
+   :... v4.1 ... Uncached ... 18.256 s, 118 MB/s, 0.70 s kern,  3% cpu
+   :    :....... Cached ..... 18.254 s, 118 MB/s, 0.73 s kern,  4% cpu
+   :... v4.2 ... Uncached ...  0.851 s, 2.5 GB/s, 0.72 s kern, 84% cpu
+        :....... Cached .....  0.847 s, 2.5 GB/s, 0.73 s kern, 86% cpu
+  mixed-4d
+   :... v4.1 ... Uncached ... 56.857 s,  38 MB/s, 0.76 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 54.455 s,  39 MB/s, 0.73 s kern, 1% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.68 s kern, 7% cpu
+  mixed-8d
+   :... v4.1 ... Uncached ... 36.641 s,  59 MB/s, 0.68 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 33.205 s,  65 MB/s, 0.67 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.65 s kern, 7% cpu
+  mixed-16d
+   :... v4.1 ... Uncached ... 28.653 s,  75 MB/s, 0.72 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 25.748 s,  83 MB/s, 0.71 s kern, 2% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.64 s kern, 7% cpu
+  mixed-32d
+   :... v4.1 ... Uncached ... 28.886 s,  74 MB/s, 0.67 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 24.724 s,  87 MB/s, 0.74 s kern, 2% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.63 s kern, 6% cpu
+  mixed-4h
+   :... v4.1 ... Uncached ...  52.181 s,  41 MB/s, 0.73 s kern, 1% cpu
+   :    :....... Cached .....  18.252 s, 118 MB/s, 0.66 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 150.341 s,  14 MB/s, 0.72 s kern, 0% cpu
+        :....... Cached .....   9.216 s, 233 MB/s, 0.63 s kern, 6% cpu
+  mixed-8h
+   :... v4.1 ... Uncached ... 36.945 s,  58 MB/s, 0.68 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.65 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 79.781 s,  27 MB/s, 0.68 s kern, 0% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.66 s kern, 7% cpu
+  mixed-16h
+   :... v4.1 ... Uncached ... 28.651 s,  75 MB/s, 0.73 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.66 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 47.428 s,  45 MB/s, 0.71 s kern, 1% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.67 s kern, 7% cpu
+  mixed-32h
+   :... v4.1 ... Uncached ... 28.618 s,  75 MB/s, 0.69 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 38.813 s,  55 MB/s, 0.67 s kern, 1% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.61 s kern, 6% cpu
+
+
+Thoughts?
+Anna
+
+
+Anna Schumaker (5):
+  SUNRPC/NFSD: Implement xdr_reserve_space_vec()
+  NFSD: Add READ_PLUS data support
+  NFSD: Add READ_PLUS hole segment encoding
+  NFSD: Return both a hole and a data segment
+  NFSD: Encode a full READ_PLUS reply
+
+ fs/nfsd/nfs4proc.c         |  21 +++++
+ fs/nfsd/nfs4xdr.c          | 177 +++++++++++++++++++++++++++++++------
+ include/linux/sunrpc/xdr.h |   2 +
+ net/sunrpc/xdr.c           |  45 ++++++++++
+ 4 files changed, 217 insertions(+), 28 deletions(-)
+
+-- 
+2.28.0
 
