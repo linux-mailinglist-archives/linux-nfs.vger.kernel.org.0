@@ -2,148 +2,114 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9253227B2C9
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Sep 2020 19:09:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC3A027B329
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Sep 2020 19:27:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgI1RJd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 28 Sep 2020 13:09:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgI1RJc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Sep 2020 13:09:32 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88447C061755
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Sep 2020 10:09:32 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id c2so1631460qkf.10
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Sep 2020 10:09:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=McNZrU0EDFV6A3TZqivdfUIZNz6mK+EHHnD6g+nLLJ8=;
-        b=bVg/ZV2VwDmjNQNJvs0UwPKunkLjs4m3sq29Bfea4c4s7+dsh4ee60got0pIgHha4c
-         HYV7drreqsUjq8Sd5+NNt/CwvozbeLTRQJrJXW5kv/pA2xe5kfW6XDt9W8LB08Eqh+RD
-         icTR3e1rM29Z/J83EGN533Hb4U4A0WLJsn9+QfZ/KMDEnHtdZ4JV62OAHdWvpG8AksGW
-         q5DHv9xPSL6hy23WMecULg7X0Hx9W/uqaqiEptAYR4QmGDj364KUhpXvoy2S3A0qrc1Z
-         G09T5O4ehu+ojQWJ9yGBQ11HoaN03kxFNC+NCXu6baRzrmG7BBBY2MJ8dTS9JM3ZInAm
-         mFeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=McNZrU0EDFV6A3TZqivdfUIZNz6mK+EHHnD6g+nLLJ8=;
-        b=TB6x/VvFGSmYTLK+jJ+qtSOPft4yC0Lte0x0z5DAR1mKpG+JZtksx9eDJTTiEBmCR5
-         xxqMRcYChsqAGCD+RIY6cRDhPhL/syLUG4EXz2VqIUScXVB538sbtoULVMp6kW4hZdIB
-         6XmGL7WwV1/zleFU8+R5gOljIaHugKhvpSJpXuCksdIw2cyFqU0wk4+tcAhnePFo22/q
-         vk/6Scto6kyf21sEHM/ym/d5UqexddHdjTQ4lPPu4wzLpREGi8selJSk+jcYf4hAVnQ+
-         Sf7OLXKPiRUgqgd2SdHPErth7Vw2Zkdiup3qDVGXpLD/0kagwb1mFZPmrLH9Am77KTSu
-         Ge5A==
-X-Gm-Message-State: AOAM533CviSpSfOkTJDz/71bMjSXOw9u4ijT7xZ2I0RVxQJsouZ9C1C7
-        FeIxi5znsvwrgFZr5yeFdcD98vYCGLY=
-X-Google-Smtp-Source: ABdhPJw4lYZFEXcZbiuYbIfTqLcQIn4Y3txOjrjjquLvPNtsVx5st05wFXKCK+GBI2vHqjOcFoeNJw==
-X-Received: by 2002:a37:9d86:: with SMTP id g128mr458526qke.26.1601312971495;
-        Mon, 28 Sep 2020 10:09:31 -0700 (PDT)
-Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.gmail.com with ESMTPSA id 201sm1556862qkf.103.2020.09.28.10.09.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2020 10:09:31 -0700 (PDT)
-Sender: Anna Schumaker <schumakeranna@gmail.com>
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v6 10/10] NFS: Decode a full READ_PLUS reply
-Date:   Mon, 28 Sep 2020 13:09:19 -0400
-Message-Id: <20200928170919.707641-11-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200928170919.707641-1-Anna.Schumaker@Netapp.com>
-References: <20200928170919.707641-1-Anna.Schumaker@Netapp.com>
+        id S1726409AbgI1R1U (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 28 Sep 2020 13:27:20 -0400
+Received: from mail-bn8nam11on2119.outbound.protection.outlook.com ([40.107.236.119]:54241
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726281AbgI1R1U (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 28 Sep 2020 13:27:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CSOm2vZLzQMck3FGzXITrSE/DybxYZYf3GSatYfSwnswvq3q9u/pjXpvTd8KqU8PkRSy8r5QFE9H/P3+H0lHqxTBNwoZALQZ3/S05J4hKXbRdlnE3ml71uOmVuoONjS5VVgmJz5e4BiGvg/QSvoAG4f4N0MqMk37rZjWNNxJu5o0BGQK0nKQ/+DcU/cGNACChjN1SoFafOayqDKh4qhdnv8Sm5LNGEyUeiWMqhvVjkQ0PJ7hZ4slR0WKnc91tP1itrqsFZMVVuqsJVAzZFa/d8XL7Hy1Hq+2pwIwzlIQEPcax8Mex/yEAC4AiKZSe+2ExR1oAWk89WVPzHaWv+Nr9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=obKvPQYQV8QBhYqKJosYIDVefS+y2r3SOzFNSH5f2rg=;
+ b=LfcpF1dreKgoFaC4dXN9EGOZIrDSZuC0tLJjkBotTzRrmRSTzwJJDfvfbgnFP1O3m/L3Jx7pvIp/0JtUb77JYxhRWewlmdri7IoWO7CzLJfFT9moFm6wrUDmsjWs1NOW1s7lfTUFMySu5gMGVMmKBIi2uDJkNaN1BZPbuvU3wR4Wy0jIcxJQMbHUa16KEHSvw2EvDOVyQ7oNGmwEMCkWd76rMshEXwv44aN0T8uhibpz0ZfgfSj07ao1h3wgGjNKXhBdYkTQYIECObJVndzW3x1jA+KsJnU7u6Tx4loNH81P5XxBDrjM/OSQLwmgMFItKX4qOKDkHIquUaPiTdDJ8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=obKvPQYQV8QBhYqKJosYIDVefS+y2r3SOzFNSH5f2rg=;
+ b=Upap9GP3d41yX6RMxbKfQePR963Sbo55HU9f3O+Z6AV+2v/BXruN1J6VkSJwE6J1C+C/jRmauozRpWJezwU9gB1llpfn2w9yE2CWqz+3T/uzhR3EnxjMvrqo1t05N65co4Bkd9gkEF/aHVbxxqsxQrsVn/iU5KFmxx3xr4EAcds=
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
+ by MN2PR13MB3696.namprd13.prod.outlook.com (2603:10b6:208:1e0::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.18; Mon, 28 Sep
+ 2020 17:27:15 +0000
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e8a1:6acc:70f0:ef39]) by MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e8a1:6acc:70f0:ef39%6]) with mapi id 15.20.3433.030; Mon, 28 Sep 2020
+ 17:27:15 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Please pull NFS client bugfixes
+Thread-Topic: [GIT PULL] Please pull NFS client bugfixes
+Thread-Index: AQHWlbyb7Abp3rPZ80efHk7uJAcVYw==
+Date:   Mon, 28 Sep 2020 17:27:14 +0000
+Message-ID: <93a6b36e466a389330945f8c515ad7fd86e8b714.camel@hammerspace.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linux-foundation.org; dkim=none (message not signed)
+ header.d=none;linux-foundation.org; dmarc=none action=none
+ header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 76459e92-d25e-4eb5-6cef-08d863d3be15
+x-ms-traffictypediagnostic: MN2PR13MB3696:
+x-microsoft-antispam-prvs: <MN2PR13MB3696E67DB78161A5A87264FBB8350@MN2PR13MB3696.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:913;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9eOdc02iu42a2Q6Vl4HFOZOk1MJMlsd+Ec9ZHseLErmm3R7ziycdu5loLi+kIfHs4DiY4MKu7GYrQ4yi/vBniPl3wUQXs9x5A0CbUhQp77dkfPTYO7jqo9MkBNtfYw3WjKbCoJn+tjssXQmQfaCyyiBrzbC+0+8BRs14zNMHsMiTKoMFtaTZtrqx03pgvsAiL1C4/XbODhFyt3YKRlgJv/zFz+JicgblhPDuF/+wTrxsDUwtMiegror1SpSKpCZxAm1B3HDkjwHfBEF8O7qLSK4mx8iCZzQw/YTM0ILzduUI7ce1KUsnsyqL43K1ENnTDe9QCgFd+qyrOwrBJaJB0w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(39830400003)(396003)(346002)(376002)(136003)(366004)(478600001)(26005)(54906003)(36756003)(2616005)(6506007)(186003)(316002)(8936002)(2906002)(6916009)(6512007)(8676002)(86362001)(66476007)(64756008)(66556008)(66446008)(83380400001)(5660300002)(71200400001)(6486002)(76116006)(91956017)(4326008)(66946007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: rBxeWNAeOyn85CFINKQjCyZqCW536WTskLOTLUDEavzvzky2WuWVue5e+cySMiAkRNXZ7PBADPpADo+xNifsfOxBQV4WgGE4qP8uIaGIw1Gfnr5cjEnrJPcyJ7/hBy0N1YTPNhua98nj30rKIgshjI9KFMgRyd9M7MicEBVQeFKhVvI7sRG/D8zAm2GDEINk4/bMKP/NrHMNWjI3DgST0r3eutWAoE85c56ZV51vo+2NPZX5Pr5xGHyZfqHFQeqcZVRb4o0lrOSIbSL+HbynKCaC6fRRyhogF88mnQAEp3c1q2vi7g/tx7nrMzFbjIsnZkjNwHY49OLXRaDc4x2xdTYwvEbkUbsEo55qEbBaBx/ltthmggFaRgIwQptcwUsTwh2a9Ep324gh2EDrJulyaevh1lJCmkpS10mE3hUOOuqKI4ZqKEZJYXT9rZ8NnjdxEmHZrccNNR9Upvm7nI7J3gJuPxSGL/azvLn32YrB2uzBflNla1JSDVOpn3B1f0FhXC5lLL303Dj9UJRhi2vXfME7EVIboMdTmkfbgsMzWWa61OnEXReo+iMvu8werzGgqBb6pbG9VcKUvAasBPh7LDH2e/QBhYbr7O0dfdsxnSX8/o6qCZoZHEk/EWcWcYLnMebIUCpz+TdLVddj/WS9pQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C970E3A53B69824683840492C9890F7F@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76459e92-d25e-4eb5-6cef-08d863d3be15
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Sep 2020 17:27:14.9128
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dDqHGUWznzM/9ip1llAQD21YmehYMf8ALNNK1wnVchueVZaOjYDbW3nDrU3hl3XAyJZyNWoeuo1khuUlGpO9Xg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3696
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-
-Decode multiple hole and data segments sent by the server, placing
-everything directly where they need to go in the xdr pages.
-
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- fs/nfs/nfs42xdr.c | 36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
-
-diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-index 9720fedd2e57..0dc31ad2362e 100644
---- a/fs/nfs/nfs42xdr.c
-+++ b/fs/nfs/nfs42xdr.c
-@@ -1032,7 +1032,7 @@ static int decode_read_plus_data(struct xdr_stream *xdr, struct nfs_pgio_res *re
- 
- 	p = xdr_decode_hyper(p, &offset);
- 	count = be32_to_cpup(p);
--	recvd = xdr_read_pages(xdr, count);
-+	recvd = xdr_align_data(xdr, res->count, count);
- 	res->count += recvd;
- 
- 	if (count > recvd) {
-@@ -1057,7 +1057,7 @@ static int decode_read_plus_hole(struct xdr_stream *xdr, struct nfs_pgio_res *re
- 
- 	p = xdr_decode_hyper(p, &offset);
- 	p = xdr_decode_hyper(p, &length);
--	recvd = xdr_expand_hole(xdr, 0, length);
-+	recvd = xdr_expand_hole(xdr, res->count, length);
- 	res->count += recvd;
- 
- 	if (recvd < length) {
-@@ -1070,7 +1070,7 @@ static int decode_read_plus_hole(struct xdr_stream *xdr, struct nfs_pgio_res *re
- static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
- {
- 	uint32_t eof, segments, type;
--	int status;
-+	int status, i;
- 	__be32 *p;
- 
- 	status = decode_op_hdr(xdr, OP_READ_PLUS);
-@@ -1086,22 +1086,24 @@ static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
- 	if (segments == 0)
- 		goto out;
- 
--	p = xdr_inline_decode(xdr, 4);
--	if (unlikely(!p))
--		return -EIO;
-+	for (i = 0; i < segments; i++) {
-+		p = xdr_inline_decode(xdr, 4);
-+		if (unlikely(!p))
-+			return -EIO;
- 
--	type = be32_to_cpup(p++);
--	if (type == NFS4_CONTENT_DATA)
--		status = decode_read_plus_data(xdr, res, &eof);
--	else if (type == NFS4_CONTENT_HOLE)
--		status = decode_read_plus_hole(xdr, res, &eof);
--	else
--		return -EINVAL;
-+		type = be32_to_cpup(p++);
-+		if (type == NFS4_CONTENT_DATA)
-+			status = decode_read_plus_data(xdr, res, &eof);
-+		else if (type == NFS4_CONTENT_HOLE)
-+			status = decode_read_plus_hole(xdr, res, &eof);
-+		else
-+			return -EINVAL;
- 
--	if (status)
--		return status;
--	if (segments > 1)
--		eof = 0;
-+		if (status < 0)
-+			return status;
-+		if (status > 0)
-+			break;
-+	}
- 
- out:
- 	res->eof = eof;
--- 
-2.28.0
-
+SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgODU2ZGViODY2
+ZDE2ZTI5YmQ2NTk1MmUwMjg5MDY2ZjYwNzhhZjc3MzoNCg0KICBMaW51eCA1LjktcmM1ICgyMDIw
+LTA5LTEzIDE2OjA2OjAwIC0wNzAwKQ0KDQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3Np
+dG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQubGludXgtbmZzLm9yZy9wcm9qZWN0cy90cm9uZG15L2xp
+bnV4LW5mcy5naXQgdGFncy9uZnMtZm9yLTUuOS0zDQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdl
+cyB1cCB0byBiOWRmNDZkMDhhOGQwOThlYTIxMjRjYjllM2I4NDQ1OGE0NzRiNGQ0Og0KDQogIHBO
+RlMvZmxleGZpbGVzOiBCZSBjb25zaXN0ZW50IGFib3V0IG1pcnJvciBpbmRleCB0eXBlcyAoMjAy
+MC0wOS0xOCAwOToyNTozMyAtMDQwMCkNCg0KQ2hlZXJzLA0KICBUcm9uZA0KLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KTkZT
+IGNsaWVudCBidWdmaXhlcyBmb3IgTGludXggNS45DQoNCkhpZ2hsaWdodHMgaW5jbHVkZToNCg0K
+QnVnZml4ZXM6DQotIE5GU3Y0LjI6IGNvcHlfZmlsZV9yYW5nZSBuZWVkcyB0byBpbnZhbGlkYXRl
+IGNhY2hlcyBvbiBzdWNjZXNzDQotIE5GU3Y0LjI6IEZpeCBzZWN1cml0eSBsYWJlbCBsZW5ndGgg
+bm90IGJlaW5nIHJlc2V0DQotIHBORlMvZmxleGZpbGVzOiBFbnN1cmUgd2UgaW5pdGlhbGlzZSB0
+aGUgbWlycm9yIGJzaXplcyBjb3JyZWN0bHkgb24gcmVhZA0KLSBwTkZTL2ZsZXhmaWxlczogRml4
+IHNpZ25lZC91bnNpZ25lZCB0eXBlIGlzc3VlcyB3aXRoIG1pcnJvciBpbmRpY2VzDQoNCi0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0NCkplZmZyZXkgTWl0Y2hlbGwgKDEpOg0KICAgICAgbmZzOiBGaXggc2VjdXJpdHkgbGFiZWwg
+bGVuZ3RoIG5vdCBiZWluZyByZXNldA0KDQpPbGdhIEtvcm5pZXZza2FpYSAoMSk6DQogICAgICBO
+RlN2NC4yOiBmaXggY2xpZW50J3MgYXR0cmlidXRlIGNhY2hlIG1hbmFnZW1lbnQgZm9yIGNvcHlf
+ZmlsZV9yYW5nZQ0KDQpUcm9uZCBNeWtsZWJ1c3QgKDIpOg0KICAgICAgcE5GUy9mbGV4ZmlsZXM6
+IEVuc3VyZSB3ZSBpbml0aWFsaXNlIHRoZSBtaXJyb3IgYnNpemVzIGNvcnJlY3RseSBvbiByZWFk
+DQogICAgICBwTkZTL2ZsZXhmaWxlczogQmUgY29uc2lzdGVudCBhYm91dCBtaXJyb3IgaW5kZXgg
+dHlwZXMNCg0KIGZzL25mcy9kaXIuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDMgKysr
+DQogZnMvbmZzL2ZsZXhmaWxlbGF5b3V0L2ZsZXhmaWxlbGF5b3V0LmMgfCA0MyArKysrKysrKysr
+KysrKysrKy0tLS0tLS0tLS0tLS0tLS0tDQogZnMvbmZzL25mczQycHJvYy5jICAgICAgICAgICAg
+ICAgICAgICAgfCAxMCArKysrKysrLQ0KIGluY2x1ZGUvbGludXgvbmZzX3hkci5oICAgICAgICAg
+ICAgICAgIHwgIDQgKystLQ0KIDQgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKSwgMjQg
+ZGVsZXRpb25zKC0pDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWlu
+dGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoN
+Cg==
