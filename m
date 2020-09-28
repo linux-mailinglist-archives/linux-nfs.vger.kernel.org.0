@@ -2,63 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0579127B2BB
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Sep 2020 19:09:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B50D27B2BE
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Sep 2020 19:09:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgI1RJM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 28 Sep 2020 13:09:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36584 "EHLO
+        id S1726566AbgI1RJX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 28 Sep 2020 13:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgI1RJL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Sep 2020 13:09:11 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD48C061755
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Sep 2020 10:09:10 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id s131so1660626qke.0
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Sep 2020 10:09:10 -0700 (PDT)
+        with ESMTP id S1726477AbgI1RJX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Sep 2020 13:09:23 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C8FEC0613CE
+        for <linux-nfs@vger.kernel.org>; Mon, 28 Sep 2020 10:09:23 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id d1so1323734qtr.6
+        for <linux-nfs@vger.kernel.org>; Mon, 28 Sep 2020 10:09:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0IW2ZMhPd1UFeHJdeoJ5W21HZVFAiNbyQBzHJ+bvLFA=;
-        b=ga4aF5+AkBCsQ0dBITu8jmJL06404dg6PxnHMb1+NO6GsiZ0AqQ7M6bLpPPMYt0ZjZ
-         mE8wn1JLgRkCTC3FVHt9pReijm09Y0B8ZFVpnwEozL+UWcin+pyJY/QPuoPOVuMUVjLy
-         wXbvx+ARBGusZsUhDIM4HAvllHj5Ugi6gnvR8yKC9MbSKyOT3jyAJdP6drkF0F0f6yPt
-         mk2iNE6O9NtO7Xvb5DSjVS4YI2T7R7zrVRy1xCxKBWGzNF1nz+8F7oouIlq0b4d9nyok
-         uAzapjUIqt5UDQO/L3l70KU7iNJI8EdhZrdHCQNXC38sEVmJohMvfGGZPCVf/ZmDySVI
-         lfYQ==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GUHrlTvW4AtHCcCjsuvF0sWKJa/HocWoEYq/WwxdNMw=;
+        b=dr/JUnVK0VktGzRCYu+9VA3AB7hxAuqqF5XmRY6W6USIt6EkO7vaFV7Y5Gx4q97pCf
+         V5DNndF9nOWXjIf6C9enlfQzDb3jUsONpAALh6eyJt7RcUwGwrOlk5mFvLfhXME9DIKd
+         K0C65l5Z49algYbdEHOw/V8kSvugBmsy7FPlr3SOkFqaiDw18Y0YAfEfQpuxR3Njoxvc
+         LhZRE/ku3bgWCvHUvT9uk38gUWOyrcZ+tkExVcSJb0BPC+nVQ0kbjy6/RldZLSekXfvI
+         53tDZpSP7TX7/PrrUVAlVgRDZA/55EIgxTlZrKgj2YChvgAnHXuxNJrYe5akALsY19RW
+         pUYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=0IW2ZMhPd1UFeHJdeoJ5W21HZVFAiNbyQBzHJ+bvLFA=;
-        b=B8evZW2kIOQFOt73I3P6/7G8NGdyDhex6DVanBQoHyBz3Pp8rzCrEtIboKKawz76WZ
-         kU4mNDAuYGyfxf3GAiyu8GoqJEiZHWQhv8HboRIYPzJFbYU0EqlBVG3d8ka0CDloS0He
-         OQpdjqKbJbnpjsHzLtv+eAdJRCnx4H4xYH/gmsVU0FYQBHRLPcdfREH4ffaPenko80k6
-         vCt1GBrPvh8f23Cd1Bkrx9Vtq6/B/oLL/xKKtIDtdaBDxAVwB5mCP8K3VA0WLoqNXtmD
-         YQiohtBzZYxsJHLNYmcft5JYrHzeZaChAjGE05xymQR0TUmCEGcLTsrRf/gokf7Xr/M4
-         +vSg==
-X-Gm-Message-State: AOAM533MIiZU4EvNEIB3sku95otCJLmUnmZ3taQELNmpMlvty4zbYqC+
-        0h91whcZuHRXZRGr1UcZP4U=
-X-Google-Smtp-Source: ABdhPJzzteH8NwmOu2oKcvS2yscJYbId9j87it/+EazZcaEepE+C2qdVU2YpWncKoJTJyNqmQRd06w==
-X-Received: by 2002:a05:620a:4e7:: with SMTP id b7mr405835qkh.415.1601312949438;
-        Mon, 28 Sep 2020 10:09:09 -0700 (PDT)
+         :mime-version:content-transfer-encoding;
+        bh=GUHrlTvW4AtHCcCjsuvF0sWKJa/HocWoEYq/WwxdNMw=;
+        b=aOIZrEs3GVF7vB2s2mHQOVDebgDezSbvlDm+r0kdExhTO/V/savTOcOZ6cXDykQdEo
+         W7aoZrKzb8GFKjvS+VN4ZUzxQ6XFLxFoNCh6RoT2QmFApBkI/JcWmgbR2n9Mr47RwOqa
+         cnWBmb+IMzYpMgAqd8tcsZpTNOKT9XpT2L7tEcuNTH54za6hbqGbLaU0PLzP1cdQPh/x
+         EhRQSyOvdLutYtOto677j4TvjdmBc2O/BPskKS9wfHZqS1ihWaTcqizuYXmH7hOP6MFr
+         nxdJ5ji+NDtr7DgAsMQbtDkGs12DTTcb8q3ge8f0P9gcCO5RCqYf0159QSPJK6E+UdP5
+         lqvg==
+X-Gm-Message-State: AOAM531D4pkTCMCggXxnc27U5aEneRvUdTQtOTWCSgz/Z5KbI0MDROgP
+        374YexzGyjRp+Y1YgmcCTEyfONSEaHQ=
+X-Google-Smtp-Source: ABdhPJxeA0OpHcqAPm1aaMd3n7Hn78kFwGj8o9HZPDUCeO1gJQDHI3iT8avSjncLJbPolnNZ59KK6w==
+X-Received: by 2002:ac8:48d5:: with SMTP id l21mr2586750qtr.267.1601312960755;
+        Mon, 28 Sep 2020 10:09:20 -0700 (PDT)
 Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.gmail.com with ESMTPSA id k20sm2011631qtb.34.2020.09.28.10.09.08
+        by smtp.gmail.com with ESMTPSA id 201sm1556862qkf.103.2020.09.28.10.09.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2020 10:09:08 -0700 (PDT)
+        Mon, 28 Sep 2020 10:09:20 -0700 (PDT)
 Sender: Anna Schumaker <schumakeranna@gmail.com>
 From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     bfields@redhat.com, chuck.lever@oracle.com,
-        linux-nfs@vger.kernel.org
+To:     linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v6 5/5] NFSD: Encode a full READ_PLUS reply
-Date:   Mon, 28 Sep 2020 13:09:01 -0400
-Message-Id: <20200928170901.707554-6-Anna.Schumaker@Netapp.com>
+Subject: [PATCH v6 00/10] NFS: Add support for the v4.2 READ_PLUS operation
+Date:   Mon, 28 Sep 2020 13:09:09 -0400
+Message-Id: <20200928170919.707641-1-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200928170901.707554-1-Anna.Schumaker@Netapp.com>
-References: <20200928170901.707554-1-Anna.Schumaker@Netapp.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -67,138 +64,222 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-Reply to the client with multiple hole and data segments. I use the
-result of the first vfs_llseek() call for encoding as an optimization so
-we don't have to immediately repeat the call. This also lets us encode
-any remaining reply as data if we get an unexpected result while trying
-to calculate a hole.
+These patches add client support for the READ_PLUS operation, which
+breaks read requests into several "data" and "hole" segments when
+replying to the client.
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+- Changes since v5:
+  - Make sure we disable READ_PLUS over RDMA, by Chuck's request
+  - Update to v5.9-rc7
 
----
-v6: Bail out of unexpected hole values by encoding the remaining reply
-    as data
-v5: Truncate the encode to the last segment length if we're returning a
-    short read
----
- fs/nfsd/nfs4xdr.c | 49 ++++++++++++++++++++++++-----------------------
- 1 file changed, 25 insertions(+), 24 deletions(-)
+Here are the results of some performance tests I ran on some lab
+machines. I tested by reading various 2G files from a few different underlying
+filesystems and across several NFS versions. I used the `vmtouch` utility
+to make sure files were only cached when we wanted them to be. In addition
+to 100% data and 100% hole cases, I also tested with files that alternate
+between data and hole segments. These files have either 4K, 8K, 16K, or 32K
+segment sizes and start with either data or hole segments. So the file
+mixed-4d has a 4K segment size beginning with a data segment, but mixed-32h
+has 32K segments beginning with a hole. The units are in seconds, with the
+first number for each NFS version being the uncached read time and the second
+number is for when the file is cached on the server.
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 7ed9181a69d4..dfbde8fb08f9 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -4603,16 +4603,18 @@ nfsd4_encode_offload_status(struct nfsd4_compoundres *resp, __be32 nfserr,
- static __be32
- nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
- 			    struct nfsd4_read *read,
--			    unsigned long *maxcount, u32 *eof)
-+			    unsigned long *maxcount, u32 *eof,
-+			    loff_t *pos)
- {
- 	struct xdr_stream *xdr = &resp->xdr;
- 	struct file *file = read->rd_nf->nf_file;
- 	int starting_len = xdr->buf->len;
--	loff_t hole_pos = vfs_llseek(file, read->rd_offset, SEEK_HOLE);
-+	loff_t hole_pos;
- 	__be32 nfserr;
- 	__be32 *p, tmp;
- 	__be64 tmp64;
- 
-+	hole_pos = pos ? *pos : vfs_llseek(file, read->rd_offset, SEEK_HOLE);
- 	if (hole_pos > read->rd_offset)
- 		*maxcount = min_t(unsigned long, *maxcount, hole_pos - read->rd_offset);
- 	*maxcount = min_t(unsigned long, *maxcount, (xdr->buf->buflen - xdr->buf->len));
-@@ -4647,13 +4649,14 @@ nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp,
- {
- 	struct file *file = read->rd_nf->nf_file;
- 	loff_t data_pos = vfs_llseek(file, read->rd_offset, SEEK_DATA);
-+	loff_t f_size = i_size_read(file_inode(file));
- 	unsigned long count;
- 	__be32 *p;
- 
- 	if (data_pos == -ENXIO)
--		data_pos = i_size_read(file_inode(file));
--	else if (data_pos <= read->rd_offset)
--		return nfserr_resource;
-+		data_pos = f_size;
-+	else if (data_pos <= read->rd_offset || (data_pos < f_size && data_pos % PAGE_SIZE))
-+		return nfsd4_encode_read_plus_data(resp, read, maxcount, eof, &f_size);
- 	count = data_pos - read->rd_offset;
- 
- 	/* Content type, offset, byte count */
-@@ -4665,7 +4668,7 @@ nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp,
- 	 p   = xdr_encode_hyper(p, read->rd_offset);
- 	 p   = xdr_encode_hyper(p, count);
- 
--	*eof = (read->rd_offset + count) >= i_size_read(file_inode(file));
-+	*eof = (read->rd_offset + count) >= f_size;
- 	*maxcount = min_t(unsigned long, count, *maxcount);
- 	return nfs_ok;
- }
-@@ -4678,8 +4681,10 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	struct xdr_stream *xdr = &resp->xdr;
- 	struct file *file;
- 	int starting_len = xdr->buf->len;
-+	int last_segment = xdr->buf->len;
- 	int segments = 0;
- 	__be32 *p, tmp;
-+	bool is_data;
- 	loff_t pos;
- 	u32 eof;
- 
-@@ -4703,29 +4708,22 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	if (eof)
- 		goto out;
- 
--	pos = vfs_llseek(file, read->rd_offset, SEEK_DATA);
--	if (pos == -ENXIO)
--		pos = i_size_read(file_inode(file));
--	else if (pos < 0)
--		pos = read->rd_offset;
-+	pos = vfs_llseek(file, read->rd_offset, SEEK_HOLE);
-+	is_data = pos > read->rd_offset;
- 
--	if (pos == read->rd_offset) {
-+	while (count > 0 && !eof) {
- 		maxcount = count;
--		nfserr = nfsd4_encode_read_plus_data(resp, read, &maxcount, &eof);
--		if (nfserr)
--			goto out;
--		count -= maxcount;
--		read->rd_offset += maxcount;
--		segments++;
--	}
--
--	if (count > 0 && !eof) {
--		maxcount = count;
--		nfserr = nfsd4_encode_read_plus_hole(resp, read, &maxcount, &eof);
-+		if (is_data)
-+			nfserr = nfsd4_encode_read_plus_data(resp, read, &maxcount, &eof,
-+						segments == 0 ? &pos : NULL);
-+		else
-+			nfserr = nfsd4_encode_read_plus_hole(resp, read, &maxcount, &eof);
- 		if (nfserr)
- 			goto out;
- 		count -= maxcount;
- 		read->rd_offset += maxcount;
-+		is_data = !is_data;
-+		last_segment = xdr->buf->len;
- 		segments++;
- 	}
- 
-@@ -4737,7 +4735,10 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
- 		write_bytes_to_xdr_buf(xdr->buf, starting_len,     &tmp, 4);
- 		tmp = htonl(segments);
- 		write_bytes_to_xdr_buf(xdr->buf, starting_len + 4, &tmp, 4);
--		nfserr = nfs_ok;
-+		if (nfserr) {
-+			xdr_truncate_encode(xdr, last_segment);
-+			nfserr = nfs_ok;
-+		}
- 	}
- 
- 	return nfserr;
+I added some extra data collection (client cpu percentage and sys time),
+but the extra data means I couldn't figure out a way to break this down
+into a concise table. I cut out v3 and v4.0 performance numbers to get
+the size down, but I kept v4.1 for comparison because it uses the same
+code that v4.2 without read plus uses.
+
+
+Read Plus Results (ext4):
+  data
+   :... v4.1 ... Uncached ... 20.540 s, 105 MB/s, 0.65 s kern, 3% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 20.605 s, 104 MB/s, 0.65 s kern, 3% cpu
+        :....... Cached ..... 18.253 s, 118 MB/s, 0.67 s kern, 3% cpu
+  hole
+   :... v4.1 ... Uncached ... 18.255 s, 118 MB/s, 0.72 s kern,  3% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern,  3% cpu
+   :... v4.2 ... Uncached ...  0.847 s, 2.5 GB/s, 0.73 s kern, 86% cpu
+        :....... Cached .....  0.845 s, 2.5 GB/s, 0.72 s kern, 85% cpu
+  mixed-4d
+   :... v4.1 ... Uncached ... 54.691 s,  39 MB/s, 0.75 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 51.587 s,  42 MB/s, 0.75 s kern, 1% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.67 s kern, 7% cpu
+  mixed-8d
+   :... v4.1 ... Uncached ... 37.072 s,  58 MB/s, 0.67 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 33.259 s,  65 MB/s, 0.68 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.67 s kern, 7% cpu
+  mixed-16d
+   :... v4.1 ... Uncached ... 27.138 s,  79 MB/s, 0.73 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 23.042 s,  93 MB/s, 0.73 s kern, 3% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.66 s kern, 7% cpu
+  mixed-32d
+   :... v4.1 ... Uncached ... 25.326 s,  85 MB/s, 0.68 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 21.125 s, 102 MB/s, 0.69 s kern, 3% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.67 s kern, 7% cpu
+  mixed-4h
+   :... v4.1 ... Uncached ... 58.317 s,  37 MB/s, 0.75 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 51.878 s,  41 MB/s, 0.74 s kern, 1% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.68 s kern, 7% cpu
+  mixed-8h
+   :... v4.1 ... Uncached ... 36.855 s,  58 MB/s, 0.68 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 29.457 s,  73 MB/s, 0.68 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.67 s kern, 7% cpu
+  mixed-16h
+   :... v4.1 ... Uncached ... 26.460 s,  81 MB/s, 0.74 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 19.587 s, 110 MB/s, 0.74 s kern, 3% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.67 s kern, 7% cpu
+  mixed-32h
+   :... v4.1 ... Uncached ... 25.495 s,  84 MB/s, 0.69 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.65 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 17.634 s, 122 MB/s, 0.69 s kern, 3% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.68 s kern, 7% cpu
+
+
+
+Read Plus Results (xfs):
+  data
+   :... v4.1 ... Uncached ... 20.230 s, 106 MB/s, 0.65 s kern, 3% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.68 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 20.724 s, 104 MB/s, 0.65 s kern, 3% cpu
+        :....... Cached ..... 18.253 s, 118 MB/s, 0.67 s kern, 3% cpu
+  hole
+   :... v4.1 ... Uncached ... 18.255 s, 118 MB/s, 0.68 s kern,  3% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.69 s kern,  3% cpu
+   :... v4.2 ... Uncached ...  0.904 s, 2.4 GB/s, 0.72 s kern, 79% cpu
+        :....... Cached .....  0.908 s, 2.4 GB/s, 0.73 s kern, 80% cpu
+  mixed-4d
+   :... v4.1 ... Uncached ... 57.553 s,  37 MB/s, 0.77 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 37.162 s,  58 MB/s, 0.73 s kern, 1% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.67 s kern, 7% cpu
+  mixed-8d
+   :... v4.1 ... Uncached ... 36.754 s,  58 MB/s, 0.69 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.68 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 24.454 s,  88 MB/s, 0.69 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.66 s kern, 7% cpu
+  mixed-16d
+   :... v4.1 ... Uncached ... 27.156 s,  79 MB/s, 0.73 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 22.934 s,  94 MB/s, 0.72 s kern, 3% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.68 s kern, 7% cpu
+  mixed-32d
+   :... v4.1 ... Uncached ... 27.849 s,  77 MB/s, 0.68 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 23.670 s,  91 MB/s, 0.67 s kern, 2% cpu
+        :....... Cached .....  9.139 s, 235 MB/s, 0.64 s kern, 7% cpu
+  mixed-4h
+   :... v4.1 ... Uncached ... 57.639 s,  37 MB/s, 0.72 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.69 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 35.503 s,  61 MB/s, 0.72 s kern, 2% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.66 s kern, 7% cpu
+  mixed-8h
+   :... v4.1 ... Uncached ... 37.044 s,  58 MB/s, 0.71 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.68 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 23.779 s,  90 MB/s, 0.69 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.65 s kern, 7% cpu
+  mixed-16h
+   :... v4.1 ... Uncached ... 27.167 s,  79 MB/s, 0.73 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.67 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 19.088 s, 113 MB/s, 0.75 s kern, 3% cpu
+        :....... Cached .....  9.159 s, 234 MB/s, 0.66 s kern, 7% cpu
+  mixed-32h
+   :... v4.1 ... Uncached ... 27.592 s,  78 MB/s, 0.71 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.68 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 19.682 s, 109 MB/s, 0.67 s kern, 3% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.67 s kern, 7% cpu
+
+
+
+Read Plus Results (btrfs):
+  data
+   :... v4.1 ... Uncached ... 21.317 s, 101 MB/s, 0.63 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.67 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 28.665 s,  75 MB/s, 0.65 s kern, 2% cpu
+        :....... Cached ..... 18.253 s, 118 MB/s, 0.66 s kern, 3% cpu
+  hole
+   :... v4.1 ... Uncached ... 18.256 s, 118 MB/s, 0.70 s kern,  3% cpu
+   :    :....... Cached ..... 18.254 s, 118 MB/s, 0.73 s kern,  4% cpu
+   :... v4.2 ... Uncached ...  0.851 s, 2.5 GB/s, 0.72 s kern, 84% cpu
+        :....... Cached .....  0.847 s, 2.5 GB/s, 0.73 s kern, 86% cpu
+  mixed-4d
+   :... v4.1 ... Uncached ... 56.857 s,  38 MB/s, 0.76 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.72 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 54.455 s,  39 MB/s, 0.73 s kern, 1% cpu
+        :....... Cached .....  9.215 s, 233 MB/s, 0.68 s kern, 7% cpu
+  mixed-8d
+   :... v4.1 ... Uncached ... 36.641 s,  59 MB/s, 0.68 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 33.205 s,  65 MB/s, 0.67 s kern, 2% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.65 s kern, 7% cpu
+  mixed-16d
+   :... v4.1 ... Uncached ... 28.653 s,  75 MB/s, 0.72 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 25.748 s,  83 MB/s, 0.71 s kern, 2% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.64 s kern, 7% cpu
+  mixed-32d
+   :... v4.1 ... Uncached ... 28.886 s,  74 MB/s, 0.67 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.71 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 24.724 s,  87 MB/s, 0.74 s kern, 2% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.63 s kern, 6% cpu
+  mixed-4h
+   :... v4.1 ... Uncached ...  52.181 s,  41 MB/s, 0.73 s kern, 1% cpu
+   :    :....... Cached .....  18.252 s, 118 MB/s, 0.66 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 150.341 s,  14 MB/s, 0.72 s kern, 0% cpu
+        :....... Cached .....   9.216 s, 233 MB/s, 0.63 s kern, 6% cpu
+  mixed-8h
+   :... v4.1 ... Uncached ... 36.945 s,  58 MB/s, 0.68 s kern, 1% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.65 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 79.781 s,  27 MB/s, 0.68 s kern, 0% cpu
+        :....... Cached .....  9.172 s, 234 MB/s, 0.66 s kern, 7% cpu
+  mixed-16h
+   :... v4.1 ... Uncached ... 28.651 s,  75 MB/s, 0.73 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.66 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 47.428 s,  45 MB/s, 0.71 s kern, 1% cpu
+        :....... Cached .....  9.150 s, 235 MB/s, 0.67 s kern, 7% cpu
+  mixed-32h
+   :... v4.1 ... Uncached ... 28.618 s,  75 MB/s, 0.69 s kern, 2% cpu
+   :    :....... Cached ..... 18.252 s, 118 MB/s, 0.70 s kern, 3% cpu
+   :... v4.2 ... Uncached ... 38.813 s,  55 MB/s, 0.67 s kern, 1% cpu
+        :....... Cached .....  9.140 s, 235 MB/s, 0.61 s kern, 6% cpu
+
+
+
+Thoughts?
+Anna
+
+
+Anna Schumaker (10):
+  SUNRPC: Split out a function for setting current page
+  SUNRPC: Implement a xdr_page_pos() function
+  NFS: Use xdr_page_pos() in NFSv4 decode_getacl()
+  NFS: Add READ_PLUS data segment support
+  SUNRPC: Split out xdr_realign_pages() from xdr_align_pages()
+  SUNRPC: Split out _shift_data_right_tail()
+  SUNRPC: Add the ability to expand holes in data pages
+  NFS: Add READ_PLUS hole segment decoding
+  SUNRPC: Add an xdr_align_data() function
+  NFS: Decode a full READ_PLUS reply
+
+ fs/nfs/nfs42xdr.c          | 167 ++++++++++++++++++++
+ fs/nfs/nfs4client.c        |   2 +
+ fs/nfs/nfs4proc.c          |  43 +++++-
+ fs/nfs/nfs4xdr.c           |   7 +-
+ include/linux/nfs4.h       |   2 +-
+ include/linux/nfs_fs_sb.h  |   1 +
+ include/linux/nfs_xdr.h    |   2 +-
+ include/linux/sunrpc/xdr.h |   3 +
+ net/sunrpc/xdr.c           | 309 ++++++++++++++++++++++++++++++++-----
+ 9 files changed, 488 insertions(+), 48 deletions(-)
+
 -- 
 2.28.0
 
