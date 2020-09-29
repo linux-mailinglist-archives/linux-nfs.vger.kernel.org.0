@@ -2,61 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8297D27D072
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Sep 2020 16:03:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9485927D074
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Sep 2020 16:03:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730884AbgI2ODo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 29 Sep 2020 10:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33014 "EHLO
+        id S1727328AbgI2ODt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 29 Sep 2020 10:03:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729073AbgI2ODl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Sep 2020 10:03:41 -0400
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8A07C061755
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Sep 2020 07:03:40 -0700 (PDT)
-Received: by mail-io1-xd29.google.com with SMTP id v8so4893124iom.6
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Sep 2020 07:03:40 -0700 (PDT)
+        with ESMTP id S1729073AbgI2ODp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Sep 2020 10:03:45 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8FA2C061755
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Sep 2020 07:03:44 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id u19so4927446ion.3
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Sep 2020 07:03:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=pq6n0tNRmfKsH6AxS0q8F3zZTztUq9fbQ60d/U+pHAU=;
-        b=ITGy9svH/mLAZNhTnepuYHHIJqq0a+oP7pQf5km7qcYKLka3IrlkVd4Gc3JgmPqB/a
-         3KoG/GrjKVyGEGVhvvc9yLm4kDkBwzPZJk25hXp/t8M9+hec8uyt5i5MBveZyaMJVc9X
-         jKnO0KP1MCooqMsQ0ljgXkj036RtX3b8hSTOCZrDQ/97V7tGJvG4JLReYt2RDM6O7w9m
-         SgV5szGc2hfqQjLb/c3RqKTYOk27/aladZgapRShBUVEkJq9TNGdOi/wF6Zlyhqxz/lG
-         yayjspZzDr4313Kh1eEaltDbfq4ccGigz2F1oR2zg2WaYKAuyOuK+816C69eDBQ1CgCM
-         YMAw==
+        h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=d1yDBXQS21Lezp0DekytB6nItiT1WP4runGCxzB8XUg=;
+        b=jMvcFuKTVhK43Di+DJQajgjIg3+yVeHRlZ/72iIn75vdk2o0AMBYF/tQfSraUBNQdM
+         O8Di4VofbskiD0Oeolw49w7uno2TTr7agS4SZ5x8WzeGUgLDh0S5hNgGrneJ1mA5Iy17
+         jo5v7tWWrsy13WyPgtdukviy7KS/3egdTQWp4N7kAKLA1U2r1ao1Od1GhbIlZ6afxQmW
+         b2vMsW1GrY5lNXBq7azQwtGcL6bC4dNIFuVOmGAYbOn6BwNQq+gv0mL7/1Pe0jzDZJzu
+         Zf7QJ2rq2z1VvZ1JFUWnU7XfYEFGbUJppVcgxiLI45JPrxY/r5/8n1ZXn25o8YIS+9IV
+         yxkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=pq6n0tNRmfKsH6AxS0q8F3zZTztUq9fbQ60d/U+pHAU=;
-        b=W9e659HepMhQFKh5sFsW0Jos02eVst3b4pQv8dLGlY+wSNzHkJctn/mJl+LVDFtOj8
-         FMb2+GQUAzzX4p7LZZfguqglZ1/O/+4wOCcbSJydbyP9YPSuG2R+HhTHcDLEKMGtNl0w
-         TmcpN3Y0DMEyi6IB3m18skeDtSUmPgJjUy/ndf+k6ly1+wmnbf0YaKvhJwuv5hvDIC3+
-         N7/pvkQplKZ8a7qNvK7Z0HQKbEXm0qZt4OE2iwvwY6V5QqwX3ls7FiWg9U17vgBQc3cT
-         hA0sRfJlSF+i93aYNpD9r+C0j4hxneLk/fXSvXrdxyQ7OCUwIJT/hdKXoGzmMOFM/ITJ
-         On7A==
-X-Gm-Message-State: AOAM532MZC5yqpTAsfbL0v26yF0H/bMeTFt0hkX082LikEgJlIyIMrWI
-        ymhDQh5RNa0fyg0+0DPEJxCMXDLtrmETrg==
-X-Google-Smtp-Source: ABdhPJwuTp9myhs9kZD0reIAEmuKCVj5x5BSiF63tau+SFFbcDCYmjIS7jvmMDcb0sGo62okDp0BTw==
-X-Received: by 2002:a5e:8d04:: with SMTP id m4mr2490803ioj.107.1601388219589;
-        Tue, 29 Sep 2020 07:03:39 -0700 (PDT)
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=d1yDBXQS21Lezp0DekytB6nItiT1WP4runGCxzB8XUg=;
+        b=Ef1oSBZ7OZ/BvqHdRodkhZ3rFbGdtfWNjBWjzaEZDhfgY3wJCn33IN5JEN+h4G6Vw5
+         cVdqejmy6FdjjV1DsmgYdbT2JjKyTlZ2eYPf7IzUYEtSmPthjg/7NcNxwSBzm0TuSw2r
+         XLdJRaS4ZWWVLDVlycwstFM+Lh89xhtEjlj4FEdyPcKHmND/MvA+4CsS8fgb3XSiFx5P
+         U7GmBR0xs3/+ImPqFjuSuwPeWeQ8qNqwXRWyx0SGSu6lsZpYkszeynmyeKuya9Xx3isy
+         zfwkklDcw2lGOcPLtOlXaP7XnPn83KZLRLM3cQRZ8L/zCAMATtvyxAQhHiUGdzIcWKxJ
+         9DxA==
+X-Gm-Message-State: AOAM53248xtW+VjoSl/6SUo0PvBmLKdXAgd/McMKQTSIr0nwI8yL6mB7
+        9saFTWcvy9vQ3QQstT8fxnI=
+X-Google-Smtp-Source: ABdhPJxWkmUmrQWTeVsQ0u+RBAhv8SbGqvmU/pK0cNZOoseIEzn9c/oZ47L9bp6kd93wqOzi7pBBWw==
+X-Received: by 2002:a6b:7f0b:: with SMTP id l11mr2589642ioq.182.1601388224151;
+        Tue, 29 Sep 2020 07:03:44 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id o23sm2464173ili.62.2020.09.29.07.03.37
+        by smtp.gmail.com with ESMTPSA id o12sm2423353ilh.49.2020.09.29.07.03.43
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Sep 2020 07:03:38 -0700 (PDT)
+        Tue, 29 Sep 2020 07:03:43 -0700 (PDT)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08TE3afA026412;
-        Tue, 29 Sep 2020 14:03:36 GMT
-Subject: [PATCH v2 00/11] nfsd_dispatch() clean up
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08TE3grb026415;
+        Tue, 29 Sep 2020 14:03:42 GMT
+Subject: [PATCH v2 01/11] nfsd: rq_lease_breaker cleanup
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org
-Date:   Tue, 29 Sep 2020 10:03:36 -0400
-Message-ID: <160138785101.2558.11821923574884893011.stgit@klimt.1015granger.net>
+Date:   Tue, 29 Sep 2020 10:03:42 -0400
+Message-ID: <160138822239.2558.8296960298766443554.stgit@klimt.1015granger.net>
+In-Reply-To: <160138785101.2558.11821923574884893011.stgit@klimt.1015granger.net>
+References: <160138785101.2558.11821923574884893011.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -65,52 +68,42 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce-
+From: J. Bruce Fields <bfields@redhat.com>
 
-I've tested the latest version of your rq_lease_breaker patch plus
-my nfsd_dispatch() clean ups and haven't found any new issues.
+Since only the v4 code cares about it, maybe it's better to leave
+rq_lease_breaker out of the common dispatch code?
 
-Changes since v1:
-- Pulled in latest version of rq_lease_breaker cleanup
-- Added patches to make NFSv2 error encoding similar to NFSv3
-- Clarified nfsd_dispatch's new documenting comment
-- Renamed a variable
-
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 ---
+ fs/nfsd/nfs4state.c |    3 ++-
+ fs/nfsd/nfssvc.c    |    1 -
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Chuck Lever (10):
-      lockd: Replace PROC() macro with open code
-      NFSACL: Replace PROC() macro with open code
-      NFSD: Encoder and decoder functions are always present
-      NFSD: Clean up switch statement in nfsd_dispatch()
-      NFSD: Clean up stale comments in nfsd_dispatch()
-      NFSD: Clean up nfsd_dispatch() variables
-      NFSD: Refactor nfsd_dispatch() error paths
-      NFSD: Set *statp in success path
-      NFSD: Fix .pc_release method for NFSv2
-      NFSD: Call NFSv2 encoders on error returns
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 767dc1b27e91..603c0a227a64 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -4601,7 +4601,8 @@ static bool nfsd_breaker_owns_lease(struct file_lock *fl)
+ 	if (!i_am_nfsd())
+ 		return NULL;
+ 	rqst = kthread_data(current);
+-	if (!rqst->rq_lease_breaker)
++	/* Note rq_prog == NFS_ACL_PROGRAM is also possible: */
++	if (rqst->rq_prog != NFS_PROGRAM || rqst->rq_vers < 4)
+ 		return NULL;
+ 	clp = *(rqst->rq_lease_breaker);
+ 	return dl->dl_stid.sc_client == clp;
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index f7f6473578af..f6bc94cab9da 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -1016,7 +1016,6 @@ nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+ 		*statp = rpc_garbage_args;
+ 		return 1;
+ 	}
+-	rqstp->rq_lease_breaker = NULL;
+ 	/*
+ 	 * Give the xdr decoder a chance to change this if it wants
+ 	 * (necessary in the NFSv4.0 compound case)
 
-J. Bruce Fields (1):
-      nfsd: rq_lease_breaker cleanup
-
-
- fs/lockd/svc4proc.c         | 242 +++++++++++++++++++++++++++--------
- fs/lockd/svcproc.c          | 244 ++++++++++++++++++++++++++++--------
- fs/nfsd/nfs2acl.c           |  87 +++++++++----
- fs/nfsd/nfs3acl.c           |  50 +++++---
- fs/nfsd/nfs3proc.c          |   1 +
- fs/nfsd/nfs3xdr.c           |   6 +
- fs/nfsd/nfs4proc.c          |   1 +
- fs/nfsd/nfs4xdr.c           |   6 +
- fs/nfsd/nfsproc.c           | 173 ++++++++++++-------------
- fs/nfsd/nfssvc.c            | 109 ++++++++--------
- fs/nfsd/nfsxdr.c            |  37 +++++-
- fs/nfsd/xdr.h               |  11 +-
- fs/nfsd/xdr3.h              |   1 +
- fs/nfsd/xdr4.h              |   1 +
- include/uapi/linux/nfsacl.h |   2 +
- 15 files changed, 691 insertions(+), 280 deletions(-)
-
---
-Chuck Lever
 
