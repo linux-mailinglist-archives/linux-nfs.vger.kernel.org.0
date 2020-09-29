@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EEA7D27D080
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Sep 2020 16:04:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BF2F27D081
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Sep 2020 16:04:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731036AbgI2OEc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 29 Sep 2020 10:04:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33152 "EHLO
+        id S1731051AbgI2OEd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 29 Sep 2020 10:04:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730082AbgI2OE1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Sep 2020 10:04:27 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01AFC061755
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Sep 2020 07:04:26 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id y2so5003977ila.0
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Sep 2020 07:04:26 -0700 (PDT)
+        with ESMTP id S1730082AbgI2OEc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Sep 2020 10:04:32 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A24A5C061755
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Sep 2020 07:04:32 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id e5so2052575ils.10
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Sep 2020 07:04:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:cc:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=O+9Q0DHCqAEnSq7SktVxjWAQglOZ+y4pJdzweRaL1uQ=;
-        b=f+8/M+lKG7qyLy+ey96gNKsf/k/n0GoGTSBupR9uEQHXGXKF7OfRZ1HAVA+YOHjwb1
-         bZsMkhKKfaF9Zu95jJJcPYxVi0F53anCJj0YnpFJBIg7tJbQmv+CNfe5/NfxKeY9khS9
-         2hUUXMb+j9HrIAyhZzJzWtBXD7MPxclIKOSDQ9lSn8z3BiaW1wUheHjluN/wsk/mvfhz
-         ZfII2thmClrDd2zOOd1xovhbWPmQVLFYQ2ZoihIQFYyaioBaPHbLsUhBmD+6xq/DHiJB
-         pbGf2ZpNJuOV5BqbDkbIVgyQDnIfIU5vor6H3QVd2cQV+M1LhzkD04AkOty8ADjXX/7D
-         g56g==
+        bh=2jKSRTMxd06k1G9+9t6OYvlXy+Ku3xUPQeob4IfuY88=;
+        b=pNeHIaqvOnET4wlRVTqqC6MIJHPjRMWIHwexdp35Y9QEH7sCLPfKIFs3qqs2Rk/EI/
+         MZuZBaiv3cy1btUif0+2lZxxUlwb+dcEpB5F8oag3qyK4b5a0Ie5QZl8VQAv9nkjcYWn
+         GULOD7+HlxxmYGB8lG04GBv41wecn4cJAqLmoCPAZgKOf2MnLC0vgIQlFRPGu4aj0gWd
+         OsrJTbN02W4jx2WfhyXLk2uq1qkFW/Xww5i7+CwM6PXZvN8C/6I6gCAYygOhcQpEhqbX
+         xj+t1COiPyXsXPYxMSW8tf/BF01NQwNuwsHSl4PgiiPQWFBoF27w9APFhyLwxhvlEqb0
+         Ep0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=O+9Q0DHCqAEnSq7SktVxjWAQglOZ+y4pJdzweRaL1uQ=;
-        b=tUJQGnC1/2aORVugGmVTZJ6NO///Qxe79iDXfCT3Cz0zr8FdX/XA3y43Lzs7neJPPu
-         jO+QoX4WSZwlx/u79zpvRL9Hq5wIJWMozdwpEVK9IS8Tov7tCXosysxsSLi36rISb/U2
-         TlkyZjMHgZYc82gY0yayjbh0uBZ7zWSb5gd3lxm4rN2NvrO5etRfs5atR4uKHaN6QaS2
-         QUkIB7T0v0AHQvGB/bqU/LiEVXdn7Up3xQjWnMGbvAf3uoLqes3pOoNnnWY/zqTlDq0C
-         dP1fsWv+eNZarqx7ucjcnyHyRTPY6sHHnoqze2ff52xtePmCIEY4sMkWfwrVyXPpMvOl
-         YV1w==
-X-Gm-Message-State: AOAM531UEksJa35Tjnq1VkwmxAMCnFARNlGGoYoDtKOZTBxHzWLt+7zH
-        pAjbiQas0TP4tBj228SwIak=
-X-Google-Smtp-Source: ABdhPJw/mRQUA3+fdsuqFPTV0IWXjBiILlQDWtic6Y3i39GMzkeOePxVdXC+R/3ND+azsw3rmtfj0w==
-X-Received: by 2002:a05:6e02:8a:: with SMTP id l10mr3317966ilm.130.1601388266314;
-        Tue, 29 Sep 2020 07:04:26 -0700 (PDT)
+        bh=2jKSRTMxd06k1G9+9t6OYvlXy+Ku3xUPQeob4IfuY88=;
+        b=KjiWX+6d1O/Rth46/IeelpDerUInyOXWfcYylJyPUAW1CJEvozUP0cOG4Mr8uzZZ6b
+         2HGPobdrwY3GEgCNKX9IvjwFPcN/3IweylW6EWy+KfHt8pbRri4SpXyUZ9roR4bx/QHM
+         agdZhrExjkC6meBi2X3lnsc0fzAle+X+arrrX/+i6cXRNQZkl1MOFLXGBQzpNlpWRmtQ
+         r3NGoAnX5T/6XhNDwNzVdY6kCTQv3fQ3FoK+50tM6uvLQ9/fN72qBAPM4D0kaWhsp8FX
+         iAGjw/pGN4DPw9WaE5JBx9UaiydE+xbN0PX1xzp7YwWk2JSi9cHu1rimlmHBukW4X3qM
+         ze2g==
+X-Gm-Message-State: AOAM5339oazlxCo+MPq5+74v1N7IJ7D7a0hdHQ6TS0v2I2BkOVwhurmx
+        XKseiqw6Itz1Vs3uia8r9W5/nAMWx3odpQ==
+X-Google-Smtp-Source: ABdhPJyhx8MP9OF1KbLyODHXvaGpHbWJ8t3SYWII197nTDcePbt5fsrv8WGi0dJvUapei+42FdTouw==
+X-Received: by 2002:a05:6e02:c74:: with SMTP id f20mr3096663ilj.57.1601388271980;
+        Tue, 29 Sep 2020 07:04:31 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id i144sm1745859ioa.55.2020.09.29.07.04.25
+        by smtp.gmail.com with ESMTPSA id y10sm1799136ioy.25.2020.09.29.07.04.30
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Sep 2020 07:04:25 -0700 (PDT)
+        Tue, 29 Sep 2020 07:04:31 -0700 (PDT)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08TE4ORR026439;
-        Tue, 29 Sep 2020 14:04:24 GMT
-Subject: [PATCH v2 09/11] NFSD: Set *statp in success path
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08TE4Tq6026442;
+        Tue, 29 Sep 2020 14:04:29 GMT
+Subject: [PATCH v2 10/11] NFSD: Fix .pc_release method for NFSv2
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@fieldses.org
 Cc:     linux-nfs@vger.kernel.org
-Date:   Tue, 29 Sep 2020 10:04:24 -0400
-Message-ID: <160138826463.2558.7846998437714554728.stgit@klimt.1015granger.net>
+Date:   Tue, 29 Sep 2020 10:04:29 -0400
+Message-ID: <160138826992.2558.5806906591247144060.stgit@klimt.1015granger.net>
 In-Reply-To: <160138785101.2558.11821923574884893011.stgit@klimt.1015granger.net>
 References: <160138785101.2558.11821923574884893011.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -68,25 +68,134 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-*statp is supposed to be set in every path through nfsd_dispatch().
-The success case appears to leave *statp uninitialized.
+nfsd_release_fhandle() assumes that rqstp->rq_resp always points to
+an nfsd_fhandle struct. In fact, no NFSv2 procedure uses struct
+nfsd_fhandle as its response structure.
+
+So far that has been "safe" to do because the res structs put the
+resp->fh field at that same offset as struct nfsd_fhandle. I don't
+think that's a guarantee, though, and there is certainly nothing
+preventing a developer from altering the fields in those structures.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfssvc.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/nfsd/nfsproc.c |   14 +++++++-------
+ fs/nfsd/nfsxdr.c  |   19 ++++++++++++++++---
+ fs/nfsd/xdr.h     |    4 +++-
+ 3 files changed, 26 insertions(+), 11 deletions(-)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 283d29ecae43..08776b44cde6 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -1065,6 +1065,7 @@ int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+index 6e0b066480c5..33204d83709c 100644
+--- a/fs/nfsd/nfsproc.c
++++ b/fs/nfsd/nfsproc.c
+@@ -600,7 +600,7 @@ static const struct svc_procedure nfsd_procedures2[18] = {
+ 		.pc_func = nfsd_proc_getattr,
+ 		.pc_decode = nfssvc_decode_fhandle,
+ 		.pc_encode = nfssvc_encode_attrstat,
+-		.pc_release = nfssvc_release_fhandle,
++		.pc_release = nfssvc_release_attrstat,
+ 		.pc_argsize = sizeof(struct nfsd_fhandle),
+ 		.pc_ressize = sizeof(struct nfsd_attrstat),
+ 		.pc_cachetype = RC_NOCACHE,
+@@ -610,7 +610,7 @@ static const struct svc_procedure nfsd_procedures2[18] = {
+ 		.pc_func = nfsd_proc_setattr,
+ 		.pc_decode = nfssvc_decode_sattrargs,
+ 		.pc_encode = nfssvc_encode_attrstat,
+-		.pc_release = nfssvc_release_fhandle,
++		.pc_release = nfssvc_release_attrstat,
+ 		.pc_argsize = sizeof(struct nfsd_sattrargs),
+ 		.pc_ressize = sizeof(struct nfsd_attrstat),
+ 		.pc_cachetype = RC_REPLBUFF,
+@@ -628,7 +628,7 @@ static const struct svc_procedure nfsd_procedures2[18] = {
+ 		.pc_func = nfsd_proc_lookup,
+ 		.pc_decode = nfssvc_decode_diropargs,
+ 		.pc_encode = nfssvc_encode_diropres,
+-		.pc_release = nfssvc_release_fhandle,
++		.pc_release = nfssvc_release_diropres,
+ 		.pc_argsize = sizeof(struct nfsd_diropargs),
+ 		.pc_ressize = sizeof(struct nfsd_diropres),
+ 		.pc_cachetype = RC_NOCACHE,
+@@ -647,7 +647,7 @@ static const struct svc_procedure nfsd_procedures2[18] = {
+ 		.pc_func = nfsd_proc_read,
+ 		.pc_decode = nfssvc_decode_readargs,
+ 		.pc_encode = nfssvc_encode_readres,
+-		.pc_release = nfssvc_release_fhandle,
++		.pc_release = nfssvc_release_readres,
+ 		.pc_argsize = sizeof(struct nfsd_readargs),
+ 		.pc_ressize = sizeof(struct nfsd_readres),
+ 		.pc_cachetype = RC_NOCACHE,
+@@ -665,7 +665,7 @@ static const struct svc_procedure nfsd_procedures2[18] = {
+ 		.pc_func = nfsd_proc_write,
+ 		.pc_decode = nfssvc_decode_writeargs,
+ 		.pc_encode = nfssvc_encode_attrstat,
+-		.pc_release = nfssvc_release_fhandle,
++		.pc_release = nfssvc_release_attrstat,
+ 		.pc_argsize = sizeof(struct nfsd_writeargs),
+ 		.pc_ressize = sizeof(struct nfsd_attrstat),
+ 		.pc_cachetype = RC_REPLBUFF,
+@@ -675,7 +675,7 @@ static const struct svc_procedure nfsd_procedures2[18] = {
+ 		.pc_func = nfsd_proc_create,
+ 		.pc_decode = nfssvc_decode_createargs,
+ 		.pc_encode = nfssvc_encode_diropres,
+-		.pc_release = nfssvc_release_fhandle,
++		.pc_release = nfssvc_release_diropres,
+ 		.pc_argsize = sizeof(struct nfsd_createargs),
+ 		.pc_ressize = sizeof(struct nfsd_diropres),
+ 		.pc_cachetype = RC_REPLBUFF,
+@@ -721,7 +721,7 @@ static const struct svc_procedure nfsd_procedures2[18] = {
+ 		.pc_func = nfsd_proc_mkdir,
+ 		.pc_decode = nfssvc_decode_createargs,
+ 		.pc_encode = nfssvc_encode_diropres,
+-		.pc_release = nfssvc_release_fhandle,
++		.pc_release = nfssvc_release_diropres,
+ 		.pc_argsize = sizeof(struct nfsd_createargs),
+ 		.pc_ressize = sizeof(struct nfsd_diropres),
+ 		.pc_cachetype = RC_REPLBUFF,
+diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
+index b51fe515f06f..39c004ec7d85 100644
+--- a/fs/nfsd/nfsxdr.c
++++ b/fs/nfsd/nfsxdr.c
+@@ -561,10 +561,23 @@ nfssvc_encode_entry(void *ccdv, const char *name,
+ /*
+  * XDR release functions
+  */
+-void
+-nfssvc_release_fhandle(struct svc_rqst *rqstp)
++void nfssvc_release_attrstat(struct svc_rqst *rqstp)
+ {
+-	struct nfsd_fhandle *resp = rqstp->rq_resp;
++	struct nfsd_attrstat *resp = rqstp->rq_resp;
++
++	fh_put(&resp->fh);
++}
++
++void nfssvc_release_diropres(struct svc_rqst *rqstp)
++{
++	struct nfsd_diropres *resp = rqstp->rq_resp;
++
++	fh_put(&resp->fh);
++}
++
++void nfssvc_release_readres(struct svc_rqst *rqstp)
++{
++	struct nfsd_readres *resp = rqstp->rq_resp;
  
- 	nfsd_cache_update(rqstp, rqstp->rq_cachetype, statp + 1);
- out_cached_reply:
-+	*statp = rpc_success;
- 	return 1;
+ 	fh_put(&resp->fh);
+ }
+diff --git a/fs/nfsd/xdr.h b/fs/nfsd/xdr.h
+index ea7cca3a64b7..3d3e16d48268 100644
+--- a/fs/nfsd/xdr.h
++++ b/fs/nfsd/xdr.h
+@@ -156,7 +156,9 @@ int nfssvc_encode_readdirres(struct svc_rqst *, __be32 *);
+ int nfssvc_encode_entry(void *, const char *name,
+ 			int namlen, loff_t offset, u64 ino, unsigned int);
  
- out_too_large:
+-void nfssvc_release_fhandle(struct svc_rqst *);
++void nfssvc_release_attrstat(struct svc_rqst *rqstp);
++void nfssvc_release_diropres(struct svc_rqst *rqstp);
++void nfssvc_release_readres(struct svc_rqst *rqstp);
+ 
+ /* Helper functions for NFSv2 ACL code */
+ __be32 *nfs2svc_encode_fattr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp, struct kstat *stat);
 
 
