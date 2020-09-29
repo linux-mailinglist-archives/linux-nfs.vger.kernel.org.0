@@ -2,1296 +2,693 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C41B27D1BB
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Sep 2020 16:47:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF28827D32C
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Sep 2020 17:54:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731067AbgI2OrU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 29 Sep 2020 10:47:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730884AbgI2OrU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Sep 2020 10:47:20 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB78C061755
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Sep 2020 07:47:20 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id z5so5145880ilq.5
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Sep 2020 07:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=f30nHMA3w/sN/K/tv3bwN6Sls99xxxWJ44QUijQjEHs=;
-        b=bxLNVJPsS1bhxtyv7vSVmnI/WwgzKg5nFIgv68hQiUivq4fCVUaC8DHX8oSFJO9NW2
-         ZdEJa2Ws2nCHDEni6eJdcceTv7bNYa/eiDTWQ58uSSfyeYJY402mJj1PALSEwYPdTBjj
-         q54mKALUm+pz1cgo4HrsyA5gNG4zsnFcZXezKdlKPccqZDtIiqbH1bcOCjG5sRH2HabB
-         0qtBt/EY++XG4tH4kLh7/byLVEHiG9sScMecnBtg4FRifigUqBAqsQ3RKe+E/3VC0hy4
-         lrvSrGoeYQ+L5xS1haazPmVVQ2qbVRLcPR6BJLE/JD21mKqk8GMzi0gr1WIgo+KMIaeT
-         4KyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=f30nHMA3w/sN/K/tv3bwN6Sls99xxxWJ44QUijQjEHs=;
-        b=E/90nk+4HGUAcm5JZsun9tEabYfoXhFxPnbtYShSywfMQbMr0R2vww60rz/DK2cCr6
-         f9zg37md8g7NLL9Q8Pt9eMLojeEYr3gPFru+UgAugoURRIKICm6qWJX6t3twHP/kQhoe
-         r7jFOuSgfNsqQg5Vy77tlxEaIoczIe4tLcJZn7vsLQtT2oCjA1G041AYrQyspj+O+oPi
-         Xo2CaVtfhrkxYjExk4DKidyIrBjERxBFmhHmSdqK8P5aX1IwZwh4QYlkuCMOSiNEzrMG
-         hTRw0uQvlpdlvyVWoGmRHggw//1iMHmUDn029d1P9fBDCvz/qV7G+SKbPp5ktIz3Qe/2
-         2a7g==
-X-Gm-Message-State: AOAM533joOI977bQiJeYprhqB7RBiheXALTfRxJvk2TCB24b2FluMxsZ
-        zSaYHf02KUv59eHmqvpzYZZxM5Q+yxcvFw==
-X-Google-Smtp-Source: ABdhPJzJcKBck/vAKHVXXCAILIXSinnoyR7isE8IU5Cc3lFUkr7oU2Qv30q2fANCyJKrTVVNfoMENw==
-X-Received: by 2002:a92:9a13:: with SMTP id t19mr430185ili.269.1601390838503;
-        Tue, 29 Sep 2020 07:47:18 -0700 (PDT)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id c2sm883728iot.52.2020.09.29.07.47.17
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Sep 2020 07:47:17 -0700 (PDT)
-Sender: Chuck Lever <chucklever@gmail.com>
-Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 08TElGQB026499
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Sep 2020 14:47:16 GMT
-Subject: [PATCH RFC] lockd: Replace some dprintk() callsites with tracepoints
+        id S1728401AbgI2PyD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 29 Sep 2020 11:54:03 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59792 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbgI2PyD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Sep 2020 11:54:03 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08TFn36s001488;
+        Tue, 29 Sep 2020 15:53:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=FxSDF/v7JS9Pmj4k7zcbEMGZN8tzahdirwRIZaMsWwo=;
+ b=asnAeeaoAVAQoXG3sWKNHYyzgz42MzUb8raA3inW/pE2UblyLmQcC8ZQndO375ufXOMj
+ 3LrK9LKloUSrVKL5I8LgdoJ8fiZ4ANsd44o00CEnZ15dgJN4H9s9pG084DDiiUnDOwRm
+ M11ujX/YOJw1aLyOItiuRh04+b9jy1ZFR3fJ5hI6qRwRHedNVhPVCFPnV9LUoBqBwn7w
+ SiTmEUrgYtipyb8Za0ulVb+iKa/iHyFd+V9gvaOLy6yG2ARAXu+AfZfP5z3jjHq54XgG
+ SjbKtj1Z9vI9KeZ/RbcbzzuZbgf46X+xwz65oN26y6zHmCs5kK1kueOMU1+IRBF8PsWC sA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 33sx9n3pdb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 29 Sep 2020 15:53:57 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08TFoju8184519;
+        Tue, 29 Sep 2020 15:53:56 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 33tfdsb4ne-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Sep 2020 15:53:56 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08TFrtVo000312;
+        Tue, 29 Sep 2020 15:53:55 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 29 Sep 2020 08:53:54 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [PATCH v2 11/11] NFSD: Call NFSv2 encoders on error returns
 From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Tue, 29 Sep 2020 10:47:16 -0400
-Message-ID: <160139069000.1267.9327919889389631563.stgit@klimt.1015granger.net>
-User-Agent: StGit/0.23-29-ga622f1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <160138827523.2558.10662502652461223634.stgit@klimt.1015granger.net>
+Date:   Tue, 29 Sep 2020 11:53:54 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <13B75E3F-58AB-4B92-BF31-1A5612104A19@oracle.com>
+References: <160138785101.2558.11821923574884893011.stgit@klimt.1015granger.net>
+ <160138827523.2558.10662502652461223634.stgit@klimt.1015granger.net>
+To:     Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9759 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ adultscore=0 malwarescore=0 spamscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009290136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9759 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
+ phishscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
+ spamscore=0 impostorscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009290136
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Replace dprintk() infrastructure with tracepoints that collect
-much deeper per-RPC information. Some examples:
-
-lockd-1016  [000]   254.812542: lockd_proc_test: \
-	xid=0xa7290991 caller=manet.1015granger.net \
-	fh_hash=0x16fbb5ab range=[2147483647,-1] status=GRANTED
-
-lockd-1016  [000]   254.827767: lockd_proc_lock: \
-	xid=0xa8290991 caller=manet.1015granger.net \
-	fh_hash=0x1e6450d5 range=[0,-1] status=GRANTED
-
-lockd-1016  [000]   254.831879: lockd_proc_unlock: \
-	xid=0xa9290991 caller=manet.1015granger.net \
-	fh_hash=0x1e6450d5 range=[0,-1] status=GRANTED
-
-Each of these tracepoints also stores but does not display IP
-address information:
-
-  netns_ino=4026532000
-  server=192.168.2.55:34723
-  client=192.168.2.51:993
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
-Hello-
-
-Here's another alternative for introducing operational tracepoints
-on the NFS server. Here, for each procedure, the Call arguments and
-the returned status code are recorded, as well as the server's
-network namespace and IP address and the client's IP address.
-
-Comments welcome.
 
 
- fs/lockd/Makefile   |    2 
- fs/lockd/svc.c      |    3 -
- fs/lockd/svc4proc.c |  177 ++++++++++++++++++++++++++--------------
- fs/lockd/svcproc.c  |  186 ++++++++++++++++++++++++++++--------------
- fs/lockd/trace.c    |   19 ++++
- fs/lockd/trace.h    |  228 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 490 insertions(+), 125 deletions(-)
- create mode 100644 fs/lockd/trace.c
- create mode 100644 fs/lockd/trace.h
+> On Sep 29, 2020, at 10:04 AM, Chuck Lever <chuck.lever@oracle.com> =
+wrote:
+>=20
+> Eventually we want to deprecate NFSv2 entirely.
+>=20
+> Remove special dispatcher logic for NFSv2 error responses. These are
+> rare to the point of becoming extinct, but all NFS responses have to
+> pay the cost of the extra conditional branches.
+>=20
+> This also means the NFSv2 error cases now get proper
+> xdr_ressize_check() calls.
+>=20
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+> fs/nfsd/nfs2acl.c |    9 +++
+> fs/nfsd/nfsproc.c |  159 =
++++++++++++++++++++++++++++--------------------------
+> fs/nfsd/nfssvc.c  |    8 +--
+> fs/nfsd/nfsxdr.c  |   18 ++++++
+> fs/nfsd/xdr.h     |    7 ++
+> 5 files changed, 118 insertions(+), 83 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfs2acl.c b/fs/nfsd/nfs2acl.c
+> index 3c8b9250dc4a..70b3a90cfe92 100644
+> --- a/fs/nfsd/nfs2acl.c
+> +++ b/fs/nfsd/nfs2acl.c
+> @@ -273,6 +273,9 @@ static int nfsaclsvc_encode_getaclres(struct =
+svc_rqst *rqstp, __be32 *p)
+> 	int n;
+> 	int w;
+>=20
+> +	if (resp->status !=3D nfs_ok)
+> +		return xdr_ressize_check(rqstp, p);
+> +
+> 	/*
+> 	 * Since this is version 2, the check for nfserr in
+> 	 * nfsd_dispatch actually ensures the following cannot happen.
+> @@ -312,6 +315,9 @@ static int nfsaclsvc_encode_attrstatres(struct =
+svc_rqst *rqstp, __be32 *p)
+> {
+> 	struct nfsd_attrstat *resp =3D rqstp->rq_resp;
+>=20
+> +	if (resp->status !=3D nfs_ok)
+> +		return xdr_ressize_check(rqstp, p);
 
-diff --git a/fs/lockd/Makefile b/fs/lockd/Makefile
-index 6d5e83ed4476..865324d97db5 100644
---- a/fs/lockd/Makefile
-+++ b/fs/lockd/Makefile
-@@ -6,7 +6,7 @@
- obj-$(CONFIG_LOCKD) += lockd.o
- 
- lockd-objs-y := clntlock.o clntproc.o clntxdr.o host.o svc.o svclock.o \
--	        svcshare.o svcproc.o svcsubs.o mon.o xdr.o
-+	        svcshare.o svcproc.o svcsubs.o mon.o trace.o xdr.o
- lockd-objs-$(CONFIG_LOCKD_V4) += clnt4xdr.o xdr4.o svc4proc.o
- lockd-objs-$(CONFIG_PROC_FS) += procfs.o
- lockd-objs		      := $(lockd-objs-y)
-diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
-index 1a639e34847d..7b598e52014a 100644
---- a/fs/lockd/svc.c
-+++ b/fs/lockd/svc.c
-@@ -153,7 +153,6 @@ lockd(void *vrqstp)
- 	 */
- 	while (!kthread_should_stop()) {
- 		long timeout = MAX_SCHEDULE_TIMEOUT;
--		RPC_IFDEBUG(char buf[RPC_MAX_ADDRBUFLEN]);
- 
- 		/* update sv_maxconn if it has changed */
- 		rqstp->rq_server->sv_maxconn = nlm_max_connections;
-@@ -173,8 +172,6 @@ lockd(void *vrqstp)
- 		err = svc_recv(rqstp, timeout);
- 		if (err == -EAGAIN || err == -EINTR)
- 			continue;
--		dprintk("lockd: request from %s\n",
--				svc_print_addr(rqstp, buf, sizeof(buf)));
- 
- 		svc_process(rqstp);
- 	}
-diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-index 9913b823a5e7..a522ff2a8d8a 100644
---- a/fs/lockd/svc4proc.c
-+++ b/fs/lockd/svc4proc.c
-@@ -14,7 +14,7 @@
- #include <linux/lockd/share.h>
- #include <linux/sunrpc/svc_xprt.h>
- 
--#define NLMDBG_FACILITY		NLMDBG_CLIENT
-+#include "trace.h"
- 
- /*
-  * Obtain client and file from arguments
-@@ -71,7 +71,7 @@ nlm4svc_retrieve_args(struct svc_rqst *rqstp, struct nlm_args *argp,
- static __be32
- nlm4svc_proc_null(struct svc_rqst *rqstp)
- {
--	dprintk("lockd: NULL          called\n");
-+	trace_lockd_proc_null(rqstp);
- 	return rpc_success;
- }
- 
-@@ -86,7 +86,6 @@ __nlm4svc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	struct nlm_file	*file;
- 	__be32 rc = rpc_success;
- 
--	dprintk("lockd: TEST4        called\n");
- 	resp->cookie = argp->cookie;
- 
- 	/* Obtain client and file */
-@@ -97,8 +96,6 @@ __nlm4svc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	resp->status = nlmsvc_testlock(rqstp, file, host, &argp->lock, &resp->lock, &resp->cookie);
- 	if (resp->status == nlm_drop_reply)
- 		rc = rpc_drop_reply;
--	else
--		dprintk("lockd: TEST4        status %d\n", ntohl(resp->status));
- 
- 	nlmsvc_release_lockowner(&argp->lock);
- 	nlmsvc_release_host(host);
-@@ -109,7 +106,13 @@ __nlm4svc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
- static __be32
- nlm4svc_proc_test(struct svc_rqst *rqstp)
- {
--	return __nlm4svc_proc_test(rqstp, rqstp->rq_resp);
-+	struct nlm_args *argp = rqstp->rq_argp;
-+	__be32 rc;
-+
-+	rc = __nlm4svc_proc_test(rqstp, rqstp->rq_resp);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_test(rqstp, &argp->lock);
-+	return rc;
- }
- 
- static __be32
-@@ -120,8 +123,6 @@ __nlm4svc_proc_lock(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	struct nlm_file	*file;
- 	__be32 rc = rpc_success;
- 
--	dprintk("lockd: LOCK          called\n");
--
- 	resp->cookie = argp->cookie;
- 
- 	/* Obtain client and file */
-@@ -146,8 +147,6 @@ __nlm4svc_proc_lock(struct svc_rqst *rqstp, struct nlm_res *resp)
- 					argp->reclaim);
- 	if (resp->status == nlm_drop_reply)
- 		rc = rpc_drop_reply;
--	else
--		dprintk("lockd: LOCK         status %d\n", ntohl(resp->status));
- 
- 	nlmsvc_release_lockowner(&argp->lock);
- 	nlmsvc_release_host(host);
-@@ -158,7 +157,13 @@ __nlm4svc_proc_lock(struct svc_rqst *rqstp, struct nlm_res *resp)
- static __be32
- nlm4svc_proc_lock(struct svc_rqst *rqstp)
- {
--	return __nlm4svc_proc_lock(rqstp, rqstp->rq_resp);
-+	struct nlm_args *argp = rqstp->rq_argp;
-+	__be32 rc;
-+
-+	rc = __nlm4svc_proc_lock(rqstp, rqstp->rq_resp);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_lock(rqstp, &argp->lock);
-+	return rc;
- }
- 
- static __be32
-@@ -168,8 +173,6 @@ __nlm4svc_proc_cancel(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	struct nlm_host	*host;
- 	struct nlm_file	*file;
- 
--	dprintk("lockd: CANCEL        called\n");
--
- 	resp->cookie = argp->cookie;
- 
- 	/* Don't accept requests during grace period */
-@@ -185,7 +188,6 @@ __nlm4svc_proc_cancel(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	/* Try to cancel request. */
- 	resp->status = nlmsvc_cancel_blocked(SVC_NET(rqstp), file, &argp->lock);
- 
--	dprintk("lockd: CANCEL        status %d\n", ntohl(resp->status));
- 	nlmsvc_release_lockowner(&argp->lock);
- 	nlmsvc_release_host(host);
- 	nlm_release_file(file);
-@@ -195,7 +197,13 @@ __nlm4svc_proc_cancel(struct svc_rqst *rqstp, struct nlm_res *resp)
- static __be32
- nlm4svc_proc_cancel(struct svc_rqst *rqstp)
- {
--	return __nlm4svc_proc_cancel(rqstp, rqstp->rq_resp);
-+	struct nlm_args *argp = rqstp->rq_argp;
-+	__be32 rc;
-+
-+	rc = __nlm4svc_proc_cancel(rqstp, rqstp->rq_resp);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_cancel(rqstp, &argp->lock);
-+	return rc;
- }
- 
- /*
-@@ -208,8 +216,6 @@ __nlm4svc_proc_unlock(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	struct nlm_host	*host;
- 	struct nlm_file	*file;
- 
--	dprintk("lockd: UNLOCK        called\n");
--
- 	resp->cookie = argp->cookie;
- 
- 	/* Don't accept new lock requests during grace period */
-@@ -225,7 +231,6 @@ __nlm4svc_proc_unlock(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	/* Now try to remove the lock */
- 	resp->status = nlmsvc_unlock(SVC_NET(rqstp), file, &argp->lock);
- 
--	dprintk("lockd: UNLOCK        status %d\n", ntohl(resp->status));
- 	nlmsvc_release_lockowner(&argp->lock);
- 	nlmsvc_release_host(host);
- 	nlm_release_file(file);
-@@ -235,7 +240,13 @@ __nlm4svc_proc_unlock(struct svc_rqst *rqstp, struct nlm_res *resp)
- static __be32
- nlm4svc_proc_unlock(struct svc_rqst *rqstp)
- {
--	return __nlm4svc_proc_unlock(rqstp, rqstp->rq_resp);
-+	struct nlm_args *argp = rqstp->rq_argp;
-+	__be32 rc;
-+
-+	rc = __nlm4svc_proc_unlock(rqstp, rqstp->rq_resp);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_lock(rqstp, &argp->lock);
-+	return rc;
- }
- 
- /*
-@@ -249,16 +260,16 @@ __nlm4svc_proc_granted(struct svc_rqst *rqstp, struct nlm_res *resp)
- 
- 	resp->cookie = argp->cookie;
- 
--	dprintk("lockd: GRANTED       called\n");
- 	resp->status = nlmclnt_grant(svc_addr(rqstp), &argp->lock);
--	dprintk("lockd: GRANTED       status %d\n", ntohl(resp->status));
- 	return rpc_success;
- }
- 
- static __be32
- nlm4svc_proc_granted(struct svc_rqst *rqstp)
- {
--	return __nlm4svc_proc_granted(rqstp, rqstp->rq_resp);
-+	__nlm4svc_proc_granted(rqstp, rqstp->rq_resp);
-+	trace_lockd_proc_granted(rqstp);
-+	return rpc_success;
- }
- 
- /*
-@@ -266,8 +277,6 @@ nlm4svc_proc_granted(struct svc_rqst *rqstp)
-  */
- static void nlm4svc_callback_exit(struct rpc_task *task, void *data)
- {
--	dprintk("lockd: %5u callback returned %d\n", task->tk_pid,
--			-task->tk_status);
- }
- 
- static void nlm4svc_callback_release(void *data)
-@@ -318,32 +327,52 @@ static __be32 nlm4svc_callback(struct svc_rqst *rqstp, u32 proc,
- 
- static __be32 nlm4svc_proc_test_msg(struct svc_rqst *rqstp)
- {
--	dprintk("lockd: TEST_MSG      called\n");
--	return nlm4svc_callback(rqstp, NLMPROC_TEST_RES, __nlm4svc_proc_test);
-+	__be32 rc;
-+
-+	rc = nlm4svc_callback(rqstp, NLMPROC_TEST_RES, __nlm4svc_proc_test);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_test_msg(rqstp);
-+	return rc;
- }
- 
- static __be32 nlm4svc_proc_lock_msg(struct svc_rqst *rqstp)
- {
--	dprintk("lockd: LOCK_MSG      called\n");
--	return nlm4svc_callback(rqstp, NLMPROC_LOCK_RES, __nlm4svc_proc_lock);
-+	__be32 rc;
-+
-+	rc = nlm4svc_callback(rqstp, NLMPROC_LOCK_RES, __nlm4svc_proc_lock);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_lock_msg(rqstp);
-+	return rc;
- }
- 
- static __be32 nlm4svc_proc_cancel_msg(struct svc_rqst *rqstp)
- {
--	dprintk("lockd: CANCEL_MSG    called\n");
--	return nlm4svc_callback(rqstp, NLMPROC_CANCEL_RES, __nlm4svc_proc_cancel);
-+	__be32 rc;
-+
-+	rc = nlm4svc_callback(rqstp, NLMPROC_CANCEL_RES, __nlm4svc_proc_cancel);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_cancel_msg(rqstp);
-+	return rc;
- }
- 
- static __be32 nlm4svc_proc_unlock_msg(struct svc_rqst *rqstp)
- {
--	dprintk("lockd: UNLOCK_MSG    called\n");
--	return nlm4svc_callback(rqstp, NLMPROC_UNLOCK_RES, __nlm4svc_proc_unlock);
-+	__be32 rc;
-+
-+	rc = nlm4svc_callback(rqstp, NLMPROC_UNLOCK_RES, __nlm4svc_proc_unlock);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_unlock_msg(rqstp);
-+	return rc;
- }
- 
- static __be32 nlm4svc_proc_granted_msg(struct svc_rqst *rqstp)
- {
--	dprintk("lockd: GRANTED_MSG   called\n");
--	return nlm4svc_callback(rqstp, NLMPROC_GRANTED_RES, __nlm4svc_proc_granted);
-+	__be32 rc;
-+
-+	rc = nlm4svc_callback(rqstp, NLMPROC_GRANTED_RES, __nlm4svc_proc_granted);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_granted_msg(rqstp);
-+	return rc;
- }
- 
- /*
-@@ -357,8 +386,6 @@ nlm4svc_proc_share(struct svc_rqst *rqstp)
- 	struct nlm_host	*host;
- 	struct nlm_file	*file;
- 
--	dprintk("lockd: SHARE         called\n");
--
- 	resp->cookie = argp->cookie;
- 
- 	/* Don't accept new lock requests during grace period */
-@@ -374,7 +401,7 @@ nlm4svc_proc_share(struct svc_rqst *rqstp)
- 	/* Now try to create the share */
- 	resp->status = nlmsvc_share_file(host, file, argp);
- 
--	dprintk("lockd: SHARE         status %d\n", ntohl(resp->status));
-+	trace_lockd_proc_share(rqstp, &argp->lock);
- 	nlmsvc_release_lockowner(&argp->lock);
- 	nlmsvc_release_host(host);
- 	nlm_release_file(file);
-@@ -392,8 +419,6 @@ nlm4svc_proc_unshare(struct svc_rqst *rqstp)
- 	struct nlm_host	*host;
- 	struct nlm_file	*file;
- 
--	dprintk("lockd: UNSHARE       called\n");
--
- 	resp->cookie = argp->cookie;
- 
- 	/* Don't accept requests during grace period */
-@@ -409,8 +434,9 @@ nlm4svc_proc_unshare(struct svc_rqst *rqstp)
- 	/* Now try to lock the file */
- 	resp->status = nlmsvc_unshare_file(host, file, argp);
- 
--	dprintk("lockd: UNSHARE       status %d\n", ntohl(resp->status));
- 	nlmsvc_release_lockowner(&argp->lock);
-+
-+	trace_lockd_proc_unshare(rqstp, &argp->lock);
- 	nlmsvc_release_host(host);
- 	nlm_release_file(file);
- 	return rpc_success;
-@@ -423,11 +449,13 @@ static __be32
- nlm4svc_proc_nm_lock(struct svc_rqst *rqstp)
- {
- 	struct nlm_args *argp = rqstp->rq_argp;
--
--	dprintk("lockd: NM_LOCK       called\n");
-+	__be32 rc;
- 
- 	argp->monitor = 0;		/* just clean the monitor flag */
--	return nlm4svc_proc_lock(rqstp);
-+	rc = __nlm4svc_proc_lock(rqstp, rqstp->rq_resp);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_nm_lock(rqstp, &argp->lock);
-+	return rc;
- }
- 
- /*
-@@ -444,6 +472,8 @@ nlm4svc_proc_free_all(struct svc_rqst *rqstp)
- 		return rpc_success;
- 
- 	nlmsvc_free_host_resources(host);
-+
-+	trace_lockd_proc_free_all(rqstp, &argp->lock);
- 	nlmsvc_release_host(host);
- 	return rpc_success;
- }
-@@ -456,16 +486,11 @@ nlm4svc_proc_sm_notify(struct svc_rqst *rqstp)
- {
- 	struct nlm_reboot *argp = rqstp->rq_argp;
- 
--	dprintk("lockd: SM_NOTIFY     called\n");
--
--	if (!nlm_privileged_requester(rqstp)) {
--		char buf[RPC_MAX_ADDRBUFLEN];
--		printk(KERN_WARNING "lockd: rejected NSM callback from %s\n",
--				svc_print_addr(rqstp, buf, sizeof(buf)));
-+	if (!nlm_privileged_requester(rqstp))
- 		return rpc_system_err;
--	}
- 
- 	nlm_host_rebooted(SVC_NET(rqstp), argp);
-+	trace_lockd_proc_sm_notify(rqstp);
- 	return rpc_success;
- }
- 
-@@ -480,9 +505,43 @@ nlm4svc_proc_granted_res(struct svc_rqst *rqstp)
-         if (!nlmsvc_ops)
-                 return rpc_success;
- 
--        dprintk("lockd: GRANTED_RES   called\n");
--
-         nlmsvc_grant_reply(&argp->cookie, argp->status);
-+	trace_lockd_proc_granted_res(rqstp);
-+        return rpc_success;
-+}
-+
-+static __be32
-+nlm4svc_proc_test_res(struct svc_rqst *rqstp)
-+{
-+	trace_lockd_proc_test_res(rqstp);
-+        return rpc_success;
-+}
-+
-+static __be32
-+nlm4svc_proc_lock_res(struct svc_rqst *rqstp)
-+{
-+	trace_lockd_proc_lock_res(rqstp);
-+        return rpc_success;
-+}
-+
-+static __be32
-+nlm4svc_proc_cancel_res(struct svc_rqst *rqstp)
-+{
-+	trace_lockd_proc_cancel_res(rqstp);
-+        return rpc_success;
-+}
-+
-+static __be32
-+nlm4svc_proc_unlock_res(struct svc_rqst *rqstp)
-+{
-+	trace_lockd_proc_unlock_res(rqstp);
-+        return rpc_success;
-+}
-+
-+static __be32
-+nlm4svc_proc_unused(struct svc_rqst *rqstp)
-+{
-+	trace_lockd_proc_unused(rqstp);
-         return rpc_success;
- }
- 
-@@ -588,7 +647,7 @@ const struct svc_procedure nlmsvc_procedures4[24] = {
- 		.pc_xdrressize = St,
- 	},
- 	[NLMPROC_TEST_RES] = {
--		.pc_func = nlm4svc_proc_null,
-+		.pc_func = nlm4svc_proc_test_res,
- 		.pc_decode = nlm4svc_decode_void,
- 		.pc_encode = nlm4svc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_res),
-@@ -596,7 +655,7 @@ const struct svc_procedure nlmsvc_procedures4[24] = {
- 		.pc_xdrressize = St,
- 	},
- 	[NLMPROC_LOCK_RES] = {
--		.pc_func = nlm4svc_proc_null,
-+		.pc_func = nlm4svc_proc_lock_res,
- 		.pc_decode = nlm4svc_decode_void,
- 		.pc_encode = nlm4svc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_res),
-@@ -604,7 +663,7 @@ const struct svc_procedure nlmsvc_procedures4[24] = {
- 		.pc_xdrressize = St,
- 	},
- 	[NLMPROC_CANCEL_RES] = {
--		.pc_func = nlm4svc_proc_null,
-+		.pc_func = nlm4svc_proc_cancel_res,
- 		.pc_decode = nlm4svc_decode_void,
- 		.pc_encode = nlm4svc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_res),
-@@ -612,7 +671,7 @@ const struct svc_procedure nlmsvc_procedures4[24] = {
- 		.pc_xdrressize = St,
- 	},
- 	[NLMPROC_UNLOCK_RES] = {
--		.pc_func = nlm4svc_proc_null,
-+		.pc_func = nlm4svc_proc_unlock_res,
- 		.pc_decode = nlm4svc_decode_void,
- 		.pc_encode = nlm4svc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_res),
-@@ -636,7 +695,7 @@ const struct svc_procedure nlmsvc_procedures4[24] = {
- 		.pc_xdrressize = St,
- 	},
- 	[17] = { /* unused procedure */
--		.pc_func = nlm4svc_proc_null,
-+		.pc_func = nlm4svc_proc_unused,
- 		.pc_decode = nlm4svc_decode_void,
- 		.pc_encode = nlm4svc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_void),
-@@ -644,7 +703,7 @@ const struct svc_procedure nlmsvc_procedures4[24] = {
- 		.pc_xdrressize = 0,
- 	},
- 	[18] = { /* unused procedure */
--		.pc_func = nlm4svc_proc_null,
-+		.pc_func = nlm4svc_proc_unused,
- 		.pc_decode = nlm4svc_decode_void,
- 		.pc_encode = nlm4svc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_void),
-@@ -652,7 +711,7 @@ const struct svc_procedure nlmsvc_procedures4[24] = {
- 		.pc_xdrressize = 0,
- 	},
- 	[19] = { /* unused procedure */
--		.pc_func = nlm4svc_proc_null,
-+		.pc_func = nlm4svc_proc_unused,
- 		.pc_decode = nlm4svc_decode_void,
- 		.pc_encode = nlm4svc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_void),
-diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
-index dbcfa67a36b1..a9565a155f01 100644
---- a/fs/lockd/svcproc.c
-+++ b/fs/lockd/svcproc.c
-@@ -14,7 +14,7 @@
- #include <linux/lockd/share.h>
- #include <linux/sunrpc/svc_xprt.h>
- 
--#define NLMDBG_FACILITY		NLMDBG_CLIENT
-+#include "trace.h"
- 
- #ifdef CONFIG_LOCKD_V4
- static __be32
-@@ -101,7 +101,7 @@ nlmsvc_retrieve_args(struct svc_rqst *rqstp, struct nlm_args *argp,
- static __be32
- nlmsvc_proc_null(struct svc_rqst *rqstp)
- {
--	dprintk("lockd: NULL          called\n");
-+	trace_lockd_proc_null(rqstp);
- 	return rpc_success;
- }
- 
-@@ -116,7 +116,6 @@ __nlmsvc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	struct nlm_file	*file;
- 	__be32 rc = rpc_success;
- 
--	dprintk("lockd: TEST          called\n");
- 	resp->cookie = argp->cookie;
- 
- 	/* Obtain client and file */
-@@ -127,9 +126,6 @@ __nlmsvc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	resp->status = cast_status(nlmsvc_testlock(rqstp, file, host, &argp->lock, &resp->lock, &resp->cookie));
- 	if (resp->status == nlm_drop_reply)
- 		rc = rpc_drop_reply;
--	else
--		dprintk("lockd: TEST          status %d vers %d\n",
--			ntohl(resp->status), rqstp->rq_vers);
- 
- 	nlmsvc_release_lockowner(&argp->lock);
- 	nlmsvc_release_host(host);
-@@ -140,7 +136,13 @@ __nlmsvc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
- static __be32
- nlmsvc_proc_test(struct svc_rqst *rqstp)
- {
--	return __nlmsvc_proc_test(rqstp, rqstp->rq_resp);
-+	struct nlm_args *argp = rqstp->rq_argp;
-+	__be32 rc;
-+
-+	rc = __nlmsvc_proc_test(rqstp, rqstp->rq_resp);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_test(rqstp, &argp->lock);
-+	return rc;
- }
- 
- static __be32
-@@ -151,8 +153,6 @@ __nlmsvc_proc_lock(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	struct nlm_file	*file;
- 	__be32 rc = rpc_success;
- 
--	dprintk("lockd: LOCK          called\n");
--
- 	resp->cookie = argp->cookie;
- 
- 	/* Obtain client and file */
-@@ -177,8 +177,6 @@ __nlmsvc_proc_lock(struct svc_rqst *rqstp, struct nlm_res *resp)
- 					       argp->reclaim));
- 	if (resp->status == nlm_drop_reply)
- 		rc = rpc_drop_reply;
--	else
--		dprintk("lockd: LOCK         status %d\n", ntohl(resp->status));
- 
- 	nlmsvc_release_lockowner(&argp->lock);
- 	nlmsvc_release_host(host);
-@@ -189,7 +187,13 @@ __nlmsvc_proc_lock(struct svc_rqst *rqstp, struct nlm_res *resp)
- static __be32
- nlmsvc_proc_lock(struct svc_rqst *rqstp)
- {
--	return __nlmsvc_proc_lock(rqstp, rqstp->rq_resp);
-+	struct nlm_args *argp = rqstp->rq_argp;
-+	__be32 rc;
-+
-+	rc = __nlmsvc_proc_lock(rqstp, rqstp->rq_resp);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_lock(rqstp, &argp->lock);
-+	return rc;
- }
- 
- static __be32
-@@ -200,8 +204,6 @@ __nlmsvc_proc_cancel(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	struct nlm_file	*file;
- 	struct net *net = SVC_NET(rqstp);
- 
--	dprintk("lockd: CANCEL        called\n");
--
- 	resp->cookie = argp->cookie;
- 
- 	/* Don't accept requests during grace period */
-@@ -217,7 +219,6 @@ __nlmsvc_proc_cancel(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	/* Try to cancel request. */
- 	resp->status = cast_status(nlmsvc_cancel_blocked(net, file, &argp->lock));
- 
--	dprintk("lockd: CANCEL        status %d\n", ntohl(resp->status));
- 	nlmsvc_release_lockowner(&argp->lock);
- 	nlmsvc_release_host(host);
- 	nlm_release_file(file);
-@@ -227,7 +228,13 @@ __nlmsvc_proc_cancel(struct svc_rqst *rqstp, struct nlm_res *resp)
- static __be32
- nlmsvc_proc_cancel(struct svc_rqst *rqstp)
- {
--	return __nlmsvc_proc_cancel(rqstp, rqstp->rq_resp);
-+	struct nlm_args *argp = rqstp->rq_argp;
-+	__be32 rc;
-+
-+	rc = __nlmsvc_proc_cancel(rqstp, rqstp->rq_resp);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_cancel(rqstp, &argp->lock);
-+	return rc;
- }
- 
- /*
-@@ -241,8 +248,6 @@ __nlmsvc_proc_unlock(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	struct nlm_file	*file;
- 	struct net *net = SVC_NET(rqstp);
- 
--	dprintk("lockd: UNLOCK        called\n");
--
- 	resp->cookie = argp->cookie;
- 
- 	/* Don't accept new lock requests during grace period */
-@@ -258,7 +263,6 @@ __nlmsvc_proc_unlock(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	/* Now try to remove the lock */
- 	resp->status = cast_status(nlmsvc_unlock(net, file, &argp->lock));
- 
--	dprintk("lockd: UNLOCK        status %d\n", ntohl(resp->status));
- 	nlmsvc_release_lockowner(&argp->lock);
- 	nlmsvc_release_host(host);
- 	nlm_release_file(file);
-@@ -268,7 +272,13 @@ __nlmsvc_proc_unlock(struct svc_rqst *rqstp, struct nlm_res *resp)
- static __be32
- nlmsvc_proc_unlock(struct svc_rqst *rqstp)
- {
--	return __nlmsvc_proc_unlock(rqstp, rqstp->rq_resp);
-+	struct nlm_args *argp = rqstp->rq_argp;
-+	__be32 rc;
-+
-+	rc = __nlmsvc_proc_unlock(rqstp, rqstp->rq_resp);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_unlock(rqstp, &argp->lock);
-+	return rc;
- }
- 
- /*
-@@ -282,16 +292,19 @@ __nlmsvc_proc_granted(struct svc_rqst *rqstp, struct nlm_res *resp)
- 
- 	resp->cookie = argp->cookie;
- 
--	dprintk("lockd: GRANTED       called\n");
- 	resp->status = nlmclnt_grant(svc_addr(rqstp), &argp->lock);
--	dprintk("lockd: GRANTED       status %d\n", ntohl(resp->status));
- 	return rpc_success;
- }
- 
- static __be32
- nlmsvc_proc_granted(struct svc_rqst *rqstp)
- {
--	return __nlmsvc_proc_granted(rqstp, rqstp->rq_resp);
-+	__be32 rc;
-+
-+	rc = __nlmsvc_proc_granted(rqstp, rqstp->rq_resp);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_granted(rqstp);
-+	return rc;
- }
- 
- /*
-@@ -299,8 +312,6 @@ nlmsvc_proc_granted(struct svc_rqst *rqstp)
-  */
- static void nlmsvc_callback_exit(struct rpc_task *task, void *data)
- {
--	dprintk("lockd: %5u callback returned %d\n", task->tk_pid,
--			-task->tk_status);
- }
- 
- void nlmsvc_release_call(struct nlm_rqst *call)
-@@ -359,34 +370,53 @@ static __be32 nlmsvc_callback(struct svc_rqst *rqstp, u32 proc,
- 
- static __be32 nlmsvc_proc_test_msg(struct svc_rqst *rqstp)
- {
--	dprintk("lockd: TEST_MSG      called\n");
--	return nlmsvc_callback(rqstp, NLMPROC_TEST_RES, __nlmsvc_proc_test);
-+	__be32 rc;
-+
-+	rc = nlmsvc_callback(rqstp, NLMPROC_TEST_RES, __nlmsvc_proc_test);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_test_msg(rqstp);
-+	return rc;
- }
- 
- static __be32 nlmsvc_proc_lock_msg(struct svc_rqst *rqstp)
- {
--	dprintk("lockd: LOCK_MSG      called\n");
--	return nlmsvc_callback(rqstp, NLMPROC_LOCK_RES, __nlmsvc_proc_lock);
-+	__be32 rc;
-+
-+	rc = nlmsvc_callback(rqstp, NLMPROC_LOCK_RES, __nlmsvc_proc_lock);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_lock_msg(rqstp);
-+	return rc;
- }
- 
- static __be32 nlmsvc_proc_cancel_msg(struct svc_rqst *rqstp)
- {
--	dprintk("lockd: CANCEL_MSG    called\n");
--	return nlmsvc_callback(rqstp, NLMPROC_CANCEL_RES, __nlmsvc_proc_cancel);
-+	__be32 rc;
-+
-+	rc = nlmsvc_callback(rqstp, NLMPROC_CANCEL_RES, __nlmsvc_proc_cancel);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_cancel_msg(rqstp);
-+	return rc;
- }
- 
--static __be32
--nlmsvc_proc_unlock_msg(struct svc_rqst *rqstp)
-+static __be32 nlmsvc_proc_unlock_msg(struct svc_rqst *rqstp)
- {
--	dprintk("lockd: UNLOCK_MSG    called\n");
--	return nlmsvc_callback(rqstp, NLMPROC_UNLOCK_RES, __nlmsvc_proc_unlock);
-+	__be32 rc;
-+
-+	rc = nlmsvc_callback(rqstp, NLMPROC_UNLOCK_RES, __nlmsvc_proc_unlock);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_unlock_msg(rqstp);
-+	return rc;
- }
- 
- static __be32
- nlmsvc_proc_granted_msg(struct svc_rqst *rqstp)
- {
--	dprintk("lockd: GRANTED_MSG   called\n");
--	return nlmsvc_callback(rqstp, NLMPROC_GRANTED_RES, __nlmsvc_proc_granted);
-+	__be32 rc;
-+
-+	rc = nlmsvc_callback(rqstp, NLMPROC_GRANTED_RES, __nlmsvc_proc_granted);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_granted_msg(rqstp);
-+	return rc;
- }
- 
- /*
-@@ -400,13 +430,12 @@ nlmsvc_proc_share(struct svc_rqst *rqstp)
- 	struct nlm_host	*host;
- 	struct nlm_file	*file;
- 
--	dprintk("lockd: SHARE         called\n");
--
- 	resp->cookie = argp->cookie;
- 
- 	/* Don't accept new lock requests during grace period */
- 	if (locks_in_grace(SVC_NET(rqstp)) && !argp->reclaim) {
- 		resp->status = nlm_lck_denied_grace_period;
-+		trace_lockd_proc_share(rqstp, &argp->lock);
- 		return rpc_success;
- 	}
- 
-@@ -417,7 +446,7 @@ nlmsvc_proc_share(struct svc_rqst *rqstp)
- 	/* Now try to create the share */
- 	resp->status = cast_status(nlmsvc_share_file(host, file, argp));
- 
--	dprintk("lockd: SHARE         status %d\n", ntohl(resp->status));
-+	trace_lockd_proc_share(rqstp, &argp->lock);
- 	nlmsvc_release_lockowner(&argp->lock);
- 	nlmsvc_release_host(host);
- 	nlm_release_file(file);
-@@ -435,13 +464,12 @@ nlmsvc_proc_unshare(struct svc_rqst *rqstp)
- 	struct nlm_host	*host;
- 	struct nlm_file	*file;
- 
--	dprintk("lockd: UNSHARE       called\n");
--
- 	resp->cookie = argp->cookie;
- 
- 	/* Don't accept requests during grace period */
- 	if (locks_in_grace(SVC_NET(rqstp))) {
- 		resp->status = nlm_lck_denied_grace_period;
-+		trace_lockd_proc_unshare(rqstp, &argp->lock);
- 		return rpc_success;
- 	}
- 
-@@ -452,7 +480,7 @@ nlmsvc_proc_unshare(struct svc_rqst *rqstp)
- 	/* Now try to unshare the file */
- 	resp->status = cast_status(nlmsvc_unshare_file(host, file, argp));
- 
--	dprintk("lockd: UNSHARE       status %d\n", ntohl(resp->status));
-+	trace_lockd_proc_unshare(rqstp, &argp->lock);
- 	nlmsvc_release_lockowner(&argp->lock);
- 	nlmsvc_release_host(host);
- 	nlm_release_file(file);
-@@ -466,11 +494,13 @@ static __be32
- nlmsvc_proc_nm_lock(struct svc_rqst *rqstp)
- {
- 	struct nlm_args *argp = rqstp->rq_argp;
--
--	dprintk("lockd: NM_LOCK       called\n");
-+	__be32 rc;
- 
- 	argp->monitor = 0;		/* just clean the monitor flag */
--	return nlmsvc_proc_lock(rqstp);
-+	rc = __nlmsvc_proc_lock(rqstp, rqstp->rq_resp);
-+	if (rc == rpc_success)
-+		trace_lockd_proc_nm_lock(rqstp, &argp->lock);
-+	return rc;
- }
- 
- /*
-@@ -487,6 +517,8 @@ nlmsvc_proc_free_all(struct svc_rqst *rqstp)
- 		return rpc_success;
- 
- 	nlmsvc_free_host_resources(host);
-+
-+	trace_lockd_proc_free_all(rqstp, &argp->lock);
- 	nlmsvc_release_host(host);
- 	return rpc_success;
- }
-@@ -499,16 +531,11 @@ nlmsvc_proc_sm_notify(struct svc_rqst *rqstp)
- {
- 	struct nlm_reboot *argp = rqstp->rq_argp;
- 
--	dprintk("lockd: SM_NOTIFY     called\n");
--
--	if (!nlm_privileged_requester(rqstp)) {
--		char buf[RPC_MAX_ADDRBUFLEN];
--		printk(KERN_WARNING "lockd: rejected NSM callback from %s\n",
--				svc_print_addr(rqstp, buf, sizeof(buf)));
-+	if (!nlm_privileged_requester(rqstp))
- 		return rpc_system_err;
--	}
- 
- 	nlm_host_rebooted(SVC_NET(rqstp), argp);
-+	trace_lockd_proc_sm_notify(rqstp);
- 	return rpc_success;
- }
- 
-@@ -523,12 +550,47 @@ nlmsvc_proc_granted_res(struct svc_rqst *rqstp)
- 	if (!nlmsvc_ops)
- 		return rpc_success;
- 
--	dprintk("lockd: GRANTED_RES   called\n");
--
- 	nlmsvc_grant_reply(&argp->cookie, argp->status);
-+	trace_lockd_proc_granted_res(rqstp);
-+	return rpc_success;
-+}
-+
-+static __be32
-+nlmsvc_proc_test_res(struct svc_rqst *rqstp)
-+{
-+	trace_lockd_proc_test_res(rqstp);
-+	return rpc_success;
-+}
-+
-+static __be32
-+nlmsvc_proc_lock_res(struct svc_rqst *rqstp)
-+{
-+	trace_lockd_proc_lock_res(rqstp);
-+	return rpc_success;
-+}
-+
-+static __be32
-+nlmsvc_proc_cancel_res(struct svc_rqst *rqstp)
-+{
-+	trace_lockd_proc_cancel_res(rqstp);
- 	return rpc_success;
- }
- 
-+static __be32
-+nlmsvc_proc_unlock_res(struct svc_rqst *rqstp)
-+{
-+	trace_lockd_proc_unlock_res(rqstp);
-+	return rpc_success;
-+}
-+
-+static __be32
-+nlmsvc_proc_unused(struct svc_rqst *rqstp)
-+{
-+	trace_lockd_proc_unused(rqstp);
-+        return rpc_success;
-+}
-+
-+
- /*
-  * NLM Server procedures.
-  */
-@@ -630,7 +692,7 @@ const struct svc_procedure nlmsvc_procedures[24] = {
- 		.pc_xdrressize = St,
- 	},
- 	[NLMPROC_TEST_RES] = {
--		.pc_func = nlmsvc_proc_null,
-+		.pc_func = nlmsvc_proc_test_res,
- 		.pc_decode = nlmsvc_decode_void,
- 		.pc_encode = nlmsvc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_res),
-@@ -638,7 +700,7 @@ const struct svc_procedure nlmsvc_procedures[24] = {
- 		.pc_xdrressize = St,
- 	},
- 	[NLMPROC_LOCK_RES] = {
--		.pc_func = nlmsvc_proc_null,
-+		.pc_func = nlmsvc_proc_lock_res,
- 		.pc_decode = nlmsvc_decode_void,
- 		.pc_encode = nlmsvc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_res),
-@@ -646,7 +708,7 @@ const struct svc_procedure nlmsvc_procedures[24] = {
- 		.pc_xdrressize = St,
- 	},
- 	[NLMPROC_CANCEL_RES] = {
--		.pc_func = nlmsvc_proc_null,
-+		.pc_func = nlmsvc_proc_cancel_res,
- 		.pc_decode = nlmsvc_decode_void,
- 		.pc_encode = nlmsvc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_res),
-@@ -654,7 +716,7 @@ const struct svc_procedure nlmsvc_procedures[24] = {
- 		.pc_xdrressize = St,
- 	},
- 	[NLMPROC_UNLOCK_RES] = {
--		.pc_func = nlmsvc_proc_null,
-+		.pc_func = nlmsvc_proc_unlock_res,
- 		.pc_decode = nlmsvc_decode_void,
- 		.pc_encode = nlmsvc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_res),
-@@ -678,7 +740,7 @@ const struct svc_procedure nlmsvc_procedures[24] = {
- 		.pc_xdrressize = St,
- 	},
- 	[17] = { /* unused procedure */
--		.pc_func = nlmsvc_proc_null,
-+		.pc_func = nlmsvc_proc_unused,
- 		.pc_decode = nlmsvc_decode_void,
- 		.pc_encode = nlmsvc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_void),
-@@ -686,7 +748,7 @@ const struct svc_procedure nlmsvc_procedures[24] = {
- 		.pc_xdrressize = St,
- 	},
- 	[18] = { /* unused procedure */
--		.pc_func = nlmsvc_proc_null,
-+		.pc_func = nlmsvc_proc_unused,
- 		.pc_decode = nlmsvc_decode_void,
- 		.pc_encode = nlmsvc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_void),
-@@ -694,7 +756,7 @@ const struct svc_procedure nlmsvc_procedures[24] = {
- 		.pc_xdrressize = St,
- 	},
- 	[19] = { /* unused procedure */
--		.pc_func = nlmsvc_proc_null,
-+		.pc_func = nlmsvc_proc_unused,
- 		.pc_decode = nlmsvc_decode_void,
- 		.pc_encode = nlmsvc_encode_void,
- 		.pc_argsize = sizeof(struct nlm_void),
-diff --git a/fs/lockd/trace.c b/fs/lockd/trace.c
-new file mode 100644
-index 000000000000..3ce35d6546d5
---- /dev/null
-+++ b/fs/lockd/trace.c
-@@ -0,0 +1,19 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/crc32.h>
-+#include <linux/nfs.h>
-+
-+#ifdef CONFIG_CRC32
-+static inline u32 nfs_fhandle_hash(const struct nfs_fh *fh)
-+{
-+	return ~crc32_le(0xFFFFFFFF, &fh->data[0], fh->size);
-+}
-+#else
-+static inline u32 nfs_fhandle_hash(const struct nfs_fh *fh)
-+{
-+	return 0;
-+}
-+#endif
-+
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
-diff --git a/fs/lockd/trace.h b/fs/lockd/trace.h
-new file mode 100644
-index 000000000000..70c36c64b370
---- /dev/null
-+++ b/fs/lockd/trace.h
-@@ -0,0 +1,228 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Tracepoints for lockd
-+ *
-+ * Author: Chuck Lever <chuck.lever@oracle.com>
-+ *
-+ * Copyright (c) 2020, Oracle and/or its affiliates.
-+ */
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM lockd
-+
-+#if !defined(_LOCKD_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _LOCKD_TRACE_H
-+
-+#include <linux/tracepoint.h>
-+
-+#include <linux/lockd/nlm.h>
-+#include <linux/lockd/xdr.h>
-+#include <linux/sunrpc/svc.h>
-+#include <linux/sunrpc/svc_xprt.h>
-+#include <trace/events/nfs.h>
-+
-+TRACE_DEFINE_ENUM(NLM_LCK_GRANTED);
-+TRACE_DEFINE_ENUM(NLM_LCK_DENIED);
-+TRACE_DEFINE_ENUM(NLM_LCK_DENIED_NOLOCKS);
-+TRACE_DEFINE_ENUM(NLM_LCK_BLOCKED);
-+TRACE_DEFINE_ENUM(NLM_LCK_DENIED_GRACE_PERIOD);
-+TRACE_DEFINE_ENUM(NLM_DEADLCK);
-+TRACE_DEFINE_ENUM(NLM_ROFS);
-+TRACE_DEFINE_ENUM(NLM_STALE_FH);
-+TRACE_DEFINE_ENUM(NLM_FBIG);
-+TRACE_DEFINE_ENUM(NLM_FAILED);
-+
-+#define show_nlm_status(x) \
-+	__print_symbolic(x, \
-+		{ NLM_LCK_GRANTED,		"GRANTED" }, \
-+		{ NLM_LCK_DENIED,		"DENIED" }, \
-+		{ NLM_LCK_DENIED_NOLOCKS,	"DENIED_NOLOCKS" }, \
-+		{ NLM_LCK_BLOCKED,		"BLOCKED" }, \
-+		{ NLM_LCK_DENIED_GRACE_PERIOD,	"DENIED_GRACE_PERIOD" }, \
-+		{ NLM_DEADLCK,			"DEADLCK" }, \
-+		{ NLM_ROFS,			"ROFS" }, \
-+		{ NLM_STALE_FH,			"STALE_FH" }, \
-+		{ NLM_FBIG,			"FBIG" }, \
-+		{ NLM_FAILED,			"FAILED" })
-+
-+DECLARE_EVENT_CLASS(lockd_class,
-+	TP_PROTO(
-+		const struct svc_rqst *rqstp
-+	),
-+	TP_ARGS(rqstp),
-+	TP_STRUCT__entry(
-+		__field(unsigned int, netns_ino)
-+		__field(u32, xid)
-+		__field(u32, version)
-+		__array(unsigned char, server, sizeof(struct sockaddr_in6))
-+		__array(unsigned char, client, sizeof(struct sockaddr_in6))
-+	),
-+	TP_fast_assign(
-+		__entry->netns_ino = SVC_NET(rqstp)->ns.inum;
-+		__entry->xid = be32_to_cpu(rqstp->rq_xid);
-+		__entry->version = rqstp->rq_vers;
-+		memcpy(__entry->server, &rqstp->rq_xprt->xpt_local,
-+		       rqstp->rq_xprt->xpt_locallen);
-+		memcpy(__entry->client, &rqstp->rq_xprt->xpt_remote,
-+		       rqstp->rq_xprt->xpt_remotelen);
-+	),
-+	TP_printk("xid=0x%08x",
-+		__entry->xid
-+	)
-+);
-+
-+#define DEFINE_LOCKD_PROC_EVENT(name)			\
-+DEFINE_EVENT(lockd_class, lockd_proc_##name,		\
-+	TP_PROTO(					\
-+		const struct svc_rqst *rqstp		\
-+	),						\
-+	TP_ARGS(rqstp))
-+
-+DECLARE_EVENT_CLASS(lockd_status_class,
-+	TP_PROTO(
-+		const struct svc_rqst *rqstp
-+	),
-+	TP_ARGS(rqstp),
-+	TP_STRUCT__entry(
-+		__field(unsigned int, netns_ino)
-+		__field(u32, xid)
-+		__field(u32, version)
-+		__field(unsigned long, nlm_status)
-+		__array(unsigned char, server, sizeof(struct sockaddr_in6))
-+		__array(unsigned char, client, sizeof(struct sockaddr_in6))
-+	),
-+	TP_fast_assign(
-+		const struct nlm_res *resp = rqstp->rq_resp;
-+
-+		__entry->netns_ino = SVC_NET(rqstp)->ns.inum;
-+		__entry->xid = be32_to_cpu(rqstp->rq_xid);
-+		__entry->version = rqstp->rq_vers;
-+		__entry->nlm_status = be32_to_cpu(resp->status);
-+		memcpy(__entry->server, &rqstp->rq_xprt->xpt_local,
-+		       rqstp->rq_xprt->xpt_locallen);
-+		memcpy(__entry->client, &rqstp->rq_xprt->xpt_remote,
-+		       rqstp->rq_xprt->xpt_remotelen);
-+	),
-+	TP_printk("xid=0x%08x status=%s",
-+		__entry->xid, show_nlm_status(__entry->nlm_status)
-+	)
-+);
-+
-+#define DEFINE_LOCKD_PROC_STATUS_EVENT(name)		\
-+DEFINE_EVENT(lockd_status_class, lockd_proc_##name,	\
-+	TP_PROTO(					\
-+		const struct svc_rqst *rqstp		\
-+	),						\
-+	TP_ARGS(rqstp))
-+
-+DECLARE_EVENT_CLASS(lockd_args_class,
-+	TP_PROTO(
-+		const struct svc_rqst *rqstp,
-+		const struct nlm_lock *lock
-+	),
-+	TP_ARGS(rqstp, lock),
-+	TP_STRUCT__entry(
-+		__field(unsigned int, netns_ino)
-+		__field(u32, xid)
-+		__field(u32, version)
-+		__field(u32, fh_hash)
-+		__field(u64, start)
-+		__field(u64, end)
-+		__field(unsigned long, nlm_status)
-+		__array(unsigned char, server, sizeof(struct sockaddr_in6))
-+		__array(unsigned char, client, sizeof(struct sockaddr_in6))
-+		__dynamic_array(unsigned char, caller, lock->len + 1)
-+	),
-+	TP_fast_assign(
-+		const struct nlm_res *resp = rqstp->rq_resp;
-+
-+		__entry->netns_ino = SVC_NET(rqstp)->ns.inum;
-+		__entry->xid = be32_to_cpu(rqstp->rq_xid);
-+		__entry->version = rqstp->rq_vers;
-+		__entry->fh_hash = nfs_fhandle_hash(&lock->fh);
-+		__entry->start = lock->fl.fl_start == OFFSET_MAX ?
-+					-1 : lock->fl.fl_start;
-+		__entry->end = lock->fl.fl_end == OFFSET_MAX ?
-+					-1 : lock->fl.fl_end;
-+		__entry->nlm_status = be32_to_cpu(resp->status);
-+		memcpy(__entry->server, &rqstp->rq_xprt->xpt_local,
-+		       rqstp->rq_xprt->xpt_locallen);
-+		memcpy(__entry->client, &rqstp->rq_xprt->xpt_remote,
-+		       rqstp->rq_xprt->xpt_remotelen);
-+		memcpy(__get_str(caller), lock->caller, lock->len);
-+		__get_str(caller)[lock->len] = '\0';
-+	),
-+	TP_printk("xid=0x%08x caller=%s fh_hash=0x%08x range=[%lld,%lld] status=%s",
-+		__entry->xid, __get_str(caller), __entry->fh_hash,
-+		__entry->start, __entry->end,
-+		show_nlm_status(__entry->nlm_status)
-+	)
-+);
-+
-+#define DEFINE_LOCKD_PROC_ARGS_EVENT(name)		\
-+DEFINE_EVENT(lockd_args_class, lockd_proc_##name,	\
-+	TP_PROTO(					\
-+		const struct svc_rqst *rqstp,		\
-+		const struct nlm_lock *lock		\
-+	),						\
-+	TP_ARGS(rqstp, lock))
-+
-+DEFINE_LOCKD_PROC_EVENT(null);
-+DEFINE_LOCKD_PROC_ARGS_EVENT(test);
-+DEFINE_LOCKD_PROC_ARGS_EVENT(lock);
-+DEFINE_LOCKD_PROC_ARGS_EVENT(cancel);
-+DEFINE_LOCKD_PROC_ARGS_EVENT(unlock);
-+DEFINE_LOCKD_PROC_STATUS_EVENT(granted);
-+DEFINE_LOCKD_PROC_EVENT(test_msg);
-+DEFINE_LOCKD_PROC_EVENT(lock_msg);
-+DEFINE_LOCKD_PROC_EVENT(cancel_msg);
-+DEFINE_LOCKD_PROC_EVENT(unlock_msg);
-+DEFINE_LOCKD_PROC_EVENT(granted_msg);
-+DEFINE_LOCKD_PROC_EVENT(test_res);
-+DEFINE_LOCKD_PROC_EVENT(lock_res);
-+DEFINE_LOCKD_PROC_EVENT(cancel_res);
-+DEFINE_LOCKD_PROC_EVENT(unlock_res);
-+DEFINE_LOCKD_PROC_EVENT(granted_res);
-+DEFINE_LOCKD_PROC_EVENT(sm_notify);
-+DEFINE_LOCKD_PROC_EVENT(unused);
-+DEFINE_LOCKD_PROC_ARGS_EVENT(share);
-+DEFINE_LOCKD_PROC_ARGS_EVENT(unshare);
-+DEFINE_LOCKD_PROC_ARGS_EVENT(nm_lock);
-+
-+TRACE_EVENT(lockd_proc_free_all,
-+	TP_PROTO(
-+		const struct svc_rqst *rqstp,
-+		const struct nlm_lock *lock
-+	),
-+	TP_ARGS(rqstp, lock),
-+	TP_STRUCT__entry(
-+		__field(unsigned int, netns_ino)
-+		__field(u32, xid)
-+		__field(u32, version)
-+		__array(unsigned char, server, sizeof(struct sockaddr_in6))
-+		__array(unsigned char, client, sizeof(struct sockaddr_in6))
-+		__dynamic_array(unsigned char, caller, lock->len + 1)
-+	),
-+	TP_fast_assign(
-+		__entry->netns_ino = SVC_NET(rqstp)->ns.inum;
-+		__entry->xid = be32_to_cpu(rqstp->rq_xid);
-+		__entry->version = rqstp->rq_vers;
-+		memcpy(__entry->server, &rqstp->rq_xprt->xpt_local,
-+		       rqstp->rq_xprt->xpt_locallen);
-+		memcpy(__entry->client, &rqstp->rq_xprt->xpt_remote,
-+		       rqstp->rq_xprt->xpt_remotelen);
-+		memcpy(__get_str(caller), lock->caller, lock->len);
-+		__get_str(caller)[lock->len] = '\0';
-+	),
-+	TP_printk("xid=0x%08x caller=%s",
-+		__entry->xid, __get_str(caller)
-+	)
-+);
-+
-+#endif /* _LOCKD_TRACE_H */
-+
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH ../../fs/lockd
-+#define TRACE_INCLUDE_FILE trace
-+
-+#include <trace/define_trace.h>
+Looks like proc_setacl doesn't set resp->status. Will be fixed
+in the next version of this series.
+
+
+> +
+> 	p =3D nfs2svc_encode_fattr(rqstp, p, &resp->fh, &resp->stat);
+> 	return xdr_ressize_check(rqstp, p);
+> }
+> @@ -321,6 +327,9 @@ static int nfsaclsvc_encode_accessres(struct =
+svc_rqst *rqstp, __be32 *p)
+> {
+> 	struct nfsd3_accessres *resp =3D rqstp->rq_resp;
+>=20
+> +	if (resp->status !=3D nfs_ok)
+> +		return xdr_ressize_check(rqstp, p);
+> +
+> 	p =3D nfs2svc_encode_fattr(rqstp, p, &resp->fh, &resp->stat);
+> 	*p++ =3D htonl(resp->access);
+> 	return xdr_ressize_check(rqstp, p);
+> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+> index 33204d83709c..9727f2fdf5e4 100644
+> --- a/fs/nfsd/nfsproc.c
+> +++ b/fs/nfsd/nfsproc.c
+> @@ -16,6 +16,7 @@ typedef struct svc_buf	svc_buf;
+>=20
+> #define NFSDDBG_FACILITY		NFSDDBG_PROC
+>=20
+> +#define RETURN_STATUS(st)	{ resp->status =3D (st); return (st); }
+>=20
+> static __be32
+> nfsd_proc_null(struct svc_rqst *rqstp)
+> @@ -23,18 +24,6 @@ nfsd_proc_null(struct svc_rqst *rqstp)
+> 	return nfs_ok;
+> }
+>=20
+> -static __be32
+> -nfsd_return_attrs(__be32 err, struct nfsd_attrstat *resp)
+> -{
+> -	if (err) return err;
+> -	return fh_getattr(&resp->fh, &resp->stat);
+> -}
+> -static __be32
+> -nfsd_return_dirop(__be32 err, struct nfsd_diropres *resp)
+> -{
+> -	if (err) return err;
+> -	return fh_getattr(&resp->fh, &resp->stat);
+> -}
+> /*
+>  * Get a file's attributes
+>  * N.B. After this call resp->fh needs an fh_put
+> @@ -44,13 +33,17 @@ nfsd_proc_getattr(struct svc_rqst *rqstp)
+> {
+> 	struct nfsd_fhandle *argp =3D rqstp->rq_argp;
+> 	struct nfsd_attrstat *resp =3D rqstp->rq_resp;
+> -	__be32 nfserr;
+> +
+> 	dprintk("nfsd: GETATTR  %s\n", SVCFH_fmt(&argp->fh));
+>=20
+> 	fh_copy(&resp->fh, &argp->fh);
+> -	nfserr =3D fh_verify(rqstp, &resp->fh, 0,
+> -			NFSD_MAY_NOP | NFSD_MAY_BYPASS_GSS_ON_ROOT);
+> -	return nfsd_return_attrs(nfserr, resp);
+> +	resp->status =3D fh_verify(rqstp, &resp->fh, 0,
+> +				 NFSD_MAY_NOP | =
+NFSD_MAY_BYPASS_GSS_ON_ROOT);
+> +	if (resp->status !=3D nfs_ok)
+> +		return resp->status;
+> +
+> +	resp->status =3D fh_getattr(&resp->fh, &resp->stat);
+> +	return resp->status;
+> }
+>=20
+> /*
+> @@ -64,7 +57,6 @@ nfsd_proc_setattr(struct svc_rqst *rqstp)
+> 	struct nfsd_attrstat *resp =3D rqstp->rq_resp;
+> 	struct iattr *iap =3D &argp->attrs;
+> 	struct svc_fh *fhp;
+> -	__be32 nfserr;
+>=20
+> 	dprintk("nfsd: SETATTR  %s, valid=3D%x, size=3D%ld\n",
+> 		SVCFH_fmt(&argp->fh),
+> @@ -96,9 +88,9 @@ nfsd_proc_setattr(struct svc_rqst *rqstp)
+> 		 */
+> 		time64_t delta =3D iap->ia_atime.tv_sec - =
+ktime_get_real_seconds();
+>=20
+> -		nfserr =3D fh_verify(rqstp, fhp, 0, NFSD_MAY_NOP);
+> -		if (nfserr)
+> -			goto done;
+> +		resp->status =3D fh_verify(rqstp, fhp, 0, NFSD_MAY_NOP);
+> +		if (resp->status !=3D nfs_ok)
+> +			return resp->status;
+>=20
+> 		if (delta < 0)
+> 			delta =3D -delta;
+> @@ -113,9 +105,12 @@ nfsd_proc_setattr(struct svc_rqst *rqstp)
+> 		}
+> 	}
+>=20
+> -	nfserr =3D nfsd_setattr(rqstp, fhp, iap, 0, (time64_t)0);
+> -done:
+> -	return nfsd_return_attrs(nfserr, resp);
+> +	resp->status =3D nfsd_setattr(rqstp, fhp, iap, 0, (time64_t)0);
+> +	if (resp->status !=3D nfs_ok)
+> +		return resp->status;
+> +
+> +	resp->status =3D fh_getattr(&resp->fh, &resp->stat);
+> +	return resp->status;
+> }
+>=20
+> /*
+> @@ -129,17 +124,19 @@ nfsd_proc_lookup(struct svc_rqst *rqstp)
+> {
+> 	struct nfsd_diropargs *argp =3D rqstp->rq_argp;
+> 	struct nfsd_diropres *resp =3D rqstp->rq_resp;
+> -	__be32	nfserr;
+>=20
+> 	dprintk("nfsd: LOOKUP   %s %.*s\n",
+> 		SVCFH_fmt(&argp->fh), argp->len, argp->name);
+>=20
+> 	fh_init(&resp->fh, NFS_FHSIZE);
+> -	nfserr =3D nfsd_lookup(rqstp, &argp->fh, argp->name, argp->len,
+> -				 &resp->fh);
+> -
+> +	resp->status =3D nfsd_lookup(rqstp, &argp->fh, argp->name, =
+argp->len,
+> +				   &resp->fh);
+> 	fh_put(&argp->fh);
+> -	return nfsd_return_dirop(nfserr, resp);
+> +	if (resp->status !=3D nfs_ok)
+> +		return resp->status;
+> +
+> +	resp->status =3D fh_getattr(&resp->fh, &resp->stat);
+> +	return resp->status;
+> }
+>=20
+> /*
+> @@ -150,16 +147,15 @@ nfsd_proc_readlink(struct svc_rqst *rqstp)
+> {
+> 	struct nfsd_readlinkargs *argp =3D rqstp->rq_argp;
+> 	struct nfsd_readlinkres *resp =3D rqstp->rq_resp;
+> -	__be32	nfserr;
+>=20
+> 	dprintk("nfsd: READLINK %s\n", SVCFH_fmt(&argp->fh));
+>=20
+> 	/* Read the symlink. */
+> 	resp->len =3D NFS_MAXPATHLEN;
+> -	nfserr =3D nfsd_readlink(rqstp, &argp->fh, argp->buffer, =
+&resp->len);
+> +	resp->status =3D nfsd_readlink(rqstp, &argp->fh, argp->buffer, =
+&resp->len);
+>=20
+> 	fh_put(&argp->fh);
+> -	return nfserr;
+> +	return resp->status;
+> }
+>=20
+> /*
+> @@ -171,7 +167,6 @@ nfsd_proc_read(struct svc_rqst *rqstp)
+> {
+> 	struct nfsd_readargs *argp =3D rqstp->rq_argp;
+> 	struct nfsd_readres *resp =3D rqstp->rq_resp;
+> -	__be32	nfserr;
+> 	u32 eof;
+>=20
+> 	dprintk("nfsd: READ    %s %d bytes at %d\n",
+> @@ -193,14 +188,16 @@ nfsd_proc_read(struct svc_rqst *rqstp)
+> 	svc_reserve_auth(rqstp, (19<<2) + argp->count + 4);
+>=20
+> 	resp->count =3D argp->count;
+> -	nfserr =3D nfsd_read(rqstp, fh_copy(&resp->fh, &argp->fh),
+> -				  argp->offset,
+> -			   	  rqstp->rq_vec, argp->vlen,
+> -				  &resp->count,
+> -				  &eof);
+> -
+> -	if (nfserr) return nfserr;
+> -	return fh_getattr(&resp->fh, &resp->stat);
+> +	resp->status =3D nfsd_read(rqstp, fh_copy(&resp->fh, &argp->fh),
+> +				 argp->offset,
+> +				 rqstp->rq_vec, argp->vlen,
+> +				 &resp->count,
+> +				 &eof);
+> +	if (resp->status !=3D nfs_ok)
+> +		return resp->status;
+> +
+> +	resp->status =3D fh_getattr(&resp->fh, &resp->stat);
+> +	return resp->status;
+> }
+>=20
+> /*
+> @@ -212,7 +209,6 @@ nfsd_proc_write(struct svc_rqst *rqstp)
+> {
+> 	struct nfsd_writeargs *argp =3D rqstp->rq_argp;
+> 	struct nfsd_attrstat *resp =3D rqstp->rq_resp;
+> -	__be32	nfserr;
+> 	unsigned long cnt =3D argp->len;
+> 	unsigned int nvecs;
+>=20
+> @@ -224,10 +220,14 @@ nfsd_proc_write(struct svc_rqst *rqstp)
+> 				      &argp->first, cnt);
+> 	if (!nvecs)
+> 		return nfserr_io;
+> -	nfserr =3D nfsd_write(rqstp, fh_copy(&resp->fh, &argp->fh),
+> -			    argp->offset, rqstp->rq_vec, nvecs,
+> -			    &cnt, NFS_DATA_SYNC, NULL);
+> -	return nfsd_return_attrs(nfserr, resp);
+> +	resp->status =3D nfsd_write(rqstp, fh_copy(&resp->fh, =
+&argp->fh),
+> +				  argp->offset, rqstp->rq_vec, nvecs,
+> +				  &cnt, NFS_DATA_SYNC, NULL);
+> +	if (resp->status !=3D nfs_ok)
+> +		return resp->status;
+> +
+> +	resp->status =3D fh_getattr(&resp->fh, &resp->stat);
+> +	return resp->status;
+> }
+>=20
+> /*
+> @@ -247,7 +247,6 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+> 	struct inode	*inode;
+> 	struct dentry	*dchild;
+> 	int		type, mode;
+> -	__be32		nfserr;
+> 	int		hosterr;
+> 	dev_t		rdev =3D 0, wanted =3D =
+new_decode_dev(attr->ia_size);
+>=20
+> @@ -255,40 +254,40 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+> 		SVCFH_fmt(dirfhp), argp->len, argp->name);
+>=20
+> 	/* First verify the parent file handle */
+> -	nfserr =3D fh_verify(rqstp, dirfhp, S_IFDIR, NFSD_MAY_EXEC);
+> -	if (nfserr)
+> +	resp->status =3D fh_verify(rqstp, dirfhp, S_IFDIR, =
+NFSD_MAY_EXEC);
+> +	if (resp->status !=3D nfs_ok)
+> 		goto done; /* must fh_put dirfhp even on error */
+>=20
+> 	/* Check for NFSD_MAY_WRITE in nfsd_create if necessary */
+>=20
+> -	nfserr =3D nfserr_exist;
+> +	resp->status =3D nfserr_exist;
+> 	if (isdotent(argp->name, argp->len))
+> 		goto done;
+> 	hosterr =3D fh_want_write(dirfhp);
+> 	if (hosterr) {
+> -		nfserr =3D nfserrno(hosterr);
+> +		resp->status =3D nfserrno(hosterr);
+> 		goto done;
+> 	}
+>=20
+> 	fh_lock_nested(dirfhp, I_MUTEX_PARENT);
+> 	dchild =3D lookup_one_len(argp->name, dirfhp->fh_dentry, =
+argp->len);
+> 	if (IS_ERR(dchild)) {
+> -		nfserr =3D nfserrno(PTR_ERR(dchild));
+> +		resp->status =3D nfserrno(PTR_ERR(dchild));
+> 		goto out_unlock;
+> 	}
+> 	fh_init(newfhp, NFS_FHSIZE);
+> -	nfserr =3D fh_compose(newfhp, dirfhp->fh_export, dchild, =
+dirfhp);
+> -	if (!nfserr && d_really_is_negative(dchild))
+> -		nfserr =3D nfserr_noent;
+> +	resp->status =3D fh_compose(newfhp, dirfhp->fh_export, dchild, =
+dirfhp);
+> +	if (!resp->status && d_really_is_negative(dchild))
+> +		resp->status =3D nfserr_noent;
+> 	dput(dchild);
+> -	if (nfserr) {
+> -		if (nfserr !=3D nfserr_noent)
+> +	if (resp->status) {
+> +		if (resp->status !=3D nfserr_noent)
+> 			goto out_unlock;
+> 		/*
+> 		 * If the new file handle wasn't verified, we can't tell
+> 		 * whether the file exists or not. Time to bail ...
+> 		 */
+> -		nfserr =3D nfserr_acces;
+> +		resp->status =3D nfserr_acces;
+> 		if (!newfhp->fh_dentry) {
+> 			printk(KERN_WARNING=20
+> 				"nfsd_proc_create: file handle not =
+verified\n");
+> @@ -321,11 +320,11 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+> 					 *   echo thing > =
+device-special-file-or-pipe
+> 					 * by doing a CREATE with =
+type=3D=3D0
+> 					 */
+> -					nfserr =3D =
+nfsd_permission(rqstp,
+> +					resp->status =3D =
+nfsd_permission(rqstp,
+> 								 =
+newfhp->fh_export,
+> 								 =
+newfhp->fh_dentry,
+> 								 =
+NFSD_MAY_WRITE|NFSD_MAY_LOCAL_ACCESS);
+> -					if (nfserr && nfserr !=3D =
+nfserr_rofs)
+> +					if (resp->status && resp->status =
+!=3D nfserr_rofs)
+> 						goto out_unlock;
+> 				}
+> 			} else
+> @@ -361,16 +360,17 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+> 		attr->ia_valid &=3D ~ATTR_SIZE;
+>=20
+> 		/* Make sure the type and device matches */
+> -		nfserr =3D nfserr_exist;
+> +		resp->status =3D nfserr_exist;
+> 		if (inode && type !=3D (inode->i_mode & S_IFMT))
+> 			goto out_unlock;
+> 	}
+>=20
+> -	nfserr =3D 0;
+> +	resp->status =3D nfs_ok;
+> 	if (!inode) {
+> 		/* File doesn't exist. Create it and set attrs */
+> -		nfserr =3D nfsd_create_locked(rqstp, dirfhp, argp->name,
+> -					argp->len, attr, type, rdev, =
+newfhp);
+> +		resp->status =3D nfsd_create_locked(rqstp, dirfhp, =
+argp->name,
+> +						  argp->len, attr, type, =
+rdev,
+> +						  newfhp);
+> 	} else if (type =3D=3D S_IFREG) {
+> 		dprintk("nfsd:   existing %s, valid=3D%x, size=3D%ld\n",
+> 			argp->name, attr->ia_valid, (long) =
+attr->ia_size);
+> @@ -380,7 +380,8 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+> 		 */
+> 		attr->ia_valid &=3D ATTR_SIZE;
+> 		if (attr->ia_valid)
+> -			nfserr =3D nfsd_setattr(rqstp, newfhp, attr, 0, =
+(time64_t)0);
+> +			resp->status =3D nfsd_setattr(rqstp, newfhp, =
+attr, 0,
+> +						    (time64_t)0);
+> 	}
+>=20
+> out_unlock:
+> @@ -389,7 +390,10 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+> 	fh_drop_write(dirfhp);
+> done:
+> 	fh_put(dirfhp);
+> -	return nfsd_return_dirop(nfserr, resp);
+> +	if (resp->status !=3D nfs_ok)
+> +		return resp->status;
+> +	resp->status =3D fh_getattr(&resp->fh, &resp->stat);
+> +	return resp->status;
+> }
+>=20
+> static __be32
+> @@ -484,7 +488,6 @@ nfsd_proc_mkdir(struct svc_rqst *rqstp)
+> {
+> 	struct nfsd_createargs *argp =3D rqstp->rq_argp;
+> 	struct nfsd_diropres *resp =3D rqstp->rq_resp;
+> -	__be32	nfserr;
+>=20
+> 	dprintk("nfsd: MKDIR    %s %.*s\n", SVCFH_fmt(&argp->fh), =
+argp->len, argp->name);
+>=20
+> @@ -495,10 +498,14 @@ nfsd_proc_mkdir(struct svc_rqst *rqstp)
+>=20
+> 	argp->attrs.ia_valid &=3D ~ATTR_SIZE;
+> 	fh_init(&resp->fh, NFS_FHSIZE);
+> -	nfserr =3D nfsd_create(rqstp, &argp->fh, argp->name, argp->len,
+> -				    &argp->attrs, S_IFDIR, 0, =
+&resp->fh);
+> +	resp->status =3D nfsd_create(rqstp, &argp->fh, argp->name, =
+argp->len,
+> +				   &argp->attrs, S_IFDIR, 0, &resp->fh);
+> 	fh_put(&argp->fh);
+> -	return nfsd_return_dirop(nfserr, resp);
+> +	if (resp->status !=3D nfs_ok)
+> +		return resp->status;
+> +
+> +	resp->status =3D fh_getattr(&resp->fh, &resp->stat);
+> +	return resp->status;
+> }
+>=20
+> /*
+> @@ -526,7 +533,6 @@ nfsd_proc_readdir(struct svc_rqst *rqstp)
+> 	struct nfsd_readdirargs *argp =3D rqstp->rq_argp;
+> 	struct nfsd_readdirres *resp =3D rqstp->rq_resp;
+> 	int		count;
+> -	__be32		nfserr;
+> 	loff_t		offset;
+>=20
+> 	dprintk("nfsd: READDIR  %s %d bytes at %d\n",
+> @@ -547,15 +553,15 @@ nfsd_proc_readdir(struct svc_rqst *rqstp)
+> 	resp->common.err =3D nfs_ok;
+> 	/* Read directory and encode entries on the fly */
+> 	offset =3D argp->cookie;
+> -	nfserr =3D nfsd_readdir(rqstp, &argp->fh, &offset,=20
+> -			      &resp->common, nfssvc_encode_entry);
+> +	resp->status =3D nfsd_readdir(rqstp, &argp->fh, &offset,
+> +				    &resp->common, nfssvc_encode_entry);
+>=20
+> 	resp->count =3D resp->buffer - argp->buffer;
+> 	if (resp->offset)
+> 		*resp->offset =3D htonl(offset);
+>=20
+> 	fh_put(&argp->fh);
+> -	return nfserr;
+> +	return resp->status;
+> }
+>=20
+> /*
+> @@ -566,14 +572,13 @@ nfsd_proc_statfs(struct svc_rqst *rqstp)
+> {
+> 	struct nfsd_fhandle *argp =3D rqstp->rq_argp;
+> 	struct nfsd_statfsres *resp =3D rqstp->rq_resp;
+> -	__be32	nfserr;
+>=20
+> 	dprintk("nfsd: STATFS   %s\n", SVCFH_fmt(&argp->fh));
+>=20
+> -	nfserr =3D nfsd_statfs(rqstp, &argp->fh, &resp->stats,
+> -			NFSD_MAY_BYPASS_GSS_ON_ROOT);
+> +	resp->status =3D nfsd_statfs(rqstp, &argp->fh, &resp->stats,
+> +				   NFSD_MAY_BYPASS_GSS_ON_ROOT);
+> 	fh_put(&argp->fh);
+> -	return nfserr;
+> +	return resp->status;
+> }
+>=20
+> /*
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 08776b44cde6..9faf9224ef62 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -1056,12 +1056,8 @@ int nfsd_dispatch(struct svc_rqst *rqstp, =
+__be32 *statp)
+> 	if (rqstp->rq_proc !=3D 0)
+> 		*p++ =3D nfserr;
+>=20
+> -	/*
+> -	 * For NFSv2, additional info is never returned in case of an =
+error.
+> -	 */
+> -	if (!(nfserr && rqstp->rq_vers =3D=3D 2))
+> -		if (!proc->pc_encode(rqstp, p))
+> -			goto out_encode_err;
+> +	if (!proc->pc_encode(rqstp, p))
+> +		goto out_encode_err;
+>=20
+> 	nfsd_cache_update(rqstp, rqstp->rq_cachetype, statp + 1);
+> out_cached_reply:
+> diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
+> index 39c004ec7d85..952e71c95d4e 100644
+> --- a/fs/nfsd/nfsxdr.c
+> +++ b/fs/nfsd/nfsxdr.c
+> @@ -434,6 +434,9 @@ nfssvc_encode_attrstat(struct svc_rqst *rqstp, =
+__be32 *p)
+> {
+> 	struct nfsd_attrstat *resp =3D rqstp->rq_resp;
+>=20
+> +	if (resp->status !=3D nfs_ok)
+> +		return xdr_ressize_check(rqstp, p);
+> +
+> 	p =3D encode_fattr(rqstp, p, &resp->fh, &resp->stat);
+> 	return xdr_ressize_check(rqstp, p);
+> }
+> @@ -443,6 +446,9 @@ nfssvc_encode_diropres(struct svc_rqst *rqstp, =
+__be32 *p)
+> {
+> 	struct nfsd_diropres *resp =3D rqstp->rq_resp;
+>=20
+> +	if (resp->status !=3D nfs_ok)
+> +		return xdr_ressize_check(rqstp, p);
+> +
+> 	p =3D encode_fh(p, &resp->fh);
+> 	p =3D encode_fattr(rqstp, p, &resp->fh, &resp->stat);
+> 	return xdr_ressize_check(rqstp, p);
+> @@ -453,6 +459,9 @@ nfssvc_encode_readlinkres(struct svc_rqst *rqstp, =
+__be32 *p)
+> {
+> 	struct nfsd_readlinkres *resp =3D rqstp->rq_resp;
+>=20
+> +	if (resp->status !=3D nfs_ok)
+> +		return xdr_ressize_check(rqstp, p);
+> +
+> 	*p++ =3D htonl(resp->len);
+> 	xdr_ressize_check(rqstp, p);
+> 	rqstp->rq_res.page_len =3D resp->len;
+> @@ -470,6 +479,9 @@ nfssvc_encode_readres(struct svc_rqst *rqstp, =
+__be32 *p)
+> {
+> 	struct nfsd_readres *resp =3D rqstp->rq_resp;
+>=20
+> +	if (resp->status !=3D nfs_ok)
+> +		return xdr_ressize_check(rqstp, p);
+> +
+> 	p =3D encode_fattr(rqstp, p, &resp->fh, &resp->stat);
+> 	*p++ =3D htonl(resp->count);
+> 	xdr_ressize_check(rqstp, p);
+> @@ -490,6 +502,9 @@ nfssvc_encode_readdirres(struct svc_rqst *rqstp, =
+__be32 *p)
+> {
+> 	struct nfsd_readdirres *resp =3D rqstp->rq_resp;
+>=20
+> +	if (resp->status !=3D nfs_ok)
+> +		return xdr_ressize_check(rqstp, p);
+> +
+> 	xdr_ressize_check(rqstp, p);
+> 	p =3D resp->buffer;
+> 	*p++ =3D 0;			/* no more entries */
+> @@ -505,6 +520,9 @@ nfssvc_encode_statfsres(struct svc_rqst *rqstp, =
+__be32 *p)
+> 	struct nfsd_statfsres *resp =3D rqstp->rq_resp;
+> 	struct kstatfs	*stat =3D &resp->stats;
+>=20
+> +	if (resp->status !=3D nfs_ok)
+> +		return xdr_ressize_check(rqstp, p);
+> +
+> 	*p++ =3D htonl(NFSSVC_MAXBLKSIZE_V2);	/* max transfer size */
+> 	*p++ =3D htonl(stat->f_bsize);
+> 	*p++ =3D htonl(stat->f_blocks);
+> diff --git a/fs/nfsd/xdr.h b/fs/nfsd/xdr.h
+> index 3d3e16d48268..17221931815f 100644
+> --- a/fs/nfsd/xdr.h
+> +++ b/fs/nfsd/xdr.h
+> @@ -83,26 +83,32 @@ struct nfsd_readdirargs {
+> };
+>=20
+> struct nfsd_attrstat {
+> +	__be32			status;
+> 	struct svc_fh		fh;
+> 	struct kstat		stat;
+> };
+>=20
+> struct nfsd_diropres  {
+> +	__be32			status;
+> 	struct svc_fh		fh;
+> 	struct kstat		stat;
+> };
+>=20
+> struct nfsd_readlinkres {
+> +	__be32			status;
+> 	int			len;
+> };
+>=20
+> struct nfsd_readres {
+> +	__be32			status;
+> 	struct svc_fh		fh;
+> 	unsigned long		count;
+> 	struct kstat		stat;
+> };
+>=20
+> struct nfsd_readdirres {
+> +	__be32			status;
+> +
+> 	int			count;
+>=20
+> 	struct readdir_cd	common;
+> @@ -112,6 +118,7 @@ struct nfsd_readdirres {
+> };
+>=20
+> struct nfsd_statfsres {
+> +	__be32			status;
+> 	struct kstatfs		stats;
+> };
+>=20
+>=20
+>=20
+
+--
+Chuck Lever
+
 
 
