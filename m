@@ -2,161 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CDE627DEEA
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Sep 2020 05:21:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1073927E0ED
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Sep 2020 08:18:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgI3DVF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 29 Sep 2020 23:21:05 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:40812 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbgI3DVF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Sep 2020 23:21:05 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08U3A5r4122597;
-        Wed, 30 Sep 2020 03:21:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- references : cc : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=/6GxIS+p+XvN2S+2JJd5NFKeOTfk94TaNrSLKju43Vw=;
- b=ITblcg+ukTjeQMYOwSBIhRoLYmwGbg/akVXhXes3X12owMLE7k/EUIl2cp4YKeJYFX4L
- SNloVm1FgdRwk9IbcCWBQ2GHyTvku0bPw82aSnYI1e1qBtv3w5uf+v4mfdY/7E6MXrgY
- FG5ELrZ2aE7lDIrCFfQB81nNQ1ES4sbwCw7GDu7ATgs4ryTg7t79HRIOE3MFAnPc7keX
- 3vTnOcvMyVyxQX55E9efkIBiNwR79LJz7PNiIwS58TlEnbOCO/dCqIf2mgzHYsnUV3GT
- U9qK14CZhR8tos8BSxign6o6iJmJc+CRppT90WMuJ/0gzj9+OxWzCkjFJ7H7h2Bph8+q Fg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 33su5axb9a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Sep 2020 03:20:59 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08U34rBO182689;
-        Wed, 30 Sep 2020 03:18:59 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 33uv2eqtww-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Sep 2020 03:18:59 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08U3IthL007933;
-        Wed, 30 Sep 2020 03:18:58 GMT
-Received: from dhcp-10-154-184-178.vpn.oracle.com (/10.154.184.178)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 29 Sep 2020 20:18:55 -0700
-Subject: Re: [PATCH 0/1] NFSv4.2: Fix NFS4ERR_STALE with inter server copy
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     Bruce Fields <bfields@fieldses.org>
-References: <20200923230606.63904-1-dai.ngo@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Message-ID: <e7e738c6-f6e7-0d04-07fa-8017da469b8a@oracle.com>
-Date:   Tue, 29 Sep 2020 20:18:54 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.0
+        id S1725771AbgI3GSe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Sep 2020 02:18:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45430 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725320AbgI3GSe (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 30 Sep 2020 02:18:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 6DA76AC3C;
+        Wed, 30 Sep 2020 06:18:32 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Steve Dickson <SteveD@redhat.com>
+Date:   Wed, 30 Sep 2020 16:18:26 +1000
+Subject: [PATCH nfs-utils] nfsdcld: update tool name in man page.
+cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Message-ID: <87y2krhjnx.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <20200923230606.63904-1-dai.ngo@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9759 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- suspectscore=3 malwarescore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009300022
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9759 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=3
- lowpriorityscore=0 spamscore=0 clxscore=1011 mlxscore=0 impostorscore=0
- malwarescore=0 phishscore=0 adultscore=0 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009300022
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Have you had chance to review this patch and if it's ok would it be 
-possible to include it in the 5.10 pull?
 
-Thanks,
+clddb-tool was recently renamed to nfsdclddb.
+Unfortunately the nfsdcld man page wasn't told.
 
--Dai
+Signed-off-by: NeilBrown <neilb@suse.de>
+=2D--
+ utils/nfsdcld/nfsdcld.man | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 9/23/20 4:06 PM, Dai Ngo wrote:
-> This patch provides a temporarily relief for inter copy to work with
-> some common configs.  For long term solution, I think Trond's suggestion
-> of using fs/nfs/nfs_common to store an op table that server can use to
-> access the client code is the way to go.
->
->   fs/nfsd/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
->
-> Below are the results of my testing of upstream mainline without and with the fix.
->
-> Upstream version used for testing:  5.9-rc5
->
-> 1. Upstream mainline (existing code: NFS_FS=y)
->
->
-> |----------------------------------------------------------------------------------------|
-> |  NFSD  |  NFS_FS  |  NFS_V4  |               RESULTS                                   |
-> |----------------------------------------------------------------------------------------|
-> |   y    |    y     |    m     | Build errors: nfs42_ssc_open/close                      |
-> |----------------------------------------------------------------------------------------|
-> |   y    |    m     |    m     | Build OK, inter server copy failed with NFS4ERR_STALE   |
-> |        |          |          | See NOTE1.                                              |
-> |----------------------------------------------------------------------------------------|
-> |   y    |    m     |   y (m)  | Build OK, inter server copy failed with NFS4ERR_STALE   |
-> |        |          |          | See NOTE2.                                              |
-> |----------------------------------------------------------------------------------------|
-> |   y    |    y     |    y     | Build OK, inter server copy OK                          |
-> |----------------------------------------------------------------------------------------|
->
->
-> |----------------------------------------------------------------------------------------|
-> |  NFSD  |  NFS_FS  |  NFS_V4  |               RESULTS                                   |
-> |----------------------------------------------------------------------------------------|
-> |   m    |    y     |    m     | Build OK, inter server copy OK                          |
-> |----------------------------------------------------------------------------------------|
-> |   m    |    m     |    m     | Build OK, inter server copy failed with NFS4ERR_STALE   |
-> |----------------------------------------------------------------------------------------|
-> |   m    |    m     |   y (m)  | Build OK, inter server copy failed with NFS4ERR_STALE   |
-> |----------------------------------------------------------------------------------------|
-> |   m    |    y     |    y     | Build OK, inter server copy OK                          |
-> |----------------------------------------------------------------------------------------|
->
-> 2. Upstream mainline (with the fix:  !(NFSD=y && (NFS_FS=m || NFS_V4=m))
->
->
-> |----------------------------------------------------------------------------------------|
-> |  NFSD  |  NFS_FS  |  NFS_V4  |               RESULTS                                   |
-> |----------------------------------------------------------------------------------------|
-> |   m    |    y     |    m     | Build OK, inter server copy OK                          |
-> |----------------------------------------------------------------------------------------|
-> |   m    |    m     |    m     | Build OK, inter server copy OK                          |
-> |----------------------------------------------------------------------------------------|
-> |   m    |    m     |   y (m)  | Build OK, inter server copy OK                          |
-> |----------------------------------------------------------------------------------------|
-> |   m    |    y     |    y     | Build OK, inter server copy OK                          |
-> |----------------------------------------------------------------------------------------|
->
->
-> |----------------------------------------------------------------------------------------|
-> |  NFSD  |  NFS_FS  |  NFS_V4  |               RESULTS                                   |
-> |----------------------------------------------------------------------------------------|
-> |   y    |    y     |    m     | Build OK, inter server copy failed with NFS4ERR_STALE   |
-> |----------------------------------------------------------------------------------------|
-> |   y    |    m     |    m     | Build OK, inter server copy failed with NFS4ERR_STALE   |
-> |----------------------------------------------------------------------------------------|
-> |   y    |    m     |   y (m)  | Build OK, inter server copy failed with NFS4ERR_STALE   |
-> |----------------------------------------------------------------------------------------|
-> |   y    |    y     |    y     | Build OK, inter server copy OK                          |
-> |----------------------------------------------------------------------------------------|
->
-> NOTE1:
-> BUG:  When inter server copy fails with NFS4ERR_STALE, it left the file
-> created with size of 0!
->
-> NOTE2:
-> When NFS_V4=y and NFS_FS=m, the build process automatically builds with NFS_V4=m
-> and ignores the setting NFS_V4=y in the config file.
->
-> This probably due to NFS_V4 in fs/nfs/Kconfig is configured to depend on NFS_FS.
->
+diff --git a/utils/nfsdcld/nfsdcld.man b/utils/nfsdcld/nfsdcld.man
+index 4c2b1e80a2a8..861f1c49efec 100644
+=2D-- a/utils/nfsdcld/nfsdcld.man
++++ b/utils/nfsdcld/nfsdcld.man
+@@ -209,12 +209,12 @@ not necessary after upgrading \fBnfsdcld\fR, however =
+\fBnfsd\fR will not use a l
+ version until restart.  A restart of \fBnfsd is necessary\fR after downgra=
+ding \fBnfsdcld\fR,
+ to ensure that \fBnfsd\fR does not use an upcall version that \fBnfsdcld\f=
+R does not support.
+ Additionally, a downgrade of \fBnfsdcld\fR requires the schema of the on-d=
+isk database to
+=2Dbe downgraded as well.  That can be accomplished using the \fBclddb-tool=
+\fR(8) utility.
++be downgraded as well.  That can be accomplished using the \fBnfsdclddb\fR=
+(8) utility.
+ .SH FILES
+ .TP
+ .B /var/lib/nfs/nfsdcld/main.sqlite
+ .SH SEE ALSO
+=2D.BR nfsdcltrack "(8), " clddb-tool (8)
++.BR nfsdcltrack "(8), " nfsdclddb (8)
+ .SH "AUTHORS"
+ .IX Header "AUTHORS"
+ The nfsdcld daemon was developed by Jeff Layton <jlayton@redhat.com>
+=2D-=20
+2.28.0
+
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJCBAEBCAAsFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl90IzIOHG5laWxiQHN1
+c2UuZGUACgkQOeye3VZigblGWQ//XEei3Ip23WvQLOcNxKql8379249UkLQY5m0D
+vEvC6kaC/KfDn+Ri1EGvwg7jbAFtWo9PN/0IJ+QAveZIxD1ourdy8PIl5qS7JqhR
+WIlee7d04dRIv6k1btd5BzcVIzE2vi7OZCItBT8SWUs0oFc7jwMsW7lB4XBfN30+
+Y8KzSI56Fil/o6Cdrykya1vWbe8Uc/KSXe3lTHlWjME70Jpa4z/FPDNnpGLIMCIT
+wTRA0yJ76bZA8+zayniHP8JToc0/5EifY4zc8C+oH68c+hKmNDTMSZSOystPKV+k
+9aNiOT2jksQVVNWPhYfAB0ZiKF5q6+XiOxmwNnH1+cjgy8PjV7cWAKSmTLLNgbA2
+DatkoW0nRg2ofm8ZcQhrXbccPenq57LW0KHCI30d1RyXfCUeyQW2zV9opi5u66dy
+ylP3tSMyUQliNdOj7ImP3Lmntgy18BCHWxSrSNEFVCFVhyiUTknjvn31G8h5emtJ
+tx31aHr1WP/48M5G5w9thqXeAkx9fGI/D7j9YgljJumwHnCygHumoXnpryDHg57L
+vtaAKKMfAtDkZagJ8jB36a9fVHRLSAtybj96sQrFOLiuI5dZ6W6gtr984irlDdy5
+xsJSZ5wZSHw1TVfQ4XA4j8Z3zU7IOZ1e10/Mp+yRxecQruCz7qfp+EmHttyhwx9S
+grhsZD4=
+=JiV1
+-----END PGP SIGNATURE-----
+--=-=-=--
