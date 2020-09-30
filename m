@@ -2,102 +2,103 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AEE527F2EF
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Sep 2020 22:04:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 594E727F384
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Sep 2020 22:46:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725814AbgI3UEi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Sep 2020 16:04:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbgI3UEh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Sep 2020 16:04:37 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF3AC061755;
-        Wed, 30 Sep 2020 13:04:37 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z19so1942542pfn.8;
-        Wed, 30 Sep 2020 13:04:37 -0700 (PDT)
+        id S1730341AbgI3Uqx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Sep 2020 16:46:53 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:25111 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbgI3Uqx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Sep 2020 16:46:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fRxlphcyV5L+6kzJRgkcYTmAPfhDSCJRy7uL810DHvg=;
-        b=JJJ4LUE2HM8QngeFWwn/lYALkew4LFitz+FSL4qyj48kRgIApIpUgB3erfhMXSwVVY
-         HVnISKtaZyCK3FdsnQcIYfMaZK4uFrd4+ojb2RH0H93PfK45mkv1ZJpSsojbFiwz7oZL
-         EHch64HQhcJaON1RqgVUGVCd5NDMZOQn+lmD67p1/TZPzjfL3vA5GmvHqdXpIkENo/L2
-         2+KBTBHAqDKgCcb1atmtJwtic4ZAHe0CeysGLBTauTj2B19TkG52P9L+uvQ5BI4jtk0R
-         xn1W/SV6P4CxFvtmGglN09Wf4FvhPKPNIamltClC7IyS9RMZxZEoikJGo8VsG/ss6NvK
-         SLsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fRxlphcyV5L+6kzJRgkcYTmAPfhDSCJRy7uL810DHvg=;
-        b=GiRcK1zDS37p4PeExfpxOrKKrfE2u4MXa3QZUp6eCeVBuBjhZdw6ezt+nkGf2zRVNZ
-         Q5UePbuMpXAnjd7OR4eT01VvAj5L0SBgIeju7AoJZwj0hoMrtkV8Kz8z6B8Ae/NMrxtT
-         pk0CkLhFQltg/lBogXDNad6Vr0yckaDX8/uADJdoxThfJ6QVzNuED59Y6dwpQkmSNp6b
-         xMfW4ASYb05Me7SXrQKnXIBpEa4o8RGp4cH/NbX7uGgGZWP9HzL0oe/5uWfXpISP6YJL
-         boyd9e4/DEdodt6QE4SVYtdlAlMLKmIwJ8QOzmW84EQLll9+xalVXo/LbNr3l6pGgwxD
-         +OTA==
-X-Gm-Message-State: AOAM533R0MMfg6PZt6eym0sUw0z5GtVu37gAnITufynF9w5dIc5vhUcq
-        +01wnLhX+1C1W9shFAqKkRw=
-X-Google-Smtp-Source: ABdhPJzNEfUPI/vsckvfZ/3Qh6VsaBOY5er1Qfs/1HH6uA0+ftRR4Ae3Fcc9D6fUiwTjF5I3P/fUEg==
-X-Received: by 2002:aa7:8812:0:b029:13c:1611:6537 with SMTP id c18-20020aa788120000b029013c16116537mr4350626pfo.9.1601496277332;
-        Wed, 30 Sep 2020 13:04:37 -0700 (PDT)
-Received: from localhost.localdomain (c-107-3-138-210.hsd1.ca.comcast.net. [107.3.138.210])
-        by smtp.gmail.com with ESMTPSA id v21sm2992881pgl.39.2020.09.30.13.04.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Sep 2020 13:04:36 -0700 (PDT)
-From:   Yang Shi <shy828301@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        fllinden@amazon.com
-Cc:     shy828301@gmail.com, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fs: nfs: return per memcg count for xattr shrinkers
-Date:   Sun, 27 Sep 2020 04:42:20 -0700
-Message-Id: <20200927114220.141530-1-shy828301@gmail.com>
-X-Mailer: git-send-email 2.26.2
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1601498813; x=1633034813;
+  h=date:from:to:cc:message-id:references:mime-version:
+   in-reply-to:subject;
+  bh=XbNOWeAHjXdc18oeXXyRojpqrg19RF+CX4RcweS8pmY=;
+  b=NCnjxxAy+HzYGzAV3zjPq95tDkNDyg+8Bqy6g/foSZWkn5496Po9i3Fg
+   9xEV+Y3y1dSfVQyLhVnGjd/QSB0oLCQSRVvQxeN9AkSov/+iTR3yFZILa
+   xlorR0vkCFZJ/Ff/sx+ZXsTUcRVTkjpFoNtpQsZbxiLLPmhN8sghAyBGh
+   I=;
+X-IronPort-AV: E=Sophos;i="5.77,322,1596499200"; 
+   d="scan'208";a="57041457"
+Subject: Re: [PATCH] fs: nfs: return per memcg count for xattr shrinkers
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 30 Sep 2020 20:46:51 +0000
+Received: from EX13MTAUEE001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
+        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id BA2E9A1B8A;
+        Wed, 30 Sep 2020 20:46:49 +0000 (UTC)
+Received: from EX13D18UEE002.ant.amazon.com (10.43.62.65) by
+ EX13MTAUEE001.ant.amazon.com (10.43.62.200) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 30 Sep 2020 20:46:48 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
+ EX13D18UEE002.ant.amazon.com (10.43.62.65) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 30 Sep 2020 20:46:48 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Wed, 30 Sep 2020 20:46:48 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id 1FE05C14B2; Wed, 30 Sep 2020 20:46:48 +0000 (UTC)
+Date:   Wed, 30 Sep 2020 20:46:48 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     Yang Shi <shy828301@gmail.com>
+CC:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
+        <linux-nfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Message-ID: <20200930204648.GA9098@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+References: <20200927114220.141530-1-shy828301@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200927114220.141530-1-shy828301@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The list_lru_count() returns the pre node count, but the new xattr
-shrinkers are memcg aware, so the shrinkers should return per memcg
-count by calling list_lru_shrink_count() instead.  Otherwise over-shrink
-might be experienced.  The problem was spotted by visual code
-inspection.
+On Sun, Sep 27, 2020 at 04:42:20AM -0700, Yang Shi wrote:
+> 
+> The list_lru_count() returns the pre node count, but the new xattr
+> shrinkers are memcg aware, so the shrinkers should return per memcg
+> count by calling list_lru_shrink_count() instead.  Otherwise over-shrink
+> might be experienced.  The problem was spotted by visual code
+> inspection.
+> 
+> Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Cc: Anna Schumaker <anna.schumaker@netapp.com>
+> Cc: Frank van der Linden <fllinden@amazon.com>
+> Signed-off-by: Yang Shi <shy828301@gmail.com>
+> ---
+>  fs/nfs/nfs42xattr.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
+> index 86777996cfec..6e5f34916937 100644
+> --- a/fs/nfs/nfs42xattr.c
+> +++ b/fs/nfs/nfs42xattr.c
+> @@ -882,7 +882,7 @@ nfs4_xattr_cache_count(struct shrinker *shrink, struct shrink_control *sc)
+>  {
+>         unsigned long count;
+> 
+> -       count = list_lru_count(&nfs4_xattr_cache_lru);
+> +       count = list_lru_shrink_count(&nfs4_xattr_cache_lru, sc);
+>         return vfs_pressure_ratio(count);
+>  }
+> 
+> @@ -976,7 +976,7 @@ nfs4_xattr_entry_count(struct shrinker *shrink, struct shrink_control *sc)
+>         lru = (shrink == &nfs4_xattr_large_entry_shrinker) ?
+>             &nfs4_xattr_large_entry_lru : &nfs4_xattr_entry_lru;
+> 
+> -       count = list_lru_count(lru);
+> +       count = list_lru_shrink_count(lru, sc);
+>         return vfs_pressure_ratio(count);
+>  }
+> 
+> --
+> 2.26.2
+> 
 
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna.schumaker@netapp.com>
-Cc: Frank van der Linden <fllinden@amazon.com>
-Signed-off-by: Yang Shi <shy828301@gmail.com>
----
- fs/nfs/nfs42xattr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yep, thanks.
 
-diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
-index 86777996cfec..6e5f34916937 100644
---- a/fs/nfs/nfs42xattr.c
-+++ b/fs/nfs/nfs42xattr.c
-@@ -882,7 +882,7 @@ nfs4_xattr_cache_count(struct shrinker *shrink, struct shrink_control *sc)
- {
- 	unsigned long count;
- 
--	count = list_lru_count(&nfs4_xattr_cache_lru);
-+	count = list_lru_shrink_count(&nfs4_xattr_cache_lru, sc);
- 	return vfs_pressure_ratio(count);
- }
- 
-@@ -976,7 +976,7 @@ nfs4_xattr_entry_count(struct shrinker *shrink, struct shrink_control *sc)
- 	lru = (shrink == &nfs4_xattr_large_entry_shrinker) ?
- 	    &nfs4_xattr_large_entry_lru : &nfs4_xattr_entry_lru;
- 
--	count = list_lru_count(lru);
-+	count = list_lru_shrink_count(lru, sc);
- 	return vfs_pressure_ratio(count);
- }
- 
--- 
-2.26.2
-
+Reviewed-by: Frank van der Linden <fllinden@amazon.com>
