@@ -2,86 +2,185 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B6C728099C
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Oct 2020 23:47:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65E4D2809A6
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Oct 2020 23:50:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbgJAVru (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Oct 2020 17:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbgJAVru (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Oct 2020 17:47:50 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 314BEC0613D0
-        for <linux-nfs@vger.kernel.org>; Thu,  1 Oct 2020 14:47:50 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 959196192; Thu,  1 Oct 2020 17:47:49 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 959196192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1601588869;
-        bh=+HHW5/8+IJ9Z1KssUsp/rV3T0cffctVAKjBOiBsGCWE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vlbiQG9VBaU0jjb4mOSt+8x2Q9hJJas7Tm4IUFvEu7zWmfVDnvma5Rqy79GJoENsh
-         D2hKazNKePAxfkPGb8kjQ6SqpMVnCpia363/b6xRxq7IrzPP3oyPhmiiEqFM/A7KqH
-         DBQobz2wtUP2WCLttiKl1Iuq2UtfydWlWoAHe0IE=
-Date:   Thu, 1 Oct 2020 17:47:49 -0400
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "inoguchi.yuki@fujitsu.com" <inoguchi.yuki@fujitsu.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: client caching and locks
-Message-ID: <20201001214749.GK1496@fieldses.org>
-References: <20200608211945.GB30639@fieldses.org>
- <OSBPR01MB2949040AA49BC9B5F104DA1FEF9B0@OSBPR01MB2949.jpnprd01.prod.outlook.com>
- <22b841f7a8979f19009c96f31a7be88dd177a47a.camel@hammerspace.com>
- <20200618200905.GA10313@fieldses.org>
- <20200622135222.GA6075@fieldses.org>
+        id S1730045AbgJAVuP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Oct 2020 17:50:15 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47768 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727017AbgJAVuP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Oct 2020 17:50:15 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 091LnHYF180057;
+        Thu, 1 Oct 2020 21:50:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=fnrvyi8ew1rQLuffNfHg2JOLKKAsZebYSZ2vAc5l+0k=;
+ b=yNTPjdIGv0UGkLHVe0Ye5WeegpqWZtqUTUf/lcgBkABOjZLL3NegQ5ct5+FSFjDCg6cE
+ F4f4iFrwYxDQFeNeRulW/LeFnoIf4zxrl/eibQTeXVpTiAynrecsu+qpvvEOtDsah2Mj
+ h4BjHD1QrG2REivJ7x3aHgZhcW7m5bPlhBMt7WApZhuRs6QgjArhbeC4kkC23j1Z7MbV
+ xDdsjJ9MJ2p59+pjFb+NMWWvQBMROomK9Z30ckQEMcE6Om/zdGR60mFxRWdGzezTK1Ma
+ nxKdfv6yRVxHmr8okDv67RcCNndBjBnRnsY9cxyUbjcmBXLQIcol+SwuZwQ7OcxQTXsC pA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 33sx9ngg79-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 01 Oct 2020 21:50:13 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 091LV0Ue058349;
+        Thu, 1 Oct 2020 21:48:12 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 33uv2hg2h1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 01 Oct 2020 21:48:12 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 091Lm8x1032744;
+        Thu, 1 Oct 2020 21:48:10 GMT
+Received: from dhcp-10-154-97-134.vpn.oracle.com (/10.154.97.134)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 01 Oct 2020 14:48:08 -0700
+Subject: Re: [PATCH 0/1] NFSv4.2: Fix NFS4ERR_STALE with inter server copy
+To:     Bruce Fields <bfields@fieldses.org>
+Cc:     linux-nfs@vger.kernel.org
+References: <20200923230606.63904-1-dai.ngo@oracle.com>
+ <e7e738c6-f6e7-0d04-07fa-8017da469b8a@oracle.com>
+ <20201001205119.GI1496@fieldses.org>
+From:   Dai Ngo <dai.ngo@oracle.com>
+Message-ID: <9a60ba5b-aefe-d75b-683a-fa0f4db6ae24@oracle.com>
+Date:   Thu, 1 Oct 2020 14:48:07 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622135222.GA6075@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20201001205119.GI1496@fieldses.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9761 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
+ suspectscore=3 malwarescore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2010010172
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9761 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=3
+ phishscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
+ spamscore=0 impostorscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2010010173
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 09:52:22AM -0400, bfields@fieldses.org wrote:
-> On Thu, Jun 18, 2020 at 04:09:05PM -0400, bfields@fieldses.org wrote:
-> > I probably don't understand the algorithm (in particular, how it
-> > revalidates caches after a write).
-> > 
-> > How does it avoid a race like this?:
-> > 
-> > Start with a file whose data is all 0's and change attribute x:
-> > 
-> >         client 0                        client 1
-> >         --------                        --------
-> >         take write lock on byte 0
-> >                                         take write lock on byte 1
-> >         write 1 to offset 0
-> >           change attribute now x+1
-> >                                         write 1 to offset 1
-> >                                           change attribute now x+2
-> >         getattr returns x+2
-> >                                         getattr returns x+2
-> >         unlock
-> >                                         unlock
-> > 
-> >         take readlock on byte 1
-> > 
-> > At this point a getattr will return change attribute x+2, the same as
-> > was returned after client 0's write.  Does that mean client 0 assumes
-> > the file data is unchanged since its last write?
-> 
-> Basically: write-locking less than the whole range doesn't prevent
-> concurrent writes outside that range.  And the change attribute gives us
-> no way to identify whether concurrent writes have happened.  (At least,
-> not without NFS4_CHANGE_TYPE_IS_VERSION_COUNTER.)
-> 
-> So as far as I can tell, a client implementation has no reliable way to
-> revalidate its cache outside the write-locked area--instead it needs to
-> just throw out that part of the cache.
+Thanks Bruce for your comments,
 
-Does my description of that race make sense?
+On 10/1/20 1:51 PM, Bruce Fields wrote:
+> On Tue, Sep 29, 2020 at 08:18:54PM -0700, Dai Ngo wrote:
+>> Have you had chance to review this patch and if it's ok would it be
+>> possible to include it in the 5.10 pull?
+> I don't think the op table approach would be that difficult, I'd really
+> rather see that.
 
---b.
+I think if we do the op table approach then we should also try to solve
+all other dependencies between various NFS client and server modules
+and not just the SSC part. It might be a little involved so I'd like
+to take some time to research before committing to the longer solution
+which I plan to do. In the mean time, this small patch allows some of
+us to use the inter server copy until the long term solution is available.
+
+> Is this causing someone an immediate practical problem?
+
+This causes inter server copy to fail with any kernel build with NFS_FS=m
+which I think is a common config. And it also causes compile errors if
+NFSD=y, NFS_FS=y and NFS_v4=m.
+
+-Dai
+
+>
+> --b.
+>
+>> Thanks,
+>>
+>> -Dai
+>>
+>> On 9/23/20 4:06 PM, Dai Ngo wrote:
+>>> This patch provides a temporarily relief for inter copy to work with
+>>> some common configs.  For long term solution, I think Trond's suggestion
+>>> of using fs/nfs/nfs_common to store an op table that server can use to
+>>> access the client code is the way to go.
+>>>
+>>>   fs/nfsd/Kconfig | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>>
+>>> Below are the results of my testing of upstream mainline without and with the fix.
+>>>
+>>> Upstream version used for testing:  5.9-rc5
+>>>
+>>> 1. Upstream mainline (existing code: NFS_FS=y)
+>>>
+>>>
+>>> |----------------------------------------------------------------------------------------|
+>>> |  NFSD  |  NFS_FS  |  NFS_V4  |               RESULTS                                   |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   y    |    y     |    m     | Build errors: nfs42_ssc_open/close                      |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   y    |    m     |    m     | Build OK, inter server copy failed with NFS4ERR_STALE   |
+>>> |        |          |          | See NOTE1.                                              |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   y    |    m     |   y (m)  | Build OK, inter server copy failed with NFS4ERR_STALE   |
+>>> |        |          |          | See NOTE2.                                              |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   y    |    y     |    y     | Build OK, inter server copy OK                          |
+>>> |----------------------------------------------------------------------------------------|
+>>>
+>>>
+>>> |----------------------------------------------------------------------------------------|
+>>> |  NFSD  |  NFS_FS  |  NFS_V4  |               RESULTS                                   |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   m    |    y     |    m     | Build OK, inter server copy OK                          |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   m    |    m     |    m     | Build OK, inter server copy failed with NFS4ERR_STALE   |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   m    |    m     |   y (m)  | Build OK, inter server copy failed with NFS4ERR_STALE   |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   m    |    y     |    y     | Build OK, inter server copy OK                          |
+>>> |----------------------------------------------------------------------------------------|
+>>>
+>>> 2. Upstream mainline (with the fix:  !(NFSD=y && (NFS_FS=m || NFS_V4=m))
+>>>
+>>>
+>>> |----------------------------------------------------------------------------------------|
+>>> |  NFSD  |  NFS_FS  |  NFS_V4  |               RESULTS                                   |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   m    |    y     |    m     | Build OK, inter server copy OK                          |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   m    |    m     |    m     | Build OK, inter server copy OK                          |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   m    |    m     |   y (m)  | Build OK, inter server copy OK                          |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   m    |    y     |    y     | Build OK, inter server copy OK                          |
+>>> |----------------------------------------------------------------------------------------|
+>>>
+>>>
+>>> |----------------------------------------------------------------------------------------|
+>>> |  NFSD  |  NFS_FS  |  NFS_V4  |               RESULTS                                   |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   y    |    y     |    m     | Build OK, inter server copy failed with NFS4ERR_STALE   |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   y    |    m     |    m     | Build OK, inter server copy failed with NFS4ERR_STALE   |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   y    |    m     |   y (m)  | Build OK, inter server copy failed with NFS4ERR_STALE   |
+>>> |----------------------------------------------------------------------------------------|
+>>> |   y    |    y     |    y     | Build OK, inter server copy OK                          |
+>>> |----------------------------------------------------------------------------------------|
+>>>
+>>> NOTE1:
+>>> BUG:  When inter server copy fails with NFS4ERR_STALE, it left the file
+>>> created with size of 0!
+>>>
+>>> NOTE2:
+>>> When NFS_V4=y and NFS_FS=m, the build process automatically builds with NFS_V4=m
+>>> and ignores the setting NFS_V4=y in the config file.
+>>>
+>>> This probably due to NFS_V4 in fs/nfs/Kconfig is configured to depend on NFS_FS.
+>>>
