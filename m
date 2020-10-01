@@ -2,233 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 478B728067E
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Oct 2020 20:25:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAE58280693
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Oct 2020 20:30:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730017AbgJASZW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Oct 2020 14:25:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37920 "EHLO
+        id S1729927AbgJASai (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Oct 2020 14:30:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729927AbgJASZW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Oct 2020 14:25:22 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30E31C0613D0
-        for <linux-nfs@vger.kernel.org>; Thu,  1 Oct 2020 11:25:20 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id g4so6706072edk.0
-        for <linux-nfs@vger.kernel.org>; Thu, 01 Oct 2020 11:25:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Eu48F29p4N8zbgxpWXhOr/e84QySfOIaZsSTj0F0bCs=;
-        b=YmjH6oWgHsLX0r5TpfB9JWgWjEyVSBwQ1gWq6Hgc5uMUSXX0lVijfKo3z+EdwWsVic
-         AWuvCTyODdstwAxaDDBq/bTLJPAziUn9+mINfEt07XKtTHYGGbnpX+66sMoiZsFQhb3k
-         VvvtNjrMQg+VWfKBoMUhN+YC9qG7fKScaFhqF+8WaQW0DN0iCah1KVDF7Drwry7WVwiR
-         bFqOC4ahYByIov5A+2adI2ir312q6mqidY7CmkU9xg9nVVI0n+lewX853lMUfwGQmhnV
-         jwxS9c594ChUNoOrPALudXYJlYsUzeY4kmDhOjMC1aYr8BNdoMyplcc6TPTXiMcFevR3
-         l2lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Eu48F29p4N8zbgxpWXhOr/e84QySfOIaZsSTj0F0bCs=;
-        b=tu5a/vL00WZtlowKGUVrEdyHyC2cDXKWzuK6mvJPZj7pcZrwl4Isg3J+rBh1JKw1tY
-         im3yODAGBKVOVWMa6ZYp4uTNLWLE3vI5fwAwFEBwg/bABqirfbnIjoR5u2xef0T3vBmn
-         bs6MjM+WFHKnEYP0mzOBc11wbuH/0fvgpu0pu02lebnrC/huOzanf9h1WDzIaqkX6/SO
-         /F3Vqo+u7TW8+eOktraiHGyr/IzDVwb3yQGlf8V9vimxPKvCWEogAhIkkEdWQ6MVchyX
-         2qZKdLJrG0ZrmZxVAK44w5oNhSPpPfQmIxLecVOM+8IxqdMWhT42AcyaCQpHXN1DbUgP
-         ZFEg==
-X-Gm-Message-State: AOAM532uGDUE9kNg82tfZGscjxbn/cEZPQmcPlzHGFhC+ngkSmgd2o1n
-        H7PJOhIlU+3oDVadsBbQFB8GD1BM+EtyIimbbrHDAH7LtQA=
-X-Google-Smtp-Source: ABdhPJzgK3v06oVmVuW2lsZHOXanOFlG4pLfy3foxyMRvChBej4jrPx9V4p4C0biYJJ5JjrfluvFKrvbrZoQXN4LpuE=
-X-Received: by 2002:a05:6402:18d:: with SMTP id r13mr9334987edv.267.1601576718764;
- Thu, 01 Oct 2020 11:25:18 -0700 (PDT)
+        with ESMTP id S1729412AbgJASah (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Oct 2020 14:30:37 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B73E7C0613D0
+        for <linux-nfs@vger.kernel.org>; Thu,  1 Oct 2020 11:30:37 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id D2A681C79; Thu,  1 Oct 2020 14:30:36 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org D2A681C79
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1601577036;
+        bh=DXtn2M2gIybYDZI+UF/45itJU+tt02Fx/Gkz49fKWpw=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=pmdtUajrMyu0W/knutJtE/J8wUpc6gr79k4ikQv4Eorzd2uQg7fo4OEfSASeu3QFH
+         8bwjzmJXTx8BCpZN/PBmze7zH3Yr5waQEzAC1uBAQC5K4muxqOleOIo5I/ryamhl7r
+         XQPFPQzBnTcYFY5XorO92/Ic6VAR6dSsVxMwCNoA=
+Date:   Thu, 1 Oct 2020 14:30:36 -0400
+To:     Patrick Goetz <pgoetz@math.utexas.edu>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: rpcbind redux
+Message-ID: <20201001183036.GD1496@fieldses.org>
+References: <6b0c5514-ebb1-fde7-abba-7f4130b3d59f@math.utexas.edu>
 MIME-Version: 1.0
-References: <20200914210508.7701-1-olga.kornievskaia@gmail.com> <ed267a2c190101c53a2d409f7a6b1530ae50e72d.camel@hammerspace.com>
-In-Reply-To: <ed267a2c190101c53a2d409f7a6b1530ae50e72d.camel@hammerspace.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Thu, 1 Oct 2020 14:25:07 -0400
-Message-ID: <CAN-5tyGk6qwC+g+qB8QeTGTXrRUdD7ar5cvRjd9DAyzNO-GzvA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] NFSv4: make cache consistency bitmask dynamic
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6b0c5514-ebb1-fde7-abba-7f4130b3d59f@math.utexas.edu>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Oct 1, 2020 at 1:14 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> Hi Olga,
->
-> On Mon, 2020-09-14 at 17:05 -0400, Olga Kornievskaia wrote:
-> > From: Olga Kornievskaia <kolga@netapp.com>
-> >
-> > Client uses static bitmask for GETATTR on CLOSE/WRITE/DELEGRETURN
-> > and ignores the fact that it might have some attributes marked
-> > invalid in its cache. Compared to v3 where all attributes are
-> > retrieved in postop attributes, v4's cache is frequently out of
-> > sync and leads to standalone GETATTRs being sent to the server.
-> >
-> > Instead, in addition to the minimum cache consistency attributes
-> > also check cache_validity and adjust the GETATTR request accordingly.
-> >
-> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> > ---
-> >  fs/nfs/nfs4proc.c       | 45 ++++++++++++++++++++++++++++++++++++++-
-> > --
-> >  include/linux/nfs_xdr.h |  6 +++---
-> >  2 files changed, 45 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index 6e95c85fe395..d7434a3697d9 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -107,6 +107,9 @@ static int nfs41_test_stateid(struct nfs_server
-> > *, nfs4_stateid *,
-> >  static int nfs41_free_stateid(struct nfs_server *, const
-> > nfs4_stateid *,
-> >               const struct cred *, bool);
-> >  #endif
-> > +static void nfs4_bitmask_adjust(__u32 *bitmask, struct inode *inode,
-> > +             struct nfs_server *server,
-> > +             struct nfs4_label *label);
-> >
-> >  #ifdef CONFIG_NFS_V4_SECURITY_LABEL
-> >  static inline struct nfs4_label *
-> > @@ -3632,9 +3635,10 @@ static void nfs4_close_prepare(struct rpc_task
-> > *task, void *data)
-> >
-> >       if (calldata->arg.fmode == 0 || calldata->arg.fmode ==
-> > FMODE_READ) {
-> >               /* Close-to-open cache consistency revalidation */
-> > -             if (!nfs4_have_delegation(inode, FMODE_READ))
-> > +             if (!nfs4_have_delegation(inode, FMODE_READ)) {
-> >                       calldata->arg.bitmask = NFS_SERVER(inode)-
-> > >cache_consistency_bitmask;
-> > -             else
-> > +                     nfs4_bitmask_adjust(calldata->arg.bitmask,
-> > inode, NFS_SERVER(inode), NULL);
-> > +             } else
-> >                       calldata->arg.bitmask = NULL;
-> >       }
-> >
-> > @@ -5360,6 +5364,38 @@ bool
-> > nfs4_write_need_cache_consistency_data(struct nfs_pgio_header *hdr)
-> >       return nfs4_have_delegation(hdr->inode, FMODE_READ) == 0;
-> >  }
-> >
-> > +static void nfs4_bitmask_adjust(__u32 *bitmask, struct inode *inode,
-> > +                             struct nfs_server *server,
-> > +                             struct nfs4_label *label)
-> > +{
-> > +
-> > +     unsigned long cache_validity = READ_ONCE(NFS_I(inode)-
-> > >cache_validity);
-> > +
-> > +     if ((cache_validity & NFS_INO_INVALID_DATA) ||
-> > +             (cache_validity & NFS_INO_REVAL_PAGECACHE) ||
-> > +             (cache_validity & NFS_INO_REVAL_FORCED) ||
-> > +             (cache_validity & NFS_INO_INVALID_OTHER))
-> > +             nfs4_bitmap_copy_adjust(bitmask, nfs4_bitmask(server,
-> > label), inode);
-> > +
-> > +     if (cache_validity & NFS_INO_INVALID_ATIME)
-> > +             bitmask[1] |= FATTR4_WORD1_TIME_ACCESS;
-> > +     if (cache_validity & NFS_INO_INVALID_ACCESS)
-> > +             bitmask[0] |= FATTR4_WORD1_MODE | FATTR4_WORD1_OWNER |
-> > +                             FATTR4_WORD1_OWNER_GROUP;
-> > +     if (cache_validity & NFS_INO_INVALID_ACL)
-> > +             bitmask[0] |= FATTR4_WORD0_ACL;
-> > +     if (cache_validity & NFS_INO_INVALID_LABEL)
-> > +             bitmask[2] |= FATTR4_WORD2_SECURITY_LABEL;
-> > +     if (cache_validity & NFS_INO_INVALID_CTIME)
-> > +             bitmask[0] |= FATTR4_WORD0_CHANGE;
-> > +     if (cache_validity & NFS_INO_INVALID_MTIME)
-> > +             bitmask[1] |= FATTR4_WORD1_TIME_MODIFY;
-> > +     if (cache_validity & NFS_INO_INVALID_SIZE)
-> > +             bitmask[0] |= FATTR4_WORD0_SIZE;
-> > +     if (cache_validity & NFS_INO_INVALID_BLOCKS)
-> > +             bitmask[1] |= FATTR4_WORD1_SPACE_USED;
->
-> If we hold a delegation (which we could do when called
-> from nfs4_proc_write_setup()) then we only want to get extra attributes
-> if the NFS_INO_REVAL_FORCED flag is also set.
+On Fri, Sep 25, 2020 at 09:40:16AM -0500, Patrick Goetz wrote:
+> My University information security office does not like rpcbind and
+> will automatically quarantine any system for which they detect a
+> portmapper running on an exposed port.
+> 
+> Since I exclusively use NFSv4 I was happy to "learn" that NFSv4
+> doesn't require rpcbind any more.  For example, here's what it says
+> in the current RHEL documentation:
+> 
+> "NFS version 4 (NFSv4) works through firewalls and on the Internet,
+> no longer requires an rpcbind service, supports Access Control Lists
+> (ACLs), and utilizes stateful operations."
+> 
+> https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_file_systems/exporting-nfs-shares_managing-file-systems#introduction-to-nfs_exporting-nfs-shares
+> 
+> I'm using Ubuntu 20.04 rather than RHEL, but the nfs-server service
+> absolutely will not start if it can't launch rpcbind as a precursor:
+> 
+> -----------------------------
+> root@helios:~# systemctl stop rpcbind
+> Warning: Stopping rpcbind.service, but it can still be activated by:
+>   rpcbind.socket
+> root@helios:~# systemctl mask rpcbind
+> Created symlink /etc/systemd/system/rpcbind.service → /dev/null.
+> 
+> root@helios:~# systemctl restart nfs-server
+> Job for nfs-server.service canceled.
+> root@helios:~# systemctl status nfs-server
+> ● nfs-server.service - NFS server and services
+>      Loaded: loaded (/lib/systemd/system/nfs-server.service;
+> enabled; vendor preset: enabled)
+>     Drop-In: /run/systemd/generator/nfs-server.service.d
+>              └─order-with-mounts.conf
+>      Active: failed (Result: exit-code) since Fri 2020-09-25
+> 14:21:46 UTC; 10s ago
+>     Process: 3923 ExecStartPre=/usr/sbin/exportfs -r (code=exited,
+> status=0/SUCCESS)
+>     Process: 3925 ExecStart=/usr/sbin/rpc.nfsd $RPCNFSDARGS
+> (code=exited, status=1/FAILURE)
+>     Process: 3931 ExecStopPost=/usr/sbin/exportfs -au (code=exited,
+> status=0/SUCCESS)
+>     Process: 3932 ExecStopPost=/usr/sbin/exportfs -f (code=exited,
+> status=0/SUCCESS)
+>    Main PID: 3925 (code=exited, status=1/FAILURE)
+> 
+> Sep 25 14:21:46 helios systemd[1]: Starting NFS server and services...
+> Sep 25 14:21:46 helios rpc.nfsd[3925]: rpc.nfsd: writing fd to
+> kernel failed: errno 111 (Connection refused)
+> Sep 25 14:21:46 helios rpc.nfsd[3925]: rpc.nfsd: unable to set any
+> sockets for nfsd
+> Sep 25 14:21:46 helios systemd[1]: nfs-server.service: Main process
+> exited, code=exited, status=1/FAILURE
+> Sep 25 14:21:46 helios systemd[1]: nfs-server.service: Failed with
+> result 'exit-code'.
+> Sep 25 14:21:46 helios systemd[1]: Stopped NFS server and services.
+> -----------------------------
+> 
+> So, now I'm confused.  Does NFSv4 need rpcbind to be running, does
+> it just need it when it launches, or something else?  I made a local
+> copy of the systemd service file and edited out the rpcbind
+> dependency, so it's not that.
 
-If we hold a delegation then nfs4_write_need_cache_consistency_data()
-would be true and no getattr would be added (or need to be adjusted).
-Am I mis-reading your comment?
+Do you have v2 and v3 turned off in /etc/nfs.conf?
 
-> > +}
-> > +
-> >  static void nfs4_proc_write_setup(struct nfs_pgio_header *hdr,
-> >                                 struct rpc_message *msg,
-> >                                 struct rpc_clnt **clnt)
-> > @@ -5369,8 +5405,10 @@ static void nfs4_proc_write_setup(struct
-> > nfs_pgio_header *hdr,
-> >       if (!nfs4_write_need_cache_consistency_data(hdr)) {
-> >               hdr->args.bitmask = NULL;
-> >               hdr->res.fattr = NULL;
-> > -     } else
-> > +     } else {
-> >               hdr->args.bitmask = server->cache_consistency_bitmask;
-> > +             nfs4_bitmask_adjust(hdr->args.bitmask, hdr->inode,
-> > server, NULL);
-> > +     }
-> >
-> >       if (!hdr->pgio_done_cb)
-> >               hdr->pgio_done_cb = nfs4_write_done_cb;
-> > @@ -6406,6 +6444,7 @@ static int _nfs4_proc_delegreturn(struct inode
-> > *inode, const struct cred *cred,
-> >       data->args.fhandle = &data->fh;
-> >       data->args.stateid = &data->stateid;
-> >       data->args.bitmask = server->cache_consistency_bitmask;
-> > +     nfs4_bitmask_adjust(data->args.bitmask, inode, server, NULL);
-> >       nfs_copy_fh(&data->fh, NFS_FH(inode));
-> >       nfs4_stateid_copy(&data->stateid, stateid);
-> >       data->res.fattr = &data->fattr;
-> > diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> > index 9408f3252c8e..bafbf6695796 100644
-> > --- a/include/linux/nfs_xdr.h
-> > +++ b/include/linux/nfs_xdr.h
-> > @@ -525,7 +525,7 @@ struct nfs_closeargs {
-> >       struct nfs_seqid *      seqid;
-> >       fmode_t                 fmode;
-> >       u32                     share_access;
-> > -     const u32 *             bitmask;
-> > +     u32 *                   bitmask;
-> >       struct nfs4_layoutreturn_args *lr_args;
-> >  };
-> >
-> > @@ -608,7 +608,7 @@ struct nfs4_delegreturnargs {
-> >       struct nfs4_sequence_args       seq_args;
-> >       const struct nfs_fh *fhandle;
-> >       const nfs4_stateid *stateid;
-> > -     const u32 * bitmask;
-> > +     u32 * bitmask;
-> >       struct nfs4_layoutreturn_args *lr_args;
-> >  };
-> >
-> > @@ -648,7 +648,7 @@ struct nfs_pgio_args {
-> >       union {
-> >               unsigned int            replen;                 /*
-> > used by read */
-> >               struct {
-> > -                     const u32 *             bitmask;        /*
-> > used by write */
-> > +                     u32 *                   bitmask;        /*
-> > used by write */
-> >                       enum nfs3_stable_how    stable;         /*
-> > used by write */
-> >               };
-> >       };
->
-> Otherwise this looks good. Thanks!
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+If yes, and nfsd is still refusing to start, that sounds like an nfsd
+bug; with v4 only it should definitely be ignoring any failures to
+contact rpcbind.
+
+--b.
