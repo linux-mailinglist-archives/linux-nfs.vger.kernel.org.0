@@ -2,167 +2,233 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B76AA280595
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Oct 2020 19:39:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 478B728067E
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Oct 2020 20:25:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732417AbgJARjQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Oct 2020 13:39:16 -0400
-Received: from mail-eopbgr760095.outbound.protection.outlook.com ([40.107.76.95]:39585
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732096AbgJARjP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 1 Oct 2020 13:39:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SdXk0wnsmmtj1FtVlKJldQLkRyfOhWN8Z/E+D/RKMdQRBAD5m8dBdIcApfyAVR33vjzOuIwnHdlNWaXQwMw8Xuf9+4tVy9Ew9K86kwBet/c4TmAvd1C0kqUbcBtsA77CvDhaFp/VnONEzbwjUR13vSU8ZLQNaUESSKDZ0zSCbEaVw1SNCcq/4kh81a5peVTd2mEclSEcxZsqdr6ihihJEoXnNfYpZEZNpzOOACY1MklA+rQLE4p/MId2iGkzVbKq4nTBu1sxc3+kOWthoCZ6tJOAHLRiM6zckBOuDxBpCPozRQ1qlKW3sWEKQANfzI97oy9IK1XNoJAuBRKNEX9Uxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z8mYvBR1nrXhYYf5FN3zrzxsChrf4RwwsriLKCkPLtM=;
- b=GkXnz5G0iQjBPKOXO043phKCFRj8X9cbAJFVF1UGL2+gIib5MU3BuVzXBqZhV7SEAKu4y+cHQR+5I6fBFzkNFWuSiunmTtkZF4oich3a6KrZUd7I20aipOuBhWOj76VFM3PZhqQcONf8t6pRbxZtV5zjaH1jNUCJPLOt9wpEgRtDGaJrzkRjKy+/nAGxG8q+YrlJwzHBspIRCDjAN527TTQb0mEQDQNX4hsy3VX8srGTECRwxoqoU99htqKw1wxrCeLiJNSZwDqpaZNYHkaIJZqeitRYZUaB2m4O7UTG3JKOJaN9HW7ICaE/K+lhUsTHKDdNbzodX77Gv0T/qaNCGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z8mYvBR1nrXhYYf5FN3zrzxsChrf4RwwsriLKCkPLtM=;
- b=YMuftMEAfG4iITW6gWZdCSSThFC3+sHu2+Qbafd1Z91Q88U25m+ykwCnqH0ogrUtX7HvD3ZlIBKHRIAUiKrg0QpW2nOMSaIKq/WMic10sMGnGwd5N3n0xmyOuYlt0ouQTfgR91oAGA7WPRf8hz3vkS3Yw1VUY/M4t9UND6vR0Fs=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB3630.namprd13.prod.outlook.com (2603:10b6:208:1e2::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.13; Thu, 1 Oct
- 2020 17:39:12 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e8a1:6acc:70f0:ef39]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e8a1:6acc:70f0:ef39%6]) with mapi id 15.20.3433.037; Thu, 1 Oct 2020
- 17:39:12 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "schumaker.anna@gmail.com" <schumaker.anna@gmail.com>
-CC:     "Anna.Schumaker@Netapp.com" <Anna.Schumaker@Netapp.com>
-Subject: Re: [PATCH v6 07/10] SUNRPC: Add the ability to expand holes in data
- pages
-Thread-Topic: [PATCH v6 07/10] SUNRPC: Add the ability to expand holes in data
- pages
-Thread-Index: AQHWlboi4T8XHDFTs0Oz6vbcdLjmaamDCBSA
-Date:   Thu, 1 Oct 2020 17:39:11 +0000
-Message-ID: <f0260b917ab4e0812a7e628e49847867059300ce.camel@hammerspace.com>
-References: <20200928170919.707641-1-Anna.Schumaker@Netapp.com>
-         <20200928170919.707641-8-Anna.Schumaker@Netapp.com>
-In-Reply-To: <20200928170919.707641-8-Anna.Schumaker@Netapp.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f2cca23e-03a5-42ca-dfc2-08d86630e8d0
-x-ms-traffictypediagnostic: MN2PR13MB3630:
-x-microsoft-antispam-prvs: <MN2PR13MB36303F4B5832799BD8BB0AF2B8300@MN2PR13MB3630.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VIxI0qJObJTC7yUOj0Ak44fW4VEvhnq0XqxganNtRSOfg0hSh2w0q9IgBoo6Gl2NPDTUnEdUcbLhCGq0QcUJgwOyQrJlbjSR5OE1WyYEUzj1lkgPuHgTF2qXO2CScarIeeuB4qUFqoj2e6EHa7pv33l8au8Wj7j3mWodzRCZpmOy81+L3u0S8gCThbq0aXaKr+++Q2ttJsMp/i7l9aEQ6ZxbQcLAoQb4qcmEEcQnPSCwwmpEdPDWl3doUwaYHd89WncVvJ49Tr0S604zKidMn75BmB1rR0L2o/85UdrYB2M081474Df+AKgxKaPz8+N9
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(346002)(376002)(136003)(39830400003)(396003)(186003)(64756008)(76116006)(91956017)(66556008)(66476007)(66946007)(8676002)(8936002)(316002)(26005)(2906002)(6506007)(5660300002)(66446008)(71200400001)(478600001)(86362001)(36756003)(4326008)(2616005)(83380400001)(6512007)(110136005)(6486002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: m09DquOdlmpq6e4dYvCdRia96klL23iV2MfisdOqWQnA6gImRZxZ8NFE8GMTee1HAaHr4GTqo4wGJAKfkkAnaedl3mTnwV3RbA+Q9OnGo0n6Y0L7a7U76lNERub/mlb9KqnNXm66QNrub2VJXoLoK4Xp58EYnwssgSeQyilebzMi5Qm54/NTPbDjD9f+DtpyaMQuXU6X1buPKo8Zx4yeanXyB6bLqQ6/q0Gx/Rb4O46doEdjkWz0l4VSMTBKBOpWUN0I8n+kbxuW4qoF1l8Tk6VQXVbCrsU+UJOyODcVUsCSSeih10UipTY2MmwsTwDcVItMX9PbX/5DbKxjVR1wUFREG8PEyu3fcIbVL7AyafZ+RrlYqtq9HqQ1qZ8tMRgQKWJOYcSeSr+OtUXvwA9GJ/3v4fIqCct0e1kYxZE1ZUiWCUHaK7z3OdHxc9Ld87MX20eyFm+tofrOxjk7JK0Wemph6cKEDo9bFdYnysN2bgZ1fiu7LwAJzm/ONxSC3ZNmiCAD2i/rnSTq22FEiHXVSyoZ2TZCN4xY+asQjm4WPoyS/XfaGaal9uD/a6Yz1WdK7YuvMJSX5Kj/+Hla0C3JLEjgkCxzpb93ngJ4+GXxopvHdk6UqxL0YWG1xxkbl7/6Y1BdkDfe8kYxcVKX3fX5Yg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5647A564448079479BD732839C86EA18@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1730017AbgJASZW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Oct 2020 14:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729927AbgJASZW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Oct 2020 14:25:22 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30E31C0613D0
+        for <linux-nfs@vger.kernel.org>; Thu,  1 Oct 2020 11:25:20 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id g4so6706072edk.0
+        for <linux-nfs@vger.kernel.org>; Thu, 01 Oct 2020 11:25:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Eu48F29p4N8zbgxpWXhOr/e84QySfOIaZsSTj0F0bCs=;
+        b=YmjH6oWgHsLX0r5TpfB9JWgWjEyVSBwQ1gWq6Hgc5uMUSXX0lVijfKo3z+EdwWsVic
+         AWuvCTyODdstwAxaDDBq/bTLJPAziUn9+mINfEt07XKtTHYGGbnpX+66sMoiZsFQhb3k
+         VvvtNjrMQg+VWfKBoMUhN+YC9qG7fKScaFhqF+8WaQW0DN0iCah1KVDF7Drwry7WVwiR
+         bFqOC4ahYByIov5A+2adI2ir312q6mqidY7CmkU9xg9nVVI0n+lewX853lMUfwGQmhnV
+         jwxS9c594ChUNoOrPALudXYJlYsUzeY4kmDhOjMC1aYr8BNdoMyplcc6TPTXiMcFevR3
+         l2lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Eu48F29p4N8zbgxpWXhOr/e84QySfOIaZsSTj0F0bCs=;
+        b=tu5a/vL00WZtlowKGUVrEdyHyC2cDXKWzuK6mvJPZj7pcZrwl4Isg3J+rBh1JKw1tY
+         im3yODAGBKVOVWMa6ZYp4uTNLWLE3vI5fwAwFEBwg/bABqirfbnIjoR5u2xef0T3vBmn
+         bs6MjM+WFHKnEYP0mzOBc11wbuH/0fvgpu0pu02lebnrC/huOzanf9h1WDzIaqkX6/SO
+         /F3Vqo+u7TW8+eOktraiHGyr/IzDVwb3yQGlf8V9vimxPKvCWEogAhIkkEdWQ6MVchyX
+         2qZKdLJrG0ZrmZxVAK44w5oNhSPpPfQmIxLecVOM+8IxqdMWhT42AcyaCQpHXN1DbUgP
+         ZFEg==
+X-Gm-Message-State: AOAM532uGDUE9kNg82tfZGscjxbn/cEZPQmcPlzHGFhC+ngkSmgd2o1n
+        H7PJOhIlU+3oDVadsBbQFB8GD1BM+EtyIimbbrHDAH7LtQA=
+X-Google-Smtp-Source: ABdhPJzgK3v06oVmVuW2lsZHOXanOFlG4pLfy3foxyMRvChBej4jrPx9V4p4C0biYJJ5JjrfluvFKrvbrZoQXN4LpuE=
+X-Received: by 2002:a05:6402:18d:: with SMTP id r13mr9334987edv.267.1601576718764;
+ Thu, 01 Oct 2020 11:25:18 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2cca23e-03a5-42ca-dfc2-08d86630e8d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2020 17:39:12.1848
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: u2rAzc7wa60TIXX57wUjt4vBKyuFgk++IA44MXQD7Tify7ZUO1vFVMoz7tdGcCxbb7J0mRYArFzeriY12RFQww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3630
+References: <20200914210508.7701-1-olga.kornievskaia@gmail.com> <ed267a2c190101c53a2d409f7a6b1530ae50e72d.camel@hammerspace.com>
+In-Reply-To: <ed267a2c190101c53a2d409f7a6b1530ae50e72d.camel@hammerspace.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Thu, 1 Oct 2020 14:25:07 -0400
+Message-ID: <CAN-5tyGk6qwC+g+qB8QeTGTXrRUdD7ar5cvRjd9DAyzNO-GzvA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] NFSv4: make cache consistency bitmask dynamic
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA5LTI4IGF0IDEzOjA5IC0wNDAwLCBzY2h1bWFrZXIuYW5uYUBnbWFpbC5j
-b20gd3JvdGU6DQo+IEZyb206IEFubmEgU2NodW1ha2VyIDxBbm5hLlNjaHVtYWtlckBOZXRhcHAu
-Y29tPg0KPiANCj4gVGhpcyBwYXRjaCBhZGRzIHRoZSBhYmlsaXR5IHRvICJyZWFkIGEgaG9sZSIg
-aW50byBhIHNldCBvZiBYRFIgZGF0YQ0KPiBwYWdlcyBieSB0YWtpbmcgdGhlIGZvbGxvd2luZyBz
-dGVwczoNCj4gDQo+IDEpIFNoaWZ0IGFsbCBkYXRhIGFmdGVyIHRoZSBjdXJyZW50IHhkci0+cCB0
-byB0aGUgcmlnaHQsIHBvc3NpYmx5DQo+IGludG8NCj4gICAgdGhlIHRhaWwsDQo+IDIpIFplcm8g
-dGhlIHNwZWNpZmllZCByYW5nZSwgYW5kDQo+IDMpIFVwZGF0ZSB4ZHItPnAgdG8gcG9pbnQgYmV5
-b25kIHRoZSBob2xlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW5uYSBTY2h1bWFrZXIgPEFubmEu
-U2NodW1ha2VyQE5ldGFwcC5jb20+DQo+IC0tLQ0KPiAgaW5jbHVkZS9saW51eC9zdW5ycGMveGRy
-LmggfCAgMSArDQo+ICBuZXQvc3VucnBjL3hkci5jICAgICAgICAgICB8IDczDQo+ICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDc0IGlu
-c2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3N1bnJwYy94ZHIu
-aCBiL2luY2x1ZGUvbGludXgvc3VucnBjL3hkci5oDQo+IGluZGV4IDAyNmVkYmQwNDFkNS4uMzZh
-ODFjMjk1NDJlIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3N1bnJwYy94ZHIuaA0KPiAr
-KysgYi9pbmNsdWRlL2xpbnV4L3N1bnJwYy94ZHIuaA0KPiBAQCAtMjUyLDYgKzI1Miw3IEBAIGV4
-dGVybiBfX2JlMzIgKnhkcl9pbmxpbmVfZGVjb2RlKHN0cnVjdA0KPiB4ZHJfc3RyZWFtICp4ZHIs
-IHNpemVfdCBuYnl0ZXMpOw0KPiAgZXh0ZXJuIHVuc2lnbmVkIGludCB4ZHJfcmVhZF9wYWdlcyhz
-dHJ1Y3QgeGRyX3N0cmVhbSAqeGRyLCB1bnNpZ25lZA0KPiBpbnQgbGVuKTsNCj4gIGV4dGVybiB2
-b2lkIHhkcl9lbnRlcl9wYWdlKHN0cnVjdCB4ZHJfc3RyZWFtICp4ZHIsIHVuc2lnbmVkIGludA0K
-PiBsZW4pOw0KPiAgZXh0ZXJuIGludCB4ZHJfcHJvY2Vzc19idWYoc3RydWN0IHhkcl9idWYgKmJ1
-ZiwgdW5zaWduZWQgaW50IG9mZnNldCwNCj4gdW5zaWduZWQgaW50IGxlbiwgaW50ICgqYWN0b3Ip
-KHN0cnVjdCBzY2F0dGVybGlzdCAqLCB2b2lkICopLCB2b2lkDQo+ICpkYXRhKTsNCj4gK2V4dGVy
-biB1aW50NjRfdCB4ZHJfZXhwYW5kX2hvbGUoc3RydWN0IHhkcl9zdHJlYW0gKiwgdWludDY0X3Qs
-DQo+IHVpbnQ2NF90KTsNCj4gIA0KPiAgLyoqDQo+ICAgKiB4ZHJfc3RyZWFtX3JlbWFpbmluZyAt
-IFJldHVybiB0aGUgbnVtYmVyIG9mIGJ5dGVzIHJlbWFpbmluZyBpbg0KPiB0aGUgc3RyZWFtDQo+
-IGRpZmYgLS1naXQgYS9uZXQvc3VucnBjL3hkci5jIGIvbmV0L3N1bnJwYy94ZHIuYw0KPiBpbmRl
-eCBkOGM5NTU1YzZmMmIuLjI0YmFmMDUyZTZlNiAxMDA2NDQNCj4gLS0tIGEvbmV0L3N1bnJwYy94
-ZHIuYw0KPiArKysgYi9uZXQvc3VucnBjL3hkci5jDQo+IEBAIC0zOTAsNiArMzkwLDQyIEBAIF9j
-b3B5X2Zyb21fcGFnZXMoY2hhciAqcCwgc3RydWN0IHBhZ2UgKipwYWdlcywNCj4gc2l6ZV90IHBn
-YmFzZSwgc2l6ZV90IGxlbikNCj4gIH0NCj4gIEVYUE9SVF9TWU1CT0xfR1BMKF9jb3B5X2Zyb21f
-cGFnZXMpOw0KPiAgDQo+ICsvKioNCj4gKyAqIF96ZXJvX3BhZ2VzDQo+ICsgKiBAcGFnZXM6IGFy
-cmF5IG9mIHBhZ2VzDQo+ICsgKiBAcGdiYXNlOiBiZWdpbm5pbmcgcGFnZSB2ZWN0b3IgYWRkcmVz
-cw0KPiArICogQGxlbjogbGVuZ3RoDQo+ICsgKi8NCj4gK3N0YXRpYyB2b2lkDQo+ICtfemVyb19w
-YWdlcyhzdHJ1Y3QgcGFnZSAqKnBhZ2VzLCBzaXplX3QgcGdiYXNlLCBzaXplX3QgbGVuKQ0KPiAr
-ew0KPiArCXN0cnVjdCBwYWdlICoqcGFnZTsNCj4gKwljaGFyICp2cGFnZTsNCj4gKwlzaXplX3Qg
-emVybzsNCj4gKw0KPiArCXBhZ2UgPSBwYWdlcyArIChwZ2Jhc2UgPj4gUEFHRV9TSElGVCk7DQo+
-ICsJcGdiYXNlICY9IH5QQUdFX01BU0s7DQo+ICsNCj4gKwlkbyB7DQo+ICsJCXplcm8gPSBQQUdF
-X1NJWkUgLSBwZ2Jhc2U7DQo+ICsJCWlmICh6ZXJvID4gbGVuKQ0KPiArCQkJemVybyA9IGxlbjsN
-Cj4gKw0KPiArCQl2cGFnZSA9IGttYXBfYXRvbWljKCpwYWdlKTsNCj4gKwkJbWVtc2V0KHZwYWdl
-ICsgcGdiYXNlLCAwLCB6ZXJvKTsNCj4gKwkJa3VubWFwX2F0b21pYyh2cGFnZSk7DQo+ICsNCj4g
-KwkJcGdiYXNlICs9IHplcm87DQo+ICsJCWlmIChwZ2Jhc2UgPT0gUEFHRV9TSVpFKSB7DQoNCkht
-bS4uLi4gRG8gd2UgbmVlZCB0byBtYWtlIHRoaXMgY29uZGl0aW9uYWw/IEFmdGVyIGFsbCwgaWYg
-cGdiYXNlICE9DQpQQUdFX1NJWkUgaW4gdGhpcyBjYXNlLCB0aGVuIHplcm8gPT0gbGVuLCBpbiB3
-aGljaCBjYXNlIHdlIHN0aWxsIHdhbnQNCnRvIGZsdXNoX2RjYWNoZV9wYWdlKCpwYWdlKSBhbmQg
-dGhlbiBleGl0Lg0KDQo+ICsJCQlmbHVzaF9kY2FjaGVfcGFnZSgqcGFnZSk7DQo+ICsJCQlwZ2Jh
-c2UgPSAwOw0KPiArCQkJcGFnZSsrOw0KPiArCQl9DQo+ICsNCj4gKwl9IHdoaWxlICgobGVuIC09
-IHplcm8pICE9IDApOw0KPiArCWZsdXNoX2RjYWNoZV9wYWdlKCpwYWdlKTsNCj4gK30NCj4gKw0K
-PiAgLyoqDQo+ICAgKiB4ZHJfc2hyaW5rX2J1ZmhlYWQNCj4gICAqIEBidWY6IHhkcl9idWYNCj4g
-QEAgLTExNDEsNiArMTE3Nyw0MyBAQCB1bnNpZ25lZCBpbnQgeGRyX3JlYWRfcGFnZXMoc3RydWN0
-IHhkcl9zdHJlYW0NCj4gKnhkciwgdW5zaWduZWQgaW50IGxlbikNCj4gIH0NCj4gIEVYUE9SVF9T
-WU1CT0xfR1BMKHhkcl9yZWFkX3BhZ2VzKTsNCj4gIA0KPiArdWludDY0X3QgeGRyX2V4cGFuZF9o
-b2xlKHN0cnVjdCB4ZHJfc3RyZWFtICp4ZHIsIHVpbnQ2NF90IG9mZnNldCwNCj4gdWludDY0X3Qg
-bGVuZ3RoKQ0KPiArew0KPiArCXN0cnVjdCB4ZHJfYnVmICpidWYgPSB4ZHItPmJ1ZjsNCj4gKwl1
-bnNpZ25lZCBpbnQgYnl0ZXM7DQo+ICsJdW5zaWduZWQgaW50IGZyb207DQo+ICsJdW5zaWduZWQg
-aW50IHRydW5jYXRlZCA9IDA7DQo+ICsNCj4gKwlpZiAoKG9mZnNldCArIGxlbmd0aCkgPCBvZmZz
-ZXQgfHwNCj4gKwkgICAgKG9mZnNldCArIGxlbmd0aCkgPiBidWYtPnBhZ2VfbGVuKQ0KPiArCQls
-ZW5ndGggPSBidWYtPnBhZ2VfbGVuIC0gb2Zmc2V0Ow0KPiArDQo+ICsJeGRyX3JlYWxpZ25fcGFn
-ZXMoeGRyKTsNCj4gKwlmcm9tID0geGRyX3BhZ2VfcG9zKHhkcik7DQo+ICsJYnl0ZXMgPSB4ZHIt
-Pm53b3JkcyA8PCAyOw0KDQpIbW0uLi4gV29uJ3QgdGhpcyBtZWFuIHRoYXQgd2UgYWxzbyBpbmNs
-dWRlIHRoZSBwYWRkaW5nIGF0IHRoZSBlbmQgb2YNCnRoZSByZWFkIGJ1ZmZlciBpbiAnYnl0ZXMn
-Pw0KDQo+ICsNCj4gKwlpZiAob2Zmc2V0ICsgbGVuZ3RoICsgYnl0ZXMgPiBidWYtPnBhZ2VfbGVu
-KSB7DQo+ICsJCXVuc2lnbmVkIGludCBzaGlmdCA9IChvZmZzZXQgKyBsZW5ndGggKyBieXRlcykg
-LSBidWYtDQo+ID5wYWdlX2xlbjsNCj4gKwkJdW5zaWduZWQgaW50IHJlcyA9IF9zaGlmdF9kYXRh
-X3JpZ2h0X3RhaWwoYnVmLCBmcm9tICsNCj4gYnl0ZXMgLSBzaGlmdCwgc2hpZnQpOw0KPiArCQl0
-cnVuY2F0ZWQgPSBzaGlmdCAtIHJlczsNCj4gKwkJeGRyLT5ud29yZHMgLT0gWERSX1FVQURMRU4o
-dHJ1bmNhdGVkKTsNCj4gKwkJYnl0ZXMgLT0gc2hpZnQ7DQo+ICsJfQ0KPiArDQo+ICsJLyogTm93
-IG1vdmUgdGhlIHBhZ2UgZGF0YSBvdmVyIGFuZCB6ZXJvIHBhZ2VzICovDQo+ICsJaWYgKGJ5dGVz
-ID4gMCkNCj4gKwkJX3NoaWZ0X2RhdGFfcmlnaHRfcGFnZXMoYnVmLT5wYWdlcywNCj4gKwkJCQkJ
-YnVmLT5wYWdlX2Jhc2UgKyBvZmZzZXQgKw0KPiBsZW5ndGgsDQo+ICsJCQkJCWJ1Zi0+cGFnZV9i
-YXNlICsgZnJvbSwNCj4gKwkJCQkJYnl0ZXMpOw0KPiArCV96ZXJvX3BhZ2VzKGJ1Zi0+cGFnZXMs
-IGJ1Zi0+cGFnZV9iYXNlICsgb2Zmc2V0LCBsZW5ndGgpOw0KPiArDQo+ICsJYnVmLT5sZW4gKz0g
-bGVuZ3RoIC0gKGZyb20gLSBvZmZzZXQpIC0gdHJ1bmNhdGVkOw0KPiArCXhkcl9zZXRfcGFnZSh4
-ZHIsIG9mZnNldCArIGxlbmd0aCwgUEFHRV9TSVpFKTsNCj4gKwlyZXR1cm4gbGVuZ3RoOw0KPiAr
-fQ0KPiArRVhQT1JUX1NZTUJPTF9HUEwoeGRyX2V4cGFuZF9ob2xlKTsNCj4gKw0KPiAgLyoqDQo+
-ICAgKiB4ZHJfZW50ZXJfcGFnZSAtIGRlY29kZSBkYXRhIGZyb20gdGhlIFhEUiBwYWdlDQo+ICAg
-KiBAeGRyOiBwb2ludGVyIHRvIHhkcl9zdHJlYW0gc3RydWN0DQotLSANClRyb25kIE15a2xlYnVz
-dA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVi
-dXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Thu, Oct 1, 2020 at 1:14 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> Hi Olga,
+>
+> On Mon, 2020-09-14 at 17:05 -0400, Olga Kornievskaia wrote:
+> > From: Olga Kornievskaia <kolga@netapp.com>
+> >
+> > Client uses static bitmask for GETATTR on CLOSE/WRITE/DELEGRETURN
+> > and ignores the fact that it might have some attributes marked
+> > invalid in its cache. Compared to v3 where all attributes are
+> > retrieved in postop attributes, v4's cache is frequently out of
+> > sync and leads to standalone GETATTRs being sent to the server.
+> >
+> > Instead, in addition to the minimum cache consistency attributes
+> > also check cache_validity and adjust the GETATTR request accordingly.
+> >
+> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > ---
+> >  fs/nfs/nfs4proc.c       | 45 ++++++++++++++++++++++++++++++++++++++-
+> > --
+> >  include/linux/nfs_xdr.h |  6 +++---
+> >  2 files changed, 45 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > index 6e95c85fe395..d7434a3697d9 100644
+> > --- a/fs/nfs/nfs4proc.c
+> > +++ b/fs/nfs/nfs4proc.c
+> > @@ -107,6 +107,9 @@ static int nfs41_test_stateid(struct nfs_server
+> > *, nfs4_stateid *,
+> >  static int nfs41_free_stateid(struct nfs_server *, const
+> > nfs4_stateid *,
+> >               const struct cred *, bool);
+> >  #endif
+> > +static void nfs4_bitmask_adjust(__u32 *bitmask, struct inode *inode,
+> > +             struct nfs_server *server,
+> > +             struct nfs4_label *label);
+> >
+> >  #ifdef CONFIG_NFS_V4_SECURITY_LABEL
+> >  static inline struct nfs4_label *
+> > @@ -3632,9 +3635,10 @@ static void nfs4_close_prepare(struct rpc_task
+> > *task, void *data)
+> >
+> >       if (calldata->arg.fmode == 0 || calldata->arg.fmode ==
+> > FMODE_READ) {
+> >               /* Close-to-open cache consistency revalidation */
+> > -             if (!nfs4_have_delegation(inode, FMODE_READ))
+> > +             if (!nfs4_have_delegation(inode, FMODE_READ)) {
+> >                       calldata->arg.bitmask = NFS_SERVER(inode)-
+> > >cache_consistency_bitmask;
+> > -             else
+> > +                     nfs4_bitmask_adjust(calldata->arg.bitmask,
+> > inode, NFS_SERVER(inode), NULL);
+> > +             } else
+> >                       calldata->arg.bitmask = NULL;
+> >       }
+> >
+> > @@ -5360,6 +5364,38 @@ bool
+> > nfs4_write_need_cache_consistency_data(struct nfs_pgio_header *hdr)
+> >       return nfs4_have_delegation(hdr->inode, FMODE_READ) == 0;
+> >  }
+> >
+> > +static void nfs4_bitmask_adjust(__u32 *bitmask, struct inode *inode,
+> > +                             struct nfs_server *server,
+> > +                             struct nfs4_label *label)
+> > +{
+> > +
+> > +     unsigned long cache_validity = READ_ONCE(NFS_I(inode)-
+> > >cache_validity);
+> > +
+> > +     if ((cache_validity & NFS_INO_INVALID_DATA) ||
+> > +             (cache_validity & NFS_INO_REVAL_PAGECACHE) ||
+> > +             (cache_validity & NFS_INO_REVAL_FORCED) ||
+> > +             (cache_validity & NFS_INO_INVALID_OTHER))
+> > +             nfs4_bitmap_copy_adjust(bitmask, nfs4_bitmask(server,
+> > label), inode);
+> > +
+> > +     if (cache_validity & NFS_INO_INVALID_ATIME)
+> > +             bitmask[1] |= FATTR4_WORD1_TIME_ACCESS;
+> > +     if (cache_validity & NFS_INO_INVALID_ACCESS)
+> > +             bitmask[0] |= FATTR4_WORD1_MODE | FATTR4_WORD1_OWNER |
+> > +                             FATTR4_WORD1_OWNER_GROUP;
+> > +     if (cache_validity & NFS_INO_INVALID_ACL)
+> > +             bitmask[0] |= FATTR4_WORD0_ACL;
+> > +     if (cache_validity & NFS_INO_INVALID_LABEL)
+> > +             bitmask[2] |= FATTR4_WORD2_SECURITY_LABEL;
+> > +     if (cache_validity & NFS_INO_INVALID_CTIME)
+> > +             bitmask[0] |= FATTR4_WORD0_CHANGE;
+> > +     if (cache_validity & NFS_INO_INVALID_MTIME)
+> > +             bitmask[1] |= FATTR4_WORD1_TIME_MODIFY;
+> > +     if (cache_validity & NFS_INO_INVALID_SIZE)
+> > +             bitmask[0] |= FATTR4_WORD0_SIZE;
+> > +     if (cache_validity & NFS_INO_INVALID_BLOCKS)
+> > +             bitmask[1] |= FATTR4_WORD1_SPACE_USED;
+>
+> If we hold a delegation (which we could do when called
+> from nfs4_proc_write_setup()) then we only want to get extra attributes
+> if the NFS_INO_REVAL_FORCED flag is also set.
+
+If we hold a delegation then nfs4_write_need_cache_consistency_data()
+would be true and no getattr would be added (or need to be adjusted).
+Am I mis-reading your comment?
+
+> > +}
+> > +
+> >  static void nfs4_proc_write_setup(struct nfs_pgio_header *hdr,
+> >                                 struct rpc_message *msg,
+> >                                 struct rpc_clnt **clnt)
+> > @@ -5369,8 +5405,10 @@ static void nfs4_proc_write_setup(struct
+> > nfs_pgio_header *hdr,
+> >       if (!nfs4_write_need_cache_consistency_data(hdr)) {
+> >               hdr->args.bitmask = NULL;
+> >               hdr->res.fattr = NULL;
+> > -     } else
+> > +     } else {
+> >               hdr->args.bitmask = server->cache_consistency_bitmask;
+> > +             nfs4_bitmask_adjust(hdr->args.bitmask, hdr->inode,
+> > server, NULL);
+> > +     }
+> >
+> >       if (!hdr->pgio_done_cb)
+> >               hdr->pgio_done_cb = nfs4_write_done_cb;
+> > @@ -6406,6 +6444,7 @@ static int _nfs4_proc_delegreturn(struct inode
+> > *inode, const struct cred *cred,
+> >       data->args.fhandle = &data->fh;
+> >       data->args.stateid = &data->stateid;
+> >       data->args.bitmask = server->cache_consistency_bitmask;
+> > +     nfs4_bitmask_adjust(data->args.bitmask, inode, server, NULL);
+> >       nfs_copy_fh(&data->fh, NFS_FH(inode));
+> >       nfs4_stateid_copy(&data->stateid, stateid);
+> >       data->res.fattr = &data->fattr;
+> > diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+> > index 9408f3252c8e..bafbf6695796 100644
+> > --- a/include/linux/nfs_xdr.h
+> > +++ b/include/linux/nfs_xdr.h
+> > @@ -525,7 +525,7 @@ struct nfs_closeargs {
+> >       struct nfs_seqid *      seqid;
+> >       fmode_t                 fmode;
+> >       u32                     share_access;
+> > -     const u32 *             bitmask;
+> > +     u32 *                   bitmask;
+> >       struct nfs4_layoutreturn_args *lr_args;
+> >  };
+> >
+> > @@ -608,7 +608,7 @@ struct nfs4_delegreturnargs {
+> >       struct nfs4_sequence_args       seq_args;
+> >       const struct nfs_fh *fhandle;
+> >       const nfs4_stateid *stateid;
+> > -     const u32 * bitmask;
+> > +     u32 * bitmask;
+> >       struct nfs4_layoutreturn_args *lr_args;
+> >  };
+> >
+> > @@ -648,7 +648,7 @@ struct nfs_pgio_args {
+> >       union {
+> >               unsigned int            replen;                 /*
+> > used by read */
+> >               struct {
+> > -                     const u32 *             bitmask;        /*
+> > used by write */
+> > +                     u32 *                   bitmask;        /*
+> > used by write */
+> >                       enum nfs3_stable_how    stable;         /*
+> > used by write */
+> >               };
+> >       };
+>
+> Otherwise this looks good. Thanks!
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
