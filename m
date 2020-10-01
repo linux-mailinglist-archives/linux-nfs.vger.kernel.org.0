@@ -2,199 +2,188 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23DC328041B
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Oct 2020 18:39:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7B802804E8
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Oct 2020 19:15:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732026AbgJAQjo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Oct 2020 12:39:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731917AbgJAQjo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 1 Oct 2020 12:39:44 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD97C2072E;
-        Thu,  1 Oct 2020 16:39:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601570383;
-        bh=IADk8ebl38/MAJx5nrLp8k98RP86nFcdWAgzzHWJdzk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=wxl/GJXTy2jKMfetuTCRml3K72vSg9QcNUc77tYEffuJ7wsXbvzlxmbLL3svgrueM
-         E89PohVrkN8cgcedyjHbAisB+AQpSiz3iin/jcOY/KHspWb7PuRB6fWuxQ/pO9hgrm
-         LItUEg5Uj4HN2bwR8Y96TPZmsa2m4398AB1ufH5o=
-Message-ID: <cab47436d0050570cafaf9c9c4a02ee6202215fd.camel@kernel.org>
-Subject: Re: [Linux-cachefs] Adventures in NFS re-exporting
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "daire@dneg.com" <daire@dneg.com>
-Cc:     "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Date:   Thu, 01 Oct 2020 12:39:41 -0400
-In-Reply-To: <7cdb496a2b77dd62b8e6373c28926f11a4816d49.camel@hammerspace.com>
-References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
-         <1155061727.42788071.1600777874179.JavaMail.zimbra@dneg.com>
-         <97eff1ee2886c14bcd7972b17330f18ceacdef78.camel@kernel.org>
-         <1309604906.55950004.1601510969548.JavaMail.zimbra@dneg.com>
-         <3243730b0661de0ac0864a9bb5375f894b266220.camel@kernel.org>
-         <7cdb496a2b77dd62b8e6373c28926f11a4816d49.camel@hammerspace.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        id S1732415AbgJARPB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Oct 2020 13:15:01 -0400
+Received: from mail-bn8nam11on2110.outbound.protection.outlook.com ([40.107.236.110]:61355
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732380AbgJARO6 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 1 Oct 2020 13:14:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nAjug8lud+pDQ4vLkU6Mw1arBOAhOyJdhhLGkhiuajlxYhAuNih/TTA85IpkDKLGlCKhEkb+8Z4zr6IzYmBeNwTt73QcBin/7SJjp7A/P4wpHdjHobGwCTVT3x8TlVY0W02X84Pk+UGcY5wxsnXy9qR6c+UCjuy1KVStB1OS9wBgC8jbpvmkqgufGjya9ne6SSsRu9P6JF2Hr2ZrxiDNY7hn1qLlHsAwHYyiAJvAEAnxXUbAYpylQdIFFkDSx6u3bEdt6mJgTOYp6ZP7juHfxAw8GmsfZ6H8Gygc7smyq0ZGExztwrygti0RnzUM0zRXgkHUf/WSU828ryF0Bz6c1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FdurLLDzKvx8rzMGbu/Cw4o2rvIqXzn2/KNbFILfw4k=;
+ b=Eci4P179m4d31G/duMct7YyE59c1WcNsRUECr1FtzWhf5kdeBqP4Tb02xjbmuwYHFlZEkXmonAGXlz6u74+Co9ftTPbG1Tw7gaZ+jpvPjOA6kvwDkf7PRDDY7w7i4Gh2zqLSTmG8eyk10ZNGePQR0gRxppFekM1bxyFQInFMivE5yl3PPVyqP3JN0nTcuENX1aXKNcBPJFnmSJB1X/KPJvDpefdnCEOcixx46Lohk5MsPNBN67iyevlXvIJ3uITBdFRsEfcaXGan7B8YankFwxCGf0uV9TeY4SM55uwSMjZg/IipasSRjZf3Z38U0yonRctBPubWDZlB2OiEQ9+PTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FdurLLDzKvx8rzMGbu/Cw4o2rvIqXzn2/KNbFILfw4k=;
+ b=OUTeiSHZ+106sjZPvy2TOgs1Q0oV5R+gTUVjbZnfSNoxtPIDttAhRDDlsmNR1btWebAwx5DN3cz5XIq3lUZLVoPqddH572bgDhFVGCphq3IEbqFEQxWF6tKmVr9nzcYo1brNAoQcYyXEpDk3/LnSuN8y5EuB85I5zzhi2Neh1Wc=
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
+ by MN2PR13MB3341.namprd13.prod.outlook.com (2603:10b6:208:164::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.13; Thu, 1 Oct
+ 2020 17:14:18 +0000
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e8a1:6acc:70f0:ef39]) by MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e8a1:6acc:70f0:ef39%6]) with mapi id 15.20.3433.037; Thu, 1 Oct 2020
+ 17:14:18 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 1/1] NFSv4: make cache consistency bitmask dynamic
+Thread-Topic: [PATCH 1/1] NFSv4: make cache consistency bitmask dynamic
+Thread-Index: AQHWitq7HgXAsmSgb0eFRw//yH1PTamDFt8A
+Date:   Thu, 1 Oct 2020 17:14:18 +0000
+Message-ID: <ed267a2c190101c53a2d409f7a6b1530ae50e72d.camel@hammerspace.com>
+References: <20200914210508.7701-1-olga.kornievskaia@gmail.com>
+In-Reply-To: <20200914210508.7701-1-olga.kornievskaia@gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: netapp.com; dkim=none (message not signed)
+ header.d=none;netapp.com; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 900e3e60-17eb-4056-249a-08d8662d6e72
+x-ms-traffictypediagnostic: MN2PR13MB3341:
+x-microsoft-antispam-prvs: <MN2PR13MB33410F0E27A6E8191D86F8CAB8300@MN2PR13MB3341.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XJl2QRADLdrFeqP+5LGBgRBQ9wqhAH80GVpaL0MTjUKpAP+c36CQ68NrL8m7XdzND0v1i7z+Qco3/E3XSUkXuSy9tDjxsZ3KWCoVfpppiNT/DtqR2TPiUkDkctYWyYzYJLBIO3w88v181QvIt4co4GA2YrwMCFvxiyhFJtDxMcdBOMJmnpAMb+TephtB7smKHLqgn0Z7eyW+8Qj1EBq5fOKqHQuzOo6Ac12Gzi0tLLNf0xKhHOc4l4ok30LMCqbj6g0HE901mEOLBZ0wA4EAqyknQknmRGdmb7Qo4+2mKmvM6NDV3bJP3d7bIwLgv2YizLTufW3TCQ8v7Xgo2wPWLQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(39830400003)(396003)(346002)(366004)(136003)(186003)(6506007)(2616005)(36756003)(6486002)(2906002)(8676002)(66556008)(26005)(66476007)(64756008)(316002)(8936002)(86362001)(66446008)(4326008)(110136005)(5660300002)(71200400001)(478600001)(91956017)(76116006)(66946007)(83380400001)(6512007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: WJV5S87K0A4yNU9AF2Fq7cBJVOmyjnPrEhg3r+Q9O8RIxFCF6CgFMfbkxamBD7VNKdZj05X9/TyTBe3M4Vq+zJN3ldzRF3f/ASNGOacCuSyYy9mCT7bUTf3FxKVImA6p4X++pZ8PcqaUmtsxWkxSdb76OFdYLkxRYhbaL9DcTWm1Vihk9V4emXBJEc5/akc+sUcOPBFkFTeEzuuqdnj5brjphiCgDEsA75Il9PuqxpRY6RT1OrN5XKdYpTUfGXzfdE6yOc5lTLhRAveeLsdU62VUU2KduR6hhKi4GQEJNMc7pcwT0PBDFhycVHK+3A3DzKv4RoFNBHkx/ZIugw9Oe2wi7Ok8R4YtBVzYsFb72H42S0EBThsWvG2vHx091Aad5PUoQY2ut5Rb0/P8/JU2J4KoRHYT1DMAL4vllrkqYf4ktOxO5wo3YmS0nyQnqETU3CJcLjd9ET6ZtlSO/v21TtOdcIieg+bla+zFx54QcUNuhEXdvmX9goGagED2pd/uFcdBdW4v7hcnzR+yNwhpskGOGHhMmlDgCCER6R6VuPyStatD1wdWndH31VE25Zih9rLvCiefeJpm9GbD5qqmn6wMeJn0A6NoTiPTaybCbpu0Fqd/B39rBqXIdhxxF+JxYF63oKYoFTdGsc+f306Q5Q==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BCA7F9A0AA47AE4B9FD75EB09749AE57@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 900e3e60-17eb-4056-249a-08d8662d6e72
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2020 17:14:18.4923
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LzYx3KEcP+X3Fhfepf6Fo3N7o37pJzWx/Mp+DP0uM1IIdEtmv3Op7S9M8HRR78+vJ9j8V/ZIgPCQrJd0vwjGDw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3341
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2020-10-01 at 12:38 +0000, Trond Myklebust wrote:
-> On Thu, 2020-10-01 at 06:36 -0400, Jeff Layton wrote:
-> > On Thu, 2020-10-01 at 01:09 +0100, Daire Byrne wrote:
-> > > ----- On 30 Sep, 2020, at 20:30, Jeff Layton jlayton@kernel.org
-> > > wrote:
-> > > 
-> > > > On Tue, 2020-09-22 at 13:31 +0100, Daire Byrne wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > I just thought I'd flesh out the other two issues I have found
-> > > > > with re-exporting
-> > > > > that are ultimately responsible for the biggest performance
-> > > > > bottlenecks. And
-> > > > > both of them revolve around the caching of metadata file
-> > > > > lookups in the NFS
-> > > > > client.
-> > > > > 
-> > > > > Especially for the case where we are re-exporting a server many
-> > > > > milliseconds
-> > > > > away (i.e. on-premise -> cloud), we want to be able to control
-> > > > > how much the
-> > > > > client caches metadata and file data so that it's many LAN
-> > > > > clients all benefit
-> > > > > from the re-export server only having to do the WAN lookups
-> > > > > once (within a
-> > > > > specified coherency time).
-> > > > > 
-> > > > > Keeping the file data in the vfs page cache or on disk using
-> > > > > fscache/cachefiles
-> > > > > is fairly straightforward, but keeping the metadata cached is
-> > > > > particularly
-> > > > > difficult. And without the cached metadata we introduce long
-> > > > > delays before we
-> > > > > can serve the already present and locally cached file data to
-> > > > > many waiting
-> > > > > clients.
-> > > > > 
-> > > > > ----- On 7 Sep, 2020, at 18:31, Daire Byrne daire@dneg.com
-> > > > > wrote:
-> > > > > > 2) If we cache metadata on the re-export server using
-> > > > > > actimeo=3600,nocto we can
-> > > > > > cut the network packets back to the origin server to zero for
-> > > > > > repeated lookups.
-> > > > > > However, if a client of the re-export server walks paths and
-> > > > > > memory maps those
-> > > > > > files (i.e. loading an application), the re-export server
-> > > > > > starts issuing
-> > > > > > unexpected calls back to the origin server again,
-> > > > > > ignoring/invalidating the
-> > > > > > re-export server's NFS client cache. We worked around this
-> > > > > > this by patching an
-> > > > > > inode/iversion validity check in inode.c so that the NFS
-> > > > > > client cache on the
-> > > > > > re-export server is used. I'm not sure about the correctness
-> > > > > > of this patch but
-> > > > > > it works for our corner case.
-> > > > > 
-> > > > > If we use actimeo=3600,nocto (say) to mount a remote software
-> > > > > volume on the
-> > > > > re-export server, we can successfully cache the loading of
-> > > > > applications and
-> > > > > walking of paths directly on the re-export server such that
-> > > > > after a couple of
-> > > > > runs, there are practically zero packets back to the
-> > > > > originating NFS server
-> > > > > (great!). But, if we then do the same thing on a client which
-> > > > > is mounting that
-> > > > > re-export server, the re-export server now starts issuing lots
-> > > > > of calls back to
-> > > > > the originating server and invalidating it's client cache
-> > > > > (bad!).
-> > > > > 
-> > > > > I'm not exactly sure why, but the iversion of the inode gets
-> > > > > changed locally
-> > > > > (due to atime modification?) most likely via invocation of
-> > > > > method
-> > > > > inode_inc_iversion_raw. Each time it gets incremented the
-> > > > > following call to
-> > > > > validate attributes detects changes causing it to be reloaded
-> > > > > from the
-> > > > > originating server.
-> > > > > 
-> > > > 
-> > > > I'd expect the change attribute to track what's in actual inode
-> > > > on the
-> > > > "home" server. The NFS client is supposed to (mostly) keep the
-> > > > raw
-> > > > change attribute in its i_version field.
-> > > > 
-> > > > The only place we call inode_inc_iversion_raw is in
-> > > > nfs_inode_add_request, which I don't think you'd be hitting
-> > > > unless you
-> > > > were writing to the file while holding a write delegation.
-> > > > 
-> > > > What sort of server is hosting the actual data in your setup?
-> > > 
-> > > We mostly use RHEL7.6 NFS servers with XFS backed filesystems and a
-> > > couple of (older) Netapps too. The re-export server is running the
-> > > latest mainline kernel(s).
-> > > 
-> > > As far as I can make out, both these originating (home) server
-> > > types exhibit a similar (but not exactly the same) effect on the
-> > > Linux NFS client cache when it is being re-exported and accessed by
-> > > other clients. I can replicate it when only using a read-only mount
-> > > at every hop so I don't think that writes are related.
-> > > 
-> > > Our RHEL7 NFS servers actually mount XFS with noatime too so any
-> > > atime updates that might be causing this client invalidation (which
-> > > is what I initially thought) are ultimately a wasted effort.
-> > > 
-> > 
-> > Ok. I suspect there is a bug here somewhere, but with such a
-> > complicated
-> > setup though it's not clear to me where that bug would be though. You
-> > might need to do some packet sniffing and look at what the servers
-> > are
-> > sending for change attributes.
-> > 
-> > nfsd4_change_attribute does mix in the ctime, so your hunch about the
-> > atime may be correct. atime updates imply a ctime update and that
-> > could
-> > cause nfsd to continually send a new one, even on files that aren't
-> > being changed.
-> 
-> No. Ordinary atime updates due to read() do not trigger a ctime or
-> change attribute update. Only an explicit atime update through, e.g. a
-> call to utimensat() will do that.
-> 
-
-Oh, interesting. I didn't realize that.
-
-> > It might be interesting to doctor nfsd4_change_attribute() to not mix
-> > in
-> > the ctime and see whether that improves things. If it does, then we
-> > may
-> > want to teach nfsd how to avoid doing that for certain types of
-> > filesystems.
-> 
-> NACK. That would cause very incorrect behaviour for the change
-> attribute. It is supposed to change in all circumstances where you
-> ordinarily see a ctime change.
-
-
-I wasn't suggesting this as a real fix, just as a way to see whether we
-understand the problem correctly. I doubt the reexporting machine would
-be bumping the change_attr on its own, and this may tell you whether
-it's the "home" server changing it. There are other ways to determine it
-too though (packet sniffer, for instance).
-
--- 
-Jeff Layton <jlayton@kernel.org>
-
+SGkgT2xnYSwNCg0KT24gTW9uLCAyMDIwLTA5LTE0IGF0IDE3OjA1IC0wNDAwLCBPbGdhIEtvcm5p
+ZXZza2FpYSB3cm90ZToNCj4gRnJvbTogT2xnYSBLb3JuaWV2c2thaWEgPGtvbGdhQG5ldGFwcC5j
+b20+DQo+IA0KPiBDbGllbnQgdXNlcyBzdGF0aWMgYml0bWFzayBmb3IgR0VUQVRUUiBvbiBDTE9T
+RS9XUklURS9ERUxFR1JFVFVSTg0KPiBhbmQgaWdub3JlcyB0aGUgZmFjdCB0aGF0IGl0IG1pZ2h0
+IGhhdmUgc29tZSBhdHRyaWJ1dGVzIG1hcmtlZA0KPiBpbnZhbGlkIGluIGl0cyBjYWNoZS4gQ29t
+cGFyZWQgdG8gdjMgd2hlcmUgYWxsIGF0dHJpYnV0ZXMgYXJlDQo+IHJldHJpZXZlZCBpbiBwb3N0
+b3AgYXR0cmlidXRlcywgdjQncyBjYWNoZSBpcyBmcmVxdWVudGx5IG91dCBvZg0KPiBzeW5jIGFu
+ZCBsZWFkcyB0byBzdGFuZGFsb25lIEdFVEFUVFJzIGJlaW5nIHNlbnQgdG8gdGhlIHNlcnZlci4N
+Cj4gDQo+IEluc3RlYWQsIGluIGFkZGl0aW9uIHRvIHRoZSBtaW5pbXVtIGNhY2hlIGNvbnNpc3Rl
+bmN5IGF0dHJpYnV0ZXMNCj4gYWxzbyBjaGVjayBjYWNoZV92YWxpZGl0eSBhbmQgYWRqdXN0IHRo
+ZSBHRVRBVFRSIHJlcXVlc3QgYWNjb3JkaW5nbHkuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBPbGdh
+IEtvcm5pZXZza2FpYSA8a29sZ2FAbmV0YXBwLmNvbT4NCj4gLS0tDQo+ICBmcy9uZnMvbmZzNHBy
+b2MuYyAgICAgICB8IDQ1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQ0K
+PiAtLQ0KPiAgaW5jbHVkZS9saW51eC9uZnNfeGRyLmggfCAgNiArKystLS0NCj4gIDIgZmlsZXMg
+Y2hhbmdlZCwgNDUgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1n
+aXQgYS9mcy9uZnMvbmZzNHByb2MuYyBiL2ZzL25mcy9uZnM0cHJvYy5jDQo+IGluZGV4IDZlOTVj
+ODVmZTM5NS4uZDc0MzRhMzY5N2Q5IDEwMDY0NA0KPiAtLS0gYS9mcy9uZnMvbmZzNHByb2MuYw0K
+PiArKysgYi9mcy9uZnMvbmZzNHByb2MuYw0KPiBAQCAtMTA3LDYgKzEwNyw5IEBAIHN0YXRpYyBp
+bnQgbmZzNDFfdGVzdF9zdGF0ZWlkKHN0cnVjdCBuZnNfc2VydmVyDQo+ICosIG5mczRfc3RhdGVp
+ZCAqLA0KPiAgc3RhdGljIGludCBuZnM0MV9mcmVlX3N0YXRlaWQoc3RydWN0IG5mc19zZXJ2ZXIg
+KiwgY29uc3QNCj4gbmZzNF9zdGF0ZWlkICosDQo+ICAJCWNvbnN0IHN0cnVjdCBjcmVkICosIGJv
+b2wpOw0KPiAgI2VuZGlmDQo+ICtzdGF0aWMgdm9pZCBuZnM0X2JpdG1hc2tfYWRqdXN0KF9fdTMy
+ICpiaXRtYXNrLCBzdHJ1Y3QgaW5vZGUgKmlub2RlLA0KPiArCQlzdHJ1Y3QgbmZzX3NlcnZlciAq
+c2VydmVyLA0KPiArCQlzdHJ1Y3QgbmZzNF9sYWJlbCAqbGFiZWwpOw0KPiAgDQo+ICAjaWZkZWYg
+Q09ORklHX05GU19WNF9TRUNVUklUWV9MQUJFTA0KPiAgc3RhdGljIGlubGluZSBzdHJ1Y3QgbmZz
+NF9sYWJlbCAqDQo+IEBAIC0zNjMyLDkgKzM2MzUsMTAgQEAgc3RhdGljIHZvaWQgbmZzNF9jbG9z
+ZV9wcmVwYXJlKHN0cnVjdCBycGNfdGFzaw0KPiAqdGFzaywgdm9pZCAqZGF0YSkNCj4gIA0KPiAg
+CWlmIChjYWxsZGF0YS0+YXJnLmZtb2RlID09IDAgfHwgY2FsbGRhdGEtPmFyZy5mbW9kZSA9PQ0K
+PiBGTU9ERV9SRUFEKSB7DQo+ICAJCS8qIENsb3NlLXRvLW9wZW4gY2FjaGUgY29uc2lzdGVuY3kg
+cmV2YWxpZGF0aW9uICovDQo+IC0JCWlmICghbmZzNF9oYXZlX2RlbGVnYXRpb24oaW5vZGUsIEZN
+T0RFX1JFQUQpKQ0KPiArCQlpZiAoIW5mczRfaGF2ZV9kZWxlZ2F0aW9uKGlub2RlLCBGTU9ERV9S
+RUFEKSkgew0KPiAgCQkJY2FsbGRhdGEtPmFyZy5iaXRtYXNrID0gTkZTX1NFUlZFUihpbm9kZSkt
+DQo+ID5jYWNoZV9jb25zaXN0ZW5jeV9iaXRtYXNrOw0KPiAtCQllbHNlDQo+ICsJCQluZnM0X2Jp
+dG1hc2tfYWRqdXN0KGNhbGxkYXRhLT5hcmcuYml0bWFzaywNCj4gaW5vZGUsIE5GU19TRVJWRVIo
+aW5vZGUpLCBOVUxMKTsNCj4gKwkJfSBlbHNlDQo+ICAJCQljYWxsZGF0YS0+YXJnLmJpdG1hc2sg
+PSBOVUxMOw0KPiAgCX0NCj4gIA0KPiBAQCAtNTM2MCw2ICs1MzY0LDM4IEBAIGJvb2wNCj4gbmZz
+NF93cml0ZV9uZWVkX2NhY2hlX2NvbnNpc3RlbmN5X2RhdGEoc3RydWN0IG5mc19wZ2lvX2hlYWRl
+ciAqaGRyKQ0KPiAgCXJldHVybiBuZnM0X2hhdmVfZGVsZWdhdGlvbihoZHItPmlub2RlLCBGTU9E
+RV9SRUFEKSA9PSAwOw0KPiAgfQ0KPiAgDQo+ICtzdGF0aWMgdm9pZCBuZnM0X2JpdG1hc2tfYWRq
+dXN0KF9fdTMyICpiaXRtYXNrLCBzdHJ1Y3QgaW5vZGUgKmlub2RlLA0KPiArCQkJCXN0cnVjdCBu
+ZnNfc2VydmVyICpzZXJ2ZXIsDQo+ICsJCQkJc3RydWN0IG5mczRfbGFiZWwgKmxhYmVsKQ0KPiAr
+ew0KPiArDQo+ICsJdW5zaWduZWQgbG9uZyBjYWNoZV92YWxpZGl0eSA9IFJFQURfT05DRShORlNf
+SShpbm9kZSktDQo+ID5jYWNoZV92YWxpZGl0eSk7DQo+ICsNCj4gKwlpZiAoKGNhY2hlX3ZhbGlk
+aXR5ICYgTkZTX0lOT19JTlZBTElEX0RBVEEpIHx8DQo+ICsJCShjYWNoZV92YWxpZGl0eSAmIE5G
+U19JTk9fUkVWQUxfUEFHRUNBQ0hFKSB8fA0KPiArCQkoY2FjaGVfdmFsaWRpdHkgJiBORlNfSU5P
+X1JFVkFMX0ZPUkNFRCkgfHwNCj4gKwkJKGNhY2hlX3ZhbGlkaXR5ICYgTkZTX0lOT19JTlZBTElE
+X09USEVSKSkNCj4gKwkJbmZzNF9iaXRtYXBfY29weV9hZGp1c3QoYml0bWFzaywgbmZzNF9iaXRt
+YXNrKHNlcnZlciwNCj4gbGFiZWwpLCBpbm9kZSk7DQo+ICsNCj4gKwlpZiAoY2FjaGVfdmFsaWRp
+dHkgJiBORlNfSU5PX0lOVkFMSURfQVRJTUUpDQo+ICsJCWJpdG1hc2tbMV0gfD0gRkFUVFI0X1dP
+UkQxX1RJTUVfQUNDRVNTOw0KPiArCWlmIChjYWNoZV92YWxpZGl0eSAmIE5GU19JTk9fSU5WQUxJ
+RF9BQ0NFU1MpDQo+ICsJCWJpdG1hc2tbMF0gfD0gRkFUVFI0X1dPUkQxX01PREUgfCBGQVRUUjRf
+V09SRDFfT1dORVIgfA0KPiArCQkJCUZBVFRSNF9XT1JEMV9PV05FUl9HUk9VUDsNCj4gKwlpZiAo
+Y2FjaGVfdmFsaWRpdHkgJiBORlNfSU5PX0lOVkFMSURfQUNMKQ0KPiArCQliaXRtYXNrWzBdIHw9
+IEZBVFRSNF9XT1JEMF9BQ0w7DQo+ICsJaWYgKGNhY2hlX3ZhbGlkaXR5ICYgTkZTX0lOT19JTlZB
+TElEX0xBQkVMKQ0KPiArCQliaXRtYXNrWzJdIHw9IEZBVFRSNF9XT1JEMl9TRUNVUklUWV9MQUJF
+TDsNCj4gKwlpZiAoY2FjaGVfdmFsaWRpdHkgJiBORlNfSU5PX0lOVkFMSURfQ1RJTUUpDQo+ICsJ
+CWJpdG1hc2tbMF0gfD0gRkFUVFI0X1dPUkQwX0NIQU5HRTsNCj4gKwlpZiAoY2FjaGVfdmFsaWRp
+dHkgJiBORlNfSU5PX0lOVkFMSURfTVRJTUUpDQo+ICsJCWJpdG1hc2tbMV0gfD0gRkFUVFI0X1dP
+UkQxX1RJTUVfTU9ESUZZOw0KPiArCWlmIChjYWNoZV92YWxpZGl0eSAmIE5GU19JTk9fSU5WQUxJ
+RF9TSVpFKQ0KPiArCQliaXRtYXNrWzBdIHw9IEZBVFRSNF9XT1JEMF9TSVpFOw0KPiArCWlmIChj
+YWNoZV92YWxpZGl0eSAmIE5GU19JTk9fSU5WQUxJRF9CTE9DS1MpDQo+ICsJCWJpdG1hc2tbMV0g
+fD0gRkFUVFI0X1dPUkQxX1NQQUNFX1VTRUQ7DQoNCklmIHdlIGhvbGQgYSBkZWxlZ2F0aW9uICh3
+aGljaCB3ZSBjb3VsZCBkbyB3aGVuIGNhbGxlZA0KZnJvbSBuZnM0X3Byb2Nfd3JpdGVfc2V0dXAo
+KSkgdGhlbiB3ZSBvbmx5IHdhbnQgdG8gZ2V0IGV4dHJhIGF0dHJpYnV0ZXMNCmlmIHRoZSBORlNf
+SU5PX1JFVkFMX0ZPUkNFRCBmbGFnIGlzIGFsc28gc2V0Lg0KDQo+ICt9DQo+ICsNCj4gIHN0YXRp
+YyB2b2lkIG5mczRfcHJvY193cml0ZV9zZXR1cChzdHJ1Y3QgbmZzX3BnaW9faGVhZGVyICpoZHIs
+DQo+ICAJCQkJICBzdHJ1Y3QgcnBjX21lc3NhZ2UgKm1zZywNCj4gIAkJCQkgIHN0cnVjdCBycGNf
+Y2xudCAqKmNsbnQpDQo+IEBAIC01MzY5LDggKzU0MDUsMTAgQEAgc3RhdGljIHZvaWQgbmZzNF9w
+cm9jX3dyaXRlX3NldHVwKHN0cnVjdA0KPiBuZnNfcGdpb19oZWFkZXIgKmhkciwNCj4gIAlpZiAo
+IW5mczRfd3JpdGVfbmVlZF9jYWNoZV9jb25zaXN0ZW5jeV9kYXRhKGhkcikpIHsNCj4gIAkJaGRy
+LT5hcmdzLmJpdG1hc2sgPSBOVUxMOw0KPiAgCQloZHItPnJlcy5mYXR0ciA9IE5VTEw7DQo+IC0J
+fSBlbHNlDQo+ICsJfSBlbHNlIHsNCj4gIAkJaGRyLT5hcmdzLmJpdG1hc2sgPSBzZXJ2ZXItPmNh
+Y2hlX2NvbnNpc3RlbmN5X2JpdG1hc2s7DQo+ICsJCW5mczRfYml0bWFza19hZGp1c3QoaGRyLT5h
+cmdzLmJpdG1hc2ssIGhkci0+aW5vZGUsDQo+IHNlcnZlciwgTlVMTCk7DQo+ICsJfQ0KPiAgDQo+
+ICAJaWYgKCFoZHItPnBnaW9fZG9uZV9jYikNCj4gIAkJaGRyLT5wZ2lvX2RvbmVfY2IgPSBuZnM0
+X3dyaXRlX2RvbmVfY2I7DQo+IEBAIC02NDA2LDYgKzY0NDQsNyBAQCBzdGF0aWMgaW50IF9uZnM0
+X3Byb2NfZGVsZWdyZXR1cm4oc3RydWN0IGlub2RlDQo+ICppbm9kZSwgY29uc3Qgc3RydWN0IGNy
+ZWQgKmNyZWQsDQo+ICAJZGF0YS0+YXJncy5maGFuZGxlID0gJmRhdGEtPmZoOw0KPiAgCWRhdGEt
+PmFyZ3Muc3RhdGVpZCA9ICZkYXRhLT5zdGF0ZWlkOw0KPiAgCWRhdGEtPmFyZ3MuYml0bWFzayA9
+IHNlcnZlci0+Y2FjaGVfY29uc2lzdGVuY3lfYml0bWFzazsNCj4gKwluZnM0X2JpdG1hc2tfYWRq
+dXN0KGRhdGEtPmFyZ3MuYml0bWFzaywgaW5vZGUsIHNlcnZlciwgTlVMTCk7DQo+ICAJbmZzX2Nv
+cHlfZmgoJmRhdGEtPmZoLCBORlNfRkgoaW5vZGUpKTsNCj4gIAluZnM0X3N0YXRlaWRfY29weSgm
+ZGF0YS0+c3RhdGVpZCwgc3RhdGVpZCk7DQo+ICAJZGF0YS0+cmVzLmZhdHRyID0gJmRhdGEtPmZh
+dHRyOw0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9uZnNfeGRyLmggYi9pbmNsdWRlL2xp
+bnV4L25mc194ZHIuaA0KPiBpbmRleCA5NDA4ZjMyNTJjOGUuLmJhZmJmNjY5NTc5NiAxMDA2NDQN
+Cj4gLS0tIGEvaW5jbHVkZS9saW51eC9uZnNfeGRyLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9u
+ZnNfeGRyLmgNCj4gQEAgLTUyNSw3ICs1MjUsNyBAQCBzdHJ1Y3QgbmZzX2Nsb3NlYXJncyB7DQo+
+ICAJc3RydWN0IG5mc19zZXFpZCAqCXNlcWlkOw0KPiAgCWZtb2RlX3QJCQlmbW9kZTsNCj4gIAl1
+MzIJCQlzaGFyZV9hY2Nlc3M7DQo+IC0JY29uc3QgdTMyICoJCWJpdG1hc2s7DQo+ICsJdTMyICoJ
+CQliaXRtYXNrOw0KPiAgCXN0cnVjdCBuZnM0X2xheW91dHJldHVybl9hcmdzICpscl9hcmdzOw0K
+PiAgfTsNCj4gIA0KPiBAQCAtNjA4LDcgKzYwOCw3IEBAIHN0cnVjdCBuZnM0X2RlbGVncmV0dXJu
+YXJncyB7DQo+ICAJc3RydWN0IG5mczRfc2VxdWVuY2VfYXJncwlzZXFfYXJnczsNCj4gIAljb25z
+dCBzdHJ1Y3QgbmZzX2ZoICpmaGFuZGxlOw0KPiAgCWNvbnN0IG5mczRfc3RhdGVpZCAqc3RhdGVp
+ZDsNCj4gLQljb25zdCB1MzIgKiBiaXRtYXNrOw0KPiArCXUzMiAqIGJpdG1hc2s7DQo+ICAJc3Ry
+dWN0IG5mczRfbGF5b3V0cmV0dXJuX2FyZ3MgKmxyX2FyZ3M7DQo+ICB9Ow0KPiAgDQo+IEBAIC02
+NDgsNyArNjQ4LDcgQEAgc3RydWN0IG5mc19wZ2lvX2FyZ3Mgew0KPiAgCXVuaW9uIHsNCj4gIAkJ
+dW5zaWduZWQgaW50CQlyZXBsZW47CQkJLyoNCj4gdXNlZCBieSByZWFkICovDQo+ICAJCXN0cnVj
+dCB7DQo+IC0JCQljb25zdCB1MzIgKgkJYml0bWFzazsJLyoNCj4gdXNlZCBieSB3cml0ZSAqLw0K
+PiArCQkJdTMyICoJCQliaXRtYXNrOwkvKg0KPiB1c2VkIGJ5IHdyaXRlICovDQo+ICAJCQllbnVt
+IG5mczNfc3RhYmxlX2hvdwlzdGFibGU7CQkvKg0KPiB1c2VkIGJ5IHdyaXRlICovDQo+ICAJCX07
+DQo+ICAJfTsNCg0KT3RoZXJ3aXNlIHRoaXMgbG9va3MgZ29vZC4gVGhhbmtzIQ0KDQotLSANClRy
+b25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0K
+dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
