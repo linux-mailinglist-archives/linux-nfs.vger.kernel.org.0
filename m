@@ -2,119 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7098281677
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Oct 2020 17:23:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19EAE2816C5
+	for <lists+linux-nfs@lfdr.de>; Fri,  2 Oct 2020 17:38:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387939AbgJBPXJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 2 Oct 2020 11:23:09 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54234 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387807AbgJBPXI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Oct 2020 11:23:08 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 092FJfQk030464;
-        Fri, 2 Oct 2020 15:23:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=rMX121eFLLPwhqQLhwxn+e0hVfcOS3a27Rt7tzJU7e4=;
- b=truDxpu69C2zzNhxrIHGnjbhXNgSlcsWn/orUSG2yOL/GD4TV9fW+w/OVvjE8HDyguuP
- y9X6XnhvhZVq9oB0Ki6U/fbqx/+Cdn9JaVHjpGpevPnhdDH8lVUWJ1Vd9t4jsw7zLRIW
- yeGl19nYV5gtptCx7thuIikvCRfw+DF1bXAFCfdyz2thgKpghEQbmE6hq1sodKrPu9In
- KJk4UO/W69tGe+fOBwf6i7B5MKajTZqr1kLx3orklc1Se67hNfaEfjQRq/n0ekZUCcOu
- I2NYiM/NXqsVHVskQTMugqOp30o2xIpeAsao1Qhg1cpeRMNUBw7vsnk4DjRVtbTP7q54 gQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 33swkmbft3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 02 Oct 2020 15:23:07 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 092FJtnn194177;
-        Fri, 2 Oct 2020 15:23:06 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 33tfk3ngvp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 02 Oct 2020 15:23:06 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 092FN5Ir008588;
-        Fri, 2 Oct 2020 15:23:05 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 02 Oct 2020 08:23:05 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH] svcrdma: fix bounce buffers for non-zero page offsets
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20201002151833.GA988340@gmail.com>
-Date:   Fri, 2 Oct 2020 11:23:04 -0400
-Cc:     linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <58FBC94E-3F7D-4C23-A720-6588B0B22E86@oracle.com>
-References: <20201002144827.984306-1-dan@kernelim.com>
- <7DE1BF37-DF5E-47F2-A24C-A80ED20956CE@oracle.com>
- <20201002151833.GA988340@gmail.com>
-To:     Dan Aloni <dan@kernelim.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9762 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 mlxscore=0
- phishscore=0 adultscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010020120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9762 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 phishscore=0
- suspectscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010020120
+        id S2387938AbgJBPil (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 2 Oct 2020 11:38:41 -0400
+Received: from mail-il1-f208.google.com ([209.85.166.208]:36291 "EHLO
+        mail-il1-f208.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbgJBPiT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Oct 2020 11:38:19 -0400
+Received: by mail-il1-f208.google.com with SMTP id q11so1444144ilt.3
+        for <linux-nfs@vger.kernel.org>; Fri, 02 Oct 2020 08:38:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=PE5cBLSWtFQkLHdR6wGzlq+rKO5hHx9Bm3+Pczm/w3M=;
+        b=jtEjaffH/WxeaNcnTWm5NH/4MvrWIdYd7TIbe6AoZWeEn1EgLcMEDqKouWjjqTck6Z
+         vQ7Z8pCwe6wXVny3hs7rSRWsdRdpUJU9y0z8k5oMiYTz5ZcQwH/ytMQ9oWsXkEGOdwlr
+         USSRxM4fwVEK4Mgsp3yPECueMQRstVAVqzLe4dsV6dfeqxsyCdJ34pMUrW0NBRwJT4pI
+         VK+aUzx5TCInGQDG8PuB1RP2yL7pw2xdnB5BMlwuMdXJcApPFEM6s64Fh0ydCMV4ZT3X
+         vuZPME0B5LOyl7VRIV9Pw83HEwKn0gdp2BFVLDGw6sphk0PBzFHv9nIeqMeVMxeTyrWV
+         TE7Q==
+X-Gm-Message-State: AOAM5306TScfVLHArvjusRGah3iMBQStdAHl0qd3jnJ0zuk/cftXu4rY
+        gPM0iUMsFv4NkzvEQaDWC89a2ClINcvRlGgA1ejekXS4R5m+
+X-Google-Smtp-Source: ABdhPJzfnKMduYiT0ZQ8SenI2VNULXq37MlUlg779YihyNkxKSLdyFyv8J1RzNk28gsqjwGpG5S8RtnOGVBTTOcnwbfGJFPXzMCj
+MIME-Version: 1.0
+X-Received: by 2002:a5e:9319:: with SMTP id k25mr2429079iom.153.1601653098822;
+ Fri, 02 Oct 2020 08:38:18 -0700 (PDT)
+Date:   Fri, 02 Oct 2020 08:38:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000002468205b0b1ece8@google.com>
+Subject: WARNING in kvfree
+From:   syzbot <syzbot+e8b76e1215d7b7214060@syzkaller.appspotmail.com>
+To:     bfields@fieldses.org, chuck.lever@oracle.com,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    60e72093 Merge tag 'clk-fixes-for-linus' of git://git.kern..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=169943a7900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=89ab6a0c48f30b49
+dashboard link: https://syzkaller.appspot.com/bug?extid=e8b76e1215d7b7214060
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+userspace arch: i386
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e8b76e1215d7b7214060@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+virt_to_cache: Object is not a Slab page!
+WARNING: CPU: 1 PID: 1161 at mm/slab.h:420 virt_to_cache mm/slab.h:420 [inline]
+WARNING: CPU: 1 PID: 1161 at mm/slab.h:420 kfree+0x29b/0x2b0 mm/slab.c:3752
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 1161 Comm: kworker/u4:9 Not tainted 5.9.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: netns cleanup_net
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x198/0x1fd lib/dump_stack.c:118
+ panic+0x382/0x7fb kernel/panic.c:231
+ __warn.cold+0x20/0x4b kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:virt_to_cache mm/slab.h:420 [inline]
+RIP: 0010:kfree+0x29b/0x2b0 mm/slab.c:3752
+Code: 05 91 b6 9d 09 01 e8 29 bf a5 ff e9 7a ff ff ff 48 c7 c6 80 70 96 88 48 c7 c7 70 c9 b2 89 c6 05 25 db 9d 09 01 e8 67 dd 8f ff <0f> 0b e9 bf fe ff ff 0f 0b 66 90 66 2e 0f 1f 84 00 00 00 00 00 41
+RSP: 0018:ffffc90016137b50 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: 0000000000000286 RCX: 0000000000000000
+RDX: ffff888061194000 RSI: ffffffff815f59d5 RDI: fffff52002c26f5c
+RBP: ffff888000400000 R08: 0000000000000001 R09: ffff8880ae520f8b
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000200
+R13: 000000000002bfa8 R14: ffff888000400000 R15: 0000000000000800
+ kvfree+0x42/0x50 mm/util.c:603
+ nfsd_reply_cache_shutdown+0x1a3/0x2c0 fs/nfsd/nfscache.c:214
+ nfsd_exit_net+0x15f/0x490 fs/nfsd/nfsctl.c:1507
+ ops_exit_list+0xb0/0x160 net/core/net_namespace.c:186
+ cleanup_net+0x4ea/0xa00 net/core/net_namespace.c:603
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-> On Oct 2, 2020, at 11:18 AM, Dan Aloni <dan@kernelim.com> wrote:
->=20
-> On Fri, Oct 02, 2020 at 10:54:28AM -0400, Chuck Lever wrote:
->> Hi Dan-
->>=20
->>> On Oct 2, 2020, at 10:48 AM, Dan Aloni <dan@kernelim.com> wrote:
->>>=20
->>> This was discovered using O_DIRECT and small unaligned file offsets
->>> at the client side.
->>>=20
->>> Fixes: e248aa7be86 ("svcrdma: Remove max_sge check at connect time")
->>> Signed-off-by: Dan Aloni <dan@kernelim.com>
->>> ---
->>> net/sunrpc/xprtrdma/svc_rdma_sendto.c | 2 +-
->>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>=20
->>> diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c =
-b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
->>> index 7b94d971feb3..c991eb1fd4e3 100644
->>> --- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
->>> +++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
->>> @@ -638,7 +638,7 @@ static int svc_rdma_pull_up_reply_msg(struct =
-svcxprt_rdma *rdma,
->>> 		while (remaining) {
->>> 			len =3D min_t(u32, PAGE_SIZE - pageoff, =
-remaining);
->>>=20
->>> -			memcpy(dst, page_address(*ppages), len);
->>> +			memcpy(dst, page_address(*ppages) + pageoff, =
-len);
->>=20
->> I'm assuming the only relevant place that sets xdr->page_base
->> is nfsd_splice_actor() ?
->=20
-> Yes, and traces at the server indeed indicate that splicing happened.
-> This works for both tmpfs and ext4 as host FSes.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Seems plausible, thanks. I'll throw it into my test environment.
-
-
---
-Chuck Lever
-
-
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
