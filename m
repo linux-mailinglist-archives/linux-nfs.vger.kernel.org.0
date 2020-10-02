@@ -2,104 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36A022819FE
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Oct 2020 19:44:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 188CF281B8A
+	for <lists+linux-nfs@lfdr.de>; Fri,  2 Oct 2020 21:22:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388181AbgJBRo6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 2 Oct 2020 13:44:58 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41688 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgJBRo6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Oct 2020 13:44:58 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 092HZRg1085019;
-        Fri, 2 Oct 2020 17:44:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=l2UNO2YNoDQNHXYdO38iaikDx7u/tLWrzRS36kF1bqU=;
- b=MGbfXxaTTodkj1SYVrJSGGVDz4QGbPeknz/hb9J70skJklnyadrqJ7ZQzHVz3tikivhI
- cEaBDMD6QP1LIei5AhD++mTSdmR7mo+A0/Ddcutx7BtASMktLn/H99Zp9BNfREIV/pcy
- FD4EhAKFLNnGPreoCH6IWHn6kbEPp9mEvCGUNOH7rZmx8Lt9Hm2NeS2srkNQP6dOHHeb
- 078X51I88+fFTnQnmXF4ZZVZPJWZwaDMlIJk2x039rP9Pd/sjvuEk/G4aUHm/iuiVLY3
- NKDyTDrQxHk7KzBaX7FSC7XvODKaTWfakaVEt5LX+IwQZpx17njZFuN5GcpmVuUn+5LR rQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 33sx9nm3t0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 02 Oct 2020 17:44:56 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 092HVIWO081332;
-        Fri, 2 Oct 2020 17:44:55 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 33uv2jmg1e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 02 Oct 2020 17:44:55 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 092Hirhf015335;
-        Fri, 2 Oct 2020 17:44:54 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 02 Oct 2020 10:44:53 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH v3 00/15] nfsd_dispatch() clean up
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20201002174255.GB31151@fieldses.org>
-Date:   Fri, 2 Oct 2020 13:44:51 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1156EA12-2D90-4D60-A9A2-C892576D412E@oracle.com>
-References: <160159301676.79253.16488984581431975601.stgit@klimt.1015granger.net>
- <20201002173908.GA31151@fieldses.org> <20201002174255.GB31151@fieldses.org>
-To:     Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9762 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- suspectscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010020130
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9762 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- phishscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
- spamscore=0 impostorscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010020130
+        id S2388392AbgJBTV6 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 2 Oct 2020 15:21:58 -0400
+Received: from mx.metalurgs.lv ([81.198.125.103]:65054 "EHLO mx.metalurgs.lv"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388174AbgJBTV6 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 2 Oct 2020 15:21:58 -0400
+X-Greylist: delayed 337 seconds by postgrey-1.27 at vger.kernel.org; Fri, 02 Oct 2020 15:21:57 EDT
+Received: from mx.metalurgs.lv (localhost [127.0.0.1])
+        by mx.metalurgs.lv (Postfix) with ESMTP id 0990A62B6C
+        for <linux-nfs@vger.kernel.org>; Fri,  2 Oct 2020 22:16:17 +0300 (EEST)
+Received: from kas30pipe.localhost (localhost [127.0.0.1])
+        by mx.metalurgs.lv (Postfix) with ESMTP id E2C0462B65
+        for <linux-nfs@vger.kernel.org>; Fri,  2 Oct 2020 22:16:16 +0300 (EEST)
+Received: by mx.metalurgs.lv (Postfix, from userid 1005)
+        id C4C4B62C59; Fri,  2 Oct 2020 22:16:15 +0300 (EEST)
+Received: from [100.64.1.74] (unknown [190.15.125.50])
+        (Authenticated sender: admin)
+        by mx.metalurgs.lv (Postfix) with ESMTPA id 3C08962AB7;
+        Fri,  2 Oct 2020 22:16:08 +0300 (EEST)
+MIME-Version: 1.0
+Content-Description: Mail message body
+To:     Recipients <financialcapability6@gmail.com>
+From:   "Mr. Hashim Bin" <financialcapability6@gmail.com>
+Date:   Fri, 02 Oct 2020 16:16:02 -0300
+Reply-To: binmurrah@gmail.com
+X-SpamTest-Envelope-From: financialcapability6@gmail.com
+X-SpamTest-Group-ID: 00000000
+X-SpamTest-Info: Profiles 71303 [Jan 01 2015]
+X-SpamTest-Info: {TO: forged address, i.e. recipient, investors, public, etc.}
+X-SpamTest-Info: {DATE: unreal year}
+X-SpamTest-Method: none
+X-SpamTest-Rate: 55
+X-SpamTest-Status: Not detected
+X-SpamTest-Status-Extended: not_detected
+X-SpamTest-Version: SMTP-Filter Version 3.0.0 [0284], KAS30/Release
+Message-ID: <20201002191615.C4C4B62C59@mx.metalurgs.lv>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Subject: Low Rate Loan.
+X-Anti-Virus: Kaspersky Anti-Virus for Linux Mail Server 5.6.39/RELEASE,
+         bases: 20140401 #7726142, check: 20201002 notchecked
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hello Dear,
 
+We are Investment Company offering Corporate and Personal
+Loan at 3% Interest Rate for a duration of 10Years.
 
-> On Oct 2, 2020, at 1:42 PM, J. Bruce Fields <bfields@fieldses.org> wrote:
-> 
-> On Fri, Oct 02, 2020 at 01:39:08PM -0400, J. Bruce Fields wrote:
->> I'm seeing a pynfs4.0 GATT9 regression.  That's a test that attempts a
->> compound with 90 GETATTR ops each a request for all mandatory
->> attributes.  The test expects OK or RESOURCE but looks like its getting
->> a corrupted response?  (I haven't looked at the wire traffic yet.)  I
->> think it's one of the final patches changing how errors are returned.
-> 
-> Also some other tests that send compounds with lots of ops:
-> 
-> GATT9    st_getattr.testLotsofGetattrsFile                        : FAILURE
->           nfs4lib.InvalidCompoundRes: Invalid COMPOUND result:
->           Truncated response list.
-> COMP6    st_compound.testLongCompound                             : FAILURE
->           COMPOUND with len=150 argarry got Invalid COMPOUND
->           result: Truncated response list., expected
->           NFS4ERR_RESOURCE
-> COMP4    st_compound.testInvalidMinor                             : FAILURE
->           nfs4lib.InvalidCompoundRes: Invalid COMPOUND result:
->           Truncated response list.
-> 
-> Bisect lands on the last patch ("Hoist status code...").
+We also pay 1% commission to brokers, who introduce project
+owners for finance or other opportunities.
 
-Excellent, thanks for the test results. I'll take a look.
+Please get back to me if you are interested for more
+details.
 
-
---
-Chuck Lever
-
-
-
+Yours faithfully,
+Hashim Bin 
