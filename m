@@ -2,89 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AD1C282A8E
-	for <lists+linux-nfs@lfdr.de>; Sun,  4 Oct 2020 14:08:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDA0A28331C
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Oct 2020 11:23:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725868AbgJDMIc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 4 Oct 2020 08:08:32 -0400
-Received: from h-163-233.A498.priv.bahnhof.se ([155.4.163.233]:35826 "EHLO
-        mail.kenjo.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbgJDMIb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 4 Oct 2020 08:08:31 -0400
-X-Greylist: delayed 927 seconds by postgrey-1.27 at vger.kernel.org; Sun, 04 Oct 2020 08:08:30 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kenjo.org;
-         s=mail; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-        Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=GL2Hf40wA7qDi+oHdKlsqhN8In7nUF9fnHrUF8oY4Qk=; b=iVUEFWfDkKzCe1459iYy7C37oC
-        Vhz2yfOaiHVgI9qXvxnE6p19Av16a6p8DEffOJoMvaAv9do4eedPH3hI+bEk7JURK/c4FA2nOX5to
-        egKkSMCfb9wkkIgZ3psu8wfHY4/YR84zOJTr/jyb7vZAqDOviR5LrGVHUrOPriTo81sI=;
-Received: from brix.kenjo.org ([172.16.2.16])
-        by mail.kenjo.org with esmtp (Exim 4.89)
-        (envelope-from <ken@kenjo.org>)
-        id 1kP2ZZ-0007Tn-QR
-        for linux-nfs@vger.kernel.org; Sun, 04 Oct 2020 13:53:01 +0200
-To:     linux-nfs@vger.kernel.org
-From:   Kenneth Johansson <ken@kenjo.org>
-Subject: nfs home directory and google chrome.
-Message-ID: <0ba0cd0c-eccd-2362-9958-23cd1fa033df@kenjo.org>
-Date:   Sun, 4 Oct 2020 13:53:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        id S1725947AbgJEJX1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Oct 2020 05:23:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbgJEJX0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Oct 2020 05:23:26 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E9EC0613CE;
+        Mon,  5 Oct 2020 02:23:26 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id n14so6459961pff.6;
+        Mon, 05 Oct 2020 02:23:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qGE1hqJMTpJDbPinNcIwyJ/y/qQief1uJTtMUva0Xfo=;
+        b=OQf48a1zYvw7KiwcMeOtPiRRj8wUnUpabQexmF4lzIEO1QkKoC7cutJ/Bl3wTnu8vu
+         0FVr8vt0xkA2q5ga2cwhdRAeqheOn9CxXlS+XY1ToVDTSrzN8wmsj+500G610LK+MXOe
+         zYOBLacprqMSqob4UEMAo92HXzegxXW8DrC4LhUOWC9WFfcRkzsX35it/9YYH0wksNS9
+         UzrdnBW58qVDkfbFx7IWTvBN5JI3O5hnlpR6OqyLOpxZ/0TN/sfYlQzOwrxNHnBlFgSk
+         2JC64dJdMzVtiYZ68z08ceorl8refD5OCy5vpmMSgYtJ/Ky3nnlhtmYhrIt2HFkbAz6s
+         WZrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qGE1hqJMTpJDbPinNcIwyJ/y/qQief1uJTtMUva0Xfo=;
+        b=GoQ0+ZynYexThgDZtSsWKgWsMPNSk/ktmIK0Xjxbpy7Lml8jfCqKAriwlzXYXca974
+         Qs6W98ASXfMd0BYiyiEY68Uvg7FLuxnsJPGeDjbS9D50akn5piUKJu7ZmJmajClszf8B
+         68dYYS7zK9sHInWTTNMwz/SWgLsEBBr/cBZvPQJIzfJdL5SYXS9DJ3ZK/87aOQ8WvbSh
+         mGPrrZOUJkm+ic1R/7Rh1jIpq+JVF/5ldxyqJvzwJfkuOcunx85giJV84YHJbC+zxWDP
+         68XmX1PsNWCY19BNJjLzwfx9X/jUKFIhemdqpr6BbuV3jMVQLZP8VNQuGmQoW6QyvCK3
+         zsBA==
+X-Gm-Message-State: AOAM530VdurQOg/3Fhj2/VFR5MkFimKZr2ATgKJ8/vJ4/ve8kZeGMF1D
+        m74JKRNAKVTzS4B7HB95YLojLrXIrOYN82gZ+x/GJw==
+X-Google-Smtp-Source: ABdhPJy1IflB+nGDCV2ETraG4lOf3YChuw9mCl2FqLQY/LT+41vnAj7vDYhQBRBmJRH5FwCfotnc9Q==
+X-Received: by 2002:a63:ed01:: with SMTP id d1mr13716662pgi.58.1601889806302;
+        Mon, 05 Oct 2020 02:23:26 -0700 (PDT)
+Received: from ashish-sangwan.user.nutanix.com (mcp02.nutanix.com. [192.146.155.5])
+        by smtp.googlemail.com with ESMTPSA id q65sm11929699pfq.219.2020.10.05.02.23.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Oct 2020 02:23:25 -0700 (PDT)
+From:   Ashish Sangwan <ashishsangwan2@gmail.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     ashishsangwan2@gmail.com, stable@vger.kernel.org,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFS: fix nfs_path in case of a rename retry
+Date:   Mon,  5 Oct 2020 02:22:43 -0700
+Message-Id: <20201005092243.105168-1-ashishsangwan2@gmail.com>
+X-Mailer: git-send-email 2.16.3
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-So I have had for a long time problems with google chrome and suspend 
-resume causing it to mangle its sqlite database.
+We are generating incorrect path in case of rename retry because
+we are restarting from wrong dentry. We should restart from the
+dentry which was received in the call to nfs_path.
 
-it looks to only happen if I use nfs mounted home directory. I'm not 
-sure exactly what is happening but lets first see if this happens to 
-anybody else.
+CC: stable@vger.kernel.org
+Signed-off-by: Ashish Sangwan <ashishsangwan2@gmail.com>
+---
+ fs/nfs/namespace.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-How to get the error.
-
-1. start google from a terminal with "google-chrome"
-
-2. suspend the computer
-
-3. wait a while. There is some type of minimum time here I do not know 
-what its is but I basically get the error every time of I suspend in 
-evening and resume in morning
-
-4. look for printout that looks like something like this
-
-[16789:18181:1004/125852.529750:ERROR:database.cc(1692)] Passwords 
-sqlite error 1034, errno 5: disk I/O error, sql: COMMIT
-[16789:16829:1004/125852.529744:ERROR:database.cc(1692)] Web sqlite 
-error 1034, errno 5: disk I/O error, sql: COMMIT
-[16789:16829:1004/125852.530261:ERROR:database.cc(1692)] Web sqlite 
-error 1034, errno 5: disk I/O error, sql: INSERT OR REPLACE INTO 
-autofill_model_type_state (model_type, value) VALUES(?,?)
-[16789:16789:1004/125852.563571:ERROR:sync_metadata_store_change_list.cc(34)] 
-Autofill datatype error was encountered: Failed to update ModelTypeState.
-[16789:19002:1004/125902.534103:ERROR:database.cc(1692)] History sqlite 
-error 1034, errno 5: disk I/O error, sql: COMMIT
-[16789:19002:1004/125902.536903:ERROR:database.cc(1692)] Thumbnail 
-sqlite error 778, errno 5: disk I/O error, sql: COMMIT
-
-
-[16789:19002:1004/130044.120379:ERROR:database.cc(1692)] Passwords 
-sqlite error 1034, errno 5: disk I/O error, sql: INSERT OR REPLACE INTO 
-sync_model_metadata (id, model_metadata) VALUES(1, ?)
-[16789:16829:1004/130044.120388:ERROR:database.cc(1692)] Web sqlite 
-error 1034, errno 5: disk I/O error, sql: INSERT OR REPLACE INTO 
-autofill_model_type_state (model_type, value) VALUES(?,?)
-
-
-and so on.  if you use google sync you can also check 
-"chrome://sync-internals" to see if something is wrong with the database.
-
-
+diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+index 6b063227e34e..2bcbe38afe2e 100644
+--- a/fs/nfs/namespace.c
++++ b/fs/nfs/namespace.c
+@@ -32,9 +32,9 @@ int nfs_mountpoint_expiry_timeout = 500 * HZ;
+ /*
+  * nfs_path - reconstruct the path given an arbitrary dentry
+  * @base - used to return pointer to the end of devname part of path
+- * @dentry - pointer to dentry
++ * @dentry_in - pointer to dentry
+  * @buffer - result buffer
+- * @buflen - length of buffer
++ * @buflen_in - length of buffer
+  * @flags - options (see below)
+  *
+  * Helper function for constructing the server pathname
+@@ -49,15 +49,19 @@ int nfs_mountpoint_expiry_timeout = 500 * HZ;
+  *		       the original device (export) name
+  *		       (if unset, the original name is returned verbatim)
+  */
+-char *nfs_path(char **p, struct dentry *dentry, char *buffer, ssize_t buflen,
+-	       unsigned flags)
++char *nfs_path(char **p, struct dentry *dentry_in, char *buffer,
++	       ssize_t buflen_in, unsigned flags)
+ {
+ 	char *end;
+ 	int namelen;
+ 	unsigned seq;
+ 	const char *base;
++	struct dentry *dentry;
++	ssize_t buflen;
+ 
+ rename_retry:
++	buflen = buflen_in;
++	dentry = dentry_in;
+ 	end = buffer+buflen;
+ 	*--end = '\0';
+ 	buflen--;
+-- 
+2.22.0
 
