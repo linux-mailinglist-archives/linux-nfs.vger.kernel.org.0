@@ -2,80 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C7A5285087
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Oct 2020 19:14:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9315E2850C0
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Oct 2020 19:26:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgJFROa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 6 Oct 2020 13:14:30 -0400
-Received: from p3plsmtpa09-06.prod.phx3.secureserver.net ([173.201.193.235]:53816
-        "EHLO p3plsmtpa09-06.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725769AbgJFRO3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Oct 2020 13:14:29 -0400
-X-Greylist: delayed 438 seconds by postgrey-1.27 at vger.kernel.org; Tue, 06 Oct 2020 13:14:29 EDT
-Received: from [192.168.0.117] ([71.184.94.153])
-        by :SMTPAUTH: with ESMTPSA
-        id PqQgkZI9Iz5JkPqQgkhcef; Tue, 06 Oct 2020 10:07:11 -0700
-X-CMAE-Analysis: v=2.3 cv=aPSOVo1m c=1 sm=1 tr=0
- a=vbvdVb1zh1xTTaY8rfQfKQ==:117 a=vbvdVb1zh1xTTaY8rfQfKQ==:17
- a=IkcTkHD0fZMA:10 a=mJjC6ScEAAAA:8 a=mRtmDtF74R81MPjdODkA:9 a=QEXdDO2ut3YA:10
- a=ijnPKfduoCotzip5AuI1:22
-X-SECURESERVER-ACCT: tom@talpey.com
-Subject: Re: unsharing tcp connections from different NFS mounts
-To:     Bruce Fields <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <20201006151335.GB28306@fieldses.org>
- <43CA4047-F058-4339-AD64-29453AE215D6@oracle.com>
- <20201006152223.GD28306@fieldses.org>
-From:   Tom Talpey <tom@talpey.com>
-Message-ID: <bb58e43a-f23d-d5f5-ac53-9230267f7faa@talpey.com>
-Date:   Tue, 6 Oct 2020 13:07:11 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        id S1725925AbgJFR0I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 6 Oct 2020 13:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725902AbgJFR0I (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Oct 2020 13:26:08 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FAE3C061755
+        for <linux-nfs@vger.kernel.org>; Tue,  6 Oct 2020 10:26:08 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 9603D367; Tue,  6 Oct 2020 13:26:07 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 9603D367
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1602005167;
+        bh=M4fachXUpRc9S+ieKkFnargtA7yodP3XYujMtpIY3lY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X//ZOCSzaPb3n9LeJHJHX2acFHh4C+eFt433QxBcUyK0Jhiuj4WQgJSv/btxhFGO9
+         0uhkLjKePhWdryZFDp8f21MkTbKifcAuiW0so1+mPl91u4+oMROR2qrQdY5HHBhnqK
+         bNU074lCMYKEjFNZh6Vt1kKDpqi5pEczO2Vr+VTM=
+Date:   Tue, 6 Oct 2020 13:26:07 -0400
+From:   "bfields@fieldses.org" <bfields@fieldses.org>
+To:     Matt Benjamin <mbenjami@redhat.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "inoguchi.yuki@fujitsu.com" <inoguchi.yuki@fujitsu.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: client caching and locks
+Message-ID: <20201006172607.GA32640@fieldses.org>
+References: <20200608211945.GB30639@fieldses.org>
+ <OSBPR01MB2949040AA49BC9B5F104DA1FEF9B0@OSBPR01MB2949.jpnprd01.prod.outlook.com>
+ <22b841f7a8979f19009c96f31a7be88dd177a47a.camel@hammerspace.com>
+ <20200618200905.GA10313@fieldses.org>
+ <20200622135222.GA6075@fieldses.org>
+ <20201001214749.GK1496@fieldses.org>
+ <CAKOnarndL1-u5jGG2VAENz2bEc9wsERH6rGTbZeYZy+WyAUk-w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20201006152223.GD28306@fieldses.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfPCEQ6bn2vaz27JHv+0OlRx36SR0tGTMknVNIpuVIOZB41UhOMYNFFjkcDl8QVoBWOQtOnoEtxVIIrStlEqX+INRbCV+eKRGKPWMw8FCCeIOMpXMiazE
- IxvNQkNUOseCw3RUlXSOuoGOhluDFDP9Sbx125zbxpCTthurZBISd54Td6SBIHoDq+xy9+BHEHKLo92tzVgWP4FKtd7zDqUOpD4mbCsalY7XFYNUzixZrUF4
- BziFC47QoSYIBSO0l0Z0xQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKOnarndL1-u5jGG2VAENz2bEc9wsERH6rGTbZeYZy+WyAUk-w@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 10/6/2020 11:22 AM, Bruce Fields wrote:
-> On Tue, Oct 06, 2020 at 11:20:41AM -0400, Chuck Lever wrote:
->>
->>
->>> On Oct 6, 2020, at 11:13 AM, bfields@fieldses.org wrote:
->>>
->>> NFSv4.1+ differs from earlier versions in that it always performs
->>> trunking discovery that results in mounts to the same server sharing a
->>> TCP connection.
->>>
->>> It turns out this results in performance regressions for some users;
->>> apparently the workload on one mount interferes with performance of
->>> another mount, and they were previously able to work around the problem
->>> by using different server IP addresses for the different mounts.
->>>
->>> Am I overlooking some hack that would reenable the previous behavior?
->>> Or would people be averse to an "-o noshareconn" option?
->>
->> I thought this was what the nconnect mount option was for.
+On Thu, Oct 01, 2020 at 06:26:25PM -0400, Matt Benjamin wrote:
+> I'm not sure.  My understanding has been that, NFSv4 does not mandate
+> a mechanism to update clients of changes outside of any locked range.
+> In AFS (and I think DCE DFS?) this role is played by DataVersion.  If
+> I recall correctly, David Noveck provided an errata that addresses
+> this, that servers could use in a similar manner to DV, but I don't
+> recall the details.
+
+Maybe you're thinking of the change_attr_type that's new to 4.2?  I
+think that was Trond's proposal originally.  In the
+CHANGE_TYPE_IS_VERSION_COUNTER case it would in theory allow you to tell
+whether a file that you'd written to was also written to by someone else
+by counting WRITE operations.
+
+But we still have to ensure consistency whether the server implements
+that.  (I doubt any server currently does.)
+
+--b.
+
 > 
-> I've suggested that.  It doesn't isolate the two mounts from each other
-> in the same way, but I can imagine it might make it less likely that a
-> user on one mount will block a user on another?  I don't know, it might
-> depend on the details of their workload and a certain amount of luck.
-
-Wouldn't it be better to fully understand the reason for the
-performance difference, before changing the mount API? If it's
-a guess, it'll come back to haunt the code for years.
-
-For example, maybe it's lock contention in the xprt transport code,
-or in the socket stack.
-
-Just askin'.
-
-Tom.
+> Matt
+> 
+> On Thu, Oct 1, 2020 at 5:48 PM bfields@fieldses.org
+> <bfields@fieldses.org> wrote:
+> >
+> > On Mon, Jun 22, 2020 at 09:52:22AM -0400, bfields@fieldses.org wrote:
+> > > On Thu, Jun 18, 2020 at 04:09:05PM -0400, bfields@fieldses.org wrote:
+> > > > I probably don't understand the algorithm (in particular, how it
+> > > > revalidates caches after a write).
+> > > >
+> > > > How does it avoid a race like this?:
+> > > >
+> > > > Start with a file whose data is all 0's and change attribute x:
+> > > >
+> > > >         client 0                        client 1
+> > > >         --------                        --------
+> > > >         take write lock on byte 0
+> > > >                                         take write lock on byte 1
+> > > >         write 1 to offset 0
+> > > >           change attribute now x+1
+> > > >                                         write 1 to offset 1
+> > > >                                           change attribute now x+2
+> > > >         getattr returns x+2
+> > > >                                         getattr returns x+2
+> > > >         unlock
+> > > >                                         unlock
+> > > >
+> > > >         take readlock on byte 1
+> > > >
+> > > > At this point a getattr will return change attribute x+2, the same as
+> > > > was returned after client 0's write.  Does that mean client 0 assumes
+> > > > the file data is unchanged since its last write?
+> > >
+> > > Basically: write-locking less than the whole range doesn't prevent
+> > > concurrent writes outside that range.  And the change attribute gives us
+> > > no way to identify whether concurrent writes have happened.  (At least,
+> > > not without NFS4_CHANGE_TYPE_IS_VERSION_COUNTER.)
+> > >
+> > > So as far as I can tell, a client implementation has no reliable way to
+> > > revalidate its cache outside the write-locked area--instead it needs to
+> > > just throw out that part of the cache.
+> >
+> > Does my description of that race make sense?
+> >
+> > --b.
+> >
+> 
+> 
+> -- 
+> 
+> Matt Benjamin
+> Red Hat, Inc.
+> 315 West Huron Street, Suite 140A
+> Ann Arbor, Michigan 48103
+> 
+> http://www.redhat.com/en/technologies/storage
+> 
+> tel.  734-821-5101
+> fax.  734-769-8938
+> cel.  734-216-5309
