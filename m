@@ -2,117 +2,183 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2441284EB0
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Oct 2020 17:15:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94123284EBF
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Oct 2020 17:20:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgJFPPZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 6 Oct 2020 11:15:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42668 "EHLO
+        id S1725946AbgJFPUb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 6 Oct 2020 11:20:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgJFPPZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Oct 2020 11:15:25 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E779EC061755;
-        Tue,  6 Oct 2020 08:15:24 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id m15so1365407pls.8;
-        Tue, 06 Oct 2020 08:15:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=O3wutOykn+qjv13+aIbbS9aviAcrhkTNsBYW/8APKCI=;
-        b=Ge7sc9DFWYNmWKj/NId96QnjqS7divhkH2kHeTLILE/UPpyrCZ4IXU+0R3PRtbRyVH
-         RVWsno4V7HbX1f1vratyfq6JlxSIHTI7s6CvK/KRkNviLAqBuNZBUxJZca8RdsURKy/t
-         a6TubcGai1NF8WOXxKDBm8vNQsp8tbAJuPBzIpq5gazkyPhWnZj4Y3TWJ4ywE90xTQ0S
-         wmhWCPeMv2RRIqEzNiSluNno3KwyBrVQZ4ZIkgGdZNeoEHL7m5LBhFDWvTa0fMCE7vSy
-         ucoDTbq1s9IHd22dW7ECLT9QUIic0BEMjgQmzs9dDUkM9bVgdaLTvDzbOG83mGH2d1JV
-         9asQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=O3wutOykn+qjv13+aIbbS9aviAcrhkTNsBYW/8APKCI=;
-        b=eCMN35Du900jj4OtMw5L8jCCimW/BUrODZc0Swqkr5VC6RDEuD7k/A8F5xUH1vbx4D
-         mtGOxE0XgGYyc+CavrzIsOxCC3XHR/WFxugxMK0LheXaKlZKgkG9PvJTOpkDkg+osEKe
-         p0dJ70efqbi+ZNkY2Q1iYSkF3MJj5A3YuVDxBasiWAngzdAyA9C9X7d/HMJB1axPaQ4r
-         2kdLFyWabDC/oiwS//z2Xx0T9igQ5yTGmKjrI+9s4sXXrYb6d1wBdZTDI88UF9juG2JU
-         xNRZhL+MxjP5gbdB2XGN0TqFixqmL2emTA3fY/le5s3A5u9EqmCQmk9GoD0oOsSii+87
-         LL8Q==
-X-Gm-Message-State: AOAM5311GvGhky69XwpnQUKL/6PwhG6WxklbKFSlPb2lDDx7cwT6Yue2
-        cVD3vrG+U2lhL9WuUrdl93A=
-X-Google-Smtp-Source: ABdhPJxJ93yZXWx4BKa4VxxHx7oDzy9xslGONHzwIA0G3joVJKEsY34G7bWYFkiQtBWe4B7/3lfdEg==
-X-Received: by 2002:a17:902:b7ca:b029:d3:eca2:d221 with SMTP id v10-20020a170902b7cab02900d3eca2d221mr1808827plz.74.1601997324473;
-        Tue, 06 Oct 2020 08:15:24 -0700 (PDT)
-Received: from ashish-sangwan.user.nutanix.com (mcp02.nutanix.com. [192.146.155.5])
-        by smtp.googlemail.com with ESMTPSA id x7sm2924159pgl.77.2020.10.06.08.15.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Oct 2020 08:15:23 -0700 (PDT)
-From:   Ashish Sangwan <ashishsangwan2@gmail.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc:     ashishsangwan2@gmail.com, stable@vger.kernel.org,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] NFS: Fix mode bits and nlink count for v4 referral dirs
-Date:   Tue,  6 Oct 2020 08:14:56 -0700
-Message-Id: <20201006151456.20875-1-ashishsangwan2@gmail.com>
-X-Mailer: git-send-email 2.16.3
+        with ESMTP id S1725902AbgJFPUb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Oct 2020 11:20:31 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B4BC061755
+        for <linux-nfs@vger.kernel.org>; Tue,  6 Oct 2020 08:20:31 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 90E241C25; Tue,  6 Oct 2020 11:20:30 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 90E241C25
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1601997630;
+        bh=xUjm2wWiNE0/DAbGKUniErnvwwuy4vyTqoVExLp91lo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AdwRGawKNNQzo7v7Pp7P7+kd8F8nDnlyFg0vlP0kykFMUP+fQbABNg/ojgelN94PK
+         FbM+AZxMqb3L1ZudmgY1MbeWDnCy05D+8oNopB27E8Qhvgzv1Teto1gmooGpTEvk7w
+         4Ls/Eu1i6jHtaSIsaF6Qw/4DJIztNqu9Y2kMDnaE=
+Date:   Tue, 6 Oct 2020 11:20:30 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 0/1] NFSv4.2: Fix NFS4ERR_STALE with inter server copy
+Message-ID: <20201006152030.GC28306@fieldses.org>
+References: <20200923230606.63904-1-dai.ngo@oracle.com>
+ <e7e738c6-f6e7-0d04-07fa-8017da469b8a@oracle.com>
+ <20201001205119.GI1496@fieldses.org>
+ <9a60ba5b-aefe-d75b-683a-fa0f4db6ae24@oracle.com>
+ <20201001215218.GL1496@fieldses.org>
+ <87879d23-986f-e123-1597-842a2913e864@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87879d23-986f-e123-1597-842a2913e864@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Request for mode bits and nlink count in the nfs4_get_referral call
-and if server returns them use them instead of hard coded values.
+On Thu, Oct 01, 2020 at 03:13:41PM -0700, Dai Ngo wrote:
+> 
+> On 10/1/20 2:52 PM, Bruce Fields wrote:
+> >On Thu, Oct 01, 2020 at 02:48:07PM -0700, Dai Ngo wrote:
+> >>Thanks Bruce for your comments,
+> >>
+> >>On 10/1/20 1:51 PM, Bruce Fields wrote:
+> >>>On Tue, Sep 29, 2020 at 08:18:54PM -0700, Dai Ngo wrote:
+> >>>>Have you had chance to review this patch and if it's ok would it be
+> >>>>possible to include it in the 5.10 pull?
+> >>>I don't think the op table approach would be that difficult, I'd really
+> >>>rather see that.
+> >>I think if we do the op table approach then we should also try to solve
+> >>all other dependencies between various NFS client and server modules
+> >>and not just the SSC part.
+> >Are there any others?  I'd be very surprised.  It's something we've been
+> >quite careful not to do in the past.  I apologize that it got past my
+> >review this time.
+> 
+> No, I'm not sure if there is any others, I'm just being cautious.
+> 
+> We can always start by building the infra-structure and fix the SSC first
+> and if there is any others then we can use the same mechanism to fix them
+> too. I can work on this for long term. In the mean time can we pull in this
+> temporary fix or you rather just want to see the long term solution?
 
-CC: stable@vger.kernel.org
-Signed-off-by: Ashish Sangwan <ashishsangwan2@gmail.com>
----
- fs/nfs/nfs4proc.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+I'd really rather see the long term solution.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 6e95c85fe395..efec05c5f535 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -266,7 +266,9 @@ const u32 nfs4_fs_locations_bitmap[3] = {
- 	| FATTR4_WORD0_FSID
- 	| FATTR4_WORD0_FILEID
- 	| FATTR4_WORD0_FS_LOCATIONS,
--	FATTR4_WORD1_OWNER
-+	FATTR4_WORD1_MODE
-+	| FATTR4_WORD1_NUMLINKS
-+	| FATTR4_WORD1_OWNER
- 	| FATTR4_WORD1_OWNER_GROUP
- 	| FATTR4_WORD1_RAWDEV
- 	| FATTR4_WORD1_SPACE_USED
-@@ -7594,16 +7596,28 @@ nfs4_listxattr_nfs4_user(struct inode *inode, char *list, size_t list_len)
-  */
- static void nfs_fixup_referral_attributes(struct nfs_fattr *fattr)
- {
-+	bool fix_mode = true, fix_nlink = true;
-+
- 	if (!(((fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID) ||
- 	       (fattr->valid & NFS_ATTR_FATTR_FILEID)) &&
- 	      (fattr->valid & NFS_ATTR_FATTR_FSID) &&
- 	      (fattr->valid & NFS_ATTR_FATTR_V4_LOCATIONS)))
- 		return;
- 
-+	if (fattr->valid & NFS_ATTR_FATTR_MODE)
-+		fix_mode = false;
-+	if (fattr->valid & NFS_ATTR_FATTR_NLINK)
-+		fix_nlink = false;
- 	fattr->valid |= NFS_ATTR_FATTR_TYPE | NFS_ATTR_FATTR_MODE |
- 		NFS_ATTR_FATTR_NLINK | NFS_ATTR_FATTR_V4_REFERRAL;
--	fattr->mode = S_IFDIR | S_IRUGO | S_IXUGO;
--	fattr->nlink = 2;
-+
-+	if (fix_mode)
-+		fattr->mode = S_IFDIR | S_IRUGO | S_IXUGO;
-+	else
-+		fattr->mode |= S_IFDIR;
-+
-+	if (fix_nlink)
-+		fattr->nlink = 2;
- }
- 
- static int _nfs4_proc_fs_locations(struct rpc_clnt *client, struct inode *dir,
--- 
-2.22.0
+--b.
 
+> 
+> 
+> Thanks,
+> -Dai
+> 
+> >
+> >--b.
+> >
+> >>It might be a little involved so I'd like
+> >>to take some time to research before committing to the longer solution
+> >>which I plan to do. In the mean time, this small patch allows some of
+> >>us to use the inter server copy until the long term solution is available.
+> >>>Is this causing someone an immediate practical problem?
+> >>This causes inter server copy to fail with any kernel build with NFS_FS=m
+> >>which I think is a common config. And it also causes compile errors if
+> >>NFSD=y, NFS_FS=y and NFS_v4=m.
+> >>
+> >>-Dai
+> >>
+> >>>--b.
+> >>>
+> >>>>Thanks,
+> >>>>
+> >>>>-Dai
+> >>>>
+> >>>>On 9/23/20 4:06 PM, Dai Ngo wrote:
+> >>>>>This patch provides a temporarily relief for inter copy to work with
+> >>>>>some common configs.  For long term solution, I think Trond's suggestion
+> >>>>>of using fs/nfs/nfs_common to store an op table that server can use to
+> >>>>>access the client code is the way to go.
+> >>>>>
+> >>>>>  fs/nfsd/Kconfig | 2 +-
+> >>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>>>
+> >>>>>
+> >>>>>Below are the results of my testing of upstream mainline without and with the fix.
+> >>>>>
+> >>>>>Upstream version used for testing:  5.9-rc5
+> >>>>>
+> >>>>>1. Upstream mainline (existing code: NFS_FS=y)
+> >>>>>
+> >>>>>
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|  NFSD  |  NFS_FS  |  NFS_V4  |               RESULTS                                   |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   y    |    y     |    m     | Build errors: nfs42_ssc_open/close                      |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   y    |    m     |    m     | Build OK, inter server copy failed with NFS4ERR_STALE   |
+> >>>>>|        |          |          | See NOTE1.                                              |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   y    |    m     |   y (m)  | Build OK, inter server copy failed with NFS4ERR_STALE   |
+> >>>>>|        |          |          | See NOTE2.                                              |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   y    |    y     |    y     | Build OK, inter server copy OK                          |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>
+> >>>>>
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|  NFSD  |  NFS_FS  |  NFS_V4  |               RESULTS                                   |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   m    |    y     |    m     | Build OK, inter server copy OK                          |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   m    |    m     |    m     | Build OK, inter server copy failed with NFS4ERR_STALE   |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   m    |    m     |   y (m)  | Build OK, inter server copy failed with NFS4ERR_STALE   |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   m    |    y     |    y     | Build OK, inter server copy OK                          |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>
+> >>>>>2. Upstream mainline (with the fix:  !(NFSD=y && (NFS_FS=m || NFS_V4=m))
+> >>>>>
+> >>>>>
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|  NFSD  |  NFS_FS  |  NFS_V4  |               RESULTS                                   |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   m    |    y     |    m     | Build OK, inter server copy OK                          |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   m    |    m     |    m     | Build OK, inter server copy OK                          |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   m    |    m     |   y (m)  | Build OK, inter server copy OK                          |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   m    |    y     |    y     | Build OK, inter server copy OK                          |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>
+> >>>>>
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|  NFSD  |  NFS_FS  |  NFS_V4  |               RESULTS                                   |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   y    |    y     |    m     | Build OK, inter server copy failed with NFS4ERR_STALE   |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   y    |    m     |    m     | Build OK, inter server copy failed with NFS4ERR_STALE   |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   y    |    m     |   y (m)  | Build OK, inter server copy failed with NFS4ERR_STALE   |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>|   y    |    y     |    y     | Build OK, inter server copy OK                          |
+> >>>>>|----------------------------------------------------------------------------------------|
+> >>>>>
+> >>>>>NOTE1:
+> >>>>>BUG:  When inter server copy fails with NFS4ERR_STALE, it left the file
+> >>>>>created with size of 0!
+> >>>>>
+> >>>>>NOTE2:
+> >>>>>When NFS_V4=y and NFS_FS=m, the build process automatically builds with NFS_V4=m
+> >>>>>and ignores the setting NFS_V4=y in the config file.
+> >>>>>
+> >>>>>This probably due to NFS_V4 in fs/nfs/Kconfig is configured to depend on NFS_FS.
+> >>>>>
