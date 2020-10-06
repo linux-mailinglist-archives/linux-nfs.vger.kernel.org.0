@@ -2,148 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2C64284FDC
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Oct 2020 18:29:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C7A5285087
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Oct 2020 19:14:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725902AbgJFQ3k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 6 Oct 2020 12:29:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgJFQ3k (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Oct 2020 12:29:40 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67364C0613D1
-        for <linux-nfs@vger.kernel.org>; Tue,  6 Oct 2020 09:29:40 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id c23so6395004qtp.0
-        for <linux-nfs@vger.kernel.org>; Tue, 06 Oct 2020 09:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=McNZrU0EDFV6A3TZqivdfUIZNz6mK+EHHnD6g+nLLJ8=;
-        b=M1Q8kcPdHu06aINxLDFqi3ieaK1kk5EiJyIU2JfQbuIi8EOhdrw7S8eufjzUr+5Lpp
-         3bpVsLZi5MEHQWe4X5KDem1PX55A01B3+D3sAMV5l8XQhEE1IgSABKuCRfwHdBlPJwKV
-         u/3FH2mM9Ekb6lWrrIrlUUOpEWAlYzAGofZl4Xlpz+7H90mnWEZ8FAGu/wJKth5l4Uzx
-         kufhY8Ln/Aan8MAJxtjUA9ivu/v0xUjXozZ1t+HJokIp+oAm/XitDXkUAjNzuH1IZ3Wu
-         xvjhQWmFQqPfiM2y4zKcV9cHkcGPdZTBiDy7g4+CEo72/n0W5Hdodn8qLpFCzlW/+fKL
-         Y2cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=McNZrU0EDFV6A3TZqivdfUIZNz6mK+EHHnD6g+nLLJ8=;
-        b=RD7MJcWdIkiy8+zWExPpjbS7eXp1Yz1ijvDRp3dDAj76EbnKLKDGh9Y9EH7ubAwYmN
-         JPBzWAh2ucBhoI15+ur/lTZkLsY5fz0M1xgSQ7M4nDeXbo+8JADSweAaW+y3DaYRqPu3
-         hs0ppWGFb6noviF0K3ssqGZpE884sRfPMHYJUguiw78qOtO7GCX41K6r1SwKH1BbI95W
-         VSygavpDuC3m0xIyvnMllsjzJo7X4c7BC3kKZ0N8KjnX2BJ5Lz9DsOkQMGofX+W5vRPn
-         Gg4Tf5MWLQ/KpDLqxKmkWFE/JFLK2CyABHqISdr8/98py+Sr85fbvihCbkXu/z3mV+9k
-         9Xrw==
-X-Gm-Message-State: AOAM53213NkpuP6FBpWRKFdjfLhmc7/O6K6bxsEVdCQvWhL49n6j4VNT
-        IyliUdUubwFBUpYAFL95pMQ2TvFjifPSkg==
-X-Google-Smtp-Source: ABdhPJw9v6VsMKZSVFemXYiIaCJmhaXyadblqd4T1u5Angi1h2XPKjPzqccwXVmCVLKxmRcWJU7exw==
-X-Received: by 2002:ac8:5491:: with SMTP id h17mr5991495qtq.47.1602001779281;
-        Tue, 06 Oct 2020 09:29:39 -0700 (PDT)
-Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.gmail.com with ESMTPSA id q5sm2629984qtn.60.2020.10.06.09.29.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Oct 2020 09:29:38 -0700 (PDT)
-Sender: Anna Schumaker <schumakeranna@gmail.com>
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v7 10/10] NFS: Decode a full READ_PLUS reply
-Date:   Tue,  6 Oct 2020 12:29:25 -0400
-Message-Id: <20201006162925.1331781-11-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201006162925.1331781-1-Anna.Schumaker@Netapp.com>
-References: <20201006162925.1331781-1-Anna.Schumaker@Netapp.com>
+        id S1726100AbgJFROa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 6 Oct 2020 13:14:30 -0400
+Received: from p3plsmtpa09-06.prod.phx3.secureserver.net ([173.201.193.235]:53816
+        "EHLO p3plsmtpa09-06.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725769AbgJFRO3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Oct 2020 13:14:29 -0400
+X-Greylist: delayed 438 seconds by postgrey-1.27 at vger.kernel.org; Tue, 06 Oct 2020 13:14:29 EDT
+Received: from [192.168.0.117] ([71.184.94.153])
+        by :SMTPAUTH: with ESMTPSA
+        id PqQgkZI9Iz5JkPqQgkhcef; Tue, 06 Oct 2020 10:07:11 -0700
+X-CMAE-Analysis: v=2.3 cv=aPSOVo1m c=1 sm=1 tr=0
+ a=vbvdVb1zh1xTTaY8rfQfKQ==:117 a=vbvdVb1zh1xTTaY8rfQfKQ==:17
+ a=IkcTkHD0fZMA:10 a=mJjC6ScEAAAA:8 a=mRtmDtF74R81MPjdODkA:9 a=QEXdDO2ut3YA:10
+ a=ijnPKfduoCotzip5AuI1:22
+X-SECURESERVER-ACCT: tom@talpey.com
+Subject: Re: unsharing tcp connections from different NFS mounts
+To:     Bruce Fields <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <20201006151335.GB28306@fieldses.org>
+ <43CA4047-F058-4339-AD64-29453AE215D6@oracle.com>
+ <20201006152223.GD28306@fieldses.org>
+From:   Tom Talpey <tom@talpey.com>
+Message-ID: <bb58e43a-f23d-d5f5-ac53-9230267f7faa@talpey.com>
+Date:   Tue, 6 Oct 2020 13:07:11 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201006152223.GD28306@fieldses.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPCEQ6bn2vaz27JHv+0OlRx36SR0tGTMknVNIpuVIOZB41UhOMYNFFjkcDl8QVoBWOQtOnoEtxVIIrStlEqX+INRbCV+eKRGKPWMw8FCCeIOMpXMiazE
+ IxvNQkNUOseCw3RUlXSOuoGOhluDFDP9Sbx125zbxpCTthurZBISd54Td6SBIHoDq+xy9+BHEHKLo92tzVgWP4FKtd7zDqUOpD4mbCsalY7XFYNUzixZrUF4
+ BziFC47QoSYIBSO0l0Z0xQ==
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+On 10/6/2020 11:22 AM, Bruce Fields wrote:
+> On Tue, Oct 06, 2020 at 11:20:41AM -0400, Chuck Lever wrote:
+>>
+>>
+>>> On Oct 6, 2020, at 11:13 AM, bfields@fieldses.org wrote:
+>>>
+>>> NFSv4.1+ differs from earlier versions in that it always performs
+>>> trunking discovery that results in mounts to the same server sharing a
+>>> TCP connection.
+>>>
+>>> It turns out this results in performance regressions for some users;
+>>> apparently the workload on one mount interferes with performance of
+>>> another mount, and they were previously able to work around the problem
+>>> by using different server IP addresses for the different mounts.
+>>>
+>>> Am I overlooking some hack that would reenable the previous behavior?
+>>> Or would people be averse to an "-o noshareconn" option?
+>>
+>> I thought this was what the nconnect mount option was for.
+> 
+> I've suggested that.  It doesn't isolate the two mounts from each other
+> in the same way, but I can imagine it might make it less likely that a
+> user on one mount will block a user on another?  I don't know, it might
+> depend on the details of their workload and a certain amount of luck.
 
-Decode multiple hole and data segments sent by the server, placing
-everything directly where they need to go in the xdr pages.
+Wouldn't it be better to fully understand the reason for the
+performance difference, before changing the mount API? If it's
+a guess, it'll come back to haunt the code for years.
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- fs/nfs/nfs42xdr.c | 36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
+For example, maybe it's lock contention in the xprt transport code,
+or in the socket stack.
 
-diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-index 9720fedd2e57..0dc31ad2362e 100644
---- a/fs/nfs/nfs42xdr.c
-+++ b/fs/nfs/nfs42xdr.c
-@@ -1032,7 +1032,7 @@ static int decode_read_plus_data(struct xdr_stream *xdr, struct nfs_pgio_res *re
- 
- 	p = xdr_decode_hyper(p, &offset);
- 	count = be32_to_cpup(p);
--	recvd = xdr_read_pages(xdr, count);
-+	recvd = xdr_align_data(xdr, res->count, count);
- 	res->count += recvd;
- 
- 	if (count > recvd) {
-@@ -1057,7 +1057,7 @@ static int decode_read_plus_hole(struct xdr_stream *xdr, struct nfs_pgio_res *re
- 
- 	p = xdr_decode_hyper(p, &offset);
- 	p = xdr_decode_hyper(p, &length);
--	recvd = xdr_expand_hole(xdr, 0, length);
-+	recvd = xdr_expand_hole(xdr, res->count, length);
- 	res->count += recvd;
- 
- 	if (recvd < length) {
-@@ -1070,7 +1070,7 @@ static int decode_read_plus_hole(struct xdr_stream *xdr, struct nfs_pgio_res *re
- static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
- {
- 	uint32_t eof, segments, type;
--	int status;
-+	int status, i;
- 	__be32 *p;
- 
- 	status = decode_op_hdr(xdr, OP_READ_PLUS);
-@@ -1086,22 +1086,24 @@ static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
- 	if (segments == 0)
- 		goto out;
- 
--	p = xdr_inline_decode(xdr, 4);
--	if (unlikely(!p))
--		return -EIO;
-+	for (i = 0; i < segments; i++) {
-+		p = xdr_inline_decode(xdr, 4);
-+		if (unlikely(!p))
-+			return -EIO;
- 
--	type = be32_to_cpup(p++);
--	if (type == NFS4_CONTENT_DATA)
--		status = decode_read_plus_data(xdr, res, &eof);
--	else if (type == NFS4_CONTENT_HOLE)
--		status = decode_read_plus_hole(xdr, res, &eof);
--	else
--		return -EINVAL;
-+		type = be32_to_cpup(p++);
-+		if (type == NFS4_CONTENT_DATA)
-+			status = decode_read_plus_data(xdr, res, &eof);
-+		else if (type == NFS4_CONTENT_HOLE)
-+			status = decode_read_plus_hole(xdr, res, &eof);
-+		else
-+			return -EINVAL;
- 
--	if (status)
--		return status;
--	if (segments > 1)
--		eof = 0;
-+		if (status < 0)
-+			return status;
-+		if (status > 0)
-+			break;
-+	}
- 
- out:
- 	res->eof = eof;
--- 
-2.28.0
+Just askin'.
 
+Tom.
