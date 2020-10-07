@@ -2,102 +2,174 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89A16285F88
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Oct 2020 14:56:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDEFB285FD2
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Oct 2020 15:10:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgJGM4E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Oct 2020 08:56:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:54351 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727253AbgJGM4E (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Oct 2020 08:56:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1602075362;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vAukPWjVRphjO9TzgW6qLjhVzdawIp1UNIH7Q41Oaxk=;
-        b=KG77Tkwk5cQJb3KfQzbyPuwcXeGcPx64ljNB1MWSSlA+p/TlcU+qtV6fvjD6QmILnbiwQb
-        PTkvUjIrtJ8X4i9WMTCw/ZWlXFLpGZGPODlfM1rFHGRTFkf1+7tahSVnz/YAC+5+S+04Lg
-        Mf+J+TTdxrL+mpgoVSi6dmU1T9fRY5A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-118-iafsv85xNJmwdE_mPeEXcA-1; Wed, 07 Oct 2020 08:56:01 -0400
-X-MC-Unique: iafsv85xNJmwdE_mPeEXcA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2C74196C907;
-        Wed,  7 Oct 2020 12:55:57 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-66.rdu2.redhat.com [10.10.64.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B78010002B5;
-        Wed,  7 Oct 2020 12:55:57 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     "Olga Kornievskaia" <aglo@umich.edu>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: unsharing tcp connections from different NFS mounts
-Date:   Wed, 07 Oct 2020 08:55:56 -0400
-Message-ID: <5B5CF80C-494A-42D3-8D3F-51C0277D9E1B@redhat.com>
-In-Reply-To: <57E3293C-5C49-4A80-957B-E490E6A9B32E@redhat.com>
-References: <20201006151335.GB28306@fieldses.org>
- <95542179-0C20-4A1F-A835-77E73AD70DB8@redhat.com>
- <CAN-5tyGDC0VQqjqUNzs_Ka+-G_1eCScVxuXvWsp7xe7QYj69Ww@mail.gmail.com>
- <20201007001814.GA5138@fieldses.org>
- <57E3293C-5C49-4A80-957B-E490E6A9B32E@redhat.com>
+        id S1728289AbgJGNKi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Oct 2020 09:10:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728177AbgJGNKi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Oct 2020 09:10:38 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90460C061755
+        for <linux-nfs@vger.kernel.org>; Wed,  7 Oct 2020 06:10:38 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 6D5874F3B; Wed,  7 Oct 2020 09:10:37 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6D5874F3B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1602076237;
+        bh=uS9Lz/cEr5pBvZBR+mF0/7pdxZQEF3hGSDwUaWU3M9w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lJByCkYFhyrrJC0E25QPqVUj1uUyAuZyQ7PJNHEeivOcpQjB4S19BxkGpGot+xEKa
+         g5wToK1UoGn8eEtbYW79rRnJZyyuOfJW6IgyMT6g2Ops9okOLrkstjPKHYcQs+Lg/Y
+         n5GyKiGqBb5sf2AMTwkhScaW9G4o1XJWIW6+SMr8=
+Date:   Wed, 7 Oct 2020 09:10:37 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Kenneth Johansson <ken@kenjo.org>
+Cc:     Patrick Goetz <pgoetz@math.utexas.edu>, linux-nfs@vger.kernel.org
+Subject: Re: nfs home directory and google chrome.
+Message-ID: <20201007131037.GA23452@fieldses.org>
+References: <0ba0cd0c-eccd-2362-9958-23cd1fa033df@kenjo.org>
+ <5326b6a3-0222-fc1a-6baa-ae2fbdaf209d@math.utexas.edu>
+ <923003de-7fcf-abee-07a2-0691b25673d8@kenjo.org>
+ <20201006181454.GB32640@fieldses.org>
+ <07f3684e-482e-dc73-5c9a-b7c9329fc410@kenjo.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <07f3684e-482e-dc73-5c9a-b7c9329fc410@kenjo.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 7 Oct 2020, at 7:27, Benjamin Coddington wrote:
+On Wed, Oct 07, 2020 at 12:54:50PM +0200, Kenneth Johansson wrote:
+> On 2020-10-06 20:14, J. Bruce Fields wrote:
+> >On Mon, Oct 05, 2020 at 10:07:56PM +0200, Kenneth Johansson wrote:
+> >>On 2020-10-05 18:46, Patrick Goetz wrote:
+> >>>We had a similar problem with Firefox, most notably with Mac OSX
+> >>>users who have NFS-mounted home directories. There's an
+> >>>about:config solution for Firefox; namely set
+> >>>
+> >>>    storage.nfs_filesystem: true
+> >>>
+> >>>This forces a specific network file locking mechanism which makes
+> >>>sqlite behave better. I'm guessing google chrome has something
+> >>>similar.
+> >>>
+> >>Since I have used chrome for years without any problems my guess it
+> >>that its something that changed with nfs in my setup.
+> >>
+> >>I did a strace and the first -EIO I get look like this
+> >>
+> >>fdatasync(94</home/kenjo/.config/google-chrome/Default/Login Data>)
+> >>= -1 EIO (Input/output error)
+> >>
+> >>then the same thing happens for other files like
+> >>
+> >>fdatasync(83</home/kenjo/.config/google-chrome/Default/Web Data>) =
+> >>-1 EIO (Input/output error)
+> >>
+> >>fdatasync(74</home/kenjo/.config/google-chrome/Default/History>) =
+> >>-1 EIO (Input/output error)
+> >Are you using soft mounts?
+> >
+> >(What are your mount options?)
+> 
+> auto.home /home autofs rw,relatime,fd=18,pgrp=2682,timeout=300,minproto=5,maxproto=5,indirect,pipe_ino=67621
+> 0 0
+> 
+> /home/kenjo nfs4 rw,noatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,acregmin=120,acregmax=120,acdirmin=120,acdirmax=120,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=172.16.2.16,fsc,local_lock=none,addr=172.16.2.6
+> 0 0
+> 
+> what I actualy set manually in auto.home is
+> 
+> -tcp,fsc,noatime,ac,actimeo=120
 
-> On 6 Oct 2020, at 20:18, J. Bruce Fields wrote:
->
->> On Tue, Oct 06, 2020 at 05:46:11PM -0400, Olga Kornievskaia wrote:
->>> On Tue, Oct 6, 2020 at 3:38 PM Benjamin Coddington 
->>> <bcodding@redhat.com> wrote:
->>>>
->>>> On 6 Oct 2020, at 11:13, J. Bruce Fields wrote:
+OK, that looks fine.
 
->> Looks like nfs4_init_{non}uniform_client_string() stores it in
->> cl_owner_id, and I was thinking that meant cl_owner_id would be used
->> from then on....
->>
->> But actually, I think it may run that again on recovery, yes, so I 
->> bet
->> changing the nfs4_unique_id parameter midway like this could cause 
->> bugs
->> on recovery.
->
-> Ah, that's what I thought as well.  Thanks for looking closer Olga!
+Maybe I overlooked the obvious: if Chrome holds a lock on that file when
+you suspend, and if you stay in suspend for longer than the NFSv4 lease
+time (default 90 seconds), then the client will lose its lease, hence
+any file locks.  I think these days the client then returns EIO on any
+further IO to that file descriptor.
 
-Well, no -- it does indeed continue to use the original cl_owner_id.  We
-only jump through nfs4_init_uniquifier_client_string() if cl_owner_id is
-NULL:
+Maybe there's some way to turn off that locking as a workaround.
 
-6087 static int
-6088 nfs4_init_uniform_client_string(struct nfs_client *clp)
-6089 {
-6090     size_t len;
-6091     char *str;
-6092
-6093     if (clp->cl_owner_id != NULL)
-6094         return 0;
-6095
-6096     if (nfs4_client_id_uniquifier[0] != '\0')
-6097         return nfs4_init_uniquifier_client_string(clp);
-6098
+The simplest thing we can do to help might be implementing "courteous
+server" behavior: instead of automatically removing locks after a
+client's lease expires, it can wait until there's an actual lock
+conflict.  That might be enough for your case.
 
+There's been a little planning done and it's not a big project, but I
+don't think it's actually at the top of anyone's todo list right now, so
+I'm not sure when that will get done.
 
-Testing proves this out as well for both EXCHANGE_ID and SETCLIENTID.
+--b.
 
-Is there any precedent for stabilizing module parameters as part of a
-supported interface?  Maybe this ought to be a mount option, so client 
-can
-set a uniquifier per-mount.
-
-Ben
-
+> 
+> 
+> >--b.
+> >
+> >>
+> >>
+> >>
+> >>>On 10/4/20 6:53 AM, Kenneth Johansson wrote:
+> >>>>So I have had for a long time problems with google chrome and
+> >>>>suspend resume causing it to mangle its sqlite database.
+> >>>>
+> >>>>it looks to only happen if I use nfs mounted home directory. I'm
+> >>>>not sure exactly what is happening but lets first see if this
+> >>>>happens to anybody else.
+> >>>>
+> >>>>How to get the error.
+> >>>>
+> >>>>1. start google from a terminal with "google-chrome"
+> >>>>
+> >>>>2. suspend the computer
+> >>>>
+> >>>>3. wait a while. There is some type of minimum time here I do
+> >>>>not know what its is but I basically get the error every time of
+> >>>>I suspend in evening and resume in morning
+> >>>>
+> >>>>4. look for printout that looks like something like this
+> >>>>
+> >>>>[16789:18181:1004/125852.529750:ERROR:database.cc(1692)]
+> >>>>Passwords sqlite error 1034, errno 5: disk I/O error, sql:
+> >>>>COMMIT
+> >>>>[16789:16829:1004/125852.529744:ERROR:database.cc(1692)] Web
+> >>>>sqlite error 1034, errno 5: disk I/O error, sql: COMMIT
+> >>>>[16789:16829:1004/125852.530261:ERROR:database.cc(1692)] Web
+> >>>>sqlite error 1034, errno 5: disk I/O error, sql: INSERT OR
+> >>>>REPLACE INTO autofill_model_type_state (model_type, value)
+> >>>>VALUES(?,?)
+> >>>>[16789:16789:1004/125852.563571:ERROR:sync_metadata_store_change_list.cc(34)]
+> >>>>Autofill datatype error was encountered: Failed to update
+> >>>>ModelTypeState.
+> >>>>[16789:19002:1004/125902.534103:ERROR:database.cc(1692)] History
+> >>>>sqlite error 1034, errno 5: disk I/O error, sql: COMMIT
+> >>>>[16789:19002:1004/125902.536903:ERROR:database.cc(1692)]
+> >>>>Thumbnail sqlite error 778, errno 5: disk I/O error, sql: COMMIT
+> >>>>
+> >>>>
+> >>>>[16789:19002:1004/130044.120379:ERROR:database.cc(1692)]
+> >>>>Passwords sqlite error 1034, errno 5: disk I/O error, sql:
+> >>>>INSERT OR REPLACE INTO sync_model_metadata (id, model_metadata)
+> >>>>VALUES(1, ?)
+> >>>>[16789:16829:1004/130044.120388:ERROR:database.cc(1692)] Web
+> >>>>sqlite error 1034, errno 5: disk I/O error, sql: INSERT OR
+> >>>>REPLACE INTO autofill_model_type_state (model_type, value)
+> >>>>VALUES(?,?)
+> >>>>
+> >>>>
+> >>>>and so on.  if you use google sync you can also check
+> >>>>"chrome://sync-internals" to see if something is wrong with the
+> >>>>database.
+> >>>>
+> >>>>
+> >>>>
+> >>>>>>This message is from an external sender. Learn more about why this <<
+> >>>>>>matters at https://links.utexas.edu/rtyclf. <<
+> 
