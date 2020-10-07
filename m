@@ -2,125 +2,168 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0F11286102
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Oct 2020 16:15:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82FEB286104
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Oct 2020 16:15:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgJGOPf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Oct 2020 10:15:35 -0400
-Received: from p3plsmtpa06-01.prod.phx3.secureserver.net ([173.201.192.102]:34530
-        "EHLO p3plsmtpa06-01.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728230AbgJGOPe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Oct 2020 10:15:34 -0400
-X-Greylist: delayed 438 seconds by postgrey-1.27 at vger.kernel.org; Wed, 07 Oct 2020 10:15:34 EDT
-Received: from [10.64.176.159] ([192.138.178.211])
-        by :SMTPAUTH: with ESMTPSA
-        id QA74kI5mYXReoQA75kKVa8; Wed, 07 Oct 2020 07:08:15 -0700
-X-CMAE-Analysis: v=2.3 cv=DKHxHBFb c=1 sm=1 tr=0
- a=5HL3Asy66/FZFZAtvjrEgQ==:117 a=5HL3Asy66/FZFZAtvjrEgQ==:17
- a=IkcTkHD0fZMA:10 a=mJjC6ScEAAAA:8 a=yVUtY6i4JWGfK-NmFg0A:9 a=QEXdDO2ut3YA:10
- a=ijnPKfduoCotzip5AuI1:22
-X-SECURESERVER-ACCT: tom@talpey.com
+        id S1728230AbgJGOPu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Oct 2020 10:15:50 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:60670 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbgJGOPu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Oct 2020 10:15:50 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 097EFVQd066565;
+        Wed, 7 Oct 2020 14:15:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=OUTx0+SDTZgUE4q1Ya/E45pXtGg4A7DnacTIyqlZ27A=;
+ b=rb/ONmreVkZevObMV8zXMl6d3WVO5ndMIcAeXWynsgKkYgdXWCWGFSKJ0thGz1KzRxgB
+ /oecU4wWkCnpZ21u7zNFfDw/+uEifz/361wwrF1QmsdtbvuaJ1hgKjOARiLAmCXve8Pp
+ X4bfjPYv5TEfVZ35PXB74yEXOF+Uf1QmFj91bg0fAm4BHGZNW2CszZiMBg57bHLnwrqt
+ /WGju14fSjazMDMXNbuO7lCyeSteuDIApJ4fUVFPFzZyW4NCMB1bldRDKYCfQsqVPBhV
+ V0oX1+uGZVU3O2qML59r6n07I1mJjjb8dwbZV5DW1FtABjwnyzDyEtrNyifN7QZb9e45 Og== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 33xhxn1x73-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 07 Oct 2020 14:15:43 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 097EErX4082429;
+        Wed, 7 Oct 2020 14:15:43 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 3410jypmv9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 07 Oct 2020 14:15:43 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 097EFfAt027406;
+        Wed, 7 Oct 2020 14:15:41 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Oct 2020 07:15:41 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
 Subject: Re: unsharing tcp connections from different NFS mounts
-To:     Igor Ostrovsky <igor@purestorage.com>,
-        Bruce Fields <bfields@fieldses.org>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20201007140502.GC23452@fieldses.org>
+Date:   Wed, 7 Oct 2020 10:15:39 -0400
+Cc:     Benjamin Coddington <bcodding@redhat.com>,
+        Olga Kornievskaia <aglo@umich.edu>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <85F496CD-9AAC-451C-A224-FCD138BDC591@oracle.com>
 References: <20201006151335.GB28306@fieldses.org>
- <43CA4047-F058-4339-AD64-29453AE215D6@oracle.com>
- <20201006152223.GD28306@fieldses.org>
- <bb58e43a-f23d-d5f5-ac53-9230267f7faa@talpey.com>
- <20201006193044.GC32640@fieldses.org>
- <CAGrwUG5_KeRVR8chcA8=3FSeii2+4c8FbuE=CSGAtYVYqV4kLg@mail.gmail.com>
-From:   Tom Talpey <tom@talpey.com>
-Message-ID: <5064e851-5fa3-ee37-a5c7-a6e9f02e2b8d@talpey.com>
-Date:   Wed, 7 Oct 2020 10:08:15 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
-MIME-Version: 1.0
-In-Reply-To: <CAGrwUG5_KeRVR8chcA8=3FSeii2+4c8FbuE=CSGAtYVYqV4kLg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfMODCJXF9AGAOLq5jBSVJ8SdvcUBKjX6Ysr7QqeYbfvAjSD6QEwE1kDe5ZG37AwPQrmd2GCvrR2/pIYddUjy1n+APO5yLOwrbXDuBgajSjCQGLh0A4Hl
- IPaAgF2Z5SPNv9YVGlXELDBy2c2JefztbbsTKUB/I4p5rIKaSQaD/6Uhv6LM/BbPqdlgjV4YkGm3xLaxhh1repOxAP8rTJzWldHXDtwjoCVhb7eE0V0U17+E
- 8+beV0190844LGnIgJZFzFouskiRNJla5+vn0MF0G6Q=
+ <95542179-0C20-4A1F-A835-77E73AD70DB8@redhat.com>
+ <CAN-5tyGDC0VQqjqUNzs_Ka+-G_1eCScVxuXvWsp7xe7QYj69Ww@mail.gmail.com>
+ <20201007001814.GA5138@fieldses.org>
+ <57E3293C-5C49-4A80-957B-E490E6A9B32E@redhat.com>
+ <5B5CF80C-494A-42D3-8D3F-51C0277D9E1B@redhat.com>
+ <8ED5511E-25DE-4C06-9E26-A1947383C86A@oracle.com>
+ <20201007140502.GC23452@fieldses.org>
+To:     Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9767 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ adultscore=0 bulkscore=0 malwarescore=0 suspectscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2010070091
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9767 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
+ impostorscore=0 lowpriorityscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 clxscore=1015 spamscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2010070091
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 10/6/2020 5:26 PM, Igor Ostrovsky wrote:
-> 
-> 
-> On Tue, Oct 6, 2020 at 12:30 PM Bruce Fields <bfields@fieldses.org 
-> <mailto:bfields@fieldses.org>> wrote:
-> 
->     On Tue, Oct 06, 2020 at 01:07:11PM -0400, Tom Talpey wrote:
->      > On 10/6/2020 11:22 AM, Bruce Fields wrote:
->      > >On Tue, Oct 06, 2020 at 11:20:41AM -0400, Chuck Lever wrote:
->      > >>
->      > >>
->      > >>>On Oct 6, 2020, at 11:13 AM, bfields@fieldses.org
->     <mailto:bfields@fieldses.org> wrote:
->      > >>>
->      > >>>NFSv4.1+ differs from earlier versions in that it always performs
->      > >>>trunking discovery that results in mounts to the same server
->     sharing a
->      > >>>TCP connection.
->      > >>>
->      > >>>It turns out this results in performance regressions for some
->     users;
->      > >>>apparently the workload on one mount interferes with
->     performance of
->      > >>>another mount, and they were previously able to work around
->     the problem
->      > >>>by using different server IP addresses for the different mounts.
->      > >>>
->      > >>>Am I overlooking some hack that would reenable the previous
->     behavior?
->      > >>>Or would people be averse to an "-o noshareconn" option?
->      > >>
->      > >>I thought this was what the nconnect mount option was for.
->      > >
->      > >I've suggested that.  It doesn't isolate the two mounts from
->     each other
->      > >in the same way, but I can imagine it might make it less likely
->     that a
->      > >user on one mount will block a user on another?  I don't know,
->     it might
->      > >depend on the details of their workload and a certain amount of
->     luck.
->      >
->      > Wouldn't it be better to fully understand the reason for the
->      > performance difference, before changing the mount API? If it's
->      > a guess, it'll come back to haunt the code for years.
->      >
->      > For example, maybe it's lock contention in the xprt transport code,
->      > or in the socket stack.
-> 
->     Yeah, I wonder too, and I don't have the details.
-> 
-> 
-> I've seen cases like this:
-> 
->      dd if=/dev/zero of=/mnt/mount1/zeros &
->      ls /mnt/mount2/
-> 
-> If /mnt/mount1 and /mnt/mount2 are NFS v3 mounts to the same server IP, 
-> the access to /mnt/mount2 can take a long time because the RPCs from "ls 
-> /mnt/mount2/" get stuck behind a bunch of the writes to /mnt/mount1. If 
-> /mnt/mount1 and /mnt/mount2 are different IPs to the same server, the 
-> accesses to /mnt/mount2 aren't impacted by the write workload on 
-> /mnt/mount1 (unless there is a saturation on the  server side, obviously).
 
-This is plausible, and if so, I believe it indicates a credit/slot
-shortage.
 
-Does the client request more slots when it begins to share another
-mount point on the connection? Does the server grant them, if so?
+> On Oct 7, 2020, at 10:05 AM, Bruce Fields <bfields@fieldses.org> =
+wrote:
+>=20
+> On Wed, Oct 07, 2020 at 09:45:50AM -0400, Chuck Lever wrote:
+>>=20
+>>=20
+>>> On Oct 7, 2020, at 8:55 AM, Benjamin Coddington =
+<bcodding@redhat.com> wrote:
+>>>=20
+>>> On 7 Oct 2020, at 7:27, Benjamin Coddington wrote:
+>>>=20
+>>>> On 6 Oct 2020, at 20:18, J. Bruce Fields wrote:
+>>>>=20
+>>>>> On Tue, Oct 06, 2020 at 05:46:11PM -0400, Olga Kornievskaia wrote:
+>>>>>> On Tue, Oct 6, 2020 at 3:38 PM Benjamin Coddington =
+<bcodding@redhat.com> wrote:
+>>>>>>>=20
+>>>>>>> On 6 Oct 2020, at 11:13, J. Bruce Fields wrote:
+>>>=20
+>>>>> Looks like nfs4_init_{non}uniform_client_string() stores it in
+>>>>> cl_owner_id, and I was thinking that meant cl_owner_id would be =
+used
+>>>>> from then on....
+>>>>>=20
+>>>>> But actually, I think it may run that again on recovery, yes, so I =
+bet
+>>>>> changing the nfs4_unique_id parameter midway like this could cause =
+bugs
+>>>>> on recovery.
+>>>>=20
+>>>> Ah, that's what I thought as well.  Thanks for looking closer Olga!
+>>>=20
+>>> Well, no -- it does indeed continue to use the original cl_owner_id. =
+ We
+>>> only jump through nfs4_init_uniquifier_client_string() if =
+cl_owner_id is
+>>> NULL:
+>>>=20
+>>> 6087 static int
+>>> 6088 nfs4_init_uniform_client_string(struct nfs_client *clp)
+>>> 6089 {
+>>> 6090     size_t len;
+>>> 6091     char *str;
+>>> 6092
+>>> 6093     if (clp->cl_owner_id !=3D NULL)
+>>> 6094         return 0;
+>>> 6095
+>>> 6096     if (nfs4_client_id_uniquifier[0] !=3D '\0')
+>>> 6097         return nfs4_init_uniquifier_client_string(clp);
+>>> 6098
+>>>=20
+>>>=20
+>>> Testing proves this out as well for both EXCHANGE_ID and =
+SETCLIENTID.
+>>>=20
+>>> Is there any precedent for stabilizing module parameters as part of =
+a
+>>> supported interface?  Maybe this ought to be a mount option, so =
+client can
+>>> set a uniquifier per-mount.
+>>=20
+>> The protocol is designed as one client-ID per client. FreeBSD is
+>> the only client I know of that uses one client-ID per mount, fwiw.
+>>=20
+>> You are suggesting each mount point would have its own lease. There
+>> would likely be deeper implementation changes needed than just
+>> specifying a unique client-ID for each mount point.
+>=20
+> Huh, I thought that should do it.
+>=20
+> Do you have something specific in mind?
 
-Tom.
+The relationship between nfs_client and nfs_server structs comes to
+mind.
 
-> 
-> It sounds like with NFS v4.1 trunking discovery, using separate IPs for 
-> the two mounts is no longer a sufficient workaround.
-> Igor
+Trunking discovery has been around for several years. This is the
+first report I've heard of a performance regression.
+
+We do know that nconnect helps relieve head-of-line blocking on TCP.
+I think adding a second socket would be a very easy thing to try and
+wouldn't have any NFSv4 state recovery ramifications.
+
+
+--
+Chuck Lever
+
+
+
