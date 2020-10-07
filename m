@@ -2,135 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 013E328632B
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Oct 2020 18:05:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FD8C2863E6
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Oct 2020 18:28:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgJGQF5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Oct 2020 12:05:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46698 "EHLO
+        id S1726138AbgJGQ2N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Oct 2020 12:28:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728177AbgJGQF5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Oct 2020 12:05:57 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CC02C061755
-        for <linux-nfs@vger.kernel.org>; Wed,  7 Oct 2020 09:05:57 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 83E6969C3; Wed,  7 Oct 2020 12:05:56 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 83E6969C3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1602086756;
-        bh=+eYBaeT1bfmMnAcszS5mtmzOWCe9ejzwWD7J6m/UFlY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TyDyD3/v6FBl8l7CtEvjoLeUZAn7eWigOZtzMIaKx28VF+CQcNvUM/A+jzJaHCMAK
-         EAzsJcW3UzFnBE4tf/B2X9qL91CJ3gtbdkc930fQor33qwJlPUQItuPzv/wyVz2QMl
-         TD0/wruBMSbJkRE5nz8+j51DThne3bjUAerVjyJQ=
-Date:   Wed, 7 Oct 2020 12:05:56 -0400
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Benjamin Coddington <bcodding@redhat.com>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: unsharing tcp connections from different NFS mounts
-Message-ID: <20201007160556.GE23452@fieldses.org>
-References: <20201006151335.GB28306@fieldses.org>
- <95542179-0C20-4A1F-A835-77E73AD70DB8@redhat.com>
- <CAN-5tyGDC0VQqjqUNzs_Ka+-G_1eCScVxuXvWsp7xe7QYj69Ww@mail.gmail.com>
- <20201007001814.GA5138@fieldses.org>
- <57E3293C-5C49-4A80-957B-E490E6A9B32E@redhat.com>
- <5B5CF80C-494A-42D3-8D3F-51C0277D9E1B@redhat.com>
- <8ED5511E-25DE-4C06-9E26-A1947383C86A@oracle.com>
- <20201007140502.GC23452@fieldses.org>
- <85F496CD-9AAC-451C-A224-FCD138BDC591@oracle.com>
+        with ESMTP id S1726105AbgJGQ2M (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Oct 2020 12:28:12 -0400
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B592BC061755
+        for <linux-nfs@vger.kernel.org>; Wed,  7 Oct 2020 09:28:12 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id j22so2380167qtj.8
+        for <linux-nfs@vger.kernel.org>; Wed, 07 Oct 2020 09:28:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r6+uO8I2VW2mJGYPdvvwjqBKkpdtpb+OLtWSFFZnN1E=;
+        b=L702T7Ea3ozZq59JPUKLNjoZU79TmQSIiFHEzTZy2zFB16HMwPkQ3nEzx6CC9cdI4r
+         /Z4hmZ6J6sLyU6MuGVH1P2sF9p0kJyJT4e9a4on3z+e0j9lcG6pK2tGaUFP+R1g9cVUB
+         Tq1QUAfcfH18+FRyOzq5qnIFlhLSqfhIO7RqE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r6+uO8I2VW2mJGYPdvvwjqBKkpdtpb+OLtWSFFZnN1E=;
+        b=MOEcMz6v25/zs+MyfUlJ+uAB8E6RbdzVH6SNOHkt0ZHuYQ+UcRx40Vo2XFlu3RiG0D
+         nWHN0bLVPtjpkZhZ4fx4qJr8+o94jDLljofA7nIB7YsmJ6BKvJjkAdJsLjV8Aa2IbhA1
+         Uw4xxKoxZG8ZtKQrxyOm4J0FA9l4zhLNRSKvu+maMBzQ3WxVrZrzYzKyaOZLretL2VhQ
+         +/ijE1NgvAd1CDY3RaxnDmKyAst2YpFCWHqJjuW0+BOs3W3hNppicTv+dZQdI5BheN55
+         Uu5fILgCUSDdGXX5j0c07yYA+L8+SW0XH1U1ePKQrh1/rGWwDtaJhZv6JxTPi5o47K8e
+         cjaw==
+X-Gm-Message-State: AOAM533M7zVvMoPpS0kqdwU9VagaGifT4oOvUH/2yfyiTt1uVyRNuFbQ
+        4mcqfh0T0bvC86hJjOd9lSn7+M7wY3oiwacz57a0ig==
+X-Google-Smtp-Source: ABdhPJyTWYzpFkOU6dfkHq9ZMfycgJ7qopzsyf+l5TT8Qpe4FIBTlUwp5byjkLTCNKpKHSxFgImJwDrhYB8IUIznAek=
+X-Received: by 2002:ac8:100c:: with SMTP id z12mr3924480qti.81.1602088091738;
+ Wed, 07 Oct 2020 09:28:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <85F496CD-9AAC-451C-A224-FCD138BDC591@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20201006151335.GB28306@fieldses.org> <df7b7b26-c6a7-9e6f-edf6-e3c858623462@math.utexas.edu>
+In-Reply-To: <df7b7b26-c6a7-9e6f-edf6-e3c858623462@math.utexas.edu>
+From:   Igor Ostrovsky <igor@purestorage.com>
+Date:   Wed, 7 Oct 2020 09:28:00 -0700
+Message-ID: <CAGrwUG4TSTBWXZRRbYLvTyavDkMpryXdx8AREm-13dkueG99NQ@mail.gmail.com>
+Subject: Re: unsharing tcp connections from different NFS mounts
+To:     Patrick Goetz <pgoetz@math.utexas.edu>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Oct 07, 2020 at 10:15:39AM -0400, Chuck Lever wrote:
-> 
-> 
-> > On Oct 7, 2020, at 10:05 AM, Bruce Fields <bfields@fieldses.org> wrote:
-> > 
-> > On Wed, Oct 07, 2020 at 09:45:50AM -0400, Chuck Lever wrote:
-> >> 
-> >> 
-> >>> On Oct 7, 2020, at 8:55 AM, Benjamin Coddington <bcodding@redhat.com> wrote:
-> >>> 
-> >>> On 7 Oct 2020, at 7:27, Benjamin Coddington wrote:
-> >>> 
-> >>>> On 6 Oct 2020, at 20:18, J. Bruce Fields wrote:
-> >>>> 
-> >>>>> On Tue, Oct 06, 2020 at 05:46:11PM -0400, Olga Kornievskaia wrote:
-> >>>>>> On Tue, Oct 6, 2020 at 3:38 PM Benjamin Coddington <bcodding@redhat.com> wrote:
-> >>>>>>> 
-> >>>>>>> On 6 Oct 2020, at 11:13, J. Bruce Fields wrote:
-> >>> 
-> >>>>> Looks like nfs4_init_{non}uniform_client_string() stores it in
-> >>>>> cl_owner_id, and I was thinking that meant cl_owner_id would be used
-> >>>>> from then on....
-> >>>>> 
-> >>>>> But actually, I think it may run that again on recovery, yes, so I bet
-> >>>>> changing the nfs4_unique_id parameter midway like this could cause bugs
-> >>>>> on recovery.
-> >>>> 
-> >>>> Ah, that's what I thought as well.  Thanks for looking closer Olga!
-> >>> 
-> >>> Well, no -- it does indeed continue to use the original cl_owner_id.  We
-> >>> only jump through nfs4_init_uniquifier_client_string() if cl_owner_id is
-> >>> NULL:
-> >>> 
-> >>> 6087 static int
-> >>> 6088 nfs4_init_uniform_client_string(struct nfs_client *clp)
-> >>> 6089 {
-> >>> 6090     size_t len;
-> >>> 6091     char *str;
-> >>> 6092
-> >>> 6093     if (clp->cl_owner_id != NULL)
-> >>> 6094         return 0;
-> >>> 6095
-> >>> 6096     if (nfs4_client_id_uniquifier[0] != '\0')
-> >>> 6097         return nfs4_init_uniquifier_client_string(clp);
-> >>> 6098
-> >>> 
-> >>> 
-> >>> Testing proves this out as well for both EXCHANGE_ID and SETCLIENTID.
-> >>> 
-> >>> Is there any precedent for stabilizing module parameters as part of a
-> >>> supported interface?  Maybe this ought to be a mount option, so client can
-> >>> set a uniquifier per-mount.
-> >> 
-> >> The protocol is designed as one client-ID per client. FreeBSD is
-> >> the only client I know of that uses one client-ID per mount, fwiw.
-> >> 
-> >> You are suggesting each mount point would have its own lease. There
-> >> would likely be deeper implementation changes needed than just
-> >> specifying a unique client-ID for each mount point.
-> > 
-> > Huh, I thought that should do it.
-> > 
-> > Do you have something specific in mind?
-> 
-> The relationship between nfs_client and nfs_server structs comes to
-> mind.
+On Wed, Oct 7, 2020 at 6:57 AM Patrick Goetz <pgoetz@math.utexas.edu> wrote:
 
-I'm not following.  Do you have a specific problem in mind?
+> I don't see how sharing a TCP connection can result in a performance
+> regression (the performance degradation of *not* sharing a TCP
+> connection is why HTTP 1.x is being replaced), or how using different IP
+> addresses on the same interface resolves anything.  Does anyone have an
+> explanation?
+>
 
---b.
+The two IPs give you a form of QoS. So, it's about performance isolation
+across the mounts, not about improving the aggregate performance.
 
-> 
-> Trunking discovery has been around for several years. This is the
-> first report I've heard of a performance regression.
-> 
-> We do know that nconnect helps relieve head-of-line blocking on TCP.
-> I think adding a second socket would be a very easy thing to try and
-> wouldn't have any NFSv4 state recovery ramifications.
-> 
-> 
-> --
-> Chuck Lever
-> 
-> 
+The example I mentioned was this one:
+
+    dd if=/dev/zero of=/mnt/mount1/zeros &
+    ls /mnt/mount2/
+
+The writes to /mnt/mount1 keep the transport busy transmitting data. As
+a result, the "ls" GETATTR (or whatever RPC) needs to wait on the
+single transport, potentially for seconds. Putting the two mounts on
+different IPs solves the problem, at least prior to trunking discovery.
