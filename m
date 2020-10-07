@@ -2,78 +2,196 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 342C528647F
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Oct 2020 18:34:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 027F828653E
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Oct 2020 18:50:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgJGQeg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Oct 2020 12:34:36 -0400
-Received: from sonic307-9.consmr.mail.ne1.yahoo.com ([66.163.190.32]:41891
-        "EHLO sonic307-9.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726981AbgJGQeg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Oct 2020 12:34:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602088475; bh=PxMwWzXvs+dqOoH0/FHvFmQpYH2JguaCUHYAVLLmaiw=; h=Date:From:Reply-To:Subject:References:From:Subject; b=om5tBXO1MUE4f6+f4xnFN9x5d2/5IYIAeIBMswjaEIwtW089yQDuSG/luF+tDoD+zd6Oi+rxTTe8mG6tSRMXscN5stxwJEP9yKEixmX5EqORKyM466AkyQa3/EzRxjvsu+OHn16DyB8ejdKdM3DDJnx0K0y6vReB07SmQ3mHKSaOyHtEptDDeP0gMBKEkLBxIMXT3pHpgYdMnyDt6VFqkd3xEUgYKPLJlyCN/EEsV8F5DvarMgisqtALGla8pfwuJJRnAsnrUxI/rO7bon0BITFvuaO2I16IxJ6VX1JVMgpwBNzskpj4HcduhiIKA5utm66RRMLtQ1v2MGJ5X4JXrg==
-X-YMail-OSG: jToXWE0VM1nzLfnAi.fh_JvlF083PZNrtGPwwm6dXilaodfraqrw2aNCX2v_k3_
- DK_O.X0e3tsrRqX3bLwtH7FUqOvAmQRZrkuXDkVU3i25inZj9YBMhLuUD8JfZuJ4RB5yS8K3lhC4
- .AOZny2akjMtg_D6ZfhJAfmdaRC3jyiiAF5nrbOskapSEWLCOeEVuh9VYHUCpGLSabcqmifT2C1y
- RSNqkMGtbHoOUqFs2NC.tGLppW2CuyuGcbZTP.kAriMyPAD_A_E7v91uErDEX5z6c3w_kImZLMmf
- .f0S4jiBdE4tr696RmlNImu8NvXT8xWmGaoca0GTeTploOXPYGuRAAtPLljjd4nInlEc3kg5DoXj
- Ff5DwMVrJXPDF.xrLbMi.cLxFdHFBZSylBPyR9ZbXPy1gZSVWojE7QZ5ooRy5ok7ECsc_0uA0V55
- O7.dBhhR8ZMiPETMLzWHjiOGQwMPIyBNfc.1LIxKssJMm_pKpM_g9_wTl4DMey5CKFMuFCqpmJpc
- cRoj7JtRLNVH0By0icyx_X9s.R5XeNdayNoMCU0_1zC42dz33K.z6e4JdCAUwebhxYPrWxLHe26z
- 7xbaYPEq2nLCu3FluX_8K9oe16K9q8_PWXA6LLmuPWefh_tPPZIlWGepIjZqvybV5Q2eugSO6hKW
- 7lPsLYt748eKlqpT321x03HM71Qda1MkyvAzqh.uCwtLhGBlYpvKs1_BEEbW2FRN.rD9hJqOAGho
- WEELp_AgSNArM_zpr3x0WiINWQguROCLDUtSE0bY4d1TgZJpiyT79akjcnghn8AZm5Rpa9T8.b1e
- 7TmNMpkj0RrCXMjmeZY5muGCnfYVaulaMsBvPiQ4NLQHCYWygOJmJs7kMXgx6gF0.z89lksCb4wa
- Y2RgymIt8P9pMZNHLspFXc70L8WREprbcZw6T4gPkxkLYOV33GQWSN6pb8o7t2TX8D9myQ4LIf7I
- fUBljmypUyAatjFr14vs2T18O.BVH3W.0AzOGIHRKpLhXEt5ltUaT2BQyMj7adPOeRi.VzjRbZLM
- UceRmcgUtnye.cs.qniwsyq0fI.73zsGI.F4ME3d6xTD1Gtk2PtkNlyiU87Q_AjzbTHnhr3MNQTU
- wURzQ2drltpwdLDlgBCV1yyiH_Ojj_UMBxce_e0FfuVG1xz0M1Rkq0.JPx.1Y.mQQ7oP4wIwfov5
- jdUB9ndPTwui2gpq87gzYt_nVrpatGagYD1ne3kwAve2EzBGNuriD3a6FM4L0IeKx1fWK.YFM1V8
- KauSQxtA6HechEs_UAVht3gpya7JFkX7Eskk456NCu9pXvficeZDZgdmimgGmyW0y8QuPbQa2OHN
- JgA8t7a2_Zse3FMTitlYRDelY0T3HW0sdQnRVTlwX_iCK6oSbKCYviDcOfNkOFH3vS.SQBjKE3n3
- 1Kj9pM18U_2Zqrm8FBiFeqftV3cJ.alZ2Tok9iQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ne1.yahoo.com with HTTP; Wed, 7 Oct 2020 16:34:35 +0000
-Date:   Wed, 7 Oct 2020 16:34:32 +0000 (UTC)
-From:   Marilyn Robert <fredodinga22@gmail.com>
-Reply-To: marilyobert@gmail.com
-Message-ID: <632062844.281145.1602088472450@mail.yahoo.com>
-Subject: =?UTF-8?B?0J3QsNGY0LzQuNC70LAg0LrQsNGYINCz0L7RgdC/0L7QtNCw0YDQvtGC?=
+        id S1727888AbgJGQu1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Oct 2020 12:50:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgJGQu1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Oct 2020 12:50:27 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFCF6C061755
+        for <linux-nfs@vger.kernel.org>; Wed,  7 Oct 2020 09:50:26 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id s47so2474966qth.4
+        for <linux-nfs@vger.kernel.org>; Wed, 07 Oct 2020 09:50:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:message-id:subject:to:cc:in-reply-to:references:organization
+         :mime-version:date:user-agent:content-transfer-encoding;
+        bh=v5fkWWavFoMpc89w5iQzYCJZDfdv93KOFJLVoB5lsfQ=;
+        b=YOxHwf1q8BXWeIR9na20uVsU8BuayVoSyhqor2B7nBeNOL3IKr64cYa9mkRQ2zJxMg
+         a06Q8g1uQRQ5SsTo3jn1A+72qieAs0D8bipItWPdjaQFxDhSdFlrWcR05QjNIySL+a7N
+         Rtgr3qak9pKl+dSo310WrBBNmWx2SJw5b7vLAAjw671KAPRFvFPJACJVy3ivQLhs5Xt0
+         l+b5zX/ahG+SjtcgAmwbhEwEWjHLCx4cV2XYMkhR7xIL7DyyUXfJWrnEYk+pMHf/sfKt
+         BbpLL+xGzK9txtywImbuip2yArifgy8dDycYIkvGXIqxF9yRPVl8uLZ3e9f9KTV2JCJZ
+         Xbwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:subject:to:cc:in-reply-to
+         :references:organization:mime-version:date:user-agent
+         :content-transfer-encoding;
+        bh=v5fkWWavFoMpc89w5iQzYCJZDfdv93KOFJLVoB5lsfQ=;
+        b=EkoFbZcPOKkaHJPjpdW1XW0Yx6P1RWvFnhS1bQJYCqNFZxZCrff4hcgISF3/CkABhZ
+         0hzpCkc9n/iVK39dzDImk1JoegjC97lGNkDxg85d2YlrlDjPiy5CMEnYO887iLYspwNW
+         CoPmQN/hHuT2rb08bg/AKnVf/9Nxp2j8wCfV7NuRnzwlKOozGJBXlNuHZ/7a57b1+C/h
+         XSVcPTL0jQ9tM19LdX+hRQh3/5yHNKRemrMRxPenFeW/eWbB+kBfGqhJJq1Ww+piUZVG
+         s3sl3tFwBrDGdAyALpq4oQu3zOzXdRP9kSeDKlw+CZ4y0skX7m7TbIAImCSlZzyMvNuR
+         TzWQ==
+X-Gm-Message-State: AOAM533pBwTo3fZezLGjEQgLiQA0RYLrJS5bAvf8x2YnFrThVFI2PbYN
+        Tmb4Wt9N/lYZ4iMzXwdmMA==
+X-Google-Smtp-Source: ABdhPJwMD+WSG/qR7aPmSwOoS9xi5fi46O7aTe2Q6YiSnNjLh0GXCgAu6RCSz1RCWr3ovZ1goasYKw==
+X-Received: by 2002:aed:25fc:: with SMTP id y57mr4032472qtc.199.1602089425743;
+        Wed, 07 Oct 2020 09:50:25 -0700 (PDT)
+Received: from leira (c-68-36-133-222.hsd1.mi.comcast.net. [68.36.133.222])
+        by smtp.gmail.com with ESMTPSA id d21sm1860873qtp.97.2020.10.07.09.50.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Oct 2020 09:50:24 -0700 (PDT)
+From:   Trond Myklebust <trondmy@gmail.com>
+X-Google-Original-From: Trond Myklebust <trondmy@hammerspace.com>
+Message-ID: <6d9aee613e9fb25509c9317910189ee37a2e4b43.camel@hammerspace.com>
+Subject: Re: unsharing tcp connections from different NFS mounts
+To:     Bruce Fields <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     Benjamin Coddington <bcodding@redhat.com>,
+        Olga Kornievskaia <aglo@umich.edu>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+In-Reply-To: <20201007160556.GE23452@fieldses.org>
+References: <20201006151335.GB28306@fieldses.org>
+         <95542179-0C20-4A1F-A835-77E73AD70DB8@redhat.com>
+         <CAN-5tyGDC0VQqjqUNzs_Ka+-G_1eCScVxuXvWsp7xe7QYj69Ww@mail.gmail.com>
+         <20201007001814.GA5138@fieldses.org>
+         <57E3293C-5C49-4A80-957B-E490E6A9B32E@redhat.com>
+         <5B5CF80C-494A-42D3-8D3F-51C0277D9E1B@redhat.com>
+         <8ED5511E-25DE-4C06-9E26-A1947383C86A@oracle.com>
+         <20201007140502.GC23452@fieldses.org>
+         <85F496CD-9AAC-451C-A224-FCD138BDC591@oracle.com>
+         <20201007160556.GE23452@fieldses.org>
+Organization: Hammerspace Inc
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-References: <632062844.281145.1602088472450.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16795 YMailNodin Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+Date:   Wed, 07 Oct 2020 12:44:42 -0400
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-DQoNCtCd0LDRmNC80LjQu9CwINC60LDRmCDQs9C+0YHQv9C+0LTQsNGA0L7Rgg0KDQrQiNCw0YEg
-0YHRg9C8IDY4LdCz0L7QtNC40YjQvdCwINC20LXQvdCwLCDQutC+0ZjQsCDRgdGC0YDQsNC00LAg
-0L7QtCDQv9GA0L7QtNC+0LvQttC10L0g0LrQsNGA0YbQuNC90L7QvCDQvdCwINC00L7RmNC60LAs
-INC+0LQg0YHQuNGC0LUg0LzQtdC00LjRhtC40L3RgdC60Lgg0LjQvdC00LjQutCw0YbQuNC4LCDQ
-vNC+0ZjQsNGC0LAg0YHQvtGB0YLQvtGY0LHQsCDQvdCw0LLQuNGB0YLQuNC90LAg0YHQtSDQstC7
-0L7RiNC4INC4INC+0YfQuNCz0LvQtdC00L3QviDQtSDQtNC10LrQsCDQvNC+0LbQtdCx0Lgg0L3Q
-tdC80LAg0LTQsCDQttC40LLQtdCw0Lwg0L/QvtCy0LXRnNC1INC+0LQg0YjQtdGB0YIg0LzQtdGB
-0LXRhtC4INC60LDQutC+INGA0LXQt9GD0LvRgtCw0YIg0L3QsCDQsdGA0LfQuNC+0YIg0YDQsNGB
-0YIg0Lgg0LHQvtC70LrQsNGC0LAg0YjRgtC+INGB0LUg0ZjQsNCy0YPQstCwINC60LDRmCDQvdC1
-0LAuINCc0L7RmNC+0YIg0YHQvtC/0YDRg9CzINC/0L7Rh9C40L3QsCDQvdC10LrQvtC70LrRgyDQ
-s9C+0LTQuNC90Lgg0L3QsNC90LDQt9Cw0LQg0Lgg0L3QsNGI0LjRgtC1INC00L7Qu9Cz0Lgg0LPQ
-vtC00LjQvdC4INCx0YDQsNC6INC90LUg0LHQtdCwINCx0LvQsNCz0L7RgdC70L7QstC10L3QuCDR
-gdC+INC90LjRgtGDINC10LTQvdC+INC00LXRgtC1LCDQv9C+INC90LXQs9C+0LLQsNGC0LAg0YHQ
-vNGA0YIg0LPQviDQvdCw0YHQu9C10LTQuNCyINGG0LXQu9C+0YLQviDQvdC10LPQvtCy0L4g0LHQ
-vtCz0LDRgtGB0YLQstC+Lg0KDQrQlNC+0LDRk9Cw0Lwg0LrQsNGYINCy0LDRgSDQvtGC0LrQsNC6
-0L4g0YHQtSDQv9C+0LzQvtC70LjQsiDQt9CwINGC0L7QsCwg0L/QvtC00LPQvtGC0LLQtdC9INGB
-0YPQvCDQtNCwINC00L7QvdC40YDQsNC8INGB0YPQvNCwINC+0LQgMiwgMzAwLCAwMDAg0LXQstGA
-0LAg0LfQsCDQv9C+0LzQvtGIINC90LAg0YHQuNGA0L7QvNCw0YjQvdC40YLQtSwg0YHQuNGA0L7Q
-vNCw0YjQvdC40YLQtSDQuCDQv9C+0LzQsNC70LrRgyDQv9GA0LjQstC40LvQtdCz0LjRgNCw0L3Q
-uNGC0LUg0LzQtdGT0YMg0LLQsNGI0LjRgtC1INGB0L7QsdGA0LDQvdC40ZjQsCAvINC+0L/RiNGC
-0LXRgdGC0LLQvi4g0JfQsNCx0LXQu9C10LbQtdGC0LUg0LTQtdC60LAg0L7QstC+0Zgg0YTQvtC9
-0LQg0LUg0LTQtdC/0L7QvdC40YDQsNC9INCy0L4g0LHQsNC90LrQsCDQutCw0LTQtSDRiNGC0L4g
-0YDQsNCx0L7RgtC10YjQtSDQvNC+0ZjQvtGCINGB0L7Qv9GA0YPQsy4gQXBwcmVjaWF0ZdC1INGG
-0LXQvdCw0Lwg0LDQutC+INC+0LHRgNC90LXRgtC1INCy0L3QuNC80LDQvdC40LUg0L3QsCDQvNC+
-0LXRgtC+INCx0LDRgNCw0ZrQtSDQt9CwINC/0YDQvtC/0LDQs9C40YDQsNGa0LUg0L3QsCDQvNCw
-0YHQsNC20LDRgtCwINC90LAg0LrRgNCw0LvRgdGC0LLQvtGC0L4sINGc0LUg0LLQuCDQtNCw0LTQ
-sNC8INC/0L7QstC10ZzQtSDQtNC10YLQsNC70Lgg0LfQsCDRgtC+0LAg0LrQsNC60L4g0LTQsCDQ
-v9C+0YHRgtCw0L/QuNGC0LUuDQoNCtCR0LvQsNCz0L7QtNCw0YDQsNC8DQrQky3Rk9CwINCc0LXR
-gNC40LvQuNC9INCg0L7QsdC10YDRgg==
+On Wed, 2020-10-07 at 12:05 -0400, Bruce Fields wrote:
+> On Wed, Oct 07, 2020 at 10:15:39AM -0400, Chuck Lever wrote:
+> > 
+> > > On Oct 7, 2020, at 10:05 AM, Bruce Fields <bfields@fieldses.org>
+> > > wrote:
+> > > 
+> > > On Wed, Oct 07, 2020 at 09:45:50AM -0400, Chuck Lever wrote:
+> > > > 
+> > > > > On Oct 7, 2020, at 8:55 AM, Benjamin Coddington <
+> > > > > bcodding@redhat.com> wrote:
+> > > > > 
+> > > > > On 7 Oct 2020, at 7:27, Benjamin Coddington wrote:
+> > > > > 
+> > > > > > On 6 Oct 2020, at 20:18, J. Bruce Fields wrote:
+> > > > > > 
+> > > > > > > On Tue, Oct 06, 2020 at 05:46:11PM -0400, Olga
+> > > > > > > Kornievskaia wrote:
+> > > > > > > > On Tue, Oct 6, 2020 at 3:38 PM Benjamin Coddington <
+> > > > > > > > bcodding@redhat.com> wrote:
+> > > > > > > > > On 6 Oct 2020, at 11:13, J. Bruce Fields wrote:
+> > > > > > > Looks like nfs4_init_{non}uniform_client_string() stores
+> > > > > > > it in
+> > > > > > > cl_owner_id, and I was thinking that meant cl_owner_id
+> > > > > > > would be used
+> > > > > > > from then on....
+> > > > > > > 
+> > > > > > > But actually, I think it may run that again on recovery,
+> > > > > > > yes, so I bet
+> > > > > > > changing the nfs4_unique_id parameter midway like this
+> > > > > > > could cause bugs
+> > > > > > > on recovery.
+> > > > > > 
+> > > > > > Ah, that's what I thought as well.  Thanks for looking
+> > > > > > closer Olga!
+> > > > > 
+> > > > > Well, no -- it does indeed continue to use the original
+> > > > > cl_owner_id.  We
+> > > > > only jump through nfs4_init_uniquifier_client_string() if
+> > > > > cl_owner_id is
+> > > > > NULL:
+> > > > > 
+> > > > > 6087 static int
+> > > > > 6088 nfs4_init_uniform_client_string(struct nfs_client *clp)
+> > > > > 6089 {
+> > > > > 6090     size_t len;
+> > > > > 6091     char *str;
+> > > > > 6092
+> > > > > 6093     if (clp->cl_owner_id != NULL)
+> > > > > 6094         return 0;
+> > > > > 6095
+> > > > > 6096     if (nfs4_client_id_uniquifier[0] != '\0')
+> > > > > 6097         return nfs4_init_uniquifier_client_string(clp);
+> > > > > 6098
+> > > > > 
+> > > > > 
+> > > > > Testing proves this out as well for both EXCHANGE_ID and
+> > > > > SETCLIENTID.
+> > > > > 
+> > > > > Is there any precedent for stabilizing module parameters as
+> > > > > part of a
+> > > > > supported interface?  Maybe this ought to be a mount option,
+> > > > > so client can
+> > > > > set a uniquifier per-mount.
+> > > > 
+> > > > The protocol is designed as one client-ID per client. FreeBSD
+> > > > is
+> > > > the only client I know of that uses one client-ID per mount,
+> > > > fwiw.
+> > > > 
+> > > > You are suggesting each mount point would have its own lease.
+> > > > There
+> > > > would likely be deeper implementation changes needed than just
+> > > > specifying a unique client-ID for each mount point.
+> > > 
+> > > Huh, I thought that should do it.
+> > > 
+> > > Do you have something specific in mind?
+> > 
+> > The relationship between nfs_client and nfs_server structs comes to
+> > mind.
+> 
+> I'm not following.  Do you have a specific problem in mind?
+> 
+
+The problem that all locks etc are tied to the lease, so if you change
+the clientid (and hence change the lease) then you need to ensure that
+the client knows to which lease the locks belong, that it is able to
+respond appropriately to all delegation recalls, layout recalls, ...
+etc.
+This need to track things on a per-lease basis is why we have the
+struct nfs_client. Things that are tracked on a per-superblock basis
+are tracked by the struct nfs_server.
+
+However all this is moot as long as nobody can explain why we'd want to
+do all this.
+
+As far as I can tell, this thread started with a complaint that
+performance suffers when we don't allow setups that hack the client by
+pretending that a multi-homed server is actually multiple different
+servers.
+
+AFAICS Tom Talpey's question is the relevant one. Why is there a
+performance regression being seen by these setups when they share the
+same connection? Is it really the connection, or is it the fact that
+they all share the same fixed-slot session?
+
+I did see Igor's claim that there is a QoS issue (which afaics would
+also affect NFSv3), but why do I care about QoS as a per-mountpoint
+feature?
+
+-- 
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trond.myklebust@hammerspace.com
+
+
+
