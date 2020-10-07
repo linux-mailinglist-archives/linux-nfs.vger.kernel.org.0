@@ -2,174 +2,142 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDEFB285FD2
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Oct 2020 15:10:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28184286067
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Oct 2020 15:46:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgJGNKi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Oct 2020 09:10:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728177AbgJGNKi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Oct 2020 09:10:38 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90460C061755
-        for <linux-nfs@vger.kernel.org>; Wed,  7 Oct 2020 06:10:38 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 6D5874F3B; Wed,  7 Oct 2020 09:10:37 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6D5874F3B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1602076237;
-        bh=uS9Lz/cEr5pBvZBR+mF0/7pdxZQEF3hGSDwUaWU3M9w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lJByCkYFhyrrJC0E25QPqVUj1uUyAuZyQ7PJNHEeivOcpQjB4S19BxkGpGot+xEKa
-         g5wToK1UoGn8eEtbYW79rRnJZyyuOfJW6IgyMT6g2Ops9okOLrkstjPKHYcQs+Lg/Y
-         n5GyKiGqBb5sf2AMTwkhScaW9G4o1XJWIW6+SMr8=
-Date:   Wed, 7 Oct 2020 09:10:37 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Kenneth Johansson <ken@kenjo.org>
-Cc:     Patrick Goetz <pgoetz@math.utexas.edu>, linux-nfs@vger.kernel.org
-Subject: Re: nfs home directory and google chrome.
-Message-ID: <20201007131037.GA23452@fieldses.org>
-References: <0ba0cd0c-eccd-2362-9958-23cd1fa033df@kenjo.org>
- <5326b6a3-0222-fc1a-6baa-ae2fbdaf209d@math.utexas.edu>
- <923003de-7fcf-abee-07a2-0691b25673d8@kenjo.org>
- <20201006181454.GB32640@fieldses.org>
- <07f3684e-482e-dc73-5c9a-b7c9329fc410@kenjo.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <07f3684e-482e-dc73-5c9a-b7c9329fc410@kenjo.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        id S1728428AbgJGNqM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Oct 2020 09:46:12 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34142 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728177AbgJGNqL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Oct 2020 09:46:11 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 097DZf7n182013;
+        Wed, 7 Oct 2020 13:45:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=olvT5p6ERpG8BK2fT6Llv2Cod2X9X+lOuiPuLCGCzA0=;
+ b=ycvMfbZvIk2wMkCfN9WXAPvCLoI8hklXeo8XfHAagsHw1Z7ZTTzChg8ybfeshfqqmFfQ
+ KhP0VdRz9hse2FSJJLCYQc9eCgXlXyK3LniWYlvwMylYM+T+rd4N4A8V+PPUebXcZn1i
+ ZjctOubnfPzCGl9BFAHr+SCQ2nEZY9S8UzYZ++tw0dCeU3YzRvepdGaAKZxqO/3T976V
+ qIfGtiRZNrm/mtDgiJUDAIHg8IhePOZ3HC27+Ep6RPFCdbAAuzQsEEeUEbCGyCRJRw+D
+ BBnfnFXBHRUGx3k8mUenOYRapLzaBEmIldSO/yIA0Ox4p0KlQ7xmaWV/g37cnWC+FqSL 1Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 33xhxn1rmc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 07 Oct 2020 13:45:55 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 097DaRvM132654;
+        Wed, 7 Oct 2020 13:45:55 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 33y37yk901-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 07 Oct 2020 13:45:55 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 097DjrxA032509;
+        Wed, 7 Oct 2020 13:45:53 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Oct 2020 06:45:53 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: unsharing tcp connections from different NFS mounts
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <5B5CF80C-494A-42D3-8D3F-51C0277D9E1B@redhat.com>
+Date:   Wed, 7 Oct 2020 09:45:50 -0400
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Olga Kornievskaia <aglo@umich.edu>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8ED5511E-25DE-4C06-9E26-A1947383C86A@oracle.com>
+References: <20201006151335.GB28306@fieldses.org>
+ <95542179-0C20-4A1F-A835-77E73AD70DB8@redhat.com>
+ <CAN-5tyGDC0VQqjqUNzs_Ka+-G_1eCScVxuXvWsp7xe7QYj69Ww@mail.gmail.com>
+ <20201007001814.GA5138@fieldses.org>
+ <57E3293C-5C49-4A80-957B-E490E6A9B32E@redhat.com>
+ <5B5CF80C-494A-42D3-8D3F-51C0277D9E1B@redhat.com>
+To:     Benjamin Coddington <bcodding@redhat.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9766 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 spamscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2010070089
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9766 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
+ impostorscore=0 lowpriorityscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 clxscore=1015 spamscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2010070089
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Oct 07, 2020 at 12:54:50PM +0200, Kenneth Johansson wrote:
-> On 2020-10-06 20:14, J. Bruce Fields wrote:
-> >On Mon, Oct 05, 2020 at 10:07:56PM +0200, Kenneth Johansson wrote:
-> >>On 2020-10-05 18:46, Patrick Goetz wrote:
-> >>>We had a similar problem with Firefox, most notably with Mac OSX
-> >>>users who have NFS-mounted home directories. There's an
-> >>>about:config solution for Firefox; namely set
-> >>>
-> >>>    storage.nfs_filesystem: true
-> >>>
-> >>>This forces a specific network file locking mechanism which makes
-> >>>sqlite behave better. I'm guessing google chrome has something
-> >>>similar.
-> >>>
-> >>Since I have used chrome for years without any problems my guess it
-> >>that its something that changed with nfs in my setup.
-> >>
-> >>I did a strace and the first -EIO I get look like this
-> >>
-> >>fdatasync(94</home/kenjo/.config/google-chrome/Default/Login Data>)
-> >>= -1 EIO (Input/output error)
-> >>
-> >>then the same thing happens for other files like
-> >>
-> >>fdatasync(83</home/kenjo/.config/google-chrome/Default/Web Data>) =
-> >>-1 EIO (Input/output error)
-> >>
-> >>fdatasync(74</home/kenjo/.config/google-chrome/Default/History>) =
-> >>-1 EIO (Input/output error)
-> >Are you using soft mounts?
-> >
-> >(What are your mount options?)
-> 
-> auto.home /home autofs rw,relatime,fd=18,pgrp=2682,timeout=300,minproto=5,maxproto=5,indirect,pipe_ino=67621
-> 0 0
-> 
-> /home/kenjo nfs4 rw,noatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,acregmin=120,acregmax=120,acdirmin=120,acdirmax=120,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=172.16.2.16,fsc,local_lock=none,addr=172.16.2.6
-> 0 0
-> 
-> what I actualy set manually in auto.home is
-> 
-> -tcp,fsc,noatime,ac,actimeo=120
 
-OK, that looks fine.
 
-Maybe I overlooked the obvious: if Chrome holds a lock on that file when
-you suspend, and if you stay in suspend for longer than the NFSv4 lease
-time (default 90 seconds), then the client will lose its lease, hence
-any file locks.  I think these days the client then returns EIO on any
-further IO to that file descriptor.
+> On Oct 7, 2020, at 8:55 AM, Benjamin Coddington <bcodding@redhat.com> =
+wrote:
+>=20
+> On 7 Oct 2020, at 7:27, Benjamin Coddington wrote:
+>=20
+>> On 6 Oct 2020, at 20:18, J. Bruce Fields wrote:
+>>=20
+>>> On Tue, Oct 06, 2020 at 05:46:11PM -0400, Olga Kornievskaia wrote:
+>>>> On Tue, Oct 6, 2020 at 3:38 PM Benjamin Coddington =
+<bcodding@redhat.com> wrote:
+>>>>>=20
+>>>>> On 6 Oct 2020, at 11:13, J. Bruce Fields wrote:
+>=20
+>>> Looks like nfs4_init_{non}uniform_client_string() stores it in
+>>> cl_owner_id, and I was thinking that meant cl_owner_id would be used
+>>> from then on....
+>>>=20
+>>> But actually, I think it may run that again on recovery, yes, so I =
+bet
+>>> changing the nfs4_unique_id parameter midway like this could cause =
+bugs
+>>> on recovery.
+>>=20
+>> Ah, that's what I thought as well.  Thanks for looking closer Olga!
+>=20
+> Well, no -- it does indeed continue to use the original cl_owner_id.  =
+We
+> only jump through nfs4_init_uniquifier_client_string() if cl_owner_id =
+is
+> NULL:
+>=20
+> 6087 static int
+> 6088 nfs4_init_uniform_client_string(struct nfs_client *clp)
+> 6089 {
+> 6090     size_t len;
+> 6091     char *str;
+> 6092
+> 6093     if (clp->cl_owner_id !=3D NULL)
+> 6094         return 0;
+> 6095
+> 6096     if (nfs4_client_id_uniquifier[0] !=3D '\0')
+> 6097         return nfs4_init_uniquifier_client_string(clp);
+> 6098
+>=20
+>=20
+> Testing proves this out as well for both EXCHANGE_ID and SETCLIENTID.
+>=20
+> Is there any precedent for stabilizing module parameters as part of a
+> supported interface?  Maybe this ought to be a mount option, so client =
+can
+> set a uniquifier per-mount.
 
-Maybe there's some way to turn off that locking as a workaround.
+The protocol is designed as one client-ID per client. FreeBSD is
+the only client I know of that uses one client-ID per mount, fwiw.
 
-The simplest thing we can do to help might be implementing "courteous
-server" behavior: instead of automatically removing locks after a
-client's lease expires, it can wait until there's an actual lock
-conflict.  That might be enough for your case.
+You are suggesting each mount point would have its own lease. There
+would likely be deeper implementation changes needed than just
+specifying a unique client-ID for each mount point.
 
-There's been a little planning done and it's not a big project, but I
-don't think it's actually at the top of anyone's todo list right now, so
-I'm not sure when that will get done.
+--
+Chuck Lever
 
---b.
 
-> 
-> 
-> >--b.
-> >
-> >>
-> >>
-> >>
-> >>>On 10/4/20 6:53 AM, Kenneth Johansson wrote:
-> >>>>So I have had for a long time problems with google chrome and
-> >>>>suspend resume causing it to mangle its sqlite database.
-> >>>>
-> >>>>it looks to only happen if I use nfs mounted home directory. I'm
-> >>>>not sure exactly what is happening but lets first see if this
-> >>>>happens to anybody else.
-> >>>>
-> >>>>How to get the error.
-> >>>>
-> >>>>1. start google from a terminal with "google-chrome"
-> >>>>
-> >>>>2. suspend the computer
-> >>>>
-> >>>>3. wait a while. There is some type of minimum time here I do
-> >>>>not know what its is but I basically get the error every time of
-> >>>>I suspend in evening and resume in morning
-> >>>>
-> >>>>4. look for printout that looks like something like this
-> >>>>
-> >>>>[16789:18181:1004/125852.529750:ERROR:database.cc(1692)]
-> >>>>Passwords sqlite error 1034, errno 5: disk I/O error, sql:
-> >>>>COMMIT
-> >>>>[16789:16829:1004/125852.529744:ERROR:database.cc(1692)] Web
-> >>>>sqlite error 1034, errno 5: disk I/O error, sql: COMMIT
-> >>>>[16789:16829:1004/125852.530261:ERROR:database.cc(1692)] Web
-> >>>>sqlite error 1034, errno 5: disk I/O error, sql: INSERT OR
-> >>>>REPLACE INTO autofill_model_type_state (model_type, value)
-> >>>>VALUES(?,?)
-> >>>>[16789:16789:1004/125852.563571:ERROR:sync_metadata_store_change_list.cc(34)]
-> >>>>Autofill datatype error was encountered: Failed to update
-> >>>>ModelTypeState.
-> >>>>[16789:19002:1004/125902.534103:ERROR:database.cc(1692)] History
-> >>>>sqlite error 1034, errno 5: disk I/O error, sql: COMMIT
-> >>>>[16789:19002:1004/125902.536903:ERROR:database.cc(1692)]
-> >>>>Thumbnail sqlite error 778, errno 5: disk I/O error, sql: COMMIT
-> >>>>
-> >>>>
-> >>>>[16789:19002:1004/130044.120379:ERROR:database.cc(1692)]
-> >>>>Passwords sqlite error 1034, errno 5: disk I/O error, sql:
-> >>>>INSERT OR REPLACE INTO sync_model_metadata (id, model_metadata)
-> >>>>VALUES(1, ?)
-> >>>>[16789:16829:1004/130044.120388:ERROR:database.cc(1692)] Web
-> >>>>sqlite error 1034, errno 5: disk I/O error, sql: INSERT OR
-> >>>>REPLACE INTO autofill_model_type_state (model_type, value)
-> >>>>VALUES(?,?)
-> >>>>
-> >>>>
-> >>>>and so on.  if you use google sync you can also check
-> >>>>"chrome://sync-internals" to see if something is wrong with the
-> >>>>database.
-> >>>>
-> >>>>
-> >>>>
-> >>>>>>This message is from an external sender. Learn more about why this <<
-> >>>>>>matters at https://links.utexas.edu/rtyclf. <<
-> 
+
