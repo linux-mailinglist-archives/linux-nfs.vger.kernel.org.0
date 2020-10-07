@@ -2,109 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 137192860E1
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Oct 2020 16:05:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0F11286102
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Oct 2020 16:15:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgJGOFD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Oct 2020 10:05:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728469AbgJGOFD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Oct 2020 10:05:03 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59A44C061755
-        for <linux-nfs@vger.kernel.org>; Wed,  7 Oct 2020 07:05:03 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 82C7F69C3; Wed,  7 Oct 2020 10:05:02 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 82C7F69C3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1602079502;
-        bh=gRT0dnFwglzPNulbC0c3JM2+Nto4TWO0uvknJ1NuNaE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K4XIopx7nYsaxFgP1L95/TNuSU3AcICBgY8UGfEhY1Pl/mCAUtWTbOC98xG2AnBpQ
-         hej3HrEwdmEfa9WPbfBTWfb+DLogXmvfLrd8vXxLgTK/6V5SgKDoqPJx9jKhcORP9l
-         bGvchzJzMCd+9GT2cw9XYBuuL7qeglTMrf1qiNLA=
-Date:   Wed, 7 Oct 2020 10:05:02 -0400
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Benjamin Coddington <bcodding@redhat.com>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+        id S1728560AbgJGOPf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Oct 2020 10:15:35 -0400
+Received: from p3plsmtpa06-01.prod.phx3.secureserver.net ([173.201.192.102]:34530
+        "EHLO p3plsmtpa06-01.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728230AbgJGOPe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Oct 2020 10:15:34 -0400
+X-Greylist: delayed 438 seconds by postgrey-1.27 at vger.kernel.org; Wed, 07 Oct 2020 10:15:34 EDT
+Received: from [10.64.176.159] ([192.138.178.211])
+        by :SMTPAUTH: with ESMTPSA
+        id QA74kI5mYXReoQA75kKVa8; Wed, 07 Oct 2020 07:08:15 -0700
+X-CMAE-Analysis: v=2.3 cv=DKHxHBFb c=1 sm=1 tr=0
+ a=5HL3Asy66/FZFZAtvjrEgQ==:117 a=5HL3Asy66/FZFZAtvjrEgQ==:17
+ a=IkcTkHD0fZMA:10 a=mJjC6ScEAAAA:8 a=yVUtY6i4JWGfK-NmFg0A:9 a=QEXdDO2ut3YA:10
+ a=ijnPKfduoCotzip5AuI1:22
+X-SECURESERVER-ACCT: tom@talpey.com
 Subject: Re: unsharing tcp connections from different NFS mounts
-Message-ID: <20201007140502.GC23452@fieldses.org>
+To:     Igor Ostrovsky <igor@purestorage.com>,
+        Bruce Fields <bfields@fieldses.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 References: <20201006151335.GB28306@fieldses.org>
- <95542179-0C20-4A1F-A835-77E73AD70DB8@redhat.com>
- <CAN-5tyGDC0VQqjqUNzs_Ka+-G_1eCScVxuXvWsp7xe7QYj69Ww@mail.gmail.com>
- <20201007001814.GA5138@fieldses.org>
- <57E3293C-5C49-4A80-957B-E490E6A9B32E@redhat.com>
- <5B5CF80C-494A-42D3-8D3F-51C0277D9E1B@redhat.com>
- <8ED5511E-25DE-4C06-9E26-A1947383C86A@oracle.com>
+ <43CA4047-F058-4339-AD64-29453AE215D6@oracle.com>
+ <20201006152223.GD28306@fieldses.org>
+ <bb58e43a-f23d-d5f5-ac53-9230267f7faa@talpey.com>
+ <20201006193044.GC32640@fieldses.org>
+ <CAGrwUG5_KeRVR8chcA8=3FSeii2+4c8FbuE=CSGAtYVYqV4kLg@mail.gmail.com>
+From:   Tom Talpey <tom@talpey.com>
+Message-ID: <5064e851-5fa3-ee37-a5c7-a6e9f02e2b8d@talpey.com>
+Date:   Wed, 7 Oct 2020 10:08:15 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ED5511E-25DE-4C06-9E26-A1947383C86A@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAGrwUG5_KeRVR8chcA8=3FSeii2+4c8FbuE=CSGAtYVYqV4kLg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfMODCJXF9AGAOLq5jBSVJ8SdvcUBKjX6Ysr7QqeYbfvAjSD6QEwE1kDe5ZG37AwPQrmd2GCvrR2/pIYddUjy1n+APO5yLOwrbXDuBgajSjCQGLh0A4Hl
+ IPaAgF2Z5SPNv9YVGlXELDBy2c2JefztbbsTKUB/I4p5rIKaSQaD/6Uhv6LM/BbPqdlgjV4YkGm3xLaxhh1repOxAP8rTJzWldHXDtwjoCVhb7eE0V0U17+E
+ 8+beV0190844LGnIgJZFzFouskiRNJla5+vn0MF0G6Q=
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Oct 07, 2020 at 09:45:50AM -0400, Chuck Lever wrote:
+On 10/6/2020 5:26 PM, Igor Ostrovsky wrote:
 > 
 > 
-> > On Oct 7, 2020, at 8:55 AM, Benjamin Coddington <bcodding@redhat.com> wrote:
-> > 
-> > On 7 Oct 2020, at 7:27, Benjamin Coddington wrote:
-> > 
-> >> On 6 Oct 2020, at 20:18, J. Bruce Fields wrote:
-> >> 
-> >>> On Tue, Oct 06, 2020 at 05:46:11PM -0400, Olga Kornievskaia wrote:
-> >>>> On Tue, Oct 6, 2020 at 3:38 PM Benjamin Coddington <bcodding@redhat.com> wrote:
-> >>>>> 
-> >>>>> On 6 Oct 2020, at 11:13, J. Bruce Fields wrote:
-> > 
-> >>> Looks like nfs4_init_{non}uniform_client_string() stores it in
-> >>> cl_owner_id, and I was thinking that meant cl_owner_id would be used
-> >>> from then on....
-> >>> 
-> >>> But actually, I think it may run that again on recovery, yes, so I bet
-> >>> changing the nfs4_unique_id parameter midway like this could cause bugs
-> >>> on recovery.
-> >> 
-> >> Ah, that's what I thought as well.  Thanks for looking closer Olga!
-> > 
-> > Well, no -- it does indeed continue to use the original cl_owner_id.  We
-> > only jump through nfs4_init_uniquifier_client_string() if cl_owner_id is
-> > NULL:
-> > 
-> > 6087 static int
-> > 6088 nfs4_init_uniform_client_string(struct nfs_client *clp)
-> > 6089 {
-> > 6090     size_t len;
-> > 6091     char *str;
-> > 6092
-> > 6093     if (clp->cl_owner_id != NULL)
-> > 6094         return 0;
-> > 6095
-> > 6096     if (nfs4_client_id_uniquifier[0] != '\0')
-> > 6097         return nfs4_init_uniquifier_client_string(clp);
-> > 6098
-> > 
-> > 
-> > Testing proves this out as well for both EXCHANGE_ID and SETCLIENTID.
-> > 
-> > Is there any precedent for stabilizing module parameters as part of a
-> > supported interface?  Maybe this ought to be a mount option, so client can
-> > set a uniquifier per-mount.
+> On Tue, Oct 6, 2020 at 12:30 PM Bruce Fields <bfields@fieldses.org 
+> <mailto:bfields@fieldses.org>> wrote:
 > 
-> The protocol is designed as one client-ID per client. FreeBSD is
-> the only client I know of that uses one client-ID per mount, fwiw.
+>     On Tue, Oct 06, 2020 at 01:07:11PM -0400, Tom Talpey wrote:
+>      > On 10/6/2020 11:22 AM, Bruce Fields wrote:
+>      > >On Tue, Oct 06, 2020 at 11:20:41AM -0400, Chuck Lever wrote:
+>      > >>
+>      > >>
+>      > >>>On Oct 6, 2020, at 11:13 AM, bfields@fieldses.org
+>     <mailto:bfields@fieldses.org> wrote:
+>      > >>>
+>      > >>>NFSv4.1+ differs from earlier versions in that it always performs
+>      > >>>trunking discovery that results in mounts to the same server
+>     sharing a
+>      > >>>TCP connection.
+>      > >>>
+>      > >>>It turns out this results in performance regressions for some
+>     users;
+>      > >>>apparently the workload on one mount interferes with
+>     performance of
+>      > >>>another mount, and they were previously able to work around
+>     the problem
+>      > >>>by using different server IP addresses for the different mounts.
+>      > >>>
+>      > >>>Am I overlooking some hack that would reenable the previous
+>     behavior?
+>      > >>>Or would people be averse to an "-o noshareconn" option?
+>      > >>
+>      > >>I thought this was what the nconnect mount option was for.
+>      > >
+>      > >I've suggested that.  It doesn't isolate the two mounts from
+>     each other
+>      > >in the same way, but I can imagine it might make it less likely
+>     that a
+>      > >user on one mount will block a user on another?  I don't know,
+>     it might
+>      > >depend on the details of their workload and a certain amount of
+>     luck.
+>      >
+>      > Wouldn't it be better to fully understand the reason for the
+>      > performance difference, before changing the mount API? If it's
+>      > a guess, it'll come back to haunt the code for years.
+>      >
+>      > For example, maybe it's lock contention in the xprt transport code,
+>      > or in the socket stack.
 > 
-> You are suggesting each mount point would have its own lease. There
-> would likely be deeper implementation changes needed than just
-> specifying a unique client-ID for each mount point.
+>     Yeah, I wonder too, and I don't have the details.
+> 
+> 
+> I've seen cases like this:
+> 
+>      dd if=/dev/zero of=/mnt/mount1/zeros &
+>      ls /mnt/mount2/
+> 
+> If /mnt/mount1 and /mnt/mount2 are NFS v3 mounts to the same server IP, 
+> the access to /mnt/mount2 can take a long time because the RPCs from "ls 
+> /mnt/mount2/" get stuck behind a bunch of the writes to /mnt/mount1. If 
+> /mnt/mount1 and /mnt/mount2 are different IPs to the same server, the 
+> accesses to /mnt/mount2 aren't impacted by the write workload on 
+> /mnt/mount1 (unless there is a saturation on the  server side, obviously).
 
-Huh, I thought that should do it.
+This is plausible, and if so, I believe it indicates a credit/slot
+shortage.
 
-Do you have something specific in mind?
+Does the client request more slots when it begins to share another
+mount point on the connection? Does the server grant them, if so?
 
---b.
+Tom.
+
+> 
+> It sounds like with NFS v4.1 trunking discovery, using separate IPs for 
+> the two mounts is no longer a sufficient workaround.
+> Igor
