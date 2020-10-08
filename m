@@ -2,303 +2,106 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B767D286D25
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Oct 2020 05:25:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1B12287B49
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Oct 2020 19:58:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgJHDZo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Oct 2020 23:25:44 -0400
-Received: from mga09.intel.com ([134.134.136.24]:11225 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727449AbgJHDZo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 7 Oct 2020 23:25:44 -0400
-IronPort-SDR: wcJ5B4x0rPQeLdlmvKON+lAd4Co1EOFuk+6drZZ54EZHbtvhihoytp9PQiUK1VQCQPyMc7+A8g
- UZqqUBY4NYTA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9767"; a="165362511"
-X-IronPort-AV: E=Sophos;i="5.77,349,1596524400"; 
-   d="gz'50?scan'50,208,50";a="165362511"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2020 20:25:42 -0700
-IronPort-SDR: fhVRZes9iHyH7Fwy5n9HX86yfiGJaq585/13+zaGi3Sfo7/Y0Ry/EJHql1ztD20RNREVMcj6JC
- ketsY2vYHVnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,349,1596524400"; 
-   d="gz'50?scan'50,208,50";a="461639345"
-Received: from lkp-server02.sh.intel.com (HELO b5ae2f167493) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 07 Oct 2020 20:25:40 -0700
-Received: from kbuild by b5ae2f167493 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kQMYl-0001wm-Tk; Thu, 08 Oct 2020 03:25:39 +0000
-Date:   Thu, 8 Oct 2020 11:24:42 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Dai Ngo <dai.ngo@oracle.com>, bfields@fieldses.org
-Cc:     kbuild-all@lists.01.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] NFSv4.2: Fix NFS4ERR_STALE error when doing inter
- server copy
-Message-ID: <202010081111.8DpnWWOa-lkp@intel.com>
-References: <20201008012513.89989-2-dai.ngo@oracle.com>
+        id S1726165AbgJHR6E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 8 Oct 2020 13:58:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbgJHR6E (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 8 Oct 2020 13:58:04 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65DE4C061755
+        for <linux-nfs@vger.kernel.org>; Thu,  8 Oct 2020 10:58:04 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 9555F6EF0; Thu,  8 Oct 2020 13:58:03 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 9555F6EF0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1602179883;
+        bh=kPpYtnUt4nRld0oIrX5N+NaYGso2dvbs9Al3BGLYPf8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hmHOFvQ1wAjJEqGddXxmD7GZoi2dftVytgO4x0/3WxGGk8xN15FXcc9vowEh53fVk
+         YnRnZlesYY+H1yrBQNd3XvMqSqTdXxG5kNVi2Rf09xaDkKia3xqRIIYBLOMuhU3PkL
+         PvkTz1dn618SXSYhh8opn1bHeSJKz36qOWZxzqec=
+Date:   Thu, 8 Oct 2020 13:58:03 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 0/1] NFSv4.2: Fix NFS4ERR_STALE with inter server copy
+Message-ID: <20201008175803.GA18179@fieldses.org>
+References: <20201008012513.89989-1-dai.ngo@oracle.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="nFreZHaLTZJo0R7j"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201008012513.89989-2-dai.ngo@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20201008012513.89989-1-dai.ngo@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Wed, Oct 07, 2020 at 09:25:12PM -0400, Dai Ngo wrote:
+> This cover email is intended for including my test results.
+> 
+> This patch adds the ops table in nfs_common for knfsd to access
+> NFS client modules without calling these functions directly.
+> 
+> The client module registers their functions and deregisters them
+> when the module is loaded and unloaded respectively.
+> 
+>  fs/nfs/nfs4file.c       |  44 ++++++++++++--
+>  fs/nfs/nfs4super.c      |   6 ++
+>  fs/nfs/super.c          |  20 +++++++
+>  fs/nfs_common/Makefile  |   1 +
+>  fs/nfs_common/nfs_ssc.c | 136 +++++++++++++++++++++++++++++++++++++++++++
+>  fs/nfsd/Kconfig         |   2 +-
+>  fs/nfsd/nfs4proc.c      |   3 +-
+>  include/linux/nfs_ssc.h |  77 ++++++++++++++++++++++++
+>  8 files changed, 281 insertions(+), 8 deletions(-)
+> 
+> Test Results:
+> 
+> Upstream version used for testing:  5.9-rc5
+> 
+> |----------------------------------------------------------|
+> |  NFSD  |  NFS_FS  |  NFS_V4  |       RESULTS             |
+> |----------------------------------------------------------|
+> |   m    |    y     |    m     | inter server copy OK      |
+> |----------------------------------------------------------|
+> |   m    |    m     |    m     | inter server copy OK      |
+> |----------------------------------------------------------|
+> |   m    |    m     |   y (m)  | inter server copy OK      |
+> |----------------------------------------------------------|
+> |   m    |    y     |    y     | inter server copy OK      |
+> |----------------------------------------------------------|
+> |   m    |    n     |    n     | NFS4ERR_STALE error       |
+> |----------------------------------------------------------|
 
---nFreZHaLTZJo0R7j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Why are there two?  And how are you getting that NFS4ERR_STALE case?
+NFSD_V4_2_INTER_SSC depends on NFS_FS, so it shouldn't be possible to
+build server-to-server-copy support without building the client.  And if
+you don't build NFSD_V4_2_INTER_SSC at all, then I think it should be
+returning NOTSUPP instead of STALE.
 
-Hi Dai,
+--b.
 
-Thank you for the patch! Yet something to improve:
-
-[auto build test ERROR on nfs/linux-next]
-[also build test ERROR on nfsd/nfsd-next v5.9-rc8 next-20201007]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/0day-ci/linux/commits/Dai-Ngo/NFSv4-2-Fix-NFS4ERR_STALE-with-inter-server-copy/20201008-092931
-base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
-config: nds32-defconfig (attached as .config)
-compiler: nds32le-linux-gcc (GCC) 9.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/589c5501bac22055fafe42825de27f3cc1c82626
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review Dai-Ngo/NFSv4-2-Fix-NFS4ERR_STALE-with-inter-server-copy/20201008-092931
-        git checkout 589c5501bac22055fafe42825de27f3cc1c82626
-        # save the attached .config to linux build tree
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=nds32 
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   nds32le-linux-ld: fs/nfs/super.o: in function `register_nfs_fs':
-   super.c:(.init.text+0x72): undefined reference to `nfs_ssc_register'
-   nds32le-linux-ld: super.c:(.init.text+0x76): undefined reference to `nfs_ssc_register'
->> nds32le-linux-ld: fs/nfs/nfs4file.o:(.rodata+0x84): undefined reference to `__nfs42_ssc_open'
->> nds32le-linux-ld: fs/nfs/nfs4file.o:(.rodata+0x88): undefined reference to `__nfs42_ssc_close'
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
---nFreZHaLTZJo0R7j
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-P7WuJELsqgAA
-
---nFreZHaLTZJo0R7j--
+> |----------------------------------------------------------|
+> |  NFSD  |  NFS_FS  |  NFS_V4  |        RESULTS            |
+> |----------------------------------------------------------|
+> |   y    |    y     |    m     | inter server copy OK      |
+> |----------------------------------------------------------|
+> |   y    |    m     |    m     | inter server copy OK      |
+> |----------------------------------------------------------|
+> |   y    |    m     |   y (m)  | inter server copy OK      |
+> |----------------------------------------------------------|
+> |   y    |    y     |    y     | inter server copy OK      |
+> |----------------------------------------------------------|
+> |   y    |    n     |    n     | NFS4ERR_STALE error       |
+> |----------------------------------------------------------|
+> 
+> NOTE:
+> When NFS_V4=y and NFS_FS=m, the build process automatically builds
+> with NFS_V4=m and ignores the setting NFS_V4=y in the config file. 
+> 
+> This probably due to NFS_V4 in fs/nfs/Kconfig is configured to
+> depend on NFS_FS.
