@@ -2,122 +2,142 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 685FD28C1FA
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Oct 2020 22:03:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2D2028C43C
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Oct 2020 23:43:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgJLUDL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Oct 2020 16:03:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34096 "EHLO
+        id S1730583AbgJLVn5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Oct 2020 17:43:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgJLUDJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Oct 2020 16:03:09 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A3C8C0613D0;
-        Mon, 12 Oct 2020 13:03:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=bCWIFHvT8FvIPrDMc3maof4qHUnzu6oS60i9lgfyu+w=; b=osm7lCKhtCxcgsJVmnbUIZHhMp
-        5nvioHkxA8AhlfbRA0tXQBSBlQdovP0UNFUmlu/tYL30pdEacRnzwKeBjNLJ8YRj+D/sF4f+x4FRA
-        68EE5VyuQPlhkPgzE4vuiuikkji/6lzFKcK2qIYtpBfSW0scT+5xZ65/me+9ijMgWVh8NM56bexcy
-        gJZd0qYjXWzdg4a2mFecVVyLa3Rwg0gTTp9KEwoseCi8fLlQXob3uBfLwA1anIPkZvUKPjVJpvK3u
-        UT+9cSbb34PGNNH3jL974SwKTCytz2qfL4ONXzbZAaSn1ZoiKQGnXIIuZa+WQOp/Awa/qjp/ly6GK
-        H6D/8XHQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kS422-0000HA-AX; Mon, 12 Oct 2020 20:02:54 +0000
-Date:   Mon, 12 Oct 2020 21:02:54 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, linux-aio@kvack.org,
-        linux-efi@vger.kernel.org, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        target-devel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-kselftest@vger.kernel.org, samba-technical@lists.samba.org,
-        ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
-        devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org,
-        x86@kernel.org, amd-gfx@lists.freedesktop.org,
-        linux-afs@lists.infradead.org, cluster-devel@redhat.com,
-        linux-cachefs@redhat.com, intel-wired-lan@lists.osuosl.org,
-        xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org,
-        Fenghua Yu <fenghua.yu@intel.com>, ecryptfs@vger.kernel.org,
-        linux-um@lists.infradead.org, intel-gfx@lists.freedesktop.org,
-        linux-erofs@lists.ozlabs.org, reiserfs-devel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        io-uring@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-ntfs-dev@lists.sourceforge.net, netdev@vger.kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH RFC PKS/PMEM 22/58] fs/f2fs: Utilize new kmap_thread()
-Message-ID: <20201012200254.GB20115@casper.infradead.org>
-References: <20201009195033.3208459-1-ira.weiny@intel.com>
- <20201009195033.3208459-23-ira.weiny@intel.com>
- <20201009213434.GA839@sol.localdomain>
- <20201010003954.GW20115@casper.infradead.org>
- <20201010013036.GD1122@sol.localdomain>
- <20201012065635.GB2046448@iweiny-DESK2.sc.intel.com>
- <20201012161946.GA858@sol.localdomain>
- <5d621db9-23d4-e140-45eb-d7fca2093d2b@intel.com>
- <20201012164438.GA20115@casper.infradead.org>
- <20201012195354.GC2046448@iweiny-DESK2.sc.intel.com>
+        with ESMTP id S1730555AbgJLVn5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Oct 2020 17:43:57 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A39A3C0613D1
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Oct 2020 14:43:56 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id o9so9404949plx.10
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Oct 2020 14:43:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SblYN1e37CL9JdaGLQ5Y/6gLdI5UbuRc4P5/Ws+FaE0=;
+        b=trBiP6d4fYRQAfCdkqfM2hxAOmzzL+Ns2poC/dNnkAOtywmreZp1ZPUisBbEl43Q0b
+         XCCJX6j3+KcWMzUSVnqkKEL4WKhOxK2eb95cqKCWqOzssj5Gwi9Gt3kwY6jKSYEvNEKZ
+         1c8JLeN+t3UeVSfmoMB6wpOEHRQoCnoUTvVGM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SblYN1e37CL9JdaGLQ5Y/6gLdI5UbuRc4P5/Ws+FaE0=;
+        b=B4AFNDRaerhfxt4xnek3zzbHkYY3o+yNTK0zRfym12ERTLHvDmXisqAxmZyUSh8RrH
+         DoBaQ6jBc+xcau5hHqSIumq7QGL5TvIUQwO/SAAvsor1OiSOJiJOYfo+wixohIQlI/hd
+         h7ulKSkRQd85fozlON7XDgLzuV+grN/6fcLQSZ1tklCEJ22YFsiP2ajonqF8MjbLrv7D
+         nVdxYdZme2Lnx32fUrp36rNFJiVxo4tOa+qAvg1RBrE2kbaR3IYJallmSvppY4eK+sn2
+         D99iXmrCd0aEqF9WisDFDsD0PQbyV0c3TQufB9oUEUJXypArfkQVNwPF+Fmql3Ml/fxh
+         FZOA==
+X-Gm-Message-State: AOAM530IBqmgfdoT5P1ZrtQkT4TwIaBTQ7sR0STugaqzMrwcuNNHVmdn
+        jQMUo6rgGGwXNiF79ApIe3IoUw==
+X-Google-Smtp-Source: ABdhPJze2pu/LKw8phRCCUQRAYxhYqKPdK6K3HHpTH98lUUyjsv8/goN67o4aAofFpjme7TAcbslYQ==
+X-Received: by 2002:a17:902:8d86:b029:d1:9237:6dfd with SMTP id v6-20020a1709028d86b02900d192376dfdmr25060401plo.22.1602539035925;
+        Mon, 12 Oct 2020 14:43:55 -0700 (PDT)
+Received: from ubuntu.netflix.com (203.20.25.136.in-addr.arpa. [136.25.20.203])
+        by smtp.gmail.com with ESMTPSA id x5sm21284370pfp.113.2020.10.12.14.43.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Oct 2020 14:43:55 -0700 (PDT)
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     "J . Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     Sargun Dhillon <sargun@sargun.me>, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFS: Only reference user namespace from nfs4idmap struct instead of cred
+Date:   Mon, 12 Oct 2020 14:43:39 -0700
+Message-Id: <20201012214339.6070-1-sargun@sargun.me>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201012195354.GC2046448@iweiny-DESK2.sc.intel.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Oct 12, 2020 at 12:53:54PM -0700, Ira Weiny wrote:
-> On Mon, Oct 12, 2020 at 05:44:38PM +0100, Matthew Wilcox wrote:
-> > On Mon, Oct 12, 2020 at 09:28:29AM -0700, Dave Hansen wrote:
-> > > kmap_atomic() is always preferred over kmap()/kmap_thread().
-> > > kmap_atomic() is _much_ more lightweight since its TLB invalidation is
-> > > always CPU-local and never broadcast.
-> > > 
-> > > So, basically, unless you *must* sleep while the mapping is in place,
-> > > kmap_atomic() is preferred.
-> > 
-> > But kmap_atomic() disables preemption, so the _ideal_ interface would map
-> > it only locally, then on preemption make it global.  I don't even know
-> > if that _can_ be done.  But this email makes it seem like kmap_atomic()
-> > has no downsides.
-> 
-> And that is IIUC what Thomas was trying to solve.
-> 
-> Also, Linus brought up that kmap_atomic() has quirks in nesting.[1]
-> 
-> >From what I can see all of these discussions support the need to have something
-> between kmap() and kmap_atomic().
-> 
-> However, the reason behind converting call sites to kmap_thread() are different
-> between Thomas' patch set and mine.  Both require more kmap granularity.
-> However, they do so with different reasons and underlying implementations but
-> with the _same_ resulting semantics; a thread local mapping which is
-> preemptable.[2]  Therefore they each focus on changing different call sites.
-> 
-> While this patch set is huge I think it serves a valuable purpose to identify a
-> large number of call sites which are candidates for this new semantic.
+The nfs4idmapper only needs access to the user namespace, and not the
+entire cred struct. This replaces the struct cred* member with
+struct user_namespace*. This is mostly hygiene, so we don't have to
+hold onto the cred object, which has extraneous references to
+things like user_struct. This also makes switching away
+from init_user_ns more straightforward in the future.
 
-Yes, I agree.  My problem with this patch-set is that it ties it to
-some Intel feature that almost nobody cares about.  Maybe we should
-care about it, but you didn't try very hard to make anyone care about
-it in the cover letter.
+Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+---
+ fs/nfs/nfs4idmap.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-For a future patch-set, I'd like to see you just introduce the new
-API.  Then you can optimise the Intel implementation of it afterwards.
-Those patch-sets have entirely different reviewers.
+diff --git a/fs/nfs/nfs4idmap.c b/fs/nfs/nfs4idmap.c
+index 62e6eea5c516..8d8aba305ecc 100644
+--- a/fs/nfs/nfs4idmap.c
++++ b/fs/nfs/nfs4idmap.c
+@@ -46,6 +46,7 @@
+ #include <keys/user-type.h>
+ #include <keys/request_key_auth-type.h>
+ #include <linux/module.h>
++#include <linux/user_namespace.h>
+ 
+ #include "internal.h"
+ #include "netns.h"
+@@ -69,13 +70,13 @@ struct idmap {
+ 	struct rpc_pipe		*idmap_pipe;
+ 	struct idmap_legacy_upcalldata *idmap_upcall_data;
+ 	struct mutex		idmap_mutex;
+-	const struct cred	*cred;
++	struct user_namespace	*user_ns;
+ };
+ 
+ static struct user_namespace *idmap_userns(const struct idmap *idmap)
+ {
+-	if (idmap && idmap->cred)
+-		return idmap->cred->user_ns;
++	if (idmap && idmap->user_ns)
++		return idmap->user_ns;
+ 	return &init_user_ns;
+ }
+ 
+@@ -286,7 +287,7 @@ static struct key *nfs_idmap_request_key(const char *name, size_t namelen,
+ 	if (ret < 0)
+ 		return ERR_PTR(ret);
+ 
+-	if (!idmap->cred || idmap->cred->user_ns == &init_user_ns)
++	if (!idmap->user_ns || idmap->user_ns == &init_user_ns)
+ 		rkey = request_key(&key_type_id_resolver, desc, "");
+ 	if (IS_ERR(rkey)) {
+ 		mutex_lock(&idmap->idmap_mutex);
+@@ -462,7 +463,7 @@ nfs_idmap_new(struct nfs_client *clp)
+ 		return -ENOMEM;
+ 
+ 	mutex_init(&idmap->idmap_mutex);
+-	idmap->cred = get_cred(clp->cl_rpcclient->cl_cred);
++	idmap->user_ns = get_user_ns(clp->cl_rpcclient->cl_cred->user_ns);
+ 
+ 	rpc_init_pipe_dir_object(&idmap->idmap_pdo,
+ 			&nfs_idmap_pipe_dir_object_ops,
+@@ -486,7 +487,7 @@ nfs_idmap_new(struct nfs_client *clp)
+ err_destroy_pipe:
+ 	rpc_destroy_pipe_data(idmap->idmap_pipe);
+ err:
+-	put_cred(idmap->cred);
++	get_user_ns(idmap->user_ns);
+ 	kfree(idmap);
+ 	return error;
+ }
+@@ -503,7 +504,7 @@ nfs_idmap_delete(struct nfs_client *clp)
+ 			&clp->cl_rpcclient->cl_pipedir_objects,
+ 			&idmap->idmap_pdo);
+ 	rpc_destroy_pipe_data(idmap->idmap_pipe);
+-	put_cred(idmap->cred);
++	put_user_ns(idmap->user_ns);
+ 	kfree(idmap);
+ }
+ 
+-- 
+2.25.1
+
