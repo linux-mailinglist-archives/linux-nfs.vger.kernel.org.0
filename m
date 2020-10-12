@@ -2,95 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAEF728BC99
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Oct 2020 17:42:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7044528BD78
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Oct 2020 18:19:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390173AbgJLPmN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Oct 2020 11:42:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390706AbgJLPmE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Oct 2020 11:42:04 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4252C0613D0
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Oct 2020 08:42:04 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id k18so17985790wmj.5
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Oct 2020 08:42:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aToOWHUs0J4uG0c//TkJEJf1HhYv3SCoqpzhCNPirQM=;
-        b=eOA07KUSKQ2izgPIV6W0Yz9YDD4EHWJOIoIoRDTboXJdTgNMDkEK2q2m1CFcsWFRRT
-         TF5kgHsm31a4hatclpgE9Kun4SlW/rNaikVjFnGuS1ys2yyjKjSX4tqdyRUxQutg7JvU
-         SlA/AR6AuD8IGZrZec6f2lZ1DL3xhUIxschJhJVXY//VQwUD7Ke2Hs+MnciNWeW913gq
-         RLOneW7iLOvU8mQQ9CWWJGwHA3eQWi6/9QJUryhZqtZ4cUUbHFivvhf7jOh+bjPONCBZ
-         RwkvIEcEejPp1Pk2VtrFqkfWy+2sYODnsaPIRKdxe/B5U2QnJ5GuP+xD/Keir+EzVhDj
-         rZnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=aToOWHUs0J4uG0c//TkJEJf1HhYv3SCoqpzhCNPirQM=;
-        b=WiLSJH+IBBPsAHuvSiSEoPoEc3w1flmk0MS5B9YD8gMoX2KNuI9NcbPznF6xzXte7G
-         xoQgKyqq7B53pDU/32WWn3fb3MErzGMSVUj8b4pS7BD70/p9Y1kRzDGT8rPEMzoaFRAz
-         saLvUaJnSN7Eiyy4/2RMdk2dk09Q4T5G0K4on7ipvpRfPT5H5bbKrMBzFvKHSpncF3H5
-         u5JpESm3ArNIhwaQlFJvlmHkW83lozhQP68/v1R67QX7/651yM3h2ZFAjauk+8i9c2nU
-         alVAeORJX3U+/mrHILsDnhlX/iKQdBoKT+qr0bVI//w7vjwAMCoZnaLyUH3oUZ+dswPB
-         msOw==
-X-Gm-Message-State: AOAM533Lt54KpULabkHaL17x4D8WRFEE9v4qKVtjugDuEzf0hlNzXvfh
-        cLh4zaHxmYZ8ZTmfjMyAgTc=
-X-Google-Smtp-Source: ABdhPJxLE1VGTAiK/VH/FxZAzFhrGmAiXDHSCRCzpzjf0TKfMRUfU+sIdvtjsNlC/a5HfdU0uc9dyQ==
-X-Received: by 2002:a1c:e256:: with SMTP id z83mr10935833wmg.37.1602517323232;
-        Mon, 12 Oct 2020 08:42:03 -0700 (PDT)
-Received: from eldamar (host-95-235-240-65.retail.telecomitalia.it. [95.235.240.65])
-        by smtp.gmail.com with ESMTPSA id a127sm28847002wmh.13.2020.10.12.08.42.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Oct 2020 08:42:01 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Date:   Mon, 12 Oct 2020 17:41:59 +0200
-From:   Salvatore Bonaccorso <carnil@debian.org>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: Kernel panic / list_add corruption when in nfsd4_run_cb_work
-Message-ID: <20201012154159.GA49819@eldamar.lan>
-References: <20201011075913.GA8065@eldamar.lan>
- <20201012142602.GD26571@fieldses.org>
+        id S2390695AbgJLQTw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Oct 2020 12:19:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390043AbgJLQTu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 12 Oct 2020 12:19:50 -0400
+Received: from sol.localdomain (172-10-235-113.lightspeed.sntcca.sbcglobal.net [172.10.235.113])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22B302080A;
+        Mon, 12 Oct 2020 16:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602519589;
+        bh=FXrMfe87r7In01hy1fZxNUDLVXbtP/5TJ3+XTzWq1o4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V7DSrccLr5b4UIwMLihtwG0wHPpEpEeCdL4DEsryZDNbDbBe/031RRLLs/mkasjte
+         GkozOXCGlriE75ewyNE/y/+1/YN0mvEXF3Fx+zkSk5bqABC19TCsH57zxXZt4yoDfc
+         Gd/Q7Kn6Oc4wJMc886CZx9bFLur2svNEjPDcQyvk=
+Date:   Mon, 12 Oct 2020 09:19:46 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, linux-aio@kvack.org,
+        linux-efi@vger.kernel.org, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        target-devel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-kselftest@vger.kernel.org, samba-technical@lists.samba.org,
+        ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
+        devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org,
+        x86@kernel.org, amd-gfx@lists.freedesktop.org,
+        linux-afs@lists.infradead.org, cluster-devel@redhat.com,
+        linux-cachefs@redhat.com, intel-wired-lan@lists.osuosl.org,
+        xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org,
+        Fenghua Yu <fenghua.yu@intel.com>, ecryptfs@vger.kernel.org,
+        linux-um@lists.infradead.org, intel-gfx@lists.freedesktop.org,
+        linux-erofs@lists.ozlabs.org, reiserfs-devel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        io-uring@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, netdev@vger.kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH RFC PKS/PMEM 22/58] fs/f2fs: Utilize new kmap_thread()
+Message-ID: <20201012161946.GA858@sol.localdomain>
+References: <20201009195033.3208459-1-ira.weiny@intel.com>
+ <20201009195033.3208459-23-ira.weiny@intel.com>
+ <20201009213434.GA839@sol.localdomain>
+ <20201010003954.GW20115@casper.infradead.org>
+ <20201010013036.GD1122@sol.localdomain>
+ <20201012065635.GB2046448@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201012142602.GD26571@fieldses.org>
+In-Reply-To: <20201012065635.GB2046448@iweiny-DESK2.sc.intel.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce,
-
-Thanks a lot for your reply, much appreciated.
-
-On Mon, Oct 12, 2020 at 10:26:02AM -0400, J. Bruce Fields wrote:
-> On Sun, Oct 11, 2020 at 09:59:13AM +0200, Salvatore Bonaccorso wrote:
-> > Hi
+On Sun, Oct 11, 2020 at 11:56:35PM -0700, Ira Weiny wrote:
 > > 
-> > On a system running 4.19.146-1 in Debian buster an issue got hit,
-> > while the server was under some slight load, but it does not seem
-> > easily reproducible, so asking if some more information can be
-> > provided to track/narrow this down. On the console the following was
-> > caught:
+> > And I still don't really understand.  After this patchset, there is still code
+> > nearly identical to the above (doing a temporary mapping just for a memcpy) that
+> > would still be using kmap_atomic().
 > 
-> Worth checking git logs of fs/nfsd/nfs4state.c and
-> fs/nfsd/nfs4callback.c.  It might be
-> 2bbfed98a4d82ac4e7abfcd4eba40bddfc670b1d "nfsd: Fix races between
-> nfsd4_cb_release() and nfsd4_shutdown_callback()" ?
+> I don't understand.  You mean there would be other call sites calling:
+> 
+> kmap_atomic()
+> memcpy()
+> kunmap_atomic()
 
-That might be possible. As it was not possible to simply trigger the
-issue, do you know if it is possible to simply reproduce the issue
-fixed in the above?
+Yes, there are tons of places that do this.  Try 'git grep -A6 kmap_atomic'
+and look for memcpy().
 
-2bbfed98a4d8 ("nfsd: Fix races between nfsd4_cb_release() and
-nfsd4_shutdown_callback()") would be missing in the v4.19.y stable
-series (as it was in 5.5-rc1 but not backported to other stable
-versions).
+Hence why I'm asking what will be the "recommended" way to do this...
+kunmap_thread() or kmap_atomic()?
 
-Regards,
-Salvatore
+> And since I don't know the call site details if there are kmap_thread() calls
+> which are better off as kmap_atomic() calls I think it is worth converting
+> them.  But I made the assumption that kmap users would already be calling
+> kmap_atomic() if they could (because it is more efficient).
+
+Not necessarily.  In cases where either one is correct, people might not have
+put much thought into which of kmap() and kmap_atomic() they are using.
+
+- Eric
