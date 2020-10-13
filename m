@@ -2,98 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E41728D5F6
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Oct 2020 22:53:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06DED28D681
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Oct 2020 00:43:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgJMUxk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Oct 2020 16:53:40 -0400
-Received: from mga17.intel.com ([192.55.52.151]:54071 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbgJMUxi (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 13 Oct 2020 16:53:38 -0400
-IronPort-SDR: gI8MkOnOGO61aP07XY6CCWHG9J8FvCUX/dOJGBzQnYJFTP4ej18aKmY+Fn52D+I38Lw4zhRGT9
- RQaSxhwXc52g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9773"; a="145845033"
-X-IronPort-AV: E=Sophos;i="5.77,371,1596524400"; 
-   d="scan'208";a="145845033"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2020 13:53:36 -0700
-IronPort-SDR: 6pC5EU5QwoXbsJ9AhSALdpEnefHex0iyEFu7THvX1eaSFNd77CbWePaQQdxa3yUvYDZ6VBgRvg
- Vwn0OOQPMwwA==
-X-IronPort-AV: E=Sophos;i="5.77,371,1596524400"; 
-   d="scan'208";a="313946459"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2020 13:53:35 -0700
-Date:   Tue, 13 Oct 2020 13:52:49 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm@vger.kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
-        kexec@lists.infradead.org, linux-bcache@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-efi@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-um@lists.infradead.org, linux-ntfs-dev@lists.sourceforge.net,
-        reiserfs-devel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-nilfs@vger.kernel.org, cluster-devel@redhat.com,
-        ecryptfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-rdma@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-cachefs@redhat.com,
-        samba-technical@lists.samba.org, intel-wired-lan@lists.osuosl.org
-Subject: Re: [PATCH RFC PKS/PMEM 24/58] fs/freevxfs: Utilize new kmap_thread()
-Message-ID: <20201013205248.GJ2046448@iweiny-DESK2.sc.intel.com>
-References: <20201009195033.3208459-1-ira.weiny@intel.com>
- <20201009195033.3208459-25-ira.weiny@intel.com>
- <20201013112544.GA5249@infradead.org>
+        id S1729010AbgJMWne (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Oct 2020 18:43:34 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34364 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728931AbgJMWnZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Oct 2020 18:43:25 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09DMYHRI023311;
+        Tue, 13 Oct 2020 22:43:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=BPXVhR8Zcz1sWINwPPKI15oRrSSfJmS7Dk7t6k2FBvc=;
+ b=X98OMsUEJ6iXi28jlvGzIuUNtCUPCHKr9Y26mlldDvGV1tVg0rW4+z19ERv9nUm05fW2
+ 7uLfRfkQC87plb6dqK0JgwDllNVeWHEr4KuohBovrquRB4Wp8Fn55mzzRhERGk86b1R8
+ IUAHuFALM9P0nzG0SMad9VRc3S4BqwSCpX9uXbI7E8E4JWNs+M489BfaOy69s9tMy36o
+ WsDINZk0QvR9KX7AD1uVtYIm858Ec1rCBrQM2cWhu74pWwQ4sERB2XP+p4QlG2a3ov36
+ KsDceZW1Gf6MViMvswmWBcHmPujmAKdJrQLwx9ihpq7sGfN7gk8NuWumGIvUgBivX+8I Nw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 3434wkmr7r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 13 Oct 2020 22:43:19 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09DMZeSv129581;
+        Tue, 13 Oct 2020 22:43:18 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 343phntsx7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 13 Oct 2020 22:43:18 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09DMhIGo146795;
+        Tue, 13 Oct 2020 22:43:18 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 343phntswf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Oct 2020 22:43:18 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09DMhFrt005717;
+        Tue, 13 Oct 2020 22:43:16 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 13 Oct 2020 15:43:15 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     linux-spi@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-media@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        linux-serial@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Yossi Leybovich <sleybo@amazon.com>,
+        linux-block@vger.kernel.org, rds-devel@oss.oracle.com
+Subject: Re: [PATCH 00/14] drop double zeroing
+Date:   Tue, 13 Oct 2020 18:42:52 -0400
+Message-Id: <160262862433.3018.13907233755506910409.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
+References: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201013112544.GA5249@infradead.org>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9773 signatures=668681
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 suspectscore=0 impostorscore=0 clxscore=1011
+ spamscore=0 priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010130158
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Oct 13, 2020 at 12:25:44PM +0100, Christoph Hellwig wrote:
-> > -	kaddr = kmap(pp);
-> > +	kaddr = kmap_thread(pp);
-> >  	memcpy(kaddr, vip->vii_immed.vi_immed + offset, PAGE_SIZE);
-> > -	kunmap(pp);
-> > +	kunmap_thread(pp);
-> 
-> You only Cced me on this particular patch, which means I have absolutely
-> no idea what kmap_thread and kunmap_thread actually do, and thus can't
-> provide an informed review.
+On Sun, 20 Sep 2020 13:26:12 +0200, Julia Lawall wrote:
 
-Sorry the list was so big I struggled with who to CC and on which patches.
+> sg_init_table zeroes its first argument, so the allocation of that argument
+> doesn't have to.
 
-> 
-> That being said I think your life would be a lot easier if you add
-> helpers for the above code sequence and its counterpart that copies
-> to a potential hughmem page first, as that hides the implementation
-> details from most users.
+Applied to 5.10/scsi-queue, thanks!
 
-Matthew Wilcox and Al Viro have suggested similar ideas.
+[02/14] scsi: target: rd: Drop double zeroing
+        https://git.kernel.org/mkp/scsi/c/4b217e015b75
 
-https://lore.kernel.org/lkml/20201013205012.GI2046448@iweiny-DESK2.sc.intel.com/
-
-Ira
+-- 
+Martin K. Petersen	Oracle Linux Engineering
