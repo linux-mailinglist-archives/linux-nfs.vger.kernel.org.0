@@ -2,88 +2,174 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81AC328CC85
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Oct 2020 13:26:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B9D528CFC6
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Oct 2020 16:04:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgJML0I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Oct 2020 07:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbgJML0F (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Oct 2020 07:26:05 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BDA2C0613D0;
-        Tue, 13 Oct 2020 04:26:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ap+vugPRXoOSJhloW5EJc9FGxy9ZwiLwbnG+7+pEMhA=; b=a/Sp1GZZiVtkIrsbDZFKKgQTkQ
-        FS+JHTt9pp+5vCrBdk0ac5b7U8ZgZGFScrKiULCJv4PZD4wWqOSzzq06ZoGh/8vFLI33VuvYYBdii
-        wZ4VlXJvl5fnmlD+q4pIJJmvrTs/0jX/FIDmEAYUX2+Mt6vIwB3sAbRYRgWIA8hB4i4EWyZuWPFOQ
-        rIaV+GwSaVBgBLKvO/SsFSj7I46VHFxg38PLmJQ+Oh1DkRIQcIx5NIWLGcWnDXshQ14JMdlpURiF2
-        LxyBxRGv+1Wkfh31jf6dzRr+U4xHgvz3PsshAxeZoaF0OQPY6Fl5VA2XZOxLonra6CTBCfgsfUBp/
-        6eTYHzgA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kSIR6-0001VK-7P; Tue, 13 Oct 2020 11:25:44 +0000
-Date:   Tue, 13 Oct 2020 12:25:44 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     ira.weiny@intel.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm@vger.kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
-        kexec@lists.infradead.org, linux-bcache@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-efi@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-um@lists.infradead.org, linux-ntfs-dev@lists.sourceforge.net,
-        reiserfs-devel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-nilfs@vger.kernel.org, cluster-devel@redhat.com,
-        ecryptfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-rdma@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-cachefs@redhat.com,
-        samba-technical@lists.samba.org, intel-wired-lan@lists.osuosl.org
-Subject: Re: [PATCH RFC PKS/PMEM 24/58] fs/freevxfs: Utilize new kmap_thread()
-Message-ID: <20201013112544.GA5249@infradead.org>
-References: <20201009195033.3208459-1-ira.weiny@intel.com>
- <20201009195033.3208459-25-ira.weiny@intel.com>
+        id S1726867AbgJMOEw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Oct 2020 10:04:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22792 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726567AbgJMOEw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Oct 2020 10:04:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1602597890;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wumQZIpN5hAuQeftAMThyDAcRGaSlO2INM6i5MXuFFw=;
+        b=gv7fmtaTXaivITJ4tGufXNHblX4a4GBibjgw/Li0QKLo6bNyaFdBEAycibKRnZIoPCwkoc
+        2y+mvQPwIiHBRAILn2JrAR9JHY5yhaoLsZLdijLcSIS4CFsCWbipwb3pLXyMP7qfN0w9CK
+        aoi7F7r1QOqOAvOWhjyU2Rq1nbxkCvM=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-543-W6qOqfy5PK2gDLn-yAuGdQ-1; Tue, 13 Oct 2020 10:04:48 -0400
+X-MC-Unique: W6qOqfy5PK2gDLn-yAuGdQ-1
+Received: by mail-wm1-f69.google.com with SMTP id 73so18985wma.5
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Oct 2020 07:04:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wumQZIpN5hAuQeftAMThyDAcRGaSlO2INM6i5MXuFFw=;
+        b=JYSTwoOnAJV/upB4hvh5CZRBVvuRgsKrrOlCHJWVqnx4fhkxhGtmpu7ZN96fL3IvP6
+         gXzm9j91XzShVidDRpaxEVS1wXOOboaEdF2VC7jcPvoa6bF+++kqxqqjrw3PVoCt82Oc
+         tqsGN9xI1zNGAt/jJVCvwRD3aKKJiySTPfiLk74/QEZp3blPxcigMXZV0yOigQy0MbBI
+         JxujT6vQnruNG3khc8lDBRhE3Zluyz3F979QGXOHiE1hHCinRileglj7RfCvjhI8fMyF
+         YEyTUv0MU0Z6IlLaULWhcyQ+P9mMdPJFPH4pPUPRLPB8/AHN/B8mT/zYZ3ZeX0jOwWZh
+         cFBg==
+X-Gm-Message-State: AOAM530EiA3InEUXK3Wdahqkh++hOZ56yWSYODeb+jFotgngr0dcFLPy
+        YnYmcdVIJhG5NevE6I/ppkM5Trg0LwjUBro0v/ASmbKPKSvqI83UmCn3GEgPiwv3zXf4dSCsSKD
+        mMXsgmYwLffDC+AAWKFD3
+X-Received: by 2002:a05:6000:8e:: with SMTP id m14mr35979282wrx.400.1602597885924;
+        Tue, 13 Oct 2020 07:04:45 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz5uwKCr+UiD6vszmHekVHuOE1ZVC4d5BVr7UgYtmusqMCItr9TN/hATWiAiwn9FTcLdocqOQ==
+X-Received: by 2002:a05:6000:8e:: with SMTP id m14mr35979249wrx.400.1602597885656;
+        Tue, 13 Oct 2020 07:04:45 -0700 (PDT)
+Received: from [192.168.68.106] ([77.137.152.100])
+        by smtp.gmail.com with ESMTPSA id f14sm19283wme.22.2020.10.13.07.04.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Oct 2020 07:04:44 -0700 (PDT)
+Subject: Re: Help with config change for CIFS
+To:     Ronnie Sahlberg <lsahlber@redhat.com>,
+        "Herton R. Krzesinski" <herton@redhat.com>
+References: <200195397.3817648.1602575184327.JavaMail.zimbra@redhat.com>
+Cc:     Red Hat INTERNAL-ONLY kernel discussion list 
+        <rhkernel-list@redhat.com>, linux-nfs <linux-nfs@vger.kernel.org>
+From:   Kamal Heib <kheib@redhat.com>
+Message-ID: <7b087315-7140-e988-c2d4-d3fd9077247e@redhat.com>
+Date:   Tue, 13 Oct 2020 17:04:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201009195033.3208459-25-ira.weiny@intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <200195397.3817648.1602575184327.JavaMail.zimbra@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> -	kaddr = kmap(pp);
-> +	kaddr = kmap_thread(pp);
->  	memcpy(kaddr, vip->vii_immed.vi_immed + offset, PAGE_SIZE);
-> -	kunmap(pp);
-> +	kunmap_thread(pp);
 
-You only Cced me on this particular patch, which means I have absolutely
-no idea what kmap_thread and kunmap_thread actually do, and thus can't
-provide an informed review.
 
-That being said I think your life would be a lot easier if you add
-helpers for the above code sequence and its counterpart that copies
-to a potential hughmem page first, as that hides the implementation
-details from most users.
+On 10/13/20 10:46 AM, Ronnie Sahlberg wrote:
+> Hi List,
+> 
+> I have some issues with a config change can not find what else I need to do to fix this.
+> 
+> I tried to enable RDMA support in the cifs client, by simply doing :
+> diff --git a/redhat/configs/generic/CONFIG_CIFS_SMB_DIRECT b/redhat/configs/generic/CONFIG_CIFS_SMB_DIRECT
+> index 849bffb38ecd..88e746ddab11 100644
+> --- a/redhat/configs/generic/CONFIG_CIFS_SMB_DIRECT
+> +++ b/redhat/configs/generic/CONFIG_CIFS_SMB_DIRECT
+> @@ -1 +1 @@
+> -# CONFIG_CIFS_SMB_DIRECT is not set
+> +CONFIG_CIFS_SMB_DIRECT=y
+> 
+> 
+> But this fails with the brew build with:
+> Depmod failure
+> + '[' -s depmod.out ']'
+> + echo 'Depmod failure'
+> + cat depmod.out
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol ib_free_cq_user
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol __ib_alloc_pd
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol rdma_resolve_addr
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol ib_dereg_mr_user
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol ib_event_msg
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol rdma_disconnect
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol ib_alloc_mr_user
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol rdma_resolve_route
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol rdma_create_qp
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol ib_map_mr_sg
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol __ib_alloc_cq_any
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol rdma_destroy_qp
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol rdma_connect
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol rdma_destroy_id
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol __rdma_create_id
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol ib_drain_qp
+> depmod: WARNING: /builddir/build/BUILDROOT/kernel-4.18.0-240.2.el8.rdma2.x86_64/./lib/modules/4.18.0-240.2.el8.rdma2.x86_64+debug/kernel/fs/cifs/cifs.ko needs unknown symbol ib_dealloc_pd_user
+> + exit 1
+> RPM build errors:
+> 
+> These symbols should be available already in the infiniband module, so I am a little at loss.
+> Does anyone know what else I need to chang eto get this config change to compile in brew?
+> 
+> regards
+> ronnie sahlberg
+> 
+
+
+Hi Ronnie,
+
+Looks like you need to add "cifs" directory to the fs filtered directories under
+"redhat/filter-modules.sh" script to let the cifs.ko know about the rdma symbols.
+
+I have created [1] brew build with the following patch and looks like the issue
+is gone.
+
+commit aab32aec9fff2e0acd31885b7f696a582e7df42f
+Author: Kamal Heib <kheib@redhat.com>
+Date:   Tue Oct 13 10:59:24 2020 +0300
+
+    redhat/configs: Update CONFIG_CIFS_SMB_DIRECT
+
+    Upstream Status: RHEL only.
+
+    Update redhat/configs for CONFIG_CIFS_SMB_DIRECT.
+
+    Autogenerated & verified by editconfig.
+
+diff --git a/redhat/configs/generic/CONFIG_CIFS_SMB_DIRECT
+b/redhat/configs/generic/CONFIG_CIFS_SMB_DIRECT
+index 849bffb38ecd..88e746ddab11 100644
+--- a/redhat/configs/generic/CONFIG_CIFS_SMB_DIRECT
++++ b/redhat/configs/generic/CONFIG_CIFS_SMB_DIRECT
+@@ -1 +1 @@
+-# CONFIG_CIFS_SMB_DIRECT is not set
++CONFIG_CIFS_SMB_DIRECT=y
+diff --git a/redhat/filter-modules.sh b/redhat/filter-modules.sh
+index 66ff2ec80060..48cc8df145b6 100755
+--- a/redhat/filter-modules.sh
++++ b/redhat/filter-modules.sh
+@@ -28,7 +28,7 @@ scsidrvs="aacraid aic7xxx aic94xx be2iscsi bfa bnx2i bnx2fc
+csiostor cxgbi esas2
+
+ usbdrvs="atm image misc serial wusbcore"
+
+-fsdrvs="affs befs coda cramfs ecryptfs hfs hfsplus jfs minix ncpfs nilfs2 ocfs2
+reiserfs romfs squashfs sysv ubifs ufs"
++fsdrvs="affs befs coda cramfs ecryptfs hfs hfsplus jfs minix ncpfs nilfs2 ocfs2
+reiserfs romfs squashfs sysv ubifs ufs cifs"
+
+ netprots="6lowpan appletalk atm ax25 batman-adv bluetooth can dccp dsa
+ieee802154 irda l2tp mac80211 mac802154 mpls netrom nfc rds rfkill rose sctp smc
+wireless"
+
+
+[1] - https://brewweb.engineering.redhat.com/brew/taskinfo?taskID=31931687
+
+Thanks,
+Kamal
+
