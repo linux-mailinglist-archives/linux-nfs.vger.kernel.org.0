@@ -2,151 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C47028E4B2
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Oct 2020 18:44:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15D9D28E628
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Oct 2020 20:17:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgJNQoS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Oct 2020 12:44:18 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:36861 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727559AbgJNQoR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Oct 2020 12:44:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1602693855;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mcYfcXbyIcG5Hh6iRlSH4CyHcqxBdOljCBEFJjUrc2Q=;
-        b=JDn5qiHJ5NnlipGIVME2dm1rppEQ7qmsNmXAlvzkKhlpTqA29qdg6EYTzvlC9fKYQOKw05
-        b2ZWp4sx3EE4MlZvTvTSH1yF4feBUirKRXKhHRGrLoMPVs/Bl9WIwdJ7M68Qfv2wLaIQLw
-        Sf7lkoneMxBdUetK1kLxva0K8gmR9xk=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-594-wq7rM2O_M-qXphfNLaO71A-1; Wed, 14 Oct 2020 12:44:13 -0400
-X-MC-Unique: wq7rM2O_M-qXphfNLaO71A-1
-Received: by mail-ed1-f72.google.com with SMTP id e14so102865edk.2
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Oct 2020 09:44:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mcYfcXbyIcG5Hh6iRlSH4CyHcqxBdOljCBEFJjUrc2Q=;
-        b=ia7Xtic4oCQDzXCOcz2+ZiQ7kpe6DLXbUwi7E/fajUzfxtzUjby0xURJhOJ8BMsyrl
-         hb08C9CIxX2wbJutZSn0IYanlY5dhhOFNT/kmTrI4RJSfu7JsM+YcuDYKUrr6NC9f8ef
-         6ACTsBkqP3ki1m+eQuuyru3L31kclOhXsTfgxcjnWmc0tS/ZDAXGQ6qvWhNC58X02MWi
-         pjE8N3rCXYNLbghzg+1Ct7FW+Qkn2EI8sjlsLEvfeWZjP9jZiU7HLMq2rFx71yhS0Mdu
-         G83cWrwfIE50cKWPp95ISebMHaYYtwX4opXN9CKxrE3xNsiNNQhJmxfMxlMmaARi30/V
-         /5jg==
-X-Gm-Message-State: AOAM533YZY8mH9gTQwCH0EeAeGhr1OCDMawS1OMAi6S+Hf91RodFLhj5
-        ttGzRCGJq2bWNHYUTE3NtxtvsZFI087cIH41daeIhGO6pG2B4BFMXMa4cAEpQGECNEhhkGZe8Ce
-        vnRbRHlgg6wvyc+TRmSZij8GL0i51xPd7T/n2
-X-Received: by 2002:aa7:de82:: with SMTP id j2mr6583871edv.3.1602693851610;
-        Wed, 14 Oct 2020 09:44:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzZr1/TARDpNCnBhkK8IKOSCEMpVFoys8uur0CFQ30TGk0jxLx2yLGpewA6m/lq7cLFDRuaKoAglJYyxo4BOP8=
-X-Received: by 2002:aa7:de82:: with SMTP id j2mr6583854edv.3.1602693851373;
- Wed, 14 Oct 2020 09:44:11 -0700 (PDT)
+        id S2387797AbgJNSRN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Oct 2020 14:17:13 -0400
+Received: from mail-co1nam11on2104.outbound.protection.outlook.com ([40.107.220.104]:48793
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727114AbgJNSRN (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 14 Oct 2020 14:17:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mJeZR1HxidMhgpNRdxG0LVsqh/+HY5uwutt4QFbyTry7zaKLc4pam+0a6IKjIz5Yn+XQtnbThXTRwD92yKA0VmhhDliaNVbCnl9carAfShJCbRkJ9lt47yWvRh7voRbvLMPKQ3t9bmKH7Pt7PJ5oj0DDlzdIyziCbSrWEGGoZQKzkDW3G2e6amL1KS2KQtyE8QgpWmpC3N2j4dcuuBL24kx7PQwcUDL62UwwLyrfELKP+TYEaR24TeJLBx+EEob6kgi8UhZEMvaf010R6VnNUzruJ7o9CISofLkVr0Z8ct1A3w5rTd4hrmfBYPhXqRFgjDeX4SloIFF+Jx2CvZazcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vuwuZ7Ow/70Tk/xZiDO3Y9Yb6RbPkbqSK2pMVmeaWJA=;
+ b=efXCbujDDcDhKBZXd5ts9cTjJ/L54trMS748bvpxIde8jUHSGwWzEdMU7N+vm86PuOXUcCb6tTnPVmUFTIHzbZhwcxd/pqJM8oKX267qkcke8MNlIWj+Y8HvBR52xH4vrtXrb8xv6OGGIjYQ0v/rnF9GqJ9p9+OBUXmCqiXryEEnrkJMnZTgvDXSlZGw9VPemJnp+P+8Pw9msU2hKENMF9dZ9d/naOxWAUi+TwNoYilWo1T0AG61zeeeUJ7mZnsx4QkvJ0qCiuxl4o6yIH+zZaVsH9ZZqV/EPaXtpmb5Lo1TsXElzcdJwRRYp22O29wguYwCDM+Wz3/FMut+N6nMwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vuwuZ7Ow/70Tk/xZiDO3Y9Yb6RbPkbqSK2pMVmeaWJA=;
+ b=VO+gIhrpWOVj3dpcUxTTWZHZ9WyhgSgCYsqaZM5F5F+yM+P77g6ICWJnwJINmK/WUKtJC7AqNwqrzX5MGccUN9p5D4g86suPjy3vweq5paUlW9fX3Huu5PYr/hX9EuUwDmpU3IpXy0dFsaRyb1x8S0K9ifCjfXmTMsrmnjfV600=
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
+ by MN2PR13MB3664.namprd13.prod.outlook.com (2603:10b6:208:19f::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.11; Wed, 14 Oct
+ 2020 18:17:10 +0000
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e8a1:6acc:70f0:ef39]) by MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e8a1:6acc:70f0:ef39%7]) with mapi id 15.20.3477.019; Wed, 14 Oct 2020
+ 18:17:10 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "ashishsangwan2@gmail.com" <ashishsangwan2@gmail.com>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] NFS: Fix mode bits and nlink count for v4 referral dirs
+Thread-Topic: [PATCH] NFS: Fix mode bits and nlink count for v4 referral dirs
+Thread-Index: AQHWm/OGeyO0BuEaoUK9JXx6hV8a+KmXdI6A
+Date:   Wed, 14 Oct 2020 18:17:10 +0000
+Message-ID: <2d1ff3421a88ece2f1b7708cdbc9d34b00ad3e81.camel@hammerspace.com>
+References: <20201006151456.20875-1-ashishsangwan2@gmail.com>
+In-Reply-To: <20201006151456.20875-1-ashishsangwan2@gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 933ea864-fc25-4606-4177-08d8706d5e26
+x-ms-traffictypediagnostic: MN2PR13MB3664:
+x-microsoft-antispam-prvs: <MN2PR13MB366440BB1935CD5734548D8CB8050@MN2PR13MB3664.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xENKoglYRxSlqiZQNYThvFgmovMqelpij45DZg2UVWVTt9ejAzwDqqFvnSvLiw9TBAwPaJ5fVm+UIeCHtNoN5WnN+klk9MdzmQvdeZ0vALCWfVfcC8dq7+9DGwE2qryf0G2py0vA7ys96TfAhTOmY4zTbvaRelpOCk4nn3wGbiRwJVt6CNztIsWJR+kOO1HPtqFJuZJbWibR1ACCLJx+664rU1uo4ExmrZhy1TAPLkDK7xnmP651Befk/cx4eK1Q33E2nv8/0zOxofFFPJlbPbdYIFKDQOIEq1DBPwiE1KHkUYI2VKCiHtCqGu6S2Ypbdw9uhJQ2WgLZmW/OTczW4w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(366004)(376002)(346002)(396003)(39840400004)(6512007)(478600001)(36756003)(26005)(76116006)(66446008)(66946007)(66556008)(6506007)(71200400001)(66476007)(186003)(91956017)(64756008)(6486002)(2906002)(5660300002)(86362001)(4326008)(8936002)(54906003)(2616005)(6916009)(8676002)(316002)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: DGCEdl/E6g+mz54uuOY96gdSvzx1qvLj/R1X2K9jQ6j2WxwYWwaJPf3wIBUpuiuwP5257fZwxRJsmojsEFaN5fPEZ/rc1buc5x3F2C74ead6Yorq3n8WY4P53cZQBa/JAbMdGpvdWqq+241FBChSTU3lbhTiA92ehEEzy2l2C72rBeedBD/Ap3vMpjm7NcgvMw07i4o/xQaQInmsweU41R7sbSU9wv9EyO5aNn90DTynA36PWLaHSkI6oTVLqFPp/glV93vPwQrC7/5PkVMtOAIr/JrMMJ48i7AcyWI1XDNowUMvdU//8c3PM4FyxwS3nCKc6/cFWH5opUSFmCQvQl4tjw8UrxJJ6ZGb6+QvyAy2KRDxRd/dHFzH8HjCEZc9fv/TtahDtjW66MKGmWWQciXxvEobxnP+5FoY65VYUa3H7utdT8OZc/gZzYMqgq0CitrtrxfUzebzrTPfJvSX/pTSHfHSIJQaS9k9aeKLM+UFJVXAmg9BPPux3yUYRJ8AnYprdllZT4BgaKQoIcjqdcEFKC3gpKAKyZpaDGixE8AstWP90mJFPLqRRaRPf1Mkwpi82KQRS+XjSz8SBHGgnEqOqPrEQVmChQ2zLsjzhYjAx0NrO5xLqmYSWHvn88RRAGvFujo/wzOgVmiJ2QhtjA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3ED7695FE3950145B1706F4287A85DA5@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <959e2a4790849c226b0967ecda11f79e@talpidae.net>
-In-Reply-To: <959e2a4790849c226b0967ecda11f79e@talpidae.net>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Wed, 14 Oct 2020 12:43:35 -0400
-Message-ID: <CALF+zOnDa4cN5MKFtzKKKyyCaTZ8XM=Q_9sLhsTRK4ZM1_pfzw@mail.gmail.com>
-Subject: Re: Linux 5.9.0: NFS 4.1 with cachefilesd: Assertion failed (100% CPU)
-To:     Jonas Zeiger <jonas.zeiger@talpidae.net>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 933ea864-fc25-4606-4177-08d8706d5e26
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Oct 2020 18:17:10.5878
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GLcssNSdHlNX/8+irl7sd17Bm9YsLKR3Ha94WUDElKCXawiumR6meFD5FAxPQvWty5IUgJwD3yc/MRki3IkTGQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3664
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Oct 14, 2020 at 9:13 AM Jonas Zeiger <jonas.zeiger@talpidae.net> wrote:
->
-> Hi all,
->
-> I experience failed assertions on an x86_64 KVM virtual machine (VirtIO devices) when accessing files on NFS 4 shares while having cachefilesd (0.10.7) running.
->
-> Good kernel: 4.14.49
-> Bad kernels: 5.8.14, 5.9.0
->
-> The machine is rendered unusable (100% CPU) and requires a hard-reset.
->
-> This is the console error report captured via serial console:
->
-> CacheFiles:
-> CacheFiles: Assertion failed
-> invalid opcode: 0000 [#1]
-> CPU: 0 PID: 4215 Comm: git Not tainted 5.9.0vzlinux #3
-> RIP: 0010:cachefiles_read_or_alloc_pages+0x9e/0x5cf
-> Code: ff 0f 0b 49 8b 46 30 48 8b 40 70 48 83 78 20 00 75 1a 48 c7 c7 20 fc e8 81 e8 cf 7a e7 ff 48 c7 c7 30 fc e8 81 e8 c3 7a e7 ff <0f> 0b 49 8b 46 28 ba 0c 00 00 00 c6 44 24 40 00 c6 44 24 41 00 c7
-
-
-Can you do
-
-eu-addr2line -e ./vmlinux cachefiles_read_or_alloc_pages+0x9e
-
-That should give the line # of the assertion.
-
-
-> RSP: 0000:ffffc900015cba98 EFLAGS: 00010292
-> RAX: 000000000000001c RBX: ffffc900015cbc04 RCX: 0000000000000027
-> RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffffffff82039340
-> RBP: ffff88803c3469c0 R08: 0000000000000000 R09: 0000000000000000
-> R10: 000000000001e88c R11: 000000000000003c R12: ffffc900015cbd70
-> R13: ffff88803c3469c0 R14: ffff88802e2d2fd0 R15: ffff88802bf27000
-> FS:  00007feea1027fc0(0000) GS:ffffffff82030000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007feea1036000 CR3: 000000002bcbd005 CR4: 00000000001706b0
-> Call Trace:
->  ? nfs_access_add_cache+0x140/0x1c5
->  ? slab_free_freelist_hook+0x45/0xc4
->  ? slab_pre_alloc_hook.isra.81+0x26/0x37
->  ? fscache_run_op.isra.13+0x57/0x69
->  __fscache_read_or_alloc_pages+0x1a6/0x1f2
->  __nfs_readpages_from_fscache+0x51/0xa9
->  nfs_readpages+0x111/0x133
->  ? get_page_from_freelist+0x734/0x8a1
->  read_pages+0x8c/0x102
->  ? __alloc_pages_nodemask+0xd4/0x122
->  ? page_cache_readahead_unbounded+0xce/0x17d
->  page_cache_readahead_unbounded+0xce/0x17d
->  filemap_fault+0x1f9/0x3d8
->  __do_fault+0x44/0x63
->  handle_mm_fault+0x70e/0xad3
->  exc_page_fault+0x1f0/0x311
->  ? asm_exc_page_fault+0x5/0x20
->  asm_exc_page_fault+0x1b/0x20
-> RIP: 0033:0x7feea0991bef
-> Code: 41 c7 45 00 1d 00 00 00 e9 1e f8 ff ff 41 8b 55 08 85 d2 0f 84 72 07 00 00 83 fb 0f 0f 87 37 14 00 00 85 ed 0f 84 83 f5 ff ff <41> 0f b6 34 24 89 d9 8d 45 ff 49 8d 7c 24 01 48 d3 e6 8d 4b 08 4c
-> RSP: 002b:00007fffbb7d5240 EFLAGS: 00010202
-> RAX: 00007feea0991bd2 RBX: 0000000000000000 RCX: 00000000000000d0
-> RDX: 0000000000000001 RSI: 000055d7e1bf9c10 RDI: 00007fffbb7d52a0
-> RBP: 00000000000000d0 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 00007fffbb7d5390 R12: 00007feea1036000
-> R13: 000055d7e1bf9900 R14: 00007fffbb7d5570 R15: 0000000000000000
-> ---[ end trace cad4b4a2dd601cdd ]---
-> RIP: 0010:cachefiles_read_or_alloc_pages+0x9e/0x5cf
-> Code: ff 0f 0b 49 8b 46 30 48 8b 40 70 48 83 78 20 00 75 1a 48 c7 c7 20 fc e8 81 e8 cf 7a e7 ff 48 c7 c7 30 fc e8 81 e8 c3 7a e7 ff <0f> 0b 49 8b 46 28 ba 0c 00 00 00 c6 44 24 40 00 c6 44 24 41 00 c7
-> RSP: 0000:ffffc900015cba98 EFLAGS: 00010292
-> RAX: 000000000000001c RBX: ffffc900015cbc04 RCX: 0000000000000027
-> RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffffffff82039340
-> RBP: ffff88803c3469c0 R08: 0000000000000000 R09: 0000000000000000
-> R10: 000000000001e88c R11: 000000000000003c R12: ffffc900015cbd70
-> R13: ffff88803c3469c0 R14: ffff88802e2d2fd0 R15: ffff88802bf27000
-> FS:  00007feea1027fc0(0000) GS:ffffffff82030000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007feea1036000 CR3: 000000002bcbd005 CR4: 00000000001706b0
-> Kernel panic - not syncing: Fatal exception
-> Kernel Offset: disabled
-> ---[ end Kernel panic - not syncing: Fatal exception ]---
->
-> Feel free to ask for further info or testing patches.
->
-> Thank you!
->
-> Regards,
-> Jonas Zeiger
->
->
-> Ps: I found this mail https://lkml.org/lkml/2020/3/20/399 describing a similar issue, but it may be unrelated.
->
-
+T24gVHVlLCAyMDIwLTEwLTA2IGF0IDA4OjE0IC0wNzAwLCBBc2hpc2ggU2FuZ3dhbiB3cm90ZToN
+Cj4gUmVxdWVzdCBmb3IgbW9kZSBiaXRzIGFuZCBubGluayBjb3VudCBpbiB0aGUgbmZzNF9nZXRf
+cmVmZXJyYWwgY2FsbA0KPiBhbmQgaWYgc2VydmVyIHJldHVybnMgdGhlbSB1c2UgdGhlbSBpbnN0
+ZWFkIG9mIGhhcmQgY29kZWQgdmFsdWVzLg0KPiANCj4gQ0M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5v
+cmcNCj4gU2lnbmVkLW9mZi1ieTogQXNoaXNoIFNhbmd3YW4gPGFzaGlzaHNhbmd3YW4yQGdtYWls
+LmNvbT4NCj4gLS0tDQo+ICBmcy9uZnMvbmZzNHByb2MuYyB8IDIwICsrKysrKysrKysrKysrKysr
+LS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkN
+Cj4gDQo+IGRpZmYgLS1naXQgYS9mcy9uZnMvbmZzNHByb2MuYyBiL2ZzL25mcy9uZnM0cHJvYy5j
+DQo+IGluZGV4IDZlOTVjODVmZTM5NS4uZWZlYzA1YzVmNTM1IDEwMDY0NA0KPiAtLS0gYS9mcy9u
+ZnMvbmZzNHByb2MuYw0KPiArKysgYi9mcy9uZnMvbmZzNHByb2MuYw0KPiBAQCAtMjY2LDcgKzI2
+Niw5IEBAIGNvbnN0IHUzMiBuZnM0X2ZzX2xvY2F0aW9uc19iaXRtYXBbM10gPSB7DQo+ICAJfCBG
+QVRUUjRfV09SRDBfRlNJRA0KPiAgCXwgRkFUVFI0X1dPUkQwX0ZJTEVJRA0KPiAgCXwgRkFUVFI0
+X1dPUkQwX0ZTX0xPQ0FUSU9OUywNCj4gLQlGQVRUUjRfV09SRDFfT1dORVINCj4gKwlGQVRUUjRf
+V09SRDFfTU9ERQ0KPiArCXwgRkFUVFI0X1dPUkQxX05VTUxJTktTDQo+ICsJfCBGQVRUUjRfV09S
+RDFfT1dORVINCj4gIAl8IEZBVFRSNF9XT1JEMV9PV05FUl9HUk9VUA0KPiAgCXwgRkFUVFI0X1dP
+UkQxX1JBV0RFVg0KPiAgCXwgRkFUVFI0X1dPUkQxX1NQQUNFX1VTRUQNCj4gQEAgLTc1OTQsMTYg
+Kzc1OTYsMjggQEAgbmZzNF9saXN0eGF0dHJfbmZzNF91c2VyKHN0cnVjdCBpbm9kZSAqaW5vZGUs
+DQo+IGNoYXIgKmxpc3QsIHNpemVfdCBsaXN0X2xlbikNCj4gICAqLw0KPiAgc3RhdGljIHZvaWQg
+bmZzX2ZpeHVwX3JlZmVycmFsX2F0dHJpYnV0ZXMoc3RydWN0IG5mc19mYXR0ciAqZmF0dHIpDQo+
+ICB7DQo+ICsJYm9vbCBmaXhfbW9kZSA9IHRydWUsIGZpeF9ubGluayA9IHRydWU7DQo+ICsNCj4g
+IAlpZiAoISgoKGZhdHRyLT52YWxpZCAmIE5GU19BVFRSX0ZBVFRSX01PVU5URURfT05fRklMRUlE
+KSB8fA0KPiAgCSAgICAgICAoZmF0dHItPnZhbGlkICYgTkZTX0FUVFJfRkFUVFJfRklMRUlEKSkg
+JiYNCj4gIAkgICAgICAoZmF0dHItPnZhbGlkICYgTkZTX0FUVFJfRkFUVFJfRlNJRCkgJiYNCj4g
+IAkgICAgICAoZmF0dHItPnZhbGlkICYgTkZTX0FUVFJfRkFUVFJfVjRfTE9DQVRJT05TKSkpDQo+
+ICAJCXJldHVybjsNCj4gIA0KPiArCWlmIChmYXR0ci0+dmFsaWQgJiBORlNfQVRUUl9GQVRUUl9N
+T0RFKQ0KPiArCQlmaXhfbW9kZSA9IGZhbHNlOw0KPiArCWlmIChmYXR0ci0+dmFsaWQgJiBORlNf
+QVRUUl9GQVRUUl9OTElOSykNCj4gKwkJZml4X25saW5rID0gZmFsc2U7DQo+ICAJZmF0dHItPnZh
+bGlkIHw9IE5GU19BVFRSX0ZBVFRSX1RZUEUgfCBORlNfQVRUUl9GQVRUUl9NT0RFIHwNCj4gIAkJ
+TkZTX0FUVFJfRkFUVFJfTkxJTksgfCBORlNfQVRUUl9GQVRUUl9WNF9SRUZFUlJBTDsNCj4gLQlm
+YXR0ci0+bW9kZSA9IFNfSUZESVIgfCBTX0lSVUdPIHwgU19JWFVHTzsNCj4gLQlmYXR0ci0+bmxp
+bmsgPSAyOw0KPiArDQo+ICsJaWYgKGZpeF9tb2RlKQ0KPiArCQlmYXR0ci0+bW9kZSA9IFNfSUZE
+SVIgfCBTX0lSVUdPIHwgU19JWFVHTzsNCj4gKwllbHNlDQo+ICsJCWZhdHRyLT5tb2RlIHw9IFNf
+SUZESVI7DQo+ICsNCj4gKwlpZiAoZml4X25saW5rKQ0KPiArCQlmYXR0ci0+bmxpbmsgPSAyOw0K
+PiAgfQ0KPiAgDQo+ICBzdGF0aWMgaW50IF9uZnM0X3Byb2NfZnNfbG9jYXRpb25zKHN0cnVjdCBy
+cGNfY2xudCAqY2xpZW50LCBzdHJ1Y3QNCj4gaW5vZGUgKmRpciwNCg0KTkFDSyB0byB0aGlzIHBh
+dGNoLiBUaGUgd2hvbGUgcG9pbnQgaXMgdGhhdCBpZiB0aGUgc2VydmVyIGhhcyBhDQpyZWZlcnJh
+bCwgdGhlbiBpdCBpcyBub3QgZ29pbmcgdG8gZ2l2ZSB1cyBhbnkgYXR0cmlidXRlcyBvdGhlciB0
+aGFuIHRoZQ0Kb25lcyB3ZSdyZSBhbHJlYWR5IGFza2luZyBmb3IgYmVjYXVzZSBpdCBtYXkgbm90
+IGV2ZW4gaGF2ZSBhIHJlYWwNCmRpcmVjdG9yeS4gVGhlIGNsaWVudCBpcyByZXF1aXJlZCB0byBm
+YWtlIHVwIGFuIGlub2RlLCBoZW5jZSB0aGUNCmV4aXN0aW5nIGNvZGUuDQoNCi0tIA0KVHJvbmQg
+TXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9u
+ZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
