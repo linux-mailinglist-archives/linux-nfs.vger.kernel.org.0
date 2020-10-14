@@ -2,129 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B59528E73E
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Oct 2020 21:27:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F10B28E83F
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Oct 2020 23:14:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390610AbgJNT1B (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Oct 2020 15:27:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389668AbgJNT1B (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Oct 2020 15:27:01 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 391C0C061755
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Oct 2020 12:27:01 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id B41C23F5; Wed, 14 Oct 2020 15:26:59 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org B41C23F5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1602703619;
-        bh=Uu9rvFn8NQSCrAONDF2dYJXEqyokOKR0zKYJisC2p/s=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=ORaBd3YxY326lzIS91+7D+OzOKgkccHIg9gZdL4AS1z7N56k+v8BPpuoCUVmZpFDR
-         RIc7YUmvT+9uAGX/EsaA0V/aaMIeuKpr/HWT2P81O+gYvDs9pKwU7pDA53iJg0J7Ed
-         Hdv8pE8vyecn0s4rzacQsBSd7ziDy5isOe9dlWsI=
-Date:   Wed, 14 Oct 2020 15:26:59 -0400
-To:     guy keren <guy@vastdata.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: questions about the linux NFS 4.1 client and persistent sessions
-Message-ID: <20201014192659.GA23262@fieldses.org>
-References: <02b2121f-42d1-2587-6705-ca2aadb521bc@vastdata.com>
+        id S1730204AbgJNVNh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Oct 2020 17:13:37 -0400
+Received: from mail.talpidae.net ([176.9.32.230]:48739 "EHLO
+        node0.talpidae.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728295AbgJNVNf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Oct 2020 17:13:35 -0400
+Received: from talpidae.net (localhost [127.0.0.1])
+        by node0.talpidae.net (mail.talpidae.net) with ESMTP id 6E6B4BC1C4F;
+        Wed, 14 Oct 2020 23:13:32 +0200 (CEST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <02b2121f-42d1-2587-6705-ca2aadb521bc@vastdata.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+Date:   Wed, 14 Oct 2020 23:13:30 +0200
+From:   Jonas Zeiger <jonas.zeiger@talpidae.net>
+To:     David Wysochanski <dwysocha@redhat.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: Linux 5.9.0: NFS 4.1 with cachefilesd: Assertion failed (100%
+ CPU)
+In-Reply-To: <CALF+zOnDa4cN5MKFtzKKKyyCaTZ8XM=Q_9sLhsTRK4ZM1_pfzw@mail.gmail.com>
+References: <959e2a4790849c226b0967ecda11f79e@talpidae.net>
+ <CALF+zOnDa4cN5MKFtzKKKyyCaTZ8XM=Q_9sLhsTRK4ZM1_pfzw@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.9
+Message-ID: <646585853425598fd04612ab63ff4331@talpidae.net>
+X-Sender: jonas.zeiger@talpidae.net
+Organization: talpidae.net
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Oct 10, 2020 at 11:39:30PM +0300, guy keren wrote:
-> during the design, we encountered some issues with high-availability
-> and persistent sessions handling by the linux NFS client, and i
-> would like to understand a few things about the linux NFS client - i
-> read all relevant material on www.linux-nfs.org, and spent a while
-> reading the relevant recovery code in the nfs4.1 client kernel
-> sources, but i am missing some things (a pointer to the relevant
-> part in the recovery code will be appreciated as well):
+Hi David,
+
+root@host:/usr/src/linux-5.9# eu-addr2line -e ./vmlinux cachefiles_read_or_alloc_pages+0x9e
+fs/cachefiles/rdwr.c:715
+
+Thank you for looking into it!
+
+-Jonas
+
+On 2020-10-14 18:43, David Wysochanski wrote:
+> On Wed, Oct 14, 2020 at 9:13 AM Jonas Zeiger <jonas.zeiger@talpidae.net> wrote:
+>>
+>> Hi all,
+>>
+>> I experience failed assertions on an x86_64 KVM virtual machine (VirtIO devices) when accessing files on NFS 4 shares while having cachefilesd (0.10.7) running.
+>>
+>> Good kernel: 4.14.49
+>> Bad kernels: 5.8.14, 5.9.0
+>>
+>> The machine is rendered unusable (100% CPU) and requires a hard-reset.
+>>
+>> This is the console error report captured via serial console:
+>>
+>> CacheFiles:
+>> CacheFiles: Assertion failed
+>> invalid opcode: 0000 [#1]
+>> CPU: 0 PID: 4215 Comm: git Not tainted 5.9.0vzlinux #3
+>> RIP: 0010:cachefiles_read_or_alloc_pages+0x9e/0x5cf
+>> Code: ff 0f 0b 49 8b 46 30 48 8b 40 70 48 83 78 20 00 75 1a 48 c7 c7 20 fc e8 81 e8 cf 7a e7 ff 48 c7 c7 30 fc e8 81 e8 c3 7a e7 ff <0f> 0b 49 8b 46 28 ba 0c 00 00 00 c6 44 24 40 00 c6 44 24 41 00 c7
 > 
 > 
-> 1. suppose there is a persistent session that got disconnected
-> (because of a server restart, for example). i see that the client is
-> re-sending all the in-flight commands as part of
+> Can you do
 > 
->     the recovery. however, suppose that one of the commands was a
-> compound command containing 2 requests, and the reply to the first
-> of them was NFS4_OK, and to the 2nd it was NFS4ERR_DELAY - will the
-> client's code know that after it finishes recovery of the session -
-> then when it creates a new session, it needs to re-send the 2nd
-> request in this compound command?
-
-If the client received the reply, it shouldn't have to resend the
-compound at all.
-
-If the client didn't see the reply, it will resend the whole compound.
-Its behavior won't be affected by how the compound failed, since it
-can't know that.
-
-> the broader question is about a
-> compound with N commands, where the first X have an NFS4_OK reply
-> and the last N-X have NFS4_DELAY
-
-The server always stops processing a compound at the first failure, so
-N-X is always <=1.
-
-> - will the client re-send a new
-> compound with the last N-X commands after establishing a new
-> session?
-
-A resend by definition is a resend of exactly the same compound.  The
-client won't break it into pieces in that way.
-
-(And typical compounds can't be broken up that way anyway--often earlier
-ops in the compound are things like PUTFH's that supply required
-information to later ops.)
-
-> 2. if there is a non-persistent session, on which the client sent a
-> non-idempotent request (e.g. rename of a file into a different
-> directory), and the server restarted before the client received the
-> response - will the client just blindly re-send the same request
-> again after establishing a new session, or will it take some
-> measures to attempt to understand whether the command was already
-> executed? i.e. if the server already executed the rename, then
-> re-sending it will return a failure to locate the source file handle
-> (because it moved to a new directory).
-
-In a rename of A/X to B/Y, the source filehandle refers to the directory
-"A", so that filehandle will still work.  You might get a NFS4ERR_NOENT
-if there's nothing at A/X any more, and you could guess that meant the
-rename succeeded.  But it could equally well be that your rename was
-never executed, and it's somebody else's rename or unlink that caused
-A/X to no longer exist.  Similarly, the A/X might have executed but
-another operation might have immediately created something else at A/X.
-
-> does the linux NFS client
-> attempt to recover from this, or will it simply return an error to
-> the application layer?
-
-I suspect that's all any client does.  You can imagine all sorts of
-complicated hueristics, but none of them will be 100% right.  Persistent
-sessions is what you really need to fix this kind of bug.
-
-> 3. what NFS server with persistent sessions is used (or was used)
-> when testing the persistent sessions support in the linux NFS
-> client? the linux NFS server, as far as i understood, cannot support
-> persistent sessions (due to lack of assured persistent memory).
-
-I don't think any special hardware is necessary.  Or if it is, we could
-just disable the feature in the absence of that hardware.  Mainly what
-we need is some cooperation from the filesystem--some way the can ID
-particular operations so the server can ask the filesystem if a
-particular operation was committed to disk.  I talked to the XFS
-developers about it informally and they seemed open to the idea, but
-they need some sort of explanation of the requirements and I haven't
-gotten around to it....
-
---b.
+> eu-addr2line -e ./vmlinux cachefiles_read_or_alloc_pages+0x9e
+> 
+> That should give the line # of the assertion.
+> 
+> 
+>> RSP: 0000:ffffc900015cba98 EFLAGS: 00010292
+>> RAX: 000000000000001c RBX: ffffc900015cbc04 RCX: 0000000000000027
+>> RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffffffff82039340
+>> RBP: ffff88803c3469c0 R08: 0000000000000000 R09: 0000000000000000
+>> R10: 000000000001e88c R11: 000000000000003c R12: ffffc900015cbd70
+>> R13: ffff88803c3469c0 R14: ffff88802e2d2fd0 R15: ffff88802bf27000
+>> FS:  00007feea1027fc0(0000) GS:ffffffff82030000(0000) knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 00007feea1036000 CR3: 000000002bcbd005 CR4: 00000000001706b0
+>> Call Trace:
+>>  ? nfs_access_add_cache+0x140/0x1c5
+>>  ? slab_free_freelist_hook+0x45/0xc4
+>>  ? slab_pre_alloc_hook.isra.81+0x26/0x37
+>>  ? fscache_run_op.isra.13+0x57/0x69
+>>  __fscache_read_or_alloc_pages+0x1a6/0x1f2
+>>  __nfs_readpages_from_fscache+0x51/0xa9
+>>  nfs_readpages+0x111/0x133
+>>  ? get_page_from_freelist+0x734/0x8a1
+>>  read_pages+0x8c/0x102
+>>  ? __alloc_pages_nodemask+0xd4/0x122
+>>  ? page_cache_readahead_unbounded+0xce/0x17d
+>>  page_cache_readahead_unbounded+0xce/0x17d
+>>  filemap_fault+0x1f9/0x3d8
+>>  __do_fault+0x44/0x63
+>>  handle_mm_fault+0x70e/0xad3
+>>  exc_page_fault+0x1f0/0x311
+>>  ? asm_exc_page_fault+0x5/0x20
+>>  asm_exc_page_fault+0x1b/0x20
+>> RIP: 0033:0x7feea0991bef
+>> Code: 41 c7 45 00 1d 00 00 00 e9 1e f8 ff ff 41 8b 55 08 85 d2 0f 84 72 07 00 00 83 fb 0f 0f 87 37 14 00 00 85 ed 0f 84 83 f5 ff ff <41> 0f b6 34 24 89 d9 8d 45 ff 49 8d 7c 24 01 48 d3 e6 8d 4b 08 4c
+>> RSP: 002b:00007fffbb7d5240 EFLAGS: 00010202
+>> RAX: 00007feea0991bd2 RBX: 0000000000000000 RCX: 00000000000000d0
+>> RDX: 0000000000000001 RSI: 000055d7e1bf9c10 RDI: 00007fffbb7d52a0
+>> RBP: 00000000000000d0 R08: 0000000000000000 R09: 0000000000000000
+>> R10: 0000000000000000 R11: 00007fffbb7d5390 R12: 00007feea1036000
+>> R13: 000055d7e1bf9900 R14: 00007fffbb7d5570 R15: 0000000000000000
+>> ---[ end trace cad4b4a2dd601cdd ]---
+>> RIP: 0010:cachefiles_read_or_alloc_pages+0x9e/0x5cf
+>> Code: ff 0f 0b 49 8b 46 30 48 8b 40 70 48 83 78 20 00 75 1a 48 c7 c7 20 fc e8 81 e8 cf 7a e7 ff 48 c7 c7 30 fc e8 81 e8 c3 7a e7 ff <0f> 0b 49 8b 46 28 ba 0c 00 00 00 c6 44 24 40 00 c6 44 24 41 00 c7
+>> RSP: 0000:ffffc900015cba98 EFLAGS: 00010292
+>> RAX: 000000000000001c RBX: ffffc900015cbc04 RCX: 0000000000000027
+>> RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffffffff82039340
+>> RBP: ffff88803c3469c0 R08: 0000000000000000 R09: 0000000000000000
+>> R10: 000000000001e88c R11: 000000000000003c R12: ffffc900015cbd70
+>> R13: ffff88803c3469c0 R14: ffff88802e2d2fd0 R15: ffff88802bf27000
+>> FS:  00007feea1027fc0(0000) GS:ffffffff82030000(0000) knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 00007feea1036000 CR3: 000000002bcbd005 CR4: 00000000001706b0
+>> Kernel panic - not syncing: Fatal exception
+>> Kernel Offset: disabled
+>> ---[ end Kernel panic - not syncing: Fatal exception ]---
+>>
+>> Feel free to ask for further info or testing patches.
+>>
+>> Thank you!
+>>
+>> Regards,
+>> Jonas Zeiger
+>>
+>>
+>> Ps: I found this mail https://lkml.org/lkml/2020/3/20/399 describing a similar issue, but it may be unrelated.
+>>
