@@ -2,154 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8072F28F593
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Oct 2020 17:11:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A794528F65E
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Oct 2020 18:06:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389064AbgJOPLC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 15 Oct 2020 11:11:02 -0400
-Received: from mx01-sz.bfs.de ([194.94.69.67]:38338 "EHLO mx02-sz.bfs.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388764AbgJOPLC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 15 Oct 2020 11:11:02 -0400
-X-Greylist: delayed 373 seconds by postgrey-1.27 at vger.kernel.org; Thu, 15 Oct 2020 11:11:00 EDT
-Received: from SRVEX01-SZ.bfs.intern (exchange-sz.bfs.de [10.129.90.31])
-        by mx02-sz.bfs.de (Postfix) with ESMTPS id A058220403;
-        Thu, 15 Oct 2020 17:04:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
-        t=1602774286;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9Xuug+2hVFBm+B5UTc9CM6NcxF57zXPletFCWeaT4gw=;
-        b=cCGN8umA+LSkB9Eby1Bah6kZIRkI2t76DUyaG6XoQp0hAuOROgfwHJfLSCKAH+yBVziGVf
-        95DrTBeCqThRK0lCMby4VqmTF+0qPieg35O7Q3IgNDA1lOUoS7uaFr7NF7+rg3PtHrfU0j
-        S8UWH28pY7QgnMU7qMOAj1xsFj7hJ58ijyswr778PtG80M3uQ5Mo9F+EBAleMKwrx6l+t7
-        s7wwYa0zH92F/xPUc+8iBxmpnCrG3Z2syKYYKcF/BkK/jxq2k9T+wkoGXCrMx72EEm2/Rp
-        MpKfmZ/1+lfenDuJxgsjAMJPKC82GXvzXQSFUTau1yfc0u5tLacUdgPzfQDbaw==
-Received: from SRVEX01-SZ.bfs.intern (10.129.90.31) by SRVEX01-SZ.bfs.intern
- (10.129.90.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2106.2; Thu, 15 Oct
- 2020 17:04:46 +0200
-Received: from SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a]) by
- SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a%6]) with mapi id
- 15.01.2106.002; Thu, 15 Oct 2020 17:04:46 +0200
-From:   Walter Harms <wharms@bfs.de>
-To:     Fedor Tokarev <ftokarev@gmail.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: AW: [PATCH] net: sunrpc: Fix 'snprintf' return value check in
- 'do_xprt_debugfs'
-Thread-Topic: [PATCH] net: sunrpc: Fix 'snprintf' return value check in
- 'do_xprt_debugfs'
-Thread-Index: AQHWovtnyQ5di/wyF0Kmy+Tq/adLsKmYwM+i
-Date:   Thu, 15 Oct 2020 15:04:46 +0000
-Message-ID: <b97379d3bf59487d8d0ca3bbf14ad0df@bfs.de>
-References: <20201015135341.GA16343@laptop>
-In-Reply-To: <20201015135341.GA16343@laptop>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.137.16.40]
-x-tm-as-product-ver: SMEX-14.0.0.3031-8.6.1012-25728.000
-x-tm-as-result: No-10--5.425900-5.000000
-x-tmase-matchedrid: 1w4R1hu8EHXed0Ij9t5iQyEyJ8xFEVolPknazlXMVpV+SLLtNOiBhrLs
-        vs6J0rHdg5UXYAmrRiPQVBnHbDgUs6krm8GLHGyo52zh+cq/0Ju62wuq1giw0x3RY4pGTCyHfjc
-        dX7WMS/BFeoHCZIFQtCKkzMT7+4ooN9rojbjxBkwwwOrFPm3RDUpFpc3bJiMeEt/W/Pt5w8clC4
-        sxsYCYIvc4XRSNAau6vsp8E6m7CmMdrB57CzPAJj8Ckw9b/GFeTJDl9FKHbrl2/QXA1+sfBZ4CI
-        KY/Hg3AcmfM3DjaQLHEQdG7H66TyF82MXkEdQ77PZGkYTzNvZGv1nL/XchjCD2cE0BmbxnjEHAr
-        QLGCQG/e9xXzfruQvg==
-x-tm-as-user-approved-sender: No
-x-tm-as-user-blocked-sender: No
-x-tmase-result: 10--5.425900-5.000000
-x-tmase-version: SMEX-14.0.0.3031-8.6.1012-25728.000
-x-tm-snts-smtp: CF9EB13A45BC0FE4DCB7889F4C01F5288A58F5C7E6C89D543D611277CA13CB362000:9
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-Spam-Status: No, score=-0.05
-Authentication-Results: mx02-sz.bfs.de;
-        none
-X-Spamd-Result: default: False [-0.05 / 7.00];
-         ARC_NA(0.00)[];
-         TO_DN_EQ_ADDR_SOME(0.00)[];
-         HAS_XOIP(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[11];
-         NEURAL_HAM(-0.00)[-1.069];
-         FREEMAIL_TO(0.00)[gmail.com,fieldses.org,oracle.com,netapp.com,hammerspace.com,davemloft.net,kernel.org];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         BAYES_HAM(-0.05)[60.08%]
+        id S2388549AbgJOQGx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 15 Oct 2020 12:06:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388357AbgJOQGx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 15 Oct 2020 12:06:53 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E856C061755
+        for <linux-nfs@vger.kernel.org>; Thu, 15 Oct 2020 09:06:53 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id 67so5201490iob.8
+        for <linux-nfs@vger.kernel.org>; Thu, 15 Oct 2020 09:06:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Hv8s+89+OvEunMurIA6L5e/WAOthZDZ/IV/6X0UyNhE=;
+        b=Z9AP147G3XrlyVBzOmuuziuec0ZyTDMKiHkAvHdAOvqz9E/E+rz+5r65VnShXz+Uf9
+         O9bbtHPP1zonySu62eqf9WnQk6zxf5BwbK0vYqhvImrGWt24YRP56oUy3tdRjjXtqHN2
+         G98pK6MqVvc55o2AGlhv6IKU3aUAD04+FCqvwWoDdZSmqsBOxCPHqmWwJ1hS8l6yctSJ
+         g8BDF/GJTyzji6sT3xzhuU4JXeSeWo0kwONvGJUNJgc4Q8SaLNW9F7PF2nbbfKuvY7dy
+         YYRENFc7RgT11PEEOPu0G2I1utNmezgZaswha5IklJpuxPalsAUZgz7mqvNGd1bmp9N1
+         /E1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Hv8s+89+OvEunMurIA6L5e/WAOthZDZ/IV/6X0UyNhE=;
+        b=UfBCiQowcjlFgawpsjiEdNXHbCvMZG+Uf2KhQX/7SlI0RS58b/PMb4JJx8u2jxHOfi
+         pHJ1dG8bBmJ886bYSBP5whljM6KTTrUmWPTxkcrueeGwtO0aI00wyTgjVW8b6oWwBcH4
+         2dVe1Vj5n+eF5ZgQZGmdxaSpBsItu8MYhst1dkTEbJvMIUCzvA5pPkDbUEUKnuEgF0KP
+         K009jwKFS4dP5pEwyLC/XralC4SFTzP86OvyPw1HGA5wVAK8wyb1+58xUWXZXIHyStOG
+         nMngb00IcnqQLbobZvxjdPUaYaJAeZdzLctgbfgZl0ft10zCtdq5oR+DqgnBfPC+Mr3M
+         EOXg==
+X-Gm-Message-State: AOAM530KjoNlTKfWLt83BnrxyKgEJNQG6xPjAhSgL6SVvJYdL2tF+hEo
+        9dqO8q4kgO0Wz9A2OjCqVbg=
+X-Google-Smtp-Source: ABdhPJy8uNYBeBPvNsS1o19GaUYdNYo7e+oNhGPxp/wKeMR/CxTFHf3B4/TEoVOTcwvoB02FaCUPOA==
+X-Received: by 2002:a5d:8e12:: with SMTP id e18mr3385216iod.99.1602778012701;
+        Thu, 15 Oct 2020 09:06:52 -0700 (PDT)
+Received: from Olgas-MBP-305.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
+        by smtp.gmail.com with ESMTPSA id r5sm2756835ioj.51.2020.10.15.09.06.50
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Thu, 15 Oct 2020 09:06:51 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org, jencce.kernel@gmail.com
+Subject: [PATCH 1/1] NFSv4.2: support EXCHGID4_FLAG_SUPP_FENCE_OPS 4.2 EXCHANGE_ID flag
+Date:   Thu, 15 Oct 2020 12:06:53 -0400
+Message-Id: <20201015160653.59086-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-if  xprt->debugfs->d_name.name can be what ever long
-it is more clever to use kasprintf()
-the some for link (no idea how many xprt als possible)
+From: Olga Kornievskaia <kolga@netapp.com>
 
-jm2c
- wh
+RFC 7862 introduced a new flag that either client or server is
+allowed to set: EXCHGID4_FLAG_SUPP_FENCE_OPS.
 
-________________________________________
-Von: Fedor Tokarev [ftokarev@gmail.com]
-Gesendet: Donnerstag, 15. Oktober 2020 15:59
-An: bfields@fieldses.org; chuck.lever@oracle.com; anna.schumaker@netapp.com=
-; trond.myklebust@hammerspace.com; davem@davemloft.net; kuba@kernel.org
-Cc: linux-nfs@vger.kernel.org; netdev@vger.kernel.org; linux-kernel@vger.ke=
-rnel.org; kernel-janitors@vger.kernel.org; ftokarev@gmail.com
-Betreff: [PATCH] net: sunrpc: Fix 'snprintf' return value check in 'do_xprt=
-_debugfs'
+Client needs to update its bitmask to allow for this flag value.
 
-'snprintf' returns the number of characters which would have been written
-if enough space had been available, excluding the terminating null byte.
-Thus, the return value of 'sizeof(buf)' means that the last character
-has been dropped.
-
-Signed-off-by: Fedor Tokarev <ftokarev@gmail.com>
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+CC: <stable@vger.kernel.org>
 ---
- net/sunrpc/debugfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfs/nfs4proc.c         | 9 ++++++---
+ include/uapi/linux/nfs4.h | 3 +++
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
-index fd9bca2..56029e3 100644
---- a/net/sunrpc/debugfs.c
-+++ b/net/sunrpc/debugfs.c
-@@ -128,13 +128,13 @@ static int do_xprt_debugfs(struct rpc_clnt *clnt, str=
-uct rpc_xprt *xprt, void *n
-                return 0;
-        len =3D snprintf(name, sizeof(name), "../../rpc_xprt/%s",
-                       xprt->debugfs->d_name.name);
--       if (len > sizeof(name))
-+       if (len >=3D sizeof(name))
-                return -1;
-        if (*nump =3D=3D 0)
-                strcpy(link, "xprt");
-        else {
-                len =3D snprintf(link, sizeof(link), "xprt%d", *nump);
--               if (len > sizeof(link))
-+               if (len >=3D sizeof(link))
-                        return -1;
-        }
-        debugfs_create_symlink(link, clnt->cl_debugfs, name);
---
-2.7.4
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 6e95c85fe395..20f2e0f5c5ba 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -8039,9 +8039,11 @@ int nfs4_proc_secinfo(struct inode *dir, const struct qstr *name,
+  * both PNFS and NON_PNFS flags set, and not having one of NON_PNFS, PNFS, or
+  * DS flags set.
+  */
+-static int nfs4_check_cl_exchange_flags(u32 flags)
++static int nfs4_check_cl_exchange_flags(u32 flags, int version)
+ {
+-	if (flags & ~EXCHGID4_FLAG_MASK_R)
++	if (version >= 2 && (flags & ~EXCHGID4_2_FLAG_MASK_R))
++		goto out_inval;
++	else if (version < 2 && (flags & ~EXCHGID4_FLAG_MASK_R))
+ 		goto out_inval;
+ 	if ((flags & EXCHGID4_FLAG_USE_PNFS_MDS) &&
+ 	    (flags & EXCHGID4_FLAG_USE_NON_PNFS))
+@@ -8454,7 +8456,8 @@ static int _nfs4_proc_exchange_id(struct nfs_client *clp, const struct cred *cre
+ 	if (status  != 0)
+ 		goto out;
+ 
+-	status = nfs4_check_cl_exchange_flags(resp->flags);
++	status = nfs4_check_cl_exchange_flags(resp->flags,
++			clp->cl_mvops->minor_version);
+ 	if (status  != 0)
+ 		goto out;
+ 
+diff --git a/include/uapi/linux/nfs4.h b/include/uapi/linux/nfs4.h
+index bf197e99b98f..ed5415e0f1c1 100644
+--- a/include/uapi/linux/nfs4.h
++++ b/include/uapi/linux/nfs4.h
+@@ -139,6 +139,8 @@
+ 
+ #define EXCHGID4_FLAG_UPD_CONFIRMED_REC_A	0x40000000
+ #define EXCHGID4_FLAG_CONFIRMED_R		0x80000000
++
++#define EXCHGID4_FLAG_SUPP_FENCE_OPS		0x00000004
+ /*
+  * Since the validity of these bits depends on whether
+  * they're set in the argument or response, have separate
+@@ -146,6 +148,7 @@
+  */
+ #define EXCHGID4_FLAG_MASK_A			0x40070103
+ #define EXCHGID4_FLAG_MASK_R			0x80070103
++#define EXCHGID4_2_FLAG_MASK_R			0x80070107
+ 
+ #define SEQ4_STATUS_CB_PATH_DOWN		0x00000001
+ #define SEQ4_STATUS_CB_GSS_CONTEXTS_EXPIRING	0x00000002
+-- 
+2.18.2
 
