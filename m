@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B50528F46C
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Oct 2020 16:08:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30B5828F4B7
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Oct 2020 16:28:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbgJOOIw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 15 Oct 2020 10:08:52 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37078 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727988AbgJOOIt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 15 Oct 2020 10:08:49 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09FE3rIf164025;
-        Thu, 15 Oct 2020 14:08:44 GMT
+        id S1730160AbgJOO2q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 15 Oct 2020 10:28:46 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:44180 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728231AbgJOO2q (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 15 Oct 2020 10:28:46 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09FEKiLw138256;
+        Thu, 15 Oct 2020 14:28:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
  mime-version : subject : from : in-reply-to : date : cc :
  content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=ZDrP08mgbjZ26yc3pJkM9S7bhn6r7oR6wHAtbo57Izo=;
- b=xzNqydizVSrNkEwWjv1+//yjX5NRhH8hks7UT00T3KkPVgmlMeGWkH3x7Ij3/Lj34wyZ
- fCuYLsI0r7ml2QCe5hCabvFhpCuo9ipt5HXjndrbWK3o3g2ZStsej5r431ck88ORnHmz
- RKIsZt23IKCJ+RMj+5C6S40JJBlYAelXBvPFXvyd7UFKPbbEHEKSq+Ry84Nn0MlPjn2V
- xmHMOYxEWfZ7XpYqmWn881dx7BierHwmbsjmwXH2Nnk6Pz+vkCr3zFNcVl9ZGy4VdpUn
- wUsTJqIZ1DnwPVpXhA1CkL3kqxRgUruy5BJ5lREKUWjQRbuSwmWuSc4W429I9/pFnoQj Xg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 343vaek6nx-1
+ s=corp-2020-01-29; bh=RyTku8xDTH+b1O5BBM7VsnPZNc0gwS1LC36OiIr+RZo=;
+ b=OV7Z0VadbkjNUcUAD5i7Z7My3W5EcefsjGmu0zC5OJhPh+wvuSLxUjJcp5ZkTsVu6VIb
+ PCCzPma2cRCGMmvsizqKas23qkPCNdcauoQxFibSolUZPgtsNE87JlqGyvbxZ8Pd6s3b
+ gm7+rCOAY52UegyR2BbbMyhNXPfYje+Tit5wc7acPKbifkBViIRbQJZRwvuuTWVJKk9X
+ WPo7xd/WlPYIRk967llAISV11LtIWAr2Pv37Gj65uiN8UJ43miDUcD2PNW8MpgcLtZB/
+ An4D63u13IjEp8tWqGz3pd/AiV0hP389ytwdaiJiZmd+1LPT6sdrm67wgb1ixUT/usMK Yw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 3434wkvyjy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 15 Oct 2020 14:08:43 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09FE6dhV013675;
-        Thu, 15 Oct 2020 14:08:43 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 343pw0dy24-1
+        Thu, 15 Oct 2020 14:28:41 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09FEJfH7107839;
+        Thu, 15 Oct 2020 14:28:40 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 344by58t0y-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Oct 2020 14:08:43 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09FE8feg019867;
-        Thu, 15 Oct 2020 14:08:41 GMT
+        Thu, 15 Oct 2020 14:28:40 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09FESdje021772;
+        Thu, 15 Oct 2020 14:28:39 GMT
 Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 15 Oct 2020 07:08:41 -0700
+        with ESMTP ; Thu, 15 Oct 2020 07:28:39 -0700
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
 Subject: Re: [PATCH] NFS: Fix mode bits and nlink count for v4 referral dirs
 From:   Chuck Lever <chuck.lever@oracle.com>
 In-Reply-To: <a998d760a52f5a86343d608e34802c41977442f7.camel@hammerspace.com>
-Date:   Thu, 15 Oct 2020 10:08:40 -0400
+Date:   Thu, 15 Oct 2020 10:28:37 -0400
 Cc:     "ashishsangwan2@gmail.com" <ashishsangwan2@gmail.com>,
         "stable@vger.kernel.org" <stable@vger.kernel.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <C0A500CC-E132-4E77-822C-60AE13504289@oracle.com>
+Message-Id: <B1C50A91-9948-49B8-8047-BE3FE7EF8F46@oracle.com>
 References: <20201006151456.20875-1-ashishsangwan2@gmail.com>
  <2d1ff3421a88ece2f1b7708cdbc9d34b00ad3e81.camel@hammerspace.com>
  <CAOiN93mh-ssTDuN1fAptECqc5JpUHtK=1V56jY_0MtWEcT=U2Q@mail.gmail.com>
@@ -63,16 +63,16 @@ References: <20201006151456.20875-1-ashishsangwan2@gmail.com>
 To:     Trond Myklebust <trondmy@hammerspace.com>
 X-Mailer: Apple Mail (2.3608.120.23.2.4)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9774 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
- bulkscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010150099
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ suspectscore=2 mlxscore=0 malwarescore=0 adultscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010150101
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9774 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 phishscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
- mlxscore=0 suspectscore=0 spamscore=0 adultscore=0 lowpriorityscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 suspectscore=2 impostorscore=0 clxscore=1015
+ spamscore=0 priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010150099
+ definitions=main-2010150101
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -261,7 +261,32 @@ wrote:
 >=20
 > It doesn't matter that the client's behaviour is spec compliant. We're
 > asking for information that is not supposed to be divulged by the
-> majority of servers, Furthermore, that information is, quite frankly,
+> majority of servers,
+
+We might be reading the spec differently.
+
+I read that SHOULD NOT as saying the server should not hand out
+attributes for the absent file system, not that it shouldn't
+hand out attributes at all. My experience at that time was that
+servers handed out attributes for the referral object that was
+present on that server. That seems to be completely allowed by
+the spec language.
+
+But you're correct: it's not relevant to application behavior.
+As I said, it's merely to prevent users from deciding the Linux
+client is somehow not working right.
+
+We're working around the client's behavior: it doesn't follow
+the referral until after a user cd's into that directory. Thus
+the typical pattern of
+
+$ ls
+$ cd
+
+Gives surprising results.
+
+
+> Furthermore, that information is, quite frankly,
 > utterly irrelevant to the client and application running on it. Any
 > attempt to access that fake object will result in a submount of
 > something completely different on top of that object.
@@ -270,19 +295,6 @@ wrote:
 > us with a faked up object (which it is not supposed to do), whereas
 > previously, we were faking that object up ourselves. What's the big
 > deal here?
-
-Right, that boils it down nicely.
-
-The difference has been that by and large the server-provided values
-don't look broken to users. Perhaps all we need to do is select better
-defaults for these attributes on Linux clients. I haven't followed
-Ashish's requirements, so I can't speak to them.
-
-Here is some history.
-
-=
-https://lore.kernel.org/linux-nfs/CAD8zhTAAvTKhp6k0vYRMnhZW5pxjstpBiDKLgoX=
-ocfpAXNjKTg@mail.gmail.com/
 
 
 --
