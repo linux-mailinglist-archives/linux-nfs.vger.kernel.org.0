@@ -2,83 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C8862902A0
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Oct 2020 12:15:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33434290558
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Oct 2020 14:38:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406601AbgJPKNK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 16 Oct 2020 06:13:10 -0400
-Received: from mout.gmx.net ([212.227.15.15]:60501 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406596AbgJPKNJ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 16 Oct 2020 06:13:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1602843182;
-        bh=9nssCMMBv7tzELS+fUZMBow//rn3xu+MNXAU4tgsZ6A=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
-        b=lgYUm/ICOsAa06h00t0wQfL0ZaUune5jpNkiul8SqOcy1PMkbttWpcYoel1VsZOxI
-         2lAJ3DQXdKRRh2+FOQdug1VxRl7D4zNIP9Mx1uodr/zY+kX4L9kyTDjqJxPK7O9n1R
-         Uh1kfYi/4pt0lN2XnOXf0b7dZQIT+dE4Kj+D7PUk=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ls3530.fritz.box ([92.116.166.88]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MnaoZ-1k3tvv2xBV-00jZbf; Fri, 16
- Oct 2020 12:13:02 +0200
-Date:   Fri, 16 Oct 2020 12:13:00 +0200
-From:   Helge Deller <deller@gmx.de>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        id S2407679AbgJPMiE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 16 Oct 2020 08:38:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407657AbgJPMhz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 16 Oct 2020 08:37:55 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA1FC0613D5
+        for <linux-nfs@vger.kernel.org>; Fri, 16 Oct 2020 05:37:55 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id p11so1210165pld.5
+        for <linux-nfs@vger.kernel.org>; Fri, 16 Oct 2020 05:37:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O1evu/uCI+QRNY7SsK/no8njk1hcUqNItCkuJRC3dLc=;
+        b=bbJsAymhNU7wMqvb0WzSVgn1C9Jcd2lKiiaXod7R/qUN4qsDT63a+BhDt4ttf0Jl4C
+         rjtiJa1dk4TOXpoKlArIjTaEtyzOWqWztAYpfgR1YZng7senS2eo6FvwC4oJxXRS3ELW
+         /M62ON0214rJR8cODTrk/F8IWYlsvYFtJzBSU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O1evu/uCI+QRNY7SsK/no8njk1hcUqNItCkuJRC3dLc=;
+        b=MK8hRSLuWFVijt7P1R/c8pWQw56g8OtaSGbX+5+2jE3KzyeQQznU9mrNaH/GJS9V7s
+         87YX6iea53Hq1e3pDjNTMADq2YEPIsxdxMIWCQxBDh5d0PQqGAxC8xJjYVkGKYUVuSia
+         bLRaSHuKY0Ox4p0buajzahddAXHq26qlBNiQq34/Yraht5VaHfb7RR81VR9TnVSqlKmN
+         ghJkr0RJci3WTEHTid1KUdR9wmeihfZM4zsIqM3FsJoAFU/9yoWt7aEsouAsXvN4JZba
+         pbrSSNijK8eEaSjXa36SVqP+1sX9L2j+gr1TLXIRtJ1D3vPymAoQAajMBYXPyiRSof2+
+         GWgA==
+X-Gm-Message-State: AOAM533Fwk+46vVNL584kv1GGoTQSQZYfSSjdfA4lmU3YpfE96TZTsIH
+        h9soP5kQLTs/a0T+WajkSdzhCA==
+X-Google-Smtp-Source: ABdhPJzsFH8TOOowaw0mIWd+vpBDOWRsXcrIqIPbu4xMwYtLhl/N2BPAgpaIC6rR8+z7FBQJsv7CTg==
+X-Received: by 2002:a17:90a:65cc:: with SMTP id i12mr3772205pjs.193.1602851874366;
+        Fri, 16 Oct 2020 05:37:54 -0700 (PDT)
+Received: from ubuntu.netflix.com (203.20.25.136.in-addr.arpa. [136.25.20.203])
+        by smtp.gmail.com with ESMTPSA id q8sm2857216pfg.118.2020.10.16.05.37.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Oct 2020 05:37:53 -0700 (PDT)
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     "J . Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org
-Subject: nfsroot: Default mount option should ask for built-in NFS version
-Message-ID: <20201016101300.GA364@ls3530.fritz.box>
+        David Howells <dhowells@redhat.com>
+Cc:     Sargun Dhillon <sargun@sargun.me>, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] NFS User Namespaces
+Date:   Fri, 16 Oct 2020 05:37:42 -0700
+Message-Id: <20201016123745.9510-1-sargun@sargun.me>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Provags-ID: V03:K1:AlTZQWUaumXyJzzN41d431uYsCxjdUZ5t3Om5Lmt6bsPgYwjkEZ
- 25cJPeu1FdA4XF25wU3U0uKoCewHCo3Fjxy2zMflq8ilTFj3pKKO7dB/0ryxRwQm/eRxcO3
- WsP3daEvD5r3jqatGoZ15duwLoQNems1XF88ocOvc3DssWXGtyH+R51Dqi4OeuFu9edb4K5
- o8CR/hr1fWBxNf7F0t3Dg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nZInG/kunyg=:ObGxnqK3YeQorDogqRtBi/
- D9LxOk7CkXKNcnFwDJXK/3JfBGZv6sw2MXge6cGXx/ii8tPycXHxgR4ST95MqlVx7AvjLS57Z
- 6CW+zoiUy9NjifAKivAwtXOv+r8/MCQqbRX1F9bBdeaL4a256dUmqeumpAXo1f7BzyIsQ7IZI
- 3ABlHHk5aPqZG3beBSQUheHXaEeFk8aW7H4FxcDZNjT790EMcebOYJ1bipj9+omTuB8YBiMif
- l+Aef6GdSmxHtIO8C+sggy+GiaNNHg0Iy/MXYzHTV+z9JDSvr3VW1bOIdXz6lUaKr3N7jwlhG
- 41Thl0xqkiP+ybDK61dx97gPYZow9uDE39jVL4tFZ0rNIvSX6av8QimpzPqLDwr5IUQQrCd2V
- O69iobacj2n1NrQvb060dEFQOlAwO95JYEsNWtkq+cRMShlkbWuDnd3vIBBkKkT/3ii4n6Tvu
- 0serhmZD5i6cVIHmKw5uLCIdQTbJyqNHagxS6InN6/HU8Tm+RBO/rCLZWweTDAipshEIAiP3y
- t7U1dYIgP74YNpTeUE4lqm2BrrrS8I5/hlMX0LSzDzzFfalKopUWDAlazYLU0JAmnr4gxkZ+E
- bVUZGRmX62vdIhwMumvHtPzI1NW5ykq2QlfyhLScwPYW6DQU2k5OpgG0fMBpxoZygqqmFjioB
- n+pugxPQ2T4KyRkrvnHjoa0z8n6+VL83yoAdg8j6DuJKiqGwuaCxJVMSzJ3g4E6ZVvmw0CrgV
- 8zLjE3iuOJ93TATzINZsLvpUpqMrrPPfRdFd+8oFDMjbTzeaP8QX2yNyO+TewIk6cIYlPurZS
- +/k4su77qHwg0wVNYIkIAr7ehX9uWYmYoaa16ZLsHgynmEaR9SN/+tMyXB/8bgMRFipOi4Ahm
- Ncx+4dm4T1ZPIuxNn8xg==
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Change the nfsroot default mount option to ask for NFSv2 only *if* the
-kernel was built with NFSv2 support.
-If not, default to NFSv3 or as last choice to NFSv4, depending on actual
-kernel config.
+This patchset adds some functionality to allow NFS to be used from
+NFS namespaces (containers).
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+Changes since v1:
+  * Added samples
 
-diff --git a/fs/nfs/nfsroot.c b/fs/nfs/nfsroot.c
-index 8d3278805602..fa148308822c 100644
-=2D-- a/fs/nfs/nfsroot.c
-+++ b/fs/nfs/nfsroot.c
-@@ -88,7 +88,13 @@
- #define NFS_ROOT		"/tftpboot/%s"
+Sargun Dhillon (3):
+  NFS: Use cred from fscontext during fsmount
+  samples/vfs: Split out common code for new syscall APIs
+  samples/vfs: Add example leveraging NFS with new APIs and user
+    namespaces
 
- /* Default NFSROOT mount options. */
-+#if defined(CONFIG_NFS_V2)
- #define NFS_DEF_OPTIONS		"vers=3D2,tcp,rsize=3D4096,wsize=3D4096"
-+#elif defined(CONFIG_NFS_V3)
-+#define NFS_DEF_OPTIONS		"vers=3D3,tcp,rsize=3D4096,wsize=3D4096"
-+#else
-+#define NFS_DEF_OPTIONS		"vers=3D4,tcp,rsize=3D4096,wsize=3D4096"
-+#endif
+ fs/nfs/client.c                        |   2 +-
+ fs/nfs/flexfilelayout/flexfilelayout.c |   1 +
+ fs/nfs/nfs4client.c                    |   2 +-
+ samples/vfs/.gitignore                 |   2 +
+ samples/vfs/Makefile                   |   5 +-
+ samples/vfs/test-fsmount.c             |  86 +-----------
+ samples/vfs/test-nfs-userns.c          | 181 +++++++++++++++++++++++++
+ samples/vfs/vfs-helper.c               |  43 ++++++
+ samples/vfs/vfs-helper.h               |  55 ++++++++
+ 9 files changed, 289 insertions(+), 88 deletions(-)
+ create mode 100644 samples/vfs/test-nfs-userns.c
+ create mode 100644 samples/vfs/vfs-helper.c
+ create mode 100644 samples/vfs/vfs-helper.h
 
- /* Parameters passed from the kernel command line */
- static char nfs_root_parms[NFS_MAXPATHLEN + 1] __initdata =3D "";
+-- 
+2.25.1
+
