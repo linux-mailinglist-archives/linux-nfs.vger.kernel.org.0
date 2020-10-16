@@ -2,110 +2,533 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D48B290986
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Oct 2020 18:18:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79DEA290B05
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Oct 2020 19:59:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410012AbgJPQSg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 16 Oct 2020 12:18:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:33999 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2409976AbgJPQSe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 16 Oct 2020 12:18:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1602865112;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=y+hjVI66PfcmwJlWfVwVOTQ6i8qhG0kIQEYwSMKlTRs=;
-        b=RUybtcalXrFLkWeOefy5DSLyiNHq1BHsVjrO0yS5ApXru0ad+NAOd5m0P/fyoc4S+2bTSI
-        ebe0K64cJYo4iKUjXz3bxQamD+BdgZ+Df86MotfPf1lJolYjsmMdTtKr6Dp/ZwrT8nY4dz
-        tpJBc5dHSeYoPGhccXwnfnwAp5UgQWM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-356-hJhe2FRRP26PUE3ZREH50Q-1; Fri, 16 Oct 2020 12:18:31 -0400
-X-MC-Unique: hJhe2FRRP26PUE3ZREH50Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7400A80365F;
-        Fri, 16 Oct 2020 16:18:29 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-70.rdu2.redhat.com [10.10.120.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1A5CB60C04;
-        Fri, 16 Oct 2020 16:18:26 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        trond.myklebust@hammerspace.com
-cc:     dhowells@redhat.com, linux-crypto@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-afs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: gssapi, crypto and afs/rxrpc
+        id S2387509AbgJPR7i (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 16 Oct 2020 13:59:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733113AbgJPR7i (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 16 Oct 2020 13:59:38 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0964DC061755
+        for <linux-nfs@vger.kernel.org>; Fri, 16 Oct 2020 10:59:38 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 8007C36E1; Fri, 16 Oct 2020 13:59:36 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 8007C36E1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1602871176;
+        bh=I9qpbpvmP5M1PsjExDiTQ6DTZMim0zsuYuKgazVNpSs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gFfpAtpRwiyFBdkDwyGmcQ3ZkQO3S7Fn6doHJxnahoHELstxla4UGbgKh3bdt06LF
+         xUPvyFao2L/GMojtx/0i7/klanV5axShm67tJL4z5f3Q2AZsE2cNIDFlozqcmRgU4M
+         1bKx40Io+Qi7OQn7QrXnda5SBsb+Ce0M4eCuyruc=
+Date:   Fri, 16 Oct 2020 13:59:36 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] NFSv4.2: Fix NFS4ERR_STALE error when doing inter
+ server copy
+Message-ID: <20201016175936.GA7332@fieldses.org>
+References: <20201009062819.92173-2-dai.ngo@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1444463.1602865106.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Fri, 16 Oct 2020 17:18:26 +0100
-Message-ID: <1444464.1602865106@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201009062819.92173-2-dai.ngo@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Herbert, Dave, Trond,
+On Fri, Oct 09, 2020 at 02:28:19AM -0400, Dai Ngo wrote:
+> NFS_FS=y as dependency of CONFIG_NFSD_V4_2_INTER_SSC still have
+> build errors and some configs with NFSD=m to get NFS4ERR_STALE
+> error when doing inter server copy.
+> 
+> Added ops table in nfs_common for knfsd to access NFS client modules.
 
-I've written basic gssapi-derived security support for AF_RXRPC:
+This looks like a good start, but I think it could be a lot simpler:
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log=
-/?h=3Drxrpc-rxgk
+> 
+> Fixes: 3ac3711adb88 ("NFSD: Fix NFS server build errors")
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+> changes from v2: fix 0-day build issues.
+> ---
+>  fs/nfs/nfs4file.c       |  40 +++++++++++--
+>  fs/nfs/nfs4super.c      |   6 ++
+>  fs/nfs/super.c          |  20 +++++++
+>  fs/nfs_common/Makefile  |   1 +
+>  fs/nfs_common/nfs_ssc.c | 148 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  fs/nfsd/Kconfig         |   2 +-
+>  fs/nfsd/nfs4proc.c      |   3 +-
+>  include/linux/nfs_ssc.h |  77 +++++++++++++++++++++++++
+>  8 files changed, 289 insertions(+), 8 deletions(-)
+>  create mode 100644 fs/nfs_common/nfs_ssc.c
+>  create mode 100644 include/linux/nfs_ssc.h
+> 
+> diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+> index fdfc77486ace..7d242fcb134a 100644
+> --- a/fs/nfs/nfs4file.c
+> +++ b/fs/nfs/nfs4file.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/falloc.h>
+>  #include <linux/mount.h>
+>  #include <linux/nfs_fs.h>
+> +#include <linux/nfs_ssc.h>
+>  #include "delegation.h"
+>  #include "internal.h"
+>  #include "iostat.h"
+> @@ -314,9 +315,8 @@ static loff_t nfs42_remap_file_range(struct file *src_file, loff_t src_off,
+>  static int read_name_gen = 1;
+>  #define SSC_READ_NAME_BODY "ssc_read_%d"
+>  
+> -struct file *
+> -nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
+> -		nfs4_stateid *stateid)
+> +static struct file *__nfs42_ssc_open(struct vfsmount *ss_mnt,
+> +		struct nfs_fh *src_fh, nfs4_stateid *stateid)
+>  {
+>  	struct nfs_fattr fattr;
+>  	struct file *filep, *res;
+> @@ -398,14 +398,42 @@ struct file *
+>  	fput(filep);
+>  	goto out_free_name;
+>  }
+> -EXPORT_SYMBOL_GPL(nfs42_ssc_open);
+> -void nfs42_ssc_close(struct file *filep)
+> +
+> +static void __nfs42_ssc_close(struct file *filep)
+>  {
+>  	struct nfs_open_context *ctx = nfs_file_open_context(filep);
+>  
+>  	ctx->state->flags = 0;
+>  }
+> -EXPORT_SYMBOL_GPL(nfs42_ssc_close);
+> +
+> +static const struct nfs4_ssc_client_ops nfs4_ssc_clnt_ops_tbl = {
+> +	.sco_owner = THIS_MODULE,
+> +	.sco_open = __nfs42_ssc_open,
+> +	.sco_close = __nfs42_ssc_close,
+> +};
+> +
+> +/**
+> + * nfs42_ssc_register_ops - Wrapper to register NFS_V4 ops in nfs_common
+> + *
+> + * Return values:
+> + *   On success, returns 0
+> + *   %-EINVAL if validation check fails
+> + */
+> +int nfs42_ssc_register_ops(void)
+> +{
+> +	return nfs42_ssc_register(&nfs4_ssc_clnt_ops_tbl);
+> +}
+> +
+> +/**
+> + * nfs42_ssc_unregister_ops - wrapper to un-register NFS_V4 ops in nfs_common
+> + *
+> + * Return values:
+> + *   None.
+> + */
+> +void nfs42_ssc_unregister_ops(void)
+> +{
+> +	nfs42_ssc_unregister(&nfs4_ssc_clnt_ops_tbl);
+> +}
+>  #endif /* CONFIG_NFS_V4_2 */
+>  
+>  const struct file_operations nfs4_file_operations = {
+> diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+> index 0c1ab846b83d..ed0c1f9fc890 100644
+> --- a/fs/nfs/nfs4super.c
+> +++ b/fs/nfs/nfs4super.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/mount.h>
+>  #include <linux/nfs4_mount.h>
+>  #include <linux/nfs_fs.h>
+> +#include <linux/nfs_ssc.h>
+>  #include "delegation.h"
+>  #include "internal.h"
+>  #include "nfs4_fs.h"
+> @@ -273,6 +274,10 @@ static int __init init_nfs_v4(void)
+>  	err = nfs4_xattr_cache_init();
+>  	if (err)
+>  		goto out2;
+> +
+> +	err = nfs42_ssc_register_ops();
+> +	if (err)
+> +		goto out2;
+>  #endif
+>  
+>  	err = nfs4_register_sysctl();
+> @@ -297,6 +302,7 @@ static void __exit exit_nfs_v4(void)
+>  	unregister_nfs_version(&nfs_v4);
+>  #ifdef CONFIG_NFS_V4_2
+>  	nfs4_xattr_cache_exit();
+> +	nfs42_ssc_unregister_ops();
+>  #endif
+>  	nfs4_unregister_sysctl();
+>  	nfs_idmap_quit();
+> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+> index 7a70287f21a2..65636fef6a00 100644
+> --- a/fs/nfs/super.c
+> +++ b/fs/nfs/super.c
+> @@ -57,6 +57,7 @@
+>  #include <linux/rcupdate.h>
+>  
+>  #include <linux/uaccess.h>
+> +#include <linux/nfs_ssc.h>
+>  
+>  #include "nfs4_fs.h"
+>  #include "callback.h"
+> @@ -85,6 +86,11 @@
+>  };
+>  EXPORT_SYMBOL_GPL(nfs_sops);
+>  
+> +static const struct nfs_ssc_client_ops nfs_ssc_clnt_ops_tbl = {
+> +	.sco_owner = THIS_MODULE,
+> +	.sco_sb_deactive = nfs_sb_deactive,
+> +};
+> +
+>  #if IS_ENABLED(CONFIG_NFS_V4)
+>  static int __init register_nfs4_fs(void)
+>  {
+> @@ -106,6 +112,16 @@ static void unregister_nfs4_fs(void)
+>  }
+>  #endif
+>  
+> +static int nfs_ssc_register_ops(void)
+> +{
+> +	return nfs_ssc_register(&nfs_ssc_clnt_ops_tbl);
+> +}
+> +
+> +static void nfs_ssc_unregister_ops(void)
+> +{
+> +	nfs_ssc_unregister(&nfs_ssc_clnt_ops_tbl);
+> +}
+> +
+>  static struct shrinker acl_shrinker = {
+>  	.count_objects	= nfs_access_cache_count,
+>  	.scan_objects	= nfs_access_cache_scan,
+> @@ -133,6 +149,9 @@ int __init register_nfs_fs(void)
+>  	ret = register_shrinker(&acl_shrinker);
+>  	if (ret < 0)
+>  		goto error_3;
+> +	ret = nfs_ssc_register_ops();
+> +	if (ret < 0)
+> +		goto error_3;
+>  	return 0;
+>  error_3:
+>  	nfs_unregister_sysctl();
+> @@ -152,6 +171,7 @@ void __exit unregister_nfs_fs(void)
+>  	unregister_shrinker(&acl_shrinker);
+>  	nfs_unregister_sysctl();
+>  	unregister_nfs4_fs();
+> +	nfs_ssc_unregister_ops();
+>  	unregister_filesystem(&nfs_fs_type);
+>  }
+>  
+> diff --git a/fs/nfs_common/Makefile b/fs/nfs_common/Makefile
+> index 4bebe834c009..fa82f5aaa6d9 100644
+> --- a/fs/nfs_common/Makefile
+> +++ b/fs/nfs_common/Makefile
+> @@ -7,3 +7,4 @@ obj-$(CONFIG_NFS_ACL_SUPPORT) += nfs_acl.o
+>  nfs_acl-objs := nfsacl.o
+>  
+>  obj-$(CONFIG_GRACE_PERIOD) += grace.o
+> +obj-$(CONFIG_GRACE_PERIOD) += nfs_ssc.o
+> diff --git a/fs/nfs_common/nfs_ssc.c b/fs/nfs_common/nfs_ssc.c
+> new file mode 100644
+> index 000000000000..6d99a6d2d6b9
+> --- /dev/null
+> +++ b/fs/nfs_common/nfs_ssc.c
+> @@ -0,0 +1,148 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * fs/nfs_common/nfs_ssc_comm.c
+> + *
+> + * Helper for knfsd's SSC to access ops in NFS client modules
+> + *
+> + * Author: Dai Ngo <dai.ngo@oracle.com>
+> + *
+> + * Copyright (c) 2020, Oracle and/or its affiliates.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/fs.h>
+> +#include <linux/nfs_ssc.h>
+> +#include "../nfs/nfs4_fs.h"
+> +
+> +MODULE_LICENSE("GPL");
+> +
+> +/*
+> + * NFS_FS
+> + */
+> +static void nfs_sb_deactive_def(struct super_block *sb);
+> +
+> +static struct nfs_ssc_client_ops nfs_ssc_clnt_ops_def = {
+> +	.sco_owner = THIS_MODULE,
+> +	.sco_sb_deactive = nfs_sb_deactive_def,
+> +};
+> +
+> +/*
+> + * NFS_V4
+> + */
+> +static struct file *nfs42_ssc_open_def(struct vfsmount *ss_mnt,
+> +		struct nfs_fh *src_fh, nfs4_stateid *stateid);
+> +static void nfs42_ssc_close_def(struct file *filep);
+> +
+> +static struct nfs4_ssc_client_ops nfs4_ssc_clnt_ops_def = {
+> +	.sco_owner = THIS_MODULE,
+> +	.sco_open = nfs42_ssc_open_def,
+> +	.sco_close = nfs42_ssc_close_def,
+> +};
+> +
+> +
+> +struct nfs_ssc_client_ops_tbl nfs_ssc_client_tbl = {
+> +	.ssc_nfs4_ops	= &nfs4_ssc_clnt_ops_def,
+> +	.ssc_nfs_ops = &nfs_ssc_clnt_ops_def
+> +};
+> +EXPORT_SYMBOL_GPL(nfs_ssc_client_tbl);
+> +
+> +
+> +static struct file *nfs42_ssc_open_def(struct vfsmount *ss_mnt,
+> +		struct nfs_fh *src_fh, nfs4_stateid *stateid)
+> +{
+> +	return ERR_PTR(-EIO);
+> +}
+> +
+> +static void nfs42_ssc_close_def(struct file *filep)
+> +{
+> +}
 
-I've borrowed some bits from net/sunrpc/auth_gss/ but there's a lot in the=
-re
-that is quite specific to the sunrpc module that makes it hard to use for
-rxrpc (dprintk, struct xdr_buf).
+I don't think we need any of these "_def" ops.  We just shouldn't be
+calling any of these ops in the case the operations aren't loaded.
 
-Further, I've implemented some more enctypes that aren't supported yet by
-gssapi (AES with sha256/sha384 and Camellia), and that requires some chang=
-es
-to the handling as AES with sha384 has a 24-byte checksum size and a 24-by=
-te
-calculated key size for Kc and Ki but a 32-byte Ke.
+> +
+> +#ifdef CONFIG_NFS_V4_2
+> +/**
+> + * nfs42_ssc_register - install the NFS_V4 client ops in the nfs_ssc_client_tbl
+> + * @ops: NFS_V4 ops to be installed
+> + *
+> + * Return values:
+> + *   On success, return 0
+> + *   %-EINVAL  if validation check fails
+> + */
+> +int nfs42_ssc_register(const struct nfs4_ssc_client_ops *ops)
+> +{
+> +	if (ops == NULL || ops->sco_open == NULL || ops->sco_close == NULL)
+> +		return -EINVAL;
 
-Should I pull the core out and try to make it common?  If so, should I mov=
-e it
-to crypto/ or lib/, or perhaps put it in net/gssapi/?
+This function only has one caller, and we know it won't do these things.
 
-There are two components to it:
+It's not worth the check and the error handling in the caller for
+something so unlikely.
 
- (1) Key derivation steps.
+> +	nfs_ssc_client_tbl.ssc_nfs4_ops = ops;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(nfs42_ssc_register);
+> +
+> +/**
+> + * nfs42_ssc_unregister - uninstall the NFS_V4 client ops from
+> + *				the nfs_ssc_client_tbl
+> + * @ops: ops to be uninstalled
+> + *
+> + * Return values:
+> + *   None
+> + */
+> +void nfs42_ssc_unregister(const struct nfs4_ssc_client_ops *ops)
+> +{
+> +	if (nfs_ssc_client_tbl.ssc_nfs4_ops != ops)
+> +		return;
+> +
+> +	nfs_ssc_client_tbl.ssc_nfs4_ops = &nfs4_ssc_clnt_ops_def;
+> +}
+> +EXPORT_SYMBOL_GPL(nfs42_ssc_unregister);
+> +#endif /* CONFIG_NFS_V4_2 */
+> +
+> +/*
+> + * NFS_FS
+> + */
+> +static void nfs_sb_deactive_def(struct super_block *sb)
+> +{
+> +}
+> +
+> +#ifdef CONFIG_NFS_V4_2
+> +/**
+> + * nfs_ssc_register - install the NFS_FS client ops in the nfs_ssc_client_tbl
+> + * @ops: NFS_FS ops to be installed
+> + *
+> + * Return values:
+> + *   On success, return 0
+> + *   %-EINVAL  if validation check fails
+> + */
+> +int nfs_ssc_register(const struct nfs_ssc_client_ops *ops)
+> +{
+> +	if (ops == NULL || ops->sco_sb_deactive == NULL)
+> +		return -EINVAL;
 
-     My thought is to use xdr_netobj or something similar for to communica=
-te
-     between the steps (though I'd prefer to change .data to be a void* ra=
-ther
-     than u8*).
+Ditto, let's drop these checks.
 
- (2) Encryption/checksumming.
+> +	nfs_ssc_client_tbl.ssc_nfs_ops = ops;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(nfs_ssc_register);
+> +
+> +/**
+> + * nfs_ssc_unregister - uninstall the NFS_FS client ops from
+> + *				the nfs_ssc_client_tbl
+> + * @ops: ops to be uninstalled
+> + *
+> + * Return values:
+> + *   None
+> + */
+> +void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops)
+> +{
+> +	if (nfs_ssc_client_tbl.ssc_nfs_ops != ops)
+> +		return;
+> +	nfs_ssc_client_tbl.ssc_nfs_ops = &nfs_ssc_clnt_ops_def;
+> +}
+> +EXPORT_SYMBOL_GPL(nfs_ssc_unregister);
+> +
+> +#else
+> +int nfs_ssc_register(const struct nfs_ssc_client_ops *ops)
+> +{
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(nfs_ssc_register);
+> +
+> +void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops)
+> +{
+> +}
+> +EXPORT_SYMBOL_GPL(nfs_ssc_unregister);
+> +#endif /* CONFIG_NFS_V4_2 */
+> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+> index 99d2cae91bd6..f368f3215f88 100644
+> --- a/fs/nfsd/Kconfig
+> +++ b/fs/nfsd/Kconfig
+> @@ -136,7 +136,7 @@ config NFSD_FLEXFILELAYOUT
+>  
+>  config NFSD_V4_2_INTER_SSC
+>  	bool "NFSv4.2 inter server to server COPY"
+> -	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2 && NFS_FS=y
+> +	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2
+>  	help
+>  	  This option enables support for NFSv4.2 inter server to
+>  	  server copy where the destination server calls the NFSv4.2
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index eaf50eafa935..84e10aef1417 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -38,6 +38,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/kthread.h>
+>  #include <linux/sunrpc/addr.h>
+> +#include <linux/nfs_ssc.h>
+>  
+>  #include "idmap.h"
+>  #include "cache.h"
+> @@ -1247,7 +1248,7 @@ extern struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
+>  static void
+>  nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
+>  {
+> -	nfs_sb_deactive(ss_mnt->mnt_sb);
+> +	nfs_do_sb_deactive(ss_mnt->mnt_sb);
+>  	mntput(ss_mnt);
+>  }
+>  
+> diff --git a/include/linux/nfs_ssc.h b/include/linux/nfs_ssc.h
+> new file mode 100644
+> index 000000000000..45a763bd6b0b
+> --- /dev/null
+> +++ b/include/linux/nfs_ssc.h
+> @@ -0,0 +1,77 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * include/linux/nfs_ssc.h
+> + *
+> + * Author: Dai Ngo <dai.ngo@oracle.com>
+> + *
+> + * Copyright (c) 2020, Oracle and/or its affiliates.
+> + */
+> +
+> +#include <linux/nfs_fs.h>
+> +
+> +extern struct nfs_ssc_client_ops_tbl nfs_ssc_client_tbl;
+> +
+> +/*
+> + * NFS_V4
+> + */
+> +struct nfs4_ssc_client_ops {
+> +	struct module *sco_owner;
+> +	struct file *(*sco_open)(struct vfsmount *ss_mnt,
+> +		struct nfs_fh *src_fh, nfs4_stateid *stateid);
+> +	void (*sco_close)(struct file *filep);
+> +};
+> +
+> +/*
+> + * NFS_FS
+> + */
+> +struct nfs_ssc_client_ops {
+> +	struct module *sco_owner;
+> +	void (*sco_sb_deactive)(struct super_block *sb);
+> +};
+> +
+> +struct nfs_ssc_client_ops_tbl {
+> +	const struct nfs4_ssc_client_ops *ssc_nfs4_ops;
+> +	const struct nfs_ssc_client_ops *ssc_nfs_ops;
+> +};
+> +
+> +extern int nfs42_ssc_register_ops(void);
+> +extern void nfs42_ssc_unregister_ops(void);
+> +
+> +extern int nfs42_ssc_register(const struct nfs4_ssc_client_ops *ops);
+> +extern void nfs42_ssc_unregister(const struct nfs4_ssc_client_ops *ops);
+> +
+> +#ifdef CONFIG_NFSD_V4_2_INTER_SSC
+> +static inline struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
+> +		struct nfs_fh *src_fh, nfs4_stateid *stateid)
+> +{
+> +	struct file *file;
+> +
+> +	if (!try_module_get(nfs_ssc_client_tbl.ssc_nfs4_ops->sco_owner))
+> +		return ERR_PTR(-EIO);
 
-     My thought is to make this interface use scattergather lists[*] since
-     that's what the crypto encryption API requires (though not the hash A=
-PI).
+The module load already happened back when we did the get_fs_type in
+nfsd4_interssc_connect(), and it's not going away at this point (or
+there's something already terribly wrong with ss_mnt).
 
-If I do this, should I create a "kerberos" crypto API for the data wrappin=
-g
-functions?  I'm not sure that it quite matches the existing APIs because t=
-he
-size of the input data will likely not match the size of the output data a=
-nd
-it's "one shot" as it needs to deal with a checksum.
+So I don't think we need any try_module_get()s or module_put()s.
 
-Or I can just keep my implementation separate inside net/rxrpc/.
+--b.
 
-David
-
-[*] That said, I'm not exactly sure how the sunrpc stuff works, so this mi=
-ght
-not work for that.
-
+> +	file = (*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_open)(ss_mnt, src_fh, stateid);
+> +	module_put(nfs_ssc_client_tbl.ssc_nfs4_ops->sco_owner);
+> +	return file;
+> +}
+> +
+> +static inline void nfs42_ssc_close(struct file *filep)
+> +{
+> +	if (!try_module_get(nfs_ssc_client_tbl.ssc_nfs4_ops->sco_owner))
+> +		return;
+> +	(*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_close)(filep);
+> +	module_put(nfs_ssc_client_tbl.ssc_nfs4_ops->sco_owner);
+> +}
+> +#endif
+> +
+> +/*
+> + * NFS_FS
+> + */
+> +extern int nfs_ssc_register(const struct nfs_ssc_client_ops *ops);
+> +extern void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops);
+> +
+> +static inline void nfs_do_sb_deactive(struct super_block *sb)
+> +{
+> +	if (!try_module_get(nfs_ssc_client_tbl.ssc_nfs_ops->sco_owner))
+> +		return;
+> +	(*nfs_ssc_client_tbl.ssc_nfs_ops->sco_sb_deactive)(sb);
+> +	module_put(nfs_ssc_client_tbl.ssc_nfs_ops->sco_owner);
+> +}
+> -- 
+> 1.8.3.1
