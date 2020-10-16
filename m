@@ -2,313 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C616290575
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Oct 2020 14:46:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A728329063E
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Oct 2020 15:25:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407839AbgJPMqN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 16 Oct 2020 08:46:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38228 "EHLO
+        id S2407058AbgJPNZp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 16 Oct 2020 09:25:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407810AbgJPMqD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 16 Oct 2020 08:46:03 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BCE7C061755
-        for <linux-nfs@vger.kernel.org>; Fri, 16 Oct 2020 05:46:01 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ds1so1326490pjb.5
-        for <linux-nfs@vger.kernel.org>; Fri, 16 Oct 2020 05:46:01 -0700 (PDT)
+        with ESMTP id S2407014AbgJPNZp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 16 Oct 2020 09:25:45 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1506BC061755
+        for <linux-nfs@vger.kernel.org>; Fri, 16 Oct 2020 06:25:45 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id i7so604761ils.7
+        for <linux-nfs@vger.kernel.org>; Fri, 16 Oct 2020 06:25:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pSm/g0kqVjlpnCUrgMA34WIyplgwS/+jMYU+gRHVlgw=;
-        b=yEtWgvz7p6jYnSHOfZ8SZ61XE6LNnfmjHq2tgg4W0HalfMsdO1fu7hLigiTmd3cPa1
-         Epme0Xmw7MhQIRTFwtwNQ10nfw/43wDopvOLVJfhEnYYQoSzBKcpSAzeFuEvB85Lc0Nk
-         IvaYD1A9N8146rLQPS6tGDPB4ns6JbD79//oY=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=nzZ6DaJfsi5z58qFCycNArv7yIs9vdH6XmkRcviNpNg=;
+        b=frQGHtkY6flrfZETrJkYy/Df8Oi6y3BJV/fFg6lRD2gMKMKN51CijswlJA1kb2pS2i
+         /exzvIDlfxXemezjH1urrZoWnDe3MVrncsjZJuxE6z5MRP8AJjJt0fIiB/JL22iLcGxg
+         pg/C3+nb0eaKj/O5TysY4xSB/ix+ReiD3xJcHFR9qI9ijxK7WYKufVQyHmo5uKIgnNXt
+         5oisXDcNyqurP8wX2xrYx7BWBmu0tMD8OTbxlCleEfDVoIBJrfjr89VvCHBLIa3ky4Ph
+         zSaqzk7yqiFXX/GKrj6LO4Gs0bAA8gw1QDxTCYebnr0QGpgBGo99+ky+kYwylblAEQkm
+         0uOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pSm/g0kqVjlpnCUrgMA34WIyplgwS/+jMYU+gRHVlgw=;
-        b=lzkBXvBIk6UiFNqHLaUnAq4xnf1MkddRfxJCp7Ue/NMCAC/ULtbbbQmNQkuRR7QxxY
-         C+5/cSaWeBvm0OY1M4J8+WlYLjbmwyNNdQs3EOXoxaWVkUDFQY1pJUA9GHhC10hzLMAc
-         DTLNa0vXSc7aBRklaiJd41RPQNNXKrk5o4NPAFCU31sMJ77l9jHOfqe2vS96ItK2DTRO
-         dUNM/sJY9k/28f+6BZnPh+U4FJEVB0ObMbh+2kK7/uXuyPAT8vNhATAZP13TUTxX3jif
-         K01ySQ/8GVFc3aZLo918eytwgylFTp22niZKnL4O3bWQNEHonyWb0ihkdWlLqzGwKJqj
-         R1bA==
-X-Gm-Message-State: AOAM533rOxBe3wDF5VtNcJ7NXzokIOji24gfQRtTkZgCgdqnEQIzuwaC
-        Oj/EmJ03C9KUsyCspKTwinpUUQ==
-X-Google-Smtp-Source: ABdhPJwopKhTcd5efvly6yqdL5APFJcFTFOl+PUbxxo8hSB6Y5ASyHdEt4/NsC+tZyTziioLvOti8Q==
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr3917023pjb.74.1602852360786;
-        Fri, 16 Oct 2020 05:46:00 -0700 (PDT)
-Received: from ubuntu.netflix.com (203.20.25.136.in-addr.arpa. [136.25.20.203])
-        by smtp.gmail.com with ESMTPSA id q123sm2906732pfq.56.2020.10.16.05.45.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Oct 2020 05:46:00 -0700 (PDT)
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     "J . Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        David Howells <dhowells@redhat.com>
-Cc:     Sargun Dhillon <sargun@sargun.me>, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kyle Anderson <kylea@netflix.com>
-Subject: [RESEND PATCH v2 3/3] samples/vfs: Add example leveraging NFS with new APIs and user namespaces
-Date:   Fri, 16 Oct 2020 05:45:50 -0700
-Message-Id: <20201016124550.10739-4-sargun@sargun.me>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201016124550.10739-1-sargun@sargun.me>
-References: <20201016124550.10739-1-sargun@sargun.me>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nzZ6DaJfsi5z58qFCycNArv7yIs9vdH6XmkRcviNpNg=;
+        b=PNT98QABfykv/w4jISQ/ywTI9jwLV1Q3soWD5SEFnvFO1IpnsgW1v9HiqAYd4IURur
+         5+pYrKNrRplaV7iSVBMrg4toog/GnKGPib6jggzoScJZ1dtlsdlco8OCknkj33JEFgzB
+         g5S1LtVezs5Co83mRkKLQkVtBRQFU0umLEug+Qf3CN1yH692ayfXx6Z5f672lkh7evQW
+         vSxu833ph+C3qSaCM73IZ5HsxkBXFspIHEXYuJXdiT6q2QJkRADOGUnwaa9ZTUgayLy9
+         SvsHfEbsIJmD9ikurPMuXb2M4VvvU11ygw26wO0xZrrE4OKG9+NETx0f3FhRFUQJiyz9
+         uHmw==
+X-Gm-Message-State: AOAM53136faN3bUAFi+SsfOIZu7jhWxG2S04ivJl9Kyp+5Pf6a9PRIZ5
+        xFEILCCX5VN+zwDM/0QqisQ=
+X-Google-Smtp-Source: ABdhPJxLov0CvMJ/TZfDAoZYwcZYkm0ut3+GqBrjJq0xyRjYOdk7EaKKsjfVgb+D6QpGU+ObaF/5Vg==
+X-Received: by 2002:a05:6e02:5ad:: with SMTP id k13mr2766526ils.71.1602854744421;
+        Fri, 16 Oct 2020 06:25:44 -0700 (PDT)
+Received: from Olgas-MBP-305.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
+        by smtp.gmail.com with ESMTPSA id z15sm2227735ioj.22.2020.10.16.06.25.43
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Fri, 16 Oct 2020 06:25:43 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org, jencce.kernel@gmail.com
+Subject: [PATCH 1/1 v2] NFSv4.2: support EXCHGID4_FLAG_SUPP_FENCE_OPS 4.2 EXCHANGE_ID flag
+Date:   Fri, 16 Oct 2020 09:25:45 -0400
+Message-Id: <20201016132545.60779-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.10.1 (Apple Git-78)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This adds an example which assumes you already have an NFS server setup,
-but does the work of creating a user namespace, and an NFS mount from
-that user namespace which then exposes different UIDs than that of
-the init user namespace.
+From: Olga Kornievskaia <kolga@netapp.com>
 
-Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-Cc: J. Bruce Fields <bfields@fieldses.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna.schumaker@netapp.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Kyle Anderson <kylea@netflix.com>
+RFC 7862 introduced a new flag that either client or server is
+allowed to set: EXCHGID4_FLAG_SUPP_FENCE_OPS.
+
+Client needs to update its bitmask to allow for this flag value.
+
+v2: changed minor version argument to unsigned int
+
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+CC: <stable@vger.kernel.org>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c |   1 +
- samples/vfs/.gitignore                 |   2 +
- samples/vfs/Makefile                   |   3 +-
- samples/vfs/test-nfs-userns.c          | 181 +++++++++++++++++++++++++
- 4 files changed, 186 insertions(+), 1 deletion(-)
- create mode 100644 samples/vfs/test-nfs-userns.c
+ fs/nfs/nfs4proc.c         | 9 ++++++---
+ include/uapi/linux/nfs4.h | 3 +++
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index f9348ed1bcda..ee45ff7d75ac 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -361,6 +361,7 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
- 		     struct nfs4_layoutget_res *lgr,
- 		     gfp_t gfp_flags)
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 6e95c85fe395..699aa6645d9c 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -8039,9 +8039,11 @@ int nfs4_proc_secinfo(struct inode *dir, const struct qstr *name,
+  * both PNFS and NON_PNFS flags set, and not having one of NON_PNFS, PNFS, or
+  * DS flags set.
+  */
+-static int nfs4_check_cl_exchange_flags(u32 flags)
++static int nfs4_check_cl_exchange_flags(u32 flags, u32 version)
  {
-+	struct user_namespace *user_ns = lh->plh_lc_cred->user_ns;
- 	struct pnfs_layout_segment *ret;
- 	struct nfs4_ff_layout_segment *fls = NULL;
- 	struct xdr_stream stream;
-diff --git a/samples/vfs/.gitignore b/samples/vfs/.gitignore
-index 8fdabf7e5373..1d09826b31a6 100644
---- a/samples/vfs/.gitignore
-+++ b/samples/vfs/.gitignore
-@@ -1,3 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- test-fsmount
- test-statx
-+test-nfs-userns
-+
-diff --git a/samples/vfs/Makefile b/samples/vfs/Makefile
-index 7f76875eaa70..6a2926080c08 100644
---- a/samples/vfs/Makefile
-+++ b/samples/vfs/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- test-fsmount-objs := test-fsmount.o vfs-helper.o
--userprogs := test-fsmount test-statx
-+test-nfs-userns-objs := test-nfs-userns.o vfs-helper.o
-+userprogs := test-fsmount test-statx test-nfs-userns
+-	if (flags & ~EXCHGID4_FLAG_MASK_R)
++	if (version >= 2 && (flags & ~EXCHGID4_2_FLAG_MASK_R))
++		goto out_inval;
++	else if (version < 2 && (flags & ~EXCHGID4_FLAG_MASK_R))
+ 		goto out_inval;
+ 	if ((flags & EXCHGID4_FLAG_USE_PNFS_MDS) &&
+ 	    (flags & EXCHGID4_FLAG_USE_NON_PNFS))
+@@ -8454,7 +8456,8 @@ static int _nfs4_proc_exchange_id(struct nfs_client *clp, const struct cred *cre
+ 	if (status  != 0)
+ 		goto out;
  
- always-y := $(userprogs)
+-	status = nfs4_check_cl_exchange_flags(resp->flags);
++	status = nfs4_check_cl_exchange_flags(resp->flags,
++			clp->cl_mvops->minor_version);
+ 	if (status  != 0)
+ 		goto out;
  
-diff --git a/samples/vfs/test-nfs-userns.c b/samples/vfs/test-nfs-userns.c
-new file mode 100644
-index 000000000000..108af924cbdd
---- /dev/null
-+++ b/samples/vfs/test-nfs-userns.c
-@@ -0,0 +1,181 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+#define _GNU_SOURCE
-+#include <stdio.h>
-+#include <linux/unistd.h>
-+#include <assert.h>
-+#include <sys/types.h>
-+#include <unistd.h>
-+#include <errno.h>
-+#include <sys/stat.h>
-+#include <stdlib.h>
-+#include <sys/socket.h>
-+#include <string.h>
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <sys/prctl.h>
-+#include <sys/wait.h>
-+#include "vfs-helper.h"
+diff --git a/include/uapi/linux/nfs4.h b/include/uapi/linux/nfs4.h
+index bf197e99b98f..ed5415e0f1c1 100644
+--- a/include/uapi/linux/nfs4.h
++++ b/include/uapi/linux/nfs4.h
+@@ -139,6 +139,8 @@
+ 
+ #define EXCHGID4_FLAG_UPD_CONFIRMED_REC_A	0x40000000
+ #define EXCHGID4_FLAG_CONFIRMED_R		0x80000000
 +
-+
-+#define WELL_KNOWN_FD	100
-+
-+static inline int pidfd_open(pid_t pid, unsigned int flags)
-+{
-+	return syscall(__NR_pidfd_open, pid, flags);
-+}
-+
-+static inline int pidfd_getfd(int pidfd, int fd, int flags)
-+{
-+	return syscall(__NR_pidfd_getfd, pidfd, fd, flags);
-+}
-+
-+static void write_to_path(const char *path, const char *str)
-+{
-+	int fd, len = strlen(str);
-+
-+	fd = open(path, O_WRONLY);
-+	if (fd < 0) {
-+		fprintf(stderr, "Can't open %s: %s\n", path, strerror(errno));
-+		exit(1);
-+	}
-+
-+	if (write(fd, str, len) != len) {
-+		fprintf(stderr, "Can't write string: %s\n", strerror(errno));
-+		exit(1);
-+	}
-+
-+	E(close(fd));
-+}
-+
-+static int do_work(int sk)
-+{
-+	int fsfd;
-+
-+	E(unshare(CLONE_NEWNS|CLONE_NEWUSER));
-+
-+	fsfd = fsopen("nfs4", 0);
-+	E(fsfd);
-+
-+	E(send(sk, &fsfd, sizeof(fsfd), 0));
-+	// Wait for the other side to close / finish / wrap up
-+	recv(sk, &fsfd, sizeof(fsfd), 0);
-+	E(close(sk));
-+
-+	return 0;
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int pidfd, mntfd, fsfd, fsfdnum, status, sk_pair[2];
-+	struct statx statxbuf;
-+	char buf[1024];
-+	pid_t pid;
-+
-+	if (mkdir("/mnt/share", 0777) && errno != EEXIST) {
-+		perror("mkdir");
-+		return 1;
-+	}
-+
-+	E(chmod("/mnt/share", 0777));
-+
-+	if (mkdir("/mnt/nfs", 0755) && errno != EEXIST) {
-+		perror("mkdir");
-+		return 1;
-+	}
-+
-+	if (unlink("/mnt/share/newfile") && errno != ENOENT) {
-+		perror("unlink");
-+		return 1;
-+	}
-+
-+	E(creat("/mnt/share/testfile", 0644));
-+	E(chown("/mnt/share/testfile", 1001, 1001));
-+
-+	/* exportfs is idempotent, but expects nfs-server to be running */
-+	if (system("exportfs -o no_root_squash,no_subtree_check,rw 127.0.0.0/8:/mnt/share")) {
-+		fprintf(stderr,
-+			"Could not export /mnt/share. Is NFS the server running?\n");
-+		return 1;
-+	}
-+
-+	E(socketpair(PF_LOCAL, SOCK_SEQPACKET, 0, sk_pair));
-+
-+	pid = fork();
-+	E(pid);
-+	if (pid == 0) {
-+		E(close(sk_pair[0]));
-+		return do_work(sk_pair[1]);
-+	}
-+
-+	E(close(sk_pair[1]));
-+
-+	pidfd = pidfd_open(pid, 0);
-+	E(pidfd);
-+
-+	E(recv(sk_pair[0], &fsfdnum, sizeof(fsfdnum), 0));
-+
-+	fsfd = pidfd_getfd(pidfd, fsfdnum, 0);
-+	if (fsfd == -1) {
-+		perror("pidfd_getfd");
-+		return 1;
-+	}
-+
-+
-+	snprintf(buf, sizeof(buf) - 1, "/proc/%d/uid_map", pid);
-+	write_to_path(buf, "0 1000 2");
-+	snprintf(buf, sizeof(buf) - 1, "/proc/%d/setgroups", pid);
-+	write_to_path(buf, "deny");
-+	snprintf(buf, sizeof(buf) - 1, "/proc/%d/gid_map", pid);
-+	write_to_path(buf, "0 1000 2");
-+
-+	/* Now we can proceed to mount */
-+	E_fsconfig(fsfd, FSCONFIG_SET_STRING, "vers", "4.1", 0);
-+	E_fsconfig(fsfd, FSCONFIG_SET_STRING, "clientaddr", "127.0.0.1", 0);
-+	E_fsconfig(fsfd, FSCONFIG_SET_STRING, "addr", "127.0.0.1", 0);
-+	E_fsconfig(fsfd, FSCONFIG_SET_STRING, "source", "127.0.0.1:/mnt/share",
-+		   0);
-+	E_fsconfig(fsfd, FSCONFIG_CMD_CREATE, NULL, NULL, 0);
-+
-+	/* Move into the namespace's of the worker */
-+	E(setns(pidfd, CLONE_NEWNS|CLONE_NEWUSER));
-+	E(close(pidfd));
-+
-+	/* Close our socket pair indicating the child should exit */
-+	E(close(sk_pair[0]));
-+	assert(waitpid(pid, &status, 0) == pid);
-+	if (!WIFEXITED(status) || WEXITSTATUS(status)) {
-+		fprintf(stderr, "worker exited nonzero\n");
-+		return 1;
-+	}
-+
-+	E(setuid(0));
-+	E(setgid(0));
-+
-+	/* Now do all the work of moving doing the mount in the child ns */
-+	E(syscall(__NR_mount, NULL, "/", NULL, MS_REC|MS_PRIVATE, NULL));
-+
-+	mntfd = fsmount(fsfd, 0, MS_NODEV);
-+	if (mntfd < 0) {
-+		E(close(fsfd));
-+		mount_error(fsfd, "fsmount");
-+	}
-+
-+	E(move_mount(mntfd, "", AT_FDCWD, "/mnt/nfs", MOVE_MOUNT_F_EMPTY_PATH));
-+	E(close(mntfd));
-+
-+	/* Create the file through NFS */
-+	E(creat("/mnt/nfs/newfile", 0644));
-+	/* Check what the file's status is on the disk, accessed directly */
-+	E(statx(AT_FDCWD, "/mnt/share/newfile", 0, STATX_UID|STATX_GID,
-+		&statxbuf));
-+	assert(statxbuf.stx_uid == 0);
-+	assert(statxbuf.stx_gid == 0);
-+
-+	E(statx(AT_FDCWD, "/mnt/nfs/testfile", 0, STATX_UID|STATX_GID,
-+		&statxbuf));
-+	assert(statxbuf.stx_uid == 1);
-+	assert(statxbuf.stx_gid == 1);
-+
-+
-+	return 0;
-+}
++#define EXCHGID4_FLAG_SUPP_FENCE_OPS		0x00000004
+ /*
+  * Since the validity of these bits depends on whether
+  * they're set in the argument or response, have separate
+@@ -146,6 +148,7 @@
+  */
+ #define EXCHGID4_FLAG_MASK_A			0x40070103
+ #define EXCHGID4_FLAG_MASK_R			0x80070103
++#define EXCHGID4_2_FLAG_MASK_R			0x80070107
+ 
+ #define SEQ4_STATUS_CB_PATH_DOWN		0x00000001
+ #define SEQ4_STATUS_CB_GSS_CONTEXTS_EXPIRING	0x00000002
 -- 
-2.25.1
+2.18.2
 
