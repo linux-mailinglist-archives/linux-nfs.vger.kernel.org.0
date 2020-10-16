@@ -2,64 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 373DE290540
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Oct 2020 14:37:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C8862902A0
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Oct 2020 12:15:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407616AbgJPMh2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 16 Oct 2020 08:37:28 -0400
-Received: from cpanel.giganet.cl ([190.96.78.139]:39766 "EHLO
-        cpanel.giganet.cl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407562AbgJPMhY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 16 Oct 2020 08:37:24 -0400
-X-Greylist: delayed 20782 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Oct 2020 08:37:10 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=dplgrout.cl
-        ; s=default; h=Content-Transfer-Encoding:Content-Type:Message-ID:Reply-To:
-        Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=TrgUs68YRs3neP+PfrvGhLoeMXh3YzKv5z9oCWPJ0m4=; b=m/ABHCVvyLYD2QkkwOjuWUgGFG
-        i9BJXsIic9wHOFEzjhXFPbcsR2XTWptcrmKLSqDrJOV7hGJM6za5nSEFhd4CC/+eaHHsgS48/E2jM
-        qvMpEeazlOlIrwSs4xM+Zdf/REorOK5GVU6ZAJUjCzQuCMv9dTVBPKuexZxj1Qoi2hPLiQ576Ik0L
-        XzwzerIXphINfmlVQ0r0UMIuChB1Vcn201QVmD2skB/Nh9D/yp0E95Av9ZMQq7ln6H0uEUnu/2/5Y
-        /CHuMEs39xrrgaYDtG7jTh3PfukIIcCJEs3b52/mZokA1w+tDL1dp0MaV2Z+qYj+Bzs13o0ru0vv/
-        Mq733mMw==;
-Received: from [::1] (port=55048 helo=cpanel.giganet.cl)
-        by cpanel.giganet.cl with esmtpa (Exim 4.93)
-        (envelope-from <info@controlypotencia.com>)
-        id 1kTJ7f-0009vt-N3; Fri, 16 Oct 2020 03:21:51 -0300
+        id S2406601AbgJPKNK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 16 Oct 2020 06:13:10 -0400
+Received: from mout.gmx.net ([212.227.15.15]:60501 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406596AbgJPKNJ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 16 Oct 2020 06:13:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1602843182;
+        bh=9nssCMMBv7tzELS+fUZMBow//rn3xu+MNXAU4tgsZ6A=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
+        b=lgYUm/ICOsAa06h00t0wQfL0ZaUune5jpNkiul8SqOcy1PMkbttWpcYoel1VsZOxI
+         2lAJ3DQXdKRRh2+FOQdug1VxRl7D4zNIP9Mx1uodr/zY+kX4L9kyTDjqJxPK7O9n1R
+         Uh1kfYi/4pt0lN2XnOXf0b7dZQIT+dE4Kj+D7PUk=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530.fritz.box ([92.116.166.88]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MnaoZ-1k3tvv2xBV-00jZbf; Fri, 16
+ Oct 2020 12:13:02 +0200
+Date:   Fri, 16 Oct 2020 12:13:00 +0200
+From:   Helge Deller <deller@gmx.de>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org
+Subject: nfsroot: Default mount option should ask for built-in NFS version
+Message-ID: <20201016101300.GA364@ls3530.fritz.box>
 MIME-Version: 1.0
-Date:   Fri, 16 Oct 2020 03:21:50 -0300
-From:   Ying Chongan <info@controlypotencia.com>
-To:     undisclosed-recipients:;
-Subject: Investment opportunity
-Reply-To: yingchongan@zohomail.com
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <e70e5a6e462f92c7f06eea146a612430@controlypotencia.com>
-X-Sender: info@controlypotencia.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel.giganet.cl
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - controlypotencia.com
-X-Get-Message-Sender-Via: cpanel.giganet.cl: authenticated_id: mariapaz.lopez@dplgrout.cl
-X-Authenticated-Sender: cpanel.giganet.cl: mariapaz.lopez@dplgrout.cl
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Provags-ID: V03:K1:AlTZQWUaumXyJzzN41d431uYsCxjdUZ5t3Om5Lmt6bsPgYwjkEZ
+ 25cJPeu1FdA4XF25wU3U0uKoCewHCo3Fjxy2zMflq8ilTFj3pKKO7dB/0ryxRwQm/eRxcO3
+ WsP3daEvD5r3jqatGoZ15duwLoQNems1XF88ocOvc3DssWXGtyH+R51Dqi4OeuFu9edb4K5
+ o8CR/hr1fWBxNf7F0t3Dg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nZInG/kunyg=:ObGxnqK3YeQorDogqRtBi/
+ D9LxOk7CkXKNcnFwDJXK/3JfBGZv6sw2MXge6cGXx/ii8tPycXHxgR4ST95MqlVx7AvjLS57Z
+ 6CW+zoiUy9NjifAKivAwtXOv+r8/MCQqbRX1F9bBdeaL4a256dUmqeumpAXo1f7BzyIsQ7IZI
+ 3ABlHHk5aPqZG3beBSQUheHXaEeFk8aW7H4FxcDZNjT790EMcebOYJ1bipj9+omTuB8YBiMif
+ l+Aef6GdSmxHtIO8C+sggy+GiaNNHg0Iy/MXYzHTV+z9JDSvr3VW1bOIdXz6lUaKr3N7jwlhG
+ 41Thl0xqkiP+ybDK61dx97gPYZow9uDE39jVL4tFZ0rNIvSX6av8QimpzPqLDwr5IUQQrCd2V
+ O69iobacj2n1NrQvb060dEFQOlAwO95JYEsNWtkq+cRMShlkbWuDnd3vIBBkKkT/3ii4n6Tvu
+ 0serhmZD5i6cVIHmKw5uLCIdQTbJyqNHagxS6InN6/HU8Tm+RBO/rCLZWweTDAipshEIAiP3y
+ t7U1dYIgP74YNpTeUE4lqm2BrrrS8I5/hlMX0LSzDzzFfalKopUWDAlazYLU0JAmnr4gxkZ+E
+ bVUZGRmX62vdIhwMumvHtPzI1NW5ykq2QlfyhLScwPYW6DQU2k5OpgG0fMBpxoZygqqmFjioB
+ n+pugxPQ2T4KyRkrvnHjoa0z8n6+VL83yoAdg8j6DuJKiqGwuaCxJVMSzJ3g4E6ZVvmw0CrgV
+ 8zLjE3iuOJ93TATzINZsLvpUpqMrrPPfRdFd+8oFDMjbTzeaP8QX2yNyO+TewIk6cIYlPurZS
+ +/k4su77qHwg0wVNYIkIAr7ehX9uWYmYoaa16ZLsHgynmEaR9SN/+tMyXB/8bgMRFipOi4Ahm
+ Ncx+4dm4T1ZPIuxNn8xg==
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Greetings,
+Change the nfsroot default mount option to ask for NFSv2 only *if* the
+kernel was built with NFSv2 support.
+If not, default to NFSv3 or as last choice to NFSv4, depending on actual
+kernel config.
 
-This email is for an opportunity to invest in any lucrative business in 
-your country.
+Signed-off-by: Helge Deller <deller@gmx.de>
 
-We offer a quick loan at low interest rate, if you are interested, 
-please reply to yingchongan@gmail.com for more details.
+diff --git a/fs/nfs/nfsroot.c b/fs/nfs/nfsroot.c
+index 8d3278805602..fa148308822c 100644
+=2D-- a/fs/nfs/nfsroot.c
++++ b/fs/nfs/nfsroot.c
+@@ -88,7 +88,13 @@
+ #define NFS_ROOT		"/tftpboot/%s"
 
-Sincerely: Ying Chongan
+ /* Default NFSROOT mount options. */
++#if defined(CONFIG_NFS_V2)
+ #define NFS_DEF_OPTIONS		"vers=3D2,tcp,rsize=3D4096,wsize=3D4096"
++#elif defined(CONFIG_NFS_V3)
++#define NFS_DEF_OPTIONS		"vers=3D3,tcp,rsize=3D4096,wsize=3D4096"
++#else
++#define NFS_DEF_OPTIONS		"vers=3D4,tcp,rsize=3D4096,wsize=3D4096"
++#endif
+
+ /* Parameters passed from the kernel command line */
+ static char nfs_root_parms[NFS_MAXPATHLEN + 1] __initdata =3D "";
