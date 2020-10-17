@@ -2,563 +2,242 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA30F291047
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 Oct 2020 08:59:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EE5A29145C
+	for <lists+linux-nfs@lfdr.de>; Sat, 17 Oct 2020 22:40:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408156AbgJQG7U (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 17 Oct 2020 02:59:20 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36978 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393311AbgJQG7U (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 17 Oct 2020 02:59:20 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09H0nO7T044504;
-        Sat, 17 Oct 2020 01:11:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=7w+krdrgwfD3G+q95O39qh+p3vL1oPF0Llx+4xellNA=;
- b=FlK5E/OujW8ntFvWxLbklVFzZpfXYw2ELqTZmSI7WWVGZ4DUmmy/Orfo/mNXrK802Sz6
- cJdf5MkGvP9KJ3qMncCyBNY6qGNbYB2D9tIYrVSeu9i8dD7TRNHf4uGQ9U0+csmuuzjF
- cxWoVnLVbb5t3oJR94vpGrgRur0ExPDbDqhOa/kxcA2KJvFv6krJBQv/unGPwnK5yGUS
- jBvGUYdUbiACfNORjEHcCZ2sGuusX1c+FdcmLuEc/S7gt5MclMtVuZOgwIvMbTkIMgqV
- F0ywZKDFVAwpaDRqXqIPBsK1RyuWl6LQOkWtV78gHrowFgCjLaxMcQdZSz4GNcNO36io uQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 3434wm47fv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 17 Oct 2020 01:11:49 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09H19naG100875;
-        Sat, 17 Oct 2020 01:09:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 347pn882de-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 17 Oct 2020 01:09:48 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09H19bTE014526;
-        Sat, 17 Oct 2020 01:09:42 GMT
-Received: from dhcp-10-154-97-228.vpn.oracle.com (/10.154.97.228)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 16 Oct 2020 18:09:37 -0700
-Subject: Re: [PATCH v3 1/1] NFSv4.2: Fix NFS4ERR_STALE error when doing inter
- server copy
+        id S2438673AbgJQUk3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 17 Oct 2020 16:40:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438060AbgJQUk2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 17 Oct 2020 16:40:28 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A09F4C061755
+        for <linux-nfs@vger.kernel.org>; Sat, 17 Oct 2020 13:40:22 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id ce10so8419887ejc.5
+        for <linux-nfs@vger.kernel.org>; Sat, 17 Oct 2020 13:40:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vastdata.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H8DWXYXXTIHw9DDNtaT/MoXjI7bzOm7XbmRYSsYXJmg=;
+        b=gBjzCkVGShfdBJ7Z19PCvwg/L3mnbk2owIv4g60+VBHaipLcFhBa6sDk/kuwo14xh2
+         yEQ8z3y4CJIEB7RGF1AXl44NdICwYRzsS22rzcDONuJUzUcuNHmBy8em5/Jk3Yg3McYT
+         O5sU2VK+ighr89dio7JcSh/UUb1LY2Wm0690wI/Mf7WFbl4BNSL2xWuvPH0odtGvnj/O
+         Rdb+t/3X8ytVY2zg8IIpy8Urq1uX5j51Q3a+jzpgK9W/7jV6/BQqKgVI1pF0jEjW4Jzx
+         TAtWuovRMKPYqY0O2fwgIKMFp9+ub3Q7zG7eQBfQ+ssP4ZP72D6jeI00peDITPdK1zvA
+         3JZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H8DWXYXXTIHw9DDNtaT/MoXjI7bzOm7XbmRYSsYXJmg=;
+        b=hT2M+Xqhw/rojt/NKz4qACp4r0FG1zOt2sPXnQcUi39Zx4Q2g9N9b99g0Ev6q/0on6
+         9I3DuVvpDsjN1hwJnb5XDqIwdBRdgvXxDq2I22vDWmP7GjGrwFiKaK0QE/tIeeCxIfNj
+         4kmpvLmBHAP1QdpgWwXbHIBxPH48aavyQqajBHJA7jjKe56mxYzr0Aq0Jmjuu53N2HWm
+         2eH8f1how8asXR9G5TNeEweJZr8FAyGdQBAWTFdoqvXypZstweMmXvunjSwHHa0KgYJs
+         ycnswH6NWBEwfQJoCtyXSEWjGloMfZbfoDFGQ9Qh3AiBod54z5B2RqNcZhduLcuoWUTI
+         1hOw==
+X-Gm-Message-State: AOAM531DKq9dUAwAJDznbZ/qbLLsq0eziDmD7R9JuEwtYNGosbs9+/FM
+        7JEinUBj+X7SnlX9S5nA51qV1arZKDig69FL15t20SCQGDvMVJoJ
+X-Google-Smtp-Source: ABdhPJyqwEhmzqWylLRUMv17Ay8yBoKzt9WWZ7WKW5BdQHdijEq4otMDK0x1IfF8E2BpVG9reagTqN8OXZKnkYhjcs4=
+X-Received: by 2002:a17:906:bb0d:: with SMTP id jz13mr376656ejb.154.1602967220635;
+ Sat, 17 Oct 2020 13:40:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <02b2121f-42d1-2587-6705-ca2aadb521bc@vastdata.com> <20201014192659.GA23262@fieldses.org>
+In-Reply-To: <20201014192659.GA23262@fieldses.org>
+From:   Guy Keren <guy@vastdata.com>
+Date:   Sat, 17 Oct 2020 23:40:09 +0300
+Message-ID: <CAENext5RMsQXJtV-H63Ons5rovKfk0-oXW-MgBCkZi+DvRDJcQ@mail.gmail.com>
+Subject: Re: questions about the linux NFS 4.1 client and persistent sessions
 To:     "J. Bruce Fields" <bfields@fieldses.org>
 Cc:     linux-nfs@vger.kernel.org
-References: <20201009062819.92173-2-dai.ngo@oracle.com>
- <20201016175936.GA7332@fieldses.org>
-From:   Dai Ngo <dai.ngo@oracle.com>
-Message-ID: <675a9261-0be4-a55c-5174-bafd45adf3b4@oracle.com>
-Date:   Fri, 16 Oct 2020 18:09:36 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.1
-MIME-Version: 1.0
-In-Reply-To: <20201016175936.GA7332@fieldses.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9776 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
- mlxlogscore=999 spamscore=0 suspectscore=11 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010170003
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9776 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxscore=0
- malwarescore=0 phishscore=0 suspectscore=11 impostorscore=0 clxscore=1015
- spamscore=0 priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010170002
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Thanks Bruce for reviewing the patch.
-I'll update the patch in v3.
+hi Bruce,
 
--Dai
+thanks for the response. this opens up a few questions about things i
+thought i understood initially, so i did a re-read of parts of the NFS
+4.1 RFC (RFC 5661), and i would like to clarify some things further.
+see answers below:
 
-On 10/16/20 10:59 AM, J. Bruce Fields wrote:
-> On Fri, Oct 09, 2020 at 02:28:19AM -0400, Dai Ngo wrote:
->> NFS_FS=y as dependency of CONFIG_NFSD_V4_2_INTER_SSC still have
->> build errors and some configs with NFSD=m to get NFS4ERR_STALE
->> error when doing inter server copy.
->>
->> Added ops table in nfs_common for knfsd to access NFS client modules.
-> This looks like a good start, but I think it could be a lot simpler:
+On Wed, Oct 14, 2020 at 10:27 PM J. Bruce Fields <bfields@fieldses.org> wrote:
 >
->> Fixes: 3ac3711adb88 ("NFSD: Fix NFS server build errors")
->> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
->> ---
->> changes from v2: fix 0-day build issues.
->> ---
->>   fs/nfs/nfs4file.c       |  40 +++++++++++--
->>   fs/nfs/nfs4super.c      |   6 ++
->>   fs/nfs/super.c          |  20 +++++++
->>   fs/nfs_common/Makefile  |   1 +
->>   fs/nfs_common/nfs_ssc.c | 148 ++++++++++++++++++++++++++++++++++++++++++++++++
->>   fs/nfsd/Kconfig         |   2 +-
->>   fs/nfsd/nfs4proc.c      |   3 +-
->>   include/linux/nfs_ssc.h |  77 +++++++++++++++++++++++++
->>   8 files changed, 289 insertions(+), 8 deletions(-)
->>   create mode 100644 fs/nfs_common/nfs_ssc.c
->>   create mode 100644 include/linux/nfs_ssc.h
->>
->> diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
->> index fdfc77486ace..7d242fcb134a 100644
->> --- a/fs/nfs/nfs4file.c
->> +++ b/fs/nfs/nfs4file.c
->> @@ -9,6 +9,7 @@
->>   #include <linux/falloc.h>
->>   #include <linux/mount.h>
->>   #include <linux/nfs_fs.h>
->> +#include <linux/nfs_ssc.h>
->>   #include "delegation.h"
->>   #include "internal.h"
->>   #include "iostat.h"
->> @@ -314,9 +315,8 @@ static loff_t nfs42_remap_file_range(struct file *src_file, loff_t src_off,
->>   static int read_name_gen = 1;
->>   #define SSC_READ_NAME_BODY "ssc_read_%d"
->>   
->> -struct file *
->> -nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
->> -		nfs4_stateid *stateid)
->> +static struct file *__nfs42_ssc_open(struct vfsmount *ss_mnt,
->> +		struct nfs_fh *src_fh, nfs4_stateid *stateid)
->>   {
->>   	struct nfs_fattr fattr;
->>   	struct file *filep, *res;
->> @@ -398,14 +398,42 @@ struct file *
->>   	fput(filep);
->>   	goto out_free_name;
->>   }
->> -EXPORT_SYMBOL_GPL(nfs42_ssc_open);
->> -void nfs42_ssc_close(struct file *filep)
->> +
->> +static void __nfs42_ssc_close(struct file *filep)
->>   {
->>   	struct nfs_open_context *ctx = nfs_file_open_context(filep);
->>   
->>   	ctx->state->flags = 0;
->>   }
->> -EXPORT_SYMBOL_GPL(nfs42_ssc_close);
->> +
->> +static const struct nfs4_ssc_client_ops nfs4_ssc_clnt_ops_tbl = {
->> +	.sco_owner = THIS_MODULE,
->> +	.sco_open = __nfs42_ssc_open,
->> +	.sco_close = __nfs42_ssc_close,
->> +};
->> +
->> +/**
->> + * nfs42_ssc_register_ops - Wrapper to register NFS_V4 ops in nfs_common
->> + *
->> + * Return values:
->> + *   On success, returns 0
->> + *   %-EINVAL if validation check fails
->> + */
->> +int nfs42_ssc_register_ops(void)
->> +{
->> +	return nfs42_ssc_register(&nfs4_ssc_clnt_ops_tbl);
->> +}
->> +
->> +/**
->> + * nfs42_ssc_unregister_ops - wrapper to un-register NFS_V4 ops in nfs_common
->> + *
->> + * Return values:
->> + *   None.
->> + */
->> +void nfs42_ssc_unregister_ops(void)
->> +{
->> +	nfs42_ssc_unregister(&nfs4_ssc_clnt_ops_tbl);
->> +}
->>   #endif /* CONFIG_NFS_V4_2 */
->>   
->>   const struct file_operations nfs4_file_operations = {
->> diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
->> index 0c1ab846b83d..ed0c1f9fc890 100644
->> --- a/fs/nfs/nfs4super.c
->> +++ b/fs/nfs/nfs4super.c
->> @@ -7,6 +7,7 @@
->>   #include <linux/mount.h>
->>   #include <linux/nfs4_mount.h>
->>   #include <linux/nfs_fs.h>
->> +#include <linux/nfs_ssc.h>
->>   #include "delegation.h"
->>   #include "internal.h"
->>   #include "nfs4_fs.h"
->> @@ -273,6 +274,10 @@ static int __init init_nfs_v4(void)
->>   	err = nfs4_xattr_cache_init();
->>   	if (err)
->>   		goto out2;
->> +
->> +	err = nfs42_ssc_register_ops();
->> +	if (err)
->> +		goto out2;
->>   #endif
->>   
->>   	err = nfs4_register_sysctl();
->> @@ -297,6 +302,7 @@ static void __exit exit_nfs_v4(void)
->>   	unregister_nfs_version(&nfs_v4);
->>   #ifdef CONFIG_NFS_V4_2
->>   	nfs4_xattr_cache_exit();
->> +	nfs42_ssc_unregister_ops();
->>   #endif
->>   	nfs4_unregister_sysctl();
->>   	nfs_idmap_quit();
->> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
->> index 7a70287f21a2..65636fef6a00 100644
->> --- a/fs/nfs/super.c
->> +++ b/fs/nfs/super.c
->> @@ -57,6 +57,7 @@
->>   #include <linux/rcupdate.h>
->>   
->>   #include <linux/uaccess.h>
->> +#include <linux/nfs_ssc.h>
->>   
->>   #include "nfs4_fs.h"
->>   #include "callback.h"
->> @@ -85,6 +86,11 @@
->>   };
->>   EXPORT_SYMBOL_GPL(nfs_sops);
->>   
->> +static const struct nfs_ssc_client_ops nfs_ssc_clnt_ops_tbl = {
->> +	.sco_owner = THIS_MODULE,
->> +	.sco_sb_deactive = nfs_sb_deactive,
->> +};
->> +
->>   #if IS_ENABLED(CONFIG_NFS_V4)
->>   static int __init register_nfs4_fs(void)
->>   {
->> @@ -106,6 +112,16 @@ static void unregister_nfs4_fs(void)
->>   }
->>   #endif
->>   
->> +static int nfs_ssc_register_ops(void)
->> +{
->> +	return nfs_ssc_register(&nfs_ssc_clnt_ops_tbl);
->> +}
->> +
->> +static void nfs_ssc_unregister_ops(void)
->> +{
->> +	nfs_ssc_unregister(&nfs_ssc_clnt_ops_tbl);
->> +}
->> +
->>   static struct shrinker acl_shrinker = {
->>   	.count_objects	= nfs_access_cache_count,
->>   	.scan_objects	= nfs_access_cache_scan,
->> @@ -133,6 +149,9 @@ int __init register_nfs_fs(void)
->>   	ret = register_shrinker(&acl_shrinker);
->>   	if (ret < 0)
->>   		goto error_3;
->> +	ret = nfs_ssc_register_ops();
->> +	if (ret < 0)
->> +		goto error_3;
->>   	return 0;
->>   error_3:
->>   	nfs_unregister_sysctl();
->> @@ -152,6 +171,7 @@ void __exit unregister_nfs_fs(void)
->>   	unregister_shrinker(&acl_shrinker);
->>   	nfs_unregister_sysctl();
->>   	unregister_nfs4_fs();
->> +	nfs_ssc_unregister_ops();
->>   	unregister_filesystem(&nfs_fs_type);
->>   }
->>   
->> diff --git a/fs/nfs_common/Makefile b/fs/nfs_common/Makefile
->> index 4bebe834c009..fa82f5aaa6d9 100644
->> --- a/fs/nfs_common/Makefile
->> +++ b/fs/nfs_common/Makefile
->> @@ -7,3 +7,4 @@ obj-$(CONFIG_NFS_ACL_SUPPORT) += nfs_acl.o
->>   nfs_acl-objs := nfsacl.o
->>   
->>   obj-$(CONFIG_GRACE_PERIOD) += grace.o
->> +obj-$(CONFIG_GRACE_PERIOD) += nfs_ssc.o
->> diff --git a/fs/nfs_common/nfs_ssc.c b/fs/nfs_common/nfs_ssc.c
->> new file mode 100644
->> index 000000000000..6d99a6d2d6b9
->> --- /dev/null
->> +++ b/fs/nfs_common/nfs_ssc.c
->> @@ -0,0 +1,148 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * fs/nfs_common/nfs_ssc_comm.c
->> + *
->> + * Helper for knfsd's SSC to access ops in NFS client modules
->> + *
->> + * Author: Dai Ngo <dai.ngo@oracle.com>
->> + *
->> + * Copyright (c) 2020, Oracle and/or its affiliates.
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/fs.h>
->> +#include <linux/nfs_ssc.h>
->> +#include "../nfs/nfs4_fs.h"
->> +
->> +MODULE_LICENSE("GPL");
->> +
->> +/*
->> + * NFS_FS
->> + */
->> +static void nfs_sb_deactive_def(struct super_block *sb);
->> +
->> +static struct nfs_ssc_client_ops nfs_ssc_clnt_ops_def = {
->> +	.sco_owner = THIS_MODULE,
->> +	.sco_sb_deactive = nfs_sb_deactive_def,
->> +};
->> +
->> +/*
->> + * NFS_V4
->> + */
->> +static struct file *nfs42_ssc_open_def(struct vfsmount *ss_mnt,
->> +		struct nfs_fh *src_fh, nfs4_stateid *stateid);
->> +static void nfs42_ssc_close_def(struct file *filep);
->> +
->> +static struct nfs4_ssc_client_ops nfs4_ssc_clnt_ops_def = {
->> +	.sco_owner = THIS_MODULE,
->> +	.sco_open = nfs42_ssc_open_def,
->> +	.sco_close = nfs42_ssc_close_def,
->> +};
->> +
->> +
->> +struct nfs_ssc_client_ops_tbl nfs_ssc_client_tbl = {
->> +	.ssc_nfs4_ops	= &nfs4_ssc_clnt_ops_def,
->> +	.ssc_nfs_ops = &nfs_ssc_clnt_ops_def
->> +};
->> +EXPORT_SYMBOL_GPL(nfs_ssc_client_tbl);
->> +
->> +
->> +static struct file *nfs42_ssc_open_def(struct vfsmount *ss_mnt,
->> +		struct nfs_fh *src_fh, nfs4_stateid *stateid)
->> +{
->> +	return ERR_PTR(-EIO);
->> +}
->> +
->> +static void nfs42_ssc_close_def(struct file *filep)
->> +{
->> +}
-> I don't think we need any of these "_def" ops.  We just shouldn't be
-> calling any of these ops in the case the operations aren't loaded.
+> On Sat, Oct 10, 2020 at 11:39:30PM +0300, guy keren wrote:
+> > during the design, we encountered some issues with high-availability
+> > and persistent sessions handling by the linux NFS client, and i
+> > would like to understand a few things about the linux NFS client - i
+> > read all relevant material on www.linux-nfs.org, and spent a while
+> > reading the relevant recovery code in the nfs4.1 client kernel
+> > sources, but i am missing some things (a pointer to the relevant
+> > part in the recovery code will be appreciated as well):
+> >
+> >
+> > 1. suppose there is a persistent session that got disconnected
+> > (because of a server restart, for example). i see that the client is
+> > re-sending all the in-flight commands as part of
+> >
+> >     the recovery. however, suppose that one of the commands was a
+> > compound command containing 2 requests, and the reply to the first
+> > of them was NFS4_OK, and to the 2nd it was NFS4ERR_DELAY - will the
+> > client's code know that after it finishes recovery of the session -
+> > then when it creates a new session, it needs to re-send the 2nd
+> > request in this compound command?
 >
->> +
->> +#ifdef CONFIG_NFS_V4_2
->> +/**
->> + * nfs42_ssc_register - install the NFS_V4 client ops in the nfs_ssc_client_tbl
->> + * @ops: NFS_V4 ops to be installed
->> + *
->> + * Return values:
->> + *   On success, return 0
->> + *   %-EINVAL  if validation check fails
->> + */
->> +int nfs42_ssc_register(const struct nfs4_ssc_client_ops *ops)
->> +{
->> +	if (ops == NULL || ops->sco_open == NULL || ops->sco_close == NULL)
->> +		return -EINVAL;
-> This function only has one caller, and we know it won't do these things.
+> If the client received the reply, it shouldn't have to resend the
+> compound at all.
 >
-> It's not worth the check and the error handling in the caller for
-> something so unlikely.
+> If the client didn't see the reply, it will resend the whole compound.
+> Its behavior won't be affected by how the compound failed, since it
+> can't know that.
+
+according to what you wrote here, an NFS4ERR_DELAY response is
+something that needs to be sent at the level of the entire compound
+request - i.e. the server is not allowed to send a compound response
+where the first few requests have a status of NFS4_OK, while the last
+have a status of NFS4ERR_DELAY. i tried looking exactly where the spec
+specifies the possibility of the server sending an NFS4ERR_DELAY, and
+one example is on delegation recall. i am quoting from a paragraph
+from section 10.2 of the spec:
+
+===================
+
+On recall, the client holding the delegation needs to flush modified
+   state (such as modified data) to the server and return the
+   delegation.  The conflicting request will not be acted on until the
+   recall is complete.  The recall is considered complete when the
+   client returns the delegation or the server times its wait for the
+   delegation to be returned and revokes the delegation as a result of
+   the timeout.  In the interim, the server will either delay responding
+   to conflicting requests or respond to them with NFS4ERR_DELAY.
+   Following the resolution of the recall, the server has the
+   information necessary to grant or deny the second client's request.
+===========================
+
+according to what you say, if the OPEN request is in the middle of the
+compound request, and is preceded by state-modifying requests (e.g.
+creation of other files, writes into other open handles, renames,
+etc.), then the server must avoid processing them until it recalled
+the delegation to the file (i.e. it must process the entire command to
+make sure it doesn't need to send an NFS4ERR_DELAY response due to any
+of the requests inside it, before it starts processing, and it must
+also lock the state of all files involved in the request, to avoid
+another client acquiring a delegation on any of the files in the
+request that have an OPEN request in the same compound. alternatively,
+it must not send an NFS4ERR_DELAY request, and instead just keep the
+request pending until the delegation recall was completed.
+
+do i understand you correctly here?
+
 >
->> +	nfs_ssc_client_tbl.ssc_nfs4_ops = ops;
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(nfs42_ssc_register);
->> +
->> +/**
->> + * nfs42_ssc_unregister - uninstall the NFS_V4 client ops from
->> + *				the nfs_ssc_client_tbl
->> + * @ops: ops to be uninstalled
->> + *
->> + * Return values:
->> + *   None
->> + */
->> +void nfs42_ssc_unregister(const struct nfs4_ssc_client_ops *ops)
->> +{
->> +	if (nfs_ssc_client_tbl.ssc_nfs4_ops != ops)
->> +		return;
->> +
->> +	nfs_ssc_client_tbl.ssc_nfs4_ops = &nfs4_ssc_clnt_ops_def;
->> +}
->> +EXPORT_SYMBOL_GPL(nfs42_ssc_unregister);
->> +#endif /* CONFIG_NFS_V4_2 */
->> +
->> +/*
->> + * NFS_FS
->> + */
->> +static void nfs_sb_deactive_def(struct super_block *sb)
->> +{
->> +}
->> +
->> +#ifdef CONFIG_NFS_V4_2
->> +/**
->> + * nfs_ssc_register - install the NFS_FS client ops in the nfs_ssc_client_tbl
->> + * @ops: NFS_FS ops to be installed
->> + *
->> + * Return values:
->> + *   On success, return 0
->> + *   %-EINVAL  if validation check fails
->> + */
->> +int nfs_ssc_register(const struct nfs_ssc_client_ops *ops)
->> +{
->> +	if (ops == NULL || ops->sco_sb_deactive == NULL)
->> +		return -EINVAL;
-> Ditto, let's drop these checks.
+> > the broader question is about a
+> > compound with N commands, where the first X have an NFS4_OK reply
+> > and the last N-X have NFS4_DELAY
 >
->> +	nfs_ssc_client_tbl.ssc_nfs_ops = ops;
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(nfs_ssc_register);
->> +
->> +/**
->> + * nfs_ssc_unregister - uninstall the NFS_FS client ops from
->> + *				the nfs_ssc_client_tbl
->> + * @ops: ops to be uninstalled
->> + *
->> + * Return values:
->> + *   None
->> + */
->> +void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops)
->> +{
->> +	if (nfs_ssc_client_tbl.ssc_nfs_ops != ops)
->> +		return;
->> +	nfs_ssc_client_tbl.ssc_nfs_ops = &nfs_ssc_clnt_ops_def;
->> +}
->> +EXPORT_SYMBOL_GPL(nfs_ssc_unregister);
->> +
->> +#else
->> +int nfs_ssc_register(const struct nfs_ssc_client_ops *ops)
->> +{
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(nfs_ssc_register);
->> +
->> +void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops)
->> +{
->> +}
->> +EXPORT_SYMBOL_GPL(nfs_ssc_unregister);
->> +#endif /* CONFIG_NFS_V4_2 */
->> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
->> index 99d2cae91bd6..f368f3215f88 100644
->> --- a/fs/nfsd/Kconfig
->> +++ b/fs/nfsd/Kconfig
->> @@ -136,7 +136,7 @@ config NFSD_FLEXFILELAYOUT
->>   
->>   config NFSD_V4_2_INTER_SSC
->>   	bool "NFSv4.2 inter server to server COPY"
->> -	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2 && NFS_FS=y
->> +	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2
->>   	help
->>   	  This option enables support for NFSv4.2 inter server to
->>   	  server copy where the destination server calls the NFSv4.2
->> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
->> index eaf50eafa935..84e10aef1417 100644
->> --- a/fs/nfsd/nfs4proc.c
->> +++ b/fs/nfsd/nfs4proc.c
->> @@ -38,6 +38,7 @@
->>   #include <linux/slab.h>
->>   #include <linux/kthread.h>
->>   #include <linux/sunrpc/addr.h>
->> +#include <linux/nfs_ssc.h>
->>   
->>   #include "idmap.h"
->>   #include "cache.h"
->> @@ -1247,7 +1248,7 @@ extern struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
->>   static void
->>   nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
->>   {
->> -	nfs_sb_deactive(ss_mnt->mnt_sb);
->> +	nfs_do_sb_deactive(ss_mnt->mnt_sb);
->>   	mntput(ss_mnt);
->>   }
->>   
->> diff --git a/include/linux/nfs_ssc.h b/include/linux/nfs_ssc.h
->> new file mode 100644
->> index 000000000000..45a763bd6b0b
->> --- /dev/null
->> +++ b/include/linux/nfs_ssc.h
->> @@ -0,0 +1,77 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * include/linux/nfs_ssc.h
->> + *
->> + * Author: Dai Ngo <dai.ngo@oracle.com>
->> + *
->> + * Copyright (c) 2020, Oracle and/or its affiliates.
->> + */
->> +
->> +#include <linux/nfs_fs.h>
->> +
->> +extern struct nfs_ssc_client_ops_tbl nfs_ssc_client_tbl;
->> +
->> +/*
->> + * NFS_V4
->> + */
->> +struct nfs4_ssc_client_ops {
->> +	struct module *sco_owner;
->> +	struct file *(*sco_open)(struct vfsmount *ss_mnt,
->> +		struct nfs_fh *src_fh, nfs4_stateid *stateid);
->> +	void (*sco_close)(struct file *filep);
->> +};
->> +
->> +/*
->> + * NFS_FS
->> + */
->> +struct nfs_ssc_client_ops {
->> +	struct module *sco_owner;
->> +	void (*sco_sb_deactive)(struct super_block *sb);
->> +};
->> +
->> +struct nfs_ssc_client_ops_tbl {
->> +	const struct nfs4_ssc_client_ops *ssc_nfs4_ops;
->> +	const struct nfs_ssc_client_ops *ssc_nfs_ops;
->> +};
->> +
->> +extern int nfs42_ssc_register_ops(void);
->> +extern void nfs42_ssc_unregister_ops(void);
->> +
->> +extern int nfs42_ssc_register(const struct nfs4_ssc_client_ops *ops);
->> +extern void nfs42_ssc_unregister(const struct nfs4_ssc_client_ops *ops);
->> +
->> +#ifdef CONFIG_NFSD_V4_2_INTER_SSC
->> +static inline struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
->> +		struct nfs_fh *src_fh, nfs4_stateid *stateid)
->> +{
->> +	struct file *file;
->> +
->> +	if (!try_module_get(nfs_ssc_client_tbl.ssc_nfs4_ops->sco_owner))
->> +		return ERR_PTR(-EIO);
-> The module load already happened back when we did the get_fs_type in
-> nfsd4_interssc_connect(), and it's not going away at this point (or
-> there's something already terribly wrong with ss_mnt).
+> The server always stops processing a compound at the first failure, so
+> N-X is always <=1.
+
+granted.
+
 >
-> So I don't think we need any try_module_get()s or module_put()s.
+> > - will the client re-send a new
+> > compound with the last N-X commands after establishing a new
+> > session?
+>
+> A resend by definition is a resend of exactly the same compound.  The
+> client won't break it into pieces in that way.
+>
+> (And typical compounds can't be broken up that way anyway--often earlier
+> ops in the compound are things like PUTFH's that supply required
+> information to later ops.)
+
+i would assume that the same mechanism used to create the compound
+request in the first place (adding the PUTFH in front, etc.) could be
+used during a re-building of a smaller compound request - provided
+that the client knows which requests from the compound were already
+completed - and which were not.
+
+but i understand that there's no such mechanism today on the linux NFS
+client kernel - which is what i initially asked - so that clarifies
+things.
+
+>
+> > 2. if there is a non-persistent session, on which the client sent a
+> > non-idempotent request (e.g. rename of a file into a different
+> > directory), and the server restarted before the client received the
+> > response - will the client just blindly re-send the same request
+> > again after establishing a new session, or will it take some
+> > measures to attempt to understand whether the command was already
+> > executed? i.e. if the server already executed the rename, then
+> > re-sending it will return a failure to locate the source file handle
+> > (because it moved to a new directory).
+>
+> In a rename of A/X to B/Y, the source filehandle refers to the directory
+> "A", so that filehandle will still work.  You might get a NFS4ERR_NOENT
+> if there's nothing at A/X any more, and you could guess that meant the
+> rename succeeded.  But it could equally well be that your rename was
+> never executed, and it's somebody else's rename or unlink that caused
+> A/X to no longer exist.  Similarly, the A/X might have executed but
+> another operation might have immediately created something else at A/X.
+
+i see. understood.
+
+>
+> > does the linux NFS client
+> > attempt to recover from this, or will it simply return an error to
+> > the application layer?
+>
+> I suspect that's all any client does.  You can imagine all sorts of
+> complicated hueristics, but none of them will be 100% right.  Persistent
+> sessions is what you really need to fix this kind of bug.
+
+what about a situation in which instead of a server restart event, the
+client just disconnected before receiving a rename response, and
+re-connected with the same session to the same session? in that case,
+i presume that the Linux NFS client will re-send the compound request,
+and get the results from the server's Duplicate-Request cache, without
+returning errors to the application. correct?
+
+>
+> > 3. what NFS server with persistent sessions is used (or was used)
+> > when testing the persistent sessions support in the linux NFS
+> > client? the linux NFS server, as far as i understood, cannot support
+> > persistent sessions (due to lack of assured persistent memory).
+>
+> I don't think any special hardware is necessary.  Or if it is, we could
+> just disable the feature in the absence of that hardware.  Mainly what
+> we need is some cooperation from the filesystem--some way the can ID
+> particular operations so the server can ask the filesystem if a
+> particular operation was committed to disk.  I talked to the XFS
+> developers about it informally and they seemed open to the idea, but
+> they need some sort of explanation of the requirements and I haven't
+> gotten around to it....
+
+you might also need the file system to be aware of delegations at some
+level, in order to break delegations held by NFS4 clients, when a
+local application attempts to open a file in a conflicting manner.
+
+and this doesn't answer the original question: how was the "persistent
+sessions" support in the linux NFS 4.1 client tested?
+when i tried to find an NFS 4.1 server that supports "persistent
+sessions" i first went to NetApp - and doing a "node takeover"
+operation on it revealed that the session is unknown on the 2nd node -
+making it practically irrelevant for such scenarios (unless there is
+some way to change the behaviour of this feature to behave more like
+SMB3 CA volumes).
+
 >
 > --b.
->
->> +	file = (*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_open)(ss_mnt, src_fh, stateid);
->> +	module_put(nfs_ssc_client_tbl.ssc_nfs4_ops->sco_owner);
->> +	return file;
->> +}
->> +
->> +static inline void nfs42_ssc_close(struct file *filep)
->> +{
->> +	if (!try_module_get(nfs_ssc_client_tbl.ssc_nfs4_ops->sco_owner))
->> +		return;
->> +	(*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_close)(filep);
->> +	module_put(nfs_ssc_client_tbl.ssc_nfs4_ops->sco_owner);
->> +}
->> +#endif
->> +
->> +/*
->> + * NFS_FS
->> + */
->> +extern int nfs_ssc_register(const struct nfs_ssc_client_ops *ops);
->> +extern void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops);
->> +
->> +static inline void nfs_do_sb_deactive(struct super_block *sb)
->> +{
->> +	if (!try_module_get(nfs_ssc_client_tbl.ssc_nfs_ops->sco_owner))
->> +		return;
->> +	(*nfs_ssc_client_tbl.ssc_nfs_ops->sco_sb_deactive)(sb);
->> +	module_put(nfs_ssc_client_tbl.ssc_nfs_ops->sco_owner);
->> +}
->> -- 
->> 1.8.3.1
+
+on an aside - i see that you are also the maintainer of the pynfs test
+suite. would you be interested in patches fixing its install
+operation, and if yes - should we send them to this mailing list, or
+directly to you? i failed to find a mailing list dedicated to pynfs
+development.
+
+thanks,
+--guy keren
+Vast Data
