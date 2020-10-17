@@ -2,116 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A7FC2914AC
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 Oct 2020 23:14:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B44EC291515
+	for <lists+linux-nfs@lfdr.de>; Sun, 18 Oct 2020 01:59:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439088AbgJQVOF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 17 Oct 2020 17:14:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55802 "EHLO
+        id S2439933AbgJQX7i (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 17 Oct 2020 19:59:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438951AbgJQVOF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 17 Oct 2020 17:14:05 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D79EC061755
-        for <linux-nfs@vger.kernel.org>; Sat, 17 Oct 2020 14:14:05 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 1B5CD69C3; Sat, 17 Oct 2020 17:14:03 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 1B5CD69C3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1602969243;
-        bh=xISCgxrGA7aWrtbEgiXTDt1bZS6Z6ajPDfrhQzBZ0Sg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U07pQGyTbE1NkU1OpkXqSinFqul5MnyHqQW7DRrcBK7k/snmFO6hT/UJAvaNItaIc
-         ZnugAedWTC6zKXv418MQHnZV8/xkZYkXC4XqfN9h9NqGqAULrR03j6drk181g5rCb0
-         pkGltVxyuSC3UgH/oy8JI/ioYamEja+2ruGN29Lo=
-Date:   Sat, 17 Oct 2020 17:14:03 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Guy Keren <guy@vastdata.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: questions about the linux NFS 4.1 client and persistent sessions
-Message-ID: <20201017211403.GC8644@fieldses.org>
-References: <02b2121f-42d1-2587-6705-ca2aadb521bc@vastdata.com>
- <20201014192659.GA23262@fieldses.org>
- <CAENext5RMsQXJtV-H63Ons5rovKfk0-oXW-MgBCkZi+DvRDJcQ@mail.gmail.com>
+        with ESMTP id S2439715AbgJQX7i (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 17 Oct 2020 19:59:38 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA3F6C061755
+        for <linux-nfs@vger.kernel.org>; Sat, 17 Oct 2020 16:59:37 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id z5so103372iob.1
+        for <linux-nfs@vger.kernel.org>; Sat, 17 Oct 2020 16:59:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=h2GtTlshfWWUrnm7ALXf8OWo2w1JGw4rOyTg09mkVyQ=;
+        b=ApP7c5sXrBNPlNOq+WcG1+06dnSbHDjMN70f3T4VJGPh1N27Qb/LtYEGbhNfSHBb7B
+         nLR4DA01wYpPOnLgEiNsu6tBSIpmzoNeGFiWGS8Dx8OVcLpr+QWfzIThlZrTChAH7e/z
+         6RT+zavq8V9k4N627FbdpMzyYwlBswSG7Prds=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h2GtTlshfWWUrnm7ALXf8OWo2w1JGw4rOyTg09mkVyQ=;
+        b=GDOLk35t84kKSe9L4bp+dC3PML267AkQ57I2krGLtHTV3ufyQVh/QRK7S5XCnLjq1Z
+         QUm8EmzKHBBNhARACn3VjSmwF/mD84GQ9AQjp9dsDGNmyWyjhlSl8/J8FGuzAgYMMVAC
+         V2DqwQRrDN/5sLOkg6Ozg0symQhlHWfYbk95wS0i4fQsnLcBJ+7vF5uB0mqhtHypdwC1
+         oIwCi0EPOx9HkeOtoSvK68qEYO/4s4y4urY93TWNJIWI9E5k+jdK32aBulDug6+pZqLv
+         XoLTfGOWZ0RZy9R6yIh4wcCWvBWHMDGxxXhQBORTUOxvA25Pxelub5h5jcCjVz0qbzSg
+         udKA==
+X-Gm-Message-State: AOAM531S5tp0EBhOhKMo+NWhLYSyrWUcdmh1hl5UY7AbJfNuryKl2S2r
+        M4lIozzkaU0tFuP5Gue0m+Fs3Q==
+X-Google-Smtp-Source: ABdhPJxOO/JhWm5ou5JikonWGPY7wHpCNLut3YTQOFiVBKXQY0qVFd6+y5r7mn+ejRfpXC6oQGaPdw==
+X-Received: by 2002:a02:6d4b:: with SMTP id e11mr6791283jaf.41.1602979176779;
+        Sat, 17 Oct 2020 16:59:36 -0700 (PDT)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id e11sm6726478ioq.48.2020.10.17.16.59.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 17 Oct 2020 16:59:36 -0700 (PDT)
+Date:   Sat, 17 Oct 2020 23:59:34 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     "J . Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        David Howells <dhowells@redhat.com>
+Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v2 0/3] NFS User Namespaces with new mount API
+Message-ID: <20201017235933.GA1516@ircssh-2.c.rugged-nimbus-611.internal>
+References: <20201016124550.10739-1-sargun@sargun.me>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAENext5RMsQXJtV-H63Ons5rovKfk0-oXW-MgBCkZi+DvRDJcQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20201016124550.10739-1-sargun@sargun.me>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Oct 17, 2020 at 11:40:09PM +0300, Guy Keren wrote:
-> according to what you wrote here, an NFS4ERR_DELAY response is
-> something that needs to be sent at the level of the entire compound
-> request - i.e. the server is not allowed to send a compound response
-> where the first few requests have a status of NFS4_OK, while the last
-> have a status of NFS4ERR_DELAY.
-
-Oh, no, it's absolutely fine for a server to do that.
-
-Sorry, you mentioned persistent sessions, so I assumed somehow this was
-about retries after crashes or reboots, where the client may not have
-received the reply and doesn't know whether it executed.
-
-> according to what you say, if the OPEN request is in the middle of the
-> compound request, and is preceded by state-modifying requests (e.g.
-> creation of other files, writes into other open handles, renames,
-> etc.), then the server must avoid processing them until it recalled
-> the delegation to the file (i.e. it must process the entire command to
-> make sure it doesn't need to send an NFS4ERR_DELAY response due to any
-> of the requests inside it, before it starts processing, and it must
-> also lock the state of all files involved in the request, to avoid
-> another client acquiring a delegation on any of the files in the
-> request that have an OPEN request in the same compound. alternatively,
-> it must not send an NFS4ERR_DELAY request, and instead just keep the
-> request pending until the delegation recall was completed.
-
-No, sorry for the confusion, you're correct, if the client had a bunch
-of non-idempotent ops all in one compound, and got a DELAY partway
-through, then, yes, it would have to deal with retrying only the part
-that didn't execute.
-
-I don't know of any client that actually does that, for what it's worth.
-The Linux client, for example, doesn't send any compounds that I can
-think of that have more than one nonidempotent op.
-
-> i would assume that the same mechanism used to create the compound
-> request in the first place (adding the PUTFH in front, etc.) could be
-> used during a re-building of a smaller compound request - provided
-> that the client knows which requests from the compound were already
-> completed - and which were not.
+On Fri, Oct 16, 2020 at 05:45:47AM -0700, Sargun Dhillon wrote:
+> This patchset adds some functionality to allow NFS to be used from
+> NFS namespaces (containers).
 > 
-> but i understand that there's no such mechanism today on the linux NFS
-> client kernel - which is what i initially asked - so that clarifies
-> things.
+> Changes since v1:
+>   * Added samples
+> 
+> Sargun Dhillon (3):
+>   NFS: Use cred from fscontext during fsmount
+>   samples/vfs: Split out common code for new syscall APIs
+>   samples/vfs: Add example leveraging NFS with new APIs and user
+>     namespaces
+> 
+>  fs/nfs/client.c                        |   2 +-
+>  fs/nfs/flexfilelayout/flexfilelayout.c |   1 +
+>  fs/nfs/nfs4client.c                    |   2 +-
+>  samples/vfs/.gitignore                 |   2 +
+>  samples/vfs/Makefile                   |   5 +-
+>  samples/vfs/test-fsmount.c             |  86 +-----------
+>  samples/vfs/test-nfs-userns.c          | 181 +++++++++++++++++++++++++
+>  samples/vfs/vfs-helper.c               |  43 ++++++
+>  samples/vfs/vfs-helper.h               |  55 ++++++++
+>  9 files changed, 289 insertions(+), 88 deletions(-)
+>  create mode 100644 samples/vfs/test-nfs-userns.c
+>  create mode 100644 samples/vfs/vfs-helper.c
+>  create mode 100644 samples/vfs/vfs-helper.h
+> 
+> -- 
+> 2.25.1
+> 
 
-Right, in theory you could imagine clients doing very general things
-with compounds.  In practice I don't know of any that do.
+Digging deeper into this a little bit, I actually found that there is some 
+problematic aspects of the current behaviour. Because nfs_get_tree_common calls 
+sget_fc, and sget_fc sets the super block's s_user_ns (via alloc_super) to the 
+fs_context's user namespace unless the global flag is set (which NFS does not 
+set), there are a bunch of permissions checks that are done against the super 
+block's user_ns.
 
-(Not that that allows a spec-compliant server to assume they won't.)
+It looks like this was introduced in:
+f2aedb713c28: NFS: Add fs_context support[1]
 
-> what about a situation in which instead of a server restart event, the
-> client just disconnected before receiving a rename response, and
-> re-connected with the same session to the same session? in that case,
-> i presume that the Linux NFS client will re-send the compound request,
-> and get the results from the server's Duplicate-Request cache, without
-> returning errors to the application. correct?
+It turns out that unmapped users in the "parent" user namespace just get an 
+EOVERFLOW error when trying to perform a read, even if the UID sent to the NFS 
+server to read a file is a valid uid (the uid in the init user ns), and 
+inode_permission checks permissions against the mapped UID in the namespace, 
+while the authentication credentials (UIDs, GIDs) sent to the server are
+those from the init user ns.
 
-Right, assuming the client managed to hang on to its lease.
+[This is all under the assumption there's not upcalls doing ID mapping]
 
-> and this doesn't answer the original question: how was the "persistent
-> sessions" support in the linux NFS 4.1 client tested?
+Although, I do not think this presents any security risk (because you have to 
+have CAP_SYS_ADMIN in the init user ns to get this far), it definitely seems
+like "incorrect" behaviour.
 
-I don't know, sorry.
-
-> on an aside - i see that you are also the maintainer of the pynfs test
-> suite. would you be interested in patches fixing its install
-> operation, and if yes - should we send them to this mailing list, or
-> directly to you? i failed to find a mailing list dedicated to pynfs
-> development.
-
-Just send them to me, cc'd to this list.  Thanks!
-
---b.
+[1]: https://lore.kernel.org/linux-nfs/20191120152750.6880-26-smayhew@redhat.com/
