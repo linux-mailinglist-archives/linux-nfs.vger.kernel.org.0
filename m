@@ -2,189 +2,177 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 335582916C2
-	for <lists+linux-nfs@lfdr.de>; Sun, 18 Oct 2020 11:39:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51F79291723
+	for <lists+linux-nfs@lfdr.de>; Sun, 18 Oct 2020 13:19:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725298AbgJRJjJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 18 Oct 2020 05:39:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56492 "EHLO
+        id S1726593AbgJRLTK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 18 Oct 2020 07:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725287AbgJRJjI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 18 Oct 2020 05:39:08 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2118C061755
-        for <linux-nfs@vger.kernel.org>; Sun, 18 Oct 2020 02:39:07 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x7so8135285wrl.3
-        for <linux-nfs@vger.kernel.org>; Sun, 18 Oct 2020 02:39:07 -0700 (PDT)
+        with ESMTP id S1726513AbgJRLTJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 18 Oct 2020 07:19:09 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10CD4C061755
+        for <linux-nfs@vger.kernel.org>; Sun, 18 Oct 2020 04:19:09 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id e22so9936306ejr.4
+        for <linux-nfs@vger.kernel.org>; Sun, 18 Oct 2020 04:19:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=A90IV+H1U7668AytYr8EJAfeecrW7Co0JaefoVo01d4=;
-        b=OG6FyQqBd3GsTrZkzZjHa5mVn4xbraDGUECuE1nTjYfQClltrbl8xCfYpKhcKprgk1
-         jbpOBgROp9zwFDEoyP4dNb2m8BGjgILhpbxJjtnoNbA6bRA1p/LodWOVM2nZNMqv1ohb
-         kMt+2O0FGfwHXg4N++5tJhmPmqfaaGIr9S2+8hmSPVOqASsFl22jfdlC6z4a0uX3BdrW
-         oiisFkoeM6PT1N43yG54tFUJMPKe5dCsQ625WR7PvZjm4OacUlxcDCHs6GDjEgfpA5Zk
-         FXVJynCESf/qJzAW2GIZ+OLjnorV++2jIZiWwUALsPV2Dnk72ck8Y/D+YuEcH7tt5fwj
-         5tow==
+        d=vastdata.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vfajlmtxm9TUxgGha2uWbL0wRsvoUGFiN9g4azhwdt8=;
+        b=Y+NuuheIHhins2J1W2ZKrnXL67/UM9xLxq45wbEFvetjo70AcouwAFqpGH2Vgppm/+
+         dB5CbmoxdKpoWVy1e6a8xF7khL8Q5QUPPai6Ne3VoGolrNVJOUk6IZa8bs2ZNmIHBw4y
+         S8Rv6eOYz9+DOf50JxqzhIKw5f1UARYKpMh+I8xEGIB3xdIcs8RDuYud/GNPf4aolmx9
+         yktSd2KykOpLj/xM5RQgfNW+Lpa1MaDyoWoj9XJyDgkIlFDlfrNHiqqNoTGXkRW/WZlZ
+         Dk46ZU0M3Ti20p4xtmBUOc3ZM0F4iKrH5/b2V5avT2x4aa6wZ06MNFXqCxhXYDv4YJ4D
+         15Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=A90IV+H1U7668AytYr8EJAfeecrW7Co0JaefoVo01d4=;
-        b=CGGYmoAwXmlx+U1N+QTr5gH2TV6RjcuvTQGoOJsUjkzXcs3MrozZosx4BMgVGIT1xa
-         9E2RAEzMi4AfomwFUkelht72pYG7KxqcaB+XWHLLClWjqw8hFYL/mkjrEl2i3UxKOHwg
-         I/OuHtCyWM6uXWpjTU5TJE5/XEE3bISGNaBTjPdZjtpaJsxFKCvpHfxjlc8EOZhYe8iH
-         FPRsdCi9DSofTiaCqQVncNcjrUL3vISZTclL58jPwiCqVKBRALLSLxlZu3dyT/cXsMuA
-         NGxTW2Rgg3WH+rNdTFqnWSemL2wR/l3iWF9QWXiyvFbxXnjb7JXHOjrCc3WiEONTjP4x
-         0p8A==
-X-Gm-Message-State: AOAM532DzGqDzRwGRUh2bi44U6ovIJbH0EiAIOKgedYueKljuOinx9sX
-        oinTQNbp2KA96qMXpQTGr94rUehC/DsTIw==
-X-Google-Smtp-Source: ABdhPJzjLZ65MNhpqJt+2RuDWN3c2XL5xt/ipduRf19IcJXXLjvqepEhaIi2Nzg3wcNZlBLZzCuoiQ==
-X-Received: by 2002:adf:a551:: with SMTP id j17mr14814067wrb.217.1603013946471;
-        Sun, 18 Oct 2020 02:39:06 -0700 (PDT)
-Received: from eldamar (80-218-24-251.dclient.hispeed.ch. [80.218.24.251])
-        by smtp.gmail.com with ESMTPSA id s1sm11100229wmh.22.2020.10.18.02.39.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Oct 2020 02:39:04 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Date:   Sun, 18 Oct 2020 11:39:03 +0200
-From:   Salvatore Bonaccorso <carnil@debian.org>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: Kernel panic / list_add corruption when in nfsd4_run_cb_work
-Message-ID: <20201018093903.GA364695@eldamar.lan>
-References: <20201011075913.GA8065@eldamar.lan>
- <20201012142602.GD26571@fieldses.org>
- <20201012154159.GA49819@eldamar.lan>
- <20201012163355.GF26571@fieldses.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vfajlmtxm9TUxgGha2uWbL0wRsvoUGFiN9g4azhwdt8=;
+        b=C6GOeePKqrSZ/2613ZHV/3SuKi0+Akw2bikObF3MVS/DslexsbBMYsX5CKjWYgBoBD
+         HF5joIHhPVUA/KeezTHaztRWWjpZqXRx9MGNwhGckjTEBkslVF3R1FC/DXHbyVjaKUW0
+         jX3nEVlDMxWZ8bwxH7weysCldi3Q+HLOsJ4CQcr7YTg0ZYXnlvquZ8GfuOYrHfdMRW8s
+         5hfg9rlAaHqFsY6Qc89XO1pThlxOQvU2C92se7cKsJDKAm/gKYWt5M06tt0JvMayE7iy
+         SJmOCy6RarsozCthOVc6NT2GNliGoyaRAAamU8o1XSrGuj0UL2Nb5wKnVXFjTQGl2oJf
+         o7+A==
+X-Gm-Message-State: AOAM530bwKFm0QmoiqAJc5tpSsa66zoFx8vSXVDdfQBJNaFqSHvNmK6J
+        hDAZVZDq17RdQ0IQhxzQ6rdU47VA6yjPmY1WQYHoeWXstu7nmy9N
+X-Google-Smtp-Source: ABdhPJxX6VtQw0ekGjxe7dIG+MuWa69MtXlYYj+cNeKUVH8EFvgDUoVxhCMWRVsXo7ECScu5sVn6q6+EOFV9ruECt7s=
+X-Received: by 2002:a17:906:b2ca:: with SMTP id cf10mr11735329ejb.65.1603019946504;
+ Sun, 18 Oct 2020 04:19:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201012163355.GF26571@fieldses.org>
+References: <02b2121f-42d1-2587-6705-ca2aadb521bc@vastdata.com>
+ <20201014192659.GA23262@fieldses.org> <CAENext5RMsQXJtV-H63Ons5rovKfk0-oXW-MgBCkZi+DvRDJcQ@mail.gmail.com>
+ <20201017211403.GC8644@fieldses.org>
+In-Reply-To: <20201017211403.GC8644@fieldses.org>
+From:   Guy Keren <guy@vastdata.com>
+Date:   Sun, 18 Oct 2020 14:18:55 +0300
+Message-ID: <CAENext6Roxg6aOh8hWC8+SK8jKpZ55AGiTSx0W5maRd5QHLxLg@mail.gmail.com>
+Subject: Re: questions about the linux NFS 4.1 client and persistent sessions
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+On Sun, Oct 18, 2020 at 12:14 AM J. Bruce Fields <bfields@fieldses.org> wrote:
+>
+> On Sat, Oct 17, 2020 at 11:40:09PM +0300, Guy Keren wrote:
+> > according to what you wrote here, an NFS4ERR_DELAY response is
+> > something that needs to be sent at the level of the entire compound
+> > request - i.e. the server is not allowed to send a compound response
+> > where the first few requests have a status of NFS4_OK, while the last
+> > have a status of NFS4ERR_DELAY.
+>
+> Oh, no, it's absolutely fine for a server to do that.
+>
+> Sorry, you mentioned persistent sessions, so I assumed somehow this was
+> about retries after crashes or reboots, where the client may not have
+> received the reply and doesn't know whether it executed.
+>
+> > according to what you say, if the OPEN request is in the middle of the
+> > compound request, and is preceded by state-modifying requests (e.g.
+> > creation of other files, writes into other open handles, renames,
+> > etc.), then the server must avoid processing them until it recalled
+> > the delegation to the file (i.e. it must process the entire command to
+> > make sure it doesn't need to send an NFS4ERR_DELAY response due to any
+> > of the requests inside it, before it starts processing, and it must
+> > also lock the state of all files involved in the request, to avoid
+> > another client acquiring a delegation on any of the files in the
+> > request that have an OPEN request in the same compound. alternatively,
+> > it must not send an NFS4ERR_DELAY request, and instead just keep the
+> > request pending until the delegation recall was completed.
+>
+> No, sorry for the confusion, you're correct, if the client had a bunch
+> of non-idempotent ops all in one compound, and got a DELAY partway
+> through, then, yes, it would have to deal with retrying only the part
+> that didn't execute.
 
-On Mon, Oct 12, 2020 at 12:33:55PM -0400, J. Bruce Fields wrote:
-> On Mon, Oct 12, 2020 at 05:41:59PM +0200, Salvatore Bonaccorso wrote:
-> > Hi Bruce,
-> > 
-> > Thanks a lot for your reply, much appreciated.
-> > 
-> > On Mon, Oct 12, 2020 at 10:26:02AM -0400, J. Bruce Fields wrote:
-> > > On Sun, Oct 11, 2020 at 09:59:13AM +0200, Salvatore Bonaccorso wrote:
-> > > > Hi
-> > > > 
-> > > > On a system running 4.19.146-1 in Debian buster an issue got hit,
-> > > > while the server was under some slight load, but it does not seem
-> > > > easily reproducible, so asking if some more information can be
-> > > > provided to track/narrow this down. On the console the following was
-> > > > caught:
-> > > 
-> > > Worth checking git logs of fs/nfsd/nfs4state.c and
-> > > fs/nfsd/nfs4callback.c.  It might be
-> > > 2bbfed98a4d82ac4e7abfcd4eba40bddfc670b1d "nfsd: Fix races between
-> > > nfsd4_cb_release() and nfsd4_shutdown_callback()" ?
-> > 
-> > That might be possible. As it was not possible to simply trigger the
-> > issue, do you know if it is possible to simply reproduce the issue
-> > fixed in the above?
-> 
-> I don't have a reproducer.
+actually, it is my understanding that, with persistent sessions, the
+client has no way to distinguish between a temporary network
+connection loss, and a server restart, if the server stores the client
+state (client_id and all stateids) in persistent store.
 
-I stil could not find a way to controlled trigger the issue, but on
-the same server the following was caused as well, which might be
-releated as well (altough different backtrace, but maybe gives
-additional hints what can be looked for):
+so suppose that the client sent two 'Open' requests in one compound.
+the server finished processing the first, but then had a delegation on
+the 2nd one, so it is supposed to return an NFS4_OK to the first Open
+and a NFSERR_DELAY for the 2nd open (and this is also the compound
+response that the server will store in its Duplicate Request Cache).
+if the server had a temporary network disconnection, or had a server
+restart, then when the client re-connects and re-sends this compound
+request, it receives the response from the server's Duplicate Request
+Cache (with OK for the first open and DELA?Y For the 2nd). than, i
+presume that the client needs to accept that the first Open already
+succeeded, and when creating a new session, re-send only the 2nd Open
+request. does this make sense?
 
-[ 4390.059004] ------------[ cut here ]------------
-[ 4390.063780] WARNING: CPU: 14 PID: 24184 at fs/nfsd/nfs4state.c:4778 laundromat_main.cold.125+0x31/0x7a [nfsd]
-[ 4390.073763] Modules linked in: tcp_diag udp_diag raw_diag inet_diag unix_diag binfmt_misc rpcsec_gss_krb5 nfsv4 dns_resolver nfs fscache quota_v2 quota_tree bonding intel_rapl skx_edac nfit libnv
-dimm x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm irqbypass ipmi_ssif crct10dif_pclmul crc32_pclmul ghash_clmulni_intel intel_cstate ast ttm drm_kms_helper intel_uncore mei_me drm jo
-ydev iTCO_wdt evdev pcc_cpufreq pcspkr sg ioatdma intel_rapl_perf mei iTCO_vendor_support i2c_algo_bit dca ipmi_si wmi ipmi_devintf ipmi_msghandler acpi_power_meter acpi_pad button nfsd auth_rpcgss
-nfs_acl lockd grace sunrpc ip_tables x_tables autofs4 ext4 crc16 mbcache jbd2 fscrypto ecb dm_mod raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c crc
-32c_generic raid1
-[ 4390.144313]  raid0 multipath linear md_mod hid_generic usbhid hid sd_mod crc32c_intel aesni_intel ahci xhci_pci libahci aes_x86_64 xhci_hcd arcmsr crypto_simd libata cryptd i40e usbcore scsi_mod
-glue_helper lpc_ich i2c_i801 mfd_core usb_common
-[ 4390.165906] CPU: 14 PID: 24184 Comm: kworker/u42:2 Not tainted 4.19.0-11-amd64 #1 Debian 4.19.146-1
-[ 4390.174969] Hardware name: DALCO AG S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
-[ 4390.184654] Workqueue: nfsd4 laundromat_main [nfsd]
-[ 4390.189550] RIP: 0010:laundromat_main.cold.125+0x31/0x7a [nfsd]
-[ 4390.195484] Code: f6 6b c0 e8 24 ae 62 d7 e9 6f 21 ff ff 48 c7 c7 38 f6 6b c0 e8 13 ae 62 d7 e9 1f 21 ff ff 48 c7 c7 40 f3 6b c0 e8 02 ae 62 d7 <0f> 0b e9 34 23 ff ff 48 c7 c7 40 f3 6b c0 e8 ef a
-d 62 d7 0f 0b e9
-[ 4390.214280] RSP: 0018:ffffb0568a6d7e20 EFLAGS: 00010246
-[ 4390.219523] RAX: 0000000000000024 RBX: ffffb0568a6d7e50 RCX: 0000000000000000
-[ 4390.226678] RDX: 0000000000000000 RSI: ffff9def8f8166b8 RDI: ffff9def8f8166b8
-[ 4390.233826] RBP: ffffb0568a6d7e50 R08: 0000000000000556 R09: 0000000000aaaaaa
-[ 4390.240976] R10: 0000000000000000 R11: 0000000000000001 R12: 000000005f8b6732
-[ 4390.248126] R13: ffff9de31d44c798 R14: 000000000000001c R15: ffffb0568a6d7e50
-[ 4390.255277] FS:  0000000000000000(0000) GS:ffff9def8f800000(0000) knlGS:0000000000000000
-[ 4390.263382] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 4390.269147] CR2: 00007f50de60b7f8 CR3: 000000046740a006 CR4: 00000000007606e0
-[ 4390.276302] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 4390.283448] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 4390.290598] PKRU: 55555554
-[ 4390.293316] Call Trace:
-[ 4390.295790]  process_one_work+0x1a7/0x3a0
-[ 4390.299815]  worker_thread+0x30/0x390
-[ 4390.303487]  ? create_worker+0x1a0/0x1a0
-[ 4390.307422]  kthread+0x112/0x130
-[ 4390.310661]  ? kthread_bind+0x30/0x30
-[ 4390.314340]  ret_from_fork+0x35/0x40
-[ 4390.317936] ---[ end trace d0209d068f8583fd ]---
-[ 4390.322577] list_add double add: new=ffff9de31d44c798, prev=ffffb0568a6d7e50, next=ffff9de31d44c798.
-[ 4390.331736] ------------[ cut here ]------------
-[ 4390.336368] kernel BUG at lib/list_debug.c:31!
-[ 4390.340829] invalid opcode: 0000 [#1] SMP PTI
-[ 4390.345200] CPU: 14 PID: 24184 Comm: kworker/u42:2 Tainted: G        W         4.19.0-11-amd64 #1 Debian 4.19.146-1
-[ 4390.355648] Hardware name: DALCO AG S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
-[ 4390.365327] Workqueue: nfsd4 laundromat_main [nfsd]
-[ 4390.371091] RIP: 0010:__list_add_valid+0x41/0x50
-[ 4390.376551] Code: 85 94 00 00 00 48 39 c7 74 0b 48 39 d7 74 06 b8 01 00 00 00 c3 48 89 f2 4c 89 c1 48 89 fe 48 c7 c7 80 a4 a9 98 e8 bd 6b d0 ff <0f> 0b 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 8b 07 48 8b 57 08
-[ 4390.397015] RSP: 0018:ffffb0568a6d7e18 EFLAGS: 00010246
-[ 4390.403077] RAX: 0000000000000058 RBX: ffff9de31d44c798 RCX: 0000000000000000
-[ 4390.411045] RDX: 0000000000000000 RSI: ffff9def8f8166b8 RDI: ffff9def8f8166b8
-[ 4390.418996] RBP: ffffb0568a6d7e50 R08: 0000000000000573 R09: 0000000000aaaaaa
-[ 4390.426937] R10: 0000000000000000 R11: 0000000000000001 R12: 000000005f8b6732
-[ 4390.434859] R13: ffff9de31d44c798 R14: 000000000000001c R15: ffffb0568a6d7e50
-[ 4390.442761] FS:  0000000000000000(0000) GS:ffff9def8f800000(0000) knlGS:0000000000000000
-[ 4390.451610] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 4390.458100] CR2: 00007f50de60b7f8 CR3: 000000046740a006 CR4: 00000000007606e0
-[ 4390.465970] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 4390.473820] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 4390.481650] PKRU: 55555554
-[ 4390.485032] Call Trace:
-[ 4390.488145]  laundromat_main+0x27a/0x610 [nfsd]
-[ 4390.493333]  process_one_work+0x1a7/0x3a0
-[ 4390.497987]  worker_thread+0x30/0x390
-[ 4390.502276]  ? create_worker+0x1a0/0x1a0
-[ 4390.506808]  kthread+0x112/0x130
-[ 4390.510636]  ? kthread_bind+0x30/0x30
-[ 4390.514892]  ret_from_fork+0x35/0x40
-[ 4390.519056] Modules linked in: tcp_diag udp_diag raw_diag inet_diag unix_diag binfmt_misc rpcsec_gss_krb5 nfsv4 dns_resolver nfs fscache quota_v2 quota_tree bonding intel_rapl skx_edac nfit libnvdimm x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm irqbypass ipmi_ssif crct10dif_pclmul crc32_pclmul ghash_clmulni_intel intel_cstate ast ttm drm_kms_helper intel_uncore mei_me drm joydev iTCO_wdt evdev pcc_cpufreq pcspkr sg ioatdma intel_rapl_perf mei iTCO_vendor_support i2c_algo_bit dca ipmi_si wmi ipmi_devintf ipmi_msghandler acpi_power_meter acpi_pad button nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_tables x_tables autofs4 ext4 crc16 mbcache jbd2 fscrypto ecb dm_mod raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c crc32c_generic raid1
-[ 4390.593983]  raid0 multipath linear md_mod hid_generic usbhid hid sd_mod crc32c_intel aesni_intel ahci xhci_pci libahci aes_x86_64 xhci_hcd arcmsr crypto_simd libata cryptd i40e usbcore scsi_mod glue_helper lpc_ich i2c_i801 mfd_core usb_common
-[ 4390.616982] ---[ end trace d0209d068f8583fe ]---
-[ 4390.704972] RIP: 0010:__list_add_valid+0x41/0x50
-[ 4390.710342] Code: 85 94 00 00 00 48 39 c7 74 0b 48 39 d7 74 06 b8 01 00 00 00 c3 48 89 f2 4c 89 c1 48 89 fe 48 c7 c7 80 a4 a9 98 e8 bd 6b d0 ff <0f> 0b 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 8b 07 48 8b 57 08
-[ 4390.730656] RSP: 0018:ffffb0568a6d7e18 EFLAGS: 00010246
-[ 4390.736676] RAX: 0000000000000058 RBX: ffff9de31d44c798 RCX: 0000000000000000
-[ 4390.744609] RDX: 0000000000000000 RSI: ffff9def8f8166b8 RDI: ffff9def8f8166b8
-[ 4390.752555] RBP: ffffb0568a6d7e50 R08: 0000000000000573 R09: 0000000000aaaaaa
-[ 4390.760497] R10: 0000000000000000 R11: 0000000000000001 R12: 000000005f8b6732
-[ 4390.768433] R13: ffff9de31d44c798 R14: 000000000000001c R15: ffffb0568a6d7e50
-[ 4390.776361] FS:  0000000000000000(0000) GS:ffff9def8f800000(0000) knlGS:0000000000000000
-[ 4390.785244] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 4390.791789] CR2: 00007f50de60b7f8 CR3: 000000046740a006 CR4: 00000000007606e0
-[ 4390.799725] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 4390.807642] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 4390.815544] PKRU: 55555554
-[ 4390.819023] Kernel panic - not syncing: Fatal exception
-[ 4390.825022] Kernel Offset: 0x16c00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+>
+> I don't know of any client that actually does that, for what it's worth.
+> The Linux client, for example, doesn't send any compounds that I can
+> think of that have more than one nonidempotent op.
 
-Thanks for your time in any case!
+does it mean that the linux NFS 4.1 client will also never send two
+Write requests in the same compound? and never send an Open request
+which might create a file, with a Write request in the same compound?
+because, although these are not non-idempotent requests, it could be
+that one of them was executed while the next one was not (at least
+according to the spec, the server might return NFS4ERR_DELAY for all
+of the NFS4.1 Request types)?
 
-Regards,
-Salvatore
+>
+> > i would assume that the same mechanism used to create the compound
+> > request in the first place (adding the PUTFH in front, etc.) could be
+> > used during a re-building of a smaller compound request - provided
+> > that the client knows which requests from the compound were already
+> > completed - and which were not.
+> >
+> > but i understand that there's no such mechanism today on the linux NFS
+> > client kernel - which is what i initially asked - so that clarifies
+> > things.
+>
+> Right, in theory you could imagine clients doing very general things
+> with compounds.  In practice I don't know of any that do.
+>
+> (Not that that allows a spec-compliant server to assume they won't.)
+>
+> > what about a situation in which instead of a server restart event, the
+> > client just disconnected before receiving a rename response, and
+> > re-connected with the same session to the same session? in that case,
+> > i presume that the Linux NFS client will re-send the compound request,
+> > and get the results from the server's Duplicate-Request cache, without
+> > returning errors to the application. correct?
+>
+> Right, assuming the client managed to hang on to its lease.
+
+right. which will be the case if the server doesn't revoke state
+immediately upon lease expiration, and no other client performed
+conflicting requests.
+
+>
+> > and this doesn't answer the original question: how was the "persistent
+> > sessions" support in the linux NFS 4.1 client tested?
+>
+> I don't know, sorry.
+
+ok, thanks.
+
+>
+> > on an aside - i see that you are also the maintainer of the pynfs test
+> > suite. would you be interested in patches fixing its install
+> > operation, and if yes - should we send them to this mailing list, or
+> > directly to you? i failed to find a mailing list dedicated to pynfs
+> > development.
+>
+> Just send them to me, cc'd to this list.  Thanks!
+
+ok. we'll clean-up what we have and send it within a few days. thanks.
+
+>
+> --b.
+
+--guy keren
+Vast Data
