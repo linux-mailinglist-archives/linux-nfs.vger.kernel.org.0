@@ -2,54 +2,456 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72110292166
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Oct 2020 05:15:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F9EA29217D
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Oct 2020 05:43:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbgJSDPJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 18 Oct 2020 23:15:09 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:57606 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729093AbgJSDPI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 18 Oct 2020 23:15:08 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kULdR-0003Ig-TP; Mon, 19 Oct 2020 14:14:59 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 19 Oct 2020 14:14:57 +1100
-Date:   Mon, 19 Oct 2020 14:14:57 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     davem@davemloft.net, trond.myklebust@hammerspace.com,
-        linux-crypto@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-afs@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: gssapi, crypto and afs/rxrpc
-Message-ID: <20201019031457.GA551@gondor.apana.org.au>
-References: <1444464.1602865106@warthog.procyon.org.uk>
+        id S1731611AbgJSDnF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 18 Oct 2020 23:43:05 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:53686 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731610AbgJSDnF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 18 Oct 2020 23:43:05 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09J3OuEV155268;
+        Mon, 19 Oct 2020 03:42:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=wuY458lhDPsW8Y9OlHrUqeNOJkXVL7bWDvL3jLFyeXQ=;
+ b=azN89QJUvG0QLXYA0biizjwDxcjEe8oOwhj9focNLnbdX9AQmYQH5tttVtM5LzGZVD9l
+ BAYdKfoeUmdoqTJZ+Nbga+hqKP0JREpGZFQcGBBU92UHiF0/SObEV58eblVb7NyLkwiJ
+ zXQnHIshP9es53LfI5XyfvuyfRM0Ehdir9A2JMSmDS/uqsdaHYFCTf9vGRFVUO7q/nn6
+ QbhbtCnR4Gjw4mTVk2DqmgwlGlUM/uf0F0gKjSI6ytCyeKHeXT44wGhcZKOHKFDnx4K6
+ WqbaIjGgDJKQogdrzj0Jktit/4IRH+D4YJqV7L0MgOy0v3aTrzOrOwEFagO+OOwuwTLb xQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 347p4aketn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 19 Oct 2020 03:42:55 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09J3OnZD194010;
+        Mon, 19 Oct 2020 03:42:55 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 348ahuf6x5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 19 Oct 2020 03:42:55 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09J3gshG032576;
+        Mon, 19 Oct 2020 03:42:54 GMT
+Received: from userp3020.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
+        by userp3030.oracle.com with ESMTP id 348ahuf6ww-1;
+        Mon, 19 Oct 2020 03:42:54 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v4 1/1] NFSv4.2: Fix NFS4ERR_STALE error when doing inter server copy
+Date:   Sun, 18 Oct 2020 23:42:49 -0400
+Message-Id: <20201019034249.27990-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1444464.1602865106@warthog.procyon.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9778 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 priorityscore=1501
+ clxscore=1015 malwarescore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0
+ phishscore=0 adultscore=0 mlxlogscore=999 impostorscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010190028
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Oct 16, 2020 at 05:18:26PM +0100, David Howells wrote:
->
-> If I do this, should I create a "kerberos" crypto API for the data wrapping
-> functions?  I'm not sure that it quite matches the existing APIs because the
-> size of the input data will likely not match the size of the output data and
-> it's "one shot" as it needs to deal with a checksum.
+NFS_FS=y as dependency of CONFIG_NFSD_V4_2_INTER_SSC still have
+build errors and some configs with NFSD=m to get NFS4ERR_STALE
+error when doing inter server copy.
 
-Generally it makes sense to create a Crypto API for an algorithm
-if there are going to be at least two implementations of it.  In
-particular, if there is hardware acceleration available then it'd
-make sense.
+Added ops table in nfs_common for knfsd to access NFS client modules.
 
-Otherwise a library helper would be more appropriate.
+Fixes: 3ac3711adb88 ("NFSD: Fix NFS server build errors")
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+changes from v2: fix 0-day build issues.
+changes from v3: reacted to Bruce's comments, removed paranoid error checking.
+---
+ fs/nfs/nfs4file.c       | 38 ++++++++++++++++----
+ fs/nfs/nfs4super.c      |  5 +++
+ fs/nfs/super.c          | 17 +++++++++
+ fs/nfs_common/Makefile  |  1 +
+ fs/nfs_common/nfs_ssc.c | 94 +++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/nfsd/Kconfig         |  2 +-
+ fs/nfsd/nfs4proc.c      |  3 +-
+ include/linux/nfs_ssc.h | 67 +++++++++++++++++++++++++++++++++++
+ 8 files changed, 219 insertions(+), 8 deletions(-)
+ create mode 100644 fs/nfs_common/nfs_ssc.c
+ create mode 100644 include/linux/nfs_ssc.h
 
-Cheers,
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index fdfc77486ace..984938024011 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -9,6 +9,7 @@
+ #include <linux/falloc.h>
+ #include <linux/mount.h>
+ #include <linux/nfs_fs.h>
++#include <linux/nfs_ssc.h>
+ #include "delegation.h"
+ #include "internal.h"
+ #include "iostat.h"
+@@ -314,9 +315,8 @@ static loff_t nfs42_remap_file_range(struct file *src_file, loff_t src_off,
+ static int read_name_gen = 1;
+ #define SSC_READ_NAME_BODY "ssc_read_%d"
+ 
+-struct file *
+-nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
+-		nfs4_stateid *stateid)
++static struct file *__nfs42_ssc_open(struct vfsmount *ss_mnt,
++		struct nfs_fh *src_fh, nfs4_stateid *stateid)
+ {
+ 	struct nfs_fattr fattr;
+ 	struct file *filep, *res;
+@@ -398,14 +398,40 @@ struct file *
+ 	fput(filep);
+ 	goto out_free_name;
+ }
+-EXPORT_SYMBOL_GPL(nfs42_ssc_open);
+-void nfs42_ssc_close(struct file *filep)
++
++static void __nfs42_ssc_close(struct file *filep)
+ {
+ 	struct nfs_open_context *ctx = nfs_file_open_context(filep);
+ 
+ 	ctx->state->flags = 0;
+ }
+-EXPORT_SYMBOL_GPL(nfs42_ssc_close);
++
++static const struct nfs4_ssc_client_ops nfs4_ssc_clnt_ops_tbl = {
++	.sco_open = __nfs42_ssc_open,
++	.sco_close = __nfs42_ssc_close,
++};
++
++/**
++ * nfs42_ssc_register_ops - Wrapper to register NFS_V4 ops in nfs_common
++ *
++ * Return values:
++ *   None
++ */
++void nfs42_ssc_register_ops(void)
++{
++	nfs42_ssc_register(&nfs4_ssc_clnt_ops_tbl);
++}
++
++/**
++ * nfs42_ssc_unregister_ops - wrapper to un-register NFS_V4 ops in nfs_common
++ *
++ * Return values:
++ *   None.
++ */
++void nfs42_ssc_unregister_ops(void)
++{
++	nfs42_ssc_unregister(&nfs4_ssc_clnt_ops_tbl);
++}
+ #endif /* CONFIG_NFS_V4_2 */
+ 
+ const struct file_operations nfs4_file_operations = {
+diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+index 0c1ab846b83d..93f5c1678ec2 100644
+--- a/fs/nfs/nfs4super.c
++++ b/fs/nfs/nfs4super.c
+@@ -7,6 +7,7 @@
+ #include <linux/mount.h>
+ #include <linux/nfs4_mount.h>
+ #include <linux/nfs_fs.h>
++#include <linux/nfs_ssc.h>
+ #include "delegation.h"
+ #include "internal.h"
+ #include "nfs4_fs.h"
+@@ -279,6 +280,9 @@ static int __init init_nfs_v4(void)
+ 	if (err)
+ 		goto out2;
+ 
++#ifdef CONFIG_NFS_V4_2
++	nfs42_ssc_register_ops();
++#endif
+ 	register_nfs_version(&nfs_v4);
+ 	return 0;
+ out2:
+@@ -297,6 +301,7 @@ static void __exit exit_nfs_v4(void)
+ 	unregister_nfs_version(&nfs_v4);
+ #ifdef CONFIG_NFS_V4_2
+ 	nfs4_xattr_cache_exit();
++	nfs42_ssc_unregister_ops();
+ #endif
+ 	nfs4_unregister_sysctl();
+ 	nfs_idmap_quit();
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 7a70287f21a2..f7dad8227a5f 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -57,6 +57,7 @@
+ #include <linux/rcupdate.h>
+ 
+ #include <linux/uaccess.h>
++#include <linux/nfs_ssc.h>
+ 
+ #include "nfs4_fs.h"
+ #include "callback.h"
+@@ -85,6 +86,10 @@
+ };
+ EXPORT_SYMBOL_GPL(nfs_sops);
+ 
++static const struct nfs_ssc_client_ops nfs_ssc_clnt_ops_tbl = {
++	.sco_sb_deactive = nfs_sb_deactive,
++};
++
+ #if IS_ENABLED(CONFIG_NFS_V4)
+ static int __init register_nfs4_fs(void)
+ {
+@@ -106,6 +111,16 @@ static void unregister_nfs4_fs(void)
+ }
+ #endif
+ 
++static void nfs_ssc_register_ops(void)
++{
++	nfs_ssc_register(&nfs_ssc_clnt_ops_tbl);
++}
++
++static void nfs_ssc_unregister_ops(void)
++{
++	nfs_ssc_unregister(&nfs_ssc_clnt_ops_tbl);
++}
++
+ static struct shrinker acl_shrinker = {
+ 	.count_objects	= nfs_access_cache_count,
+ 	.scan_objects	= nfs_access_cache_scan,
+@@ -133,6 +148,7 @@ int __init register_nfs_fs(void)
+ 	ret = register_shrinker(&acl_shrinker);
+ 	if (ret < 0)
+ 		goto error_3;
++	nfs_ssc_register_ops();
+ 	return 0;
+ error_3:
+ 	nfs_unregister_sysctl();
+@@ -152,6 +168,7 @@ void __exit unregister_nfs_fs(void)
+ 	unregister_shrinker(&acl_shrinker);
+ 	nfs_unregister_sysctl();
+ 	unregister_nfs4_fs();
++	nfs_ssc_unregister_ops();
+ 	unregister_filesystem(&nfs_fs_type);
+ }
+ 
+diff --git a/fs/nfs_common/Makefile b/fs/nfs_common/Makefile
+index 4bebe834c009..fa82f5aaa6d9 100644
+--- a/fs/nfs_common/Makefile
++++ b/fs/nfs_common/Makefile
+@@ -7,3 +7,4 @@ obj-$(CONFIG_NFS_ACL_SUPPORT) += nfs_acl.o
+ nfs_acl-objs := nfsacl.o
+ 
+ obj-$(CONFIG_GRACE_PERIOD) += grace.o
++obj-$(CONFIG_GRACE_PERIOD) += nfs_ssc.o
+diff --git a/fs/nfs_common/nfs_ssc.c b/fs/nfs_common/nfs_ssc.c
+new file mode 100644
+index 000000000000..f43bbb373913
+--- /dev/null
++++ b/fs/nfs_common/nfs_ssc.c
+@@ -0,0 +1,94 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * fs/nfs_common/nfs_ssc_comm.c
++ *
++ * Helper for knfsd's SSC to access ops in NFS client modules
++ *
++ * Author: Dai Ngo <dai.ngo@oracle.com>
++ *
++ * Copyright (c) 2020, Oracle and/or its affiliates.
++ */
++
++#include <linux/module.h>
++#include <linux/fs.h>
++#include <linux/nfs_ssc.h>
++#include "../nfs/nfs4_fs.h"
++
++MODULE_LICENSE("GPL");
++
++struct nfs_ssc_client_ops_tbl nfs_ssc_client_tbl;
++EXPORT_SYMBOL_GPL(nfs_ssc_client_tbl);
++
++#ifdef CONFIG_NFS_V4_2
++/**
++ * nfs42_ssc_register - install the NFS_V4 client ops in the nfs_ssc_client_tbl
++ * @ops: NFS_V4 ops to be installed
++ *
++ * Return values:
++ *   None
++ */
++void nfs42_ssc_register(const struct nfs4_ssc_client_ops *ops)
++{
++	nfs_ssc_client_tbl.ssc_nfs4_ops = ops;
++}
++EXPORT_SYMBOL_GPL(nfs42_ssc_register);
++
++/**
++ * nfs42_ssc_unregister - uninstall the NFS_V4 client ops from
++ *				the nfs_ssc_client_tbl
++ * @ops: ops to be uninstalled
++ *
++ * Return values:
++ *   None
++ */
++void nfs42_ssc_unregister(const struct nfs4_ssc_client_ops *ops)
++{
++	if (nfs_ssc_client_tbl.ssc_nfs4_ops != ops)
++		return;
++
++	nfs_ssc_client_tbl.ssc_nfs4_ops = NULL;
++}
++EXPORT_SYMBOL_GPL(nfs42_ssc_unregister);
++#endif /* CONFIG_NFS_V4_2 */
++
++#ifdef CONFIG_NFS_V4_2
++/**
++ * nfs_ssc_register - install the NFS_FS client ops in the nfs_ssc_client_tbl
++ * @ops: NFS_FS ops to be installed
++ *
++ * Return values:
++ *   None
++ */
++void nfs_ssc_register(const struct nfs_ssc_client_ops *ops)
++{
++	nfs_ssc_client_tbl.ssc_nfs_ops = ops;
++}
++EXPORT_SYMBOL_GPL(nfs_ssc_register);
++
++/**
++ * nfs_ssc_unregister - uninstall the NFS_FS client ops from
++ *				the nfs_ssc_client_tbl
++ * @ops: ops to be uninstalled
++ *
++ * Return values:
++ *   None
++ */
++void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops)
++{
++	if (nfs_ssc_client_tbl.ssc_nfs_ops != ops)
++		return;
++	nfs_ssc_client_tbl.ssc_nfs_ops = NULL;
++}
++EXPORT_SYMBOL_GPL(nfs_ssc_unregister);
++
++#else
++void nfs_ssc_register(const struct nfs_ssc_client_ops *ops)
++{
++}
++EXPORT_SYMBOL_GPL(nfs_ssc_register);
++
++void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops)
++{
++}
++EXPORT_SYMBOL_GPL(nfs_ssc_unregister);
++#endif /* CONFIG_NFS_V4_2 */
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index 99d2cae91bd6..f368f3215f88 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -136,7 +136,7 @@ config NFSD_FLEXFILELAYOUT
+ 
+ config NFSD_V4_2_INTER_SSC
+ 	bool "NFSv4.2 inter server to server COPY"
+-	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2 && NFS_FS=y
++	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2
+ 	help
+ 	  This option enables support for NFSv4.2 inter server to
+ 	  server copy where the destination server calls the NFSv4.2
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index eaf50eafa935..84e10aef1417 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -38,6 +38,7 @@
+ #include <linux/slab.h>
+ #include <linux/kthread.h>
+ #include <linux/sunrpc/addr.h>
++#include <linux/nfs_ssc.h>
+ 
+ #include "idmap.h"
+ #include "cache.h"
+@@ -1247,7 +1248,7 @@ extern struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
+ static void
+ nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
+ {
+-	nfs_sb_deactive(ss_mnt->mnt_sb);
++	nfs_do_sb_deactive(ss_mnt->mnt_sb);
+ 	mntput(ss_mnt);
+ }
+ 
+diff --git a/include/linux/nfs_ssc.h b/include/linux/nfs_ssc.h
+new file mode 100644
+index 000000000000..f5ba0fbff72f
+--- /dev/null
++++ b/include/linux/nfs_ssc.h
+@@ -0,0 +1,67 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * include/linux/nfs_ssc.h
++ *
++ * Author: Dai Ngo <dai.ngo@oracle.com>
++ *
++ * Copyright (c) 2020, Oracle and/or its affiliates.
++ */
++
++#include <linux/nfs_fs.h>
++
++extern struct nfs_ssc_client_ops_tbl nfs_ssc_client_tbl;
++
++/*
++ * NFS_V4
++ */
++struct nfs4_ssc_client_ops {
++	struct file *(*sco_open)(struct vfsmount *ss_mnt,
++		struct nfs_fh *src_fh, nfs4_stateid *stateid);
++	void (*sco_close)(struct file *filep);
++};
++
++/*
++ * NFS_FS
++ */
++struct nfs_ssc_client_ops {
++	void (*sco_sb_deactive)(struct super_block *sb);
++};
++
++struct nfs_ssc_client_ops_tbl {
++	const struct nfs4_ssc_client_ops *ssc_nfs4_ops;
++	const struct nfs_ssc_client_ops *ssc_nfs_ops;
++};
++
++extern void nfs42_ssc_register_ops(void);
++extern void nfs42_ssc_unregister_ops(void);
++
++extern void nfs42_ssc_register(const struct nfs4_ssc_client_ops *ops);
++extern void nfs42_ssc_unregister(const struct nfs4_ssc_client_ops *ops);
++
++#ifdef CONFIG_NFSD_V4_2_INTER_SSC
++static inline struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
++		struct nfs_fh *src_fh, nfs4_stateid *stateid)
++{
++	if (nfs_ssc_client_tbl.ssc_nfs4_ops)
++		return (*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_open)(ss_mnt, src_fh, stateid);
++	return ERR_PTR(-EIO);
++}
++
++static inline void nfs42_ssc_close(struct file *filep)
++{
++	if (nfs_ssc_client_tbl.ssc_nfs4_ops)
++		(*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_close)(filep);
++}
++#endif
++
++/*
++ * NFS_FS
++ */
++extern void nfs_ssc_register(const struct nfs_ssc_client_ops *ops);
++extern void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops);
++
++static inline void nfs_do_sb_deactive(struct super_block *sb)
++{
++	if (nfs_ssc_client_tbl.ssc_nfs_ops)
++		(*nfs_ssc_client_tbl.ssc_nfs_ops->sco_sb_deactive)(sb);
++}
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+1.8.3.1
+
