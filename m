@@ -2,131 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 393E1292B56
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Oct 2020 18:23:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F745292D33
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Oct 2020 19:55:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbgJSQXl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 19 Oct 2020 12:23:41 -0400
-Received: from natter.dneg.com ([193.203.89.68]:45018 "EHLO natter.dneg.com"
+        id S1727962AbgJSRzu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 19 Oct 2020 13:55:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729845AbgJSQTq (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 19 Oct 2020 12:19:46 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by natter.dneg.com (Postfix) with ESMTP id 75FB7C35A2;
-        Mon, 19 Oct 2020 17:19:44 +0100 (BST)
-X-Virus-Scanned: amavisd-new at mx-dneg
-Received: from natter.dneg.com ([127.0.0.1])
-        by localhost (natter.dneg.com [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id Fj7w7u61iTFb; Mon, 19 Oct 2020 17:19:44 +0100 (BST)
-Received: from zrozimbrai.dneg.com (zrozimbrai.dneg.com [10.11.20.12])
-        by natter.dneg.com (Postfix) with ESMTPS id 5463DB3F851;
-        Mon, 19 Oct 2020 17:19:44 +0100 (BST)
-Received: from localhost (localhost [127.0.0.1])
-        by zrozimbrai.dneg.com (Postfix) with ESMTP id 439438177FF1;
-        Mon, 19 Oct 2020 17:19:44 +0100 (BST)
-Received: from zrozimbrai.dneg.com ([127.0.0.1])
-        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id cOaINGZQurbY; Mon, 19 Oct 2020 17:19:44 +0100 (BST)
-Received: from localhost (localhost [127.0.0.1])
-        by zrozimbrai.dneg.com (Postfix) with ESMTP id B8F3A8177B84;
-        Mon, 19 Oct 2020 17:19:43 +0100 (BST)
-X-Virus-Scanned: amavisd-new at zimbra-dneg
-Received: from zrozimbrai.dneg.com ([127.0.0.1])
-        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id IK2PflamYvtl; Mon, 19 Oct 2020 17:19:43 +0100 (BST)
-Received: from zrozimbra1.dneg.com (zrozimbra1.dneg.com [10.11.16.16])
-        by zrozimbrai.dneg.com (Postfix) with ESMTP id A0D278177FFB;
-        Mon, 19 Oct 2020 17:19:43 +0100 (BST)
-Date:   Mon, 19 Oct 2020 17:19:43 +0100 (BST)
-From:   Daire Byrne <daire@dneg.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     bfields <bfields@fieldses.org>,
-        linux-cachefs <linux-cachefs@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com>
-In-Reply-To: <1188023047.38703514.1600272094778.JavaMail.zimbra@dneg.com>
-References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com> <20200915172140.GA32632@fieldses.org> <4d1d7cd0076d98973a56e89c92e4ff0474aa0e14.camel@hammerspace.com> <1188023047.38703514.1600272094778.JavaMail.zimbra@dneg.com>
-Subject: Re: Adventures in NFS re-exporting
+        id S1726005AbgJSRzu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 19 Oct 2020 13:55:50 -0400
+Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ED892224D;
+        Mon, 19 Oct 2020 17:55:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603130149;
+        bh=/Ou1201yhdUNXE/9uX43V7eOsDH00j0nbAO5iwPaJcM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=awN0nMzS8w62V6gsSqWxYb5I+wQRwuWELtFptcN9b7Q3/ZrLQxnr+oizjBA9h61h/
+         ntw/5GbOmCMcokKjDV4Pn09LP8ybYqjFC3J1ZP2nIHhFascLA1UOCDNbKWM1dWRTZ6
+         BcWJl6QwTKkmC89ZLERYBKQNKlDjVFZnhAaDeAUI=
+From:   trondmy@kernel.org
+To:     Daire Byrne <daire@dneg.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 0/2] Add NFSv3 emulation of the lookupp operation
+Date:   Mon, 19 Oct 2020 13:53:28 -0400
+Message-Id: <20201019175330.595894-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com>
+References: <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.7.11_GA_1854 (ZimbraWebClient - GC78 (Linux)/8.7.11_GA_1854)
-Thread-Topic: Adventures in NFS re-exporting
-Thread-Index: fNDm/l4o9cYx5Rz5g0S1EO4zMAtIR4tJDJwAAAWCe4BeKhpLVGiQL7pU
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
------ On 16 Sep, 2020, at 17:01, Daire Byrne daire@dneg.com wrote:
+In order to use the open-by-filehandle functionality with NFSv3, we
+need to ensure that the NFS client can convert disconnected dentries
+into connected ones by doing a reverse walk of the filesystem path.
+To do so, NFSv4 provides the LOOKUPP operation, which does not
+exist in NFSv3, but which can usually be emulated using lookup("..").
 
-> Trond/Bruce,
-> 
-> ----- On 15 Sep, 2020, at 20:59, Trond Myklebust trondmy@hammerspace.com wrote:
-> 
->> On Tue, 2020-09-15 at 13:21 -0400, J. Bruce Fields wrote:
->>> On Mon, Sep 07, 2020 at 06:31:00PM +0100, Daire Byrne wrote:
->>> > 1) The kernel can drop entries out of the NFS client inode cache
->>> > (under memory cache churn) when those filehandles are still being
->>> > used by the knfsd's remote clients resulting in sporadic and random
->>> > stale filehandles. This seems to be mostly for directories from
->>> > what I've seen. Does the NFS client not know that knfsd is still
->>> > using those files/dirs? The workaround is to never drop inode &
->>> > dentry caches on the re-export servers (vfs_cache_pressure=1). This
->>> > also helps to ensure that we actually make the most of our
->>> > actimeo=3600,nocto mount options for the full specified time.
->>> 
->>> I thought reexport worked by embedding the original server's
->>> filehandles
->>> in the filehandles given out by the reexporting server.
->>> 
->>> So, even if nothing's cached, when the reexporting server gets a
->>> filehandle, it should be able to extract the original filehandle from
->>> it
->>> and use that.
->>> 
->>> I wonder why that's not working?
->> 
->> NFSv3? If so, I suspect it is because we never wrote a lookupp()
->> callback for it.
-> 
-> So in terms of the ESTALE counter on the reexport server, we see it increase if
-> the end client mounts the reexport using either NFSv3 or NFSv4. But there is a
-> difference in the client experience in that with NFSv3 we quickly get
-> input/output errors but with NFSv4 we don't. But it does seem like the
-> performance drops significantly which makes me think that NFSv4 retries the
-> lookups (which succeed) when an ESTALE is reported but NFSv3 does not?
-> 
-> This is the simplest reproducer I could come up with but it may still be
-> specific to our workloads/applications and hard to replicate exactly.
-> 
-> nfs-client # sudo mount -t nfs -o vers=3,actimeo=5,ro
-> reexport-server:/vol/software /mnt/software
-> nfs-client # while true; do /mnt/software/bin/application; echo 3 | sudo tee
-> /proc/sys/vm/drop_caches; done
-> 
-> reexport-server # sysctl -w vm.vfs_cache_pressure=100
-> reexport-server # while true; do echo 3 > /proc/sys/vm/drop_caches ; done
-> reexport-server # while true; do awk '/fh/ {print $2}' /proc/net/rpc/nfsd; sleep
-> 10; done
-> 
-> Where "application" is some big application with lots of paths to scan with libs
-> to memory map and "/vol/software" is an NFS mount on the reexport-server from
-> another originating NFS server. I don't know why this application loading
-> workload shows this best, but perhaps the access patterns of memory mapped
-> binaries and libs is particularly susceptible to estale?
-> 
-> With vfs_cache_pressure=100, running "echo 3 > /proc/sys/vm/drop_caches"
-> repeatedly on the reexport server drops chunks of the dentry & nfs_inode_cache.
-> The ESTALE count increases and the client running the application reports
-> input/output errors with NFSv3 or the loading slows to a crawl with NFSv4.
-> 
-> As soon as we switch to vfs_cache_pressure=0, the repeating drop_caches on the
-> reexport server do not cull the dentry or nfs_inode_cache, the ESTALE counter
-> no longer increases and the client experiences no issues (NFSv3 & NFSv4).
+Trond Myklebust (2):
+  NFSv3: Refactor nfs3_proc_lookup() to split out the dentry
+  NFSv3: Add emulation of the lookupp() operation
 
-I don't suppose anyone has any more thoughts on this one? This is likely the first problem that anyone trying to NFS re-export is going to encounter. If they re-export NFSv3 they'll just get lots of ESTALE as the nfs inodes are dropped from cache (with the default vfs_cache_pressure=100) and if they re-export NFSv4, the lookup performance will drop significantly as an ESTALE triggers re-lookups.
+ fs/nfs/nfs3proc.c | 43 ++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 32 insertions(+), 11 deletions(-)
 
-For our particular use case, it is actually desirable to have vfs_cache_pressure=0 to keep nfs client inodes and dentry caches in memory to help with expensive metadata lookups, but it would still be nice to have the option of using a less drastic setting (such as vfs_cache_pressure=1) to help avoid OOM conditions.
+-- 
+2.26.2
 
-Daire
