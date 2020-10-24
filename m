@@ -2,174 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D81629743F
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Oct 2020 18:35:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 187D42979D1
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Oct 2020 02:04:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1751876AbgJWQdv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 23 Oct 2020 12:33:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751843AbgJWQdu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 23 Oct 2020 12:33:50 -0400
-Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35A10246AB;
-        Fri, 23 Oct 2020 16:33:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603470828;
-        bh=kZEeYcZI3W9smR89Evx7xmR6MBrCXpfe2JhxTnfEpfQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zeCKaLRhBdgdFeMAVl+z9mL59X5f6WyaTti64EBzRXlr5omPLn8sqLd1EoWpN3DIR
-         JNdOUnlKWya97Qz3yUQbzYILlAuzpMnKczT3TrqHLdoSpi4YcLd1AZLgMXarTJRR/p
-         Izevu6sHkiN+QowG8M0j3sZJyK29MAmUWRBegKdA=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kW00f-002Aw9-Fd; Fri, 23 Oct 2020 18:33:45 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        "Jonathan Corbet" <corbet@lwn.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Florian Westphal <fw@strlen.de>,
-        Guillaume Nault <gnault@redhat.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Martin Varghese <martin.varghese@nokia.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Pravin B Shelar <pshelar@ovn.org>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Yadu Kishore <kyk.segfault@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH v3 19/56] net: datagram: fix some kernel-doc markups
-Date:   Fri, 23 Oct 2020 18:33:06 +0200
-Message-Id: <c8850a0e48e2b873cdced4a580dc4c599728a273.1603469755.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1603469755.git.mchehab+huawei@kernel.org>
-References: <cover.1603469755.git.mchehab+huawei@kernel.org>
+        id S1755237AbgJXAEh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 23 Oct 2020 20:04:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1755236AbgJXAEh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Oct 2020 20:04:37 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63C93C0613CE;
+        Fri, 23 Oct 2020 17:04:37 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C9971648C; Fri, 23 Oct 2020 20:04:34 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C9971648C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1603497874;
+        bh=hJkl7AU0OJW4JRWttT1ahPP2tUSYaSDr5Ua7PvoS8lM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bftkeSIEVAQ0I3Luu98cIalWlb9RoILTw3hNtfauqpkx8CmG0uORKN+k5prUbJiMi
+         6KZREynCZ0h5APxDTFDbK5mN5DsLrw4VqOUzF/ZIc09JHQ0SvxFD4WLGPbMffUcWPb
+         GWcSz0pPT9CgL/0vdBvqSoydCwXnrhF1m4uvYpEc=
+Date:   Fri, 23 Oct 2020 20:04:34 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sunrpc: raise kernel RPC channel buffer size
+Message-ID: <20201024000434.GA31481@fieldses.org>
+References: <20201019093356.7395-1-rbergant@redhat.com>
+ <20201019132000.GA32403@fieldses.org>
+ <alpine.DEB.2.21.2010231141460.29805@ramsan.of.borg>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2010231141460.29805@ramsan.of.borg>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Some identifiers have different names between their prototypes
-and the kernel-doc markup.
+On Fri, Oct 23, 2020 at 11:44:38AM +0200, Geert Uytterhoeven wrote:
+> 	Hi Bruce, Roberto,
+> 
+> On Mon, 19 Oct 2020, J. Bruce Fields wrote:
+> >On Mon, Oct 19, 2020 at 11:33:56AM +0200, Roberto Bergantinos Corpas wrote:
+> >>Its possible that using AUTH_SYS and mountd manage-gids option a
+> >>user may hit the 8k RPC channel buffer limit. This have been observed
+> >>on field, causing unanswered RPCs on clients after mountd fails to
+> >>write on channel :
+> >>
+> >>rpc.mountd[11231]: auth_unix_gid: error writing reply
+> >>
+> >>Userland nfs-utils uses a buffer size of 32k (RPC_CHAN_BUF_SIZE), so
+> >>lets match those two.
+> >
+> >Thanks, applying.
+> >
+> >That should allow about 4000 group memberships.  If that doesn't do it
+> >then maybe it's time to rethink....
+> >
+> >--b.
+> >
+> >>
+> >>Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+> >>---
+> >> net/sunrpc/cache.c | 2 +-
+> >> 1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >>diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+> >>index baef5ee43dbb..08df4c599ab3 100644
+> >>--- a/net/sunrpc/cache.c
+> >>+++ b/net/sunrpc/cache.c
+> >>@@ -908,7 +908,7 @@ static ssize_t cache_do_downcall(char *kaddr, const char __user *buf,
+> >> static ssize_t cache_slow_downcall(const char __user *buf,
+> >> 				   size_t count, struct cache_detail *cd)
+> >> {
+> >>-	static char write_buf[8192]; /* protected by queue_io_mutex */
+> >>+	static char write_buf[32768]; /* protected by queue_io_mutex */
+> >> 	ssize_t ret = -EINVAL;
+> >>
+> >> 	if (count >= sizeof(write_buf))
+> 
+> This is now commit 27a1e8a0f79e643d ("sunrpc: raise kernel RPC channel
+> buffer size") upstream, and increases kernel size by 24 KiB, even if
+> RPC is not used.
+> 
+> Can this buffer allocated dynamically instead? This code path seems to
+> be a slow path anyway. If it's critical, perhaps this buffer can be
+> allocated on first use?
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- net/core/datagram.c   | 2 +-
- net/core/dev.c        | 4 ++--
- net/core/skbuff.c     | 2 +-
- net/ethernet/eth.c    | 6 +++---
- net/sunrpc/rpc_pipe.c | 3 ++-
- 5 files changed, 9 insertions(+), 8 deletions(-)
+Sure.  Actually it is using an allocated buffer typically, see
+cache_downcall().
 
-diff --git a/net/core/datagram.c b/net/core/datagram.c
-index 9fcaa544f11a..81809fa735a7 100644
---- a/net/core/datagram.c
-+++ b/net/core/datagram.c
-@@ -709,7 +709,7 @@ int zerocopy_sg_from_iter(struct sk_buff *skb, struct iov_iter *from)
- EXPORT_SYMBOL(zerocopy_sg_from_iter);
- 
- /**
-- *	skb_copy_and_csum_datagram_iter - Copy datagram to an iovec iterator
-+ *	skb_copy_and_csum_datagram - Copy datagram to an iovec iterator
-  *          and update a checksum.
-  *	@skb: buffer to copy
-  *	@offset: offset in the buffer to start copying from
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 751e5264fd49..75c879f8ab3f 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -6915,7 +6915,7 @@ bool netdev_has_upper_dev(struct net_device *dev,
- EXPORT_SYMBOL(netdev_has_upper_dev);
- 
- /**
-- * netdev_has_upper_dev_all - Check if device is linked to an upper device
-+ * netdev_has_upper_dev_all_rcu - Check if device is linked to an upper device
-  * @dev: device
-  * @upper_dev: upper device to check
-  *
-@@ -8153,7 +8153,7 @@ EXPORT_SYMBOL(netdev_lower_dev_get_private);
- 
- 
- /**
-- * netdev_lower_change - Dispatch event about lower device state change
-+ * netdev_lower_state_changed - Dispatch event about lower device state change
-  * @lower_dev: device
-  * @lower_state_info: state to dispatch
-  *
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 1ba8f0163744..49da6b259444 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -837,7 +837,7 @@ EXPORT_SYMBOL(consume_skb);
- #endif
- 
- /**
-- *	consume_stateless_skb - free an skbuff, assuming it is stateless
-+ *	__consume_stateless_skb - free an skbuff, assuming it is stateless
-  *	@skb: buffer to free
-  *
-  *	Alike consume_skb(), but this variant assumes that this is the last
-diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
-index dac65180c4ef..4106373180c6 100644
---- a/net/ethernet/eth.c
-+++ b/net/ethernet/eth.c
-@@ -272,7 +272,7 @@ void eth_header_cache_update(struct hh_cache *hh,
- EXPORT_SYMBOL(eth_header_cache_update);
- 
- /**
-- * eth_header_parser_protocol - extract protocol from L2 header
-+ * eth_header_parse_protocol - extract protocol from L2 header
-  * @skb: packet to extract protocol from
-  */
- __be16 eth_header_parse_protocol(const struct sk_buff *skb)
-@@ -523,8 +523,8 @@ int eth_platform_get_mac_address(struct device *dev, u8 *mac_addr)
- EXPORT_SYMBOL(eth_platform_get_mac_address);
- 
- /**
-- * Obtain the MAC address from an nvmem cell named 'mac-address' associated
-- * with given device.
-+ * nvmem_get_mac_address - Obtain the MAC address from an nvmem cell named
-+ * 'mac-address' associated with given device.
-  *
-  * @dev:	Device with which the mac-address cell is associated.
-  * @addrbuf:	Buffer to which the MAC address will be copied on success.
-diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
-index eadc0ede928c..8241f5a4a01c 100644
---- a/net/sunrpc/rpc_pipe.c
-+++ b/net/sunrpc/rpc_pipe.c
-@@ -781,7 +781,8 @@ static int rpc_rmdir_depopulate(struct dentry *dentry,
- }
- 
- /**
-- * rpc_mkpipe - make an rpc_pipefs file for kernel<->userspace communication
-+ * rpc_mkpipe_dentry - make an rpc_pipefs file for kernel<->userspace
-+ *		       communication
-  * @parent: dentry of directory to create new "pipe" in
-  * @name: name of pipe
-  * @private: private data to associate with the pipe, for the caller's use
--- 
-2.26.2
+Looking back at the history....  That was added by Trond in 2009
+(da77005f0d64 "SUNRPC: Remove the global temporary write buffer in
+net/sunrpc/cache.c").  
 
+Before that there's a pre-git change from 2004 which replaced a simple
+kmalloc(PAGE_SIZE).
+
+So I guess the point was to be careful about higher-order allocations,
+but probably it was overkill.
+
+How about making it a kvmalloc?
+
+--b.
