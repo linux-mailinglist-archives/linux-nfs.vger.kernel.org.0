@@ -2,175 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C592298A30
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Oct 2020 11:15:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BAAD298E7F
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Oct 2020 14:51:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1769190AbgJZKOg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Oct 2020 06:14:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42506 "EHLO mail.kernel.org"
+        id S1780688AbgJZNvk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Oct 2020 09:51:40 -0400
+Received: from etc.inittab.org ([51.254.149.154]:54160 "EHLO etc.inittab.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1768387AbgJZJro (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 26 Oct 2020 05:47:44 -0400
-Received: from mail.kernel.org (ip5f5ad5a1.dynamic.kabel-deutschland.de [95.90.213.161])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1421385AbgJZNvj (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 26 Oct 2020 09:51:39 -0400
+X-Greylist: delayed 558 seconds by postgrey-1.27 at vger.kernel.org; Mon, 26 Oct 2020 09:51:38 EDT
+Received: from var.inittab.org (249.171.116.91.static.reverse-mundo-r.com [91.116.171.249])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEDC02087C;
-        Mon, 26 Oct 2020 09:47:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603705663;
-        bh=kZEeYcZI3W9smR89Evx7xmR6MBrCXpfe2JhxTnfEpfQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1C6ZvuQvdGgw57lYmPQcZQ2LNdgRRVZV534pCf87iNQhUnFIB4yxOd+QnrsQrBUQH
-         deg4XKzJMCI8BfXmdjiQmIBZ6Rzp5ZcJsqpWI384HzSaNuMR2tGRwWffooWD3prUp1
-         YJ7AToqeixr/Qci/1Bu65uyzL2cMfbJLBcfMy21U=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kWz6J-0030t3-Mk; Mon, 26 Oct 2020 10:47:39 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        "Jonathan Corbet" <corbet@lwn.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Florian Westphal <fw@strlen.de>,
-        Guillaume Nault <gnault@redhat.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Martin Varghese <martin.varghese@nokia.com>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Pravin B Shelar <pshelar@ovn.org>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Yadu Kishore <kyk.segfault@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH RESEND 2/3] net: datagram: fix some kernel-doc markups
-Date:   Mon, 26 Oct 2020 10:47:37 +0100
-Message-Id: <c8850a0e48e2b873cdced4a580dc4c599728a273.1603705472.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1603705472.git.mchehab+huawei@kernel.org>
-References: <cover.1603705472.git.mchehab+huawei@kernel.org>
+        (Authenticated sender: smtp_auth_agi@correo-e.org)
+        by etc.inittab.org (Postfix) with ESMTPSA id 74FBAA10BA;
+        Mon, 26 Oct 2020 14:42:17 +0100 (CET)
+Received: by var.inittab.org (Postfix, from userid 1000)
+        id 9B6A3404E9; Mon, 26 Oct 2020 14:42:16 +0100 (CET)
+Date:   Mon, 26 Oct 2020 14:42:16 +0100
+From:   Alberto Gonzalez Iniesta <alberto.gonzalez@udima.es>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     linux-nfs@vger.kernel.org,
+        Miguel Rodriguez <miguel.rodriguez@udima.es>,
+        Isaac Marco Blancas <isaac.marco@udima.es>
+Subject: Re: Random IO errors on nfs clients running linux > 4.20
+Message-ID: <20201026134216.GK74269@var.inittab.org>
+References: <20200429171527.GG2531021@var.inittab.org>
+ <20200430173200.GE29491@fieldses.org>
+ <20200909092900.GO189595@var.inittab.org>
+ <20200909134727.GA3894@fieldses.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
+In-Reply-To: <20200909134727.GA3894@fieldses.org>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Some identifiers have different names between their prototypes
-and the kernel-doc markup.
+On Wed, Sep 09, 2020 at 09:47:27AM -0400, J. Bruce Fields wrote:
+> On Wed, Sep 09, 2020 at 11:29:00AM +0200, Alberto Gonzalez Iniesta wrote:
+> > On Thu, Apr 30, 2020 at 01:32:00PM -0400, J. Bruce Fields wrote:
+> > > On Wed, Apr 29, 2020 at 07:15:27PM +0200, Alberto Gonzalez Iniesta wrote:
+> > > > We can run the previous "ls -lR" 20 times and get no error, or get
+> > > > this "ls: leyendo el directorio 'Becas y ayudas/': Error de entrada/salida"
+> > > > (ls: reading directorio 'Becas y ayudas/': Input/Output Error") every
+> > > > now and then.
+> > > > 
+> > > > The error happens (obviously?) with ls, rsync and the users's GUI tools.
+> > > > 
+> > > > There's nothing in dmesg (or elsewhere).
+> > > > These are the kernels with tried:
+> > > > 4.18.0-25   -> Can't reproduce
+> > > > 4.19.0      -> Can't reproduce
+> > > > 4.20.17     -> Happening (hard to reproduce)
+> > > > 5.0.0-15    -> Happening (hard to reproduce)
+> > > > 5.3.0-45    -> Happening (more frequently)
+> > > > 5.6.0-rc7   -> Reproduced a couple of times after boot, then nothing
+> > > > 
+> > > > We did long (as in daylong) testing trying to reproduce this with all
+> > > > those kernel versions, so we are pretty sure 4.18 and 4.19 don't
+> > > > experience this and our Ubuntu 16.04 clients don't have any issue.
+> > > > 
+> > > > I know we aren't providing much info but we are really looking forward
+> > > > to doing all the testing required (we already spent lots of time in it).
+> > > > 
+> > > > Thanks for your work.
+> 
+> So all I notice from this one is the readdir EIO came from call_decode.
+> I suspect that means it failed in the xdr decoding.  Looks like xdr
+> decoding of the actual directory data (which is the complicated part) is
+> done later, so this means it failed decoding the header or verifier,
+> which is a little odd:
+> 
+> > Sep  8 16:03:23 portatil264 kernel: [15033.016276] RPC:  3284 call_decode result -5
+> > Sep  8 16:03:23 portatil264 kernel: [15033.016281] nfs41_sequence_process: Error 1 free the slot 
+> > Sep  8 16:03:23 portatil264 kernel: [15033.016286] RPC:       wake_up_first(00000000d3f50f4d "ForeChannel Slot table")
+> > Sep  8 16:03:23 portatil264 kernel: [15033.016288] nfs4_free_slot: slotid 0 highest_used_slotid 4294967295
+> > Sep  8 16:03:23 portatil264 kernel: [15033.016290] RPC:  3284 return 0, status -5
+> > Sep  8 16:03:23 portatil264 kernel: [15033.016291] RPC:  3284 release task
+> > Sep  8 16:03:23 portatil264 kernel: [15033.016295] RPC:       freeing buffer of size 4144 at 00000000a3649daf
+> > Sep  8 16:03:23 portatil264 kernel: [15033.016298] RPC:  3284 release request 0000000079df89b2
+> > Sep  8 16:03:23 portatil264 kernel: [15033.016300] RPC:       wake_up_first(00000000c5ee49ee "xprt_backlog")
+> > Sep  8 16:03:23 portatil264 kernel: [15033.016302] RPC:       rpc_release_client(00000000b930c343)
+> > Sep  8 16:03:23 portatil264 kernel: [15033.016304] RPC:  3284 freeing task
+> > Sep  8 16:03:23 portatil264 kernel: [15033.016309] _nfs4_proc_readdir: returns -5
+> > Sep  8 16:03:23 portatil264 kernel: [15033.016318] NFS: readdir(departamentos/innovacion) returns -5
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- net/core/datagram.c   | 2 +-
- net/core/dev.c        | 4 ++--
- net/core/skbuff.c     | 2 +-
- net/ethernet/eth.c    | 6 +++---
- net/sunrpc/rpc_pipe.c | 3 ++-
- 5 files changed, 9 insertions(+), 8 deletions(-)
+Hi, Bruce et al.
 
-diff --git a/net/core/datagram.c b/net/core/datagram.c
-index 9fcaa544f11a..81809fa735a7 100644
---- a/net/core/datagram.c
-+++ b/net/core/datagram.c
-@@ -709,7 +709,7 @@ int zerocopy_sg_from_iter(struct sk_buff *skb, struct iov_iter *from)
- EXPORT_SYMBOL(zerocopy_sg_from_iter);
- 
- /**
-- *	skb_copy_and_csum_datagram_iter - Copy datagram to an iovec iterator
-+ *	skb_copy_and_csum_datagram - Copy datagram to an iovec iterator
-  *          and update a checksum.
-  *	@skb: buffer to copy
-  *	@offset: offset in the buffer to start copying from
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 751e5264fd49..75c879f8ab3f 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -6915,7 +6915,7 @@ bool netdev_has_upper_dev(struct net_device *dev,
- EXPORT_SYMBOL(netdev_has_upper_dev);
- 
- /**
-- * netdev_has_upper_dev_all - Check if device is linked to an upper device
-+ * netdev_has_upper_dev_all_rcu - Check if device is linked to an upper device
-  * @dev: device
-  * @upper_dev: upper device to check
-  *
-@@ -8153,7 +8153,7 @@ EXPORT_SYMBOL(netdev_lower_dev_get_private);
- 
- 
- /**
-- * netdev_lower_change - Dispatch event about lower device state change
-+ * netdev_lower_state_changed - Dispatch event about lower device state change
-  * @lower_dev: device
-  * @lower_state_info: state to dispatch
-  *
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 1ba8f0163744..49da6b259444 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -837,7 +837,7 @@ EXPORT_SYMBOL(consume_skb);
- #endif
- 
- /**
-- *	consume_stateless_skb - free an skbuff, assuming it is stateless
-+ *	__consume_stateless_skb - free an skbuff, assuming it is stateless
-  *	@skb: buffer to free
-  *
-  *	Alike consume_skb(), but this variant assumes that this is the last
-diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
-index dac65180c4ef..4106373180c6 100644
---- a/net/ethernet/eth.c
-+++ b/net/ethernet/eth.c
-@@ -272,7 +272,7 @@ void eth_header_cache_update(struct hh_cache *hh,
- EXPORT_SYMBOL(eth_header_cache_update);
- 
- /**
-- * eth_header_parser_protocol - extract protocol from L2 header
-+ * eth_header_parse_protocol - extract protocol from L2 header
-  * @skb: packet to extract protocol from
-  */
- __be16 eth_header_parse_protocol(const struct sk_buff *skb)
-@@ -523,8 +523,8 @@ int eth_platform_get_mac_address(struct device *dev, u8 *mac_addr)
- EXPORT_SYMBOL(eth_platform_get_mac_address);
- 
- /**
-- * Obtain the MAC address from an nvmem cell named 'mac-address' associated
-- * with given device.
-+ * nvmem_get_mac_address - Obtain the MAC address from an nvmem cell named
-+ * 'mac-address' associated with given device.
-  *
-  * @dev:	Device with which the mac-address cell is associated.
-  * @addrbuf:	Buffer to which the MAC address will be copied on success.
-diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
-index eadc0ede928c..8241f5a4a01c 100644
---- a/net/sunrpc/rpc_pipe.c
-+++ b/net/sunrpc/rpc_pipe.c
-@@ -781,7 +781,8 @@ static int rpc_rmdir_depopulate(struct dentry *dentry,
- }
- 
- /**
-- * rpc_mkpipe - make an rpc_pipefs file for kernel<->userspace communication
-+ * rpc_mkpipe_dentry - make an rpc_pipefs file for kernel<->userspace
-+ *		       communication
-  * @parent: dentry of directory to create new "pipe" in
-  * @name: name of pipe
-  * @private: private data to associate with the pipe, for the caller's use
+Is there anything we can do to help debugging/fixing this? It's still
+biting our users with a +4.20.x kernel.
+
+Thanks,
+
+Alberto
+
 -- 
-2.26.2
-
+Alberto González Iniesta             | Universidad a Distancia
+alberto.gonzalez@udima.es            | de Madrid
