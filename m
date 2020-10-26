@@ -2,58 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A80692995FF
+	by mail.lfdr.de (Postfix) with ESMTP id E67BE299601
 	for <lists+linux-nfs@lfdr.de>; Mon, 26 Oct 2020 19:54:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1781434AbgJZSyq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Oct 2020 14:54:46 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35106 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1781703AbgJZSyo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Oct 2020 14:54:44 -0400
-Received: by mail-qk1-f196.google.com with SMTP id 140so9396038qko.2;
-        Mon, 26 Oct 2020 11:54:43 -0700 (PDT)
+        id S1781570AbgJZSyu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Oct 2020 14:54:50 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44483 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1781411AbgJZSyt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Oct 2020 14:54:49 -0400
+Received: by mail-qk1-f195.google.com with SMTP id s14so9383199qkg.11;
+        Mon, 26 Oct 2020 11:54:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=/UwfH7nwiffhdnewCAuG5LcH0M5Ze2QoaFOiJ4vkAGQ=;
-        b=GBpz6QiHNuUHhtu9jal0pfqfn0x5ftum7RuLlwsbDmSzypODAfqU4eAEjgT8TbqSoF
-         k2jLiGFyish0Si6OhYZ0t1+OKHbG9CIO5PT998fS5e8BVhFTmsUA/2fw908KWFHwHnNg
-         CLmSdF9AXijla0EraAwGuI5eqbh+VO8Ij51UPdh3Uuk6+xGNKRaM2WrzPaG8NDpoCs84
-         gDYsoh0GCJef7snAJ6oryXrw2fuDTt5cnJQ42WBtX7QhsWOf8et3M0qRVjy1b/ZeAMIN
-         IIw4R8NSgb8T4N9CTvZAwBQlybEPbor4O5m//H0awsl/Zwyt2n1AWCDuHEy6QwEYK7SJ
-         y3EQ==
+        bh=YmDGVD1h9UeAesVa6tAnE/M/BMcF/UUcrSwGwabb9zU=;
+        b=J6qk6gJUOV7/DNdkZOqLA8DEfZXO1/LEr81Q1OSeBXKYdFOuQ9fKn8TGg3Y3XiN+SH
+         eGJL8NC/x6IwLwZmNhw8gAoFXmXEx9lkg2oCQ/3LLiQ+ZQr+KU/Y4rwqXIGTBnB5UmOu
+         ZMb0jzSevmRfULnTT3sjdsoKTk/hOuP5/FD8usfNPmf5Su8vumKc8Qnts9CpVpijG9vt
+         ozz/FnXaIrGHZI8deNoct3N/yQKX5Yep7p1pliNUoc96epsQVwlVLnHK+RN2Z5dKFQ82
+         fTGOhYjZhMlyDGsMQfrnY4DGg2B6sDp2TYKPD7IkB8G1pO/GvsRtKCYPBWw3fbKG2Iin
+         b3Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=/UwfH7nwiffhdnewCAuG5LcH0M5Ze2QoaFOiJ4vkAGQ=;
-        b=n0eq2OO8JS3we+OkkRaoX2DWhVgGanfCfF1Pyr8Em7/gSGDD+lLAwhbsixx8vujd7f
-         F2GuuwfnYmwSDRHBhxfWCF0dmCF4fvQVYJxo6PJ7upwRmn9qow0ztrK5EyYlNOFCtqAT
-         FkRGl4VYOZvdFD7QXiZDyexpFo/L93sNlDRC6LMIX4ODGQIwroR5wBfQs4+cd6YYL9AG
-         ClXzJTav6QWc5RAULFVCTixV2p0xC9aqtr3tbcCNhDny8zjCo0LMF7GEN+166OiZRZtS
-         7T17SkAm5PF2E7R0hkZPL3FuwMkncWfcRauY6oVX71uOnqxvzxZ5wAzRoa9rdIbwFnLk
-         hXWQ==
-X-Gm-Message-State: AOAM532UlCyoU7QcwsK3xgWLYK1ifv3jI9c2yxui6IlyoX037Oky1CjL
-        tR0A1keoGidPcSwejz4KK2MhzKBD2IM=
-X-Google-Smtp-Source: ABdhPJwr3WKwafdpycABxgXEQlAv5YzgpY1TY1SVUGV4QAh1PCpg1Ui+0dtC/jSe9MCogZCkc5zoJg==
-X-Received: by 2002:a05:620a:12ea:: with SMTP id f10mr17113719qkl.480.1603738482597;
-        Mon, 26 Oct 2020 11:54:42 -0700 (PDT)
+        bh=YmDGVD1h9UeAesVa6tAnE/M/BMcF/UUcrSwGwabb9zU=;
+        b=dQrxtO935HFt2+WjSMJKm8Bm5+6Gd5yOqARFddoeEIiZtILx5xny49HJA+mEb+Hq59
+         MJ+Xah2xbtjZBsJfyPDG/CLAA+45GflBwafUwE3p4L5qCQa9XGMZwiyMw6Jz+fkl+8mI
+         iRDUSeeZi4Pq9/K2xmgvthrPlJpIwjnJ03bJqXNB2e1qEeiv63N1PLSYPUga1Fz2w+gO
+         uVj7c8cPNRcsh4/+oLgGMyljOTPlf2pvfxD3BGi1VgKKiZPEKRI8VYuZywV1s4+VlWWk
+         k0Bdr1FVsH1tsm4Rs+GPT4lHANmUkfTwgDtMGTpB0Kt0qi/cbq6+uOxbr+r4D+J8tkaK
+         mDLA==
+X-Gm-Message-State: AOAM530F+buctYpi8+B+dxogeaDuzEN9gyZNzqLwYkHIh8++3s2G9PB6
+        L1sNbWY3ZCOwh4F3xZsnuf7hslZdXwQ=
+X-Google-Smtp-Source: ABdhPJw/qToBnwVZQ8rzZ6jvs0OOFqcNEfFiqHS+CZApYR3d/yeP7/EVXRKyOv55suGHXi7Zp3CMIg==
+X-Received: by 2002:a05:620a:1322:: with SMTP id p2mr17818897qkj.211.1603738488169;
+        Mon, 26 Oct 2020 11:54:48 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id s3sm7103631qkj.27.2020.10.26.11.54.41
+        by smtp.gmail.com with ESMTPSA id p38sm7462909qtb.20.2020.10.26.11.54.46
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Oct 2020 11:54:42 -0700 (PDT)
+        Mon, 26 Oct 2020 11:54:47 -0700 (PDT)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 09QIseIH013640;
-        Mon, 26 Oct 2020 18:54:40 GMT
-Subject: [PATCH 09/20] svcrdma: Use parsed chunk lists to derive the inv_rkey
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 09QIsk6F013643;
+        Mon, 26 Oct 2020 18:54:46 GMT
+Subject: [PATCH 10/20] svcrdma: Use parsed chunk lists to detect reverse
+ direction replies
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Mon, 26 Oct 2020 14:54:40 -0400
-Message-ID: <160373848080.1886.5015616032132594298.stgit@klimt.1015granger.net>
+Date:   Mon, 26 Oct 2020 14:54:46 -0400
+Message-ID: <160373848616.1886.3476213491131167397.stgit@klimt.1015granger.net>
 In-Reply-To: <160373843299.1886.12604782813896379719.stgit@klimt.1015granger.net>
 References: <160373843299.1886.12604782813896379719.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -67,105 +68,91 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 Refactor: Don't duplicate header decoding smarts here. Instead, use
 the new parsed chunk lists.
 
+Note that the XID sanity test is also removed. The XID is already
+looked up by the cb handler, and is rejected if it's not recognized.
+
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   67 ++++++++++++++-----------------
- 1 file changed, 30 insertions(+), 37 deletions(-)
+ include/linux/sunrpc/svc_rdma.h         |    1 +
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   29 ++++++++++++++---------------
+ 2 files changed, 15 insertions(+), 15 deletions(-)
 
+diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
+index a89d4209fe2a..74247a33b6c6 100644
+--- a/include/linux/sunrpc/svc_rdma.h
++++ b/include/linux/sunrpc/svc_rdma.h
+@@ -144,6 +144,7 @@ struct svc_rdma_recv_ctxt {
+ 	unsigned int		rc_page_count;
+ 	unsigned int		rc_hdr_count;
+ 	u32			rc_inv_rkey;
++	__be32			rc_msgtype;
+ 
+ 	struct svc_rdma_pcl	rc_call_pcl;
+ 
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index ec9d259b149c..2755ca178b09 100644
+index 2755ca178b09..72b07e8aa3c9 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -586,60 +586,53 @@ static bool xdr_check_reply_chunk(struct svc_rdma_recv_ctxt *rctxt)
-  *
-  * If there is exactly one distinct R_key in the received transport
-  * header, set rc_inv_rkey to that R_key. Otherwise, set it to zero.
-- *
-- * Perform this operation while the received transport header is
-- * still in the CPU cache.
+@@ -668,7 +668,8 @@ static int svc_rdma_xdr_decode_req(struct xdr_buf *rq_arg,
+ 	if (*p != rpcrdma_version)
+ 		goto out_version;
+ 	p += 2;
+-	switch (*p) {
++	rctxt->rc_msgtype = *p;
++	switch (rctxt->rc_msgtype) {
+ 	case rdma_msg:
+ 		break;
+ 	case rdma_nomsg:
+@@ -762,30 +763,28 @@ static void svc_rdma_send_error(struct svcxprt_rdma *rdma,
+  * the RPC/RDMA header small and fixed in size, so it is
+  * straightforward to check the RPC header's direction field.
   */
- static void svc_rdma_get_inv_rkey(struct svcxprt_rdma *rdma,
- 				  struct svc_rdma_recv_ctxt *ctxt)
+-static bool svc_rdma_is_backchannel_reply(struct svc_xprt *xprt,
+-					  __be32 *rdma_resp)
++static bool svc_rdma_is_reverse_direction_reply(struct svc_xprt *xprt,
++						struct svc_rdma_recv_ctxt *rctxt)
  {
--	__be32 inv_rkey, *p;
--	u32 i, segcount;
-+	struct svc_rdma_segment *segment;
-+	struct svc_rdma_chunk *chunk;
-+	u32 inv_rkey;
+-	__be32 *p;
++	__be32 *p = rctxt->rc_recv_buf;
  
- 	ctxt->rc_inv_rkey = 0;
+ 	if (!xprt->xpt_bc_xprt)
+ 		return false;
  
- 	if (!rdma->sc_snd_w_inv)
- 		return;
+-	p = rdma_resp + 3;
+-	if (*p++ != rdma_msg)
++	if (rctxt->rc_msgtype != rdma_msg)
+ 		return false;
  
--	inv_rkey = xdr_zero;
--	p = ctxt->rc_recv_buf;
--	p += rpcrdma_fixed_maxsz;
--
--	/* Read list */
--	while (xdr_item_is_present(p++)) {
--		p++;	/* position */
--		if (inv_rkey == xdr_zero)
--			inv_rkey = *p;
--		else if (inv_rkey != *p)
--			return;
--		p += 4;
-+	inv_rkey = 0;
-+	pcl_for_each_chunk(chunk, &ctxt->rc_call_pcl) {
-+		pcl_for_each_segment(segment, chunk) {
-+			if (inv_rkey == 0)
-+				inv_rkey = segment->rs_handle;
-+			else if (inv_rkey != segment->rs_handle)
-+				return;
-+		}
- 	}
--
--	/* Write list */
--	while (xdr_item_is_present(p++)) {
--		segcount = be32_to_cpup(p++);
--		for (i = 0; i < segcount; i++) {
--			if (inv_rkey == xdr_zero)
--				inv_rkey = *p;
--			else if (inv_rkey != *p)
-+	pcl_for_each_chunk(chunk, &ctxt->rc_read_pcl) {
-+		pcl_for_each_segment(segment, chunk) {
-+			if (inv_rkey == 0)
-+				inv_rkey = segment->rs_handle;
-+			else if (inv_rkey != segment->rs_handle)
- 				return;
--			p += 4;
- 		}
- 	}
--
--	/* Reply chunk */
--	if (xdr_item_is_present(p++)) {
--		segcount = be32_to_cpup(p++);
--		for (i = 0; i < segcount; i++) {
--			if (inv_rkey == xdr_zero)
--				inv_rkey = *p;
--			else if (inv_rkey != *p)
-+	pcl_for_each_chunk(chunk, &ctxt->rc_write_pcl) {
-+		pcl_for_each_segment(segment, chunk) {
-+			if (inv_rkey == 0)
-+				inv_rkey = segment->rs_handle;
-+			else if (inv_rkey != segment->rs_handle)
- 				return;
--			p += 4;
- 		}
- 	}
--
--	ctxt->rc_inv_rkey = be32_to_cpu(inv_rkey);
-+	pcl_for_each_chunk(chunk, &ctxt->rc_reply_pcl) {
-+		pcl_for_each_segment(segment, chunk) {
-+			if (inv_rkey == 0)
-+				inv_rkey = segment->rs_handle;
-+			else if (inv_rkey != segment->rs_handle)
-+				return;
-+		}
-+	}
-+	ctxt->rc_inv_rkey = inv_rkey;
- }
+-	if (*p++ != xdr_zero)
++	if (!pcl_is_empty(&rctxt->rc_call_pcl))
++		return false;
++	if (!pcl_is_empty(&rctxt->rc_read_pcl))
+ 		return false;
+-	if (*p++ != xdr_zero)
++	if (!pcl_is_empty(&rctxt->rc_write_pcl))
+ 		return false;
+-	if (*p++ != xdr_zero)
++	if (!pcl_is_empty(&rctxt->rc_reply_pcl))
+ 		return false;
  
- /**
+-	/* XID sanity */
+-	if (*p++ != *rdma_resp)
+-		return false;
+-	/* call direction */
+-	if (*p == cpu_to_be32(RPC_CALL))
++	/* RPC call direction */
++	if (*(p + 8) == cpu_to_be32(RPC_CALL))
+ 		return false;
+ 
+ 	return true;
+@@ -868,7 +867,7 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
+ 		goto out_drop;
+ 	rqstp->rq_xprt_hlen = ret;
+ 
+-	if (svc_rdma_is_backchannel_reply(xprt, p))
++	if (svc_rdma_is_reverse_direction_reply(xprt, ctxt))
+ 		goto out_backchannel;
+ 
+ 	svc_rdma_get_inv_rkey(rdma_xprt, ctxt);
 
 
