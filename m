@@ -2,96 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DEBF299068
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Oct 2020 16:02:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D97B3299075
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Oct 2020 16:05:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1782929AbgJZPCt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Oct 2020 11:02:49 -0400
-Received: from fieldses.org ([173.255.197.46]:34068 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1782928AbgJZPCt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 26 Oct 2020 11:02:49 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id ADC93ABC; Mon, 26 Oct 2020 11:02:47 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org ADC93ABC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1603724567;
-        bh=kgEEm/ISndXcvQl2fVGsLNIuh3pbwL+P5lMUCVT1Cgc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yuJUzxhIn130rJg/ps6uqZ0Eu2dBodAlSjkuBSu4Qpyci0Ic5GhWt1k1Qg7YkEbfA
-         6B5dIDswfZPnbi7wgAUZE07Ne3bVcBJv34ajyrn7tqQAYDU3DNstqYOrfYaIZCwbl6
-         fIhP6CPOwhcUXbMIs1kzw55osLz9uA5Eo88adMrE=
-Date:   Mon, 26 Oct 2020 11:02:47 -0400
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Alberto Gonzalez Iniesta <alberto.gonzalez@udima.es>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Miguel Rodriguez <miguel.rodriguez@udima.es>,
-        Isaac Marco Blancas <isaac.marco@udima.es>
-Subject: Re: Random IO errors on nfs clients running linux > 4.20
-Message-ID: <20201026150247.GB2417@fieldses.org>
-References: <20200429171527.GG2531021@var.inittab.org>
- <20200430173200.GE29491@fieldses.org>
- <20200909092900.GO189595@var.inittab.org>
- <20200909134727.GA3894@fieldses.org>
- <20201026134216.GK74269@var.inittab.org>
- <40FDCE82-5895-4184-BAB3-AC221326EB34@oracle.com>
- <20201026144358.GM74269@var.inittab.org>
- <8A4C335B-446F-4385-BA7C-643911FF9498@oracle.com>
+        id S1783062AbgJZPFh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Oct 2020 11:05:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31907 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2403968AbgJZPFh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Oct 2020 11:05:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603724736;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ZH1AbaUNoIFiiF2HbJepWq664il8WWobUCRiDkdhzq8=;
+        b=HqBoXNhXsDVY04yeoh/DXXDT6bx5mKg0DIcHdtFDIWbjRAJng9GR4A52pr1Jh4Buqh76SJ
+        E/chZTUzlKscRLjr/FeazEmZMwHII1LL8K86NEEr9xxHi1qVD8i5b6qTZxRf7MltyZbkhK
+        SMDeS7cibLyji03SFk2hf5N9PHBLrTA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-413--fRyDzxvMNqb516DZ05PBw-1; Mon, 26 Oct 2020 11:05:34 -0400
+X-MC-Unique: -fRyDzxvMNqb516DZ05PBw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5D06C101F7A6;
+        Mon, 26 Oct 2020 15:05:33 +0000 (UTC)
+Received: from idlethread.redhat.com (unknown [10.40.192.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 56C7E19728;
+        Mon, 26 Oct 2020 15:05:31 +0000 (UTC)
+From:   Roberto Bergantinos Corpas <rbergant@redhat.com>
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] sunrpc : make RPC channel buffer dynamic for slow case
+Date:   Mon, 26 Oct 2020 16:05:30 +0100
+Message-Id: <20201026150530.29019-1-rbergant@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8A4C335B-446F-4385-BA7C-643911FF9498@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 10:46:05AM -0400, Chuck Lever wrote:
-> 
-> 
-> > On Oct 26, 2020, at 10:43 AM, Alberto Gonzalez Iniesta <alberto.gonzalez@udima.es> wrote:
-> > 
-> > On Mon, Oct 26, 2020 at 09:58:17AM -0400, Chuck Lever wrote:
-> >>>> So all I notice from this one is the readdir EIO came from call_decode.
-> >>>> I suspect that means it failed in the xdr decoding.  Looks like xdr
-> >>>> decoding of the actual directory data (which is the complicated part) is
-> >>>> done later, so this means it failed decoding the header or verifier,
-> >>>> which is a little odd:
-> >>>> 
-> >>>>> Sep  8 16:03:23 portatil264 kernel: [15033.016276] RPC:  3284 call_decode result -5
-> >>>>> Sep  8 16:03:23 portatil264 kernel: [15033.016281] nfs41_sequence_process: Error 1 free the slot 
-> >>>>> Sep  8 16:03:23 portatil264 kernel: [15033.016286] RPC:       wake_up_first(00000000d3f50f4d "ForeChannel Slot table")
-> >>>>> Sep  8 16:03:23 portatil264 kernel: [15033.016288] nfs4_free_slot: slotid 0 highest_used_slotid 4294967295
-> >>>>> Sep  8 16:03:23 portatil264 kernel: [15033.016290] RPC:  3284 return 0, status -5
-> >>>>> Sep  8 16:03:23 portatil264 kernel: [15033.016291] RPC:  3284 release task
-> >>>>> Sep  8 16:03:23 portatil264 kernel: [15033.016295] RPC:       freeing buffer of size 4144 at 00000000a3649daf
-> >>>>> Sep  8 16:03:23 portatil264 kernel: [15033.016298] RPC:  3284 release request 0000000079df89b2
-> >>>>> Sep  8 16:03:23 portatil264 kernel: [15033.016300] RPC:       wake_up_first(00000000c5ee49ee "xprt_backlog")
-> >>>>> Sep  8 16:03:23 portatil264 kernel: [15033.016302] RPC:       rpc_release_client(00000000b930c343)
-> >>>>> Sep  8 16:03:23 portatil264 kernel: [15033.016304] RPC:  3284 freeing task
-> >>>>> Sep  8 16:03:23 portatil264 kernel: [15033.016309] _nfs4_proc_readdir: returns -5
-> >>>>> Sep  8 16:03:23 portatil264 kernel: [15033.016318] NFS: readdir(departamentos/innovacion) returns -5
-> >>> 
-> >>> Hi, Bruce et al.
-> >>> 
-> >>> Is there anything we can do to help debugging/fixing this? It's still
-> >>> biting our users with a +4.20.x kernel.
-> >> 
-> >> Alberto, can you share a snippet of a raw network capture that shows
-> >> the READDIR Reply that fails to decode?
-> > 
-> > Hi, Chuck.
-> > 
-> > Thanks for your reply. We're using "sec=krb5p", which makes the network
-> > capture useless :-(
-> 
-> You can plug keytabs into Wireshark to enable it to decrypt the traffic.
+RPC channel buffer size for slow case (user buffer bigger than
+one page) can be converted into dymanic and also allows us to
+prescind from queue_io_mutex
 
-Just skimming that range of history, there's some changes to the
-handling of gss sequence numbers, I wonder if there's a chance he could
-be hitting that?  You had a workload that would lead to calls dropping
-out of the sequence number window, didn't you, Chuck?  Is there a quick
-way to check whether that's happening?
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+---
+ net/sunrpc/cache.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---b.
+diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+index baef5ee43dbb..325393f75e17 100644
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -777,7 +777,6 @@ void cache_clean_deferred(void *owner)
+  */
+ 
+ static DEFINE_SPINLOCK(queue_lock);
+-static DEFINE_MUTEX(queue_io_mutex);
+ 
+ struct cache_queue {
+ 	struct list_head	list;
+@@ -908,14 +907,18 @@ static ssize_t cache_do_downcall(char *kaddr, const char __user *buf,
+ static ssize_t cache_slow_downcall(const char __user *buf,
+ 				   size_t count, struct cache_detail *cd)
+ {
+-	static char write_buf[8192]; /* protected by queue_io_mutex */
++	char *write_buf;
+ 	ssize_t ret = -EINVAL;
+ 
+-	if (count >= sizeof(write_buf))
++	if (count >= 32768) /* 32k is max userland buffer, lets check anyway */
+ 		goto out;
+-	mutex_lock(&queue_io_mutex);
++
++	write_buf = kvmalloc(count + 1, GFP_KERNEL);
++	if (!write_buf)
++		return -ENOMEM;
++
+ 	ret = cache_do_downcall(write_buf, buf, count, cd);
+-	mutex_unlock(&queue_io_mutex);
++	kvfree(write_buf);
+ out:
+ 	return ret;
+ }
+-- 
+2.21.0
+
