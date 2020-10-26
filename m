@@ -2,36 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6CEA299BD2
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Oct 2020 00:53:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21AA6299F99
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Oct 2020 01:24:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410121AbgJZXxf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Oct 2020 19:53:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58150 "EHLO mail.kernel.org"
+        id S2410379AbgJZXyP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Oct 2020 19:54:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410115AbgJZXxe (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 26 Oct 2020 19:53:34 -0400
+        id S2410368AbgJZXyO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 26 Oct 2020 19:54:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A1A4221FC;
-        Mon, 26 Oct 2020 23:53:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1923E221F8;
+        Mon, 26 Oct 2020 23:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603756413;
-        bh=jq3+6+vpC0K076l/7Ii6puB7IWw6g2F3iSVyX/FnC3s=;
+        s=default; t=1603756453;
+        bh=/yDi3gbshJFjAfad5LA1t5ZG6Qb0CXX2KU/HWcpfXSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JXJlc2HIiBgMv9PlE33kWzrhBxYTdJiRjb2ASCJhJuv4GJMFCy1i5CGjLsHhoYe2G
-         /5mUzwSsH1fMfFww9xfYz+Gl6Nbhs8J9+saERjo8ZDlBfcZbr8Wu9lca5Xa2tS8UbC
-         etdoyUIHkAMevWgNU/yOHtluBJtrIxir8yYZNn1U=
+        b=zWAnFK+HLO2+hJ+SYWlpEHncHAzcZfGKYTb++laeeN3tNBdwFBxvbjb8QTysDz+SF
+         TPI7fgoq/BgFT3HH8Vg8L7J8H9Wl1Pop5+askc0axtuc6El06PRm9hkmdZcgIgo++a
+         S45fNMhH3o9x1iWDuxZK0YJKfDTzBcoqJnI1ts5I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 071/132] SUNRPC: Mitigate cond_resched() in xprt_transmit()
-Date:   Mon, 26 Oct 2020 19:51:03 -0400
-Message-Id: <20201026235205.1023962-71-sashal@kernel.org>
+Cc:     Hou Tao <houtao1@huawei.com>, Chuck Lever <chuck.lever@oracle.com>,
+        "J . Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 104/132] nfsd: rename delegation related tracepoints to make them less confusing
+Date:   Mon, 26 Oct 2020 19:51:36 -0400
+Message-Id: <20201026235205.1023962-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20201026235205.1023962-1-sashal@kernel.org>
 References: <20201026235205.1023962-1-sashal@kernel.org>
@@ -43,53 +42,73 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit 6f9f17287e78e5049931af2037b15b26d134a32a ]
+[ Upstream commit 3caf91757ced158e6c4a44d8b105bd7b3e1767d8 ]
 
-The original purpose of this expensive call is to prevent a long
-queue of requests from blocking other work.
+Now when a read delegation is given, two delegation related traces
+will be printed:
 
-The cond_resched() call is unnecessary after just a single send
-operation.
+    nfsd_deleg_open: client 5f45b854:e6058001 stateid 00000030:00000001
+    nfsd_deleg_none: client 5f45b854:e6058001 stateid 0000002f:00000001
 
-For longer queues, instead of invoking the kernel scheduler, simply
-release the transport send lock and return to the RPC scheduler.
+Although the intention is to let developers know two stateid are
+returned, the traces are confusing about whether or not a read delegation
+is handled out. So renaming trace_nfsd_deleg_none() to trace_nfsd_open()
+and trace_nfsd_deleg_open() to trace_nfsd_deleg_read() to make
+the intension clearer.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+The patched traces will be:
+
+    nfsd_deleg_read: client 5f48a967:b55b21cd stateid 00000003:00000001
+    nfsd_open: client 5f48a967:b55b21cd stateid 00000002:00000001
+
+Suggested-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprt.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4state.c | 4 ++--
+ fs/nfsd/trace.h     | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index d5cc5db9dbf39..b44099958c8bb 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1511,10 +1511,13 @@ xprt_transmit(struct rpc_task *task)
- {
- 	struct rpc_rqst *next, *req = task->tk_rqstp;
- 	struct rpc_xprt	*xprt = req->rq_xprt;
--	int status;
-+	int counter, status;
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index cea682ce8aa12..2d568d0e55f78 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -5100,7 +5100,7 @@ nfs4_open_delegation(struct svc_fh *fh, struct nfsd4_open *open,
  
- 	spin_lock(&xprt->queue_lock);
-+	counter = 0;
- 	while (!list_empty(&xprt->xmit_queue)) {
-+		if (++counter == 20)
-+			break;
- 		next = list_first_entry(&xprt->xmit_queue,
- 				struct rpc_rqst, rq_xmit);
- 		xprt_pin_rqst(next);
-@@ -1522,7 +1525,6 @@ xprt_transmit(struct rpc_task *task)
- 		status = xprt_request_transmit(next, task);
- 		if (status == -EBADMSG && next != req)
- 			status = 0;
--		cond_resched();
- 		spin_lock(&xprt->queue_lock);
- 		xprt_unpin_rqst(next);
- 		if (status == 0) {
+ 	memcpy(&open->op_delegate_stateid, &dp->dl_stid.sc_stateid, sizeof(dp->dl_stid.sc_stateid));
+ 
+-	trace_nfsd_deleg_open(&dp->dl_stid.sc_stateid);
++	trace_nfsd_deleg_read(&dp->dl_stid.sc_stateid);
+ 	open->op_delegate_type = NFS4_OPEN_DELEGATE_READ;
+ 	nfs4_put_stid(&dp->dl_stid);
+ 	return;
+@@ -5217,7 +5217,7 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
+ 	nfs4_open_delegation(current_fh, open, stp);
+ nodeleg:
+ 	status = nfs_ok;
+-	trace_nfsd_deleg_none(&stp->st_stid.sc_stateid);
++	trace_nfsd_open(&stp->st_stid.sc_stateid);
+ out:
+ 	/* 4.1 client trying to upgrade/downgrade delegation? */
+ 	if (open->op_delegate_type == NFS4_OPEN_DELEGATE_NONE && dp &&
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index 1861db1bdc670..99bf07800cd09 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -289,8 +289,8 @@ DEFINE_STATEID_EVENT(layout_recall_done);
+ DEFINE_STATEID_EVENT(layout_recall_fail);
+ DEFINE_STATEID_EVENT(layout_recall_release);
+ 
+-DEFINE_STATEID_EVENT(deleg_open);
+-DEFINE_STATEID_EVENT(deleg_none);
++DEFINE_STATEID_EVENT(open);
++DEFINE_STATEID_EVENT(deleg_read);
+ DEFINE_STATEID_EVENT(deleg_break);
+ DEFINE_STATEID_EVENT(deleg_recall);
+ 
 -- 
 2.25.1
 
