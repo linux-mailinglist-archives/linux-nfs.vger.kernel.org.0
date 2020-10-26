@@ -2,37 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 185F5299B70
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Oct 2020 00:51:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6CEA299BD2
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Oct 2020 00:53:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409408AbgJZXv0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Oct 2020 19:51:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52088 "EHLO mail.kernel.org"
+        id S2410121AbgJZXxf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Oct 2020 19:53:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409392AbgJZXvX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 26 Oct 2020 19:51:23 -0400
+        id S2410115AbgJZXxe (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 26 Oct 2020 19:53:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE98E20878;
-        Mon, 26 Oct 2020 23:51:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A1A4221FC;
+        Mon, 26 Oct 2020 23:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603756283;
-        bh=U4hNVg58GNMo2aZHHFPXyFqtWRWY2ACYYgvPmvKvbeg=;
+        s=default; t=1603756413;
+        bh=jq3+6+vpC0K076l/7Ii6puB7IWw6g2F3iSVyX/FnC3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pU5bBL9nh6+t+0z6o/NOiGP8sZOcCoEdyQsjjrm0TJc0m535KLwMgMDmvCBIw0xXF
-         t1a43FQYmY0TbVF3WiBuZQB2RtZwXIDpWhUQtOO7artc3UG+pATpnCs5NydPZYjoRh
-         1TcofB1GPFIvZNw6M3XLXYK5UZWe8ycQfvc4Cpbs=
+        b=JXJlc2HIiBgMv9PlE33kWzrhBxYTdJiRjb2ASCJhJuv4GJMFCy1i5CGjLsHhoYe2G
+         /5mUzwSsH1fMfFww9xfYz+Gl6Nbhs8J9+saERjo8ZDlBfcZbr8Wu9lca5Xa2tS8UbC
+         etdoyUIHkAMevWgNU/yOHtluBJtrIxir8yYZNn1U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.9 113/147] nfsd4: remove check_conflicting_opens warning
-Date:   Mon, 26 Oct 2020 19:48:31 -0400
-Message-Id: <20201026234905.1022767-113-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 071/132] SUNRPC: Mitigate cond_resched() in xprt_transmit()
+Date:   Mon, 26 Oct 2020 19:51:03 -0400
+Message-Id: <20201026235205.1023962-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201026234905.1022767-1-sashal@kernel.org>
-References: <20201026234905.1022767-1-sashal@kernel.org>
+In-Reply-To: <20201026235205.1023962-1-sashal@kernel.org>
+References: <20201026235205.1023962-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -41,31 +43,53 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 50747dd5e47bde3b7d7f839c84d0d3b554090497 ]
+[ Upstream commit 6f9f17287e78e5049931af2037b15b26d134a32a ]
 
-There are actually rare races where this is possible (e.g. if a new open
-intervenes between the read of i_writecount and the fi_fds).
+The original purpose of this expensive call is to prevent a long
+queue of requests from blocking other work.
 
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+The cond_resched() call is unnecessary after just a single send
+operation.
+
+For longer queues, instead of invoking the kernel scheduler, simply
+release the transport send lock and return to the RPC scheduler.
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 1 -
- 1 file changed, 1 deletion(-)
+ net/sunrpc/xprt.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 0525acfe31314..1f646a27481fb 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -4954,7 +4954,6 @@ static int nfsd4_check_conflicting_opens(struct nfs4_client *clp,
- 		writes--;
- 	if (fp->fi_fds[O_RDWR])
- 		writes--;
--	WARN_ON_ONCE(writes < 0);
- 	if (writes > 0)
- 		return -EAGAIN;
- 	spin_lock(&fp->fi_lock);
+diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+index d5cc5db9dbf39..b44099958c8bb 100644
+--- a/net/sunrpc/xprt.c
++++ b/net/sunrpc/xprt.c
+@@ -1511,10 +1511,13 @@ xprt_transmit(struct rpc_task *task)
+ {
+ 	struct rpc_rqst *next, *req = task->tk_rqstp;
+ 	struct rpc_xprt	*xprt = req->rq_xprt;
+-	int status;
++	int counter, status;
+ 
+ 	spin_lock(&xprt->queue_lock);
++	counter = 0;
+ 	while (!list_empty(&xprt->xmit_queue)) {
++		if (++counter == 20)
++			break;
+ 		next = list_first_entry(&xprt->xmit_queue,
+ 				struct rpc_rqst, rq_xmit);
+ 		xprt_pin_rqst(next);
+@@ -1522,7 +1525,6 @@ xprt_transmit(struct rpc_task *task)
+ 		status = xprt_request_transmit(next, task);
+ 		if (status == -EBADMSG && next != req)
+ 			status = 0;
+-		cond_resched();
+ 		spin_lock(&xprt->queue_lock);
+ 		xprt_unpin_rqst(next);
+ 		if (status == 0) {
 -- 
 2.25.1
 
