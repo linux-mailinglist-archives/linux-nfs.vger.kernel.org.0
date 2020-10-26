@@ -2,94 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A2E8297F4A
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Oct 2020 23:40:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73D52298A2C
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Oct 2020 11:15:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1764955AbgJXVjH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 24 Oct 2020 17:39:07 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:40534 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1765137AbgJXVjE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 24 Oct 2020 17:39:04 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09OLWhs4026528;
-        Sat, 24 Oct 2020 21:38:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2020-01-29;
- bh=e1lTqXLcN5w00NKyttGMzYu+FWxt1ovJrYWEOkDWP80=;
- b=uizQMAk8XeEwFWBgtyaffLpnOgTwYbnO3BRolFl3O+qB6A78XCN0Uiwo0S8xKyV7clHh
- dqSGMeIuymxy9nn5no08154e6K1TmsbByurMoXJS/kUNUN28wxSqJrSPXK7ZD+QBV5bM
- HAAAPdhHuv7lQ3WRkp0Nx6YNIURlmfSMwZmyp+2wVmNGAEO47mBOWwrUolmqpQnOMOnM
- 22azSbARDQLUzc3GSGPUDu0/GAODjQWUHvX6bweLtze1ZYTDcgFdjN95cbJWbYcMYr9I
- xNF2/93fRDfqJ9BjKLH1aKUa2kq87sZX6rtTTKXbTkWWz8zf4eKgO6V8Vm9tCS0DnAeU 7g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 34ccwmh3kx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 24 Oct 2020 21:38:56 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09OLVATd101963;
-        Sat, 24 Oct 2020 21:36:56 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3030.oracle.com with ESMTP id 34c9cr9gkq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 24 Oct 2020 21:36:56 +0000
-Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09OLau1K107516;
-        Sat, 24 Oct 2020 21:36:56 GMT
-Received: from cdmvmol7.uk.oracle.com (dhcp-10-175-182-191.vpn.oracle.com [10.175.182.191])
-        by userp3030.oracle.com with ESMTP id 34c9cr9gka-1;
-        Sat, 24 Oct 2020 21:36:55 +0000
-From:   Calum Mackay <calum.mackay@oracle.com>
-To:     trondmy@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] SUNRPC: correct error code comment in xs_tcp_setup_socket()
-Date:   Sat, 24 Oct 2020 22:36:38 +0100
-Message-Id: <20201024213638.16697-1-calum.mackay@oracle.com>
-X-Mailer: git-send-email 2.18.4
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9784 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 adultscore=0
- spamscore=0 mlxlogscore=999 clxscore=1011 malwarescore=0
- priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010240165
+        id S1769211AbgJZKOg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Oct 2020 06:14:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1768386AbgJZJrn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 26 Oct 2020 05:47:43 -0400
+Received: from mail.kernel.org (ip5f5ad5a1.dynamic.kabel-deutschland.de [95.90.213.161])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EED8420704;
+        Mon, 26 Oct 2020 09:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603705663;
+        bh=cm0DgYGOWrzWhAQoSMBRcvt64IJtdw58FGbr6XTCKpw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=eVW0Kh9mJcqAGqXz7Tc5qsUNbIaIgFX/WeC+zatS7ooQ/8UicBHJZrmUAlCfzOi8Z
+         Z3G9pE4WncM6z5lBJRPa0MaxWCbcMvUk/odUc8x8beaV9WUD43rG5a1Gz65xeeQio6
+         y/a4IWfbub0GY/Z9+LwShaWH6G7ez+RfSXK9oIXs=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kWz6J-0030sz-Ke; Mon, 26 Oct 2020 10:47:39 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>, Andrii Nakryiko <andriin@fb.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Florian Westphal <fw@strlen.de>,
+        Guillaume Nault <gnault@redhat.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Martin Varghese <martin.varghese@nokia.com>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Yadu Kishore <kyk.segfault@gmail.com>,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH RESEND 0/3] Fix wrong identifiers on kernel-doc markups
+Date:   Mon, 26 Oct 2020 10:47:35 +0100
+Message-Id: <cover.1603705472.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This comment was introduced by commit 6ea44adce915
-("SUNRPC: ensure correct error is reported by xs_tcp_setup_socket()").
+Hi Mark/Jakub,
 
-I believe EIO was a typo at the time: it should have been EAGAIN.
+As you requested, I'm resending the three -net patches
+from the /56 patch series I sent last Friday:
 
-Subsequently, commit 0445f92c5d53 ("SUNRPC: Fix disconnection races")
-changed that to ENOTCONN.
+	[PATCH v3 00/56] Fix several bad kernel-doc markups
 
-Rather than trying to keep the comment here in sync with the code in
-xprt_force_disconnect(), make the point in a non-specific way.
+They fix a few kernel-doc markups that are using different
+identifiers than the function/struct that they are actually
+documenting.
 
-Fixes: 6ea44adce915 ("SUNRPC: ensure correct error is reported by xs_tcp_setup_socket()")
-Signed-off-by: Calum Mackay <calum.mackay@oracle.com>
----
- net/sunrpc/xprtsock.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+This should help checking them via CI automation.
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 554e1bb4c1c7..3f11de5ad486 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -2278,10 +2278,8 @@ static void xs_tcp_setup_socket(struct work_struct *work)
- 	case -EHOSTUNREACH:
- 	case -EADDRINUSE:
- 	case -ENOBUFS:
--		/*
--		 * xs_tcp_force_close() wakes tasks with -EIO.
--		 * We need to wake them first to ensure the
--		 * correct error code.
-+		/* xs_tcp_force_close() wakes tasks with a fixed error code.
-+		 * We need to wake them first to ensure the correct error code.
- 		 */
- 		xprt_wake_pending_tasks(xprt, status);
- 		xs_tcp_force_close(xprt);
+Regards,
+Mauro
+
+Mauro Carvalho Chehab (3):
+  net: phy: fix kernel-doc markups
+  net: datagram: fix some kernel-doc markups
+  net: core: fix some kernel-doc markups
+
+ drivers/net/phy/mdio_bus.c   |  2 +-
+ drivers/net/phy/phy-c45.c    |  2 +-
+ drivers/net/phy/phy.c        |  2 +-
+ drivers/net/phy/phy_device.c |  2 +-
+ drivers/net/phy/phylink.c    |  2 +-
+ include/linux/netdevice.h    | 11 +++++++++--
+ net/core/datagram.c          |  2 +-
+ net/core/dev.c               |  4 ++--
+ net/core/skbuff.c            |  2 +-
+ net/ethernet/eth.c           |  6 +++---
+ net/sunrpc/rpc_pipe.c        |  3 ++-
+ 11 files changed, 23 insertions(+), 15 deletions(-)
+
 -- 
-2.18.4
+2.26.2
+
 
