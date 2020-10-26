@@ -2,33 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7141F299047
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Oct 2020 15:56:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DEBF299068
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Oct 2020 16:02:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1782175AbgJZO4k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Oct 2020 10:56:40 -0400
-Received: from etc.inittab.org ([51.254.149.154]:45474 "EHLO etc.inittab.org"
+        id S1782929AbgJZPCt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Oct 2020 11:02:49 -0400
+Received: from fieldses.org ([173.255.197.46]:34068 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1782332AbgJZOyo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 26 Oct 2020 10:54:44 -0400
-Received: from var.inittab.org (249.171.116.91.static.reverse-mundo-r.com [91.116.171.249])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: smtp_auth_agi@correo-e.org)
-        by etc.inittab.org (Postfix) with ESMTPSA id C453EA10BA;
-        Mon, 26 Oct 2020 15:54:42 +0100 (CET)
-Received: by var.inittab.org (Postfix, from userid 1000)
-        id F2F65404E9; Mon, 26 Oct 2020 15:54:41 +0100 (CET)
-Date:   Mon, 26 Oct 2020 15:54:41 +0100
-From:   Alberto Gonzalez Iniesta <alberto.gonzalez@udima.es>
+        id S1782928AbgJZPCt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 26 Oct 2020 11:02:49 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id ADC93ABC; Mon, 26 Oct 2020 11:02:47 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org ADC93ABC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1603724567;
+        bh=kgEEm/ISndXcvQl2fVGsLNIuh3pbwL+P5lMUCVT1Cgc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yuJUzxhIn130rJg/ps6uqZ0Eu2dBodAlSjkuBSu4Qpyci0Ic5GhWt1k1Qg7YkEbfA
+         6B5dIDswfZPnbi7wgAUZE07Ne3bVcBJv34ajyrn7tqQAYDU3DNstqYOrfYaIZCwbl6
+         fIhP6CPOwhcUXbMIs1kzw55osLz9uA5Eo88adMrE=
+Date:   Mon, 26 Oct 2020 11:02:47 -0400
+From:   Bruce Fields <bfields@fieldses.org>
 To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Bruce Fields <bfields@fieldses.org>,
+Cc:     Alberto Gonzalez Iniesta <alberto.gonzalez@udima.es>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         Miguel Rodriguez <miguel.rodriguez@udima.es>,
         Isaac Marco Blancas <isaac.marco@udima.es>
 Subject: Re: Random IO errors on nfs clients running linux > 4.20
-Message-ID: <20201026145441.GO74269@var.inittab.org>
+Message-ID: <20201026150247.GB2417@fieldses.org>
 References: <20200429171527.GG2531021@var.inittab.org>
  <20200430173200.GE29491@fieldses.org>
  <20200909092900.GO189595@var.inittab.org>
@@ -38,10 +39,10 @@ References: <20200429171527.GG2531021@var.inittab.org>
  <20201026144358.GM74269@var.inittab.org>
  <8A4C335B-446F-4385-BA7C-643911FF9498@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 In-Reply-To: <8A4C335B-446F-4385-BA7C-643911FF9498@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -86,12 +87,11 @@ On Mon, Oct 26, 2020 at 10:46:05AM -0400, Chuck Lever wrote:
 > > capture useless :-(
 > 
 > You can plug keytabs into Wireshark to enable it to decrypt the traffic.
-> 
 
-Cool, I'll look into that then.
+Just skimming that range of history, there's some changes to the
+handling of gss sequence numbers, I wonder if there's a chance he could
+be hitting that?  You had a workload that would lead to calls dropping
+out of the sequence number window, didn't you, Chuck?  Is there a quick
+way to check whether that's happening?
 
-Thanks!
-
--- 
-Alberto González Iniesta             | Universidad a Distancia
-alberto.gonzalez@udima.es            | de Madrid
+--b.
