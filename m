@@ -2,58 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E993E299609
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Oct 2020 19:55:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3755729960A
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Oct 2020 19:55:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1781766AbgJZSzG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Oct 2020 14:55:06 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:40478 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1781712AbgJZSzG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Oct 2020 14:55:06 -0400
-Received: by mail-qv1-f67.google.com with SMTP id 63so2947090qva.7;
-        Mon, 26 Oct 2020 11:55:04 -0700 (PDT)
+        id S1782250AbgJZSzL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Oct 2020 14:55:11 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42940 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1781712AbgJZSzL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Oct 2020 14:55:11 -0400
+Received: by mail-qt1-f196.google.com with SMTP id h12so2461137qtc.9;
+        Mon, 26 Oct 2020 11:55:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=vWL+cDt2Y6NkYEnEYS+ArN4PXs78b+qtMN6zVKDF8iA=;
-        b=gY2e3wgJQP703ZlbsgliHpxkhLZ2q/WmGvwJMhOlub0gCZyWeeYlf9U84ECHLb7udK
-         wnsQjRuhff9H+sZ7ok6UGN5NScKZF3SHFTFT4e9OlXo87UP3ZiVd6HRZ3ZS11ccINmki
-         REG6zDsSdwgOTVvICW+KBcZSn8ypC1txOEmE3vVGM3XOw98UdBo/a3hkuiEJcO06IHIu
-         bzO3lKM40UsctgMbiiehJVVMp2ieaUhNa1JTQ3DBolmONnvhx+TW4omPylKe4L9ZK/Jr
-         Qec3pidANl2sal0ZxnN1cSTfeX8Orj7tvsNXxGlugM5rWgyxiKHZjpVuEr5ruaEa7J5H
-         DtMw==
+        bh=d+l+CZoRjizN0kcs9YlZbmHpHnFcD+aEO5hzRa2NF5k=;
+        b=NNdNmzL758T/bcUOfKSiggNKjF9VkYkI5w7jNCOhZXWG8oryLYCBQbfmYawR0g65+H
+         2pMlfJDS3DTFNhPa5uQYKFfun9jmslAYVgQh9sN/Zw176JbKXKz3sXCmqILVcUEsXgnM
+         f9xQ82k0BDEBqP63C5Y/ehV392/RvV8yZTyC0a2zMTr0UUgIMaZqQ1bqjRNlUVn3gpz5
+         ZxOCawoCvMMtvNJq7V15f6XeofHtYXrig+gurjcJEfhitvJp3bdlL9nlIaLa5mJlrzJ4
+         fjjawSFOY2jgDxyms29pZBI4TJqaMou8iMO0wYCc4AsAkNbw0K+Woa0Plg7cDK/2UkuO
+         /mFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=vWL+cDt2Y6NkYEnEYS+ArN4PXs78b+qtMN6zVKDF8iA=;
-        b=ng/umUVxucd7d54XcCx1Zj/1IAeHzZSG/v3W8Jc3Xxyy1sPhjZtPh0diZtY9TOE+PG
-         SAgkdvO88j6Oy0zEMKKaIAvHwEBCAsVdXnqllmGbXFk1excCE/fqhO5+1pgvBahXuni5
-         gCxKxwM9jbKtvYEBSMzcXCtn1tAqocLfIHZRO6Y+ibMblE+rDf7PNXVYD5sit+Y9/7V4
-         cAiqW8OmI3+aXQ++hml0JuNL9liwXl6BZAX9atco9tHwTCz5tLL2Ucygc/Pc8Ol5Gq/b
-         GvmHZxBHELKLDoVdAMQG6OH7j5erOPOOqO5cvINOB3Xa4ik5T0QjymFzbyoDvMfgn+YW
-         5CLg==
-X-Gm-Message-State: AOAM533a+AyUKrneA2j2WbpcErw+q4FsvP01MmJS70VK3IPo7tPlGdzN
-        U9iMw7cNfRiSDtxLiBfySO28ApIcBHc=
-X-Google-Smtp-Source: ABdhPJw0iIE6SRk66jTUS6IHSkT1b4m4ekqSX9jrl/Fu2jci4L5ovrBvbNk/nAK/9coczgN/NWUliQ==
-X-Received: by 2002:a05:6214:4af:: with SMTP id w15mr18231885qvz.51.1603738503654;
-        Mon, 26 Oct 2020 11:55:03 -0700 (PDT)
+        bh=d+l+CZoRjizN0kcs9YlZbmHpHnFcD+aEO5hzRa2NF5k=;
+        b=mrPX656vaRLNltba/dbO46UtXdkLjuh3HnVg4r+V+pnHSkgn2ZqkqjnA4PKOxRwBb9
+         K28zJB4tWuJOg9T+3Wxc9605qrqYSVKVdRtE6otlq5L39xPvZZw6aWJQsfHxm6ayOiYw
+         bP2IbUFKHSK4B4qkl6W4hO4bFd3LlvIaULWqkm5umYys9v5Xu7fHJl5gNX960J+RU8vd
+         QpK/ZTQFBCYfW3nfWfIv6T1w9SqsPnNTxY4W2qkAt2VfTRva8hj9OvDZQcDOelJKvHT1
+         0lQs7evNNkLILRMiHjtJ2e0wDGpC44EucW00HtibPSNC764Kzwr+5J5t7eMQYE2o2i1U
+         Tcgw==
+X-Gm-Message-State: AOAM530wutR19yKaiEESF3aKsgWWc7qOfn1MJROGukrRLahF0LhaDjXk
+        8D3kzH4gMjpIGQHylwXFWxqq7WKayzk=
+X-Google-Smtp-Source: ABdhPJwmBcRQUD4547itHdhlOYL0OQRcWBhrikvXNC06f9OumN9/efIrQ9j5g6QzcbrosvNEIEBXew==
+X-Received: by 2002:ac8:6f6f:: with SMTP id u15mr18983244qtv.115.1603738508885;
+        Mon, 26 Oct 2020 11:55:08 -0700 (PDT)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id s11sm6961635qks.64.2020.10.26.11.55.02
+        by smtp.gmail.com with ESMTPSA id c12sm7348333qtp.14.2020.10.26.11.55.07
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Oct 2020 11:55:02 -0700 (PDT)
+        Mon, 26 Oct 2020 11:55:08 -0700 (PDT)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 09QIt212013652;
-        Mon, 26 Oct 2020 18:55:02 GMT
-Subject: [PATCH 13/20] svcrdma: Support multiple write chunks when pulling up
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 09QIt7t4013655;
+        Mon, 26 Oct 2020 18:55:07 GMT
+Subject: [PATCH 14/20] svcrdma: Support multiple Write chunks in
+ svc_rdma_map_reply_msg()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Mon, 26 Oct 2020 14:55:02 -0400
-Message-ID: <160373850208.1886.1587096744698083631.stgit@klimt.1015granger.net>
+Date:   Mon, 26 Oct 2020 14:55:07 -0400
+Message-ID: <160373850716.1886.4046562444210479073.stgit@klimt.1015granger.net>
 In-Reply-To: <160373843299.1886.12604782813896379719.stgit@klimt.1015granger.net>
 References: <160373843299.1886.12604782813896379719.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -64,356 +65,276 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When counting the number of SGEs needed to construct a Send request,
-do not count result payloads. And, when copying the Reply message
-into the pull-up buffer, result payloads are not to be copied to the
-Send buffer.
+Refactor: svc_rdma_map_reply_msg() is restructured to DMA map only
+the parts of rq_res that do not contain a result payload.
+
+This change has been tested to confirm that it does not cause a
+regression in the no Write chunk and single Write chunk cases.
+Multiple Write chunks have not been tested.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc_rdma.h            |    2 
- include/trace/events/rpcrdma.h             |   20 ++-
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   14 +-
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c    |    9 +
- net/sunrpc/xprtrdma/svc_rdma_sendto.c      |  188 +++++++++++++++++-----------
- 5 files changed, 146 insertions(+), 87 deletions(-)
+ include/linux/sunrpc/svc_rdma.h       |    2 
+ include/trace/events/rpcrdma.h        |    1 
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c |  174 +++++++++++++++++++--------------
+ 3 files changed, 100 insertions(+), 77 deletions(-)
 
 diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index d9148787efff..7090af1a9791 100644
+index 7090af1a9791..e09fafba00d7 100644
 --- a/include/linux/sunrpc/svc_rdma.h
 +++ b/include/linux/sunrpc/svc_rdma.h
-@@ -182,6 +182,8 @@ extern void svc_rdma_handle_bc_reply(struct svc_rqst *rqstp,
- /* svc_rdma_recvfrom.c */
- extern void svc_rdma_recv_ctxts_destroy(struct svcxprt_rdma *rdma);
- extern bool svc_rdma_post_recvs(struct svcxprt_rdma *rdma);
-+extern struct svc_rdma_recv_ctxt *
-+		svc_rdma_recv_ctxt_get(struct svcxprt_rdma *rdma);
- extern void svc_rdma_recv_ctxt_put(struct svcxprt_rdma *rdma,
- 				   struct svc_rdma_recv_ctxt *ctxt);
- extern void svc_rdma_flush_recv_queues(struct svcxprt_rdma *rdma);
+@@ -213,7 +213,7 @@ extern int svc_rdma_send(struct svcxprt_rdma *rdma,
+ extern int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
+ 				  struct svc_rdma_send_ctxt *sctxt,
+ 				  const struct svc_rdma_recv_ctxt *rctxt,
+-				  struct xdr_buf *xdr);
++				  const struct xdr_buf *xdr);
+ extern void svc_rdma_send_error_msg(struct svcxprt_rdma *rdma,
+ 				    struct svc_rdma_send_ctxt *sctxt,
+ 				    struct svc_rdma_recv_ctxt *rctxt,
 diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index 5218e0f9596a..afc58accb9cf 100644
+index afc58accb9cf..054dedd0280c 100644
 --- a/include/trace/events/rpcrdma.h
 +++ b/include/trace/events/rpcrdma.h
-@@ -1805,20 +1805,30 @@ TRACE_EVENT(svcrdma_small_wrch_err,
+@@ -1687,6 +1687,7 @@ DECLARE_EVENT_CLASS(svcrdma_dma_map_class,
+ 				TP_ARGS(rdma, dma_addr, length))
  
- TRACE_EVENT(svcrdma_send_pullup,
- 	TP_PROTO(
--		unsigned int len
-+		const struct svc_rdma_send_ctxt *ctxt,
-+		unsigned int msglen
- 	),
+ DEFINE_SVC_DMA_EVENT(dma_map_page);
++DEFINE_SVC_DMA_EVENT(dma_map_err);
+ DEFINE_SVC_DMA_EVENT(dma_unmap_page);
  
--	TP_ARGS(len),
-+	TP_ARGS(ctxt, msglen),
- 
- 	TP_STRUCT__entry(
--		__field(unsigned int, len)
-+		__field(u32, cq_id)
-+		__field(int, completion_id)
-+		__field(unsigned int, hdrlen)
-+		__field(unsigned int, msglen)
- 	),
- 
- 	TP_fast_assign(
--		__entry->len = len;
-+		__entry->cq_id = ctxt->sc_cid.ci_queue_id;
-+		__entry->completion_id = ctxt->sc_cid.ci_completion_id;
-+		__entry->hdrlen = ctxt->sc_hdrbuf.len,
-+		__entry->msglen = msglen;
- 	),
- 
--	TP_printk("len=%u", __entry->len)
-+	TP_printk("cq_id=%u cid=%d hdr=%u msg=%u (total %u)",
-+		__entry->cq_id, __entry->completion_id,
-+		__entry->hdrlen, __entry->msglen,
-+		__entry->hdrlen + __entry->msglen)
- );
- 
- TRACE_EVENT(svcrdma_send_err,
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-index 5e7c4ba9e147..63f8be974df2 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-@@ -74,11 +74,17 @@ void svc_rdma_handle_bc_reply(struct svc_rqst *rqstp,
-  */
- static int svc_rdma_bc_sendto(struct svcxprt_rdma *rdma,
- 			      struct rpc_rqst *rqst,
--			      struct svc_rdma_send_ctxt *ctxt)
-+			      struct svc_rdma_send_ctxt *sctxt)
- {
-+	struct svc_rdma_recv_ctxt *rctxt;
- 	int ret;
- 
--	ret = svc_rdma_map_reply_msg(rdma, ctxt, NULL, &rqst->rq_snd_buf);
-+	rctxt = svc_rdma_recv_ctxt_get(rdma);
-+	if (!rctxt)
-+		return -EIO;
-+
-+	ret = svc_rdma_map_reply_msg(rdma, sctxt, rctxt, &rqst->rq_snd_buf);
-+	svc_rdma_recv_ctxt_put(rdma, rctxt);
- 	if (ret < 0)
- 		return -EIO;
- 
-@@ -86,8 +92,8 @@ static int svc_rdma_bc_sendto(struct svcxprt_rdma *rdma,
- 	 * the rq_buffer before all retransmits are complete.
- 	 */
- 	get_page(virt_to_page(rqst->rq_buffer));
--	ctxt->sc_send_wr.opcode = IB_WR_SEND;
--	return svc_rdma_send(rdma, ctxt);
-+	sctxt->sc_send_wr.opcode = IB_WR_SEND;
-+	return svc_rdma_send(rdma, sctxt);
- }
- 
- /* Server-side transport endpoint wants a whole page for its send
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index 7d44e9d2e7a3..af32c3ad45a6 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -194,8 +194,13 @@ void svc_rdma_recv_ctxts_destroy(struct svcxprt_rdma *rdma)
- 	}
- }
- 
--static struct svc_rdma_recv_ctxt *
--svc_rdma_recv_ctxt_get(struct svcxprt_rdma *rdma)
-+/**
-+ * svc_rdma_recv_ctxt_get - Allocate a recv_ctxt
-+ * @rdma: controlling svcxprt_rdma
-+ *
-+ * Returns a recv_ctxt or (rarely) NULL if none are available.
-+ */
-+struct svc_rdma_recv_ctxt *svc_rdma_recv_ctxt_get(struct svcxprt_rdma *rdma)
- {
- 	struct svc_rdma_recv_ctxt *ctxt;
- 	struct llist_node *node;
+ TRACE_EVENT(svcrdma_dma_map_rw_err,
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index fd8d62b1e640..b21beaa0114e 100644
+index b21beaa0114e..7d35bd6224ea 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -531,6 +531,45 @@ static int svc_rdma_dma_map_buf(struct svcxprt_rdma *rdma,
- 				     offset_in_page(base), len);
+@@ -496,39 +496,111 @@ svc_rdma_encode_reply_chunk(struct svc_rdma_recv_ctxt *rctxt,
+ 	return svc_rdma_encode_write_chunk(sctxt, chunk);
  }
  
-+struct svc_rdma_pullup_data {
-+	u8		*pd_dest;
-+	unsigned int	pd_length;
-+	unsigned int	pd_num_sges;
+-static int svc_rdma_dma_map_page(struct svcxprt_rdma *rdma,
+-				 struct svc_rdma_send_ctxt *ctxt,
+-				 struct page *page,
+-				 unsigned long offset,
+-				 unsigned int len)
++struct svc_rdma_map_data {
++	struct svcxprt_rdma		*md_rdma;
++	struct svc_rdma_send_ctxt	*md_ctxt;
 +};
 +
 +/**
-+ * svc_rdma_xb_count_sges - Count how many SGEs will be needed
++ * svc_rdma_page_dma_map - DMA map one page
++ * @data: pointer to arguments
++ * @page: struct page to DMA map
++ * @offset: offset into the page
++ * @len: number of bytes to map
++ *
++ * Returns:
++ *   %0 if DMA mapping was successful
++ *   %-EIO if the page cannot be DMA mapped
++ */
++static int svc_rdma_page_dma_map(void *data, struct page *page,
++				 unsigned long offset, unsigned int len)
+ {
++	struct svc_rdma_map_data *args = data;
++	struct svcxprt_rdma *rdma = args->md_rdma;
++	struct svc_rdma_send_ctxt *ctxt = args->md_ctxt;
+ 	struct ib_device *dev = rdma->sc_cm_id->device;
+ 	dma_addr_t dma_addr;
+ 
++	++ctxt->sc_cur_sge_no;
++
+ 	dma_addr = ib_dma_map_page(dev, page, offset, len, DMA_TO_DEVICE);
+-	trace_svcrdma_dma_map_page(rdma, dma_addr, len);
+ 	if (ib_dma_mapping_error(dev, dma_addr))
+ 		goto out_maperr;
+ 
++	trace_svcrdma_dma_map_page(rdma, dma_addr, len);
+ 	ctxt->sc_sges[ctxt->sc_cur_sge_no].addr = dma_addr;
+ 	ctxt->sc_sges[ctxt->sc_cur_sge_no].length = len;
+ 	ctxt->sc_send_wr.num_sge++;
+ 	return 0;
+ 
+ out_maperr:
++	trace_svcrdma_dma_map_err(rdma, dma_addr, len);
+ 	return -EIO;
+ }
+ 
+-/* ib_dma_map_page() is used here because svc_rdma_dma_unmap()
++/**
++ * svc_rdma_iov_dma_map - DMA map an iovec
++ * @data: pointer to arguments
++ * @iov: kvec to DMA map
++ *
++ * ib_dma_map_page() is used here because svc_rdma_dma_unmap()
+  * handles DMA-unmap and it uses ib_dma_unmap_page() exclusively.
++ *
++ * Returns:
++ *   %0 if DMA mapping was successful
++ *   %-EIO if the iovec cannot be DMA mapped
+  */
+-static int svc_rdma_dma_map_buf(struct svcxprt_rdma *rdma,
+-				struct svc_rdma_send_ctxt *ctxt,
+-				unsigned char *base,
+-				unsigned int len)
++static int svc_rdma_iov_dma_map(void *data, const struct kvec *iov)
+ {
+-	return svc_rdma_dma_map_page(rdma, ctxt, virt_to_page(base),
+-				     offset_in_page(base), len);
++	if (!iov->iov_len)
++		return 0;
++	return svc_rdma_page_dma_map(data, virt_to_page(iov->iov_base),
++				     offset_in_page(iov->iov_base),
++				     iov->iov_len);
++}
++
++/**
++ * svc_rdma_xb_dma_map - DMA map all segments of an xdr_buf
 + * @xdr: xdr_buf containing portion of an RPC message to transmit
 + * @data: pointer to arguments
 + *
 + * Returns:
-+ *   Number of SGEs needed to Send the contents of @xdr inline
-+ */
-+static int svc_rdma_xb_count_sges(const struct xdr_buf *xdr,
-+				  void *data)
-+{
-+	struct svc_rdma_pullup_data *args = data;
-+	unsigned int remaining;
-+	unsigned long offset;
-+
-+	if (xdr->head[0].iov_len)
-+		++args->pd_num_sges;
-+
-+	offset = offset_in_page(xdr->page_base);
-+	remaining = xdr->page_len;
-+	while (remaining) {
-+		++args->pd_num_sges;
-+		remaining -= min_t(u32, PAGE_SIZE - offset, remaining);
-+		offset = 0;
-+	}
-+
-+	if (xdr->tail[0].iov_len)
-+		++args->pd_num_sges;
-+
-+	args->pd_length += xdr->len;
-+	return 0;
-+}
-+
- /**
-  * svc_rdma_pull_up_needed - Determine whether to use pull-up
-  * @rdma: controlling transport
-@@ -539,50 +578,71 @@ static int svc_rdma_dma_map_buf(struct svcxprt_rdma *rdma,
-  * @xdr: xdr_buf containing RPC message to transmit
-  *
-  * Returns:
-- *	%true if pull-up must be used
-- *	%false otherwise
-+ *   %true if pull-up must be used
-+ *   %false otherwise
-  */
--static bool svc_rdma_pull_up_needed(struct svcxprt_rdma *rdma,
--				    struct svc_rdma_send_ctxt *sctxt,
-+static bool svc_rdma_pull_up_needed(const struct svcxprt_rdma *rdma,
-+				    const struct svc_rdma_send_ctxt *sctxt,
- 				    const struct svc_rdma_recv_ctxt *rctxt,
--				    struct xdr_buf *xdr)
-+				    const struct xdr_buf *xdr)
- {
--	bool write_chunk_present = rctxt && rctxt->rc_write_list;
--	int elements;
-+	/* Resources needed for the transport header */
-+	struct svc_rdma_pullup_data args = {
-+		.pd_length	= sctxt->sc_hdrbuf.len,
-+		.pd_num_sges	= 1,
-+	};
-+	int ret;
- 
--	/* For small messages, copying bytes is cheaper than DMA mapping.
--	 */
--	if (!write_chunk_present &&
--	    sctxt->sc_hdrbuf.len + xdr->len < RPCRDMA_PULLUP_THRESH)
-+	ret = pcl_process_nonpayloads(&rctxt->rc_write_pcl, xdr,
-+				      svc_rdma_xb_count_sges, &args);
-+	if (ret < 0)
-+		return false;
-+
-+	if (args.pd_length < RPCRDMA_PULLUP_THRESH)
- 		return true;
-+	return args.pd_num_sges >= rdma->sc_max_send_sges;
-+}
- 
--	/* Check whether the xdr_buf has more elements than can
--	 * fit in a single RDMA Send.
--	 */
--	/* xdr->head */
--	elements = 1;
--
--	/* xdr->pages */
--	if (!rctxt || !rctxt->rc_write_list) {
--		unsigned int remaining;
--		unsigned long pageoff;
--
--		pageoff = xdr->page_base & ~PAGE_MASK;
--		remaining = xdr->page_len;
--		while (remaining) {
--			++elements;
--			remaining -= min_t(u32, PAGE_SIZE - pageoff,
--					   remaining);
--			pageoff = 0;
--		}
-+/**
-+ * svc_rdma_xb_linearize - Copy region of xdr_buf to flat buffer
-+ * @xdr: xdr_buf containing portion of an RPC message to copy
-+ * @data: pointer to arguments
++ *   %0 if DMA mapping was successful
++ *   %-EIO if DMA mapping failed
 + *
-+ * Returns:
-+ *   Always zero.
++ * On failure, any DMA mappings that have been already done must be
++ * unmapped by the caller.
 + */
-+static int svc_rdma_xb_linearize(const struct xdr_buf *xdr,
-+				 void *data)
++static int svc_rdma_xb_dma_map(const struct xdr_buf *xdr, void *data)
 +{
-+	struct svc_rdma_pullup_data *args = data;
 +	unsigned int len, remaining;
 +	unsigned long pageoff;
 +	struct page **ppages;
++	int ret;
 +
-+	if (xdr->head[0].iov_len) {
-+		memcpy(args->pd_dest, xdr->head[0].iov_base, xdr->head[0].iov_len);
-+		args->pd_dest += xdr->head[0].iov_len;
- 	}
- 
--	/* xdr->tail */
--	if (xdr->tail[0].iov_len)
--		++elements;
++	ret = svc_rdma_iov_dma_map(data, &xdr->head[0]);
++	if (ret < 0)
++		return ret;
++
 +	ppages = xdr->pages + (xdr->page_base >> PAGE_SHIFT);
 +	pageoff = offset_in_page(xdr->page_base);
 +	remaining = xdr->page_len;
 +	while (remaining) {
 +		len = min_t(u32, PAGE_SIZE - pageoff, remaining);
-+		memcpy(args->pd_dest, page_address(*ppages) + pageoff, len);
++
++		ret = svc_rdma_page_dma_map(data, *ppages++, pageoff, len);
++		if (ret < 0)
++			return ret;
++
 +		remaining -= len;
-+		args->pd_dest += len;
 +		pageoff = 0;
-+		ppages++;
-+	}
- 
--	/* assume 1 SGE is needed for the transport header */
--	return elements >= rdma->sc_max_send_sges;
-+	if (xdr->tail[0].iov_len) {
-+		memcpy(args->pd_dest, xdr->tail[0].iov_base, xdr->tail[0].iov_len);
-+		args->pd_dest += xdr->tail[0].iov_len;
 +	}
 +
-+	args->pd_length += xdr->len;
-+	return 0;
- }
- 
- /**
-@@ -595,54 +655,30 @@ static bool svc_rdma_pull_up_needed(struct svcxprt_rdma *rdma,
-  * The device is not capable of sending the reply directly.
-  * Assemble the elements of @xdr into the transport header buffer.
-  *
-- * Returns zero on success, or a negative errno on failure.
-+ * Assumptions:
-+ *  pull_up_needed has determined that @xdr will fit in the buffer.
-+ *
-+ * Returns:
-+ *   %0 if pull-up was successful
-+ *   %-EMSGSIZE if a buffer manipulation problem occurred
-  */
--static int svc_rdma_pull_up_reply_msg(struct svcxprt_rdma *rdma,
-+static int svc_rdma_pull_up_reply_msg(const struct svcxprt_rdma *rdma,
- 				      struct svc_rdma_send_ctxt *sctxt,
- 				      const struct svc_rdma_recv_ctxt *rctxt,
- 				      const struct xdr_buf *xdr)
- {
--	unsigned char *dst, *tailbase;
--	unsigned int taillen;
--
--	dst = sctxt->sc_xprt_buf + sctxt->sc_hdrbuf.len;
--	memcpy(dst, xdr->head[0].iov_base, xdr->head[0].iov_len);
--	dst += xdr->head[0].iov_len;
--
--	tailbase = xdr->tail[0].iov_base;
--	taillen = xdr->tail[0].iov_len;
--	if (rctxt && rctxt->rc_write_list) {
--		u32 xdrpad;
--
--		xdrpad = xdr_pad_size(xdr->page_len);
--		if (taillen && xdrpad) {
--			tailbase += xdrpad;
--			taillen -= xdrpad;
--		}
--	} else {
--		unsigned int len, remaining;
--		unsigned long pageoff;
--		struct page **ppages;
--
--		ppages = xdr->pages + (xdr->page_base >> PAGE_SHIFT);
--		pageoff = xdr->page_base & ~PAGE_MASK;
--		remaining = xdr->page_len;
--		while (remaining) {
--			len = min_t(u32, PAGE_SIZE - pageoff, remaining);
--
--			memcpy(dst, page_address(*ppages) + pageoff, len);
--			remaining -= len;
--			dst += len;
--			pageoff = 0;
--			ppages++;
--		}
--	}
-+	struct svc_rdma_pullup_data args = {
-+		.pd_dest	= sctxt->sc_xprt_buf + sctxt->sc_hdrbuf.len,
-+	};
-+	int ret;
- 
--	if (taillen)
--		memcpy(dst, tailbase, taillen);
-+	ret = pcl_process_nonpayloads(&rctxt->rc_write_pcl, xdr,
-+				      svc_rdma_xb_linearize, &args);
++	ret = svc_rdma_iov_dma_map(data, &xdr->tail[0]);
 +	if (ret < 0)
 +		return ret;
- 
--	sctxt->sc_sges[0].length += xdr->len;
--	trace_svcrdma_send_pullup(sctxt->sc_sges[0].length);
-+	sctxt->sc_sges[0].length = sctxt->sc_hdrbuf.len + args.pd_length;
-+	trace_svcrdma_send_pullup(sctxt, args.pd_length);
- 	return 0;
++
++	return xdr->len;
  }
  
+ struct svc_rdma_pullup_data {
+@@ -688,22 +760,22 @@ static int svc_rdma_pull_up_reply_msg(const struct svcxprt_rdma *rdma,
+  * @rctxt: Write and Reply chunks provided by client
+  * @xdr: prepared xdr_buf containing RPC message
+  *
+- * Load the xdr_buf into the ctxt's sge array, and DMA map each
+- * element as it is added. The Send WR's num_sge field is set.
++ * Returns:
++ *   %0 if DMA mapping was successful.
++ *   %-EMSGSIZE if a buffer manipulation problem occurred
++ *   %-EIO if DMA mapping failed
+  *
+- * Returns zero on success, or a negative errno on failure.
++ * The Send WR's num_sge field is set in all cases.
+  */
+ int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
+ 			   struct svc_rdma_send_ctxt *sctxt,
+ 			   const struct svc_rdma_recv_ctxt *rctxt,
+-			   struct xdr_buf *xdr)
++			   const struct xdr_buf *xdr)
+ {
+-	unsigned int len, remaining;
+-	unsigned long page_off;
+-	struct page **ppages;
+-	unsigned char *base;
+-	u32 xdr_pad;
+-	int ret;
++	struct svc_rdma_map_data args = {
++		.md_rdma	= rdma,
++		.md_ctxt	= sctxt,
++	};
+ 
+ 	/* Set up the (persistently-mapped) transport header SGE. */
+ 	sctxt->sc_send_wr.num_sge = 1;
+@@ -712,7 +784,7 @@ int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
+ 	/* If there is a Reply chunk, nothing follows the transport
+ 	 * header, and we're done here.
+ 	 */
+-	if (rctxt && rctxt->rc_reply_chunk)
++	if (!pcl_is_empty(&rctxt->rc_reply_pcl))
+ 		return 0;
+ 
+ 	/* For pull-up, svc_rdma_send() will sync the transport header.
+@@ -721,58 +793,8 @@ int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
+ 	if (svc_rdma_pull_up_needed(rdma, sctxt, rctxt, xdr))
+ 		return svc_rdma_pull_up_reply_msg(rdma, sctxt, rctxt, xdr);
+ 
+-	++sctxt->sc_cur_sge_no;
+-	ret = svc_rdma_dma_map_buf(rdma, sctxt,
+-				   xdr->head[0].iov_base,
+-				   xdr->head[0].iov_len);
+-	if (ret < 0)
+-		return ret;
+-
+-	/* If a Write chunk is present, the xdr_buf's page list
+-	 * is not included inline. However the Upper Layer may
+-	 * have added XDR padding in the tail buffer, and that
+-	 * should not be included inline.
+-	 */
+-	if (rctxt && rctxt->rc_write_list) {
+-		base = xdr->tail[0].iov_base;
+-		len = xdr->tail[0].iov_len;
+-		xdr_pad = xdr_pad_size(xdr->page_len);
+-
+-		if (len && xdr_pad) {
+-			base += xdr_pad;
+-			len -= xdr_pad;
+-		}
+-
+-		goto tail;
+-	}
+-
+-	ppages = xdr->pages + (xdr->page_base >> PAGE_SHIFT);
+-	page_off = xdr->page_base & ~PAGE_MASK;
+-	remaining = xdr->page_len;
+-	while (remaining) {
+-		len = min_t(u32, PAGE_SIZE - page_off, remaining);
+-
+-		++sctxt->sc_cur_sge_no;
+-		ret = svc_rdma_dma_map_page(rdma, sctxt, *ppages++,
+-					    page_off, len);
+-		if (ret < 0)
+-			return ret;
+-
+-		remaining -= len;
+-		page_off = 0;
+-	}
+-
+-	base = xdr->tail[0].iov_base;
+-	len = xdr->tail[0].iov_len;
+-tail:
+-	if (len) {
+-		++sctxt->sc_cur_sge_no;
+-		ret = svc_rdma_dma_map_buf(rdma, sctxt, base, len);
+-		if (ret < 0)
+-			return ret;
+-	}
+-
+-	return 0;
++	return pcl_process_nonpayloads(&rctxt->rc_write_pcl, xdr,
++				       svc_rdma_xb_dma_map, &args);
+ }
+ 
+ /* The svc_rqst and all resources it owns are released as soon as
 
 
