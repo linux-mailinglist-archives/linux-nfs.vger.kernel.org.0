@@ -2,124 +2,217 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1A9229B086
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Oct 2020 15:22:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97D1C29BDA2
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Oct 2020 17:50:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2509227AbgJ0OUd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 27 Oct 2020 10:20:33 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:34538 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1758596AbgJ0OUT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Oct 2020 10:20:19 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09REFU92044911;
-        Tue, 27 Oct 2020 14:20:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=DAQgQ08j/OaIwGQgAEOJBZdGf7wUU1XY8J9kawgRTzQ=;
- b=jSWx2kyMBsqQJIZTetmJlCucevuZ7wYg1QOWHjOK7vmyK/P6gryChn8QegkBx5BDawiQ
- Dizg242bl3R6cPj2Mr6MQ3bpQ7TS7VHCUEU3/xsPkJdVhwEZcdkGeE0Q72qZYdjuywFU
- NbzpHfe39rVerc0KkzFQuNQaE7RDg101KshqhbnUbettzeaCWMPeVbH6oe6qa1d+/g7s
- qrYKvctivo5PdORPPsgm7BHano5siopeoFbfwAlf33++yW3oUuz8/MLW1UZ/miQYdj+K
- tgSgCLryWNlMv1d+sK6xMfypd2qQT73Doblax7mzO0uLOgn/SXs+eRcB+aPOGhbSpRrI Dw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 34c9satcka-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 27 Oct 2020 14:20:10 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09REFRTx145068;
-        Tue, 27 Oct 2020 14:18:10 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 34cx6w17we-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Oct 2020 14:18:10 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09REI59H029549;
-        Tue, 27 Oct 2020 14:18:05 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 27 Oct 2020 07:18:05 -0700
-Date:   Tue, 27 Oct 2020 17:17:58 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Artur Molchanov <arturmolchanov@gmail.com>
-Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jakub Kicinski <kuba@kernel.org>, linux-nfs@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] net/sunrpc: clean up error checking in proc_do_xprt()
-Message-ID: <20201027141758.GA3488087@mwanda>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <031F93AC-744F-4E02-9948-1C1F5939714B@gmail.com>
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010270090
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 spamscore=0 phishscore=0 clxscore=1011 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010270090
+        id S1811889AbgJ0Qn0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 27 Oct 2020 12:43:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39025 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1811887AbgJ0QnU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Oct 2020 12:43:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603816998;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=mj6uaiHROCag3uZJ/gHJroorYDnXKuN4EyYRFIYPu8Y=;
+        b=SbUT6LrPKSG/kjhEPSpbNL37X7EqS95pLWLFJN05U8T6IvmsgoI1621azrkHaUCQe2IU+4
+        A+8ip+R7TFhvfL2PFtA2YPAVSij+jMd+5zp3Ro8XdkS11BXJM1Rlv3U/dAVL3h95weU9IY
+        Ml5NELPo7a9T9EfhM60DKYJDO3/RVn0=
+Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
+ [209.85.161.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-281-pwuN7ChKN2uSNgqqxehNkQ-1; Tue, 27 Oct 2020 12:43:14 -0400
+X-MC-Unique: pwuN7ChKN2uSNgqqxehNkQ-1
+Received: by mail-oo1-f72.google.com with SMTP id t19so1012177ook.18
+        for <linux-nfs@vger.kernel.org>; Tue, 27 Oct 2020 09:43:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mj6uaiHROCag3uZJ/gHJroorYDnXKuN4EyYRFIYPu8Y=;
+        b=nOXBxCw8eVcAPAVznNgvP55uPwqRjSRtsf0vyKKFDz4S3pFz7ZYGvn+0jqCFqyV4sF
+         z0E7pbXeU8EqVgWfySPUH0gNA8prYb4u0ROggw80Z0YEpR01WrfJs6F0DhF6NNjIc6JE
+         6UYjJP3CWok8N0xBt0qgqG6nbk9QrNC5586Z2DbOYNWSm9vRZFzS5zuY2X2n2SvGtO5F
+         Nb012bkXMZ4buhr/ZmDgIwW0vTkBz0hsy91WCyb45w/vuh4sB5tE9h+rrKaIEnSAaxD3
+         OEhSEbRtU2yHE7mMWmpB+q+wVzdIRGL4YhRb+z1fbeqrbrguP6Deq3KMVv9oQZPljjLP
+         H6cw==
+X-Gm-Message-State: AOAM530jQ9i70j40pr4B6zbAd3luDoc8Url9m1GZPYm1IoUiflFRODM/
+        Vv1VVQYtPviyufDOd0tWvHkGB39jkq2So3axktdSv4uh5rpjn4fDdugnudRJOM5cSRb54VMmvB5
+        ghZ6eQGJE/tacLBNI/Qb2
+X-Received: by 2002:aca:ef03:: with SMTP id n3mr2048471oih.67.1603816993832;
+        Tue, 27 Oct 2020 09:43:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw7y1eCX7WfRNi9tkZnfLpiDio1qtG9FKTpwYlLMD9SlPYp6FIE57BquNUx5oTk2cs+UUc+WA==
+X-Received: by 2002:aca:ef03:: with SMTP id n3mr2048435oih.67.1603816993577;
+        Tue, 27 Oct 2020 09:43:13 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id l89sm90968otc.6.2020.10.27.09.43.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Oct 2020 09:43:12 -0700 (PDT)
+From:   trix@redhat.com
+To:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Cc:     linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
+        qat-linux@intel.com, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net, alsa-devel@alsa-project.org,
+        linux-rpi-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+        =?UTF-8?q?=EF=BB=BFFrom=20=3A=20Tom=20Rix?= <trix@redhat.com>
+Subject: Subject: [RFC] clang tooling cleanups
+Date:   Tue, 27 Oct 2020 09:42:55 -0700
+Message-Id: <20201027164255.1573301-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-There are three changes but none of them should affect run time:
+This rfc will describe
+An upcoming treewide cleanup.
+How clang tooling was used to programatically do the clean up.
+Solicit opinions on how to generally use clang tooling.
 
-1)  You can't write to this file because the permissions are 0444.  But
-    it sort of looked like you could do a write and it would result in
-    a read.  Then it looked like proc_sys_call_handler() just ignored
-    it.  Which is confusing.  It's more clear if the "write" just
-    returns zero.
-2)  The "lenp" pointer is never NULL so that check can be removed.
-3)  In the original code, the "if (*lenp < 0)" check didn't work because
-    "*lenp" is unsigned.  Fortunately, the memory_read_from_buffer()
-    call will never fail in this context so it doesn't affect runtime.
+The clang warning -Wextra-semi-stmt produces about 10k warnings.
+Reviewing these, a subset of semicolon after a switch looks safe to
+fix all the time.  An example problem
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- net/sunrpc/sysctl.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+void foo(int a) {
+     switch(a) {
+     	       case 1:
+	       ...
+     }; <--- extra semicolon
+}
 
-diff --git a/net/sunrpc/sysctl.c b/net/sunrpc/sysctl.c
-index a18b36b5422d..04526bab4a06 100644
---- a/net/sunrpc/sysctl.c
-+++ b/net/sunrpc/sysctl.c
-@@ -63,19 +63,19 @@ static int proc_do_xprt(struct ctl_table *table, int write,
- 			void *buffer, size_t *lenp, loff_t *ppos)
- {
- 	char tmpbuf[256];
--	size_t len;
-+	ssize_t len;
- 
--	if ((*ppos && !write) || !*lenp) {
--		*lenp = 0;
-+	*lenp = 0;
-+
-+	if (write || *ppos)
- 		return 0;
--	}
-+
- 	len = svc_print_xprts(tmpbuf, sizeof(tmpbuf));
--	*lenp = memory_read_from_buffer(buffer, *lenp, ppos, tmpbuf, len);
-+	len = memory_read_from_buffer(buffer, *lenp, ppos, tmpbuf, len);
-+	if (len < 0)
-+		return len;
- 
--	if (*lenp < 0) {
--		*lenp = 0;
--		return -EINVAL;
--	}
-+	*lenp = len;
- 	return 0;
- }
- 
--- 
-2.28.0
+Treewide, there are about 100 problems in 50 files for x86_64 allyesconfig.
+These fixes will be the upcoming cleanup.
+
+clang already supports fixing this problem. Add to your command line
+
+  clang -c -Wextra-semi-stmt -Xclang -fixit foo.c
+
+  foo.c:8:3: warning: empty expression statement has no effect;
+    remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
+        };
+         ^
+  foo.c:8:3: note: FIX-IT applied suggested code changes
+  1 warning generated.
+
+The big problem is using this treewide is it will fix all 10k problems.
+10k changes to analyze and upstream is not practical.
+
+Another problem is the generic fixer only removes the semicolon.
+So empty lines with some tabs need to be manually cleaned.
+
+What is needed is a more precise fixer.
+
+Enter clang-tidy.
+https://clang.llvm.org/extra/clang-tidy/
+
+Already part of the static checker infrastructure, invoke on the clang
+build with
+  make clang-tidy
+
+It is only a matter of coding up a specific checker for the cleanup.
+Upstream this is review is happening here
+https://reviews.llvm.org/D90180
+
+The development of a checker/fixer is
+Start with a reproducer
+
+void foo (int a) {
+  switch (a) {};
+}
+
+Generate the abstract syntax tree (AST)
+
+  clang -Xclang -ast-dump foo.c
+
+`-FunctionDecl 
+  |-ParmVarDecl 
+  `-CompoundStmt 
+    |-SwitchStmt 
+    | |-ImplicitCastExpr
+    | | `-DeclRefExpr
+    | `-CompoundStmt
+    `-NullStmt
+
+Write a matcher to get you most of the way
+
+void SwitchSemiCheck::registerMatchers(MatchFinder *Finder) {
+  Finder->addMatcher(
+      compoundStmt(has(switchStmt().bind("switch"))).bind("comp"), this);
+}
+
+The 'bind' method is important, it allows a string to be associated
+with a node in the AST.  In this case these are
+
+`-FunctionDecl 
+  |-ParmVarDecl 
+  `-CompoundStmt <-------- comp
+    |-SwitchStmt <-------- switch
+    | |-ImplicitCastExpr
+    | | `-DeclRefExpr
+    | `-CompoundStmt
+    `-NullStmt
+
+When a match is made the 'check' method will be called.
+
+  void SwitchSemiCheck::check(const MatchFinder::MatchResult &Result) {
+    auto *C = Result.Nodes.getNodeAs<CompoundStmt>("comp");
+    auto *S = Result.Nodes.getNodeAs<SwitchStmt>("switch");
+
+This is where the string in the bind calls are changed to nodes
+
+`-FunctionDecl 
+  |-ParmVarDecl 
+  `-CompoundStmt <-------- comp, C
+    |-SwitchStmt <-------- switch, S
+    | |-ImplicitCastExpr
+    | | `-DeclRefExpr
+    | `-CompoundStmt
+    `-NullStmt <---------- looking for N
+
+And then more logic to find the NullStmt
+
+  auto Current = C->body_begin();
+  auto Next = Current;
+  Next++;
+  while (Next != C->body_end()) {
+    if (*Current == S) {
+      if (const auto *N = dyn_cast<NullStmt>(*Next)) {
+
+When it is found, a warning is printed and a FixItHint is proposed.
+
+  auto H = FixItHint::CreateReplacement(
+    SourceRange(S->getBody()->getEndLoc(), N->getSemiLoc()), "}");
+  diag(N->getSemiLoc(), "unneeded semicolon") << H;
+
+This fixit replaces from the end of switch to the semicolon with a
+'}'.  Because the end of the switch is '}' this has the effect of
+removing all the whitespace as well as the semicolon.
+
+Because of the checker's placement in clang-tidy existing linuxkernel
+checkers, all that was needed to fix the tree was to add a '-fix'to the
+build's clang-tidy call.
+
+I am looking for opinions on what we want to do specifically with
+cleanups and generally about other source-to-source programmatic
+changes to the code base.
+
+For cleanups, I think we need a new toplevel target
+
+clang-tidy-fix
+
+And an explicit list of fixers that have a very high (100%?) fix rate.
+
+Ideally a bot should make the changes, but a bot could also nag folks.
+Is there interest in a bot making the changes? Does one already exist?
+
+The general source-to-source is a bit blue sky.  Ex/ could automagicly
+refactor api, outline similar cut-n-pasted functions etc. Anything on
+someone's wishlist you want to try out ?
+
+Signed-off-by: Tom Rix <trix@redhat.com>
 
