@@ -2,101 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D752329CC81
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Oct 2020 00:01:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F13729CD00
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Oct 2020 02:38:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2507473AbgJ0XBc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 27 Oct 2020 19:01:32 -0400
-Received: from h-163-233.A498.priv.bahnhof.se ([155.4.163.233]:46196 "EHLO
-        mail.kenjo.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2507458AbgJ0XBc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 27 Oct 2020 19:01:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kenjo.org;
-         s=mail; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:
-        Date:Message-ID:References:To:From:Subject:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=v5xK9tCTnBBNZqDx0s3uy+VePVQ0lsAtfHgxXz3DHmo=; b=WnvW/JkK4ZKmWMCTxSuAyPft5P
-        oWDycHAjyvxIeI+JOqIMa2JCm8WSSK1Ujkc8sb03u0XLE02bWkR9LgF9liYktOJf5wuN2TAWB64OA
-        8J+nIIo34V2+Y+5NoQSv458hIWtBzHDqe0gTIxjK6JHSNBMsFDvCvqMn3yP7DehTwOZw=;
-Received: from brix.kenjo.org ([172.16.2.16])
-        by mail.kenjo.org with esmtp (Exim 4.89)
-        (envelope-from <ken@kenjo.org>)
-        id 1kXXy4-0006Uc-Dd
-        for linux-nfs@vger.kernel.org; Wed, 28 Oct 2020 00:01:28 +0100
-Subject: Re: nfs home directory and google chrome.
-From:   Kenneth Johansson <ken@kenjo.org>
-To:     linux-nfs@vger.kernel.org
-References: <0ba0cd0c-eccd-2362-9958-23cd1fa033df@kenjo.org>
-Message-ID: <df1c5127-4e48-672f-e2c4-4ce31f146952@kenjo.org>
-Date:   Wed, 28 Oct 2020 00:01:28 +0100
+        id S1726173AbgJ1Bij (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 27 Oct 2020 21:38:39 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52014 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1833049AbgJ0Xmf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Oct 2020 19:42:35 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RNdU5J033454;
+        Tue, 27 Oct 2020 23:42:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc : to : from :
+ subject : message-id : date : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=rIHsVK2Oy3+HUfVyT3NQyvNdOPBUsBa0ax0zbtnybL8=;
+ b=TFJiBvZigbKvtRAHuHGPt5V+TU6nGt0GZp3Sop1rZ0GHYmdfX+RfJQqqfTMMTKr5i3wF
+ aXFcBQHgZiceXh+8Ymo/0jftwgoB7tho88tuBm3IQxJVFvxAnoXncNRmOapOeeT1RzDj
+ 3B+ITf3WBfLkwSppYSquv4Z7KHL9YUL5UCv6ksthqSQYSkhDv9JAphHYFVY7J9Vm7hGk
+ OjgZ13jz6+vhpVHi27rmPm+KBX3sR0Nh+eu+Mlg5Sbe4tbqZr1PRVQXCwj907q1B5yo/
+ dROe/LT7bKDY1Gw+IY40ORaEAS5/GE7MFGCf473PrwLTnszfKybvsRJ/9cu999tXURyd yA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 34dgm42cea-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 27 Oct 2020 23:42:30 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RNeIir070761;
+        Tue, 27 Oct 2020 23:42:30 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 34cx1rb3g9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Oct 2020 23:42:30 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09RNgTcG014364;
+        Tue, 27 Oct 2020 23:42:29 GMT
+Received: from [10.175.221.126] (/10.175.221.126)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 27 Oct 2020 16:42:28 -0700
+Cc:     linux-nfs@vger.kernel.org, NeilBrown <neilb@suse.com>
+To:     stable@vger.kernel.org
+From:   Calum Mackay <calum.mackay@oracle.com>
+Subject: please cherry-pick for stable --- fd01b2597941 SUNRPC: ECONNREFUSED
+ should cause a rebind.
+Organization: Oracle
+Message-ID: <380083cd-f5f5-73fa-33ff-c5dde2e7bd02@oracle.com>
+Date:   Tue, 27 Oct 2020 23:42:27 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.2
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-In-Reply-To: <0ba0cd0c-eccd-2362-9958-23cd1fa033df@kenjo.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ suspectscore=13 malwarescore=0 mlxlogscore=965 mlxscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010270135
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ adultscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ suspectscore=13 clxscore=1011 mlxscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010270135
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-So this is just an update to how to avoid this problem.
+This commit:
 
-I switched to nfs v3 and no more issues. Since the switch chrome have 
-not stopped syncing with the google server even once. suspend resume 
-causes no issues and everything looks ok.  So it's clear that 
-google-chrome currently does not like nfs v4 and I need chrome to work 
-more than I need to run nfs v4.
+	fd01b2597941 SUNRPC: ECONNREFUSED should cause a rebind.
 
+(originally applied to v4.14-rc1) didn't appear to get a stable cc, 
+perhaps because it wasn't considered a common problem at the time.
 
-On 2020-10-04 13:53, Kenneth Johansson wrote:
-> So I have had for a long time problems with google chrome and suspend 
-> resume causing it to mangle its sqlite database.
->
-> it looks to only happen if I use nfs mounted home directory. I'm not 
-> sure exactly what is happening but lets first see if this happens to 
-> anybody else.
->
-> How to get the error.
->
-> 1. start google from a terminal with "google-chrome"
->
-> 2. suspend the computer
->
-> 3. wait a while. There is some type of minimum time here I do not know 
-> what its is but I basically get the error every time of I suspend in 
-> evening and resume in morning
->
-> 4. look for printout that looks like something like this
->
-> [16789:18181:1004/125852.529750:ERROR:database.cc(1692)] Passwords 
-> sqlite error 1034, errno 5: disk I/O error, sql: COMMIT
-> [16789:16829:1004/125852.529744:ERROR:database.cc(1692)] Web sqlite 
-> error 1034, errno 5: disk I/O error, sql: COMMIT
-> [16789:16829:1004/125852.530261:ERROR:database.cc(1692)] Web sqlite 
-> error 1034, errno 5: disk I/O error, sql: INSERT OR REPLACE INTO 
-> autofill_model_type_state (model_type, value) VALUES(?,?)
-> [16789:16789:1004/125852.563571:ERROR:sync_metadata_store_change_list.cc(34)] 
-> Autofill datatype error was encountered: Failed to update ModelTypeState.
-> [16789:19002:1004/125902.534103:ERROR:database.cc(1692)] History 
-> sqlite error 1034, errno 5: disk I/O error, sql: COMMIT
-> [16789:19002:1004/125902.536903:ERROR:database.cc(1692)] Thumbnail 
-> sqlite error 778, errno 5: disk I/O error, sql: COMMIT
->
->
-> [16789:19002:1004/130044.120379:ERROR:database.cc(1692)] Passwords 
-> sqlite error 1034, errno 5: disk I/O error, sql: INSERT OR REPLACE 
-> INTO sync_model_metadata (id, model_metadata) VALUES(1, ?)
-> [16789:16829:1004/130044.120388:ERROR:database.cc(1692)] Web sqlite 
-> error 1034, errno 5: disk I/O error, sql: INSERT OR REPLACE INTO 
-> autofill_model_type_state (model_type, value) VALUES(?,?)
->
->
-> and so on.  if you use google sync you can also check 
-> "chrome://sync-internals" to see if something is wrong with the database.
->
->
->
+A patch I'm shortly about to post, cc stable, depends on the above, so 
+could it please be cherry-picked for stable?
+
+It applies cleanly to both v4.4.240 & v4.9.240
+
+thank you,
+calum.
 
