@@ -2,100 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D36EF29A06D
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Oct 2020 01:31:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D9FA29A479
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Oct 2020 07:08:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409759AbgJZXwb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Oct 2020 19:52:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54926 "EHLO mail.kernel.org"
+        id S2506253AbgJ0GI2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 27 Oct 2020 02:08:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409749AbgJZXw3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 26 Oct 2020 19:52:29 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2506251AbgJ0GI2 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 27 Oct 2020 02:08:28 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84B03221F8;
-        Mon, 26 Oct 2020 23:52:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3760A207BB;
+        Tue, 27 Oct 2020 06:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603756349;
-        bh=M7m7F8XvewI0zgBxlsuaCVECm9BU7hsOxf77ZbhlsVM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WwxSVKLNuGQEyeUFX71T9t768UzTQ5z8Xs43Plr7LlEA/bMCPwAK6DHg6r3c7gBMh
-         WKqaLeINo/xlBJBz3uevd711d+SPm7Ua1DPicHEU/MyCWYLdcBCoXd9jUuFNP2bi1v
-         IuqAGn/NjNyrV1mEQRGJXy5kkpo/nZ76HwDR9dSE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Wysochanski <dwysocha@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 020/132] NFS4: Fix oops when copy_file_range is attempted with NFS4.0 source
-Date:   Mon, 26 Oct 2020 19:50:12 -0400
-Message-Id: <20201026235205.1023962-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201026235205.1023962-1-sashal@kernel.org>
-References: <20201026235205.1023962-1-sashal@kernel.org>
+        s=default; t=1603778907;
+        bh=WP3q6woHndwr1etIplF7KIz1C0FwXTTk/4sAmpv1O30=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fjTbBz6G5ue2iFFybKYFxFGw6fpEQQamv/3kluzAUqpRpiiae68YC+/GV3Pq61WzE
+         6pvFqHRqAm6ZNQpbeUc59J1QWWkxwYEIkkAHh8IdEdxDtBEV45pKibFKaYhkVTK0UI
+         JpmaolwdnM7OQ8F3ZkB4xJpdwAp9eXjp9W9Ka0CI=
+Date:   Tue, 27 Oct 2020 08:08:23 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH 00/20] NFSD support for multiple RPC/RDMA chunks
+Message-ID: <20201027060823.GF4821@unreal>
+References: <160373843299.1886.12604782813896379719.stgit@klimt.1015granger.net>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <160373843299.1886.12604782813896379719.stgit@klimt.1015granger.net>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Dave Wysochanski <dwysocha@redhat.com>
+On Mon, Oct 26, 2020 at 02:53:53PM -0400, Chuck Lever wrote:
+> This series implements support for multiple RPC/RDMA chunks per RPC
+> transaction. This is one of the few remaining generalities that the
+> Linux NFS/RDMA server implementation lacks.
+>
+> There is currently one known NFS/RDMA client implementation that can
+> send multiple chunks per RPC, and that is Solaris. Multiple chunks
+> are rare enough that the Linux NFS/RDMA implementation has been
+> successful without this support for many years.
 
-[ Upstream commit d8a6ad913c286d4763ae20b14c02fe6f39d7cd9f ]
+So why do we need it? Solaris is dead, and like you wrote Linux systems
+work without this feature just fine, what are the benefits? Who will use it?
 
-The following oops is seen during xfstest/565 when the 'test'
-(source of the copy) is NFS4.0 and 'scratch' (destination) is NFS4.2
-[   59.692458] run fstests generic/565 at 2020-08-01 05:50:35
-[   60.613588] BUG: kernel NULL pointer dereference, address: 0000000000000008
-[   60.624970] #PF: supervisor read access in kernel mode
-[   60.627671] #PF: error_code(0x0000) - not-present page
-[   60.630347] PGD 0 P4D 0
-[   60.631853] Oops: 0000 [#1] SMP PTI
-[   60.634086] CPU: 6 PID: 2828 Comm: xfs_io Kdump: loaded Not tainted 5.8.0-rc3 #1
-[   60.637676] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-[   60.639901] RIP: 0010:nfs4_check_serverowner_major_id+0x5/0x30 [nfsv4]
-[   60.642719] Code: 89 ff e8 3e b3 b8 e1 e9 71 fe ff ff 41 bc da d8 ff ff e9 c3 fe ff ff e8 e9 9d 08 e2 66 0f 1f 84 00 00 00 00 00 66 66 66 66 90 <8b> 57 08 31 c0 3b 56 08 75 12 48 83 c6 0c 48 83 c7 0c e8 c4 97 bb
-[   60.652629] RSP: 0018:ffffc265417f7e10 EFLAGS: 00010287
-[   60.655379] RAX: ffffa0664b066400 RBX: 0000000000000000 RCX: 0000000000000001
-[   60.658754] RDX: ffffa066725fb000 RSI: ffffa066725fd000 RDI: 0000000000000000
-[   60.662292] RBP: 0000000000020000 R08: 0000000000020000 R09: 0000000000000000
-[   60.666189] R10: 0000000000000003 R11: 0000000000000000 R12: ffffa06648258d00
-[   60.669914] R13: 0000000000000000 R14: 0000000000000000 R15: ffffa06648258100
-[   60.673645] FS:  00007faa9fb35800(0000) GS:ffffa06677d80000(0000) knlGS:0000000000000000
-[   60.677698] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   60.680773] CR2: 0000000000000008 CR3: 0000000203f14000 CR4: 00000000000406e0
-[   60.684476] Call Trace:
-[   60.685809]  nfs4_copy_file_range+0xfc/0x230 [nfsv4]
-[   60.688704]  vfs_copy_file_range+0x2ee/0x310
-[   60.691104]  __x64_sys_copy_file_range+0xd6/0x210
-[   60.693527]  do_syscall_64+0x4d/0x90
-[   60.695512]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   60.698006] RIP: 0033:0x7faa9febc1bd
-
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/nfs4file.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index a339707654673..af84787aa0631 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -145,7 +145,8 @@ static ssize_t __nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
- 	/* Only offload copy if superblock is the same */
- 	if (file_in->f_op != &nfs4_file_operations)
- 		return -EXDEV;
--	if (!nfs_server_capable(file_inode(file_out), NFS_CAP_COPY))
-+	if (!nfs_server_capable(file_inode(file_out), NFS_CAP_COPY) ||
-+	    !nfs_server_capable(file_inode(file_in), NFS_CAP_COPY))
- 		return -EOPNOTSUPP;
- 	if (file_inode(file_in) == file_inode(file_out))
- 		return -EOPNOTSUPP;
--- 
-2.25.1
-
+Thanks
