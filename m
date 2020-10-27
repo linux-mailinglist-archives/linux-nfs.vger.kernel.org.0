@@ -2,227 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BA3E29CABD
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Oct 2020 21:53:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D752329CC81
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Oct 2020 00:01:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1829301AbgJ0Ux3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 27 Oct 2020 16:53:29 -0400
-Received: from fieldses.org ([173.255.197.46]:45906 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1829279AbgJ0Ux3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 27 Oct 2020 16:53:29 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 38D976814; Tue, 27 Oct 2020 16:53:27 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 38D976814
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1603832007;
-        bh=udMB4klfObKe+kmSusmH9Qgg92RhbS7M1xRkA4YrwDg=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=EkoKQssiwNf9h/QyoUSuYbUQB6WhcTBQbfItG4CJS6AOZ/TLO2TSYA69lcOQfkZ1U
-         XjxvthfeCEzwLF5TytH2obu1Q63E5DujFcBYcGqgdtmZcaKBbxvAx7469GI5bYI8gE
-         zFhS/yijbe3qp7DrDVhM2A3J+Y+N7PbMqgMwNK3A=
-Date:   Tue, 27 Oct 2020 16:53:27 -0400
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH 04/20] SUNRPC: Rename svc_encode_read_payload()
-Message-ID: <20201027205327.GC4697@fieldses.org>
-References: <160373843299.1886.12604782813896379719.stgit@klimt.1015granger.net>
- <160373845420.1886.3075276814923041440.stgit@klimt.1015granger.net>
+        id S2507473AbgJ0XBc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 27 Oct 2020 19:01:32 -0400
+Received: from h-163-233.A498.priv.bahnhof.se ([155.4.163.233]:46196 "EHLO
+        mail.kenjo.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2507458AbgJ0XBc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 27 Oct 2020 19:01:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kenjo.org;
+         s=mail; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:
+        Date:Message-ID:References:To:From:Subject:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=v5xK9tCTnBBNZqDx0s3uy+VePVQ0lsAtfHgxXz3DHmo=; b=WnvW/JkK4ZKmWMCTxSuAyPft5P
+        oWDycHAjyvxIeI+JOqIMa2JCm8WSSK1Ujkc8sb03u0XLE02bWkR9LgF9liYktOJf5wuN2TAWB64OA
+        8J+nIIo34V2+Y+5NoQSv458hIWtBzHDqe0gTIxjK6JHSNBMsFDvCvqMn3yP7DehTwOZw=;
+Received: from brix.kenjo.org ([172.16.2.16])
+        by mail.kenjo.org with esmtp (Exim 4.89)
+        (envelope-from <ken@kenjo.org>)
+        id 1kXXy4-0006Uc-Dd
+        for linux-nfs@vger.kernel.org; Wed, 28 Oct 2020 00:01:28 +0100
+Subject: Re: nfs home directory and google chrome.
+From:   Kenneth Johansson <ken@kenjo.org>
+To:     linux-nfs@vger.kernel.org
+References: <0ba0cd0c-eccd-2362-9958-23cd1fa033df@kenjo.org>
+Message-ID: <df1c5127-4e48-672f-e2c4-4ce31f146952@kenjo.org>
+Date:   Wed, 28 Oct 2020 00:01:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <160373845420.1886.3075276814923041440.stgit@klimt.1015granger.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+In-Reply-To: <0ba0cd0c-eccd-2362-9958-23cd1fa033df@kenjo.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 02:54:14PM -0400, Chuck Lever wrote:
-> Clean up: "result payload" is a less confusing name for these
-> payloads. "READ payload" reflects only the NFS usage.
-> 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/nfs4xdr.c                        |    2 +-
->  include/linux/sunrpc/svc.h               |    6 +++---
->  include/linux/sunrpc/svc_rdma.h          |    4 ++--
->  include/linux/sunrpc/svc_xprt.h          |    4 ++--
->  net/sunrpc/svc.c                         |   11 ++++++-----
->  net/sunrpc/svcsock.c                     |    8 ++++----
->  net/sunrpc/xprtrdma/svc_rdma_sendto.c    |    8 ++++----
->  net/sunrpc/xprtrdma/svc_rdma_transport.c |    2 +-
->  8 files changed, 23 insertions(+), 22 deletions(-)
-> 
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 833a2c64dfe8..7e24fb3ca36e 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -3829,7 +3829,7 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
->  	read->rd_length = maxcount;
->  	if (nfserr)
->  		return nfserr;
-> -	if (svc_encode_read_payload(resp->rqstp, starting_len + 8, maxcount))
-> +	if (svc_encode_result_payload(resp->rqstp, starting_len + 8, maxcount))
->  		return nfserr_io;
+So this is just an update to how to avoid this problem.
 
-Why does this call check for an error return while the
-svc_encode_result_payload() calls in the next patch don't?
+I switched to nfs v3 and no more issues. Since the switch chrome have 
+not stopped syncing with the google server even once. suspend resume 
+causes no issues and everything looks ok.  So it's clear that 
+google-chrome currently does not like nfs v4 and I need chrome to work 
+more than I need to run nfs v4.
 
---b.
 
->  	xdr_truncate_encode(xdr, starting_len + 8 + xdr_align_size(maxcount));
->  
-> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> index 386628b36bc7..c220b734fa69 100644
-> --- a/include/linux/sunrpc/svc.h
-> +++ b/include/linux/sunrpc/svc.h
-> @@ -519,9 +519,9 @@ void		   svc_wake_up(struct svc_serv *);
->  void		   svc_reserve(struct svc_rqst *rqstp, int space);
->  struct svc_pool *  svc_pool_for_cpu(struct svc_serv *serv, int cpu);
->  char *		   svc_print_addr(struct svc_rqst *, char *, size_t);
-> -int		   svc_encode_read_payload(struct svc_rqst *rqstp,
-> -					   unsigned int offset,
-> -					   unsigned int length);
-> +int		   svc_encode_result_payload(struct svc_rqst *rqstp,
-> +					     unsigned int offset,
-> +					     unsigned int length);
->  unsigned int	   svc_fill_write_vector(struct svc_rqst *rqstp,
->  					 struct page **pages,
->  					 struct kvec *first, size_t total);
-> diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-> index 9dc3a3b88391..2b870a3f391b 100644
-> --- a/include/linux/sunrpc/svc_rdma.h
-> +++ b/include/linux/sunrpc/svc_rdma.h
-> @@ -207,8 +207,8 @@ extern void svc_rdma_send_error_msg(struct svcxprt_rdma *rdma,
->  				    struct svc_rdma_recv_ctxt *rctxt,
->  				    int status);
->  extern int svc_rdma_sendto(struct svc_rqst *);
-> -extern int svc_rdma_read_payload(struct svc_rqst *rqstp, unsigned int offset,
-> -				 unsigned int length);
-> +extern int svc_rdma_result_payload(struct svc_rqst *rqstp, unsigned int offset,
-> +				   unsigned int length);
->  
->  /* svc_rdma_transport.c */
->  extern struct svc_xprt_class svc_rdma_class;
-> diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
-> index aca35ab5cff2..92455e0d5244 100644
-> --- a/include/linux/sunrpc/svc_xprt.h
-> +++ b/include/linux/sunrpc/svc_xprt.h
-> @@ -21,8 +21,8 @@ struct svc_xprt_ops {
->  	int		(*xpo_has_wspace)(struct svc_xprt *);
->  	int		(*xpo_recvfrom)(struct svc_rqst *);
->  	int		(*xpo_sendto)(struct svc_rqst *);
-> -	int		(*xpo_read_payload)(struct svc_rqst *, unsigned int,
-> -					    unsigned int);
-> +	int		(*xpo_result_payload)(struct svc_rqst *, unsigned int,
-> +					      unsigned int);
->  	void		(*xpo_release_rqst)(struct svc_rqst *);
->  	void		(*xpo_detach)(struct svc_xprt *);
->  	void		(*xpo_free)(struct svc_xprt *);
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index c211b607239e..b41500645c3f 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -1622,7 +1622,7 @@ u32 svc_max_payload(const struct svc_rqst *rqstp)
->  EXPORT_SYMBOL_GPL(svc_max_payload);
->  
->  /**
-> - * svc_encode_read_payload - mark a range of bytes as a READ payload
-> + * svc_encode_result_payload - mark a range of bytes as a result payload
->   * @rqstp: svc_rqst to operate on
->   * @offset: payload's byte offset in rqstp->rq_res
->   * @length: size of payload, in bytes
-> @@ -1630,12 +1630,13 @@ EXPORT_SYMBOL_GPL(svc_max_payload);
->   * Returns zero on success, or a negative errno if a permanent
->   * error occurred.
->   */
-> -int svc_encode_read_payload(struct svc_rqst *rqstp, unsigned int offset,
-> -			    unsigned int length)
-> +int svc_encode_result_payload(struct svc_rqst *rqstp, unsigned int offset,
-> +			      unsigned int length)
->  {
-> -	return rqstp->rq_xprt->xpt_ops->xpo_read_payload(rqstp, offset, length);
-> +	return rqstp->rq_xprt->xpt_ops->xpo_result_payload(rqstp, offset,
-> +							   length);
->  }
-> -EXPORT_SYMBOL_GPL(svc_encode_read_payload);
-> +EXPORT_SYMBOL_GPL(svc_encode_result_payload);
->  
->  /**
->   * svc_fill_write_vector - Construct data argument for VFS write call
-> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-> index c2752e2b9ce3..b248f2349437 100644
-> --- a/net/sunrpc/svcsock.c
-> +++ b/net/sunrpc/svcsock.c
-> @@ -181,8 +181,8 @@ static void svc_set_cmsg_data(struct svc_rqst *rqstp, struct cmsghdr *cmh)
->  	}
->  }
->  
-> -static int svc_sock_read_payload(struct svc_rqst *rqstp, unsigned int offset,
-> -				 unsigned int length)
-> +static int svc_sock_result_payload(struct svc_rqst *rqstp, unsigned int offset,
-> +				   unsigned int length)
->  {
->  	return 0;
->  }
-> @@ -635,7 +635,7 @@ static const struct svc_xprt_ops svc_udp_ops = {
->  	.xpo_create = svc_udp_create,
->  	.xpo_recvfrom = svc_udp_recvfrom,
->  	.xpo_sendto = svc_udp_sendto,
-> -	.xpo_read_payload = svc_sock_read_payload,
-> +	.xpo_result_payload = svc_sock_result_payload,
->  	.xpo_release_rqst = svc_udp_release_rqst,
->  	.xpo_detach = svc_sock_detach,
->  	.xpo_free = svc_sock_free,
-> @@ -1123,7 +1123,7 @@ static const struct svc_xprt_ops svc_tcp_ops = {
->  	.xpo_create = svc_tcp_create,
->  	.xpo_recvfrom = svc_tcp_recvfrom,
->  	.xpo_sendto = svc_tcp_sendto,
-> -	.xpo_read_payload = svc_sock_read_payload,
-> +	.xpo_result_payload = svc_sock_result_payload,
->  	.xpo_release_rqst = svc_tcp_release_rqst,
->  	.xpo_detach = svc_tcp_sock_detach,
->  	.xpo_free = svc_sock_free,
-> diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-> index c3d588b149aa..c8411b4f3492 100644
-> --- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-> +++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-> @@ -979,19 +979,19 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
->  }
->  
->  /**
-> - * svc_rdma_read_payload - special processing for a READ payload
-> + * svc_rdma_result_payload - special processing for a result payload
->   * @rqstp: svc_rqst to operate on
->   * @offset: payload's byte offset in @xdr
->   * @length: size of payload, in bytes
->   *
->   * Returns zero on success.
->   *
-> - * For the moment, just record the xdr_buf location of the READ
-> + * For the moment, just record the xdr_buf location of the result
->   * payload. svc_rdma_sendto will use that location later when
->   * we actually send the payload.
->   */
-> -int svc_rdma_read_payload(struct svc_rqst *rqstp, unsigned int offset,
-> -			  unsigned int length)
-> +int svc_rdma_result_payload(struct svc_rqst *rqstp, unsigned int offset,
-> +			    unsigned int length)
->  {
->  	struct svc_rdma_recv_ctxt *rctxt = rqstp->rq_xprt_ctxt;
->  
-> diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> index fb044792b571..afba4e9d5425 100644
-> --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> @@ -80,7 +80,7 @@ static const struct svc_xprt_ops svc_rdma_ops = {
->  	.xpo_create = svc_rdma_create,
->  	.xpo_recvfrom = svc_rdma_recvfrom,
->  	.xpo_sendto = svc_rdma_sendto,
-> -	.xpo_read_payload = svc_rdma_read_payload,
-> +	.xpo_result_payload = svc_rdma_result_payload,
->  	.xpo_release_rqst = svc_rdma_release_rqst,
->  	.xpo_detach = svc_rdma_detach,
->  	.xpo_free = svc_rdma_free,
-> 
+On 2020-10-04 13:53, Kenneth Johansson wrote:
+> So I have had for a long time problems with google chrome and suspend 
+> resume causing it to mangle its sqlite database.
+>
+> it looks to only happen if I use nfs mounted home directory. I'm not 
+> sure exactly what is happening but lets first see if this happens to 
+> anybody else.
+>
+> How to get the error.
+>
+> 1. start google from a terminal with "google-chrome"
+>
+> 2. suspend the computer
+>
+> 3. wait a while. There is some type of minimum time here I do not know 
+> what its is but I basically get the error every time of I suspend in 
+> evening and resume in morning
+>
+> 4. look for printout that looks like something like this
+>
+> [16789:18181:1004/125852.529750:ERROR:database.cc(1692)] Passwords 
+> sqlite error 1034, errno 5: disk I/O error, sql: COMMIT
+> [16789:16829:1004/125852.529744:ERROR:database.cc(1692)] Web sqlite 
+> error 1034, errno 5: disk I/O error, sql: COMMIT
+> [16789:16829:1004/125852.530261:ERROR:database.cc(1692)] Web sqlite 
+> error 1034, errno 5: disk I/O error, sql: INSERT OR REPLACE INTO 
+> autofill_model_type_state (model_type, value) VALUES(?,?)
+> [16789:16789:1004/125852.563571:ERROR:sync_metadata_store_change_list.cc(34)] 
+> Autofill datatype error was encountered: Failed to update ModelTypeState.
+> [16789:19002:1004/125902.534103:ERROR:database.cc(1692)] History 
+> sqlite error 1034, errno 5: disk I/O error, sql: COMMIT
+> [16789:19002:1004/125902.536903:ERROR:database.cc(1692)] Thumbnail 
+> sqlite error 778, errno 5: disk I/O error, sql: COMMIT
+>
+>
+> [16789:19002:1004/130044.120379:ERROR:database.cc(1692)] Passwords 
+> sqlite error 1034, errno 5: disk I/O error, sql: INSERT OR REPLACE 
+> INTO sync_model_metadata (id, model_metadata) VALUES(1, ?)
+> [16789:16829:1004/130044.120388:ERROR:database.cc(1692)] Web sqlite 
+> error 1034, errno 5: disk I/O error, sql: INSERT OR REPLACE INTO 
+> autofill_model_type_state (model_type, value) VALUES(?,?)
+>
+>
+> and so on.  if you use google sync you can also check 
+> "chrome://sync-internals" to see if something is wrong with the database.
+>
+>
+>
+
