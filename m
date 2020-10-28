@@ -2,85 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F13729CD00
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Oct 2020 02:38:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 040F029D67E
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Oct 2020 23:15:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgJ1Bij (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 27 Oct 2020 21:38:39 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:52014 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1833049AbgJ0Xmf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Oct 2020 19:42:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RNdU5J033454;
-        Tue, 27 Oct 2020 23:42:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc : to : from :
- subject : message-id : date : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=rIHsVK2Oy3+HUfVyT3NQyvNdOPBUsBa0ax0zbtnybL8=;
- b=TFJiBvZigbKvtRAHuHGPt5V+TU6nGt0GZp3Sop1rZ0GHYmdfX+RfJQqqfTMMTKr5i3wF
- aXFcBQHgZiceXh+8Ymo/0jftwgoB7tho88tuBm3IQxJVFvxAnoXncNRmOapOeeT1RzDj
- 3B+ITf3WBfLkwSppYSquv4Z7KHL9YUL5UCv6ksthqSQYSkhDv9JAphHYFVY7J9Vm7hGk
- OjgZ13jz6+vhpVHi27rmPm+KBX3sR0Nh+eu+Mlg5Sbe4tbqZr1PRVQXCwj907q1B5yo/
- dROe/LT7bKDY1Gw+IY40ORaEAS5/GE7MFGCf473PrwLTnszfKybvsRJ/9cu999tXURyd yA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 34dgm42cea-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 27 Oct 2020 23:42:30 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RNeIir070761;
-        Tue, 27 Oct 2020 23:42:30 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 34cx1rb3g9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Oct 2020 23:42:30 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09RNgTcG014364;
-        Tue, 27 Oct 2020 23:42:29 GMT
-Received: from [10.175.221.126] (/10.175.221.126)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 27 Oct 2020 16:42:28 -0700
-Cc:     linux-nfs@vger.kernel.org, NeilBrown <neilb@suse.com>
-To:     stable@vger.kernel.org
-From:   Calum Mackay <calum.mackay@oracle.com>
-Subject: please cherry-pick for stable --- fd01b2597941 SUNRPC: ECONNREFUSED
- should cause a rebind.
-Organization: Oracle
-Message-ID: <380083cd-f5f5-73fa-33ff-c5dde2e7bd02@oracle.com>
-Date:   Tue, 27 Oct 2020 23:42:27 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        id S1731316AbgJ1WPT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 28 Oct 2020 18:15:19 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:51986 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731268AbgJ1WPG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Oct 2020 18:15:06 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id A654929A58;
+        Tue, 27 Oct 2020 23:26:19 -0400 (EDT)
+Date:   Wed, 28 Oct 2020 14:26:12 +1100 (AEDT)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Tom Rix <trix@redhat.com>
+cc:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
+        qat-linux@intel.com, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net, alsa-devel@alsa-project.org,
+        linux-rpi-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [RFC] clang tooling cleanups
+In-Reply-To: <20201027164255.1573301-1-trix@redhat.com>
+Message-ID: <alpine.LNX.2.23.453.2010281344120.31@nippy.intranet>
+References: <20201027164255.1573301-1-trix@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
- suspectscore=13 malwarescore=0 mlxlogscore=965 mlxscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010270135
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- adultscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- suspectscore=13 clxscore=1011 mlxscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010270135
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This commit:
 
-	fd01b2597941 SUNRPC: ECONNREFUSED should cause a rebind.
+On Tue, 27 Oct 2020, trix@redhat.com wrote:
 
-(originally applied to v4.14-rc1) didn't appear to get a stable cc, 
-perhaps because it wasn't considered a common problem at the time.
+> This rfc will describe
+> An upcoming treewide cleanup.
+> How clang tooling was used to programatically do the clean up.
+> Solicit opinions on how to generally use clang tooling.
+> 
 
-A patch I'm shortly about to post, cc stable, depends on the above, so 
-could it please be cherry-picked for stable?
+This tooling is very impressive. It makes possible an idea that I had a 
+while ago, to help make code review more efficient. It works like this. 
 
-It applies cleanly to both v4.4.240 & v4.9.240
+Suppose a patch, p, is the difference between the new tree, n, and the old 
+tree, o. That is, p = n - o.
 
-thank you,
-calum.
+Now let clang-tidy be the transformation 't'. This gets you a much more 
+readable patch submission, P = t(n) - t(o).
 
+The only difficulty is that, if I submit P intead of p then 'git am' will 
+probably reject it. This is solved by a little tooling around git, such 
+that, should a patch P fail to apply, the relevant files are automatically 
+reformatted with the officially endorsed transformation t, to generate a 
+minimal cleanup patch, such that P can be automatically applied on top.
+
+If the patch submission process required* that every patch submission was 
+generated like P and not like p, it would immediately eliminate all 
+clean-up patches from the workload of all reviewers, and also make the 
+reviewers' job easier because all submissions are now formatted correctly, 
+and also avoid time lost to round-trips, such as, "you can have a 
+reviewed-by if you respin to fix some minor style issues".
+
+* Enforcing this, e.g. with checkpatch, is slightly more complicated, but 
+it works the same way: generate a minimal cleanup patch for the relevant 
+files, apply the patch-to-be-submitted, and finally confirm that the 
+modified files are unchanged under t.
