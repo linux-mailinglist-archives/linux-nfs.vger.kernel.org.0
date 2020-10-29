@@ -2,88 +2,126 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDD6029E9F6
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Oct 2020 12:04:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D57E729F35F
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Oct 2020 18:36:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgJ2LEw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 29 Oct 2020 07:04:52 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:59283 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726071AbgJ2LEw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Oct 2020 07:04:52 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 1E44A5C0172;
-        Thu, 29 Oct 2020 07:04:51 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 29 Oct 2020 07:04:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=fcUTHlI0YXoRRSufhXhW2Gk3Txj
-        GQ2RXt7LzqobeGeA=; b=JY+FH2LGaP9fJXSu8pxCkQhzoAJ7aKORPd9PD17GWKh
-        O73naJSonRmM2TlG0DQDOz+4TOv0KRZRB7FxeLlBXy68z+zaQmOv1wkPET77OcZU
-        mc4fyldOJ29TYtWggEc3+PJJ4pch9ItlI4qllohS2wfNdmB+sjQRbzJnXdO1qxqV
-        8vhfINjUq0sWMxrEV0sZbAa5oCBVWLjnWws33mnbXDeBOqgbQQWpw9aOH6EjjayU
-        h0g2ZOyKMVcjDEHjmJ5j8Vpk+qQz6oLH3t4F+rQmXQP9oaKev8a8TCoB0bjUJLVv
-        9d9dvyHog+u9t3TPzBUan2JJSidHqSTnEYXywO69NmQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=fcUTHl
-        I0YXoRRSufhXhW2Gk3TxjGQ2RXt7LzqobeGeA=; b=cWXOO2mwWykEfJ84ae4v22
-        qRUfypIZwrW+OQ5uTw98qHFzfyaGihB2ztbbyy62SzRp+gpZqoy78+GxDS/uxTL7
-        gE3IFUHPATYtaYyQN/6C5YkxdMvaIrv5dbEtQO5eaGLVAVkrNFvIYKLIPDfJEuUA
-        8WphxFjqWWeK6iUnE6cjT4VHEVbfy2NQuxZ+ZDgF8D/8CyU3n3AkyHVvRaIdjJKk
-        PfRxcP6RZO5pyfj0plgPQ9u9Kcp5xLqfbUrVPBB/T4DGfmXjaUD4+3HFAuksjOev
-        btxke1NtRjpRe2LVGOcljEwpZnLb6xW0cncqzFD5c2UDHLVwpQwYLRSmgbdEoWEw
-        ==
-X-ME-Sender: <xms:0qGaX4bcs23oOkWKmEGiAWzhhFKg8CexyKcUZbgA7oi-v4JTLr_IXg>
-    <xme:0qGaXzZlMxXOJ4qu16Owfm5c_z7Mypdg4ksbn7n2AZ3sGMXIBpArLdTPjbhJkKvzn
-    5__38Is9t7MOA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrleefgddvgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuheejgf
-    ffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecukfhppeekfedr
-    keeirdejgedrieegnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilh
-    hfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:0qGaXy_0-EzflJMBJUNi_vbf4daQAboPJW_Gyfzm4SxEukXD3KpePg>
-    <xmx:0qGaXyqemZN67CcZCfevKr5rLuODJs4iQzZfdEC4O4-FLARKkdKejg>
-    <xmx:0qGaXzrYfVMi7ix9TeT7BKnM0aNq6ombRgUxAjjK0cZASH__IER3Kw>
-    <xmx:06GaX8CEcn2sBv7KDbSsDUT5ZyyVhpSmZQw0zJGnbHJALJS3VrJPAQ>
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 837A63064687;
-        Thu, 29 Oct 2020 07:04:50 -0400 (EDT)
-Date:   Thu, 29 Oct 2020 12:05:37 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Calum Mackay <calum.mackay@oracle.com>
-Cc:     stable@vger.kernel.org, linux-nfs@vger.kernel.org,
-        NeilBrown <neilb@suse.com>
-Subject: Re: please cherry-pick for stable --- fd01b2597941 SUNRPC:
- ECONNREFUSED should cause a rebind.
-Message-ID: <20201029110537.GF3840801@kroah.com>
-References: <380083cd-f5f5-73fa-33ff-c5dde2e7bd02@oracle.com>
+        id S1727952AbgJ2Rg2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 29 Oct 2020 13:36:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbgJ2Rg1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Oct 2020 13:36:27 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A33C0613CF
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Oct 2020 10:36:27 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 780F135D4; Thu, 29 Oct 2020 13:36:25 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 780F135D4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1603992985;
+        bh=d6mk9uV3EP6tf4BJzLWCwOiByylru0ONHAkO56TE5FM=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=WKnfUhDG/N/KkSpjI7eFnrNIWOxi5AET/1qx1VNbSrqAfECp68F25OhLYbXfuf/ZZ
+         DBfYTyLDkbpatzT+s2dCVzsDoXlXn4qPaVESEcQenFt4cveBJaYfVKAnqRXBudn22Y
+         gVSZcPuXtpGmGz8Xcut0JTMxX+7MMvPIgOrXU+1Q=
+Date:   Thu, 29 Oct 2020 13:36:25 -0400
+To:     Kenneth Johansson <ken@kenjo.org>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: nfs home directory and google chrome.
+Message-ID: <20201029173625.GA26726@fieldses.org>
+References: <0ba0cd0c-eccd-2362-9958-23cd1fa033df@kenjo.org>
+ <df1c5127-4e48-672f-e2c4-4ce31f146952@kenjo.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <380083cd-f5f5-73fa-33ff-c5dde2e7bd02@oracle.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <df1c5127-4e48-672f-e2c4-4ce31f146952@kenjo.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Oct 27, 2020 at 11:42:27PM +0000, Calum Mackay wrote:
-> This commit:
+On Wed, Oct 28, 2020 at 12:01:28AM +0100, Kenneth Johansson wrote:
+> So this is just an update to how to avoid this problem.
 > 
-> 	fd01b2597941 SUNRPC: ECONNREFUSED should cause a rebind.
-> 
-> (originally applied to v4.14-rc1) didn't appear to get a stable cc, perhaps
-> because it wasn't considered a common problem at the time.
-> 
-> A patch I'm shortly about to post, cc stable, depends on the above, so could
-> it please be cherry-picked for stable?
-> 
-> It applies cleanly to both v4.4.240 & v4.9.240
+> I switched to nfs v3 and no more issues.
 
-Now queued up, thanks.
+Yes, that's also consistent with the explanation that the problem is
+client lease expiry.
 
-greg k-h
+NFSv4 locks are lease-based--the client loses all its locks if it
+doesn't contact the server regularly (by default, about every 90
+seconds).  So, if you suspend or lose contact with the server for too
+long, then you lose your locks.
+
+NFSv3 (NLM) locks are not.  The client keeps them until it unlocks them
+or explicitly tells the server to remove them all (such as if it comes
+back up after crashing).  So, there's no risk of losing locks when you
+suspend, but there's more of a risk of stuck locks that get in other
+client's way when one client dies.
+
+Once we implement "courteous server", locks will only be removed once
+the client loses contact for more than 90 seconds *and* either another
+client requests a conflicting lock, or  the server just runs out of
+memory for client state.  I think that'll be a better compromise.
+
+--b.
+
+> Since the switch chrome
+> have not stopped syncing with the google server even once. suspend
+> resume causes no issues and everything looks ok.  So it's clear that
+> google-chrome currently does not like nfs v4 and I need chrome to
+> work more than I need to run nfs v4.
+> 
+> 
+> On 2020-10-04 13:53, Kenneth Johansson wrote:
+> >So I have had for a long time problems with google chrome and
+> >suspend resume causing it to mangle its sqlite database.
+> >
+> >it looks to only happen if I use nfs mounted home directory. I'm
+> >not sure exactly what is happening but lets first see if this
+> >happens to anybody else.
+> >
+> >How to get the error.
+> >
+> >1. start google from a terminal with "google-chrome"
+> >
+> >2. suspend the computer
+> >
+> >3. wait a while. There is some type of minimum time here I do not
+> >know what its is but I basically get the error every time of I
+> >suspend in evening and resume in morning
+> >
+> >4. look for printout that looks like something like this
+> >
+> >[16789:18181:1004/125852.529750:ERROR:database.cc(1692)] Passwords
+> >sqlite error 1034, errno 5: disk I/O error, sql: COMMIT
+> >[16789:16829:1004/125852.529744:ERROR:database.cc(1692)] Web
+> >sqlite error 1034, errno 5: disk I/O error, sql: COMMIT
+> >[16789:16829:1004/125852.530261:ERROR:database.cc(1692)] Web
+> >sqlite error 1034, errno 5: disk I/O error, sql: INSERT OR REPLACE
+> >INTO autofill_model_type_state (model_type, value) VALUES(?,?)
+> >[16789:16789:1004/125852.563571:ERROR:sync_metadata_store_change_list.cc(34)]
+> >Autofill datatype error was encountered: Failed to update
+> >ModelTypeState.
+> >[16789:19002:1004/125902.534103:ERROR:database.cc(1692)] History
+> >sqlite error 1034, errno 5: disk I/O error, sql: COMMIT
+> >[16789:19002:1004/125902.536903:ERROR:database.cc(1692)] Thumbnail
+> >sqlite error 778, errno 5: disk I/O error, sql: COMMIT
+> >
+> >
+> >[16789:19002:1004/130044.120379:ERROR:database.cc(1692)] Passwords
+> >sqlite error 1034, errno 5: disk I/O error, sql: INSERT OR REPLACE
+> >INTO sync_model_metadata (id, model_metadata) VALUES(1, ?)
+> >[16789:16829:1004/130044.120388:ERROR:database.cc(1692)] Web
+> >sqlite error 1034, errno 5: disk I/O error, sql: INSERT OR REPLACE
+> >INTO autofill_model_type_state (model_type, value) VALUES(?,?)
+> >
+> >
+> >and so on.  if you use google sync you can also check
+> >"chrome://sync-internals" to see if something is wrong with the
+> >database.
+> >
+> >
+> >
