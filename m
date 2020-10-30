@@ -2,70 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0CAA2A10AC
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Oct 2020 23:07:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 443D52A115A
+	for <lists+linux-nfs@lfdr.de>; Sat, 31 Oct 2020 00:02:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725914AbgJ3WHm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 30 Oct 2020 18:07:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725792AbgJ3WHm (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 30 Oct 2020 18:07:42 -0400
-Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2B8322227
-        for <linux-nfs@vger.kernel.org>; Fri, 30 Oct 2020 22:07:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604095662;
-        bh=MOBmL2uL4txSencAZUUeyuOlu/ZATH07W1xk5scpDbw=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=SR1kYCq4JgZuWtsceH5oAI/VbgCf4DMaX1P3n4E08iexNHd1Bwl6DUF5lUrMbc3BS
-         sgKPgNYH4KTtMrbdn3O/99MPWSt8ys0C9O0TS7LU/cosQO2NAGrYd2gsMbN5iCGI5g
-         aIXSyfaoL2C4SIIaArvBJ1pS7kz6ENIbJ/ddAlbE=
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] NFS: Remove unnecessary inode lock in nfs_fsync_dir()
-Date:   Fri, 30 Oct 2020 17:57:30 -0400
-Message-Id: <20201030215730.85147-2-trondmy@kernel.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201030215730.85147-1-trondmy@kernel.org>
-References: <20201030215730.85147-1-trondmy@kernel.org>
+        id S1725956AbgJ3XCV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 30 Oct 2020 19:02:21 -0400
+Received: from server.msgroupspa.com ([185.149.113.111]:55162 "EHLO
+        server.msgroupspa.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725780AbgJ3XCU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 30 Oct 2020 19:02:20 -0400
+X-Greylist: delayed 53432 seconds by postgrey-1.27 at vger.kernel.org; Fri, 30 Oct 2020 19:02:11 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=msgroupspa.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=gOeEglh1DIJatPKqyvOsPs4e0Zw8Lzg9wwjnNfQdiM8=; b=f0J1AWuajA3oZ1Dpfc1x8K8xEJ
+        AUip3Gv2UXILC1QLa9azjb3AcsLQqGjiyvcdNpmgT4E3ckADFb84tXlqXdyZsQiNBG2DujmkXqT6T
+        d2mjFNqNRzqSvTZ5qo3MQnCtCov24Wb4wcnpMjift4pdGB4JPDnKAHB+AICh1brF5U0xFQPetWE6H
+        BdPwBb7MNTVWN2mlAPb66Psghg7IoDbQVF1Tmf3H0jaTjlEaWeH4lQoLQpQIzRJYm5NbY0Di4+n63
+        5jJQ9+O4mZNL1aiyS8rwPAgEOxxbLBRAAH3FJTu26AO783jjZImRhbqNmO2ZZgHvlSfFh6vWgR2oo
+        WibXGz9w==;
+Received: from [::1] (port=55834 helo=server.msgroupspa.com)
+        by server.msgroupspa.com with esmtpa (Exim 4.93)
+        (envelope-from <no-reply@msgroupspa.com>)
+        id 1kYPS7-0006MI-86; Fri, 30 Oct 2020 16:08:03 +0800
 MIME-Version: 1.0
+Date:   Fri, 30 Oct 2020 16:08:03 +0800
+From:   "Mr. John Galvan" <no-reply@msgroupspa.com>
+To:     undisclosed-recipients:;
+Subject: Hello/Hallo
+Reply-To: galvan.johnny@outlook.com
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <0d2cf4301ff4649fbf993b8f3f7e83c8@msgroupspa.com>
+X-Sender: no-reply@msgroupspa.com
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.msgroupspa.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - msgroupspa.com
+X-Get-Message-Sender-Via: server.msgroupspa.com: authenticated_id: no-reply@msgroupspa.com
+X-Authenticated-Sender: server.msgroupspa.com: no-reply@msgroupspa.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-nfs_inc_stats() is already thread-safe, and there are no other reasons
-to hold the inode lock here.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/dir.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index e56b1bd99537..4e011adaf967 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -997,13 +997,9 @@ static loff_t nfs_llseek_dir(struct file *filp, loff_t offset, int whence)
- static int nfs_fsync_dir(struct file *filp, loff_t start, loff_t end,
- 			 int datasync)
- {
--	struct inode *inode = file_inode(filp);
--
- 	dfprintk(FILE, "NFS: fsync dir(%pD2) datasync %d\n", filp, datasync);
- 
--	inode_lock(inode);
--	nfs_inc_stats(inode, NFSIOS_VFSFSYNC);
--	inode_unlock(inode);
-+	nfs_inc_stats(file_inode(filp), NFSIOS_VFSFSYNC);
- 	return 0;
- }
- 
 -- 
-2.28.0
+Sir/Madam,
 
+I have access to very vital information that can be used to move a huge 
+amount of money. I have done my homework very well and I have the 
+machineries in place to get it done since I am still in active service. 
+If it was possible for me to do it alone I would not have bothered 
+contacting you. Ultimately I need an honest foreigner to play an 
+important role in the completion of this business transaction. Send 
+responds to this email: galvan.johnny@outlook.com
+
+Regards,
+John Galvan
+
+---------------------------------------------------------------
+
+Sir / Madam,
+
+Ich habe Zugang zu sehr wichtigen Informationen, mit denen ich eine 
+große Menge Geld bewegen kann. Ich habe meine Hausaufgaben sehr gut 
+gemacht und ich habe die Maschinen, um sie zu erledigen, da ich immer 
+noch im aktiven Dienst bin. Wenn es mir möglich gewesen wäre, es alleine 
+zu tun, hätte ich mich nicht darum gekümmert, Sie zu kontaktieren. 
+Letztendlich brauche ich einen ehrlichen Ausländer, der eine wichtige 
+Rolle beim Abschluss dieses Geschäftsvorgangs spielt. Senden Sie 
+Antworten auf diese E-Mail: galvan.johnny@outlook.com
+
+Grüße,
+John Galvan
