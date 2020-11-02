@@ -2,143 +2,195 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 585CB2A2F81
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Nov 2020 17:17:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53DA92A2FA4
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Nov 2020 17:21:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbgKBQRl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Nov 2020 11:17:41 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:38550 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726587AbgKBQRk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Nov 2020 11:17:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604333858;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Yzwbn9p4rnPyl3APTWsLwY5GfK88lg/KxUiGugny2z8=;
-        b=Bjwf1VhimuH3RdFsjJxZSt4/c6l6tLeV/akzSj8AMeIrrvQMKxleNWUXkGKCvGyf5qEfEq
-        zYngHNE7VP9Pi1D8TOYQqn90rniDKDFLXiuBcDXAVi4vDLdSfyJjsdPkERYa3AiYlsojBM
-        sABCt3j+JYuZnNoZZgNHFkRuLN5hnZE=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-qWuR0_YcOW2-hVEMHf77ag-1; Mon, 02 Nov 2020 11:17:37 -0500
-X-MC-Unique: qWuR0_YcOW2-hVEMHf77ag-1
-Received: by mail-ed1-f72.google.com with SMTP id t7so6395574edt.0
-        for <linux-nfs@vger.kernel.org>; Mon, 02 Nov 2020 08:17:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yzwbn9p4rnPyl3APTWsLwY5GfK88lg/KxUiGugny2z8=;
-        b=bmjtGn0I2+vM2BOnliVbA95O7vYK7koQGCbqzuZmJugRqufiKxqcJzb4jWwr7jFnDL
-         EGM1z8v98jJX6e4tIlcOpDKQ4rzD3iHf9x/5N6s0T354DrGU+Mb9JBmLBGFwvaGwYGkX
-         hg1Y7Nf2IwlbN2liqQs119CxGHcEuTqtZHuv09sBRa3ge6LhZ8Dp2U3YQHlsCgJk3cTf
-         3VXH39fs+L52vbmBJQpILaNJn6CW78vJ1OWrbiKQBULhllzF0PurCf+naWsh9h4kZ1rW
-         IgPvzBDj9YF9e1XjOeXNmUXLb0L9bz71Z4vFfxIomqHBJkomySyIj698E50kWO/Mteo5
-         mwAg==
-X-Gm-Message-State: AOAM530b6iZPkzYfrlS1oL6NXryuRaiUyGLZ6I0h1U9vyE9BULXZiuVw
-        BEvteDr17Yz8TSv4umPeWbBhztsw/U2zYp5ZnbUonVNG1bBHU4TPsvtTrEkLrbVg5GvA5uPat0Q
-        TnIojtiE0yhJ3wyfsMb7Y7g/l8OZlLUrKVHKC
-X-Received: by 2002:a50:d5dd:: with SMTP id g29mr1018925edj.344.1604333855664;
-        Mon, 02 Nov 2020 08:17:35 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyMcfNjVlorW0l4emw3r+kVtYWnG5W9L2tG56NZziW1MUBDlZpXJkotUUf0jU4PLmrPx783RdqHXhfjqwndHmg=
-X-Received: by 2002:a50:d5dd:: with SMTP id g29mr1018912edj.344.1604333855476;
- Mon, 02 Nov 2020 08:17:35 -0800 (PST)
-MIME-Version: 1.0
+        id S1726653AbgKBQV5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Nov 2020 11:21:57 -0500
+Received: from mail-mw2nam12on2119.outbound.protection.outlook.com ([40.107.244.119]:34848
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726473AbgKBQV5 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 2 Nov 2020 11:21:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l54d7NDSQGeiFkb2y8WADhycnmf6jxDnGoxq2AZu4D1xx0jyIvJdFcc40UV8AGuD/mnxmD3BK6MHjJaEPKqH2jMzhn/GQS4stmzE5Q2cAxmloHE0Qmc4yP9RIjmXRllaEdQtrGkeUh8q4hYHgqSNGHRuQgd1NmU+KB4Wad6X0WSTN5lSSVef5nFvcM2DiShSWNaMJZYNlS4XwNB+1i6ujN46CHc1A2SYpqW7w7jM6UHVnSstfcjWScggMJp4RmQ645oXGJYGUtGEjSlaDNIm4KSJYwGcmuKtMm1ZBmlYrmYBWEz1eVj1W2NyXwxRJAM5NhhZ8ZsJ+9vMI/HGgc1QoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gMQo8puclb/gj1Az4WVA74PYwhrOTJ0lQ1E1YV09S6A=;
+ b=SlPyLnuPqPrRM6XYhVgNrr9YNN3kJW8eU9zPry2w9yQJa+52mlHLRDH5nbNe8BMYUO7qY3GjR9t4Cj20Iysizr6YKwrlRTL5exyvxey91l6d5KbnE9O373rsuf8OTooxhsFYcGCCsq/4/uiel+/4cEFI7EdUaPrmuu1iwS9tvbrFWK2UyOjjCDXbzjv2LveIylwvzgSlK6M1nCvfFKkTQTieqYQ03hgElBV1o4PZicRIsBW0/ATmzel3LaqqSOAG2MFQ2WwWwjBFf3pIX+SqJmRAQByAPUvEVitg3xa+vZ/b076Entp9ueQpMU6SfsXhJDMziW2CG9Nj0bTfayBnyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gMQo8puclb/gj1Az4WVA74PYwhrOTJ0lQ1E1YV09S6A=;
+ b=gQm6reasePo06OCKDjOmMTGI6mzuhGpDxwphu80WmAahR/khLgZnj1hq0dpYaib62OMKGeGskKiKfS/yi49gkEC53SXYFa/7UGRDrcUY5LC5HLtmA8UL4ry51HMeULo9xcV0Jb/9hvoMKOwJq/2IYa+EcOrwPJLUcEe9QGpI2zs=
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
+ by BL0PR13MB4211.namprd13.prod.outlook.com (2603:10b6:207:39::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.10; Mon, 2 Nov
+ 2020 16:21:53 +0000
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.010; Mon, 2 Nov 2020
+ 16:21:52 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "dwysocha@redhat.com" <dwysocha@redhat.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 09/11] NFS: Improve performance of listing directories
+ being modified
+Thread-Topic: [PATCH 09/11] NFS: Improve performance of listing directories
+ being modified
+Thread-Index: AQHWsR8e3oN/u14Jk0KcmdvFniEkgqm1BkuA
+Date:   Mon, 2 Nov 2020 16:21:52 +0000
+Message-ID: <2af057425352e05315b53c5b9bbd7fd277175a13.camel@hammerspace.com>
 References: <1604325011-29427-1-git-send-email-dwysocha@redhat.com>
- <1604325011-29427-12-git-send-email-dwysocha@redhat.com> <1976524196.5308081.1604331522179.JavaMail.zimbra@desy.de>
-In-Reply-To: <1976524196.5308081.1604331522179.JavaMail.zimbra@desy.de>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Mon, 2 Nov 2020 11:16:59 -0500
-Message-ID: <CALF+zOkEuGEj=4Rre_ofyxCZrtj-snFshYxZX1VfURdXOcALbA@mail.gmail.com>
-Subject: Re: [PATCH 11/11] NFS: Bring back nfs_dir_mapping_need_revalidate()
- in nfs_readdir()
-To:     "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-Cc:     trondmy <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+         <1604325011-29427-10-git-send-email-dwysocha@redhat.com>
+In-Reply-To: <1604325011-29427-10-git-send-email-dwysocha@redhat.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: netapp.com; dkim=none (message not signed)
+ header.d=none;netapp.com; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1cf24d27-b3f1-4308-b9a5-08d87f4b68c3
+x-ms-traffictypediagnostic: BL0PR13MB4211:
+x-microsoft-antispam-prvs: <BL0PR13MB4211F51956C069E103DFC77DB8100@BL0PR13MB4211.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +erVLCVXA9S+/fWnxAumZcPiT18fRXKUKgqrpqQHEmhqFH0geDpALSCDuF25aMASq4MWNjAWcTVErfOWyLEtzgthRMaS7JN09E0V+GdbNLIOlRq3FjYXskz21A85iHu5+c7hyCmTuLMWE0Xpk4eNIlrvYGRPdS9AktFvg/wMjWMtiFuBp2y8vcRhTuy+lyUN0euTxeOcxHkYt84kcjSHylBaLqGI82VonJOQOGUt/7RzuqnoQzbmS/nqWqqCQEFHD8/a8rTxslkb85vYVnI36KAesQBHpggYzXIY3hUHzw1dfM2LrEWDtpOSJke819xyZ+KLoX23QTQthnp+H32HEg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(396003)(346002)(376002)(39830400003)(136003)(86362001)(64756008)(66946007)(478600001)(6506007)(83380400001)(5660300002)(66556008)(66476007)(66446008)(4326008)(2616005)(76116006)(91956017)(36756003)(6512007)(186003)(6486002)(8936002)(2906002)(316002)(26005)(71200400001)(8676002)(110136005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: c3a3thbdegaWqMWnmR/N6W+iJ+TR3D3ziW3sNLy72k3+l5qMZl7qcyHSrtL3iZ9SfGmaeEdKwz8sf3g90iw2cVnHfhDJIArT/kwoJObxcw+cSHvkjMoSUO4RmnUuun5uRzTAA2zL8O1GwltyxZ7/B5x84zyDxJrXcnmU4BAI2hzVaL4rY47l7X/JNmQNNNMG56o8X+JZiacejyJ3lfNzSjaqNnfyAlVrA5NXjIgbbcJxFHARYygu5gJD2fdzBfPBJq9r3eKNqexQV4GdcSe6FIByk1DLLhnsRqhfcHmvYffaPAjoMOnlQvRPXKIHWkaGiLlVvt0CX+5FpjbI+hne0Zk2Dhr50e15WJO6vVbJZjlyxlxviWCY+XW+QSNsgAbBKhrh2CLoqME4zjeWJE8ygntIc7cXSElRXy/bUPHgGivbFtjS/EVpwQmYewoH5ZkqCCSo71JQARP1f2LDcVBBIKBcfrQfmfU32zlDGNBEXjSqK9LlSxm9nktsGam5Vi5CgIPCcX/741uzd1T8wBu3Lx4biq0gOLxmiwcabvCo8+7tz7scSBTAcJglAoYiNZYzaHtgF6OAwsyDt4AJmslnF6h4AmVh42gyvXlTJimOH0ic7KAK63/7zH6R/PeIRYPjnYT9pZORA/JDf1hCy74jEg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2CCFE322D7BF3D43AEDEB2EAE4B07D01@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cf24d27-b3f1-4308-b9a5-08d87f4b68c3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Nov 2020 16:21:52.8592
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jk51J+pUIcHbPLtFyr4AKHp0embvNWWAs/K5T0nMMv+RCYI7CrtLHaI8LIKGTyddB3wQ5s8HywCyKHmTzpsA9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR13MB4211
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Nov 2, 2020 at 10:48 AM Mkrtchyan, Tigran
-<tigran.mkrtchyan@desy.de> wrote:
->
-> Hi Dave,
->
-> ----- Original Message -----
-> > From: "David Wysochanski" <dwysocha@redhat.com>
-> > To: "trondmy" <trondmy@hammerspace.com>, "Anna Schumaker" <anna.schumaker@netapp.com>
-> > Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
-> > Sent: Monday, 2 November, 2020 14:50:11
-> > Subject: [PATCH 11/11] NFS: Bring back nfs_dir_mapping_need_revalidate() in nfs_readdir()
->
-> > commit 79f687a3de9e ("NFS: Fix a performance regression in readdir")
-> > removed nfs_dir_mapping_need_revalidate() in an attempt to fix a
-> > performance regression, but had the effect that with NFSv3 the
-> > pagecache would never expire while a process was reading a directory.
-> > An earlier patch addressed this problem by allowing the pagecache
-> > to expire but the current process to continue using the last cookie
-> > returned by the server when searching the pagecache, rather than
-> > always starting at 0.  Thus, bring back nfs_dir_mapping_need_revalidate()
-> > so that nfsi->cache_validity & NFS_INO_INVALID_DATA will be seen
-> > and nfs_revalidate_mapping() will be called with NFSv3 as well,
-> > making it behave the same as NFSv4.
-> >
-> > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-> > ---
-> > fs/nfs/dir.c | 13 ++++++++++++-
-> > 1 file changed, 12 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> > index cbd74cbdbb9f..aeb086fb3d0a 100644
-> > --- a/fs/nfs/dir.c
-> > +++ b/fs/nfs/dir.c
-> > @@ -872,6 +872,17 @@ int uncached_readdir(nfs_readdir_descriptor_t *desc)
-> >       return status;
-> > }
-> >
-> > +static bool nfs_dir_mapping_need_revalidate(struct inode *dir)
-> > +{
-> > +     struct nfs_inode *nfsi = NFS_I(dir);
-> > +
-> > +     if (nfs_attribute_cache_expired(dir))
-> > +             return true;
-> > +     if (nfsi->cache_validity & NFS_INO_INVALID_DATA)
-> > +             return true;
-> > +     return false;
-> > +}
->
-> Is this the same as:
->
-> static bool nfs_dir_mapping_need_revalidate(struct inode *dir)
-> {
->         struct nfs_inode *nfsi = NFS_I(dir);
->
->         return nfs_attribute_cache_expired(dir) || nfsi->cache_validity & NFS_INO_INVALID_DATA);
-> }
->
-Yes that's a nice simplification!
-
-> Tigran.
->
-> > +
-> > /* The file offset position represents the dirent entry number.  A
-> >    last cookie cache takes care of the common case of reading the
-> >    whole directory.
-> > @@ -903,7 +914,7 @@ static int nfs_readdir(struct file *file, struct dir_context
-> > *ctx)
-> >        * to either find the entry with the appropriate number or
-> >        * revalidate the cookie.
-> >        */
-> > -     if (ctx->pos == 0 || nfs_attribute_cache_expired(inode))
-> > +     if (ctx->pos == 0 || nfs_dir_mapping_need_revalidate(inode))
-> >               res = nfs_revalidate_mapping(inode, file->f_mapping);
-> >       if (res < 0)
-> >               goto out;
-> > --
-> > 1.8.3.1
->
-
+T24gTW9uLCAyMDIwLTExLTAyIGF0IDA4OjUwIC0wNTAwLCBEYXZlIFd5c29jaGFuc2tpIHdyb3Rl
+Og0KPiBBIHByb2Nlc3MgY2FuIGhhbmcgZm9yZXZlciB0byAnbHMgLWwnIGEgZGlyZWN0b3J5IHdo
+aWxlIHRoZSBkaXJlY3RvcnkNCj4gaXMgYmVpbmcgbW9kaWZpZWQgc3VjaCBhcyBhbm90aGVyIE5G
+UyBjbGllbnQgYWRkaW5nIGZpbGVzIHRvIHRoZQ0KPiBkaXJlY3RvcnkuwqAgVGhlIHByb2JsZW0g
+aXMgc2VlbiBzcGVjaWZpY2FsbHkgd2l0aCBsYXJnZXIgZGlyZWN0b3JpZXMNCj4gKEkgdGVzdGVk
+IHdpdGggMSBtaWxsaW9uKSBhbmQvb3Igc2xvd2VyIE5GUyBzZXJ2ZXIgcmVzcG9uc2VzIHRvDQo+
+IFJFQURESVIuwqAgSWYgYSBjb21iaW5hdGlvbiBvZiB0aGUgTkZTIGRpcmVjdG9yeSBzaXplLCB0
+aGUgTkZTIHNlcnZlcg0KPiByZXNwb25zZXMgdG8gUkVBRERJUiBpcyBzdWNoIHRoYXQgdGhlICds
+cycgcHJvY2VzcyBnZXRzIHBhcnRpYWxseQ0KPiB0aHJvdWdoIHRoZSBsaXN0aW5nIGJlZm9yZSB0
+aGUgYXR0cmlidXRlIGNhY2hlIGV4cGlyZXMgKHRpbWUNCj4gZXhjZWVkcyBhY2Rpcm1heCksIHdl
+IGRyb3AgdGhlIHBhZ2VjYWNoZSBhbmQgaGF2ZSB0byByZS1maWxsIGl0LA0KPiBhbmQgYXMgYSBy
+ZXN1bHQsIHRoZSBwcm9jZXNzIG1heSBuZXZlciBjb21wbGV0ZS7CoCBPbmUgY291bGQgYXJndWUN
+Cj4gZm9yIGxhcmdlciBkaXJlY3RvcmllcyB0aGUgYWNkaXJtaW4vYWNkaXJtYXggc2hvdWxkIGJl
+IGluY3JlYXNlZCwNCj4gYnV0IGl0J3Mgbm90IGFsd2F5cyBwb3NzaWJsZSB0byB0dW5lIHRoaXMg
+ZWZmZWN0aXZlbHkuDQo+IA0KPiBUaGUgcm9vdCBjYXVzZSBvZiB0aGlzIHByb2JsZW0gaXMgZHVl
+IHRvIGhvdyB0aGUgTkZTIHJlYWRkaXIgY2FjaGUNCj4gY3VycmVudGx5IHdvcmtzLsKgIFRoZSBt
+YWluIHNlYXJjaCBmdW5jdGlvbiwNCj4gcmVhZGRpcl9zZWFyY2hfcGFnZWNhY2hlKCksDQo+IGFs
+d2F5cyBzdGFydHMgc2VhcmNoaW5nIGF0IHBhZ2VfaW5kZXggYW5kIGNvb2tpZSA9PSAwLCBhbmQg
+Zm9yIGFueQ0KPiBwYWdlIG5vdCBpbiB0aGUgY2FjaGUsIGZpbGxzIGluIHRoZSBwYWdlIHdpdGgg
+ZW50cmllcyBvYnRhaW5lZCBpbg0KPiBhIFJFQURESVIgTkZTIGNhbGwuwqAgSWYgYSBwYWdlIGFs
+cmVhZHkgZXhpc3RzLCB3ZSBwcm9jZWVkIHRvDQo+IG5mc19yZWFkZGlyX3NlYXJjaF9mb3JfY29v
+a2llKCksIHdoaWNoIHNlYXJjaGVzIGZvciB0aGUgY29va2llDQo+IChwb3MpIG9mIHRoZSByZWFk
+ZGlyIGNhbGwuwqAgVGhlIHNlYXJjaCBpcyBPKG4pLCB3aGVyZSBuIGlzIHRoZQ0KPiBkaXJlY3Rv
+cnkgc2l6ZSBiZWZvcmUgdGhlIGNvb2tpZSBpbiBxdWVzdGlvbiBpcyBmb3VuZCwgYW5kIGV2ZXJ5
+DQo+IGVudHJ5IHRvIG5mc19yZWFkZGlyKCkgcGF5cyB0aGlzIHBlbmFsdHksIGlycmVzcGVjdGl2
+ZSBvZiB0aGUNCj4gY3VycmVudCBkaXJlY3RvcnkgcG9zaXRpb24gKGRpcl9jb250ZXh0LnBvcyku
+wqAgVGhlIHNlYXJjaCBpcw0KPiBleHBlbnNpdmUgZHVlIHRvIHRoZSBvcGFxdWUgbmF0dXJlIG9m
+IHJlYWRkaXIgY29va2llcywgYW5kIHRoZSBmYWN0DQo+IHRoYXQgbm8gbWFwcGluZyAoaGFzaCkg
+ZXhpc3RzIGZyb20gY29va2llcyB0byBwYWdlcy7CoCBJbiB0aGUgY2FzZQ0KPiBvZiBhIGRpcmVj
+dG9yeSBiZWluZyBtb2RpZmllZCwgdGhlIGFib3ZlIGJlaGF2aW9yIGNhbiBiZWNvbWUgYW4NCj4g
+ZXhjZXNzaXZlIHBlbmFsdHksIHNpbmNlIHRoZSBzYW1lIHByb2Nlc3MgaXMgZm9yY2VkIHRvIGZp
+bGwgcGFnZXMgaXQNCj4gbWF5IGJlIG5vIGxvbmdlciBpbnRlcmVzdGVkIGluICh0aGUgZW50cmll
+cyB3ZXJlIHBhc3NlZCBpbiBhIHByZXZpb3VzDQo+IG5mc19yZWFkZGlyIGNhbGwpLCBhbmQgdGhp
+cyBjYW4gZXNzZW50aWFsbHkgbGVhZCBubyBmb3J3YXJkIHByb2dyZXNzLg0KPiANCj4gVG8gZml4
+IHRoaXMgcHJvYmxlbSwgYXQgdGhlIGVuZCBvZiBuZnNfcmVhZGRpcigpLCBzYXZlIHRoZSBwYWdl
+X2luZGV4DQo+IGNvcnJlc3BvbmRpbmcgdG8gdGhlIGRpcmVjdG9yeSBwb3NpdGlvbiAoY29va2ll
+KSBpbnNpZGUgdGhlIHByb2Nlc3Mncw0KPiBuZnNfb3Blbl9kaXJfY29udGV4dC7CoCBUaGVuIGF0
+IHRoZSBuZXh0IGVudHJ5IG9mIG5mc19yZWFkZGlyKCksIHVzZQ0KPiB0aGUgc2F2ZWQgcGFnZV9p
+bmRleCBhcyB0aGUgc3RhcnRpbmcgc2VhcmNoIHBvaW50IHJhdGhlciB0aGFuDQo+IHN0YXJ0aW5n
+DQo+IGF0IHBhZ2VfaW5kZXggPT0gMC7CoCBOb3Qgb25seSBkb2VzIHRoaXMgZml4IHRoZSBwcm9i
+bGVtIG9mIGxpc3RpbmcNCj4gYSBkaXJlY3RvcnkgYmVpbmcgbW9kaWZpZWQsIGl0IGFsc28gc2ln
+bmlmaWNhbnRseSBpbXByb3Zlcw0KPiBwZXJmb3JtYW5jZQ0KPiBpbiB0aGUgdW5tb2RpZmllZCBj
+YXNlIHNpbmNlIG5vIGV4dHJhIHNlYXJjaCBwZW5hbHR5IGlzIHBhaWQgYXQgZWFjaA0KPiBlbnRy
+eSB0byBuZnNfcmVhZGRpcigpLg0KPiANCj4gSW4gdGhlIGNhc2Ugb2YgbHNlZWssIHNpbmNlIHRo
+ZXJlIGlzIG5vIGhhc2ggb3Igb3RoZXIgbWFwcGluZyBmcm9tIGENCj4gY29va2llIHZhbHVlIHRv
+IHRoZSBwYWdlLT5pbmRleCwganVzdCByZXNldA0KPiBuZnNfb3Blbl9kaXJfY29udGV4dC5wYWdl
+X2luZGV4DQo+IHRvIDAsIHdoaWNoIHdpbGwgcmVzZXQgdGhlIHNlYXJjaCB0byB0aGUgb2xkIGJl
+aGF2aW9yLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRGF2ZSBXeXNvY2hhbnNraSA8ZHd5c29jaGFA
+cmVkaGF0LmNvbT4NCj4gLS0tDQo+IMKgZnMvbmZzL2Rpci5jwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+fCA4ICsrKysrKystDQo+IMKgaW5jbHVkZS9saW51eC9uZnNfZnMuaCB8IDEgKw0KPiDCoDIgZmls
+ZXMgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0t
+Z2l0IGEvZnMvbmZzL2Rpci5jIGIvZnMvbmZzL2Rpci5jDQo+IGluZGV4IDUyZTA2YzhmYzdjZC4u
+YjI2NmY1MDViNTIxIDEwMDY0NA0KPiAtLS0gYS9mcy9uZnMvZGlyLmMNCj4gKysrIGIvZnMvbmZz
+L2Rpci5jDQo+IEBAIC03OCw2ICs3OCw3IEBAIHN0YXRpYyBzdHJ1Y3QgbmZzX29wZW5fZGlyX2Nv
+bnRleHQNCj4gKmFsbG9jX25mc19vcGVuX2Rpcl9jb250ZXh0KHN0cnVjdCBpbm9kZSAqZGlyDQo+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY3R4LT5hdHRyX2dlbmNvdW50ID0gbmZz
+aS0+YXR0cl9nZW5jb3VudDsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjdHgt
+PmRpcl9jb29raWUgPSAwOw0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGN0eC0+
+ZHVwX2Nvb2tpZSA9IDA7DQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjdHgtPnBh
+Z2VfaW5kZXggPSAwOw0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGN0eC0+Y3Jl
+ZCA9IGdldF9jcmVkKGNyZWQpOw0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHNw
+aW5fbG9jaygmZGlyLT5pX2xvY2spOw0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oGlmIChsaXN0X2VtcHR5KCZuZnNpLT5vcGVuX2ZpbGVzKSAmJg0KPiBAQCAtNzYzLDcgKzc2NCw3
+IEBAIGludA0KPiBmaW5kX2FuZF9sb2NrX2NhY2hlX3BhZ2UobmZzX3JlYWRkaXJfZGVzY3JpcHRv
+cl90ICpkZXNjKQ0KPiDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIHJlczsNCj4gwqB9DQo+IMKgDQo+
+IC0vKiBTZWFyY2ggZm9yIGRlc2MtPmRpcl9jb29raWUgZnJvbSB0aGUgYmVnaW5uaW5nIG9mIHRo
+ZSBwYWdlIGNhY2hlDQo+ICovDQo+ICsvKiBTZWFyY2ggZm9yIGRlc2MtPmRpcl9jb29raWUgc3Rh
+cnRpbmcgYXQgZGVzYy0+cGFnZV9pbmRleCAqLw0KPiDCoHN0YXRpYyBpbmxpbmUNCj4gwqBpbnQg
+cmVhZGRpcl9zZWFyY2hfcGFnZWNhY2hlKG5mc19yZWFkZGlyX2Rlc2NyaXB0b3JfdCAqZGVzYykN
+Cj4gwqB7DQo+IEBAIC04ODUsNiArODg2LDggQEAgc3RhdGljIGludCBuZnNfcmVhZGRpcihzdHJ1
+Y3QgZmlsZSAqZmlsZSwgc3RydWN0DQo+IGRpcl9jb250ZXh0ICpjdHgpDQo+IMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgLmN0eCA9IGN0eCwNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAuZGlyX2Nvb2tpZSA9ICZkaXJfY3R4LT5kaXJfY29va2llLA0KPiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5wbHVzID0gbmZzX3VzZV9yZWFkZGlycGx1cyhpbm9k
+ZSwgY3R4KSwNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5wYWdlX2luZGV4ID0g
+ZGlyX2N0eC0+cGFnZV9pbmRleCwNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5s
+YXN0X2Nvb2tpZSA9IG5mc19yZWFkZGlyX3VzZV9jb29raWUoZmlsZSkgPyBjdHgtDQo+ID5wb3Mg
+OiAwLA0KPiDCoMKgwqDCoMKgwqDCoMKgfSwNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgKmRlc2MgPSAmbXlfZGVzYzsNCj4gwqDCoMKgwqDCoMKgwqDC
+oGludCByZXMgPSAwOw0KPiBAQCAtOTM4LDYgKzk0MSw3IEBAIHN0YXRpYyBpbnQgbmZzX3JlYWRk
+aXIoc3RydWN0IGZpbGUgKmZpbGUsIHN0cnVjdA0KPiBkaXJfY29udGV4dCAqY3R4KQ0KPiDCoG91
+dDoNCj4gwqDCoMKgwqDCoMKgwqDCoGlmIChyZXMgPiAwKQ0KPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoHJlcyA9IDA7DQo+ICvCoMKgwqDCoMKgwqDCoGRpcl9jdHgtPnBhZ2VfaW5k
+ZXggPSBkZXNjLT5wYWdlX2luZGV4Ow0KPiDCoMKgwqDCoMKgwqDCoMKgdHJhY2VfbmZzX3JlYWRk
+aXJfZXhpdChpbm9kZSwgY3R4LT5wb3MsIGRpcl9jdHgtPmRpcl9jb29raWUsDQo+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBORlNf
+U0VSVkVSKGlub2RlKS0+ZHRzaXplLA0KPiBteV9kZXNjLnBsdXMsIHJlcyk7DQo+IMKgwqDCoMKg
+wqDCoMKgwqByZXR1cm4gcmVzOw0KPiBAQCAtOTc1LDYgKzk3OSw4IEBAIHN0YXRpYyBsb2ZmX3Qg
+bmZzX2xsc2Vla19kaXIoc3RydWN0IGZpbGUgKmZpbHAsDQo+IGxvZmZfdCBvZmZzZXQsIGludCB3
+aGVuY2UpDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZWxzZQ0KPiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkaXJfY3R4LT5kaXJfY29v
+a2llID0gMDsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkaXJfY3R4LT5kdXBl
+ZCA9IDA7DQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAvKiBGb3JjZSByZWFkZGly
+X3NlYXJjaF9wYWdlY2FjaGUgdG8gc3RhcnQgb3ZlciAqLw0KPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgZGlyX2N0eC0+cGFnZV9pbmRleCA9IDA7DQo+IMKgwqDCoMKgwqDCoMKgwqB9
+DQo+IMKgwqDCoMKgwqDCoMKgwqBpbm9kZV91bmxvY2soaW5vZGUpOw0KPiDCoMKgwqDCoMKgwqDC
+oMKgcmV0dXJuIG9mZnNldDsNCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbmZzX2ZzLmgg
+Yi9pbmNsdWRlL2xpbnV4L25mc19mcy5oDQo+IGluZGV4IGEyYzY0NTVlYTNmYS4uMGU1NWMwMTU0
+Y2NkIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L25mc19mcy5oDQo+ICsrKyBiL2luY2x1
+ZGUvbGludXgvbmZzX2ZzLmgNCj4gQEAgLTkzLDYgKzkzLDcgQEAgc3RydWN0IG5mc19vcGVuX2Rp
+cl9jb250ZXh0IHsNCj4gwqDCoMKgwqDCoMKgwqDCoF9fdTY0IGRpcl9jb29raWU7DQo+IMKgwqDC
+oMKgwqDCoMKgwqBfX3U2NCBkdXBfY29va2llOw0KPiDCoMKgwqDCoMKgwqDCoMKgc2lnbmVkIGNo
+YXIgZHVwZWQ7DQo+ICvCoMKgwqDCoMKgwqDCoHVuc2lnbmVkIGxvbmfCoMKgwqBwYWdlX2luZGV4
+Ow0KPiDCoH07DQo+IMKgDQo+IMKgLyoNCg0KTkFDSy4gSXQgbWFrZXMgbm8gc2Vuc2UgdG8gc3Rv
+cmUgdGhlIHBhZ2UgaW5kZXggYXMgYSBjdXJzb3IuDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpM
+aW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RA
+aGFtbWVyc3BhY2UuY29tDQoNCg0K
