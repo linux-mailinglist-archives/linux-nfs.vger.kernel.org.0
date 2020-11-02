@@ -2,192 +2,194 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59CD42A2FC6
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Nov 2020 17:27:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22F7B2A2FEF
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Nov 2020 17:37:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgKBQ1Z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Nov 2020 11:27:25 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49139 "EHLO
+        id S1726786AbgKBQho (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Nov 2020 11:37:44 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:36846 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726633AbgKBQ1Z (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Nov 2020 11:27:25 -0500
+        by vger.kernel.org with ESMTP id S1727115AbgKBQhn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Nov 2020 11:37:43 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604334443;
+        s=mimecast20190719; t=1604335062;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=7958s1TJSviy3Ay04c6a1q5B7/0e/Cp6TphJsNH6Elk=;
-        b=ezgFcyI+s9d+ABpnglt2cU42NainYkTy63TArmtAYQeGcXnZHsZMe+qI3XLrT9cy1nMc1U
-        iebPBFKYyQW0bo0tmjNcuTFLGXrz3kktJjFSOJf2cQ90kMGHIgPyYPbEI+qU34U1lxC8a3
-        lLv/Biq/13/3xEv9DFKyf2kbxZ7efOI=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-431-NP-hUdksMheMkRBw_zM0Fw-1; Mon, 02 Nov 2020 11:27:21 -0500
-X-MC-Unique: NP-hUdksMheMkRBw_zM0Fw-1
-Received: by mail-ej1-f72.google.com with SMTP id z9so4447670ejg.10
-        for <linux-nfs@vger.kernel.org>; Mon, 02 Nov 2020 08:27:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7958s1TJSviy3Ay04c6a1q5B7/0e/Cp6TphJsNH6Elk=;
-        b=AWlrbLoNNH1yjjwaa5oUnpoJ7XlM2SIOz84WdjhnBmy+ATQzpTuIK4SftyMsS5gO+W
-         LLMpBXonoVR9/0583azJ+2FtWMqf2Cx7nS5wzAGfM6rjzCSSCxI26PoQ1Jya86IFSCdR
-         o2kUD29nhG0P0NSE+P0+K/ZuEiDApfCHvYtewIlNYpFRb52bYsQNolF+FDa3ZPiY5v1w
-         AvfXmCwdld+4Ty3JVOpE2S2eU1HnjHDNSisIIO40qlke64VCvZbRxjMidpTZnIW1/oVy
-         WhpheXuYe1x4hLgcFbnk4CmRaSwdwaDaqmBfSseWYUOgLucjT2/5Hl4LfPCJZRd62XvM
-         ZFlw==
-X-Gm-Message-State: AOAM533aM4jzuNFedOzM9M0+QFXwrxVWZ1AI6RCIq61kZthECiatxyp/
-        qWK+u36ciGC4TK1rKXEvctmeggGLEYJKxCbyGN5lPp7kbWW/PH++GHfnyvq1ntYN2exN6mrAi4E
-        xJc3TppfUJ2P1iYhobN4WFSz6cQJ3hEBAm+SS
-X-Received: by 2002:a50:e705:: with SMTP id a5mr17508735edn.29.1604334440274;
-        Mon, 02 Nov 2020 08:27:20 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwAgollr1vcBirNc6UAwfMMhtoJ2Y8zeCAJ9S1+3ntlJJajdHY5Y9lQ79LqdoPN3tFUEBJy2L8oNsJ+m/h0wTk=
-X-Received: by 2002:a50:e705:: with SMTP id a5mr17508714edn.29.1604334440004;
- Mon, 02 Nov 2020 08:27:20 -0800 (PST)
+        bh=62q4qd+ULqCL24Abu3OXSl5c+U12QSY1kH68R8gb9Xk=;
+        b=EGtoTnMc6GEm8ASaQH1qYpMDV499Fg0sC9TxlUfEw9Z9+fvxiOq4Ffe7IoiZka/CBx0GGT
+        a1R7H4+tnCX1/7d2cbu+xKFianwM1Z51ztZlSt4WSLgXNOgBv5/kTL+88X4hkhWyL1bJx9
+        CI2gkUEMR8uoiX04vI2rzgGzXhAklc8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-596-THEowvdjMDW_mu4S-SEOCg-1; Mon, 02 Nov 2020 11:37:39 -0500
+X-MC-Unique: THEowvdjMDW_mu4S-SEOCg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6CB31005513;
+        Mon,  2 Nov 2020 16:37:38 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-113-8.phx2.redhat.com [10.3.113.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 77D475D9D2;
+        Mon,  2 Nov 2020 16:37:38 +0000 (UTC)
+Subject: Re: [RFC PATCH 0/1] Enable config.d directory to be processed.
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        Alice Mitchell <ajmitchell@redhat.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <20201029210401.446244-1-steved@redhat.com>
+ <338aeb795a31c2233016d225dc114e33d02eb0cb.camel@redhat.com>
+ <6f3caf91-296c-0aa8-ba41-bc35d500adaa@RedHat.com>
+ <4836616f-3aa6-d0bd-22db-cd7fecf4dce9@RedHat.com>
+ <a42154ffeb06a21590db01ab651870040597571c.camel@redhat.com>
+ <820312BD-099F-4B53-81A3-12E6F4066A5C@oracle.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <33c2621f-ce64-b401-6c11-266c3f23340d@RedHat.com>
+Date:   Mon, 2 Nov 2020 11:37:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-References: <1604325011-29427-1-git-send-email-dwysocha@redhat.com>
- <1604325011-29427-10-git-send-email-dwysocha@redhat.com> <2af057425352e05315b53c5b9bbd7fd277175a13.camel@hammerspace.com>
-In-Reply-To: <2af057425352e05315b53c5b9bbd7fd277175a13.camel@hammerspace.com>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Mon, 2 Nov 2020 11:26:43 -0500
-Message-ID: <CALF+zOmK1RuwCZDYoSF=fuB-F=HxC+n4vNUFtxgW_Qo58Mk2_A@mail.gmail.com>
-Subject: Re: [PATCH 09/11] NFS: Improve performance of listing directories
- being modified
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <820312BD-099F-4B53-81A3-12E6F4066A5C@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Nov 2, 2020 at 11:22 AM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Mon, 2020-11-02 at 08:50 -0500, Dave Wysochanski wrote:
-> > A process can hang forever to 'ls -l' a directory while the directory
-> > is being modified such as another NFS client adding files to the
-> > directory.  The problem is seen specifically with larger directories
-> > (I tested with 1 million) and/or slower NFS server responses to
-> > READDIR.  If a combination of the NFS directory size, the NFS server
-> > responses to READDIR is such that the 'ls' process gets partially
-> > through the listing before the attribute cache expires (time
-> > exceeds acdirmax), we drop the pagecache and have to re-fill it,
-> > and as a result, the process may never complete.  One could argue
-> > for larger directories the acdirmin/acdirmax should be increased,
-> > but it's not always possible to tune this effectively.
-> >
-> > The root cause of this problem is due to how the NFS readdir cache
-> > currently works.  The main search function,
-> > readdir_search_pagecache(),
-> > always starts searching at page_index and cookie == 0, and for any
-> > page not in the cache, fills in the page with entries obtained in
-> > a READDIR NFS call.  If a page already exists, we proceed to
-> > nfs_readdir_search_for_cookie(), which searches for the cookie
-> > (pos) of the readdir call.  The search is O(n), where n is the
-> > directory size before the cookie in question is found, and every
-> > entry to nfs_readdir() pays this penalty, irrespective of the
-> > current directory position (dir_context.pos).  The search is
-> > expensive due to the opaque nature of readdir cookies, and the fact
-> > that no mapping (hash) exists from cookies to pages.  In the case
-> > of a directory being modified, the above behavior can become an
-> > excessive penalty, since the same process is forced to fill pages it
-> > may be no longer interested in (the entries were passed in a previous
-> > nfs_readdir call), and this can essentially lead no forward progress.
-> >
-> > To fix this problem, at the end of nfs_readdir(), save the page_index
-> > corresponding to the directory position (cookie) inside the process's
-> > nfs_open_dir_context.  Then at the next entry of nfs_readdir(), use
-> > the saved page_index as the starting search point rather than
-> > starting
-> > at page_index == 0.  Not only does this fix the problem of listing
-> > a directory being modified, it also significantly improves
-> > performance
-> > in the unmodified case since no extra search penalty is paid at each
-> > entry to nfs_readdir().
-> >
-> > In the case of lseek, since there is no hash or other mapping from a
-> > cookie value to the page->index, just reset
-> > nfs_open_dir_context.page_index
-> > to 0, which will reset the search to the old behavior.
-> >
-> > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-> > ---
-> >  fs/nfs/dir.c           | 8 +++++++-
-> >  include/linux/nfs_fs.h | 1 +
-> >  2 files changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> > index 52e06c8fc7cd..b266f505b521 100644
-> > --- a/fs/nfs/dir.c
-> > +++ b/fs/nfs/dir.c
-> > @@ -78,6 +78,7 @@ static struct nfs_open_dir_context
-> > *alloc_nfs_open_dir_context(struct inode *dir
-> >                 ctx->attr_gencount = nfsi->attr_gencount;
-> >                 ctx->dir_cookie = 0;
-> >                 ctx->dup_cookie = 0;
-> > +               ctx->page_index = 0;
-> >                 ctx->cred = get_cred(cred);
-> >                 spin_lock(&dir->i_lock);
-> >                 if (list_empty(&nfsi->open_files) &&
-> > @@ -763,7 +764,7 @@ int
-> > find_and_lock_cache_page(nfs_readdir_descriptor_t *desc)
-> >         return res;
-> >  }
-> >
-> > -/* Search for desc->dir_cookie from the beginning of the page cache
-> > */
-> > +/* Search for desc->dir_cookie starting at desc->page_index */
-> >  static inline
-> >  int readdir_search_pagecache(nfs_readdir_descriptor_t *desc)
-> >  {
-> > @@ -885,6 +886,8 @@ static int nfs_readdir(struct file *file, struct
-> > dir_context *ctx)
-> >                 .ctx = ctx,
-> >                 .dir_cookie = &dir_ctx->dir_cookie,
-> >                 .plus = nfs_use_readdirplus(inode, ctx),
-> > +               .page_index = dir_ctx->page_index,
-> > +               .last_cookie = nfs_readdir_use_cookie(file) ? ctx-
-> > >pos : 0,
-> >         },
-> >                         *desc = &my_desc;
-> >         int res = 0;
-> > @@ -938,6 +941,7 @@ static int nfs_readdir(struct file *file, struct
-> > dir_context *ctx)
-> >  out:
-> >         if (res > 0)
-> >                 res = 0;
-> > +       dir_ctx->page_index = desc->page_index;
-> >         trace_nfs_readdir_exit(inode, ctx->pos, dir_ctx->dir_cookie,
-> >                                NFS_SERVER(inode)->dtsize,
-> > my_desc.plus, res);
-> >         return res;
-> > @@ -975,6 +979,8 @@ static loff_t nfs_llseek_dir(struct file *filp,
-> > loff_t offset, int whence)
-> >                 else
-> >                         dir_ctx->dir_cookie = 0;
-> >                 dir_ctx->duped = 0;
-> > +               /* Force readdir_search_pagecache to start over */
-> > +               dir_ctx->page_index = 0;
-> >         }
-> >         inode_unlock(inode);
-> >         return offset;
-> > diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-> > index a2c6455ea3fa..0e55c0154ccd 100644
-> > --- a/include/linux/nfs_fs.h
-> > +++ b/include/linux/nfs_fs.h
-> > @@ -93,6 +93,7 @@ struct nfs_open_dir_context {
-> >         __u64 dir_cookie;
-> >         __u64 dup_cookie;
-> >         signed char duped;
-> > +       unsigned long   page_index;
-> >  };
-> >
-> >  /*
->
-> NACK. It makes no sense to store the page index as a cursor.
->
+Hello,
 
-A similar thing was done recently with:
-227823d2074d nfs: optimise readdir cache page invalidation
+On 11/2/20 10:16 AM, Chuck Lever wrote:
+> 
+> 
+>> On Nov 2, 2020, at 10:05 AM, Alice Mitchell <ajmitchell@redhat.com> wrote:
+>>
+>> Hi Steve,
+>> That should work yes, although I am still dubious of the merits of
+>> replacing the single config file with multiple ones rather than reading
+>> them in addition to it. Surely this is going to lead to queries of why
+>> the main config file is being ignored just because the directory also
+>> existed.
+> 
+> I would follow the pattern used in other tools. How does /etc/exports.d/
+> work, for example?
+I pattern my patch on how exports.d works today. Scandir() all the 
+dir-entries then process each file. 
+ 
+> 
+> 
+>> I also have concerns that blindly loading -every- file in the directory
+>> is also going to lead to problems, such as foo.conf.rpmorig files and
+>> the like.  This is why i suggested a glob would be a better solution
+> 
+> The usual behavior used by other tools is to load only files that match
+> a particular file extension. That way, files can be left in place in the
+> .d directory, but disabled, by simply renaming them.
+Interesting... So only process *.conf files? Ex. 001-nfs.conf, 002-nfs.conf??
+
+steved.
+
+> 
+> 
+>> -Alice
+>>
+>>
+>> On Mon, 2020-11-02 at 09:23 -0500, Steve Dickson wrote:
+>>> Hello,
+>>>
+>>> On 11/2/20 8:24 AM, Steve Dickson wrote:
+>>>>> You would need to write an equivalent of conf_load_file() that
+>>>>> created
+>>>>> a new transaction id and read in all the files before committing
+>>>>> them
+>>>>> to do it this way.
+>>>> I kinda do think we should be able to read in multiple files...
+>>>> If that free was not done until all the files are read in, would
+>>>> something
+>>>> like that work? I guess I'm ask how difficult would be to re-work
+>>>> the code to do something like this. 
+>>>>
+>>> Something similar to this... load all the files under the same trans
+>>> id:
+>>> (Compiled tested):
+>>> diff --git a/support/nfs/conffile.c b/support/nfs/conffile.c
+>>> index c60e511..f003fe1 100644
+>>> --- a/support/nfs/conffile.c
+>>> +++ b/support/nfs/conffile.c
+>>> @@ -578,6 +578,30 @@ static void conf_free_bindings(void)
+>>> 	}
+>>> }
+>>>
+>>> +static int
+>>> +conf_load_files(int trans, const char *conf_file)
+>>> +{
+>>> +	char *conf_data;
+>>> +	char *section = NULL;
+>>> +	char *subsection = NULL;
+>>> +
+>>> +	conf_data = conf_readfile(conf_file);
+>>> +	if (conf_data == NULL)
+>>> +		return 1;
+>>> +
+>>> +	/* Load default configuration values.  */
+>>> +	conf_load_defaults();
+>>> +
+>>> +	/* Parse config contents into the transaction queue */
+>>> +	conf_parse(trans, conf_data, &section, &subsection, conf_file);
+>>> +	if (section) 
+>>> +		free(section);
+>>> +	if (subsection) 
+>>> +		free(subsection);
+>>> +	free(conf_data);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> /* Open the config file and map it into our address space, then
+>>> parse it.  */
+>>> static int
+>>> conf_load_file(const char *conf_file)
+>>> @@ -616,6 +640,7 @@ conf_init_dir(const char *conf_file)
+>>> 	struct dirent **namelist = NULL;
+>>> 	char *dname, fname[PATH_MAX + 1];
+>>> 	int n = 0, nfiles = 0, i, fname_len, dname_len;
+>>> +	int trans;
+>>>
+>>> 	dname = malloc(strlen(conf_file) + 3);
+>>> 	if (dname == NULL) {
+>>> @@ -637,6 +662,7 @@ conf_init_dir(const char *conf_file)
+>>> 		return nfiles;
+>>> 	}
+>>>
+>>> +	trans = conf_begin();
+>>> 	dname_len = strlen(dname);
+>>> 	for (i = 0; i < n; i++ ) {
+>>> 		struct dirent *d = namelist[i];
+>>> @@ -660,11 +686,17 @@ conf_init_dir(const char *conf_file)
+>>> 		}
+>>> 		sprintf(fname, "%s/%s", dname, d->d_name);
+>>>
+>>> -		if (conf_load_file(fname))
+>>> +		if (conf_load_files(trans, fname))
+>>> 			continue;
+>>> 		nfiles++;
+>>> 	}
+>>>
+>>> +	/* Free potential existing configuration.  */
+>>> +	conf_free_bindings();
+>>> +
+>>> +	/* Apply the new configuration values */
+>>> +	conf_end(trans, 1);
+>>> +
+>>> 	for (i = 0; i < n; i++)
+>>> 		free(namelist[i]);
+>>> 	free(namelist);
+>>>
+>>
+> 
+> --
+> Chuck Lever
+> 
+> 
+> 
 
