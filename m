@@ -2,274 +2,211 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 902E82A32B4
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Nov 2020 19:17:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 039352A3474
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Nov 2020 20:42:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgKBSR2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Nov 2020 13:17:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726342AbgKBSR1 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 2 Nov 2020 13:17:27 -0500
-Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726625AbgKBTmU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Nov 2020 14:42:20 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34453 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725838AbgKBTmU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Nov 2020 14:42:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1604346138;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oEITDkD8vZXMXeumV0cuHM8xWQyj5lNbZfFFSmq3H0A=;
+        b=Eqobr7C57ebw+5YtnsoEE8eccD0Vv44B+t13jXLX6CUEQo01zVjEkjkDn1t9YtCV90Vi3g
+        ddVFXYHXXYUyDups7GL9XjRwi+tpMrVUWkbf+BHxiUvSNxYuZlJjtNOSH3SLD1TyEei0SX
+        hkxODCCokfQ1mubQKQBkysn/Hlaqme8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-79-9btzFfL1OuKHnWv6RjEWFg-1; Mon, 02 Nov 2020 14:42:15 -0500
+X-MC-Unique: 9btzFfL1OuKHnWv6RjEWFg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FE402222B
-        for <linux-nfs@vger.kernel.org>; Mon,  2 Nov 2020 18:17:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604341046;
-        bh=XVXBt4Tj7nqalGynpZA6CSK0J9bdcHzViYb2QRauuk4=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=k6rLGh6GwPmS8ff+9KocyWM4cmzA+7QX3RzZc6qAO8zRP9XueXGGkDwsIckEakatQ
-         3qfc9z669Y1Fls5fZCrlPU7GZwpRCQh2D++oxAISkDucrGzJrnw1AHG1ZR2Ko+ZPNd
-         X5MzSWQ4uoBPdJhaQgkFRvw5p0P0Tj3nhgyt3b64=
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 12/12] NFS: Reduce readdir stack usage
-Date:   Mon,  2 Nov 2020 13:06:58 -0500
-Message-Id: <20201102180658.6218-13-trondmy@kernel.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201102180658.6218-12-trondmy@kernel.org>
-References: <20201102180658.6218-1-trondmy@kernel.org>
- <20201102180658.6218-2-trondmy@kernel.org>
- <20201102180658.6218-3-trondmy@kernel.org>
- <20201102180658.6218-4-trondmy@kernel.org>
- <20201102180658.6218-5-trondmy@kernel.org>
- <20201102180658.6218-6-trondmy@kernel.org>
- <20201102180658.6218-7-trondmy@kernel.org>
- <20201102180658.6218-8-trondmy@kernel.org>
- <20201102180658.6218-9-trondmy@kernel.org>
- <20201102180658.6218-10-trondmy@kernel.org>
- <20201102180658.6218-11-trondmy@kernel.org>
- <20201102180658.6218-12-trondmy@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB8C98030D9
+        for <linux-nfs@vger.kernel.org>; Mon,  2 Nov 2020 19:42:14 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-113-8.phx2.redhat.com [10.3.113.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4D6535F919;
+        Mon,  2 Nov 2020 19:42:14 +0000 (UTC)
+Subject: Re: [RFC PATCH 0/1] Enable config.d directory to be processed.
+To:     Alice Mitchell <ajmitchell@redhat.com>,
+        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20201029210401.446244-1-steved@redhat.com>
+ <338aeb795a31c2233016d225dc114e33d02eb0cb.camel@redhat.com>
+ <6f3caf91-296c-0aa8-ba41-bc35d500adaa@RedHat.com>
+ <4836616f-3aa6-d0bd-22db-cd7fecf4dce9@RedHat.com>
+ <1ac387a1ef608258b2e23e7923a1c4e2ec6b25b3.camel@redhat.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <5d090330-d67f-4bf0-ca91-e30772bd87b2@RedHat.com>
+Date:   Mon, 2 Nov 2020 14:42:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1ac387a1ef608258b2e23e7923a1c4e2ec6b25b3.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+Hello,
 
-The descriptor and the struct nfs_entry are both large structures,
-so don't allocate them from the stack.
+On 11/2/20 10:57 AM, Alice Mitchell wrote:
+> On Mon, 2020-11-02 at 09:23 -0500, Steve Dickson wrote:
+>> Hello,
+>>
+>> On 11/2/20 8:24 AM, Steve Dickson wrote:
+>>>> You would need to write an equivalent of conf_load_file() that
+>>>> created a new transaction id and read in all the files before
+>>>> committing them to do it this way.
+>>>
+> 
+> How about the following as an alternative...
+> 
+> It changes none of the past behaviour, but if you wanted to add an
+> optional directory structure to a config file then simply add this to
+> the default single config file that we ship.
+> 
+> /etc/nfsmount.conf:
+> [NFSMount_Global_Options]
+> include=-/etc/nfsmount.conf.d/*.conf
+If it was this simple I would go for it... 
+but it just not work... as expected. Here is why.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/dir.c | 88 +++++++++++++++++++++++++++-------------------------
- 1 file changed, 46 insertions(+), 42 deletions(-)
+In relative_path() looks at the new file 
+(/etc/nfsmount.conf.d/*.conf). If the path starts
+with '/',  the path is strdup-ed and returned.
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index a2cebd365948..966e8fc6c9b7 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -144,7 +144,7 @@ struct nfs_cache_array {
- 	struct nfs_cache_array_entry array[];
- };
- 
--typedef struct nfs_readdir_descriptor {
-+struct nfs_readdir_descriptor {
- 	struct file	*file;
- 	struct page	*page;
- 	struct dir_context *ctx;
-@@ -163,7 +163,7 @@ typedef struct nfs_readdir_descriptor {
- 	signed char duped;
- 	bool plus;
- 	bool eof;
--} nfs_readdir_descriptor_t;
-+};
- 
- static void nfs_readdir_array_init(struct nfs_cache_array *array)
- {
-@@ -358,8 +358,8 @@ bool nfs_readdir_use_cookie(const struct file *filp)
- 	return true;
- }
- 
--static
--int nfs_readdir_search_for_pos(struct nfs_cache_array *array, nfs_readdir_descriptor_t *desc)
-+static int nfs_readdir_search_for_pos(struct nfs_cache_array *array,
-+				      struct nfs_readdir_descriptor *desc)
- {
- 	loff_t diff = desc->ctx->pos - desc->current_index;
- 	unsigned int index;
-@@ -390,8 +390,8 @@ nfs_readdir_inode_mapping_valid(struct nfs_inode *nfsi)
- 	return !test_bit(NFS_INO_INVALIDATING, &nfsi->flags);
- }
- 
--static
--int nfs_readdir_search_for_cookie(struct nfs_cache_array *array, nfs_readdir_descriptor_t *desc)
-+static int nfs_readdir_search_for_cookie(struct nfs_cache_array *array,
-+					 struct nfs_readdir_descriptor *desc)
- {
- 	int i;
- 	loff_t new_pos;
-@@ -439,8 +439,7 @@ int nfs_readdir_search_for_cookie(struct nfs_cache_array *array, nfs_readdir_des
- 	return status;
- }
- 
--static
--int nfs_readdir_search_array(nfs_readdir_descriptor_t *desc)
-+static int nfs_readdir_search_array(struct nfs_readdir_descriptor *desc)
- {
- 	struct nfs_cache_array *array;
- 	int status;
-@@ -493,7 +492,7 @@ static int nfs_readdir_xdr_filler(struct nfs_readdir_descriptor *desc,
- 	return error;
- }
- 
--static int xdr_decode(nfs_readdir_descriptor_t *desc,
-+static int xdr_decode(struct nfs_readdir_descriptor *desc,
- 		      struct nfs_entry *entry, struct xdr_stream *xdr)
- {
- 	struct inode *inode = file_inode(desc->file);
-@@ -757,27 +756,28 @@ static struct page **nfs_readdir_alloc_pages(size_t npages)
- 	return NULL;
- }
- 
--static
--int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page, struct inode *inode)
-+static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *desc,
-+				    struct page *page, struct inode *inode)
- {
- 	struct page **pages;
--	struct nfs_entry entry;
-+	struct nfs_entry *entry;
- 	size_t array_size;
- 	size_t dtsize = NFS_SERVER(inode)->dtsize;
- 	int status = -ENOMEM;
- 
--	entry.prev_cookie = 0;
--	entry.cookie = nfs_readdir_page_last_cookie(page);
--	entry.eof = 0;
--	entry.fh = nfs_alloc_fhandle();
--	entry.fattr = nfs_alloc_fattr();
--	entry.server = NFS_SERVER(inode);
--	if (entry.fh == NULL || entry.fattr == NULL)
-+	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-+	if (!entry)
-+		return -ENOMEM;
-+	entry->cookie = nfs_readdir_page_last_cookie(page);
-+	entry->fh = nfs_alloc_fhandle();
-+	entry->fattr = nfs_alloc_fattr();
-+	entry->server = NFS_SERVER(inode);
-+	if (entry->fh == NULL || entry->fattr == NULL)
- 		goto out;
- 
--	entry.label = nfs4_label_alloc(NFS_SERVER(inode), GFP_NOWAIT);
--	if (IS_ERR(entry.label)) {
--		status = PTR_ERR(entry.label);
-+	entry->label = nfs4_label_alloc(NFS_SERVER(inode), GFP_NOWAIT);
-+	if (IS_ERR(entry->label)) {
-+		status = PTR_ERR(entry->label);
- 		goto out;
- 	}
- 
-@@ -788,7 +788,7 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
- 
- 	do {
- 		unsigned int pglen;
--		status = nfs_readdir_xdr_filler(desc, entry.cookie,
-+		status = nfs_readdir_xdr_filler(desc, entry->cookie,
- 						pages, dtsize);
- 		if (status < 0)
- 			break;
-@@ -799,15 +799,16 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
- 			break;
- 		}
- 
--		status = nfs_readdir_page_filler(desc, &entry, pages, page, pglen);
-+		status = nfs_readdir_page_filler(desc, entry, pages, page, pglen);
- 	} while (!status && nfs_readdir_page_needs_filling(page));
- 
- 	nfs_readdir_free_pages(pages, array_size);
- out_release_label:
--	nfs4_label_free(entry.label);
-+	nfs4_label_free(entry->label);
- out:
--	nfs_free_fattr(entry.fattr);
--	nfs_free_fhandle(entry.fh);
-+	nfs_free_fattr(entry->fattr);
-+	nfs_free_fhandle(entry->fh);
-+	kfree(entry);
- 	return status;
- }
- 
-@@ -829,8 +830,7 @@ nfs_readdir_page_get_cached(struct nfs_readdir_descriptor *desc)
-  * Returns 0 if desc->dir_cookie was found on page desc->page_index
-  * and locks the page to prevent removal from the page cache.
-  */
--static
--int find_and_lock_cache_page(nfs_readdir_descriptor_t *desc)
-+static int find_and_lock_cache_page(struct nfs_readdir_descriptor *desc)
- {
- 	struct inode *inode = file_inode(desc->file);
- 	struct nfs_inode *nfsi = NFS_I(inode);
-@@ -856,8 +856,7 @@ int find_and_lock_cache_page(nfs_readdir_descriptor_t *desc)
- }
- 
- /* Search for desc->dir_cookie from the beginning of the page cache */
--static inline
--int readdir_search_pagecache(nfs_readdir_descriptor_t *desc)
-+static int readdir_search_pagecache(struct nfs_readdir_descriptor *desc)
- {
- 	int res;
- 
-@@ -922,8 +921,7 @@ static void nfs_do_filldir(struct nfs_readdir_descriptor *desc)
-  *	 we should already have a complete representation of the
-  *	 directory in the page cache by the time we get here.
-  */
--static inline
--int uncached_readdir(nfs_readdir_descriptor_t *desc)
-+static int uncached_readdir(struct nfs_readdir_descriptor *desc)
- {
- 	struct page	*page = NULL;
- 	int		status;
-@@ -968,13 +966,8 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
- 	struct dentry	*dentry = file_dentry(file);
- 	struct inode	*inode = d_inode(dentry);
- 	struct nfs_open_dir_context *dir_ctx = file->private_data;
--	nfs_readdir_descriptor_t my_desc = {
--		.file = file,
--		.ctx = ctx,
--		.plus = nfs_use_readdirplus(inode, ctx),
--	},
--			*desc = &my_desc;
--	int res = 0;
-+	struct nfs_readdir_descriptor *desc;
-+	int res;
- 
- 	dfprintk(FILE, "NFS: readdir(%pD2) starting at cookie %llu\n",
- 			file, (long long)ctx->pos);
-@@ -986,10 +979,19 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
- 	 * to either find the entry with the appropriate number or
- 	 * revalidate the cookie.
- 	 */
--	if (ctx->pos == 0 || nfs_attribute_cache_expired(inode))
-+	if (ctx->pos == 0 || nfs_attribute_cache_expired(inode)) {
- 		res = nfs_revalidate_mapping(inode, file->f_mapping);
--	if (res < 0)
-+		if (res < 0)
-+			goto out;
-+	}
-+
-+	res = -ENOMEM;
-+	desc = kzalloc(sizeof(*desc), GFP_KERNEL);
-+	if (!desc)
- 		goto out;
-+	desc->file = file;
-+	desc->ctx = ctx;
-+	desc->plus = nfs_use_readdirplus(inode, ctx);
- 
- 	spin_lock(&file->f_lock);
- 	desc->dir_cookie = dir_ctx->dir_cookie;
-@@ -1035,6 +1037,8 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
- 	dir_ctx->attr_gencount = desc->attr_gencount;
- 	spin_unlock(&file->f_lock);
- 
-+	kfree(desc);
-+
- out:
- 	dfprintk(FILE, "NFS: readdir(%pD2) returns %d\n", file, res);
- 	return res;
--- 
-2.28.0
+The '*' is never expanded. Even if it was... there
+no code (that I see) that will process multiple
+files.   TBL... This works 
+include=-/etc/nfsmount.conf.d/nfsmount.conf
+
+This doesn't 
+include=-/etc/nfsmount.conf.d/*.conf
+
+Also I don't know if it is a good idea to have the sub configs
+dependent on the main config file. If the main config is remove
+the sub config will never be seen. Is that a good thing?
+
+I'm thinking we go with processing the sub configs separate 
+from the main config and allow multiple sub configs be processed 
+if they end with ".config" (mrchuck's suggestion).
+
+Then document all this in the man pages.  
+
+The last question should the main config be process,
+not at all or after or before the sub configs?
+
+steved.
+  
+> 
+> 
+> The leading minus tells it that it isnt an error if its empty, and it
+> will load all of the fragments it finds in there as well as the
+> existing single file.  Apply the same structure to any existing config
+> file that you want to also have a directory for.
+> 
+> -Alice
+> 
+> 
+> 
+> diff --git a/support/nfs/conffile.c b/support/nfs/conffile.c
+> index 58c03911..aade50c8 100644
+> --- a/support/nfs/conffile.c
+> +++ b/support/nfs/conffile.c
+> @@ -53,6 +53,7 @@
+>  #include <libgen.h>
+>  #include <sys/file.h>
+>  #include <time.h>
+> +#include <glob.h>
+>  
+>  #include "conffile.h"
+>  #include "xlog.h"
+> @@ -690,6 +691,7 @@ conf_parse_line(int trans, char *line, const char *filename, int lineno, char **
+>  	if (strcasecmp(line, "include")==0) {
+>  		/* load and parse subordinate config files */
+>  		_Bool optional = false;
+> +		glob_t globdata;
+>  
+>  		if (val && *val == '-') {
+>  			optional = true;
+> @@ -704,33 +706,46 @@ conf_parse_line(int trans, char *line, const char *filename, int lineno, char **
+>  			return;
+>  		}
+>  
+> -		subconf = conf_readfile(relpath);
+> -		if (subconf == NULL) {
+> -			if (!optional)
+> -				xlog_warn("config error at %s:%d: error loading included config",
+> -					  filename, lineno);
+> -			if (relpath)
+> -				free(relpath);
+> -			return;
+> -		}
+> +		if (glob(relpath, GLOB_MARK|GLOB_NOCHECK, NULL, &globdata)) {
+> +			xlog_warn("config error at %s:%d: error with matching pattern", filename, lineno);
+> +		} else 
+> +		{
+> +			for (size_t g=0; g<globdata.gl_pathc; g++) {
+> +				const char * subpath = globdata.gl_pathv[g];
+>  
+> -		/* copy the section data so the included file can inherit it
+> -		 * without accidentally changing it for us */
+> -		if (*section != NULL) {
+> -			inc_section = strdup(*section);
+> -			if (*subsection != NULL)
+> -				inc_subsection = strdup(*subsection);
+> -		}
+> +				if (subpath[strlen(subpath)-1] == '/') {
+> +					continue;
+> +				}
+> +				subconf = conf_readfile(subpath);
+> +				if (subconf == NULL) {
+> +					if (!optional)
+> +						xlog_warn("config error at %s:%d: error loading included config",
+> +							  filename, lineno);
+> +					if (relpath)
+> +						free(relpath);
+> +					return;
+> +				}
+> +
+> +				/* copy the section data so the included file can inherit it
+> +				 * without accidentally changing it for us */
+> +				if (*section != NULL) {
+> +					inc_section = strdup(*section);
+> +					if (*subsection != NULL)
+> +						inc_subsection = strdup(*subsection);
+> +				}
+>  
+> -		conf_parse(trans, subconf, &inc_section, &inc_subsection, relpath);
+> +				conf_parse(trans, subconf, &inc_section, &inc_subsection, relpath);
+>  
+> -		if (inc_section)
+> -			free(inc_section);
+> -		if (inc_subsection)
+> -			free(inc_subsection);
+> +				if (inc_section)
+> +					free(inc_section);
+> +				if (inc_subsection)
+> +					free(inc_subsection);
+> +				free(subconf);
+> +			}
+> +		}
+>  		if (relpath)
+>  			free(relpath);
+> -		free(subconf);
+> +		globfree(&globdata);
+>  	} else {
+>  		/* XXX Perhaps should we not ignore errors?  */
+>  		conf_set(trans, *section, *subsection, line, val, 0, 0);
+> 
+> 
 
