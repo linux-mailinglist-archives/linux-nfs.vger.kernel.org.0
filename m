@@ -2,107 +2,158 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF09F2A2D03
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Nov 2020 15:31:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7A172A2D9D
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Nov 2020 16:05:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725902AbgKBObf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Nov 2020 09:31:35 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:40874 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgKBObf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Nov 2020 09:31:35 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A2EPLKd042219;
-        Mon, 2 Nov 2020 14:31:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=BQDJe71X5l6t0vecfZytTzkoHxPWhPbaKkNRsejo630=;
- b=mjwWSevI93WJzam9IOb6T47zzJ89nLLqnCVCGvqCbuHdp6493HOLg9B1p1Ov6mx4yGCk
- fAYSxdMzIxlrbnXYaHXg9lcdyGRzqDDSd7o/CBvFObwLcujnqv9cXTYvP9qwp3nwS0gG
- zgGyLYkoqzFhrsWH+iwpUPmgHWZsBiTTb7cU9oynMQIZuFwS1ixHjU3OICviVMRG7/Ix
- Jb/Mq305A++iR2LhShkCvvjpbDLeGXxLghFTQYDFP7zNwacILtjvYgIyetaKr10A+Yy3
- 4LrMMwqpqG+JZrTAH0VpsKzjBfRQuwes90T9u8QjMMTxpB2qHNjDl5gxj6kYpwMYxPnL KA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 34hhvc45he-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 02 Nov 2020 14:31:29 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A2ETdGs087987;
-        Mon, 2 Nov 2020 14:31:28 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 34hvrtxh1d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 02 Nov 2020 14:31:28 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0A2EVPg1011249;
-        Mon, 2 Nov 2020 14:31:25 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 02 Nov 2020 06:31:25 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH] nfsd: remove unneeded semicolon
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20201101153234.2291612-1-trix@redhat.com>
-Date:   Mon, 2 Nov 2020 09:31:24 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+        id S1726311AbgKBPF4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Nov 2020 10:05:56 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51142 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726242AbgKBPF4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Nov 2020 10:05:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1604329554;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lZ0XGqfXTwZ7VyzXbeCvqwA/GIrukEesuG4prcyRFCk=;
+        b=TWtlIsF0v+hyicqXns6F7rj5nv5BaztSSzYK+R+FEKq6UMzVVfSs8U/n2fKmFbwWxnOW8o
+        h3NH8Je5yBVdg2A0NDtQ7177LzIIi6sRyXkuvalxIbiHKAZBMXfRSka2ZBxI4P+HIJr+As
+        VzRZKkp/qdSkSmGcSth1lM8p6vGkxc0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-35-EmtSJw2jMfeICCjNUHM82g-1; Mon, 02 Nov 2020 10:05:52 -0500
+X-MC-Unique: EmtSJw2jMfeICCjNUHM82g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA98A6D242
+        for <linux-nfs@vger.kernel.org>; Mon,  2 Nov 2020 15:05:51 +0000 (UTC)
+Received: from ovpn-112-10.ams2.redhat.com (ovpn-112-10.ams2.redhat.com [10.36.112.10])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 10A3410013C0;
+        Mon,  2 Nov 2020 15:05:50 +0000 (UTC)
+Message-ID: <a42154ffeb06a21590db01ab651870040597571c.camel@redhat.com>
+Subject: Re: [RFC PATCH 0/1] Enable config.d directory to be processed.
+From:   Alice Mitchell <ajmitchell@redhat.com>
+To:     Steve Dickson <SteveD@RedHat.com>,
+        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Date:   Mon, 02 Nov 2020 15:05:49 +0000
+In-Reply-To: <4836616f-3aa6-d0bd-22db-cd7fecf4dce9@RedHat.com>
+References: <20201029210401.446244-1-steved@redhat.com>
+         <338aeb795a31c2233016d225dc114e33d02eb0cb.camel@redhat.com>
+         <6f3caf91-296c-0aa8-ba41-bc35d500adaa@RedHat.com>
+         <4836616f-3aa6-d0bd-22db-cd7fecf4dce9@RedHat.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <A241215F-384F-4BC7-98A4-339D21622B4B@oracle.com>
-References: <20201101153234.2291612-1-trix@redhat.com>
-To:     trix@redhat.com, Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9792 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 suspectscore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011020116
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9792 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
- impostorscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=999
- bulkscore=0 phishscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011020115
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Steve,
+That should work yes, although I am still dubious of the merits of
+replacing the single config file with multiple ones rather than reading
+them in addition to it. Surely this is going to lead to queries of why
+the main config file is being ignored just because the directory also
+existed.
+
+I also have concerns that blindly loading -every- file in the directory
+is also going to lead to problems, such as foo.conf.rpmorig files and
+the like.  This is why i suggested a glob would be a better solution
+
+-Alice
 
 
-> On Nov 1, 2020, at 10:32 AM, trix@redhat.com wrote:
+On Mon, 2020-11-02 at 09:23 -0500, Steve Dickson wrote:
+> Hello,
 > 
-> From: Tom Rix <trix@redhat.com>
+> On 11/2/20 8:24 AM, Steve Dickson wrote:
+> > > You would need to write an equivalent of conf_load_file() that
+> > > created
+> > > a new transaction id and read in all the files before committing
+> > > them
+> > > to do it this way.
+> > I kinda do think we should be able to read in multiple files...
+> > If that free was not done until all the files are read in, would
+> > something
+> > like that work? I guess I'm ask how difficult would be to re-work
+> > the code to do something like this. 
+> > 
+> Something similar to this... load all the files under the same trans
+> id:
+> (Compiled tested):
+> diff --git a/support/nfs/conffile.c b/support/nfs/conffile.c
+> index c60e511..f003fe1 100644
+> --- a/support/nfs/conffile.c
+> +++ b/support/nfs/conffile.c
+> @@ -578,6 +578,30 @@ static void conf_free_bindings(void)
+>  	}
+>  }
+>  
+> +static int
+> +conf_load_files(int trans, const char *conf_file)
+> +{
+> +	char *conf_data;
+> +	char *section = NULL;
+> +	char *subsection = NULL;
+> +
+> +	conf_data = conf_readfile(conf_file);
+> +	if (conf_data == NULL)
+> +		return 1;
+> +
+> +	/* Load default configuration values.  */
+> +	conf_load_defaults();
+> +
+> +	/* Parse config contents into the transaction queue */
+> +	conf_parse(trans, conf_data, &section, &subsection, conf_file);
+> +	if (section) 
+> +		free(section);
+> +	if (subsection) 
+> +		free(subsection);
+> +	free(conf_data);
+> +
+> +	return 0;
+> +}
+>  /* Open the config file and map it into our address space, then
+> parse it.  */
+>  static int
+>  conf_load_file(const char *conf_file)
+> @@ -616,6 +640,7 @@ conf_init_dir(const char *conf_file)
+>  	struct dirent **namelist = NULL;
+>  	char *dname, fname[PATH_MAX + 1];
+>  	int n = 0, nfiles = 0, i, fname_len, dname_len;
+> +	int trans;
+>  
+>  	dname = malloc(strlen(conf_file) + 3);
+>  	if (dname == NULL) {
+> @@ -637,6 +662,7 @@ conf_init_dir(const char *conf_file)
+>  		return nfiles;
+>  	}
+>  
+> +	trans = conf_begin();
+>  	dname_len = strlen(dname);
+>  	for (i = 0; i < n; i++ ) {
+>  		struct dirent *d = namelist[i];
+> @@ -660,11 +686,17 @@ conf_init_dir(const char *conf_file)
+>  		}
+>  		sprintf(fname, "%s/%s", dname, d->d_name);
+>  
+> -		if (conf_load_file(fname))
+> +		if (conf_load_files(trans, fname))
+>  			continue;
+>  		nfiles++;
+>  	}
+>  
+> +	/* Free potential existing configuration.  */
+> +	conf_free_bindings();
+> +
+> +	/* Apply the new configuration values */
+> +	conf_end(trans, 1);
+> +
+>  	for (i = 0; i < n; i++)
+>  		free(namelist[i]);
+>  	free(namelist);
 > 
-> A semicolon is not needed after a switch statement.
-> 
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
-> fs/nfsd/nfs4xdr.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 259d5ad0e3f4..6020f0ff6795 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -2558,7 +2558,7 @@ static u32 nfs4_file_type(umode_t mode)
-> 	case S_IFREG:	return NF4REG;
-> 	case S_IFSOCK:	return NF4SOCK;
-> 	default:	return NF4BAD;
-> -	};
-> +	}
-> }
-> 
-> static inline __be32
-> -- 
-> 2.18.1
-> 
-
-I can take this for 5.11.
-
---
-Chuck Lever
-
-
 
