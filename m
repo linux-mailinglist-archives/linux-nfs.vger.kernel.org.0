@@ -2,77 +2,225 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 809622A3026
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Nov 2020 17:42:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB2002A3191
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Nov 2020 18:31:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgKBQmn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Nov 2020 11:42:43 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:20057 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727134AbgKBQmn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Nov 2020 11:42:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604335362;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=inxxV8Xl3+G9MYOyzRRPDfhKsUuLxeZmCwk7U8WRpwE=;
-        b=FWp43K/irvLuBD9K9xdXP2G1g6h8gGimmcOntU6WpmQg59Xh2mTbnad6znrZHct0+732Pz
-        QKcO7ck+81S7wu8fRZoAlCfLI4+IP6XHjitIHlnmjPWuUMKUV8B5INX/+nDzHOzjrsxPHD
-        a4A8ZG7Rbhy4opFKQVDinUhOdy04acs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-431-Yb2a-PChNM-N-ZsXf1Ylkg-1; Mon, 02 Nov 2020 11:42:41 -0500
-X-MC-Unique: Yb2a-PChNM-N-ZsXf1Ylkg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 06B7E804001
-        for <linux-nfs@vger.kernel.org>; Mon,  2 Nov 2020 16:42:40 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-113-8.phx2.redhat.com [10.3.113.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B58DD5B4D3;
-        Mon,  2 Nov 2020 16:42:39 +0000 (UTC)
-Subject: Re: [RFC PATCH 0/1] Enable config.d directory to be processed.
-To:     Alice Mitchell <ajmitchell@redhat.com>,
-        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20201029210401.446244-1-steved@redhat.com>
- <338aeb795a31c2233016d225dc114e33d02eb0cb.camel@redhat.com>
- <6f3caf91-296c-0aa8-ba41-bc35d500adaa@RedHat.com>
- <4836616f-3aa6-d0bd-22db-cd7fecf4dce9@RedHat.com>
- <a42154ffeb06a21590db01ab651870040597571c.camel@redhat.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <99ef399b-7c8a-e440-ce85-463a8ecf3097@RedHat.com>
-Date:   Mon, 2 Nov 2020 11:42:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
-MIME-Version: 1.0
-In-Reply-To: <a42154ffeb06a21590db01ab651870040597571c.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
+        id S1727782AbgKBRbw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Nov 2020 12:31:52 -0500
+Received: from mail-bn8nam08on2109.outbound.protection.outlook.com ([40.107.100.109]:27617
+        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726587AbgKBRbw (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 2 Nov 2020 12:31:52 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ot7GBp9rBsmr19i9On+ZBc/rxmlElX6CO7Qel7h+mQOowDp0PrVq+0qyT6D6DYS8W0tlufyVnrFqCQoPPR5sOo+g5RW0sYJzPu01WA4KMbS4IRnDtVd1xgtCOqt28NFw+tI03EcD7r67yQ/7hcxx0nTb80hER/JDzfusJrF/iz/XOy7iV46WtE6t7qajED+eGjl0YgjWUQkEiOAUtAALiMSgvGXS3KzgooJVuHTlOrLdZab1VOmBwMLi2ZFT+THqvU5WJ68HxJ92UP4NtehT4P0yBcyhUPffGSG3pSiKwNgwdl/jhA7TwUUIdtQAjFVYs3ccbbi256GAtinoSmVdhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FUxEIu+zyURG+0G/htwTXLpdwu5ThnJTq4u6CIMInm0=;
+ b=O+FhKh7EdcHFKNly+ic2uHVEvw26xHooq6lcC7kMUUZbRKPUEpdFvizwiex0GzPbllnvX+QmnXmKkAs4KNgMat++/PNk6cVHsdrYFwcpytL6LQBKB45NPc0oO4Mj+RNAPoSbZnEYG5mBVt3rPCqjGKEMtfSP5O5o2ZS5lLgexAKJUCwCbhvL3JSpfCvQb3e3YaRwUcmAhGiQ3qHbEloPJuEuMuVSunJHrkajpMn9xid5GnQu0AJArtHr+s3iX60zsX7gMKlPIGvOSeV5Ztpx7KtY8DGK3Dcdq5QwuGFyX9HBmmGhflDSYV0B7O3/ZM629T8H5sQFRfc/Yx9U7Ih0Jg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FUxEIu+zyURG+0G/htwTXLpdwu5ThnJTq4u6CIMInm0=;
+ b=YcvB7J/mT7xUUqC0CFSgjVR+/iZR85m8LEQABEgC90N49f2T6QPgLEDzVhHjFRuxwGr0qAx50rKcd0tsezarDt9fHP/TydueSDtsX3yEzS6aLzhgcUcWmrEzwbxuCLYXNuTcYyzO8wjf3qHa3PbwthZap20z2nrTZV/KpjPavlY=
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
+ by MN2PR13MB3976.namprd13.prod.outlook.com (2603:10b6:208:269::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.10; Mon, 2 Nov
+ 2020 17:31:48 +0000
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.010; Mon, 2 Nov 2020
+ 17:31:47 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "dwysocha@redhat.com" <dwysocha@redhat.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
+Subject: Re: [PATCH 09/11] NFS: Improve performance of listing directories
+ being modified
+Thread-Topic: [PATCH 09/11] NFS: Improve performance of listing directories
+ being modified
+Thread-Index: AQHWsR8e3oN/u14Jk0KcmdvFniEkgqm1BkuAgAABXYCAABIsAA==
+Date:   Mon, 2 Nov 2020 17:31:47 +0000
+Message-ID: <d0bce650791752805f5d03149d7ea709d07002bb.camel@hammerspace.com>
+References: <1604325011-29427-1-git-send-email-dwysocha@redhat.com>
+         <1604325011-29427-10-git-send-email-dwysocha@redhat.com>
+         <2af057425352e05315b53c5b9bbd7fd277175a13.camel@hammerspace.com>
+         <CALF+zOmK1RuwCZDYoSF=fuB-F=HxC+n4vNUFtxgW_Qo58Mk2_A@mail.gmail.com>
+In-Reply-To: <CALF+zOmK1RuwCZDYoSF=fuB-F=HxC+n4vNUFtxgW_Qo58Mk2_A@mail.gmail.com>
+Accept-Language: en-US, en-GB
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3d52a964-f136-4b48-6dae-08d87f552d1d
+x-ms-traffictypediagnostic: MN2PR13MB3976:
+x-microsoft-antispam-prvs: <MN2PR13MB39760031BFA4F90FE0CB8B2AB8100@MN2PR13MB3976.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: unIb1cdZNrK8yMau+jo9XJcMlgQAZHQ2QY3wO4n3Poa6ENlB8EczxGqgZj41UP7aSGOeU2lN2G6n+WcWEpTos7akM4nbppYFvjXqgpQDkA0tmqwgHhTkDj6/PkZ3cQX1lljuTt5pEX72keT8L/KivoWq1tcH5hshqUoVlMVOIPJ2WlzetjEPggnmZf2Cwi7kzCkzSy2eTg7ER7FigaaY1+xHXvFZfstMEJo6mYuiT7OIvWMQ2ZRrHB/b0fLuTCy31Pfgy2E6gXsHo4biBt/0Xp3rthOzpBxt0qm6F5klZT56SxJQ65a1nGjDpjvxeEfTpOs+PHGf+oMlPjWD0V+tmg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(346002)(136003)(39830400003)(396003)(366004)(71200400001)(316002)(54906003)(86362001)(26005)(6506007)(8936002)(53546011)(83380400001)(186003)(8676002)(6486002)(6512007)(36756003)(6916009)(76116006)(91956017)(66556008)(64756008)(66946007)(66476007)(66446008)(478600001)(4326008)(2616005)(2906002)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: fDk9kiU116fDVGXQ0oVOnvWjDjqXWyhbkxkSMMg/5MA/zumTJ8nOTk1eXbMtmuyHCVb57OdDh0WExgQ4Hpn+z/x2x4wskQ3+rdRvJOzKQK9P9nx2w2G/HYjiOAs1oJ4nXMo5+kbBrSRp+EaTjbinYaXrAcqgz/Rxykvi1wKiEWmqOQDgCy17mtqZO0np5oeK57LYOXR2Sn241dBVyh4hah3R7pI79wnV9tHK1S3jgBvy4RBpsKA3M/H5viEGyHgPw333g+l7pVJhwunb++gG5jxrO2KBkw1tpOWUHXaONHTIATZIORmVj2n9GbqlMkDUfy3IPm1BeGquoOdIad/SZesuI48tMpZX34v3t0mcZseWKoctaJkEaHQvkPF1iuFHFAx0gbDvHiii8558yLLg1sr0993qz6il/HE8BZIj2i47Ppo0hR/xa8iKJzm7NydUqfiacEknW4oXPG70iWciIkpD76iAiMAf4cRmaUx3E1luKB6MpwVYLGFVVomVrUtmOqeVEgBI2Mp2jefVEGg20BPvWVhXq0Q1W4p++KUS5Wky5iFBjYnSMs5VhZI1ggLe0Djywq8uyE8HrgdJJdoUI/kPDEgGQylTu0y9MWzQphYqBkrFbhaXs66oCN2eMZUyhyQknViM2R5FjU5KPlMSUQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0CAB6C98E15E384D8734EC73A1EC69F4@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d52a964-f136-4b48-6dae-08d87f552d1d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Nov 2020 17:31:47.6745
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mbWwNFNkCOpA21noE7/ZW83kDR3RtjIVtgTWkgwrgvcnU3xKtXrWbYpSow7w+qOpLF5y0lZm+LEMbmhO5zGKvw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3976
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hey!
-
-On 11/2/20 10:05 AM, Alice Mitchell wrote:
-> That should work yes, although I am still dubious of the merits of
-> replacing the single config file with multiple ones rather than reading
-> them in addition to it. Surely this is going to lead to queries of why
-> the main config file is being ignored just because the directory also
-> existed.
-Isn't that how Ansible works? They drop in its own config file assuming 
-main config file is ignored (or even removed)?
- 
-
-> 
-> I also have concerns that blindly loading -every- file in the directory
-> is also going to lead to problems, such as foo.conf.rpmorig files and
-> the like.  This is why i suggested a glob would be a better solution
-Maybe used mrchuck's suggestion only process *.conf files? 
-
-steved.
-
+T24gTW9uLCAyMDIwLTExLTAyIGF0IDExOjI2IC0wNTAwLCBEYXZpZCBXeXNvY2hhbnNraSB3cm90
+ZToNCj4gT24gTW9uLCBOb3YgMiwgMjAyMCBhdCAxMToyMiBBTSBUcm9uZCBNeWtsZWJ1c3QgPA0K
+PiB0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gT24gTW9uLCAyMDIw
+LTExLTAyIGF0IDA4OjUwIC0wNTAwLCBEYXZlIFd5c29jaGFuc2tpIHdyb3RlOg0KPiA+ID4gQSBw
+cm9jZXNzIGNhbiBoYW5nIGZvcmV2ZXIgdG8gJ2xzIC1sJyBhIGRpcmVjdG9yeSB3aGlsZSB0aGUN
+Cj4gPiA+IGRpcmVjdG9yeQ0KPiA+ID4gaXMgYmVpbmcgbW9kaWZpZWQgc3VjaCBhcyBhbm90aGVy
+IE5GUyBjbGllbnQgYWRkaW5nIGZpbGVzIHRvIHRoZQ0KPiA+ID4gZGlyZWN0b3J5LsKgIFRoZSBw
+cm9ibGVtIGlzIHNlZW4gc3BlY2lmaWNhbGx5IHdpdGggbGFyZ2VyDQo+ID4gPiBkaXJlY3Rvcmll
+cw0KPiA+ID4gKEkgdGVzdGVkIHdpdGggMSBtaWxsaW9uKSBhbmQvb3Igc2xvd2VyIE5GUyBzZXJ2
+ZXIgcmVzcG9uc2VzIHRvDQo+ID4gPiBSRUFERElSLsKgIElmIGEgY29tYmluYXRpb24gb2YgdGhl
+IE5GUyBkaXJlY3Rvcnkgc2l6ZSwgdGhlIE5GUw0KPiA+ID4gc2VydmVyDQo+ID4gPiByZXNwb25z
+ZXMgdG8gUkVBRERJUiBpcyBzdWNoIHRoYXQgdGhlICdscycgcHJvY2VzcyBnZXRzIHBhcnRpYWxs
+eQ0KPiA+ID4gdGhyb3VnaCB0aGUgbGlzdGluZyBiZWZvcmUgdGhlIGF0dHJpYnV0ZSBjYWNoZSBl
+eHBpcmVzICh0aW1lDQo+ID4gPiBleGNlZWRzIGFjZGlybWF4KSwgd2UgZHJvcCB0aGUgcGFnZWNh
+Y2hlIGFuZCBoYXZlIHRvIHJlLWZpbGwgaXQsDQo+ID4gPiBhbmQgYXMgYSByZXN1bHQsIHRoZSBw
+cm9jZXNzIG1heSBuZXZlciBjb21wbGV0ZS7CoCBPbmUgY291bGQgYXJndWUNCj4gPiA+IGZvciBs
+YXJnZXIgZGlyZWN0b3JpZXMgdGhlIGFjZGlybWluL2FjZGlybWF4IHNob3VsZCBiZSBpbmNyZWFz
+ZWQsDQo+ID4gPiBidXQgaXQncyBub3QgYWx3YXlzIHBvc3NpYmxlIHRvIHR1bmUgdGhpcyBlZmZl
+Y3RpdmVseS4NCj4gPiA+IA0KPiA+ID4gVGhlIHJvb3QgY2F1c2Ugb2YgdGhpcyBwcm9ibGVtIGlz
+IGR1ZSB0byBob3cgdGhlIE5GUyByZWFkZGlyDQo+ID4gPiBjYWNoZQ0KPiA+ID4gY3VycmVudGx5
+IHdvcmtzLsKgIFRoZSBtYWluIHNlYXJjaCBmdW5jdGlvbiwNCj4gPiA+IHJlYWRkaXJfc2VhcmNo
+X3BhZ2VjYWNoZSgpLA0KPiA+ID4gYWx3YXlzIHN0YXJ0cyBzZWFyY2hpbmcgYXQgcGFnZV9pbmRl
+eCBhbmQgY29va2llID09IDAsIGFuZCBmb3INCj4gPiA+IGFueQ0KPiA+ID4gcGFnZSBub3QgaW4g
+dGhlIGNhY2hlLCBmaWxscyBpbiB0aGUgcGFnZSB3aXRoIGVudHJpZXMgb2J0YWluZWQgaW4NCj4g
+PiA+IGEgUkVBRERJUiBORlMgY2FsbC7CoCBJZiBhIHBhZ2UgYWxyZWFkeSBleGlzdHMsIHdlIHBy
+b2NlZWQgdG8NCj4gPiA+IG5mc19yZWFkZGlyX3NlYXJjaF9mb3JfY29va2llKCksIHdoaWNoIHNl
+YXJjaGVzIGZvciB0aGUgY29va2llDQo+ID4gPiAocG9zKSBvZiB0aGUgcmVhZGRpciBjYWxsLsKg
+IFRoZSBzZWFyY2ggaXMgTyhuKSwgd2hlcmUgbiBpcyB0aGUNCj4gPiA+IGRpcmVjdG9yeSBzaXpl
+IGJlZm9yZSB0aGUgY29va2llIGluIHF1ZXN0aW9uIGlzIGZvdW5kLCBhbmQgZXZlcnkNCj4gPiA+
+IGVudHJ5IHRvIG5mc19yZWFkZGlyKCkgcGF5cyB0aGlzIHBlbmFsdHksIGlycmVzcGVjdGl2ZSBv
+ZiB0aGUNCj4gPiA+IGN1cnJlbnQgZGlyZWN0b3J5IHBvc2l0aW9uIChkaXJfY29udGV4dC5wb3Mp
+LsKgIFRoZSBzZWFyY2ggaXMNCj4gPiA+IGV4cGVuc2l2ZSBkdWUgdG8gdGhlIG9wYXF1ZSBuYXR1
+cmUgb2YgcmVhZGRpciBjb29raWVzLCBhbmQgdGhlDQo+ID4gPiBmYWN0DQo+ID4gPiB0aGF0IG5v
+IG1hcHBpbmcgKGhhc2gpIGV4aXN0cyBmcm9tIGNvb2tpZXMgdG8gcGFnZXMuwqAgSW4gdGhlIGNh
+c2UNCj4gPiA+IG9mIGEgZGlyZWN0b3J5IGJlaW5nIG1vZGlmaWVkLCB0aGUgYWJvdmUgYmVoYXZp
+b3IgY2FuIGJlY29tZSBhbg0KPiA+ID4gZXhjZXNzaXZlIHBlbmFsdHksIHNpbmNlIHRoZSBzYW1l
+IHByb2Nlc3MgaXMgZm9yY2VkIHRvIGZpbGwgcGFnZXMNCj4gPiA+IGl0DQo+ID4gPiBtYXkgYmUg
+bm8gbG9uZ2VyIGludGVyZXN0ZWQgaW4gKHRoZSBlbnRyaWVzIHdlcmUgcGFzc2VkIGluIGENCj4g
+PiA+IHByZXZpb3VzDQo+ID4gPiBuZnNfcmVhZGRpciBjYWxsKSwgYW5kIHRoaXMgY2FuIGVzc2Vu
+dGlhbGx5IGxlYWQgbm8gZm9yd2FyZA0KPiA+ID4gcHJvZ3Jlc3MuDQo+ID4gPiANCj4gPiA+IFRv
+IGZpeCB0aGlzIHByb2JsZW0sIGF0IHRoZSBlbmQgb2YgbmZzX3JlYWRkaXIoKSwgc2F2ZSB0aGUN
+Cj4gPiA+IHBhZ2VfaW5kZXgNCj4gPiA+IGNvcnJlc3BvbmRpbmcgdG8gdGhlIGRpcmVjdG9yeSBw
+b3NpdGlvbiAoY29va2llKSBpbnNpZGUgdGhlDQo+ID4gPiBwcm9jZXNzJ3MNCj4gPiA+IG5mc19v
+cGVuX2Rpcl9jb250ZXh0LsKgIFRoZW4gYXQgdGhlIG5leHQgZW50cnkgb2YgbmZzX3JlYWRkaXIo
+KSwNCj4gPiA+IHVzZQ0KPiA+ID4gdGhlIHNhdmVkIHBhZ2VfaW5kZXggYXMgdGhlIHN0YXJ0aW5n
+IHNlYXJjaCBwb2ludCByYXRoZXIgdGhhbg0KPiA+ID4gc3RhcnRpbmcNCj4gPiA+IGF0IHBhZ2Vf
+aW5kZXggPT0gMC7CoCBOb3Qgb25seSBkb2VzIHRoaXMgZml4IHRoZSBwcm9ibGVtIG9mDQo+ID4g
+PiBsaXN0aW5nDQo+ID4gPiBhIGRpcmVjdG9yeSBiZWluZyBtb2RpZmllZCwgaXQgYWxzbyBzaWdu
+aWZpY2FudGx5IGltcHJvdmVzDQo+ID4gPiBwZXJmb3JtYW5jZQ0KPiA+ID4gaW4gdGhlIHVubW9k
+aWZpZWQgY2FzZSBzaW5jZSBubyBleHRyYSBzZWFyY2ggcGVuYWx0eSBpcyBwYWlkIGF0DQo+ID4g
+PiBlYWNoDQo+ID4gPiBlbnRyeSB0byBuZnNfcmVhZGRpcigpLg0KPiA+ID4gDQo+ID4gPiBJbiB0
+aGUgY2FzZSBvZiBsc2Vlaywgc2luY2UgdGhlcmUgaXMgbm8gaGFzaCBvciBvdGhlciBtYXBwaW5n
+DQo+ID4gPiBmcm9tIGENCj4gPiA+IGNvb2tpZSB2YWx1ZSB0byB0aGUgcGFnZS0+aW5kZXgsIGp1
+c3QgcmVzZXQNCj4gPiA+IG5mc19vcGVuX2Rpcl9jb250ZXh0LnBhZ2VfaW5kZXgNCj4gPiA+IHRv
+IDAsIHdoaWNoIHdpbGwgcmVzZXQgdGhlIHNlYXJjaCB0byB0aGUgb2xkIGJlaGF2aW9yLg0KPiA+
+ID4gDQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBEYXZlIFd5c29jaGFuc2tpIDxkd3lzb2NoYUByZWRo
+YXQuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiDCoGZzL25mcy9kaXIuY8KgwqDCoMKgwqDCoMKgwqDC
+oMKgIHwgOCArKysrKysrLQ0KPiA+ID4gwqBpbmNsdWRlL2xpbnV4L25mc19mcy5oIHwgMSArDQo+
+ID4gPiDCoDIgZmlsZXMgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+
+ID4gPiANCj4gPiA+IGRpZmYgLS1naXQgYS9mcy9uZnMvZGlyLmMgYi9mcy9uZnMvZGlyLmMNCj4g
+PiA+IGluZGV4IDUyZTA2YzhmYzdjZC4uYjI2NmY1MDViNTIxIDEwMDY0NA0KPiA+ID4gLS0tIGEv
+ZnMvbmZzL2Rpci5jDQo+ID4gPiArKysgYi9mcy9uZnMvZGlyLmMNCj4gPiA+IEBAIC03OCw2ICs3
+OCw3IEBAIHN0YXRpYyBzdHJ1Y3QgbmZzX29wZW5fZGlyX2NvbnRleHQNCj4gPiA+ICphbGxvY19u
+ZnNfb3Blbl9kaXJfY29udGV4dChzdHJ1Y3QgaW5vZGUgKmRpcg0KPiA+ID4gwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIGN0eC0+YXR0cl9nZW5jb3VudCA9IG5mc2ktPmF0dHJfZ2VuY291
+bnQ7DQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY3R4LT5kaXJfY29va2ll
+ID0gMDsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjdHgtPmR1cF9jb29r
+aWUgPSAwOw0KPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY3R4LT5wYWdlX2lu
+ZGV4ID0gMDsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjdHgtPmNyZWQg
+PSBnZXRfY3JlZChjcmVkKTsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBz
+cGluX2xvY2soJmRpci0+aV9sb2NrKTsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBpZiAobGlzdF9lbXB0eSgmbmZzaS0+b3Blbl9maWxlcykgJiYNCj4gPiA+IEBAIC03NjMs
+NyArNzY0LDcgQEAgaW50DQo+ID4gPiBmaW5kX2FuZF9sb2NrX2NhY2hlX3BhZ2UobmZzX3JlYWRk
+aXJfZGVzY3JpcHRvcl90ICpkZXNjKQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqAgcmV0dXJuIHJlczsN
+Cj4gPiA+IMKgfQ0KPiA+ID4gDQo+ID4gPiAtLyogU2VhcmNoIGZvciBkZXNjLT5kaXJfY29va2ll
+IGZyb20gdGhlIGJlZ2lubmluZyBvZiB0aGUgcGFnZQ0KPiA+ID4gY2FjaGUNCj4gPiA+ICovDQo+
+ID4gPiArLyogU2VhcmNoIGZvciBkZXNjLT5kaXJfY29va2llIHN0YXJ0aW5nIGF0IGRlc2MtPnBh
+Z2VfaW5kZXggKi8NCj4gPiA+IMKgc3RhdGljIGlubGluZQ0KPiA+ID4gwqBpbnQgcmVhZGRpcl9z
+ZWFyY2hfcGFnZWNhY2hlKG5mc19yZWFkZGlyX2Rlc2NyaXB0b3JfdCAqZGVzYykNCj4gPiA+IMKg
+ew0KPiA+ID4gQEAgLTg4NSw2ICs4ODYsOCBAQCBzdGF0aWMgaW50IG5mc19yZWFkZGlyKHN0cnVj
+dCBmaWxlICpmaWxlLA0KPiA+ID4gc3RydWN0DQo+ID4gPiBkaXJfY29udGV4dCAqY3R4KQ0KPiA+
+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC5jdHggPSBjdHgsDQo+ID4gPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLmRpcl9jb29raWUgPSAmZGlyX2N0eC0+ZGlyX2Nv
+b2tpZSwNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAucGx1cyA9IG5mc191
+c2VfcmVhZGRpcnBsdXMoaW5vZGUsIGN0eCksDQo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCAucGFnZV9pbmRleCA9IGRpcl9jdHgtPnBhZ2VfaW5kZXgsDQo+ID4gPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAubGFzdF9jb29raWUgPSBuZnNfcmVhZGRpcl91c2VfY29v
+a2llKGZpbGUpID8NCj4gPiA+IGN0eC0NCj4gPiA+ID4gcG9zIDogMCwNCj4gPiA+IMKgwqDCoMKg
+wqDCoMKgIH0sDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgICpkZXNjID0gJm15X2Rlc2M7DQo+ID4gPiDCoMKgwqDCoMKgwqDCoCBpbnQgcmVzID0g
+MDsNCj4gPiA+IEBAIC05MzgsNiArOTQxLDcgQEAgc3RhdGljIGludCBuZnNfcmVhZGRpcihzdHJ1
+Y3QgZmlsZSAqZmlsZSwNCj4gPiA+IHN0cnVjdA0KPiA+ID4gZGlyX2NvbnRleHQgKmN0eCkNCj4g
+PiA+IMKgb3V0Og0KPiA+ID4gwqDCoMKgwqDCoMKgwqAgaWYgKHJlcyA+IDApDQo+ID4gPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVzID0gMDsNCj4gPiA+ICvCoMKgwqDCoMKgwqAg
+ZGlyX2N0eC0+cGFnZV9pbmRleCA9IGRlc2MtPnBhZ2VfaW5kZXg7DQo+ID4gPiDCoMKgwqDCoMKg
+wqDCoCB0cmFjZV9uZnNfcmVhZGRpcl9leGl0KGlub2RlLCBjdHgtPnBvcywgZGlyX2N0eC0NCj4g
+PiA+ID5kaXJfY29va2llLA0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIE5GU19TRVJWRVIoaW5vZGUpLT5kdHNpemUsDQo+
+ID4gPiBteV9kZXNjLnBsdXMsIHJlcyk7DQo+ID4gPiDCoMKgwqDCoMKgwqDCoCByZXR1cm4gcmVz
+Ow0KPiA+ID4gQEAgLTk3NSw2ICs5NzksOCBAQCBzdGF0aWMgbG9mZl90IG5mc19sbHNlZWtfZGly
+KHN0cnVjdCBmaWxlDQo+ID4gPiAqZmlscCwNCj4gPiA+IGxvZmZfdCBvZmZzZXQsIGludCB3aGVu
+Y2UpDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZWxzZQ0KPiA+ID4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkaXJfY3R4LT5kaXJf
+Y29va2llID0gMDsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkaXJfY3R4
+LT5kdXBlZCA9IDA7DQo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAvKiBGb3Jj
+ZSByZWFkZGlyX3NlYXJjaF9wYWdlY2FjaGUgdG8gc3RhcnQgb3Zlcg0KPiA+ID4gKi8NCj4gPiA+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRpcl9jdHgtPnBhZ2VfaW5kZXggPSAwOw0K
+PiA+ID4gwqDCoMKgwqDCoMKgwqAgfQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqAgaW5vZGVfdW5sb2Nr
+KGlub2RlKTsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgIHJldHVybiBvZmZzZXQ7DQo+ID4gPiBkaWZm
+IC0tZ2l0IGEvaW5jbHVkZS9saW51eC9uZnNfZnMuaCBiL2luY2x1ZGUvbGludXgvbmZzX2ZzLmgN
+Cj4gPiA+IGluZGV4IGEyYzY0NTVlYTNmYS4uMGU1NWMwMTU0Y2NkIDEwMDY0NA0KPiA+ID4gLS0t
+IGEvaW5jbHVkZS9saW51eC9uZnNfZnMuaA0KPiA+ID4gKysrIGIvaW5jbHVkZS9saW51eC9uZnNf
+ZnMuaA0KPiA+ID4gQEAgLTkzLDYgKzkzLDcgQEAgc3RydWN0IG5mc19vcGVuX2Rpcl9jb250ZXh0
+IHsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgIF9fdTY0IGRpcl9jb29raWU7DQo+ID4gPiDCoMKgwqDC
+oMKgwqDCoCBfX3U2NCBkdXBfY29va2llOw0KPiA+ID4gwqDCoMKgwqDCoMKgwqAgc2lnbmVkIGNo
+YXIgZHVwZWQ7DQo+ID4gPiArwqDCoMKgwqDCoMKgIHVuc2lnbmVkIGxvbmfCoMKgIHBhZ2VfaW5k
+ZXg7DQo+ID4gPiDCoH07DQo+ID4gPiANCj4gPiA+IMKgLyoNCj4gPiANCj4gPiBOQUNLLiBJdCBt
+YWtlcyBubyBzZW5zZSB0byBzdG9yZSB0aGUgcGFnZSBpbmRleCBhcyBhIGN1cnNvci4NCj4gPiAN
+Cj4gDQo+IEEgc2ltaWxhciB0aGluZyB3YXMgZG9uZSByZWNlbnRseSB3aXRoOg0KPiAyMjc4MjNk
+MjA3NGQgbmZzOiBvcHRpbWlzZSByZWFkZGlyIGNhY2hlIHBhZ2UgaW52YWxpZGF0aW9uDQo+IA0K
+DQpUaGF0J3MgYSB2ZXJ5IGRpZmZlcmVudCB0aGluZy4gSXQgaXMgYWJvdXQgZGlzY2FyZGluZyBw
+YWdlIGRhdGEgaW4NCm9yZGVyIHRvIGZvcmNlIGEgcmUtcmVhZCBvZiB0aGUgY29udGVudHMgaW50
+byBjYWNoZS4NCg0KV2hhdCB5b3UncmUgZG9pbmcgaXMgYmFzaWNhbGx5IHRyeWluZyB0byBndWVz
+cyB3aGVyZSB0aGUgZGF0YSBpcw0KbG9jYXRlZC4gd2hpY2ggbWlnaHQgd29yayBpbiBzb21lIGNh
+c2VzIHdoZXJlIHRoZSBkaXJlY3RvcnkgaXMNCmNvbXBsZXRlbHkgc3RhdGljLCBidXQgaWYgaXQg
+c2hyaW5rcyAoZS5nLiBkdWUgdG8gYSBmZXcgdW5saW5rKCkgb3INCnJlbmFtZSgpIGNhbGxzKSBz
+byB0aGF0IHlvdSBvdmVyc2hvb3QgdGhlIGNvb2tpZSwgdGhlbiB5b3UgY2FuIGVuZCB1cA0KcmVh
+ZGluZyBhbGwgdGhlIHdheSB0byB0aGUgZW5kIG9mIHRoZSBkaXJlY3RvcnkgYmVmb3JlIGRvaW5n
+IGFuDQp1bmNhY2hlZCByZWFkZGlyLg0KDQpJT1c6IFRoaXMgd2lsbCBoYXZlIGEgZGV0cmltZW50
+YWwgZWZmZWN0IGZvciBzb21lIHdvcmtsb2Fkcywgd2hpY2gNCm5lZWRzIHRvIGJlIHdlaWdoZWQg
+dXAgYWdhaW5zdCB0aGUgYmVuZWZpdHMuIEkgc2F3IHRoYXQgeW91J3ZlIHRlc3RlZA0Kd2l0aCBs
+YXJnZSBkaXJlY3RvcmllcywgYnV0IHdoYXQgd29ya2xvYWRzIHdlcmUgeW91IHRlc3Rpbmcgb24g
+dGhvc2UNCmRpcmVjdG9yaWVzPw0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNs
+aWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNl
+LmNvbQ0KDQoNCg==
