@@ -2,34 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C63AC2A4A2A
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Nov 2020 16:43:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F31F42A4A2B
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Nov 2020 16:43:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbgKCPnr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Nov 2020 10:43:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39170 "EHLO mail.kernel.org"
+        id S1728383AbgKCPns (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Nov 2020 10:43:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbgKCPnq (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 3 Nov 2020 10:43:46 -0500
+        id S1728352AbgKCPnr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 3 Nov 2020 10:43:47 -0500
 Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A23042236F
-        for <linux-nfs@vger.kernel.org>; Tue,  3 Nov 2020 15:43:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B83120780
+        for <linux-nfs@vger.kernel.org>; Tue,  3 Nov 2020 15:43:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604418225;
-        bh=fP8mF/QyWT8AjyqHoLygoPSmGXi5i/cnj5jFbOxXyKo=;
+        s=default; t=1604418226;
+        bh=xBSL3pfGbtDAbepQoR9aCAb6CqAipWbqpXS3RS0ySEY=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=DfMSzZQPHIxOw9FQSL+Tn8SRJBexadWRLpZCyijtKgJM+vvGKRnzPWKzDMeTX2QNC
-         bDRVubf5yimq7uFvbR9jAI3rsdQ2R+UluyhYwUm9Fq5aCf4i8PFuvj8+wBJJnCwvxv
-         X4w8THJeDTYKw6z8Uh58IJ6s5o+GolkviF2HjkuQ=
+        b=DgjcmyRK8saxFuIbRyQRsHzK4uoCLtsPd7BXCiqBsH+PgXEvx/D6obkLEQPkoQTgK
+         YxG6/SplOZMA8Ff3yUp7lO35RgIpjPXJgqbSoad+YmTl6PPbQ9/ghF38Ws75Ywddos
+         lPOQSk6dhFLRoa0EGZnDvr1l7U6kZqrahVQw3nkc=
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 11/16] NFS: nfs_do_filldir() does not return a value
-Date:   Tue,  3 Nov 2020 10:33:24 -0500
-Message-Id: <20201103153329.531942-12-trondmy@kernel.org>
+Subject: [PATCH v2 12/16] NFS: Reduce readdir stack usage
+Date:   Tue,  3 Nov 2020 10:33:25 -0500
+Message-Id: <20201103153329.531942-13-trondmy@kernel.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201103153329.531942-11-trondmy@kernel.org>
+In-Reply-To: <20201103153329.531942-12-trondmy@kernel.org>
 References: <20201103153329.531942-1-trondmy@kernel.org>
  <20201103153329.531942-2-trondmy@kernel.org>
  <20201103153329.531942-3-trondmy@kernel.org>
@@ -41,6 +41,7 @@ References: <20201103153329.531942-1-trondmy@kernel.org>
  <20201103153329.531942-9-trondmy@kernel.org>
  <20201103153329.531942-10-trondmy@kernel.org>
  <20201103153329.531942-11-trondmy@kernel.org>
+ <20201103153329.531942-12-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -49,76 +50,131 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Clean up nfs_do_filldir().
+The descriptor and the struct nfs_entry are both large structures,
+so don't allocate them from the stack.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/dir.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+ fs/nfs/dir.c | 58 ++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 33 insertions(+), 25 deletions(-)
 
 diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index b09073afb51b..647585358901 100644
+index 647585358901..75d7c3e8cf03 100644
 --- a/fs/nfs/dir.c
 +++ b/fs/nfs/dir.c
-@@ -882,13 +882,11 @@ int readdir_search_pagecache(nfs_readdir_descriptor_t *desc)
- /*
-  * Once we've found the start of the dirent within a page: fill 'er up...
-  */
--static 
--int nfs_do_filldir(nfs_readdir_descriptor_t *desc)
-+static void nfs_do_filldir(struct nfs_readdir_descriptor *desc)
+@@ -762,23 +762,24 @@ static
+ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page, struct inode *inode)
  {
- 	struct file	*file = desc->file;
--	int i = 0;
--	int res = 0;
--	struct nfs_cache_array *array = NULL;
-+	struct nfs_cache_array *array;
-+	unsigned int i = 0;
+ 	struct page **pages;
+-	struct nfs_entry entry;
++	struct nfs_entry *entry;
+ 	size_t array_size;
+ 	size_t dtsize = NFS_SERVER(inode)->dtsize;
+ 	int status = -ENOMEM;
  
- 	array = kmap(desc->page);
- 	for (i = desc->cache_entry_index; i < array->size; i++) {
-@@ -915,9 +913,8 @@ int nfs_do_filldir(nfs_readdir_descriptor_t *desc)
- 		desc->eof = true;
+-	entry.prev_cookie = 0;
+-	entry.cookie = nfs_readdir_page_last_cookie(page);
+-	entry.eof = 0;
+-	entry.fh = nfs_alloc_fhandle();
+-	entry.fattr = nfs_alloc_fattr();
+-	entry.server = NFS_SERVER(inode);
+-	if (entry.fh == NULL || entry.fattr == NULL)
++	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
++	if (!entry)
++		return -ENOMEM;
++	entry->cookie = nfs_readdir_page_last_cookie(page);
++	entry->fh = nfs_alloc_fhandle();
++	entry->fattr = nfs_alloc_fattr();
++	entry->server = NFS_SERVER(inode);
++	if (entry->fh == NULL || entry->fattr == NULL)
+ 		goto out;
  
- 	kunmap(desc->page);
--	dfprintk(DIRCACHE, "NFS: nfs_do_filldir() filling ended @ cookie %Lu; returning = %d\n",
--			(unsigned long long)desc->dir_cookie, res);
--	return res;
-+	dfprintk(DIRCACHE, "NFS: nfs_do_filldir() filling ended @ cookie %llu\n",
-+			(unsigned long long)desc->dir_cookie);
+-	entry.label = nfs4_label_alloc(NFS_SERVER(inode), GFP_NOWAIT);
+-	if (IS_ERR(entry.label)) {
+-		status = PTR_ERR(entry.label);
++	entry->label = nfs4_label_alloc(NFS_SERVER(inode), GFP_NOWAIT);
++	if (IS_ERR(entry->label)) {
++		status = PTR_ERR(entry->label);
+ 		goto out;
+ 	}
+ 
+@@ -789,7 +790,7 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
+ 
+ 	do {
+ 		unsigned int pglen;
+-		status = nfs_readdir_xdr_filler(desc, entry.cookie,
++		status = nfs_readdir_xdr_filler(desc, entry->cookie,
+ 						pages, dtsize);
+ 		if (status < 0)
+ 			break;
+@@ -800,15 +801,16 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
+ 			break;
+ 		}
+ 
+-		status = nfs_readdir_page_filler(desc, &entry, pages, page, pglen);
++		status = nfs_readdir_page_filler(desc, entry, pages, page, pglen);
+ 	} while (!status && nfs_readdir_page_needs_filling(page));
+ 
+ 	nfs_readdir_free_pages(pages, array_size);
+ out_release_label:
+-	nfs4_label_free(entry.label);
++	nfs4_label_free(entry->label);
+ out:
+-	nfs_free_fattr(entry.fattr);
+-	nfs_free_fhandle(entry.fh);
++	nfs_free_fattr(entry->fattr);
++	nfs_free_fhandle(entry->fh);
++	kfree(entry);
+ 	return status;
  }
  
- /*
-@@ -958,7 +955,7 @@ int uncached_readdir(nfs_readdir_descriptor_t *desc)
- 	if (status < 0)
- 		goto out_release;
+@@ -975,13 +977,8 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 	struct dentry	*dentry = file_dentry(file);
+ 	struct inode	*inode = d_inode(dentry);
+ 	struct nfs_open_dir_context *dir_ctx = file->private_data;
+-	nfs_readdir_descriptor_t my_desc = {
+-		.file = file,
+-		.ctx = ctx,
+-		.plus = nfs_use_readdirplus(inode, ctx),
+-	},
+-			*desc = &my_desc;
+-	int res = 0;
++	struct nfs_readdir_descriptor *desc;
++	int res;
  
--	status = nfs_do_filldir(desc);
-+	nfs_do_filldir(desc);
- 
-  out_release:
- 	nfs_readdir_clear_array(desc->page);
-@@ -1033,10 +1030,8 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
- 		if (res < 0)
- 			break;
- 
--		res = nfs_do_filldir(desc);
-+		nfs_do_filldir(desc);
- 		nfs_readdir_page_unlock_and_put_cached(desc);
--		if (res < 0)
--			break;
- 	} while (!desc->eof);
+ 	dfprintk(FILE, "NFS: readdir(%pD2) starting at cookie %llu\n",
+ 			file, (long long)ctx->pos);
+@@ -993,10 +990,19 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 	 * to either find the entry with the appropriate number or
+ 	 * revalidate the cookie.
+ 	 */
+-	if (ctx->pos == 0 || nfs_attribute_cache_expired(inode))
++	if (ctx->pos == 0 || nfs_attribute_cache_expired(inode)) {
+ 		res = nfs_revalidate_mapping(inode, file->f_mapping);
+-	if (res < 0)
++		if (res < 0)
++			goto out;
++	}
++
++	res = -ENOMEM;
++	desc = kzalloc(sizeof(*desc), GFP_KERNEL);
++	if (!desc)
+ 		goto out;
++	desc->file = file;
++	desc->ctx = ctx;
++	desc->plus = nfs_use_readdirplus(inode, ctx);
  
  	spin_lock(&file->f_lock);
-@@ -1047,8 +1042,6 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 	desc->dir_cookie = dir_ctx->dir_cookie;
+@@ -1041,6 +1047,8 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 	dir_ctx->attr_gencount = desc->attr_gencount;
  	spin_unlock(&file->f_lock);
  
++	kfree(desc);
++
  out:
--	if (res > 0)
--		res = 0;
  	dfprintk(FILE, "NFS: readdir(%pD2) returns %d\n", file, res);
  	return res;
- }
 -- 
 2.28.0
 
