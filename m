@@ -2,294 +2,335 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8419A2A4C80
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Nov 2020 18:16:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67CBB2A4D7B
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Nov 2020 18:50:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbgKCRQh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Nov 2020 12:16:37 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42471 "EHLO
+        id S1727688AbgKCRuZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Nov 2020 12:50:25 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44710 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726581AbgKCRQh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Nov 2020 12:16:37 -0500
+        by vger.kernel.org with ESMTP id S1725957AbgKCRuZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Nov 2020 12:50:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604423795;
+        s=mimecast20190719; t=1604425823;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XGFMSkl98vwL6bqF00Qc6dc31oixQuvSr05Sa0MYdWs=;
-        b=VXocBtlBN3nsDURSJAK4cfze8z0J7EwnDAiJ9v1rt5bg4BMWUXic2tbiKLu8U4oTopH0ZK
-        wenoGtQxaQCZRqIRd0p2ewRGFKEnyLrycTR5u64WafAzWFpXTHSu5G7x25u/pwKnqsZTpC
-        64lMK2d638VpTZnrGI1KO+wsAxtWn7E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-235-xaPKQYskOeCLLnay5a3hiQ-1; Tue, 03 Nov 2020 12:16:31 -0500
-X-MC-Unique: xaPKQYskOeCLLnay5a3hiQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 172881006CB6;
-        Tue,  3 Nov 2020 17:16:30 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-113-128.phx2.redhat.com [10.3.113.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9AD5F21E97;
-        Tue,  3 Nov 2020 17:16:29 +0000 (UTC)
-Subject: Re: [RFC PATCH 0/1] Enable config.d directory to be processed.
-To:     Alice Mitchell <ajmitchell@redhat.com>,
-        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Cc:     "McIntyre, Vincent (CASS, Marsfield)" <Vincent.Mcintyre@csiro.au>
-References: <20201029210401.446244-1-steved@redhat.com>
- <338aeb795a31c2233016d225dc114e33d02eb0cb.camel@redhat.com>
- <6f3caf91-296c-0aa8-ba41-bc35d500adaa@RedHat.com>
- <4836616f-3aa6-d0bd-22db-cd7fecf4dce9@RedHat.com>
- <1ac387a1ef608258b2e23e7923a1c4e2ec6b25b3.camel@redhat.com>
- <5d090330-d67f-4bf0-ca91-e30772bd87b2@RedHat.com>
- <01f8610433a684a6f17229f1bc3fa33199638f52.camel@redhat.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <ca5bd237-42c6-bab4-0529-df90666e90c7@RedHat.com>
-Date:   Tue, 3 Nov 2020 12:16:35 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        bh=FanrZR+28tbGHlvck29X+0DEQpbsI2dYKaSKROIb+s4=;
+        b=KPqNqRWAlF+fisDrRHbn3JDf16o1I9aYB8jK7tbtUuyOQc2BNOTv4oqnPyBOehzS98O6Xo
+        3NJhdiyQi49m6/7N9mbiTuIl82dwGI2dVjz5SriN5q/FmOvuLk/t+aUEwlL9/YaVaPEvO0
+        /yiTpfnmnABUO70av8R198M8SmN4efc=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-439-BWp9aLYUONesJ2HsnzKbhQ-1; Tue, 03 Nov 2020 12:50:21 -0500
+X-MC-Unique: BWp9aLYUONesJ2HsnzKbhQ-1
+Received: by mail-ej1-f70.google.com with SMTP id gr9so3991324ejb.19
+        for <linux-nfs@vger.kernel.org>; Tue, 03 Nov 2020 09:50:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FanrZR+28tbGHlvck29X+0DEQpbsI2dYKaSKROIb+s4=;
+        b=tFCgnzRFOuQSE5kgDyoniBjL/+g3bp9hAU9sUOD1Acszr4bYiSTAAvCphGoGjauquz
+         1ztkFEscRpxle2m3oTn5acJmZJSflEPa3Fqrf2Dfsre8tL4z/Rck4QVbhqMD4EauYiwh
+         GwZIl878qTGcMUe576ZK7ecQE9e2AqTySqqPENKpoeWAUIrjOKKJaLLJ+iLG7jB+fgRW
+         uWLxufadQkXHt9ziNSRt32pDQPNnrj2tzvLWWkizIUzDxokbhWwfHMjw1bdnUMYEfZYi
+         +LU8rDqm90X1NFrw14xpPXgu2BDQbDf6pic2kntBi0QtoX4rpIt8kEdq1TeB3PBBDFjQ
+         PIPQ==
+X-Gm-Message-State: AOAM531bhcGjYk8ElTj/qeOpbFtlSpSYCCXvpVQJrTJVY4BwM/DYnjSP
+        c7D/DWkblThu1vtR3FCW2IWQa4te9LGnlSigYgACLCclljDcZrx1tTphTlp9oNg0l46WePf0gLm
+        w13bztpAmXdhzZXVnlugbN//+PjntN/cgqRMt
+X-Received: by 2002:a17:906:2f10:: with SMTP id v16mr20798235eji.320.1604425819663;
+        Tue, 03 Nov 2020 09:50:19 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxGXP8Z/PelAqdQAwahBZJp9kIb7T8LcsuxDaCokChGhc06gz2Eud71J60FZd+CYdIUJoPR2fHTNuWE9Dr89Q0=
+X-Received: by 2002:a17:906:2f10:: with SMTP id v16mr20798213eji.320.1604425819343;
+ Tue, 03 Nov 2020 09:50:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <01f8610433a684a6f17229f1bc3fa33199638f52.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <1604325011-29427-1-git-send-email-dwysocha@redhat.com>
+ <1604325011-29427-10-git-send-email-dwysocha@redhat.com> <2af057425352e05315b53c5b9bbd7fd277175a13.camel@hammerspace.com>
+ <CALF+zOmK1RuwCZDYoSF=fuB-F=HxC+n4vNUFtxgW_Qo58Mk2_A@mail.gmail.com>
+ <d0bce650791752805f5d03149d7ea709d07002bb.camel@hammerspace.com>
+ <CALF+zOnBKsNdRg9pbDe8wki6rBQJy2R+datBXDWE-Kg2_L-SGw@mail.gmail.com> <20201103000903.GA23691@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+In-Reply-To: <20201103000903.GA23691@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Tue, 3 Nov 2020 12:49:43 -0500
+Message-ID: <CALF+zOnhbGR28SBgtXT6FNf03kqXcMF99_cGRWtbDefJxfEnxw@mail.gmail.com>
+Subject: Re: [PATCH 09/11] NFS: Improve performance of listing directories
+ being modified
+To:     Frank van der Linden <fllinden@amazon.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Mon, Nov 2, 2020 at 7:09 PM Frank van der Linden <fllinden@amazon.com> wrote:
+>
+> Hi Dave,
+>
+> Thanks for looking at this.
+>
+> On Mon, Nov 02, 2020 at 02:45:09PM -0500, David Wysochanski wrote:
+> > On Mon, Nov 2, 2020 at 12:31 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+> > >
+> > > On Mon, 2020-11-02 at 11:26 -0500, David Wysochanski wrote:
+> > > > On Mon, Nov 2, 2020 at 11:22 AM Trond Myklebust <
+> > > > trondmy@hammerspace.com> wrote:
+> > > > >
+> > > > > On Mon, 2020-11-02 at 08:50 -0500, Dave Wysochanski wrote:
+> > > > > > A process can hang forever to 'ls -l' a directory while the
+> > > > > > directory
+> > > > > > is being modified such as another NFS client adding files to the
+> > > > > > directory.  The problem is seen specifically with larger
+> > > > > > directories
+> > > > > > (I tested with 1 million) and/or slower NFS server responses to
+> > > > > > READDIR.  If a combination of the NFS directory size, the NFS
+> > > > > > server
+> > > > > > responses to READDIR is such that the 'ls' process gets partially
+> > > > > > through the listing before the attribute cache expires (time
+> > > > > > exceeds acdirmax), we drop the pagecache and have to re-fill it,
+> > > > > > and as a result, the process may never complete.  One could argue
+> > > > > > for larger directories the acdirmin/acdirmax should be increased,
+> > > > > > but it's not always possible to tune this effectively.
+> > > > > >
+> > > > > > The root cause of this problem is due to how the NFS readdir
+> > > > > > cache
+> > > > > > currently works.  The main search function,
+> > > > > > readdir_search_pagecache(),
+> > > > > > always starts searching at page_index and cookie == 0, and for
+> > > > > > any
+> > > > > > page not in the cache, fills in the page with entries obtained in
+> > > > > > a READDIR NFS call.  If a page already exists, we proceed to
+> > > > > > nfs_readdir_search_for_cookie(), which searches for the cookie
+> > > > > > (pos) of the readdir call.  The search is O(n), where n is the
+> > > > > > directory size before the cookie in question is found, and every
+> > > > > > entry to nfs_readdir() pays this penalty, irrespective of the
+> > > > > > current directory position (dir_context.pos).  The search is
+> > > > > > expensive due to the opaque nature of readdir cookies, and the
+> > > > > > fact
+> > > > > > that no mapping (hash) exists from cookies to pages.  In the case
+> > > > > > of a directory being modified, the above behavior can become an
+> > > > > > excessive penalty, since the same process is forced to fill pages
+> > > > > > it
+> > > > > > may be no longer interested in (the entries were passed in a
+> > > > > > previous
+> > > > > > nfs_readdir call), and this can essentially lead no forward
+> > > > > > progress.
+> > > > > >
+> > > > > > To fix this problem, at the end of nfs_readdir(), save the
+> > > > > > page_index
+> > > > > > corresponding to the directory position (cookie) inside the
+> > > > > > process's
+> > > > > > nfs_open_dir_context.  Then at the next entry of nfs_readdir(),
+> > > > > > use
+> > > > > > the saved page_index as the starting search point rather than
+> > > > > > starting
+> > > > > > at page_index == 0.  Not only does this fix the problem of
+> > > > > > listing
+> > > > > > a directory being modified, it also significantly improves
+> > > > > > performance
+> > > > > > in the unmodified case since no extra search penalty is paid at
+> > > > > > each
+> > > > > > entry to nfs_readdir().
+> > > > > >
+> > > > > > In the case of lseek, since there is no hash or other mapping
+> > > > > > from a
+> > > > > > cookie value to the page->index, just reset
+> > > > > > nfs_open_dir_context.page_index
+> > > > > > to 0, which will reset the search to the old behavior.
+> > > > > >
+> > > > > > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> > > > > > ---
+> > > > > >  fs/nfs/dir.c           | 8 +++++++-
+> > > > > >  include/linux/nfs_fs.h | 1 +
+> > > > > >  2 files changed, 8 insertions(+), 1 deletion(-)
+> > > > > >
+> > > > > > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> > > > > > index 52e06c8fc7cd..b266f505b521 100644
+> > > > > > --- a/fs/nfs/dir.c
+> > > > > > +++ b/fs/nfs/dir.c
+> > > > > > @@ -78,6 +78,7 @@ static struct nfs_open_dir_context
+> > > > > > *alloc_nfs_open_dir_context(struct inode *dir
+> > > > > >                 ctx->attr_gencount = nfsi->attr_gencount;
+> > > > > >                 ctx->dir_cookie = 0;
+> > > > > >                 ctx->dup_cookie = 0;
+> > > > > > +               ctx->page_index = 0;
+> > > > > >                 ctx->cred = get_cred(cred);
+> > > > > >                 spin_lock(&dir->i_lock);
+> > > > > >                 if (list_empty(&nfsi->open_files) &&
+> > > > > > @@ -763,7 +764,7 @@ int
+> > > > > > find_and_lock_cache_page(nfs_readdir_descriptor_t *desc)
+> > > > > >         return res;
+> > > > > >  }
+> > > > > >
+> > > > > > -/* Search for desc->dir_cookie from the beginning of the page
+> > > > > > cache
+> > > > > > */
+> > > > > > +/* Search for desc->dir_cookie starting at desc->page_index */
+> > > > > >  static inline
+> > > > > >  int readdir_search_pagecache(nfs_readdir_descriptor_t *desc)
+> > > > > >  {
+> > > > > > @@ -885,6 +886,8 @@ static int nfs_readdir(struct file *file,
+> > > > > > struct
+> > > > > > dir_context *ctx)
+> > > > > >                 .ctx = ctx,
+> > > > > >                 .dir_cookie = &dir_ctx->dir_cookie,
+> > > > > >                 .plus = nfs_use_readdirplus(inode, ctx),
+> > > > > > +               .page_index = dir_ctx->page_index,
+> > > > > > +               .last_cookie = nfs_readdir_use_cookie(file) ?
+> > > > > > ctx-
+> > > > > > > pos : 0,
+> > > > > >         },
+> > > > > >                         *desc = &my_desc;
+> > > > > >         int res = 0;
+> > > > > > @@ -938,6 +941,7 @@ static int nfs_readdir(struct file *file,
+> > > > > > struct
+> > > > > > dir_context *ctx)
+> > > > > >  out:
+> > > > > >         if (res > 0)
+> > > > > >                 res = 0;
+> > > > > > +       dir_ctx->page_index = desc->page_index;
+> > > > > >         trace_nfs_readdir_exit(inode, ctx->pos, dir_ctx-
+> > > > > > >dir_cookie,
+> > > > > >                                NFS_SERVER(inode)->dtsize,
+> > > > > > my_desc.plus, res);
+> > > > > >         return res;
+> > > > > > @@ -975,6 +979,8 @@ static loff_t nfs_llseek_dir(struct file
+> > > > > > *filp,
+> > > > > > loff_t offset, int whence)
+> > > > > >                 else
+> > > > > >                         dir_ctx->dir_cookie = 0;
+> > > > > >                 dir_ctx->duped = 0;
+> > > > > > +               /* Force readdir_search_pagecache to start over
+> > > > > > */
+> > > > > > +               dir_ctx->page_index = 0;
+> > > > > >         }
+> > > > > >         inode_unlock(inode);
+> > > > > >         return offset;
+> > > > > > diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+> > > > > > index a2c6455ea3fa..0e55c0154ccd 100644
+> > > > > > --- a/include/linux/nfs_fs.h
+> > > > > > +++ b/include/linux/nfs_fs.h
+> > > > > > @@ -93,6 +93,7 @@ struct nfs_open_dir_context {
+> > > > > >         __u64 dir_cookie;
+> > > > > >         __u64 dup_cookie;
+> > > > > >         signed char duped;
+> > > > > > +       unsigned long   page_index;
+> > > > > >  };
+> > > > > >
+> > > > > >  /*
+> > > > >
+> > > > > NACK. It makes no sense to store the page index as a cursor.
+> > > > >
+> > > >
+> > > > A similar thing was done recently with:
+> > > > 227823d2074d nfs: optimise readdir cache page invalidation
+> > > >
+> > >
+> > > That's a very different thing. It is about discarding page data in
+> > > order to force a re-read of the contents into cache.
+> > >
+> > Right - I only pointed it out because it is in effect a cursor about
+> > the last access into the cache but it's on a global basis, not
+> > process context.
+> >
+> > > What you're doing is basically trying to guess where the data is
+> > > located. which might work in some cases where the directory is
+> > > completely static, but if it shrinks (e.g. due to a few unlink() or
+> > > rename() calls) so that you overshoot the cookie, then you can end up
+> > > reading all the way to the end of the directory before doing an
+> > > uncached readdir.
+> > >
+> > First, consider the unmodified (idle directory) scenario.  Today the
+> > performance is bad the larger the directory goes - do you see why?
+> > I tried to explain in the cover letter and header but maybe it's not clear?
+>
+> I agree with you that the patch is good for that case. It seems
+> like a bug that, if the cache is not invalidated in the meantime,
+> nfs_readdir would start at offset 0 of the cache while searching.
+>
+> But, as Trond said, page_index isn't a good cursor once the
+> page cache was invalidated, you don't know what data you are
+> leaving out inadvertently.
+>
+
+Hey Frank - thanks for looking at this too.  Yes I see it this is probably
+not a good approach especially since you and Trond seem to come
+to the same conclusion.
 
 
-On 11/3/20 5:14 AM, Alice Mitchell wrote:
-> I know the code doesn't look like very much but it does do exactly what
-> I suggest, and i feel is quite a simple and elegant solution that is
-> inline with what many of services do.
-I'm not saying the include does not work... 
-Its just the example you gave does not work.
+> >
+> > Second, the modified scenario today the performance is very bad
+> > because of the same problem - the cookie is reset and the process
+> > needs to start over at cookie 0, repeating READDIRs.  But maybe
+> > there's a specific scenario I'm not thinking about.
+> >
+> > The way I thought about this is that if you're in a heavily modified
+> > scenario with a large directory and you're past the 'acdirmax' time,
+> > you have to make the choice of either:
+> > a) ignoring 'acdirmax' (this is what the NFSv3 patch did) and even
+> > though you know the cache expired you keep going as though it
+> > did not (at least until a different process starts a listing)
+> > b) honoring 'acdirmax' (drop the pagecache), but keep going the
+> > best you can based on the previous information and don't try to
+> > rebuild the cache before continuing.
+>
+> Yeah, it seems like those are your options. The only other way
+> of doing this that I can think of would be to add logic that
+> says something like:
+>
+>         if (pos != 0 and the cache is invalid)
+>                 uncached_readdir()
+>
+> ..which is, by the looks of it, easily done by having
+> readdir_search_pagecache() return EBADCOOKIE if
+> there's no cache, and the offset is not 0. E.g. it
+> shouldn't try to fill the cache in that case, but
+> just let uncached reads take over.
+>
+I thought about other logic, but this seems simple
+enough - just check for 0 and probably the number
+of pages in the cache to see if it's invalid.
 
-I mistakenly include the sub conf in the sub conf
-which cause an infinite loop... but again that was
-a pilot error on my part.
+> The idea here is that the only information that is possibly
+> still valid is the cookie - and that the server will know
+> how to use the cookie to keep going where you left off.
+>
+Makes sense.
 
-> 
-> relative_path() is just as it suggests only for building relative
-> paths, whatever comes out of it, either the constructed relative path
-> or the untouched absolute one gets handed to glob(3) which builds a
-> list of files which match the wildcard pattern given, the for() loop
-> around conf_readfile()/conf_parse() loads all of the contents of those
-> files into the current transaction as if it was one big config file,
-> the wildcard pattern will also do the file extension matching that
-> Chuck suggested.
-Here is what I'm seeing:
-mount -v steved-fedora:/home/tmp /mnt/tmp
-conf_readfile: stat(/etc/nfsmount.conf) 0 errno 2
-relative_path: newfile '/etc/nfsmount.conf.d/*.conf'
-conf_parse_line: relpath '/etc/nfsmount.conf.d/*.conf'
-conf_readfile: stat(/etc/nfsmount.conf.d/*.conf) -1 errno 2 
-conf_parse_line: subconf '(null)'
-^^^^ this NULL stop the processing so the vers=4 mount option 
-is never processed in the sub config file. 
+> Of course, this mean that, in the case of another client
+> modifying the directory, you'll end up doing mostly / all
+> uncached readdirs after an invalidate. Same for a scenario
+> where a client did: open llseek(<nonzero_offset), getdents().
+> Until another process starts at offset 0 and re-fills the
+> cache, of course.
+>
+> I'm not sure if that's all that bad, though, it depends
+> on common usage patterns.
+>
 
-> 
-> Looking around many other services handle config directories in the
-> same way, not all admittedly, but things like apache always handled
-> their config this way and at Vincents suggestion I checked and this is
-> also how autofs handles it, a directive in the main config file that
-> loads a subdirectory.
-> 
-> /etc/auto.master :
-> # Include /etc/auto.master.d/*.autofs
-> # The included files must conform to the format of this file.
-> #
-> +dir:/etc/auto.master.d
-Question I have is... Do all the files under /etc/auto.master.d
-get processed?
+Yeah I was wondering about this too - what side effects would
+happen when going uncached and how far should we go
+to try to detect we're in this pattern.
 
-> 
-> So the patch i included adds comparable functionality to all of the NFS
-> tools, you simply add the include line to the master config files that
-> require directory configs as well.
-Well not all of the tools... As said before, I pattern my patch
-after what exportfs does with /etc/export.d. 
+I guess I was hoping to avoid going uncached because that
+means we have to ask the server again for the same info,
+which could very well be a lot.  But then again if we're blowing
+past acdirmax then we're making the best of a bad situation
+and just need to make forward progress.
 
-steved.
-> 
-> -Alice
-> 
-> 
-> 
-> On Mon, 2020-11-02 at 14:42 -0500, Steve Dickson wrote:
->> Hello,
->>
->> On 11/2/20 10:57 AM, Alice Mitchell wrote:
->>> On Mon, 2020-11-02 at 09:23 -0500, Steve Dickson wrote:
->>>> Hello,
->>>>
->>>> On 11/2/20 8:24 AM, Steve Dickson wrote:
->>>>>> You would need to write an equivalent of conf_load_file()
->>>>>> that
->>>>>> created a new transaction id and read in all the files before
->>>>>> committing them to do it this way.
->>>
->>> How about the following as an alternative...
->>>
->>> It changes none of the past behaviour, but if you wanted to add an
->>> optional directory structure to a config file then simply add this
->>> to
->>> the default single config file that we ship.
->>>
->>> /etc/nfsmount.conf:
->>> [NFSMount_Global_Options]
->>> include=-/etc/nfsmount.conf.d/*.conf
->> If it was this simple I would go for it... 
->> but it just not work... as expected. Here is why.
->>
->> In relative_path() looks at the new file 
->> (/etc/nfsmount.conf.d/*.conf). If the path starts
->> with '/',  the path is strdup-ed and returned.
->>
->> The '*' is never expanded. Even if it was... there
->> no code (that I see) that will process multiple
->> files.   TBL... This works 
->> include=-/etc/nfsmount.conf.d/nfsmount.conf
->>
->> This doesn't 
->> include=-/etc/nfsmount.conf.d/*.conf
->>
->> Also I don't know if it is a good idea to have the sub configs
->> dependent on the main config file. If the main config is remove
->> the sub config will never be seen. Is that a good thing?
->>
->> I'm thinking we go with processing the sub configs separate 
->> from the main config and allow multiple sub configs be processed 
->> if they end with ".config" (mrchuck's suggestion).
->>
->> Then document all this in the man pages.  
->>
->> The last question should the main config be process,
->> not at all or after or before the sub configs?
->>
->> steved.
->>   
->>>
->>> The leading minus tells it that it isnt an error if its empty, and
->>> it
->>> will load all of the fragments it finds in there as well as the
->>> existing single file.  Apply the same structure to any existing
->>> config
->>> file that you want to also have a directory for.
->>>
->>> -Alice
->>>
->>>
->>>
->>> diff --git a/support/nfs/conffile.c b/support/nfs/conffile.c
->>> index 58c03911..aade50c8 100644
->>> --- a/support/nfs/conffile.c
->>> +++ b/support/nfs/conffile.c
->>> @@ -53,6 +53,7 @@
->>>  #include <libgen.h>
->>>  #include <sys/file.h>
->>>  #include <time.h>
->>> +#include <glob.h>
->>>  
->>>  #include "conffile.h"
->>>  #include "xlog.h"
->>> @@ -690,6 +691,7 @@ conf_parse_line(int trans, char *line, const
->>> char *filename, int lineno, char **
->>>  	if (strcasecmp(line, "include")==0) {
->>>  		/* load and parse subordinate config files */
->>>  		_Bool optional = false;
->>> +		glob_t globdata;
->>>  
->>>  		if (val && *val == '-') {
->>>  			optional = true;
->>> @@ -704,33 +706,46 @@ conf_parse_line(int trans, char *line, const
->>> char *filename, int lineno, char **
->>>  			return;
->>>  		}
->>>  
->>> -		subconf = conf_readfile(relpath);
->>> -		if (subconf == NULL) {
->>> -			if (!optional)
->>> -				xlog_warn("config error at %s:%d: error
->>> loading included config",
->>> -					  filename, lineno);
->>> -			if (relpath)
->>> -				free(relpath);
->>> -			return;
->>> -		}
->>> +		if (glob(relpath, GLOB_MARK|GLOB_NOCHECK, NULL,
->>> &globdata)) {
->>> +			xlog_warn("config error at %s:%d: error with
->>> matching pattern", filename, lineno);
->>> +		} else 
->>> +		{
->>> +			for (size_t g=0; g<globdata.gl_pathc; g++) {
->>> +				const char * subpath =
->>> globdata.gl_pathv[g];
->>>  
->>> -		/* copy the section data so the included file can
->>> inherit it
->>> -		 * without accidentally changing it for us */
->>> -		if (*section != NULL) {
->>> -			inc_section = strdup(*section);
->>> -			if (*subsection != NULL)
->>> -				inc_subsection = strdup(*subsection);
->>> -		}
->>> +				if (subpath[strlen(subpath)-1] == '/')
->>> {
->>> +					continue;
->>> +				}
->>> +				subconf = conf_readfile(subpath);
->>> +				if (subconf == NULL) {
->>> +					if (!optional)
->>> +						xlog_warn("config error
->>> at %s:%d: error loading included config",
->>> +							  filename,
->>> lineno);
->>> +					if (relpath)
->>> +						free(relpath);
->>> +					return;
->>> +				}
->>> +
->>> +				/* copy the section data so the
->>> included file can inherit it
->>> +				 * without accidentally changing it for
->>> us */
->>> +				if (*section != NULL) {
->>> +					inc_section = strdup(*section);
->>> +					if (*subsection != NULL)
->>> +						inc_subsection =
->>> strdup(*subsection);
->>> +				}
->>>  
->>> -		conf_parse(trans, subconf, &inc_section,
->>> &inc_subsection, relpath);
->>> +				conf_parse(trans, subconf,
->>> &inc_section, &inc_subsection, relpath);
->>>  
->>> -		if (inc_section)
->>> -			free(inc_section);
->>> -		if (inc_subsection)
->>> -			free(inc_subsection);
->>> +				if (inc_section)
->>> +					free(inc_section);
->>> +				if (inc_subsection)
->>> +					free(inc_subsection);
->>> +				free(subconf);
->>> +			}
->>> +		}
->>>  		if (relpath)
->>>  			free(relpath);
->>> -		free(subconf);
->>> +		globfree(&globdata);
->>>  	} else {
->>>  		/* XXX Perhaps should we not ignore errors?  */
->>>  		conf_set(trans, *section, *subsection, line, val, 0,
->>> 0);
->>>
->>>
-> 
+I also considered whether it would be possible to improve the readdir
+cache data structure and search to handle this, especially now that it
+looks like Trond's latest patches have given us 16 bytes of free space in
+each page.  I was thinking for example of adding a 'next_page_index'
+into nfs_cache_array but then I think we get into a mess of overlap of
+entries, etc. So far I don't see a clean way forward on that, and the
+added complexity does not seem worthwhile.  So trying uncached
+like you and Trond suggest may be the best approach.
+
+
+> - Frank
+>
 
