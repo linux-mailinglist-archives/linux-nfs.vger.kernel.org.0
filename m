@@ -2,144 +2,162 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFA1B2A475F
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Nov 2020 15:10:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C34312A47F0
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Nov 2020 15:20:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbgKCOKa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Nov 2020 09:10:30 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45038 "EHLO
+        id S1729359AbgKCOUo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Nov 2020 09:20:44 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39356 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729505AbgKCOJU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Nov 2020 09:09:20 -0500
+        by vger.kernel.org with ESMTP id S1729133AbgKCOS7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Nov 2020 09:18:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604412559;
+        s=mimecast20190719; t=1604413138;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=tc6fk/nl8GTjKGZXgMbhSd6hhw+TWj3pyHi0GFYb3yE=;
-        b=N1mPIjrsxUESymMgs665/kAfwFDDDKeqaY7U1Q+yNZzXNt06O1kVPLgxC/jFbRgxYGd2lG
-        oFI951VLyTbjtuYQFdjV5p+mmSEY+Kd458b1q26reOshfQUNUgf91l4srnzDSjtia0T0LQ
-        1j5MmbmlFV3HWZg2DS9uT0p9BVbo05A=
+        bh=jDHSdiRb2oKMmmCc5HJcne24XxdTSTAA1I++EUcYADg=;
+        b=b0wH2a97cJJrxM5NSodyvSISFH7a7Cg5Na2HG4zWckVJBb4xokHIskJHePiIpPeFMDYePa
+        c0J0Irhk7NkASZE85epX+ROibVO5bzpj+imcpfobf0P/Rl8pha8hs0+RmCAtMofZ3aKyzx
+        gF+GCMzhxwDqALXeWe9+SJEGqcXTXHk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-534-A32ISuGxPLyXYyCNtkSGhA-1; Tue, 03 Nov 2020 09:09:17 -0500
-X-MC-Unique: A32ISuGxPLyXYyCNtkSGhA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-313-bJ9OYkNtMDCwww0os7LJpQ-1; Tue, 03 Nov 2020 09:18:56 -0500
+X-MC-Unique: bJ9OYkNtMDCwww0os7LJpQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44F5C64161;
-        Tue,  3 Nov 2020 14:09:16 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 320A26D240;
+        Tue,  3 Nov 2020 14:18:55 +0000 (UTC)
 Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E144A1002D5D;
-        Tue,  3 Nov 2020 14:09:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DE2F25577D;
+        Tue,  3 Nov 2020 14:18:54 +0000 (UTC)
 From:   "Benjamin Coddington" <bcodding@redhat.com>
 To:     trondmy@kernel.org
 Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 02/12] NFS: Clean up readdir struct nfs_cache_array
-Date:   Tue, 03 Nov 2020 09:09:14 -0500
-Message-ID: <ACB62869-286C-4189-9BF9-C4F622C02C73@redhat.com>
-In-Reply-To: <015FB69A-1E45-4A93-89F3-2755F2A565F0@redhat.com>
+Subject: Re: [PATCH 03/12] NFS: Clean up nfs_readdir_page_filler()
+Date:   Tue, 03 Nov 2020 09:18:53 -0500
+Message-ID: <36E36AEF-E3D3-472B-A837-FF1312B7C169@redhat.com>
+In-Reply-To: <20201102180658.6218-4-trondmy@kernel.org>
 References: <20201102180658.6218-1-trondmy@kernel.org>
  <20201102180658.6218-2-trondmy@kernel.org>
  <20201102180658.6218-3-trondmy@kernel.org>
- <015FB69A-1E45-4A93-89F3-2755F2A565F0@redhat.com>
+ <20201102180658.6218-4-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 3 Nov 2020, at 8:35, Benjamin Coddington wrote:
+On 2 Nov 2020, at 13:06, trondmy@kernel.org wrote:
 
-> On 2 Nov 2020, at 13:06, trondmy@kernel.org wrote:
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >
->> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->>
->> Since the 'eof_index' is only ever used as a flag, make it so.
->> Also add a flag to detect if the page has been completely filled.
->>
->> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
->> ---
->>  fs/nfs/dir.c | 66 
->> ++++++++++++++++++++++++++++++++++++++--------------
->>  1 file changed, 49 insertions(+), 17 deletions(-)
->>
->> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
->> index 67d8595cd6e5..604ebe015387 100644
->> --- a/fs/nfs/dir.c
->> +++ b/fs/nfs/dir.c
->> @@ -138,9 +138,10 @@ struct nfs_cache_array_entry {
->>  };
->>
->>  struct nfs_cache_array {
->> -	int size;
->> -	int eof_index;
->>  	u64 last_cookie;
->> +	unsigned int size;
->> +	unsigned char page_full : 1,
->> +		      page_is_eof : 1;
->>  	struct nfs_cache_array_entry array[];
->>  };
->>
->> @@ -172,7 +173,6 @@ void nfs_readdir_init_array(struct page *page)
->>
->>  	array = kmap_atomic(page);
->>  	memset(array, 0, sizeof(struct nfs_cache_array));
->> -	array->eof_index = -1;
->>  	kunmap_atomic(array);
->>  }
->>
->> @@ -192,6 +192,17 @@ void nfs_readdir_clear_array(struct page *page)
->>  	kunmap_atomic(array);
->>  }
->>
->> +static void nfs_readdir_array_set_eof(struct nfs_cache_array *array)
->> +{
->> +	array->page_is_eof = 1;
->> +	array->page_full = 1;
->> +}
->> +
->> +static bool nfs_readdir_array_is_full(struct nfs_cache_array *array)
->> +{
->> +	return array->page_full;
->> +}
->> +
->>  /*
->>   * the caller is responsible for freeing qstr.name
->>   * when called by nfs_readdir_add_to_array, the strings will be 
->> freed in
->> @@ -213,6 +224,23 @@ int nfs_readdir_make_qstr(struct qstr *string, 
->> const char *name, unsigned int le
->>  	return 0;
->>  }
->>
->> +/*
->> + * Check that the next array entry lies entirely within the page 
->> bounds
->> + */
->> +static int nfs_readdir_array_can_expand(struct nfs_cache_array 
->> *array)
->> +{
->> +	struct nfs_cache_array_entry *cache_entry;
->> +
->> +	if (array->page_full)
->> +		return -ENOSPC;
->> +	cache_entry = &array->array[array->size + 1];
->> +	if ((char *)cache_entry - (char *)array > PAGE_SIZE) {
->> +		array->page_full = 1;
->> +		return -ENOSPC;
->> +	}
->> +	return 0;
->> +}
->> +
+> Clean up handling of the case where there are no entries in the 
+> readdir
+> reply.
 >
-> I think we could do this calculation at compile-time instead of doing 
-> it for
-> each entry, for dubious nominal gains..
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/nfs/dir.c | 39 ++++++++++++++++++---------------------
+>  1 file changed, 18 insertions(+), 21 deletions(-)
+>
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index 604ebe015387..68acbde3f914 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -601,16 +601,12 @@ int 
+> nfs_readdir_page_filler(nfs_readdir_descriptor_t *desc, struct 
+> nfs_entry *en
+>  	struct xdr_stream stream;
+>  	struct xdr_buf buf;
+>  	struct page *scratch;
+> -	unsigned int count = 0;
+>  	int status;
+>
+>  	scratch = alloc_page(GFP_KERNEL);
+>  	if (scratch == NULL)
+>  		return -ENOMEM;
+>
+> -	if (buflen == 0)
+> -		goto out_nopages;
+> -
+>  	xdr_init_decode_pages(&stream, &buf, xdr_pages, buflen);
+>  	xdr_set_scratch_buffer(&stream, page_address(scratch), PAGE_SIZE);
+>
+> @@ -619,27 +615,27 @@ int 
+> nfs_readdir_page_filler(nfs_readdir_descriptor_t *desc, struct 
+> nfs_entry *en
+>  			entry->label->len = NFS4_MAXLABELLEN;
+>
+>  		status = xdr_decode(desc, entry, &stream);
+> -		if (status != 0) {
+> -			if (status == -EAGAIN)
+> -				status = 0;
+> +		if (status != 0)
+>  			break;
+> -		}
+> -
+> -		count++;
+>
+>  		if (desc->plus)
+>  			nfs_prime_dcache(file_dentry(desc->file), entry,
+>  					desc->dir_verifier);
+>
+>  		status = nfs_readdir_add_to_array(entry, page);
+> -		if (status != 0)
+> -			break;
+> -	} while (!entry->eof);
+> +	} while (!status && !entry->eof);
+>
+> -out_nopages:
+> -	if (count == 0 || (status == -EBADCOOKIE && entry->eof != 0)) {
+> -		nfs_readdir_page_set_eof(page);
+> +	switch (status) {
+> +	case -EBADCOOKIE:
+> +		if (entry->eof) {
+> +			nfs_readdir_page_set_eof(page);
+> +			status = 0;
+> +		}
+> +		break;
+> +	case -ENOSPC:
 
-and doing so might allow us to detect the case where the array is full
-before doing another RPC that we'll discard.
+If you return ENOSPC, then you don't need to use
+nfs_readdir_array_is_full(array) below..
+
+> +	case -EAGAIN:
+>  		status = 0;
+> +		break;
+>  	}
+>
+>  	put_page(scratch);
+> @@ -714,14 +710,15 @@ int 
+> nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page 
+> *page,
+>
+>  		if (status < 0)
+>  			break;
+> +
+>  		pglen = status;
+> -		status = nfs_readdir_page_filler(desc, &entry, pages, page, pglen);
+> -		if (status < 0) {
+> -			if (status == -ENOSPC)
+> -				status = 0;
+> +		if (pglen == 0) {
+> +			nfs_readdir_page_set_eof(page);
+>  			break;
+>  		}
+> -	} while (!nfs_readdir_array_is_full(array));
+> +
+> +		status = nfs_readdir_page_filler(desc, &entry, pages, page, pglen);
+> +	} while (!status && !nfs_readdir_array_is_full(array));
+
+^^ here.
+
+I suppose nfs_readdir_array_is_full() is nice and clear.. I wonder if 
+the
+compiler would optimize it away.
 
 Ben
 
