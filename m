@@ -2,158 +2,294 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E23702A4AE7
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Nov 2020 17:14:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8419A2A4C80
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Nov 2020 18:16:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgKCQOL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Nov 2020 11:14:11 -0500
-Received: from mail-dm6nam11on2109.outbound.protection.outlook.com ([40.107.223.109]:31328
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727109AbgKCQOL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 3 Nov 2020 11:14:11 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mOTzyr9GkwPhA6FXzt2dJJuBpxC322z5lmI1qJyoFbMn45PhPX8/dZtw2S9sR6S1SzFBLuEgQiq3M88DEn4+wY3/xHY/L4z6s7LRt3d7cb1cNWLBMI3/GGm+nH0skMn4UbHmAIhbynPT9iFe0p5l2SJ/5h1cgWU43J4dj5B+yaOu30pqx3LeoJT3OT1LwDUI8mWi5z1VKTDAjutXjCdvUzv62l4rC7J0/gXr0Ruxm+jWnKRMUWR0l6ygV8hYnkV2HuTDwfLP72WEccij65uguROa40aP7eHvWyj81NLbzCcfcGEAsgbQ7OtH6b1SSgBIl24wtGhrbJno0RJnt77gpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ui5Y08qQawPXOLGomrlgdf77ynGd5eSkxAn8LAqwfpE=;
- b=nsJ0pfJzYg3mecOPc7dhPF5gKYP6S2zqbCRgZ5GUtCLuQYztbyYh8aIyd46lFLXZjKUeizhYyn4jroKWoHQ9YS1Vi4OuERbFJG9WngthNW3JCayFPyEZ3lnt+bMe3ePNILEsfLpp+XfG0TmqzUVa7ee0wLbYnbblX+xlLWttapmoV4aPHjPw1uunggkuyLnLtek+c5aPM3yBB0nWqN49iTMTfN2dv4QK6r+6K4+NhjtAtISlf8CCrDQqFPMcXJ8qRcag9MJ6GSH3obYx8KiO7l8U00n/aNjOJiZQO2k3v/d0MKpbP8OhyqrLg5oo/gAK9N8UdlPa5zOaM2F69s6Wtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ui5Y08qQawPXOLGomrlgdf77ynGd5eSkxAn8LAqwfpE=;
- b=CBiHYcLaDT56NUczJLCyv5bQNFHpLU33OuuPLA0qxtXlb+O4Gs2XPRwNlK7DzLLjPl4vdFr13vz0qXRn+C+U9fxIEsOD/XN/FAcM9BRlEnI0Qvci9p703us6yydnP6daCRZBzmpsT89/4N2/1vFNn1cUx9UWK+QCqqNiqARUEPc=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB3742.namprd13.prod.outlook.com (2603:10b6:208:1e7::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.6; Tue, 3 Nov
- 2020 16:14:06 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.010; Tue, 3 Nov 2020
- 16:14:06 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bcodding@redhat.com" <bcodding@redhat.com>,
-        "trondmy@kernel.org" <trondmy@kernel.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2 05/16] NFS: Don't discard readdir results
-Thread-Topic: [PATCH v2 05/16] NFS: Don't discard readdir results
-Thread-Index: AQHWsfgf180MPtNOhEWQVVxhUiLNYKm2j4eAgAAFOwA=
-Date:   Tue, 3 Nov 2020 16:14:05 +0000
-Message-ID: <46be3eda2816ea6ec950483e9b6e17d5a6fcaf7a.camel@hammerspace.com>
-References: <20201103153329.531942-1-trondmy@kernel.org>
-         <20201103153329.531942-2-trondmy@kernel.org>
-         <20201103153329.531942-3-trondmy@kernel.org>
-         <20201103153329.531942-4-trondmy@kernel.org>
-         <20201103153329.531942-5-trondmy@kernel.org>
-         <20201103153329.531942-6-trondmy@kernel.org>
-         <DEB8710B-8D01-4FC9-9DA6-78A701C46E19@redhat.com>
-In-Reply-To: <DEB8710B-8D01-4FC9-9DA6-78A701C46E19@redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8f93a71a-28f5-423c-3c74-08d880137ceb
-x-ms-traffictypediagnostic: MN2PR13MB3742:
-x-microsoft-antispam-prvs: <MN2PR13MB3742FE3B0DFD423972142A31B8110@MN2PR13MB3742.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bXa9sSI0ZgDixGhfs6xf/O0WVZZaMCI+AX4B3UB9ZztNsGG7JwiFmNCjn6IF3GoQIB4MsvvAwwRTDDGTmQtel2el0Nkbl5PoiNL7wBpFxsPPsYzWJuqYkb+DvyuDN6xnU+FmYBNhOTBnF61986blRLjwvTjIyKGZL08N8CPW1TRgc8x3nE5+BAg/WKMoH7QUo9G4uroor0uQuiaURFWO5zdCaM8x2G1mpjmtXy1svT6qE0kE1Ga7GG4iac8lD+WEAMS1LtJHhNe960lF5wgoi2ZlKRqJDbIAc0hy1xMVzjrSLb2BaJOWbVmDh1cYX8QQ6FUYh7zQsDmupCVc7Xzggw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(366004)(396003)(39830400003)(346002)(376002)(66556008)(64756008)(36756003)(8676002)(478600001)(76116006)(66476007)(66946007)(66446008)(110136005)(8936002)(91956017)(2906002)(316002)(83380400001)(86362001)(6512007)(4326008)(6486002)(186003)(26005)(53546011)(6506007)(2616005)(5660300002)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: nIeaKe6xK9C2hK5mcM9mJUwtJ2a/Dl0ifdSWr54fA8B+mG+Ces12RHG6ytYyOBCHHCVBKRGyoiQ9hPsaTQRLLmE+5KOyoO1DMz8X2UKTsxTf93EXei8ktwfu3Bnn6+YganDDOgugRS0+goHgeVWKvrF2ZrfaFN8zVVzj3XdxJTgzVtViBxvOmXxMSSLiSxfKRYP1XMNtAcmz4BGPgUADsgbC+15AEfSg3qIDtZgIZsRMiVnkUF5MwacKfR8khYkA8V5rXvmNI1Mx3Pxv4l0bO3a9nnZ0etU/qhPclnMSmOV8dUOPmdnFJImPXXQahJfOG0rRKnvFO7uJLx0OETzKjwZON2AlrLH26e0SC87RVgxn8yLn2eGSI81R6QGU8270PJK8d0SCCV8eHyTGc/oCK+mmGPBVd5rvDhio1yq0EZDUrzXQ/kGBZ1xtffyiTknBQZsUb6ca1sL4qdNX63VN3ZU2/HvE9+u7e0Uy9osNYmm3biEUGude1dsKDQ49A3KLTkoElmGZY9ua8prpnmvyLbzUkECuGUeWsOOvbwdrtYHfdnyWASpyPMLQvSAAiATciwEQhP+Q6aIVFpaQbAjDNtmD9pVSWeKx7WrkqQVWZi6a6ey94ptRzwxSLDLeiRKIjugfWUU0pQV21wtRaoVJ9Q==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <983C66BC21E8954E8469A87C3873854A@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1727530AbgKCRQh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Nov 2020 12:16:37 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42471 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726581AbgKCRQh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Nov 2020 12:16:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1604423795;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XGFMSkl98vwL6bqF00Qc6dc31oixQuvSr05Sa0MYdWs=;
+        b=VXocBtlBN3nsDURSJAK4cfze8z0J7EwnDAiJ9v1rt5bg4BMWUXic2tbiKLu8U4oTopH0ZK
+        wenoGtQxaQCZRqIRd0p2ewRGFKEnyLrycTR5u64WafAzWFpXTHSu5G7x25u/pwKnqsZTpC
+        64lMK2d638VpTZnrGI1KO+wsAxtWn7E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-235-xaPKQYskOeCLLnay5a3hiQ-1; Tue, 03 Nov 2020 12:16:31 -0500
+X-MC-Unique: xaPKQYskOeCLLnay5a3hiQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 172881006CB6;
+        Tue,  3 Nov 2020 17:16:30 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-113-128.phx2.redhat.com [10.3.113.128])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9AD5F21E97;
+        Tue,  3 Nov 2020 17:16:29 +0000 (UTC)
+Subject: Re: [RFC PATCH 0/1] Enable config.d directory to be processed.
+To:     Alice Mitchell <ajmitchell@redhat.com>,
+        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Cc:     "McIntyre, Vincent (CASS, Marsfield)" <Vincent.Mcintyre@csiro.au>
+References: <20201029210401.446244-1-steved@redhat.com>
+ <338aeb795a31c2233016d225dc114e33d02eb0cb.camel@redhat.com>
+ <6f3caf91-296c-0aa8-ba41-bc35d500adaa@RedHat.com>
+ <4836616f-3aa6-d0bd-22db-cd7fecf4dce9@RedHat.com>
+ <1ac387a1ef608258b2e23e7923a1c4e2ec6b25b3.camel@redhat.com>
+ <5d090330-d67f-4bf0-ca91-e30772bd87b2@RedHat.com>
+ <01f8610433a684a6f17229f1bc3fa33199638f52.camel@redhat.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <ca5bd237-42c6-bab4-0529-df90666e90c7@RedHat.com>
+Date:   Tue, 3 Nov 2020 12:16:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f93a71a-28f5-423c-3c74-08d880137ceb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Nov 2020 16:14:05.8174
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aulLdG8f/G/fcCwE17s2/nH6xsxelH1fgf5o5Kc9llKeoCW7B8H+b91/sn6gsKFG7wEbtS7ugx7+TdzRLbiLDg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3742
+In-Reply-To: <01f8610433a684a6f17229f1bc3fa33199638f52.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTExLTAzIGF0IDEwOjU1IC0wNTAwLCBCZW5qYW1pbiBDb2RkaW5ndG9uIHdy
-b3RlOg0KPiBPbiAzIE5vdiAyMDIwLCBhdCAxMDozMywgdHJvbmRteUBrZXJuZWwub3JnwqB3cm90
-ZToNCj4gDQo+ID4gRnJvbTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWtsZWJ1c3RAaGFtbWVy
-c3BhY2UuY29tPg0KPiA+IA0KPiA+IElmIGEgcmVhZGRpciBjYWxsIHJldHVybnMgbW9yZSBkYXRh
-IHRoYW4gd2UgY2FuIGZpdCBpbnRvIG9uZSBwYWdlDQo+ID4gY2FjaGUgcGFnZSwgdGhlbiBhbGxv
-Y2F0ZSBhIG5ldyBvbmUgZm9yIHRoYXQgZGF0YSByYXRoZXIgdGhhbg0KPiA+IGRpc2NhcmRpbmcg
-dGhlIGRhdGEuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogVHJvbmQgTXlrbGVidXN0IDx0cm9u
-ZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tPg0KPiA+IC0tLQ0KPiA+IMKgZnMvbmZzL2Rpci5j
-IHwgNDYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLQ0KPiA+
-IMKgMSBmaWxlIGNoYW5nZWQsIDQyIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+ID4g
-DQo+ID4gZGlmZiAtLWdpdCBhL2ZzL25mcy9kaXIuYyBiL2ZzL25mcy9kaXIuYw0KPiA+IGluZGV4
-IGI0ODYxYTMzYWQ2MC4uNzg4YzJhMmVlYWEzIDEwMDY0NA0KPiA+IC0tLSBhL2ZzL25mcy9kaXIu
-Yw0KPiA+ICsrKyBiL2ZzL25mcy9kaXIuYw0KPiA+IEBAIC0zMjEsNiArMzIxLDI2IEBAIHN0YXRp
-YyB2b2lkIG5mc19yZWFkZGlyX3BhZ2Vfc2V0X2VvZihzdHJ1Y3QNCj4gPiBwYWdlIA0KPiA+ICpw
-YWdlKQ0KPiA+IMKgwqDCoMKgwqDCoMKgwqBrdW5tYXBfYXRvbWljKGFycmF5KTsNCj4gPiDCoH0N
-Cj4gPiANCj4gPiArc3RhdGljIHZvaWQgbmZzX3JlYWRkaXJfcGFnZV91bmxvY2tfYW5kX3B1dChz
-dHJ1Y3QgcGFnZSAqcGFnZSkNCj4gPiArew0KPiA+ICvCoMKgwqDCoMKgwqDCoHVubG9ja19wYWdl
-KHBhZ2UpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoHB1dF9wYWdlKHBhZ2UpOw0KPiA+ICt9DQo+ID4g
-Kw0KPiA+ICtzdGF0aWMgc3RydWN0IHBhZ2UgKm5mc19yZWFkZGlyX3BhZ2VfZ2V0X25leHQoc3Ry
-dWN0IGFkZHJlc3Nfc3BhY2UNCj4gPiAqbWFwcGluZywNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBwZ29mZl90IGluZGV4LCB1NjQNCj4gPiBjb29raWUpDQo+ID4gK3sNCj4g
-PiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgcGFnZSAqcGFnZTsNCj4gPiArDQo+ID4gK8KgwqDCoMKg
-wqDCoMKgcGFnZSA9IG5mc19yZWFkZGlyX3BhZ2VfZ2V0X2xvY2tlZChtYXBwaW5nLCBpbmRleCwg
-Y29va2llKTsNCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAocGFnZSkgew0KPiA+ICvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAobmZzX3JlYWRkaXJfcGFnZV9sYXN0X2Nvb2tpZShwYWdl
-KSA9PSBjb29raWUpDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqByZXR1cm4gcGFnZTsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-bmZzX3JlYWRkaXJfcGFnZV91bmxvY2tfYW5kX3B1dChwYWdlKTsNCj4gPiArwqDCoMKgwqDCoMKg
-wqB9DQo+ID4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIE5VTEw7DQo+ID4gK30NCj4gPiArDQo+ID4g
-wqBzdGF0aWMgaW5saW5lDQo+ID4gwqBpbnQgaXNfMzJiaXRfYXBpKHZvaWQpDQo+ID4gwqB7DQo+
-ID4gQEAgLTYzOCwxMyArNjU4LDE1IEBAIHZvaWQgbmZzX3ByaW1lX2RjYWNoZShzdHJ1Y3QgZGVu
-dHJ5ICpwYXJlbnQsIA0KPiA+IHN0cnVjdCBuZnNfZW50cnkgKmVudHJ5LA0KPiA+IMKgfQ0KPiA+
-IA0KPiA+IMKgLyogUGVyZm9ybSBjb252ZXJzaW9uIGZyb20geGRyIHRvIGNhY2hlIGFycmF5ICov
-DQo+ID4gLXN0YXRpYw0KPiA+IC1pbnQgbmZzX3JlYWRkaXJfcGFnZV9maWxsZXIobmZzX3JlYWRk
-aXJfZGVzY3JpcHRvcl90ICpkZXNjLCBzdHJ1Y3QNCj4gPiBuZnNfZW50cnkgKmVudHJ5LA0KPiA+
-IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoHN0cnVjdCBwYWdlICoqeGRyX3BhZ2VzLCBzdHJ1Y3QNCj4gPiBwYWdlICpwYWdlLCB1
-bnNpZ25lZCBpbnQgYnVmbGVuKQ0KPiA+ICtzdGF0aWMgaW50IG5mc19yZWFkZGlyX3BhZ2VfZmls
-bGVyKHN0cnVjdCBuZnNfcmVhZGRpcl9kZXNjcmlwdG9yIA0KPiA+ICpkZXNjLA0KPiA+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgc3RydWN0IG5mc19lbnRyeSAqZW50cnksDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3QgcGFn
-ZSAqKnhkcl9wYWdlcywNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBwYWdlICpmaWxsbWUsIHVuc2ln
-bmVkDQo+ID4gaW50IGJ1ZmxlbikNCj4gPiDCoHsNCj4gPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3Qg
-YWRkcmVzc19zcGFjZSAqbWFwcGluZyA9IGRlc2MtPmZpbGUtPmZfbWFwcGluZzsNCj4gPiDCoMKg
-wqDCoMKgwqDCoMKgc3RydWN0IHhkcl9zdHJlYW0gc3RyZWFtOw0KPiA+IMKgwqDCoMKgwqDCoMKg
-wqBzdHJ1Y3QgeGRyX2J1ZiBidWY7DQo+ID4gLcKgwqDCoMKgwqDCoMKgc3RydWN0IHBhZ2UgKnNj
-cmF0Y2g7DQo+ID4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IHBhZ2UgKnNjcmF0Y2gsICpuZXcsICpw
-YWdlID0gZmlsbG1lOw0KPiA+IMKgwqDCoMKgwqDCoMKgwqBpbnQgc3RhdHVzOw0KPiA+IA0KPiA+
-IMKgwqDCoMKgwqDCoMKgwqBzY3JhdGNoID0gYWxsb2NfcGFnZShHRlBfS0VSTkVMKTsNCj4gPiBA
-QCAtNjY3LDYgKzY4OSwxOSBAQCBpbnQgDQo+ID4gbmZzX3JlYWRkaXJfcGFnZV9maWxsZXIobmZz
-X3JlYWRkaXJfZGVzY3JpcHRvcl90ICpkZXNjLCBzdHJ1Y3QgDQo+ID4gbmZzX2VudHJ5ICplbg0K
-PiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGVzYy0+ZGlyX3ZlcmlmaWVyKTsNCj4gPiANCj4g
-PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHN0YXR1cyA9IG5mc19yZWFkZGlyX2Fk
-ZF90b19hcnJheShlbnRyeSwgcGFnZSk7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoGlmIChzdGF0dXMgIT0gLUVOT1NQQykNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbnRpbnVlOw0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgaWYgKHBhZ2UtPm1hcHBpbmcgIT0gbWFwcGluZykNCj4gPiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGJyZWFrOw0KPiANCj4g
-Xl4gSG93IGNhbiB0aGlzIGhhcHBlbj8NCj4gDQoNCldlIGNhbGwgdGhlIHNhbWUgcm91dGluZXMg
-ZnJvbSB1bmNhY2hlZF9yZWFkZGlyKCksIHNvIHRoZSBhYm92ZSBpcw0KcmVhbGx5IHRoZXJlIGlu
-IG9yZGVyIHRvIGV4aXQgd2hlbiB3ZSBzZWUgdGhvc2UgYW5vbnltb3VzIHBhZ2VzLg0KDQotLSAN
-ClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFj
-ZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+
+
+On 11/3/20 5:14 AM, Alice Mitchell wrote:
+> I know the code doesn't look like very much but it does do exactly what
+> I suggest, and i feel is quite a simple and elegant solution that is
+> inline with what many of services do.
+I'm not saying the include does not work... 
+Its just the example you gave does not work.
+
+I mistakenly include the sub conf in the sub conf
+which cause an infinite loop... but again that was
+a pilot error on my part.
+
+> 
+> relative_path() is just as it suggests only for building relative
+> paths, whatever comes out of it, either the constructed relative path
+> or the untouched absolute one gets handed to glob(3) which builds a
+> list of files which match the wildcard pattern given, the for() loop
+> around conf_readfile()/conf_parse() loads all of the contents of those
+> files into the current transaction as if it was one big config file,
+> the wildcard pattern will also do the file extension matching that
+> Chuck suggested.
+Here is what I'm seeing:
+mount -v steved-fedora:/home/tmp /mnt/tmp
+conf_readfile: stat(/etc/nfsmount.conf) 0 errno 2
+relative_path: newfile '/etc/nfsmount.conf.d/*.conf'
+conf_parse_line: relpath '/etc/nfsmount.conf.d/*.conf'
+conf_readfile: stat(/etc/nfsmount.conf.d/*.conf) -1 errno 2 
+conf_parse_line: subconf '(null)'
+^^^^ this NULL stop the processing so the vers=4 mount option 
+is never processed in the sub config file. 
+
+> 
+> Looking around many other services handle config directories in the
+> same way, not all admittedly, but things like apache always handled
+> their config this way and at Vincents suggestion I checked and this is
+> also how autofs handles it, a directive in the main config file that
+> loads a subdirectory.
+> 
+> /etc/auto.master :
+> # Include /etc/auto.master.d/*.autofs
+> # The included files must conform to the format of this file.
+> #
+> +dir:/etc/auto.master.d
+Question I have is... Do all the files under /etc/auto.master.d
+get processed?
+
+> 
+> So the patch i included adds comparable functionality to all of the NFS
+> tools, you simply add the include line to the master config files that
+> require directory configs as well.
+Well not all of the tools... As said before, I pattern my patch
+after what exportfs does with /etc/export.d. 
+
+steved.
+> 
+> -Alice
+> 
+> 
+> 
+> On Mon, 2020-11-02 at 14:42 -0500, Steve Dickson wrote:
+>> Hello,
+>>
+>> On 11/2/20 10:57 AM, Alice Mitchell wrote:
+>>> On Mon, 2020-11-02 at 09:23 -0500, Steve Dickson wrote:
+>>>> Hello,
+>>>>
+>>>> On 11/2/20 8:24 AM, Steve Dickson wrote:
+>>>>>> You would need to write an equivalent of conf_load_file()
+>>>>>> that
+>>>>>> created a new transaction id and read in all the files before
+>>>>>> committing them to do it this way.
+>>>
+>>> How about the following as an alternative...
+>>>
+>>> It changes none of the past behaviour, but if you wanted to add an
+>>> optional directory structure to a config file then simply add this
+>>> to
+>>> the default single config file that we ship.
+>>>
+>>> /etc/nfsmount.conf:
+>>> [NFSMount_Global_Options]
+>>> include=-/etc/nfsmount.conf.d/*.conf
+>> If it was this simple I would go for it... 
+>> but it just not work... as expected. Here is why.
+>>
+>> In relative_path() looks at the new file 
+>> (/etc/nfsmount.conf.d/*.conf). If the path starts
+>> with '/',  the path is strdup-ed and returned.
+>>
+>> The '*' is never expanded. Even if it was... there
+>> no code (that I see) that will process multiple
+>> files.   TBL... This works 
+>> include=-/etc/nfsmount.conf.d/nfsmount.conf
+>>
+>> This doesn't 
+>> include=-/etc/nfsmount.conf.d/*.conf
+>>
+>> Also I don't know if it is a good idea to have the sub configs
+>> dependent on the main config file. If the main config is remove
+>> the sub config will never be seen. Is that a good thing?
+>>
+>> I'm thinking we go with processing the sub configs separate 
+>> from the main config and allow multiple sub configs be processed 
+>> if they end with ".config" (mrchuck's suggestion).
+>>
+>> Then document all this in the man pages.  
+>>
+>> The last question should the main config be process,
+>> not at all or after or before the sub configs?
+>>
+>> steved.
+>>   
+>>>
+>>> The leading minus tells it that it isnt an error if its empty, and
+>>> it
+>>> will load all of the fragments it finds in there as well as the
+>>> existing single file.  Apply the same structure to any existing
+>>> config
+>>> file that you want to also have a directory for.
+>>>
+>>> -Alice
+>>>
+>>>
+>>>
+>>> diff --git a/support/nfs/conffile.c b/support/nfs/conffile.c
+>>> index 58c03911..aade50c8 100644
+>>> --- a/support/nfs/conffile.c
+>>> +++ b/support/nfs/conffile.c
+>>> @@ -53,6 +53,7 @@
+>>>  #include <libgen.h>
+>>>  #include <sys/file.h>
+>>>  #include <time.h>
+>>> +#include <glob.h>
+>>>  
+>>>  #include "conffile.h"
+>>>  #include "xlog.h"
+>>> @@ -690,6 +691,7 @@ conf_parse_line(int trans, char *line, const
+>>> char *filename, int lineno, char **
+>>>  	if (strcasecmp(line, "include")==0) {
+>>>  		/* load and parse subordinate config files */
+>>>  		_Bool optional = false;
+>>> +		glob_t globdata;
+>>>  
+>>>  		if (val && *val == '-') {
+>>>  			optional = true;
+>>> @@ -704,33 +706,46 @@ conf_parse_line(int trans, char *line, const
+>>> char *filename, int lineno, char **
+>>>  			return;
+>>>  		}
+>>>  
+>>> -		subconf = conf_readfile(relpath);
+>>> -		if (subconf == NULL) {
+>>> -			if (!optional)
+>>> -				xlog_warn("config error at %s:%d: error
+>>> loading included config",
+>>> -					  filename, lineno);
+>>> -			if (relpath)
+>>> -				free(relpath);
+>>> -			return;
+>>> -		}
+>>> +		if (glob(relpath, GLOB_MARK|GLOB_NOCHECK, NULL,
+>>> &globdata)) {
+>>> +			xlog_warn("config error at %s:%d: error with
+>>> matching pattern", filename, lineno);
+>>> +		} else 
+>>> +		{
+>>> +			for (size_t g=0; g<globdata.gl_pathc; g++) {
+>>> +				const char * subpath =
+>>> globdata.gl_pathv[g];
+>>>  
+>>> -		/* copy the section data so the included file can
+>>> inherit it
+>>> -		 * without accidentally changing it for us */
+>>> -		if (*section != NULL) {
+>>> -			inc_section = strdup(*section);
+>>> -			if (*subsection != NULL)
+>>> -				inc_subsection = strdup(*subsection);
+>>> -		}
+>>> +				if (subpath[strlen(subpath)-1] == '/')
+>>> {
+>>> +					continue;
+>>> +				}
+>>> +				subconf = conf_readfile(subpath);
+>>> +				if (subconf == NULL) {
+>>> +					if (!optional)
+>>> +						xlog_warn("config error
+>>> at %s:%d: error loading included config",
+>>> +							  filename,
+>>> lineno);
+>>> +					if (relpath)
+>>> +						free(relpath);
+>>> +					return;
+>>> +				}
+>>> +
+>>> +				/* copy the section data so the
+>>> included file can inherit it
+>>> +				 * without accidentally changing it for
+>>> us */
+>>> +				if (*section != NULL) {
+>>> +					inc_section = strdup(*section);
+>>> +					if (*subsection != NULL)
+>>> +						inc_subsection =
+>>> strdup(*subsection);
+>>> +				}
+>>>  
+>>> -		conf_parse(trans, subconf, &inc_section,
+>>> &inc_subsection, relpath);
+>>> +				conf_parse(trans, subconf,
+>>> &inc_section, &inc_subsection, relpath);
+>>>  
+>>> -		if (inc_section)
+>>> -			free(inc_section);
+>>> -		if (inc_subsection)
+>>> -			free(inc_subsection);
+>>> +				if (inc_section)
+>>> +					free(inc_section);
+>>> +				if (inc_subsection)
+>>> +					free(inc_subsection);
+>>> +				free(subconf);
+>>> +			}
+>>> +		}
+>>>  		if (relpath)
+>>>  			free(relpath);
+>>> -		free(subconf);
+>>> +		globfree(&globdata);
+>>>  	} else {
+>>>  		/* XXX Perhaps should we not ignore errors?  */
+>>>  		conf_set(trans, *section, *subsection, line, val, 0,
+>>> 0);
+>>>
+>>>
+> 
+
