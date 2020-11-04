@@ -2,66 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C98642A69A5
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Nov 2020 17:27:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46C422A69A6
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Nov 2020 17:27:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbgKDQ1J (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Nov 2020 11:27:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36112 "EHLO
+        id S1730889AbgKDQ1L (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Nov 2020 11:27:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728999AbgKDQ1J (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Nov 2020 11:27:09 -0500
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2366AC0613D3
-        for <linux-nfs@vger.kernel.org>; Wed,  4 Nov 2020 08:27:09 -0800 (PST)
-Received: by mail-qk1-x743.google.com with SMTP id 11so233638qkd.5
-        for <linux-nfs@vger.kernel.org>; Wed, 04 Nov 2020 08:27:09 -0800 (PST)
+        with ESMTP id S1728999AbgKDQ1K (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Nov 2020 11:27:10 -0500
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3844DC0613D3
+        for <linux-nfs@vger.kernel.org>; Wed,  4 Nov 2020 08:27:10 -0800 (PST)
+Received: by mail-qv1-xf41.google.com with SMTP id w5so10147779qvn.12
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Nov 2020 08:27:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=d4SBKQY4D3SrCP5hjy6CzKLVkGZfG5JmNrqa2naVuXg=;
-        b=ZGdxe8CO4I9std1kg2XmPfD0kVU1rgdXYrIYkg5HyResRYNkmIEBPJH0HvdkwBxPit
-         MGuF3AhoiqY3GiMswMLqOpXxNtiW2eUbPLK1FZUSZ8zjXr5R01wraCl85FYXWy/Kvd8T
-         HfQa4znxVYSuESy4mi9juViPBN+5+Gu97BscR55mlSXiFZlgOeNQQKhejn1WtjETFC42
-         7w7vpAm79cpDJdwx+DH0P4l+6btXxUB34ORA9CKoAU0w7ZFyr9xbrZ8GlnIboNyB9zE/
-         e1ddXzymyhAQF2Z0HKECkNecfSZfftxM7JGfSbBSlL4scdNvFQOPsl7CbJ/8P6rhyxy3
-         tfhQ==
+        bh=cQWnqdY1gDuNcCekRbuBF1v/3ZoPLijNeC7jWYYnvtc=;
+        b=db5F/CTl9J2G9prXbl50VGBnX2gnu7dekvyQWA8kj/T3eSRLuh8Gyb1u80WAr3Jgsy
+         70emfNd4aETR5W02qSGspedDqFNQA9S0Y+ggRss946lAODF5sG+zGbYvI6q6D2DI4Yyu
+         LH9cB0sPNe+TlnKlGjH0MiId7sudQPmkZhr+GDpd0d1n+X/bFtoCMbHXwZYFDceXB5p6
+         NbY/lR2YJd0cIk+hEeFpJyuWPKuFXRikqUc9QoVZbb2cZGWVIqbMIE9FalgY1O2UGuqK
+         Vy60HEFjd2MDkBKts85BaR4Bi+lx4Qhu8EUKOP6+9oaHceWiz7IMT3qo3ePpbrF4LGEw
+         e6kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=d4SBKQY4D3SrCP5hjy6CzKLVkGZfG5JmNrqa2naVuXg=;
-        b=dKztAJp8+2BXEu/h5NargafUj7c2w5pafDKnul63fVbBClgxKZmTB2ETya4+C0i8AK
-         rzG1cC3zACGAbA2M864gj60X0ijz73uB7ZKgbhfipDIYw87+eD3jgb+B5BZc9ShBXFdn
-         q7+Rx0wZyPLOUKRtHEOYZ2skp5OEdobmTrzeVJGji5z7Qy2AIfhiUONFnoz22bvUEkAi
-         idTcLSwUa9V1qhQsj5ca+zWkbVN9x+T6tRtNcWAk1Ltc9GTGk7bFPjJUVd0CKaf9Dyp+
-         KfRiLxVxeSXhAx9t9dGfQ5AncjkFRJvmWeFc6mVUOCeBqAxmVeQdzSUlAbIJI0EQj03i
-         3VWQ==
-X-Gm-Message-State: AOAM533xa9e3uwHpzpTfGPaqC7tvJ9FfX/iTYB0ACMrZVBc/6PhzyFsx
-        Tbupt5/m3gBe7+bBYtDTLKVe3Rp1c4I4
-X-Google-Smtp-Source: ABdhPJxYGXHnE2IQ6j5Azfaduj2Ze4C2lAkT4JvwJQyR7yhqSafqISPxLmBUuIn7fYM88egMX4iorQ==
-X-Received: by 2002:ae9:ee15:: with SMTP id i21mr24394904qkg.76.1604507228067;
-        Wed, 04 Nov 2020 08:27:08 -0800 (PST)
+        bh=cQWnqdY1gDuNcCekRbuBF1v/3ZoPLijNeC7jWYYnvtc=;
+        b=V3hR/SZ+uR+3NI7TpXUR+AbXuqt/l45aB1oWhcvNS8fkZQdEFbrXv3ShkELe2ygoqh
+         qdHclx6UECI5KAiyAEFrSqcbezs9jV4RAh39sRVgrlrGDbDGvAxlS2kuiW2KRaSopfOc
+         9ajC71Tqa0GMAdknhnu28mPPX+fXcufdwOI6GgxSlXBmiasIqY+nipFezfUVQwQ6VOdt
+         IMX026INCrvC4IvJKrDL4krGtmAbMcPZFzA3GCXP2eMHKbGSBVy96KWqu4bKiQOn7Ydh
+         o4gUFdebTlLhyDb2dyh3qR3qjEKnPDR/Y4+lTiGRPVRTcCnke6lg/Oaed8IHBdVxUpwI
+         2/ig==
+X-Gm-Message-State: AOAM531qdmACLQ+E9q5tKxCaYjkHBCvAfb7Yf9UFwN3HmnjgFQLrmYDy
+        pKTqfISNFDXOmG9EkRJUBclHW/3snh6L
+X-Google-Smtp-Source: ABdhPJyO4rB0tRS6uW3MczgcdLTfXRRC3D60NornRhqtzAS/fsxmTM5JSyH4LRvE5y8dQzp87cErbg==
+X-Received: by 2002:a0c:ecc8:: with SMTP id o8mr32915864qvq.54.1604507229119;
+        Wed, 04 Nov 2020 08:27:09 -0800 (PST)
 Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net. [68.36.133.222])
-        by smtp.gmail.com with ESMTPSA id g78sm2896924qke.88.2020.11.04.08.27.06
+        by smtp.gmail.com with ESMTPSA id g78sm2896924qke.88.2020.11.04.08.27.08
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2020 08:27:07 -0800 (PST)
+        Wed, 04 Nov 2020 08:27:08 -0800 (PST)
 From:   trondmy@gmail.com
 X-Google-Original-From: trond.myklebust@hammerspace.com
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 06/17] NFS: Remove unnecessary kmap in nfs_readdir_xdr_to_array()
-Date:   Wed,  4 Nov 2020 11:16:27 -0500
-Message-Id: <20201104161638.300324-7-trond.myklebust@hammerspace.com>
+Subject: [PATCH v3 07/17] NFS: Replace kmap() with kmap_atomic() in nfs_readdir_search_array()
+Date:   Wed,  4 Nov 2020 11:16:28 -0500
+Message-Id: <20201104161638.300324-8-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201104161638.300324-6-trond.myklebust@hammerspace.com>
+In-Reply-To: <20201104161638.300324-7-trond.myklebust@hammerspace.com>
 References: <20201104161638.300324-1-trond.myklebust@hammerspace.com>
  <20201104161638.300324-2-trond.myklebust@hammerspace.com>
  <20201104161638.300324-3-trond.myklebust@hammerspace.com>
  <20201104161638.300324-4-trond.myklebust@hammerspace.com>
  <20201104161638.300324-5-trond.myklebust@hammerspace.com>
  <20201104161638.300324-6-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-7-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -70,53 +71,33 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-The kmapped pointer is only used once per loop to check if we need to
-exit.
-
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/dir.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ fs/nfs/dir.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index f7248145c333..e8b0fcc1bc9e 100644
+index e8b0fcc1bc9e..b9001123ec84 100644
 --- a/fs/nfs/dir.c
 +++ b/fs/nfs/dir.c
-@@ -759,7 +759,6 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
- 	struct page *pages[NFS_MAX_READDIR_PAGES];
- 	struct nfs_entry entry;
- 	struct file	*file = desc->file;
--	struct nfs_cache_array *array;
- 	int status = -ENOMEM;
- 	unsigned int array_size = ARRAY_SIZE(pages);
+@@ -447,7 +447,7 @@ int nfs_readdir_search_array(nfs_readdir_descriptor_t *desc)
+ 	struct nfs_cache_array *array;
+ 	int status;
  
-@@ -778,11 +777,9 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
- 		goto out;
+-	array = kmap(desc->page);
++	array = kmap_atomic(desc->page);
+ 
+ 	if (desc->dir_cookie == 0)
+ 		status = nfs_readdir_search_for_pos(array, desc);
+@@ -459,7 +459,7 @@ int nfs_readdir_search_array(nfs_readdir_descriptor_t *desc)
+ 		desc->current_index += array->size;
+ 		desc->page_index++;
  	}
+-	kunmap(desc->page);
++	kunmap_atomic(array);
+ 	return status;
+ }
  
--	array = kmap(page);
--
- 	status = nfs_readdir_alloc_pages(pages, array_size);
- 	if (status < 0)
--		goto out_release_array;
-+		goto out_release_label;
- 	do {
- 		unsigned int pglen;
- 		status = nfs_readdir_xdr_filler(pages, desc, &entry, file, inode);
-@@ -797,11 +794,10 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
- 		}
- 
- 		status = nfs_readdir_page_filler(desc, &entry, pages, page, pglen);
--	} while (!status && !nfs_readdir_array_is_full(array));
-+	} while (!status && nfs_readdir_page_needs_filling(page));
- 
- 	nfs_readdir_free_pages(pages, array_size);
--out_release_array:
--	kunmap(page);
-+out_release_label:
- 	nfs4_label_free(entry.label);
- out:
- 	nfs_free_fattr(entry.fattr);
 -- 
 2.28.0
 
