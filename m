@@ -2,163 +2,143 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E66AC2A69B4
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Nov 2020 17:27:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 603702A6B50
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Nov 2020 18:03:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730886AbgKDQ1Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Nov 2020 11:27:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36176 "EHLO
+        id S1731283AbgKDRC6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Nov 2020 12:02:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbgKDQ1X (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Nov 2020 11:27:23 -0500
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F534C0613D3
-        for <linux-nfs@vger.kernel.org>; Wed,  4 Nov 2020 08:27:21 -0800 (PST)
-Received: by mail-qv1-xf42.google.com with SMTP id dj6so6183814qvb.3
-        for <linux-nfs@vger.kernel.org>; Wed, 04 Nov 2020 08:27:21 -0800 (PST)
+        with ESMTP id S1731513AbgKDRC5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Nov 2020 12:02:57 -0500
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1349C0613D4
+        for <linux-nfs@vger.kernel.org>; Wed,  4 Nov 2020 09:02:55 -0800 (PST)
+Received: by mail-ej1-x641.google.com with SMTP id gn41so13486404ejc.4
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Nov 2020 09:02:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=7PN4Vw59i214EUwCV4qZJILmXyvuZ2XbdjIb2vLc7fE=;
-        b=U9X8cxRg9GbuExgMS7t2NBY/tlMPvf9/sjkDhBjgNWWh4xOlfQgAy6/c0lCATcyJDf
-         6XvbvHz/eSbmSiOu80K1NpcoHMdcqOwRuOR/9pBtTCZYf28FUlP9QAwqknznzp0SRNzu
-         LxGsStOzX1m7ksJ3f1yANcya84/VRboEbopGN2X+KFpNeTI/eT/S0ze2ZFLdvkjOHpmq
-         Euh6mIAy4/ielDVhJjYGUNdEOX13fzns0zpWv1dGQI8XBZOX4J/UsjfBLNXFRX3z44dP
-         T5CET19lT4xc5SYqlq1QWldemIC/1BrAup+nixUfGq74w466aHNzC7To6lL4PfQXMoj8
-         GTZQ==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x2M/mARoDzrcfFFiwEe2r6gawenXxInWJUsbPLXI4aU=;
+        b=M7sTa4A3JZbX13eK8mgywZ5kdDjq33XlU/mpL1bHzx7FoLS3ztmx9M9jWTjyj1wfCe
+         s4N1kwTO9+A0wg+7pPU5k95P7JqFWQN1hHzwrzWO+IpYNzYRFmYpzZAv5Kc5wjJia+wl
+         65vkjtjKE6b52MBX9xVcDRMRdlWj1Rw1clG+312fBrHk5k1tlLpWaibkbe2Z5Kqpq9+U
+         1EZn6bUY51uaVkjJtrchPAq6GJ7mOhY5N4M7DLhxQhxcPoiQ2VEJ6rrKF/Pj/PyAOW/z
+         lhhpy5AWmnZvME8LvXYIzSHyoaFgMnW45UfjiBWxz0X/tpkmusE8zKDNuh8d4jjde4Bg
+         v8Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7PN4Vw59i214EUwCV4qZJILmXyvuZ2XbdjIb2vLc7fE=;
-        b=Rxp1uWiiJOopIg1Mkuap2Yw8oqbfysVnENw2XUyZAVKgVN9/4IlzSbpBFzow2RGHf8
-         nGzOf8/qQaixPJN0JM443OfMwDJx/0CFHOZxY+G1GbJP5y6jhMGl8ZHWu+AhdYJ8dSqT
-         bDmjy9igMMiUKAHLIz3S5xLc5CicAB64cAykAgn9zq0IoU+NpWIX5UpFcxtcsTSsxLAn
-         lSWaK8qdv1vd0SVoHl6XMjTdNfsyLS3lZWgRdeLgOj9rc4gXqd0aV/dQDL5k1e83d1Kq
-         ts1SiK3oWBbR4DLwd4/6CpOgi/FnTb4oqYGyD7vMrSEwYjfY0h4KknKyxZ6vCeJ+LZAE
-         lulQ==
-X-Gm-Message-State: AOAM532FGc4Z3W3gZCEh78XE89XF1S3m3UgjWC5ULHiWYTuy9czaQjnt
-        8TwFJnDwh2iGLOqRD03w1L64grR4YfFc
-X-Google-Smtp-Source: ABdhPJyv39HNcY+vbLpKPEPg1YC/R5WHpv3mpgfmYOC/4QJ6HfetsMOTlJ1s1ZeXf8Cutj3v5ijPrQ==
-X-Received: by 2002:a05:6214:18e8:: with SMTP id ep8mr18339651qvb.61.1604507240229;
-        Wed, 04 Nov 2020 08:27:20 -0800 (PST)
-Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net. [68.36.133.222])
-        by smtp.gmail.com with ESMTPSA id g78sm2896924qke.88.2020.11.04.08.27.19
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2020 08:27:19 -0800 (PST)
-From:   trondmy@gmail.com
-X-Google-Original-From: trond.myklebust@hammerspace.com
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 17/17] NFS: Optimisations for monotonically increasing readdir cookies
-Date:   Wed,  4 Nov 2020 11:16:38 -0500
-Message-Id: <20201104161638.300324-18-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201104161638.300324-17-trond.myklebust@hammerspace.com>
-References: <20201104161638.300324-1-trond.myklebust@hammerspace.com>
- <20201104161638.300324-2-trond.myklebust@hammerspace.com>
- <20201104161638.300324-3-trond.myklebust@hammerspace.com>
- <20201104161638.300324-4-trond.myklebust@hammerspace.com>
- <20201104161638.300324-5-trond.myklebust@hammerspace.com>
- <20201104161638.300324-6-trond.myklebust@hammerspace.com>
- <20201104161638.300324-7-trond.myklebust@hammerspace.com>
- <20201104161638.300324-8-trond.myklebust@hammerspace.com>
- <20201104161638.300324-9-trond.myklebust@hammerspace.com>
- <20201104161638.300324-10-trond.myklebust@hammerspace.com>
- <20201104161638.300324-11-trond.myklebust@hammerspace.com>
- <20201104161638.300324-12-trond.myklebust@hammerspace.com>
- <20201104161638.300324-13-trond.myklebust@hammerspace.com>
- <20201104161638.300324-14-trond.myklebust@hammerspace.com>
- <20201104161638.300324-15-trond.myklebust@hammerspace.com>
- <20201104161638.300324-16-trond.myklebust@hammerspace.com>
- <20201104161638.300324-17-trond.myklebust@hammerspace.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x2M/mARoDzrcfFFiwEe2r6gawenXxInWJUsbPLXI4aU=;
+        b=cT+ZyTHXI/kDjr3dO7iYAr+HxSYAuu8pSR/NeO1Rf5twokLypJnDhwl/UIqQJKEX4x
+         e2DmUaFK6f8wNTsozfCxcweOiZgnEMdDKUd8v/dvMfrRFPHo1ah6PXqDiGdsI8sbj9JK
+         CDtJRDYqJKt42Ojk5NkHRU49M6QreVglGC4BJeT8XIi19lJ1hswzL+FGNJpGXZblyy1y
+         pMZDA2Qx2YG8VA322Hj/ScS4wlyz2iSyyAD7bvtbNymlOrKyz1cGU6XdgwH5jtHHYmRF
+         4eAIBGN/2MjDd816DFpBh4LLhSmvMILvVgb3STXUpAnt4dUoH7lKTtw9j4CgCI3wWunQ
+         yH2g==
+X-Gm-Message-State: AOAM531DBokLCPi1XT6fNoKQRcHhK5AGWVqnwugXtG4KDiajVtDw/tzo
+        qc67ctAzZFZr1MRiCzbq9G2VObSKAawWnKLhi9kN
+X-Google-Smtp-Source: ABdhPJwnz1UtFa7ZfNIrVWs1o+Tvv5+b2V30m/yWN9QZtdmkerlPloaXcjzTHxCBxaQbBdQJ58kX093S2c9nCvxtPDo=
+X-Received: by 2002:a17:906:1159:: with SMTP id i25mr5847474eja.398.1604509374270;
+ Wed, 04 Nov 2020 09:02:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAN-5tyETQWVphrgqWjcPrtTzHHyz5DGrRz741yPYRS9Byyd=3Q@mail.gmail.com>
+ <CAHC9VhRP2iJqLWiBg46zPKUqxzZoUOuaA6FPigxOw7qubophdw@mail.gmail.com>
+ <CAN-5tyFq775PeOOzqskFexdbCgK3Gk_XB2Yy80SRYSc7Pdj=CA@mail.gmail.com>
+ <CAHC9VhTzO1z6NmYz6cOLg5OvJiyQXdH_VmLh4=+h1MrGXx36JQ@mail.gmail.com>
+ <CAN-5tyGJxUZb5QdJ=fh+L-6rc2B-MhQbDcDkTZNAZAAJm9Q8YQ@mail.gmail.com>
+ <FB6C74CE-5D9F-4469-A49B-93CC8A51D7D5@gmail.com> <CAN-5tyFQbfkiuno07C6Azc7RcF3z3qF3PP0FutFMD3raBgnQmA@mail.gmail.com>
+ <CAEjxPJ7PoAG6f+gVdodx=6X8+_Z_WCFXAuxnpB8WmC1gTF4iQQ@mail.gmail.com>
+ <CAN-5tyEy57xoqEbZAThZKHriJywx-5DMKBD5tsXwo5ccGwuctw@mail.gmail.com>
+ <CAHC9VhQpCXFySZY42==KR57hfAkVLdS6mSAcp2UHn-GWjEfVLg@mail.gmail.com>
+ <bc766b2b-d1f1-d767-579c-02e10ae32a9a@schaufler-ca.com> <CAHC9VhS7UeCX9BXPrHNH90_sLHKGxTbbtjdm6GBOgDM9=T05FA@mail.gmail.com>
+ <CAN-5tyF_JTMr4+05_YH2VQGft4aXXon3ZjuiVuOn-Z-DLVvTQg@mail.gmail.com>
+In-Reply-To: <CAN-5tyF_JTMr4+05_YH2VQGft4aXXon3ZjuiVuOn-Z-DLVvTQg@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 4 Nov 2020 12:02:41 -0500
+Message-ID: <CAHC9VhQgJ93LrEFBBJ-kz8C9b4RukODzRRRJVKgwGEL8jPVZaQ@mail.gmail.com>
+Subject: Re: selinux: how to query if selinux is enabled
+To:     Olga Kornievskaia <aglo@umich.edu>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Chuck Lever <chucklever@gmail.com>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Wed, Nov 4, 2020 at 9:21 AM Olga Kornievskaia <aglo@umich.edu> wrote:
+> On Wed, Oct 14, 2020 at 8:11 PM Paul Moore <paul@paul-moore.com> wrote:
+> > On Wed, Oct 14, 2020 at 12:31 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> > > On 10/14/2020 8:57 AM, Paul Moore wrote:
+> > > > On Wed, Oct 14, 2020 at 10:37 AM Olga Kornievskaia <aglo@umich.edu> wrote:
+> > > >> On Tue, Oct 13, 2020 at 7:51 PM Stephen Smalley wrote:
 
-If the server is handing out monotonically increasing readdir cookie values,
-then we can optimise away searches through pages that contain cookies that
-lie outside our search range.
+...
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/dir.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+> > > > To start the discussion I might suggest the following:
+> > > >
+> > > > #define LSM_FQUERY_VFS_NONE     0x00000000
+> > > > #define LSM_FQUERY_VFS_XATTRS   0x00000001
+> > > > int security_func_query_vfs(unsigned int flags);
+> > > >
+> > > > ... with an example SELinux implementation looks like this:
+> > > >
+> > > > int selinux_func_query_vfs(unsigned int flags)
+> > > > {
+> > > >     return !!(flags & LSM_FQUERY_VFS_XATTRS);
+> > > > }
+> > >
+> > > Not a bad start, but I see optimizations and issues.
+> > >
+> > > It would be really easy to collect the LSM features at module
+> > > initialization by adding the feature flags to struct lsm_info.
+> > > We could maintain a variable lsm_features in security.c that
+> > > has the cumulative feature set. Rather than have an LSM hook for
+> > > func_query_vfs we'd get
+> > >
+> > > int security_func_query_vfs(void)
+> > > {
+> > >         return !!(lsm_features & LSM_FQUERY_VFS_XATTRS);
+> > > }
+> >
+> > Works for me.
+> >
+> > > In either case there could be confusion in the case where more
+> > > than one security module provides the feature. NFS, for example,
+> > > cares about the SELinux "selinux" attribute, but probably not
+> > > about the Smack "SMACK64EXEC" attribute. It's entirely possible
+> > > that a bit isn't enough information to check about a "feature".
+> >
+> > In the LSM stacking world that shouldn't matter to callers, right?  Or
+> > perhaps more correctly, if it matters to the caller which individual
+> > LSM supports what feature then the caller is doing it wrong, right?
+>
+> Hi folks,
+>
+> I would like to resurrect this discussion and sorry for a delayed
+> response. I'm a little bit unsure about the suggested approach of
+> adding something like selinux_func_query_vfs() call where selinux has
+> such a function. What happens when selinux is configured to be
+> "disabled" wouldn't this call still return the same value as when it
+> is configured as "permissive or enforcing"?
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 454377228167..b6c3501e8f61 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -140,7 +140,8 @@ struct nfs_cache_array {
- 	u64 last_cookie;
- 	unsigned int size;
- 	unsigned char page_full : 1,
--		      page_is_eof : 1;
-+		      page_is_eof : 1,
-+		      cookies_are_ordered : 1;
- 	struct nfs_cache_array_entry array[];
- };
- 
-@@ -178,6 +179,7 @@ static void nfs_readdir_page_init_array(struct page *page, u64 last_cookie)
- 	array = kmap_atomic(page);
- 	nfs_readdir_array_init(array);
- 	array->last_cookie = last_cookie;
-+	array->cookies_are_ordered = 1;
- 	kunmap_atomic(array);
- }
- 
-@@ -269,6 +271,8 @@ int nfs_readdir_add_to_array(struct nfs_entry *entry, struct page *page)
- 	cache_entry->name_len = entry->len;
- 	cache_entry->name = name;
- 	array->last_cookie = entry->cookie;
-+	if (array->last_cookie <= cache_entry->cookie)
-+		array->cookies_are_ordered = 0;
- 	array->size++;
- 	if (entry->eof != 0)
- 		nfs_readdir_array_set_eof(array);
-@@ -395,6 +399,19 @@ nfs_readdir_inode_mapping_valid(struct nfs_inode *nfsi)
- 	return !test_bit(NFS_INO_INVALIDATING, &nfsi->flags);
- }
- 
-+static bool nfs_readdir_array_cookie_in_range(struct nfs_cache_array *array,
-+					      u64 cookie)
-+{
-+	if (!array->cookies_are_ordered)
-+		return true;
-+	/* Optimisation for monotonically increasing cookies */
-+	if (cookie >= array->last_cookie)
-+		return false;
-+	if (array->size && cookie < array->array[0].cookie)
-+		return false;
-+	return true;
-+}
-+
- static int nfs_readdir_search_for_cookie(struct nfs_cache_array *array,
- 					 struct nfs_readdir_descriptor *desc)
- {
-@@ -402,6 +419,9 @@ static int nfs_readdir_search_for_cookie(struct nfs_cache_array *array,
- 	loff_t new_pos;
- 	int status = -EAGAIN;
- 
-+	if (!nfs_readdir_array_cookie_in_range(array, desc->dir_cookie))
-+		goto check_eof;
-+
- 	for (i = 0; i < array->size; i++) {
- 		if (array->array[i].cookie == desc->dir_cookie) {
- 			struct nfs_inode *nfsi = NFS_I(file_inode(desc->file));
-@@ -435,6 +455,7 @@ static int nfs_readdir_search_for_cookie(struct nfs_cache_array *array,
- 			return 0;
- 		}
- 	}
-+check_eof:
- 	if (array->page_is_eof) {
- 		status = -EBADCOOKIE;
- 		if (desc->dir_cookie == array->last_cookie)
+Hello again.
+
+To start, the non-LSM portion of the kernel shouldn't be calling
+selinux_func_query_vfs() directly, it should call
+security_func_query_vfs(); it would be up to the individual LSMs to
+indicate to the LSM hooks layer what is required.  If SELinux wasn't
+built into the kernel, or was disabled at boot, I would expect that
+the security_func_query_vfs() function would adjust to exclude the
+SELinux requirements.
+
 -- 
-2.28.0
-
+paul moore
+www.paul-moore.com
