@@ -2,121 +2,327 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E5B62A6B89
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Nov 2020 18:21:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C9AF2A6F53
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Nov 2020 22:02:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbgKDRVI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Nov 2020 12:21:08 -0500
-Received: from mail-mw2nam12on2112.outbound.protection.outlook.com ([40.107.244.112]:8800
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726604AbgKDRVH (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 4 Nov 2020 12:21:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EHUvyUUKVT4L4DZAtNTm9EilRaAxN8AfupM3hEijDL9RF6H5RuBTChNLqqT+M4UtZ+ga1NrXGw7pQslvvkXCSrU/Y16IVg2Hfulmv7yzvHwb9DUUpPmFOQstPtmRbp6DhqVkBVhl7GKCFkKiEYAR3fQWg1BsOnMjgTQ+vZH0IL7LrXfq4P+pyiW5GgORe+aVbvps3k7VIFcf1hSbxkIv9D9SNHzTTC05qdyKiwfGkmnBEB7gHF9s9owKLtbLu5buHe054O5B1sH+TqGMa3EHtsXW2uiAdxke8kjr9bR80JZUiGL/JQHNews+O7Psm6b9OVbCO+e2kceNjsxrKhvLCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tw3qJKMMIZRj/pG7cgqMGiyITjPS9sFXi1xuvTaju9Q=;
- b=cNXdoaXVv5v/1+RTPXoPA0KWigcDGz4D54kurts2DtOE311aOYgARhvQdyKvL/sZk3btkgdDZdzSmRNxeIA/sPV+eRUqjTWnRUjtWuyJAjJi9PzIX2gg+st2kmEBXt+94dL2fjXQufjrbYkg7qVJa307V+1Fqqh+3Sh9YE+vkimdm1BsoUpM2MGOerl5hUa7/EbHMvCKOuxyPB+CRx4dIZD8CZvnUHbBmHfc+XznmF9zFN6L1F/QzAJomjKfsyzisHi9NczWj+paUDMyxAe6PRZ5Z3Z3p2+DXr74lh377QRHdeZyk8KyyUQ84VoOa7gV7UD9gsAbYTWyw/x9txFHyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tw3qJKMMIZRj/pG7cgqMGiyITjPS9sFXi1xuvTaju9Q=;
- b=D+ukB82SeqScL3OLDfGSEYrsqjR/feasjRhsIzK4RvHjK/QYNCmckoFOWwm6vY/El8oiRXD8cZ4a0adr3tpaiu5FcJ7GxIkjxP4USCswFQ6O0wloTPUDW7n/EaB/zm113/3Z06E0kLZaXS7J0WcLavA94qoaVjnsyL3froQDFBI=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB3007.namprd13.prod.outlook.com (2603:10b6:208:153::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.10; Wed, 4 Nov
- 2020 17:21:05 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.018; Wed, 4 Nov 2020
- 17:21:05 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "tigran.mkrtchyan@desy.de" <tigran.mkrtchyan@desy.de>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2 16/16] NFS: Improve handling of directory verifiers
-Thread-Topic: [PATCH v2 16/16] NFS: Improve handling of directory verifiers
-Thread-Index: AQHWsfghAtnAZ/q0ekqAigRdEV1d66m3wiiAgAB3pAA=
-Date:   Wed, 4 Nov 2020 17:21:05 +0000
-Message-ID: <fc3b4ff48d315674f9b076187dc2a1c056cf5744.camel@hammerspace.com>
-References: <20201103153329.531942-1-trondmy@kernel.org>
-         <20201103153329.531942-11-trondmy@kernel.org>
-         <20201103153329.531942-12-trondmy@kernel.org>
-         <20201103153329.531942-13-trondmy@kernel.org>
-         <20201103153329.531942-14-trondmy@kernel.org>
-         <20201103153329.531942-15-trondmy@kernel.org>
-         <20201103153329.531942-16-trondmy@kernel.org>
-         <20201103153329.531942-17-trondmy@kernel.org>
-         <1868756897.5941283.1604484769947.JavaMail.zimbra@desy.de>
-In-Reply-To: <1868756897.5941283.1604484769947.JavaMail.zimbra@desy.de>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: desy.de; dkim=none (message not signed)
- header.d=none;desy.de; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: de3874ef-5fe7-49b1-12a0-08d880e602f2
-x-ms-traffictypediagnostic: MN2PR13MB3007:
-x-microsoft-antispam-prvs: <MN2PR13MB3007B9083AAEFE3F08B7AB41B8EF0@MN2PR13MB3007.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /hPH7zHezgS3jUIHr7cfaSMt9ylZ1uOdeXSZRDBRtjVp83g7sDPw3AHk9yHztJQp+p2yBostSbUVDrGBuliYXU9klmNmHUj5IbjO5fyMbhCUSoZ4u3L9XKjczhLIrZBakHeHfh7FG5iO/t9xxZJSdnXPzJ21uKQP4Pbberkm/zJfAB8pFAsVp9dQ7nHC3l3PkHj3Fe/DSj55HDMkx7CTuJmAqt/u4cHJBnPRhoSvjkYIuW2o4S2nolItku2h1NIY58N3gE8//5ETf4QDQ71vLOP4+FkOg2KFrKJ/ig48IgcUfRGwcgkeoK1J/QTSFaqzT1WKGICvYTDkyza0UNYb9A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(39830400003)(136003)(366004)(396003)(346002)(316002)(83380400001)(478600001)(6512007)(5660300002)(4326008)(6486002)(86362001)(66446008)(53546011)(6506007)(186003)(2616005)(6916009)(66476007)(71200400001)(8936002)(66946007)(2906002)(36756003)(64756008)(66556008)(26005)(91956017)(8676002)(76116006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: oM7wl++fK8rl61L/PBeSUgmROKd5yda0Ct5BW1jGo77QACXjQVb01sworq4UJWFprL+P809IpjJ5dE/BWNZmcwzjSsuORPnpn8YliQKpzrN/Ykry5/VXUyKmZ/CVtXEONgyHS6IKIWR3rcioHJyE50yjOo7dpwspw6+d5W2ndd0iSXhVTimiIpsf9/X+wL64k07s4OuecKAqb+rLNag2uGy2EPtS38wEiQ2PBiUXz/ZzCRKskGRC2rPW+4YI9cW//8ZY75apVPLSZDlgN4j5Wt7a1AJfpR2WYFlGrzCExhGZ9hE1mxD30iHZbYUuiMNEoXuGxn0uQuW4GGrdxhOz/oV3vAeagr96F2QHl3jabmnmaHw/KzdRI6wQjBZcxqxrCC9QJCsEHDGfa+hN+0uzKXy61Ce1CnwcwnipHXWpNARUClmqx9kKyIFTmQvG8ZctdjEqvaqCopShNCEf+MIOPHBIpjy+DPYhdF0NgmnMjbO2dSFuNrhWXOyt5w8gwxCrmhJF3OrmDhR6q/tjlqHch4oE3uzfNfSGgLPGscWUN9MCVtJggeRDy4uSmyqGprZa+31Ad0kGYiFv3EwxF+T8AqRm2JKqg6J2+hNjIhGlETzCZJVTb07pvQUeGo4Z+boUDUMThscmybQgA1gkmxSOLA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7367E4847DEB964E8A3A5AE081DE341F@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1727245AbgKDVCR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Nov 2020 16:02:17 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:50321 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726969AbgKDVCQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Nov 2020 16:02:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1604523733;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5YKGm9jP7feuBQzU6CeoElg2XCtotMjtBWrNn06l0pw=;
+        b=SP470/eQK/6ALp0KfFm0A//AcHs4WkqgCPW5PTNwNycB+6DU2VTuFo1DFfOU3DI9YXdcVQ
+        rQXCTH1YyfGUny/Tu1vVj/y+wxFhq6Ef+gk0L5lPDot5gFV2OR9tjVH62YFabubBImsMWB
+        XSUjex22PpKwc0vfVwpEP5lMrZvCTMI=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-262-oDSsqsv3O8Kqx84zIVWOmw-1; Wed, 04 Nov 2020 16:02:12 -0500
+X-MC-Unique: oDSsqsv3O8Kqx84zIVWOmw-1
+Received: by mail-ed1-f70.google.com with SMTP id c24so2319636edx.2
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Nov 2020 13:02:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5YKGm9jP7feuBQzU6CeoElg2XCtotMjtBWrNn06l0pw=;
+        b=AuEOrd4KRz4t8kg9qmiCtHJZYUL6OGn5MMBuOR7E5at0oM82FlOtBB0wiDHiWiqm+e
+         G8nvAH7oGo/vEdiU0BWsLsMV3E24yXRrelmooP+51Q2+H0QWnE1eXe3BbqHcYC3WvLwU
+         fcoPcE4WTagwGWXtiWCqnyeDBdCW0NnhHwoB3Te8i7n0O0Z2MGR9Q5TygidX5fFSGFRm
+         f8dTSOvbxU3ynKRjw0+4V3FaYAPBK63/5Ud+YfC9JNc4xpafu7ftVA17Egg8zJMBJCBO
+         rvF4YiUSfJmYaRj/542duMfjX+4UOgsi4nElstvXtsPquX3xXUUeIGGcFF/XsEIq66GK
+         Uq7w==
+X-Gm-Message-State: AOAM5312QNbrGZzR1ysP7KmGU/VQCavPrjLhmXlpraPrxVlFzOGXfAKj
+        C2m/vBoDABElbpxjQiZFad748Fw9PT32TxMBd1ekM63wwXldpt6Mo5DS5nM5LCUqhl4mgucs5WT
+        knS2SulR5vxhoEPmzhApkwIWKiu0FntYqv87n
+X-Received: by 2002:a17:906:17d1:: with SMTP id u17mr8398083eje.229.1604523730557;
+        Wed, 04 Nov 2020 13:02:10 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzaJGncc01EPqUUQMKacKwkIFHfEmMZMB+aYk0C47VJjjPePYMs+xj5lYRlgMeqdcd8BuXDdCLrcCrfbma+tBQ=
+X-Received: by 2002:a17:906:17d1:: with SMTP id u17mr8398047eje.229.1604523730225;
+ Wed, 04 Nov 2020 13:02:10 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de3874ef-5fe7-49b1-12a0-08d880e602f2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Nov 2020 17:21:05.1913
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xQda/G+MY51aLdPV8beJdU4YSzoRvmqkMTtKEtBuJJ2Ub+6vkr6IlWy7DbG803/gFKAX1S2Lx7oDeo2izRP0VA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3007
+References: <20201104161638.300324-1-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-2-trond.myklebust@hammerspace.com> <20201104161638.300324-3-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-4-trond.myklebust@hammerspace.com> <20201104161638.300324-5-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-6-trond.myklebust@hammerspace.com> <20201104161638.300324-7-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-8-trond.myklebust@hammerspace.com> <20201104161638.300324-9-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-10-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-11-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-12-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-13-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-14-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-15-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-16-trond.myklebust@hammerspace.com> <20201104161638.300324-17-trond.myklebust@hammerspace.com>
+In-Reply-To: <20201104161638.300324-17-trond.myklebust@hammerspace.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Wed, 4 Nov 2020 16:01:34 -0500
+Message-ID: <CALF+zOnbaR3x0FqLFY85_5y4e640h7kcm+ibwHsxPc0zocdrJA@mail.gmail.com>
+Subject: Re: [PATCH v3 16/17] NFS: Improve handling of directory verifiers
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SGkgVGlncmFuLA0KDQpPbiBXZWQsIDIwMjAtMTEtMDQgYXQgMTE6MTIgKzAxMDAsIE1rcnRjaHlh
-biwgVGlncmFuIHdyb3RlOg0KPiANCj4gDQo+IC0tLS0tIE9yaWdpbmFsIE1lc3NhZ2UgLS0tLS0N
-Cj4gPiBGcm9tOiB0cm9uZG15QGtlcm5lbC5vcmcNCj4gPiBUbzogImxpbnV4LW5mcyIgPGxpbnV4
-LW5mc0B2Z2VyLmtlcm5lbC5vcmc+DQo+ID4gU2VudDogVHVlc2RheSwgMyBOb3ZlbWJlciwgMjAy
-MCAxNjozMzoyOQ0KPiA+IFN1YmplY3Q6IFtQQVRDSCB2MiAxNi8xNl0gTkZTOiBJbXByb3ZlIGhh
-bmRsaW5nIG9mIGRpcmVjdG9yeQ0KPiA+IHZlcmlmaWVycw0KPiANCj4gPiBGcm9tOiBUcm9uZCBN
-eWtsZWJ1c3QgPHRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20+DQo8c25pcD4NCj4gPiBA
-QCAtODksNiArOTQsNyBAQCBzdHJ1Y3QgbmZzX29wZW5fY29udGV4dCB7DQo+ID4gc3RydWN0IG5m
-c19vcGVuX2Rpcl9jb250ZXh0IHsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IGxpc3RfaGVh
-ZCBsaXN0Ow0KPiA+IMKgwqDCoMKgwqDCoMKgwqB1bnNpZ25lZCBsb25nIGF0dHJfZ2VuY291bnQ7
-DQo+ID4gK8KgwqDCoMKgwqDCoMKgX19iZTMywqDCoHZlcmZbTkZTX0RJUl9WRVJJRklFUl9TSVpF
-XTsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgX191NjQgZGlyX2Nvb2tpZTsNCj4gPiDCoMKgwqDCoMKg
-wqDCoMKgX191NjQgZHVwX2Nvb2tpZTsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgc2lnbmVkIGNoYXIg
-ZHVwZWQ7DQo+ID4gQEAgLTE1Niw3ICsxNjIsNyBAQCBzdHJ1Y3QgbmZzX2lub2RlIHsNCj4gPiDC
-oMKgwqDCoMKgwqDCoMKgICogVGhpcyBpcyB0aGUgY29va2llIHZlcmlmaWVyIHVzZWQgZm9yIE5G
-U3YzIHJlYWRkaXINCj4gPiDCoMKgwqDCoMKgwqDCoMKgICogb3BlcmF0aW9ucw0KPiA+IMKgwqDC
-oMKgwqDCoMKgwqAgKi8NCj4gPiAtwqDCoMKgwqDCoMKgwqBfX2JlMzLCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBjb29raWV2ZXJmWzJdOw0KPiA+ICvCoMKgwqDCoMKgwqDCoF9f
-YmUzMsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvb2tpZXZlcmZbTkZTX0RJ
-Ul9WRVJJRklFUl9TSVpFXTsNCj4gDQo+IEp1c3QgZm9yIG15IGVkdWNhdGlvbi4gV2h5IHdlIHVz
-ZSAyeDMyIGJpdCBCRSBlbmNvZGVkIGludHMgaW5zdGVhZCBvZg0KPiByYXcgOCBieXRlcz8NCj4g
-QW5kIGlmIGl0J3MgdHJlYWRlZCBhcyBhIG51bWJlciwgYXMgc3BlYyBzb21ldGltZXMgZG9lcyAo
-IlRoZQ0KPiByZXF1ZXN0J3MgY29va2lldmVyZg0KPiBmaWVsZCBzaG91bGQgYmUgc2V0IHRvIDAi
-KSwgdGhlbiB3aHkgaXQncyBub3QgdGhlbiBfX2JlNjQ/DQoNClRoZSBtYWluIHJlYXNvbiBmb3Ig
-b2Z0ZW4gdXNpbmcgX19iZTMyIG9uIHRoZXNlIGlkZW50aWZpZXJzIGlzIHRvIHRhZw0KdGhlbSBh
-cyBiZWluZyBvcGFxdWUgUlBDIG9iamVjdHMgKHNpbmNlIFJQQyBvYmplY3RzIGFyZSBhbHdheXMg
-aW4gdW5pdHMNCm9mIDMyLWJpdHMgYW5kIGFyZSBiaWcgZW5kaWFuIGVuY29kZWQpLg0KDQotLSAN
-ClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFj
-ZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Wed, Nov 4, 2020 at 11:28 AM <trondmy@gmail.com> wrote:
+>
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>
+> If the server insists on using the readdir verifiers in order to allow
+> cookies to expire, then we should ensure that we cache the verifier
+> with the cookie, so that we can return an error if the application
+> tries to use the expired cookie.
+>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/nfs/dir.c           | 35 +++++++++++++++++++++++------------
+>  fs/nfs/inode.c         |  7 -------
+>  include/linux/nfs_fs.h |  8 +++++++-
+>  3 files changed, 30 insertions(+), 20 deletions(-)
+>
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index 3b44bef3a1b4..454377228167 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -155,6 +155,7 @@ struct nfs_readdir_descriptor {
+>         loff_t          current_index;
+>         loff_t          prev_index;
+>
+> +       __be32          verf[NFS_DIR_VERIFIER_SIZE];
+>         unsigned long   dir_verifier;
+>         unsigned long   timestamp;
+>         unsigned long   gencount;
+> @@ -466,15 +467,15 @@ static int nfs_readdir_search_array(struct nfs_readdir_descriptor *desc)
+>
+>  /* Fill a page with xdr information before transferring to the cache page */
+>  static int nfs_readdir_xdr_filler(struct nfs_readdir_descriptor *desc,
+> -                                 u64 cookie, struct page **pages,
+> -                                 size_t bufsize)
+> +                                 __be32 *verf, u64 cookie,
+> +                                 struct page **pages, size_t bufsize,
+> +                                 __be32 *verf_res)
+>  {
+>         struct inode *inode = file_inode(desc->file);
+> -       __be32 verf_res[2];
+>         struct nfs_readdir_arg arg = {
+>                 .dentry = file_dentry(desc->file),
+>                 .cred = desc->file->f_cred,
+> -               .verf = NFS_I(inode)->cookieverf,
+> +               .verf = verf,
+>                 .cookie = cookie,
+>                 .pages = pages,
+>                 .page_len = bufsize,
+> @@ -503,8 +504,6 @@ static int nfs_readdir_xdr_filler(struct nfs_readdir_descriptor *desc,
+>         }
+>         desc->timestamp = timestamp;
+>         desc->gencount = gencount;
+> -       memcpy(NFS_I(inode)->cookieverf, res.verf,
+> -              sizeof(NFS_I(inode)->cookieverf));
+>  error:
+>         return error;
+>  }
+> @@ -770,11 +769,13 @@ static struct page **nfs_readdir_alloc_pages(size_t npages)
+>  }
+>
+>  static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *desc,
+> -                                   struct page *page, struct inode *inode)
+> +                                   struct page *page, __be32 *verf_arg,
+> +                                   __be32 *verf_res)
+>  {
+>         struct page **pages;
+>         struct nfs_entry *entry;
+>         size_t array_size;
+> +       struct inode *inode = file_inode(desc->file);
+>         size_t dtsize = NFS_SERVER(inode)->dtsize;
+>         int status = -ENOMEM;
+>
+> @@ -801,8 +802,9 @@ static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *desc,
+>
+>         do {
+>                 unsigned int pglen;
+> -               status = nfs_readdir_xdr_filler(desc, entry->cookie,
+> -                                               pages, dtsize);
+> +               status = nfs_readdir_xdr_filler(desc, verf_arg, entry->cookie,
+> +                                               pages, dtsize,
+> +                                               verf_res);
+>                 if (status < 0)
+>                         break;
+>
+> @@ -854,13 +856,15 @@ static int find_and_lock_cache_page(struct nfs_readdir_descriptor *desc)
+>  {
+>         struct inode *inode = file_inode(desc->file);
+>         struct nfs_inode *nfsi = NFS_I(inode);
+> +       __be32 verf[NFS_DIR_VERIFIER_SIZE];
+>         int res;
+>
+>         desc->page = nfs_readdir_page_get_cached(desc);
+>         if (!desc->page)
+>                 return -ENOMEM;
+>         if (nfs_readdir_page_needs_filling(desc->page)) {
+> -               res = nfs_readdir_xdr_to_array(desc, desc->page, inode);
+> +               res = nfs_readdir_xdr_to_array(desc, desc->page,
+> +                                              nfsi->cookieverf, verf);
+>                 if (res < 0) {
+>                         nfs_readdir_page_unlock_and_put_cached(desc);
+>                         if (res == -EBADCOOKIE || res == -ENOTSYNC) {
+> @@ -870,6 +874,7 @@ static int find_and_lock_cache_page(struct nfs_readdir_descriptor *desc)
+>                         }
+>                         return res;
+>                 }
+> +               memcpy(nfsi->cookieverf, verf, sizeof(nfsi->cookieverf));
+>         }
+>         res = nfs_readdir_search_array(desc);
+>         if (res == 0) {
+> @@ -902,6 +907,7 @@ static int readdir_search_pagecache(struct nfs_readdir_descriptor *desc)
+>  static void nfs_do_filldir(struct nfs_readdir_descriptor *desc)
+>  {
+>         struct file     *file = desc->file;
+> +       struct nfs_inode *nfsi = NFS_I(file_inode(file));
+>         struct nfs_cache_array *array;
+>         unsigned int i = 0;
+>
+> @@ -915,6 +921,7 @@ static void nfs_do_filldir(struct nfs_readdir_descriptor *desc)
+>                         desc->eof = true;
+>                         break;
+>                 }
+> +               memcpy(desc->verf, nfsi->cookieverf, sizeof(desc->verf));
+>                 if (i < (array->size-1))
+>                         desc->dir_cookie = array->array[i+1].cookie;
+>                 else
+> @@ -949,8 +956,8 @@ static void nfs_do_filldir(struct nfs_readdir_descriptor *desc)
+>  static int uncached_readdir(struct nfs_readdir_descriptor *desc)
+>  {
+>         struct page     *page = NULL;
+> +       __be32          verf[NFS_DIR_VERIFIER_SIZE];
+>         int             status;
+> -       struct inode *inode = file_inode(desc->file);
+>
+>         dfprintk(DIRCACHE, "NFS: uncached_readdir() searching for cookie %Lu\n",
+>                         (unsigned long long)desc->dir_cookie);
+> @@ -967,7 +974,7 @@ static int uncached_readdir(struct nfs_readdir_descriptor *desc)
+>         desc->duped = 0;
+>
+>         nfs_readdir_page_init_array(page, desc->dir_cookie);
+> -       status = nfs_readdir_xdr_to_array(desc, page, inode);
+> +       status = nfs_readdir_xdr_to_array(desc, page, desc->verf, verf);
+>         if (status < 0)
+>                 goto out_release;
+>
+> @@ -1023,6 +1030,7 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+>         desc->dup_cookie = dir_ctx->dup_cookie;
+>         desc->duped = dir_ctx->duped;
+>         desc->attr_gencount = dir_ctx->attr_gencount;
+> +       memcpy(desc->verf, dir_ctx->verf, sizeof(desc->verf));
+>         spin_unlock(&file->f_lock);
+>
+>         do {
+> @@ -1061,6 +1069,7 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+>         dir_ctx->dup_cookie = desc->dup_cookie;
+>         dir_ctx->duped = desc->duped;
+>         dir_ctx->attr_gencount = desc->attr_gencount;
+> +       memcpy(dir_ctx->verf, desc->verf, sizeof(dir_ctx->verf));
+>         spin_unlock(&file->f_lock);
+>
+>         kfree(desc);
+> @@ -1101,6 +1110,8 @@ static loff_t nfs_llseek_dir(struct file *filp, loff_t offset, int whence)
+>                         dir_ctx->dir_cookie = offset;
+>                 else
+>                         dir_ctx->dir_cookie = 0;
+> +               if (offset == 0)
+> +                       memset(dir_ctx->verf, 0, sizeof(dir_ctx->verf));
+>                 dir_ctx->duped = 0;
+>         }
+>         spin_unlock(&filp->f_lock);
+
+Thanks for doing these patches!
+
+For some reason this patch does not apply but I get a problem at this hunk.
+Is there a fixup or hunk or two missing from 01/17 ?
+I'm starting at 3cea11cd5e3b (Linux 5.10-rc2).
+
+Problem looks like it's at the spin_unlock - here's what the hunk
+looks like for me:
+fs/nfs/dir.c
+1092         inode_lock(inode);
+1093         offset += filp->f_pos;
+1094         if (offset < 0) {
+1095             inode_unlock(inode);
+1096             return -EINVAL;
+1097         }
+1098     }
+1099     if (offset != filp->f_pos) {
+1100         filp->f_pos = offset;
+1101         if (nfs_readdir_use_cookie(filp))
+1102             dir_ctx->dir_cookie = offset;
+1103         else
+1104             dir_ctx->dir_cookie = 0;
+1105         dir_ctx->duped = 0;
+1106     }
+1107     inode_unlock(inode);
+1108     return offset;
+1109 }
+
+
+
+$ git reset --hard 3cea11cd5e3b
+HEAD is now at 3cea11cd5e3b Linux 5.10-rc2
+$ for f in
+~/Downloads/trond-nfs-readdir/v3/*; do echo applying $(basename "$f");
+git am "$f"; done
+applying [PATCH v3 01_17] NFS_ Ensure contents of struct
+nfs_open_dir_context are consistent.eml
+Applying: NFS: Ensure contents of struct nfs_open_dir_context are consistent
+applying [PATCH v3 02_17] NFS_ Clean up readdir struct nfs_cache_array.eml
+Applying: NFS: Clean up readdir struct nfs_cache_array
+applying [PATCH v3 03_17] NFS_ Clean up nfs_readdir_page_filler().eml
+Applying: NFS: Clean up nfs_readdir_page_filler()
+applying [PATCH v3 04_17] NFS_ Clean up directory array handling.eml
+Applying: NFS: Clean up directory array handling
+applying [PATCH v3 05_17] NFS_ Don't discard readdir results.eml
+Applying: NFS: Don't discard readdir results
+applying [PATCH v3 06_17] NFS_ Remove unnecessary kmap in
+nfs_readdir_xdr_to_array().eml
+Applying: NFS: Remove unnecessary kmap in nfs_readdir_xdr_to_array()
+applying [PATCH v3 07_17] NFS_ Replace kmap() with kmap_atomic() in
+nfs_readdir_search_array().eml
+Applying: NFS: Replace kmap() with kmap_atomic() in nfs_readdir_search_array()
+applying [PATCH v3 08_17] NFS_ Simplify struct nfs_cache_array_entry.eml
+Applying: NFS: Simplify struct nfs_cache_array_entry
+applying [PATCH v3 09_17] NFS_ Support larger readdir buffers.eml
+Applying: NFS: Support larger readdir buffers
+applying [PATCH v3 10_17] NFS_ More readdir cleanups.eml
+Applying: NFS: More readdir cleanups
+applying [PATCH v3 11_17] NFS_ nfs_do_filldir() does not return a value.eml
+Applying: NFS: nfs_do_filldir() does not return a value
+applying [PATCH v3 12_17] NFS_ Reduce readdir stack usage.eml
+Applying: NFS: Reduce readdir stack usage
+applying [PATCH v3 13_17] NFS_ Cleanup to remove
+nfs_readdir_descriptor_t typedef.eml
+Applying: NFS: Cleanup to remove nfs_readdir_descriptor_t typedef
+applying [PATCH v3 14_17] NFS_ Allow the NFS generic code to pass in a
+verifier to readdir.eml
+Applying: NFS: Allow the NFS generic code to pass in a verifier to readdir
+applying [PATCH v3 15_17] NFS_ Handle NFS4ERR_NOT_SAME and
+NFSERR_BADCOOKIE from readdir calls.eml
+Applying: NFS: Handle NFS4ERR_NOT_SAME and NFSERR_BADCOOKIE from readdir calls
+applying [PATCH v3 16_17] NFS_ Improve handling of directory verifiers.eml
+Applying: NFS: Improve handling of directory verifiers
+error: patch failed: fs/nfs/dir.c:1101
+error: fs/nfs/dir.c: patch does not apply
+Patch failed at 0001 NFS: Improve handling of directory verifiers
+The copy of the patch that failed is found in:
+   /home/dwysocha/git/kernel/.git/rebase-apply/patch
+When you have resolved this problem, run "git am --resolved".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+applying [PATCH v3 17_17] NFS_ Optimisations for monotonically
+increasing readdir cookies.eml
+previous rebase directory /home/dwysocha/git/kernel/.git/rebase-apply
+still exists but mbox given.
+
