@@ -2,335 +2,315 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67CBB2A4D7B
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Nov 2020 18:50:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3CF02A6145
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Nov 2020 11:12:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbgKCRuZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Nov 2020 12:50:25 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44710 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725957AbgKCRuZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Nov 2020 12:50:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604425823;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FanrZR+28tbGHlvck29X+0DEQpbsI2dYKaSKROIb+s4=;
-        b=KPqNqRWAlF+fisDrRHbn3JDf16o1I9aYB8jK7tbtUuyOQc2BNOTv4oqnPyBOehzS98O6Xo
-        3NJhdiyQi49m6/7N9mbiTuIl82dwGI2dVjz5SriN5q/FmOvuLk/t+aUEwlL9/YaVaPEvO0
-        /yiTpfnmnABUO70av8R198M8SmN4efc=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-439-BWp9aLYUONesJ2HsnzKbhQ-1; Tue, 03 Nov 2020 12:50:21 -0500
-X-MC-Unique: BWp9aLYUONesJ2HsnzKbhQ-1
-Received: by mail-ej1-f70.google.com with SMTP id gr9so3991324ejb.19
-        for <linux-nfs@vger.kernel.org>; Tue, 03 Nov 2020 09:50:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FanrZR+28tbGHlvck29X+0DEQpbsI2dYKaSKROIb+s4=;
-        b=tFCgnzRFOuQSE5kgDyoniBjL/+g3bp9hAU9sUOD1Acszr4bYiSTAAvCphGoGjauquz
-         1ztkFEscRpxle2m3oTn5acJmZJSflEPa3Fqrf2Dfsre8tL4z/Rck4QVbhqMD4EauYiwh
-         GwZIl878qTGcMUe576ZK7ecQE9e2AqTySqqPENKpoeWAUIrjOKKJaLLJ+iLG7jB+fgRW
-         uWLxufadQkXHt9ziNSRt32pDQPNnrj2tzvLWWkizIUzDxokbhWwfHMjw1bdnUMYEfZYi
-         +LU8rDqm90X1NFrw14xpPXgu2BDQbDf6pic2kntBi0QtoX4rpIt8kEdq1TeB3PBBDFjQ
-         PIPQ==
-X-Gm-Message-State: AOAM531bhcGjYk8ElTj/qeOpbFtlSpSYCCXvpVQJrTJVY4BwM/DYnjSP
-        c7D/DWkblThu1vtR3FCW2IWQa4te9LGnlSigYgACLCclljDcZrx1tTphTlp9oNg0l46WePf0gLm
-        w13bztpAmXdhzZXVnlugbN//+PjntN/cgqRMt
-X-Received: by 2002:a17:906:2f10:: with SMTP id v16mr20798235eji.320.1604425819663;
-        Tue, 03 Nov 2020 09:50:19 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxGXP8Z/PelAqdQAwahBZJp9kIb7T8LcsuxDaCokChGhc06gz2Eud71J60FZd+CYdIUJoPR2fHTNuWE9Dr89Q0=
-X-Received: by 2002:a17:906:2f10:: with SMTP id v16mr20798213eji.320.1604425819343;
- Tue, 03 Nov 2020 09:50:19 -0800 (PST)
+        id S1727923AbgKDKMz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Nov 2020 05:12:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727389AbgKDKMy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Nov 2020 05:12:54 -0500
+X-Greylist: delayed 153246 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 04 Nov 2020 02:12:53 PST
+Received: from smtp-o-1.desy.de (smtp-o-1.desy.de [IPv6:2001:638:700:1038::1:9a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9580C0613D3
+        for <linux-nfs@vger.kernel.org>; Wed,  4 Nov 2020 02:12:53 -0800 (PST)
+Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [131.169.56.164])
+        by smtp-o-1.desy.de (Postfix) with ESMTP id 8A07EE04DE
+        for <linux-nfs@vger.kernel.org>; Wed,  4 Nov 2020 11:12:50 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de 8A07EE04DE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1604484770; bh=80L72VLbhQkYn+bohZhheH5RpGTsGN+3DGhaCsShsdw=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=j0Zvl+Hj7QZIXvzh3dtij5v18X3pOVpt6a4+jIdw4DBT0sXKoZDotDTD6qRPYoiwI
+         LwBS5f5JW5Pho8Dgg0ezU4CqaXf+a+kDXCpnFH/KlaPjw2oDwO3F7dDrpb7e+shSIq
+         tV01osqqbEHasPYd2+6Vgg77+8zQ0QW1Q5I80DoY=
+Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [IPv6:2001:638:700:1038::1:81])
+        by smtp-buf-1.desy.de (Postfix) with ESMTP id 8621F120906;
+        Wed,  4 Nov 2020 11:12:50 +0100 (CET)
+X-Virus-Scanned: amavisd-new at desy.de
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+        by smtp-intra-1.desy.de (Postfix) with ESMTP id 5F84FC0177;
+        Wed,  4 Nov 2020 11:12:50 +0100 (CET)
+Date:   Wed, 4 Nov 2020 11:12:49 +0100 (CET)
+From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To:     trondmy@kernel.org
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1868756897.5941283.1604484769947.JavaMail.zimbra@desy.de>
+In-Reply-To: <20201103153329.531942-17-trondmy@kernel.org>
+References: <20201103153329.531942-1-trondmy@kernel.org> <20201103153329.531942-11-trondmy@kernel.org> <20201103153329.531942-12-trondmy@kernel.org> <20201103153329.531942-13-trondmy@kernel.org> <20201103153329.531942-14-trondmy@kernel.org> <20201103153329.531942-15-trondmy@kernel.org> <20201103153329.531942-16-trondmy@kernel.org> <20201103153329.531942-17-trondmy@kernel.org>
+Subject: Re: [PATCH v2 16/16] NFS: Improve handling of directory verifiers
 MIME-Version: 1.0
-References: <1604325011-29427-1-git-send-email-dwysocha@redhat.com>
- <1604325011-29427-10-git-send-email-dwysocha@redhat.com> <2af057425352e05315b53c5b9bbd7fd277175a13.camel@hammerspace.com>
- <CALF+zOmK1RuwCZDYoSF=fuB-F=HxC+n4vNUFtxgW_Qo58Mk2_A@mail.gmail.com>
- <d0bce650791752805f5d03149d7ea709d07002bb.camel@hammerspace.com>
- <CALF+zOnBKsNdRg9pbDe8wki6rBQJy2R+datBXDWE-Kg2_L-SGw@mail.gmail.com> <20201103000903.GA23691@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-In-Reply-To: <20201103000903.GA23691@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Tue, 3 Nov 2020 12:49:43 -0500
-Message-ID: <CALF+zOnhbGR28SBgtXT6FNf03kqXcMF99_cGRWtbDefJxfEnxw@mail.gmail.com>
-Subject: Re: [PATCH 09/11] NFS: Improve performance of listing directories
- being modified
-To:     Frank van der Linden <fllinden@amazon.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF82 (Linux)/8.8.15_GA_3953)
+Thread-Topic: Improve handling of directory verifiers
+Thread-Index: dueZGGPnoh+hPttb4hAaTQh+G+LniA==
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Nov 2, 2020 at 7:09 PM Frank van der Linden <fllinden@amazon.com> wrote:
->
-> Hi Dave,
->
-> Thanks for looking at this.
->
-> On Mon, Nov 02, 2020 at 02:45:09PM -0500, David Wysochanski wrote:
-> > On Mon, Nov 2, 2020 at 12:31 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
-> > >
-> > > On Mon, 2020-11-02 at 11:26 -0500, David Wysochanski wrote:
-> > > > On Mon, Nov 2, 2020 at 11:22 AM Trond Myklebust <
-> > > > trondmy@hammerspace.com> wrote:
-> > > > >
-> > > > > On Mon, 2020-11-02 at 08:50 -0500, Dave Wysochanski wrote:
-> > > > > > A process can hang forever to 'ls -l' a directory while the
-> > > > > > directory
-> > > > > > is being modified such as another NFS client adding files to the
-> > > > > > directory.  The problem is seen specifically with larger
-> > > > > > directories
-> > > > > > (I tested with 1 million) and/or slower NFS server responses to
-> > > > > > READDIR.  If a combination of the NFS directory size, the NFS
-> > > > > > server
-> > > > > > responses to READDIR is such that the 'ls' process gets partially
-> > > > > > through the listing before the attribute cache expires (time
-> > > > > > exceeds acdirmax), we drop the pagecache and have to re-fill it,
-> > > > > > and as a result, the process may never complete.  One could argue
-> > > > > > for larger directories the acdirmin/acdirmax should be increased,
-> > > > > > but it's not always possible to tune this effectively.
-> > > > > >
-> > > > > > The root cause of this problem is due to how the NFS readdir
-> > > > > > cache
-> > > > > > currently works.  The main search function,
-> > > > > > readdir_search_pagecache(),
-> > > > > > always starts searching at page_index and cookie == 0, and for
-> > > > > > any
-> > > > > > page not in the cache, fills in the page with entries obtained in
-> > > > > > a READDIR NFS call.  If a page already exists, we proceed to
-> > > > > > nfs_readdir_search_for_cookie(), which searches for the cookie
-> > > > > > (pos) of the readdir call.  The search is O(n), where n is the
-> > > > > > directory size before the cookie in question is found, and every
-> > > > > > entry to nfs_readdir() pays this penalty, irrespective of the
-> > > > > > current directory position (dir_context.pos).  The search is
-> > > > > > expensive due to the opaque nature of readdir cookies, and the
-> > > > > > fact
-> > > > > > that no mapping (hash) exists from cookies to pages.  In the case
-> > > > > > of a directory being modified, the above behavior can become an
-> > > > > > excessive penalty, since the same process is forced to fill pages
-> > > > > > it
-> > > > > > may be no longer interested in (the entries were passed in a
-> > > > > > previous
-> > > > > > nfs_readdir call), and this can essentially lead no forward
-> > > > > > progress.
-> > > > > >
-> > > > > > To fix this problem, at the end of nfs_readdir(), save the
-> > > > > > page_index
-> > > > > > corresponding to the directory position (cookie) inside the
-> > > > > > process's
-> > > > > > nfs_open_dir_context.  Then at the next entry of nfs_readdir(),
-> > > > > > use
-> > > > > > the saved page_index as the starting search point rather than
-> > > > > > starting
-> > > > > > at page_index == 0.  Not only does this fix the problem of
-> > > > > > listing
-> > > > > > a directory being modified, it also significantly improves
-> > > > > > performance
-> > > > > > in the unmodified case since no extra search penalty is paid at
-> > > > > > each
-> > > > > > entry to nfs_readdir().
-> > > > > >
-> > > > > > In the case of lseek, since there is no hash or other mapping
-> > > > > > from a
-> > > > > > cookie value to the page->index, just reset
-> > > > > > nfs_open_dir_context.page_index
-> > > > > > to 0, which will reset the search to the old behavior.
-> > > > > >
-> > > > > > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-> > > > > > ---
-> > > > > >  fs/nfs/dir.c           | 8 +++++++-
-> > > > > >  include/linux/nfs_fs.h | 1 +
-> > > > > >  2 files changed, 8 insertions(+), 1 deletion(-)
-> > > > > >
-> > > > > > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> > > > > > index 52e06c8fc7cd..b266f505b521 100644
-> > > > > > --- a/fs/nfs/dir.c
-> > > > > > +++ b/fs/nfs/dir.c
-> > > > > > @@ -78,6 +78,7 @@ static struct nfs_open_dir_context
-> > > > > > *alloc_nfs_open_dir_context(struct inode *dir
-> > > > > >                 ctx->attr_gencount = nfsi->attr_gencount;
-> > > > > >                 ctx->dir_cookie = 0;
-> > > > > >                 ctx->dup_cookie = 0;
-> > > > > > +               ctx->page_index = 0;
-> > > > > >                 ctx->cred = get_cred(cred);
-> > > > > >                 spin_lock(&dir->i_lock);
-> > > > > >                 if (list_empty(&nfsi->open_files) &&
-> > > > > > @@ -763,7 +764,7 @@ int
-> > > > > > find_and_lock_cache_page(nfs_readdir_descriptor_t *desc)
-> > > > > >         return res;
-> > > > > >  }
-> > > > > >
-> > > > > > -/* Search for desc->dir_cookie from the beginning of the page
-> > > > > > cache
-> > > > > > */
-> > > > > > +/* Search for desc->dir_cookie starting at desc->page_index */
-> > > > > >  static inline
-> > > > > >  int readdir_search_pagecache(nfs_readdir_descriptor_t *desc)
-> > > > > >  {
-> > > > > > @@ -885,6 +886,8 @@ static int nfs_readdir(struct file *file,
-> > > > > > struct
-> > > > > > dir_context *ctx)
-> > > > > >                 .ctx = ctx,
-> > > > > >                 .dir_cookie = &dir_ctx->dir_cookie,
-> > > > > >                 .plus = nfs_use_readdirplus(inode, ctx),
-> > > > > > +               .page_index = dir_ctx->page_index,
-> > > > > > +               .last_cookie = nfs_readdir_use_cookie(file) ?
-> > > > > > ctx-
-> > > > > > > pos : 0,
-> > > > > >         },
-> > > > > >                         *desc = &my_desc;
-> > > > > >         int res = 0;
-> > > > > > @@ -938,6 +941,7 @@ static int nfs_readdir(struct file *file,
-> > > > > > struct
-> > > > > > dir_context *ctx)
-> > > > > >  out:
-> > > > > >         if (res > 0)
-> > > > > >                 res = 0;
-> > > > > > +       dir_ctx->page_index = desc->page_index;
-> > > > > >         trace_nfs_readdir_exit(inode, ctx->pos, dir_ctx-
-> > > > > > >dir_cookie,
-> > > > > >                                NFS_SERVER(inode)->dtsize,
-> > > > > > my_desc.plus, res);
-> > > > > >         return res;
-> > > > > > @@ -975,6 +979,8 @@ static loff_t nfs_llseek_dir(struct file
-> > > > > > *filp,
-> > > > > > loff_t offset, int whence)
-> > > > > >                 else
-> > > > > >                         dir_ctx->dir_cookie = 0;
-> > > > > >                 dir_ctx->duped = 0;
-> > > > > > +               /* Force readdir_search_pagecache to start over
-> > > > > > */
-> > > > > > +               dir_ctx->page_index = 0;
-> > > > > >         }
-> > > > > >         inode_unlock(inode);
-> > > > > >         return offset;
-> > > > > > diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-> > > > > > index a2c6455ea3fa..0e55c0154ccd 100644
-> > > > > > --- a/include/linux/nfs_fs.h
-> > > > > > +++ b/include/linux/nfs_fs.h
-> > > > > > @@ -93,6 +93,7 @@ struct nfs_open_dir_context {
-> > > > > >         __u64 dir_cookie;
-> > > > > >         __u64 dup_cookie;
-> > > > > >         signed char duped;
-> > > > > > +       unsigned long   page_index;
-> > > > > >  };
-> > > > > >
-> > > > > >  /*
-> > > > >
-> > > > > NACK. It makes no sense to store the page index as a cursor.
-> > > > >
-> > > >
-> > > > A similar thing was done recently with:
-> > > > 227823d2074d nfs: optimise readdir cache page invalidation
-> > > >
-> > >
-> > > That's a very different thing. It is about discarding page data in
-> > > order to force a re-read of the contents into cache.
-> > >
-> > Right - I only pointed it out because it is in effect a cursor about
-> > the last access into the cache but it's on a global basis, not
-> > process context.
-> >
-> > > What you're doing is basically trying to guess where the data is
-> > > located. which might work in some cases where the directory is
-> > > completely static, but if it shrinks (e.g. due to a few unlink() or
-> > > rename() calls) so that you overshoot the cookie, then you can end up
-> > > reading all the way to the end of the directory before doing an
-> > > uncached readdir.
-> > >
-> > First, consider the unmodified (idle directory) scenario.  Today the
-> > performance is bad the larger the directory goes - do you see why?
-> > I tried to explain in the cover letter and header but maybe it's not clear?
->
-> I agree with you that the patch is good for that case. It seems
-> like a bug that, if the cache is not invalidated in the meantime,
-> nfs_readdir would start at offset 0 of the cache while searching.
->
-> But, as Trond said, page_index isn't a good cursor once the
-> page cache was invalidated, you don't know what data you are
-> leaving out inadvertently.
->
-
-Hey Frank - thanks for looking at this too.  Yes I see it this is probably
-not a good approach especially since you and Trond seem to come
-to the same conclusion.
 
 
-> >
-> > Second, the modified scenario today the performance is very bad
-> > because of the same problem - the cookie is reset and the process
-> > needs to start over at cookie 0, repeating READDIRs.  But maybe
-> > there's a specific scenario I'm not thinking about.
-> >
-> > The way I thought about this is that if you're in a heavily modified
-> > scenario with a large directory and you're past the 'acdirmax' time,
-> > you have to make the choice of either:
-> > a) ignoring 'acdirmax' (this is what the NFSv3 patch did) and even
-> > though you know the cache expired you keep going as though it
-> > did not (at least until a different process starts a listing)
-> > b) honoring 'acdirmax' (drop the pagecache), but keep going the
-> > best you can based on the previous information and don't try to
-> > rebuild the cache before continuing.
->
-> Yeah, it seems like those are your options. The only other way
-> of doing this that I can think of would be to add logic that
-> says something like:
->
->         if (pos != 0 and the cache is invalid)
->                 uncached_readdir()
->
-> ..which is, by the looks of it, easily done by having
-> readdir_search_pagecache() return EBADCOOKIE if
-> there's no cache, and the offset is not 0. E.g. it
-> shouldn't try to fill the cache in that case, but
-> just let uncached reads take over.
->
-I thought about other logic, but this seems simple
-enough - just check for 0 and probably the number
-of pages in the cache to see if it's invalid.
+----- Original Message -----
+> From: trondmy@kernel.org
+> To: "linux-nfs" <linux-nfs@vger.kernel.org>
+> Sent: Tuesday, 3 November, 2020 16:33:29
+> Subject: [PATCH v2 16/16] NFS: Improve handling of directory verifiers
 
-> The idea here is that the only information that is possibly
-> still valid is the cookie - and that the server will know
-> how to use the cookie to keep going where you left off.
->
-Makes sense.
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> 
+> If the server insists on using the readdir verifiers in order to allow
+> cookies to expire, then we should ensure that we cache the verifier
+> with the cookie, so that we can return an error if the application
+> tries to use the expired cookie.
+> 
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+> fs/nfs/dir.c           | 35 +++++++++++++++++++++++------------
+> fs/nfs/inode.c         |  7 -------
+> include/linux/nfs_fs.h |  8 +++++++-
+> 3 files changed, 30 insertions(+), 20 deletions(-)
+> 
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index 1c5a5f9cb228..0bd9cc625bdb 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -155,6 +155,7 @@ struct nfs_readdir_descriptor {
+> 	loff_t		current_index;
+> 	loff_t		prev_index;
+> 
+> +	__be32		verf[NFS_DIR_VERIFIER_SIZE];
+> 	unsigned long	dir_verifier;
+> 	unsigned long	timestamp;
+> 	unsigned long	gencount;
+> @@ -467,15 +468,15 @@ static int nfs_readdir_search_array(struct
+> nfs_readdir_descriptor *desc)
+> 
+> /* Fill a page with xdr information before transferring to the cache page */
+> static int nfs_readdir_xdr_filler(struct nfs_readdir_descriptor *desc,
+> -				  u64 cookie, struct page **pages,
+> -				  size_t bufsize)
+> +				  __be32 *verf, u64 cookie,
+> +				  struct page **pages, size_t bufsize,
+> +				  __be32 *verf_res)
+> {
+> 	struct inode *inode = file_inode(desc->file);
+> -	__be32 verf_res[2];
+> 	struct nfs_readdir_arg arg = {
+> 		.dentry = file_dentry(desc->file),
+> 		.cred = desc->file->f_cred,
+> -		.verf = NFS_I(inode)->cookieverf,
+> +		.verf = verf,
+> 		.cookie = cookie,
+> 		.pages = pages,
+> 		.page_len = bufsize,
+> @@ -504,8 +505,6 @@ static int nfs_readdir_xdr_filler(struct
+> nfs_readdir_descriptor *desc,
+> 	}
+> 	desc->timestamp = timestamp;
+> 	desc->gencount = gencount;
+> -	memcpy(NFS_I(inode)->cookieverf, res.verf,
+> -	       sizeof(NFS_I(inode)->cookieverf));
+> error:
+> 	return error;
+> }
+> @@ -771,11 +770,13 @@ static struct page **nfs_readdir_alloc_pages(size_t
+> npages)
+> }
+> 
+> static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *desc,
+> -				    struct page *page, struct inode *inode)
+> +				    struct page *page, __be32 *verf_arg,
+> +				    __be32 *verf_res)
+> {
+> 	struct page **pages;
+> 	struct nfs_entry *entry;
+> 	size_t array_size;
+> +	struct inode *inode = file_inode(desc->file);
+> 	size_t dtsize = NFS_SERVER(inode)->dtsize;
+> 	int status = -ENOMEM;
+> 
+> @@ -802,8 +803,9 @@ static int nfs_readdir_xdr_to_array(struct
+> nfs_readdir_descriptor *desc,
+> 
+> 	do {
+> 		unsigned int pglen;
+> -		status = nfs_readdir_xdr_filler(desc, entry->cookie,
+> -						pages, dtsize);
+> +		status = nfs_readdir_xdr_filler(desc, verf_arg, entry->cookie,
+> +						pages, dtsize,
+> +						verf_res);
+> 		if (status < 0)
+> 			break;
+> 
+> @@ -855,13 +857,15 @@ static int find_and_lock_cache_page(struct
+> nfs_readdir_descriptor *desc)
+> {
+> 	struct inode *inode = file_inode(desc->file);
+> 	struct nfs_inode *nfsi = NFS_I(inode);
+> +	__be32 verf[NFS_DIR_VERIFIER_SIZE];
+> 	int res;
+> 
+> 	desc->page = nfs_readdir_page_get_cached(desc);
+> 	if (!desc->page)
+> 		return -ENOMEM;
+> 	if (nfs_readdir_page_needs_filling(desc->page)) {
+> -		res = nfs_readdir_xdr_to_array(desc, desc->page, inode);
+> +		res = nfs_readdir_xdr_to_array(desc, desc->page,
+> +					       nfsi->cookieverf, verf);
+> 		if (res < 0) {
+> 			nfs_readdir_page_unlock_and_put_cached(desc);
+> 			if (res == -EBADCOOKIE || res == -ENOTSYNC) {
+> @@ -871,6 +875,7 @@ static int find_and_lock_cache_page(struct
+> nfs_readdir_descriptor *desc)
+> 			}
+> 			return res;
+> 		}
+> +		memcpy(nfsi->cookieverf, verf, sizeof(nfsi->cookieverf));
+> 	}
+> 	res = nfs_readdir_search_array(desc);
+> 	if (res == 0) {
+> @@ -903,6 +908,7 @@ static int readdir_search_pagecache(struct
+> nfs_readdir_descriptor *desc)
+> static void nfs_do_filldir(struct nfs_readdir_descriptor *desc)
+> {
+> 	struct file	*file = desc->file;
+> +	struct nfs_inode *nfsi = NFS_I(file_inode(file));
+> 	struct nfs_cache_array *array;
+> 	unsigned int i = 0;
+> 
+> @@ -916,6 +922,7 @@ static void nfs_do_filldir(struct nfs_readdir_descriptor
+> *desc)
+> 			desc->eof = true;
+> 			break;
+> 		}
+> +		memcpy(desc->verf, nfsi->cookieverf, sizeof(desc->verf));
+> 		if (i < (array->size-1))
+> 			desc->dir_cookie = array->array[i+1].cookie;
+> 		else
+> @@ -950,8 +957,8 @@ static void nfs_do_filldir(struct nfs_readdir_descriptor
+> *desc)
+> static int uncached_readdir(struct nfs_readdir_descriptor *desc)
+> {
+> 	struct page	*page = NULL;
+> +	__be32		verf[NFS_DIR_VERIFIER_SIZE];
+> 	int		status;
+> -	struct inode *inode = file_inode(desc->file);
+> 
+> 	dfprintk(DIRCACHE, "NFS: uncached_readdir() searching for cookie %Lu\n",
+> 			(unsigned long long)desc->dir_cookie);
+> @@ -968,7 +975,7 @@ static int uncached_readdir(struct nfs_readdir_descriptor
+> *desc)
+> 	desc->duped = 0;
+> 
+> 	nfs_readdir_page_init_array(page, desc->dir_cookie);
+> -	status = nfs_readdir_xdr_to_array(desc, page, inode);
+> +	status = nfs_readdir_xdr_to_array(desc, page, desc->verf, verf);
+> 	if (status < 0)
+> 		goto out_release;
+> 
+> @@ -1024,6 +1031,7 @@ static int nfs_readdir(struct file *file, struct
+> dir_context *ctx)
+> 	desc->dup_cookie = dir_ctx->dup_cookie;
+> 	desc->duped = dir_ctx->duped;
+> 	desc->attr_gencount = dir_ctx->attr_gencount;
+> +	memcpy(desc->verf, dir_ctx->verf, sizeof(desc->verf));
+> 	spin_unlock(&file->f_lock);
+> 
+> 	do {
+> @@ -1062,6 +1070,7 @@ static int nfs_readdir(struct file *file, struct
+> dir_context *ctx)
+> 	dir_ctx->dup_cookie = desc->dup_cookie;
+> 	dir_ctx->duped = desc->duped;
+> 	dir_ctx->attr_gencount = desc->attr_gencount;
+> +	memcpy(dir_ctx->verf, desc->verf, sizeof(dir_ctx->verf));
+> 	spin_unlock(&file->f_lock);
+> 
+> 	kfree(desc);
+> @@ -1102,6 +1111,8 @@ static loff_t nfs_llseek_dir(struct file *filp, loff_t
+> offset, int whence)
+> 			dir_ctx->dir_cookie = offset;
+> 		else
+> 			dir_ctx->dir_cookie = 0;
+> +		if (offset == 0)
+> +			memset(dir_ctx->verf, 0, sizeof(dir_ctx->verf));
+> 		dir_ctx->duped = 0;
+> 	}
+> 	spin_unlock(&filp->f_lock);
+> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> index aa6493905bbe..9b765a900b28 100644
+> --- a/fs/nfs/inode.c
+> +++ b/fs/nfs/inode.c
+> @@ -229,7 +229,6 @@ static void nfs_zap_caches_locked(struct inode *inode)
+> 	nfsi->attrtimeo = NFS_MINATTRTIMEO(inode);
+> 	nfsi->attrtimeo_timestamp = jiffies;
+> 
+> -	memset(NFS_I(inode)->cookieverf, 0, sizeof(NFS_I(inode)->cookieverf));
+> 	if (S_ISREG(mode) || S_ISDIR(mode) || S_ISLNK(mode)) {
+> 		nfs_set_cache_invalid(inode, NFS_INO_INVALID_ATTR
+> 					| NFS_INO_INVALID_DATA
+> @@ -1237,7 +1236,6 @@ EXPORT_SYMBOL_GPL(nfs_revalidate_inode);
+> 
+> static int nfs_invalidate_mapping(struct inode *inode, struct address_space
+> *mapping)
+> {
+> -	struct nfs_inode *nfsi = NFS_I(inode);
+> 	int ret;
+> 
+> 	if (mapping->nrpages != 0) {
+> @@ -1250,11 +1248,6 @@ static int nfs_invalidate_mapping(struct inode *inode,
+> struct address_space *map
+> 		if (ret < 0)
+> 			return ret;
+> 	}
+> -	if (S_ISDIR(inode->i_mode)) {
+> -		spin_lock(&inode->i_lock);
+> -		memset(nfsi->cookieverf, 0, sizeof(nfsi->cookieverf));
+> -		spin_unlock(&inode->i_lock);
+> -	}
+> 	nfs_inc_stats(inode, NFSIOS_DATAINVALIDATE);
+> 	nfs_fscache_wait_on_invalidate(inode);
+> 
+> diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+> index dd6b463dda80..681ed98e4ba8 100644
+> --- a/include/linux/nfs_fs.h
+> +++ b/include/linux/nfs_fs.h
+> @@ -45,6 +45,11 @@
+>  */
+> #define NFS_RPC_SWAPFLAGS		(RPC_TASK_SWAPPER|RPC_TASK_ROOTCREDS)
+> 
+> +/*
+> + * Size of the NFS directory verifier
+> + */
+> +#define NFS_DIR_VERIFIER_SIZE		2
+> +
+> /*
+>  * NFSv3/v4 Access mode cache entry
+>  */
+> @@ -89,6 +94,7 @@ struct nfs_open_context {
+> struct nfs_open_dir_context {
+> 	struct list_head list;
+> 	unsigned long attr_gencount;
+> +	__be32	verf[NFS_DIR_VERIFIER_SIZE];
+> 	__u64 dir_cookie;
+> 	__u64 dup_cookie;
+> 	signed char duped;
+> @@ -156,7 +162,7 @@ struct nfs_inode {
+> 	 * This is the cookie verifier used for NFSv3 readdir
+> 	 * operations
+> 	 */
+> -	__be32			cookieverf[2];
+> +	__be32			cookieverf[NFS_DIR_VERIFIER_SIZE];
 
-> Of course, this mean that, in the case of another client
-> modifying the directory, you'll end up doing mostly / all
-> uncached readdirs after an invalidate. Same for a scenario
-> where a client did: open llseek(<nonzero_offset), getdents().
-> Until another process starts at offset 0 and re-fills the
-> cache, of course.
->
-> I'm not sure if that's all that bad, though, it depends
-> on common usage patterns.
->
+Just for my education. Why we use 2x32 bit BE encoded ints instead of raw 8 bytes?
+And if it's treaded as a number, as spec sometimes does ("The request's cookieverf
+field should be set to 0"), then why it's not then __be64?
 
-Yeah I was wondering about this too - what side effects would
-happen when going uncached and how far should we go
-to try to detect we're in this pattern.
+Tigran.
 
-I guess I was hoping to avoid going uncached because that
-means we have to ask the server again for the same info,
-which could very well be a lot.  But then again if we're blowing
-past acdirmax then we're making the best of a bad situation
-and just need to make forward progress.
-
-I also considered whether it would be possible to improve the readdir
-cache data structure and search to handle this, especially now that it
-looks like Trond's latest patches have given us 16 bytes of free space in
-each page.  I was thinking for example of adding a 'next_page_index'
-into nfs_cache_array but then I think we get into a mess of overlap of
-entries, etc. So far I don't see a clean way forward on that, and the
-added complexity does not seem worthwhile.  So trying uncached
-like you and Trond suggest may be the best approach.
-
-
-> - Frank
->
-
+> 
+> 	atomic_long_t		nrequests;
+> 	struct nfs_mds_commit_info commit_info;
+> --
+> 2.28.0
