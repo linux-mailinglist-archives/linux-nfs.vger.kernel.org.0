@@ -2,57 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AA732A6FAF
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Nov 2020 22:31:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37F632A6FC8
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Nov 2020 22:40:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgKDVby (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Nov 2020 16:31:54 -0500
-Received: from mail-dm6nam12on2136.outbound.protection.outlook.com ([40.107.243.136]:29664
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727098AbgKDVbx (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 4 Nov 2020 16:31:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cqFNko6axsiKBUX8+hh/xEBXo6l3gQDALNEyn1Ploa5MRObykc1p4MRoi4QW+57mVLzagIDcSCsezPOvP2FzHDPwaSQXZzyfwZC1fA+cnckVvv5GIfV93k1VjPhuP2WEe8nq3hSRzdJ2Y9nb++Ha2ng/23NGHvYCNuH1QaGY4NWCVjVZShS4Uwtj0MXu0oMzePXve6G4Lz9NeKBnKCwCmcOS5MIE/NLBa04oXIZoQRpGYt8QuJgou/uANfZCS1sEvXXoaa/Nm5s+Ak1S/DI7hznexzz4F75VFjdeTUh+oem6In5QAI73VpLAGDyG+2/10qyQR2ZntZlU+U9rDZx4fQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DFzN9cX1Q9EwYmKZh4iWH/ucsDrQ6qkn9edSUjTcW1g=;
- b=TxlypwajDYUpbTPeXh0zStJI4a6K69SH6oSPil+O+maXnXCGx/fiTUr1L1iezadUojLl/lpRnp8RkMxBd5eGneGNnbR/62TWwsjgEZrEVaq2AfLN3pskuDQhH7v77+kw4aThr2Z8mjxRy4lEP7cY3HgISQlmB3ucv2CuoEXV9OSbN1hf0JlHsc3lurWxLb7w4yPXBFyvVR05VENnVCg+oQhjyjFIjqcZjfarobJYbd4srT+lhZcSsUHwB8CfeRV6Vkauo+YPihQbNipc2xVjtdk/tnyOzZh/BLn5HJLsPl3JU3GqiYrDn4QQBy5eJBawc2Q/uI6nlz2l/g9ScTdfYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DFzN9cX1Q9EwYmKZh4iWH/ucsDrQ6qkn9edSUjTcW1g=;
- b=Bbk+UvB21BULzB/kJdtp0LBswVzRObF3g0rxTbrRBrAXotiwetmPo0v8trYV55r4CKusFnclv97nM2lfeS5cnxSXYltytieCDGrllcnOekRNSZ3NWhv8eVUPxIfwVziVyAz1AM0PsGOJ5OxiDywq58oVOLwDIkVyWgBVjonU9Ns=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB3008.namprd13.prod.outlook.com (2603:10b6:208:151::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.10; Wed, 4 Nov
- 2020 21:31:48 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.018; Wed, 4 Nov 2020
- 21:31:47 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     David Wysochanski <dwysocha@redhat.com>
-CC:     linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v3 16/17] NFS: Improve handling of directory verifiers
-Thread-Topic: [PATCH v3 16/17] NFS: Improve handling of directory verifiers
-Thread-Index: AQHWssdnZQZFDOdNkkqZw9MtB6i6lqm4dcsAgAAIcoA=
-Date:   Wed, 4 Nov 2020 21:31:47 +0000
-Message-ID: <5D348A8A-B486-4752-8F28-CB55C05F80D0@hammerspace.com>
+        id S1726777AbgKDVkr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Nov 2020 16:40:47 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51243 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726827AbgKDVkr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Nov 2020 16:40:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1604526044;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BfsJ0FWzTY/cAKHR6bdvCzL/d89foQuZHwZN/WhjuGY=;
+        b=XAcQFVwwZwBfhX9rn+drEbdgovUoxQ88hICEkpJZtK4Khon5dptBogYySv076BrryFMvgb
+        ZJ8Hl+bu3HHyvjnS93nfyRcyafCg+3GehR8/lqIAn/hlvCpDn3QE6/gTIZYF/RHIXo8E9S
+        HlDyFQ1mM66+gRG41eyMnndjG89Dm9I=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-312-S7H2uTY8PJmrNMi4DwtYgA-1; Wed, 04 Nov 2020 16:40:41 -0500
+X-MC-Unique: S7H2uTY8PJmrNMi4DwtYgA-1
+Received: by mail-ed1-f69.google.com with SMTP id n16so9393142edw.19
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Nov 2020 13:40:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BfsJ0FWzTY/cAKHR6bdvCzL/d89foQuZHwZN/WhjuGY=;
+        b=RESRthhwFS3wmABZr7es/Ezz+iFCPVPbyZX/IB0f/Fh73k+lU8M2KO4/USRUBpmhdQ
+         LGSWv3oIpJ2vEn6bk/h6TfcoeYIjHFqXmcOnQW4h4LbyIvz5/6KCC5zb3UWc2lsiRtbu
+         aBF2YWkh+dIXfzjm5cJknXaG16a6uU3cjX1/beu5cS2FbI2igSZv4o+fTyyWmPJonl5j
+         /dTEUOvO+qDb25xK7S0qYwX3pqgzyRPWqdWXdHeGIcwnMyUjl6+ka7xE8QdECbf8HIZ2
+         7NlQ/I6osG7zSjVuL2q45UMjZuJHerAMxRpajf90b1F8a+WCF4aRMsFWu/ibQcjxn15q
+         Jdtw==
+X-Gm-Message-State: AOAM532msQXa/l+rsVKLeL3NRGOPUN1KGrHxg6tcp3CILTmBTE1HEo1n
+        Yi30H9CIU91LWm7/mCa/+2aY6A1ht00fESyiJ26scf86Gk/NUnHFj3GzzWKdFk3ZosnPSlvzve9
+        h0FksRSkkY4m7f3R5iXNLbYdPcbFcnhFxIJ6o
+X-Received: by 2002:aa7:c358:: with SMTP id j24mr29349746edr.265.1604526040200;
+        Wed, 04 Nov 2020 13:40:40 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy9SdwBJzJE92XrCsnrm7KsTZLGa6D+9JJJG438CfgcB3oUUM8ThVGmnwI97PvP/K2wX4sNvsPAEsjglijEZSU=
+X-Received: by 2002:aa7:c358:: with SMTP id j24mr29349731edr.265.1604526039928;
+ Wed, 04 Nov 2020 13:40:39 -0800 (PST)
+MIME-Version: 1.0
 References: <20201104161638.300324-1-trond.myklebust@hammerspace.com>
- <20201104161638.300324-2-trond.myklebust@hammerspace.com>
- <20201104161638.300324-3-trond.myklebust@hammerspace.com>
- <20201104161638.300324-4-trond.myklebust@hammerspace.com>
- <20201104161638.300324-5-trond.myklebust@hammerspace.com>
- <20201104161638.300324-6-trond.myklebust@hammerspace.com>
- <20201104161638.300324-7-trond.myklebust@hammerspace.com>
- <20201104161638.300324-8-trond.myklebust@hammerspace.com>
- <20201104161638.300324-9-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-2-trond.myklebust@hammerspace.com> <20201104161638.300324-3-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-4-trond.myklebust@hammerspace.com> <20201104161638.300324-5-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-6-trond.myklebust@hammerspace.com> <20201104161638.300324-7-trond.myklebust@hammerspace.com>
+ <20201104161638.300324-8-trond.myklebust@hammerspace.com> <20201104161638.300324-9-trond.myklebust@hammerspace.com>
  <20201104161638.300324-10-trond.myklebust@hammerspace.com>
  <20201104161638.300324-11-trond.myklebust@hammerspace.com>
  <20201104161638.300324-12-trond.myklebust@hammerspace.com>
@@ -61,204 +60,260 @@ References: <20201104161638.300324-1-trond.myklebust@hammerspace.com>
  <20201104161638.300324-15-trond.myklebust@hammerspace.com>
  <20201104161638.300324-16-trond.myklebust@hammerspace.com>
  <20201104161638.300324-17-trond.myklebust@hammerspace.com>
- <CALF+zOnbaR3x0FqLFY85_5y4e640h7kcm+ibwHsxPc0zocdrJA@mail.gmail.com>
-In-Reply-To: <CALF+zOnbaR3x0FqLFY85_5y4e640h7kcm+ibwHsxPc0zocdrJA@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.120.23.2.4)
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5a3a37d2-b72f-48d2-8fb3-08d881090905
-x-ms-traffictypediagnostic: MN2PR13MB3008:
-x-microsoft-antispam-prvs: <MN2PR13MB30083BE539EE28E40A47BAE9B8EF0@MN2PR13MB3008.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wRSoVeaktVPcwsT2gqML4CHF/lCU92NXxfNdcLQ/FcByh3gyisjHSw7BDv56LuUgJ+UiYvY9gbGlHjAddGbOgyVuSBBiS9IjsRC6eF6idAN/W/pyMycTG69KDzwDXlQSuAohQG+OULO95L8hiQ4iRz6FQ1PURzVM+DFijRy32pOKLrSZqXuSaQvsy9s3r3x8QRj5FtpaE9rxy+flgah/SnTHkexpsIAN+di5EwZA6AWvl6NGMviNALvMJfEMyDtN0M+bgcKgCbi2Czpwg3MJAcTz0zmsWM1Slxyj3GMFctk9mAJACpewD7lkl4gf44SFD47OlYo4+yR6EmuOsGBk2g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(346002)(376002)(39830400003)(136003)(396003)(6512007)(33656002)(66446008)(6506007)(64756008)(316002)(53546011)(5660300002)(66476007)(66556008)(6486002)(186003)(26005)(86362001)(71200400001)(6916009)(478600001)(2616005)(2906002)(8936002)(91956017)(76116006)(66946007)(4326008)(8676002)(83380400001)(36756003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 08MGKBl8qDEk3TR7EXKMGkm6tU3shjajn3a/Db2Zp7IUNiyOZndP6rLBAYKIBTqmK5o6VTVMAbdpsbbs+mUwJIKEugATrObKU/5OZDf4TsDnNpiWNRcU0sQ/1pmLi8Vyi52tT0bSRJ8Xdh/UeeytADF8DevDLOz3j5m2LCO+gYkqK3cUxSSKYUGbMl3SIn8QAYMhJYqvpTh6HPYQRe0uVe9txZqVQMdowoyzCUzKOBz1kqnxE/5fEgrP1Dx0j110zFCwQfT/TuCp6OD9XDgr0uqwuOnZtX+PUfbAskk1RDjAonOTHktCMEWpjIoj5Cc/X60yswI2Tf6hSlgderUPDmeWlCTiva8mK285aVBW7XxHiAZrsoL883kkzZBULAmm+imOf8xEpkg8F6hFTtFkQ6nQOZJZv7BADdtjsDPDTsLDFfM+YXFr/IL1aVQ1msFv8uX3wm8iqsE0M2p5EcPW7lx2ecNSX1CgmJffHUb+kjiDO0T4EPlBAHteE+dTPVw8aSSC3ZdhhhIe6cBS40EjyiM+wS1Ma/1ho+UzqOfNfpZ3hB3JbP/bqsYdilBgM+OJ7LggxkJk57Qq40WKHtm154leCOr7GhcaNPtaG1hlVj6+YN+8LpuXPRyGjTzfiV33IOOeoUvhK5Dg9bfqgO1nyQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AEFAFA76643B39478C721274125A5EBB@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a3a37d2-b72f-48d2-8fb3-08d881090905
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Nov 2020 21:31:47.5030
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CtEgRfkJMNXSTpCPWxvhcJwhmu0fQC1u9JB854EFBc8wUbj3UktJwjpJd9g2TKni7gffDjfblur+c0ZhvLsDkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3008
+ <CALF+zOnbaR3x0FqLFY85_5y4e640h7kcm+ibwHsxPc0zocdrJA@mail.gmail.com> <5D348A8A-B486-4752-8F28-CB55C05F80D0@hammerspace.com>
+In-Reply-To: <5D348A8A-B486-4752-8F28-CB55C05F80D0@hammerspace.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Wed, 4 Nov 2020 16:40:04 -0500
+Message-ID: <CALF+zOmnYs1EW3nGpHsoF3=KBZNZWRbVsKX45CtcOSjHDvD=4g@mail.gmail.com>
+Subject: Re: [PATCH v3 16/17] NFS: Improve handling of directory verifiers
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-DQoNCj4gT24gTm92IDQsIDIwMjAsIGF0IDE2OjAxLCBEYXZpZCBXeXNvY2hhbnNraSA8ZHd5c29j
-aGFAcmVkaGF0LmNvbT4gd3JvdGU6DQo+IA0KPiBPbiBXZWQsIE5vdiA0LCAyMDIwIGF0IDExOjI4
-IEFNIDx0cm9uZG15QGdtYWlsLmNvbT4gd3JvdGU6DQo+PiANCj4+IEZyb206IFRyb25kIE15a2xl
-YnVzdCA8dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbT4NCj4+IA0KPj4gSWYgdGhlIHNl
-cnZlciBpbnNpc3RzIG9uIHVzaW5nIHRoZSByZWFkZGlyIHZlcmlmaWVycyBpbiBvcmRlciB0byBh
-bGxvdw0KPj4gY29va2llcyB0byBleHBpcmUsIHRoZW4gd2Ugc2hvdWxkIGVuc3VyZSB0aGF0IHdl
-IGNhY2hlIHRoZSB2ZXJpZmllcg0KPj4gd2l0aCB0aGUgY29va2llLCBzbyB0aGF0IHdlIGNhbiBy
-ZXR1cm4gYW4gZXJyb3IgaWYgdGhlIGFwcGxpY2F0aW9uDQo+PiB0cmllcyB0byB1c2UgdGhlIGV4
-cGlyZWQgY29va2llLg0KPj4gDQo+PiBTaWduZWQtb2ZmLWJ5OiBUcm9uZCBNeWtsZWJ1c3QgPHRy
-b25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20+DQo+PiAtLS0NCj4+IGZzL25mcy9kaXIuYyAg
-ICAgICAgICAgfCAzNSArKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLQ0KPj4gZnMv
-bmZzL2lub2RlLmMgICAgICAgICB8ICA3IC0tLS0tLS0NCj4+IGluY2x1ZGUvbGludXgvbmZzX2Zz
-LmggfCAgOCArKysrKysrLQ0KPj4gMyBmaWxlcyBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspLCAy
-MCBkZWxldGlvbnMoLSkNCj4+IA0KPj4gZGlmZiAtLWdpdCBhL2ZzL25mcy9kaXIuYyBiL2ZzL25m
-cy9kaXIuYw0KPj4gaW5kZXggM2I0NGJlZjNhMWI0Li40NTQzNzcyMjgxNjcgMTAwNjQ0DQo+PiAt
-LS0gYS9mcy9uZnMvZGlyLmMNCj4+ICsrKyBiL2ZzL25mcy9kaXIuYw0KPj4gQEAgLTE1NSw2ICsx
-NTUsNyBAQCBzdHJ1Y3QgbmZzX3JlYWRkaXJfZGVzY3JpcHRvciB7DQo+PiAgICAgICAgbG9mZl90
-ICAgICAgICAgIGN1cnJlbnRfaW5kZXg7DQo+PiAgICAgICAgbG9mZl90ICAgICAgICAgIHByZXZf
-aW5kZXg7DQo+PiANCj4+ICsgICAgICAgX19iZTMyICAgICAgICAgIHZlcmZbTkZTX0RJUl9WRVJJ
-RklFUl9TSVpFXTsNCj4+ICAgICAgICB1bnNpZ25lZCBsb25nICAgZGlyX3ZlcmlmaWVyOw0KPj4g
-ICAgICAgIHVuc2lnbmVkIGxvbmcgICB0aW1lc3RhbXA7DQo+PiAgICAgICAgdW5zaWduZWQgbG9u
-ZyAgIGdlbmNvdW50Ow0KPj4gQEAgLTQ2NiwxNSArNDY3LDE1IEBAIHN0YXRpYyBpbnQgbmZzX3Jl
-YWRkaXJfc2VhcmNoX2FycmF5KHN0cnVjdCBuZnNfcmVhZGRpcl9kZXNjcmlwdG9yICpkZXNjKQ0K
-Pj4gDQo+PiAvKiBGaWxsIGEgcGFnZSB3aXRoIHhkciBpbmZvcm1hdGlvbiBiZWZvcmUgdHJhbnNm
-ZXJyaW5nIHRvIHRoZSBjYWNoZSBwYWdlICovDQo+PiBzdGF0aWMgaW50IG5mc19yZWFkZGlyX3hk
-cl9maWxsZXIoc3RydWN0IG5mc19yZWFkZGlyX2Rlc2NyaXB0b3IgKmRlc2MsDQo+PiAtICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgdTY0IGNvb2tpZSwgc3RydWN0IHBhZ2UgKipwYWdl
-cywNCj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplX3QgYnVmc2l6ZSkN
-Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfX2JlMzIgKnZlcmYsIHU2NCBj
-b29raWUsDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IHBhZ2Ug
-KipwYWdlcywgc2l6ZV90IGJ1ZnNpemUsDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgX19iZTMyICp2ZXJmX3JlcykNCj4+IHsNCj4+ICAgICAgICBzdHJ1Y3QgaW5vZGUgKmlu
-b2RlID0gZmlsZV9pbm9kZShkZXNjLT5maWxlKTsNCj4+IC0gICAgICAgX19iZTMyIHZlcmZfcmVz
-WzJdOw0KPj4gICAgICAgIHN0cnVjdCBuZnNfcmVhZGRpcl9hcmcgYXJnID0gew0KPj4gICAgICAg
-ICAgICAgICAgLmRlbnRyeSA9IGZpbGVfZGVudHJ5KGRlc2MtPmZpbGUpLA0KPj4gICAgICAgICAg
-ICAgICAgLmNyZWQgPSBkZXNjLT5maWxlLT5mX2NyZWQsDQo+PiAtICAgICAgICAgICAgICAgLnZl
-cmYgPSBORlNfSShpbm9kZSktPmNvb2tpZXZlcmYsDQo+PiArICAgICAgICAgICAgICAgLnZlcmYg
-PSB2ZXJmLA0KPj4gICAgICAgICAgICAgICAgLmNvb2tpZSA9IGNvb2tpZSwNCj4+ICAgICAgICAg
-ICAgICAgIC5wYWdlcyA9IHBhZ2VzLA0KPj4gICAgICAgICAgICAgICAgLnBhZ2VfbGVuID0gYnVm
-c2l6ZSwNCj4+IEBAIC01MDMsOCArNTA0LDYgQEAgc3RhdGljIGludCBuZnNfcmVhZGRpcl94ZHJf
-ZmlsbGVyKHN0cnVjdCBuZnNfcmVhZGRpcl9kZXNjcmlwdG9yICpkZXNjLA0KPj4gICAgICAgIH0N
-Cj4+ICAgICAgICBkZXNjLT50aW1lc3RhbXAgPSB0aW1lc3RhbXA7DQo+PiAgICAgICAgZGVzYy0+
-Z2VuY291bnQgPSBnZW5jb3VudDsNCj4+IC0gICAgICAgbWVtY3B5KE5GU19JKGlub2RlKS0+Y29v
-a2lldmVyZiwgcmVzLnZlcmYsDQo+PiAtICAgICAgICAgICAgICBzaXplb2YoTkZTX0koaW5vZGUp
-LT5jb29raWV2ZXJmKSk7DQo+PiBlcnJvcjoNCj4+ICAgICAgICByZXR1cm4gZXJyb3I7DQo+PiB9
-DQo+PiBAQCAtNzcwLDExICs3NjksMTMgQEAgc3RhdGljIHN0cnVjdCBwYWdlICoqbmZzX3JlYWRk
-aXJfYWxsb2NfcGFnZXMoc2l6ZV90IG5wYWdlcykNCj4+IH0NCj4+IA0KPj4gc3RhdGljIGludCBu
-ZnNfcmVhZGRpcl94ZHJfdG9fYXJyYXkoc3RydWN0IG5mc19yZWFkZGlyX2Rlc2NyaXB0b3IgKmRl
-c2MsDQo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgcGFnZSAq
-cGFnZSwgc3RydWN0IGlub2RlICppbm9kZSkNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHN0cnVjdCBwYWdlICpwYWdlLCBfX2JlMzIgKnZlcmZfYXJnLA0KPj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX19iZTMyICp2ZXJmX3JlcykNCj4+IHsNCj4+
-ICAgICAgICBzdHJ1Y3QgcGFnZSAqKnBhZ2VzOw0KPj4gICAgICAgIHN0cnVjdCBuZnNfZW50cnkg
-KmVudHJ5Ow0KPj4gICAgICAgIHNpemVfdCBhcnJheV9zaXplOw0KPj4gKyAgICAgICBzdHJ1Y3Qg
-aW5vZGUgKmlub2RlID0gZmlsZV9pbm9kZShkZXNjLT5maWxlKTsNCj4+ICAgICAgICBzaXplX3Qg
-ZHRzaXplID0gTkZTX1NFUlZFUihpbm9kZSktPmR0c2l6ZTsNCj4+ICAgICAgICBpbnQgc3RhdHVz
-ID0gLUVOT01FTTsNCj4+IA0KPj4gQEAgLTgwMSw4ICs4MDIsOSBAQCBzdGF0aWMgaW50IG5mc19y
-ZWFkZGlyX3hkcl90b19hcnJheShzdHJ1Y3QgbmZzX3JlYWRkaXJfZGVzY3JpcHRvciAqZGVzYywN
-Cj4+IA0KPj4gICAgICAgIGRvIHsNCj4+ICAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBwZ2xl
-bjsNCj4+IC0gICAgICAgICAgICAgICBzdGF0dXMgPSBuZnNfcmVhZGRpcl94ZHJfZmlsbGVyKGRl
-c2MsIGVudHJ5LT5jb29raWUsDQo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBwYWdlcywgZHRzaXplKTsNCj4+ICsgICAgICAgICAgICAgICBzdGF0dXMg
-PSBuZnNfcmVhZGRpcl94ZHJfZmlsbGVyKGRlc2MsIHZlcmZfYXJnLCBlbnRyeS0+Y29va2llLA0K
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGFnZXMs
-IGR0c2l6ZSwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHZlcmZfcmVzKTsNCj4+ICAgICAgICAgICAgICAgIGlmIChzdGF0dXMgPCAwKQ0KPj4gICAg
-ICAgICAgICAgICAgICAgICAgICBicmVhazsNCj4+IA0KPj4gQEAgLTg1NCwxMyArODU2LDE1IEBA
-IHN0YXRpYyBpbnQgZmluZF9hbmRfbG9ja19jYWNoZV9wYWdlKHN0cnVjdCBuZnNfcmVhZGRpcl9k
-ZXNjcmlwdG9yICpkZXNjKQ0KPj4gew0KPj4gICAgICAgIHN0cnVjdCBpbm9kZSAqaW5vZGUgPSBm
-aWxlX2lub2RlKGRlc2MtPmZpbGUpOw0KPj4gICAgICAgIHN0cnVjdCBuZnNfaW5vZGUgKm5mc2kg
-PSBORlNfSShpbm9kZSk7DQo+PiArICAgICAgIF9fYmUzMiB2ZXJmW05GU19ESVJfVkVSSUZJRVJf
-U0laRV07DQo+PiAgICAgICAgaW50IHJlczsNCj4+IA0KPj4gICAgICAgIGRlc2MtPnBhZ2UgPSBu
-ZnNfcmVhZGRpcl9wYWdlX2dldF9jYWNoZWQoZGVzYyk7DQo+PiAgICAgICAgaWYgKCFkZXNjLT5w
-YWdlKQ0KPj4gICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07DQo+PiAgICAgICAgaWYgKG5m
-c19yZWFkZGlyX3BhZ2VfbmVlZHNfZmlsbGluZyhkZXNjLT5wYWdlKSkgew0KPj4gLSAgICAgICAg
-ICAgICAgIHJlcyA9IG5mc19yZWFkZGlyX3hkcl90b19hcnJheShkZXNjLCBkZXNjLT5wYWdlLCBp
-bm9kZSk7DQo+PiArICAgICAgICAgICAgICAgcmVzID0gbmZzX3JlYWRkaXJfeGRyX3RvX2FycmF5
-KGRlc2MsIGRlc2MtPnBhZ2UsDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIG5mc2ktPmNvb2tpZXZlcmYsIHZlcmYpOw0KPj4gICAgICAgICAgICAgICAg
-aWYgKHJlcyA8IDApIHsNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgbmZzX3JlYWRkaXJfcGFn
-ZV91bmxvY2tfYW5kX3B1dF9jYWNoZWQoZGVzYyk7DQo+PiAgICAgICAgICAgICAgICAgICAgICAg
-IGlmIChyZXMgPT0gLUVCQURDT09LSUUgfHwgcmVzID09IC1FTk9UU1lOQykgew0KPj4gQEAgLTg3
-MCw2ICs4NzQsNyBAQCBzdGF0aWMgaW50IGZpbmRfYW5kX2xvY2tfY2FjaGVfcGFnZShzdHJ1Y3Qg
-bmZzX3JlYWRkaXJfZGVzY3JpcHRvciAqZGVzYykNCj4+ICAgICAgICAgICAgICAgICAgICAgICAg
-fQ0KPj4gICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gcmVzOw0KPj4gICAgICAgICAgICAg
-ICAgfQ0KPj4gKyAgICAgICAgICAgICAgIG1lbWNweShuZnNpLT5jb29raWV2ZXJmLCB2ZXJmLCBz
-aXplb2YobmZzaS0+Y29va2lldmVyZikpOw0KPj4gICAgICAgIH0NCj4+ICAgICAgICByZXMgPSBu
-ZnNfcmVhZGRpcl9zZWFyY2hfYXJyYXkoZGVzYyk7DQo+PiAgICAgICAgaWYgKHJlcyA9PSAwKSB7
-DQo+PiBAQCAtOTAyLDYgKzkwNyw3IEBAIHN0YXRpYyBpbnQgcmVhZGRpcl9zZWFyY2hfcGFnZWNh
-Y2hlKHN0cnVjdCBuZnNfcmVhZGRpcl9kZXNjcmlwdG9yICpkZXNjKQ0KPj4gc3RhdGljIHZvaWQg
-bmZzX2RvX2ZpbGxkaXIoc3RydWN0IG5mc19yZWFkZGlyX2Rlc2NyaXB0b3IgKmRlc2MpDQo+PiB7
-DQo+PiAgICAgICAgc3RydWN0IGZpbGUgICAgICpmaWxlID0gZGVzYy0+ZmlsZTsNCj4+ICsgICAg
-ICAgc3RydWN0IG5mc19pbm9kZSAqbmZzaSA9IE5GU19JKGZpbGVfaW5vZGUoZmlsZSkpOw0KPj4g
-ICAgICAgIHN0cnVjdCBuZnNfY2FjaGVfYXJyYXkgKmFycmF5Ow0KPj4gICAgICAgIHVuc2lnbmVk
-IGludCBpID0gMDsNCj4+IA0KPj4gQEAgLTkxNSw2ICs5MjEsNyBAQCBzdGF0aWMgdm9pZCBuZnNf
-ZG9fZmlsbGRpcihzdHJ1Y3QgbmZzX3JlYWRkaXJfZGVzY3JpcHRvciAqZGVzYykNCj4+ICAgICAg
-ICAgICAgICAgICAgICAgICAgZGVzYy0+ZW9mID0gdHJ1ZTsNCj4+ICAgICAgICAgICAgICAgICAg
-ICAgICAgYnJlYWs7DQo+PiAgICAgICAgICAgICAgICB9DQo+PiArICAgICAgICAgICAgICAgbWVt
-Y3B5KGRlc2MtPnZlcmYsIG5mc2ktPmNvb2tpZXZlcmYsIHNpemVvZihkZXNjLT52ZXJmKSk7DQo+
-PiAgICAgICAgICAgICAgICBpZiAoaSA8IChhcnJheS0+c2l6ZS0xKSkNCj4+ICAgICAgICAgICAg
-ICAgICAgICAgICAgZGVzYy0+ZGlyX2Nvb2tpZSA9IGFycmF5LT5hcnJheVtpKzFdLmNvb2tpZTsN
-Cj4+ICAgICAgICAgICAgICAgIGVsc2UNCj4+IEBAIC05NDksOCArOTU2LDggQEAgc3RhdGljIHZv
-aWQgbmZzX2RvX2ZpbGxkaXIoc3RydWN0IG5mc19yZWFkZGlyX2Rlc2NyaXB0b3IgKmRlc2MpDQo+
-PiBzdGF0aWMgaW50IHVuY2FjaGVkX3JlYWRkaXIoc3RydWN0IG5mc19yZWFkZGlyX2Rlc2NyaXB0
-b3IgKmRlc2MpDQo+PiB7DQo+PiAgICAgICAgc3RydWN0IHBhZ2UgICAgICpwYWdlID0gTlVMTDsN
-Cj4+ICsgICAgICAgX19iZTMyICAgICAgICAgIHZlcmZbTkZTX0RJUl9WRVJJRklFUl9TSVpFXTsN
-Cj4+ICAgICAgICBpbnQgICAgICAgICAgICAgc3RhdHVzOw0KPj4gLSAgICAgICBzdHJ1Y3QgaW5v
-ZGUgKmlub2RlID0gZmlsZV9pbm9kZShkZXNjLT5maWxlKTsNCj4+IA0KPj4gICAgICAgIGRmcHJp
-bnRrKERJUkNBQ0hFLCAiTkZTOiB1bmNhY2hlZF9yZWFkZGlyKCkgc2VhcmNoaW5nIGZvciBjb29r
-aWUgJUx1XG4iLA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAodW5zaWduZWQgbG9uZyBsb25n
-KWRlc2MtPmRpcl9jb29raWUpOw0KPj4gQEAgLTk2Nyw3ICs5NzQsNyBAQCBzdGF0aWMgaW50IHVu
-Y2FjaGVkX3JlYWRkaXIoc3RydWN0IG5mc19yZWFkZGlyX2Rlc2NyaXB0b3IgKmRlc2MpDQo+PiAg
-ICAgICAgZGVzYy0+ZHVwZWQgPSAwOw0KPj4gDQo+PiAgICAgICAgbmZzX3JlYWRkaXJfcGFnZV9p
-bml0X2FycmF5KHBhZ2UsIGRlc2MtPmRpcl9jb29raWUpOw0KPj4gLSAgICAgICBzdGF0dXMgPSBu
-ZnNfcmVhZGRpcl94ZHJfdG9fYXJyYXkoZGVzYywgcGFnZSwgaW5vZGUpOw0KPj4gKyAgICAgICBz
-dGF0dXMgPSBuZnNfcmVhZGRpcl94ZHJfdG9fYXJyYXkoZGVzYywgcGFnZSwgZGVzYy0+dmVyZiwg
-dmVyZik7DQo+PiAgICAgICAgaWYgKHN0YXR1cyA8IDApDQo+PiAgICAgICAgICAgICAgICBnb3Rv
-IG91dF9yZWxlYXNlOw0KPj4gDQo+PiBAQCAtMTAyMyw2ICsxMDMwLDcgQEAgc3RhdGljIGludCBu
-ZnNfcmVhZGRpcihzdHJ1Y3QgZmlsZSAqZmlsZSwgc3RydWN0IGRpcl9jb250ZXh0ICpjdHgpDQo+
-PiAgICAgICAgZGVzYy0+ZHVwX2Nvb2tpZSA9IGRpcl9jdHgtPmR1cF9jb29raWU7DQo+PiAgICAg
-ICAgZGVzYy0+ZHVwZWQgPSBkaXJfY3R4LT5kdXBlZDsNCj4+ICAgICAgICBkZXNjLT5hdHRyX2dl
-bmNvdW50ID0gZGlyX2N0eC0+YXR0cl9nZW5jb3VudDsNCj4+ICsgICAgICAgbWVtY3B5KGRlc2Mt
-PnZlcmYsIGRpcl9jdHgtPnZlcmYsIHNpemVvZihkZXNjLT52ZXJmKSk7DQo+PiAgICAgICAgc3Bp
-bl91bmxvY2soJmZpbGUtPmZfbG9jayk7DQo+PiANCj4+ICAgICAgICBkbyB7DQo+PiBAQCAtMTA2
-MSw2ICsxMDY5LDcgQEAgc3RhdGljIGludCBuZnNfcmVhZGRpcihzdHJ1Y3QgZmlsZSAqZmlsZSwg
-c3RydWN0IGRpcl9jb250ZXh0ICpjdHgpDQo+PiAgICAgICAgZGlyX2N0eC0+ZHVwX2Nvb2tpZSA9
-IGRlc2MtPmR1cF9jb29raWU7DQo+PiAgICAgICAgZGlyX2N0eC0+ZHVwZWQgPSBkZXNjLT5kdXBl
-ZDsNCj4+ICAgICAgICBkaXJfY3R4LT5hdHRyX2dlbmNvdW50ID0gZGVzYy0+YXR0cl9nZW5jb3Vu
-dDsNCj4+ICsgICAgICAgbWVtY3B5KGRpcl9jdHgtPnZlcmYsIGRlc2MtPnZlcmYsIHNpemVvZihk
-aXJfY3R4LT52ZXJmKSk7DQo+PiAgICAgICAgc3Bpbl91bmxvY2soJmZpbGUtPmZfbG9jayk7DQo+
-PiANCj4+ICAgICAgICBrZnJlZShkZXNjKTsNCj4+IEBAIC0xMTAxLDYgKzExMTAsOCBAQCBzdGF0
-aWMgbG9mZl90IG5mc19sbHNlZWtfZGlyKHN0cnVjdCBmaWxlICpmaWxwLCBsb2ZmX3Qgb2Zmc2V0
-LCBpbnQgd2hlbmNlKQ0KPj4gICAgICAgICAgICAgICAgICAgICAgICBkaXJfY3R4LT5kaXJfY29v
-a2llID0gb2Zmc2V0Ow0KPj4gICAgICAgICAgICAgICAgZWxzZQ0KPj4gICAgICAgICAgICAgICAg
-ICAgICAgICBkaXJfY3R4LT5kaXJfY29va2llID0gMDsNCj4+ICsgICAgICAgICAgICAgICBpZiAo
-b2Zmc2V0ID09IDApDQo+PiArICAgICAgICAgICAgICAgICAgICAgICBtZW1zZXQoZGlyX2N0eC0+
-dmVyZiwgMCwgc2l6ZW9mKGRpcl9jdHgtPnZlcmYpKTsNCj4+ICAgICAgICAgICAgICAgIGRpcl9j
-dHgtPmR1cGVkID0gMDsNCj4+ICAgICAgICB9DQo+PiAgICAgICAgc3Bpbl91bmxvY2soJmZpbHAt
-PmZfbG9jayk7DQo+IA0KPiBUaGFua3MgZm9yIGRvaW5nIHRoZXNlIHBhdGNoZXMhDQo+IA0KPiBG
-b3Igc29tZSByZWFzb24gdGhpcyBwYXRjaCBkb2VzIG5vdCBhcHBseSBidXQgSSBnZXQgYSBwcm9i
-bGVtIGF0IHRoaXMgaHVuay4NCj4gSXMgdGhlcmUgYSBmaXh1cCBvciBodW5rIG9yIHR3byBtaXNz
-aW5nIGZyb20gMDEvMTcgPw0KPiBJJ20gc3RhcnRpbmcgYXQgM2NlYTExY2Q1ZTNiIChMaW51eCA1
-LjEwLXJjMikuDQo+IA0KPiBQcm9ibGVtIGxvb2tzIGxpa2UgaXQncyBhdCB0aGUgc3Bpbl91bmxv
-Y2sgLSBoZXJlJ3Mgd2hhdCB0aGUgaHVuaw0KPiBsb29rcyBsaWtlIGZvciBtZToNCj4gZnMvbmZz
-L2Rpci5jDQo+IDEwOTIgICAgICAgICBpbm9kZV9sb2NrKGlub2RlKTsNCj4gMTA5MyAgICAgICAg
-IG9mZnNldCArPSBmaWxwLT5mX3BvczsNCj4gMTA5NCAgICAgICAgIGlmIChvZmZzZXQgPCAwKSB7
-DQo+IDEwOTUgICAgICAgICAgICAgaW5vZGVfdW5sb2NrKGlub2RlKTsNCj4gMTA5NiAgICAgICAg
-ICAgICByZXR1cm4gLUVJTlZBTDsNCj4gMTA5NyAgICAgICAgIH0NCj4gMTA5OCAgICAgfQ0KPiAx
-MDk5ICAgICBpZiAob2Zmc2V0ICE9IGZpbHAtPmZfcG9zKSB7DQo+IDExMDAgICAgICAgICBmaWxw
-LT5mX3BvcyA9IG9mZnNldDsNCj4gMTEwMSAgICAgICAgIGlmIChuZnNfcmVhZGRpcl91c2VfY29v
-a2llKGZpbHApKQ0KPiAxMTAyICAgICAgICAgICAgIGRpcl9jdHgtPmRpcl9jb29raWUgPSBvZmZz
-ZXQ7DQo+IDExMDMgICAgICAgICBlbHNlDQo+IDExMDQgICAgICAgICAgICAgZGlyX2N0eC0+ZGly
-X2Nvb2tpZSA9IDA7DQo+IDExMDUgICAgICAgICBkaXJfY3R4LT5kdXBlZCA9IDA7DQo+IDExMDYg
-ICAgIH0NCj4gMTEwNyAgICAgaW5vZGVfdW5sb2NrKGlub2RlKTsNCj4gMTEwOCAgICAgcmV0dXJu
-IG9mZnNldDsNCj4gMTEwOSB9DQo+IA0KDQpZZXMsIGl0IGRlcGVuZHMgb24gdGhlIHBhdGNoICJb
-UEFUQ0ggMS8yXSBORlM6IFJlbW92ZSB1bm5lY2Vzc2FyeSBpbm9kZSBsb2NraW5nIGluIG5mc19s
-bHNlZWtfZGlyKCnigJ0gdGhhdCBJIHNlbnQgb3V0IHRvIHRoZSBsaXN0IG9uIE9jdCAzMC4NCkkg
-Y2FuIGluY2x1ZGUgdGhhdCBpbiBmdXR1cmUgdXBkYXRlcyBvZiB0aGlzIHBhdGNoc2V0Lg0KDQpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NClRyb25kIE15a2xlYnVzdA0KTGludXgg
-TkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1l
-cnNwYWNlLmNvbQ0KDQo=
+On Wed, Nov 4, 2020 at 4:32 PM Trond Myklebust <trondmy@hammerspace.com> wr=
+ote:
+>
+>
+>
+> > On Nov 4, 2020, at 16:01, David Wysochanski <dwysocha@redhat.com> wrote=
+:
+> >
+> > On Wed, Nov 4, 2020 at 11:28 AM <trondmy@gmail.com> wrote:
+> >>
+> >> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> >>
+> >> If the server insists on using the readdir verifiers in order to allow
+> >> cookies to expire, then we should ensure that we cache the verifier
+> >> with the cookie, so that we can return an error if the application
+> >> tries to use the expired cookie.
+> >>
+> >> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> >> ---
+> >> fs/nfs/dir.c           | 35 +++++++++++++++++++++++------------
+> >> fs/nfs/inode.c         |  7 -------
+> >> include/linux/nfs_fs.h |  8 +++++++-
+> >> 3 files changed, 30 insertions(+), 20 deletions(-)
+> >>
+> >> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> >> index 3b44bef3a1b4..454377228167 100644
+> >> --- a/fs/nfs/dir.c
+> >> +++ b/fs/nfs/dir.c
+> >> @@ -155,6 +155,7 @@ struct nfs_readdir_descriptor {
+> >>        loff_t          current_index;
+> >>        loff_t          prev_index;
+> >>
+> >> +       __be32          verf[NFS_DIR_VERIFIER_SIZE];
+> >>        unsigned long   dir_verifier;
+> >>        unsigned long   timestamp;
+> >>        unsigned long   gencount;
+> >> @@ -466,15 +467,15 @@ static int nfs_readdir_search_array(struct nfs_r=
+eaddir_descriptor *desc)
+> >>
+> >> /* Fill a page with xdr information before transferring to the cache p=
+age */
+> >> static int nfs_readdir_xdr_filler(struct nfs_readdir_descriptor *desc,
+> >> -                                 u64 cookie, struct page **pages,
+> >> -                                 size_t bufsize)
+> >> +                                 __be32 *verf, u64 cookie,
+> >> +                                 struct page **pages, size_t bufsize,
+> >> +                                 __be32 *verf_res)
+> >> {
+> >>        struct inode *inode =3D file_inode(desc->file);
+> >> -       __be32 verf_res[2];
+> >>        struct nfs_readdir_arg arg =3D {
+> >>                .dentry =3D file_dentry(desc->file),
+> >>                .cred =3D desc->file->f_cred,
+> >> -               .verf =3D NFS_I(inode)->cookieverf,
+> >> +               .verf =3D verf,
+> >>                .cookie =3D cookie,
+> >>                .pages =3D pages,
+> >>                .page_len =3D bufsize,
+> >> @@ -503,8 +504,6 @@ static int nfs_readdir_xdr_filler(struct nfs_readd=
+ir_descriptor *desc,
+> >>        }
+> >>        desc->timestamp =3D timestamp;
+> >>        desc->gencount =3D gencount;
+> >> -       memcpy(NFS_I(inode)->cookieverf, res.verf,
+> >> -              sizeof(NFS_I(inode)->cookieverf));
+> >> error:
+> >>        return error;
+> >> }
+> >> @@ -770,11 +769,13 @@ static struct page **nfs_readdir_alloc_pages(siz=
+e_t npages)
+> >> }
+> >>
+> >> static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *des=
+c,
+> >> -                                   struct page *page, struct inode *i=
+node)
+> >> +                                   struct page *page, __be32 *verf_ar=
+g,
+> >> +                                   __be32 *verf_res)
+> >> {
+> >>        struct page **pages;
+> >>        struct nfs_entry *entry;
+> >>        size_t array_size;
+> >> +       struct inode *inode =3D file_inode(desc->file);
+> >>        size_t dtsize =3D NFS_SERVER(inode)->dtsize;
+> >>        int status =3D -ENOMEM;
+> >>
+> >> @@ -801,8 +802,9 @@ static int nfs_readdir_xdr_to_array(struct nfs_rea=
+ddir_descriptor *desc,
+> >>
+> >>        do {
+> >>                unsigned int pglen;
+> >> -               status =3D nfs_readdir_xdr_filler(desc, entry->cookie,
+> >> -                                               pages, dtsize);
+> >> +               status =3D nfs_readdir_xdr_filler(desc, verf_arg, entr=
+y->cookie,
+> >> +                                               pages, dtsize,
+> >> +                                               verf_res);
+> >>                if (status < 0)
+> >>                        break;
+> >>
+> >> @@ -854,13 +856,15 @@ static int find_and_lock_cache_page(struct nfs_r=
+eaddir_descriptor *desc)
+> >> {
+> >>        struct inode *inode =3D file_inode(desc->file);
+> >>        struct nfs_inode *nfsi =3D NFS_I(inode);
+> >> +       __be32 verf[NFS_DIR_VERIFIER_SIZE];
+> >>        int res;
+> >>
+> >>        desc->page =3D nfs_readdir_page_get_cached(desc);
+> >>        if (!desc->page)
+> >>                return -ENOMEM;
+> >>        if (nfs_readdir_page_needs_filling(desc->page)) {
+> >> -               res =3D nfs_readdir_xdr_to_array(desc, desc->page, ino=
+de);
+> >> +               res =3D nfs_readdir_xdr_to_array(desc, desc->page,
+> >> +                                              nfsi->cookieverf, verf)=
+;
+> >>                if (res < 0) {
+> >>                        nfs_readdir_page_unlock_and_put_cached(desc);
+> >>                        if (res =3D=3D -EBADCOOKIE || res =3D=3D -ENOTS=
+YNC) {
+> >> @@ -870,6 +874,7 @@ static int find_and_lock_cache_page(struct nfs_rea=
+ddir_descriptor *desc)
+> >>                        }
+> >>                        return res;
+> >>                }
+> >> +               memcpy(nfsi->cookieverf, verf, sizeof(nfsi->cookieverf=
+));
+> >>        }
+> >>        res =3D nfs_readdir_search_array(desc);
+> >>        if (res =3D=3D 0) {
+> >> @@ -902,6 +907,7 @@ static int readdir_search_pagecache(struct nfs_rea=
+ddir_descriptor *desc)
+> >> static void nfs_do_filldir(struct nfs_readdir_descriptor *desc)
+> >> {
+> >>        struct file     *file =3D desc->file;
+> >> +       struct nfs_inode *nfsi =3D NFS_I(file_inode(file));
+> >>        struct nfs_cache_array *array;
+> >>        unsigned int i =3D 0;
+> >>
+> >> @@ -915,6 +921,7 @@ static void nfs_do_filldir(struct nfs_readdir_desc=
+riptor *desc)
+> >>                        desc->eof =3D true;
+> >>                        break;
+> >>                }
+> >> +               memcpy(desc->verf, nfsi->cookieverf, sizeof(desc->verf=
+));
+> >>                if (i < (array->size-1))
+> >>                        desc->dir_cookie =3D array->array[i+1].cookie;
+> >>                else
+> >> @@ -949,8 +956,8 @@ static void nfs_do_filldir(struct nfs_readdir_desc=
+riptor *desc)
+> >> static int uncached_readdir(struct nfs_readdir_descriptor *desc)
+> >> {
+> >>        struct page     *page =3D NULL;
+> >> +       __be32          verf[NFS_DIR_VERIFIER_SIZE];
+> >>        int             status;
+> >> -       struct inode *inode =3D file_inode(desc->file);
+> >>
+> >>        dfprintk(DIRCACHE, "NFS: uncached_readdir() searching for cooki=
+e %Lu\n",
+> >>                        (unsigned long long)desc->dir_cookie);
+> >> @@ -967,7 +974,7 @@ static int uncached_readdir(struct nfs_readdir_des=
+criptor *desc)
+> >>        desc->duped =3D 0;
+> >>
+> >>        nfs_readdir_page_init_array(page, desc->dir_cookie);
+> >> -       status =3D nfs_readdir_xdr_to_array(desc, page, inode);
+> >> +       status =3D nfs_readdir_xdr_to_array(desc, page, desc->verf, ve=
+rf);
+> >>        if (status < 0)
+> >>                goto out_release;
+> >>
+> >> @@ -1023,6 +1030,7 @@ static int nfs_readdir(struct file *file, struct=
+ dir_context *ctx)
+> >>        desc->dup_cookie =3D dir_ctx->dup_cookie;
+> >>        desc->duped =3D dir_ctx->duped;
+> >>        desc->attr_gencount =3D dir_ctx->attr_gencount;
+> >> +       memcpy(desc->verf, dir_ctx->verf, sizeof(desc->verf));
+> >>        spin_unlock(&file->f_lock);
+> >>
+> >>        do {
+> >> @@ -1061,6 +1069,7 @@ static int nfs_readdir(struct file *file, struct=
+ dir_context *ctx)
+> >>        dir_ctx->dup_cookie =3D desc->dup_cookie;
+> >>        dir_ctx->duped =3D desc->duped;
+> >>        dir_ctx->attr_gencount =3D desc->attr_gencount;
+> >> +       memcpy(dir_ctx->verf, desc->verf, sizeof(dir_ctx->verf));
+> >>        spin_unlock(&file->f_lock);
+> >>
+> >>        kfree(desc);
+> >> @@ -1101,6 +1110,8 @@ static loff_t nfs_llseek_dir(struct file *filp, =
+loff_t offset, int whence)
+> >>                        dir_ctx->dir_cookie =3D offset;
+> >>                else
+> >>                        dir_ctx->dir_cookie =3D 0;
+> >> +               if (offset =3D=3D 0)
+> >> +                       memset(dir_ctx->verf, 0, sizeof(dir_ctx->verf)=
+);
+> >>                dir_ctx->duped =3D 0;
+> >>        }
+> >>        spin_unlock(&filp->f_lock);
+> >
+> > Thanks for doing these patches!
+> >
+> > For some reason this patch does not apply but I get a problem at this h=
+unk.
+> > Is there a fixup or hunk or two missing from 01/17 ?
+> > I'm starting at 3cea11cd5e3b (Linux 5.10-rc2).
+> >
+> > Problem looks like it's at the spin_unlock - here's what the hunk
+> > looks like for me:
+> > fs/nfs/dir.c
+> > 1092         inode_lock(inode);
+> > 1093         offset +=3D filp->f_pos;
+> > 1094         if (offset < 0) {
+> > 1095             inode_unlock(inode);
+> > 1096             return -EINVAL;
+> > 1097         }
+> > 1098     }
+> > 1099     if (offset !=3D filp->f_pos) {
+> > 1100         filp->f_pos =3D offset;
+> > 1101         if (nfs_readdir_use_cookie(filp))
+> > 1102             dir_ctx->dir_cookie =3D offset;
+> > 1103         else
+> > 1104             dir_ctx->dir_cookie =3D 0;
+> > 1105         dir_ctx->duped =3D 0;
+> > 1106     }
+> > 1107     inode_unlock(inode);
+> > 1108     return offset;
+> > 1109 }
+> >
+>
+> Yes, it depends on the patch "[PATCH 1/2] NFS: Remove unnecessary inode l=
+ocking in nfs_llseek_dir()=E2=80=9D that I sent out to the list on Oct 30.
+> I can include that in future updates of this patchset.
+>
+
+FWIW, the statement of the dependency is fine with me - I grabbed the
+other two patches and now applies cleanly.
+Thanks!
+
