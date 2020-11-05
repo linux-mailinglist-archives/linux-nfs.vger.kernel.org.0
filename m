@@ -2,169 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABF762A867C
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Nov 2020 19:55:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 058C52A86FC
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Nov 2020 20:23:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgKESzm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Nov 2020 13:55:42 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52113 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728137AbgKESzm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Nov 2020 13:55:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604602541;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=D1JX91vyX0RMOSkxWirey7PqVagR00j9ZCCAeF7MViU=;
-        b=H1zSVUmHQISbVpxLwNwxkJuvuckObB/tqG4Ova0xgXWuZQUO3Y5nsLvz8jMhEGRnXpzL77
-        BOOWh7FJj5NQADUOQNjiWQwuLxlrRXFFz8N8EFuNt0qP3qIqfRS8t+DhpcCKafVyX5bjIK
-        u7fJavvPjpUQPb+H4CxAmYyclOuKdQ4=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-219-8WzwEmzJOnKsz-CQYHbxJA-1; Thu, 05 Nov 2020 13:55:36 -0500
-X-MC-Unique: 8WzwEmzJOnKsz-CQYHbxJA-1
-Received: by mail-ed1-f69.google.com with SMTP id t7so910270edt.0
-        for <linux-nfs@vger.kernel.org>; Thu, 05 Nov 2020 10:55:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D1JX91vyX0RMOSkxWirey7PqVagR00j9ZCCAeF7MViU=;
-        b=LXXFTdiZxE3MEyb3mdyEvheRrOJw7RUikhZCW8GTFuIbsTFDhli2mq37AY002HT3Lu
-         Sc75j8xyK6RUF28yb/f6KIybXgN+vm1sPaTMpIFBjEFYhDZbXrz/6/bgJ0ZTA9UzdqTn
-         Dq9VWQdzsjPqMf6wZOl1b7g5Wsa1Lxzv1AuSEUXCrDVAgt6aXUsvU84ebt08hMl56VWn
-         PoXZorE1PYmVH6sMdTl2sIeCgBNwepYgdT9NLMzZyD9h56j0Dpz6ggByhRnbu4qFbpTN
-         rT3StJDCbNj/BE5HSVkOX+ZlLqRsISMRZ77+a1claLhoHZxT2lWEue6H5uQzTQPd2CJ9
-         Wpaw==
-X-Gm-Message-State: AOAM531wMALfcOLaoL8xwysDfz4DXT8jgQev16Jj13xWPUgdZ24N6Ujn
-        /0755wbmgNVmTQdxrRJvz/824xFn9iJEy65jYSzGh6D6C7PYfqczYrRdQ/60rnFxaY//r96Sd38
-        RgP/LJpCwQ/VKM8Dm4K1PzXySg3IBslGKqidG
-X-Received: by 2002:a50:cc48:: with SMTP id n8mr4234057edi.137.1604602534872;
-        Thu, 05 Nov 2020 10:55:34 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxOXq6TzFUWqo6exDgAAPj905PARZ/K8l6nKjmXIQeFt7uFPr3bqyHlefLfvjruhGYqgEaSuddfh2+AsqQlahU=
-X-Received: by 2002:a50:cc48:: with SMTP id n8mr4234039edi.137.1604602534585;
- Thu, 05 Nov 2020 10:55:34 -0800 (PST)
+        id S1726996AbgKETX1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 5 Nov 2020 14:23:27 -0500
+Received: from mail-bn7nam10on2124.outbound.protection.outlook.com ([40.107.92.124]:9568
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726729AbgKETX0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 5 Nov 2020 14:23:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j1w24n67CUIJiZbUnxYFgYUqzbZFxrDy9ac3Vj2s0nUmitHS2ZB7u8KXXoy9JvS5cKzWQgK3lMYKBq7fBgq585YLJW3zMP5lwzc37WeCUiHWvqatJSXM3RS06OPBRa3W8yG8EMF9WhZZH4ppOSnK33uiQp9lQFY/ViyS1lYKUAPtB3BezWVywdL21lbSlFCwOPf/IqIc4/QD6K6gUYwA3d8tvhlu4Vr2SNgkugOYzMIhMyjXEFMM3ONKCfnO9OM7hNW4qxsl9oHHXWJ2jdboImnDzVid8TP3qogcAhYbwF2k8ZYC9mYgswgB6q96gXIOqbPFFIBYT+/1KgV0OA50dQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9pU1y6H/NLmQ1pDGdWZRnT8BYU1MTNvsD7mCtWD2uWY=;
+ b=T10ambHubaLsWw2OasjgrYeWmCiScsTqNARl04N7YWzX9YFi5J1tkpovjxmlwkhevGAHmqz+jkA81eN2oUfRClI+HgnCxjSx87REDEou3ZL9nNGdpG3Vw9/JU4ktqXGKgokvpwckKk07oG7h8zV4ewyhgf5Bhy0SWXcZRJw59Lf+T9C/0Wmj13ZPu9FrNI+a8kw42mEOHXjauMp4mm2avEsw7o05+HtFqxAcn5nZIkuPxZonDxDoQvce+S5nhwcec9zClOokaBO1dQ00xj+jF3QUn72uzWmWcf40GSqnFyvemiSHuij/FKJ0qv7UfCO6kf1Ih1ErGCGQBqCuw//4BQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9pU1y6H/NLmQ1pDGdWZRnT8BYU1MTNvsD7mCtWD2uWY=;
+ b=dHPkUjw3huweOzRtFDJDeoFhMpvPyNxZ9Yvlq2x5OQSBlge/9NYDLqZHNVfuCUAeg/Lp6VPpu4dsUBvP4GKnHIvdYjHU2j1iLXZRV9FPTmExYgtYLmTEUjTUOXEC5uhhSrSgOzkevdeAnBf/mPdg8cH79FnZ1gF+IZ60gJJ814o=
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
+ by MN2PR13MB3773.namprd13.prod.outlook.com (2603:10b6:208:1e6::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.13; Thu, 5 Nov
+ 2020 19:23:23 +0000
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.018; Thu, 5 Nov 2020
+ 19:23:23 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "neilb@suse.de" <neilb@suse.de>
+Subject: Re: [PATCH/RFC] Does nfsiod need WQ_CPU_INTENSIVE?
+Thread-Topic: [PATCH/RFC] Does nfsiod need WQ_CPU_INTENSIVE?
+Thread-Index: AQHWswhvhyJSBmabJkyvO3MOSPUiVqm57C2A
+Date:   Thu, 5 Nov 2020 19:23:22 +0000
+Message-ID: <37ec02047951a5d61cf9f9f5b4dc7151cd877772.camel@hammerspace.com>
+References: <87sg9or794.fsf@notabene.neil.brown.name>
+In-Reply-To: <87sg9or794.fsf@notabene.neil.brown.name>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c372cf91-7949-4314-d914-08d881c04315
+x-ms-traffictypediagnostic: MN2PR13MB3773:
+x-microsoft-antispam-prvs: <MN2PR13MB37738DC8B4800BA854D8026FB8EE0@MN2PR13MB3773.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EQ5BS/PSJMjiAhqcyat4u0N/bw9fA9f4g4Rm3vLa6hA7vFuzeXvZVwzUxjHMuynKUcE2E1CBPbD97QVhHmXgaXPkUu0PS7KE3ijE4YZfMyn/ocI7YxqjIDQDemfTxLeEYY+Dk+575/ybYNM9wLwJ0ZuqT1b5kK7R8Tf86IisSWyqF9/Lz5h88Q+9F4HkCheHoX6+xRehc+QGJa026f6ZplELPhE3pfwflERvSkvPxxQdensQlx3GtFQoMY9mjs4oQZ8WRd/1GrZe0PlBSr6NQrITmvNjzTbpBXVe+8TkRcwi97PtVU4wMSD4ugLY/W5PCfMO6JORHjCMheYkb27Gzg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(39830400003)(136003)(396003)(366004)(376002)(76116006)(2906002)(110136005)(86362001)(36756003)(71200400001)(6512007)(316002)(91956017)(66476007)(66556008)(66946007)(64756008)(66446008)(8936002)(5660300002)(8676002)(83380400001)(478600001)(26005)(6506007)(186003)(6486002)(2616005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: CJZp9IcGSXITZ42JlYJbEPv/16DwplJVOvUOQ40WTUGq99Nn3FatO/Y6kkF8H11JcyQHI79SUztz0dpg/HHwo6ljC7IwN2jEHXURhOphht1Mw4riWd4EROWQ0jQ1PZYhn4hBEA+FHYT5iCOSvoyK+t0U/eIZOiDR6SZuXgjN9dSoRZqlkw1VYjLYlV5UhgLB2QsYUFB2jPkqkmF1nW3/KVXB2xUMGtEgDynvYi3ZWO53vaV3D0XNH1/2uVvp7tzhbyceyVC132/RQzBW6W560EV83f3dbyKZ0GCMQUsHrLqPJUFveKsxzmcdnPtJCxzORJEqFAfLHlKrWV4xZyMREYBHSAoEd7mt6l589q1fWYKsX4/3SxY6U36tYm7y3tcMTm4ToJZ+reCF0u8rYh/sbh1kx+22vtHiBrUbd27CEvJHYTPTZ8m8086Py2Hw4ppR588qvpi4QAMEfJhbyoxJPO/y2JuRw0SwewdDt7J3fSPnSRYNu3v7z+o7OW22/WFAoN19ayFJuNfGiXll0VlqkfjPGI9CYIDxIUNMZHzIT01OpWvWp6LIHMr7XOxZpvTrRbzSzjOnQfsxRBLcAUag+SU8jh5B/MMDTXRYAYIcdA04mEbRj3XjL4uBigOESh+1HYn15KtrSQOK/PS4qQE82g==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F08187C73B8FF54C872A044CB0437BBB@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20201105173328.2539-1-olga.kornievskaia@gmail.com> <20201105173328.2539-2-olga.kornievskaia@gmail.com>
-In-Reply-To: <20201105173328.2539-2-olga.kornievskaia@gmail.com>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Thu, 5 Nov 2020 19:55:23 +0100
-Message-ID: <CAFqZXNtjMEF0LO4vtEmcgwydbWfUS36d8g24J6C-NDXORYbEJg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] NFSv4.2: condition READDIR's mask for security label
- based on LSM state
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        linux-nfs@vger.kernel.org,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c372cf91-7949-4314-d914-08d881c04315
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2020 19:23:22.9705
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zrUP3DjX68voV9mXeUnBU2Y2LfyFuWdCv/XkkEIEZldQoSeXo/pB4f8XzDTJoF3/jYoQDsCcXQYzNENZJtGxsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3773
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Nov 5, 2020 at 6:33 PM Olga Kornievskaia
-<olga.kornievskaia@gmail.com> wrote:
-> From: Olga Kornievskaia <kolga@netapp.com>
->
-> Currently, the client will always ask for security_labels if the server
-> returns that it supports that feature regardless of any LSM modules
-> (such as Selinux) enforcing security policy. This adds performance
-> penalty to the READDIR operation.
->
-> Instead, query the LSM module to find if anything is enabled and
-> if not, then remove FATTR4_WORD2_SECURITY_LABEL from the bitmask.
-
-Having spent some time staring at some of the NFS code very recently,
-I can't help but suggest: Would it perhaps be enough to decide whether
-to ask for labels based on (NFS_SB(dentry->d_sb)->caps &
-NFS_CAP_SECURITY_LABEL)? It is set when mounting the FS iff some LSM
-confirms via the security_sb_*_mnt_opts() hook that it wants the
-filesystem to give it labels (or at least that's how I interpret the
-cryptic name) [1]. It's just a shot in the dark, but it seems to fit
-this use case.
-
-[1] https://elixir.bootlin.com/linux/v5.10-rc2/source/fs/nfs/getroot.c#L148
-
->
-> Suggested-by: Scott Mayhew <smayhew@redhat.com>
-> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> ---
->  fs/nfs/nfs4proc.c       | 5 +++++
->  fs/nfs/nfs4xdr.c        | 3 ++-
->  include/linux/nfs_xdr.h | 1 +
->  3 files changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 9e0ca9b2b210..774bc5e63ca7 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -55,6 +55,7 @@
->  #include <linux/utsname.h>
->  #include <linux/freezer.h>
->  #include <linux/iversion.h>
-> +#include <linux/security.h>
->
->  #include "nfs4_fs.h"
->  #include "delegation.h"
-> @@ -4968,6 +4969,7 @@ static int _nfs4_proc_readdir(struct dentry *dentry, const struct cred *cred,
->                 .count = count,
->                 .bitmask = NFS_SERVER(d_inode(dentry))->attr_bitmask,
->                 .plus = plus,
-> +               .labels = true,
->         };
->         struct nfs4_readdir_res res;
->         struct rpc_message msg = {
-> @@ -4977,10 +4979,13 @@ static int _nfs4_proc_readdir(struct dentry *dentry, const struct cred *cred,
->                 .rpc_cred = cred,
->         };
->         int                     status;
-> +       int sec_flags = LSM_FQUERY_VFS_XATTRS;
->
->         dprintk("%s: dentry = %pd2, cookie = %Lu\n", __func__,
->                         dentry,
->                         (unsigned long long)cookie);
-> +       if (!security_func_query_vfs(sec_flags))
-> +               args.labels = false;
->         nfs4_setup_readdir(cookie, NFS_I(dir)->cookieverf, dentry, &args);
->         res.pgbase = args.pgbase;
->         status = nfs4_call_sync(NFS_SERVER(dir)->client, NFS_SERVER(dir), &msg, &args.seq_args, &res.seq_res, 0);
-> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-> index c6dbfcae7517..585d5b5cc3dc 100644
-> --- a/fs/nfs/nfs4xdr.c
-> +++ b/fs/nfs/nfs4xdr.c
-> @@ -1605,7 +1605,8 @@ static void encode_readdir(struct xdr_stream *xdr, const struct nfs4_readdir_arg
->                         FATTR4_WORD1_OWNER_GROUP|FATTR4_WORD1_RAWDEV|
->                         FATTR4_WORD1_SPACE_USED|FATTR4_WORD1_TIME_ACCESS|
->                         FATTR4_WORD1_TIME_METADATA|FATTR4_WORD1_TIME_MODIFY;
-> -               attrs[2] |= FATTR4_WORD2_SECURITY_LABEL;
-> +               if (readdir->labels)
-> +                       attrs[2] |= FATTR4_WORD2_SECURITY_LABEL;
->                 dircount >>= 1;
->         }
->         /* Use mounted_on_fileid only if the server supports it */
-> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> index d63cb862d58e..95f648b26525 100644
-> --- a/include/linux/nfs_xdr.h
-> +++ b/include/linux/nfs_xdr.h
-> @@ -1119,6 +1119,7 @@ struct nfs4_readdir_arg {
->         unsigned int                    pgbase; /* zero-copy data */
->         const u32 *                     bitmask;
->         bool                            plus;
-> +       bool                            labels;
->  };
->
->  struct nfs4_readdir_res {
-> --
-> 2.18.2
->
-
-
--- 
-Ondrej Mosnacek
-Software Engineer, Platform Security - SELinux kernel
-Red Hat, Inc.
-
+T24gVGh1LCAyMDIwLTExLTA1IGF0IDExOjEyICsxMTAwLCBOZWlsQnJvd24gd3JvdGU6DQo+IA0K
+PiBIaSwNCj4gwqBJIGhhdmUgYSBjdXN0b21lciByZXBvcnQgb2YgTkZTIGdldHRpbmcgc3R1Y2sg
+ZHVlIHRvIGEgd29ya3F1ZXVlDQo+IMKgbG9ja3VwLg0KPiANCj4gwqBUaGlzIGFwcGVhcnMgdG8g
+YmUgdHJpZ2dlcmVkIGJ5IGNhbGxpbmcgJ2Nsb3NlJyBvbiBhIDVUQiBmaWxlLg0KPiDCoFRoZSBy
+cGNfcmVsZWFzZSBzZXQgdXAgYnkgbmZzNF9kb19jbG9zZSgpIGNhbGxzIGEgZmluYWwgaXB1dCgp
+DQo+IMKgb24gdGhlIGlub2RlIHdoaWNoIGxlYWRzIHRvIG5mczRfZXZpY3RfaW5vZGUoKSB3aGlj
+aCBjYWxscw0KPiDCoHRydW5jYXRlX2lub2RlX3BhZ2VzX2ZpbmFsKCkuwqAgT24gYSA1VEIgZmls
+ZSwgdGhpcyBjYW4gdGFrZSBhIGxpdHRsZQ0KPiDCoHdoaWxlLg0KPiANCj4gwqBEb2N1bWVudGF0
+aW9uIGZvciB3b3JrcXVldWUgc2F5cw0KPiDCoMKgIEdlbmVyYWxseSwgd29yayBpdGVtcyBhcmUg
+bm90IGV4cGVjdGVkIHRvIGhvZyBhIENQVSBhbmQgY29uc3VtZQ0KPiBtYW55DQo+IMKgwqAgY3lj
+bGVzLg0KPiANCj4gwqBzbyBtYXliZSB0aGF0IGlzbid0IGEgZ29vZCBpZGVhLg0KPiDCoHRydW5j
+YXRlX2lub2RlX3BhZ2VzX2ZpbmFsKCkgZG9lcyBjYWxsIGNvbmRfcmVzY2hlZCgpLCBidXQgd29y
+a3F1ZXVlDQo+IMKgZG9lc24ndCB0YWtlIG5vdGljZSBvZiB0aGF0LsKgIEJ5IGRlZmF1bHQgaXQg
+b25seSBydW5zIG1vcmUgdGhyZWFkcw0KPiBvbg0KPiDCoHRoZSBzYW1lIENQVSBpZiB0aGUgZmly
+c3QgdGhyZWFkIGFjdHVhbGx5IHNsZWVwcy7CoCBTbyB0aGUgbmV0IHJlc3VsdA0KPiBpcw0KPiDC
+oHRoYXQgdGhlcmUgYXJlIGxvdHMgb2YgcnBjX2FzeW5jX3NjaGVkdWxlIHRhc2tzIHF1ZXVlZCB1
+cCBiZWhpbmQgdGhlDQo+IMKgaXB1dCwgd2FpdGluZyBmb3IgaXQgdG8gZmluaXNoIHJhdGhlciB0
+aGFuIHJ1bm5pbmcgY29uY3VycmVudGx5Lg0KPiANCj4gwqBJIGJlbGlldmUgdGhpcyBjYW4gYmUg
+Zml4ZWQgYnkgc2V0dGluZyBXUV9DUFVfSU5URU5TSVZFIG9uIHRoZQ0KPiBuZnNpb2QNCj4gwqB3
+b3JrcXVldWUuwqAgVGhpcyBmbGFnIGNhdXNlcyB0aGUgd29ya3F1ZXVlIGNvcmUgdG8gc2NoZWR1
+bGUgbW9yZQ0KPiDCoHRocmVhZHMgYXMgbmVlZGVkIGV2ZW4gaWYgdGhlIGV4aXN0aW5nIHRocmVh
+ZHMgbmV2ZXIgc2xlZXAuDQo+IMKgSSBkb24ndCBrbm93IGlmIHRoaXMgaXMgYSBnb29kIGlkZWEg
+YXMgaXQgbWlnaHQgc3BhbnMgbG90cyBvZg0KPiB0aHJlYWRzDQo+IMKgbmVlZGxlc3NseSB3aGVu
+IHJwY19yZWxlYXNlIGZ1bmN0aW9ucyBkb24ndCBoYXZlIGxvdHMgb2Ygd29yayB0byBkby4NCj4g
+DQo+IMKgQW5vdGhlciBvcHRpb24gbWlnaHQgYmUgdG8gY3JlYXRlIGEgc2VwYXJhdGUNCj4gbmZz
+aW9kX2ludGVuc2l2ZV93b3JrcXVldWUNCj4gwqB3aXRoIHRoaXMgZmxhZyBzZXQsIGFuZCBoYW5k
+IGFsbCBpcHV0IHJlcXVlc3RzIG92ZXIgdG8gdGhpcw0KPiB3b3JrcXVldWUuDQo+IA0KPiDCoEkn
+dmUgYXNrZWQgZm9yIHRoZSBjdXN0b21lciB0byB0ZXN0IHdpdGggdGhpcyBzaW1wbGUgcGF0Y2gu
+DQo+IA0KPiDCoEFueSB0aG91Z2h0cyBvciBzdWdnZXN0aW9ucyBtb3N0IHdlbGNvbWUsDQo+IA0K
+DQpJc24ndCB0aGlzIGEgZ2VuZXJhbCBwcm9ibGVtIChpLmUuIG9uZSB0aGF0IGlzIG5vdCBzcGVj
+aWZpYyB0byBORlMpDQp3aGVuIHlvdSBoYXZlIG11bHRpLXRlcmFieXRlIGNhY2hlcz8gV2h5IHdv
+dWxkbid0IGlvX3VyaW5nIGJlDQp2dWxuZXJhYmxlIHRvIHRoZSBzYW1lIGlzc3VlLCBmb3IgaW5z
+dGFuY2U/DQoNClRoZSB0aGluZyBpcyB0aGF0IHRydW5jYXRlX2lub2RlX3BhZ2VzKCkgaGFzIHBs
+ZW50eSBvZiBsYXRlbmN5IHJlZHVjaW5nDQpjb25kX3NjaGVkKCkgY2FsbHMgdGhhdCBzaG91bGQg
+ZW5zdXJlIHRoYXQgb3RoZXIgdGhyZWFkcyBnZXQgc2NoZWR1bGVkLA0Kc28gdGhpcyBwcm9ibGVt
+IGRvZXNuJ3Qgc3RyaWN0bHkgbWVldCB0aGUgJ0NQVSBpbnRlbnNpdmUnIGNyaXRlcmlvbg0KdGhh
+dCBJIHVuZGVyc3RhbmQgV1FfQ1BVX0lOVEVOU0lWRSB0byBiZSBkZXNpZ25lZCBmb3IuDQoNCi0t
+IA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNw
+YWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
