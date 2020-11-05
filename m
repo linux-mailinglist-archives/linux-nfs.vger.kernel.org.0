@@ -2,124 +2,209 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 058C52A86FC
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Nov 2020 20:23:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE2B42A8776
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Nov 2020 20:39:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgKETX1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Nov 2020 14:23:27 -0500
-Received: from mail-bn7nam10on2124.outbound.protection.outlook.com ([40.107.92.124]:9568
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726729AbgKETX0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 5 Nov 2020 14:23:26 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j1w24n67CUIJiZbUnxYFgYUqzbZFxrDy9ac3Vj2s0nUmitHS2ZB7u8KXXoy9JvS5cKzWQgK3lMYKBq7fBgq585YLJW3zMP5lwzc37WeCUiHWvqatJSXM3RS06OPBRa3W8yG8EMF9WhZZH4ppOSnK33uiQp9lQFY/ViyS1lYKUAPtB3BezWVywdL21lbSlFCwOPf/IqIc4/QD6K6gUYwA3d8tvhlu4Vr2SNgkugOYzMIhMyjXEFMM3ONKCfnO9OM7hNW4qxsl9oHHXWJ2jdboImnDzVid8TP3qogcAhYbwF2k8ZYC9mYgswgB6q96gXIOqbPFFIBYT+/1KgV0OA50dQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9pU1y6H/NLmQ1pDGdWZRnT8BYU1MTNvsD7mCtWD2uWY=;
- b=T10ambHubaLsWw2OasjgrYeWmCiScsTqNARl04N7YWzX9YFi5J1tkpovjxmlwkhevGAHmqz+jkA81eN2oUfRClI+HgnCxjSx87REDEou3ZL9nNGdpG3Vw9/JU4ktqXGKgokvpwckKk07oG7h8zV4ewyhgf5Bhy0SWXcZRJw59Lf+T9C/0Wmj13ZPu9FrNI+a8kw42mEOHXjauMp4mm2avEsw7o05+HtFqxAcn5nZIkuPxZonDxDoQvce+S5nhwcec9zClOokaBO1dQ00xj+jF3QUn72uzWmWcf40GSqnFyvemiSHuij/FKJ0qv7UfCO6kf1Ih1ErGCGQBqCuw//4BQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9pU1y6H/NLmQ1pDGdWZRnT8BYU1MTNvsD7mCtWD2uWY=;
- b=dHPkUjw3huweOzRtFDJDeoFhMpvPyNxZ9Yvlq2x5OQSBlge/9NYDLqZHNVfuCUAeg/Lp6VPpu4dsUBvP4GKnHIvdYjHU2j1iLXZRV9FPTmExYgtYLmTEUjTUOXEC5uhhSrSgOzkevdeAnBf/mPdg8cH79FnZ1gF+IZ60gJJ814o=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB3773.namprd13.prod.outlook.com (2603:10b6:208:1e6::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.13; Thu, 5 Nov
- 2020 19:23:23 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.018; Thu, 5 Nov 2020
- 19:23:23 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "neilb@suse.de" <neilb@suse.de>
-Subject: Re: [PATCH/RFC] Does nfsiod need WQ_CPU_INTENSIVE?
-Thread-Topic: [PATCH/RFC] Does nfsiod need WQ_CPU_INTENSIVE?
-Thread-Index: AQHWswhvhyJSBmabJkyvO3MOSPUiVqm57C2A
-Date:   Thu, 5 Nov 2020 19:23:22 +0000
-Message-ID: <37ec02047951a5d61cf9f9f5b4dc7151cd877772.camel@hammerspace.com>
-References: <87sg9or794.fsf@notabene.neil.brown.name>
-In-Reply-To: <87sg9or794.fsf@notabene.neil.brown.name>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c372cf91-7949-4314-d914-08d881c04315
-x-ms-traffictypediagnostic: MN2PR13MB3773:
-x-microsoft-antispam-prvs: <MN2PR13MB37738DC8B4800BA854D8026FB8EE0@MN2PR13MB3773.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EQ5BS/PSJMjiAhqcyat4u0N/bw9fA9f4g4Rm3vLa6hA7vFuzeXvZVwzUxjHMuynKUcE2E1CBPbD97QVhHmXgaXPkUu0PS7KE3ijE4YZfMyn/ocI7YxqjIDQDemfTxLeEYY+Dk+575/ybYNM9wLwJ0ZuqT1b5kK7R8Tf86IisSWyqF9/Lz5h88Q+9F4HkCheHoX6+xRehc+QGJa026f6ZplELPhE3pfwflERvSkvPxxQdensQlx3GtFQoMY9mjs4oQZ8WRd/1GrZe0PlBSr6NQrITmvNjzTbpBXVe+8TkRcwi97PtVU4wMSD4ugLY/W5PCfMO6JORHjCMheYkb27Gzg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(39830400003)(136003)(396003)(366004)(376002)(76116006)(2906002)(110136005)(86362001)(36756003)(71200400001)(6512007)(316002)(91956017)(66476007)(66556008)(66946007)(64756008)(66446008)(8936002)(5660300002)(8676002)(83380400001)(478600001)(26005)(6506007)(186003)(6486002)(2616005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: CJZp9IcGSXITZ42JlYJbEPv/16DwplJVOvUOQ40WTUGq99Nn3FatO/Y6kkF8H11JcyQHI79SUztz0dpg/HHwo6ljC7IwN2jEHXURhOphht1Mw4riWd4EROWQ0jQ1PZYhn4hBEA+FHYT5iCOSvoyK+t0U/eIZOiDR6SZuXgjN9dSoRZqlkw1VYjLYlV5UhgLB2QsYUFB2jPkqkmF1nW3/KVXB2xUMGtEgDynvYi3ZWO53vaV3D0XNH1/2uVvp7tzhbyceyVC132/RQzBW6W560EV83f3dbyKZ0GCMQUsHrLqPJUFveKsxzmcdnPtJCxzORJEqFAfLHlKrWV4xZyMREYBHSAoEd7mt6l589q1fWYKsX4/3SxY6U36tYm7y3tcMTm4ToJZ+reCF0u8rYh/sbh1kx+22vtHiBrUbd27CEvJHYTPTZ8m8086Py2Hw4ppR588qvpi4QAMEfJhbyoxJPO/y2JuRw0SwewdDt7J3fSPnSRYNu3v7z+o7OW22/WFAoN19ayFJuNfGiXll0VlqkfjPGI9CYIDxIUNMZHzIT01OpWvWp6LIHMr7XOxZpvTrRbzSzjOnQfsxRBLcAUag+SU8jh5B/MMDTXRYAYIcdA04mEbRj3XjL4uBigOESh+1HYn15KtrSQOK/PS4qQE82g==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F08187C73B8FF54C872A044CB0437BBB@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1731821AbgKETjb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 5 Nov 2020 14:39:31 -0500
+Received: from sonic301-38.consmr.mail.ne1.yahoo.com ([66.163.184.207]:41011
+        "EHLO sonic301-38.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726729AbgKETja (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Nov 2020 14:39:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1604605168; bh=yeGzDTn11pZYHAlhwK5D5PkK5UrVNOIRPiMTnbvxlSg=; h=To:Cc:References:From:Subject:Date:In-Reply-To:From:Subject; b=L9EAF/yOVgeB7a1uiVCGPuimzcCjHeSoV1oUYUkEy8Rw5BWxKt6W/QYwnDSbVLNzef8PQVDuSV5shTDQh30ZGQ9GCaJ7hcPVtrI0VzBsDfpEQHDVvRDW/13KmVZdA0kVk2sI9yqjArH/L4yZPwCO8dVXzEooRrGl1pgTm9FMzZwHURXMcYde0usi7LMlQ8OBWWsfRoxuP1vOFaPGIcQboYUF7jtI+3GXxXp5pB+ND0S0jPHToln5cbzGa72SDVgVbAXxNOUmnrYiKSej7M5K+u+T/MKenC2ddFDygTby25z/ZvO9KwK5ZzTRaivtKFIxrdtb7Rr2GtsyDrgt1NH7uQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1604605169; bh=ESTqZueWvPPgDt0rNWAwXrDF1Eu9OodtRNvnlgwvPLm=; h=To:From:Subject:Date; b=eWZP4d9SRQJg7hvQktIBMUU0LfJiBkbJl3ReR/heNu6i8b172rm/Jv613Qdj5QzMZJArgFv65YfKZ4gYtBX6QD9LS5Cx00blvvZhWClhvkO0t6zCdJwmD7G9IIUqOeiRuilxg+2e34Lgb/xXoWAWT+ydnrRWGxXyLL3BXgCnLpTdCtR2p4TgPQ+An+HCdYSCR1dKTKCcVmfbxesWJN4ikZo6zpvDfonuyaB+l11Ij+TMw2Bp0yOGyFtoJpuI8YP00OenwY5MYirflwIVgD0z5ConQS7V8taeYYUP7ZE9Lr2bo1sPPMYb2RuUykEC4EezfOn+twY1tpD0J8NlUzHVSg==
+X-YMail-OSG: 0t5oDt0VM1lWSibYg90uqq1JCYXCCJzuTHMNaTJ79E7sGKoqhkEdGvNAyMkCzET
+ G3oS6.PNSFcV5f6o91RhGBsdq68ABoCdhqaMp.MB56MoomM9u8qrLnf19ENXAH4Oh3c6BH7oYNEs
+ 7v4M8RReLPtKMFUuRtSixgbAoCPa303OQTSQrqgrGBgetzk2cYLdjPWok8iO8wiseIRchFQWrDyC
+ xIRyyaCPSH8ZcnQGLgp4OmpY1gQDT8oZOVwFFy9.DivWufpfmpvXpS.g5X4UHfsZKWYjwD8KcXNj
+ Y.8.8Nz_GuuGfrrmKWzyp284enVI5AKnjrLm1QPvgaXt3MHArUvIs88EswZ1gQi9Le4IJR17CP8s
+ MZqIc9c1lzH11Q5YWY4rP21Tf9TYM8uX_._CpdIt3pcuwYhLgaAXeZTNeRmrVlr5VEYdZ5xZYeTf
+ 2ICcZ4AkUy9G2N4EhI11ZqQKHr_ngM3qxieM.gTJgeoOgUdN0YhprUixRFrYVzjnWzOajMj9UcCm
+ a2DunCwnK2ATRcD4XcEaYSRK4Opu.B.v0YRZn4GfQbu8PimVdNn3WMQgJ2dzA18JJqvOHV42Z1Z4
+ S0nUPfHS8uwUtPNt8M0lZsCwbPOGs4dHZFlhfXvot7bzjNEYDFwgy2RKJcZKB6bPf7T5PV6gGW5H
+ 4dYEd_nXQns43xL5gRiGs9ctEh24eYPZ4jL26t1HSFDvrV6JNZ9jZXqj5eSfTfZFpjJA4nEnun.C
+ 05Wi.w5rrWfdvYlF8fPuBiJr6.rmpO7Q5BbdDKyBkcwEjaQrZs.TJy5N0WiSxu2RqL4lPn14yng2
+ AOndlBKjeylRfRcSGUmym8Dq8IFvi4pzOnQIstSa5iEItlfbBMkhc1IkQl0._Tf4tb4ppTLNpxjz
+ 8ASVojswc8GwzIlv2Dmi1riTLPmbkt1WkuJcdsbcjShbaQmCqMoxPViIud80DKpFBMEYVKCqxQEd
+ 8HTq5qWpXgr.tqTpkoC7CXOfOF0Dbo0aBGt_GanFzFt6YwQ4Fu6ZNA7FGAk5.rGWmO7GQKH3768Q
+ FP_AEELx5OkqYf8cEONk65.RClIhL_cbt5x0E08cARQ79JYG5pmQIEngQ8Wae_ze4quCplHji2US
+ NbU3boIcxofzIWa4KfCoA0iRd_vf1OW6wbYwJV8zjb1QF1CBj225SBDRDkGkGpaogH5uc93ew7WP
+ FFf.naDdm21xDWlVWvRq0LPQOAb5K1rY1yIp37GTzEc29nfLqgNP2vzwipWFUoRIOzVehOc7RDgm
+ IIBzCMWydCZ_oWiIKyMFfo_QAPaOQ5tZOodwZ.jOSLL8_V1Quw7AZYbzvLjvPzgcM9ktd6ABPzny
+ Qrvg9xMj2z5V8DKDR5mFQAid.QbFl..rbNb7TiCap5a5geB8eokAeeiFICjWbLNxYUixHfRy0nFR
+ .JRm2QzuHmdVspbBEX3v_WmLAZE1nqblAxSzavui5iJSCUp85RnLCDsaiBzgZGNN86es.F9c3RDn
+ Xl3RwxJWacKBliNilOm_viqkdBIK7a_2Xgnw7krJt5jBqAese0gc1Y0MQr__DHGXKINxjHx7sAd0
+ q6rwQ6xcovknJTIPMRY17BeMbP7XmeTPaM.cFQux9eyCtj02gVSKMFShkGpOV9xNxiXG_gjmaPb9
+ .YMmsC6sx0ccGpXtnhJlvgswVRrUCye88qDDQOpWs_4D0gysWqDWkQ7DpFT7f6ENAkiBiip950Qa
+ 2JSvaH6DwFleUyawZ4PczqS0xi4Oc0sTUmRUlc8G8F0Vlz0xQKd5Z4fLIkwb3mDGefouaSes2hQt
+ HoFpxnAgvLNZYAGOKFgLE7B4CgqSZf_b8BgiYbP2bsB3SvZ2JVFOS_cjWikoIyvXU7mNzxiO243C
+ sj9.0hwf7GX6zN0wQHMVHkPSYDgEatUxkhB2zofctT_LdxIK_wuWDa34mYKi21rLrlvg02yYagb2
+ MjQbNODuzSGfhkUGGzC4GNiXyR1g55P5oIl5NGcmqb072gbG.Q7Ym5No9BQGk6lUPnkszxWMbfc7
+ m0LGQrGaAMhhPW0mEwMvTGS46zguJadt9eQWIRWhlhHTFWKZvSerzSPAr6MqsmFlPW4_jVCaUdGT
+ V45t_oOsJWr22VOF_LLxMpDBW2H0xQAjHwuF6Yj1sEOGiVPutRAo_e7qh_vDV7aLzRsHO7Kk1fy9
+ ZtRGxHzL3xbZtR8qEWj7t3XmKu6gb_J7t4KVJrPglqZvEyAM3JFZugHD.AwKQfbKSDmplz.K7_V8
+ R72Nalq0Bzuaz0x1WwL6CcwB1gDGbRp4B7VVgUPIE3wvIfuKwlBPjFrM5fHf1YW2DMW1VHarEquo
+ nLT8JbPlNAwQnzsNZ3.j58Qad9bEREl6fz0RFgH0Q3xSWKHv1sbANcXU81pZYfbftvwPE_ZUxRIl
+ 78qhXQp.oImumwv3aMCH7mt613Dmf2fbkh9pEDGtowt.4l_nuI5n5ibVen0cUvGQMnbu3HGddZdZ
+ PU_OfiCQIqFWcxPx_ehgk3p3GlDSunBjfj5WQFarAeWOgH8iviZfb3fo93KyO1CegEzJ0K4a_Xwp
+ PGurMDL7ZHwXgn9.PhMD5gXF6XRnbkbdNjlZd7PHWnuORezz4ap6dOrNrjvUYng7u17oD_U4PTYT
+ xKP5KGTB31rbd7a7xEcdYD1XJtXIHv9Xrxixv6u2Dmj71nL0H7ayzeUiPxR.6dsNHwNPRRB1BS1m
+ Ce9c7.vK4U3VA5SSTDvMC7vcG8LMUW1_FQxztPzSCm8AR6PtE3fEnZCHe83idfcyNDTaeF5_74v5
+ zWzc0QKWJQdZyGuYp07_7bxZlZmGnjFAlfhc_Xp076cz3XXY7ZiB5o99h2kC1FCfQcHQC.J8kNja
+ qQO5hOBQSJsfgfF9CfCiR7ySPtq7hr3H2HSdrFupXtKEpbjcg9jlW1ATSXZnqMj.Cv48GMZJHewW
+ .QBRwcbvAA5YWjL6xmILNPClVVjtE6l4hIqIB4kzGGGIFZiscHEr1E9TeOH6lRFHnBbLB5Y5tyhV
+ NfQfDsoUgWUexG8JuIgq2GJUx.9lQlrHcUD0Xv18xCYw08zicPCdkScVU9CfNg3AcChtL4W1YmCD
+ 5s0gX8Pok7g0lFoDIDUB6JJ8J0KW09ZDY2u72u4duaNvS53thN2ChI7NeKI8ZNaZu7OlQNgm8ZtV
+ nEvaHHt_9.YDWCBManovMMx9.SUTVwH70iiCx_as3UqKy.qCjbIst8o.K8Sb4
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.ne1.yahoo.com with HTTP; Thu, 5 Nov 2020 19:39:28 +0000
+Received: by smtp410.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 089eb3219800930c805981760dee0e96;
+          Thu, 05 Nov 2020 19:39:23 +0000 (UTC)
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        paul@paul-moore.com, stephen.smalley.work@gmail.com
+Cc:     linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>
+References: <20201105173328.2539-1-olga.kornievskaia@gmail.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Subject: Re: [PATCH 1/2] [lsm] introduce a new hook to query LSM for
+ functionality
+Message-ID: <30b2b09e-c274-e349-f50b-570e24b33f44@schaufler-ca.com>
+Date:   Thu, 5 Nov 2020 11:39:20 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c372cf91-7949-4314-d914-08d881c04315
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2020 19:23:22.9705
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zrUP3DjX68voV9mXeUnBU2Y2LfyFuWdCv/XkkEIEZldQoSeXo/pB4f8XzDTJoF3/jYoQDsCcXQYzNENZJtGxsQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3773
+In-Reply-To: <20201105173328.2539-1-olga.kornievskaia@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Mailer: WebService/1.1.16944 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.8)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTExLTA1IGF0IDExOjEyICsxMTAwLCBOZWlsQnJvd24gd3JvdGU6DQo+IA0K
-PiBIaSwNCj4gwqBJIGhhdmUgYSBjdXN0b21lciByZXBvcnQgb2YgTkZTIGdldHRpbmcgc3R1Y2sg
-ZHVlIHRvIGEgd29ya3F1ZXVlDQo+IMKgbG9ja3VwLg0KPiANCj4gwqBUaGlzIGFwcGVhcnMgdG8g
-YmUgdHJpZ2dlcmVkIGJ5IGNhbGxpbmcgJ2Nsb3NlJyBvbiBhIDVUQiBmaWxlLg0KPiDCoFRoZSBy
-cGNfcmVsZWFzZSBzZXQgdXAgYnkgbmZzNF9kb19jbG9zZSgpIGNhbGxzIGEgZmluYWwgaXB1dCgp
-DQo+IMKgb24gdGhlIGlub2RlIHdoaWNoIGxlYWRzIHRvIG5mczRfZXZpY3RfaW5vZGUoKSB3aGlj
-aCBjYWxscw0KPiDCoHRydW5jYXRlX2lub2RlX3BhZ2VzX2ZpbmFsKCkuwqAgT24gYSA1VEIgZmls
-ZSwgdGhpcyBjYW4gdGFrZSBhIGxpdHRsZQ0KPiDCoHdoaWxlLg0KPiANCj4gwqBEb2N1bWVudGF0
-aW9uIGZvciB3b3JrcXVldWUgc2F5cw0KPiDCoMKgIEdlbmVyYWxseSwgd29yayBpdGVtcyBhcmUg
-bm90IGV4cGVjdGVkIHRvIGhvZyBhIENQVSBhbmQgY29uc3VtZQ0KPiBtYW55DQo+IMKgwqAgY3lj
-bGVzLg0KPiANCj4gwqBzbyBtYXliZSB0aGF0IGlzbid0IGEgZ29vZCBpZGVhLg0KPiDCoHRydW5j
-YXRlX2lub2RlX3BhZ2VzX2ZpbmFsKCkgZG9lcyBjYWxsIGNvbmRfcmVzY2hlZCgpLCBidXQgd29y
-a3F1ZXVlDQo+IMKgZG9lc24ndCB0YWtlIG5vdGljZSBvZiB0aGF0LsKgIEJ5IGRlZmF1bHQgaXQg
-b25seSBydW5zIG1vcmUgdGhyZWFkcw0KPiBvbg0KPiDCoHRoZSBzYW1lIENQVSBpZiB0aGUgZmly
-c3QgdGhyZWFkIGFjdHVhbGx5IHNsZWVwcy7CoCBTbyB0aGUgbmV0IHJlc3VsdA0KPiBpcw0KPiDC
-oHRoYXQgdGhlcmUgYXJlIGxvdHMgb2YgcnBjX2FzeW5jX3NjaGVkdWxlIHRhc2tzIHF1ZXVlZCB1
-cCBiZWhpbmQgdGhlDQo+IMKgaXB1dCwgd2FpdGluZyBmb3IgaXQgdG8gZmluaXNoIHJhdGhlciB0
-aGFuIHJ1bm5pbmcgY29uY3VycmVudGx5Lg0KPiANCj4gwqBJIGJlbGlldmUgdGhpcyBjYW4gYmUg
-Zml4ZWQgYnkgc2V0dGluZyBXUV9DUFVfSU5URU5TSVZFIG9uIHRoZQ0KPiBuZnNpb2QNCj4gwqB3
-b3JrcXVldWUuwqAgVGhpcyBmbGFnIGNhdXNlcyB0aGUgd29ya3F1ZXVlIGNvcmUgdG8gc2NoZWR1
-bGUgbW9yZQ0KPiDCoHRocmVhZHMgYXMgbmVlZGVkIGV2ZW4gaWYgdGhlIGV4aXN0aW5nIHRocmVh
-ZHMgbmV2ZXIgc2xlZXAuDQo+IMKgSSBkb24ndCBrbm93IGlmIHRoaXMgaXMgYSBnb29kIGlkZWEg
-YXMgaXQgbWlnaHQgc3BhbnMgbG90cyBvZg0KPiB0aHJlYWRzDQo+IMKgbmVlZGxlc3NseSB3aGVu
-IHJwY19yZWxlYXNlIGZ1bmN0aW9ucyBkb24ndCBoYXZlIGxvdHMgb2Ygd29yayB0byBkby4NCj4g
-DQo+IMKgQW5vdGhlciBvcHRpb24gbWlnaHQgYmUgdG8gY3JlYXRlIGEgc2VwYXJhdGUNCj4gbmZz
-aW9kX2ludGVuc2l2ZV93b3JrcXVldWUNCj4gwqB3aXRoIHRoaXMgZmxhZyBzZXQsIGFuZCBoYW5k
-IGFsbCBpcHV0IHJlcXVlc3RzIG92ZXIgdG8gdGhpcw0KPiB3b3JrcXVldWUuDQo+IA0KPiDCoEkn
-dmUgYXNrZWQgZm9yIHRoZSBjdXN0b21lciB0byB0ZXN0IHdpdGggdGhpcyBzaW1wbGUgcGF0Y2gu
-DQo+IA0KPiDCoEFueSB0aG91Z2h0cyBvciBzdWdnZXN0aW9ucyBtb3N0IHdlbGNvbWUsDQo+IA0K
-DQpJc24ndCB0aGlzIGEgZ2VuZXJhbCBwcm9ibGVtIChpLmUuIG9uZSB0aGF0IGlzIG5vdCBzcGVj
-aWZpYyB0byBORlMpDQp3aGVuIHlvdSBoYXZlIG11bHRpLXRlcmFieXRlIGNhY2hlcz8gV2h5IHdv
-dWxkbid0IGlvX3VyaW5nIGJlDQp2dWxuZXJhYmxlIHRvIHRoZSBzYW1lIGlzc3VlLCBmb3IgaW5z
-dGFuY2U/DQoNClRoZSB0aGluZyBpcyB0aGF0IHRydW5jYXRlX2lub2RlX3BhZ2VzKCkgaGFzIHBs
-ZW50eSBvZiBsYXRlbmN5IHJlZHVjaW5nDQpjb25kX3NjaGVkKCkgY2FsbHMgdGhhdCBzaG91bGQg
-ZW5zdXJlIHRoYXQgb3RoZXIgdGhyZWFkcyBnZXQgc2NoZWR1bGVkLA0Kc28gdGhpcyBwcm9ibGVt
-IGRvZXNuJ3Qgc3RyaWN0bHkgbWVldCB0aGUgJ0NQVSBpbnRlbnNpdmUnIGNyaXRlcmlvbg0KdGhh
-dCBJIHVuZGVyc3RhbmQgV1FfQ1BVX0lOVEVOU0lWRSB0byBiZSBkZXNpZ25lZCBmb3IuDQoNCi0t
-IA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNw
-YWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+On 11/5/2020 9:33 AM, Olga Kornievskaia wrote:
+> From: Olga Kornievskaia <kolga@netapp.com>
+>
+> Add a new hook func_query_vfs to query an LSM module (such as
+> SELinux) with the intention of finding whether or not it is enabled
+> or perhaps supports some functionality.
+>
+> NFS stores security labels for file system objects and SElinux
+> or any other LSM module can query those objects. But it's
+> wasteful to do so when no security enforcement is taking place.
+> Using a new API call of security_func_query_vfs() and asking if
+
+As I mentioned earlier, this is a sub-optimal implementation.
+Instead of adding a func_query_vfs() hook add a field to
+security_hook_list and have the LSM declare the "features"
+it supports there. security_add_hooks() can gather the "features"
+for the whole system into a single mask. security_func_query_vfs()
+can then just return that mask.
+
+> Suggested-by: Paul Moore <paul@paul-moore.com>
+> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> ---
+>  include/linux/lsm_hook_defs.h | 1 +
+>  include/linux/security.h      | 4 ++++
+>  security/security.c           | 6 ++++++
+>  security/selinux/hooks.c      | 7 +++++++
+>  4 files changed, 18 insertions(+)
+>
+> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_def=
+s.h
+> index 32a940117e7a..df3454a1fcac 100644
+> --- a/include/linux/lsm_hook_defs.h
+> +++ b/include/linux/lsm_hook_defs.h
+> @@ -257,6 +257,7 @@ LSM_HOOK(int, 0, inode_notifysecctx, struct inode *=
+inode, void *ctx, u32 ctxlen)
+>  LSM_HOOK(int, 0, inode_setsecctx, struct dentry *dentry, void *ctx, u3=
+2 ctxlen)
+>  LSM_HOOK(int, 0, inode_getsecctx, struct inode *inode, void **ctx,
+>  	 u32 *ctxlen)
+> +LSM_HOOK(int, 0, func_query_vfs, unsigned int)
+> =20
+>  #if defined(CONFIG_SECURITY) && defined(CONFIG_WATCH_QUEUE)
+>  LSM_HOOK(int, 0, post_notification, const struct cred *w_cred,
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index bc2725491560..e15964059fa4 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -456,6 +456,10 @@ int security_inode_notifysecctx(struct inode *inod=
+e, void *ctx, u32 ctxlen);
+>  int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctx=
+len);
+>  int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctx=
+len);
+>  int security_locked_down(enum lockdown_reason what);
+> +#define LSM_FQUERY_VFS_NONE     0x00000000
+> +#define LSM_FQUERY_VFS_XATTRS   0x00000001
+
+This is the wrong granularity for the task at hand.
+You don't care if an LSM supports vfs xattrs. You care if
+the LSM provides an xattr that may be propagated by NFS
+for the purpose of mandatory access control. An LSM that
+provides time-of-day controls may use xattrs that are
+meaningless to NFS.
+
+
+> +int security_func_query_vfs(unsigned int flags);
+> +
+>  #else /* CONFIG_SECURITY */
+> =20
+>  static inline int call_blocking_lsm_notifier(enum lsm_event event, voi=
+d *data)
+> diff --git a/security/security.c b/security/security.c
+> index a28045dc9e7f..502b33865238 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -2067,6 +2067,12 @@ int security_inode_getsecctx(struct inode *inode=
+, void **ctx, u32 *ctxlen)
+>  }
+>  EXPORT_SYMBOL(security_inode_getsecctx);
+> =20
+> +int security_func_query_vfs(unsigned int flags)
+> +{
+> +	return call_int_hook(func_query_vfs, 0, flags);
+> +}
+> +EXPORT_SYMBOL(security_func_query_vfs);
+> +
+>  #ifdef CONFIG_WATCH_QUEUE
+>  int security_post_notification(const struct cred *w_cred,
+>  			       const struct cred *cred,
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 6b1826fc3658..38f47570e214 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -92,6 +92,7 @@
+>  #include <uapi/linux/mount.h>
+>  #include <linux/fsnotify.h>
+>  #include <linux/fanotify.h>
+> +#include <linux/security.h>
+> =20
+>  #include "avc.h"
+>  #include "objsec.h"
+> @@ -6502,6 +6503,11 @@ static void selinux_inode_invalidate_secctx(stru=
+ct inode *inode)
+>  	spin_unlock(&isec->lock);
+>  }
+> =20
+> +static int selinux_func_query_vfs(unsigned int flags)
+> +{
+> +	return !!(flags & LSM_FQUERY_VFS_XATTRS);
+> +}
+> +
+>  /*
+>   *	called with inode->i_mutex locked
+>   */
+> @@ -7085,6 +7091,7 @@ static struct security_hook_list selinux_hooks[] =
+__lsm_ro_after_init =3D {
+>  	LSM_HOOK_INIT(inode_invalidate_secctx, selinux_inode_invalidate_secct=
+x),
+>  	LSM_HOOK_INIT(inode_notifysecctx, selinux_inode_notifysecctx),
+>  	LSM_HOOK_INIT(inode_setsecctx, selinux_inode_setsecctx),
+> +	LSM_HOOK_INIT(func_query_vfs, selinux_func_query_vfs),
+> =20
+>  	LSM_HOOK_INIT(unix_stream_connect, selinux_socket_unix_stream_connect=
+),
+>  	LSM_HOOK_INIT(unix_may_send, selinux_socket_unix_may_send),
+
