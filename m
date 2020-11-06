@@ -2,214 +2,115 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 458912A9703
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Nov 2020 14:31:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B43A02A979D
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Nov 2020 15:29:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbgKFNbc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Nov 2020 08:31:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45385 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727214AbgKFNbb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Nov 2020 08:31:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604669488;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=L6eSX+4KBZhp1TaWfCGjj2f9CX5uzJCTLnz3d803aIs=;
-        b=BIY2slOowSc/Sr/jrZg0YkmzOEtgGqfhoC00cgrv4iyrPWlzCkvpFConFMhc3J+88kcR/q
-        QFbzo2wcC/3sBW1ahnpak6Tica4+nDDywT/DekZs+K+Rnz/9YGJSbt6RXX8/r/tx7tMO32
-        NB57p6z5kunFCZ4d6bJLIdJVZ4oDKsQ=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-267-asf_e8w5NN6qAuYiBWHpkg-1; Fri, 06 Nov 2020 08:31:26 -0500
-X-MC-Unique: asf_e8w5NN6qAuYiBWHpkg-1
-Received: by mail-ed1-f72.google.com with SMTP id c24so529620edx.2
-        for <linux-nfs@vger.kernel.org>; Fri, 06 Nov 2020 05:31:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L6eSX+4KBZhp1TaWfCGjj2f9CX5uzJCTLnz3d803aIs=;
-        b=TwFA5ScnHm9Jmd/MOlHTj2vJFpXKFpGFzntXyLqxsN66IX2jRIHDtIk6xaA8fco3UN
-         1ilUPImASY+OoTOfp4LGeNpk8/IF0pf6Yh2aS2VutGhbGXqEi1bwn/qfWczeJstArGUx
-         3EHOmTi4QZ2TomDFtSvz0cFLQIEr737XSW+wz+XdAQeXa9tUVst18+7t/71ZiPrQjXrH
-         Qwc4x9N69RBlLxdPMj0SuJtk0DAlMgb8YuqTxQ4CaUHyShIJYjTwYuRTH/KezpIArliK
-         QCYRYZDFXN2bJ6snqSrKSkikVc6ELawVdX1Pg70cd8bXP9Nq84808buZy8towoH9XdGQ
-         dnxA==
-X-Gm-Message-State: AOAM5312AyQzn3Q3G9ht1FQ7Zm9q/3l7udFDrSKOh4pEKkV1VXv0x8X1
-        TS4X9xe+04YlvcBbbzJpEuhEkodxWuts0nMZmMUVJ9/w+gwDQiJP2tkuNwU4Wwi3to/216X+cSz
-        ZgPHiPelcczV6bQdyWRdaTHKcmxD5d3KGVhsf
-X-Received: by 2002:a17:906:17d1:: with SMTP id u17mr1901948eje.229.1604669485542;
-        Fri, 06 Nov 2020 05:31:25 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxXESpo24zdjKFj5ZLjdYlOr2+tHN8CbbbEyox81tQZtX/zlmDrQuOhIadmSLUpjgXnw6mJLvST+7QDjGk3DdM=
-X-Received: by 2002:a17:906:17d1:: with SMTP id u17mr1901932eje.229.1604669485278;
- Fri, 06 Nov 2020 05:31:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20201104161638.300324-1-trond.myklebust@hammerspace.com>
- <20201104161638.300324-2-trond.myklebust@hammerspace.com> <20201104161638.300324-3-trond.myklebust@hammerspace.com>
- <20201104161638.300324-4-trond.myklebust@hammerspace.com> <20201104161638.300324-5-trond.myklebust@hammerspace.com>
- <20201104161638.300324-6-trond.myklebust@hammerspace.com>
-In-Reply-To: <20201104161638.300324-6-trond.myklebust@hammerspace.com>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Fri, 6 Nov 2020 08:30:49 -0500
-Message-ID: <CALF+zOnirS++y=pW8HRtzwdric15ixuAiqTL9YiYh2-NdDd=0Q@mail.gmail.com>
-Subject: Re: [PATCH v3 05/17] NFS: Don't discard readdir results
-To:     Trond Myklebust <trondmy@gmail.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1727166AbgKFO3Z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Nov 2020 09:29:25 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:51586 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbgKFO3Z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Nov 2020 09:29:25 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A6ENesH021034;
+        Fri, 6 Nov 2020 14:29:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=rUuKUtCppy6N7dcPp/iTA5mbc0TMv6fJgcRziHZpC20=;
+ b=Dd39j+/xwBKyq/0IMT/7HHrHUm0IxZv6vO6qJfaG8WUqc0NmWgaB8AjwXX+yjD/c/QYC
+ 0p+FbiPHjVdS4gpvymVPY1vP+IfLmsvr7l/4aO8JAHLnqIPikqQM7S2/JevA5RI0D79H
+ Vc6XhEMMzaSkxw3SNYNTmUAfwkZOwUcyGGVR3V4tn8u8m5AsjJLjcaaa+T1Ap/5B3G5l
+ 52elooT9ZkmFeTtln+OgnQ75FYzgVq7iZ/m3gxIuztdTknd9OtSRdj8MQ3zOqQD89Ujh
+ soipQ4rK7cKM+cOE/Ga68o3QPGqrCxX1S+p+lwjajTuM40I3SFDwi5HXbNalajsNG4i0 nA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 34hhb2h5eb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 06 Nov 2020 14:29:16 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A6EOxAE069445;
+        Fri, 6 Nov 2020 14:29:16 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 34jf4e25jm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Nov 2020 14:29:16 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0A6ETE66006981;
+        Fri, 6 Nov 2020 14:29:14 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 06 Nov 2020 06:29:14 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [PATCH] nfsd/nfs3: remove unused macro nfsd3_fhandleres
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <1604641257-6159-1-git-send-email-alex.shi@linux.alibaba.com>
+Date:   Fri, 6 Nov 2020 09:29:11 -0500
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <94040377-C2A4-47DF-BBA1-16573F69739D@oracle.com>
+References: <1604641257-6159-1-git-send-email-alex.shi@linux.alibaba.com>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9796 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
+ bulkscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011060104
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9796 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 suspectscore=0
+ clxscore=1011 mlxlogscore=999 impostorscore=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011060104
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Nov 4, 2020 at 11:27 AM <trondmy@gmail.com> wrote:
->
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->
-> If a readdir call returns more data than we can fit into one page
-> cache page, then allocate a new one for that data rather than
-> discarding the data.
->
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+
+
+> On Nov 6, 2020, at 12:40 AM, Alex Shi <alex.shi@linux.alibaba.com> wrote:
+> 
+> The macro is unused, remove it to tame gcc warning:
+> fs/nfsd/nfs3proc.c:702:0: warning: macro "nfsd3_fhandleres" is not used
+> [-Wunused-macros]
+> 
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: "J. Bruce Fields" <bfields@fieldses.org> 
+> Cc: Chuck Lever <chuck.lever@oracle.com> 
+> Cc: linux-nfs@vger.kernel.org 
+> Cc: linux-kernel@vger.kernel.org 
 > ---
->  fs/nfs/dir.c | 46 ++++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 42 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> index 842f69120a01..f7248145c333 100644
-> --- a/fs/nfs/dir.c
-> +++ b/fs/nfs/dir.c
-> @@ -320,6 +320,26 @@ static void nfs_readdir_page_set_eof(struct page *page)
->         kunmap_atomic(array);
->  }
->
-> +static void nfs_readdir_page_unlock_and_put(struct page *page)
-> +{
-> +       unlock_page(page);
-> +       put_page(page);
-> +}
-> +
-> +static struct page *nfs_readdir_page_get_next(struct address_space *mapping,
-> +                                             pgoff_t index, u64 cookie)
-> +{
-> +       struct page *page;
-> +
-> +       page = nfs_readdir_page_get_locked(mapping, index, cookie);
-> +       if (page) {
-> +               if (nfs_readdir_page_last_cookie(page) == cookie)
-> +                       return page;
-> +               nfs_readdir_page_unlock_and_put(page);
-> +       }
-> +       return NULL;
-> +}
-> +
->  static inline
->  int is_32bit_api(void)
->  {
-> @@ -637,13 +657,15 @@ void nfs_prime_dcache(struct dentry *parent, struct nfs_entry *entry,
->  }
->
->  /* Perform conversion from xdr to cache array */
-> -static
-> -int nfs_readdir_page_filler(nfs_readdir_descriptor_t *desc, struct nfs_entry *entry,
-> -                               struct page **xdr_pages, struct page *page, unsigned int buflen)
-> +static int nfs_readdir_page_filler(struct nfs_readdir_descriptor *desc,
-> +                                  struct nfs_entry *entry,
-> +                                  struct page **xdr_pages,
-> +                                  struct page *fillme, unsigned int buflen)
->  {
-> +       struct address_space *mapping = desc->file->f_mapping;
->         struct xdr_stream stream;
->         struct xdr_buf buf;
-> -       struct page *scratch;
-> +       struct page *scratch, *new, *page = fillme;
->         int status;
->
->         scratch = alloc_page(GFP_KERNEL);
-> @@ -666,6 +688,19 @@ int nfs_readdir_page_filler(nfs_readdir_descriptor_t *desc, struct nfs_entry *en
->                                         desc->dir_verifier);
->
->                 status = nfs_readdir_add_to_array(entry, page);
-> +               if (status != -ENOSPC)
-> +                       continue;
-> +
-> +               if (page->mapping != mapping)
-> +                       break;
-> +               new = nfs_readdir_page_get_next(mapping, page->index + 1,
-> +                                               entry->prev_cookie);
-> +               if (!new)
-> +                       break;
-> +               if (page != fillme)
-> +                       nfs_readdir_page_unlock_and_put(page);
-> +               page = new;
-> +               status = nfs_readdir_add_to_array(entry, page);
->         } while (!status && !entry->eof);
->
->         switch (status) {
-> @@ -681,6 +716,9 @@ int nfs_readdir_page_filler(nfs_readdir_descriptor_t *desc, struct nfs_entry *en
->                 break;
->         }
->
-> +       if (page != fillme)
-> +               nfs_readdir_page_unlock_and_put(page);
-> +
->         put_page(scratch);
->         return status;
->  }
-> --
-> 2.28.0
->
+> fs/nfsd/nfs3proc.c | 1 -
+> 1 file changed, 1 deletion(-)
+> 
+> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+> index 781e265921aa..6e79bae0af4d 100644
+> --- a/fs/nfsd/nfs3proc.c
+> +++ b/fs/nfsd/nfs3proc.c
+> @@ -687,7 +687,6 @@
+> #define nfsd3_mkdirargs			nfsd3_createargs
+> #define nfsd3_readdirplusargs		nfsd3_readdirargs
+> #define nfsd3_fhandleargs		nfsd_fhandle
+> -#define nfsd3_fhandleres		nfsd3_attrstat
+> #define nfsd3_attrstatres		nfsd3_attrstat
+> #define nfsd3_wccstatres		nfsd3_attrstat
+> #define nfsd3_createres			nfsd3_diropres
+> -- 
+> 1.8.3.1
 
-It doesn't look like this handles uncached_readdir.  Were you planning
-on addressing that somehow, or should we think about something like
-this to move dtsize up as a parameter to nfs_readdir_xdr_to_array(),
-and force uncached_readdir() to 1 page:
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index b6c3501e8f61..ca30e2dbb9c3 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -791,13 +791,12 @@ static struct page
-**nfs_readdir_alloc_pages(size_t npages)
+Applied to cel-next, thanks Alex.
 
- static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *desc,
-                                    struct page *page, __be32 *verf_arg,
--                                   __be32 *verf_res)
-+                                   __be32 *verf_res, size_t dtsize)
- {
-        struct page **pages;
-        struct nfs_entry *entry;
-        size_t array_size;
-        struct inode *inode = file_inode(desc->file);
--       size_t dtsize = NFS_SERVER(inode)->dtsize;
-        int status = -ENOMEM;
+The topic branch that collects patches for nfsd-5.11 is here:
 
-        entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-@@ -879,13 +878,15 @@ static int find_and_lock_cache_page(struct
-nfs_readdir_descriptor *desc)
-        struct nfs_inode *nfsi = NFS_I(inode);
-        __be32 verf[NFS_DIR_VERIFIER_SIZE];
-        int res;
-+       size_t dtsize = NFS_SERVER(inode)->dtsize;
+http://git.linux-nfs.org/?p=cel/cel-2.6.git;a=shortlog;h=refs/heads/cel-next
 
-        desc->page = nfs_readdir_page_get_cached(desc);
-        if (!desc->page)
-                return -ENOMEM;
-        if (nfs_readdir_page_needs_filling(desc->page)) {
-                res = nfs_readdir_xdr_to_array(desc, desc->page,
--                                              nfsi->cookieverf, verf);
-+                                              nfsi->cookieverf, verf,
-+                                              dtsize);
-                if (res < 0) {
-                        nfs_readdir_page_unlock_and_put_cached(desc);
-                        if (res == -EBADCOOKIE || res == -ENOTSYNC) {
-@@ -995,7 +996,8 @@ static int uncached_readdir(struct
-nfs_readdir_descriptor *desc)
-        desc->duped = 0;
 
-        nfs_readdir_page_init_array(page, desc->dir_cookie);
--       status = nfs_readdir_xdr_to_array(desc, page, desc->verf, verf);
-+       status = nfs_readdir_xdr_to_array(desc, page, desc->verf, verf,
-+                                         PAGE_SIZE);
-        if (status < 0)
-                goto out_release;
+--
+Chuck Lever
+
+
 
