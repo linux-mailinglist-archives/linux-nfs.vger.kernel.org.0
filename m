@@ -2,109 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE3B92A9F53
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Nov 2020 22:46:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E6C42A9F8A
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Nov 2020 22:51:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgKFVqm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Nov 2020 16:46:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56370 "EHLO
+        id S1728639AbgKFVv3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Nov 2020 16:51:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728248AbgKFVql (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Nov 2020 16:46:41 -0500
+        with ESMTP id S1728464AbgKFVv2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Nov 2020 16:51:28 -0500
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84971C0613CF
-        for <linux-nfs@vger.kernel.org>; Fri,  6 Nov 2020 13:46:41 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1683C0613CF
+        for <linux-nfs@vger.kernel.org>; Fri,  6 Nov 2020 13:51:28 -0800 (PST)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id C82F91C25; Fri,  6 Nov 2020 16:46:40 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C82F91C25
+        id 5BF1C4F3A; Fri,  6 Nov 2020 16:51:28 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 5BF1C4F3A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1604699200;
-        bh=oW153lG2+05KF1LNE5994hXucYNr+yUdm6JrOctUyx8=;
+        s=default; t=1604699488;
+        bh=9FlJEdCBypkoSaNwr8y05npAfUl3p+m6UrQhT0+QP9Q=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EsGhCcy3VFr5EHudVR1FjxK5tzxCNhzVJEAGSJbJXWe3uXOqQuvI5Vfkeie06FjaI
-         fh5jRA7GGGhp/5ObAdU9PV8TSk9rMP8jjTjMCw3oVghlUHr5iPPM9QcwGscsx+SSWF
-         nS8jZZ/cXUX09xuLe6Xv3V+IwZc4EIFkZCKydLFM=
-Date:   Fri, 6 Nov 2020 16:46:40 -0500
+        b=PU/TPClO3jHXOK4nFwhSsLprkjiS8Z2BDU7xnE5yrH3ozFnvN9EeQiHwHehvsjrA5
+         UoQgMMua8odMwPaBWROFNSJUiRk/NbEuYGrkCcRkrIKYg/h6Jr4V8Y50z/yo58EKhh
+         JlrvA9kHIJk63h/O1QOipgZpS20zw0iDuBrW8JEg=
+Date:   Fri, 6 Nov 2020 16:51:28 -0500
 From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Vasyl Vavrychuk <vvavrychuk@gmail.com>
-Cc:     Patrick Goetz <pgoetz@math.utexas.edu>, linux-nfs@vger.kernel.org
-Subject: Re: Hard linking symlink does not work
-Message-ID: <20201106214640.GC26028@fieldses.org>
-References: <CAGj4m+5rpNqW=XnU2cxGmWiBi47w3XTvn9EGekVPjq74pHfFGA@mail.gmail.com>
- <20201027171240.GA1644@fieldses.org>
- <5dddc4b5-7777-859e-2730-28afc3067c57@math.utexas.edu>
- <CAGj4m+5j1ZK+=-4w6LpRLsnEPvi=UfpO3r8PruRtcJib9gbYyQ@mail.gmail.com>
+To:     Roberto Bergantinos Corpas <rbergant@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] sunrpc : make RPC channel buffer dynamic for slow case
+Message-ID: <20201106215128.GD26028@fieldses.org>
+References: <20201026150530.29019-1-rbergant@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGj4m+5j1ZK+=-4w6LpRLsnEPvi=UfpO3r8PruRtcJib9gbYyQ@mail.gmail.com>
+In-Reply-To: <20201026150530.29019-1-rbergant@redhat.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 10:53:20AM +0200, Vasyl Vavrychuk wrote:
-> Thanks for replies about my problem. It is actually a practical one...
-> 
-> I need to compile Yocto BSP which builds only under older
-> distributions. For convenience I have established a Vagrant virtual
-> machine which uses NFS to share workspace with the host machine.
-> 
-> Now coming back to hardlinking symlinks.
-> 
-> Yocto build system uses hardlinks to prepare sysroot for packages, and
-> symlinks are part of that sysroot provided by other packages.
+On Mon, Oct 26, 2020 at 04:05:30PM +0100, Roberto Bergantinos Corpas wrote:
+> RPC channel buffer size for slow case (user buffer bigger than
+> one page) can be converted into dymanic and also allows us to
+> prescind from queue_io_mutex
 
-For what it's worth, I can't reproduce the problem, linking a symlink
-works fine for me.
+Sorry for the slow response.
 
-What's your server?  (OS, version, exported filesystem?)
+Let's just remove cache_slow_downcall and the find_or_create_page()
+thing and just do a kvmalloc() from the start.  I don't understand why
+we need to be more complicated.
 
 --b.
 
 > 
-> On Tue, Oct 27, 2020 at 10:03 PM Patrick Goetz <pgoetz@math.utexas.edu> wrote:
-> >
-> >
-> >
-> > On 10/27/20 12:12 PM, J. Bruce Fields wrote:
-> > > On Fri, Oct 23, 2020 at 01:13:02PM +0300, Vasyl Vavrychuk wrote:
-> > >> I have found that hard links for regular files works well for me over NFS:
-> > >>
-> > >> $ touch bar
-> > >> $ ln bar tata
-> > >>
-> > >> But if I try to make hard link for symlink, then it fails:
-> > >>
-> > >> $ ln -s foo bar
-> > >> $ ln bar tata
-> > >> ln: failed to create hard link 'tata' => 'bar': Operation not permitted
-> > >
-> > > Huh.  I'm not sure I even realized it was possible to hardlink symlinks.
-> > > Makes sense, I guess.
-> >
-> > What's even the use case for hard linking a symlink?  That sounds like
-> > asking for trouble...
-> >
-> >
-> > >
-> > > I think my first step debugging this would be to watch wireshark while
-> > > attempting the "ln", and see what happens.  That should tell us whether
-> > > it's the client or server that's failing the operation.
-> > >
-> > > --b.
-> > >
-> > >>
-> > >> I am using NFSv4 with Vagrant, here is mount entry:
-> > >>
-> > >> 172.28.128.1:PATH on /vagrant type nfs4
-> > >> (rw,relatime,vers=4.0,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,port=0,timeo=600,retrans=2,sec=sys,clientaddr=IP,local_lock=none,addr=IP)
-> > >>
-> > >> I have also verified that rpc-statd is running on host.
-> > >>
-> > >> Host machine is Ubuntu 18.04 with NFS packages version 1:1.3.4-2.1ubuntu5.3.
-> > >>
-> > >> Will appreciate help on this.
-> > >>
-> > >> Thanks,
-> > >> Vasyl
+> Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+> ---
+>  net/sunrpc/cache.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+> index baef5ee43dbb..325393f75e17 100644
+> --- a/net/sunrpc/cache.c
+> +++ b/net/sunrpc/cache.c
+> @@ -777,7 +777,6 @@ void cache_clean_deferred(void *owner)
+>   */
+>  
+>  static DEFINE_SPINLOCK(queue_lock);
+> -static DEFINE_MUTEX(queue_io_mutex);
+>  
+>  struct cache_queue {
+>  	struct list_head	list;
+> @@ -908,14 +907,18 @@ static ssize_t cache_do_downcall(char *kaddr, const char __user *buf,
+>  static ssize_t cache_slow_downcall(const char __user *buf,
+>  				   size_t count, struct cache_detail *cd)
+>  {
+> -	static char write_buf[8192]; /* protected by queue_io_mutex */
+> +	char *write_buf;
+>  	ssize_t ret = -EINVAL;
+>  
+> -	if (count >= sizeof(write_buf))
+> +	if (count >= 32768) /* 32k is max userland buffer, lets check anyway */
+>  		goto out;
+> -	mutex_lock(&queue_io_mutex);
+> +
+> +	write_buf = kvmalloc(count + 1, GFP_KERNEL);
+> +	if (!write_buf)
+> +		return -ENOMEM;
+> +
+>  	ret = cache_do_downcall(write_buf, buf, count, cd);
+> -	mutex_unlock(&queue_io_mutex);
+> +	kvfree(write_buf);
+>  out:
+>  	return ret;
+>  }
+> -- 
+> 2.21.0
