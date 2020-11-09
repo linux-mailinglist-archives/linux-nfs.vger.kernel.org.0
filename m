@@ -2,61 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EA6F2AC70A
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Nov 2020 22:21:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16BD12AC70B
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Nov 2020 22:21:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbgKIVUo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 9 Nov 2020 16:20:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42380 "EHLO
+        id S1730646AbgKIVUp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 9 Nov 2020 16:20:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730490AbgKIVUn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Nov 2020 16:20:43 -0500
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83349C0613CF
-        for <linux-nfs@vger.kernel.org>; Mon,  9 Nov 2020 13:20:43 -0800 (PST)
-Received: by mail-qt1-x844.google.com with SMTP id v11so6725991qtq.12
-        for <linux-nfs@vger.kernel.org>; Mon, 09 Nov 2020 13:20:43 -0800 (PST)
+        with ESMTP id S1730490AbgKIVUo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Nov 2020 16:20:44 -0500
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A61EDC0613D3
+        for <linux-nfs@vger.kernel.org>; Mon,  9 Nov 2020 13:20:44 -0800 (PST)
+Received: by mail-qt1-x843.google.com with SMTP id p12so7107602qtp.7
+        for <linux-nfs@vger.kernel.org>; Mon, 09 Nov 2020 13:20:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=VVMQUbJ4iznq9ND4iOH8VfAwBPVr6YZBnHjxRO8Npmc=;
-        b=isEGDJxBLKuwAPFwY3EanSDcpN7f12pclu407bvwfkQDK6HYIzcy9qfEcdBk5p6z9m
-         9fBM1bHHGnfevGwEVjQJT+ZKZ0RBn6KRebScjXCD1NDQIh17q/Z1LTSUsPkP+LAX/iUd
-         Sm1pm1/AV2bBQA5nnonLh79dFFth5IAX4PDg1A0zS1YifnTzwlfZgBF3xjOErVWuwzxp
-         4KrSj8UWX3eISK2vg+L0gD4jRPxxpo3acDSbLOxV+aGpqkifND48drsUhARPmiv8M40K
-         75/606afeoA6dtD8GkNMAlkybjASXmnYirRAnSFXJG/ZMH+/rN34eO7qrr22R/+vuHWA
-         1HKQ==
+        bh=areiMMXZzlnhm2wpgeZFwm/3fbilrhaLYUTcNjpnIv8=;
+        b=B9HpvBh/MNXu2M9eSgNLiiT6p+sCWevAqFN88QbHr0tv9aI7A32lVzsXN+7OYa3ZA/
+         ouCAXEMIVJO+F1VN0SYvz3CpJDiYzmwcXqEjB0q9IdfBdxRaFG57dfJIM354s28nguo+
+         dDOGZJr+JigXbr1z1xPdjqGCjgFcZl9sI7iyWD5VppqdKvQwdBE10sHFFHkIEPk5WL5P
+         aVfWeJAne0GPpVZMW899zJHavl56ibohMjYUYJCSft0LnUucKvjk4Cv3Z56FgCZmwcGI
+         myVOGiJEebCOYQdkTKPYuN1QiuSGEUgUfizOu/mZvgQsAbAnivTPVH8b/zdVS6kqAbHs
+         ywNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VVMQUbJ4iznq9ND4iOH8VfAwBPVr6YZBnHjxRO8Npmc=;
-        b=jc7fhg6wiViY78759JjZRSwSE3hDs1Aog/8zPf99qUQhW83445z10IQ0yNRhxr/ySH
-         ViQWtaZmD1bAo/t9cRXgZjaV6VRCmnFW2LCX56e+q8TvyZm2cPGGmsBJE/Mhtl3j/xsP
-         q1XXTo8q79YUXap8YMds7joiZDJJ0aknYwY8a3Q2/3gdkyuD7wySN8RDu76UhDgPc07G
-         gm/me9qWVz8rBFtO0zccgn640//2TgMlVTHQu1PVLlF2KsOCrgWhW95bDaMb3AHfIRCe
-         0muXVSqDML7oG5JYa1QXiCbu/0P2XiFwc0DvH0RbxZXu0CLE6Mhv2WwMl1tdZTBJNfLl
-         6OgA==
-X-Gm-Message-State: AOAM531bldZY20qQLNi7X7mQH/2kRNb4i29WZBqxm6y3X3IrEyg4Md7Z
-        HFzmtrpisNcAiknxXe5M+zYBTnuypivr
-X-Google-Smtp-Source: ABdhPJxITZz/V5F+GMrOGI0ykE66yW+t5XFghupqPR/RclDQpibHlznT433m4cx3OyklIqFf3MEKNg==
-X-Received: by 2002:ac8:46cb:: with SMTP id h11mr10060132qto.121.1604956842445;
-        Mon, 09 Nov 2020 13:20:42 -0800 (PST)
+        bh=areiMMXZzlnhm2wpgeZFwm/3fbilrhaLYUTcNjpnIv8=;
+        b=G9EunCWO9OFmYOFdYF7TK/8BtZOLdZCOmvkskHlLsMpK0FkSKYi3j8zYIWoycM0LsO
+         qa0GBzeAAniP3VZiXSw4GeS0gotnDIPbbPTq00RRkWJ125NtQd6mkFOVHyiLpybPdbWk
+         5vDIlhod4HAvFGP/nA6vTjoERwZgyx8rnJ56MOH2oT0aAC/FdBCXGbFMKvNcS/rGg1LZ
+         M56EV7sqgx7VLVx95FhEbpFsgLPBDxtw7idmyeKoukATMxk52NWyLUKvXYCp8n2zSZex
+         n7J9ltHfXNWdqxIkSw+iEfuOI7ufQ75+pHDRefpP32+5HbuliiX5KVG3QIooB5D3DGRa
+         XImw==
+X-Gm-Message-State: AOAM533+3wUsu/slkdhNX3Z5pkgJnfCoFmXIKPBB04iXVAxPntZIwBy2
+        Kl5PPyMPzzMaKp1+4/H1DoipgmCBXkPk
+X-Google-Smtp-Source: ABdhPJyxXs8hlgb0RNHs6Pbjdgs8ReMLMdo8fIWeCwjWc1L3Jyia4PcJ2U8UV65/uZ7uo6t0noz3kw==
+X-Received: by 2002:aed:3865:: with SMTP id j92mr3354810qte.318.1604956843557;
+        Mon, 09 Nov 2020 13:20:43 -0800 (PST)
 Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net. [68.36.133.222])
-        by smtp.gmail.com with ESMTPSA id d188sm7025241qkb.10.2020.11.09.13.20.41
+        by smtp.gmail.com with ESMTPSA id d188sm7025241qkb.10.2020.11.09.13.20.42
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2020 13:20:41 -0800 (PST)
+        Mon, 09 Nov 2020 13:20:42 -0800 (PST)
 From:   trondmy@gmail.com
 X-Google-Original-From: trond.myklebust@hammerspace.com
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 1/5] SUNRPC: xprt_load_transport() needs to support the netid "rdma6"
-Date:   Mon,  9 Nov 2020 16:10:25 -0500
-Message-Id: <20201109211029.540993-2-trond.myklebust@hammerspace.com>
+Subject: [PATCH v2 2/5] NFSv4/pNFS: Use connections to a DS that are all of the same protocol family
+Date:   Mon,  9 Nov 2020 16:10:26 -0500
+Message-Id: <20201109211029.540993-3-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201109211029.540993-1-trond.myklebust@hammerspace.com>
+In-Reply-To: <20201109211029.540993-2-trond.myklebust@hammerspace.com>
 References: <20201109211029.540993-1-trond.myklebust@hammerspace.com>
+ <20201109211029.540993-2-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -65,31 +66,38 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-According to RFC5666, the correct netid for an IPv6 addressed RDMA
-transport is "rdma6", which we've supported as a mount option since
-Linux-4.7. The problem is when we try to load the module "xprtrdma6",
-that will fail, since there is no modulealias of that name.
+If the pNFS metadata server advertises multiple addresses for the same
+data server, we should try to connect to just one protocol family and
+transport type on the assumption that homogeneity will improve performance.
 
-Fixes: 181342c5ebe8 ("xprtrdma: Add rdma6 option to support NFS/RDMA IPv6")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- net/sunrpc/xprtrdma/module.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/nfs/pnfs_nfs.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/sunrpc/xprtrdma/module.c b/net/sunrpc/xprtrdma/module.c
-index 620327c01302..fb55983628b4 100644
---- a/net/sunrpc/xprtrdma/module.c
-+++ b/net/sunrpc/xprtrdma/module.c
-@@ -23,7 +23,9 @@ MODULE_AUTHOR("Open Grid Computing and Network Appliance, Inc.");
- MODULE_DESCRIPTION("RPC/RDMA Transport");
- MODULE_LICENSE("Dual BSD/GPL");
- MODULE_ALIAS("svcrdma");
-+MODULE_ALIAS("svcrdma6");
- MODULE_ALIAS("xprtrdma");
-+MODULE_ALIAS("xprtrdma6");
+diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
+index 679767ac258d..7027dac41cc7 100644
+--- a/fs/nfs/pnfs_nfs.c
++++ b/fs/nfs/pnfs_nfs.c
+@@ -860,6 +860,9 @@ static int _nfs4_pnfs_v3_ds_connect(struct nfs_server *mds_srv,
+ 				.addrlen = da->da_addrlen,
+ 				.servername = clp->cl_hostname,
+ 			};
++
++			if (da->da_addr.ss_family != clp->cl_addr.ss_family)
++				continue;
+ 			/* Add this address as an alias */
+ 			rpc_clnt_add_xprt(clp->cl_rpcclient, &xprt_args,
+ 					rpc_clnt_test_and_add_xprt, NULL);
+@@ -920,6 +923,8 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 				.data = &xprtdata,
+ 			};
  
- static void __exit rpc_rdma_cleanup(void)
- {
++			if (da->da_addr.ss_family != clp->cl_addr.ss_family)
++				continue;
+ 			/**
+ 			* Test this address for session trunking and
+ 			* add as an alias
 -- 
 2.28.0
 
