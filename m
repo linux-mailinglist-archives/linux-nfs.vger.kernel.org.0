@@ -2,72 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA34A2AC507
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Nov 2020 20:33:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 30F352AC50F
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Nov 2020 20:34:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730470AbgKITdd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 9 Nov 2020 14:33:33 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:33688 "EHLO
+        id S1730920AbgKITeQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 9 Nov 2020 14:34:16 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:34150 "EHLO
         aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729831AbgKITdc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Nov 2020 14:33:32 -0500
+        with ESMTP id S1729499AbgKITeQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Nov 2020 14:34:16 -0500
 Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A9JXTuh093233;
-        Mon, 9 Nov 2020 19:33:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=v8kRVvy556fGGPqyFh6SHsBSjLR6I7c3YmpYh5wlKc4=;
- b=a6i1oQYya1p0EAogO1bIb4J3LFK01zp37Xqc84NK+1O9EnACZpnUAzz1zCcv6ycYcNry
- Jfa7FfnLfafrzQJ0HMiaznX6h3v5X0A3XQBqYZgqESaFm0ePbTbHZL29OvW5mgoN0xQd
- 7VlRuJJDceU0qVuIzR8jv/ut8H3qq3ZOmNhIpvJCptwARt4h3+M47Y+sRY2qpdZ4CGy3
- /a0frOEBojWu7647KgbsME8t+NBL6kOoNaCrK9nUCgm0mgQeT1BXtJQcOnTMXPE0VRmV
- aKiPZ+dfXfC0k/0ncBjwYD0oeixUTy7mIm51FnGg67d/P4VUP0pJrjNyCok+sN1Erlrx hw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 34nh3ar13v-1
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A9JXPNi093146;
+        Mon, 9 Nov 2020 19:34:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=ptT7tnjjTrNsYyyOh9mQvwq5JwCHuHco8H6BVPmSL+w=;
+ b=W3xi9Aorfh+mljAAvJkYT5YTBVnBDx1M9JeQleGVnajJLpgTizqWWc4sDRabGS+JmIhf
+ Mnet8PT7ysNshcbEbSMjz1Z1E8IoHi56CfkWnN4ReMVrSWOAT0gkz9ozNQJKv1ZHJ3vF
+ ZBl7l4RU4DG+VS4DgLK/WixjOt5C2UvGmRXjN/UmfxXK1MEi6Ia9NvIf9bECX01HWuKV
+ zbonEgBPJk8qMXEB0OVW/xvC4wSMr9x+5gXD57RqoX88dPf3G8aYCb+Ahvkb6b5QnKe7
+ zOoh6c4DZtNBsAYsJPS//C0weila76whcwK522+vuNRRdlHeLLwWonDbyrGzzJC74wXB 4A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 34nh3ar16p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 09 Nov 2020 19:33:29 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A9JVFlv190884;
-        Mon, 9 Nov 2020 19:31:29 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 34p5bqxht4-1
+        Mon, 09 Nov 2020 19:34:13 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A9JUL28023755;
+        Mon, 9 Nov 2020 19:34:12 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 34p5gvprg7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 09 Nov 2020 19:31:28 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0A9JVR9Z027253;
-        Mon, 9 Nov 2020 19:31:27 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        Mon, 09 Nov 2020 19:34:12 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0A9JY9Yf006615;
+        Mon, 9 Nov 2020 19:34:11 GMT
+Received: from dhcp-10-154-143-59.vpn.oracle.com (/10.154.143.59)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 09 Nov 2020 11:31:27 -0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH RFC] SUNRPC: Use zero-copy to perform socket send
- operations
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <3194609c525610dc502d69f11c09cff1c9b21f2d.camel@hammerspace.com>
-Date:   Mon, 9 Nov 2020 14:31:26 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A3D0FF41-D88F-4116-AD47-AF9C94B1D984@oracle.com>
-References: <160493771006.15633.8524084764848931537.stgit@klimt.1015granger.net>
- <9ce015245c916b2c90de72440a22f801142f2c6e.camel@hammerspace.com>
- <0313136F-6801-434F-8304-72B9EADD389E@oracle.com>
- <f03dae6d36c0f008796ae01bbb6de3673e783571.camel@hammerspace.com>
- <5056C7C7-7B26-4667-9691-D2F634C02FB1@oracle.com>
- <3194609c525610dc502d69f11c09cff1c9b21f2d.camel@hammerspace.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
+        with ESMTP ; Mon, 09 Nov 2020 11:34:09 -0800
+Subject: Re: [PATCH v4 1/1] NFSv4.2: Fix NFS4ERR_STALE error when doing inter
+ server copy
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     linux-nfs@vger.kernel.org
+References: <20201019034249.27990-1-dai.ngo@oracle.com>
+ <20201020170114.GF1133@fieldses.org>
+ <fb514565-cd47-9180-2adc-f3ba4459202b@oracle.com>
+ <20201109183054.GD11144@fieldses.org>
+From:   Dai Ngo <dai.ngo@oracle.com>
+Message-ID: <eeafd9e2-5d04-848e-d330-670e2185098d@oracle.com>
+Date:   Mon, 9 Nov 2020 11:34:08 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.4.1
+MIME-Version: 1.0
+In-Reply-To: <20201109183054.GD11144@fieldses.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9800 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011090130
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ spamscore=0 phishscore=0 adultscore=0 malwarescore=0 suspectscore=11
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011090130
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9800 signatures=668682
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 priorityscore=1501
- clxscore=1015 malwarescore=0 mlxscore=0 spamscore=0 suspectscore=0
+ clxscore=1015 malwarescore=0 mlxscore=0 spamscore=0 suspectscore=11
  mlxlogscore=999 impostorscore=0 phishscore=0 adultscore=0 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2011090130
@@ -76,157 +74,452 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
+On 11/9/20 10:30 AM, J. Bruce Fields wrote:
+> On Tue, Oct 20, 2020 at 11:34:35AM -0700, Dai Ngo wrote:
+>> On 10/20/20 10:01 AM, J. Bruce Fields wrote:
+>>> On Sun, Oct 18, 2020 at 11:42:49PM -0400, Dai Ngo wrote:
+>>>> NFS_FS=y as dependency of CONFIG_NFSD_V4_2_INTER_SSC still have
+>>>> build errors and some configs with NFSD=m to get NFS4ERR_STALE
+>>>> error when doing inter server copy.
+>>>>
+>>>> Added ops table in nfs_common for knfsd to access NFS client modules.
+>>> OK, looks reasonable to me, applying.  Does this resolve all the
+>>> problems you've seen, or is there any bad case left?
+>> Thanks Bruce.
+>>
+>> With this patch, I no longer see the NFS4ERR_STALE in any config.
+>>
+>> The problem with NFS4ERR_STALE was because of a bug in nfs42_ssc_open.
+>> When CONFIG_NFSD_V4_2_INTER_SSC is not defined, nfs42_ssc_open
+>> returns NULL which is incorrect allowing the operation to continue
+>> until nfsd4_putfh which does not have the code to handle nfserr_stale.
+>>
+>> With this patch, when CONFIG_NFSD_V4_2_INTER_SSC is not defined the
+>> new nfs42_ssc_open returns ERR_PTR(-EIO) which causes the NFS client
+>> to switch over to the split copying (read src and write to dst).
+> That sounds reasonable, but I don't see any of the patches you've sent
+> changing that error return.  Did I overlook something, or did you mean
+> to append a patch to this message?
 
-> On Nov 9, 2020, at 1:16 PM, Trond Myklebust <trondmy@hammerspace.com> =
-wrote:
->=20
-> On Mon, 2020-11-09 at 12:36 -0500, Chuck Lever wrote:
->>=20
->>=20
->>> On Nov 9, 2020, at 12:32 PM, Trond Myklebust <
->>> trondmy@hammerspace.com> wrote:
->>>=20
->>> On Mon, 2020-11-09 at 12:12 -0500, Chuck Lever wrote:
->>>>=20
->>>>=20
->>>>> On Nov 9, 2020, at 12:08 PM, Trond Myklebust
->>>>> <trondmy@hammerspace.com> wrote:
->>>>>=20
->>>>> On Mon, 2020-11-09 at 11:03 -0500, Chuck Lever wrote:
->>>>>> Daire Byrne reports a ~50% aggregrate throughput regression
->>>>>> on
->>>>>> his
->>>>>> Linux NFS server after commit da1661b93bf4 ("SUNRPC: Teach
->>>>>> server
->>>>>> to
->>>>>> use xprt_sock_sendmsg for socket sends"), which replaced
->>>>>> kernel_send_page() calls in NFSD's socket send path with
->>>>>> calls to
->>>>>> sock_sendmsg() using iov_iter.
->>>>>>=20
->>>>>> Investigation showed that tcp_sendmsg() was not using zero-
->>>>>> copy
->>>>>> to
->>>>>> send the xdr_buf's bvec pages, but instead was relying on
->>>>>> memcpy.
->>>>>>=20
->>>>>> Set up the socket and each msghdr that bears bvec pages to
->>>>>> use
->>>>>> the
->>>>>> zero-copy mechanism in tcp_sendmsg.
->>>>>>=20
->>>>>> Reported-by: Daire Byrne <daire@dneg.com>
->>>>>> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=3D209439
->>>>>> Fixes: da1661b93bf4 ("SUNRPC: Teach server to use
->>>>>> xprt_sock_sendmsg
->>>>>> for socket sends")
->>>>>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->>>>>> ---
->>>>>>  net/sunrpc/socklib.c  |    5 ++++-
->>>>>>  net/sunrpc/svcsock.c  |    1 +
->>>>>>  net/sunrpc/xprtsock.c |    1 +
->>>>>>  3 files changed, 6 insertions(+), 1 deletion(-)
->>>>>>=20
->>>>>> This patch does not fully resolve the issue. Daire reports
->>>>>> high
->>>>>> softIRQ activity after the patch is applied, and this
->>>>>> activity
->>>>>> seems to prevent full restoration of previous performance.
->>>>>>=20
->>>>>>=20
->>>>>> diff --git a/net/sunrpc/socklib.c b/net/sunrpc/socklib.c
->>>>>> index d52313af82bc..af47596a7bdd 100644
->>>>>> --- a/net/sunrpc/socklib.c
->>>>>> +++ b/net/sunrpc/socklib.c
->>>>>> @@ -226,9 +226,12 @@ static int xprt_send_pagedata(struct
->>>>>> socket
->>>>>> *sock, struct msghdr *msg,
->>>>>>         if (err < 0)
->>>>>>                 return err;
->>>>>> =20
->>>>>> +       msg->msg_flags |=3D MSG_ZEROCOPY;
->>>>>>         iov_iter_bvec(&msg->msg_iter, WRITE, xdr->bvec,
->>>>>> xdr_buf_pagecount(xdr),
->>>>>>                       xdr->page_len + xdr->page_base);
->>>>>> -       return xprt_sendmsg(sock, msg, base + xdr-
->>>>>>> page_base);
->>>>>> +       err =3D xprt_sendmsg(sock, msg, base + xdr->page_base);
->>>>>> +       msg->msg_flags &=3D ~MSG_ZEROCOPY;
->>>>>> +       return err;
->>>>>>  }
->>>>>> =20
->>>>>>  /* Common case:
->>>>>> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
->>>>>> index c2752e2b9ce3..c814b4953b15 100644
->>>>>> --- a/net/sunrpc/svcsock.c
->>>>>> +++ b/net/sunrpc/svcsock.c
->>>>>> @@ -1176,6 +1176,7 @@ static void svc_tcp_init(struct
->>>>>> svc_sock
->>>>>> *svsk,
->>>>>> struct svc_serv *serv)
->>>>>>                 svsk->sk_datalen =3D 0;
->>>>>>                 memset(&svsk->sk_pages[0], 0, sizeof(svsk-
->>>>>>> sk_pages));
->>>>>> =20
->>>>>> +               sock_set_flag(sk, SOCK_ZEROCOPY);
->>>>>>                 tcp_sk(sk)->nonagle |=3D TCP_NAGLE_OFF;
->>>>>> =20
->>>>>>                 set_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
->>>>>> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
->>>>>> index 7090bbee0ec5..343c6396b297 100644
->>>>>> --- a/net/sunrpc/xprtsock.c
->>>>>> +++ b/net/sunrpc/xprtsock.c
->>>>>> @@ -2175,6 +2175,7 @@ static int
->>>>>> xs_tcp_finish_connecting(struct
->>>>>> rpc_xprt *xprt, struct socket *sock)
->>>>>> =20
->>>>>>                 /* socket options */
->>>>>>                 sock_reset_flag(sk, SOCK_LINGER);
->>>>>> +               sock_set_flag(sk, SOCK_ZEROCOPY);
->>>>>>                 tcp_sk(sk)->nonagle |=3D TCP_NAGLE_OFF;
->>>>>> =20
->>>>>>                 xprt_clear_connected(xprt);
->>>>>>=20
->>>>>>=20
->>>>> I'm thinking we are not really allowed to do that here. The
->>>>> pages
->>>>> we
->>>>> pass in to the RPC layer are not guaranteed to contain stable
->>>>> data
->>>>> since they include unlocked page cache pages as well as
->>>>> O_DIRECT
->>>>> pages.
->>>>=20
->>>> I assume you mean the client side only. Those issues aren't a
->>>> factor
->>>> on the server. Not setting SOCK_ZEROCOPY here should be enough to
->>>> prevent the use of zero-copy on the client.
->>>>=20
->>>> However, the client loses the benefits of sending a page at a
->>>> time.
->>>> Is there a desire to remedy that somehow?
->>>=20
->>> What about splice reads on the server side?
->>=20
->> On the server, this path formerly used kernel_sendpages(), which I
->> assumed is similar to the sendmsg zero-copy mechanism. How does
->> kernel_sendpages() mitigate against page instability?
->=20
-> It copies the data. =F0=9F=99=82
+Since with the patch, I did not run into the condition where NFS4ERR_STALE
+is returned so I did not fix this return error code. Do you want me to
+submit another patch to change the returned error code from NFS4ERR_STALE
+to NFS4ERR_NOTSUPP if it ever runs into that condition?
 
-tcp_sendmsg_locked() invokes skb_copy_to_page_nocache(), which is
-where Daire's performance-robbing memcpy occurs.
+-Dai
 
-do_tcp_sendpages() has no such call site. Therefore the legacy
-sendpage-based path has at least one fewer data copy operations.
-
-What is the appropriate way to make tcp_sendmsg() treat a bvec-bearing
-msghdr like an array of struct page pointers passed to kernel_sendpage() =
-?
-
-
---
-Chuck Lever
-
-
-
+>
+> --b.
+>
+>> The other problem that I see was the "use-after-free" which I think
+>> happens only on the 1st inter server copy. I will look into this:
+>>
+>>
+>>   Sep 23 01:08:10 nfsvmf24 kernel: ------------[ cut here ]------------
+>> Sep 23 01:08:10 nfsvmf24 kernel: refcount_t: underflow; use-after-free.
+>> Sep 23 01:08:10 nfsvmf24 kernel: WARNING: CPU: 0 PID: 4217 at lib/refcount.c:28 refcount_warn_saturate+0xae/0xf0
+>> Sep 23 01:08:10 nfsvmf24 kernel: Modules linked in: cts rpcsec_gss_krb5 xt_REDIRECT xt_nat ip6table_nat ip6_tables iptable_nat nf_nat nf_conntrack btrfs nf_defrag_ipv6 nf_defrag_ipv4 blake2b_generic xor zstd_compress rfkill raid6_pq sb_edac intel_powerclamp crct10dif_pclmul crc32_pclmul ghash_clmulni_intel aesni_intel crypto_simd cryptd glue_helper sg pcspkr i2c_piix4 video ip_tables xfs libcrc32c sd_mod t10_pi ahci libahci libata e1000 crc32c_intel serio_raw dm_mirror dm_region_hash dm_log dm_mod
+>> Sep 23 01:08:10 nfsvmf24 kernel: CPU: 0 PID: 4217 Comm: copy thread Not tainted 5.9.0-rc5+ #14
+>> Sep 23 01:08:10 nfsvmf24 kernel: Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+>> Sep 23 01:08:10 nfsvmf24 kernel: RIP: 0010:refcount_warn_saturate+0xae/0xf0
+>> Sep 23 01:08:10 nfsvmf24 kernel: Code: 99 83 31 01 01 e8 27 ba b6 ff 0f 0b 5d c3 80 3d 86 83 31 01 00 75 91 48 c7 c7 20 d3 3a 84 c6 05 76 83 31 01 01 e8 07 ba b6 ff <0f> 0b 5d c3 80 3d 64 83 31 01 00 0f 85 6d ff ff ff 48 c7 c7 78 d3
+>> Sep 23 01:08:10 nfsvmf24 kernel: RSP: 0000:ffffc20300403e68 EFLAGS: 00010286
+>> Sep 23 01:08:10 nfsvmf24 kernel: RAX: 0000000000000000 RBX: 0000000000000010 RCX: 0000000000000027
+>> Sep 23 01:08:10 nfsvmf24 kernel: RDX: 0000000000000027 RSI: 0000000000000086 RDI: ffff9e8c97c18c48
+>> Sep 23 01:08:10 nfsvmf24 kernel: RBP: ffffc20300403e68 R08: ffff9e8c97c18c40 R09: 0000000000000004
+>> Sep 23 01:08:10 nfsvmf24 kernel: R10: 0000000000000000 R11: 0000000000000001 R12: ffff9e8c96693300
+>> Sep 23 01:08:10 nfsvmf24 kernel: R13: ffff9e8c96693300 R14: ffff9e8c8a6e3000 R15: ffff9e8c959c5520
+>> Sep 23 01:08:10 nfsvmf24 kernel: FS:  0000000000000000(0000) GS:ffff9e8c97c00000(0000) knlGS:0000000000000000
+>> Sep 23 01:08:10 nfsvmf24 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> Sep 23 01:08:10 nfsvmf24 kernel: CR2: 000055aedfd031a8 CR3: 000000020ee6e000 CR4: 00000000000406f0
+>> Sep 23 01:08:10 nfsvmf24 kernel: Call Trace:
+>> Sep 23 01:08:10 nfsvmf24 kernel: nfsd_file_put_noref+0x8f/0xa0
+>> Sep 23 01:08:10 nfsvmf24 kernel: nfsd_file_put+0x3e/0x90
+>> Sep 23 01:08:10 nfsvmf24 kernel: nfsd4_do_copy+0xe5/0x150
+>> Sep 23 01:08:10 nfsvmf24 kernel: nfsd4_do_async_copy+0x84/0x200
+>> Sep 23 01:08:10 nfsvmf24 kernel: kthread+0x114/0x150
+>> Sep 23 01:08:10 nfsvmf24 kernel: ? nfsd4_copy+0x4e0/0x4e0
+>> Sep 23 01:08:10 nfsvmf24 kernel: ? kthread_park+0x90/0x90
+>> Sep 23 01:08:10 nfsvmf24 kernel: ret_from_fork+0x22/0x30
+>>
+>> -Dai
+>>
+>>> --b.
+>>>
+>>>> Fixes: 3ac3711adb88 ("NFSD: Fix NFS server build errors")
+>>>> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+>>>> ---
+>>>> changes from v2: fix 0-day build issues.
+>>>> changes from v3: reacted to Bruce's comments, removed paranoid error checking.
+>>>> ---
+>>>>   fs/nfs/nfs4file.c       | 38 ++++++++++++++++----
+>>>>   fs/nfs/nfs4super.c      |  5 +++
+>>>>   fs/nfs/super.c          | 17 +++++++++
+>>>>   fs/nfs_common/Makefile  |  1 +
+>>>>   fs/nfs_common/nfs_ssc.c | 94 +++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>   fs/nfsd/Kconfig         |  2 +-
+>>>>   fs/nfsd/nfs4proc.c      |  3 +-
+>>>>   include/linux/nfs_ssc.h | 67 +++++++++++++++++++++++++++++++++++
+>>>>   8 files changed, 219 insertions(+), 8 deletions(-)
+>>>>   create mode 100644 fs/nfs_common/nfs_ssc.c
+>>>>   create mode 100644 include/linux/nfs_ssc.h
+>>>>
+>>>> diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+>>>> index fdfc77486ace..984938024011 100644
+>>>> --- a/fs/nfs/nfs4file.c
+>>>> +++ b/fs/nfs/nfs4file.c
+>>>> @@ -9,6 +9,7 @@
+>>>>   #include <linux/falloc.h>
+>>>>   #include <linux/mount.h>
+>>>>   #include <linux/nfs_fs.h>
+>>>> +#include <linux/nfs_ssc.h>
+>>>>   #include "delegation.h"
+>>>>   #include "internal.h"
+>>>>   #include "iostat.h"
+>>>> @@ -314,9 +315,8 @@ static loff_t nfs42_remap_file_range(struct file *src_file, loff_t src_off,
+>>>>   static int read_name_gen = 1;
+>>>>   #define SSC_READ_NAME_BODY "ssc_read_%d"
+>>>> -struct file *
+>>>> -nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
+>>>> -		nfs4_stateid *stateid)
+>>>> +static struct file *__nfs42_ssc_open(struct vfsmount *ss_mnt,
+>>>> +		struct nfs_fh *src_fh, nfs4_stateid *stateid)
+>>>>   {
+>>>>   	struct nfs_fattr fattr;
+>>>>   	struct file *filep, *res;
+>>>> @@ -398,14 +398,40 @@ struct file *
+>>>>   	fput(filep);
+>>>>   	goto out_free_name;
+>>>>   }
+>>>> -EXPORT_SYMBOL_GPL(nfs42_ssc_open);
+>>>> -void nfs42_ssc_close(struct file *filep)
+>>>> +
+>>>> +static void __nfs42_ssc_close(struct file *filep)
+>>>>   {
+>>>>   	struct nfs_open_context *ctx = nfs_file_open_context(filep);
+>>>>   	ctx->state->flags = 0;
+>>>>   }
+>>>> -EXPORT_SYMBOL_GPL(nfs42_ssc_close);
+>>>> +
+>>>> +static const struct nfs4_ssc_client_ops nfs4_ssc_clnt_ops_tbl = {
+>>>> +	.sco_open = __nfs42_ssc_open,
+>>>> +	.sco_close = __nfs42_ssc_close,
+>>>> +};
+>>>> +
+>>>> +/**
+>>>> + * nfs42_ssc_register_ops - Wrapper to register NFS_V4 ops in nfs_common
+>>>> + *
+>>>> + * Return values:
+>>>> + *   None
+>>>> + */
+>>>> +void nfs42_ssc_register_ops(void)
+>>>> +{
+>>>> +	nfs42_ssc_register(&nfs4_ssc_clnt_ops_tbl);
+>>>> +}
+>>>> +
+>>>> +/**
+>>>> + * nfs42_ssc_unregister_ops - wrapper to un-register NFS_V4 ops in nfs_common
+>>>> + *
+>>>> + * Return values:
+>>>> + *   None.
+>>>> + */
+>>>> +void nfs42_ssc_unregister_ops(void)
+>>>> +{
+>>>> +	nfs42_ssc_unregister(&nfs4_ssc_clnt_ops_tbl);
+>>>> +}
+>>>>   #endif /* CONFIG_NFS_V4_2 */
+>>>>   const struct file_operations nfs4_file_operations = {
+>>>> diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+>>>> index 0c1ab846b83d..93f5c1678ec2 100644
+>>>> --- a/fs/nfs/nfs4super.c
+>>>> +++ b/fs/nfs/nfs4super.c
+>>>> @@ -7,6 +7,7 @@
+>>>>   #include <linux/mount.h>
+>>>>   #include <linux/nfs4_mount.h>
+>>>>   #include <linux/nfs_fs.h>
+>>>> +#include <linux/nfs_ssc.h>
+>>>>   #include "delegation.h"
+>>>>   #include "internal.h"
+>>>>   #include "nfs4_fs.h"
+>>>> @@ -279,6 +280,9 @@ static int __init init_nfs_v4(void)
+>>>>   	if (err)
+>>>>   		goto out2;
+>>>> +#ifdef CONFIG_NFS_V4_2
+>>>> +	nfs42_ssc_register_ops();
+>>>> +#endif
+>>>>   	register_nfs_version(&nfs_v4);
+>>>>   	return 0;
+>>>>   out2:
+>>>> @@ -297,6 +301,7 @@ static void __exit exit_nfs_v4(void)
+>>>>   	unregister_nfs_version(&nfs_v4);
+>>>>   #ifdef CONFIG_NFS_V4_2
+>>>>   	nfs4_xattr_cache_exit();
+>>>> +	nfs42_ssc_unregister_ops();
+>>>>   #endif
+>>>>   	nfs4_unregister_sysctl();
+>>>>   	nfs_idmap_quit();
+>>>> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+>>>> index 7a70287f21a2..f7dad8227a5f 100644
+>>>> --- a/fs/nfs/super.c
+>>>> +++ b/fs/nfs/super.c
+>>>> @@ -57,6 +57,7 @@
+>>>>   #include <linux/rcupdate.h>
+>>>>   #include <linux/uaccess.h>
+>>>> +#include <linux/nfs_ssc.h>
+>>>>   #include "nfs4_fs.h"
+>>>>   #include "callback.h"
+>>>> @@ -85,6 +86,10 @@
+>>>>   };
+>>>>   EXPORT_SYMBOL_GPL(nfs_sops);
+>>>> +static const struct nfs_ssc_client_ops nfs_ssc_clnt_ops_tbl = {
+>>>> +	.sco_sb_deactive = nfs_sb_deactive,
+>>>> +};
+>>>> +
+>>>>   #if IS_ENABLED(CONFIG_NFS_V4)
+>>>>   static int __init register_nfs4_fs(void)
+>>>>   {
+>>>> @@ -106,6 +111,16 @@ static void unregister_nfs4_fs(void)
+>>>>   }
+>>>>   #endif
+>>>> +static void nfs_ssc_register_ops(void)
+>>>> +{
+>>>> +	nfs_ssc_register(&nfs_ssc_clnt_ops_tbl);
+>>>> +}
+>>>> +
+>>>> +static void nfs_ssc_unregister_ops(void)
+>>>> +{
+>>>> +	nfs_ssc_unregister(&nfs_ssc_clnt_ops_tbl);
+>>>> +}
+>>>> +
+>>>>   static struct shrinker acl_shrinker = {
+>>>>   	.count_objects	= nfs_access_cache_count,
+>>>>   	.scan_objects	= nfs_access_cache_scan,
+>>>> @@ -133,6 +148,7 @@ int __init register_nfs_fs(void)
+>>>>   	ret = register_shrinker(&acl_shrinker);
+>>>>   	if (ret < 0)
+>>>>   		goto error_3;
+>>>> +	nfs_ssc_register_ops();
+>>>>   	return 0;
+>>>>   error_3:
+>>>>   	nfs_unregister_sysctl();
+>>>> @@ -152,6 +168,7 @@ void __exit unregister_nfs_fs(void)
+>>>>   	unregister_shrinker(&acl_shrinker);
+>>>>   	nfs_unregister_sysctl();
+>>>>   	unregister_nfs4_fs();
+>>>> +	nfs_ssc_unregister_ops();
+>>>>   	unregister_filesystem(&nfs_fs_type);
+>>>>   }
+>>>> diff --git a/fs/nfs_common/Makefile b/fs/nfs_common/Makefile
+>>>> index 4bebe834c009..fa82f5aaa6d9 100644
+>>>> --- a/fs/nfs_common/Makefile
+>>>> +++ b/fs/nfs_common/Makefile
+>>>> @@ -7,3 +7,4 @@ obj-$(CONFIG_NFS_ACL_SUPPORT) += nfs_acl.o
+>>>>   nfs_acl-objs := nfsacl.o
+>>>>   obj-$(CONFIG_GRACE_PERIOD) += grace.o
+>>>> +obj-$(CONFIG_GRACE_PERIOD) += nfs_ssc.o
+>>>> diff --git a/fs/nfs_common/nfs_ssc.c b/fs/nfs_common/nfs_ssc.c
+>>>> new file mode 100644
+>>>> index 000000000000..f43bbb373913
+>>>> --- /dev/null
+>>>> +++ b/fs/nfs_common/nfs_ssc.c
+>>>> @@ -0,0 +1,94 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>>> +/*
+>>>> + * fs/nfs_common/nfs_ssc_comm.c
+>>>> + *
+>>>> + * Helper for knfsd's SSC to access ops in NFS client modules
+>>>> + *
+>>>> + * Author: Dai Ngo <dai.ngo@oracle.com>
+>>>> + *
+>>>> + * Copyright (c) 2020, Oracle and/or its affiliates.
+>>>> + */
+>>>> +
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/fs.h>
+>>>> +#include <linux/nfs_ssc.h>
+>>>> +#include "../nfs/nfs4_fs.h"
+>>>> +
+>>>> +MODULE_LICENSE("GPL");
+>>>> +
+>>>> +struct nfs_ssc_client_ops_tbl nfs_ssc_client_tbl;
+>>>> +EXPORT_SYMBOL_GPL(nfs_ssc_client_tbl);
+>>>> +
+>>>> +#ifdef CONFIG_NFS_V4_2
+>>>> +/**
+>>>> + * nfs42_ssc_register - install the NFS_V4 client ops in the nfs_ssc_client_tbl
+>>>> + * @ops: NFS_V4 ops to be installed
+>>>> + *
+>>>> + * Return values:
+>>>> + *   None
+>>>> + */
+>>>> +void nfs42_ssc_register(const struct nfs4_ssc_client_ops *ops)
+>>>> +{
+>>>> +	nfs_ssc_client_tbl.ssc_nfs4_ops = ops;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(nfs42_ssc_register);
+>>>> +
+>>>> +/**
+>>>> + * nfs42_ssc_unregister - uninstall the NFS_V4 client ops from
+>>>> + *				the nfs_ssc_client_tbl
+>>>> + * @ops: ops to be uninstalled
+>>>> + *
+>>>> + * Return values:
+>>>> + *   None
+>>>> + */
+>>>> +void nfs42_ssc_unregister(const struct nfs4_ssc_client_ops *ops)
+>>>> +{
+>>>> +	if (nfs_ssc_client_tbl.ssc_nfs4_ops != ops)
+>>>> +		return;
+>>>> +
+>>>> +	nfs_ssc_client_tbl.ssc_nfs4_ops = NULL;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(nfs42_ssc_unregister);
+>>>> +#endif /* CONFIG_NFS_V4_2 */
+>>>> +
+>>>> +#ifdef CONFIG_NFS_V4_2
+>>>> +/**
+>>>> + * nfs_ssc_register - install the NFS_FS client ops in the nfs_ssc_client_tbl
+>>>> + * @ops: NFS_FS ops to be installed
+>>>> + *
+>>>> + * Return values:
+>>>> + *   None
+>>>> + */
+>>>> +void nfs_ssc_register(const struct nfs_ssc_client_ops *ops)
+>>>> +{
+>>>> +	nfs_ssc_client_tbl.ssc_nfs_ops = ops;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(nfs_ssc_register);
+>>>> +
+>>>> +/**
+>>>> + * nfs_ssc_unregister - uninstall the NFS_FS client ops from
+>>>> + *				the nfs_ssc_client_tbl
+>>>> + * @ops: ops to be uninstalled
+>>>> + *
+>>>> + * Return values:
+>>>> + *   None
+>>>> + */
+>>>> +void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops)
+>>>> +{
+>>>> +	if (nfs_ssc_client_tbl.ssc_nfs_ops != ops)
+>>>> +		return;
+>>>> +	nfs_ssc_client_tbl.ssc_nfs_ops = NULL;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(nfs_ssc_unregister);
+>>>> +
+>>>> +#else
+>>>> +void nfs_ssc_register(const struct nfs_ssc_client_ops *ops)
+>>>> +{
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(nfs_ssc_register);
+>>>> +
+>>>> +void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops)
+>>>> +{
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(nfs_ssc_unregister);
+>>>> +#endif /* CONFIG_NFS_V4_2 */
+>>>> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+>>>> index 99d2cae91bd6..f368f3215f88 100644
+>>>> --- a/fs/nfsd/Kconfig
+>>>> +++ b/fs/nfsd/Kconfig
+>>>> @@ -136,7 +136,7 @@ config NFSD_FLEXFILELAYOUT
+>>>>   config NFSD_V4_2_INTER_SSC
+>>>>   	bool "NFSv4.2 inter server to server COPY"
+>>>> -	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2 && NFS_FS=y
+>>>> +	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2
+>>>>   	help
+>>>>   	  This option enables support for NFSv4.2 inter server to
+>>>>   	  server copy where the destination server calls the NFSv4.2
+>>>> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+>>>> index eaf50eafa935..84e10aef1417 100644
+>>>> --- a/fs/nfsd/nfs4proc.c
+>>>> +++ b/fs/nfsd/nfs4proc.c
+>>>> @@ -38,6 +38,7 @@
+>>>>   #include <linux/slab.h>
+>>>>   #include <linux/kthread.h>
+>>>>   #include <linux/sunrpc/addr.h>
+>>>> +#include <linux/nfs_ssc.h>
+>>>>   #include "idmap.h"
+>>>>   #include "cache.h"
+>>>> @@ -1247,7 +1248,7 @@ extern struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
+>>>>   static void
+>>>>   nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
+>>>>   {
+>>>> -	nfs_sb_deactive(ss_mnt->mnt_sb);
+>>>> +	nfs_do_sb_deactive(ss_mnt->mnt_sb);
+>>>>   	mntput(ss_mnt);
+>>>>   }
+>>>> diff --git a/include/linux/nfs_ssc.h b/include/linux/nfs_ssc.h
+>>>> new file mode 100644
+>>>> index 000000000000..f5ba0fbff72f
+>>>> --- /dev/null
+>>>> +++ b/include/linux/nfs_ssc.h
+>>>> @@ -0,0 +1,67 @@
+>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>>> +/*
+>>>> + * include/linux/nfs_ssc.h
+>>>> + *
+>>>> + * Author: Dai Ngo <dai.ngo@oracle.com>
+>>>> + *
+>>>> + * Copyright (c) 2020, Oracle and/or its affiliates.
+>>>> + */
+>>>> +
+>>>> +#include <linux/nfs_fs.h>
+>>>> +
+>>>> +extern struct nfs_ssc_client_ops_tbl nfs_ssc_client_tbl;
+>>>> +
+>>>> +/*
+>>>> + * NFS_V4
+>>>> + */
+>>>> +struct nfs4_ssc_client_ops {
+>>>> +	struct file *(*sco_open)(struct vfsmount *ss_mnt,
+>>>> +		struct nfs_fh *src_fh, nfs4_stateid *stateid);
+>>>> +	void (*sco_close)(struct file *filep);
+>>>> +};
+>>>> +
+>>>> +/*
+>>>> + * NFS_FS
+>>>> + */
+>>>> +struct nfs_ssc_client_ops {
+>>>> +	void (*sco_sb_deactive)(struct super_block *sb);
+>>>> +};
+>>>> +
+>>>> +struct nfs_ssc_client_ops_tbl {
+>>>> +	const struct nfs4_ssc_client_ops *ssc_nfs4_ops;
+>>>> +	const struct nfs_ssc_client_ops *ssc_nfs_ops;
+>>>> +};
+>>>> +
+>>>> +extern void nfs42_ssc_register_ops(void);
+>>>> +extern void nfs42_ssc_unregister_ops(void);
+>>>> +
+>>>> +extern void nfs42_ssc_register(const struct nfs4_ssc_client_ops *ops);
+>>>> +extern void nfs42_ssc_unregister(const struct nfs4_ssc_client_ops *ops);
+>>>> +
+>>>> +#ifdef CONFIG_NFSD_V4_2_INTER_SSC
+>>>> +static inline struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
+>>>> +		struct nfs_fh *src_fh, nfs4_stateid *stateid)
+>>>> +{
+>>>> +	if (nfs_ssc_client_tbl.ssc_nfs4_ops)
+>>>> +		return (*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_open)(ss_mnt, src_fh, stateid);
+>>>> +	return ERR_PTR(-EIO);
+>>>> +}
+>>>> +
+>>>> +static inline void nfs42_ssc_close(struct file *filep)
+>>>> +{
+>>>> +	if (nfs_ssc_client_tbl.ssc_nfs4_ops)
+>>>> +		(*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_close)(filep);
+>>>> +}
+>>>> +#endif
+>>>> +
+>>>> +/*
+>>>> + * NFS_FS
+>>>> + */
+>>>> +extern void nfs_ssc_register(const struct nfs_ssc_client_ops *ops);
+>>>> +extern void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops);
+>>>> +
+>>>> +static inline void nfs_do_sb_deactive(struct super_block *sb)
+>>>> +{
+>>>> +	if (nfs_ssc_client_tbl.ssc_nfs_ops)
+>>>> +		(*nfs_ssc_client_tbl.ssc_nfs_ops->sco_sb_deactive)(sb);
+>>>> +}
+>>>> -- 
+>>>> 1.8.3.1
