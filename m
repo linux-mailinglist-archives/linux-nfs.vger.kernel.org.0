@@ -2,81 +2,136 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E09F22AC066
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Nov 2020 17:02:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 319172AC06B
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Nov 2020 17:03:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729570AbgKIQC6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 9 Nov 2020 11:02:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49344 "EHLO
+        id S1729951AbgKIQDc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 9 Nov 2020 11:03:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729302AbgKIQC6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Nov 2020 11:02:58 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A92BC0613CF
-        for <linux-nfs@vger.kernel.org>; Mon,  9 Nov 2020 08:02:58 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id A5203410D; Mon,  9 Nov 2020 11:02:56 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org A5203410D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1604937776;
-        bh=7rRZbMVQ9R1NVanfiR3C5AILaE+qcFbAqiBdMCGKDLQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m9asprdr6BP7UF/XlTZ5MTv3iRD8CC0wZiOryyNI4ZPrS8Pz73NjDkNNy+VS2B5Y2
-         rgvTL1UMbcrp/tMPh3k0fl5QF7TJc7mgQEO4Z309Y6yOpAg64eBWw7gwF2JjdjdXoR
-         IBbSQSNqalL2twRQ8zE5bd0nlua1rsMDT6zCEkNY=
-Date:   Mon, 9 Nov 2020 11:02:56 -0500
-From:   bfields <bfields@fieldses.org>
-To:     Daire Byrne <daire@dneg.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        linux-cachefs <linux-cachefs@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: Adventures in NFS re-exporting
-Message-ID: <20201109160256.GB11144@fieldses.org>
-References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
- <20200915172140.GA32632@fieldses.org>
- <4d1d7cd0076d98973a56e89c92e4ff0474aa0e14.camel@hammerspace.com>
- <1188023047.38703514.1600272094778.JavaMail.zimbra@dneg.com>
- <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com>
- <635679406.70384074.1603272832846.JavaMail.zimbra@dneg.com>
+        with ESMTP id S1729658AbgKIQDb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Nov 2020 11:03:31 -0500
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0E57C0613CF;
+        Mon,  9 Nov 2020 08:03:31 -0800 (PST)
+Received: by mail-qv1-xf41.google.com with SMTP id x13so2923412qvk.8;
+        Mon, 09 Nov 2020 08:03:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=JFK5dzY/ExJkYmS7OjYI6bXdnmvaWPZaMlnpOs2/ScI=;
+        b=mAFC1H96E5O6uf6Jc2qxg3GC5R6+jEBG4dY9tT4V2HcHS7LwJaMnzQWKXSMJrWlXag
+         lPT7qxysTx/F3VMA7uVU1dtOGcZ5g23qAnmi/730CbWkP+Fj4uEQ7p9VOsSVnzWn7hhg
+         QKN4FWv5+Eag3T6cVdIYxLHV0IDqOGgna5Yf45R7fjIQrvghyGVXWNuPZ9nVSKXOYGHs
+         TiF+o0seeZHIzo9L8V4AtFLBHOFyN7J6mQcws2vp2L3nBHPJzYlhI3KvzKz3tAzSbnh7
+         B7fhKfYTW7w/7126ZQSJOwM2is5gTNfnKRBWVi5kYMJyq20DPQ2rivPmGfZpflcxfE+f
+         T25A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=JFK5dzY/ExJkYmS7OjYI6bXdnmvaWPZaMlnpOs2/ScI=;
+        b=Xb7+1BSOy+rjxEr9u8t2lt77qesBDBuy0c1qocwhvUG+eeGUJ65I8f67qRfowr3cwb
+         BQPpCEtq9T5STtHKi4SXLKKqEBiOZx9uPCusFu6V/yCyinpV+hrO++NKe18jo4yvQ1qz
+         oxVdAQ6r3hyBs+pE0wZAvwheH+8GZzuEwnme3VujNI3aKwaxHZK6/qGIFrFI7FE0W21t
+         jYCXMFddjZ0xDt3zQp3NxRfgNqmXs4N3nwYlH/9LuDl6uuXPYbS/TJcCWtLk9PncAaY+
+         T/dU2Lsq9yyG0Qa4Q23zvRLnGgtHfMxyXJ9jBjpoZ3jSAT9hWtTzVCrk8mWtzdUobJhd
+         rbew==
+X-Gm-Message-State: AOAM532+4ETRfWr3nVhYvSgSvbnSnfRFs8iQDFGV2zR0OYR+7IZ1Dj9C
+        HlVuMRpzCe6vlaf3mt+pkm8dzptIE8s=
+X-Google-Smtp-Source: ABdhPJzmaacYce0oLEOEPSE30QsgQ25KB/VonwChzlazNlkZxEFvadeWk/IgPM66AYucDcI//mUiyQ==
+X-Received: by 2002:a0c:e585:: with SMTP id t5mr14665598qvm.6.1604937810164;
+        Mon, 09 Nov 2020 08:03:30 -0800 (PST)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id n6sm6365192qkk.6.2020.11.09.08.03.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Nov 2020 08:03:29 -0800 (PST)
+Sender: Chuck Lever <chucklever@gmail.com>
+Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0A9G3RQO021418;
+        Mon, 9 Nov 2020 16:03:27 GMT
+Subject: [PATCH RFC] SUNRPC: Use zero-copy to perform socket send operations
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     netdev@vger.kernel.org, linux-nfs@vger.kernel.org
+Date:   Mon, 09 Nov 2020 11:03:27 -0500
+Message-ID: <160493771006.15633.8524084764848931537.stgit@klimt.1015granger.net>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <635679406.70384074.1603272832846.JavaMail.zimbra@dneg.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Oct 21, 2020 at 10:33:52AM +0100, Daire Byrne wrote:
-> Trond has posted some (v3) patches to emulate lookupp for NFSv3 (a million thanks!) so I applied them to v5.9.1 and ran some more tests using that on the re-export server. Again, I just pathologically dropped inode & dentry caches every second on the re-export server (vfs_cache_pressure=100) while a client looped through some application loading tests.
-> 
-> Now for every combination of re-export (NFSv3 -> NFSv4.x or NFSv4.x -> NFSv3), I no longer see any stale file handles (/proc/net/rpc/nfsd) when dropping inode & dentry caches (yay!).
-> 
-> However, my assumption that some of the input/output errors I was seeing were related to the estales seems to have been misguided. After running these tests again without any estales, it now looks like a different issue that is unique to re-exporting NFSv3 from an NFSv4.0 originating server (either Linux or Netapp). The lookups are all fine (no estale) but reading some files eventually gives an input/output error on multiple clients which remain consistent until the re-export nfs-server is restarted. Again, this only occurs while dropping inode + dentry caches.
-> 
-> So in summary, while continuously dropping inode/dentry caches on the re-export server:
+Daire Byrne reports a ~50% aggregrate throughput regression on his
+Linux NFS server after commit da1661b93bf4 ("SUNRPC: Teach server to
+use xprt_sock_sendmsg for socket sends"), which replaced
+kernel_send_page() calls in NFSD's socket send path with calls to
+sock_sendmsg() using iov_iter.
 
-How continuously, exactly?
+Investigation showed that tcp_sendmsg() was not using zero-copy to
+send the xdr_buf's bvec pages, but instead was relying on memcpy.
 
-I recall that there are some situations where the best the client can do
-to handle an ESTALE is just retry.  And that our code generally just
-retries once and then gives up.
+Set up the socket and each msghdr that bears bvec pages to use the
+zero-copy mechanism in tcp_sendmsg.
 
-I wonder if it's possible that the client or re-export server can get
-stuck in a situation where they can't guarantee forward progress in the
-face of repeated ESTALEs.  I don't have a specific case in mind, though.
+Reported-by: Daire Byrne <daire@dneg.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=209439
+Fixes: da1661b93bf4 ("SUNRPC: Teach server to use xprt_sock_sendmsg for socket sends")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ net/sunrpc/socklib.c  |    5 ++++-
+ net/sunrpc/svcsock.c  |    1 +
+ net/sunrpc/xprtsock.c |    1 +
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
---b.
+This patch does not fully resolve the issue. Daire reports high
+softIRQ activity after the patch is applied, and this activity
+seems to prevent full restoration of previous performance.
 
-> 
-> originating server NFSv4.x -> NFSv4.x re-export server = good (no estale, no input/output errors)
-> originating server NFSv4.1/4.2 -> NFSv3 re-export server = good
-> originating server NFSv4.0 -> NFSv3 re-export server = no estale but lots of input/output errors
-> originating server NFSv3 -> NFSv3 re-export server = good (fixed by Trond's lookupp emulation patches)
-> originating server NFSv3 -> NFSv4.x re-export server = good (fixed by Trond's lookupp emulation patches)
-> 
-> In our case, we are stuck with some old 7-mode Netapps so we only have two mount choices, NFSv3 or NFSv4.0 (hence our particular interest in the NFSv4.0 re-export behaviour). And as discussed previously, a re-export of an NFSv3 server requires my horrible hack in order to avoid excessive lookups and client cache invalidations.
-> 
-> But these lookupp emulation patches fix the ESTALEs for the NFSv3 re-export cases, so many thanks again for that Trond. When re-exporting an NFSv3 client mount, we no longer need to change vfs_cache_pressure=0.
-> 
-> Daire
+
+diff --git a/net/sunrpc/socklib.c b/net/sunrpc/socklib.c
+index d52313af82bc..af47596a7bdd 100644
+--- a/net/sunrpc/socklib.c
++++ b/net/sunrpc/socklib.c
+@@ -226,9 +226,12 @@ static int xprt_send_pagedata(struct socket *sock, struct msghdr *msg,
+ 	if (err < 0)
+ 		return err;
+ 
++	msg->msg_flags |= MSG_ZEROCOPY;
+ 	iov_iter_bvec(&msg->msg_iter, WRITE, xdr->bvec, xdr_buf_pagecount(xdr),
+ 		      xdr->page_len + xdr->page_base);
+-	return xprt_sendmsg(sock, msg, base + xdr->page_base);
++	err = xprt_sendmsg(sock, msg, base + xdr->page_base);
++	msg->msg_flags &= ~MSG_ZEROCOPY;
++	return err;
+ }
+ 
+ /* Common case:
+diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+index c2752e2b9ce3..c814b4953b15 100644
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@ -1176,6 +1176,7 @@ static void svc_tcp_init(struct svc_sock *svsk, struct svc_serv *serv)
+ 		svsk->sk_datalen = 0;
+ 		memset(&svsk->sk_pages[0], 0, sizeof(svsk->sk_pages));
+ 
++		sock_set_flag(sk, SOCK_ZEROCOPY);
+ 		tcp_sk(sk)->nonagle |= TCP_NAGLE_OFF;
+ 
+ 		set_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index 7090bbee0ec5..343c6396b297 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -2175,6 +2175,7 @@ static int xs_tcp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
+ 
+ 		/* socket options */
+ 		sock_reset_flag(sk, SOCK_LINGER);
++		sock_set_flag(sk, SOCK_ZEROCOPY);
+ 		tcp_sk(sk)->nonagle |= TCP_NAGLE_OFF;
+ 
+ 		xprt_clear_connected(xprt);
+
+
