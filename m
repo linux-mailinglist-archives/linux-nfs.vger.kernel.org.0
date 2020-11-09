@@ -2,189 +2,490 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09A872AC373
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Nov 2020 19:16:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 231692AC3DA
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Nov 2020 19:31:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbgKISQj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 9 Nov 2020 13:16:39 -0500
-Received: from mail-dm6nam12on2110.outbound.protection.outlook.com ([40.107.243.110]:15200
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729119AbgKISQj (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 9 Nov 2020 13:16:39 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GfzcNQpXY88cwe7kkRArF9+J4ttNlYuDXSzNiqXbWwqo6IbCyR3zErXzWr51UmzmXtBLtJ5jIJPBR5ZHUfqm/xtjihXbr9sLVsrwki0U2w03WRrpXmymhSGYjQ7g1xIAqhU3FLTMlufPmqO4YgRKNRKIaHbWDK6zLmdYrUCw+y/9L2gCV5/XuY2xzEH4EHHipg3q0XwyMgiMDu/yldWb+Kac024syckMIqPSyAOt4MVBDPupfu8j+TkVl4xJrlSjg/ASSmK9/o2n/j2XiV9y+aXTA0B9/+fhDeexS507EMQs/zQC05mEKNi4CvIr2x8XWvZvT2YXv8FU3c1foH2n7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kDG/YCBbbN/W1GuejYWwWS6/XKO0AJ2KhEAJayJIMPk=;
- b=nufoD9CdqyFO+EYcVNRnPdT7wG23AvmQX2xfXvwDzFhXixphZ4nodtyqsfDUSeOmkL4LX4LZrd/NMcZFANFnP91Y6BQr5Y9uzoH1yv9UGb0H6GSdQzcbUtq55845O9xyXe9xqmCV26msZxe5MXUpzysXqwWxJZd8nQQrdeUytmfngJzbm9vuN21q7MSmoxZsZQOu1tJLPCmDFjE2FaHHRXZrVOQ1/lAaIi0zNaLCjdn6KOxL3C2NgweWoxyHgUaLniEhUXNI9pS5Z2KKFQ2A/w/ebihHMIKIL4KOeqBO6q+qpC3GNcK2dv3Y+SHNmP3BjHztqZSqzVJvKyvyzqWz8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kDG/YCBbbN/W1GuejYWwWS6/XKO0AJ2KhEAJayJIMPk=;
- b=E3azoGbbu4HhDaVwq38GTyz3mcDj8Myv2HLRjO2fMtIiwAQitGiHx2dy42xfu/hzguAhjIQs7cPXorjKJNvjJW3MjFDPlUAngapDNzKBtf4nNxuJ2TdlF8rMnxwLvUYISPXonauxYYFLsWxxU2tASqR0x50XDCzjzAhXKmhIfAQ=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by BL0PR13MB4210.namprd13.prod.outlook.com (2603:10b6:207:38::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.13; Mon, 9 Nov
- 2020 18:16:34 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.018; Mon, 9 Nov 2020
- 18:16:34 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH RFC] SUNRPC: Use zero-copy to perform socket send
- operations
-Thread-Topic: [PATCH RFC] SUNRPC: Use zero-copy to perform socket send
- operations
-Thread-Index: AQHWtrHgQGMAEXnlr0WTJWA0fWWPg6nACJ0AgAABGQCAAAWNAIAAAP6AgAALQgA=
-Date:   Mon, 9 Nov 2020 18:16:34 +0000
-Message-ID: <3194609c525610dc502d69f11c09cff1c9b21f2d.camel@hammerspace.com>
-References: <160493771006.15633.8524084764848931537.stgit@klimt.1015granger.net>
-         <9ce015245c916b2c90de72440a22f801142f2c6e.camel@hammerspace.com>
-         <0313136F-6801-434F-8304-72B9EADD389E@oracle.com>
-         <f03dae6d36c0f008796ae01bbb6de3673e783571.camel@hammerspace.com>
-         <5056C7C7-7B26-4667-9691-D2F634C02FB1@oracle.com>
-In-Reply-To: <5056C7C7-7B26-4667-9691-D2F634C02FB1@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ca57c4f2-23eb-4acb-8431-08d884db977d
-x-ms-traffictypediagnostic: BL0PR13MB4210:
-x-microsoft-antispam-prvs: <BL0PR13MB4210CFD5DB296D8AD64C1DA4B8EA0@BL0PR13MB4210.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1360;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Ith/O4DgJMELVqjzgseQGppLjn6ui7ZPQipFC6IzZqv3MhtFchjDRKgtnZ8scj7GK8cwWbSZ2CGwEkfbUIjesvs7oMSHvzNc3ocn0chNKdUVUV5eedHxT7A2ZfV2CozsO53aBvYqrhFfHVY6mwLVAqbKU0UAKufMJhGIvSdmNo5UxegmE864KindaK7qgZe+Mbu4yHD4LSwAD2p/JA1+H8kKKwLbWncAfp1sbB1RSWw6WIVy+W0S3K5bvJhAPuVgWFnVLbJMaRS9XetNh3EO272uJoaliXFzSzESxBP10Xw5NZxwhHK/QjdvlZLdplti/mdnJxBi3gMSMpcbiTuOqr0OYtyxGc8wmY0LPtcIFowIPDc2o85z4hnWCZE4MIr1/Gp7xPgQOjJUPCeMtvqGxg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(136003)(366004)(376002)(346002)(39830400003)(966005)(8936002)(36756003)(66556008)(8676002)(6916009)(86362001)(91956017)(2906002)(71200400001)(66946007)(64756008)(6486002)(66476007)(478600001)(76116006)(6512007)(53546011)(2616005)(6506007)(186003)(5660300002)(54906003)(83380400001)(316002)(4326008)(66446008)(26005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 9FigtwzNvxmpZ7leYEzeLOkUvZFw124JSrmvwZuXYtv8bwrpIV8Ygm6yjqi2ivnqW/nmzusNWO9xF4soqwF3DjXGv9vbmCFiIyN+x1wIjI1VtAZzdzf8itOI+V8ld+czvbMJ4F7BAbBjBsFnRY1634+GppOtZf8I5l+ND/nQlgW9uCMeCAOpKeeDERDDiY1VKXzLRlOJs1yVdj71qL7JtchaY8tHD+X6uAlGsEXStFK1i4X6YYecxpNb3h65KBd9tH5n4HumgwTYjSE3NVFWfcXgV/ZjdmeNgwLRAg3no5HTstpD225220alnR7J/UBemhgsBzuOm6aaKyya8tDkF+Oj9yJy4J6+L5yn1/wgSv0YMHHUMgP48tbYJD/k7iL1tKI/xK5yfvdx8Bqnk5Unb4RFef/BtpyU23r5fzxIrfVTZAOMFlIuY5cSHiljQ/g9weBwtzj4g8bupLNaWjRl75gkuC+x41sZMGDsJtey0L0owW+i1pYfrqSyZfCbXKjb/0HTrvwzKF9WLG5AvyHEgmSXRKaSGDdcJ+FCaxkTJHHjFzMDVFJg5ljzHmhWOfukChlqjg9MZW/EDoGLt6Gr+yXmlnf12ecaIWi4POuNft5Mm8vxPCnL16cMR8Qp7875GpzySzGHd5HXMVwzSuRcaQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <03D260971BDF8C42A44F937CAE9BD256@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1729292AbgKISa7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 9 Nov 2020 13:30:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729243AbgKISa7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Nov 2020 13:30:59 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3053C0613CF
+        for <linux-nfs@vger.kernel.org>; Mon,  9 Nov 2020 10:30:56 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id BE287448D; Mon,  9 Nov 2020 13:30:54 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BE287448D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1604946654;
+        bh=tJBbxDR0Q6CaqdXuTSn7vtGU+KO8nRm0Q7ND85ADSE0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tYsFfICriqL3JfOusxp0maZLFr7xVgaquPAhO1zWw3Flr7IBgrcx1h66zXB4VmA7P
+         mN/EzdgPPD+oz18Fizewl0+EidOO1+yHtWqJjL0ckrQu8vsCuY8lN1gzrh5ST8p3mr
+         AoGxOcUN4vH7splMOvPMPdHsuVp9pYFwU0kg5NxI=
+Date:   Mon, 9 Nov 2020 13:30:54 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] NFSv4.2: Fix NFS4ERR_STALE error when doing inter
+ server copy
+Message-ID: <20201109183054.GD11144@fieldses.org>
+References: <20201019034249.27990-1-dai.ngo@oracle.com>
+ <20201020170114.GF1133@fieldses.org>
+ <fb514565-cd47-9180-2adc-f3ba4459202b@oracle.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca57c4f2-23eb-4acb-8431-08d884db977d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Nov 2020 18:16:34.4725
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /DASb09sS8FV3RUqyJX8AiD32cVoK82z9pL+YNMbMIHwjdbhm9aHOBKQSX82nb7V+LjtXHpevd7gmkSZipwQAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR13MB4210
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fb514565-cd47-9180-2adc-f3ba4459202b@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTExLTA5IGF0IDEyOjM2IC0wNTAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
-DQo+IA0KPiA+IE9uIE5vdiA5LCAyMDIwLCBhdCAxMjozMiBQTSwgVHJvbmQgTXlrbGVidXN0IDwN
-Cj4gPiB0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gT24gTW9uLCAy
-MDIwLTExLTA5IGF0IDEyOjEyIC0wNTAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4gPiA+IA0KPiA+
-ID4gDQo+ID4gPiA+IE9uIE5vdiA5LCAyMDIwLCBhdCAxMjowOCBQTSwgVHJvbmQgTXlrbGVidXN0
-DQo+ID4gPiA+IDx0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gPiA+IA0KPiA+
-ID4gPiBPbiBNb24sIDIwMjAtMTEtMDkgYXQgMTE6MDMgLTA1MDAsIENodWNrIExldmVyIHdyb3Rl
-Og0KPiA+ID4gPiA+IERhaXJlIEJ5cm5lIHJlcG9ydHMgYSB+NTAlIGFnZ3JlZ3JhdGUgdGhyb3Vn
-aHB1dCByZWdyZXNzaW9uDQo+ID4gPiA+ID4gb24NCj4gPiA+ID4gPiBoaXMNCj4gPiA+ID4gPiBM
-aW51eCBORlMgc2VydmVyIGFmdGVyIGNvbW1pdCBkYTE2NjFiOTNiZjQgKCJTVU5SUEM6IFRlYWNo
-DQo+ID4gPiA+ID4gc2VydmVyDQo+ID4gPiA+ID4gdG8NCj4gPiA+ID4gPiB1c2UgeHBydF9zb2Nr
-X3NlbmRtc2cgZm9yIHNvY2tldCBzZW5kcyIpLCB3aGljaCByZXBsYWNlZA0KPiA+ID4gPiA+IGtl
-cm5lbF9zZW5kX3BhZ2UoKSBjYWxscyBpbiBORlNEJ3Mgc29ja2V0IHNlbmQgcGF0aCB3aXRoDQo+
-ID4gPiA+ID4gY2FsbHMgdG8NCj4gPiA+ID4gPiBzb2NrX3NlbmRtc2coKSB1c2luZyBpb3ZfaXRl
-ci4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBJbnZlc3RpZ2F0aW9uIHNob3dlZCB0aGF0IHRjcF9z
-ZW5kbXNnKCkgd2FzIG5vdCB1c2luZyB6ZXJvLQ0KPiA+ID4gPiA+IGNvcHkNCj4gPiA+ID4gPiB0
-bw0KPiA+ID4gPiA+IHNlbmQgdGhlIHhkcl9idWYncyBidmVjIHBhZ2VzLCBidXQgaW5zdGVhZCB3
-YXMgcmVseWluZyBvbg0KPiA+ID4gPiA+IG1lbWNweS4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBT
-ZXQgdXAgdGhlIHNvY2tldCBhbmQgZWFjaCBtc2doZHIgdGhhdCBiZWFycyBidmVjIHBhZ2VzIHRv
-DQo+ID4gPiA+ID4gdXNlDQo+ID4gPiA+ID4gdGhlDQo+ID4gPiA+ID4gemVyby1jb3B5IG1lY2hh
-bmlzbSBpbiB0Y3Bfc2VuZG1zZy4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBSZXBvcnRlZC1ieTog
-RGFpcmUgQnlybmUgPGRhaXJlQGRuZWcuY29tPg0KPiA+ID4gPiA+IEJ1Z0xpbms6IGh0dHBzOi8v
-YnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MjA5NDM5DQo+ID4gPiA+ID4gRml4
-ZXM6IGRhMTY2MWI5M2JmNCAoIlNVTlJQQzogVGVhY2ggc2VydmVyIHRvIHVzZQ0KPiA+ID4gPiA+
-IHhwcnRfc29ja19zZW5kbXNnDQo+ID4gPiA+ID4gZm9yIHNvY2tldCBzZW5kcyIpDQo+ID4gPiA+
-ID4gU2lnbmVkLW9mZi1ieTogQ2h1Y2sgTGV2ZXIgPGNodWNrLmxldmVyQG9yYWNsZS5jb20+DQo+
-ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4gwqBuZXQvc3VucnBjL3NvY2tsaWIuY8KgIHzCoMKgwqAg
-NSArKysrLQ0KPiA+ID4gPiA+IMKgbmV0L3N1bnJwYy9zdmNzb2NrLmPCoCB8wqDCoMKgIDEgKw0K
-PiA+ID4gPiA+IMKgbmV0L3N1bnJwYy94cHJ0c29jay5jIHzCoMKgwqAgMSArDQo+ID4gPiA+ID4g
-wqAzIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+ID4g
-PiA+IA0KPiA+ID4gPiA+IFRoaXMgcGF0Y2ggZG9lcyBub3QgZnVsbHkgcmVzb2x2ZSB0aGUgaXNz
-dWUuIERhaXJlIHJlcG9ydHMNCj4gPiA+ID4gPiBoaWdoDQo+ID4gPiA+ID4gc29mdElSUSBhY3Rp
-dml0eSBhZnRlciB0aGUgcGF0Y2ggaXMgYXBwbGllZCwgYW5kIHRoaXMNCj4gPiA+ID4gPiBhY3Rp
-dml0eQ0KPiA+ID4gPiA+IHNlZW1zIHRvIHByZXZlbnQgZnVsbCByZXN0b3JhdGlvbiBvZiBwcmV2
-aW91cyBwZXJmb3JtYW5jZS4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBkaWZm
-IC0tZ2l0IGEvbmV0L3N1bnJwYy9zb2NrbGliLmMgYi9uZXQvc3VucnBjL3NvY2tsaWIuYw0KPiA+
-ID4gPiA+IGluZGV4IGQ1MjMxM2FmODJiYy4uYWY0NzU5NmE3YmRkIDEwMDY0NA0KPiA+ID4gPiA+
-IC0tLSBhL25ldC9zdW5ycGMvc29ja2xpYi5jDQo+ID4gPiA+ID4gKysrIGIvbmV0L3N1bnJwYy9z
-b2NrbGliLmMNCj4gPiA+ID4gPiBAQCAtMjI2LDkgKzIyNiwxMiBAQCBzdGF0aWMgaW50IHhwcnRf
-c2VuZF9wYWdlZGF0YShzdHJ1Y3QNCj4gPiA+ID4gPiBzb2NrZXQNCj4gPiA+ID4gPiAqc29jaywg
-c3RydWN0IG1zZ2hkciAqbXNnLA0KPiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKgIGlmIChlcnIgPCAw
-KQ0KPiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gZXJyOw0K
-PiA+ID4gPiA+IMKgDQo+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoCBtc2ctPm1zZ19mbGFncyB8PSBN
-U0dfWkVST0NPUFk7DQo+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqAgaW92X2l0ZXJfYnZlYygmbXNn
-LT5tc2dfaXRlciwgV1JJVEUsIHhkci0+YnZlYywNCj4gPiA+ID4gPiB4ZHJfYnVmX3BhZ2Vjb3Vu
-dCh4ZHIpLA0KPiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCB4ZHItPnBhZ2VfbGVuICsgeGRyLT5wYWdlX2Jhc2UpOw0KPiA+ID4gPiA+IC3CoMKgwqDC
-oMKgwqAgcmV0dXJuIHhwcnRfc2VuZG1zZyhzb2NrLCBtc2csIGJhc2UgKyB4ZHItDQo+ID4gPiA+
-ID4gPnBhZ2VfYmFzZSk7DQo+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoCBlcnIgPSB4cHJ0X3NlbmRt
-c2coc29jaywgbXNnLCBiYXNlICsgeGRyLT5wYWdlX2Jhc2UpOw0KPiA+ID4gPiA+ICvCoMKgwqDC
-oMKgwqAgbXNnLT5tc2dfZmxhZ3MgJj0gfk1TR19aRVJPQ09QWTsNCj4gPiA+ID4gPiArwqDCoMKg
-wqDCoMKgIHJldHVybiBlcnI7DQo+ID4gPiA+ID4gwqB9DQo+ID4gPiA+ID4gwqANCj4gPiA+ID4g
-PiDCoC8qIENvbW1vbiBjYXNlOg0KPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9uZXQvc3VucnBjL3N2
-Y3NvY2suYyBiL25ldC9zdW5ycGMvc3Zjc29jay5jDQo+ID4gPiA+ID4gaW5kZXggYzI3NTJlMmI5
-Y2UzLi5jODE0YjQ5NTNiMTUgMTAwNjQ0DQo+ID4gPiA+ID4gLS0tIGEvbmV0L3N1bnJwYy9zdmNz
-b2NrLmMNCj4gPiA+ID4gPiArKysgYi9uZXQvc3VucnBjL3N2Y3NvY2suYw0KPiA+ID4gPiA+IEBA
-IC0xMTc2LDYgKzExNzYsNyBAQCBzdGF0aWMgdm9pZCBzdmNfdGNwX2luaXQoc3RydWN0DQo+ID4g
-PiA+ID4gc3ZjX3NvY2sNCj4gPiA+ID4gPiAqc3ZzaywNCj4gPiA+ID4gPiBzdHJ1Y3Qgc3ZjX3Nl
-cnYgKnNlcnYpDQo+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN2c2st
-PnNrX2RhdGFsZW4gPSAwOw0KPiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBtZW1zZXQoJnN2c2stPnNrX3BhZ2VzWzBdLCAwLCBzaXplb2Yoc3Zzay0NCj4gPiA+ID4gPiA+
-IHNrX3BhZ2VzKSk7DQo+ID4gPiA+ID4gwqANCj4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBzb2NrX3NldF9mbGFnKHNrLCBTT0NLX1pFUk9DT1BZKTsNCj4gPiA+ID4gPiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdGNwX3NrKHNrKS0+bm9uYWdsZSB8PSBUQ1Bf
-TkFHTEVfT0ZGOw0KPiA+ID4gPiA+IMKgDQo+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHNldF9iaXQoWFBUX0RBVEEsICZzdnNrLT5za194cHJ0LnhwdF9mbGFncyk7DQo+
-ID4gPiA+ID4gZGlmZiAtLWdpdCBhL25ldC9zdW5ycGMveHBydHNvY2suYyBiL25ldC9zdW5ycGMv
-eHBydHNvY2suYw0KPiA+ID4gPiA+IGluZGV4IDcwOTBiYmVlMGVjNS4uMzQzYzYzOTZiMjk3IDEw
-MDY0NA0KPiA+ID4gPiA+IC0tLSBhL25ldC9zdW5ycGMveHBydHNvY2suYw0KPiA+ID4gPiA+ICsr
-KyBiL25ldC9zdW5ycGMveHBydHNvY2suYw0KPiA+ID4gPiA+IEBAIC0yMTc1LDYgKzIxNzUsNyBA
-QCBzdGF0aWMgaW50DQo+ID4gPiA+ID4geHNfdGNwX2ZpbmlzaF9jb25uZWN0aW5nKHN0cnVjdA0K
-PiA+ID4gPiA+IHJwY194cHJ0ICp4cHJ0LCBzdHJ1Y3Qgc29ja2V0ICpzb2NrKQ0KPiA+ID4gPiA+
-IMKgDQo+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8qIHNvY2tldCBv
-cHRpb25zICovDQo+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNvY2tf
-cmVzZXRfZmxhZyhzaywgU09DS19MSU5HRVIpOw0KPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIHNvY2tfc2V0X2ZsYWcoc2ssIFNPQ0tfWkVST0NPUFkpOw0KPiA+ID4gPiA+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB0Y3Bfc2soc2spLT5ub25hZ2xlIHw9IFRD
-UF9OQUdMRV9PRkY7DQo+ID4gPiA+ID4gwqANCj4gPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgeHBydF9jbGVhcl9jb25uZWN0ZWQoeHBydCk7DQo+ID4gPiA+ID4gDQo+ID4g
-PiA+ID4gDQo+ID4gPiA+IEknbSB0aGlua2luZyB3ZSBhcmUgbm90IHJlYWxseSBhbGxvd2VkIHRv
-IGRvIHRoYXQgaGVyZS4gVGhlDQo+ID4gPiA+IHBhZ2VzDQo+ID4gPiA+IHdlDQo+ID4gPiA+IHBh
-c3MgaW4gdG8gdGhlIFJQQyBsYXllciBhcmUgbm90IGd1YXJhbnRlZWQgdG8gY29udGFpbiBzdGFi
-bGUNCj4gPiA+ID4gZGF0YQ0KPiA+ID4gPiBzaW5jZSB0aGV5IGluY2x1ZGUgdW5sb2NrZWQgcGFn
-ZSBjYWNoZSBwYWdlcyBhcyB3ZWxsIGFzDQo+ID4gPiA+IE9fRElSRUNUDQo+ID4gPiA+IHBhZ2Vz
-Lg0KPiA+ID4gDQo+ID4gPiBJIGFzc3VtZSB5b3UgbWVhbiB0aGUgY2xpZW50IHNpZGUgb25seS4g
-VGhvc2UgaXNzdWVzIGFyZW4ndCBhDQo+ID4gPiBmYWN0b3INCj4gPiA+IG9uIHRoZSBzZXJ2ZXIu
-IE5vdCBzZXR0aW5nIFNPQ0tfWkVST0NPUFkgaGVyZSBzaG91bGQgYmUgZW5vdWdoIHRvDQo+ID4g
-PiBwcmV2ZW50IHRoZSB1c2Ugb2YgemVyby1jb3B5IG9uIHRoZSBjbGllbnQuDQo+ID4gPiANCj4g
-PiA+IEhvd2V2ZXIsIHRoZSBjbGllbnQgbG9zZXMgdGhlIGJlbmVmaXRzIG9mIHNlbmRpbmcgYSBw
-YWdlIGF0IGENCj4gPiA+IHRpbWUuDQo+ID4gPiBJcyB0aGVyZSBhIGRlc2lyZSB0byByZW1lZHkg
-dGhhdCBzb21laG93Pw0KPiA+IA0KPiA+IFdoYXQgYWJvdXQgc3BsaWNlIHJlYWRzIG9uIHRoZSBz
-ZXJ2ZXIgc2lkZT8NCj4gDQo+IE9uIHRoZSBzZXJ2ZXIsIHRoaXMgcGF0aCBmb3JtZXJseSB1c2Vk
-IGtlcm5lbF9zZW5kcGFnZXMoKSwgd2hpY2ggSQ0KPiBhc3N1bWVkIGlzIHNpbWlsYXIgdG8gdGhl
-IHNlbmRtc2cgemVyby1jb3B5IG1lY2hhbmlzbS4gSG93IGRvZXMNCj4ga2VybmVsX3NlbmRwYWdl
-cygpIG1pdGlnYXRlIGFnYWluc3QgcGFnZSBpbnN0YWJpbGl0eT8NCj4gDQoNCkl0IGNvcGllcyB0
-aGUgZGF0YS4g8J+Zgg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBt
-YWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0K
-DQoNCg==
+On Tue, Oct 20, 2020 at 11:34:35AM -0700, Dai Ngo wrote:
+> 
+> On 10/20/20 10:01 AM, J. Bruce Fields wrote:
+> >On Sun, Oct 18, 2020 at 11:42:49PM -0400, Dai Ngo wrote:
+> >>NFS_FS=y as dependency of CONFIG_NFSD_V4_2_INTER_SSC still have
+> >>build errors and some configs with NFSD=m to get NFS4ERR_STALE
+> >>error when doing inter server copy.
+> >>
+> >>Added ops table in nfs_common for knfsd to access NFS client modules.
+> >OK, looks reasonable to me, applying.  Does this resolve all the
+> >problems you've seen, or is there any bad case left?
+> 
+> Thanks Bruce.
+> 
+> With this patch, I no longer see the NFS4ERR_STALE in any config.
+> 
+> The problem with NFS4ERR_STALE was because of a bug in nfs42_ssc_open.
+> When CONFIG_NFSD_V4_2_INTER_SSC is not defined, nfs42_ssc_open
+> returns NULL which is incorrect allowing the operation to continue
+> until nfsd4_putfh which does not have the code to handle nfserr_stale.
+> 
+> With this patch, when CONFIG_NFSD_V4_2_INTER_SSC is not defined the
+> new nfs42_ssc_open returns ERR_PTR(-EIO) which causes the NFS client
+> to switch over to the split copying (read src and write to dst).
+
+That sounds reasonable, but I don't see any of the patches you've sent
+changing that error return.  Did I overlook something, or did you mean
+to append a patch to this message?
+
+--b.
+
+> 
+> The other problem that I see was the "use-after-free" which I think
+> happens only on the 1st inter server copy. I will look into this:
+> 
+> 
+>  Sep 23 01:08:10 nfsvmf24 kernel: ------------[ cut here ]------------
+> Sep 23 01:08:10 nfsvmf24 kernel: refcount_t: underflow; use-after-free.
+> Sep 23 01:08:10 nfsvmf24 kernel: WARNING: CPU: 0 PID: 4217 at lib/refcount.c:28 refcount_warn_saturate+0xae/0xf0
+> Sep 23 01:08:10 nfsvmf24 kernel: Modules linked in: cts rpcsec_gss_krb5 xt_REDIRECT xt_nat ip6table_nat ip6_tables iptable_nat nf_nat nf_conntrack btrfs nf_defrag_ipv6 nf_defrag_ipv4 blake2b_generic xor zstd_compress rfkill raid6_pq sb_edac intel_powerclamp crct10dif_pclmul crc32_pclmul ghash_clmulni_intel aesni_intel crypto_simd cryptd glue_helper sg pcspkr i2c_piix4 video ip_tables xfs libcrc32c sd_mod t10_pi ahci libahci libata e1000 crc32c_intel serio_raw dm_mirror dm_region_hash dm_log dm_mod
+> Sep 23 01:08:10 nfsvmf24 kernel: CPU: 0 PID: 4217 Comm: copy thread Not tainted 5.9.0-rc5+ #14
+> Sep 23 01:08:10 nfsvmf24 kernel: Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+> Sep 23 01:08:10 nfsvmf24 kernel: RIP: 0010:refcount_warn_saturate+0xae/0xf0
+> Sep 23 01:08:10 nfsvmf24 kernel: Code: 99 83 31 01 01 e8 27 ba b6 ff 0f 0b 5d c3 80 3d 86 83 31 01 00 75 91 48 c7 c7 20 d3 3a 84 c6 05 76 83 31 01 01 e8 07 ba b6 ff <0f> 0b 5d c3 80 3d 64 83 31 01 00 0f 85 6d ff ff ff 48 c7 c7 78 d3
+> Sep 23 01:08:10 nfsvmf24 kernel: RSP: 0000:ffffc20300403e68 EFLAGS: 00010286
+> Sep 23 01:08:10 nfsvmf24 kernel: RAX: 0000000000000000 RBX: 0000000000000010 RCX: 0000000000000027
+> Sep 23 01:08:10 nfsvmf24 kernel: RDX: 0000000000000027 RSI: 0000000000000086 RDI: ffff9e8c97c18c48
+> Sep 23 01:08:10 nfsvmf24 kernel: RBP: ffffc20300403e68 R08: ffff9e8c97c18c40 R09: 0000000000000004
+> Sep 23 01:08:10 nfsvmf24 kernel: R10: 0000000000000000 R11: 0000000000000001 R12: ffff9e8c96693300
+> Sep 23 01:08:10 nfsvmf24 kernel: R13: ffff9e8c96693300 R14: ffff9e8c8a6e3000 R15: ffff9e8c959c5520
+> Sep 23 01:08:10 nfsvmf24 kernel: FS:  0000000000000000(0000) GS:ffff9e8c97c00000(0000) knlGS:0000000000000000
+> Sep 23 01:08:10 nfsvmf24 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Sep 23 01:08:10 nfsvmf24 kernel: CR2: 000055aedfd031a8 CR3: 000000020ee6e000 CR4: 00000000000406f0
+> Sep 23 01:08:10 nfsvmf24 kernel: Call Trace:
+> Sep 23 01:08:10 nfsvmf24 kernel: nfsd_file_put_noref+0x8f/0xa0
+> Sep 23 01:08:10 nfsvmf24 kernel: nfsd_file_put+0x3e/0x90
+> Sep 23 01:08:10 nfsvmf24 kernel: nfsd4_do_copy+0xe5/0x150
+> Sep 23 01:08:10 nfsvmf24 kernel: nfsd4_do_async_copy+0x84/0x200
+> Sep 23 01:08:10 nfsvmf24 kernel: kthread+0x114/0x150
+> Sep 23 01:08:10 nfsvmf24 kernel: ? nfsd4_copy+0x4e0/0x4e0
+> Sep 23 01:08:10 nfsvmf24 kernel: ? kthread_park+0x90/0x90
+> Sep 23 01:08:10 nfsvmf24 kernel: ret_from_fork+0x22/0x30
+> 
+> -Dai
+> 
+> >
+> >--b.
+> >
+> >>Fixes: 3ac3711adb88 ("NFSD: Fix NFS server build errors")
+> >>Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> >>---
+> >>changes from v2: fix 0-day build issues.
+> >>changes from v3: reacted to Bruce's comments, removed paranoid error checking.
+> >>---
+> >>  fs/nfs/nfs4file.c       | 38 ++++++++++++++++----
+> >>  fs/nfs/nfs4super.c      |  5 +++
+> >>  fs/nfs/super.c          | 17 +++++++++
+> >>  fs/nfs_common/Makefile  |  1 +
+> >>  fs/nfs_common/nfs_ssc.c | 94 +++++++++++++++++++++++++++++++++++++++++++++++++
+> >>  fs/nfsd/Kconfig         |  2 +-
+> >>  fs/nfsd/nfs4proc.c      |  3 +-
+> >>  include/linux/nfs_ssc.h | 67 +++++++++++++++++++++++++++++++++++
+> >>  8 files changed, 219 insertions(+), 8 deletions(-)
+> >>  create mode 100644 fs/nfs_common/nfs_ssc.c
+> >>  create mode 100644 include/linux/nfs_ssc.h
+> >>
+> >>diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+> >>index fdfc77486ace..984938024011 100644
+> >>--- a/fs/nfs/nfs4file.c
+> >>+++ b/fs/nfs/nfs4file.c
+> >>@@ -9,6 +9,7 @@
+> >>  #include <linux/falloc.h>
+> >>  #include <linux/mount.h>
+> >>  #include <linux/nfs_fs.h>
+> >>+#include <linux/nfs_ssc.h>
+> >>  #include "delegation.h"
+> >>  #include "internal.h"
+> >>  #include "iostat.h"
+> >>@@ -314,9 +315,8 @@ static loff_t nfs42_remap_file_range(struct file *src_file, loff_t src_off,
+> >>  static int read_name_gen = 1;
+> >>  #define SSC_READ_NAME_BODY "ssc_read_%d"
+> >>-struct file *
+> >>-nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
+> >>-		nfs4_stateid *stateid)
+> >>+static struct file *__nfs42_ssc_open(struct vfsmount *ss_mnt,
+> >>+		struct nfs_fh *src_fh, nfs4_stateid *stateid)
+> >>  {
+> >>  	struct nfs_fattr fattr;
+> >>  	struct file *filep, *res;
+> >>@@ -398,14 +398,40 @@ struct file *
+> >>  	fput(filep);
+> >>  	goto out_free_name;
+> >>  }
+> >>-EXPORT_SYMBOL_GPL(nfs42_ssc_open);
+> >>-void nfs42_ssc_close(struct file *filep)
+> >>+
+> >>+static void __nfs42_ssc_close(struct file *filep)
+> >>  {
+> >>  	struct nfs_open_context *ctx = nfs_file_open_context(filep);
+> >>  	ctx->state->flags = 0;
+> >>  }
+> >>-EXPORT_SYMBOL_GPL(nfs42_ssc_close);
+> >>+
+> >>+static const struct nfs4_ssc_client_ops nfs4_ssc_clnt_ops_tbl = {
+> >>+	.sco_open = __nfs42_ssc_open,
+> >>+	.sco_close = __nfs42_ssc_close,
+> >>+};
+> >>+
+> >>+/**
+> >>+ * nfs42_ssc_register_ops - Wrapper to register NFS_V4 ops in nfs_common
+> >>+ *
+> >>+ * Return values:
+> >>+ *   None
+> >>+ */
+> >>+void nfs42_ssc_register_ops(void)
+> >>+{
+> >>+	nfs42_ssc_register(&nfs4_ssc_clnt_ops_tbl);
+> >>+}
+> >>+
+> >>+/**
+> >>+ * nfs42_ssc_unregister_ops - wrapper to un-register NFS_V4 ops in nfs_common
+> >>+ *
+> >>+ * Return values:
+> >>+ *   None.
+> >>+ */
+> >>+void nfs42_ssc_unregister_ops(void)
+> >>+{
+> >>+	nfs42_ssc_unregister(&nfs4_ssc_clnt_ops_tbl);
+> >>+}
+> >>  #endif /* CONFIG_NFS_V4_2 */
+> >>  const struct file_operations nfs4_file_operations = {
+> >>diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+> >>index 0c1ab846b83d..93f5c1678ec2 100644
+> >>--- a/fs/nfs/nfs4super.c
+> >>+++ b/fs/nfs/nfs4super.c
+> >>@@ -7,6 +7,7 @@
+> >>  #include <linux/mount.h>
+> >>  #include <linux/nfs4_mount.h>
+> >>  #include <linux/nfs_fs.h>
+> >>+#include <linux/nfs_ssc.h>
+> >>  #include "delegation.h"
+> >>  #include "internal.h"
+> >>  #include "nfs4_fs.h"
+> >>@@ -279,6 +280,9 @@ static int __init init_nfs_v4(void)
+> >>  	if (err)
+> >>  		goto out2;
+> >>+#ifdef CONFIG_NFS_V4_2
+> >>+	nfs42_ssc_register_ops();
+> >>+#endif
+> >>  	register_nfs_version(&nfs_v4);
+> >>  	return 0;
+> >>  out2:
+> >>@@ -297,6 +301,7 @@ static void __exit exit_nfs_v4(void)
+> >>  	unregister_nfs_version(&nfs_v4);
+> >>  #ifdef CONFIG_NFS_V4_2
+> >>  	nfs4_xattr_cache_exit();
+> >>+	nfs42_ssc_unregister_ops();
+> >>  #endif
+> >>  	nfs4_unregister_sysctl();
+> >>  	nfs_idmap_quit();
+> >>diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+> >>index 7a70287f21a2..f7dad8227a5f 100644
+> >>--- a/fs/nfs/super.c
+> >>+++ b/fs/nfs/super.c
+> >>@@ -57,6 +57,7 @@
+> >>  #include <linux/rcupdate.h>
+> >>  #include <linux/uaccess.h>
+> >>+#include <linux/nfs_ssc.h>
+> >>  #include "nfs4_fs.h"
+> >>  #include "callback.h"
+> >>@@ -85,6 +86,10 @@
+> >>  };
+> >>  EXPORT_SYMBOL_GPL(nfs_sops);
+> >>+static const struct nfs_ssc_client_ops nfs_ssc_clnt_ops_tbl = {
+> >>+	.sco_sb_deactive = nfs_sb_deactive,
+> >>+};
+> >>+
+> >>  #if IS_ENABLED(CONFIG_NFS_V4)
+> >>  static int __init register_nfs4_fs(void)
+> >>  {
+> >>@@ -106,6 +111,16 @@ static void unregister_nfs4_fs(void)
+> >>  }
+> >>  #endif
+> >>+static void nfs_ssc_register_ops(void)
+> >>+{
+> >>+	nfs_ssc_register(&nfs_ssc_clnt_ops_tbl);
+> >>+}
+> >>+
+> >>+static void nfs_ssc_unregister_ops(void)
+> >>+{
+> >>+	nfs_ssc_unregister(&nfs_ssc_clnt_ops_tbl);
+> >>+}
+> >>+
+> >>  static struct shrinker acl_shrinker = {
+> >>  	.count_objects	= nfs_access_cache_count,
+> >>  	.scan_objects	= nfs_access_cache_scan,
+> >>@@ -133,6 +148,7 @@ int __init register_nfs_fs(void)
+> >>  	ret = register_shrinker(&acl_shrinker);
+> >>  	if (ret < 0)
+> >>  		goto error_3;
+> >>+	nfs_ssc_register_ops();
+> >>  	return 0;
+> >>  error_3:
+> >>  	nfs_unregister_sysctl();
+> >>@@ -152,6 +168,7 @@ void __exit unregister_nfs_fs(void)
+> >>  	unregister_shrinker(&acl_shrinker);
+> >>  	nfs_unregister_sysctl();
+> >>  	unregister_nfs4_fs();
+> >>+	nfs_ssc_unregister_ops();
+> >>  	unregister_filesystem(&nfs_fs_type);
+> >>  }
+> >>diff --git a/fs/nfs_common/Makefile b/fs/nfs_common/Makefile
+> >>index 4bebe834c009..fa82f5aaa6d9 100644
+> >>--- a/fs/nfs_common/Makefile
+> >>+++ b/fs/nfs_common/Makefile
+> >>@@ -7,3 +7,4 @@ obj-$(CONFIG_NFS_ACL_SUPPORT) += nfs_acl.o
+> >>  nfs_acl-objs := nfsacl.o
+> >>  obj-$(CONFIG_GRACE_PERIOD) += grace.o
+> >>+obj-$(CONFIG_GRACE_PERIOD) += nfs_ssc.o
+> >>diff --git a/fs/nfs_common/nfs_ssc.c b/fs/nfs_common/nfs_ssc.c
+> >>new file mode 100644
+> >>index 000000000000..f43bbb373913
+> >>--- /dev/null
+> >>+++ b/fs/nfs_common/nfs_ssc.c
+> >>@@ -0,0 +1,94 @@
+> >>+// SPDX-License-Identifier: GPL-2.0-only
+> >>+/*
+> >>+ * fs/nfs_common/nfs_ssc_comm.c
+> >>+ *
+> >>+ * Helper for knfsd's SSC to access ops in NFS client modules
+> >>+ *
+> >>+ * Author: Dai Ngo <dai.ngo@oracle.com>
+> >>+ *
+> >>+ * Copyright (c) 2020, Oracle and/or its affiliates.
+> >>+ */
+> >>+
+> >>+#include <linux/module.h>
+> >>+#include <linux/fs.h>
+> >>+#include <linux/nfs_ssc.h>
+> >>+#include "../nfs/nfs4_fs.h"
+> >>+
+> >>+MODULE_LICENSE("GPL");
+> >>+
+> >>+struct nfs_ssc_client_ops_tbl nfs_ssc_client_tbl;
+> >>+EXPORT_SYMBOL_GPL(nfs_ssc_client_tbl);
+> >>+
+> >>+#ifdef CONFIG_NFS_V4_2
+> >>+/**
+> >>+ * nfs42_ssc_register - install the NFS_V4 client ops in the nfs_ssc_client_tbl
+> >>+ * @ops: NFS_V4 ops to be installed
+> >>+ *
+> >>+ * Return values:
+> >>+ *   None
+> >>+ */
+> >>+void nfs42_ssc_register(const struct nfs4_ssc_client_ops *ops)
+> >>+{
+> >>+	nfs_ssc_client_tbl.ssc_nfs4_ops = ops;
+> >>+}
+> >>+EXPORT_SYMBOL_GPL(nfs42_ssc_register);
+> >>+
+> >>+/**
+> >>+ * nfs42_ssc_unregister - uninstall the NFS_V4 client ops from
+> >>+ *				the nfs_ssc_client_tbl
+> >>+ * @ops: ops to be uninstalled
+> >>+ *
+> >>+ * Return values:
+> >>+ *   None
+> >>+ */
+> >>+void nfs42_ssc_unregister(const struct nfs4_ssc_client_ops *ops)
+> >>+{
+> >>+	if (nfs_ssc_client_tbl.ssc_nfs4_ops != ops)
+> >>+		return;
+> >>+
+> >>+	nfs_ssc_client_tbl.ssc_nfs4_ops = NULL;
+> >>+}
+> >>+EXPORT_SYMBOL_GPL(nfs42_ssc_unregister);
+> >>+#endif /* CONFIG_NFS_V4_2 */
+> >>+
+> >>+#ifdef CONFIG_NFS_V4_2
+> >>+/**
+> >>+ * nfs_ssc_register - install the NFS_FS client ops in the nfs_ssc_client_tbl
+> >>+ * @ops: NFS_FS ops to be installed
+> >>+ *
+> >>+ * Return values:
+> >>+ *   None
+> >>+ */
+> >>+void nfs_ssc_register(const struct nfs_ssc_client_ops *ops)
+> >>+{
+> >>+	nfs_ssc_client_tbl.ssc_nfs_ops = ops;
+> >>+}
+> >>+EXPORT_SYMBOL_GPL(nfs_ssc_register);
+> >>+
+> >>+/**
+> >>+ * nfs_ssc_unregister - uninstall the NFS_FS client ops from
+> >>+ *				the nfs_ssc_client_tbl
+> >>+ * @ops: ops to be uninstalled
+> >>+ *
+> >>+ * Return values:
+> >>+ *   None
+> >>+ */
+> >>+void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops)
+> >>+{
+> >>+	if (nfs_ssc_client_tbl.ssc_nfs_ops != ops)
+> >>+		return;
+> >>+	nfs_ssc_client_tbl.ssc_nfs_ops = NULL;
+> >>+}
+> >>+EXPORT_SYMBOL_GPL(nfs_ssc_unregister);
+> >>+
+> >>+#else
+> >>+void nfs_ssc_register(const struct nfs_ssc_client_ops *ops)
+> >>+{
+> >>+}
+> >>+EXPORT_SYMBOL_GPL(nfs_ssc_register);
+> >>+
+> >>+void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops)
+> >>+{
+> >>+}
+> >>+EXPORT_SYMBOL_GPL(nfs_ssc_unregister);
+> >>+#endif /* CONFIG_NFS_V4_2 */
+> >>diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+> >>index 99d2cae91bd6..f368f3215f88 100644
+> >>--- a/fs/nfsd/Kconfig
+> >>+++ b/fs/nfsd/Kconfig
+> >>@@ -136,7 +136,7 @@ config NFSD_FLEXFILELAYOUT
+> >>  config NFSD_V4_2_INTER_SSC
+> >>  	bool "NFSv4.2 inter server to server COPY"
+> >>-	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2 && NFS_FS=y
+> >>+	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2
+> >>  	help
+> >>  	  This option enables support for NFSv4.2 inter server to
+> >>  	  server copy where the destination server calls the NFSv4.2
+> >>diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> >>index eaf50eafa935..84e10aef1417 100644
+> >>--- a/fs/nfsd/nfs4proc.c
+> >>+++ b/fs/nfsd/nfs4proc.c
+> >>@@ -38,6 +38,7 @@
+> >>  #include <linux/slab.h>
+> >>  #include <linux/kthread.h>
+> >>  #include <linux/sunrpc/addr.h>
+> >>+#include <linux/nfs_ssc.h>
+> >>  #include "idmap.h"
+> >>  #include "cache.h"
+> >>@@ -1247,7 +1248,7 @@ extern struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
+> >>  static void
+> >>  nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
+> >>  {
+> >>-	nfs_sb_deactive(ss_mnt->mnt_sb);
+> >>+	nfs_do_sb_deactive(ss_mnt->mnt_sb);
+> >>  	mntput(ss_mnt);
+> >>  }
+> >>diff --git a/include/linux/nfs_ssc.h b/include/linux/nfs_ssc.h
+> >>new file mode 100644
+> >>index 000000000000..f5ba0fbff72f
+> >>--- /dev/null
+> >>+++ b/include/linux/nfs_ssc.h
+> >>@@ -0,0 +1,67 @@
+> >>+/* SPDX-License-Identifier: GPL-2.0 */
+> >>+/*
+> >>+ * include/linux/nfs_ssc.h
+> >>+ *
+> >>+ * Author: Dai Ngo <dai.ngo@oracle.com>
+> >>+ *
+> >>+ * Copyright (c) 2020, Oracle and/or its affiliates.
+> >>+ */
+> >>+
+> >>+#include <linux/nfs_fs.h>
+> >>+
+> >>+extern struct nfs_ssc_client_ops_tbl nfs_ssc_client_tbl;
+> >>+
+> >>+/*
+> >>+ * NFS_V4
+> >>+ */
+> >>+struct nfs4_ssc_client_ops {
+> >>+	struct file *(*sco_open)(struct vfsmount *ss_mnt,
+> >>+		struct nfs_fh *src_fh, nfs4_stateid *stateid);
+> >>+	void (*sco_close)(struct file *filep);
+> >>+};
+> >>+
+> >>+/*
+> >>+ * NFS_FS
+> >>+ */
+> >>+struct nfs_ssc_client_ops {
+> >>+	void (*sco_sb_deactive)(struct super_block *sb);
+> >>+};
+> >>+
+> >>+struct nfs_ssc_client_ops_tbl {
+> >>+	const struct nfs4_ssc_client_ops *ssc_nfs4_ops;
+> >>+	const struct nfs_ssc_client_ops *ssc_nfs_ops;
+> >>+};
+> >>+
+> >>+extern void nfs42_ssc_register_ops(void);
+> >>+extern void nfs42_ssc_unregister_ops(void);
+> >>+
+> >>+extern void nfs42_ssc_register(const struct nfs4_ssc_client_ops *ops);
+> >>+extern void nfs42_ssc_unregister(const struct nfs4_ssc_client_ops *ops);
+> >>+
+> >>+#ifdef CONFIG_NFSD_V4_2_INTER_SSC
+> >>+static inline struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
+> >>+		struct nfs_fh *src_fh, nfs4_stateid *stateid)
+> >>+{
+> >>+	if (nfs_ssc_client_tbl.ssc_nfs4_ops)
+> >>+		return (*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_open)(ss_mnt, src_fh, stateid);
+> >>+	return ERR_PTR(-EIO);
+> >>+}
+> >>+
+> >>+static inline void nfs42_ssc_close(struct file *filep)
+> >>+{
+> >>+	if (nfs_ssc_client_tbl.ssc_nfs4_ops)
+> >>+		(*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_close)(filep);
+> >>+}
+> >>+#endif
+> >>+
+> >>+/*
+> >>+ * NFS_FS
+> >>+ */
+> >>+extern void nfs_ssc_register(const struct nfs_ssc_client_ops *ops);
+> >>+extern void nfs_ssc_unregister(const struct nfs_ssc_client_ops *ops);
+> >>+
+> >>+static inline void nfs_do_sb_deactive(struct super_block *sb)
+> >>+{
+> >>+	if (nfs_ssc_client_tbl.ssc_nfs_ops)
+> >>+		(*nfs_ssc_client_tbl.ssc_nfs_ops->sco_sb_deactive)(sb);
+> >>+}
+> >>-- 
+> >>1.8.3.1
