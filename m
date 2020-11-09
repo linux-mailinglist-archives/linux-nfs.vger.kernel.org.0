@@ -2,68 +2,231 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AD492AC4BD
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Nov 2020 20:11:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA34A2AC507
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Nov 2020 20:33:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbgKITLN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 9 Nov 2020 14:11:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729491AbgKITLN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Nov 2020 14:11:13 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40D7AC0613CF;
-        Mon,  9 Nov 2020 11:11:13 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 73487AB6; Mon,  9 Nov 2020 14:11:12 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 73487AB6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1604949072;
-        bh=w7fHvXEletg5+a7Lbz7J9G1vhosCa/9rtc1juG2Kp8M=;
-        h=Date:To:Cc:Subject:From:From;
-        b=XRAXAYf4IeIPNq6D7+WfTaOIKlVoytPBq1yf/Carrw6BPmzOZVHP+Gn1Xwwyx7lGE
-         X36yIzxxCrHkdQcXDvHGsbU+ne1JOBJCVvimkEPXDxGc7HUHnxgwT7J6Smmbkyj4zx
-         CYAEIU2UiIHW7fJ3mIkx8JSYU/IewG8A5gquCVWk=
-Date:   Mon, 9 Nov 2020 14:11:12 -0500
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] nfsd 5.10 fixes
-Message-ID: <20201109191112.GE11144@fieldses.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+        id S1730470AbgKITdd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 9 Nov 2020 14:33:33 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:33688 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729831AbgKITdc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Nov 2020 14:33:32 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A9JXTuh093233;
+        Mon, 9 Nov 2020 19:33:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=v8kRVvy556fGGPqyFh6SHsBSjLR6I7c3YmpYh5wlKc4=;
+ b=a6i1oQYya1p0EAogO1bIb4J3LFK01zp37Xqc84NK+1O9EnACZpnUAzz1zCcv6ycYcNry
+ Jfa7FfnLfafrzQJ0HMiaznX6h3v5X0A3XQBqYZgqESaFm0ePbTbHZL29OvW5mgoN0xQd
+ 7VlRuJJDceU0qVuIzR8jv/ut8H3qq3ZOmNhIpvJCptwARt4h3+M47Y+sRY2qpdZ4CGy3
+ /a0frOEBojWu7647KgbsME8t+NBL6kOoNaCrK9nUCgm0mgQeT1BXtJQcOnTMXPE0VRmV
+ aKiPZ+dfXfC0k/0ncBjwYD0oeixUTy7mIm51FnGg67d/P4VUP0pJrjNyCok+sN1Erlrx hw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 34nh3ar13v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 09 Nov 2020 19:33:29 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A9JVFlv190884;
+        Mon, 9 Nov 2020 19:31:29 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 34p5bqxht4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Nov 2020 19:31:28 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0A9JVR9Z027253;
+        Mon, 9 Nov 2020 19:31:27 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 09 Nov 2020 11:31:27 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [PATCH RFC] SUNRPC: Use zero-copy to perform socket send
+ operations
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <3194609c525610dc502d69f11c09cff1c9b21f2d.camel@hammerspace.com>
+Date:   Mon, 9 Nov 2020 14:31:26 -0500
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A3D0FF41-D88F-4116-AD47-AF9C94B1D984@oracle.com>
+References: <160493771006.15633.8524084764848931537.stgit@klimt.1015granger.net>
+ <9ce015245c916b2c90de72440a22f801142f2c6e.camel@hammerspace.com>
+ <0313136F-6801-434F-8304-72B9EADD389E@oracle.com>
+ <f03dae6d36c0f008796ae01bbb6de3673e783571.camel@hammerspace.com>
+ <5056C7C7-7B26-4667-9691-D2F634C02FB1@oracle.com>
+ <3194609c525610dc502d69f11c09cff1c9b21f2d.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9800 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011090130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9800 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 priorityscore=1501
+ clxscore=1015 malwarescore=0 mlxscore=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011090130
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Please pull nfsd fixes for 5.10 from
 
-  git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.10-1
 
-This is mainly server-to-server copy and fallout from Chuck's 5.10 rpc
-refactoring.
+> On Nov 9, 2020, at 1:16 PM, Trond Myklebust <trondmy@hammerspace.com> =
+wrote:
+>=20
+> On Mon, 2020-11-09 at 12:36 -0500, Chuck Lever wrote:
+>>=20
+>>=20
+>>> On Nov 9, 2020, at 12:32 PM, Trond Myklebust <
+>>> trondmy@hammerspace.com> wrote:
+>>>=20
+>>> On Mon, 2020-11-09 at 12:12 -0500, Chuck Lever wrote:
+>>>>=20
+>>>>=20
+>>>>> On Nov 9, 2020, at 12:08 PM, Trond Myklebust
+>>>>> <trondmy@hammerspace.com> wrote:
+>>>>>=20
+>>>>> On Mon, 2020-11-09 at 11:03 -0500, Chuck Lever wrote:
+>>>>>> Daire Byrne reports a ~50% aggregrate throughput regression
+>>>>>> on
+>>>>>> his
+>>>>>> Linux NFS server after commit da1661b93bf4 ("SUNRPC: Teach
+>>>>>> server
+>>>>>> to
+>>>>>> use xprt_sock_sendmsg for socket sends"), which replaced
+>>>>>> kernel_send_page() calls in NFSD's socket send path with
+>>>>>> calls to
+>>>>>> sock_sendmsg() using iov_iter.
+>>>>>>=20
+>>>>>> Investigation showed that tcp_sendmsg() was not using zero-
+>>>>>> copy
+>>>>>> to
+>>>>>> send the xdr_buf's bvec pages, but instead was relying on
+>>>>>> memcpy.
+>>>>>>=20
+>>>>>> Set up the socket and each msghdr that bears bvec pages to
+>>>>>> use
+>>>>>> the
+>>>>>> zero-copy mechanism in tcp_sendmsg.
+>>>>>>=20
+>>>>>> Reported-by: Daire Byrne <daire@dneg.com>
+>>>>>> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=3D209439
+>>>>>> Fixes: da1661b93bf4 ("SUNRPC: Teach server to use
+>>>>>> xprt_sock_sendmsg
+>>>>>> for socket sends")
+>>>>>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>>>>>> ---
+>>>>>>  net/sunrpc/socklib.c  |    5 ++++-
+>>>>>>  net/sunrpc/svcsock.c  |    1 +
+>>>>>>  net/sunrpc/xprtsock.c |    1 +
+>>>>>>  3 files changed, 6 insertions(+), 1 deletion(-)
+>>>>>>=20
+>>>>>> This patch does not fully resolve the issue. Daire reports
+>>>>>> high
+>>>>>> softIRQ activity after the patch is applied, and this
+>>>>>> activity
+>>>>>> seems to prevent full restoration of previous performance.
+>>>>>>=20
+>>>>>>=20
+>>>>>> diff --git a/net/sunrpc/socklib.c b/net/sunrpc/socklib.c
+>>>>>> index d52313af82bc..af47596a7bdd 100644
+>>>>>> --- a/net/sunrpc/socklib.c
+>>>>>> +++ b/net/sunrpc/socklib.c
+>>>>>> @@ -226,9 +226,12 @@ static int xprt_send_pagedata(struct
+>>>>>> socket
+>>>>>> *sock, struct msghdr *msg,
+>>>>>>         if (err < 0)
+>>>>>>                 return err;
+>>>>>> =20
+>>>>>> +       msg->msg_flags |=3D MSG_ZEROCOPY;
+>>>>>>         iov_iter_bvec(&msg->msg_iter, WRITE, xdr->bvec,
+>>>>>> xdr_buf_pagecount(xdr),
+>>>>>>                       xdr->page_len + xdr->page_base);
+>>>>>> -       return xprt_sendmsg(sock, msg, base + xdr-
+>>>>>>> page_base);
+>>>>>> +       err =3D xprt_sendmsg(sock, msg, base + xdr->page_base);
+>>>>>> +       msg->msg_flags &=3D ~MSG_ZEROCOPY;
+>>>>>> +       return err;
+>>>>>>  }
+>>>>>> =20
+>>>>>>  /* Common case:
+>>>>>> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+>>>>>> index c2752e2b9ce3..c814b4953b15 100644
+>>>>>> --- a/net/sunrpc/svcsock.c
+>>>>>> +++ b/net/sunrpc/svcsock.c
+>>>>>> @@ -1176,6 +1176,7 @@ static void svc_tcp_init(struct
+>>>>>> svc_sock
+>>>>>> *svsk,
+>>>>>> struct svc_serv *serv)
+>>>>>>                 svsk->sk_datalen =3D 0;
+>>>>>>                 memset(&svsk->sk_pages[0], 0, sizeof(svsk-
+>>>>>>> sk_pages));
+>>>>>> =20
+>>>>>> +               sock_set_flag(sk, SOCK_ZEROCOPY);
+>>>>>>                 tcp_sk(sk)->nonagle |=3D TCP_NAGLE_OFF;
+>>>>>> =20
+>>>>>>                 set_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
+>>>>>> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+>>>>>> index 7090bbee0ec5..343c6396b297 100644
+>>>>>> --- a/net/sunrpc/xprtsock.c
+>>>>>> +++ b/net/sunrpc/xprtsock.c
+>>>>>> @@ -2175,6 +2175,7 @@ static int
+>>>>>> xs_tcp_finish_connecting(struct
+>>>>>> rpc_xprt *xprt, struct socket *sock)
+>>>>>> =20
+>>>>>>                 /* socket options */
+>>>>>>                 sock_reset_flag(sk, SOCK_LINGER);
+>>>>>> +               sock_set_flag(sk, SOCK_ZEROCOPY);
+>>>>>>                 tcp_sk(sk)->nonagle |=3D TCP_NAGLE_OFF;
+>>>>>> =20
+>>>>>>                 xprt_clear_connected(xprt);
+>>>>>>=20
+>>>>>>=20
+>>>>> I'm thinking we are not really allowed to do that here. The
+>>>>> pages
+>>>>> we
+>>>>> pass in to the RPC layer are not guaranteed to contain stable
+>>>>> data
+>>>>> since they include unlocked page cache pages as well as
+>>>>> O_DIRECT
+>>>>> pages.
+>>>>=20
+>>>> I assume you mean the client side only. Those issues aren't a
+>>>> factor
+>>>> on the server. Not setting SOCK_ZEROCOPY here should be enough to
+>>>> prevent the use of zero-copy on the client.
+>>>>=20
+>>>> However, the client loses the benefits of sending a page at a
+>>>> time.
+>>>> Is there a desire to remedy that somehow?
+>>>=20
+>>> What about splice reads on the server side?
+>>=20
+>> On the server, this path formerly used kernel_sendpages(), which I
+>> assumed is similar to the sendmsg zero-copy mechanism. How does
+>> kernel_sendpages() mitigate against page instability?
+>=20
+> It copies the data. =F0=9F=99=82
 
---b.
+tcp_sendmsg_locked() invokes skb_copy_to_page_nocache(), which is
+where Daire's performance-robbing memcpy occurs.
 
-Chuck Lever (3):
-      NFSD: NFSv3 PATHCONF Reply is improperly formed
-      SUNRPC: Fix general protection fault in trace_rpc_xdr_overflow()
-      NFSD: MKNOD should return NFSERR_BADTYPE instead of NFSERR_INVAL
+do_tcp_sendpages() has no such call site. Therefore the legacy
+sendpage-based path has at least one fewer data copy operations.
 
-Dai Ngo (2):
-      NFSD: Fix use-after-free warning when doing inter-server copy
-      NFSD: fix missing refcount in nfsd4_copy by nfsd4_do_async_copy
+What is the appropriate way to make tcp_sendmsg() treat a bvec-bearing
+msghdr like an array of struct page pointers passed to kernel_sendpage() =
+?
 
-Dan Carpenter (2):
-      net/sunrpc: return 0 on attempt to write to "transports"
-      net/sunrpc: fix useless comparison in proc_do_xprt()
 
- fs/nfsd/nfs3proc.c            | 6 +-----
- fs/nfsd/nfs3xdr.c             | 1 +
- fs/nfsd/nfs4proc.c            | 3 ++-
- include/trace/events/sunrpc.h | 8 ++++----
- net/sunrpc/sysctl.c           | 9 +++++----
- 5 files changed, 13 insertions(+), 14 deletions(-)
+--
+Chuck Lever
+
+
+
