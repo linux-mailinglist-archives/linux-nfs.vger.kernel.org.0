@@ -2,127 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A408C2AC802
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Nov 2020 23:06:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E7532AC857
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Nov 2020 23:26:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbgKIWGZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 9 Nov 2020 17:06:25 -0500
-Received: from mail-eopbgr750101.outbound.protection.outlook.com ([40.107.75.101]:58944
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725946AbgKIWGX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 9 Nov 2020 17:06:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d+i9ZB4p5Qg82sUtFU/TnBHz/1GUCH8k9q4St+uSZ9pDVMO81U6l7xbALnnxuR/rxH1yLPVnxJj8BzJcjz7eyG1C9nuVGzJSWcg532+xY3X4xsBA74U1MqR13dcQrztNAyou/Hh0vdA/uuWTojQpFfLKXozxhSQWZvB7MBqRq1jRrsKNhEUTH0Ys6DF/jYCmKWoYfCcCVZ0+31j/RHhcmTPpDY55SbTEzj6wD3bGQbdSSs1bMyAJTB9vqNfQppmF8WqAtzTk1GBp0PhdCXfFH5XL+xGbE/8V2BZLNWyNStJw/yVkWnfW3U1IBciyDn551NyIPEuM6ii/emDYTDZy2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MzT4Kj8Ds3FvfrcIwwFzLdG3qJGfpO6JkJNzXFuBAXM=;
- b=KN1CLr8+3sf67l5JdZohIl1lOspYNJAAmrH3t0FYJhYCFe2tiuuPvurhv/8ldwPkl6ipNyneMwgt5WOsinBCzfFLufQxiKF3/VhbUp/hWynqrl01LK08NAVHfLXGwRFbs7DNbMoXTS66s5u0NGzi4ABvx27eq2sTux3/oJ6DOe4Co+UN7uK4Xp2WwJpj+kE863RGgICRaUEQU1oB4oO1dBzAEWxtYBOTWDuHri46bzA1/o+JkxfW3nKbC0oQ15XoxWIfk2UKBt192M93QyIP/H6n0ExX6zPUPdUDK8EU33BKHUdaFyxV5zOETAsKx6W6QMgJHgeaGuB9iM4d2H+bjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MzT4Kj8Ds3FvfrcIwwFzLdG3qJGfpO6JkJNzXFuBAXM=;
- b=bS4v8idw0IImLLlZMkqw6W4+Suk/o3nKvL5jsF0n/Qsy1CDmsaO+sM5lTQ/oCvgrYgxTo3fxsGvK+veolyf90uJifS6JBfiuhPVwkVDqQXbIRupfKQXped25R0CVMXirtWoJZTTZ8yT/Lc9+jCJasytZjIprMVj8WltKWHaRIXg=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB3390.namprd13.prod.outlook.com (2603:10b6:208:163::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.21; Mon, 9 Nov
- 2020 22:06:18 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.018; Mon, 9 Nov 2020
- 22:06:18 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2 1/5] SUNRPC: xprt_load_transport() needs to support the
- netid "rdma6"
-Thread-Topic: [PATCH v2 1/5] SUNRPC: xprt_load_transport() needs to support
- the netid "rdma6"
-Thread-Index: AQHWtt4wJmvWIqsO0Uq/iwdKELJe16nAVs4AgAAEjAA=
-Date:   Mon, 9 Nov 2020 22:06:18 +0000
-Message-ID: <f5f3d846dc339fa9b79533235cb7971dd5c8a71d.camel@hammerspace.com>
-References: <20201109211029.540993-1-trond.myklebust@hammerspace.com>
-         <20201109211029.540993-2-trond.myklebust@hammerspace.com>
-         <1BBDFE45-EFF6-4997-A6C1-E4BB07863ACB@oracle.com>
-In-Reply-To: <1BBDFE45-EFF6-4997-A6C1-E4BB07863ACB@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0ed914b0-2d6a-46af-a4e2-08d884fbaf46
-x-ms-traffictypediagnostic: MN2PR13MB3390:
-x-microsoft-antispam-prvs: <MN2PR13MB3390A82D09E57099910D4E48B8EA0@MN2PR13MB3390.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XOr8N8maNzvjM0PTJr6QGNUVdBS0iZZNdD75bJ+fJf+EDFe9gzR+Nt6GT2sPuGsYX+RpiVXMVGgTNjSPlHJXVUz9z9DIpqQDgKbldRa/SGQ/9XabTpNi+5I1FjkgGEa8i28bJ/hmOw1xEY6qRIIMiXmzLduXW0Cp0DgogzHJtUdcgW/TsknvePpqrX7TEzeOoRLpHtwNcfkRkEMVv3aNWxRUeyBf9KSpIP2yri25Ol6nbBJ50uXDGsSo7lnQ64q7wZ5aCFTR/NkI5r4G0bT+ZwEgk+VhBqTAJdCjk2AkkEnnrKUTTvvjMpKCJxJUvQMqrHJ3P+RBSxq/xY+9ir0U4w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(39830400003)(136003)(346002)(376002)(396003)(8936002)(5660300002)(8676002)(6486002)(66946007)(2616005)(6512007)(316002)(66476007)(76116006)(36756003)(478600001)(91956017)(66556008)(66446008)(64756008)(26005)(186003)(4326008)(6916009)(86362001)(53546011)(6506007)(71200400001)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 55LAaCqybegI0CRJ9/r99TADDnaKjASIIpPDzMXAkDHl9G5+ZaOq4F+JkDSOE4YRCE/37oEZbyXEtw5kr6/dx+5jfBSKvxsvcdjPs7j+H//EGophgvjVWNzfL3aZw4O5iwcZKqe0PeBoAd2dzfmfB3mPo6p0W/q6JCYRhWreHaGDj24kS7YOVwZOEPgwi3vI5fmJytHOOoQenV14CjXVlX6xHIlQvFcS+4eh8j6Y42rzms9wWwrc+lKCGbfUxiw4QdPrtHJNFZa0ACyK4RdVUt04ZFY9mCpbnGHVJf2ZfH8lE5/ZRrLfj+5yzskcjKWhTyZQWYnB0lsmwQlplvyA80nibzWUC35dfpyH3XFWYMUfohW9gLaNJs4gM7icHUDsj2bAOgJ57pZg01Fv3YU4W7FL2fapZaPgJQvHAXXX+928AxEtKxKGhywuWWdbyBRoikTmHIGKSoVbaYRuopRI2SgUUfGrvF1J/2cRX/uRxM+wkyhtNYx7muPQvjY4sn/s2HmUOLc2bpyzzSscySkMk1WH0hFQq/pYemN4q1wlw6lIJaMmoX+WhIOHxnVePnp4PFncRWF1KqLMj+IcZEmDyqzc4rmtcw//odFqRIJ/j8jnIrkPfgTZUY201FKp+RHrARr55T3l+aJrIq+LX7V/cA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E75BFAC374F3984FA4C9320FA51EA4D6@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1731565AbgKIW0l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 9 Nov 2020 17:26:41 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:45468 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731496AbgKIW0l (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Nov 2020 17:26:41 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A9MOtFU105476;
+        Mon, 9 Nov 2020 22:26:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=0ZJRy9RnZmHGyK8akzTu+QHy67v3hJLon9bxf7Fw+0k=;
+ b=uY5Izoci7iQPN3mHYZSnBfOkgcbFzkFhD+a48ZzYtFWGDEc0/L8mCAdQ9XFhyY0Iuocn
+ /qbKoDNX5ogzjyLgIoIsi6zDy/dnEVm3Oe0qC0BsoPSSPnaFLLF2ln89Vn/ff/t2CyMb
+ p/0iRZjX4PydjRf2s8aFfn/zYwcQ556njKakMpWo6BDbtlYqjlt2sjI1SFVkkjXLFP92
+ 5POjeGToFYReENnoKqUXVeAngaLb0MJk6EpFWlsfZlY4aYc/EzOM8awumSfvJJdFtDvG
+ Vaq1bzcctbwwwAz6iYZDL/8P7jEN+0c7WLo7qf+Xw98+4cm6FDuCauoT171ZGhntDN8X 4Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 34nkhkrks9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 09 Nov 2020 22:26:39 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A9MK6mO149769;
+        Mon, 9 Nov 2020 22:26:38 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 34p5gvwxk8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Nov 2020 22:26:38 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0A9MQc7C001215;
+        Mon, 9 Nov 2020 22:26:38 GMT
+Received: from dhcp-10-154-143-59.vpn.oracle.com (/10.154.143.59)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 09 Nov 2020 14:26:37 -0800
+Subject: Re: [PATCH v4 1/1] NFSv4.2: Fix NFS4ERR_STALE error when doing inter
+ server copy
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     linux-nfs@vger.kernel.org
+References: <20201019034249.27990-1-dai.ngo@oracle.com>
+ <20201020170114.GF1133@fieldses.org>
+ <fb514565-cd47-9180-2adc-f3ba4459202b@oracle.com>
+ <20201109183054.GD11144@fieldses.org>
+ <eeafd9e2-5d04-848e-d330-670e2185098d@oracle.com>
+ <20201109204206.GA20261@fieldses.org>
+From:   Dai Ngo <dai.ngo@oracle.com>
+Message-ID: <7a18452a-3120-ea5b-f676-9d7e18a65446@oracle.com>
+Date:   Mon, 9 Nov 2020 14:26:37 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ed914b0-2d6a-46af-a4e2-08d884fbaf46
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Nov 2020 22:06:18.2845
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 95tYasF2oZ7rYC2qUnBxe4GQf/UQOYVEZDBK2J/PjLWaYUYrIv144he67ltrhy03aWveHOY7JLATqDZ74N0OlA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3390
+In-Reply-To: <20201109204206.GA20261@fieldses.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9800 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ spamscore=0 phishscore=0 adultscore=0 malwarescore=0 suspectscore=3
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011090141
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9800 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
+ mlxscore=0 suspectscore=3 mlxlogscore=999 lowpriorityscore=0 spamscore=0
+ malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011090141
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTExLTA5IGF0IDE2OjUwIC0wNTAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
-DQo+IA0KPiA+IE9uIE5vdiA5LCAyMDIwLCBhdCA0OjEwIFBNLCB0cm9uZG15QGdtYWlsLmNvbcKg
-d3JvdGU6DQo+ID4gDQo+ID4gRnJvbTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWtsZWJ1c3RA
-aGFtbWVyc3BhY2UuY29tPg0KPiA+IA0KPiA+IEFjY29yZGluZyB0byBSRkM1NjY2LCB0aGUgY29y
-cmVjdCBuZXRpZCBmb3IgYW4gSVB2NiBhZGRyZXNzZWQgUkRNQQ0KPiA+IHRyYW5zcG9ydCBpcyAi
-cmRtYTYiLCB3aGljaCB3ZSd2ZSBzdXBwb3J0ZWQgYXMgYSBtb3VudCBvcHRpb24gc2luY2UNCj4g
-PiBMaW51eC00LjcuIFRoZSBwcm9ibGVtIGlzIHdoZW4gd2UgdHJ5IHRvIGxvYWQgdGhlIG1vZHVs
-ZQ0KPiA+ICJ4cHJ0cmRtYTYiLA0KPiA+IHRoYXQgd2lsbCBmYWlsLCBzaW5jZSB0aGVyZSBpcyBu
-byBtb2R1bGVhbGlhcyBvZiB0aGF0IG5hbWUuDQo+IA0KPiBUcnlpbmcgdG8gd3JhcCBteSBoZWFk
-IGFyb3VuZCB0aGlzLiBXaG8gaXMgZm9ybWluZyB0aGUgbGVnYWN5IG5hbWVzDQo+ICJ4cHJ0cmRt
-YTYiIGFuZCAic3ZjcmRtYTYiID8NCg0KSSBkb24ndCBjYXJlIGFib3V0ICJzdmNyZG1hNiIsIGJl
-Y2F1c2Ugbm90aGluZyB1c2VzIHRoYXQgbmFtZSwgQUZBSUNTLA0KYmVjYXVzZSBfX3dyaXRlX3Bv
-cnRzX2FkZHhwcnQoKSBhcHBlYXJzIHRvIHVzZSB0aGUgInRyYW5zcG9ydCBuYW1lIiwNCndoYXRl
-dmVyIHRoYXQgaXMuDQoNCj4gVGhlIG1vZHVsZSBuYW1lIHRoZXNlIGRheXMgaXMgInJwY3JkbWEi
-LiBTZWVtcyBsaWtlIHlvdSBzaG91bGQgZml4DQo+IHRoZSBjb2RlIHRoYXQgaXMgdHJ5aW5nIHRv
-IGxvYWQgdGhlc2UgYnkgdGhlIHdyb25nIG5hbWUgcmF0aGVyIHRoYW4NCj4gYWRkaW5nIG1vcmUg
-bGVnYWN5IG5hbWVzLg0KDQpObywgSSdtIG5vdCBnb2luZyB0byBkbyB0aGF0Lg0KDQpUaGUgaW50
-ZW50aW9uIHdhcyBhbHdheXMgdGhhdCB4cHJ0X2xvYWRfdHJhbnNwb3J0KCkgc2hvdWxkIHRha2Ug
-dGhlDQpuZXRpZCBhcyBpdHMgYXJndW1lbnQuIEZ1cnRoZXJtb3JlLCBpdCBtYWtlcyBubyBzZW5z
-ZSBmb3IgZWl0aGVyIHRoZQ0KTkZTIG9yIGdlbmVyaWMgUlBDIGxheWVycyB0byBoYXZlIHRvIGZp
-Z3VyZSBvdXQgaG93IGJ5IHRoZW1zZWx2ZXMgaG93DQp0byB0cmFuc2xhdGUgbmV0aWRzIGludG8g
-dHJhbnNwb3J0IG1vZHVsZSBuYW1lcy4NCg0KPiANCj4gPiBGaXhlczogMTgxMzQyYzVlYmU4ICgi
-eHBydHJkbWE6IEFkZCByZG1hNiBvcHRpb24gdG8gc3VwcG9ydA0KPiA+IE5GUy9SRE1BIElQdjYi
-KQ0KPiA+IFNpZ25lZC1vZmYtYnk6IFRyb25kIE15a2xlYnVzdCA8dHJvbmQubXlrbGVidXN0QGhh
-bW1lcnNwYWNlLmNvbT4NCj4gPiAtLS0NCj4gPiBuZXQvc3VucnBjL3hwcnRyZG1hL21vZHVsZS5j
-IHwgMiArKw0KPiA+IDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBk
-aWZmIC0tZ2l0IGEvbmV0L3N1bnJwYy94cHJ0cmRtYS9tb2R1bGUuYw0KPiA+IGIvbmV0L3N1bnJw
-Yy94cHJ0cmRtYS9tb2R1bGUuYw0KPiA+IGluZGV4IDYyMDMyN2MwMTMwMi4uZmI1NTk4MzYyOGI0
-IDEwMDY0NA0KPiA+IC0tLSBhL25ldC9zdW5ycGMveHBydHJkbWEvbW9kdWxlLmMNCj4gPiArKysg
-Yi9uZXQvc3VucnBjL3hwcnRyZG1hL21vZHVsZS5jDQo+ID4gQEAgLTIzLDcgKzIzLDkgQEAgTU9E
-VUxFX0FVVEhPUigiT3BlbiBHcmlkIENvbXB1dGluZyBhbmQgTmV0d29yaw0KPiA+IEFwcGxpYW5j
-ZSwgSW5jLiIpOw0KPiA+IE1PRFVMRV9ERVNDUklQVElPTigiUlBDL1JETUEgVHJhbnNwb3J0Iik7
-DQo+ID4gTU9EVUxFX0xJQ0VOU0UoIkR1YWwgQlNEL0dQTCIpOw0KPiA+IE1PRFVMRV9BTElBUygi
-c3ZjcmRtYSIpOw0KPiA+ICtNT0RVTEVfQUxJQVMoInN2Y3JkbWE2Iik7DQo+ID4gTU9EVUxFX0FM
-SUFTKCJ4cHJ0cmRtYSIpOw0KPiA+ICtNT0RVTEVfQUxJQVMoInhwcnRyZG1hNiIpOw0KPiA+IA0K
-PiA+IHN0YXRpYyB2b2lkIF9fZXhpdCBycGNfcmRtYV9jbGVhbnVwKHZvaWQpDQo+ID4gew0KPiA+
-IC0tIA0KPiA+IDIuMjguMA0KPiA+IA0KPiANCj4gLS0NCj4gQ2h1Y2sgTGV2ZXINCj4gDQo+IA0K
-PiANCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwg
-SGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+
+On 11/9/20 12:42 PM, J. Bruce Fields wrote:
+> On Mon, Nov 09, 2020 at 11:34:08AM -0800, Dai Ngo wrote:
+>> On 11/9/20 10:30 AM, J. Bruce Fields wrote:
+>>> On Tue, Oct 20, 2020 at 11:34:35AM -0700, Dai Ngo wrote:
+>>>> On 10/20/20 10:01 AM, J. Bruce Fields wrote:
+>>>>> On Sun, Oct 18, 2020 at 11:42:49PM -0400, Dai Ngo wrote:
+>>>>>> NFS_FS=y as dependency of CONFIG_NFSD_V4_2_INTER_SSC still have
+>>>>>> build errors and some configs with NFSD=m to get NFS4ERR_STALE
+>>>>>> error when doing inter server copy.
+>>>>>>
+>>>>>> Added ops table in nfs_common for knfsd to access NFS client modules.
+>>>>> OK, looks reasonable to me, applying.  Does this resolve all the
+>>>>> problems you've seen, or is there any bad case left?
+>>>> Thanks Bruce.
+>>>>
+>>>> With this patch, I no longer see the NFS4ERR_STALE in any config.
+>>>>
+>>>> The problem with NFS4ERR_STALE was because of a bug in nfs42_ssc_open.
+>>>> When CONFIG_NFSD_V4_2_INTER_SSC is not defined, nfs42_ssc_open
+>>>> returns NULL which is incorrect allowing the operation to continue
+>>>> until nfsd4_putfh which does not have the code to handle nfserr_stale.
+>>>>
+>>>> With this patch, when CONFIG_NFSD_V4_2_INTER_SSC is not defined the
+>>>> new nfs42_ssc_open returns ERR_PTR(-EIO) which causes the NFS client
+>>>> to switch over to the split copying (read src and write to dst).
+>>> That sounds reasonable, but I don't see any of the patches you've sent
+>>> changing that error return.  Did I overlook something, or did you mean
+>>> to append a patch to this message?
+>> Since with the patch, I did not run into the condition where NFS4ERR_STALE
+>> is returned so I did not fix this return error code. Do you want me to
+>> submit another patch to change the returned error code from NFS4ERR_STALE
+>> to NFS4ERR_NOTSUPP if it ever runs into that condition?
+> That would be great, thanks.  (I mean, it is still possible to hit that
+> case, right?  You just didn't test with !CONFIG_NFSD_V4_2_INTER_SSC ?)
+
+will do. I did tested with (!CONFIG_NFSD_V4_2_INTER_SSC) but did not hit
+this case. Because with this patch, when CONFIG_NFSD_V4_2_INTER_SSC is not
+defined the new nfs42_ssc_open returns ERR_PTR(-EIO), instead of NULL in
+the old code, which causes the NFS client to switch over to the split
+copying (read src and write to dst).
+Returning NULL in the old nfs42_ssc_open is not correct, it allows the copy
+operation to proceed and hits the NFS4ERR_STALE case in the COPY operation.
+
+-Dai
+
+>
+> --b.
