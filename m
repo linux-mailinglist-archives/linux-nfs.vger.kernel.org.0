@@ -2,120 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4786D2BFE09
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 02:24:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DB2F2BFE16
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 02:57:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgKWBYJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 22 Nov 2020 20:24:09 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:45708 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgKWBYI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Nov 2020 20:24:08 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AN1O6Qu110016;
-        Mon, 23 Nov 2020 01:24:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=SfTYlJxogPV3K4+IQFVcQfu/ifZGhkNVB1nWRRmntz8=;
- b=qGKUBEkkXOBhdpHWJ2DKOmuq6tQGQ0MLwPgNSSZEHpcKDC+C+6Xn4YxKfPPNvTeoYxbm
- dInjUR5wYweFYNWnvjjLOJWmJIFZ68HHfpfB3OglYEUXzGQA96cYugMzdvii5CyZXAzq
- co+t7ahvq7mM0ASCqnxBdNVEnDVcpcoV4y2pQQQDq/GKUpSIh3EUPQBxD9pjOrRfr4HO
- Koq0vFEM1WGhor+qNQygkwBfI9ScUwbdku8au1LoBrIiQzrUyi2qIstnvtII7Pwpg0pJ
- fH7dZFOgkICCyK3Wo+pKpcTLHExwgmCYQz8HvWiDo2UCvm2MIECKC9tjhdT/76mMXsrv ZQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 34xuhmjxg0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Nov 2020 01:24:06 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AN1JmAb095978;
-        Mon, 23 Nov 2020 01:24:05 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 34ycnq31ay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Nov 2020 01:24:05 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AN1O49s031566;
-        Mon, 23 Nov 2020 01:24:05 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 22 Nov 2020 17:24:04 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH 5/8] SUNRPC: Don't truncate tail in xdr_inline_pages()
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20201122205229.3826-6-trondmy@kernel.org>
-Date:   Sun, 22 Nov 2020 20:24:03 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0CB9471F-ACC6-42A1-8DCD-8A9E74BAF8F1@oracle.com>
-References: <20201122205229.3826-1-trondmy@kernel.org>
- <20201122205229.3826-2-trondmy@kernel.org>
- <20201122205229.3826-3-trondmy@kernel.org>
- <20201122205229.3826-4-trondmy@kernel.org>
- <20201122205229.3826-5-trondmy@kernel.org>
- <20201122205229.3826-6-trondmy@kernel.org>
-To:     trondmy@kernel.org
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9813 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=1
- mlxlogscore=999 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011230006
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9813 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- adultscore=0 phishscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
- suspectscore=1 priorityscore=1501 mlxlogscore=999 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011230006
+        id S1726620AbgKWB5G convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Sun, 22 Nov 2020 20:57:06 -0500
+Received: from sw73-70-41.adsl.seed.net.tw ([203.73.70.41]:48543 "EHLO
+        oa.trendtek.com.tw" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgKWB5G (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Nov 2020 20:57:06 -0500
+Received: from [156.96.44.214] ([156.96.44.214])
+        (authenticated bits=0)
+        by oa.trendtek.com.tw (8.13.8/8.13.1) with ESMTP id 0AACI9Hx004590
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Nov 2020 20:18:26 +0800
+Message-Id: <202011101218.0AACI9Hx004590@oa.trendtek.com.tw>
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Corporate and Personal Loan+
+To:     linux-nfs@vger.kernel.org
+From:   "Investment  Corporate" <financialcapability6@gmail.com>
+Date:   Tue, 10 Nov 2020 04:18:23 -0800
+Reply-To: hmurrah39@gmail.com
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hello linux-nfs@vger.kernel.org
 
 
-> On Nov 22, 2020, at 3:52 PM, trondmy@kernel.org wrote:
->=20
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->=20
-> True that if the length of the pages[] array is not 4-byte aligned, =
-then
-> we will need to store the padding in the tail, but there is no need to
-> truncate the total buffer length here.
-
-This description confuses me. The existing code reduces the length of
-the tail, not the "total buffer length." And what the removed logic is
-doing is taking out the length of the XDR pad for the pages array when
-it is not expected to be used.
+We are Base Investment Company offering Corporate and Personal Loan at 3% Interest Rate for a duration of 10Years.
 
 
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
-> net/sunrpc/xdr.c | 3 ---
-> 1 file changed, 3 deletions(-)
->=20
-> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-> index 3ce0a5daa9eb..5a450055469f 100644
-> --- a/net/sunrpc/xdr.c
-> +++ b/net/sunrpc/xdr.c
-> @@ -193,9 +193,6 @@ xdr_inline_pages(struct xdr_buf *xdr, unsigned int =
-offset,
->=20
-> 	tail->iov_base =3D buf + offset;
-> 	tail->iov_len =3D buflen - offset;
-> -	if ((xdr->page_len & 3) =3D=3D 0)
-> -		tail->iov_len -=3D sizeof(__be32);
-> -
-> 	xdr->buflen +=3D len;
-> }
-> EXPORT_SYMBOL_GPL(xdr_inline_pages);
-> --=20
-> 2.28.0
->=20
-
---
-Chuck Lever
+We also pay 1% commission to brokers, who introduce project owners for finance or other opportunities.
 
 
+Please get back to me if you are interested for more
 
+details.
+
+
+Yours faithfully,
+
+Hashim Murrah
