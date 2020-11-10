@@ -2,192 +2,175 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F035C2ACE79
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Nov 2020 05:18:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80BE32ACED0
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Nov 2020 06:00:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgKJESx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 9 Nov 2020 23:18:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729243AbgKJESx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Nov 2020 23:18:53 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73E8CC0613CF
-        for <linux-nfs@vger.kernel.org>; Mon,  9 Nov 2020 20:18:53 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id f38so9062085pgm.2
-        for <linux-nfs@vger.kernel.org>; Mon, 09 Nov 2020 20:18:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=v1Sc4PjPGpot7NoATWAYOOjbPzYoqv7HnG/nSNu682I=;
-        b=Qjbs99cu8XA02OyTHfK9fsD4JPargyw6WgNGJKhdoiQ4wsrtyrityQN/k18cNolY9I
-         BGcCefSI0zfrZ/Hqm2PpE9IjLjttmNEA2EGEMx/qU/yCraN2eYz+H5s3Buz8AlEiVq9d
-         ut2L3wNA6c4mCOdYy08ojT633EV0NaZo5x7IKDCR1rPmaSOHb/NGgxwYkjOh4gsO2DpO
-         Yqk25HXPzo/OXnNYabAcA2DUpXujA00uHdl5frk73olk6SZ6y2Iop8CmUQWYFeaGItcv
-         PCKPQibO1cVlPcc7F306Vh5BDObwrnX/yBRbu5V7s7e04PzqKl209Z5/QhbsAKVTSlDF
-         3KVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=v1Sc4PjPGpot7NoATWAYOOjbPzYoqv7HnG/nSNu682I=;
-        b=YiTIwNl2jQsXlr4I+9bQkDhV+CQgwXw9oXkU2EmEqo5E78+mHtY5P6u8a2Y9JWBfNY
-         AGuhI3Uvkkp5+A2zsZnghRNwXt2aV4OZO45X1x2073b7F+yu5UVNZlT+g74AXUKWtZOe
-         mjWmy58kfdpHooBzGR51PMV+sJsNA7wGYMn9j0RuHPE5yQfOzfSRanOmKl9jv+g++nND
-         7plBu2sUrJ4/AFAEouyWXFIRP7YS7wBgs045niQPw2CphP4SEEOLU5WhP7ydHBUZchnD
-         V8PYkSo1jP1l/9qDzI9QQJatV7xvfCddxdNmG5MxWoLQ9J9++bzTnth8eT8kBBVPO5a5
-         9mgw==
-X-Gm-Message-State: AOAM533gWDWalC6LXMDfBTwfOd2ZBwSvF9qwMoHap1Ocs3j6eg45DJx7
-        ANqwWn4kVllnSBUtgr0QgCRmUqqBP9s=
-X-Google-Smtp-Source: ABdhPJwgFUXV6tHp6FhiYwxg79EG+2kSQj28G/zUt5kKPsjh/q9zQZWJpV1wGGYCSxOgTS7VBGe7FA==
-X-Received: by 2002:a63:fc5f:: with SMTP id r31mr15344590pgk.90.1604981932899;
-        Mon, 09 Nov 2020 20:18:52 -0800 (PST)
-Received: from localhost ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id k17sm1118543pji.50.2020.11.09.20.18.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2020 20:18:52 -0800 (PST)
-Date:   Tue, 10 Nov 2020 12:18:45 +0800
-From:   Murphy Zhou <jencce.kernel@gmail.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Cc:     linux-nfs@vger.kernel.org, ltp@lists.linux.it
-Subject: Last NFSD update breaks nfsv4.2 copy_file_range
-Message-ID: <20201110041845.ag2kj3l6l6263ri5@xzhoux.usersys.redhat.com>
+        id S1731929AbgKJFAC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Nov 2020 00:00:02 -0500
+Received: from mga17.intel.com ([192.55.52.151]:12625 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729454AbgKJE77 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 9 Nov 2020 23:59:59 -0500
+IronPort-SDR: b21jH+8daNxFd9MhjXJ+hcbKWYaVf+1LuxpUVENj4DuN0lfPZ6JFWJv2XzpSDg/I8fO29ydhkv
+ QgXh15BrSwxQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9800"; a="149768142"
+X-IronPort-AV: E=Sophos;i="5.77,465,1596524400"; 
+   d="scan'208";a="149768142"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 20:59:55 -0800
+IronPort-SDR: hhtGbVHiYEduO62f/jUORNlQE29+PA61IlKuvPXTtZvvOlHxHT75TW+y4i0J9B1O2lrgZ7K2Sp
+ gskiAxl5TCew==
+X-IronPort-AV: E=Sophos;i="5.77,465,1596524400"; 
+   d="scan'208";a="531063331"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 20:59:54 -0800
+Date:   Mon, 9 Nov 2020 20:59:54 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        kvm@vger.kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
+        kexec@lists.infradead.org, linux-bcache@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devel@driverdev.osuosl.org,
+        linux-efi@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-um@lists.infradead.org, linux-ntfs-dev@lists.sourceforge.net,
+        reiserfs-devel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-nilfs@vger.kernel.org, cluster-devel@redhat.com,
+        ecryptfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-rdma@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-cachefs@redhat.com,
+        samba-technical@lists.samba.org, intel-wired-lan@lists.osuosl.org
+Subject: Re: [PATCH RFC PKS/PMEM 05/58] kmap: Introduce k[un]map_thread
+Message-ID: <20201110045954.GL3976735@iweiny-DESK2.sc.intel.com>
+References: <20201009195033.3208459-1-ira.weiny@intel.com>
+ <20201009195033.3208459-6-ira.weiny@intel.com>
+ <87h7pyhv3f.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="gntlxg3aq5x7mobf"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <87h7pyhv3f.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Tue, Nov 10, 2020 at 02:13:56AM +0100, Thomas Gleixner wrote:
+> Ira,
+> 
+> On Fri, Oct 09 2020 at 12:49, ira weiny wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> >
+> > To correctly support the semantics of kmap() with Kernel protection keys
+> > (PKS), kmap() may be required to set the protections on multiple
+> > processors (globally).  Enabling PKS globally can be very expensive
+> > depending on the requested operation.  Furthermore, enabling a domain
+> > globally reduces the protection afforded by PKS.
+> >
+> > Most kmap() (Aprox 209 of 229) callers use the map within a single thread and
+> > have no need for the protection domain to be enabled globally.  However, the
+> > remaining callers do not follow this pattern and, as best I can tell, expect
+> > the mapping to be 'global' and available to any thread who may access the
+> > mapping.[1]
+> >
+> > We don't anticipate global mappings to pmem, however in general there is a
+> > danger in changing the semantics of kmap().  Effectively, this would cause an
+> > unresolved page fault with little to no information about why the failure
+> > occurred.
+> >
+> > To resolve this a number of options were considered.
+> >
+> > 1) Attempt to change all the thread local kmap() calls to kmap_atomic()[2]
+> > 2) Introduce a flags parameter to kmap() to indicate if the mapping should be
+> >    global or not
+> > 3) Change ~20 call sites to 'kmap_global()' to indicate that they require a
+> >    global enablement of the pages.
+> > 4) Change ~209 call sites to 'kmap_thread()' to indicate that the mapping is to
+> >    be used within that thread of execution only
+> >
+> > Option 1 is simply not feasible.  Option 2 would require all of the call sites
+> > of kmap() to change.  Option 3 seems like a good minimal change but there is a
+> > danger that new code may miss the semantic change of kmap() and not get the
+> > behavior the developer intended.  Therefore, #4 was chosen.
+> 
+> There is Option #5:
 
---gntlxg3aq5x7mobf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+There is now yes.  :-D
 
-Hi,
+> 
+> Convert the thread local kmap() invocations to the proposed kmap_local()
+> interface which is coming along [1].
 
-copy_file_range for NFSv4.2 is broke by this
+I've been trying to follow that thread.
 
-commit 9f0b5792f07d8f0745c3620d577d6930ff2a96fd
-Author: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Date:   Mon Sep 28 13:09:01 2020 -0400
+> 
+> That solves a couple of issues:
+> 
+>  1) It relieves the current kmap_atomic() usage sites from the implict
+>     pagefault/preempt disable semantics which apply even when
+>     CONFIG_HIGHMEM is disabled. kmap_local() still can be invoked from
+>     atomic context.
+> 
+>  2) Due to #1 it allows to replace the conditional usage of kmap() and
+>     kmap_atomic() for purely thread local mappings.
+> 
+>  3) It puts the burden on the HIGHMEM inflicted systems
+> 
+>  4) It is actually more efficient for most of the pure thread local use
+>     cases on HIGHMEM inflicted systems because it avoids the overhead of
+>     the global lock and the potential kmap slot exhaustion. A potential
+>     preemption will be more expensive, but that's not really the case we
+>     want to optimize for.
+> 
+>  5) It solves the RT issue vs. kmap_atomic()
+> 
+> So instead of creating yet another variety of kmap() which is just
+> scratching the particular PKRS itch, can we please consolidate all of
+> that on the wider reaching kmap_local() approach?
 
-    NFSD: Encode a full READ_PLUS reply
+Yes I agree.  We absolutely don't want more kmap*() calls and I was hoping to
+dovetail into your kmap_local() work.[2]
 
+I've pivoted away from this work a bit to clean up all the
+kmap()/memcpy*()/kunmaps() as discussed elsewhere in the thread first.[3]  I
+was hoping your work would land and then I could s/kmap_thread()/kmap_local()/
+on all of these patches.
 
-LTP copy_file_range01 repeats this failure:
-copy_file_range01.c:144: TFAIL: file contents do not match
+Also, we can convert the new memcpy_*_page() calls to kmap_local() as well.
+[For now my patch just uses kmap_atomic().]
 
-Revert this commit then the failure gone.
+I've not looked at all of the patches in your latest version.  Have you
+included converting any of the kmap() call sites?  I thought you were more
+focused on converting the kmap_atomic() to kmap_local()?
 
-Attached simplified reproducer for your ref.
+Ira
 
--- 
-Murphy
+> 
+> Thanks,
+> 
+>         tglx
+>      
+> [1] https://lore.kernel.org/lkml/20201103092712.714480842@linutronix.de/
 
---gntlxg3aq5x7mobf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="copy_file_range.c"
+[2] https://lore.kernel.org/lkml/20201012195354.GC2046448@iweiny-DESK2.sc.intel.com/
+[3] https://lore.kernel.org/lkml/20201009213434.GA839@sol.localdomain/
+    https://lore.kernel.org/lkml/20201013200149.GI3576660@ZenIV.linux.org.uk/
 
-#define _GNU_SOURCE
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-#include <sys/syscall.h>
-#include <unistd.h>
-
-int main(int argc, char **argv)
-{
-	int fd_in, fd_out;
-	struct stat stat;
-	loff_t len;
-	ssize_t ret;
-	char buf[2];
-	loff_t in = 0, out, i2, o2, to_cp, copied;
-
-	if (argc != 6) {
-		fprintf(stderr, "Usage: %s <src> <dest> inoff outoff len\n", argv[0]);
-		exit(EXIT_FAILURE);
-	}
-
-	fd_in = open(argv[1], O_RDONLY);
-	if (fd_in == -1) {
-		perror("open (argv[1])");
-		exit(EXIT_FAILURE);
-	}
-
-	fd_out = open(argv[2], O_CREAT|O_WRONLY|O_TRUNC|O_SYNC, 0644);
-	if (fd_out == -1) {
-		perror("open (argv[2])");
-		exit(EXIT_FAILURE);
-	}
-
-	in = strtoul(argv[3], NULL, 0);
-	out = strtoul(argv[4], NULL, 0);
-	len = strtoul(argv[5], NULL, 0);
-	i2 = in;
-	o2 = out;
-	to_cp = len;
-
-	do {
-		ret = copy_file_range(fd_in, &in, fd_out, &out, to_cp, 0);
-		if (ret == -1) {
-			perror("copy_file_range");
-			exit(EXIT_FAILURE);
-		}
-		copied += ret;
-		to_cp -= ret;
-	} while (to_cp > 0 && ret > 0);
-
-	close(fd_in);
-	close(fd_out);
-	sync();
-
-	FILE *fp1, *fp2;
-	int ch1, ch2, count = 0;
-
-	fp1 = fopen(argv[1], "r");
-	if (fseek(fp1, i2, SEEK_SET)) {
-		perror("fseek fp1");
-		exit(EXIT_FAILURE);
-	}
-	fp2 = fopen(argv[2], "r");
-	if (fseek(fp2, o2, SEEK_SET)) {
-		perror("fseek fp2");
-		exit(EXIT_FAILURE);
-	}
-
-	do {
-		ch1 = fgetc(fp1);
-		ch2 = fgetc(fp2);
-		count++;
-	} while ((count < len) && (ch1 == ch2));
-	fclose(fp1);
-	fclose(fp2);
-
-	if (ch1 != ch2) {
-		printf("%d %d %d copied %d ch1 %c ch2 %c count %d file content corrupted\n", i2, o2, len, copied, ch1, ch2, count);
-		return 1;
-	}
-	return 0;
-}
-
---gntlxg3aq5x7mobf
-Content-Type: application/x-sh
-Content-Disposition: attachment; filename="nfs_copy_range.sh"
-Content-Transfer-Encoding: quoted-printable
-
-#!/bin/bash=0Amkdir -p /nfsexport /nfsmnt=0Acp /etc/exports{,.back}=0Acat >=
- /etc/exports <<EOF=0A/nfsexport *(rw,no_root_squash)=0AEOF=0Asystemctl res=
-tart nfs-server || exit=0Acc copy_file_range.c -o /root/cfr || exit=0Amount=
- -t nfs -o vers=3D4.2 localhost:/nfsexport/ /nfsmnt || exit=0Amount | grep =
-nfsmnt=0Acd /nfsmnt=0Afor i in 0 17 4095 4096 4097 ; do		  # in offset=0A	f=
-or j in 0 17 4095 4096 4097 ; do	  # out offset=0A		for k in 11 4095 4096 4=
-097 ; do   # len=0A			echo ABCDEFGHIJKLMNOPQRSTUVWXYZ12345 > 1=0A			echo AB=
-CDEFGHIJKLMNOPQRSTUVWXYZ12345 > 2=0A			sync=0A			/root/cfr 1 2 $i $j $k=0A	=
-	done=0A	done=0Adone=0Acd=0Aumount /nfsmnt=0Asystemctl stop nfs-server=0Arm=
- -f test.img=0A
---gntlxg3aq5x7mobf--
