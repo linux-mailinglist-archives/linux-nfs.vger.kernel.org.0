@@ -2,170 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0A142AE349
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Nov 2020 23:21:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8DFC2AE408
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Nov 2020 00:29:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732457AbgKJWV5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Nov 2020 17:21:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732407AbgKJWV4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Nov 2020 17:21:56 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE0DC0613D1
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Nov 2020 14:21:56 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id EB3D17CC; Tue, 10 Nov 2020 17:21:55 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org EB3D17CC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1605046915;
-        bh=ZlCBThJonPisFszMByhYWwJNwQVQMlyFwwasBtnUfkA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=akw080tUhx+vy0KWjExUwXRTcyaWSjfxqHmA+ayLUQsBiSwx7WRkUbUU9v0pW69d/
-         MkCn2hdfTODDjE5uv6FEp6ibIkWAkjya7i7SYv6VZmfSrHSWImM8wrolBMuU5UpG3J
-         rvfIlo8rIniAZqrfBXR6IejxTtCdVhJn6/dr2+uc=
-Date:   Tue, 10 Nov 2020 17:21:55 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     Dai Ngo <dai.ngo@oracle.com>, linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v4 1/1] NFSv4.2: Fix NFS4ERR_STALE error when doing inter
- server copy
-Message-ID: <20201110222155.GC17755@fieldses.org>
-References: <fb514565-cd47-9180-2adc-f3ba4459202b@oracle.com>
- <20201109183054.GD11144@fieldses.org>
- <eeafd9e2-5d04-848e-d330-670e2185098d@oracle.com>
- <20201109204206.GA20261@fieldses.org>
- <7a18452a-3120-ea5b-f676-9d7e18a65446@oracle.com>
- <470b690f-c919-2c48-95b7-18cc75f71f70@oracle.com>
- <20201110201239.GA17755@fieldses.org>
- <CAN-5tyHEj_nNhN=wM3xkzsAp2RUqQw4pVau+DruFPXGT8j+kuw@mail.gmail.com>
- <20201110215157.GB17755@fieldses.org>
- <CAN-5tyEPvpQQVL+j=4vbfdcKmr96ZpYq3fsCQTZHyS5qWGJsvw@mail.gmail.com>
+        id S1732013AbgKJX3V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Nov 2020 18:29:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726737AbgKJX3T (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 10 Nov 2020 18:29:19 -0500
+Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E22ED20781
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Nov 2020 23:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605050958;
+        bh=hStNH2bnjnwhkxmPkjxdG2aH8abWmgNQm7Z6jtpiHZM=;
+        h=From:To:Subject:Date:From;
+        b=xKKIN/+GWNv7T0YEtEn5a4QBJRd5DMZXvW/oM8xDQGXQsG+kmfSSoIu69CYUjF+3u
+         rtmvAJEKaNDe5w59x3mKHsYfGcxRAXa3jf8tH1A9QOEWBJnH5dSr5DFgUIb3mSl4nB
+         I7bRjNIjUEdweuPhoKN24JaYrxmS6q+BNK7xoY2Q=
+From:   trondmy@kernel.org
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfiles data channels
+Date:   Tue, 10 Nov 2020 18:18:55 -0500
+Message-Id: <20201110231906.863446-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAN-5tyEPvpQQVL+j=4vbfdcKmr96ZpYq3fsCQTZHyS5qWGJsvw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 05:08:59PM -0500, Olga Kornievskaia wrote:
-> On Tue, Nov 10, 2020 at 4:52 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> >
-> > On Tue, Nov 10, 2020 at 04:07:41PM -0500, Olga Kornievskaia wrote:
-> > > On Tue, Nov 10, 2020 at 3:14 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> > > >
-> > > > On Mon, Nov 09, 2020 at 10:46:12PM -0800, Dai Ngo wrote:
-> > > > >
-> > > > > On 11/9/20 2:26 PM, Dai Ngo wrote:
-> > > > > >
-> > > > > >On 11/9/20 12:42 PM, J. Bruce Fields wrote:
-> > > > > >>On Mon, Nov 09, 2020 at 11:34:08AM -0800, Dai Ngo wrote:
-> > > > > >>>On 11/9/20 10:30 AM, J. Bruce Fields wrote:
-> > > > > >>>>On Tue, Oct 20, 2020 at 11:34:35AM -0700, Dai Ngo wrote:
-> > > > > >>>>>On 10/20/20 10:01 AM, J. Bruce Fields wrote:
-> > > > > >>>>>>On Sun, Oct 18, 2020 at 11:42:49PM -0400, Dai Ngo wrote:
-> > > > > >>>>>>>NFS_FS=y as dependency of CONFIG_NFSD_V4_2_INTER_SSC still have
-> > > > > >>>>>>>build errors and some configs with NFSD=m to get NFS4ERR_STALE
-> > > > > >>>>>>>error when doing inter server copy.
-> > > > > >>>>>>>
-> > > > > >>>>>>>Added ops table in nfs_common for knfsd to access NFS
-> > > > > >>>>>>>client modules.
-> > > > > >>>>>>OK, looks reasonable to me, applying.  Does this resolve all the
-> > > > > >>>>>>problems you've seen, or is there any bad case left?
-> > > > > >>>>>Thanks Bruce.
-> > > > > >>>>>
-> > > > > >>>>>With this patch, I no longer see the NFS4ERR_STALE in any config.
-> > > > > >>>>>
-> > > > > >>>>>The problem with NFS4ERR_STALE was because of a bug in
-> > > > > >>>>>nfs42_ssc_open.
-> > > > > >>>>>When CONFIG_NFSD_V4_2_INTER_SSC is not defined, nfs42_ssc_open
-> > > > > >>>>>returns NULL which is incorrect allowing the operation to continue
-> > > > > >>>>>until nfsd4_putfh which does not have the code to handle
-> > > > > >>>>>nfserr_stale.
-> > > > > >>>>>
-> > > > > >>>>>With this patch, when CONFIG_NFSD_V4_2_INTER_SSC is not defined the
-> > > > > >>>>>new nfs42_ssc_open returns ERR_PTR(-EIO) which causes the NFS client
-> > > > > >>>>>to switch over to the split copying (read src and write to dst).
-> > > > > >>>>That sounds reasonable, but I don't see any of the patches you've sent
-> > > > > >>>>changing that error return.  Did I overlook something, or did you mean
-> > > > > >>>>to append a patch to this message?
-> > > > > >>>Since with the patch, I did not run into the condition where
-> > > > > >>>NFS4ERR_STALE
-> > > > > >>>is returned so I did not fix this return error code. Do you want me to
-> > > > > >>>submit another patch to change the returned error code from
-> > > > > >>>NFS4ERR_STALE
-> > > > > >>>to NFS4ERR_NOTSUPP if it ever runs into that condition?
-> > > > > >>That would be great, thanks.  (I mean, it is still possible to hit that
-> > > > > >>case, right?  You just didn't test with !CONFIG_NFSD_V4_2_INTER_SSC ?)
-> > > > > >
-> > > > > >will do. I did tested with (!CONFIG_NFSD_V4_2_INTER_SSC) but did not hit
-> > > > > >this case.
-> > > > >
-> > > > > I need to qualify this, the copy_file_range syscall did not return
-> > > > > ESTALE in the test.
-> > > > >
-> > > > > >Because with this patch, when CONFIG_NFSD_V4_2_INTER_SSC is not
-> > > > > >defined the new nfs42_ssc_open returns ERR_PTR(-EIO), instead of NULL in
-> > > > > >the old code, which causes the NFS client to switch over to the split
-> > > > > >copying (read src and write to dst).
-> > > > >
-> > > > > This is not the reason why the client switches to generic_copy_file_range.
-> > > > >
-> > > > > >Returning NULL in the old nfs42_ssc_open is not correct, it allows
-> > > > > >the copy
-> > > > > >operation to proceed and hits the NFS4ERR_STALE case in the COPY
-> > > > > >operation.
-> > > > >
-> > > > > I retested with (!CONFIG_NFSD_V4_2_INTER_SSC) and saw NFS4ERR_STALE
-> > > > > returned for the PUTFH of the SRC in the COPY compound. However on the
-> > > > > client nfs42_proc_copy (with commit 7e350197a1c10) replaced the ESTALE
-> > > > > with EOPNOTSUPP causing nfs4_copy_file_range to use generic_copy_file_range
-> > > > > to do the copy.
-> > > > >
-> > > > > The ESTALE error is only returned by copy_file_range if the client
-> > > > > does not have commit 7e350197a1c10. So I think there is no need to
-> > > > > make any change on the source server for the NFS4ERR_STALE error.
-> > > >
-> > > > I don't believe NFS4ERR_STALE is the correct error for the server to
-> > > > return.  It's nice that the client is able to do the right thing despite
-> > > > the server returning the wrong error, but we should still try to get
-> > > > this right on the server.
-> > >
-> > > Hi Bruce,
-> > >
-> > > ERR_STALE is the appropriate error to be returned by the server that
-> > > gets a COPY compound when it doesn't support COPY. Since server can't
-> > > understand the filehandle so it can't process it so we can't get to
-> > > processing COPY opcode where the server could have returned
-> > > EOPNOTSUPP.
-> >
-> > The case we're discussing is the case where we support COPY but not
-> > server-to-server copy.
-> 
-> My point is still the same, that's an appropriate error for when
-> server-to-server copy is not supported.
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Uh, OK, if it backs up and returns it to the PUTFH, I guess?
+Add support for connecting to the pNFS files/flexfiles data servers
+through RDMA, assuming that the GETDEVICEINFO call advertises that
+support.
 
-Was it really the intention of nfsd4_do_async_copy() that it return
-STALE in the case NFS42_ssc_open() returns NULL?  That's pretty
-confusing.
+v2: Fix layoutstats encoding for pNFS/flexfiles.
+v3: Move most of the netid handling into the SUNRPC and RDMA modules.
+    Fix up the mount code to benefit more from automated loading of
+    SUNRPC transport modules.
 
---b.
+Trond Myklebust (11):
+  SUNRPC: xprt_load_transport() needs to support the netid "rdma6"
+  SUNRPC: Close a race with transport setup and module put
+  SUNRPC: Add a helper to return the transport identifier given a netid
+  NFS: Switch mount code to use xprt_find_transport_ident()
+  SUNRPC: Remove unused function xprt_load_transport()
+  NFSv4/pNFS: Use connections to a DS that are all of the same protocol
+    family
+  pNFS: Add helpers for allocation/free of struct nfs4_pnfs_ds_addr
+  NFSv4/pNFS: Store the transport type in struct nfs4_pnfs_ds_addr
+  pNFS/flexfiles: Fix up layoutstats reporting for non-TCP transports
+  SUNRPC: Fix up open coded kmemdup_nul()
+  pNFS: Clean up open coded xdr string decoding
 
-> 
-> > --b.
-> >
-> > > Thus a client side patch is needed and the server is doing
-> > > everything it can in the situation.
-> > >
-> > > I'm confused about the title of this patch. I thought what it does is
-> > > removes NFSD dependency on the NFS and instead loads the needed
-> > > function dynamically.
-> > >
-> > > Honestly, I don't understand why that allows removal of the NFS_FS
-> > > from the dependencies I don't understand. nfs4_ssc_open calls nfs
-> > > client functions that are built when NFS_FS is compiled but I'm
-> > > assuming will not be otherwise.
+ fs/nfs/flexfilelayout/flexfilelayout.c |   9 +-
+ fs/nfs/fs_context.c                    |  21 +++--
+ fs/nfs/pnfs.h                          |   2 +
+ fs/nfs/pnfs_nfs.c                      | 103 ++++++++++------------
+ include/linux/sunrpc/xprt.h            |   3 +-
+ net/sunrpc/xdr.c                       |   4 +-
+ net/sunrpc/xprt.c                      | 117 ++++++++++++++++++-------
+ net/sunrpc/xprtrdma/module.c           |   1 +
+ net/sunrpc/xprtrdma/transport.c        |   1 +
+ net/sunrpc/xprtsock.c                  |   4 +
+ 10 files changed, 159 insertions(+), 106 deletions(-)
+
+-- 
+2.28.0
+
