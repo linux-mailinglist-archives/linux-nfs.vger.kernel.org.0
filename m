@@ -2,303 +2,237 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 793132AD904
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Nov 2020 15:42:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E1422AD935
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Nov 2020 15:49:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbgKJOmE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Nov 2020 09:42:04 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:35764 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730059AbgKJOmD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Nov 2020 09:42:03 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AAEZHwF177538;
-        Tue, 10 Nov 2020 14:41:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=FUQr5fNJTSP6S82FfCJz1UKfpfS3L7hZeW12zAvQcdc=;
- b=dWETWKk0Y69ujXKKms7x8UHULAK9FefQ0wWpl+QgHMGWrr1B242uQ3sr2/iykIKbJc+E
- iQLlT4+UrBVF0ECGrMCfUbotyuoQa2pZSEFnI08gkIZN9ZUVkzaFZnSKW5QvNgKd8AzQ
- VTdB7sDrZakhZLg/Ve9UkeCRkyPXCKTy8rYimySaYBV1tgQKsq7u5TzygPV6f7SMnQmw
- z3ZRGl4Svs5Dq0Zu8ea32lv1AG0PGw+PAEd/EDCBfBX0I3DLAAFrFW5x2JbYgN29Wxvu
- N80Hv9sH7S4aVTdtkQhVOw1kZzYeQ/5D+A0Lpch0PgYfEOiZeFNLfycC+E9AqLuslgHN UA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 34p72ej19f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Nov 2020 14:41:56 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AAEYq5h034936;
-        Tue, 10 Nov 2020 14:41:55 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 34p5g0c3ma-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Nov 2020 14:41:55 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0AAEfsqR025570;
-        Tue, 10 Nov 2020 14:41:54 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Nov 2020 06:41:54 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: kernel oops in generic/013 on an rdma mount (over either soft
- roce or iwarp)
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CAN-5tyFsGBJ3aJC0XVfTOAR219d6jukYZPLvmUGgRFYkraB88A@mail.gmail.com>
-Date:   Tue, 10 Nov 2020 09:41:53 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <576A90AD-278A-4738-B437-162C8B931FE0@oracle.com>
-References: <CAN-5tyENFaKb=CUZCxkeAqhS7jsFswwaGkPyC0W9h_OJyVrEmw@mail.gmail.com>
- <98BAC3EC-35C5-449F-8476-4B740632DC7C@oracle.com>
- <CAN-5tyGKXJCWxzDnPfT0v70Ry7QNvSCKRnwyU360aW6nJvN-aA@mail.gmail.com>
- <CAN-5tyFsGBJ3aJC0XVfTOAR219d6jukYZPLvmUGgRFYkraB88A@mail.gmail.com>
-To:     Olga Kornievskaia <aglo@umich.edu>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9800 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 malwarescore=0
- adultscore=0 phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011100105
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9800 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 suspectscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
- priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011100105
+        id S1730432AbgKJOtM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Nov 2020 09:49:12 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50343 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730760AbgKJOtL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Nov 2020 09:49:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605019749;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bkAS42uANfABRC2N5GWOoF5jng/cBwZWFyJ7UocoJw8=;
+        b=XEz5JROsZaZz3KMSjk5FbTd/w+C4SiPH9AXw1nf6B/+6bnTKkwjEDltNLTLWdECDAr0CAK
+        CiMogV9vwsGuJPrc8N4D+PL+HSP/j85k2gF+IKlgaSDtrzEnNJk/1LCGOu3gi7KEWhEVGi
+        adStgJ3V3qKl4qwVOgQmmZ/lDNJYZDo=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-21-_G7hg4_aOJWM77gVhQA-Zw-1; Tue, 10 Nov 2020 09:49:06 -0500
+X-MC-Unique: _G7hg4_aOJWM77gVhQA-Zw-1
+Received: by mail-ej1-f72.google.com with SMTP id z9so4778187ejg.10
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Nov 2020 06:49:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bkAS42uANfABRC2N5GWOoF5jng/cBwZWFyJ7UocoJw8=;
+        b=ALUbSNQqh+FZnWaXU/kHeVRMBQtSXt+/Bq6n80NKzxVUydFoCMIEv3+SDzh8ovrFC0
+         ERx68izz2VbFxL/FvrHaV1rgo1Zrs9jaQVXEHbqqJzAkp4WeNMeYlVRJAelXxTDESneg
+         zYZu0OPqTqnPL7S5p6jfM5072GFKeW7n3ygw6AqpY/wg+U3tGiinyMc9bCgOGLQSdwnU
+         tU/iRy3Uise+ynkkDpSvrhlrfzRlI91qxpTAyID1EQx9zdddHUWbakaE3eeuemnXNEpa
+         sNrWATEMkEBeTW9e/+dX3/VX7lv23Y/YTXLdu6sQu/2qkiO1PkioFL8gS1erJ/o5TuL8
+         7Stw==
+X-Gm-Message-State: AOAM531WgwZF+qqHJWY55ZYYKfIuplCsJI18OCsqXwC6TePNgA7ej4wc
+        eGevPKJGV04CvFd9uwvUww/pd6wPq0hkrUdncZ35dkeGLRErGkQX1e1FS9KCDEkeF0Q1fccVIgn
+        4TPdPvXLN+gTz/8JLvvef9yG9bsUCAT/WBY3b
+X-Received: by 2002:a17:906:3547:: with SMTP id s7mr12501771eja.70.1605019744809;
+        Tue, 10 Nov 2020 06:49:04 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwi2qzoITNpCNBcN5znYm7xrURxzaCI/l2+9PNxueSzwKdWRrKNx+AGTe7w5erXW/UML3pFTYsvVB+kF909ZIg=
+X-Received: by 2002:a17:906:3547:: with SMTP id s7mr12501748eja.70.1605019744538;
+ Tue, 10 Nov 2020 06:49:04 -0800 (PST)
+MIME-Version: 1.0
+References: <20201107140325.281678-1-trondmy@kernel.org> <20201107140325.281678-2-trondmy@kernel.org>
+ <20201107140325.281678-3-trondmy@kernel.org> <20201107140325.281678-4-trondmy@kernel.org>
+ <20201107140325.281678-5-trondmy@kernel.org> <20201107140325.281678-6-trondmy@kernel.org>
+ <20201107140325.281678-7-trondmy@kernel.org> <20201107140325.281678-8-trondmy@kernel.org>
+ <20201107140325.281678-9-trondmy@kernel.org> <20201107140325.281678-10-trondmy@kernel.org>
+ <20201107140325.281678-11-trondmy@kernel.org> <20201107140325.281678-12-trondmy@kernel.org>
+ <20201107140325.281678-13-trondmy@kernel.org> <20201107140325.281678-14-trondmy@kernel.org>
+ <20201107140325.281678-15-trondmy@kernel.org> <20201107140325.281678-16-trondmy@kernel.org>
+ <20201107140325.281678-17-trondmy@kernel.org> <20201107140325.281678-18-trondmy@kernel.org>
+ <20201107140325.281678-19-trondmy@kernel.org> <20201107140325.281678-20-trondmy@kernel.org>
+ <20201107140325.281678-21-trondmy@kernel.org> <20201107140325.281678-22-trondmy@kernel.org>
+In-Reply-To: <20201107140325.281678-22-trondmy@kernel.org>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Tue, 10 Nov 2020 09:48:28 -0500
+Message-ID: <CALF+zOm+2Vng8Fx6124jK9G9bZHGLd1UEMrjot79naUwyLqn7Q@mail.gmail.com>
+Subject: Re: [PATCH v4 21/21] NFS: Do uncached readdir when we're seeking a
+ cookie in an empty page cache
+To:     trondmy@kernel.org
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Sat, Nov 7, 2020 at 9:14 AM <trondmy@kernel.org> wrote:
+>
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>
+> If the directory is changing, causing the page cache to get invalidated
+> while we are listing the contents, then the NFS client is currently forced
+> to read in the entire directory contents from scratch, because it needs
+> to perform a linear search for the readdir cookie. While this is not
+> an issue for small directories, it does not scale to directories with
+> millions of entries.
+> In order to be able to deal with large directories that are changing,
+> add a heuristic to ensure that if the page cache is empty, and we are
+> searching for a cookie that is not the zero cookie, we just default to
+> performing uncached readdir.
+>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/nfs/dir.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index 238872d116f7..d7a9efd31ecd 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -917,11 +917,28 @@ static int find_and_lock_cache_page(struct nfs_readdir_descriptor *desc)
+>         return res;
+>  }
+>
+> +static bool nfs_readdir_dont_search_cache(struct nfs_readdir_descriptor *desc)
+> +{
+> +       struct address_space *mapping = desc->file->f_mapping;
+> +       struct inode *dir = file_inode(desc->file);
+> +       unsigned int dtsize = NFS_SERVER(dir)->dtsize;
+> +       loff_t size = i_size_read(dir);
+> +
+> +       /*
+> +        * Default to uncached readdir if the page cache is empty, and
+> +        * we're looking for a non-zero cookie in a large directory.
+> +        */
+> +       return desc->dir_cookie != 0 && mapping->nrpages == 0 && size > dtsize;
+> +}
+> +
+>  /* Search for desc->dir_cookie from the beginning of the page cache */
+>  static int readdir_search_pagecache(struct nfs_readdir_descriptor *desc)
+>  {
+>         int res;
+>
+> +       if (nfs_readdir_dont_search_cache(desc))
+> +               return -EBADCOOKIE;
+> +
+>         do {
+>                 if (desc->page_index == 0) {
+>                         desc->current_index = 0;
+> --
+> 2.28.0
+>
+I did a lot of testing yesterday and last night and this mostly
+behaves as designed.
 
+However, before you sent this I was starting to test the following
+patch which adds a NFS_DIR_CONTEXT_UNCACHED
+flag inside nfs_open_dir_context.  I was not sure about the logic when
+to turn it on, so for now I'd ignore that
+(especially nrpages > NFS_READDIR_UNCACHED_THRESHOLD).  However, I'm
+curious why:
+1. you didn't take the approach of adding a per-process context flag
+so once a process hits this condition, the
+process would just shift to uncached and be unaffected by any other
+process.  I wonder about multiple directory
+listing processes defeating this logic if it's not per-process so we
+may get an unbounded time still
+2. you put the logic inside readdir_search_pagecache rather than
+inside the calling do { .. } while loop
 
-> On Nov 9, 2020, at 6:17 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
->=20
-> On Mon, Nov 9, 2020 at 6:07 PM Olga Kornievskaia <aglo@umich.edu> =
-wrote:
->>=20
->> On Mon, Nov 9, 2020 at 6:01 PM Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>>=20
->>>=20
->>>=20
->>>> On Nov 9, 2020, at 5:55 PM, Olga Kornievskaia <aglo@umich.edu> =
-wrote:
->>>>=20
->>>> Hi Chuck,
->>>>=20
->>>> generic/013 on 5.10-rc3 under both soft RoCE and iWarp produce the
->>>> following kernel oops.
->>>> Are you aware of it? 5.9 ran fine. In 5.10-rc1/rc2 both soft RoCE =
-and
->>>> iWarp were broken (outside of nfs) so can't test. I'll see what I =
-can
->>>> find out more but wanted to run it by you first. Thank you.
->>>=20
->>> Could be this:
->>>=20
->>> =
-https://lore.kernel.org/linux-nfs/160416263202.2615192.7554388264467271587=
-.stgit@manet.1015granger.net/T/#u
->>=20
->> So what does that mean: are you planning to post this patch? That
->> patch never ended in even 5.10-rc3?
+commit a56ff638fe696929a1bc633b22e2d9bd05f3c308
+Author: Dave Wysochanski <dwysocha@redhat.com>
+Date:   Fri Nov 6 08:32:41 2020 -0500
 
-The URL refers to a linux-nfs mail archive, so that patch has already
-been posted (in October). The client maintainers need to merge it.
+    NFS: Use uncached readdir if we drop the pagecache with larger directories
 
+    Larger directories can get into problem where they do not make
+    forward progress once the pagecache times out via exceeding
+    acdirmax.  Alleviate this problem by shifting to uncached
+    readdir if we drop the pagecache on larger directory.
 
-> Which those changes applied, I get the following oops:
+    Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
 
-What's your workload? Do you have a reproducer?
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index ca30e2dbb9c3..7f43f75d5b76 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -78,6 +78,7 @@ static struct nfs_open_dir_context
+*alloc_nfs_open_dir_context(struct inode *di
+                ctx->attr_gencount = nfsi->attr_gencount;
+                ctx->dir_cookie = 0;
+                ctx->dup_cookie = 0;
++               ctx->flags = 0;
+                spin_lock(&dir->i_lock);
+                if (list_empty(&nfsi->open_files) &&
+                    (nfsi->cache_validity & NFS_INO_DATA_INVAL_DEFER))
+@@ -1023,6 +1024,8 @@ static int nfs_readdir(struct file *file, struct
+dir_context *ctx)
+        struct nfs_open_dir_context *dir_ctx = file->private_data;
+        struct nfs_readdir_descriptor *desc;
+        int res;
++       unsigned long nrpages;
++#define NFS_READDIR_UNCACHED_THRESHOLD 1024
 
-What's the output of
+        dfprintk(FILE, "NFS: readdir(%pD2) starting at cookie %llu\n",
+                        file, (long long)ctx->pos);
+@@ -1035,9 +1038,25 @@ static int nfs_readdir(struct file *file,
+struct dir_context *ctx)
+         * revalidate the cookie.
+         */
+        if (ctx->pos == 0 || nfs_attribute_cache_expired(inode)) {
++               nrpages = inode->i_mapping->nrpages;
+                res = nfs_revalidate_mapping(inode, file->f_mapping);
+                if (res < 0)
+                        goto out;
++               /*
++                * If we just dropped the pagecache, and we're not
++                * at the start of the directory, use uncached.
++                */
++               if (!test_bit(NFS_DIR_CONTEXT_UNCACHED, &dir_ctx->flags) &&
++                   ctx->pos != 0 &&
++                   !inode->i_mapping->nrpages &&
++                   nrpages > NFS_READDIR_UNCACHED_THRESHOLD) {
++                       set_bit(NFS_DIR_CONTEXT_UNCACHED, &dir_ctx->flags);
++                       printk("NFS: DBG setting
+NFS_DIR_CONTEXT_UNCACHED ctx->pos = %lld nrpages
++               }
++       }
++       if (test_bit(NFS_DIR_CONTEXT_UNCACHED, &dir_ctx->flags) &&
+ctx->pos == 0) {
++               clear_bit(NFS_DIR_CONTEXT_UNCACHED, &dir_ctx->flags);
++               printk("NFS: DBG clearing NFS_DIR_CONTEXT_UNCACHED");
+        }
 
-$ scripts/faddr2line net/sunrpc/xprtrdma/rpc_rdma.o =
-rpcrdma_complete_rqst+0x294
+        res = -ENOMEM;
+@@ -1057,7 +1076,10 @@ static int nfs_readdir(struct file *file,
+struct dir_context *ctx)
+        spin_unlock(&file->f_lock);
 
-(On my system it's in the middle of rpcrdma_inline_fixup(), for =
-example).
+        do {
+-               res = readdir_search_pagecache(desc);
++               if (test_bit(NFS_DIR_CONTEXT_UNCACHED, &dir_ctx->flags))
++                       res = -EBADCOOKIE;
++               else
++                       res = readdir_search_pagecache(desc);
 
+                if (res == -EBADCOOKIE) {
+                        res = 0;
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 681ed98e4ba8..fedcfec94d95 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -98,6 +98,8 @@ struct nfs_open_dir_context {
+        __u64 dir_cookie;
+        __u64 dup_cookie;
+        signed char duped;
++       unsigned long flags;
++#define NFS_DIR_CONTEXT_UNCACHED       (1)
+ };
 
-> [   54.501538] run fstests generic/013 at 2020-11-09 18:10:16
-> [   65.555863] general protection fault, probably for non-canonical
-> address 0x28fb180000000: 0000 [#1] SMP PTI
-> [   65.562715] CPU: 0 PID: 490 Comm: kworker/0:1H Not tainted =
-5.10.0-rc3+ #32
-> [   65.566089] Hardware name: VMware, Inc. VMware Virtual
-> Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
-> [   65.571259] Workqueue: ib-comp-wq ib_cq_poll_work [ib_core]
-> [   65.574099] RIP: 0010:rpcrdma_complete_rqst+0x294/0x400 [rpcrdma]
-> [   65.577254] Code: 4c 63 c2 48 c1 f9 06 48 c1 e1 0c 48 03 0d c4 88
-> ed e9 48 01 f1 49 83 f8 08 0f 82 68 ff ff ff 48 8b 30 48 8d 79 08 48
-> 83 e7 f8 <48> 89 31 4a 8b 74 00 f8 4a 89 74 01 f8 48 29 f9 48 89 c6 48
-> 29 ce
-> [   65.587561] RSP: 0018:ffffadbcc18efdd8 EFLAGS: 00010202
-> [   65.590890] RAX: ffff98a1ddbd208c RBX: ffff98a1b0c20fc0 RCX: =
-00028fb180000000
-> [   65.594829] RDX: 0000000000000008 RSI: 0100000000003178 RDI: =
-00028fb180000008
-> [   65.598956] RBP: ffff98a1ba249200 R08: 0000000000000008 R09: =
-0000000000000008
-> [   65.602641] R10: ffff98a1b0c20fb8 R11: 0000000000000008 R12: =
-ffff98a1f44b8010
-> [   65.607044] R13: 0000000000000000 R14: 0000000000000078 R15: =
-0000000000001000
-> [   65.611062] FS:  0000000000000000(0000) GS:ffff98a1fbe00000(0000)
-> knlGS:0000000000000000
-> [   65.615928] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   65.620071] CR2: 00007f048c00b668 CR3: 0000000005bde005 CR4: =
-00000000001706f0
-> [   65.623661] Call Trace:
-> [   65.624907]  __ib_process_cq+0x89/0x150 [ib_core]
-> [   65.627238]  ib_cq_poll_work+0x26/0x80 [ib_core]
-> [   65.629623]  process_one_work+0x1a4/0x340
-> [   65.632506]  ? process_one_work+0x340/0x340
-> [   65.634627]  worker_thread+0x30/0x370
-> [   65.636395]  ? process_one_work+0x340/0x340
-> [   65.639333]  kthread+0x116/0x130
-> [   65.642022]  ? kthread_park+0x80/0x80
-> [   65.645183]  ret_from_fork+0x22/0x30
-> [   65.647019] Modules linked in: cts rpcsec_gss_krb5 nfsv4
-> dns_resolver nfs lockd grace nfs_ssc rpcrdma rdma_ucm rdma_cm iw_cm
-> ib_cm ib_uverbs siw ib_core nls_utf8 isofs fuse rfcomm nft_fib_inet
-> nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4
-> nf_reject_ipv6 nft_reject nft_ct nf_conntrack nf_defrag_ipv6
-> nf_defrag_ipv4 tun bridge stp llc ip6_tables nft_compat ip_set
-> nf_tables nfnetlink bnep vmw_vsock_vmci_transport vsock snd_seq_midi
-> snd_seq_midi_event intel_rapl_msr intel_rapl_common crct10dif_pclmul
-> crc32_pclmul vmw_balloon ghash_clmulni_intel btusb btrtl btbcm btintel
-> pcspkr joydev uvcvideo snd_ens1371 videobuf2_vmalloc snd_ac97_codec
-> videobuf2_memops ac97_bus videobuf2_v4l2 videobuf2_common bluetooth
-> snd_seq videodev rfkill snd_pcm mc ecdh_generic ecc snd_timer
-> snd_rawmidi snd_seq_device snd soundcore vmw_vmci i2c_piix4
-> auth_rpcgss sunrpc ip_tables xfs libcrc32c sr_mod cdrom sg
-> crc32c_intel ata_generic serio_raw vmwgfx nvme drm_kms_helper
-> syscopyarea sysfillrect sysimgblt
-> [   65.647074]  nvme_core t10_pi fb_sys_fops ata_piix ahci libahci
-> vmxnet3 cec ttm libata drm
-> [   65.705629] ---[ end trace acdae4b270638f48 ]---
->=20
->=20
->>=20
->>>=20
->>>=20
->>>=20
->>>=20
->>>>=20
->>>> [  126.767318] run fstests generic/013 at 2020-11-09 17:03:25
->>>> [  126.931805] BUG: unable to handle page fault for address: =
-ffffa085363bb010
->>>> [  126.935622] #PF: supervisor write access in kernel mode
->>>> [  126.938202] #PF: error_code(0x0003) - permissions violation
->>>> [  126.941042] PGD 3fe02067 P4D 3fe02067 PUD 3fe06067 PMD 74e77063 =
-PTE
->>>> 80000000763bb061
->>>> [  126.944882] Oops: 0003 [#1] SMP PTI
->>>> [  126.946985] CPU: 0 PID: 2924 Comm: fsstress Not tainted =
-5.10.0-rc3+ #32
->>>> [  126.950482] Hardware name: VMware, Inc. VMware Virtual
->>>> Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
->>>> [  126.955680] RIP: 0010:rpcrdma_convert_iovs.isra.32+0x125/0x190 =
-[rpcrdma]
->>>> [  126.959175] Code: 03 74 70 83 f9 05 74 6b 49 8b 45 18 48 85 c0 =
-74
->>>> 43 49 8b 4d 10 89 c2 89 ce 81 e6 ff 0f 00 00 85 c0 74 31 bf 00 10 =
-00
->>>> 00 89 f8 <49> 89 48 10 29 f0 49 c7 40 08 00 00 00 00 39 d0 0f 47 c2 =
-49
->>>> 83 c0
->>>> [  126.968901] RSP: 0018:ffffc32703137a68 EFLAGS: 00010286
->>>> [  126.971423] RAX: 0000000000001000 RBX: 0000000000000000 RCX: =
-ffffa08542daf000
->>>> [  126.974807] RDX: 00000000f34df06c RSI: 0000000000000000 RDI: =
-0000000000001000
->>>> [  126.978224] RBP: 0000000000000000 R08: ffffa085363bb000 R09: =
-0000000000001000
->>>> [  126.982701] R10: ffffeef9c0006f48 R11: ffffa0853ffd60c0 R12: =
-000000000000cb35
->>>> [  126.986327] R13: ffffa0853628a060 R14: ffffa08534f195d0 R15: =
-ffffa0851e213358
->>>> [  126.989769] FS:  00007fab74973740(0000) =
-GS:ffffa0853be00000(0000)
->>>> knlGS:0000000000000000
->>>> [  126.993803] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>> [  126.996953] CR2: ffffa085363bb010 CR3: 0000000074fd0002 CR4: =
-00000000001706f0
->>>> [  127.000593] Call Trace:
->>>> [  127.001907]  rpcrdma_marshal_req+0x4b9/0xb30 [rpcrdma]
->>>> [  127.004789]  ? lock_timer_base+0x67/0x80
->>>> [  127.006710]  xprt_rdma_send_request+0x48/0xd0 [rpcrdma]
->>>> [  127.009257]  xprt_transmit+0x130/0x3f0 [sunrpc]
->>>> [  127.011499]  ? rpc_clnt_swap_deactivate+0x30/0x30 [sunrpc]
->>>> [  127.014225]  ?
->>>> rpc_wake_up_task_on_wq_queue_action_locked+0x230/0x230 [sunrpc]
->>>> [  127.017848]  call_transmit+0x63/0x70 [sunrpc]
->>>> [  127.019973]  __rpc_execute+0x75/0x3e0 [sunrpc]
->>>> [  127.022135]  ? xprt_iter_get_helper+0x17/0x30 [sunrpc]
->>>> [  127.024793]  rpc_run_task+0x153/0x170 [sunrpc]
->>>> [  127.027098]  nfs4_call_sync_custom+0xb/0x30 [nfsv4]
->>>> [  127.029617]  nfs4_do_call_sync+0x69/0x90 [nfsv4]
->>>> [  127.032001]  _nfs42_proc_listxattrs+0x143/0x200 [nfsv4]
->>>> [  127.034766]  nfs42_proc_listxattrs+0x8e/0xc0 [nfsv4]
->>>> [  127.037160]  nfs4_listxattr+0x1b8/0x210 [nfsv4]
->>>> [  127.039454]  ? __check_object_size+0x162/0x180
->>>> [  127.041606]  listxattr+0xd1/0xf0
->>>> [  127.043163]  path_listxattr+0x5f/0xb0
->>>> [  127.044969]  do_syscall_64+0x33/0x40
->>>> [  127.047200]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>>> [  127.049644] RIP: 0033:0x7fab74296c8b
->>>> [  127.051440] Code: f0 ff ff 73 01 c3 48 8b 0d fa 21 2c 00 f7 d8 =
-64
->>>> 89 01 48 83 c8 ff c3 0f 1f 84 00 00 00 00 00 f3 0f 1e fa b8 c2 00 =
-00
->>>> 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d cd 21 2c 00 f7 d8 64 =
-89
->>>> 01 48
->>>> [  127.060978] RSP: 002b:00007fffcddc4a38 EFLAGS: 00000202 =
-ORIG_RAX:
->>>> 00000000000000c2
->>>> [  127.064848] RAX: ffffffffffffffda RBX: 000000000000002a RCX: =
-00007fab74296c8b
->>>> [  127.068244] RDX: 0000000000000000 RSI: 0000000000000000 RDI: =
-0000000000674440
->>>> [  127.071642] RBP: 00000000000001f4 R08: 0000000000000000 R09: =
-00007fffcddc4687
->>>> [  127.075214] R10: 0000000000000004 R11: 0000000000000202 R12: =
-000000000000002a
->>>> [  127.078667] R13: 0000000000403e60 R14: 0000000000000000 R15: =
-0000000000000000
->>>> [  127.082783] Modules linked in: cts rpcsec_gss_krb5 nfsv4
->>>> dns_resolver nfs lockd grace nfs_ssc rpcrdma rdma_rxe =
-ip6_udp_tunnel
->>>> udp_tunnel rdma_ucm rdma_cm iw_cm ib_cm ib_uverbs ib_core nls_utf8
->>>> isofs fuse rfcomm nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib
->>>> nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct
->>>> nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 tun bridge stp llc
->>>> ip6_tables nft_compat ip_set nf_tables nfnetlink bnep
->>>> vmw_vsock_vmci_transport vsock snd_seq_midi snd_seq_midi_event
->>>> intel_rapl_msr intel_rapl_common crct10dif_pclmul crc32_pclmul
->>>> vmw_balloon ghash_clmulni_intel joydev btusb btrtl pcspkr btbcm
->>>> btintel uvcvideo videobuf2_vmalloc videobuf2_memops videobuf2_v4l2
->>>> videobuf2_common videodev snd_ens1371 bluetooth snd_ac97_codec
->>>> ac97_bus rfkill mc snd_seq snd_pcm ecdh_generic ecc snd_timer
->>>> snd_rawmidi snd_seq_device snd soundcore vmw_vmci i2c_piix4
->>>> auth_rpcgss sunrpc ip_tables xfs libcrc32c sr_mod cdrom sg =
-ata_generic
->>>> vmwgfx drm_kms_helper nvme crc32c_intel serio_raw
->>>> [  127.082841]  syscopyarea sysfillrect sysimgblt fb_sys_fops
->>>> nvme_core t10_pi cec vmxnet3 ata_piix ahci libahci ttm libata drm
->>>> [  127.132635] CR2: ffffa085363bb010
->>>> [  127.134527] ---[ end trace 912ce02a00d98fdf ]---
->>>=20
->>> --
->>> Chuck Lever
-
---
-Chuck Lever
-
-
+ /*
 
