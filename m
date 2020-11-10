@@ -2,34 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE08A2AE20C
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Nov 2020 22:48:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F5FC2AE20E
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Nov 2020 22:48:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731951AbgKJVr7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Nov 2020 16:47:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43146 "EHLO mail.kernel.org"
+        id S1731862AbgKJVsA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Nov 2020 16:48:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731946AbgKJVr7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        id S1731910AbgKJVr7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
         Tue, 10 Nov 2020 16:47:59 -0500
 Received: from localhost.localdomain (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F61120829
+        by mail.kernel.org (Postfix) with ESMTPSA id A115620781
         for <linux-nfs@vger.kernel.org>; Tue, 10 Nov 2020 21:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1605044878;
-        bh=mz6L/kk9HpxjF3j42okUGrod+PYxFsC3u13nH1Ow1Y4=;
+        bh=sSl2Hq4NF2YxR6RCbF6zFfkoL3NO4Ta8b7ml+0Zz6Vk=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=bWKHG+2Ks7ba3InghL9OO7bsgI1fwXg16XiUvc5/frbv8uvpGd6kZTjG5y2g9483N
-         qfzvikdfsKzb0h2Dgx18L7NHtHSODqDS1AXKEBDJGxkoIDyIfAFNQgksJPssvf08DI
-         SX1gD18eJSzjh6zUq5M83w8qNzxR2RuOih4kxuvI=
+        b=ZoilwfEYm4R3t4y0lEVQMQGf9SgzTx8TJYg2+LfU91ZaDtEkKPZfUiJuy6cYALtpo
+         HwIVHUguAOH0SyZc2hAt9hBskXc3xg70e8T6gDyboAJJbE3VLMYakUCXL8No+dh0Uy
+         WbFyb8gh+sCYPI9K4G1vcuulVjJielu8RKwqdlRY=
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v5 11/22] NFS: Simplify struct nfs_cache_array_entry
-Date:   Tue, 10 Nov 2020 16:37:30 -0500
-Message-Id: <20201110213741.860745-12-trondmy@kernel.org>
+Subject: [PATCH v5 12/22] NFS: Support larger readdir buffers
+Date:   Tue, 10 Nov 2020 16:37:31 -0500
+Message-Id: <20201110213741.860745-13-trondmy@kernel.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201110213741.860745-11-trondmy@kernel.org>
+In-Reply-To: <20201110213741.860745-12-trondmy@kernel.org>
 References: <20201110213741.860745-1-trondmy@kernel.org>
  <20201110213741.860745-2-trondmy@kernel.org>
  <20201110213741.860745-3-trondmy@kernel.org>
@@ -41,6 +41,7 @@ References: <20201110213741.860745-1-trondmy@kernel.org>
  <20201110213741.860745-9-trondmy@kernel.org>
  <20201110213741.860745-10-trondmy@kernel.org>
  <20201110213741.860745-11-trondmy@kernel.org>
+ <20201110213741.860745-12-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -49,128 +50,128 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-We don't need to store a hash, so replace struct qstr with a simple
-const char pointer and length.
+Support readdir buffers of up to 1MB in size so that we can read
+large directories using few RPC calls.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 Tested-by: Benjamin Coddington <bcodding@redhat.com>
 ---
- fs/nfs/dir.c | 46 +++++++++++++++++++++++++---------------------
- 1 file changed, 25 insertions(+), 21 deletions(-)
+ fs/nfs/client.c   |  4 ++--
+ fs/nfs/dir.c      | 33 +++++++++++++++++++--------------
+ fs/nfs/internal.h |  6 ------
+ 3 files changed, 21 insertions(+), 22 deletions(-)
 
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 4b8cc93913f7..f6454ba53d05 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -781,8 +781,8 @@ static void nfs_server_set_fsinfo(struct nfs_server *server,
+ 	server->wtmult = nfs_block_bits(fsinfo->wtmult, NULL);
+ 
+ 	server->dtsize = nfs_block_size(fsinfo->dtpref, NULL);
+-	if (server->dtsize > PAGE_SIZE * NFS_MAX_READDIR_PAGES)
+-		server->dtsize = PAGE_SIZE * NFS_MAX_READDIR_PAGES;
++	if (server->dtsize > NFS_MAX_FILE_IO_SIZE)
++		server->dtsize = NFS_MAX_FILE_IO_SIZE;
+ 	if (server->dtsize > server->rsize)
+ 		server->dtsize = server->rsize;
+ 
 diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index b9001123ec84..be0e2891fecc 100644
+index be0e2891fecc..438906dae083 100644
 --- a/fs/nfs/dir.c
 +++ b/fs/nfs/dir.c
-@@ -133,7 +133,8 @@ nfs_closedir(struct inode *inode, struct file *filp)
- struct nfs_cache_array_entry {
- 	u64 cookie;
- 	u64 ino;
--	struct qstr string;
-+	const char *name;
-+	unsigned int name_len;
- 	unsigned char d_type;
- };
- 
-@@ -192,7 +193,7 @@ void nfs_readdir_clear_array(struct page *page)
- 
- 	array = kmap_atomic(page);
- 	for (i = 0; i < array->size; i++)
--		kfree(array->array[i].string.name);
-+		kfree(array->array[i].name);
- 	nfs_readdir_array_init(array);
- 	kunmap_atomic(array);
+@@ -727,44 +727,47 @@ static int nfs_readdir_page_filler(struct nfs_readdir_descriptor *desc,
+ 	return status;
  }
-@@ -213,20 +214,17 @@ static bool nfs_readdir_array_is_full(struct nfs_cache_array *array)
-  * when called by nfs_readdir_add_to_array, the strings will be freed in
-  * nfs_clear_readdir_array()
-  */
+ 
 -static
--int nfs_readdir_make_qstr(struct qstr *string, const char *name, unsigned int len)
-+static const char *nfs_readdir_copy_name(const char *name, unsigned int len)
+-void nfs_readdir_free_pages(struct page **pages, unsigned int npages)
++static void nfs_readdir_free_pages(struct page **pages, size_t npages)
  {
--	string->len = len;
--	string->name = kmemdup_nul(name, len, GFP_KERNEL);
--	if (string->name == NULL)
--		return -ENOMEM;
-+	const char *ret = kmemdup_nul(name, len, GFP_KERNEL);
-+
- 	/*
- 	 * Avoid a kmemleak false positive. The pointer to the name is stored
- 	 * in a page cache page which kmemleak does not scan.
- 	 */
--	kmemleak_not_leak(string->name);
--	string->hash = full_name_hash(NULL, name, len);
--	return 0;
-+	if (ret != NULL)
-+		kmemleak_not_leak(ret);
-+	return ret;
+-	unsigned int i;
+-	for (i = 0; i < npages; i++)
+-		put_page(pages[i]);
++	while (npages--)
++		put_page(pages[npages]);
++	kfree(pages);
  }
  
  /*
-@@ -249,27 +247,34 @@ static int nfs_readdir_array_can_expand(struct nfs_cache_array *array)
- static
- int nfs_readdir_add_to_array(struct nfs_entry *entry, struct page *page)
+  * nfs_readdir_alloc_pages() will allocate pages that must be freed with a call
+  * to nfs_readdir_free_pages()
+  */
+-static
+-int nfs_readdir_alloc_pages(struct page **pages, unsigned int npages)
++static struct page **nfs_readdir_alloc_pages(size_t npages)
  {
--	struct nfs_cache_array *array = kmap(page);
-+	struct nfs_cache_array *array;
- 	struct nfs_cache_array_entry *cache_entry;
-+	const char *name;
- 	int ret;
+-	unsigned int i;
++	struct page **pages;
++	size_t i;
  
-+	name = nfs_readdir_copy_name(entry->name, entry->len);
-+	if (!name)
-+		return -ENOMEM;
-+
-+	array = kmap_atomic(page);
- 	ret = nfs_readdir_array_can_expand(array);
--	if (ret)
-+	if (ret) {
-+		kfree(name);
- 		goto out;
-+	}
++	pages = kmalloc_array(npages, sizeof(*pages), GFP_KERNEL);
++	if (!pages)
++		return NULL;
+ 	for (i = 0; i < npages; i++) {
+ 		struct page *page = alloc_page(GFP_KERNEL);
+ 		if (page == NULL)
+ 			goto out_freepages;
+ 		pages[i] = page;
+ 	}
+-	return 0;
++	return pages;
  
- 	cache_entry = &array->array[array->size];
- 	cache_entry->cookie = entry->prev_cookie;
- 	cache_entry->ino = entry->ino;
- 	cache_entry->d_type = entry->d_type;
--	ret = nfs_readdir_make_qstr(&cache_entry->string, entry->name, entry->len);
--	if (ret)
--		goto out;
-+	cache_entry->name_len = entry->len;
-+	cache_entry->name = name;
- 	array->last_cookie = entry->cookie;
- 	array->size++;
- 	if (entry->eof != 0)
- 		nfs_readdir_array_set_eof(array);
- out:
--	kunmap(page);
-+	kunmap_atomic(array);
- 	return ret;
+ out_freepages:
+ 	nfs_readdir_free_pages(pages, i);
+-	return -ENOMEM;
++	return NULL;
  }
  
-@@ -413,9 +418,8 @@ int nfs_readdir_search_for_cookie(struct nfs_cache_array *array, nfs_readdir_des
- 					if (printk_ratelimit()) {
- 						pr_notice("NFS: directory %pD2 contains a readdir loop."
- 								"Please contact your server vendor.  "
--								"The file: %.*s has duplicate cookie %llu\n",
--								desc->file, array->array[i].string.len,
--								array->array[i].string.name, desc->dir_cookie);
-+								"The file: %s has duplicate cookie %llu\n",
-+								desc->file, array->array[i].name, desc->dir_cookie);
- 					}
- 					status = -ELOOP;
- 					goto out;
-@@ -888,7 +892,7 @@ int nfs_do_filldir(nfs_readdir_descriptor_t *desc)
- 		struct nfs_cache_array_entry *ent;
+ static
+ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page, struct inode *inode)
+ {
+-	struct page *pages[NFS_MAX_READDIR_PAGES];
++	struct page **pages;
+ 	struct nfs_entry entry;
+ 	struct file	*file = desc->file;
++	size_t array_size;
++	size_t dtsize = NFS_SERVER(inode)->dtsize;
+ 	int status = -ENOMEM;
+-	unsigned int array_size = ARRAY_SIZE(pages);
  
- 		ent = &array->array[i];
--		if (!dir_emit(desc->ctx, ent->string.name, ent->string.len,
-+		if (!dir_emit(desc->ctx, ent->name, ent->name_len,
- 		    nfs_compat_user_ino64(ent->ino), ent->d_type)) {
- 			desc->eof = true;
- 			break;
+ 	entry.prev_cookie = 0;
+ 	entry.cookie = nfs_readdir_page_last_cookie(page);
+@@ -781,9 +784,11 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
+ 		goto out;
+ 	}
+ 
+-	status = nfs_readdir_alloc_pages(pages, array_size);
+-	if (status < 0)
++	array_size = (dtsize + PAGE_SIZE - 1) >> PAGE_SHIFT;
++	pages = nfs_readdir_alloc_pages(array_size);
++	if (!pages)
+ 		goto out_release_label;
++
+ 	do {
+ 		unsigned int pglen;
+ 		status = nfs_readdir_xdr_filler(pages, desc, &entry, file, inode);
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 6673a77884d9..b840d0a91c9d 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -56,12 +56,6 @@ static inline bool nfs_lookup_is_soft_revalidate(const struct dentry *dentry)
+ #define NFS_UNSPEC_RETRANS	(UINT_MAX)
+ #define NFS_UNSPEC_TIMEO	(UINT_MAX)
+ 
+-/*
+- * Maximum number of pages that readdir can use for creating
+- * a vmapped array of pages.
+- */
+-#define NFS_MAX_READDIR_PAGES 8
+-
+ struct nfs_client_initdata {
+ 	unsigned long init_flags;
+ 	const char *hostname;			/* Hostname of the server */
 -- 
 2.28.0
 
