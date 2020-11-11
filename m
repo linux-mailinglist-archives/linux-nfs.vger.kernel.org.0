@@ -2,123 +2,441 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B6252AE4FE
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Nov 2020 01:42:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22ED52AE82D
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Nov 2020 06:36:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731805AbgKKAma (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Nov 2020 19:42:30 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:33888 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731746AbgKKAma (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Nov 2020 19:42:30 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AB0ZGhN016801;
-        Wed, 11 Nov 2020 00:42:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2020-01-29; bh=ac7TAgGN8Y2elDHJ6ZkEOyv0KYgVeytcsxvp5mX73CU=;
- b=CryRd6etV5ofkuWdgCl+d08qolkJphiN4IyB6TKMh5H14yvVufrWhjwsG+fzC+4D3t8l
- R+WReFwgOukqA+KvUIjTdDFr+KjihCfDHaeUOEkOVlmTPIYg7Vn1kpp0s7kmPxU40i0z
- AnFew8JcHp8x/Zc+VDkDSf1uqHeAX508Usnu8UDXsgBV0tFA13TW9dVrVoXrUMOQCAYm
- ExQGk2mSRzRS5A5DDNqn52dVpBfJB2N1tFyLllg+y02lNEoc3DjZEFW9Es4lU47iTsHt
- 4B7WT9YRoGhYuIWBt+AK+5IlTJar+YgwU0+CpnKKjd3CeiUQ4RLTuhdBgcPI8537At4q 3Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 34p72emv2m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Nov 2020 00:42:26 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AB0UCnA098134;
-        Wed, 11 Nov 2020 00:40:25 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3030.oracle.com with ESMTP id 34p5gxq4n6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Nov 2020 00:40:25 +0000
-Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AB0ePuO131668;
-        Wed, 11 Nov 2020 00:40:25 GMT
-Received: from aserp3030.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
-        by userp3030.oracle.com with ESMTP id 34p5gxq4mw-1;
-        Wed, 11 Nov 2020 00:40:25 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     bfields@fieldses.org
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] NFSD: Fix 5 seconds delay when doing inter server copy
-Date:   Tue, 10 Nov 2020 19:40:03 -0500
-Message-Id: <20201111004003.40823-1-dai.ngo@oracle.com>
-X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
+        id S1725859AbgKKFgB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Nov 2020 00:36:01 -0500
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:56813 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725468AbgKKFf5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Nov 2020 00:35:57 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UEx51DX_1605072945;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0UEx51DX_1605072945)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 11 Nov 2020 13:35:46 +0800
+Subject: Re: [PATCH] fs/nfsd: remove unused NFSDDBG_FACILITY to tame gcc
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1604634457-3954-2-git-send-email-alex.shi@linux.alibaba.com>
+ <202011110421.9Eyhaskz-lkp@intel.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <1efed1ed-c408-5f82-3adc-12275ea793cf@linux.alibaba.com>
+Date:   Wed, 11 Nov 2020 13:35:11 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.0
 MIME-Version: 1.0
+In-Reply-To: <202011110421.9Eyhaskz-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9801 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 suspectscore=3 lowpriorityscore=0 adultscore=0 phishscore=0
- priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011110001
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Since commit b4868b44c5628, every inter server copy operation suffers
-5 seconds delay regardless of the size of the copy. The delay is from
-nfs_set_open_stateid_locked when the check by nfs_stateid_is_sequential
-fails because the seqid in both nfs4_state and nfs4_stateid are 0. 
+I had a recall email for this patch https://www.spinics.net/lists/linux-nfs/msg80135.html
+seem your robot just omit it. :)
 
-The nfs_stateid_is_sequential is the new replacement for the old
-nfs_need_update_open_stateid check.
+Thanks
 
-Fix by modifying the source server to return the stateid for COPY_NOTIFY
-request with seqid 1 instead of 0. This is also to conform with section
-4.8 of RFC 7682. And on the destination server, delaying the setting of
-NFS_OPEN_STATE in nfs4_state to indicate this is the 1st open to pass
-the check by nfs_stateid_is_sequential.
-
-Here is the relevant paragraph from section 4.8 of RFC 7682:
-
-   A copy offload stateid's seqid MUST NOT be zero.  In the context of a
-   copy offload operation, it is inappropriate to indicate "the most
-   recent copy offload operation" using a stateid with a seqid of zero
-   (see Section 8.2.2 of [RFC5661]).  It is inappropriate because the
-   stateid refers to internal state in the server and there may be
-   several asynchronous COPY operations being performed in parallel on
-   the same file by the server.  Therefore, a copy offload stateid with
-   a seqid of zero MUST be considered invalid.
-
-Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-
----
- fs/nfs/nfs4file.c   | 2 +-
- fs/nfsd/nfs4state.c | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 9d354de613da..57b3821d975a 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -377,10 +377,10 @@ static struct file *__nfs42_ssc_open(struct vfsmount *ss_mnt,
- 		goto out_stateowner;
- 
- 	set_bit(NFS_SRV_SSC_COPY_STATE, &ctx->state->flags);
--	set_bit(NFS_OPEN_STATE, &ctx->state->flags);
- 	memcpy(&ctx->state->open_stateid.other, &stateid->other,
- 	       NFS4_STATEID_OTHER_SIZE);
- 	update_open_stateid(ctx->state, stateid, NULL, filep->f_mode);
-+	set_bit(NFS_OPEN_STATE, &ctx->state->flags);
- 
- 	nfs_file_set_open_context(filep, ctx);
- 	put_nfs_open_context(ctx);
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index d7f27ed6b794..33ee1a6961e3 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -793,6 +793,7 @@ struct nfs4_cpntf_state *nfs4_alloc_init_cpntf_state(struct nfsd_net *nn,
- 	refcount_set(&cps->cp_stateid.sc_count, 1);
- 	if (!nfs4_init_cp_state(nn, &cps->cp_stateid, NFS4_COPYNOTIFY_STID))
- 		goto out_free;
-+	cps->cp_stateid.stid.si_generation = 1;
- 	spin_lock(&nn->s2s_cp_lock);
- 	list_add(&cps->cp_list, &p_stid->sc_cp_list);
- 	spin_unlock(&nn->s2s_cp_lock);
--- 
-2.9.5
-
+在 2020/11/11 上午4:55, kernel test robot 写道:
+> Hi Alex,
+> 
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v5.10-rc3 next-20201110]
+> [cannot apply to nfsd/nfsd-next cel/for-next linux/master]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Alex-Shi/fs-nfsd-remove-unused-NFSDDBG_FACILITY-to-tame-gcc/20201106-115002
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 521b619acdc8f1f5acdac15b84f81fd9515b2aff
+> config: x86_64-rhel (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-15) 9.3.0
+> reproduce (this is a W=1 build):
+>         # https://github.com/0day-ci/linux/commit/c817df999b061443f75af7b3ffe502bf289b0e03
+>         git remote add linux-review https://github.com/0day-ci/linux
+>         git fetch --no-tags linux-review Alex-Shi/fs-nfsd-remove-unused-NFSDDBG_FACILITY-to-tame-gcc/20201106-115002
+>         git checkout c817df999b061443f75af7b3ffe502bf289b0e03
+>         # save the attached .config to linux build tree
+>         make W=1 ARCH=x86_64 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from fs/nfsd/nfssvc.c:26:
+>    fs/nfsd/nfssvc.c: In function 'nfsd_inetaddr_event':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfssvc.c:451:3: note: in expansion of macro 'dprintk'
+>      451 |   dprintk("nfsd_inetaddr_event: removed %pI4\n", &ifa->ifa_local);
+>          |   ^~~~~~~
+>    fs/nfsd/nfsd.h:32:42: note: each undeclared identifier is reported only once for each function it appears in
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfssvc.c:451:3: note: in expansion of macro 'dprintk'
+>      451 |   dprintk("nfsd_inetaddr_event: removed %pI4\n", &ifa->ifa_local);
+>          |   ^~~~~~~
+>    fs/nfsd/nfssvc.c: In function 'nfsd_inet6addr_event':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfssvc.c:482:3: note: in expansion of macro 'dprintk'
+>      482 |   dprintk("nfsd_inet6addr_event: removed %pI6\n", &ifa->addr);
+>          |   ^~~~~~~
+>    fs/nfsd/nfssvc.c: In function 'set_max_drc':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfssvc.c:570:2: note: in expansion of macro 'dprintk'
+>      570 |  dprintk("%s nfsd_drc_max_mem %lu \n", __func__, nfsd_drc_max_mem);
+>          |  ^~~~~~~
+>    fs/nfsd/nfssvc.c: In function 'nfsd_svc':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfssvc.c:746:2: note: in expansion of macro 'dprintk'
+>      746 |  dprintk("nfsd: creating service\n");
+>          |  ^~~~~~~
+>    fs/nfsd/nfssvc.c: In function 'nfsd_dispatch':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfssvc.c:1010:2: note: in expansion of macro 'dprintk'
+>     1010 |  dprintk("nfsd_dispatch: vers %d proc %d\n",
+>          |  ^~~~~~~
+> --
+>    In file included from fs/nfsd/xdr.h:8,
+>                     from fs/nfsd/nfsproc.c:11:
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_getattr':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:30:2: note: in expansion of macro 'dprintk'
+>       30 |  dprintk("nfsd: GETATTR  %s\n", SVCFH_fmt(&argp->fh));
+>          |  ^~~~~~~
+>    fs/nfsd/nfsd.h:32:42: note: each undeclared identifier is reported only once for each function it appears in
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:30:2: note: in expansion of macro 'dprintk'
+>       30 |  dprintk("nfsd: GETATTR  %s\n", SVCFH_fmt(&argp->fh));
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_setattr':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:54:2: note: in expansion of macro 'dprintk'
+>       54 |  dprintk("nfsd: SETATTR  %s, valid=%x, size=%ld\n",
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_lookup':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:129:2: note: in expansion of macro 'dprintk'
+>      129 |  dprintk("nfsd: LOOKUP   %s %.*s\n",
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_readlink':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:153:2: note: in expansion of macro 'dprintk'
+>      153 |  dprintk("nfsd: READLINK %s\n", SVCFH_fmt(&argp->fh));
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_read':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:174:2: note: in expansion of macro 'dprintk'
+>      174 |  dprintk("nfsd: READ    %s %d bytes at %d\n",
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_write':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:224:2: note: in expansion of macro 'dprintk'
+>      224 |  dprintk("nfsd: WRITE    %s %d bytes at %d\n",
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_create':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:266:2: note: in expansion of macro 'dprintk'
+>      266 |  dprintk("nfsd: CREATE   %s %.*s\n",
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_remove':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:419:2: note: in expansion of macro 'dprintk'
+>      419 |  dprintk("nfsd: REMOVE   %s %.*s\n", SVCFH_fmt(&argp->fh),
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_rename':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:435:2: note: in expansion of macro 'dprintk'
+>      435 |  dprintk("nfsd: RENAME   %s %.*s -> \n",
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_link':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:453:2: note: in expansion of macro 'dprintk'
+>      453 |  dprintk("nfsd: LINK     %s ->\n",
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_symlink':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:487:2: note: in expansion of macro 'dprintk'
+>      487 |  dprintk("nfsd: SYMLINK  %s %.*s -> %.*s\n",
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_mkdir':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:512:2: note: in expansion of macro 'dprintk'
+>      512 |  dprintk("nfsd: MKDIR    %s %.*s\n", SVCFH_fmt(&argp->fh), argp->len, argp->name);
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_rmdir':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:541:2: note: in expansion of macro 'dprintk'
+>      541 |  dprintk("nfsd: RMDIR    %s %.*s\n", SVCFH_fmt(&argp->fh), argp->len, argp->name);
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_readdir':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:560:2: note: in expansion of macro 'dprintk'
+>      560 |  dprintk("nfsd: READDIR  %s %d bytes at %d\n",
+>          |  ^~~~~~~
+>    fs/nfsd/nfsproc.c: In function 'nfsd_proc_statfs':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsproc.c:598:2: note: in expansion of macro 'dprintk'
+>      598 |  dprintk("nfsd: STATFS   %s\n", SVCFH_fmt(&argp->fh));
+>          |  ^~~~~~~
+> --
+>    In file included from fs/nfsd/nfsfh.c:14:
+>    fs/nfsd/nfsfh.c: In function 'nfsd_acceptable':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsfh.c:50:3: note: in expansion of macro 'dprintk'
+>       50 |   dprintk("nfsd_acceptable failed at %p %pd\n", tdentry, tdentry);
+>          |   ^~~~~~~
+>    fs/nfsd/nfsd.h:32:42: note: each undeclared identifier is reported only once for each function it appears in
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsfh.c:50:3: note: in expansion of macro 'dprintk'
+>       50 |   dprintk("nfsd_acceptable failed at %p %pd\n", tdentry, tdentry);
+>          |   ^~~~~~~
+>    fs/nfsd/nfsfh.c: In function 'nfsd_setuser_and_check_port':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsfh.c:107:3: note: in expansion of macro 'dprintk'
+>      107 |   dprintk("nfsd: request from insecure port %s!\n",
+>          |   ^~~~~~~
+>    fs/nfsd/nfsfh.c: In function 'fh_verify':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsfh.c:332:2: note: in expansion of macro 'dprintk'
+>      332 |  dprintk("nfsd: fh_verify(%s)\n", SVCFH_fmt(fhp));
+>          |  ^~~~~~~
+>    fs/nfsd/nfsfh.c: In function 'fh_compose':
+>>> fs/nfsd/nfsd.h:32:42: error: 'NFSDDBG_FACILITY' undeclared (first use in this function); did you mean 'NFSDDBG_FILEOP'?
+>       32 | # define ifdebug(flag)  if (nfsd_debug & NFSDDBG_##flag)
+>          |                                          ^~~~~~~~
+>    include/linux/sunrpc/debug.h:39:2: note: in expansion of macro 'ifdebug'
+>       39 |  ifdebug(fac)       \
+>          |  ^~~~~~~
+>    include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
+>       25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |  ^~~~~~~~
+>    fs/nfsd/nfsfh.c:548:2: note: in expansion of macro 'dprintk'
+>      548 |  dprintk("nfsd: fh_compose(exp %02x:%02x/%ld %pd2, ino=%ld)\n",
+>          |  ^~~~~~~
+> ..
+> 
+> vim +32 fs/nfsd/nfsd.h
+> 
+> d430e8d530e900c Christoph Hellwig 2014-05-06  29  
+> 6f226e2ab1b895c Christoph Hellwig 2014-05-06  30  #undef ifdebug
+> 135dd002c23054a Mark Salter       2015-04-06  31  #ifdef CONFIG_SUNRPC_DEBUG
+> 6f226e2ab1b895c Christoph Hellwig 2014-05-06 @32  # define ifdebug(flag)		if (nfsd_debug & NFSDDBG_##flag)
+> 6f226e2ab1b895c Christoph Hellwig 2014-05-06  33  #else
+> 6f226e2ab1b895c Christoph Hellwig 2014-05-06  34  # define ifdebug(flag)		if (0)
+> 6f226e2ab1b895c Christoph Hellwig 2014-05-06  35  #endif
+> 6f226e2ab1b895c Christoph Hellwig 2014-05-06  36  
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> 
