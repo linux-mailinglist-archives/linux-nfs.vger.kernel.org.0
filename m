@@ -2,294 +2,264 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA00D2AF89E
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Nov 2020 19:57:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77CF32AF94F
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Nov 2020 20:53:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725916AbgKKS5e (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Nov 2020 13:57:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgKKS5d (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Nov 2020 13:57:33 -0500
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B07ECC0613D1
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Nov 2020 10:57:31 -0800 (PST)
-Received: by mail-io1-xd44.google.com with SMTP id s24so3325220ioj.13
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Nov 2020 10:57:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8DKuDB5LEEiDs+HKBVBurFjvTqncsTKUmAwonf+c4kk=;
-        b=iQC2M+ydj+IdRnNKU1Bq4uRd1PSu/wbVcdQBf/5ys2NMbeX6thY4YmEJOZBEeBiILh
-         bf3uCKWYh7jhgAQGH0n0+GgfS2nvC00u4GyzBFiKncZIH25Gxp8PGRWGZ+XRwVG3Wbnb
-         8i/7dGOqJzh3h/k+JvYVjHlomliOq6hqoDeb0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8DKuDB5LEEiDs+HKBVBurFjvTqncsTKUmAwonf+c4kk=;
-        b=cWiu926oA01JNE5yvZQujHLyHAmioO5tPzllMaYcdvqUJe2dnAW9HFQceBxZFZgTIC
-         SMp7Bys4SnBCqcXZwdOx2/jRusJN6x1IN+EvzhgobLzgiGSZfdjvgEwpp7egewfo+yKr
-         Nl3voj0z3icUIwV7RLWoS7q4ZkbIEEq77sPZXGvjlymJJvDSHMmsEskq5SrmTdBqoNAP
-         z0k8IPTR9SlVCNR0UDH2pvXFRTnvtLNFiIQgOft71KUpKW8EIcRsGj3sjmjD4rEMoHEE
-         xh3pS5UAMVzH+ibZKJjMazZ3PYKuMkdRkkwuACT4H7Eupb3/ElY/b0uLnAC2OZK3947V
-         eQMg==
-X-Gm-Message-State: AOAM533GJ3VrPDhFESavPdEPIHIjSTToIeetmbiqpPcjMl2XL4jwupy0
-        +gTBGmHw6dKRVGbGKwi5FgWSWg==
-X-Google-Smtp-Source: ABdhPJzI4P23JL1hsAmkxeShiPup7VXJMrqqKoyBvNA/MDImyGOvOCz2EpOJdjwtPjy0et2hRqrx9Q==
-X-Received: by 2002:a02:6a59:: with SMTP id m25mr21258822jaf.132.1605121050913;
-        Wed, 11 Nov 2020 10:57:30 -0800 (PST)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id n4sm1565046iox.6.2020.11.11.10.57.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Nov 2020 10:57:30 -0800 (PST)
-Date:   Wed, 11 Nov 2020 18:57:28 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "smayhew@redhat.com" <smayhew@redhat.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "dhowells@redhat.com" <dhowells@redhat.com>,
-        "schumaker.anna@gmail.com" <schumaker.anna@gmail.com>,
-        "alban.crequy@gmail.com" <alban.crequy@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mauricio@kinvolk.io" <mauricio@kinvolk.io>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v4 0/2] NFS: Fix interaction between fs_context and user
- namespaces
-Message-ID: <20201111185727.GA27945@ircssh-2.c.rugged-nimbus-611.internal>
-References: <20201102174737.2740-1-sargun@sargun.me>
- <CAMXgnP5cVoLKTGPOAO+aLEAGLpkjACy1e4iLBKkfp8Gv1U77xA@mail.gmail.com>
- <f6d86006ccd19d4d101097de309eb21bbbf96e43.camel@hammerspace.com>
- <20201111111233.GA21917@ircssh-2.c.rugged-nimbus-611.internal>
- <8feccf45f6575a204da03e796391cc135283eb88.camel@hammerspace.com>
+        id S1725895AbgKKTxa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Nov 2020 14:53:30 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:55025 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725860AbgKKTxa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Nov 2020 14:53:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605124407;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cv7Oy6A/hm6Xsurk75laZlqCEJBunCxyOhRxshXm8A4=;
+        b=OlAwmssGKLNMqQmo5DM8C44MZ/fq+EAtoDfM+EPMDPjSDH2umfWgFMXselYkDpPO/vIAhW
+        bfCCczeAnzjcpDFQBROi9lLVvWz8I6VW2LzIprV7h6qQGyFieS/1Mbryam+0FRxeDtEslW
+        IdvfF9E1woMsB1KQz19oJFFy/EqAIxs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-50-DGq0vl2KNWa4AjLGyFV3Xw-1; Wed, 11 Nov 2020 14:53:25 -0500
+X-MC-Unique: DGq0vl2KNWa4AjLGyFV3Xw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB7BE188C126;
+        Wed, 11 Nov 2020 19:53:24 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-194.rdu2.redhat.com [10.10.64.194])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74E0C19C66;
+        Wed, 11 Nov 2020 19:53:24 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v4 21/21] NFS: Do uncached readdir when we're seeking a
+ cookie in an empty page cache
+Date:   Wed, 11 Nov 2020 14:53:23 -0500
+Message-ID: <80F65B51-35C0-4849-A3EB-691CDD8F4B0A@redhat.com>
+In-Reply-To: <4e92cc94e4b10b42aee30e198c6474c72564cbaa.camel@hammerspace.com>
+References: <20201107140325.281678-1-trondmy@kernel.org>
+ <20201107140325.281678-2-trondmy@kernel.org>
+ <20201107140325.281678-3-trondmy@kernel.org>
+ <20201107140325.281678-4-trondmy@kernel.org>
+ <20201107140325.281678-5-trondmy@kernel.org>
+ <20201107140325.281678-6-trondmy@kernel.org>
+ <20201107140325.281678-7-trondmy@kernel.org>
+ <20201107140325.281678-8-trondmy@kernel.org>
+ <20201107140325.281678-9-trondmy@kernel.org>
+ <20201107140325.281678-10-trondmy@kernel.org>
+ <20201107140325.281678-11-trondmy@kernel.org>
+ <20201107140325.281678-12-trondmy@kernel.org>
+ <20201107140325.281678-13-trondmy@kernel.org>
+ <20201107140325.281678-14-trondmy@kernel.org>
+ <20201107140325.281678-15-trondmy@kernel.org>
+ <20201107140325.281678-16-trondmy@kernel.org>
+ <20201107140325.281678-17-trondmy@kernel.org>
+ <20201107140325.281678-18-trondmy@kernel.org>
+ <20201107140325.281678-19-trondmy@kernel.org>
+ <20201107140325.281678-20-trondmy@kernel.org>
+ <20201107140325.281678-21-trondmy@kernel.org>
+ <20201107140325.281678-22-trondmy@kernel.org>
+ <86F25343-0860-44A2-BA40-CFB640147D50@redhat.com>
+ <d31c1ca31e734d7566f3da6d1c1d651abc4101f7.camel@hammerspace.com>
+ <6D043238-4C98-41B9-A890-B0897E7EFDBA@redhat.com>
+ <4e92cc94e4b10b42aee30e198c6474c72564cbaa.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8feccf45f6575a204da03e796391cc135283eb88.camel@hammerspace.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Nov 11, 2020 at 02:38:11PM +0000, Trond Myklebust wrote:
-> On Wed, 2020-11-11 at 11:12 +0000, Sargun Dhillon wrote:
-> > On Tue, Nov 10, 2020 at 08:12:01PM +0000, Trond Myklebust wrote:
-> > > On Tue, 2020-11-10 at 17:43 +0100, Alban Crequy wrote:
-> > > > Hi,
-> > > > 
-> > > > I tested the patches on top of 5.10.0-rc3+ and I could mount an
-> > > > NFS
-> > > > share with a different user namespace. fsopen() is done in the
-> > > > container namespaces (user, mnt and net namespaces) while
-> > > > fsconfig(),
-> > > > fsmount() and move_mount() are done on the host namespaces. The
-> > > > mount
-> > > > on the host is available in the container via mount propagation
-> > > > from
-> > > > the host mount.
-> > > > 
-> > > > With this, the files on the NFS server with uid 0 are available
-> > > > in
-> > > > the
-> > > > container with uid 0. On the host, they are available with uid
-> > > > 4294967294 (make_kuid(&init_user_ns, -2)).
-> > > > 
-> > > 
-> > > Can someone please tell me what is broken with the _current_ design
-> > > before we start trying to push "fixes" that clearly break it?
-> > Currently the mechanism of mounting nfs4 in a user namespace is as
-> > follows:
-> > 
-> > Parent: fork()
-> > Child: setns(userns)
-> > C: fsopen("nfs4") = 3
-> > C->P: Send FD 3
-> > P: FSConfig...
-> > P: fsmount... (This is where the CAP_SYS_ADMIN check happens))
-> > 
-> > 
-> > Right now, when you mount an NFS filesystem in a non-init user
-> > namespace, and you have UIDs / GIDs on, the UIDs / GIDs which
-> > are sent to the server are not the UIDs from the mounting namespace,
-> > instead they are the UIDs from the init user ns.
-> > 
-> > The reason for this is that you can call fsopen("nfs4") in the
-> > unprivileged 
-> > namespace, and that configures fs_context with all the right
-> > information for 
-> > that user namespace, but we currently require CAP_SYS_ADMIN in the
-> > init user 
-> > namespace to call fsmount. This means that the superblock's user
-> > namespace is 
-> > set "correctly" to the container, but there's absolutely no way
-> > nfs4uidmap
-> > to consume an unprivileged user namespace.
-> > 
-> > This behaviour happens "the other way" as well, where the UID in the
-> > container
-> > may be 0, but the corresponding kuid is 1000. When a response from an
-> > NFS
-> > server comes in we decode it according to the idmap userns[1]. The
-> > userns
-> > used to get create idmap is generated at fsmount time, and not as
-> > fsopen
-> > time. So, even if the filesystem is in the user namespace, and the
-> > server
-> > responds with UID 0, it'll come up with an unmapped UID.
-> > 
-> > This is because we do
-> > Server UID 0 -> idmap make_kuid(init_user_ns, 0) -> VFS
-> > from_kuid(container_ns, 0) -> invalid uid
-> > 
-> > This is broken behaviour, in my humble opinion as is it makes it
-> > impossible to 
-> > use NFSv4 (and v3 for that matter) out of the box with unprivileged
-> > user 
-> > namespaces. At least in our environment, using usernames / GSS isn't
-> > an option,
-> > so we have to rely on UIDs being set correctly [at least from the
-> > container's
-> > perspective].
-> > 
-> 
-> The current code for setting server->cred was developed independently
-> of fsopen() (and predates it actually). I'm fine with the change to
-> have server->cred be the cred of the user that called fsopen(). That's
-> in line with what we used to do for sys_mount().
-> 
-Just curious, without FS_USERNS, how were you mounting NFSv4 in an
-unprivileged user ns?
+On 11 Nov 2020, at 12:34, Trond Myklebust wrote:
 
+> On Wed, 2020-11-11 at 11:43 -0500, Benjamin Coddington wrote:
+>> On 9 Nov 2020, at 16:46, Trond Myklebust wrote:
+>>
+>>> On Mon, 2020-11-09 at 16:41 -0500, Benjamin Coddington wrote:
+>>>> On 7 Nov 2020, at 9:03, trondmy@kernel.org wrote:
+>>>>
+>>>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>>>>
+>>>>> If the directory is changing, causing the page cache to get
+>>>>> invalidated
+>>>>> while we are listing the contents, then the NFS client is
+>>>>> currently
+>>>>> forced
+>>>>> to read in the entire directory contents from scratch, because
+>>>>> it
+>>>>> needs
+>>>>> to perform a linear search for the readdir cookie. While this
+>>>>> is
+>>>>> not
+>>>>> an issue for small directories, it does not scale to
+>>>>> directories
+>>>>> with
+>>>>> millions of entries.
+>>>>> In order to be able to deal with large directories that are
+>>>>> changing,
+>>>>> add a heuristic to ensure that if the page cache is empty, and
+>>>>> we
+>>>>> are
+>>>>> searching for a cookie that is not the zero cookie, we just
+>>>>> default
+>>>>> to
+>>>>> performing uncached readdir.
+>>>>>
+>>>>> Signed-off-by: Trond Myklebust
+>>>>> <trond.myklebust@hammerspace.com>
+>>>>> ---
+>>>>>  fs/nfs/dir.c | 17 +++++++++++++++++
+>>>>>  1 file changed, 17 insertions(+)
+>>>>>
+>>>>> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+>>>>> index 238872d116f7..d7a9efd31ecd 100644
+>>>>> --- a/fs/nfs/dir.c
+>>>>> +++ b/fs/nfs/dir.c
+>>>>> @@ -917,11 +917,28 @@ static int
+>>>>> find_and_lock_cache_page(struct
+>>>>> nfs_readdir_descriptor *desc)
+>>>>>         return res;
+>>>>>  }
+>>>>>
+>>>>> +static bool nfs_readdir_dont_search_cache(struct
+>>>>> nfs_readdir_descriptor *desc)
+>>>>> +{
+>>>>> +       struct address_space *mapping = desc->file->f_mapping;
+>>>>> +       struct inode *dir = file_inode(desc->file);
+>>>>> +       unsigned int dtsize = NFS_SERVER(dir)->dtsize;
+>>>>> +       loff_t size = i_size_read(dir);
+>>>>> +
+>>>>> +       /*
+>>>>> +        * Default to uncached readdir if the page cache is
+>>>>> empty,
+>>>>> and
+>>>>> +        * we're looking for a non-zero cookie in a large
+>>>>> directory.
+>>>>> +        */
+>>>>> +       return desc->dir_cookie != 0 && mapping->nrpages == 0
+>>>>> &&
+>>>>> size >
+>>>>> dtsize;
+>>>>
+>>>> inode size > dtsize is a little hand-wavy.  We have a lot of
+>>>> customers
+>>>> trying to
+>>>> reverse-engineer nfs_readdir() behavior instead of reading the
+>>>> code,
+>>>> this
+>>>> is sure to drive them crazy.
+>>>>
+>>>> That said, in the absence of an easy way to make it tunable, I
+>>>> don't
+>>>> have
+>>>> anything better to suggest.
+>>>>
+>>>> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+>>>
+>>>
+>>> Right. It is a heuristic, but I would expect that the directory
+>>> size is
+>>> going to be somewhat proportional to the number of RPC calls we
+>>> need to
+>>> perform to read it. That number again is somewhat proportional to
+>>> the
+>>> dtsize.
+>>>
+>>> IOW: The general idea is correct.
+>>
+>> I can agree with that, but I have another thought:
+>>
+>> If the point of the heuristic is to allow a full listing to
+>> eventually
+>> complete, it should not be dependent on mapping->nrpages == 0. 
+>> Otherwise,
+>> other processes can start filling the cache and we're back to the
+>> situation
+>> where filling the cache could take longer than acdirmax, and things
+>> eventually congest to a halt.
+>>
+>> Flipping a bit on the context to remain uncached gives a better
+>> assurance we
+>> can continue to make forward progress.
+>
+> I disagree. The point of the page cache is to allow sharing of
+> information between processes where possible. If there are multiple
+> processes all trying to make progress, and one of them starts filling
+> the page cache from scratch, then why should we not use that?
 
-> However all the other stuff to throw errors when the user namespace is
-> not init_user_ns introduces massive regressions.
-> 
+Because the process that starts filling the pagecache from scratch then
+enjoins the process that may be nearly finished listing the directory to
+start over waiting for the page cache to be filled (or help fill it).
 
-I can remove that and respin the patch. How do you feel about that?  I would 
-still like to keep the log lines though because it is a uapi change. I am 
-worried that someone might exercise this path with GSS and allow for upcalls 
-into the main namespaces by accident -- or be confused of why they're seeing 
-upcalls "in a different namespace".
+If the time taken to get to a certain offset/cookie exceeds the time to
+cache the directory's attributes, we'll drop the pagecache, or if we're
+perhaps using READDIRPLUS with many entries, we'll saturate the memory on
+the machine and start to reclaim it before we can ever finish.  There are
+scenarios where forward progress becomes very slow.
 
-Are you okay with picking up ("NFS: NFSv2/NFSv3: Use cred from fs_context during 
-mount") without any changes?
+Perhaps the onus is on me to whip up an example - I will do that.
 
-I can respin ("NFSv4: Refactor NFS to use user namespaces") without:
-/*
- * nfs4idmap is not fully isolated by user namespaces. It is currently
- * only network namespace aware. If upcalls never happen, we do not
- * need to worry as nfs_client instances aren't shared between
- * user namespaces.
- */
-if (idmap_userns(server->nfs_client->cl_idmap) != &init_user_ns && 
-	!(server->caps & NFS_CAP_UIDGID_NOMAP)) {
-	error = -EINVAL;
-	errorf(fc, "Mount credentials are from non init user namespace and ID mapping is enabled. This is not allowed.");
-	goto error;
-}
+> The alternative is not scaling to multiple processes.
 
-(and making it so we can call idmap_userns)
+The next process that comes along filling the pagecache will benefit the
+next processes, and so on, until a page is evicted or the cache is lost..
+etc.  The pagecache is still useful to multiple processes.
 
-> > > 
-> > > The current design assumes that the user namespace being used is
-> > > the one where 
-> > > the mount itself is performed. That means that the uids and gids or
-> > > usernames 
-> > > and groupnames that go on the wire match the uids and gids of the
-> > > container in 
-> > > which the mount occurred.
-> > > 
-> > 
-> > Right now, NFS does not have the ability for the fsmount() call to be
-> > called in an unprivileged user namespace. We can change that
-> > behaviour
-> > elsewhere if we want, but it's orthogonal to this.
-> > 
-> > > The assumption is that the server has authenticated that client as
-> > > belonging to a domain that it recognises (either through strong
-> > > RPCSEC_GSS/krb5 authentication, or through weaker matching of IP
-> > > addresses to a list of acceptable clients).
-> > > 
-> > I added a rejection for upcalls because upcalls can happen in the
-> > init 
-> > namespaces. We can drop that restriction from the nfs4 patch if you'd
-> > like. I
-> > *believe* (and I'm not a little out of my depth) that the request-key
-> > handler gets called with the *network namespace* of the NFS mount,
-> > but the userns is a privileged one, allowing for potential hazards.
-> > 
-> 
-> The idmapper already rejects upcalls to the keyring '/sbin/request-key'
-> utility if you're running with your own user namespace.
-> 
-> Quite frankly, switching to using the keyring was a mistake which I'd
-> undo if I could. Aside from not supporting containers, it is horribly
-> slow due to requiring a full process startup/teardown for every upcall,
-> so it scales poorly to large numbers of identities (particularly with
-> an operation like readdir() in which you're doing serial upcalls).
-> 
-> However nothing stops you from using the old NFSv4 idmapper daemon
-> (a.k.a. rpc.idmapd) in the context of the container that called
-> fsopen() so that it can translate identities correctly using whatever
-> userspace tools (ldap, sssd, winbind...) that the container has
-> configured.
-> 
+>> It's too bad we're stuck caching entries linearly.  What challenges
+>> might
+>> exist if we tried to use an XArray to map directory position to
+>> cookie?  I
+>> imagine we could implement this in a single XArray by using both
+>> position
+>> and cookie values as indices, and differentiate between them using
+>> two of
+>> the three XA marks, and store a structure to represent both.  Also
+>> unclear
+>> would be how to handle the lifetime of the XArray, since we'd no
+>> longer be
+>> using the VMs pagecache management..
+>>
+>
+> You might be able to speed up first cookie lookup by having an Xarray
+> that maps from a 64-bit cookie to a nfs_cache_array_entry which
+> contains the next cookie to look up. However that would only work on
+> 64-bit systems since xarrays take an unsigned long index.
 
-1. We see this as a potential security risk [this being upcalls] into the 
-unconfined portion of the system. Although, I'm sure that the userspace handlers 
-are written perfectly well, it allows for information leakage to occur.
+Yes, but I would like to allow processes to cache entries non-linearly.
 
-2. Is there a way to do this for NFSv3? 
+> Furthermore, you still need a way to map offsets to entries for the
+> case where we're not able to use cookies for lseek() purposes. That's a
+> linear search through the directory, which would be horrible with an
+> xarray of linked cookie values (so you'd probably need a second xarray
+> for that?).
 
-3. Can rpc.idmapd get the user namespace that the call is from (and is the 
-keyring per-userns?). In general, I think that this change follows the principal 
-of least surprise.
+There's xa_for_each_marked(), but it may not perform - I haven't looked
+at the implementation or tested it.
 
-> > The reason I added that block there is that I didn't imagine anyone
-> > was running 
-> > NFS in an unprivileged user namespace, and relying on upcalls
-> > (potentially into 
-> > privileged namespaces) in order to do authz.
-> > 
-> > 
-> > > If you go ahead and change the user namespace on the client without
-> > > going through the mount process again to mount a different super
-> > > block
-> > > with a different user namespace, then you will now get the exact
-> > > same
-> > > behaviour as if you do that with any other filesystem.
-> > 
-> > Not exactly, because other filesystems *only* use the s_user_ns for
-> > conversion 
-> > of UIDs, whereas NFS uses the currend_cred() acquired at mount time,
-> > which 
-> > doesn't match s_user_ns, leading to this behaviour.
-> > 
-> > 1. Mistranslated UIDs in encoding RPCs
-> > 2. The UID / GID exposed to VFS do not match the user ns.
-> > 
-> > > 
-> > > -- 
-> > > Trond Myklebust
-> > > Linux NFS client maintainer, Hammerspace
-> > > trond.myklebust@hammerspace.com
-> > > 
-> > > 
-> > -Thanks,
-> > Sargun
-> > 
-> > [1]:  
-> > https://elixir.bootlin.com/linux/v5.9.8/source/fs/nfs/nfs4idmap.c#L782
-> > [2]:  
-> > https://elixir.bootlin.com/linux/v5.9.8/source/fs/nfs/nfs4client.c#L1154
-> 
-> -- 
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-> 
-> 
+> Construction and teardown of that structure would be nasty for large
+> directories, since you have as many cookies as you have entries in your
+> directory. IOW: You'd have to tear down 127 times as many xarray
+> entries as we have now.
+>
+> It is not obvious that we would be able to benefit from starting at an
+> arbitrary location and caching that data, since if the directory
+> changed, we'd have to read in the new data anyway.
+
+The only case where it seems obvious is for the case where a very long
+listing is about to complete, and then the pagecache is invalidated, and
+then that plays out over and over again.  This is the pain point for our
+customers that are migrating NFS workloads onto slower (more latent)
+cloud infrastructure.
+
+> Memory management would need to be implemented somehow. You'd need a
+> shrinker for this tree that could intelligently prune it.
+
+nod.. thanks for your thoughts on this.
+
+Ben
+
