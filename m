@@ -2,213 +2,294 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D0EF2AF76A
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Nov 2020 18:34:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA00D2AF89E
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Nov 2020 19:57:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725895AbgKKRe2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Nov 2020 12:34:28 -0500
-Received: from mail-bn7nam10on2099.outbound.protection.outlook.com ([40.107.92.99]:31712
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725860AbgKKRe0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 11 Nov 2020 12:34:26 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dCPbkWMNUdcKD44QB0BoX5gML3lP8j4A0BRYelDfuQqjFji4t+CkfuAuIgBDEe687FTjmX8yMEPwmZ4RvyUau3bhjSp0De1eA/B6lCBuJMYOzB7tmZXamlc2RWP8N4Url6Z+a14FPuiRNaHwQxFAVCmKl+GlQbhkdXYeKIR3adLkp/6VhEoQFx7bqa3Q5enpCECGxTYpBeGaCapj6tyqKWm946DNchXipOfa/88eibEI8mA8sPUvjH0b1mU8a+xkwbyzAB1GCNOiyfgD5wYjQPmTgyW2AdChk8HPxWhSYWokg9lVaD4qk5oSew0JBe8wDmo1GR04tQ5D7zBK+wPNFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g1NdArtnPf0tMhewixWXO9tqWJr75RTyLk8vHB3NkWI=;
- b=aMPIfrufc0SGPO6elEeHaumv1oHC4uzbxaBpOvJv+8GWI4vUImSinPHY0IbngxkqbygPzyKaGRrnFtLPl5gnPUFP6n1vQVfUn6e+MujOxi9pu4i5kw1+HyjgSNgZAoaZ+u1HrV6Lz0joW37Md0YTHKjlIIU1DtYUObtpg5NnH9qye/SLbKHpevdoECPzNLnAZDEMwnsxxB/Te7MD7mvpy1LlY6Q7a11IPDhiuZ7dwY3JQdDrbKzmUT5/Pg0EZvnM4g6eZMzl6lVtEIm1e5NZA/Y5Uj9A/lQCJ49liM4A7Ijr82MzH5dRAKCPRMq8gBNVx166V9ofBGT37HSF/Zr0sQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g1NdArtnPf0tMhewixWXO9tqWJr75RTyLk8vHB3NkWI=;
- b=KE18IEGdyAtVsfDoqYfsFUQXx0pbmKsyON7SLzjT1Y/xHziK6Ws/Wpgy4/qFeBnZWFY/1Z+N/5CAoOBh/EXcmqWIlBRzsbZdRCJem46TiAKsaZDqJDPaHLJjYoG40Ok86zs8f3Bax/qu6SDn1cwI2zE/DyFvrsrc7ySJ1jBJbJo=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB3870.namprd13.prod.outlook.com (2603:10b6:208:1e9::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.14; Wed, 11 Nov
- 2020 17:34:22 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.018; Wed, 11 Nov 2020
- 17:34:22 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bcodding@redhat.com" <bcodding@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v4 21/21] NFS: Do uncached readdir when we're seeking a
- cookie in an empty page cache
-Thread-Topic: [PATCH v4 21/21] NFS: Do uncached readdir when we're seeking a
- cookie in an empty page cache
-Thread-Index: AQHWtRA6iwOeaceJLkybCI7SueOQ/6nAV/UAgAABg4CAAs/9gIAADjAA
-Date:   Wed, 11 Nov 2020 17:34:22 +0000
-Message-ID: <4e92cc94e4b10b42aee30e198c6474c72564cbaa.camel@hammerspace.com>
-References: <20201107140325.281678-1-trondmy@kernel.org>
-         <20201107140325.281678-2-trondmy@kernel.org>
-         <20201107140325.281678-3-trondmy@kernel.org>
-         <20201107140325.281678-4-trondmy@kernel.org>
-         <20201107140325.281678-5-trondmy@kernel.org>
-         <20201107140325.281678-6-trondmy@kernel.org>
-         <20201107140325.281678-7-trondmy@kernel.org>
-         <20201107140325.281678-8-trondmy@kernel.org>
-         <20201107140325.281678-9-trondmy@kernel.org>
-         <20201107140325.281678-10-trondmy@kernel.org>
-         <20201107140325.281678-11-trondmy@kernel.org>
-         <20201107140325.281678-12-trondmy@kernel.org>
-         <20201107140325.281678-13-trondmy@kernel.org>
-         <20201107140325.281678-14-trondmy@kernel.org>
-         <20201107140325.281678-15-trondmy@kernel.org>
-         <20201107140325.281678-16-trondmy@kernel.org>
-         <20201107140325.281678-17-trondmy@kernel.org>
-         <20201107140325.281678-18-trondmy@kernel.org>
-         <20201107140325.281678-19-trondmy@kernel.org>
-         <20201107140325.281678-20-trondmy@kernel.org>
-         <20201107140325.281678-21-trondmy@kernel.org>
-         <20201107140325.281678-22-trondmy@kernel.org>
-         <86F25343-0860-44A2-BA40-CFB640147D50@redhat.com>
-         <d31c1ca31e734d7566f3da6d1c1d651abc4101f7.camel@hammerspace.com>
-         <6D043238-4C98-41B9-A890-B0897E7EFDBA@redhat.com>
-In-Reply-To: <6D043238-4C98-41B9-A890-B0897E7EFDBA@redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 125d2ac7-02a6-4302-c2d1-08d8866806ee
-x-ms-traffictypediagnostic: MN2PR13MB3870:
-x-microsoft-antispam-prvs: <MN2PR13MB3870248392C621FA9F7083FAB8E80@MN2PR13MB3870.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: k7eJkYcLglL598mLfmgcmpjmQ3eVwqK/Al1P7zhbHNTuIhrl+NfJbpKbW6NiBS9WgtsKWLEGGE04f0bmt/MdsReaaGJRm7mOg95ckdebuS6Tm/Av2zbVzVgwFFuxyb+3Pqjwr9Gqb+EqTzUSp/HVMxfrDRz1vv+8TgH3Qh0NuVJ3NB0QJ7qFhs1GNBIn0q9mSiMHwKXcYdckIpVqWDCr/cfweqiS1BrAIIhWEeZnWnlrIERBZVm/TvlyPl7urfvgXVbMYo4FESKcYYRNc847l/9rgsVh3KCxjj/ExWKJvXAC2kLWz1pdYMzWiRhHmu/Demfo51G5kfUN8bLNCt7V4w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(136003)(346002)(366004)(396003)(39840400004)(6512007)(478600001)(4326008)(2906002)(66556008)(66476007)(66946007)(64756008)(76116006)(66446008)(91956017)(8936002)(4001150100001)(83380400001)(36756003)(5660300002)(316002)(2616005)(6486002)(6916009)(6506007)(71200400001)(26005)(186003)(8676002)(86362001)(53546011);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 1iZPZYSLG4KEr+/F/cjs/uik3B6riG/Bg3SI8w3EdZbqTYgpn6mXbm9jjmHos0VBOz7J1VdCp9n+cPdtWAq7YSDJBAQ43xM/YWmptiCPg7trqHoA9I//BkTWSJW7cEARNLT5HQ/vFHcDooD1PSQY5zNsCpuRsjyq5ODPf4L9DdaF4Es4ORQQB41McF/d+oGB41ZZOx3OyhVSe0FYfI4lEk8lkK5s5YdZml+Zi+HMnkGMPjVvwNJzOejTwjrKSF3rJprkLHaG1YAyvTxQMqsFqpYbPDAJxNCxqK5pl+ct7fp40oJGqkQFNWT8Jl0+a86kjLbCLvA1nHRbM1enGGAzfUptsNy1Vkv1ysD5fUAXSq/eFSdAURW/IqA5NovfJ5100JTWbIber7h9Z444OSR7A5czXGigiAU8zxpOkIskju2Api5hkdCW0zlXBrO+rfhyDHyNkdPyP51Kot4imwRpvrT8c9yr5ZDntKf9iinqj21ZDhkTejF1st63dQaIFv77e71I0uTDVuSom8DPdOI1nNZh+vaqJvuePRc1/LG0ZGqkVK4ILE+6laH1qt5WmdNxfl4qbzw8W9wApnUFhXEJGPHjDRNFFVNS/rfX16IIDKCCPIwX8iMGGPWje1vkkSz3oeN9WzVW21w1VouLU/ajNg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F10A6C64836ED04DAC20E395B0F2657F@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1725916AbgKKS5e (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Nov 2020 13:57:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbgKKS5d (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Nov 2020 13:57:33 -0500
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B07ECC0613D1
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Nov 2020 10:57:31 -0800 (PST)
+Received: by mail-io1-xd44.google.com with SMTP id s24so3325220ioj.13
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Nov 2020 10:57:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8DKuDB5LEEiDs+HKBVBurFjvTqncsTKUmAwonf+c4kk=;
+        b=iQC2M+ydj+IdRnNKU1Bq4uRd1PSu/wbVcdQBf/5ys2NMbeX6thY4YmEJOZBEeBiILh
+         bf3uCKWYh7jhgAQGH0n0+GgfS2nvC00u4GyzBFiKncZIH25Gxp8PGRWGZ+XRwVG3Wbnb
+         8i/7dGOqJzh3h/k+JvYVjHlomliOq6hqoDeb0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8DKuDB5LEEiDs+HKBVBurFjvTqncsTKUmAwonf+c4kk=;
+        b=cWiu926oA01JNE5yvZQujHLyHAmioO5tPzllMaYcdvqUJe2dnAW9HFQceBxZFZgTIC
+         SMp7Bys4SnBCqcXZwdOx2/jRusJN6x1IN+EvzhgobLzgiGSZfdjvgEwpp7egewfo+yKr
+         Nl3voj0z3icUIwV7RLWoS7q4ZkbIEEq77sPZXGvjlymJJvDSHMmsEskq5SrmTdBqoNAP
+         z0k8IPTR9SlVCNR0UDH2pvXFRTnvtLNFiIQgOft71KUpKW8EIcRsGj3sjmjD4rEMoHEE
+         xh3pS5UAMVzH+ibZKJjMazZ3PYKuMkdRkkwuACT4H7Eupb3/ElY/b0uLnAC2OZK3947V
+         eQMg==
+X-Gm-Message-State: AOAM533GJ3VrPDhFESavPdEPIHIjSTToIeetmbiqpPcjMl2XL4jwupy0
+        +gTBGmHw6dKRVGbGKwi5FgWSWg==
+X-Google-Smtp-Source: ABdhPJzI4P23JL1hsAmkxeShiPup7VXJMrqqKoyBvNA/MDImyGOvOCz2EpOJdjwtPjy0et2hRqrx9Q==
+X-Received: by 2002:a02:6a59:: with SMTP id m25mr21258822jaf.132.1605121050913;
+        Wed, 11 Nov 2020 10:57:30 -0800 (PST)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id n4sm1565046iox.6.2020.11.11.10.57.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 11 Nov 2020 10:57:30 -0800 (PST)
+Date:   Wed, 11 Nov 2020 18:57:28 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "smayhew@redhat.com" <smayhew@redhat.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "schumaker.anna@gmail.com" <schumaker.anna@gmail.com>,
+        "alban.crequy@gmail.com" <alban.crequy@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mauricio@kinvolk.io" <mauricio@kinvolk.io>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v4 0/2] NFS: Fix interaction between fs_context and user
+ namespaces
+Message-ID: <20201111185727.GA27945@ircssh-2.c.rugged-nimbus-611.internal>
+References: <20201102174737.2740-1-sargun@sargun.me>
+ <CAMXgnP5cVoLKTGPOAO+aLEAGLpkjACy1e4iLBKkfp8Gv1U77xA@mail.gmail.com>
+ <f6d86006ccd19d4d101097de309eb21bbbf96e43.camel@hammerspace.com>
+ <20201111111233.GA21917@ircssh-2.c.rugged-nimbus-611.internal>
+ <8feccf45f6575a204da03e796391cc135283eb88.camel@hammerspace.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 125d2ac7-02a6-4302-c2d1-08d8866806ee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2020 17:34:22.2771
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: X/sJKuuaOV3XNMwViwUFAgP4tjKykKANcPTeY5Xf4J75IsZHFHfllbBmeJrEn0gymjJjK2Fjl5v0t75jo6aSeg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3870
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8feccf45f6575a204da03e796391cc135283eb88.camel@hammerspace.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTExLTExIGF0IDExOjQzIC0wNTAwLCBCZW5qYW1pbiBDb2RkaW5ndG9uIHdy
-b3RlOg0KPiBPbiA5IE5vdiAyMDIwLCBhdCAxNjo0NiwgVHJvbmQgTXlrbGVidXN0IHdyb3RlOg0K
-PiANCj4gPiBPbiBNb24sIDIwMjAtMTEtMDkgYXQgMTY6NDEgLTA1MDAsIEJlbmphbWluIENvZGRp
-bmd0b24gd3JvdGU6DQo+ID4gPiBPbiA3IE5vdiAyMDIwLCBhdCA5OjAzLCB0cm9uZG15QGtlcm5l
-bC5vcmfCoHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+IEZyb206IFRyb25kIE15a2xlYnVzdCA8dHJv
-bmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbT4NCj4gPiA+ID4gDQo+ID4gPiA+IElmIHRoZSBk
-aXJlY3RvcnkgaXMgY2hhbmdpbmcsIGNhdXNpbmcgdGhlIHBhZ2UgY2FjaGUgdG8gZ2V0DQo+ID4g
-PiA+IGludmFsaWRhdGVkDQo+ID4gPiA+IHdoaWxlIHdlIGFyZSBsaXN0aW5nIHRoZSBjb250ZW50
-cywgdGhlbiB0aGUgTkZTIGNsaWVudCBpcw0KPiA+ID4gPiBjdXJyZW50bHkNCj4gPiA+ID4gZm9y
-Y2VkDQo+ID4gPiA+IHRvIHJlYWQgaW4gdGhlIGVudGlyZSBkaXJlY3RvcnkgY29udGVudHMgZnJv
-bSBzY3JhdGNoLCBiZWNhdXNlDQo+ID4gPiA+IGl0DQo+ID4gPiA+IG5lZWRzDQo+ID4gPiA+IHRv
-IHBlcmZvcm0gYSBsaW5lYXIgc2VhcmNoIGZvciB0aGUgcmVhZGRpciBjb29raWUuIFdoaWxlIHRo
-aXMNCj4gPiA+ID4gaXMNCj4gPiA+ID4gbm90DQo+ID4gPiA+IGFuIGlzc3VlIGZvciBzbWFsbCBk
-aXJlY3RvcmllcywgaXQgZG9lcyBub3Qgc2NhbGUgdG8NCj4gPiA+ID4gZGlyZWN0b3JpZXMNCj4g
-PiA+ID4gd2l0aA0KPiA+ID4gPiBtaWxsaW9ucyBvZiBlbnRyaWVzLg0KPiA+ID4gPiBJbiBvcmRl
-ciB0byBiZSBhYmxlIHRvIGRlYWwgd2l0aCBsYXJnZSBkaXJlY3RvcmllcyB0aGF0IGFyZQ0KPiA+
-ID4gPiBjaGFuZ2luZywNCj4gPiA+ID4gYWRkIGEgaGV1cmlzdGljIHRvIGVuc3VyZSB0aGF0IGlm
-IHRoZSBwYWdlIGNhY2hlIGlzIGVtcHR5LCBhbmQNCj4gPiA+ID4gd2UNCj4gPiA+ID4gYXJlDQo+
-ID4gPiA+IHNlYXJjaGluZyBmb3IgYSBjb29raWUgdGhhdCBpcyBub3QgdGhlIHplcm8gY29va2ll
-LCB3ZSBqdXN0DQo+ID4gPiA+IGRlZmF1bHQNCj4gPiA+ID4gdG8NCj4gPiA+ID4gcGVyZm9ybWlu
-ZyB1bmNhY2hlZCByZWFkZGlyLg0KPiA+ID4gPiANCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogVHJv
-bmQgTXlrbGVidXN0DQo+ID4gPiA+IDx0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tPg0K
-PiA+ID4gPiAtLS0NCj4gPiA+ID4gwqBmcy9uZnMvZGlyLmMgfCAxNyArKysrKysrKysrKysrKysr
-Kw0KPiA+ID4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspDQo+ID4gPiA+IA0K
-PiA+ID4gPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL2Rpci5jIGIvZnMvbmZzL2Rpci5jDQo+ID4gPiA+
-IGluZGV4IDIzODg3MmQxMTZmNy4uZDdhOWVmZDMxZWNkIDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9m
-cy9uZnMvZGlyLmMNCj4gPiA+ID4gKysrIGIvZnMvbmZzL2Rpci5jDQo+ID4gPiA+IEBAIC05MTcs
-MTEgKzkxNywyOCBAQCBzdGF0aWMgaW50DQo+ID4gPiA+IGZpbmRfYW5kX2xvY2tfY2FjaGVfcGFn
-ZShzdHJ1Y3QNCj4gPiA+ID4gbmZzX3JlYWRkaXJfZGVzY3JpcHRvciAqZGVzYykNCj4gPiA+ID4g
-wqDCoMKgwqDCoMKgwqDCoHJldHVybiByZXM7DQo+ID4gPiA+IMKgfQ0KPiA+ID4gPiANCj4gPiA+
-ID4gK3N0YXRpYyBib29sIG5mc19yZWFkZGlyX2RvbnRfc2VhcmNoX2NhY2hlKHN0cnVjdA0KPiA+
-ID4gPiBuZnNfcmVhZGRpcl9kZXNjcmlwdG9yICpkZXNjKQ0KPiA+ID4gPiArew0KPiA+ID4gPiAr
-wqDCoMKgwqDCoMKgwqBzdHJ1Y3QgYWRkcmVzc19zcGFjZSAqbWFwcGluZyA9IGRlc2MtPmZpbGUt
-PmZfbWFwcGluZzsNCj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IGlub2RlICpkaXIgPSBm
-aWxlX2lub2RlKGRlc2MtPmZpbGUpOw0KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqB1bnNpZ25lZCBp
-bnQgZHRzaXplID0gTkZTX1NFUlZFUihkaXIpLT5kdHNpemU7DQo+ID4gPiA+ICvCoMKgwqDCoMKg
-wqDCoGxvZmZfdCBzaXplID0gaV9zaXplX3JlYWQoZGlyKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiAr
-wqDCoMKgwqDCoMKgwqAvKg0KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqAgKiBEZWZhdWx0IHRvIHVu
-Y2FjaGVkIHJlYWRkaXIgaWYgdGhlIHBhZ2UgY2FjaGUgaXMNCj4gPiA+ID4gZW1wdHksDQo+ID4g
-PiA+IGFuZA0KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqAgKiB3ZSdyZSBsb29raW5nIGZvciBhIG5v
-bi16ZXJvIGNvb2tpZSBpbiBhIGxhcmdlDQo+ID4gPiA+IGRpcmVjdG9yeS4NCj4gPiA+ID4gK8Kg
-wqDCoMKgwqDCoMKgICovDQo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoHJldHVybiBkZXNjLT5kaXJf
-Y29va2llICE9IDAgJiYgbWFwcGluZy0+bnJwYWdlcyA9PSAwDQo+ID4gPiA+ICYmDQo+ID4gPiA+
-IHNpemUgPg0KPiA+ID4gPiBkdHNpemU7DQo+ID4gPiANCj4gPiA+IGlub2RlIHNpemUgPiBkdHNp
-emUgaXMgYSBsaXR0bGUgaGFuZC13YXZ5LsKgIFdlIGhhdmUgYSBsb3Qgb2YNCj4gPiA+IGN1c3Rv
-bWVycw0KPiA+ID4gdHJ5aW5nIHRvDQo+ID4gPiByZXZlcnNlLWVuZ2luZWVyIG5mc19yZWFkZGly
-KCkgYmVoYXZpb3IgaW5zdGVhZCBvZiByZWFkaW5nIHRoZQ0KPiA+ID4gY29kZSwNCj4gPiA+IHRo
-aXMNCj4gPiA+IGlzIHN1cmUgdG8gZHJpdmUgdGhlbSBjcmF6eS4NCj4gPiA+IA0KPiA+ID4gVGhh
-dCBzYWlkLCBpbiB0aGUgYWJzZW5jZSBvZiBhbiBlYXN5IHdheSB0byBtYWtlIGl0IHR1bmFibGUs
-IEkNCj4gPiA+IGRvbid0DQo+ID4gPiBoYXZlDQo+ID4gPiBhbnl0aGluZyBiZXR0ZXIgdG8gc3Vn
-Z2VzdC4NCj4gPiA+IA0KPiA+ID4gUmV2aWV3ZWQtYnk6IEJlbmphbWluIENvZGRpbmd0b24gPGJj
-b2RkaW5nQHJlZGhhdC5jb20+DQo+ID4gDQo+ID4gDQo+ID4gUmlnaHQuIEl0IGlzIGEgaGV1cmlz
-dGljLCBidXQgSSB3b3VsZCBleHBlY3QgdGhhdCB0aGUgZGlyZWN0b3J5DQo+ID4gc2l6ZSBpcw0K
-PiA+IGdvaW5nIHRvIGJlIHNvbWV3aGF0IHByb3BvcnRpb25hbCB0byB0aGUgbnVtYmVyIG9mIFJQ
-QyBjYWxscyB3ZQ0KPiA+IG5lZWQgdG8NCj4gPiBwZXJmb3JtIHRvIHJlYWQgaXQuIFRoYXQgbnVt
-YmVyIGFnYWluIGlzIHNvbWV3aGF0IHByb3BvcnRpb25hbCB0bw0KPiA+IHRoZQ0KPiA+IGR0c2l6
-ZS4NCj4gPiANCj4gPiBJT1c6IFRoZSBnZW5lcmFsIGlkZWEgaXMgY29ycmVjdC4NCj4gDQo+IEkg
-Y2FuIGFncmVlIHdpdGggdGhhdCwgYnV0IEkgaGF2ZSBhbm90aGVyIHRob3VnaHQ6DQo+IA0KPiBJ
-ZiB0aGUgcG9pbnQgb2YgdGhlIGhldXJpc3RpYyBpcyB0byBhbGxvdyBhIGZ1bGwgbGlzdGluZyB0
-bw0KPiBldmVudHVhbGx5DQo+IGNvbXBsZXRlLCBpdCBzaG91bGQgbm90IGJlIGRlcGVuZGVudCBv
-biBtYXBwaW5nLT5ucnBhZ2VzID09IDAuwqANCj4gT3RoZXJ3aXNlLA0KPiBvdGhlciBwcm9jZXNz
-ZXMgY2FuIHN0YXJ0IGZpbGxpbmcgdGhlIGNhY2hlIGFuZCB3ZSdyZSBiYWNrIHRvIHRoZQ0KPiBz
-aXR1YXRpb24NCj4gd2hlcmUgZmlsbGluZyB0aGUgY2FjaGUgY291bGQgdGFrZSBsb25nZXIgdGhh
-biBhY2Rpcm1heCwgYW5kIHRoaW5ncw0KPiBldmVudHVhbGx5IGNvbmdlc3QgdG8gYSBoYWx0Lg0K
-PiANCj4gRmxpcHBpbmcgYSBiaXQgb24gdGhlIGNvbnRleHQgdG8gcmVtYWluIHVuY2FjaGVkIGdp
-dmVzIGEgYmV0dGVyDQo+IGFzc3VyYW5jZSB3ZQ0KPiBjYW4gY29udGludWUgdG8gbWFrZSBmb3J3
-YXJkIHByb2dyZXNzLg0KDQpJIGRpc2FncmVlLiBUaGUgcG9pbnQgb2YgdGhlIHBhZ2UgY2FjaGUg
-aXMgdG8gYWxsb3cgc2hhcmluZyBvZg0KaW5mb3JtYXRpb24gYmV0d2VlbiBwcm9jZXNzZXMgd2hl
-cmUgcG9zc2libGUuIElmIHRoZXJlIGFyZSBtdWx0aXBsZQ0KcHJvY2Vzc2VzIGFsbCB0cnlpbmcg
-dG8gbWFrZSBwcm9ncmVzcywgYW5kIG9uZSBvZiB0aGVtIHN0YXJ0cyBmaWxsaW5nDQp0aGUgcGFn
-ZSBjYWNoZSBmcm9tIHNjcmF0Y2gsIHRoZW4gd2h5IHNob3VsZCB3ZSBub3QgdXNlIHRoYXQ/DQoN
-ClRoZSBhbHRlcm5hdGl2ZSBpcyBub3Qgc2NhbGluZyB0byBtdWx0aXBsZSBwcm9jZXNzZXMuDQoN
-Cj4gDQo+IEl0J3MgdG9vIGJhZCB3ZSdyZSBzdHVjayBjYWNoaW5nIGVudHJpZXMgbGluZWFybHku
-wqAgV2hhdCBjaGFsbGVuZ2VzDQo+IG1pZ2h0DQo+IGV4aXN0IGlmIHdlIHRyaWVkIHRvIHVzZSBh
-biBYQXJyYXkgdG8gbWFwIGRpcmVjdG9yeSBwb3NpdGlvbiB0bw0KPiBjb29raWU/wqAgSQ0KPiBp
-bWFnaW5lIHdlIGNvdWxkIGltcGxlbWVudCB0aGlzIGluIGEgc2luZ2xlIFhBcnJheSBieSB1c2lu
-ZyBib3RoDQo+IHBvc2l0aW9uDQo+IGFuZCBjb29raWUgdmFsdWVzIGFzIGluZGljZXMsIGFuZCBk
-aWZmZXJlbnRpYXRlIGJldHdlZW4gdGhlbSB1c2luZw0KPiB0d28gb2YNCj4gdGhlIHRocmVlIFhB
-IG1hcmtzLCBhbmQgc3RvcmUgYSBzdHJ1Y3R1cmUgdG8gcmVwcmVzZW50IGJvdGguwqAgQWxzbw0K
-PiB1bmNsZWFyDQo+IHdvdWxkIGJlIGhvdyB0byBoYW5kbGUgdGhlIGxpZmV0aW1lIG9mIHRoZSBY
-QXJyYXksIHNpbmNlIHdlJ2Qgbm8NCj4gbG9uZ2VyIGJlDQo+IHVzaW5nIHRoZSBWTXMgcGFnZWNh
-Y2hlIG1hbmFnZW1lbnQuLg0KPiANCg0KWW91IG1pZ2h0IGJlIGFibGUgdG8gc3BlZWQgdXAgZmly
-c3QgY29va2llIGxvb2t1cCBieSBoYXZpbmcgYW4gWGFycmF5DQp0aGF0IG1hcHMgZnJvbSBhIDY0
-LWJpdCBjb29raWUgdG8gYSBuZnNfY2FjaGVfYXJyYXlfZW50cnkgd2hpY2gNCmNvbnRhaW5zIHRo
-ZSBuZXh0IGNvb2tpZSB0byBsb29rIHVwLiBIb3dldmVyIHRoYXQgd291bGQgb25seSB3b3JrIG9u
-DQo2NC1iaXQgc3lzdGVtcyBzaW5jZSB4YXJyYXlzIHRha2UgYW4gdW5zaWduZWQgbG9uZyBpbmRl
-eC4NCg0KRnVydGhlcm1vcmUsIHlvdSBzdGlsbCBuZWVkIGEgd2F5IHRvIG1hcCBvZmZzZXRzIHRv
-IGVudHJpZXMgZm9yIHRoZQ0KY2FzZSB3aGVyZSB3ZSdyZSBub3QgYWJsZSB0byB1c2UgY29va2ll
-cyBmb3IgbHNlZWsoKSBwdXJwb3Nlcy4gVGhhdCdzIGENCmxpbmVhciBzZWFyY2ggdGhyb3VnaCB0
-aGUgZGlyZWN0b3J5LCB3aGljaCB3b3VsZCBiZSBob3JyaWJsZSB3aXRoIGFuDQp4YXJyYXkgb2Yg
-bGlua2VkIGNvb2tpZSB2YWx1ZXMgKHNvIHlvdSdkIHByb2JhYmx5IG5lZWQgYSBzZWNvbmQgeGFy
-cmF5DQpmb3IgdGhhdD8pLg0KDQpDb25zdHJ1Y3Rpb24gYW5kIHRlYXJkb3duIG9mIHRoYXQgc3Ry
-dWN0dXJlIHdvdWxkIGJlIG5hc3R5IGZvciBsYXJnZQ0KZGlyZWN0b3JpZXMsIHNpbmNlIHlvdSBo
-YXZlIGFzIG1hbnkgY29va2llcyBhcyB5b3UgaGF2ZSBlbnRyaWVzIGluIHlvdXINCmRpcmVjdG9y
-eS4gSU9XOiBZb3UnZCBoYXZlIHRvIHRlYXIgZG93biAxMjcgdGltZXMgYXMgbWFueSB4YXJyYXkN
-CmVudHJpZXMgYXMgd2UgaGF2ZSBub3cuDQoNCkl0IGlzIG5vdCBvYnZpb3VzIHRoYXQgd2Ugd291
-bGQgYmUgYWJsZSB0byBiZW5lZml0IGZyb20gc3RhcnRpbmcgYXQgYW4NCmFyYml0cmFyeSBsb2Nh
-dGlvbiBhbmQgY2FjaGluZyB0aGF0IGRhdGEsIHNpbmNlIGlmIHRoZSBkaXJlY3RvcnkNCmNoYW5n
-ZWQsIHdlJ2QgaGF2ZSB0byByZWFkIGluIHRoZSBuZXcgZGF0YSBhbnl3YXkuDQoNCk1lbW9yeSBt
-YW5hZ2VtZW50IHdvdWxkIG5lZWQgdG8gYmUgaW1wbGVtZW50ZWQgc29tZWhvdy4gWW91J2QgbmVl
-ZCBhDQpzaHJpbmtlciBmb3IgdGhpcyB0cmVlIHRoYXQgY291bGQgaW50ZWxsaWdlbnRseSBwcnVu
-ZSBpdC4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5l
-ciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+On Wed, Nov 11, 2020 at 02:38:11PM +0000, Trond Myklebust wrote:
+> On Wed, 2020-11-11 at 11:12 +0000, Sargun Dhillon wrote:
+> > On Tue, Nov 10, 2020 at 08:12:01PM +0000, Trond Myklebust wrote:
+> > > On Tue, 2020-11-10 at 17:43 +0100, Alban Crequy wrote:
+> > > > Hi,
+> > > > 
+> > > > I tested the patches on top of 5.10.0-rc3+ and I could mount an
+> > > > NFS
+> > > > share with a different user namespace. fsopen() is done in the
+> > > > container namespaces (user, mnt and net namespaces) while
+> > > > fsconfig(),
+> > > > fsmount() and move_mount() are done on the host namespaces. The
+> > > > mount
+> > > > on the host is available in the container via mount propagation
+> > > > from
+> > > > the host mount.
+> > > > 
+> > > > With this, the files on the NFS server with uid 0 are available
+> > > > in
+> > > > the
+> > > > container with uid 0. On the host, they are available with uid
+> > > > 4294967294 (make_kuid(&init_user_ns, -2)).
+> > > > 
+> > > 
+> > > Can someone please tell me what is broken with the _current_ design
+> > > before we start trying to push "fixes" that clearly break it?
+> > Currently the mechanism of mounting nfs4 in a user namespace is as
+> > follows:
+> > 
+> > Parent: fork()
+> > Child: setns(userns)
+> > C: fsopen("nfs4") = 3
+> > C->P: Send FD 3
+> > P: FSConfig...
+> > P: fsmount... (This is where the CAP_SYS_ADMIN check happens))
+> > 
+> > 
+> > Right now, when you mount an NFS filesystem in a non-init user
+> > namespace, and you have UIDs / GIDs on, the UIDs / GIDs which
+> > are sent to the server are not the UIDs from the mounting namespace,
+> > instead they are the UIDs from the init user ns.
+> > 
+> > The reason for this is that you can call fsopen("nfs4") in the
+> > unprivileged 
+> > namespace, and that configures fs_context with all the right
+> > information for 
+> > that user namespace, but we currently require CAP_SYS_ADMIN in the
+> > init user 
+> > namespace to call fsmount. This means that the superblock's user
+> > namespace is 
+> > set "correctly" to the container, but there's absolutely no way
+> > nfs4uidmap
+> > to consume an unprivileged user namespace.
+> > 
+> > This behaviour happens "the other way" as well, where the UID in the
+> > container
+> > may be 0, but the corresponding kuid is 1000. When a response from an
+> > NFS
+> > server comes in we decode it according to the idmap userns[1]. The
+> > userns
+> > used to get create idmap is generated at fsmount time, and not as
+> > fsopen
+> > time. So, even if the filesystem is in the user namespace, and the
+> > server
+> > responds with UID 0, it'll come up with an unmapped UID.
+> > 
+> > This is because we do
+> > Server UID 0 -> idmap make_kuid(init_user_ns, 0) -> VFS
+> > from_kuid(container_ns, 0) -> invalid uid
+> > 
+> > This is broken behaviour, in my humble opinion as is it makes it
+> > impossible to 
+> > use NFSv4 (and v3 for that matter) out of the box with unprivileged
+> > user 
+> > namespaces. At least in our environment, using usernames / GSS isn't
+> > an option,
+> > so we have to rely on UIDs being set correctly [at least from the
+> > container's
+> > perspective].
+> > 
+> 
+> The current code for setting server->cred was developed independently
+> of fsopen() (and predates it actually). I'm fine with the change to
+> have server->cred be the cred of the user that called fsopen(). That's
+> in line with what we used to do for sys_mount().
+> 
+Just curious, without FS_USERNS, how were you mounting NFSv4 in an
+unprivileged user ns?
+
+
+> However all the other stuff to throw errors when the user namespace is
+> not init_user_ns introduces massive regressions.
+> 
+
+I can remove that and respin the patch. How do you feel about that?  I would 
+still like to keep the log lines though because it is a uapi change. I am 
+worried that someone might exercise this path with GSS and allow for upcalls 
+into the main namespaces by accident -- or be confused of why they're seeing 
+upcalls "in a different namespace".
+
+Are you okay with picking up ("NFS: NFSv2/NFSv3: Use cred from fs_context during 
+mount") without any changes?
+
+I can respin ("NFSv4: Refactor NFS to use user namespaces") without:
+/*
+ * nfs4idmap is not fully isolated by user namespaces. It is currently
+ * only network namespace aware. If upcalls never happen, we do not
+ * need to worry as nfs_client instances aren't shared between
+ * user namespaces.
+ */
+if (idmap_userns(server->nfs_client->cl_idmap) != &init_user_ns && 
+	!(server->caps & NFS_CAP_UIDGID_NOMAP)) {
+	error = -EINVAL;
+	errorf(fc, "Mount credentials are from non init user namespace and ID mapping is enabled. This is not allowed.");
+	goto error;
+}
+
+(and making it so we can call idmap_userns)
+
+> > > 
+> > > The current design assumes that the user namespace being used is
+> > > the one where 
+> > > the mount itself is performed. That means that the uids and gids or
+> > > usernames 
+> > > and groupnames that go on the wire match the uids and gids of the
+> > > container in 
+> > > which the mount occurred.
+> > > 
+> > 
+> > Right now, NFS does not have the ability for the fsmount() call to be
+> > called in an unprivileged user namespace. We can change that
+> > behaviour
+> > elsewhere if we want, but it's orthogonal to this.
+> > 
+> > > The assumption is that the server has authenticated that client as
+> > > belonging to a domain that it recognises (either through strong
+> > > RPCSEC_GSS/krb5 authentication, or through weaker matching of IP
+> > > addresses to a list of acceptable clients).
+> > > 
+> > I added a rejection for upcalls because upcalls can happen in the
+> > init 
+> > namespaces. We can drop that restriction from the nfs4 patch if you'd
+> > like. I
+> > *believe* (and I'm not a little out of my depth) that the request-key
+> > handler gets called with the *network namespace* of the NFS mount,
+> > but the userns is a privileged one, allowing for potential hazards.
+> > 
+> 
+> The idmapper already rejects upcalls to the keyring '/sbin/request-key'
+> utility if you're running with your own user namespace.
+> 
+> Quite frankly, switching to using the keyring was a mistake which I'd
+> undo if I could. Aside from not supporting containers, it is horribly
+> slow due to requiring a full process startup/teardown for every upcall,
+> so it scales poorly to large numbers of identities (particularly with
+> an operation like readdir() in which you're doing serial upcalls).
+> 
+> However nothing stops you from using the old NFSv4 idmapper daemon
+> (a.k.a. rpc.idmapd) in the context of the container that called
+> fsopen() so that it can translate identities correctly using whatever
+> userspace tools (ldap, sssd, winbind...) that the container has
+> configured.
+> 
+
+1. We see this as a potential security risk [this being upcalls] into the 
+unconfined portion of the system. Although, I'm sure that the userspace handlers 
+are written perfectly well, it allows for information leakage to occur.
+
+2. Is there a way to do this for NFSv3? 
+
+3. Can rpc.idmapd get the user namespace that the call is from (and is the 
+keyring per-userns?). In general, I think that this change follows the principal 
+of least surprise.
+
+> > The reason I added that block there is that I didn't imagine anyone
+> > was running 
+> > NFS in an unprivileged user namespace, and relying on upcalls
+> > (potentially into 
+> > privileged namespaces) in order to do authz.
+> > 
+> > 
+> > > If you go ahead and change the user namespace on the client without
+> > > going through the mount process again to mount a different super
+> > > block
+> > > with a different user namespace, then you will now get the exact
+> > > same
+> > > behaviour as if you do that with any other filesystem.
+> > 
+> > Not exactly, because other filesystems *only* use the s_user_ns for
+> > conversion 
+> > of UIDs, whereas NFS uses the currend_cred() acquired at mount time,
+> > which 
+> > doesn't match s_user_ns, leading to this behaviour.
+> > 
+> > 1. Mistranslated UIDs in encoding RPCs
+> > 2. The UID / GID exposed to VFS do not match the user ns.
+> > 
+> > > 
+> > > -- 
+> > > Trond Myklebust
+> > > Linux NFS client maintainer, Hammerspace
+> > > trond.myklebust@hammerspace.com
+> > > 
+> > > 
+> > -Thanks,
+> > Sargun
+> > 
+> > [1]:  
+> > https://elixir.bootlin.com/linux/v5.9.8/source/fs/nfs/nfs4idmap.c#L782
+> > [2]:  
+> > https://elixir.bootlin.com/linux/v5.9.8/source/fs/nfs/nfs4client.c#L1154
+> 
+> -- 
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+> 
+> 
