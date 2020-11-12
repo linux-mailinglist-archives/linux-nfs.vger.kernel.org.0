@@ -2,37 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16BCA2B054A
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 13:58:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42C352B0551
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 13:58:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgKLM57 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Nov 2020 07:57:59 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:31072 "EHLO
+        id S1728293AbgKLM6X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Nov 2020 07:58:23 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:34104 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728155AbgKLM54 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 07:57:56 -0500
+        by vger.kernel.org with ESMTP id S1728251AbgKLM6U (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 07:58:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605185874;
+        s=mimecast20190719; t=1605185897;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=KApSY4n0QrJwiU60IUmc5BIOxVfBJ4BfZCyb2aGAlK4=;
-        b=Vaxpt1SUZv9xukXoyAbb097DXNNTjb7S5jPGkJSiLuDVRZlwbIIttTJhoUTtSZVJERfX6r
-        3+uwHJtxgeXPQz+FsC0Wr8Azx+mdzs1gep0XIdkj7ezMnOkrPpRdnyzXBd5t1IAQa1f/ex
-        WVQgjttSXk3ebFpfW8Z0yqRcq+BOtyQ=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vlX81bfxkSnCx/kV2/K9DOewa6eFmGPkRqimXiZZar0=;
+        b=dXNDKs8vVdEunm5s14x8ScX9GkD6sm2rwKJxcPa4SB8JP4hAxUL2T/rt+7nMo/XvkaMYHn
+        HTJJQGXsyGUniHE9drjYJRvaxCBQ5mPDl7oq2NogG1BwHBMIh5Y/E5kw6gZmworQ/jgh1A
+        SbCMU0xDfGbZjhhb0Y7NiY4bcaYa1p0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-128-LTVl2aaZOp-mAJ7msfQEwQ-1; Thu, 12 Nov 2020 07:57:50 -0500
-X-MC-Unique: LTVl2aaZOp-mAJ7msfQEwQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-12-qb-NUw5ONfGnrv_CijFFuQ-1; Thu, 12 Nov 2020 07:58:14 -0500
+X-MC-Unique: qb-NUw5ONfGnrv_CijFFuQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8BAE51882FAB;
-        Thu, 12 Nov 2020 12:57:48 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 79BE080364D;
+        Thu, 12 Nov 2020 12:58:12 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-115-47.rdu2.redhat.com [10.10.115.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4335A5D9E4;
-        Thu, 12 Nov 2020 12:57:46 +0000 (UTC)
-Subject: [RFC][PATCH 00/18] crypto: Add generic Kerberos library
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 74D5027BDC;
+        Thu, 12 Nov 2020 12:58:10 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 03/18] crypto/krb5: Provide infrastructure and key derivation
 From:   David Howells <dhowells@redhat.com>
 To:     herbert@gondor.apana.org.au, bfields@fieldses.org
 Cc:     dhowells@redhat.com, trond.myklebust@hammerspace.com,
@@ -40,132 +45,309 @@ Cc:     dhowells@redhat.com, trond.myklebust@hammerspace.com,
         linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Thu, 12 Nov 2020 12:57:45 +0000
-Message-ID: <160518586534.2277919.14475638653680231924.stgit@warthog.procyon.org.uk>
+Date:   Thu, 12 Nov 2020 12:58:09 +0000
+Message-ID: <160518588968.2277919.3783200728891264713.stgit@warthog.procyon.org.uk>
+In-Reply-To: <160518586534.2277919.14475638653680231924.stgit@warthog.procyon.org.uk>
+References: <160518586534.2277919.14475638653680231924.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Provide key derivation interface functions and a helper to implement the
+PRF+ function from rfc4402.
 
-Hi Herbert, Bruce,
-
-Here's my first cut at a generic Kerberos crypto library in the kernel so
-that I can share code between rxrpc and sunrpc (and cifs?).
-
-I derived some of the parts from the sunrpc gss library and added more
-advanced AES and Camellia crypto.  I haven't ported across the DES-based
-crypto yet - I figure that can wait a bit till the interface is sorted.
-
-Whilst I have put it into a directory under crypto/, I haven't made an
-interface that goes and loads it (analogous to crypto_alloc_skcipher,
-say).  Instead, you call:
-
-        const struct krb5_enctype *crypto_krb5_find_enctype(u32 enctype);
-
-to go and get a handler table and then use a bunch of accessor functions to
-jump through the hoops.  This is basically the way the sunrpc gsslib does
-things.  It might be worth making it so you do something like:
-
-	struct crypto_mech *ctx = crypto_mech_alloc("krb5(18)");
-
-to get enctype 18, but I'm not sure if it's worth the effort.  Also, I'm
-not sure if there are any alternatives to kerberos we will need to support.
-
-There are three main interfaces to it:
-
- (*) I/O crypto: encrypt, decrypt, get_mic and verify_mic.
-
-     These all do in-place crypto, using an sglist to define the buffer
-     with the data in it.  Is it necessary to make it able to take separate
-     input and output buffers?
-
- (*) PRF+ calculation for key derivation.
- (*) Kc, Ke, Ki derivation.
-
-     These use krb5_buffer structs to pass objects around.  This is akin to
-     the xdr_netobj, but has a void* instead of a u8* data pointer.
-
-In terms of rxrpc's rxgk, there's another step in key derivation that isn't
-part of the kerberos standard, but uses the PRF+ function to generate a key
-that is then used to generate Kc, Ke and Ki.  Is it worth putting this into
-the directory or maybe having a callout to insert an intermediate step in
-key derivation?
-
-Note that, for purposes of illustration, I've included some rxrpc patches
-that use this interface to implement the rxgk Rx security class.  The
-branch also is based on some rxrpc patches that are a prerequisite for
-this, but the crypto patches don't need it.
-
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
-The patches can be found here also:
 
-	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=crypto-krb5
-
-David
----
-David Howells (18):
-      crypto/krb5: Implement Kerberos crypto core
-      crypto/krb5: Add some constants out of sunrpc headers
-      crypto/krb5: Provide infrastructure and key derivation
-      crypto/krb5: Implement the Kerberos5 rfc3961 key derivation
-      crypto/krb5: Implement the Kerberos5 rfc3961 encrypt and decrypt functions
-      crypto/krb5: Implement the Kerberos5 rfc3961 get_mic and verify_mic
-      crypto/krb5: Implement the AES enctypes from rfc3962
-      crypto/krb5: Implement crypto self-testing
-      crypto/krb5: Implement the AES enctypes from rfc8009
-      crypto/krb5: Implement the AES encrypt/decrypt from rfc8009
-      crypto/krb5: Add the AES self-testing data from rfc8009
-      crypto/krb5: Implement the Camellia enctypes from rfc6803
-      rxrpc: Add the security index for yfs-rxgk
-      rxrpc: Add YFS RxGK (GSSAPI) security class
-      rxrpc: rxgk: Provide infrastructure and key derivation
-      rxrpc: rxgk: Implement the yfs-rxgk security class (GSSAPI)
-      rxrpc: rxgk: Implement connection rekeying
-      rxgk: Support OpenAFS's rxgk implementation
-
-
- crypto/krb5/Kconfig              |    9 +
- crypto/krb5/Makefile             |   11 +-
- crypto/krb5/internal.h           |  101 +++
- crypto/krb5/kdf.c                |  223 ++++++
- crypto/krb5/main.c               |  190 +++++
- crypto/krb5/rfc3961_simplified.c |  732 ++++++++++++++++++
- crypto/krb5/rfc3962_aes.c        |  140 ++++
- crypto/krb5/rfc6803_camellia.c   |  249 ++++++
- crypto/krb5/rfc8009_aes2.c       |  440 +++++++++++
- crypto/krb5/selftest.c           |  543 +++++++++++++
- crypto/krb5/selftest_data.c      |  289 +++++++
- fs/afs/misc.c                    |   13 +
- include/crypto/krb5.h            |  100 +++
- include/keys/rxrpc-type.h        |   17 +
- include/trace/events/rxrpc.h     |    4 +
- include/uapi/linux/rxrpc.h       |   17 +
- net/rxrpc/Kconfig                |   10 +
- net/rxrpc/Makefile               |    5 +
- net/rxrpc/ar-internal.h          |   20 +
- net/rxrpc/conn_object.c          |    2 +
- net/rxrpc/key.c                  |  319 ++++++++
- net/rxrpc/rxgk.c                 | 1232 ++++++++++++++++++++++++++++++
- net/rxrpc/rxgk_app.c             |  424 ++++++++++
- net/rxrpc/rxgk_common.h          |  164 ++++
- net/rxrpc/rxgk_kdf.c             |  271 +++++++
- net/rxrpc/security.c             |    6 +
- 26 files changed, 5530 insertions(+), 1 deletion(-)
+ crypto/krb5/Makefile  |    1 
+ crypto/krb5/kdf.c     |  223 +++++++++++++++++++++++++++++++++++++++++++++++++
+ include/crypto/krb5.h |   29 ++++++
+ 3 files changed, 253 insertions(+)
  create mode 100644 crypto/krb5/kdf.c
- create mode 100644 crypto/krb5/rfc3961_simplified.c
- create mode 100644 crypto/krb5/rfc3962_aes.c
- create mode 100644 crypto/krb5/rfc6803_camellia.c
- create mode 100644 crypto/krb5/rfc8009_aes2.c
- create mode 100644 crypto/krb5/selftest.c
- create mode 100644 crypto/krb5/selftest_data.c
- create mode 100644 net/rxrpc/rxgk.c
- create mode 100644 net/rxrpc/rxgk_app.c
- create mode 100644 net/rxrpc/rxgk_common.h
- create mode 100644 net/rxrpc/rxgk_kdf.c
+
+diff --git a/crypto/krb5/Makefile b/crypto/krb5/Makefile
+index 071ce2ff82e5..b764c4d09bf2 100644
+--- a/crypto/krb5/Makefile
++++ b/crypto/krb5/Makefile
+@@ -4,6 +4,7 @@
+ #
+ 
+ krb5-y += \
++	kdf.o \
+ 	main.o
+ 
+ obj-$(CONFIG_CRYPTO_KRB5) += krb5.o
+diff --git a/crypto/krb5/kdf.c b/crypto/krb5/kdf.c
+new file mode 100644
+index 000000000000..8ef7ea31ee8a
+--- /dev/null
++++ b/crypto/krb5/kdf.c
+@@ -0,0 +1,223 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/* Kerberos key derivation.
++ *
++ * Copyright (C) 2020 Red Hat, Inc. All Rights Reserved.
++ * Written by David Howells (dhowells@redhat.com)
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/export.h>
++#include <linux/slab.h>
++#include <crypto/skcipher.h>
++#include <crypto/hash.h>
++#include "internal.h"
++
++/**
++ * crypto_krb5_free_enc_keys - Free an encryption keypair
++ * @e: The key pair to free.
++ */
++void crypto_krb5_free_enc_keys(struct krb5_enc_keys *e)
++{
++	if (e->Ke)
++		crypto_free_sync_skcipher(e->Ke);
++	if (e->Ki)
++		crypto_free_shash(e->Ki);
++	e->Ke = NULL;
++	e->Ki = NULL;
++}
++EXPORT_SYMBOL(crypto_krb5_free_enc_keys);
++
++/**
++ * crypto_krb5_calc_PRFplus - Calculate PRF+ [RFC4402]
++ * @krb5: The encryption type to use
++ * @K: The protocol key for the pseudo-random function
++ * @L: The length of the output
++ * @S: The input octet string
++ * @result: Result buffer, sized to krb5->prf_len
++ * @gfp: Allocation restrictions
++ *
++ * Calculate the kerberos pseudo-random function, PRF+() by the following
++ * method:
++ *
++ *      PRF+(K, L, S) = truncate(L, T1 || T2 || .. || Tn)
++ *      Tn = PRF(K, n || S)
++ *      [rfc4402 sec 2]
++ */
++int crypto_krb5_calc_PRFplus(const struct krb5_enctype *krb5,
++			     const struct krb5_buffer *K,
++			     unsigned int L,
++			     const struct krb5_buffer *S,
++			     struct krb5_buffer *result,
++			     gfp_t gfp)
++{
++	struct krb5_buffer T_series, Tn, n_S;
++	void *buffer;
++	int ret, n = 1;
++
++	Tn.len = krb5->prf_len;
++	T_series.len = 0;
++	n_S.len = 4 + S->len;
++
++	buffer = kzalloc(round16(L + Tn.len) + round16(n_S.len), gfp);
++	if (!buffer)
++		return -ENOMEM;
++
++	T_series.data = buffer;
++	n_S.data = buffer + round16(L + Tn.len);
++	memcpy(n_S.data + 4, S->data, S->len);
++
++	while (T_series.len < L) {
++		*(__be32 *)(n_S.data) = htonl(n);
++		Tn.data = T_series.data + Tn.len * (n - 1);
++		ret = krb5->profile->calc_PRF(krb5, K, &n_S, &Tn, gfp);
++		if (ret < 0)
++			goto err;
++		T_series.len += Tn.len;
++		n++;
++	}
++
++	/* Truncate to L */
++	memcpy(result->data, T_series.data, L);
++	ret = 0;
++
++err:
++	kfree_sensitive(buffer);
++	return ret;
++}
++EXPORT_SYMBOL(crypto_krb5_calc_PRFplus);
++
++/**
++ * crypto_krb5_get_Kc - Derive key Kc and install into a hash
++ * @krb5: The encryption type to use
++ * @TK: The base key
++ * @usage: The key usage number
++ * @key: Prepped buffer to store the key into
++ * @_shash: Where to put the hash (or NULL if not wanted)
++ * @gfp: Allocation restrictions
++ *
++ * Derive the Kerberos Kc checksumming key and, optionally, allocate a hash and
++ * install the key into it, returning the hash.  The key is stored into the
++ * prepared buffer.
++ */
++int crypto_krb5_get_Kc(const struct krb5_enctype *krb5,
++		       const struct krb5_buffer *TK,
++		       u32 usage,
++		       struct krb5_buffer *key,
++		       struct crypto_shash **_shash,
++		       gfp_t gfp)
++{
++	struct crypto_shash *shash;
++	int ret;
++	u8 buf[CRYPTO_MINALIGN] __aligned(CRYPTO_MINALIGN);
++	struct krb5_buffer usage_constant = { .len = 5, .data = buf };
++
++	*(__be32 *)buf = cpu_to_be32(usage);
++	buf[4] = KEY_USAGE_SEED_CHECKSUM;
++
++	key->len = krb5->Kc_len;
++	ret = krb5->profile->calc_Kc(krb5, TK, &usage_constant, key, gfp);
++	if (ret < 0)
++		return ret;
++
++	if (_shash) {
++		shash = crypto_alloc_shash(krb5->cksum_name, 0, 0);
++		if (IS_ERR(shash))
++			return (PTR_ERR(shash) == -ENOENT) ? -ENOPKG : PTR_ERR(shash);
++		*_shash = shash;
++		ret = crypto_shash_setkey(shash, key->data, key->len);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL(crypto_krb5_get_Kc);
++
++/**
++ * crypto_krb5_get_Ke - Derive key Ke and install into an skcipher
++ * @krb5: The encryption type to use
++ * @TK: The base key
++ * @usage: The key usage number
++ * @key: Prepped buffer to store the key into
++ * @_ci: Where to put the cipher (or NULL if not wanted)
++ * @gfp: Allocation restrictions
++ *
++ * Derive the Kerberos Ke encryption key and, optionally, allocate an skcipher
++ * and install the key into it, returning the cipher.  The key is stored into
++ * the prepared buffer.
++ */
++int crypto_krb5_get_Ke(const struct krb5_enctype *krb5,
++		       const struct krb5_buffer *TK,
++		       u32 usage,
++		       struct krb5_buffer *key,
++		       struct crypto_sync_skcipher **_ci,
++		       gfp_t gfp)
++{
++	struct crypto_sync_skcipher *ci;
++	int ret;
++	u8 buf[CRYPTO_MINALIGN] __aligned(CRYPTO_MINALIGN);
++	struct krb5_buffer usage_constant = { .len = 5, .data = buf };
++
++	*(__be32 *)buf = cpu_to_be32(usage);
++	buf[4] = KEY_USAGE_SEED_ENCRYPTION;
++
++	key->len = krb5->Ke_len;
++	ret = krb5->profile->calc_Ke(krb5, TK, &usage_constant, key, gfp);
++	if (ret < 0)
++		return ret;
++
++	if (_ci) {
++		ci = crypto_alloc_sync_skcipher(krb5->encrypt_name, 0, 0);
++		if (IS_ERR(ci))
++			return (PTR_ERR(ci) == -ENOENT) ? -ENOPKG : PTR_ERR(ci);
++		*_ci = ci;
++		ret = crypto_sync_skcipher_setkey(ci, key->data, key->len);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL(crypto_krb5_get_Ke);
++
++/**
++ * crypto_krb5_get_Ki - Derive key Ki and install into a hash
++ * @krb5: The encryption type to use
++ * @TK: The base key
++ * @usage: The key usage number
++ * @key: Prepped buffer to store the key into
++ * @_shash: Where to put the hash (or NULL if not wanted)
++ * @gfp: Allocation restrictions
++ *
++ * Derive the Kerberos Ki integrity checksum key and, optionally, allocate a
++ * hash and install the key into it, returning the hash.  The key is stored
++ * into the prepared buffer.
++ */
++int crypto_krb5_get_Ki(const struct krb5_enctype *krb5,
++		       const struct krb5_buffer *TK,
++		       u32 usage,
++		       struct krb5_buffer *key,
++		       struct crypto_shash **_shash,
++		       gfp_t gfp)
++{
++	struct crypto_shash *shash;
++	int ret;
++	u8 buf[CRYPTO_MINALIGN] __aligned(CRYPTO_MINALIGN);
++	struct krb5_buffer usage_constant = { .len = 5, .data = buf };
++
++	*(__be32 *)buf = cpu_to_be32(usage);
++	buf[4] = KEY_USAGE_SEED_INTEGRITY;
++
++	key->len = krb5->Ki_len;
++	ret = krb5->profile->calc_Kc(krb5, TK, &usage_constant, key, gfp);
++	if (ret < 0)
++		return ret;
++
++	if (_shash) {
++		shash = crypto_alloc_shash(krb5->cksum_name, 0, 0);
++		if (IS_ERR(shash))
++			return (PTR_ERR(shash) == -ENOENT) ? -ENOPKG : PTR_ERR(shash);
++		*_shash = shash;
++		ret = crypto_shash_setkey(shash, key->data, key->len);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL(crypto_krb5_get_Ki);
+diff --git a/include/crypto/krb5.h b/include/crypto/krb5.h
+index a7e4ab4e1348..04286bacaf06 100644
+--- a/include/crypto/krb5.h
++++ b/include/crypto/krb5.h
+@@ -103,4 +103,33 @@ struct krb5_enctype {
+  */
+ extern const struct krb5_enctype *crypto_krb5_find_enctype(u32 enctype);
+ 
++/*
++ * kdf.c
++ */
++extern void crypto_krb5_free_enc_keys(struct krb5_enc_keys *e);
++extern int crypto_krb5_calc_PRFplus(const struct krb5_enctype *krb5,
++				    const struct krb5_buffer *K,
++				    unsigned int L,
++				    const struct krb5_buffer *S,
++				    struct krb5_buffer *result,
++				    gfp_t gfp);
++extern int crypto_krb5_get_Kc(const struct krb5_enctype *krb5,
++			      const struct krb5_buffer *TK,
++			      u32 usage,
++			      struct krb5_buffer *key,
++			      struct crypto_shash **_shash,
++			      gfp_t gfp);
++extern int crypto_krb5_get_Ke(const struct krb5_enctype *krb5,
++			      const struct krb5_buffer *TK,
++			      u32 usage,
++			      struct krb5_buffer *key,
++			      struct crypto_sync_skcipher **_ci,
++			      gfp_t gfp);
++extern int crypto_krb5_get_Ki(const struct krb5_enctype *krb5,
++			      const struct krb5_buffer *TK,
++			      u32 usage,
++			      struct krb5_buffer *key,
++			      struct crypto_shash **_shash,
++			      gfp_t gfp);
++
+ #endif /* _CRYPTO_KRB5_H */
 
 
