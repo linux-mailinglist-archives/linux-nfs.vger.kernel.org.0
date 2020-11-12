@@ -2,192 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D87D72B0AC5
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 17:54:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3073A2B0AC7
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 17:54:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbgKLQyT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Nov 2020 11:54:19 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48854 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728346AbgKLQyS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 11:54:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605200056;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HGrk85a0VZVfDIo9MNpIfHt62UYe1QlF3HTUKbfYRUc=;
-        b=d5Oi5ngkHEgB1eyy0pN2AjI/QRfXs4ELKN6xXKoZpB4UhBhnrk0bP2kAYZ1hQZv0hW5mec
-        eJ6mxIP0cDwgzZMaqL+Vk+82MK6pJhsFVcJlScG0KOglVjtJVfpRWN5t9hFgfT7Qxfkzhj
-        QIpbP+aC7RL+551+jxyOMg3MbkW9PTQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-Qnmvm0OEMaqqpFKUqCkxbg-1; Thu, 12 Nov 2020 11:54:11 -0500
-X-MC-Unique: Qnmvm0OEMaqqpFKUqCkxbg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77D7A6D254;
-        Thu, 12 Nov 2020 16:54:09 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-115-47.rdu2.redhat.com [10.10.115.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D55EB5D993;
-        Thu, 12 Nov 2020 16:54:06 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <22138FE2-9E79-4E24-99FC-74A35651B0C1@oracle.com>
-References: <22138FE2-9E79-4E24-99FC-74A35651B0C1@oracle.com> <2F96670A-58DC-43A6-A20E-696803F0BFBA@oracle.com> <160518586534.2277919.14475638653680231924.stgit@warthog.procyon.org.uk> <2380561.1605195776@warthog.procyon.org.uk>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     dhowells@redhat.com, CIFS <linux-cifs@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        linux-crypto@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-afs@lists.infradead.org
-Subject: Re: [RFC][PATCH 00/18] crypto: Add generic Kerberos library
+        id S1729061AbgKLQyp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Nov 2020 11:54:45 -0500
+Received: from mail-mw2nam12on2133.outbound.protection.outlook.com ([40.107.244.133]:23392
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728692AbgKLQyo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 12 Nov 2020 11:54:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E9bTSD2ugXcN2hNNkhB/hxngyPIBdn7W81RNkTl5vYTxrrFPiasRLtdE2ZNfP03bc5CtcE32OYOBrSvnCYOU/xIvAHHk3hMDhdZNQBTQim8ClihwGd2cBYceVDRxTyhDogMpDKI93ZQVSbzO87i/M40fvrOOaCU7uKIkeB4lrq1WQoyak4jTf1YAeENEevj5D3Amb0A+BFI/XnDmw0f2x/LQRKcLvNn2LVpX8tvoht3nIxwb4roERB2C1ujL1WA52u8Ibv4o+wBZ4+oDjwX9/b9v+gRV49PcYV2kAi+aQM3e9YrSghoJEPVwVPvyB4Nj9FpvFQMkhd9ggEYPETvPpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OQq6K70UlIDSu3GWC/YzHGD/TwmkolClLmi3Beemt04=;
+ b=lIN8tLuJQ6tpDC3yrdpZ6DlI6U5Mv+0TQGKa4SIXMfCzFcDHnfiCaytU6Q/CB4f7e4qphxgrZtx5hd8Vn98RKBh6fI39huHffsj/VKwbP5NBUc+NcjQs4r8Qr+ZYshefmyqjdXP+G54WYiM6HLmibIFd2LdGVKtUkww59wB9zyaVokhrtKEhl8hpYZVHPvRU7P30JRjDNtiIO4ZhPnS78D6pR3ydiJ1bBDrGA9oL0L8NXSooEa6/3lHp1V4ZkC0uaRWa2s6ebEtfTGi0Vvs+WXinYtokzu6XU3aK6IThJvrF8IKIPzvV1Q7g2QmXsSfLchjMuU3IHDii720pIBLK6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OQq6K70UlIDSu3GWC/YzHGD/TwmkolClLmi3Beemt04=;
+ b=UJpA3qkYTaeVi5mk6uQ/f/+gC+7EB/YVOsjroMsDMGOlGo2h0RLMvKcnZS9NM0S+7lscdEejcuH2swOu5P7O1YOGw2lO3/4Ovs0ddmW2RUMtQWnGnFhv4vqQEVbPd7M2plfn+0Bf3/koI2Nil3Pw4i+etMi+SI7+yFyIdSZ/h60=
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
+ by MN2PR13MB2637.namprd13.prod.outlook.com (2603:10b6:208:e9::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.15; Thu, 12 Nov
+ 2020 16:54:40 +0000
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.018; Thu, 12 Nov 2020
+ 16:54:40 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "guy@vastdata.com" <guy@vastdata.com>,
+        "dwysocha@redhat.com" <dwysocha@redhat.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "trondmy@kernel.org" <trondmy@kernel.org>
+Subject: Re: [PATCH v5 00/22] Readdir enhancements
+Thread-Topic: [PATCH v5 00/22] Readdir enhancements
+Thread-Index: AQHWt6smlycN3byFeUCu4hbFFYYhUqnDgPIAgADhS4CAAEEBgIAAFm8A
+Date:   Thu, 12 Nov 2020 16:54:39 +0000
+Message-ID: <fbc830f41e90c510adef43e13c4463add305f6a9.camel@hammerspace.com>
+References: <20201110213741.860745-1-trondmy@kernel.org>
+         <CALF+zOkdXMDZ3TNGSNJQPtxy-ru_4iCYTz3U2uwkPAo3j55FZg@mail.gmail.com>
+         <CALF+zO=-Si+CcEJvgzaYAjd2j8APV=4Xwm=FJibhuJRV+zWE5Q@mail.gmail.com>
+         <CAENext7G47KvYO3q0_7g3KUX+QxQs3G17nuqs=Npsg2RBPdX7g@mail.gmail.com>
+In-Reply-To: <CAENext7G47KvYO3q0_7g3KUX+QxQs3G17nuqs=Npsg2RBPdX7g@mail.gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: vastdata.com; dkim=none (message not signed)
+ header.d=none;vastdata.com; dmarc=none action=none
+ header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5e8a11fa-d02a-4b07-80b0-08d8872ba559
+x-ms-traffictypediagnostic: MN2PR13MB2637:
+x-microsoft-antispam-prvs: <MN2PR13MB2637A4B69639807F882F661BB8E70@MN2PR13MB2637.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +fa+U2KZQr0zSxXGf9BBj+B3Dp0XRilPYPiUthWTO+MF28gFOPxkNyVb99NdVGzkGR9Cq2QtzIv430cqOw6EJMohkTi4qP8+wZSmPN6s53musfTfceEK/F1iTq9ZwcvoLFoD9Aj3pR5JMNmyPomjaiAi8N0MAkgjcu9OKXNFL7Xn/N2UDWJjoCmkNXKh80KhDZXjNvAYkeevv8lJqHcX1J1+tW0ZYtO3WCMCFssWjJ+JPJ/fA6CEXYQpIGu1WUiqDKueYklrWg+oOTL//4mmRtrN2ioSik1IkYVjrPR920f9M4KHfGrCw2kVKdqjSSAemxydroT++A3dq6lugkLUUw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(39830400003)(346002)(366004)(396003)(376002)(6506007)(66556008)(76116006)(91956017)(4001150100001)(83380400001)(8936002)(66446008)(66946007)(64756008)(5660300002)(4744005)(6512007)(36756003)(2616005)(2906002)(316002)(186003)(86362001)(478600001)(54906003)(6486002)(4326008)(8676002)(26005)(71200400001)(110136005)(66476007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: WZn/yxnvORRWFhh1cGUHJnd7TgfFKhNjpwbaYYO8uNxaCItepaUpqjOmHTjKyPsVZb/SFxopsVUtUpxf+uU8S23CMOafT5pDE+JWDcyYsTn3gI5SC6bhk1DxoPjTCq3J4bNtnG/IpkgvqCgJkVsDqsaER9yMmFlYlq8QkcX7sYg9cpXndF0nIUhHWIp8SZSiCPf+h+4Ye9yvEAervLvHHb6RB0aWEs7y/oaFIw2NAiKIfcrkiVQpbTaHKJGh87MCpfoSTKWwKsIMCN69B6EsOp+nyFLZ5tKnIypL63f+qFz5U/5zqERb1qwGyV8Yg+M41irOdWPlcLdDbjls6/H/3gQ3VJQovwWW/iXR1AW9t+0K5r2Q0LdwAyMM9+HeNYV3Zc4xBHoVksLxmRbXPCaBN9SNKrrv51b6qhL5idvfyIqC3EYYbzktwyx1mFePSa5ynR5RXtEH1dF6hhsd/878BSvrmJQHopcMTRLvAM4hTVNYoRH2Th5MTvhlRhY/oNOWWcYbkvif/8AabZVThOU7a09cEo/4PRbo2MgJtkGJawXpeYM4Re4Dmey7RPzKOhR6g7bT2B20so8NRSvcWcSt0rMgPZXlImWkTAHVsNcS0FNtV0X6RPNZJUM7W78oMnqqXTWlgGN20dieWP45pOwRyQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CDEAA1D565C8664E9497B089BEE93EA2@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2422486.1605200046.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Thu, 12 Nov 2020 16:54:06 +0000
-Message-ID: <2422487.1605200046@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e8a11fa-d02a-4b07-80b0-08d8872ba559
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2020 16:54:39.7776
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JLGOSg3fTwTqx8gWN6O/PtO0VWYQKZXyyixfDHaHMCY8H55aTM4FMorkv/mBEb1qTyaWWAL3BtjjRUF+0CGurQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB2637
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Chuck Lever <chuck.lever@oracle.com> wrote:
-
-> Really? My understanding of the Linux kernel SUNRPC implementation is
-> that it uses asynchronous, even for small data items. Maybe I'm using
-> the terminology incorrectly.
-
-Seems to be synchronous, at least in its use of skcipher:
-
-grep -e skcipher *
-gss_krb5_crypto.c:#include <crypto/skcipher.h>
-gss_krb5_crypto.c:	struct crypto_sync_skcipher *tfm,
-gss_krb5_crypto.c:	if (length % crypto_sync_skcipher_blocksize(tfm) !=3D 0=
-)
-gss_krb5_crypto.c:	if (crypto_sync_skcipher_ivsize(tfm) > GSS_KRB5_MAX_BLO=
-CKSIZE) {
-gss_krb5_crypto.c:			crypto_sync_skcipher_ivsize(tfm));
-gss_krb5_crypto.c:		memcpy(local_iv, iv, crypto_sync_skcipher_ivsize(tfm))=
-;
-gss_krb5_crypto.c:	skcipher_request_set_sync_tfm(req, tfm);
-gss_krb5_crypto.c:	skcipher_request_set_callback(req, 0, NULL, NULL);
-gss_krb5_crypto.c:	skcipher_request_set_crypt(req, sg, sg, length, local_i=
-v);
-gss_krb5_crypto.c:	ret =3D crypto_skcipher_encrypt(req);
-gss_krb5_crypto.c:	skcipher_request_zero(req);
-gss_krb5_crypto.c:     struct crypto_sync_skcipher *tfm,
-gss_krb5_crypto.c:	if (length % crypto_sync_skcipher_blocksize(tfm) !=3D 0=
-)
-gss_krb5_crypto.c:	if (crypto_sync_skcipher_ivsize(tfm) > GSS_KRB5_MAX_BLO=
-CKSIZE) {
-gss_krb5_crypto.c:			crypto_sync_skcipher_ivsize(tfm));
-gss_krb5_crypto.c:		memcpy(local_iv, iv, crypto_sync_skcipher_ivsize(tfm))=
-;
-gss_krb5_crypto.c:	skcipher_request_set_sync_tfm(req, tfm);
-gss_krb5_crypto.c:	skcipher_request_set_callback(req, 0, NULL, NULL);
-gss_krb5_crypto.c:	skcipher_request_set_crypt(req, sg, sg, length, local_i=
-v);
-gss_krb5_crypto.c:	ret =3D crypto_skcipher_decrypt(req);
-gss_krb5_crypto.c:	skcipher_request_zero(req);
-gss_krb5_crypto.c:	struct skcipher_request *req;
-gss_krb5_crypto.c:	struct crypto_sync_skcipher *tfm =3D
-gss_krb5_crypto.c:		crypto_sync_skcipher_reqtfm(desc->req);
-gss_krb5_crypto.c:	fraglen =3D thislen & (crypto_sync_skcipher_blocksize(t=
-fm) - 1);
-gss_krb5_crypto.c:	skcipher_request_set_crypt(desc->req, desc->infrags, de=
-sc->outfrags,
-gss_krb5_crypto.c:	ret =3D crypto_skcipher_encrypt(desc->req);
-gss_krb5_crypto.c:gss_encrypt_xdr_buf(struct crypto_sync_skcipher *tfm, st=
-ruct xdr_buf *buf,
-gss_krb5_crypto.c:	BUG_ON((buf->len - offset) % crypto_sync_skcipher_block=
-size(tfm) !=3D 0);
-gss_krb5_crypto.c:	skcipher_request_set_sync_tfm(req, tfm);
-gss_krb5_crypto.c:	skcipher_request_set_callback(req, 0, NULL, NULL);
-gss_krb5_crypto.c:	skcipher_request_zero(req);
-gss_krb5_crypto.c:	struct skcipher_request *req;
-gss_krb5_crypto.c:	struct crypto_sync_skcipher *tfm =3D
-gss_krb5_crypto.c:		crypto_sync_skcipher_reqtfm(desc->req);
-gss_krb5_crypto.c:	fraglen =3D thislen & (crypto_sync_skcipher_blocksize(t=
-fm) - 1);
-gss_krb5_crypto.c:	skcipher_request_set_crypt(desc->req, desc->frags, desc=
-->frags,
-gss_krb5_crypto.c:	ret =3D crypto_skcipher_decrypt(desc->req);
-gss_krb5_crypto.c:gss_decrypt_xdr_buf(struct crypto_sync_skcipher *tfm, st=
-ruct xdr_buf *buf,
-gss_krb5_crypto.c:	BUG_ON((buf->len - offset) % crypto_sync_skcipher_block=
-size(tfm) !=3D 0);
-gss_krb5_crypto.c:	skcipher_request_set_sync_tfm(req, tfm);
-gss_krb5_crypto.c:	skcipher_request_set_callback(req, 0, NULL, NULL);
-gss_krb5_crypto.c:	skcipher_request_zero(req);
-gss_krb5_crypto.c:gss_krb5_cts_crypt(struct crypto_sync_skcipher *cipher, =
-struct xdr_buf *buf,
-gss_krb5_crypto.c:	skcipher_request_set_sync_tfm(req, cipher);
-gss_krb5_crypto.c:	skcipher_request_set_callback(req, 0, NULL, NULL);
-gss_krb5_crypto.c:	skcipher_request_set_crypt(req, sg, sg, len, iv);
-gss_krb5_crypto.c:		ret =3D crypto_skcipher_encrypt(req);
-gss_krb5_crypto.c:		ret =3D crypto_skcipher_decrypt(req);
-gss_krb5_crypto.c:	skcipher_request_zero(req);
-gss_krb5_crypto.c:	struct crypto_sync_skcipher *cipher, *aux_cipher;
-gss_krb5_crypto.c:	blocksize =3D crypto_sync_skcipher_blocksize(cipher);
-gss_krb5_crypto.c:		skcipher_request_set_sync_tfm(req, aux_cipher);
-gss_krb5_crypto.c:		skcipher_request_set_callback(req, 0, NULL, NULL);
-gss_krb5_crypto.c:		skcipher_request_zero(req);
-gss_krb5_crypto.c:	struct crypto_sync_skcipher *cipher, *aux_cipher;
-gss_krb5_crypto.c:	blocksize =3D crypto_sync_skcipher_blocksize(cipher);
-gss_krb5_crypto.c:		skcipher_request_set_sync_tfm(req, aux_cipher);
-gss_krb5_crypto.c:		skcipher_request_set_callback(req, 0, NULL, NULL);
-gss_krb5_crypto.c:		skcipher_request_zero(req);
-gss_krb5_keys.c:#include <crypto/skcipher.h>
-gss_krb5_keys.c:	struct crypto_sync_skcipher *cipher;
-gss_krb5_keys.c:	cipher =3D crypto_alloc_sync_skcipher(gk5e->encrypt_name,=
- 0, 0);
-gss_krb5_keys.c:	if (crypto_sync_skcipher_setkey(cipher, inkey->data, inke=
-y->len))
-gss_krb5_keys.c:	crypto_free_sync_skcipher(cipher);
-gss_krb5_mech.c:#include <crypto/skcipher.h>
-gss_krb5_mech.c:	struct krb5_ctx *ctx, struct crypto_sync_skcipher **res)
-gss_krb5_mech.c:	*res =3D crypto_alloc_sync_skcipher(ctx->gk5e->encrypt_na=
-me, 0, 0);
-gss_krb5_mech.c:	if (crypto_sync_skcipher_setkey(*res, key.data, key.len))=
- {
-gss_krb5_mech.c:	crypto_free_sync_skcipher(*res);
-gss_krb5_mech.c:	crypto_free_sync_skcipher(ctx->seq);
-gss_krb5_mech.c:	crypto_free_sync_skcipher(ctx->enc);
-gss_krb5_mech.c:static struct crypto_sync_skcipher *
-gss_krb5_mech.c:	struct crypto_sync_skcipher *cp;
-gss_krb5_mech.c:	cp =3D crypto_alloc_sync_skcipher(cname, 0, 0);
-gss_krb5_mech.c:	if (crypto_sync_skcipher_setkey(cp, key, ctx->gk5e->keyle=
-ngth)) {
-gss_krb5_mech.c:		crypto_free_sync_skcipher(cp);
-gss_krb5_mech.c:	crypto_free_sync_skcipher(ctx->enc);
-gss_krb5_mech.c:	crypto_free_sync_skcipher(ctx->seq);
-gss_krb5_mech.c:			crypto_free_sync_skcipher(ctx->initiator_enc_aux);
-gss_krb5_mech.c:	crypto_free_sync_skcipher(ctx->acceptor_enc);
-gss_krb5_mech.c:	crypto_free_sync_skcipher(ctx->initiator_enc);
-gss_krb5_mech.c:	crypto_free_sync_skcipher(kctx->seq);
-gss_krb5_mech.c:	crypto_free_sync_skcipher(kctx->enc);
-gss_krb5_mech.c:	crypto_free_sync_skcipher(kctx->acceptor_enc);
-gss_krb5_mech.c:	crypto_free_sync_skcipher(kctx->initiator_enc);
-gss_krb5_mech.c:	crypto_free_sync_skcipher(kctx->acceptor_enc_aux);
-gss_krb5_mech.c:	crypto_free_sync_skcipher(kctx->initiator_enc_aux);
-gss_krb5_seqnum.c:#include <crypto/skcipher.h>
-gss_krb5_seqnum.c:		struct crypto_sync_skcipher *key,
-gss_krb5_seqnum.c:	struct crypto_sync_skcipher *key =3D kctx->seq;
-gss_krb5_wrap.c:#include <crypto/skcipher.h>
-gss_krb5_wrap.c:	blocksize =3D crypto_sync_skcipher_blocksize(kctx->enc);
-gss_krb5_wrap.c:	blocksize =3D crypto_sync_skcipher_blocksize(kctx->enc);
-
-David
-
+T24gVGh1LCAyMDIwLTExLTEyIGF0IDE3OjM0ICswMjAwLCBHdXkgS2VyZW4gd3JvdGU6DQo+IGp1
+c3QgYSBnZW5lcmFsIHF1ZXN0aW9uOiBzaW5jZSB0aGUgY2FjaGUgc2VlbXMgdG8gY2F1c2UgbWFu
+eSBwcm9ibGVtcw0KPiB3aGVuIGRlYWxpbmcgd2l0aCB2ZXJ5IGxhcmdlIGRpcmVjdG9yaWVzLCBh
+bmQgc2luY2UgYWxsIHNvbHV0aW9ucw0KPiBwcm9wb3NlZCB1bnRpbCBub3cgZG9uJ3Qgc2VlbSB0
+byBmdWxseSBzb2x2ZSB0aG9zZSBwcm9ibGVtcywgd29uJ3QgYW4NCj4gYXBwcm9hY2ggc3VjaCBh
+cyAiaWYgdGhlIGRpcmVjdG9yeSBlbnRyaWVzIGNvdW50IGV4Y2VlZGVkIFggLSBzdG9wDQo+IHVz
+aW5nIHRoZSBjYWNoZSBjb21wbGV0ZWx5IiAtIHdoZXJlIFggaXMgcHJvcG9ydGlvbmFsIHRvIHRo
+ZSBzaXplIG9mDQo+IHRoZSBkaXJlY3RvcnkgZW50cmllcyBjYWNoZSBzaXplIGxpbWl0IC0gbWFr
+ZSB0aGUgY29kZSBzaW1wbGVyLCBhbmQNCj4gbGVzcyBwcm9uZSB0byBidWdzIG9mIHRoaXMgc29y
+dD8NCj4gDQo+IGkgKnRoaW5rKiB3ZSBjYW4gdW5kZXJzdGFuZCB0aGF0IGZvciBhIGRpcmVjdG9y
+eSB3aXRoIG1pbGxpb25zIG9mDQo+IGZpbGVzLCB3ZSdsbCBub3QgaGF2ZSBlZmZpY2llbnQgY2Fj
+aGluZyBvbiB0aGUgY2xpZW50IHNpZGUsIHdoaWxlDQo+IGxpbWl0aW5nIG91cnNlbHZlcyB0byBy
+ZWFzb25hYmxlIFJBTSBjb25zdW1wdGlvbj8NCj4gDQoNCkFnYWluLCBJIGRpc2FncmVlLg0KDQpJ
+ZiB5b3UgaGF2ZSBhIG1vc3RseS1yZWFkIGRpcmVjdG9yeSB3aXRoIG1pbGxpb25zIG9mIGZpbGVz
+IChlLmcuIGRhdGENCnBvb2wpIGFuZCBsb3RzIG9mIHByb2Nlc3NlcyBzZWFyY2hpbmcsIHRoZW4g
+Y2FjaGluZyBpcyBib3RoIHVzZWZ1bCBhbmQNCmFwcHJvcHJpYXRlLg0KDQo+IA0KDQotLSANClRy
+b25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0K
+dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
