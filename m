@@ -2,260 +2,246 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A5DD2B0864
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 16:28:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED4482B0877
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 16:34:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgKLP2L (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Nov 2020 10:28:11 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:55776 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727932AbgKLP2H (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 10:28:07 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ACF9TwQ035229;
-        Thu, 12 Nov 2020 15:28:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=rvFvM7Qz/HO90ermCLkcugTWPp2cS1+MM6Bki9g4hCw=;
- b=A7MMBqUj8e7ODohsFOWNogn4mZBd/DiwX4rFV6Uf4iXr8GMSsGIMwRtvibRY960mwrdr
- YW3n3+ac7pvBi9xRzz8ZI3XAPAqcHA+qAmu31MNa24aeUNL5NNpGOAva7fB+/yZzNIJ4
- vpSvyLSA18w1ozBjuDK6nqMRWD0qp+XNyKX9ls5aSEvNpclYWdOk4Ijb/UYhD3KMgT9F
- yrDbJpPPP+TZcGuGDVY/cj6xXxgXqKZ7E4DaqQKJPWBnFvULwnkyp89e4BApzUiPkugb
- E2lMyjngqwtrBMW9CNe59H0kVKK3NcNJPhQskLhpKC4w+zl3f1l3lJlTKi8GsCASWI4a Kg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 34p72ev3cu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Nov 2020 15:28:00 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ACFBDrr056012;
-        Thu, 12 Nov 2020 15:28:00 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 34rt56775p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Nov 2020 15:28:00 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0ACFRtLX023405;
-        Thu, 12 Nov 2020 15:27:55 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 12 Nov 2020 07:27:54 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: kernel oops in generic/013 on an rdma mount (over either soft
- roce or iwarp)
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CAN-5tyGPjbbqybxxBty5VV3ZXvSp4kg+zOS_VV5QnNjpM2F4VA@mail.gmail.com>
-Date:   Thu, 12 Nov 2020 10:27:54 -0500
-Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <83E3FB9A-B096-4965-8E2C-9124A8052EBB@oracle.com>
-References: <CAN-5tyENFaKb=CUZCxkeAqhS7jsFswwaGkPyC0W9h_OJyVrEmw@mail.gmail.com>
- <98BAC3EC-35C5-449F-8476-4B740632DC7C@oracle.com>
- <CAN-5tyGKXJCWxzDnPfT0v70Ry7QNvSCKRnwyU360aW6nJvN-aA@mail.gmail.com>
- <CAN-5tyFsGBJ3aJC0XVfTOAR219d6jukYZPLvmUGgRFYkraB88A@mail.gmail.com>
- <576A90AD-278A-4738-B437-162C8B931FE0@oracle.com>
- <CAN-5tyF1mUQ3bgx_5i2SJH=BQ1MH0omHkQq6SmaZw7sS5U_1GA@mail.gmail.com>
- <C452338F-A32A-4F35-BB9C-08104DB91960@oracle.com>
- <CAN-5tyH0ujGDgowBZi6ykZ52ZFqW7GZJekhb6-oZEuq0XrpaUw@mail.gmail.com>
- <71766FD5-E726-474A-95D8-A86CB6E6AF55@oracle.com>
- <CAN-5tyGPjbbqybxxBty5VV3ZXvSp4kg+zOS_VV5QnNjpM2F4VA@mail.gmail.com>
-To:     Olga Kornievskaia <aglo@umich.edu>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9802 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011120092
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9802 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 suspectscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
- priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011120092
+        id S1728210AbgKLPem (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Nov 2020 10:34:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgKLPem (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 10:34:42 -0500
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9065BC0613D1
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Nov 2020 07:34:41 -0800 (PST)
+Received: by mail-ej1-x641.google.com with SMTP id w13so8386927eju.13
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Nov 2020 07:34:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vastdata.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Orfz2iJGsWP5JmhGofAn9Iukr+gLRmZi2dXpF2OK7I4=;
+        b=oEjm5GFkJilAjoEhbKy6KBq4rEGhZ6j2Bsi4BuwkjxxeEIYr9kLtScjB1PIgQKqJUX
+         O6MPajOoB10ZoPQq/7cjuim6LWVITKfSkhZoNYwaInZtWn7CebvJqoQif0lxJYzCrMgj
+         UyAlev9LwOIWiB0GJKoY7RqMuVDmEEhmJj+7Ah9Y/+c/Ow34VS3tntduMXdpzjm+IB2V
+         UrRiTTUVcIElXpXSHvdN/6s1uzHtRmEDS/zjyXQiSyPS8iz4gMx0LGZfrmn6AA0dZMmn
+         JCqapY2o9PJpeZxa2vYl9mrKdtcI/zELQ3u97THsNW9tfFBUVTa7rzsb4WrHP5v4ROm0
+         idOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Orfz2iJGsWP5JmhGofAn9Iukr+gLRmZi2dXpF2OK7I4=;
+        b=la+I9smm+ABd546+xB7SDWMZTlNNIlXqB2Idt2pq1gfx7HK2A0MqzHZTnCNoYlrazk
+         Tl8QE+VGkeXwO1jJGvWjCon1X4J9aA4LnobfitWtp04/1IB7Zx+whEzTOQ3FFsvgn7Rs
+         XbwotDHhqCsiNRJkf3fv4Ol1eUerYY0cLpiC72xbLV1J+R1eUghdqRtSIQviplW1MaFR
+         2JDHsaqb/ytWYbV+bt3waC7EWv1QV1XtqpFugfPODIRk1A03TQw6VQ/12nI4up99r6G+
+         JdSk6bvr0bq5DecZ82WnDjGKFTF/XugxGkalVE8zoSXOsP6HOCDRAmGljvIPDLtVNf9A
+         st2Q==
+X-Gm-Message-State: AOAM531dSr9SL+Zjjw8Rtup8IdReHUMB3oHAixJddUwUBaR7+8xPuZ2r
+        FyylT+dqMCgyaXrVTfuajsrdPq1TuWeXt2XPSxApxw==
+X-Google-Smtp-Source: ABdhPJyi7MDQ/RGCV0o26qkf/NhAIBZetZcpGhSJLeyqH7HTDuBVnegL6NqzGKKFg3AtVB7Z2KGyvr3uT787TFadEug=
+X-Received: by 2002:a17:906:114b:: with SMTP id i11mr29854024eja.106.1605195280103;
+ Thu, 12 Nov 2020 07:34:40 -0800 (PST)
+MIME-Version: 1.0
+References: <20201110213741.860745-1-trondmy@kernel.org> <CALF+zOkdXMDZ3TNGSNJQPtxy-ru_4iCYTz3U2uwkPAo3j55FZg@mail.gmail.com>
+ <CALF+zO=-Si+CcEJvgzaYAjd2j8APV=4Xwm=FJibhuJRV+zWE5Q@mail.gmail.com>
+In-Reply-To: <CALF+zO=-Si+CcEJvgzaYAjd2j8APV=4Xwm=FJibhuJRV+zWE5Q@mail.gmail.com>
+From:   Guy Keren <guy@vastdata.com>
+Date:   Thu, 12 Nov 2020 17:34:21 +0200
+Message-ID: <CAENext7G47KvYO3q0_7g3KUX+QxQs3G17nuqs=Npsg2RBPdX7g@mail.gmail.com>
+Subject: Re: [PATCH v5 00/22] Readdir enhancements
+To:     David Wysochanski <dwysocha@redhat.com>
+Cc:     trondmy@kernel.org, linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+just a general question: since the cache seems to cause many problems
+when dealing with very large directories, and since all solutions
+proposed until now don't seem to fully solve those problems, won't an
+approach such as "if the directory entries count exceeded X - stop
+using the cache completely" - where X is proportional to the size of
+the directory entries cache size limit - make the code simpler, and
+less prone to bugs of this sort?
 
+i *think* we can understand that for a directory with millions of
+files, we'll not have efficient caching on the client side, while
+limiting ourselves to reasonable RAM consumption?
 
-> On Nov 11, 2020, at 4:42 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
->=20
-> On Tue, Nov 10, 2020 at 1:25 PM Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->=20
->> Start by identifying what NFS operation is failing, and what =
-configuration
->> of chunks it is using.
->=20
-> This happens after decoding LIST_XATTRS reply. It's a send only reply.
-> I can't tell if the real problem is in the nfs4_xdr_dec_listxattrs()
-> and it's overwritting memory that messes with rpcrdma_complete_rqst()
-> or it's the rdma problem.
->=20
-> Running it with Kasan shows the following:
->=20
-> [  538.505743] BUG: KASAN: wild-memory-access in
-> rpcrdma_complete_rqst+0x41b/0x680 [rpcrdma]
-> [  538.512019] Write of size 8 at addr 0005088000000000 by task =
-kworker/1:1H/493
-> [  538.517285]
-> [  538.518219] CPU: 1 PID: 493 Comm: kworker/1:1H Not tainted =
-5.10.0-rc3+ #33
-> [  538.521811] Hardware name: VMware, Inc. VMware Virtual
-> Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
-> [  538.529220] Workqueue: ib-comp-wq ib_cq_poll_work [ib_core]
-> [  538.532722] Call Trace:
-> [  538.534366]  dump_stack+0x7c/0xa2
-> [  538.536473]  ? rpcrdma_complete_rqst+0x41b/0x680 [rpcrdma]
-> [  538.539514]  ? rpcrdma_complete_rqst+0x41b/0x680 [rpcrdma]
-> [  538.542817]  kasan_report.cold.9+0x6a/0x7c
-> [  538.545952]  ? rpcrdma_complete_rqst+0x41b/0x680 [rpcrdma]
-> [  538.551001]  check_memory_region+0x198/0x200
-> [  538.553763]  memcpy+0x38/0x60
-> [  538.555612]  rpcrdma_complete_rqst+0x41b/0x680 [rpcrdma]
-> [  538.558974]  ? rpcrdma_reset_cwnd+0x70/0x70 [rpcrdma]
-> [  538.562162]  ? ktime_get+0x4f/0xb0
-> [  538.564072]  ? rpcrdma_reply_handler+0x4ca/0x640 [rpcrdma]
-> [  538.567066]  __ib_process_cq+0xa7/0x1f0 [ib_core]
-> [  538.569905]  ib_cq_poll_work+0x31/0xb0 [ib_core]
-> [  538.573151]  process_one_work+0x387/0x680
-> [  538.575798]  worker_thread+0x57/0x5a0
-> [  538.577917]  ? process_one_work+0x680/0x680
-> [  538.581095]  kthread+0x1c8/0x1f0
-> [  538.583271]  ? kthread_parkme+0x40/0x40
-> [  538.585637]  ret_from_fork+0x22/0x30
-> [  538.587688] =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [  538.591920] Disabling lock debugging due to kernel taint
-> [  538.595267] general protection fault, probably for non-canonical
-> address 0x5088000000000: 0000 [#1] SMP KASAN PTI
-> [  538.601982] CPU: 1 PID: 3623 Comm: fsstress Tainted: G    B
->    5.10.0-rc3+ #33
-> [  538.609032] Hardware name: VMware, Inc. VMware Virtual
-> Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
-> [  538.619678] RIP: 0010:memcpy_orig+0xf5/0x10f
-> [  538.623892] Code: 00 00 00 00 00 83 fa 04 72 1b 8b 0e 44 8b 44 16
-> fc 89 0f 44 89 44 17 fc c3 66 90 66 2e 0f 1f 84 00 00 00 00 00 83 ea
-> 01 72 19 <0f> b6 0e 74 12 4c 0f b6 46 01 4c 0f b6 0c 16 44 88 47 01 44
-> 88 0c
-> [  538.636726] RSP: 0018:ffff888018707628 EFLAGS: 00010202
-> [  538.641125] RAX: ffff888009098855 RBX: 0000000000000008 RCX: =
-ffffffffc19eca2d
-> [  538.645793] RDX: 0000000000000001 RSI: 0005088000000000 RDI: =
-ffff888009098855
-> [  538.650290] RBP: 0000000000000000 R08: ffffed100121310b R09: =
-ffffed100121310b
-> [  538.654879] R10: ffff888009098856 R11: ffffed100121310a R12: =
-ffff888018707788
-> [  538.658700] R13: ffff888009098858 R14: ffff888009098857 R15: =
-0000000000000002
-> [  538.662871] FS:  00007f12be1c8740(0000) GS:ffff88805ca40000(0000)
-> knlGS:0000000000000000
-> [  538.667424] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  538.670768] CR2: 00007f12be1c7000 CR3: 000000005c37a004 CR4: =
-00000000001706e0
-> [  538.675865] Call Trace:
-> [  538.677376]  nfs4_xdr_dec_listxattrs+0x31d/0x3c0 [nfsv4]
-> [  538.681151]  ? nfs4_xdr_dec_read_plus+0x360/0x360 [nfsv4]
-> [  538.684232]  ? xdr_inline_decode+0x1e/0x260 [sunrpc]
-> [  538.687114]  call_decode+0x365/0x390 [sunrpc]
-> [  538.689626]  ? rpc_decode_header+0x770/0x770 [sunrpc]
-> [  538.692410]  ? var_wake_function+0x80/0x80
-> [  538.694634]  ?
-> xprt_request_retransmit_after_disconnect.isra.15+0x5e/0x80 [sunrpc]
-> [  538.698920]  ? rpc_decode_header+0x770/0x770 [sunrpc]
-> [  538.701578]  ? rpc_decode_header+0x770/0x770 [sunrpc]
-> [  538.704252]  __rpc_execute+0x11c/0x6e0 [sunrpc]
-> [  538.706829]  ? trace_event_raw_event_xprt_cong_event+0x270/0x270 =
-[sunrpc]
-> [  538.710654]  ? rpc_make_runnable+0x54/0xe0 [sunrpc]
-> [  538.713416]  rpc_run_task+0x29c/0x2c0 [sunrpc]
-> [  538.715806]  nfs4_call_sync_custom+0xc/0x40 [nfsv4]
-> [  538.718551]  nfs4_do_call_sync+0x114/0x160 [nfsv4]
-> [  538.721571]  ? nfs4_call_sync_custom+0x40/0x40 [nfsv4]
-> [  538.724333]  ? __alloc_pages_nodemask+0x200/0x410
-> [  538.726794]  ? kasan_unpoison_shadow+0x30/0x40
-> [  538.729147]  ? __kasan_kmalloc.constprop.8+0xc1/0xd0
-> [  538.731733]  _nfs42_proc_listxattrs+0x1f6/0x2f0 [nfsv4]
-> [  538.734504]  ? nfs42_offload_cancel_done+0x50/0x50 [nfsv4]
-> [  538.737173]  ? __kernel_text_address+0xe/0x30
-> [  538.739400]  ? unwind_get_return_address+0x2f/0x50
-> [  538.741727]  ? create_prof_cpu_mask+0x20/0x20
-> [  538.744141]  ? stack_trace_consume_entry+0x80/0x80
-> [  538.746585]  ? _raw_spin_lock+0x7a/0xd0
-> [  538.748477]  nfs42_proc_listxattrs+0xf4/0x150 [nfsv4]
-> [  538.750920]  ? nfs42_proc_setxattr+0x150/0x150 [nfsv4]
-> [  538.753557]  ? nfs4_xattr_cache_list+0x91/0x120 [nfsv4]
-> [  538.756313]  nfs4_listxattr+0x34d/0x3d0 [nfsv4]
-> [  538.758506]  ? _nfs4_proc_access+0x260/0x260 [nfsv4]
-> [  538.760859]  ? __ia32_sys_rename+0x40/0x40
-> [  538.762897]  ? selinux_quota_on+0xf0/0xf0
-> [  538.764827]  ? __check_object_size+0x178/0x220
-> [  538.767063]  ? kasan_unpoison_shadow+0x30/0x40
-> [  538.769233]  ? security_inode_listxattr+0x53/0x60
-> [  538.771962]  listxattr+0x5b/0xf0
-> [  538.773980]  path_listxattr+0xa1/0x100
-> [  538.776147]  ? listxattr+0xf0/0xf0
-> [  538.778064]  do_syscall_64+0x33/0x40
-> [  538.780714]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [  538.783440] RIP: 0033:0x7f12bdaebc8b
-> [  538.785341] Code: f0 ff ff 73 01 c3 48 8b 0d fa 21 2c 00 f7 d8 64
-> 89 01 48 83 c8 ff c3 0f 1f 84 00 00 00 00 00 f3 0f 1e fa b8 c2 00 00
-> 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d cd 21 2c 00 f7 d8 64 89
-> 01 48
-> [  538.794845] RSP: 002b:00007ffc7947cff8 EFLAGS: 00000206 ORIG_RAX:
-> 00000000000000c2
-> [  538.798985] RAX: ffffffffffffffda RBX: 0000000001454650 RCX: =
-00007f12bdaebc8b
-> [  538.802840] RDX: 0000000000000018 RSI: 000000000145c150 RDI: =
-0000000001454650
-> [  538.807093] RBP: 000000000145c150 R08: 00007f12bddaeba0 R09: =
-00007ffc7947cc46
-> [  538.811487] R10: 0000000000000000 R11: 0000000000000206 R12: =
-00000000000002dd
-> [  538.816713] R13: 0000000000000018 R14: 0000000000000018 R15: =
-0000000000000000
-> [  538.820437] Modules linked in: rpcrdma rdma_rxe ip6_udp_tunnel
-> udp_tunnel rdma_ucm rdma_cm iw_cm ib_cm ib_uverbs ib_core cts
-> rpcsec_gss_krb5 nfsv4 dns_resolver nfs lockd grace nfs_ssc nls_utf8
-> isofs fuse rfcomm nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib
-> nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct
-> nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 tun bridge stp llc
-> ip6_tables nft_compat ip_set nf_tables nfnetlink bnep
-> vmw_vsock_vmci_transport vsock snd_seq_midi snd_seq_midi_event
-> intel_rapl_msr intel_rapl_common crct10dif_pclmul crc32_pclmul
-> vmw_balloon ghash_clmulni_intel joydev pcspkr btusb uvcvideo btrtl
-> btbcm btintel videobuf2_vmalloc videobuf2_memops videobuf2_v4l2
-> videobuf2_common snd_ens1371 snd_ac97_codec ac97_bus snd_seq snd_pcm
-> videodev bluetooth mc rfkill ecdh_generic ecc snd_timer snd_rawmidi
-> snd_seq_device snd soundcore vmw_vmci i2c_piix4 auth_rpcgss sunrpc
-> ip_tables xfs libcrc32c sr_mod cdrom sg crc32c_intel ata_generic
-> serio_raw nvme vmwgfx drm_kms_helper
-> [  538.820577]  syscopyarea sysfillrect sysimgblt fb_sys_fops cec
-> nvme_core t10_pi ata_piix ahci libahci ttm vmxnet3 drm libata
-> [  538.869541] ---[ end trace 4abb2d95a72e9aab ]---
+--guy keren
+Vast data
 
-I'm running a v5.10-rc3 client now with the fix applied and
-KASAN enabled. I traced my xfstests run and I'm definitely
-exercising the LISTXATTRS path:
-
-# trace-cmd report -F rpc_request | grep LISTXATTR | wc -l
-462
-
-No crash or KASAN splat. I'm still missing something.
-
-I sometimes apply small patches from the mailing list by hand
-editing the modified file. Are you sure you applied my fix
-correctly?
-
-
---
-Chuck Lever
-
-
-
+On Thu, Nov 12, 2020 at 1:46 PM David Wysochanski <dwysocha@redhat.com> wrote:
+>
+> On Wed, Nov 11, 2020 at 5:15 PM David Wysochanski <dwysocha@redhat.com> wrote:
+> >
+> > On Tue, Nov 10, 2020 at 4:48 PM <trondmy@kernel.org> wrote:
+> > >
+> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > >
+> > > The following patch series performs a number of cleanups on the readdir
+> > > code.
+> > > It also adds support for 1MB readdir RPC calls on-the-wire, and modifies
+> > > the caching code to ensure that we cache the entire contents of that
+> > > 1MB call (instead of discarding the data that doesn't fit into a single
+> > > page).
+> > > For filesystems that use ordered readdir cookie schemes (e.g. XFS), it
+> > > optimises searching for cookies in the client's page cache by skipping
+> > > over pages that contain cookie values that are not in the range we are
+> > > searching for.
+> > > Finally, it improves scalability when dealing with very large
+> > > directories by turning off caching when those directories are changing,
+> > > so as to avoid the need for a linear search on the client of the entire
+> > > directory when looking for the first entry pointed to by the current
+> > > file descriptor offset.
+> > >
+> > > v2: Fix the handling of the NFSv3/v4 directory verifier.
+> > > v3: Optimise searching when the readdir cookies are seen to be ordered.
+> > > v4: Optimise performance for large directories that are changing.
+> > >     Add in llseek dependency patches.
+> > > v5: Integrate Olga's patch for the READDIR security label handling.
+> > >     Record more entries in the uncached readdir case. Bump the max
+> > >     number of pages to 512, but allocate them on demand in case the
+> > >     readdir RPC call returns fewer entries.
+> > >
+> > > Olga Kornievskaia (1):
+> > >   NFSv4.2: condition READDIR's mask for security label based on LSM
+> > >     state
+> > >
+> > > Trond Myklebust (21):
+> > >   NFS: Remove unnecessary inode locking in nfs_llseek_dir()
+> > >   NFS: Remove unnecessary inode lock in nfs_fsync_dir()
+> > >   NFS: Ensure contents of struct nfs_open_dir_context are consistent
+> > >   NFS: Clean up readdir struct nfs_cache_array
+> > >   NFS: Clean up nfs_readdir_page_filler()
+> > >   NFS: Clean up directory array handling
+> > >   NFS: Don't discard readdir results
+> > >   NFS: Remove unnecessary kmap in nfs_readdir_xdr_to_array()
+> > >   NFS: Replace kmap() with kmap_atomic() in nfs_readdir_search_array()
+> > >   NFS: Simplify struct nfs_cache_array_entry
+> > >   NFS: Support larger readdir buffers
+> > >   NFS: More readdir cleanups
+> > >   NFS: nfs_do_filldir() does not return a value
+> > >   NFS: Reduce readdir stack usage
+> > >   NFS: Cleanup to remove nfs_readdir_descriptor_t typedef
+> > >   NFS: Allow the NFS generic code to pass in a verifier to readdir
+> > >   NFS: Handle NFS4ERR_NOT_SAME and NFSERR_BADCOOKIE from readdir calls
+> > >   NFS: Improve handling of directory verifiers
+> > >   NFS: Optimisations for monotonically increasing readdir cookies
+> > >   NFS: Reduce number of RPC calls when doing uncached readdir
+> > >   NFS: Do uncached readdir when we're seeking a cookie in an empty page
+> > >     cache
+> > >
+> > >  fs/nfs/client.c         |   4 +-
+> > >  fs/nfs/dir.c            | 734 +++++++++++++++++++++++++---------------
+> > >  fs/nfs/inode.c          |   7 -
+> > >  fs/nfs/internal.h       |   6 -
+> > >  fs/nfs/nfs3proc.c       |  35 +-
+> > >  fs/nfs/nfs4proc.c       |  48 +--
+> > >  fs/nfs/proc.c           |  18 +-
+> > >  include/linux/nfs_fs.h  |   9 +-
+> > >  include/linux/nfs_xdr.h |  17 +-
+> > >  9 files changed, 541 insertions(+), 337 deletions(-)
+> > >
+> > > --
+> > > 2.28.0
+> > >
+> >
+> > I wrote a test script and ran this patchset against 5.10-rc2 in a
+> > variety of scenarios listing 1 million files and various directory
+> > modification scenarios. The test checked ops, runtime and cookie
+> > resets (via tcpdump).
+> >
+> > All runs performed very well on all scenarios I threw at it on all NFS
+> > versions (I tested 3, 4.0, 4.1, and 4.2) with fairly dramatic
+> > improvements vs the same runs on 5.10-rc2.   One scenario I found
+> > where a single 'ls -l' could take a long time (about 5 minutes, but
+> > not unbounded time) was when the directory was being modified with
+> > both file adds and removed, but this seemed due to other ops unrelated
+> > to readdir performance.   A second scenario that this patchset does
+> > not fix is the scenario where the directory is large enough to exceed
+> > the acdirmax, is being modified (adds and removes), and _multiple_
+> > processes are listing it.  In this scenario a lister can still have
+> > unbounded time, but the existing readdir code also has this problem
+> > and fixing that probably requires another patch / approach (such as
+> > reworking the structure of the cache or an approach such as the flag
+> > on per-process dir context).
+> >
+>
+> I think I am mistaken in my previous email that said multiple listers
+> will not make forward progress.  After more testing I could not
+> reproduce any indefinite wait but it was many minutes, and I think
+> there is proof in the current code (patch 22) that an indefinite wait
+> should not occur with any process (multiple processes does not change
+> this).  Note that I did not trace this, but below is an attempt at a
+> more detailed explanation from the code.  The summary of the argument
+> is that periodically nfs_readdir_dont_search_cache() will be true for
+> one iteration of nfs_readdir(), and this ensures forward progress,
+> even if it may be slow.
+>
+> Some notation for the below explanation.
+> Tu: Time to list unmodified (idle) directory
+> Ax: acdirmax
+> Assume Tu > acdirmax (time to list idle directory is larger than
+> acdirmax) and i_size_read(dir) > NFS_SERVER(dir)->dtsize
+> PL1: pid1 that is listing the directory
+> DC1, DC2 and DC3: values of nfs_open_dir_context.dir_cookie for PL1
+> PL1_dir_cookie: the current value of PL1's nfs_open_dir_context.dir_cookie
+>
+> Then consider the following timeline, with "Tn" various points on a
+> timeline of PL1 listing a very large directory.
+>
+> T0: PL1 starts listing directory with repeated calls to nfs_readdir()
+> T1: acdirmax is exceeded, and we drop the pagecache (mapping->nrpages
+> == 0); at this point, PL1_dir_cookie = DC1 != 0
+> T2: PL1 calls nfs_readdir and nfs_readdir_dont_search_cache() returns
+> true (due to mapping->nrpages == 0), so enters uncached_readdir();
+> thus, PL1_dir_cookie makes forward progress so PL1_dir_cookie is ahead
+> of DC1 and the exit of nfs_readdir()
+> T3: PL1 calls nfs_readdir() and nfs_readdir_dont_search_cache() is
+> false, so it must restart filling the pagecache from cookie == 0 (we
+> send READDIRs over the wire); at this point PL1_dir_cookie forward
+> progress is stalled, and PL1's calls to nfs_readdir() will have to
+> fetch entries and fill pages in the pagecache that does not pertain to
+> its listing (they've already been returned to userspace in a previous
+> nfs_readdir call)
+> T4: acdirmax is exceeded, and we drop the pagecache again, setting
+> mapping->nrpages == 0; at this point though, PL1_dir_cookie = DC2,
+> where DC2 is ahead of DC1 (we made forward progress last time)
+> T5: PL1 calls nfs_readdir and nfs_readdir_dont_search_cache() returns
+> true, so enters uncached_readdir(); thus, PL1_dir_cookie makes forward
+> progress again for this one call to nfs_readdir(), and PL1_dir_cookie
+> = DC3 is ahead of DC2
+>
+> Thus, it seems PL1 will eventually complete, even if it is delayed a
+> bit, and even if it has to re-fill pages in the page cache that is
+> "extra work" that doesn't help PL1.  Forward progress is guaranteed
+> due to the periodic calls to nfs_readdir() when
+> nfs_readdir_dont_search_cache() returns true due to mapping->nrpages
+> == 0 portion of the condition inside nfs_readdir_dont_search_cache()
+> +static bool nfs_readdir_dont_search_cache(struct nfs_readdir_descriptor *desc)
+> +{
+> +       struct address_space *mapping = desc->file->f_mapping;
+> +       struct inode *dir = file_inode(desc->file);
+> +       unsigned int dtsize = NFS_SERVER(dir)->dtsize;
+> +       loff_t size = i_size_read(dir);
+> +
+> +       /*
+> +        * Default to uncached readdir if the page cache is empty, and
+> +        * we're looking for a non-zero cookie in a large directory.
+> +        */
+> +       return desc->dir_cookie != 0 && mapping->nrpages == 0 && size > dtsize;
+> +}
+>
+>
+>
+>
+> > I think these patches make NFS readdir dramatically better, and they
+> > fix a lot of underlying issues with the existing code, like the cookie
+> > resets when pagecache is dropped, single page rx data problem, etc.
+> > Thank you for doing these patches.
+> >
+> > Tested-by: Dave Wysochanski
+>
