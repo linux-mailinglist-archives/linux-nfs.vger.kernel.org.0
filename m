@@ -2,461 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C74432B05AF
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 14:01:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 329B32B05C0
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 14:02:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbgKLNBJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Nov 2020 08:01:09 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25825 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728376AbgKLNBA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 08:01:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605186057;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qmTzZMw26ZOxVsw6AE+Yi1dOtYZgOHQMXHW1UsBHzzI=;
-        b=PCKSJA9Y3hx956HhGvQE1wru3uKihdfkK1NuWFsYhhvdinEm0G0Z3b5GSFSanmDMZexdiK
-        /ldG6KE2NS1OGKBaUPoBAwVVpQi+J/qFnSwSRPE3sbHg/56fr8Jd1guTPohAZawIYxPyYo
-        GhoE8tKf1dNWkNQ3iP/vh6fGG4dmpvc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-61-0UbhHBIRPjeq6bbaj7-23A-1; Thu, 12 Nov 2020 08:00:51 -0500
-X-MC-Unique: 0UbhHBIRPjeq6bbaj7-23A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7587811CC7EF;
-        Thu, 12 Nov 2020 13:00:49 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-115-47.rdu2.redhat.com [10.10.115.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BA9375B4DB;
-        Thu, 12 Nov 2020 13:00:46 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 18/18] rxgk: Support OpenAFS's rxgk implementation
-From:   David Howells <dhowells@redhat.com>
-To:     herbert@gondor.apana.org.au, bfields@fieldses.org
-Cc:     dhowells@redhat.com, trond.myklebust@hammerspace.com,
-        linux-crypto@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 12 Nov 2020 13:00:45 +0000
-Message-ID: <160518604546.2277919.883911770718886136.stgit@warthog.procyon.org.uk>
-In-Reply-To: <160518586534.2277919.14475638653680231924.stgit@warthog.procyon.org.uk>
-References: <160518586534.2277919.14475638653680231924.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        id S1728211AbgKLNCM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Nov 2020 08:02:12 -0500
+Received: from natter.dneg.com ([193.203.89.68]:56946 "EHLO natter.dneg.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727803AbgKLNCL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 12 Nov 2020 08:02:11 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by natter.dneg.com (Postfix) with ESMTP id 4CB6E69D097D;
+        Thu, 12 Nov 2020 13:02:10 +0000 (GMT)
+X-Virus-Scanned: amavisd-new at mx-dneg
+Received: from natter.dneg.com ([127.0.0.1])
+        by localhost (natter.dneg.com [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id HxadmVT4_sQN; Thu, 12 Nov 2020 13:02:10 +0000 (GMT)
+Received: from zrozimbrai.dneg.com (zrozimbrai.dneg.com [10.11.20.12])
+        by natter.dneg.com (Postfix) with ESMTPS id 2C7C069DB6F5;
+        Thu, 12 Nov 2020 13:02:10 +0000 (GMT)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 1D46A8102E07;
+        Thu, 12 Nov 2020 13:02:10 +0000 (GMT)
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id mN9mhnrtnpXF; Thu, 12 Nov 2020 13:02:10 +0000 (GMT)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 104E8826D69E;
+        Thu, 12 Nov 2020 13:01:52 +0000 (GMT)
+X-Virus-Scanned: amavisd-new at zimbra-dneg
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id baDDNzVZDloS; Thu, 12 Nov 2020 13:01:51 +0000 (GMT)
+Received: from zrozimbra1.dneg.com (zrozimbra1.dneg.com [10.11.16.16])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 6FE08826C9D7;
+        Thu, 12 Nov 2020 13:01:24 +0000 (GMT)
+Date:   Thu, 12 Nov 2020 13:01:24 +0000 (GMT)
+From:   Daire Byrne <daire@dneg.com>
+To:     bfields <bfields@fieldses.org>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        linux-cachefs <linux-cachefs@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1744768451.86186596.1605186084252.JavaMail.zimbra@dneg.com>
+In-Reply-To: <20201109160256.GB11144@fieldses.org>
+References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com> <20200915172140.GA32632@fieldses.org> <4d1d7cd0076d98973a56e89c92e4ff0474aa0e14.camel@hammerspace.com> <1188023047.38703514.1600272094778.JavaMail.zimbra@dneg.com> <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com> <635679406.70384074.1603272832846.JavaMail.zimbra@dneg.com> <20201109160256.GB11144@fieldses.org>
+Subject: Re: Adventures in NFS re-exporting
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Mailer: Zimbra 8.7.11_GA_1854 (ZimbraWebClient - GC78 (Linux)/8.7.11_GA_1854)
+Thread-Topic: Adventures in NFS re-exporting
+Thread-Index: 9doLxBH184R2kXPXNb1Z3BB0W3rboA==
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
----
+----- On 9 Nov, 2020, at 16:02, bfields bfields@fieldses.org wrote:
+> On Wed, Oct 21, 2020 at 10:33:52AM +0100, Daire Byrne wrote:
+>> Trond has posted some (v3) patches to emulate lookupp for NFSv3 (a million
+>> thanks!) so I applied them to v5.9.1 and ran some more tests using that on the
+>> re-export server. Again, I just pathologically dropped inode & dentry caches
+>> every second on the re-export server (vfs_cache_pressure=100) while a client
+>> looped through some application loading tests.
+>> 
+>> Now for every combination of re-export (NFSv3 -> NFSv4.x or NFSv4.x -> NFSv3), I
+>> no longer see any stale file handles (/proc/net/rpc/nfsd) when dropping inode &
+>> dentry caches (yay!).
+>> 
+>> However, my assumption that some of the input/output errors I was seeing were
+>> related to the estales seems to have been misguided. After running these tests
+>> again without any estales, it now looks like a different issue that is unique
+>> to re-exporting NFSv3 from an NFSv4.0 originating server (either Linux or
+>> Netapp). The lookups are all fine (no estale) but reading some files eventually
+>> gives an input/output error on multiple clients which remain consistent until
+>> the re-export nfs-server is restarted. Again, this only occurs while dropping
+>> inode + dentry caches.
+>> 
+>> So in summary, while continuously dropping inode/dentry caches on the re-export
+>> server:
+> 
+> How continuously, exactly?
+> 
+> I recall that there are some situations where the best the client can do
+> to handle an ESTALE is just retry.  And that our code generally just
+> retries once and then gives up.
+> 
+> I wonder if it's possible that the client or re-export server can get
+> stuck in a situation where they can't guarantee forward progress in the
+> face of repeated ESTALEs.  I don't have a specific case in mind, though.
 
- net/rxrpc/ar-internal.h |    1 
- net/rxrpc/key.c         |  136 +++++++++++++++++++++++++++++++++++++++++++++++
- net/rxrpc/rxgk.c        |   25 +++++++++
- net/rxrpc/rxgk_app.c    |  135 +++++++++++++++++++++++++++++++++++++++++++++++
- net/rxrpc/rxgk_common.h |    2 +
- net/rxrpc/security.c    |    3 +
- 6 files changed, 302 insertions(+)
+I was dropping caches every second in a loop on the NFS re-export server. Meanwhile a large python application that takes ~15 seconds to complete was also looping on a client of the re-export server. So we are clearing out the cache many times such that the same python paths are being re-populated many times.
 
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index 3f2469714422..ed44ceeeab68 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -1070,6 +1070,7 @@ void rxrpc_peer_init_rtt(struct rxrpc_peer *);
- /*
-  * rxgk.c
-  */
-+extern const struct rxrpc_security rxgk_openafs;
- extern const struct rxrpc_security rxgk_yfs;
- 
- /*
-diff --git a/net/rxrpc/key.c b/net/rxrpc/key.c
-index b7f154701d97..3479ef285980 100644
---- a/net/rxrpc/key.c
-+++ b/net/rxrpc/key.c
-@@ -147,6 +147,135 @@ static time64_t rxrpc_s64_to_time64(s64 time_in_100ns)
- 	return neg ? -tmp : tmp;
- }
- 
-+/*
-+ * Parse an OpenAFS RxGK type XDR format token
-+ * - the caller guarantees we have at least 4 words
-+ *
-+ * struct token_rxgk {
-+ *	afs_int64	0 gk_viceid;
-+ *	afs_int32	2 gk_enctype;
-+ *	afs_int32	3 gk_level;
-+ *	afs_uint32	4 gk_lifetime;
-+ *	afs_uint32	5 gk_bytelife;
-+ *	afs_int64	6 gk_expiration;
-+ *	opaque		8 gk_token<AFSTOKEN_GK_TOK_MAX>;
-+ *	opaque		9 gk_k0<AFSTOKEN_GK_TOK_MAX>;
-+ * };
-+ */
-+static int rxrpc_preparse_xdr_rxgk(struct key_preparsed_payload *prep,
-+				   size_t datalen,
-+				   const __be32 *xdr, unsigned int toklen)
-+{
-+	struct rxrpc_key_token *token, **pptoken;
-+	time64_t expiry;
-+	size_t plen;
-+	const __be32 *ticket, *key;
-+	u32 tktlen, keylen;
-+
-+	_enter(",{%x,%x,%x,%x},%x",
-+	       ntohl(xdr[0]), ntohl(xdr[1]), ntohl(xdr[2]), ntohl(xdr[3]),
-+	       toklen);
-+
-+	if (toklen / 4 < 10)
-+		goto reject;
-+
-+	ticket = xdr + 9;
-+	tktlen = ntohl(ticket[-1]);
-+	_debug("tktlen: %x", tktlen);
-+	tktlen = round_up(tktlen, 4);
-+	if (toklen < 10 * 4 + tktlen)
-+		goto reject;
-+
-+	key = ticket + (tktlen / 4) + 1;
-+	keylen = ntohl(key[-1]);
-+	_debug("keylen: %x", keylen);
-+	keylen = round_up(keylen, 4);
-+	if (10 * 4 + tktlen + keylen != toklen) {
-+		kleave(" = -EKEYREJECTED [%x!=%x, %x,%x]",
-+		       10 * 4 + tktlen + keylen, toklen, tktlen, keylen);
-+		goto reject;
-+	}
-+
-+	plen = sizeof(*token) + sizeof(*token->rxgk) + tktlen + keylen;
-+	prep->quotalen = datalen + plen;
-+
-+	plen -= sizeof(*token);
-+	token = kzalloc(sizeof(*token), GFP_KERNEL);
-+	if (!token)
-+		goto nomem;
-+
-+	token->rxgk = kzalloc(sizeof(struct rxgk_key) + keylen, GFP_KERNEL);
-+	if (!token->rxgk)
-+		goto nomem_token;
-+
-+	token->security_index	= RXRPC_SECURITY_RXGK;
-+	token->rxgk->begintime	= 0;
-+	token->rxgk->endtime	= xdr_dec64(xdr + 6);
-+	token->rxgk->level	= ntohl(xdr[3]);
-+	if (token->rxgk->level > RXRPC_SECURITY_ENCRYPT)
-+		goto reject_token;
-+	token->rxgk->lifetime	= ntohl(xdr[4]);
-+	token->rxgk->bytelife	= ntohl(xdr[5]);
-+	token->rxgk->enctype	= ntohl(xdr[2]);
-+	token->rxgk->key.len	= ntohl(key[-1]);
-+	token->rxgk->key.data	= token->rxgk->_key;
-+	token->rxgk->ticket.len = ntohl(ticket[-1]);
-+
-+	expiry = rxrpc_s64_to_time64(token->rxgk->endtime);
-+	if (expiry < 0)
-+		goto expired;
-+	if (expiry < prep->expiry)
-+		prep->expiry = expiry;
-+
-+	memcpy(token->rxgk->key.data, key, token->rxgk->key.len);
-+
-+	/* Pad the ticket so that we can use it directly in XDR */
-+	token->rxgk->ticket.data = kzalloc(round_up(token->rxgk->ticket.len, 4),
-+					   GFP_KERNEL);
-+	if (!token->rxgk->ticket.data)
-+		goto nomem_yrxgk;
-+	memcpy(token->rxgk->ticket.data, ticket, token->rxgk->ticket.len);
-+
-+	_debug("SCIX: %u",	token->security_index);
-+	_debug("LIFE: %llx",	token->rxgk->lifetime);
-+	_debug("BYTE: %llx",	token->rxgk->bytelife);
-+	_debug("ENC : %u",	token->rxgk->enctype);
-+	_debug("LEVL: %u",	token->rxgk->level);
-+	_debug("KLEN: %u",	token->rxgk->key.len);
-+	_debug("TLEN: %u",	token->rxgk->ticket.len);
-+	_debug("KEY0: %*phN",	token->rxgk->key.len, token->rxgk->key.data);
-+	_debug("TICK: %*phN",
-+	       min_t(u32, token->rxgk->ticket.len, 32), token->rxgk->ticket.data);
-+
-+	/* count the number of tokens attached */
-+	prep->payload.data[1] = (void *)((unsigned long)prep->payload.data[1] + 1);
-+
-+	/* attach the data */
-+	for (pptoken = (struct rxrpc_key_token **)&prep->payload.data[0];
-+	     *pptoken;
-+	     pptoken = &(*pptoken)->next)
-+		continue;
-+	*pptoken = token;
-+
-+	_leave(" = 0");
-+	return 0;
-+
-+nomem_yrxgk:
-+	kfree(token->rxgk);
-+nomem_token:
-+	kfree(token);
-+nomem:
-+	return -ENOMEM;
-+reject_token:
-+	kfree(token);
-+reject:
-+	return -EKEYREJECTED;
-+expired:
-+	kfree(token->rxgk);
-+	kfree(token);
-+	return -EKEYEXPIRED;
-+}
-+
- /*
-  * Parse a YFS-RxGK type XDR format token
-  * - the caller guarantees we have at least 4 words
-@@ -380,6 +509,9 @@ static int rxrpc_preparse_xdr(struct key_preparsed_payload *prep)
- 		case RXRPC_SECURITY_RXKAD:
- 			ret2 = rxrpc_preparse_xdr_rxkad(prep, datalen, token, toklen);
- 			break;
-+		case RXRPC_SECURITY_RXGK:
-+			ret2 = rxrpc_preparse_xdr_rxgk(prep, datalen, token, toklen);
-+			break;
- 		case RXRPC_SECURITY_YFS_RXGK:
- 			ret2 = rxrpc_preparse_xdr_yfs_rxgk(prep, datalen, token, toklen);
- 			break;
-@@ -545,6 +677,7 @@ static void rxrpc_free_token_list(struct rxrpc_key_token *token)
- 		case RXRPC_SECURITY_RXKAD:
- 			kfree(token->kad);
- 			break;
-+		case RXRPC_SECURITY_RXGK:
- 		case RXRPC_SECURITY_YFS_RXGK:
- 			kfree(token->rxgk->ticket.data);
- 			kfree(token->rxgk);
-@@ -592,6 +725,9 @@ static void rxrpc_describe(const struct key *key, struct seq_file *m)
- 		case RXRPC_SECURITY_RXKAD:
- 			seq_puts(m, "ka");
- 			break;
-+		case RXRPC_SECURITY_RXGK:
-+			seq_puts(m, "ogk");
-+			break;
- 		case RXRPC_SECURITY_YFS_RXGK:
- 			seq_puts(m, "ygk");
- 			break;
-diff --git a/net/rxrpc/rxgk.c b/net/rxrpc/rxgk.c
-index 0aa6da93b8d4..bad68d293ced 100644
---- a/net/rxrpc/rxgk.c
-+++ b/net/rxrpc/rxgk.c
-@@ -1181,6 +1181,31 @@ static void rxgk_exit(void)
- {
- }
- 
-+/*
-+ * RxRPC OpenAFS GSSAPI-based security
-+ */
-+const struct rxrpc_security rxgk_openafs = {
-+	.name				= "rxgk",
-+	.security_index			= RXRPC_SECURITY_RXGK,
-+	.no_key_abort			= RXGK_NOTAUTH,
-+	.init				= rxgk_init,
-+	.exit				= rxgk_exit,
-+	.preparse_server_key		= rxgk_preparse_server_key,
-+	.free_preparse_server_key	= rxgk_free_preparse_server_key,
-+	.destroy_server_key		= rxgk_destroy_server_key,
-+	.describe_server_key		= rxgk_describe_server_key,
-+	.init_connection_security	= rxgk_init_connection_security,
-+	.secure_packet			= rxgk_secure_packet,
-+	.verify_packet			= rxgk_verify_packet,
-+	.free_call_crypto		= rxgk_free_call_crypto,
-+	.locate_data			= rxgk_locate_data,
-+	.issue_challenge		= rxgk_issue_challenge,
-+	.respond_to_challenge		= rxgk_respond_to_challenge,
-+	.verify_response		= rxgk_verify_response,
-+	.clear				= rxgk_clear,
-+	.default_decode_ticket		= rxgk_openafs_decode_ticket,
-+};
-+
- /*
-  * RxRPC YFS GSSAPI-based security
-  */
-diff --git a/net/rxrpc/rxgk_app.c b/net/rxrpc/rxgk_app.c
-index 895879f3acfb..8c35e3a88119 100644
---- a/net/rxrpc/rxgk_app.c
-+++ b/net/rxrpc/rxgk_app.c
-@@ -14,6 +14,141 @@
- #include "ar-internal.h"
- #include "rxgk_common.h"
- 
-+/*
-+ * Decode a default-style OpenAFS ticket in a response and turn it into an
-+ * rxrpc-type key.
-+ *
-+ * struct RXGK_Token {
-+ *	afs_int32		enctype;
-+ *	opaque			K0<>;
-+ *	RXGK_Level		level;
-+ *	afs_int32		lifetime;
-+ *	afs_int32		bytelife;
-+ *	rxgkTime		expirationtime;
-+ *	struct RXGK_PrAuthName	identities<>;
-+ * };
-+ */
-+int rxgk_openafs_decode_ticket(struct sk_buff *skb,
-+			       unsigned int ticket_offset, unsigned int ticket_len,
-+			       u32 *_abort_code,
-+			       struct key **_key)
-+{
-+	struct rxrpc_key_token *token;
-+	const struct cred *cred = current_cred(); // TODO - use socket creds
-+	struct key *key;
-+	size_t pre_ticket_len, payload_len;
-+	unsigned int klen, enctype;
-+	void *payload, *ticket;
-+	__be32 *t, *p, *q, tmp[2];
-+	int ret;
-+
-+	_enter("");
-+
-+	/* Get the session key length */
-+	ret = skb_copy_bits(skb, ticket_offset, tmp, sizeof(tmp));
-+	if (ret < 0)
-+		goto error_out;
-+	enctype = ntohl(tmp[0]);
-+	klen = ntohl(tmp[1]);
-+
-+	if (klen > ticket_len - 8 * sizeof(__be32)) {
-+		*_abort_code = RXGK_INCONSISTENCY;
-+		return -EPROTO;
-+	}
-+
-+	pre_ticket_len = ((5 + 10) * sizeof(__be32));
-+	payload_len = pre_ticket_len + xdr_round_up(ticket_len) +
-+		sizeof(__be32) + xdr_round_up(klen);
-+
-+	payload = kzalloc(payload_len, GFP_NOFS);
-+	if (!payload)
-+		return -ENOMEM;
-+
-+	/* We need to fill out the XDR form for a key payload that we can pass
-+	 * to add_key().  Start by copying in the ticket so that we can parse
-+	 * it.
-+	 */
-+	ticket = payload + pre_ticket_len;
-+	ret = skb_copy_bits(skb, ticket_offset, ticket, ticket_len);
-+	if (ret < 0)
-+		goto error;
-+
-+	/* Fill out the form header. */
-+	p = payload;
-+	p[0] = htonl(0); /* Flags */
-+	p[1] = htonl(1); /* len(cellname) */
-+	p[2] = htonl(0x20000000); /* Cellname " " */
-+	p[3] = htonl(1); /* #tokens */
-+	p[4] = htonl(11 * sizeof(__be32) +
-+		     xdr_round_up(klen) + xdr_round_up(ticket_len)); /* Token len */
-+
-+	/* Now fill in the body.  Most of this we can just scrape directly from
-+	 * the ticket.
-+	 */
-+	t = ticket + sizeof(__be32) * 2 + xdr_round_up(klen);
-+	q = payload + 5 * sizeof(__be32);
-+	q[ 0] = htonl(RXRPC_SECURITY_RXGK);
-+	q[ 1] = 0;		/* gk_viceid - msw */
-+	q[ 2] = 0;		/* - lsw */
-+	q[ 3] = htonl(enctype);	/* gkenctype - msw */
-+	q[ 4] = t[0];		/* gk_level */
-+	q[ 5] = t[1];		/* gk_lifetime */
-+	q[ 6] = t[2];		/* gk_bytelife */
-+	q[ 7] = t[3];		/* gk_expiration - msw */
-+	q[ 8] = t[4];		/* - lsw */
-+	q[ 9] = htonl(ticket_len); /* gk_token.length */
-+
-+	q += 10;
-+	if (WARN_ON((unsigned long)q != (unsigned long)ticket)) {
-+		kdebug("%lx %lx", (long)q, (long)ticket);
-+		ret = -EIO;
-+		goto error;
-+	}
-+
-+	/* Ticket read in with skb_copy_bits above */
-+	q += xdr_round_up(ticket_len) / 4;
-+	q[0] = ntohl(klen);
-+	q++;
-+
-+	memcpy(q, ticket + sizeof(__be32) * 2, klen);
-+
-+	q += xdr_round_up(klen) / 4;
-+	if (WARN_ON((unsigned long)q - (unsigned long)payload != payload_len)) {
-+		ret = -EIO;
-+		goto error;
-+	}
-+
-+	/* Now turn that into a key. */
-+	key = key_alloc(&key_type_rxrpc, "x",
-+			GLOBAL_ROOT_UID, GLOBAL_ROOT_GID, cred, 0, // TODO: Use socket owner
-+			KEY_ALLOC_NOT_IN_QUOTA, NULL);
-+	if (IS_ERR(key)) {
-+		_leave(" = -ENOMEM [alloc %ld]", PTR_ERR(key));
-+		goto error;
-+	}
-+
-+	_debug("key %d", key_serial(key));
-+
-+	ret = key_instantiate_and_link(key, payload, payload_len, NULL, NULL);
-+	if (ret < 0)
-+		goto error_key;
-+
-+	token = key->payload.data[0];
-+	token->no_leak_key = true;
-+	*_key = key;
-+	key = NULL;
-+	ret = 0;
-+	goto error;
-+
-+error_key:
-+	key_put(key);
-+error:
-+	kfree_sensitive(payload);
-+error_out:
-+	_leave(" = %d", ret);
-+	return ret;
-+}
-+
- /*
-  * Decode a default-style YFS ticket in a response and turn it into an
-  * rxrpc-type key.
-diff --git a/net/rxrpc/rxgk_common.h b/net/rxrpc/rxgk_common.h
-index 38473b13e67d..88278da64c6a 100644
---- a/net/rxrpc/rxgk_common.h
-+++ b/net/rxrpc/rxgk_common.h
-@@ -38,6 +38,8 @@ struct rxgk_context {
- /*
-  * rxgk_app.c
-  */
-+int rxgk_openafs_decode_ticket(struct sk_buff *, unsigned int, unsigned int,
-+			       u32 *, struct key **);
- int rxgk_yfs_decode_ticket(struct sk_buff *, unsigned int, unsigned int,
- 			   u32 *, struct key **);
- int rxgk_extract_token(struct rxrpc_connection *,
-diff --git a/net/rxrpc/security.c b/net/rxrpc/security.c
-index 278a510b2956..dd11aa1aa137 100644
---- a/net/rxrpc/security.c
-+++ b/net/rxrpc/security.c
-@@ -20,6 +20,9 @@ static const struct rxrpc_security *rxrpc_security_types[] = {
- #ifdef CONFIG_RXKAD
- 	[RXRPC_SECURITY_RXKAD]	= &rxkad,
- #endif
-+#ifdef CONFIG_RXGK
-+	[RXRPC_SECURITY_RXGK]	= &rxgk_openafs,
-+#endif
- #ifdef CONFIG_RXGK
- 	[RXRPC_SECURITY_YFS_RXGK] = &rxgk_yfs,
- #endif
+Having just completed a bunch of fresh cloud rendering with v5.9.1 and Trond's NFSv3 lookupp emulation patches, I can now revise my original list of issues that others will likely experience if they ever try to do this craziness:
 
+1) Don't re-export NFSv4.0 unless you set vfs_cache_presure=0 otherwise you will see random input/output errors on your clients when things are dropped out of the cache. In the end we gave up on using NFSv4.0 with our Netapps because the 7-mode implementation seemed a bit flakey with modern Linux clients (Linux NFSv4.2 servers on the other hand have been rock solid). We now use NFSv3 with Trond's lookupp emulation patches instead.
 
+2) In order to better utilise the re-export server's client cache when re-exporting an NFSv3 server (using either NFSv3 or NFSv4), we still need to use the horrible inode_peek_iversion_raw hack to maintain good metadata performance for large numbers of clients. Otherwise each re-export server's clients can cause invalidation of the re-export server client cache. Once you have hundreds of clients they all combine to constantly invalidate the cache resulting in an order of magnitude slower metadata performance. If you are re-exporting an NFSv4.x server (with either NFSv3 or NFSv4.x) this hack is not required.
+
+3) For some reason, when a 1MB read call arrives at the re-export server from a client, it gets chopped up into 128k read calls that are issued back to the originating server despite rsize/wsize=1MB on all mounts. This results in a noticeable increase in rpc chatter for large reads. Writes on the other hand retain their 1MB size from client to re-export server and back to the originating server. I am using nconnect but I doubt that is related.
+
+4) After some random time, the cachefilesd userspace daemon stops culling old data from an fscache disk storage. I thought it was to do with setting vfs_cache_pressure=0 but even with it set to the default 100 it just randomly decides to stop culling and never comes back to life until restarted or rebooted. Perhaps the fscache/cachefilesd rewrite that David Howells & David Wysochanski have been working on will improve matters.
+
+5) It's still really hard to cache nfs client metadata for any definitive time (actimeo,nocto) due to the pagecache churn that reads cause. If all required metadata (i.e. directory contents) could either be locally cached to disk or the inode cache rather than pagecache then maybe we would have more control over the actual cache times we are comfortable with for our workloads. This has little to do with re-exporting and is just a general NFS performance over the WAN thing. I'm very interested to see how Trond's recent patches to improve readdir performance might at least help re-populate the dropped cached metadata more efficiently over the WAN.
+
+I just want to finish with one more crazy thing we have been doing - a re-export server of a re-export server! Again, a locking and consistency nightmare so only possible for very specific workloads (like ours). The advantage of this topology is that you can pull all your data over the WAN once (e.g. on-premise to cloud) and then fan-out that data to multiple other NFS re-export servers in the cloud to improve the aggregate performance to many clients. This avoids having multiple re-export servers all needing to pull the same data across the WAN.
+
+Daire
