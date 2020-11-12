@@ -2,48 +2,48 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 189332B0285
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 11:10:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2DAB2B028B
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 11:10:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgKLKKS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Nov 2020 05:10:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46926 "EHLO
+        id S1727890AbgKLKKW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Nov 2020 05:10:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbgKLKKR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 05:10:17 -0500
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 161D9C0613D1
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Nov 2020 02:10:17 -0800 (PST)
-Received: by mail-pf1-x443.google.com with SMTP id y7so4049386pfq.11
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Nov 2020 02:10:17 -0800 (PST)
+        with ESMTP id S1727706AbgKLKKT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 05:10:19 -0500
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F77C0613D4
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Nov 2020 02:10:19 -0800 (PST)
+Received: by mail-pf1-x433.google.com with SMTP id a18so4084663pfl.3
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Nov 2020 02:10:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sargun.me; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZXrDzR3SLORDW5B7BUxvaBnQDDjG2dXfGiE5xVAIxC0=;
-        b=nBow6u9tPZA43FN3nCgtszIoqhqbBJjGt0CmSFIvvOYVwRXDr7SihjVAAtnWPjQdp0
-         dX+sebVqnQfw8LbuxSnfYoDc4g46kXifVQEDtx5fWi9C/6MJcfmSrqN04DOPYU6EYdeR
-         ctU7Eht15V2KESPM+8lqAhTQh4Goj8IhT07k4=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=HwBTug+23umF28NOUuY72jHdkiXAQf5/pampIt7rm+0=;
+        b=f/FCgDAPg3mfdDCjfy71ryP/hWtUQJNJ7T+gmydKdG95040KitzidkH2AYuLXZuA9P
+         tHip4qbqzxoqWvSHCUV0qMyydFKRNS1nMaVj3uH4yF9iilbUU85jczoPNOr8/t2xxqZs
+         HQ8KW0cuWxYYLlQgRTGmbaqT1KE7Z9qtCwalI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZXrDzR3SLORDW5B7BUxvaBnQDDjG2dXfGiE5xVAIxC0=;
-        b=EuQ+o3wQIqWjk0XP9rKuYha1/t2lfbyHpXyruHljQ17dSwWE9s/x6+c+kBTDKfQ2ep
-         Ih3b/hLZ0CUK4uKcMOaRm4ETLW1oL4L/YDeXwualgCM4RdVChbR1V7AxidQnC+uA6Wy2
-         cldsFJb5aOE1q8lm8DzcggwfU69rRPDNVhYqwmVVXtglr2oQTUEo6dAOe6vyTi7XkBjB
-         RQxxz+4xbplT69X4yMn42wfHNuFiPafMsutLaV0ojuVfrbvlqUgWrSs0J1h470qNTYQ2
-         NW5qUd3AK8MM6/ec7S7OR1RfC3vnpCcEVxzX4P2aWKqEj13lg5+Fzq12SiAl3FnpPJmd
-         nsEw==
-X-Gm-Message-State: AOAM531lWWS0ShhCnJQULJXAqnym7VJHmg+0VY8fisLxPFta6HM3QbzM
-        t0wmSft4o1GuYM1rpeptZ+zstQ==
-X-Google-Smtp-Source: ABdhPJwB7gExvcWWZhLfWtnNMQ/JrrgUkIyGe5YvETA35aU+CCtIA0OUTuMLrMSotsd7uhY9aqguBg==
-X-Received: by 2002:a17:90b:512:: with SMTP id r18mr8949419pjz.149.1605175816341;
-        Thu, 12 Nov 2020 02:10:16 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HwBTug+23umF28NOUuY72jHdkiXAQf5/pampIt7rm+0=;
+        b=AVZOuibnA8Kipij0tyco6MU1Fgb/JK2KAJQ5hZnwelsH/yDWG8Ojw/gtICA8dqWXqW
+         aK60nnTBe/YwdekxirF2JjS484peG94PpiUmw8HNeFLuk7RnZvUldgtm1H2XR1UuChAF
+         BnVQFbKp1fFnaRphEipa07hlMgO1Mvl3F2UiaQf1ty88AIzi4yO8SqRMJyz1PQmUC/XM
+         d+9qXQ0hQIZmfz4mttcf6xg/79nssHyoIGGOWlnB0HeEXy7fVEJ1WsL0JXsGarLwcIOx
+         rFbKsJD7ZiFZePWnSk6GFCfR559SMdYoDUMgcJLpjxPDczUkASwRyXrZZ+sle9ESJHND
+         KQGQ==
+X-Gm-Message-State: AOAM532hkH/uTjst28HgEnmC1BigBHa8DKvXTeugckNQFbVpsAOk5xY9
+        TqAQU6aQkLWdV+VS7WBUCBG8Pg==
+X-Google-Smtp-Source: ABdhPJxKsI86xum8d5jkMs9uEYgnOC5aQTE4UvTzZiFlEp6gDjWmAC2oYsoDrPCFjQpENuC1k+Kjfw==
+X-Received: by 2002:a17:90a:648b:: with SMTP id h11mr8573948pjj.221.1605175818836;
+        Thu, 12 Nov 2020 02:10:18 -0800 (PST)
 Received: from ubuntu.netflix.com (203.20.25.136.in-addr.arpa. [136.25.20.203])
-        by smtp.gmail.com with ESMTPSA id n1sm5577060pfu.211.2020.11.12.02.10.14
+        by smtp.gmail.com with ESMTPSA id n1sm5577060pfu.211.2020.11.12.02.10.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2020 02:10:15 -0800 (PST)
+        Thu, 12 Nov 2020 02:10:18 -0800 (PST)
 From:   Sargun Dhillon <sargun@sargun.me>
 To:     "J . Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>,
@@ -55,81 +55,72 @@ Cc:     mauricio@kinvolk.io, Alban Crequy <alban.crequy@gmail.com>,
         Sargun Dhillon <sargun@sargun.me>, linux-nfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         Kyle Anderson <kylea@netflix.com>
-Subject: [PATCH v5 0/2] NFS: Fix interaction between fs_context and user namespaces
-Date:   Thu, 12 Nov 2020 02:09:50 -0800
-Message-Id: <20201112100952.3514-1-sargun@sargun.me>
+Subject: [PATCH v5 1/2] NFS: NFSv2/NFSv3: Use cred from fs_context during mount
+Date:   Thu, 12 Nov 2020 02:09:51 -0800
+Message-Id: <20201112100952.3514-2-sargun@sargun.me>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20201112100952.3514-1-sargun@sargun.me>
+References: <20201112100952.3514-1-sargun@sargun.me>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Right now, it is possible to mount NFS with an non-matching super block
-user ns, and NFS sunrpc user ns. This (for the user) results in an awkward
-set of interactions if using anything other than auth_null, where the UIDs
-being sent to the server are different than the local UIDs being checked.
-This can cause "breakage", where if you try to communicate with the NFS
-server with any other set of mappings, it breaks.
+There was refactoring done to use the fs_context for mounting done in:
+62a55d088cd87: NFS: Additional refactoring for fs_context conversion
 
-The reason for this is that you can call fsopen("nfs4") in the unprivileged
-namespace, and that configures fs_context with all the right information
-for that user namespace. In addition, it also keeps a gets a cred object
-associated with the caller -- which should match the user namespace.
-Unfortunately, the mount has to be finished in the init_user_ns because we
-currently require CAP_SYS_ADMIN in the init user namespace to call fsmount.
-This means that the superblock's user namespace is set "correctly" to the
-container, but there's absolutely no way nfs4idmap to consume an
-unprivileged user namespace because the cred / user_ns that's passed down
-to nfs4idmap is the one at fsmount.
+This made it so that the net_ns is fetched from the fs_context (the netns
+that fsopen is called in). This change also makes it so that the credential
+fetched during fsopen is used as well as the net_ns.
 
-How this actually exhibits is let's say that the UID 0 in the user
-namespace is mapped to UID 1000 in the init user ns (and kuid space). What
-will happen is that nfs4idmap will translate the UID 1000 into UID 0 on the
-wire, even if the mount is in entirely in the mount / user namespace of the
-container.
+NFS has already had a number of changes to prepare it for user namespaces:
+1a58e8a0e5c1: NFS: Store the credential of the mount process in the nfs_server
+264d948ce7d0: NFS: Convert NFSv3 to use the container user namespace
+c207db2f5da5: NFS: Convert NFSv2 to use the container user namespace
 
-So, it looks something like this
-Client in unprivileged User NS (UID: 0, KUID: 0)
-	->Perform open()
-		...VFS / NFS bits...
-		nfs_map_uid_to_name ->
-			from_kuid_munged(init_user_ns, uid) (returns 0)
-				RPC with UID 0
+Previously, different credentials could be used for creation of the
+fs_context versus creation of the nfs_server, as FSCONFIG_CMD_CREATE did
+the actual credential check, and that's where current_creds() were fetched.
+This meant that the user namespace which fsopen was called in could be a
+non-init user namespace. This still requires that the user that calls
+FSCONFIG_CMD_CREATE has CAP_SYS_ADMIN in the init user ns.
 
-This behaviour happens "the other way" as well, where the UID in the
-container may be 0, but the corresponding kuid is 1000. When a response
-from an NFS server comes in we decode it according to the idmap userns.
-The way this exhibits is even more odd.
+This roughly allows a privileged user to mount on behalf of an unprivileged
+usernamespace, by forking off and calling fsopen in the unprivileged user
+namespace. It can then pass back that fsfd to the privileged process which
+can configure the NFS mount, and then it can call FSCONFIG_CMD_CREATE
+before switching back into the mount namespace of the container, and finish
+up the mounting process and call fsmount and move_mount.
 
-Server responds with file attribute (UID: 0, GID: 0)
-	->nfs_map_name_to_uid(..., 0)
-		->make_kuid(init_user_ns, id) (returns 0)
-			....VFS / NFS Bits...
-			->from_kuid(container_ns, 0) -> invalid uid
-				-> EOVERFLOW
+Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+Tested-by: Alban Crequy <alban.crequy@gmail.com>
+---
+ fs/nfs/client.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-This changes the nfs server to use the cred / userns from fs_context, which
-is how idmap is constructed. This subsequently is used in the above
-described flow of converting uids back-and-forth.
-
-Trond gave the feedback that this behaviour [implemented by this patch] is
-how the legacy sys_mount() behaviour worked[1], and that the intended
-behaviour is for UIDs to be plumbed through entirely, where the user
-namespaces UIDs are what is sent over the wire, and not the init user ns.
-
-[1]: https://lore.kernel.org/linux-nfs/8feccf45f6575a204da03e796391cc135283eb88.camel@hammerspace.com/
-
-Sargun Dhillon (2):
-  NFS: NFSv2/NFSv3: Use cred from fs_context during mount
-  NFSv4: Refactor to use user namespaces for nfs4idmap
-
- fs/nfs/client.c     | 4 ++--
- fs/nfs/nfs4client.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-
-base-commit: 8c39076c276be0b31982e44654e2c2357473258a
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 4b8cc93913f7..1e6f3b3ed445 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -571,7 +571,7 @@ static int nfs_start_lockd(struct nfs_server *server)
+ 					1 : 0,
+ 		.net		= clp->cl_net,
+ 		.nlmclnt_ops 	= clp->cl_nfs_mod->rpc_ops->nlmclnt_ops,
+-		.cred		= current_cred(),
++		.cred		= server->cred,
+ 	};
+ 
+ 	if (nlm_init.nfs_version > 3)
+@@ -985,7 +985,7 @@ struct nfs_server *nfs_create_server(struct fs_context *fc)
+ 	if (!server)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	server->cred = get_cred(current_cred());
++	server->cred = get_cred(fc->cred);
+ 
+ 	error = -ENOMEM;
+ 	fattr = nfs_alloc_fattr();
 -- 
 2.25.1
 
