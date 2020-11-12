@@ -2,280 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 392FA2B0F32
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 21:49:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EBCBF2B0FA8
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 21:55:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbgKLUtE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Nov 2020 15:49:04 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:41076 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgKLUtE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 15:49:04 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ACKe9VJ145064;
-        Thu, 12 Nov 2020 20:48:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=fHE4V4uiEC17GHsR6S58P3ZRgofiObUc3qJWbZv7Fh4=;
- b=BXWKYGpdXOavjsIcjJPE8BUMlaX2E4EmFHegxEGn7l6YzbSqrbt7aJc2YllwId6m/RhQ
- UkKD9jGJebQrd/8TB+J9aqtRwc0ebitt+jsg31IJdicsNNCavFaLvFZJYbzKx3aTCb9w
- Qp18ruivExbz7IM2aDUv6POMCcsJ90/+RbWnqmSYRRdJLDch30bnezI3GLQuTMyGnxgL
- tckdhz/WPvMWXU4u+w7S8PuAKem0e3c+sGme5yp3k/vLHhrHTVqmucTz+hr4/3bQjO5b
- NrvNyc9WZr91v8BZXG5SZ5VU4IAiOYdnFDzVbFeeU0ngnU8DFIvFEvhILmifOKYCxXV8 nA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 34nh3b7sub-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Nov 2020 20:48:57 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ACKjBhR086006;
-        Thu, 12 Nov 2020 20:48:56 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 34rt56nyre-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Nov 2020 20:48:56 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0ACKmtW0024382;
-        Thu, 12 Nov 2020 20:48:55 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 12 Nov 2020 12:48:54 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: kernel oops in generic/013 on an rdma mount (over either soft
- roce or iwarp)
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CAN-5tyFTbe1jLt=sxsiEBy-u_RN8-bbH13iTsaYPfHj_bEXO_Q@mail.gmail.com>
-Date:   Thu, 12 Nov 2020 15:48:54 -0500
-Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <938321D5-A495-4743-831C-1150E29CB44C@oracle.com>
-References: <CAN-5tyENFaKb=CUZCxkeAqhS7jsFswwaGkPyC0W9h_OJyVrEmw@mail.gmail.com>
- <98BAC3EC-35C5-449F-8476-4B740632DC7C@oracle.com>
- <CAN-5tyGKXJCWxzDnPfT0v70Ry7QNvSCKRnwyU360aW6nJvN-aA@mail.gmail.com>
- <CAN-5tyFsGBJ3aJC0XVfTOAR219d6jukYZPLvmUGgRFYkraB88A@mail.gmail.com>
- <576A90AD-278A-4738-B437-162C8B931FE0@oracle.com>
- <CAN-5tyF1mUQ3bgx_5i2SJH=BQ1MH0omHkQq6SmaZw7sS5U_1GA@mail.gmail.com>
- <C452338F-A32A-4F35-BB9C-08104DB91960@oracle.com>
- <CAN-5tyH0ujGDgowBZi6ykZ52ZFqW7GZJekhb6-oZEuq0XrpaUw@mail.gmail.com>
- <71766FD5-E726-474A-95D8-A86CB6E6AF55@oracle.com>
- <CAN-5tyGPjbbqybxxBty5VV3ZXvSp4kg+zOS_VV5QnNjpM2F4VA@mail.gmail.com>
- <83E3FB9A-B096-4965-8E2C-9124A8052EBB@oracle.com>
- <CAN-5tyFTbe1jLt=sxsiEBy-u_RN8-bbH13iTsaYPfHj_bEXO_Q@mail.gmail.com>
-To:     Olga Kornievskaia <aglo@umich.edu>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9803 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011120122
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9803 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 priorityscore=1501
- clxscore=1015 malwarescore=0 mlxscore=0 spamscore=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011120121
+        id S1726893AbgKLUzZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Nov 2020 15:55:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbgKLUzZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 15:55:25 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E938C0613D1
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Nov 2020 12:55:25 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 9F67940B5; Thu, 12 Nov 2020 15:55:24 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 9F67940B5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1605214524;
+        bh=V5U9txh62l3KLTPgdR5X5Jzi53wShHNFYJrkNfUm3vg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZyiChE0vzcp4qLOuRsHh1zKubrXzp6B3xG2fUW+64GeLxs4VaQNi1qFbITR7zNEVz
+         07ttI0OcIznmwCYl5d/WupyfhcrKIpn2gggh0IVHHvwXDnmm1n3i0MP9v7Y1he7xNk
+         uITx/36PPe0RSntmWA7AXoSMd0hLyDxMabsQAzwY=
+Date:   Thu, 12 Nov 2020 15:55:24 -0500
+From:   bfields <bfields@fieldses.org>
+To:     Daire Byrne <daire@dneg.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        linux-cachefs <linux-cachefs@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: Adventures in NFS re-exporting
+Message-ID: <20201112205524.GI9243@fieldses.org>
+References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
+ <4d1d7cd0076d98973a56e89c92e4ff0474aa0e14.camel@hammerspace.com>
+ <1188023047.38703514.1600272094778.JavaMail.zimbra@dneg.com>
+ <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com>
+ <635679406.70384074.1603272832846.JavaMail.zimbra@dneg.com>
+ <20201109160256.GB11144@fieldses.org>
+ <1744768451.86186596.1605186084252.JavaMail.zimbra@dneg.com>
+ <20201112135733.GA9243@fieldses.org>
+ <444227972.86442677.1605206025305.JavaMail.zimbra@dneg.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <444227972.86442677.1605206025305.JavaMail.zimbra@dneg.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Thu, Nov 12, 2020 at 06:33:45PM +0000, Daire Byrne wrote:
+> Well, yes NFSv4.2 all the way through works well for us but it's re-exporting a NFSv4.0 server (Linux OR Netapp) that seems to still show the input/output errors when dropping caches. Every other possible combination now seems to be working without ESTALE or input/errors with the lookupp emulation patches.
+> 
+> So this is still not working when dropping caches on the re-export server:
+> 
+> 		NFSv3/4.x			  NFSv4.0
+> 	client --------> re-export server -------> original server
+> 
+> The bit specific to the Netapp is simply that our 7-mode only supports NFSv4.0 so I can't actually test NFSv4.1/4.2 on a more modern Netapp firmware release. So I have to use NFSv3 to mount the Netapp and can then happily re-export that using NFSv4.x or NFSv3 (if the filehandles fit in 63 bytes).
 
+Oh, got it, thanks, so it's just the minor-version difference (probably
+the open-by-filehandle stuff that went into 4.1).
 
-> On Nov 12, 2020, at 10:37 AM, Olga Kornievskaia <aglo@umich.edu> =
-wrote:
->=20
-> On Thu, Nov 12, 2020 at 10:28 AM Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>=20
->>=20
->>=20
->>> On Nov 11, 2020, at 4:42 PM, Olga Kornievskaia <aglo@umich.edu> =
-wrote:
->>>=20
->>> On Tue, Nov 10, 2020 at 1:25 PM Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>>=20
->>>> Start by identifying what NFS operation is failing, and what =
-configuration
->>>> of chunks it is using.
->>>=20
->>> This happens after decoding LIST_XATTRS reply. It's a send only =
-reply.
->>> I can't tell if the real problem is in the nfs4_xdr_dec_listxattrs()
->>> and it's overwritting memory that messes with =
-rpcrdma_complete_rqst()
->>> or it's the rdma problem.
->>>=20
->>> Running it with Kasan shows the following:
->>>=20
->>> [  538.505743] BUG: KASAN: wild-memory-access in
->>> rpcrdma_complete_rqst+0x41b/0x680 [rpcrdma]
->>> [  538.512019] Write of size 8 at addr 0005088000000000 by task =
-kworker/1:1H/493
->>> [  538.517285]
->>> [  538.518219] CPU: 1 PID: 493 Comm: kworker/1:1H Not tainted =
-5.10.0-rc3+ #33
->>> [  538.521811] Hardware name: VMware, Inc. VMware Virtual
->>> Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
->>> [  538.529220] Workqueue: ib-comp-wq ib_cq_poll_work [ib_core]
->>> [  538.532722] Call Trace:
->>> [  538.534366]  dump_stack+0x7c/0xa2
->>> [  538.536473]  ? rpcrdma_complete_rqst+0x41b/0x680 [rpcrdma]
->>> [  538.539514]  ? rpcrdma_complete_rqst+0x41b/0x680 [rpcrdma]
->>> [  538.542817]  kasan_report.cold.9+0x6a/0x7c
->>> [  538.545952]  ? rpcrdma_complete_rqst+0x41b/0x680 [rpcrdma]
->>> [  538.551001]  check_memory_region+0x198/0x200
->>> [  538.553763]  memcpy+0x38/0x60
->>> [  538.555612]  rpcrdma_complete_rqst+0x41b/0x680 [rpcrdma]
->>> [  538.558974]  ? rpcrdma_reset_cwnd+0x70/0x70 [rpcrdma]
->>> [  538.562162]  ? ktime_get+0x4f/0xb0
->>> [  538.564072]  ? rpcrdma_reply_handler+0x4ca/0x640 [rpcrdma]
->>> [  538.567066]  __ib_process_cq+0xa7/0x1f0 [ib_core]
->>> [  538.569905]  ib_cq_poll_work+0x31/0xb0 [ib_core]
->>> [  538.573151]  process_one_work+0x387/0x680
->>> [  538.575798]  worker_thread+0x57/0x5a0
->>> [  538.577917]  ? process_one_work+0x680/0x680
->>> [  538.581095]  kthread+0x1c8/0x1f0
->>> [  538.583271]  ? kthread_parkme+0x40/0x40
->>> [  538.585637]  ret_from_fork+0x22/0x30
->>> [  538.587688] =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>> [  538.591920] Disabling lock debugging due to kernel taint
->>> [  538.595267] general protection fault, probably for non-canonical
->>> address 0x5088000000000: 0000 [#1] SMP KASAN PTI
->>> [  538.601982] CPU: 1 PID: 3623 Comm: fsstress Tainted: G    B
->>>   5.10.0-rc3+ #33
->>> [  538.609032] Hardware name: VMware, Inc. VMware Virtual
->>> Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
->>> [  538.619678] RIP: 0010:memcpy_orig+0xf5/0x10f
->>> [  538.623892] Code: 00 00 00 00 00 83 fa 04 72 1b 8b 0e 44 8b 44 16
->>> fc 89 0f 44 89 44 17 fc c3 66 90 66 2e 0f 1f 84 00 00 00 00 00 83 ea
->>> 01 72 19 <0f> b6 0e 74 12 4c 0f b6 46 01 4c 0f b6 0c 16 44 88 47 01 =
-44
->>> 88 0c
->>> [  538.636726] RSP: 0018:ffff888018707628 EFLAGS: 00010202
->>> [  538.641125] RAX: ffff888009098855 RBX: 0000000000000008 RCX: =
-ffffffffc19eca2d
->>> [  538.645793] RDX: 0000000000000001 RSI: 0005088000000000 RDI: =
-ffff888009098855
->>> [  538.650290] RBP: 0000000000000000 R08: ffffed100121310b R09: =
-ffffed100121310b
->>> [  538.654879] R10: ffff888009098856 R11: ffffed100121310a R12: =
-ffff888018707788
->>> [  538.658700] R13: ffff888009098858 R14: ffff888009098857 R15: =
-0000000000000002
->>> [  538.662871] FS:  00007f12be1c8740(0000) GS:ffff88805ca40000(0000)
->>> knlGS:0000000000000000
->>> [  538.667424] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>> [  538.670768] CR2: 00007f12be1c7000 CR3: 000000005c37a004 CR4: =
-00000000001706e0
->>> [  538.675865] Call Trace:
->>> [  538.677376]  nfs4_xdr_dec_listxattrs+0x31d/0x3c0 [nfsv4]
->>> [  538.681151]  ? nfs4_xdr_dec_read_plus+0x360/0x360 [nfsv4]
->>> [  538.684232]  ? xdr_inline_decode+0x1e/0x260 [sunrpc]
->>> [  538.687114]  call_decode+0x365/0x390 [sunrpc]
->>> [  538.689626]  ? rpc_decode_header+0x770/0x770 [sunrpc]
->>> [  538.692410]  ? var_wake_function+0x80/0x80
->>> [  538.694634]  ?
->>> xprt_request_retransmit_after_disconnect.isra.15+0x5e/0x80 [sunrpc]
->>> [  538.698920]  ? rpc_decode_header+0x770/0x770 [sunrpc]
->>> [  538.701578]  ? rpc_decode_header+0x770/0x770 [sunrpc]
->>> [  538.704252]  __rpc_execute+0x11c/0x6e0 [sunrpc]
->>> [  538.706829]  ? trace_event_raw_event_xprt_cong_event+0x270/0x270 =
-[sunrpc]
->>> [  538.710654]  ? rpc_make_runnable+0x54/0xe0 [sunrpc]
->>> [  538.713416]  rpc_run_task+0x29c/0x2c0 [sunrpc]
->>> [  538.715806]  nfs4_call_sync_custom+0xc/0x40 [nfsv4]
->>> [  538.718551]  nfs4_do_call_sync+0x114/0x160 [nfsv4]
->>> [  538.721571]  ? nfs4_call_sync_custom+0x40/0x40 [nfsv4]
->>> [  538.724333]  ? __alloc_pages_nodemask+0x200/0x410
->>> [  538.726794]  ? kasan_unpoison_shadow+0x30/0x40
->>> [  538.729147]  ? __kasan_kmalloc.constprop.8+0xc1/0xd0
->>> [  538.731733]  _nfs42_proc_listxattrs+0x1f6/0x2f0 [nfsv4]
->>> [  538.734504]  ? nfs42_offload_cancel_done+0x50/0x50 [nfsv4]
->>> [  538.737173]  ? __kernel_text_address+0xe/0x30
->>> [  538.739400]  ? unwind_get_return_address+0x2f/0x50
->>> [  538.741727]  ? create_prof_cpu_mask+0x20/0x20
->>> [  538.744141]  ? stack_trace_consume_entry+0x80/0x80
->>> [  538.746585]  ? _raw_spin_lock+0x7a/0xd0
->>> [  538.748477]  nfs42_proc_listxattrs+0xf4/0x150 [nfsv4]
->>> [  538.750920]  ? nfs42_proc_setxattr+0x150/0x150 [nfsv4]
->>> [  538.753557]  ? nfs4_xattr_cache_list+0x91/0x120 [nfsv4]
->>> [  538.756313]  nfs4_listxattr+0x34d/0x3d0 [nfsv4]
->>> [  538.758506]  ? _nfs4_proc_access+0x260/0x260 [nfsv4]
->>> [  538.760859]  ? __ia32_sys_rename+0x40/0x40
->>> [  538.762897]  ? selinux_quota_on+0xf0/0xf0
->>> [  538.764827]  ? __check_object_size+0x178/0x220
->>> [  538.767063]  ? kasan_unpoison_shadow+0x30/0x40
->>> [  538.769233]  ? security_inode_listxattr+0x53/0x60
->>> [  538.771962]  listxattr+0x5b/0xf0
->>> [  538.773980]  path_listxattr+0xa1/0x100
->>> [  538.776147]  ? listxattr+0xf0/0xf0
->>> [  538.778064]  do_syscall_64+0x33/0x40
->>> [  538.780714]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>> [  538.783440] RIP: 0033:0x7f12bdaebc8b
->>> [  538.785341] Code: f0 ff ff 73 01 c3 48 8b 0d fa 21 2c 00 f7 d8 64
->>> 89 01 48 83 c8 ff c3 0f 1f 84 00 00 00 00 00 f3 0f 1e fa b8 c2 00 00
->>> 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d cd 21 2c 00 f7 d8 64 =
-89
->>> 01 48
->>> [  538.794845] RSP: 002b:00007ffc7947cff8 EFLAGS: 00000206 ORIG_RAX:
->>> 00000000000000c2
->>> [  538.798985] RAX: ffffffffffffffda RBX: 0000000001454650 RCX: =
-00007f12bdaebc8b
->>> [  538.802840] RDX: 0000000000000018 RSI: 000000000145c150 RDI: =
-0000000001454650
->>> [  538.807093] RBP: 000000000145c150 R08: 00007f12bddaeba0 R09: =
-00007ffc7947cc46
->>> [  538.811487] R10: 0000000000000000 R11: 0000000000000206 R12: =
-00000000000002dd
->>> [  538.816713] R13: 0000000000000018 R14: 0000000000000018 R15: =
-0000000000000000
->>> [  538.820437] Modules linked in: rpcrdma rdma_rxe ip6_udp_tunnel
->>> udp_tunnel rdma_ucm rdma_cm iw_cm ib_cm ib_uverbs ib_core cts
->>> rpcsec_gss_krb5 nfsv4 dns_resolver nfs lockd grace nfs_ssc nls_utf8
->>> isofs fuse rfcomm nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib
->>> nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct
->>> nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 tun bridge stp llc
->>> ip6_tables nft_compat ip_set nf_tables nfnetlink bnep
->>> vmw_vsock_vmci_transport vsock snd_seq_midi snd_seq_midi_event
->>> intel_rapl_msr intel_rapl_common crct10dif_pclmul crc32_pclmul
->>> vmw_balloon ghash_clmulni_intel joydev pcspkr btusb uvcvideo btrtl
->>> btbcm btintel videobuf2_vmalloc videobuf2_memops videobuf2_v4l2
->>> videobuf2_common snd_ens1371 snd_ac97_codec ac97_bus snd_seq snd_pcm
->>> videodev bluetooth mc rfkill ecdh_generic ecc snd_timer snd_rawmidi
->>> snd_seq_device snd soundcore vmw_vmci i2c_piix4 auth_rpcgss sunrpc
->>> ip_tables xfs libcrc32c sr_mod cdrom sg crc32c_intel ata_generic
->>> serio_raw nvme vmwgfx drm_kms_helper
->>> [  538.820577]  syscopyarea sysfillrect sysimgblt fb_sys_fops cec
->>> nvme_core t10_pi ata_piix ahci libahci ttm vmxnet3 drm libata
->>> [  538.869541] ---[ end trace 4abb2d95a72e9aab ]---
->>=20
->> I'm running a v5.10-rc3 client now with the fix applied and
->> KASAN enabled. I traced my xfstests run and I'm definitely
->> exercising the LISTXATTRS path:
->>=20
->> # trace-cmd report -F rpc_request | grep LISTXATTR | wc -l
->> 462
->>=20
->> No crash or KASAN splat. I'm still missing something.
->>=20
->> I sometimes apply small patches from the mailing list by hand
->> editing the modified file. Are you sure you applied my fix
->> correctly?
->=20
-> Again I think the difference is the SoftRoce vs hardware
+> There was some discussion about NFS4_CHANGE_TYPE_IS_MONOTONIC_INCR
+> allowing for the hack/optimisation but I guess that is only for the
+> case when re-exporting NFSv4 to the eventual clients. It would not
+> help if you were re-exporting an NFSv3 server with NFSv3 to the
+> clients? I lack the deeper understanding to say anything more than
+> that.
 
-I'm not finding that plausible... Can you troubleshoot this further
-to demonstrate how soft RoCE is contributing to this issue?
+Oh, right, thanks for the reminder.  The CHANGE_TYPE_IS_MONOTONIC_INCR
+optimization still looks doable to me.
 
+How does that help, anyway?  I guess it avoids false positives of some
+kind when rpc's are processed out of order?
 
---
-Chuck Lever
+Looking back at
 
+	https://lore.kernel.org/linux-nfs/1155061727.42788071.1600777874179.JavaMail.zimbra@dneg.com/
 
+this bothers me: "I'm not exactly sure why, but the iversion of the
+inode gets changed locally (due to atime modification?) most likely via
+invocation of method inode_inc_iversion_raw. Each time it gets
+incremented the following call to validate attributes detects changes
+causing it to be reloaded from the originating server."
 
+The only call to that function outside afs or ceph code is in
+fs/nfs/write.c, in the write delegation case.  The Linux server doesn't
+support write delegations, Netapp does but this shouldn't be causing
+cache invalidations.
+
+--b.
