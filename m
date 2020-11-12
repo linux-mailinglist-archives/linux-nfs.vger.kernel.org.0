@@ -2,230 +2,170 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D14642B0439
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 12:46:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16BCA2B054A
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 13:58:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgKLLqq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Nov 2020 06:46:46 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:56305 "EHLO
+        id S1728211AbgKLM57 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Nov 2020 07:57:59 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:31072 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728211AbgKLLmb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 06:42:31 -0500
+        by vger.kernel.org with ESMTP id S1728155AbgKLM54 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 07:57:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605181341;
+        s=mimecast20190719; t=1605185874;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HZ2k1mzM2ECTWUMsuaKKr8B1mHSqb3Ym10j5+pu3XDE=;
-        b=VJDDEjumlS9dNB56Z0mcXqYWMTaTsKwNwzeQTSMg1id7nKMukxSn7q4BFPDNdBy0+BskVL
-        JlzQ2S2Hc+wmd1rgwlHbf+woepuAcJzEljZ/Et84cZvybdESs1cjPcywMWIyPXI0rrQL9F
-        x0+qZRBe7lcBwn0lihDZs6msaijmwPw=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-210-H1TWmX2wMMiYVeRUUUGu3g-1; Thu, 12 Nov 2020 06:42:19 -0500
-X-MC-Unique: H1TWmX2wMMiYVeRUUUGu3g-1
-Received: by mail-ej1-f71.google.com with SMTP id p6so1729125ejj.5
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Nov 2020 03:42:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HZ2k1mzM2ECTWUMsuaKKr8B1mHSqb3Ym10j5+pu3XDE=;
-        b=JX+/JtMnX/9ggOsUYuJhaEDK5REkNlfaQ9fwNP0WmmIfSwDo2jd5zyNIRjID1oWAlX
-         FuYAF4Prlbo7jQr8zn29RuQEKruxzO3uJan5IGnt10GOCKnLwSnLnhbxI3OMagFbXEMz
-         DDKrEWlgkWqMLgB8lb9Gmjp7s40EMhpQVNRq3lrdFSZBpueh5y7k933ellcthq9sgfq/
-         eJ1NPH2QnnB/f+QTnRn95fAAxxjiyQFYKmP53+0eFcOQnidz44XL48aJTIg4go0vjhVf
-         eW1Dc9wzik7MVdwEmkoOYasK3HWFjfo7Xi/R+Ue6mU+q4JsqgcgWevRFQnNb66wymKde
-         GyBA==
-X-Gm-Message-State: AOAM532zWa7NSyMi5VHCsNBdKIPokxTPc3rnwCpKPlQHGqNdUALceRau
-        WDUBLuHWC/J2FxYhODDelXBEYe5W2nAcNJ3bglvftu6h1q+moykMr2FquEMaHOjd5xbtrXoIlNB
-        qhTHHRjo6jM5OMzlO0BwhLUMmI7G8JklmSlmh
-X-Received: by 2002:a17:906:3547:: with SMTP id s7mr21772565eja.70.1605181338069;
-        Thu, 12 Nov 2020 03:42:18 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxaGKVm9QrHsIRBHCbO73kkOye99yeiep1KQzfNK3q7A80hRJ2yAVQ87chYssCjPUcRqFYiF0+49ki88CsMWto=
-X-Received: by 2002:a17:906:3547:: with SMTP id s7mr21772546eja.70.1605181337724;
- Thu, 12 Nov 2020 03:42:17 -0800 (PST)
+         content-transfer-encoding:content-transfer-encoding;
+        bh=KApSY4n0QrJwiU60IUmc5BIOxVfBJ4BfZCyb2aGAlK4=;
+        b=Vaxpt1SUZv9xukXoyAbb097DXNNTjb7S5jPGkJSiLuDVRZlwbIIttTJhoUTtSZVJERfX6r
+        3+uwHJtxgeXPQz+FsC0Wr8Azx+mdzs1gep0XIdkj7ezMnOkrPpRdnyzXBd5t1IAQa1f/ex
+        WVQgjttSXk3ebFpfW8Z0yqRcq+BOtyQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-128-LTVl2aaZOp-mAJ7msfQEwQ-1; Thu, 12 Nov 2020 07:57:50 -0500
+X-MC-Unique: LTVl2aaZOp-mAJ7msfQEwQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8BAE51882FAB;
+        Thu, 12 Nov 2020 12:57:48 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-115-47.rdu2.redhat.com [10.10.115.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4335A5D9E4;
+        Thu, 12 Nov 2020 12:57:46 +0000 (UTC)
+Subject: [RFC][PATCH 00/18] crypto: Add generic Kerberos library
+From:   David Howells <dhowells@redhat.com>
+To:     herbert@gondor.apana.org.au, bfields@fieldses.org
+Cc:     dhowells@redhat.com, trond.myklebust@hammerspace.com,
+        linux-crypto@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 12 Nov 2020 12:57:45 +0000
+Message-ID: <160518586534.2277919.14475638653680231924.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-References: <20201110213741.860745-1-trondmy@kernel.org> <CALF+zOkdXMDZ3TNGSNJQPtxy-ru_4iCYTz3U2uwkPAo3j55FZg@mail.gmail.com>
-In-Reply-To: <CALF+zOkdXMDZ3TNGSNJQPtxy-ru_4iCYTz3U2uwkPAo3j55FZg@mail.gmail.com>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Thu, 12 Nov 2020 06:41:41 -0500
-Message-ID: <CALF+zO=-Si+CcEJvgzaYAjd2j8APV=4Xwm=FJibhuJRV+zWE5Q@mail.gmail.com>
-Subject: Re: [PATCH v5 00/22] Readdir enhancements
-To:     trondmy@kernel.org
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Nov 11, 2020 at 5:15 PM David Wysochanski <dwysocha@redhat.com> wrote:
->
-> On Tue, Nov 10, 2020 at 4:48 PM <trondmy@kernel.org> wrote:
-> >
-> > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> >
-> > The following patch series performs a number of cleanups on the readdir
-> > code.
-> > It also adds support for 1MB readdir RPC calls on-the-wire, and modifies
-> > the caching code to ensure that we cache the entire contents of that
-> > 1MB call (instead of discarding the data that doesn't fit into a single
-> > page).
-> > For filesystems that use ordered readdir cookie schemes (e.g. XFS), it
-> > optimises searching for cookies in the client's page cache by skipping
-> > over pages that contain cookie values that are not in the range we are
-> > searching for.
-> > Finally, it improves scalability when dealing with very large
-> > directories by turning off caching when those directories are changing,
-> > so as to avoid the need for a linear search on the client of the entire
-> > directory when looking for the first entry pointed to by the current
-> > file descriptor offset.
-> >
-> > v2: Fix the handling of the NFSv3/v4 directory verifier.
-> > v3: Optimise searching when the readdir cookies are seen to be ordered.
-> > v4: Optimise performance for large directories that are changing.
-> >     Add in llseek dependency patches.
-> > v5: Integrate Olga's patch for the READDIR security label handling.
-> >     Record more entries in the uncached readdir case. Bump the max
-> >     number of pages to 512, but allocate them on demand in case the
-> >     readdir RPC call returns fewer entries.
-> >
-> > Olga Kornievskaia (1):
-> >   NFSv4.2: condition READDIR's mask for security label based on LSM
-> >     state
-> >
-> > Trond Myklebust (21):
-> >   NFS: Remove unnecessary inode locking in nfs_llseek_dir()
-> >   NFS: Remove unnecessary inode lock in nfs_fsync_dir()
-> >   NFS: Ensure contents of struct nfs_open_dir_context are consistent
-> >   NFS: Clean up readdir struct nfs_cache_array
-> >   NFS: Clean up nfs_readdir_page_filler()
-> >   NFS: Clean up directory array handling
-> >   NFS: Don't discard readdir results
-> >   NFS: Remove unnecessary kmap in nfs_readdir_xdr_to_array()
-> >   NFS: Replace kmap() with kmap_atomic() in nfs_readdir_search_array()
-> >   NFS: Simplify struct nfs_cache_array_entry
-> >   NFS: Support larger readdir buffers
-> >   NFS: More readdir cleanups
-> >   NFS: nfs_do_filldir() does not return a value
-> >   NFS: Reduce readdir stack usage
-> >   NFS: Cleanup to remove nfs_readdir_descriptor_t typedef
-> >   NFS: Allow the NFS generic code to pass in a verifier to readdir
-> >   NFS: Handle NFS4ERR_NOT_SAME and NFSERR_BADCOOKIE from readdir calls
-> >   NFS: Improve handling of directory verifiers
-> >   NFS: Optimisations for monotonically increasing readdir cookies
-> >   NFS: Reduce number of RPC calls when doing uncached readdir
-> >   NFS: Do uncached readdir when we're seeking a cookie in an empty page
-> >     cache
-> >
-> >  fs/nfs/client.c         |   4 +-
-> >  fs/nfs/dir.c            | 734 +++++++++++++++++++++++++---------------
-> >  fs/nfs/inode.c          |   7 -
-> >  fs/nfs/internal.h       |   6 -
-> >  fs/nfs/nfs3proc.c       |  35 +-
-> >  fs/nfs/nfs4proc.c       |  48 +--
-> >  fs/nfs/proc.c           |  18 +-
-> >  include/linux/nfs_fs.h  |   9 +-
-> >  include/linux/nfs_xdr.h |  17 +-
-> >  9 files changed, 541 insertions(+), 337 deletions(-)
-> >
-> > --
-> > 2.28.0
-> >
->
-> I wrote a test script and ran this patchset against 5.10-rc2 in a
-> variety of scenarios listing 1 million files and various directory
-> modification scenarios. The test checked ops, runtime and cookie
-> resets (via tcpdump).
->
-> All runs performed very well on all scenarios I threw at it on all NFS
-> versions (I tested 3, 4.0, 4.1, and 4.2) with fairly dramatic
-> improvements vs the same runs on 5.10-rc2.   One scenario I found
-> where a single 'ls -l' could take a long time (about 5 minutes, but
-> not unbounded time) was when the directory was being modified with
-> both file adds and removed, but this seemed due to other ops unrelated
-> to readdir performance.   A second scenario that this patchset does
-> not fix is the scenario where the directory is large enough to exceed
-> the acdirmax, is being modified (adds and removes), and _multiple_
-> processes are listing it.  In this scenario a lister can still have
-> unbounded time, but the existing readdir code also has this problem
-> and fixing that probably requires another patch / approach (such as
-> reworking the structure of the cache or an approach such as the flag
-> on per-process dir context).
->
 
-I think I am mistaken in my previous email that said multiple listers
-will not make forward progress.  After more testing I could not
-reproduce any indefinite wait but it was many minutes, and I think
-there is proof in the current code (patch 22) that an indefinite wait
-should not occur with any process (multiple processes does not change
-this).  Note that I did not trace this, but below is an attempt at a
-more detailed explanation from the code.  The summary of the argument
-is that periodically nfs_readdir_dont_search_cache() will be true for
-one iteration of nfs_readdir(), and this ensures forward progress,
-even if it may be slow.
+Hi Herbert, Bruce,
 
-Some notation for the below explanation.
-Tu: Time to list unmodified (idle) directory
-Ax: acdirmax
-Assume Tu > acdirmax (time to list idle directory is larger than
-acdirmax) and i_size_read(dir) > NFS_SERVER(dir)->dtsize
-PL1: pid1 that is listing the directory
-DC1, DC2 and DC3: values of nfs_open_dir_context.dir_cookie for PL1
-PL1_dir_cookie: the current value of PL1's nfs_open_dir_context.dir_cookie
+Here's my first cut at a generic Kerberos crypto library in the kernel so
+that I can share code between rxrpc and sunrpc (and cifs?).
 
-Then consider the following timeline, with "Tn" various points on a
-timeline of PL1 listing a very large directory.
+I derived some of the parts from the sunrpc gss library and added more
+advanced AES and Camellia crypto.  I haven't ported across the DES-based
+crypto yet - I figure that can wait a bit till the interface is sorted.
 
-T0: PL1 starts listing directory with repeated calls to nfs_readdir()
-T1: acdirmax is exceeded, and we drop the pagecache (mapping->nrpages
-== 0); at this point, PL1_dir_cookie = DC1 != 0
-T2: PL1 calls nfs_readdir and nfs_readdir_dont_search_cache() returns
-true (due to mapping->nrpages == 0), so enters uncached_readdir();
-thus, PL1_dir_cookie makes forward progress so PL1_dir_cookie is ahead
-of DC1 and the exit of nfs_readdir()
-T3: PL1 calls nfs_readdir() and nfs_readdir_dont_search_cache() is
-false, so it must restart filling the pagecache from cookie == 0 (we
-send READDIRs over the wire); at this point PL1_dir_cookie forward
-progress is stalled, and PL1's calls to nfs_readdir() will have to
-fetch entries and fill pages in the pagecache that does not pertain to
-its listing (they've already been returned to userspace in a previous
-nfs_readdir call)
-T4: acdirmax is exceeded, and we drop the pagecache again, setting
-mapping->nrpages == 0; at this point though, PL1_dir_cookie = DC2,
-where DC2 is ahead of DC1 (we made forward progress last time)
-T5: PL1 calls nfs_readdir and nfs_readdir_dont_search_cache() returns
-true, so enters uncached_readdir(); thus, PL1_dir_cookie makes forward
-progress again for this one call to nfs_readdir(), and PL1_dir_cookie
-= DC3 is ahead of DC2
+Whilst I have put it into a directory under crypto/, I haven't made an
+interface that goes and loads it (analogous to crypto_alloc_skcipher,
+say).  Instead, you call:
 
-Thus, it seems PL1 will eventually complete, even if it is delayed a
-bit, and even if it has to re-fill pages in the page cache that is
-"extra work" that doesn't help PL1.  Forward progress is guaranteed
-due to the periodic calls to nfs_readdir() when
-nfs_readdir_dont_search_cache() returns true due to mapping->nrpages
-== 0 portion of the condition inside nfs_readdir_dont_search_cache()
-+static bool nfs_readdir_dont_search_cache(struct nfs_readdir_descriptor *desc)
-+{
-+       struct address_space *mapping = desc->file->f_mapping;
-+       struct inode *dir = file_inode(desc->file);
-+       unsigned int dtsize = NFS_SERVER(dir)->dtsize;
-+       loff_t size = i_size_read(dir);
-+
-+       /*
-+        * Default to uncached readdir if the page cache is empty, and
-+        * we're looking for a non-zero cookie in a large directory.
-+        */
-+       return desc->dir_cookie != 0 && mapping->nrpages == 0 && size > dtsize;
-+}
+        const struct krb5_enctype *crypto_krb5_find_enctype(u32 enctype);
+
+to go and get a handler table and then use a bunch of accessor functions to
+jump through the hoops.  This is basically the way the sunrpc gsslib does
+things.  It might be worth making it so you do something like:
+
+	struct crypto_mech *ctx = crypto_mech_alloc("krb5(18)");
+
+to get enctype 18, but I'm not sure if it's worth the effort.  Also, I'm
+not sure if there are any alternatives to kerberos we will need to support.
+
+There are three main interfaces to it:
+
+ (*) I/O crypto: encrypt, decrypt, get_mic and verify_mic.
+
+     These all do in-place crypto, using an sglist to define the buffer
+     with the data in it.  Is it necessary to make it able to take separate
+     input and output buffers?
+
+ (*) PRF+ calculation for key derivation.
+ (*) Kc, Ke, Ki derivation.
+
+     These use krb5_buffer structs to pass objects around.  This is akin to
+     the xdr_netobj, but has a void* instead of a u8* data pointer.
+
+In terms of rxrpc's rxgk, there's another step in key derivation that isn't
+part of the kerberos standard, but uses the PRF+ function to generate a key
+that is then used to generate Kc, Ke and Ki.  Is it worth putting this into
+the directory or maybe having a callout to insert an intermediate step in
+key derivation?
+
+Note that, for purposes of illustration, I've included some rxrpc patches
+that use this interface to implement the rxgk Rx security class.  The
+branch also is based on some rxrpc patches that are a prerequisite for
+this, but the crypto patches don't need it.
+
+---
+The patches can be found here also:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=crypto-krb5
+
+David
+---
+David Howells (18):
+      crypto/krb5: Implement Kerberos crypto core
+      crypto/krb5: Add some constants out of sunrpc headers
+      crypto/krb5: Provide infrastructure and key derivation
+      crypto/krb5: Implement the Kerberos5 rfc3961 key derivation
+      crypto/krb5: Implement the Kerberos5 rfc3961 encrypt and decrypt functions
+      crypto/krb5: Implement the Kerberos5 rfc3961 get_mic and verify_mic
+      crypto/krb5: Implement the AES enctypes from rfc3962
+      crypto/krb5: Implement crypto self-testing
+      crypto/krb5: Implement the AES enctypes from rfc8009
+      crypto/krb5: Implement the AES encrypt/decrypt from rfc8009
+      crypto/krb5: Add the AES self-testing data from rfc8009
+      crypto/krb5: Implement the Camellia enctypes from rfc6803
+      rxrpc: Add the security index for yfs-rxgk
+      rxrpc: Add YFS RxGK (GSSAPI) security class
+      rxrpc: rxgk: Provide infrastructure and key derivation
+      rxrpc: rxgk: Implement the yfs-rxgk security class (GSSAPI)
+      rxrpc: rxgk: Implement connection rekeying
+      rxgk: Support OpenAFS's rxgk implementation
 
 
+ crypto/krb5/Kconfig              |    9 +
+ crypto/krb5/Makefile             |   11 +-
+ crypto/krb5/internal.h           |  101 +++
+ crypto/krb5/kdf.c                |  223 ++++++
+ crypto/krb5/main.c               |  190 +++++
+ crypto/krb5/rfc3961_simplified.c |  732 ++++++++++++++++++
+ crypto/krb5/rfc3962_aes.c        |  140 ++++
+ crypto/krb5/rfc6803_camellia.c   |  249 ++++++
+ crypto/krb5/rfc8009_aes2.c       |  440 +++++++++++
+ crypto/krb5/selftest.c           |  543 +++++++++++++
+ crypto/krb5/selftest_data.c      |  289 +++++++
+ fs/afs/misc.c                    |   13 +
+ include/crypto/krb5.h            |  100 +++
+ include/keys/rxrpc-type.h        |   17 +
+ include/trace/events/rxrpc.h     |    4 +
+ include/uapi/linux/rxrpc.h       |   17 +
+ net/rxrpc/Kconfig                |   10 +
+ net/rxrpc/Makefile               |    5 +
+ net/rxrpc/ar-internal.h          |   20 +
+ net/rxrpc/conn_object.c          |    2 +
+ net/rxrpc/key.c                  |  319 ++++++++
+ net/rxrpc/rxgk.c                 | 1232 ++++++++++++++++++++++++++++++
+ net/rxrpc/rxgk_app.c             |  424 ++++++++++
+ net/rxrpc/rxgk_common.h          |  164 ++++
+ net/rxrpc/rxgk_kdf.c             |  271 +++++++
+ net/rxrpc/security.c             |    6 +
+ 26 files changed, 5530 insertions(+), 1 deletion(-)
+ create mode 100644 crypto/krb5/kdf.c
+ create mode 100644 crypto/krb5/rfc3961_simplified.c
+ create mode 100644 crypto/krb5/rfc3962_aes.c
+ create mode 100644 crypto/krb5/rfc6803_camellia.c
+ create mode 100644 crypto/krb5/rfc8009_aes2.c
+ create mode 100644 crypto/krb5/selftest.c
+ create mode 100644 crypto/krb5/selftest_data.c
+ create mode 100644 net/rxrpc/rxgk.c
+ create mode 100644 net/rxrpc/rxgk_app.c
+ create mode 100644 net/rxrpc/rxgk_common.h
+ create mode 100644 net/rxrpc/rxgk_kdf.c
 
-
-> I think these patches make NFS readdir dramatically better, and they
-> fix a lot of underlying issues with the existing code, like the cookie
-> resets when pagecache is dropped, single page rx data problem, etc.
-> Thank you for doing these patches.
->
-> Tested-by: Dave Wysochanski
 
