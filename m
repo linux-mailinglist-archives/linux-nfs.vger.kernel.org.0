@@ -2,108 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3073A2B0AC7
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 17:54:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C0DF2B0AE5
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 18:01:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729061AbgKLQyp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Nov 2020 11:54:45 -0500
-Received: from mail-mw2nam12on2133.outbound.protection.outlook.com ([40.107.244.133]:23392
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728692AbgKLQyo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 12 Nov 2020 11:54:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E9bTSD2ugXcN2hNNkhB/hxngyPIBdn7W81RNkTl5vYTxrrFPiasRLtdE2ZNfP03bc5CtcE32OYOBrSvnCYOU/xIvAHHk3hMDhdZNQBTQim8ClihwGd2cBYceVDRxTyhDogMpDKI93ZQVSbzO87i/M40fvrOOaCU7uKIkeB4lrq1WQoyak4jTf1YAeENEevj5D3Amb0A+BFI/XnDmw0f2x/LQRKcLvNn2LVpX8tvoht3nIxwb4roERB2C1ujL1WA52u8Ibv4o+wBZ4+oDjwX9/b9v+gRV49PcYV2kAi+aQM3e9YrSghoJEPVwVPvyB4Nj9FpvFQMkhd9ggEYPETvPpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OQq6K70UlIDSu3GWC/YzHGD/TwmkolClLmi3Beemt04=;
- b=lIN8tLuJQ6tpDC3yrdpZ6DlI6U5Mv+0TQGKa4SIXMfCzFcDHnfiCaytU6Q/CB4f7e4qphxgrZtx5hd8Vn98RKBh6fI39huHffsj/VKwbP5NBUc+NcjQs4r8Qr+ZYshefmyqjdXP+G54WYiM6HLmibIFd2LdGVKtUkww59wB9zyaVokhrtKEhl8hpYZVHPvRU7P30JRjDNtiIO4ZhPnS78D6pR3ydiJ1bBDrGA9oL0L8NXSooEa6/3lHp1V4ZkC0uaRWa2s6ebEtfTGi0Vvs+WXinYtokzu6XU3aK6IThJvrF8IKIPzvV1Q7g2QmXsSfLchjMuU3IHDii720pIBLK6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OQq6K70UlIDSu3GWC/YzHGD/TwmkolClLmi3Beemt04=;
- b=UJpA3qkYTaeVi5mk6uQ/f/+gC+7EB/YVOsjroMsDMGOlGo2h0RLMvKcnZS9NM0S+7lscdEejcuH2swOu5P7O1YOGw2lO3/4Ovs0ddmW2RUMtQWnGnFhv4vqQEVbPd7M2plfn+0Bf3/koI2Nil3Pw4i+etMi+SI7+yFyIdSZ/h60=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB2637.namprd13.prod.outlook.com (2603:10b6:208:e9::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.15; Thu, 12 Nov
- 2020 16:54:40 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.018; Thu, 12 Nov 2020
- 16:54:40 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "guy@vastdata.com" <guy@vastdata.com>,
-        "dwysocha@redhat.com" <dwysocha@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "trondmy@kernel.org" <trondmy@kernel.org>
-Subject: Re: [PATCH v5 00/22] Readdir enhancements
-Thread-Topic: [PATCH v5 00/22] Readdir enhancements
-Thread-Index: AQHWt6smlycN3byFeUCu4hbFFYYhUqnDgPIAgADhS4CAAEEBgIAAFm8A
-Date:   Thu, 12 Nov 2020 16:54:39 +0000
-Message-ID: <fbc830f41e90c510adef43e13c4463add305f6a9.camel@hammerspace.com>
-References: <20201110213741.860745-1-trondmy@kernel.org>
-         <CALF+zOkdXMDZ3TNGSNJQPtxy-ru_4iCYTz3U2uwkPAo3j55FZg@mail.gmail.com>
-         <CALF+zO=-Si+CcEJvgzaYAjd2j8APV=4Xwm=FJibhuJRV+zWE5Q@mail.gmail.com>
-         <CAENext7G47KvYO3q0_7g3KUX+QxQs3G17nuqs=Npsg2RBPdX7g@mail.gmail.com>
-In-Reply-To: <CAENext7G47KvYO3q0_7g3KUX+QxQs3G17nuqs=Npsg2RBPdX7g@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: vastdata.com; dkim=none (message not signed)
- header.d=none;vastdata.com; dmarc=none action=none
- header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e8a11fa-d02a-4b07-80b0-08d8872ba559
-x-ms-traffictypediagnostic: MN2PR13MB2637:
-x-microsoft-antispam-prvs: <MN2PR13MB2637A4B69639807F882F661BB8E70@MN2PR13MB2637.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +fa+U2KZQr0zSxXGf9BBj+B3Dp0XRilPYPiUthWTO+MF28gFOPxkNyVb99NdVGzkGR9Cq2QtzIv430cqOw6EJMohkTi4qP8+wZSmPN6s53musfTfceEK/F1iTq9ZwcvoLFoD9Aj3pR5JMNmyPomjaiAi8N0MAkgjcu9OKXNFL7Xn/N2UDWJjoCmkNXKh80KhDZXjNvAYkeevv8lJqHcX1J1+tW0ZYtO3WCMCFssWjJ+JPJ/fA6CEXYQpIGu1WUiqDKueYklrWg+oOTL//4mmRtrN2ioSik1IkYVjrPR920f9M4KHfGrCw2kVKdqjSSAemxydroT++A3dq6lugkLUUw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(39830400003)(346002)(366004)(396003)(376002)(6506007)(66556008)(76116006)(91956017)(4001150100001)(83380400001)(8936002)(66446008)(66946007)(64756008)(5660300002)(4744005)(6512007)(36756003)(2616005)(2906002)(316002)(186003)(86362001)(478600001)(54906003)(6486002)(4326008)(8676002)(26005)(71200400001)(110136005)(66476007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: WZn/yxnvORRWFhh1cGUHJnd7TgfFKhNjpwbaYYO8uNxaCItepaUpqjOmHTjKyPsVZb/SFxopsVUtUpxf+uU8S23CMOafT5pDE+JWDcyYsTn3gI5SC6bhk1DxoPjTCq3J4bNtnG/IpkgvqCgJkVsDqsaER9yMmFlYlq8QkcX7sYg9cpXndF0nIUhHWIp8SZSiCPf+h+4Ye9yvEAervLvHHb6RB0aWEs7y/oaFIw2NAiKIfcrkiVQpbTaHKJGh87MCpfoSTKWwKsIMCN69B6EsOp+nyFLZ5tKnIypL63f+qFz5U/5zqERb1qwGyV8Yg+M41irOdWPlcLdDbjls6/H/3gQ3VJQovwWW/iXR1AW9t+0K5r2Q0LdwAyMM9+HeNYV3Zc4xBHoVksLxmRbXPCaBN9SNKrrv51b6qhL5idvfyIqC3EYYbzktwyx1mFePSa5ynR5RXtEH1dF6hhsd/878BSvrmJQHopcMTRLvAM4hTVNYoRH2Th5MTvhlRhY/oNOWWcYbkvif/8AabZVThOU7a09cEo/4PRbo2MgJtkGJawXpeYM4Re4Dmey7RPzKOhR6g7bT2B20so8NRSvcWcSt0rMgPZXlImWkTAHVsNcS0FNtV0X6RPNZJUM7W78oMnqqXTWlgGN20dieWP45pOwRyQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CDEAA1D565C8664E9497B089BEE93EA2@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1725973AbgKLRBr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Nov 2020 12:01:47 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38378 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725903AbgKLRBr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 12:01:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605200506;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type;
+        bh=+k3D5bacduzGFcoMR9y7oBsPfhBoQH/3lfgQLGdxA/4=;
+        b=OT1gUVI3q1msNVQkXJUZ/ZZ92Ftt7WKt5juu0OboZCS9cZ4PGEO0K0KW1639dgRPV24Gv0
+        RESxjZFOBCdyrTlpuz7PGUoG9vB/F21CjmEiZBFFuWhUI0MvaeUCUvJ3oyHzwrxvfymCli
+        BPRD9r5qztPFAjZL3dtwWTdQuHtbe8M=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-375-E2xIzsonNmezkblLBaUDPQ-1; Thu, 12 Nov 2020 12:01:42 -0500
+X-MC-Unique: E2xIzsonNmezkblLBaUDPQ-1
+Received: by mail-ed1-f72.google.com with SMTP id n25so2577665edr.20
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Nov 2020 09:01:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=+k3D5bacduzGFcoMR9y7oBsPfhBoQH/3lfgQLGdxA/4=;
+        b=Y+/9DRKYYln1h1+8/KCI37mPbPMesg5XSqr3VrEMdiGVO03e08gFiUKwtoxgplchDq
+         aoIVtX/j0eHL05h5oIYdWdrvtX/k/6bKXY65pHjUw2YBbw0k5aIaah636IORj1gByJOA
+         XHR0vV8oDuYFtZb4IubI9TYoETM+weLt+t9XxsgxvNcxWUrlwqt2Rabe87ZpCR0h6wWY
+         WSFuVcmMG3e6lcx8aV0GbTpeJVfssqzAjHUTCh558bUNiSqwfXQxZh9VpXc3QaC0oSg/
+         TRdFqUxfF4IJzGmAThGg50kGoilnDg1qJgqpM/JfDsN86dZGNGQWpf0wrLuqv4SxihWL
+         BRog==
+X-Gm-Message-State: AOAM532ftChJBVMWfnIpMKCte0HrvyeuGe1BIkdK05Gn5dRwERtIkFnc
+        mzuasskmT2SzCUR1uspY0wjcqaugRmCdFbvySS1i7pq6Ie8bxyBwpC63GrYQmNh11CJ42zAa5C9
+        avlXfnC4xiGqovymEsE7QRIl8T7MPbdoMmlGl
+X-Received: by 2002:a17:906:ccc5:: with SMTP id ot5mr242253ejb.248.1605200500389;
+        Thu, 12 Nov 2020 09:01:40 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzutkYhJy9I1S82gzpcNi8SdF5rRkrpbbcIz1xFb03G8JBN5Hy31ZDsDk1RPmxC4cRQJqc63vyYg3l6KJ9ONGA=
+X-Received: by 2002:a17:906:ccc5:: with SMTP id ot5mr242213ejb.248.1605200499795;
+ Thu, 12 Nov 2020 09:01:39 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e8a11fa-d02a-4b07-80b0-08d8872ba559
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2020 16:54:39.7776
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JLGOSg3fTwTqx8gWN6O/PtO0VWYQKZXyyixfDHaHMCY8H55aTM4FMorkv/mBEb1qTyaWWAL3BtjjRUF+0CGurQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB2637
+From:   Vadim Rutkovsky <vrutkovs@redhat.com>
+Date:   Thu, 12 Nov 2020 18:01:28 +0100
+Message-ID: <CAKO8Qe496svrBnO27O8ugXOSVMGwaqe4Nv4K2ecT6pZG_WC07A@mail.gmail.com>
+Subject: Bug 209399 - Can't unmount bind-mounted NFS mounts with "Stale file handle"
+To:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTExLTEyIGF0IDE3OjM0ICswMjAwLCBHdXkgS2VyZW4gd3JvdGU6DQo+IGp1
-c3QgYSBnZW5lcmFsIHF1ZXN0aW9uOiBzaW5jZSB0aGUgY2FjaGUgc2VlbXMgdG8gY2F1c2UgbWFu
-eSBwcm9ibGVtcw0KPiB3aGVuIGRlYWxpbmcgd2l0aCB2ZXJ5IGxhcmdlIGRpcmVjdG9yaWVzLCBh
-bmQgc2luY2UgYWxsIHNvbHV0aW9ucw0KPiBwcm9wb3NlZCB1bnRpbCBub3cgZG9uJ3Qgc2VlbSB0
-byBmdWxseSBzb2x2ZSB0aG9zZSBwcm9ibGVtcywgd29uJ3QgYW4NCj4gYXBwcm9hY2ggc3VjaCBh
-cyAiaWYgdGhlIGRpcmVjdG9yeSBlbnRyaWVzIGNvdW50IGV4Y2VlZGVkIFggLSBzdG9wDQo+IHVz
-aW5nIHRoZSBjYWNoZSBjb21wbGV0ZWx5IiAtIHdoZXJlIFggaXMgcHJvcG9ydGlvbmFsIHRvIHRo
-ZSBzaXplIG9mDQo+IHRoZSBkaXJlY3RvcnkgZW50cmllcyBjYWNoZSBzaXplIGxpbWl0IC0gbWFr
-ZSB0aGUgY29kZSBzaW1wbGVyLCBhbmQNCj4gbGVzcyBwcm9uZSB0byBidWdzIG9mIHRoaXMgc29y
-dD8NCj4gDQo+IGkgKnRoaW5rKiB3ZSBjYW4gdW5kZXJzdGFuZCB0aGF0IGZvciBhIGRpcmVjdG9y
-eSB3aXRoIG1pbGxpb25zIG9mDQo+IGZpbGVzLCB3ZSdsbCBub3QgaGF2ZSBlZmZpY2llbnQgY2Fj
-aGluZyBvbiB0aGUgY2xpZW50IHNpZGUsIHdoaWxlDQo+IGxpbWl0aW5nIG91cnNlbHZlcyB0byBy
-ZWFzb25hYmxlIFJBTSBjb25zdW1wdGlvbj8NCj4gDQoNCkFnYWluLCBJIGRpc2FncmVlLg0KDQpJ
-ZiB5b3UgaGF2ZSBhIG1vc3RseS1yZWFkIGRpcmVjdG9yeSB3aXRoIG1pbGxpb25zIG9mIGZpbGVz
-IChlLmcuIGRhdGENCnBvb2wpIGFuZCBsb3RzIG9mIHByb2Nlc3NlcyBzZWFyY2hpbmcsIHRoZW4g
-Y2FjaGluZyBpcyBib3RoIHVzZWZ1bCBhbmQNCmFwcHJvcHJpYXRlLg0KDQo+IA0KDQotLSANClRy
-b25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0K
-dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+Hey,
+
+Fresh kernels (starting 5.7 up to 5.9.8 in Fedora's update-testing)
+are hitting an odd issue -
+
+"Stale file handle" error is thrown on NFS share when bind-mounted dir
+is removed. See reproduce steps in
+https://bugzilla.kernel.org/show_bug.cgi?id=209399.
+
+This is unexpected, affects all kernels since 5.7.7 and breaks
+kubernetes conformance tests.
+Could someone have a look and see if there's a workaround or a fix?
+
+-- 
+Thanks in advance,
+    Vadim
+
