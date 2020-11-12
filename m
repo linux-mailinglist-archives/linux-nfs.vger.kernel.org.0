@@ -2,52 +2,134 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 577782AFEAB
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 06:39:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 189332B0285
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Nov 2020 11:10:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728952AbgKLFjY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Nov 2020 00:39:24 -0500
-Received: from mail-proxy101.phy.heteml.jp ([157.7.189.101]:38188 "EHLO
-        mail-proxy101.phy.heteml.jp" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728344AbgKLDkS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Nov 2020 22:40:18 -0500
-X-Greylist: delayed 888 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Nov 2020 22:40:14 EST
-Received: from mail-proxy101.phy.heteml.jp (localhost [127.0.0.1])
-        by mail-proxy101.phy.heteml.jp (Postfix) with ESMTP id 5D4F41661124;
-        Thu, 12 Nov 2020 12:25:22 +0900 (JST)
-Received: from 127.0.0.1 (127.0.0.1)
- by mail-proxy101.phy.heteml.jp (HETEML-Fsecure);
- Thu, 12 Nov 2020 12:25:22 +0900 (JST)
-X-Virus-Status: clean(HETEML-Fsecure)
-Received: from User (unknown [52.231.203.57])
-        (Authenticated sender: form@healingart-n.jp)
-        by mail-proxy101.phy.heteml.jp (Postfix) with ESMTPA;
-        Thu, 12 Nov 2020 12:25:22 +0900 (JST)
-Reply-To: <reemhashimymail@gmail.com>
-From:   "Reem" <form@healingart-n.jp>
-Subject: Hello Friend  12/11/2020
-Date:   Thu, 12 Nov 2020 03:25:24 -0000
+        id S1727796AbgKLKKS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Nov 2020 05:10:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbgKLKKR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Nov 2020 05:10:17 -0500
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 161D9C0613D1
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Nov 2020 02:10:17 -0800 (PST)
+Received: by mail-pf1-x443.google.com with SMTP id y7so4049386pfq.11
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Nov 2020 02:10:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZXrDzR3SLORDW5B7BUxvaBnQDDjG2dXfGiE5xVAIxC0=;
+        b=nBow6u9tPZA43FN3nCgtszIoqhqbBJjGt0CmSFIvvOYVwRXDr7SihjVAAtnWPjQdp0
+         dX+sebVqnQfw8LbuxSnfYoDc4g46kXifVQEDtx5fWi9C/6MJcfmSrqN04DOPYU6EYdeR
+         ctU7Eht15V2KESPM+8lqAhTQh4Goj8IhT07k4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZXrDzR3SLORDW5B7BUxvaBnQDDjG2dXfGiE5xVAIxC0=;
+        b=EuQ+o3wQIqWjk0XP9rKuYha1/t2lfbyHpXyruHljQ17dSwWE9s/x6+c+kBTDKfQ2ep
+         Ih3b/hLZ0CUK4uKcMOaRm4ETLW1oL4L/YDeXwualgCM4RdVChbR1V7AxidQnC+uA6Wy2
+         cldsFJb5aOE1q8lm8DzcggwfU69rRPDNVhYqwmVVXtglr2oQTUEo6dAOe6vyTi7XkBjB
+         RQxxz+4xbplT69X4yMn42wfHNuFiPafMsutLaV0ojuVfrbvlqUgWrSs0J1h470qNTYQ2
+         NW5qUd3AK8MM6/ec7S7OR1RfC3vnpCcEVxzX4P2aWKqEj13lg5+Fzq12SiAl3FnpPJmd
+         nsEw==
+X-Gm-Message-State: AOAM531lWWS0ShhCnJQULJXAqnym7VJHmg+0VY8fisLxPFta6HM3QbzM
+        t0wmSft4o1GuYM1rpeptZ+zstQ==
+X-Google-Smtp-Source: ABdhPJwB7gExvcWWZhLfWtnNMQ/JrrgUkIyGe5YvETA35aU+CCtIA0OUTuMLrMSotsd7uhY9aqguBg==
+X-Received: by 2002:a17:90b:512:: with SMTP id r18mr8949419pjz.149.1605175816341;
+        Thu, 12 Nov 2020 02:10:16 -0800 (PST)
+Received: from ubuntu.netflix.com (203.20.25.136.in-addr.arpa. [136.25.20.203])
+        by smtp.gmail.com with ESMTPSA id n1sm5577060pfu.211.2020.11.12.02.10.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Nov 2020 02:10:15 -0800 (PST)
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     "J . Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        David Howells <dhowells@redhat.com>,
+        Scott Mayhew <smayhew@redhat.com>
+Cc:     mauricio@kinvolk.io, Alban Crequy <alban.crequy@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kyle Anderson <kylea@netflix.com>
+Subject: [PATCH v5 0/2] NFS: Fix interaction between fs_context and user namespaces
+Date:   Thu, 12 Nov 2020 02:09:50 -0800
+Message-Id: <20201112100952.3514-1-sargun@sargun.me>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-Id: <20201112032522.5D4F41661124@mail-proxy101.phy.heteml.jp>
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-My name is Reem Hashimy, the Emirates Minister of State and Managing Director of the United Arab Emirates (Dubai) World Expo 2020 Committee which has been postponed to October 2021 to March 2022 because of the Covid-19 pandemic.
- 
-I am writing to you to manage the funds I received as financial gratification from various foreign companies I assisted to receive a participation approval to the coming event. The amount is $44,762,906.00 United States dollars. But I can not personally manage the fund in my country because of the sensitive nature of my office and the certain restriction on married Muslim women.
+Right now, it is possible to mount NFS with an non-matching super block
+user ns, and NFS sunrpc user ns. This (for the user) results in an awkward
+set of interactions if using anything other than auth_null, where the UIDs
+being sent to the server are different than the local UIDs being checked.
+This can cause "breakage", where if you try to communicate with the NFS
+server with any other set of mappings, it breaks.
 
-For this reason, an agreement was reached with a consulting firm to direct the various financial gifts into an open beneficiary account in my name with a bank where it will be possible for me to instruct the transfer of ownership right to a third party for investment purpose; which is the reason I am contacting you to receive the fund and manage it as my investment partner. Note that the fund is NOT connected to any criminal or terrorist activity.
- 
-On your indication of interest with your information to include your name, your phone number and contact mailing address; I will instruct the consulting firm to process the fund from the bank to your country for investment purposes.
+The reason for this is that you can call fsopen("nfs4") in the unprivileged
+namespace, and that configures fs_context with all the right information
+for that user namespace. In addition, it also keeps a gets a cred object
+associated with the caller -- which should match the user namespace.
+Unfortunately, the mount has to be finished in the init_user_ns because we
+currently require CAP_SYS_ADMIN in the init user namespace to call fsmount.
+This means that the superblock's user namespace is set "correctly" to the
+container, but there's absolutely no way nfs4idmap to consume an
+unprivileged user namespace because the cred / user_ns that's passed down
+to nfs4idmap is the one at fsmount.
 
-Regards.
-Reem Hashimy.
+How this actually exhibits is let's say that the UID 0 in the user
+namespace is mapped to UID 1000 in the init user ns (and kuid space). What
+will happen is that nfs4idmap will translate the UID 1000 into UID 0 on the
+wire, even if the mount is in entirely in the mount / user namespace of the
+container.
+
+So, it looks something like this
+Client in unprivileged User NS (UID: 0, KUID: 0)
+	->Perform open()
+		...VFS / NFS bits...
+		nfs_map_uid_to_name ->
+			from_kuid_munged(init_user_ns, uid) (returns 0)
+				RPC with UID 0
+
+This behaviour happens "the other way" as well, where the UID in the
+container may be 0, but the corresponding kuid is 1000. When a response
+from an NFS server comes in we decode it according to the idmap userns.
+The way this exhibits is even more odd.
+
+Server responds with file attribute (UID: 0, GID: 0)
+	->nfs_map_name_to_uid(..., 0)
+		->make_kuid(init_user_ns, id) (returns 0)
+			....VFS / NFS Bits...
+			->from_kuid(container_ns, 0) -> invalid uid
+				-> EOVERFLOW
+
+This changes the nfs server to use the cred / userns from fs_context, which
+is how idmap is constructed. This subsequently is used in the above
+described flow of converting uids back-and-forth.
+
+Trond gave the feedback that this behaviour [implemented by this patch] is
+how the legacy sys_mount() behaviour worked[1], and that the intended
+behaviour is for UIDs to be plumbed through entirely, where the user
+namespaces UIDs are what is sent over the wire, and not the init user ns.
+
+[1]: https://lore.kernel.org/linux-nfs/8feccf45f6575a204da03e796391cc135283eb88.camel@hammerspace.com/
+
+Sargun Dhillon (2):
+  NFS: NFSv2/NFSv3: Use cred from fs_context during mount
+  NFSv4: Refactor to use user namespaces for nfs4idmap
+
+ fs/nfs/client.c     | 4 ++--
+ fs/nfs/nfs4client.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+
+base-commit: 8c39076c276be0b31982e44654e2c2357473258a
+-- 
+2.25.1
+
