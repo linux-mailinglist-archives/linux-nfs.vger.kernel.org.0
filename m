@@ -2,182 +2,252 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49E1D2B28B9
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Nov 2020 23:45:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BBC332B294F
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 Nov 2020 00:46:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgKMWpG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Nov 2020 17:45:06 -0500
-Received: from mail-mw2nam10on2114.outbound.protection.outlook.com ([40.107.94.114]:65489
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725981AbgKMWpE (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 13 Nov 2020 17:45:04 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DIfMuYS5/SU3Ky8cWL+dJif+wzMeHQUDqyzYNSm6CaZz1fNCiGMmRetBjqkbZhxI3KZPDTx1QsjxdnafxwHq6ehYv/E02fMEtRXZKlgs6djRmsVJAJuWf8w7+GkcZWiiEeQeNiB/3/2v3nj4JebhB+QCGV52XBU1eaiHenni1S40Ti0wtJtpXQnXsPKVtPm9RSdUg2/j0AFHuJR857zHwRm3y/Ff3yAyyT5vairtLiPa1pMe7ECEsQobb70CbB8q6H/iMs3aJ0ufvN8fx15N8NFOm090orzHck4HNn3o2Ul92rA78L2Mt/KMbfNfaMpxMVoNn4FVYjgmBb3X+Him7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vx4z0348YQg0vdHLlm3Uwt719ed+nbaiX4xnGer2pnA=;
- b=CUJBaqNv31RfKO+bR7tNMo2yr96RGFkAnRSr/Tw2UuC8YrR/GQFQtsQ+FqYVGRz2/uDY+aFfsscyoAQ0uiYz7E7DGFK3Xoy7sVK5fPzwY2zsazv2wFNmTGLppetfwU46kAN7QrzdKmt7+168Y/+th1wLqs3i77VxECLX0tDP/KYJvaoXL+Jc8AKfe81CDLAevQ1a0+UD7atPlsSmkxNYCylkD5XRFu8PrhMr8AR972WuxN0KkRcDa30GTH7JmlxhWQdY5FpQ4RtoMbAt2kPobZkvrdY+QyV1ugDW6ebgqW1LNK20EG0G/ehkk9ADa0UyKOeqrktRhhKXmvMYfTULmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vx4z0348YQg0vdHLlm3Uwt719ed+nbaiX4xnGer2pnA=;
- b=gPwDJAnMHfPvMg7BJIvYEw94RjPp+h++MwbZGzT1LpIv6gUIa53oJqqYMJMFRqZVqjso0wOUoFHGggQpw6NxbNOxFOcfbSv6wXab5TUt/ZlG6TLW5aCB84eiPgT1EBjJk9q6gWRd2yKuah0yFAoLFwMuKnjFkNv4ooqqkICqdd8=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB3374.namprd13.prod.outlook.com (2603:10b6:208:162::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.13; Fri, 13 Nov
- 2020 22:45:01 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.018; Fri, 13 Nov 2020
- 22:45:00 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "tigran.mkrtchyan@desy.de" <tigran.mkrtchyan@desy.de>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfiles data
- channels
-Thread-Topic: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfiles
+        id S1726039AbgKMXq6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Nov 2020 18:46:58 -0500
+Received: from smtp-o-2.desy.de ([131.169.56.155]:38149 "EHLO smtp-o-2.desy.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbgKMXq5 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 13 Nov 2020 18:46:57 -0500
+Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [IPv6:2001:638:700:1038::1:a5])
+        by smtp-o-2.desy.de (Postfix) with ESMTP id E6E31160FED
+        for <linux-nfs@vger.kernel.org>; Sat, 14 Nov 2020 00:46:52 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de E6E31160FED
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1605311212; bh=2CaMqp7tQtuUD1wB51bJVBy+M8xx3HXOqfzlbvT7TLg=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=sgWlQ38qV8YlC3ZkwXImh4cO3jdz1pg9xx1i+fz38Bxw6hA114+zvTj49+giCww5b
+         L2wiWPzz2FDVhWJQgG+LitmsV72rtR1IhcNWpem4FthgdtLYlEbq1psCjTouh0ZPDa
+         jckrZghTrQDP+3Fu4ko20Dy79mbAoRlGbm0W0z3Q=
+Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [131.169.56.130])
+        by smtp-buf-2.desy.de (Postfix) with ESMTP id E2FA91A00ED;
+        Sat, 14 Nov 2020 00:46:52 +0100 (CET)
+X-Virus-Scanned: amavisd-new at desy.de
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+        by smtp-intra-2.desy.de (Postfix) with ESMTP id AFCAF1001A7;
+        Sat, 14 Nov 2020 00:46:52 +0100 (CET)
+Date:   Sat, 14 Nov 2020 00:46:52 +0100 (CET)
+From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To:     trondmy <trondmy@hammerspace.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1371149886.691555.1605311212511.JavaMail.zimbra@desy.de>
+In-Reply-To: <d73c15ca631ad52f036bb8708ab15b89af432952.camel@hammerspace.com>
+References: <20201110231906.863446-1-trondmy@kernel.org> <3a3696f03eef74ac4723fdc0d1297076a34aa8ae.camel@hammerspace.com> <1375056959.614278.1605271687151.JavaMail.zimbra@desy.de> <994125760.684644.1605303041944.JavaMail.zimbra@desy.de> <d73c15ca631ad52f036bb8708ab15b89af432952.camel@hammerspace.com>
+Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfiles
  data channels
-Thread-Index: AQHWt7lTY9xR7iW33kG2X9IO1/hKs6nCBtsAFTVACHJOhL5PDfzm1vaA
-Date:   Fri, 13 Nov 2020 22:45:00 +0000
-Message-ID: <d73c15ca631ad52f036bb8708ab15b89af432952.camel@hammerspace.com>
-References: <20201110231906.863446-1-trondmy@kernel.org>
-         <3a3696f03eef74ac4723fdc0d1297076a34aa8ae.camel@hammerspace.com>
-         <1375056959.614278.1605271687151.JavaMail.zimbra@desy.de>
-         <994125760.684644.1605303041944.JavaMail.zimbra@desy.de>
-In-Reply-To: <994125760.684644.1605303041944.JavaMail.zimbra@desy.de>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: desy.de; dkim=none (message not signed)
- header.d=none;desy.de; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1380ab90-a979-4a5c-eee4-08d88825c124
-x-ms-traffictypediagnostic: MN2PR13MB3374:
-x-microsoft-antispam-prvs: <MN2PR13MB337460BF92F2E84962C16CEFB8E60@MN2PR13MB3374.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1YzLpcd8FGOqAVdW8M8KgY4GEZ9dWLuG29kgO+kgpTHKEWu8ZW5n349882cHOfKyRRcbf0QVHfS1AzG46Y0s3JHplKKdqO9E7A6EDui+dv1UslJUr2uZYfYw/NkSfz3Jr934K3InKeM8tHEMwvK/cy7USm4h37PQJEZNXEPAck3W4BaXqRD3ghv8vFInXZvAH4Vo08BULMfu/BGgQdVTIW0DusE8uuu3SH4wtN1187eglw8MYME6n+nzpmRaWvlrC4MOC+YKt6Q2BIrtGe57aNsOqJDGQV9tCrcehWF5BB8sQiJt6fbfQGtbwpsJkEX7GTUQuGZ0ireLr2OZ6sc0eq2iwnpDJrJN4UrWI706yhrL+CQ749MkycQp1cDdYE4BJfR679jHWZDSUZvQdvTeyw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(396003)(39840400004)(376002)(346002)(366004)(66446008)(76116006)(6916009)(64756008)(66476007)(66556008)(66946007)(53546011)(36756003)(2906002)(5660300002)(91956017)(8676002)(71200400001)(2616005)(6512007)(15974865002)(316002)(186003)(86362001)(8936002)(4326008)(4001150100001)(6486002)(6506007)(26005)(478600001)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: vW/LoOJ94eF8JiydHudVRQpVvjhivFY7OAheFdXd/nOgbQZoH/J/alC83yoHfxscS76TStbSmP1gopyhIl7DJXVHJBI1qjDwWz388Mm7miR8Q4AKePUVhZWdhP7d5D2nUhm6qFvaDvZCSkBqm7gTU4CXZDAJOD6tQgfP29d/jnQ8B8chDuqd+ZZX2L0XJB1mFSC0Qi3Gprb3dt/mnzMcig0R9/dAWEEFC+z44EFZB1HdNfiQtGeMbDXqJUF6nWap7rWsJz/ALMi2+cZsVF95KEPYyBJWh5YqDVm2R7vWMl8WngQHCkJtvzLaNYXCV00Nfwd7WAI8Bk5KY+TMnPPWJIRmioHDK8Aetley/JemJs+rGRyJZYGsZKv7DIAKgmKtY6XxikJ0PsDgBVTcILJgwPs7WWX25Wf6ey5wwR2bagaTgOhjL+gEao96PQSaqvZIyX8DVwIHWCwBIXvrtmd0t0ZeROYzLf5BHJp1WdhljNCRx0X2HDvbbsjVHTHQAzwXbOwYP/+A3Iiy5Y9SkLhwSgWO2QKfRID8o2/mdqbfv4gbkmTJ9t21mbfx5TWeHxGTNFV32922PEEPHGhWDSefxb1cYL85vaXMjTm6GoENrSRoI5ldvbvqKJygAJcgGGdrGC+VTZyjHd//q1n80RZdtw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6110E0535A6EA843A77AC95D77185479@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1380ab90-a979-4a5c-eee4-08d88825c124
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2020 22:45:00.6116
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7pIsyKaWxlMxDUJArzMX6Udyf1uh9rcqmi8wIySX9gXkQGLBwWqCYbMcrXelKX7SqnILQc9OQrF63pfoTV4C7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3374
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF82 (Mac)/8.8.15_GA_3953)
+Thread-Topic: Add RDMA support to the pNFS file+flexfiles data channels
+Thread-Index: AQHWt7lTY9xR7iW33kG2X9IO1/hKs6nCBtsAFTVACHJOhL5PDfzm1vaA/xWRAGo=
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTExLTEzIGF0IDIyOjMwICswMTAwLCBNa3J0Y2h5YW4sIFRpZ3JhbiB3cm90
-ZToNCj4gDQo+IEFmdGVyIG1vcmUgdGVzdGluZywgaXQgbG9va3MgbGlrZSB0aGF0IGNsaWVudCBk
-b2Vzbid0IGxpa2UNCj4gbm90aWZpY2F0aW9uIGJpdG1hcDoNCj4gDQo+IA0KPiBbMzE1NzYuNzg5
-NDkyXSAtLT4gX25mczRfcHJvY19nZXRkZXZpY2VpbmZvDQo+IFszMTU3Ni43ODk1MDNdIC0tPiBu
-ZnM0MV9jYWxsX3N5bmNfcHJlcGFyZSBkYXRhLT5zZXFfc2VydmVyDQo+IDAwMDAwMDAwMWQxN2M0
-M2UNCj4gWzMxNTc2Ljc4OTUwN10gLS0+IG5mczRfYWxsb2Nfc2xvdCB1c2VkX3Nsb3RzPTAwMDAN
-Cj4gaGlnaGVzdF91c2VkPTQyOTQ5NjcyOTUgbWF4X3Nsb3RzPTE2DQo+IFszMTU3Ni43ODk1MTBd
-IDwtLSBuZnM0X2FsbG9jX3Nsb3QgdXNlZF9zbG90cz0wMDAxIGhpZ2hlc3RfdXNlZD0wDQo+IHNs
-b3RpZD0wDQo+IFszMTU3Ni43ODk1MjddIGVuY29kZV9zZXF1ZW5jZToNCj4gc2Vzc2lvbmlkPTI5
-MTA2OTUwMDc6MTUwOTk1NzEyOjA6MTY3NzcyMTYgc2VxaWQ9OTI0NjIgc2xvdGlkPTANCj4gbWF4
-X3Nsb3RpZD0wIGNhY2hlX3RoaXM9MA0KPiBbMzE1NzYuNzg5OTkxXSBkZWNvZGVfZ2V0ZGV2aWNl
-aW5mbzogdW5zdXBwb3J0ZWQgbm90aWZpY2F0aW9uDQoNCkFjY29yZGluZyB0byB0aGlzLCB5b3Ug
-YXBwZWFyIHRvIGJlIHJldHVybmluZyBhIGRldmljZWluZm8gYml0bWFwIHdpdGgNCmF0IGxlYXN0
-IG9uZSBub24temVybyBlbnRyeSB0aGF0IGlzIG5vdCBpbiB0aGUgZmlyc3QgMzItYml0IHdvcmQu
-IFdlDQpvbmx5IGFzayBmb3Igbm90aWZpY2F0aW9ucyBmb3IgTk9USUZZX0RFVklDRUlENF9DSEFO
-R0UgYW5kDQpOT1RJRllfREVWSUNFSUQ0X0RFTEVURSwgc28gd2Ugb25seSBleHBlY3QgYml0bWFw
-WzBdIHRvIGhhdmUgbm9uLXplcm8NCmVudHJpZXMuDQoNCj4gWzMxNTc2Ljc5MDAwM10gLS0+IG5m
-czRfYWxsb2Nfc2xvdCB1c2VkX3Nsb3RzPTAwMDEgaGlnaGVzdF91c2VkPTANCj4gbWF4X3Nsb3Rz
-PTE2DQo+IFszMTU3Ni43OTAwMDddIDwtLSBuZnM0X2FsbG9jX3Nsb3QgdXNlZF9zbG90cz0wMDAz
-IGhpZ2hlc3RfdXNlZD0xDQo+IHNsb3RpZD0xDQo+IFszMTU3Ni43OTAwMTBdIG5mczRfZnJlZV9z
-bG90OiBzbG90aWQgMSBoaWdoZXN0X3VzZWRfc2xvdGlkIDANCj4gWzMxNTc2Ljc5MDAxM10gbmZz
-NDFfc2VxdWVuY2VfcHJvY2VzczogRXJyb3IgMCBmcmVlIHRoZSBzbG90DQo+IFszMTU3Ni43OTAw
-MTddIG5mczRfZnJlZV9zbG90OiBzbG90aWQgMCBoaWdoZXN0X3VzZWRfc2xvdGlkDQo+IDQyOTQ5
-NjcyOTUNCj4gWzMxNTc2Ljc5MDAzMF0gPC0tIF9uZnM0X3Byb2NfZ2V0ZGV2aWNlaW5mbyBzdGF0
-dXM9LTUNCj4gWzMxNTc2Ljc5MDAzNF0gbmZzNF9nZXRfZGV2aWNlX2luZm8gZ2V0ZGV2aWNlIGlu
-Zm8gcmV0dXJucyAtNQ0KPiBbMzE1NzYuNzkwMDg0XSA8LS0gbmZzNF9nZXRfZGV2aWNlX2luZm8g
-ZCAwMDAwMDAwMDAwMDAwMDAwDQo+IA0KPiANCj4gVGlncmFuLg0KPiANCj4gDQo+IC0tLS0tIE9y
-aWdpbmFsIE1lc3NhZ2UgLS0tLS0NCj4gPiBGcm9tOiAiVGlncmFuIE1rcnRjaHlhbiIgPHRpZ3Jh
-bi5ta3J0Y2h5YW5AZGVzeS5kZT4NCj4gPiBUbzogInRyb25kbXkiIDx0cm9uZG15QGhhbW1lcnNw
-YWNlLmNvbT4NCj4gPiBDYzogImxpbnV4LW5mcyIgPGxpbnV4LW5mc0B2Z2VyLmtlcm5lbC5vcmc+
-DQo+ID4gU2VudDogRnJpZGF5LCAxMyBOb3ZlbWJlciwgMjAyMCAxMzo0ODowNw0KPiA+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggdjMgMDAvMTFdIEFkZCBSRE1BIHN1cHBvcnQgdG8gdGhlIHBORlMNCj4g
-PiBmaWxlK2ZsZXhmaWxlcyBkYXRhIGNoYW5uZWxzDQo+IA0KPiA+IEhpIFRyb25kLA0KPiA+IA0K
-PiA+IHdoaXQgdGhpcyBjaGFuZ2VzICgzZWU2OWExNGY5MmQ3NGNlZDI2NDcxNDBiMzc5OTUxMWJh
-NGYzZmE1KSBJIHNlZQ0KPiA+IGFuIGluZmluaXRlDQo+ID4gbG9vcA0KPiA+IG9mIExBWU9VVEdF
-VC0+R0VUREVWSUNFSU5GTy0+TEFZT1VUUkVUVVJOIHdpdGhvdXQgYW55IGF0dGVtcHQgdG8NCj4g
-PiBjb25uZWN0IHRvIGENCj4gPiBEUy4NCj4gPiANCj4gPiBUaGlzIGlzIGhvdyB0aGUgcmVzcG9u
-c2UgdG8gTEFZT1VUR0VUIGxvb2tzIGxpa2UuDQo+ID4gDQo+ID4gTmV0d29yayBGaWxlIFN5c3Rl
-bSwgT3BzKDIpOiBTRVFVRU5DRSBHRVRERVZJTkZPDQo+ID4gwqDCoCBbUHJvZ3JhbSBWZXJzaW9u
-OiA0XQ0KPiA+IMKgwqAgW1Y0IFByb2NlZHVyZTogQ09NUE9VTkQgKDEpXQ0KPiA+IMKgwqAgU3Rh
-dHVzOiBORlM0X09LICgwKQ0KPiA+IMKgwqAgVGFnOiA8RU1QVFk+DQo+ID4gwqDCoMKgwqDCoMKg
-IGxlbmd0aDogMA0KPiA+IMKgwqDCoMKgwqDCoCBjb250ZW50czogPEVNUFRZPg0KPiA+IMKgwqAg
-T3BlcmF0aW9ucyAoY291bnQ6IDIpDQo+ID4gwqDCoMKgwqDCoMKgIE9wY29kZTogU0VRVUVOQ0Ug
-KDUzKQ0KPiA+IMKgwqDCoMKgwqDCoCBPcGNvZGU6IEdFVERFVklORk8gKDQ3KQ0KPiA+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIFN0YXR1czogTkZTNF9PSyAoMCkNCj4gPiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCBsYXlvdXQgdHlwZTogTEFZT1VUNF9GTEVYX0ZJTEVTICg0KQ0KPiA+IMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHJfbmV0aWQ6IHRjcA0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-bGVuZ3RoOiAzDQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb250ZW50czogdGNw
-DQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmaWxsIGJ5dGVzOiBvcGFxdWUgZGF0
-YQ0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJfYWRkcjogMTMxLjE2OS4xOTEuMTQzLjEyNS40
-OQ0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbGVuZ3RoOiAyMg0KPiA+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29udGVudHM6IDEzMS4xNjkuMTkxLjE0My4xMjUuNDkN
-Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZpbGwgYnl0ZXM6IG9wYXF1ZSBkYXRh
-DQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqAgdmVyc2lvbjogNA0KPiA+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIG1pbm9ydmVyc2lvbjogMQ0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgIG1heF9yc2l6
-ZTogMTA0ODU3Ng0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgIG1heF93c2l6ZTogMTA0ODU3Ng0K
-PiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgIHRpZ2h0bHkgY291cGxlZDogWWVzDQo+ID4gwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgbm90aWZ5X21hc2s6IDB4MDAwMDAwMDYgKENoYW5nZSwgRGVsZXRlKQ0K
-PiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbm90aWZ5X3R5cGU6IENoYW5nZSAoMSkN
-Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG5vdGlmeV90eXBlOiBEZWxldGUgKDIp
-DQo+ID4gwqDCoCBbTWFpbiBPcGNvZGU6IEdFVERFVklORk8gKDQ3KV0NCj4gPiANCj4gPiANCj4g
-PiANCj4gPiBUaGUgTURTIGlzIG1vdW50ZWQgd2l0aCBJUHY0LiBJIGNhbiBwcm92aWRlIHRoZSBm
-dWxsIHBhY2tldCB0cmFjZSwNCj4gPiBpZiBuZWVkZWQuDQo+ID4gDQo+ID4gDQo+ID4gUmVnYXJk
-cywNCj4gPiDCoCBUaWdyYW4uDQo+ID4gDQo+ID4gDQo+ID4gLS0tLS0gT3JpZ2luYWwgTWVzc2Fn
-ZSAtLS0tLQ0KPiA+ID4gRnJvbTogInRyb25kbXkiIDx0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4N
-Cj4gPiA+IFRvOiAibGludXgtbmZzIiA8bGludXgtbmZzQHZnZXIua2VybmVsLm9yZz4NCj4gPiA+
-IFNlbnQ6IFdlZG5lc2RheSwgMTEgTm92ZW1iZXIsIDIwMjAgMDA6NDI6MzENCj4gPiA+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggdjMgMDAvMTFdIEFkZCBSRE1BIHN1cHBvcnQgdG8gdGhlIHBORlMNCj4g
-PiA+IGZpbGUrZmxleGZpbGVzIGRhdGENCj4gPiA+IGNoYW5uZWxzDQo+ID4gDQo+ID4gPiBPbiBU
-dWUsIDIwMjAtMTEtMTAgYXQgMTg6MTggLTA1MDAsIHRyb25kbXlAa2VybmVsLm9yZ8Kgd3JvdGU6
-DQo+ID4gPiA+IEZyb206IFRyb25kIE15a2xlYnVzdCA8dHJvbmQubXlrbGVidXN0QGhhbW1lcnNw
-YWNlLmNvbT4NCj4gPiA+ID4gDQo+ID4gPiA+IEFkZCBzdXBwb3J0IGZvciBjb25uZWN0aW5nIHRv
-IHRoZSBwTkZTIGZpbGVzL2ZsZXhmaWxlcyBkYXRhDQo+ID4gPiA+IHNlcnZlcnMNCj4gPiA+ID4g
-dGhyb3VnaCBSRE1BLCBhc3N1bWluZyB0aGF0IHRoZSBHRVRERVZJQ0VJTkZPIGNhbGwgYWR2ZXJ0
-aXNlcw0KPiA+ID4gPiB0aGF0DQo+ID4gPiA+IHN1cHBvcnQuDQo+ID4gPiA+IA0KPiA+ID4gPiB2
-MjogRml4IGxheW91dHN0YXRzIGVuY29kaW5nIGZvciBwTkZTL2ZsZXhmaWxlcy4NCj4gPiA+ID4g
-djM6IE1vdmUgbW9zdCBvZiB0aGUgbmV0aWQgaGFuZGxpbmcgaW50byB0aGUgU1VOUlBDIGFuZCBS
-RE1BDQo+ID4gPiA+IG1vZHVsZXMuDQo+ID4gPiA+IMKgwqDCoCBGaXggdXAgdGhlIG1vdW50IGNv
-ZGUgdG8gYmVuZWZpdCBtb3JlIGZyb20gYXV0b21hdGVkDQo+ID4gPiA+IGxvYWRpbmcgb2YNCj4g
-PiA+ID4gwqDCoMKgIFNVTlJQQyB0cmFuc3BvcnQgbW9kdWxlcy4NCj4gPiA+ID4gDQo+ID4gPiAN
-Cj4gPiA+IE5vdGUgdGhhdCBvbmUgY2xlYW51cCB0aGF0IEkgZGlkIG5vdCBwZXJmb3JtLCBidXQg
-d2hpY2ggcmVhbGx5DQo+ID4gPiBjb3VsZCBiZQ0KPiA+ID4gdXNlZnVsIHNob3VsZCB3ZSB3YW50
-IHRvIGFkZCBtb3JlIHRyYW5zcG9ydCBtZWNoYW5pc21zLCBpcyB0bw0KPiA+ID4gbW92ZSB0aGUN
-Cj4gPiA+IGNvZGUgdG8gcGFyc2Ugc3RyaW5naWZpZWQgYWRkcmVzc2VzIChpbiBwYXJ0aWN1bGFy
-IElFVEYgc3R5bGUNCj4gPiA+ICJ1bml2ZXJzYWwgYWRkcmVzc2VzIikgaW50byB0aGUgdHJhbnNw
-b3J0IG1vZHVsZXMgc28gdGhhdCB0aGUNCj4gPiA+IGFjdHVhbA0KPiA+ID4gcGFyc2luZyBvZiBt
-b3VudCBhbmQgcE5GUyB0cmFuc3BvcnQgaW5mbyBjYW4gYmUgYXV0b21hdGljYWxseQ0KPiA+ID4g
-ZXh0ZW5kZWQNCj4gPiA+IHdoZW4gbmV3IHRyYW5zcG9ydCBtb2R1bGVzIGFyZSBhZGRlZC4NCj4g
-PiA+IA0KPiA+ID4gLS0NCj4gPiA+IFRyb25kIE15a2xlYnVzdA0KPiA+ID4gTGludXggTkZTIGNs
-aWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KPiA+ID4gdHJvbmQubXlrbGVidXN0QGhhbW1l
-cnNwYWNlLmNvbQ0KDQotLSANClRyb25kIE15a2xlYnVzdA0KQ1RPLCBIYW1tZXJzcGFjZSBJbmMN
-CjQ5ODQgRWwgQ2FtaW5vIFJlYWwsIFN1aXRlIDIwOA0KTG9zIEFsdG9zLCBDQSA5NDAyMg0K4oCL
-DQp3d3cuaGFtbWVyLnNwYWNlDQoNCg==
+
+
+----- Original Message -----
+> From: "trondmy" <trondmy@hammerspace.com>
+> To: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
+> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
+> Sent: Friday, 13 November, 2020 23:45:00
+> Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfiles=
+ data channels
+
+> On Fri, 2020-11-13 at 22:30 +0100, Mkrtchyan, Tigran wrote:
+>>=20
+>> After more testing, it looks like that client doesn't like
+>> notification bitmap:
+>>=20
+>>=20
+>> [31576.789492] --> _nfs4_proc_getdeviceinfo
+>> [31576.789503] --> nfs41_call_sync_prepare data->seq_server
+>> 000000001d17c43e
+>> [31576.789507] --> nfs4_alloc_slot used_slots=3D0000
+>> highest_used=3D4294967295 max_slots=3D16
+>> [31576.789510] <-- nfs4_alloc_slot used_slots=3D0001 highest_used=3D0
+>> slotid=3D0
+>> [31576.789527] encode_sequence:
+>> sessionid=3D2910695007:150995712:0:16777216 seqid=3D92462 slotid=3D0
+>> max_slotid=3D0 cache_this=3D0
+>> [31576.789991] decode_getdeviceinfo: unsupported notification
+>=20
+> According to this, you appear to be returning a deviceinfo bitmap with
+> at least one non-zero entry that is not in the first 32-bit word. We
+> only ask for notifications for NOTIFY_DEVICEID4_CHANGE and
+> NOTIFY_DEVICEID4_DELETE, so we only expect bitmap[0] to have non-zero
+> entries.
+
+
+according to packet capture only bitmap[0] has non zero bits set.
+This is the reply of compound starting from nfs staus code, tag
+length and so on.
+
+
+0000   00 00 00 00 00 00 00 00 00 00 00 02 00 00 00 35
+0010   00 00 00 00 5f ae 7d ad 00 03 00 09 00 00 00 00
+0020   00 00 00 01 00 00 00 4c 00 00 00 00 00 00 00 0f
+0030   00 00 00 0f 00 00 00 00 00 00 00 2f 00 00 00 00
+0040   00 00 00 04 00 00 00 40 00 00 00 01 00 00 00 03
+0050   74 63 70 00 00 00 00 16 31 33 31 2e 31 36 39 2e
+0060   31 39 31 2e 31 34 33 2e 31 32 35 2e 34 39 00 00
+0070   00 00 00 01 00 00 00 04 00 00 00 01 00 10 00 00
+0080   00 10 00 00 00 00 00 01 00 00 00 02 00 00 00 06
+0090   00 00 00 00
+
+
+the last 12 bytes : bitmap size, bitmap[0], bitmap[1]
+
+
+This part of code in the didn't change since 2010, and I
+have no issues to use 5.8 kernel. I am pretty sure, that
+tests with 5.9 did pass as expected. I will try to bisec it.
+
+Tigran.
+
+>=20
+>> [31576.790003] --> nfs4_alloc_slot used_slots=3D0001 highest_used=3D0
+>> max_slots=3D16
+>> [31576.790007] <-- nfs4_alloc_slot used_slots=3D0003 highest_used=3D1
+>> slotid=3D1
+>> [31576.790010] nfs4_free_slot: slotid 1 highest_used_slotid 0
+>> [31576.790013] nfs41_sequence_process: Error 0 free the slot
+>> [31576.790017] nfs4_free_slot: slotid 0 highest_used_slotid
+>> 4294967295
+>> [31576.790030] <-- _nfs4_proc_getdeviceinfo status=3D-5
+>> [31576.790034] nfs4_get_device_info getdevice info returns -5
+>> [31576.790084] <-- nfs4_get_device_info d 0000000000000000
+>>=20
+>>=20
+>> Tigran.
+>>=20
+>>=20
+>> ----- Original Message -----
+>> > From: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
+>> > To: "trondmy" <trondmy@hammerspace.com>
+>> > Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
+>> > Sent: Friday, 13 November, 2020 13:48:07
+>> > Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS
+>> > file+flexfiles data channels
+>>=20
+>> > Hi Trond,
+>> >=20
+>> > whit this changes (3ee69a14f92d74ced2647140b3799511ba4f3fa5) I see
+>> > an infinite
+>> > loop
+>> > of LAYOUTGET->GETDEVICEINFO->LAYOUTRETURN without any attempt to
+>> > connect to a
+>> > DS.
+>> >=20
+>> > This is how the response to LAYOUTGET looks like.
+>> >=20
+>> > Network File System, Ops(2): SEQUENCE GETDEVINFO
+>> > =C2=A0=C2=A0 [Program Version: 4]
+>> > =C2=A0=C2=A0 [V4 Procedure: COMPOUND (1)]
+>> > =C2=A0=C2=A0 Status: NFS4_OK (0)
+>> > =C2=A0=C2=A0 Tag: <EMPTY>
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 length: 0
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 contents: <EMPTY>
+>> > =C2=A0=C2=A0 Operations (count: 2)
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Opcode: SEQUENCE (53)
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Opcode: GETDEVINFO (47)
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Status: N=
+FS4_OK (0)
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 layout ty=
+pe: LAYOUT4_FLEX_FILES (4)
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r_netid: =
+tcp
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 length: 3
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 contents: tcp
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 fill bytes: opaque data
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r_addr: 1=
+31.169.191.143.125.49
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 length: 22
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 contents: 131.169.191.143.125.49
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 fill bytes: opaque data
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 version: =
+4
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 minorvers=
+ion: 1
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 max_rsize=
+: 1048576
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 max_wsize=
+: 1048576
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tightly c=
+oupled: Yes
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 notify_ma=
+sk: 0x00000006 (Change, Delete)
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 notify_type: Change (1)
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 notify_type: Delete (2)
+>> > =C2=A0=C2=A0 [Main Opcode: GETDEVINFO (47)]
+>> >=20
+>> >=20
+>> >=20
+>> > The MDS is mounted with IPv4. I can provide the full packet trace,
+>> > if needed.
+>> >=20
+>> >=20
+>> > Regards,
+>> > =C2=A0 Tigran.
+>> >=20
+>> >=20
+>> > ----- Original Message -----
+>> > > From: "trondmy" <trondmy@hammerspace.com>
+>> > > To: "linux-nfs" <linux-nfs@vger.kernel.org>
+>> > > Sent: Wednesday, 11 November, 2020 00:42:31
+>> > > Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS
+>> > > file+flexfiles data
+>> > > channels
+>> >=20
+>> > > On Tue, 2020-11-10 at 18:18 -0500, trondmy@kernel.org=C2=A0wrote:
+>> > > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>> > > >=20
+>> > > > Add support for connecting to the pNFS files/flexfiles data
+>> > > > servers
+>> > > > through RDMA, assuming that the GETDEVICEINFO call advertises
+>> > > > that
+>> > > > support.
+>> > > >=20
+>> > > > v2: Fix layoutstats encoding for pNFS/flexfiles.
+>> > > > v3: Move most of the netid handling into the SUNRPC and RDMA
+>> > > > modules.
+>> > > > =C2=A0=C2=A0=C2=A0 Fix up the mount code to benefit more from auto=
+mated
+>> > > > loading of
+>> > > > =C2=A0=C2=A0=C2=A0 SUNRPC transport modules.
+>> > > >=20
+>> > >=20
+>> > > Note that one cleanup that I did not perform, but which really
+>> > > could be
+>> > > useful should we want to add more transport mechanisms, is to
+>> > > move the
+>> > > code to parse stringified addresses (in particular IETF style
+>> > > "universal addresses") into the transport modules so that the
+>> > > actual
+>> > > parsing of mount and pNFS transport info can be automatically
+>> > > extended
+>> > > when new transport modules are added.
+>> > >=20
+>> > > --
+>> > > Trond Myklebust
+>> > > Linux NFS client maintainer, Hammerspace
+>> > > trond.myklebust@hammerspace.com
+>=20
+> --
+> Trond Myklebust
+> CTO, Hammerspace Inc
+> 4984 El Camino Real, Suite 208
+> Los Altos, CA 94022
+>=20
+> www.hammer.space
