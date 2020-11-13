@@ -2,165 +2,142 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87B102B1E3E
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Nov 2020 16:07:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48B4E2B23FA
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Nov 2020 19:46:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgKMPHs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Nov 2020 10:07:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36738 "EHLO
+        id S1726239AbgKMSqo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Nov 2020 13:46:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbgKMPHr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Nov 2020 10:07:47 -0500
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A157C0613D1
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:07:47 -0800 (PST)
-Received: by mail-qt1-x841.google.com with SMTP id g17so6854552qts.5
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:07:47 -0800 (PST)
+        with ESMTP id S1726199AbgKMSqn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Nov 2020 13:46:43 -0500
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C0C4C0617A6
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 10:46:43 -0800 (PST)
+Received: by mail-il1-x143.google.com with SMTP id h6so5732878ilj.8
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 10:46:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=d6RR6f6r3EsCnCokdGgPRh3LTVdPPGEAj+AsZPCBwIU=;
-        b=vexd7SsglNBxAiRnMPEbxhQqSNrtNox+EAXFEI0q/lY4gJp5r2Y6fWvQkRFEogohSs
-         Hf/E9A/y5IbL9c04uzzSQzzR61CcPhyDbu1t2tBmva6Sz0JCqYcNzNRrrKK1H+1l67fz
-         D+JBQwn22Bgt2OvLG3cb+VOqwRHl9LRgYfpT/VtKqe22ZY5TF3cn3Nbk5+/D1+5XUfIe
-         0pohwC2sbw2jj5MeULTmH8Js55oDSJaik513XRukkzsLDtQH2e+bCDJuphqHMdaCcU9y
-         1NqM8hxUZPD4oLtjYBZX8Ht8oHPOESvJ/vnyPKLi5PqhAv1dUluUZLzS8bRcI+Eck+fa
-         4vAA==
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cTJlJ+7xtu0sUuJYplh5pdrvcoxPXi2kVPalslnbuBo=;
+        b=MXdK/hBFVZU9sIyi3jdmY6UGXxmLRQ+WPtbV+AuWQVNdIgqdvtprYRVMYDUfArJhYY
+         V0/yWQy7fmHZh04SVLKUZwm4tfOG47Hfd1Y/w77U3XwqOFW5FmEBxhhI6GZ9BqgveJby
+         t5bXvkXnG6oH4Zddp+WDRbVHtJO7TGT/wWc9s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :in-reply-to:references:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=d6RR6f6r3EsCnCokdGgPRh3LTVdPPGEAj+AsZPCBwIU=;
-        b=Cju7y/TI98Q+n7jsWm9mRBfYCs4bg1voiGpArQ/st3KGDc53cV2oUX8243ZbGRhyPz
-         lO+b9BoRqBR7fwIu5ZhUVDJs4KIBmy6ayfaaXuzJhPzVw5RaP26kFCeFIKdWGtZqfsA6
-         5afpDBGNEFtnOrkxunPFpj0QQb2qFZTfQGxKEMEhrjK8zjVHyTSnY8xq0z390rD863oQ
-         zpC3+oB6lfeB9OpcEKbo73RV4XY6pUp8wzAbepgIgIP9+JN/pKNiih9Nm8BQ2RsIqqsh
-         N0H6JXWTBVMwYZtcln2XzGNCVHxByydBuhHi2eqptwj8bokxuzSH9RYGeIgFqBVTD+Fv
-         9M/g==
-X-Gm-Message-State: AOAM530+la2RHDOMpUzHy1Nbq1M7z8XbyGQgeA7YvHDPaChDuRqFQK8j
-        xFL7qnG96FR0rvwFf1ohFSl4UuCTTE0=
-X-Google-Smtp-Source: ABdhPJz46RsMNO/JzNJ5ar/czFj8h89zGHMYk+xVb8OJBAZLYU68STJsc5M0cZZk2XEYgxSNf7jtNQ==
-X-Received: by 2002:ac8:6953:: with SMTP id n19mr2466336qtr.184.1605280066285;
-        Fri, 13 Nov 2020 07:07:46 -0800 (PST)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id d184sm6924338qkf.136.2020.11.13.07.07.45
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Nov 2020 07:07:45 -0800 (PST)
-Sender: Chuck Lever <chucklever@gmail.com>
-Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0ADF7irA000352
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 15:07:44 GMT
-Subject: [PATCH v1 61/61] NFSD: Remove macros that are no longer used
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Fri, 13 Nov 2020 10:07:44 -0500
-Message-ID: <160528006463.6186.2700423294066360127.stgit@klimt.1015granger.net>
-In-Reply-To: <160527962905.6186.17550620763636619885.stgit@klimt.1015granger.net>
-References: <160527962905.6186.17550620763636619885.stgit@klimt.1015granger.net>
-User-Agent: StGit/0.23-29-ga622f1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cTJlJ+7xtu0sUuJYplh5pdrvcoxPXi2kVPalslnbuBo=;
+        b=FaqsRY9A5Y19VAttY+dUcIDBSWZqEeeUa/L6RKxT2mlOQLPdbhSzMY/S55RONTQxnk
+         2WTaujrEwCW0TmMaL72IS9gT0iPinU9O2rG/Vn5C5drt23luJC+ZtAG1WGFFfTBKSWii
+         49pfCCB5sZQXp6RGDED9D7sIcZD2G/kMc65KhRRPzc5h7GiXP9iPRgEs+wpvdc9+1AVB
+         OtZrcbL9Ys3l7XiHQ0+uhpfzq6yBiVU6XNmU0YUNhQ2PpuaYgOXD30DNiJi62lbeYJDz
+         hGFaNzeLk3iWI/HMdDrj3gClJPf+7rwUD2xApAaxIwhwBYIaicVrbgJ8kFtgbbreDOv8
+         XMBQ==
+X-Gm-Message-State: AOAM530w6bBlDc3GdnE3J0evwZbMYDZ3cPcm9sTvWy7djB0lcRT1yY5n
+        BUJBW2JFzRXKbQFUNTkQ/jrCNw==
+X-Google-Smtp-Source: ABdhPJwGClNp5JrE4fdKndsLLJw6ddafB0Zud1YHDNyHMMvxd3LeWD+obVjRVPSlzsa2bT2R24Bt0Q==
+X-Received: by 2002:a92:6706:: with SMTP id b6mr975121ilc.42.1605293202608;
+        Fri, 13 Nov 2020 10:46:42 -0800 (PST)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id k28sm1099897ilg.40.2020.11.13.10.46.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Nov 2020 10:46:42 -0800 (PST)
+Date:   Fri, 13 Nov 2020 18:46:40 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     "J . Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        David Howells <dhowells@redhat.com>,
+        Scott Mayhew <smayhew@redhat.com>
+Cc:     mauricio@kinvolk.io, Alban Crequy <alban.crequy@gmail.com>,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kyle Anderson <kylea@netflix.com>
+Subject: Re: [PATCH v5 0/2] NFS: Fix interaction between fs_context and user
+ namespaces
+Message-ID: <20201113184640.GA29286@ircssh-2.c.rugged-nimbus-611.internal>
+References: <20201112100952.3514-1-sargun@sargun.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201112100952.3514-1-sargun@sargun.me>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Now that all the NFSv4 decoder functions have been converted to
-make direct calls to the xdr helpers, remove the unused C macros.
+On Thu, Nov 12, 2020 at 02:09:50AM -0800, Sargun Dhillon wrote:
+> Right now, it is possible to mount NFS with an non-matching super block
+> user ns, and NFS sunrpc user ns. This (for the user) results in an awkward
+> set of interactions if using anything other than auth_null, where the UIDs
+> being sent to the server are different than the local UIDs being checked.
+> This can cause "breakage", where if you try to communicate with the NFS
+> server with any other set of mappings, it breaks.
+> 
+> The reason for this is that you can call fsopen("nfs4") in the unprivileged
+> namespace, and that configures fs_context with all the right information
+> for that user namespace. In addition, it also keeps a gets a cred object
+> associated with the caller -- which should match the user namespace.
+> Unfortunately, the mount has to be finished in the init_user_ns because we
+> currently require CAP_SYS_ADMIN in the init user namespace to call fsmount.
+> This means that the superblock's user namespace is set "correctly" to the
+> container, but there's absolutely no way nfs4idmap to consume an
+> unprivileged user namespace because the cred / user_ns that's passed down
+> to nfs4idmap is the one at fsmount.
+> 
+> How this actually exhibits is let's say that the UID 0 in the user
+> namespace is mapped to UID 1000 in the init user ns (and kuid space). What
+> will happen is that nfs4idmap will translate the UID 1000 into UID 0 on the
+> wire, even if the mount is in entirely in the mount / user namespace of the
+> container.
+> 
+> So, it looks something like this
+> Client in unprivileged User NS (UID: 0, KUID: 0)
+> 	->Perform open()
+> 		...VFS / NFS bits...
+> 		nfs_map_uid_to_name ->
+> 			from_kuid_munged(init_user_ns, uid) (returns 0)
+> 				RPC with UID 0
+> 
+> This behaviour happens "the other way" as well, where the UID in the
+> container may be 0, but the corresponding kuid is 1000. When a response
+> from an NFS server comes in we decode it according to the idmap userns.
+> The way this exhibits is even more odd.
+> 
+> Server responds with file attribute (UID: 0, GID: 0)
+> 	->nfs_map_name_to_uid(..., 0)
+> 		->make_kuid(init_user_ns, id) (returns 0)
+> 			....VFS / NFS Bits...
+> 			->from_kuid(container_ns, 0) -> invalid uid
+> 				-> EOVERFLOW
+> 
+> This changes the nfs server to use the cred / userns from fs_context, which
+> is how idmap is constructed. This subsequently is used in the above
+> described flow of converting uids back-and-forth.
+> 
+> Trond gave the feedback that this behaviour [implemented by this patch] is
+> how the legacy sys_mount() behaviour worked[1], and that the intended
+> behaviour is for UIDs to be plumbed through entirely, where the user
+> namespaces UIDs are what is sent over the wire, and not the init user ns.
+> 
+> [1]: https://lore.kernel.org/linux-nfs/8feccf45f6575a204da03e796391cc135283eb88.camel@hammerspace.com/
+> 
+> Sargun Dhillon (2):
+>   NFS: NFSv2/NFSv3: Use cred from fs_context during mount
+>   NFSv4: Refactor to use user namespaces for nfs4idmap
+> 
+>  fs/nfs/client.c     | 4 ++--
+>  fs/nfs/nfs4client.c | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> 
+> base-commit: 8c39076c276be0b31982e44654e2c2357473258a
+> -- 
+> 2.25.1
+> 
+Trond,
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs4xdr.c |   40 ----------------------------------------
- fs/nfsd/xdr4.h    |    9 ---------
- 2 files changed, 49 deletions(-)
-
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 3ab248433f44..68d9dec9bc32 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -100,45 +100,6 @@ check_filename(char *str, int len)
- 	return 0;
- }
- 
--#define DECODE_HEAD				\
--	__be32 *p;				\
--	__be32 status
--#define DECODE_TAIL				\
--	status = 0;				\
--out:						\
--	return status;				\
--xdr_error:					\
--	dprintk("NFSD: xdr error (%s:%d)\n",	\
--			__FILE__, __LINE__);	\
--	status = nfserr_bad_xdr;		\
--	goto out
--
--#define READMEM(x,nbytes) do {			\
--	x = (char *)p;				\
--	p += XDR_QUADLEN(nbytes);		\
--} while (0)
--#define SAVEMEM(x,nbytes) do {			\
--	if (!(x = (p==argp->tmp || p == argp->tmpp) ? \
-- 		savemem(argp, p, nbytes) :	\
-- 		(char *)p)) {			\
--		dprintk("NFSD: xdr error (%s:%d)\n", \
--				__FILE__, __LINE__); \
--		goto xdr_error;			\
--		}				\
--	p += XDR_QUADLEN(nbytes);		\
--} while (0)
--#define COPYMEM(x,nbytes) do {			\
--	memcpy((x), p, nbytes);			\
--	p += XDR_QUADLEN(nbytes);		\
--} while (0)
--#define READ_BUF(nbytes)			\
--	do {					\
--		p = xdr_inline_decode(argp->xdr,\
--				      nbytes);	\
--		if (!p)				\
--			goto xdr_error;		\
--	} while (0)
--
- static int zero_clientid(clientid_t *clid)
- {
- 	return (clid->cl_boot == 0) && (clid->cl_id == 0);
-@@ -5546,7 +5507,6 @@ nfs4svc_decode_compoundargs(struct svc_rqst *rqstp, __be32 *p)
- 	struct nfsd4_compoundargs *args = rqstp->rq_argp;
- 
- 	/* svcxdr_tmp_alloc */
--	args->tmpp = NULL;
- 	args->to_free = NULL;
- 
- 	args->xdr = &rqstp->rq_xdr_stream;
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index 749c2d711d21..dc951768c695 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -386,13 +386,6 @@ struct nfsd4_setclientid_confirm {
- 	nfs4_verifier	sc_confirm;
- };
- 
--struct nfsd4_saved_compoundargs {
--	__be32 *p;
--	__be32 *end;
--	int pagelen;
--	struct page **pagelist;
--};
--
- struct nfsd4_test_stateid_id {
- 	__be32			ts_id_status;
- 	stateid_t		ts_id_stateid;
-@@ -696,8 +689,6 @@ struct svcxdr_tmpbuf {
- 
- struct nfsd4_compoundargs {
- 	/* scratch variables for XDR decode */
--	__be32				tmp[8];
--	__be32 *			tmpp;
- 	struct xdr_stream		*xdr;
- 	struct svcxdr_tmpbuf		*to_free;
- 	struct svc_rqst			*rqstp;
-
-
+I was just thinking, since you said that this is the behaviour of the sys_mount 
+API, would this be considered a regression? Should it go to stable (v5.9)?
