@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFD282B1DF8
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Nov 2020 16:03:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5D162B1DFA
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Nov 2020 16:03:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgKMPDP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Nov 2020 10:03:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35920 "EHLO
+        id S1726746AbgKMPDV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Nov 2020 10:03:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726746AbgKMPDO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Nov 2020 10:03:14 -0500
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914C9C0613D1
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:03:14 -0800 (PST)
-Received: by mail-qk1-x744.google.com with SMTP id q22so9018030qkq.6
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:03:14 -0800 (PST)
+        with ESMTP id S1726770AbgKMPDT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Nov 2020 10:03:19 -0500
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A1CC0613D1
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:03:18 -0800 (PST)
+Received: by mail-qv1-xf43.google.com with SMTP id ek7so4697424qvb.6
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:03:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=qRk/sfW4bwcD+Ts7SzXfR9EqT4+NA8QCdXiccKkiWFk=;
-        b=qGteZ/jAuYmjBw8lUihoGUpMAf5K3jYCyU0//pVM6K+NQhFd6GzuZENeVuRqsSplHr
-         ilx0xD/kMwPVhVVjk5j03omQ6hVU2Hea59tyE6jLhhi8yckf44g3Bi+NKdgzUxlnWEO1
-         ukqDbdvd8PdUUg6h/f2Rj4+t/tH00FuZZYVh+NvrkBdwHLEFLk57ySRIQKpgzCeOw284
-         MeN4vOzo1ZQIohvOpx/u1S573/21Tx4FRdYCpaT7RdGI2Q6dKHQwV1bLjkVgmTi0irHm
-         phq6CpbFgV07uEaC//E56DQAfMVwNLTzhHpZsccKzr8Rc53DonZGSXa+2M2GBJLW3kbR
-         MXAg==
+        bh=pM0PO+aDwWs+bvXXts7opUXIQ+5lV4ayeYZ6oNz/u5E=;
+        b=kp+WM69SiVrGpCWBLZNyiRjjtlpbjDhb9X2nKKUrDEot/xLXqfKilS98omr/7V/jmA
+         OqEs5Cy+h7oXG4aQMUZuXKI7sID3gYvjF7qJ/E+PqeLj4HRwW46mlLch5HwMca1vA72A
+         /pmWwLAh75axELAZdCHiLa4GijsxkSo9v6/fhP/xk4wO02T8A8aGr3JlKdyp2FSUev6v
+         Z/s8uSWH9y0+GjlyDSOzR+JAsBLoTJANM+XIxEJzmhnDTlC8A1bfNuSyKSAM2OD56c9r
+         qpG5pLfUG3zNtZP/FFnoTaTLeEqv2vi4rJEvRUYQuEWZhfeck1s1tyDOgYGusU/Jv++M
+         Vg7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=qRk/sfW4bwcD+Ts7SzXfR9EqT4+NA8QCdXiccKkiWFk=;
-        b=STuZNYt/QuPuVty1/wp9ZZ5c8aGa/ObdHCU//YpR31uyWwM1wmiQOh6WxparhhRujB
-         /cOgiT7Tcy/Domi5N3PaK9xnfZpfOsNK+yfrLn1Sdw9YiN9YAGGqu1GWQRFZEV6BEaWZ
-         KZHCZfpzVi/BqWmNA1hloKztb6ODjI6BxKmExMqvUF+tqKNthEv+w/ggGQ5Hf5eMi5ac
-         7dMV6n7JKuCVqdya6viouyxbW01IkLZaBOdOroCw9AIpZmNnKLcySvi//Lh3oLSzr3Y7
-         eYO93EDixlxx+LRm7cFZEocsh8qU6u37ivd5z40jHwLn57TpvQKmVt4X+ti/8uFJ9hPR
-         9DJQ==
-X-Gm-Message-State: AOAM5301GuoNsKT16aKOPt/sY5CGyrauX0is39+67jmZvZNe/FBMbeFK
-        xqZhfDu0LH5CSRR0qm/mNJG+nmeFTms=
-X-Google-Smtp-Source: ABdhPJwCDs6LMEm4g4OlwfNEyM5UG6aXlYJm5LPwBobuEQbQ4dL/ku8Os/mmFGn/+uQuHrSYDXsq8g==
-X-Received: by 2002:a37:7641:: with SMTP id r62mr2274348qkc.465.1605279792610;
-        Fri, 13 Nov 2020 07:03:12 -0800 (PST)
+        bh=pM0PO+aDwWs+bvXXts7opUXIQ+5lV4ayeYZ6oNz/u5E=;
+        b=GErr2EZm75aU4jV892Rg0MCdxLjaIxmJAIWyyiRmoTCOuX9pgR3x/mKLed3XCrYbF4
+         3nw32x/d+1HmsCae5BNXkQ0R0ZVd/uvQGcFtQbWV+JuWBlNsek2miRwiNjQ4ueF/z3oe
+         KXjWif5qm1fRj9EUc0fje8Zsg9mPMjMYd1Q0Jf0FK65nFI+3mh+o77P4+SrDRyllF3IF
+         2aQOQC3/E+ZWlMD8Bvk/W6Wq/Ufr65vzCqaZQYU1FSyNssHwc4GxPnrH+JzyWZKgXg3/
+         NnQYwNenDPgqpbwkM30nD98d3otIMjJ8wFnP3ytTNltG6uFy5SqyNme4NX7DZ2LCGYH+
+         CCig==
+X-Gm-Message-State: AOAM5306Lrgxhvq1Kgo4pRfzQeYZC88+aCRRBkErbtnpfppStaaXreoC
+        YXf31fAv+UfUongqPCz3XSXwjGYJV2s=
+X-Google-Smtp-Source: ABdhPJwgGY0XasAQhuSToIIo8mYjqxFvyMxNzS6J5qTTSnMKvuKkAhldMtIdsc8P9oKTdQme3GB5Ag==
+X-Received: by 2002:a0c:d414:: with SMTP id t20mr2859804qvh.34.1605279797669;
+        Fri, 13 Nov 2020 07:03:17 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id x5sm7254964qtx.61.2020.11.13.07.03.11
+        by smtp.gmail.com with ESMTPSA id e22sm6483316qtq.38.2020.11.13.07.03.16
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Nov 2020 07:03:11 -0800 (PST)
+        Fri, 13 Nov 2020 07:03:17 -0800 (PST)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0ADF3AP4032664
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 15:03:10 GMT
-Subject: [PATCH v1 09/61] NFSD: Replace READ* macros in nfsd4_decode_create()
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0ADF3GGf032667
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 15:03:16 GMT
+Subject: [PATCH v1 10/61] NFSD: Replace READ* macros in nfsd4_decode_bitmap()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Fri, 13 Nov 2020 10:03:10 -0500
-Message-ID: <160527979096.6186.164949251806384511.stgit@klimt.1015granger.net>
+Date:   Fri, 13 Nov 2020 10:03:16 -0500
+Message-ID: <160527979624.6186.5009509470610259534.stgit@klimt.1015granger.net>
 In-Reply-To: <160527962905.6186.17550620763636619885.stgit@klimt.1015granger.net>
 References: <160527962905.6186.17550620763636619885.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -70,120 +70,120 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c |   65 +++++++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 48 insertions(+), 17 deletions(-)
+ fs/nfsd/nfs4xdr.c |   57 ++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 32 insertions(+), 25 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 2c69bf10d556..3cd5b2c843d8 100644
+index 3cd5b2c843d8..bc36c746b293 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -90,6 +90,8 @@ check_filename(char *str, int len)
- 
- 	if (len == 0)
- 		return nfserr_inval;
-+	if (len > NFS4_MAXNAMLEN)
-+		return nfserr_nametoolong;
- 	if (isdotent(str, len))
- 		return nfserr_badname;
- 	for (i = 0; i < len; i++)
-@@ -203,6 +205,32 @@ static char *savemem(struct nfsd4_compoundargs *argp, __be32 *p, int nbytes)
- 	return ret;
+@@ -246,29 +246,29 @@ nfsd4_decode_time(struct nfsd4_compoundargs *argp, struct timespec64 *tv)
  }
  
-+static __be32 nfsd4_decode_component4(struct nfsd4_compoundargs *argp,
-+				      char **namp, u32 *lenp)
-+{
-+	__be32 *p, status;
-+
-+	if (xdr_stream_decode_u32(argp->xdr, lenp) < 0)
+ static __be32
+-nfsd4_decode_bitmap(struct nfsd4_compoundargs *argp, u32 *bmval)
++nfsd4_decode_bitmap4(struct nfsd4_compoundargs *argp, u32 *bmval,
++		     u32 bmlen)
+ {
+-	u32 bmlen;
+-	DECODE_HEAD;
++	__be32 *p;
++	u32 len, i;
+ 
+-	bmval[0] = 0;
+-	bmval[1] = 0;
+-	bmval[2] = 0;
++	for (i = 0; i < bmlen; i++)
++		bmval[i] = 0;
+ 
+-	READ_BUF(4);
+-	bmlen = be32_to_cpup(p++);
+-	if (bmlen > 1000)
++	if (xdr_stream_decode_u32(argp->xdr, &len) < 0)
 +		goto xdr_error;
-+	p = xdr_inline_decode(argp->xdr, *lenp);
++	if (len > 1000)
+ 		goto xdr_error;
+ 
+-	READ_BUF(bmlen << 2);
+-	if (bmlen > 0)
+-		bmval[0] = be32_to_cpup(p++);
+-	if (bmlen > 1)
+-		bmval[1] = be32_to_cpup(p++);
+-	if (bmlen > 2)
+-		bmval[2] = be32_to_cpup(p++);
++	p = xdr_inline_decode(argp->xdr, len << 2);
 +	if (!p)
 +		goto xdr_error;
-+	status = check_filename((char *)p, *lenp);
-+	if (status)
-+		goto out;
-+	*namp = svcxdr_tmpalloc(argp, *lenp);
-+	if (!*namp)
-+		goto nomem;
-+	memcpy(*namp, p, *lenp);
-+	status = nfs_ok;
-+out:
-+	return status;
-+xdr_error:
-+	return nfserr_bad_xdr;
-+nomem:
-+	return nfserr_jukebox;
-+}
-+
- static __be32
- nfsd4_decode_time(struct nfsd4_compoundargs *argp, struct timespec64 *tv)
- {
-@@ -583,24 +611,27 @@ nfsd4_decode_commit(struct nfsd4_compoundargs *argp, struct nfsd4_commit *commit
- static __be32
- nfsd4_decode_create(struct nfsd4_compoundargs *argp, struct nfsd4_create *create)
- {
--	DECODE_HEAD;
-+	__be32 *p, status;
- 
--	READ_BUF(4);
--	create->cr_type = be32_to_cpup(p++);
-+	if (xdr_stream_decode_u32(argp->xdr, &create->cr_type) < 0)
-+		goto xdr_error;
- 	switch (create->cr_type) {
- 	case NF4LNK:
--		READ_BUF(4);
--		create->cr_datalen = be32_to_cpup(p++);
--		READ_BUF(create->cr_datalen);
-+		if (xdr_stream_decode_u32(argp->xdr, &create->cr_datalen) < 0)
-+			goto xdr_error;
-+		p = xdr_inline_decode(argp->xdr, create->cr_datalen);
-+		if (!p)
-+			goto xdr_error;
- 		create->cr_data = svcxdr_dupstr(argp, p, create->cr_datalen);
- 		if (!create->cr_data)
- 			return nfserr_jukebox;
- 		break;
- 	case NF4BLK:
- 	case NF4CHR:
--		READ_BUF(8);
--		create->cr_specdata1 = be32_to_cpup(p++);
--		create->cr_specdata2 = be32_to_cpup(p++);
-+		if (xdr_stream_decode_u32(argp->xdr, &create->cr_specdata1) < 0)
-+			goto xdr_error;
-+		if (xdr_stream_decode_u32(argp->xdr, &create->cr_specdata2) < 0)
-+			goto xdr_error;
- 		break;
- 	case NF4SOCK:
- 	case NF4FIFO:
-@@ -609,20 +640,20 @@ nfsd4_decode_create(struct nfsd4_compoundargs *argp, struct nfsd4_create *create
- 		break;
- 	}
- 
--	READ_BUF(4);
--	create->cr_namelen = be32_to_cpup(p++);
--	READ_BUF(create->cr_namelen);
--	SAVEMEM(create->cr_name, create->cr_namelen);
--	if ((status = check_filename(create->cr_name, create->cr_namelen)))
--		return status;
--
-+	status = nfsd4_decode_component4(argp, &create->cr_name,
-+					 &create->cr_namelen);
-+	if (status)
-+		goto out;
- 	status = nfsd4_decode_fattr(argp, create->cr_bmval, &create->cr_iattr,
- 				    &create->cr_acl, &create->cr_label,
- 				    &create->cr_umask);
- 	if (status)
- 		goto out;
++	for (i = 0; i < len && i < bmlen; i++)
++		bmval[i] = be32_to_cpup(p++);
  
 -	DECODE_TAIL;
-+out:
-+	return status;
++	return nfs_ok;
 +xdr_error:
 +	return nfserr_bad_xdr;
  }
  
+ static __be32
+@@ -282,8 +282,9 @@ nfsd4_decode_fattr(struct nfsd4_compoundargs *argp, u32 *bmval,
+ 
+ 	DECODE_HEAD;
+ 	iattr->ia_valid = 0;
+-	if ((status = nfsd4_decode_bitmap(argp, bmval)))
+-		return status;
++	status = nfsd4_decode_bitmap4(argp, bmval, 3);
++	if (status)
++		goto out;
+ 
+ 	if (bmval[0] & ~NFSD_WRITEABLE_ATTRS_WORD0
+ 	    || bmval[1] & ~NFSD_WRITEABLE_ATTRS_WORD1
+@@ -665,7 +666,8 @@ nfsd4_decode_delegreturn(struct nfsd4_compoundargs *argp, struct nfsd4_delegretu
  static inline __be32
+ nfsd4_decode_getattr(struct nfsd4_compoundargs *argp, struct nfsd4_getattr *getattr)
+ {
+-	return nfsd4_decode_bitmap(argp, getattr->ga_bmval);
++	return nfsd4_decode_bitmap4(argp, getattr->ga_bmval,
++				    ARRAY_SIZE(getattr->ga_bmval));
+ }
+ 
+ static __be32
+@@ -1060,7 +1062,9 @@ nfsd4_decode_readdir(struct nfsd4_compoundargs *argp, struct nfsd4_readdir *read
+ 	COPYMEM(readdir->rd_verf.data, sizeof(readdir->rd_verf.data));
+ 	readdir->rd_dircount = be32_to_cpup(p++);
+ 	readdir->rd_maxcount = be32_to_cpup(p++);
+-	if ((status = nfsd4_decode_bitmap(argp, readdir->rd_bmval)))
++	status = nfsd4_decode_bitmap4(argp, readdir->rd_bmval,
++				      ARRAY_SIZE(readdir->rd_bmval));
++	if (status)
+ 		goto out;
+ 
+ 	DECODE_TAIL;
+@@ -1206,7 +1210,9 @@ nfsd4_decode_verify(struct nfsd4_compoundargs *argp, struct nfsd4_verify *verify
+ {
+ 	DECODE_HEAD;
+ 
+-	if ((status = nfsd4_decode_bitmap(argp, verify->ve_bmval)))
++	status = nfsd4_decode_bitmap4(argp, verify->ve_bmval,
++				      ARRAY_SIZE(verify->ve_bmval));
++	if (status)
+ 		goto out;
+ 
+ 	/* For convenience's sake, we compare raw xdr'd attributes in
+@@ -1285,12 +1291,13 @@ nfsd4_decode_exchange_id(struct nfsd4_compoundargs *argp,
+ 		break;
+ 	case SP4_MACH_CRED:
+ 		/* spo_must_enforce */
+-		status = nfsd4_decode_bitmap(argp,
+-					exid->spo_must_enforce);
++		status = nfsd4_decode_bitmap4(argp, exid->spo_must_enforce,
++					      ARRAY_SIZE(exid->spo_must_enforce));
+ 		if (status)
+ 			goto out;
+ 		/* spo_must_allow */
+-		status = nfsd4_decode_bitmap(argp, exid->spo_must_allow);
++		status = nfsd4_decode_bitmap4(argp, exid->spo_must_allow,
++					      ARRAY_SIZE(exid->spo_must_allow));
+ 		if (status)
+ 			goto out;
+ 		break;
 
 
