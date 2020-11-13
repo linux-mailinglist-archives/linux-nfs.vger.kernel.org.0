@@ -2,62 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2987E2B1DEF
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Nov 2020 16:02:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77F662B1DF0
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Nov 2020 16:02:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgKMPCc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Nov 2020 10:02:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35780 "EHLO
+        id S1726336AbgKMPCi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Nov 2020 10:02:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbgKMPCc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Nov 2020 10:02:32 -0500
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D63D5C0613D1
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:02:31 -0800 (PST)
-Received: by mail-qk1-x744.google.com with SMTP id d9so9003496qke.8
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:02:31 -0800 (PST)
+        with ESMTP id S1726160AbgKMPCi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Nov 2020 10:02:38 -0500
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF12EC0613D1
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:02:37 -0800 (PST)
+Received: by mail-qk1-x741.google.com with SMTP id 199so9000414qkg.9
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:02:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=lI50/gELjS2rXymyXdCFIVVfAWwxhe722H5bkJzcpsk=;
-        b=ckyoV4VNkU62soH+O/IjwEyqnBMUDQZF0QYg/uoWQAfj/pxCPaZlkQ+zINfCPMwQRW
-         37QEj3vD8ZUguvArRkMwJTnRE7sTSIjSOtOlRBHe31XZLwBF8FDXEEq/pA8m9P2jyt3V
-         e33ZU3I7/haPbu2lZ7K5VVJHCwBZUP5ATckJFo4q8as3Id+UCsFMu0Q+KFR23Wr7a/5H
-         AIEWnCf/7uul5dn5fl1Wk8RFmUVF/61Cm6ao1JOIyO4BU49S2ZWUdn1WNP5LRg8sfh4w
-         4YtSnuivgb/P6vJzor3A8HXGU6jGAYb+cIDuYCp3D6hs9xPk9GQJfGwnuNbUPF0e3AA9
-         PTjw==
+        bh=O8eJ0Y1KoyQq4Rk144FOc+X5PvshmZ/lfJzBBD19NIU=;
+        b=t5JjrpyH7NrEGUpgH8DsEr2pqwUwIxo9FgyzgJB35F+/gHRGQ+Ra0++NLZSsPUfw2U
+         2u3tG3LCrTG7YB6pKVWK02gXocWYVoQPvdLfYKZ9jAAD+E87nXGBEhJFxDbrSCdHHfGj
+         m/PmICTOeDX/IXZD175RU9oXKNMHng5vyfJbIaAXKBm8mEavT5Bkt3yufC9U4Fz1MyU4
+         f/2Tf5wdo14bvMNbttlp7qdL/8+FjbtX6SuGx6VNr4DbHREB6L9yQAHOXPMqduyaHvUK
+         qk5ARdSnTR7pQsPh6v2oRX7Nyjr1o/3BAYIogG3X2jrp+ggu8144RuUbL9OTuI9LjB2f
+         k7Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=lI50/gELjS2rXymyXdCFIVVfAWwxhe722H5bkJzcpsk=;
-        b=YPT9naEwLyib962PHM0iHuRf3Zxz8toRZQYCZCTgdURqAHSyebb62eRoywOV1os3OH
-         1BOVglFL+LuqBZjgMgpRN7L60bWr6fdnnp77sO3ckyjKvVKBzGfWOnXxCSMj5OpJvsvc
-         SvVBAzNicKrLXzwi+tpI3QBFmamGplnWohHFrGvidvWLRrekQqVpd7oREy2sD7eaBL06
-         77rox2OOjJsPbCmYIqkDNy1X9pBTmV28SJIrWeSSvbWAlxQIyKhBLlsXNjc3WvxYtD25
-         ONuIr560RGt43v+jNT6O39u41NpVQmNPcY4tR4xRn7OeaBnyXqPwyZ4HP2yYCuIaIDRo
-         FRPQ==
-X-Gm-Message-State: AOAM530UxDr3tzdTvgKFxJW3O2KlPctsD0VtRV9xY0C9L5sYBS3fW1mv
-        iwLJllBPEoXycODvnZLczpY5S+y/UcE=
-X-Google-Smtp-Source: ABdhPJzZt3JSanGtWo9UfKgFKFCELIHz2pOl1LF7pYZMR8QTZppQsh7VB2RrL52+mSm81+eVGDSzaA==
-X-Received: by 2002:a37:7903:: with SMTP id u3mr2298418qkc.226.1605279750765;
-        Fri, 13 Nov 2020 07:02:30 -0800 (PST)
+        bh=O8eJ0Y1KoyQq4Rk144FOc+X5PvshmZ/lfJzBBD19NIU=;
+        b=sGKyHpiWt1Yi/0KPiyaYQz4Ll0/Yfg4JE1JcRj32dOz1xyEKFIXsvTfOXgqRhYNPYY
+         4OBf4uQs3+O09S1YGzG5NnMDgyMH8OI4UhOHN+utRYy0bClWmw17axSZO4h7wDYdYMxI
+         gznEyzOHRBf9bPIjk22mziMGrGlb2la57dUUTxJfiMnu67YEQzZ5G7nbD2AMEzHKWUVd
+         FJzPthGR1G1+DmIuriloGFLtvMjdxxz37jLbI6oLdKVz82++ZtcyJrNFspSOa5tXn2Lu
+         ag1FsLYhGgD0SE/TmhNzBWO79hGRx0e8G3axUJ0oh2dEVgocAhqq6a1IACkJkkiMHikg
+         /o8A==
+X-Gm-Message-State: AOAM532MDJwBDJSmJ9belf+hWxpCOPYd642Y22J/J27dwTCeI5DnN1QM
+        ZvNSvOpNYDDfo6kkUZgpDHvhLMVpmcM=
+X-Google-Smtp-Source: ABdhPJzD07fyhXF3cvn02SC4T5ugxs5eKxaXWFTvSTXNOaJzw7ha7AH/5kxsmUnrGv0ULyAaep2PZQ==
+X-Received: by 2002:a37:8005:: with SMTP id b5mr2328882qkd.419.1605279756002;
+        Fri, 13 Nov 2020 07:02:36 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id 82sm6837386qke.76.2020.11.13.07.02.29
+        by smtp.gmail.com with ESMTPSA id d12sm6574015qtp.77.2020.11.13.07.02.35
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Nov 2020 07:02:30 -0800 (PST)
+        Fri, 13 Nov 2020 07:02:35 -0800 (PST)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0ADF2SK3032640
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 15:02:28 GMT
-Subject: [PATCH v1 01/61] NFSD: Fix returned READDIR offset cookie
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0ADF2YaA032643
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 15:02:34 GMT
+Subject: [PATCH v1 02/61] SUNRPC: Add xdr_set_scratch_page() and
+ xdr_reset_scratch_buffer()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Fri, 13 Nov 2020 10:02:28 -0500
-Message-ID: <160527974881.6186.12322949032060570965.stgit@klimt.1015granger.net>
+Date:   Fri, 13 Nov 2020 10:02:34 -0500
+Message-ID: <160527975415.6186.18157826846650479797.stgit@klimt.1015granger.net>
 In-Reply-To: <160527962905.6186.17550620763636619885.stgit@klimt.1015granger.net>
 References: <160527962905.6186.17550620763636619885.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -68,50 +69,299 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Code inspection shows that the server's NFSv3 READDIR implementation
-returns the same offset cookie as the client sent, instead of the
-last cookie it returns in the reply's dirlist. This is unlike the
-NFSv2 READDIR, NFSv3 READDIRPLUS, and NFSv4 READDIR implementations,
-and it's been like this since the beginning of kernel git history.
-
-I copied the logic from nfsd3_proc_readdirplus().
+Clean up: De-duplicate some frequently-used code.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs3proc.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/nfs/blocklayout/blocklayout.c          |    2 +
+ fs/nfs/blocklayout/dev.c                  |    2 +
+ fs/nfs/dir.c                              |    2 +
+ fs/nfs/filelayout/filelayout.c            |    2 +
+ fs/nfs/filelayout/filelayoutdev.c         |    2 +
+ fs/nfs/flexfilelayout/flexfilelayout.c    |    2 +
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c |    2 +
+ fs/nfs/nfs42xdr.c                         |    2 +
+ fs/nfs/nfs4xdr.c                          |    6 +---
+ fs/nfsd/nfs4proc.c                        |    2 +
+ include/linux/sunrpc/xdr.h                |   43 ++++++++++++++++++++++++++++-
+ net/sunrpc/auth_gss/gss_rpc_xdr.c         |    2 +
+ net/sunrpc/xdr.c                          |   28 +++----------------
+ 13 files changed, 58 insertions(+), 39 deletions(-)
 
-diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index d9be589fed15..e0ad18d6b5a8 100644
---- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -430,6 +430,7 @@ nfsd3_proc_readdir(struct svc_rqst *rqstp)
- 	struct nfsd3_readdirargs *argp = rqstp->rq_argp;
- 	struct nfsd3_readdirres  *resp = rqstp->rq_resp;
- 	int		count = 0;
-+	loff_t		offset;
- 	struct page	**p;
- 	caddr_t		page_addr = NULL;
+diff --git a/fs/nfs/blocklayout/blocklayout.c b/fs/nfs/blocklayout/blocklayout.c
+index 08108b6d2fa1..3be6836074ae 100644
+--- a/fs/nfs/blocklayout/blocklayout.c
++++ b/fs/nfs/blocklayout/blocklayout.c
+@@ -697,7 +697,7 @@ bl_alloc_lseg(struct pnfs_layout_hdr *lo, struct nfs4_layoutget_res *lgr,
  
-@@ -448,7 +449,9 @@ nfsd3_proc_readdir(struct svc_rqst *rqstp)
- 	resp->common.err = nfs_ok;
- 	resp->buffer = argp->buffer;
- 	resp->rqstp = rqstp;
--	resp->status = nfsd_readdir(rqstp, &resp->fh, (loff_t *)&argp->cookie,
-+	offset = argp->cookie;
+ 	xdr_init_decode_pages(&xdr, &buf,
+ 			lgr->layoutp->pages, lgr->layoutp->len);
+-	xdr_set_scratch_buffer(&xdr, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&xdr, scratch);
+ 
+ 	status = -EIO;
+ 	p = xdr_inline_decode(&xdr, 4);
+diff --git a/fs/nfs/blocklayout/dev.c b/fs/nfs/blocklayout/dev.c
+index dec5880ac6de..acb1d22907da 100644
+--- a/fs/nfs/blocklayout/dev.c
++++ b/fs/nfs/blocklayout/dev.c
+@@ -510,7 +510,7 @@ bl_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
+ 		goto out;
+ 
+ 	xdr_init_decode_pages(&xdr, &buf, pdev->pages, pdev->pglen);
+-	xdr_set_scratch_buffer(&xdr, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&xdr, scratch);
+ 
+ 	p = xdr_inline_decode(&xdr, sizeof(__be32));
+ 	if (!p)
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index cb52db9a0cfb..2b1a680d7f3d 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -576,7 +576,7 @@ int nfs_readdir_page_filler(nfs_readdir_descriptor_t *desc, struct nfs_entry *en
+ 		goto out_nopages;
+ 
+ 	xdr_init_decode_pages(&stream, &buf, xdr_pages, buflen);
+-	xdr_set_scratch_buffer(&stream, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&stream, scratch);
+ 
+ 	do {
+ 		if (entry->label)
+diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filelayout.c
+index 7f5aa0403e16..d158a500c25c 100644
+--- a/fs/nfs/filelayout/filelayout.c
++++ b/fs/nfs/filelayout/filelayout.c
+@@ -666,7 +666,7 @@ filelayout_decode_layout(struct pnfs_layout_hdr *flo,
+ 		return -ENOMEM;
+ 
+ 	xdr_init_decode_pages(&stream, &buf, lgr->layoutp->pages, lgr->layoutp->len);
+-	xdr_set_scratch_buffer(&stream, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&stream, scratch);
+ 
+ 	/* 20 = ufl_util (4), first_stripe_index (4), pattern_offset (8),
+ 	 * num_fh (4) */
+diff --git a/fs/nfs/filelayout/filelayoutdev.c b/fs/nfs/filelayout/filelayoutdev.c
+index d913e818858f..86c3f7e69ec4 100644
+--- a/fs/nfs/filelayout/filelayoutdev.c
++++ b/fs/nfs/filelayout/filelayoutdev.c
+@@ -82,7 +82,7 @@ nfs4_fl_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
+ 		goto out_err;
+ 
+ 	xdr_init_decode_pages(&stream, &buf, pdev->pages, pdev->pglen);
+-	xdr_set_scratch_buffer(&stream, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&stream, scratch);
+ 
+ 	/* Get the stripe count (number of stripe index) */
+ 	p = xdr_inline_decode(&stream, 4);
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index a163533446fa..d7010686d39a 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -378,7 +378,7 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
+ 
+ 	xdr_init_decode_pages(&stream, &buf, lgr->layoutp->pages,
+ 			      lgr->layoutp->len);
+-	xdr_set_scratch_buffer(&stream, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&stream, scratch);
+ 
+ 	/* stripe unit and mirror_array_cnt */
+ 	rc = -EIO;
+diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+index 3eda40a320a5..c9b61b818ec1 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
++++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+@@ -69,7 +69,7 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
+ 	INIT_LIST_HEAD(&dsaddrs);
+ 
+ 	xdr_init_decode_pages(&stream, &buf, pdev->pages, pdev->pglen);
+-	xdr_set_scratch_buffer(&stream, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&stream, scratch);
+ 
+ 	/* multipath count */
+ 	p = xdr_inline_decode(&stream, 4);
+diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+index 0dc31ad2362e..a7e513e2ec42 100644
+--- a/fs/nfs/nfs42xdr.c
++++ b/fs/nfs/nfs42xdr.c
+@@ -1540,7 +1540,7 @@ static int nfs4_xdr_dec_listxattrs(struct rpc_rqst *rqstp,
+ 	struct compound_hdr hdr;
+ 	int status;
+ 
+-	xdr_set_scratch_buffer(xdr, page_address(res->scratch), PAGE_SIZE);
++	xdr_set_scratch_page(xdr, res->scratch);
+ 
+ 	status = decode_compound_hdr(xdr, &hdr);
+ 	if (status)
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index c6dbfcae7517..2eabe5add344 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -6403,10 +6403,8 @@ nfs4_xdr_dec_getacl(struct rpc_rqst *rqstp, struct xdr_stream *xdr,
+ 	struct compound_hdr hdr;
+ 	int status;
+ 
+-	if (res->acl_scratch != NULL) {
+-		void *p = page_address(res->acl_scratch);
+-		xdr_set_scratch_buffer(xdr, p, PAGE_SIZE);
+-	}
++	if (res->acl_scratch != NULL)
++		xdr_set_scratch_page(xdr, res->acl_scratch);
+ 	status = decode_compound_hdr(xdr, &hdr);
+ 	if (status)
+ 		goto out;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index ad2fa1a8e7ad..5fbda469fbfe 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2275,7 +2275,7 @@ static void svcxdr_init_encode(struct svc_rqst *rqstp,
+ 	xdr->end = head->iov_base + PAGE_SIZE - rqstp->rq_auth_slack;
+ 	/* Tail and page_len should be zero at this point: */
+ 	buf->len = buf->head[0].iov_len;
+-	xdr->scratch.iov_len = 0;
++	xdr_reset_scratch_buffer(xdr);
+ 	xdr->page_ptr = buf->pages - 1;
+ 	buf->buflen = PAGE_SIZE * (1 + rqstp->rq_page_end - buf->pages)
+ 		- rqstp->rq_auth_slack;
+diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+index ec2a22ccdc2a..6e9edb4dcc0f 100644
+--- a/include/linux/sunrpc/xdr.h
++++ b/include/linux/sunrpc/xdr.h
+@@ -248,7 +248,6 @@ extern void xdr_init_decode(struct xdr_stream *xdr, struct xdr_buf *buf,
+ 			    __be32 *p, struct rpc_rqst *rqst);
+ extern void xdr_init_decode_pages(struct xdr_stream *xdr, struct xdr_buf *buf,
+ 		struct page **pages, unsigned int len);
+-extern void xdr_set_scratch_buffer(struct xdr_stream *xdr, void *buf, size_t buflen);
+ extern __be32 *xdr_inline_decode(struct xdr_stream *xdr, size_t nbytes);
+ extern unsigned int xdr_read_pages(struct xdr_stream *xdr, unsigned int len);
+ extern void xdr_enter_page(struct xdr_stream *xdr, unsigned int len);
+@@ -256,6 +255,48 @@ extern int xdr_process_buf(struct xdr_buf *buf, unsigned int offset, unsigned in
+ extern uint64_t xdr_align_data(struct xdr_stream *, uint64_t, uint32_t);
+ extern uint64_t xdr_expand_hole(struct xdr_stream *, uint64_t, uint64_t);
+ 
++/**
++ * xdr_set_scratch_buffer - Attach a scratch buffer for decoding data.
++ * @xdr: pointer to xdr_stream struct
++ * @buf: pointer to an empty buffer
++ * @buflen: size of 'buf'
++ *
++ * The scratch buffer is used when decoding from an array of pages.
++ * If an xdr_inline_decode() call spans across page boundaries, then
++ * we copy the data into the scratch buffer in order to allow linear
++ * access.
++ */
++static inline void xdr_set_scratch_buffer(struct xdr_stream *xdr, void *buf,
++					  size_t buflen)
++{
++	xdr->scratch.iov_base = buf;
++	xdr->scratch.iov_len = buflen;
++}
 +
-+	resp->status = nfsd_readdir(rqstp, &resp->fh, &offset,
- 				    &resp->common, nfs3svc_encode_entry);
- 	memcpy(resp->verf, argp->verf, 8);
- 	count = 0;
-@@ -464,8 +467,6 @@ nfsd3_proc_readdir(struct svc_rqst *rqstp)
- 	}
- 	resp->count = count >> 2;
- 	if (resp->offset) {
--		loff_t offset = argp->cookie;
++/**
++ * xdr_set_scratch_page - Attach a scratch buffer for decoding data
++ * @xdr: pointer to xdr_stream struct
++ * @page: an anonymous page
++ *
++ * See xdr_set_scratch_buffer().
++ */
++static inline void xdr_set_scratch_page(struct xdr_stream *xdr,
++					struct page *page)
++{
++	xdr_set_scratch_buffer(xdr, page_address(page), PAGE_SIZE);
++}
++
++/**
++ * xdr_reset_scratch_buffer - Clear scratch buffer information
++ * @xdr: pointer to xdr_stream struct
++ *
++ * See xdr_set_scratch_buffer().
++ */
++static inline void xdr_reset_scratch_buffer(struct xdr_stream *xdr)
++{
++	xdr_set_scratch_buffer(xdr, NULL, 0);
++}
++
+ /**
+  * xdr_stream_remaining - Return the number of bytes remaining in the stream
+  * @xdr: pointer to struct xdr_stream
+diff --git a/net/sunrpc/auth_gss/gss_rpc_xdr.c b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+index 2ff7b7083eba..c636c648849b 100644
+--- a/net/sunrpc/auth_gss/gss_rpc_xdr.c
++++ b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+@@ -789,7 +789,7 @@ int gssx_dec_accept_sec_context(struct rpc_rqst *rqstp,
+ 	scratch = alloc_page(GFP_KERNEL);
+ 	if (!scratch)
+ 		return -ENOMEM;
+-	xdr_set_scratch_buffer(xdr, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(xdr, scratch);
+ 
+ 	/* res->status */
+ 	err = gssx_dec_status(xdr, &res->status);
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index 28f81769a27c..c607744b3ea8 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -669,7 +669,7 @@ void xdr_init_encode(struct xdr_stream *xdr, struct xdr_buf *buf, __be32 *p,
+ 	struct kvec *iov = buf->head;
+ 	int scratch_len = buf->buflen - buf->page_len - buf->tail[0].iov_len;
+ 
+-	xdr_set_scratch_buffer(xdr, NULL, 0);
++	xdr_reset_scratch_buffer(xdr);
+ 	BUG_ON(scratch_len < 0);
+ 	xdr->buf = buf;
+ 	xdr->iov = iov;
+@@ -713,7 +713,7 @@ inline void xdr_commit_encode(struct xdr_stream *xdr)
+ 	page = page_address(*xdr->page_ptr);
+ 	memcpy(xdr->scratch.iov_base, page, shift);
+ 	memmove(page, page + shift, (void *)xdr->p - page);
+-	xdr->scratch.iov_len = 0;
++	xdr_reset_scratch_buffer(xdr);
+ }
+ EXPORT_SYMBOL_GPL(xdr_commit_encode);
+ 
+@@ -743,8 +743,7 @@ static __be32 *xdr_get_next_encode_buffer(struct xdr_stream *xdr,
+ 	 * the "scratch" iov to track any temporarily unused fragment of
+ 	 * space at the end of the previous buffer:
+ 	 */
+-	xdr->scratch.iov_base = xdr->p;
+-	xdr->scratch.iov_len = frag1bytes;
++	xdr_set_scratch_buffer(xdr, xdr->p, frag1bytes);
+ 	p = page_address(*xdr->page_ptr);
+ 	/*
+ 	 * Note this is where the next encode will start after we've
+@@ -1052,8 +1051,7 @@ void xdr_init_decode(struct xdr_stream *xdr, struct xdr_buf *buf, __be32 *p,
+ 		     struct rpc_rqst *rqst)
+ {
+ 	xdr->buf = buf;
+-	xdr->scratch.iov_base = NULL;
+-	xdr->scratch.iov_len = 0;
++	xdr_reset_scratch_buffer(xdr);
+ 	xdr->nwords = XDR_QUADLEN(buf->len);
+ 	if (buf->head[0].iov_len != 0)
+ 		xdr_set_iov(xdr, buf->head, buf->len);
+@@ -1101,24 +1099,6 @@ static __be32 * __xdr_inline_decode(struct xdr_stream *xdr, size_t nbytes)
+ 	return p;
+ }
+ 
+-/**
+- * xdr_set_scratch_buffer - Attach a scratch buffer for decoding data.
+- * @xdr: pointer to xdr_stream struct
+- * @buf: pointer to an empty buffer
+- * @buflen: size of 'buf'
+- *
+- * The scratch buffer is used when decoding from an array of pages.
+- * If an xdr_inline_decode() call spans across page boundaries, then
+- * we copy the data into the scratch buffer in order to allow linear
+- * access.
+- */
+-void xdr_set_scratch_buffer(struct xdr_stream *xdr, void *buf, size_t buflen)
+-{
+-	xdr->scratch.iov_base = buf;
+-	xdr->scratch.iov_len = buflen;
+-}
+-EXPORT_SYMBOL_GPL(xdr_set_scratch_buffer);
 -
- 		if (unlikely(resp->offset1)) {
- 			/* we ended up with offset on a page boundary */
- 			*resp->offset = htonl(offset >> 32);
+ static __be32 *xdr_copy_to_scratch(struct xdr_stream *xdr, size_t nbytes)
+ {
+ 	__be32 *p;
 
 
