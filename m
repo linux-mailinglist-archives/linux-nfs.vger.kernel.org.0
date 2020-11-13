@@ -2,63 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72EB82B1E05
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Nov 2020 16:04:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AC962B1E09
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Nov 2020 16:04:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgKMPEM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Nov 2020 10:04:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36088 "EHLO
+        id S1726788AbgKMPER (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Nov 2020 10:04:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726324AbgKMPEL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Nov 2020 10:04:11 -0500
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07231C0613D1
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:04:11 -0800 (PST)
-Received: by mail-qk1-x741.google.com with SMTP id t191so9031015qka.4
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:04:10 -0800 (PST)
+        with ESMTP id S1726787AbgKMPER (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Nov 2020 10:04:17 -0500
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D3FDC0613D1
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:04:17 -0800 (PST)
+Received: by mail-qt1-x841.google.com with SMTP id z3so3247871qtw.9
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 07:04:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=UjrhjxcUN9c0UXHlv7afSsmV4W02b6jenOnKHdReaBY=;
-        b=AI7cGEXuXtRXDOHSANTnkxAPQ6Ikfbt6Q6RpQCOeV16l0psCEuUwvRzog6f+K5s3dY
-         4zg2PKuc4mBviZT2qeJjtAUuk/1FT1rkaUU/Fc5f8vhpPSE5zMkHsHZGVkAb69bay5Zq
-         L8NlTDCMzb5WE/1D404ziU20DSVGEuOZMOF3iWtzzLs947PKH+Oy6CzXaQXRJ4NOOh6j
-         R5bzoDBTYxM07m0mbDmn1NEADoRH/CppKcd95QDe8mflThhhQkL9u4Yv/hyWz/VXRSTc
-         1zNl7blBE/OddX1LJNfv+69TexpMMaFqr7Aknlq3F0wEI/c9fBX49Pr0PjpM5Mwm2JHm
-         Xidw==
+        bh=tN0VXUzvfOn1IsGyxe61OZ/fZfxUb40B1aG2GEluqwE=;
+        b=rW2HpzioVktLGtQkLz3xd+fzdBccZeEpv2r05YR7Loejt9PM5TiFhQpG89lQKvfV7p
+         gi430TIl9e8DwkZg1Bd79xsRIM080kLt2KupeXwbYyAdQLLoONyWejoyURlMuMMVsNI9
+         41422fQJjLnVEiVoSh9p0R+CBAKQZf816Kj7XFplvfsmPBRVub+Qiic41s6cK3Irg3DB
+         64qKC4ZvFrIL+crcU54h342brNui3GrSoia5BFZ+gaz1TA4f6Gf9tCOuQTPCs2spSe4v
+         dVwRJCZY3y959Qe/UBslB9FKZT1zfdxVNbZR6t+kK22ciAsxyDIWXD6cRAFR950yqecA
+         eKdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=UjrhjxcUN9c0UXHlv7afSsmV4W02b6jenOnKHdReaBY=;
-        b=TsETHU3IfzaFuyzC508tmGgdbnGaILLCln75U4g6xbYy7G0ITq8ngiJ053BouRgZqK
-         8trX5ISacDbQwno2Ac8MAVLZecMizhZpP7eMP3IhDu46AtCSj1Je4XU3dNNqFuWIDvws
-         Q7OeTG+W0a4c12MzPXz3+nY2F/ZOVejhVNluCHV7Ne82heOvZ7wWpMLUhY84tuEiTxuh
-         HFjR1QHbDgv7YJR1El981eCB9MICbyYbHGAmZIDH1XS+0H/G4ctQrRVEMnCn5m6f1XU2
-         ZuQEnzgwsu9ZRcb24nwH/gl0cQPhrQF73fPuzKQwhwOOgHaRBaA+WI3GVh3xvWwDRh5Z
-         97OA==
-X-Gm-Message-State: AOAM532SXKUoYBkwNoOlmGxRXTAKACy7L6PX71zTDnISfeAzlsa1IPVz
-        3vItIoCIwD+ya9WOCNlbDTpUpMFtaTA=
-X-Google-Smtp-Source: ABdhPJw+UGVL3M5n9nRvM6DroLS0Ce5zXLLT2Ero57HsKNB0MLwLZFP+x6kW3pBuprgYO7S26kiWNA==
-X-Received: by 2002:a37:946:: with SMTP id 67mr2181199qkj.304.1605279849893;
-        Fri, 13 Nov 2020 07:04:09 -0800 (PST)
+        bh=tN0VXUzvfOn1IsGyxe61OZ/fZfxUb40B1aG2GEluqwE=;
+        b=jE6aSeKNslkXpNiFCUCJH4m/eL0CeoPsMtdfvOZP2Y1WqGFuD/STWJJRruxhVNTcXL
+         4GDwbj8KnqNwGc59Y0i09zDIuHmysVscHPi1My2U1RdAwyfkk6lJ+i5v+8nUkt5r9LgL
+         XRWVsjsRyiZmvQRX4JaaXLYAtRnvSh/p9LXTUOXj+Zb8dG32/kkrFNDuvoG4rY3nEjWH
+         WuFTzNxNMWx95Tj9o85uskTN8rsf2DMsgWf65Saliw9ZLU2YcAbS/lpiJo1QhCNZuTh0
+         QQ0BeQ6YcmiQzp2BASdbreOakOMPiU/IPGpuUZQNbjFH3wPcXIKq730gMm1ShlIQ4Mf/
+         MuTw==
+X-Gm-Message-State: AOAM531aM2tQ0X9T7JjekNtTluld7NEvyiN6nqRFJkA/8GOjF3ZZJfnO
+        +GF8FOUqZhotyklEULLYUPZeZuaT7z4=
+X-Google-Smtp-Source: ABdhPJwxNxlx4fAjxNYpDqeArNVoPlleMaVCyFZ3sXaZbFCiGqpgxkJ2t/3ubZYbL76PXozneL1tPw==
+X-Received: by 2002:ac8:3499:: with SMTP id w25mr2418738qtb.44.1605279855188;
+        Fri, 13 Nov 2020 07:04:15 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id 199sm2310642qkj.61.2020.11.13.07.04.09
+        by smtp.gmail.com with ESMTPSA id p6sm6671118qkh.105.2020.11.13.07.04.14
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Nov 2020 07:04:09 -0800 (PST)
+        Fri, 13 Nov 2020 07:04:14 -0800 (PST)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0ADF48rN032697
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 15:04:08 GMT
-Subject: [PATCH v1 20/61] NFSD: Replace READ* macros in
- nfsd4_decode_open_confirm()
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0ADF4DJ5032700
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 15:04:13 GMT
+Subject: [PATCH v1 21/61] NFSD: Replace READ* macros in
+ nfsd4_decode_open_downgrade()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Fri, 13 Nov 2020 10:04:08 -0500
-Message-ID: <160527984824.6186.3658550944136540072.stgit@klimt.1015granger.net>
+Date:   Fri, 13 Nov 2020 10:04:13 -0500
+Message-ID: <160527985353.6186.18423382803060328673.stgit@klimt.1015granger.net>
 In-Reply-To: <160527962905.6186.17550620763636619885.stgit@klimt.1015granger.net>
 References: <160527962905.6186.17550620763636619885.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -71,33 +71,40 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c |   14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ fs/nfsd/nfs4xdr.c |   21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 2ff3dfaca4a1..b4f23d1fd85e 100644
+index b4f23d1fd85e..c7e7854b5e19 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -1100,18 +1100,22 @@ nfsd4_decode_open(struct nfsd4_compoundargs *argp, struct nfsd4_open *open)
+@@ -1121,21 +1121,26 @@ nfsd4_decode_open_confirm(struct nfsd4_compoundargs *argp, struct nfsd4_open_con
  static __be32
- nfsd4_decode_open_confirm(struct nfsd4_compoundargs *argp, struct nfsd4_open_confirm *open_conf)
+ nfsd4_decode_open_downgrade(struct nfsd4_compoundargs *argp, struct nfsd4_open_downgrade *open_down)
  {
 -	DECODE_HEAD;
+-		    
 +	__be32 status;
- 
- 	if (argp->minorversion >= 1)
- 		return nfserr_notsupp;
- 
- 	status = nfsd4_decode_stateid4(argp, &open_conf->oc_req_stateid);
++
+ 	status = nfsd4_decode_stateid4(argp, &open_down->od_stateid);
  	if (status)
 -		return status;
 -	READ_BUF(4);
--	open_conf->oc_seqid = be32_to_cpup(p++);
+-	open_down->od_seqid = be32_to_cpup(p++);
 +		goto out;
-+	if (xdr_stream_decode_u32(argp->xdr, &open_conf->oc_seqid) < 0)
++	if (xdr_stream_decode_u32(argp->xdr, &open_down->od_seqid) < 0)
 +		goto xdr_error;
- 
+ 	status = nfsd4_decode_share_access(argp, &open_down->od_share_access,
+ 					   &open_down->od_deleg_want, NULL);
+ 	if (status)
+-		return status;
++		goto out;
+ 	status = nfsd4_decode_share_deny(argp, &open_down->od_share_deny);
+ 	if (status)
+-		return status;
 -	DECODE_TAIL;
++		goto out;
++
 +	status = nfs_ok;
 +out:
 +	return status;
