@@ -2,173 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B30102B26C8
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Nov 2020 22:30:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EA542B2882
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Nov 2020 23:26:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbgKMVax (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Nov 2020 16:30:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41084 "EHLO
+        id S1725885AbgKMW0C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Nov 2020 17:26:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgKMVar (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Nov 2020 16:30:47 -0500
-Received: from smtp-o-1.desy.de (smtp-o-1.desy.de [IPv6:2001:638:700:1038::1:9a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE2C8C08E9AA
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 13:30:46 -0800 (PST)
-Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [IPv6:2001:638:700:1038::1:a4])
-        by smtp-o-1.desy.de (Postfix) with ESMTP id C4B69E0844
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 22:30:42 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de C4B69E0844
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-        t=1605303042; bh=knUOoEFyNsrSo0KZCAT/vWSAtTrJ3pQ3unJ/BxLFzLw=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=vQ9w8zOZPIhYC+jf84uVuQgJ3bGN7HoUAXgDvyENI+vI7n2EbPgDirqz7q2xcG9vI
-         hv0IxrhLbZ60WdIvtXFeW9CD8UcdLSUBD3vO3JGJ/RezUV70sXzarC1DCjQdCjL1hJ
-         w44DF5qAy2bDSXHAN0SFee0RINoJJKAsck47sXhY=
-Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [IPv6:2001:638:700:1038::1:81])
-        by smtp-buf-1.desy.de (Postfix) with ESMTP id C022C1201E1;
-        Fri, 13 Nov 2020 22:30:42 +0100 (CET)
-X-Virus-Scanned: amavisd-new at desy.de
-Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
-        by smtp-intra-2.desy.de (Postfix) with ESMTP id 940661001A7;
-        Fri, 13 Nov 2020 22:30:42 +0100 (CET)
-Date:   Fri, 13 Nov 2020 22:30:41 +0100 (CET)
-From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To:     trondmy <trondmy@hammerspace.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <994125760.684644.1605303041944.JavaMail.zimbra@desy.de>
-In-Reply-To: <1375056959.614278.1605271687151.JavaMail.zimbra@desy.de>
-References: <20201110231906.863446-1-trondmy@kernel.org> <3a3696f03eef74ac4723fdc0d1297076a34aa8ae.camel@hammerspace.com> <1375056959.614278.1605271687151.JavaMail.zimbra@desy.de>
-Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfiles
- data channels
+        with ESMTP id S1725866AbgKMW0C (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Nov 2020 17:26:02 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED459C0613D1
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Nov 2020 14:26:01 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id E2747BC8; Fri, 13 Nov 2020 17:26:00 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org E2747BC8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1605306360;
+        bh=hMeP0skOVg0AJwg/0m7ZFv4bsiMgQXseCzoFBQYwqU8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Cv9DO2rr5OyUhbjKd31K93ZZ4kdllOLZtjrDjjbGyK/WzoXCFcMleJ9pS3v4q8NZW
+         mMPzIBHIrNYtoII1px9RYZTWM4gP03YDGXmLjdCrTXzLZhriGTAYdv+gajrTMevn48
+         lqP6KmkL2l8Poma2P7Gndz8Wl7gSzZHqDI2RcOfE=
+Date:   Fri, 13 Nov 2020 17:26:00 -0500
+From:   bfields <bfields@fieldses.org>
+To:     Daire Byrne <daire@dneg.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        linux-cachefs <linux-cachefs@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: Adventures in NFS re-exporting
+Message-ID: <20201113222600.GC1299@fieldses.org>
+References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
+ <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com>
+ <635679406.70384074.1603272832846.JavaMail.zimbra@dneg.com>
+ <20201109160256.GB11144@fieldses.org>
+ <1744768451.86186596.1605186084252.JavaMail.zimbra@dneg.com>
+ <20201112135733.GA9243@fieldses.org>
+ <444227972.86442677.1605206025305.JavaMail.zimbra@dneg.com>
+ <20201112205524.GI9243@fieldses.org>
+ <883314904.86570901.1605222357023.JavaMail.zimbra@dneg.com>
+ <20201113145050.GB1299@fieldses.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF82 (Mac)/8.8.15_GA_3953)
-Thread-Topic: Add RDMA support to the pNFS file+flexfiles data channels
-Thread-Index: AQHWt7lTY9xR7iW33kG2X9IO1/hKs6nCBtsAFTVACHJOhL5PDQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201113145050.GB1299@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Fri, Nov 13, 2020 at 09:50:50AM -0500, bfields wrote:
+> On Thu, Nov 12, 2020 at 11:05:57PM +0000, Daire Byrne wrote:
+> > So, I can't lay claim to identifying the exact optimisation/hack that
+> > improves the retention of the re-export server's client cache when
+> > re-exporting an NFSv3 server (which is then read by many clients). We
+> > were working with an engineer at the time who showed an interest in
+> > our use case and after we supplied a reproducer he suggested modifying
+> > the nfs/inode.c
+> > 
+> > -		if (!inode_eq_iversion_raw(inode, fattr->change_attr)) {
+> > +		if (inode_peek_iversion_raw(inode) < fattr->change_attr)
+> > {
+> > 
+> > His reasoning at the time was:
+> > 
+> > "Fixes inode invalidation caused by read access. The least important
+> > bit is ORed with 1 and causes the inode version to differ from the one
+> > seen on the NFS share. This in turn causes unnecessary re-download
+> > impacting the performance significantly. This fix makes it only
+> > re-fetch file content if inode version seen on the server is newer
+> > than the one on the client."
+> > 
+> > But I've always been puzzled by why this only seems to be the case
+> > when using knfsd to re-export the (NFSv3) client mount. Using multiple
+> > processes on a standard client mount never causes any similar
+> > re-validations. And this happens with a completely read-only share
+> > which is why I started to think it has something to do with atimes as
+> > that could perhaps still cause a "write" modification even when
+> > read-only?
+> 
+> Ah-hah!  So, it's inode_query_iversion() that's modifying a nfs inode's
+> i_version.  That's a special thing that only nfsd would do.
+> 
+> I think that's totally fixable, we'll just have to think a little about
+> how....
 
-After more testing, it looks like that client doesn't like
-notification bitmap:
+I wonder if something like this helps?--b.
 
+commit 0add88a9ccc5
+Author: J. Bruce Fields <bfields@redhat.com>
+Date:   Fri Nov 13 17:03:04 2020 -0500
 
-[31576.789492] --> _nfs4_proc_getdeviceinfo
-[31576.789503] --> nfs41_call_sync_prepare data->seq_server 000000001d17c43=
-e
-[31576.789507] --> nfs4_alloc_slot used_slots=3D0000 highest_used=3D4294967=
-295 max_slots=3D16
-[31576.789510] <-- nfs4_alloc_slot used_slots=3D0001 highest_used=3D0 sloti=
-d=3D0
-[31576.789527] encode_sequence: sessionid=3D2910695007:150995712:0:16777216=
- seqid=3D92462 slotid=3D0 max_slotid=3D0 cache_this=3D0
-[31576.789991] decode_getdeviceinfo: unsupported notification
-[31576.790003] --> nfs4_alloc_slot used_slots=3D0001 highest_used=3D0 max_s=
-lots=3D16
-[31576.790007] <-- nfs4_alloc_slot used_slots=3D0003 highest_used=3D1 sloti=
-d=3D1
-[31576.790010] nfs4_free_slot: slotid 1 highest_used_slotid 0
-[31576.790013] nfs41_sequence_process: Error 0 free the slot
-[31576.790017] nfs4_free_slot: slotid 0 highest_used_slotid 4294967295
-[31576.790030] <-- _nfs4_proc_getdeviceinfo status=3D-5
-[31576.790034] nfs4_get_device_info getdevice info returns -5
-[31576.790084] <-- nfs4_get_device_info d 0000000000000000
+    nfs: don't mangle i_version on NFS
+    
+    The i_version on NFS has pretty much opaque to the client, so we don't
+    want to give the low bit any special interpretation.
+    
+    Define a new FS_PRIVATE_I_VERSION flag for filesystems that manage the
+    i_version on their own.
+    
+    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 
-
-Tigran.
-
-
------ Original Message -----
-> From: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
-> To: "trondmy" <trondmy@hammerspace.com>
-> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
-> Sent: Friday, 13 November, 2020 13:48:07
-> Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfiles=
- data channels
-
-> Hi Trond,
->=20
-> whit this changes (3ee69a14f92d74ced2647140b3799511ba4f3fa5) I see an inf=
-inite
-> loop
-> of LAYOUTGET->GETDEVICEINFO->LAYOUTRETURN without any attempt to connect =
-to a
-> DS.
->=20
-> This is how the response to LAYOUTGET looks like.
->=20
-> Network File System, Ops(2): SEQUENCE GETDEVINFO
->    [Program Version: 4]
->    [V4 Procedure: COMPOUND (1)]
->    Status: NFS4_OK (0)
->    Tag: <EMPTY>
->        length: 0
->        contents: <EMPTY>
->    Operations (count: 2)
->        Opcode: SEQUENCE (53)
->        Opcode: GETDEVINFO (47)
->            Status: NFS4_OK (0)
->            layout type: LAYOUT4_FLEX_FILES (4)
->            r_netid: tcp
->                length: 3
->                contents: tcp
->                fill bytes: opaque data
->            r_addr: 131.169.191.143.125.49
->                length: 22
->                contents: 131.169.191.143.125.49
->                fill bytes: opaque data
->            version: 4
->            minorversion: 1
->            max_rsize: 1048576
->            max_wsize: 1048576
->            tightly coupled: Yes
->            notify_mask: 0x00000006 (Change, Delete)
->                notify_type: Change (1)
->                notify_type: Delete (2)
->    [Main Opcode: GETDEVINFO (47)]
->=20
->=20
->=20
-> The MDS is mounted with IPv4. I can provide the full packet trace, if nee=
-ded.
->=20
->=20
-> Regards,
->   Tigran.
->=20
->=20
-> ----- Original Message -----
->> From: "trondmy" <trondmy@hammerspace.com>
->> To: "linux-nfs" <linux-nfs@vger.kernel.org>
->> Sent: Wednesday, 11 November, 2020 00:42:31
->> Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfile=
-s data
->> channels
->=20
->> On Tue, 2020-11-10 at 18:18 -0500, trondmy@kernel.org wrote:
->>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->>>=20
->>> Add support for connecting to the pNFS files/flexfiles data servers
->>> through RDMA, assuming that the GETDEVICEINFO call advertises that
->>> support.
->>>=20
->>> v2: Fix layoutstats encoding for pNFS/flexfiles.
->>> v3: Move most of the netid handling into the SUNRPC and RDMA modules.
->>> =C2=A0=C2=A0=C2=A0 Fix up the mount code to benefit more from automated=
- loading of
->>> =C2=A0=C2=A0=C2=A0 SUNRPC transport modules.
->>>=20
->>=20
->> Note that one cleanup that I did not perform, but which really could be
->> useful should we want to add more transport mechanisms, is to move the
->> code to parse stringified addresses (in particular IETF style
->> "universal addresses") into the transport modules so that the actual
->> parsing of mount and pNFS transport info can be automatically extended
->> when new transport modules are added.
->>=20
->> --
->> Trond Myklebust
->> Linux NFS client maintainer, Hammerspace
-> > trond.myklebust@hammerspace.com
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 29ec8b09a52d..9b8dd5b713a7 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -1488,7 +1488,8 @@ struct file_system_type nfs_fs_type = {
+ 	.init_fs_context	= nfs_init_fs_context,
+ 	.parameters		= nfs_fs_parameters,
+ 	.kill_sb		= nfs_kill_super,
+-	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
++	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA|
++				  FS_PRIVATE_I_VERSION,
+ };
+ MODULE_ALIAS_FS("nfs");
+ EXPORT_SYMBOL_GPL(nfs_fs_type);
+@@ -1500,7 +1501,8 @@ struct file_system_type nfs4_fs_type = {
+ 	.init_fs_context	= nfs_init_fs_context,
+ 	.parameters		= nfs_fs_parameters,
+ 	.kill_sb		= nfs_kill_super,
+-	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
++	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA|
++				  FS_PRIVATE_I_VERSION,
+ };
+ MODULE_ALIAS_FS("nfs4");
+ MODULE_ALIAS("nfs4");
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 21cc971fd960..c5bb4268228b 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2217,6 +2217,7 @@ struct file_system_type {
+ #define FS_HAS_SUBTYPE		4
+ #define FS_USERNS_MOUNT		8	/* Can be mounted by userns root */
+ #define FS_DISALLOW_NOTIFY_PERM	16	/* Disable fanotify permission events */
++#define FS_PRIVATE_I_VERSION	32	/* i_version managed by filesystem */
+ #define FS_THP_SUPPORT		8192	/* Remove once all fs converted */
+ #define FS_RENAME_DOES_D_MOVE	32768	/* FS will handle d_move() during rename() internally. */
+ 	int (*init_fs_context)(struct fs_context *);
+diff --git a/include/linux/iversion.h b/include/linux/iversion.h
+index 2917ef990d43..52c790a847de 100644
+--- a/include/linux/iversion.h
++++ b/include/linux/iversion.h
+@@ -307,6 +307,8 @@ inode_query_iversion(struct inode *inode)
+ 	u64 cur, old, new;
+ 
+ 	cur = inode_peek_iversion_raw(inode);
++	if (inode->i_sb->s_type->fs_flags & FS_PRIVATE_I_VERSION)
++		return cur;
+ 	for (;;) {
+ 		/* If flag is already set, then no need to swap */
+ 		if (cur & I_VERSION_QUERIED) {
