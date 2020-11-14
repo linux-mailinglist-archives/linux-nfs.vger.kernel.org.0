@@ -2,170 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D9252B2D3E
-	for <lists+linux-nfs@lfdr.de>; Sat, 14 Nov 2020 13:58:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B5BF2B2D58
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 Nov 2020 14:33:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgKNM52 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 14 Nov 2020 07:57:28 -0500
-Received: from natter.dneg.com ([193.203.89.68]:46416 "EHLO natter.dneg.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726868AbgKNM51 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 14 Nov 2020 07:57:27 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by natter.dneg.com (Postfix) with ESMTP id 534E875A2EC7;
-        Sat, 14 Nov 2020 12:57:26 +0000 (GMT)
-X-Virus-Scanned: amavisd-new at mx-dneg
-Received: from natter.dneg.com ([127.0.0.1])
-        by localhost (natter.dneg.com [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id 0Bji90B3dRTC; Sat, 14 Nov 2020 12:57:26 +0000 (GMT)
-Received: from zrozimbrai.dneg.com (zrozimbrai.dneg.com [10.11.20.12])
-        by natter.dneg.com (Postfix) with ESMTPS id 31D6F75A0ACC;
-        Sat, 14 Nov 2020 12:57:26 +0000 (GMT)
-Received: from localhost (localhost [127.0.0.1])
-        by zrozimbrai.dneg.com (Postfix) with ESMTP id 21FA281B5F5F;
-        Sat, 14 Nov 2020 12:57:26 +0000 (GMT)
-Received: from zrozimbrai.dneg.com ([127.0.0.1])
-        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id KeeGZUmt6BiA; Sat, 14 Nov 2020 12:57:26 +0000 (GMT)
-Received: from localhost (localhost [127.0.0.1])
-        by zrozimbrai.dneg.com (Postfix) with ESMTP id 062BE81B6520;
-        Sat, 14 Nov 2020 12:57:26 +0000 (GMT)
-X-Virus-Scanned: amavisd-new at zimbra-dneg
-Received: from zrozimbrai.dneg.com ([127.0.0.1])
-        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id bXOgpCKTnoq3; Sat, 14 Nov 2020 12:57:25 +0000 (GMT)
-Received: from zrozimbra1.dneg.com (zrozimbra1.dneg.com [10.11.16.16])
-        by zrozimbrai.dneg.com (Postfix) with ESMTP id C076581B5F5F;
-        Sat, 14 Nov 2020 12:57:25 +0000 (GMT)
-Date:   Sat, 14 Nov 2020 12:57:24 +0000 (GMT)
-From:   Daire Byrne <daire@dneg.com>
-To:     bfields <bfields@fieldses.org>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        linux-cachefs <linux-cachefs@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <217712894.87456370.1605358643862.JavaMail.zimbra@dneg.com>
-In-Reply-To: <20201113222600.GC1299@fieldses.org>
-References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com> <1744768451.86186596.1605186084252.JavaMail.zimbra@dneg.com> <20201112135733.GA9243@fieldses.org> <444227972.86442677.1605206025305.JavaMail.zimbra@dneg.com> <20201112205524.GI9243@fieldses.org> <883314904.86570901.1605222357023.JavaMail.zimbra@dneg.com> <20201113145050.GB1299@fieldses.org> <20201113222600.GC1299@fieldses.org>
-Subject: Re: Adventures in NFS re-exporting
+        id S1726307AbgKNNc7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 14 Nov 2020 08:32:59 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:59122 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726112AbgKNNc7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 Nov 2020 08:32:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605360777;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IYKhhQT8Sedpn8Ox/PR9aS+larB5VafOh/F4z8tpD24=;
+        b=Dn1gXLHXle++Jp1OgXTV7NYP6QTKo6mH21+2h6n8gmt8fY1bLAS1s8nCTMT3ABNoBDjnIf
+        dK8D+NitZ8IXsWjkBveQ5n5AB92OEsOLNXG5fbGy25K+q+zv7VRl8yo9qbqP+XtHARZdmD
+        ZJmJY8L0j2Qzla/gJbg6FIpcs/tsAlM=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-272-1aChAAIiMtqogrwrVhvr1A-1; Sat, 14 Nov 2020 08:32:55 -0500
+X-MC-Unique: 1aChAAIiMtqogrwrVhvr1A-1
+Received: by mail-ej1-f70.google.com with SMTP id o27so5744302eji.12
+        for <linux-nfs@vger.kernel.org>; Sat, 14 Nov 2020 05:32:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IYKhhQT8Sedpn8Ox/PR9aS+larB5VafOh/F4z8tpD24=;
+        b=ne7oL8hIjVe1X3r+SnhAI6mchbI/GJsh5vQdwS8ewxpObDGgBpOumQH83N4S9gLu6J
+         LYfJlp3IzoJ3nva6DlOPBcwBqtnkBjsb/aRTh3ENs7mEw6Csw5/vToXl9CEERxX6veF1
+         2B9Ad3p4ZgpY/5/og0btE/5ZqIi74leL7l3pDu8OrWA4YXVbBhsC4lzg6eVRyEmkGnOP
+         PrdLTwPW2NrQuDCXuCwPyRcn2Ou34T3oWxmzHg7n3o2GDipwYryk98Ap2djkL6bkMhF7
+         NJ3qvMCA/quA5nbMjxQ4hca02ZDUXHm1vK3wNd23+4UzAFePkdtZFl7VNXIQpv4LEl8H
+         81qQ==
+X-Gm-Message-State: AOAM532DBLpJZh5LzzDVzPjOkRzWURuTeSbESU97GPDMCXiDdIa9dIz8
+        tjEeHsLimCa3b1+ndv7ra925badgRpfzlv7qfJ3U9dF2FYuilBerGTFVFxdDJ5YlxR5+OnCuV+9
+        +HCMlG2r+dq2BrtZaI0o4EmGRLXojn/B75N7H
+X-Received: by 2002:aa7:cb02:: with SMTP id s2mr7221015edt.211.1605360774264;
+        Sat, 14 Nov 2020 05:32:54 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyQEvxH2lHN+Kk+zyinIM8vIpCu85AUwiaqKPt/K32jPSVtHAUG4Adsyq9SD3xHIK3wbezEQEHkS21VP0AQSWc=
+X-Received: by 2002:aa7:cb02:: with SMTP id s2mr7221009edt.211.1605360774068;
+ Sat, 14 Nov 2020 05:32:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.7.11_GA_1854 (ZimbraWebClient - GC78 (Linux)/8.7.11_GA_1854)
-Thread-Topic: Adventures in NFS re-exporting
-Thread-Index: g/vfeij9eDo1ICtJyNfItBe87fEG+w==
+References: <20201110213741.860745-1-trondmy@kernel.org> <CALF+zOkdXMDZ3TNGSNJQPtxy-ru_4iCYTz3U2uwkPAo3j55FZg@mail.gmail.com>
+ <CALF+zO=-Si+CcEJvgzaYAjd2j8APV=4Xwm=FJibhuJRV+zWE5Q@mail.gmail.com>
+ <723ef5d47994e34804f5514b06940e96620e2b70.camel@hammerspace.com> <6b07ff95824f5b46237fa07f5f72d8261d764007.camel@hammerspace.com>
+In-Reply-To: <6b07ff95824f5b46237fa07f5f72d8261d764007.camel@hammerspace.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Sat, 14 Nov 2020 08:32:18 -0500
+Message-ID: <CALF+zOnvne6xyKSTbzkYBcJXfeCKwgc9nmdo4Hzz60dUE-sJog@mail.gmail.com>
+Subject: Re: [PATCH v5 00/22] Readdir enhancements
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Thu, Nov 12, 2020 at 1:26 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Thu, 2020-11-12 at 16:51 +0000, Trond Myklebust wrote:
+> >
+> > I was going to ask you if perhaps reverting Scott's commit
+> > 07b5ce8ef2d8
+> > ("NFS: Make nfs_readdir revalidate less often") might help here?
+> > My thinking is that will trigger more cache invalidations when the
+> > directory is changing underneath us, and will now trigger uncached
+> > readdir in those situations.
+> >
+> > >
+>
+> IOW, the suggestion would be to apply something like the following on
+> top of the existing readdir patchset:
+>
+> ---
+>  fs/nfs/dir.c | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
+>
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index 3f70697729d8..384a4663f742 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -956,10 +956,10 @@ static int readdir_search_pagecache(struct
+> nfs_readdir_descriptor *desc)
+>  {
+>         int res;
+>
+> -       if (nfs_readdir_dont_search_cache(desc))
+> -               return -EBADCOOKIE;
+> -
+>         do {
+> +               if (nfs_readdir_dont_search_cache(desc))
+> +                       return -EBADCOOKIE;
+> +
+>                 if (desc->page_index == 0) {
+>                         desc->current_index = 0;
+>                         desc->prev_index = 0;
+> @@ -1082,11 +1082,9 @@ static int nfs_readdir(struct file *file, struct
+> dir_context *ctx)
+>          * to either find the entry with the appropriate number or
+>          * revalidate the cookie.
+>          */
+> -       if (ctx->pos == 0 || nfs_attribute_cache_expired(inode)) {
+> -               res = nfs_revalidate_mapping(inode, file->f_mapping);
+> -               if (res < 0)
+> -                       goto out;
+> -       }
+> +       res = nfs_revalidate_mapping(inode, file->f_mapping);
+> +       if (res < 0)
+> +               goto out;
+>
+>         res = -ENOMEM;
+>         desc = kzalloc(sizeof(*desc), GFP_KERNEL);
+>
+>
 
------ On 13 Nov, 2020, at 22:26, bfields bfields@fieldses.org wrote:
-> On Fri, Nov 13, 2020 at 09:50:50AM -0500, bfields wrote:
->> On Thu, Nov 12, 2020 at 11:05:57PM +0000, Daire Byrne wrote:
->> > So, I can't lay claim to identifying the exact optimisation/hack that
->> > improves the retention of the re-export server's client cache when
->> > re-exporting an NFSv3 server (which is then read by many clients). We
->> > were working with an engineer at the time who showed an interest in
->> > our use case and after we supplied a reproducer he suggested modifying
->> > the nfs/inode.c
->> > 
->> > -		if (!inode_eq_iversion_raw(inode, fattr->change_attr)) {
->> > +		if (inode_peek_iversion_raw(inode) < fattr->change_attr)
->> > {
->> > 
->> > His reasoning at the time was:
->> > 
->> > "Fixes inode invalidation caused by read access. The least important
->> > bit is ORed with 1 and causes the inode version to differ from the one
->> > seen on the NFS share. This in turn causes unnecessary re-download
->> > impacting the performance significantly. This fix makes it only
->> > re-fetch file content if inode version seen on the server is newer
->> > than the one on the client."
->> > 
->> > But I've always been puzzled by why this only seems to be the case
->> > when using knfsd to re-export the (NFSv3) client mount. Using multiple
->> > processes on a standard client mount never causes any similar
->> > re-validations. And this happens with a completely read-only share
->> > which is why I started to think it has something to do with atimes as
->> > that could perhaps still cause a "write" modification even when
->> > read-only?
->> 
->> Ah-hah!  So, it's inode_query_iversion() that's modifying a nfs inode's
->> i_version.  That's a special thing that only nfsd would do.
->> 
->> I think that's totally fixable, we'll just have to think a little about
->> how....
-> 
-> I wonder if something like this helps?--b.
-> 
-> commit 0add88a9ccc5
-> Author: J. Bruce Fields <bfields@redhat.com>
-> Date:   Fri Nov 13 17:03:04 2020 -0500
-> 
->    nfs: don't mangle i_version on NFS
->    
->    The i_version on NFS has pretty much opaque to the client, so we don't
->    want to give the low bit any special interpretation.
->    
->    Define a new FS_PRIVATE_I_VERSION flag for filesystems that manage the
->    i_version on their own.
->    
->    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> 
-> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-> index 29ec8b09a52d..9b8dd5b713a7 100644
-> --- a/fs/nfs/fs_context.c
-> +++ b/fs/nfs/fs_context.c
-> @@ -1488,7 +1488,8 @@ struct file_system_type nfs_fs_type = {
-> 	.init_fs_context	= nfs_init_fs_context,
-> 	.parameters		= nfs_fs_parameters,
-> 	.kill_sb		= nfs_kill_super,
-> -	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
-> +	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA|
-> +				  FS_PRIVATE_I_VERSION,
-> };
-> MODULE_ALIAS_FS("nfs");
-> EXPORT_SYMBOL_GPL(nfs_fs_type);
-> @@ -1500,7 +1501,8 @@ struct file_system_type nfs4_fs_type = {
-> 	.init_fs_context	= nfs_init_fs_context,
-> 	.parameters		= nfs_fs_parameters,
-> 	.kill_sb		= nfs_kill_super,
-> -	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
-> +	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA|
-> +				  FS_PRIVATE_I_VERSION,
-> };
-> MODULE_ALIAS_FS("nfs4");
-> MODULE_ALIAS("nfs4");
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 21cc971fd960..c5bb4268228b 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2217,6 +2217,7 @@ struct file_system_type {
-> #define FS_HAS_SUBTYPE		4
-> #define FS_USERNS_MOUNT		8	/* Can be mounted by userns root */
-> #define FS_DISALLOW_NOTIFY_PERM	16	/* Disable fanotify permission events */
-> +#define FS_PRIVATE_I_VERSION	32	/* i_version managed by filesystem */
-> #define FS_THP_SUPPORT		8192	/* Remove once all fs converted */
-> #define FS_RENAME_DOES_D_MOVE	32768	/* FS will handle d_move() during rename()
-> internally. */
-> 	int (*init_fs_context)(struct fs_context *);
-> diff --git a/include/linux/iversion.h b/include/linux/iversion.h
-> index 2917ef990d43..52c790a847de 100644
-> --- a/include/linux/iversion.h
-> +++ b/include/linux/iversion.h
-> @@ -307,6 +307,8 @@ inode_query_iversion(struct inode *inode)
-> 	u64 cur, old, new;
-> 
-> 	cur = inode_peek_iversion_raw(inode);
-> +	if (inode->i_sb->s_type->fs_flags & FS_PRIVATE_I_VERSION)
-> +		return cur;
-> 	for (;;) {
-> 		/* If flag is already set, then no need to swap */
->  		if (cur & I_VERSION_QUERIED) {
+If you want to pursue this let me know and I will run through some
+tests with this patch (or some other patch) and all NFS versions.
+I've mostly been testing with NFSv4 because that has been the
+problematic case, but this would affect NFSv3 too.
 
-Yes, I can confirm that this absolutely helps! I replaced our (brute force) iversion patch with this (much nicer) patch and we got the same improvement; nfsd and it's clients no longer cause the re-export server's client cache to constantly be re-validated. The re-export server can now serve the same results to many clients from cache. Thanks so much for spending the time to track this down. If merged, future (crazy) NFS re-exporters will benefit from the metadata performance improvement/acceleration!
+I too had been looking at 07b5ce8ef2d8 because it causes NFSv3 to
+behave differently than NFSv4 (I saw with NFSv3,
+nfs_attribute_cache_expired() was always false while a directory is
+being listed).  I pondered whether this was the right direction for
+NFSv4 as well since that causes us to avoid dropping the pagecache and
+kinda "neuters" it for a period of time while a large directory
+listing was in progress.  However I didn't see a way to achieve the
+NFSv3 behavior for NFSv4 and I wasn't convinced NFSv3 behavior was
+necessarily the best approach.
 
-Now if anyone has any ideas why all the read calls to the originating server are limited to a maximum of 128k (with rsize=1M) when coming via the re-export server's nfsd threads, I see that as the next biggest performance issue. Reading directly on the re-export server with a userspace process issues 1MB reads as expected. It doesn't happen for writes (wsize=1MB all the way through) but I'm not sure if that has more to do with async and write back caching helping to build up the size before commit?
-
-I figure the other remaining items on my (wish) list are probably more in the "won't fix" or "can't fix" category (except maybe the NFSv4.0 input/output errors?).
-
-Daire
