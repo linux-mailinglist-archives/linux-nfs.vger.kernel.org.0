@@ -2,135 +2,173 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B5BF2B2D58
-	for <lists+linux-nfs@lfdr.de>; Sat, 14 Nov 2020 14:33:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F11E42B2DA6
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 Nov 2020 15:29:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgKNNc7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 14 Nov 2020 08:32:59 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:59122 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726112AbgKNNc7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 Nov 2020 08:32:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605360777;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IYKhhQT8Sedpn8Ox/PR9aS+larB5VafOh/F4z8tpD24=;
-        b=Dn1gXLHXle++Jp1OgXTV7NYP6QTKo6mH21+2h6n8gmt8fY1bLAS1s8nCTMT3ABNoBDjnIf
-        dK8D+NitZ8IXsWjkBveQ5n5AB92OEsOLNXG5fbGy25K+q+zv7VRl8yo9qbqP+XtHARZdmD
-        ZJmJY8L0j2Qzla/gJbg6FIpcs/tsAlM=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-272-1aChAAIiMtqogrwrVhvr1A-1; Sat, 14 Nov 2020 08:32:55 -0500
-X-MC-Unique: 1aChAAIiMtqogrwrVhvr1A-1
-Received: by mail-ej1-f70.google.com with SMTP id o27so5744302eji.12
-        for <linux-nfs@vger.kernel.org>; Sat, 14 Nov 2020 05:32:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IYKhhQT8Sedpn8Ox/PR9aS+larB5VafOh/F4z8tpD24=;
-        b=ne7oL8hIjVe1X3r+SnhAI6mchbI/GJsh5vQdwS8ewxpObDGgBpOumQH83N4S9gLu6J
-         LYfJlp3IzoJ3nva6DlOPBcwBqtnkBjsb/aRTh3ENs7mEw6Csw5/vToXl9CEERxX6veF1
-         2B9Ad3p4ZgpY/5/og0btE/5ZqIi74leL7l3pDu8OrWA4YXVbBhsC4lzg6eVRyEmkGnOP
-         PrdLTwPW2NrQuDCXuCwPyRcn2Ou34T3oWxmzHg7n3o2GDipwYryk98Ap2djkL6bkMhF7
-         NJ3qvMCA/quA5nbMjxQ4hca02ZDUXHm1vK3wNd23+4UzAFePkdtZFl7VNXIQpv4LEl8H
-         81qQ==
-X-Gm-Message-State: AOAM532DBLpJZh5LzzDVzPjOkRzWURuTeSbESU97GPDMCXiDdIa9dIz8
-        tjEeHsLimCa3b1+ndv7ra925badgRpfzlv7qfJ3U9dF2FYuilBerGTFVFxdDJ5YlxR5+OnCuV+9
-        +HCMlG2r+dq2BrtZaI0o4EmGRLXojn/B75N7H
-X-Received: by 2002:aa7:cb02:: with SMTP id s2mr7221015edt.211.1605360774264;
-        Sat, 14 Nov 2020 05:32:54 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyQEvxH2lHN+Kk+zyinIM8vIpCu85AUwiaqKPt/K32jPSVtHAUG4Adsyq9SD3xHIK3wbezEQEHkS21VP0AQSWc=
-X-Received: by 2002:aa7:cb02:: with SMTP id s2mr7221009edt.211.1605360774068;
- Sat, 14 Nov 2020 05:32:54 -0800 (PST)
+        id S1726356AbgKNO3H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 14 Nov 2020 09:29:07 -0500
+Received: from mail-dm6nam10on2139.outbound.protection.outlook.com ([40.107.93.139]:40000
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726307AbgKNO3G (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 14 Nov 2020 09:29:06 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UJpLZA94qIYPr/xM813mzpJjxhf39OF5qri0jvM0mV9AKV28nRzrZ4RqtezbjoiTodI3mqifY8Tv2SanekBGqf7ekIxA+J2dTuZmSW6JvxitZnMk3UNYx/acV0pwm7pvXczwxM8BLMQHu0BGTNVd6XyCTrIteGiCJDjbZR5345ORzgeyDGBrMJFiPOP4KHAJDUShTwheTaBm0vKRPau2l33tCNVvR+JZLiMVIQ7IhnZ1uRcyirRu5QxPHPtcTOf9wa4On+JOef/o5rR2h6BIKYSAAJHpG8cRax36SKLJPaxnGpj3COb9wR89fKoKBVx+ej6JffOlf8CZk8w5c3NMsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y+ejaTPbsyLoHNr/zxqLRv38L7QJ9HhHoqA0LA2f2MI=;
+ b=nXD6RARB6rv5AXRLNpbV93pRDrTS7hIbcMpRU9lZu6dLGmXEk0PUb2iw72yYDCi/hoqGT6x84RTOiilm2JlW7iiNDMwLoiykHxHbW1iD828NG/lCuUhDPu6BtkEDltNhsPPbeJTVCdkfNkPEzCvPSHztz5mx0DdeUhbXxLV2RgHODob/bnOd+BFEIKWCpAoaz6szdu2O4V3208tdrjw43lXJYMO4bQyFEGs1YBkhTE0IfdbKZS0/NYxtptQl351ziTXJTylmZtUFXbMpmYzFY3NeKNY/KAa54/e9YorW5SJ+hdA7rmxeRCafzIN69lE5rBz/qkk6PuSddJezJHOH4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y+ejaTPbsyLoHNr/zxqLRv38L7QJ9HhHoqA0LA2f2MI=;
+ b=ZeAA93D4M+IuTAw+adC9ZGG8YIwsoqAaoJph/zJEqGDSkJbwAN6pPcAbxT0ok4Oon4dQpDpOOq1qYDIVSqzxrNPHyvswSpKpPxPBXUj1uBtRlP9bb/WH3Ikp9NmkztUpngRU+cigVXUeh6zkeVTbLEbDYaHCrqyDDo3klh6E9ac=
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
+ by BL0PR13MB4449.namprd13.prod.outlook.com (2603:10b6:208:1cb::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.10; Sat, 14 Nov
+ 2020 14:29:01 +0000
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3541.021; Sat, 14 Nov 2020
+ 14:29:01 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "tigran.mkrtchyan@desy.de" <tigran.mkrtchyan@desy.de>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfiles data
+ channels
+Thread-Topic: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfiles
+ data channels
+Thread-Index: AQHWt7lTY9xR7iW33kG2X9IO1/hKs6nCBtsAFTVACHJOhL5PDfzm1vaA/xWRAGqA63bEgA==
+Date:   Sat, 14 Nov 2020 14:29:01 +0000
+Message-ID: <fc82f441b9393720102f1a7e151517ef881f99df.camel@hammerspace.com>
+References: <20201110231906.863446-1-trondmy@kernel.org>
+         <3a3696f03eef74ac4723fdc0d1297076a34aa8ae.camel@hammerspace.com>
+         <1375056959.614278.1605271687151.JavaMail.zimbra@desy.de>
+         <994125760.684644.1605303041944.JavaMail.zimbra@desy.de>
+         <d73c15ca631ad52f036bb8708ab15b89af432952.camel@hammerspace.com>
+         <1371149886.691555.1605311212511.JavaMail.zimbra@desy.de>
+In-Reply-To: <1371149886.691555.1605311212511.JavaMail.zimbra@desy.de>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: desy.de; dkim=none (message not signed)
+ header.d=none;desy.de; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: eb931041-3050-4c0a-e131-08d888a9a1cc
+x-ms-traffictypediagnostic: BL0PR13MB4449:
+x-microsoft-antispam-prvs: <BL0PR13MB4449918BEA623951F8CD1C53B8E50@BL0PR13MB4449.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: F9/uxF/QRIPcw6xNqFOkjEnMZql9CoPO5wB+UkKWUIF2CtzDpcpSrDCSXWSG93uiWWyARjy/KuTv5U0U/Z5OCc6+g9hscwMmPWJJx0ZupjujyhxDXqx1ILph3rrIUyM1gOEPa+kPvP/p3irpNTL+xw0Cv17wgCxS0SNhl8dxmnrmIntBlBr6ZqfmUoJTsTrf0kCkDSHzq9I1Y1PIkPAK9Ifr8ArxBUsYDWD/aqDrrXmkiv0DeYvd/nvZQFHBrXPKB0u6sRGnOyEiQbsjMCCOVCu5o2PeF70GwNxKVZxnRuQEPtZnLDIzFTGeOncFxddub5+Qrt41r47AlTnS3W4FJDAY0Jw7I0rzauCCJhIpz/CCsk/2y8XzSMhtD0DXfVw+
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(136003)(376002)(396003)(39840400004)(366004)(8676002)(4326008)(6486002)(186003)(2616005)(316002)(5660300002)(6916009)(2906002)(71200400001)(83380400001)(66556008)(6512007)(66946007)(4001150100001)(66446008)(86362001)(36756003)(53546011)(26005)(6506007)(76116006)(91956017)(64756008)(8936002)(66476007)(478600001)(505234006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: hIABnOiu/RkQOmV9AeCZVI9KHCCCaeu1aaldaPqR1f34q5fMo4OhrfP7g2myj2VmzCCyTGPLo0pphACH7ZKQz7ZJg7rrHShMzVuSgeJup+o+IRbfv2Tmiij8y+V+dMyzEcE+uLE95mm9+KEOikmckwpoX8gN3FQmi79rJjHF1BQpiUD1gLbnS/E7uZQjPOd+4Yv71dl94rOypetYWNCPNIzv3SBa8JmEWXXHWD8mWcb44emydj7W/2SsVrC3tPntmgPT259iBsTQi7hFoB+4XNue2ICB6OWYf50T2xr/bQnoD4VI0NnKdgCLKszSzq/cvijJXWiykbytk75UdCkK8074rLL7UEGkyjy9HjnitzqYfh1wX8l1Zkv262zB5xZD2ttBiQ/QPVyAN+d0m7pxkLHDqs/IWYXvikBabsqORnmD76aQjqmBcqyvC23J0/Ujmo9nUnNQ4xDLk52tJAu4r2+Srcenqa31//EI5sXxj73TOuaLYK/8JY2QEvpN0lKI4jZ9KgIFDaqa1P/4NqIkOVKGFEVyMkm3fvxOaKgLxdZn73r6nk1fdnJK5j4cjaCJapljbue1DZBJSwLr2RBpCf/HiULv2ADY1rGJBOhbn0rg1hoDNXxJCyHY/ixZP9L1gfwK+D/AASQpDXrGFiICOg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6F2A40418162074F835350B49ED4FF76@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20201110213741.860745-1-trondmy@kernel.org> <CALF+zOkdXMDZ3TNGSNJQPtxy-ru_4iCYTz3U2uwkPAo3j55FZg@mail.gmail.com>
- <CALF+zO=-Si+CcEJvgzaYAjd2j8APV=4Xwm=FJibhuJRV+zWE5Q@mail.gmail.com>
- <723ef5d47994e34804f5514b06940e96620e2b70.camel@hammerspace.com> <6b07ff95824f5b46237fa07f5f72d8261d764007.camel@hammerspace.com>
-In-Reply-To: <6b07ff95824f5b46237fa07f5f72d8261d764007.camel@hammerspace.com>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Sat, 14 Nov 2020 08:32:18 -0500
-Message-ID: <CALF+zOnvne6xyKSTbzkYBcJXfeCKwgc9nmdo4Hzz60dUE-sJog@mail.gmail.com>
-Subject: Re: [PATCH v5 00/22] Readdir enhancements
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb931041-3050-4c0a-e131-08d888a9a1cc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2020 14:29:01.6034
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RDruPQWkioRCn/hFO7uxrD/iV059VX5fBpR6Z4tFYAR4iPqNFE7MR9vXdgUQHn/t+zllHcgHKLhe/2zsoUYuBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR13MB4449
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 1:26 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Thu, 2020-11-12 at 16:51 +0000, Trond Myklebust wrote:
-> >
-> > I was going to ask you if perhaps reverting Scott's commit
-> > 07b5ce8ef2d8
-> > ("NFS: Make nfs_readdir revalidate less often") might help here?
-> > My thinking is that will trigger more cache invalidations when the
-> > directory is changing underneath us, and will now trigger uncached
-> > readdir in those situations.
-> >
-> > >
->
-> IOW, the suggestion would be to apply something like the following on
-> top of the existing readdir patchset:
->
-> ---
->  fs/nfs/dir.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
->
-> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> index 3f70697729d8..384a4663f742 100644
-> --- a/fs/nfs/dir.c
-> +++ b/fs/nfs/dir.c
-> @@ -956,10 +956,10 @@ static int readdir_search_pagecache(struct
-> nfs_readdir_descriptor *desc)
->  {
->         int res;
->
-> -       if (nfs_readdir_dont_search_cache(desc))
-> -               return -EBADCOOKIE;
-> -
->         do {
-> +               if (nfs_readdir_dont_search_cache(desc))
-> +                       return -EBADCOOKIE;
-> +
->                 if (desc->page_index == 0) {
->                         desc->current_index = 0;
->                         desc->prev_index = 0;
-> @@ -1082,11 +1082,9 @@ static int nfs_readdir(struct file *file, struct
-> dir_context *ctx)
->          * to either find the entry with the appropriate number or
->          * revalidate the cookie.
->          */
-> -       if (ctx->pos == 0 || nfs_attribute_cache_expired(inode)) {
-> -               res = nfs_revalidate_mapping(inode, file->f_mapping);
-> -               if (res < 0)
-> -                       goto out;
-> -       }
-> +       res = nfs_revalidate_mapping(inode, file->f_mapping);
-> +       if (res < 0)
-> +               goto out;
->
->         res = -ENOMEM;
->         desc = kzalloc(sizeof(*desc), GFP_KERNEL);
->
->
-
-If you want to pursue this let me know and I will run through some
-tests with this patch (or some other patch) and all NFS versions.
-I've mostly been testing with NFSv4 because that has been the
-problematic case, but this would affect NFSv3 too.
-
-I too had been looking at 07b5ce8ef2d8 because it causes NFSv3 to
-behave differently than NFSv4 (I saw with NFSv3,
-nfs_attribute_cache_expired() was always false while a directory is
-being listed).  I pondered whether this was the right direction for
-NFSv4 as well since that causes us to avoid dropping the pagecache and
-kinda "neuters" it for a period of time while a large directory
-listing was in progress.  However I didn't see a way to achieve the
-NFSv3 behavior for NFSv4 and I wasn't convinced NFSv3 behavior was
-necessarily the best approach.
-
+T24gU2F0LCAyMDIwLTExLTE0IGF0IDAwOjQ2ICswMTAwLCBNa3J0Y2h5YW4sIFRpZ3JhbiB3cm90
+ZToNCj4gDQo+IA0KPiAtLS0tLSBPcmlnaW5hbCBNZXNzYWdlIC0tLS0tDQo+ID4gRnJvbTogInRy
+b25kbXkiIDx0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4NCj4gPiBUbzogIlRpZ3JhbiBNa3J0Y2h5
+YW4iIDx0aWdyYW4ubWtydGNoeWFuQGRlc3kuZGU+DQo+ID4gQ2M6ICJsaW51eC1uZnMiIDxsaW51
+eC1uZnNAdmdlci5rZXJuZWwub3JnPg0KPiA+IFNlbnQ6IEZyaWRheSwgMTMgTm92ZW1iZXIsIDIw
+MjAgMjM6NDU6MDANCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDAwLzExXSBBZGQgUkRNQSBz
+dXBwb3J0IHRvIHRoZSBwTkZTDQo+ID4gZmlsZStmbGV4ZmlsZXMgZGF0YSBjaGFubmVscw0KPiAN
+Cj4gPiBPbiBGcmksIDIwMjAtMTEtMTMgYXQgMjI6MzAgKzAxMDAsIE1rcnRjaHlhbiwgVGlncmFu
+IHdyb3RlOg0KPiA+ID4gDQo+ID4gPiBBZnRlciBtb3JlIHRlc3RpbmcsIGl0IGxvb2tzIGxpa2Ug
+dGhhdCBjbGllbnQgZG9lc24ndCBsaWtlDQo+ID4gPiBub3RpZmljYXRpb24gYml0bWFwOg0KPiA+
+ID4gDQo+ID4gPiANCj4gPiA+IFszMTU3Ni43ODk0OTJdIC0tPiBfbmZzNF9wcm9jX2dldGRldmlj
+ZWluZm8NCj4gPiA+IFszMTU3Ni43ODk1MDNdIC0tPiBuZnM0MV9jYWxsX3N5bmNfcHJlcGFyZSBk
+YXRhLT5zZXFfc2VydmVyDQo+ID4gPiAwMDAwMDAwMDFkMTdjNDNlDQo+ID4gPiBbMzE1NzYuNzg5
+NTA3XSAtLT4gbmZzNF9hbGxvY19zbG90IHVzZWRfc2xvdHM9MDAwMA0KPiA+ID4gaGlnaGVzdF91
+c2VkPTQyOTQ5NjcyOTUgbWF4X3Nsb3RzPTE2DQo+ID4gPiBbMzE1NzYuNzg5NTEwXSA8LS0gbmZz
+NF9hbGxvY19zbG90IHVzZWRfc2xvdHM9MDAwMSBoaWdoZXN0X3VzZWQ9MA0KPiA+ID4gc2xvdGlk
+PTANCj4gPiA+IFszMTU3Ni43ODk1MjddIGVuY29kZV9zZXF1ZW5jZToNCj4gPiA+IHNlc3Npb25p
+ZD0yOTEwNjk1MDA3OjE1MDk5NTcxMjowOjE2Nzc3MjE2IHNlcWlkPTkyNDYyIHNsb3RpZD0wDQo+
+ID4gPiBtYXhfc2xvdGlkPTAgY2FjaGVfdGhpcz0wDQo+ID4gPiBbMzE1NzYuNzg5OTkxXSBkZWNv
+ZGVfZ2V0ZGV2aWNlaW5mbzogdW5zdXBwb3J0ZWQgbm90aWZpY2F0aW9uDQo+ID4gDQo+ID4gQWNj
+b3JkaW5nIHRvIHRoaXMsIHlvdSBhcHBlYXIgdG8gYmUgcmV0dXJuaW5nIGEgZGV2aWNlaW5mbyBi
+aXRtYXANCj4gPiB3aXRoDQo+ID4gYXQgbGVhc3Qgb25lIG5vbi16ZXJvIGVudHJ5IHRoYXQgaXMg
+bm90IGluIHRoZSBmaXJzdCAzMi1iaXQgd29yZC4NCj4gPiBXZQ0KPiA+IG9ubHkgYXNrIGZvciBu
+b3RpZmljYXRpb25zIGZvciBOT1RJRllfREVWSUNFSUQ0X0NIQU5HRSBhbmQNCj4gPiBOT1RJRllf
+REVWSUNFSUQ0X0RFTEVURSwgc28gd2Ugb25seSBleHBlY3QgYml0bWFwWzBdIHRvIGhhdmUgbm9u
+LQ0KPiA+IHplcm8NCj4gPiBlbnRyaWVzLg0KPiANCj4gDQo+IGFjY29yZGluZyB0byBwYWNrZXQg
+Y2FwdHVyZSBvbmx5IGJpdG1hcFswXSBoYXMgbm9uIHplcm8gYml0cyBzZXQuDQo+IFRoaXMgaXMg
+dGhlIHJlcGx5IG9mIGNvbXBvdW5kIHN0YXJ0aW5nIGZyb20gbmZzIHN0YXVzIGNvZGUsIHRhZw0K
+PiBsZW5ndGggYW5kIHNvIG9uLg0KPiANCj4gDQo+IDAwMDDCoMKgIDAwIDAwIDAwIDAwIDAwIDAw
+IDAwIDAwIDAwIDAwIDAwIDAyIDAwIDAwIDAwIDM1DQo+IDAwMTDCoMKgIDAwIDAwIDAwIDAwIDVm
+IGFlIDdkIGFkIDAwIDAzIDAwIDA5IDAwIDAwIDAwIDAwDQo+IDAwMjDCoMKgIDAwIDAwIDAwIDAx
+IDAwIDAwIDAwIDRjIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDBmDQo+IDAwMzDCoMKgIDAwIDAwIDAw
+IDBmIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDJmIDAwIDAwIDAwIDAwDQo+IDAwNDDCoMKgIDAwIDAw
+IDAwIDA0IDAwIDAwIDAwIDQwIDAwIDAwIDAwIDAxIDAwIDAwIDAwIDAzDQo+IDAwNTDCoMKgIDc0
+IDYzIDcwIDAwIDAwIDAwIDAwIDE2IDMxIDMzIDMxIDJlIDMxIDM2IDM5IDJlDQo+IDAwNjDCoMKg
+IDMxIDM5IDMxIDJlIDMxIDM0IDMzIDJlIDMxIDMyIDM1IDJlIDM0IDM5IDAwIDAwDQo+IDAwNzDC
+oMKgIDAwIDAwIDAwIDAxIDAwIDAwIDAwIDA0IDAwIDAwIDAwIDAxIDAwIDEwIDAwIDAwDQo+IDAw
+ODDCoMKgIDAwIDEwIDAwIDAwIDAwIDAwIDAwIDAxIDAwIDAwIDAwIDAyIDAwIDAwIDAwIDA2DQo+
+IDAwOTDCoMKgIDAwIDAwIDAwIDAwDQo+IA0KPiANCj4gdGhlIGxhc3QgMTIgYnl0ZXMgOiBiaXRt
+YXAgc2l6ZSwgYml0bWFwWzBdLCBiaXRtYXBbMV0NCj4gDQo+IA0KPiBUaGlzIHBhcnQgb2YgY29k
+ZSBpbiB0aGUgZGlkbid0IGNoYW5nZSBzaW5jZSAyMDEwLCBhbmQgSQ0KPiBoYXZlIG5vIGlzc3Vl
+cyB0byB1c2UgNS44IGtlcm5lbC4gSSBhbSBwcmV0dHkgc3VyZSwgdGhhdA0KPiB0ZXN0cyB3aXRo
+IDUuOSBkaWQgcGFzcyBhcyBleHBlY3RlZC4gSSB3aWxsIHRyeSB0byBiaXNlYyBpdC4NCg0KSSBk
+b24ndCB0aGluayBJJ3ZlIGludHJvZHVjZWQgdGhpcyBidWcuIEkgZGlkIG5vdCB0b3VjaCBhbnl0
+aGluZyBpbiB0aGUNCmdldGRldmljZWluZm8gcHJvYyBvciBYRFIgY29kZS4NCkRvZXMgdGhlIGZv
+bGxvd2luZyBwYXRjaCBoZWxwPw0KDQo4PC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCkZyb20gZTkyYjJkNGUzOWU5MWQzNzllYzExNDcxMTU4
+MjBhYjVkZmU0Yzg5YSBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDENCkZyb206IFRyb25kIE15a2xl
+YnVzdCA8dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbT4NCkRhdGU6IEZyaSwgMTMgTm92
+IDIwMjAgMjE6NDI6MTYgLTA1MDANClN1YmplY3Q6IFtQQVRDSF0gTkZTdjQ6IEZpeCB0aGUgYWxp
+Z25tZW50IG9mIHBhZ2UgZGF0YSBpbiB0aGUgZ2V0ZGV2aWNlaW5mbw0KIHJlcGx5DQoNCldlIGNh
+biBmaXQgdGhlIGRldmljZV9hZGRyNCBvcGFxdWUgZGF0YSBwYWRkaW5nIGluIHRoZSBwYWdlcy4N
+Cg0KRml4ZXM6IGNmNTAwYmFjOGZkNCAoIlNVTlJQQzogSW50cm9kdWNlIHJwY19wcmVwYXJlX3Jl
+cGx5X3BhZ2VzKCkiKQ0KU2lnbmVkLW9mZi1ieTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWts
+ZWJ1c3RAaGFtbWVyc3BhY2UuY29tPg0KLS0tDQogZnMvbmZzL25mczR4ZHIuYyB8IDE0ICsrKysr
+KysrKystLS0tDQogMSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25z
+KC0pDQoNCmRpZmYgLS1naXQgYS9mcy9uZnMvbmZzNHhkci5jIGIvZnMvbmZzL25mczR4ZHIuYw0K
+aW5kZXggYzZkYmZjYWU3NTE3Li5jODcxNDM4MWQ1MTEgMTAwNjQ0DQotLS0gYS9mcy9uZnMvbmZz
+NHhkci5jDQorKysgYi9mcy9uZnMvbmZzNHhkci5jDQpAQCAtMzAwOSwxNSArMzAwOSwxOSBAQCBz
+dGF0aWMgdm9pZCBuZnM0X3hkcl9lbmNfZ2V0ZGV2aWNlaW5mbyhzdHJ1Y3QgcnBjX3Jxc3QgKnJl
+cSwNCiAJc3RydWN0IGNvbXBvdW5kX2hkciBoZHIgPSB7DQogCQkubWlub3J2ZXJzaW9uID0gbmZz
+NF94ZHJfbWlub3J2ZXJzaW9uKCZhcmdzLT5zZXFfYXJncyksDQogCX07DQorCXVpbnQzMl90IHJl
+cGxlbjsNCiANCiAJZW5jb2RlX2NvbXBvdW5kX2hkcih4ZHIsIHJlcSwgJmhkcik7DQogCWVuY29k
+ZV9zZXF1ZW5jZSh4ZHIsICZhcmdzLT5zZXFfYXJncywgJmhkcik7DQorDQorCXJlcGxlbiA9IGhk
+ci5yZXBsZW4gKyBvcF9kZWNvZGVfaGRyX21heHN6Ow0KKw0KIAllbmNvZGVfZ2V0ZGV2aWNlaW5m
+byh4ZHIsIGFyZ3MsICZoZHIpOw0KIA0KLQkvKiBzZXQgdXAgcmVwbHkga3ZlYy4gU3VidHJhY3Qg
+bm90aWZpY2F0aW9uIGJpdG1hcCBtYXggc2l6ZSAoMikNCi0JICogc28gdGhhdCBub3RpZmljYXRp
+b24gYml0bWFwIGlzIHB1dCBpbiB4ZHJfYnVmIHRhaWwgKi8NCisJLyogc2V0IHVwIHJlcGx5IGt2
+ZWMuIGRldmljZV9hZGRyNCBvcGFxdWUgZGF0YSBpcyByZWFkIGludG8gdGhlDQorCSAqIHBhZ2Vz
+ICovDQogCXJwY19wcmVwYXJlX3JlcGx5X3BhZ2VzKHJlcSwgYXJncy0+cGRldi0+cGFnZXMsIGFy
+Z3MtPnBkZXYtPnBnYmFzZSwNCi0JCQkJYXJncy0+cGRldi0+cGdsZW4sIGhkci5yZXBsZW4gLSAy
+KTsNCisJCQkJYXJncy0+cGRldi0+cGdsZW4sIHJlcGxlbiArIDIpOw0KIAllbmNvZGVfbm9wcygm
+aGRyKTsNCiB9DQogDQpAQCAtNTg0OCw3ICs1ODUyLDkgQEAgc3RhdGljIGludCBkZWNvZGVfZ2V0
+ZGV2aWNlaW5mbyhzdHJ1Y3QgeGRyX3N0cmVhbSAqeGRyLA0KIAkgKiBhbmQgcGxhY2VzIHRoZSBy
+ZW1haW5pbmcgeGRyIGRhdGEgaW4geGRyX2J1Zi0+dGFpbA0KIAkgKi8NCiAJcGRldi0+bWluY291
+bnQgPSBiZTMyX3RvX2NwdXAocCk7DQotCWlmICh4ZHJfcmVhZF9wYWdlcyh4ZHIsIHBkZXYtPm1p
+bmNvdW50KSAhPSBwZGV2LT5taW5jb3VudCkNCisJLyogQ2FsY3VsYXRlIHBhZGRpbmcgKi8NCisJ
+bGVuID0geGRyX2FsaWduX3NpemUocGRldi0+bWluY291bnQpOw0KKwlpZiAoeGRyX3JlYWRfcGFn
+ZXMoeGRyLCBsZW4pICE9IGxlbikNCiAJCXJldHVybiAtRUlPOw0KIA0KIAkvKiBQYXJzZSBub3Rp
+ZmljYXRpb24gYml0bWFwLCB2ZXJpZnlpbmcgdGhhdCBpdCBpcyB6ZXJvLiAqLw0KLS0gDQoyLjI4
+LjANCg0KDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWlu
+ZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
