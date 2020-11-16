@@ -2,82 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E281E2B40C7
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Nov 2020 11:19:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BA8D2B40DF
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Nov 2020 11:19:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbgKPKTA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 16 Nov 2020 05:19:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
+        id S1729040AbgKPKTb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 16 Nov 2020 05:19:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728867AbgKPKSc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 16 Nov 2020 05:18:32 -0500
+        id S1728847AbgKPKSb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 16 Nov 2020 05:18:31 -0500
 Received: from mail.kernel.org (ip5f5ad5de.dynamic.kabel-deutschland.de [95.90.213.222])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C48B2467D;
-        Mon, 16 Nov 2020 10:18:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D2A323A32;
+        Mon, 16 Nov 2020 10:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605521909;
-        bh=hrYDFejIWKc2Sc1kJcaDxBLFYaPls+fhDdb9MsI3AZg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nOYrZpl4mWNo4VChMm50rhlZZFPHrNl2Md99UAjXUoT1Rv4ai6qEtKNY48QQHHDZ9
-         HHi0C1trk4izVD71hsF3fVqJ+98gWWf5nNLgENrcQfgxQXQZ2k1Gs3wz9z2aw/LySR
-         l+js1iuF3inRwlmH2DVzaLCAfu7AYgHEXvSB+IiI=
+        s=default; t=1605521908;
+        bh=JVIjR5UYWMem/PlP0sHePqFteQ12l6ecd/TnghhKzxg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tYoeVXh9Eb0IUyC7557m3+9NYHf6B4ACyemqKhg11R7Gu6GCqzjbyymURW1K4xdQH
+         sVAVUOIh/5QNiw3TxbB/iIhtQJvaZvtq0QeW0pJl9IgBOEGyjCS3ksuWFOY9nMz3x0
+         0p0dSRyDdLXlimLMFmLQKuA7vXBJynKRlUWWIcpQ=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kebab-00FwDo-Pf; Mon, 16 Nov 2020 11:18:25 +0100
+        id 1kebab-00FwDs-Sb; Mon, 16 Nov 2020 11:18:25 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+To:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Ben Segall <bsegall@google.com>,
-        Colin Cross <ccross@android.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        "Jonathan Corbet" <corbet@lwn.net>,
+        "Linux Doc Mailing List" <linux-doc@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Florian Westphal <fw@strlen.de>,
+        Guillaume Nault <gnault@redhat.com>,
         Heiner Kallweit <hkallweit1@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mel Gorman <mgorman@suse.de>, Mike Rapoport <rppt@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Richard Gong <richard.gong@linux.intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sebastian Reichel <sre@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Will Drewry <wad@chromium.org>,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-ext4@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, target-devel@vger.kernel.org
-Subject: [PATCH v4 00/27]Fix several bad kernel-doc markups
-Date:   Mon, 16 Nov 2020 11:17:56 +0100
-Message-Id: <cover.1605521731.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Martin Varghese <martin.varghese@nokia.com>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Yadu Kishore <kyk.segfault@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH v4 02/27] net: datagram: fix some kernel-doc markups
+Date:   Mon, 16 Nov 2020 11:17:58 +0100
+Message-Id: <7a16cca43a8fc1b2491c9848c1cb72804692afda.1605521731.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <cover.1605521731.git.mchehab+huawei@kernel.org>
+References: <cover.1605521731.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
@@ -85,189 +73,342 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Kernel-doc has always be limited to a probably bad documented
-rule:
+Some identifiers have different names between their prototypes
+and the kernel-doc markup.
 
-The kernel-doc markups should appear *imediatelly before* the
-function or data structure that it documents.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ net/core/datagram.c   | 2 +-
+ net/core/dev.c        | 4 ++--
+ net/core/skbuff.c     | 2 +-
+ net/ethernet/eth.c    | 6 +++---
+ net/sunrpc/rpc_pipe.c | 3 ++-
+ 5 files changed, 9 insertions(+), 8 deletions(-)
 
-On other words, if a C file would contain something like this:
-
-	/**
-	 * foo - function foo
-	 * @args: foo args
-	 */
-	static inline void bar(int args);
-
-	/**
-	 * bar - function bar
-	 * @args: foo args
-	 */
-	static inline void foo(void *args);
-
-
-The output (in ReST format) will be:
-
-	.. c:function:: void bar (int args)
-
-	   function foo
-
-	**Parameters**
-
-	``int args``
-	  foo args
-
-
-	.. c:function:: void foo (void *args)
-
-	   function bar
-
-	**Parameters**
-
-	``void *args``
-	  foo args
-
-Which is clearly a wrong result.  Before this changeset, 
-not even a warning is produced on such cases.
-
-As placing such markups just before the documented
-data is a common practice, on most cases this is fine.
-
-However, as patches touch things, identifiers may be
-renamed, and people may forget to update the kernel-doc
-markups to follow such changes.
-
-This has been happening for quite a while, as there are
-lots of files with kernel-doc problems.
-
-This series address those issues and add a file at the
-end that will enforce that the identifier will match the
-kernel-doc markup, avoiding this problem from
-keep happening as time goes by.
-
-This series is based on current upstream tree.
-
-@maintainers: feel free to pick the patches and
-apply them directly on your trees, as all patches on 
-this series are independent from the other ones.
-
---
-
-v4:
-
-  - Patches got rebased and got some acks.
-
-Mauro Carvalho Chehab (27):
-  net: phy: fix kernel-doc markups
-  net: datagram: fix some kernel-doc markups
-  net: core: fix some kernel-doc markups
-  s390: fix kernel-doc markups
-  drm: fix some kernel-doc markups
-  HSI: fix a kernel-doc markup
-  IB: fix kernel-doc markups
-  parport: fix a kernel-doc markup
-  rapidio: fix kernel-doc a markup
-  video: fix some kernel-doc markups
-  fs: fix kernel-doc markups
-  jbd2: fix kernel-doc markups
-  pstore/zone: fix a kernel-doc markup
-  completion: fix kernel-doc markups
-  firmware: stratix10-svc: fix kernel-doc markups
-  connector: fix a kernel-doc markup
-  lib/crc7: fix a kernel-doc markup
-  hrtimer: fix kernel-doc markups
-  genirq: fix kernel-doc markups
-  list: fix a typo at the kernel-doc markup
-  memblock: fix kernel-doc markups
-  w1: fix a kernel-doc markup
-  resource: fix kernel-doc markups
-  shed: fix kernel-doc markup
-  mm: fix kernel-doc markups
-  selftests: kselftest_harness.h: partially fix kernel-doc markups
-  scripts: kernel-doc: validate kernel-doc markup with the actual names
-
- arch/s390/include/asm/ccwdev.h                |  2 +-
- arch/s390/include/asm/cio.h                   |  2 +-
- drivers/gpu/drm/drm_atomic_state_helper.c     |  2 +-
- drivers/gpu/drm/drm_connector.c               |  3 +-
- drivers/gpu/drm/drm_dp_helper.c               |  2 +-
- drivers/gpu/drm/drm_framebuffer.c             |  2 +-
- drivers/gpu/drm/drm_gem.c                     |  4 +-
- drivers/gpu/drm/drm_gem_vram_helper.c         |  2 +-
- drivers/gpu/drm/drm_mode_object.c             |  2 +-
- drivers/gpu/drm/drm_modes.c                   |  4 +-
- drivers/gpu/drm/drm_scdc_helper.c             |  2 +-
- drivers/gpu/drm/i915/display/intel_dpll_mgr.c |  2 +-
- drivers/gpu/drm/i915/i915_gem_evict.c         |  2 +-
- drivers/gpu/drm/i915/i915_perf.c              |  8 ++-
- drivers/gpu/drm/scheduler/sched_main.c        |  2 +-
- drivers/gpu/drm/v3d/v3d_sched.c               |  2 +-
- drivers/gpu/drm/vc4/vc4_bo.c                  |  2 +-
- drivers/hsi/hsi_core.c                        |  2 +-
- drivers/infiniband/core/cm.c                  |  5 +-
- drivers/infiniband/core/cq.c                  |  4 +-
- drivers/infiniband/core/iwpm_util.h           |  2 +-
- drivers/infiniband/core/sa_query.c            |  3 +-
- drivers/infiniband/core/verbs.c               |  4 +-
- drivers/infiniband/sw/rdmavt/ah.c             |  2 +-
- drivers/infiniband/sw/rdmavt/mcast.c          | 12 ++--
- drivers/infiniband/sw/rdmavt/qp.c             |  8 +--
- drivers/infiniband/ulp/iser/iscsi_iser.c      |  2 +-
- .../infiniband/ulp/opa_vnic/opa_vnic_encap.h  |  2 +-
- .../ulp/opa_vnic/opa_vnic_vema_iface.c        |  2 +-
- drivers/infiniband/ulp/srpt/ib_srpt.h         |  2 +-
- drivers/net/phy/mdio_bus.c                    |  2 +-
- drivers/net/phy/phy-c45.c                     |  2 +-
- drivers/net/phy/phy.c                         |  2 +-
- drivers/net/phy/phy_device.c                  |  2 +-
- drivers/net/phy/phylink.c                     |  2 +-
- drivers/parport/share.c                       |  2 +-
- drivers/rapidio/rio.c                         |  2 +-
- drivers/video/fbdev/core/fbcmap.c             |  2 +-
- drivers/video/hdmi.c                          |  3 +-
- fs/dcache.c                                   | 72 +++++++++----------
- fs/inode.c                                    |  4 +-
- fs/jbd2/journal.c                             | 34 ++++-----
- fs/jbd2/transaction.c                         | 31 ++++----
- fs/pstore/zone.c                              |  2 +-
- fs/seq_file.c                                 |  5 +-
- fs/super.c                                    | 12 ++--
- include/drm/drm_atomic_helper.h               |  4 +-
- include/drm/drm_connector.h                   |  2 +-
- include/drm/drm_device.h                      |  2 +-
- include/drm/drm_dsc.h                         |  3 +-
- include/drm/drm_gem_vram_helper.h             |  8 +--
- include/linux/completion.h                    | 10 ++-
- include/linux/connector.h                     |  2 +-
- .../firmware/intel/stratix10-svc-client.h     | 10 +--
- include/linux/hrtimer.h                       |  6 +-
- include/linux/jbd2.h                          |  2 +-
- include/linux/list.h                          |  2 +-
- include/linux/memblock.h                      |  4 +-
- include/linux/netdevice.h                     | 11 ++-
- include/linux/parport.h                       | 31 ++++++++
- include/linux/w1.h                            |  2 +-
- include/rdma/ib_verbs.h                       | 11 +++
- kernel/irq/chip.c                             |  2 +-
- kernel/irq/generic-chip.c                     |  2 +-
- kernel/resource.c                             | 24 ++++---
- kernel/sched/core.c                           | 16 ++---
- kernel/sched/fair.c                           |  2 +-
- kernel/time/hrtimer.c                         |  2 +-
- lib/crc7.c                                    |  2 +-
- mm/gup.c                                      | 24 ++++---
- mm/page_alloc.c                               | 16 ++---
- mm/truncate.c                                 | 10 ++-
- net/core/datagram.c                           |  2 +-
- net/core/dev.c                                |  4 +-
- net/core/skbuff.c                             |  2 +-
- net/ethernet/eth.c                            |  6 +-
- net/sunrpc/rpc_pipe.c                         |  3 +-
- scripts/kernel-doc                            | 62 +++++++++++-----
- tools/testing/selftests/kselftest_harness.h   | 22 +++---
- 79 files changed, 350 insertions(+), 235 deletions(-)
-
+diff --git a/net/core/datagram.c b/net/core/datagram.c
+index 9fcaa544f11a..81809fa735a7 100644
+--- a/net/core/datagram.c
++++ b/net/core/datagram.c
+@@ -692,41 +692,41 @@ EXPORT_SYMBOL(__zerocopy_sg_from_iter);
+  *	@from: the source to copy from
+  *
+  *	The function will first copy up to headlen, and then pin the userspace
+  *	pages and build frags through them.
+  *
+  *	Returns 0, -EFAULT or -EMSGSIZE.
+  */
+ int zerocopy_sg_from_iter(struct sk_buff *skb, struct iov_iter *from)
+ {
+ 	int copy = min_t(int, skb_headlen(skb), iov_iter_count(from));
+ 
+ 	/* copy up to skb headlen */
+ 	if (skb_copy_datagram_from_iter(skb, 0, from, copy))
+ 		return -EFAULT;
+ 
+ 	return __zerocopy_sg_from_iter(NULL, skb, from, ~0U);
+ }
+ EXPORT_SYMBOL(zerocopy_sg_from_iter);
+ 
+ /**
+- *	skb_copy_and_csum_datagram_iter - Copy datagram to an iovec iterator
++ *	skb_copy_and_csum_datagram - Copy datagram to an iovec iterator
+  *          and update a checksum.
+  *	@skb: buffer to copy
+  *	@offset: offset in the buffer to start copying from
+  *	@to: iovec iterator to copy to
+  *	@len: amount of data to copy from buffer to iovec
+  *      @csump: checksum pointer
+  */
+ static int skb_copy_and_csum_datagram(const struct sk_buff *skb, int offset,
+ 				      struct iov_iter *to, int len,
+ 				      __wsum *csump)
+ {
+ 	return __skb_datagram_iter(skb, offset, to, len, true,
+ 			csum_and_copy_to_iter, csump);
+ }
+ 
+ /**
+  *	skb_copy_and_csum_datagram_msg - Copy and checksum skb to user iovec.
+  *	@skb: skbuff
+  *	@hlen: hardware length
+  *	@msg: destination
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 60d325bda0d7..4bfdcd6b20e8 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -6902,41 +6902,41 @@ static int ____netdev_has_upper_dev(struct net_device *upper_dev,
+  *
+  * Find out if a device is linked to specified upper device and return true
+  * in case it is. Note that this checks only immediate upper device,
+  * not through a complete stack of devices. The caller must hold the RTNL lock.
+  */
+ bool netdev_has_upper_dev(struct net_device *dev,
+ 			  struct net_device *upper_dev)
+ {
+ 	struct netdev_nested_priv priv = {
+ 		.data = (void *)upper_dev,
+ 	};
+ 
+ 	ASSERT_RTNL();
+ 
+ 	return netdev_walk_all_upper_dev_rcu(dev, ____netdev_has_upper_dev,
+ 					     &priv);
+ }
+ EXPORT_SYMBOL(netdev_has_upper_dev);
+ 
+ /**
+- * netdev_has_upper_dev_all - Check if device is linked to an upper device
++ * netdev_has_upper_dev_all_rcu - Check if device is linked to an upper device
+  * @dev: device
+  * @upper_dev: upper device to check
+  *
+  * Find out if a device is linked to specified upper device and return true
+  * in case it is. Note that this checks the entire upper device chain.
+  * The caller must hold rcu lock.
+  */
+ 
+ bool netdev_has_upper_dev_all_rcu(struct net_device *dev,
+ 				  struct net_device *upper_dev)
+ {
+ 	struct netdev_nested_priv priv = {
+ 		.data = (void *)upper_dev,
+ 	};
+ 
+ 	return !!netdev_walk_all_upper_dev_rcu(dev, ____netdev_has_upper_dev,
+ 					       &priv);
+ }
+ EXPORT_SYMBOL(netdev_has_upper_dev_all_rcu);
+ 
+@@ -8140,41 +8140,41 @@ void netdev_adjacent_rename_links(struct net_device *dev, char *oldname)
+ 	}
+ }
+ 
+ void *netdev_lower_dev_get_private(struct net_device *dev,
+ 				   struct net_device *lower_dev)
+ {
+ 	struct netdev_adjacent *lower;
+ 
+ 	if (!lower_dev)
+ 		return NULL;
+ 	lower = __netdev_find_adj(lower_dev, &dev->adj_list.lower);
+ 	if (!lower)
+ 		return NULL;
+ 
+ 	return lower->private;
+ }
+ EXPORT_SYMBOL(netdev_lower_dev_get_private);
+ 
+ 
+ /**
+- * netdev_lower_change - Dispatch event about lower device state change
++ * netdev_lower_state_changed - Dispatch event about lower device state change
+  * @lower_dev: device
+  * @lower_state_info: state to dispatch
+  *
+  * Send NETDEV_CHANGELOWERSTATE to netdev notifiers with info.
+  * The caller must hold the RTNL lock.
+  */
+ void netdev_lower_state_changed(struct net_device *lower_dev,
+ 				void *lower_state_info)
+ {
+ 	struct netdev_notifier_changelowerstate_info changelowerstate_info = {
+ 		.info.dev = lower_dev,
+ 	};
+ 
+ 	ASSERT_RTNL();
+ 	changelowerstate_info.lower_state_info = lower_state_info;
+ 	call_netdevice_notifiers_info(NETDEV_CHANGELOWERSTATE,
+ 				      &changelowerstate_info.info);
+ }
+ EXPORT_SYMBOL(netdev_lower_state_changed);
+ 
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index c9a5a3c262c8..ffe3dcc0ebea 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -825,41 +825,41 @@ EXPORT_SYMBOL(skb_tx_error);
+ /**
+  *	consume_skb - free an skbuff
+  *	@skb: buffer to free
+  *
+  *	Drop a ref to the buffer and free it if the usage count has hit zero
+  *	Functions identically to kfree_skb, but kfree_skb assumes that the frame
+  *	is being dropped after a failure and notes that
+  */
+ void consume_skb(struct sk_buff *skb)
+ {
+ 	if (!skb_unref(skb))
+ 		return;
+ 
+ 	trace_consume_skb(skb);
+ 	__kfree_skb(skb);
+ }
+ EXPORT_SYMBOL(consume_skb);
+ #endif
+ 
+ /**
+- *	consume_stateless_skb - free an skbuff, assuming it is stateless
++ *	__consume_stateless_skb - free an skbuff, assuming it is stateless
+  *	@skb: buffer to free
+  *
+  *	Alike consume_skb(), but this variant assumes that this is the last
+  *	skb reference and all the head states have been already dropped
+  */
+ void __consume_stateless_skb(struct sk_buff *skb)
+ {
+ 	trace_consume_skb(skb);
+ 	skb_release_data(skb);
+ 	kfree_skbmem(skb);
+ }
+ 
+ void __kfree_skb_flush(void)
+ {
+ 	struct napi_alloc_cache *nc = this_cpu_ptr(&napi_alloc_cache);
+ 
+ 	/* flush skb_cache if containing objects */
+ 	if (nc->skb_count) {
+ 		kmem_cache_free_bulk(skbuff_head_cache, nc->skb_count,
+ 				     nc->skb_cache);
+diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
+index dac65180c4ef..4106373180c6 100644
+--- a/net/ethernet/eth.c
++++ b/net/ethernet/eth.c
+@@ -255,41 +255,41 @@ int eth_header_cache(const struct neighbour *neigh, struct hh_cache *hh, __be16
+ EXPORT_SYMBOL(eth_header_cache);
+ 
+ /**
+  * eth_header_cache_update - update cache entry
+  * @hh: destination cache entry
+  * @dev: network device
+  * @haddr: new hardware address
+  *
+  * Called by Address Resolution module to notify changes in address.
+  */
+ void eth_header_cache_update(struct hh_cache *hh,
+ 			     const struct net_device *dev,
+ 			     const unsigned char *haddr)
+ {
+ 	memcpy(((u8 *) hh->hh_data) + HH_DATA_OFF(sizeof(struct ethhdr)),
+ 	       haddr, ETH_ALEN);
+ }
+ EXPORT_SYMBOL(eth_header_cache_update);
+ 
+ /**
+- * eth_header_parser_protocol - extract protocol from L2 header
++ * eth_header_parse_protocol - extract protocol from L2 header
+  * @skb: packet to extract protocol from
+  */
+ __be16 eth_header_parse_protocol(const struct sk_buff *skb)
+ {
+ 	const struct ethhdr *eth = eth_hdr(skb);
+ 
+ 	return eth->h_proto;
+ }
+ EXPORT_SYMBOL(eth_header_parse_protocol);
+ 
+ /**
+  * eth_prepare_mac_addr_change - prepare for mac change
+  * @dev: network device
+  * @p: socket address
+  */
+ int eth_prepare_mac_addr_change(struct net_device *dev, void *p)
+ {
+ 	struct sockaddr *addr = p;
+ 
+ 	if (!(dev->priv_flags & IFF_LIVE_ADDR_CHANGE) && netif_running(dev))
+@@ -506,42 +506,42 @@ unsigned char * __weak arch_get_platform_mac_address(void)
+ 
+ int eth_platform_get_mac_address(struct device *dev, u8 *mac_addr)
+ {
+ 	const unsigned char *addr = NULL;
+ 
+ 	if (dev->of_node)
+ 		addr = of_get_mac_address(dev->of_node);
+ 	if (IS_ERR_OR_NULL(addr))
+ 		addr = arch_get_platform_mac_address();
+ 
+ 	if (!addr)
+ 		return -ENODEV;
+ 
+ 	ether_addr_copy(mac_addr, addr);
+ 
+ 	return 0;
+ }
+ EXPORT_SYMBOL(eth_platform_get_mac_address);
+ 
+ /**
+- * Obtain the MAC address from an nvmem cell named 'mac-address' associated
+- * with given device.
++ * nvmem_get_mac_address - Obtain the MAC address from an nvmem cell named
++ * 'mac-address' associated with given device.
+  *
+  * @dev:	Device with which the mac-address cell is associated.
+  * @addrbuf:	Buffer to which the MAC address will be copied on success.
+  *
+  * Returns 0 on success or a negative error number on failure.
+  */
+ int nvmem_get_mac_address(struct device *dev, void *addrbuf)
+ {
+ 	struct nvmem_cell *cell;
+ 	const void *mac;
+ 	size_t len;
+ 
+ 	cell = nvmem_cell_get(dev, "mac-address");
+ 	if (IS_ERR(cell))
+ 		return PTR_ERR(cell);
+ 
+ 	mac = nvmem_cell_read(cell, &len);
+ 	nvmem_cell_put(cell);
+ 
+ 	if (IS_ERR(mac))
+diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+index eadc0ede928c..8241f5a4a01c 100644
+--- a/net/sunrpc/rpc_pipe.c
++++ b/net/sunrpc/rpc_pipe.c
+@@ -764,41 +764,42 @@ static struct dentry *rpc_mkdir_populate(struct dentry *parent,
+ 
+ static int rpc_rmdir_depopulate(struct dentry *dentry,
+ 		void (*depopulate)(struct dentry *))
+ {
+ 	struct dentry *parent;
+ 	struct inode *dir;
+ 	int error;
+ 
+ 	parent = dget_parent(dentry);
+ 	dir = d_inode(parent);
+ 	inode_lock_nested(dir, I_MUTEX_PARENT);
+ 	if (depopulate != NULL)
+ 		depopulate(dentry);
+ 	error = __rpc_rmdir(dir, dentry);
+ 	inode_unlock(dir);
+ 	dput(parent);
+ 	return error;
+ }
+ 
+ /**
+- * rpc_mkpipe - make an rpc_pipefs file for kernel<->userspace communication
++ * rpc_mkpipe_dentry - make an rpc_pipefs file for kernel<->userspace
++ *		       communication
+  * @parent: dentry of directory to create new "pipe" in
+  * @name: name of pipe
+  * @private: private data to associate with the pipe, for the caller's use
+  * @pipe: &rpc_pipe containing input parameters
+  *
+  * Data is made available for userspace to read by calls to
+  * rpc_queue_upcall().  The actual reads will result in calls to
+  * @ops->upcall, which will be called with the file pointer,
+  * message, and userspace buffer to copy to.
+  *
+  * Writes can come at any time, and do not necessarily have to be
+  * responses to upcalls.  They will result in calls to @msg->downcall.
+  *
+  * The @private argument passed here will be available to all these methods
+  * from the file pointer, via RPC_I(file_inode(file))->private.
+  */
+ struct dentry *rpc_mkpipe_dentry(struct dentry *parent, const char *name,
+ 				 void *private, struct rpc_pipe *pipe)
+ {
+ 	struct dentry *dentry;
 -- 
 2.28.0
-
 
