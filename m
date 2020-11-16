@@ -2,227 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DAEE2B39EF
-	for <lists+linux-nfs@lfdr.de>; Sun, 15 Nov 2020 23:38:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F1042B3B93
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Nov 2020 04:00:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgKOWho (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 15 Nov 2020 17:37:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60416 "EHLO mail.kernel.org"
+        id S1726633AbgKPC7H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 15 Nov 2020 21:59:07 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48400 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727302AbgKOWho (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 15 Nov 2020 17:37:44 -0500
-Received: from leira.hammer.space (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A01E522314
-        for <linux-nfs@vger.kernel.org>; Sun, 15 Nov 2020 22:37:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605479858;
-        bh=et4KJHX3H+UCEDfuJpFTHFlKdurY2qf7SKRfFpPvojQ=;
-        h=From:To:Subject:Date:From;
-        b=pi/S1Vr1qoSaw/nhyGbvwQzXEVLYUhotDqaZrY/RJHF7nfFbJ/TuzSMkYy01O+U+7
-         PyV70EOlfEgZrglFxViyfNvzI+jpmk+YzfaRkSmk+6yc0OrpTKf1ISDFuuwd0/Vx1c
-         1busaQwn2/0n/BcJsChYG5tlEoVNn54wLH9y7gEU=
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH] pNFS/flexfiles: Fix array overflow when flexfiles mirroring is enabled
-Date:   Sun, 15 Nov 2020 17:37:37 -0500
-Message-Id: <20201115223737.56968-1-trondmy@kernel.org>
-X-Mailer: git-send-email 2.28.0
+        id S1726534AbgKPC7H (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 15 Nov 2020 21:59:07 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 8F2DDABDE;
+        Mon, 16 Nov 2020 02:59:05 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Date:   Mon, 16 Nov 2020 13:59:00 +1100
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFS: only invalidate dentrys that are clearly invalid.
+Message-ID: <87361aovm3.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-If the flexfiles mirroring is enabled, then the read code expects to be
-able to set pgio->pg_mirror_idx to point to the data server that is
-being used for this particular read. However it does not change the
-pg_mirror_count because we only need to send a single read.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/flexfilelayout/flexfilelayout.c | 27 ++++++++++++++-----
- fs/nfs/pagelist.c                      | 36 +++++++++++++++++++-------
- include/linux/nfs_page.h               |  4 +++
- 3 files changed, 52 insertions(+), 15 deletions(-)
+Prior to commit 5ceb9d7fdaaf ("NFS: Refactor nfs_lookup_revalidate()")
+and error from nfs_lookup_verify_inode() other than -ESTALE would result
+in nfs_lookup_revalidate() returning that error code (-ESTALE is mapped
+to zero).
+Since that commit, all errors result in zero being returned.
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 59ae36bf5cc0..b7c26836b2cb 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -838,7 +838,7 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 	struct nfs_pgio_mirror *pgm;
- 	struct nfs4_ff_layout_mirror *mirror;
- 	struct nfs4_pnfs_ds *ds;
--	u32 ds_idx, i;
-+	u32 ds_idx;
- 
- retry:
- 	ff_layout_pg_check_layout(pgio, req);
-@@ -864,11 +864,9 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 		goto retry;
- 	}
- 
--	for (i = 0; i < pgio->pg_mirror_count; i++) {
--		mirror = FF_LAYOUT_COMP(pgio->pg_lseg, i);
--		pgm = &pgio->pg_mirrors[i];
--		pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].rsize;
--	}
-+	mirror = FF_LAYOUT_COMP(pgio->pg_lseg, ds_idx);
-+	pgm = &pgio->pg_mirrors[0];
-+	pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].rsize;
- 
- 	pgio->pg_mirror_idx = ds_idx;
- 
-@@ -985,6 +983,21 @@ ff_layout_pg_get_mirror_count_write(struct nfs_pageio_descriptor *pgio,
- 	return 1;
- }
- 
-+static u32
-+ff_layout_pg_set_mirror_write(struct nfs_pageio_descriptor *desc, u32 idx)
-+{
-+	u32 old = desc->pg_mirror_idx;
-+
-+	desc->pg_mirror_idx = idx;
-+	return old;
-+}
-+
-+static struct nfs_pgio_mirror *
-+ff_layout_pg_get_mirror_write(struct nfs_pageio_descriptor *desc, u32 idx)
-+{
-+	return &desc->pg_mirrors[idx];
-+}
-+
- static const struct nfs_pageio_ops ff_layout_pg_read_ops = {
- 	.pg_init = ff_layout_pg_init_read,
- 	.pg_test = pnfs_generic_pg_test,
-@@ -998,6 +1011,8 @@ static const struct nfs_pageio_ops ff_layout_pg_write_ops = {
- 	.pg_doio = pnfs_generic_pg_writepages,
- 	.pg_get_mirror_count = ff_layout_pg_get_mirror_count_write,
- 	.pg_cleanup = pnfs_generic_pg_cleanup,
-+	.pg_get_mirror = ff_layout_pg_get_mirror_write,
-+	.pg_set_mirror = ff_layout_pg_set_mirror_write,
- };
- 
- static void ff_layout_reset_write(struct nfs_pgio_header *hdr, bool retry_pnfs)
-diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index 6985cacf4700..78c9c4bdef2b 100644
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -31,13 +31,29 @@
- static struct kmem_cache *nfs_page_cachep;
- static const struct rpc_call_ops nfs_pgio_common_ops;
- 
-+static struct nfs_pgio_mirror *
-+nfs_pgio_get_mirror(struct nfs_pageio_descriptor *desc, u32 idx)
-+{
-+	if (desc->pg_ops->pg_get_mirror)
-+		return desc->pg_ops->pg_get_mirror(desc, idx);
-+	return &desc->pg_mirrors[0];
-+}
-+
- struct nfs_pgio_mirror *
- nfs_pgio_current_mirror(struct nfs_pageio_descriptor *desc)
+When nfs_lookup_revalidate() returns zero, the dentry is invalidated
+and, significantly, if the dentry is a directory that is mounted on,
+that mountpoint is lost.
+
+If you:
+ - mount an NFS filesystem which contains a directory
+ - mount something (e.g. tmpfs) on that directory
+ - use iptables (or scissors) to block traffic to the server
+ - ls -l the-mounted-on-directory
+ - interrupt the 'ls -l'
+you will find that the directory has been unmounted.
+
+This can be fixed by returning the actual error code from
+nfs_lookup_verify_inode() rather then zero (except for -ESTALE).
+
+Fixes: 5ceb9d7fdaaf ("NFS: Refactor nfs_lookup_revalidate()")
+Signed-off-by: NeilBrown <neilb@suse.de>
+=2D--
+ fs/nfs/dir.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index cb52db9a0cfb..d24acf556e9e 100644
+=2D-- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -1350,7 +1350,7 @@ nfs_do_lookup_revalidate(struct inode *dir, struct de=
+ntry *dentry,
+ 			 unsigned int flags)
  {
--	return &desc->pg_mirrors[desc->pg_mirror_idx];
-+	return nfs_pgio_get_mirror(desc, desc->pg_mirror_idx);
- }
- EXPORT_SYMBOL_GPL(nfs_pgio_current_mirror);
- 
-+static u32
-+nfs_pgio_set_current_mirror(struct nfs_pageio_descriptor *desc, u32 idx)
-+{
-+	if (desc->pg_ops->pg_set_mirror)
-+		return desc->pg_ops->pg_set_mirror(desc, idx);
-+	return desc->pg_mirror_idx;
-+}
-+
- void nfs_pgheader_init(struct nfs_pageio_descriptor *desc,
- 		       struct nfs_pgio_header *hdr,
- 		       void (*release)(struct nfs_pgio_header *hdr))
-@@ -1259,7 +1275,7 @@ static void nfs_pageio_error_cleanup(struct nfs_pageio_descriptor *desc)
- 		return;
- 
- 	for (midx = 0; midx < desc->pg_mirror_count; midx++) {
--		mirror = &desc->pg_mirrors[midx];
-+		mirror = nfs_pgio_get_mirror(desc, midx);
- 		desc->pg_completion_ops->error_cleanup(&mirror->pg_list,
- 				desc->pg_error);
- 	}
-@@ -1293,12 +1309,12 @@ int nfs_pageio_add_request(struct nfs_pageio_descriptor *desc,
- 			goto out_failed;
+ 	struct inode *inode;
+=2D	int error;
++	int error =3D 0;
+=20
+ 	nfs_inc_stats(dir, NFSIOS_DENTRYREVALIDATE);
+ 	inode =3D d_inode(dentry);
+@@ -1372,8 +1372,10 @@ nfs_do_lookup_revalidate(struct inode *dir, struct d=
+entry *dentry,
+ 	    nfs_check_verifier(dir, dentry, flags & LOOKUP_RCU)) {
+ 		error =3D nfs_lookup_verify_inode(inode, flags);
+ 		if (error) {
+=2D			if (error =3D=3D -ESTALE)
++			if (error =3D=3D -ESTALE) {
+ 				nfs_zap_caches(dir);
++				error =3D 0;
++			}
+ 			goto out_bad;
  		}
- 
--		desc->pg_mirror_idx = midx;
-+		nfs_pgio_set_current_mirror(desc, midx);
- 		if (!nfs_pageio_add_request_mirror(desc, dupreq))
- 			goto out_cleanup_subreq;
- 	}
- 
--	desc->pg_mirror_idx = 0;
-+	nfs_pgio_set_current_mirror(desc, 0);
- 	if (!nfs_pageio_add_request_mirror(desc, req))
- 		goto out_failed;
- 
-@@ -1320,10 +1336,12 @@ int nfs_pageio_add_request(struct nfs_pageio_descriptor *desc,
- static void nfs_pageio_complete_mirror(struct nfs_pageio_descriptor *desc,
- 				       u32 mirror_idx)
- {
--	struct nfs_pgio_mirror *mirror = &desc->pg_mirrors[mirror_idx];
--	u32 restore_idx = desc->pg_mirror_idx;
-+	struct nfs_pgio_mirror *mirror;
-+	u32 restore_idx;
-+
-+	restore_idx = nfs_pgio_set_current_mirror(desc, mirror_idx);
-+	mirror = nfs_pgio_current_mirror(desc);
- 
--	desc->pg_mirror_idx = mirror_idx;
- 	for (;;) {
- 		nfs_pageio_doio(desc);
- 		if (desc->pg_error < 0 || !mirror->pg_recoalesce)
-@@ -1331,7 +1349,7 @@ static void nfs_pageio_complete_mirror(struct nfs_pageio_descriptor *desc,
- 		if (!nfs_do_recoalesce(desc))
- 			break;
- 	}
--	desc->pg_mirror_idx = restore_idx;
-+	nfs_pgio_set_current_mirror(desc, restore_idx);
+ 		nfs_advise_use_readdirplus(dir);
+@@ -1395,7 +1397,7 @@ nfs_do_lookup_revalidate(struct inode *dir, struct de=
+ntry *dentry,
+ out_bad:
+ 	if (flags & LOOKUP_RCU)
+ 		return -ECHILD;
+=2D	return nfs_lookup_revalidate_done(dir, dentry, inode, 0);
++	return nfs_lookup_revalidate_done(dir, dentry, inode, error);
  }
- 
- /*
-@@ -1405,7 +1423,7 @@ void nfs_pageio_cond_complete(struct nfs_pageio_descriptor *desc, pgoff_t index)
- 	u32 midx;
- 
- 	for (midx = 0; midx < desc->pg_mirror_count; midx++) {
--		mirror = &desc->pg_mirrors[midx];
-+		mirror = nfs_pgio_get_mirror(desc, midx);
- 		if (!list_empty(&mirror->pg_list)) {
- 			prev = nfs_list_entry(mirror->pg_list.prev);
- 			if (index != prev->wb_index + 1) {
-diff --git a/include/linux/nfs_page.h b/include/linux/nfs_page.h
-index c32c15216da3..f0373a6cb5fb 100644
---- a/include/linux/nfs_page.h
-+++ b/include/linux/nfs_page.h
-@@ -55,6 +55,7 @@ struct nfs_page {
- 	unsigned short		wb_nio;		/* Number of I/O attempts */
- };
- 
-+struct nfs_pgio_mirror;
- struct nfs_pageio_descriptor;
- struct nfs_pageio_ops {
- 	void	(*pg_init)(struct nfs_pageio_descriptor *, struct nfs_page *);
-@@ -64,6 +65,9 @@ struct nfs_pageio_ops {
- 	unsigned int	(*pg_get_mirror_count)(struct nfs_pageio_descriptor *,
- 				       struct nfs_page *);
- 	void	(*pg_cleanup)(struct nfs_pageio_descriptor *);
-+	struct nfs_pgio_mirror *
-+		(*pg_get_mirror)(struct nfs_pageio_descriptor *, u32);
-+	u32	(*pg_set_mirror)(struct nfs_pageio_descriptor *, u32);
- };
- 
- struct nfs_rw_ops {
--- 
-2.28.0
+=20
+ static int
+=2D-=20
+2.29.2
 
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJCBAEBCAAsFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl+x6vQOHG5laWxiQHN1
+c2UuZGUACgkQOeye3VZigbkHHA/6ArBmbcJgnubaMOQu+U5qI40yP8NwiLUOLbbC
+8tzWBA1lQoIm6ww98VmxD43iSgmAtqA9tz5Ln3fhEVnypznjnmDOp5TI5cFERXTQ
+mR8U8OjBPAM6zMxpX43yGcZYjod0aKqstyIwGb49AieuyWuV3RRE+j7NFiVw0sZu
+i15CExoEYH5Z3OVqUSdhY4C2LSQj+JLJOEUqGeJ1t+qaMQ7liT0TMUlGNCMYPCKt
+kMn3/ApPQjH73sJnX+YDCl9DAHiHn7BGTp3VxjtxaYEEaZqdbQSgY1m7WErQKCdm
+RaLN0ydwGHmgknWLBIzpFtnoP7FBIs4xAPDUHJfnT4UhRHzx1KT/9lDJxmN2aZ0R
+btyn4osJzMp1iLcOctKNpkog0Vvin6QjAMCqvqa5CadCO7OEMjEqFywMogoDzDzp
+cx6MJvKtSSqk1Z018HgJbXcuijOfU6AGqj3wOpb/q0t5qascBmeqRdoaJg8yjNAo
+hwF2Fi/OShobs9w/HCepLcHaxDD+vT4cAgv9YKdA8x/Ce52yeKZRSP1E28Nb+6zT
+3rUcH4fpdUY8/rsaNWw0GKdUYD4h3HY/QNrg3t7Ga95xB4AStwTgtcQCncruR16y
+nQZJMxV8JROUg5U0Qv7Xyd9K4yRkKv78EaDGo4xAI9BjOOoQqQ6TUSqq/xnbIfSj
+B9IG7EM=
+=7Ejm
+-----END PGP SIGNATURE-----
+--=-=-=--
