@@ -2,200 +2,266 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9F762B3C50
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Nov 2020 06:08:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFA352B3C59
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Nov 2020 06:12:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725710AbgKPFIB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 16 Nov 2020 00:08:01 -0500
-Received: from mail-mw2nam10on2097.outbound.protection.outlook.com ([40.107.94.97]:19424
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725300AbgKPFIB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 16 Nov 2020 00:08:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LIyvNW/K22vDF7GiAQpPZW9yXYg9x26r/EzjoKRjeQ3OsocZlJgKUXvNbjQ0pjlU3C+G0ASBuBvI5tn84tLr+CbHWThTsS3ias3lLLVFO6Ap+W0PMD4dAP4un8yr0W1pJeXDZQ9hlY6oLAhlOL/9m/ETWh3xlMDYeg55fSamM8aukjmLe9F3CTD8VHfvI7l315Qsvg+I5dbu+NB8PzsuyU0XN9b3jTIicPH6i2NOy8Htc0htaKsTA6nYAdPJZ7SvZi41dP3dj+NAdFW11inptF4tr5BHcEV1vaRkDae/EsTFjmCc6eRoqsBR3CMolE6X5izDZM1l4w3Jl8mPTe2GvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CBzVims3RC34kiyyMhq2juZxnMN0OQt/HMhsXWc7P8A=;
- b=Qp10slr2INnaN4kkSw6PIbQ8XylnaMSVOL4vAzgmE6/vPfYqmWtAX3fb1agIaVjAwxGxJO8qWjVPypsNb5TMK1ngn3mZOFQmu7saeTvSwDswiR2JgOTtYiu6Sa1JwK2ykSANUUonny39GFkWoW8uco+6w0O8Q6WZ+HUZOBRPzNW5+4GnkysBU/99u63FP5ymRY/4ZPUbq3RB1SV2HeO0OjyWHzhmOG3DwQLx8rIw5EGHf6tX8l1y2DmJ3DcQvACxdIiXUyhVMMCsdXH1mVpQd6TrywM+xF2RnExrTuHVuZWWbAzycIN7iemFWzbYZDTfajkw2nx5FbX2j7rJI+A3VA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CBzVims3RC34kiyyMhq2juZxnMN0OQt/HMhsXWc7P8A=;
- b=SGMhrbp7jQpPkUlsj/wOmETxxP8Id258XfVa6w9PVamd64zSxqc++jLUHbUJ2Rc+HkMb7L2rVfGg8yTogYu7XgNT/4a/m0JgzWG5yrkFy3KthURIEQh7wC8skwDeVol8dYRHYFosGqtnNPJYIlNw4nQ1ils5VM08xEPHB+pocNA=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB3662.namprd13.prod.outlook.com (2603:10b6:208:1e3::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.16; Mon, 16 Nov
- 2020 05:07:58 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3589.016; Mon, 16 Nov 2020
- 05:07:58 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "neilb@suse.de" <neilb@suse.de>,
+        id S1725764AbgKPFMm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 16 Nov 2020 00:12:42 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52970 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbgKPFMm (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 16 Nov 2020 00:12:42 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 5A101ABDE;
+        Mon, 16 Nov 2020 05:12:39 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
         "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+Date:   Mon, 16 Nov 2020 16:12:32 +1100
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH] NFS: only invalidate dentrys that are clearly invalid.
-Thread-Topic: [PATCH] NFS: only invalidate dentrys that are clearly invalid.
-Thread-Index: AQHWu8R1m5j20T9EEUSCuq70JTb/pqnKKisAgAAEXACAAAINgIAAAtEAgAAB9QA=
-Date:   Mon, 16 Nov 2020 05:07:57 +0000
-Message-ID: <b28216153179dd20c22aa164259d3f901099896c.camel@hammerspace.com>
+In-Reply-To: <b28216153179dd20c22aa164259d3f901099896c.camel@hammerspace.com>
 References: <87361aovm3.fsf@notabene.neil.brown.name>
-         <d2fabd4b78dda3bd52519b84f50785dbcc2d40fb.camel@hammerspace.com>
-         <87zh3hoqrx.fsf@notabene.neil.brown.name>
-         <d208c9c085d8abf27a764e31a61e98f9c3743675.camel@hammerspace.com>
-         <87wnylopyv.fsf@notabene.neil.brown.name>
-In-Reply-To: <87wnylopyv.fsf@notabene.neil.brown.name>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: suse.de; dkim=none (message not signed)
- header.d=none;suse.de; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b3f975e2-5407-4c1c-4f31-08d889ed957c
-x-ms-traffictypediagnostic: MN2PR13MB3662:
-x-microsoft-antispam-prvs: <MN2PR13MB3662F8DF5722EFF823A0E2E0B8E30@MN2PR13MB3662.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cNNPeB4JcPbcRTstIvJzp/t0F6W7gAnaXtOq4Z9DohIfiQi6A/FMRVSWzwB2cebrDHykPYJU/YWqKq4mzS4RGaNRvKTa7pRuBNaDNF7mTq6+bf3uQ3bqt84QgUxElt5VvbSSyUXm98yfRJPQoWw0clCg58BTt0BxfDGO0mPYiQ/aMVkaaA18tvTnps8kgd8JEE4VgwGq6qLpawxCZ1fcAfD5McV9OpFeM07+H/8fZfRRbTz2ohgkfHgdbr5k0arTIxw6OOadeXI+XbIm8H6Wt6UwJcsb5TuYprMuZHbOREHCxSy1fNiY1FS5T2U9WmN0dF6GMXpciQhPFjKQv+X8JcnXCzqMB+MoqYUcNUJ1+24iPGRv4Sd9z7ncY/wUm22wKLPxdFYXzrWUIJrS0G1Ofw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(346002)(376002)(396003)(136003)(39830400003)(66476007)(64756008)(66556008)(66446008)(478600001)(15974865002)(4326008)(4001150100001)(66946007)(76116006)(91956017)(316002)(71200400001)(8676002)(8936002)(26005)(186003)(2906002)(5660300002)(2616005)(110136005)(54906003)(6512007)(6506007)(6486002)(86362001)(36756003)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 2bvTOV5m8NHRcuqOyMY3cMEfPmqc60ycBFFY5zFlOz4I0qsL6lPs8XLWpKGOzjnak+dCqUOs8MNdTVo1Xl1LFWTWaT170+Y2tiWbOGiRPmWVmR6Rjya+79QRc/WzbjdR5+dGKanHPt9RG2/y/Hds2l7JdKq2B0H7AeXD9yRBUWNitSa41MaaLZ65pAABZEHHIwWK8WQTvv8aJBFvkD+01B9l5XdbRI0z9ytCJAfAwCS8tcr0VD3eXwETAPHT2DVZDHtRRhsd/C6L/Ez7Uy+pvDt4dKNBbSHQcOKARDQ8asx0I6oF4gzYsVPQ4qaQLThg+gAlcQRQMhjiC997/hRSHB9RHvmbkhv+Rg5feoy+wAPEYx03QHOFB4NXb16+xbtQoTkIvE4aEfqGH2lntTn7UNMqC31imKDwTsEUCoWLuvs5HTiFBlV/YbJ2FIIu9BIKQPwac5cvKLSC2IyfSKMPdWxtftT71A6JpCEEy9r89YJ0uS3WZI93GFLLZ5QiM6QTgLj2DAbiPrJ83owrmDuim00WAKpg7OIMFmMnC5g/gYHwkOE4heeAXRxZG4kyY30S8q4i2yruXMcttGXWsEMPtSCl9VEt/V7tXiDyN0obMKgFOogwCIIHcbgpxVZZh5XARjBRavgApeLmz5HflcY4lQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EAB9995CB042E34E97E78B1DE36E72A6@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <d2fabd4b78dda3bd52519b84f50785dbcc2d40fb.camel@hammerspace.com>
+ <87zh3hoqrx.fsf@notabene.neil.brown.name>
+ <d208c9c085d8abf27a764e31a61e98f9c3743675.camel@hammerspace.com>
+ <87wnylopyv.fsf@notabene.neil.brown.name>
+ <b28216153179dd20c22aa164259d3f901099896c.camel@hammerspace.com>
+Message-ID: <87tutpopfj.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3f975e2-5407-4c1c-4f31-08d889ed957c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Nov 2020 05:07:57.9847
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aX0j6CpDiwRxQZ1rxNW0DkcM2fEaP7FZhOg3QC1EH88RCbQ6YXTfxX3ey5E0XnYzyp6rYZTwCt9ngG3RjoIuJw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3662
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTExLTE2IGF0IDE2OjAwICsxMTAwLCBOZWlsQnJvd24gd3JvdGU6DQo+IE9u
-IE1vbiwgTm92IDE2IDIwMjAsIFRyb25kIE15a2xlYnVzdCB3cm90ZToNCj4gDQo+ID4gT24gTW9u
-LCAyMDIwLTExLTE2IGF0IDE1OjQzICsxMTAwLCBOZWlsQnJvd24gd3JvdGU6DQo+ID4gPiBPbiBN
-b24sIE5vdiAxNiAyMDIwLCBUcm9uZCBNeWtsZWJ1c3Qgd3JvdGU6DQo+ID4gPiANCj4gPiA+ID4g
-T24gTW9uLCAyMDIwLTExLTE2IGF0IDEzOjU5ICsxMTAwLCBOZWlsQnJvd24gd3JvdGU6DQo+ID4g
-PiA+ID4gDQo+ID4gPiA+ID4gUHJpb3IgdG8gY29tbWl0IDVjZWI5ZDdmZGFhZiAoIk5GUzogUmVm
-YWN0b3INCj4gPiA+ID4gPiBuZnNfbG9va3VwX3JldmFsaWRhdGUoKSIpDQo+ID4gPiA+ID4gYW5k
-IGVycm9yIGZyb20gbmZzX2xvb2t1cF92ZXJpZnlfaW5vZGUoKSBvdGhlciB0aGFuIC1FU1RBTEUN
-Cj4gPiA+ID4gPiB3b3VsZA0KPiA+ID4gPiA+IHJlc3VsdA0KPiA+ID4gPiA+IGluIG5mc19sb29r
-dXBfcmV2YWxpZGF0ZSgpIHJldHVybmluZyB0aGF0IGVycm9yIGNvZGUgKC1FU1RBTEUNCj4gPiA+
-ID4gPiBpcw0KPiA+ID4gPiA+IG1hcHBlZA0KPiA+ID4gPiA+IHRvIHplcm8pLg0KPiA+ID4gPiA+
-IFNpbmNlIHRoYXQgY29tbWl0LCBhbGwgZXJyb3JzIHJlc3VsdCBpbiB6ZXJvIGJlaW5nIHJldHVy
-bmVkLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IFdoZW4gbmZzX2xvb2t1cF9yZXZhbGlkYXRlKCkg
-cmV0dXJucyB6ZXJvLCB0aGUgZGVudHJ5IGlzDQo+ID4gPiA+ID4gaW52YWxpZGF0ZWQNCj4gPiA+
-ID4gPiBhbmQsIHNpZ25pZmljYW50bHksIGlmIHRoZSBkZW50cnkgaXMgYSBkaXJlY3RvcnkgdGhh
-dCBpcw0KPiA+ID4gPiA+IG1vdW50ZWQNCj4gPiA+ID4gPiBvbiwNCj4gPiA+ID4gPiB0aGF0IG1v
-dW50cG9pbnQgaXMgbG9zdC4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBJZiB5b3U6DQo+ID4gPiA+
-ID4gwqAtIG1vdW50IGFuIE5GUyBmaWxlc3lzdGVtIHdoaWNoIGNvbnRhaW5zIGEgZGlyZWN0b3J5
-DQo+ID4gPiA+ID4gwqAtIG1vdW50IHNvbWV0aGluZyAoZS5nLiB0bXBmcykgb24gdGhhdCBkaXJl
-Y3RvcnkNCj4gPiA+ID4gPiDCoC0gdXNlIGlwdGFibGVzIChvciBzY2lzc29ycykgdG8gYmxvY2sg
-dHJhZmZpYyB0byB0aGUgc2VydmVyDQo+ID4gPiA+ID4gwqAtIGxzIC1sIHRoZS1tb3VudGVkLW9u
-LWRpcmVjdG9yeQ0KPiA+ID4gPiA+IMKgLSBpbnRlcnJ1cHQgdGhlICdscyAtbCcNCj4gPiA+ID4g
-PiB5b3Ugd2lsbCBmaW5kIHRoYXQgdGhlIGRpcmVjdG9yeSBoYXMgYmVlbiB1bm1vdW50ZWQuDQo+
-ID4gPiA+ID4gDQo+ID4gPiA+ID4gVGhpcyBjYW4gYmUgZml4ZWQgYnkgcmV0dXJuaW5nIHRoZSBh
-Y3R1YWwgZXJyb3IgY29kZSBmcm9tDQo+ID4gPiA+ID4gbmZzX2xvb2t1cF92ZXJpZnlfaW5vZGUo
-KSByYXRoZXIgdGhlbiB6ZXJvIChleGNlcHQgZm9yIC0NCj4gPiA+ID4gPiBFU1RBTEUpLg0KPiA+
-ID4gPiA+IA0KPiA+ID4gPiA+IEZpeGVzOiA1Y2ViOWQ3ZmRhYWYgKCJORlM6IFJlZmFjdG9yIG5m
-c19sb29rdXBfcmV2YWxpZGF0ZSgpIikNCj4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBOZWlsQnJv
-d24gPG5laWxiQHN1c2UuZGU+DQo+ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4gwqBmcy9uZnMvZGly
-LmMgfCA4ICsrKysrLS0tDQo+ID4gPiA+ID4gwqAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25z
-KCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9m
-cy9uZnMvZGlyLmMgYi9mcy9uZnMvZGlyLmMNCj4gPiA+ID4gPiBpbmRleCBjYjUyZGI5YTBjZmIu
-LmQyNGFjZjU1NmU5ZSAxMDA2NDQNCj4gPiA+ID4gPiAtLS0gYS9mcy9uZnMvZGlyLmMNCj4gPiA+
-ID4gPiArKysgYi9mcy9uZnMvZGlyLmMNCj4gPiA+ID4gPiBAQCAtMTM1MCw3ICsxMzUwLDcgQEAg
-bmZzX2RvX2xvb2t1cF9yZXZhbGlkYXRlKHN0cnVjdCBpbm9kZQ0KPiA+ID4gPiA+ICpkaXIsDQo+
-ID4gPiA+ID4gc3RydWN0IGRlbnRyeSAqZGVudHJ5LA0KPiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1bnNpZ25lZCBpbnQgZmxhZ3MpDQo+
-ID4gPiA+ID4gwqB7DQo+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBpbm9kZSAqaW5v
-ZGU7DQo+ID4gPiA+ID4gLcKgwqDCoMKgwqDCoMKgaW50IGVycm9yOw0KPiA+ID4gPiA+ICvCoMKg
-wqDCoMKgwqDCoGludCBlcnJvciA9IDA7DQo+ID4gPiA+ID4gwqANCj4gPiA+ID4gPiDCoMKgwqDC
-oMKgwqDCoMKgbmZzX2luY19zdGF0cyhkaXIsIE5GU0lPU19ERU5UUllSRVZBTElEQVRFKTsNCj4g
-PiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgaW5vZGUgPSBkX2lub2RlKGRlbnRyeSk7DQo+ID4gPiA+
-ID4gQEAgLTEzNzIsOCArMTM3MiwxMCBAQCBuZnNfZG9fbG9va3VwX3JldmFsaWRhdGUoc3RydWN0
-IGlub2RlDQo+ID4gPiA+ID4gKmRpciwNCj4gPiA+ID4gPiBzdHJ1Y3QgZGVudHJ5ICpkZW50cnks
-DQo+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBuZnNfY2hlY2tfdmVyaWZpZXIoZGly
-LCBkZW50cnksIGZsYWdzICYNCj4gPiA+ID4gPiBMT09LVVBfUkNVKSkNCj4gPiA+ID4gPiB7DQo+
-ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBlcnJvciA9IG5mc19sb29r
-dXBfdmVyaWZ5X2lub2RlKGlub2RlLA0KPiA+ID4gPiA+IGZsYWdzKTsNCj4gPiA+ID4gPiDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlmIChlcnJvcikgew0KPiA+ID4gPiA+IC3CoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKGVycm9yID09IC1F
-U1RBTEUpDQo+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqBpZiAoZXJyb3IgPT0gLUVTVEFMRSkgew0KPiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBuZnNfemFw
-X2NhY2hlcyhkaXIpOw0KPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGVycm9yID0gMDsNCj4gPiA+ID4gPiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH0NCj4gPiA+ID4gPiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBnb3RvIG91dF9i
-YWQ7DQo+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9DQo+ID4gPiA+
-ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBuZnNfYWR2aXNlX3VzZV9yZWFkZGly
-cGx1cyhkaXIpOw0KPiA+ID4gPiA+IEBAIC0xMzk1LDcgKzEzOTcsNyBAQCBuZnNfZG9fbG9va3Vw
-X3JldmFsaWRhdGUoc3RydWN0IGlub2RlDQo+ID4gPiA+ID4gKmRpciwNCj4gPiA+ID4gPiBzdHJ1
-Y3QgZGVudHJ5ICpkZW50cnksDQo+ID4gPiA+ID4gwqBvdXRfYmFkOg0KPiA+ID4gPiA+IMKgwqDC
-oMKgwqDCoMKgwqBpZiAoZmxhZ3MgJiBMT09LVVBfUkNVKQ0KPiA+ID4gPiA+IMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIC1FQ0hJTEQ7DQo+ID4gPiA+ID4gLcKgwqDCoMKg
-wqDCoMKgcmV0dXJuIG5mc19sb29rdXBfcmV2YWxpZGF0ZV9kb25lKGRpciwgZGVudHJ5LCBpbm9k
-ZSwNCj4gPiA+ID4gPiAwKTsNCj4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqByZXR1cm4gbmZzX2xv
-b2t1cF9yZXZhbGlkYXRlX2RvbmUoZGlyLCBkZW50cnksIGlub2RlLA0KPiA+ID4gPiA+IGVycm9y
-KTsNCj4gPiA+ID4gDQo+ID4gPiA+IFdoaWNoIGVycm9ycyBkbyB3ZSBhY3R1YWxseSBuZWVkIHRv
-IHJldHVybiBoZXJlPyBBcyBmYXIgYXMgSQ0KPiA+ID4gPiBjYW4NCj4gPiA+ID4gdGVsbCwNCj4g
-PiA+ID4gdGhlIG9ubHkgZXJyb3JzIHRoYXQgbmZzX2xvb2t1cF92ZXJpZnlfaW5vZGUoKSBpcyBz
-dXBwb3NlZCB0bw0KPiA+ID4gPiByZXR1cm4gaXMNCj4gPiA+ID4gRU5PTUVNLCBFU1RBTEUsIEVD
-SElMRCwgYW5kIHBvc3NpYmx5IEVJTyBvciBFVGlNRURPVVQuDQo+ID4gPiA+IA0KPiA+ID4gPiBX
-aHkgd291bGQgaXQgYmUgYmV0dGVyIHRvIHJldHVybiB0aG9zZSBlcnJvcnMgcmF0aGVyIHRoYW4g
-anVzdA0KPiA+ID4gPiBhIDANCj4gPiA+ID4gd2hlbg0KPiA+ID4gPiB3ZSBuZWVkIHRvIGludmFs
-aWRhdGUgdGhlIGlub2RlLCBwYXJ0aWN1bGFybHkgc2luY2Ugd2UgYWxyZWFkeQ0KPiA+ID4gPiBo
-YXZlDQo+ID4gPiA+IGENCj4gPiA+ID4gc3BlY2lhbCBjYXNlIGluIG5mc19sb29rdXBfcmV2YWxp
-ZGF0ZV9kb25lKCkgd2hlbiB0aGUgZGVudHJ5IGlzDQo+ID4gPiA+IHJvb3Q/DQo+ID4gPiANCj4g
-PiA+IEVSRVNUQVJUU1lTIGlzIHRoZSBlcnJvciB0aGF0IGVhc2lseSBjYXVzZXMgcHJvYmxlbXMu
-DQo+ID4gPiANCj4gPiA+IFJldHVybmluZyAwIGNhdXNlcyBkX2ludmFsaWRhdGUoKSB0byBiZSBj
-YWxsZWQgd2hpY2ggaXMgcXVpdGUNCj4gPiA+IGhlYXZ5DQo+ID4gPiBoYW5kZWQgaW4gbW91bnRw
-b2ludHMuDQo+ID4gDQo+ID4gTXkgcG9pbnQgaXMgdGhhdCBpdCBzaG91bGRuJ3QgZ2V0IHJldHVy
-bmVkIGZvciBtb3VudHBvaW50cy4gU2VlDQo+ID4gbmZzX2xvb2t1cF9yZXZhbGlkYXRlX2RvbmUo
-KS4NCj4gDQo+IG5mc19sb29rdXBfcmV2YWxpZGF0ZV9kb25lKCkgb25seSBjaGVja3MgSVNfUk9P
-VCgpLCBhbmQgd2hpbGUgbWFueQ0KPiBtb3VudHBvaW50cyBhcmUgSVNfUk9PVCgpLCBub3QgYWxs
-IGFyZSAoLS1iaW5kIGVhc2lseSBtYWtlcyBvdGhlcnMpLg0KPiANCj4gQnV0IHRoYXQgaXNuJ3Qg
-ZXZlbiByZWFsbHkgcmVsZXZhbnQgaGVyZS7CoCBUaGUgZGVudHJ5IGJlaW5nDQo+IHJldmFsaWRh
-dGVkDQo+IGlzIHRoZSB1bmRlcmx5aW5nIGRpcmVjdG9yeSAtIHRoYXQgc29tZXRoaW5nIGVsc2Ug
-aXMgbW91bnRlZCBvbi4NCj4gc3RlcF9pbnRvKCkgd2hpY2ggZm9sbG93cyBtb3VudCBwb2ludHMg
-aXMgY2FsbGVkIGluIHdhbGtfY29tcG9uZW50KCkNCj4gKmFmdGVyKiBsb29rdXBfZmFzdCBvciBs
-b29rdXBfc2xvdyB3aGljaCB3aWxsIGhhdmUgcmV2YWxpZGF0ZWQgdGhlDQo+IGRlbnRyeS4NCg0K
-U28gdGhlbiB3aHkgaXMgaXQgbm90IHN1ZmZpY2llbnQgdG8ganVzdCBhZGQgYSBjaGVjayBmb3IN
-CmRfbW91bnRwb2ludCgpPyBUaGlzIGlzIGEgcmV2YWxpZGF0aW9uLCBub3QgYSBuZXcgbG9va3Vw
-Lg0KDQo+IA0KPiBOZWlsQnJvd24NCj4gDQo+IA0KPiA+IA0KPiA+ID4gU28gaXQgaXMgb25seSBy
-ZWFzb25hYmxlIHRvIHJldHVybiAwIHdoZW4gd2UgaGF2ZSB1bmFtYmlndW91cw0KPiA+ID4gY29u
-ZmlybWF0aW9uIGZyb20gdGhlIHNlcnZlciB0aGF0IHRoZSBvYmplY3Qgbm8gbG9uZ2VyIGV4aXN0
-cy7CoA0KPiA+ID4gRVNUQUxFDQo+ID4gPiBpcyB1bmFtYmlndW91cy4gRUlPIG1pZ2h0IGJlIHVu
-YW1iaWd1b3VzLsKgIEVSRVNUQVJUU1lTLCBFTk9NRU0sDQo+ID4gPiBFVElNRURPVVQgYXJlIHRy
-YW5zaWVudCBhbmQgZG9uJ3QganVzdGlmeSBkX2ludmFsaWRhdGUoKSBiZWluZw0KPiA+ID4gY2Fs
-bGVkLg0KPiA+ID4gDQo+ID4gPiAoQlRXLCBDb21taXQgY2M4OTY4NGM5YTI2ICgiTkZTOiBvbmx5
-IGludmFsaWRhdGUgZGVudHJ5cyB0aGF0IGFyZQ0KPiA+ID4gY2xlYXJseSBpbnZhbGlkLiIpDQo+
-ID4gPiDCoGZpeGVkIG11Y2ggdGhlIHNhbWUgYnVnIDMgeWVhcnMgYWdvKS4NCj4gPiA+IMKgDQo+
-ID4gPiBUaGFua3MsDQo+ID4gPiBOZWlsQnJvd24NCj4gPiA+IA0KPiA+ID4gDQo+ID4gPiA+IA0K
-PiA+ID4gPiA+IMKgfQ0KPiA+ID4gPiA+IMKgDQo+ID4gPiA+ID4gwqBzdGF0aWMgaW50DQo+ID4g
-PiA+IA0KPiA+ID4gPiAtLSANCj4gPiA+ID4gVHJvbmQgTXlrbGVidXN0DQo+ID4gPiA+IExpbnV4
-IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCj4gPiA+ID4gdHJvbmQubXlrbGVi
-dXN0QGhhbW1lcnNwYWNlLmNvbQ0KPiA+IA0KPiA+IC0tIA0KPiA+IFRyb25kIE15a2xlYnVzdA0K
-PiA+IENUTywgSGFtbWVyc3BhY2UgSW5jDQo+ID4gNDk4NCBFbCBDYW1pbm8gUmVhbCwgU3VpdGUg
-MjA4DQo+ID4gTG9zIEFsdG9zLCBDQSA5NDAyMg0KPiA+IOKAiw0KPiA+IHd3dy5oYW1tZXIuc3Bh
-Y2UNCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwg
-SGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Nov 16 2020, Trond Myklebust wrote:
+
+> On Mon, 2020-11-16 at 16:00 +1100, NeilBrown wrote:
+>> On Mon, Nov 16 2020, Trond Myklebust wrote:
+>>=20
+>> > On Mon, 2020-11-16 at 15:43 +1100, NeilBrown wrote:
+>> > > On Mon, Nov 16 2020, Trond Myklebust wrote:
+>> > >=20
+>> > > > On Mon, 2020-11-16 at 13:59 +1100, NeilBrown wrote:
+>> > > > >=20
+>> > > > > Prior to commit 5ceb9d7fdaaf ("NFS: Refactor
+>> > > > > nfs_lookup_revalidate()")
+>> > > > > and error from nfs_lookup_verify_inode() other than -ESTALE
+>> > > > > would
+>> > > > > result
+>> > > > > in nfs_lookup_revalidate() returning that error code (-ESTALE
+>> > > > > is
+>> > > > > mapped
+>> > > > > to zero).
+>> > > > > Since that commit, all errors result in zero being returned.
+>> > > > >=20
+>> > > > > When nfs_lookup_revalidate() returns zero, the dentry is
+>> > > > > invalidated
+>> > > > > and, significantly, if the dentry is a directory that is
+>> > > > > mounted
+>> > > > > on,
+>> > > > > that mountpoint is lost.
+>> > > > >=20
+>> > > > > If you:
+>> > > > > =C2=A0- mount an NFS filesystem which contains a directory
+>> > > > > =C2=A0- mount something (e.g. tmpfs) on that directory
+>> > > > > =C2=A0- use iptables (or scissors) to block traffic to the server
+>> > > > > =C2=A0- ls -l the-mounted-on-directory
+>> > > > > =C2=A0- interrupt the 'ls -l'
+>> > > > > you will find that the directory has been unmounted.
+>> > > > >=20
+>> > > > > This can be fixed by returning the actual error code from
+>> > > > > nfs_lookup_verify_inode() rather then zero (except for -
+>> > > > > ESTALE).
+>> > > > >=20
+>> > > > > Fixes: 5ceb9d7fdaaf ("NFS: Refactor nfs_lookup_revalidate()")
+>> > > > > Signed-off-by: NeilBrown <neilb@suse.de>
+>> > > > > ---
+>> > > > > =C2=A0fs/nfs/dir.c | 8 +++++---
+>> > > > > =C2=A01 file changed, 5 insertions(+), 3 deletions(-)
+>> > > > >=20
+>> > > > > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+>> > > > > index cb52db9a0cfb..d24acf556e9e 100644
+>> > > > > --- a/fs/nfs/dir.c
+>> > > > > +++ b/fs/nfs/dir.c
+>> > > > > @@ -1350,7 +1350,7 @@ nfs_do_lookup_revalidate(struct inode
+>> > > > > *dir,
+>> > > > > struct dentry *dentry,
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 unsigned int flags)
+>> > > > > =C2=A0{
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct inode *in=
+ode;
+>> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int error;
+>> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int error =3D 0;
+>> > > > > =C2=A0
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0nfs_inc_stats(di=
+r, NFSIOS_DENTRYREVALIDATE);
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0inode =3D d_inod=
+e(dentry);
+>> > > > > @@ -1372,8 +1372,10 @@ nfs_do_lookup_revalidate(struct inode
+>> > > > > *dir,
+>> > > > > struct dentry *dentry,
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 nfs_check_verifier(dir, dentry, flags &
+>> > > > > LOOKUP_RCU))
+>> > > > > {
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0error =3D nfs_lookup_verify_inode(inode,
+>> > > > > flags);
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (error) {
+>> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+if (error =3D=3D -ESTALE)
+>> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+if (error =3D=3D -ESTALE) {
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0nfs_zap_caches(dir);
+>> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0error =3D 0;
+>> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0goto out_bad;
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0nfs_advise_use_readdirplus(dir);
+>> > > > > @@ -1395,7 +1397,7 @@ nfs_do_lookup_revalidate(struct inode
+>> > > > > *dir,
+>> > > > > struct dentry *dentry,
+>> > > > > =C2=A0out_bad:
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (flags & LOOK=
+UP_RCU)
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return -ECHILD;
+>> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return nfs_lookup_rev=
+alidate_done(dir, dentry, inode,
+>> > > > > 0);
+>> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return nfs_lookup_rev=
+alidate_done(dir, dentry, inode,
+>> > > > > error);
+>> > > >=20
+>> > > > Which errors do we actually need to return here? As far as I
+>> > > > can
+>> > > > tell,
+>> > > > the only errors that nfs_lookup_verify_inode() is supposed to
+>> > > > return is
+>> > > > ENOMEM, ESTALE, ECHILD, and possibly EIO or ETiMEDOUT.
+>> > > >=20
+>> > > > Why would it be better to return those errors rather than just
+>> > > > a 0
+>> > > > when
+>> > > > we need to invalidate the inode, particularly since we already
+>> > > > have
+>> > > > a
+>> > > > special case in nfs_lookup_revalidate_done() when the dentry is
+>> > > > root?
+>> > >=20
+>> > > ERESTARTSYS is the error that easily causes problems.
+>> > >=20
+>> > > Returning 0 causes d_invalidate() to be called which is quite
+>> > > heavy
+>> > > handed in mountpoints.
+>> >=20
+>> > My point is that it shouldn't get returned for mountpoints. See
+>> > nfs_lookup_revalidate_done().
+>>=20
+>> nfs_lookup_revalidate_done() only checks IS_ROOT(), and while many
+>> mountpoints are IS_ROOT(), not all are (--bind easily makes others).
+>>=20
+>> But that isn't even really relevant here.=C2=A0 The dentry being
+>> revalidated
+>> is the underlying directory - that something else is mounted on.
+>> step_into() which follows mount points is called in walk_component()
+>> *after* lookup_fast or lookup_slow which will have revalidated the
+>> dentry.
+>
+> So then why is it not sufficient to just add a check for
+> d_mountpoint()? This is a revalidation, not a new lookup.
+>
+
+I guess you could do that.
+But why would you want to call d_invalidate() just because a signal was
+received, or a memory allocation failed?
+
+NeilBrown
+
+
+>>=20
+>> NeilBrown
+>>=20
+>>=20
+>> >=20
+>> > > So it is only reasonable to return 0 when we have unambiguous
+>> > > confirmation from the server that the object no longer exists.=C2=A0
+>> > > ESTALE
+>> > > is unambiguous. EIO might be unambiguous.=C2=A0 ERESTARTSYS, ENOMEM,
+>> > > ETIMEDOUT are transient and don't justify d_invalidate() being
+>> > > called.
+>> > >=20
+>> > > (BTW, Commit cc89684c9a26 ("NFS: only invalidate dentrys that are
+>> > > clearly invalid.")
+>> > > =C2=A0fixed much the same bug 3 years ago).
+>> > > =C2=A0
+>> > > Thanks,
+>> > > NeilBrown
+>> > >=20
+>> > >=20
+>> > > >=20
+>> > > > > =C2=A0}
+>> > > > > =C2=A0
+>> > > > > =C2=A0static int
+>> > > >=20
+>> > > > --=20
+>> > > > Trond Myklebust
+>> > > > Linux NFS client maintainer, Hammerspace
+>> > > > trond.myklebust@hammerspace.com
+>> >=20
+>> > --=20
+>> > Trond Myklebust
+>> > CTO, Hammerspace Inc
+>> > 4984 El Camino Real, Suite 208
+>> > Los Altos, CA 94022
+>> > =E2=80=8B
+>> > www.hammer.space
+>
+> --=20
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJCBAEBCAAsFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl+yCkEOHG5laWxiQHN1
+c2UuZGUACgkQOeye3VZigblUuw/9FvhK5EhkCXYlB90zl0jWRErZPjk0iZ7l+cfR
+GKy/c3UtR5Wli/vUAgvkQECVkw5CP5HZwNQJdsMU9Fh8u8XJzXoFIj7KRe90dpNE
+eM6FaH9IbAAFMM0YOHdjDa0vHuSbv5Zpe9fNAtGq6JvbEiYnWIbOd1r6SA4NtuaL
+u8KDiPLXz6fN1CbZ4GdTtPcws85oNQ/ej4QgiExIE6blQKRgIWkU4VSoMvO+/VJR
+GoIhELruH9P4PRtbrzk4azmUQdQ5W5aDRtxd9gxwtYua9ZdS6FLyrR8Ju1AzHwyb
+DVGSPn3RX7j7Ukrc3f2WO3nvfo79amEinXZ6nvTVMc4zVZVcgUdWVS/2JvVGuTC4
+gxrDkBklTeQoAlJVk9uI5cB2V+mFRgYVWYvxjaMlDymF1IGztpZnASKt2Xfbl+R/
+p7qrFc9iy1CaGyHx0tnau4FmK06+6BZ6qNTSmtzJ3A8YQbLlU8bpvLpzuNfNFQpf
+H2zZr4AhTMhM+Z54iQAFRNkLXXG+PIV5irami/2fGsfKaqtGisklNWbLNGyo0BRY
+f/T1vVXJRv9ZH9EHlm+SQ1Er7ohrq+Z6r98v/8NgIN/6aXG9Jb91yn33JPqUWrUX
++rFD21bUKDjRonJJEwTygRHzC12eQpnVLesHNmG+2oNTEjeneJljaRjMbo793PPw
+bo4+DVo=
+=9xDI
+-----END PGP SIGNATURE-----
+--=-=-=--
