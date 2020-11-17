@@ -2,199 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD9152B5346
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Nov 2020 21:56:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B2E02B57B7
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Nov 2020 04:16:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgKPUz4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 16 Nov 2020 15:55:56 -0500
-Received: from smtp-o-1.desy.de ([131.169.56.154]:55469 "EHLO smtp-o-1.desy.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbgKPUz4 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 16 Nov 2020 15:55:56 -0500
-Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [131.169.56.164])
-        by smtp-o-1.desy.de (Postfix) with ESMTP id 5D621E0719
-        for <linux-nfs@vger.kernel.org>; Mon, 16 Nov 2020 21:55:51 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de 5D621E0719
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-        t=1605560151; bh=PpeV2UvG0hPpJWwUCZzqr1EkbGGOgQDFaMNvpOFHh50=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=c+mRb4Gp79XV/DNFmsWGbimv69WrX+Qxfm5ax2FlDd4JfmpGTipETQA70+GHtdK3v
-         BVo38lT+a1MMNDVq2rB2jO9dmU4B0x1M+gJwNqK+Sj9YaC5lnPR8WFx/2jZo+Pf/Av
-         MfHXR9ojHW+f+8lWHwZLSrMOVKMUOZKPwmoKaEto=
-Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [131.169.56.129])
-        by smtp-buf-1.desy.de (Postfix) with ESMTP id 538DD1201E1;
-        Mon, 16 Nov 2020 21:55:51 +0100 (CET)
-X-Virus-Scanned: amavisd-new at desy.de
-Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
-        by smtp-intra-1.desy.de (Postfix) with ESMTP id 28BF2C0177;
-        Mon, 16 Nov 2020 21:55:51 +0100 (CET)
-Date:   Mon, 16 Nov 2020 21:55:50 +0100 (CET)
-From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To:     trondmy <trondmy@hammerspace.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <291795931.1083930.1605560150768.JavaMail.zimbra@desy.de>
-In-Reply-To: <fc82f441b9393720102f1a7e151517ef881f99df.camel@hammerspace.com>
-References: <20201110231906.863446-1-trondmy@kernel.org> <3a3696f03eef74ac4723fdc0d1297076a34aa8ae.camel@hammerspace.com> <1375056959.614278.1605271687151.JavaMail.zimbra@desy.de> <994125760.684644.1605303041944.JavaMail.zimbra@desy.de> <d73c15ca631ad52f036bb8708ab15b89af432952.camel@hammerspace.com> <1371149886.691555.1605311212511.JavaMail.zimbra@desy.de> <fc82f441b9393720102f1a7e151517ef881f99df.camel@hammerspace.com>
-Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfiles
- data channels
+        id S1725994AbgKQDQD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 16 Nov 2020 22:16:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgKQDQC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Nov 2020 22:16:02 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81EEC0613CF
+        for <linux-nfs@vger.kernel.org>; Mon, 16 Nov 2020 19:16:02 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 77B151C29; Mon, 16 Nov 2020 22:16:01 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 77B151C29
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1605582961;
+        bh=D2jNETWSFuPlafNmnOgOiUVi8uS32omeIyXC3EjwZ4M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CGH2P/voMOZqLry8hvHXMdSvfGrO8DRqj9l/duJ4trIwkAOMeU3uDRAIyyovUv/Pn
+         s9jp1lA8w4uc7qVE3YQ3G17S1gYVyW2nP+YHjaqLDbz5JHeIMqYUQhCqBQTSDYcvSn
+         bNXQ5AeBhoSGMXOqHFsB0P8/a/YwX4uJdYdkStJQ=
+Date:   Mon, 16 Nov 2020 22:16:01 -0500
+From:   bfields <bfields@fieldses.org>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Daire Byrne <daire@dneg.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        linux-cachefs <linux-cachefs@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: Adventures in NFS re-exporting
+Message-ID: <20201117031601.GB10526@fieldses.org>
+References: <883314904.86570901.1605222357023.JavaMail.zimbra@dneg.com>
+ <20201113145050.GB1299@fieldses.org>
+ <20201113222600.GC1299@fieldses.org>
+ <b0d61b4053442ba46fd2c707ee7e0608704c2598.camel@kernel.org>
+ <20201116155619.GF898@fieldses.org>
+ <83ebb6dc68216ce3f3dfd2a2736b7a301550efc5.camel@kernel.org>
+ <20201116161407.GG898@fieldses.org>
+ <db55bab87b6fc9dd1594f8c2e853f07b1165ff5d.camel@kernel.org>
+ <20201116190336.GH898@fieldses.org>
+ <0047077b3bd79a96589626ba154e6d9e95a35478.camel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF82 (Linux)/8.8.15_GA_3953)
-Thread-Topic: Add RDMA support to the pNFS file+flexfiles data channels
-Thread-Index: AQHWt7lTY9xR7iW33kG2X9IO1/hKs6nCBtsAFTVACHJOhL5PDfzm1vaA/xWRAGqA63bEgH5VnYYp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0047077b3bd79a96589626ba154e6d9e95a35478.camel@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Mon, Nov 16, 2020 at 03:03:15PM -0500, Jeff Layton wrote:
+> Another idea might be to add a new fetch_iversion export operation that
+> returns a u64. Roll two generic functions -- one to handle the
+> xfs/ext4/btrfs case and another for the NFS/AFS/Ceph case (where we just
+> fetch it raw). When the op is a NULL pointer, treat it like the
+> !IS_I_VERSION case today.
 
-Hi Trond,
-
-I am afraid, that the fix didn't work. I bisecting it....=20
-
-
-Tigran.
-
-
------ Original Message -----
-> From: "trondmy" <trondmy@hammerspace.com>
-> To: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
-> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
-> Sent: Saturday, 14 November, 2020 15:29:01
-> Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfiles=
- data channels
-
-> On Sat, 2020-11-14 at 00:46 +0100, Mkrtchyan, Tigran wrote:
->>=20
->>=20
->> ----- Original Message -----
->> > From: "trondmy" <trondmy@hammerspace.com>
->> > To: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
->> > Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
->> > Sent: Friday, 13 November, 2020 23:45:00
->> > Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS
->> > file+flexfiles data channels
->>=20
->> > On Fri, 2020-11-13 at 22:30 +0100, Mkrtchyan, Tigran wrote:
->> > >=20
->> > > After more testing, it looks like that client doesn't like
->> > > notification bitmap:
->> > >=20
->> > >=20
->> > > [31576.789492] --> _nfs4_proc_getdeviceinfo
->> > > [31576.789503] --> nfs41_call_sync_prepare data->seq_server
->> > > 000000001d17c43e
->> > > [31576.789507] --> nfs4_alloc_slot used_slots=3D0000
->> > > highest_used=3D4294967295 max_slots=3D16
->> > > [31576.789510] <-- nfs4_alloc_slot used_slots=3D0001 highest_used=3D=
-0
->> > > slotid=3D0
->> > > [31576.789527] encode_sequence:
->> > > sessionid=3D2910695007:150995712:0:16777216 seqid=3D92462 slotid=3D0
->> > > max_slotid=3D0 cache_this=3D0
->> > > [31576.789991] decode_getdeviceinfo: unsupported notification
->> >=20
->> > According to this, you appear to be returning a deviceinfo bitmap
->> > with
->> > at least one non-zero entry that is not in the first 32-bit word.
->> > We
->> > only ask for notifications for NOTIFY_DEVICEID4_CHANGE and
->> > NOTIFY_DEVICEID4_DELETE, so we only expect bitmap[0] to have non-
->> > zero
->> > entries.
->>=20
->>=20
->> according to packet capture only bitmap[0] has non zero bits set.
->> This is the reply of compound starting from nfs staus code, tag
->> length and so on.
->>=20
->>=20
->> 0000=C2=A0=C2=A0 00 00 00 00 00 00 00 00 00 00 00 02 00 00 00 35
->> 0010=C2=A0=C2=A0 00 00 00 00 5f ae 7d ad 00 03 00 09 00 00 00 00
->> 0020=C2=A0=C2=A0 00 00 00 01 00 00 00 4c 00 00 00 00 00 00 00 0f
->> 0030=C2=A0=C2=A0 00 00 00 0f 00 00 00 00 00 00 00 2f 00 00 00 00
->> 0040=C2=A0=C2=A0 00 00 00 04 00 00 00 40 00 00 00 01 00 00 00 03
->> 0050=C2=A0=C2=A0 74 63 70 00 00 00 00 16 31 33 31 2e 31 36 39 2e
->> 0060=C2=A0=C2=A0 31 39 31 2e 31 34 33 2e 31 32 35 2e 34 39 00 00
->> 0070=C2=A0=C2=A0 00 00 00 01 00 00 00 04 00 00 00 01 00 10 00 00
->> 0080=C2=A0=C2=A0 00 10 00 00 00 00 00 01 00 00 00 02 00 00 00 06
->> 0090=C2=A0=C2=A0 00 00 00 00
->>=20
->>=20
->> the last 12 bytes : bitmap size, bitmap[0], bitmap[1]
->>=20
->>=20
->> This part of code in the didn't change since 2010, and I
->> have no issues to use 5.8 kernel. I am pretty sure, that
->> tests with 5.9 did pass as expected. I will try to bisec it.
->=20
-> I don't think I've introduced this bug. I did not touch anything in the
-> getdeviceinfo proc or XDR code.
-> Does the following patch help?
->=20
-> 8<-------------------------------------------------------
-> From e92b2d4e39e91d379ec1147115820ab5dfe4c89a Mon Sep 17 00:00:00 2001
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Date: Fri, 13 Nov 2020 21:42:16 -0500
-> Subject: [PATCH] NFSv4: Fix the alignment of page data in the getdevicein=
-fo
-> reply
->=20
-> We can fit the device_addr4 opaque data padding in the pages.
->=20
-> Fixes: cf500bac8fd4 ("SUNRPC: Introduce rpc_prepare_reply_pages()")
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
-> fs/nfs/nfs4xdr.c | 14 ++++++++++----
-> 1 file changed, 10 insertions(+), 4 deletions(-)
->=20
-> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-> index c6dbfcae7517..c8714381d511 100644
-> --- a/fs/nfs/nfs4xdr.c
-> +++ b/fs/nfs/nfs4xdr.c
-> @@ -3009,15 +3009,19 @@ static void nfs4_xdr_enc_getdeviceinfo(struct rpc=
-_rqst
-> *req,
-> =09struct compound_hdr hdr =3D {
-> =09=09.minorversion =3D nfs4_xdr_minorversion(&args->seq_args),
-> =09};
-> +=09uint32_t replen;
->=20
-> =09encode_compound_hdr(xdr, req, &hdr);
-> =09encode_sequence(xdr, &args->seq_args, &hdr);
-> +
-> +=09replen =3D hdr.replen + op_decode_hdr_maxsz;
-> +
-> =09encode_getdeviceinfo(xdr, args, &hdr);
->=20
-> -=09/* set up reply kvec. Subtract notification bitmap max size (2)
-> -=09 * so that notification bitmap is put in xdr_buf tail */
-> +=09/* set up reply kvec. device_addr4 opaque data is read into the
-> +=09 * pages */
-> =09rpc_prepare_reply_pages(req, args->pdev->pages, args->pdev->pgbase,
-> -=09=09=09=09args->pdev->pglen, hdr.replen - 2);
-> +=09=09=09=09args->pdev->pglen, replen + 2);
-> =09encode_nops(&hdr);
-> }
->=20
-> @@ -5848,7 +5852,9 @@ static int decode_getdeviceinfo(struct xdr_stream *=
-xdr,
-> =09 * and places the remaining xdr data in xdr_buf->tail
-> =09 */
-> =09pdev->mincount =3D be32_to_cpup(p);
-> -=09if (xdr_read_pages(xdr, pdev->mincount) !=3D pdev->mincount)
-> +=09/* Calculate padding */
-> +=09len =3D xdr_align_size(pdev->mincount);
-> +=09if (xdr_read_pages(xdr, len) !=3D len)
-> =09=09return -EIO;
->=20
-> =09/* Parse notification bitmap, verifying that it is zero. */
-> --
-> 2.28.0
->=20
->=20
->=20
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
+OK, a rough attempt follows, mostly untested.--b.
