@@ -2,247 +2,248 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECD7C2B67E8
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Nov 2020 15:52:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 604552B68A6
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Nov 2020 16:26:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgKQOvC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 17 Nov 2020 09:51:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45078 "EHLO
+        id S1729110AbgKQPZi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 17 Nov 2020 10:25:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728894AbgKQOvC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 17 Nov 2020 09:51:02 -0500
-Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [IPv6:2001:638:700:1038::1:9c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD6C5C0613CF
-        for <linux-nfs@vger.kernel.org>; Tue, 17 Nov 2020 06:51:01 -0800 (PST)
-Received: from smtp-buf-3.desy.de (smtp-buf-3.desy.de [131.169.56.166])
-        by smtp-o-3.desy.de (Postfix) with ESMTP id 03EC760667
-        for <linux-nfs@vger.kernel.org>; Tue, 17 Nov 2020 15:50:57 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-3.desy.de 03EC760667
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-        t=1605624658; bh=QHO9KeomPCu25FPrDIg+v8rKEmwSS0IavjDLZ2LKosc=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=kpYuWGE2VmUZDLwmBhwre4KtOflrXlfSEgztDsZ86G2Z+982aqVqeIOTIhJ3K64+e
-         sDAxThi8E0xgu9f9MgJaGbvNryAWohZgNjdCjc8uet9VVKjWuFSln0o+OcB3Cusqkv
-         1nUPQmONHHQcueFz2W+BusunxWRB6LMeqpX7OMHU=
-Received: from smtp-m-3.desy.de (smtp-m-3.desy.de [131.169.56.131])
-        by smtp-buf-3.desy.de (Postfix) with ESMTP id ED5E4A0586;
-        Tue, 17 Nov 2020 15:50:57 +0100 (CET)
-X-Virus-Scanned: amavisd-new at desy.de
-Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
-        by smtp-intra-2.desy.de (Postfix) with ESMTP id C2E661001A7;
-        Tue, 17 Nov 2020 15:50:57 +0100 (CET)
-Date:   Tue, 17 Nov 2020 15:50:57 +0100 (CET)
-From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To:     trondmy <trondmy@hammerspace.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Message-ID: <1959492891.1289318.1605624657755.JavaMail.zimbra@desy.de>
-In-Reply-To: <291795931.1083930.1605560150768.JavaMail.zimbra@desy.de>
-References: <20201110231906.863446-1-trondmy@kernel.org> <3a3696f03eef74ac4723fdc0d1297076a34aa8ae.camel@hammerspace.com> <1375056959.614278.1605271687151.JavaMail.zimbra@desy.de> <994125760.684644.1605303041944.JavaMail.zimbra@desy.de> <d73c15ca631ad52f036bb8708ab15b89af432952.camel@hammerspace.com> <1371149886.691555.1605311212511.JavaMail.zimbra@desy.de> <fc82f441b9393720102f1a7e151517ef881f99df.camel@hammerspace.com> <291795931.1083930.1605560150768.JavaMail.zimbra@desy.de>
-Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfiles
- data channels
+        with ESMTP id S1729087AbgKQPZi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 17 Nov 2020 10:25:38 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 817BFC0613CF
+        for <linux-nfs@vger.kernel.org>; Tue, 17 Nov 2020 07:25:38 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 6A7201C21; Tue, 17 Nov 2020 10:25:37 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6A7201C21
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1605626737;
+        bh=hPhzIdY6gNd9mDmeWEK+Rm55DPyoFV6fdXub/Cxg7yA=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=Ym7JlXM27NT3f42Ao8OJ+9L10gGNfKCqcEJIyUGLsK5KArxJGSJdu/KgXFrklzJDU
+         HKpHPXehLwmCfItVzoAjlTfMN0orbzenFiLWi8aUi+27P8mAnCmWfOnsbgzEATT88e
+         ck0Jm+u4qk5L3u4yFQJCsJxoShbvhW+aCozXhYdc=
+Date:   Tue, 17 Nov 2020 10:25:37 -0500
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Daire Byrne <daire@dneg.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        linux-cachefs <linux-cachefs@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 2/4] nfsd: pre/post attr is using wrong change attribute
+Message-ID: <20201117152537.GB4556@fieldses.org>
+References: <20201117031601.GB10526@fieldses.org>
+ <1605583086-19869-1-git-send-email-bfields@redhat.com>
+ <1605583086-19869-2-git-send-email-bfields@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF82 (Linux)/8.8.15_GA_3953)
-Thread-Topic: Add RDMA support to the pNFS file+flexfiles data channels
-Thread-Index: AQHWt7lTY9xR7iW33kG2X9IO1/hKs6nCBtsAFTVACHJOhL5PDfzm1vaA/xWRAGqA63bEgH5VnYYpbZFtEok=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1605583086-19869-2-git-send-email-bfields@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Mon, Nov 16, 2020 at 10:18:04PM -0500, J. Bruce Fields wrote:
+> From: "J. Bruce Fields" <bfields@redhat.com>
+> 
+> fill_{pre/post}_attr are unconditionally using i_version even when the
+> underlying filesystem doesn't have proper support for i_version.
 
+Actually, I didn't have this quite right....
 
-Here is the result:
+These values are queried, but they aren't used, thanks to the
+"change_supported" field of nfsd4_change_info; in set_change_info():
 
+	cinfo->change_supported = IS_I_VERSION(d_inode(fhp->fh_dentry));
 
-$ git bisect bad=20
-c567552612ece787b178e3b147b5854ad422a836 is the first bad commit
-commit c567552612ece787b178e3b147b5854ad422a836
-Author: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Date:   Wed May 28 13:41:22 2014 -0400
+and then later on encode_cinfo() chooses to use stored change attribute
+or ctime values depending on how change_supported.
 
-    NFS: Add READ_PLUS data segment support
-   =20
-    This patch adds client support for decoding a single NFS4_CONTENT_DATA
-    segment returned by the server. This is the simplest implementation
-    possible, since it does not account for any hole segments in the reply.
-   =20
-    Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+But as of the ctime changes, just querying the change attribute here has
+side effects.
 
- fs/nfs/nfs42xdr.c         | 141 ++++++++++++++++++++++++++++++++++++++++++=
-++++
- fs/nfs/nfs4client.c       |   2 +
- fs/nfs/nfs4proc.c         |  43 +++++++++++++-
- fs/nfs/nfs4xdr.c          |   1 +
- include/linux/nfs4.h      |   2 +-
- include/linux/nfs_fs_sb.h |   1 +
- include/linux/nfs_xdr.h   |   2 +-
- 7 files changed, 187 insertions(+), 5 deletions(-)
+So, that explains why Daire's team was seeing a performance regression,
+while no one was complaining about our returned change info being
+garbage.
 
+Anyway.
 
-Regards,
-   Tigran.
+--b.
 
-
-
------ Original Message -----
-> From: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
-> To: "trondmy" <trondmy@hammerspace.com>
-> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
-> Sent: Monday, 16 November, 2020 21:55:50
-> Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfiles=
- data channels
-
-> Hi Trond,
->=20
-> I am afraid, that the fix didn't work. I bisecting it....
->=20
->=20
-> Tigran.
->=20
->=20
-> ----- Original Message -----
->> From: "trondmy" <trondmy@hammerspace.com>
->> To: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
->> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
->> Sent: Saturday, 14 November, 2020 15:29:01
->> Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS file+flexfile=
-s data
->> channels
->=20
->> On Sat, 2020-11-14 at 00:46 +0100, Mkrtchyan, Tigran wrote:
->>>=20
->>>=20
->>> ----- Original Message -----
->>> > From: "trondmy" <trondmy@hammerspace.com>
->>> > To: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
->>> > Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
->>> > Sent: Friday, 13 November, 2020 23:45:00
->>> > Subject: Re: [PATCH v3 00/11] Add RDMA support to the pNFS
->>> > file+flexfiles data channels
->>>=20
->>> > On Fri, 2020-11-13 at 22:30 +0100, Mkrtchyan, Tigran wrote:
->>> > >=20
->>> > > After more testing, it looks like that client doesn't like
->>> > > notification bitmap:
->>> > >=20
->>> > >=20
->>> > > [31576.789492] --> _nfs4_proc_getdeviceinfo
->>> > > [31576.789503] --> nfs41_call_sync_prepare data->seq_server
->>> > > 000000001d17c43e
->>> > > [31576.789507] --> nfs4_alloc_slot used_slots=3D0000
->>> > > highest_used=3D4294967295 max_slots=3D16
->>> > > [31576.789510] <-- nfs4_alloc_slot used_slots=3D0001 highest_used=
-=3D0
->>> > > slotid=3D0
->>> > > [31576.789527] encode_sequence:
->>> > > sessionid=3D2910695007:150995712:0:16777216 seqid=3D92462 slotid=3D=
-0
->>> > > max_slotid=3D0 cache_this=3D0
->>> > > [31576.789991] decode_getdeviceinfo: unsupported notification
->>> >=20
->>> > According to this, you appear to be returning a deviceinfo bitmap
->>> > with
->>> > at least one non-zero entry that is not in the first 32-bit word.
->>> > We
->>> > only ask for notifications for NOTIFY_DEVICEID4_CHANGE and
->>> > NOTIFY_DEVICEID4_DELETE, so we only expect bitmap[0] to have non-
->>> > zero
->>> > entries.
->>>=20
->>>=20
->>> according to packet capture only bitmap[0] has non zero bits set.
->>> This is the reply of compound starting from nfs staus code, tag
->>> length and so on.
->>>=20
->>>=20
->>> 0000=C2=A0=C2=A0 00 00 00 00 00 00 00 00 00 00 00 02 00 00 00 35
->>> 0010=C2=A0=C2=A0 00 00 00 00 5f ae 7d ad 00 03 00 09 00 00 00 00
->>> 0020=C2=A0=C2=A0 00 00 00 01 00 00 00 4c 00 00 00 00 00 00 00 0f
->>> 0030=C2=A0=C2=A0 00 00 00 0f 00 00 00 00 00 00 00 2f 00 00 00 00
->>> 0040=C2=A0=C2=A0 00 00 00 04 00 00 00 40 00 00 00 01 00 00 00 03
->>> 0050=C2=A0=C2=A0 74 63 70 00 00 00 00 16 31 33 31 2e 31 36 39 2e
->>> 0060=C2=A0=C2=A0 31 39 31 2e 31 34 33 2e 31 32 35 2e 34 39 00 00
->>> 0070=C2=A0=C2=A0 00 00 00 01 00 00 00 04 00 00 00 01 00 10 00 00
->>> 0080=C2=A0=C2=A0 00 10 00 00 00 00 00 01 00 00 00 02 00 00 00 06
->>> 0090=C2=A0=C2=A0 00 00 00 00
->>>=20
->>>=20
->>> the last 12 bytes : bitmap size, bitmap[0], bitmap[1]
->>>=20
->>>=20
->>> This part of code in the didn't change since 2010, and I
->>> have no issues to use 5.8 kernel. I am pretty sure, that
->>> tests with 5.9 did pass as expected. I will try to bisec it.
->>=20
->> I don't think I've introduced this bug. I did not touch anything in the
->> getdeviceinfo proc or XDR code.
->> Does the following patch help?
->>=20
->> 8<-------------------------------------------------------
->> From e92b2d4e39e91d379ec1147115820ab5dfe4c89a Mon Sep 17 00:00:00 2001
->> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->> Date: Fri, 13 Nov 2020 21:42:16 -0500
->> Subject: [PATCH] NFSv4: Fix the alignment of page data in the getdevicei=
-nfo
->> reply
->>=20
->> We can fit the device_addr4 opaque data padding in the pages.
->>=20
->> Fixes: cf500bac8fd4 ("SUNRPC: Introduce rpc_prepare_reply_pages()")
->> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
->> ---
->> fs/nfs/nfs4xdr.c | 14 ++++++++++----
->> 1 file changed, 10 insertions(+), 4 deletions(-)
->>=20
->> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
->> index c6dbfcae7517..c8714381d511 100644
->> --- a/fs/nfs/nfs4xdr.c
->> +++ b/fs/nfs/nfs4xdr.c
->> @@ -3009,15 +3009,19 @@ static void nfs4_xdr_enc_getdeviceinfo(struct rp=
-c_rqst
->> *req,
->> =09struct compound_hdr hdr =3D {
->> =09=09.minorversion =3D nfs4_xdr_minorversion(&args->seq_args),
->> =09};
->> +=09uint32_t replen;
->>=20
->> =09encode_compound_hdr(xdr, req, &hdr);
->> =09encode_sequence(xdr, &args->seq_args, &hdr);
->> +
->> +=09replen =3D hdr.replen + op_decode_hdr_maxsz;
->> +
->> =09encode_getdeviceinfo(xdr, args, &hdr);
->>=20
->> -=09/* set up reply kvec. Subtract notification bitmap max size (2)
->> -=09 * so that notification bitmap is put in xdr_buf tail */
->> +=09/* set up reply kvec. device_addr4 opaque data is read into the
->> +=09 * pages */
->> =09rpc_prepare_reply_pages(req, args->pdev->pages, args->pdev->pgbase,
->> -=09=09=09=09args->pdev->pglen, hdr.replen - 2);
->> +=09=09=09=09args->pdev->pglen, replen + 2);
->> =09encode_nops(&hdr);
->> }
->>=20
->> @@ -5848,7 +5852,9 @@ static int decode_getdeviceinfo(struct xdr_stream =
-*xdr,
->> =09 * and places the remaining xdr data in xdr_buf->tail
->> =09 */
->> =09pdev->mincount =3D be32_to_cpup(p);
->> -=09if (xdr_read_pages(xdr, pdev->mincount) !=3D pdev->mincount)
->> +=09/* Calculate padding */
->> +=09len =3D xdr_align_size(pdev->mincount);
->> +=09if (xdr_read_pages(xdr, len) !=3D len)
->> =09=09return -EIO;
->>=20
->> =09/* Parse notification bitmap, verifying that it is zero. */
->> --
->> 2.28.0
->>=20
->>=20
->>=20
->> --
->> Trond Myklebust
->> Linux NFS client maintainer, Hammerspace
-> > trond.myklebust@hammerspace.com
+> 
+> Move the code that chooses which i_version to use to the common
+> nfsd4_change_attribute().
+> 
+> The NFSEXP_V4ROOT case probably doesn't matter (the pseudoroot
+> filesystem is usually read-only and unlikely to see operations with pre
+> and post change attributes), but let's put it in the same place anyway
+> for consistency.
+> 
+> Fixes: c654b8a9cba6 ("nfsd: support ext4 i_version")
+> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> ---
+>  fs/nfsd/nfs4xdr.c | 11 +----------
+>  fs/nfsd/nfsfh.c   | 11 +++++++----
+>  fs/nfsd/nfsfh.h   | 23 -----------------------
+>  fs/nfsd/vfs.c     | 32 ++++++++++++++++++++++++++++++++
+>  fs/nfsd/vfs.h     |  3 +++
+>  5 files changed, 43 insertions(+), 37 deletions(-)
+> 
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 833a2c64dfe8..6806207b6d18 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -2295,16 +2295,7 @@ nfsd4_decode_compound(struct nfsd4_compoundargs *argp)
+>  static __be32 *encode_change(__be32 *p, struct kstat *stat, struct inode *inode,
+>  			     struct svc_export *exp)
+>  {
+> -	if (exp->ex_flags & NFSEXP_V4ROOT) {
+> -		*p++ = cpu_to_be32(convert_to_wallclock(exp->cd->flush_time));
+> -		*p++ = 0;
+> -	} else if (IS_I_VERSION(inode)) {
+> -		p = xdr_encode_hyper(p, nfsd4_change_attribute(stat, inode));
+> -	} else {
+> -		*p++ = cpu_to_be32(stat->ctime.tv_sec);
+> -		*p++ = cpu_to_be32(stat->ctime.tv_nsec);
+> -	}
+> -	return p;
+> +	return xdr_encode_hyper(p, nfsd4_change_attribute(stat, inode, exp));
+>  }
+>  
+>  /*
+> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> index b3b4e8809aa9..4fbe1413e767 100644
+> --- a/fs/nfsd/nfsfh.c
+> +++ b/fs/nfsd/nfsfh.c
+> @@ -719,6 +719,7 @@ void fill_pre_wcc(struct svc_fh *fhp)
+>  {
+>  	struct inode    *inode;
+>  	struct kstat	stat;
+> +	struct svc_export *exp = fhp->fh_export;
+>  	__be32 err;
+>  
+>  	if (fhp->fh_pre_saved)
+> @@ -736,7 +737,7 @@ void fill_pre_wcc(struct svc_fh *fhp)
+>  	fhp->fh_pre_mtime = stat.mtime;
+>  	fhp->fh_pre_ctime = stat.ctime;
+>  	fhp->fh_pre_size  = stat.size;
+> -	fhp->fh_pre_change = nfsd4_change_attribute(&stat, inode);
+> +	fhp->fh_pre_change = nfsd4_change_attribute(&stat, inode, exp);
+>  	fhp->fh_pre_saved = true;
+>  }
+>  
+> @@ -746,17 +747,19 @@ void fill_pre_wcc(struct svc_fh *fhp)
+>  void fill_post_wcc(struct svc_fh *fhp)
+>  {
+>  	__be32 err;
+> +	struct inode *inode = d_inode(fhp->fh_dentry);
+> +	struct svc_export *exp = fhp->fh_export;
+>  
+>  	if (fhp->fh_post_saved)
+>  		printk("nfsd: inode locked twice during operation.\n");
+>  
+>  	err = fh_getattr(fhp, &fhp->fh_post_attr);
+> -	fhp->fh_post_change = nfsd4_change_attribute(&fhp->fh_post_attr,
+> -						     d_inode(fhp->fh_dentry));
+> +	fhp->fh_post_change =
+> +			nfsd4_change_attribute(&fhp->fh_post_attr, inode, exp);
+>  	if (err) {
+>  		fhp->fh_post_saved = false;
+>  		/* Grab the ctime anyway - set_change_info might use it */
+> -		fhp->fh_post_attr.ctime = d_inode(fhp->fh_dentry)->i_ctime;
+> +		fhp->fh_post_attr.ctime = inode->i_ctime;
+>  	} else
+>  		fhp->fh_post_saved = true;
+>  }
+> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+> index 56cfbc361561..547aef9b3265 100644
+> --- a/fs/nfsd/nfsfh.h
+> +++ b/fs/nfsd/nfsfh.h
+> @@ -245,29 +245,6 @@ fh_clear_wcc(struct svc_fh *fhp)
+>  	fhp->fh_pre_saved = false;
+>  }
+>  
+> -/*
+> - * We could use i_version alone as the change attribute.  However,
+> - * i_version can go backwards after a reboot.  On its own that doesn't
+> - * necessarily cause a problem, but if i_version goes backwards and then
+> - * is incremented again it could reuse a value that was previously used
+> - * before boot, and a client who queried the two values might
+> - * incorrectly assume nothing changed.
+> - *
+> - * By using both ctime and the i_version counter we guarantee that as
+> - * long as time doesn't go backwards we never reuse an old value.
+> - */
+> -static inline u64 nfsd4_change_attribute(struct kstat *stat,
+> -					 struct inode *inode)
+> -{
+> -	u64 chattr;
+> -
+> -	chattr =  stat->ctime.tv_sec;
+> -	chattr <<= 30;
+> -	chattr += stat->ctime.tv_nsec;
+> -	chattr += inode_query_iversion(inode);
+> -	return chattr;
+> -}
+> -
+>  extern void fill_pre_wcc(struct svc_fh *fhp);
+>  extern void fill_post_wcc(struct svc_fh *fhp);
+>  #else
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 1ecaceebee13..2c71b02dd1fe 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -2390,3 +2390,35 @@ nfsd_permission(struct svc_rqst *rqstp, struct svc_export *exp,
+>  
+>  	return err? nfserrno(err) : 0;
+>  }
+> +
+> +/*
+> + * We could use i_version alone as the change attribute.  However,
+> + * i_version can go backwards after a reboot.  On its own that doesn't
+> + * necessarily cause a problem, but if i_version goes backwards and then
+> + * is incremented again it could reuse a value that was previously used
+> + * before boot, and a client who queried the two values might
+> + * incorrectly assume nothing changed.
+> + *
+> + * By using both ctime and the i_version counter we guarantee that as
+> + * long as time doesn't go backwards we never reuse an old value.
+> + */
+> +u64 nfsd4_change_attribute(struct kstat *stat, struct inode *inode,
+> +					 struct svc_export *exp)
+> +{
+> +	u64 chattr;
+> +
+> +	if (exp->ex_flags & NFSEXP_V4ROOT) {
+> +		chattr = cpu_to_be32(convert_to_wallclock(exp->cd->flush_time));
+> +		chattr <<= 32;
+> +	} else if (IS_I_VERSION(inode)) {
+> +		chattr = stat->ctime.tv_sec;
+> +		chattr <<= 30;
+> +		chattr += stat->ctime.tv_nsec;
+> +		chattr += inode_query_iversion(inode);
+> +	} else {
+> +		chattr = stat->ctime.tv_sec;
+> +		chattr <<= 32;
+> +		chattr += stat->ctime.tv_nsec;
+> +	}
+> +	return chattr;
+> +}
+> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+> index a2442ebe5acf..26ed15256340 100644
+> --- a/fs/nfsd/vfs.h
+> +++ b/fs/nfsd/vfs.h
+> @@ -132,6 +132,9 @@ __be32		nfsd_statfs(struct svc_rqst *, struct svc_fh *,
+>  __be32		nfsd_permission(struct svc_rqst *, struct svc_export *,
+>  				struct dentry *, int);
+>  
+> +u64		nfsd4_change_attribute(struct kstat *stat, struct inode *inode,
+> +				struct svc_export *exp);
+> +
+>  static inline int fh_want_write(struct svc_fh *fh)
+>  {
+>  	int ret;
+> -- 
+> 2.28.0
