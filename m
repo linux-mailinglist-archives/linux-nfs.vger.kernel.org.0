@@ -2,154 +2,251 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB4492B94B1
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Nov 2020 15:35:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAFCC2B94C2
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Nov 2020 15:41:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbgKSOee (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Nov 2020 09:34:34 -0500
-Received: from mail-dm6nam10on2125.outbound.protection.outlook.com ([40.107.93.125]:17281
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727473AbgKSOed (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 19 Nov 2020 09:34:33 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kNHcp6ZAtgOVBftwcFYYiyQ+jcSKfg9oDvOwqoUDvZfexm0TBFL6GYGG4cvl2R0uUADwVS413Nc1qd+0xWi3b4fP6Ai4nK7D9NgiNTCJnOoAeSUE6gFidXeUgNUDwRwaNRHafIsmPP0jWmbeg0rHq125eccyAJYi7SWwh7N0qx8lleO6EsOBkox75Hyau6Fa3gZNgizY+kNEfXTWbSJltKDZj4F2lrWDbJrWBju2E2uqpKfT+nxX10tKyUCEDIFNDbqAvL2tsLUYz9v0+mvEDhTMMhpZIanqRgZw+WRHDdpJlETbmdS/QnuFD9kNM7TPtRT8Xh5khrMWYrFuXjbIGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8NRr7UHrvXh0Q4cyCBv9OJUgtQoHJCRtybQ8EMKWRwI=;
- b=R9Zg/v5Z1o7W5oamcjjHFUxznQnl0a31Umsp2K0N2ewn0JzVRr9AUzpF6L3vQpUeED4RnS7+fv6ohrUGUCevMVHFFpQzodr1kD6gxVWwRMAJxA7q1asCHD2BdW2+R0EhmsgYEp7VvYsDuDoYtAywkwV5L/mcW4xBetfXQ6Mb0dux6aGDTDl0vhwNDwqkBT/8vPuTh5mLVN6H+/ChqhlL4secxSxrWj9b2qWgSMPZrDJpQ/4lICC8R6hrGjEtj2wcIeUFS+XWxkkKag0ljlvVawCF52l0gUAKkdcsjwaNVX/tMFpuWth71PXY1Q1kUJfvB4KHHKQEzgStT56CP702DQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8NRr7UHrvXh0Q4cyCBv9OJUgtQoHJCRtybQ8EMKWRwI=;
- b=eT0k7JmcQRN/D0WbhJzaV8TsEOE/VTkLYcOVRzEQk11cjfw3Q11HXY5WHtMwoh6lR0+mWTgV2y6HkN3hQuMnxFIHtXLpgr90oV38ivj7NtMm0jPrkNEQyLsig30j23ktvcOkMyBJseMBaMh6SNOU94vNyP3iaU3cGFsf5e059yQ=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB2941.namprd13.prod.outlook.com (2603:10b6:208:13d::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3611.9; Thu, 19 Nov
- 2020 14:34:29 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3589.016; Thu, 19 Nov 2020
- 14:34:29 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 3/3] NFS: Avoid copy of xdr padding in read()
-Thread-Topic: [PATCH 3/3] NFS: Avoid copy of xdr padding in read()
-Thread-Index: AQHWvfkXUHuTZLUV8keMpBIY5a4z6anPgYwAgAADcYCAAACHAIAAALUA
-Date:   Thu, 19 Nov 2020 14:34:29 +0000
-Message-ID: <6f13978155f7f6fd6cc885f9efdb13c0e890faf3.camel@hammerspace.com>
-References: <20201118221939.20715-1-trondmy@kernel.org>
-         <20201118221939.20715-2-trondmy@kernel.org>
-         <20201118221939.20715-3-trondmy@kernel.org>
-         <42FFB4EC-5E31-4002-92FC-7CA329479D78@oracle.com>
-         <57b085d32f624986412770d10cc4daa8211ee0f4.camel@hammerspace.com>
-         <D322F599-E680-4715-AD9A-CC6017AFF8E0@oracle.com>
-In-Reply-To: <D322F599-E680-4715-AD9A-CC6017AFF8E0@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f751f987-eafe-45ac-29b9-08d88c98390b
-x-ms-traffictypediagnostic: MN2PR13MB2941:
-x-microsoft-antispam-prvs: <MN2PR13MB2941660BCF313A7529E12F26B8E00@MN2PR13MB2941.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ApJ5KF74Wqs5E86eVmXpe5FfC2YNn9hLbq4AQl9GbbuoJy292X+QTNyHrFstisU32OC6zPCQWp4LvgX3VJ+BfLKx5a6hTLDhrM2QgagPqXmma81LLYOt7lO20f7SmSw0wxQM8mqayRi6bk8dRN2XM3orVVAExNTAsQ6DSC0OwL1EBAf+qViU172oqy4RIgeFIXTB4rmk930fYx5fw0pTQe8ws5ICjLUhLRCfI1dRyBGqSh+eeFGBobPf4ePIasyRXES7ndPMRvmSkUHQlLFpICDlA8NjgGip7nywZDNSQ4jWjKfuY/uTLvPoi91pzMIu6x4ejj4IxMy5pJFKPzBOxQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(136003)(396003)(366004)(376002)(39840400004)(8936002)(8676002)(5660300002)(83380400001)(6512007)(6486002)(36756003)(4001150100001)(71200400001)(4326008)(2906002)(66556008)(6916009)(478600001)(2616005)(26005)(6506007)(186003)(53546011)(316002)(86362001)(76116006)(66446008)(66476007)(64756008)(66946007)(91956017);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: WlkHhnu50xBMkrJTdp87WRkArNwLl6qVI7z2Yrbs4Mk1ABT+48bCO3hf30XoMG0VGMVN94zoAcI5xJrNYWa2o2mFfZUhCwOm+g/kzDOQZrndZzZYzNdc19RFMTvYa1963cLLEFpRgED5T3VFwNKinSOI1tpvQtra+9Uq4HwB5GoUiZ7I9Lu3gbM7V8NRf/+VEZQPics1ePdIQoxzEj9kwgTCNY4TQ+aJ8iBvVWnk4frxEzl14dNqboIIgME+RgQ4BayqSBT10/5q9A2ywnS9Tk2U07bY8fhsYUoc5JiScnmBwHUVEl4EUwfVLYDHAL++ZHtjB91K8hohNeBiNho5k3YwQ1JFKCblru949bDnAdp/D2aFz/YdO3+QceFSsreUzsvsnJ2aHxSQLVAo6OR1Ss4/jwTrj3v/KYHtGrsOdGHSaPmDdbNUdSxR5oRkU5VTy9X5Dt3u802xAPBOO/ArNk5poxhIWtMitAXjKUTGKMe/UiH6oma/osXit8m0g9VZCQpAO7+2Qo1ahql/FYhpoGR1yyH+UiRGDNrT2vctKk2Lhn6ZuuGHFosE+ONhOKoYeQzF8g3UpuCMJJyPALfSKNryabV4zs44Kkte+WVksj+9ujnlQ6hYVbylRgUkxW4xIj6Gah7rm5sI9HcHBsYAng==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FDFDD07C911F1F449799A49FC63EBD93@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f751f987-eafe-45ac-29b9-08d88c98390b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2020 14:34:29.2288
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tnDyIbCamIi+qOzzR07G1HAoaNDOWRasOhpo5SZY2HZ0f1fB2dQXJd+RfGIWeJWhWtyr+Xn7boEHhcYgVVTlRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB2941
+        id S1726691AbgKSOhX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Nov 2020 09:37:23 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:48860 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbgKSOhX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Nov 2020 09:37:23 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AJEYKhS144626;
+        Thu, 19 Nov 2020 14:37:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=4w9VVhu2rt0cdnO8yN07BiwFCHt0gYt17eymHHH0YmQ=;
+ b=y5rK5FHWfjbdClp/MYfR7eSBNPVtlH4XKmIeLk1HUpAAExaawtA3wT61aMLfjiv0PRDI
+ mw8nShG6te2GSnuOBZZCzOpKJHi85MwX5RPNvJK0n9pH0ngzQG3cEwaNTBTAoxlnCrml
+ co/E2e+6sE0lTu5/ByEjvewuMQZeZKLQuhp/wPKJaUbSZR7lUMjn4ZC17EDrONPdUMa5
+ v8dde6vexpRZ6B/B3aLPOhS+VFSch2lWatt2EYaIkf5JdsQA9FhYH+xAq48np71hJLTi
+ UkE55ZJrjG9GetQjYSk7BEVotWhiiAeyFmFL7agxDzqgID4qF0CeFc3ZK8PHzaWquF2s RA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 34t4rb5tg1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Nov 2020 14:37:16 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AJEZOSI069172;
+        Thu, 19 Nov 2020 14:37:16 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 34umd21p5s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Nov 2020 14:37:15 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0AJEbFQq029325;
+        Thu, 19 Nov 2020 14:37:15 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 19 Nov 2020 06:37:14 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [PATCH 1/1] NFSv4.2: fix LISTXATTR buffer receive size
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <CAN-5tyEyQbmc-oefF+-PdtdcS7GJ9zmJk71Dk8EED0upcorqaA@mail.gmail.com>
+Date:   Thu, 19 Nov 2020 09:37:13 -0500
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Frank van der Linden <fllinden@amazon.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <07AF9A5C-BC42-4F66-A153-19A410D312E1@oracle.com>
+References: <20201113190851.7817-1-olga.kornievskaia@gmail.com>
+ <99874775-A18C-4832-A2F0-F2152BE5CE32@oracle.com>
+ <CAN-5tyEyQbmc-oefF+-PdtdcS7GJ9zmJk71Dk8EED0upcorqaA@mail.gmail.com>
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9809 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 mlxscore=0 phishscore=0
+ spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011190110
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9809 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
+ mlxlogscore=999 adultscore=0 phishscore=0 suspectscore=2 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011190110
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTExLTE5IGF0IDA5OjMxIC0wNTAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
-DQo+IA0KPiA+IE9uIE5vdiAxOSwgMjAyMCwgYXQgOTozMCBBTSwgVHJvbmQgTXlrbGVidXN0IDwN
-Cj4gPiB0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gT24gVGh1LCAy
-MDIwLTExLTE5IGF0IDA5OjE3IC0wNTAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4gPiA+IA0KPiA+
-ID4gDQo+ID4gPiA+IE9uIE5vdiAxOCwgMjAyMCwgYXQgNToxOSBQTSwgdHJvbmRteUBrZXJuZWwu
-b3JnwqB3cm90ZToNCj4gPiA+ID4gDQo+ID4gPiA+IEZyb206IFRyb25kIE15a2xlYnVzdCA8dHJv
-bmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbT4NCj4gPiA+ID4gDQo+ID4gPiA+IFdoZW4gZG9p
-bmcgYSByZWFkKCkgaW50byBhIHBhZ2UsIHdlIGFsc28gZG9uJ3QgY2FyZSBpZiB0aGUgbnVsDQo+
-ID4gPiA+IHBhZGRpbmcNCj4gPiA+ID4gc3RheXMgaW4gdGhhdCBsYXN0IHBhZ2Ugd2hlbiB0aGUg
-ZGF0YSBsZW5ndGggaXMgbm90IDMyLWJpdA0KPiA+ID4gPiBhbGlnbmVkLg0KPiA+ID4gDQo+ID4g
-PiBXaGF0IGlmIHRoZSBSRUFEIHBheWxvYWQgbGFuZHMgaW4gdGhlIG1pZGRsZSBvZiBhIGZpbGU/
-IFRoZQ0KPiA+ID4gcGFkIG9uIHRoZSBlbmQgd2lsbCBvdmVyd3JpdGUgZmlsZSBjb250ZW50IGp1
-c3QgcGFzdCB3aGVyZQ0KPiA+ID4gdGhlIFJFQUQgcGF5bG9hZCBsYW5kcy4NCj4gPiANCj4gPiBJ
-ZiB0aGUgc2l6ZSA+IGJ1Zi0+cGFnZV9sZW4sIHRoZW4gaXQgZ2V0cyB0cnVuY2F0ZWQgaW4NCj4g
-PiB4ZHJfYWxpZ25fcGFnZXMoKSBhZmFpay4NCj4gDQo+IEkgd2lsbCBuZWVkIHRvIGNoZWNrIGhv
-dyBSUEMvUkRNQSBiZWhhdmVzLiBJdCBtaWdodCBidWlsZCBhDQo+IGNodW5rIHRoYXQgaW5jbHVk
-ZXMgdGhlIHBhZCBpbiB0aGlzIGNhc2UsIHdoaWNoIHdvdWxkIGJyZWFrDQo+IHRoaW5ncy4NCg0K
-VGhhdCB3b3VsZCBiZSBhIGJ1ZyBpbiB0aGUgZXhpc3RpbmcgY29kZSB0b28sIHRoZW4uIEl0IHNo
-b3VsZG4ndCBiZQ0Kd3JpdGluZyBiZXlvbmQgdGhlIGJ1ZmZlciBzaXplIHdlIHNldCBpbiB0aGUg
-TkZTIGxheWVyLg0KDQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFRyb25kIE15a2xlYnVzdA0KPiA+
-ID4gPiA8dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4g
-PiA+IGZzL25mcy9uZnMyeGRyLmMgfCAyICstDQo+ID4gPiA+IGZzL25mcy9uZnMzeGRyLmMgfCAy
-ICstDQo+ID4gPiA+IGZzL25mcy9uZnM0eGRyLmMgfCAyICstDQo+ID4gPiA+IDMgZmlsZXMgY2hh
-bmdlZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+ID4gPiANCj4gPiA+ID4g
-ZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnMyeGRyLmMgYi9mcy9uZnMvbmZzMnhkci5jDQo+ID4gPiA+
-IGluZGV4IGRiOWMyNjVhZDllMS4uNDY4YmZiZmU0NGQ3IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9m
-cy9uZnMvbmZzMnhkci5jDQo+ID4gPiA+ICsrKyBiL2ZzL25mcy9uZnMyeGRyLmMNCj4gPiA+ID4g
-QEAgLTEwMiw3ICsxMDIsNyBAQCBzdGF0aWMgaW50IGRlY29kZV9uZnNkYXRhKHN0cnVjdCB4ZHJf
-c3RyZWFtDQo+ID4gPiA+ICp4ZHIsIHN0cnVjdCBuZnNfcGdpb19yZXMgKnJlc3VsdCkNCj4gPiA+
-ID4gwqDCoMKgwqDCoMKgwqAgaWYgKHVubGlrZWx5KCFwKSkNCj4gPiA+ID4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiAtRUlPOw0KPiA+ID4gPiDCoMKgwqDCoMKgwqDCoCBj
-b3VudCA9IGJlMzJfdG9fY3B1cChwKTsNCj4gPiA+ID4gLcKgwqDCoMKgwqDCoCByZWN2ZCA9IHhk
-cl9yZWFkX3BhZ2VzKHhkciwgY291bnQpOw0KPiA+ID4gPiArwqDCoMKgwqDCoMKgIHJlY3ZkID0g
-eGRyX3JlYWRfcGFnZXMoeGRyLCB4ZHJfYWxpZ25fc2l6ZShjb3VudCkpOw0KPiA+ID4gPiDCoMKg
-wqDCoMKgwqDCoCBpZiAodW5saWtlbHkoY291bnQgPiByZWN2ZCkpDQo+ID4gPiA+IMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBnb3RvIG91dF9jaGVhdGluZzsNCj4gPiA+ID4gb3V0Og0K
-PiA+ID4gPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL25mczN4ZHIuYyBiL2ZzL25mcy9uZnMzeGRyLmMN
-Cj4gPiA+ID4gaW5kZXggZDNlMTcyNmQ1MzhiLi44ZWY3Yzk2MWQzZTIgMTAwNjQ0DQo+ID4gPiA+
-IC0tLSBhL2ZzL25mcy9uZnMzeGRyLmMNCj4gPiA+ID4gKysrIGIvZnMvbmZzL25mczN4ZHIuYw0K
-PiA+ID4gPiBAQCAtMTYxMSw3ICsxNjExLDcgQEAgc3RhdGljIGludCBkZWNvZGVfcmVhZDNyZXNv
-ayhzdHJ1Y3QNCj4gPiA+ID4geGRyX3N0cmVhbSAqeGRyLA0KPiA+ID4gPiDCoMKgwqDCoMKgwqDC
-oCBvY291bnQgPSBiZTMyX3RvX2NwdXAocCsrKTsNCj4gPiA+ID4gwqDCoMKgwqDCoMKgwqAgaWYg
-KHVubGlrZWx5KG9jb3VudCAhPSBjb3VudCkpDQo+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBnb3RvIG91dF9taXNtYXRjaDsNCj4gPiA+ID4gLcKgwqDCoMKgwqDCoCByZWN2
-ZCA9IHhkcl9yZWFkX3BhZ2VzKHhkciwgY291bnQpOw0KPiA+ID4gPiArwqDCoMKgwqDCoMKgIHJl
-Y3ZkID0geGRyX3JlYWRfcGFnZXMoeGRyLCB4ZHJfYWxpZ25fc2l6ZShjb3VudCkpOw0KPiA+ID4g
-PiDCoMKgwqDCoMKgwqDCoCBpZiAodW5saWtlbHkoY291bnQgPiByZWN2ZCkpDQo+ID4gPiA+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBnb3RvIG91dF9jaGVhdGluZzsNCj4gPiA+ID4g
-b3V0Og0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL25mczR4ZHIuYyBiL2ZzL25mcy9uZnM0
-eGRyLmMNCj4gPiA+ID4gaW5kZXggNzU1YjU1NmU4NWMzLi41YmFhNzY3MTA2ZGMgMTAwNjQ0DQo+
-ID4gPiA+IC0tLSBhL2ZzL25mcy9uZnM0eGRyLmMNCj4gPiA+ID4gKysrIGIvZnMvbmZzL25mczR4
-ZHIuYw0KPiA+ID4gPiBAQCAtNTIwMiw3ICs1MjAyLDcgQEAgc3RhdGljIGludCBkZWNvZGVfcmVh
-ZChzdHJ1Y3QgeGRyX3N0cmVhbQ0KPiA+ID4gPiAqeGRyLCBzdHJ1Y3QgcnBjX3Jxc3QgKnJlcSwN
-Cj4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiAtRUlPOw0KPiA+
-ID4gPiDCoMKgwqDCoMKgwqDCoCBlb2YgPSBiZTMyX3RvX2NwdXAocCsrKTsNCj4gPiA+ID4gwqDC
-oMKgwqDCoMKgwqAgY291bnQgPSBiZTMyX3RvX2NwdXAocCk7DQo+ID4gPiA+IC3CoMKgwqDCoMKg
-wqAgcmVjdmQgPSB4ZHJfcmVhZF9wYWdlcyh4ZHIsIGNvdW50KTsNCj4gPiA+ID4gK8KgwqDCoMKg
-wqDCoCByZWN2ZCA9IHhkcl9yZWFkX3BhZ2VzKHhkciwgeGRyX2FsaWduX3NpemUoY291bnQpKTsN
-Cj4gPiA+ID4gwqDCoMKgwqDCoMKgwqAgaWYgKGNvdW50ID4gcmVjdmQpIHsNCj4gPiA+ID4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRwcmludGsoIk5GUzogc2VydmVyIGNoZWF0aW5n
-IGluIHJlYWQgcmVwbHk6ICINCj4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgImNvdW50ICV1ID4gcmVjdmQgJXVcbiIs
-IGNvdW50LA0KPiA+ID4gPiByZWN2ZCk7DQo+ID4gPiA+IC0tIA0KPiA+ID4gPiAyLjI4LjANCg0K
-LS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVy
-c3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+Hi Olga-
+
+> On Nov 18, 2020, at 4:44 PM, Olga Kornievskaia =
+<olga.kornievskaia@gmail.com> wrote:
+>=20
+> Hi Chuck,
+>=20
+> The first problem I found was from 5.10-rc3 testing was from the fact
+> that tail's iov_len was set to -4 and reply_chunk was trying to call
+> rpcrdma_convert_kvec() for a tail that didn't exist.
+>=20
+> Do you see issues with this fix?
+>=20
+> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+> index 71e03b930b70..2e6a228abb95 100644
+> --- a/net/sunrpc/xdr.c
+> +++ b/net/sunrpc/xdr.c
+> @@ -193,7 +193,7 @@ xdr_inline_pages(struct xdr_buf *xdr, unsigned int =
+offset,
+>=20
+>        tail->iov_base =3D buf + offset;
+>        tail->iov_len =3D buflen - offset;
+> -       if ((xdr->page_len & 3) =3D=3D 0)
+> +       if ((xdr->page_len & 3) =3D=3D 0 && tail->iov_len)
+>                tail->iov_len -=3D sizeof(__be32);
+>=20
+>        xdr->buflen +=3D len;
+
+It's not clear to me whether only the listxattrs encoder is
+not providing a receive tail kvec, or whether all the encoders
+fail to provide a tail in this case.
+
+
+> This one fixes KASAN's reported problem of added at the end of this =
+message.
+>=20
+> The next problem that I can't figure out yet is another KASAN's report
+> during the completion of the request.
+>=20
+> [   99.610666] BUG: KASAN: wild-memory-access in
+> rpcrdma_complete_rqst+0x41b/0x680 [rpcrdma]
+> [   99.617947] Write of size 4 at addr 0005088000000000 by task =
+kworker/1:1H/490
+>=20
+>=20
+> This is the KASAN for the negative tail problem:
+> [  665.767611] =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [  665.772202] BUG: KASAN: slab-out-of-bounds in
+> rpcrdma_convert_kvec.isra.29+0x4a/0xc4 [rpcrdma]
+> [  665.777860] Write of size 8 at addr ffff88803ded9b70 by task =
+fsstress/3123
+> [  665.783754]
+> [  665.784981] CPU: 0 PID: 3123 Comm: fsstress Not tainted 5.10.0-rc3+ =
+#38
+> [  665.790534] Hardware name: VMware, Inc. VMware Virtual
+> Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
+> [  665.798538] Call Trace:
+> [  665.800398]  dump_stack+0x7c/0xa2
+> [  665.802647]  ? rpcrdma_convert_kvec.isra.29+0x4a/0xc4 [rpcrdma]
+> [  665.808145]  print_address_description.constprop.7+0x1e/0x230
+> [  665.812543]  ? record_print_text.cold.38+0x11/0x11
+> [  665.816093]  ? _raw_write_lock_irqsave+0xe0/0xe0
+> [  665.819257]  ? rpcrdma_convert_kvec.isra.29+0x4a/0xc4 [rpcrdma]
+> [  665.823368]  ? rpcrdma_convert_kvec.isra.29+0x4a/0xc4 [rpcrdma]
+> [  665.827837]  kasan_report.cold.9+0x37/0x7c
+> [  665.830076]  ? rpcrdma_convert_kvec.isra.29+0x4a/0xc4 [rpcrdma]
+> [  665.834066]  rpcrdma_convert_kvec.isra.29+0x4a/0xc4 [rpcrdma]
+> [  665.837342]  rpcrdma_convert_iovs.isra.30.cold.41+0x9b/0xa0 =
+[rpcrdma]
+> [  665.841766]  ? decode_read_list+0x40/0x40 [rpcrdma]
+> [  665.845063]  ? _raw_spin_lock_irqsave+0x80/0xe0
+> [  665.848444]  ? xdr_reserve_space+0x12e/0x360 [sunrpc]
+> [  665.852186]  ? xdr_init_encode+0x104/0x130 [sunrpc]
+> [  665.855305]  rpcrdma_marshal_req.cold.43+0x39/0x1fa [rpcrdma]
+> [  665.859771]  ? _raw_spin_lock+0x7a/0xd0
+> [  665.862516]  ? rpcrdma_prepare_send_sges+0x7e0/0x7e0 [rpcrdma]
+> [  665.866533]  ? call_bind+0x60/0xf0 [sunrpc]
+> [  665.869382]  xprt_rdma_send_request+0x79/0x190 [rpcrdma]
+> [  665.872965]  xprt_transmit+0x2ae/0x6c0 [sunrpc]
+> [  665.875955]  ? call_bind+0xf0/0xf0 [sunrpc]
+> [  665.878372]  call_transmit+0xdd/0x110 [sunrpc]
+> [  665.881539]  ? call_bind+0xf0/0xf0 [sunrpc]
+> [  665.884629]  __rpc_execute+0x11c/0x6e0 [sunrpc]
+> [  665.888300]  ? trace_event_raw_event_xprt_cong_event+0x270/0x270 =
+[sunrpc]
+> [  665.893935]  ? rpc_make_runnable+0x54/0xe0 [sunrpc]
+> [  665.898021]  rpc_run_task+0x29c/0x2c0 [sunrpc]
+> [  665.901142]  nfs4_call_sync_custom+0xc/0x40 [nfsv4]
+> [  665.904903]  nfs4_do_call_sync+0x114/0x160 [nfsv4]
+> [  665.908633]  ? nfs4_call_sync_custom+0x40/0x40 [nfsv4]
+> [  665.913094]  ? __alloc_pages_nodemask+0x200/0x410
+> [  665.916831]  ? kasan_unpoison_shadow+0x30/0x40
+> [  665.920393]  ? __kasan_kmalloc.constprop.8+0xc1/0xd0
+> [  665.924403]  _nfs42_proc_listxattrs+0x1f6/0x2f0 [nfsv4]
+> [  665.928552]  ? kasan_set_free_info+0x1b/0x30
+> [  665.932283]  ? nfs42_offload_cancel_done+0x50/0x50 [nfsv4]
+> [  665.936240]  ? _raw_spin_lock+0x7a/0xd0
+> [  665.938677]  nfs42_proc_listxattrs+0xf4/0x150 [nfsv4]
+> [  665.942532]  ? nfs42_proc_setxattr+0x150/0x150 [nfsv4]
+> [  665.946410]  ? nfs4_xattr_cache_list+0x21/0x120 [nfsv4]
+> [  665.950095]  nfs4_listxattr+0x34d/0x3d0 [nfsv4]
+> [  665.952951]  ? _nfs4_proc_access+0x260/0x260 [nfsv4]
+> [  665.956383]  ? __ia32_sys_rename+0x40/0x40
+> [  665.959559]  ? __ia32_sys_lstat+0x30/0x30
+> [  665.962519]  ? __check_object_size+0x178/0x220
+> [  665.965830]  ? strncpy_from_user+0xe9/0x230
+> [  665.968401]  ? security_inode_listxattr+0x20/0x60
+> [  665.971653]  listxattr+0xd1/0xf0
+> [  665.974065]  path_listxattr+0xa1/0x100
+> [  665.977023]  ? listxattr+0xf0/0xf0
+> [  665.979305]  do_syscall_64+0x33/0x40
+> [  665.981561]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  665.985559] RIP: 0033:0x7fe3f5a1fc8b
+> [  665.988136] Code: f0 ff ff 73 01 c3 48 8b 0d fa 21 2c 00 f7 d8 64
+> 89 01 48 83 c8 ff c3 0f 1f 84 00 00 00 00 00 f3 0f 1e fa b8 c2 00 00
+> 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d cd 21 2c 00 f7 d8 64 89
+> 01 48
+> [  666.002248] RSP: 002b:00007ffc826128e8 EFLAGS: 00000206 ORIG_RAX:
+> 00000000000000c2
+> [  666.007760] RAX: ffffffffffffffda RBX: 0000000000000021 RCX: =
+00007fe3f5a1fc8b
+> [  666.012999] RDX: 0000000000000000 RSI: 0000000000000000 RDI: =
+00000000016eaf70
+> [  666.018963] RBP: 00000000000001f4 R08: 0000000000000000 R09: =
+00007ffc82612537
+> [  666.025553] R10: 0000000000000004 R11: 0000000000000206 R12: =
+0000000000000021
+> [  666.030600] R13: 0000000000403e60 R14: 0000000000000000 R15: =
+0000000000000000
+> [  666.035780]
+> [  666.036906] Allocated by task 2837:
+> [  666.039447]  kasan_save_stack+0x19/0x40
+> [  666.042815]  __kasan_kmalloc.constprop.8+0xc1/0xd0
+> [  666.046626]  rpcrdma_req_create+0x58/0x1f0 [rpcrdma]
+> [  666.050283]  rpcrdma_buffer_create+0x217/0x270 [rpcrdma]
+> [  666.053727]  xprt_setup_rdma+0x1a3/0x2c0 [rpcrdma]
+> [  666.057287]  xprt_create_transport+0xc7/0x300 [sunrpc]
+> [  666.061656]  rpc_create+0x185/0x360 [sunrpc]
+> [  666.064803]  nfs_create_rpc_client+0x2d9/0x350 [nfs]
+> [  666.068233]  nfs4_init_client+0x111/0x3d0 [nfsv4]
+> [  666.071563]  nfs4_set_client+0x18c/0x2b0 [nfsv4]
+> [  666.075287]  nfs4_create_server+0x303/0x590 [nfsv4]
+> [  666.079563]  nfs4_try_get_tree+0x60/0xe0 [nfsv4]
+> [  666.082835]  vfs_get_tree+0x45/0x120
+> [  666.085165]  path_mount+0x8da/0xcc0
+> [  666.087352]  do_mount+0xcb/0xf0
+> [  666.089377]  __x64_sys_mount+0xf4/0x110
+> [  666.091894]  do_syscall_64+0x33/0x40
+> [  666.094215]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  666.097181]
+> [  666.098548] The buggy address belongs to the object at =
+ffff88803ded8000
+> [  666.098548]  which belongs to the cache kmalloc-8k of size 8192
+> [  666.108266] The buggy address is located 7024 bytes inside of
+> [  666.108266]  8192-byte region [ffff88803ded8000, ffff88803deda000)
+> [  666.115709] The buggy address belongs to the page:
+> [  666.118516] page:00000000e08a579f refcount:1 mapcount:0
+> mapping:0000000000000000 index:0x0 pfn:0x3ded8
+> [  666.124078] head:00000000e08a579f order:3 compound_mapcount:0
+> compound_pincount:0
+> [  666.130104] flags: 0xfffffc0010200(slab|head)
+> [  666.133692] raw: 000fffffc0010200 dead000000000100 dead000000000122
+> ffff88800104ee40
+> [  666.139286] raw: 0000000000000000 0000000000020002 00000001ffffffff
+> 0000000000000000
+> [  666.145052] page dumped because: kasan: bad access detected
+> [  666.149341]
+> [  666.150408] Memory state around the buggy address:
+
+--
+Chuck Lever
+
+
+
