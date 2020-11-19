@@ -2,196 +2,169 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 260E82B9DEA
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 00:01:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 492EC2B9E4C
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 00:27:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbgKSXA0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Nov 2020 18:00:26 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:40324 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgKSXA0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Nov 2020 18:00:26 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AJMiQKP155375;
-        Thu, 19 Nov 2020 23:00:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=3kru9X5GMiv8SGYRTQjS74ko/OOOSWBxqm7pDdAnDbc=;
- b=qsK5P0SWoOsySTQSocGOx/U9GmUrsyxS+ne/CQ4odve4tjpiif3dTXj+M/neeIuv+zZu
- NjcseILB9caZhc1XFP3fzTtd8vTJ4Jl6mHnwEcMtCC+O46IcddfN4ObPK5O0zWxxmSGq
- SH6y8QL+Z/MtTFF2D/TSVNPgb8mwcGyDU+fBuSGWR1Q95+2PM7fBY664JCBQkaY3cm5g
- MTsT0LQgHyd3FlRRiTAp6GLk4+1VygJz2qRXctrCiMw8QxiAmRBRPWfdS9ShT6RYErOC
- 0aezs+55lYmVxl/A383HI3F2kmRuvvPIdf+7fosyX+/bvdOF5E+0ZhscrXaX07mx8TQ9 iA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 34t4rb89gb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Nov 2020 23:00:22 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AJMjaXX073000;
-        Thu, 19 Nov 2020 22:58:22 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 34ts0ue1vh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Nov 2020 22:58:21 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0AJMwH0a032120;
-        Thu, 19 Nov 2020 22:58:20 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 19 Nov 2020 14:58:17 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH 3/3] NFS: Avoid copy of xdr padding in read()
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <6f13978155f7f6fd6cc885f9efdb13c0e890faf3.camel@hammerspace.com>
-Date:   Thu, 19 Nov 2020 17:58:16 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F2A105B4-6395-45ED-ABFF-DD6A0EBE1D79@oracle.com>
-References: <20201118221939.20715-1-trondmy@kernel.org>
- <20201118221939.20715-2-trondmy@kernel.org>
- <20201118221939.20715-3-trondmy@kernel.org>
- <42FFB4EC-5E31-4002-92FC-7CA329479D78@oracle.com>
- <57b085d32f624986412770d10cc4daa8211ee0f4.camel@hammerspace.com>
- <D322F599-E680-4715-AD9A-CC6017AFF8E0@oracle.com>
- <6f13978155f7f6fd6cc885f9efdb13c0e890faf3.camel@hammerspace.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9810 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- bulkscore=0 suspectscore=0 spamscore=0 malwarescore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011190155
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9810 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
- mlxlogscore=999 adultscore=0 phishscore=0 suspectscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011190155
+        id S1726463AbgKSX0y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Nov 2020 18:26:54 -0500
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:47055 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbgKSX0y (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Nov 2020 18:26:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1605828414; x=1637364414;
+  h=date:from:to:cc:message-id:references:mime-version:
+   in-reply-to:subject;
+  bh=+V8vKuTKM3F9DFqyHGbFoA7iE5hzjYMK4TWRLwU2EDI=;
+  b=IespnO7Fc8h7znAhkJAdEGTwHd4fBokRLNFd3hBHQ7CX8tSfDkNzYj0o
+   CvaHhftaIKhDG3jN8sZxMkWsXDNW+pfQF5KDckEDLLLKoGzb90FP8dQrL
+   eZL4jIBK2JDm5ivQr+WlcFdzzY7usDMSC3YlA2p3n2T7aznjABlXmPF1G
+   Q=;
+X-IronPort-AV: E=Sophos;i="5.78,354,1599523200"; 
+   d="scan'208";a="88936573"
+Subject: Re: [PATCH 1/1] NFSv4.2: fix LISTXATTR buffer receive size
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 19 Nov 2020 23:26:48 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id E2BA7A188A;
+        Thu, 19 Nov 2020 23:26:47 +0000 (UTC)
+Received: from EX13D23UWA002.ant.amazon.com (10.43.160.40) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 19 Nov 2020 23:26:47 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D23UWA002.ant.amazon.com (10.43.160.40) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 19 Nov 2020 23:26:47 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Thu, 19 Nov 2020 23:26:46 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id 22DBAC67FD; Thu, 19 Nov 2020 23:26:47 +0000 (UTC)
+Date:   Thu, 19 Nov 2020 23:26:47 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+CC:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Message-ID: <20201119232647.GA11369@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+References: <20201113190851.7817-1-olga.kornievskaia@gmail.com>
+ <99874775-A18C-4832-A2F0-F2152BE5CE32@oracle.com>
+ <CAN-5tyEyQbmc-oefF+-PdtdcS7GJ9zmJk71Dk8EED0upcorqaA@mail.gmail.com>
+ <07AF9A5C-BC42-4F66-A153-19A410D312E1@oracle.com>
+ <CAN-5tyFpeVf0y67tJqvbqZmNMRzyvdj_33g9nJUNWW62Tx+thg@mail.gmail.com>
+ <7E0CD3F3-84F2-4D08-8D5A-37AA0FA4852D@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <7E0CD3F3-84F2-4D08-8D5A-37AA0FA4852D@oracle.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Thu, Nov 19, 2020 at 11:19:05AM -0500, Chuck Lever wrote:
+> > On Nov 19, 2020, at 10:09 AM, Olga Kornievskaia <olga.kornievskaia@gmail.com> wrote:
+> >
+> > On Thu, Nov 19, 2020 at 9:37 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+> >>
+> >> Hi Olga-
+> >>
+> >>> On Nov 18, 2020, at 4:44 PM, Olga Kornievskaia <olga.kornievskaia@gmail.com> wrote:
+> >>>
+> >>> Hi Chuck,
+> >>>
+> >>> The first problem I found was from 5.10-rc3 testing was from the fact
+> >>> that tail's iov_len was set to -4 and reply_chunk was trying to call
+> >>> rpcrdma_convert_kvec() for a tail that didn't exist.
+> >>>
+> >>> Do you see issues with this fix?
+> >>>
+> >>> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+> >>> index 71e03b930b70..2e6a228abb95 100644
+> >>> --- a/net/sunrpc/xdr.c
+> >>> +++ b/net/sunrpc/xdr.c
+> >>> @@ -193,7 +193,7 @@ xdr_inline_pages(struct xdr_buf *xdr, unsigned int offset,
+> >>>
+> >>>       tail->iov_base = buf + offset;
+> >>>       tail->iov_len = buflen - offset;
+> >>> -       if ((xdr->page_len & 3) == 0)
+> >>> +       if ((xdr->page_len & 3) == 0 && tail->iov_len)
+> >>>               tail->iov_len -= sizeof(__be32);
+> >>>
+> >>>       xdr->buflen += len;
+> >>
+> >> It's not clear to me whether only the listxattrs encoder is
+> >> not providing a receive tail kvec, or whether all the encoders
+> >> fail to provide a tail in this case.
+> >
+> > There is nothing specific that listxattr does, it just calls
+> > rpc_prepare_pages(). Isn't tail[0] always there (xdr_buf structure has
+> > tail[1] defined)?
+> 
+> Flip the question on its head: Why does xdr_inline_pages() work
+> fine for all the other operations? That suggests the problem is
+> with listxattrs, not with generic code.
+> 
+> 
+> > But not all requests have data in the page. So as
+> > far as I understand, tail->iov_len can be 0 so not checking for it is
+> > wrong.
+> 
+> The full context of the tail logic is:
+> 
+>  194         tail->iov_base = buf + offset;
+>  195         tail->iov_len = buflen - offset;
+>  196         if ((xdr->page_len & 3) == 0)
+>  197                 tail->iov_len -= sizeof(__be32);
+> 
+> tail->iov_len is set to buflen - offset right here. It should
+> /always/ be 4 or more. We can ensure that because the input
+> to this function is always provided by another kernel function
+> (in other words, we control all the callers).
+> 
+> Why is buflen == offset for listxattrs? 6c2190b3fcbc ("NFS:
+> Fix listxattr receive buffer size") is trying to ensure
+> tail->iov_len is not zero -- that the math here gives us a
+> positive value every time.
+> 
+> In nfs4_xdr_enc_listxattrs() we have:
+> 
+> 1529         rpc_prepare_reply_pages(req, args->xattr_pages, 0, args->count,
+> 1530             hdr.replen);
+> 
+> hdr.replen is set to NFS4_dec_listxattrs_sz.
+> 
+> _nfs42_proc_listxattrs() sets args->count.
+> 
+> I suspect the problem is the way _nfs42_proc_listxattrs() is
+> computing the length of xattr_pages. It includes the trailing
+> EOF boolean, but so does the decode_listxattrs_maxsz macro,
+> for instance.
+> 
+> We need head->iov_len to always be one XDR_UNIT larger than
+> the position where the xattr_pages array starts. Then the
+> math in xdr_inline_pages() will work correctly. (sidebar:
+> perhaps the documenting comment for xdr_inline_pages() should
+> explain that assumption).
+> 
+> So, now I agree with the assessment that 6c2190b3fcbc ("NFS:
+> Fix listxattr receive buffer size") is probably not adequate.
+> There is another subtlety to address in the way that
+> _nfs42_proc_listxattrs() computes args->count.
 
+The only thing I see wrong so far is that I believe that
+decode_listxattrs_maxsz is wrong - it shouldn't include the EOF
+word, which is accounted for in the page data part.
 
-> On Nov 19, 2020, at 9:34 AM, Trond Myklebust <trondmy@hammerspace.com> =
-wrote:
->=20
-> On Thu, 2020-11-19 at 09:31 -0500, Chuck Lever wrote:
->>=20
->>=20
->>> On Nov 19, 2020, at 9:30 AM, Trond Myklebust <
->>> trondmy@hammerspace.com> wrote:
->>>=20
->>> On Thu, 2020-11-19 at 09:17 -0500, Chuck Lever wrote:
->>>>=20
->>>>=20
->>>>> On Nov 18, 2020, at 5:19 PM, trondmy@kernel.org wrote:
->>>>>=20
->>>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->>>>>=20
->>>>> When doing a read() into a page, we also don't care if the nul
->>>>> padding
->>>>> stays in that last page when the data length is not 32-bit
->>>>> aligned.
->>>>=20
->>>> What if the READ payload lands in the middle of a file? The
->>>> pad on the end will overwrite file content just past where
->>>> the READ payload lands.
->>>=20
->>> If the size > buf->page_len, then it gets truncated in
->>> xdr_align_pages() afaik.
->>=20
->> I will need to check how RPC/RDMA behaves. It might build a
->> chunk that includes the pad in this case, which would break
->> things.
->=20
-> That would be a bug in the existing code too, then. It shouldn't be
-> writing beyond the buffer size we set in the NFS layer.
+But, it seems that this wouldn't cause the above problem. I'm
+also uncertain why this happens with RDMA, but not otherwise.
+Unfortunately, I can't test RDMA, but when I ran listxattr tests,
+I did so with KASAN enabled, and didn't see issues.
 
-Testing now with xfstests, which should include fsx with direct
-I/O of odd sizes. So far I haven't seen any unexpected behavior.
+Obviously there could be a bug here, it could be that the code
+just gets lucky, but that the bug is exposed on RDMA.
 
-But I'm not sure what copy you're trying to avoid. This one in
-xdr_align_pages() ?
+Is there a specific size passed to listxattr that this happens with?
 
-1189         else if (nwords < xdr->nwords) {
-1190                 /* Truncate page data and move it into the tail */
-1191                 offset =3D buf->page_len - len;
-1192                 copied =3D xdr_shrink_pagelen(buf, offset);
-1193                 trace_rpc_xdr_alignment(xdr, offset, copied);
-1194                 xdr->nwords =3D XDR_QUADLEN(buf->len - cur);
-1195         }
-
-We set up the receive buffer already to avoid this copy. It should
-rarely, if ever, happen. That's the point of rpc_prepare_reply_pages().
-
-
->>>>> Signed-off-by: Trond Myklebust
->>>>> <trond.myklebust@hammerspace.com>
->>>>> ---
->>>>> fs/nfs/nfs2xdr.c | 2 +-
->>>>> fs/nfs/nfs3xdr.c | 2 +-
->>>>> fs/nfs/nfs4xdr.c | 2 +-
->>>>> 3 files changed, 3 insertions(+), 3 deletions(-)
->>>>>=20
->>>>> diff --git a/fs/nfs/nfs2xdr.c b/fs/nfs/nfs2xdr.c
->>>>> index db9c265ad9e1..468bfbfe44d7 100644
->>>>> --- a/fs/nfs/nfs2xdr.c
->>>>> +++ b/fs/nfs/nfs2xdr.c
->>>>> @@ -102,7 +102,7 @@ static int decode_nfsdata(struct xdr_stream
->>>>> *xdr, struct nfs_pgio_res *result)
->>>>>         if (unlikely(!p))
->>>>>                 return -EIO;
->>>>>         count =3D be32_to_cpup(p);
->>>>> -       recvd =3D xdr_read_pages(xdr, count);
->>>>> +       recvd =3D xdr_read_pages(xdr, xdr_align_size(count));
->>>>>         if (unlikely(count > recvd))
->>>>>                 goto out_cheating;
->>>>> out:
->>>>> diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
->>>>> index d3e1726d538b..8ef7c961d3e2 100644
->>>>> --- a/fs/nfs/nfs3xdr.c
->>>>> +++ b/fs/nfs/nfs3xdr.c
->>>>> @@ -1611,7 +1611,7 @@ static int decode_read3resok(struct
->>>>> xdr_stream *xdr,
->>>>>         ocount =3D be32_to_cpup(p++);
->>>>>         if (unlikely(ocount !=3D count))
->>>>>                 goto out_mismatch;
->>>>> -       recvd =3D xdr_read_pages(xdr, count);
->>>>> +       recvd =3D xdr_read_pages(xdr, xdr_align_size(count));
->>>>>         if (unlikely(count > recvd))
->>>>>                 goto out_cheating;
->>>>> out:
->>>>> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
->>>>> index 755b556e85c3..5baa767106dc 100644
->>>>> --- a/fs/nfs/nfs4xdr.c
->>>>> +++ b/fs/nfs/nfs4xdr.c
->>>>> @@ -5202,7 +5202,7 @@ static int decode_read(struct xdr_stream
->>>>> *xdr, struct rpc_rqst *req,
->>>>>                 return -EIO;
->>>>>         eof =3D be32_to_cpup(p++);
->>>>>         count =3D be32_to_cpup(p);
->>>>> -       recvd =3D xdr_read_pages(xdr, count);
->>>>> +       recvd =3D xdr_read_pages(xdr, xdr_align_size(count));
->>>>>         if (count > recvd) {
->>>>>                 dprintk("NFS: server cheating in read reply: "
->>>>>                                 "count %u > recvd %u\n", count,
->>>>> recvd);
->>>>> --=20
->>>>> 2.28.0
->=20
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->=20
->=20
-
---
-Chuck Lever
-
-
-
+- Frank
