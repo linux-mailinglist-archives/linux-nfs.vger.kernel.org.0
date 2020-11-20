@@ -2,63 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F0A22BB78B
+	by mail.lfdr.de (Postfix) with ESMTP id ACB8F2BB78C
 	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 21:43:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731558AbgKTUlM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Nov 2020 15:41:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33688 "EHLO
+        id S1731515AbgKTUlQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Nov 2020 15:41:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730631AbgKTUlM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Nov 2020 15:41:12 -0500
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2FFCC0613CF
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 12:41:10 -0800 (PST)
-Received: by mail-qv1-xf43.google.com with SMTP id y11so5300928qvu.10
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 12:41:10 -0800 (PST)
+        with ESMTP id S1730631AbgKTUlQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Nov 2020 15:41:16 -0500
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E58F3C0613CF
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 12:41:15 -0800 (PST)
+Received: by mail-qk1-x744.google.com with SMTP id y197so10211379qkb.7
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 12:41:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=A4SfpDgUKmiQOphape7Rod4t6lp5H5w0YY/Q8qkDK0s=;
-        b=qBzVU0AISmT7X1GHehXcsq+4WZxx4s3iHiBrqe3NT64EEy30M5JGj1XOn4Y++OAoMI
-         0Q/RRx+Gvye/50deD6dR9vj3BRzH26Hq1obzeD+wd0XPmDrWkd/NWmKGie+Oeiz1jY6D
-         EEbVCDcM8DHSkIWSDRzV1FhFKSfWpx7Me0cyMlsAZRQwL/WC7aLx9Pi6TevgF/tIK36M
-         8FVmGwIpO/Hb2PaibQMzIVf1Na/vZ55Dy97M4JIxF3CVk1CwerETi9Wkh5xyWAITzGS/
-         PxCWPId4J/wXykQocaHiS3hm1h/3sWym/glwtpzV/Bn93rbZmlYFSuTTadjgbpsaOTpK
-         SXdQ==
+        bh=YFUG6VqpJOpmkb5ByhOUjmvLvwfm4lNUw7Azvk5bWT4=;
+        b=SYR6Ze974sbhlGxJkSjnMMQjDrIQft8G8xD7lF1DW8L6reegz7gCLvN43g2Kqy4/xv
+         81RCPPsqWTiakSwpeC+RyoESnq72wuhfz3HhTKzyS3TxW025m23JrOLyKeT0BoHB1AqP
+         TTu/OxZ7L3lKd3LHSif2cVVKNWFQ/tC3jQ+QQqmWZ1J+pOASeFTPTi/n0Bd5db/Xl56l
+         vHo5csDj+lPcZHDHljjUzREp8XsE/42ylrhmhYKVWHtRA/Z0LY96sqnPlfaCOX3WCqv6
+         l3emwdw87iL8bR67wGXISD/BmYDnsOVj3FkHV0CCGzR9hFG3G1TcE2xv4Xga3rg0X088
+         5/RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=A4SfpDgUKmiQOphape7Rod4t6lp5H5w0YY/Q8qkDK0s=;
-        b=Nrji9YElx7SfpL3y7260O/Qp84+mZl6uNqg9UVJiIaD3zHlcz64gl8N/j22XlojJfi
-         0nx8vcfdwiqd0B15m3x/Zt09QjHiclW5IkVP9tTO8DRcgZNdUeoMzE7E1e3FvGZc5Yxk
-         9qtVk3RiBznHCUNglfkrRmZJVju90rwf9al2gq8gZiQEmqagtHuZ3IQO/OQmhw3/yIt/
-         THaHKLFsREpy9vYnDQIUUgFmf6qUpFNOhqY8IJODXFR0V76T0S9jjF8i5iF83p0VoCaj
-         qYujkx1wbjrEMeuOEzDsTOr9KM9gt2BoU40X3l77Ot8ecc/v0i8eoHNBAMVEqZwMWrH6
-         mqMQ==
-X-Gm-Message-State: AOAM530ycAIkTdoEXoFkKVgO1ZUskFhnDYBGKKJvPluhTlKXcE+yWpd2
-        KCBVSsGtJiei+1bI3sYfn18zEEk54do=
-X-Google-Smtp-Source: ABdhPJx8CK/aC8HUCaRsJhlh7p3RNJn3MzA/niBhUmvV2xHScIIJduMNXT6xzEomWCZDCtmRuKMQyw==
-X-Received: by 2002:a0c:ecc1:: with SMTP id o1mr17421419qvq.6.1605904869538;
-        Fri, 20 Nov 2020 12:41:09 -0800 (PST)
+        bh=YFUG6VqpJOpmkb5ByhOUjmvLvwfm4lNUw7Azvk5bWT4=;
+        b=lz33IMTdHmCCwhx/GFa5/IAFjUTf2JOwI81jDNyupe5PRpHrZJt/rzlMip0RXZpaGL
+         EDH55hwoT9bgnUfwHwqT0IkRpfuNVtL3Rs4jeEoMJGj8/1rSQJmR1PBn+MZSR4vqdsAJ
+         PHxjskRH9FItcnERzbZVqwC2vPPtqKo5JEBc98HsFik30iHgE8yCgj236Ad14+9Qig2F
+         KJad4jruVZUxLsIuyWgIvWt3R9c9WChtxN6T7SJx2yZBOQlvw2VP6h6pXoqEcMrG7xCL
+         0ZPeYWWLMTvlhWfaZ5uDiE3jztWW7AT7PX23rp2stkHLbO3mzVP5Y7sJrN7pmTK/V2mq
+         vlRA==
+X-Gm-Message-State: AOAM530ZQqSR/ZtAgkKxy0s3MBB4OwrzT6/gukq8WLUqCgKzob/3+TQG
+        4F6FD/fR4XFlOSiATnHqkU8EUExMH5E=
+X-Google-Smtp-Source: ABdhPJzelyGvhqzyTR4zczqH1/kZTrOSSJeXfFXfOkb6eZnj2Gp4KOnp9/Ucpdvjm9gh6J96WGmbJQ==
+X-Received: by 2002:a37:6143:: with SMTP id v64mr18384973qkb.490.1605904874856;
+        Fri, 20 Nov 2020 12:41:14 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id w15sm2836341qkf.52.2020.11.20.12.41.08
+        by smtp.gmail.com with ESMTPSA id c27sm2754593qkk.57.2020.11.20.12.41.13
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Nov 2020 12:41:08 -0800 (PST)
+        Fri, 20 Nov 2020 12:41:14 -0800 (PST)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0AKKf7Q2029462
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 20:41:07 GMT
-Subject: [PATCH v2 083/118] NFSD: Update READ3arg decoder to use struct
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0AKKfDmA029465
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 20:41:13 GMT
+Subject: [PATCH v2 084/118] NFSD: Update WRITE3arg decoder to use struct
  xdr_stream
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Fri, 20 Nov 2020 15:41:07 -0500
-Message-ID: <160590486784.1340.9612166122815548998.stgit@klimt.1015granger.net>
+Date:   Fri, 20 Nov 2020 15:41:13 -0500
+Message-ID: <160590487318.1340.4098500934407742189.stgit@klimt.1015granger.net>
 In-Reply-To: <160590425404.1340.8850646771948736468.stgit@klimt.1015granger.net>
 References: <160590425404.1340.8850646771948736468.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -69,118 +69,94 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The code that sets up rq_vec is refactored so that it is now
-adjacent to the nfsd_read() call site where it is used.
+As part of the update, open code that sanity-checks the size of the
+data payload against the length of the RPC Call message has to be
+re-implemented to use xdr_stream infrastructure.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs3proc.c |   23 ++++++++++++++++++-----
- fs/nfsd/nfs3xdr.c  |   27 +++++++--------------------
- fs/nfsd/xdr3.h     |    1 -
- 3 files changed, 25 insertions(+), 26 deletions(-)
+ fs/nfsd/nfs3xdr.c |   56 +++++++++++++++++++++--------------------------------
+ 1 file changed, 22 insertions(+), 34 deletions(-)
 
-diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index b6c2c1c837a0..5c0664486485 100644
---- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -144,25 +144,38 @@ nfsd3_proc_read(struct svc_rqst *rqstp)
- {
- 	struct nfsd3_readargs *argp = rqstp->rq_argp;
- 	struct nfsd3_readres *resp = rqstp->rq_resp;
--	u32	max_blocksize = svc_max_payload(rqstp);
--	unsigned long cnt = min(argp->count, max_blocksize);
-+	u32 max_blocksize = svc_max_payload(rqstp);
-+	unsigned int len;
-+	int v;
-+
-+	argp->count = min_t(u32, argp->count, max_blocksize);
- 
- 	dprintk("nfsd: READ(3) %s %lu bytes at %Lu\n",
- 				SVCFH_fmt(&argp->fh),
- 				(unsigned long) argp->count,
- 				(unsigned long long) argp->offset);
- 
-+	v = 0;
-+	len = argp->count;
-+	while (len > 0) {
-+		struct page *page = *(rqstp->rq_next_page++);
-+
-+		rqstp->rq_vec[v].iov_base = page_address(page);
-+		rqstp->rq_vec[v].iov_len = min_t(unsigned int, len, PAGE_SIZE);
-+		len -= rqstp->rq_vec[v].iov_len;
-+		v++;
-+	}
-+
- 	/* Obtain buffer pointer for payload.
- 	 * 1 (status) + 22 (post_op_attr) + 1 (count) + 1 (eof)
- 	 * + 1 (xdr opaque byte count) = 26
- 	 */
--	resp->count = cnt;
-+	resp->count = argp->count;
- 	svc_reserve_auth(rqstp, ((1 + NFS3_POST_OP_ATTR_WORDS + 3)<<2) + resp->count +4);
- 
- 	fh_copy(&resp->fh, &argp->fh);
- 	resp->status = nfsd_read(rqstp, &resp->fh, argp->offset,
--				 rqstp->rq_vec, argp->vlen, &resp->count,
--				 &resp->eof);
-+				 rqstp->rq_vec, v, &resp->count, &resp->eof);
- 	return rpc_success;
- }
- 
 diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-index 600bc45db66e..2b51686c238f 100644
+index 2b51686c238f..38dad447a760 100644
 --- a/fs/nfsd/nfs3xdr.c
 +++ b/fs/nfsd/nfs3xdr.c
-@@ -383,31 +383,18 @@ nfs3svc_decode_accessargs(struct svc_rqst *rqstp, __be32 *p)
+@@ -400,53 +400,41 @@ nfs3svc_decode_readargs(struct svc_rqst *rqstp, __be32 *p)
  int
- nfs3svc_decode_readargs(struct svc_rqst *rqstp, __be32 *p)
+ nfs3svc_decode_writeargs(struct svc_rqst *rqstp, __be32 *p)
  {
 +	struct xdr_stream *xdr = &rqstp->rq_xdr_stream;
- 	struct nfsd3_readargs *args = rqstp->rq_argp;
--	unsigned int len;
--	int v;
--	u32 max_blocksize = svc_max_payload(rqstp);
+ 	struct nfsd3_writeargs *args = rqstp->rq_argp;
+-	unsigned int len, hdr, dlen;
+ 	u32 max_blocksize = svc_max_payload(rqstp);
+ 	struct kvec *head = rqstp->rq_arg.head;
+ 	struct kvec *tail = rqstp->rq_arg.tail;
++	size_t remaining;
  
 -	p = decode_fh(p, &args->fh);
 +	if (!svcxdr_decode_nfs_fh3(xdr, &args->fh))
 +		return XDR_DECODE_FAILED;
-+	p = xdr_inline_decode(xdr, sizeof(__be32) * 3);
++	p = xdr_inline_decode(xdr, sizeof(__be32) * 5);
  	if (!p)
 -		return 0;
 +		return XDR_DECODE_FAILED;
  	p = xdr_decode_hyper(p, &args->offset);
-+	args->count = be32_to_cpup(p);
++	args->count = be32_to_cpup(p++);
++	args->stable = be32_to_cpup(p++);
  
 -	args->count = ntohl(*p++);
--	len = min(args->count, max_blocksize);
+-	args->stable = ntohl(*p++);
+-	len = args->len = ntohl(*p++);
+-	if ((void *)p > head->iov_base + head->iov_len)
+-		return 0;
+-	/*
+-	 * The count must equal the amount of data passed.
+-	 */
+-	if (args->count != args->len)
+-		return 0;
 -
--	/* set up the kvec */
--	v=0;
--	while (len > 0) {
--		struct page *p = *(rqstp->rq_next_page++);
--
--		rqstp->rq_vec[v].iov_base = page_address(p);
--		rqstp->rq_vec[v].iov_len = min_t(unsigned int, len, PAGE_SIZE);
--		len -= rqstp->rq_vec[v].iov_len;
--		v++;
--	}
--	args->vlen = v;
--	return xdr_argsize_check(rqstp, p);
+-	/*
+-	 * Check to make sure that we got the right number of
+-	 * bytes.
+-	 */
+-	hdr = (void*)p - head->iov_base;
+-	dlen = head->iov_len + rqstp->rq_arg.page_len + tail->iov_len - hdr;
+-	/*
+-	 * Round the length of the data which was specified up to
+-	 * the next multiple of XDR units and then compare that
+-	 * against the length which was actually received.
+-	 * Note that when RPCSEC/GSS (for example) is used, the
+-	 * data buffer can be padded so dlen might be larger
+-	 * than required.  It must never be smaller.
+-	 */
+-	if (dlen < XDR_QUADLEN(len)*4)
+-		return 0;
++	/* opaque data */
++	args->len = be32_to_cpup(p++);
+ 
++	/* request sanity */
++	if (args->count != args->len)
++		return XDR_DECODE_FAILED;
++	remaining = head->iov_len + rqstp->rq_arg.page_len + tail->iov_len;
++	remaining -= xdr_stream_pos(xdr);
++	if (remaining < xdr_align_size(args->len))
++		return XDR_DECODE_FAILED;
+ 	if (args->count > max_blocksize) {
+ 		args->count = max_blocksize;
+-		len = args->len = max_blocksize;
++		args->len = max_blocksize;
+ 	}
+ 
+-	args->first.iov_base = (void *)p;
+-	args->first.iov_len = head->iov_len - hdr;
+-	return 1;
++	args->first.iov_base = p;
++	args->first.iov_len = head->iov_len - xdr_stream_pos(xdr);
++
 +	return XDR_DECODE_DONE;
  }
  
  int
-diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
-index a4dce4baec7c..7dfeeaa4e1df 100644
---- a/fs/nfsd/xdr3.h
-+++ b/fs/nfsd/xdr3.h
-@@ -32,7 +32,6 @@ struct nfsd3_readargs {
- 	struct svc_fh		fh;
- 	__u64			offset;
- 	__u32			count;
--	int			vlen;
- };
- 
- struct nfsd3_writeargs {
 
 
