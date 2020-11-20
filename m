@@ -2,244 +2,333 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A66472BB13B
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 18:14:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0188B2BB1CB
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 18:54:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbgKTROb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Nov 2020 12:14:31 -0500
-Received: from mail-co1nam11on2107.outbound.protection.outlook.com ([40.107.220.107]:1504
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729979AbgKTROa (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 20 Nov 2020 12:14:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BIbykSwmBgc618szQrBRzWNy9YG8qmZYhPcv+22KEafJE6jyVvSeDaFru6kUAvaU0isRjjWkq20Nx3kQY2iYLqCSYUB6Lj4UUxSLKE3tYFe5oQbqjZcO2D6alPqAzPHzuFSQNMLbBbTlqHXXZ42zXpRTvQBMjFfsnNEUJJPEulqfPDFsTMOgZZCEyd0orHZpYHgzr8bBKP+s+kIb5RDhKt4FWnCZONzCE8lfX0pX105+VuYULq1F2/OvdFQB0Y+pm44h7BHjokTDwWepiavQEnRyw3g8ymNXi97FLx5D9JLw0y/ncL+qvUZGRMwdFbzMIHK/llhjU/LjmYL2Ulj+nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lTVUXHcqmCwng422wLNe24TXAuIDcDexzFhFf8kwnlI=;
- b=Mbk+Bih0IzKfIpnWDb6cHCuvukhULWGS1qMpVr7AQ/kRh/zj1gbGI7b9mLrKAOmVsEgKrSwUEsvCCDUJbUH2kVvHepPI51jgwaZIbu3DsNUUZXZLEj2x+xPF2Hg+nL5DaXD2ednwzR/zeUPYKczg51Qfvi+nIjKjpxyN1PmMjgdlETceZt88xSq/n62zYWIHG0SJJSJNurq0M+1gv2/EcRECReJZDFJHTrWt0/l4fU8MW08xozjfA/a9Yo7kO3hXisTmrgOV80a9DmxV6Mc6ynTCLJjMifaWCWWGw8uMI6sjuhFtQeGo4HCIQ2OGHHdN78dhU93V+Xl4zmgWkxN/eg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lTVUXHcqmCwng422wLNe24TXAuIDcDexzFhFf8kwnlI=;
- b=P76AfSC35Ulve/vV+ZGNDI4UMgJTsJJiJlIrCVdwMs++F5FzqCa5IwWZW2moMn+/YhwS4P8AS+PeIaZixvSnDmeOLlhQ6XfWLfA5qNIfcUxnysxTQ8OgS+CDmg3+9ETjDdSEyz8/XlotOGdujkOtf2EvADif2YQIrnMqL5sFyBI=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB2813.namprd13.prod.outlook.com (2603:10b6:208:f4::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3611.9; Fri, 20 Nov
- 2020 17:14:26 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3589.021; Fri, 20 Nov 2020
- 17:14:26 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        id S1728858AbgKTRv7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Nov 2020 12:51:59 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:32988 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728870AbgKTRv5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Nov 2020 12:51:57 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AKHiKMa085631;
+        Fri, 20 Nov 2020 17:51:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=2mzCifH6aWzbtKZScAXJcjEUrPAp3P2WWDDfkF9GNmc=;
+ b=vSR6amkpyS80ZS8Ryu0ThXx5d8HcfXcAoawNUTQP9IrnNyVu0NeHlbUlKQpQD/S4nVsl
+ FqVtMh5wPPqTv6ZjG2exRkoBuokfaoI/xDz8U2stYhq6U2ZjGQskj3FFvZVgUbfywrVX
+ uLoUYSBYt7sw3/nO1C1XLlw7m52+ZoEv2vhsvep86cLUbE3SxWObaK90Mab9tSiu6tpi
+ Mbg9tk2aBG+uDpm5Y8omt6picMhB2FIdzPjh9C1wea1CcIdOM0kdGRauB4xNyQmnIvqp
+ 5fdPgu2AUrg0get2scyAQXpRcodq6DWZD32/Wv63hwl5+xahwkx0A/m4BKO1HPBygVf/ 6w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 34t76mbvn7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Nov 2020 17:51:52 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AKHjc7b028765;
+        Fri, 20 Nov 2020 17:51:52 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 34ts0vn7tr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Nov 2020 17:51:52 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AKHpnp7011468;
+        Fri, 20 Nov 2020 17:51:51 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 20 Nov 2020 09:51:49 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
 Subject: Re: [PATCH 3/3] NFS: Avoid copy of xdr padding in read()
-Thread-Topic: [PATCH 3/3] NFS: Avoid copy of xdr padding in read()
-Thread-Index: AQHWvfkXUHuTZLUV8keMpBIY5a4z6anPgYwAgAADcYCAAACHAIAAALUAgACMwwCAACGbgIAA6RWAgAAnkQA=
-Date:   Fri, 20 Nov 2020 17:14:26 +0000
-Message-ID: <6d072290a67fc60b3cdd146dbb16cd529c29a8ec.camel@hammerspace.com>
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <6d072290a67fc60b3cdd146dbb16cd529c29a8ec.camel@hammerspace.com>
+Date:   Fri, 20 Nov 2020 12:51:48 -0500
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1404959A-B680-4413-9E6F-7ED6ABB4F3B4@oracle.com>
 References: <20201118221939.20715-1-trondmy@kernel.org>
-         <20201118221939.20715-2-trondmy@kernel.org>
-         <20201118221939.20715-3-trondmy@kernel.org>
-         <42FFB4EC-5E31-4002-92FC-7CA329479D78@oracle.com>
-         <57b085d32f624986412770d10cc4daa8211ee0f4.camel@hammerspace.com>
-         <D322F599-E680-4715-AD9A-CC6017AFF8E0@oracle.com>
-         <6f13978155f7f6fd6cc885f9efdb13c0e890faf3.camel@hammerspace.com>
-         <F2A105B4-6395-45ED-ABFF-DD6A0EBE1D79@oracle.com>
-         <40f07903bf0cb1b80c6fa99f3465c4b1d771b027.camel@hammerspace.com>
-         <6A3A6033-F7AC-4518-9D84-B420D05CFA4E@oracle.com>
-In-Reply-To: <6A3A6033-F7AC-4518-9D84-B420D05CFA4E@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a94f091c-a561-4b2a-fc73-08d88d77bba6
-x-ms-traffictypediagnostic: MN2PR13MB2813:
-x-microsoft-antispam-prvs: <MN2PR13MB28137CAA5F8F01820140319AB8FF0@MN2PR13MB2813.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: juopVUG7HxbSSTQuANhCKveONUaPb3MPfAbiPRw8eNdy/CzGu7OkiG3MKqgoLullQrbm4cdmH9FcLu7L9txfQqvnjX7SoFUFmPRsWrlnNEOvKA+vqTzb14RZHnXHw9vhzdQAJ7+z9TY8ZPjZMYwL+EGgsuCdvNNSIJy7GpCslmYuidT1QsJMlhArqwSBB3ajJXgk0JsllsT/fDBL4fWWEyG9u8Z9BHSsPT8Avmf/22C6I0bfl+jrvX5w8BPKCxSzsFMhvmLTufYYsx3B6TtMWtCQNmjygfudp8s82zN7D9KzXmZpwXHxQMxzo6U+wyFzMpnue2Ekzwubc103gWwnQA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(366004)(39840400004)(136003)(376002)(396003)(53546011)(66946007)(478600001)(66446008)(66476007)(4001150100001)(4326008)(76116006)(6506007)(86362001)(2616005)(316002)(26005)(83380400001)(6512007)(186003)(6486002)(36756003)(71200400001)(64756008)(66556008)(8676002)(2906002)(91956017)(8936002)(5660300002)(6916009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: NpGHaQsx+fgcO5xv0voMngm3ZAVSHEKO6H0ih+A9RigzRNl7/YeFFSvSniXVzzEwJnuazxzaYtvWWdUEugYmbM3Br3E7Stq++TWbibTHtY9hJfLnpyUKRcD+G6lG0D2BJfyPHCixLEpPtOeIpOEZUaICVOJZ1OzIa65MzkvZNHNMk+I2oK+20d8KFtZJ3SHPYvZZx6ZYXMzpOkU2cHRJ/52bA9CpovUmdcc4ViGa+pgoiLZJ6tinmaAa1b8t8Aq9Op9hl//rMO+GJsHvb7rEl4dvT0bjCF1c8xb7FdgyPYvXtvgYWzbwJzVwxt6u2JYL/RSfDrnhLmLLT6PAv1as/NUEvNPYrlDF2iNqUIrEU1bbfOR+symJZDMTVwZDhfW4zp7A/muKoNnPuypmo59bVMP/0d7zoLR0eNWGXLbPcjcKZs4/QdiBzsSL3vbVFUi/c/fRuX4kErVHvHAVIC/gAs8AzHvHCWXUGRxCEuFFAEPtBKQ9U48a+xeUOr/BnuyI2p/Kpn7iPyr9XjEEoFJtniK9EkR6LpJ5xSJEZs4XCYpmAHaHJUV9S1DSPqEuarkKckRbHJYYjO2Jd49tslXF+nnKGcauM0zqfG3G0SZsJK3OkZxxTz41JbVgth6A0vkcjrAYIf8CLdftmdWOyi4Fmw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A7E52543B9E6A945B7A88CE38B4AF808@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a94f091c-a561-4b2a-fc73-08d88d77bba6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2020 17:14:26.0648
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Q1BF5k6ImpBG7FjrQBoERfiOxNIVliUBAVSElBp9stMUUDG8L0Dvw9FbEbPlXw6fJwlEf8UdtYYDjEoXDI/aZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB2813
+ <20201118221939.20715-2-trondmy@kernel.org>
+ <20201118221939.20715-3-trondmy@kernel.org>
+ <42FFB4EC-5E31-4002-92FC-7CA329479D78@oracle.com>
+ <57b085d32f624986412770d10cc4daa8211ee0f4.camel@hammerspace.com>
+ <D322F599-E680-4715-AD9A-CC6017AFF8E0@oracle.com>
+ <6f13978155f7f6fd6cc885f9efdb13c0e890faf3.camel@hammerspace.com>
+ <F2A105B4-6395-45ED-ABFF-DD6A0EBE1D79@oracle.com>
+ <40f07903bf0cb1b80c6fa99f3465c4b1d771b027.camel@hammerspace.com>
+ <6A3A6033-F7AC-4518-9D84-B420D05CFA4E@oracle.com>
+ <6d072290a67fc60b3cdd146dbb16cd529c29a8ec.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9811 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 suspectscore=0 spamscore=0 malwarescore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011200122
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9811 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 clxscore=1015 mlxlogscore=999
+ malwarescore=0 mlxscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011200122
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTExLTIwIGF0IDA5OjUyIC0wNTAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
-DQo+IA0KPiA+IE9uIE5vdiAxOSwgMjAyMCwgYXQgNzo1OCBQTSwgVHJvbmQgTXlrbGVidXN0IDwN
-Cj4gPiB0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gT24gVGh1LCAy
-MDIwLTExLTE5IGF0IDE3OjU4IC0wNTAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4gPiA+IA0KPiA+
-ID4gDQo+ID4gPiA+IE9uIE5vdiAxOSwgMjAyMCwgYXQgOTozNCBBTSwgVHJvbmQgTXlrbGVidXN0
-IDwNCj4gPiA+ID4gdHJvbmRteUBoYW1tZXJzcGFjZS5jb20+IHdyb3RlOg0KPiA+ID4gPiANCj4g
-PiA+ID4gT24gVGh1LCAyMDIwLTExLTE5IGF0IDA5OjMxIC0wNTAwLCBDaHVjayBMZXZlciB3cm90
-ZToNCj4gPiA+ID4gPiANCj4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IE9uIE5vdiAxOSwgMjAyMCwg
-YXQgOTozMCBBTSwgVHJvbmQgTXlrbGVidXN0IDwNCj4gPiA+ID4gPiA+IHRyb25kbXlAaGFtbWVy
-c3BhY2UuY29tPiB3cm90ZToNCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gT24gVGh1LCAyMDIw
-LTExLTE5IGF0IDA5OjE3IC0wNTAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4gPiA+ID4gPiA+ID4g
-DQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IE9uIE5vdiAxOCwgMjAyMCwgYXQgNTox
-OSBQTSwgdHJvbmRteUBrZXJuZWwub3JnwqB3cm90ZToNCj4gPiA+ID4gPiA+ID4gPiANCj4gPiA+
-ID4gPiA+ID4gPiBGcm9tOiBUcm9uZCBNeWtsZWJ1c3QgPHRyb25kLm15a2xlYnVzdEBoYW1tZXJz
-cGFjZS5jb20+DQo+ID4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+ID4gV2hlbiBkb2luZyBh
-IHJlYWQoKSBpbnRvIGEgcGFnZSwgd2UgYWxzbyBkb24ndCBjYXJlIGlmDQo+ID4gPiA+ID4gPiA+
-ID4gdGhlDQo+ID4gPiA+ID4gPiA+ID4gbnVsDQo+ID4gPiA+ID4gPiA+ID4gcGFkZGluZw0KPiA+
-ID4gPiA+ID4gPiA+IHN0YXlzIGluIHRoYXQgbGFzdCBwYWdlIHdoZW4gdGhlIGRhdGEgbGVuZ3Ro
-IGlzIG5vdCAzMi0NCj4gPiA+ID4gPiA+ID4gPiBiaXQNCj4gPiA+ID4gPiA+ID4gPiBhbGlnbmVk
-Lg0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gV2hhdCBpZiB0aGUgUkVBRCBwYXlsb2Fk
-IGxhbmRzIGluIHRoZSBtaWRkbGUgb2YgYSBmaWxlPw0KPiA+ID4gPiA+ID4gPiBUaGUNCj4gPiA+
-ID4gPiA+ID4gcGFkIG9uIHRoZSBlbmQgd2lsbCBvdmVyd3JpdGUgZmlsZSBjb250ZW50IGp1c3Qg
-cGFzdA0KPiA+ID4gPiA+ID4gPiB3aGVyZQ0KPiA+ID4gPiA+ID4gPiB0aGUgUkVBRCBwYXlsb2Fk
-IGxhbmRzLg0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBJZiB0aGUgc2l6ZSA+IGJ1Zi0+cGFn
-ZV9sZW4sIHRoZW4gaXQgZ2V0cyB0cnVuY2F0ZWQgaW4NCj4gPiA+ID4gPiA+IHhkcl9hbGlnbl9w
-YWdlcygpIGFmYWlrLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IEkgd2lsbCBuZWVkIHRvIGNoZWNr
-IGhvdyBSUEMvUkRNQSBiZWhhdmVzLiBJdCBtaWdodCBidWlsZCBhDQo+ID4gPiA+ID4gY2h1bmsg
-dGhhdCBpbmNsdWRlcyB0aGUgcGFkIGluIHRoaXMgY2FzZSwgd2hpY2ggd291bGQgYnJlYWsNCj4g
-PiA+ID4gPiB0aGluZ3MuDQo+ID4gPiA+IA0KPiA+ID4gPiBUaGF0IHdvdWxkIGJlIGEgYnVnIGlu
-IHRoZSBleGlzdGluZyBjb2RlIHRvbywgdGhlbi4gSXQNCj4gPiA+ID4gc2hvdWxkbid0IGJlDQo+
-ID4gPiA+IHdyaXRpbmcgYmV5b25kIHRoZSBidWZmZXIgc2l6ZSB3ZSBzZXQgaW4gdGhlIE5GUyBs
-YXllci4NCj4gPiA+IA0KPiA+ID4gVGVzdGluZyBub3cgd2l0aCB4ZnN0ZXN0cywgd2hpY2ggc2hv
-dWxkIGluY2x1ZGUgZnN4IHdpdGggZGlyZWN0DQo+ID4gPiBJL08gb2Ygb2RkIHNpemVzLiBTbyBm
-YXIgSSBoYXZlbid0IHNlZW4gYW55IHVuZXhwZWN0ZWQgYmVoYXZpb3IuDQo+ID4gPiANCj4gPiA+
-IEJ1dCBJJ20gbm90IHN1cmUgd2hhdCBjb3B5IHlvdSdyZSB0cnlpbmcgdG8gYXZvaWQuIFRoaXMg
-b25lIGluDQo+ID4gPiB4ZHJfYWxpZ25fcGFnZXMoKSA/DQo+ID4gPiANCj4gPiA+IDExODnCoMKg
-wqDCoMKgwqDCoMKgIGVsc2UgaWYgKG53b3JkcyA8IHhkci0+bndvcmRzKSB7DQo+ID4gPiAxMTkw
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLyogVHJ1bmNhdGUgcGFnZSBkYXRhIGFu
-ZCBtb3ZlIGl0IGludG8gdGhlDQo+ID4gPiB0YWlsDQo+ID4gPiAqLw0KPiA+ID4gMTE5McKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG9mZnNldCA9IGJ1Zi0+cGFnZV9sZW4gLSBsZW47
-DQo+ID4gPiAxMTkywqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29waWVkID0geGRy
-X3Nocmlua19wYWdlbGVuKGJ1Ziwgb2Zmc2V0KTsNCj4gPiA+IDExOTPCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCB0cmFjZV9ycGNfeGRyX2FsaWdubWVudCh4ZHIsIG9mZnNldCwNCj4g
-PiA+IGNvcGllZCk7DQo+ID4gPiAxMTk0wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-eGRyLT5ud29yZHMgPSBYRFJfUVVBRExFTihidWYtPmxlbiAtIGN1cik7DQo+ID4gPiAxMTk1wqDC
-oMKgwqDCoMKgwqDCoCB9DQo+ID4gPiANCj4gPiA+IFdlIHNldCB1cCB0aGUgcmVjZWl2ZSBidWZm
-ZXIgYWxyZWFkeSB0byBhdm9pZCB0aGlzIGNvcHkuIEl0DQo+ID4gPiBzaG91bGQNCj4gPiA+IHJh
-cmVseSwgaWYgZXZlciwgaGFwcGVuLiBUaGF0J3MgdGhlIHBvaW50IG9mDQo+ID4gPiBycGNfcHJl
-cGFyZV9yZXBseV9wYWdlcygpLg0KPiA+IA0KPiA+IA0KPiA+IC4uLmFuZCB0aGUgcG9pbnQgb2Yg
-cGFkZGluZyBoZXJlIGlzIHRvIGF2b2lkIHVuYWxpZ25lZCBhY2Nlc3MgdG8NCj4gPiBtZW1vcnku
-IFRoYXQgaXMgY29tcGxldGVseSBicm9rZW4gYnkgdGhpcyB3aG9sZSBtZWNoYW5pc20sIHdoaWNo
-DQo+ID4gY2F1c2VzDQo+ID4gdXMgdG8gcGxhY2UgdGhlIHJlYWwgZGF0YSBpbiB0aGUgdGFpbCBp
-biBhbiB1bmFsaWduZWQgYnVmZmVyIHRoYXQNCj4gPiBmb2xsb3dzIHRoaXMgcGFkZGluZy4NCj4g
-DQo+IEkndmUgbmV2ZXIgc2VlbiBydW4tdGltZSBjb21wbGFpbnRzIGFib3V0IHVuYWxpZ25lZCBh
-Y2Nlc3NlcyBvZg0KPiB0aGUgdGFpbCBkYXRhLiBEbyB5b3UgaGF2ZSBhIHJlcHJvZHVjZXI/IChB
-bmQgb2J2aW91c2x5IHRoaXMNCj4gYXBwbGllcyBvbmx5IHRvIE5GU3Y0IENPTVBPVU5EIHJlc3Vs
-dHMsIHJpZ2h0PykNCg0KSSBkb24ndCB0aGluayB3ZSBjYW4gdHJpZ2dlciBpdCBhbnl3aGVyZSBy
-aWdodCBub3cgbWFpbmx5IGJlY2F1c2Ugd2UncmUNCmNhcmVmdWwgbmV2ZXIgdG8gcHV0IGFueSBm
-dXJ0aGVyIG9wcyBhZnRlciBhIHJlYWQsIHJlYWRkaXIgb3IgcmVhZGxpbmssDQpldmVuIHRob3Vn
-aCB3ZSBwcm9iYWJseSBzaG91bGQgYXBwZW5kIGEgVkVSSUZZIHRvIHNvbWUgb2YgdGhvc2Ugc28g
-YXMNCnRvIHByb3RlY3QgZGF0YSBjYWNoaW5nIChwYXJ0aWN1bGFybHkgZm9yIHJlYWRsaW5rKS4N
-Cg0KPiANCj4gPiBGdXJ0aGVybW9yZSwgcnBjX3ByZXBhcmVfcmVwbHlfcGFnZXMoKSBvbmx5IGV2
-ZXIgcGxhY2VzIHRoZSBwYWRkaW5nDQo+ID4gaW4NCj4gPiB0aGUgdGFpbCBfaWZfIG91ciBidWZm
-ZXIgc2l6ZSBpcyBhbHJlYWR5IG5vdCAzMi1iaXQgYWxpZ25lZC4NCj4gPiBPdGhlcndpc2UsDQo+
-ID4gd2UncmUgZW5nYWdpbmcgaW4gdGhpcyBwb2ludGxlc3MgZXhlcmNpc2Ugb2YgbWFraW5nIHRo
-ZSB0YWlsIGJ1ZmZlcg0KPiA+IGRhdGEgdW5hbGlnbmVkIGFmdGVyIHRoZSBmYWN0Lg0KPiANCj4g
-QXJjaGl0ZWN0dXJhbGx5LCBJIGFncmVlIHRoYXQgaXQgd291bGQgYmUgYmVzdCBpZiB0aGUgdGFp
-bCBidWZmZXINCj4gcHJlc2VudGVkIHRoZSBYRFIgZGF0YSBpdGVtcyBhbGlnbmVkIG9uIDQgYnl0
-ZXMuDQo+IA0KPiBCdXQgSSBkbyBub3QgYWdyZWUgdGhhdCBhIHBhZCBnb2VzIGluIHRoZSBwYWdl
-cy4gU29tZSB0cmFuc3BvcnRzIGRvDQo+IG5vdCBzZW5kIGFuIFhEUiBwYWQgZm9yIHVuYWxpZ25l
-ZCBkYXRhIHBheWxvYWRzLiBUcmFuc3BvcnRzIGhhdmUgdG8NCj4gaGF2ZSBhIHdheSBvZiBhdm9p
-ZGluZyB0aGF0IHBhZC4gSWYgaXQgbm8gbG9uZ2VyIGdvZXMgaW4gdGhlIHRhaWwsDQo+IHRoZW4g
-aG93IHdpbGwgdGhleSBkbyB0aGF0Pw0KPiANCj4gV2UgY291bGQgcGVyaGFwcyBoYXZlIGEgbmV3
-IGZsYWcsIFhEUkJVRl9JTVBMSUNJVF9QQUQsIHRoYXQgbWVhbnMNCj4gdGhlIHRyYW5zcG9ydCBo
-YXMgdG8gYWRkIGEgcGFkIHRvIHhkci0+cGFnZXMgb24gc2VuZCwgb3IgZGlkIG5vdCBhZGQNCj4g
-YSBwYWQgb24gcmVjZWl2ZS4NCj4gDQoNCkkgZG9uJ3Qgc2VlIHdoeSB3ZSB3b3VsZCBuZWVkIGFu
-eSBvZiB0aGlzLiBJZiB0aGUgcGFkIGlzIGJlaW5nIGRpcmVjdGx5DQpwbGFjZWQgaW4gdGhlIHRh
-aWwgYnkgdGhlIFJQQyB0cmFuc3BvcnQgbGF5ZXIsIHRoZW4gdGhlcmUgaXMgbm90aGluZyBpbg0K
-eGRyX3JlYWRfcGFnZXMoKSB0aGF0IHdpbGwgbW92ZSBpdCBvciBjaGFuZ2UgdGhlIGFsaWdubWVu
-dCBvZiB0aGUNCmV4aXN0aW5nIGNvZGUgaW4gdGhlIHRhaWwuIFRoZSBjYWxsIGp1c3Qgbm90ZXMg
-dGhhdCB4ZHJfYWxpZ25fcGFnZXMoKQ0KcmV0dXJuZWQgYSBsZW5ndGggdGhhdCB3YXMgc2hvcnRl
-ciB0aGFuIHRoZSBvbmUgd2Ugc3VwcGxpZWQsIGFuZA0KY29udGludWVzIHRvIHNraXAgdGhlIHBh
-ZGRpbmcgaW4gdGhlIHRhaWwuDQoNClRoZSBvbmUgdGhpbmcgdGhhdCBwZXJoYXBzIGlzIGJyb2tl
-biBoZXJlIGlzIHRoYXQgaWYgd2Ugc3VwcGx5IGEgbGVuZ3RoDQp0byB4ZHJfcmVhZF9wYWdlcygp
-IHRoYXQgaXMgaW4gZmFjdCBsYXJnZXIgdGhhbiB4ZHJfYWxpZ25fc2l6ZSh4ZHItDQo+YnVmLT5w
-YWdlX2xlbiksIHRoZW4gd2Ugc2hvdWxkIHNraXAgYWRkaXRpb25hbCBkYXRhIHRoYXQgd2FzIHBs
-YWNlZCBpbg0KdGhlIHRhaWwsIGJ1dCB0aGF0IGlzIGEgYnVnIHdpdGggdGhlIGV4aXN0aW5nIHhk
-cl9yZWFkX3BhZ2VzKCkgYW5kIGlzDQp1bmFmZmVjdGVkIGJ5IHRoZXNlIHBhdGNoZXMuDQoNCj4g
-DQo+ID4gPiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogVHJvbmQgTXlrbGVidXN0DQo+ID4gPiA+
-ID4gPiA+ID4gPHRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20+DQo+ID4gPiA+ID4gPiA+
-ID4gLS0tDQo+ID4gPiA+ID4gPiA+ID4gZnMvbmZzL25mczJ4ZHIuYyB8IDIgKy0NCj4gPiA+ID4g
-PiA+ID4gPiBmcy9uZnMvbmZzM3hkci5jIHwgMiArLQ0KPiA+ID4gPiA+ID4gPiA+IGZzL25mcy9u
-ZnM0eGRyLmMgfCAyICstDQo+ID4gPiA+ID4gPiA+ID4gMyBmaWxlcyBjaGFuZ2VkLCAzIGluc2Vy
-dGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+ID4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+
-ID4gZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnMyeGRyLmMgYi9mcy9uZnMvbmZzMnhkci5jDQo+ID4g
-PiA+ID4gPiA+ID4gaW5kZXggZGI5YzI2NWFkOWUxLi40NjhiZmJmZTQ0ZDcgMTAwNjQ0DQo+ID4g
-PiA+ID4gPiA+ID4gLS0tIGEvZnMvbmZzL25mczJ4ZHIuYw0KPiA+ID4gPiA+ID4gPiA+ICsrKyBi
-L2ZzL25mcy9uZnMyeGRyLmMNCj4gPiA+ID4gPiA+ID4gPiBAQCAtMTAyLDcgKzEwMiw3IEBAIHN0
-YXRpYyBpbnQgZGVjb2RlX25mc2RhdGEoc3RydWN0DQo+ID4gPiA+ID4gPiA+ID4geGRyX3N0cmVh
-bQ0KPiA+ID4gPiA+ID4gPiA+ICp4ZHIsIHN0cnVjdCBuZnNfcGdpb19yZXMgKnJlc3VsdCkNCj4g
-PiA+ID4gPiA+ID4gPiDCoMKgwqDCoMKgwqDCoCBpZiAodW5saWtlbHkoIXApKQ0KPiA+ID4gPiA+
-ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gLUVJTzsNCj4gPiA+
-ID4gPiA+ID4gPiDCoMKgwqDCoMKgwqDCoCBjb3VudCA9IGJlMzJfdG9fY3B1cChwKTsNCj4gPiA+
-ID4gPiA+ID4gPiAtwqDCoMKgwqDCoMKgIHJlY3ZkID0geGRyX3JlYWRfcGFnZXMoeGRyLCBjb3Vu
-dCk7DQo+ID4gPiA+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoCByZWN2ZCA9IHhkcl9yZWFkX3BhZ2Vz
-KHhkciwNCj4gPiA+ID4gPiA+ID4gPiB4ZHJfYWxpZ25fc2l6ZShjb3VudCkpOw0KPiA+ID4gPiA+
-ID4gPiA+IMKgwqDCoMKgwqDCoMKgIGlmICh1bmxpa2VseShjb3VudCA+IHJlY3ZkKSkNCj4gPiA+
-ID4gPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZ290byBvdXRfY2hlYXRp
-bmc7DQo+ID4gPiA+ID4gPiA+ID4gb3V0Og0KPiA+ID4gPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9m
-cy9uZnMvbmZzM3hkci5jIGIvZnMvbmZzL25mczN4ZHIuYw0KPiA+ID4gPiA+ID4gPiA+IGluZGV4
-IGQzZTE3MjZkNTM4Yi4uOGVmN2M5NjFkM2UyIDEwMDY0NA0KPiA+ID4gPiA+ID4gPiA+IC0tLSBh
-L2ZzL25mcy9uZnMzeGRyLmMNCj4gPiA+ID4gPiA+ID4gPiArKysgYi9mcy9uZnMvbmZzM3hkci5j
-DQo+ID4gPiA+ID4gPiA+ID4gQEAgLTE2MTEsNyArMTYxMSw3IEBAIHN0YXRpYyBpbnQNCj4gPiA+
-ID4gPiA+ID4gPiBkZWNvZGVfcmVhZDNyZXNvayhzdHJ1Y3QNCj4gPiA+ID4gPiA+ID4gPiB4ZHJf
-c3RyZWFtICp4ZHIsDQo+ID4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqAgb2NvdW50ID0gYmUz
-Ml90b19jcHVwKHArKyk7DQo+ID4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqAgaWYgKHVubGlr
-ZWx5KG9jb3VudCAhPSBjb3VudCkpDQo+ID4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIGdvdG8gb3V0X21pc21hdGNoOw0KPiA+ID4gPiA+ID4gPiA+IC3CoMKgwqDC
-oMKgwqAgcmVjdmQgPSB4ZHJfcmVhZF9wYWdlcyh4ZHIsIGNvdW50KTsNCj4gPiA+ID4gPiA+ID4g
-PiArwqDCoMKgwqDCoMKgIHJlY3ZkID0geGRyX3JlYWRfcGFnZXMoeGRyLA0KPiA+ID4gPiA+ID4g
-PiA+IHhkcl9hbGlnbl9zaXplKGNvdW50KSk7DQo+ID4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKg
-wqAgaWYgKHVubGlrZWx5KGNvdW50ID4gcmVjdmQpKQ0KPiA+ID4gPiA+ID4gPiA+IMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBnb3RvIG91dF9jaGVhdGluZzsNCj4gPiA+ID4gPiA+ID4g
-PiBvdXQ6DQo+ID4gPiA+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnM0eGRyLmMgYi9m
-cy9uZnMvbmZzNHhkci5jDQo+ID4gPiA+ID4gPiA+ID4gaW5kZXggNzU1YjU1NmU4NWMzLi41YmFh
-NzY3MTA2ZGMgMTAwNjQ0DQo+ID4gPiA+ID4gPiA+ID4gLS0tIGEvZnMvbmZzL25mczR4ZHIuYw0K
-PiA+ID4gPiA+ID4gPiA+ICsrKyBiL2ZzL25mcy9uZnM0eGRyLmMNCj4gPiA+ID4gPiA+ID4gPiBA
-QCAtNTIwMiw3ICs1MjAyLDcgQEAgc3RhdGljIGludCBkZWNvZGVfcmVhZChzdHJ1Y3QNCj4gPiA+
-ID4gPiA+ID4gPiB4ZHJfc3RyZWFtDQo+ID4gPiA+ID4gPiA+ID4gKnhkciwgc3RydWN0IHJwY19y
-cXN0ICpyZXEsDQo+ID4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IHJldHVybiAtRUlPOw0KPiA+ID4gPiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKgIGVvZiA9IGJlMzJf
-dG9fY3B1cChwKyspOw0KPiA+ID4gPiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKgIGNvdW50ID0gYmUz
-Ml90b19jcHVwKHApOw0KPiA+ID4gPiA+ID4gPiA+IC3CoMKgwqDCoMKgwqAgcmVjdmQgPSB4ZHJf
-cmVhZF9wYWdlcyh4ZHIsIGNvdW50KTsNCj4gPiA+ID4gPiA+ID4gPiArwqDCoMKgwqDCoMKgIHJl
-Y3ZkID0geGRyX3JlYWRfcGFnZXMoeGRyLA0KPiA+ID4gPiA+ID4gPiA+IHhkcl9hbGlnbl9zaXpl
-KGNvdW50KSk7DQo+ID4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqAgaWYgKGNvdW50ID4gcmVj
-dmQpIHsNCj4gPiA+ID4gPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZHBy
-aW50aygiTkZTOiBzZXJ2ZXIgY2hlYXRpbmcgaW4gcmVhZA0KPiA+ID4gPiA+ID4gPiA+IHJlcGx5
-OiAiDQo+ID4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgImNvdW50ICV1ID4gcmVjdmQNCj4gPiA+ID4gPiA+
-ID4gPiAldVxuIiwNCj4gPiA+ID4gPiA+ID4gPiBjb3VudCwNCj4gPiA+ID4gPiA+ID4gPiByZWN2
-ZCk7DQo+ID4gPiA+ID4gPiA+ID4gLS0gDQo+ID4gPiA+ID4gPiA+ID4gMi4yOC4wDQo+ID4gPiA+
-IA0KPiA+ID4gPiAtLSANCj4gPiA+ID4gVHJvbmQgTXlrbGVidXN0DQo+ID4gPiA+IExpbnV4IE5G
-UyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCj4gPiA+ID4gdHJvbmQubXlrbGVidXN0
-QGhhbW1lcnNwYWNlLmNvbQ0KPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiANCj4gPiA+IC0tDQo+
-ID4gPiBDaHVjayBMZXZlcg0KPiA+ID4gDQo+ID4gPiANCj4gPiA+IA0KPiA+IA0KPiA+IC0tIA0K
-PiA+IFRyb25kIE15a2xlYnVzdA0KPiA+IExpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFt
-bWVyc3BhY2UNCj4gPiB0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQo+IA0KPiAtLQ0K
-PiBDaHVjayBMZXZlcg0KPiANCj4gDQo+IA0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXgg
-TkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1l
-cnNwYWNlLmNvbQ0KDQoNCg==
+
+
+> On Nov 20, 2020, at 12:14 PM, Trond Myklebust =
+<trondmy@hammerspace.com> wrote:
+>=20
+> On Fri, 2020-11-20 at 09:52 -0500, Chuck Lever wrote:
+>>=20
+>>=20
+>>> On Nov 19, 2020, at 7:58 PM, Trond Myklebust <
+>>> trondmy@hammerspace.com> wrote:
+>>>=20
+>>> On Thu, 2020-11-19 at 17:58 -0500, Chuck Lever wrote:
+>>>>=20
+>>>>=20
+>>>>> On Nov 19, 2020, at 9:34 AM, Trond Myklebust <
+>>>>> trondmy@hammerspace.com> wrote:
+>>>>>=20
+>>>>> On Thu, 2020-11-19 at 09:31 -0500, Chuck Lever wrote:
+>>>>>>=20
+>>>>>>=20
+>>>>>>> On Nov 19, 2020, at 9:30 AM, Trond Myklebust <
+>>>>>>> trondmy@hammerspace.com> wrote:
+>>>>>>>=20
+>>>>>>> On Thu, 2020-11-19 at 09:17 -0500, Chuck Lever wrote:
+>>>>>>>>=20
+>>>>>>>>=20
+>>>>>>>>> On Nov 18, 2020, at 5:19 PM, trondmy@kernel.org wrote:
+>>>>>>>>>=20
+>>>>>>>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>>>>>>>>=20
+>>>>>>>>> When doing a read() into a page, we also don't care if
+>>>>>>>>> the
+>>>>>>>>> nul
+>>>>>>>>> padding
+>>>>>>>>> stays in that last page when the data length is not 32-
+>>>>>>>>> bit
+>>>>>>>>> aligned.
+>>>>>>>>=20
+>>>>>>>> What if the READ payload lands in the middle of a file?
+>>>>>>>> The
+>>>>>>>> pad on the end will overwrite file content just past
+>>>>>>>> where
+>>>>>>>> the READ payload lands.
+>>>>>>>=20
+>>>>>>> If the size > buf->page_len, then it gets truncated in
+>>>>>>> xdr_align_pages() afaik.
+>>>>>>=20
+>>>>>> I will need to check how RPC/RDMA behaves. It might build a
+>>>>>> chunk that includes the pad in this case, which would break
+>>>>>> things.
+>>>>>=20
+>>>>> That would be a bug in the existing code too, then. It
+>>>>> shouldn't be
+>>>>> writing beyond the buffer size we set in the NFS layer.
+>>>>=20
+>>>> Testing now with xfstests, which should include fsx with direct
+>>>> I/O of odd sizes. So far I haven't seen any unexpected behavior.
+>>>>=20
+>>>> But I'm not sure what copy you're trying to avoid. This one in
+>>>> xdr_align_pages() ?
+>>>>=20
+>>>> 1189         else if (nwords < xdr->nwords) {
+>>>> 1190                 /* Truncate page data and move it into the
+>>>> tail
+>>>> */
+>>>> 1191                 offset =3D buf->page_len - len;
+>>>> 1192                 copied =3D xdr_shrink_pagelen(buf, offset);
+>>>> 1193                 trace_rpc_xdr_alignment(xdr, offset,
+>>>> copied);
+>>>> 1194                 xdr->nwords =3D XDR_QUADLEN(buf->len - cur);
+>>>> 1195         }
+>>>>=20
+>>>> We set up the receive buffer already to avoid this copy. It
+>>>> should
+>>>> rarely, if ever, happen. That's the point of
+>>>> rpc_prepare_reply_pages().
+>>>=20
+>>>=20
+>>> ...and the point of padding here is to avoid unaligned access to
+>>> memory. That is completely broken by this whole mechanism, which
+>>> causes
+>>> us to place the real data in the tail in an unaligned buffer that
+>>> follows this padding.
+>>=20
+>> I've never seen run-time complaints about unaligned accesses of
+>> the tail data. Do you have a reproducer? (And obviously this
+>> applies only to NFSv4 COMPOUND results, right?)
+>=20
+> I don't think we can trigger it anywhere right now mainly because =
+we're
+> careful never to put any further ops after a read, readdir or =
+readlink,
+> even though we probably should append a VERIFY to some of those so as
+> to protect data caching (particularly for readlink).
+>=20
+>>=20
+>>> Furthermore, rpc_prepare_reply_pages() only ever places the padding
+>>> in
+>>> the tail _if_ our buffer size is already not 32-bit aligned.
+>>> Otherwise,
+>>> we're engaging in this pointless exercise of making the tail buffer
+>>> data unaligned after the fact.
+>>=20
+>> Architecturally, I agree that it would be best if the tail buffer
+>> presented the XDR data items aligned on 4 bytes.
+>>=20
+>> But I do not agree that a pad goes in the pages. Some transports do
+>> not send an XDR pad for unaligned data payloads. Transports have to
+>> have a way of avoiding that pad. If it no longer goes in the tail,
+>> then how will they do that?
+>>=20
+>> We could perhaps have a new flag, XDRBUF_IMPLICIT_PAD, that means
+>> the transport has to add a pad to xdr->pages on send, or did not add
+>> a pad on receive.
+>>=20
+>=20
+> I don't see why we would need any of this.
+
+Right. I was conflating the send and receive side. You're talking
+about only receive. This would be a problem when the structure of
+the reply doesn't allow the client to align the pages and tail[]
+in advance.
+
+So, READ/READLINK/READDIR/LISTXATTRS, on either TCP, or with RDMA
+and krb5i and krb5p where XDR pads have to stay inline. I'm still
+a little troubled by what happens to the pad during a short READ.
+
+The common case for READ requests is page-aligned payloads, so I
+don't think tail content alignment is a performance issue. Do you
+concur?
+
+
+> If the pad is being directly
+> placed in the tail by the RPC transport layer, then there is nothing =
+in
+> xdr_read_pages() that will move it or change the alignment of the
+> existing code in the tail. The call just notes that xdr_align_pages()
+> returned a length that was shorter than the one we supplied, and
+> continues to skip the padding in the tail.
+
+That's what I observe today. I'm trying to understand the usage
+scenario where the tail content is not word-aligned. Probably can
+happen on server-side receives too.
+
+
+> The one thing that perhaps is broken here is that if we supply a =
+length
+> to xdr_read_pages() that is in fact larger than xdr_align_size(xdr-
+>> buf->page_len), then we should skip additional data that was placed =
+in
+> the tail, but that is a bug with the existing xdr_read_pages() and is
+> unaffected by these patches.
+
+I think I understand what these patches do well enough to drop my
+objection, pending further exercise with a testing barrage.
+
+
+>>>>>>>>> Signed-off-by: Trond Myklebust
+>>>>>>>>> <trond.myklebust@hammerspace.com>
+>>>>>>>>> ---
+>>>>>>>>> fs/nfs/nfs2xdr.c | 2 +-
+>>>>>>>>> fs/nfs/nfs3xdr.c | 2 +-
+>>>>>>>>> fs/nfs/nfs4xdr.c | 2 +-
+>>>>>>>>> 3 files changed, 3 insertions(+), 3 deletions(-)
+>>>>>>>>>=20
+>>>>>>>>> diff --git a/fs/nfs/nfs2xdr.c b/fs/nfs/nfs2xdr.c
+>>>>>>>>> index db9c265ad9e1..468bfbfe44d7 100644
+>>>>>>>>> --- a/fs/nfs/nfs2xdr.c
+>>>>>>>>> +++ b/fs/nfs/nfs2xdr.c
+>>>>>>>>> @@ -102,7 +102,7 @@ static int decode_nfsdata(struct
+>>>>>>>>> xdr_stream
+>>>>>>>>> *xdr, struct nfs_pgio_res *result)
+>>>>>>>>>         if (unlikely(!p))
+>>>>>>>>>                 return -EIO;
+>>>>>>>>>         count =3D be32_to_cpup(p);
+>>>>>>>>> -       recvd =3D xdr_read_pages(xdr, count);
+>>>>>>>>> +       recvd =3D xdr_read_pages(xdr,
+>>>>>>>>> xdr_align_size(count));
+>>>>>>>>>         if (unlikely(count > recvd))
+>>>>>>>>>                 goto out_cheating;
+>>>>>>>>> out:
+>>>>>>>>> diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
+>>>>>>>>> index d3e1726d538b..8ef7c961d3e2 100644
+>>>>>>>>> --- a/fs/nfs/nfs3xdr.c
+>>>>>>>>> +++ b/fs/nfs/nfs3xdr.c
+>>>>>>>>> @@ -1611,7 +1611,7 @@ static int
+>>>>>>>>> decode_read3resok(struct
+>>>>>>>>> xdr_stream *xdr,
+>>>>>>>>>         ocount =3D be32_to_cpup(p++);
+>>>>>>>>>         if (unlikely(ocount !=3D count))
+>>>>>>>>>                 goto out_mismatch;
+>>>>>>>>> -       recvd =3D xdr_read_pages(xdr, count);
+>>>>>>>>> +       recvd =3D xdr_read_pages(xdr,
+>>>>>>>>> xdr_align_size(count));
+>>>>>>>>>         if (unlikely(count > recvd))
+>>>>>>>>>                 goto out_cheating;
+>>>>>>>>> out:
+>>>>>>>>> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+>>>>>>>>> index 755b556e85c3..5baa767106dc 100644
+>>>>>>>>> --- a/fs/nfs/nfs4xdr.c
+>>>>>>>>> +++ b/fs/nfs/nfs4xdr.c
+>>>>>>>>> @@ -5202,7 +5202,7 @@ static int decode_read(struct
+>>>>>>>>> xdr_stream
+>>>>>>>>> *xdr, struct rpc_rqst *req,
+>>>>>>>>>                 return -EIO;
+>>>>>>>>>         eof =3D be32_to_cpup(p++);
+>>>>>>>>>         count =3D be32_to_cpup(p);
+>>>>>>>>> -       recvd =3D xdr_read_pages(xdr, count);
+>>>>>>>>> +       recvd =3D xdr_read_pages(xdr,
+>>>>>>>>> xdr_align_size(count));
+>>>>>>>>>         if (count > recvd) {
+>>>>>>>>>                 dprintk("NFS: server cheating in read
+>>>>>>>>> reply: "
+>>>>>>>>>                                 "count %u > recvd
+>>>>>>>>> %u\n",
+>>>>>>>>> count,
+>>>>>>>>> recvd);
+>>>>>>>>> --=20
+>>>>>>>>> 2.28.0
+>>>>>=20
+>>>>> --=20
+>>>>> Trond Myklebust
+>>>>> Linux NFS client maintainer, Hammerspace
+>>>>> trond.myklebust@hammerspace.com
+>>>>>=20
+>>>>>=20
+>>>>=20
+>>>> --
+>>>> Chuck Lever
+>>>>=20
+>>>>=20
+>>>>=20
+>>>=20
+>>> --=20
+>>> Trond Myklebust
+>>> Linux NFS client maintainer, Hammerspace
+>>> trond.myklebust@hammerspace.com
+>>=20
+>> --
+>> Chuck Lever
+>>=20
+>>=20
+>>=20
+>=20
+> --=20
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+
+--
+Chuck Lever
+
+
+
