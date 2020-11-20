@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52B4B2BB736
+	by mail.lfdr.de (Postfix) with ESMTP id C05062BB737
 	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 21:42:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731397AbgKTUgE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Nov 2020 15:36:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60966 "EHLO
+        id S1730782AbgKTUgH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Nov 2020 15:36:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731165AbgKTUgD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Nov 2020 15:36:03 -0500
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C172C0613CF
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 12:36:02 -0800 (PST)
-Received: by mail-qk1-x741.google.com with SMTP id v143so10219394qkb.2
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 12:36:02 -0800 (PST)
+        with ESMTP id S1730541AbgKTUgH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Nov 2020 15:36:07 -0500
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D0D6C0613CF
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 12:36:07 -0800 (PST)
+Received: by mail-qt1-x842.google.com with SMTP id f93so8074922qtb.10
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 12:36:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=zRuQC2llKWA28mnYfcQi05tMxEKpw4RhZV1a8oqyizA=;
-        b=Lnhkzm+4X3/ENN8XOvpuhJUwfkJ7HQqce/q4oEKDjc0BcottkFwg8FJR1MB8MW3b5g
-         glFr03bJKXQBRmgj06KDjGaEygdzAphVzUUbIYAhnSZTuiChBlHWW24cHp/bWR16vWbv
-         Q6cWjmZixSO7J5FW33SwiAYMG1LV85s+8WIItaC7gNjb4rdgHckljnjbax0hbEGaTXLw
-         2MpOWfXDZKa2Ea5CRzKljujcNgDpheCHnr51xROZ+MUoV2/BQsJmbcG7F88MkONJS8G1
-         P3XbBCzu182onJV5wlt7FWAIR0GKFhWjVNVcW/3Mi83MEf/2ZxZNaiXlYvAEiujPW5cH
-         OCYw==
+        bh=nIwximQeRM9GZSSWJcNjVeNCPiTwgf/lgj+uZBeuy6s=;
+        b=EUvHBBF5B0v7cgjKbgshr4OOzHPvmd928h2qM2BQC8T8C2udj1p/I6fyhluU/OMent
+         HPYHbwqiPazGd2OGzbejU/jHXtIJcCeSF5kpedbewXEcnoE3dztBwAkA+pkDr5O5gMET
+         oAIlllv1A0MqL3UwdbHSV+M5KP4lzVWD5G0uVtyP32KIirczg7lrs0q6xUfJ6hX4Sihc
+         OgT5y+nbVNDLmwQf5xdpc2HtnIr/oHPoFw+RlqSchO/9/ZOtIxilHAJ9xH1taH4uX6rX
+         F5DkotOdcHAgxm42SIb63TDpsx6ZRuO7xPWzznpwhBkuhM2dAmERU0ln8Gjepn24PJs/
+         osaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=zRuQC2llKWA28mnYfcQi05tMxEKpw4RhZV1a8oqyizA=;
-        b=b6MF1H9q0vy1l/OmJZ4/J226htqAOoaDVx91gchNvX2CZ+csEpJE3MDtRSYr7pc899
-         cxLh3MOP9DO25vWPoSWR0HITsAc6gEMB914LOmBBtDdYbvbka/vTfnnBp30+H0j4S4un
-         vGjydQ5BJCCpAmHl3yqbSF4HnvGA9tqeb2AyFso+GepNwgGCTMTeToFkE0TkjJUN/RD5
-         FeYm5AEcEGvHFoHQPd4tC3N6UT0VJmcjiuKvtYFCzwV0UlD4ZVxXkzoJ8HbzhPu10krP
-         b3GgqvETAOdGuT3l/cYu0ft1dxb4HdHwabNl9tgi+R4Drlsi0swoEMmNA0Vaw8Q5D3XO
-         tq7A==
-X-Gm-Message-State: AOAM531BHA1c8WUw3Snb5xh+qEAhWazpLjPsCg3/O9gSKvflmapGlq6T
-        omkQMUCFQVzaicOCbZPHLMmVdPEFh/4=
-X-Google-Smtp-Source: ABdhPJzgOCvOm7FwBcxfaBL6dmvbCz73HBSuswOG5low9aVjYcomDYlSOWr0af3X3UsCs8/fpvtkKw==
-X-Received: by 2002:a37:8c05:: with SMTP id o5mr18881209qkd.396.1605904560857;
-        Fri, 20 Nov 2020 12:36:00 -0800 (PST)
+        bh=nIwximQeRM9GZSSWJcNjVeNCPiTwgf/lgj+uZBeuy6s=;
+        b=knSdQ74GNaquBbZccE9kKeKQIPQAFGTaQs8B/q6prhb9pICt0Z/ij4ccRBoGWWeX0e
+         j6KFOWeQ3i+CjWa16srwMQZ3pbIa2DvlbV2j/JoMLT85Q65z+YAL248GIkI6rho1avur
+         cyzCuCA7OqH2/9s7cGenPu14QF0LOBGsQG+HrTjCq+PBV2x40fF8Kc75BkdvIpjEmQAG
+         YbohvC2lmRDVwIEGTQrrOuNOlUSWSMdHgFqS3+t/kvsyXYSphwlK3VRuwYNky5xfIw/E
+         2ELVTtq8L2sxyU83Ho5IZMU/z8dT8/kFb9FXlbDzDMsENFsXE3tbOFYizZJRIeEfBjxz
+         q6WQ==
+X-Gm-Message-State: AOAM533NuB7MPC/SiStaXgCHB2BOyzGAV6wd7LVugQQJUAyAgqSs9Ndh
+        qGSiBlRskgIUjLG8EuRswK45i2ORVXw=
+X-Google-Smtp-Source: ABdhPJxXzejPuI8If9SjMOV5OJeRAPTXuXa3IDKM7VWirGAC32F2b/M3UHdYGtfqwkmxW2LZ5O7X6Q==
+X-Received: by 2002:ac8:1c28:: with SMTP id a37mr2620519qtk.356.1605904566248;
+        Fri, 20 Nov 2020 12:36:06 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id r14sm2809332qtu.25.2020.11.20.12.36.00
+        by smtp.gmail.com with ESMTPSA id j63sm2659789qke.67.2020.11.20.12.36.05
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Nov 2020 12:36:00 -0800 (PST)
+        Fri, 20 Nov 2020 12:36:05 -0800 (PST)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0AKKZxc6029277
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 20:35:59 GMT
-Subject: [PATCH v2 025/118] NFSD: Add helper for decoding locker4
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0AKKa4PU029280
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 20:36:04 GMT
+Subject: [PATCH v2 026/118] NFSD: Replace READ* macros in nfsd4_decode_lock()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Fri, 20 Nov 2020 15:35:59 -0500
-Message-ID: <160590455932.1340.14843743077242511114.stgit@klimt.1015granger.net>
+Date:   Fri, 20 Nov 2020 15:36:04 -0500
+Message-ID: <160590456454.1340.12535304431985619714.stgit@klimt.1015granger.net>
 In-Reply-To: <160590425404.1340.8850646771948736468.stgit@klimt.1015granger.net>
 References: <160590425404.1340.8850646771948736468.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -68,127 +68,46 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Refactor for clarity.
-
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c          |   64 ++++++++++++++++++++++++++++++--------------
- include/linux/sunrpc/xdr.h |   21 ++++++++++++++
- 2 files changed, 64 insertions(+), 21 deletions(-)
+ fs/nfsd/nfs4xdr.c |   24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index a7c9a0368951..94219ceb2ea2 100644
+index 94219ceb2ea2..83a8f872ae9a 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -780,6 +780,48 @@ nfsd4_decode_link(struct nfsd4_compoundargs *argp, struct nfsd4_link *link)
- 	return nfsd4_decode_component4(argp, &link->li_name, &link->li_namelen);
- }
- 
-+static __be32
-+nfsd4_decode_open_to_lock_owner4(struct nfsd4_compoundargs *argp,
-+				 struct nfsd4_lock *lock)
-+{
-+	__be32 status;
-+
-+	if (xdr_stream_decode_u32(argp->xdr, &lock->lk_new_open_seqid) < 0)
-+		return nfserr_bad_xdr;
-+	status = nfsd4_decode_stateid4(argp, &lock->lk_new_open_stateid);
-+	if (status)
-+		return status;
-+	if (xdr_stream_decode_u32(argp->xdr, &lock->lk_new_lock_seqid) < 0)
-+		return nfserr_bad_xdr;
-+	return nfsd4_decode_state_owner4(argp, &lock->lk_new_clientid,
-+					 &lock->lk_new_owner);
-+}
-+
-+static __be32
-+nfsd4_decode_exist_lock_owner4(struct nfsd4_compoundargs *argp,
-+			       struct nfsd4_lock *lock)
-+{
-+	__be32 status;
-+
-+	status = nfsd4_decode_stateid4(argp, &lock->lk_old_lock_stateid);
-+	if (status)
-+		return status;
-+	if (xdr_stream_decode_u32(argp->xdr, &lock->lk_old_lock_seqid) < 0)
-+		return nfserr_bad_xdr;
-+
-+	return nfs_ok;
-+}
-+
-+static __be32
-+nfsd4_decode_locker4(struct nfsd4_compoundargs *argp, struct nfsd4_lock *lock)
-+{
-+	if (xdr_stream_decode_bool(argp->xdr, &lock->lk_is_new) < 0)
-+		return nfserr_bad_xdr;
-+	if (lock->lk_is_new)
-+		return nfsd4_decode_open_to_lock_owner4(argp, lock);
-+	return nfsd4_decode_exist_lock_owner4(argp, lock);
-+}
-+
+@@ -825,21 +825,17 @@ nfsd4_decode_locker4(struct nfsd4_compoundargs *argp, struct nfsd4_lock *lock)
  static __be32
  nfsd4_decode_lock(struct nfsd4_compoundargs *argp, struct nfsd4_lock *lock)
  {
-@@ -795,27 +837,7 @@ nfsd4_decode_lock(struct nfsd4_compoundargs *argp, struct nfsd4_lock *lock)
- 	lock->lk_reclaim = be32_to_cpup(p++);
- 	p = xdr_decode_hyper(p, &lock->lk_offset);
- 	p = xdr_decode_hyper(p, &lock->lk_length);
--	lock->lk_is_new = be32_to_cpup(p++);
+-	DECODE_HEAD;
 -
--	if (lock->lk_is_new) {
--		READ_BUF(4);
--		lock->lk_new_open_seqid = be32_to_cpup(p++);
--		status = nfsd4_decode_stateid4(argp, &lock->lk_new_open_stateid);
--		if (status)
--			return status;
--		READ_BUF(4);
--		lock->lk_new_lock_seqid = be32_to_cpup(p++);
--		status = nfsd4_decode_state_owner4(argp, &lock->lk_new_clientid,
--						   &lock->lk_new_owner);
--		if (status)
--			return status;
--	} else {
--		status = nfsd4_decode_stateid4(argp, &lock->lk_old_lock_stateid);
--		if (status)
--			return status;
--		READ_BUF(4);
--		lock->lk_old_lock_seqid = be32_to_cpup(p++);
--	}
-+	status = nfsd4_decode_locker4(argp, lock);
- 
- 	DECODE_TAIL;
- }
-diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
-index 22b00104bc1a..abd45f03634f 100644
---- a/include/linux/sunrpc/xdr.h
-+++ b/include/linux/sunrpc/xdr.h
-@@ -555,6 +555,27 @@ static inline bool xdr_item_is_present(const __be32 *p)
- 	return *p != xdr_zero;
+-	/*
+-	* type, reclaim(boolean), offset, length, new_lock_owner(boolean)
+-	*/
+-	READ_BUF(28);
+-	lock->lk_type = be32_to_cpup(p++);
++	if (xdr_stream_decode_u32(argp->xdr, &lock->lk_type) < 0)
++		return nfserr_bad_xdr;
+ 	if ((lock->lk_type < NFS4_READ_LT) || (lock->lk_type > NFS4_WRITEW_LT))
+-		goto xdr_error;
+-	lock->lk_reclaim = be32_to_cpup(p++);
+-	p = xdr_decode_hyper(p, &lock->lk_offset);
+-	p = xdr_decode_hyper(p, &lock->lk_length);
+-	status = nfsd4_decode_locker4(argp, lock);
+-
+-	DECODE_TAIL;
++		return nfserr_bad_xdr;
++	if (xdr_stream_decode_bool(argp->xdr, &lock->lk_reclaim) < 0)
++		return nfserr_bad_xdr;
++	if (xdr_stream_decode_u64(argp->xdr, &lock->lk_offset) < 0)
++		return nfserr_bad_xdr;
++	if (xdr_stream_decode_u64(argp->xdr, &lock->lk_length) < 0)
++		return nfserr_bad_xdr;
++	return nfsd4_decode_locker4(argp, lock);
  }
  
-+/**
-+ * xdr_stream_decode_bool - Decode a boolean
-+ * @xdr: pointer to xdr_stream
-+ * @ptr: pointer to a u32 in which to store the result
-+ *
-+ * Return values:
-+ *   %0 on success
-+ *   %-EBADMSG on XDR buffer overflow
-+ */
-+static inline ssize_t
-+xdr_stream_decode_bool(struct xdr_stream *xdr, __u32 *ptr)
-+{
-+	const size_t count = sizeof(*ptr);
-+	__be32 *p = xdr_inline_decode(xdr, count);
-+
-+	if (unlikely(!p))
-+		return -EBADMSG;
-+	*ptr = (*p != xdr_zero);
-+	return 0;
-+}
-+
- /**
-  * xdr_stream_decode_u32 - Decode a 32-bit integer
-  * @xdr: pointer to xdr_stream
+ static __be32
 
 
