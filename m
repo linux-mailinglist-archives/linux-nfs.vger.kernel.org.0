@@ -2,252 +2,386 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29EE52BAC3D
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 15:55:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD9942BAC77
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 16:06:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbgKTOw6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Nov 2020 09:52:58 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:45188 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728041AbgKTOw5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Nov 2020 09:52:57 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AKEnlCM126275;
-        Fri, 20 Nov 2020 14:52:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=8SNr2GEyQ9vA9shgg9vwYh0EHHki3IKUdGFkE3S+HZs=;
- b=UpapML4Wd42XJC0COgZcZrSG/1y7YgG8Ukc2mi9qRsiKIECrgTrIO3e+XLlURXjJGuAC
- 6sRBUTaaVsJ7KSS8OgWEXm+5PNCEt8K2t07mjd7/W+MGEGhy/UfHIZp+lK3s4mZ2onfc
- MjkRYSop+ryms4fZXDdlRL/YUkwKy8CIVnvWsCfHQ1/xOlN0Ho3sUTS/iAnNEqTGgeJv
- S2u+JsNCeT5cd7WGLbSwKy4DBFZ/L7pOYPq4QiRyinIuhq9i/PbKKFuT24+1R6zxnDZQ
- l/gz2TXqJX3n4eaK5BYFr6IyQTQnUxSbklYCoCU26GBnP4UETEz44n7u58KON5ucgw8W Vg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 34t7vnjxq7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Nov 2020 14:52:54 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AKEnkhh013933;
-        Fri, 20 Nov 2020 14:52:53 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 34uspxr1nc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Nov 2020 14:52:53 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0AKEqn2t011032;
-        Fri, 20 Nov 2020 14:52:52 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 20 Nov 2020 06:52:49 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH 3/3] NFS: Avoid copy of xdr padding in read()
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <40f07903bf0cb1b80c6fa99f3465c4b1d771b027.camel@hammerspace.com>
-Date:   Fri, 20 Nov 2020 09:52:47 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6A3A6033-F7AC-4518-9D84-B420D05CFA4E@oracle.com>
-References: <20201118221939.20715-1-trondmy@kernel.org>
- <20201118221939.20715-2-trondmy@kernel.org>
- <20201118221939.20715-3-trondmy@kernel.org>
- <42FFB4EC-5E31-4002-92FC-7CA329479D78@oracle.com>
- <57b085d32f624986412770d10cc4daa8211ee0f4.camel@hammerspace.com>
- <D322F599-E680-4715-AD9A-CC6017AFF8E0@oracle.com>
- <6f13978155f7f6fd6cc885f9efdb13c0e890faf3.camel@hammerspace.com>
- <F2A105B4-6395-45ED-ABFF-DD6A0EBE1D79@oracle.com>
- <40f07903bf0cb1b80c6fa99f3465c4b1d771b027.camel@hammerspace.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9810 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 bulkscore=0 suspectscore=0 adultscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011200102
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9810 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- malwarescore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 spamscore=0
- adultscore=0 mlxscore=0 priorityscore=1501 phishscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011200102
+        id S1727808AbgKTPC6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Nov 2020 10:02:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45145 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728281AbgKTPC5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Nov 2020 10:02:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605884574;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AvzEbXkWDGq3m4j2v0MYXHV0NRfK51mv7g+MgzcU+jk=;
+        b=VCGKaKH3ZMJR5r6AaNv0s/WbirUeJse5JPsBFHRlKiLK8yeEJngsUAPm8r/GrrmNgbqCZX
+        b2qzKQIqibUWnlY/xjyZVbnAqTQfAlcgQZUvjvDv0am2opZBIVc62HMLJxSRk4CwnZgng/
+        44dAYlLXbC/ZMWJnYKsD0nZB+K+sXgg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-328-i1aNzOicOSyMzP5ogeYp2g-1; Fri, 20 Nov 2020 10:02:44 -0500
+X-MC-Unique: i1aNzOicOSyMzP5ogeYp2g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C1B263CC2;
+        Fri, 20 Nov 2020 15:02:41 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-246.rdu2.redhat.com [10.10.112.246])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6061660C05;
+        Fri, 20 Nov 2020 15:02:33 +0000 (UTC)
+Subject: [RFC PATCH 00/76] fscache: Modernisation
+From:   David Howells <dhowells@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>
+Cc:     linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
+        v9fs-developer@lists.sourceforge.net,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-nfs@vger.kernel.org, Eric Van Hensbergen <ericvh@gmail.com>,
+        dhowells@redhat.com, Jeff Layton <jlayton@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 20 Nov 2020 15:02:32 +0000
+Message-ID: <160588455242.3465195.3214733858273019178.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
+Here's a set of patches that modernises the fscache API by switching to use
+the kiocb interface to do async DIO to/from the cache rather than by
+snooping the pagecache of the backing filesystem - something that doesn't
+seem totally reliable.  This means that the cache uses a lot less memory
+than it did and is faster than it was.
 
-> On Nov 19, 2020, at 7:58 PM, Trond Myklebust <trondmy@hammerspace.com> =
-wrote:
->=20
-> On Thu, 2020-11-19 at 17:58 -0500, Chuck Lever wrote:
->>=20
->>=20
->>> On Nov 19, 2020, at 9:34 AM, Trond Myklebust <
->>> trondmy@hammerspace.com> wrote:
->>>=20
->>> On Thu, 2020-11-19 at 09:31 -0500, Chuck Lever wrote:
->>>>=20
->>>>=20
->>>>> On Nov 19, 2020, at 9:30 AM, Trond Myklebust <
->>>>> trondmy@hammerspace.com> wrote:
->>>>>=20
->>>>> On Thu, 2020-11-19 at 09:17 -0500, Chuck Lever wrote:
->>>>>>=20
->>>>>>=20
->>>>>>> On Nov 18, 2020, at 5:19 PM, trondmy@kernel.org wrote:
->>>>>>>=20
->>>>>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->>>>>>>=20
->>>>>>> When doing a read() into a page, we also don't care if the
->>>>>>> nul
->>>>>>> padding
->>>>>>> stays in that last page when the data length is not 32-bit
->>>>>>> aligned.
->>>>>>=20
->>>>>> What if the READ payload lands in the middle of a file? The
->>>>>> pad on the end will overwrite file content just past where
->>>>>> the READ payload lands.
->>>>>=20
->>>>> If the size > buf->page_len, then it gets truncated in
->>>>> xdr_align_pages() afaik.
->>>>=20
->>>> I will need to check how RPC/RDMA behaves. It might build a
->>>> chunk that includes the pad in this case, which would break
->>>> things.
->>>=20
->>> That would be a bug in the existing code too, then. It shouldn't be
->>> writing beyond the buffer size we set in the NFS layer.
->>=20
->> Testing now with xfstests, which should include fsx with direct
->> I/O of odd sizes. So far I haven't seen any unexpected behavior.
->>=20
->> But I'm not sure what copy you're trying to avoid. This one in
->> xdr_align_pages() ?
->>=20
->> 1189         else if (nwords < xdr->nwords) {
->> 1190                 /* Truncate page data and move it into the tail
->> */
->> 1191                 offset =3D buf->page_len - len;
->> 1192                 copied =3D xdr_shrink_pagelen(buf, offset);
->> 1193                 trace_rpc_xdr_alignment(xdr, offset, copied);
->> 1194                 xdr->nwords =3D XDR_QUADLEN(buf->len - cur);
->> 1195         }
->>=20
->> We set up the receive buffer already to avoid this copy. It should
->> rarely, if ever, happen. That's the point of
->> rpc_prepare_reply_pages().
->=20
->=20
-> ...and the point of padding here is to avoid unaligned access to
-> memory. That is completely broken by this whole mechanism, which =
-causes
-> us to place the real data in the tail in an unaligned buffer that
-> follows this padding.
+A netfs helper library is provided that handles most of the readpage,
+readahead and write_begin ops on behalf of the filesystem.  This is
+intended to be used unconditionally by the filesystem and provides a common
+framework for doing caching, transparent huge pages (which works with AFS)
+and, in the future, possibly fscrypt.  It also allows the netfs and the
+cache to align, expand and slice up a read request from the VM in various
+ways; the netfs need only provide a function to read a stretch of data to
+the pagecache and the helper takes care of the rest.
 
-I've never seen run-time complaints about unaligned accesses of
-the tail data. Do you have a reproducer? (And obviously this
-applies only to NFSv4 COMPOUND results, right?)
+This patch series ports the AFS filesystem to the new API and disables
+caching in NFS, Ceph, CIFS and 9P.  Jeff Layton has a port for Ceph that is
+solid and Dave Wysochanski has one for NFS that is mostly solid.  I've
+given partial ports to 9P and CIFS to Dominique Martinet and Steve French
+respectively.
+
+-~-
+
+To this end, the fscache API has been massively overhauled.  Code that was
+using the old API is now disabled.  It's not practical to have the two APIs
+coexist because they have totally different ways of doing things, but must
+share common data.
+
+The following parts have been removed:
+
+    - The object state machine
+    - The I/O operation manager
+    - All non-transient references from fscache to the netfs's data
+    - All non-transient callbacks from fscache to the netfs
+    - The backing page I/O monitoring
+    - The tracking of netfs pages that fscache knows about
+    - The tracking of netfs pages that need writing to the cache
+    - The use of bmap to work out if a page is stored in the cache
+    - The copy of data to/from backing pages to netfs pages.
+
+Instead, the I/O to the cache is driven much more from the netfs and the
+netfs helpers.  There are a number of aspects to the I/O API:
+
+ (1) The lowest level I/O primitives just take an iov_iter and start async
+     DIO on the cache objects.  The caller gets a callback upon completion.
+     The PG_fscache bit is now just used to indicate that there's a write
+     to the cache in progress.  The cache will keep track in xattrs as to
+     what areas of the backing file are occupied.
+
+     - fscache_begin_operation(), fscache_end_operation()
+     - fscache_read() and fscache_write().
+
+ (2) The cookie that's obtained when an inode is set up must be 'used' when a
+     file is opened (with an indication as to whether it might be modified)
+     and 'unused' when it is done with.  At the point of unuse, the auxdata
+     and file size can be specified.
+
+     - fscache_use_cookie(), fscache_unuse_cookie()
+
+ (3) The cookie can be invalidated at any time, and new auxiliary data and a
+     new size provided.  Any in-progress I/O will either cause new I/O to
+     wait, or a replacement tmpfile will be created and the in-progress I/O
+     will just be abandoned.  The on-disk auxdata (in xattrs, say) are updated
+     lazily.
+
+     - fscache_invalidate()
+
+ (4) The netfs helpers for read are provided to combine the (1), (2) above
+     and do read-(re)issue to the network in the case that the data isn't
+     present or the cache fails.  This requires that an operation
+     descriptor be allocated and given some operations.  This needs to be
+     used for ->readpage(), ->readahead() and prefetching for
+     ->write_begin().  ->readpages() is obsolete and soon to go away.
+
+     - include/linux/netfs.h
+     - netfs_readpage(), netfs_readahead(), netfs_begin_write()
+
+ (5) There are some helpers to keep a cookie in use once a file has been
+     closed so that writeback can write to the cache.  write_inode and
+     evict inode need to clear this.
+
+     - fscache_set_page_dirty(), fscache_unpin_writeback()
+     - fscache_write_to_cache()
+
+I've also simplified the cookie management API to remove struct
+fscache_cookie_def.  Instead, the pertinent details are supplied when a
+cookie is created and the file size, key and auxdata are stored in the
+cookie.  Callbacks and backpointers are simply removed.
+
+I've added some pieces outside of the API also:
+
+ (1) An inode flag to mark a backing cachefile as being in use by the
+     kernel.  This prevents multiple caches mounted in the same directory
+     from fighting over the same files.  It can also be extended to exclude
+     other kernel users (such as swap) and could also be used to prevent
+     userspace interfering with the file.
+
+ (2) A new I/O iterator class, ITER_XARRAY, that iterates over the
+     specified byte range of an xarray.  The caller is required to make
+     sure that the pages don't evaporate under the callee (eg. pinning them
+     by PG_locked, PG_writeback, PG_fscache or usage count).
+
+     This is better than an ITER_BVEC as no allocation of bio_vec structs
+     is required since the xarray holds pointers to all the pages involved.
+
+ (3) Wait and unlock functions for PG_fscache.  These are in the core, so
+     no need to call into fscache for it.
+
+Future stuff:
+
+ (1) Avoid the need to double-truncate a backing file on relinquishment.
+     The first truncate cuts of rubbish data from the end so that it's not
+     retrieved in future; the second expands the EOF back out to DIO block
+     size.
+
+ (2) Add a write helper to improve on generic_perform_write(), allowing a
+     span of pages to be modified as a block and to take account of cache
+     granularity.
+
+ (3) Put in support for versioned monolithic objects (eg. AFS directories).
+
+ (4) Currently it cachefiles only caches large files up to 1GiB.  File data
+     beyond that isn't cached.  The problem here is that I'm using an xattr to
+     hold the content map, and xattrs may be limited in size and I've limited
+     myself to using a 512 byte xattr.  I can easily make it cache a
+     non-sparse file of any size with no map, but as soon as it becomes
+     sparse, I need a different strategy.
+
+ (5) Change the indexing strategy so that the culling mechanism is brought
+     into the kernel, rather than doing that in userspace, and use an index
+     table of files with a LRU list.
+
+ (6) Add support for throttling readahead when the server pushes back (cifs
+     credits).
+
+These patches can be found also on:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-iter
+
+David
+---
+David Howells (75):
+      nfs, cifs, ceph, 9p: Disable use of fscache prior to its rewrite
+      afs: Disable use of the fscache I/O routines
+      fscache: Add a cookie debug ID and use that in traces
+      fscache: Procfile to display cookies
+      fscache: Remove the old I/O API
+      fscache: Remove the netfs data from the cookie
+      fscache: Remove struct fscache_cookie_def
+      fscache: Remove store_limit* from struct fscache_object
+      fscache: Remove fscache_check_consistency()
+      fscache: Remove fscache_attr_changed()
+      fscache: Remove obsolete stats
+      fscache: Remove old I/O tracepoints
+      fscache: Temporarily disable fscache_invalidate()
+      fscache: Remove the I/O operation manager
+      fscache: Change %p in format strings to something else
+      cachefiles: Change %p in format strings to something else
+      iov_iter: Add ITER_XARRAY
+      vm: Add wait/unlock functions for PG_fscache
+      mm: Implement readahead_control pageset expansion
+      mm: Stop generic_file_buffered_read() from grabbing a superfluous page
+      vfs: Export rw_verify_area() for use by cachefiles
+      vfs: Provide S_CACHE_FILE inode flag
+      cachefiles: Remove tree of active files and use S_CACHE_FILE inode flag
+      fscache: Provide a simple thread pool for running ops asynchronously
+      fscache: Replace the object management state machine
+      fscache: Rewrite the I/O API based on iov_iter
+      fscache: Keep track of size of a file last set independently on the server
+      fscache, cachefiles: Fix disabled histogram warnings
+      fscache: Recast assertion in terms of cookie not being an index
+      vfs, fscache: Force ->write_inode() to occur if cookie pinned for writeback
+      fscache: Allow ->put_super() to be used to wait for cache operations
+      netfs: Make a netfs helper module
+      netfs: Provide readahead and readpage netfs helpers
+      netfs: Use the cache
+      fscache: read-helper: Add tracepoints
+      cachefiles: Remove some redundant checks on unsigned values
+      cachefiles: trace: Log coherency checks
+      cachefiles: Split cachefiles_drop_object() up a bit
+      cachefiles: Implement new fscache I/O backend API
+      cachefiles: Merge object->backer into object->dentry
+      cachefiles: Implement a content-present indicator and bitmap
+      cachefiles: Shape requests from the fscache read helper
+      cachefiles: Round the cachefile size up to DIO block size
+      cachefiles: Implement read and write parts of new I/O API
+      cachefiles: Add I/O tracepoints
+      fscache: Display cache-specific data in /proc/fs/fscache/objects
+      fscache: Remove more obsolete stats
+      fscache: Always create /proc/fs/fscache/stats if configured
+      netfs: Stats
+      fscache: New stats
+      fscache, cachefiles: Rewrite invalidation
+      fscache: Implement "will_modify" parameter on fscache_use_cookie()
+      fscache: Provide resize operation
+      fscache: Remove the update operation
+      afs: Pass page into dirty region helpers to provide THP size
+      afs: Print the operation debug_id when logging an unexpected data version
+      afs: Move key to afs_read struct
+      afs: Don't truncate iter during data fetch
+      afs: Log remote unmarshalling errors
+      afs: Set up the iov_iter before calling afs_extract_data()
+      afs: Use ITER_XARRAY for writing
+      afs: Wait on PG_fscache before modifying/releasing a page
+      afs: Extract writeback extension into its own function
+      afs: Prepare for use of THPs
+      afs: Use the fs operation ops to handle FetchData completion
+      afs: Use new fscache read helper API
+      netfs: Add write_begin helper
+      fscache: Add support for writing to the cache
+      afs: Use the fscache_write_begin() helper
+      afs: Copy local writes to the cache when writing to the server
+      afs: Invoke fscache_resize_cookie() when handling ATTR_SIZE for setattr
+      afs: Add O_DIRECT read support
+      afs: Skip truncation on the server of data we haven't written yet
+      afs: Make afs_write_begin() return the THP subpage
+      afs: Fix speculative status fetch going out of order wrt to modifications
+
+Jeff Layton (1):
+      fscache: disable cookie when doing an invalidation for DIO write
 
 
-> Furthermore, rpc_prepare_reply_pages() only ever places the padding in
-> the tail _if_ our buffer size is already not 32-bit aligned. =
-Otherwise,
-> we're engaging in this pointless exercise of making the tail buffer
-> data unaligned after the fact.
-
-Architecturally, I agree that it would be best if the tail buffer
-presented the XDR data items aligned on 4 bytes.
-
-But I do not agree that a pad goes in the pages. Some transports do
-not send an XDR pad for unaligned data payloads. Transports have to
-have a way of avoiding that pad. If it no longer goes in the tail,
-then how will they do that?
-
-We could perhaps have a new flag, XDRBUF_IMPLICIT_PAD, that means
-the transport has to add a pad to xdr->pages on send, or did not add
-a pad on receive.
-
-
->>>>>>> Signed-off-by: Trond Myklebust
->>>>>>> <trond.myklebust@hammerspace.com>
->>>>>>> ---
->>>>>>> fs/nfs/nfs2xdr.c | 2 +-
->>>>>>> fs/nfs/nfs3xdr.c | 2 +-
->>>>>>> fs/nfs/nfs4xdr.c | 2 +-
->>>>>>> 3 files changed, 3 insertions(+), 3 deletions(-)
->>>>>>>=20
->>>>>>> diff --git a/fs/nfs/nfs2xdr.c b/fs/nfs/nfs2xdr.c
->>>>>>> index db9c265ad9e1..468bfbfe44d7 100644
->>>>>>> --- a/fs/nfs/nfs2xdr.c
->>>>>>> +++ b/fs/nfs/nfs2xdr.c
->>>>>>> @@ -102,7 +102,7 @@ static int decode_nfsdata(struct
->>>>>>> xdr_stream
->>>>>>> *xdr, struct nfs_pgio_res *result)
->>>>>>>         if (unlikely(!p))
->>>>>>>                 return -EIO;
->>>>>>>         count =3D be32_to_cpup(p);
->>>>>>> -       recvd =3D xdr_read_pages(xdr, count);
->>>>>>> +       recvd =3D xdr_read_pages(xdr, xdr_align_size(count));
->>>>>>>         if (unlikely(count > recvd))
->>>>>>>                 goto out_cheating;
->>>>>>> out:
->>>>>>> diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
->>>>>>> index d3e1726d538b..8ef7c961d3e2 100644
->>>>>>> --- a/fs/nfs/nfs3xdr.c
->>>>>>> +++ b/fs/nfs/nfs3xdr.c
->>>>>>> @@ -1611,7 +1611,7 @@ static int decode_read3resok(struct
->>>>>>> xdr_stream *xdr,
->>>>>>>         ocount =3D be32_to_cpup(p++);
->>>>>>>         if (unlikely(ocount !=3D count))
->>>>>>>                 goto out_mismatch;
->>>>>>> -       recvd =3D xdr_read_pages(xdr, count);
->>>>>>> +       recvd =3D xdr_read_pages(xdr, xdr_align_size(count));
->>>>>>>         if (unlikely(count > recvd))
->>>>>>>                 goto out_cheating;
->>>>>>> out:
->>>>>>> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
->>>>>>> index 755b556e85c3..5baa767106dc 100644
->>>>>>> --- a/fs/nfs/nfs4xdr.c
->>>>>>> +++ b/fs/nfs/nfs4xdr.c
->>>>>>> @@ -5202,7 +5202,7 @@ static int decode_read(struct
->>>>>>> xdr_stream
->>>>>>> *xdr, struct rpc_rqst *req,
->>>>>>>                 return -EIO;
->>>>>>>         eof =3D be32_to_cpup(p++);
->>>>>>>         count =3D be32_to_cpup(p);
->>>>>>> -       recvd =3D xdr_read_pages(xdr, count);
->>>>>>> +       recvd =3D xdr_read_pages(xdr, xdr_align_size(count));
->>>>>>>         if (count > recvd) {
->>>>>>>                 dprintk("NFS: server cheating in read
->>>>>>> reply: "
->>>>>>>                                 "count %u > recvd %u\n",
->>>>>>> count,
->>>>>>> recvd);
->>>>>>> --=20
->>>>>>> 2.28.0
->>>=20
->>> --=20
->>> Trond Myklebust
->>> Linux NFS client maintainer, Hammerspace
->>> trond.myklebust@hammerspace.com
->>>=20
->>>=20
->>=20
->> --
->> Chuck Lever
->>=20
->>=20
->>=20
->=20
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-
---
-Chuck Lever
-
+ fs/Kconfig                        |    1 +
+ fs/Makefile                       |    1 +
+ fs/afs/Kconfig                    |    1 +
+ fs/afs/cache.c                    |   54 --
+ fs/afs/cell.c                     |    9 +-
+ fs/afs/dir.c                      |  226 ++++--
+ fs/afs/file.c                     |  562 +++++--------
+ fs/afs/fs_operation.c             |    4 +-
+ fs/afs/fsclient.c                 |  126 ++-
+ fs/afs/inode.c                    |  108 ++-
+ fs/afs/internal.h                 |   69 +-
+ fs/afs/rxrpc.c                    |  150 ++--
+ fs/afs/super.c                    |   25 +
+ fs/afs/volume.c                   |    9 +-
+ fs/afs/write.c                    |  819 +++++++++++--------
+ fs/afs/yfsclient.c                |   94 +--
+ fs/cachefiles/Makefile            |    3 +-
+ fs/cachefiles/bind.c              |   13 +-
+ fs/cachefiles/content-map.c       |  515 ++++++++++++
+ fs/cachefiles/daemon.c            |   10 +-
+ fs/cachefiles/interface.c         |  597 ++++++++------
+ fs/cachefiles/internal.h          |  155 ++--
+ fs/cachefiles/io.c                |  360 +++++++++
+ fs/cachefiles/key.c               |    2 +-
+ fs/cachefiles/main.c              |   12 +-
+ fs/cachefiles/namei.c             |  538 +++++--------
+ fs/cachefiles/rdwr.c              |  975 ----------------------
+ fs/cachefiles/xattr.c             |  271 +++----
+ fs/fs-writeback.c                 |    8 +
+ fs/fscache/Kconfig                |    2 +
+ fs/fscache/Makefile               |   10 +-
+ fs/fscache/cache.c                |  171 ++--
+ fs/fscache/cache_init.c           |  139 ++++
+ fs/fscache/cookie.c               |  939 ++++++++++------------
+ fs/fscache/dispatcher.c           |  151 ++++
+ fs/fscache/fsdef.c                |   56 +-
+ fs/fscache/histogram.c            |    2 +-
+ fs/fscache/internal.h             |  268 ++-----
+ fs/fscache/io.c                   |  390 +++++++++
+ fs/fscache/main.c                 |  151 +---
+ fs/fscache/netfs.c                |   10 +-
+ fs/fscache/obj.c                  |  360 +++++++++
+ fs/fscache/object-list.c          |  129 +--
+ fs/fscache/object.c               | 1133 --------------------------
+ fs/fscache/object_bits.c          |  120 +++
+ fs/fscache/operation.c            |  633 ---------------
+ fs/fscache/page.c                 | 1248 -----------------------------
+ fs/fscache/proc.c                 |   55 +-
+ fs/fscache/stats.c                |  233 ++----
+ fs/internal.h                     |    5 -
+ fs/netfs/Kconfig                  |   23 +
+ fs/netfs/Makefile                 |    5 +
+ fs/netfs/internal.h               |   97 +++
+ fs/netfs/read_helper.c            | 1125 ++++++++++++++++++++++++++
+ fs/netfs/stats.c                  |   57 ++
+ fs/nfs/fscache-index.c            |    4 +-
+ fs/read_write.c                   |    1 +
+ include/linux/fs.h                |    5 +
+ include/linux/fscache-cache.h     |  510 +++---------
+ include/linux/fscache-obsolete.h  |   13 +
+ include/linux/fscache.h           |  814 ++++++++-----------
+ include/linux/netfs.h             |  111 +++
+ include/linux/pagemap.h           |   16 +
+ include/linux/uio.h               |   11 +
+ include/linux/writeback.h         |    1 +
+ include/net/af_rxrpc.h            |    2 +-
+ include/trace/events/afs.h        |   74 +-
+ include/trace/events/cachefiles.h |  287 +++++--
+ include/trace/events/fscache.h    |  428 ++--------
+ include/trace/events/netfs.h      |  202 +++++
+ lib/iov_iter.c                    |  312 +++++++-
+ mm/filemap.c                      |   20 +
+ mm/readahead.c                    |   70 ++
+ net/rxrpc/recvmsg.c               |    9 +-
+ 74 files changed, 7421 insertions(+), 8698 deletions(-)
+ create mode 100644 fs/cachefiles/content-map.c
+ create mode 100644 fs/cachefiles/io.c
+ delete mode 100644 fs/cachefiles/rdwr.c
+ create mode 100644 fs/fscache/cache_init.c
+ create mode 100644 fs/fscache/dispatcher.c
+ create mode 100644 fs/fscache/io.c
+ create mode 100644 fs/fscache/obj.c
+ delete mode 100644 fs/fscache/object.c
+ create mode 100644 fs/fscache/object_bits.c
+ delete mode 100644 fs/fscache/operation.c
+ delete mode 100644 fs/fscache/page.c
+ create mode 100644 fs/netfs/Kconfig
+ create mode 100644 fs/netfs/Makefile
+ create mode 100644 fs/netfs/internal.h
+ create mode 100644 fs/netfs/read_helper.c
+ create mode 100644 fs/netfs/stats.c
+ create mode 100644 include/linux/fscache-obsolete.h
+ create mode 100644 include/linux/netfs.h
+ create mode 100644 include/trace/events/netfs.h
 
 
