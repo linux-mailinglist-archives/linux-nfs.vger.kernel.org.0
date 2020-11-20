@@ -2,137 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00BB42BB2DC
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 19:37:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CAF12BB2F2
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 19:37:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbgKTS0l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Nov 2020 13:26:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728002AbgKTS0l (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:26:41 -0500
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EE3724137;
-        Fri, 20 Nov 2020 18:26:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605896800;
-        bh=LZueLPJ+3ObSrv0fVnvb4Tj7nxHz4UZd36lHn7FoZys=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wAI3v0GMrcJb3dWvQX/23tEGib+xjtZqG5TRS+g0yAGPV76Kv+0VGkS/16kuB/jcT
-         V8i6coGqHxTUTnn9k67j2YUALk9bRb5sctN+FTaA1qbMBWAaFLOj6NcvfPXCVkAZgx
-         oLvLk3JFJ3PjJJIOE6oKfgSnEtCHh4QMhCnnSCW8=
-Date:   Fri, 20 Nov 2020 12:26:46 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 017/141] nfs: Fix fall-through warnings for Clang
-Message-ID: <078232d75c5a02b41ad54a48eb68c461da564f76.1605896059.git.gustavoars@kernel.org>
+        id S1730298AbgKTS2E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Nov 2020 13:28:04 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:37646 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730287AbgKTS2E (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Nov 2020 13:28:04 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AKIOcBK106375;
+        Fri, 20 Nov 2020 18:27:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=qvBE1SJNT/wZHcsLMI3PMAlfbCkt7erxtPgt3PiLBvA=;
+ b=QXq6usQw0U9HQH2H2JMwu/okYOUocTNxYPPWMtf0mQ1ljRJmoaNOHDFLWQh15A5w0Z5T
+ zGxem7cBaS1xcehqG4+loIW72SIeBZ1xjci8cUgbiRK+s/fJ2dy/h+DCD3xFZ1OAv24w
+ GmizLALc1vw4uOalbST+56GPEOUMMgSRqRd6v4NUoI15z9xvlPSkGOY1CQNyG4aa4lEW
+ Ve0YMy6akItPEL0Uhfi/x/kLT+XzYQzvmrEJyEcY/alAPwlaeEP8hoskJovRBbuPhb++
+ /KUWvb6bXJGFLnCGVhnfjxR5HnKKx5vgHyemuIQ0JjEF/bjWudM6OimYS1HEep4vUOHN bQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 34t4rbc44u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Nov 2020 18:27:55 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AKIPhFs070245;
+        Fri, 20 Nov 2020 18:27:54 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 34umd3sp7p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Nov 2020 18:27:54 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AKIRrst004103;
+        Fri, 20 Nov 2020 18:27:53 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 20 Nov 2020 10:27:53 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [PATCH 016/141] nfsd: Fix fall-through warnings for Clang
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <0669408377bdc6ee87b214b2756465a6edc354fc.1605896059.git.gustavoars@kernel.org>
+Date:   Fri, 20 Nov 2020 13:27:51 -0500
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <BF1128CE-4339-4145-9766-4EE7A5F58B5F@oracle.com>
 References: <cover.1605896059.git.gustavoars@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1605896059.git.gustavoars@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+ <0669408377bdc6ee87b214b2756465a6edc354fc.1605896059.git.gustavoars@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9811 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 phishscore=0
+ spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011200126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9811 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
+ mlxlogscore=999 adultscore=0 phishscore=0 suspectscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011200126
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
-warnings by explicitly add multiple break/goto/return/fallthrough
-statements instead of just letting the code fall through to the next
-case.
 
-Link: https://github.com/KSPP/linux/issues/115
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/nfs/nfs3acl.c    | 1 +
- fs/nfs/nfs4client.c | 1 +
- fs/nfs/nfs4proc.c   | 2 ++
- fs/nfs/nfs4state.c  | 1 +
- fs/nfs/pnfs.c       | 2 ++
- 5 files changed, 7 insertions(+)
 
-diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
-index c6c863382f37..68e206cf4c4e 100644
---- a/fs/nfs/nfs3acl.c
-+++ b/fs/nfs/nfs3acl.c
-@@ -111,6 +111,7 @@ struct posix_acl *nfs3_get_acl(struct inode *inode, int type)
- 			fallthrough;
- 		case -ENOTSUPP:
- 			status = -EOPNOTSUPP;
-+			goto getout;
- 		default:
- 			goto getout;
- 	}
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index be7915c861ce..4bdd256b725a 100644
---- a/fs/nfs/nfs4client.c
-+++ b/fs/nfs/nfs4client.c
-@@ -609,6 +609,7 @@ int nfs40_walk_client_list(struct nfs_client *new,
- 			 * changed. Schedule recovery!
- 			 */
- 			nfs4_schedule_path_down_recovery(pos);
-+			goto out;
- 		default:
- 			goto out;
- 		}
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 9e0ca9b2b210..98c9f3197647 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -2229,6 +2229,7 @@ static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct
- 		default:
- 			printk(KERN_ERR "NFS: %s: unhandled error "
- 					"%d.\n", __func__, err);
-+			fallthrough;
- 		case 0:
- 		case -ENOENT:
- 		case -EAGAIN:
-@@ -9698,6 +9699,7 @@ nfs4_layoutcommit_done(struct rpc_task *task, void *calldata)
- 	case -NFS4ERR_BADLAYOUT:     /* no layout */
- 	case -NFS4ERR_GRACE:	    /* loca_recalim always false */
- 		task->tk_status = 0;
-+		break;
- 	case 0:
- 		break;
- 	default:
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 4bf10792cb5b..3a51351bdc6a 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -1125,6 +1125,7 @@ static void nfs_increment_seqid(int status, struct nfs_seqid *seqid)
- 					" sequence-id error on an"
- 					" unconfirmed sequence %p!\n",
- 					seqid->sequence);
-+			return;
- 		case -NFS4ERR_STALE_CLIENTID:
- 		case -NFS4ERR_STALE_STATEID:
- 		case -NFS4ERR_BAD_STATEID:
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 0e50b9d45c32..7f71f4f8347f 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -2824,6 +2824,7 @@ pnfs_do_write(struct nfs_pageio_descriptor *desc,
- 	switch (trypnfs) {
- 	case PNFS_NOT_ATTEMPTED:
- 		pnfs_write_through_mds(desc, hdr);
-+		break;
- 	case PNFS_ATTEMPTED:
- 		break;
- 	case PNFS_TRY_AGAIN:
-@@ -2968,6 +2969,7 @@ pnfs_do_read(struct nfs_pageio_descriptor *desc, struct nfs_pgio_header *hdr)
- 	switch (trypnfs) {
- 	case PNFS_NOT_ATTEMPTED:
- 		pnfs_read_through_mds(desc, hdr);
-+		break;
- 	case PNFS_ATTEMPTED:
- 		break;
- 	case PNFS_TRY_AGAIN:
--- 
-2.27.0
+> On Nov 20, 2020, at 1:26 PM, Gustavo A. R. Silva =
+<gustavoars@kernel.org> wrote:
+>=20
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix =
+multiple
+> warnings by explicitly adding a couple of break statements instead of
+> just letting the code fall through to the next case.
+>=20
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> fs/nfsd/nfs4state.c | 1 +
+> fs/nfsd/nfsctl.c    | 1 +
+> 2 files changed, 2 insertions(+)
+>=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index d7f27ed6b794..cdab0d5be186 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -3113,6 +3113,7 @@ nfsd4_exchange_id(struct svc_rqst *rqstp, struct =
+nfsd4_compound_state *cstate,
+> 			goto out_nolock;
+> 		}
+> 		new->cl_mach_cred =3D true;
+> +		break;
+> 	case SP4_NONE:
+> 		break;
+> 	default:				/* checked by xdr code =
+*/
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index f6d5d783f4a4..9a3bb1e217f9 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -1165,6 +1165,7 @@ static struct inode *nfsd_get_inode(struct =
+super_block *sb, umode_t mode)
+> 		inode->i_fop =3D &simple_dir_operations;
+> 		inode->i_op =3D &simple_dir_inode_operations;
+> 		inc_nlink(inode);
+> +		break;
+> 	default:
+> 		break;
+> 	}
+> --=20
+> 2.27.0
+>=20
+
+Acked-by: Chuck Lever <chuck.lever@oracle.com>
+
+--
+Chuck Lever
+
+
 
