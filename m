@@ -2,127 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CAF12BB2F2
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 19:37:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5672B2BB30F
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 19:37:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730298AbgKTS2E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Nov 2020 13:28:04 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:37646 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730287AbgKTS2E (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Nov 2020 13:28:04 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AKIOcBK106375;
-        Fri, 20 Nov 2020 18:27:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=qvBE1SJNT/wZHcsLMI3PMAlfbCkt7erxtPgt3PiLBvA=;
- b=QXq6usQw0U9HQH2H2JMwu/okYOUocTNxYPPWMtf0mQ1ljRJmoaNOHDFLWQh15A5w0Z5T
- zGxem7cBaS1xcehqG4+loIW72SIeBZ1xjci8cUgbiRK+s/fJ2dy/h+DCD3xFZ1OAv24w
- GmizLALc1vw4uOalbST+56GPEOUMMgSRqRd6v4NUoI15z9xvlPSkGOY1CQNyG4aa4lEW
- Ve0YMy6akItPEL0Uhfi/x/kLT+XzYQzvmrEJyEcY/alAPwlaeEP8hoskJovRBbuPhb++
- /KUWvb6bXJGFLnCGVhnfjxR5HnKKx5vgHyemuIQ0JjEF/bjWudM6OimYS1HEep4vUOHN bQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 34t4rbc44u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Nov 2020 18:27:55 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AKIPhFs070245;
-        Fri, 20 Nov 2020 18:27:54 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 34umd3sp7p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Nov 2020 18:27:54 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AKIRrst004103;
-        Fri, 20 Nov 2020 18:27:53 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 20 Nov 2020 10:27:53 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH 016/141] nfsd: Fix fall-through warnings for Clang
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <0669408377bdc6ee87b214b2756465a6edc354fc.1605896059.git.gustavoars@kernel.org>
-Date:   Fri, 20 Nov 2020 13:27:51 -0500
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <BF1128CE-4339-4145-9766-4EE7A5F58B5F@oracle.com>
+        id S1729712AbgKTS3K (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Nov 2020 13:29:10 -0500
+Received: from smtprelay0187.hostedemail.com ([216.40.44.187]:46450 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729771AbgKTS3I (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Nov 2020 13:29:08 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 2DC80180A7FF1;
+        Fri, 20 Nov 2020 18:29:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1539:1593:1594:1711:1730:1747:1777:1792:2198:2199:2393:2559:2562:2731:2828:3138:3139:3140:3141:3142:3352:3622:3865:3866:3867:3870:3871:3874:4321:4362:5007:6742:6743:10004:10400:10848:11232:11658:11914:12297:12740:12760:12895:13069:13311:13357:13439:14180:14659:14721:21060:21067:21080:21627:21990:30012:30054:30070:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
+X-HE-Tag: woman67_620d0012734d
+X-Filterd-Recvd-Size: 3843
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 20 Nov 2020 18:28:49 +0000 (UTC)
+Message-ID: <3e0bbb1644fe53d79322c2feb28ccaf3e20c0e94.camel@perches.com>
+Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
+From:   Joe Perches <joe@perches.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     alsa-devel@alsa-project.org, amd-gfx@lists.freedesktop.org,
+        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
+        cluster-devel@redhat.com, coreteam@netfilter.org,
+        devel@driverdev.osuosl.org, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com, dri-devel@lists.freedesktop.org,
+        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
+        keyrings@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        linux-acpi@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net,
+        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-ext4@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-geode@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mm@kvack.org,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
+        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
+        selinux@vger.kernel.org, target-devel@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        usb-storage@lists.one-eyed-alien.net,
+        virtualization@lists.linux-foundation.org,
+        wcn36xx@lists.infradead.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Date:   Fri, 20 Nov 2020 10:28:48 -0800
+In-Reply-To: <cover.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <0669408377bdc6ee87b214b2756465a6edc354fc.1605896059.git.gustavoars@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9811 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 phishscore=0
- spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011200126
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9811 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011
- malwarescore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
- mlxlogscore=999 adultscore=0 phishscore=0 suspectscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011200126
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.38.1-1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Fri, 2020-11-20 at 12:21 -0600, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> This series aims to fix almost all remaining fall-through warnings in
+> order to enable -Wimplicit-fallthrough for Clang.
+> 
+> In preparation to enable -Wimplicit-fallthrough for Clang, explicitly
+> add multiple break/goto/return/fallthrough statements instead of just
+> letting the code fall through to the next case.
+> 
+> Notice that in order to enable -Wimplicit-fallthrough for Clang, this
+> change[1] is meant to be reverted at some point. So, this patch helps
+> to move in that direction.
 
+This was a bit hard to parse for a second or three.
 
-> On Nov 20, 2020, at 1:26 PM, Gustavo A. R. Silva =
-<gustavoars@kernel.org> wrote:
->=20
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix =
-multiple
-> warnings by explicitly adding a couple of break statements instead of
-> just letting the code fall through to the next case.
->=20
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> fs/nfsd/nfs4state.c | 1 +
-> fs/nfsd/nfsctl.c    | 1 +
-> 2 files changed, 2 insertions(+)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index d7f27ed6b794..cdab0d5be186 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -3113,6 +3113,7 @@ nfsd4_exchange_id(struct svc_rqst *rqstp, struct =
-nfsd4_compound_state *cstate,
-> 			goto out_nolock;
-> 		}
-> 		new->cl_mach_cred =3D true;
-> +		break;
-> 	case SP4_NONE:
-> 		break;
-> 	default:				/* checked by xdr code =
-*/
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index f6d5d783f4a4..9a3bb1e217f9 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -1165,6 +1165,7 @@ static struct inode *nfsd_get_inode(struct =
-super_block *sb, umode_t mode)
-> 		inode->i_fop =3D &simple_dir_operations;
-> 		inode->i_op =3D &simple_dir_inode_operations;
-> 		inc_nlink(inode);
-> +		break;
-> 	default:
-> 		break;
-> 	}
-> --=20
-> 2.27.0
->=20
+Thanks Gustavo.
 
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
-
---
-Chuck Lever
-
+How was this change done?
 
 
