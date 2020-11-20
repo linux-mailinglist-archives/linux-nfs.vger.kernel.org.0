@@ -2,224 +2,256 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D49DD2BB6FC
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 21:32:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 854532BB712
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 21:42:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731302AbgKTUb6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Nov 2020 15:31:58 -0500
-Received: from sonic302-28.consmr.mail.ne1.yahoo.com ([66.163.186.154]:37090
-        "EHLO sonic302-28.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731284AbgKTUb5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Nov 2020 15:31:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1605904316; bh=d9qjmRxQpH8SFhboWp6UhmW+qc4RaLALjgtGk/qje80=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject; b=R4bpq7JCL7qXKAxORxbjMv+BR12HEAk5AnT061PC6p4Vm4JoZcDfPGTI+NPb8c4ibGaD9q4e32j3KIlvRmTZzpr2wugDjxX/Xe0sjUesX7IK3TmosxQYS5cdLGIvlQY8yeqkdZ7jpV1+4k/0aaiLYkW5G+X3R6VbQfhSJ/j3TpsYZ5sNPo28wVKTIYEYrPiYheuTTTN5fNgZjeMvL9KDCGXm0GF4G/IlALlidhcgnU5xwDrz2TKFJPhMNtqsyEP04TsCPzUHgnCjaMNMblpS5QJPBYNd5jcN2eu5+mjKAQj19Z8ETYzsrdvUPeJRS50M6XCrF8ne88kEqhzlfkrKVw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1605904316; bh=FNKerAmDCJR5/GgTsnuTczNqYxp7Xktj0s2i9RtQSS8=; h=From:To:Subject:Date:From:Subject; b=KTRljfEabFwWpT3NEi2pnD7fS9Hy+MYIkCiSiZ+MS1kuGwFy6emu7+r2HjVYLSoKAzU7f4qV/bCa3bivMM7YOQBynWujBsE3gXJKpRJNkKCJNhs/EU2GQqOkb5Dhj5f4pvowkKxVIDY3HrsjQbKZC88ZwJawLxAp2aVtn2QqtIUlc/EtvA0eE9d/UKXeBFGQ7eYO776CgKTyImShI9/m6ahvkBsBnG1W5LMc9SVgvrnS3bhI+ssxRsc7EqcXxs3pWwQtH9DGFa95JxLZWZQWA9LhXd02QLWkrGG7MNlzL1+Wr7nrzB1BGVL2G3Ok8E1eJJMQ/PwhI2nzKDCmSA3QCw==
-X-YMail-OSG: aw2k8_EVM1mjkq_LMVkDeawCxJeTa5Jx1T4wnMwi.cHf75Am7Kh.MXlKPF4kYGf
- BeVsa.oLV1.XgSvqRhap9nJoVXrsOCLu15bKWMpiRbskJxBJix6VfXJo0IlgYidaOW3ZnJgNXT7z
- XEqG0t0qWDcVlvpS4lrGfk.G4wKw0r81BIHtqIPhXb7d3cE0BLe5xXWak3H_SUrnn0KvMqe.LZdm
- w9N6CDOaU5WNBB4lbv0A2KS0W2f9AKVkJqZrQu.JN2md635qGDqXyxMhdYh9ln5uvs_oh3IHAfvv
- Smpl2LxExmZHUF3hK5aK1x5462ucSpFRM9xB9lK5cdvPSep5Pmuo37gEGZPnHu3OKk8yY9Mv0sQR
- G62_WP88BkSPuBfipydWNTkZXuQb0h2ZQbNzBgr.epY4TzMh1Wn0X2vUdn7LBcm90d.CVLEXEhLl
- j_t.OXhSiekM9cEz.DeuuQ8vMlaFF9AJzTX2wH_1PaSjmNLg7tMjVLB.su8yZJKN7NVwI8.tbReF
- PCjvlTZJjctxNZRBJZSHTq7oGDnLRWfd6CDYbs_LSqioPQ5HF08BQOGF0n6f4IuQtI7KgZg3eNQB
- 71xBG19BxRB1I65iauxtNAxrboj2VuPRWAzZJ5.XR8Z9nLOFKgtkJ9egIw2tSBp80JTQg8rd8xvG
- UQxBqv5_lB97EJneejFePZbl_hHJQVsMNve8cKdVH8S2019OdKxTxMM600WDUa9IIUjYN8TEp3K0
- 5_Sxxps2uecxpzZ6YokKn4GPn7YasaUoYlISmladwFxTwDcsYHppIaiXi2z0Yb89yO3OXC0JFxri
- npHvyifrw_5RNs4Gof6m1PPXMwr3NwK.crlHuC5MusJwgke3fPeMglwGSKatsx.kqs..T6zHMHTF
- fxTbKmwznIgKYNZsAa_ALtDihafG.L4DkqJat.wFaVURTwcwmhoktDHzVzjgha68YfnH8q4.xiv4
- dpkA6mduA59SZZETbB34.Z5wBmiAxH18RK5pJ7TGRQ3Fjr5E7mdVDqVkdhMPPixYDU_QuYdG77gg
- qEFQ5sFglO8JNoPdvd3aL8MmjNWBEkldgLnZQSKepwIe58JFm1cYJWJIoZV0WIBi8loLoZw90efy
- 4gti8.5vfowpx5pp3nTZNMwRuIpcTv7WSI3v07Oc4X01iwLKC0SJ.ERNiL4uosYzt5oKAIK99uRo
- gFZN5bBgj.6FTKm5RgLRXgH0.PMn49wfyKMjSrOAAgF5hokYl1zOYuBOKzR38o.D.3N0cSwiXnU1
- ZfInFbDjjqDZr9WtmXpjI.Tgv7xKWBqQbN1l.k9T8H2a75B0WnoKxqfPUVsNFQ_6i3ZwmQYCU5s8
- .VhBzVBXLXHVaDAn.dXSPQ5AZuzVJYi.Tz7qFKeH_zVh197hS8Z4T1.rkbE0Q4lNghXkBtlkhebT
- geJGfRtLeSUsIs5s8oU5dgq3O1rHuUV8WUiSFCGKaLUXB44f2x7BOEqhVCjEMuXPQ2BiCVvbZqFA
- yNH92Uat4GqBrcJ4NCxvFfZ1DJKaEZDtO.3NuaSu5xPVbhdDY2F6mBhyPJYsNfw01RAwH5OmEB48
- NnXWWSRavLfQSY3gAEfQ6n6e6pzK8x3A3TELp_s.k2gFhMpwMI1GBp97P7UyyC8g3E_DfckUvwjm
- gbbHJvArYUPtTp8WvAibsoMBCwwywrL_6Em732EJs8GbBtUnAJ9zkVfIGEboORJRltObBKBwNAto
- 4El.7MFfsrdhudlHfyh64s7tJTS6df5dNRoUfUO61qqN86cu2F2Z4MkTNhAIZ5BLiuJPVWBMa2zm
- c7Te8QjXSSQCkb9MsvFKda0Z50kpeO4_Fl0z6rD4M9iYdc.JLY32erW8uFhgYLWuNGhuerp5DW6w
- cGmNh32jG5WzQNjEN1ihg5dFak1AWsOFrpUaRSFg3XUurWGoZnFz4tZsf4Zjm5MCuPFQR_TLQN.n
- oj0HEgPGuUK51wpFBjZ4HxxeIUN2.x.Rb2FzG7RPic39WGAHBG2XYx8F61B0LWK8t8lUCI.s3y_Y
- qVoq_7zBv.oqeZrTEJzNIPfU8Ar7lHMzEWPgyjvsCm7OdSHcCLUJ1ir8MfHBUdhuBSjEXCYy7oCf
- bJ6E6aWfvwE6.f2wyzZA7H4xsJ0Q8pz9M1W6CZ.nS0C_i8RKD_4qms5P3bMGaLQtv5Z_olt5SbAa
- wDYTpt7tkIAezzLhsqGE9BNSB53FyXIo9UqpOw2NgQk8ixyclq9PlyRPGmTffzWQsUS4Lw0Csnze
- 3g9rre7oI2S9Q.SEDW.7Ksql6ZG8F5BuSZ0ufwkeXWZ9uecY_o9gaSH9.iewPh4yXMS5L.XZRi5U
- WgFP0ePTUHkGWhslg3xlJbljV7V56Gr9KScCRiafzM7d5AhE.yuTrLp_BEixwaLKdFmz4_MSf4d9
- _QAwS2vQ69rZ.d4l694RHiHclZWmJ.zaADN.c7upzGWbKL7kwsYfUm3nwrRrHXptbqm4X3h7eKvD
- .VnhUKq_AzXpf8v_Lowxou2DcdseTp8FWkqdK2aO1rt3HQKoik0YqTtiOdALJpc3TyVItOhH16vt
- Nd9pdtD2QRshPIwcslm8IdkWv2AZ5nm9nJtoVodIqwoSfllXn4N6gcKIy50_R5NcjQ2iWUsrVMhk
- uKLC0DISs2dYiGPd7pTu9pNxFFxe0ZKAbCswyGy9przkXAp8YsjUIggzl1tpfVAGXi6XGWBWw.Zg
- yRkRWgfEI8l7Q3QzNqAROEr.S2domBePUgOTEzAqIIAKuWGqGQGYXgnfSPZrtWS.vrGpt6CeO7VK
- .kkAVYMF7GwiqVVQFBYNL09Gp3y1JPLgJV7u31H.fEyPkDA7kyEunXegGNQ_ADzxBiHljk7LemIJ
- OG3knaw3Zcly2kiOOojGXa1Aizs.w7B1hIDQNa165GTUXHnN3YB62eGKnggaUm3QSQfXquHV4nuR
- 3pA1DCpQU_VvljpVwkDteYRf1DIevZGLC6hMT09tCdrbIhcuGbWjB7ShY7HLXKPFaRpyr8mBclaD
- iNI1HX0HVkl5TZDtHJOpKAXF4AwZTvnDrGd4wnQOvakduCp55y5pPqXL.Mg6bp9bEygby2RONVrd
- Yr6twCAHIGbGTb38QwfBY8jk8IaVXi_iN8inD8pxcxJyyNDbtdYshFjxjPsQFGyOP8J0P_w--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.ne1.yahoo.com with HTTP; Fri, 20 Nov 2020 20:31:56 +0000
-Received: by smtp409.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID b88463ba9175d4b4904dbefa430c1109;
-          Fri, 20 Nov 2020 20:31:54 +0000 (UTC)
-From:   Casey Schaufler <casey@schaufler-ca.com>
-To:     casey.schaufler@intel.com, jmorris@namei.org,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org
-Cc:     casey@schaufler-ca.com, linux-audit@redhat.com,
-        keescook@chromium.org, john.johansen@canonical.com,
-        penguin-kernel@i-love.sakura.ne.jp, paul@paul-moore.com,
-        sds@tycho.nsa.gov, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH v23 15/23] LSM: Use lsmcontext in security_inode_getsecctx
-Date:   Fri, 20 Nov 2020 12:14:59 -0800
-Message-Id: <20201120201507.11993-16-casey@schaufler-ca.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20201120201507.11993-1-casey@schaufler-ca.com>
-References: <20201120201507.11993-1-casey@schaufler-ca.com>
+        id S1731067AbgKTUdu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Nov 2020 15:33:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731028AbgKTUdt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Nov 2020 15:33:49 -0500
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72998C0613CF
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 12:33:49 -0800 (PST)
+Received: by mail-qv1-xf44.google.com with SMTP id a15so5314831qvk.5
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 12:33:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=uR5iAIfJ5gGi4i92SdYH3oXVk/Z2QnlVTsf3i8Lblnc=;
+        b=H4f9f9T4xhZNGV+vYeRdOnzhqPmJBcsgJ0Vpou2RIMZe1V1nD3FF1EL5q5JYPpV1df
+         Qt9FaUWhi6sZGnz2ySka4fRwLMhtcr16vGBORTcsvP3iWCz6fjvwv0lZcXxSJlCPH9Lj
+         ALa6Y4FRUkgGt/bey0lRq7aIkBpN6xFbNKw/KabjO3gsrtAe0cwRqxUzZze6peFdD0fR
+         BJkfBZ6sGgq9HZ58YO67jbn8HELx4sQwRCLKnfHEbPMJBWkdXd2UMg+kd+35X81DFMII
+         PTJ9iEO7MNdY5+0WU/g95Q+EyzmmsUhj/L+F3Gi9NU66hNOs7ZQBuKx1InIVXPMtd3bJ
+         5Dgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=uR5iAIfJ5gGi4i92SdYH3oXVk/Z2QnlVTsf3i8Lblnc=;
+        b=JgQnuKxyNfwgMTgfZish7iR1OIUteCCTI/SgXT+DIIzfxjI7JCzzAIaIL/G3ru0SmV
+         T7SfEbr5YuD6kf5YbvcOupVjRDeF9RMDS8Vq9onwli/ZJP5GtY9vThyhzytSWbd1ZxCE
+         +NYL2E8qjb1cL6DGM4HkmjsYxh/AGlpJ5Avb0Ek9tsotnj4wMz4MenAucyHYSX452Z1X
+         zNYQc9k+rTWcNTd7getmQePN8lBQpcq4XWqThIcIzSSt7l0nJDIOuhMrTuaKQMZxnXj2
+         oFSi9myTIGkJv+Zau1XljZ4ZWHyKWf4gu91Z6hZ9ZZE0LY7VIrP/t0qLum3nJmGinHU3
+         1Trw==
+X-Gm-Message-State: AOAM533qp0+jcyOqA3xO68C63/6BEV4fRK2KZuyPNoAKUBPb5McjTF0x
+        Le2Nfd/rEH2Mj+18KPTUdMh08aoF1Xs=
+X-Google-Smtp-Source: ABdhPJxh9KtgZcOUA872zLKp4Zb5uC8HWpJTqmLq4a0cy1J1hzHhr/qvcy50HObNq5vaGAfDawbVrw==
+X-Received: by 2002:a0c:fe66:: with SMTP id b6mr8191086qvv.42.1605904428137;
+        Fri, 20 Nov 2020 12:33:48 -0800 (PST)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id j17sm2648887qtn.2.2020.11.20.12.33.46
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Nov 2020 12:33:47 -0800 (PST)
+Sender: Chuck Lever <chucklever@gmail.com>
+Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0AKKXjMQ029202
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 20:33:46 GMT
+Subject: [PATCH v2 000/118] Update NFSD XDR functions
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Date:   Fri, 20 Nov 2020 15:33:45 -0500
+Message-ID: <160590425404.1340.8850646771948736468.stgit@klimt.1015granger.net>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Change the security_inode_getsecctx() interface to fill
-a lsmcontext structure instead of data and length pointers.
-This provides the information about which LSM created the
-context so that security_release_secctx() can use the
-correct hook.
+My apologies for piling on.
 
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
-Acked-by: Paul Moore <paul@paul-moore.com>
-Reviewed-by: John Johansen <john.johansen@canonical.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-Cc: linux-nfs@vger.kernel.org
+The purpose of this series is to convert the NFSD XDR encoder and
+decoder functions to use the struct xdr_stream API. This is largely
+a refactor/clean-up, but there are some long-term benefits:
+
+- More robust input sanitization in the NFSD decoders
+- Help make it possible to use common kernel library functions with
+  XDR stream APIs (for example, GSS-API)
+- Align the code itself with the RFCs so it is easier to learn,
+  understand, and verify our XDR implementation
+- Removal of more than a hundred hidden dprintk() call sites
+- Removal of as much explicit manipulation of pages as possible to
+  help make the transition to xdr->bvecs smoother
+
+The series contains only decoder changes for the moment. I have
+encoder changes for NFSv2 and NFSv3 in development. It makes sense
+to put those off for a separate review/merge window cycle.
+
+These patches are available in a topic branch in my git repo:
+
+ git://git.linux-nfs.org/projects/cel/cel-2.6.git nfsd-xdr_stream
+
+
+Changes since v1:
+- Broke up larger patches (fattr4, LOCK, OPEN, EXCHANGE_ID, and so on)
+- Replaced goto spaghetti in NFSv4 decoders
+- Cleaned up function synopses
+- Replaced nfsd4_decode_bitmap() with generic XDR helper
+- The posted series now contains changes to NFSv2 and NFSv3 decoders
+
 ---
- fs/nfsd/nfs4xdr.c        | 23 +++++++++--------------
- include/linux/security.h |  5 +++--
- security/security.c      | 13 +++++++++++--
- 3 files changed, 23 insertions(+), 18 deletions(-)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 4ae7e156ea87..3092568d5ed3 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2600,11 +2600,11 @@ nfsd4_encode_layout_types(struct xdr_stream *xdr, u32 layout_types)
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- static inline __be32
- nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
--			    void *context, int len)
-+			    struct lsmcontext *context)
- {
- 	__be32 *p;
- 
--	p = xdr_reserve_space(xdr, len + 4 + 4 + 4);
-+	p = xdr_reserve_space(xdr, context->len + 4 + 4 + 4);
- 	if (!p)
- 		return nfserr_resource;
- 
-@@ -2614,13 +2614,13 @@ nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
- 	 */
- 	*p++ = cpu_to_be32(0); /* lfs */
- 	*p++ = cpu_to_be32(0); /* pi */
--	p = xdr_encode_opaque(p, context, len);
-+	p = xdr_encode_opaque(p, context->context, context->len);
- 	return 0;
- }
- #else
- static inline __be32
- nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
--			    void *context, int len)
-+			    struct lsmcontext *context)
- { return 0; }
- #endif
- 
-@@ -2717,9 +2717,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	int err;
- 	struct nfs4_acl *acl = NULL;
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--	struct lsmcontext scaff; /* scaffolding */
--	void *context = NULL;
--	int contextlen;
-+	struct lsmcontext context = { };
- #endif
- 	bool contextsupport = false;
- 	struct nfsd4_compoundres *resp = rqstp->rq_resp;
-@@ -2777,7 +2775,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	     bmval0 & FATTR4_WORD0_SUPPORTED_ATTRS) {
- 		if (exp->ex_flags & NFSEXP_SECURITY_LABEL)
- 			err = security_inode_getsecctx(d_inode(dentry),
--						&context, &contextlen);
-+						       &context);
- 		else
- 			err = -EOPNOTSUPP;
- 		contextsupport = (err == 0);
-@@ -3207,8 +3205,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- 	if (bmval2 & FATTR4_WORD2_SECURITY_LABEL) {
--		status = nfsd4_encode_security_label(xdr, rqstp, context,
--								contextlen);
-+		status = nfsd4_encode_security_label(xdr, rqstp, &context);
- 		if (status)
- 			goto out;
- 	}
-@@ -3229,10 +3226,8 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 
- out:
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--	if (context) {
--		lsmcontext_init(&scaff, context, contextlen, 0); /*scaffolding*/
--		security_release_secctx(&scaff);
--	}
-+	if (context.context)
-+		security_release_secctx(&context);
- #endif /* CONFIG_NFSD_V4_SECURITY_LABEL */
- 	kfree(acl);
- 	if (tempfh) {
-diff --git a/include/linux/security.h b/include/linux/security.h
-index c86c9870b352..20486380c176 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -566,7 +566,7 @@ void security_release_secctx(struct lsmcontext *cp);
- void security_inode_invalidate_secctx(struct inode *inode);
- int security_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen);
- int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen);
--int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
-+int security_inode_getsecctx(struct inode *inode, struct lsmcontext *cp);
- int security_locked_down(enum lockdown_reason what);
- #else /* CONFIG_SECURITY */
- 
-@@ -1413,7 +1413,8 @@ static inline int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32
- {
- 	return -EOPNOTSUPP;
- }
--static inline int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
-+static inline int security_inode_getsecctx(struct inode *inode,
-+					   struct lsmcontext *cp)
- {
- 	return -EOPNOTSUPP;
- }
-diff --git a/security/security.c b/security/security.c
-index ab5d2c9770f1..31c983a252b9 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -2281,9 +2281,18 @@ int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen)
- }
- EXPORT_SYMBOL(security_inode_setsecctx);
- 
--int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
-+int security_inode_getsecctx(struct inode *inode, struct lsmcontext *cp)
- {
--	return call_int_hook(inode_getsecctx, -EOPNOTSUPP, inode, ctx, ctxlen);
-+	struct security_hook_list *hp;
-+
-+	memset(cp, 0, sizeof(*cp));
-+
-+	hlist_for_each_entry(hp, &security_hook_heads.inode_getsecctx, list) {
-+		cp->slot = hp->lsmid->slot;
-+		return hp->hook.inode_getsecctx(inode, (void **)&cp->context,
-+						&cp->len);
-+	}
-+	return -EOPNOTSUPP;
- }
- EXPORT_SYMBOL(security_inode_getsecctx);
- 
--- 
-2.24.1
+Chuck Lever (118):
+      NFSD: Fix returned READDIR offset cookie
+      SUNRPC: Add xdr_set_scratch_page() and xdr_reset_scratch_buffer()
+      SUNRPC: Prepare for xdr_stream-style decoding on the server-side
+      NFSD: Add common helpers to decode void args and encode void results
+      NFSD: Replace the internals of the READ_BUF() macro
+      NFSD: Replace READ* macros in nfsd4_decode_access()
+      NFSD: Replace READ* macros in nfsd4_decode_stateid()
+      NFSD: Replace READ* macros in nfsd4_decode_close()
+      NFSD: Replace READ* macros in nfsd4_decode_commit()
+      NFSD: Change the way the expected length of a fattr4 is checked
+      NFSD: Replace READ* macros that decode the fattr4 size attribute
+      NFSD: Replace READ* macros that decode the fattr4 acl attribute
+      NFSD: Replace READ* macros that decode the fattr4 mode attribute
+      NFSD: Replace READ* macros that decode the fattr4 owner attribute
+      NFSD: Replace READ* macros that decode the fattr4 owner_group attribute
+      NFSD: Replace READ* macros that decode the fattr4 time_set attributes
+      NFSD: Replace READ* macros that decode the fattr4 security label attribute
+      NFSD: Replace READ* macros that decode the fattr4 umask attribute
+      NFSD: Replace READ* macros in nfsd4_decode_fattr()
+      NFSD: Replace READ* macros in nfsd4_decode_create()
+      NFSD: Replace READ* macros in nfsd4_decode_getattr()
+      NFSD: Replace READ* macros in nfsd4_decode_link()
+      NFSD: Relocate nfsd4_decode_opaque()
+      NFSD: Add helpers to decode a clientid4 and an NFSv4 state owner
+      NFSD: Add helper for decoding locker4
+      NFSD: Replace READ* macros in nfsd4_decode_lock()
+      NFSD: Replace READ* macros in nfsd4_decode_lockt()
+      NFSD: Replace READ* macros in nfsd4_decode_locku()
+      NFSD: Replace READ* macros in nfsd4_decode_lookup()
+      NFSD: Add helper to decode NFSv4 verifiers
+      NFSD: Add helper to decode OPEN's createhow4 argument
+      NFSD: Add helper to decode OPEN's openflag4 argument
+      NFSD: Replace READ* macros in nfsd4_decode_share_access()
+      NFSD: Replace READ* macros in nfsd4_decode_share_deny()
+      NFSD: Add helper to decode OPEN's open_claim4 argument
+      NFSD: Replace READ* macros in nfsd4_decode_open()
+      NFSD: Replace READ* macros in nfsd4_decode_open_confirm()
+      NFSD: Replace READ* macros in nfsd4_decode_open_downgrade()
+      NFSD: Replace READ* macros in nfsd4_decode_putfh()
+      NFSD: Replace READ* macros in nfsd4_decode_read()
+      NFSD: Replace READ* macros in nfsd4_decode_readdir()
+      NFSD: Replace READ* macros in nfsd4_decode_remove()
+      NFSD: Replace READ* macros in nfsd4_decode_rename()
+      NFSD: Replace READ* macros in nfsd4_decode_renew()
+      NFSD: Replace READ* macros in nfsd4_decode_secinfo()
+      NFSD: Replace READ* macros in nfsd4_decode_setclientid()
+      NFSD: Replace READ* macros in nfsd4_decode_setclientid_confirm()
+      NFSD: Replace READ* macros in nfsd4_decode_verify()
+      NFSD: Replace READ* macros in nfsd4_decode_write()
+      NFSD: Replace READ* macros in nfsd4_decode_release_lockowner()
+      NFSD: Replace READ* macros in nfsd4_decode_cb_sec()
+      NFSD: Replace READ* macros in nfsd4_decode_backchannel_ctl()
+      NFSD: Replace READ* macros in nfsd4_decode_bind_conn_to_session()
+      NFSD: Add a separate decoder to handle state_protect_ops
+      NFSD: Add a separate decoder for ssv_sp_parms
+      NFSD: Add a helper to decode state_protect4_a
+      NFSD: Add a helper to decode nfs_impl_id4
+      NFSD: Add a helper to decode channel_attrs4
+      NFSD: Replace READ* macros in nfsd4_decode_create_session()
+      NFSD: Replace READ* macros in nfsd4_decode_destroy_session()
+      NFSD: Replace READ* macros in nfsd4_decode_free_stateid()
+      NFSD: Replace READ* macros in nfsd4_decode_getdeviceinfo()
+      NFSD: Replace READ* macros in nfsd4_decode_layoutcommit()
+      NFSD: Replace READ* macros in nfsd4_decode_layoutget()
+      NFSD: Replace READ* macros in nfsd4_decode_layoutreturn()
+      NFSD: Replace READ* macros in nfsd4_decode_secinfo_no_name()
+      NFSD: Replace READ* macros in nfsd4_decode_sequence()
+      NFSD: Replace READ* macros in nfsd4_decode_test_stateid()
+      NFSD: Replace READ* macros in nfsd4_decode_destroy_clientid()
+      NFSD: Replace READ* macros in nfsd4_decode_reclaim_complete()
+      NFSD: Replace READ* macros in nfsd4_decode_fallocate()
+      NFSD: Replace READ* macros in nfsd4_decode_clone()
+      NFSD: Replace READ* macros in nfsd4_decode_nl4_server()
+      NFSD: Replace READ* macros in nfsd4_decode_copy()
+      NFSD: Replace READ* macros in nfsd4_decode_seek()
+      NFSD: Replace READ* macros in nfsd4_decode_xattr_name()
+      NFSD: Replace READ* macros in nfsd4_decode_setxattr()
+      NFSD: Replace READ* macros in nfsd4_decode_listxattrs()
+      NFSD: Replace READ* macros in nfsd4_decode_compound()
+      NFSD: Remove macros that are no longer used
+      NFSD: Update GETATTR3args decoder to use struct xdr_stream
+      NFSD: Update ACCESS3arg decoder to use struct xdr_stream
+      NFSD: Update READ3arg decoder to use struct xdr_stream
+      NFSD: Update WRITE3arg decoder to use struct xdr_stream
+      NFSD: Update READLINK3arg decoder to use struct xdr_stream
+      NFSD: Add helper to set up the pages where the dirlist is encoded
+      NFSD: Update READDIR3args decoders to use struct xdr_stream
+      NFSD: Update COMMIT3arg decoder to use struct xdr_stream
+      NFSD: Update the NFSv3 DIROPargs decoder to use struct xdr_stream
+      NFSD: Update the RENAME3args decoder to use struct xdr_stream
+      NFSD: Update the LINK3args decoder to use struct xdr_stream
+      NFSD: Update the SETATTR3args decoder to use struct xdr_stream
+      NFSD: Update the CREATE3args decoder to use struct xdr_stream
+      NFSD: Update the MKDIR3args decoder to use struct xdr_stream
+      NFSD: Update the SYMLINK3args decoder to use struct xdr_stream
+      NFSD: Update the MKNOD3args decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 GETATTR argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 READ argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 WRITE argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 READLINK argument decoder to use struct xdr_stream
+      NFSD: Add helper to set up the pages where the dirlist is encoded
+      NFSD: Update the NFSv2 READDIR argument decoder to use struct xdr_stream
+      NFSD: Update NFSv2 diropargs decoding to use struct xdr_stream
+      NFSD: Update the NFSv2 RENAME argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 LINK argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 SETATTR argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 CREATE argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 SYMLINK argument decoder to use struct xdr_stream
+      NFSD: Remove argument length checking in nfsd_dispatch()
+      NFSD: Update the NFSv2 GETACL argument decoder to use struct xdr_stream
+      NFSD: Add an xdr_stream-based decoder for NFSv2/3 ACLs
+      NFSD: Update the NFSv2 SETACL argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 ACL GETATTR argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 ACL ACCESS argument decoder to use struct xdr_stream
+      NFSD: Clean up after updating NFSv2 ACL decoders
+      NFSD: Update the NFSv3 GETACL argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 SETACL argument decoder to use struct xdr_stream
+      NFSD: Clean up after updating NFSv3 ACL decoders
+
+
+ fs/nfs/blocklayout/blocklayout.c          |    2 +-
+ fs/nfs/blocklayout/dev.c                  |    2 +-
+ fs/nfs/dir.c                              |    2 +-
+ fs/nfs/filelayout/filelayout.c            |    2 +-
+ fs/nfs/filelayout/filelayoutdev.c         |    2 +-
+ fs/nfs/flexfilelayout/flexfilelayout.c    |    2 +-
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c |    2 +-
+ fs/nfs/nfs42xdr.c                         |    2 +-
+ fs/nfs/nfs4xdr.c                          |    6 +-
+ fs/nfs_common/nfsacl.c                    |   53 +
+ fs/nfsd/nfs2acl.c                         |   96 +-
+ fs/nfsd/nfs3acl.c                         |   60 +-
+ fs/nfsd/nfs3proc.c                        |   74 +-
+ fs/nfsd/nfs3xdr.c                         |  588 ++---
+ fs/nfsd/nfs4proc.c                        |   24 +-
+ fs/nfsd/nfs4state.c                       |    2 +-
+ fs/nfsd/nfs4xdr.c                         | 2419 +++++++++++----------
+ fs/nfsd/nfsd.h                            |    8 +
+ fs/nfsd/nfsproc.c                         |   99 +-
+ fs/nfsd/nfssvc.c                          |   66 +-
+ fs/nfsd/nfsxdr.c                          |  370 ++--
+ fs/nfsd/xdr.h                             |   15 +-
+ fs/nfsd/xdr3.h                            |   22 +-
+ fs/nfsd/xdr4.h                            |   30 +-
+ include/linux/nfsacl.h                    |    3 +
+ include/linux/sunrpc/svc.h                |   16 +
+ include/linux/sunrpc/xdr.h                |   93 +-
+ include/uapi/linux/nfs3.h                 |    6 +
+ net/sunrpc/auth_gss/gss_rpc_xdr.c         |    2 +-
+ net/sunrpc/svc.c                          |    5 +
+ net/sunrpc/xdr.c                          |   72 +-
+ 31 files changed, 2184 insertions(+), 1961 deletions(-)
+
+--
+Chuck Lever
 
