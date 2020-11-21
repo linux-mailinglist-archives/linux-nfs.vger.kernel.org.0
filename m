@@ -2,197 +2,263 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3D322BBE8D
-	for <lists+linux-nfs@lfdr.de>; Sat, 21 Nov 2020 11:56:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6385A2BBF1D
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Nov 2020 14:00:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbgKUKyr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 21 Nov 2020 05:54:47 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:22682 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727241AbgKUKyr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 21 Nov 2020 05:54:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605956084;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4jxSPit35VJ+3fmzmBiFIJ1OiVFuB9LMJGr7vPdRryw=;
-        b=iJS9/jJo/CTMcnAEtFvt3P1Q+JGt7PNUx7ALzqYigxVVCrKwPzuVLydSVGNhhYuzVi0OZd
-        XvOxW8SyDXdKYSElOUxrBg9P69YwpQQyc1RP/hJaUlPpKu4oce9+6e8RoYY71UQGT+8M5/
-        Th+MAkKPqst/5IDemLWm1yXOmJ2sP74=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-180-8eEIwtMhOGajISRC1IEPOA-1; Sat, 21 Nov 2020 05:54:43 -0500
-X-MC-Unique: 8eEIwtMhOGajISRC1IEPOA-1
-Received: by mail-il1-f199.google.com with SMTP id q10so5672252ile.1
-        for <linux-nfs@vger.kernel.org>; Sat, 21 Nov 2020 02:54:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4jxSPit35VJ+3fmzmBiFIJ1OiVFuB9LMJGr7vPdRryw=;
-        b=YmH7X4kL9OBJoAZN26Up+E3a79tS7JZT8UIa973suWVJESnx0eVdflFvghoC0x9l1L
-         +HU+D4SljhFEWnz27hEDzEf52KNM+QXGgA3SAyaHqkaxh39O9Y8t0jmSTMUp/lGb+FGB
-         +doGgEYuraT8un92uQBPi6picKTQQ/R3+PoRfyoVpIeeIReAngpEgicSMs/qB4Jhx57r
-         apx48R+mbqeCm/m+TOyz9zYmzn3htMoIa8p+meJp07zHFj0BCM++4k6w+MPqE3cax7K6
-         8y2QyUw9uTKz6n3jW6a/adAg1Mwm123pipC0f9Hx/EbWfr5u5ceZdpTaXZEIOtdHrz8x
-         c65A==
-X-Gm-Message-State: AOAM530UwkhPVZfk2wc9SYPMiWgk7XVlWkIWj+o/msgqQWUyRtPis+6A
-        bceJ3vDd1H36S0lRs96GOxrUh6TrB65qrOaQDFVl05vdlLXLiIojEk/75s7kSzt1WykgHKsCSTw
-        lAIjMM/E39PasHbcMy6/vqeXUdW5WZniE+I5G
-X-Received: by 2002:a5d:958b:: with SMTP id a11mr10457761ioo.160.1605956082107;
-        Sat, 21 Nov 2020 02:54:42 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxFH0OMIRlRA41Ga8KgUUfnHmzWT/P8Vnz+Iz8qScBHVW4E0MhwcGIExLsNRnz3dEq4Ujx2YYxGsjQ72t6ugC0=
-X-Received: by 2002:a5d:958b:: with SMTP id a11mr10457754ioo.160.1605956081840;
- Sat, 21 Nov 2020 02:54:41 -0800 (PST)
-MIME-Version: 1.0
-References: <20201026150530.29019-1-rbergant@redhat.com> <20201106215128.GD26028@fieldses.org>
-In-Reply-To: <20201106215128.GD26028@fieldses.org>
-From:   Roberto Bergantinos Corpas <rbergant@redhat.com>
-Date:   Sat, 21 Nov 2020 11:54:30 +0100
-Message-ID: <CACWnjLxiCTAkxBca_NFrUSPCq_g4y0yNaHuNKX+Rwr=-xPhibw@mail.gmail.com>
-Subject: Re: [PATCH] sunrpc : make RPC channel buffer dynamic for slow case
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs@vger.kernel.org
+        id S1727274AbgKUNAe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 21 Nov 2020 08:00:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727677AbgKUNAd (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 21 Nov 2020 08:00:33 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5771217A0;
+        Sat, 21 Nov 2020 13:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605963632;
+        bh=bWO4512rrwQksK0Rvo197S83Z8f0AoILWgXDmivlrV4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=rcb4uvhe6Kx3DPlF3dU2gkn8SeGGCSRmVm6JxtlNpe/nDVZun/LjR3NtE8lZ5PeKo
+         bKHKBdGyIJ22edC3AZVzlukekMT9SPxxbh6IidiIqr3IgQiyH5v9eeIp43BINEiFdZ
+         G27VXIvr2CZWLMz7leO7LRFJvrw7F0Cr1ysObE4U=
+Message-ID: <8462cb90445a8553d0667e6ca59fbb42835ad9a9.camel@kernel.org>
+Subject: Re: [PATCH 6/8] nfsd: move change attribute generation to filesystem
+From:   Jeff Layton <jlayton@kernel.org>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Daire Byrne <daire@dneg.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        linux-cachefs <linux-cachefs@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Date:   Sat, 21 Nov 2020 08:00:30 -0500
+In-Reply-To: <1605911960-12516-6-git-send-email-bfields@redhat.com>
+References: <20201120223831.GB7705@fieldses.org>
+         <1605911960-12516-1-git-send-email-bfields@redhat.com>
+         <1605911960-12516-6-git-send-email-bfields@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.1 (3.38.1-1.fc33) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce,
+On Fri, 2020-11-20 at 17:39 -0500, J. Bruce Fields wrote:
+> From: "J. Bruce Fields" <bfields@redhat.com>
+> 
+> After this, only filesystems lacking change attribute support will leave
+> the fetch_iversion export op NULL.
+> 
+> This seems cleaner to me, and will allow some minor optimizations in the
+> nfsd code.
+> 
+> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> ---
+>  fs/btrfs/export.c        |  2 ++
+>  fs/ext4/super.c          |  9 +++++++++
+>  fs/nfsd/nfs4xdr.c        |  2 +-
+>  fs/nfsd/nfsfh.h          | 25 +++----------------------
+>  fs/nfsd/xdr4.h           |  4 +++-
+>  fs/xfs/xfs_export.c      |  2 ++
+>  include/linux/iversion.h | 26 ++++++++++++++++++++++++++
+>  7 files changed, 46 insertions(+), 24 deletions(-)
+> 
+> diff --git a/fs/btrfs/export.c b/fs/btrfs/export.c
+> index 1a8d419d9e1f..ece32440999a 100644
+> --- a/fs/btrfs/export.c
+> +++ b/fs/btrfs/export.c
+> @@ -7,6 +7,7 @@
+>  #include "btrfs_inode.h"
+>  #include "print-tree.h"
+>  #include "export.h"
+> +#include <linux/iversion.h>
+>  
+> 
+>  #define BTRFS_FID_SIZE_NON_CONNECTABLE (offsetof(struct btrfs_fid, \
+>  						 parent_objectid) / 4)
+> @@ -279,4 +280,5 @@ const struct export_operations btrfs_export_ops = {
+>  	.fh_to_parent	= btrfs_fh_to_parent,
+>  	.get_parent	= btrfs_get_parent,
+>  	.get_name	= btrfs_get_name,
+> +	.fetch_iversion	= generic_fetch_iversion,
+>  };
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index ef4734b40e2a..a4f48273d435 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -1685,11 +1685,20 @@ static const struct super_operations ext4_sops = {
+>  	.bdev_try_to_free_page = bdev_try_to_free_page,
+>  };
+>  
+> 
+> +static u64 ext4_fetch_iversion(struct inode *inode)
+> +{
+> +	if (IS_I_VERSION(inode))
+> +		return generic_fetch_iversion(inode);
+> +	else
+> +		return time_to_chattr(&inode->i_ctime);
+> +}
+> +
+>  static const struct export_operations ext4_export_ops = {
+>  	.fh_to_dentry = ext4_fh_to_dentry,
+>  	.fh_to_parent = ext4_fh_to_parent,
+>  	.get_parent = ext4_get_parent,
+>  	.commit_metadata = ext4_nfs_commit_metadata,
+> +	.fetch_iversion = ext4_fetch_iversion,
+>  };
+>  
+> 
+>  enum {
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 18c912930947..182190684792 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -3187,7 +3187,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+>  		p = xdr_reserve_space(xdr, 4);
+>  		if (!p)
+>  			goto out_resource;
+> -		if (IS_I_VERSION(d_inode(dentry)))
+> +		if (IS_I_VERSION(d_inode(dentry))
+>  			*p++ = cpu_to_be32(NFS4_CHANGE_TYPE_IS_MONOTONIC_INCR);
+>  		else
+>  			*p++ = cpu_to_be32(NFS4_CHANGE_TYPE_IS_TIME_METADATA);
+> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+> index 2656a3464c6c..ac3e309d7339 100644
+> --- a/fs/nfsd/nfsfh.h
+> +++ b/fs/nfsd/nfsfh.h
+> @@ -46,8 +46,8 @@ typedef struct svc_fh {
+>  	struct timespec64	fh_pre_mtime;	/* mtime before oper */
+>  	struct timespec64	fh_pre_ctime;	/* ctime before oper */
+>  	/*
+> -	 * pre-op nfsv4 change attr: note must check IS_I_VERSION(inode)
+> -	 *  to find out if it is valid.
+> +	 * pre-op nfsv4 change attr: note must check for fetch_iversion
+> +	 * op to find out if it is valid.
+>  	 */
+>  	u64			fh_pre_change;
+>  
+> 
+> @@ -246,31 +246,12 @@ fh_clear_wcc(struct svc_fh *fhp)
+>  	fhp->fh_pre_saved = false;
+>  }
+>  
+> 
+> -/*
+> - * We could use i_version alone as the change attribute.  However,
+> - * i_version can go backwards after a reboot.  On its own that doesn't
+> - * necessarily cause a problem, but if i_version goes backwards and then
+> - * is incremented again it could reuse a value that was previously used
+> - * before boot, and a client who queried the two values might
+> - * incorrectly assume nothing changed.
+> - *
+> - * By using both ctime and the i_version counter we guarantee that as
+> - * long as time doesn't go backwards we never reuse an old value.
+> - */
+>  static inline u64 nfsd4_change_attribute(struct kstat *stat,
+>  					 struct inode *inode)
+>  {
+>  	if (inode->i_sb->s_export_op->fetch_iversion)
+>  		return inode->i_sb->s_export_op->fetch_iversion(inode);
+> -	else if (IS_I_VERSION(inode)) {
+> -		u64 chattr;
+> -
+> -		chattr =  stat->ctime.tv_sec;
+> -		chattr <<= 30;
+> -		chattr += stat->ctime.tv_nsec;
+> -		chattr += inode_query_iversion(inode);
+> -		return chattr;
+> -	} else
+> +	else
+>  		return time_to_chattr(&stat->ctime);
+>  }
+>  
+> 
+> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+> index 9c2d942d055d..f0c8fbe704a2 100644
+> --- a/fs/nfsd/xdr4.h
+> +++ b/fs/nfsd/xdr4.h
+> @@ -761,10 +761,12 @@ void warn_on_nonidempotent_op(struct nfsd4_op *op);
+>  static inline void
+>  set_change_info(struct nfsd4_change_info *cinfo, struct svc_fh *fhp)
+>  {
+> +	struct inode *inode = d_inode(fhp->fh_dentry);
+> +
+>  	BUG_ON(!fhp->fh_pre_saved);
+>  	cinfo->atomic = (u32)fhp->fh_post_saved;
+>  
+> 
+> -	if (IS_I_VERSION(d_inode(fhp->fh_dentry))) {
+> +	if (inode->i_sb->s_export_op->fetch_iversion) {
+>  		cinfo->before_change = fhp->fh_pre_change;
+>  		cinfo->after_change = fhp->fh_post_change;
+>  	} else {
+> diff --git a/fs/xfs/xfs_export.c b/fs/xfs/xfs_export.c
+> index 465fd9e048d4..b950fac3d7df 100644
+> --- a/fs/xfs/xfs_export.c
+> +++ b/fs/xfs/xfs_export.c
+> @@ -16,6 +16,7 @@
+>  #include "xfs_inode_item.h"
+>  #include "xfs_icache.h"
+>  #include "xfs_pnfs.h"
+> +#include <linux/iversion.h>
+>  
+> 
+>  /*
+>   * Note that we only accept fileids which are long enough rather than allow
+> @@ -234,4 +235,5 @@ const struct export_operations xfs_export_operations = {
+>  	.map_blocks		= xfs_fs_map_blocks,
+>  	.commit_blocks		= xfs_fs_commit_blocks,
+>  #endif
+> +	.fetch_iversion		= generic_fetch_iversion,
+>  };
+> diff --git a/include/linux/iversion.h b/include/linux/iversion.h
+> index 3bfebde5a1a6..ded74523c8a6 100644
+> --- a/include/linux/iversion.h
+> +++ b/include/linux/iversion.h
+> @@ -328,6 +328,32 @@ inode_query_iversion(struct inode *inode)
+>  	return cur >> I_VERSION_QUERIED_SHIFT;
+>  }
+>  
+> 
+> +/*
+> + * We could use i_version alone as the NFSv4 change attribute.  However,
+> + * i_version can go backwards after a reboot.  On its own that doesn't
+> + * necessarily cause a problem, but if i_version goes backwards and then
+> + * is incremented again it could reuse a value that was previously used
+> + * before boot, and a client who queried the two values might
+> + * incorrectly assume nothing changed.
+> + *
+> + * By using both ctime and the i_version counter we guarantee that as
+> + * long as time doesn't go backwards we never reuse an old value.
+> + *
+> + * A filesystem that has an on-disk boot counter or similar might prefer
+> + * to use that to avoid the risk of the change attribute going backwards
+> + * if system time is set backwards.
+> + */
+> +static inline u64 generic_fetch_iversion(struct inode *inode)
+> +{
+> +	u64 chattr;
+> +
+> +	chattr =  inode->i_ctime.tv_sec;
+> +	chattr <<= 30;
+> +	chattr += inode->i_ctime.tv_nsec;
+> +	chattr += inode_query_iversion(inode);
+> +	return chattr;
+> +}
+> +
+>  /*
+>   * For filesystems without any sort of change attribute, the best we can
+>   * do is fake one up from the ctime:
 
-  Sorry for late response as well.
+One more nit: 
 
-    Ok, here's a possible patch, let me know your thoughts
+We probably don't want anyone using this on filesystems that don't set
+SB_I_VERSION. It might be a good idea to add something like:
 
-diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index baef5ee43dbb..1347ecae9c84 100644
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -777,7 +777,6 @@ void cache_clean_deferred(void *owner)
-  */
+    WARN_ON_ONCE(!IS_I_VERSION(inode));
 
- static DEFINE_SPINLOCK(queue_lock);
--static DEFINE_MUTEX(queue_io_mutex);
-
- struct cache_queue {
-        struct list_head        list;
-@@ -905,44 +904,26 @@ static ssize_t cache_do_downcall(char *kaddr,
-const char __user *buf,
-        return ret;
- }
-
--static ssize_t cache_slow_downcall(const char __user *buf,
--                                  size_t count, struct cache_detail *cd)
--{
--       static char write_buf[8192]; /* protected by queue_io_mutex */
--       ssize_t ret = -EINVAL;
--
--       if (count >= sizeof(write_buf))
--               goto out;
--       mutex_lock(&queue_io_mutex);
--       ret = cache_do_downcall(write_buf, buf, count, cd);
--       mutex_unlock(&queue_io_mutex);
--out:
--       return ret;
--}
--
- static ssize_t cache_downcall(struct address_space *mapping,
-                              const char __user *buf,
-                              size_t count, struct cache_detail *cd)
- {
--       struct page *page;
--       char *kaddr;
-+       char *write_buf;
-        ssize_t ret = -ENOMEM;
-
--       if (count >= PAGE_SIZE)
--               goto out_slow;
-+       if (count >= 32768) { /* 32k is max userland buffer, lets
-check anyway */
-+               ret = -EINVAL;
-+               goto out;
-+       }
-
--       page = find_or_create_page(mapping, 0, GFP_KERNEL);
--       if (!page)
--               goto out_slow;
-+       write_buf = kvmalloc(count + 1, GFP_KERNEL);
-+       if (!write_buf)
-+               goto out;
-
--       kaddr = kmap(page);
--       ret = cache_do_downcall(kaddr, buf, count, cd);
--       kunmap(page);
--       unlock_page(page);
--       put_page(page);
-+       ret = cache_do_downcall(write_buf, buf, count, cd);
-+       kvfree(write_buf);
-+out:
-        return ret;
--out_slow:
--       return cache_slow_downcall(buf, count, cd);
- }
-
- static ssize_t cache_write(struct file *filp, const char __user *buf,
-
-On Fri, Nov 6, 2020 at 10:51 PM J. Bruce Fields <bfields@fieldses.org> wrote:
->
-> On Mon, Oct 26, 2020 at 04:05:30PM +0100, Roberto Bergantinos Corpas wrote:
-> > RPC channel buffer size for slow case (user buffer bigger than
-> > one page) can be converted into dymanic and also allows us to
-> > prescind from queue_io_mutex
->
-> Sorry for the slow response.
->
-> Let's just remove cache_slow_downcall and the find_or_create_page()
-> thing and just do a kvmalloc() from the start.  I don't understand why
-> we need to be more complicated.
->
-> --b.
->
-> >
-> > Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
-> > ---
-> >  net/sunrpc/cache.c | 13 ++++++++-----
-> >  1 file changed, 8 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-> > index baef5ee43dbb..325393f75e17 100644
-> > --- a/net/sunrpc/cache.c
-> > +++ b/net/sunrpc/cache.c
-> > @@ -777,7 +777,6 @@ void cache_clean_deferred(void *owner)
-> >   */
-> >
-> >  static DEFINE_SPINLOCK(queue_lock);
-> > -static DEFINE_MUTEX(queue_io_mutex);
-> >
-> >  struct cache_queue {
-> >       struct list_head        list;
-> > @@ -908,14 +907,18 @@ static ssize_t cache_do_downcall(char *kaddr, const char __user *buf,
-> >  static ssize_t cache_slow_downcall(const char __user *buf,
-> >                                  size_t count, struct cache_detail *cd)
-> >  {
-> > -     static char write_buf[8192]; /* protected by queue_io_mutex */
-> > +     char *write_buf;
-> >       ssize_t ret = -EINVAL;
-> >
-> > -     if (count >= sizeof(write_buf))
-> > +     if (count >= 32768) /* 32k is max userland buffer, lets check anyway */
-> >               goto out;
-> > -     mutex_lock(&queue_io_mutex);
-> > +
-> > +     write_buf = kvmalloc(count + 1, GFP_KERNEL);
-> > +     if (!write_buf)
-> > +             return -ENOMEM;
-> > +
-> >       ret = cache_do_downcall(write_buf, buf, count, cd);
-> > -     mutex_unlock(&queue_io_mutex);
-> > +     kvfree(write_buf);
-> >  out:
-> >       return ret;
-> >  }
-> > --
-> > 2.21.0
->
+To this function, to catch anyone trying to do it.
+-- 
+Jeff Layton <jlayton@kernel.org>
 
