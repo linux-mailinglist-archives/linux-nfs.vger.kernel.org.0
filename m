@@ -2,263 +2,170 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6385A2BBF1D
-	for <lists+linux-nfs@lfdr.de>; Sat, 21 Nov 2020 14:00:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 804CA2BBF34
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Nov 2020 14:29:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbgKUNAe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 21 Nov 2020 08:00:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727677AbgKUNAd (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 21 Nov 2020 08:00:33 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727794AbgKUN3V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 21 Nov 2020 08:29:21 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:36623 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727418AbgKUN3T (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 21 Nov 2020 08:29:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605965357;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=g4EvwRqKARLQ2449PToWbl+ABo+TcsAmc6gj28NBxt0=;
+        b=S1jKD81QREO34b5Kv3N58unMduSdmawg/RJ3GtjL6WSj1fzydHkGYU328GiXFCBCg4Xgzp
+        AoHRHTqbZqjkQuXT/mMUIZhoeFpS84GzU94c1ykqY1XbqbMxh7JpY+Iu3n2qXmhoR3brUT
+        H3RDwTTzh5IIMSCRrB+DPDw+f4a9aIw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-156-VgU7e7F6OMKdctxVKMVbBQ-1; Sat, 21 Nov 2020 08:29:12 -0500
+X-MC-Unique: VgU7e7F6OMKdctxVKMVbBQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5771217A0;
-        Sat, 21 Nov 2020 13:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605963632;
-        bh=bWO4512rrwQksK0Rvo197S83Z8f0AoILWgXDmivlrV4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=rcb4uvhe6Kx3DPlF3dU2gkn8SeGGCSRmVm6JxtlNpe/nDVZun/LjR3NtE8lZ5PeKo
-         bKHKBdGyIJ22edC3AZVzlukekMT9SPxxbh6IidiIqr3IgQiyH5v9eeIp43BINEiFdZ
-         G27VXIvr2CZWLMz7leO7LRFJvrw7F0Cr1ysObE4U=
-Message-ID: <8462cb90445a8553d0667e6ca59fbb42835ad9a9.camel@kernel.org>
-Subject: Re: [PATCH 6/8] nfsd: move change attribute generation to filesystem
-From:   Jeff Layton <jlayton@kernel.org>
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     Daire Byrne <daire@dneg.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        linux-cachefs <linux-cachefs@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Date:   Sat, 21 Nov 2020 08:00:30 -0500
-In-Reply-To: <1605911960-12516-6-git-send-email-bfields@redhat.com>
-References: <20201120223831.GB7705@fieldses.org>
-         <1605911960-12516-1-git-send-email-bfields@redhat.com>
-         <1605911960-12516-6-git-send-email-bfields@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.1 (3.38.1-1.fc33) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5731E1842146;
+        Sat, 21 Nov 2020 13:29:11 +0000 (UTC)
+Received: from dwysocha.rdu.csb (ovpn-112-41.rdu2.redhat.com [10.10.112.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C41455D9D7;
+        Sat, 21 Nov 2020 13:29:10 +0000 (UTC)
+From:   Dave Wysochanski <dwysocha@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org, dhowells@redhat.com
+Subject: [PATCH v1 0/13] Convert NFS to new netfs and fscache APIs
+Date:   Sat, 21 Nov 2020 08:29:08 -0500
+Message-Id: <1605965348-24468-1-git-send-email-dwysocha@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2020-11-20 at 17:39 -0500, J. Bruce Fields wrote:
-> From: "J. Bruce Fields" <bfields@redhat.com>
-> 
-> After this, only filesystems lacking change attribute support will leave
-> the fetch_iversion export op NULL.
-> 
-> This seems cleaner to me, and will allow some minor optimizations in the
-> nfsd code.
-> 
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> ---
->  fs/btrfs/export.c        |  2 ++
->  fs/ext4/super.c          |  9 +++++++++
->  fs/nfsd/nfs4xdr.c        |  2 +-
->  fs/nfsd/nfsfh.h          | 25 +++----------------------
->  fs/nfsd/xdr4.h           |  4 +++-
->  fs/xfs/xfs_export.c      |  2 ++
->  include/linux/iversion.h | 26 ++++++++++++++++++++++++++
->  7 files changed, 46 insertions(+), 24 deletions(-)
-> 
-> diff --git a/fs/btrfs/export.c b/fs/btrfs/export.c
-> index 1a8d419d9e1f..ece32440999a 100644
-> --- a/fs/btrfs/export.c
-> +++ b/fs/btrfs/export.c
-> @@ -7,6 +7,7 @@
->  #include "btrfs_inode.h"
->  #include "print-tree.h"
->  #include "export.h"
-> +#include <linux/iversion.h>
->  
-> 
->  #define BTRFS_FID_SIZE_NON_CONNECTABLE (offsetof(struct btrfs_fid, \
->  						 parent_objectid) / 4)
-> @@ -279,4 +280,5 @@ const struct export_operations btrfs_export_ops = {
->  	.fh_to_parent	= btrfs_fh_to_parent,
->  	.get_parent	= btrfs_get_parent,
->  	.get_name	= btrfs_get_name,
-> +	.fetch_iversion	= generic_fetch_iversion,
->  };
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index ef4734b40e2a..a4f48273d435 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -1685,11 +1685,20 @@ static const struct super_operations ext4_sops = {
->  	.bdev_try_to_free_page = bdev_try_to_free_page,
->  };
->  
-> 
-> +static u64 ext4_fetch_iversion(struct inode *inode)
-> +{
-> +	if (IS_I_VERSION(inode))
-> +		return generic_fetch_iversion(inode);
-> +	else
-> +		return time_to_chattr(&inode->i_ctime);
-> +}
-> +
->  static const struct export_operations ext4_export_ops = {
->  	.fh_to_dentry = ext4_fh_to_dentry,
->  	.fh_to_parent = ext4_fh_to_parent,
->  	.get_parent = ext4_get_parent,
->  	.commit_metadata = ext4_nfs_commit_metadata,
-> +	.fetch_iversion = ext4_fetch_iversion,
->  };
->  
-> 
->  enum {
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 18c912930947..182190684792 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -3187,7 +3187,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
->  		p = xdr_reserve_space(xdr, 4);
->  		if (!p)
->  			goto out_resource;
-> -		if (IS_I_VERSION(d_inode(dentry)))
-> +		if (IS_I_VERSION(d_inode(dentry))
->  			*p++ = cpu_to_be32(NFS4_CHANGE_TYPE_IS_MONOTONIC_INCR);
->  		else
->  			*p++ = cpu_to_be32(NFS4_CHANGE_TYPE_IS_TIME_METADATA);
-> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-> index 2656a3464c6c..ac3e309d7339 100644
-> --- a/fs/nfsd/nfsfh.h
-> +++ b/fs/nfsd/nfsfh.h
-> @@ -46,8 +46,8 @@ typedef struct svc_fh {
->  	struct timespec64	fh_pre_mtime;	/* mtime before oper */
->  	struct timespec64	fh_pre_ctime;	/* ctime before oper */
->  	/*
-> -	 * pre-op nfsv4 change attr: note must check IS_I_VERSION(inode)
-> -	 *  to find out if it is valid.
-> +	 * pre-op nfsv4 change attr: note must check for fetch_iversion
-> +	 * op to find out if it is valid.
->  	 */
->  	u64			fh_pre_change;
->  
-> 
-> @@ -246,31 +246,12 @@ fh_clear_wcc(struct svc_fh *fhp)
->  	fhp->fh_pre_saved = false;
->  }
->  
-> 
-> -/*
-> - * We could use i_version alone as the change attribute.  However,
-> - * i_version can go backwards after a reboot.  On its own that doesn't
-> - * necessarily cause a problem, but if i_version goes backwards and then
-> - * is incremented again it could reuse a value that was previously used
-> - * before boot, and a client who queried the two values might
-> - * incorrectly assume nothing changed.
-> - *
-> - * By using both ctime and the i_version counter we guarantee that as
-> - * long as time doesn't go backwards we never reuse an old value.
-> - */
->  static inline u64 nfsd4_change_attribute(struct kstat *stat,
->  					 struct inode *inode)
->  {
->  	if (inode->i_sb->s_export_op->fetch_iversion)
->  		return inode->i_sb->s_export_op->fetch_iversion(inode);
-> -	else if (IS_I_VERSION(inode)) {
-> -		u64 chattr;
-> -
-> -		chattr =  stat->ctime.tv_sec;
-> -		chattr <<= 30;
-> -		chattr += stat->ctime.tv_nsec;
-> -		chattr += inode_query_iversion(inode);
-> -		return chattr;
-> -	} else
-> +	else
->  		return time_to_chattr(&stat->ctime);
->  }
->  
-> 
-> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-> index 9c2d942d055d..f0c8fbe704a2 100644
-> --- a/fs/nfsd/xdr4.h
-> +++ b/fs/nfsd/xdr4.h
-> @@ -761,10 +761,12 @@ void warn_on_nonidempotent_op(struct nfsd4_op *op);
->  static inline void
->  set_change_info(struct nfsd4_change_info *cinfo, struct svc_fh *fhp)
->  {
-> +	struct inode *inode = d_inode(fhp->fh_dentry);
-> +
->  	BUG_ON(!fhp->fh_pre_saved);
->  	cinfo->atomic = (u32)fhp->fh_post_saved;
->  
-> 
-> -	if (IS_I_VERSION(d_inode(fhp->fh_dentry))) {
-> +	if (inode->i_sb->s_export_op->fetch_iversion) {
->  		cinfo->before_change = fhp->fh_pre_change;
->  		cinfo->after_change = fhp->fh_post_change;
->  	} else {
-> diff --git a/fs/xfs/xfs_export.c b/fs/xfs/xfs_export.c
-> index 465fd9e048d4..b950fac3d7df 100644
-> --- a/fs/xfs/xfs_export.c
-> +++ b/fs/xfs/xfs_export.c
-> @@ -16,6 +16,7 @@
->  #include "xfs_inode_item.h"
->  #include "xfs_icache.h"
->  #include "xfs_pnfs.h"
-> +#include <linux/iversion.h>
->  
-> 
->  /*
->   * Note that we only accept fileids which are long enough rather than allow
-> @@ -234,4 +235,5 @@ const struct export_operations xfs_export_operations = {
->  	.map_blocks		= xfs_fs_map_blocks,
->  	.commit_blocks		= xfs_fs_commit_blocks,
->  #endif
-> +	.fetch_iversion		= generic_fetch_iversion,
->  };
-> diff --git a/include/linux/iversion.h b/include/linux/iversion.h
-> index 3bfebde5a1a6..ded74523c8a6 100644
-> --- a/include/linux/iversion.h
-> +++ b/include/linux/iversion.h
-> @@ -328,6 +328,32 @@ inode_query_iversion(struct inode *inode)
->  	return cur >> I_VERSION_QUERIED_SHIFT;
->  }
->  
-> 
-> +/*
-> + * We could use i_version alone as the NFSv4 change attribute.  However,
-> + * i_version can go backwards after a reboot.  On its own that doesn't
-> + * necessarily cause a problem, but if i_version goes backwards and then
-> + * is incremented again it could reuse a value that was previously used
-> + * before boot, and a client who queried the two values might
-> + * incorrectly assume nothing changed.
-> + *
-> + * By using both ctime and the i_version counter we guarantee that as
-> + * long as time doesn't go backwards we never reuse an old value.
-> + *
-> + * A filesystem that has an on-disk boot counter or similar might prefer
-> + * to use that to avoid the risk of the change attribute going backwards
-> + * if system time is set backwards.
-> + */
-> +static inline u64 generic_fetch_iversion(struct inode *inode)
-> +{
-> +	u64 chattr;
-> +
-> +	chattr =  inode->i_ctime.tv_sec;
-> +	chattr <<= 30;
-> +	chattr += inode->i_ctime.tv_nsec;
-> +	chattr += inode_query_iversion(inode);
-> +	return chattr;
-> +}
-> +
->  /*
->   * For filesystems without any sort of change attribute, the best we can
->   * do is fake one up from the ctime:
+These patches update the NFS client to use the new netfs and fscache
+APIs and are at:
+https://github.com/DaveWysochanskiRH/kernel.git
+https://github.com/DaveWysochanskiRH/kernel/commit/94e9633d98a5542ea384b1095290ac6f915fc917
+https://github.com/DaveWysochanskiRH/kernel/releases/tag/fscache-iter-nfs-20201120
 
-One more nit: 
+The patches are based on David Howells fscache-iter tree at
+https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-iter
 
-We probably don't want anyone using this on filesystems that don't set
-SB_I_VERSION. It might be a good idea to add something like:
+The first 6 patches refactor some of the NFS read code to facilitate
+re-use, the next 6 patches do the conversion to the new API, and the
+last patch is a somewhat awkward fix for a problem seen in final
+testing.
 
-    WARN_ON_ONCE(!IS_I_VERSION(inode));
+Per David Howell's recent post, note that the new fscache API is
+divided into two separate APIs, a 'netfs' API and an 'fscache' API.
+The netfs API was done to help simplify the IO paths of network
+filesystems, and can be called even when fscache is disabled, thus
+simplifing both readpage and readahead implementations.  However,
+for now these NFS conversion patches only call the netfs API when
+fscache is enabled, similar to the existing NFS code.
 
-To this function, to catch anyone trying to do it.
+Trond and Anna, I would appreciate your guidance on this patchset.
+At least I would like your feedback regarding the direction
+you would like these patches to go, in particular, the following
+items:
+
+1. Whether you are ok with using the netfs API unconditionally even
+when fscache is disabled, or prefer this "least invasive to NFS"
+approach.  Note the unconditional use of the netfs API is the
+recommended approach per David's post and the AFS and CEPH
+implementations, but I was unsure if you would accept this
+approach or would prefer to minimize changes to NFS.  Note if
+we keep the current approach to minimize NFS changes, we will
+have to address some problems with page unlocking such as with
+patch 13 in the series.
+
+2. Whether to keep the NFS fscache implementation as "read only"
+or if we add write through support.  Today we only enable fscache
+when a file is open read-only and disable / invalidate when a file
+is open for write.
+
+Still TODO
+1. Address known issues (lockdep, page unlocking), depending on
+what is decided as far as implementation direction
+  a) nfs_issue_op: takes rcu_read_lock but may calls nfs_page_alloc()
+  with GFP_KERNEL which may sleep (dhowells noted this in a review)
+  b) nfs_refresh_inode() takes inode->i_lock but may call
+  __fscache_invalidate() which may sleep (found with lockdep)
+2. Fixup NFS fscache stats (NFSIOS_FSCACHE_*)
+* Compare with netfs stats and determine if still needed
+3. Cleanup dfprintks and/or convert to tracepoints
+4. Further tests (see "Not tested yet")
+
+Checks run
+1. checkpatch: PASS*
+  * a few warnings, mostly trivial fixups, some unrelated to this set
+2. kernel builds with each patch: PASS
+  * each patch in series built cleanly which ensure bisection
+
+Tests run
+1. Custom NFS+fscache unit tests for basic operation: PASS*
+  * no oops or data corruptions
+  * Some op counts are a bit off but these are mostly due
+    to statistics not implemented properly (NFSIOS_FSCACHE_*)
+2. cthon04: PASS (test options "-b -g -s -l", fsc,vers=3,4.0,4.1,4.2,sec=sys)
+* No failures or oopses for any version or test options
+3. iozone tests (fsc,vers=3,4.0,4.1,4.2,sec=sys): PASS
+* No failures or oopses
+4. kernel build (fsc,vers=3,4.1,4.2): PASS*
+  * all builds finish without errors or data corruption
+  * one lockdep "scheduling while atomic" fired with NFS41 and
+    was due to one an fscache invalidation code path (known issue 'b' above)
+5. xfstests/generic (fsc,vers=4.2, nofsc,vers=4.2): PASS*
+   * generic/013 (pass but triggers i_lock lockdep warning known issue 'a' above)
+   * NOTE: The following tests failed with errors, but they
+     also fail on vanilla 5.10-rc4 so are not related to this
+     patchset
+     * generic/074 (lockep invalid wait context - nfs_free_request())
+     * generic/538 (short read)
+     * generic/551 (pread: Unknown error 524, Data verification fail)
+     * generic/568 (ERROR: File grew from 4096 B to 8192 B when writing to the fallocated range)
+
+Not tested yet:
+* error injections (for example, connection disruptions, server errors during IO, etc)
+* pNFS
+* many process mixed read/write on same file
+* performance
+Dave Wysochanski (13):
+  NFS: Clean up nfs_readpage() and nfs_readpages()
+  NFS: In nfs_readpage() only increment NFSIOS_READPAGES when read
+    succeeds
+  NFS: Refactor nfs_readpage() and nfs_readpage_async() to use
+    nfs_readdesc
+  NFS: Call readpage_async_filler() from nfs_readpage_async()
+  NFS: Add nfs_pageio_complete_read() and remove nfs_readpage_async()
+  NFS: Allow internal use of read structs and functions
+  NFS: Convert fscache_acquire_cookie and fscache_relinquish_cookie
+  NFS: Convert fscache_enable_cookie and fscache_disable_cookie
+  NFS: Convert fscache invalidation and update aux_data and i_size
+  NFS: Convert to the netfs API and nfs_readpage to use netfs_readpage
+  NFS: Convert readpage to readahead and use netfs_readahead for fscache
+  NFS: Allow NFS use of new fscache API in build
+  NFS: Ensure proper page unlocking when reads fail with retryable
+    errors
+
+ fs/nfs/Kconfig             |   2 +-
+ fs/nfs/direct.c            |   2 +
+ fs/nfs/file.c              |  22 ++--
+ fs/nfs/fscache-index.c     |  94 --------------
+ fs/nfs/fscache.c           | 315 ++++++++++++++++++++-------------------------
+ fs/nfs/fscache.h           | 132 +++++++------------
+ fs/nfs/inode.c             |   4 +-
+ fs/nfs/internal.h          |   8 ++
+ fs/nfs/nfs4proc.c          |   2 +-
+ fs/nfs/pagelist.c          |   2 +
+ fs/nfs/read.c              | 248 ++++++++++++++++-------------------
+ fs/nfs/write.c             |   3 +-
+ include/linux/nfs_fs.h     |   5 +-
+ include/linux/nfs_iostat.h |   2 +-
+ include/linux/nfs_page.h   |   1 +
+ include/linux/nfs_xdr.h    |   1 +
+ 16 files changed, 339 insertions(+), 504 deletions(-)
+
 -- 
-Jeff Layton <jlayton@kernel.org>
+1.8.3.1
 
