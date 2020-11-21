@@ -2,111 +2,247 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 969A22BC143
-	for <lists+linux-nfs@lfdr.de>; Sat, 21 Nov 2020 19:02:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A34682BC16E
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Nov 2020 19:32:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgKUSC1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 21 Nov 2020 13:02:27 -0500
-Received: from smtprelay0210.hostedemail.com ([216.40.44.210]:53086 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726556AbgKUSC0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 21 Nov 2020 13:02:26 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id AF7D7181D3025;
-        Sat, 21 Nov 2020 18:02:23 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 50,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:800:960:967:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1542:1593:1594:1711:1730:1747:1777:1792:2393:2525:2560:2563:2682:2685:2828:2859:2933:2937:2939:2942:2945:2947:2951:2954:3022:3138:3139:3140:3141:3142:3354:3622:3865:3866:3867:3868:3870:3871:3872:3873:3874:3934:3936:3938:3941:3944:3947:3950:3953:3956:3959:4321:5007:6117:6119:6742:6743:7809:7903:9025:10004:10400:10848:11027:11232:11658:11914:12043:12297:12663:12679:12740:12760:12895:13161:13229:13439:13845:14096:14097:14181:14659:14721:21080:21451:21627:21790:21987:30012:30054:30070:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: uncle36_3402e8c27356
-X-Filterd-Recvd-Size: 3937
-Received: from XPS-9350.home (unknown [47.151.128.180])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 21 Nov 2020 18:02:18 +0000 (UTC)
-Message-ID: <f7643c9cb0a896f3ead65e86084b7c143e21ef43.camel@perches.com>
-Subject: Re: [RFC] MAINTAINERS tag for cleanup robot
-From:   Joe Perches <joe@perches.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        trix@redhat.com, clang-built-linux@googlegroups.com
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org, tboot-devel@lists.sourceforge.net,
-        kvm@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-acpi@vger.kernel.org, devel@acpica.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, netdev@vger.kernel.org,
-        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        ecryptfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cluster-devel@redhat.com, linux-mtd@lists.infradead.org,
-        keyrings@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, alsa-devel@alsa-project.org,
-        bpf@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-nfs@vger.kernel.org, patches@opensource.cirrus.com
-Date:   Sat, 21 Nov 2020 10:02:17 -0800
-In-Reply-To: <5843ef910b0e86c00d9c0143dec20f93823b016b.camel@HansenPartnership.com>
-References: <20201121165058.1644182-1-trix@redhat.com>
-         <5843ef910b0e86c00d9c0143dec20f93823b016b.camel@HansenPartnership.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+        id S1728135AbgKUS3l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 21 Nov 2020 13:29:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40368 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726662AbgKUS3k (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 21 Nov 2020 13:29:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605983378;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GwO0IDDaSs+9fzGeFKvWMlx16qahMvefjk02fbTpSsc=;
+        b=DZDsskjGZTzd5rlgftC3CWwRc+kQzhxb88UwvWwTHwLKAVRBakMhwpQJZGTBuE9EwJshcK
+        LLVcdmlwwMOPD6AErldhnqb1fSFNJLb9Dk79GgGCLKIwgEEa94gUX6/yLKJyeel4TH6CnE
+        +es392d5eubvwB7JK8NgNQ2T+2NyakU=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-244-Zv9N8XCLOZS0ya3IpP03tg-1; Sat, 21 Nov 2020 13:29:35 -0500
+X-MC-Unique: Zv9N8XCLOZS0ya3IpP03tg-1
+Received: by mail-ej1-f72.google.com with SMTP id j18so3047674ejs.12
+        for <linux-nfs@vger.kernel.org>; Sat, 21 Nov 2020 10:29:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GwO0IDDaSs+9fzGeFKvWMlx16qahMvefjk02fbTpSsc=;
+        b=JMcCRov7qJ2mRODKLjyk6tTVU0oDY7K6NDmvGRcrw4oSUONrkMtuZwHxmPAF2vTMue
+         xd5OhzxDL1drQttz5EaiNb82rZlIXt5g3d7x8SoU9lqEaTSTZGrigZ2qxdXNewm7vM0q
+         wnaMvgeSqjdKrNr6mDqzHwA3DQsfLuGNc+ldbe6rensHMPqohbpAcqGwXCyGUSOuzQBG
+         ERp6+R20UCDLHIv2yXKXOmD91i+NOoOBW2OKV/vKLAXgx9aeNRCP8nk1PKdK/nVWCAhF
+         OjtKu528zHoj7KtaFrTiLsAbwtvzQkNV7eqT9NIHFiZeQFBzsVnHFgupUsqDuV6HU8f4
+         OOpQ==
+X-Gm-Message-State: AOAM5322P5f/tFj8B44pqaZt4iLYUGfrvXu7yYZRrxWnqu/270zKS+qH
+        LXsNDJhsrF8Uodn/uzrxERHovcNBZAP2r7aKuBtpWltYjbaw/iN33JTj1YTFRHPPOm6/6oValYQ
+        VkU0VVBqg0z1+lFzrKMSjCT/KnzFNVBeVouRg
+X-Received: by 2002:a05:6402:b08:: with SMTP id bm8mr7817883edb.29.1605983373624;
+        Sat, 21 Nov 2020 10:29:33 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxobZE2AE7rOsQqoIQw2veZsjx1ChTcYPH5XlnjzTM20dcU7T85RU5bbMhIhzCdjjXZ8VEP21D0LbzI3YFw8zw=
+X-Received: by 2002:a05:6402:b08:: with SMTP id bm8mr7817864edb.29.1605983373343;
+ Sat, 21 Nov 2020 10:29:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <1605965348-24468-1-git-send-email-dwysocha@redhat.com>
+ <017D0771-4BA1-4A97-A077-6222B8CF1B57@oracle.com> <CALF+zOmTSqJycjadduibk2sA-iqB3_FdtAX8zGtx4Qn1hXNCKA@mail.gmail.com>
+ <6773E22E-57CC-4555-8B27-2B52034DD24D@oracle.com>
+In-Reply-To: <6773E22E-57CC-4555-8B27-2B52034DD24D@oracle.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Sat, 21 Nov 2020 13:28:57 -0500
+Message-ID: <CALF+zOnqDeFS+WHe8XUAhbzhkYOBMp2JrAFvqcHqxKsBDzycwA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/13] Convert NFS to new netfs and fscache APIs
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 2020-11-21 at 09:18 -0800, James Bottomley wrote:
-> On Sat, 2020-11-21 at 08:50 -0800, trix@redhat.com wrote:
-> > A difficult part of automating commits is composing the subsystem
-> > preamble in the commit log.  For the ongoing effort of a fixer
-> > producing one or two fixes a release the use of 'treewide:' does
-> > not seem appropriate.
-> > 
-> > It would be better if the normal prefix was used.  Unfortunately
-> > normal is not consistent across the tree.
-> > 
-> > 	D: Commit subsystem prefix
-> > 
-> > ex/ for FPGA DFL DRIVERS
-> > 
-> > 	D: fpga: dfl:
-> 
-> I've got to bet this is going to cause more issues than it solves. 
-> SCSI uses scsi: <driver>: for drivers but not every driver has a
-> MAINTAINERS entry.  We use either scsi: or scsi: core: for mid layer
-> things, but we're not consistent.  Block uses blk-<something>: for all
-> of it's stuff but almost no <somtehing>s have a MAINTAINERS entry.  So
-> the next thing you're going to cause is an explosion of suggested
-> MAINTAINERs entries.
+On Sat, Nov 21, 2020 at 12:16 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+>
+>
+> > On Nov 21, 2020, at 12:01 PM, David Wysochanski <dwysocha@redhat.com> wrote:
+> >
+> > On Sat, Nov 21, 2020 at 11:14 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+> >>
+> >> Hi Dave-
+> >>
+> >>> On Nov 21, 2020, at 8:29 AM, Dave Wysochanski <dwysocha@redhat.com> wrote:
+> >>>
+> >>> These patches update the NFS client to use the new netfs and fscache
+> >>> APIs and are at:
+> >>> https://github.com/DaveWysochanskiRH/kernel.git
+> >>> https://github.com/DaveWysochanskiRH/kernel/commit/94e9633d98a5542ea384b1095290ac6f915fc917
+> >>> https://github.com/DaveWysochanskiRH/kernel/releases/tag/fscache-iter-nfs-20201120
+> >>>
+> >>> The patches are based on David Howells fscache-iter tree at
+> >>> https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-iter
+> >>>
+> >>> The first 6 patches refactor some of the NFS read code to facilitate
+> >>> re-use, the next 6 patches do the conversion to the new API, and the
+> >>> last patch is a somewhat awkward fix for a problem seen in final
+> >>> testing.
+> >>>
+> >>> Per David Howell's recent post, note that the new fscache API is
+> >>> divided into two separate APIs, a 'netfs' API and an 'fscache' API.
+> >>> The netfs API was done to help simplify the IO paths of network
+> >>> filesystems, and can be called even when fscache is disabled, thus
+> >>> simplifing both readpage and readahead implementations.  However,
+> >>> for now these NFS conversion patches only call the netfs API when
+> >>> fscache is enabled, similar to the existing NFS code.
+> >>>
+> >>> Trond and Anna, I would appreciate your guidance on this patchset.
+> >>> At least I would like your feedback regarding the direction
+> >>> you would like these patches to go, in particular, the following
+> >>> items:
+> >>>
+> >>> 1. Whether you are ok with using the netfs API unconditionally even
+> >>> when fscache is disabled, or prefer this "least invasive to NFS"
+> >>> approach.  Note the unconditional use of the netfs API is the
+> >>> recommended approach per David's post and the AFS and CEPH
+> >>> implementations, but I was unsure if you would accept this
+> >>> approach or would prefer to minimize changes to NFS.  Note if
+> >>> we keep the current approach to minimize NFS changes, we will
+> >>> have to address some problems with page unlocking such as with
+> >>> patch 13 in the series.
+> >>>
+> >>> 2. Whether to keep the NFS fscache implementation as "read only"
+> >>> or if we add write through support.  Today we only enable fscache
+> >>> when a file is open read-only and disable / invalidate when a file
+> >>> is open for write.
+> >>>
+> >>> Still TODO
+> >>> 1. Address known issues (lockdep, page unlocking), depending on
+> >>> what is decided as far as implementation direction
+> >>> a) nfs_issue_op: takes rcu_read_lock but may calls nfs_page_alloc()
+> >>> with GFP_KERNEL which may sleep (dhowells noted this in a review)
+> >>> b) nfs_refresh_inode() takes inode->i_lock but may call
+> >>> __fscache_invalidate() which may sleep (found with lockdep)
+> >>> 2. Fixup NFS fscache stats (NFSIOS_FSCACHE_*)
+> >>> * Compare with netfs stats and determine if still needed
+> >>> 3. Cleanup dfprintks and/or convert to tracepoints
+> >>> 4. Further tests (see "Not tested yet")
+> >>
+> >> Can you say whether your approach has any performance impact?
+> > No I cannot.
+> >
+> >> In particular, what comparative benchmarks have been run?
+> >>
+> > No comparisons so far, but note the last bullet - "performance".
+> >
+> > Are you wondering about performance with/without fscache for this
+> > series, or the old vs new fscache, or something else?
+>
+> I'd like to have some explicit performance-related merge worthiness
+> criteria. For example: "No performance regressions, and here's how
+> we're going to determine that we're good: fio / iozone / yada with
+> NFS/TCP and NFS/RDMA on 100GbE; for very little additional CPU
+> cost measured via perf xyzzy. Also some benchmark that measures lock
+> contention."
+>
+> We haven't been especially careful about this in the past when
+> reworking the client's primary I/O paths. Nothing unreasonable, but
+> it should be stated up front where we want to end up.
+>
+Makes sense.
 
-As well as some changes require simultaneous changes across
-multiple subsystems.
+> Another approach might be: we're going to start by making fscache
+> opt-in. As confidence increases over time and good performance is
+> demonstrated, then we'll unify the fscache and non-cached I/O paths.
+>
+It sounds like what you want is what I've done in this first implementation.
+This implementation takes a "least invasive to NFS" approach, staying
+with the old fscache on/off logic, even though this was not ideal or what
+was recommended as the end game for the netfs API.
 
-> Has anyone actually complained about treewide:?
-
-It depends on what you mean by treewide:
-
-If a treewide: patch is applied by some "higher level" maintainer,
-then generally, no.
-
-If the treewide patch is also cc'd to many individual maintainers,
-then yes, many many times.
-
-Mostly because patches cause what is in their view churn or that
-changes are not specific to their subsystem grounds.
-
-The treewide patch is sometimes dropped, sometimes broken up and
-generally not completely applied.
-
-What would be useful in many cases like this is for a pre and post
-application of the treewide patch to be compiled and the object
-code verified for lack of any logic change.
-
-Unfortunately, gcc does not guarantee deterministic compilation so
-this isn't feasible with at least gcc.  Does clang guarantee this?
-
-I'm not sure it's possible:
-https://blog.llvm.org/2019/11/deterministic-builds-with-clang-and-lld.html
-
+>
+> >>> Checks run
+> >>> 1. checkpatch: PASS*
+> >>> * a few warnings, mostly trivial fixups, some unrelated to this set
+> >>> 2. kernel builds with each patch: PASS
+> >>> * each patch in series built cleanly which ensure bisection
+> >>>
+> >>> Tests run
+> >>> 1. Custom NFS+fscache unit tests for basic operation: PASS*
+> >>> * no oops or data corruptions
+> >>> * Some op counts are a bit off but these are mostly due
+> >>>   to statistics not implemented properly (NFSIOS_FSCACHE_*)
+> >>> 2. cthon04: PASS (test options "-b -g -s -l", fsc,vers=3,4.0,4.1,4.2,sec=sys)
+> >>> * No failures or oopses for any version or test options
+> >>> 3. iozone tests (fsc,vers=3,4.0,4.1,4.2,sec=sys): PASS
+> >>> * No failures or oopses
+> >>> 4. kernel build (fsc,vers=3,4.1,4.2): PASS*
+> >>> * all builds finish without errors or data corruption
+> >>> * one lockdep "scheduling while atomic" fired with NFS41 and
+> >>>   was due to one an fscache invalidation code path (known issue 'b' above)
+> >>> 5. xfstests/generic (fsc,vers=4.2, nofsc,vers=4.2): PASS*
+> >>>  * generic/013 (pass but triggers i_lock lockdep warning known issue 'a' above)
+> >>>  * NOTE: The following tests failed with errors, but they
+> >>>    also fail on vanilla 5.10-rc4 so are not related to this
+> >>>    patchset
+> >>>    * generic/074 (lockep invalid wait context - nfs_free_request())
+> >>>    * generic/538 (short read)
+> >>>    * generic/551 (pread: Unknown error 524, Data verification fail)
+> >>>    * generic/568 (ERROR: File grew from 4096 B to 8192 B when writing to the fallocated range)
+> >>>
+> >>> Not tested yet:
+> >>> * error injections (for example, connection disruptions, server errors during IO, etc)
+> >>> * pNFS
+> >>> * many process mixed read/write on same file
+> >>> * performance
+> >>> Dave Wysochanski (13):
+> >>> NFS: Clean up nfs_readpage() and nfs_readpages()
+> >>> NFS: In nfs_readpage() only increment NFSIOS_READPAGES when read
+> >>>   succeeds
+> >>> NFS: Refactor nfs_readpage() and nfs_readpage_async() to use
+> >>>   nfs_readdesc
+> >>> NFS: Call readpage_async_filler() from nfs_readpage_async()
+> >>> NFS: Add nfs_pageio_complete_read() and remove nfs_readpage_async()
+> >>> NFS: Allow internal use of read structs and functions
+> >>> NFS: Convert fscache_acquire_cookie and fscache_relinquish_cookie
+> >>> NFS: Convert fscache_enable_cookie and fscache_disable_cookie
+> >>> NFS: Convert fscache invalidation and update aux_data and i_size
+> >>> NFS: Convert to the netfs API and nfs_readpage to use netfs_readpage
+> >>> NFS: Convert readpage to readahead and use netfs_readahead for fscache
+> >>> NFS: Allow NFS use of new fscache API in build
+> >>> NFS: Ensure proper page unlocking when reads fail with retryable
+> >>>   errors
+> >>>
+> >>> fs/nfs/Kconfig             |   2 +-
+> >>> fs/nfs/direct.c            |   2 +
+> >>> fs/nfs/file.c              |  22 ++--
+> >>> fs/nfs/fscache-index.c     |  94 --------------
+> >>> fs/nfs/fscache.c           | 315 ++++++++++++++++++++-------------------------
+> >>> fs/nfs/fscache.h           | 132 +++++++------------
+> >>> fs/nfs/inode.c             |   4 +-
+> >>> fs/nfs/internal.h          |   8 ++
+> >>> fs/nfs/nfs4proc.c          |   2 +-
+> >>> fs/nfs/pagelist.c          |   2 +
+> >>> fs/nfs/read.c              | 248 ++++++++++++++++-------------------
+> >>> fs/nfs/write.c             |   3 +-
+> >>> include/linux/nfs_fs.h     |   5 +-
+> >>> include/linux/nfs_iostat.h |   2 +-
+> >>> include/linux/nfs_page.h   |   1 +
+> >>> include/linux/nfs_xdr.h    |   1 +
+> >>> 16 files changed, 339 insertions(+), 504 deletions(-)
+> >>>
+> >>> --
+> >>> 1.8.3.1
+> >>>
+> >>
+> >> --
+> >> Chuck Lever
+>
+> --
+> Chuck Lever
+>
+>
+>
 
