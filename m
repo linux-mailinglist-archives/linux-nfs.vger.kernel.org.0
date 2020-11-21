@@ -2,314 +2,154 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 251C82BC192
-	for <lists+linux-nfs@lfdr.de>; Sat, 21 Nov 2020 19:48:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CA4F2BC24F
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Nov 2020 22:46:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgKUSsK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 21 Nov 2020 13:48:10 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:41918 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbgKUSsJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 21 Nov 2020 13:48:09 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ALIg5mn117115;
-        Sat, 21 Nov 2020 18:48:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=Cruu9JbLlV+smQ7d4A8nDCmYfDaad2vLt5wnXPtXbkE=;
- b=oKqgTzyKuJlVVJh3aIbvfOLawKsp61nzUeqUD8dW7hdJAUYtMJdReClHPBt7dl6RAjYA
- l6zN3phvdcM2xpvlCyldOf9gEWpn4l82IwLZ4IYFKMtos1bURhSScAiriMB53mhh+Qct
- pLjI/H1MCi5JkWbf3uoUrMbH9qcXNSTRRMczgymHggt8x6w5UlXieU3nalTVq57Op8z/
- 2iNmAqfSrPjbI5tmoUb1RUxcGvW8+y6VG3d3s/bwmIjOX7oVfC9A/W0aBUhZmDhnlemx
- JkM5/qXyPzcYvcsiu9Ul0mOV+7PfOrOg4OcwUhfo2t+MKgCOPxuqsTI9ywcRqOUYFftx Sw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 34xuhmh39w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 21 Nov 2020 18:48:00 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ALIjp2h010226;
-        Sat, 21 Nov 2020 18:48:00 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 34xt7hnjaq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 21 Nov 2020 18:48:00 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0ALIltGg003036;
-        Sat, 21 Nov 2020 18:47:57 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 21 Nov 2020 10:47:54 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH v1 0/13] Convert NFS to new netfs and fscache APIs
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CALF+zOnqDeFS+WHe8XUAhbzhkYOBMp2JrAFvqcHqxKsBDzycwA@mail.gmail.com>
-Date:   Sat, 21 Nov 2020 13:47:53 -0500
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0A640C47-5F51-47E8-864D-E0E980F8B310@oracle.com>
-References: <1605965348-24468-1-git-send-email-dwysocha@redhat.com>
- <017D0771-4BA1-4A97-A077-6222B8CF1B57@oracle.com>
- <CALF+zOmTSqJycjadduibk2sA-iqB3_FdtAX8zGtx4Qn1hXNCKA@mail.gmail.com>
- <6773E22E-57CC-4555-8B27-2B52034DD24D@oracle.com>
- <CALF+zOnqDeFS+WHe8XUAhbzhkYOBMp2JrAFvqcHqxKsBDzycwA@mail.gmail.com>
-To:     David Wysochanski <dwysocha@redhat.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9812 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
- bulkscore=0 mlxlogscore=999 phishscore=0 mlxscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011210132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9812 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- adultscore=0 phishscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
- suspectscore=0 priorityscore=1501 mlxlogscore=999 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011210131
+        id S1728549AbgKUVoc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 21 Nov 2020 16:44:32 -0500
+Received: from natter.dneg.com ([193.203.89.68]:42320 "EHLO natter.dneg.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728541AbgKUVoc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 21 Nov 2020 16:44:32 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by natter.dneg.com (Postfix) with ESMTP id E3C7613A09A7;
+        Sat, 21 Nov 2020 21:44:29 +0000 (GMT)
+X-Virus-Scanned: amavisd-new at mx-dneg
+Received: from natter.dneg.com ([127.0.0.1])
+        by localhost (natter.dneg.com [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id S3qMFKqxMrqS; Sat, 21 Nov 2020 21:44:29 +0000 (GMT)
+Received: from zrozimbrai.dneg.com (zrozimbrai.dneg.com [10.11.20.12])
+        by natter.dneg.com (Postfix) with ESMTPS id C2334137178C;
+        Sat, 21 Nov 2020 21:44:29 +0000 (GMT)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id AF0C2815D119;
+        Sat, 21 Nov 2020 21:44:29 +0000 (GMT)
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id oIWOE7EDQnYr; Sat, 21 Nov 2020 21:44:29 +0000 (GMT)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 939B18157E6E;
+        Sat, 21 Nov 2020 21:44:29 +0000 (GMT)
+X-Virus-Scanned: amavisd-new at zimbra-dneg
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id PaaqoMFsRI2S; Sat, 21 Nov 2020 21:44:29 +0000 (GMT)
+Received: from zrozimbra1.dneg.com (zrozimbra1.dneg.com [10.11.16.16])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 44A338157961;
+        Sat, 21 Nov 2020 21:44:29 +0000 (GMT)
+Date:   Sat, 21 Nov 2020 21:44:29 +0000 (GMT)
+From:   Daire Byrne <daire@dneg.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     bfields <bfields@fieldses.org>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        linux-cachefs <linux-cachefs@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1758069641.91412432.1605995069116.JavaMail.zimbra@dneg.com>
+In-Reply-To: <5f8e9e0cb53c89a7d1c156a6799c6dbc6db96dae.camel@kernel.org>
+References: <20201117031601.GB10526@fieldses.org> <1605583086-19869-2-git-send-email-bfields@redhat.com> <a5704a8f7a6ebdfa60d4fa996a4d9ebaacc7daaf.camel@kernel.org> <20201117152636.GC4556@fieldses.org> <725499c144317aac1a03f0334a22005588dbdefc.camel@kernel.org> <20201120223831.GB7705@fieldses.org> <20201120224438.GC7705@fieldses.org> <5f8e9e0cb53c89a7d1c156a6799c6dbc6db96dae.camel@kernel.org>
+Subject: Re: [PATCH 2/4] nfsd: pre/post attr is using wrong change attribute
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.7.11_GA_1854 (ZimbraWebClient - GC78 (Linux)/8.7.11_GA_1854)
+Thread-Topic: nfsd: pre/post attr is using wrong change attribute
+Thread-Index: 9SQ8W8XP7WrkbqlFFbnJGOfc9kG89A==
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+----- On 21 Nov, 2020, at 01:03, Jeff Layton jlayton@kernel.org wrote:
+> On Fri, 2020-11-20 at 17:44 -0500, J. Bruce Fields wrote:
+>> On Fri, Nov 20, 2020 at 05:38:31PM -0500, J. Bruce Fields wrote:
+>> > On Tue, Nov 17, 2020 at 10:34:57AM -0500, Jeff Layton wrote:
+>> > > On Tue, 2020-11-17 at 10:26 -0500, J. Bruce Fields wrote:
+>> > > > On Tue, Nov 17, 2020 at 07:34:49AM -0500, Jeff Layton wrote:
+>> > > > > I don't think I described what I was thinking well. Let me try again...
+>> > > > > 
+>> > > > > There should be no need to change the code in iversion.h -- I think we
+>> > > > > can do this in a way that's confined to just nfsd/export code.
+>> > > > > 
+>> > > > > What I would suggest is to have nfsd4_change_attribute call the
+>> > > > > fetch_iversion op if it exists, instead of checking IS_I_VERSION and
+>> > > > > doing the stuff in that block. If fetch_iversion is NULL, then just use
+>> > > > > the ctime.
+>> > > > > 
+>> > > > > Then, you just need to make sure that the filesystems' export_ops have
+>> > > > > an appropriate fetch_iversion vector. xfs, ext4 and btrfs can just call
+>> > > > > inode_query_iversion, and NFS and Ceph can call inode_peek_iversion_raw.
+>> > > > > The rest of the filesystems can leave fetch_iversion as NULL (since we
+>> > > > > don't want to use it on them).
+>> > > > 
+>> > > > Thanks for your patience, that makes sense, I'll try it.
+>> > > > 
+>> > > 
+>> > > There is one gotcha in here though... ext4 needs to also handle the case
+>> > > where SB_I_VERSION is not set. The simple fix might be to just have
+>> > > different export ops for ext4 based on whether it was mounted with -o
+>> > > iversion or not, but maybe there is some better way to do it?
+>> > 
+>> > I was thinking ext4's export op could check for I_VERSION on its own and
+>> > vary behavior based on that.
+>> > 
+>> > I'll follow up with new patches in a moment.
+>> > 
+>> > I think the first one's all that's needed to fix the problem Daire
+>> > identified.  I'm a little less sure of the rest.
 
+I can confirm that patch 1/8 alone does indeed address the reported revalidation issue for us (as did the previous patch). The re-export server's client cache seems to remain intact and can serve the same cached results to multiple clients.
 
-> On Nov 21, 2020, at 1:28 PM, David Wysochanski <dwysocha@redhat.com> =
-wrote:
->=20
-> On Sat, Nov 21, 2020 at 12:16 PM Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>=20
->>=20
->>=20
->>> On Nov 21, 2020, at 12:01 PM, David Wysochanski =
-<dwysocha@redhat.com> wrote:
->>>=20
->>> On Sat, Nov 21, 2020 at 11:14 AM Chuck Lever =
-<chuck.lever@oracle.com> wrote:
->>>>=20
->>>> Hi Dave-
->>>>=20
->>>>> On Nov 21, 2020, at 8:29 AM, Dave Wysochanski =
-<dwysocha@redhat.com> wrote:
->>>>>=20
->>>>> These patches update the NFS client to use the new netfs and =
-fscache
->>>>> APIs and are at:
->>>>> https://github.com/DaveWysochanskiRH/kernel.git
->>>>> =
-https://github.com/DaveWysochanskiRH/kernel/commit/94e9633d98a5542ea384b10=
-95290ac6f915fc917
->>>>> =
-https://github.com/DaveWysochanskiRH/kernel/releases/tag/fscache-iter-nfs-=
-20201120
->>>>>=20
->>>>> The patches are based on David Howells fscache-iter tree at
->>>>> =
-https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/=
-?h=3Dfscache-iter
->>>>>=20
->>>>> The first 6 patches refactor some of the NFS read code to =
-facilitate
->>>>> re-use, the next 6 patches do the conversion to the new API, and =
-the
->>>>> last patch is a somewhat awkward fix for a problem seen in final
->>>>> testing.
->>>>>=20
->>>>> Per David Howell's recent post, note that the new fscache API is
->>>>> divided into two separate APIs, a 'netfs' API and an 'fscache' =
-API.
->>>>> The netfs API was done to help simplify the IO paths of network
->>>>> filesystems, and can be called even when fscache is disabled, thus
->>>>> simplifing both readpage and readahead implementations.  However,
->>>>> for now these NFS conversion patches only call the netfs API when
->>>>> fscache is enabled, similar to the existing NFS code.
->>>>>=20
->>>>> Trond and Anna, I would appreciate your guidance on this patchset.
->>>>> At least I would like your feedback regarding the direction
->>>>> you would like these patches to go, in particular, the following
->>>>> items:
->>>>>=20
->>>>> 1. Whether you are ok with using the netfs API unconditionally =
-even
->>>>> when fscache is disabled, or prefer this "least invasive to NFS"
->>>>> approach.  Note the unconditional use of the netfs API is the
->>>>> recommended approach per David's post and the AFS and CEPH
->>>>> implementations, but I was unsure if you would accept this
->>>>> approach or would prefer to minimize changes to NFS.  Note if
->>>>> we keep the current approach to minimize NFS changes, we will
->>>>> have to address some problems with page unlocking such as with
->>>>> patch 13 in the series.
->>>>>=20
->>>>> 2. Whether to keep the NFS fscache implementation as "read only"
->>>>> or if we add write through support.  Today we only enable fscache
->>>>> when a file is open read-only and disable / invalidate when a file
->>>>> is open for write.
->>>>>=20
->>>>> Still TODO
->>>>> 1. Address known issues (lockdep, page unlocking), depending on
->>>>> what is decided as far as implementation direction
->>>>> a) nfs_issue_op: takes rcu_read_lock but may calls =
-nfs_page_alloc()
->>>>> with GFP_KERNEL which may sleep (dhowells noted this in a review)
->>>>> b) nfs_refresh_inode() takes inode->i_lock but may call
->>>>> __fscache_invalidate() which may sleep (found with lockdep)
->>>>> 2. Fixup NFS fscache stats (NFSIOS_FSCACHE_*)
->>>>> * Compare with netfs stats and determine if still needed
->>>>> 3. Cleanup dfprintks and/or convert to tracepoints
->>>>> 4. Further tests (see "Not tested yet")
->>>>=20
->>>> Can you say whether your approach has any performance impact?
->>> No I cannot.
->>>=20
->>>> In particular, what comparative benchmarks have been run?
->>>>=20
->>> No comparisons so far, but note the last bullet - "performance".
->>>=20
->>> Are you wondering about performance with/without fscache for this
->>> series, or the old vs new fscache, or something else?
->>=20
->> I'd like to have some explicit performance-related merge worthiness
->> criteria. For example: "No performance regressions, and here's how
->> we're going to determine that we're good: fio / iozone / yada with
->> NFS/TCP and NFS/RDMA on 100GbE; for very little additional CPU
->> cost measured via perf xyzzy. Also some benchmark that measures lock
->> contention."
->>=20
->> We haven't been especially careful about this in the past when
->> reworking the client's primary I/O paths. Nothing unreasonable, but
->> it should be stated up front where we want to end up.
->>=20
-> Makes sense.
->=20
->> Another approach might be: we're going to start by making fscache
->> opt-in. As confidence increases over time and good performance is
->> demonstrated, then we'll unify the fscache and non-cached I/O paths.
->>=20
-> It sounds like what you want is what I've done in this first =
-implementation.
+>> > Lightly tested, just by running them through my usual regression tests
+>> > (which don't re-export) and then running connectathon on a 4.2 re-export
+>> > of a 4.2 mount.
+>> > 
+>> > The latter triggered a crash preceded by a KASAN use-after free warning.
+>> > Looks like it might be a problem with blocking lock notifications,
+>> > probably not related to these patches.
+>> >
+> The set looks pretty reasonable at first glance. Nice work.
+> 
+> Once you put this in, I'll plan to add a suitable fetch_iversion op for
+> ceph too.
+> 
+>> Another nit I ran across:
+>> 
+>> Some NFSv4 directory-modifying operations return pre- and post- change
+>> attributes together with an "atomic" flag that's supposed to indicate
+>> whether the change attributes were read atomically with the operation.
+>> It looks like we're setting the atomic flag under the assumptions that
+>> local vfs locks are sufficient to guarantee atomicity, which isn't right
+>> when we're exporting a distributed filesystem.
+>> 
+>> In the case we're reexporting NFS I guess ideal would be to use the pre-
+>> and post- attributes that the original server returned and also save
+>> having to do extra getattr calls.  Not sure how we'd do that,
+>> though--more export operations?  Maybe for now we could just figure out
+>> when to turn off the atomic bit.
+> 
+> Oh yeah, good point.
+> 
+> I'm not even sure that local locks are really enough -- IIRC, there are
+> still some race windows between doing the metadata operations and the
+> getattrs called to fill pre/post op attrs. Still, those windows are a
+> lot larger on something like NFS, so setting the flag there is really
+> stretching things.
+> 
+> One hacky fix might be to add a flags field to export_operations, and
+> have one that indicates that the atomic flag shouldn't be set. Then we
+> could add that flag to all of the netfs' (nfs, ceph, cifs), and anywhere
+> else that we thought it appropriate?
+> 
+> That approach might be helpful later too since we're starting to see a
+> wider variety of exportable filesystems these days. We may need more
+> "quirk" flags like this.
+> --
+> Jeff Layton <jlayton@kernel.org>
 
-My understanding is that you haven't decided whether to take the
-opt-in approach or to convert the primary I/O paths right now.
+I should also mention that I still see a lot of unexpected repeat lookups even with the iversion optimisation patches with certain workloads. For example, looking at a network capture on the re-export server I might see 100s of getattr calls to the originating server for the same filehandle within 30 seconds which I would have expected the client cache to serve. But it could also be that the client cache is under memory pressure and not holding that data for very long.
 
+But now I do wonder if these NFSv4 directory modifications and pre/post change attributes could be one potential contributor? I might run some production loads with a v3 re-export of a v3 server to see if that changes anything.
 
-> This implementation takes a "least invasive to NFS" approach, staying
-> with the old fscache on/off logic, even though this was not ideal or =
-what
-> was recommended as the end game for the netfs API.
+Many thanks again for the patches, I will take the entire set and run them through our production re-export workloads to see if anything shakes out.
 
-I'm not taking a position on your two approaches, but I would like
-that when the time comes to take the approach that involves full
-integration, we should have an agreed-upon set of performance
-goals. I don't want that integration to cause our high performance
-environments (NFS/RDMA, for instance) to lose out from that
-integration.
-
-Btw, it isn't clear yet that we need to use the fscache APIs to
-introduce proper huge page support. One of our current efforts is
-to convert xdr_buf from the use of an array of struct page pointers
-to an array of struct bio_vec pointers. In that case each entry in
-the array carries the size of the thing that the entry points to,
-which today is always PAGE_SIZE, but in the future could be much
-larger.
-
-
->>>>> Checks run
->>>>> 1. checkpatch: PASS*
->>>>> * a few warnings, mostly trivial fixups, some unrelated to this =
-set
->>>>> 2. kernel builds with each patch: PASS
->>>>> * each patch in series built cleanly which ensure bisection
->>>>>=20
->>>>> Tests run
->>>>> 1. Custom NFS+fscache unit tests for basic operation: PASS*
->>>>> * no oops or data corruptions
->>>>> * Some op counts are a bit off but these are mostly due
->>>>>  to statistics not implemented properly (NFSIOS_FSCACHE_*)
->>>>> 2. cthon04: PASS (test options "-b -g -s -l", =
-fsc,vers=3D3,4.0,4.1,4.2,sec=3Dsys)
->>>>> * No failures or oopses for any version or test options
->>>>> 3. iozone tests (fsc,vers=3D3,4.0,4.1,4.2,sec=3Dsys): PASS
->>>>> * No failures or oopses
->>>>> 4. kernel build (fsc,vers=3D3,4.1,4.2): PASS*
->>>>> * all builds finish without errors or data corruption
->>>>> * one lockdep "scheduling while atomic" fired with NFS41 and
->>>>>  was due to one an fscache invalidation code path (known issue 'b' =
-above)
->>>>> 5. xfstests/generic (fsc,vers=3D4.2, nofsc,vers=3D4.2): PASS*
->>>>> * generic/013 (pass but triggers i_lock lockdep warning known =
-issue 'a' above)
->>>>> * NOTE: The following tests failed with errors, but they
->>>>>   also fail on vanilla 5.10-rc4 so are not related to this
->>>>>   patchset
->>>>>   * generic/074 (lockep invalid wait context - nfs_free_request())
->>>>>   * generic/538 (short read)
->>>>>   * generic/551 (pread: Unknown error 524, Data verification fail)
->>>>>   * generic/568 (ERROR: File grew from 4096 B to 8192 B when =
-writing to the fallocated range)
->>>>>=20
->>>>> Not tested yet:
->>>>> * error injections (for example, connection disruptions, server =
-errors during IO, etc)
->>>>> * pNFS
->>>>> * many process mixed read/write on same file
->>>>> * performance
->>>>> Dave Wysochanski (13):
->>>>> NFS: Clean up nfs_readpage() and nfs_readpages()
->>>>> NFS: In nfs_readpage() only increment NFSIOS_READPAGES when read
->>>>>  succeeds
->>>>> NFS: Refactor nfs_readpage() and nfs_readpage_async() to use
->>>>>  nfs_readdesc
->>>>> NFS: Call readpage_async_filler() from nfs_readpage_async()
->>>>> NFS: Add nfs_pageio_complete_read() and remove =
-nfs_readpage_async()
->>>>> NFS: Allow internal use of read structs and functions
->>>>> NFS: Convert fscache_acquire_cookie and fscache_relinquish_cookie
->>>>> NFS: Convert fscache_enable_cookie and fscache_disable_cookie
->>>>> NFS: Convert fscache invalidation and update aux_data and i_size
->>>>> NFS: Convert to the netfs API and nfs_readpage to use =
-netfs_readpage
->>>>> NFS: Convert readpage to readahead and use netfs_readahead for =
-fscache
->>>>> NFS: Allow NFS use of new fscache API in build
->>>>> NFS: Ensure proper page unlocking when reads fail with retryable
->>>>>  errors
->>>>>=20
->>>>> fs/nfs/Kconfig             |   2 +-
->>>>> fs/nfs/direct.c            |   2 +
->>>>> fs/nfs/file.c              |  22 ++--
->>>>> fs/nfs/fscache-index.c     |  94 --------------
->>>>> fs/nfs/fscache.c           | 315 =
-++++++++++++++++++++-------------------------
->>>>> fs/nfs/fscache.h           | 132 +++++++------------
->>>>> fs/nfs/inode.c             |   4 +-
->>>>> fs/nfs/internal.h          |   8 ++
->>>>> fs/nfs/nfs4proc.c          |   2 +-
->>>>> fs/nfs/pagelist.c          |   2 +
->>>>> fs/nfs/read.c              | 248 =
-++++++++++++++++-------------------
->>>>> fs/nfs/write.c             |   3 +-
->>>>> include/linux/nfs_fs.h     |   5 +-
->>>>> include/linux/nfs_iostat.h |   2 +-
->>>>> include/linux/nfs_page.h   |   1 +
->>>>> include/linux/nfs_xdr.h    |   1 +
->>>>> 16 files changed, 339 insertions(+), 504 deletions(-)
->>>>>=20
->>>>> --
->>>>> 1.8.3.1
->>>>>=20
->>>>=20
->>>> --
->>>> Chuck Lever
->>=20
->> --
->> Chuck Lever
-
---
-Chuck Lever
-
-
-
+Daire
