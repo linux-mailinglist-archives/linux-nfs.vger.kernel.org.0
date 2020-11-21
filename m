@@ -2,111 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F174A2BB958
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Nov 2020 23:45:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B5902BBB0C
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Nov 2020 01:35:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgKTWoj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Nov 2020 17:44:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728698AbgKTWoj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Nov 2020 17:44:39 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E23EEC0613CF
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Nov 2020 14:44:38 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 44A836E9D; Fri, 20 Nov 2020 17:44:38 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 44A836E9D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1605912278;
-        bh=iahjJpmb2a36itD0CZCcwaZpdndHSna/vFK2IWBbsfw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iaWJ1kSw/lP0zRUiO2skY2hvsXh6ZaOBzCpPCeTkI0eaKPqWEDRv+ddCosr15N4MF
-         GEiCgPCTOn40PGte7q54BBsVWoW5zKv1g+7FKcjvqO7xiuF/tWk62PJjVtJ3e53M1j
-         G25lxBgBIFGmaevV+ZMVZnwUIu6wtiKnjCD+/qUE=
-Date:   Fri, 20 Nov 2020 17:44:38 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Daire Byrne <daire@dneg.com>,
+        id S1728086AbgKUAeh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Nov 2020 19:34:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727855AbgKUAeh (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 20 Nov 2020 19:34:37 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF85C23A65;
+        Sat, 21 Nov 2020 00:34:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605918877;
+        bh=nPsrTlHbTt4V41wLRoXUl9wd3VGtww3QpUsAJZ5Jz7Y=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=PyCd5CVDjdyLPfJ9m7Y5AbKj7t2lAw+ZPsasgrtnetZPA5g2urx1P+3p8bYDL+1cE
+         7EdcpVshZfsko+pSKJl+hGK7JJyUSeKNhK/K4KXtC2Xpe+v6IysowOQpHFv9vbwv2T
+         XZjYiD4fxBSFN+9tqT33mApSqtpUKWLw9oeL7V5k=
+Message-ID: <761df9cadb497de177eb29bb407061f6e213e75c.camel@kernel.org>
+Subject: Re: [PATCH 3/8] nfsd: minor nfsd4_change_attribute cleanup
+From:   Jeff Layton <jlayton@kernel.org>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Daire Byrne <daire@dneg.com>,
         Trond Myklebust <trondmy@hammerspace.com>,
         linux-cachefs <linux-cachefs@redhat.com>,
         linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 2/4] nfsd: pre/post attr is using wrong change attribute
-Message-ID: <20201120224438.GC7705@fieldses.org>
-References: <20201117031601.GB10526@fieldses.org>
- <1605583086-19869-1-git-send-email-bfields@redhat.com>
- <1605583086-19869-2-git-send-email-bfields@redhat.com>
- <a5704a8f7a6ebdfa60d4fa996a4d9ebaacc7daaf.camel@kernel.org>
- <20201117152636.GC4556@fieldses.org>
- <725499c144317aac1a03f0334a22005588dbdefc.camel@kernel.org>
- <20201120223831.GB7705@fieldses.org>
+Date:   Fri, 20 Nov 2020 19:34:35 -0500
+In-Reply-To: <1605911960-12516-3-git-send-email-bfields@redhat.com>
+References: <20201120223831.GB7705@fieldses.org>
+         <1605911960-12516-1-git-send-email-bfields@redhat.com>
+         <1605911960-12516-3-git-send-email-bfields@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.1 (3.38.1-1.fc33) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201120223831.GB7705@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 05:38:31PM -0500, J. Bruce Fields wrote:
-> On Tue, Nov 17, 2020 at 10:34:57AM -0500, Jeff Layton wrote:
-> > On Tue, 2020-11-17 at 10:26 -0500, J. Bruce Fields wrote:
-> > > On Tue, Nov 17, 2020 at 07:34:49AM -0500, Jeff Layton wrote:
-> > > > I don't think I described what I was thinking well. Let me try again...
-> > > > 
-> > > > There should be no need to change the code in iversion.h -- I think we
-> > > > can do this in a way that's confined to just nfsd/export code.
-> > > > 
-> > > > What I would suggest is to have nfsd4_change_attribute call the
-> > > > fetch_iversion op if it exists, instead of checking IS_I_VERSION and
-> > > > doing the stuff in that block. If fetch_iversion is NULL, then just use
-> > > > the ctime.
-> > > > 
-> > > > Then, you just need to make sure that the filesystems' export_ops have
-> > > > an appropriate fetch_iversion vector. xfs, ext4 and btrfs can just call
-> > > > inode_query_iversion, and NFS and Ceph can call inode_peek_iversion_raw.
-> > > > The rest of the filesystems can leave fetch_iversion as NULL (since we
-> > > > don't want to use it on them).
-> > > 
-> > > Thanks for your patience, that makes sense, I'll try it.
-> > > 
-> > 
-> > There is one gotcha in here though... ext4 needs to also handle the case
-> > where SB_I_VERSION is not set. The simple fix might be to just have
-> > different export ops for ext4 based on whether it was mounted with -o
-> > iversion or not, but maybe there is some better way to do it?
+On Fri, 2020-11-20 at 17:39 -0500, J. Bruce Fields wrote:
+> From: "J. Bruce Fields" <bfields@redhat.com>
 > 
-> I was thinking ext4's export op could check for I_VERSION on its own and
-> vary behavior based on that.
+> Minor cleanup, no change in behavior
 > 
-> I'll follow up with new patches in a moment.
+> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> ---
+>  fs/nfsd/nfsfh.h | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
 > 
-> I think the first one's all that's needed to fix the problem Daire
-> identified.  I'm a little less sure of the rest.
+> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+> index 3faf5974fa4e..45bd776290d5 100644
+> --- a/fs/nfsd/nfsfh.h
+> +++ b/fs/nfsd/nfsfh.h
+> @@ -259,19 +259,16 @@ fh_clear_wcc(struct svc_fh *fhp)
+>  static inline u64 nfsd4_change_attribute(struct kstat *stat,
+>  					 struct inode *inode)
+>  {
+> -	u64 chattr;
+> -
+>  	if (IS_I_VERSION(inode)) {
+> +		u64 chattr;
+> +
+>  		chattr =  stat->ctime.tv_sec;
+>  		chattr <<= 30;
+>  		chattr += stat->ctime.tv_nsec;
+>  		chattr += inode_query_iversion(inode);
+> -	} else {
+> -		chattr = cpu_to_be32(stat->ctime.tv_sec);
+> -		chattr <<= 32;
+> -		chattr += cpu_to_be32(stat->ctime.tv_nsec);
+> -	}
+> -	return chattr;
+> +		return chattr;
+> +	} else
+> +		return time_to_chattr(&stat->ctime);
+>  }
+>  
 > 
-> Lightly tested, just by running them through my usual regression tests
-> (which don't re-export) and then running connectathon on a 4.2 re-export
-> of a 4.2 mount.
-> 
-> The latter triggered a crash preceded by a KASAN use-after free warning.
-> Looks like it might be a problem with blocking lock notifications,
-> probably not related to these patches.
+>  extern void fill_pre_wcc(struct svc_fh *fhp);
 
-Another nit I ran across:
+I'd just fold this one into 2/8.
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-Some NFSv4 directory-modifying operations return pre- and post- change
-attributes together with an "atomic" flag that's supposed to indicate
-whether the change attributes were read atomically with the operation.
-It looks like we're setting the atomic flag under the assumptions that
-local vfs locks are sufficient to guarantee atomicity, which isn't right
-when we're exporting a distributed filesystem.
-
-In the case we're reexporting NFS I guess ideal would be to use the pre-
-and post- attributes that the original server returned and also save
-having to do extra getattr calls.  Not sure how we'd do that,
-though--more export operations?  Maybe for now we could just figure out
-when to turn off the atomic bit.
-
---b.
