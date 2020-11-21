@@ -2,266 +2,215 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C9D32BC0AB
-	for <lists+linux-nfs@lfdr.de>; Sat, 21 Nov 2020 17:52:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AE3B2BC0C4
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Nov 2020 18:02:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgKUQvR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 21 Nov 2020 11:51:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:23809 "EHLO
+        id S1726618AbgKURCh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 21 Nov 2020 12:02:37 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43634 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726704AbgKUQvO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 21 Nov 2020 11:51:14 -0500
+        by vger.kernel.org with ESMTP id S1726476AbgKURCg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 21 Nov 2020 12:02:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605977471;
+        s=mimecast20190719; t=1605978154;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=zLH0U0S3qPuM/4/c12zDySDpu72UCHtVP0nLwv0orcI=;
-        b=PMDCQH+PjaLILI+jmPRUPCxPNqZ9b1d+FDhMFgHSxhSENkqcfenVx43KFi13r+Ex7D2I2M
-        EljLHUMjVzijt8UE/5TuEqt8gAu+s1/L0/cDhZWp3x/Zbeym6GJ6qKuvFiPa3BQkGiro+3
-        9hzEAFUTRPSRQlWmeMKcu1ZaUpOoL+8=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-278-MnhQJVsuPZSHmxWOYfiKVQ-1; Sat, 21 Nov 2020 11:51:08 -0500
-X-MC-Unique: MnhQJVsuPZSHmxWOYfiKVQ-1
-Received: by mail-qt1-f197.google.com with SMTP id f49so2295201qta.11
-        for <linux-nfs@vger.kernel.org>; Sat, 21 Nov 2020 08:51:08 -0800 (PST)
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hKxB2AdK4Y+8BKLr54nAD1KLu+7AIkEHOfuhlTwS1w0=;
+        b=YlRuYs1nrs9ZoOW8vyp5x2k1/tGv1kWRGfSiNboVFnm36lKPZBA+G9I3MECCcmEmIrh546
+        vNcV3+nsJcQE7ZGcVhlgXPJn0dXuw9RCF/uODom81EFtH7GRHtLqj5qmcpcaLGNkW7AIc1
+        r5s32m+85rTCY2Jb2Ln3pC+UZwEgzjM=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-569-PZeh3SdqOt-ug24EyKrtVQ-1; Sat, 21 Nov 2020 12:02:30 -0500
+X-MC-Unique: PZeh3SdqOt-ug24EyKrtVQ-1
+Received: by mail-ed1-f71.google.com with SMTP id g25so158408edu.21
+        for <linux-nfs@vger.kernel.org>; Sat, 21 Nov 2020 09:02:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zLH0U0S3qPuM/4/c12zDySDpu72UCHtVP0nLwv0orcI=;
-        b=oLqXruQzRJHN8leEn8yBZytu7mdEVq0urTxBZU+OTAmruGMurH5345z1FXCpYf/T8k
-         V9Ds2NuFW7+OB1uuSRQiI8Yp8pjLZGTPTTj44YGCbYHNGkMxeeN/FtW8VkDvm//z6Tqk
-         ++Qv7An/sAspzjJoI11ErLxN8dRNcCHsTuEnv9n/kOFfN+8pt1Ij7jRwd5we2mzrh5PK
-         8tt+QSZpRePnmmQ1pFiM/2shDRph8iBuIzl+HXejqLvvVlogNQuHuhYh7NrcntGQBPl4
-         RUcAZ4pAAePSwhJqpkc/hg1AGILkp5r4xuoRzuwcOcjW6/yUl1qZwTgcnGhSNfEoDTHy
-         BJ1A==
-X-Gm-Message-State: AOAM532O9OIG6AVnP5X/nr7bl3QXyd0gnKPHpxJxE7SMmg2rkNh64NkJ
-        fPZWE+Oerow2TZU5u4gMjXQx9Rk80SBgEDnXP95bWqA5Jty8yUKxiNE0gWBDWSoMLB+MCN8ygcc
-        +L8TWzONBTuyLsPqW71iB
-X-Received: by 2002:a05:620a:15ce:: with SMTP id o14mr22885279qkm.231.1605977467695;
-        Sat, 21 Nov 2020 08:51:07 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwJMB7Phx6GdQ/NzrSSCIOwTBjDbbn+gugDtHjIEeXte769cdu0l51J2LUn/+h4QxN+fnLujw==
-X-Received: by 2002:a05:620a:15ce:: with SMTP id o14mr22885248qkm.231.1605977467468;
-        Sat, 21 Nov 2020 08:51:07 -0800 (PST)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id j202sm4129196qke.108.2020.11.21.08.51.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Nov 2020 08:51:06 -0800 (PST)
-From:   trix@redhat.com
-To:     trix@redhat.com, joe@perches.com,
-        clang-built-linux@googlegroups.com
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org, tboot-devel@lists.sourceforge.net,
-        kvm@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-acpi@vger.kernel.org, devel@acpica.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, netdev@vger.kernel.org,
-        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        ecryptfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cluster-devel@redhat.com, linux-mtd@lists.infradead.org,
-        keyrings@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, alsa-devel@alsa-project.org,
-        bpf@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-nfs@vger.kernel.org, patches@opensource.cirrus.com
-Subject: [RFC] MAINTAINERS tag for cleanup robot
-Date:   Sat, 21 Nov 2020 08:50:58 -0800
-Message-Id: <20201121165058.1644182-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hKxB2AdK4Y+8BKLr54nAD1KLu+7AIkEHOfuhlTwS1w0=;
+        b=LbnB8xJxNU9zaWGfs0tlzrUB6CMIiSiwcY7PXyStBQrJydovRCaLivpFnSIZej3afX
+         7MJkGhrDZlKJ0Ht9bP7v0cQoJrgLyJMHcidHhwZ6ZMvdCTGqVZsZJ0oLxpnp8WPqpUzp
+         oIgDlGwoliMkohTazbRexCM048ElKt0ABIW0NGj7nTYtxg47l8xZnlefNFgN7IffEvVY
+         pTyHxQzQTw70r8+qbRN60uz4Y8cN3Cu91By6J09PdRahVJGzcD/qWfQj1FiKkGDJK+Mt
+         bzCQx+KRFCbmqB/tzXBIzBrbUBrJDTNOQYskYbLwlnaEWQ2Vk/3jV+9CFovE1q0NpLH9
+         f72Q==
+X-Gm-Message-State: AOAM532I9VC6iRXQd05zRg+U4QWWH2jvRLeKWvNYfiA7zq+GOKrLAxpm
+        GqFl+9WhnRbZbDzos16RjtcO4VDlshqeYfFW1bHj2GnSYn4jEnNi5YlrXBGgzxy3GvarCoGeO1h
+        fRTcDIHvTIyV6SKYxeM6d7qSlJzNxfkQAtCEl
+X-Received: by 2002:aa7:d2c4:: with SMTP id k4mr22175867edr.367.1605978149382;
+        Sat, 21 Nov 2020 09:02:29 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwWYrXfqB9jQmUGZa4449LkDCm6t6yCL0uLCSNng05XmblGfK45fLsp/yoU221E9pYsJ/4XPeGQUrNvVoV+9Vs=
+X-Received: by 2002:aa7:d2c4:: with SMTP id k4mr22175841edr.367.1605978149111;
+ Sat, 21 Nov 2020 09:02:29 -0800 (PST)
+MIME-Version: 1.0
+References: <1605965348-24468-1-git-send-email-dwysocha@redhat.com> <017D0771-4BA1-4A97-A077-6222B8CF1B57@oracle.com>
+In-Reply-To: <017D0771-4BA1-4A97-A077-6222B8CF1B57@oracle.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Sat, 21 Nov 2020 12:01:52 -0500
+Message-ID: <CALF+zOmTSqJycjadduibk2sA-iqB3_FdtAX8zGtx4Qn1hXNCKA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/13] Convert NFS to new netfs and fscache APIs
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-A difficult part of automating commits is composing the subsystem
-preamble in the commit log.  For the ongoing effort of a fixer producing
-one or two fixes a release the use of 'treewide:' does not seem appropriate.
+On Sat, Nov 21, 2020 at 11:14 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+> Hi Dave-
+>
+> > On Nov 21, 2020, at 8:29 AM, Dave Wysochanski <dwysocha@redhat.com> wrote:
+> >
+> > These patches update the NFS client to use the new netfs and fscache
+> > APIs and are at:
+> > https://github.com/DaveWysochanskiRH/kernel.git
+> > https://github.com/DaveWysochanskiRH/kernel/commit/94e9633d98a5542ea384b1095290ac6f915fc917
+> > https://github.com/DaveWysochanskiRH/kernel/releases/tag/fscache-iter-nfs-20201120
+> >
+> > The patches are based on David Howells fscache-iter tree at
+> > https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-iter
+> >
+> > The first 6 patches refactor some of the NFS read code to facilitate
+> > re-use, the next 6 patches do the conversion to the new API, and the
+> > last patch is a somewhat awkward fix for a problem seen in final
+> > testing.
+> >
+> > Per David Howell's recent post, note that the new fscache API is
+> > divided into two separate APIs, a 'netfs' API and an 'fscache' API.
+> > The netfs API was done to help simplify the IO paths of network
+> > filesystems, and can be called even when fscache is disabled, thus
+> > simplifing both readpage and readahead implementations.  However,
+> > for now these NFS conversion patches only call the netfs API when
+> > fscache is enabled, similar to the existing NFS code.
+> >
+> > Trond and Anna, I would appreciate your guidance on this patchset.
+> > At least I would like your feedback regarding the direction
+> > you would like these patches to go, in particular, the following
+> > items:
+> >
+> > 1. Whether you are ok with using the netfs API unconditionally even
+> > when fscache is disabled, or prefer this "least invasive to NFS"
+> > approach.  Note the unconditional use of the netfs API is the
+> > recommended approach per David's post and the AFS and CEPH
+> > implementations, but I was unsure if you would accept this
+> > approach or would prefer to minimize changes to NFS.  Note if
+> > we keep the current approach to minimize NFS changes, we will
+> > have to address some problems with page unlocking such as with
+> > patch 13 in the series.
+> >
+> > 2. Whether to keep the NFS fscache implementation as "read only"
+> > or if we add write through support.  Today we only enable fscache
+> > when a file is open read-only and disable / invalidate when a file
+> > is open for write.
+> >
+> > Still TODO
+> > 1. Address known issues (lockdep, page unlocking), depending on
+> > what is decided as far as implementation direction
+> >  a) nfs_issue_op: takes rcu_read_lock but may calls nfs_page_alloc()
+> >  with GFP_KERNEL which may sleep (dhowells noted this in a review)
+> >  b) nfs_refresh_inode() takes inode->i_lock but may call
+> >  __fscache_invalidate() which may sleep (found with lockdep)
+> > 2. Fixup NFS fscache stats (NFSIOS_FSCACHE_*)
+> > * Compare with netfs stats and determine if still needed
+> > 3. Cleanup dfprintks and/or convert to tracepoints
+> > 4. Further tests (see "Not tested yet")
+>
+> Can you say whether your approach has any performance impact?
+No I cannot.
 
-It would be better if the normal prefix was used.  Unfortunately normal is
-not consistent across the tree.
+> In particular, what comparative benchmarks have been run?
+>
+No comparisons so far, but note the last bullet - "performance".
 
-So I am looking for comments for adding a new tag to the MAINTAINERS file
+Are you wondering about performance with/without fscache for this
+series, or the old vs new fscache, or something else?
 
-	D: Commit subsystem prefix
 
-ex/ for FPGA DFL DRIVERS
-
-	D: fpga: dfl:
-
-Continuing with cleaning up clang's -Wextra-semi-stmt
-
-A significant number of warnings are caused by function like macros with
-a trailing semicolon.  For example.
-
-#define FOO(a) a++; <-- extra, unneeded semicolon
-void bar() {
-	int v = 0;
-	FOO(a);
-} 
-
-Clang will warn at the FOO(a); expansion location. Instead of removing
-the semicolon there,  the fixer removes semicolon from the macro
-definition.  After the fixer, the code will be:
-
-#define FOO(a) a++
-void bar() {
-	int v = 0;
-	FOO(a);
-} 
-
-The fixer review is
-https://reviews.llvm.org/D91789
-
-A run over allyesconfig for x86_64 finds 62 issues, 5 are false positives.
-The false positives are caused by macros passed to other macros and by
-some macro expansions that did not have an extra semicolon.
-
-This cleans up about 1,000 of the current 10,000 -Wextra-semi-stmt
-warnings in linux-next.
-
-An update to [RFC] clang tooling cleanup
-This change adds the clang-tidy-fix as a top level target and
-uses it to do the cleaning.  The next iteration will do a loop of
-cleaners.  This will mean breaking clang-tidy-fix out into its own
-processing function 'run_fixers'.
-
-Makefile: Add toplevel target clang-tidy-fix to makefile
-
-Calls clang-tidy with -fix option for a set of checkers that
-programatically fixes the kernel source in place, treewide.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- Makefile                               |  7 ++++---
- scripts/clang-tools/run-clang-tools.py | 20 +++++++++++++++++---
- 2 files changed, 21 insertions(+), 6 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 47a8add4dd28..57756dbb767b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1567,20 +1567,21 @@ help:
- 	 echo  ''
- 	@echo  'Static analysers:'
- 	@echo  '  checkstack      - Generate a list of stack hogs'
- 	@echo  '  versioncheck    - Sanity check on version.h usage'
- 	@echo  '  includecheck    - Check for duplicate included header files'
- 	@echo  '  export_report   - List the usages of all exported symbols'
- 	@echo  '  headerdep       - Detect inclusion cycles in headers'
- 	@echo  '  coccicheck      - Check with Coccinelle'
- 	@echo  '  clang-analyzer  - Check with clang static analyzer'
- 	@echo  '  clang-tidy      - Check with clang-tidy'
-+	@echo  '  clang-tidy-fix  - Check and fix with clang-tidy'
- 	@echo  ''
- 	@echo  'Tools:'
- 	@echo  '  nsdeps          - Generate missing symbol namespace dependencies'
- 	@echo  ''
- 	@echo  'Kernel selftest:'
- 	@echo  '  kselftest         - Build and run kernel selftest'
- 	@echo  '                      Build, install, and boot kernel before'
- 	@echo  '                      running kselftest on it'
- 	@echo  '                      Run as root for full coverage'
- 	@echo  '  kselftest-all     - Build kernel selftest'
-@@ -1842,30 +1843,30 @@ nsdeps: modules
- quiet_cmd_gen_compile_commands = GEN     $@
-       cmd_gen_compile_commands = $(PYTHON3) $< -a $(AR) -o $@ $(filter-out $<, $(real-prereqs))
- 
- $(extmod-prefix)compile_commands.json: scripts/clang-tools/gen_compile_commands.py \
- 	$(if $(KBUILD_EXTMOD),,$(KBUILD_VMLINUX_OBJS) $(KBUILD_VMLINUX_LIBS)) \
- 	$(if $(CONFIG_MODULES), $(MODORDER)) FORCE
- 	$(call if_changed,gen_compile_commands)
- 
- targets += $(extmod-prefix)compile_commands.json
- 
--PHONY += clang-tidy clang-analyzer
-+PHONY += clang-tidy-fix clang-tidy clang-analyzer
- 
- ifdef CONFIG_CC_IS_CLANG
- quiet_cmd_clang_tools = CHECK   $<
-       cmd_clang_tools = $(PYTHON3) $(srctree)/scripts/clang-tools/run-clang-tools.py $@ $<
- 
--clang-tidy clang-analyzer: $(extmod-prefix)compile_commands.json
-+clang-tidy-fix clang-tidy clang-analyzer: $(extmod-prefix)compile_commands.json
- 	$(call cmd,clang_tools)
- else
--clang-tidy clang-analyzer:
-+clang-tidy-fix clang-tidy clang-analyzer:
- 	@echo "$@ requires CC=clang" >&2
- 	@false
- endif
- 
- # Scripts to check various things for consistency
- # ---------------------------------------------------------------------------
- 
- PHONY += includecheck versioncheck coccicheck export_report
- 
- includecheck:
-diff --git a/scripts/clang-tools/run-clang-tools.py b/scripts/clang-tools/run-clang-tools.py
-index fa7655c7cec0..c177ca822c56 100755
---- a/scripts/clang-tools/run-clang-tools.py
-+++ b/scripts/clang-tools/run-clang-tools.py
-@@ -22,43 +22,57 @@ def parse_arguments():
-     Returns:
-         args: Dict of parsed args
-         Has keys: [path, type]
-     """
-     usage = """Run clang-tidy or the clang static-analyzer on a
-         compilation database."""
-     parser = argparse.ArgumentParser(description=usage)
- 
-     type_help = "Type of analysis to be performed"
-     parser.add_argument("type",
--                        choices=["clang-tidy", "clang-analyzer"],
-+                        choices=["clang-tidy-fix", "clang-tidy", "clang-analyzer"],
-                         help=type_help)
-     path_help = "Path to the compilation database to parse"
-     parser.add_argument("path", type=str, help=path_help)
- 
-     return parser.parse_args()
- 
- 
- def init(l, a):
-     global lock
-     global args
-     lock = l
-     args = a
- 
- 
- def run_analysis(entry):
-     # Disable all checks, then re-enable the ones we want
-     checks = "-checks=-*,"
--    if args.type == "clang-tidy":
-+    fix = ""
-+    header_filter = ""
-+    if args.type == "clang-tidy-fix":
-+        checks += "linuxkernel-macro-trailing-semi"
-+        #
-+        # Fix this
-+        # #define M(a) a++; <-- clang-tidy fixes the problem here
-+        # int f() {
-+        #   int v = 0;
-+        #   M(v);  <-- clang reports problem here
-+        #   return v;
-+        # }
-+        fix += "-fix"
-+        header_filter += "-header-filter=.*"
-+    elif args.type == "clang-tidy":
-         checks += "linuxkernel-*"
-     else:
-         checks += "clang-analyzer-*"
--    p = subprocess.run(["clang-tidy", "-p", args.path, checks, entry["file"]],
-+    p = subprocess.run(["clang-tidy", "-p", args.path, checks, header_filter, fix, entry["file"]],
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.STDOUT,
-                        cwd=entry["directory"])
-     with lock:
-         sys.stderr.buffer.write(p.stdout)
- 
- 
- def main():
-     args = parse_arguments()
- 
--- 
-2.18.4
+>
+> > Checks run
+> > 1. checkpatch: PASS*
+> >  * a few warnings, mostly trivial fixups, some unrelated to this set
+> > 2. kernel builds with each patch: PASS
+> >  * each patch in series built cleanly which ensure bisection
+> >
+> > Tests run
+> > 1. Custom NFS+fscache unit tests for basic operation: PASS*
+> >  * no oops or data corruptions
+> >  * Some op counts are a bit off but these are mostly due
+> >    to statistics not implemented properly (NFSIOS_FSCACHE_*)
+> > 2. cthon04: PASS (test options "-b -g -s -l", fsc,vers=3,4.0,4.1,4.2,sec=sys)
+> > * No failures or oopses for any version or test options
+> > 3. iozone tests (fsc,vers=3,4.0,4.1,4.2,sec=sys): PASS
+> > * No failures or oopses
+> > 4. kernel build (fsc,vers=3,4.1,4.2): PASS*
+> >  * all builds finish without errors or data corruption
+> >  * one lockdep "scheduling while atomic" fired with NFS41 and
+> >    was due to one an fscache invalidation code path (known issue 'b' above)
+> > 5. xfstests/generic (fsc,vers=4.2, nofsc,vers=4.2): PASS*
+> >   * generic/013 (pass but triggers i_lock lockdep warning known issue 'a' above)
+> >   * NOTE: The following tests failed with errors, but they
+> >     also fail on vanilla 5.10-rc4 so are not related to this
+> >     patchset
+> >     * generic/074 (lockep invalid wait context - nfs_free_request())
+> >     * generic/538 (short read)
+> >     * generic/551 (pread: Unknown error 524, Data verification fail)
+> >     * generic/568 (ERROR: File grew from 4096 B to 8192 B when writing to the fallocated range)
+> >
+> > Not tested yet:
+> > * error injections (for example, connection disruptions, server errors during IO, etc)
+> > * pNFS
+> > * many process mixed read/write on same file
+> > * performance
+> > Dave Wysochanski (13):
+> >  NFS: Clean up nfs_readpage() and nfs_readpages()
+> >  NFS: In nfs_readpage() only increment NFSIOS_READPAGES when read
+> >    succeeds
+> >  NFS: Refactor nfs_readpage() and nfs_readpage_async() to use
+> >    nfs_readdesc
+> >  NFS: Call readpage_async_filler() from nfs_readpage_async()
+> >  NFS: Add nfs_pageio_complete_read() and remove nfs_readpage_async()
+> >  NFS: Allow internal use of read structs and functions
+> >  NFS: Convert fscache_acquire_cookie and fscache_relinquish_cookie
+> >  NFS: Convert fscache_enable_cookie and fscache_disable_cookie
+> >  NFS: Convert fscache invalidation and update aux_data and i_size
+> >  NFS: Convert to the netfs API and nfs_readpage to use netfs_readpage
+> >  NFS: Convert readpage to readahead and use netfs_readahead for fscache
+> >  NFS: Allow NFS use of new fscache API in build
+> >  NFS: Ensure proper page unlocking when reads fail with retryable
+> >    errors
+> >
+> > fs/nfs/Kconfig             |   2 +-
+> > fs/nfs/direct.c            |   2 +
+> > fs/nfs/file.c              |  22 ++--
+> > fs/nfs/fscache-index.c     |  94 --------------
+> > fs/nfs/fscache.c           | 315 ++++++++++++++++++++-------------------------
+> > fs/nfs/fscache.h           | 132 +++++++------------
+> > fs/nfs/inode.c             |   4 +-
+> > fs/nfs/internal.h          |   8 ++
+> > fs/nfs/nfs4proc.c          |   2 +-
+> > fs/nfs/pagelist.c          |   2 +
+> > fs/nfs/read.c              | 248 ++++++++++++++++-------------------
+> > fs/nfs/write.c             |   3 +-
+> > include/linux/nfs_fs.h     |   5 +-
+> > include/linux/nfs_iostat.h |   2 +-
+> > include/linux/nfs_page.h   |   1 +
+> > include/linux/nfs_xdr.h    |   1 +
+> > 16 files changed, 339 insertions(+), 504 deletions(-)
+> >
+> > --
+> > 1.8.3.1
+> >
+>
+> --
+> Chuck Lever
+>
+>
+>
 
