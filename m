@@ -2,147 +2,175 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A9252C0D52
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 15:27:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF4572C0E72
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 16:08:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388959AbgKWOUJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Nov 2020 09:20:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730804AbgKWOUH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 09:20:07 -0500
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97705C061A4D;
-        Mon, 23 Nov 2020 06:20:06 -0800 (PST)
-Received: by mail-yb1-xb41.google.com with SMTP id r127so12314537yba.10;
-        Mon, 23 Nov 2020 06:20:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WUYMqcUnfpAQa1YuH9tQ3ze5bp2bxaoGLXc9Sg/470Y=;
-        b=b0LkeT2q71Z3peIccxL7MkU5QadaCN3igdEC89IE4ykmdOxIlhuoo/0+H7pQCoNmlh
-         0UX19Z7soasUpz2fDZHX56luUWrH4GLKAJ9K28HwPu9km7qlcvasqfBffaQW+LtXvh6a
-         fVP4J8wQFxbi1QWFB10Wsq9dLONxRShLcqQtcaktrZCy3tSRV5R4FOw2MSdgwNuCxNwd
-         cKQMyE/jYgmlc9Qm972BZKz9xJaasT5iW6gpZgai8YpCh1sxJNgZFzlfCpv21Fvd7rwb
-         akOsznbnFT4mJT95mXFDUPnplTdAJirWAcm8YfzHFRAfOGn9Vk91PuRcq7JipLelDPMB
-         VWgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WUYMqcUnfpAQa1YuH9tQ3ze5bp2bxaoGLXc9Sg/470Y=;
-        b=lKwdUTbbfqoTkTAIgp9mZrmqU0ijWcHp+iS8IAhntH72d3s9iYJuX87xfDva9I4lf3
-         v8fZFrd6A/ZoNnnKI9Ufo/CQd84EPCVmP699vgDnaebb1AOTGh35TDQox+Tjt+Mkl+PO
-         9xhrICCS8DPqhs5qDLfgPBudTzTlVuoCX1zMCGn265RUXoKazk8TNw8gVmCeIWmxjXu0
-         9atl13SD50eRTituupdU7yHj0eeNc1FZy80Dql4f4jClf3PJKAd0dw0fF0iq70BlyjBm
-         D/8h5bsNDzQDKcXJmk5WKbzZmOyiV9nWldAukc3pft/P820sC0PeoGme7yQLVJZl6dNN
-         68lQ==
-X-Gm-Message-State: AOAM533cX8axbPLyO/5uGloelj8h1rp7LshnxgMBjIAQvMSvBl7c7+7W
-        X/53WSk6j6xjolzoHOFypqUhx/48H/iN54UXOIs=
-X-Google-Smtp-Source: ABdhPJyiJqjBIpEzWlk5pyqpoGG3+KpoWdKnlyza2YA6ODhXnRhATytwh5Bq+iGOzNqc5gs+zuqHC8iB1cjfDTXU/ik=
-X-Received: by 2002:a25:bcc7:: with SMTP id l7mr32380985ybm.115.1606141205830;
- Mon, 23 Nov 2020 06:20:05 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1605896059.git.gustavoars@kernel.org> <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
- <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com> <1c7d7fde126bc0acf825766de64bf2f9b888f216.camel@HansenPartnership.com>
-In-Reply-To: <1c7d7fde126bc0acf825766de64bf2f9b888f216.camel@HansenPartnership.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Mon, 23 Nov 2020 15:19:55 +0100
-Message-ID: <CANiq72m22Jb5_+62NnwX8xds2iUdWDMAqD8PZw9cuxdHd95W0A@mail.gmail.com>
-Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        alsa-devel@alsa-project.org, amd-gfx@lists.freedesktop.org,
-        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
-        cluster-devel@redhat.com, coreteam@netfilter.org,
-        devel@driverdev.osuosl.org, dm-devel@redhat.com,
-        drbd-dev@lists.linbit.com, dri-devel@lists.freedesktop.org,
-        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
-        keyrings@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        linux-acpi@vger.kernel.org, linux-afs@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net,
-        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-cifs@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-decnet-user@lists.sourceforge.net,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-fbdev@vger.kernel.org, linux-geode@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input <linux-input@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mmc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
-        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
-        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
-        selinux@vger.kernel.org, target-devel@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        usb-storage@lists.one-eyed-alien.net,
-        virtualization@lists.linux-foundation.org,
-        wcn36xx@lists.infradead.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1731153AbgKWPHo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Nov 2020 10:07:44 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:35256 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731120AbgKWPHn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 10:07:43 -0500
+X-Greylist: delayed 879 seconds by postgrey-1.27 at vger.kernel.org; Mon, 23 Nov 2020 10:07:42 EST
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANEnEx2026508;
+        Mon, 23 Nov 2020 14:52:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=ED63SLbk7ZvnzOYI9i0kkLwBopq9I25oyeu4sNkgzDE=;
+ b=ZvP7AljTmrjyup2ze3owVbx0UuIoEt2tZ4sQ1K1GmWu0RNhMQQietTNd/R47lfCeGXV9
+ 8bwQ0irgZ54XP0wufux9/UeeJfeWl7t5L2qT8E9My39A2b6Yu6zoHPqoWXGO1cDBbupp
+ ecDDtcuFFyqsD6gPQIK9ikvvebq5onDeptZeZKVLtFXndbJaX+32L3RgrBgHTw7MZ0zS
+ GzlvDXGQqxFkvO3WQD10f2BbEWsK3Ew19IxgsG+w39G0EOnvI+NMkJzPw1sd7oIyriAa
+ rZ005BGSkvuT8ewvfFVicH0y9ZRucmanmNjXvUr8UXflOIj99R5CjUGLtjTjwG6eMI+6 gw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 34xtaqh1yx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 23 Nov 2020 14:52:59 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANEnoPj173918;
+        Mon, 23 Nov 2020 14:52:58 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 34ycnr0e7g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Nov 2020 14:52:58 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0ANEqsIF008950;
+        Mon, 23 Nov 2020 14:52:57 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Nov 2020 06:52:54 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [PATCH 5/8] SUNRPC: Don't truncate tail in xdr_inline_pages()
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <614498c69c40421f8581fd8b25633e8668959581.camel@hammerspace.com>
+Date:   Mon, 23 Nov 2020 09:52:53 -0500
+Cc:     "trondmy@kernel.org" <trondmy@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4C120984-5A7B-4245-9B04-8E44C4370BC1@oracle.com>
+References: <20201122205229.3826-1-trondmy@kernel.org>
+ <20201122205229.3826-2-trondmy@kernel.org>
+ <20201122205229.3826-3-trondmy@kernel.org>
+ <20201122205229.3826-4-trondmy@kernel.org>
+ <20201122205229.3826-5-trondmy@kernel.org>
+ <20201122205229.3826-6-trondmy@kernel.org>
+ <0CB9471F-ACC6-42A1-8DCD-8A9E74BAF8F1@oracle.com>
+ <614498c69c40421f8581fd8b25633e8668959581.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9813 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011230102
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9813 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1015 suspectscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011230102
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Nov 22, 2020 at 11:36 PM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> Well, it seems to be three years of someone's time plus the maintainer
-> review time and series disruption of nearly a thousand patches.  Let's
-> be conservative and assume the producer worked about 30% on the series
-> and it takes about 5-10 minutes per patch to review, merge and for
-> others to rework existing series.  So let's say it's cost a person year
-> of a relatively junior engineer producing the patches and say 100h of
-> review and application time.  The latter is likely the big ticket item
-> because it's what we have in least supply in the kernel (even though
-> it's 20x vs the producer time).
 
-How are you arriving at such numbers? It is a total of ~200 trivial lines.
 
-> It's not about the risk of the changes it's about the cost of
-> implementing them.  Even if you discount the producer time (which
-> someone gets to pay for, and if I were the engineering manager, I'd be
-> unhappy about), the review/merge/rework time is pretty significant in
-> exchange for six minor bug fixes.  Fine, when a new compiler warning
-> comes along it's certainly reasonable to see if we can benefit from it
-> and the fact that the compiler people think it's worthwhile is enough
-> evidence to assume this initially.  But at some point you have to ask
-> whether that assumption is supported by the evidence we've accumulated
-> over the time we've been using it.  And if the evidence doesn't support
-> it perhaps it is time to stop the experiment.
+> On Nov 22, 2020, at 11:29 PM, Trond Myklebust =
+<trondmy@hammerspace.com> wrote:
+>=20
+> On Sun, 2020-11-22 at 20:24 -0500, Chuck Lever wrote:
+>>=20
+>>=20
+>>> On Nov 22, 2020, at 3:52 PM, trondmy@kernel.org wrote:
+>>>=20
+>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>>=20
+>>> True that if the length of the pages[] array is not 4-byte aligned,
+>>> then
+>>> we will need to store the padding in the tail, but there is no need
+>>> to
+>>> truncate the total buffer length here.
+>>=20
+>> This description confuses me. The existing code reduces the length of
+>> the tail, not the "total buffer length." And what the removed logic
+>> is
+>> doing is taking out the length of the XDR pad for the pages array
+>> when
+>> it is not expected to be used.
+>=20
+> Why are we bothering to do that? There is nothing problematic with =
+just
+> ignoring this test and leaving the tail length as it is, nor is there
+> anything to be gained by applying it.
 
-Maintainers routinely review 1-line trivial patches, not to mention
-internal API changes, etc.
+You are correct that leaving the buffer a little long is not going
+to harm normal operation. After all, we lived with a wildly over-
+estimated slack length for years.
 
-If some company does not want to pay for that, that's fine, but they
-don't get to be maintainers and claim `Supported`.
+The purpose of this code path is to prepare the receive buffer with
+the memory resources and expected length of the Reply. The series
+of patches that introduced this particular change was all about
+ensuring that the estimated length of the reply message was exact.
 
-Cheers,
-Miguel
+If the reply message size is overestimated, that moves the end-of-
+message sentinel that is later set by xdr_init_decode(). We then
+miss subtle problems like our fixed size estimates are incorrect
+or a man-in-the-middle is extending the RPC message or the server
+is malfunctioning.
+
+<scratches chin>
+
+After moving the ->pages pad into ->pages, I'm wondering if you
+should revert 02ef04e432ba ("NFS: Account for XDR pad of buf->pages") --
+the maxsz macros don't need to account for the XDR pad of ->pages
+any more. Then the below hunk makes sense. The patch description
+still doesn't, though ;-)
+
+And then you should confirm that we are still getting the receive
+buffer size estimate right for krb5i and krb5p.
+
+
+>>> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>> ---
+>>> net/sunrpc/xdr.c | 3 ---
+>>> 1 file changed, 3 deletions(-)
+>>>=20
+>>> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+>>> index 3ce0a5daa9eb..5a450055469f 100644
+>>> --- a/net/sunrpc/xdr.c
+>>> +++ b/net/sunrpc/xdr.c
+>>> @@ -193,9 +193,6 @@ xdr_inline_pages(struct xdr_buf *xdr, unsigned
+>>> int offset,
+>>>=20
+>>>         tail->iov_base =3D buf + offset;
+>>>         tail->iov_len =3D buflen - offset;
+>>> -       if ((xdr->page_len & 3) =3D=3D 0)
+>>> -               tail->iov_len -=3D sizeof(__be32);
+>>> -
+>>>         xdr->buflen +=3D len;
+>>> }
+>>> EXPORT_SYMBOL_GPL(xdr_inline_pages);
+>>> --=20
+>>> 2.28.0
+>>>=20
+>>=20
+>> --
+>> Chuck Lever
+>>=20
+>>=20
+>>=20
+>=20
+> --=20
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+
+--
+Chuck Lever
+
+
+
