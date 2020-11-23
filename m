@@ -2,95 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3795A2C0F51
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 16:56:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A80122C0F61
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 16:56:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732466AbgKWPsO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Nov 2020 10:48:14 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:58604 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732217AbgKWPsN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 10:48:13 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANFjFvQ090353;
-        Mon, 23 Nov 2020 15:48:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=UYXMNudr+fmMNCrNXFCCKL7y9vwWlKg3QQjFxNjQPPU=;
- b=TX1N0NM/QABsiYxXuO8MX51Ic0pi+i31EzssfAaXbiPjvEira/F7nVP7xRnUs0XIJY30
- sCCnis8hgDlHg282uncr2qxvbGjiAdryLT6Ik/5fQu7sbzcnq4FNsyYvAZPKXbE3Athu
- 1Mfm+QglSe/aDJV6Oz0fe/GwKCV1LUWdRve2NtS6psguZmKOGvlrl4TVuA3Vy9YO0/vV
- u3LZ28keyc+5uFbxg6BduX5QGZm63J8hhHKJKUFjygFVD3C+BKiIL2SmfW8WL3DQPlzh
- XZ4M7maFTrUEzBtHqWB+hUWAtcaYH2mH9zzjFUjgbD9jDdIe8JThl2tv415ogVUZ7VNI Fg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 34xtaqhcwj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Nov 2020 15:48:09 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANFTprm160004;
-        Mon, 23 Nov 2020 15:48:09 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 34yx8hk6vp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Nov 2020 15:48:09 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0ANFm3NI017898;
-        Mon, 23 Nov 2020 15:48:08 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Nov 2020 07:48:03 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH] sunrpc : make RPC channel buffer dynamic for slow case
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20201123153627.GD32599@fieldses.org>
-Date:   Mon, 23 Nov 2020 10:48:02 -0500
-Cc:     Roberto Bergantinos Corpas <rbergant@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <F4985547-8F5A-4694-8785-E05E5BC5390F@oracle.com>
-References: <20201026150530.29019-1-rbergant@redhat.com>
- <20201106215128.GD26028@fieldses.org>
- <CACWnjLxiCTAkxBca_NFrUSPCq_g4y0yNaHuNKX+Rwr=-xPhibw@mail.gmail.com>
- <20201123153627.GD32599@fieldses.org>
-To:     Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9813 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 suspectscore=0
- bulkscore=0 mlxlogscore=999 malwarescore=0 adultscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011230106
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9813 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
- mlxlogscore=999 clxscore=1015 suspectscore=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 impostorscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011230106
+        id S2387611AbgKWPwh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Nov 2020 10:52:37 -0500
+Received: from mga04.intel.com ([192.55.52.120]:3310 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732814AbgKWPwg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 23 Nov 2020 10:52:36 -0500
+IronPort-SDR: wdIVWjG4qt3kkvZFlTfNHJ1qSha0XKAk2CxPFx4fu9uvtz0EoQNlcxjxuegxxUzv7XWLNMv6N9
+ dwo6ar0lSANA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9813"; a="169224209"
+X-IronPort-AV: E=Sophos;i="5.78,363,1599548400"; 
+   d="scan'208";a="169224209"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2020 07:52:35 -0800
+IronPort-SDR: o6LRPZSLFHblJ72nLIxI7QtuEJsSPQd11jVZTPC9b01xjBsR6V5ML2IOh4GsWUUm1pKbyVJ0KQ
+ V9qBxJqg/0zw==
+X-IronPort-AV: E=Sophos;i="5.78,363,1599548400"; 
+   d="scan'208";a="546463497"
+Received: from suygunge-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.108])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2020 07:52:23 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        trix@redhat.com, joe@perches.com,
+        clang-built-linux@googlegroups.com
+Cc:     linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org,
+        ibm-acpi-devel@lists.sourceforge.net, keyrings@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-scsi@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, cluster-devel@redhat.com,
+        linux-acpi@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        coreteam@netfilter.org, xen-devel@lists.xenproject.org,
+        MPT-FusionLinux.pdl@broadcom.com, linux-media@vger.kernel.org,
+        alsa-devel@alsa-project.org, intel-gfx@lists.freedesktop.org,
+        ecryptfs@vger.kernel.org, linux-omap@vger.kernel.org,
+        devel@acpica.org, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, patches@opensource.cirrus.com,
+        linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC] MAINTAINERS tag for cleanup robot
+In-Reply-To: <5843ef910b0e86c00d9c0143dec20f93823b016b.camel@HansenPartnership.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20201121165058.1644182-1-trix@redhat.com> <5843ef910b0e86c00d9c0143dec20f93823b016b.camel@HansenPartnership.com>
+Date:   Mon, 23 Nov 2020 17:52:20 +0200
+Message-ID: <87y2ism5or.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On Nov 23, 2020, at 10:36 AM, J. Bruce Fields <bfields@fieldses.org> wrote:
-> 
-> On Sat, Nov 21, 2020 at 11:54:30AM +0100, Roberto Bergantinos Corpas wrote:
->> Hi Bruce,
+On Sat, 21 Nov 2020, James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
+> On Sat, 2020-11-21 at 08:50 -0800, trix@redhat.com wrote:
+>> A difficult part of automating commits is composing the subsystem
+>> preamble in the commit log.  For the ongoing effort of a fixer
+>> producing
+>> one or two fixes a release the use of 'treewide:' does not seem
+>> appropriate.
 >> 
->>  Sorry for late response as well.
+>> It would be better if the normal prefix was used.  Unfortunately
+>> normal is
+>> not consistent across the tree.
 >> 
->>    Ok, here's a possible patch, let me know your thoughts
-> 
-> Looks good to me!  Could you just submit with changelog and
-> Signed-off-by?
+>> 
+>> 	D: Commit subsystem prefix
+>> 
+>> ex/ for FPGA DFL DRIVERS
+>> 
+>> 	D: fpga: dfl:
+>> 
+>
+> I've got to bet this is going to cause more issues than it solves.
 
-Bruce, are you taking this for v5.10-rc, or shall I include it
-with v5.11 ?
+Agreed.
 
---
-Chuck Lever
+> SCSI uses scsi: <driver>: for drivers but not every driver has a
+> MAINTAINERS entry.  We use either scsi: or scsi: core: for mid layer
+> things, but we're not consistent.  Block uses blk-<something>: for all
+> of it's stuff but almost no <somtehing>s have a MAINTAINERS entry.  So
+> the next thing you're going to cause is an explosion of suggested
+> MAINTAINERs entries.
+
+On the one hand, adoption of new MAINTAINERS entries has been really
+slow. Look at B, C, or P, for instance. On the other hand, if this were
+to get adopted, you'll potentially get conflicting prefixes for patches
+touching multiple files. Then what?
+
+I'm guessing a script looking at git log could come up with better
+suggestions for prefixes via popularity contest than manually maintained
+MAINTAINERS entries. It might not always get it right, but then human
+outsiders aren't going to always get it right either.
+
+Now you'll only need Someone(tm) to write the script. ;)
+
+Something quick like this:
+
+git log --since={1year} --pretty=format:%s -- <FILES> |\
+	grep -v "^\(Merge\|Revert\)" |\
+        sed 's/:[^:]*$//' |\
+        sort | uniq -c | sort -rn | head -5
+
+already gives me results that really aren't worse than some of the
+prefixes invented by drive-by contributors.
+
+> Has anyone actually complained about treewide:?
+
+As Joe said, I'd feel silly applying patches to drivers with that
+prefix. If it gets applied by someone else higher up, literally
+treewide, then no complaints.
+
+BR,
+Jani.
 
 
-
+-- 
+Jani Nikula, Intel Open Source Graphics Center
