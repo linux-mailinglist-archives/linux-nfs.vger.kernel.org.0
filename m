@@ -2,61 +2,65 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E75CC2C1510
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 21:04:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F6D52C151C
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 21:04:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgKWUED (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Nov 2020 15:04:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41380 "EHLO
+        id S1728078AbgKWUEI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Nov 2020 15:04:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgKWUEC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 15:04:02 -0500
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D55C0613CF
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 12:04:02 -0800 (PST)
-Received: by mail-qt1-x844.google.com with SMTP id m65so14301448qte.11
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 12:04:02 -0800 (PST)
+        with ESMTP id S1726770AbgKWUEH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 15:04:07 -0500
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A27F9C0613CF
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 12:04:07 -0800 (PST)
+Received: by mail-qk1-x741.google.com with SMTP id y18so1894569qki.11
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 12:04:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:from:to:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=NADEDo/1KQ/3Z+4BxtA8R2wX2IJfu0m8WWSLKiBDMck=;
-        b=UfJOjnEKFwtz0oDVL4JlN+UDjqBOKV+3ACO7e+SjVUW5sgEEwMdIhsDPsLZEyA10+t
-         p8vw9DPizMJHZ9hLOuYRbu2DWrPsdrB/Z9Un4wV7WHqGtAG2XsN7eWA2VVRKPmENeo/f
-         ooeak5MV6at4LKqLSsoxOHj49QhM00uyn8lrscdLUcC5De1O6ucVheE2Prxnaempuyz8
-         icM2BGmoDSzHrRBdgl95vtSv1sB9coBp8ORZc7qCMWLrtgyb7RxtKSdf7ECsQlPb+3Ot
-         xS5Tdpxd8cMM40ACJrCCtALBCDePfRpcrcQQ7SSaUISwDzFv/jE8+UiRvmGMhBRh40Od
-         d4Cg==
+        h=sender:subject:from:to:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=HcSb6CUIyEdHtSUSeX0VbJSU8WnCONnxaJpo3aBIQQY=;
+        b=ZRGKBKpvOaO7lbpuBVybrzGv8L7rVLEpT8+09PK0PeMqXHEvSpp0tm7me9QHKYWBYe
+         hHbWmcuVujdVA+lWQFf/hl5jFljIRFkKzBjg3z1YWHh9AzS3VjkHHtVCxM5n3VfexeWu
+         Y5nUoIy3gdxPXPyl1A+QSMBrmzrOr5Ja5tT2xJ1vMegBRtOQ8w96IsgDtc2zJHDsQHLj
+         u7kGEt8eWtGayldKTWHRZtRofxcjq7OkqEx6xfCrKTme6Uyqmh1wiu3DINkDxlEK7+/N
+         3z6RnNcBBBHDjPhdSMoLcPQGjFOF0HSE9OjevoT/RY3uOOehiX/d82CQ+q3VdXXdIx6B
+         IG0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=NADEDo/1KQ/3Z+4BxtA8R2wX2IJfu0m8WWSLKiBDMck=;
-        b=jWTGTcWymZCgJf8KbAjrGvvvXCeg92WRaa198Sb/eLFC2K6FTSkDhIC2CgZhab38rA
-         BvK/h257rliYiTySFZi3LCFAz8SrDCJxmHBDHgKnIetI0OSNcFHsXSQSWNGHkMl36w9p
-         dBhijQ445RGi/KRKImflV8ouz7UGVMdDRWRBWkzZRAK7mh4PunkwgV4mOBGZSQ9uN3Jj
-         t3pzzBzfM0Cw7PiLrM1/nTZHryiSF/+7/YiqRH8s+HGhT2o1bVPS9tZ7sE20t01Atvt5
-         1NS5+Zg9WtO+AexY/fBwXH3wfykx5FbGqyxN5YenpyBPDcu63P9whOuYRwb54+ZVnpKr
-         n3CA==
-X-Gm-Message-State: AOAM531LkocPFFpDn8IvAWWr9qrcHZ0nN794JA5ucigZ9gzkcpDUei1k
-        y9V5j7O0uPJ7aogkCtO3Sps97QrWx6Y=
-X-Google-Smtp-Source: ABdhPJx9uBOfrCiM0/R3Zsu22pcZrqPYhP0mTwR4ShLCNMjHG8UMl8OHt6EvsKxyZNDoOZs+QlenJg==
-X-Received: by 2002:aed:204c:: with SMTP id 70mr867062qta.92.1606161841405;
-        Mon, 23 Nov 2020 12:04:01 -0800 (PST)
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=HcSb6CUIyEdHtSUSeX0VbJSU8WnCONnxaJpo3aBIQQY=;
+        b=dCKB/o8z/2s8RvfMcLYkx92i1NFPvYdO9fOoDBpJ4PggygKIkfwHv5ZM0+G8A/6Hrq
+         4At43MTSS3LWXrkbRPcpLMKxnAAFjDGwULmXvdU10vYrZiMgv1vkJuPsiM9e5nh+c8T4
+         SvqIrLb+j/gkOpcU2yGY8diEKFiO9vfVBl/918vRNZDlAjRGG+VKqDuqm9L4M5umkTWj
+         2I3B5OeRgMvFJECMBEnKXFke86QqbAFZRWj9B83L3ZMgFCrnaUzVrT5BxfQWEWfRG6j5
+         M1ieziBa7P7j65Zc/z41iklxqTHm9QsVJmiPBYeKZ4RF3AlWTI/i7UEoyHVPD+aXqJJB
+         idNA==
+X-Gm-Message-State: AOAM533202lGKQZStk/2Fkn+RsDsm8xImg0GA7iRHNL8U65ehZWgTZt8
+        i16hvAvO5X0CcekOKMXcBqOjC5Mzk14=
+X-Google-Smtp-Source: ABdhPJwR/Ao+ThIGBQZ0CqxNB97j/JpJwScFyMpbifgEMU++rYWl7W1Oow1ZtidsV+WFEh5QTGwDVg==
+X-Received: by 2002:a37:6c41:: with SMTP id h62mr1209233qkc.401.1606161846273;
+        Mon, 23 Nov 2020 12:04:06 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id a13sm6440161qtj.69.2020.11.23.12.04.00
+        by smtp.gmail.com with ESMTPSA id i21sm10243140qtm.1.2020.11.23.12.04.05
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Nov 2020 12:04:00 -0800 (PST)
+        Mon, 23 Nov 2020 12:04:05 -0800 (PST)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0ANK3wfZ010266
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 20:03:59 GMT
-Subject: [PATCH v3 00/85] Update NFSD XDR functions
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0ANK44hl010269
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 20:04:04 GMT
+Subject: [PATCH v3 01/85] SUNRPC: Add xdr_set_scratch_page() and
+ xdr_reset_scratch_buffer()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Mon, 23 Nov 2020 15:03:58 -0500
-Message-ID: <160616177104.51996.14915419165992024951.stgit@klimt.1015granger.net>
+Date:   Mon, 23 Nov 2020 15:04:04 -0500
+Message-ID: <160616184452.51996.9922379919062613933.stgit@klimt.1015granger.net>
+In-Reply-To: <160616177104.51996.14915419165992024951.stgit@klimt.1015granger.net>
+References: <160616177104.51996.14915419165992024951.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -65,156 +69,300 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The long-term purpose is to convert the NFSD XDR encoder and decoder
-functions to use the struct xdr_stream API. This is a refactor and
-clean-up with few or no changes in behavior expected, but there are
-some long-term benefits:
+Clean up: De-duplicate some frequently-used code.
 
-- More robust input sanitization in the NFSD decoders.
-- Help make it possible to use common kernel library functions with
-  XDR stream APIs (for example, GSS-API).
-- Align the structure of the source code with the RFCs so it is
-  easier to learn, verify, and maintain our XDR implementation.
-- Removal of more than a hundred hidden dprintk() call sites.
-- Removal of as much explicit manipulation of pages as possible to
-  help make the eventual transition to xdr->bvecs smoother.
-
-The current series focuses on NFSv4 decoder changes only. To
-simplify things, I've postponed the NFSv2 and NFSv3 changes until
-the NFSv4 work has been merged.
-
-The full set of ready patches lives in a topic branch in my git
-repo:
-
- git://git.linux-nfs.org/projects/cel/cel-2.6.git nfsd-xdr_stream
-
-
-Changes since v2:
-- Rebase on v5.10-rc5
-- Add tracepoints to capture NFSD decoding and encoding errors
-- Revert the use of xdr_stream_decode_uint32_array()
-- Fix a bug in xdr_stream_subsegment()
-- Drop most of the NFSv2 and NFSv3 related patches
-- Drop the use of XDR_DECODE_DONE/FAILED
-
-Changes since v1:
-- Broke up larger patches (fattr4, LOCK, OPEN, EXCHANGE_ID, and so on)
-- Replaced goto spaghetti in new decoders
-- Cleaned up function synopses
-- Replaced nfsd4_decode_bitmap() with generic XDR helper
-- The posted series now contains changes to NFSv2 and NFSv3 decoders
-
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ fs/nfs/blocklayout/blocklayout.c          |    2 +
+ fs/nfs/blocklayout/dev.c                  |    2 +
+ fs/nfs/dir.c                              |    2 +
+ fs/nfs/filelayout/filelayout.c            |    2 +
+ fs/nfs/filelayout/filelayoutdev.c         |    2 +
+ fs/nfs/flexfilelayout/flexfilelayout.c    |    2 +
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c |    2 +
+ fs/nfs/nfs42xdr.c                         |    2 +
+ fs/nfs/nfs4xdr.c                          |    6 +---
+ fs/nfsd/nfs4proc.c                        |    2 +
+ include/linux/sunrpc/xdr.h                |   44 ++++++++++++++++++++++++++++-
+ net/sunrpc/auth_gss/gss_rpc_xdr.c         |    2 +
+ net/sunrpc/xdr.c                          |   28 +++---------------
+ 13 files changed, 59 insertions(+), 39 deletions(-)
 
-Chuck Lever (85):
-      SUNRPC: Add xdr_set_scratch_page() and xdr_reset_scratch_buffer()
-      SUNRPC: Prepare for xdr_stream-style decoding on the server-side
-      NFSD: Add common helpers to decode void args and encode void results
-      NFSD: Add tracepoints in nfsd_dispatch()
-      NFSD: Add tracepoints in
-      NFSD: Replace the internals of the READ_BUF() macro
-      NFSD: Replace READ* macros in nfsd4_decode_access()
-      NFSD: Replace READ* macros in nfsd4_decode_close()
-      NFSD: Replace READ* macros in nfsd4_decode_commit()
-      NFSD: Change the way the expected length of a fattr4 is checked
-      NFSD: Replace READ* macros that decode the fattr4 size attribute
-      NFSD: Replace READ* macros that decode the fattr4 acl attribute
-      NFSD: Replace READ* macros that decode the fattr4 mode attribute
-      NFSD: Replace READ* macros that decode the fattr4 owner attribute
-      NFSD: Replace READ* macros that decode the fattr4 owner_group attribute
-      NFSD: Replace READ* macros that decode the fattr4 time_set attributes
-      NFSD: Replace READ* macros that decode the fattr4 security label attribute
-      NFSD: Replace READ* macros that decode the fattr4 umask attribute
-      NFSD: Replace READ* macros in nfsd4_decode_fattr()
-      NFSD: Replace READ* macros in nfsd4_decode_create()
-      NFSD: Replace READ* macros in nfsd4_decode_delegreturn()
-      NFSD: Replace READ* macros in nfsd4_decode_getattr()
-      NFSD: Replace READ* macros in nfsd4_decode_link()
-      NFSD: Relocate nfsd4_decode_opaque()
-      NFSD: Add helpers to decode a clientid4 and an NFSv4 state owner
-      NFSD: Add helper for decoding locker4
-      NFSD: Replace READ* macros in nfsd4_decode_lock()
-      NFSD: Replace READ* macros in nfsd4_decode_lockt()
-      NFSD: Replace READ* macros in nfsd4_decode_locku()
-      NFSD: Replace READ* macros in nfsd4_decode_lookup()
-      NFSD: Add helper to decode NFSv4 verifiers
-      NFSD: Add helper to decode OPEN's createhow4 argument
-      NFSD: Add helper to decode OPEN's openflag4 argument
-      NFSD: Replace READ* macros in nfsd4_decode_share_access()
-      NFSD: Replace READ* macros in nfsd4_decode_share_deny()
-      NFSD: Add helper to decode OPEN's open_claim4 argument
-      NFSD: Replace READ* macros in nfsd4_decode_open()
-      NFSD: Replace READ* macros in nfsd4_decode_open_confirm()
-      NFSD: Replace READ* macros in nfsd4_decode_open_downgrade()
-      NFSD: Replace READ* macros in nfsd4_decode_putfh()
-      NFSD: Replace READ* macros in nfsd4_decode_read()
-      NFSD: Replace READ* macros in nfsd4_decode_readdir()
-      NFSD: Replace READ* macros in nfsd4_decode_remove()
-      NFSD: Replace READ* macros in nfsd4_decode_rename()
-      NFSD: Replace READ* macros in nfsd4_decode_renew()
-      NFSD: Replace READ* macros in nfsd4_decode_secinfo()
-      NFSD: Replace READ* macros in nfsd4_decode_setattr()
-      NFSD: Replace READ* macros in nfsd4_decode_setclientid()
-      NFSD: Replace READ* macros in nfsd4_decode_setclientid_confirm()
-      NFSD: Replace READ* macros in nfsd4_decode_verify()
-      NFSD: Replace READ* macros in nfsd4_decode_write()
-      NFSD: Replace READ* macros in nfsd4_decode_release_lockowner()
-      NFSD: Replace READ* macros in nfsd4_decode_cb_sec()
-      NFSD: Replace READ* macros in nfsd4_decode_backchannel_ctl()
-      NFSD: Replace READ* macros in nfsd4_decode_bind_conn_to_session()
-      NFSD: Add a separate decoder to handle state_protect_ops
-      NFSD: Add a separate decoder for ssv_sp_parms
-      NFSD: Add a helper to decode state_protect4_a
-      NFSD: Add a helper to decode nfs_impl_id4
-      NFSD: Add a helper to decode channel_attrs4
-      NFSD: Replace READ* macros in nfsd4_decode_create_session()
-      NFSD: Replace READ* macros in nfsd4_decode_destroy_session()
-      NFSD: Replace READ* macros in nfsd4_decode_free_stateid()
-      NFSD: Replace READ* macros in nfsd4_decode_getdeviceinfo()
-      NFSD: Replace READ* macros in nfsd4_decode_layoutcommit()
-      NFSD: Replace READ* macros in nfsd4_decode_layoutget()
-      NFSD: Replace READ* macros in nfsd4_decode_layoutreturn()
-      NFSD: Replace READ* macros in nfsd4_decode_secinfo_no_name()
-      NFSD: Replace READ* macros in nfsd4_decode_sequence()
-      NFSD: Replace READ* macros in nfsd4_decode_test_stateid()
-      NFSD: Replace READ* macros in nfsd4_decode_destroy_clientid()
-      NFSD: Replace READ* macros in nfsd4_decode_reclaim_complete()
-      NFSD: Replace READ* macros in nfsd4_decode_fallocate()
-      NFSD: Replace READ* macros in nfsd4_decode_nl4_server()
-      NFSD: Replace READ* macros in nfsd4_decode_copy()
-      NFSD: Replace READ* macros in nfsd4_decode_copy_notify()
-      NFSD: Replace READ* macros in nfsd4_decode_offload_status()
-      NFSD: Replace READ* macros in nfsd4_decode_seek()
-      NFSD: Replace READ* macros in nfsd4_decode_clone()
-      NFSD: Replace READ* macros in nfsd4_decode_xattr_name()
-      NFSD: Replace READ* macros in nfsd4_decode_setxattr()
-      NFSD: Replace READ* macros in nfsd4_decode_listxattrs()
-      NFSD: Make nfsd4_ops::opnum a u32
-      NFSD: Replace READ* macros in nfsd4_decode_compound()
-      NFSD: Remove macros that are no longer used
+diff --git a/fs/nfs/blocklayout/blocklayout.c b/fs/nfs/blocklayout/blocklayout.c
+index 08108b6d2fa1..3be6836074ae 100644
+--- a/fs/nfs/blocklayout/blocklayout.c
++++ b/fs/nfs/blocklayout/blocklayout.c
+@@ -697,7 +697,7 @@ bl_alloc_lseg(struct pnfs_layout_hdr *lo, struct nfs4_layoutget_res *lgr,
+ 
+ 	xdr_init_decode_pages(&xdr, &buf,
+ 			lgr->layoutp->pages, lgr->layoutp->len);
+-	xdr_set_scratch_buffer(&xdr, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&xdr, scratch);
+ 
+ 	status = -EIO;
+ 	p = xdr_inline_decode(&xdr, 4);
+diff --git a/fs/nfs/blocklayout/dev.c b/fs/nfs/blocklayout/dev.c
+index dec5880ac6de..acb1d22907da 100644
+--- a/fs/nfs/blocklayout/dev.c
++++ b/fs/nfs/blocklayout/dev.c
+@@ -510,7 +510,7 @@ bl_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
+ 		goto out;
+ 
+ 	xdr_init_decode_pages(&xdr, &buf, pdev->pages, pdev->pglen);
+-	xdr_set_scratch_buffer(&xdr, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&xdr, scratch);
+ 
+ 	p = xdr_inline_decode(&xdr, sizeof(__be32));
+ 	if (!p)
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 4e011adaf967..8a24fe20dccf 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -576,7 +576,7 @@ int nfs_readdir_page_filler(nfs_readdir_descriptor_t *desc, struct nfs_entry *en
+ 		goto out_nopages;
+ 
+ 	xdr_init_decode_pages(&stream, &buf, xdr_pages, buflen);
+-	xdr_set_scratch_buffer(&stream, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&stream, scratch);
+ 
+ 	do {
+ 		if (entry->label)
+diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filelayout.c
+index 7f5aa0403e16..d158a500c25c 100644
+--- a/fs/nfs/filelayout/filelayout.c
++++ b/fs/nfs/filelayout/filelayout.c
+@@ -666,7 +666,7 @@ filelayout_decode_layout(struct pnfs_layout_hdr *flo,
+ 		return -ENOMEM;
+ 
+ 	xdr_init_decode_pages(&stream, &buf, lgr->layoutp->pages, lgr->layoutp->len);
+-	xdr_set_scratch_buffer(&stream, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&stream, scratch);
+ 
+ 	/* 20 = ufl_util (4), first_stripe_index (4), pattern_offset (8),
+ 	 * num_fh (4) */
+diff --git a/fs/nfs/filelayout/filelayoutdev.c b/fs/nfs/filelayout/filelayoutdev.c
+index d913e818858f..86c3f7e69ec4 100644
+--- a/fs/nfs/filelayout/filelayoutdev.c
++++ b/fs/nfs/filelayout/filelayoutdev.c
+@@ -82,7 +82,7 @@ nfs4_fl_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
+ 		goto out_err;
+ 
+ 	xdr_init_decode_pages(&stream, &buf, pdev->pages, pdev->pglen);
+-	xdr_set_scratch_buffer(&stream, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&stream, scratch);
+ 
+ 	/* Get the stripe count (number of stripe index) */
+ 	p = xdr_inline_decode(&stream, 4);
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index a163533446fa..d7010686d39a 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -378,7 +378,7 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
+ 
+ 	xdr_init_decode_pages(&stream, &buf, lgr->layoutp->pages,
+ 			      lgr->layoutp->len);
+-	xdr_set_scratch_buffer(&stream, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&stream, scratch);
+ 
+ 	/* stripe unit and mirror_array_cnt */
+ 	rc = -EIO;
+diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+index 3eda40a320a5..c9b61b818ec1 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
++++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+@@ -69,7 +69,7 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
+ 	INIT_LIST_HEAD(&dsaddrs);
+ 
+ 	xdr_init_decode_pages(&stream, &buf, pdev->pages, pdev->pglen);
+-	xdr_set_scratch_buffer(&stream, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(&stream, scratch);
+ 
+ 	/* multipath count */
+ 	p = xdr_inline_decode(&stream, 4);
+diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+index 6e060a88f98c..cb5d4da2308f 100644
+--- a/fs/nfs/nfs42xdr.c
++++ b/fs/nfs/nfs42xdr.c
+@@ -1540,7 +1540,7 @@ static int nfs4_xdr_dec_listxattrs(struct rpc_rqst *rqstp,
+ 	struct compound_hdr hdr;
+ 	int status;
+ 
+-	xdr_set_scratch_buffer(xdr, page_address(res->scratch), PAGE_SIZE);
++	xdr_set_scratch_page(xdr, res->scratch);
+ 
+ 	status = decode_compound_hdr(xdr, &hdr);
+ 	if (status)
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index c6dbfcae7517..2eabe5add344 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -6403,10 +6403,8 @@ nfs4_xdr_dec_getacl(struct rpc_rqst *rqstp, struct xdr_stream *xdr,
+ 	struct compound_hdr hdr;
+ 	int status;
+ 
+-	if (res->acl_scratch != NULL) {
+-		void *p = page_address(res->acl_scratch);
+-		xdr_set_scratch_buffer(xdr, p, PAGE_SIZE);
+-	}
++	if (res->acl_scratch != NULL)
++		xdr_set_scratch_page(xdr, res->acl_scratch);
+ 	status = decode_compound_hdr(xdr, &hdr);
+ 	if (status)
+ 		goto out;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index e83b21778816..20772f6b0b2d 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2276,7 +2276,7 @@ static void svcxdr_init_encode(struct svc_rqst *rqstp,
+ 	xdr->end = head->iov_base + PAGE_SIZE - rqstp->rq_auth_slack;
+ 	/* Tail and page_len should be zero at this point: */
+ 	buf->len = buf->head[0].iov_len;
+-	xdr->scratch.iov_len = 0;
++	xdr_reset_scratch_buffer(xdr);
+ 	xdr->page_ptr = buf->pages - 1;
+ 	buf->buflen = PAGE_SIZE * (1 + rqstp->rq_page_end - buf->pages)
+ 		- rqstp->rq_auth_slack;
+diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+index ec2a22ccdc2a..2729d2d6efce 100644
+--- a/include/linux/sunrpc/xdr.h
++++ b/include/linux/sunrpc/xdr.h
+@@ -248,7 +248,6 @@ extern void xdr_init_decode(struct xdr_stream *xdr, struct xdr_buf *buf,
+ 			    __be32 *p, struct rpc_rqst *rqst);
+ extern void xdr_init_decode_pages(struct xdr_stream *xdr, struct xdr_buf *buf,
+ 		struct page **pages, unsigned int len);
+-extern void xdr_set_scratch_buffer(struct xdr_stream *xdr, void *buf, size_t buflen);
+ extern __be32 *xdr_inline_decode(struct xdr_stream *xdr, size_t nbytes);
+ extern unsigned int xdr_read_pages(struct xdr_stream *xdr, unsigned int len);
+ extern void xdr_enter_page(struct xdr_stream *xdr, unsigned int len);
+@@ -256,6 +255,49 @@ extern int xdr_process_buf(struct xdr_buf *buf, unsigned int offset, unsigned in
+ extern uint64_t xdr_align_data(struct xdr_stream *, uint64_t, uint32_t);
+ extern uint64_t xdr_expand_hole(struct xdr_stream *, uint64_t, uint64_t);
+ 
++/**
++ * xdr_set_scratch_buffer - Attach a scratch buffer for decoding data.
++ * @xdr: pointer to xdr_stream struct
++ * @buf: pointer to an empty buffer
++ * @buflen: size of 'buf'
++ *
++ * The scratch buffer is used when decoding from an array of pages.
++ * If an xdr_inline_decode() call spans across page boundaries, then
++ * we copy the data into the scratch buffer in order to allow linear
++ * access.
++ */
++static inline void
++xdr_set_scratch_buffer(struct xdr_stream *xdr, void *buf, size_t buflen)
++{
++	xdr->scratch.iov_base = buf;
++	xdr->scratch.iov_len = buflen;
++}
++
++/**
++ * xdr_set_scratch_page - Attach a scratch buffer for decoding data
++ * @xdr: pointer to xdr_stream struct
++ * @page: an anonymous page
++ *
++ * See xdr_set_scratch_buffer().
++ */
++static inline void
++xdr_set_scratch_page(struct xdr_stream *xdr, struct page *page)
++{
++	xdr_set_scratch_buffer(xdr, page_address(page), PAGE_SIZE);
++}
++
++/**
++ * xdr_reset_scratch_buffer - Clear scratch buffer information
++ * @xdr: pointer to xdr_stream struct
++ *
++ * See xdr_set_scratch_buffer().
++ */
++static inline void
++xdr_reset_scratch_buffer(struct xdr_stream *xdr)
++{
++	xdr_set_scratch_buffer(xdr, NULL, 0);
++}
++
+ /**
+  * xdr_stream_remaining - Return the number of bytes remaining in the stream
+  * @xdr: pointer to struct xdr_stream
+diff --git a/net/sunrpc/auth_gss/gss_rpc_xdr.c b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+index 2ff7b7083eba..c636c648849b 100644
+--- a/net/sunrpc/auth_gss/gss_rpc_xdr.c
++++ b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+@@ -789,7 +789,7 @@ int gssx_dec_accept_sec_context(struct rpc_rqst *rqstp,
+ 	scratch = alloc_page(GFP_KERNEL);
+ 	if (!scratch)
+ 		return -ENOMEM;
+-	xdr_set_scratch_buffer(xdr, page_address(scratch), PAGE_SIZE);
++	xdr_set_scratch_page(xdr, scratch);
+ 
+ 	/* res->status */
+ 	err = gssx_dec_status(xdr, &res->status);
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index 28f81769a27c..c607744b3ea8 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -669,7 +669,7 @@ void xdr_init_encode(struct xdr_stream *xdr, struct xdr_buf *buf, __be32 *p,
+ 	struct kvec *iov = buf->head;
+ 	int scratch_len = buf->buflen - buf->page_len - buf->tail[0].iov_len;
+ 
+-	xdr_set_scratch_buffer(xdr, NULL, 0);
++	xdr_reset_scratch_buffer(xdr);
+ 	BUG_ON(scratch_len < 0);
+ 	xdr->buf = buf;
+ 	xdr->iov = iov;
+@@ -713,7 +713,7 @@ inline void xdr_commit_encode(struct xdr_stream *xdr)
+ 	page = page_address(*xdr->page_ptr);
+ 	memcpy(xdr->scratch.iov_base, page, shift);
+ 	memmove(page, page + shift, (void *)xdr->p - page);
+-	xdr->scratch.iov_len = 0;
++	xdr_reset_scratch_buffer(xdr);
+ }
+ EXPORT_SYMBOL_GPL(xdr_commit_encode);
+ 
+@@ -743,8 +743,7 @@ static __be32 *xdr_get_next_encode_buffer(struct xdr_stream *xdr,
+ 	 * the "scratch" iov to track any temporarily unused fragment of
+ 	 * space at the end of the previous buffer:
+ 	 */
+-	xdr->scratch.iov_base = xdr->p;
+-	xdr->scratch.iov_len = frag1bytes;
++	xdr_set_scratch_buffer(xdr, xdr->p, frag1bytes);
+ 	p = page_address(*xdr->page_ptr);
+ 	/*
+ 	 * Note this is where the next encode will start after we've
+@@ -1052,8 +1051,7 @@ void xdr_init_decode(struct xdr_stream *xdr, struct xdr_buf *buf, __be32 *p,
+ 		     struct rpc_rqst *rqst)
+ {
+ 	xdr->buf = buf;
+-	xdr->scratch.iov_base = NULL;
+-	xdr->scratch.iov_len = 0;
++	xdr_reset_scratch_buffer(xdr);
+ 	xdr->nwords = XDR_QUADLEN(buf->len);
+ 	if (buf->head[0].iov_len != 0)
+ 		xdr_set_iov(xdr, buf->head, buf->len);
+@@ -1101,24 +1099,6 @@ static __be32 * __xdr_inline_decode(struct xdr_stream *xdr, size_t nbytes)
+ 	return p;
+ }
+ 
+-/**
+- * xdr_set_scratch_buffer - Attach a scratch buffer for decoding data.
+- * @xdr: pointer to xdr_stream struct
+- * @buf: pointer to an empty buffer
+- * @buflen: size of 'buf'
+- *
+- * The scratch buffer is used when decoding from an array of pages.
+- * If an xdr_inline_decode() call spans across page boundaries, then
+- * we copy the data into the scratch buffer in order to allow linear
+- * access.
+- */
+-void xdr_set_scratch_buffer(struct xdr_stream *xdr, void *buf, size_t buflen)
+-{
+-	xdr->scratch.iov_base = buf;
+-	xdr->scratch.iov_len = buflen;
+-}
+-EXPORT_SYMBOL_GPL(xdr_set_scratch_buffer);
+-
+ static __be32 *xdr_copy_to_scratch(struct xdr_stream *xdr, size_t nbytes)
+ {
+ 	__be32 *p;
 
-
- fs/nfsd/nfs2acl.c          |   21 +-
- fs/nfsd/nfs3acl.c          |    8 +-
- fs/nfsd/nfs3proc.c         |   10 +-
- fs/nfsd/nfs3xdr.c          |   11 -
- fs/nfsd/nfs4proc.c         |   25 +-
- fs/nfsd/nfs4state.c        |    2 +-
- fs/nfsd/nfs4xdr.c          | 2531 +++++++++++++++++++-----------------
- fs/nfsd/nfsd.h             |    8 +
- fs/nfsd/nfsproc.c          |   25 +-
- fs/nfsd/nfssvc.c           |   47 +-
- fs/nfsd/nfsxdr.c           |   10 -
- fs/nfsd/trace.h            |  128 ++
- fs/nfsd/xdr.h              |    2 -
- fs/nfsd/xdr3.h             |    2 -
- fs/nfsd/xdr4.h             |   30 +-
- include/linux/sunrpc/svc.h |   16 +
- include/linux/sunrpc/xdr.h |   44 +
- net/sunrpc/svc.c           |    5 +
- net/sunrpc/xdr.c           |   45 +
- 19 files changed, 1643 insertions(+), 1327 deletions(-)
-
---
-Chuck Lever
 
