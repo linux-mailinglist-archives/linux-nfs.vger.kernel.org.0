@@ -2,130 +2,219 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAB202C1512
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 21:04:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E75CC2C1510
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 21:04:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgKWUD4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Nov 2020 15:03:56 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17000 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgKWUDy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 15:03:54 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fbc15a70004>; Mon, 23 Nov 2020 12:03:51 -0800
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Nov
- 2020 20:03:49 +0000
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.103)
- by HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 23 Nov 2020 20:03:49 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gITd84wMHHzcOptjQRg1Bi4wKYLoloErjGXTzbxbsYYxXpRm6DfDjP1G8JsqPPruG8n8djHpWT3ChykgCoTQdTlPHkj05TPw7WZ4Y46HlI8bprZC3XuF3n009Te/qaTwPxc9ef3s3wxgnUStlvtZrJvP5WQhh3MIKLFTGEWjhLXWcgs1VmoV9q6ndrBwWgPhsRBIC9rKh9qqm9cf9Ujr9sks/ml2cZ4bW16uPSJVifE1ke5RuUikXPZ60YcpNVw15sbmeBPfJ8v059YAkVfr8AOpsBgi+OymMySTg/JYVNFtVJ2pGo3M9pC5txLp474ztgTCR2D9RfvqUQOXT+42RA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QophqWBVIGhmInjMMmoN1JCz5yEuED07MVw87J8AVUY=;
- b=dpOj+p56VpZQgFejSTc+TjZx9PpIbmIlWcJPfXyA8QiV6hyerQ1PNIg37pZm/OoPMM7dRNU+MPO2Sxmva5Z6iKtLQpQNkcM79tS52of8WjxHEmReB+Qc/VB0gzy26dU2FtXMoEzn5Rx6YHRp97uhlWeSk7Nsi1BUrieORD+G9yqkgKBmwQvC726s6EkJ0s32uNc7iMGffyCjKbyBtSLggJX9G9WEJ0m0GYQlYWRE7aVXL+Iy16bXoksvn7nW7YXP74v45GAqxPt7EElquzCZ4kXurFfWXXWM9ThsUobGLm/yb7wWVAmTEM+ttWZwc1mR7P3I+RsId2H9o2Xiqq+zAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB4338.namprd12.prod.outlook.com (2603:10b6:5:2a2::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.21; Mon, 23 Nov
- 2020 20:03:48 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::e40c:730c:156c:2ef9]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::e40c:730c:156c:2ef9%7]) with mapi id 15.20.3589.022; Mon, 23 Nov 2020
- 20:03:48 +0000
-Date:   Mon, 23 Nov 2020 16:03:45 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <amd-gfx@lists.freedesktop.org>,
-        <bridge@lists.linux-foundation.org>, <ceph-devel@vger.kernel.org>,
-        <cluster-devel@redhat.com>, <coreteam@netfilter.org>,
-        <devel@driverdev.osuosl.org>, <dm-devel@redhat.com>,
-        <drbd-dev@lists.linbit.com>, <dri-devel@lists.freedesktop.org>,
-        <GR-everest-linux-l2@marvell.com>, <GR-Linux-NIC-Dev@marvell.com>,
-        <intel-gfx@lists.freedesktop.org>,
-        <intel-wired-lan@lists.osuosl.org>, <keyrings@vger.kernel.org>,
-        <linux1394-devel@lists.sourceforge.net>,
-        <linux-acpi@vger.kernel.org>, <linux-afs@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        <linux-atm-general@lists.sourceforge.net>,
-        <linux-block@vger.kernel.org>, <linux-can@vger.kernel.org>,
-        <linux-cifs@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-decnet-user@lists.sourceforge.net>,
-        <linux-ext4@vger.kernel.org>, <linux-fbdev@vger.kernel.org>,
-        <linux-geode@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-hams@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
-        <linux-i3c@lists.infradead.org>, <linux-ide@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-integrity@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-media@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-mtd@lists.infradead.org>,
-        <linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <linux-sctp@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-usb@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <netfilter-devel@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
-        <op-tee@lists.trustedfirmware.org>, <oss-drivers@netronome.com>,
-        <patches@opensource.cirrus.com>, <rds-devel@oss.oracle.com>,
-        <reiserfs-devel@vger.kernel.org>,
-        <samba-technical@lists.samba.org>, <selinux@vger.kernel.org>,
-        <target-devel@vger.kernel.org>,
-        <tipc-discussion@lists.sourceforge.net>,
-        <usb-storage@lists.one-eyed-alien.net>,
-        <virtualization@lists.linux-foundation.org>,
-        <wcn36xx@lists.infradead.org>, <x86@kernel.org>,
-        <xen-devel@lists.xenproject.org>,
-        <linux-hardening@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
-Message-ID: <20201123200345.GA38546@nvidia.com>
-References: <cover.1605896059.git.gustavoars@kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1605896059.git.gustavoars@kernel.org>
-X-ClientProxiedBy: MN2PR03CA0013.namprd03.prod.outlook.com
- (2603:10b6:208:23a::18) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        id S1728252AbgKWUED (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Nov 2020 15:04:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbgKWUEC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 15:04:02 -0500
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D55C0613CF
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 12:04:02 -0800 (PST)
+Received: by mail-qt1-x844.google.com with SMTP id m65so14301448qte.11
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 12:04:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=NADEDo/1KQ/3Z+4BxtA8R2wX2IJfu0m8WWSLKiBDMck=;
+        b=UfJOjnEKFwtz0oDVL4JlN+UDjqBOKV+3ACO7e+SjVUW5sgEEwMdIhsDPsLZEyA10+t
+         p8vw9DPizMJHZ9hLOuYRbu2DWrPsdrB/Z9Un4wV7WHqGtAG2XsN7eWA2VVRKPmENeo/f
+         ooeak5MV6at4LKqLSsoxOHj49QhM00uyn8lrscdLUcC5De1O6ucVheE2Prxnaempuyz8
+         icM2BGmoDSzHrRBdgl95vtSv1sB9coBp8ORZc7qCMWLrtgyb7RxtKSdf7ECsQlPb+3Ot
+         xS5Tdpxd8cMM40ACJrCCtALBCDePfRpcrcQQ7SSaUISwDzFv/jE8+UiRvmGMhBRh40Od
+         d4Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=NADEDo/1KQ/3Z+4BxtA8R2wX2IJfu0m8WWSLKiBDMck=;
+        b=jWTGTcWymZCgJf8KbAjrGvvvXCeg92WRaa198Sb/eLFC2K6FTSkDhIC2CgZhab38rA
+         BvK/h257rliYiTySFZi3LCFAz8SrDCJxmHBDHgKnIetI0OSNcFHsXSQSWNGHkMl36w9p
+         dBhijQ445RGi/KRKImflV8ouz7UGVMdDRWRBWkzZRAK7mh4PunkwgV4mOBGZSQ9uN3Jj
+         t3pzzBzfM0Cw7PiLrM1/nTZHryiSF/+7/YiqRH8s+HGhT2o1bVPS9tZ7sE20t01Atvt5
+         1NS5+Zg9WtO+AexY/fBwXH3wfykx5FbGqyxN5YenpyBPDcu63P9whOuYRwb54+ZVnpKr
+         n3CA==
+X-Gm-Message-State: AOAM531LkocPFFpDn8IvAWWr9qrcHZ0nN794JA5ucigZ9gzkcpDUei1k
+        y9V5j7O0uPJ7aogkCtO3Sps97QrWx6Y=
+X-Google-Smtp-Source: ABdhPJx9uBOfrCiM0/R3Zsu22pcZrqPYhP0mTwR4ShLCNMjHG8UMl8OHt6EvsKxyZNDoOZs+QlenJg==
+X-Received: by 2002:aed:204c:: with SMTP id 70mr867062qta.92.1606161841405;
+        Mon, 23 Nov 2020 12:04:01 -0800 (PST)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id a13sm6440161qtj.69.2020.11.23.12.04.00
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Nov 2020 12:04:00 -0800 (PST)
+Sender: Chuck Lever <chucklever@gmail.com>
+Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0ANK3wfZ010266
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 20:03:59 GMT
+Subject: [PATCH v3 00/85] Update NFSD XDR functions
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Date:   Mon, 23 Nov 2020 15:03:58 -0500
+Message-ID: <160616177104.51996.14915419165992024951.stgit@klimt.1015granger.net>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR03CA0013.namprd03.prod.outlook.com (2603:10b6:208:23a::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.20 via Frontend Transport; Mon, 23 Nov 2020 20:03:47 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1khI3t-000A35-Tb; Mon, 23 Nov 2020 16:03:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1606161831; bh=QophqWBVIGhmInjMMmoN1JCz5yEuED07MVw87J8AVUY=;
-        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
-         From:To:CC:Subject:Message-ID:References:Content-Type:
-         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType;
-        b=Zr1EZlr7FGouweCXJ2A3YJZ8lxsTazMwmiIDkNNgeYuPc4M3hA0h9guNHLXrnnLeX
-         Dp0jtpGLpYuZZsYit0m8+Y/3Pgk+U78P2KDuhjfei0oh+kHbQnRfzB2jD1Wu7rVyZ8
-         A2iuCgvA8hhwNVx8Bo/l4LfRAECKvf8eJj6um7c8+wyJ6oFgyijvPixB8Xcq6YNTLj
-         o7o09Zdo2SkPJV9Ld82VvGAW1KENwGx8qxL8L4kHw5xGizl/kk/4FLfOCs8mx17bXD
-         N2PIS7AsaPoH2bHogxWrZ7vcH6YOCMGYKk/oZQ1BhSoaDoH96AMZAs9BCirfcyYEMq
-         3EMRDyReptNPA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 12:21:39PM -0600, Gustavo A. R. Silva wrote:
+The long-term purpose is to convert the NFSD XDR encoder and decoder
+functions to use the struct xdr_stream API. This is a refactor and
+clean-up with few or no changes in behavior expected, but there are
+some long-term benefits:
 
->   IB/hfi1: Fix fall-through warnings for Clang
->   IB/mlx4: Fix fall-through warnings for Clang
->   IB/qedr: Fix fall-through warnings for Clang
->   RDMA/mlx5: Fix fall-through warnings for Clang
+- More robust input sanitization in the NFSD decoders.
+- Help make it possible to use common kernel library functions with
+  XDR stream APIs (for example, GSS-API).
+- Align the structure of the source code with the RFCs so it is
+  easier to learn, verify, and maintain our XDR implementation.
+- Removal of more than a hundred hidden dprintk() call sites.
+- Removal of as much explicit manipulation of pages as possible to
+  help make the eventual transition to xdr->bvecs smoother.
 
-I picked these four to the rdma tree, thanks
+The current series focuses on NFSv4 decoder changes only. To
+simplify things, I've postponed the NFSv2 and NFSv3 changes until
+the NFSv4 work has been merged.
 
-Jason
+The full set of ready patches lives in a topic branch in my git
+repo:
+
+ git://git.linux-nfs.org/projects/cel/cel-2.6.git nfsd-xdr_stream
+
+
+Changes since v2:
+- Rebase on v5.10-rc5
+- Add tracepoints to capture NFSD decoding and encoding errors
+- Revert the use of xdr_stream_decode_uint32_array()
+- Fix a bug in xdr_stream_subsegment()
+- Drop most of the NFSv2 and NFSv3 related patches
+- Drop the use of XDR_DECODE_DONE/FAILED
+
+Changes since v1:
+- Broke up larger patches (fattr4, LOCK, OPEN, EXCHANGE_ID, and so on)
+- Replaced goto spaghetti in new decoders
+- Cleaned up function synopses
+- Replaced nfsd4_decode_bitmap() with generic XDR helper
+- The posted series now contains changes to NFSv2 and NFSv3 decoders
+
+---
+
+Chuck Lever (85):
+      SUNRPC: Add xdr_set_scratch_page() and xdr_reset_scratch_buffer()
+      SUNRPC: Prepare for xdr_stream-style decoding on the server-side
+      NFSD: Add common helpers to decode void args and encode void results
+      NFSD: Add tracepoints in nfsd_dispatch()
+      NFSD: Add tracepoints in
+      NFSD: Replace the internals of the READ_BUF() macro
+      NFSD: Replace READ* macros in nfsd4_decode_access()
+      NFSD: Replace READ* macros in nfsd4_decode_close()
+      NFSD: Replace READ* macros in nfsd4_decode_commit()
+      NFSD: Change the way the expected length of a fattr4 is checked
+      NFSD: Replace READ* macros that decode the fattr4 size attribute
+      NFSD: Replace READ* macros that decode the fattr4 acl attribute
+      NFSD: Replace READ* macros that decode the fattr4 mode attribute
+      NFSD: Replace READ* macros that decode the fattr4 owner attribute
+      NFSD: Replace READ* macros that decode the fattr4 owner_group attribute
+      NFSD: Replace READ* macros that decode the fattr4 time_set attributes
+      NFSD: Replace READ* macros that decode the fattr4 security label attribute
+      NFSD: Replace READ* macros that decode the fattr4 umask attribute
+      NFSD: Replace READ* macros in nfsd4_decode_fattr()
+      NFSD: Replace READ* macros in nfsd4_decode_create()
+      NFSD: Replace READ* macros in nfsd4_decode_delegreturn()
+      NFSD: Replace READ* macros in nfsd4_decode_getattr()
+      NFSD: Replace READ* macros in nfsd4_decode_link()
+      NFSD: Relocate nfsd4_decode_opaque()
+      NFSD: Add helpers to decode a clientid4 and an NFSv4 state owner
+      NFSD: Add helper for decoding locker4
+      NFSD: Replace READ* macros in nfsd4_decode_lock()
+      NFSD: Replace READ* macros in nfsd4_decode_lockt()
+      NFSD: Replace READ* macros in nfsd4_decode_locku()
+      NFSD: Replace READ* macros in nfsd4_decode_lookup()
+      NFSD: Add helper to decode NFSv4 verifiers
+      NFSD: Add helper to decode OPEN's createhow4 argument
+      NFSD: Add helper to decode OPEN's openflag4 argument
+      NFSD: Replace READ* macros in nfsd4_decode_share_access()
+      NFSD: Replace READ* macros in nfsd4_decode_share_deny()
+      NFSD: Add helper to decode OPEN's open_claim4 argument
+      NFSD: Replace READ* macros in nfsd4_decode_open()
+      NFSD: Replace READ* macros in nfsd4_decode_open_confirm()
+      NFSD: Replace READ* macros in nfsd4_decode_open_downgrade()
+      NFSD: Replace READ* macros in nfsd4_decode_putfh()
+      NFSD: Replace READ* macros in nfsd4_decode_read()
+      NFSD: Replace READ* macros in nfsd4_decode_readdir()
+      NFSD: Replace READ* macros in nfsd4_decode_remove()
+      NFSD: Replace READ* macros in nfsd4_decode_rename()
+      NFSD: Replace READ* macros in nfsd4_decode_renew()
+      NFSD: Replace READ* macros in nfsd4_decode_secinfo()
+      NFSD: Replace READ* macros in nfsd4_decode_setattr()
+      NFSD: Replace READ* macros in nfsd4_decode_setclientid()
+      NFSD: Replace READ* macros in nfsd4_decode_setclientid_confirm()
+      NFSD: Replace READ* macros in nfsd4_decode_verify()
+      NFSD: Replace READ* macros in nfsd4_decode_write()
+      NFSD: Replace READ* macros in nfsd4_decode_release_lockowner()
+      NFSD: Replace READ* macros in nfsd4_decode_cb_sec()
+      NFSD: Replace READ* macros in nfsd4_decode_backchannel_ctl()
+      NFSD: Replace READ* macros in nfsd4_decode_bind_conn_to_session()
+      NFSD: Add a separate decoder to handle state_protect_ops
+      NFSD: Add a separate decoder for ssv_sp_parms
+      NFSD: Add a helper to decode state_protect4_a
+      NFSD: Add a helper to decode nfs_impl_id4
+      NFSD: Add a helper to decode channel_attrs4
+      NFSD: Replace READ* macros in nfsd4_decode_create_session()
+      NFSD: Replace READ* macros in nfsd4_decode_destroy_session()
+      NFSD: Replace READ* macros in nfsd4_decode_free_stateid()
+      NFSD: Replace READ* macros in nfsd4_decode_getdeviceinfo()
+      NFSD: Replace READ* macros in nfsd4_decode_layoutcommit()
+      NFSD: Replace READ* macros in nfsd4_decode_layoutget()
+      NFSD: Replace READ* macros in nfsd4_decode_layoutreturn()
+      NFSD: Replace READ* macros in nfsd4_decode_secinfo_no_name()
+      NFSD: Replace READ* macros in nfsd4_decode_sequence()
+      NFSD: Replace READ* macros in nfsd4_decode_test_stateid()
+      NFSD: Replace READ* macros in nfsd4_decode_destroy_clientid()
+      NFSD: Replace READ* macros in nfsd4_decode_reclaim_complete()
+      NFSD: Replace READ* macros in nfsd4_decode_fallocate()
+      NFSD: Replace READ* macros in nfsd4_decode_nl4_server()
+      NFSD: Replace READ* macros in nfsd4_decode_copy()
+      NFSD: Replace READ* macros in nfsd4_decode_copy_notify()
+      NFSD: Replace READ* macros in nfsd4_decode_offload_status()
+      NFSD: Replace READ* macros in nfsd4_decode_seek()
+      NFSD: Replace READ* macros in nfsd4_decode_clone()
+      NFSD: Replace READ* macros in nfsd4_decode_xattr_name()
+      NFSD: Replace READ* macros in nfsd4_decode_setxattr()
+      NFSD: Replace READ* macros in nfsd4_decode_listxattrs()
+      NFSD: Make nfsd4_ops::opnum a u32
+      NFSD: Replace READ* macros in nfsd4_decode_compound()
+      NFSD: Remove macros that are no longer used
+
+
+ fs/nfsd/nfs2acl.c          |   21 +-
+ fs/nfsd/nfs3acl.c          |    8 +-
+ fs/nfsd/nfs3proc.c         |   10 +-
+ fs/nfsd/nfs3xdr.c          |   11 -
+ fs/nfsd/nfs4proc.c         |   25 +-
+ fs/nfsd/nfs4state.c        |    2 +-
+ fs/nfsd/nfs4xdr.c          | 2531 +++++++++++++++++++-----------------
+ fs/nfsd/nfsd.h             |    8 +
+ fs/nfsd/nfsproc.c          |   25 +-
+ fs/nfsd/nfssvc.c           |   47 +-
+ fs/nfsd/nfsxdr.c           |   10 -
+ fs/nfsd/trace.h            |  128 ++
+ fs/nfsd/xdr.h              |    2 -
+ fs/nfsd/xdr3.h             |    2 -
+ fs/nfsd/xdr4.h             |   30 +-
+ include/linux/sunrpc/svc.h |   16 +
+ include/linux/sunrpc/xdr.h |   44 +
+ net/sunrpc/svc.c           |    5 +
+ net/sunrpc/xdr.c           |   45 +
+ 19 files changed, 1643 insertions(+), 1327 deletions(-)
+
+--
+Chuck Lever
+
