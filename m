@@ -2,156 +2,192 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA7A12C12EB
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 19:09:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A75822C12F6
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 19:18:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgKWSJu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Nov 2020 13:09:50 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:56142 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgKWSJu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 13:09:50 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANI8XkC104298;
-        Mon, 23 Nov 2020 18:09:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=MDKJYQYPFtVwEP/5AgQ8wjc8/Mg11CqjUITtD0QpEvg=;
- b=mIiLlJYZI7w1rPTQaiWSoBYwwFYykcdaeM01GhEFKurGuENAQr92kdfMyFKPbniOnjdo
- MZiCFgaxFQ+nINo/dh6SjhVHmhojOjv6KRIKn7SQiC0jiSNE7rlc9rQkpQHBQqxUduiZ
- Fps3MEqRxl9o5/fLTvz4FpXckmYwXbhA/QpURB72QW0hxB6g4dSmAlpqjlm+hWrD590k
- A2nlVmtVVJw1u3NSmD07Ig/j3t4NK66qG6P/gLiDlmm1pVBqdyEhFq5zww6lAOEpnGFE
- wTv9Kgar1tji5xxvYhMHlHi8SViskrAl6IEGorIENN+JSMOkG1RY6ssg4SH1sdltGaB4 uQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 34xrdaps24-1
+        id S1730245AbgKWSQ5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Nov 2020 13:16:57 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:53388 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgKWSQ5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 13:16:57 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANIET27165985;
+        Mon, 23 Nov 2020 18:16:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=iuf1imG4Rsjrz6757d6haCdBclA/AkVqhAXpv43lFtI=;
+ b=bLhiU5eoyUn5atVbuibyzLJVSY2TXFeRtKzkAcnEyfxY1FjZtQViPsP7Og3qZrjTnrZb
+ mEwl4m4jq7af+rxZvYaXFt9wIN4AloBmV0rBqv/NGmaevxIcw+eKB1BjrsYliwfN4OZn
+ y5VI/7jcplDM/cnyQGaPbl3RwP1Xm95ppNgxwqh9L0OZHcWDOIw1oWiXFi86bAG/qglZ
+ fyfcAUU6Z9zDOaNR7VvYUduv+t5jR/akwoKYVofmsFDBHpWwmsV7gjTva+VuoQttdNyj
+ ptk1LomMaKIOVmq9T9lbtSCT3vOZesEvw9b3w+IFlTiAtc4jtIBBEU9bq8DXAIwqphzK zQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 34xtukxm6a-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Nov 2020 18:09:44 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANI4rPV169300;
-        Mon, 23 Nov 2020 18:09:43 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 34yctv7f3y-1
+        Mon, 23 Nov 2020 18:16:54 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANI5dkC119249;
+        Mon, 23 Nov 2020 18:14:54 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 34yx8hs83r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Nov 2020 18:09:43 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0ANI9eoP029042;
-        Mon, 23 Nov 2020 18:09:40 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        Mon, 23 Nov 2020 18:14:54 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0ANIEqgE029645;
+        Mon, 23 Nov 2020 18:14:52 GMT
+Received: from dhcp-10-154-161-244.vpn.oracle.com (/10.154.161.244)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Nov 2020 10:09:40 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH 1/1] NFSv4.2: fix LISTXATTR buffer receive size
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CAN-5tyEd8iDfEW0WsXyPsoM73tUSAXQgyhAfRbRbRZCem_cwPw@mail.gmail.com>
-Date:   Mon, 23 Nov 2020 13:09:38 -0500
-Cc:     Frank van der Linden <fllinden@amazon.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F85397C8-3FFD-4A7F-92E4-DB84D80F6387@oracle.com>
-References: <20201113190851.7817-1-olga.kornievskaia@gmail.com>
- <99874775-A18C-4832-A2F0-F2152BE5CE32@oracle.com>
- <CAN-5tyEyQbmc-oefF+-PdtdcS7GJ9zmJk71Dk8EED0upcorqaA@mail.gmail.com>
- <07AF9A5C-BC42-4F66-A153-19A410D312E1@oracle.com>
- <CAN-5tyFpeVf0y67tJqvbqZmNMRzyvdj_33g9nJUNWW62Tx+thg@mail.gmail.com>
- <7E0CD3F3-84F2-4D08-8D5A-37AA0FA4852D@oracle.com>
- <20201119232647.GA11369@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
- <CAN-5tyH+ZCiqxKQEE9iGURP-71Xd2BqzHuWWPMzZURePKXirfQ@mail.gmail.com>
- <CAN-5tyEJ4Lbf=Ht2P4gwd9y4EPvN=G6teAiaunL=Ayxox8MSdg@mail.gmail.com>
- <4687FA42-6294-418D-9835-EDE809997AE3@oracle.com>
- <CAN-5tyEd8iDfEW0WsXyPsoM73tUSAXQgyhAfRbRbRZCem_cwPw@mail.gmail.com>
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
+        with ESMTP ; Mon, 23 Nov 2020 10:14:52 -0800
+Subject: Re: [PATCH v4 1/1] NFSv4.2: Fix NFS4ERR_STALE error when doing inter
+ server copy
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Olga Kornievskaia <aglo@umich.edu>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+References: <eeafd9e2-5d04-848e-d330-670e2185098d@oracle.com>
+ <20201109204206.GA20261@fieldses.org>
+ <7a18452a-3120-ea5b-f676-9d7e18a65446@oracle.com>
+ <470b690f-c919-2c48-95b7-18cc75f71f70@oracle.com>
+ <20201110201239.GA17755@fieldses.org>
+ <CAN-5tyHEj_nNhN=wM3xkzsAp2RUqQw4pVau+DruFPXGT8j+kuw@mail.gmail.com>
+ <20201110215157.GB17755@fieldses.org>
+ <CAN-5tyEPvpQQVL+j=4vbfdcKmr96ZpYq3fsCQTZHyS5qWGJsvw@mail.gmail.com>
+ <20201110222155.GC17755@fieldses.org>
+ <5b395908-8cd4-f93d-421e-68608235b863@oracle.com>
+ <20201123162514.GF32599@fieldses.org>
+From:   Dai Ngo <dai.ngo@oracle.com>
+Message-ID: <05c6adaa-c998-36d3-c66d-da2968941fb8@oracle.com>
+Date:   Mon, 23 Nov 2020 10:14:51 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.5.0
+MIME-Version: 1.0
+In-Reply-To: <20201123162514.GF32599@fieldses.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9814 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- malwarescore=0 spamscore=0 phishscore=0 mlxlogscore=999 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011230120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9814 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 impostorscore=0 mlxscore=0
- mlxlogscore=999 spamscore=0 phishscore=0 clxscore=1015 malwarescore=0
- lowpriorityscore=0 adultscore=0 suspectscore=0 priorityscore=1501
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 suspectscore=3
+ bulkscore=0 mlxlogscore=999 malwarescore=0 adultscore=0 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2011230120
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9814 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 mlxlogscore=999 impostorscore=0 spamscore=0 mlxscore=0
+ phishscore=0 clxscore=1011 suspectscore=3 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011230121
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
+On 11/23/20 8:25 AM, J. Bruce Fields wrote:
+> On Wed, Nov 11, 2020 at 03:02:19PM -0800, Dai Ngo wrote:
+>> On 11/10/20 2:21 PM, J. Bruce Fields wrote:
+>>> On Tue, Nov 10, 2020 at 05:08:59PM -0500, Olga Kornievskaia wrote:
+>>>> On Tue, Nov 10, 2020 at 4:52 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+>>>>> On Tue, Nov 10, 2020 at 04:07:41PM -0500, Olga Kornievskaia wrote:
+>>>>>> On Tue, Nov 10, 2020 at 3:14 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+>>>>>>> On Mon, Nov 09, 2020 at 10:46:12PM -0800, Dai Ngo wrote:
+>>>>>>>> On 11/9/20 2:26 PM, Dai Ngo wrote:
+>>>>>>>>> On 11/9/20 12:42 PM, J. Bruce Fields wrote:
+>>>>>>>>>> On Mon, Nov 09, 2020 at 11:34:08AM -0800, Dai Ngo wrote:
+>>>>>>>>>>> On 11/9/20 10:30 AM, J. Bruce Fields wrote:
+>>>>>>>>>>>> On Tue, Oct 20, 2020 at 11:34:35AM -0700, Dai Ngo wrote:
+>>>>>>>>>>>>> On 10/20/20 10:01 AM, J. Bruce Fields wrote:
+>>>>>>>>>>>>>> On Sun, Oct 18, 2020 at 11:42:49PM -0400, Dai Ngo wrote:
+>>>>>>>>>>>>>>> NFS_FS=y as dependency of CONFIG_NFSD_V4_2_INTER_SSC still have
+>>>>>>>>>>>>>>> build errors and some configs with NFSD=m to get NFS4ERR_STALE
+>>>>>>>>>>>>>>> error when doing inter server copy.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Added ops table in nfs_common for knfsd to access NFS
+>>>>>>>>>>>>>>> client modules.
+>>>>>>>>>>>>>> OK, looks reasonable to me, applying.  Does this resolve all the
+>>>>>>>>>>>>>> problems you've seen, or is there any bad case left?
+>>>>>>>>>>>>> Thanks Bruce.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> With this patch, I no longer see the NFS4ERR_STALE in any config.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> The problem with NFS4ERR_STALE was because of a bug in
+>>>>>>>>>>>>> nfs42_ssc_open.
+>>>>>>>>>>>>> When CONFIG_NFSD_V4_2_INTER_SSC is not defined, nfs42_ssc_open
+>>>>>>>>>>>>> returns NULL which is incorrect allowing the operation to continue
+>>>>>>>>>>>>> until nfsd4_putfh which does not have the code to handle
+>>>>>>>>>>>>> nfserr_stale.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> With this patch, when CONFIG_NFSD_V4_2_INTER_SSC is not defined the
+>>>>>>>>>>>>> new nfs42_ssc_open returns ERR_PTR(-EIO) which causes the NFS client
+>>>>>>>>>>>>> to switch over to the split copying (read src and write to dst).
+>>>>>>>>>>>> That sounds reasonable, but I don't see any of the patches you've sent
+>>>>>>>>>>>> changing that error return.  Did I overlook something, or did you mean
+>>>>>>>>>>>> to append a patch to this message?
+>>>>>>>>>>> Since with the patch, I did not run into the condition where
+>>>>>>>>>>> NFS4ERR_STALE
+>>>>>>>>>>> is returned so I did not fix this return error code. Do you want me to
+>>>>>>>>>>> submit another patch to change the returned error code from
+>>>>>>>>>>> NFS4ERR_STALE
+>>>>>>>>>>> to NFS4ERR_NOTSUPP if it ever runs into that condition?
+>>>>>>>>>> That would be great, thanks.  (I mean, it is still possible to hit that
+>>>>>>>>>> case, right?  You just didn't test with !CONFIG_NFSD_V4_2_INTER_SSC ?)
+>>>>>>>>> will do. I did tested with (!CONFIG_NFSD_V4_2_INTER_SSC) but did not hit
+>>>>>>>>> this case.
+>>>>>>>> I need to qualify this, the copy_file_range syscall did not return
+>>>>>>>> ESTALE in the test.
+>>>>>>>>
+>>>>>>>>> Because with this patch, when CONFIG_NFSD_V4_2_INTER_SSC is not
+>>>>>>>>> defined the new nfs42_ssc_open returns ERR_PTR(-EIO), instead of NULL in
+>>>>>>>>> the old code, which causes the NFS client to switch over to the split
+>>>>>>>>> copying (read src and write to dst).
+>>>>>>>> This is not the reason why the client switches to generic_copy_file_range.
+>>>>>>>>
+>>>>>>>>> Returning NULL in the old nfs42_ssc_open is not correct, it allows
+>>>>>>>>> the copy
+>>>>>>>>> operation to proceed and hits the NFS4ERR_STALE case in the COPY
+>>>>>>>>> operation.
+>>>>>>>> I retested with (!CONFIG_NFSD_V4_2_INTER_SSC) and saw NFS4ERR_STALE
+>>>>>>>> returned for the PUTFH of the SRC in the COPY compound. However on the
+>>>>>>>> client nfs42_proc_copy (with commit 7e350197a1c10) replaced the ESTALE
+>>>>>>>> with EOPNOTSUPP causing nfs4_copy_file_range to use generic_copy_file_range
+>>>>>>>> to do the copy.
+>>>>>>>>
+>>>>>>>> The ESTALE error is only returned by copy_file_range if the client
+>>>>>>>> does not have commit 7e350197a1c10. So I think there is no need to
+>>>>>>>> make any change on the source server for the NFS4ERR_STALE error.
+>>>>>>> I don't believe NFS4ERR_STALE is the correct error for the server to
+>>>>>>> return.  It's nice that the client is able to do the right thing despite
+>>>>>>> the server returning the wrong error, but we should still try to get
+>>>>>>> this right on the server.
+>>>>>> Hi Bruce,
+>>>>>>
+>>>>>> ERR_STALE is the appropriate error to be returned by the server that
+>>>>>> gets a COPY compound when it doesn't support COPY. Since server can't
+>>>>>> understand the filehandle so it can't process it so we can't get to
+>>>>>> processing COPY opcode where the server could have returned
+>>>>>> EOPNOTSUPP.
+>>>>> The case we're discussing is the case where we support COPY but not
+>>>>> server-to-server copy.
+>>>> My point is still the same, that's an appropriate error for when
+>>>> server-to-server copy is not supported.
+>>> Uh, OK, if it backs up and returns it to the PUTFH, I guess?
+>>>
+>>> Was it really the intention of nfsd4_do_async_copy() that it return
+>>> STALE in the case NFS42_ssc_open() returns NULL?  That's pretty
+>>> confusing.
+>> In this scenario, the COPY compound fails at the PUTFH op and
+>> NFS4ERR_NOTSUPP is not a valid error code for PUTFH, NFS4ERR_STALE is.
+> OK, makes sense.
+>
+> I've lost track of what's left to apply.
 
-> On Nov 23, 2020, at 12:59 PM, Olga Kornievskaia =
-<olga.kornievskaia@gmail.com> wrote:
->=20
-> On Mon, Nov 23, 2020 at 12:37 PM Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>=20
->>=20
->>=20
->>> On Nov 23, 2020, at 11:42 AM, Olga Kornievskaia =
-<olga.kornievskaia@gmail.com> wrote:
->>>=20
->>> Hi Frank, Chuck,
->>>=20
->>> I would like your option on how LISTXATTR is supposed to work over
->>> RDMA. Here's my current understanding of why the listxattr is not
->>> working over the RDMA.
->>>=20
->>> This happens when the listxattr is called with a very small buffer
->>> size which RDMA wants to send an inline request. I really dont
->>> understand why, Chuck, you are not seeing any problems with hardware
->>> as far as I can tell it would have the same problem because the =
-inline
->>> threshold size would still make this size inline.
->>> rcprdma_inline_fixup() is trying to write to pages that don't exist.
->>>=20
->>> When LISTXATTR sets this flag XDRBUF_SPARSE_PAGES there is code that
->>> will allocate pages in xs_alloc_sparse_pages() but this is ONLY for
->>> TCP. RDMA doesn't have anything like that.
->>>=20
->>> Question: Should there be code added to RDMA that will do something
->>> similar when it sees that flag set?
->>=20
->> Isn't the logic in rpcrdma_convert_iovs() allocating those pages?
->=20
-> No, rpcrdm_convert_iovs is only called for when you have reply chunks,
-> lists etc but not for the inline messages. What am I missing?
+I think we're good with this issue.
+There is still one inter server copy related patch waiting for
+your review:
 
-So, then, rpcrdma_marshal_req() is deciding that the LISTXATTRS
-reply is supposed to fit inline. That means rqst->rq_rcv_buf.buflen
-is small.
+PATCH] NFSD: Fix 5 seconds delay when doing inter server copy
 
-But if rpcrdma_inline_fixup() is trying to fill pages,
-rqst->rq_rcv_buf.page_len must not be zero? That sounds like the
-LISTXATTRS encoder is not setting up the receive buffer correctly.
+Thanks,
+-Dai
 
-The receive buffer's buflen field is supposed to be set to a value
-that is at least as large as page_len, I would think.
-
-
->>> Or, should LISTXATTR be re-written
->>> to be like READDIR which allocates pages before calling the code.
->>=20
->> AIUI READDIR reads into the directory inode's page cache. I recall
->> that Frank couldn't do that for LISTXATTR because there's no
->> similar page cache associated with the xattr listing.
->>=20
->> That said, I would prefer that the *XATTR procedures directly
->> allocate pages instead of relying on SPARSE_PAGES, which is a hack
->> IMO. I think it would have to use alloc_page() for that, and then
->> ensure those pages are released when the call has completed.
->>=20
->> I'm not convinced this is the cause of the problem you're seeing,
->> though.
->>=20
->> --
->> Chuck Lever
-
---
-Chuck Lever
-
-
-
+>
+> --b.
