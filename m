@@ -2,164 +2,154 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 601D32C0FF8
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 17:20:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F7272C1037
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 17:28:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389793AbgKWQRO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Nov 2020 11:17:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730953AbgKWQRN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 11:17:13 -0500
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B58B8C0613CF;
-        Mon, 23 Nov 2020 08:17:12 -0800 (PST)
-Received: by mail-io1-xd41.google.com with SMTP id r1so18631487iob.13;
-        Mon, 23 Nov 2020 08:17:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9G9wehhbpTZzWWOvGr3rWAgWQ0geLC9Yp77M/YC6Idw=;
-        b=jzsPhOCPkH8JcubkL+ilpCqrpmJxzR/ZZhmza1K1c0eddk7+QY69lMXZ1zjj7yUobv
-         UPOat94Oznz5N+aYQtyK2tx44PHGHvaT6c5ydFaOoT5387NjxS4giDE0liSNJKSpvdGp
-         HKiV67o8ZfM+QomP6uHJNCHgME5k654Lm9OlI5uZEZV/BZyGXhrMcp4osA9RqzKjR7Ze
-         0dIcMPHMz9M6e1KbFfvtyGGjldyt3D137VsBHg9GBRp12UjhpWPsI6mtFPtV54IoaC+K
-         mSdXyd8g5UOodS4awURhueIsrAq2XHUWM9vJndBZGt3fLtR88qq6iY1NEsTPrUzb2MVL
-         n+0A==
+        id S2389937AbgKWQZL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Nov 2020 11:25:11 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46696 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730953AbgKWQZG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 11:25:06 -0500
+Received: by mail-ot1-f66.google.com with SMTP id g19so16405027otp.13;
+        Mon, 23 Nov 2020 08:25:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9G9wehhbpTZzWWOvGr3rWAgWQ0geLC9Yp77M/YC6Idw=;
-        b=hVitWrlh2sxeAFONKORzLus4JyvFA3rcn8QIGBQq2k3uJuVq9YUNy4fCzc2x69GM/K
-         x6rfL2APtZvmrb1QXu5TXk9V3l0N6frUY3Frbobn0kfBusqszKZr4uiJWNdpaCdv56Z/
-         wgziWxLdZgSOzR4FRX9JXiW5o4UOPn1jq8hzDGybC0oJkLOCyFUgLiLrhTnpbS+MLyEH
-         lmEqyVjNf6BTXWC7Ghnn6V46zxeDQZ7iP2c4fd9pUb+1oMUgwzcz3TL4RFIJocGkSwXl
-         TPsa+LquElSljh07DGHwR4mXXm/pXrcSuqcFIzp5JCtS1lDBTj67LON7U4ug71f5MvLC
-         sQWQ==
-X-Gm-Message-State: AOAM530K9rFD6JQ02rXi1spGVMPYez+BJ8N9wPtE6BGR/WFNVYGQ52rc
-        gi/eUmgbUZdvHll24yu2X3FTOrjU/s2OU5ec+po=
-X-Google-Smtp-Source: ABdhPJw5wxDBX8QpwE2CghMfFtPIAtnmG9XIUqmbpxXD9wxvuYGnavpxLlav0NBfuecvTCMrGKLgN0Lee5ktV7i8vQ8=
-X-Received: by 2002:a05:6602:22c7:: with SMTP id e7mr415585ioe.114.1606148231969;
- Mon, 23 Nov 2020 08:17:11 -0800 (PST)
+        bh=SWzdE85KMSmQ5K6aYMgWVQjn8/tst2VI3dLUnv/55SM=;
+        b=tt87NnnAO5VGtl3XI4J4ai62RjtWg2YZ7uCoDHeJuRIVwzPzXDnEZRCOqttT2DdQ4t
+         egb3NYfE/CJdb59O38AVWWufklBxs9mdhTQAJQlXY3UDIzdp9Z4Dud/At/9hDKnvLIVc
+         ESs5CmJr2JscwRtUymU4vNeYYKwuvo+9wiq7nnIUnWUds+gB+FKLigO6FH/qkW1dlKBT
+         lAxZMSl+gk0L5eb9wfCTMvLHjcNioUhoGntJjTOGk/F2iZjlHy/jDUqF0wiJg1+Vi4Ma
+         53gNnAYdtU+gEJdw7C0x5o3zl+CpmYJ+EiWLxBvL+58CzGP/7SAAgpN+vn8HCjRubbjT
+         my3Q==
+X-Gm-Message-State: AOAM531fkC8Xvk2qw3PULaWa9M0XKIlDezforErFLqtVJUBmOJiA+1Sn
+        rVaEZPsNS/s7cmPiuzbl3rq70WUkqrCPpad71gQ=
+X-Google-Smtp-Source: ABdhPJxW9u67TbnPp8ObIChv5a6F+ncd8SoV+BFvs894Bl4MJzyAX0TVAjkpawJr+z1OvIzzPyEcIsCefAg0WelXSFg=
+X-Received: by 2002:a9d:16f:: with SMTP id 102mr68959otu.206.1606148702991;
+ Mon, 23 Nov 2020 08:25:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20201121165058.1644182-1-trix@redhat.com> <5843ef910b0e86c00d9c0143dec20f93823b016b.camel@HansenPartnership.com>
- <87y2ism5or.fsf@intel.com>
-In-Reply-To: <87y2ism5or.fsf@intel.com>
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Date:   Mon, 23 Nov 2020 17:17:00 +0100
-Message-ID: <CAKXUXMydH+VtMeuftPRgCg_PYm2iChOMkUYjO=QTG=NRM3QFiw@mail.gmail.com>
-Subject: Re: [RFC] MAINTAINERS tag for cleanup robot
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Tom Rix <trix@redhat.com>, Joe Perches <joe@perches.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        linux-mtd@lists.infradead.org, linux-scsi@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, cluster-devel@redhat.com,
-        linux-acpi@vger.kernel.org, tboot-devel@lists.sourceforge.net,
-        coreteam@netfilter.org, xen-devel@lists.xenproject.org,
-        MPT-FusionLinux.pdl@broadcom.com,
+References: <cover.1605896059.git.gustavoars@kernel.org> <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
+ <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com>
+ <1c7d7fde126bc0acf825766de64bf2f9b888f216.camel@HansenPartnership.com>
+ <CANiq72m22Jb5_+62NnwX8xds2iUdWDMAqD8PZw9cuxdHd95W0A@mail.gmail.com> <fc45750b6d0277c401015b7aa11e16cd15f32ab2.camel@HansenPartnership.com>
+In-Reply-To: <fc45750b6d0277c401015b7aa11e16cd15f32ab2.camel@HansenPartnership.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 23 Nov 2020 17:24:51 +0100
+Message-ID: <CAJZ5v0jJ6GFm4LFCR2V3qvD9rZrVw=pXyXSjSWPYtQudg-F3xg@mail.gmail.com>
+Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
+        cluster-devel@redhat.com, coreteam@netfilter.org,
+        devel@driverdev.osuosl.org, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        intel-wired-lan@lists.osuosl.org, keyrings@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-afs@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-atm-general@lists.sourceforge.net,
+        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-cifs@vger.kernel.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-decnet-user@lists.sourceforge.net,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
+        linux-geode@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-i3c@lists.infradead.org,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>, linux-iio@vger.kernel.org,
+        linux-input <linux-input@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
         Linux Media Mailing List <linux-media@vger.kernel.org>,
-        alsa-devel@alsa-project.org, intel-gfx@lists.freedesktop.org,
-        ecryptfs@vger.kernel.org, linux-omap@vger.kernel.org,
-        devel@acpica.org, linux-nfs@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>, linux-usb@vger.kernel.org,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-mtd@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:TARGET SUBSYSTEM" <linux-scsi@vger.kernel.org>,
+        linux-sctp@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
+        <linux-usb@vger.kernel.org>, linux-watchdog@vger.kernel.org,
         linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-bluetooth@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, patches@opensource.cirrus.com,
-        linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org
+        Network Development <netdev@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org,
+        nouveau <nouveau@lists.freedesktop.org>,
+        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
+        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
+        selinux@vger.kernel.org, target-devel@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        usb-storage@lists.one-eyed-alien.net,
+        virtualization@lists.linux-foundation.org,
+        wcn36xx@lists.infradead.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 4:52 PM Jani Nikula <jani.nikula@linux.intel.com> wrote:
+On Mon, Nov 23, 2020 at 4:58 PM James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
 >
-> On Sat, 21 Nov 2020, James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
-> > On Sat, 2020-11-21 at 08:50 -0800, trix@redhat.com wrote:
-> >> A difficult part of automating commits is composing the subsystem
-> >> preamble in the commit log.  For the ongoing effort of a fixer
-> >> producing
-> >> one or two fixes a release the use of 'treewide:' does not seem
-> >> appropriate.
-> >>
-> >> It would be better if the normal prefix was used.  Unfortunately
-> >> normal is
-> >> not consistent across the tree.
-> >>
-> >>
-> >>      D: Commit subsystem prefix
-> >>
-> >> ex/ for FPGA DFL DRIVERS
-> >>
-> >>      D: fpga: dfl:
-> >>
+> On Mon, 2020-11-23 at 15:19 +0100, Miguel Ojeda wrote:
+> > On Sun, Nov 22, 2020 at 11:36 PM James Bottomley
+> > <James.Bottomley@hansenpartnership.com> wrote:
+
+[cut]
+
 > >
-> > I've got to bet this is going to cause more issues than it solves.
+> > Maintainers routinely review 1-line trivial patches, not to mention
+> > internal API changes, etc.
 >
-> Agreed.
+> We're also complaining about the inability to recruit maintainers:
 >
+> https://www.theregister.com/2020/06/30/hard_to_find_linux_maintainers_says_torvalds/
+>
+> And burn out:
+>
+> http://antirez.com/news/129
 
-Tom, this a problem only kernel janitors encounter; all other
-developers really do not have that issue. The time spent on creating
-the patch is much larger than the amount saved if the commit log
-header line prefix would be derived automatically. I believe Julia
-Lawall, Arnd Bergmann and Nathan Chancellor as long-term
-high-frequency janitors do have already scripted approaches to that
-issue. Maybe they simply need to share these scripts with you and you
-consolidate them and share with everyone?
+Right.
 
-Also, making clean-up patches cumbersome has a positive side as well;
-maintainers are not swamped with fully automated patch submissions.
-There have been some bad experiences with some submitters on that in
-the past...
+> The whole crux of your argument seems to be maintainers' time isn't
+> important so we should accept all trivial patches ... I'm pushing back
+> on that assumption in two places, firstly the valulessness of the time
+> and secondly that all trivial patches are valuable.
+>
+> > If some company does not want to pay for that, that's fine, but they
+> > don't get to be maintainers and claim `Supported`.
+>
+> What I'm actually trying to articulate is a way of measuring value of
+> the patch vs cost ... it has nothing really to do with who foots the
+> actual bill.
+>
+> One thesis I'm actually starting to formulate is that this continual
+> devaluing of maintainers is why we have so much difficulty keeping and
+> recruiting them.
 
-> > SCSI uses scsi: <driver>: for drivers but not every driver has a
-> > MAINTAINERS entry.  We use either scsi: or scsi: core: for mid layer
-> > things, but we're not consistent.  Block uses blk-<something>: for all
-> > of it's stuff but almost no <somtehing>s have a MAINTAINERS entry.  So
-> > the next thing you're going to cause is an explosion of suggested
-> > MAINTAINERs entries.
->
-> On the one hand, adoption of new MAINTAINERS entries has been really
-> slow. Look at B, C, or P, for instance. On the other hand, if this were
-> to get adopted, you'll potentially get conflicting prefixes for patches
-> touching multiple files. Then what?
->
-> I'm guessing a script looking at git log could come up with better
-> suggestions for prefixes via popularity contest than manually maintained
-> MAINTAINERS entries. It might not always get it right, but then human
-> outsiders aren't going to always get it right either.
->
-> Now you'll only need Someone(tm) to write the script. ;)
->
-> Something quick like this:
->
-> git log --since={1year} --pretty=format:%s -- <FILES> |\
->         grep -v "^\(Merge\|Revert\)" |\
->         sed 's/:[^:]*$//' |\
->         sort | uniq -c | sort -rn | head -5
->
-> already gives me results that really aren't worse than some of the
-> prefixes invented by drive-by contributors.
->
+Absolutely.
 
-I agree I do not see the need to introduce something in MAINTAINERS;
-from my observations maintaining MAINTAINERS, there is sufficient work
-on adoption and maintenance of the existing entries already without
-such an yet another additional entry. Some entries are outdated or
-wrong and the janitor task of cleaning those up is already enough work
-for involved janitors and enough churn for involved maintainers. So a
-machine-learned approach as above is probably good enough, but if you
-think you need more complex rules try to learn them from the data at
-hand... certainly a nice task to do with machine learning on commit
-message prefixes.
-
-Lukas
+This is just one of the factors involved, but a significant one IMV.
