@@ -2,108 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C24B2C172A
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 22:05:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A65A92C1834
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 23:11:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgKWUzN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Nov 2020 15:55:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49552 "EHLO
+        id S1729501AbgKWWIc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Nov 2020 17:08:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728975AbgKWUzN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 15:55:13 -0500
+        with ESMTP id S1729245AbgKWWIb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 17:08:31 -0500
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F5E6C0613CF
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 12:55:13 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA70AC0613CF
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 14:08:31 -0800 (PST)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 18ACA6EA1; Mon, 23 Nov 2020 15:55:12 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 18ACA6EA1
+        id 673D96EA1; Mon, 23 Nov 2020 17:08:30 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 673D96EA1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1606164912;
-        bh=dHmeuLEB+pPCltH2/vSYGu+9m4HGXkAE4YxgdYbliis=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=EFE9I69eMYuccvJO4uKUdBaonNEK2Ip9tL6Jd6JBN6iJqOEVED+y2pQUxz5coQkyr
-         cAL/ilTvwZtWM9NSZn2cci94w1Vj5H9Q2D7O2hgGPLZttM/+eI1HXfjeErwE2S8xlD
-         JgkLkphIJ7nrMqjQY8cKt/ma/+pzUuH28M8AW0NQ=
-Date:   Mon, 23 Nov 2020 15:55:12 -0500
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 087/118] NFSD: Update READDIR3args decoders to use
- struct xdr_stream
-Message-ID: <20201123205512.GI32599@fieldses.org>
-References: <160590425404.1340.8850646771948736468.stgit@klimt.1015granger.net>
- <160590488919.1340.2035631615670807514.stgit@klimt.1015granger.net>
+        s=default; t=1606169310;
+        bh=W55AoYxNJ/CpsoafMyWVI1TlFciTZ4/fAvic4cXPmLs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=om899cufEnuxXgcRhu9UlwiftaF+u6JP6NfQ96u9tcexT2BkvNgSrBoBKQqyMXqf4
+         1vhTMd2VrQ2gFKpd90C1NBvrrS2mzVjD9bYDe1t0oD9RyHqyynyUNJT8uhhHLO0K/T
+         eNU3VNJflKtAGb/IxOkKIKEi6XUa+MPjJWbKB2kc=
+Date:   Mon, 23 Nov 2020 17:08:30 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     Olga Kornievskaia <aglo@umich.edu>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v4 1/1] NFSv4.2: Fix NFS4ERR_STALE error when doing inter
+ server copy
+Message-ID: <20201123220830.GJ32599@fieldses.org>
+References: <7a18452a-3120-ea5b-f676-9d7e18a65446@oracle.com>
+ <470b690f-c919-2c48-95b7-18cc75f71f70@oracle.com>
+ <20201110201239.GA17755@fieldses.org>
+ <CAN-5tyHEj_nNhN=wM3xkzsAp2RUqQw4pVau+DruFPXGT8j+kuw@mail.gmail.com>
+ <20201110215157.GB17755@fieldses.org>
+ <CAN-5tyEPvpQQVL+j=4vbfdcKmr96ZpYq3fsCQTZHyS5qWGJsvw@mail.gmail.com>
+ <20201110222155.GC17755@fieldses.org>
+ <5b395908-8cd4-f93d-421e-68608235b863@oracle.com>
+ <20201123162514.GF32599@fieldses.org>
+ <05c6adaa-c998-36d3-c66d-da2968941fb8@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <160590488919.1340.2035631615670807514.stgit@klimt.1015granger.net>
+In-Reply-To: <05c6adaa-c998-36d3-c66d-da2968941fb8@oracle.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 03:41:29PM -0500, Chuck Lever wrote:
-> As an additional clean up, neither nfsd3_proc_readdir() nor
-> nfsd3_proc_readdirplus() make use of the dircount argument, so
-> remove it.
+On Mon, Nov 23, 2020 at 10:14:51AM -0800, Dai Ngo wrote:
+> On 11/23/20 8:25 AM, J. Bruce Fields wrote:
+> >I've lost track of what's left to apply.
+> 
+> I think we're good with this issue.
+> There is still one inter server copy related patch waiting for
+> your review:
+> 
+> PATCH] NFSD: Fix 5 seconds delay when doing inter server copy
 
-Are we technically violating the protocol if we return more than
-dircount entries?
+Looking...  Could you break that up into two fixes, one fof the client,
+one for the server?
 
-https://tools.ietf.org/html/rfc1813#page-82 doesn't say it's optional.
-I suppose we'd know by now if any client actually cared.  Seems like
-it'd be easy to implement, though.
-
-Anyway, for now:
-
->  int
->  nfs3svc_decode_readdirplusargs(struct svc_rqst *rqstp, __be32 *p)
->  {
-> +	struct xdr_stream *xdr = &rqstp->rq_xdr_stream;
->  	struct nfsd3_readdirargs *args = rqstp->rq_argp;
-
-maybe just add "/* ignored */" to make it clear it's inentional we're
-not actually using the value read into this variable?:
-
-> +	u32 dircount;
+Also note the RFC is 7862, not 7682.
 
 --b.
-
->  
-> -	p = decode_fh(p, &args->fh);
-> -	if (!p)
-> -		return 0;
-> -	p = xdr_decode_hyper(p, &args->cookie);
-> -	args->verf     = p; p += 2;
-> -	args->dircount = ntohl(*p++);
-> -	args->count    = ntohl(*p++);
-> +	if (!svcxdr_decode_nfs_fh3(xdr, &args->fh))
-> +		return XDR_DECODE_FAILED;
-> +	if (xdr_stream_decode_u64(xdr, &args->cookie) < 0)
-> +		return XDR_DECODE_FAILED;
-> +	args->verf = xdr_inline_decode(xdr, NFS3_COOKIEVERFSIZE);
-> +	if (!args->verf)
-> +		return XDR_DECODE_FAILED;
-> +	if (xdr_stream_decode_u32(xdr, &dircount) < 0)
-> +		return XDR_DECODE_FAILED;
-> +	if (xdr_stream_decode_u32(xdr, &args->count) < 0)
-> +		return XDR_DECODE_FAILED;
->  
-> -	return xdr_argsize_check(rqstp, p);
-> +	return XDR_DECODE_DONE;
->  }
->  
->  int
-> diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
-> index 789a364d5e69..64af5b01c5d7 100644
-> --- a/fs/nfsd/xdr3.h
-> +++ b/fs/nfsd/xdr3.h
-> @@ -90,7 +90,6 @@ struct nfsd3_symlinkargs {
->  struct nfsd3_readdirargs {
->  	struct svc_fh		fh;
->  	__u64			cookie;
-> -	__u32			dircount;
->  	__u32			count;
->  	__be32 *		verf;
->  };
-> 
