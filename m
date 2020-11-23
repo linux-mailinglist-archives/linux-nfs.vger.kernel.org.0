@@ -2,168 +2,223 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ADE92C0EF6
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 16:40:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A46FD2C0F52
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 16:56:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731427AbgKWPh5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Nov 2020 10:37:57 -0500
-Received: from mail-eopbgr770132.outbound.protection.outlook.com ([40.107.77.132]:45892
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729244AbgKWPh5 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 23 Nov 2020 10:37:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i5ojobN31fMoS5hxi8glaq530r5XeHfcvZz6QZBWzu9DzFPQ5XLXL7AOVgpDFeRsV/AhXPWPHOMwMcB60AyQl/3mEBJAJbIrR9Hd+b2lttuNZ4y6aivZzT5il2GglyQe8QnG6oAg1JcwBQLtHSWrigcSOxlLKnhXDVBg7jBbq2i2/0olIBYsmH8LpIXbXYdgOr07ku9VYD8JXN/vJFaqh5vqIeYiLIBbL3yNgBPKV3HSfiE4695mRAyU17qLbdy5ePRX1nxKNdGvWQ6aGJbsD3P5jvWj1391WFkJG+Al9EYuZ7RzanXsrO0nXbuYO0HxiznbJJ7+rh8ejujINsXmQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bp6MlaQg3hAQI7UJnVK2AdMhnjE55TV2en3nqI/aJp0=;
- b=FoqI8kjergCI0hwnUCon3KtGC+UorqCZaNI4FM1cRavmDH/kBFVTM6y3Fb0d7jeydxjV/xsHS8IhGwgHbwdEVuIHSAKOBAgOD8F4oDH7sbZKH4uG3YXjB9HYu2qCrzga4fRuSZssG9wRAYSl0OW0o+77T1iYpiPLLVac8JBpJsj4AbcYQi5f3iR9nwqCCxs6KUoXva3A6pDwlXKixlwgupbjY4xwO59R0W7fYI0B06nUm50VoIHXR5Q8PNVvKl6VvfmNuvCTFvGSfZmkpyGutHFC8slg1pmMwLmY/XAiq3x8kq8Q4iK/+/Tl6Q3fLfppfyag7Y0M6C78S3UrRTTmfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bp6MlaQg3hAQI7UJnVK2AdMhnjE55TV2en3nqI/aJp0=;
- b=BN2WGJorXbEd8ESaOUJ661W6ymml7uSzXPUxW56PUigL4KMNGdk0Sd7dqGpqSW7yom8IO4iCmAWfTsO/+yk5QFS6iBzh3l1UMHGvpKJtC8iLTFbQvivI+hnjuCpZ3z2iETEOO2PqISCnR7G+cg3dHG1ad5zsX3Omw4Y0pGvrQQ0=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB3942.namprd13.prod.outlook.com (2603:10b6:208:269::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3611.17; Mon, 23 Nov
- 2020 15:37:53 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3611.020; Mon, 23 Nov 2020
- 15:37:53 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        id S1729270AbgKWPtY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Nov 2020 10:49:24 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:59110 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbgKWPtX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 10:49:23 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANFjMJ7090877;
+        Mon, 23 Nov 2020 15:49:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=TSXmQLKs7FnshoLBNuBx8q9kEWasktzMFkbR4JyoilU=;
+ b=ws1CGhg3VNBX/tbKZ7aJ1STOgp246h6S1jIhIxHgVFAahAYRmlCVmUJ1JL4jAO2hI3kT
+ XwkhnAYniwPDBvXJRQNasL4Ryu8onu46gSBbzYRUZfLrD1oRhGztPyS10wLCbvCMUzSl
+ bTxhTXrWnzczn68+1Zk9Z+ccYgt1pYi4VN2erc/okmAzPs0fscFCVvjkW0/PYKlfVnaF
+ 5V/RebuOeiZxis87/d00fCMGVDZEG4rAjsrK3bCdVjrMehtxNMgyXlHKOtLRUgiEpuYB
+ b4lUOqhuA5spoqNIYuAjv2Y6eNHdOlJE3umdNwsfv53PMAviZajN8QzsJZZLfwOzkXBh 8g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 34xtaqhd3s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 23 Nov 2020 15:49:20 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANFTqQ5160110;
+        Mon, 23 Nov 2020 15:47:19 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 34yx8hk64k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Nov 2020 15:47:19 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0ANFlFEw019654;
+        Mon, 23 Nov 2020 15:47:15 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Nov 2020 07:47:15 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
 Subject: Re: [PATCH 5/8] SUNRPC: Don't truncate tail in xdr_inline_pages()
-Thread-Topic: [PATCH 5/8] SUNRPC: Don't truncate tail in xdr_inline_pages()
-Thread-Index: AQHWwRF4yd6FYecdbUORATZ5zTbL+6nU7ISAgAAz1ICAAK4pgIAADJCA
-Date:   Mon, 23 Nov 2020 15:37:52 +0000
-Message-ID: <0d00e53170ade9685c3aa5b049e577450369d3f0.camel@hammerspace.com>
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <0d00e53170ade9685c3aa5b049e577450369d3f0.camel@hammerspace.com>
+Date:   Mon, 23 Nov 2020 10:47:13 -0500
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A0165C8E-0CAE-4DF9-8EF8-DACFF210D38B@oracle.com>
 References: <20201122205229.3826-1-trondmy@kernel.org>
-         <20201122205229.3826-2-trondmy@kernel.org>
-         <20201122205229.3826-3-trondmy@kernel.org>
-         <20201122205229.3826-4-trondmy@kernel.org>
-         <20201122205229.3826-5-trondmy@kernel.org>
-         <20201122205229.3826-6-trondmy@kernel.org>
-         <0CB9471F-ACC6-42A1-8DCD-8A9E74BAF8F1@oracle.com>
-         <614498c69c40421f8581fd8b25633e8668959581.camel@hammerspace.com>
-         <4C120984-5A7B-4245-9B04-8E44C4370BC1@oracle.com>
-In-Reply-To: <4C120984-5A7B-4245-9B04-8E44C4370BC1@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8b8a94a0-5704-47fe-d60d-08d88fc5bdef
-x-ms-traffictypediagnostic: MN2PR13MB3942:
-x-microsoft-antispam-prvs: <MN2PR13MB39427FE5600AC99E15D50F4FB8FC0@MN2PR13MB3942.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hhooe6AOBGtb+XIEPMrIJOxnXQVbAZTIWspXyyJjGe3OS0aZROf6JmYJEWywpz/+WKJhcCUFJJgLzybPXOldjtXVN1a/cIJMMf7kO6C67HnPTS5Mo3in0v3jAIHETkYO3lm0iUxrMYAr3RLQa9DtmKnt6jXUl3TtxBsaPsaCAQ7aMqmKzRsldntrmIrPJDbM/3IXxZseZafOtHC5GFvqu7luxeD5Y3c5EwxHzMLgPJGxjRuLvmDCQQ96Fvg+mwb94B/n9Rchn6U+r8kxeaSJyCRy847oADw8IqIQq1mSPpy37L8BrEydqzZz8jnQV4kL37IE33w94VUpsTRvA4filQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(136003)(376002)(346002)(26005)(186003)(71200400001)(6506007)(53546011)(508600001)(6512007)(2616005)(6486002)(8936002)(83380400001)(66446008)(86362001)(8676002)(64756008)(6916009)(76116006)(91956017)(66946007)(36756003)(66556008)(66476007)(5660300002)(2906002)(4001150100001)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: cBZw+KflcdIk2pOlbjJ/jmOzctuiMZqTWHoLZVbao8E0zZ6J4Gq+SiPfAKgio8nfL8JYIMmrMpC0KAmeZGVdrOC1IxGXzD9GTUa2jhplchBO9kmSn3eAsPHXjTM4A9csb9r+pWNCNH/TMKAm15M6pgKhB2XBwGYpJ5YDRTqXuG3VfzcmGK9C+hkNE9SCxQl57x7OcLZO0SuScB8pQ4BqYRe6sDVN0qWg8ufSfbV3WhQuDPkBDaewSomS7hqJ2A8i/qe7EgVm22kuibbdennDPnjX6TTKndhEQ1bsdsfehgfTXdHncq8lygR1vNTRlVN3NVuVgTiCrOoYzPWIMs0vv2APuVXetC42Uhmjsa2jKHDzPsSf8vENWCrOFz+pZToOGfKjAqT21XVMvbEyDopYPY/D09JHJxu+CMLv2BVjsGBZdvFmIR/FtQOJk69YgIhBSTEa9SvkPBeEwBzXaaXM14zt46jcwe84F2Ui+9fCBO2gwvUsWcEOCly5fZxA4Ir6UD4NAr2nP3eZLH7fDdPpmnV7cAhhWRdqUWspGuZfpKsaqsnouufp23kituv713r/uQMw+zOBJQBaOAm/Srcd5HXDsG5Y1B2LlI5Ulb919A4MHljqJMmT9jJ3OG+sSS4l2gdBkVP1UlrsEhB7kWuelw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A4D9D5BF59E2204F8A10B27D89E5B088@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b8a94a0-5704-47fe-d60d-08d88fc5bdef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Nov 2020 15:37:52.9681
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6umP3WeqPzj0hnYDLdU52lZATHAczQY3ATnlc05hAUBMd1aZxRMu3TQ/MTOo+7I3AI4Q0NJZq8ZHD1ndhGocPQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3942
+ <20201122205229.3826-2-trondmy@kernel.org>
+ <20201122205229.3826-3-trondmy@kernel.org>
+ <20201122205229.3826-4-trondmy@kernel.org>
+ <20201122205229.3826-5-trondmy@kernel.org>
+ <20201122205229.3826-6-trondmy@kernel.org>
+ <0CB9471F-ACC6-42A1-8DCD-8A9E74BAF8F1@oracle.com>
+ <614498c69c40421f8581fd8b25633e8668959581.camel@hammerspace.com>
+ <4C120984-5A7B-4245-9B04-8E44C4370BC1@oracle.com>
+ <0d00e53170ade9685c3aa5b049e577450369d3f0.camel@hammerspace.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9813 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 suspectscore=0
+ bulkscore=0 mlxlogscore=999 malwarescore=0 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011230106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9813 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1015 suspectscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011230106
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTExLTIzIGF0IDA5OjUyIC0wNTAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
-DQo+IA0KPiA+IE9uIE5vdiAyMiwgMjAyMCwgYXQgMTE6MjkgUE0sIFRyb25kIE15a2xlYnVzdCA8
-DQo+ID4gdHJvbmRteUBoYW1tZXJzcGFjZS5jb20+IHdyb3RlOg0KPiA+IA0KPiA+IE9uIFN1biwg
-MjAyMC0xMS0yMiBhdCAyMDoyNCAtMDUwMCwgQ2h1Y2sgTGV2ZXIgd3JvdGU6DQo+ID4gPiANCj4g
-PiA+IA0KPiA+ID4gPiBPbiBOb3YgMjIsIDIwMjAsIGF0IDM6NTIgUE0sIHRyb25kbXlAa2VybmVs
-Lm9yZ8Kgd3JvdGU6DQo+ID4gPiA+IA0KPiA+ID4gPiBGcm9tOiBUcm9uZCBNeWtsZWJ1c3QgPHRy
-b25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20+DQo+ID4gPiA+IA0KPiA+ID4gPiBUcnVlIHRo
-YXQgaWYgdGhlIGxlbmd0aCBvZiB0aGUgcGFnZXNbXSBhcnJheSBpcyBub3QgNC1ieXRlDQo+ID4g
-PiA+IGFsaWduZWQsDQo+ID4gPiA+IHRoZW4NCj4gPiA+ID4gd2Ugd2lsbCBuZWVkIHRvIHN0b3Jl
-IHRoZSBwYWRkaW5nIGluIHRoZSB0YWlsLCBidXQgdGhlcmUgaXMgbm8NCj4gPiA+ID4gbmVlZA0K
-PiA+ID4gPiB0bw0KPiA+ID4gPiB0cnVuY2F0ZSB0aGUgdG90YWwgYnVmZmVyIGxlbmd0aCBoZXJl
-Lg0KPiA+ID4gDQo+ID4gPiBUaGlzIGRlc2NyaXB0aW9uIGNvbmZ1c2VzIG1lLiBUaGUgZXhpc3Rp
-bmcgY29kZSByZWR1Y2VzIHRoZQ0KPiA+ID4gbGVuZ3RoIG9mDQo+ID4gPiB0aGUgdGFpbCwgbm90
-IHRoZSAidG90YWwgYnVmZmVyIGxlbmd0aC4iIEFuZCB3aGF0IHRoZSByZW1vdmVkDQo+ID4gPiBs
-b2dpYw0KPiA+ID4gaXMNCj4gPiA+IGRvaW5nIGlzIHRha2luZyBvdXQgdGhlIGxlbmd0aCBvZiB0
-aGUgWERSIHBhZCBmb3IgdGhlIHBhZ2VzIGFycmF5DQo+ID4gPiB3aGVuDQo+ID4gPiBpdCBpcyBu
-b3QgZXhwZWN0ZWQgdG8gYmUgdXNlZC4NCj4gPiANCj4gPiBXaHkgYXJlIHdlIGJvdGhlcmluZyB0
-byBkbyB0aGF0PyBUaGVyZSBpcyBub3RoaW5nIHByb2JsZW1hdGljIHdpdGgNCj4gPiBqdXN0DQo+
-ID4gaWdub3JpbmcgdGhpcyB0ZXN0IGFuZCBsZWF2aW5nIHRoZSB0YWlsIGxlbmd0aCBhcyBpdCBp
-cywgbm9yIGlzDQo+ID4gdGhlcmUNCj4gPiBhbnl0aGluZyB0byBiZSBnYWluZWQgYnkgYXBwbHlp
-bmcgaXQuDQo+IA0KPiBZb3UgYXJlIGNvcnJlY3QgdGhhdCBsZWF2aW5nIHRoZSBidWZmZXIgYSBs
-aXR0bGUgbG9uZyBpcyBub3QgZ29pbmcNCj4gdG8gaGFybSBub3JtYWwgb3BlcmF0aW9uLiBBZnRl
-ciBhbGwsIHdlIGxpdmVkIHdpdGggYSB3aWxkbHkgb3Zlci0NCj4gZXN0aW1hdGVkIHNsYWNrIGxl
-bmd0aCBmb3IgeWVhcnMuDQo+IA0KPiBUaGUgcHVycG9zZSBvZiB0aGlzIGNvZGUgcGF0aCBpcyB0
-byBwcmVwYXJlIHRoZSByZWNlaXZlIGJ1ZmZlciB3aXRoDQo+IHRoZSBtZW1vcnkgcmVzb3VyY2Vz
-IGFuZCBleHBlY3RlZCBsZW5ndGggb2YgdGhlIFJlcGx5LiBUaGUgc2VyaWVzDQo+IG9mIHBhdGNo
-ZXMgdGhhdCBpbnRyb2R1Y2VkIHRoaXMgcGFydGljdWxhciBjaGFuZ2Ugd2FzIGFsbCBhYm91dA0K
-PiBlbnN1cmluZyB0aGF0IHRoZSBlc3RpbWF0ZWQgbGVuZ3RoIG9mIHRoZSByZXBseSBtZXNzYWdl
-IHdhcyBleGFjdC4NCj4gDQo+IElmIHRoZSByZXBseSBtZXNzYWdlIHNpemUgaXMgb3ZlcmVzdGlt
-YXRlZCwgdGhhdCBtb3ZlcyB0aGUgZW5kLW9mLQ0KPiBtZXNzYWdlIHNlbnRpbmVsIHRoYXQgaXMg
-bGF0ZXIgc2V0IGJ5IHhkcl9pbml0X2RlY29kZSgpLiBXZSB0aGVuDQo+IG1pc3Mgc3VidGxlIHBy
-b2JsZW1zIGxpa2Ugb3VyIGZpeGVkIHNpemUgZXN0aW1hdGVzIGFyZSBpbmNvcnJlY3QNCj4gb3Ig
-YSBtYW4taW4tdGhlLW1pZGRsZSBpcyBleHRlbmRpbmcgdGhlIFJQQyBtZXNzYWdlIG9yIHRoZSBz
-ZXJ2ZXINCj4gaXMgbWFsZnVuY3Rpb25pbmcuDQo+IA0KPiA8c2NyYXRjaGVzIGNoaW4+DQo+IA0K
-PiBBZnRlciBtb3ZpbmcgdGhlIC0+cGFnZXMgcGFkIGludG8gLT5wYWdlcywgSSdtIHdvbmRlcmlu
-ZyBpZiB5b3UNCj4gc2hvdWxkIHJldmVydCAwMmVmMDRlNDMyYmEgKCJORlM6IEFjY291bnQgZm9y
-IFhEUiBwYWQgb2YgYnVmLT5wYWdlcyIpDQo+IC0tDQo+IHRoZSBtYXhzeiBtYWNyb3MgZG9uJ3Qg
-bmVlZCB0byBhY2NvdW50IGZvciB0aGUgWERSIHBhZCBvZiAtPnBhZ2VzDQo+IGFueSBtb3JlLiBU
-aGVuIHRoZSBiZWxvdyBodW5rIG1ha2VzIHNlbnNlLiBUaGUgcGF0Y2ggZGVzY3JpcHRpb24NCj4g
-c3RpbGwgZG9lc24ndCwgdGhvdWdoIDstKQ0KPiANCg0KSSBkb24ndCB0aGluayBpdCBuZWVkcyB0
-byBiZSByZXZlcnRlZC4gSSB0aGluayB5b3UgYXJlIHJpZ2h0IHRvIGluY2x1ZGUNCnRoZSBwYWRk
-aW5nIGluIHRoZSBidWZmZXIgc2l6ZSB0aGF0IHdlIHVzZSB0byBzZXQgdGhlIHZhbHVlIG9mIHRh
-c2stDQo+dGtfcnFzdHAtPnJxX3JjdnNpemUuDQoNClRoYXQgc2FpZCwgaXQgc2VlbXMgd3Jvbmcg
-dG8gaW5jbHVkZSB0aGF0IHBhZGRpbmcgYXMgcGFydCBvZiB0aGUNCidoZHJzaXplJyBhcmd1bWVu
-dCBpbiBycGNfcHJlcGFyZV9yZXBseV9wYWdlcygpLiBUaGF0IGp1c3QgY2F1c2VzDQpjb25mdXNp
-b24sIGJlY2F1c2UgdGhlIHBhZGRpbmcgaXMgbm90IHBhcnQgb2YgdGhlIGhlYWRlciBpbiBmcm9u
-dCBvZg0KdGhlIGFycmF5IG9mIHBhZ2VzLiBJdCBpcyBwYXJ0IG9mIHRoZSB0YWlsIGRhdGEgYWZ0
-ZXIgdGhlIGFycmF5IG9mDQpwYWdlcy4gU28gSSB0aGluayBhIGNsZWFudXAgdGhlcmUgbWF5IGJl
-IHdhcnJhbnRlZC4NCg0KVGhlIG90aGVyIHRoaW5nIHRoYXQgSSdtIGNvbnNpZGVyaW5nIGlzIHRo
-YXQgd2UgbWF5IHdhbnQgdG8gb3B0aW1pc2UgdG8NCmF2b2lkIHNldHRpbmcgdXAgYW4gUkRNQSBT
-RU5EIGp1c3QgZm9yIHRoZSBwYWRkaW5nIGlmIHRoYXQgaXMgdHJ1bHkgdGhlDQpsYXN0IHdvcmQg
-aW4gdGhlIFJQQyBjYWxsIChpdCBtYXR0ZXJzIGxlc3MgaWYgdGhlcmUgaXMgb3RoZXIgZGF0YSB0
-aGF0DQpyZXF1aXJlcyB1cyB0byBzZXQgdXAgc3VjaCBhIFNFTkQgYW55d2F5KS4gTm90IHN1cmUg
-aG93IHRvIGRvIHRoYXQgaW4gYQ0KY2xlYW4gbWFubmVyLCB0aG91Z2guIFBlcmhhcHMgd2UnZCBo
-YXZlIHRvIHBhc3MgaW4gdGhlIHBhZGRpbmcgc2l6ZSBhcw0KYSBzZXBhcmF0ZSBhcmd1bWVudCB0
-byB4ZHJfaW5saW5lX3BhZ2VzKCkgKGFuZCBhbHNvIHRvDQpycGNfcHJlcGFyZV9yZXBseV9wYWdl
-cygpKT8NCg0KDQo+IEFuZCB0aGVuIHlvdSBzaG91bGQgY29uZmlybSB0aGF0IHdlIGFyZSBzdGls
-bCBnZXR0aW5nIHRoZSByZWNlaXZlDQo+IGJ1ZmZlciBzaXplIGVzdGltYXRlIHJpZ2h0IGZvciBr
-cmI1aSBhbmQga3JiNXAuDQo+IA0KPiANCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogVHJvbmQgTXlr
-bGVidXN0DQo+ID4gPiA+IDx0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tPg0KPiA+ID4g
-PiAtLS0NCj4gPiA+ID4gbmV0L3N1bnJwYy94ZHIuYyB8IDMgLS0tDQo+ID4gPiA+IDEgZmlsZSBj
-aGFuZ2VkLCAzIGRlbGV0aW9ucygtKQ0KPiA+ID4gPiANCj4gPiA+ID4gZGlmZiAtLWdpdCBhL25l
-dC9zdW5ycGMveGRyLmMgYi9uZXQvc3VucnBjL3hkci5jDQo+ID4gPiA+IGluZGV4IDNjZTBhNWRh
-YTllYi4uNWE0NTAwNTU0NjlmIDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9uZXQvc3VucnBjL3hkci5j
-DQo+ID4gPiA+ICsrKyBiL25ldC9zdW5ycGMveGRyLmMNCj4gPiA+ID4gQEAgLTE5Myw5ICsxOTMs
-NiBAQCB4ZHJfaW5saW5lX3BhZ2VzKHN0cnVjdCB4ZHJfYnVmICp4ZHIsDQo+ID4gPiA+IHVuc2ln
-bmVkDQo+ID4gPiA+IGludCBvZmZzZXQsDQo+ID4gPiA+IA0KPiA+ID4gPiDCoMKgwqDCoMKgwqDC
-oCB0YWlsLT5pb3ZfYmFzZSA9IGJ1ZiArIG9mZnNldDsNCj4gPiA+ID4gwqDCoMKgwqDCoMKgwqAg
-dGFpbC0+aW92X2xlbiA9IGJ1ZmxlbiAtIG9mZnNldDsNCj4gPiA+ID4gLcKgwqDCoMKgwqDCoCBp
-ZiAoKHhkci0+cGFnZV9sZW4gJiAzKSA9PSAwKQ0KPiA+ID4gPiAtwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCB0YWlsLT5pb3ZfbGVuIC09IHNpemVvZihfX2JlMzIpOw0KPiA+ID4gPiAtDQo+
-ID4gPiA+IMKgwqDCoMKgwqDCoMKgIHhkci0+YnVmbGVuICs9IGxlbjsNCj4gPiA+ID4gfQ0KPiA+
-ID4gPiBFWFBPUlRfU1lNQk9MX0dQTCh4ZHJfaW5saW5lX3BhZ2VzKTsNCj4gPiA+ID4gLS0gDQo+
-ID4gPiA+IDIuMjguMA0KPiANCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGll
-bnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5j
-b20NCg0KDQo=
+
+
+> On Nov 23, 2020, at 10:37 AM, Trond Myklebust =
+<trondmy@hammerspace.com> wrote:
+>=20
+> On Mon, 2020-11-23 at 09:52 -0500, Chuck Lever wrote:
+>>=20
+>>=20
+>>> On Nov 22, 2020, at 11:29 PM, Trond Myklebust <
+>>> trondmy@hammerspace.com> wrote:
+>>>=20
+>>> On Sun, 2020-11-22 at 20:24 -0500, Chuck Lever wrote:
+>>>>=20
+>>>>=20
+>>>>> On Nov 22, 2020, at 3:52 PM, trondmy@kernel.org wrote:
+>>>>>=20
+>>>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>>>>=20
+>>>>> True that if the length of the pages[] array is not 4-byte
+>>>>> aligned,
+>>>>> then
+>>>>> we will need to store the padding in the tail, but there is no
+>>>>> need
+>>>>> to
+>>>>> truncate the total buffer length here.
+>>>>=20
+>>>> This description confuses me. The existing code reduces the
+>>>> length of
+>>>> the tail, not the "total buffer length." And what the removed
+>>>> logic
+>>>> is
+>>>> doing is taking out the length of the XDR pad for the pages array
+>>>> when
+>>>> it is not expected to be used.
+>>>=20
+>>> Why are we bothering to do that? There is nothing problematic with
+>>> just
+>>> ignoring this test and leaving the tail length as it is, nor is
+>>> there
+>>> anything to be gained by applying it.
+>>=20
+>> You are correct that leaving the buffer a little long is not going
+>> to harm normal operation. After all, we lived with a wildly over-
+>> estimated slack length for years.
+>>=20
+>> The purpose of this code path is to prepare the receive buffer with
+>> the memory resources and expected length of the Reply. The series
+>> of patches that introduced this particular change was all about
+>> ensuring that the estimated length of the reply message was exact.
+>>=20
+>> If the reply message size is overestimated, that moves the end-of-
+>> message sentinel that is later set by xdr_init_decode(). We then
+>> miss subtle problems like our fixed size estimates are incorrect
+>> or a man-in-the-middle is extending the RPC message or the server
+>> is malfunctioning.
+>>=20
+>> <scratches chin>
+>>=20
+>> After moving the ->pages pad into ->pages, I'm wondering if you
+>> should revert 02ef04e432ba ("NFS: Account for XDR pad of buf->pages")
+>> --
+>> the maxsz macros don't need to account for the XDR pad of ->pages
+>> any more. Then the below hunk makes sense. The patch description
+>> still doesn't, though ;-)
+>>=20
+>=20
+> I don't think it needs to be reverted. I think you are right to =
+include
+> the padding in the buffer size that we use to set the value of task-
+>> tk_rqstp->rq_rcvsize.
+>=20
+> That said, it seems wrong to include that padding as part of the
+> 'hdrsize' argument in rpc_prepare_reply_pages(). That just causes
+> confusion, because the padding is not part of the header in front of
+> the array of pages. It is part of the tail data after the array of
+> pages. So I think a cleanup there may be warranted.
+
+Agreed, dealing with the tail size is confusing.
+
+
+> The other thing that I'm considering is that we may want to optimise =
+to
+> avoid setting up an RDMA SEND just for the padding if that is truly =
+the
+> last word in the RPC call (it matters less if there is other data that
+> requires us to set up such a SEND anyway). Not sure how to do that in =
+a
+> clean manner, though. Perhaps we'd have to pass in the padding size as
+> a separate argument to xdr_inline_pages() (and also to
+> rpc_prepare_reply_pages())?
+
+In the current version of RPC/RDMA, there's always exactly one RDMA
+Send per RPC message.
+
+The Linux client implementation is also careful to exclude XDR padding
+in both Read and Write chunks because the protocol makes the inclusion
+of padding on the wire optional.
+
+The only issue I see is that the upper layer needs to identify to the
+transport the exact size of the data item that is being transferred
+in a chunk so that the padding can be properly excluded. Currently
+rpcrdma makes some assumptions about how the data items are laid out
+in the xdr_buf when XDRBUF_READ/WRITE is set.
+
+
+>> And then you should confirm that we are still getting the receive
+>> buffer size estimate right for krb5i and krb5p.
+>>=20
+>>=20
+>>>>> Signed-off-by: Trond Myklebust
+>>>>> <trond.myklebust@hammerspace.com>
+>>>>> ---
+>>>>> net/sunrpc/xdr.c | 3 ---
+>>>>> 1 file changed, 3 deletions(-)
+>>>>>=20
+>>>>> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+>>>>> index 3ce0a5daa9eb..5a450055469f 100644
+>>>>> --- a/net/sunrpc/xdr.c
+>>>>> +++ b/net/sunrpc/xdr.c
+>>>>> @@ -193,9 +193,6 @@ xdr_inline_pages(struct xdr_buf *xdr,
+>>>>> unsigned
+>>>>> int offset,
+>>>>>=20
+>>>>>         tail->iov_base =3D buf + offset;
+>>>>>         tail->iov_len =3D buflen - offset;
+>>>>> -       if ((xdr->page_len & 3) =3D=3D 0)
+>>>>> -               tail->iov_len -=3D sizeof(__be32);
+>>>>> -
+>>>>>         xdr->buflen +=3D len;
+>>>>> }
+>>>>> EXPORT_SYMBOL_GPL(xdr_inline_pages);
+>>>>> --=20
+>>>>> 2.28.0
+>>=20
+>=20
+> --=20
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+
+--
+Chuck Lever
+
+
+
