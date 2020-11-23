@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FF1A2C1593
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 21:28:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18CC12C1594
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 21:28:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbgKWUEX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Nov 2020 15:04:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41440 "EHLO
+        id S1728482AbgKWUEa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Nov 2020 15:04:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgKWUEX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 15:04:23 -0500
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72C62C0613CF
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 12:04:23 -0800 (PST)
-Received: by mail-qk1-x743.google.com with SMTP id z188so6803061qke.9
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 12:04:23 -0800 (PST)
+        with ESMTP id S1726770AbgKWUE3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 15:04:29 -0500
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7473DC0613CF
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 12:04:28 -0800 (PST)
+Received: by mail-qv1-xf43.google.com with SMTP id 11so152190qvq.11
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 12:04:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=tDjUj9OHG3MgWfymkB8Z0cJsQnH7QZk73EqARM1nLzM=;
-        b=Tz68b0u33h0YXFePiq90M+nmlkPuH/TGpX5itjL9S8BHJhBKJB2CB9dvUR1YODEJ93
-         8Y3m8o9DPTM4HeM7cAsUt+1PZtUBpqJPFxe/d8q8VqxAUJPWan4AdPy7iLct2BlgCD4v
-         bEBdFBTsgHgAxvyDZS2KAo5FtRjMnhVMSWS+2yDeT2WORgC686D//lVlufQvNSJjQl+E
-         BN6tbYswOUvyy4W/fD11ZCHHn9bMPEzRvwVKhddKamEOzl52IBlY3I/4GuAk8GJHmUaA
-         3uvvTuZi98afc+kR3ViZFEIgnu5x0uf7BYU3wGU1G2u1qAU+3BMQhKE0jDlXPueYnPWF
-         OrUQ==
+        bh=W4j98SKwgtN/8xfyf2yWXsdXmMUkUzTkpLQWBxfiNCg=;
+        b=PS6Gu3vG6WpOJy/k5SsxllUl5wRZN1fr5ZBZX9/Ln2F7U3P2D66xZ+Z60weE3OyfH6
+         0m305cWZ3qXxDjfuYAzmzPEI6Wn8m8EPW+ITzcdU605+eD3Vo7tTW3+2BsL4UyluxmJ8
+         JA/YxofKcKn44I8dauOZSMpC5MvLXExYNnfVEGZmUEaerPOcr10Vl7AhD88ZNFWqAWrF
+         bvnhoo5kHcGUZI3mkDlMf6lU5v5ErzxD9+TVJZhlxLNQSB6n+VQ1dX4NPSYZjAsuEexD
+         UgSncwocQywjZtNQp7+U4MTz7h9YGAN51rQHndgPjhl8onvgZDjFRurSDP/84q8DuXCk
+         cNdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=tDjUj9OHG3MgWfymkB8Z0cJsQnH7QZk73EqARM1nLzM=;
-        b=ZRxOm9wtYNR+CRTvNzvUSdRfAzqwNa+S+C3O1nqNF2dyClMU06bdaXH83o/Jc+nbGt
-         Y7bE+y2aLZRGwI/KopWH7CTsbF243LQnZw+BEVz7J7Z9jiPAIEc1jKQ6z2C/wyeAohIg
-         XrtUw3PuvXFq2gV/mCnrnj9AdjoFrbwylArsMibDI4gknUwThhQUEsdRJgh1xF8pP02W
-         eYhj4zNYovqNtTlJc8D1beCaXjCjOByNhz4NuHGbqtUa7dIZc/1ZSMa57qiMDBo2pa3g
-         +EBfeifFAu6q1OSz9NWZck9SI7gjWcLkSO3X8yASQTR5YqFxGx2Rgc2hNmlPRnZIXXJ3
-         Imlw==
-X-Gm-Message-State: AOAM530TcjqeoNo3tkHuoqrlpZjRqvsuHJz9u4R+ppSVN62Qwb2PSvJr
-        sqqWaO+jO+FXGtBJRTzawRX3i3CsJNI=
-X-Google-Smtp-Source: ABdhPJzNEYav66oMngNQYkhB1l/CDpJIQkv6Ah8OjvYAnpKZLFq4y0s+dLO7RN5B8F7qwkwbbn31/Q==
-X-Received: by 2002:a37:b4e:: with SMTP id 75mr1165702qkl.78.1606161862038;
-        Mon, 23 Nov 2020 12:04:22 -0800 (PST)
+        bh=W4j98SKwgtN/8xfyf2yWXsdXmMUkUzTkpLQWBxfiNCg=;
+        b=hQs8P04OzEBPWScfc2A311r4Qu+d/P8BVThMukOj2BoHe23VzHNgxa/n9SIdZ0aW7d
+         8UgfKZBb7n7xcimM4qCFdK9q27lSCJzY6uyHzdj7eUowcOLtjPEee+7P7GKcQ9+FODdL
+         q0py5ID8Colfm/njhEF4IULu2esGsvnMo8S3VEMlR84jNnTrdsbUrO50LcMABj6aXrPg
+         JaHhjOZRkHEAHXD8wTLhEV1xx8gQfuRmQZyuxC+SFqqmugYkYXkS3dFBcnQDK+VoAmrB
+         CjIqFsQAjZ9VOniH2eVQisWFL75yvx7xxCaX1XbUyPdfoVOw7P++BPTn+7ltWjnofkbv
+         A2tg==
+X-Gm-Message-State: AOAM531VGmXGo9t3oBOiMtW4/JxHnIah+itl4qysARYQBT5XCJvhCmFM
+        8UIXCbEy87pXt/EpBnstQNLiviOo+Fc=
+X-Google-Smtp-Source: ABdhPJy2RFWTUeKTkUxiwRidLR3Mqpa4u0WYdTWbu6TVSgTfgqKownlkcyCdtJQ4PNwHNs7uUWdVgw==
+X-Received: by 2002:a0c:e9c7:: with SMTP id q7mr1101025qvo.9.1606161867338;
+        Mon, 23 Nov 2020 12:04:27 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id c9sm10257847qkm.116.2020.11.23.12.04.21
+        by smtp.gmail.com with ESMTPSA id a123sm4124988qkc.52.2020.11.23.12.04.26
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Nov 2020 12:04:21 -0800 (PST)
+        Mon, 23 Nov 2020 12:04:26 -0800 (PST)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0ANK4KDV010279
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 20:04:20 GMT
-Subject: [PATCH v3 04/85] NFSD: Add tracepoints in nfsd_dispatch()
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0ANK4PjO010282
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 20:04:25 GMT
+Subject: [PATCH v3 05/85] NFSD: Add tracepoints in
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Mon, 23 Nov 2020 15:04:20 -0500
-Message-ID: <160616186042.51996.15361343804924022774.stgit@klimt.1015granger.net>
+Date:   Mon, 23 Nov 2020 15:04:25 -0500
+Message-ID: <160616186571.51996.4492471734685593106.stgit@klimt.1015granger.net>
 In-Reply-To: <160616177104.51996.14915419165992024951.stgit@klimt.1015granger.net>
 References: <160616177104.51996.14915419165992024951.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -68,138 +68,142 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-For troubleshooting purposes, record GARBAGE_ARGS and CANT_ENCODE
-failures.
+For troubleshooting purposes, record failures to decode NFSv4
+operation arguments and encode operation results.
+
+trace_nfsd_compound_decode_err() replaces the dprintk() call sites
+that are embedded in READ_* macros that are about to be removed.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfssvc.c |   17 +++++----------
- fs/nfsd/trace.h  |   60 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 65 insertions(+), 12 deletions(-)
+ fs/nfsd/nfs4xdr.c |   13 +++++++++-
+ fs/nfsd/trace.h   |   68 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 79 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index c4c646f25f1c..7214e578c09c 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -29,6 +29,8 @@
- #include "netns.h"
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 86a149ce0e84..66edac748272 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -54,6 +54,8 @@
+ #include "pnfs.h"
  #include "filecache.h"
  
 +#include "trace.h"
 +
- #define NFSDDBG_FACILITY	NFSDDBG_SVC
+ #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
+ #include <linux/security.h>
+ #endif
+@@ -2248,9 +2250,14 @@ nfsd4_decode_compound(struct nfsd4_compoundargs *argp)
+ 		READ_BUF(4);
+ 		op->opnum = be32_to_cpup(p++);
  
- bool inter_copy_offload_enable;
-@@ -1009,11 +1011,8 @@ int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
- 	struct kvec *resv = &rqstp->rq_res.head[0];
- 	__be32 *p;
- 
--	dprintk("nfsd_dispatch: vers %d proc %d\n",
--				rqstp->rq_vers, rqstp->rq_proc);
--
- 	if (nfs_request_too_big(rqstp, proc))
--		goto out_too_large;
-+		goto out_decode_err;
- 
- 	/*
- 	 * Give the xdr decoder a chance to change this if it wants
-@@ -1052,24 +1051,18 @@ int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
- out_cached_reply:
- 	return 1;
- 
--out_too_large:
--	dprintk("nfsd: NFSv%d argument too large\n", rqstp->rq_vers);
--	*statp = rpc_garbage_args;
--	return 1;
--
- out_decode_err:
--	dprintk("nfsd: failed to decode arguments!\n");
-+	trace_nfsd_garbage_args_err(rqstp);
- 	*statp = rpc_garbage_args;
- 	return 1;
- 
- out_update_drop:
--	dprintk("nfsd: Dropping request; may be revisited later\n");
- 	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
- out_dropit:
- 	return 0;
- 
- out_encode_err:
--	dprintk("nfsd: failed to encode result!\n");
-+	trace_nfsd_cant_encode_err(rqstp);
- 	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
- 	*statp = rpc_system_err;
- 	return 1;
+-		if (nfsd4_opnum_in_range(argp, op))
++		if (nfsd4_opnum_in_range(argp, op)) {
+ 			op->status = nfsd4_dec_ops[op->opnum](argp, &op->u);
+-		else {
++			if (op->status != nfs_ok)
++				trace_nfsd_compound_decode_err(argp->rqstp,
++							       argp->opcnt, i,
++							       op->opnum,
++							       op->status);
++		} else {
+ 			op->opnum = OP_ILLEGAL;
+ 			op->status = nfserr_op_illegal;
+ 		}
+@@ -5203,6 +5210,8 @@ nfsd4_encode_operation(struct nfsd4_compoundres *resp, struct nfsd4_op *op)
+ 	       !nfsd4_enc_ops[op->opnum]);
+ 	encoder = nfsd4_enc_ops[op->opnum];
+ 	op->status = encoder(resp, op->status, &op->u);
++	if (op->status)
++		trace_nfsd_compound_encode_err(rqstp, op->opnum, op->status);
+ 	if (opdesc && opdesc->op_release)
+ 		opdesc->op_release(&op->u);
+ 	xdr_commit_encode(xdr);
 diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 89f218d0279c..0bf1707bd846 100644
+index 0bf1707bd846..92a0973dd671 100644
 --- a/fs/nfsd/trace.h
 +++ b/fs/nfsd/trace.h
-@@ -12,6 +12,66 @@
- #include "export.h"
- #include "nfsfh.h"
+@@ -28,6 +28,24 @@
+ 			       rqstp->rq_xprt->xpt_remotelen); \
+ 		} while (0);
  
-+#define NFSD_TRACE_PROC_ARG_FIELDS \
++#define NFSD_TRACE_PROC_RES_FIELDS \
 +		__field(unsigned int, netns_ino) \
 +		__field(u32, xid) \
++		__field(unsigned long, status) \
 +		__array(unsigned char, server, sizeof(struct sockaddr_in6)) \
 +		__array(unsigned char, client, sizeof(struct sockaddr_in6))
 +
-+#define NFSD_TRACE_PROC_ARG_ASSIGNMENTS \
++#define NFSD_TRACE_PROC_RES_ASSIGNMENTS(error) \
 +		do { \
 +			__entry->netns_ino = SVC_NET(rqstp)->ns.inum; \
 +			__entry->xid = be32_to_cpu(rqstp->rq_xid); \
++			__entry->status = be32_to_cpu(error); \
 +			memcpy(__entry->server, &rqstp->rq_xprt->xpt_local, \
 +			       rqstp->rq_xprt->xpt_locallen); \
 +			memcpy(__entry->client, &rqstp->rq_xprt->xpt_remote, \
 +			       rqstp->rq_xprt->xpt_remotelen); \
 +		} while (0);
 +
-+TRACE_EVENT(nfsd_garbage_args_err,
+ TRACE_EVENT(nfsd_garbage_args_err,
+ 	TP_PROTO(
+ 		const struct svc_rqst *rqstp
+@@ -127,6 +145,56 @@ TRACE_EVENT(nfsd_compound_status,
+ 		__get_str(name), __entry->status)
+ )
+ 
++TRACE_EVENT(nfsd_compound_decode_err,
 +	TP_PROTO(
-+		const struct svc_rqst *rqstp
++		const struct svc_rqst *rqstp,
++		u32 args_opcnt,
++		u32 resp_opcnt,
++		u32 opnum,
++		__be32 status
 +	),
-+	TP_ARGS(rqstp),
++	TP_ARGS(rqstp, args_opcnt, resp_opcnt, opnum, status),
 +	TP_STRUCT__entry(
-+		NFSD_TRACE_PROC_ARG_FIELDS
++		NFSD_TRACE_PROC_RES_FIELDS
 +
-+		__field(u32, vers)
-+		__field(u32, proc)
++		__field(u32, args_opcnt)
++		__field(u32, resp_opcnt)
++		__field(u32, opnum)
 +	),
 +	TP_fast_assign(
-+		NFSD_TRACE_PROC_ARG_ASSIGNMENTS
++		NFSD_TRACE_PROC_RES_ASSIGNMENTS(status)
 +
-+		__entry->vers = rqstp->rq_vers;
-+		__entry->proc = rqstp->rq_proc;
++		__entry->args_opcnt = args_opcnt;
++		__entry->resp_opcnt = resp_opcnt;
++		__entry->opnum = opnum;
 +	),
-+	TP_printk("xid=0x%08x vers=%u proc=%u",
-+		__entry->xid, __entry->vers, __entry->proc
-+	)
++	TP_printk("op=%u/%u opnum=%u status=%lu",
++		__entry->resp_opcnt, __entry->args_opcnt,
++		__entry->opnum, __entry->status)
 +);
 +
-+TRACE_EVENT(nfsd_cant_encode_err,
++TRACE_EVENT(nfsd_compound_encode_err,
 +	TP_PROTO(
-+		const struct svc_rqst *rqstp
++		const struct svc_rqst *rqstp,
++		u32 opnum,
++		__be32 status
 +	),
-+	TP_ARGS(rqstp),
++	TP_ARGS(rqstp, opnum, status),
 +	TP_STRUCT__entry(
-+		NFSD_TRACE_PROC_ARG_FIELDS
++		NFSD_TRACE_PROC_RES_FIELDS
 +
-+		__field(u32, vers)
-+		__field(u32, proc)
++		__field(u32, opnum)
 +	),
 +	TP_fast_assign(
-+		NFSD_TRACE_PROC_ARG_ASSIGNMENTS
++		NFSD_TRACE_PROC_RES_ASSIGNMENTS(status)
 +
-+		__entry->vers = rqstp->rq_vers;
-+		__entry->proc = rqstp->rq_proc;
++		__entry->opnum = opnum;
 +	),
-+	TP_printk("xid=0x%08x vers=%u proc=%u",
-+		__entry->xid, __entry->vers, __entry->proc
-+	)
++	TP_printk("opnum=%u status=%lu",
++		__entry->opnum, __entry->status)
 +);
 +
- #define show_nfsd_may_flags(x)						\
- 	__print_flags(x, "|",						\
- 		{ NFSD_MAY_EXEC,		"EXEC" },		\
++
+ DECLARE_EVENT_CLASS(nfsd_fh_err_class,
+ 	TP_PROTO(struct svc_rqst *rqstp,
+ 		 struct svc_fh	*fhp,
 
 
