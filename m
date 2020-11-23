@@ -2,175 +2,186 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF4572C0E72
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 16:08:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C14AB2C0EF5
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 16:40:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731153AbgKWPHo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Nov 2020 10:07:44 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:35256 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731120AbgKWPHn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 10:07:43 -0500
-X-Greylist: delayed 879 seconds by postgrey-1.27 at vger.kernel.org; Mon, 23 Nov 2020 10:07:42 EST
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANEnEx2026508;
-        Mon, 23 Nov 2020 14:52:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=ED63SLbk7ZvnzOYI9i0kkLwBopq9I25oyeu4sNkgzDE=;
- b=ZvP7AljTmrjyup2ze3owVbx0UuIoEt2tZ4sQ1K1GmWu0RNhMQQietTNd/R47lfCeGXV9
- 8bwQ0irgZ54XP0wufux9/UeeJfeWl7t5L2qT8E9My39A2b6Yu6zoHPqoWXGO1cDBbupp
- ecDDtcuFFyqsD6gPQIK9ikvvebq5onDeptZeZKVLtFXndbJaX+32L3RgrBgHTw7MZ0zS
- GzlvDXGQqxFkvO3WQD10f2BbEWsK3Ew19IxgsG+w39G0EOnvI+NMkJzPw1sd7oIyriAa
- rZ005BGSkvuT8ewvfFVicH0y9ZRucmanmNjXvUr8UXflOIj99R5CjUGLtjTjwG6eMI+6 gw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 34xtaqh1yx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Nov 2020 14:52:59 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANEnoPj173918;
-        Mon, 23 Nov 2020 14:52:58 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 34ycnr0e7g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Nov 2020 14:52:58 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0ANEqsIF008950;
-        Mon, 23 Nov 2020 14:52:57 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Nov 2020 06:52:54 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH 5/8] SUNRPC: Don't truncate tail in xdr_inline_pages()
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <614498c69c40421f8581fd8b25633e8668959581.camel@hammerspace.com>
-Date:   Mon, 23 Nov 2020 09:52:53 -0500
-Cc:     "trondmy@kernel.org" <trondmy@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4C120984-5A7B-4245-9B04-8E44C4370BC1@oracle.com>
-References: <20201122205229.3826-1-trondmy@kernel.org>
- <20201122205229.3826-2-trondmy@kernel.org>
- <20201122205229.3826-3-trondmy@kernel.org>
- <20201122205229.3826-4-trondmy@kernel.org>
- <20201122205229.3826-5-trondmy@kernel.org>
- <20201122205229.3826-6-trondmy@kernel.org>
- <0CB9471F-ACC6-42A1-8DCD-8A9E74BAF8F1@oracle.com>
- <614498c69c40421f8581fd8b25633e8668959581.camel@hammerspace.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9813 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- mlxlogscore=999 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011230102
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9813 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
- mlxlogscore=999 clxscore=1015 suspectscore=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 impostorscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011230102
+        id S1732386AbgKWPg3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Nov 2020 10:36:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732256AbgKWPg3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 10:36:29 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D499C0613CF
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 07:36:29 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 1DB916EA1; Mon, 23 Nov 2020 10:36:27 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 1DB916EA1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1606145787;
+        bh=9/66e0zDaQZpwNyeclK2IXabup0B9rp6K+fDwP+z7o0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ahEgJTfUjXs8xbk0W2u0vhm2KrhW2gYfPuxgbB7CXThKWc0wcnwYQgB6YrvpKaAjd
+         o56I9pd3ss7V9JxtyoCQCMoGDI+wTbomweBV4Vq4qvW7b81ftHCbthT5Vm7Mk6gUr+
+         onQvbFq79OyIdBb5ALOXc30ZhJ2U8hXZoBHlSynY=
+Date:   Mon, 23 Nov 2020 10:36:27 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Roberto Bergantinos Corpas <rbergant@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] sunrpc : make RPC channel buffer dynamic for slow case
+Message-ID: <20201123153627.GD32599@fieldses.org>
+References: <20201026150530.29019-1-rbergant@redhat.com>
+ <20201106215128.GD26028@fieldses.org>
+ <CACWnjLxiCTAkxBca_NFrUSPCq_g4y0yNaHuNKX+Rwr=-xPhibw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACWnjLxiCTAkxBca_NFrUSPCq_g4y0yNaHuNKX+Rwr=-xPhibw@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Sat, Nov 21, 2020 at 11:54:30AM +0100, Roberto Bergantinos Corpas wrote:
+> Hi Bruce,
+> 
+>   Sorry for late response as well.
+> 
+>     Ok, here's a possible patch, let me know your thoughts
 
+Looks good to me!  Could you just submit with changelog and
+Signed-off-by?
 
-> On Nov 22, 2020, at 11:29 PM, Trond Myklebust =
-<trondmy@hammerspace.com> wrote:
->=20
-> On Sun, 2020-11-22 at 20:24 -0500, Chuck Lever wrote:
->>=20
->>=20
->>> On Nov 22, 2020, at 3:52 PM, trondmy@kernel.org wrote:
->>>=20
->>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->>>=20
->>> True that if the length of the pages[] array is not 4-byte aligned,
->>> then
->>> we will need to store the padding in the tail, but there is no need
->>> to
->>> truncate the total buffer length here.
->>=20
->> This description confuses me. The existing code reduces the length of
->> the tail, not the "total buffer length." And what the removed logic
->> is
->> doing is taking out the length of the XDR pad for the pages array
->> when
->> it is not expected to be used.
->=20
-> Why are we bothering to do that? There is nothing problematic with =
-just
-> ignoring this test and leaving the tail length as it is, nor is there
-> anything to be gained by applying it.
+--b.
 
-You are correct that leaving the buffer a little long is not going
-to harm normal operation. After all, we lived with a wildly over-
-estimated slack length for years.
-
-The purpose of this code path is to prepare the receive buffer with
-the memory resources and expected length of the Reply. The series
-of patches that introduced this particular change was all about
-ensuring that the estimated length of the reply message was exact.
-
-If the reply message size is overestimated, that moves the end-of-
-message sentinel that is later set by xdr_init_decode(). We then
-miss subtle problems like our fixed size estimates are incorrect
-or a man-in-the-middle is extending the RPC message or the server
-is malfunctioning.
-
-<scratches chin>
-
-After moving the ->pages pad into ->pages, I'm wondering if you
-should revert 02ef04e432ba ("NFS: Account for XDR pad of buf->pages") --
-the maxsz macros don't need to account for the XDR pad of ->pages
-any more. Then the below hunk makes sense. The patch description
-still doesn't, though ;-)
-
-And then you should confirm that we are still getting the receive
-buffer size estimate right for krb5i and krb5p.
-
-
->>> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
->>> ---
->>> net/sunrpc/xdr.c | 3 ---
->>> 1 file changed, 3 deletions(-)
->>>=20
->>> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
->>> index 3ce0a5daa9eb..5a450055469f 100644
->>> --- a/net/sunrpc/xdr.c
->>> +++ b/net/sunrpc/xdr.c
->>> @@ -193,9 +193,6 @@ xdr_inline_pages(struct xdr_buf *xdr, unsigned
->>> int offset,
->>>=20
->>>         tail->iov_base =3D buf + offset;
->>>         tail->iov_len =3D buflen - offset;
->>> -       if ((xdr->page_len & 3) =3D=3D 0)
->>> -               tail->iov_len -=3D sizeof(__be32);
->>> -
->>>         xdr->buflen +=3D len;
->>> }
->>> EXPORT_SYMBOL_GPL(xdr_inline_pages);
->>> --=20
->>> 2.28.0
->>>=20
->>=20
->> --
->> Chuck Lever
->>=20
->>=20
->>=20
->=20
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-
---
-Chuck Lever
-
-
-
+> 
+> diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+> index baef5ee43dbb..1347ecae9c84 100644
+> --- a/net/sunrpc/cache.c
+> +++ b/net/sunrpc/cache.c
+> @@ -777,7 +777,6 @@ void cache_clean_deferred(void *owner)
+>   */
+> 
+>  static DEFINE_SPINLOCK(queue_lock);
+> -static DEFINE_MUTEX(queue_io_mutex);
+> 
+>  struct cache_queue {
+>         struct list_head        list;
+> @@ -905,44 +904,26 @@ static ssize_t cache_do_downcall(char *kaddr,
+> const char __user *buf,
+>         return ret;
+>  }
+> 
+> -static ssize_t cache_slow_downcall(const char __user *buf,
+> -                                  size_t count, struct cache_detail *cd)
+> -{
+> -       static char write_buf[8192]; /* protected by queue_io_mutex */
+> -       ssize_t ret = -EINVAL;
+> -
+> -       if (count >= sizeof(write_buf))
+> -               goto out;
+> -       mutex_lock(&queue_io_mutex);
+> -       ret = cache_do_downcall(write_buf, buf, count, cd);
+> -       mutex_unlock(&queue_io_mutex);
+> -out:
+> -       return ret;
+> -}
+> -
+>  static ssize_t cache_downcall(struct address_space *mapping,
+>                               const char __user *buf,
+>                               size_t count, struct cache_detail *cd)
+>  {
+> -       struct page *page;
+> -       char *kaddr;
+> +       char *write_buf;
+>         ssize_t ret = -ENOMEM;
+> 
+> -       if (count >= PAGE_SIZE)
+> -               goto out_slow;
+> +       if (count >= 32768) { /* 32k is max userland buffer, lets
+> check anyway */
+> +               ret = -EINVAL;
+> +               goto out;
+> +       }
+> 
+> -       page = find_or_create_page(mapping, 0, GFP_KERNEL);
+> -       if (!page)
+> -               goto out_slow;
+> +       write_buf = kvmalloc(count + 1, GFP_KERNEL);
+> +       if (!write_buf)
+> +               goto out;
+> 
+> -       kaddr = kmap(page);
+> -       ret = cache_do_downcall(kaddr, buf, count, cd);
+> -       kunmap(page);
+> -       unlock_page(page);
+> -       put_page(page);
+> +       ret = cache_do_downcall(write_buf, buf, count, cd);
+> +       kvfree(write_buf);
+> +out:
+>         return ret;
+> -out_slow:
+> -       return cache_slow_downcall(buf, count, cd);
+>  }
+> 
+>  static ssize_t cache_write(struct file *filp, const char __user *buf,
+> 
+> On Fri, Nov 6, 2020 at 10:51 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+> >
+> > On Mon, Oct 26, 2020 at 04:05:30PM +0100, Roberto Bergantinos Corpas wrote:
+> > > RPC channel buffer size for slow case (user buffer bigger than
+> > > one page) can be converted into dymanic and also allows us to
+> > > prescind from queue_io_mutex
+> >
+> > Sorry for the slow response.
+> >
+> > Let's just remove cache_slow_downcall and the find_or_create_page()
+> > thing and just do a kvmalloc() from the start.  I don't understand why
+> > we need to be more complicated.
+> >
+> > --b.
+> >
+> > >
+> > > Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+> > > ---
+> > >  net/sunrpc/cache.c | 13 ++++++++-----
+> > >  1 file changed, 8 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+> > > index baef5ee43dbb..325393f75e17 100644
+> > > --- a/net/sunrpc/cache.c
+> > > +++ b/net/sunrpc/cache.c
+> > > @@ -777,7 +777,6 @@ void cache_clean_deferred(void *owner)
+> > >   */
+> > >
+> > >  static DEFINE_SPINLOCK(queue_lock);
+> > > -static DEFINE_MUTEX(queue_io_mutex);
+> > >
+> > >  struct cache_queue {
+> > >       struct list_head        list;
+> > > @@ -908,14 +907,18 @@ static ssize_t cache_do_downcall(char *kaddr, const char __user *buf,
+> > >  static ssize_t cache_slow_downcall(const char __user *buf,
+> > >                                  size_t count, struct cache_detail *cd)
+> > >  {
+> > > -     static char write_buf[8192]; /* protected by queue_io_mutex */
+> > > +     char *write_buf;
+> > >       ssize_t ret = -EINVAL;
+> > >
+> > > -     if (count >= sizeof(write_buf))
+> > > +     if (count >= 32768) /* 32k is max userland buffer, lets check anyway */
+> > >               goto out;
+> > > -     mutex_lock(&queue_io_mutex);
+> > > +
+> > > +     write_buf = kvmalloc(count + 1, GFP_KERNEL);
+> > > +     if (!write_buf)
+> > > +             return -ENOMEM;
+> > > +
+> > >       ret = cache_do_downcall(write_buf, buf, count, cd);
+> > > -     mutex_unlock(&queue_io_mutex);
+> > > +     kvfree(write_buf);
+> > >  out:
+> > >       return ret;
+> > >  }
+> > > --
+> > > 2.21.0
+> >
