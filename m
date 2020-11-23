@@ -2,99 +2,128 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 341FC2C11EA
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 18:30:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 899D92C1224
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 18:40:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390220AbgKWRZO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Nov 2020 12:25:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729531AbgKWRZO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 12:25:14 -0500
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B1C8C0613CF
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 09:25:14 -0800 (PST)
-Received: by mail-ed1-x542.google.com with SMTP id cq7so17925378edb.4
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 09:25:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GwHdc8W8H2pO5l9czXldORVagDqXJgS4zeprzvsjaQg=;
-        b=bG+iM1OsIwbLBxx302buZnfy0XBMKuVDwlmZEuJ2jzlS3M0b45DjPyEAuJVZ+6Q/uO
-         HqI1lJ1eGaOkYHlvc1dFjtvnSWF1hVXw3OOM0EYffAU2TZrKDg0q0dViui1/ZRW8c5cF
-         YS14tPDBZUvspIOo+ZoGTaFyWyPD+y77Nvy7FaWAjiEF6q+dD1vUpNGDerXX/k+01JqU
-         QD7Qav28I7jenxBISC9xzZ4Q6a1yxQxRpy2YlG8R3OZGWUH0SIPRY7Gg+CQxkMTCSEO2
-         pqrhw7JSnot1vety56a4UdRQqLfvOBFLAy1Ru9N8oUcQ7R32Kb+8dstr3+Erby9RzPO/
-         y/gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GwHdc8W8H2pO5l9czXldORVagDqXJgS4zeprzvsjaQg=;
-        b=nIyg738sjxXzDSeY7XsLyk5Ts2RQ00TbPBCwQgMvKs2R075zcMmRbgZQLq+lKE5jor
-         oIanvB2OuQdxWUxFo5exqm8vMJ8gb+pWdWa29t9+b/wqi4ur4oI9htJYuhZmOE6ZhZHZ
-         EoLBQhYk74dTaE8y7C+yJa8ADZmMAt3qhlN7DrT8fEzlmBvNM4Loov35tNfy7OJUKasc
-         jec81NdOvYqQiqp5WaD2TIGP8R71WUbKBl1ceKFgx+rtlejjxhMXAi3aJQ+eaY+wdNWh
-         0rbhW46nF+9bcXQ89TgSmygXeMj4rrtOoyvDaqlfsXSf5TRlobKYFcrXxrhgQzm6H85a
-         zF6Q==
-X-Gm-Message-State: AOAM531GNb6DZR5mbgVnat5+OYnLNAsQlI+d5I/AwjGiXTEJVD9+3Mv7
-        OdCwRfuzQxI6XusSFRfuXO/8fUUdYjWyheVv18rEi3MZnNc=
-X-Google-Smtp-Source: ABdhPJy3UNVtlqd72k5y9o+SoOX4Q4d0j4BxrxS3lwjRA4cjQCeopmz8SQ5lU7+HC+HzS4HRWZDmpClbxYDl6+eDI9E=
-X-Received: by 2002:a05:6402:1a22:: with SMTP id be2mr264840edb.102.1606152313055;
- Mon, 23 Nov 2020 09:25:13 -0800 (PST)
-MIME-Version: 1.0
-References: <20201122205229.3826-1-trondmy@kernel.org> <20201122205229.3826-2-trondmy@kernel.org>
- <20201122205229.3826-3-trondmy@kernel.org> <20201122205229.3826-4-trondmy@kernel.org>
- <20201122205229.3826-5-trondmy@kernel.org> <20201122205229.3826-6-trondmy@kernel.org>
-In-Reply-To: <20201122205229.3826-6-trondmy@kernel.org>
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Mon, 23 Nov 2020 12:24:57 -0500
-Message-ID: <CAFX2JfnwQb1SbK68y14P6-E7WWwPKd3TvOFQ342K0GhDds3gjA@mail.gmail.com>
-Subject: Re: [PATCH 5/8] SUNRPC: Don't truncate tail in xdr_inline_pages()
-To:     trondmy@kernel.org
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726844AbgKWRh3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Nov 2020 12:37:29 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:55128 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732939AbgKWRh3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 12:37:29 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANHZPXm038451;
+        Mon, 23 Nov 2020 17:37:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=Ou1mUReMY/LPyB+82QIq9GSJ66PfNuvbKZaDQ70MR8s=;
+ b=u1KZjsgaNQY8KCUsOEL0U/fNHsWjAj0zZUd0C/Oy//jc87IzaWZiRCTak+xAYJyA/OdN
+ D1tFKzrKKoBKSMc0wxwp8RLElwX9nqllcufJgYZR0kgVf4SlYQFcz2KtOUX0+ABspT/e
+ bXbir47kLR0F75R7R0Iu1kbyHuoJPLhVVQJ5qcbE+HdEO0dJb0wXp9dkOUO58Ht8DuHv
+ 9gtPj/g0sld6/f4GY8osDUCb8IzxE72rlZrHn0srmDDugJBwgGdgfy/3DYiI+HyNh/AA
+ M+AhoMlcwc6mIDaAF9+M4vPzzL3r5pEHohpIWRP1eyZSKE8YMPRhpWvbG8arfTP57C9F Nw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 34xrdapkw0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 23 Nov 2020 17:37:22 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ANHZoM4038501;
+        Mon, 23 Nov 2020 17:37:22 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 34ycnr7xrb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Nov 2020 17:37:22 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0ANHbHPD021147;
+        Mon, 23 Nov 2020 17:37:17 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Nov 2020 09:37:17 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [PATCH 1/1] NFSv4.2: fix LISTXATTR buffer receive size
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <CAN-5tyEJ4Lbf=Ht2P4gwd9y4EPvN=G6teAiaunL=Ayxox8MSdg@mail.gmail.com>
+Date:   Mon, 23 Nov 2020 12:37:15 -0500
+Cc:     Frank van der Linden <fllinden@amazon.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4687FA42-6294-418D-9835-EDE809997AE3@oracle.com>
+References: <20201113190851.7817-1-olga.kornievskaia@gmail.com>
+ <99874775-A18C-4832-A2F0-F2152BE5CE32@oracle.com>
+ <CAN-5tyEyQbmc-oefF+-PdtdcS7GJ9zmJk71Dk8EED0upcorqaA@mail.gmail.com>
+ <07AF9A5C-BC42-4F66-A153-19A410D312E1@oracle.com>
+ <CAN-5tyFpeVf0y67tJqvbqZmNMRzyvdj_33g9nJUNWW62Tx+thg@mail.gmail.com>
+ <7E0CD3F3-84F2-4D08-8D5A-37AA0FA4852D@oracle.com>
+ <20201119232647.GA11369@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <CAN-5tyH+ZCiqxKQEE9iGURP-71Xd2BqzHuWWPMzZURePKXirfQ@mail.gmail.com>
+ <CAN-5tyEJ4Lbf=Ht2P4gwd9y4EPvN=G6teAiaunL=Ayxox8MSdg@mail.gmail.com>
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9814 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011230117
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9814 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 impostorscore=0 mlxscore=0
+ mlxlogscore=999 spamscore=0 phishscore=0 clxscore=1015 malwarescore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011230117
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Trond,
 
-On Sun, Nov 22, 2020 at 4:07 PM <trondmy@kernel.org> wrote:
->
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->
-> True that if the length of the pages[] array is not 4-byte aligned, then
-> we will need to store the padding in the tail, but there is no need to
-> truncate the total buffer length here.
 
-Just a heads up, after applying this patch there are a *lot* of
-xfstests that fail when run on v4.2 against a server that supports
-READ_PLUS
+> On Nov 23, 2020, at 11:42 AM, Olga Kornievskaia =
+<olga.kornievskaia@gmail.com> wrote:
+>=20
+> Hi Frank, Chuck,
+>=20
+> I would like your option on how LISTXATTR is supposed to work over
+> RDMA. Here's my current understanding of why the listxattr is not
+> working over the RDMA.
+>=20
+> This happens when the listxattr is called with a very small buffer
+> size which RDMA wants to send an inline request. I really dont
+> understand why, Chuck, you are not seeing any problems with hardware
+> as far as I can tell it would have the same problem because the inline
+> threshold size would still make this size inline.
+> rcprdma_inline_fixup() is trying to write to pages that don't exist.
+>=20
+> When LISTXATTR sets this flag XDRBUF_SPARSE_PAGES there is code that
+> will allocate pages in xs_alloc_sparse_pages() but this is ONLY for
+> TCP. RDMA doesn't have anything like that.
+>=20
+> Question: Should there be code added to RDMA that will do something
+> similar when it sees that flag set?
 
-Anna
+Isn't the logic in rpcrdma_convert_iovs() allocating those pages?
 
->
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
->  net/sunrpc/xdr.c | 3 ---
->  1 file changed, 3 deletions(-)
->
-> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-> index 3ce0a5daa9eb..5a450055469f 100644
-> --- a/net/sunrpc/xdr.c
-> +++ b/net/sunrpc/xdr.c
-> @@ -193,9 +193,6 @@ xdr_inline_pages(struct xdr_buf *xdr, unsigned int offset,
->
->         tail->iov_base = buf + offset;
->         tail->iov_len = buflen - offset;
-> -       if ((xdr->page_len & 3) == 0)
-> -               tail->iov_len -= sizeof(__be32);
-> -
->         xdr->buflen += len;
->  }
->  EXPORT_SYMBOL_GPL(xdr_inline_pages);
-> --
-> 2.28.0
->
+
+> Or, should LISTXATTR be re-written
+> to be like READDIR which allocates pages before calling the code.
+
+AIUI READDIR reads into the directory inode's page cache. I recall
+that Frank couldn't do that for LISTXATTR because there's no
+similar page cache associated with the xattr listing.
+
+That said, I would prefer that the *XATTR procedures directly
+allocate pages instead of relying on SPARSE_PAGES, which is a hack
+IMO. I think it would have to use alloc_page() for that, and then
+ensure those pages are released when the call has completed.
+
+I'm not convinced this is the cause of the problem you're seeing,
+though.
+
+--
+Chuck Lever
+
+
+
