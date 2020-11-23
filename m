@@ -2,149 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 219272C117E
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 18:08:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 341FC2C11EA
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 18:30:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388111AbgKWRGQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Nov 2020 12:06:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54237 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388717AbgKWRGN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 12:06:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606151171;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ETdBmUCF01QVQJOZ+sQu9TUGQeVKu9xOEmE1E5gBvfU=;
-        b=BtEofZ03By1sp6OyH8lSI6IT4Bb/Q48OsWV2XnBXmdgQcceGh9rKSaQV86czSHO4W4CJHn
-        vUaUaH4n0l1WmtKl1NY4JjZQEtZdHR6F0okj/kLdyZp+LnqjvTzaYPmjipu9+IS6RcbTNg
-        lanzsvwsZXvmVS2IMlU/0SstZMlkjqs=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-469-o3cOYEauOTOweaeYfK6sVA-1; Mon, 23 Nov 2020 12:06:09 -0500
-X-MC-Unique: o3cOYEauOTOweaeYfK6sVA-1
-Received: by mail-qv1-f70.google.com with SMTP id x9so13350235qvt.16
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 09:06:09 -0800 (PST)
+        id S2390220AbgKWRZO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Nov 2020 12:25:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729531AbgKWRZO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 12:25:14 -0500
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B1C8C0613CF
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 09:25:14 -0800 (PST)
+Received: by mail-ed1-x542.google.com with SMTP id cq7so17925378edb.4
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 09:25:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GwHdc8W8H2pO5l9czXldORVagDqXJgS4zeprzvsjaQg=;
+        b=bG+iM1OsIwbLBxx302buZnfy0XBMKuVDwlmZEuJ2jzlS3M0b45DjPyEAuJVZ+6Q/uO
+         HqI1lJ1eGaOkYHlvc1dFjtvnSWF1hVXw3OOM0EYffAU2TZrKDg0q0dViui1/ZRW8c5cF
+         YS14tPDBZUvspIOo+ZoGTaFyWyPD+y77Nvy7FaWAjiEF6q+dD1vUpNGDerXX/k+01JqU
+         QD7Qav28I7jenxBISC9xzZ4Q6a1yxQxRpy2YlG8R3OZGWUH0SIPRY7Gg+CQxkMTCSEO2
+         pqrhw7JSnot1vety56a4UdRQqLfvOBFLAy1Ru9N8oUcQ7R32Kb+8dstr3+Erby9RzPO/
+         y/gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=ETdBmUCF01QVQJOZ+sQu9TUGQeVKu9xOEmE1E5gBvfU=;
-        b=Wtj2BI0RdLWzEA0CvOFkyu4ze7fHeBZF9I4jLbC8WeNKsjK2w8ZMBtt6AwQPYPp3ou
-         nJXIKGT3goQ+l9MBh7Ej/2WP2x1MShTsanoJYgrsN6g1y+vE2uGvLVwWOpquT1Ho+QPR
-         76og4Bx3MX02H7QVn4ZBK/aqu4ZXJ0+mIdRF+EApl7J5sgt8Gh3NHUxeqXdX+m49nmOH
-         kKDvj12GW2T5n9TyIebGKRci2KWG3JVxw5Q/IJSrMA8xVgRloXF4V3piLzMdOpYLRVwq
-         DShk0B0LWtoDTBoCl8KelAF6pep9z+l1Ub7chfY9i/1DM/oD6qG10DYLGFIgo/1zoBRh
-         Dp8w==
-X-Gm-Message-State: AOAM532G5R6QGL9ROKcMbJNqtssax+c/mJhQA8EAQWJFRtWGptWToSy7
-        4X2ilLhvMq6v95FxrADg6jKz9j3ScRqQLQv7G8aSsw6h/3EmshKsIo4Gqnf3y3sJNrsJ/NKQZa6
-        7vbcQHVPK+GB76ruwcELs
-X-Received: by 2002:ac8:5d53:: with SMTP id g19mr70890qtx.354.1606151168828;
-        Mon, 23 Nov 2020 09:06:08 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwHR8oVpP3xv7xpCkK6lH4mawBfXgRI3GL2dEiLGp13/vfLrDKV7SBtsWnvpv2iFDtHltekRw==
-X-Received: by 2002:ac8:5d53:: with SMTP id g19mr70839qtx.354.1606151168572;
-        Mon, 23 Nov 2020 09:06:08 -0800 (PST)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id o187sm10226153qkb.120.2020.11.23.09.06.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Nov 2020 09:06:07 -0800 (PST)
-Subject: Re: [RFC] MAINTAINERS tag for cleanup robot
-To:     Joe Perches <joe@perches.com>, clang-built-linux@googlegroups.com
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org, tboot-devel@lists.sourceforge.net,
-        kvm@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-acpi@vger.kernel.org, devel@acpica.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, netdev@vger.kernel.org,
-        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        ecryptfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cluster-devel@redhat.com, linux-mtd@lists.infradead.org,
-        keyrings@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, alsa-devel@alsa-project.org,
-        bpf@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-nfs@vger.kernel.org, patches@opensource.cirrus.com
-References: <20201121165058.1644182-1-trix@redhat.com>
- <2105f0c05e9eae8bee8e17dcc5314474b3c0bc73.camel@perches.com>
- <6e8c1926-4209-8f10-d0f9-72c875a85a88@redhat.com>
- <859bae8ddae3238116824192f6ddf1c91a381913.camel@perches.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <88eeba27-ee36-df63-8cd9-3cccbe5e0850@redhat.com>
-Date:   Mon, 23 Nov 2020 09:06:03 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GwHdc8W8H2pO5l9czXldORVagDqXJgS4zeprzvsjaQg=;
+        b=nIyg738sjxXzDSeY7XsLyk5Ts2RQ00TbPBCwQgMvKs2R075zcMmRbgZQLq+lKE5jor
+         oIanvB2OuQdxWUxFo5exqm8vMJ8gb+pWdWa29t9+b/wqi4ur4oI9htJYuhZmOE6ZhZHZ
+         EoLBQhYk74dTaE8y7C+yJa8ADZmMAt3qhlN7DrT8fEzlmBvNM4Loov35tNfy7OJUKasc
+         jec81NdOvYqQiqp5WaD2TIGP8R71WUbKBl1ceKFgx+rtlejjxhMXAi3aJQ+eaY+wdNWh
+         0rbhW46nF+9bcXQ89TgSmygXeMj4rrtOoyvDaqlfsXSf5TRlobKYFcrXxrhgQzm6H85a
+         zF6Q==
+X-Gm-Message-State: AOAM531GNb6DZR5mbgVnat5+OYnLNAsQlI+d5I/AwjGiXTEJVD9+3Mv7
+        OdCwRfuzQxI6XusSFRfuXO/8fUUdYjWyheVv18rEi3MZnNc=
+X-Google-Smtp-Source: ABdhPJy3UNVtlqd72k5y9o+SoOX4Q4d0j4BxrxS3lwjRA4cjQCeopmz8SQ5lU7+HC+HzS4HRWZDmpClbxYDl6+eDI9E=
+X-Received: by 2002:a05:6402:1a22:: with SMTP id be2mr264840edb.102.1606152313055;
+ Mon, 23 Nov 2020 09:25:13 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <859bae8ddae3238116824192f6ddf1c91a381913.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20201122205229.3826-1-trondmy@kernel.org> <20201122205229.3826-2-trondmy@kernel.org>
+ <20201122205229.3826-3-trondmy@kernel.org> <20201122205229.3826-4-trondmy@kernel.org>
+ <20201122205229.3826-5-trondmy@kernel.org> <20201122205229.3826-6-trondmy@kernel.org>
+In-Reply-To: <20201122205229.3826-6-trondmy@kernel.org>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Mon, 23 Nov 2020 12:24:57 -0500
+Message-ID: <CAFX2JfnwQb1SbK68y14P6-E7WWwPKd3TvOFQ342K0GhDds3gjA@mail.gmail.com>
+Subject: Re: [PATCH 5/8] SUNRPC: Don't truncate tail in xdr_inline_pages()
+To:     trondmy@kernel.org
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Trond,
 
-On 11/22/20 10:22 AM, Joe Perches wrote:
-> On Sun, 2020-11-22 at 08:33 -0800, Tom Rix wrote:
->> On 11/21/20 9:10 AM, Joe Perches wrote:
->>> On Sat, 2020-11-21 at 08:50 -0800, trix@redhat.com wrote:
->>>> A difficult part of automating commits is composing the subsystem
->>>> preamble in the commit log.  For the ongoing effort of a fixer producing
->>>> one or two fixes a release the use of 'treewide:' does not seem appropriate.
->>>>
->>>> It would be better if the normal prefix was used.  Unfortunately normal is
->>>> not consistent across the tree.
->>>>
->>>> So I am looking for comments for adding a new tag to the MAINTAINERS file
->>>>
->>>> 	D: Commit subsystem prefix
->>>>
->>>> ex/ for FPGA DFL DRIVERS
->>>>
->>>> 	D: fpga: dfl:
->>> I'm all for it.  Good luck with the effort.  It's not completely trivial.
->>>
->>> From a decade ago:
->>>
->>> https://lore.kernel.org/lkml/1289919077.28741.50.camel@Joe-Laptop/
->>>
->>> (and that thread started with extra semicolon patches too)
->> Reading the history, how about this.
->>
->> get_maintainer.pl outputs a single prefix, if multiple files have the
->> same prefix it works, if they don't its an error.
->>
->> Another script 'commit_one_file.sh' does the call to get_mainainter.pl
->> to get the prefix and be called by run-clang-tools.py to get the fixer
->> specific message.
-> It's not whether the script used is get_maintainer or any other script,
-> the question is really if the MAINTAINERS file is the appropriate place
-> to store per-subsystem patch specific prefixes.
+On Sun, Nov 22, 2020 at 4:07 PM <trondmy@kernel.org> wrote:
 >
-> It is.
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >
-> Then the question should be how are the forms described and what is the
-> inheritance priority.  My preference would be to have a default of
-> inherit the parent base and add basename(subsystem dirname).
->
-> Commit history seems to have standardized on using colons as the separator
-> between the commit prefix and the subject.
->
-> A good mechanism to explore how various subsystems have uses prefixes in
-> the past might be something like:
->
-> $ git log --no-merges --pretty='%s' -<commit_count> <subsystem_path> | \
->   perl -n -e 'print substr($_, 0, rindex($_, ":") + 1) . "\n";' | \
->   sort | uniq -c | sort -rn
+> True that if the length of the pages[] array is not 4-byte aligned, then
+> we will need to store the padding in the tail, but there is no need to
+> truncate the total buffer length here.
 
-Thanks, I have shamelessly stolen this line and limited the commits to the maintainer.
+Just a heads up, after applying this patch there are a *lot* of
+xfstests that fail when run on v4.2 against a server that supports
+READ_PLUS
 
-I will post something once the generation of the prefixes is done.
+Anna
 
-Tom
-
+>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  net/sunrpc/xdr.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+> index 3ce0a5daa9eb..5a450055469f 100644
+> --- a/net/sunrpc/xdr.c
+> +++ b/net/sunrpc/xdr.c
+> @@ -193,9 +193,6 @@ xdr_inline_pages(struct xdr_buf *xdr, unsigned int offset,
+>
+>         tail->iov_base = buf + offset;
+>         tail->iov_len = buflen - offset;
+> -       if ((xdr->page_len & 3) == 0)
+> -               tail->iov_len -= sizeof(__be32);
+> -
+>         xdr->buflen += len;
+>  }
+>  EXPORT_SYMBOL_GPL(xdr_inline_pages);
+> --
+> 2.28.0
+>
