@@ -2,88 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94BBB2BFDD7
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 01:54:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4786D2BFE09
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Nov 2020 02:24:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgKWAyI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 22 Nov 2020 19:54:08 -0500
-Received: from smtprelay0002.hostedemail.com ([216.40.44.2]:50256 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725782AbgKWAyH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Nov 2020 19:54:07 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 2D37318029125;
-        Mon, 23 Nov 2020 00:54:05 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:973:982:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1540:1593:1594:1711:1730:1747:1777:1792:2393:2553:2559:2562:2828:2911:3138:3139:3140:3141:3142:3352:3622:3865:3866:3867:3868:3870:3871:3872:4250:4321:4425:5007:6119:6691:6742:6743:7903:10004:10400:10848:11026:11232:11658:11914:12296:12297:12555:12740:12760:12895:13069:13161:13229:13311:13357:13439:14659:14721:21080:21433:21627:21740:30041:30054:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: steam95_4513bd127361
-X-Filterd-Recvd-Size: 3177
-Received: from XPS-9350.home (unknown [47.151.128.180])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 23 Nov 2020 00:53:59 +0000 (UTC)
-Message-ID: <21826b6d513c4d9ccc795179c1edb0df2361d870.camel@perches.com>
-Subject: Re: [RFC] MAINTAINERS tag for cleanup robot
-From:   Joe Perches <joe@perches.com>
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Tom Rix <trix@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        clang-built-linux@googlegroups.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        tboot-devel@lists.sourceforge.net, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-acpi@vger.kernel.org,
-        devel@acpica.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-media@vger.kernel.org,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-wireless@vger.kernel.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        ecryptfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cluster-devel@redhat.com, linux-mtd@lists.infradead.org,
-        keyrings@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, alsa-devel@alsa-project.org,
-        bpf@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-nfs@vger.kernel.org, patches@opensource.cirrus.com
-Date:   Sun, 22 Nov 2020 16:53:58 -0800
-In-Reply-To: <alpine.LNX.2.23.453.2011230810210.7@nippy.intranet>
-References: <20201121165058.1644182-1-trix@redhat.com>
-                 <20201122032304.GE4327@casper.infradead.org>
-                 <ddb08a27-3ca1-fb2e-d51f-4b471f1a56a3@redhat.com>
-                 <20201122145635.GG4327@casper.infradead.org>
-                 <0819ce06-c462-d4df-d3d9-14931dc5aefc@redhat.com>
-         <751803306cd957d0e7ef6a4fc3dbf12ebceaba92.camel@HansenPartnership.com>
-         <dec07021e7fc11a02b14c98b713ae2c6e2a4ca00.camel@perches.com>
-         <alpine.LNX.2.23.453.2011230810210.7@nippy.intranet>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726448AbgKWBYJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 22 Nov 2020 20:24:09 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:45708 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgKWBYI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Nov 2020 20:24:08 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AN1O6Qu110016;
+        Mon, 23 Nov 2020 01:24:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=SfTYlJxogPV3K4+IQFVcQfu/ifZGhkNVB1nWRRmntz8=;
+ b=qGKUBEkkXOBhdpHWJ2DKOmuq6tQGQ0MLwPgNSSZEHpcKDC+C+6Xn4YxKfPPNvTeoYxbm
+ dInjUR5wYweFYNWnvjjLOJWmJIFZ68HHfpfB3OglYEUXzGQA96cYugMzdvii5CyZXAzq
+ co+t7ahvq7mM0ASCqnxBdNVEnDVcpcoV4y2pQQQDq/GKUpSIh3EUPQBxD9pjOrRfr4HO
+ Koq0vFEM1WGhor+qNQygkwBfI9ScUwbdku8au1LoBrIiQzrUyi2qIstnvtII7Pwpg0pJ
+ fH7dZFOgkICCyK3Wo+pKpcTLHExwgmCYQz8HvWiDo2UCvm2MIECKC9tjhdT/76mMXsrv ZQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 34xuhmjxg0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 23 Nov 2020 01:24:06 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AN1JmAb095978;
+        Mon, 23 Nov 2020 01:24:05 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 34ycnq31ay-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Nov 2020 01:24:05 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AN1O49s031566;
+        Mon, 23 Nov 2020 01:24:05 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 22 Nov 2020 17:24:04 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [PATCH 5/8] SUNRPC: Don't truncate tail in xdr_inline_pages()
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20201122205229.3826-6-trondmy@kernel.org>
+Date:   Sun, 22 Nov 2020 20:24:03 -0500
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0CB9471F-ACC6-42A1-8DCD-8A9E74BAF8F1@oracle.com>
+References: <20201122205229.3826-1-trondmy@kernel.org>
+ <20201122205229.3826-2-trondmy@kernel.org>
+ <20201122205229.3826-3-trondmy@kernel.org>
+ <20201122205229.3826-4-trondmy@kernel.org>
+ <20201122205229.3826-5-trondmy@kernel.org>
+ <20201122205229.3826-6-trondmy@kernel.org>
+To:     trondmy@kernel.org
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9813 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=1
+ mlxlogscore=999 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011230006
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9813 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
+ adultscore=0 phishscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
+ suspectscore=1 priorityscore=1501 mlxlogscore=999 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011230006
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2020-11-23 at 09:33 +1100, Finn Thain wrote:
-> On Sun, 22 Nov 2020, Joe Perches wrote:
 
-> > But provably correct conversions IMO _should_ be done and IMO churn 
-> > considerations should generally have less importance.
-[]
-> Moreover, the patch review workload for skilled humans is being generated 
-> by the automation, which is completely backwards: the machine is supposed 
-> to be helping.
 
-Which is why the provably correct matters.
+> On Nov 22, 2020, at 3:52 PM, trondmy@kernel.org wrote:
+>=20
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>=20
+> True that if the length of the pages[] array is not 4-byte aligned, =
+then
+> we will need to store the padding in the tail, but there is no need to
+> truncate the total buffer length here.
 
-coccinelle transforms can be, but are not necessarily, provably correct.
+This description confuses me. The existing code reduces the length of
+the tail, not the "total buffer length." And what the removed logic is
+doing is taking out the length of the XDR pad for the pages array when
+it is not expected to be used.
 
-The _show transforms done via the sysfs_emit_dev.cocci script are correct
-as in commit aa838896d87a ("drivers core: Use sysfs_emit and sysfs_emit_at
-for show(device *...) functions")
 
-Worthwhile?  A different question, but I think yes as it reduces the
-overall question space of the existing other sprintf overrun possibilities.
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+> net/sunrpc/xdr.c | 3 ---
+> 1 file changed, 3 deletions(-)
+>=20
+> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+> index 3ce0a5daa9eb..5a450055469f 100644
+> --- a/net/sunrpc/xdr.c
+> +++ b/net/sunrpc/xdr.c
+> @@ -193,9 +193,6 @@ xdr_inline_pages(struct xdr_buf *xdr, unsigned int =
+offset,
+>=20
+> 	tail->iov_base =3D buf + offset;
+> 	tail->iov_len =3D buflen - offset;
+> -	if ((xdr->page_len & 3) =3D=3D 0)
+> -		tail->iov_len -=3D sizeof(__be32);
+> -
+> 	xdr->buflen +=3D len;
+> }
+> EXPORT_SYMBOL_GPL(xdr_inline_pages);
+> --=20
+> 2.28.0
+>=20
+
+--
+Chuck Lever
+
 
 
