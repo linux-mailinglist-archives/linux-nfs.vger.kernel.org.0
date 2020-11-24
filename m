@@ -2,242 +2,154 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFBB62C31D8
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Nov 2020 21:19:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E00CD2C31E3
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Nov 2020 21:26:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730742AbgKXUTB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Nov 2020 15:19:01 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:55090 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727131AbgKXUTB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 15:19:01 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AOKITGb186650;
-        Tue, 24 Nov 2020 20:18:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=OBXikVgJKKSnR0MDzorg3rOIvLKWIuDLvBBauYjrGxU=;
- b=dLwjRgt44oSql5S3CnhsBWqfIpeBENp3gSp2FNazRZMyJFlv7KRG10S57P0HtYt1AvFK
- jWvq9H7+Ytp9Q9SdYQtZKyGQ/QcXLdfbJLI7k7O2DCnqQ4qTzNb4ayclQ8fQbcJjECdP
- 9liL4SJkFKIdz3gdLoc1kTvbobIemU6vKewZPlX1zsnuqGXsvX5enh7V3OcMfxlIAJGm
- 5ucf1RnSOmkw91as6C8ROeWHm1f679OX3F2uf6Tx2dMmWTJBdb2Jz3k0ZLiESMaQCkSC
- YXyQfQLdO8I2RI8zhIS3d9dpGah3yShAi/zr71JFd3awhcMbSO/tcGHj1TTAG0nmpYTw NA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3514q8hex0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 24 Nov 2020 20:18:57 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AOK9rwk134578;
-        Tue, 24 Nov 2020 20:18:57 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 34ycnt0cyy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Nov 2020 20:18:57 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AOKIuWq001855;
-        Tue, 24 Nov 2020 20:18:56 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 24 Nov 2020 12:18:56 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH v1] NFS: Fix rpcrdma_inline_fixup() crash with new
- LISTXATTRS operation
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20201124200640.GA2476@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-Date:   Tue, 24 Nov 2020 15:18:55 -0500
-Cc:     Olga Kornievskaia <kolga@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <10EFE633-374C-4BB1-8877-424579564C55@oracle.com>
-References: <160623862874.1534.4471924380357882531.stgit@manet.1015granger.net>
- <20201124200640.GA2476@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-To:     Frank van der Linden <fllinden@amazon.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9815 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=2
- mlxlogscore=999 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011240119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9815 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 clxscore=1011
- impostorscore=0 mlxscore=0 suspectscore=2 lowpriorityscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 adultscore=0 bulkscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011240120
+        id S1726935AbgKXU02 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Nov 2020 15:26:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgKXU01 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 15:26:27 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67CDAC0613D6
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Nov 2020 12:26:27 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 590B06E9E; Tue, 24 Nov 2020 15:26:26 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 590B06E9E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1606249586;
+        bh=6VPEKYxTd7yo1xz6SJsiHLnaWE3zc5kBm6zYoTOR0BI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VbvO5hMjY88gosFw4o9gAcgGaclOLthS3A7/TFN14+8pC01H2q7DMU0HiWpiO6jVP
+         NdUF0AeQ77jOwQozmp3Jji9t2D7/1+PvkkY3WyGOOePXAHqKrcO83uHVG5jxm7iOb8
+         5kjaAmEhhWYdiOVbMkBThGTRxNhyBEYCVMC/cfJU=
+Date:   Tue, 24 Nov 2020 15:26:26 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     trondmy@kernel.org
+Cc:     linux-nfs@vger.kernel.org, Anna Schumaker <schumakeranna@gmail.com>
+Subject: Re: [PATCH v2 0/9] Fix various issues in the SUNRPC xdr code
+Message-ID: <20201124202626.GA7173@fieldses.org>
+References: <20201124135025.1097571-1-trondmy@kernel.org>
+ <20201124161250.GA1091@fieldses.org>
+ <20201124161809.GB1091@fieldses.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201124161809.GB1091@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Tue, Nov 24, 2020 at 11:18:09AM -0500, J. Bruce Fields wrote:
+> On Tue, Nov 24, 2020 at 11:12:50AM -0500, bfields wrote:
+> > On Tue, Nov 24, 2020 at 08:50:16AM -0500, trondmy@kernel.org wrote:
+> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > 
+> > > When looking at the issues raised by Tigran's testing of the NFS client
+> > > updates, I noticed a couple of things in the generic SUNRPC xdr code
+> > > that want to be fixed. This patch series replaces an earlier series that
+> > > attempted to just fix the XDR padding in the NFS code.
+> > > 
+> > > This series fixes up a number of issues w.r.t. bounds checking in the
+> > > xdr_stream code. It corrects the behaviour of xdr_read_pages() for the
+> > > case where the XDR object size is larger than the buffer page array
+> > > length and simplifies the code.
+> > 
+> > I'm seeing this on the client with recent upstream + these patches.
+> 
+> Unfortunately that was in the middle of a series of tests, and I'm not
+> sure exactly what triggered it--I'm guessing cthon special over krb5i.
+> I'll let you know what else I can figure out.
 
+Yeah, reproduceable by running cthon -s over krb5i, and it first shows
+up with the last patch, "NFSv4.2: Fix up read_plus() page alignment".
 
-> On Nov 24, 2020, at 3:06 PM, Frank van der Linden =
-<fllinden@amazon.com> wrote:
->=20
-> On Tue, Nov 24, 2020 at 12:26:32PM -0500, Chuck Lever wrote:
->> CAUTION: This email originated from outside of the organization. Do =
-not click links or open attachments unless you can confirm the sender =
-and know the content is safe.
->>=20
->>=20
->>=20
->> By switching to an XFS-backed export, I am able to reproduce the
->> ibcomp worker crash on my client with xfstests generic/013.
->>=20
->> For the failing LISTXATTRS operation, xdr_inline_pages() is called
->> with page_len=3D12 and buflen=3D128. Then:
->>=20
->> - Because buflen is small, rpcrdma_marshal_req will not set up a
->>  Reply chunk and the rpcrdma's XDRBUF_SPARSE_PAGES logic does not
->>  get invoked at all.
->>=20
->> - Because page_len is non-zero, rpcrdma_inline_fixup() tries to
->>  copy received data into rq_rcv_buf->pages, but they're missing.
->>=20
->> The result is that the ibcomp worker faults and dies. Sometimes that
->> causes a visible crash, and sometimes it results in a transport
->> hang without other symptoms.
->>=20
->> RPC/RDMA's XDRBUF_SPARSE_PAGES support is not entirely correct, and
->> should eventually be fixed or replaced. However, my preference is
->> that upper-layer operations should explicitly allocate their receive
->> buffers (using GFP_KERNEL) when possible, rather than relying on
->> XDRBUF_SPARSE_PAGES.
->>=20
->> Reported-by: Olga kornievskaia <kolga@netapp.com>
->> Suggested-by: Olga kornievskaia <kolga@netapp.com>
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->> ---
->> fs/nfs/nfs42proc.c |   17 ++++++++++-------
->> fs/nfs/nfs42xdr.c  |    1 -
->> 2 files changed, 10 insertions(+), 8 deletions(-)
->>=20
->> Hi-
->>=20
->> I like Olga's proposed approach. What do you think of this patch?
->>=20
->>=20
->> diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
->> index 2b2211d1234e..24810305ec1c 100644
->> --- a/fs/nfs/nfs42proc.c
->> +++ b/fs/nfs/nfs42proc.c
->> @@ -1241,7 +1241,7 @@ static ssize_t _nfs42_proc_listxattrs(struct =
-inode *inode, void *buf,
->>                .rpc_resp       =3D &res,
->>        };
->>        u32 xdrlen;
->> -       int ret, np;
->> +       int ret, np, i;
->>=20
->>=20
->>        res.scratch =3D alloc_page(GFP_KERNEL);
->> @@ -1253,10 +1253,14 @@ static ssize_t _nfs42_proc_listxattrs(struct =
-inode *inode, void *buf,
->>                xdrlen =3D server->lxasize;
->>        np =3D xdrlen / PAGE_SIZE + 1;
->>=20
->> +       ret =3D -ENOMEM;
->>        pages =3D kcalloc(np, sizeof(struct page *), GFP_KERNEL);
->> -       if (pages =3D=3D NULL) {
->> -               __free_page(res.scratch);
->> -               return -ENOMEM;
->> +       if (pages =3D=3D NULL)
->> +               goto out_free;
->> +       for (i =3D 0; i < np; i++) {
->> +               pages[i] =3D alloc_page(GFP_KERNEL);
->> +               if (!pages[i])
->> +                       goto out_free;
->>        }
->>=20
->>        arg.xattr_pages =3D pages;
->> @@ -1271,14 +1275,13 @@ static ssize_t _nfs42_proc_listxattrs(struct =
-inode *inode, void *buf,
->>                *eofp =3D res.eof;
->>        }
->>=20
->> +out_free:
->>        while (--np >=3D 0) {
->>                if (pages[np])
->>                        __free_page(pages[np]);
->>        }
->> -
->> -       __free_page(res.scratch);
->>        kfree(pages);
->> -
->> +       __free_page(res.scratch);
->>        return ret;
->>=20
->> }
->> diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
->> index 6e060a88f98c..8432bd6b95f0 100644
->> --- a/fs/nfs/nfs42xdr.c
->> +++ b/fs/nfs/nfs42xdr.c
->> @@ -1528,7 +1528,6 @@ static void nfs4_xdr_enc_listxattrs(struct =
-rpc_rqst *req,
->>=20
->>        rpc_prepare_reply_pages(req, args->xattr_pages, 0, =
-args->count,
->>            hdr.replen);
->> -       req->rq_rcv_buf.flags |=3D XDRBUF_SPARSE_PAGES;
->>=20
->>        encode_nops(&hdr);
->> }
->>=20
->>=20
->=20
-> I can see why this is the simplest and most pragmatic solution, so =
-it's
-> fine with me.
+--b.
 
-Thanks. I've added Olga's Reviewed/Tested-by to my local copy.
-May I add a Reviewed-by from you?
-
-
-> Why doesn't this happen with getxattr? Do we need to convert that too?
-
-If a GETXATTR request can be generated such that buflen is less than
-a page, but page_len > 0, then yes, it will happen there too. As Olga
-says, NFS is unaware of the transport's inline threshold setting, so
-there will always be some buflen value under which bad things happen.
-
-Either way, I would prefer to see GETXATTR converted to avoid using
-XDRBUF_SPARSE_PAGES. Does NFSv4 GETACL provide a good example?
-
-
-> The basic issue here is that the RPC code does not deal with inlined =
-data
-> that exceeds PAGE_SIZE. That can only be done with raw pages.
->=20
-> Since the upper layer has already allocated a buffer in the case of =
-listxattr
-> and getxattr, I would love to be able to just XDR code in to that =
-buffer,
-> and void the whole alloc+copy situation.
-
-Do you mean like the READDIR entry encoders and decoders?
-
-
-> But sadly, it might be > PAGE_SIZE,
-> so the XDR code doesn't allow it. It's not all bad, having to use =
-pages
-> allows them to be directly hooked in to the cache in the case of =
-getxattr,
-> but for listxattr, decoding directly in to the provided buffer would =
-be nice.
->=20
-> Hm, I wonder if that restriction actually holds for listxattr - the =
-invidual
-> XDR items (xattr names) should never exceed PAGE_SIZE..
-
-You'll have to worry about XDR data items crossing page boundaries.
-Our XDR code uses a scratch buffer for that, so it can be handled
-transparently.
-
-
---
-Chuck Lever
-
-
-
+> 
+> --b.
+> 
+> > [  517.213581] ==================================================================
+> > [  517.214699] BUG: KASAN: slab-out-of-bounds in xdr_set_page+0x327/0x370 [sunrpc]
+> > [  517.215875] Read of size 8 at addr ffff888035929680 by task kworker/u4:7/1423
+> > 
+> > [  517.216958] CPU: 0 PID: 1423 Comm: kworker/u4:7 Not tainted 5.10.0-rc5-16550-gf864315df3e6 #3058
+> > [  517.218027] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.13.0-3.fc33 04/01/2014
+> > [  517.219124] Workqueue: rpciod rpc_async_schedule [sunrpc]
+> > [  517.220079] Call Trace:
+> > [  517.220485]  dump_stack+0x9a/0xcc
+> > [  517.221030]  ? xdr_set_page+0x327/0x370 [sunrpc]
+> > [  517.221712]  print_address_description.constprop.0+0x1c/0x1f0
+> > [  517.222492]  ? xdr_set_page+0x327/0x370 [sunrpc]
+> > [  517.223088]  ? xdr_set_page+0x327/0x370 [sunrpc]
+> > [  517.223677]  kasan_report.cold+0x1f/0x37
+> > [  517.224270]  ? xdr_set_page+0x327/0x370 [sunrpc]
+> > [  517.224872]  xdr_set_page+0x327/0x370 [sunrpc]
+> > [  517.225476]  xdr_align_data+0x1c9/0x8e0 [sunrpc]
+> > [  517.226073]  ? lockdep_hardirqs_on_prepare+0x17b/0x400
+> > [  517.226730]  ? kfree+0x118/0x220
+> > [  517.227172]  ? lockdep_hardirqs_on+0x79/0x100
+> > [  517.227745]  ? __decode_op_hdr+0x24/0x4d0 [nfsv4]
+> > [  517.228427]  nfs4_xdr_dec_read_plus+0x360/0x5a0 [nfsv4]
+> > [  517.229117]  ? nfs4_xdr_dec_offload_cancel+0x160/0x160 [nfsv4]
+> > [  517.229877]  gss_unwrap_resp+0x145/0x220 [auth_rpcgss]
+> > [  517.230558]  call_decode+0x5d2/0x830 [sunrpc]
+> > [  517.231127]  ? rpc_decode_header+0x17c0/0x17c0 [sunrpc]
+> > [  517.231785]  ? lockdep_hardirqs_on_prepare+0x400/0x400
+> > [  517.232563]  ? rpc_decode_header+0x17c0/0x17c0 [sunrpc]
+> > [  517.233236]  __rpc_execute+0x1b8/0xf10 [sunrpc]
+> > [  517.233831]  ? rpc_exit+0x110/0x110 [sunrpc]
+> > [  517.234390]  ? lock_downgrade+0x690/0x690
+> > [  517.234918]  rpc_async_schedule+0x9f/0x140 [sunrpc]
+> > [  517.235539]  process_one_work+0x7ac/0x12d0
+> > [  517.236106]  ? lock_release+0x6c0/0x6c0
+> > [  517.236601]  ? queue_delayed_work_on+0x90/0x90
+> > [  517.237170]  ? rwlock_bug.part.0+0x90/0x90
+> > [  517.237694]  worker_thread+0x590/0xf80
+> > [  517.238204]  ? rescuer_thread+0xb80/0xb80
+> > [  517.238714]  kthread+0x375/0x450
+> > [  517.239124]  ? _raw_spin_unlock_irq+0x24/0x50
+> > [  517.239673]  ? kthread_create_worker_on_cpu+0xb0/0xb0
+> > [  517.240392]  ret_from_fork+0x22/0x30
+> > 
+> > [  517.241072] Allocated by task 9053:
+> > [  517.241533]  kasan_save_stack+0x1b/0x40
+> > [  517.242018]  __kasan_kmalloc.constprop.0+0xbf/0xd0
+> > [  517.242667]  __kmalloc+0x11e/0x210
+> > [  517.243111]  nfs_generic_pgio+0x943/0xe10 [nfs]
+> > [  517.243691]  nfs_generic_pg_pgios+0xea/0x3f0 [nfs]
+> > [  517.244375]  nfs_pageio_doio+0xe3/0x240 [nfs]
+> > [  517.244929]  nfs_pageio_complete+0x143/0x580 [nfs]
+> > [  517.245562]  nfs_readpages+0x331/0x5b0 [nfs]
+> > [  517.246135]  read_pages+0x4ab/0xa40
+> > [  517.246583]  page_cache_ra_unbounded+0x361/0x620
+> > [  517.247165]  generic_file_buffered_read+0x377/0x1e90
+> > [  517.247791]  nfs_file_read+0x144/0x240 [nfs]
+> > [  517.248396]  new_sync_read+0x352/0x5d0
+> > [  517.248870]  vfs_read+0x202/0x3f0
+> > [  517.249290]  ksys_read+0xe9/0x1b0
+> > [  517.249708]  do_syscall_64+0x33/0x40
+> > [  517.251015]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > [  517.252201] The buggy address belongs to the object at ffff888035929600
+> >                 which belongs to the cache kmalloc-128 of size 128
+> > [  517.253807] The buggy address is located 0 bytes to the right of
+> >                 128-byte region [ffff888035929600, ffff888035929680)
+> > [  517.255217] The buggy address belongs to the page:
+> > [  517.255819] page:00000000ab6145f3 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x35929
+> > [  517.257070] flags: 0x4000000000000200(slab)
+> > [  517.257600] raw: 4000000000000200 ffffea00003970d8 ffffea00004582e8 ffff888007840400
+> > [  517.258582] raw: 0000000000000000 ffff888035929000 0000000100000010
+> > [  517.259362] page dumped because: kasan: bad access detected
+> > 
+> > [  517.260315] Memory state around the buggy address:
+> > [  517.260912]  ffff888035929580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> > [  517.261833]  ffff888035929600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > [  517.262755] >ffff888035929680: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> > [  517.263655]                    ^
+> > [  517.264133]  ffff888035929700: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > [  517.265066]  ffff888035929780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> > [  517.265967] ==================================================================
+> > 
