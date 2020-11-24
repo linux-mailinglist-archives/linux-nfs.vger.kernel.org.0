@@ -2,112 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FC502C33F1
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Nov 2020 23:25:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65D2F2C3420
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Nov 2020 23:41:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389543AbgKXWYS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Nov 2020 17:24:18 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:42066 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728076AbgKXWYQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 17:24:16 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 8A96E22AD6;
-        Tue, 24 Nov 2020 17:24:09 -0500 (EST)
-Date:   Wed, 25 Nov 2020 09:24:08 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Kees Cook <keescook@chromium.org>
-cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Joe Perches <joe@perches.com>,
-        Jakub Kicinski <kuba@kernel.org>, alsa-devel@alsa-project.org,
-        linux-atm-general@lists.sourceforge.net,
-        reiserfs-devel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-ide@vger.kernel.org, dm-devel@redhat.com,
-        keyrings@vger.kernel.org, linux-mtd@lists.infradead.org,
-        GR-everest-linux-l2@marvell.com, wcn36xx@lists.infradead.org,
-        samba-technical@lists.samba.org, linux-i3c@lists.infradead.org,
-        linux1394-devel@lists.sourceforge.net,
-        linux-afs@lists.infradead.org,
-        usb-storage@lists.one-eyed-alien.net, drbd-dev@lists.linbit.com,
-        devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org,
-        rds-devel@oss.oracle.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-scsi@vger.kernel.org, linux-rdma@vger.kernel.org,
-        oss-drivers@netronome.com, bridge@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com, cluster-devel@redhat.com,
-        linux-acpi@vger.kernel.org, coreteam@netfilter.org,
-        intel-wired-lan@lists.osuosl.org, linux-input@vger.kernel.org,
-        Miguel Ojeda <ojeda@kernel.org>,
-        tipc-discussion@lists.sourceforge.net, linux-ext4@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        selinux@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, linux-geode@lists.infradead.org,
-        linux-can@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-gpio@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-        linux-mediatek@lists.infradead.org, xen-devel@lists.xenproject.org,
-        nouveau@lists.freedesktop.org, linux-hams@vger.kernel.org,
-        ceph-devel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
-        x86@kernel.org, linux-nfs@vger.kernel.org,
-        GR-Linux-NIC-Dev@marvell.com, linux-mm@kvack.org,
-        netdev@vger.kernel.org, linux-decnet-user@lists.sourceforge.net,
-        linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-sctp@vger.kernel.org, linux-usb@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        patches@opensource.cirrus.com, linux-integrity@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [Intel-wired-lan] [PATCH 000/141] Fix fall-through warnings for
- Clang
-In-Reply-To: <202011241327.BB28F12F6@keescook>
-Message-ID: <alpine.LNX.2.23.453.2011250859290.15@nippy.intranet>
-References: <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com> <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com> <ca071decb87cc7e905411423c05a48f9fd2f58d7.camel@perches.com>
- <0147972a72bc13f3629de8a32dee6f1f308994b5.camel@HansenPartnership.com> <d8d1e9add08cdd4158405e77762d4946037208f8.camel@perches.com> <dbd2cb703ed9eefa7dde9281ea26ab0f7acc8afe.camel@HansenPartnership.com> <20201123130348.GA3119@embeddedor>
- <8f5611bb015e044fa1c0a48147293923c2d904e4.camel@HansenPartnership.com> <202011241327.BB28F12F6@keescook>
+        id S2389966AbgKXWjY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Nov 2020 17:39:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731770AbgKXWjY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 17:39:24 -0500
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02AF2C0613D6
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Nov 2020 14:39:24 -0800 (PST)
+Received: by mail-qk1-x741.google.com with SMTP id h20so927717qkk.4
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Nov 2020 14:39:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=Lk4aLYXRof9fgTZaa2HhStXtQBo0PnyuXqFnidC4Ftw=;
+        b=qCuETC2zorLa011hyvpjf62MM4t2GmaOafdDtAatyyGm5HsqY2x30O1ahIjg2/ITIy
+         FcAwHdfvjSwmkMmasZAsb+Gg+dzobwet+eGSr09eLOvMHWL2jDAGQyRa5G+2rZjqXggL
+         8fqHVxhVGwIHOGkJznDL4IHRhYzWAWd3q0lDaatN8dg7IMmKUEubQtFWgdY6h3hXfQNi
+         /2AHrKboUBUzPDs9DX+PDW6GpI8ghrY4MkWky3g90dPCoKGCLmYKTWduidmG5rUWcqi6
+         RNkp8FeIw0IPfudcs7pJvCpGS8jDgM2a9meFZnneCTETFqrf7dIZjOpJTjrbJgXhdSU3
+         CYyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=Lk4aLYXRof9fgTZaa2HhStXtQBo0PnyuXqFnidC4Ftw=;
+        b=MxdiX6o89ZCEPC585n2yjfShR7sLnq9hvLt0qhvMQOymQRmaH8lL+7TGhQ3b7WutPa
+         3vHXqvmqNd2sIZXUsmQvycGcEwtiTwOdJlWpuL7Gq7TcLKKEcx4RCWXw1lTgZrniJsjd
+         6kj4kfbS6W5ir80rYuygKbWlx+fXuWiz6+V3Acpy4nH6PcdN+Szyg8BrEQky2CxA1f5q
+         MqUO/c8f8A0uj/UNv27Xamp4c0MNHi/q+YY8ybFd8Dq/r57w/i/topX3W900s01Q7Bit
+         Fr3rDblR03Vp6tczdmVKnlYdG/TNnXp0UMQl+f4DtIbXCaO7rS4FZfkh7FUmfyZfeb/N
+         QoMA==
+X-Gm-Message-State: AOAM530OlzrNz8bkm+MrlGoF1X4hS1NQhVi5TKWII5Blidl2jPYx+31N
+        jTLBkldZVdmuOlUMBTBNyxPTXqrMLvw=
+X-Google-Smtp-Source: ABdhPJx0xZ55DKyTTn79bHeYhoKv3ce/MSO/a5bJzFQvxrD9dlkEzrckzkcOJ2OUZGezAdwD4M9Bqw==
+X-Received: by 2002:a37:6445:: with SMTP id y66mr551679qkb.100.1606257562903;
+        Tue, 24 Nov 2020 14:39:22 -0800 (PST)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id o22sm521904qto.96.2020.11.24.14.39.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Nov 2020 14:39:22 -0800 (PST)
+Sender: Chuck Lever <chucklever@gmail.com>
+Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0AOMdJF1013457;
+        Tue, 24 Nov 2020 22:39:20 GMT
+Subject: [PATCH v1] SUNRPC: Remove XDRBUF_SPARSE_PAGES flag in gss_proxy
+ upcall
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     trond.myklebust@primarydata.com, simo@redhat.com,
+        bfields@fieldses.org
+Date:   Tue, 24 Nov 2020 17:39:19 -0500
+Message-ID: <160625754220.280431.690992380938118353.stgit@klimt.1015granger.net>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 24 Nov 2020, Kees Cook wrote:
+Commit 9dfd87da1aeb ("rpc: fix huge kmalloc's in gss-proxy") added
+gssp_alloc_receive_pages() to fully allocate the receive buffer
+for gss_proxy upcalls.
 
-> On Mon, Nov 23, 2020 at 08:31:30AM -0800, James Bottomley wrote:
-> > Really, no ... something which produces no improvement has no value at 
-> > all ... we really shouldn't be wasting maintainer time with it because 
-> > it has a cost to merge.  I'm not sure we understand where the balance 
-> > lies in value vs cost to merge but I am confident in the zero value 
-> > case.
-> 
-> What? We can't measure how many future bugs aren't introduced because 
-> the kernel requires explicit case flow-control statements for all new 
-> code.
-> 
+However, later, 431f6eb3570f ("SUNRPC: Add a label for RPC calls
+that require allocation on receive") sets the XDRBUF_SPARSE_PAGES
+flag for this receive buffer anyway. That doesn't appear to have
+been necessary, since gssp_alloc_receive_pages() still exists.
 
-These statements are not "missing" unless you presume that code written 
-before the latest de facto language spec was written should somehow be 
-held to that spec.
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ net/sunrpc/auth_gss/gss_rpc_xdr.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-If the 'fallthrough' statement is not part of the latest draft spec then 
-we should ask why not before we embrace it. Being that the kernel still 
-prefers -std=gnu89 you might want to consider what has prevented 
--std=gnu99 or -std=gnu2x etc.
+diff --git a/net/sunrpc/auth_gss/gss_rpc_xdr.c b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+index 2ff7b7083eba..44838f6ea25e 100644
+--- a/net/sunrpc/auth_gss/gss_rpc_xdr.c
++++ b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+@@ -771,7 +771,6 @@ void gssx_enc_accept_sec_context(struct rpc_rqst *req,
+ 	xdr_inline_pages(&req->rq_rcv_buf,
+ 		PAGE_SIZE/2 /* pretty arbitrary */,
+ 		arg->pages, 0 /* page base */, arg->npages * PAGE_SIZE);
+-	req->rq_rcv_buf.flags |= XDRBUF_SPARSE_PAGES;
+ done:
+ 	if (err)
+ 		dprintk("RPC:       gssx_enc_accept_sec_context: %d\n", err);
 
-> We already enable -Wimplicit-fallthrough globally, so that's not the 
-> discussion. The issue is that Clang is (correctly) even more strict than 
-> GCC for this, so these are the remaining ones to fix for full Clang 
-> coverage too.
-> 
 
-Seems to me you should be patching the compiler.
-
-When you have consensus among the language lawyers you'll have more 
-credibility with those being subjected to enforcement.
