@@ -2,192 +2,186 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDC952C194D
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Nov 2020 00:16:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E1EE2C1A5D
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Nov 2020 01:59:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731179AbgKWXOa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Nov 2020 18:14:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729915AbgKWXO3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 18:14:29 -0500
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FCF6C0613CF
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 15:14:27 -0800 (PST)
-Received: by mail-ej1-x642.google.com with SMTP id k27so25699128ejs.10
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Nov 2020 15:14:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qqzJi8A5sI/l3TbQhRfs9IyuwvXPrh7Hqnc/5UBuz7A=;
-        b=UeoN1wgcYJSq8CojczbNkePVepAE29mXLXQ7bbpODF1FIZuVtoPSM2SemcSOz70JBK
-         RcuLcUjk3oDaXFKKWXJ10v90Wxo5+5cnubxqXq8eQCvhN5wcy8Mp4MeJc20ExjHoiTIg
-         0vCyX7UgT8h3MZNJhYZmcaihNn45I8RvpeN40CQYmViU0TVVoW6LC/BG5ugYXuY09Lod
-         OkFW1y3UQYMKwTPcnIUWP74RCV/luuCGTofv+7CLReM1ZP/XPk2xi49CI3HEbRz87tL4
-         YZMu0rVpifj/zPRGgCN/AfcT/mSCw1Vnq/2cH3PeU/P0M2zivRpS3GTQ5HVV7Zo7d0d6
-         i8PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qqzJi8A5sI/l3TbQhRfs9IyuwvXPrh7Hqnc/5UBuz7A=;
-        b=C26UkOOZYFlLfk71aIJcf9UD7z3S3mKFW2eJ/uk4fLic0QxRRK0D5JtRkl8xX0qzoe
-         7ymzgwiGNewAicVCz5nlBgfz+/aAzqPmBqzLrJKQD6mjQr4Ix8hZL/ocmiOyrF3Mh5mj
-         1cU2Tpi06HTw39GChPKep7sqOBGa6rzosRWg6cc++JgSdAsremh7ChimgLlVjU19IwnV
-         oFDLQ0SF+BBySxAtIDT/byyt/E9mRirYUOGuAXViKSazs/JB+ik5UQYpoeeD+sYXcGWx
-         Xl58qurmy5fe+OehET2APjd6Rt5NTJ0tQ3m3MdFspGnCW62o9o1zq+I/JTf79cn+9x38
-         b+Hw==
-X-Gm-Message-State: AOAM5338BqxYkGr7Qa62hnNn5CoeLBSnOfz5FxA+WuDaKf8GeSyyrZl/
-        ArXgiiRNhrmBWYMZiOcA2juo3MCO5m5JWO8Nl4k=
-X-Google-Smtp-Source: ABdhPJx7yYOEnwojH2yV9z8FDxyJCq5gzZcZ9aVCu3toe9B9uCWChMmcX+heU7/1LdZNb/8RUy7AJ3hjrfgKKqE0c/4=
-X-Received: by 2002:a17:906:e96:: with SMTP id p22mr1659544ejf.451.1606173265820;
- Mon, 23 Nov 2020 15:14:25 -0800 (PST)
+        id S1729165AbgKXA6s (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Nov 2020 19:58:48 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:51159 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgKXA6q (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Nov 2020 19:58:46 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 0EF842A8E0;
+        Mon, 23 Nov 2020 19:58:39 -0500 (EST)
+Date:   Tue, 24 Nov 2020 11:58:37 +1100 (AEDT)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        alsa-devel@alsa-project.org, amd-gfx@lists.freedesktop.org,
+        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
+        cluster-devel@redhat.com, coreteam@netfilter.org,
+        devel@driverdev.osuosl.org, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com, dri-devel@lists.freedesktop.org,
+        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
+        keyrings@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        linux-acpi@vger.kernel.org, linux-afs@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net,
+        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-cifs@vger.kernel.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-decnet-user@lists.sourceforge.net,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-fbdev@vger.kernel.org, linux-geode@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input <linux-input@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mmc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
+        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
+        selinux@vger.kernel.org, target-devel@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        usb-storage@lists.one-eyed-alien.net,
+        virtualization@lists.linux-foundation.org,
+        wcn36xx@lists.infradead.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
+Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
+In-Reply-To: <CANiq72=z+tmuey9wj3Kk7wX5s0hTHpsQdLhAqcOVNrHon6xn5Q@mail.gmail.com>
+Message-ID: <alpine.LNX.2.23.453.2011241036520.7@nippy.intranet>
+References: <cover.1605896059.git.gustavoars@kernel.org> <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com> <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com> <202011220816.8B6591A@keescook>
+ <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com> <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com> <alpine.LNX.2.23.453.2011230938390.7@nippy.intranet>
+ <CANiq72=z+tmuey9wj3Kk7wX5s0hTHpsQdLhAqcOVNrHon6xn5Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20201113190851.7817-1-olga.kornievskaia@gmail.com>
- <99874775-A18C-4832-A2F0-F2152BE5CE32@oracle.com> <CAN-5tyEyQbmc-oefF+-PdtdcS7GJ9zmJk71Dk8EED0upcorqaA@mail.gmail.com>
- <07AF9A5C-BC42-4F66-A153-19A410D312E1@oracle.com> <CAN-5tyFpeVf0y67tJqvbqZmNMRzyvdj_33g9nJUNWW62Tx+thg@mail.gmail.com>
- <7E0CD3F3-84F2-4D08-8D5A-37AA0FA4852D@oracle.com> <20201119232647.GA11369@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
- <CAN-5tyH+ZCiqxKQEE9iGURP-71Xd2BqzHuWWPMzZURePKXirfQ@mail.gmail.com>
- <CAN-5tyEJ4Lbf=Ht2P4gwd9y4EPvN=G6teAiaunL=Ayxox8MSdg@mail.gmail.com>
- <4687FA42-6294-418D-9835-EDE809997AE3@oracle.com> <CAN-5tyEd8iDfEW0WsXyPsoM73tUSAXQgyhAfRbRbRZCem_cwPw@mail.gmail.com>
- <F85397C8-3FFD-4A7F-92E4-DB84D80F6387@oracle.com>
-In-Reply-To: <F85397C8-3FFD-4A7F-92E4-DB84D80F6387@oracle.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Mon, 23 Nov 2020 18:14:14 -0500
-Message-ID: <CAN-5tyFe-FBb_UWUmWokotEzNiYj5zJaWiu1oK+54H-1HQRurw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] NFSv4.2: fix LISTXATTR buffer receive size
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Frank van der Linden <fllinden@amazon.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 1:09 PM Chuck Lever <chuck.lever@oracle.com> wrote:
->
->
->
-> > On Nov 23, 2020, at 12:59 PM, Olga Kornievskaia <olga.kornievskaia@gmail.com> wrote:
-> >
-> > On Mon, Nov 23, 2020 at 12:37 PM Chuck Lever <chuck.lever@oracle.com> wrote:
-> >>
-> >>
-> >>
-> >>> On Nov 23, 2020, at 11:42 AM, Olga Kornievskaia <olga.kornievskaia@gmail.com> wrote:
-> >>>
-> >>> Hi Frank, Chuck,
-> >>>
-> >>> I would like your option on how LISTXATTR is supposed to work over
-> >>> RDMA. Here's my current understanding of why the listxattr is not
-> >>> working over the RDMA.
-> >>>
-> >>> This happens when the listxattr is called with a very small buffer
-> >>> size which RDMA wants to send an inline request. I really dont
-> >>> understand why, Chuck, you are not seeing any problems with hardware
-> >>> as far as I can tell it would have the same problem because the inline
-> >>> threshold size would still make this size inline.
-> >>> rcprdma_inline_fixup() is trying to write to pages that don't exist.
-> >>>
-> >>> When LISTXATTR sets this flag XDRBUF_SPARSE_PAGES there is code that
-> >>> will allocate pages in xs_alloc_sparse_pages() but this is ONLY for
-> >>> TCP. RDMA doesn't have anything like that.
-> >>>
-> >>> Question: Should there be code added to RDMA that will do something
-> >>> similar when it sees that flag set?
-> >>
-> >> Isn't the logic in rpcrdma_convert_iovs() allocating those pages?
-> >
-> > No, rpcrdm_convert_iovs is only called for when you have reply chunks,
-> > lists etc but not for the inline messages. What am I missing?
->
-> So, then, rpcrdma_marshal_req() is deciding that the LISTXATTRS
-> reply is supposed to fit inline. That means rqst->rq_rcv_buf.buflen
-> is small.
->
-> But if rpcrdma_inline_fixup() is trying to fill pages,
-> rqst->rq_rcv_buf.page_len must not be zero? That sounds like the
-> LISTXATTRS encoder is not setting up the receive buffer correctly.
->
-> The receive buffer's buflen field is supposed to be set to a value
-> that is at least as large as page_len, I would think.
 
-Here's what the LISTXATTR code does that I can see:
-It allocates pointers to the pages (but no pages). It sets the
-page_len to the hdr.replen so yes it's not zero (setting of the value
-as far as i know is correct). So for RDMA nothing allocates those
-pages because it's an inline request. TCP code will allocate those
-pages because the code was added. You keep on saying that you don't
-think this is it but I don't know how to prove to you that Kasan's
-message of "wild-memory access" means that page wasn't allocated. It's
-a bogus address. The page isn't there. Or at least that's how I read
-the Kasan's message. I don't know how else to interpret it (but also
-know that code never allocates the memory I believe is a strong
-argument).
+On Mon, 23 Nov 2020, Miguel Ojeda wrote:
 
-NFS code can't know that request is inline. It does assume something
-will allocate that memory but RDMA doesn't allocate memory for the
-inline messages.
+> On Mon, 23 Nov 2020, Finn Thain wrote:
+> 
+> > On Sun, 22 Nov 2020, Miguel Ojeda wrote:
+> > 
+> > > 
+> > > It isn't that much effort, isn't it? Plus we need to take into 
+> > > account the future mistakes that it might prevent, too.
+> > 
+> > We should also take into account optimisim about future improvements 
+> > in tooling.
+> > 
+> Not sure what you mean here. There is no reliable way to guess what the 
+> intention was with a missing fallthrough, even if you parsed whitespace 
+> and indentation.
+> 
 
-While I'm not suggesting this is a correct fix but this is a fix that
-removes the oops.
+What I meant was that you've used pessimism as if it was fact.
 
-diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 2b2211d1234e..faab6aedeb42 100644
---- a/fs/nfs/nfs42proc.c
-+++ b/fs/nfs/nfs42proc.c
-@@ -1258,6 +1258,15 @@ static ssize_t _nfs42_proc_listxattrs(struct
-inode *inode, void *buf,
-                __free_page(res.scratch);
-                return -ENOMEM;
-        }
-+       if (buflen < 1024) {
-+               int i;
-+               for (i = 0; i < np; i++) {
-+                       pages[i] = alloc_page(GFP_NOWAIT | __GFP_NOWARN);
-+                       if (!pages[i])
-+                               return -ENOMEM;
-+               }
-+       }
-+
+For example, "There is no way to guess what the effect would be if the 
+compiler trained programmers to add a knee-jerk 'break' statement to avoid 
+a warning".
 
-        arg.xattr_pages = pages;
-        arg.count = xdrlen;
+Moreover, what I meant was that preventing programmer mistakes is a 
+problem to be solved by development tools. The idea that retro-fitting new 
+language constructs onto mature code is somehow necessary to "prevent 
+future mistakes" is entirely questionable.
 
+> > > So even if there were zero problems found so far, it is still a 
+> > > positive change.
+> > > 
+> > 
+> > It is if you want to spin it that way.
+> > 
+> How is that a "spin"? It is a fact that we won't get *implicit* 
+> fallthrough mistakes anymore (in particular if we make it a hard error).
+> 
 
-Basically since I know that all RDMA less than 1024 (for soft Roce)
-will be inline, I need to allocate pages for them. This doesn't
-interfere with the TCP mounts as the code checks if pages are
-allocated and only allocates them if they are not.
+Perhaps "handwaving" is a better term?
 
-But of course this is not a solution as it's unknown what's the rdma's
-inline threshold is at the NFS layer.
+> > > I would agree if these changes were high risk, though; but they are 
+> > > almost trivial.
+> > > 
+> > 
+> > This is trivial:
+> > 
+> >  case 1:
+> >         this();
+> > +       fallthrough;
+> >  case 2:
+> >         that();
+> > 
+> > But what we inevitably get is changes like this:
+> > 
+> >  case 3:
+> >         this();
+> > +       break;
+> >  case 4:
+> >         hmmm();
+> > 
+> > Why? Mainly to silence the compiler. Also because the patch author 
+> > argued successfully that they had found a theoretical bug, often in 
+> > mature code.
+> > 
+> If someone changes control flow, that is on them. Every kernel developer 
+> knows what `break` does.
+> 
 
+Sure. And if you put -Wimplicit-fallthrough into the Makefile and if that 
+leads to well-intentioned patches that cause regressions, it is partly on 
+you.
 
+Have you ever considered the overall cost of the countless 
+-Wpresume-incompetence flags?
 
-> >>> Or, should LISTXATTR be re-written
-> >>> to be like READDIR which allocates pages before calling the code.
-> >>
-> >> AIUI READDIR reads into the directory inode's page cache. I recall
-> >> that Frank couldn't do that for LISTXATTR because there's no
-> >> similar page cache associated with the xattr listing.
-> >>
-> >> That said, I would prefer that the *XATTR procedures directly
-> >> allocate pages instead of relying on SPARSE_PAGES, which is a hack
-> >> IMO. I think it would have to use alloc_page() for that, and then
-> >> ensure those pages are released when the call has completed.
-> >>
-> >> I'm not convinced this is the cause of the problem you're seeing,
-> >> though.
-> >>
-> >> --
-> >> Chuck Lever
->
-> --
-> Chuck Lever
->
->
->
+Perhaps you pay the power bill for a build farm that produces logs that 
+no-one reads? Perhaps you've run git bisect, knowing that the compiler 
+messages are not interesting? Or compiled software in using a language 
+that generates impenetrable messages? If so, here's a tip:
+
+# grep CFLAGS /etc/portage/make.conf 
+CFLAGS="... -Wno-all -Wno-extra ..."
+CXXFLAGS="${CFLAGS}"
+
+Now allow me some pessimism: the hardware upgrades, gigawatt hours and 
+wait time attributable to obligatory static analyses are a net loss.
+
+> > But is anyone keeping score of the regressions? If unreported bugs 
+> > count, what about unreported regressions?
+> > 
+> Introducing `fallthrough` does not change semantics. If you are really 
+> keen, you can always compare the objects because the generated code 
+> shouldn't change.
+> 
+
+No, it's not for me to prove that such patches don't affect code 
+generation. That's for the patch author and (unfortunately) for reviewers.
+
+> Cheers,
+> Miguel
+> 
