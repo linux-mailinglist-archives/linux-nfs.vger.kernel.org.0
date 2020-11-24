@@ -2,143 +2,482 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39CE52C301A
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Nov 2020 19:43:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8C702C30FF
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Nov 2020 20:45:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390954AbgKXSms (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Nov 2020 13:42:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54366 "EHLO
+        id S1726299AbgKXTnN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Nov 2020 14:43:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390951AbgKXSmr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 13:42:47 -0500
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BE2FC0617A6
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Nov 2020 10:42:47 -0800 (PST)
-Received: by mail-il1-x141.google.com with SMTP id x15so4592789ilq.1
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Nov 2020 10:42:47 -0800 (PST)
+        with ESMTP id S1726357AbgKXTnL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 14:43:11 -0500
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61007C0613D6
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Nov 2020 11:43:10 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id f23so30252436ejk.2
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Nov 2020 11:43:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I66kGxStV/6CyvzIe7WIMGeh+u6UpZuKcXQ4/c5IVHM=;
-        b=QFVPduXV4LLsuiww/mzBj3avxGOXVnqoJHsAm1Is7inPRb4VVg6vQLRpYDU+6KIZqu
-         Mvafc0MXJ13dHa0Dm9qjB5bp4gbpQXHKV8bXbEkWR5nKWQsCM0TImLyz1gYveGac2aff
-         3mgCUGA/Qgb5Xopdfv77l7Y9GLtHxviSC7teg=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A4vFnPOvQEhWsIKiWCtSJnSs6of53asWxzbj0luLTYk=;
+        b=ZdDPEtOBwfKbzgElHMbxOGjQmOjMiPZQhcckQAmauS3L9KKDd6BBsZeVWqpI/f1Q/7
+         LB1ahaMEAolRK+DehOlVVucBcq/G7U+ACotQzTUueJknxuhsUITKUYp+DQMhQzCM34lf
+         x19OQ9h7RRmabMEMii/ONtvpDpScfx4TqMQieVnR6EV4d7WlfSpf5PswsJGpqOQ9Z7MW
+         h/Js+L6vfjnk1wrUAdrDvqx911Nu9rdXmfvkgeIb47FCQZWp4ErRDdbxoRwmZl+YEljb
+         wEP/EAkeSlbSYmQ0n6944twXNBFL/7OOhiZKPqRRtu0+4tnB2IFa2SlS9QmgRLJ40MEk
+         B9Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I66kGxStV/6CyvzIe7WIMGeh+u6UpZuKcXQ4/c5IVHM=;
-        b=jk1OfNC3eN7v7xuUW6zW91OAQ1CT6GN8T6uCHaD+DmTATzvdoOKFz2Jq69wOq8E+ik
-         O/MjKJis8NopocgM+KuraI51x/lqGyG5b6FDZLrQnTXg1eg05iFgZadaeKl6QRgRDA7M
-         WdM+han81p9LwXCE0bn3f4Agg82BN68AXqVqrsY13b3ELn+9zl9UMoHSVqf1dQ4WD2lQ
-         5udlLjFpdLJGNrI+EmoFY2r+wGYORLAvvqMUtxu7y1Q+2O3wmcqP06WRaJ85OT05yb0q
-         ABmVzfqbAMVaUIHpvMf543OsCRMcHvV9CSkY8y/ZjwPI0Iy9JKo83ZH8qX8rGNnOFDd+
-         b8xQ==
-X-Gm-Message-State: AOAM530nUH+tghqv2fwO+6yYjOAaxmPPSdzgbQxwp2vD2LVoZAhOqFdk
-        0SeHB2UvU548W5Bc/baELYUhXQ==
-X-Google-Smtp-Source: ABdhPJyhOIr2YADL+wmq+g6pyY81mNUBUd1fsWI6u4ZHmtWiePd6acpDOLttwfvDnBAwozJHVPLUaQ==
-X-Received: by 2002:a92:de47:: with SMTP id e7mr5051906ilr.15.1606243366381;
-        Tue, 24 Nov 2020 10:42:46 -0800 (PST)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id u11sm8147517iol.51.2020.11.24.10.42.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 24 Nov 2020 10:42:45 -0800 (PST)
-Date:   Tue, 24 Nov 2020 18:42:44 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     "J . Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        David Howells <dhowells@redhat.com>,
-        Scott Mayhew <smayhew@redhat.com>
-Cc:     mauricio@kinvolk.io, Alban Crequy <alban.crequy@gmail.com>,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kyle Anderson <kylea@netflix.com>
-Subject: Re: [PATCH v5 0/2] NFS: Fix interaction between fs_context and user
- namespaces
-Message-ID: <20201124184243.GA32491@ircssh-2.c.rugged-nimbus-611.internal>
-References: <20201112100952.3514-1-sargun@sargun.me>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A4vFnPOvQEhWsIKiWCtSJnSs6of53asWxzbj0luLTYk=;
+        b=bvinxQ+1z2YrtcbkHD8u2nRdpziBDR55WjaybfbqTPRW6YQRCJ+4wOdXl4gBCC2n5h
+         OF91z+J0z1pmiDBnpnf1bEDWG1MEWMgH1uXkexIrAyE+wpfR3lpnbQ+omDlOO4qmOj09
+         P0HLz/ayYkSaFJTgkpvQWbFZGU6c6Zog1hWzh8ez1f0VvjIkBoxP1fvGlRi5TIRvBBLg
+         ymz/G5UsYaZNTby+wE6GRKS/vF0SMaDS+2bAP4W+FUDpxKP6doAaw4D1Xazyd/ghZhL3
+         Jqe0BEK4ESQwCahaXW87HIknMID4MGPlHy9EZSF4cXimCpxEMb3qvVTDwhoiZVx0o3ud
+         TQww==
+X-Gm-Message-State: AOAM532LBz/wW0jqipoFR+EGtPQkCndulRLqa3l6J39iy5OB/Q+GnWR+
+        slBdf6D516WJ8Ui+v3M9zEz4bF+/z9rnFRhl1BI=
+X-Google-Smtp-Source: ABdhPJwBpZh4R1/trIr/iVed+H9wQ/JVuPt/7eh0vnl9vorMrObRa/28UzYZW1dXtewWQOGrV3OFLYcNaEmAPEDdHAs=
+X-Received: by 2002:a17:906:178b:: with SMTP id t11mr16003eje.152.1606246989030;
+ Tue, 24 Nov 2020 11:43:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201112100952.3514-1-sargun@sargun.me>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20201124135025.1097571-1-trondmy@kernel.org> <20201124135025.1097571-2-trondmy@kernel.org>
+ <20201124135025.1097571-3-trondmy@kernel.org> <20201124135025.1097571-4-trondmy@kernel.org>
+ <20201124135025.1097571-5-trondmy@kernel.org> <20201124135025.1097571-6-trondmy@kernel.org>
+ <CAFX2Jf=K3KEVZPiL490T2pzXvq1yyJL5fTfbaaQ383LCg4uv0Q@mail.gmail.com>
+ <MN2PR13MB39576255BD4CC8160E020B35B8FB0@MN2PR13MB3957.namprd13.prod.outlook.com>
+ <CAFX2Jfm+9CN_KycbieRp-mdz1zgqb=9_Nq2ZA8WuKMS2mVGi2A@mail.gmail.com>
+In-Reply-To: <CAFX2Jfm+9CN_KycbieRp-mdz1zgqb=9_Nq2ZA8WuKMS2mVGi2A@mail.gmail.com>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Tue, 24 Nov 2020 14:42:52 -0500
+Message-ID: <CAFX2JfnE85vPpPhuQxh2dWGntfTc8joULhN3X7UMizp8Vn1A1w@mail.gmail.com>
+Subject: Re: [PATCH v2 5/9] SUNRPC: Clean up the handling of page padding in rpc_prepare_reply_pages()
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "trondmy@kernel.org" <trondmy@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 02:09:50AM -0800, Sargun Dhillon wrote:
-> Right now, it is possible to mount NFS with an non-matching super block
-> user ns, and NFS sunrpc user ns. This (for the user) results in an awkward
-> set of interactions if using anything other than auth_null, where the UIDs
-> being sent to the server are different than the local UIDs being checked.
-> This can cause "breakage", where if you try to communicate with the NFS
-> server with any other set of mappings, it breaks.
-> 
-> The reason for this is that you can call fsopen("nfs4") in the unprivileged
-> namespace, and that configures fs_context with all the right information
-> for that user namespace. In addition, it also keeps a gets a cred object
-> associated with the caller -- which should match the user namespace.
-> Unfortunately, the mount has to be finished in the init_user_ns because we
-> currently require CAP_SYS_ADMIN in the init user namespace to call fsmount.
-> This means that the superblock's user namespace is set "correctly" to the
-> container, but there's absolutely no way nfs4idmap to consume an
-> unprivileged user namespace because the cred / user_ns that's passed down
-> to nfs4idmap is the one at fsmount.
-> 
-> How this actually exhibits is let's say that the UID 0 in the user
-> namespace is mapped to UID 1000 in the init user ns (and kuid space). What
-> will happen is that nfs4idmap will translate the UID 1000 into UID 0 on the
-> wire, even if the mount is in entirely in the mount / user namespace of the
-> container.
-> 
-> So, it looks something like this
-> Client in unprivileged User NS (UID: 0, KUID: 0)
-> 	->Perform open()
-> 		...VFS / NFS bits...
-> 		nfs_map_uid_to_name ->
-> 			from_kuid_munged(init_user_ns, uid) (returns 0)
-> 				RPC with UID 0
-> 
-> This behaviour happens "the other way" as well, where the UID in the
-> container may be 0, but the corresponding kuid is 1000. When a response
-> from an NFS server comes in we decode it according to the idmap userns.
-> The way this exhibits is even more odd.
-> 
-> Server responds with file attribute (UID: 0, GID: 0)
-> 	->nfs_map_name_to_uid(..., 0)
-> 		->make_kuid(init_user_ns, id) (returns 0)
-> 			....VFS / NFS Bits...
-> 			->from_kuid(container_ns, 0) -> invalid uid
-> 				-> EOVERFLOW
-> 
-> This changes the nfs server to use the cred / userns from fs_context, which
-> is how idmap is constructed. This subsequently is used in the above
-> described flow of converting uids back-and-forth.
-> 
-> Trond gave the feedback that this behaviour [implemented by this patch] is
-> how the legacy sys_mount() behaviour worked[1], and that the intended
-> behaviour is for UIDs to be plumbed through entirely, where the user
-> namespaces UIDs are what is sent over the wire, and not the init user ns.
-> 
-> [1]: https://lore.kernel.org/linux-nfs/8feccf45f6575a204da03e796391cc135283eb88.camel@hammerspace.com/
-> 
-> Sargun Dhillon (2):
->   NFS: NFSv2/NFSv3: Use cred from fs_context during mount
->   NFSv4: Refactor to use user namespaces for nfs4idmap
-> 
->  fs/nfs/client.c     | 4 ++--
->  fs/nfs/nfs4client.c | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> 
-> base-commit: 8c39076c276be0b31982e44654e2c2357473258a
-> -- 
-> 2.25.1
+On Tue, Nov 24, 2020 at 1:04 PM Anna Schumaker <schumaker.anna@gmail.com> wrote:
 >
+> On Tue, Nov 24, 2020 at 1:02 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+> >
+> > Is that triggering the read plus code? This patch does not attempt to fix that.
+>
+> Looks like it's running fsstress, so probably. I'll try again after
+> applying patch 9 to see if that makes a difference.
 
+I'm getting the same error after applying all the patches in the series.
 
-Trond,
-Are there any other concerns you have before landing this, or do you want
-to wait until the v5.11 merge window?
+Anna
+
+>
+> > ________________________________
+> > From: Anna Schumaker <schumaker.anna@gmail.com>
+> > Sent: Tuesday, November 24, 2020 12:52
+> > To: trondmy@kernel.org <trondmy@kernel.org>
+> > Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+> > Subject: Re: [PATCH v2 5/9] SUNRPC: Clean up the handling of page padding in rpc_prepare_reply_pages()
+> >
+> > Hi Trond,
+> >
+> > On Tue, Nov 24, 2020 at 8:54 AM <trondmy@kernel.org> wrote:
+> > >
+> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > >
+> > > rpc_prepare_reply_pages() currently expects the 'hdrsize' argument to
+> > > contain the length of the data that we expect to want placed in the head
+> > > kvec plus a count of 1 word of padding that is placed after the page data.
+> > > This is very confusing when trying to read the code, and sometimes leads
+> > > to callers adding an arbitrary value of '1' just in order to satisfy the
+> > > requirement (whether or not the page data actually needs such padding).
+> > >
+> > > This patch aims to clarify the code by changing the 'hdrsize' argument
+> > > to remove that 1 word of padding. This means we need to subtract the
+> > > padding from all the existing callers.
+> >
+> > After applying this patch, xfstests generic/013 on NFS v4.2 gives me:
+> >
+> > umount.nfs4: /mnt/test: device is busy
+> > rm: cannot remove
+> > '/mnt/test/fsstress.161220.1/p0/d4/d8XXXXXXXXXXXXXXXXXXXXXXXXX':
+> > Directory not empty
+> > rm: cannot remove '/mnt/test/fsstress.161220.2/p3/d6XX': Directory not empty
+> > rm: cannot remove '/mnt/test/fsstress.161220.2/p5': Directory not empty
+> > rm: cannot remove '/mnt/test/fsstress.161220.2/p6/d4XXXXXXXXXX':
+> > Directory not empty
+> > rm: cannot remove
+> > '/mnt/test/fsstress.161220.2/pc/d2/d4XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/d13X':
+> > Directory not empty
+> > rm: cannot remove
+> > '/mnt/test/fsstress.161220.2/pe/d1/dcXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX':
+> > Directory not empty
+> > rm: cannot remove '/mnt/test/fsstress.161220.2/p11/d1': Directory not empty
+> > rm: cannot remove
+> > '/mnt/test/fsstress.161220.2/p9/d0XXXXXXXXXXXXXXXXX/d1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/d17XXXXXXXXX/d19XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX':
+> > Directory not empty
+> >
+> > Thanks,
+> > Anna
+> >
+> > >
+> > > Fixes: 02ef04e432ba ("NFS: Account for XDR pad of buf->pages")
+> > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > ---
+> > >  fs/nfs/nfs2xdr.c  | 19 ++++++++++---------
+> > >  fs/nfs/nfs3xdr.c  | 29 ++++++++++++++++-------------
+> > >  fs/nfs/nfs4xdr.c  | 36 +++++++++++++++++++-----------------
+> > >  net/sunrpc/clnt.c |  5 +----
+> > >  net/sunrpc/xdr.c  |  3 ---
+> > >  5 files changed, 46 insertions(+), 46 deletions(-)
+> > >
+> > > diff --git a/fs/nfs/nfs2xdr.c b/fs/nfs/nfs2xdr.c
+> > > index f6676af37d5d..7fba7711e6b3 100644
+> > > --- a/fs/nfs/nfs2xdr.c
+> > > +++ b/fs/nfs/nfs2xdr.c
+> > > @@ -34,6 +34,7 @@
+> > >   * Declare the space requirements for NFS arguments and replies as
+> > >   * number of 32bit-words
+> > >   */
+> > > +#define NFS_pagepad_sz         (1) /* Page padding */
+> > >  #define NFS_fhandle_sz         (8)
+> > >  #define NFS_sattr_sz           (8)
+> > >  #define NFS_filename_sz                (1+(NFS2_MAXNAMLEN>>2))
+> > > @@ -56,11 +57,11 @@
+> > >
+> > >  #define NFS_attrstat_sz                (1+NFS_fattr_sz)
+> > >  #define NFS_diropres_sz                (1+NFS_fhandle_sz+NFS_fattr_sz)
+> > > -#define NFS_readlinkres_sz     (2+1)
+> > > -#define NFS_readres_sz         (1+NFS_fattr_sz+1+1)
+> > > +#define NFS_readlinkres_sz     (2+NFS_pagepad_sz)
+> > > +#define NFS_readres_sz         (1+NFS_fattr_sz+1+NFS_pagepad_sz)
+> > >  #define NFS_writeres_sz         (NFS_attrstat_sz)
+> > >  #define NFS_stat_sz            (1)
+> > > -#define NFS_readdirres_sz      (1+1)
+> > > +#define NFS_readdirres_sz      (1+NFS_pagepad_sz)
+> > >  #define NFS_statfsres_sz       (1+NFS_info_sz)
+> > >
+> > >  static int nfs_stat_to_errno(enum nfs_stat);
+> > > @@ -592,8 +593,8 @@ static void nfs2_xdr_enc_readlinkargs(struct rpc_rqst *req,
+> > >         const struct nfs_readlinkargs *args = data;
+> > >
+> > >         encode_fhandle(xdr, args->fh);
+> > > -       rpc_prepare_reply_pages(req, args->pages, args->pgbase,
+> > > -                               args->pglen, NFS_readlinkres_sz);
+> > > +       rpc_prepare_reply_pages(req, args->pages, args->pgbase, args->pglen,
+> > > +                               NFS_readlinkres_sz - NFS_pagepad_sz);
+> > >  }
+> > >
+> > >  /*
+> > > @@ -628,8 +629,8 @@ static void nfs2_xdr_enc_readargs(struct rpc_rqst *req,
+> > >         const struct nfs_pgio_args *args = data;
+> > >
+> > >         encode_readargs(xdr, args);
+> > > -       rpc_prepare_reply_pages(req, args->pages, args->pgbase,
+> > > -                               args->count, NFS_readres_sz);
+> > > +       rpc_prepare_reply_pages(req, args->pages, args->pgbase, args->count,
+> > > +                               NFS_readres_sz - NFS_pagepad_sz);
+> > >         req->rq_rcv_buf.flags |= XDRBUF_READ;
+> > >  }
+> > >
+> > > @@ -786,8 +787,8 @@ static void nfs2_xdr_enc_readdirargs(struct rpc_rqst *req,
+> > >         const struct nfs_readdirargs *args = data;
+> > >
+> > >         encode_readdirargs(xdr, args);
+> > > -       rpc_prepare_reply_pages(req, args->pages, 0,
+> > > -                               args->count, NFS_readdirres_sz);
+> > > +       rpc_prepare_reply_pages(req, args->pages, 0, args->count,
+> > > +                               NFS_readdirres_sz - NFS_pagepad_sz);
+> > >  }
+> > >
+> > >  /*
+> > > diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
+> > > index 69971f6c840d..ca10072644ff 100644
+> > > --- a/fs/nfs/nfs3xdr.c
+> > > +++ b/fs/nfs/nfs3xdr.c
+> > > @@ -33,6 +33,7 @@
+> > >   * Declare the space requirements for NFS arguments and replies as
+> > >   * number of 32bit-words
+> > >   */
+> > > +#define NFS3_pagepad_sz                (1) /* Page padding */
+> > >  #define NFS3_fhandle_sz                (1+16)
+> > >  #define NFS3_fh_sz             (NFS3_fhandle_sz)       /* shorthand */
+> > >  #define NFS3_sattr_sz          (15)
+> > > @@ -69,13 +70,13 @@
+> > >  #define NFS3_removeres_sz      (NFS3_setattrres_sz)
+> > >  #define NFS3_lookupres_sz      (1+NFS3_fh_sz+(2 * NFS3_post_op_attr_sz))
+> > >  #define NFS3_accessres_sz      (1+NFS3_post_op_attr_sz+1)
+> > > -#define NFS3_readlinkres_sz    (1+NFS3_post_op_attr_sz+1+1)
+> > > -#define NFS3_readres_sz                (1+NFS3_post_op_attr_sz+3+1)
+> > > +#define NFS3_readlinkres_sz    (1+NFS3_post_op_attr_sz+1+NFS3_pagepad_sz)
+> > > +#define NFS3_readres_sz                (1+NFS3_post_op_attr_sz+3+NFS3_pagepad_sz)
+> > >  #define NFS3_writeres_sz       (1+NFS3_wcc_data_sz+4)
+> > >  #define NFS3_createres_sz      (1+NFS3_fh_sz+NFS3_post_op_attr_sz+NFS3_wcc_data_sz)
+> > >  #define NFS3_renameres_sz      (1+(2 * NFS3_wcc_data_sz))
+> > >  #define NFS3_linkres_sz                (1+NFS3_post_op_attr_sz+NFS3_wcc_data_sz)
+> > > -#define NFS3_readdirres_sz     (1+NFS3_post_op_attr_sz+2+1)
+> > > +#define NFS3_readdirres_sz     (1+NFS3_post_op_attr_sz+2+NFS3_pagepad_sz)
+> > >  #define NFS3_fsstatres_sz      (1+NFS3_post_op_attr_sz+13)
+> > >  #define NFS3_fsinfores_sz      (1+NFS3_post_op_attr_sz+12)
+> > >  #define NFS3_pathconfres_sz    (1+NFS3_post_op_attr_sz+6)
+> > > @@ -85,7 +86,8 @@
+> > >  #define ACL3_setaclargs_sz     (NFS3_fh_sz+1+ \
+> > >                                 XDR_QUADLEN(NFS_ACL_INLINE_BUFSIZE))
+> > >  #define ACL3_getaclres_sz      (1+NFS3_post_op_attr_sz+1+ \
+> > > -                               XDR_QUADLEN(NFS_ACL_INLINE_BUFSIZE)+1)
+> > > +                               XDR_QUADLEN(NFS_ACL_INLINE_BUFSIZE)+\
+> > > +                               NFS3_pagepad_sz)
+> > >  #define ACL3_setaclres_sz      (1+NFS3_post_op_attr_sz)
+> > >
+> > >  static int nfs3_stat_to_errno(enum nfs_stat);
+> > > @@ -909,8 +911,8 @@ static void nfs3_xdr_enc_readlink3args(struct rpc_rqst *req,
+> > >         const struct nfs3_readlinkargs *args = data;
+> > >
+> > >         encode_nfs_fh3(xdr, args->fh);
+> > > -       rpc_prepare_reply_pages(req, args->pages, args->pgbase,
+> > > -                               args->pglen, NFS3_readlinkres_sz);
+> > > +       rpc_prepare_reply_pages(req, args->pages, args->pgbase, args->pglen,
+> > > +                               NFS3_readlinkres_sz - NFS3_pagepad_sz);
+> > >  }
+> > >
+> > >  /*
+> > > @@ -939,7 +941,8 @@ static void nfs3_xdr_enc_read3args(struct rpc_rqst *req,
+> > >                                    const void *data)
+> > >  {
+> > >         const struct nfs_pgio_args *args = data;
+> > > -       unsigned int replen = args->replen ? args->replen : NFS3_readres_sz;
+> > > +       unsigned int replen = args->replen ? args->replen :
+> > > +                                            NFS3_readres_sz - NFS3_pagepad_sz;
+> > >
+> > >         encode_read3args(xdr, args);
+> > >         rpc_prepare_reply_pages(req, args->pages, args->pgbase,
+> > > @@ -1239,8 +1242,8 @@ static void nfs3_xdr_enc_readdir3args(struct rpc_rqst *req,
+> > >         const struct nfs3_readdirargs *args = data;
+> > >
+> > >         encode_readdir3args(xdr, args);
+> > > -       rpc_prepare_reply_pages(req, args->pages, 0,
+> > > -                               args->count, NFS3_readdirres_sz);
+> > > +       rpc_prepare_reply_pages(req, args->pages, 0, args->count,
+> > > +                               NFS3_readdirres_sz - NFS3_pagepad_sz);
+> > >  }
+> > >
+> > >  /*
+> > > @@ -1281,8 +1284,8 @@ static void nfs3_xdr_enc_readdirplus3args(struct rpc_rqst *req,
+> > >         const struct nfs3_readdirargs *args = data;
+> > >
+> > >         encode_readdirplus3args(xdr, args);
+> > > -       rpc_prepare_reply_pages(req, args->pages, 0,
+> > > -                               args->count, NFS3_readdirres_sz);
+> > > +       rpc_prepare_reply_pages(req, args->pages, 0, args->count,
+> > > +                               NFS3_readdirres_sz - NFS3_pagepad_sz);
+> > >  }
+> > >
+> > >  /*
+> > > @@ -1328,7 +1331,7 @@ static void nfs3_xdr_enc_getacl3args(struct rpc_rqst *req,
+> > >         if (args->mask & (NFS_ACL | NFS_DFACL)) {
+> > >                 rpc_prepare_reply_pages(req, args->pages, 0,
+> > >                                         NFSACL_MAXPAGES << PAGE_SHIFT,
+> > > -                                       ACL3_getaclres_sz);
+> > > +                                       ACL3_getaclres_sz - NFS3_pagepad_sz);
+> > >                 req->rq_rcv_buf.flags |= XDRBUF_SPARSE_PAGES;
+> > >         }
+> > >  }
+> > > @@ -1648,7 +1651,7 @@ static int nfs3_xdr_dec_read3res(struct rpc_rqst *req, struct xdr_stream *xdr,
+> > >         result->op_status = status;
+> > >         if (status != NFS3_OK)
+> > >                 goto out_status;
+> > > -       result->replen = 4 + ((xdr_stream_pos(xdr) - pos) >> 2);
+> > > +       result->replen = 3 + ((xdr_stream_pos(xdr) - pos) >> 2);
+> > >         error = decode_read3resok(xdr, result);
+> > >  out:
+> > >         return error;
+> > > diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+> > > index c16b93df1bc1..3899ef3047f4 100644
+> > > --- a/fs/nfs/nfs4xdr.c
+> > > +++ b/fs/nfs/nfs4xdr.c
+> > > @@ -84,6 +84,7 @@ static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst *req,
+> > >  /* lock,open owner id:
+> > >   * we currently use size 2 (u64) out of (NFS4_OPAQUE_LIMIT  >> 2)
+> > >   */
+> > > +#define pagepad_maxsz          (1)
+> > >  #define open_owner_id_maxsz    (1 + 2 + 1 + 1 + 2)
+> > >  #define lock_owner_id_maxsz    (1 + 1 + 4)
+> > >  #define decode_lockowner_maxsz (1 + XDR_QUADLEN(IDMAP_NAMESZ))
+> > > @@ -215,14 +216,14 @@ static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst *req,
+> > >                                  nfs4_fattr_bitmap_maxsz)
+> > >  #define encode_read_maxsz      (op_encode_hdr_maxsz + \
+> > >                                  encode_stateid_maxsz + 3)
+> > > -#define decode_read_maxsz      (op_decode_hdr_maxsz + 2 + 1)
+> > > +#define decode_read_maxsz      (op_decode_hdr_maxsz + 2 + pagepad_maxsz)
+> > >  #define encode_readdir_maxsz   (op_encode_hdr_maxsz + \
+> > >                                  2 + encode_verifier_maxsz + 5 + \
+> > >                                 nfs4_label_maxsz)
+> > >  #define decode_readdir_maxsz   (op_decode_hdr_maxsz + \
+> > > -                                decode_verifier_maxsz + 1)
+> > > +                                decode_verifier_maxsz + pagepad_maxsz)
+> > >  #define encode_readlink_maxsz  (op_encode_hdr_maxsz)
+> > > -#define decode_readlink_maxsz  (op_decode_hdr_maxsz + 1 + 1)
+> > > +#define decode_readlink_maxsz  (op_decode_hdr_maxsz + 1 + pagepad_maxsz)
+> > >  #define encode_write_maxsz     (op_encode_hdr_maxsz + \
+> > >                                  encode_stateid_maxsz + 4)
+> > >  #define decode_write_maxsz     (op_decode_hdr_maxsz + \
+> > > @@ -284,14 +285,14 @@ static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst *req,
+> > >  #define decode_delegreturn_maxsz (op_decode_hdr_maxsz)
+> > >  #define encode_getacl_maxsz    (encode_getattr_maxsz)
+> > >  #define decode_getacl_maxsz    (op_decode_hdr_maxsz + \
+> > > -                                nfs4_fattr_bitmap_maxsz + 1 + 1)
+> > > +                                nfs4_fattr_bitmap_maxsz + 1 + pagepad_maxsz)
+> > >  #define encode_setacl_maxsz    (op_encode_hdr_maxsz + \
+> > >                                  encode_stateid_maxsz + 3)
+> > >  #define decode_setacl_maxsz    (decode_setattr_maxsz)
+> > >  #define encode_fs_locations_maxsz \
+> > >                                 (encode_getattr_maxsz)
+> > >  #define decode_fs_locations_maxsz \
+> > > -                               (1)
+> > > +                               (pagepad_maxsz)
+> > >  #define encode_secinfo_maxsz   (op_encode_hdr_maxsz + nfs4_name_maxsz)
+> > >  #define decode_secinfo_maxsz   (op_decode_hdr_maxsz + 1 + ((NFS_MAX_SECFLAVORS * (16 + GSS_OID_MAX_LEN)) / 4))
+> > >
+> > > @@ -393,12 +394,13 @@ static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst *req,
+> > >                                   /* devaddr4 payload is read into page */ \
+> > >                                 1 /* notification bitmap length */ + \
+> > >                                 1 /* notification bitmap, word 0 */ + \
+> > > -                               1 /* possible XDR padding */)
+> > > +                               pagepad_maxsz /* possible XDR padding */)
+> > >  #define encode_layoutget_maxsz (op_encode_hdr_maxsz + 10 + \
+> > >                                 encode_stateid_maxsz)
+> > >  #define decode_layoutget_maxsz (op_decode_hdr_maxsz + 8 + \
+> > >                                 decode_stateid_maxsz + \
+> > > -                               XDR_QUADLEN(PNFS_LAYOUT_MAXSIZE) + 1)
+> > > +                               XDR_QUADLEN(PNFS_LAYOUT_MAXSIZE) + \
+> > > +                               pagepad_maxsz)
+> > >  #define encode_layoutcommit_maxsz (op_encode_hdr_maxsz +          \
+> > >                                 2 /* offset */ + \
+> > >                                 2 /* length */ + \
+> > > @@ -2342,7 +2344,7 @@ static void nfs4_xdr_enc_open(struct rpc_rqst *req, struct xdr_stream *xdr,
+> > >                 encode_layoutget(xdr, args->lg_args, &hdr);
+> > >                 rpc_prepare_reply_pages(req, args->lg_args->layout.pages, 0,
+> > >                                         args->lg_args->layout.pglen,
+> > > -                                       hdr.replen);
+> > > +                                       hdr.replen - pagepad_maxsz);
+> > >         }
+> > >         encode_nops(&hdr);
+> > >  }
+> > > @@ -2388,7 +2390,7 @@ static void nfs4_xdr_enc_open_noattr(struct rpc_rqst *req,
+> > >                 encode_layoutget(xdr, args->lg_args, &hdr);
+> > >                 rpc_prepare_reply_pages(req, args->lg_args->layout.pages, 0,
+> > >                                         args->lg_args->layout.pglen,
+> > > -                                       hdr.replen);
+> > > +                                       hdr.replen - pagepad_maxsz);
+> > >         }
+> > >         encode_nops(&hdr);
+> > >  }
+> > > @@ -2499,7 +2501,7 @@ static void nfs4_xdr_enc_readlink(struct rpc_rqst *req, struct xdr_stream *xdr,
+> > >         encode_readlink(xdr, args, req, &hdr);
+> > >
+> > >         rpc_prepare_reply_pages(req, args->pages, args->pgbase,
+> > > -                               args->pglen, hdr.replen);
+> > > +                               args->pglen, hdr.replen - pagepad_maxsz);
+> > >         encode_nops(&hdr);
+> > >  }
+> > >
+> > > @@ -2520,7 +2522,7 @@ static void nfs4_xdr_enc_readdir(struct rpc_rqst *req, struct xdr_stream *xdr,
+> > >         encode_readdir(xdr, args, req, &hdr);
+> > >
+> > >         rpc_prepare_reply_pages(req, args->pages, args->pgbase,
+> > > -                               args->count, hdr.replen);
+> > > +                               args->count, hdr.replen - pagepad_maxsz);
+> > >         encode_nops(&hdr);
+> > >  }
+> > >
+> > > @@ -2541,7 +2543,7 @@ static void nfs4_xdr_enc_read(struct rpc_rqst *req, struct xdr_stream *xdr,
+> > >         encode_read(xdr, args, &hdr);
+> > >
+> > >         rpc_prepare_reply_pages(req, args->pages, args->pgbase,
+> > > -                               args->count, hdr.replen);
+> > > +                               args->count, hdr.replen - pagepad_maxsz);
+> > >         req->rq_rcv_buf.flags |= XDRBUF_READ;
+> > >         encode_nops(&hdr);
+> > >  }
+> > > @@ -2588,7 +2590,7 @@ static void nfs4_xdr_enc_getacl(struct rpc_rqst *req, struct xdr_stream *xdr,
+> > >                         ARRAY_SIZE(nfs4_acl_bitmap), &hdr);
+> > >
+> > >         rpc_prepare_reply_pages(req, args->acl_pages, 0,
+> > > -                               args->acl_len, replen + 1);
+> > > +                               args->acl_len, replen);
+> > >         encode_nops(&hdr);
+> > >  }
+> > >
+> > > @@ -2810,7 +2812,7 @@ static void nfs4_xdr_enc_fs_locations(struct rpc_rqst *req,
+> > >         }
+> > >
+> > >         rpc_prepare_reply_pages(req, (struct page **)&args->page, 0,
+> > > -                               PAGE_SIZE, replen + 1);
+> > > +                               PAGE_SIZE, replen);
+> > >         encode_nops(&hdr);
+> > >  }
+> > >
+> > > @@ -3014,14 +3016,14 @@ static void nfs4_xdr_enc_getdeviceinfo(struct rpc_rqst *req,
+> > >         encode_compound_hdr(xdr, req, &hdr);
+> > >         encode_sequence(xdr, &args->seq_args, &hdr);
+> > >
+> > > -       replen = hdr.replen + op_decode_hdr_maxsz;
+> > > +       replen = hdr.replen + op_decode_hdr_maxsz + 2;
+> > >
+> > >         encode_getdeviceinfo(xdr, args, &hdr);
+> > >
+> > >         /* set up reply kvec. device_addr4 opaque data is read into the
+> > >          * pages */
+> > >         rpc_prepare_reply_pages(req, args->pdev->pages, args->pdev->pgbase,
+> > > -                               args->pdev->pglen, replen + 2 + 1);
+> > > +                               args->pdev->pglen, replen);
+> > >         encode_nops(&hdr);
+> > >  }
+> > >
+> > > @@ -3043,7 +3045,7 @@ static void nfs4_xdr_enc_layoutget(struct rpc_rqst *req,
+> > >         encode_layoutget(xdr, args, &hdr);
+> > >
+> > >         rpc_prepare_reply_pages(req, args->layout.pages, 0,
+> > > -                               args->layout.pglen, hdr.replen);
+> > > +                               args->layout.pglen, hdr.replen - pagepad_maxsz);
+> > >         encode_nops(&hdr);
+> > >  }
+> > >
+> > > diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> > > index 3259120462ed..612f0a641f4c 100644
+> > > --- a/net/sunrpc/clnt.c
+> > > +++ b/net/sunrpc/clnt.c
+> > > @@ -1251,10 +1251,7 @@ void rpc_prepare_reply_pages(struct rpc_rqst *req, struct page **pages,
+> > >                              unsigned int base, unsigned int len,
+> > >                              unsigned int hdrsize)
+> > >  {
+> > > -       /* Subtract one to force an extra word of buffer space for the
+> > > -        * payload's XDR pad to fall into the rcv_buf's tail iovec.
+> > > -        */
+> > > -       hdrsize += RPC_REPHDRSIZE + req->rq_cred->cr_auth->au_ralign - 1;
+> > > +       hdrsize += RPC_REPHDRSIZE + req->rq_cred->cr_auth->au_ralign;
+> > >
+> > >         xdr_inline_pages(&req->rq_rcv_buf, hdrsize << 2, pages, base, len);
+> > >         trace_rpc_xdr_reply_pages(req->rq_task, &req->rq_rcv_buf);
+> > > diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+> > > index 3ce0a5daa9eb..5a450055469f 100644
+> > > --- a/net/sunrpc/xdr.c
+> > > +++ b/net/sunrpc/xdr.c
+> > > @@ -193,9 +193,6 @@ xdr_inline_pages(struct xdr_buf *xdr, unsigned int offset,
+> > >
+> > >         tail->iov_base = buf + offset;
+> > >         tail->iov_len = buflen - offset;
+> > > -       if ((xdr->page_len & 3) == 0)
+> > > -               tail->iov_len -= sizeof(__be32);
+> > > -
+> > >         xdr->buflen += len;
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(xdr_inline_pages);
+> > > --
+> > > 2.28.0
+> > >
