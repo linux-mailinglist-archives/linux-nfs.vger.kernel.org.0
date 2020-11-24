@@ -2,154 +2,177 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E00CD2C31E3
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Nov 2020 21:26:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3B082C3206
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Nov 2020 21:35:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgKXU02 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Nov 2020 15:26:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbgKXU01 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 15:26:27 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67CDAC0613D6
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Nov 2020 12:26:27 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 590B06E9E; Tue, 24 Nov 2020 15:26:26 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 590B06E9E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1606249586;
-        bh=6VPEKYxTd7yo1xz6SJsiHLnaWE3zc5kBm6zYoTOR0BI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VbvO5hMjY88gosFw4o9gAcgGaclOLthS3A7/TFN14+8pC01H2q7DMU0HiWpiO6jVP
-         NdUF0AeQ77jOwQozmp3Jji9t2D7/1+PvkkY3WyGOOePXAHqKrcO83uHVG5jxm7iOb8
-         5kjaAmEhhWYdiOVbMkBThGTRxNhyBEYCVMC/cfJU=
-Date:   Tue, 24 Nov 2020 15:26:26 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     trondmy@kernel.org
-Cc:     linux-nfs@vger.kernel.org, Anna Schumaker <schumakeranna@gmail.com>
-Subject: Re: [PATCH v2 0/9] Fix various issues in the SUNRPC xdr code
-Message-ID: <20201124202626.GA7173@fieldses.org>
-References: <20201124135025.1097571-1-trondmy@kernel.org>
- <20201124161250.GA1091@fieldses.org>
- <20201124161809.GB1091@fieldses.org>
+        id S1731292AbgKXUfK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Nov 2020 15:35:10 -0500
+Received: from natter.dneg.com ([193.203.89.68]:40152 "EHLO natter.dneg.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731196AbgKXUfI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 24 Nov 2020 15:35:08 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by natter.dneg.com (Postfix) with ESMTP id 5DBE3229E852;
+        Tue, 24 Nov 2020 20:35:07 +0000 (GMT)
+X-Virus-Scanned: amavisd-new at mx-dneg
+Received: from natter.dneg.com ([127.0.0.1])
+        by localhost (natter.dneg.com [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id kiKvSMcil7f9; Tue, 24 Nov 2020 20:35:07 +0000 (GMT)
+Received: from zrozimbrai.dneg.com (zrozimbrai.dneg.com [10.11.20.12])
+        by natter.dneg.com (Postfix) with ESMTPS id 383EA229C259;
+        Tue, 24 Nov 2020 20:35:07 +0000 (GMT)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 281E4814E188;
+        Tue, 24 Nov 2020 20:35:07 +0000 (GMT)
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id yaUb_Cremsgs; Tue, 24 Nov 2020 20:35:07 +0000 (GMT)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 092F381B5F3E;
+        Tue, 24 Nov 2020 20:35:07 +0000 (GMT)
+X-Virus-Scanned: amavisd-new at zimbra-dneg
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id HDBJAHCC8Cd4; Tue, 24 Nov 2020 20:35:06 +0000 (GMT)
+Received: from zrozimbra1.dneg.com (zrozimbra1.dneg.com [10.11.16.16])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id D5A04814E188;
+        Tue, 24 Nov 2020 20:35:06 +0000 (GMT)
+Date:   Tue, 24 Nov 2020 20:35:06 +0000 (GMT)
+From:   Daire Byrne <daire@dneg.com>
+To:     bfields <bfields@fieldses.org>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        linux-cachefs <linux-cachefs@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1055884313.92996091.1606250106656.JavaMail.zimbra@dneg.com>
+In-Reply-To: <1744768451.86186596.1605186084252.JavaMail.zimbra@dneg.com>
+References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com> <20200915172140.GA32632@fieldses.org> <4d1d7cd0076d98973a56e89c92e4ff0474aa0e14.camel@hammerspace.com> <1188023047.38703514.1600272094778.JavaMail.zimbra@dneg.com> <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com> <635679406.70384074.1603272832846.JavaMail.zimbra@dneg.com> <20201109160256.GB11144@fieldses.org> <1744768451.86186596.1605186084252.JavaMail.zimbra@dneg.com>
+Subject: Re: Adventures in NFS re-exporting
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201124161809.GB1091@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.7.11_GA_1854 (ZimbraWebClient - GC78 (Linux)/8.7.11_GA_1854)
+Thread-Topic: Adventures in NFS re-exporting
+Thread-Index: 9doLxBH184R2kXPXNb1Z3BB0W3rboMbE7ZOs
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Nov 24, 2020 at 11:18:09AM -0500, J. Bruce Fields wrote:
-> On Tue, Nov 24, 2020 at 11:12:50AM -0500, bfields wrote:
-> > On Tue, Nov 24, 2020 at 08:50:16AM -0500, trondmy@kernel.org wrote:
-> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > > 
-> > > When looking at the issues raised by Tigran's testing of the NFS client
-> > > updates, I noticed a couple of things in the generic SUNRPC xdr code
-> > > that want to be fixed. This patch series replaces an earlier series that
-> > > attempted to just fix the XDR padding in the NFS code.
-> > > 
-> > > This series fixes up a number of issues w.r.t. bounds checking in the
-> > > xdr_stream code. It corrects the behaviour of xdr_read_pages() for the
-> > > case where the XDR object size is larger than the buffer page array
-> > > length and simplifies the code.
-> > 
-> > I'm seeing this on the client with recent upstream + these patches.
+----- On 12 Nov, 2020, at 13:01, Daire Byrne daire@dneg.com wrote:
 > 
-> Unfortunately that was in the middle of a series of tests, and I'm not
-> sure exactly what triggered it--I'm guessing cthon special over krb5i.
-> I'll let you know what else I can figure out.
-
-Yeah, reproduceable by running cthon -s over krb5i, and it first shows
-up with the last patch, "NFSv4.2: Fix up read_plus() page alignment".
-
---b.
-
+> Having just completed a bunch of fresh cloud rendering with v5.9.1 and Trond's
+> NFSv3 lookupp emulation patches, I can now revise my original list of issues
+> that others will likely experience if they ever try to do this craziness:
 > 
-> --b.
+> 1) Don't re-export NFSv4.0 unless you set vfs_cache_presure=0 otherwise you will
+> see random input/output errors on your clients when things are dropped out of
+> the cache. In the end we gave up on using NFSv4.0 with our Netapps because the
+> 7-mode implementation seemed a bit flakey with modern Linux clients (Linux
+> NFSv4.2 servers on the other hand have been rock solid). We now use NFSv3 with
+> Trond's lookupp emulation patches instead.
 > 
-> > [  517.213581] ==================================================================
-> > [  517.214699] BUG: KASAN: slab-out-of-bounds in xdr_set_page+0x327/0x370 [sunrpc]
-> > [  517.215875] Read of size 8 at addr ffff888035929680 by task kworker/u4:7/1423
-> > 
-> > [  517.216958] CPU: 0 PID: 1423 Comm: kworker/u4:7 Not tainted 5.10.0-rc5-16550-gf864315df3e6 #3058
-> > [  517.218027] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.13.0-3.fc33 04/01/2014
-> > [  517.219124] Workqueue: rpciod rpc_async_schedule [sunrpc]
-> > [  517.220079] Call Trace:
-> > [  517.220485]  dump_stack+0x9a/0xcc
-> > [  517.221030]  ? xdr_set_page+0x327/0x370 [sunrpc]
-> > [  517.221712]  print_address_description.constprop.0+0x1c/0x1f0
-> > [  517.222492]  ? xdr_set_page+0x327/0x370 [sunrpc]
-> > [  517.223088]  ? xdr_set_page+0x327/0x370 [sunrpc]
-> > [  517.223677]  kasan_report.cold+0x1f/0x37
-> > [  517.224270]  ? xdr_set_page+0x327/0x370 [sunrpc]
-> > [  517.224872]  xdr_set_page+0x327/0x370 [sunrpc]
-> > [  517.225476]  xdr_align_data+0x1c9/0x8e0 [sunrpc]
-> > [  517.226073]  ? lockdep_hardirqs_on_prepare+0x17b/0x400
-> > [  517.226730]  ? kfree+0x118/0x220
-> > [  517.227172]  ? lockdep_hardirqs_on+0x79/0x100
-> > [  517.227745]  ? __decode_op_hdr+0x24/0x4d0 [nfsv4]
-> > [  517.228427]  nfs4_xdr_dec_read_plus+0x360/0x5a0 [nfsv4]
-> > [  517.229117]  ? nfs4_xdr_dec_offload_cancel+0x160/0x160 [nfsv4]
-> > [  517.229877]  gss_unwrap_resp+0x145/0x220 [auth_rpcgss]
-> > [  517.230558]  call_decode+0x5d2/0x830 [sunrpc]
-> > [  517.231127]  ? rpc_decode_header+0x17c0/0x17c0 [sunrpc]
-> > [  517.231785]  ? lockdep_hardirqs_on_prepare+0x400/0x400
-> > [  517.232563]  ? rpc_decode_header+0x17c0/0x17c0 [sunrpc]
-> > [  517.233236]  __rpc_execute+0x1b8/0xf10 [sunrpc]
-> > [  517.233831]  ? rpc_exit+0x110/0x110 [sunrpc]
-> > [  517.234390]  ? lock_downgrade+0x690/0x690
-> > [  517.234918]  rpc_async_schedule+0x9f/0x140 [sunrpc]
-> > [  517.235539]  process_one_work+0x7ac/0x12d0
-> > [  517.236106]  ? lock_release+0x6c0/0x6c0
-> > [  517.236601]  ? queue_delayed_work_on+0x90/0x90
-> > [  517.237170]  ? rwlock_bug.part.0+0x90/0x90
-> > [  517.237694]  worker_thread+0x590/0xf80
-> > [  517.238204]  ? rescuer_thread+0xb80/0xb80
-> > [  517.238714]  kthread+0x375/0x450
-> > [  517.239124]  ? _raw_spin_unlock_irq+0x24/0x50
-> > [  517.239673]  ? kthread_create_worker_on_cpu+0xb0/0xb0
-> > [  517.240392]  ret_from_fork+0x22/0x30
-> > 
-> > [  517.241072] Allocated by task 9053:
-> > [  517.241533]  kasan_save_stack+0x1b/0x40
-> > [  517.242018]  __kasan_kmalloc.constprop.0+0xbf/0xd0
-> > [  517.242667]  __kmalloc+0x11e/0x210
-> > [  517.243111]  nfs_generic_pgio+0x943/0xe10 [nfs]
-> > [  517.243691]  nfs_generic_pg_pgios+0xea/0x3f0 [nfs]
-> > [  517.244375]  nfs_pageio_doio+0xe3/0x240 [nfs]
-> > [  517.244929]  nfs_pageio_complete+0x143/0x580 [nfs]
-> > [  517.245562]  nfs_readpages+0x331/0x5b0 [nfs]
-> > [  517.246135]  read_pages+0x4ab/0xa40
-> > [  517.246583]  page_cache_ra_unbounded+0x361/0x620
-> > [  517.247165]  generic_file_buffered_read+0x377/0x1e90
-> > [  517.247791]  nfs_file_read+0x144/0x240 [nfs]
-> > [  517.248396]  new_sync_read+0x352/0x5d0
-> > [  517.248870]  vfs_read+0x202/0x3f0
-> > [  517.249290]  ksys_read+0xe9/0x1b0
-> > [  517.249708]  do_syscall_64+0x33/0x40
-> > [  517.251015]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > [  517.252201] The buggy address belongs to the object at ffff888035929600
-> >                 which belongs to the cache kmalloc-128 of size 128
-> > [  517.253807] The buggy address is located 0 bytes to the right of
-> >                 128-byte region [ffff888035929600, ffff888035929680)
-> > [  517.255217] The buggy address belongs to the page:
-> > [  517.255819] page:00000000ab6145f3 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x35929
-> > [  517.257070] flags: 0x4000000000000200(slab)
-> > [  517.257600] raw: 4000000000000200 ffffea00003970d8 ffffea00004582e8 ffff888007840400
-> > [  517.258582] raw: 0000000000000000 ffff888035929000 0000000100000010
-> > [  517.259362] page dumped because: kasan: bad access detected
-> > 
-> > [  517.260315] Memory state around the buggy address:
-> > [  517.260912]  ffff888035929580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> > [  517.261833]  ffff888035929600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > [  517.262755] >ffff888035929680: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> > [  517.263655]                    ^
-> > [  517.264133]  ffff888035929700: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > [  517.265066]  ffff888035929780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> > [  517.265967] ==================================================================
-> > 
+> 2) In order to better utilise the re-export server's client cache when
+> re-exporting an NFSv3 server (using either NFSv3 or NFSv4), we still need to
+> use the horrible inode_peek_iversion_raw hack to maintain good metadata
+> performance for large numbers of clients. Otherwise each re-export server's
+> clients can cause invalidation of the re-export server client cache. Once you
+> have hundreds of clients they all combine to constantly invalidate the cache
+> resulting in an order of magnitude slower metadata performance. If you are
+> re-exporting an NFSv4.x server (with either NFSv3 or NFSv4.x) this hack is not
+> required.
+> 
+> 3) For some reason, when a 1MB read call arrives at the re-export server from a
+> client, it gets chopped up into 128k read calls that are issued back to the
+> originating server despite rsize/wsize=1MB on all mounts. This results in a
+> noticeable increase in rpc chatter for large reads. Writes on the other hand
+> retain their 1MB size from client to re-export server and back to the
+> originating server. I am using nconnect but I doubt that is related.
+> 
+> 4) After some random time, the cachefilesd userspace daemon stops culling old
+> data from an fscache disk storage. I thought it was to do with setting
+> vfs_cache_pressure=0 but even with it set to the default 100 it just randomly
+> decides to stop culling and never comes back to life until restarted or
+> rebooted. Perhaps the fscache/cachefilesd rewrite that David Howells & David
+> Wysochanski have been working on will improve matters.
+> 
+> 5) It's still really hard to cache nfs client metadata for any definitive time
+> (actimeo,nocto) due to the pagecache churn that reads cause. If all required
+> metadata (i.e. directory contents) could either be locally cached to disk or
+> the inode cache rather than pagecache then maybe we would have more control
+> over the actual cache times we are comfortable with for our workloads. This has
+> little to do with re-exporting and is just a general NFS performance over the
+> WAN thing. I'm very interested to see how Trond's recent patches to improve
+> readdir performance might at least help re-populate the dropped cached metadata
+> more efficiently over the WAN.
+> 
+> I just want to finish with one more crazy thing we have been doing - a re-export
+> server of a re-export server! Again, a locking and consistency nightmare so
+> only possible for very specific workloads (like ours). The advantage of this
+> topology is that you can pull all your data over the WAN once (e.g. on-premise
+> to cloud) and then fan-out that data to multiple other NFS re-export servers in
+> the cloud to improve the aggregate performance to many clients. This avoids
+> having multiple re-export servers all needing to pull the same data across the
+> WAN.
+
+I will officially add another point to the wishlist that I mentioned in Bruce's recent patches thread (for dealing with the iversion change on NFS re-export). I had held off mentioning this one because I wasn't really sure if it was just a normal production workload and expected behaviour for NFS, but the more I look into it, the more it seems like maybe it could be optimised for the re-export case. But then I also might be too overly sensitive about metadata ops over the WAN at this point....
+
+6) I see many fast repeating COMMITs & GETATTRs from the NFS re-export server to the originating server for the same file while writing through it from a client. If I do a write from userspace on the re-export server directly to the client mountpoint (i.e. no re-exporting) I do not see the GETATTRs or COMMITs.
+
+I see something similar with both a re-export of a NFSv3 originating server and a re-export of a NFSv4.2 originating server (using either NFSv3 or NFSv4). Bruce mentioned an extra GETATTR in the NFSv4.2 re-export case for a COMMIT (pre/post).
+
+For simplicity let's look at the NFSv3 re-export of an NFSv3 originating server. But first let's write a file from userspace directly on the re-export server back to the originating server mount point (ie no re-export):
+
+    3   0.772902  V3 GETATTR Call, FH: 0x6791bc70
+    6   0.781239  V3 SETATTR Call, FH: 0x6791bc70
+ 3286   0.919601  V3 WRITE Call, FH: 0x6791bc70 Offset: 1048576 Len: 1048576 UNSTABLE [TCP segment of a reassembled PDU]
+ 3494   0.921351  V3 WRITE Call, FH: 0x6791bc70 Offset: 8388608 Len: 1048576 UNSTABLE [TCP segment of a reassembled PDU]
+...
+...
+48178   1.462670  V3 WRITE Call, FH: 0x6791bc70 Offset: 102760448 Len: 1048576 UNSTABLE
+48210   1.472400  V3 COMMIT Call, FH: 0x6791bc70
+
+So lots of uninterrupted 1MB write calls back to the originating server as expected with a final COMMIT (good). We can also set nconnect=16 back to the originating server and get the same trace but with the write packets going down different ports (also good).
+
+Now let's do the same write through the re-export server from a client (NFSv4.2 or NFSv3, it doesn't matter much):
+
+    7   0.034411  V3 SETATTR Call, FH: 0x364ced2c
+  286   0.148066  V3 WRITE Call, FH: 0x364ced2c Offset: 0 Len: 1048576 UNSTABLE [TCP segment of a reassembled PDU]
+  343   0.152644  V3 WRITE Call, FH: 0x364ced2c Offset: 1048576 Len: 196608 UNSTABLEV3 WRITE Call, FH: 0x364ced2c Offset: 1245184 Len: 8192 FILE_SYNC
+  580   0.168159  V3 WRITE Call, FH: 0x364ced2c Offset: 1253376 Len: 843776 UNSTABLE
+  671   0.174668  V3 COMMIT Call, FH: 0x364ced2c
+ 1105   0.193805  V3 COMMIT Call, FH: 0x364ced2c
+ 1123   0.201570  V3 WRITE Call, FH: 0x364ced2c Offset: 2097152 Len: 1048576 UNSTABLE [TCP segment of a reassembled PDU]
+ 1592   0.242259  V3 WRITE Call, FH: 0x364ced2c Offset: 3145728 Len: 1048576 UNSTABLE
+...
+...
+54571   3.668028  V3 WRITE Call, FH: 0x364ced2c Offset: 102760448 Len: 1048576 FILE_SYNC [TCP segment of a reassembled PDU]
+54940   3.713392  V3 WRITE Call, FH: 0x364ced2c Offset: 103809024 Len: 1048576 UNSTABLE
+55706   3.733284  V3 COMMIT Call, FH: 0x364ced2c
+
+So now we have lots of pairs of COMMIT calls inbetween the WRITE calls. We also see sporadic FILE_SYNC write calls which we don't when we just write direct to the originating server from userspace (all UNSTABLE).
+
+Finally, if we add nconnect=16 when mounting the originating server (useful for increasing WAN throughput) and again write through from the client, we start to see lots of GETATTRs mixed with the WRITEs & COMMITs:
+
+   84   0.075830  V3 SETATTR Call, FH: 0x0e9698e8
+  608   0.201944  V3 WRITE Call, FH: 0x0e9698e8 Offset: 0 Len: 1048576 UNSTABLE
+  857   0.218760  V3 COMMIT Call, FH: 0x0e9698e8
+  968   0.231706  V3 WRITE Call, FH: 0x0e9698e8 Offset: 1048576 Len: 1048576 UNSTABLE
+ 1042   0.246934  V3 COMMIT Call, FH: 0x0e9698e8
+...
+...
+43754   3.033689  V3 WRITE Call, FH: 0x0e9698e8 Offset: 100663296 Len: 1048576 UNSTABLE
+44085   3.044767  V3 COMMIT Call, FH: 0x0e9698e8
+44086   3.044959  V3 GETATTR Call, FH: 0x0e9698e8
+44087   3.044964  V3 GETATTR Call, FH: 0x0e9698e8
+44088   3.044983  V3 COMMIT Call, FH: 0x0e9698e8
+44615   3.079491  V3 WRITE Call, FH: 0x0e9698e8 Offset: 102760448 Len: 1048576 UNSTABLE
+44700   3.082909  V3 WRITE Call, FH: 0x0e9698e8 Offset: 103809024 Len: 1048576 UNSTABLE
+44978   3.092010  V3 COMMIT Call, FH: 0x0e9698e8
+44982   3.092943  V3 COMMIT Call, FH: 0x0e9698e8
+
+Sometimes I have seen clusters of 16 GETATTRs for the same file on the wire with nothing else inbetween. So if the re-export server is the only "client" writing these files to the originating server, why do we need to do so many repeat GETATTR calls when using nconnect>1? And why are the COMMIT calls required when the writes are coming via nfsd but not from userspace on the re-export server? Is that due to some sort of memory pressure or locking?
+
+I picked the NFSv3 originating server case because my head starts to hurt tracking the equivalent packets, stateids and compound calls with NFSv4. But I think it's mostly the same for NFSv4. The writes through the re-export server lead to lots of COMMITs and (double) GETATTRs but using nconnect>1 at least doesn't seem to make it any worse like it does for NFSv3.
+
+But maybe you actually want all the extra COMMITs to help better guarantee your writes when putting a re-export server in the way? Perhaps all of this is by design...
+
+Daire
