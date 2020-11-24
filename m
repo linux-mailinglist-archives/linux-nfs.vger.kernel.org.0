@@ -2,138 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 388A32C363B
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Nov 2020 02:29:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3CE22C3662
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Nov 2020 02:56:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgKYB2w (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Nov 2020 20:28:52 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58082 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726874AbgKYB2v (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 20:28:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606267729;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MKSRg6aBd38SSTtyjY6YZGlXtz76bilrGrpSrjdNzYc=;
-        b=eKjjTWziSSlDqch115UNw9RNIlVcJEH2xszJpNf+wdoSIZvh1P6aRMhs55D3JpocEjdyrk
-        YLDtVD4uj6ZsG07DIW9uqsaoIwHZ6blwO/4wAnxT7WkosFXaccQbHWYtP9iiULwW1Mibxu
-        HHdeWMoZrHkQYczbiKdoaFR81ibbFdY=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-317-d86Vaj9WOOui0ps41zhcbw-1; Tue, 24 Nov 2020 20:28:47 -0500
-X-MC-Unique: d86Vaj9WOOui0ps41zhcbw-1
-Received: by mail-ed1-f70.google.com with SMTP id h11so374723edw.14
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Nov 2020 17:28:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MKSRg6aBd38SSTtyjY6YZGlXtz76bilrGrpSrjdNzYc=;
-        b=CAK7Wmiau3MMZtBXfAaMcjauzNhZC0DxYaxpphzFkw8pRLuLeLjP3jRXdiDbH4ALk7
-         5ctshpI6BusLoBAPWjPB2Ot/xctE5nZR1QDlPaqXqpCNQn5/+dpabRknNpVn4FKgMDZJ
-         My4Zzd09VVCePHoSjUK+i0BOEU1HB4bi9lMuzJ2HFUW/MgpArLYbRiO/guW8Ofygt8eT
-         z6YUFfqwiDli/iukoOwpr0Zi8D28f13OGmvvqr9+QnUdI5mrNpmlEtmDojaBs2sOPclX
-         L+H2anG2ZnVMzT6M9bEF/hIvSOgJ5H0xIKcZiFQClfoNVMzwQDRO7JkYFO+1m/YWfQ6Y
-         oZ4w==
-X-Gm-Message-State: AOAM532Xt1aaimIpA72gAT3lYRDMjnDcKCcUeofg1lc2MifqM1oxFXI/
-        wql2/7GBwD1SAR2V7DEFA2VXX9zbF7DldCN0seFuhO151YTZF5iLFMa2nOLc4oXSfpYHVASXXiY
-        X6XkdPBl2kudO8nvBGmV41A4geRkgiavj5G5Z
-X-Received: by 2002:a05:6402:b08:: with SMTP id bm8mr1304135edb.29.1606267726408;
-        Tue, 24 Nov 2020 17:28:46 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxvX/6FPg6g5dYZYZ8XvZSmzUy0GZX1YR8CKvTiTDb6YTZSlMvopWjlo2Q2hQYJAmd9EtqCYwpqmRDoov7eXag=
-X-Received: by 2002:a05:6402:b08:: with SMTP id bm8mr1304126edb.29.1606267726147;
- Tue, 24 Nov 2020 17:28:46 -0800 (PST)
+        id S1726684AbgKYByF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Nov 2020 20:54:05 -0500
+Received: from elasmtp-mealy.atl.sa.earthlink.net ([209.86.89.69]:48780 "EHLO
+        elasmtp-mealy.atl.sa.earthlink.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726298AbgKYByE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 20:54:04 -0500
+X-Greylist: delayed 13084 seconds by postgrey-1.27 at vger.kernel.org; Tue, 24 Nov 2020 20:54:04 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mindspring.com;
+        s=dk12062016; t=1606269244; bh=migQkz81kWicdVymydTsI6/MV+Q/8ZBZ/8OO
+        M0bVADs=; h=Received:From:To:Cc:References:In-Reply-To:Subject:Date:
+         Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:
+         X-Mailer:Thread-Index:Content-Language:X-ELNK-Trace:
+         X-Originating-IP; b=X3KssIG/UCNvznnHBX4t3JOIkRdmlJDBsQ3m2cxVsDFetA
+        +9QrsmibtX+O/XBAA8MVFGdwIqKc8NSOLbuk6eoqL28jCkIJkfTrgcb+zeNEFGVWyTP
+        C1JeUJysuv0ye2MDOTekGFIH4DbsmXNaGLdshs4By/n+auVwnRoLRjIdqWA5JdRh4L3
+        K7a86vsPHTQ8Bpg5mpYRocNDozyTSUM0+2PlwS64p/v8GzHxxIOc8V+cne5xmgGOmXj
+        IVBZBuHm1ApUZ7h8SPTW6C7lJqoeSVXkk8jWMqTWlOPR/tbADHwCpBkZWPvihx+K52M
+        wzK8EPhM4P93FU8oQ2jQ2k1NK0ag==
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws;
+  s=dk12062016; d=mindspring.com;
+  b=RvDhKIIgbQUkWclDZl+V+s9PvPDXoAcDFXTSoteuWdvs1YuBQEzvf+xYqONNJ81vmQmFopSHXhVKISYl62DmAkTdHIpIpEoHbPn5wLxTBchNhuKeK8FrnfnU50AfRxh178CyPExdjhtHiOlXkmRAPFX6Tecwfcl19pQ1wvfUrS7tl33QSER3dgY2ce0I8LxXWGpJU5dK+rSa+to2b74OB3qTqFD1lgprZgWXbow0uSbXKcR2Vj0T8alW5BGTs3mE7eZjS1dGObpl7oWD8EkHz4cdptJ46XaSqdXUUtKbgx0sx+coQE9SYsMA7k3SEKp9vV9+Hkuh7HQwsFS4sy1z7A==;
+  h=Received:From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:X-Mailer:Thread-Index:Content-Language:X-ELNK-Trace:X-Originating-IP;
+Received: from [76.105.143.216] (helo=FRANKSTHINKPAD)
+        by elasmtp-mealy.atl.sa.earthlink.net with esmtpa (Exim 4)
+        (envelope-from <ffilzlnx@mindspring.com>)
+        id 1khgbN-000CgU-J5; Tue, 24 Nov 2020 17:15:57 -0500
+From:   "Frank Filz" <ffilzlnx@mindspring.com>
+To:     "'bfields'" <bfields@fieldses.org>,
+        "'Daire Byrne'" <daire@dneg.com>
+Cc:     "'Trond Myklebust'" <trondmy@hammerspace.com>,
+        "'linux-cachefs'" <linux-cachefs@redhat.com>,
+        "'linux-nfs'" <linux-nfs@vger.kernel.org>
+References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com> <20200915172140.GA32632@fieldses.org> <4d1d7cd0076d98973a56e89c92e4ff0474aa0e14.camel@hammerspace.com> <1188023047.38703514.1600272094778.JavaMail.zimbra@dneg.com> <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com> <635679406.70384074.1603272832846.JavaMail.zimbra@dneg.com> <20201109160256.GB11144@fieldses.org> <1744768451.86186596.1605186084252.JavaMail.zimbra@dneg.com> <1055884313.92996091.1606250106656.JavaMail.zimbra@dneg.com> <20201124211522.GC7173@fieldses.org>
+In-Reply-To: <20201124211522.GC7173@fieldses.org>
+Subject: RE: Adventures in NFS re-exporting
+Date:   Tue, 24 Nov 2020 14:15:57 -0800
+Message-ID: <0fc201d6c2af$62b039f0$2810add0$@mindspring.com>
 MIME-Version: 1.0
-References: <CALF+zOntimx8nyiAUyN5Y58T9_-PztLpUU2vpYgOzQkcK7C09w@mail.gmail.com>
- <4f3a2c0de91ff3117ada740cc9b1a22eabb1375d.camel@hammerspace.com>
-In-Reply-To: <4f3a2c0de91ff3117ada740cc9b1a22eabb1375d.camel@hammerspace.com>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Tue, 24 Nov 2020 20:28:10 -0500
-Message-ID: <CALF+zOkEWrpo=NKL2ncoierFRKmsLqG56qKdsOHBC1k79Yqxhw@mail.gmail.com>
-Subject: Re: NFS failure with generic/074 when lockdep is enabled - BUG:
- Invalid wait context
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQFnsTuWEsgY2WPwTcQ0fYvcmUGZKgIMJHTNAj0KZ+kC20c0vQH6EgB+ATmqgtcBmvnx5gFd2itFAYsKXvUCY0qgxqor/wtQ
+Content-Language: en-us
+X-ELNK-Trace: 136157f01908a8929c7f779228e2f6aeda0071232e20db4d40750170795307db90ea33c32f0615bb350badd9bab72f9c350badd9bab72f9c350badd9bab72f9c
+X-Originating-IP: 76.105.143.216
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Nov 24, 2020 at 8:07 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Tue, 2020-11-24 at 16:56 -0500, David Wysochanski wrote:
-> > I've started seeing this failure since testing 5.10-rc4 - this does
-> > not happen on 5.9
+> On Tue, Nov 24, 2020 at 08:35:06PM +0000, Daire Byrne wrote:
+> > Sometimes I have seen clusters of 16 GETATTRs for the same file on the
+> > wire with nothing else inbetween. So if the re-export server is the
+> > only "client" writing these files to the originating server, why do we
+> > need to do so many repeat GETATTR calls when using nconnect>1? And why
+> > are the COMMIT calls required when the writes are coming via nfsd but
+> > not from userspace on the re-export server? Is that due to some sort
+> > of memory pressure or locking?
 > >
+> > I picked the NFSv3 originating server case because my head starts to
+> > hurt tracking the equivalent packets, stateids and compound calls with
+> > NFSv4. But I think it's mostly the same for NFSv4. The writes through
+> > the re-export server lead to lots of COMMITs and (double) GETATTRs but
+> > using nconnect>1 at least doesn't seem to make it any worse like it
+> > does for NFSv3.
 > >
-> > f31-node1 login: [  124.055768] FS-Cache: Netfs 'nfs' registered for
-> > caching
-> > [  125.046104] Key type dns_resolver registered
-> > [  125.770354] NFS: Registering the id_resolver key type
-> > [  125.780599] Key type id_resolver registered
-> > [  125.782440] Key type id_legacy registered
-> > [  126.563717] run fstests generic/074 at 2020-11-24 11:23:49
-> > [  178.736479]
-> > [  178.751380] =============================
-> > [  178.753249] [ BUG: Invalid wait context ]
-> > [  178.754886] 5.10.0-rc4 #127 Not tainted
-> > [  178.756423] -----------------------------
-> > [  178.758055] kworker/1:2/848 is trying to lock:
-> > [  178.759866] ffff8947fffd33d8 (&zone->lock){..-.}-{3:3}, at:
-> > get_page_from_freelist+0x897/0x2190
-> > [  178.763333] other info that might help us debug this:
-> > [  178.765354] context-{5:5}
-> > [  178.766437] 3 locks held by kworker/1:2/848:
-> > [  178.768158]  #0: ffff8946ce825538
-> > ((wq_completion)nfsiod){+.+.}-{0:0}, at: process_one_work+0x1be/0x540
-> > [  178.771871]  #1: ffff9e6b408f7e58
-> > ((work_completion)(&task->u.tk_work)#2){+.+.}-{0:0}, at:
-> > process_one_work+0x1be/0x540
-> > [  178.776562]  #2: ffff8947f7c5b2b0 (krc.lock){..-.}-{2:2}, at:
-> > kvfree_call_rcu+0x69/0x230
-> > [  178.779803] stack backtrace:
-> > [  178.780996] CPU: 1 PID: 848 Comm: kworker/1:2 Kdump: loaded Not
-> > tainted 5.10.0-rc4 #127
-> > [  178.784374] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-> > [  178.787071] Workqueue: nfsiod rpc_async_release [sunrpc]
-> > [  178.789308] Call Trace:
-> > [  178.790386]  dump_stack+0x8d/0xb5
-> > [  178.791816]  __lock_acquire.cold+0x20b/0x2c8
-> > [  178.793605]  lock_acquire+0xca/0x380
-> > [  178.795113]  ? get_page_from_freelist+0x897/0x2190
-> > [  178.797116]  _raw_spin_lock+0x2c/0x40
-> > [  178.798638]  ? get_page_from_freelist+0x897/0x2190
-> > [  178.800620]  get_page_from_freelist+0x897/0x2190
-> > [  178.802537]  __alloc_pages_nodemask+0x1b4/0x460
-> > [  178.804416]  __get_free_pages+0xd/0x30
-> > [  178.805987]  kvfree_call_rcu+0x168/0x230
-> > [  178.807687]  nfs_free_request+0xab/0x180 [nfs]
-> > [  178.809547]  nfs_page_group_destroy+0x41/0x80 [nfs]
-> > [  178.811588]  nfs_read_completion+0x129/0x1f0 [nfs]
-> > [  178.813633]  rpc_free_task+0x39/0x60 [sunrpc]
-> > [  178.815481]  rpc_async_release+0x29/0x40 [sunrpc]
-> > [  178.817451]  process_one_work+0x23e/0x540
-> > [  178.819136]  worker_thread+0x50/0x3a0
-> > [  178.820657]  ? process_one_work+0x540/0x540
-> > [  178.822427]  kthread+0x10f/0x150
-> > [  178.823805]  ? kthread_park+0x90/0x90
-> > [  178.825339]  ret_from_fork+0x22/0x30
-> >
->
-> I can't think of any changes that might have caused this. Is this
-> NFSv3, v4 or other? I haven't been seeing any of this.
->
+> > But maybe you actually want all the extra COMMITs to help better
+> > guarantee your writes when putting a re-export server in the way?
+> > Perhaps all of this is by design...
+> 
+> Maybe that's close-to-open combined with the server's tendency to
+open/close
+> on every IO operation?  (Though the file cache should have helped with
+that, I
+> thought; as would using version >=4.0 on the final
+> client.)
+> 
+> Might be interesting to know whether the nocto mount option makes a
+> difference.  (So, add "nocto" to the mount options for the NFS mount that
+> you're re-exporting on the re-export server.)
+> 
+> By the way I made a start at a list of issues at
+> 
+> 	http://wiki.linux-nfs.org/wiki/index.php/NFS_re-export
+> 
+> but I was a little vague on which of your issues remained and didn't take
+much
+> time over it.
+> 
+> (If you want an account on that wiki BTW I seem to recall you just have to
+ask
+> Trond (for anti-spam reasons).)
 
-It is NFSv4.1 or NFS4.2.  I am running the xfstests NFS client against
-an older server, RHEL7 based (3.10.0-1127.8.2.el7.x86_64) though not
-sure if that matters.
-My config has these:
-CONFIG_LOCK_DEBUGGING_SUPPORT=y
-CONFIG_PROVE_LOCKING=y
-CONFIG_PROVE_RAW_LOCK_NESTING=y
-CONFIG_DEBUG_SPINLOCK=y
-CONFIG_DEBUG_LOCK_ALLOC=y
-CONFIG_LOCKDEP=y
+How much conversation about re-export has been had at the wider NFS
+community level? I have an interest because Ganesha  supports re-export via
+the PROXY_V3 and PROXY_V4 FSALs. We currently don't have a data cache though
+there has been discussion of such, we do have attribute and dirent caches.
+
+Looking over the wiki page, I have considered being able to specify a
+re-export of a Ganesha export without encapsulating handles. Ganesha
+encapsulates the export_fs handle in a way that could be coordinated between
+the original server and the re-export so they would both effectively have
+the same encapsulation layer.
+
+I'd love to see some re-export best practices shared among server
+implementations, and also what we can do to improve things when two server
+implementations are interoperating via re-export.
+
+Frank
 
