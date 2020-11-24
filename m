@@ -2,211 +2,229 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A4DF2C3232
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Nov 2020 21:51:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 358332C3262
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Nov 2020 22:14:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbgKXUul (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Nov 2020 15:50:41 -0500
-Received: from mail-dm6nam10on2072.outbound.protection.outlook.com ([40.107.93.72]:49665
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725440AbgKXUuk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 24 Nov 2020 15:50:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Si3/w2jcI2ab0tatC5cQoJlabcKdG6DLTv1/TFZCnbr3YqkOBBCv3GvQ2nn5Vxn9HYpna4775qr5CKlp3+ap0QyBTH0QwrLnaG8lTiyy392tn/Hh0ajRaX8g353DREcQIa9lAojiNMyavg//cSxSL0N2MmZYBIpqFPEHdWgoFD2T4JmLniBXk8Pshj0olZJNOMO0H8juyibswgdDcVSF4yyeaPV55ayqo9OJnrCPReaoSBhAMVGaJpmPE7u69Thz8a7FEs4dIdf9sey4oCGVUX7doKTkz5SgIzFSuEkYQ4DHwTngzCgCqGjFwdxXZiSaRgaUMHyaobxErH6LMmr5Iw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sN7xn5IUetqKKXpc9y6avlQ/3xWM+pp9n8EMAwHOBWQ=;
- b=eLlDsWyGZXoI/QcuXzs0TfgqeYOGPnEUWbQ8qnb9U1c22s3IYd3GrwLRmTExPUJU9lj9k3qu/nETIl28tMoR3vVrixU1LpDxVaRLitOcSA3bmbudVAXV8ttoAXeS/AARMR5ntTiU8HFMO1F0+3EgO2DCDNAmnCG2P6UVjEl7yJbCbY2dyZSnCDSM5UYlgsu3GzNmC+H0Vw8+8C9bjDoTfsG7KmnqWL65JHiY0tRGUIJ5GUm1u869da88VkpMEsLANOgpCVzZ2MiqVE5y0AQw/oz8qol4uOvM19xO16ZU3xTGZDxzdOUh3i9QrzWTwLCzK5bY6OooyilpKEw/jn9iTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
- dkim=pass header.d=netapp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netapp.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sN7xn5IUetqKKXpc9y6avlQ/3xWM+pp9n8EMAwHOBWQ=;
- b=ijbCLCatNf9IKY9Nhms5/FTSQbXOszEt1Kk2bm3R31tTKpd+DYWjEFRy0J66VfrT9sbRzmtuq0SIuauEsa8q3OpZP+7B0jFl9uVRjvpMCE7yOzM2xjFyefKdCWbfd97hVvXH5Z969f28DmHXX6OYTmVJSCH0yzummAeaHicskUo=
-Received: from DM6PR06MB4074.namprd06.prod.outlook.com (2603:10b6:5:86::20) by
- DM6PR06MB5083.namprd06.prod.outlook.com (2603:10b6:5:c::33) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3589.21; Tue, 24 Nov 2020 20:50:36 +0000
-Received: from DM6PR06MB4074.namprd06.prod.outlook.com
- ([fe80::28ba:560b:ae06:f163]) by DM6PR06MB4074.namprd06.prod.outlook.com
- ([fe80::28ba:560b:ae06:f163%3]) with mapi id 15.20.3564.038; Tue, 24 Nov 2020
- 20:50:36 +0000
-From:   "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>
-To:     Frank van der Linden <fllinden@amazon.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v1] NFS: Fix rpcrdma_inline_fixup() crash with new
- LISTXATTRS operation
-Thread-Topic: [PATCH v1] NFS: Fix rpcrdma_inline_fixup() crash with new
- LISTXATTRS operation
-Thread-Index: AQHWwob4iONeSUVmjkS12aRr52ERPKnXtZeA//+4c4A=
-Date:   Tue, 24 Nov 2020 20:50:36 +0000
-Message-ID: <B1CF6271-B168-4571-B8E4-0CAB0A0B40FB@netapp.com>
+        id S1728801AbgKXVOY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Nov 2020 16:14:24 -0500
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:51358 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728492AbgKXVOX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 16:14:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1606252463; x=1637788463;
+  h=date:from:to:cc:message-id:references:mime-version:
+   in-reply-to:subject;
+  bh=rH+Y8HW6Z0VW1dsGZMCcCHnlayU08zxnTumBkVz3yuE=;
+  b=BSxfEYbt72mlt7qkbKjVu87/f93++AtTNR9sbpiBXStEpUEkWhvX51bF
+   lFUUuoac6fEAlvfRzVgn/9NiXZZwOJKpknoGFXs3tWOwo1C3/GsDHw8Ik
+   DE94aFEMVwxCtxAsqHE7MTkY8QXbjX6ZZgyU/4DMrxZX8heyaFfdDA68/
+   Q=;
+X-IronPort-AV: E=Sophos;i="5.78,367,1599523200"; 
+   d="scan'208";a="90556246"
+Subject: Re: [PATCH v1] NFS: Fix rpcrdma_inline_fixup() crash with new LISTXATTRS
+ operation
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 24 Nov 2020 21:14:07 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id CC8EEA48D8;
+        Tue, 24 Nov 2020 21:14:05 +0000 (UTC)
+Received: from EX13D28UEB001.ant.amazon.com (10.43.60.81) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 24 Nov 2020 21:14:04 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
+ EX13D28UEB001.ant.amazon.com (10.43.60.81) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 24 Nov 2020 21:14:04 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Tue, 24 Nov 2020 21:14:04 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id E86C3C133E; Tue, 24 Nov 2020 21:14:03 +0000 (UTC)
+Date:   Tue, 24 Nov 2020 21:14:03 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+CC:     Olga Kornievskaia <kolga@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Message-ID: <20201124211403.GA14140@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
 References: <160623862874.1534.4471924380357882531.stgit@manet.1015granger.net>
  <20201124200640.GA2476@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-In-Reply-To: <20201124200640.GA2476@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/16.43.20110804
-authentication-results: amazon.com; dkim=none (message not signed)
- header.d=none;amazon.com; dmarc=none action=none header.from=netapp.com;
-x-originating-ip: [2600:1700:6a10:2e90:2db2:6500:672:6a1f]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a46fa2c0-69cb-436d-8b11-08d890ba9846
-x-ms-traffictypediagnostic: DM6PR06MB5083:
-x-microsoft-antispam-prvs: <DM6PR06MB50834838ED30CF72A98A050793FB0@DM6PR06MB5083.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LK9meIHTfEgsBZWpKsjnWnk0WbvLNtQ/0UcOIy6Hy8rZYhDDiakPyxXcyxeTS/j2904+WdWuchVX2crXnMuys/Gi/jfyBY4qBFbSvHXUUhfCPiEVhIsgUxhqRg0JWhtXPtH8fTi4L1S+yg5YvrdPzoQwR+2c71uzS8J8Cp5xvOyBcvDfJGV0EaTyYITKJB0q1an4vvE7RVTxwTUAKJOaIhOliRrkoSl+Rcc93eCeFRdTVoS7/9VuOOJUtA5EX8N8q34NsasSEJLvGYQb9IuIAmGys6qRGs6MX0Z9inT4nEC3E9FoB5YxN68EWDNnG5D0JEzhP6/h90IWaf8d5DIoyw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR06MB4074.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(346002)(376002)(136003)(396003)(76116006)(2906002)(66446008)(5660300002)(6512007)(64756008)(6506007)(36756003)(33656002)(478600001)(2616005)(83380400001)(66556008)(8936002)(66946007)(86362001)(91956017)(66476007)(4326008)(316002)(6486002)(186003)(8676002)(110136005)(71200400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?TGg1S3RvWUpTZFJHeUc2alNYeERwUkRPWmJZeW1neEVkcHl1OXJVbndMTldZ?=
- =?utf-8?B?UVZMbVF0NmFNN0FYMkkwUUJDOUg4MUJkdmVkQk5uOU9RNS9zU25OVjNKcVdj?=
- =?utf-8?B?eDA5K1VabTNIUFZ1Wk1JYTVHVDRsYVNyeFVZUnBlM0xJMjN5b2ZjUTVlaWdn?=
- =?utf-8?B?MWgwUUZxN2kvLzlkMXFaTjhoRGJLbWhqODdqenA5MkNqSGJ1SmpZMWs5dkJw?=
- =?utf-8?B?bGdGV3c4YUg1c25XcDlJTysxYkdpTk9NZFpGZk1jS2hpcjVyT0lDS3BxSDhJ?=
- =?utf-8?B?dlk0R3AzV3VJdjhzZUp0MGI3aGkvcVNmT2hQa1BBRExrU3VsaHpkaVh2b1l1?=
- =?utf-8?B?NDdNa3BxbHVkelNFcVRHcDhCZW1EUEhUdEpJMHB4NUxJcVlhZStiMDVPZm1y?=
- =?utf-8?B?S2k4VUU4aUZJSUxab2VnZE5DU2dFMzdFc2htc2lKYlVxMXhYbGRlbDc1Zk1S?=
- =?utf-8?B?ampvYTE5bUg1MkM3TnJaWDdqMW9YTzB4WFlwRUxDOCtoQ3lLQlpjQ293WEQr?=
- =?utf-8?B?ZjRNVXhnbDNobTRTM2xjN09YdTFhT3pvNU9XV0dvYkU4ajh0VUhrUEM4VlJG?=
- =?utf-8?B?dlFvdU9MVXg0M0FuaUorYVBxMmtrdFhQZVV1OEE3dkxOSjlaM2VPTEZoekNX?=
- =?utf-8?B?SFpnVHl5UmZYeUtXcWYzVDlKWU90NFdEOFd4ZFA1NmJubkp2TmJyVUh6T1Ir?=
- =?utf-8?B?Sndza3QrZ3UzWEpHaGhSRGFVL0VyQ2dIM1hEYTJwUzZuT2RUaVJIM0hocEMr?=
- =?utf-8?B?K29RVjhmR0FjeEREUmJCbXNKV2VHdHJzOUM4VTIxZmdvam9uZGp3SzBPWVI5?=
- =?utf-8?B?cGtDR3ZYejhyd1F6NUExRjFhOTllM3B6WURGVlduZ1p6NEMyUjVFZXR3ZUx6?=
- =?utf-8?B?MUxSb1c5cE55VkpZc1NKWkg2eFlhQXQ5cUdDMmZFUEh3UlZjRWNoaWxoazJt?=
- =?utf-8?B?bk1NTnRVVWcrTEF4NnlYMXhUYlJFdGRvMWJCVzhBS0c1OGlsVmUyUU8raVlw?=
- =?utf-8?B?TWRkN0VpcjE4M3VUaHJrV1Z2QU1tOHFWVEVYVU5vb2tYZkpqR3hjM1I0bThx?=
- =?utf-8?B?ckM0QnZwZ1NDYnJKN1NyajNjOXBlazEweU1yN21qNTdNMUFETXlna2RrQkZn?=
- =?utf-8?B?YmpZbXJRNGhiSE0vdzUzU2M2VE9rU3h1Z2RkQ0QyUmJlZGlMTTV5VlFuaGRZ?=
- =?utf-8?B?ZXM2WEV6a0lLaWxEcVZWblBpa0h2RVBob2UwRi9LaURxTFJzbnhtdjJXalZt?=
- =?utf-8?B?QXpVWVlSZytZbXpCRDdjeTBQMkNxUjRNRForMnNGMDRnZ3FETUNtMzVMZDIr?=
- =?utf-8?B?cVBRdENjeXFRbDNvSEJsTzBhenA0U3J3bWtBOSswTFNmYndrNXNaOG1mUkQ3?=
- =?utf-8?B?VlZFRktsLzJsRFVvZU94L3BwNmw2eC85V0VTa3dRQXVLMTJYRnFXdDhwamtz?=
- =?utf-8?Q?R6IqbHbl?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <399EE78A0260314B992BE74C97EF8896@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <10EFE633-374C-4BB1-8877-424579564C55@oracle.com>
 MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR06MB4074.namprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a46fa2c0-69cb-436d-8b11-08d890ba9846
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Nov 2020 20:50:36.4672
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UA3GyH6AXrVD5fAlwOIplKOsVi9j7G8LlXieH2NLaCVvxCnyJnEff+8qeUdW5Fg2rUORzHXgNacyowcuIJCoGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR06MB5083
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <10EFE633-374C-4BB1-8877-424579564C55@oracle.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-DQoNCu+7v09uIDExLzI0LzIwLCAzOjA2IFBNLCAiRnJhbmsgdmFuIGRlciBMaW5kZW4iIDxmbGxp
-bmRlbkBhbWF6b24uY29tPiB3cm90ZToNCg0KICAgIE5ldEFwcCBTZWN1cml0eSBXQVJOSU5HOiBU
-aGlzIGlzIGFuIGV4dGVybmFsIGVtYWlsLiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRh
-Y2htZW50cyB1bmxlc3MgeW91IHJlY29nbml6ZSB0aGUgc2VuZGVyIGFuZCBrbm93IHRoZSBjb250
-ZW50IGlzIHNhZmUuDQoNCg0KDQoNCiAgICBPbiBUdWUsIE5vdiAyNCwgMjAyMCBhdCAxMjoyNjoz
-MlBNIC0wNTAwLCBDaHVjayBMZXZlciB3cm90ZToNCiAgICA+IENBVVRJT046IFRoaXMgZW1haWwg
-b3JpZ2luYXRlZCBmcm9tIG91dHNpZGUgb2YgdGhlIG9yZ2FuaXphdGlvbi4gRG8gbm90IGNsaWNr
-IGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdSBjYW4gY29uZmlybSB0aGUgc2Vu
-ZGVyIGFuZCBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUuDQogICAgPg0KICAgID4NCiAgICA+DQog
-ICAgPiBCeSBzd2l0Y2hpbmcgdG8gYW4gWEZTLWJhY2tlZCBleHBvcnQsIEkgYW0gYWJsZSB0byBy
-ZXByb2R1Y2UgdGhlDQogICAgPiBpYmNvbXAgd29ya2VyIGNyYXNoIG9uIG15IGNsaWVudCB3aXRo
-IHhmc3Rlc3RzIGdlbmVyaWMvMDEzLg0KICAgID4NCiAgICA+IEZvciB0aGUgZmFpbGluZyBMSVNU
-WEFUVFJTIG9wZXJhdGlvbiwgeGRyX2lubGluZV9wYWdlcygpIGlzIGNhbGxlZA0KICAgID4gd2l0
-aCBwYWdlX2xlbj0xMiBhbmQgYnVmbGVuPTEyOC4gVGhlbjoNCiAgICA+DQogICAgPiAtIEJlY2F1
-c2UgYnVmbGVuIGlzIHNtYWxsLCBycGNyZG1hX21hcnNoYWxfcmVxIHdpbGwgbm90IHNldCB1cCBh
-DQogICAgPiAgIFJlcGx5IGNodW5rIGFuZCB0aGUgcnBjcmRtYSdzIFhEUkJVRl9TUEFSU0VfUEFH
-RVMgbG9naWMgZG9lcyBub3QNCiAgICA+ICAgZ2V0IGludm9rZWQgYXQgYWxsLg0KICAgID4NCiAg
-ICA+IC0gQmVjYXVzZSBwYWdlX2xlbiBpcyBub24temVybywgcnBjcmRtYV9pbmxpbmVfZml4dXAo
-KSB0cmllcyB0bw0KICAgID4gICBjb3B5IHJlY2VpdmVkIGRhdGEgaW50byBycV9yY3ZfYnVmLT5w
-YWdlcywgYnV0IHRoZXkncmUgbWlzc2luZy4NCiAgICA+DQogICAgPiBUaGUgcmVzdWx0IGlzIHRo
-YXQgdGhlIGliY29tcCB3b3JrZXIgZmF1bHRzIGFuZCBkaWVzLiBTb21ldGltZXMgdGhhdA0KICAg
-ID4gY2F1c2VzIGEgdmlzaWJsZSBjcmFzaCwgYW5kIHNvbWV0aW1lcyBpdCByZXN1bHRzIGluIGEg
-dHJhbnNwb3J0DQogICAgPiBoYW5nIHdpdGhvdXQgb3RoZXIgc3ltcHRvbXMuDQogICAgPg0KICAg
-ID4gUlBDL1JETUEncyBYRFJCVUZfU1BBUlNFX1BBR0VTIHN1cHBvcnQgaXMgbm90IGVudGlyZWx5
-IGNvcnJlY3QsIGFuZA0KICAgID4gc2hvdWxkIGV2ZW50dWFsbHkgYmUgZml4ZWQgb3IgcmVwbGFj
-ZWQuIEhvd2V2ZXIsIG15IHByZWZlcmVuY2UgaXMNCiAgICA+IHRoYXQgdXBwZXItbGF5ZXIgb3Bl
-cmF0aW9ucyBzaG91bGQgZXhwbGljaXRseSBhbGxvY2F0ZSB0aGVpciByZWNlaXZlDQogICAgPiBi
-dWZmZXJzICh1c2luZyBHRlBfS0VSTkVMKSB3aGVuIHBvc3NpYmxlLCByYXRoZXIgdGhhbiByZWx5
-aW5nIG9uDQogICAgPiBYRFJCVUZfU1BBUlNFX1BBR0VTLg0KICAgID4NCiAgICA+IFJlcG9ydGVk
-LWJ5OiBPbGdhIGtvcm5pZXZza2FpYSA8a29sZ2FAbmV0YXBwLmNvbT4NCiAgICA+IFN1Z2dlc3Rl
-ZC1ieTogT2xnYSBrb3JuaWV2c2thaWEgPGtvbGdhQG5ldGFwcC5jb20+DQogICAgPiBTaWduZWQt
-b2ZmLWJ5OiBDaHVjayBMZXZlciA8Y2h1Y2subGV2ZXJAb3JhY2xlLmNvbT4NCiAgICA+IC0tLQ0K
-ICAgID4gIGZzL25mcy9uZnM0MnByb2MuYyB8ICAgMTcgKysrKysrKysrKy0tLS0tLS0NCiAgICA+
-ICBmcy9uZnMvbmZzNDJ4ZHIuYyAgfCAgICAxIC0NCiAgICA+ICAyIGZpbGVzIGNoYW5nZWQsIDEw
-IGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pDQogICAgPg0KICAgID4gSGktDQogICAgPg0K
-ICAgID4gSSBsaWtlIE9sZ2EncyBwcm9wb3NlZCBhcHByb2FjaC4gV2hhdCBkbyB5b3UgdGhpbmsg
-b2YgdGhpcyBwYXRjaD8NCiAgICA+DQogICAgPg0KICAgID4gZGlmZiAtLWdpdCBhL2ZzL25mcy9u
-ZnM0MnByb2MuYyBiL2ZzL25mcy9uZnM0MnByb2MuYw0KICAgID4gaW5kZXggMmIyMjExZDEyMzRl
-Li4yNDgxMDMwNWVjMWMgMTAwNjQ0DQogICAgPiAtLS0gYS9mcy9uZnMvbmZzNDJwcm9jLmMNCiAg
-ICA+ICsrKyBiL2ZzL25mcy9uZnM0MnByb2MuYw0KICAgID4gQEAgLTEyNDEsNyArMTI0MSw3IEBA
-IHN0YXRpYyBzc2l6ZV90IF9uZnM0Ml9wcm9jX2xpc3R4YXR0cnMoc3RydWN0IGlub2RlICppbm9k
-ZSwgdm9pZCAqYnVmLA0KICAgID4gICAgICAgICAgICAgICAgIC5ycGNfcmVzcCAgICAgICA9ICZy
-ZXMsDQogICAgPiAgICAgICAgIH07DQogICAgPiAgICAgICAgIHUzMiB4ZHJsZW47DQogICAgPiAt
-ICAgICAgIGludCByZXQsIG5wOw0KICAgID4gKyAgICAgICBpbnQgcmV0LCBucCwgaTsNCiAgICA+
-DQogICAgPg0KICAgID4gICAgICAgICByZXMuc2NyYXRjaCA9IGFsbG9jX3BhZ2UoR0ZQX0tFUk5F
-TCk7DQogICAgPiBAQCAtMTI1MywxMCArMTI1MywxNCBAQCBzdGF0aWMgc3NpemVfdCBfbmZzNDJf
-cHJvY19saXN0eGF0dHJzKHN0cnVjdCBpbm9kZSAqaW5vZGUsIHZvaWQgKmJ1ZiwNCiAgICA+ICAg
-ICAgICAgICAgICAgICB4ZHJsZW4gPSBzZXJ2ZXItPmx4YXNpemU7DQogICAgPiAgICAgICAgIG5w
-ID0geGRybGVuIC8gUEFHRV9TSVpFICsgMTsNCiAgICA+DQogICAgPiArICAgICAgIHJldCA9IC1F
-Tk9NRU07DQogICAgPiAgICAgICAgIHBhZ2VzID0ga2NhbGxvYyhucCwgc2l6ZW9mKHN0cnVjdCBw
-YWdlICopLCBHRlBfS0VSTkVMKTsNCiAgICA+IC0gICAgICAgaWYgKHBhZ2VzID09IE5VTEwpIHsN
-CiAgICA+IC0gICAgICAgICAgICAgICBfX2ZyZWVfcGFnZShyZXMuc2NyYXRjaCk7DQogICAgPiAt
-ICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07DQogICAgPiArICAgICAgIGlmIChwYWdlcyA9
-PSBOVUxMKQ0KICAgID4gKyAgICAgICAgICAgICAgIGdvdG8gb3V0X2ZyZWU7DQogICAgPiArICAg
-ICAgIGZvciAoaSA9IDA7IGkgPCBucDsgaSsrKSB7DQogICAgPiArICAgICAgICAgICAgICAgcGFn
-ZXNbaV0gPSBhbGxvY19wYWdlKEdGUF9LRVJORUwpOw0KICAgID4gKyAgICAgICAgICAgICAgIGlm
-ICghcGFnZXNbaV0pDQogICAgPiArICAgICAgICAgICAgICAgICAgICAgICBnb3RvIG91dF9mcmVl
-Ow0KICAgID4gICAgICAgICB9DQogICAgPg0KICAgID4gICAgICAgICBhcmcueGF0dHJfcGFnZXMg
-PSBwYWdlczsNCiAgICA+IEBAIC0xMjcxLDE0ICsxMjc1LDEzIEBAIHN0YXRpYyBzc2l6ZV90IF9u
-ZnM0Ml9wcm9jX2xpc3R4YXR0cnMoc3RydWN0IGlub2RlICppbm9kZSwgdm9pZCAqYnVmLA0KICAg
-ID4gICAgICAgICAgICAgICAgICplb2ZwID0gcmVzLmVvZjsNCiAgICA+ICAgICAgICAgfQ0KICAg
-ID4NCiAgICA+ICtvdXRfZnJlZToNCiAgICA+ICAgICAgICAgd2hpbGUgKC0tbnAgPj0gMCkgew0K
-ICAgID4gICAgICAgICAgICAgICAgIGlmIChwYWdlc1tucF0pDQogICAgPiAgICAgICAgICAgICAg
-ICAgICAgICAgICBfX2ZyZWVfcGFnZShwYWdlc1tucF0pOw0KICAgID4gICAgICAgICB9DQogICAg
-PiAtDQogICAgPiAtICAgICAgIF9fZnJlZV9wYWdlKHJlcy5zY3JhdGNoKTsNCiAgICA+ICAgICAg
-ICAga2ZyZWUocGFnZXMpOw0KICAgID4gLQ0KICAgID4gKyAgICAgICBfX2ZyZWVfcGFnZShyZXMu
-c2NyYXRjaCk7DQogICAgPiAgICAgICAgIHJldHVybiByZXQ7DQogICAgPg0KICAgID4gIH0NCiAg
-ICA+IGRpZmYgLS1naXQgYS9mcy9uZnMvbmZzNDJ4ZHIuYyBiL2ZzL25mcy9uZnM0Mnhkci5jDQog
-ICAgPiBpbmRleCA2ZTA2MGE4OGY5OGMuLjg0MzJiZDZiOTVmMCAxMDA2NDQNCiAgICA+IC0tLSBh
-L2ZzL25mcy9uZnM0Mnhkci5jDQogICAgPiArKysgYi9mcy9uZnMvbmZzNDJ4ZHIuYw0KICAgID4g
-QEAgLTE1MjgsNyArMTUyOCw2IEBAIHN0YXRpYyB2b2lkIG5mczRfeGRyX2VuY19saXN0eGF0dHJz
-KHN0cnVjdCBycGNfcnFzdCAqcmVxLA0KICAgID4NCiAgICA+ICAgICAgICAgcnBjX3ByZXBhcmVf
-cmVwbHlfcGFnZXMocmVxLCBhcmdzLT54YXR0cl9wYWdlcywgMCwgYXJncy0+Y291bnQsDQogICAg
-PiAgICAgICAgICAgICBoZHIucmVwbGVuKTsNCiAgICA+IC0gICAgICAgcmVxLT5ycV9yY3ZfYnVm
-LmZsYWdzIHw9IFhEUkJVRl9TUEFSU0VfUEFHRVM7DQogICAgPg0KICAgID4gICAgICAgICBlbmNv
-ZGVfbm9wcygmaGRyKTsNCiAgICA+ICB9DQogICAgPg0KICAgID4NCg0KICAgIEkgY2FuIHNlZSB3
-aHkgdGhpcyBpcyB0aGUgc2ltcGxlc3QgYW5kIG1vc3QgcHJhZ21hdGljIHNvbHV0aW9uLCBzbyBp
-dCdzDQogICAgZmluZSB3aXRoIG1lLg0KDQogICAgV2h5IGRvZXNuJ3QgdGhpcyBoYXBwZW4gd2l0
-aCBnZXR4YXR0cj8gRG8gd2UgbmVlZCB0byBjb252ZXJ0IHRoYXQgdG9vPw0KDQpbb2xnYV0gSSBk
-b24ndCBrbm93IGlmIEdFVFhBVFRSL1NFVFhBVFRSIHdvcmtzLiBJJ20gbm90IHN1cmUgd2hhdCB0
-ZXN0cyBleGVyY2lzZSB0aG9zZSBvcGVyYXRpb25zLiBJIGp1c3QgcmFuIGludG8gdGhlIGZhY3Qg
-dGhhdCBnZW5lcmljLzAxMyB3YXNuJ3QgcGFzc2luZy4gQW5kIEkgZG9uJ3Qgc2VlIHRoYXQgaXQn
-cyBhbiB4YXR0ciBzcGVjaWZpYyB0ZXN0cy4gSSdtIG5vdCBzdXJlIGhvdyBpdCBlbmRzIHVwIHRy
-aWdnZXJpbmcgaXMgdXNhZ2Ugb2YgeGF0dHIuDQoNCldoYXQgZGlkIHlvdSB1c2UgdG8gdGVzdCB0
-aGlzIGZlYXR1cmU/DQoNCg0KICAgIFRoZSBiYXNpYyBpc3N1ZSBoZXJlIGlzIHRoYXQgdGhlIFJQ
-QyBjb2RlIGRvZXMgbm90IGRlYWwgd2l0aCBpbmxpbmVkIGRhdGENCiAgICB0aGF0IGV4Y2VlZHMg
-UEFHRV9TSVpFLiBUaGF0IGNhbiBvbmx5IGJlIGRvbmUgd2l0aCByYXcgcGFnZXMuDQoNCiAgICBT
-aW5jZSB0aGUgdXBwZXIgbGF5ZXIgaGFzIGFscmVhZHkgYWxsb2NhdGVkIGEgYnVmZmVyIGluIHRo
-ZSBjYXNlIG9mIGxpc3R4YXR0cg0KICAgIGFuZCBnZXR4YXR0ciwgSSB3b3VsZCBsb3ZlIHRvIGJl
-IGFibGUgdG8ganVzdCBYRFIgY29kZSBpbiB0byB0aGF0IGJ1ZmZlciwNCiAgICBhbmQgdm9pZCB0
-aGUgd2hvbGUgYWxsb2MrY29weSBzaXR1YXRpb24uIEJ1dCBzYWRseSwgaXQgbWlnaHQgYmUgPiBQ
-QUdFX1NJWkUsDQogICAgc28gdGhlIFhEUiBjb2RlIGRvZXNuJ3QgYWxsb3cgaXQuIEl0J3Mgbm90
-IGFsbCBiYWQsIGhhdmluZyB0byB1c2UgcGFnZXMNCiAgICBhbGxvd3MgdGhlbSB0byBiZSBkaXJl
-Y3RseSBob29rZWQgaW4gdG8gdGhlIGNhY2hlIGluIHRoZSBjYXNlIG9mIGdldHhhdHRyLA0KICAg
-IGJ1dCBmb3IgbGlzdHhhdHRyLCBkZWNvZGluZyBkaXJlY3RseSBpbiB0byB0aGUgcHJvdmlkZWQg
-YnVmZmVyIHdvdWxkIGJlIG5pY2UuDQoNCiAgICBIbSwgSSB3b25kZXIgaWYgdGhhdCByZXN0cmlj
-dGlvbiBhY3R1YWxseSBob2xkcyBmb3IgbGlzdHhhdHRyIC0gdGhlIGludmlkdWFsDQogICAgWERS
-IGl0ZW1zICh4YXR0ciBuYW1lcykgc2hvdWxkIG5ldmVyIGV4Y2VlZCBQQUdFX1NJWkUuLg0KDQog
-ICAgLSBGcmFuaw0KDQo=
+On Tue, Nov 24, 2020 at 03:18:55PM -0500, Chuck Lever wrote:
+> > On Nov 24, 2020, at 3:06 PM, Frank van der Linden <fllinden@amazon.com> wrote:
+> >
+> > On Tue, Nov 24, 2020 at 12:26:32PM -0500, Chuck Lever wrote:
+> >> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> >>
+> >>
+> >>
+> >> By switching to an XFS-backed export, I am able to reproduce the
+> >> ibcomp worker crash on my client with xfstests generic/013.
+> >>
+> >> For the failing LISTXATTRS operation, xdr_inline_pages() is called
+> >> with page_len=12 and buflen=128. Then:
+> >>
+> >> - Because buflen is small, rpcrdma_marshal_req will not set up a
+> >>  Reply chunk and the rpcrdma's XDRBUF_SPARSE_PAGES logic does not
+> >>  get invoked at all.
+> >>
+> >> - Because page_len is non-zero, rpcrdma_inline_fixup() tries to
+> >>  copy received data into rq_rcv_buf->pages, but they're missing.
+> >>
+> >> The result is that the ibcomp worker faults and dies. Sometimes that
+> >> causes a visible crash, and sometimes it results in a transport
+> >> hang without other symptoms.
+> >>
+> >> RPC/RDMA's XDRBUF_SPARSE_PAGES support is not entirely correct, and
+> >> should eventually be fixed or replaced. However, my preference is
+> >> that upper-layer operations should explicitly allocate their receive
+> >> buffers (using GFP_KERNEL) when possible, rather than relying on
+> >> XDRBUF_SPARSE_PAGES.
+> >>
+> >> Reported-by: Olga kornievskaia <kolga@netapp.com>
+> >> Suggested-by: Olga kornievskaia <kolga@netapp.com>
+> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> >> ---
+> >> fs/nfs/nfs42proc.c |   17 ++++++++++-------
+> >> fs/nfs/nfs42xdr.c  |    1 -
+> >> 2 files changed, 10 insertions(+), 8 deletions(-)
+> >>
+> >> Hi-
+> >>
+> >> I like Olga's proposed approach. What do you think of this patch?
+> >>
+> >>
+> >> diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+> >> index 2b2211d1234e..24810305ec1c 100644
+> >> --- a/fs/nfs/nfs42proc.c
+> >> +++ b/fs/nfs/nfs42proc.c
+> >> @@ -1241,7 +1241,7 @@ static ssize_t _nfs42_proc_listxattrs(struct inode *inode, void *buf,
+> >>                .rpc_resp       = &res,
+> >>        };
+> >>        u32 xdrlen;
+> >> -       int ret, np;
+> >> +       int ret, np, i;
+> >>
+> >>
+> >>        res.scratch = alloc_page(GFP_KERNEL);
+> >> @@ -1253,10 +1253,14 @@ static ssize_t _nfs42_proc_listxattrs(struct inode *inode, void *buf,
+> >>                xdrlen = server->lxasize;
+> >>        np = xdrlen / PAGE_SIZE + 1;
+> >>
+> >> +       ret = -ENOMEM;
+> >>        pages = kcalloc(np, sizeof(struct page *), GFP_KERNEL);
+> >> -       if (pages == NULL) {
+> >> -               __free_page(res.scratch);
+> >> -               return -ENOMEM;
+> >> +       if (pages == NULL)
+> >> +               goto out_free;
+> >> +       for (i = 0; i < np; i++) {
+> >> +               pages[i] = alloc_page(GFP_KERNEL);
+> >> +               if (!pages[i])
+> >> +                       goto out_free;
+> >>        }
+> >>
+> >>        arg.xattr_pages = pages;
+> >> @@ -1271,14 +1275,13 @@ static ssize_t _nfs42_proc_listxattrs(struct inode *inode, void *buf,
+> >>                *eofp = res.eof;
+> >>        }
+> >>
+> >> +out_free:
+> >>        while (--np >= 0) {
+> >>                if (pages[np])
+> >>                        __free_page(pages[np]);
+> >>        }
+> >> -
+> >> -       __free_page(res.scratch);
+> >>        kfree(pages);
+> >> -
+> >> +       __free_page(res.scratch);
+> >>        return ret;
+> >>
+> >> }
+> >> diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+> >> index 6e060a88f98c..8432bd6b95f0 100644
+> >> --- a/fs/nfs/nfs42xdr.c
+> >> +++ b/fs/nfs/nfs42xdr.c
+> >> @@ -1528,7 +1528,6 @@ static void nfs4_xdr_enc_listxattrs(struct rpc_rqst *req,
+> >>
+> >>        rpc_prepare_reply_pages(req, args->xattr_pages, 0, args->count,
+> >>            hdr.replen);
+> >> -       req->rq_rcv_buf.flags |= XDRBUF_SPARSE_PAGES;
+> >>
+> >>        encode_nops(&hdr);
+> >> }
+> >>
+> >>
+> >
+> > I can see why this is the simplest and most pragmatic solution, so it's
+> > fine with me.
+> 
+> Thanks. I've added Olga's Reviewed/Tested-by to my local copy.
+> May I add a Reviewed-by from you?
+
+Yep, thanks.
+
+> > Why doesn't this happen with getxattr? Do we need to convert that too?
+> 
+> If a GETXATTR request can be generated such that buflen is less than
+> a page, but page_len > 0, then yes, it will happen there too. As Olga
+> says, NFS is unaware of the transport's inline threshold setting, so
+> there will always be some buflen value under which bad things happen.
+> 
+> Either way, I would prefer to see GETXATTR converted to avoid using
+> XDRBUF_SPARSE_PAGES. Does NFSv4 GETACL provide a good example?
+
+Hm, in that case, it should be converted. That's easy enough to do.
+I'll send a small patch.
+
+> 
+> 
+> > The basic issue here is that the RPC code does not deal with inlined data
+> > that exceeds PAGE_SIZE. That can only be done with raw pages.
+> >
+> > Since the upper layer has already allocated a buffer in the case of listxattr
+> > and getxattr, I would love to be able to just XDR code in to that buffer,
+> > and void the whole alloc+copy situation.
+> 
+> Do you mean like the READDIR entry encoders and decoders?
+
+It works out for READDIR - you use page cache fillers that do the XDR
+decoding in to pages that are part of i_mapping. For xattrs, that's
+not a good fit - I looked at it, but it would have been messy.
+
+The main thing I'm complaining about here is that the upper-layer xattr
+code already kvallocs a buffer, but because of restrictions in the XDR
+code, you always end up doing an extra copy for get/set, since you need
+to allocate pages. But, this doesn't apply to listxattr.
+
+
+> 
+> 
+> > But sadly, it might be > PAGE_SIZE,
+> > so the XDR code doesn't allow it. It's not all bad, having to use pages
+> > allows them to be directly hooked in to the cache in the case of getxattr,
+> > but for listxattr, decoding directly in to the provided buffer would be nice.
+> >
+> > Hm, I wonder if that restriction actually holds for listxattr - the invidual
+> > XDR items (xattr names) should never exceed PAGE_SIZE..
+> 
+> You'll have to worry about XDR data items crossing page boundaries.
+> Our XDR code uses a scratch buffer for that, so it can be handled
+> transparently.
+
+Yep, and this is what listxattr does. I was confusing the get/set and list
+cases, sorry about the confusion.
+
+Let me just quickly convert getxattr.
+
+- Frank
