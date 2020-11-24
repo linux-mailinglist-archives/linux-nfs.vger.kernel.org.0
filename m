@@ -2,37 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F2EC2C28AE
+	by mail.lfdr.de (Postfix) with ESMTP id 7C2402C28AF
 	for <lists+linux-nfs@lfdr.de>; Tue, 24 Nov 2020 14:51:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388588AbgKXNu3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Nov 2020 08:50:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44674 "EHLO mail.kernel.org"
+        id S2388589AbgKXNua (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Nov 2020 08:50:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388573AbgKXNu3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 24 Nov 2020 08:50:29 -0500
+        id S2388575AbgKXNua (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 24 Nov 2020 08:50:30 -0500
 Received: from leira.hammer.space (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9025B20872
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Nov 2020 13:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A52920888
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Nov 2020 13:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606225828;
-        bh=pVN1NYJXByzgbl+Gege54jjNGn2XTbEaz6hjagDwx50=;
+        s=default; t=1606225829;
+        bh=vVr7Ctb2zm7C6qsRF0nmjqqjxOoMzfEA86nB2IOr9+4=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=TUGjkQq8Eoetyy2StYVO67MBveK36AOU/HXQXp0Cab2E0/TPbI/J4G0e+VjU8rFcJ
-         cdvC8WhjGrxn6gKEke0NT4cK8sNRqgwa06DLxLgAvZAR8t0EUOfQFaw9dRxNV4WNpb
-         vBEUApp48+krg01FIHl4oigR604ZbnjVyl/JSFTg=
+        b=m3rDKXO3E9NcyWiQgZgsRaEiBMnYweeysBKoNLUXz2DADTVyE9NbGUDwYHgsFvUan
+         1YHUoaPbDRXxHEpZpo4qypJY0XMXJ4pY2QGQ21FpNfg137heKLgUtaItsYsjhUAQwz
+         7tIP62XTW67zI5bv63COgFy2G+En1XRWCqxmeIaQ=
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 3/9] SUNRPC: Clean up helpers xdr_set_iov() and xdr_set_page_base()
-Date:   Tue, 24 Nov 2020 08:50:19 -0500
-Message-Id: <20201124135025.1097571-4-trondmy@kernel.org>
+Subject: [PATCH v2 4/9] SUNRPC: Fix up xdr_read_pages() to take arbitrary object lengths
+Date:   Tue, 24 Nov 2020 08:50:20 -0500
+Message-Id: <20201124135025.1097571-5-trondmy@kernel.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201124135025.1097571-3-trondmy@kernel.org>
+In-Reply-To: <20201124135025.1097571-4-trondmy@kernel.org>
 References: <20201124135025.1097571-1-trondmy@kernel.org>
  <20201124135025.1097571-2-trondmy@kernel.org>
  <20201124135025.1097571-3-trondmy@kernel.org>
+ <20201124135025.1097571-4-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -41,102 +42,81 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Allow xdr_set_iov() to set a base so that we can use it to set the
-cursor to a specific position in the kvec buffer.
-
-If the new base overflows the kvec/pages buffer in either xdr_set_iov()
-or xdr_set_page_base(), then truncate it so that we point to the end of
-the buffer.
-
-Finally, change both function to return the number of bytes remaining to
-read in their buffers.
+Fix up xdr_read_pages() so that it can handle object lengths that are
+larger than the page length, by simply aligning to the next object in
+the buffer tail.
+The function will continue to return the length of the truncate object
+data that actually fit into the pages.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- net/sunrpc/xdr.c | 36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
+ net/sunrpc/xdr.c | 41 +++++++++++++++--------------------------
+ 1 file changed, 15 insertions(+), 26 deletions(-)
 
 diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-index bc7a622016ee..394297ec1cb9 100644
+index 394297ec1cb9..3ce0a5daa9eb 100644
 --- a/net/sunrpc/xdr.c
 +++ b/net/sunrpc/xdr.c
-@@ -970,19 +970,22 @@ void xdr_write_pages(struct xdr_stream *xdr, struct page **pages, unsigned int b
+@@ -1219,44 +1219,33 @@ static unsigned int xdr_align_pages(struct xdr_stream *xdr, unsigned int len)
  }
- EXPORT_SYMBOL_GPL(xdr_write_pages);
  
--static void xdr_set_iov(struct xdr_stream *xdr, struct kvec *iov,
--		unsigned int len)
-+static unsigned int xdr_set_iov(struct xdr_stream *xdr, struct kvec *iov,
-+				unsigned int base, unsigned int len)
+ /**
+- * xdr_read_pages - Ensure page-based XDR data to decode is aligned at current pointer position
++ * xdr_read_pages - align page-based XDR data to current pointer position
+  * @xdr: pointer to xdr_stream struct
+  * @len: number of bytes of page data
+  *
+  * Moves data beyond the current pointer position from the XDR head[] buffer
+- * into the page list. Any data that lies beyond current position + "len"
+- * bytes is moved into the XDR tail[].
++ * into the page list. Any data that lies beyond current position + @len
++ * bytes is moved into the XDR tail[]. The xdr_stream current position is
++ * then advanced past that data to align to the next XDR object in the tail.
+  *
+  * Returns the number of XDR encoded bytes now contained in the pages
+  */
+ unsigned int xdr_read_pages(struct xdr_stream *xdr, unsigned int len)
  {
- 	if (len > iov->iov_len)
- 		len = iov->iov_len;
--	xdr->p = (__be32*)iov->iov_base;
-+	if (unlikely(base > len))
-+		base = len;
-+	xdr->p = (__be32*)(iov->iov_base + base);
- 	xdr->end = (__be32*)(iov->iov_base + len);
- 	xdr->iov = iov;
- 	xdr->page_ptr = NULL;
-+	return len - base;
+-	struct xdr_buf *buf = xdr->buf;
+-	struct kvec *iov;
+-	unsigned int nwords;
+-	unsigned int end;
+-	unsigned int padding;
++	unsigned int nwords = XDR_QUADLEN(len);
++	unsigned int base, end, pglen;
+ 
+-	len = xdr_align_pages(xdr, len);
+-	if (len == 0)
++	pglen = xdr_align_pages(xdr, nwords << 2);
++	if (pglen == 0)
+ 		return 0;
+-	nwords = XDR_QUADLEN(len);
+-	padding = (nwords << 2) - len;
+-	xdr->iov = iov = buf->tail;
+-	/* Compute remaining message length.  */
+-	end = ((xdr->nwords - nwords) << 2) + padding;
+-	if (end > iov->iov_len)
+-		end = iov->iov_len;
+ 
+-	/*
+-	 * Position current pointer at beginning of tail, and
+-	 * set remaining message length.
+-	 */
+-	xdr->p = (__be32 *)((char *)iov->iov_base + padding);
+-	xdr->end = (__be32 *)((char *)iov->iov_base + end);
+-	xdr->page_ptr = NULL;
+-	xdr->nwords = XDR_QUADLEN(end - padding);
+-	return len;
++	xdr->nwords -= nwords;
++	base = (nwords << 2) - pglen;
++	end = xdr_stream_remaining(xdr) - pglen;
++
++	if (xdr_set_iov(xdr, xdr->buf->tail, base, end) == 0)
++		xdr->nwords = 0;
++	return len <= pglen ? len : pglen;
  }
+ EXPORT_SYMBOL_GPL(xdr_read_pages);
  
--static int xdr_set_page_base(struct xdr_stream *xdr,
--		unsigned int base, unsigned int len)
-+static unsigned int xdr_set_page_base(struct xdr_stream *xdr,
-+				      unsigned int base, unsigned int len)
- {
- 	unsigned int pgnr;
- 	unsigned int maxlen;
-@@ -991,9 +994,11 @@ static int xdr_set_page_base(struct xdr_stream *xdr,
- 	void *kaddr;
- 
- 	maxlen = xdr->buf->page_len;
--	if (base >= maxlen)
--		return -EINVAL;
--	maxlen -= base;
-+	if (base >= maxlen) {
-+		base = maxlen;
-+		maxlen = 0;
-+	} else
-+		maxlen -= base;
- 	if (len > maxlen)
- 		len = maxlen;
- 
-@@ -1011,14 +1016,14 @@ static int xdr_set_page_base(struct xdr_stream *xdr,
- 		pgend = PAGE_SIZE;
- 	xdr->end = (__be32*)(kaddr + pgend);
- 	xdr->iov = NULL;
--	return 0;
-+	return len;
- }
- 
- static void xdr_set_page(struct xdr_stream *xdr, unsigned int base,
- 			 unsigned int len)
- {
--	if (xdr_set_page_base(xdr, base, len) < 0)
--		xdr_set_iov(xdr, xdr->buf->tail, xdr->nwords << 2);
-+	if (xdr_set_page_base(xdr, base, len) == 0)
-+		xdr_set_iov(xdr, xdr->buf->tail, 0, xdr_stream_remaining(xdr));
- }
- 
- static void xdr_set_next_page(struct xdr_stream *xdr)
-@@ -1055,12 +1060,9 @@ void xdr_init_decode(struct xdr_stream *xdr, struct xdr_buf *buf, __be32 *p,
- 	xdr->scratch.iov_base = NULL;
- 	xdr->scratch.iov_len = 0;
- 	xdr->nwords = XDR_QUADLEN(buf->len);
--	if (buf->head[0].iov_len != 0)
--		xdr_set_iov(xdr, buf->head, buf->len);
--	else if (buf->page_len != 0)
--		xdr_set_page_base(xdr, 0, buf->len);
--	else
--		xdr_set_iov(xdr, buf->tail, buf->len);
-+	if (xdr_set_iov(xdr, buf->head, 0, buf->len) == 0 &&
-+	    xdr_set_page_base(xdr, 0, buf->len) == 0)
-+		xdr_set_iov(xdr, buf->tail, 0, buf->len);
- 	if (p != NULL && p > xdr->p && xdr->end >= p) {
- 		xdr->nwords -= p - xdr->p;
- 		xdr->p = p;
 -- 
 2.28.0
 
