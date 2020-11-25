@@ -2,105 +2,165 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 631042C45ED
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Nov 2020 17:51:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A68E2C4654
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Nov 2020 18:05:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732236AbgKYQvE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Nov 2020 11:51:04 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:44631 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731088AbgKYQvD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Nov 2020 11:51:03 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1khy0T-0005D7-RI; Wed, 25 Nov 2020 16:51:01 +0000
-Subject: Re: nfsd: skip some unnecessary stats in the v4 case
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <de7dc4f1-cbf2-6bcd-1466-d67b418dcc5f@canonical.com>
- <20201125164738.GA7049@fieldses.org>
-From:   Colin Ian King <colin.king@canonical.com>
-Message-ID: <5a0b9908-9942-ddca-63f6-a87bb9867855@canonical.com>
-Date:   Wed, 25 Nov 2020 16:51:01 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+        id S1732385AbgKYREc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Nov 2020 12:04:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731273AbgKYRE1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Nov 2020 12:04:27 -0500
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 425FFC061A4F;
+        Wed, 25 Nov 2020 09:04:27 -0800 (PST)
+Received: by mail-yb1-xb41.google.com with SMTP id t33so377302ybd.0;
+        Wed, 25 Nov 2020 09:04:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U7yONu+GErpj3wVA3mUEvd1gZrZu1iMtuB4J5cc4iYs=;
+        b=bn+pL/HmrYW2tlvsO08UsmlB+e0sDsIo/gBe6lZBPy5Ml0r7IepVRmwL3Z1msCDTmB
+         4Fj8yYJnSSwKpycrMD6jc9mJYcLEOxyjBt+mj/swgeJwfcTqBWFSYbINT99XJh8MBLLG
+         BhdJX4URpdAlU1PS41QCV8cX0uycEbKi5uankHMmLYXfRheyb1dBSnJ2lYbkM9jPzYRg
+         +YL1Fiv4xli6A/G5oR00+c/fqffNKJdLOgNLmafCTxGe8sUqpvTjraMjrzXLQkd2Vyg7
+         6NJIAQ3gm8Ro9XvzXTxxo6aHXEqSB5bdv5UB5bHkEX37ZUG4NR8CwSl4aaovOFcf7q/J
+         MTKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U7yONu+GErpj3wVA3mUEvd1gZrZu1iMtuB4J5cc4iYs=;
+        b=Qpmh2GhI2WFs2qzp7Yn0fsgZaW8qKZK7HSbi+NCT0Jsrn+O5TTnjfpO9+adg1ygVEg
+         He2LQK3eRrPr4xLBwGPGrkPHhKCZ6HNIFcBvOjEKxDQ993YxbqYTay1DZxWZjjkBSFtp
+         M0hx760u7VARoHEO5ak8GSqWZwst+zM/sXvn6sP7otDrBGFamZd7Uz7ks+exNWem11Bz
+         TJSh2xoh5NFtzMA6eC7gJcnDdrPFmcPP0fZxsrUGVnTidS1mOEmaHSUvIO3cuqBKc9Xy
+         7ZuVaVdr95Q26yooscZkYKo0LK7NYIKVwJvh5HlNeqPgtTp5RkDNNpfGJhliNkKNrQ8k
+         0r7Q==
+X-Gm-Message-State: AOAM533+U9pipnNe4G+sfWPHuOqXn+o+A4RGhehQmfihcqsqUhS5WoXN
+        z5/CDlpRDEKMyKWOtPsW01afemh/jiL5NVUaOAk=
+X-Google-Smtp-Source: ABdhPJwRDTWwRnnt/vVfXeVU3lUNCXdaAf9CCrzUJdkBRbFdtXrCpJBbeymEiGhAam+E5oqqQjDTbAdkVQMGwErIDPw=
+X-Received: by 2002:a25:aac5:: with SMTP id t63mr6307293ybi.22.1606323866493;
+ Wed, 25 Nov 2020 09:04:26 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20201125164738.GA7049@fieldses.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
+ <ca071decb87cc7e905411423c05a48f9fd2f58d7.camel@perches.com>
+ <0147972a72bc13f3629de8a32dee6f1f308994b5.camel@HansenPartnership.com>
+ <d8d1e9add08cdd4158405e77762d4946037208f8.camel@perches.com>
+ <dbd2cb703ed9eefa7dde9281ea26ab0f7acc8afe.camel@HansenPartnership.com>
+ <20201123130348.GA3119@embeddedor> <8f5611bb015e044fa1c0a48147293923c2d904e4.camel@HansenPartnership.com>
+ <202011241327.BB28F12F6@keescook> <a841536fe65bb33f1c72ce2455a6eb47a0107565.camel@HansenPartnership.com>
+ <CAKwvOdkGBn7nuWTAqrORMeN1G+w3YwBfCqqaRD2nwvoAXKi=Aw@mail.gmail.com> <20201125082405.1d8c23dc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20201125082405.1d8c23dc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Wed, 25 Nov 2020 18:04:15 +0100
+Message-ID: <CANiq72=RuekXf1O6Fxrz2Eend0GtS6=E72P4T2=48SDqVcTChA@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH 000/141] Fix fall-through warnings for Clang
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Joe Perches <joe@perches.com>, alsa-devel@alsa-project.org,
+        linux-atm-general@lists.sourceforge.net,
+        reiserfs-devel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-fbdev@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-ide@vger.kernel.org, dm-devel@redhat.com,
+        keyrings@vger.kernel.org, linux-mtd@lists.infradead.org,
+        GR-everest-linux-l2@marvell.com, wcn36xx@lists.infradead.org,
+        samba-technical@lists.samba.org, linux-i3c@lists.infradead.org,
+        linux1394-devel@lists.sourceforge.net,
+        linux-afs@lists.infradead.org,
+        usb-storage@lists.one-eyed-alien.net, drbd-dev@lists.linbit.com,
+        devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-scsi@vger.kernel.org,
+        linux-rdma@vger.kernel.org, oss-drivers@netronome.com,
+        bridge@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        linux-stm32@st-md-mailman.stormreply.com, cluster-devel@redhat.com,
+        linux-acpi@vger.kernel.org, coreteam@netfilter.org,
+        intel-wired-lan@lists.osuosl.org,
+        linux-input <linux-input@vger.kernel.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        tipc-discussion@lists.sourceforge.net,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org, selinux@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        intel-gfx@lists.freedesktop.org, linux-geode@lists.infradead.org,
+        linux-can@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-gpio@vger.kernel.org, op-tee@lists.trustedfirmware.org,
+        linux-mediatek@lists.infradead.org, xen-devel@lists.xenproject.org,
+        nouveau@lists.freedesktop.org, linux-hams@vger.kernel.org,
+        ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-hwmon@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-nfs@vger.kernel.org, GR-Linux-NIC-Dev@marvell.com,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-decnet-user@lists.sourceforge.net, linux-mmc@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-sctp@vger.kernel.org, linux-usb@vger.kernel.org,
+        netfilter-devel@vger.kernel.org,
+        =?UTF-8?Q?open_list=3AHARDWARE_RANDOM_NUMBER_GENERATOR_CORE_=3Clinux=2Dcrypt?=
+         =?UTF-8?Q?o=40vger=2Ekernel=2Eorg=3E=2C_patches=40opensource=2Ecirrus=2Ecom=2C_linux=2Dint?=
+         =?UTF-8?Q?egrity=40vger=2Ekernel=2Eorg=2C_target=2Ddevel=40vger=2Ekernel=2Eorg=2C_linux=2D?=
+         =?UTF-8?Q?hardening=40vger=2Ekernel=2Eorg=2C_Jonathan_Cameron_=3CJonathan=2ECamero?=
+         =?UTF-8?Q?n=40huawei=2Ecom=3E=2C_Greg_KH?= 
+        <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 25/11/2020 16:47, J. Bruce Fields wrote:
-> On Wed, Nov 25, 2020 at 02:50:51PM +0000, Colin Ian King wrote:
->> Static analysis on today's linux-next has found an issue with the
->> following commit:
-> 
-> Thanks!  I'll probably do something like this.
+On Wed, Nov 25, 2020 at 5:24 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>
+> And just to spell it out,
+>
+> case ENUM_VALUE1:
+>         bla();
+>         break;
+> case ENUM_VALUE2:
+>         bla();
+> default:
+>         break;
+>
+> is a fairly idiomatic way of indicating that not all values of the enum
+> are expected to be handled by the switch statement.
 
-Looks good to me, even if it is a little more convoluted. Thanks.
+It looks like a benign typo to me -- `ENUM_VALUE2` does not follow the
+same pattern like `ENUM_VALUE1`. To me, the presence of the `default`
+is what indicates (explicitly) that not everything is handled.
 
-> 
-> Though this still all seems slightly more complicated than necessary.
-> 
-> --b.
-> 
-> diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-> index 8502a493be6d..7eb761801169 100644
-> --- a/fs/nfsd/nfs3xdr.c
-> +++ b/fs/nfsd/nfs3xdr.c
-> @@ -260,13 +260,12 @@ void fill_pre_wcc(struct svc_fh *fhp)
->  	struct inode    *inode;
->  	struct kstat	stat;
->  	bool v4 = (fhp->fh_maxsize == NFS4_FHSIZE);
-> -	__be32 err;
->  
->  	if (fhp->fh_pre_saved)
->  		return;
->  	inode = d_inode(fhp->fh_dentry);
->  	if (!v4 || !inode->i_sb->s_export_op->fetch_iversion) {
-> -		err = fh_getattr(fhp, &stat);
-> +		__be32 err = fh_getattr(fhp, &stat);
->  		if (err) {
->  			/* Grab the times from inode anyway */
->  			stat.mtime = inode->i_mtime;
-> @@ -290,23 +289,23 @@ void fill_post_wcc(struct svc_fh *fhp)
->  {
->  	bool v4 = (fhp->fh_maxsize == NFS4_FHSIZE);
->  	struct inode *inode = d_inode(fhp->fh_dentry);
-> -	__be32 err;
->  
->  	if (fhp->fh_post_saved)
->  		printk("nfsd: inode locked twice during operation.\n");
->  
-> +	fhp->fh_post_saved = true;
->  
-> -	if (!v4 || !inode->i_sb->s_export_op->fetch_iversion)
-> -		err = fh_getattr(fhp, &fhp->fh_post_attr);
-> +	if (!v4 || !inode->i_sb->s_export_op->fetch_iversion) {
-> +		__be32 err = fh_getattr(fhp, &fhp->fh_post_attr);
-> +		if (err) {
-> +			fhp->fh_post_saved = false;
-> +			/* set_change_info might still need this: */
-> +			fhp->fh_post_attr.ctime = inode->i_ctime;
-> +		}
-> +	}
->  	if (v4)
->  		fhp->fh_post_change =
->  			nfsd4_change_attribute(&fhp->fh_post_attr, inode);
-> -	if (err) {
-> -		fhp->fh_post_saved = false;
-> -		/* Grab the ctime anyway - set_change_info might use it */
-> -		fhp->fh_post_attr.ctime = inode->i_ctime;
-> -	} else
-> -		fhp->fh_post_saved = true;
->  }
->  
->  /*
-> 
+> Applying a real patch set and then getting a few follow ups the next day
+> for trivial coding things like fallthrough missing or static missing,
+> just because I didn't have the full range of compilers to check with
+> before applying makes me feel pretty shitty, like I'm not doing a good
+> job. YMMV.
 
+The number of compilers, checkers, static analyzers, tests, etc. we
+use keeps going up. That, indeed, means maintainers will miss more
+things (unless maintainers do more work than before). But catching
+bugs before they happen is *not* a bad thing.
+
+Perhaps we could encourage more rebasing in -next (while still giving
+credit to bots and testers) to avoid having many fixing commits
+afterwards, but that is orthogonal.
+
+I really don't think we should encourage the feeling that a maintainer
+is doing a bad job if they don't catch everything on their reviews.
+Any review is worth it. Maintainers, in the end, are just the
+"guaranteed" reviewers that decide when the code looks reasonable
+enough. They should definitely not feel pressured to be perfect.
+
+Cheers,
+Miguel
