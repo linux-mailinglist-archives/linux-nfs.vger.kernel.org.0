@@ -2,123 +2,118 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 605EA2C35B0
+	by mail.lfdr.de (Postfix) with ESMTP id D160F2C35B1
 	for <lists+linux-nfs@lfdr.de>; Wed, 25 Nov 2020 01:39:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbgKYAg1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Nov 2020 19:36:27 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:53952 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbgKYAg1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 19:36:27 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AP0TPXY099526;
-        Wed, 25 Nov 2020 00:36:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=PaWkClt1ldyWBCZCPBqERXQQEYT7hXtunXF81hcBg50=;
- b=nsmrWFgV1WKhGgPnnvxyMXPAThYzY7AtUwKRwaogKc69JclUzC6oNYWnXYBUpZrbgJKc
- XIICzmLUUrDmmsz3qpEecWlvDrY3+Aq2hR7I4x/smISEyZ0f3vtP+x6/6A3kmlkBSsdh
- IvORudYkwXE1i/O/62mPakB8RO+URpHsXTFes9lTvVJvZf0ckweB1G34ThJbXKoQmf51
- yOnowdmgAkUPYZf+tSbozWMpSRGXAisAocbvd6yKXxgVK1DlemUm8PdWqcTIDJccsFPL
- uv0pVXfWHRAJ979UcA258z+G4ky1Io7EUdWCrZir5n5EkuiZJUeMr1dhg3JFcvtMHSf+ ng== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 34xtum5h2x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 25 Nov 2020 00:36:23 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AP0Tsoi035405;
-        Wed, 25 Nov 2020 00:36:23 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 34ycnt6x28-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Nov 2020 00:36:23 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AP0aMrs031955;
-        Wed, 25 Nov 2020 00:36:22 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 24 Nov 2020 16:36:21 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: NFSD merge candidate for v5.11
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <0cbeed0a0fa2352961966efdd7e62247b5cd7a7b.camel@redhat.com>
-Date:   Tue, 24 Nov 2020 19:36:21 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5A43C026-0746-4F62-8298-2501EF1EF692@oracle.com>
-References: <48FA73BE-2D86-4A3F-91D5-C1086E228938@oracle.com>
- <0cbeed0a0fa2352961966efdd7e62247b5cd7a7b.camel@redhat.com>
-To:     Jeff Layton <jlayton@redhat.com>, Bruce Fields <bfields@redhat.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9815 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- mlxlogscore=999 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011250001
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9815 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 mlxlogscore=999 impostorscore=0 spamscore=0 mlxscore=0
- phishscore=0 clxscore=1015 suspectscore=0 bulkscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011250001
+        id S1727768AbgKYAgp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Nov 2020 19:36:45 -0500
+Received: from mail-mw2nam10on2102.outbound.protection.outlook.com ([40.107.94.102]:41057
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727084AbgKYAgo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 24 Nov 2020 19:36:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aRj6vW/RLer1H9bpvmrveVjFiz+EHSP/IbMdQfkrPuALSc8YAhfkR2zd3nZifK8Ze0UFwzsyLK7wb+5Jg+4JghLofPP4ebTiLNyLHV4cgPT1/INDuua9DuGrvxDooqEqcE2dR7EUGwZD+KIUvKbELl7NjXGwPyoJT0yOxVzG6n/y2xq7aQCT4IuPXnAPJJ5U9IXx8WRBndZGmw0zlQAqOhXT+xpl4c+gTs/drkch1wSjGDCr5HFEpW/w5EboocYtCWgxbeGpVurJKs6epRSkWh9HYR+FFUx9XRxW7IHECze9lO+LS+ZkVro1MLDtzMGF+LjFAWdpbo5NALXsuaaRqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dbqUC2gXEe5LM/kU1IKVXG+uNwekNVY70X1SHH4UZ2k=;
+ b=FY0Axa0INFdAVbEA1mYKxFv+36eDvg9oVx2biTOuoF/ypFkC112Ux45gt2ktfovz+SqB34uDpciuJE7ejz891R+nnnztpdNBum56O9Vx3KqlpaOw1cZ9SjU6QLGOqn2Cgd7Tz8bOQnKsffusMpkm0n8a2G3JX5Uqyz6VDl8O3TEm55fMJLDbZouPkwUQ++sfzS9vhLR12iKpDlEXOe7HQqQd410BSxS3M7zq1PJomAGKgTftFEo6/ldhU+d5BbO/dJDFA/2HQQ70DwYMG0G/5CicwrDPv2II82mdt3sSmqmq2fqMcVZiPFtlKy1JejZLe0oEfQYem0P/KRi/Zbvlkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dbqUC2gXEe5LM/kU1IKVXG+uNwekNVY70X1SHH4UZ2k=;
+ b=S5WPgVZgkLtrEPAxQ8KpwKzTGjPIflhp2Z9UqDUcftAf0zFGpCLtoWih6r57JurFGLT3ffSo4ZzhqrC9TDCT/0nqzK+fDBTbb1LLzn9c+KG7Sff2gF8hgOCpTvC4amySSrY/3NNMmcTtPNnazXt5KqTEezCwT45lTBBUQkEhiAU=
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
+ by BL0PR13MB4419.namprd13.prod.outlook.com (2603:10b6:208:1c9::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3611.13; Wed, 25 Nov
+ 2020 00:36:42 +0000
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3611.020; Wed, 25 Nov 2020
+ 00:36:42 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "bfields@fieldses.org" <bfields@fieldses.org>
+CC:     "schumakeranna@gmail.com" <schumakeranna@gmail.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v2 0/9] Fix various issues in the SUNRPC xdr code
+Thread-Topic: [PATCH v2 0/9] Fix various issues in the SUNRPC xdr code
+Thread-Index: AQHWwmjfwELMdH++00y7mVYsFk0+kqnXdH0AgAABfYCAAEVeAIAAReoA
+Date:   Wed, 25 Nov 2020 00:36:42 +0000
+Message-ID: <245cbfff1a71061299d82afd216b355477919e59.camel@hammerspace.com>
+References: <20201124135025.1097571-1-trondmy@kernel.org>
+         <20201124161250.GA1091@fieldses.org> <20201124161809.GB1091@fieldses.org>
+         <20201124202626.GA7173@fieldses.org>
+In-Reply-To: <20201124202626.GA7173@fieldses.org>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: fieldses.org; dkim=none (message not signed)
+ header.d=none;fieldses.org; dmarc=none action=none
+ header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d0562eeb-876b-4784-1c49-08d890da2e14
+x-ms-traffictypediagnostic: BL0PR13MB4419:
+x-microsoft-antispam-prvs: <BL0PR13MB441964E9EAFEA18E54626A83B8FA0@BL0PR13MB4419.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: W1wzPtW3UkfMLo6Et4K3b0SiI21ZJJ0YbU8D7dLHdBqkduXxWzyzmluWhqb7S8zuIJ02aVitiRADFnvofh501jtzaPg4mHgPKU4duhEUNaPcm73B+YWaweWtOcf4cuhLs0p5I+m6YxGlEYcwxNX14sfO6su9dO3NpI5CF+LlTh8scMMQePUapyjM911LMocoMN9gptiw9EFJQf7wCXxlmPWWNZlqjP2ZUJQo+bnz2ZdjpDTBbtGIgdcNrG0gaPnHRYRtvJ/zi3+Z2BtMZBb1IPF/QUFIv4etbIhcSTWvWQDfc67X+c33eCg0xFWnuoP/K8RVSQ8isRslRg7ixOSJxw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(39840400004)(136003)(346002)(396003)(376002)(366004)(5660300002)(2906002)(66476007)(6916009)(76116006)(91956017)(2616005)(478600001)(6486002)(66946007)(4001150100001)(66446008)(64756008)(66556008)(6506007)(8676002)(83380400001)(6512007)(86362001)(316002)(26005)(36756003)(186003)(71200400001)(4326008)(54906003)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: v3Wri5rgUACX1kE7KGPdPiYdx3PWFM7tIA5dqwv9LScdhR5p+G1lPT/Sf7/LjPT4xOk5i6UWhuRomkgO0Wa6APeSclLpg2rFgYUqPPMjFu/Gm+Ic/9dN7J2ovc0oVMj1fyw9Ke5LsUp8Wu4b5XCZTQRvCk8iSw4H+qW605fZ2DpkfPN5XA+WimN2uozV7xh2BWClYKIK8P/838lC8acKfzMmChclYRf2VmDNggQWTsx09FS9v5tjL19uVzt35KBZZqN7O4WEvKRMqABBjTmB3FxNxVVrap2PoPFFzNAiGW1GZimkZ0GK7j1LGs9tn5GUIyuwGxqDACymzGGy1KnkA55uWZVOJisJcIskar404FC5Zd14w24Cnq8ARnkoTGfOWeCMbb4w8YRBbQNdq/xBZRqnUowWPfClgUrJlvGCqSUgwDBbUEWguJJk3/u8lwcLYjKRn+8f3xJdjlCxLGX6bj36J7LyfZ6KCQb1CfI9bpQP6q/RZM7gIUQyK14haFHDM2mfS+GDAxVBUDymADeMnHBWSw9nQZa7nXiJOHu5N6DXHmuAf+hsCvAh8tE8K3xa9smfUrsHgSmnVZuCA0yEXTfiBNBJtm8Q6r6LXzMXgbQ5Nh+1Pt/Z0aKsTNxEn7Xz3MN0/4rgW+b0DJSWamaP/V6QNm/ZcVvkWDxinq5LqzkiojTrguFPOmunsxbyMOz3gCyZ/rEmMR3JkiHRZOX9H6TINxXCweHxqONr8/2jI6zFwsWKgSHtt+WHKGeUXCahJG3wrIjgsM3D9Pk3KFHvKx2BetQ7G8FSAZi3gTFSy/vZ6uSIlmMzQfs3tOsTczUHfGPt3qm4s7K7eIRgSFWA3A7C4zhpSB81SNN7UaskKpwPm5AtAMZZLesC7RUcxHqoq51Umayn4uuQ/2NnqDp42Q==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <29FC4C74382C9E4EB38DBCF09E29314F@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0562eeb-876b-4784-1c49-08d890da2e14
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2020 00:36:42.1632
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: f+B2FcngUu6dFxWk1Yw3v9ZiZlhRTn+C4o1R+ElOoYcxPV6HThap55cnyjT1QDTesjoF7NkHuCH3JgYD8r84zQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR13MB4419
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On Nov 24, 2020, at 6:14 PM, Jeff Layton <jlayton@redhat.com> wrote:
->=20
-> On Tue, 2020-11-24 at 17:51 -0500, Chuck Lever wrote:
->> Hi-
->>=20
->> I've added my NFSv4 XDR decoder series and Bruce's iversion
->> series to my "for next" topic branch to get some early
->> testing exposure for these changes.
->>=20
->> Bruce's series is based on 8/8 posted on November 20, with
->> Jeff's review comments integrated. The NFSD XDR decoder
->> patches are based on v4, posted yesterday afternoon with
->> Bruce's review comments integrated.
->>=20
->> The full branch is available here:
->>=20
->>   git://git.linux-nfs.org/projects/cel/cel-2.6.git cel-next
->>=20
->> or
->>=20
->>   =
-http://git.linux-nfs.org/?p=3Dcel/cel-2.6.git;a=3Dshortlog;h=3Drefs/heads/=
-cel-next
->>=20
->> ...and is still open for changes or additional patches. This
->> branch is pulled into linux-next regularly.
->=20
-> Minor nit in:
->=20
->    =
-http://git.linux-nfs.org/?p=3Dcel/cel-2.6.git;a=3Dcommit;h=3D2513716015eba=
-398378bf453d5d2dd46c63a3399
->=20
-> You added a generic_check_iversion prototype to fs.h.
->=20
-> Move that into iversion.h. I think it makes more sense there, and that
-> avoids the huge rebuild that occurs when fs.h changes.
-
-Declarations for most other generic_* functions are in fs.h.
-But OK, moved, and the series pushed.
-
-So I think the btrfs/ext4/xfs-specific changes might need
-sign-off by those maintainers. Should I post this series
-to linux-fsdevel? Or, Bruce, do you want to?
-
-
---
-Chuck Lever
-
-
-
+T24gVHVlLCAyMDIwLTExLTI0IGF0IDE1OjI2IC0wNTAwLCBKLiBCcnVjZSBGaWVsZHMgd3JvdGU6
+DQo+IE9uIFR1ZSwgTm92IDI0LCAyMDIwIGF0IDExOjE4OjA5QU0gLTA1MDAsIEouIEJydWNlIEZp
+ZWxkcyB3cm90ZToNCj4gPiBPbiBUdWUsIE5vdiAyNCwgMjAyMCBhdCAxMToxMjo1MEFNIC0wNTAw
+LCBiZmllbGRzIHdyb3RlOg0KPiA+ID4gT24gVHVlLCBOb3YgMjQsIDIwMjAgYXQgMDg6NTA6MTZB
+TSAtMDUwMCwNCj4gPiA+IHRyb25kbXlAa2VybmVsLm9yZ8Kgd3JvdGU6DQo+ID4gPiA+IEZyb206
+IFRyb25kIE15a2xlYnVzdCA8dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbT4NCj4gPiA+
+ID4gDQo+ID4gPiA+IFdoZW4gbG9va2luZyBhdCB0aGUgaXNzdWVzIHJhaXNlZCBieSBUaWdyYW4n
+cyB0ZXN0aW5nIG9mIHRoZQ0KPiA+ID4gPiBORlMgY2xpZW50DQo+ID4gPiA+IHVwZGF0ZXMsIEkg
+bm90aWNlZCBhIGNvdXBsZSBvZiB0aGluZ3MgaW4gdGhlIGdlbmVyaWMgU1VOUlBDIHhkcg0KPiA+
+ID4gPiBjb2RlDQo+ID4gPiA+IHRoYXQgd2FudCB0byBiZSBmaXhlZC4gVGhpcyBwYXRjaCBzZXJp
+ZXMgcmVwbGFjZXMgYW4gZWFybGllcg0KPiA+ID4gPiBzZXJpZXMgdGhhdA0KPiA+ID4gPiBhdHRl
+bXB0ZWQgdG8ganVzdCBmaXggdGhlIFhEUiBwYWRkaW5nIGluIHRoZSBORlMgY29kZS4NCj4gPiA+
+ID4gDQo+ID4gPiA+IFRoaXMgc2VyaWVzIGZpeGVzIHVwIGEgbnVtYmVyIG9mIGlzc3VlcyB3LnIu
+dC4gYm91bmRzIGNoZWNraW5nDQo+ID4gPiA+IGluIHRoZQ0KPiA+ID4gPiB4ZHJfc3RyZWFtIGNv
+ZGUuIEl0IGNvcnJlY3RzIHRoZSBiZWhhdmlvdXIgb2YgeGRyX3JlYWRfcGFnZXMoKQ0KPiA+ID4g
+PiBmb3IgdGhlDQo+ID4gPiA+IGNhc2Ugd2hlcmUgdGhlIFhEUiBvYmplY3Qgc2l6ZSBpcyBsYXJn
+ZXIgdGhhbiB0aGUgYnVmZmVyIHBhZ2UNCj4gPiA+ID4gYXJyYXkNCj4gPiA+ID4gbGVuZ3RoIGFu
+ZCBzaW1wbGlmaWVzIHRoZSBjb2RlLg0KPiA+ID4gDQo+ID4gPiBJJ20gc2VlaW5nIHRoaXMgb24g
+dGhlIGNsaWVudCB3aXRoIHJlY2VudCB1cHN0cmVhbSArIHRoZXNlDQo+ID4gPiBwYXRjaGVzLg0K
+PiA+IA0KPiA+IFVuZm9ydHVuYXRlbHkgdGhhdCB3YXMgaW4gdGhlIG1pZGRsZSBvZiBhIHNlcmll
+cyBvZiB0ZXN0cywgYW5kIEknbQ0KPiA+IG5vdA0KPiA+IHN1cmUgZXhhY3RseSB3aGF0IHRyaWdn
+ZXJlZCBpdC0tSSdtIGd1ZXNzaW5nIGN0aG9uIHNwZWNpYWwgb3Zlcg0KPiA+IGtyYjVpLg0KPiA+
+IEknbGwgbGV0IHlvdSBrbm93IHdoYXQgZWxzZSBJIGNhbiBmaWd1cmUgb3V0Lg0KPiANCj4gWWVh
+aCwgcmVwcm9kdWNlYWJsZSBieSBydW5uaW5nIGN0aG9uIC1zIG92ZXIga3JiNWksIGFuZCBpdCBm
+aXJzdA0KPiBzaG93cw0KPiB1cCB3aXRoIHRoZSBsYXN0IHBhdGNoLCAiTkZTdjQuMjogRml4IHVw
+IHJlYWRfcGx1cygpIHBhZ2UgYWxpZ25tZW50Ii4NCg0KT0ssIHRoYW5rcyEgSSdsbCBqdXN0IGRy
+b3AgdGhhdCBvbmUgdGhlbi4gSSBkb24ndCB0aGluayBpdCByZWFsbHkNCnN1ZmZpY2VzIHRvIGZp
+eCBSRUFEX1BMVVMgYXMgaXQgc3RhbmRzLg0KDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51
+eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFt
+bWVyc3BhY2UuY29tDQoNCg0K
