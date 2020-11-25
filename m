@@ -2,165 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A68E2C4654
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Nov 2020 18:05:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 092102C4685
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Nov 2020 18:16:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732385AbgKYREc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Nov 2020 12:04:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731273AbgKYRE1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Nov 2020 12:04:27 -0500
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 425FFC061A4F;
-        Wed, 25 Nov 2020 09:04:27 -0800 (PST)
-Received: by mail-yb1-xb41.google.com with SMTP id t33so377302ybd.0;
-        Wed, 25 Nov 2020 09:04:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U7yONu+GErpj3wVA3mUEvd1gZrZu1iMtuB4J5cc4iYs=;
-        b=bn+pL/HmrYW2tlvsO08UsmlB+e0sDsIo/gBe6lZBPy5Ml0r7IepVRmwL3Z1msCDTmB
-         4Fj8yYJnSSwKpycrMD6jc9mJYcLEOxyjBt+mj/swgeJwfcTqBWFSYbINT99XJh8MBLLG
-         BhdJX4URpdAlU1PS41QCV8cX0uycEbKi5uankHMmLYXfRheyb1dBSnJ2lYbkM9jPzYRg
-         +YL1Fiv4xli6A/G5oR00+c/fqffNKJdLOgNLmafCTxGe8sUqpvTjraMjrzXLQkd2Vyg7
-         6NJIAQ3gm8Ro9XvzXTxxo6aHXEqSB5bdv5UB5bHkEX37ZUG4NR8CwSl4aaovOFcf7q/J
-         MTKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U7yONu+GErpj3wVA3mUEvd1gZrZu1iMtuB4J5cc4iYs=;
-        b=Qpmh2GhI2WFs2qzp7Yn0fsgZaW8qKZK7HSbi+NCT0Jsrn+O5TTnjfpO9+adg1ygVEg
-         He2LQK3eRrPr4xLBwGPGrkPHhKCZ6HNIFcBvOjEKxDQ993YxbqYTay1DZxWZjjkBSFtp
-         M0hx760u7VARoHEO5ak8GSqWZwst+zM/sXvn6sP7otDrBGFamZd7Uz7ks+exNWem11Bz
-         TJSh2xoh5NFtzMA6eC7gJcnDdrPFmcPP0fZxsrUGVnTidS1mOEmaHSUvIO3cuqBKc9Xy
-         7ZuVaVdr95Q26yooscZkYKo0LK7NYIKVwJvh5HlNeqPgtTp5RkDNNpfGJhliNkKNrQ8k
-         0r7Q==
-X-Gm-Message-State: AOAM533+U9pipnNe4G+sfWPHuOqXn+o+A4RGhehQmfihcqsqUhS5WoXN
-        z5/CDlpRDEKMyKWOtPsW01afemh/jiL5NVUaOAk=
-X-Google-Smtp-Source: ABdhPJwRDTWwRnnt/vVfXeVU3lUNCXdaAf9CCrzUJdkBRbFdtXrCpJBbeymEiGhAam+E5oqqQjDTbAdkVQMGwErIDPw=
-X-Received: by 2002:a25:aac5:: with SMTP id t63mr6307293ybi.22.1606323866493;
- Wed, 25 Nov 2020 09:04:26 -0800 (PST)
+        id S1730445AbgKYROy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Nov 2020 12:14:54 -0500
+Received: from natter.dneg.com ([193.203.89.68]:40520 "EHLO natter.dneg.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730196AbgKYROx (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 25 Nov 2020 12:14:53 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by natter.dneg.com (Postfix) with ESMTP id 1F49A39616D;
+        Wed, 25 Nov 2020 17:14:52 +0000 (GMT)
+X-Virus-Scanned: amavisd-new at mx-dneg
+Received: from natter.dneg.com ([127.0.0.1])
+        by localhost (natter.dneg.com [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id KOu2BXi-Eo2H; Wed, 25 Nov 2020 17:14:52 +0000 (GMT)
+Received: from zrozimbrai.dneg.com (zrozimbrai.dneg.com [10.11.20.12])
+        by natter.dneg.com (Postfix) with ESMTPS id F3F8A39616B;
+        Wed, 25 Nov 2020 17:14:51 +0000 (GMT)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id E0D688237816;
+        Wed, 25 Nov 2020 17:14:51 +0000 (GMT)
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id kWBnEEtUyp-l; Wed, 25 Nov 2020 17:14:51 +0000 (GMT)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id C1074826D259;
+        Wed, 25 Nov 2020 17:14:51 +0000 (GMT)
+X-Virus-Scanned: amavisd-new at zimbra-dneg
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id J1MMs1WOxq3A; Wed, 25 Nov 2020 17:14:51 +0000 (GMT)
+Received: from zrozimbra1.dneg.com (zrozimbra1.dneg.com [10.11.16.16])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id A144C8237816;
+        Wed, 25 Nov 2020 17:14:51 +0000 (GMT)
+Date:   Wed, 25 Nov 2020 17:14:51 +0000 (GMT)
+From:   Daire Byrne <daire@dneg.com>
+To:     bfields <bfields@fieldses.org>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        linux-cachefs <linux-cachefs@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <932244432.93596532.1606324491501.JavaMail.zimbra@dneg.com>
+In-Reply-To: <20201124211522.GC7173@fieldses.org>
+References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com> <1188023047.38703514.1600272094778.JavaMail.zimbra@dneg.com> <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com> <635679406.70384074.1603272832846.JavaMail.zimbra@dneg.com> <20201109160256.GB11144@fieldses.org> <1744768451.86186596.1605186084252.JavaMail.zimbra@dneg.com> <1055884313.92996091.1606250106656.JavaMail.zimbra@dneg.com> <20201124211522.GC7173@fieldses.org>
+Subject: Re: Adventures in NFS re-exporting
 MIME-Version: 1.0
-References: <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
- <ca071decb87cc7e905411423c05a48f9fd2f58d7.camel@perches.com>
- <0147972a72bc13f3629de8a32dee6f1f308994b5.camel@HansenPartnership.com>
- <d8d1e9add08cdd4158405e77762d4946037208f8.camel@perches.com>
- <dbd2cb703ed9eefa7dde9281ea26ab0f7acc8afe.camel@HansenPartnership.com>
- <20201123130348.GA3119@embeddedor> <8f5611bb015e044fa1c0a48147293923c2d904e4.camel@HansenPartnership.com>
- <202011241327.BB28F12F6@keescook> <a841536fe65bb33f1c72ce2455a6eb47a0107565.camel@HansenPartnership.com>
- <CAKwvOdkGBn7nuWTAqrORMeN1G+w3YwBfCqqaRD2nwvoAXKi=Aw@mail.gmail.com> <20201125082405.1d8c23dc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20201125082405.1d8c23dc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 25 Nov 2020 18:04:15 +0100
-Message-ID: <CANiq72=RuekXf1O6Fxrz2Eend0GtS6=E72P4T2=48SDqVcTChA@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] [PATCH 000/141] Fix fall-through warnings for Clang
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Joe Perches <joe@perches.com>, alsa-devel@alsa-project.org,
-        linux-atm-general@lists.sourceforge.net,
-        reiserfs-devel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-fbdev@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-ide@vger.kernel.org, dm-devel@redhat.com,
-        keyrings@vger.kernel.org, linux-mtd@lists.infradead.org,
-        GR-everest-linux-l2@marvell.com, wcn36xx@lists.infradead.org,
-        samba-technical@lists.samba.org, linux-i3c@lists.infradead.org,
-        linux1394-devel@lists.sourceforge.net,
-        linux-afs@lists.infradead.org,
-        usb-storage@lists.one-eyed-alien.net, drbd-dev@lists.linbit.com,
-        devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-scsi@vger.kernel.org,
-        linux-rdma@vger.kernel.org, oss-drivers@netronome.com,
-        bridge@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        linux-stm32@st-md-mailman.stormreply.com, cluster-devel@redhat.com,
-        linux-acpi@vger.kernel.org, coreteam@netfilter.org,
-        intel-wired-lan@lists.osuosl.org,
-        linux-input <linux-input@vger.kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        tipc-discussion@lists.sourceforge.net,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org, selinux@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        intel-gfx@lists.freedesktop.org, linux-geode@lists.infradead.org,
-        linux-can@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-gpio@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-        linux-mediatek@lists.infradead.org, xen-devel@lists.xenproject.org,
-        nouveau@lists.freedesktop.org, linux-hams@vger.kernel.org,
-        ceph-devel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-nfs@vger.kernel.org, GR-Linux-NIC-Dev@marvell.com,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-decnet-user@lists.sourceforge.net, linux-mmc@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-sctp@vger.kernel.org, linux-usb@vger.kernel.org,
-        netfilter-devel@vger.kernel.org,
-        =?UTF-8?Q?open_list=3AHARDWARE_RANDOM_NUMBER_GENERATOR_CORE_=3Clinux=2Dcrypt?=
-         =?UTF-8?Q?o=40vger=2Ekernel=2Eorg=3E=2C_patches=40opensource=2Ecirrus=2Ecom=2C_linux=2Dint?=
-         =?UTF-8?Q?egrity=40vger=2Ekernel=2Eorg=2C_target=2Ddevel=40vger=2Ekernel=2Eorg=2C_linux=2D?=
-         =?UTF-8?Q?hardening=40vger=2Ekernel=2Eorg=2C_Jonathan_Cameron_=3CJonathan=2ECamero?=
-         =?UTF-8?Q?n=40huawei=2Ecom=3E=2C_Greg_KH?= 
-        <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.7.11_GA_1854 (ZimbraWebClient - GC78 (Linux)/8.7.11_GA_1854)
+Thread-Topic: Adventures in NFS re-exporting
+Thread-Index: jRr/eG2N4Ts+gxyP7atxT3VAnkSniQ==
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Nov 25, 2020 at 5:24 PM Jakub Kicinski <kuba@kernel.org> wrote:
->
-> And just to spell it out,
->
-> case ENUM_VALUE1:
->         bla();
->         break;
-> case ENUM_VALUE2:
->         bla();
-> default:
->         break;
->
-> is a fairly idiomatic way of indicating that not all values of the enum
-> are expected to be handled by the switch statement.
 
-It looks like a benign typo to me -- `ENUM_VALUE2` does not follow the
-same pattern like `ENUM_VALUE1`. To me, the presence of the `default`
-is what indicates (explicitly) that not everything is handled.
+----- On 24 Nov, 2020, at 21:15, bfields bfields@fieldses.org wrote:
+> On Tue, Nov 24, 2020 at 08:35:06PM +0000, Daire Byrne wrote:
+>> Sometimes I have seen clusters of 16 GETATTRs for the same file on the
+>> wire with nothing else inbetween. So if the re-export server is the
+>> only "client" writing these files to the originating server, why do we
+>> need to do so many repeat GETATTR calls when using nconnect>1? And why
+>> are the COMMIT calls required when the writes are coming via nfsd but
+>> not from userspace on the re-export server? Is that due to some sort
+>> of memory pressure or locking?
+>> 
+>> I picked the NFSv3 originating server case because my head starts to
+>> hurt tracking the equivalent packets, stateids and compound calls with
+>> NFSv4. But I think it's mostly the same for NFSv4. The writes through
+>> the re-export server lead to lots of COMMITs and (double) GETATTRs but
+>> using nconnect>1 at least doesn't seem to make it any worse like it
+>> does for NFSv3.
+>> 
+>> But maybe you actually want all the extra COMMITs to help better
+>> guarantee your writes when putting a re-export server in the way?
+>> Perhaps all of this is by design...
+> 
+> Maybe that's close-to-open combined with the server's tendency to
+> open/close on every IO operation?  (Though the file cache should have
+> helped with that, I thought; as would using version >=4.0 on the final
+> client.)
+> 
+> Might be interesting to know whether the nocto mount option makes a
+> difference.  (So, add "nocto" to the mount options for the NFS mount
+> that you're re-exporting on the re-export server.)
 
-> Applying a real patch set and then getting a few follow ups the next day
-> for trivial coding things like fallthrough missing or static missing,
-> just because I didn't have the full range of compilers to check with
-> before applying makes me feel pretty shitty, like I'm not doing a good
-> job. YMMV.
+The nocto didn't really seem to help but the NFSv4.2 re-export of a NFSv3 server did. I also realised I had done some tests with nconnect on the re-export server's client and consequently mixed things up a bit in my head. So I did some more tests and tried to make the results clear and simple. In all cases I'm just writing a big file with "dd" and capturing the traffic between the originating server and re-export server.
 
-The number of compilers, checkers, static analyzers, tests, etc. we
-use keeps going up. That, indeed, means maintainers will miss more
-things (unless maintainers do more work than before). But catching
-bugs before they happen is *not* a bad thing.
+First off, writing direct to the originating server mount on the re-export server from userspace shows the ideal behaviour for all combinations:
 
-Perhaps we could encourage more rebasing in -next (while still giving
-credit to bots and testers) to avoid having many fixing commits
-afterwards, but that is orthogonal.
+ originating server <- (vers=X,actimeo=1800,nconnect=X) <- reexport server writing = WRITE,WRITE .... repeating (good!)
 
-I really don't think we should encourage the feeling that a maintainer
-is doing a bad job if they don't catch everything on their reviews.
-Any review is worth it. Maintainers, in the end, are just the
-"guaranteed" reviewers that decide when the code looks reasonable
-enough. They should definitely not feel pressured to be perfect.
+Then re-exporting a NFSv4.2 server:
 
-Cheers,
-Miguel
+ originating server <- (vers=4.2) <- reexport server - (vers=3) <- client writing = GETATTR,COMMIT,WRITE .... repeating
+ originating server <- (vers=4.2) <- reexport server - (vers=4.2) <- client writing = GETATTR,WRITE .... repeating
+
+And re-exporting a NFSv3 server:
+
+ originating server <- (vers=3) <- reexport server - (vers=4.2) <- client writing = WRITE,WRITE .... repeating (good!)
+ originating server <- (vers=3) <- reexport server - (vers=3) <- client writing = WRITE,COMMIT .... repeating
+  
+So of all the combinations, a NFSv4.2 re-export of an NFSv3 server is the only one that matches the "ideal" case where we WRITE continuously without all the extra chatter.
+
+And for completeness, taking that "good" case and making it bad with nconnect:
+
+ originating server <- (vers=3,nconnect=16) <- reexport server - (vers=4.2) <- client writing = WRITE,WRITE .... repeating (good!)
+ originating server <- (vers=3) <- reexport server <- (vers=4.2,nconnect=16) <- client writing = WRITE,COMMIT,GETATTR .... randomly repeating
+
+So using nconnect on the re-export's client causes lots more metadata ops. There are reasons for doing that for increasing throughput but it could be that the gain is offset by the extra metadata roundtrips. 
+
+Similarly, we have mostly been using a NFSv4.2 re-export of a NFSV4.2 server over the WAN because of reduced metadata ops for reading, but it looks like we incur extra metadata ops for writing.
+
+Side note: it's hard to decode nconnect enabled packet captures because wireshark doesn't seem to like those extra port streams.
+
+> By the way I made a start at a list of issues at
+> 
+>	http://wiki.linux-nfs.org/wiki/index.php/NFS_re-export
+> 
+> but I was a little vague on which of your issues remained and didn't
+> take much time over it.
+
+Cool. I'm glad there are some notes for others to reference - this thread is now too long for any human to read. The only things I'd consider adding are:
+
+* re-export of NFSv4.0 filesystem can give input/output errors when the cache is dropped
+* a weird interaction with nfs client readahead such that all reads are limited to the default 128k unless you manually increase it to match rsize.
+
+The only other thing I can offer are tips & tricks for doing this kind of thing over the WAN (vfs_cache_pressure, actimeo, nocto) and using fscache.
+
+Daire
