@@ -2,118 +2,157 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D160F2C35B1
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Nov 2020 01:39:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AE112C3609
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Nov 2020 02:07:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgKYAgp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Nov 2020 19:36:45 -0500
-Received: from mail-mw2nam10on2102.outbound.protection.outlook.com ([40.107.94.102]:41057
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727084AbgKYAgo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 24 Nov 2020 19:36:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aRj6vW/RLer1H9bpvmrveVjFiz+EHSP/IbMdQfkrPuALSc8YAhfkR2zd3nZifK8Ze0UFwzsyLK7wb+5Jg+4JghLofPP4ebTiLNyLHV4cgPT1/INDuua9DuGrvxDooqEqcE2dR7EUGwZD+KIUvKbELl7NjXGwPyoJT0yOxVzG6n/y2xq7aQCT4IuPXnAPJJ5U9IXx8WRBndZGmw0zlQAqOhXT+xpl4c+gTs/drkch1wSjGDCr5HFEpW/w5EboocYtCWgxbeGpVurJKs6epRSkWh9HYR+FFUx9XRxW7IHECze9lO+LS+ZkVro1MLDtzMGF+LjFAWdpbo5NALXsuaaRqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dbqUC2gXEe5LM/kU1IKVXG+uNwekNVY70X1SHH4UZ2k=;
- b=FY0Axa0INFdAVbEA1mYKxFv+36eDvg9oVx2biTOuoF/ypFkC112Ux45gt2ktfovz+SqB34uDpciuJE7ejz891R+nnnztpdNBum56O9Vx3KqlpaOw1cZ9SjU6QLGOqn2Cgd7Tz8bOQnKsffusMpkm0n8a2G3JX5Uqyz6VDl8O3TEm55fMJLDbZouPkwUQ++sfzS9vhLR12iKpDlEXOe7HQqQd410BSxS3M7zq1PJomAGKgTftFEo6/ldhU+d5BbO/dJDFA/2HQQ70DwYMG0G/5CicwrDPv2II82mdt3sSmqmq2fqMcVZiPFtlKy1JejZLe0oEfQYem0P/KRi/Zbvlkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dbqUC2gXEe5LM/kU1IKVXG+uNwekNVY70X1SHH4UZ2k=;
- b=S5WPgVZgkLtrEPAxQ8KpwKzTGjPIflhp2Z9UqDUcftAf0zFGpCLtoWih6r57JurFGLT3ffSo4ZzhqrC9TDCT/0nqzK+fDBTbb1LLzn9c+KG7Sff2gF8hgOCpTvC4amySSrY/3NNMmcTtPNnazXt5KqTEezCwT45lTBBUQkEhiAU=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by BL0PR13MB4419.namprd13.prod.outlook.com (2603:10b6:208:1c9::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3611.13; Wed, 25 Nov
- 2020 00:36:42 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3611.020; Wed, 25 Nov 2020
- 00:36:42 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bfields@fieldses.org" <bfields@fieldses.org>
-CC:     "schumakeranna@gmail.com" <schumakeranna@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2 0/9] Fix various issues in the SUNRPC xdr code
-Thread-Topic: [PATCH v2 0/9] Fix various issues in the SUNRPC xdr code
-Thread-Index: AQHWwmjfwELMdH++00y7mVYsFk0+kqnXdH0AgAABfYCAAEVeAIAAReoA
-Date:   Wed, 25 Nov 2020 00:36:42 +0000
-Message-ID: <245cbfff1a71061299d82afd216b355477919e59.camel@hammerspace.com>
-References: <20201124135025.1097571-1-trondmy@kernel.org>
-         <20201124161250.GA1091@fieldses.org> <20201124161809.GB1091@fieldses.org>
-         <20201124202626.GA7173@fieldses.org>
-In-Reply-To: <20201124202626.GA7173@fieldses.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: fieldses.org; dkim=none (message not signed)
- header.d=none;fieldses.org; dmarc=none action=none
- header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d0562eeb-876b-4784-1c49-08d890da2e14
-x-ms-traffictypediagnostic: BL0PR13MB4419:
-x-microsoft-antispam-prvs: <BL0PR13MB441964E9EAFEA18E54626A83B8FA0@BL0PR13MB4419.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: W1wzPtW3UkfMLo6Et4K3b0SiI21ZJJ0YbU8D7dLHdBqkduXxWzyzmluWhqb7S8zuIJ02aVitiRADFnvofh501jtzaPg4mHgPKU4duhEUNaPcm73B+YWaweWtOcf4cuhLs0p5I+m6YxGlEYcwxNX14sfO6su9dO3NpI5CF+LlTh8scMMQePUapyjM911LMocoMN9gptiw9EFJQf7wCXxlmPWWNZlqjP2ZUJQo+bnz2ZdjpDTBbtGIgdcNrG0gaPnHRYRtvJ/zi3+Z2BtMZBb1IPF/QUFIv4etbIhcSTWvWQDfc67X+c33eCg0xFWnuoP/K8RVSQ8isRslRg7ixOSJxw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(39840400004)(136003)(346002)(396003)(376002)(366004)(5660300002)(2906002)(66476007)(6916009)(76116006)(91956017)(2616005)(478600001)(6486002)(66946007)(4001150100001)(66446008)(64756008)(66556008)(6506007)(8676002)(83380400001)(6512007)(86362001)(316002)(26005)(36756003)(186003)(71200400001)(4326008)(54906003)(8936002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: v3Wri5rgUACX1kE7KGPdPiYdx3PWFM7tIA5dqwv9LScdhR5p+G1lPT/Sf7/LjPT4xOk5i6UWhuRomkgO0Wa6APeSclLpg2rFgYUqPPMjFu/Gm+Ic/9dN7J2ovc0oVMj1fyw9Ke5LsUp8Wu4b5XCZTQRvCk8iSw4H+qW605fZ2DpkfPN5XA+WimN2uozV7xh2BWClYKIK8P/838lC8acKfzMmChclYRf2VmDNggQWTsx09FS9v5tjL19uVzt35KBZZqN7O4WEvKRMqABBjTmB3FxNxVVrap2PoPFFzNAiGW1GZimkZ0GK7j1LGs9tn5GUIyuwGxqDACymzGGy1KnkA55uWZVOJisJcIskar404FC5Zd14w24Cnq8ARnkoTGfOWeCMbb4w8YRBbQNdq/xBZRqnUowWPfClgUrJlvGCqSUgwDBbUEWguJJk3/u8lwcLYjKRn+8f3xJdjlCxLGX6bj36J7LyfZ6KCQb1CfI9bpQP6q/RZM7gIUQyK14haFHDM2mfS+GDAxVBUDymADeMnHBWSw9nQZa7nXiJOHu5N6DXHmuAf+hsCvAh8tE8K3xa9smfUrsHgSmnVZuCA0yEXTfiBNBJtm8Q6r6LXzMXgbQ5Nh+1Pt/Z0aKsTNxEn7Xz3MN0/4rgW+b0DJSWamaP/V6QNm/ZcVvkWDxinq5LqzkiojTrguFPOmunsxbyMOz3gCyZ/rEmMR3JkiHRZOX9H6TINxXCweHxqONr8/2jI6zFwsWKgSHtt+WHKGeUXCahJG3wrIjgsM3D9Pk3KFHvKx2BetQ7G8FSAZi3gTFSy/vZ6uSIlmMzQfs3tOsTczUHfGPt3qm4s7K7eIRgSFWA3A7C4zhpSB81SNN7UaskKpwPm5AtAMZZLesC7RUcxHqoq51Umayn4uuQ/2NnqDp42Q==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <29FC4C74382C9E4EB38DBCF09E29314F@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1728054AbgKYBGH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Nov 2020 20:06:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbgKYBGB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 20:06:01 -0500
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 402E8C0613D6;
+        Tue, 24 Nov 2020 17:06:01 -0800 (PST)
+Received: by mail-qk1-x742.google.com with SMTP id q5so1433321qkc.12;
+        Tue, 24 Nov 2020 17:06:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=44pFzPZOXy9WMyxuVZ4PJwmHwfPvC91GWhNSdpkVBXk=;
+        b=PLHqMkuVQ6uE1aGa3jPkk7oL0rd2+0aQGjbXwXCM1BqpOEf5R6gUmrb1tTrj75nDjD
+         aG6VHTDP2JdODJ/e29C1vfEMjWhTPlycM3mNfL2JW5BhFtstP0di/Kwb3XYGnsRoKRp5
+         7FVJzAE2cPEDrpLIYX3jwoIfPno8H9ArdOwpkc9HelZA+M7Eq52S4RmPBHauFrK9tfW3
+         8wrBLWN/Mq7Fl9GTodmgwwudDuqrVUSiSILvkeQCl7qFs3/IjbI7/AG3m5iLRdEEw+2H
+         RzsA5+EdKfz0DIt5iJKomdRqiV67cH8ZcnWPF2PnARf/ANxCrT7QZJCkY0VU2DrQ9d/L
+         oW2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=44pFzPZOXy9WMyxuVZ4PJwmHwfPvC91GWhNSdpkVBXk=;
+        b=SP1p0mv6tcasA0zjctwklRPuqCucLzpbUEoeQuQCE403Vw1wJTOPenb/wB6UzHrH8V
+         CEbDrvJHOMLkjUXMv7x5f9d9EHCKeZkhnj/wqmh3M1e50j4BhlGw6c7I8JJPA0109e/d
+         vfnCZxaNcIXUjMdU/MMen6CpRA8fenGalTBDz4LguBNbZkiHJCemof4ebdpdoAek8wac
+         lj1DqcsebfpC1b5u7uV2IfcXIhm9qvUbNNRSTDX6SkbjRAZMWj9TDrYZWq+GNROX+xdb
+         vNBFoaqkps142vfQF8ENhHQJbj3IMSLO+BWQamS8FMFTWRfk1aG5nJzC5oXJ/NYESCd0
+         LWOg==
+X-Gm-Message-State: AOAM53315a5CQglNJi6muaFhDfWMEm+HjvKkK02zci4+0RKe4Cgw0n+l
+        lUmVUCbrWBL7dwzg9uJUS+Yz0m6xY+JSD8teb/Q=
+X-Google-Smtp-Source: ABdhPJxG2tW9FM1fAqThCcvqKAPI/OeE1R4V2//A8ePZuSketjr0yKUxoxj6t2hcKlYt9sKRSewQcSyhG/w+5cGdzqU=
+X-Received: by 2002:a25:aac5:: with SMTP id t63mr1046305ybi.22.1606266360499;
+ Tue, 24 Nov 2020 17:06:00 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0562eeb-876b-4784-1c49-08d890da2e14
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2020 00:36:42.1632
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: f+B2FcngUu6dFxWk1Yw3v9ZiZlhRTn+C4o1R+ElOoYcxPV6HThap55cnyjT1QDTesjoF7NkHuCH3JgYD8r84zQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR13MB4419
+References: <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
+ <ca071decb87cc7e905411423c05a48f9fd2f58d7.camel@perches.com>
+ <0147972a72bc13f3629de8a32dee6f1f308994b5.camel@HansenPartnership.com>
+ <d8d1e9add08cdd4158405e77762d4946037208f8.camel@perches.com>
+ <dbd2cb703ed9eefa7dde9281ea26ab0f7acc8afe.camel@HansenPartnership.com>
+ <20201123130348.GA3119@embeddedor> <8f5611bb015e044fa1c0a48147293923c2d904e4.camel@HansenPartnership.com>
+ <202011241327.BB28F12F6@keescook> <alpine.LNX.2.23.453.2011250859290.15@nippy.intranet>
+ <CANiq72nUt57u5DG9rH=DB0DzQH7U6-QbG-2Ou+PyCY=p=_Ggag@mail.gmail.com> <alpine.LNX.2.23.453.2011251022550.14@nippy.intranet>
+In-Reply-To: <alpine.LNX.2.23.453.2011251022550.14@nippy.intranet>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Wed, 25 Nov 2020 02:05:49 +0100
+Message-ID: <CANiq72m2kGxSy2E9jgYE4_xRV6h9rFqiJP25KXs_5ObYnH_nmA@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH 000/141] Fix fall-through warnings for Clang
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     Kees Cook <keescook@chromium.org>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Joe Perches <joe@perches.com>,
+        Jakub Kicinski <kuba@kernel.org>, alsa-devel@alsa-project.org,
+        linux-atm-general@lists.sourceforge.net,
+        reiserfs-devel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-ide@vger.kernel.org, dm-devel@redhat.com,
+        keyrings@vger.kernel.org, linux-mtd@lists.infradead.org,
+        GR-everest-linux-l2@marvell.com, wcn36xx@lists.infradead.org,
+        samba-technical@lists.samba.org, linux-i3c@lists.infradead.org,
+        linux1394-devel@lists.sourceforge.net,
+        linux-afs@lists.infradead.org,
+        usb-storage@lists.one-eyed-alien.net, drbd-dev@lists.linbit.com,
+        devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org,
+        rds-devel@oss.oracle.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-scsi@vger.kernel.org, linux-rdma@vger.kernel.org,
+        oss-drivers@netronome.com, bridge@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org,
+        linux-stm32@st-md-mailman.stormreply.com, cluster-devel@redhat.com,
+        linux-acpi@vger.kernel.org, coreteam@netfilter.org,
+        intel-wired-lan@lists.osuosl.org,
+        linux-input <linux-input@vger.kernel.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        tipc-discussion@lists.sourceforge.net,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org, selinux@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-geode@lists.infradead.org, linux-can@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-gpio@vger.kernel.org,
+        op-tee@lists.trustedfirmware.org,
+        linux-mediatek@lists.infradead.org, xen-devel@lists.xenproject.org,
+        nouveau@lists.freedesktop.org, linux-hams@vger.kernel.org,
+        ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-hwmon@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-nfs@vger.kernel.org, GR-Linux-NIC-Dev@marvell.com,
+        Linux-MM <linux-mm@kvack.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-decnet-user@lists.sourceforge.net, linux-mmc@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-usb@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        patches@opensource.cirrus.com, linux-integrity@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTExLTI0IGF0IDE1OjI2IC0wNTAwLCBKLiBCcnVjZSBGaWVsZHMgd3JvdGU6
-DQo+IE9uIFR1ZSwgTm92IDI0LCAyMDIwIGF0IDExOjE4OjA5QU0gLTA1MDAsIEouIEJydWNlIEZp
-ZWxkcyB3cm90ZToNCj4gPiBPbiBUdWUsIE5vdiAyNCwgMjAyMCBhdCAxMToxMjo1MEFNIC0wNTAw
-LCBiZmllbGRzIHdyb3RlOg0KPiA+ID4gT24gVHVlLCBOb3YgMjQsIDIwMjAgYXQgMDg6NTA6MTZB
-TSAtMDUwMCwNCj4gPiA+IHRyb25kbXlAa2VybmVsLm9yZ8Kgd3JvdGU6DQo+ID4gPiA+IEZyb206
-IFRyb25kIE15a2xlYnVzdCA8dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbT4NCj4gPiA+
-ID4gDQo+ID4gPiA+IFdoZW4gbG9va2luZyBhdCB0aGUgaXNzdWVzIHJhaXNlZCBieSBUaWdyYW4n
-cyB0ZXN0aW5nIG9mIHRoZQ0KPiA+ID4gPiBORlMgY2xpZW50DQo+ID4gPiA+IHVwZGF0ZXMsIEkg
-bm90aWNlZCBhIGNvdXBsZSBvZiB0aGluZ3MgaW4gdGhlIGdlbmVyaWMgU1VOUlBDIHhkcg0KPiA+
-ID4gPiBjb2RlDQo+ID4gPiA+IHRoYXQgd2FudCB0byBiZSBmaXhlZC4gVGhpcyBwYXRjaCBzZXJp
-ZXMgcmVwbGFjZXMgYW4gZWFybGllcg0KPiA+ID4gPiBzZXJpZXMgdGhhdA0KPiA+ID4gPiBhdHRl
-bXB0ZWQgdG8ganVzdCBmaXggdGhlIFhEUiBwYWRkaW5nIGluIHRoZSBORlMgY29kZS4NCj4gPiA+
-ID4gDQo+ID4gPiA+IFRoaXMgc2VyaWVzIGZpeGVzIHVwIGEgbnVtYmVyIG9mIGlzc3VlcyB3LnIu
-dC4gYm91bmRzIGNoZWNraW5nDQo+ID4gPiA+IGluIHRoZQ0KPiA+ID4gPiB4ZHJfc3RyZWFtIGNv
-ZGUuIEl0IGNvcnJlY3RzIHRoZSBiZWhhdmlvdXIgb2YgeGRyX3JlYWRfcGFnZXMoKQ0KPiA+ID4g
-PiBmb3IgdGhlDQo+ID4gPiA+IGNhc2Ugd2hlcmUgdGhlIFhEUiBvYmplY3Qgc2l6ZSBpcyBsYXJn
-ZXIgdGhhbiB0aGUgYnVmZmVyIHBhZ2UNCj4gPiA+ID4gYXJyYXkNCj4gPiA+ID4gbGVuZ3RoIGFu
-ZCBzaW1wbGlmaWVzIHRoZSBjb2RlLg0KPiA+ID4gDQo+ID4gPiBJJ20gc2VlaW5nIHRoaXMgb24g
-dGhlIGNsaWVudCB3aXRoIHJlY2VudCB1cHN0cmVhbSArIHRoZXNlDQo+ID4gPiBwYXRjaGVzLg0K
-PiA+IA0KPiA+IFVuZm9ydHVuYXRlbHkgdGhhdCB3YXMgaW4gdGhlIG1pZGRsZSBvZiBhIHNlcmll
-cyBvZiB0ZXN0cywgYW5kIEknbQ0KPiA+IG5vdA0KPiA+IHN1cmUgZXhhY3RseSB3aGF0IHRyaWdn
-ZXJlZCBpdC0tSSdtIGd1ZXNzaW5nIGN0aG9uIHNwZWNpYWwgb3Zlcg0KPiA+IGtyYjVpLg0KPiA+
-IEknbGwgbGV0IHlvdSBrbm93IHdoYXQgZWxzZSBJIGNhbiBmaWd1cmUgb3V0Lg0KPiANCj4gWWVh
-aCwgcmVwcm9kdWNlYWJsZSBieSBydW5uaW5nIGN0aG9uIC1zIG92ZXIga3JiNWksIGFuZCBpdCBm
-aXJzdA0KPiBzaG93cw0KPiB1cCB3aXRoIHRoZSBsYXN0IHBhdGNoLCAiTkZTdjQuMjogRml4IHVw
-IHJlYWRfcGx1cygpIHBhZ2UgYWxpZ25tZW50Ii4NCg0KT0ssIHRoYW5rcyEgSSdsbCBqdXN0IGRy
-b3AgdGhhdCBvbmUgdGhlbi4gSSBkb24ndCB0aGluayBpdCByZWFsbHkNCnN1ZmZpY2VzIHRvIGZp
-eCBSRUFEX1BMVVMgYXMgaXQgc3RhbmRzLg0KDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51
-eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFt
-bWVyc3BhY2UuY29tDQoNCg0K
+On Wed, Nov 25, 2020 at 12:53 AM Finn Thain <fthain@telegraphics.com.au> wrote:
+>
+> I'm saying that supporting the official language spec makes more sense
+> than attempting to support a multitude of divergent interpretations of the
+> spec (i.e. gcc, clang, coverity etc.)
+
+Making the kernel strictly conforming is a ship that sailed long ago,
+for several reasons. Anyway, supporting several compilers and other
+tools, regardless of extensions, is valuable.
+
+> I'm also saying that the reason why we use -std=gnu89 is that existing
+> code was written in that language, not in ad hoc languages comprised of
+> collections of extensions that change with every release.
+
+No, we aren't particularly tied to `gnu89` or anything like that. We
+could actually go for `gnu11` already, since the minimum GCC and Clang
+support it. Even if a bit of code needs fixing, that shouldn't be a
+problem if someone puts the work.
+
+In other words, the kernel code is not frozen, nor are the features it
+uses from compilers. They do, in fact, change from time to time.
+
+> Thank you for checking. I found a free version that's only 6 weeks old:
+
+You're welcome! There are quite a few new attributes coming, mostly
+following C++ ones.
+
+> It will be interesting to see whether 6.7.11.5 changes once the various
+> implementations reach agreement.
+
+Not sure what you mean. The standard does not evolve through
+implementations' agreement (although standardizing existing practice
+is one of the best arguments to back a change).
+
+Cheers,
+Miguel
