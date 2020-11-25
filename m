@@ -2,179 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFCF72C3596
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Nov 2020 01:33:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 605EA2C35B0
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Nov 2020 01:39:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbgKYAcc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Nov 2020 19:32:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgKYAca (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 19:32:30 -0500
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDA17C0613D6;
-        Tue, 24 Nov 2020 16:32:29 -0800 (PST)
-Received: by mail-qk1-x742.google.com with SMTP id x25so81283qkj.3;
-        Tue, 24 Nov 2020 16:32:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QqqubA90NyDjnD5SH+OxnZbso0TzlLiuZ5gzRUm0zsY=;
-        b=DYdo15DH5n4eMCA51W2vXZfybVLPbTpwO6CR+j1CET94cx9FmUQEkAzz4OadVdmrht
-         /5QscdfYh1sAKLvu6dkrheNjvEoR4Mdvvl3diWkBzFiGJNP9BCqxLhr4zTkKEaaVMxi5
-         qUA6kNkUTJzI9KEPxIujLpbBVVOhJKSQSAf+FeTM6jY84RGcXl9jGks4AfD2ojo1GxQQ
-         uEwHm9wuAxdOf70IRL+AXs8sujZOQd+kSEI1eU2QAsFia5W6QaIddZOITngYX9DSKM5R
-         mNvBJUTqyzODtQONxErP8O8dRkCcVm25oDOfEuyrse782pSy0gFJjFFgzHOgMIi8mZem
-         jSGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QqqubA90NyDjnD5SH+OxnZbso0TzlLiuZ5gzRUm0zsY=;
-        b=snqjE+pgbH+a6/A7jPlUdXy2whhW302EjrjCMPv8wi67+5UYB1mcpxLsEMa2AwWdgE
-         Z3ogb3mnS6cm39pBmugB8Yyu3qPz760xuqoEdTA1d8tmPLlwAVAV87k5lE6QwmJQRd9e
-         bUxQIDg/Aaoiuj5RrObJi3RhJzwmp+x9jUs2l/R/QX5GALJ5ha3cBth6BWrqbsnY+SlQ
-         9oM5wRkqwL45XieMtADalKIGCusgMlLWbdZl9/yyhUjSbsPmZba8gE28h7YJsD1zRePl
-         9PJZy42UDve6Tl95p/M8loj5o0/C+9jo+P8wdQPCB7Hs234mYNhFWxcaapjdhHr5aCdM
-         iBSQ==
-X-Gm-Message-State: AOAM532bS9JGxvfssjcio/Twt5CRLZKuxDtn69ZFpXhjuvaRA8Ki9on5
-        /J2Dw0UU4S5F0wRU7qA4z43bOMQibjftG4sZpvQ=
-X-Google-Smtp-Source: ABdhPJwwVKQFQuxzNO/2Mi/lJ3RUII3vPq9FIwhq+sZ6y3vyBbFPDKm/uCaEGwo9LU3j1fjBVCpYTO563lD14rGXSok=
-X-Received: by 2002:a25:5f0f:: with SMTP id t15mr779915ybb.26.1606264348932;
- Tue, 24 Nov 2020 16:32:28 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1605896059.git.gustavoars@kernel.org> <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
- <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com>
- <1c7d7fde126bc0acf825766de64bf2f9b888f216.camel@HansenPartnership.com>
- <CANiq72m22Jb5_+62NnwX8xds2iUdWDMAqD8PZw9cuxdHd95W0A@mail.gmail.com>
- <fc45750b6d0277c401015b7aa11e16cd15f32ab2.camel@HansenPartnership.com>
- <CANiq72k5tpDoDPmJ0ZWc1DGqm+81Gi-uEENAtvEs9v3SZcx6_Q@mail.gmail.com> <4993259d01a0064f8bb22770503490f9252f3659.camel@HansenPartnership.com>
-In-Reply-To: <4993259d01a0064f8bb22770503490f9252f3659.camel@HansenPartnership.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 25 Nov 2020 01:32:17 +0100
-Message-ID: <CANiq72kqO=bYMJnFS2uYRpgWATJ=uXxZuNUsTXT+3aLtrpnzvQ@mail.gmail.com>
-Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        alsa-devel@alsa-project.org, amd-gfx@lists.freedesktop.org,
-        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
-        cluster-devel@redhat.com, coreteam@netfilter.org,
-        devel@driverdev.osuosl.org, dm-devel@redhat.com,
-        drbd-dev@lists.linbit.com, dri-devel@lists.freedesktop.org,
-        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
-        keyrings@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        linux-acpi@vger.kernel.org, linux-afs@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net,
-        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-cifs@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-decnet-user@lists.sourceforge.net,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-fbdev@vger.kernel.org, linux-geode@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input <linux-input@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mmc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
-        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
-        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
-        selinux@vger.kernel.org, target-devel@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        usb-storage@lists.one-eyed-alien.net,
-        virtualization@lists.linux-foundation.org,
-        wcn36xx@lists.infradead.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1727498AbgKYAg1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Nov 2020 19:36:27 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:53952 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbgKYAg1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 19:36:27 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AP0TPXY099526;
+        Wed, 25 Nov 2020 00:36:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=PaWkClt1ldyWBCZCPBqERXQQEYT7hXtunXF81hcBg50=;
+ b=nsmrWFgV1WKhGgPnnvxyMXPAThYzY7AtUwKRwaogKc69JclUzC6oNYWnXYBUpZrbgJKc
+ XIICzmLUUrDmmsz3qpEecWlvDrY3+Aq2hR7I4x/smISEyZ0f3vtP+x6/6A3kmlkBSsdh
+ IvORudYkwXE1i/O/62mPakB8RO+URpHsXTFes9lTvVJvZf0ckweB1G34ThJbXKoQmf51
+ yOnowdmgAkUPYZf+tSbozWMpSRGXAisAocbvd6yKXxgVK1DlemUm8PdWqcTIDJccsFPL
+ uv0pVXfWHRAJ979UcA258z+G4ky1Io7EUdWCrZir5n5EkuiZJUeMr1dhg3JFcvtMHSf+ ng== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 34xtum5h2x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 25 Nov 2020 00:36:23 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AP0Tsoi035405;
+        Wed, 25 Nov 2020 00:36:23 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 34ycnt6x28-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Nov 2020 00:36:23 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AP0aMrs031955;
+        Wed, 25 Nov 2020 00:36:22 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 24 Nov 2020 16:36:21 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: NFSD merge candidate for v5.11
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <0cbeed0a0fa2352961966efdd7e62247b5cd7a7b.camel@redhat.com>
+Date:   Tue, 24 Nov 2020 19:36:21 -0500
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5A43C026-0746-4F62-8298-2501EF1EF692@oracle.com>
+References: <48FA73BE-2D86-4A3F-91D5-C1086E228938@oracle.com>
+ <0cbeed0a0fa2352961966efdd7e62247b5cd7a7b.camel@redhat.com>
+To:     Jeff Layton <jlayton@redhat.com>, Bruce Fields <bfields@redhat.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9815 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011250001
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9815 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 mlxlogscore=999 impostorscore=0 spamscore=0 mlxscore=0
+ phishscore=0 clxscore=1015 suspectscore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011250001
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 9:38 PM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> So you think a one line patch should take one minute to produce ... I
-> really don't think that's grounded in reality.
 
-No, I have not said that. Please don't put words in my mouth (again).
 
-I have said *authoring* lines of *this* kind takes a minute per line.
-Specifically: lines fixing the fallthrough warning mechanically and
-repeatedly where the compiler tells you to, and doing so full-time for
-a month.
+> On Nov 24, 2020, at 6:14 PM, Jeff Layton <jlayton@redhat.com> wrote:
+>=20
+> On Tue, 2020-11-24 at 17:51 -0500, Chuck Lever wrote:
+>> Hi-
+>>=20
+>> I've added my NFSv4 XDR decoder series and Bruce's iversion
+>> series to my "for next" topic branch to get some early
+>> testing exposure for these changes.
+>>=20
+>> Bruce's series is based on 8/8 posted on November 20, with
+>> Jeff's review comments integrated. The NFSD XDR decoder
+>> patches are based on v4, posted yesterday afternoon with
+>> Bruce's review comments integrated.
+>>=20
+>> The full branch is available here:
+>>=20
+>>   git://git.linux-nfs.org/projects/cel/cel-2.6.git cel-next
+>>=20
+>> or
+>>=20
+>>   =
+http://git.linux-nfs.org/?p=3Dcel/cel-2.6.git;a=3Dshortlog;h=3Drefs/heads/=
+cel-next
+>>=20
+>> ...and is still open for changes or additional patches. This
+>> branch is pulled into linux-next regularly.
+>=20
+> Minor nit in:
+>=20
+>    =
+http://git.linux-nfs.org/?p=3Dcel/cel-2.6.git;a=3Dcommit;h=3D2513716015eba=
+398378bf453d5d2dd46c63a3399
+>=20
+> You added a generic_check_iversion prototype to fs.h.
+>=20
+> Move that into iversion.h. I think it makes more sense there, and that
+> avoids the huge rebuild that occurs when fs.h changes.
 
-For instance, take the following one from Gustavo. Are you really
-saying it takes 12 minutes (your number) to write that `break;`?
+Declarations for most other generic_* functions are in fs.h.
+But OK, moved, and the series pushed.
 
-diff --git a/drivers/gpu/drm/via/via_irq.c b/drivers/gpu/drm/via/via_irq.c
-index 24cc445169e2..a3e0fb5b8671 100644
---- a/drivers/gpu/drm/via/via_irq.c
-+++ b/drivers/gpu/drm/via/via_irq.c
-@@ -364,6 +364,7 @@ int via_wait_irq(struct drm_device *dev, void
-*data, struct drm_file *file_priv)
-                irqwait->request.sequence +=
-                        atomic_read(&cur_irq->irq_received);
-                irqwait->request.type &= ~_DRM_VBLANK_RELATIVE;
-+               break;
-        case VIA_IRQ_ABSOLUTE:
-                break;
-        default:
+So I think the btrfs/ext4/xfs-specific changes might need
+sign-off by those maintainers. Should I post this series
+to linux-fsdevel? Or, Bruce, do you want to?
 
->  I suppose a one line
-> patch only takes a minute to merge with b4 if no-one reviews or tests
-> it, but that's not really desirable.
 
-I have not said that either. I said reviewing and merging those are
-noise compared to any complex patch. Testing should be done by the
-author comparing codegen.
+--
+Chuck Lever
 
-> Part of what I'm trying to measure is the "and useful" bit because
-> that's not a given.
 
-It is useful since it makes intent clear. It also catches actual bugs,
-which is even more valuable.
 
-> Well, you know, subsystems are very different in terms of the amount of
-> patches a maintainer has to process per release cycle of the kernel.
-> If a maintainer is close to capacity, additional patches, however
-> trivial, become a problem.  If a maintainer has spare cycles, trivial
-> patches may look easy.
-
-First of all, voluntary maintainers choose their own workload.
-Furthermore, we already measure capacity in the `MAINTAINERS` file:
-maintainers can state they can only handle a few patches. Finally, if
-someone does not have time for a trivial patch, they are very unlikely
-to have any time to review big ones.
-
-> You seem to be saying that because you find it easy to merge trivial
-> patches, everyone should.
-
-Again, I have not said anything of the sort.
-
-Cheers,
-Miguel
