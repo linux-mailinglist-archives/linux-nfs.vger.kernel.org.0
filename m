@@ -2,183 +2,179 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D61F2C3546
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Nov 2020 01:15:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFCF72C3596
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Nov 2020 01:33:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgKYAPW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Nov 2020 19:15:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49512 "EHLO
+        id S1727527AbgKYAcc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Nov 2020 19:32:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgKYAPW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 19:15:22 -0500
+        with ESMTP id S1726805AbgKYAca (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Nov 2020 19:32:30 -0500
 Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 230F3C0613D6
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Nov 2020 16:15:22 -0800 (PST)
-Received: by mail-qk1-x742.google.com with SMTP id v143so1346227qkb.2
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Nov 2020 16:15:22 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDA17C0613D6;
+        Tue, 24 Nov 2020 16:32:29 -0800 (PST)
+Received: by mail-qk1-x742.google.com with SMTP id x25so81283qkj.3;
+        Tue, 24 Nov 2020 16:32:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=sZl4sBzNeDguTPghqRriwFRwqZhZHUkrmcAeW2hMHas=;
-        b=hbPAikLuULhUWypcc9b+7tP+lcEIerO2GXy3CGnr7/hGQPDvZ1bKkcjVgUuG4mw6/C
-         edYVmbfH5qCvi6CNu1Oa3dany3S3u8jQWMODHBsOFO5QYVdf2Spq6s10GZTA5z+JwrBf
-         z12M7ymg1SQVkG54PJJm8By6bPjp7oqWoArTM0mhGB87OzmgG0PGnUCmjli5M8Dp2T5P
-         u/mJUBX8NXQxS6i/1h4RJIUmpPKz6gPXIh3ZlyDsdmaIaRt0feGDDyxH9Hv1fSftGVSR
-         oQrsDmxxf1kt4QFcCvUJmfaf5SQo9/0lo0/dsEIdUFyiYjfP0vqpBzgngev8lzFkouGf
-         uzmw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QqqubA90NyDjnD5SH+OxnZbso0TzlLiuZ5gzRUm0zsY=;
+        b=DYdo15DH5n4eMCA51W2vXZfybVLPbTpwO6CR+j1CET94cx9FmUQEkAzz4OadVdmrht
+         /5QscdfYh1sAKLvu6dkrheNjvEoR4Mdvvl3diWkBzFiGJNP9BCqxLhr4zTkKEaaVMxi5
+         qUA6kNkUTJzI9KEPxIujLpbBVVOhJKSQSAf+FeTM6jY84RGcXl9jGks4AfD2ojo1GxQQ
+         uEwHm9wuAxdOf70IRL+AXs8sujZOQd+kSEI1eU2QAsFia5W6QaIddZOITngYX9DSKM5R
+         mNvBJUTqyzODtQONxErP8O8dRkCcVm25oDOfEuyrse782pSy0gFJjFFgzHOgMIi8mZem
+         jSGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:cc:date:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=sZl4sBzNeDguTPghqRriwFRwqZhZHUkrmcAeW2hMHas=;
-        b=gyuMcJGBz/Tf/G5vE781/OVbdIidtRLUutBuJfJqtr4eof6z1lRMk+0QD7CnM6wIKk
-         5VeVt8sCpY2Eh7Onujz0m+c9BKkjKSnpKgl9eNVDafrrYxgH8bRxA/xPbSoUiSmgIwKw
-         ScHnmgvb1jbyA3rGxmkJnqqlCobxJdo0QvVwi++NV+AFxLS8SvRkdlpb+eQkHZm9V6x1
-         ehQkv+GhOZ+tqpoLa/JCS0PSWUeHWihXmO4yNFjgV8dsCoYfnwZUlM0f7ZmCHcjIgFkK
-         W5SBTC3Ha3E+fHOvRBRQ667II5YplgPC8v5nxX1ySmpHyYzku6aM1qBz6e8miO4AMdnj
-         wOYA==
-X-Gm-Message-State: AOAM530QonVWoCzDTKSK7HuDCVBEkkUDuUB1UMi3FAgkxQADiQG6gp7O
-        dVw9wPT4+sGdp4PNn9j1wKA7C10P6hM=
-X-Google-Smtp-Source: ABdhPJyP+4UDXEHD92GgbmaPABo7tCgWp+cPZ7joZZP9TrLk+Iejst/taML0wsa8kYT/6a/TAJ3ZhQ==
-X-Received: by 2002:a37:c4d:: with SMTP id 74mr918936qkm.161.1606263321417;
-        Tue, 24 Nov 2020 16:15:21 -0800 (PST)
-Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id g9sm672144qti.86.2020.11.24.16.15.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Nov 2020 16:15:20 -0800 (PST)
-Sender: Chuck Lever <chucklever@gmail.com>
-Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0AP0FIkS013640;
-        Wed, 25 Nov 2020 00:15:19 GMT
-Subject: [PATCH v3] NFS: Fix rpcrdma_inline_fixup() crash with new LISTXATTRS
- operation
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     trondmy@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Date:   Tue, 24 Nov 2020 19:15:18 -0500
-Message-ID: <160626327581.1030838.17345495464569858084.stgit@manet.1015granger.net>
-User-Agent: StGit/0.23-29-ga622f1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QqqubA90NyDjnD5SH+OxnZbso0TzlLiuZ5gzRUm0zsY=;
+        b=snqjE+pgbH+a6/A7jPlUdXy2whhW302EjrjCMPv8wi67+5UYB1mcpxLsEMa2AwWdgE
+         Z3ogb3mnS6cm39pBmugB8Yyu3qPz760xuqoEdTA1d8tmPLlwAVAV87k5lE6QwmJQRd9e
+         bUxQIDg/Aaoiuj5RrObJi3RhJzwmp+x9jUs2l/R/QX5GALJ5ha3cBth6BWrqbsnY+SlQ
+         9oM5wRkqwL45XieMtADalKIGCusgMlLWbdZl9/yyhUjSbsPmZba8gE28h7YJsD1zRePl
+         9PJZy42UDve6Tl95p/M8loj5o0/C+9jo+P8wdQPCB7Hs234mYNhFWxcaapjdhHr5aCdM
+         iBSQ==
+X-Gm-Message-State: AOAM532bS9JGxvfssjcio/Twt5CRLZKuxDtn69ZFpXhjuvaRA8Ki9on5
+        /J2Dw0UU4S5F0wRU7qA4z43bOMQibjftG4sZpvQ=
+X-Google-Smtp-Source: ABdhPJwwVKQFQuxzNO/2Mi/lJ3RUII3vPq9FIwhq+sZ6y3vyBbFPDKm/uCaEGwo9LU3j1fjBVCpYTO563lD14rGXSok=
+X-Received: by 2002:a25:5f0f:: with SMTP id t15mr779915ybb.26.1606264348932;
+ Tue, 24 Nov 2020 16:32:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <cover.1605896059.git.gustavoars@kernel.org> <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
+ <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com>
+ <1c7d7fde126bc0acf825766de64bf2f9b888f216.camel@HansenPartnership.com>
+ <CANiq72m22Jb5_+62NnwX8xds2iUdWDMAqD8PZw9cuxdHd95W0A@mail.gmail.com>
+ <fc45750b6d0277c401015b7aa11e16cd15f32ab2.camel@HansenPartnership.com>
+ <CANiq72k5tpDoDPmJ0ZWc1DGqm+81Gi-uEENAtvEs9v3SZcx6_Q@mail.gmail.com> <4993259d01a0064f8bb22770503490f9252f3659.camel@HansenPartnership.com>
+In-Reply-To: <4993259d01a0064f8bb22770503490f9252f3659.camel@HansenPartnership.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Wed, 25 Nov 2020 01:32:17 +0100
+Message-ID: <CANiq72kqO=bYMJnFS2uYRpgWATJ=uXxZuNUsTXT+3aLtrpnzvQ@mail.gmail.com>
+Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        alsa-devel@alsa-project.org, amd-gfx@lists.freedesktop.org,
+        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
+        cluster-devel@redhat.com, coreteam@netfilter.org,
+        devel@driverdev.osuosl.org, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com, dri-devel@lists.freedesktop.org,
+        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
+        keyrings@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        linux-acpi@vger.kernel.org, linux-afs@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net,
+        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-cifs@vger.kernel.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-decnet-user@lists.sourceforge.net,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-fbdev@vger.kernel.org, linux-geode@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input <linux-input@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mmc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
+        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
+        selinux@vger.kernel.org, target-devel@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        usb-storage@lists.one-eyed-alien.net,
+        virtualization@lists.linux-foundation.org,
+        wcn36xx@lists.infradead.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-By switching to an XFS-backed export, I am able to reproduce the
-ibcomp worker crash on my client with xfstests generic/013.
+On Mon, Nov 23, 2020 at 9:38 PM James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> So you think a one line patch should take one minute to produce ... I
+> really don't think that's grounded in reality.
 
-For the failing LISTXATTRS operation, xdr_inline_pages() is called
-with page_len=12 and buflen=128.
+No, I have not said that. Please don't put words in my mouth (again).
 
-- When ->send_request() is called, rpcrdma_marshal_req() does not
-  set up a Reply chunk because buflen is smaller than the inline
-  threshold. Thus rpcrdma_convert_iovs() does not get invoked at
-  all and the transport's XDRBUF_SPARSE_PAGES logic is not invoked
-  on the receive buffer.
+I have said *authoring* lines of *this* kind takes a minute per line.
+Specifically: lines fixing the fallthrough warning mechanically and
+repeatedly where the compiler tells you to, and doing so full-time for
+a month.
 
-- During reply processing, rpcrdma_inline_fixup() tries to copy
-  received data into rq_rcv_buf->pages because page_len is positive.
-  But there are no receive pages because rpcrdma_marshal_req() never
-  allocated them.
+For instance, take the following one from Gustavo. Are you really
+saying it takes 12 minutes (your number) to write that `break;`?
 
-The result is that the ibcomp worker faults and dies. Sometimes that
-causes a visible crash, and sometimes it results in a transport hang
-without other symptoms.
+diff --git a/drivers/gpu/drm/via/via_irq.c b/drivers/gpu/drm/via/via_irq.c
+index 24cc445169e2..a3e0fb5b8671 100644
+--- a/drivers/gpu/drm/via/via_irq.c
++++ b/drivers/gpu/drm/via/via_irq.c
+@@ -364,6 +364,7 @@ int via_wait_irq(struct drm_device *dev, void
+*data, struct drm_file *file_priv)
+                irqwait->request.sequence +=
+                        atomic_read(&cur_irq->irq_received);
+                irqwait->request.type &= ~_DRM_VBLANK_RELATIVE;
++               break;
+        case VIA_IRQ_ABSOLUTE:
+                break;
+        default:
 
-RPC/RDMA's XDRBUF_SPARSE_PAGES support is not entirely correct, and
-should eventually be fixed or replaced. However, my preference is
-that upper-layer operations should explicitly allocate their receive
-buffers (using GFP_KERNEL) when possible, rather than relying on
-XDRBUF_SPARSE_PAGES.
+>  I suppose a one line
+> patch only takes a minute to merge with b4 if no-one reviews or tests
+> it, but that's not really desirable.
 
-Reported-by: Olga kornievskaia <kolga@netapp.com>
-Suggested-by: Olga kornievskaia <kolga@netapp.com>
-Fixes: c10a75145feb ("NFSv4.2: add the extended attribute proc functions.")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Reviewed-by: Olga kornievskaia <kolga@netapp.com>
-Reviewed-by: Frank van der Linden <fllinden@amazon.com>
-Tested-by: Olga kornievskaia <kolga@netapp.com>
----
- fs/nfs/nfs42proc.c |   21 +++++++++++++--------
- fs/nfs/nfs42xdr.c  |    1 -
- 2 files changed, 13 insertions(+), 9 deletions(-)
+I have not said that either. I said reviewing and merging those are
+noise compared to any complex patch. Testing should be done by the
+author comparing codegen.
 
-Changes since v2:
-- On error, unwind the memory allocations correctly
+> Part of what I'm trying to measure is the "and useful" bit because
+> that's not a given.
 
-Changes since v1:
-- Added a Fixes: tag
-- Added Reviewed-by:, etc tags
-- Clarified the patch description
+It is useful since it makes intent clear. It also catches actual bugs,
+which is even more valuable.
 
-diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 2b2211d1234e..4fc61e3d098d 100644
---- a/fs/nfs/nfs42proc.c
-+++ b/fs/nfs/nfs42proc.c
-@@ -1241,12 +1241,13 @@ static ssize_t _nfs42_proc_listxattrs(struct inode *inode, void *buf,
- 		.rpc_resp	= &res,
- 	};
- 	u32 xdrlen;
--	int ret, np;
-+	int ret, np, i;
- 
- 
-+	ret = -ENOMEM;
- 	res.scratch = alloc_page(GFP_KERNEL);
- 	if (!res.scratch)
--		return -ENOMEM;
-+		goto out;
- 
- 	xdrlen = nfs42_listxattr_xdrsize(buflen);
- 	if (xdrlen > server->lxasize)
-@@ -1254,9 +1255,12 @@ static ssize_t _nfs42_proc_listxattrs(struct inode *inode, void *buf,
- 	np = xdrlen / PAGE_SIZE + 1;
- 
- 	pages = kcalloc(np, sizeof(struct page *), GFP_KERNEL);
--	if (pages == NULL) {
--		__free_page(res.scratch);
--		return -ENOMEM;
-+	if (!pages)
-+		goto out_free_scratch;
-+	for (i = 0; i < np; i++) {
-+		pages[i] = alloc_page(GFP_KERNEL);
-+		if (!pages[i])
-+			goto out_free_pages;
- 	}
- 
- 	arg.xattr_pages = pages;
-@@ -1271,14 +1275,15 @@ static ssize_t _nfs42_proc_listxattrs(struct inode *inode, void *buf,
- 		*eofp = res.eof;
- 	}
- 
-+out_free_pages:
- 	while (--np >= 0) {
- 		if (pages[np])
- 			__free_page(pages[np]);
- 	}
--
--	__free_page(res.scratch);
- 	kfree(pages);
--
-+out_free_scratch:
-+	__free_page(res.scratch);
-+out:
- 	return ret;
- 
- }
-diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-index 6e060a88f98c..8432bd6b95f0 100644
---- a/fs/nfs/nfs42xdr.c
-+++ b/fs/nfs/nfs42xdr.c
-@@ -1528,7 +1528,6 @@ static void nfs4_xdr_enc_listxattrs(struct rpc_rqst *req,
- 
- 	rpc_prepare_reply_pages(req, args->xattr_pages, 0, args->count,
- 	    hdr.replen);
--	req->rq_rcv_buf.flags |= XDRBUF_SPARSE_PAGES;
- 
- 	encode_nops(&hdr);
- }
+> Well, you know, subsystems are very different in terms of the amount of
+> patches a maintainer has to process per release cycle of the kernel.
+> If a maintainer is close to capacity, additional patches, however
+> trivial, become a problem.  If a maintainer has spare cycles, trivial
+> patches may look easy.
 
+First of all, voluntary maintainers choose their own workload.
+Furthermore, we already measure capacity in the `MAINTAINERS` file:
+maintainers can state they can only handle a few patches. Finally, if
+someone does not have time for a trivial patch, they are very unlikely
+to have any time to review big ones.
 
+> You seem to be saying that because you find it easy to merge trivial
+> patches, everyone should.
+
+Again, I have not said anything of the sort.
+
+Cheers,
+Miguel
