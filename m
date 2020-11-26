@@ -2,125 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D5402C4B78
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Nov 2020 00:22:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A7BC2C4BC2
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Nov 2020 01:05:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbgKYXWD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Nov 2020 18:22:03 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:41590 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729779AbgKYXWB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Nov 2020 18:22:01 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 414EA2A490;
-        Wed, 25 Nov 2020 18:21:54 -0500 (EST)
-Date:   Thu, 26 Nov 2020 10:21:54 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Joe Perches <joe@perches.com>,
-        Jakub Kicinski <kuba@kernel.org>, alsa-devel@alsa-project.org,
-        linux-atm-general@lists.sourceforge.net,
-        reiserfs-devel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-fbdev@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-ide@vger.kernel.org, dm-devel@redhat.com,
-        keyrings@vger.kernel.org, linux-mtd@lists.infradead.org,
-        GR-everest-linux-l2@marvell.com, wcn36xx@lists.infradead.org,
-        samba-technical@lists.samba.org, linux-i3c@lists.infradead.org,
-        linux1394-devel@lists.sourceforge.net,
-        linux-afs@lists.infradead.org,
-        usb-storage@lists.one-eyed-alien.net, drbd-dev@lists.linbit.com,
-        devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-scsi@vger.kernel.org,
-        linux-rdma@vger.kernel.org, oss-drivers@netronome.com,
-        bridge@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        linux-stm32@st-md-mailman.stormreply.com, cluster-devel@redhat.com,
-        linux-acpi@vger.kernel.org, coreteam@netfilter.org,
-        intel-wired-lan@lists.osuosl.org, linux-input@vger.kernel.org,
-        Miguel Ojeda <ojeda@kernel.org>,
-        tipc-discussion@lists.sourceforge.net, linux-ext4@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        selinux@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        intel-gfx@lists.freedesktop.org, linux-geode@lists.infradead.org,
-        linux-can@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-gpio@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-        linux-mediatek@lists.infradead.org, xen-devel@lists.xenproject.org,
-        nouveau@lists.freedesktop.org, linux-hams@vger.kernel.org,
-        ceph-devel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-nfs@vger.kernel.org, GR-Linux-NIC-Dev@marvell.com,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-decnet-user@lists.sourceforge.net, linux-mmc@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-sctp@vger.kernel.org, linux-usb@vger.kernel.org,
-        netfilter-devel@vger.kernel.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, patches@opensource.cirrus.com,
-        linux-integrity@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [Intel-wired-lan] [PATCH 000/141] Fix fall-through warnings for
- Clang
-In-Reply-To: <CAKwvOdna5Zj_O=sB7Q0jHZX0BJSaakX=ZyftwQ_3=L3-ZB54XQ@mail.gmail.com>
-Message-ID: <alpine.LNX.2.23.453.2011260918510.6@nippy.intranet>
-References: <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com> <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com> <ca071decb87cc7e905411423c05a48f9fd2f58d7.camel@perches.com>
- <0147972a72bc13f3629de8a32dee6f1f308994b5.camel@HansenPartnership.com> <d8d1e9add08cdd4158405e77762d4946037208f8.camel@perches.com> <dbd2cb703ed9eefa7dde9281ea26ab0f7acc8afe.camel@HansenPartnership.com> <20201123130348.GA3119@embeddedor>
- <8f5611bb015e044fa1c0a48147293923c2d904e4.camel@HansenPartnership.com> <202011241327.BB28F12F6@keescook> <a841536fe65bb33f1c72ce2455a6eb47a0107565.camel@HansenPartnership.com> <CAKwvOdkGBn7nuWTAqrORMeN1G+w3YwBfCqqaRD2nwvoAXKi=Aw@mail.gmail.com>
- <alpine.LNX.2.23.453.2011260750300.6@nippy.intranet> <CAKwvOdna5Zj_O=sB7Q0jHZX0BJSaakX=ZyftwQ_3=L3-ZB54XQ@mail.gmail.com>
+        id S1727281AbgKZAEy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Nov 2020 19:04:54 -0500
+Received: from elasmtp-curtail.atl.sa.earthlink.net ([209.86.89.64]:37730 "EHLO
+        elasmtp-curtail.atl.sa.earthlink.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726908AbgKZAEy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Nov 2020 19:04:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mindspring.com;
+        s=dk12062016; t=1606349094; bh=kt1pgGwhmWN6g7RTzok9XNvm6uE22lgyYyUA
+        Hkzl9r8=; h=Received:From:To:Cc:References:In-Reply-To:Subject:Date:
+         Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:
+         X-Mailer:Thread-Index:Content-Language:X-ELNK-Trace:
+         X-Originating-IP; b=PojZKnhAAyiofIWXPXmateD9cmcyy6Mi8qSgNMd7TUIWTj
+        HvpEVcB59BJ1WLP/h8oFKdb5gNstj85aukpXoGk1INQyIdmJRa3QZsJ7sbjP4Pm5Vhx
+        q4+dCmPzIFSxnFpG81EkXU1NNLwpOm2civs4CpNQ47yZ/DRlAArZggmVFqnr7wvbBKg
+        PLcX1JHj9FkYGPInEY2w+SvAR+wQQKQVtdgTABPEuwAQudImis29IvjJqj10tXk/7KD
+        Wkb3L++dAr2f9cE2uJQHUeMs5gRhN5XSLZgNXkGKRSrXlSwbMPow6uQWDsAsZQPvxWj
+        5o6ThdzGW89liz8wV/InZTyGfNJA==
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws;
+  s=dk12062016; d=mindspring.com;
+  b=I2a+6DjG0npKYda/Am8eiHCLQZvxGGcp1CfEudE83zBkIXQ6jQ/1HHSI074U394kQG4uU83xnHYP/DpFMIjB7BZS7hIK00MTPbLdlDZDA+oVH8Z5yuQ/UOEYXGIQJj1Ga+aE9V1efO4qBzBpCBKy/KVAE6W9IHDYm8ZJL8RkL/uEmGOSeWaZL21el4Q9pSnZIx+z8+5PnUrnDoKasZpKTAE1X2Ftk9pZ/Fl/qXSsTcv6gebSHUq3TrVRjm+luGO8RO3vmXtl9FXG49Udg3aOjtWeDGDnUlzXskF9PfVr8C5VnD6TJG8gTksoFNhtzpz1gIbhSoD1rAyWaxUNlL5wiQ==;
+  h=Received:From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:X-Mailer:Thread-Index:Content-Language:X-ELNK-Trace:X-Originating-IP;
+Received: from [76.105.143.216] (helo=FRANKSTHINKPAD)
+        by elasmtp-curtail.atl.sa.earthlink.net with esmtpa (Exim 4)
+        (envelope-from <ffilzlnx@mindspring.com>)
+        id 1ki4mJ-0001AK-KG; Wed, 25 Nov 2020 19:04:51 -0500
+From:   "Frank Filz" <ffilzlnx@mindspring.com>
+To:     "'bfields'" <bfields@fieldses.org>
+Cc:     "'Daire Byrne'" <daire@dneg.com>,
+        "'Trond Myklebust'" <trondmy@hammerspace.com>,
+        "'linux-cachefs'" <linux-cachefs@redhat.com>,
+        "'linux-nfs'" <linux-nfs@vger.kernel.org>
+References: <1188023047.38703514.1600272094778.JavaMail.zimbra@dneg.com> <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com> <635679406.70384074.1603272832846.JavaMail.zimbra@dneg.com> <20201109160256.GB11144@fieldses.org> <1744768451.86186596.1605186084252.JavaMail.zimbra@dneg.com> <1055884313.92996091.1606250106656.JavaMail.zimbra@dneg.com> <20201124211522.GC7173@fieldses.org> <0fc201d6c2af$62b039f0$2810add0$@mindspring.com> <20201125144753.GC2811@fieldses.org> <100101d6c347$917ed0f0$b47c72d0$@mindspring.com> <20201125190315.GB7049@fieldses.org>
+In-Reply-To: <20201125190315.GB7049@fieldses.org>
+Subject: RE: Adventures in NFS re-exporting
+Date:   Wed, 25 Nov 2020 16:04:51 -0800
+Message-ID: <103e01d6c387$c3d7f640$4b87e2c0$@mindspring.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQLbRzS9yZr5C5vAyHWnu9xOS+RZ+gH6EgB+ATmqgtcBmvnx5gFd2itFAYsKXvUCY0qgxgKfDMlvApwox1gCn5pjiwGJmGGRpzSF2/A=
+Content-Language: en-us
+X-ELNK-Trace: 136157f01908a8929c7f779228e2f6aeda0071232e20db4dbf9d46175fc33655b0564f0bda0d754b350badd9bab72f9c350badd9bab72f9c350badd9bab72f9c
+X-Originating-IP: 76.105.143.216
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 25 Nov 2020, Nick Desaulniers wrote:
 
-> On Wed, Nov 25, 2020 at 1:33 PM Finn Thain <fthain@telegraphics.com.au> 
-> wrote:
+
+> -----Original Message-----
+> From: 'bfields' [mailto:bfields@fieldses.org]
+> Sent: Wednesday, November 25, 2020 11:03 AM
+> To: Frank Filz <ffilzlnx@mindspring.com>
+> Cc: 'Daire Byrne' <daire@dneg.com>; 'Trond Myklebust'
+> <trondmy@hammerspace.com>; 'linux-cachefs' <linux-cachefs@redhat.com>;
+> 'linux-nfs' <linux-nfs@vger.kernel.org>
+> Subject: Re: Adventures in NFS re-exporting
+> 
+> On Wed, Nov 25, 2020 at 08:25:19AM -0800, Frank Filz wrote:
+> > On the other
+> > hand, re-export with state has a pitfall. If the re-export server
+> > crashes, the state is lost on the original server unless we make a
+> > protocol change to allow state re-export such that a re-export server
+> > crashing doesn't cause state loss.
+> 
+> Oh, yes, reboot recovery's an interesting problem that I'd forgotten
+about;
+> added to that wiki page.
+>
+> By "state re-export" you mean you'd take the stateids the original server
+> returned to you, and return them to your own clients?  So then I guess you
+> wouldn't need much state at all.
+
+By state re-export I meant reflecting locks the end client takes on the
+re-export server to the original server. Not necessarily by reflecting the
+stateid (probably something to trip on there...) (Can we nail down a good
+name for it? Proxy server or re-export server work well for the man in the
+middle, but what about the back end server?)
+
+Frank
+
+> > For this reason, I haven't rushed to implement lock state re-export in
+> > Ganesha, rather allowing the re-export server to just manage lock
+> > state locally.
 > >
-> > Or do you think that a codebase can somehow satisfy multiple checkers 
-> > and their divergent interpretations of the language spec?
+> > > Cooperating servers could have an agreement on filehandles.  And I
+> > > guess
+> > we
+> > > could standardize that somehow.  Are we ready for that?  I'm not
+> > > sure what other re-exporting problems there are that I haven't thought
+of.
+> >
+> > I'm not sure how far we want to go there, but potentially specific
+> > server implementations could choose to be interoperable in a way that
+> > allows the handle encapsulation to either be smaller or no extra
+> > overhead. For example, if we implemented what I've thought about for
+> > Ganesha-Ganesha re-export, Ganesha COULD also be "taught" which
+> > portion of the knfsd handle is the filesystem/export identifier, and
+> > maintain a database of Ganesha export/filesystem <-> knfsd
+> > export/filesystem and have Ganesha re-encapsulate the
+> > exportfs/name_to_handle_at portion of the handle. Of course in this
+> > case, trivial migration isn't possible since Ganesha will have a
+different
+> encapsulation than knfsd.
+> >
+> > Incidentally, I also purposefully made Ganesha's encapsulation
+> > different so it never collides with either version of knfsd handles
+> > (now if over the course of the past 10 years another handle version has
+come
+> along...).
 > 
-> Have we found any cases yet that are divergent? I don't think so.
-
-There are many implementations, so I think you are guaranteed to find more 
-divergence if you look. That's because the spec is full of language like 
-this: "implementations are encouraged not to emit a diagnostic" and 
-"implementations are encouraged to issue a diagnostic".
-
-Some implementations will decide to not emit (under the premise that vast 
-amounts of existing code would have to get patched until the compiler goes 
-quiet) whereas other implementations will decide to emit (under the 
-premise that the author is doing the checking and not the janitor or the 
-packager).
-
-> It sounds to me like GCC's cases it warns for is a subset of Clang's. 
-> Having additional coverage with Clang then should ensure coverage for 
-> both.
+> I don't think anything's changed there.
 > 
+> --b.
 
-If that claim were true, the solution would be simple. (It's not.)
-
-For the benefit of projects that enable -Werror and projects that 
-nominated gcc as their preferred compiler, clang would simply need a flag 
-to enable conformance with gcc by suppressing those additional warnings 
-that clang would normally produce.
-
-This simple solution is, of course, completely unworkable, since it would 
-force clang to copy some portion of gcc's logic (rewritten under LLVM's 
-unique license) and then to track future changes to that portion of gcc 
-indefinitely.
