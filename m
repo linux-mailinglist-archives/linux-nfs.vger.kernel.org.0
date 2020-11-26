@@ -2,124 +2,213 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68ADF2C5670
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Nov 2020 14:49:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0EE12C57A1
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Nov 2020 15:54:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390433AbgKZNs1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Nov 2020 08:48:27 -0500
-Received: from mail-dm6nam08on2125.outbound.protection.outlook.com ([40.107.102.125]:34273
-        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390078AbgKZNs0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 26 Nov 2020 08:48:26 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nqPx9UgesbrbQVOP+VQFF/LYMANIFePNdIYbf62afjOIi9ZBvtz41XgloO14NVLmKEbpZahbwEzLhLs9SGbW/v3PtmC2msrWNTD1ATKFnT2gu78mZuLsvA+5/sq6vVEA7aQetSH29Cc26FaHkeoQqkf/tiIPr4XavhJPfGF8FohmoPDN50NReF3tEkhXRAkx8Yvp64dfW6xRJ80NDehfpJKv7+utGmjXMIH7S5lw7fb9vrfc0KJax6UK4bOFsq1SltiUV+i9TUC4ThB7HZq2fJlyWwLwUOGmKdlrcNFhY6d5V0a7EJb24cCfPOrBFGhXBTdW3AVhKHrmQbYkhiYcSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EV6CnqU/vVKM9SrVXfQf4rso/l2Y2Cug1/UbJMeBhsc=;
- b=jEpBympOe0gTf0u1Me/8a5tjJh5sgiDf9s3C5xThz0DwEvFXQVwyVROWXHtLBsMQt6TyRz8TnVhRHGqUGafAKgPZRhpDQYDPT2VHf4ZZIo9cRy6Uj9cFJlQej4oJwAk0WDWk0Vb/Lxg/KLmwz9JTdE73BXo/5ctOTOl6Ot+F1pp0bAjn0oSLJhErZMY0jE106qQw0Z+KJvoGMv9/iDRvt4gvFaQJhW0+OyCbNPlhybcZ+4J0LIluNTyp8amqH/aMR9W7flh9FN1tE02HuV1hAnc/yEd9hAlWw1s7Alx5Hxpuo+lDpxbcSFATmoV4JeQ+/q3QSVsNYs6J3H3B2DWGiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EV6CnqU/vVKM9SrVXfQf4rso/l2Y2Cug1/UbJMeBhsc=;
- b=TMe+6R0hxJ0HlupHUPzWXTUD1qbefZvvH3Mjt2m5HW4GqiTbjLVPJ0U1bdex3dwGwLNKNjYNDm4Ylhveu9ZSu47rWkJbAyKOdgD4KJtLLGZncARkmCjrWIMRcg45di+k6Nvp1gFJ1SvgtNxhr4aX8KWitdf0nJOMn6WkrmXeY1E=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB2992.namprd13.prod.outlook.com (2603:10b6:208:152::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3611.15; Thu, 26 Nov
- 2020 13:48:23 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3611.020; Thu, 26 Nov 2020
- 13:48:23 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "dan@kernelim.com" <dan@kernelim.com>,
-        "smayhew@redhat.com" <smayhew@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: NFS v3 soft mount semantics affected by commit ce368536d
-Thread-Topic: NFS v3 soft mount semantics affected by commit ce368536d
-Thread-Index: AQHWw+GE4ByGxrEvak+YHKx9ogrt6KnabdkA
-Date:   Thu, 26 Nov 2020 13:48:23 +0000
-Message-ID: <dc888c162b3a30cd1c617072ae606d9d8c6d42f3.camel@hammerspace.com>
-References: <20201126104712.GA4023536@gmail.com>
-In-Reply-To: <20201126104712.GA4023536@gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernelim.com; dkim=none (message not signed)
- header.d=none;kernelim.com; dmarc=none action=none
- header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 727e0ceb-ce29-42a4-8af1-08d89211f160
-x-ms-traffictypediagnostic: MN2PR13MB2992:
-x-microsoft-antispam-prvs: <MN2PR13MB2992BFE0355C1D315562FB0CB8F90@MN2PR13MB2992.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Cc1ZUuKmX4NIgKSEjZnOpsDicDJSencoNQkFVs7IW6PJMn5Xo5Fgmk1YIqUuJKVP6cw60vbAJSXfztVHldEta1NpD8DBtzRGnx5ukSCdDFGpI2bfHmDXPpH8g+GegBVrXB/qQmvbEKsNNLXT7mHoEuGEOpnfyU1A+7E+UlcDxAaN7PtdaW+9/zij3gJHoMbgLbaMu1wg0KBMUJba/5n2Cj9JKiSxN8ai9EBGc2EwpsfZLWphv5K9U+RhGwuzREo/yzw50Fk8Cg8pzv81cyHvoDHFlX7c8Y8iCpNF+lNvSb6GjTWq0UbaXQi9T6S7JogR9K/PUi6Xy/Bokvy9Ug/m9wGuSGWae1Igcm7zL93KT2FcWQGV5UlWW3p8fBmSZfhvC76ibKmw4kd0jyExATT4TQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(39840400004)(376002)(136003)(396003)(346002)(366004)(4001150100001)(5660300002)(83380400001)(71200400001)(6486002)(2616005)(86362001)(110136005)(36756003)(316002)(66446008)(64756008)(4326008)(76116006)(6506007)(66476007)(66946007)(186003)(66556008)(26005)(478600001)(966005)(6512007)(91956017)(2906002)(8936002)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Ag/iFnLy190eqkyqkw2rQ9pBMuzmSLzgQEOucLnv3TW6F/80SWlne7m4j3UbdIaBmC8RqlQckzVxgyMyv9T8I4YhTtYHHZEiLCrPx3qn91QigOHwcRCd2vFPRjk1nqm/BDqAMoUij8Otxax/Y+jtcOwBK6u5Qh0PjAvo63oe/geboM3k3ZUdF1GJ7c8v0YkBkabONJkpBsY8CGy1xgVBapmiseKD5MI6htmwDcdO9qbVgiRYEFhjWh6I5WINFlrsc10q2vgTorpygu+2vdJBGtjQavY5N+81odKxRJuFH5mguIvyCQfCwfK1QVEydsq/HSG8tIrwtzRtUONOGjUVK8AAtsa1QuIA/GT1+snTfoeI5tj1B3imYO9Q/cEF8k8pQMsq3uBMyMwG1Lh9xWnwEflq21Te0qDR7guWlgmVQtZ6XbzneXhd04yqDANIDvZZuVCJnT5nA3rjwrLbdK2aPDgFSC2Z/brqOEnOGM5aNoMUaKoDuITc2AGqy8DdipG+msEfOznpHHCIN0cfPiRvp3uRYXGowUr+jB1rHkVLf7zMVMW/78qiN8E2+5SRIluSNwtkNs9wRyji+OuwHAAaVCwS9Vq1Fjpp8KUWWrrNrAB5VeaGzbQc40lDVZl+E8LNfntmuRWc/z9J654iQhAvL5FHgTguIG292MjQQ5uboLuqCzmz+7gTy6mTqm3LsjlxNt6lj1gBk7OL6xs0llkF4GnspGIzFndLuR8VD8yf0ayZmSN114sxxqd31XHpBKitR+3z6clWq2CSp1JOh6z5Gxs8HKUnR1RbMtZlUkK6HFdaSqMKoicZGpFSp/kgrNYhDJe/ngBv10IrppjbPxITbTz70G6CQ34zhSWx8gpzTq7SDftfW5nS3W1pcPy4AmuBSoH5yFwZ4a1QDyeTOJJdsg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E55EB971D6D35946BAF4B97FA690790F@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S2391281AbgKZOxo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Nov 2020 09:53:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391237AbgKZOxk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Nov 2020 09:53:40 -0500
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2597BC0617A7;
+        Thu, 26 Nov 2020 06:53:40 -0800 (PST)
+Received: by mail-yb1-xb42.google.com with SMTP id 2so1842167ybc.12;
+        Thu, 26 Nov 2020 06:53:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DTotsfb8u+PB0eT0g4gTrA/vgT4HfiDZTYQ/geteWC4=;
+        b=QWuS1TBfImi/m9J+5lB37414TjwoB+kfRyX/7ohuLNDuEazbBA4fEE506RPmuhzrQT
+         KCYao+uRLv4Su9SW/eKLjGfymcNDAcVP9irkT5MfO/ys+N1YXqwwODp/at6Hjf5mbn7y
+         sEjBq+fitA5RwLT9szzutyPemHxF/3vzz+qMkDnIA1HF+rIjtAU7PcoRO+GQ0ANzP2/3
+         4RgPAdoGGim7svP8Zrp9IWC0s7kVtrSQn/PXobh5aGfJoVk3uyVZYliED/q0Nk6tCoA8
+         W9fyUHPup50QVVdVd9NqYx0m2pkDUcyuxLwwV68mOS3NFLJOgvtFKpngAgg7rBEfKLyO
+         Kn5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DTotsfb8u+PB0eT0g4gTrA/vgT4HfiDZTYQ/geteWC4=;
+        b=mBK0BS6TVWjBRFU3odjyPBI0qUdtX5J2whJBBOZokPbmjZIFVhPQnqE5GmfY4vHvbV
+         HT2pTD/gdZPIyz+Ka8PZGwpqbqdnkJfeOU9ZWd1J0G+AjKdTWQiUQCXttTdwVpWBkqMv
+         ZINBj1InBzUZ/P06rN6Bt3BjJ6CSLqJSeAuQxg9CxkWZIOoaLDaG++1QWREVsBaSYvRt
+         rJ6vRbz1dUvdEIH2YPGs/ain50d2odcAPpiaD9QrMy94hESh3GeN4484YDZQR0EzvWHR
+         D1wuVku4ZKmbiM7N92dZI/sc7+qWB6e5/CKVhuCqFPMTebfStQrhTXq966yIKfcdlSzb
+         lORw==
+X-Gm-Message-State: AOAM530vshkiTFDvlahcV12UmE3qEmIlTM0l8dSkFhzBb5xKoNJCfxZ0
+        N+i4NOp+YhaNoPiX0GTlQqWA0Bm14r406uJVaEc=
+X-Google-Smtp-Source: ABdhPJxnOXTYq+iR4KCiqWmvI5brXjGTtWFP5n3J8AJAa70YoLiXvitjZtrbfPlByRts+Q0mJZBucXgMnTrbOCoAA44=
+X-Received: by 2002:a25:aac5:: with SMTP id t63mr5128050ybi.22.1606402419264;
+ Thu, 26 Nov 2020 06:53:39 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 727e0ceb-ce29-42a4-8af1-08d89211f160
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2020 13:48:23.3067
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MJ+z7PM//HLNWz/ZHNlmseU4JLiIwAuaiovpOu5XRZfGDQnQLVs0nQfRIjIJEp9MblOiiQNeP16Yh2He9QbQAA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB2992
+References: <cover.1605896059.git.gustavoars@kernel.org> <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
+ <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com>
+ <1c7d7fde126bc0acf825766de64bf2f9b888f216.camel@HansenPartnership.com>
+ <CANiq72m22Jb5_+62NnwX8xds2iUdWDMAqD8PZw9cuxdHd95W0A@mail.gmail.com>
+ <fc45750b6d0277c401015b7aa11e16cd15f32ab2.camel@HansenPartnership.com>
+ <CANiq72k5tpDoDPmJ0ZWc1DGqm+81Gi-uEENAtvEs9v3SZcx6_Q@mail.gmail.com>
+ <4993259d01a0064f8bb22770503490f9252f3659.camel@HansenPartnership.com>
+ <CANiq72kqO=bYMJnFS2uYRpgWATJ=uXxZuNUsTXT+3aLtrpnzvQ@mail.gmail.com> <44005bde-f6d4-5eaa-39b8-1a5efeedb2d3@gmail.com>
+In-Reply-To: <44005bde-f6d4-5eaa-39b8-1a5efeedb2d3@gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 26 Nov 2020 15:53:27 +0100
+Message-ID: <CANiq72nobq=ptWK-qWxU91JHqkKhMcRtJNnw2XJd5-vSJWZd8Q@mail.gmail.com>
+Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
+To:     Edward Cree <ecree.xilinx@gmail.com>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        alsa-devel@alsa-project.org,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
+        cluster-devel@redhat.com, coreteam@netfilter.org,
+        devel@driverdev.osuosl.org, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
+        keyrings@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        linux-acpi@vger.kernel.org, linux-afs@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-atm-general@lists.sourceforge.net,
+        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-cifs@vger.kernel.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-decnet-user@lists.sourceforge.net,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-fbdev@vger.kernel.org, linux-geode@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input <linux-input@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mmc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
+        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
+        selinux@vger.kernel.org, target-devel@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        usb-storage@lists.one-eyed-alien.net,
+        virtualization@lists.linux-foundation.org,
+        wcn36xx@lists.infradead.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTExLTI2IGF0IDEyOjQ3ICswMjAwLCBEYW4gQWxvbmkgd3JvdGU6DQo+IEhp
-IFNjb3R0LCBUcm9uZCwNCj4gDQo+IENvbW1pdCBjZTM2ODUzNmRkNjE0NDUyNDA3ZGMzMWUyNDQ5
-ZWI4NDY4MWEwNmFmICgibmZzOg0KPiBuZnNfZmlsZV93cml0ZSgpDQo+IHNob3VsZCBjaGVjayBm
-b3Igd3JpdGViYWNrIGVycm9ycyIpIHNlZW1zIHRvIGhhdmUgYWZmZWN0ZWQgTkZTIHYzDQo+IHNv
-ZnQNCj4gbW91bnQgYmVoYXZpb3IsIGNhdXNpbmcgYXBwbGljYXRpb25zIHRvIGZhaWwgb24gYSBz
-bG93IGJhbmQNCj4gY29ubmVjdGlvbg0KPiB3aXRoIGEgcHJvcGVybHkgZnVuY3Rpb25pbmcgc2Vy
-dmVyLiBJIGNoZWNrZWQgdGhpcyB3aXRoIHJlY2VudCBMaW51eA0KPiA1LjEwLXJjNSwgYW5kIG9u
-IDUuOC4xOCB0byB3aGVyZSB0aGlzIGNvbW1pdCBpcyBiYWNrcG9ydGVkLg0KPiANCj4gUXVlc3Rp
-b246IHdoaWxlIHRoZSBORlMgdjQgcHJvdG9jb2wgdGFsa3MgYWJvdXQgYSBzb2Z0IG1vdW50IHRp
-bWVvdXQNCj4gYmVoYXZpb3IgYXQgIlJGQzc1MzAgc2VjdGlvbiAzLjEuMSIgKHNlZSByZWZlcmVu
-Y2UgYW5kIHBhdGNoc2V0DQo+IGFkZHJlc3NpbmcgaXQgaW4gWzFdKSwgaXMgaXQgdmFsaWQgdG8g
-YXNzdW1lIHRoYXQgYSBzaW1pbGFyIGd1YXJhbnRlZQ0KPiBmb3IgTkZTIHYzIHNvZnQgbW91bnRz
-IGlzIGV4cGVjdGVkPw0KPiANCj4gVGhlIHJlYXNvbiB3aHkgaXQgaXMgaW1wb3J0YW50LCBpcyBi
-ZWNhdXNlIHRoZSBmdWxmaWxtZW50IG9mIHRoaXMNCj4gZ3VhcmFudGVlIHNlZW1lZCB0byBoYXZl
-IGNoYW5nZWQgd2l0aCB0aGlzIHJlY2VudCBwYXRjaC4NCj4gDQo+IERldGFpbHMgb24gcmVwcm9k
-dWN0aW9uIC0gdXNpbmcgdGhlIGZvbGxvd2luZyBtb3VudCBvcHRpb246DQo+IA0KPiDCoMKgwqAN
-Cj4gdmVycz0zLHJzaXplPTEwNDg1NzYsd3NpemU9MTA0ODU3Nixzb2Z0LHByb3RvPXRjcCx0aW1l
-bz01MCxyZXRyYW5zPTE2DQoNClNvcnJ5LCBidXQgdGhvc2UgYXJlIGNvbXBsZXRlbHkgc2lsbHkg
-dGltZW8gYW5kIHJldHJhbnMgdmFsdWVzIGZvciBhDQpUQ1AgY29ubmVjdGlvbi4gSSBzZWUgbm8g
-cmVhc29uIHdoeSB3ZSBzaG91bGQgdHJ5IHRvIHN1cHBvcnQgdGhlbS4NCg0KPiANCj4gVGhpcyBp
-cyBkb25lIGFsb25nIHdpdGggcmF0ZSBsaW1pdGluZyBvbiB0aGUgb3V0Z29pbmcgaW50ZXJmYWNl
-Og0KPiANCj4gwqDCoMKgIHRjIHFkaXNjIGFkZCBkZXYgZXRoMCByb290IHRiZiByYXRlIDQwMDBr
-Yml0IGxhdGVuY3kgMW1zIGJ1cnN0DQo+IDE1NDANCj4gDQo+IEFuZCBwZXJmb3JtaW5nIGZvbGxv
-d2luZyBwYXJhbGxlbCB3b3JrIG9uIHRoZSBtb3VudHBvaW50Og0KPiANCj4gwqDCoMKgIGZvciBp
-IGluIGBzZXEgMSAxMDBgIDsgZG8gKGRkIGlmPS9kZXYvemVybyBvZj14JGkgJikgOyBkb25lDQo+
-IA0KPiBSZXN1bHQgaXMgdGhhdCBFSU9zIGFyZSByZXR1cm5lZCB0byBgZGRgLCB3aGVyZWFzIHdp
-dGhvdXQgdGhpcyBjb21taXQNCj4gdGhlIElPcyBzaW1wbHkgcGVyZm9ybWVkIHNsb3dseSwgYW5k
-IG5vIGVycm9ycyBvYnNlcnZlZCBieSBkZC4gSXQNCj4gYXBwZWFycyBpbiB0cmFjZXMgdGhhdCB0
-aGUgTkZTIGxheWVyIGlzIGRvaW5nIHRoZSByZXRyaWVzLg0KPiANCj4gWzFdICANCj4gaHR0cHM6
-Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LW5mcy9jb3Zlci8yMDE5MDMyODIw
-NTIzOS4yOTY3NC0xLXRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20vDQo+IA0KDQpZZXMu
-IElmIHlvdSBhcnRpZmljaWFsbHkgY3JlYXRlIGNvbmdlc3Rpb24gYnkgdGVsbGluZyB0aGUgY2xp
-ZW50IHRvDQprZWVwIHJlc2VuZGluZyBhbGwgeW91ciBvdXRzdGFuZGluZyBkYXRhIGV2ZXJ5IDUg
-c2Vjb25kcywgdGhlbiBpdCBpcw0KdHJpdmlhbCB0byBzZXQgdXAgdGhpcyBraW5kIG9mIHNpdHVh
-dGlvbi4gVGhhdCBoYXMgYWx3YXlzIGJlZW4gdGhlDQpjYXNlLCBhbmQgdGhlIHBhdGNoIHlvdSBw
-b2ludCB0byBoYXMgbm90aGluZyB0byBkbyB3aXRoIHRoaXMuDQoNCi0tIA0KVHJvbmQgTXlrbGVi
-dXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWts
-ZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+On Wed, Nov 25, 2020 at 11:44 PM Edward Cree <ecree.xilinx@gmail.com> wrote=
+:
+>
+> To make the intent clear, you have to first be certain that you
+>  understand the intent; otherwise by adding either a break or a
+>  fallthrough to suppress the warning you are just destroying the
+>  information that "the intent of this code is unknown".
+
+If you don't know what the intent of your own code is, then you
+*already* have a problem in your hands.
+
+> Figuring out the intent of a piece of unfamiliar code takes more
+>  than 1 minute; just because
+>     case foo:
+>         thing;
+>     case bar:
+>         break;
+>  produces identical code to
+>     case foo:
+>         thing;
+>         break;
+>     case bar:
+>         break;
+>  doesn't mean that *either* is correct =E2=80=94 maybe the author meant
+
+What takes 1 minute is adding it *mechanically* by the author, i.e. so
+that you later compare whether codegen is the same.
+
+>  to write
+>     case foo:
+>         return thing;
+>     case bar:
+>         break;
+>  and by inserting that break you've destroyed the marker that
+>  would direct someone who knew what the code was about to look
+>  at that point in the code and spot the problem.
+
+Then it means you already have a bug. This patchset gives the
+maintainer a chance to notice it, which is a good thing. The "you've
+destroyed the market" claim is bogus, because:
+  1. you were not looking into it
+  2. you didn't notice the bug so far
+  3. is implicit -- harder to spot
+  4. is only useful if you explicitly take a look at this kind of bug.
+So why don't you do it now?
+
+> Thus, you *always* have to look at more than just the immediate
+>  mechanical context of the code, to make a proper judgement that
+>  yes, this was the intent.
+
+I find that is the responsibility of the maintainers and reviewers for
+tree-wide patches like this, assuming they want. They can also keep
+the behavior (and the bugs) without spending time. Their choice.
+
+> If you think that that sort of thing
+>  can be done in an *average* time of one minute, then I hope you
+>  stay away from code I'm responsible for!
+
+Please don't accuse others of recklessness or incompetence, especially
+if you didn't understand what they said.
+
+> A warning is only useful because it makes you *think* about the
+>  code.  If you suppress the warning without doing that thinking,
+>  then you made the warning useless; and if the warning made you
+>  think about code that didn't *need* it, then the warning was
+>  useless from the start.
+
+We are not suppressing the warning. Quite the opposite, in fact.
+
+> So make your mind up: does Clang's stricter -Wimplicit-fallthrough
+>  flag up code that needs thought (in which case the fixes take
+>  effort both to author and to review)
+
+As I said several times already, it does take time to review if the
+maintainer wants to take the chance to see if they had a bug to begin
+with, but it does not require thought for the author if they just go
+for equivalent codegen.
+
+> or does it flag up code
+>  that can be mindlessly "fixed" (in which case the warning is
+>  worthless)?  Proponents in this thread seem to be trying to
+>  have it both ways.
+
+A warning is not worthless just because you can mindlessly fix it.
+There are many counterexamples, e.g. many
+checkpatch/lint/lang-format/indentation warnings, functional ones like
+the `if (a =3D b)` warning...
+
+Cheers,
+Miguel
