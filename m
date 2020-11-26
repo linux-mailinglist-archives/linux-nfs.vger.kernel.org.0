@@ -2,123 +2,213 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A7BC2C4BC2
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Nov 2020 01:05:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6D772C4BF9
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Nov 2020 01:22:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbgKZAEy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Nov 2020 19:04:54 -0500
-Received: from elasmtp-curtail.atl.sa.earthlink.net ([209.86.89.64]:37730 "EHLO
-        elasmtp-curtail.atl.sa.earthlink.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726908AbgKZAEy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Nov 2020 19:04:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mindspring.com;
-        s=dk12062016; t=1606349094; bh=kt1pgGwhmWN6g7RTzok9XNvm6uE22lgyYyUA
-        Hkzl9r8=; h=Received:From:To:Cc:References:In-Reply-To:Subject:Date:
-         Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:
-         X-Mailer:Thread-Index:Content-Language:X-ELNK-Trace:
-         X-Originating-IP; b=PojZKnhAAyiofIWXPXmateD9cmcyy6Mi8qSgNMd7TUIWTj
-        HvpEVcB59BJ1WLP/h8oFKdb5gNstj85aukpXoGk1INQyIdmJRa3QZsJ7sbjP4Pm5Vhx
-        q4+dCmPzIFSxnFpG81EkXU1NNLwpOm2civs4CpNQ47yZ/DRlAArZggmVFqnr7wvbBKg
-        PLcX1JHj9FkYGPInEY2w+SvAR+wQQKQVtdgTABPEuwAQudImis29IvjJqj10tXk/7KD
-        Wkb3L++dAr2f9cE2uJQHUeMs5gRhN5XSLZgNXkGKRSrXlSwbMPow6uQWDsAsZQPvxWj
-        5o6ThdzGW89liz8wV/InZTyGfNJA==
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws;
-  s=dk12062016; d=mindspring.com;
-  b=I2a+6DjG0npKYda/Am8eiHCLQZvxGGcp1CfEudE83zBkIXQ6jQ/1HHSI074U394kQG4uU83xnHYP/DpFMIjB7BZS7hIK00MTPbLdlDZDA+oVH8Z5yuQ/UOEYXGIQJj1Ga+aE9V1efO4qBzBpCBKy/KVAE6W9IHDYm8ZJL8RkL/uEmGOSeWaZL21el4Q9pSnZIx+z8+5PnUrnDoKasZpKTAE1X2Ftk9pZ/Fl/qXSsTcv6gebSHUq3TrVRjm+luGO8RO3vmXtl9FXG49Udg3aOjtWeDGDnUlzXskF9PfVr8C5VnD6TJG8gTksoFNhtzpz1gIbhSoD1rAyWaxUNlL5wiQ==;
-  h=Received:From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:X-Mailer:Thread-Index:Content-Language:X-ELNK-Trace:X-Originating-IP;
-Received: from [76.105.143.216] (helo=FRANKSTHINKPAD)
-        by elasmtp-curtail.atl.sa.earthlink.net with esmtpa (Exim 4)
-        (envelope-from <ffilzlnx@mindspring.com>)
-        id 1ki4mJ-0001AK-KG; Wed, 25 Nov 2020 19:04:51 -0500
-From:   "Frank Filz" <ffilzlnx@mindspring.com>
-To:     "'bfields'" <bfields@fieldses.org>
-Cc:     "'Daire Byrne'" <daire@dneg.com>,
-        "'Trond Myklebust'" <trondmy@hammerspace.com>,
-        "'linux-cachefs'" <linux-cachefs@redhat.com>,
-        "'linux-nfs'" <linux-nfs@vger.kernel.org>
-References: <1188023047.38703514.1600272094778.JavaMail.zimbra@dneg.com> <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com> <635679406.70384074.1603272832846.JavaMail.zimbra@dneg.com> <20201109160256.GB11144@fieldses.org> <1744768451.86186596.1605186084252.JavaMail.zimbra@dneg.com> <1055884313.92996091.1606250106656.JavaMail.zimbra@dneg.com> <20201124211522.GC7173@fieldses.org> <0fc201d6c2af$62b039f0$2810add0$@mindspring.com> <20201125144753.GC2811@fieldses.org> <100101d6c347$917ed0f0$b47c72d0$@mindspring.com> <20201125190315.GB7049@fieldses.org>
-In-Reply-To: <20201125190315.GB7049@fieldses.org>
-Subject: RE: Adventures in NFS re-exporting
-Date:   Wed, 25 Nov 2020 16:04:51 -0800
-Message-ID: <103e01d6c387$c3d7f640$4b87e2c0$@mindspring.com>
+        id S1729318AbgKZAV7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Nov 2020 19:21:59 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:2848 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgKZAV7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Nov 2020 19:21:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1606350118; x=1637886118;
+  h=date:from:to:cc:message-id:references:mime-version:
+   content-transfer-encoding:in-reply-to:subject;
+  bh=xShX6oBJo6P5nnH3QRWk8ovUW5DCv/2O1Z+1VdizbU0=;
+  b=GgNpGdbDySXpCchqzrIjdz+Q80tHLpXQ/rQ/TNbVDoQr+UZ0l5veXkP4
+   RUzdsrrdyfK71MAhLHcpjJjBhD7vYc84d696kJhgSzomP2fVZ211NXJLJ
+   jsM4bLWSX4MMHIFf+0Q2rGS73/iPbbd8MheODldkV3muOGz8/4Np80Rym
+   8=;
+X-IronPort-AV: E=Sophos;i="5.78,370,1599523200"; 
+   d="scan'208";a="99297745"
+Subject: Re: [PATCH v1] NFS: Fix rpcrdma_inline_fixup() crash with new LISTXATTRS
+ operation
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 26 Nov 2020 00:21:51 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id B95A9A2177;
+        Thu, 26 Nov 2020 00:21:50 +0000 (UTC)
+Received: from EX13D30UEA003.ant.amazon.com (10.43.61.28) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 26 Nov 2020 00:21:50 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D30UEA003.ant.amazon.com (10.43.61.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 26 Nov 2020 00:21:49 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Thu, 26 Nov 2020 00:21:50 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id 88505C21EF; Thu, 26 Nov 2020 00:21:49 +0000 (UTC)
+Date:   Thu, 26 Nov 2020 00:21:49 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>
+CC:     Chuck Lever <chuck.lever@oracle.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Message-ID: <20201126002149.GA2339@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+References: <160623862874.1534.4471924380357882531.stgit@manet.1015granger.net>
+ <20201124200640.GA2476@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <B1CF6271-B168-4571-B8E4-0CAB0A0B40FB@netapp.com>
+ <20201124211926.GB14140@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <5571DE63-1276-4AF6-BB8F-EE36878B06E5@netapp.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQLbRzS9yZr5C5vAyHWnu9xOS+RZ+gH6EgB+ATmqgtcBmvnx5gFd2itFAYsKXvUCY0qgxgKfDMlvApwox1gCn5pjiwGJmGGRpzSF2/A=
-Content-Language: en-us
-X-ELNK-Trace: 136157f01908a8929c7f779228e2f6aeda0071232e20db4dbf9d46175fc33655b0564f0bda0d754b350badd9bab72f9c350badd9bab72f9c350badd9bab72f9c
-X-Originating-IP: 76.105.143.216
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5571DE63-1276-4AF6-BB8F-EE36878B06E5@netapp.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: 'bfields' [mailto:bfields@fieldses.org]
-> Sent: Wednesday, November 25, 2020 11:03 AM
-> To: Frank Filz <ffilzlnx@mindspring.com>
-> Cc: 'Daire Byrne' <daire@dneg.com>; 'Trond Myklebust'
-> <trondmy@hammerspace.com>; 'linux-cachefs' <linux-cachefs@redhat.com>;
-> 'linux-nfs' <linux-nfs@vger.kernel.org>
-> Subject: Re: Adventures in NFS re-exporting
+On Tue, Nov 24, 2020 at 10:40:25PM +0000, Kornievskaia, Olga wrote:
 > 
-> On Wed, Nov 25, 2020 at 08:25:19AM -0800, Frank Filz wrote:
-> > On the other
-> > hand, re-export with state has a pitfall. If the re-export server
-> > crashes, the state is lost on the original server unless we make a
-> > protocol change to allow state re-export such that a re-export server
-> > crashing doesn't cause state loss.
 > 
-> Oh, yes, reboot recovery's an interesting problem that I'd forgotten
-about;
-> added to that wiki page.
->
-> By "state re-export" you mean you'd take the stateids the original server
-> returned to you, and return them to your own clients?  So then I guess you
-> wouldn't need much state at all.
-
-By state re-export I meant reflecting locks the end client takes on the
-re-export server to the original server. Not necessarily by reflecting the
-stateid (probably something to trip on there...) (Can we nail down a good
-name for it? Proxy server or re-export server work well for the man in the
-middle, but what about the back end server?)
-
-Frank
-
-> > For this reason, I haven't rushed to implement lock state re-export in
-> > Ganesha, rather allowing the re-export server to just manage lock
-> > state locally.
-> >
-> > > Cooperating servers could have an agreement on filehandles.  And I
-> > > guess
-> > we
-> > > could standardize that somehow.  Are we ready for that?  I'm not
-> > > sure what other re-exporting problems there are that I haven't thought
-of.
-> >
-> > I'm not sure how far we want to go there, but potentially specific
-> > server implementations could choose to be interoperable in a way that
-> > allows the handle encapsulation to either be smaller or no extra
-> > overhead. For example, if we implemented what I've thought about for
-> > Ganesha-Ganesha re-export, Ganesha COULD also be "taught" which
-> > portion of the knfsd handle is the filesystem/export identifier, and
-> > maintain a database of Ganesha export/filesystem <-> knfsd
-> > export/filesystem and have Ganesha re-encapsulate the
-> > exportfs/name_to_handle_at portion of the handle. Of course in this
-> > case, trivial migration isn't possible since Ganesha will have a
-different
-> encapsulation than knfsd.
-> >
-> > Incidentally, I also purposefully made Ganesha's encapsulation
-> > different so it never collides with either version of knfsd handles
-> > (now if over the course of the past 10 years another handle version has
-come
-> along...).
+> ﻿On 11/24/20, 4:20 PM, "Frank van der Linden" <fllinden@amazon.com> wrote:
 > 
-> I don't think anything's changed there.
+>     On Tue, Nov 24, 2020 at 08:50:36PM +0000, Kornievskaia, Olga wrote:
+>     >
+>     >
+>     > On 11/24/20, 3:06 PM, "Frank van der Linden" <fllinden@amazon.com> wrote:
+>     >
+>     >     On Tue, Nov 24, 2020 at 12:26:32PM -0500, Chuck Lever wrote:
+>     >     >
+>     >     >
+>     >     >
+>     >     > By switching to an XFS-backed export, I am able to reproduce the
+>     >     > ibcomp worker crash on my client with xfstests generic/013.
+>     >     >
+>     >     > For the failing LISTXATTRS operation, xdr_inline_pages() is called
+>     >     > with page_len=12 and buflen=128. Then:
+>     >     >
+>     >     > - Because buflen is small, rpcrdma_marshal_req will not set up a
+>     >     >   Reply chunk and the rpcrdma's XDRBUF_SPARSE_PAGES logic does not
+>     >     >   get invoked at all.
+>     >     >
+>     >     > - Because page_len is non-zero, rpcrdma_inline_fixup() tries to
+>     >     >   copy received data into rq_rcv_buf->pages, but they're missing.
+>     >     >
+>     >     > The result is that the ibcomp worker faults and dies. Sometimes that
+>     >     > causes a visible crash, and sometimes it results in a transport
+>     >     > hang without other symptoms.
+>     >     >
+>     >     > RPC/RDMA's XDRBUF_SPARSE_PAGES support is not entirely correct, and
+>     >     > should eventually be fixed or replaced. However, my preference is
+>     >     > that upper-layer operations should explicitly allocate their receive
+>     >     > buffers (using GFP_KERNEL) when possible, rather than relying on
+>     >     > XDRBUF_SPARSE_PAGES.
+>     >     >
+>     >     > Reported-by: Olga kornievskaia <kolga@netapp.com>
+>     >     > Suggested-by: Olga kornievskaia <kolga@netapp.com>
+>     >     > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>     >     > ---
+>     >     >  fs/nfs/nfs42proc.c |   17 ++++++++++-------
+>     >     >  fs/nfs/nfs42xdr.c  |    1 -
+>     >     >  2 files changed, 10 insertions(+), 8 deletions(-)
+>     >     >
+>     >     > Hi-
+>     >     >
+>     >     > I like Olga's proposed approach. What do you think of this patch?
+>     >     >
+>     >     >
+>     >     > diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+>     >     > index 2b2211d1234e..24810305ec1c 100644
+>     >     > --- a/fs/nfs/nfs42proc.c
+>     >     > +++ b/fs/nfs/nfs42proc.c
+>     >     > @@ -1241,7 +1241,7 @@ static ssize_t _nfs42_proc_listxattrs(struct inode *inode, void *buf,
+>     >     >                 .rpc_resp       = &res,
+>     >     >         };
+>     >     >         u32 xdrlen;
+>     >     > -       int ret, np;
+>     >     > +       int ret, np, i;
+>     >     >
+>     >     >
+>     >     >         res.scratch = alloc_page(GFP_KERNEL);
+>     >     > @@ -1253,10 +1253,14 @@ static ssize_t _nfs42_proc_listxattrs(struct inode *inode, void *buf,
+>     >     >                 xdrlen = server->lxasize;
+>     >     >         np = xdrlen / PAGE_SIZE + 1;
+>     >     >
+>     >     > +       ret = -ENOMEM;
+>     >     >         pages = kcalloc(np, sizeof(struct page *), GFP_KERNEL);
+>     >     > -       if (pages == NULL) {
+>     >     > -               __free_page(res.scratch);
+>     >     > -               return -ENOMEM;
+>     >     > +       if (pages == NULL)
+>     >     > +               goto out_free;
+>     >     > +       for (i = 0; i < np; i++) {
+>     >     > +               pages[i] = alloc_page(GFP_KERNEL);
+>     >     > +               if (!pages[i])
+>     >     > +                       goto out_free;
+>     >     >         }
+>     >     >
+>     >     >         arg.xattr_pages = pages;
+>     >     > @@ -1271,14 +1275,13 @@ static ssize_t _nfs42_proc_listxattrs(struct inode *inode, void *buf,
+>     >     >                 *eofp = res.eof;
+>     >     >         }
+>     >     >
+>     >     > +out_free:
+>     >     >         while (--np >= 0) {
+>     >     >                 if (pages[np])
+>     >     >                         __free_page(pages[np]);
+>     >     >         }
+>     >     > -
+>     >     > -       __free_page(res.scratch);
+>     >     >         kfree(pages);
+>     >     > -
+>     >     > +       __free_page(res.scratch);
+>     >     >         return ret;
+>     >     >
+>     >     >  }
+>     >     > diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+>     >     > index 6e060a88f98c..8432bd6b95f0 100644
+>     >     > --- a/fs/nfs/nfs42xdr.c
+>     >     > +++ b/fs/nfs/nfs42xdr.c
+>     >     > @@ -1528,7 +1528,6 @@ static void nfs4_xdr_enc_listxattrs(struct rpc_rqst *req,
+>     >     >
+>     >     >         rpc_prepare_reply_pages(req, args->xattr_pages, 0, args->count,
+>     >     >             hdr.replen);
+>     >     > -       req->rq_rcv_buf.flags |= XDRBUF_SPARSE_PAGES;
+>     >     >
+>     >     >         encode_nops(&hdr);
+>     >     >  }
+>     >     >
+>     >     >
+>     >
+>     >     I can see why this is the simplest and most pragmatic solution, so it's
+>     >     fine with me.
+>     >
+>     >     Why doesn't this happen with getxattr? Do we need to convert that too?
+>     >
+>     > [olga] I don't know if GETXATTR/SETXATTR works. I'm not sure what tests exercise those operations. I just ran into the fact that generic/013 wasn't passing. And I don't see that it's an xattr specific tests. I'm not sure how it ends up triggering is usage of xattr.
 > 
-> --b.
+>     I'm attaching the test program I used, it should give things a better workout.
+> 
+> [olga] I'm not sure if I'm doing something wrong but there are only 2 GETXATTR call on the network trace from running this application and both calls are returning an error (ERR_NOXATTR). Which btw might explain why no problems are seen since no decoding of data is happening. There are lots of SETXATTRs and REMOVEXATTR and there is a LISTXATTR (which btw network trace is marking as malformed so there might something bad there). Anyway...
+> 
+> This is my initial report: no real exercise of the GETXATTR code as far as I can tell.
 
+True, the test is heavier on the setxattr / listxattr side. And with caching,
+you're not going to see a lot of GETXATTR calls. I used the same test program
+with caching off, and it works fine, though.
+
+In any case, after converting GETXATTR to pre-allocate pages, I noticed that,
+when I disabled caching, I was getting EIO instead of ERANGE back from
+calls that test the case of calling getxattr() with a buffer length that
+is insufficient. The behavior is somewhat strange - if you, say, set an xattr
+of length 59, then calls with lengths 56-59 get -ERANGE from decode_getxattr
+(correct), but calls with lengths 53-55 get EIO (should be -ERANGE).
+
+E.g. non-aligned values to rpc_prepare_reply_pages make the RPC call error
+out early, even before it gets to decode_getxattr.
+
+I noticed that all other code always seems to specify multiples of PAGE_SIZE
+as the length to rpc_prepare_reply_pages. But the code itself suggests that
+it certainly *intends* to be prepared to handle any length, aligned or not.
+
+However, apparently, it at least doesn't deal with non-aligned lengths,
+making things fail further along down the line.
+
+I need to look at this a bit more.
+
+- Frank
