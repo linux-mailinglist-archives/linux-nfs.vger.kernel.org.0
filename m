@@ -2,158 +2,280 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9D822C5A30
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Nov 2020 18:07:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 56F372C5A41
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Nov 2020 18:10:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404323AbgKZRGD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Nov 2020 12:06:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391545AbgKZRF7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Nov 2020 12:05:59 -0500
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC77C0617A7;
-        Thu, 26 Nov 2020 09:05:58 -0800 (PST)
-Received: by mail-yb1-xb34.google.com with SMTP id r127so2177763yba.10;
-        Thu, 26 Nov 2020 09:05:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O/jaIJrbif54isUECHds/J8Ujq0NdoNxUTCCwJWwQ80=;
-        b=YymqsvqKytU8xghgrWvO9q2MBm/qo/QfMLfSKpWw4/r/4uRHhZxuPq9ek+nW3ctzYi
-         vs3zi1yLEuFoGUDgrnF15wpJAK9RqJ1aO9sTXa0PjOzjLe+d4O/pTFiiO013Mx2qKoL4
-         SkUMUUIjag5bjqwHGLYc9f20TwOaOWbGTale/6i8ahvnaZymX26ArF3ReuQKFVdof495
-         iKDDkr6mQvIIbdynQAd2wxd2GUAuBku/vDm4jIdtOw4Ph7wkJ5rD2TxigEVm3yQ5C9tu
-         pJCfZKqtAfLebSyeKrm6VDCN2G4oKvj4TFU9uFOnavPNoLjuB5eIt+ODZ6yyvDDDthAD
-         GeSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O/jaIJrbif54isUECHds/J8Ujq0NdoNxUTCCwJWwQ80=;
-        b=aBKS9dP5F50l3Jly7k9SSc/LK5erhBpycSZOv4wk5BN5RL5nJRXG22JXb51uhHUZXT
-         KIo7NPNuDQAaoFptzyQLY5+V165LaaM4A3SDftsG6r8jUKFTe3kOZlTNhFO98Omgyp9Q
-         a9Nhl4BC3JSKnQNtrA5BlkEEIiNZTXLFXBewv/QXrjtqSWNsWQaFfWQufRE4KuzbXqKR
-         PzrYxYYizDdcU7tHSLlPDoetCmkwwegjts2/MTRKSxYZHry2gE2IZ3EABAxgsDNNKkjr
-         HczI/bTiV/H0UdQWLP6YbSuhnjf+4UX9HDOCvOW26oy0A/Bet4FJA2uZGgwPUNbj9RMn
-         pyQw==
-X-Gm-Message-State: AOAM532cLFujGBf04/OSYyfwCvyItoqdB5R+dfwsdw217khsKAQ0vy+N
-        l26UMdbWZCDXWtXxdN3IQjQv/nw3FiJxL8cvQg0=
-X-Google-Smtp-Source: ABdhPJxMy5ncXEZ6TSWkZ0cAXTnkQ7iw+jjdg+cNNUWTZPlZcmFMrQQcJd2JAoeBontKFrtwmzLazAacI3fdsjx9xvQ=
-X-Received: by 2002:a5b:40e:: with SMTP id m14mr4835621ybp.33.1606410357153;
- Thu, 26 Nov 2020 09:05:57 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1605896059.git.gustavoars@kernel.org> <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
- <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com>
- <1c7d7fde126bc0acf825766de64bf2f9b888f216.camel@HansenPartnership.com>
- <CANiq72m22Jb5_+62NnwX8xds2iUdWDMAqD8PZw9cuxdHd95W0A@mail.gmail.com>
- <fc45750b6d0277c401015b7aa11e16cd15f32ab2.camel@HansenPartnership.com>
- <CANiq72k5tpDoDPmJ0ZWc1DGqm+81Gi-uEENAtvEs9v3SZcx6_Q@mail.gmail.com>
- <4993259d01a0064f8bb22770503490f9252f3659.camel@HansenPartnership.com>
- <CANiq72kqO=bYMJnFS2uYRpgWATJ=uXxZuNUsTXT+3aLtrpnzvQ@mail.gmail.com>
- <44005bde-f6d4-5eaa-39b8-1a5efeedb2d3@gmail.com> <CANiq72nobq=ptWK-qWxU91JHqkKhMcRtJNnw2XJd5-vSJWZd8Q@mail.gmail.com>
- <CAMuHMdV5kOakvZJMWLxbpigFPS+Xuw6DVYsWCWZy7wGsv3idcw@mail.gmail.com>
-In-Reply-To: <CAMuHMdV5kOakvZJMWLxbpigFPS+Xuw6DVYsWCWZy7wGsv3idcw@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 26 Nov 2020 18:05:45 +0100
-Message-ID: <CANiq72=n4rVvmKt0RCb5aOfQydA8bgDxfntRLDieV8Q2efP8Zg@mail.gmail.com>
-Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Edward Cree <ecree.xilinx@gmail.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        linux-atm-general@lists.sourceforge.net,
-        reiserfs-devel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-ide@vger.kernel.org, dm-devel@redhat.com,
-        keyrings@vger.kernel.org,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        GR-everest-linux-l2@marvell.com, wcn36xx@lists.infradead.org,
-        samba-technical@lists.samba.org, linux-i3c@lists.infradead.org,
-        linux1394-devel@lists.sourceforge.net,
-        linux-afs@lists.infradead.org,
-        usb-storage@lists.one-eyed-alien.net,
-        Lars Ellenberg <drbd-dev@lists.linbit.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        linux-cifs@vger.kernel.org, rds-devel@oss.oracle.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        scsi <linux-scsi@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        oss-drivers@netronome.com, bridge@lists.linux-foundation.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        linux-stm32@st-md-mailman.stormreply.com, cluster-devel@redhat.com,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        coreteam@netfilter.org, intel-wired-lan@lists.osuosl.org,
-        linux-input <linux-input@vger.kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>, selinux@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        linux-geode@lists.infradead.org, linux-can@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        op-tee@lists.trustedfirmware.org,
-        linux-mediatek@lists.infradead.org, xen-devel@lists.xenproject.org,
-        Nouveau Dev <nouveau@lists.freedesktop.org>,
-        linux-hams@vger.kernel.org,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        GR-Linux-NIC-Dev@marvell.com,
-        tipc-discussion@lists.sourceforge.net,
-        Linux-MM <linux-mm@kvack.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-decnet-user@lists.sourceforge.net,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-sctp@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        patches@opensource.cirrus.com, Joe Perches <joe@perches.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        target-devel <target-devel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        id S2404000AbgKZRKb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Nov 2020 12:10:31 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:48608 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403996AbgKZRKa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Nov 2020 12:10:30 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AQH4gv1169139;
+        Thu, 26 Nov 2020 17:10:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=D7+ChZCUQeEe/WZq8ri+PGNUf7TYx3TKXbTBhgkxLlY=;
+ b=ofTclE0uOItTq3i3tMHTkAPfCu4enzMClfoAFWaf5lqRjRkotz4/yUgnfcHiUwnBC6SR
+ Xnx4XAAH+ad4Y15bZwO3b3qOCu9mW9AqYolCGcxOE6LOGsHklUfVdhO2Cdv6Vv4uUYtb
+ TtZEiKNvuVfkb1CSiWUk67FsHUSpGLrUvDstDKDA+YBxmwbq9mwk2XI8LmO981/4tuGv
+ jeq0ezDIjdvZCqIM/3Rtql5jN+C4Asbg5r2+3wMkaJEN5+Z4G2GrMzmbdurUi1cbKhv5
+ 1HYXgd53EIOKk0pBXl9PkEBOLm5odSG1NQbAk5WMdcDQw8/oA40mEFILB8fJpWYcD1wK Lw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 351kwhes8n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 26 Nov 2020 17:10:27 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AQH69KV082356;
+        Thu, 26 Nov 2020 17:10:26 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 351n2kfm97-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Nov 2020 17:10:26 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AQHANXH001169;
+        Thu, 26 Nov 2020 17:10:25 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Nov 2020 09:10:22 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [PATCH v1] NFS: Fix rpcrdma_inline_fixup() crash with new
+ LISTXATTRS operation
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20201126002149.GA2339@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+Date:   Thu, 26 Nov 2020 12:10:21 -0500
+Cc:     "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B791B088-49C4-42F3-8721-A022027625D3@oracle.com>
+References: <160623862874.1534.4471924380357882531.stgit@manet.1015granger.net>
+ <20201124200640.GA2476@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <B1CF6271-B168-4571-B8E4-0CAB0A0B40FB@netapp.com>
+ <20201124211926.GB14140@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <5571DE63-1276-4AF6-BB8F-EE36878B06E5@netapp.com>
+ <20201126002149.GA2339@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+To:     Frank van der Linden <fllinden@amazon.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9817 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 bulkscore=0
+ mlxlogscore=999 spamscore=0 phishscore=0 malwarescore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011260105
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9815 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 impostorscore=0
+ suspectscore=2 adultscore=0 bulkscore=0 phishscore=0 malwarescore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011260104
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Nov 26, 2020 at 4:28 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> The maintainer is not necessarily the owner/author of the code, and
-> thus may not know the intent of the code.
 
-Agreed, I was not blaming maintainers -- just trying to point out that
-the problem is there :-)
 
-In those cases, it is still very useful: we add the `fallthrough` and
-a comment saying `FIXME: fallthrough intended? Figure this out...`.
-Thus a previous unknown unknown is now a known unknown. And no new
-unknown unknowns will be introduced since we enabled the warning
-globally.
+> On Nov 25, 2020, at 7:21 PM, Frank van der Linden =
+<fllinden@amazon.com> wrote:
+>=20
+> On Tue, Nov 24, 2020 at 10:40:25PM +0000, Kornievskaia, Olga wrote:
+>>=20
+>>=20
+>> =EF=BB=BFOn 11/24/20, 4:20 PM, "Frank van der Linden" =
+<fllinden@amazon.com> wrote:
+>>=20
+>>    On Tue, Nov 24, 2020 at 08:50:36PM +0000, Kornievskaia, Olga =
+wrote:
+>>>=20
+>>>=20
+>>> On 11/24/20, 3:06 PM, "Frank van der Linden" <fllinden@amazon.com> =
+wrote:
+>>>=20
+>>>    On Tue, Nov 24, 2020 at 12:26:32PM -0500, Chuck Lever wrote:
+>>>>=20
+>>>>=20
+>>>>=20
+>>>> By switching to an XFS-backed export, I am able to reproduce the
+>>>> ibcomp worker crash on my client with xfstests generic/013.
+>>>>=20
+>>>> For the failing LISTXATTRS operation, xdr_inline_pages() is called
+>>>> with page_len=3D12 and buflen=3D128. Then:
+>>>>=20
+>>>> - Because buflen is small, rpcrdma_marshal_req will not set up a
+>>>>  Reply chunk and the rpcrdma's XDRBUF_SPARSE_PAGES logic does not
+>>>>  get invoked at all.
+>>>>=20
+>>>> - Because page_len is non-zero, rpcrdma_inline_fixup() tries to
+>>>>  copy received data into rq_rcv_buf->pages, but they're missing.
+>>>>=20
+>>>> The result is that the ibcomp worker faults and dies. Sometimes =
+that
+>>>> causes a visible crash, and sometimes it results in a transport
+>>>> hang without other symptoms.
+>>>>=20
+>>>> RPC/RDMA's XDRBUF_SPARSE_PAGES support is not entirely correct, and
+>>>> should eventually be fixed or replaced. However, my preference is
+>>>> that upper-layer operations should explicitly allocate their =
+receive
+>>>> buffers (using GFP_KERNEL) when possible, rather than relying on
+>>>> XDRBUF_SPARSE_PAGES.
+>>>>=20
+>>>> Reported-by: Olga kornievskaia <kolga@netapp.com>
+>>>> Suggested-by: Olga kornievskaia <kolga@netapp.com>
+>>>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>>>> ---
+>>>> fs/nfs/nfs42proc.c |   17 ++++++++++-------
+>>>> fs/nfs/nfs42xdr.c  |    1 -
+>>>> 2 files changed, 10 insertions(+), 8 deletions(-)
+>>>>=20
+>>>> Hi-
+>>>>=20
+>>>> I like Olga's proposed approach. What do you think of this patch?
+>>>>=20
+>>>>=20
+>>>> diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+>>>> index 2b2211d1234e..24810305ec1c 100644
+>>>> --- a/fs/nfs/nfs42proc.c
+>>>> +++ b/fs/nfs/nfs42proc.c
+>>>> @@ -1241,7 +1241,7 @@ static ssize_t _nfs42_proc_listxattrs(struct =
+inode *inode, void *buf,
+>>>>                .rpc_resp       =3D &res,
+>>>>        };
+>>>>        u32 xdrlen;
+>>>> -       int ret, np;
+>>>> +       int ret, np, i;
+>>>>=20
+>>>>=20
+>>>>        res.scratch =3D alloc_page(GFP_KERNEL);
+>>>> @@ -1253,10 +1253,14 @@ static ssize_t =
+_nfs42_proc_listxattrs(struct inode *inode, void *buf,
+>>>>                xdrlen =3D server->lxasize;
+>>>>        np =3D xdrlen / PAGE_SIZE + 1;
+>>>>=20
+>>>> +       ret =3D -ENOMEM;
+>>>>        pages =3D kcalloc(np, sizeof(struct page *), GFP_KERNEL);
+>>>> -       if (pages =3D=3D NULL) {
+>>>> -               __free_page(res.scratch);
+>>>> -               return -ENOMEM;
+>>>> +       if (pages =3D=3D NULL)
+>>>> +               goto out_free;
+>>>> +       for (i =3D 0; i < np; i++) {
+>>>> +               pages[i] =3D alloc_page(GFP_KERNEL);
+>>>> +               if (!pages[i])
+>>>> +                       goto out_free;
+>>>>        }
+>>>>=20
+>>>>        arg.xattr_pages =3D pages;
+>>>> @@ -1271,14 +1275,13 @@ static ssize_t =
+_nfs42_proc_listxattrs(struct inode *inode, void *buf,
+>>>>                *eofp =3D res.eof;
+>>>>        }
+>>>>=20
+>>>> +out_free:
+>>>>        while (--np >=3D 0) {
+>>>>                if (pages[np])
+>>>>                        __free_page(pages[np]);
+>>>>        }
+>>>> -
+>>>> -       __free_page(res.scratch);
+>>>>        kfree(pages);
+>>>> -
+>>>> +       __free_page(res.scratch);
+>>>>        return ret;
+>>>>=20
+>>>> }
+>>>> diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+>>>> index 6e060a88f98c..8432bd6b95f0 100644
+>>>> --- a/fs/nfs/nfs42xdr.c
+>>>> +++ b/fs/nfs/nfs42xdr.c
+>>>> @@ -1528,7 +1528,6 @@ static void nfs4_xdr_enc_listxattrs(struct =
+rpc_rqst *req,
+>>>>=20
+>>>>        rpc_prepare_reply_pages(req, args->xattr_pages, 0, =
+args->count,
+>>>>            hdr.replen);
+>>>> -       req->rq_rcv_buf.flags |=3D XDRBUF_SPARSE_PAGES;
+>>>>=20
+>>>>        encode_nops(&hdr);
+>>>> }
+>>>>=20
+>>>>=20
+>>>=20
+>>>    I can see why this is the simplest and most pragmatic solution, =
+so it's
+>>>    fine with me.
+>>>=20
+>>>    Why doesn't this happen with getxattr? Do we need to convert that =
+too?
+>>>=20
+>>> [olga] I don't know if GETXATTR/SETXATTR works. I'm not sure what =
+tests exercise those operations. I just ran into the fact that =
+generic/013 wasn't passing. And I don't see that it's an xattr specific =
+tests. I'm not sure how it ends up triggering is usage of xattr.
+>>=20
+>>    I'm attaching the test program I used, it should give things a =
+better workout.
+>>=20
+>> [olga] I'm not sure if I'm doing something wrong but there are only 2 =
+GETXATTR call on the network trace from running this application and =
+both calls are returning an error (ERR_NOXATTR). Which btw might explain =
+why no problems are seen since no decoding of data is happening. There =
+are lots of SETXATTRs and REMOVEXATTR and there is a LISTXATTR (which =
+btw network trace is marking as malformed so there might something bad =
+there). Anyway...
+>>=20
+>> This is my initial report: no real exercise of the GETXATTR code as =
+far as I can tell.
+>=20
+> True, the test is heavier on the setxattr / listxattr side. And with =
+caching,
+> you're not going to see a lot of GETXATTR calls. I used the same test =
+program
+> with caching off, and it works fine, though.
 
-> BTW, you cannot mindlessly fix the latter, as you cannot know if
-> "(a == b)" or "((a = b))" was intended, without understanding the code
-> (and the (possibly unavailable) data sheet, and the hardware, ...).
+I unintentionally broke GETXATTR while developing the LISTXATTRS fix,
+and generic/013 rather aggressively informed me that GETXATTR was no
+longer working. There is some test coverage there, fwiw.
 
-That's right, I was referring to the cases where the compiler saves
-someone time from a typo they just made.
 
-Cheers,
-Miguel
+> In any case, after converting GETXATTR to pre-allocate pages, I =
+noticed that,
+> when I disabled caching, I was getting EIO instead of ERANGE back from
+> calls that test the case of calling getxattr() with a buffer length =
+that
+> is insufficient.
+
+Was TCP the underlying RPC transport?
+
+
+> The behavior is somewhat strange - if you, say, set an xattr
+> of length 59, then calls with lengths 56-59 get -ERANGE from =
+decode_getxattr
+> (correct), but calls with lengths 53-55 get EIO (should be -ERANGE).
+>=20
+> E.g. non-aligned values to rpc_prepare_reply_pages make the RPC call =
+error
+> out early, even before it gets to decode_getxattr.
+>=20
+> I noticed that all other code always seems to specify multiples of =
+PAGE_SIZE
+> as the length to rpc_prepare_reply_pages. But the code itself suggests =
+that
+> it certainly *intends* to be prepared to handle any length, aligned or =
+not.
+>=20
+> However, apparently, it at least doesn't deal with non-aligned =
+lengths,
+> making things fail further along down the line.
+>=20
+> I need to look at this a bit more.
+>=20
+> - Frank
+
+--
+Chuck Lever
+
+
+
