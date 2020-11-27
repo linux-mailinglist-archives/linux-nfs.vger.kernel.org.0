@@ -2,95 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 125D52C6018
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Nov 2020 07:27:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70D102C6937
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Nov 2020 17:16:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392614AbgK0G0j (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 Nov 2020 01:26:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392604AbgK0G0j (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Nov 2020 01:26:39 -0500
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18D25C0613D1
-        for <linux-nfs@vger.kernel.org>; Thu, 26 Nov 2020 22:26:39 -0800 (PST)
-Received: by mail-pl1-x642.google.com with SMTP id l11so2226898plt.1
-        for <linux-nfs@vger.kernel.org>; Thu, 26 Nov 2020 22:26:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KdoOOHE7JcF5jwP7q3cULJjg33z0tNqjrQaSl4qp56U=;
-        b=cpOQOie+pb5OUo8MxXyYB7WtG62WoupTRCUjt/CJfXJ7OzhoC0QciQHm+27fXOU/yy
-         I1EM4qHYWKu7bF2iAEDQZDL5cCpH9UqW5F+E2KrCvxn+VHDaR1VTJFJH57+KvuFVclEq
-         LI5X/9WI3xK7H7kWY4vf0wvZAMvSDmZJT90IFLe4kPxnVNUed8J7xif7m2qnPVEudO7t
-         /iOYVopna5+ruRguv2o+03Rt7zt0X5OX7gvTH0i2kHeYjTikbcJAMHwg4mvgVhcNdFAs
-         uO6PTzCAeKhu7yTjfy105KBzLmKXOV0BIyKv+J+sZuJw+VRihMjzWKeeCvqnib8P7qtD
-         Jl+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KdoOOHE7JcF5jwP7q3cULJjg33z0tNqjrQaSl4qp56U=;
-        b=QP2kELXUmGfnA+iERj+yufavQrX8XwN+UDHtIdsliNv2VDHo++EhxA7OpAD0b88X9E
-         SR3sLqI46WgbWvGDlIjjlaR/c6SBvI/MTiFSasGE5oxKDSi1Zq8IePaa0prKwpYqvdEx
-         DXG5zIJgb3Aq2gwwvaXa08/M5D9pLGZthM52a0YVrlovZ8KJmKR4HRtJ//ok1uzL5cFd
-         nHOXTgPRyz/uzTeQIep2ZWHHwabFgTKZsh+2JkcThOjTRXY3mJFJg+Lh5wGGiVN08Vy5
-         yFF/RNQ5w1AR6OWiTyJlKoG+2qhGs/EMoxQQHyKmDO25Au13+lpFp4mYcnm1TXUhTHtZ
-         6VXw==
-X-Gm-Message-State: AOAM5339PxtovFogzFyHvhipOC2ctSoUvBJKqrKfBJHUwj5PbwcmWJBK
-        tfcXJL5/7MwNN7HTsJuE/XYOawPY2dCXc5li
-X-Google-Smtp-Source: ABdhPJzLIhEtXd1JUxw+R2ZQEOyb1FP1V3Wt4M1xUlnFSTIra3qfw2eKSXB3RyyOddv5zcEw2Jn3Eg==
-X-Received: by 2002:a17:902:7c01:b029:d8:ee2a:ce88 with SMTP id x1-20020a1709027c01b02900d8ee2ace88mr5728436pll.22.1606458398295;
-        Thu, 26 Nov 2020 22:26:38 -0800 (PST)
-Received: from pro6300.kern.oss.ntt.co.jp ([222.151.198.97])
-        by smtp.gmail.com with ESMTPSA id v145sm5961452pfc.112.2020.11.26.22.26.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Nov 2020 22:26:37 -0800 (PST)
-From:   kazuo ito <kzpn200@gmail.com>
-To:     linux-nfs@vger.kernel.org,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     kazuo ito <kzpn200@gmail.com>
-Subject: [PATCH] nfsd: Fix message level for normal termination
-Date:   Fri, 27 Nov 2020 15:26:59 +0900
-Message-Id: <20201127062659.605229-1-kzpn200@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <7BA358F0-01C3-4530-B5EE-1CBBCE3843C2@oracle.com>
-References: <7BA358F0-01C3-4530-B5EE-1CBBCE3843C2@oracle.com>
+        id S1731170AbgK0QO6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 Nov 2020 11:14:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:42073 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726889AbgK0QO6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Nov 2020 11:14:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606493696;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=yFcwV5S6mrQwdzTWXy8iZEZj8Ml0ghB9YXSLBRdSVJU=;
+        b=Xszg79ezA/K2U8WGCwhbNU3t9Gsy5hqWvX/80THMSYDFR784TrL6pJ6UbCoGS76NLANmAw
+        KWn+xv5AOK3vqfJvpY7RddPDww7LGfeHUndP7tHRtOzP8/sj6eLmbYq2bvv5oDEZtc13af
+        PDxVeGEnN/p3eYYaE25Oh28bimoloJY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-334--w4ig4bJPvWKrQmv7Aztqg-1; Fri, 27 Nov 2020 11:14:54 -0500
+X-MC-Unique: -w4ig4bJPvWKrQmv7Aztqg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 869BB80EDAD;
+        Fri, 27 Nov 2020 16:14:53 +0000 (UTC)
+Received: from idlethread.redhat.com (unknown [10.40.193.159])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6E9C210013C1;
+        Fri, 27 Nov 2020 16:14:52 +0000 (UTC)
+From:   Roberto Bergantinos Corpas <rbergant@redhat.com>
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] sunrpc: clean-up cache downcall
+Date:   Fri, 27 Nov 2020 17:14:51 +0100
+Message-Id: <20201127161451.17922-1-rbergant@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The warning message from nfsd terminating normally
-can confuse system adminstrators or monitoring software.
+We can simplifly code around cache_downcall unifying memory
+allocations using kvmalloc, this have the benefit of getting rid of
+cache_slow_downcall (and queue_io_mutex), and also matches userland
+allocation size and limits
 
-Though it's not exactly fair to pin-point a commit where it
-originated, the current form in the current place started
-to appear in:
-
-Fixes: e096bbc6488d ("knfsd: remove special handling for SIGHUP")
-Signed-off-by: kazuo ito <kzpn200@gmail.com>
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
 ---
- fs/nfsd/nfssvc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/sunrpc/cache.c | 41 +++++++++++------------------------------
+ 1 file changed, 11 insertions(+), 30 deletions(-)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 27b1ad136150..9323e30a7eaf 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -527,8 +527,7 @@ static void nfsd_last_thread(struct svc_serv *serv, struct net *net)
- 		return;
+diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+index baef5ee43dbb..1347ecae9c84 100644
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -777,7 +777,6 @@ void cache_clean_deferred(void *owner)
+  */
  
- 	nfsd_shutdown_net(net);
--	printk(KERN_WARNING "nfsd: last server has exited, flushing export "
--			    "cache\n");
-+	pr_info("nfsd: last server has exited, flushing export cache\n");
- 	nfsd_export_flush(net);
+ static DEFINE_SPINLOCK(queue_lock);
+-static DEFINE_MUTEX(queue_io_mutex);
+ 
+ struct cache_queue {
+ 	struct list_head	list;
+@@ -905,44 +904,26 @@ static ssize_t cache_do_downcall(char *kaddr, const char __user *buf,
+ 	return ret;
  }
  
+-static ssize_t cache_slow_downcall(const char __user *buf,
+-				   size_t count, struct cache_detail *cd)
+-{
+-	static char write_buf[8192]; /* protected by queue_io_mutex */
+-	ssize_t ret = -EINVAL;
+-
+-	if (count >= sizeof(write_buf))
+-		goto out;
+-	mutex_lock(&queue_io_mutex);
+-	ret = cache_do_downcall(write_buf, buf, count, cd);
+-	mutex_unlock(&queue_io_mutex);
+-out:
+-	return ret;
+-}
+-
+ static ssize_t cache_downcall(struct address_space *mapping,
+ 			      const char __user *buf,
+ 			      size_t count, struct cache_detail *cd)
+ {
+-	struct page *page;
+-	char *kaddr;
++	char *write_buf;
+ 	ssize_t ret = -ENOMEM;
+ 
+-	if (count >= PAGE_SIZE)
+-		goto out_slow;
++	if (count >= 32768) { /* 32k is max userland buffer, lets check anyway */
++		ret = -EINVAL;
++		goto out;
++	}
+ 
+-	page = find_or_create_page(mapping, 0, GFP_KERNEL);
+-	if (!page)
+-		goto out_slow;
++	write_buf = kvmalloc(count + 1, GFP_KERNEL);
++	if (!write_buf)
++		goto out;
+ 
+-	kaddr = kmap(page);
+-	ret = cache_do_downcall(kaddr, buf, count, cd);
+-	kunmap(page);
+-	unlock_page(page);
+-	put_page(page);
++	ret = cache_do_downcall(write_buf, buf, count, cd);
++	kvfree(write_buf);
++out:
+ 	return ret;
+-out_slow:
+-	return cache_slow_downcall(buf, count, cd);
+ }
+ 
+ static ssize_t cache_write(struct file *filp, const char __user *buf,
 -- 
-2.20.1
+2.21.0
 
