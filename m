@@ -2,101 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B8FB2C5E77
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Nov 2020 01:24:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 274792C5EC7
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Nov 2020 03:45:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392055AbgK0AYl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Nov 2020 19:24:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59514 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392053AbgK0AYk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 26 Nov 2020 19:24:40 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E423FAC65;
-        Fri, 27 Nov 2020 00:24:38 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Date:   Fri, 27 Nov 2020 11:24:33 +1100
-Subject: [PATCH] NFS: switch nfsiod to be an UNBOUND workqueue.
-In-Reply-To: <87k0uzqqn7.fsf@notabene.neil.brown.name>
-References: <87sg9or794.fsf@notabene.neil.brown.name>
- <37ec02047951a5d61cf9f9f5b4dc7151cd877772.camel@hammerspace.com>
- <87k0uzqqn7.fsf@notabene.neil.brown.name>
-cc:     TJ <tj@kernel.org>
-Message-ID: <87pn3zlk8u.fsf@notabene.neil.brown.name>
+        id S2392231AbgK0Cou (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Nov 2020 21:44:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728340AbgK0Cou (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Nov 2020 21:44:50 -0500
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04881C0613D4
+        for <linux-nfs@vger.kernel.org>; Thu, 26 Nov 2020 18:44:48 -0800 (PST)
+Received: by mail-pl1-x644.google.com with SMTP id l1so1995104pld.5
+        for <linux-nfs@vger.kernel.org>; Thu, 26 Nov 2020 18:44:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XO6KlSjUi7E5C0/Bld/ZNsk17pOV0FAtPKGKxUDPzxU=;
+        b=TsXFEtf/4SiUkAMgp/p6lfN+h7ABAjnghaZxdTfZ9fhmfS1Oi6xixfFkR53Yjo94iZ
+         Om733y3GSfJFph5TK22lpsENpFyJpMcGviHZbgu4uaR5C/lgtd/KDjhFnCO2ZqXEa0Zz
+         4x6mDzNz4xAfNZMqZkMD2ssXhAyNJIiTVG8iBD+evK2I74CHHqf2MoSr5cC7mTwtwQDs
+         UZfCPcyhYBHCNoDphK0OGGP2IUfRjZjqSTGUlywUIu79HBp0uLeBZRt11BLKmhDlONsF
+         TYPzkdZDUBciI2HLTmtwcs1LiECrXFz7e9O3dh7ubsv/eu4BI5wYXAGnHi0xA6FIHKux
+         7v4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XO6KlSjUi7E5C0/Bld/ZNsk17pOV0FAtPKGKxUDPzxU=;
+        b=WOdW+pX1L7C4/icTrbFzF2zuTQBdz5PQWsn7oU/A4EPa4RZ48Rj3Aiz8SbRTtfXvbq
+         Sy58ebPXzrmSp3Urld/6htyXnJ++Sfg2X9vYlURrO9oGnxGoa+MLLElFxkyPUvfHpTao
+         jMVVALGDhTgRakcWICaUuCZGA6Ls92YEVN424UEyW/vpzyECPGMoJdmKvtvF3sOmxhW8
+         benwr02Gpc6RZGVcaX5JSiNS/qYWdP5vYes5Y/2hgYsZ10SIoFmNiSBIVpbWTOStzMg6
+         SKHuJdeXqRwectN4aUOnEpUWPGyubFLcyT3LSKhbxBDrGePcu+pToLZ5qelzJIv7eFI3
+         JJzg==
+X-Gm-Message-State: AOAM530duLpoPezP0teMI42FN3htmddunovGrYTmsdQGfObhb5mQOlQf
+        MEtNdXhxPv9r8oxMlz3Fg8Q=
+X-Google-Smtp-Source: ABdhPJz229KZprPCrKXyKT5QtA1zaSz4GeEAHiFYojYZMqLo+DNqbdXh5besdzCJtlvgyIzceIF1sg==
+X-Received: by 2002:a17:902:e9cc:b029:da:1d7a:f5fa with SMTP id 12-20020a170902e9ccb02900da1d7af5famr5120377plk.38.1606445088321;
+        Thu, 26 Nov 2020 18:44:48 -0800 (PST)
+Received: from localhost.localdomain (af234189.ppp.asahi-net.or.jp. [116.70.234.189])
+        by smtp.gmail.com with ESMTPSA id iq11sm4469675pjb.39.2020.11.26.18.44.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Nov 2020 18:44:47 -0800 (PST)
+From:   kazuo ito <kzpn200@gmail.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Cc:     kazuo ito <kzpn200@gmail.com>, Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH] nfsd: Fix message level for normal termination
+Date:   Fri, 27 Nov 2020 11:44:39 +0900
+Message-Id: <20201127024439.32297-1-kzpn200@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+A warning message from nfsd terminating normally
+can confuse system adminstrators or monitoring software.
 
+Though it's not exactly fair to pin-point a commit where it
+originated, the current form in the current place started
+to appear in:
 
-nfsiod is currently a concurrency-managed workqueue (CMWQ).
-This means that workitems scheduled to nfsiod on a given CPU are queued
-behind all other work items queued on any CMWQ on the same CPU.  This
-can introduce unexpected latency.
+Fixes: e096bbc6488d ("knfsd: remove special handling for SIGHUP")
+Signed-off-by: kazuo ito <kzpn200@gmail.com>
+---
+ fs/nfsd/nfssvc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Occaionally nfsiod can even cause excessive latency.  If the work item
-to complete a CLOSE request calls the final iput() on an inode, the
-address_space of that inode will be dismantled.  This takes time
-proportional to the number of in-memory pages, which on a large host
-working on large files (e.g..  5TB), can be a large number of pages
-resulting in a noticable number of seconds.
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index f7f6473578af..b08cccb71787 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -527,8 +527,8 @@ static void nfsd_last_thread(struct svc_serv *serv, struct net *net)
+ 		return;
+ 
+ 	nfsd_shutdown_net(net);
+-	printk(KERN_WARNING "nfsd: last server has exited, flushing export "
+-			    "cache\n");
++	printk(KERN_INFO "nfsd: last server has exited, flushing export "
++			 "cache\n");
+ 	nfsd_export_flush(net);
+ }
+ 
+-- 
+2.20.1
 
-We can avoid these latency problems by switching nfsiod to WQ_UNBOUND.
-This causes each concurrent work item to gets a dedicated thread which
-can be scheduled to an idle CPU.
-
-There is precedent for this as several other filesystems use WQ_UNBOUND
-workqueue for handling various async events.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
-=2D--
- fs/nfs/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index aa6493905bbe..43af053f467a 100644
-=2D-- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -2180,7 +2180,7 @@ static int nfsiod_start(void)
- {
- 	struct workqueue_struct *wq;
- 	dprintk("RPC:       creating workqueue nfsiod\n");
-=2D	wq =3D alloc_workqueue("nfsiod", WQ_MEM_RECLAIM, 0);
-+	wq =3D alloc_workqueue("nfsiod", WQ_MEM_RECLAIM | WQ_UNBOUND, 0);
- 	if (wq =3D=3D NULL)
- 		return -ENOMEM;
- 	nfsiod_workqueue =3D wq;
-=2D-=20
-2.29.2
-
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJCBAEBCAAsFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl/AR0EOHG5laWxiQHN1
-c2UuZGUACgkQOeye3VZigbliUw//XfMub60GzM3zr/mNTulcvC+bwAizfbI/9S7D
-V/Z7aMI8LRFQyl071M2bkymz+Qgj66JTF0hkM68KygcmP3A+pvPayhrrZkpfDUzM
-QNSzzYrMQtOFCepVn2qCZ0k6TFayaCqSX4ws0CP0rArUt9ZMZY7TS3GYAIyXBjQ2
-1nxxChjZRpDusmKpu9X2/EM1FjCJrH6XPXQU8n3HsG1eZ+jmykhQexZCo6NQdXLP
-Ypsc3o03cW5Xwy2klQw5gCF9yt1LVqeqwWoRRAcv5b4LWNcmWTfvtLFG8CSeLRCz
-aJl7Oz1UiG1LrNFSyH2NZiJMgDdoN80KrJliIzGvOatiM33i+bHmNWHmDIO8XMr1
-N3kGXmKsGtcyu1mbgvtKebfY8XVTFkUdBtzLZ6eu0gDzDksqiY9vUlp47Wgce7sO
-DRHlRTmMav5cf+fRvS3gfNxKmJxFoTtPZOvLi4gM1QPgsc1QMxOp9w32cKJX98xQ
-97TQQOpCAvPSZM+rz0ZqUQAMlDZH5ptCNcAyPRTq6DdFYyuo4tQUWSPLJccBfLIy
-e8+zf9u65j8DK88v8u661WNKRB+HH5/MH572Dcr7LiFvInGwgKNXzQP2NXQGmg5s
-oquIsXmhwl7FO2oK5Yr6YSHnMrTnJ2VFLsdkABYO/563ZatN82vmfWhDIHzAo7WA
-0w+pltc=
-=RkKv
------END PGP SIGNATURE-----
---=-=-=--
