@@ -2,120 +2,180 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E07EB2C6A6F
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Nov 2020 18:12:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3989C2C6A78
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Nov 2020 18:15:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731485AbgK0RL3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 Nov 2020 12:11:29 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:45092 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730675AbgK0RL3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Nov 2020 12:11:29 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ARH8ibT042901;
-        Fri, 27 Nov 2020 17:11:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=ZfKiD8hj316X+uqEuUeh7ror6gRFQ5hP+0atihoxG2w=;
- b=T4ex8Zq4/ZxGFiG/shFZ51jZBy4YppEllmGar62y6NeGr5O4RHDb+iKa7MFN6vooM8ZZ
- tyXWjYMVA08HgjWG+E0K9WvZAk9slMXhgiRDjVmzbQJHFhGEc1gcuJl+SotjzZEqxik1
- 71Vf2ZDy7JoiNrKeAZ1+JPr7IVasufSN70QbT6dRXleobW3p3iEJVMXW07M2ma72X4UK
- ufLhi4Wd0BrqLpGNQS11PKxeXib2yg54peCmXj8WecgBqUvgwjMQno5yZ+nkUSGPc4Sd
- U2i6wfRNDLcEkVjdnOILYn78rqYDv89UT0p8ieuaV7eUD2yzt693Wqr4Z33SGklBFUeF zg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 351kwhj4ax-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 27 Nov 2020 17:11:25 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ARH9pMa151816;
-        Fri, 27 Nov 2020 17:11:24 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 351kwgq5j1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Nov 2020 17:11:24 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0ARHBOYl002657;
-        Fri, 27 Nov 2020 17:11:24 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 27 Nov 2020 09:11:23 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH] nfsd: Fix message level for normal termination
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20201127062659.605229-1-kzpn200@gmail.com>
-Date:   Fri, 27 Nov 2020 12:11:23 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Bruce Fields <bfields@fieldses.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5A40B092-0C28-48C7-A2CB-61C84C2C4282@oracle.com>
-References: <7BA358F0-01C3-4530-B5EE-1CBBCE3843C2@oracle.com>
- <20201127062659.605229-1-kzpn200@gmail.com>
-To:     kazuo ito <kzpn200@gmail.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9815 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
- phishscore=0 mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011270100
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9818 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 impostorscore=0
- suspectscore=0 adultscore=0 bulkscore=0 phishscore=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011270100
+        id S1731905AbgK0ROV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 Nov 2020 12:14:21 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21524 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731419AbgK0ROU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Nov 2020 12:14:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606497260;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FXL1bpUlqJXzznp4VClhdwXzrBzm9V/O9XDJM/WBghU=;
+        b=VntZcQrFWBPm+WLG9kwXsxMkOTrpNtVy2I5WOJdDG7Y0qQEpV6EHw4tiBZL3Fn3teh1/Sv
+        tvc70EKGOZmQtYBGyhR4ROYdwe5GoiSXENgAK1MFMSWttcZIaC3jB/ZWU+DxspNCuhH6+n
+        0dnJcQAxLGrZX6wGBq4SKk+C2oF22Wo=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-26hKGkCePgW6T4QwqUZS5Q-1; Fri, 27 Nov 2020 12:14:18 -0500
+X-MC-Unique: 26hKGkCePgW6T4QwqUZS5Q-1
+Received: by mail-io1-f70.google.com with SMTP id m3so3685503iok.21
+        for <linux-nfs@vger.kernel.org>; Fri, 27 Nov 2020 09:14:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FXL1bpUlqJXzznp4VClhdwXzrBzm9V/O9XDJM/WBghU=;
+        b=An/tRm9WSBI2mXgYFHKTDgcPnYLyxFwv/80Y/QXiUBcc1JvEnqJoQR+vqmMLqTrHFz
+         3PIYhE+jSZ0EEfrc8779Gi00gbTfqh+GsHrDzjEk56IawmThM9thJu5n9hSIlVxOz/n2
+         TaTvOgRN9N06tvAYtxwmn2i0RVNJ/Vb85w7ElwBOL53X14WywLDLU9DqyDrlSj4K4lnG
+         14VT7uEgF+IBUCFeIL0sVUBVN+fBuNbnha4XMZepaVJ6TmZL6b0ksJ/eKjZ3MeJZ12GY
+         OUg1t5b0/bNeNlaqcx5MLZnBWPpOj18wqqLRhXErpTvImeb8FyembiTRRsyXrQ9Vtwvd
+         xsRQ==
+X-Gm-Message-State: AOAM531URwVRFcMKffaFw/CovM2Fo7w99mpsP1ZzhcuUOFrRjH+jzbJP
+        NcVtHANi1tJwb/R5L4zBYSqK7dhyYMe06Unkxa73FrQUjfFbrF3pW2zBMBzFH0NQh4RFOXfGPRJ
+        oJ3bWs2LlelWMs5v0DBFiBco7hDTIixSazk5O
+X-Received: by 2002:a05:6638:f89:: with SMTP id h9mr8383670jal.89.1606497257429;
+        Fri, 27 Nov 2020 09:14:17 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzxdCCrh6i590cTprcZBMgSZ5JrHXya58XqtZq/JxZm23pkUfnaFrt68GTGToQj9MwLsp7D/0xN/5X/XEA8EfM=
+X-Received: by 2002:a05:6638:f89:: with SMTP id h9mr8383659jal.89.1606497257167;
+ Fri, 27 Nov 2020 09:14:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20201127161451.17922-1-rbergant@redhat.com> <F08098E1-7E04-4ECA-852A-C93E837E4EBF@oracle.com>
+In-Reply-To: <F08098E1-7E04-4ECA-852A-C93E837E4EBF@oracle.com>
+From:   Roberto Bergantinos Corpas <rbergant@redhat.com>
+Date:   Fri, 27 Nov 2020 18:14:04 +0100
+Message-ID: <CACWnjLwx_Lj4HXr4ifaSzvjRvQTj-QuC7VeYYxNpLJwBh=uuXQ@mail.gmail.com>
+Subject: Re: [PATCH] sunrpc: clean-up cache downcall
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Bruce!
 
-> On Nov 27, 2020, at 1:26 AM, kazuo ito <kzpn200@gmail.com> wrote:
->=20
-> The warning message from nfsd terminating normally
-> can confuse system adminstrators or monitoring software.
->=20
-> Though it's not exactly fair to pin-point a commit where it
-> originated, the current form in the current place started
-> to appear in:
->=20
-> Fixes: e096bbc6488d ("knfsd: remove special handling for SIGHUP")
-> Signed-off-by: kazuo ito <kzpn200@gmail.com>
-> ---
-> fs/nfsd/nfssvc.c | 3 +--
-> 1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> index 27b1ad136150..9323e30a7eaf 100644
-> --- a/fs/nfsd/nfssvc.c
-> +++ b/fs/nfsd/nfssvc.c
-> @@ -527,8 +527,7 @@ static void nfsd_last_thread(struct svc_serv =
-*serv, struct net *net)
-> 		return;
->=20
-> 	nfsd_shutdown_net(net);
-> -	printk(KERN_WARNING "nfsd: last server has exited, flushing =
-export "
-> -			    "cache\n");
-> +	pr_info("nfsd: last server has exited, flushing export =
-cache\n");
-> 	nfsd_export_flush(net);
-> }
+ Thanks for comments!, i'll send a v2 with mechanical errors fixed
+based on v5.10-rc5.
 
-Thanks.
+rgds
+roberto
 
-Applied internally for the next full merge window. It should
-appear soon in the cel-next topic branch at:
-
-  git://git.linux-nfs.org/projects/cel/cel-2.6.git
-
-or
-
-  https://git.linux-nfs.org/?p=3Dcel/cel-2.6.git;a=3Dsummary
-
---
-Chuck Lever
-
-
+On Fri, Nov 27, 2020 at 5:52 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+> Hi Roberto-
+>
+> I spotted some mechanical problems.
+>
+>
+> > On Nov 27, 2020, at 11:14 AM, Roberto Bergantinos Corpas <rbergant@redhat.com> wrote:
+> >
+> > We can simplifly code around cache_downcall unifying memory
+>
+> ^simplifly^simplify
+>
+> > allocations using kvmalloc, this have the benefit of getting rid of
+>
+> ^, this have^. This has
+>
+> > cache_slow_downcall (and queue_io_mutex), and also matches userland
+> > allocation size and limits
+> >
+> > Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+>
+> Assuming Bruce is copacetic with this patch, the change looks
+> appropriate for the v5.11 merge window. However, this patch
+> doesn't appear to apply to v5.10-rc5. Might be because
+> 27a1e8a0f79e ("sunrpc: raise kernel RPC channel buffer size")
+> was already merged?
+>
+>
+> > ---
+> > net/sunrpc/cache.c | 41 +++++++++++------------------------------
+> > 1 file changed, 11 insertions(+), 30 deletions(-)
+> >
+> > diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+> > index baef5ee43dbb..1347ecae9c84 100644
+> > --- a/net/sunrpc/cache.c
+> > +++ b/net/sunrpc/cache.c
+> > @@ -777,7 +777,6 @@ void cache_clean_deferred(void *owner)
+> >  */
+> >
+> > static DEFINE_SPINLOCK(queue_lock);
+> > -static DEFINE_MUTEX(queue_io_mutex);
+> >
+> > struct cache_queue {
+> >       struct list_head        list;
+> > @@ -905,44 +904,26 @@ static ssize_t cache_do_downcall(char *kaddr, const char __user *buf,
+> >       return ret;
+> > }
+> >
+> > -static ssize_t cache_slow_downcall(const char __user *buf,
+> > -                                size_t count, struct cache_detail *cd)
+> > -{
+> > -     static char write_buf[8192]; /* protected by queue_io_mutex */
+> > -     ssize_t ret = -EINVAL;
+> > -
+> > -     if (count >= sizeof(write_buf))
+> > -             goto out;
+> > -     mutex_lock(&queue_io_mutex);
+> > -     ret = cache_do_downcall(write_buf, buf, count, cd);
+> > -     mutex_unlock(&queue_io_mutex);
+> > -out:
+> > -     return ret;
+> > -}
+> > -
+> > static ssize_t cache_downcall(struct address_space *mapping,
+> >                             const char __user *buf,
+> >                             size_t count, struct cache_detail *cd)
+> > {
+> > -     struct page *page;
+> > -     char *kaddr;
+> > +     char *write_buf;
+> >       ssize_t ret = -ENOMEM;
+> >
+> > -     if (count >= PAGE_SIZE)
+> > -             goto out_slow;
+> > +     if (count >= 32768) { /* 32k is max userland buffer, lets check anyway */
+> > +             ret = -EINVAL;
+> > +             goto out;
+> > +     }
+> >
+> > -     page = find_or_create_page(mapping, 0, GFP_KERNEL);
+> > -     if (!page)
+> > -             goto out_slow;
+> > +     write_buf = kvmalloc(count + 1, GFP_KERNEL);
+> > +     if (!write_buf)
+> > +             goto out;
+> >
+> > -     kaddr = kmap(page);
+> > -     ret = cache_do_downcall(kaddr, buf, count, cd);
+> > -     kunmap(page);
+> > -     unlock_page(page);
+> > -     put_page(page);
+> > +     ret = cache_do_downcall(write_buf, buf, count, cd);
+> > +     kvfree(write_buf);
+> > +out:
+> >       return ret;
+> > -out_slow:
+> > -     return cache_slow_downcall(buf, count, cd);
+> > }
+> >
+> > static ssize_t cache_write(struct file *filp, const char __user *buf,
+> > --
+> > 2.21.0
+> >
+>
+> --
+> Chuck Lever
+>
+>
+>
 
