@@ -2,93 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 274792C5EC7
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Nov 2020 03:45:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C89EF2C5F1E
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Nov 2020 04:57:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392231AbgK0Cou (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Nov 2020 21:44:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728340AbgK0Cou (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Nov 2020 21:44:50 -0500
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04881C0613D4
-        for <linux-nfs@vger.kernel.org>; Thu, 26 Nov 2020 18:44:48 -0800 (PST)
-Received: by mail-pl1-x644.google.com with SMTP id l1so1995104pld.5
-        for <linux-nfs@vger.kernel.org>; Thu, 26 Nov 2020 18:44:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XO6KlSjUi7E5C0/Bld/ZNsk17pOV0FAtPKGKxUDPzxU=;
-        b=TsXFEtf/4SiUkAMgp/p6lfN+h7ABAjnghaZxdTfZ9fhmfS1Oi6xixfFkR53Yjo94iZ
-         Om733y3GSfJFph5TK22lpsENpFyJpMcGviHZbgu4uaR5C/lgtd/KDjhFnCO2ZqXEa0Zz
-         4x6mDzNz4xAfNZMqZkMD2ssXhAyNJIiTVG8iBD+evK2I74CHHqf2MoSr5cC7mTwtwQDs
-         UZfCPcyhYBHCNoDphK0OGGP2IUfRjZjqSTGUlywUIu79HBp0uLeBZRt11BLKmhDlONsF
-         TYPzkdZDUBciI2HLTmtwcs1LiECrXFz7e9O3dh7ubsv/eu4BI5wYXAGnHi0xA6FIHKux
-         7v4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XO6KlSjUi7E5C0/Bld/ZNsk17pOV0FAtPKGKxUDPzxU=;
-        b=WOdW+pX1L7C4/icTrbFzF2zuTQBdz5PQWsn7oU/A4EPa4RZ48Rj3Aiz8SbRTtfXvbq
-         Sy58ebPXzrmSp3Urld/6htyXnJ++Sfg2X9vYlURrO9oGnxGoa+MLLElFxkyPUvfHpTao
-         jMVVALGDhTgRakcWICaUuCZGA6Ls92YEVN424UEyW/vpzyECPGMoJdmKvtvF3sOmxhW8
-         benwr02Gpc6RZGVcaX5JSiNS/qYWdP5vYes5Y/2hgYsZ10SIoFmNiSBIVpbWTOStzMg6
-         SKHuJdeXqRwectN4aUOnEpUWPGyubFLcyT3LSKhbxBDrGePcu+pToLZ5qelzJIv7eFI3
-         JJzg==
-X-Gm-Message-State: AOAM530duLpoPezP0teMI42FN3htmddunovGrYTmsdQGfObhb5mQOlQf
-        MEtNdXhxPv9r8oxMlz3Fg8Q=
-X-Google-Smtp-Source: ABdhPJz229KZprPCrKXyKT5QtA1zaSz4GeEAHiFYojYZMqLo+DNqbdXh5besdzCJtlvgyIzceIF1sg==
-X-Received: by 2002:a17:902:e9cc:b029:da:1d7a:f5fa with SMTP id 12-20020a170902e9ccb02900da1d7af5famr5120377plk.38.1606445088321;
-        Thu, 26 Nov 2020 18:44:48 -0800 (PST)
-Received: from localhost.localdomain (af234189.ppp.asahi-net.or.jp. [116.70.234.189])
-        by smtp.gmail.com with ESMTPSA id iq11sm4469675pjb.39.2020.11.26.18.44.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Nov 2020 18:44:47 -0800 (PST)
-From:   kazuo ito <kzpn200@gmail.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Cc:     kazuo ito <kzpn200@gmail.com>, Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH] nfsd: Fix message level for normal termination
-Date:   Fri, 27 Nov 2020 11:44:39 +0900
-Message-Id: <20201127024439.32297-1-kzpn200@gmail.com>
-X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1729051AbgK0D4d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Nov 2020 22:56:33 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:52746 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbgK0D4d (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Nov 2020 22:56:33 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AR3u71G095523;
+        Fri, 27 Nov 2020 03:56:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ content-transfer-encoding : from : mime-version : subject : date :
+ message-id : references : cc : in-reply-to : to; s=corp-2020-01-29;
+ bh=shIF0852mD2gkJEMz4JSU3dGyCeDiAT5zx1qk3b589E=;
+ b=VgkIWp0raO9yAkcy3+xIbUABmRDJOKo8PtSvl3KeM9GhOum5JkWRdZb1/Sw2i+TBS68U
+ j4xrQjQqVjCzmvHgWnAYuFP4DfBMVoTD6gs5lLVcPxsworMZlGl6QXG57GSdZ1sEeL0X
+ fHwIDkTu+1aGzS6aa3aMbN68QCRggGYmqIEaTqAIq0iPhJVumC8Yr/AQnlF+sjLcTXjo
+ HqbxCvhyE9Z0oFfJHe1AORvenrsQ8JjA6KGTcly4Ne6IOxEjmIIxjCPu9/Hw5Ti+Nto9
+ 7UiLDkSoMJkZbSN5ph/dutbuTK56tdXnT3LYVWo8XbJ2wFrCTOjMBkONDcp5ajLbi07v Ww== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 351kwhqrn1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 27 Nov 2020 03:56:24 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AR3u0dw142503;
+        Fri, 27 Nov 2020 03:56:24 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 351kwhevkm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Nov 2020 03:56:24 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AR3uMcm016810;
+        Fri, 27 Nov 2020 03:56:22 GMT
+Received: from [192.168.1.115] (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Nov 2020 19:56:22 -0800
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Chuck Lever <chuck.lever@oracle.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] nfsd: Fix message level for normal termination
+Date:   Thu, 26 Nov 2020 22:56:21 -0500
+Message-Id: <7BA358F0-01C3-4530-B5EE-1CBBCE3843C2@oracle.com>
+References: <20201127024439.32297-1-kzpn200@gmail.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+In-Reply-To: <20201127024439.32297-1-kzpn200@gmail.com>
+To:     kazuo ito <kzpn200@gmail.com>
+X-Mailer: iPad Mail (18B92)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9817 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 spamscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011270020
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9817 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 suspectscore=0
+ bulkscore=0 spamscore=0 mlxlogscore=999 mlxscore=0 clxscore=1011
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011270020
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-A warning message from nfsd terminating normally
-can confuse system adminstrators or monitoring software.
 
-Though it's not exactly fair to pin-point a commit where it
-originated, the current form in the current place started
-to appear in:
+> On Nov 26, 2020, at 9:46 PM, kazuo ito <kzpn200@gmail.com> wrote:
+>=20
+> =EF=BB=BFA warning message from nfsd terminating normally
+> can confuse system adminstrators or monitoring software.
+>=20
+> Though it's not exactly fair to pin-point a commit where it
+> originated, the current form in the current place started
+> to appear in:
+>=20
+> Fixes: e096bbc6488d ("knfsd: remove special handling for SIGHUP")
+> Signed-off-by: kazuo ito <kzpn200@gmail.com>
+> ---
+> fs/nfsd/nfssvc.c | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index f7f6473578af..b08cccb71787 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -527,8 +527,8 @@ static void nfsd_last_thread(struct svc_serv *serv, st=
+ruct net *net)
+>        return;
+>=20
+>    nfsd_shutdown_net(net);
+> -    printk(KERN_WARNING "nfsd: last server has exited, flushing export "
+> -                "cache\n");
+> +    printk(KERN_INFO "nfsd: last server has exited, flushing export "
+> +             "cache\n");
 
-Fixes: e096bbc6488d ("knfsd: remove special handling for SIGHUP")
-Signed-off-by: kazuo ito <kzpn200@gmail.com>
----
- fs/nfsd/nfssvc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+pr_info(), please! And see if it will fit on one line.
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index f7f6473578af..b08cccb71787 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -527,8 +527,8 @@ static void nfsd_last_thread(struct svc_serv *serv, struct net *net)
- 		return;
- 
- 	nfsd_shutdown_net(net);
--	printk(KERN_WARNING "nfsd: last server has exited, flushing export "
--			    "cache\n");
-+	printk(KERN_INFO "nfsd: last server has exited, flushing export "
-+			 "cache\n");
- 	nfsd_export_flush(net);
- }
- 
--- 
-2.20.1
+
+>    nfsd_export_flush(net);
+> }
+>=20
+> --=20
+> 2.20.1
+>=20
 
