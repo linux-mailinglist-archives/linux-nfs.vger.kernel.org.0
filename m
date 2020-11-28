@@ -2,103 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24A482C7284
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Nov 2020 23:09:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B6A82C7282
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Nov 2020 23:09:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389838AbgK1VuJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S2389847AbgK1VuJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Sat, 28 Nov 2020 16:50:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730149AbgK1Sh7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 28 Nov 2020 13:37:59 -0500
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32027C02A1A0;
-        Sat, 28 Nov 2020 05:50:59 -0800 (PST)
-Received: by mail-pl1-x642.google.com with SMTP id u2so4001067pls.10;
-        Sat, 28 Nov 2020 05:50:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=NAaKMiO3+eNR4sgSR3sGVZDQoceEJQzQRN6qUQNwYCU=;
-        b=F1MwlJUVPCdrfSPBqGl/h5JdLKUPgahWOy5Sm4oa3ZsAC9TstDAhSsAQh0vRiCDcI1
-         yA1+oUeK8ABjlWraDuX8EG7wl+MaUyrwGkLeE6ilk5JeihD8d0Iq11HpfL8ydxWDefe5
-         Ye7w06MvsBycYVtAC8CnzTrB0fpfcBqUZ8lQDEcmGfxvJlDGqbtyhoQseoKB0UdYuVSi
-         sBH0Vm++TscbVYJ3fmisT3IsL/e8m4R8yiH2M4Up7V6lKGTtYZAYB07WintI/PzwKeRN
-         860bstwPjq41NXvyb4PohFWQW2ElklIUM7fueZoBPQhcvCkV50ehRmWSaAs/gQYXjJyU
-         ZP8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=NAaKMiO3+eNR4sgSR3sGVZDQoceEJQzQRN6qUQNwYCU=;
-        b=fosyIs3q+Rt/K3WQBQGVe//9D8EgOIUPDw6ljFDJrIQ2DIxbKRVEmZXSaRWmuAJn7D
-         shGuTD/tVEj61Wlo2CYS+ZfKSwVFnoHKS/x6B3RmVNPRtOtzn9zo1LF/eEz/DFssJjf1
-         x9tanWtr9z5zbj/Vfea6YbX4D5f9ZVqAoyzXLBOO2Ei5F955OUIOQ1rrO2Nh2O24EFnK
-         xX0pW3WlXGsNfUnek3iG+KjH2ekVnasQm3C0Fc7k/K10QkZ91Ai2riT4FzckjNwTGEg7
-         GkHJgcH++uRJjMeY4rsP+VN9Pjm+2LxjV9GZoeNN2Bsergx0CvXbRB8alGvRL+TkrETZ
-         csBw==
-X-Gm-Message-State: AOAM530ispzGWwHDls8AB4gVrvVFKmm7sP2lGlxBd/xq4ytV8/+oONCl
-        uFhxqlzvBcm91y9nk0kwEgjZiR1eASJwHQ==
-X-Google-Smtp-Source: ABdhPJy69mn4Wl+YKc9TEvM+9ZzjAeoDT83i1CjHOOHqcWxQqrpoafrTCNZ26a4HY64a7Zjf8xSFFQ==
-X-Received: by 2002:a17:902:eb0c:b029:da:51da:cdac with SMTP id l12-20020a170902eb0cb02900da51dacdacmr6451087plb.4.1606571458474;
-        Sat, 28 Nov 2020 05:50:58 -0800 (PST)
-Received: from jordon-HP-15-Notebook-PC.domain.name ([122.167.220.174])
-        by smtp.gmail.com with ESMTPSA id e17sm10414159pfm.155.2020.11.28.05.50.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 28 Nov 2020 05:50:57 -0800 (PST)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     bfields@fieldses.org, chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [PATCH] nfsd: Fix kernel test robot warning
-Date:   Sat, 28 Nov 2020 19:20:51 +0530
-Message-Id: <1606571451-3655-1-git-send-email-jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
+Received: from aserp2120.oracle.com ([141.146.126.78]:35944 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730572AbgK1SmR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 28 Nov 2020 13:42:17 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ASIeNnm056892;
+        Sat, 28 Nov 2020 18:41:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=PqZnLoBYIXrmlOxFoC5hoP7Cwqsbnc9iJzNAuuV8ylI=;
+ b=EmosImKEnAVUOaKvSB50+AmiZlaKJFUltKroUOe6tWZ8dT0IfbGFvn9hG+9iYM79x2AQ
+ OwV2FwQLs61+SwfmNjsHC9nyqDHajU74d8UA8r+BweTA3ccIYt0U6UUy8l8FXwD+Pykp
+ w87oem0Ww/TuCjINZ/S3gmoMWqFafQgYqCPUd0t/eNgKgTWqYz3r7Ewd3sieJLABXdaA
+ 2esisvspmIseCxZ9+3E3BgJW6IoYpipKH6bvquR4refHEZINsemYKnxAbdnLQ6+rdigt
+ cHylzxPmvBEj7krt7unjXlvRcVrgZO5zoO6sNNWx0wU9tqnpjyol74XLDaF/xjGGe788 sA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 353egk94yc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 28 Nov 2020 18:41:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ASIe4Tr062624;
+        Sat, 28 Nov 2020 18:41:29 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 353ec0e3v3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 28 Nov 2020 18:41:29 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0ASIfPc2019459;
+        Sat, 28 Nov 2020 18:41:28 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 28 Nov 2020 10:41:24 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [PATCH] nfsd: Fix kernel test robot warning
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <1606571451-3655-1-git-send-email-jrdr.linux@gmail.com>
+Date:   Sat, 28 Nov 2020 13:41:23 -0500
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <F1972C21-8C1A-4B93-868F-2B849D224D0C@oracle.com>
+References: <1606571451-3655-1-git-send-email-jrdr.linux@gmail.com>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9819 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 malwarescore=0 adultscore=0 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011280117
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9819 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1011 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011280117
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Kernel test robot throws below warning -
+Hello Souptick-
 
->> fs/nfsd/nfs3xdr.c:299:6: warning: variable 'err' is used
->> uninitialized whenever 'if' condition is false
->> [-Wsometimes-uninitialized]
-           if (!v4 || !inode->i_sb->s_export_op->fetch_iversion)
-               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   fs/nfsd/nfs3xdr.c:304:6: note: uninitialized use occurs here
-           if (err) {
-               ^~~
-   fs/nfsd/nfs3xdr.c:299:2: note: remove the 'if' if its condition is
-always true
-           if (!v4 || !inode->i_sb->s_export_op->fetch_iversion)
-           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   fs/nfsd/nfs3xdr.c:293:12: note: initialize the variable 'err' to
-silence this warning
-           __be32 err;
-                     ^
-                      = 0
-   1 warning generated.
+This looks like the same error that Coverity caught earlier this
+week. AFAIK Bruce intends to address this issue with a replacement
+patch:
 
-Initialize err = 0 to silence this warning.
+https://lore.kernel.org/linux-nfs/20201125164738.GA7049@fieldses.org/
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
----
- fs/nfsd/nfs3xdr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-index abb1608..47aeaee 100644
---- a/fs/nfsd/nfs3xdr.c
-+++ b/fs/nfsd/nfs3xdr.c
-@@ -290,7 +290,7 @@ void fill_post_wcc(struct svc_fh *fhp)
- {
- 	bool v4 = (fhp->fh_maxsize == NFS4_FHSIZE);
- 	struct inode *inode = d_inode(fhp->fh_dentry);
--	__be32 err;
-+	__be32 err = 0;
- 
- 	if (fhp->fh_post_saved)
- 		printk("nfsd: inode locked twice during operation.\n");
--- 
-1.9.1
+> On Nov 28, 2020, at 8:50 AM, Souptick Joarder <jrdr.linux@gmail.com> wrote:
+> 
+> Kernel test robot throws below warning -
+> 
+>>> fs/nfsd/nfs3xdr.c:299:6: warning: variable 'err' is used
+>>> uninitialized whenever 'if' condition is false
+>>> [-Wsometimes-uninitialized]
+>           if (!v4 || !inode->i_sb->s_export_op->fetch_iversion)
+>               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   fs/nfsd/nfs3xdr.c:304:6: note: uninitialized use occurs here
+>           if (err) {
+>               ^~~
+>   fs/nfsd/nfs3xdr.c:299:2: note: remove the 'if' if its condition is
+> always true
+>           if (!v4 || !inode->i_sb->s_export_op->fetch_iversion)
+>           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   fs/nfsd/nfs3xdr.c:293:12: note: initialize the variable 'err' to
+> silence this warning
+>           __be32 err;
+>                     ^
+>                      = 0
+>   1 warning generated.
+> 
+> Initialize err = 0 to silence this warning.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> ---
+> fs/nfsd/nfs3xdr.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+> index abb1608..47aeaee 100644
+> --- a/fs/nfsd/nfs3xdr.c
+> +++ b/fs/nfsd/nfs3xdr.c
+> @@ -290,7 +290,7 @@ void fill_post_wcc(struct svc_fh *fhp)
+> {
+> 	bool v4 = (fhp->fh_maxsize == NFS4_FHSIZE);
+> 	struct inode *inode = d_inode(fhp->fh_dentry);
+> -	__be32 err;
+> +	__be32 err = 0;
+> 
+> 	if (fhp->fh_post_saved)
+> 		printk("nfsd: inode locked twice during operation.\n");
+> -- 
+> 1.9.1
+> 
+
+--
+Chuck Lever
+
+
 
