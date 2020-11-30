@@ -2,122 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 403D22C9166
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Nov 2020 23:47:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DF5C2C91D3
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Dec 2020 00:01:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgK3WrB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Nov 2020 17:47:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40456 "EHLO
+        id S2388816AbgK3W7I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Nov 2020 17:59:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728635AbgK3WrB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Nov 2020 17:47:01 -0500
+        with ESMTP id S2388811AbgK3W7H (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Nov 2020 17:59:07 -0500
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1956C0613D4
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Nov 2020 14:46:20 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A3BC0613D4
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Nov 2020 14:58:43 -0800 (PST)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 5A0476F4A; Mon, 30 Nov 2020 17:46:20 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 5A0476F4A
+        id E77F46F4A; Mon, 30 Nov 2020 17:58:42 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org E77F46F4A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1606776380;
-        bh=gWNV+o0XEYeIEdXXNmmNPy+FDGID8FCD43Eoi+bNcFs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cRk8yni1ESm0eCxr7yxGQQOHqbQdp8BHKI0q3gs8m3yvdR9phSSQ0SxlYmjiFegzG
-         tkbUGSCM43usII9bgdvkNzkLeAsGWsfARn0ZXFWeagt3f0kNiFjqdBq08KySkRkT7O
-         /bVcrj6D1vLJ+7KXJYNfgXaHL7cS/E0ODGKOi2us=
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5/5] Revert "nfsd4: support change_attr_type attribute"
-Date:   Mon, 30 Nov 2020 17:46:18 -0500
-Message-Id: <1606776378-22381-5-git-send-email-bfields@fieldses.org>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1606776378-22381-1-git-send-email-bfields@fieldses.org>
-References: <1606776378-22381-1-git-send-email-bfields@fieldses.org>
+        s=default; t=1606777122;
+        bh=dOI/rdwtm9VxPcujK2qc8LigCNNactIcyohphNcEoU4=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=p9V754GsVSzGVkBn41RI5E1isEOrMl2g3h1odSlhGz6RHsvx+IgWuLSSgg334g9ji
+         /oDs1obMmwDgOlk/5+rQslFR5LPPn1w10CnbIPmH9auQQj0UPGuNB2F33y+CH8yFSZ
+         GcK73+6eHj7IXy4XnqtXt7AZPauY0NrvDiLKlV34=
+Date:   Mon, 30 Nov 2020 17:58:42 -0500
+To:     trondmy@kernel.org
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/6] nfsd: add a new EXPORT_OP_NOWCC flag to struct
+ export_operations
+Message-ID: <20201130225842.GA22446@fieldses.org>
+References: <20201130212455.254469-1-trondmy@kernel.org>
+ <20201130212455.254469-2-trondmy@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201130212455.254469-2-trondmy@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+This is great, thanks:
 
-This reverts commit a85857633b04d57f4524cca0a2bfaf87b2543f9f.
+On Mon, Nov 30, 2020 at 04:24:50PM -0500, trondmy@kernel.org wrote:
+> From: Jeff Layton <jeff.layton@primarydata.com>
+> 
+> With NFSv3 nfsd will always attempt to send along WCC data to the
+> client. This generally involves saving off the in-core inode information
+> prior to doing the operation on the given filehandle, and then issuing a
+> vfs_getattr to it after the op.
+> 
+> Some filesystems (particularly clustered or networked ones) have an
+> expensive ->getattr inode operation. Atomicitiy is also often difficult
+> or impossible to guarantee on such filesystems. For those, we're best
+> off not trying to provide WCC information to the client at all, and to
+> simply allow it to poll for that information as needed with a GETATTR
+> RPC.
+> 
+> This patch adds a new flags field to struct export_operations, and
+> defines a new EXPORT_OP_NOWCC flag that filesystems can use to indicate
+> that nfsd should not attempt to provide WCC info in NFSv3 replies. It
+> also adds a blurb about the new flags field and flag to the exporting
+> documentation.
 
-We're still factoring ctime into our change attribute even in the
-IS_I_VERSION case.  If someone sets the system time backwards, a client
-could see the change attribute go backwards.  Maybe we can just say
-"well, don't do that", but there's some question whether that's good
-enough, or whether we need a better guarantee.
+In the v4 case I think it should also turn off the "atomic" flag in the
+change_info4 structure that's returned by some operations.
 
-Also, the client still isn't actually using the attribute.
+(Out of curiosity: have you seen this cause actual bugs?)
 
-While we're still figuring this out, let's just stop returning this
-attribute.
-
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
- fs/nfsd/nfs4xdr.c    | 10 ----------
- fs/nfsd/nfsd.h       |  1 -
- include/linux/nfs4.h |  8 --------
- 3 files changed, 19 deletions(-)
-
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 18c912930947..c33838caf8c6 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -3183,16 +3183,6 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 			goto out;
- 	}
- 
--	if (bmval2 & FATTR4_WORD2_CHANGE_ATTR_TYPE) {
--		p = xdr_reserve_space(xdr, 4);
--		if (!p)
--			goto out_resource;
--		if (IS_I_VERSION(d_inode(dentry)))
--			*p++ = cpu_to_be32(NFS4_CHANGE_TYPE_IS_MONOTONIC_INCR);
--		else
--			*p++ = cpu_to_be32(NFS4_CHANGE_TYPE_IS_TIME_METADATA);
--	}
--
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- 	if (bmval2 & FATTR4_WORD2_SECURITY_LABEL) {
- 		status = nfsd4_encode_security_label(xdr, rqstp, context,
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index cb742e17e04a..40cb40ac0a65 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -387,7 +387,6 @@ void		nfsd_lockd_shutdown(void);
- 
- #define NFSD4_2_SUPPORTED_ATTRS_WORD2 \
- 	(NFSD4_1_SUPPORTED_ATTRS_WORD2 | \
--	FATTR4_WORD2_CHANGE_ATTR_TYPE | \
- 	FATTR4_WORD2_MODE_UMASK | \
- 	NFSD4_2_SECURITY_ATTRS | \
- 	FATTR4_WORD2_XATTR_SUPPORT)
-diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-index 9dc7eeac924f..5b4c67c91f56 100644
---- a/include/linux/nfs4.h
-+++ b/include/linux/nfs4.h
-@@ -385,13 +385,6 @@ enum lock_type4 {
- 	NFS4_WRITEW_LT = 4
- };
- 
--enum change_attr_type4 {
--	NFS4_CHANGE_TYPE_IS_MONOTONIC_INCR = 0,
--	NFS4_CHANGE_TYPE_IS_VERSION_COUNTER = 1,
--	NFS4_CHANGE_TYPE_IS_VERSION_COUNTER_NOPNFS = 2,
--	NFS4_CHANGE_TYPE_IS_TIME_METADATA = 3,
--	NFS4_CHANGE_TYPE_IS_UNDEFINED = 4
--};
- 
- /* Mandatory Attributes */
- #define FATTR4_WORD0_SUPPORTED_ATTRS    (1UL << 0)
-@@ -459,7 +452,6 @@ enum change_attr_type4 {
- #define FATTR4_WORD2_LAYOUT_BLKSIZE     (1UL << 1)
- #define FATTR4_WORD2_MDSTHRESHOLD       (1UL << 4)
- #define FATTR4_WORD2_CLONE_BLKSIZE	(1UL << 13)
--#define FATTR4_WORD2_CHANGE_ATTR_TYPE	(1UL << 15)
- #define FATTR4_WORD2_SECURITY_LABEL     (1UL << 16)
- #define FATTR4_WORD2_MODE_UMASK		(1UL << 17)
- #define FATTR4_WORD2_XATTR_SUPPORT	(1UL << 18)
--- 
-2.28.0
-
+--b.
