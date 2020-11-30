@@ -2,220 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2811F2C8F9D
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Nov 2020 22:06:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2E1A2C8FD7
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Nov 2020 22:20:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728013AbgK3VGM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Nov 2020 16:06:12 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:47200 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbgK3VGM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Nov 2020 16:06:12 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AUKdJit189195;
-        Mon, 30 Nov 2020 21:05:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=edD6znce0bSHJip6QFkXt0rlFjkHQip1dIRlmM2oHhw=;
- b=grE1O+nYt38nz9zdvrojSpCHFdqspT41ISfSjhXXvmhHH1kBBqaBJXnoDFZLyVAlUGD6
- K+2n54BbLNYU5ELN7igMFIfX4Vk6erCVJUzILiZebMgMYOsGjHv6bXi+YXyb22CFfyCL
- f+Z/B5/gFRMQaG1195HQ+vdhgB5zGXC4Ng3cI0NaseCRzZr+lGqTMawicfbMNHt42g6p
- MFqpXzLLrp/JcGmSoUg6+rArIJWy7Rvaz2q4HypMrw7S68cUKxH33yyPxVt2ew71v0Ji
- 1sJFKL/dlZyk0v5PVBnCDbV2Q6gJe6fG6tJ9ymYUqzFKu8LqHL1l2J0azwH2MycVTfD2 qQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 353dyqfc7n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Nov 2020 21:05:27 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AUKeLGs139046;
-        Mon, 30 Nov 2020 21:03:26 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 35404m201b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Nov 2020 21:03:26 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0AUL3PgV020865;
-        Mon, 30 Nov 2020 21:03:26 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 30 Nov 2020 13:03:24 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH 1/5] nfsd: only call inode_query_iversion in the I_VERSION
- case
+        id S2387644AbgK3VUa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Nov 2020 16:20:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387531AbgK3VUa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Nov 2020 16:20:30 -0500
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53A34C0613CF
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Nov 2020 13:19:50 -0800 (PST)
+Received: by mail-qv1-xf44.google.com with SMTP id dm12so6370347qvb.3
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Nov 2020 13:19:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=WUuu3niy0a46vL6lKIp4jenyi6JzxW4d95oFEmoMdi8=;
+        b=Fo6gus4T5MGxgY1lMOk24ezZlElX7hW6xa6y85v5jbEJa30nSeKRLRScVk5auSotva
+         X1QcV86Z7BCTTLArRtR98D/jjzlC4iA/ChJTuauursXs7YvkNXlpIDrQKNTp7YI0tJR4
+         x9WFauFsRFkfOyIpLp1oj9QC4M53BLl1rNg754G/VguDDmrNlq65dVLmx6wHTL8dJcdB
+         Xc3w5wZmX1s7pyfaCHbIQKdH8VAIPPS05bpR1+K12Nt10TGG43TB1cGu9d/Ve+CBEC26
+         re93dfeJMG4ZosnNhfxHPzimoxfS68GzsYLJ/HujIRbohh63jotC+MSx4ngNZhwhkt1j
+         EEbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:date:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=WUuu3niy0a46vL6lKIp4jenyi6JzxW4d95oFEmoMdi8=;
+        b=BOU+xNihKgtbZSl7gdmvQQxBvsDzJLrCtJKvnTi9wdnGutpPL2HOLPX3pXuzzHFbPY
+         y7oLriVQK9zdycJYY1ap6StDfBluqfBJ6f2i8kXd2FPrjkb3vs/wAZ1mFpmY2WZFssJq
+         XFCPolsElHipJvtlfzAhRbs6pnLhJtsddMSK0QChdfM0mItqHoGB3snLXuX4Lkg9ZPiN
+         i72iS+AzGSfhRMljqBDWaGzzAgE9Qa2yJf/rrkN1NPvc1OC3RWdvvH1vP3h3w+gj4ui7
+         MF56UWDQ3RQtypekY3ZBWtIN2reLep3yXjiOo6AdSUCm3OoSMA+2zidGArZIHQ8tLOj6
+         4Nmw==
+X-Gm-Message-State: AOAM5320nFwDq4ZcqhkilLdlGchyrF2JWrbghIP2LpjMqm8WX6hYP6xO
+        0WDSOd1jT98POevBKzooEV4lK3Y6hys=
+X-Google-Smtp-Source: ABdhPJyfMlUwOxKo3oXZbsGPJF78EZ7ExwmIbILoK3TCFZpggTvqinUbxBYwBfUhyUehM3dd9rOp4Q==
+X-Received: by 2002:a0c:b79f:: with SMTP id l31mr24848880qve.32.1606771189299;
+        Mon, 30 Nov 2020 13:19:49 -0800 (PST)
+Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id v15sm16782511qto.74.2020.11.30.13.19.48
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Nov 2020 13:19:48 -0800 (PST)
+Sender: Chuck Lever <chucklever@gmail.com>
+Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0AULJlex029492
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Nov 2020 21:19:47 GMT
+Subject: [PATCH v1] NFSD: Fix sparse warning in nfs4proc.c
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <1606765137-17257-1-git-send-email-bfields@fieldses.org>
-Date:   Mon, 30 Nov 2020 16:03:23 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Bruce Fields <bfields@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <50CF0FBE-9C58-4DAA-B524-DE15047E9FD1@oracle.com>
-References: <1606765137-17257-1-git-send-email-bfields@fieldses.org>
-To:     Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 phishscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011300133
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- clxscore=1015 mlxscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
- suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011300133
+To:     linux-nfs@vger.kernel.org
+Date:   Mon, 30 Nov 2020 16:19:47 -0500
+Message-ID: <160677118711.395023.5957938985402771446.stgit@klimt.1015granger.net>
+User-Agent: StGit/0.23-29-ga622f1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+linux/fs/nfsd/nfs4proc.c:1542:24: warning: incorrect type in assignment (different base types)
+linux/fs/nfsd/nfs4proc.c:1542:24:    expected restricted __be32 [assigned] [usertype] status
+linux/fs/nfsd/nfs4proc.c:1542:24:    got int
 
+Clean-up: The dup_copy_fields() function returns only zero, so make
+it return void for now, and get rid of the return code check.
 
-> On Nov 30, 2020, at 2:38 PM, J. Bruce Fields <bfields@fieldses.org> =
-wrote:
->=20
-> From: "J. Bruce Fields" <bfields@redhat.com>
->=20
-> inode_query_iversion() can modify i_version.  Depending on the =
-exported
-> filesystem, that may not be safe.  For example, if you're re-exporting
-> NFS, NFS stores the server's change attribute in i_version and does =
-not
-> expect it to be modified locally.  This has been observed causing
-> unnecessary cache invalidations.
->=20
-> The way a filesystem indicates that it's OK to call
-> inode_query_iverson() is by setting SB_I_VERSION.
->=20
-> So, move the I_VERSION check out of encode_change(), where it's used
-> only in FATTR responses, to nfsd4_changeattr(), which is also called =
-for
-> pre- and post- operation attributes.
->=20
-> (Note we could also pull the NFSEXP_V4ROOT case into
-> nfsd4_change_attribute as well.  That would actually be a no-op, since
-> pre/post attrs are only used for metadata-modifying operations, and
-> V4ROOT exports are read-only.  But we might make the change in the
-> future just for simplicity.)
->=20
-> Reported-by: Daire Byrne <daire@dneg.com>
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfsd/nfs4proc.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-New sparse warnings after this one is applied:
-
-/home/cel/src/linux/linux/fs/nfsd/nfsfh.h:270:24: warning: incorrect =
-type in assignment (different base types)
-/home/cel/src/linux/linux/fs/nfsd/nfsfh.h:270:24:    expected unsigned =
-long long [assigned] [usertype] chattr
-/home/cel/src/linux/linux/fs/nfsd/nfsfh.h:270:24:    got restricted =
-__be32 [usertype]
-/home/cel/src/linux/linux/fs/nfsd/nfsfh.h:272:24: warning: invalid =
-assignment: +=3D
-/home/cel/src/linux/linux/fs/nfsd/nfsfh.h:272:24:    left side has type =
-unsigned long long
-/home/cel/src/linux/linux/fs/nfsd/nfsfh.h:272:24:    right side has type =
-restricted __be32
-/home/cel/src/linux/linux/fs/nfsd/nfsfh.h:270:24: warning: incorrect =
-type in assignment (different base types)
-/home/cel/src/linux/linux/fs/nfsd/nfsfh.h:270:24:    expected unsigned =
-long long [assigned] [usertype] chattr
-/home/cel/src/linux/linux/fs/nfsd/nfsfh.h:270:24:    got restricted =
-__be32 [usertype]
-/home/cel/src/linux/linux/fs/nfsd/nfsfh.h:272:24: warning: invalid =
-assignment: +=3D
-/home/cel/src/linux/linux/fs/nfsd/nfsfh.h:272:24:    left side has type =
-unsigned long long
-/home/cel/src/linux/linux/fs/nfsd/nfsfh.h:272:24:    right side has type =
-restricted __be32
-
-
-> ---
-> fs/nfsd/nfs3xdr.c |  5 ++---
-> fs/nfsd/nfs4xdr.c |  6 +-----
-> fs/nfsd/nfsfh.h   | 14 ++++++++++----
-> 3 files changed, 13 insertions(+), 12 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-> index 2277f83da250..dfbf390ff40c 100644
-> --- a/fs/nfsd/nfs3xdr.c
-> +++ b/fs/nfsd/nfs3xdr.c
-> @@ -291,14 +291,13 @@ void fill_post_wcc(struct svc_fh *fhp)
-> 		printk("nfsd: inode locked twice during operation.\n");
->=20
-> 	err =3D fh_getattr(fhp, &fhp->fh_post_attr);
-> -	fhp->fh_post_change =3D =
-nfsd4_change_attribute(&fhp->fh_post_attr,
-> -						     =
-d_inode(fhp->fh_dentry));
-> 	if (err) {
-> 		fhp->fh_post_saved =3D false;
-> -		/* Grab the ctime anyway - set_change_info might use it =
-*/
-> 		fhp->fh_post_attr.ctime =3D =
-d_inode(fhp->fh_dentry)->i_ctime;
-> 	} else
-> 		fhp->fh_post_saved =3D true;
-> +	fhp->fh_post_change =3D =
-nfsd4_change_attribute(&fhp->fh_post_attr,
-> +						     =
-d_inode(fhp->fh_dentry));
-> }
->=20
-> /*
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 833a2c64dfe8..56fd5f6d5c44 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -2298,12 +2298,8 @@ static __be32 *encode_change(__be32 *p, struct =
-kstat *stat, struct inode *inode,
-> 	if (exp->ex_flags & NFSEXP_V4ROOT) {
-> 		*p++ =3D =
-cpu_to_be32(convert_to_wallclock(exp->cd->flush_time));
-> 		*p++ =3D 0;
-> -	} else if (IS_I_VERSION(inode)) {
-> +	} else
-> 		p =3D xdr_encode_hyper(p, nfsd4_change_attribute(stat, =
-inode));
-> -	} else {
-> -		*p++ =3D cpu_to_be32(stat->ctime.tv_sec);
-> -		*p++ =3D cpu_to_be32(stat->ctime.tv_nsec);
-> -	}
-> 	return p;
-> }
->=20
-> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-> index 56cfbc361561..3faf5974fa4e 100644
-> --- a/fs/nfsd/nfsfh.h
-> +++ b/fs/nfsd/nfsfh.h
-> @@ -261,10 +261,16 @@ static inline u64 nfsd4_change_attribute(struct =
-kstat *stat,
-> {
-> 	u64 chattr;
->=20
-> -	chattr =3D  stat->ctime.tv_sec;
-> -	chattr <<=3D 30;
-> -	chattr +=3D stat->ctime.tv_nsec;
-> -	chattr +=3D inode_query_iversion(inode);
-> +	if (IS_I_VERSION(inode)) {
-> +		chattr =3D  stat->ctime.tv_sec;
-> +		chattr <<=3D 30;
-> +		chattr +=3D stat->ctime.tv_nsec;
-> +		chattr +=3D inode_query_iversion(inode);
-> +	} else {
-> +		chattr =3D cpu_to_be32(stat->ctime.tv_sec);
-> +		chattr <<=3D 32;
-> +		chattr +=3D cpu_to_be32(stat->ctime.tv_nsec);
-> +	}
-> 	return chattr;
-> }
->=20
-> --=20
-> 2.28.0
->=20
-
---
-Chuck Lever
-
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 73e717609213..4727b7f03c5b 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1425,7 +1425,7 @@ static __be32 nfsd4_do_copy(struct nfsd4_copy *copy, bool sync)
+ 	return status;
+ }
+ 
+-static int dup_copy_fields(struct nfsd4_copy *src, struct nfsd4_copy *dst)
++static void dup_copy_fields(struct nfsd4_copy *src, struct nfsd4_copy *dst)
+ {
+ 	dst->cp_src_pos = src->cp_src_pos;
+ 	dst->cp_dst_pos = src->cp_dst_pos;
+@@ -1444,8 +1444,6 @@ static int dup_copy_fields(struct nfsd4_copy *src, struct nfsd4_copy *dst)
+ 	memcpy(&dst->stateid, &src->stateid, sizeof(src->stateid));
+ 	memcpy(&dst->c_fh, &src->c_fh, sizeof(src->c_fh));
+ 	dst->ss_mnt = src->ss_mnt;
+-
+-	return 0;
+ }
+ 
+ static void cleanup_async_copy(struct nfsd4_copy *copy)
+@@ -1539,9 +1537,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		refcount_set(&async_copy->refcount, 1);
+ 		memcpy(&copy->cp_res.cb_stateid, &copy->cp_stateid,
+ 			sizeof(copy->cp_stateid));
+-		status = dup_copy_fields(copy, async_copy);
+-		if (status)
+-			goto out_err;
++		dup_copy_fields(copy, async_copy);
+ 		async_copy->copy_task = kthread_create(nfsd4_do_async_copy,
+ 				async_copy, "%s", "copy thread");
+ 		if (IS_ERR(async_copy->copy_task))
 
 
