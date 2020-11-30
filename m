@@ -2,128 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 552CF2C906D
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Nov 2020 23:01:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16B212C9079
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Nov 2020 23:04:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgK3WAo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Nov 2020 17:00:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33266 "EHLO
+        id S1726463AbgK3WEC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Nov 2020 17:04:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgK3WAo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Nov 2020 17:00:44 -0500
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92BE5C0613CF
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Nov 2020 13:59:57 -0800 (PST)
-Received: by mail-ej1-x642.google.com with SMTP id d17so23039321ejy.9
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Nov 2020 13:59:57 -0800 (PST)
+        with ESMTP id S1725893AbgK3WEC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Nov 2020 17:04:02 -0500
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48F37C0613CF
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Nov 2020 14:03:22 -0800 (PST)
+Received: by mail-qk1-x741.google.com with SMTP id u4so12461166qkk.10
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Nov 2020 14:03:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eccS/6KGXHmLcbxiA38hg0DVr3YzPrKQx1eAmZ7ug0A=;
-        b=YdUiobbP5TvM2XIZglKzho1fTdUo6HMD8dM5dY4OGexJpg8JOCF77l1lBxjITY0Wij
-         dFrTEN9xiGp43CD4ZUY1V0ONaf8crJ0V24IITdt57a2KysqeilFg1NPwGL8t8YlvzVG6
-         9wd7A7Lz/fqz5hnx8RTNr1YHnvTtA34Z4IDsJXTaq/vtr+s9e1MvjYdWBl0o/V+G+b8y
-         6OcZZrH6bkild1UsE22izCJlf2FPzyvum3H3w7kic8ndt2QkM9R3i5GwZWqEGqd7aDTt
-         Rc/+rNPYAO98LkKMyWVsbr8rIpLmU8Gmr9b4f+SRsRzrUYXBKShXfC4Y5HRAA6cquG3L
-         olqA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+BRei2E7Nvobh7kFz2MVHgmPHzHXWzwfZ7PzmhWpKCU=;
+        b=AEmiasZqnyG25y++J5bXUPltLqgUvmhT9bCMjBQFRYYbMRM0mwJTsokRE9Om9JAApe
+         vS9/UAxDTL3GUZYCR9TrJUZYQuvfnNDxIzHMh2X9ma6PcJIE7sI4lZXZ/shEbuNt5ogv
+         CxHAmpscLyGT1x/Ym0XZmB78ZlG7yegEdhyRM1IcINS2X2biaIRhEdE5nh9LGV68ZdR2
+         uTH4O2nNhCF59rA+os3+Te9Ol+fBSrT7AZZJjrNj1HOr6yt8rPVbAsCG/WifJIHsRONa
+         p4zd+vHdGgW8DUIchLWuJ7H0Rn9BWImhhNpu7m84LvdA3/DEibVTFjhgNfwTpsmKQXz1
+         Svzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eccS/6KGXHmLcbxiA38hg0DVr3YzPrKQx1eAmZ7ug0A=;
-        b=Ns8tq1M5FUwunpKa4Zhb/6xwfYiMw4iudHVSa5nmhMk+PmfIyS8ygQnuZzGtEKthk+
-         sCXm67qhUruqx+3/sOpBqk8dIt9KLMqstgAJcer1+N2M5cU6Hrk8Q9EHMR25NAFfLRZk
-         SMvIncgm8r6hk8hm21BmPjgSqf3LWjtkex1N+zZxGJR09a95dvEI4+Y5Pc4t3K2104d8
-         gcxU2w0pt6NyNd36x3nF5yk2i4J0kjYBPFMIIDy3TVBOav0ClW9vRxAIkcvP4OMNM76/
-         1/8PBAax188QMuaESwM/2CpLmED2Ejhnr+zQfxeEURRV1y8/TfhRh7ZfPrDopaoZWr49
-         BPAQ==
-X-Gm-Message-State: AOAM530YtYJz8Ktp97UqpDfSGrw6YTA1oGR40J3xf3OGilXAJfYC0hSk
-        55Nf+xRgdigSVy8y4ysKjqMNtjSlYoWVItvyudA=
-X-Google-Smtp-Source: ABdhPJwphEJJUZW/acHnc/R+6ql6uFgpxNQeDjrY5+Nyt90p9xJ8Wzb22RVjY8bwsTBFkTDO1slopWHsonI2psrCu2g=
-X-Received: by 2002:a17:906:1945:: with SMTP id b5mr24340207eje.388.1606773596325;
- Mon, 30 Nov 2020 13:59:56 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+BRei2E7Nvobh7kFz2MVHgmPHzHXWzwfZ7PzmhWpKCU=;
+        b=B1pzeo9ZPlGaPkE+XPgsDMcgccbTPxCRnYNlM+K2sX9uLSYoqssyUqTEEgrkSroJl2
+         KZO2umpXegE0JQ8sFduxXv6h4Lef3HyCHQPl0iV0Z25BvN8bows+wOUZrZ1OpdzZGcpj
+         lnVSCjWL6RSP5OmpfNIIQn0f7fE1A8gBJoeFSnnGyX7ZDvcUu1fi7iShgGYHFZI5a5y0
+         7KzHPPc4P68uiXkK47ly5ejU0DMYqZMya27tFGxthfWyS21h85HhkBpP/3f0pGNvkcXD
+         jMI+M31GoKWb5JNVWdMRK7tfGgxNZgLvOTTef0ehiBBuSNSrSqLmkdiggTBnUnItM1OQ
+         q0sw==
+X-Gm-Message-State: AOAM532VeiaPmYuKI7A+ivmuhJ2ubEWiiG/c2g5Fvy0cg/2+1PgbITZn
+        eFoTMDyNm1roeXh/NZ1GY+zl1/dNmw==
+X-Google-Smtp-Source: ABdhPJylZfvkxmlMcKib7+bTkgNyKn5qbSk0OhZpFeoWYnZsq/3i5XZC54WH331xaSWwsq3NWplyDA==
+X-Received: by 2002:a37:4796:: with SMTP id u144mr25609148qka.235.1606773801349;
+        Mon, 30 Nov 2020 14:03:21 -0800 (PST)
+Received: from leira.hammer.space (c-68-36-133-222.hsd1.mi.comcast.net. [68.36.133.222])
+        by smtp.gmail.com with ESMTPSA id q62sm17642886qkf.86.2020.11.30.14.03.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Nov 2020 14:03:20 -0800 (PST)
+From:   trondmy@gmail.com
+X-Google-Original-From: trond.myklebust@hammerspace.com
+To:     "J. Bruce Fields" <bfields@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v2 0/6] Patches to support NFS re-exporting
+Date:   Mon, 30 Nov 2020 17:03:13 -0500
+Message-Id: <20201130220319.501064-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <160676629926.384675.11452129892621714986.stgit@klimt.1015granger.net>
-In-Reply-To: <160676629926.384675.11452129892621714986.stgit@klimt.1015granger.net>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Mon, 30 Nov 2020 16:59:44 -0500
-Message-ID: <CAN-5tyFc3vKMwn6_UcE-oUnr762j_zzP0bp-_FQx1ANbv8zqsg@mail.gmail.com>
-Subject: Re: [PATCH v2] SUNRPC: Remove XDRBUF_SPARSE_PAGES flag in gss_proxy upcall
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Simo Sorce <simo@redhat.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Nov 30, 2020 at 2:59 PM Chuck Lever <chuck.lever@oracle.com> wrote:
->
-> There's no need to defer allocation of pages for the receive buffer.
->
-> - This upcall is quite infrequent
-> - gssp_alloc_receive_pages() can allocate the pages with GFP_KERNEL,
->   unlike the transport
-> - gssp_alloc_receive_pages() knows exactly how many pages are needed
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Looks good to me now. Reviewed-by.
+These patches fix a number of issues that Hammerspace has hit when doing
+re-exporting of NFS.
 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  net/sunrpc/auth_gss/gss_rpc_upcall.c |   15 ++++++++++-----
->  net/sunrpc/auth_gss/gss_rpc_xdr.c    |    1 -
->  2 files changed, 10 insertions(+), 6 deletions(-)
->
-> diff --git a/net/sunrpc/auth_gss/gss_rpc_upcall.c b/net/sunrpc/auth_gss/gss_rpc_upcall.c
-> index af9c7f43859c..d1c003a25b0f 100644
-> --- a/net/sunrpc/auth_gss/gss_rpc_upcall.c
-> +++ b/net/sunrpc/auth_gss/gss_rpc_upcall.c
-> @@ -200,7 +200,7 @@ static int gssp_call(struct net *net, struct rpc_message *msg)
->
->  static void gssp_free_receive_pages(struct gssx_arg_accept_sec_context *arg)
->  {
-> -       int i;
-> +       unsigned int i;
->
->         for (i = 0; i < arg->npages && arg->pages[i]; i++)
->                 __free_page(arg->pages[i]);
-> @@ -210,14 +210,19 @@ static void gssp_free_receive_pages(struct gssx_arg_accept_sec_context *arg)
->
->  static int gssp_alloc_receive_pages(struct gssx_arg_accept_sec_context *arg)
->  {
-> +       unsigned int i;
-> +
->         arg->npages = DIV_ROUND_UP(NGROUPS_MAX * 4, PAGE_SIZE);
->         arg->pages = kcalloc(arg->npages, sizeof(struct page *), GFP_KERNEL);
-> -       /*
-> -        * XXX: actual pages are allocated by xdr layer in
-> -        * xdr_partial_copy_from_skb.
-> -        */
->         if (!arg->pages)
->                 return -ENOMEM;
-> +       for (i = 0; i < arg->npages; i++) {
-> +               arg->pages[i] = alloc_page(GFP_KERNEL);
-> +               if (!arg->pages[i]) {
-> +                       gssp_free_receive_pages(arg);
-> +                       return -ENOMEM;
-> +               }
-> +       }
->         return 0;
->  }
->
-> diff --git a/net/sunrpc/auth_gss/gss_rpc_xdr.c b/net/sunrpc/auth_gss/gss_rpc_xdr.c
-> index c636c648849b..d79f12c2550a 100644
-> --- a/net/sunrpc/auth_gss/gss_rpc_xdr.c
-> +++ b/net/sunrpc/auth_gss/gss_rpc_xdr.c
-> @@ -771,7 +771,6 @@ void gssx_enc_accept_sec_context(struct rpc_rqst *req,
->         xdr_inline_pages(&req->rq_rcv_buf,
->                 PAGE_SIZE/2 /* pretty arbitrary */,
->                 arg->pages, 0 /* page base */, arg->npages * PAGE_SIZE);
-> -       req->rq_rcv_buf.flags |= XDRBUF_SPARSE_PAGES;
->  done:
->         if (err)
->                 dprintk("RPC:       gssx_enc_accept_sec_context: %d\n", err);
->
->
+- v2: Rebased on top of cel-next.
+
+Jeff Layton (3):
+  nfsd: add a new EXPORT_OP_NOWCC flag to struct export_operations
+  nfsd: allow filesystems to opt out of subtree checking
+  nfsd: close cached files prior to a REMOVE or RENAME that would
+    replace target
+
+Trond Myklebust (3):
+  exportfs: Add a function to return the raw output from fh_to_dentry()
+  nfsd: Fix up nfsd to ensure that timeout errors don't result in ESTALE
+  nfsd: Set PF_LOCAL_THROTTLE on local filesystems only
+
+ Documentation/filesystems/nfs/exporting.rst | 52 +++++++++++++++++++++
+ fs/exportfs/expfs.c                         | 32 +++++++++----
+ fs/nfs/export.c                             |  2 +
+ fs/nfsd/export.c                            |  6 +++
+ fs/nfsd/nfs3xdr.c                           |  7 ++-
+ fs/nfsd/nfsfh.c                             | 30 ++++++++++--
+ fs/nfsd/nfsfh.h                             |  2 +-
+ fs/nfsd/vfs.c                               | 29 ++++++++----
+ include/linux/exportfs.h                    | 10 ++++
+ 9 files changed, 146 insertions(+), 24 deletions(-)
+
+-- 
+2.28.0
+
