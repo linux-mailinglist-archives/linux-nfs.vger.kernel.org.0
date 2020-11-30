@@ -2,40 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8368C2C8FFE
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Nov 2020 22:26:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6C7F2C9002
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Nov 2020 22:26:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388604AbgK3VZo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Nov 2020 16:25:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42092 "EHLO mail.kernel.org"
+        id S2388607AbgK3V0W (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Nov 2020 16:26:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388607AbgK3VZo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 30 Nov 2020 16:25:44 -0500
+        id S2388558AbgK3V0W (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 30 Nov 2020 16:26:22 -0500
 Received: from leira.hammer.space (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03576208FE;
-        Mon, 30 Nov 2020 21:25:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E07BB208DB;
+        Mon, 30 Nov 2020 21:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606771503;
-        bh=ehKoeRQqCtqwzwU9iqCAkFba82xZ6gMw2ZiEuos4uc8=;
+        s=default; t=1606771504;
+        bh=N9/OPaZzIYV3a+AYR28ltm5smWP8Pti1uo38sJCxOt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d4DOkHrxLeBCFtZxEAma1s/JgZC89G/UI/mO1JNbo9eqCJaG+8g726dOi0Ff4tzyi
-         zukgVh4Zm5iNM3DFIL9r+uD6fdbjRHLfTJT/VfHCPBr+pqyfB249mORl9dMEgejt0v
-         APKKM0nFqC4oJWnJzbBvS+6deGaV64/i9cTvKLiQ=
+        b=bw1XRI0RFZPV1+jPSsVBRG28TJ3unnVnStIT2ZGWS3DZ7IldJ48qFQmte/DSxadaq
+         V+fBYB/C/d9mYtttP7fzCNYVTKIGrOVqwo/0mxxSF4POx2T0wEDZ9mPOnKSgzlLNlu
+         Cxsv7/aBpAKnVWy3OzXUJHvV/X9TcnaXYZL5x+uM=
 From:   trondmy@kernel.org
 To:     "J. Bruce Fields" <bfields@redhat.com>,
         Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 4/6] exportfs: Add a function to return the raw output from fh_to_dentry()
-Date:   Mon, 30 Nov 2020 16:24:53 -0500
-Message-Id: <20201130212455.254469-5-trondmy@kernel.org>
+Subject: [PATCH 5/6] nfsd: Fix up nfsd to ensure that timeout errors don't result in ESTALE
+Date:   Mon, 30 Nov 2020 16:24:54 -0500
+Message-Id: <20201130212455.254469-6-trondmy@kernel.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201130212455.254469-4-trondmy@kernel.org>
+In-Reply-To: <20201130212455.254469-5-trondmy@kernel.org>
 References: <20201130212455.254469-1-trondmy@kernel.org>
  <20201130212455.254469-2-trondmy@kernel.org>
  <20201130212455.254469-3-trondmy@kernel.org>
  <20201130212455.254469-4-trondmy@kernel.org>
+ <20201130212455.254469-5-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -44,91 +45,43 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-In order to allow nfsd to accept return values that are not
-acceptable to overlayfs and others, add a new function.
+If the underlying filesystem times out, then we want knfsd to return
+NFSERR_JUKEBOX/DELAY rather than NFSERR_STALE.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/exportfs/expfs.c      | 32 ++++++++++++++++++++++++--------
- include/linux/exportfs.h |  5 +++++
- 2 files changed, 29 insertions(+), 8 deletions(-)
+ fs/nfsd/nfsfh.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
-index 2dd55b172d57..0106eba46d5a 100644
---- a/fs/exportfs/expfs.c
-+++ b/fs/exportfs/expfs.c
-@@ -417,9 +417,11 @@ int exportfs_encode_fh(struct dentry *dentry, struct fid *fid, int *max_len,
- }
- EXPORT_SYMBOL_GPL(exportfs_encode_fh);
- 
--struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
--		int fh_len, int fileid_type,
--		int (*acceptable)(void *, struct dentry *), void *context)
-+struct dentry *
-+exportfs_decode_fh_raw(struct vfsmount *mnt, struct fid *fid, int fh_len,
-+		       int fileid_type,
-+		       int (*acceptable)(void *, struct dentry *),
-+		       void *context)
- {
- 	const struct export_operations *nop = mnt->mnt_sb->s_export_op;
- 	struct dentry *result, *alias;
-@@ -432,10 +434,8 @@ struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
- 	if (!nop || !nop->fh_to_dentry)
- 		return ERR_PTR(-ESTALE);
- 	result = nop->fh_to_dentry(mnt->mnt_sb, fid, fh_len, fileid_type);
--	if (PTR_ERR(result) == -ENOMEM)
--		return ERR_CAST(result);
- 	if (IS_ERR_OR_NULL(result))
--		return ERR_PTR(-ESTALE);
-+		return result;
- 
- 	/*
- 	 * If no acceptance criteria was specified by caller, a disconnected
-@@ -561,10 +561,26 @@ struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
- 
-  err_result:
- 	dput(result);
--	if (err != -ENOMEM)
--		err = -ESTALE;
- 	return ERR_PTR(err);
- }
-+EXPORT_SYMBOL_GPL(exportfs_decode_fh_raw);
-+
-+struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
-+				  int fh_len, int fileid_type,
-+				  int (*acceptable)(void *, struct dentry *),
-+				  void *context)
-+{
-+	struct dentry *ret;
-+
-+	ret = exportfs_decode_fh_raw(mnt, fid, fh_len, fileid_type,
-+				     acceptable, context);
-+	if (IS_ERR_OR_NULL(ret)) {
-+		if (ret == ERR_PTR(-ENOMEM))
-+			return ret;
-+		return ERR_PTR(-ESTALE);
-+	}
-+	return ret;
-+}
- EXPORT_SYMBOL_GPL(exportfs_decode_fh);
- 
- MODULE_LICENSE("GPL");
-diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-index d829403ffd3b..846df3c96730 100644
---- a/include/linux/exportfs.h
-+++ b/include/linux/exportfs.h
-@@ -223,6 +223,11 @@ extern int exportfs_encode_inode_fh(struct inode *inode, struct fid *fid,
- 				    int *max_len, struct inode *parent);
- extern int exportfs_encode_fh(struct dentry *dentry, struct fid *fid,
- 	int *max_len, int connectable);
-+extern struct dentry *exportfs_decode_fh_raw(struct vfsmount *mnt,
-+					     struct fid *fid, int fh_len,
-+					     int fileid_type,
-+					     int (*acceptable)(void *, struct dentry *),
-+					     void *context);
- extern struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
- 	int fh_len, int fileid_type, int (*acceptable)(void *, struct dentry *),
- 	void *context);
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index 0c2ee65e46f3..46c86f7bc429 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -268,12 +268,20 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
+ 	if (fileid_type == FILEID_ROOT)
+ 		dentry = dget(exp->ex_path.dentry);
+ 	else {
+-		dentry = exportfs_decode_fh(exp->ex_path.mnt, fid,
+-				data_left, fileid_type,
+-				nfsd_acceptable, exp);
+-		if (IS_ERR_OR_NULL(dentry))
++		dentry = exportfs_decode_fh_raw(exp->ex_path.mnt, fid,
++						data_left, fileid_type,
++						nfsd_acceptable, exp);
++		if (IS_ERR_OR_NULL(dentry)) {
+ 			trace_nfsd_set_fh_dentry_badhandle(rqstp, fhp,
+ 					dentry ?  PTR_ERR(dentry) : -ESTALE);
++			switch (PTR_ERR(dentry)) {
++			case -ENOMEM:
++			case -ETIMEDOUT:
++				break;
++			default:
++				dentry = ERR_PTR(-ESTALE);
++			}
++		}
+ 	}
+ 	if (dentry == NULL)
+ 		goto out;
 -- 
 2.28.0
 
