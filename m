@@ -2,157 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED4FB2C9085
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Nov 2020 23:05:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE6542C9165
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Nov 2020 23:47:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730392AbgK3WEs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Nov 2020 17:04:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33908 "EHLO
+        id S1728509AbgK3WrB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Nov 2020 17:47:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgK3WEs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Nov 2020 17:04:48 -0500
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36159C0617A7
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Nov 2020 14:03:29 -0800 (PST)
-Received: by mail-qk1-x742.google.com with SMTP id n132so12508516qke.1
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Nov 2020 14:03:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sHOAENSNXIvjYq9Tl7P3CdijvmITSoC+1Zpxg6ltwMA=;
-        b=Y42+wxvFjhSWek3zq7LQvqr0l//jB621jsPyx188fedunt9y8hLMBnyhvXW5OAVbv5
-         XJj1TzI8BTDOicAC+vDiZ3BtVavWeWZPDWcK1iWpNEk1VvJP5QjGIMujgokqLWnv9bsD
-         1JqaEmxzKeKc1/MTTB6JV4SlXFAp8A24HiECzv9iZ6tgC/1EEAOPN5c7L06+oMZ3G9JN
-         MsxL3XuCMZ8lMomFk8dkMqihOMQGWyfRzPx0875i2l6kHi2t/ZcWsUOBDY5WGeCTxrAD
-         35SeLft/qP9oVRynuHnFXzLw6FD0PpwnLjOVLt2NX11eOjw9jJkPipsRf8wp6KGqFQMA
-         1nsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sHOAENSNXIvjYq9Tl7P3CdijvmITSoC+1Zpxg6ltwMA=;
-        b=IuGWT0bPXfQCH2ZeOVcE+9r/7Q15kdcnharacCOAVzcJMD2SHVarOebCUtPeDSkxwD
-         9yhHhxcrBpT6xx0kFWXeFKsgQWf7vBLx+B1aynVNe0Ae6z2IM6UMXpe3FoYKEVXuhb1P
-         NKmCV/Smp0YMCHaSkIpuzW/Rl0ic0wsGKRbW/4HbH42PO/Ie1MA3V4vbrhraDoIv7q+s
-         mj0pD6W+KjiPBsBDgWE9K5Aoi+i/eLjfvP8bzVdY5f3UfTd4Qv0TecGvppJAW4ZpIB57
-         0HO/qxwy/5bHZdhBZyntaGm5hpmYcqBH/oN6wHa6TY8KcUcXuSfnFTuVx5zklrKdgiIT
-         2Bag==
-X-Gm-Message-State: AOAM531LRdpoWuAPgSAfXZeEC+ZqiXylfCi5ktS0sohWPEQzSrEUvyN/
-        s5qOhvKF9H6D/OP0VI/lAg==
-X-Google-Smtp-Source: ABdhPJwajcc/Tj1ux/CpoCBgcFDGWq4K5eLsq2AdQqBVHC5x3VJ1MqGFnkyl6mqraRlRRivIk3+UKw==
-X-Received: by 2002:a37:500a:: with SMTP id e10mr26008341qkb.60.1606773808357;
-        Mon, 30 Nov 2020 14:03:28 -0800 (PST)
-Received: from leira.hammer.space (c-68-36-133-222.hsd1.mi.comcast.net. [68.36.133.222])
-        by smtp.gmail.com with ESMTPSA id q62sm17642886qkf.86.2020.11.30.14.03.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Nov 2020 14:03:27 -0800 (PST)
-From:   trondmy@gmail.com
-X-Google-Original-From: trond.myklebust@hammerspace.com
-To:     "J. Bruce Fields" <bfields@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 6/6] nfsd: Set PF_LOCAL_THROTTLE on local filesystems only
-Date:   Mon, 30 Nov 2020 17:03:19 -0500
-Message-Id: <20201130220319.501064-7-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201130220319.501064-6-trond.myklebust@hammerspace.com>
-References: <20201130220319.501064-1-trond.myklebust@hammerspace.com>
- <20201130220319.501064-2-trond.myklebust@hammerspace.com>
- <20201130220319.501064-3-trond.myklebust@hammerspace.com>
- <20201130220319.501064-4-trond.myklebust@hammerspace.com>
- <20201130220319.501064-5-trond.myklebust@hammerspace.com>
- <20201130220319.501064-6-trond.myklebust@hammerspace.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        with ESMTP id S1726304AbgK3WrB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Nov 2020 17:47:01 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E646C0613D2
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Nov 2020 14:46:20 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 2D3E22012; Mon, 30 Nov 2020 17:46:20 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 2D3E22012
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1606776380;
+        bh=Tr4sCnrAn2+kfwdd8J+wF5M4PttWXLQJkcHSHSZ9RPE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tjVlomQrGUEQL66A+mxJ9DWULfPwwJ11SGbfsJzbPcryaDnYMcn0ELh7cDgJi3BCc
+         GYfj1Tzh16Buv2Rq8L2YZhQLn6Ck4MfAvj+sCmqv8C7+mq0C9ubZrLPF+9IsyKNQqP
+         7F3KpxumdI+j2uvHYedq98fxnMExU03V+Hc0X2fE=
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 1/5] nfsd: only call inode_query_iversion in the I_VERSION case
+Date:   Mon, 30 Nov 2020 17:46:14 -0500
+Message-Id: <1606776378-22381-1-git-send-email-bfields@fieldses.org>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-Don't set PF_LOCAL_THROTTLE on remote filesystems like NFS, since they
-aren't expected to ever be subject to double buffering.
+inode_query_iversion() can modify i_version.  Depending on the exported
+filesystem, that may not be safe.  For example, if you're re-exporting
+NFS, NFS stores the server's change attribute in i_version and does not
+expect it to be modified locally.  This has been observed causing
+unnecessary cache invalidations.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+The way a filesystem indicates that it's OK to call
+inode_query_iverson() is by setting SB_I_VERSION.
+
+So, move the I_VERSION check out of encode_change(), where it's used
+only in FATTR responses, to nfsd4_changeattr(), which is also called for
+pre- and post- operation attributes.
+
+(Note we could also pull the NFSEXP_V4ROOT case into
+nfsd4_change_attribute as well.  That would actually be a no-op, since
+pre/post attrs are only used for metadata-modifying operations, and
+V4ROOT exports are read-only.  But we might make the change in the
+future just for simplicity.)
+
+Reported-by: Daire Byrne <daire@dneg.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 ---
- fs/nfs/export.c          |  3 ++-
- fs/nfsd/vfs.c            | 13 +++++++++++--
- include/linux/exportfs.h |  1 +
- 3 files changed, 14 insertions(+), 3 deletions(-)
+ fs/nfsd/nfs3xdr.c |  5 ++---
+ fs/nfsd/nfs4xdr.c |  6 +-----
+ fs/nfsd/nfsfh.h   | 14 ++++++++++----
+ 3 files changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/fs/nfs/export.c b/fs/nfs/export.c
-index 5428713af5fe..48b879cfe6e3 100644
---- a/fs/nfs/export.c
-+++ b/fs/nfs/export.c
-@@ -171,5 +171,6 @@ const struct export_operations nfs_export_ops = {
- 	.encode_fh = nfs_encode_fh,
- 	.fh_to_dentry = nfs_fh_to_dentry,
- 	.get_parent = nfs_get_parent,
--	.flags = EXPORT_OP_NOWCC|EXPORT_OP_NOSUBTREECHK|EXPORT_OP_CLOSE_BEFORE_UNLINK,
-+	.flags = EXPORT_OP_NOWCC|EXPORT_OP_NOSUBTREECHK|
-+		EXPORT_OP_CLOSE_BEFORE_UNLINK|EXPORT_OP_REMOTE_FS,
- };
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 79cba942087e..04937e51de56 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -978,18 +978,25 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
- 				__be32 *verf)
- {
- 	struct file		*file = nf->nf_file;
-+	struct super_block	*sb = file_inode(file)->i_sb;
- 	struct svc_export	*exp;
- 	struct iov_iter		iter;
- 	__be32			nfserr;
- 	int			host_err;
- 	int			use_wgather;
- 	loff_t			pos = offset;
-+	unsigned long		exp_op_flags = 0;
- 	unsigned int		pflags = current->flags;
- 	rwf_t			flags = 0;
-+	bool			restore_flags = false;
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index 2277f83da250..dfbf390ff40c 100644
+--- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -291,14 +291,13 @@ void fill_post_wcc(struct svc_fh *fhp)
+ 		printk("nfsd: inode locked twice during operation.\n");
  
- 	trace_nfsd_write_opened(rqstp, fhp, offset, *cnt);
- 
--	if (test_bit(RQ_LOCAL, &rqstp->rq_flags))
-+	if (sb->s_export_op)
-+		exp_op_flags = sb->s_export_op->flags;
-+
-+	if (test_bit(RQ_LOCAL, &rqstp->rq_flags) &&
-+	    !(exp_op_flags & EXPORT_OP_REMOTE_FS)) {
- 		/*
- 		 * We want throttling in balance_dirty_pages()
- 		 * and shrink_inactive_list() to only consider
-@@ -998,6 +1005,8 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
- 		 * the client's dirty pages or its congested queue.
- 		 */
- 		current->flags |= PF_LOCAL_THROTTLE;
-+		restore_flags = true;
-+	}
- 
- 	exp = fhp->fh_export;
- 	use_wgather = (rqstp->rq_vers == 2) && EX_WGATHER(exp);
-@@ -1049,7 +1058,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
- 		trace_nfsd_write_err(rqstp, fhp, offset, host_err);
- 		nfserr = nfserrno(host_err);
- 	}
--	if (test_bit(RQ_LOCAL, &rqstp->rq_flags))
-+	if (restore_flags)
- 		current_restore_flags(pflags, PF_LOCAL_THROTTLE);
- 	return nfserr;
+ 	err = fh_getattr(fhp, &fhp->fh_post_attr);
+-	fhp->fh_post_change = nfsd4_change_attribute(&fhp->fh_post_attr,
+-						     d_inode(fhp->fh_dentry));
+ 	if (err) {
+ 		fhp->fh_post_saved = false;
+-		/* Grab the ctime anyway - set_change_info might use it */
+ 		fhp->fh_post_attr.ctime = d_inode(fhp->fh_dentry)->i_ctime;
+ 	} else
+ 		fhp->fh_post_saved = true;
++	fhp->fh_post_change = nfsd4_change_attribute(&fhp->fh_post_attr,
++						     d_inode(fhp->fh_dentry));
  }
-diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-index 846df3c96730..d93e8a6737bb 100644
---- a/include/linux/exportfs.h
-+++ b/include/linux/exportfs.h
-@@ -216,6 +216,7 @@ struct export_operations {
- #define	EXPORT_OP_NOWCC			(0x1) /* don't collect v3 wcc data */
- #define	EXPORT_OP_NOSUBTREECHK		(0x2) /* no subtree checking */
- #define	EXPORT_OP_CLOSE_BEFORE_UNLINK	(0x4) /* close files before unlink */
-+#define EXPORT_OP_REMOTE_FS		(0x8) /* Filesystem is remote */
- 	unsigned long	flags;
- };
+ 
+ /*
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 833a2c64dfe8..56fd5f6d5c44 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -2298,12 +2298,8 @@ static __be32 *encode_change(__be32 *p, struct kstat *stat, struct inode *inode,
+ 	if (exp->ex_flags & NFSEXP_V4ROOT) {
+ 		*p++ = cpu_to_be32(convert_to_wallclock(exp->cd->flush_time));
+ 		*p++ = 0;
+-	} else if (IS_I_VERSION(inode)) {
++	} else
+ 		p = xdr_encode_hyper(p, nfsd4_change_attribute(stat, inode));
+-	} else {
+-		*p++ = cpu_to_be32(stat->ctime.tv_sec);
+-		*p++ = cpu_to_be32(stat->ctime.tv_nsec);
+-	}
+ 	return p;
+ }
+ 
+diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+index 56cfbc361561..39d764b129fa 100644
+--- a/fs/nfsd/nfsfh.h
++++ b/fs/nfsd/nfsfh.h
+@@ -261,10 +261,16 @@ static inline u64 nfsd4_change_attribute(struct kstat *stat,
+ {
+ 	u64 chattr;
+ 
+-	chattr =  stat->ctime.tv_sec;
+-	chattr <<= 30;
+-	chattr += stat->ctime.tv_nsec;
+-	chattr += inode_query_iversion(inode);
++	if (IS_I_VERSION(inode)) {
++		chattr =  stat->ctime.tv_sec;
++		chattr <<= 30;
++		chattr += stat->ctime.tv_nsec;
++		chattr += inode_query_iversion(inode);
++	} else {
++		chattr = stat->ctime.tv_sec;
++		chattr <<= 32;
++		chattr += stat->ctime.tv_nsec;
++	}
+ 	return chattr;
+ }
  
 -- 
 2.28.0
