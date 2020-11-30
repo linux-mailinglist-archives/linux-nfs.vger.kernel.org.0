@@ -2,127 +2,138 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 559552C900F
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Nov 2020 22:32:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1E442C901D
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Nov 2020 22:39:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388473AbgK3V3G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Nov 2020 16:29:06 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:52994 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387413AbgK3V3G (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Nov 2020 16:29:06 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AULOq8s093472;
-        Mon, 30 Nov 2020 21:28:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=c7DlL33is7asJZ8TFrSKmI3u8uWV0dUSFa2bSSm7J4c=;
- b=lhfYN7b9BoeaNMfVNccqGCpuWIL3Qg/BO1S2RxmXzmdoVgczl6zWI+NStEGw6/I/kDAi
- X3nI8k5FlearueYLKXoeWTt+K+U/1A6qFcO5WZgHy7DUUkpKXuDQwLHTC5diApJvB/vd
- YZs+0ORxnGF756o63D92xNxr0k3EqX/Z3D2KJ14k08VO9IEVH7AYlkj9xo4W6erTjae4
- m6i9SnJPdIA8T4c64SGqZuPfPeLRRKcVfw+pYyDamRS1PObvaQL/pGt1+374wuDhN9De
- M+T03cAJGggxAL+TGmCQC+2S2xW2PlSjneJoVRZfJEaS/L+GQ83ILBwn8XHRPsB56utG Nw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 353egkfe38-1
+        id S1727522AbgK3Viu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Nov 2020 16:38:50 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:37812 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbgK3Viu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Nov 2020 16:38:50 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AULP39d037514;
+        Mon, 30 Nov 2020 21:38:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=UjFdXOW7H8yWfyDJfINjgLDnYUhSOKzBwDDOvVIoE9c=;
+ b=UdIoFDDu81R/QrRXTfUgNZ3fJaLgKwYvVbj1GKtns++0wpff0IajXzMTmYUi4wwUCnO6
+ Sc1XIoVwptXvtiOV7onJcdPh252knLII4PJO2h5t4Rw+NKasBNuuYLOifmQ+qitSAjvu
+ Wp4em0vN1FLW8Sv+dgMKloZnBlTQ/dLgeRESleez8UZqJpVTCJh7gk0apDf4G2jd5RuR
+ jA8EsBGfSm28BN7zslg/p/ZWFlWp2WY9Sf5xAmFw3N9wnaUv4vNGAkZypXcmHsW0lslh
+ yYDEWi0dlG3Iyl1XEpRDkR8bxDnj44uj+UhkcfMBwUqWx2W1pTCMyElcs0rlZMOBOWZG RA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 353c2aqma6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Nov 2020 21:28:23 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AULQDuP087726;
-        Mon, 30 Nov 2020 21:28:23 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 3540ar6awd-1
+        Mon, 30 Nov 2020 21:38:08 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AULQ2UF053315;
+        Mon, 30 Nov 2020 21:38:08 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 3540ex2v5b-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Nov 2020 21:28:23 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0AULSMFM002167;
-        Mon, 30 Nov 2020 21:28:22 GMT
-Received: from dhcp-10-154-154-74.vpn.oracle.com (/10.154.154.74)
+        Mon, 30 Nov 2020 21:38:08 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AULc7nH013276;
+        Mon, 30 Nov 2020 21:38:08 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 30 Nov 2020 13:28:21 -0800
+        with ESMTP ; Mon, 30 Nov 2020 13:38:07 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
 Subject: Re: [PATCH] NFSD: Fix 5 seconds delay when doing inter server copy
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs@vger.kernel.org
-References: <20201124031609.67297-1-dai.ngo@oracle.com>
- <20201124204956.GB7173@fieldses.org>
-From:   Dai Ngo <dai.ngo@oracle.com>
-Message-ID: <8d06ce44-78c4-a0fc-bf99-c104b2622889@oracle.com>
-Date:   Mon, 30 Nov 2020 13:28:20 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.5.0
-MIME-Version: 1.0
-In-Reply-To: <20201124204956.GB7173@fieldses.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20201130212449.3470-1-dai.ngo@oracle.com>
+Date:   Mon, 30 Nov 2020 16:38:06 -0500
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7AD569D2-BBEB-4F2D-9673-59E3CA4E89E1@oracle.com>
+References: <20201130212449.3470-1-dai.ngo@oracle.com>
+To:     Dai Ngo <dai.ngo@oracle.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- phishscore=0 mlxscore=0 adultscore=0 malwarescore=0 suspectscore=11
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011300135
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 phishscore=0
+ suspectscore=0 bulkscore=0 spamscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011300135
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=11
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 impostorscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2011300135
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 11/24/20 12:49 PM, J. Bruce Fields wrote:
-> On Mon, Nov 23, 2020 at 10:16:09PM -0500, Dai Ngo wrote:
->> Since commit b4868b44c5628 ("NFSv4: Wait for stateid updates after
->> CLOSE/OPEN_DOWNGRADE"), every inter server copy operation suffers 5
->> seconds delay regardless of the size of the copy. The delay is from
->> nfs_set_open_stateid_locked when the check by nfs_stateid_is_sequential
->> fails because the seqid in both nfs4_state and nfs4_stateid are 0.
->>
->> Fix by modifying the source server to return the stateid for COPY_NOTIFY
->> request with seqid 1 instead of 0. This is also to conform with
->> section 4.8 of RFC 7862.
->>
->> Here is the relevant paragraph from section 4.8 of RFC 7862:
->>
->>     A copy offload stateid's seqid MUST NOT be zero.  In the context of a
->>     copy offload operation, it is inappropriate to indicate "the most
->>     recent copy offload operation" using a stateid with a seqid of zero
->>     (see Section 8.2.2 of [RFC5661]).  It is inappropriate because the
->>     stateid refers to internal state in the server and there may be
->>     several asynchronous COPY operations being performed in parallel on
->>     the same file by the server.  Therefore, a copy offload stateid with
->>     a seqid of zero MUST be considered invalid.
->>
->> Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
->> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
->> ---
->>   fs/nfsd/nfs4state.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
->> index d7f27ed6b794..33ee1a6961e3 100644
->> --- a/fs/nfsd/nfs4state.c
->> +++ b/fs/nfsd/nfs4state.c
->> @@ -793,6 +793,7 @@ struct nfs4_cpntf_state *nfs4_alloc_init_cpntf_state(struct nfsd_net *nn,
->>   	refcount_set(&cps->cp_stateid.sc_count, 1);
->>   	if (!nfs4_init_cp_state(nn, &cps->cp_stateid, NFS4_COPYNOTIFY_STID))
->>   		goto out_free;
->> +	cps->cp_stateid.stid.si_generation = 1;
-> This affects the stateid returned by COPY_NOTIFY, but not the one
-> returned by COPY.  I think we wan to add this to nfs4_init_cp_state()
-> and cover both.
 
-Hi Bruce, thank you for your suggestion. Updated patch tested and submitted.
 
--Dai
+> On Nov 30, 2020, at 4:24 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
+>=20
+> Since commit b4868b44c5628 ("NFSv4: Wait for stateid updates after
+> CLOSE/OPEN_DOWNGRADE"), every inter server copy operation suffers 5
+> seconds delay regardless of the size of the copy. The delay is from
+> nfs_set_open_stateid_locked when the check by =
+nfs_stateid_is_sequential
+> fails because the seqid in both nfs4_state and nfs4_stateid are 0.
+>=20
+> Fix by modifying nfs4_init_cp_state to return the stateid with seqid 1
+> instead of 0. This is also to conform with section 4.8 of RFC 7862.
+>=20
+> Here is the relevant paragraph from section 4.8 of RFC 7862:
+>=20
+>   A copy offload stateid's seqid MUST NOT be zero.  In the context of =
+a
+>   copy offload operation, it is inappropriate to indicate "the most
+>   recent copy offload operation" using a stateid with a seqid of zero
+>   (see Section 8.2.2 of [RFC5661]).  It is inappropriate because the
+>   stateid refers to internal state in the server and there may be
+>   several asynchronous COPY operations being performed in parallel on
+>   the same file by the server.  Therefore, a copy offload stateid with
+>   a seqid of zero MUST be considered invalid.
+>=20
+> Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 
-P.S sorry for the delay, I was on leave last few days.
+Applied for the next merge window. See the cel-next topic branch in
+this repo:
 
->
-> --b.
->
->>   	spin_lock(&nn->s2s_cp_lock);
->>   	list_add(&cps->cp_list, &p_stid->sc_cp_list);
->>   	spin_unlock(&nn->s2s_cp_lock);
->> -- 
->> 2.9.5
+git://git.linux-nfs.org/projects/cel/cel-2.6.git
+
+See also:
+
+=
+http://git.linux-nfs.org/?p=3Dcel/cel-2.6.git;a=3Dshortlog;h=3Drefs/heads/=
+cel-next
+
+
+> ---
+> fs/nfsd/nfs4state.c | 1 +
+> 1 file changed, 1 insertion(+)
+>=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index d7f27ed6b794..47006eec724e 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -769,6 +769,7 @@ static int nfs4_init_cp_state(struct nfsd_net *nn, =
+copy_stateid_t *stid,
+> 	spin_lock(&nn->s2s_cp_lock);
+> 	new_id =3D idr_alloc_cyclic(&nn->s2s_cp_stateids, stid, 0, 0, =
+GFP_NOWAIT);
+> 	stid->stid.si_opaque.so_id =3D new_id;
+> +	stid->stid.si_generation =3D 1;
+> 	spin_unlock(&nn->s2s_cp_lock);
+> 	idr_preload_end();
+> 	if (new_id < 0)
+> --=20
+> 2.9.5
+>=20
+
+--
+Chuck Lever
+
+
+
