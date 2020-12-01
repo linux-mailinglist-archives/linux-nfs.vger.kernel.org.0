@@ -2,35 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64D422CA84D
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Dec 2020 17:32:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48FE62CA884
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Dec 2020 17:45:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgLAQa4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Dec 2020 11:30:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51810 "EHLO mail.kernel.org"
+        id S1726147AbgLAQoO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Dec 2020 11:44:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725885AbgLAQaz (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 1 Dec 2020 11:30:55 -0500
+        id S1725885AbgLAQoN (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 1 Dec 2020 11:44:13 -0500
 Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39378206B7;
-        Tue,  1 Dec 2020 16:30:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61F7820758;
+        Tue,  1 Dec 2020 16:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606840214;
-        bh=eDFp0Oox+yiwriEGxxkLwipnOLgYaXShb3VxZFZZx8o=;
+        s=default; t=1606841012;
+        bh=Km+WM9tA4MWrdRukSNY/Rw0La/ntq5vA+VkrebH6SBM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=qlMMs/IA46JerH5WacYsxf1kt2cUj5DiQl7P4ZIGckKo7Z9oIhEHzeIR2Pt5TK+yR
-         lIVz1SnSQmo7dzj21JvR3db3/NHcfQ5rgL8GgsdjmTPDGeCGai77MU7a3PIlYTwXsV
-         9I5yA/rvgO1Bis0tS2ZmY36FTTsEaBhvglSUPDH8=
-Message-ID: <e40e0b17e0eff20016b637b140b7fd4b2e367e34.camel@kernel.org>
+        b=F/KEM9POqeRZ9rdRPFnpfkjrZCdRY9z0LNefPBLXBT/D2DUMYK3uIQwOsRbkWwjKB
+         Txy0SPYIh5ZktFPtE1gr5xurIDV3SP1xbuWKSLdwEVKVw7X3M7E5YJytwXWmo1/YBi
+         BuD8g5P9wzeMhst4/vW+16mIg41Vksgen3lTe26c=
+Message-ID: <01bad6aa8aa05bb9bafd010575866125f89c5f08.camel@kernel.org>
 Subject: Re: [PATCH 1/5] nfsd: only call inode_query_iversion in the
  I_VERSION case
 From:   Jeff Layton <jlayton@kernel.org>
 To:     "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>
-Date:   Tue, 01 Dec 2020 11:30:12 -0500
+Date:   Tue, 01 Dec 2020 11:43:31 -0500
 In-Reply-To: <1606776378-22381-1-git-send-email-bfields@fieldses.org>
 References: <1606776378-22381-1-git-send-email-bfields@fieldses.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -57,9 +57,6 @@ On Mon, 2020-11-30 at 17:46 -0500, J. Bruce Fields wrote:
 > only in FATTR responses, to nfsd4_changeattr(), which is also called for
 > pre- and post- operation attributes.
 > 
-
-"only in FATTR responses, to nfsd4_change_attribute(),"
-
 > (Note we could also pull the NFSEXP_V4ROOT case into
 > nfsd4_change_attribute as well.  That would actually be a no-op, since
 > pre/post attrs are only used for metadata-modifying operations, and
@@ -145,6 +142,10 @@ On Mon, 2020-11-30 at 17:46 -0500, J. Bruce Fields wrote:
 > +	} else {
 > +		chattr = stat->ctime.tv_sec;
 > +		chattr <<= 32;
+
+Might be nice to annotate the shifts above and maybe make them named
+constants. I'm not sure where those values come from, tbh.
+
 > +		chattr += stat->ctime.tv_nsec;
 > +	}
 >  	return chattr;
@@ -154,6 +155,11 @@ On Mon, 2020-11-30 at 17:46 -0500, J. Bruce Fields wrote:
 > 
 > 
 
--- 
-Jeff Layton <jlayton@kernel.org>
+
+Other than some very minor nits, the set itself looks great.
+
+Are you planning to follow up with the series to add the fetch_iversion
+op, or have you decided not to do that for now?
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
