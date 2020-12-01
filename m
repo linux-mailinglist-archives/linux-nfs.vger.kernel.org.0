@@ -2,158 +2,252 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC0422CAD2B
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Dec 2020 21:20:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 948B92CAD4E
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Dec 2020 21:28:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730806AbgLAUTZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Dec 2020 15:19:25 -0500
-Received: from mail-eopbgr750092.outbound.protection.outlook.com ([40.107.75.92]:51025
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730794AbgLAUTY (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 1 Dec 2020 15:19:24 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XBJza+l76l3DuVtQdQb+TJ0E9V0Yrpsw2nMbx1f7cao3HARhXCZfvAVYGdODaJFxN+qNMSMT44nsTos9GKalepM0uGJTLt65RKu6C0NQjTVG+U/K60wCK3JZHwjpVpGO3dHyHfhmvuVJl2Ga5PViW8dxrlqUJZ7XWNZdme832cupurRcYo65uHYCIkLS3PRFGV3z/oZVwEJ7EUTqrj9DRhm0Z28lo9OuRKhEExFx1h2IjyMOF7iB4adH6MzEdh2b+Y4qWIP9WqFchaTfaqlPP0oy3Sp7TLDew9mRxynyj3DcJOGsZpWBZNcv8dxGwiqh5JfUrAHZr2azNDfHnSuZ+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d3Lu7srxHVtp3WZXJVgjyDG1V8AghP+F6syO2AmoeT4=;
- b=llUH/Cs+MDmmoieK/mEpYJpIrTYGhgCxRPlfpUfKzkG/A+HnlGOO/T+gqlcTc7AUngzAS15YpZx5x7h10LiJM9kbwXZ/D5yy1CQZuMsAe3LT32LKAtM2zwOeUgVRZS7wupx1V/Yxy1p3XyHZ+i9RV3GUxPTNXihAe+BPBePTgCuzVNdKULAy6PWd8u6OPvamZmW4F/GOisJFJRMxX1Ts4Ilr/zX3kkZAdPQcU3Yn6sa48WrtO6mQVlfW8BBN1yGWl2VDbofY6xtcTft5i9HHpaIAIqWe6mZBxjG6O67+ukZRjleHgeiVi2NHX+qcHKdGV2Y9smNEz1qY9GpMBX5ubw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d3Lu7srxHVtp3WZXJVgjyDG1V8AghP+F6syO2AmoeT4=;
- b=SQvR7vJw1hAWKIcBxlRzuwNWTFxihhUT0ZK3fkLh1nFogseH2E/ItIw4UBa6FsZ0eP6zFyIu8potxSjZE9BQ1MpQmAqvflOcN6KQSqZ7vqZ1kHCqSix4bpkuNn2KAXm6Zb+o0X6eYynj7V8RvoSa38U6f/J8LIwwSLGLLFHBLMg=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by MN2PR13MB3840.namprd13.prod.outlook.com (2603:10b6:208:1f0::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3632.9; Tue, 1 Dec
- 2020 20:18:35 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3632.016; Tue, 1 Dec 2020
- 20:18:34 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bfields@fieldses.org" <bfields@fieldses.org>,
-        "trondmy@kernel.org" <trondmy@kernel.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "bfields@redhat.com" <bfields@redhat.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: Re: [PATCH 2/2] nfsd: Record NFSv4 pre/post-op attributes as
- non-atomic
-Thread-Topic: [PATCH 2/2] nfsd: Record NFSv4 pre/post-op attributes as
- non-atomic
-Thread-Index: AQHWx5izYc2p09we50GI2WLg2u+XVqniowSAgAAMEQA=
-Date:   Tue, 1 Dec 2020 20:18:33 +0000
-Message-ID: <63eaf3aab8814b2d65998123b6ba2e5b979a48d9.camel@hammerspace.com>
-References: <20201201041427.756749-1-trondmy@kernel.org>
-         <20201201041427.756749-2-trondmy@kernel.org>
-         <20201201193521.GA21355@fieldses.org>
-In-Reply-To: <20201201193521.GA21355@fieldses.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: fieldses.org; dkim=none (message not signed)
- header.d=none;fieldses.org; dmarc=none action=none
- header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e4ecb72-b28f-41e6-b9e9-08d896364768
-x-ms-traffictypediagnostic: MN2PR13MB3840:
-x-microsoft-antispam-prvs: <MN2PR13MB3840E1BB429521F9684ED6F6B8F40@MN2PR13MB3840.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ssrP1F3kZZ49/+z4ZZW7vdWThkR0IMacCtBVWeFRgqqsECEetUb1ud9lKmA6R6FeptapmBQ17SJOcsdZBXy1ixnDfOD+BYwFClepI/roVkuJyFm8SUxItyOA0567VegU0jBe6aidkBiG/ZCvDFC88L8RiN++OacbGIFVNRMs+EONUpxetbeLV1wFnCbFS0MdUM2/OHiKoxhKBlzyQTmzXiX8SBRJwdrDursXTH9Zt4xaVlqAp7Ty3bMCAO7fIpDVsja8FJm290Y4Phh4gWRRBJ7IuBoWK2foGDmxMRlic8jxTSid+g8q+WIXX9VncE23
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(396003)(376002)(346002)(39830400003)(366004)(26005)(71200400001)(5660300002)(4326008)(8936002)(6506007)(8676002)(91956017)(478600001)(6512007)(66556008)(66476007)(186003)(66946007)(6486002)(2906002)(54906003)(2616005)(83380400001)(36756003)(110136005)(76116006)(316002)(66446008)(86362001)(64756008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?MHRoakdrUC95OUJEODJ6TlUySFEzeTBzaU80dE5IdnE0aGFUL0lrZFFLVVdY?=
- =?utf-8?B?ZEEvVTVHZjJuZHhRZEFTelcrRFk0MzAyVjZXQUUwS0x1YUQ1UEhNNy9kbHZn?=
- =?utf-8?B?T01YSjZtZWd1RXJ2azYwRW52emg4TlAxZzJqMjRrRkZaL0dvSVBIenpnNnl3?=
- =?utf-8?B?bk1sWllyK2hhSlNVaDZucVM1RkZESUtpQzRMSkJZVDlrR2ZEZGp1Ylc2UGRO?=
- =?utf-8?B?S05hRENKRmRVVTJEV3c1QlRJYjh3NUczQWt3SXRCR1dmcmV2bjIxZ1VsV3pL?=
- =?utf-8?B?OWlYbVN2NFZRTExJL0RWWEJuQVQxS0Q4VHFkeVNJMVUrVEx4OXYwNkZObDdY?=
- =?utf-8?B?R01BZ2Yvdjl4dDdvRm44VWRnb3VSRXZzdGROc3dNUnV2UTJEbVlKYkdKb3BH?=
- =?utf-8?B?SU5LU2pTT1JjaWJJWXJIRHI0TWJEVExLMG56OE5tSkJ0UjdUaEhDaExrTU5x?=
- =?utf-8?B?cmtnaHZZb3ZubUJub0xoT3U1Z2tpelRhNjZma3J2ZG9IYzQyS0lGQVNYS2d3?=
- =?utf-8?B?VWZiRGIwWTg1Wm5IRDlpVTJ0UlV4Q0xoZ2FPVzhZeDVCbnpxTnQ1VjZsL2VM?=
- =?utf-8?B?RW94M3RuUGY5WW1ZSTl1YUNFNnl1bUI2K1NrdEtGVUtLU2ZTeG1hWnFVVmg5?=
- =?utf-8?B?ei9WY0xjTUY5cEY4d2FlRUdtb3k5Mi90VEdJQ2NWT1AzSW0xU2h2cStHV3pQ?=
- =?utf-8?B?QmcvcWpFbi9LNzg3VjEwZHVuSVR3Rk5tbmpnZFZvYWYxVmFkUGlscVBrTDlv?=
- =?utf-8?B?aXkvTng5VzBsZkxKbGJGdTRZQ2xmUHpmUTRRZ2RNRlpGTWI4eDhzV3AzQnVi?=
- =?utf-8?B?SEhXZS9lZUZyVUxteXlYY2VUWU1oVFc5U3lrMTBPYlNqOVRuUWdCZjFYaHN3?=
- =?utf-8?B?Y0I3L1RnT1J2OUZ5VXlDUFVTbzBTTWpxZ2ZMRitReVpMTDhpYk81SDgyQld5?=
- =?utf-8?B?dXQ4dzZKRGNmL01DeEhPUElLYk9CWHRQQkxsYi85eERjdEVxbDJmb0hTUkRZ?=
- =?utf-8?B?d2Jja2JqOVBpdGQ3LzlhaklWT0toRGRaWmRxVVNSOTVSQy96WWZkdlBlQVJV?=
- =?utf-8?B?ckVqU2UvK3BGYkJpcTdQd3FjUEM1MFVVb21Zb2laTmNmcDZmNUtGdkpIZGta?=
- =?utf-8?B?YWxIZTFuSXFCMFhVWnYyU1F3eVM4czA2V0o5UlBLNERtNUp3alhqT0FoQXRR?=
- =?utf-8?B?N004ZzkvcFpuUWlTOUppNHR2WmE0d25ZLzJGZCtVdFdKOUFkZEVKeEhudHN4?=
- =?utf-8?B?RCtVV0M5Q2ZEd1lPVTdBYWhNTGtPYjJ4bTc4c0ZwVFNMRHNoTysxT0JLZ0pD?=
- =?utf-8?Q?qrRybFJ5OroELl2xrZy3hEGNL+HyE7eeR3?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <08713CDCB259A34FBB6B351D1C8EF769@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1729538AbgLAU1K (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Dec 2020 15:27:10 -0500
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:30829 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728238AbgLAU1J (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Dec 2020 15:27:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1606854427; x=1638390427;
+  h=date:from:to:cc:message-id:references:mime-version:
+   content-transfer-encoding:in-reply-to:subject;
+  bh=wAwE2rX1YJ2WVtNA57BOb4M4NmOEgm14t0TKB5ZgEMY=;
+  b=c2yy1m3vkCjdN3ZXjielYKCfpfy1x5amt/mYeRoXpfC5SWIRXlZXnGNf
+   kpGAibXTyGnZgsulxMh116WITRUBzlVVpcLonJPpi5HwsZdwLmmTF/eZ1
+   PJdSi15qVo7V/IqRRV4Uw8+KVKrC2ULDym59eAj9xXrYTTqXKga9TuIYr
+   E=;
+X-IronPort-AV: E=Sophos;i="5.78,385,1599523200"; 
+   d="scan'208";a="67026628"
+Subject: Re: [PATCH v1] NFS: Fix rpcrdma_inline_fixup() crash with new LISTXATTRS
+ operation
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 01 Dec 2020 20:25:37 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com (Postfix) with ESMTPS id 7F7A3A17EE;
+        Tue,  1 Dec 2020 20:25:34 +0000 (UTC)
+Received: from EX13D33UEA004.ant.amazon.com (10.43.61.105) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 1 Dec 2020 20:25:33 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
+ EX13D33UEA004.ant.amazon.com (10.43.61.105) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 1 Dec 2020 20:25:33 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Tue, 1 Dec 2020 20:25:33 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id 53CA0C1321; Tue,  1 Dec 2020 20:25:32 +0000 (UTC)
+Date:   Tue, 1 Dec 2020 20:25:32 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     Olga Kornievskaia <aglo@umich.edu>
+CC:     Chuck Lever <chuck.lever@oracle.com>,
+        "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Message-ID: <20201201202532.GA3723@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+References: <160623862874.1534.4471924380357882531.stgit@manet.1015granger.net>
+ <20201124200640.GA2476@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <B1CF6271-B168-4571-B8E4-0CAB0A0B40FB@netapp.com>
+ <20201124211926.GB14140@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <5571DE63-1276-4AF6-BB8F-EE36878B06E5@netapp.com>
+ <20201126002149.GA2339@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <B791B088-49C4-42F3-8721-A022027625D3@oracle.com>
+ <20201126193248.GA6578@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <CAN-5tyFbC4dmRg4sXCPirp64qnYwN1Ykw4oRA+4sBsD+NG6Fiw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e4ecb72-b28f-41e6-b9e9-08d896364768
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Dec 2020 20:18:34.0553
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KKGamBNT1w4fpLB4+YMv1z4PbY94N10jlqReqkUMcrIZhx3bzcLQ6KlleyNkR9+4BBUyJ7SHv2S+UFtn+6M2Ww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3840
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAN-5tyFbC4dmRg4sXCPirp64qnYwN1Ykw4oRA+4sBsD+NG6Fiw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTEyLTAxIGF0IDE0OjM1IC0wNTAwLCBKLiBCcnVjZSBGaWVsZHMgd3JvdGU6
-DQo+IE9uIE1vbiwgTm92IDMwLCAyMDIwIGF0IDExOjE0OjI3UE0gLTA1MDAsIHRyb25kbXlAa2Vy
-bmVsLm9yZ8Kgd3JvdGU6DQo+ID4gRnJvbTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWtsZWJ1
-c3RAaGFtbWVyc3BhY2UuY29tPg0KPiA+IA0KPiA+IEZvciB0aGUgY2FzZSBvZiBORlN2NCwgc3Bl
-Y2lmeSB0byB0aGUgY2xpZW50IHRoYXQgdGhlIHRoZSBwcmUvcG9zdC0NCj4gPiBvcA0KPiA+IGF0
-dHJpYnV0ZXMgd2VyZSBub3QgcmVjb3JkZWQgYXRvbWljYWxseSB3aXRoIHRoZSBtYWluIG9wZXJh
-dGlvbi4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBUcm9uZCBNeWtsZWJ1c3QgPHRyb25kLm15
-a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20+DQo+ID4gLS0tDQo+ID4gwqBmcy9uZnMvZXhwb3J0LmPC
-oMKgwqDCoMKgwqDCoMKgwqAgfCAzICsrLQ0KPiA+IMKgZnMvbmZzZC9uZnNmaC5jwqDCoMKgwqDC
-oMKgwqDCoMKgIHwgNCArKysrDQo+ID4gwqBmcy9uZnNkL25mc2ZoLmjCoMKgwqDCoMKgwqDCoMKg
-wqAgfCA1ICsrKysrDQo+ID4gwqBmcy9uZnNkL3hkcjQuaMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwg
-MiArLQ0KPiA+IMKgaW5jbHVkZS9saW51eC9leHBvcnRmcy5oIHwgMyArKysNCj4gPiDCoDUgZmls
-ZXMgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBk
-aWZmIC0tZ2l0IGEvZnMvbmZzL2V4cG9ydC5jIGIvZnMvbmZzL2V4cG9ydC5jDQo+ID4gaW5kZXgg
-NDhiODc5Y2ZlNmUzLi43NDEyYmIxNjRmYTcgMTAwNjQ0DQo+ID4gLS0tIGEvZnMvbmZzL2V4cG9y
-dC5jDQo+ID4gKysrIGIvZnMvbmZzL2V4cG9ydC5jDQo+ID4gQEAgLTE3Miw1ICsxNzIsNiBAQCBj
-b25zdCBzdHJ1Y3QgZXhwb3J0X29wZXJhdGlvbnMgbmZzX2V4cG9ydF9vcHMgPQ0KPiA+IHsNCj4g
-PiDCoMKgwqDCoMKgwqDCoMKgLmZoX3RvX2RlbnRyeSA9IG5mc19maF90b19kZW50cnksDQo+ID4g
-wqDCoMKgwqDCoMKgwqDCoC5nZXRfcGFyZW50ID0gbmZzX2dldF9wYXJlbnQsDQo+ID4gwqDCoMKg
-wqDCoMKgwqDCoC5mbGFncyA9IEVYUE9SVF9PUF9OT1dDQ3xFWFBPUlRfT1BfTk9TVUJUUkVFQ0hL
-fA0KPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBFWFBPUlRfT1BfQ0xPU0VfQkVG
-T1JFX1VOTElOS3xFWFBPUlRfT1BfUkVNT1RFX0ZTLA0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqBFWFBPUlRfT1BfQ0xPU0VfQkVGT1JFX1VOTElOS3xFWFBPUlRfT1BfUkVNT1RF
-X0ZTfA0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBFWFBPUlRfT1BfTk9BVE9N
-SUNfQVRUUiwNCj4gDQo+IFNvIEkgc3RpbGwgZG9uJ3QgdW5kZXJzdGFuZCB3aHkgd2UgbmVlZCBh
-IG5ldyBmbGFnIGZvciB0aGlzLg0KPiANCj4gQmVmb3JlIHlvdSBzYWlkIGl0IHdhcyBiZWNhdXNl
-IGEgZmlsZXN5c3RlbSBtaWdodCB3YW50IHRvIHR1cm4gb2ZmDQo+IHRoZQ0KPiB2NCBhdG9taWMg
-ZmxhZyBidXQgc3RpbGwgcmV0dXJuIHYzIHBvc3Qtd2NjIGF0dHJpYnV0ZXMuDQo+IA0KPiBCdXQg
-aXQgc2VlbXMgdGhhdCBhKSB3ZSBoYXZlIG5vIGV4YW1wbGUgb2YgYSBmaWxlc3lzdGVtIHRoYXQg
-d2FudHMgdG8NCj4gZG8NCj4gdGhhdCwgYikgaXQgd291bGQgdmlvbGF0ZSB0aGUgcHJvdG9jb2wg
-YW55d2F5Lg0KPiANCj4gSXMgdGhhdCByaWdodD8NCj4gDQo+IElmIHNvLCB0aGVuIGxldCdzIGp1
-c3Qgc3RpY2sgdG8gb25lIGZsYWcgZm9yIGJvdGguDQoNClRoZSAiYXRvbWljIiBmbGFnIGluIE5G
-U3Y0IGlzIHZlcnkgc3BlY2lmaWNhbGx5IHRpZWQgdG8gYSBzaW5nbGUNCmF0dHJpYnV0ZSAodGhl
-IGNoYW5nZSBhdHRyaWJ1dGUpIGFuZCBob3cgaXQgaXMgY29sbGVjdGVkIGluIGEgdmVyeQ0KbGlt
-aXRlZCBzZXQgb2Ygb3BlcmF0aW9ucy4gVGhlIHRydXRoIGlzIHRoYXQgd2UgcHJvYmFibHkgX2Nh
-bl8NCmV2ZW50dWFsbHkgc2V0IGl0IHdoZW4gcmUtZXhwb3J0aW5nIE5GU3Y0IGFzIE5GU3Y0LCBh
-c3N1bWluZyB0aGF0IHRoZQ0Kc2VydmVyIGFjdHVhbGx5IHN1cHBsaWVzIHVzIHdpdGggYW4gYXRv
-bWljIHVwZGF0ZS4NCg0KVGhlIHNhbWUgaXMgbm90IHRydWUgb2YgV0NDLiBXZSBtaWdodCBiZSBh
-YmxlIHRvIHN1cHBseSBrbmZzZCB3aXRoDQphdG9taWMgdXBkYXRlcyBmb3Igc29tZSBvcGVyYXRp
-b25zLCBidXQgY2VydGFpbmx5IG5vdCBmb3Igc29tZXRoaW5nDQpsaWtlIFJFQUQgb3IgV1JJVEUu
-DQoNClNvIEkgZG8gdGhpbmsgdGhpcyBuZWVkcyB0byBiZSBzZXBhcmF0ZSBmbGFncy4gSXQgaXMg
-ZGVmaW5pdGVseQ0KZGVzY3JpYmluZyBjb21wbGV0ZWx5IGRpZmZlcmVudCBmdW5jdGlvbmFsaXR5
-Lg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBI
-YW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Tue, Dec 01, 2020 at 03:01:57PM -0500, Olga Kornievskaia wrote:
+> 
+> 
+> On Fri, Nov 27, 2020 at 3:40 AM Frank van der Linden
+> <fllinden@amazon.com> wrote:
+> >
+> > On Thu, Nov 26, 2020 at 12:10:21PM -0500, Chuck Lever wrote:
+> > >
+> > >
+> > > > On Nov 25, 2020, at 7:21 PM, Frank van der Linden <fllinden@amazon.com> wrote:
+> > > >
+> > > > On Tue, Nov 24, 2020 at 10:40:25PM +0000, Kornievskaia, Olga wrote:
+> > > >>
+> > > >>
+> > > >> ﻿On 11/24/20, 4:20 PM, "Frank van der Linden" <fllinden@amazon.com> wrote:
+> > > >>
+> > > >>    On Tue, Nov 24, 2020 at 08:50:36PM +0000, Kornievskaia, Olga wrote:
+> > > >>>
+> > > >>>
+> > > >>> On 11/24/20, 3:06 PM, "Frank van der Linden" <fllinden@amazon.com> wrote:
+> > > >>>
+> > > >>>    On Tue, Nov 24, 2020 at 12:26:32PM -0500, Chuck Lever wrote:
+> > > >>>>
+> > > >>>>
+> > > >>>>
+> > > >>>> By switching to an XFS-backed export, I am able to reproduce the
+> > > >>>> ibcomp worker crash on my client with xfstests generic/013.
+> > > >>>>
+> > > >>>> For the failing LISTXATTRS operation, xdr_inline_pages() is called
+> > > >>>> with page_len=12 and buflen=128. Then:
+> > > >>>>
+> > > >>>> - Because buflen is small, rpcrdma_marshal_req will not set up a
+> > > >>>>  Reply chunk and the rpcrdma's XDRBUF_SPARSE_PAGES logic does not
+> > > >>>>  get invoked at all.
+> > > >>>>
+> > > >>>> - Because page_len is non-zero, rpcrdma_inline_fixup() tries to
+> > > >>>>  copy received data into rq_rcv_buf->pages, but they're missing.
+> > > >>>>
+> > > >>>> The result is that the ibcomp worker faults and dies. Sometimes that
+> > > >>>> causes a visible crash, and sometimes it results in a transport
+> > > >>>> hang without other symptoms.
+> > > >>>>
+> > > >>>> RPC/RDMA's XDRBUF_SPARSE_PAGES support is not entirely correct, and
+> > > >>>> should eventually be fixed or replaced. However, my preference is
+> > > >>>> that upper-layer operations should explicitly allocate their receive
+> > > >>>> buffers (using GFP_KERNEL) when possible, rather than relying on
+> > > >>>> XDRBUF_SPARSE_PAGES.
+> > > >>>>
+> > > >>>> Reported-by: Olga kornievskaia <kolga@netapp.com>
+> > > >>>> Suggested-by: Olga kornievskaia <kolga@netapp.com>
+> > > >>>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > > >>>> ---
+> > > >>>> fs/nfs/nfs42proc.c |   17 ++++++++++-------
+> > > >>>> fs/nfs/nfs42xdr.c  |    1 -
+> > > >>>> 2 files changed, 10 insertions(+), 8 deletions(-)
+> > > >>>>
+> > > >>>> Hi-
+> > > >>>>
+> > > >>>> I like Olga's proposed approach. What do you think of this patch?
+> > > >>>>
+> > > >>>>
+> > > >>>> diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+> > > >>>> index 2b2211d1234e..24810305ec1c 100644
+> > > >>>> --- a/fs/nfs/nfs42proc.c
+> > > >>>> +++ b/fs/nfs/nfs42proc.c
+> > > >>>> @@ -1241,7 +1241,7 @@ static ssize_t _nfs42_proc_listxattrs(struct inode *inode, void *buf,
+> > > >>>>                .rpc_resp       = &res,
+> > > >>>>        };
+> > > >>>>        u32 xdrlen;
+> > > >>>> -       int ret, np;
+> > > >>>> +       int ret, np, i;
+> > > >>>>
+> > > >>>>
+> > > >>>>        res.scratch = alloc_page(GFP_KERNEL);
+> > > >>>> @@ -1253,10 +1253,14 @@ static ssize_t _nfs42_proc_listxattrs(struct inode *inode, void *buf,
+> > > >>>>                xdrlen = server->lxasize;
+> > > >>>>        np = xdrlen / PAGE_SIZE + 1;
+> > > >>>>
+> > > >>>> +       ret = -ENOMEM;
+> > > >>>>        pages = kcalloc(np, sizeof(struct page *), GFP_KERNEL);
+> > > >>>> -       if (pages == NULL) {
+> > > >>>> -               __free_page(res.scratch);
+> > > >>>> -               return -ENOMEM;
+> > > >>>> +       if (pages == NULL)
+> > > >>>> +               goto out_free;
+> > > >>>> +       for (i = 0; i < np; i++) {
+> > > >>>> +               pages[i] = alloc_page(GFP_KERNEL);
+> > > >>>> +               if (!pages[i])
+> > > >>>> +                       goto out_free;
+> > > >>>>        }
+> > > >>>>
+> > > >>>>        arg.xattr_pages = pages;
+> > > >>>> @@ -1271,14 +1275,13 @@ static ssize_t _nfs42_proc_listxattrs(struct inode *inode, void *buf,
+> > > >>>>                *eofp = res.eof;
+> > > >>>>        }
+> > > >>>>
+> > > >>>> +out_free:
+> > > >>>>        while (--np >= 0) {
+> > > >>>>                if (pages[np])
+> > > >>>>                        __free_page(pages[np]);
+> > > >>>>        }
+> > > >>>> -
+> > > >>>> -       __free_page(res.scratch);
+> > > >>>>        kfree(pages);
+> > > >>>> -
+> > > >>>> +       __free_page(res.scratch);
+> > > >>>>        return ret;
+> > > >>>>
+> > > >>>> }
+> > > >>>> diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+> > > >>>> index 6e060a88f98c..8432bd6b95f0 100644
+> > > >>>> --- a/fs/nfs/nfs42xdr.c
+> > > >>>> +++ b/fs/nfs/nfs42xdr.c
+> > > >>>> @@ -1528,7 +1528,6 @@ static void nfs4_xdr_enc_listxattrs(struct rpc_rqst *req,
+> > > >>>>
+> > > >>>>        rpc_prepare_reply_pages(req, args->xattr_pages, 0, args->count,
+> > > >>>>            hdr.replen);
+> > > >>>> -       req->rq_rcv_buf.flags |= XDRBUF_SPARSE_PAGES;
+> > > >>>>
+> > > >>>>        encode_nops(&hdr);
+> > > >>>> }
+> > > >>>>
+> > > >>>>
+> > > >>>
+> > > >>>    I can see why this is the simplest and most pragmatic solution, so it's
+> > > >>>    fine with me.
+> > > >>>
+> > > >>>    Why doesn't this happen with getxattr? Do we need to convert that too?
+> > > >>>
+> > > >>> [olga] I don't know if GETXATTR/SETXATTR works. I'm not sure what tests exercise those operations. I just ran into the fact that generic/013 wasn't passing. And I don't see that it's an xattr specific tests. I'm not sure how it ends up triggering is usage of xattr.
+> > > >>
+> > > >>    I'm attaching the test program I used, it should give things a better workout.
+> > > >>
+> > > >> [olga] I'm not sure if I'm doing something wrong but there are only 2 GETXATTR call on the network trace from running this application and both calls are returning an error (ERR_NOXATTR). Which btw might explain why no problems are seen since no decoding of data is happening. There are lots of SETXATTRs and REMOVEXATTR and there is a LISTXATTR (which btw network trace is marking as malformed so there might something bad there). Anyway...
+> > > >>
+> > > >> This is my initial report: no real exercise of the GETXATTR code as far as I can tell.
+> > > >
+> > > > True, the test is heavier on the setxattr / listxattr side. And with caching,
+> > > > you're not going to see a lot of GETXATTR calls. I used the same test program
+> > > > with caching off, and it works fine, though.
+> > >
+> > > I unintentionally broke GETXATTR while developing the LISTXATTRS fix,
+> > > and generic/013 rather aggressively informed me that GETXATTR was no
+> > > longer working. There is some test coverage there, fwiw.
+> >
+> > Oh, the coverage was good - in my testing I also used a collection of
+> > small unit test programs, and I was the one who made the xattr tests
+> > in xfstests work on NFS.
+> 
+> I have just oops-ed the kernel trying to send a getxattr when
+> userspace provided a small buffer.
+> 
+> File with extended attributes was created using your application but
+> modified to leave the file behind. Then I coded up this to get the
+> extended attirbutes. Test coverage doesn't test for this.
+> 
+> int main(int argc, char *argv[]) {
+> 
+> int fd, len = 8;
+> char buf[8];
+> 
+> fd = open("/mnt/test_xattr_probeJxfiVU", O_RDWR | O_CREAT, S_IRWXU);
+> if (fd < 0) exit(0);
+> 
+> if (getxattr("/mnt/test_xattr_probeJxfiVU", "user.test_xattr_probe",
+> buf, len) < 0) exit(0);
+> 
+> return 0;
+> }
+> 
+> Which again produces the KASAN's
+> [ 5915.393103] BUG: KASAN: wild-memory-access in
+> rpcrdma_complete_rqst+0x41b/0x680 [rpcrdma]
+> 
+> 
+> This is my proposed fix. Will send a proper patch if agreed:
+
+I was just about to send a patch that does the pre-alloc, and rounds up
+the inserted page_len to the page allocation so that it'll catch some
+more replies to cache.
+
+Let me send it..
+
+- Frank
