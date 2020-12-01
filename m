@@ -2,127 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C99B2C9655
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Dec 2020 05:15:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 793B12C974E
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Dec 2020 06:55:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgLAEPL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Nov 2020 23:15:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728074AbgLAEPL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 30 Nov 2020 23:15:11 -0500
-Received: from leira.hammer.space (c-68-36-133-222.hsd1.mi.comcast.net [68.36.133.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FC3020796;
-        Tue,  1 Dec 2020 04:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606796070;
-        bh=30/Gux9BYIPffwuYiqP91pLD0cwJa2h+MefqshpGaoo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xoWbJobGUHoglK8leMVp8dgOKap1mXg0pN3Rc5kYK2Ok3x2hmh6rm0VXc5hrZ7s8Z
-         nLWlmIc76ySWGsFFmVL2XJD+m9nOfTOxqskypfgr1Fj3zfizQsNeg4LGYB+UV0wYt8
-         HFC0NhX02XTOW7Y9ZJiTOFHSSUDX72SeoxBySe8M=
-From:   trondmy@kernel.org
-To:     "J. Bruce Fields" <bfields@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] nfsd: Record NFSv4 pre/post-op attributes as non-atomic
-Date:   Mon, 30 Nov 2020 23:14:27 -0500
-Message-Id: <20201201041427.756749-2-trondmy@kernel.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201201041427.756749-1-trondmy@kernel.org>
-References: <20201201041427.756749-1-trondmy@kernel.org>
+        id S1726851AbgLAFyu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Dec 2020 00:54:50 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:58724 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbgLAFyt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Dec 2020 00:54:49 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B15n67q107471;
+        Tue, 1 Dec 2020 05:53:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=l9ihS9O8ty7fvCGsyg6t+FL2UWzq+Pp7wI7g9M3fu94=;
+ b=emDPbOhPomsDJ0NVhkgalKaWcDmTVt43uxmasZhRdsIKDAK5SyUn3ZBbDT0tfjc2Ub+G
+ pwnVB+2L6jYArSQUwoKsFjxw+gIeAIQd1agInCI9m5zu6sstYek99cFlGrF83pfAMoYp
+ 7h3VW08t/kH06cHx+UsVCvNai9zlonapT50haza8ExqU3V0ifCJ/7nW0lmA/qRSavM+P
+ eE0d7ezZdfPLepa71ISDd/u3VXj3GbiZhoaxq0dsKdiEuu46H687kMfk2k9ooRtVL0+n
+ yN1cC747fo++ObKGg9Es3E0DMkXRjQCXCIESHdIfuri0sdDNQNO6hiI2IHC3bOw+gche Nw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 353c2aru96-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 01 Dec 2020 05:53:05 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B15oGDF104852;
+        Tue, 1 Dec 2020 05:53:04 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 3540arqfy6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 01 Dec 2020 05:53:04 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0B15r2KY111063;
+        Tue, 1 Dec 2020 05:53:02 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 3540arqfwj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Dec 2020 05:53:02 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B15qbsa005213;
+        Tue, 1 Dec 2020 05:52:40 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 30 Nov 2020 21:52:37 -0800
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        amd-gfx@lists.freedesktop.org, bridge@lists.linux-foundation.org,
+        ceph-devel@vger.kernel.org, cluster-devel@redhat.com,
+        coreteam@netfilter.org, devel@driverdev.osuosl.org,
+        dm-devel@redhat.com, drbd-dev@tron.linbit.com,
+        dri-devel@lists.freedesktop.org, GR-everest-linux-l2@marvell.com,
+        GR-Linux-NIC-Dev@marvell.com, intel-gfx@lists.freedesktop.org,
+        intel-wired-lan@lists.osuosl.org, keyrings@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-acpi@vger.kernel.org,
+        linux-afs@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net,
+        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-ext4@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-geode@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mm@kvack.org,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
+        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
+        selinux@vger.kernel.org, target-devel@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        usb-storage@lists.one-eyed-alien.net,
+        virtualization@lists.linux-foundation.org,
+        wcn36xx@lists.infradead.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1h7p6gjkk.fsf@ca-mkp.ca.oracle.com>
+References: <cover.1605896059.git.gustavoars@kernel.org>
+Date:   Tue, 01 Dec 2020 00:52:27 -0500
+In-Reply-To: <cover.1605896059.git.gustavoars@kernel.org> (Gustavo
+        A. R. Silva's message of "Fri, 20 Nov 2020 12:21:39 -0600")
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 lowpriorityscore=0
+ clxscore=1011 bulkscore=0 mlxlogscore=289 phishscore=0 malwarescore=0
+ spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012010039
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-For the case of NFSv4, specify to the client that the the pre/post-op
-attributes were not recorded atomically with the main operation.
+Gustavo,
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/export.c          | 3 ++-
- fs/nfsd/nfsfh.c          | 4 ++++
- fs/nfsd/nfsfh.h          | 5 +++++
- fs/nfsd/xdr4.h           | 2 +-
- include/linux/exportfs.h | 3 +++
- 5 files changed, 15 insertions(+), 2 deletions(-)
+> This series aims to fix almost all remaining fall-through warnings in
+> order to enable -Wimplicit-fallthrough for Clang.
 
-diff --git a/fs/nfs/export.c b/fs/nfs/export.c
-index 48b879cfe6e3..7412bb164fa7 100644
---- a/fs/nfs/export.c
-+++ b/fs/nfs/export.c
-@@ -172,5 +172,6 @@ const struct export_operations nfs_export_ops = {
- 	.fh_to_dentry = nfs_fh_to_dentry,
- 	.get_parent = nfs_get_parent,
- 	.flags = EXPORT_OP_NOWCC|EXPORT_OP_NOSUBTREECHK|
--		EXPORT_OP_CLOSE_BEFORE_UNLINK|EXPORT_OP_REMOTE_FS,
-+		EXPORT_OP_CLOSE_BEFORE_UNLINK|EXPORT_OP_REMOTE_FS|
-+		EXPORT_OP_NOATOMIC_ATTR,
- };
-diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index e80a7525561d..66f2ef67792a 100644
---- a/fs/nfsd/nfsfh.c
-+++ b/fs/nfsd/nfsfh.c
-@@ -301,6 +301,10 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
- 	fhp->fh_export = exp;
- 
- 	switch (rqstp->rq_vers) {
-+	case 4:
-+		if (dentry->d_sb->s_export_op->flags & EXPORT_OP_NOATOMIC_ATTR)
-+			fhp->fh_no_atomic_attr = true;
-+		break;
- 	case 3:
- 		if (dentry->d_sb->s_export_op->flags & EXPORT_OP_NOWCC)
- 			fhp->fh_no_wcc = true;
-diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-index 347d10aa6265..cb20c2cd3469 100644
---- a/fs/nfsd/nfsfh.h
-+++ b/fs/nfsd/nfsfh.h
-@@ -36,6 +36,11 @@ typedef struct svc_fh {
- 	bool			fh_locked;	/* inode locked by us */
- 	bool			fh_want_write;	/* remount protection taken */
- 	bool			fh_no_wcc;	/* no wcc data needed */
-+	bool			fh_no_atomic_attr;
-+						/*
-+						 * wcc data is not atomic with
-+						 * operation
-+						 */
- 	int			fh_flags;	/* FH flags */
- #ifdef CONFIG_NFSD_V3
- 	bool			fh_post_saved;	/* post-op attrs saved */
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index b4556e86e97c..a60ff5ce1a37 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -748,7 +748,7 @@ static inline void
- set_change_info(struct nfsd4_change_info *cinfo, struct svc_fh *fhp)
- {
- 	BUG_ON(!fhp->fh_pre_saved);
--	cinfo->atomic = (u32)fhp->fh_post_saved;
-+	cinfo->atomic = (u32)(fhp->fh_post_saved && !fhp->fh_no_atomic_attr);
- 
- 	cinfo->before_change = fhp->fh_pre_change;
- 	cinfo->after_change = fhp->fh_post_change;
-diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-index d93e8a6737bb..9f4d4bcbf251 100644
---- a/include/linux/exportfs.h
-+++ b/include/linux/exportfs.h
-@@ -217,6 +217,9 @@ struct export_operations {
- #define	EXPORT_OP_NOSUBTREECHK		(0x2) /* no subtree checking */
- #define	EXPORT_OP_CLOSE_BEFORE_UNLINK	(0x4) /* close files before unlink */
- #define EXPORT_OP_REMOTE_FS		(0x8) /* Filesystem is remote */
-+#define EXPORT_OP_NOATOMIC_ATTR		(0x10) /* Filesystem cannot supply
-+						  atomic attribute updates
-+						*/
- 	unsigned long	flags;
- };
- 
+Applied 20-22,54,120-124 to 5.11/scsi-staging, thanks.
+
 -- 
-2.28.0
-
+Martin K. Petersen	Oracle Linux Engineering
