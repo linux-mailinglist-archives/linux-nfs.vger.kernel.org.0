@@ -2,67 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA98E2C9C39
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Dec 2020 10:18:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E80392CA002
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Dec 2020 11:41:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390313AbgLAJO2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Dec 2020 04:14:28 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:46840 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390239AbgLAJOS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Dec 2020 04:14:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606813971;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eVUUIWic4nOa387L60cGysm2Laqcqcvtu32GbAKq69E=;
-        b=QiftyFVao3/Rf+gD+JZIpzqYmnWCWmAb18hor6yoy/UfwCdazUdIdI7eEiBlbfWRO6Xo6R
-        8OX9wcFRbzWBj12Pv31eXAHQGSrMUWBBkdBsOA+4rpeWEAHoKnQXpmFYoKT7bTeeyXVOCc
-        my2fyBxU4MBlGeaIuux2bwjoYDqQu30=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-566-Mk-s11hRO_68q1f7Vo2ONA-1; Tue, 01 Dec 2020 04:12:47 -0500
-X-MC-Unique: Mk-s11hRO_68q1f7Vo2ONA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04BD110151E3;
-        Tue,  1 Dec 2020 09:12:46 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-159.rdu2.redhat.com [10.10.112.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C7B718996;
-        Tue,  1 Dec 2020 09:12:44 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20201201084638.GA27937@gondor.apana.org.au>
-References: <20201201084638.GA27937@gondor.apana.org.au> <20201127050701.GA22001@gondor.apana.org.au> <20201126063303.GA18366@gondor.apana.org.au> <160518586534.2277919.14475638653680231924.stgit@warthog.procyon.org.uk> <1976719.1606378781@warthog.procyon.org.uk> <4035245.1606812273@warthog.procyon.org.uk>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     dhowells@redhat.com, bfields@fieldses.org,
-        trond.myklebust@hammerspace.com, linux-crypto@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+        id S1729959AbgLAKhu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Dec 2020 05:37:50 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:48506 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbgLAKhu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 1 Dec 2020 05:37:50 -0500
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1kk31n-0002i0-QF; Tue, 01 Dec 2020 21:37:00 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 01 Dec 2020 21:36:59 +1100
+Date:   Tue, 1 Dec 2020 21:36:59 +1100
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     David Howells <dhowells@redhat.com>
+Cc:     bfields@fieldses.org, trond.myklebust@hammerspace.com,
+        linux-crypto@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Subject: Re: [RFC][PATCH 00/18] crypto: Add generic Kerberos library
+Message-ID: <20201201103659.GA28271@gondor.apana.org.au>
+References: <20201201084638.GA27937@gondor.apana.org.au>
+ <20201127050701.GA22001@gondor.apana.org.au>
+ <20201126063303.GA18366@gondor.apana.org.au>
+ <160518586534.2277919.14475638653680231924.stgit@warthog.procyon.org.uk>
+ <1976719.1606378781@warthog.procyon.org.uk>
+ <4035245.1606812273@warthog.procyon.org.uk>
+ <4036797.1606813958@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4036796.1606813958.1@warthog.procyon.org.uk>
-Date:   Tue, 01 Dec 2020 09:12:38 +0000
-Message-ID: <4036797.1606813958@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4036797.1606813958@warthog.procyon.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Herbert Xu <herbert@gondor.apana.org.au> wrote:
+On Tue, Dec 01, 2020 at 09:12:38AM +0000, David Howells wrote:
+> 
+> That depends on whether the caller has passed it elsewhere for some other
+> parallel purpose, but I think I'm going to have to go down that road and
+> restore it afterwards.
 
-> Couldn't you just change the output sg to include the offset?
+Sure but even if you added it to the API the underlying
+implementataions would just have to do the same thing.
 
-That depends on whether the caller has passed it elsewhere for some other
-parallel purpose, but I think I'm going to have to go down that road and
-restore it afterwards.
+Since this is particular to your use-case it's better to leave
+the complexity where it's needed rather than propagting it to
+all the crypto drivers.
 
-David
-
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
