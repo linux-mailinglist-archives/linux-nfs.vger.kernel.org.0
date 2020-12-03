@@ -2,176 +2,74 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB4752CE202
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Dec 2020 23:46:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46FC02CE203
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Dec 2020 23:46:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727748AbgLCWpf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Dec 2020 17:45:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60770 "EHLO
+        id S1727927AbgLCWqC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 3 Dec 2020 17:46:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727664AbgLCWpf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Dec 2020 17:45:35 -0500
+        with ESMTP id S1727664AbgLCWqB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Dec 2020 17:46:01 -0500
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CFC7C061A4F
-        for <linux-nfs@vger.kernel.org>; Thu,  3 Dec 2020 14:44:55 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90BD3C061A51
+        for <linux-nfs@vger.kernel.org>; Thu,  3 Dec 2020 14:45:21 -0800 (PST)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 9AF3E6F5E; Thu,  3 Dec 2020 17:44:54 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 9AF3E6F5E
+        id EFBFC6F4C; Thu,  3 Dec 2020 17:45:20 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org EFBFC6F4C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1607035494;
-        bh=ZdwUje1Pnx0Qt5VKBj9InKFhCEDJN154ucTg6t+uKCs=;
+        s=default; t=1607035520;
+        bh=Wgp5iLi7J60c/nEBHuQcrbKwvhRwc9Cl/uyZlZdjNHY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zfVLF3lS2u+KBHJr8LZrHf3KCHiJER3DPJpBMf1rnQoKZwVa66KPB8DHRhMsZxP9T
-         r8MeOry58Vjiuayp5DoyE65QdXwS6bkCogRZdhG9oJh87Q/sXQ1vq1AjeZspPjwkYi
-         vlXwb12Rc0/JOQH8wRKqPwW4Ugf/r6FA7gw3hdO0=
-Date:   Thu, 3 Dec 2020 17:44:54 -0500
+        b=asSzefJdpgM0fovV+xt3OYtnZ9Is1TPetqAcbKWmkpzbvSCmop1uWqgyxI3P0NYda
+         lTDOTh/JSmQBaMcng4Pf4FBzpmZKen4ZB7Md6XbBc8+4BXkKl1RIzH7LeRtR7nesp6
+         m4Y4EpJ8groDrP2lPIVi6D5AguJW7foHMm1TAkH4=
+Date:   Thu, 3 Dec 2020 17:45:20 -0500
 From:   "bfields@fieldses.org" <bfields@fieldses.org>
 To:     Trond Myklebust <trondmy@hammerspace.com>
 Cc:     "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
-        "ffilzlnx@mindspring.com" <ffilzlnx@mindspring.com>,
         "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
         "daire@dneg.com" <daire@dneg.com>
 Subject: Re: Adventures in NFS re-exporting
-Message-ID: <20201203224454.GF27931@fieldses.org>
-References: <932244432.93596532.1606324491501.JavaMail.zimbra@dneg.com>
+Message-ID: <20201203224520.GG27931@fieldses.org>
+References: <20201109160256.GB11144@fieldses.org>
+ <1744768451.86186596.1605186084252.JavaMail.zimbra@dneg.com>
+ <1055884313.92996091.1606250106656.JavaMail.zimbra@dneg.com>
+ <20201124211522.GC7173@fieldses.org>
+ <932244432.93596532.1606324491501.JavaMail.zimbra@dneg.com>
  <1403656117.98163597.1606998035261.JavaMail.zimbra@dneg.com>
  <20201203185109.GB27931@fieldses.org>
  <4903965f2beb742e0eca089b5db8aa3a4cabb7f0.camel@hammerspace.com>
  <20201203211328.GC27931@fieldses.org>
  <9df8556bf825bd0d565f057b115e35c1b507cf46.camel@hammerspace.com>
- <019001d6c9bd$acbeb6b0$063c2410$@mindspring.com>
- <b9e8da547065f6a94bed22771f214fef91449931.camel@hammerspace.com>
- <20201203220421.GE27931@fieldses.org>
- <0452916df308e9419f472b0d5ffb41815014dce4.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0452916df308e9419f472b0d5ffb41815014dce4.camel@hammerspace.com>
+In-Reply-To: <9df8556bf825bd0d565f057b115e35c1b507cf46.camel@hammerspace.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Dec 03, 2020 at 10:14:25PM +0000, Trond Myklebust wrote:
-> On Thu, 2020-12-03 at 17:04 -0500, bfields@fieldses.org wrote:
-> > On Thu, Dec 03, 2020 at 09:57:41PM +0000, Trond Myklebust wrote:
-> > > On Thu, 2020-12-03 at 13:45 -0800, Frank Filz wrote:
-> > > > > On Thu, 2020-12-03 at 16:13 -0500, bfields@fieldses.org wrote:
-> > > > > > On Thu, Dec 03, 2020 at 08:27:39PM +0000, Trond Myklebust
-> > > > > > wrote:
-> > > > > > > On Thu, 2020-12-03 at 13:51 -0500, bfields wrote:
-> > > > > > > > I've been scratching my head over how to handle reboot of
-> > > > > > > > a
-> > > > > > > > re-
-> > > > > > > > exporting server.  I think one way to fix it might be
-> > > > > > > > just to
-> > > > > > > > allow the re- export server to pass along reclaims to the
-> > > > > > > > original
-> > > > > > > > server as it receives them from its own clients.  It
-> > > > > > > > might
-> > > > > > > > require
-> > > > > > > > some protocol tweaks, I'm not sure.  I'll try to get my
-> > > > > > > > thoughts
-> > > > > > > > in order and propose something.
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > It's more complicated than that. If the re-exporting server
-> > > > > > > reboots,
-> > > > > > > but the original server does not, then unless that re-
-> > > > > > > exporting
-> > > > > > > server persisted its lease and a full set of stateids
-> > > > > > > somewhere, it
-> > > > > > > will not be able to atomically reclaim delegation and lock
-> > > > > > > state on
-> > > > > > > the server on behalf of its clients.
-> > > > > > 
-> > > > > > By sending reclaims to the original server, I mean literally
-> > > > > > sending
-> > > > > > new open and lock requests with the RECLAIM bit set, which
-> > > > > > would
-> > > > > > get
-> > > > > > brand new stateids.
-> > > > > > 
-> > > > > > So, the original server would invalidate the existing
-> > > > > > client's
-> > > > > > previous clientid and stateids--just as it normally would on
-> > > > > > reboot--but it would optionally remember the underlying locks
-> > > > > > held by
-> > > > > > the client and allow compatible lock reclaims.
-> > > > > > 
-> > > > > > Rough attempt:
-> > > > > > 
-> > > > > > 
-> > > > > > https://wiki.linux-nfs.org/wiki/index.php/Reboot_recovery_for_re-expor
-> > > > > > t_servers
-> > > > > > 
-> > > > > > Think it would fly?
-> > > > > 
-> > > > > So this would be a variant of courtesy locks that can be
-> > > > > reclaimed
-> > > > > by the client
-> > > > > using the reboot reclaim variant of OPEN/LOCK outside the grace
-> > > > > period? The
-> > > > > purpose being to allow reclaim without forcing the client to
-> > > > > persist the original
-> > > > > stateid?
-> > > > > 
-> > > > > Hmm... That's doable, but how about the following alternative:
-> > > > > Add
-> > > > > a function
-> > > > > that allows the client to request the full list of stateids
-> > > > > that
-> > > > > the server holds on
-> > > > > its behalf?
-> > > > > 
-> > > > > I've been wanting such a function for quite a while anyway in
-> > > > > order
-> > > > > to allow the
-> > > > > client to detect state leaks (either due to soft timeouts, or
-> > > > > due
-> > > > > to reordered
-> > > > > close/open operations).
-> > > > 
-> > > > Oh, that sounds interesting. So basically the re-export server
-> > > > would
-> > > > re-populate it's state from the original server rather than
-> > > > relying
-> > > > on it's clients doing reclaims? Hmm, but how does the re-export
-> > > > server rebuild its stateids? I guess it could make the clients
-> > > > repopulate them with the same "give me a dump of all my state",
-> > > > using
-> > > > the state details to match up with the old state and replacing
-> > > > stateids. Or did you have something different in mind?
-> > > > 
-> > > 
-> > > I was thinking that the re-export server could just use that list
-> > > of
-> > > stateids to figure out which locks can be reclaimed atomically, and
-> > > which ones have been irredeemably lost. The assumption is that if
-> > > you
-> > > have a lock stateid or a delegation, then that means the clients
-> > > can
-> > > reclaim all the locks that were represented by that stateid.
-> > 
-> > I'm confused about how the re-export server uses that list.  Are you
-> > assuming it persisted its own list across its own crash/reboot?  I
-> > guess
-> > that's what I was trying to avoid having to do.
-> > 
-> No. The server just uses the stateids as part of a check for 'do I hold
-> state for this file on this server?'. If the answer is 'yes' and the
-> lock owners are sane, then we should be able to assume the full set of
-> locks that lock owner held on that file are still valid.
-> 
-> BTW: if the lock owner is also returned by the server, then since the
-> lock owner is an opaque value, it could, for instance, be used by the
-> client to cache info on the server about which uid/gid owns these
-> locks.
+On Thu, Dec 03, 2020 at 09:34:26PM +0000, Trond Myklebust wrote:
+> I've been wanting such a function for quite a while anyway in order to
+> allow the client to detect state leaks (either due to soft timeouts, or
+> due to reordered close/open operations).
 
-OK, so the list of stateids returned by the server has entries that look
-like (type, filehandle, owner, stateid) (where type=open or lock?).
+One sure way to fix any state leaks is to reboot the server.  The server
+throws everything away, the clients reclaim, all that's left is stuff
+they still actually care about.
 
-I guess I'd need to see this in more detail.
+It's very disruptive.
+
+But you could do a limited version of that: the server throws away the
+state from one client (keeping the underlying locks on the exported
+filesystem), lets the client go through its normal reclaim process, at
+the end of that throws away anything that wasn't reclaimed.  The only
+delay is to anyone trying to acquire new locks that conflict with that
+set of locks, and only for as long as it takes for the one client to
+reclaim.
+
+?
 
 --b.
