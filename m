@@ -2,155 +2,161 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9AC92CDFB5
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Dec 2020 21:29:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ADA152CDFB8
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Dec 2020 21:32:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgLCU2h (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Dec 2020 15:28:37 -0500
-Received: from mail-dm6nam10on2126.outbound.protection.outlook.com ([40.107.93.126]:45920
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726915AbgLCU2f (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 3 Dec 2020 15:28:35 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X/2nQQlekJpyzw2NWJN1Yb7AnyaR6CnzO/BtTJXA83uUIQO2WwkmVfnMyxGIJFsqgG8xe+UOxoB+5hrKIrsvpV6DLnn9G/TXY4kmv8WbtpY6VLZn3249ZrHUDyXxvnBzvBV5DclnSmA4Spi3AnL+ZFAZkrVz3Hz59Whv0urr+W681PWml2MVPHyU5r1z1JQv1Ownsw5nzzsXifyGZapP7XIBquMoa1PfzfOIx2Gi3oXDu5/mlKdDDoqZ4PE61jZjf8u3pSkgn2UMqwzdeZWIskyDNhCDb5WqPeg334FftFxB55mtGrk611W3b/58uOFTbPbuV+JmlWa94801FySFwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f0USCSZSE5j+ez0xxOEXWyQPZgc0hpGyNloxOvQ3ozw=;
- b=GAiCOfAdvXySTbernw5s/dTHqNSLKs5tzYtxpHjbE8k3+7zupXjr19xiWHz41t9NiE7gPH3akLq2GtCXsIdBLJgaChL0rp8dOYX+Wi2THmS9For5we5KrQtPJWdXNArCBs8LCJf8MaEAGDQwLVTgVqKZ5wdt/SIGSqc5iD1yStVBXtUBRuI3EKBGHBZ00RFnCp4rA92aI+Y9KoEOS5J6G6+TGGJUFctndYzY+emklFzhGcM4ti6gd6iwHz9KlL1dQkv+shgHqj/2G/UfesZPXYLaJGUA2RGaF90uuvMOu5AIz6vRVCzEnKPghqmF3EVdIcfQUnNcEYJG9/TzlLIbEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f0USCSZSE5j+ez0xxOEXWyQPZgc0hpGyNloxOvQ3ozw=;
- b=b2R5ECDkzNVtfFGjfYNh9+KjmHEz8OWIbLZieoxBuFK4Tiglbm1X1Ek+PAdpzHEGbaXlB1kZn9qc7BH7xANVe5dDAyb4oy8+L4dIWK74xj0N7PY5/YK0pKj+McmImjyZAmw4kFOUZAojeByyP8B0nlK1bB2mk1DHBEtHIuFLw9U=
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
- by BL0PR13MB4241.namprd13.prod.outlook.com (2603:10b6:208:81::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3632.9; Thu, 3 Dec
- 2020 20:27:39 +0000
-Received: from MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
- ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3632.016; Thu, 3 Dec 2020
- 20:27:39 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bfields@fieldses.org" <bfields@fieldses.org>,
-        "daire@dneg.com" <daire@dneg.com>
-CC:     "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: Adventures in NFS re-exporting
-Thread-Topic: Adventures in NFS re-exporting
-Thread-Index: fNDm/l4o9cYx5Rz5g0S1EO4zMAtIR4tJDJwAAAWCe4BeKhpLVGiQL7pUtKchSdvFeTqNAIAEhEYAgBNavQCAAAtBAIABTyGAgAxAb4CAAG0ggIAAGvSA
-Date:   Thu, 3 Dec 2020 20:27:39 +0000
-Message-ID: <4903965f2beb742e0eca089b5db8aa3a4cabb7f0.camel@hammerspace.com>
-References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
-         <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com>
-         <635679406.70384074.1603272832846.JavaMail.zimbra@dneg.com>
-         <20201109160256.GB11144@fieldses.org>
-         <1744768451.86186596.1605186084252.JavaMail.zimbra@dneg.com>
-         <1055884313.92996091.1606250106656.JavaMail.zimbra@dneg.com>
-         <20201124211522.GC7173@fieldses.org>
-         <932244432.93596532.1606324491501.JavaMail.zimbra@dneg.com>
-         <1403656117.98163597.1606998035261.JavaMail.zimbra@dneg.com>
-         <20201203185109.GB27931@fieldses.org>
-In-Reply-To: <20201203185109.GB27931@fieldses.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: fieldses.org; dkim=none (message not signed)
- header.d=none;fieldses.org; dmarc=none action=none
- header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 04fff860-0312-4b67-8633-08d897c9e130
-x-ms-traffictypediagnostic: BL0PR13MB4241:
-x-microsoft-antispam-prvs: <BL0PR13MB424114B375C7CFE407B000EAB8F20@BL0PR13MB4241.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Eirkya3y6fixfucMYtuBrXDy5Gz/jZmf9OwU2B48IwioFBf5gMysXguHpoDCqLpvWOIEspDXS2Xk6TXHxULlvy8POv0tzs8Y6Askkr7rt5EfGB7UO7+zhXv7rqsH8X999Nngj7U/GSUT4b3SQztA5iCj51JqRW4MAPhKwufYHraeB47j//IaDnaXM5rCfjNMMKmYxsi8D+rsEzUFvwNXemdnyHZQlwZsYVk1fO0KFNgAE2iII28Pb6kapXaxybuqHF1HrnB/jmClNEf623Hd378uf3VfriWcgxt+okoxZy5WxTfqVcVU4kRmZvvYeRX5VON9oE4/w8GLWQO02Wy6P89nTtCuPYIrzekmDEJtWorKrdm188ayC9Zsit1yB9SgfHPieeqsbq8Ju+ie2Sya+A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(346002)(136003)(39840400004)(366004)(396003)(91956017)(5660300002)(36756003)(6506007)(6486002)(966005)(6512007)(26005)(2616005)(186003)(66446008)(76116006)(64756008)(66556008)(66946007)(66476007)(4326008)(2906002)(86362001)(83380400001)(478600001)(71200400001)(316002)(54906003)(8936002)(110136005)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?a0ZFTnNmaW1ST1RLZ3ZCeTFVMGR3SXcyWEhvOUlxbFhYSUpvdHRSTyt4KzZs?=
- =?utf-8?B?NEFBczAyZVA1YUhSVE1qYlZIMm1mWE9LdDZBZDk5Y250VGpVdno5NFNTeDBo?=
- =?utf-8?B?VDhlRjFQcHcwaWdVdmRId3pHVENjRnlqQ2ZoWDVIQlRLUXJPL3N3Tyt5VGF0?=
- =?utf-8?B?Qkh3cU5CK0hyT1VSWlJzY0IrTHpFcDlCczYvL0tKTzFPQjQxSHhWV21zVmlv?=
- =?utf-8?B?czk5b2hOb29kbHpHTm5YMFdMSmlnVW16dkliNGRBWGVFNDV6cFFDRktwVzE2?=
- =?utf-8?B?MVg0K2lzdXpDTkdlZXgyUktFRk5MNGNxcXlKclF3UFVFWk9KUWNBZTBnVTIr?=
- =?utf-8?B?SUNoOThMOGlTVStWa1F5NjBQNUhwRlk0Qmg4TVFDRGZocTZsN1R6amtIbXVx?=
- =?utf-8?B?aXk3NGhWRUdRVForL2FPWC91bVNPMVQ5Y0YvVFVUVjJBT2NodmdIZmFkb09u?=
- =?utf-8?B?RkxVRUR5YWlOUjYwNFdNSE9yVWxZSmduZ0Y0RUwwMG9Zd01NQWJ4cS9reVpQ?=
- =?utf-8?B?dlBoOUdJQTYzNy9oT0RyYjVKUEhEdU1XMjc5aFZvS0ZDUlB2OEk3d0Q0TCtH?=
- =?utf-8?B?c0xMUWJCTFZpc1YyZE1tNS9pYkduSlp5b1hlL1lENHk4cXF4d3ZCWWJRb0p2?=
- =?utf-8?B?dmZvVytjY09HbjkxemZDZklxNXhZOXlRRTY1MDZObkplQjhEYUdJWkttT2NO?=
- =?utf-8?B?OHc4eVZGdGlueUcxaDJ4b2JjTXlPSEgvSUF6RWNzNjBlR1Q5Y0VZVXJlNjNm?=
- =?utf-8?B?YlA3d3d6b3MxbmYzWFl1dGhwczhtNjI2aHpCazV5dktVSStwTE9ZM29ENFZr?=
- =?utf-8?B?MGc0TVFVRS9QRGp5dnRkRDlQWEl5R3kxUERZUjJxSmJUSmZveld5L3JZeDJP?=
- =?utf-8?B?anpjZWlkZVcwR3VmTnhoQU91cjQ0L2UwQnNLbCtscmxCR3p1bzVhNktxeDZR?=
- =?utf-8?B?QzFWV0d6U0NSOUdIOGdKdUFCS2RPWjRZbTA3ano2WG91NGdJQmhmM1IzSlJI?=
- =?utf-8?B?ZjgxT25yQzJ2REhrcks0VGZrN0xaZHUrNUJMZlRxa0VIQVY5c1owV1I3MFZP?=
- =?utf-8?B?dXp0Smo4WEtnTnZyQnF1eXRUaUpzM3ZEZW5NSGV3K2NOb1hKVnJFQlNZeXpI?=
- =?utf-8?B?bGRKVjZMdWFuNUUzME9hcEw5TVBJamFBTlh6d2ROOXg3Rm93eThXanY2MTBm?=
- =?utf-8?B?dG9hbHdSUHFuZUZkeEZZbmhyTTBWVG5hcGFWZERnMEk3Um1MQzJ4c2lTbVdm?=
- =?utf-8?B?S3RCclIrbnE5YUthbUhDandiRmw2alVPN3JUL2JWeHc5c0x0cDRhRHgwNjB0?=
- =?utf-8?Q?6AukO+0YBvwKxANlqqbYmV2mr3Bsl56NwH?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <35C9154F439D19419258D2309C1739AF@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1727502AbgLCUcT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 3 Dec 2020 15:32:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbgLCUcT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Dec 2020 15:32:19 -0500
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA6FDC061A4F
+        for <linux-nfs@vger.kernel.org>; Thu,  3 Dec 2020 12:31:38 -0800 (PST)
+Received: by mail-ed1-x542.google.com with SMTP id cw27so3533255edb.5
+        for <linux-nfs@vger.kernel.org>; Thu, 03 Dec 2020 12:31:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u7ZW2EIWp0/rl6e0h48rxwD5qR0jl7ikqoyfMg8u2VQ=;
+        b=Y2x6+pir0YItG2IGYZb2xOGgu9dm9s/ANuhx3UTNTwsPGLURaWy4pSYHs/EqJfBU+V
+         eXSXCgLvcE+8nH/uYRg+HLBgdnaXcC1D9+Gxm7DdVp/vlyNgDwyg7bCOgbgp/qIlgUwI
+         +3DYpE3VLoJs+3QRDloXMBMVucp5xFuEctHuxC+4AJ4H3hsZYFOOF3nis+z2Cj1ZxXbo
+         itTeDtBAuIvVRUCjIzuUkL8ihaxXB+Cj3EK9P/IqA6ikjoPKs/dkFLvc70Zk1GVKOLnh
+         APa9drmEx8XTVGqmHI0bckgI9lfBnTrhK050VTtzmdF0b8estUBwrbg+vbJZSNROtBkk
+         bkqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u7ZW2EIWp0/rl6e0h48rxwD5qR0jl7ikqoyfMg8u2VQ=;
+        b=OX58kaF8zoLQEtiDagDe1fMI7uEaHUZcMYrFXawan6JNLlLqwjmmqXDI691nptEGK0
+         xsQe8U7oHNZTdSGrZI5oV9o7DSBFNZqsvrv7Mne9X9jEbE+JsyKVkkpjzp2AacANsfK9
+         8x5qv78H0iwrIbJma3HoNQXa8caViHD0es1/pwYxWpV1vtMYWl4mdBHxx8PWnwJtuD2K
+         qGVypvteatuX9QrGJVWavbFhciRq0hhChJoZwb9R3J4XjWaFWT7Q2U+8n+4iVEuimmqN
+         TXT04woPijSCLu0kB7Nqjdkp5L0kH0anejupvrw5s/TpRqD4oGI7qLhY+FX5ehfteK1K
+         0pRw==
+X-Gm-Message-State: AOAM533R/QOA1tjsuQ9LwI0tE6tlFDWCwgFkG/3MHAxLYX6YXwWbn3fD
+        sZB6Cd8T/apNdnI+4jKaU6Y0yEHXryBusrelXGs=
+X-Google-Smtp-Source: ABdhPJxUnaf33f8TivIb6Ujf4u8zvkXqf4Bg1PMGGY7u97XjuQ86Bb7MhFWMbZOEiaXjYm7mrzIEQpcPiPtSk5i2fJ4=
+X-Received: by 2002:aa7:dcd2:: with SMTP id w18mr4616441edu.281.1607027497037;
+ Thu, 03 Dec 2020 12:31:37 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04fff860-0312-4b67-8633-08d897c9e130
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2020 20:27:39.4731
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0/6jsE+RTL7vvds/QvbXpzw/LUxAVX3GrL/m/d7CtU4y9GNtEECFaag4kf1/pu9tZfysyIqAt3Ashwmwr3q35A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR13MB4241
+References: <20201203201841.103294-1-Anna.Schumaker@Netapp.com>
+ <20201203201841.103294-3-Anna.Schumaker@Netapp.com> <8CE5CE8C-9301-4250-B077-ACE23969C19A@oracle.com>
+In-Reply-To: <8CE5CE8C-9301-4250-B077-ACE23969C19A@oracle.com>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Thu, 3 Dec 2020 15:31:20 -0500
+Message-ID: <CAFX2JfnsHskDd+tsGcZ1-JNaWpZ9V4c-5=x2VE4mwC6p+MhfYQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] NFS: Allocate a scratch page for READ_PLUS
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTEyLTAzIGF0IDEzOjUxIC0wNTAwLCBiZmllbGRzIHdyb3RlOg0KPiBPbiBU
-aHUsIERlYyAwMywgMjAyMCBhdCAxMjoyMDozNVBNICswMDAwLCBEYWlyZSBCeXJuZSB3cm90ZToN
-Cj4gPiBKdXN0IGEgc21hbGwgdXBkYXRlIGJhc2VkIG9uIHRoZSBtb3N0IHJlY2VudCBwYXRjaHNl
-dHMgZnJvbSBUcm9uZCAmDQo+ID4gQnJ1Y2U6DQo+ID4gDQo+ID4gaHR0cHM6Ly9wYXRjaHdvcmsu
-a2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LW5mcy9saXN0Lz9zZXJpZXM9MzkzNTY3DQo+ID4gaHR0
-cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LW5mcy9saXN0Lz9zZXJpZXM9
-MzkzNTYxDQo+ID4gDQo+ID4gRm9yIHRoZSB3cml0ZS10aHJvdWdoIHRlc3RzLCB0aGUgTkZTdjMg
-cmUtZXhwb3J0IG9mIGEgTkZTdjQuMg0KPiA+IHNlcnZlcg0KPiA+IGhhcyB0cmltbWVkIGFuIGV4
-dHJhIEdFVEFUVFI6DQo+ID4gDQo+ID4gQmVmb3JlOiBvcmlnaW5hdGluZyBzZXJ2ZXIgPC0gKHZl
-cnM9NC4yKSA8LSByZWV4cG9ydCBzZXJ2ZXIgLQ0KPiA+ICh2ZXJzPTMpDQo+ID4gPC0gY2xpZW50
-IHdyaXRpbmcgPSBXUklURSxDT01NSVQsR0VUQVRUUiAuLi4uIHJlcGVhdGluZw0KPiA+IMKgDQo+
-ID4gQWZ0ZXI6IG9yaWdpbmF0aW5nIHNlcnZlciA8LSAodmVycz00LjIpIDwtIHJlZXhwb3J0IHNl
-cnZlciAtDQo+ID4gKHZlcnM9MykNCj4gPiA8LSBjbGllbnQgd3JpdGluZyA9IFdSSVRFLENPTU1J
-VCAuLi4uIHJlcGVhdGluZw0KPiA+IA0KPiA+IEknbSBhc3N1bWluZyB0aGlzIGlzIHNwZWNpZmlj
-YWxseSBkdWUgdG8gdGhlICJFWFBPUlRfT1BfTk9XQ0MiDQo+ID4gcGF0Y2g/DQo+IA0KPiBQcm9i
-YWJseSBzbywgdGhhbmtzIGZvciB0aGUgdXBkYXRlLg0KPiANCj4gPiBBbGwgb3RoZXIgY29tYmlu
-YXRpb25zIGxvb2sgdGhlIHNhbWUgYXMgYmVmb3JlIChmb3Igd3JpdGUtdGhyb3VnaCkuDQo+ID4g
-QW4NCj4gPiBORlN2NC4yIHJlLWV4cG9ydCBvZiBhIE5GU3YzIHNlcnZlciBpcyBzdGlsbCB0aGUg
-YmVzdC9pZGVhbCBpbg0KPiA+IHRlcm1zDQo+ID4gb2Ygbm90IGluY3VycmluZyBleHRyYSBtZXRh
-ZGF0YSByb3VuZHRyaXBzIHdoZW4gd3JpdGluZy4NCj4gPiANCj4gPiBJdCdzIGdyZWF0IHRvIHNl
-ZSB0aGlzIHJlLWV4cG9ydCBzY2VuYXJpbyBiZWNvbWluZyBhIGJldHRlcg0KPiA+IHN1cHBvcnRl
-ZA0KPiA+IChhbmQgcGVyZm9ybWluZykgdG9wb2xvZ3k7IG1hbnkgdGhhbmtzIGFsbC4NCj4gDQo+
-IEkndmUgYmVlbiBzY3JhdGNoaW5nIG15IGhlYWQgb3ZlciBob3cgdG8gaGFuZGxlIHJlYm9vdCBv
-ZiBhIHJlLQ0KPiBleHBvcnRpbmcNCj4gc2VydmVyLsKgIEkgdGhpbmsgb25lIHdheSB0byBmaXgg
-aXQgbWlnaHQgYmUganVzdCB0byBhbGxvdyB0aGUgcmUtDQo+IGV4cG9ydA0KPiBzZXJ2ZXIgdG8g
-cGFzcyBhbG9uZyByZWNsYWltcyB0byB0aGUgb3JpZ2luYWwgc2VydmVyIGFzIGl0IHJlY2VpdmVz
-DQo+IHRoZW0NCj4gZnJvbSBpdHMgb3duIGNsaWVudHMuwqAgSXQgbWlnaHQgcmVxdWlyZSBzb21l
-IHByb3RvY29sIHR3ZWFrcywgSSdtIG5vdA0KPiBzdXJlLsKgIEknbGwgdHJ5IHRvIGdldCBteSB0
-aG91Z2h0cyBpbiBvcmRlciBhbmQgcHJvcG9zZSBzb21ldGhpbmcuDQo+IA0KDQpJdCdzIG1vcmUg
-Y29tcGxpY2F0ZWQgdGhhbiB0aGF0LiBJZiB0aGUgcmUtZXhwb3J0aW5nIHNlcnZlciByZWJvb3Rz
-LA0KYnV0IHRoZSBvcmlnaW5hbCBzZXJ2ZXIgZG9lcyBub3QsIHRoZW4gdW5sZXNzIHRoYXQgcmUt
-ZXhwb3J0aW5nIHNlcnZlcg0KcGVyc2lzdGVkIGl0cyBsZWFzZSBhbmQgYSBmdWxsIHNldCBvZiBz
-dGF0ZWlkcyBzb21ld2hlcmUsIGl0IHdpbGwgbm90DQpiZSBhYmxlIHRvIGF0b21pY2FsbHkgcmVj
-bGFpbSBkZWxlZ2F0aW9uIGFuZCBsb2NrIHN0YXRlIG9uIHRoZSBzZXJ2ZXINCm9uIGJlaGFsZiBv
-ZiBpdHMgY2xpZW50cy4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQg
-bWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20N
-Cg0KDQo=
+On Thu, Dec 3, 2020 at 3:27 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+>
+>
+> > On Dec 3, 2020, at 3:18 PM, schumaker.anna@gmail.com wrote:
+> >
+> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> >
+> > We might need this to better handle shifting around data in the reply
+> > buffer.
+> >
+> > Suggested-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> > ---
+> > fs/nfs/nfs42xdr.c       |  2 ++
+> > fs/nfs/read.c           | 13 +++++++++++--
+> > include/linux/nfs_xdr.h |  1 +
+> > 3 files changed, 14 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+> > index 8432bd6b95f0..ef095a5f86f7 100644
+> > --- a/fs/nfs/nfs42xdr.c
+> > +++ b/fs/nfs/nfs42xdr.c
+> > @@ -1297,6 +1297,8 @@ static int nfs4_xdr_dec_read_plus(struct rpc_rqst *rqstp,
+> >       struct compound_hdr hdr;
+> >       int status;
+> >
+> > +     xdr_set_scratch_buffer(xdr, page_address(res->scratch), PAGE_SIZE);
+>
+> I intend to submit this for v5.11:
+>
+> https://git.linux-nfs.org/?p=cel/cel-2.6.git;a=commit;h=0ae4c3e8a64ace1b8d7de033b0751afe43024416
+
+Thanks for the heads up! This patch can probably be deferred until
+yours goes in.
+
+>
+> But seems like enough callers need a scratch buffer that the XDR
+> layer should set up it transparently for all requests.
+
+That could work too, and save some headache.
+
+Anna
+
+>
+>
+> > +
+> >       status = decode_compound_hdr(xdr, &hdr);
+> >       if (status)
+> >               goto out;
+> > diff --git a/fs/nfs/read.c b/fs/nfs/read.c
+> > index eb854f1f86e2..012deb5a136f 100644
+> > --- a/fs/nfs/read.c
+> > +++ b/fs/nfs/read.c
+> > @@ -37,15 +37,24 @@ static struct kmem_cache *nfs_rdata_cachep;
+> >
+> > static struct nfs_pgio_header *nfs_readhdr_alloc(void)
+> > {
+> > -     struct nfs_pgio_header *p = kmem_cache_zalloc(nfs_rdata_cachep, GFP_KERNEL);
+> > +     struct nfs_pgio_header *p;
+> > +     struct page *page;
+> >
+> > -     if (p)
+> > +     page = alloc_page(GFP_KERNEL);
+> > +     if (!page)
+> > +             return ERR_PTR(-ENOMEM);
+> > +
+> > +     p = kmem_cache_zalloc(nfs_rdata_cachep, GFP_KERNEL);
+> > +     if (p) {
+> >               p->rw_mode = FMODE_READ;
+> > +             p->res.scratch = page;
+> > +     }
+> >       return p;
+> > }
+> >
+> > static void nfs_readhdr_free(struct nfs_pgio_header *rhdr)
+> > {
+> > +     __free_page(rhdr->res.scratch);
+> >       kmem_cache_free(nfs_rdata_cachep, rhdr);
+> > }
+> >
+> > diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+> > index d63cb862d58e..e0a1c97f11a9 100644
+> > --- a/include/linux/nfs_xdr.h
+> > +++ b/include/linux/nfs_xdr.h
+> > @@ -659,6 +659,7 @@ struct nfs_pgio_res {
+> >       struct nfs_fattr *      fattr;
+> >       __u64                   count;
+> >       __u32                   op_status;
+> > +     struct page *           scratch;
+> >       union {
+> >               struct {
+> >                       unsigned int            replen;         /* used by read */
+> > --
+> > 2.29.2
+> >
+>
+> --
+> Chuck Lever
+>
+>
+>
