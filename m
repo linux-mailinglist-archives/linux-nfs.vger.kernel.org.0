@@ -2,85 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F66B2CDE07
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Dec 2020 19:52:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0340A2CDF9A
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Dec 2020 21:19:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgLCSvv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Dec 2020 13:51:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52680 "EHLO
+        id S1727846AbgLCUTZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 3 Dec 2020 15:19:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbgLCSvu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Dec 2020 13:51:50 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B590FC061A4E
-        for <linux-nfs@vger.kernel.org>; Thu,  3 Dec 2020 10:51:10 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 0289C6F5E; Thu,  3 Dec 2020 13:51:10 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 0289C6F5E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1607021470;
-        bh=On0cocyPm5XBAlbAfaHwqvtq06p6jvVhxIbij+bxQu4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zror/5wohwl8C4kaHqmUv1AI/WDS32NK0BTlVzvWBJbOXMV42KL45SqeSNZtVkY/I
-         cs5YNu5Ryj79qv8MSMLYZxSBxdVquFUKRt+UDUJLespgfsc0YMPGD+2yamagUA1coS
-         Chxvvv9cEmnKmhF5xkmYeXQ71CkKphVhJneicg54=
-Date:   Thu, 3 Dec 2020 13:51:09 -0500
-From:   bfields <bfields@fieldses.org>
-To:     Daire Byrne <daire@dneg.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        linux-cachefs <linux-cachefs@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: Adventures in NFS re-exporting
-Message-ID: <20201203185109.GB27931@fieldses.org>
-References: <943482310.31162206.1599499860595.JavaMail.zimbra@dneg.com>
- <279389889.68934777.1603124383614.JavaMail.zimbra@dneg.com>
- <635679406.70384074.1603272832846.JavaMail.zimbra@dneg.com>
- <20201109160256.GB11144@fieldses.org>
- <1744768451.86186596.1605186084252.JavaMail.zimbra@dneg.com>
- <1055884313.92996091.1606250106656.JavaMail.zimbra@dneg.com>
- <20201124211522.GC7173@fieldses.org>
- <932244432.93596532.1606324491501.JavaMail.zimbra@dneg.com>
- <1403656117.98163597.1606998035261.JavaMail.zimbra@dneg.com>
+        with ESMTP id S1727844AbgLCUTZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Dec 2020 15:19:25 -0500
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8084C061A52
+        for <linux-nfs@vger.kernel.org>; Thu,  3 Dec 2020 12:18:44 -0800 (PST)
+Received: by mail-qk1-x742.google.com with SMTP id q22so3400758qkq.6
+        for <linux-nfs@vger.kernel.org>; Thu, 03 Dec 2020 12:18:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GAWPWqAxgiZPZRQ77eP5fnkEptbtn50ZT00r/dkUoUM=;
+        b=SQQaIVm6qD+uwSxnakFCAtXPzMrbmJQOiFuaqWC/piJ995NTMhRKMq2a+ciqaUXpsE
+         eMrzBQCvjgc6wKiY/hFPMDOzbPX4UlCEGjxKFm9hTvoDp/Ujb0KgUaxXfdVHAEOJhnT8
+         T9Ii7VBw9Zd3KkrWU6OyrYQ0ERU0Nu2ZZOL5BHTzyO3UD1RYnpbFcx3oNqktacHbrQ3I
+         1D3/ZIOdsM97lfMxCbNQ30Yyoq00789CQF+HuIi2fisAxxTN0Nfq3cJkNRS86TKtPFNF
+         8rAB4y7o8AuxhFD3iyPwAYezFWDfHuG/bEkKN/yZDIScK8lGzxOmX966L51OjOWOx5Z8
+         ip/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=GAWPWqAxgiZPZRQ77eP5fnkEptbtn50ZT00r/dkUoUM=;
+        b=YhzrghV1ssKIWjpZV4Q5ZKeQVayX+mwH7IA0uuRCf2bc4jD9MNrQZvvUqxqP4qQymK
+         3qFjLSRH127EXLcMv/CbXrtScxpikXIQKNZlEOgskSM0dXYyNf0vCb6P4qxxPy2vvuv6
+         sdsPeaEC+sxAZAncI9lgEfvn5hNGkTYI2qurBvqad4NKVbDRehtYu/SJNN/eoiBCWal+
+         Hpt9vOFkTvbGjoz8XCeiYMKRMKhbLXVE3RDwSRXRXTCcjNKaQ2AX64lc+s+kvTCOJ7Be
+         4DiaULQNc04/ja9BzrjAv3hhxTaltTchTjE4au6FPY2vQ9JYILwylSB105QV9Jh5+WsJ
+         ir0Q==
+X-Gm-Message-State: AOAM531UKdiqNx1f04PXREJWtFZwtworJ0E5WLrjybPjT3yCPymxKpfK
+        VXvYL14/Dhyj55AV1EnvXYET9HOnDWA=
+X-Google-Smtp-Source: ABdhPJyAyd4vqd+LwsA2+Nd3n0RTmUp5dZMKuVV2u71bD8VF2/OyVqCd8ojC7kYgU+OPRcOcaL6ixg==
+X-Received: by 2002:a05:620a:57b:: with SMTP id p27mr4775528qkp.417.1607026723610;
+        Thu, 03 Dec 2020 12:18:43 -0800 (PST)
+Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
+        by smtp.gmail.com with ESMTPSA id q20sm2194530qtn.80.2020.12.03.12.18.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Dec 2020 12:18:42 -0800 (PST)
+Sender: Anna Schumaker <schumakeranna@gmail.com>
+From:   schumaker.anna@gmail.com
+X-Google-Original-From: Anna.Schumaker@Netapp.com
+To:     linux-nfs@vger.kernel.org
+Cc:     Anna.Schumaker@Netapp.com
+Subject: [PATCH 0/3] NFS: Disable READ_PLUS by default
+Date:   Thu,  3 Dec 2020 15:18:38 -0500
+Message-Id: <20201203201841.103294-1-Anna.Schumaker@Netapp.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1403656117.98163597.1606998035261.JavaMail.zimbra@dneg.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Dec 03, 2020 at 12:20:35PM +0000, Daire Byrne wrote:
-> Just a small update based on the most recent patchsets from Trond &
-> Bruce:
-> 
-> https://patchwork.kernel.org/project/linux-nfs/list/?series=393567
-> https://patchwork.kernel.org/project/linux-nfs/list/?series=393561
-> 
-> For the write-through tests, the NFSv3 re-export of a NFSv4.2 server
-> has trimmed an extra GETATTR:
-> 
-> Before: originating server <- (vers=4.2) <- reexport server - (vers=3)
-> <- client writing = WRITE,COMMIT,GETATTR .... repeating
->  
-> After: originating server <- (vers=4.2) <- reexport server - (vers=3)
-> <- client writing = WRITE,COMMIT .... repeating
-> 
-> I'm assuming this is specifically due to the "EXPORT_OP_NOWCC" patch?
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-Probably so, thanks for the update.
+I've been scratching my head about what's going on with xfstests generic/091
+and generic/263, but I'm not sure what else to look at at this point.
+This patchset disables READ_PLUS by default by marking it as a
+developer-only kconfig option.
 
-> All other combinations look the same as before (for write-through). An
-> NFSv4.2 re-export of a NFSv3 server is still the best/ideal in terms
-> of not incurring extra metadata roundtrips when writing.
-> 
-> It's great to see this re-export scenario becoming a better supported
-> (and performing) topology; many thanks all.
+I also included a couple of patches fixing some other issues that were
+noticed while inspecting the code. These patches don't help the tests
+pass, but they do fail later on after applying so it does feel like
+progress.
 
-I've been scratching my head over how to handle reboot of a re-exporting
-server.  I think one way to fix it might be just to allow the re-export
-server to pass along reclaims to the original server as it receives them
-from its own clients.  It might require some protocol tweaks, I'm not
-sure.  I'll try to get my thoughts in order and propose something.
+I'm hopeful the remaning issues can be worked out in the future.
 
---b.
+Thanks,
+Anna
+
+
+Anna Schumaker (3):
+  NFS: Disable READ_PLUS by default
+  NFS: Allocate a scratch page for READ_PLUS
+  SUNRPC: Keep buf->len in sync with xdr->nwords when expanding holes
+
+ fs/nfs/Kconfig          |  9 +++++++++
+ fs/nfs/nfs42xdr.c       |  2 ++
+ fs/nfs/nfs4proc.c       |  2 +-
+ fs/nfs/read.c           | 13 +++++++++++--
+ include/linux/nfs_xdr.h |  1 +
+ net/sunrpc/xdr.c        |  3 ++-
+ 6 files changed, 26 insertions(+), 4 deletions(-)
+
+-- 
+2.29.2
+
