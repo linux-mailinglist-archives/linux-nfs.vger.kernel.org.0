@@ -2,104 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 052882CF10F
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Dec 2020 16:51:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 341E52CF16C
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Dec 2020 17:03:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730487AbgLDPsY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 4 Dec 2020 10:48:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbgLDPsX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Dec 2020 10:48:23 -0500
-Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [IPv6:2001:638:700:1038::1:9c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BFCFC0613D1
-        for <linux-nfs@vger.kernel.org>; Fri,  4 Dec 2020 07:47:43 -0800 (PST)
-Received: from smtp-buf-3.desy.de (smtp-buf-3.desy.de [131.169.56.166])
-        by smtp-o-3.desy.de (Postfix) with ESMTP id 08919605F2
-        for <linux-nfs@vger.kernel.org>; Fri,  4 Dec 2020 16:47:41 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-3.desy.de 08919605F2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-        t=1607096861; bh=aqzmUh4G4rpZKvraXeOWJt8h9/sU6iT7tillscM2ujk=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=T0i8nogVN4U51vs4krhpERXic+fQ3t3rg3oGefZTgGi2V6LpZnV8qIJadvQZKHC9E
-         FW1qhUGoQ9SeqpnZ0YLPfL12nKNy316pSnwgeXZ6b7VowgOOb5Z3Gi4g5HdXC4OuWW
-         MUXX/0L7BnIJluFWXCHhAMzciL9xul+kUAyh9LRQ=
-Received: from smtp-m-3.desy.de (smtp-m-3.desy.de [IPv6:2001:638:700:1038::1:83])
-        by smtp-buf-3.desy.de (Postfix) with ESMTP id 0202FA0586;
-        Fri,  4 Dec 2020 16:47:41 +0100 (CET)
-X-Virus-Scanned: amavisd-new at desy.de
-Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
-        by smtp-intra-3.desy.de (Postfix) with ESMTP id D01DA80067;
-        Fri,  4 Dec 2020 16:47:40 +0100 (CET)
-Date:   Fri, 4 Dec 2020 16:47:40 +0100 (CET)
-From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To:     schumaker anna <schumaker.anna@gmail.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Message-ID: <852166252.2305208.1607096860375.JavaMail.zimbra@desy.de>
-In-Reply-To: <20201203201841.103294-1-Anna.Schumaker@Netapp.com>
-References: <20201203201841.103294-1-Anna.Schumaker@Netapp.com>
-Subject: Re: [PATCH 0/3] NFS: Disable READ_PLUS by default
+        id S1730350AbgLDQD3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 4 Dec 2020 11:03:29 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:41456 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729614AbgLDQD2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Dec 2020 11:03:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1607097722;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DHcEujkTJrLzN53Yx5osScEnvJO5N+oiL4RoDLy3I/A=;
+        b=cMQNonFda5n5WhRKk0dXDLOpj3VIeezAUZOyl9IkUsjm+HoGHTD/VX7bGVSMyBTyrIDRDG
+        /xY2ezI7sFSNV0sJ4utMGpRn+urNfc1MjanmJ8GIoLXm17AQyXokTtLOlFERxDo58bw2wB
+        9HMIzo9g/anz8fAPYa35Rl0gbsZMyfk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-TjTgdB_vORSjqc8GGRy9VA-1; Fri, 04 Dec 2020 11:01:58 -0500
+X-MC-Unique: TjTgdB_vORSjqc8GGRy9VA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B163B87950C;
+        Fri,  4 Dec 2020 16:01:56 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-116-67.rdu2.redhat.com [10.10.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9075A189B8;
+        Fri,  4 Dec 2020 16:01:54 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20201204154626.GA26255@fieldses.org>
+References: <20201204154626.GA26255@fieldses.org> <2F96670A-58DC-43A6-A20E-696803F0BFBA@oracle.com> <160518586534.2277919.14475638653680231924.stgit@warthog.procyon.org.uk> <118876.1607093975@warthog.procyon.org.uk>
+To:     Bruce Fields <bfields@fieldses.org>
+Cc:     dhowells@redhat.com, Chuck Lever <chuck.lever@oracle.com>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        linux-crypto@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-afs@lists.infradead.org
+Subject: Re: Why the auxiliary cipher in gss_krb5_crypto.c?
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_3980 (ZimbraWebClient - FF83 (Mac)/8.8.15_GA_3980)
-Thread-Topic: Disable READ_PLUS by default
-Thread-Index: 9Q3FB8a67UESU3XJJaQGA1xWvDXZFA==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <122996.1607097713.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Fri, 04 Dec 2020 16:01:53 +0000
+Message-ID: <122997.1607097713@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Anna,
+Bruce Fields <bfields@fieldses.org> wrote:
 
-I see problems with gedeviceinfo and bisected it to c567552612ece787b178e3b147b5854ad422a836.
-The commit itself doesn't look that can break it, but might
-be can help you find the problem.
+> > Reading up on CTS, I'm guessing the reason it's like this is that CTS =
+is the
+> > same as the non-CTS, except for the last two blocks, but the non-CTS o=
+ne is
+> > more efficient.
+> =
 
-What I see, that after xdr_read_pages call the xdr stream points
-to a some random point (or wrong page)
+> CTS is cipher-text stealing, isn't it?  I think it was Kevin Coffman
+> that did that, and I don't remember the history.  I thought it was
+> required by some spec or peer implementation (maybe Windows?) but I
+> really don't remember.  It may predate git.  I'll dig around and see
+> what I can find.
 
-Regards,
-   Tigran.
+rfc3961 and rfc3962 specify CTS-CBC with AES.
 
+David
 
------ Original Message -----
-> From: "schumaker anna" <schumaker.anna@gmail.com>
-> To: "linux-nfs" <linux-nfs@vger.kernel.org>
-> Cc: "Anna Schumaker" <Anna.Schumaker@Netapp.com>
-> Sent: Thursday, 3 December, 2020 21:18:38
-> Subject: [PATCH 0/3] NFS: Disable READ_PLUS by default
-
-> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> 
-> I've been scratching my head about what's going on with xfstests generic/091
-> and generic/263, but I'm not sure what else to look at at this point.
-> This patchset disables READ_PLUS by default by marking it as a
-> developer-only kconfig option.
-> 
-> I also included a couple of patches fixing some other issues that were
-> noticed while inspecting the code. These patches don't help the tests
-> pass, but they do fail later on after applying so it does feel like
-> progress.
-> 
-> I'm hopeful the remaning issues can be worked out in the future.
-> 
-> Thanks,
-> Anna
-> 
-> 
-> Anna Schumaker (3):
->  NFS: Disable READ_PLUS by default
->  NFS: Allocate a scratch page for READ_PLUS
->  SUNRPC: Keep buf->len in sync with xdr->nwords when expanding holes
-> 
-> fs/nfs/Kconfig          |  9 +++++++++
-> fs/nfs/nfs42xdr.c       |  2 ++
-> fs/nfs/nfs4proc.c       |  2 +-
-> fs/nfs/read.c           | 13 +++++++++++--
-> include/linux/nfs_xdr.h |  1 +
-> net/sunrpc/xdr.c        |  3 ++-
-> 6 files changed, 26 insertions(+), 4 deletions(-)
-> 
-> --
-> 2.29.2
