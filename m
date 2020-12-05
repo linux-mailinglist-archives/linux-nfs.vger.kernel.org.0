@@ -2,61 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CF0F2CFEC5
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Dec 2020 21:23:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EA742CFEC7
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Dec 2020 21:24:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbgLEUV5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 5 Dec 2020 15:21:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59360 "EHLO
+        id S1726028AbgLEUXl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 5 Dec 2020 15:23:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbgLEUV4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 5 Dec 2020 15:21:56 -0500
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA87EC0613D1
-        for <linux-nfs@vger.kernel.org>; Sat,  5 Dec 2020 12:21:09 -0800 (PST)
-Received: by mail-qk1-x742.google.com with SMTP id 19so1366603qkm.8
-        for <linux-nfs@vger.kernel.org>; Sat, 05 Dec 2020 12:21:09 -0800 (PST)
+        with ESMTP id S1725867AbgLEUXl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 5 Dec 2020 15:23:41 -0500
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A928AC0613D1
+        for <linux-nfs@vger.kernel.org>; Sat,  5 Dec 2020 12:23:00 -0800 (PST)
+Received: by mail-qk1-x744.google.com with SMTP id z188so8937428qke.9
+        for <linux-nfs@vger.kernel.org>; Sat, 05 Dec 2020 12:23:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:user-agent:mime-version
          :content-transfer-encoding;
-        bh=sQa+cPfviU14/dlxA5PFqpKRRsYsq62sLTCfHUMNdcI=;
-        b=QJ3ZYNSc0ickaUS9Sfdg3VAVgnbe7fyG/cwYX2XDa+GARgR1Y+grxwvfhkqqujlFsa
-         021c9v2wRk41Y4mF6m3XQ9KUvxFLhYkM5MIH7yqvhyF/LfeOnmbf/QZFPeIzwJyVDCGC
-         xjDOIXKrH2MeC2ZNc6A3zfbCHntCL1ivdJLUk/k5OOvWzu25/UvlvAbD9kS1JDibk8hk
-         VcasPMUn/z47R1x1LxKX5kG3zBunzFd+Utvg4Nx+sDYW1PrATiXXJUHoaoJXLWx/eTKd
-         7CKY66o+MSWEbX4mP+8iKmtIFz3PHCcHj7YExd9SsyX5yJ1NGqZ14yFZVeA63cgEwXfr
-         YQxw==
+        bh=CICdBTikk8E5TH9/5RmMKuOpZt/HAEwI6uLWeS5HKY4=;
+        b=iFv6xgLX0LYCI/greMaIuZKDdGoarYkfxNd2OeQWsUIUTmM1F96+1y+VqwcqD8CCwN
+         h6MoZgkkYOEQG9ojYTLEzdUKJ4FXCYr6/t1eju81a6DYZIh6BYNAzD0D+duVXtD+hXQh
+         tZC32tW+l03WTwbGgI1bhsKMnirGpYHCK7apwoIVAwApJTwqpQRs+/nEhr57Ntc/JnBa
+         1SODaHY89Xg+cF8ZXCGSxPfp6L+8/P1fmiugcHS2E/IPxFOpOc3oQ0HCZbVL1Vcv0lzt
+         dP6U27MHtRiFzxXGk87wFflvKoGpax37yI4w6kaI8TgxXBz0/Be+KSIV4sMLA2w9du7M
+         msMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :user-agent:mime-version:content-transfer-encoding;
-        bh=sQa+cPfviU14/dlxA5PFqpKRRsYsq62sLTCfHUMNdcI=;
-        b=RpoMXKzVvhFyVAe7bgquf9WII1YF7Ut/qHkewlo9g6x2JysEmG2HrroGpGK6Cgqole
-         hnVpwGfIDRUwEEfnnd7VHr+VTXbqXXVSOoVD0cQyvMMD7XzGz8wgolHG9OYGuwJi6j1w
-         pXkTptBnGNTXLhYrLJsNZLr2tCREbjFsuwz+Hh6/W51L7vHtzKlPGGfDTgltKqQcZJwH
-         3/ff/6gOrZ4hXizzf/vKEicRaQjhtdXGrQx7OR+1b2XODmwFUA9BQM3eFYGQ67pRbtQH
-         QnYVTuUCA3OFwsCtq9LDoY1mffht4FG8LmwUMssYoATiJe6b5a2Ia4ZC7YtQdoiwqyDi
-         hShA==
-X-Gm-Message-State: AOAM53118aOEhfUkuO8BTXLWYEP4lstiUq+/fdvyzv02cNR8bgJ+4Z93
-        TIfiVnv42Z4eLO9vDfJWBJmFxMy85/s=
-X-Google-Smtp-Source: ABdhPJz1CHtSpD4PUalLs4VYiqtvtrzp7LQV3/l9lImLamAoM9cPoPdMlc+4AeZEWqEqsWdFV9Boeg==
-X-Received: by 2002:a05:620a:218b:: with SMTP id g11mr16807809qka.190.1607199668789;
-        Sat, 05 Dec 2020 12:21:08 -0800 (PST)
+        bh=CICdBTikk8E5TH9/5RmMKuOpZt/HAEwI6uLWeS5HKY4=;
+        b=BOHqc2UnaNBjSlN5ikmVzjgHuHNfaZCGjzFSY8EnOK+4Dh9dUjRtHfoIK+v8PaUJHY
+         Wox1MyRVdep6HsxRd8pE5CN/Jo4YH2hZOmf/1idMKBA+5CJevs6eEejymLIkzPu60olr
+         GNKHsth1LHbQrL1h5pkyZR2BDnFqsZbnK1/bvSXHOarsJzgh247lki/JGiZZJi/zYPtM
+         6M2rHFB3oBPeEQI3Pz6oHI/mI5/6b5o9Bai6ZCd1MZgm+BZuPCbPnur0VXQZa0am1+7N
+         CzjhYpBzFOOuFCV979YfWc6AtBrahEVZpWdDgU/1+9vqh7gCtBfThdMhf0rjUuH6PoqU
+         rxEQ==
+X-Gm-Message-State: AOAM531pmorywoD5NstOHDrblTzrxLWe6k/uxPcOx9tdpgxbaSjg7nWT
+        fy5/tIgvlIpXuuTECTmRGfYhZM2mIzw=
+X-Google-Smtp-Source: ABdhPJzmUWT6JtlFdb6uUYsp8cUlZFVsQ16/VbqvVp2WhtNMd7hjn+zY8ppEAyjYSqUF7kZgIxq2QA==
+X-Received: by 2002:a37:6242:: with SMTP id w63mr4870611qkb.490.1607199779522;
+        Sat, 05 Dec 2020 12:22:59 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id s134sm9700620qke.99.2020.12.05.12.21.07
+        by smtp.gmail.com with ESMTPSA id m54sm9799447qtc.29.2020.12.05.12.22.58
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 05 Dec 2020 12:21:07 -0800 (PST)
+        Sat, 05 Dec 2020 12:22:58 -0800 (PST)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from manet.1015granger.net (manet.1015granger.net [192.168.1.51])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0B5KL6Zu010544
-        for <linux-nfs@vger.kernel.org>; Sat, 5 Dec 2020 20:21:06 GMT
-Subject: [PATCH 3] xprtrdma: Fix XDRBUF_SPARSE_PAGES support
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 0B5KMvP0010547
+        for <linux-nfs@vger.kernel.org>; Sat, 5 Dec 2020 20:22:57 GMT
+Subject: [PATCH 4] xprtrdma: Fix XDRBUF_SPARSE_PAGES support
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Sat, 05 Dec 2020 15:21:06 -0500
-Message-ID: <160719962208.32424.3107134914715206238.stgit@manet.1015granger.net>
+Date:   Sat, 05 Dec 2020 15:22:57 -0500
+Message-ID: <160719971621.32538.11224487886769737849.stgit@manet.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -82,8 +82,12 @@ Reported-by: Olga Kornievskaia <kolga@netapp.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Cc: <stable@vger.kernel.org>
 ---
- net/sunrpc/xprtrdma/rpc_rdma.c |   42 +++++++++++++++++++++++++++++++---------
- 1 file changed, 33 insertions(+), 9 deletions(-)
+ net/sunrpc/xdr.c               |    1 +
+ net/sunrpc/xprtrdma/rpc_rdma.c |   41 +++++++++++++++++++++++++++++++---------
+ 2 files changed, 33 insertions(+), 9 deletions(-)
+
+Changes since v3:
+- I swear I am not drunk. I forgot to commit the change before mailing it.
 
 Changes since v2:
 - Actually fix the xdr_buf_pagecount() problem
@@ -92,19 +96,23 @@ Changes since RFC:
 - Ensure xdr_buf_pagecount() is defined in rpc_rdma.c
 - noinline the sparse page allocator -- it's an uncommon path
 
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index 71e03b930b70..878f4c4fec1a 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -141,6 +141,7 @@ xdr_buf_pagecount(struct xdr_buf *buf)
+ 		return 0;
+ 	return (buf->page_base + buf->page_len + PAGE_SIZE - 1) >> PAGE_SHIFT;
+ }
++EXPORT_SYMBOL_GPL(xdr_buf_pagecount);
+ 
+ int
+ xdr_alloc_bvec(struct xdr_buf *buf, gfp_t gfp)
 diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index 0f5120c7668f..3ce7dcce5fb9 100644
+index 0f5120c7668f..6c9a1810a70a 100644
 --- a/net/sunrpc/xprtrdma/rpc_rdma.c
 +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -49,6 +49,7 @@
- 
- #include <linux/highmem.h>
- 
-+#include <linux/sunrpc/xdr.h>
- #include <linux/sunrpc/svc_rdma.h>
- 
- #include "xprt_rdma.h"
-@@ -179,6 +180,32 @@ rpcrdma_nonpayload_inline(const struct rpcrdma_xprt *r_xprt,
+@@ -179,6 +179,32 @@ rpcrdma_nonpayload_inline(const struct rpcrdma_xprt *r_xprt,
  		r_xprt->rx_ep->re_max_inline_recv;
  }
  
@@ -137,7 +145,7 @@ index 0f5120c7668f..3ce7dcce5fb9 100644
  /* Split @vec on page boundaries into SGEs. FMR registers pages, not
   * a byte range. Other modes coalesce these SGEs into a single MR
   * when they can.
-@@ -233,15 +260,6 @@ rpcrdma_convert_iovs(struct rpcrdma_xprt *r_xprt, struct xdr_buf *xdrbuf,
+@@ -233,15 +259,6 @@ rpcrdma_convert_iovs(struct rpcrdma_xprt *r_xprt, struct xdr_buf *xdrbuf,
  	ppages = xdrbuf->pages + (xdrbuf->page_base >> PAGE_SHIFT);
  	page_base = offset_in_page(xdrbuf->page_base);
  	while (len) {
@@ -153,7 +161,7 @@ index 0f5120c7668f..3ce7dcce5fb9 100644
  		seg->mr_page = *ppages;
  		seg->mr_offset = (char *)page_base;
  		seg->mr_len = min_t(u32, PAGE_SIZE - page_base, len);
-@@ -867,6 +885,12 @@ rpcrdma_marshal_req(struct rpcrdma_xprt *r_xprt, struct rpc_rqst *rqst)
+@@ -867,6 +884,12 @@ rpcrdma_marshal_req(struct rpcrdma_xprt *r_xprt, struct rpc_rqst *rqst)
  	__be32 *p;
  	int ret;
  
