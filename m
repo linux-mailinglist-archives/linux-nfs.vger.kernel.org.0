@@ -2,113 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 505062D080A
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Dec 2020 00:32:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8551B2D0BB4
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Dec 2020 09:26:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgLFXcf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 6 Dec 2020 18:32:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgLFXcf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 6 Dec 2020 18:32:35 -0500
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9FE8C0613D0;
-        Sun,  6 Dec 2020 15:31:54 -0800 (PST)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726173AbgLGI0J (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 7 Dec 2020 03:26:09 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44142 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726098AbgLGI0I (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 7 Dec 2020 03:26:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1607329482;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mufcmj20aUEugUydgQ93FnUX087nyQYX2bLOGbVsYnA=;
+        b=TilQX35Nw+i/cS/EpHmkoKe5/ln/tTgj6Sdq7uDpTUyD3rb2cATbWwif9IlrNKInvOI4YS
+        +ZuRjI+dTF7k0ph3TqbfI5Ph6BF/96U8vzpRBTjBy/Bd7ZO2KdlfLrYMR6jb9dDdhJavzC
+        BqRPbEOkUcqL1odHeNmd4ycZS49xfRs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-269-eaugl82PMAyxNLfoaUbqvw-1; Mon, 07 Dec 2020 03:24:37 -0500
+X-MC-Unique: eaugl82PMAyxNLfoaUbqvw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Cq2lV1tJjz9sW0;
-        Mon,  7 Dec 2020 10:31:49 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1607297511;
-        bh=veDtRoJjNpeoUhwU9xkUV0ECvQ2G/BDfl8peuJgxMaw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JQWY4q1Y542c2L6rqkdeQn8NkOrK2CyJt73RBiX7VBJM+FW+lPbJHZmUe4hAnFnik
-         zE+13t0imSJ5oINuKrbh8z/jch7Cg4pVOj/7RsnxJXrbmBEOhF5z7PEJ87ZPFDsPLa
-         xPmgHHqy5SlY92CkDXr9wWVbHctu7JaCoxypBXCUf6m1wGUOeiZ7JHIKAtcf8X9SW8
-         m/Kc51B5hP2WHNFpONI/E3WNST7U8InwJ8jMrCwyThHdZGO2jBCE/13x/DYYncPj/+
-         aFsZVXf07nsSEhkvukrhkiuNlpAUZNb2qHRD9aXAOW+HZPephSYk2JM518ygLtH0+X
-         AO9Ss6a+O+Xqw==
-Date:   Mon, 7 Dec 2020 10:31:47 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Trond Myklebust <trondmy@gmail.com>,
-        NFS Mailing List <linux-nfs@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: linux-next: manual merge of the nfs-anna tree with the nfs tree
-Message-ID: <20201207103147.4173f701@canb.auug.org.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7551EBBEE3;
+        Mon,  7 Dec 2020 08:24:35 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-116-67.rdu2.redhat.com [10.10.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E40222B58B;
+        Mon,  7 Dec 2020 08:24:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20201204210855.GA3412@gondor.apana.org.au>
+References: <20201204210855.GA3412@gondor.apana.org.au> <20201204154626.GA26255@fieldses.org> <2F96670A-58DC-43A6-A20E-696803F0BFBA@oracle.com> <160518586534.2277919.14475638653680231924.stgit@warthog.procyon.org.uk> <118876.1607093975@warthog.procyon.org.uk> <122997.1607097713@warthog.procyon.org.uk> <20201204160347.GA26933@fieldses.org> <125709.1607100601@warthog.procyon.org.uk> <CAMj1kXEOm_yh478i+dqPiz0eoBxp4eag3j2qHm5eBLe+2kihoQ@mail.gmail.com> <127458.1607102368@warthog.procyon.org.uk> <CAMj1kXFe50HvZLxG6Kh-oYBCf5uu51hhuh7mW5UQ62ZSqmu_xA@mail.gmail.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     dhowells@redhat.com, Ard Biesheuvel <ardb@kernel.org>,
+        Bruce Fields <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "open list:BPF JIT for MIPS (32-BIT AND 64-BIT)" 
+        <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org
+Subject: Re: Why the auxiliary cipher in gss_krb5_crypto.c?
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/FEc4XiccDvzt=g__qd+9su1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <398200.1607329472.1@warthog.procyon.org.uk>
+Date:   Mon, 07 Dec 2020 08:24:32 +0000
+Message-ID: <398201.1607329472@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---Sig_/FEc4XiccDvzt=g__qd+9su1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Herbert Xu <herbert@gondor.apana.org.au> wrote:
 
-Hi all,
+> > Herbert recently made some changes for MSG_MORE support in the AF_ALG
+> > code, which permits a skcipher encryption to be split into several
+> > invocations of the skcipher layer without the need for this complexity
+> > on the side of the caller. Maybe there is a way to reuse that here.
+> > Herbert?
+> 
+> Yes this was one of the reasons I was persuing the continuation
+> work.  It should allow us to kill the special case for CTS in the
+> krb5 code.
+> 
+> Hopefully I can get some time to restart work on this soon.
 
-Today's linux-next merge of the nfs-anna tree got a conflict in:
+In the krb5 case, we know in advance how much data we're going to be dealing
+with, if that helps.
 
-  net/sunrpc/xdr.c
+David
 
-between commit:
-
-  0279024f2270 ("SUNRPC: Fix up xdr_set_page()")
-
-from the nfs tree and commit:
-
-  861b1da5a534 ("SUNRPC: Keep buf->len in sync with xdr->nwords when expand=
-ing holes")
-
-from the nfs-anna tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc net/sunrpc/xdr.c
-index c852d199c789,5b848fe65c81..000000000000
---- a/net/sunrpc/xdr.c
-+++ b/net/sunrpc/xdr.c
-@@@ -1316,8 -1326,8 +1317,8 @@@ uint64_t xdr_expand_hole(struct xdr_str
-  					bytes);
-  	_zero_pages(buf->pages, buf->page_base + offset, length);
- =20
-- 	buf->len +=3D length - (from - offset) - truncated;
-+ 	buf->len +=3D length - (from - offset);
- -	xdr_set_page(xdr, offset + length, PAGE_SIZE);
- +	xdr_set_page(xdr, offset + length, xdr_stream_remaining(xdr));
-  	return length;
-  }
-  EXPORT_SYMBOL_GPL(xdr_expand_hole);
-
---Sig_/FEc4XiccDvzt=g__qd+9su1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl/NaeMACgkQAVBC80lX
-0GxsDwf+ORDGRAgOuGsbhng9xdqrHgGwevSU0VSPVS2J2FPIJ92rFXOre75yVUsh
-JuSTDtd6agkND902qicMUvsk5k3l/hBqXyL2YVKzBT7TbQTMa0Go3rglD450qQ6c
-VYJ/4qnAQ9nwMoaV/Snt2pE4IWeOkkWmOhzEpMyPDNpr7udi8NfNzKcmYk8XYuAP
-nfDDUxxoIh/WmPGRnQQoqcWU443jki8fUnHhOy7iZ542BklQ1slm8Ir6CA/61Hoz
-t56ZIqar3ps9BR9/YP5NprQMW2Pq1qFOouxfx6offK+SCYMhU6eD+UKm9M97kuEy
-/cBgzxSaNcm+S3WDWSf+JvDH8dSoHw==
-=DIUD
------END PGP SIGNATURE-----
-
---Sig_/FEc4XiccDvzt=g__qd+9su1--
