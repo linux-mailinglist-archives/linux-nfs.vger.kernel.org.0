@@ -2,82 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8551B2D0BB4
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Dec 2020 09:26:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 780512D0C9F
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Dec 2020 10:07:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgLGI0J (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 7 Dec 2020 03:26:09 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44142 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726098AbgLGI0I (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 7 Dec 2020 03:26:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607329482;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mufcmj20aUEugUydgQ93FnUX087nyQYX2bLOGbVsYnA=;
-        b=TilQX35Nw+i/cS/EpHmkoKe5/ln/tTgj6Sdq7uDpTUyD3rb2cATbWwif9IlrNKInvOI4YS
-        +ZuRjI+dTF7k0ph3TqbfI5Ph6BF/96U8vzpRBTjBy/Bd7ZO2KdlfLrYMR6jb9dDdhJavzC
-        BqRPbEOkUcqL1odHeNmd4ycZS49xfRs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-269-eaugl82PMAyxNLfoaUbqvw-1; Mon, 07 Dec 2020 03:24:37 -0500
-X-MC-Unique: eaugl82PMAyxNLfoaUbqvw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7551EBBEE3;
-        Mon,  7 Dec 2020 08:24:35 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-116-67.rdu2.redhat.com [10.10.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E40222B58B;
-        Mon,  7 Dec 2020 08:24:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20201204210855.GA3412@gondor.apana.org.au>
-References: <20201204210855.GA3412@gondor.apana.org.au> <20201204154626.GA26255@fieldses.org> <2F96670A-58DC-43A6-A20E-696803F0BFBA@oracle.com> <160518586534.2277919.14475638653680231924.stgit@warthog.procyon.org.uk> <118876.1607093975@warthog.procyon.org.uk> <122997.1607097713@warthog.procyon.org.uk> <20201204160347.GA26933@fieldses.org> <125709.1607100601@warthog.procyon.org.uk> <CAMj1kXEOm_yh478i+dqPiz0eoBxp4eag3j2qHm5eBLe+2kihoQ@mail.gmail.com> <127458.1607102368@warthog.procyon.org.uk> <CAMj1kXFe50HvZLxG6Kh-oYBCf5uu51hhuh7mW5UQ62ZSqmu_xA@mail.gmail.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     dhowells@redhat.com, Ard Biesheuvel <ardb@kernel.org>,
-        Bruce Fields <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "open list:BPF JIT for MIPS (32-BIT AND 64-BIT)" 
-        <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org
-Subject: Re: Why the auxiliary cipher in gss_krb5_crypto.c?
+        id S1726552AbgLGJGp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 7 Dec 2020 04:06:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbgLGJGp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 7 Dec 2020 04:06:45 -0500
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 012F3C0613D0;
+        Mon,  7 Dec 2020 01:06:08 -0800 (PST)
+Received: by mail-pj1-x1042.google.com with SMTP id lb18so4446028pjb.5;
+        Mon, 07 Dec 2020 01:06:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ttg1rgPf81KMFs3MAsw98RgUM6DZxTe/dh3Tbs/2el8=;
+        b=ZFe+vJuxVzwH6L3xGq5RxOLkK6FCo7WC4pnxuzJXiN5yjhDSs/P9z0HpSHzHQMZwHk
+         vojv4LMDJU2lgqID3kGeJeSvDg5jTuBQowGitGi2HAL909530T5mmCadxNGsuM91y0pD
+         2PHQ0GeL9Jr+Fe1OWwp6tSn83DRVy3e/IQHiM+YJ4I7spXpsIwKkmx+xSSFfWnpZiYsp
+         LCuAkZVEkMTh9tQFZDwyZkptVpDghq5IoQXxAUJPaKvu3ZJMe7FitqTrEhGwQvd49gQ8
+         VkqEwWMA+dK1eNzRI+Xm3cqehrPUlHU1+LW6SVOItOREWF8qKljE7xLDx6Fe3QoQ1jDy
+         qlmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ttg1rgPf81KMFs3MAsw98RgUM6DZxTe/dh3Tbs/2el8=;
+        b=TrUDFvushVkgeGooSXIhxEeukgL9rIUJqayS1nt5wyE1QOpcl6J5BXEYL8ts68xal2
+         SQOj1gw7adLyHOaHGet2U9fIa3TfYbht6IwJ1M8yKRC4aFNT6ypiawsjl2kohTOhekmx
+         mb/VDewlx1Vriw85cL0rSVhR9G73/sgHEisA3of5YhGUyBjXusd2GrsfC5FCcMAHLVcq
+         BIyKsJ3SS8vojWxLEyjqhIX6C4R7oPkMRNIfUDxaPSWXJJcix9ZHaB+qJ8kL32Kch7RD
+         rRCTUC2l1SKkMzZj66Q2QZqq8DBBfM+wqBt3UW56CS9kD16WIjrZe9wL3qNCz5IxYT6Y
+         6tug==
+X-Gm-Message-State: AOAM532qiE6E9xB9WrgfV94YkmjqWsB/GZkVvdznz6YaZJj9lxgtWNva
+        qOQuq7oVIrdcedsbIaPD3z7QPR/WPvZQHg==
+X-Google-Smtp-Source: ABdhPJzEn5m248AQgPmsUejwM6smpfpdVRvAV+OT6/3BbNRW9SkbTwoS4BWlRaE1LHutf4OoFJpNTQ==
+X-Received: by 2002:a17:90a:6ac5:: with SMTP id b5mr15929315pjm.210.1607331967547;
+        Mon, 07 Dec 2020 01:06:07 -0800 (PST)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id j18sm10600078pgk.6.2020.12.07.01.06.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Dec 2020 01:06:06 -0800 (PST)
+From:   Geliang Tang <geliangtang@gmail.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     Geliang Tang <geliangtang@gmail.com>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] NFSv4.1: use BITS_PER_LONG macro in nfs4session.h
+Date:   Mon,  7 Dec 2020 17:03:52 +0800
+Message-Id: <0070adebf1d8e260de713537cc2f6c860c9026ed.1607331694.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <398200.1607329472.1@warthog.procyon.org.uk>
-Date:   Mon, 07 Dec 2020 08:24:32 +0000
-Message-ID: <398201.1607329472@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Herbert Xu <herbert@gondor.apana.org.au> wrote:
+Use the existing BITS_PER_LONG macro instead of calculating the value.
 
-> > Herbert recently made some changes for MSG_MORE support in the AF_ALG
-> > code, which permits a skcipher encryption to be split into several
-> > invocations of the skcipher layer without the need for this complexity
-> > on the side of the caller. Maybe there is a way to reuse that here.
-> > Herbert?
-> 
-> Yes this was one of the reasons I was persuing the continuation
-> work.  It should allow us to kill the special case for CTS in the
-> krb5 code.
-> 
-> Hopefully I can get some time to restart work on this soon.
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+---
+ fs/nfs/nfs4session.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-In the krb5 case, we know in advance how much data we're going to be dealing
-with, if that helps.
-
-David
+diff --git a/fs/nfs/nfs4session.h b/fs/nfs/nfs4session.h
+index b996ee23f1ba..3de425f59b3a 100644
+--- a/fs/nfs/nfs4session.h
++++ b/fs/nfs/nfs4session.h
+@@ -34,7 +34,7 @@ enum nfs4_slot_tbl_state {
+ 	NFS4_SLOT_TBL_DRAINING,
+ };
+ 
+-#define SLOT_TABLE_SZ DIV_ROUND_UP(NFS4_MAX_SLOT_TABLE, 8*sizeof(long))
++#define SLOT_TABLE_SZ DIV_ROUND_UP(NFS4_MAX_SLOT_TABLE, BITS_PER_LONG)
+ struct nfs4_slot_table {
+ 	struct nfs4_session *session;		/* Parent session */
+ 	struct nfs4_slot *slots;		/* seqid per slot */
+-- 
+2.26.2
 
