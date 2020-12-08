@@ -2,83 +2,157 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5638B2D2CDA
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Dec 2020 15:16:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7A3F2D307F
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Dec 2020 18:04:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbgLHOPX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Dec 2020 09:15:23 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:32947 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729625AbgLHOPX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Dec 2020 09:15:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607436837;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tffr6g9iDgmcI1vdIiaVq+38gJQDylZk+4muqW+tsNE=;
-        b=PYPRxxRSdfplv5X8EEkbvHRzLxpQozQ/FPoppOBP5D/81FAR9/eUOu/c4Lv9CYnt/9C2RE
-        V6FNERbX9+IM1sVOntnpE99gUw0o4YBjSDARTrHNmW2SMJiTl8qQBkyBnX3iet6LZ6ql56
-        +w/v5SuFcWqzGmj2PuGmBVbGts7Q2iM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-386-_6Jn5BKhNzC6LVuO_YUIoQ-1; Tue, 08 Dec 2020 09:13:53 -0500
-X-MC-Unique: _6Jn5BKhNzC6LVuO_YUIoQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DADC19611AE;
-        Tue,  8 Dec 2020 14:13:51 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-116-67.rdu2.redhat.com [10.10.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E13960BE2;
-        Tue,  8 Dec 2020 14:13:49 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAMj1kXE+oi2Q7OE8o0xP4XabZt-y61NMG3Q3eyRzSG6cG9i4Kg@mail.gmail.com>
-References: <CAMj1kXE+oi2Q7OE8o0xP4XabZt-y61NMG3Q3eyRzSG6cG9i4Kg@mail.gmail.com> <2F96670A-58DC-43A6-A20E-696803F0BFBA@oracle.com> <160518586534.2277919.14475638653680231924.stgit@warthog.procyon.org.uk> <118876.1607093975@warthog.procyon.org.uk> <955415.1607433903@warthog.procyon.org.uk>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     dhowells@redhat.com, Chuck Lever <chuck.lever@oracle.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:BPF JIT for MIPS (32-BIT AND 64-BIT)" 
-        <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org
-Subject: Re: Why the auxiliary cipher in gss_krb5_crypto.c?
+        id S1730338AbgLHREO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Dec 2020 12:04:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729585AbgLHREL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Dec 2020 12:04:11 -0500
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CE4FC0613D6
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Dec 2020 09:03:31 -0800 (PST)
+Received: by mail-ej1-x641.google.com with SMTP id lt17so25636680ejb.3
+        for <linux-nfs@vger.kernel.org>; Tue, 08 Dec 2020 09:03:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qKzOcey9uGfSeqVTB/TgTW1Go/hEoRMsdXo2WuKtzVA=;
+        b=oOYwe3RcDTS5SU1oYIITMIIDeogg58m3GpELN/8ZxiZTHHAdp/vVT8Bts8la8O2wcz
+         euq2odyeC8jTPGGYrb1cgabQI7Q7IdIdx1d6Frh+nPZcvOMRU8xINcZzc87wL0a5iU8m
+         qKoqpqg1GOZ4z6nq63LW9w4FbmjkVQJhzC6U0ku8EoTzgdG5TrSZaN58WYys4b8pJrE0
+         RZJ7DqeYN/saPYhWg3QEiY4P6zaa7BVZzAmu6XMuVTHGhxLwXQhDWKYfmQ6B3Lg1vvzD
+         qdVri54wWyHikKShJjrU9Y0RRXCyn4epu6dQ72RlwSXxCHfSTYQY2YS5x8WhHKMb93XJ
+         /72g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qKzOcey9uGfSeqVTB/TgTW1Go/hEoRMsdXo2WuKtzVA=;
+        b=eg+Cd6o48KbnX8gT45WokVZbxuKboV4HJxHj4tzlbNYuFRDpcbQk5KQnXqQiswNKXC
+         3F9Xzzw5DGHiH39C8BCf+t63m9mMlCIyPmzVVcfTpt6MXgg4IlPfyo/d1EskNys8M2D6
+         Ni1/Y6XDB3WVoM1VPwFEfx6NwrLcnVC0514HNiBdLoiP62II5b0vmMl5jKY6L63cxVcW
+         rXn3FHyjH0/3myEfZxi2W+809Jo8UQbH1jXJ1c/L3V0Gr4op7Yk830tV5dbdIvzoOhYO
+         LPj3OwMTVAL1OYMCXqlj7/nItxjO/HLFz4P9hD+hvdC8A8KHXaGn7ls5PxZreJWFkFX3
+         5FmA==
+X-Gm-Message-State: AOAM533K2vKI1R7ubPw83uTfVEwY8Zx7tBPc1xaa3Vg2Z+Yw5hygkL1r
+        K57liwphdInTxD/ayzsGR/roiPWJ55BPq0ZB9xY=
+X-Google-Smtp-Source: ABdhPJyRItQhE4/kwBAUYcrJ40qrCTAa03Yqub4ymlUmXmw/y7jSS5rkf5oHIPXsUjNdeYSoePS+ntX4xIcehBMrVQE=
+X-Received: by 2002:a17:907:206a:: with SMTP id qp10mr24332590ejb.432.1607447010140;
+ Tue, 08 Dec 2020 09:03:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <960648.1607436828.1@warthog.procyon.org.uk>
-Date:   Tue, 08 Dec 2020 14:13:48 +0000
-Message-ID: <960649.1607436828@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <160711969521.12486.14622797339746381076.stgit@manet.1015granger.net>
+In-Reply-To: <160711969521.12486.14622797339746381076.stgit@manet.1015granger.net>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Tue, 8 Dec 2020 12:03:18 -0500
+Message-ID: <CAN-5tyFTMj8ed7Q+4KYgwtJhUGN3i_MVV60N7f0oZH8PL=77Pw@mail.gmail.com>
+Subject: Re: [PATCH RFC] xprtrdma: Fix XDRBUF_SPARSE_PAGES support
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Olga Kornievskaia <kolga@netapp.com>,
+        Frank van der Linden <fllinden@amazon.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Ard Biesheuvel <ardb@kernel.org> wrote:
+Hi Chuck,
 
-> Apparently, it is permitted for gss_krb5_cts_crypt() to do a
-> kmalloc(GFP_NOFS) in the context from where gss_krb5_aes_encrypt() is
-> being invoked, and so I don't see why it wouldn't be possible to
-> simply kmalloc() a scatterlist[] of the appropriate size, populate it
-> with all the pages, bufs and whatever else gets passed into the
-> skcipher, and pass it into the skcipher in one go.
+Is the only user of SPARSE_PAGES is v3 ACLs? Are you fixing this so
+that v3 ACLs would work over rdma?
 
-I never said it wasn't possible.  But doing a pair of order-1 allocations from
-there might have a significant detrimental effect on performance - in which
-case Trond and co. will say "no".
-
-Remember: to crypt 1MiB of data on a 64-bit machine requires 2 x minimum 8KiB
-scatterlist arrays.  That's assuming the pages in the middle are contiguous,
-which might not be the case for a direct I/O read/write.  So for the DIO case,
-it could be involve an order-2 allocation (or chaining of single pages).
-
-David
-
+On Fri, Dec 4, 2020 at 5:13 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+> Olga K. observed that rpcrdma_marsh_req() allocates sparse pages
+> only when it has determined that a Reply chunk is necessary. There
+> are plenty of cases where no Reply chunk is needed, but the
+> XDRBUF_SPARSE_PAGES flag is set. The result would be a crash in
+> rpcrdma_inline_fixup() when it tries to copy parts of the received
+> Reply into a missing page.
+>
+> To avoid crashing, handle sparse page allocation up front.
+>
+> Until XATTR support was added, this issue did not appear often
+> because the only SPARSE_PAGES consumer always expected a reply large
+> enough to require a Reply chunk.
+>
+> Reported-by: Olga Kornievskaia <kolga@netapp.com>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  net/sunrpc/xprtrdma/rpc_rdma.c |   41 +++++++++++++++++++++++++++++++---------
+>  1 file changed, 32 insertions(+), 9 deletions(-)
+>
+> Here's a stop-gap that can be back-ported to earlier kernels if needed.
+> Untested. Comments welcome.
+>
+> diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
+> index 0f5120c7668f..09b7649fa112 100644
+> --- a/net/sunrpc/xprtrdma/rpc_rdma.c
+> +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+> @@ -179,6 +179,32 @@ rpcrdma_nonpayload_inline(const struct rpcrdma_xprt *r_xprt,
+>                 r_xprt->rx_ep->re_max_inline_recv;
+>  }
+>
+> +/* ACL likes to be lazy in allocating pages. For TCP, these
+> + * pages can be allocated during receive processing. Not true
+> + * for RDMA, which must always provision receive buffers
+> + * up front.
+> + */
+> +static int
+> +rpcrdma_alloc_sparse_pages(struct rpc_rqst *rqst)
+> +{
+> +       struct xdr_buf *xb = &rqst->rq_rcv_buf;
+> +       struct page **ppages;
+> +       int len;
+> +
+> +       len = xb->page_len;
+> +       ppages = xb->pages + xdr_buf_pagecount(xb);
+> +       while (len > 0) {
+> +               if (!*ppages)
+> +                       *ppages = alloc_page(GFP_NOWAIT | __GFP_NOWARN);
+> +               if (!*ppages)
+> +                       return -ENOBUFS;
+> +               ppages++;
+> +               len -= PAGE_SIZE;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  /* Split @vec on page boundaries into SGEs. FMR registers pages, not
+>   * a byte range. Other modes coalesce these SGEs into a single MR
+>   * when they can.
+> @@ -233,15 +259,6 @@ rpcrdma_convert_iovs(struct rpcrdma_xprt *r_xprt, struct xdr_buf *xdrbuf,
+>         ppages = xdrbuf->pages + (xdrbuf->page_base >> PAGE_SHIFT);
+>         page_base = offset_in_page(xdrbuf->page_base);
+>         while (len) {
+> -               /* ACL likes to be lazy in allocating pages - ACLs
+> -                * are small by default but can get huge.
+> -                */
+> -               if (unlikely(xdrbuf->flags & XDRBUF_SPARSE_PAGES)) {
+> -                       if (!*ppages)
+> -                               *ppages = alloc_page(GFP_NOWAIT | __GFP_NOWARN);
+> -                       if (!*ppages)
+> -                               return -ENOBUFS;
+> -               }
+>                 seg->mr_page = *ppages;
+>                 seg->mr_offset = (char *)page_base;
+>                 seg->mr_len = min_t(u32, PAGE_SIZE - page_base, len);
+> @@ -867,6 +884,12 @@ rpcrdma_marshal_req(struct rpcrdma_xprt *r_xprt, struct rpc_rqst *rqst)
+>         __be32 *p;
+>         int ret;
+>
+> +       if (unlikely(rqst->rq_rcv_buf.flags & XDRBUF_SPARSE_PAGES)) {
+> +               ret = rpcrdma_alloc_sparse_pages(rqst);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+>         rpcrdma_set_xdrlen(&req->rl_hdrbuf, 0);
+>         xdr_init_encode(xdr, &req->rl_hdrbuf, rdmab_data(req->rl_rdmabuf),
+>                         rqst);
+>
+>
