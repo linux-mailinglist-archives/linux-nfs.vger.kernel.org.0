@@ -2,93 +2,126 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFD9B2D3421
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Dec 2020 21:51:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B63EB2D34B4
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Dec 2020 22:03:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgLHUaQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Dec 2020 15:30:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727660AbgLHUaP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Dec 2020 15:30:15 -0500
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF0E8C061793
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Dec 2020 12:29:29 -0800 (PST)
-Received: by mail-qv1-xf42.google.com with SMTP id p12so8850382qvj.13
-        for <linux-nfs@vger.kernel.org>; Tue, 08 Dec 2020 12:29:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ta0oJLpJ85BMcjzd4A8eoeI6BZCDRtN4qtDaP420o2o=;
-        b=uGoXH08+Tlrb42quO0VKWOVA5dwX0YDaTUbqQnegeHV/rWCBPtnubrpZqtZAiUATBH
-         w/u+8ES6Kk6j/32MtKr8XPX5SYS01P2heKH2yFmPLFRSAB9cLMpEv7LjFzgnrUtYXtyB
-         1jPMdW+pbZ9uoc/Vtt+rKa9oiV/gqohSkq9rYbD12YX1bdhiOvTh3TU+2gAnX9056Blb
-         ORY9v8E4yQ0TUQifoVvOp8TxtcstXx69s8GZ9rLh3JZAk6H+iu1ThXlMc6YpEthzdreg
-         ZLkQ3J9wsEvldUVZYIe5LcAr6vCeeVB90HMYBXeLkuNCzRL8N/zLw+PyyZJI5Hh/Ma9W
-         yEKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=ta0oJLpJ85BMcjzd4A8eoeI6BZCDRtN4qtDaP420o2o=;
-        b=bsFYcNU+x4THovKLHMoMzJsxdFcHAzGxMLVxfOjGufBREvtyE0ra87YPuUhNtixq73
-         BJ+QzS1n2mO0+NOLVlTCT1/ysojuW20zrGHO1LGFdNGUPEOSoZqTAc7sOCjc8nCkkwYx
-         Rf3108yIGGeBNSOgLb0DQD6Ex62YSKJhlbBcvAowpiNF6tlBxghs78hDx0cIJG37Osrt
-         C1EUQBggIVounvZWdnJ8HBQJ8H3QLdkO2bnopghzFWOepFUbq558ockE5fGYVJYqVCjZ
-         AIBeKmKy05atSqoaSLsu7IyNkNw/+sB6mGM8P8uiT6BNbWT9gqYOJbEG7fswqMoleUep
-         eOOQ==
-X-Gm-Message-State: AOAM531laFAAFtVnJEJ551Nz4Gl2hEh2bn+XAZd3z5KBUfWrAaPSR6PZ
-        6rHUptfm+29+QGjYks4C6GQx2vwG3/w=
-X-Google-Smtp-Source: ABdhPJyDDqWqIzgO/aCR9GmEIE0hhiWmx+E5nA/eZ9b3jFsDP2HkO+fg6NHxdC0vwGror0Fj9efhCA==
-X-Received: by 2002:a05:6214:144b:: with SMTP id b11mr10430230qvy.5.1607459368698;
-        Tue, 08 Dec 2020 12:29:28 -0800 (PST)
-Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.gmail.com with ESMTPSA id q20sm5057278qkj.49.2020.12.08.12.29.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Dec 2020 12:29:28 -0800 (PST)
-Sender: Anna Schumaker <schumakeranna@gmail.com>
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v2 2/2] SUNRPC: Check if the buffer has fewer bytes than requested
-Date:   Tue,  8 Dec 2020 15:29:25 -0500
-Message-Id: <20201208202925.597663-3-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201208202925.597663-1-Anna.Schumaker@Netapp.com>
+        id S1729528AbgLHU5C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Dec 2020 15:57:02 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:42958 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbgLHU5C (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Dec 2020 15:57:02 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B8Ks1dY124173;
+        Tue, 8 Dec 2020 20:56:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=NIqTvRG+Jdbst5QanAu6hhkAT+g5FqQSl0hy4a7s21k=;
+ b=cQ+H8l4a2Pszm6lPfpEgh35R4D+Lf2DmqZjdsRB7402J49+KbFHHNEyr4uppTp6xzH/X
+ Q5Sv9yUv3o/1eznPpwPEzuUcV/x+TP38M7cIhKrwGTe9TE4V7OQC12Q88GLCXC+y9s7p
+ zJTURhA6F23SyqJfPpQd++wlc0hN+JkF2TsZY0kzIEVL6KQ8zSeMeF8Ixr5nXYinxMML
+ XOsQvAy0EKMAI9LAyusn54zEmTEjbJrbWRyt0tetO1ZD9tbD9czhCOrwvDVcm6TAq5TL
+ w9rjD9iVdQLL0+ggI2LAz+pnn750JlCQqGf/li2C2p91bdZR6XiuxfJ6TKqmse8QzUQf JQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 35825m50cy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 08 Dec 2020 20:56:19 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B8KtjNj078037;
+        Tue, 8 Dec 2020 20:56:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 358m4yeg88-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Dec 2020 20:56:18 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B8KuHOa021471;
+        Tue, 8 Dec 2020 20:56:17 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 08 Dec 2020 12:56:17 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [PATCH v2 1/2] SUNRPC: Keep buf->len in sync with xdr->nwords
+ when expanding holes
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20201208202925.597663-2-Anna.Schumaker@Netapp.com>
+Date:   Tue, 8 Dec 2020 15:56:16 -0500
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2A6797DD-246D-4994-B38C-57AA0196D061@oracle.com>
 References: <20201208202925.597663-1-Anna.Schumaker@Netapp.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+ <20201208202925.597663-2-Anna.Schumaker@Netapp.com>
+To:     Anna Schumaker <schumaker.anna@gmail.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9829 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 suspectscore=0
+ bulkscore=0 malwarescore=0 phishscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012080128
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9829 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
+ phishscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501 mlxscore=0
+ spamscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012080128
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-xdr_expand_hole() might truncate data off the end of the buffer. If that
-happens, we need to return a short read to the NFS code to indicate that
-some data has been lost.
 
-Fixes: e6ac0accb27c "SUNRPC: Add an xdr_align_data() function"
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- net/sunrpc/xdr.c | 2 ++
- 1 file changed, 2 insertions(+)
+> On Dec 8, 2020, at 3:29 PM, schumaker.anna@gmail.com wrote:
+>=20
+> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+>=20
+> Otherwise we could end up placing data a few bytes off from where we
+> actually want to put it.
+>=20
+> Fixes: 84ce182ab85b "SUNRPC: Add the ability to expand holes in data =
+pages"
+> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> ---
+> net/sunrpc/xdr.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+> index 71e03b930b70..5b848fe65c81 100644
+> --- a/net/sunrpc/xdr.c
+> +++ b/net/sunrpc/xdr.c
+> @@ -1314,6 +1314,7 @@ uint64_t xdr_expand_hole(struct xdr_stream *xdr, =
+uint64_t offset, uint64_t lengt
+> 		unsigned int res =3D _shift_data_right_tail(buf, from + =
+bytes - shift, shift);
+> 		truncated =3D shift - res;
+> 		xdr->nwords -=3D XDR_QUADLEN(truncated);
+> +		buf->len -=3D 4 * XDR_QUADLEN(truncated);
 
-diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-index 5b848fe65c81..68f470e33427 100644
---- a/net/sunrpc/xdr.c
-+++ b/net/sunrpc/xdr.c
-@@ -1273,6 +1273,8 @@ uint64_t xdr_align_data(struct xdr_stream *xdr, uint64_t offset, uint32_t length
- 	bytes = xdr->nwords << 2;
- 	if (length < bytes)
- 		bytes = length;
-+	if (bytes < length)
-+		length = bytes;
- 
- 	/* Move page data to the left */
- 	if (from > offset) {
--- 
-2.29.2
+If I understand what you're doing here correctly, the usual idiom
+is "XDR_QUADLEN(truncated) << 2" .
+
+
+> 		bytes -=3D shift;
+> 	}
+>=20
+> @@ -1325,7 +1326,7 @@ uint64_t xdr_expand_hole(struct xdr_stream *xdr, =
+uint64_t offset, uint64_t lengt
+> 					bytes);
+> 	_zero_pages(buf->pages, buf->page_base + offset, length);
+>=20
+> -	buf->len +=3D length - (from - offset) - truncated;
+> +	buf->len +=3D length - (from - offset);
+> 	xdr_set_page(xdr, offset + length, PAGE_SIZE);
+> 	return length;
+> }
+> --=20
+> 2.29.2
+>=20
+
+--
+Chuck Lever
+
+
 
