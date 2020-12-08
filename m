@@ -2,117 +2,223 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5616D2D3504
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Dec 2020 22:14:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 316D32D35E9
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Dec 2020 23:13:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgLHVM1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Dec 2020 16:12:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgLHVM0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Dec 2020 16:12:26 -0500
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 846B8C0613D6
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Dec 2020 13:11:46 -0800 (PST)
-Received: by mail-ed1-x541.google.com with SMTP id cw27so19072717edb.5
-        for <linux-nfs@vger.kernel.org>; Tue, 08 Dec 2020 13:11:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5WJqBMFahvlf5K6VZvTYKcVyBiHvDwWsqDLYTKYhJbw=;
-        b=RwbbgIDYZ8Dyc//xOQLeYUhJKSjrcvg/o5Wd1uj2D3GefxBT+H+gWFoHHhb06pFjzl
-         xQaSFsHzDEnjypQhueHumpfkIZcukNN4N9kWSoUvgjNIgBVd2kn1JfJhtr+vdfXS7CJq
-         0d/QQ2S6azdBglrORWDkUHJhCrVXHYvqncmVDJEUDeADLU9GnK98mUeFVSPAZPcsdFBf
-         mVYmoEPMlhaLFi1x7M5COQ3sTIHbLsvPOEzuwmqqEqPkXwt/G+fYYKkyTWJock/R+Uss
-         cxgzcEEv1cqUqEIoi+rRbP0oUigCMZ5BmP1ztvhYyohj0PQDPmFgE5me0owy+jXqPm5i
-         k2sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5WJqBMFahvlf5K6VZvTYKcVyBiHvDwWsqDLYTKYhJbw=;
-        b=sdFb/jZ7ANiqti7ZynayehKc2AiUr+pYn0Le4fNJEb0YbXvCOjKDaQckWEAU3n3ASt
-         n1AvTvIrQcyMvI0gfk3xFlYFXU2RRVyCgrPznpUhdnTcTf9XQxBDE4n7paaxy4RE98v4
-         f3JYzoyv4gaHRqEI3RXPBJ+MKny5IZIURHJZnJ8cfH1NHGRhyRYexqyD3JfUPFo4v9Qf
-         VvrhuDpE0j2j3mYFHU2NDqPgzMMOkxxxtUXIW69e5mLH7FwPvtzcgYYbjEPWYvPhWZ9g
-         dCmDyWLt9kLs8fVCBB/6ogsGndnJe//R0ryYxZG9930EQGITNYshEK6aseok0s+FRbe9
-         Wndg==
-X-Gm-Message-State: AOAM532pWJ4rIIw0qH8i4wmJLuBEkdMSblHfOEhObsTV23Rn4xBIBSYo
-        m3m/RjyeQjf7/yJn+WhTOY/V4VxzZM18GxoQ4tQ=
-X-Google-Smtp-Source: ABdhPJzNPa0WVop8/FtVc7dVngqPM85kKvDZ5McBFHbVNwCf/2g+OyQ5101J+u7HkbnY1Au6gG9voc2d1H1af+XA3to=
-X-Received: by 2002:a50:fe87:: with SMTP id d7mr19204838edt.381.1607461905162;
- Tue, 08 Dec 2020 13:11:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20201208202925.597663-1-Anna.Schumaker@Netapp.com>
- <20201208202925.597663-2-Anna.Schumaker@Netapp.com> <2A6797DD-246D-4994-B38C-57AA0196D061@oracle.com>
-In-Reply-To: <2A6797DD-246D-4994-B38C-57AA0196D061@oracle.com>
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Tue, 8 Dec 2020 16:11:28 -0500
-Message-ID: <CAFX2JfkNO9LL_iaRE_RGjP+BHKiZGk8Eedg88_MKkuZUAysThw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] SUNRPC: Keep buf->len in sync with xdr->nwords
- when expanding holes
-To:     Chuck Lever <chuck.lever@oracle.com>
+        id S1730364AbgLHWId (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Dec 2020 17:08:33 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:45486 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730547AbgLHWId (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Dec 2020 17:08:33 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B8JxKDY004928;
+        Tue, 8 Dec 2020 19:59:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=YmuOYwodSUUVwaHN+uDRshnplfr5savJzS9+mu1mYfw=;
+ b=NpCV0Nm8HJDWOe7+Kxtn1G6+OLkUkZbpGkzYJVkaZopx/bDvTp24CSQITsnb7YfjzUSA
+ k+NijgHPwWW3I8OdO2KChBRg/iCnXilCWzVmgmWas6wmFI5eiUM05FCTXcMxfDuUi8uX
+ lmAirRyxruxUhNbTtX0TQo78/nNspnvbQ7AmoEYJJ23arOvb4CKW6U9qNrVroW2ln7l3
+ Z82w8SwOsZE5Nf9Jrpqfn/s1Izgt+OCxJ4mS+zcfPSx8oV7o5kQBWY9gru4tWzaKU7jS
+ X4ZGOG188nyt13dpEsXfbEyfo3UvwxSPe56OrsL7e3c2Ecsk9/EDa/ltJIzbokC+Mq5M EA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 35825m4scb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 08 Dec 2020 19:59:20 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B8JnjwU094109;
+        Tue, 8 Dec 2020 19:57:20 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 358m4ycj1t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Dec 2020 19:57:19 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0B8JvJkJ013661;
+        Tue, 8 Dec 2020 19:57:19 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 08 Dec 2020 11:57:18 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [PATCH 4] xprtrdma: Fix XDRBUF_SPARSE_PAGES support
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <CAN-5tyFAmWL_Y73pgnaBEP3y_QeFAogRqXjtzPhsOpTvZt_o8w@mail.gmail.com>
+Date:   Tue, 8 Dec 2020 14:57:17 -0500
 Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <841D209E-2FE1-47A9-BFBB-C7EDA6D73CD1@oracle.com>
+References: <160719971621.32538.11224487886769737849.stgit@manet.1015granger.net>
+ <CAN-5tyFAmWL_Y73pgnaBEP3y_QeFAogRqXjtzPhsOpTvZt_o8w@mail.gmail.com>
+To:     Olga Kornievskaia <aglo@umich.edu>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9829 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 suspectscore=0
+ bulkscore=0 malwarescore=0 phishscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012080122
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9829 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
+ phishscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501 mlxscore=0
+ spamscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012080123
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Dec 8, 2020 at 3:56 PM Chuck Lever <chuck.lever@oracle.com> wrote:
->
->
->
-> > On Dec 8, 2020, at 3:29 PM, schumaker.anna@gmail.com wrote:
-> >
-> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> >
-> > Otherwise we could end up placing data a few bytes off from where we
-> > actually want to put it.
-> >
-> > Fixes: 84ce182ab85b "SUNRPC: Add the ability to expand holes in data pages"
-> > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > ---
-> > net/sunrpc/xdr.c | 3 ++-
-> > 1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-> > index 71e03b930b70..5b848fe65c81 100644
-> > --- a/net/sunrpc/xdr.c
-> > +++ b/net/sunrpc/xdr.c
-> > @@ -1314,6 +1314,7 @@ uint64_t xdr_expand_hole(struct xdr_stream *xdr, uint64_t offset, uint64_t lengt
-> >               unsigned int res = _shift_data_right_tail(buf, from + bytes - shift, shift);
-> >               truncated = shift - res;
-> >               xdr->nwords -= XDR_QUADLEN(truncated);
-> > +             buf->len -= 4 * XDR_QUADLEN(truncated);
->
-> If I understand what you're doing here correctly, the usual idiom
-> is "XDR_QUADLEN(truncated) << 2" .
 
-Oh, that works too. I'll adjust the patch. Thanks for letting me know!
 
-Anna
+> On Dec 8, 2020, at 2:49 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
+>=20
+> On Sat, Dec 5, 2020 at 3:24 PM Chuck Lever <chuck.lever@oracle.com> =
+wrote:
+>>=20
+>> Olga K. observed that rpcrdma_marsh_req() allocates sparse pages
+>> only when it has determined that a Reply chunk is necessary. There
+>> are plenty of cases where no Reply chunk is needed, but the
+>> XDRBUF_SPARSE_PAGES flag is set. The result would be a crash in
+>> rpcrdma_inline_fixup() when it tries to copy parts of the received
+>> Reply into a missing page.
+>>=20
+>> To avoid crashing, handle sparse page allocation up front.
+>>=20
+>> Until XATTR support was added, this issue did not appear often
+>> because the only SPARSE_PAGES consumer always expected a reply large
+>> enough to always require a Reply chunk.
+>=20
+> Ok so given that ACL never utilizes this, the only way to test this is
+> to remove the xattr fixes and try this and run the xfstest generic/013
+> would that be correct?
 
->
->
-> >               bytes -= shift;
-> >       }
-> >
-> > @@ -1325,7 +1326,7 @@ uint64_t xdr_expand_hole(struct xdr_stream *xdr, uint64_t offset, uint64_t lengt
-> >                                       bytes);
-> >       _zero_pages(buf->pages, buf->page_base + offset, length);
-> >
-> > -     buf->len += length - (from - offset) - truncated;
-> > +     buf->len += length - (from - offset);
-> >       xdr_set_page(xdr, offset + length, PAGE_SIZE);
-> >       return length;
-> > }
-> > --
-> > 2.29.2
-> >
->
-> --
-> Chuck Lever
->
->
->
+I'm simply hoisting the SPARSE_PAGES logic out of convert_iovs and into
+marshal_req, to ensure that it is visited no matter what chunk type is
+being encoded. NFSv3 GETACL would use this new code path instead of the
+old one, so it would still get exercised.=20
+
+
+> If so, then just applying this patch on top of pure say -rc4 produces =
+problems.
+
+I don't follow you. What problems would occur? On -rc4, the LISTXATTRS
+crash you found should go away after this patch is applied.
+
+
+> This patch on top of all the fixes (getxattr + listxattr patches),
+> seems ok but I'm not sure if it gets exercised.
+>>=20
+>> Reported-by: Olga Kornievskaia <kolga@netapp.com>
+>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>> Cc: <stable@vger.kernel.org>
+>> ---
+>> net/sunrpc/xdr.c               |    1 +
+>> net/sunrpc/xprtrdma/rpc_rdma.c |   41 =
++++++++++++++++++++++++++++++++---------
+>> 2 files changed, 33 insertions(+), 9 deletions(-)
+>>=20
+>> Changes since v3:
+>> - I swear I am not drunk. I forgot to commit the change before =
+mailing it.
+>>=20
+>> Changes since v2:
+>> - Actually fix the xdr_buf_pagecount() problem
+>>=20
+>> Changes since RFC:
+>> - Ensure xdr_buf_pagecount() is defined in rpc_rdma.c
+>> - noinline the sparse page allocator -- it's an uncommon path
+>>=20
+>> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+>> index 71e03b930b70..878f4c4fec1a 100644
+>> --- a/net/sunrpc/xdr.c
+>> +++ b/net/sunrpc/xdr.c
+>> @@ -141,6 +141,7 @@ xdr_buf_pagecount(struct xdr_buf *buf)
+>>                return 0;
+>>        return (buf->page_base + buf->page_len + PAGE_SIZE - 1) >> =
+PAGE_SHIFT;
+>> }
+>> +EXPORT_SYMBOL_GPL(xdr_buf_pagecount);
+>>=20
+>> int
+>> xdr_alloc_bvec(struct xdr_buf *buf, gfp_t gfp)
+>> diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c =
+b/net/sunrpc/xprtrdma/rpc_rdma.c
+>> index 0f5120c7668f..6c9a1810a70a 100644
+>> --- a/net/sunrpc/xprtrdma/rpc_rdma.c
+>> +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+>> @@ -179,6 +179,32 @@ rpcrdma_nonpayload_inline(const struct =
+rpcrdma_xprt *r_xprt,
+>>                r_xprt->rx_ep->re_max_inline_recv;
+>> }
+>>=20
+>> +/* ACL likes to be lazy in allocating pages. For TCP, these
+>> + * pages can be allocated during receive processing. Not true
+>> + * for RDMA, which must always provision receive buffers
+>> + * up front.
+>> + */
+>> +static noinline int
+>> +rpcrdma_alloc_sparse_pages(struct rpc_rqst *rqst)
+>> +{
+>> +       struct xdr_buf *xb =3D &rqst->rq_rcv_buf;
+>> +       struct page **ppages;
+>> +       int len;
+>> +
+>> +       len =3D xb->page_len;
+>> +       ppages =3D xb->pages + xdr_buf_pagecount(xb);
+>> +       while (len > 0) {
+>> +               if (!*ppages)
+>> +                       *ppages =3D alloc_page(GFP_NOWAIT | =
+__GFP_NOWARN);
+>> +               if (!*ppages)
+>> +                       return -ENOBUFS;
+>> +               ppages++;
+>> +               len -=3D PAGE_SIZE;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> /* Split @vec on page boundaries into SGEs. FMR registers pages, not
+>>  * a byte range. Other modes coalesce these SGEs into a single MR
+>>  * when they can.
+>> @@ -233,15 +259,6 @@ rpcrdma_convert_iovs(struct rpcrdma_xprt =
+*r_xprt, struct xdr_buf *xdrbuf,
+>>        ppages =3D xdrbuf->pages + (xdrbuf->page_base >> PAGE_SHIFT);
+>>        page_base =3D offset_in_page(xdrbuf->page_base);
+>>        while (len) {
+>> -               /* ACL likes to be lazy in allocating pages - ACLs
+>> -                * are small by default but can get huge.
+>> -                */
+>> -               if (unlikely(xdrbuf->flags & XDRBUF_SPARSE_PAGES)) {
+>> -                       if (!*ppages)
+>> -                               *ppages =3D alloc_page(GFP_NOWAIT | =
+__GFP_NOWARN);
+>> -                       if (!*ppages)
+>> -                               return -ENOBUFS;
+>> -               }
+>>                seg->mr_page =3D *ppages;
+>>                seg->mr_offset =3D (char *)page_base;
+>>                seg->mr_len =3D min_t(u32, PAGE_SIZE - page_base, =
+len);
+>> @@ -867,6 +884,12 @@ rpcrdma_marshal_req(struct rpcrdma_xprt *r_xprt, =
+struct rpc_rqst *rqst)
+>>        __be32 *p;
+>>        int ret;
+>>=20
+>> +       if (unlikely(rqst->rq_rcv_buf.flags & XDRBUF_SPARSE_PAGES)) {
+>> +               ret =3D rpcrdma_alloc_sparse_pages(rqst);
+>> +               if (ret)
+>> +                       return ret;
+>> +       }
+>> +
+>>        rpcrdma_set_xdrlen(&req->rl_hdrbuf, 0);
+>>        xdr_init_encode(xdr, &req->rl_hdrbuf, =
+rdmab_data(req->rl_rdmabuf),
+>>                        rqst);
+
+--
+Chuck Lever
+
+
+
