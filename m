@@ -2,29 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2542B2D44B9
+	by mail.lfdr.de (Postfix) with ESMTP id 920A32D44BA
 	for <lists+linux-nfs@lfdr.de>; Wed,  9 Dec 2020 15:49:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733077AbgLIOt3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S1733104AbgLIOt3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Wed, 9 Dec 2020 09:49:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50664 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:50670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733104AbgLIOt3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        id S1733105AbgLIOt3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
         Wed, 9 Dec 2020 09:49:29 -0500
 From:   trondmy@kernel.org
 Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 06/16] SUNRPC: Clean up open coded setting of the xdr_stream 'nwords' field
-Date:   Wed,  9 Dec 2020 09:47:51 -0500
-Message-Id: <20201209144801.700778-7-trondmy@kernel.org>
+Subject: [PATCH 07/16] SUNRPC: Cleanup - constify a number of xdr_buf helpers
+Date:   Wed,  9 Dec 2020 09:47:52 -0500
+Message-Id: <20201209144801.700778-8-trondmy@kernel.org>
 X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201209144801.700778-6-trondmy@kernel.org>
+In-Reply-To: <20201209144801.700778-7-trondmy@kernel.org>
 References: <20201209144801.700778-1-trondmy@kernel.org>
  <20201209144801.700778-2-trondmy@kernel.org>
  <20201209144801.700778-3-trondmy@kernel.org>
  <20201209144801.700778-4-trondmy@kernel.org>
  <20201209144801.700778-5-trondmy@kernel.org>
  <20201209144801.700778-6-trondmy@kernel.org>
+ <20201209144801.700778-7-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -33,130 +34,228 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Move the setting of the xdr_stream 'nwords' field into the helpers that
-reset the xdr_stream cursor.
+There are a number of xdr helpers for struct xdr_buf that do not change
+the structure itself. Mark those as taking const pointers for
+documentation purposes.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- net/sunrpc/xdr.c | 29 ++++++++++++++++-------------
- 1 file changed, 16 insertions(+), 13 deletions(-)
+ include/linux/sunrpc/xdr.h | 22 ++++++++--------
+ net/sunrpc/xdr.c           | 53 +++++++++++++++++---------------------
+ 2 files changed, 35 insertions(+), 40 deletions(-)
 
+diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+index 178f499e2283..68d49fdc4ee9 100644
+--- a/include/linux/sunrpc/xdr.h
++++ b/include/linux/sunrpc/xdr.h
+@@ -128,8 +128,8 @@ __be32 *xdr_decode_netobj(__be32 *p, struct xdr_netobj *);
+ 
+ void	xdr_inline_pages(struct xdr_buf *, unsigned int,
+ 			 struct page **, unsigned int, unsigned int);
+-void	xdr_terminate_string(struct xdr_buf *, const u32);
+-size_t	xdr_buf_pagecount(struct xdr_buf *buf);
++void	xdr_terminate_string(const struct xdr_buf *, const u32);
++size_t	xdr_buf_pagecount(const struct xdr_buf *buf);
+ int	xdr_alloc_bvec(struct xdr_buf *buf, gfp_t gfp);
+ void	xdr_free_bvec(struct xdr_buf *buf);
+ 
+@@ -182,14 +182,14 @@ xdr_adjust_iovec(struct kvec *iov, __be32 *p)
+  * XDR buffer helper functions
+  */
+ extern void xdr_shift_buf(struct xdr_buf *, size_t);
+-extern void xdr_buf_from_iov(struct kvec *, struct xdr_buf *);
+-extern int xdr_buf_subsegment(struct xdr_buf *, struct xdr_buf *, unsigned int, unsigned int);
++extern void xdr_buf_from_iov(const struct kvec *, struct xdr_buf *);
++extern int xdr_buf_subsegment(const struct xdr_buf *, struct xdr_buf *, unsigned int, unsigned int);
+ extern void xdr_buf_trim(struct xdr_buf *, unsigned int);
+-extern int read_bytes_from_xdr_buf(struct xdr_buf *, unsigned int, void *, unsigned int);
+-extern int write_bytes_to_xdr_buf(struct xdr_buf *, unsigned int, void *, unsigned int);
++extern int read_bytes_from_xdr_buf(const struct xdr_buf *, unsigned int, void *, unsigned int);
++extern int write_bytes_to_xdr_buf(const struct xdr_buf *, unsigned int, void *, unsigned int);
+ 
+-extern int xdr_encode_word(struct xdr_buf *, unsigned int, u32);
+-extern int xdr_decode_word(struct xdr_buf *, unsigned int, u32 *);
++extern int xdr_encode_word(const struct xdr_buf *, unsigned int, u32);
++extern int xdr_decode_word(const struct xdr_buf *, unsigned int, u32 *);
+ 
+ struct xdr_array2_desc;
+ typedef int (*xdr_xcode_elem_t)(struct xdr_array2_desc *desc, void *elem);
+@@ -200,9 +200,9 @@ struct xdr_array2_desc {
+ 	xdr_xcode_elem_t xcode;
+ };
+ 
+-extern int xdr_decode_array2(struct xdr_buf *buf, unsigned int base,
++extern int xdr_decode_array2(const struct xdr_buf *buf, unsigned int base,
+ 			     struct xdr_array2_desc *desc);
+-extern int xdr_encode_array2(struct xdr_buf *buf, unsigned int base,
++extern int xdr_encode_array2(const struct xdr_buf *buf, unsigned int base,
+ 			     struct xdr_array2_desc *desc);
+ extern void _copy_from_pages(char *p, struct page **pages, size_t pgbase,
+ 			     size_t len);
+@@ -251,7 +251,7 @@ extern void xdr_set_scratch_buffer(struct xdr_stream *xdr, void *buf, size_t buf
+ extern __be32 *xdr_inline_decode(struct xdr_stream *xdr, size_t nbytes);
+ extern unsigned int xdr_read_pages(struct xdr_stream *xdr, unsigned int len);
+ extern void xdr_enter_page(struct xdr_stream *xdr, unsigned int len);
+-extern int xdr_process_buf(struct xdr_buf *buf, unsigned int offset, unsigned int len, int (*actor)(struct scatterlist *, void *), void *data);
++extern int xdr_process_buf(const struct xdr_buf *buf, unsigned int offset, unsigned int len, int (*actor)(struct scatterlist *, void *), void *data);
+ extern unsigned int xdr_align_data(struct xdr_stream *, unsigned int offset, unsigned int length);
+ extern unsigned int xdr_expand_hole(struct xdr_stream *, unsigned int offset, unsigned int length);
+ 
 diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-index 196a06d32312..78232204e6da 100644
+index 78232204e6da..7ca6208e7623 100644
 --- a/net/sunrpc/xdr.c
 +++ b/net/sunrpc/xdr.c
-@@ -1147,6 +1147,15 @@ static unsigned int xdr_set_iov(struct xdr_stream *xdr, struct kvec *iov,
- 	return len - base;
- }
- 
-+static unsigned int xdr_set_tail_base(struct xdr_stream *xdr,
-+				      unsigned int base, unsigned int len)
-+{
-+	struct xdr_buf *buf = xdr->buf;
-+
-+	xdr_stream_set_pos(xdr, base + buf->page_len + buf->head->iov_len);
-+	return xdr_set_iov(xdr, buf->tail, base, len);
-+}
-+
- static unsigned int xdr_set_page_base(struct xdr_stream *xdr,
- 				      unsigned int base, unsigned int len)
+@@ -123,8 +123,7 @@ EXPORT_SYMBOL_GPL(xdr_decode_string_inplace);
+  * @len: length of string, in bytes
+  *
+  */
+-void
+-xdr_terminate_string(struct xdr_buf *buf, const u32 len)
++void xdr_terminate_string(const struct xdr_buf *buf, const u32 len)
  {
-@@ -1165,6 +1174,7 @@ static unsigned int xdr_set_page_base(struct xdr_stream *xdr,
- 	if (len > maxlen)
- 		len = maxlen;
+ 	char *kaddr;
  
-+	xdr_stream_page_set_pos(xdr, base);
- 	base += xdr->buf->page_base;
+@@ -134,8 +133,7 @@ xdr_terminate_string(struct xdr_buf *buf, const u32 len)
+ }
+ EXPORT_SYMBOL_GPL(xdr_terminate_string);
  
- 	pgnr = base >> PAGE_SHIFT;
-@@ -1187,7 +1197,7 @@ static void xdr_set_page(struct xdr_stream *xdr, unsigned int base,
+-size_t
+-xdr_buf_pagecount(struct xdr_buf *buf)
++size_t xdr_buf_pagecount(const struct xdr_buf *buf)
  {
- 	if (xdr_set_page_base(xdr, base, len) == 0) {
- 		base -= xdr->buf->page_len;
--		xdr_set_iov(xdr, xdr->buf->tail, base, len);
-+		xdr_set_tail_base(xdr, base, len);
- 	}
- }
- 
-@@ -1200,7 +1210,7 @@ static void xdr_set_next_page(struct xdr_stream *xdr)
- 	if (newbase < xdr->buf->page_len)
- 		xdr_set_page_base(xdr, newbase, xdr_stream_remaining(xdr));
- 	else
--		xdr_set_iov(xdr, xdr->buf->tail, 0, xdr_stream_remaining(xdr));
-+		xdr_set_tail_base(xdr, 0, xdr_stream_remaining(xdr));
- }
- 
- static bool xdr_set_next_buffer(struct xdr_stream *xdr)
-@@ -1352,7 +1362,7 @@ static void xdr_realign_pages(struct xdr_stream *xdr)
- 	if (iov->iov_len > cur) {
- 		copied = xdr_shrink_bufhead(buf, cur);
- 		trace_rpc_xdr_alignment(xdr, cur, copied);
--		xdr->nwords = XDR_QUADLEN(buf->len - cur);
-+		xdr_set_page(xdr, 0, buf->page_len);
- 	}
- }
- 
-@@ -1360,7 +1370,6 @@ static unsigned int xdr_align_pages(struct xdr_stream *xdr, unsigned int len)
- {
- 	struct xdr_buf *buf = xdr->buf;
- 	unsigned int nwords = XDR_QUADLEN(len);
--	unsigned int cur = xdr_stream_pos(xdr);
- 	unsigned int copied;
- 
- 	if (xdr->nwords == 0)
-@@ -1377,7 +1386,6 @@ static unsigned int xdr_align_pages(struct xdr_stream *xdr, unsigned int len)
- 		/* Truncate page data and move it into the tail */
- 		copied = xdr_shrink_pagelen(buf, len);
- 		trace_rpc_xdr_alignment(xdr, len, copied);
--		xdr->nwords = XDR_QUADLEN(buf->len - cur);
- 	}
- 	return len;
- }
-@@ -1403,12 +1411,10 @@ unsigned int xdr_read_pages(struct xdr_stream *xdr, unsigned int len)
- 	if (pglen == 0)
+ 	if (!buf->page_len)
  		return 0;
+@@ -1504,8 +1502,7 @@ EXPORT_SYMBOL_GPL(xdr_enter_page);
  
--	xdr->nwords -= nwords;
- 	base = (nwords << 2) - pglen;
- 	end = xdr_stream_remaining(xdr) - pglen;
+ static const struct kvec empty_iov = {.iov_base = NULL, .iov_len = 0};
  
--	if (xdr_set_iov(xdr, xdr->buf->tail, base, end) == 0)
--		xdr->nwords = 0;
-+	xdr_set_tail_base(xdr, base, end);
- 	return len <= pglen ? len : pglen;
+-void
+-xdr_buf_from_iov(struct kvec *iov, struct xdr_buf *buf)
++void xdr_buf_from_iov(const struct kvec *iov, struct xdr_buf *buf)
+ {
+ 	buf->head[0] = *iov;
+ 	buf->tail[0] = empty_iov;
+@@ -1528,9 +1525,8 @@ EXPORT_SYMBOL_GPL(xdr_buf_from_iov);
+  *
+  * Returns -1 if base of length are out of bounds.
+  */
+-int
+-xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
+-			unsigned int base, unsigned int len)
++int xdr_buf_subsegment(const struct xdr_buf *buf, struct xdr_buf *subbuf,
++		       unsigned int base, unsigned int len)
+ {
+ 	subbuf->buflen = subbuf->len = len;
+ 	if (base < buf->head[0].iov_len) {
+@@ -1618,7 +1614,8 @@ void xdr_buf_trim(struct xdr_buf *buf, unsigned int len)
  }
- EXPORT_SYMBOL_GPL(xdr_read_pages);
-@@ -1438,15 +1444,13 @@ unsigned int xdr_align_data(struct xdr_stream *xdr, unsigned int offset,
- 	/* Move page data to the left */
- 	shift = from - offset;
- 	xdr_buf_pages_shift_left(buf, from, shift);
--	xdr->buf->len -= shift;
--	xdr->nwords -= XDR_QUADLEN(shift);
+ EXPORT_SYMBOL_GPL(xdr_buf_trim);
  
- 	bytes = xdr_stream_remaining(xdr);
- 	if (length > bytes)
- 		length = bytes;
- 	bytes -= length;
+-static void __read_bytes_from_xdr_buf(struct xdr_buf *subbuf, void *obj, unsigned int len)
++static void __read_bytes_from_xdr_buf(const struct xdr_buf *subbuf,
++				      void *obj, unsigned int len)
+ {
+ 	unsigned int this_len;
  
--	xdr->nwords -= XDR_QUADLEN(length);
-+	xdr->buf->len -= shift;
- 	xdr_set_page(xdr, offset + length, bytes);
- 	return length;
+@@ -1635,7 +1632,8 @@ static void __read_bytes_from_xdr_buf(struct xdr_buf *subbuf, void *obj, unsigne
  }
-@@ -1467,12 +1471,11 @@ unsigned int xdr_expand_hole(struct xdr_stream *xdr, unsigned int offset,
- 		shift = to - from;
- 		xdr_buf_try_expand(buf, shift);
- 		xdr_buf_pages_shift_right(buf, from, shift);
--		xdr_stream_page_set_pos(xdr, to);
-+		xdr_set_page(xdr, to, xdr_stream_remaining(xdr));
- 	} else if (to != from)
- 		xdr_align_data(xdr, to, 0);
- 	xdr_buf_pages_zero(buf, offset, length);
  
--	xdr_set_page(xdr, to, xdr_stream_remaining(xdr));
- 	return length;
+ /* obj is assumed to point to allocated memory of size at least len: */
+-int read_bytes_from_xdr_buf(struct xdr_buf *buf, unsigned int base, void *obj, unsigned int len)
++int read_bytes_from_xdr_buf(const struct xdr_buf *buf, unsigned int base,
++			    void *obj, unsigned int len)
+ {
+ 	struct xdr_buf subbuf;
+ 	int status;
+@@ -1648,7 +1646,8 @@ int read_bytes_from_xdr_buf(struct xdr_buf *buf, unsigned int base, void *obj, u
  }
- EXPORT_SYMBOL_GPL(xdr_expand_hole);
+ EXPORT_SYMBOL_GPL(read_bytes_from_xdr_buf);
+ 
+-static void __write_bytes_to_xdr_buf(struct xdr_buf *subbuf, void *obj, unsigned int len)
++static void __write_bytes_to_xdr_buf(const struct xdr_buf *subbuf,
++				     void *obj, unsigned int len)
+ {
+ 	unsigned int this_len;
+ 
+@@ -1665,7 +1664,8 @@ static void __write_bytes_to_xdr_buf(struct xdr_buf *subbuf, void *obj, unsigned
+ }
+ 
+ /* obj is assumed to point to allocated memory of size at least len: */
+-int write_bytes_to_xdr_buf(struct xdr_buf *buf, unsigned int base, void *obj, unsigned int len)
++int write_bytes_to_xdr_buf(const struct xdr_buf *buf, unsigned int base,
++			   void *obj, unsigned int len)
+ {
+ 	struct xdr_buf subbuf;
+ 	int status;
+@@ -1678,8 +1678,7 @@ int write_bytes_to_xdr_buf(struct xdr_buf *buf, unsigned int base, void *obj, un
+ }
+ EXPORT_SYMBOL_GPL(write_bytes_to_xdr_buf);
+ 
+-int
+-xdr_decode_word(struct xdr_buf *buf, unsigned int base, u32 *obj)
++int xdr_decode_word(const struct xdr_buf *buf, unsigned int base, u32 *obj)
+ {
+ 	__be32	raw;
+ 	int	status;
+@@ -1692,8 +1691,7 @@ xdr_decode_word(struct xdr_buf *buf, unsigned int base, u32 *obj)
+ }
+ EXPORT_SYMBOL_GPL(xdr_decode_word);
+ 
+-int
+-xdr_encode_word(struct xdr_buf *buf, unsigned int base, u32 obj)
++int xdr_encode_word(const struct xdr_buf *buf, unsigned int base, u32 obj)
+ {
+ 	__be32	raw = cpu_to_be32(obj);
+ 
+@@ -1702,9 +1700,8 @@ xdr_encode_word(struct xdr_buf *buf, unsigned int base, u32 obj)
+ EXPORT_SYMBOL_GPL(xdr_encode_word);
+ 
+ /* Returns 0 on success, or else a negative error code. */
+-static int
+-xdr_xcode_array2(struct xdr_buf *buf, unsigned int base,
+-		 struct xdr_array2_desc *desc, int encode)
++static int xdr_xcode_array2(const struct xdr_buf *buf, unsigned int base,
++			    struct xdr_array2_desc *desc, int encode)
+ {
+ 	char *elem = NULL, *c;
+ 	unsigned int copied = 0, todo, avail_here;
+@@ -1896,9 +1893,8 @@ xdr_xcode_array2(struct xdr_buf *buf, unsigned int base,
+ 	return err;
+ }
+ 
+-int
+-xdr_decode_array2(struct xdr_buf *buf, unsigned int base,
+-		  struct xdr_array2_desc *desc)
++int xdr_decode_array2(const struct xdr_buf *buf, unsigned int base,
++		      struct xdr_array2_desc *desc)
+ {
+ 	if (base >= buf->len)
+ 		return -EINVAL;
+@@ -1907,9 +1903,8 @@ xdr_decode_array2(struct xdr_buf *buf, unsigned int base,
+ }
+ EXPORT_SYMBOL_GPL(xdr_decode_array2);
+ 
+-int
+-xdr_encode_array2(struct xdr_buf *buf, unsigned int base,
+-		  struct xdr_array2_desc *desc)
++int xdr_encode_array2(const struct xdr_buf *buf, unsigned int base,
++		      struct xdr_array2_desc *desc)
+ {
+ 	if ((unsigned long) base + 4 + desc->array_len * desc->elem_size >
+ 	    buf->head->iov_len + buf->page_len + buf->tail->iov_len)
+@@ -1919,9 +1914,9 @@ xdr_encode_array2(struct xdr_buf *buf, unsigned int base,
+ }
+ EXPORT_SYMBOL_GPL(xdr_encode_array2);
+ 
+-int
+-xdr_process_buf(struct xdr_buf *buf, unsigned int offset, unsigned int len,
+-		int (*actor)(struct scatterlist *, void *), void *data)
++int xdr_process_buf(const struct xdr_buf *buf, unsigned int offset,
++		    unsigned int len,
++		    int (*actor)(struct scatterlist *, void *), void *data)
+ {
+ 	int i, ret = 0;
+ 	unsigned int page_len, thislen, page_offset;
 -- 
 2.29.2
 
