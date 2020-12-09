@@ -2,213 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB31F2D475E
+	by mail.lfdr.de (Postfix) with ESMTP id 01E8D2D475C
 	for <lists+linux-nfs@lfdr.de>; Wed,  9 Dec 2020 18:01:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730070AbgLIRBY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Dec 2020 12:01:24 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:38574 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727389AbgLIRBY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Dec 2020 12:01:24 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B9Gtrmx190345;
-        Wed, 9 Dec 2020 17:00:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=RsuTagCai+js7c0deMOd+FwfyMS2OZlX6rRO1IpyS74=;
- b=tMsK7atzsdPvLZRhX+nnqgq7O1IZiJ6l265so1eRAjL/53JPBneuVGWvhUBLbxb7vhJw
- pVbEdlv4ow208Th5tUByjrcdVAjJANs5Uz/9O2wFOZd7pvrFv8MuDr0jk8kqMRF9gB4z
- PTNKDBeMsYrWIejQZmoY9Zl1Y5Okiy1/qoEq5TJLi9LFaMvIgB+362R24ZBtD0IbIUUx
- ijhnVDz9+r66BD6xwoj5Tba4Kt/ZG6lMqf1HiW7y9qg9T/qmri3CkI0XQdkrA22NpJtE
- uXMrGCFeSLlnlD/ve2Wtz/gq711iLXlxYqpZOFB8Gwd/l+8KS3IeAmynzS7wLXB5xpxZ Pg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 357yqc1br1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 09 Dec 2020 17:00:39 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B9GuiY2063639;
-        Wed, 9 Dec 2020 16:58:38 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 358kyuyeem-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Dec 2020 16:58:38 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B9GwbvD025311;
-        Wed, 9 Dec 2020 16:58:37 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 09 Dec 2020 08:58:37 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH v5] xprtrdma: Fix XDRBUF_SPARSE_PAGES support
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CAN-5tyGPzJUSSb3SGixo0L+CcFV=A12Er5+R=egc3orA9rz8Aw@mail.gmail.com>
-Date:   Wed, 9 Dec 2020 11:58:36 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E59C0E34-2172-4DBE-AD51-E57129FAE9E1@oracle.com>
-References: <160746979784.1926.1490061321200284214.stgit@manet.1015granger.net>
- <CAN-5tyGPzJUSSb3SGixo0L+CcFV=A12Er5+R=egc3orA9rz8Aw@mail.gmail.com>
-To:     Olga Kornievskaia <aglo@umich.edu>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9829 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 mlxscore=0
- malwarescore=0 suspectscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012090119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9829 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
- clxscore=1015 malwarescore=0 bulkscore=0 phishscore=0 adultscore=0
- spamscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012090119
+        id S1730407AbgLIRAS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Dec 2020 12:00:18 -0500
+Received: from mail-dm6nam12on2101.outbound.protection.outlook.com ([40.107.243.101]:40646
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732200AbgLIRAO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 9 Dec 2020 12:00:14 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SzoBp+3I0pewT6W+iG8nsjc3Yb90abozYCxM1xArnTYUUrWRuHVehSZww8DdMVzQ8k+wn43qtvMYBsTjBJNXCkK+xzvlHB4xoc5J6Tay2MJNzx0CWTEsUPkKBiwixv5aEA2/z0HO2fuyZPOeb76x6yTq98Xeiaoli+MiUCkE21KqnzaBKb79pAwn+c8xqyQMIq5uRxe8UBnSdQflsMdElkybES+s80ejbD3o/qdDxkYbliliw6Lx37qtwf4dtxGxE2wYzma6QLYXhkXt/RBqrXzoNJpiJrqP4V1LbI6L3XvyWbKJY2hAwfBVO3lU8Ex/28NMPQ3PmkwK0uRq43xL9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aDWGQCRC5hmWPSlPUUoSg7yfTedvUvEKxzZbMW6DrLU=;
+ b=crw2iqUME0kwWqMSeA606X6k/PQlBMxQTXt0FBMr0a/ENp7pEl75fnJ+iJY24HvR68SWrcs1ljfmU0yZLmx5DuqKc7tWieQIaYjiVeLInNQ5X4ASS1zu3qWGhXrijqIj5zXtsmmxO6c0qimxeGjc/sOyjk1HKY/M6rlH7qL+voWBLwjhrSLxH8KWacsIDqeKIRBUOAmi84L8sUiqvgCx47Q8+oSF7bb1NbliGl8SPkp2JbZ53STLjIMcXbX53NfR3rezv4AKSVgflJk2GRSIvOBMdjgyDCu2ygJSIMYRtasIWGMc0WLSuKWeH+4jMywYgretqwz9C/lCMipGxwdaFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aDWGQCRC5hmWPSlPUUoSg7yfTedvUvEKxzZbMW6DrLU=;
+ b=axou16eX5KhmtxsJMv4C7mY1zno5K14MCLAeo9lpQgjOIwjm530ovRWSwIbOVUeHU52Hbg9g7b8TK+U/3tOwLtSyl3B1s4KuflwDpSFx8j9QbwEmS+y8CcBQHn6mWCHPBTYlYK6p6JVfqUnDZEcqi0vbCunk3qpe5W6a2qQevAQ=
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com (2603:10b6:208:263::11)
+ by MN2PR13MB3359.namprd13.prod.outlook.com (2603:10b6:208:16c::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3654.7; Wed, 9 Dec
+ 2020 16:59:17 +0000
+Received: from MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210]) by MN2PR13MB3957.namprd13.prod.outlook.com
+ ([fe80::e989:f666:131a:e210%9]) with mapi id 15.20.3654.009; Wed, 9 Dec 2020
+ 16:59:17 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "tigran.mkrtchyan@desy.de" <tigran.mkrtchyan@desy.de>,
+        "aglo@umich.edu" <aglo@umich.edu>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
+        "schumaker.anna@gmail.com" <schumaker.anna@gmail.com>
+Subject: Re: [PATCH 0/3] NFS: Disable READ_PLUS by default
+Thread-Topic: [PATCH 0/3] NFS: Disable READ_PLUS by default
+Thread-Index: AQHWybGmaIjlThqGT0GKib773fRGxannFjQAgABGpgCAB6kDAA==
+Date:   Wed, 9 Dec 2020 16:59:17 +0000
+Message-ID: <14eac8ec352c76206c811f75b130957bb75ff590.camel@hammerspace.com>
+References: <20201203201841.103294-1-Anna.Schumaker@Netapp.com>
+         <852166252.2305208.1607096860375.JavaMail.zimbra@desy.de>
+         <CAN-5tyFJeLRyDUdtGkheGkmDE=i-FJprLFiav_mEPA35QeKLQA@mail.gmail.com>
+In-Reply-To: <CAN-5tyFJeLRyDUdtGkheGkmDE=i-FJprLFiav_mEPA35QeKLQA@mail.gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: desy.de; dkim=none (message not signed)
+ header.d=none;desy.de; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0f6792f7-5c26-4fba-435a-08d89c63c3e6
+x-ms-traffictypediagnostic: MN2PR13MB3359:
+x-microsoft-antispam-prvs: <MN2PR13MB3359C92D879F5FE676402DD0B8CC0@MN2PR13MB3359.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: i9siXWd5AbstMEGy6ap7+e+LUliLUUiYM3N6oCDNZsjIxegZnG7TrF3SJKFM/SBWqDhTRxPm2i1CW9wKWy6ammuvE4HHJxrl98I2wfpYUUh7Hae71OlvIR00VZbpcQ2Jpaw5gZPy4z81dXPiQEBoUoXc0eyIQVBU6loSoQ0lvjvn8eOz76g6GJqg2HoVWXEUaxXu4A0dqaC6xp98le7ZToRuKRFTDaSUWL8iIChubA6lD0l8RxWltk0Hv5r66KsCwKz6RJs3MeqW+pMgvvRMu80nUirGC8eo+M9XMXJQ87QAogi3f/BXnT/D1zjvHHicunsEVcz8rFnv6z6faDGZPw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR13MB3957.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(366004)(376002)(346002)(66946007)(186003)(64756008)(66556008)(66476007)(76116006)(26005)(8676002)(6512007)(91956017)(6486002)(6506007)(2906002)(8936002)(4744005)(2616005)(86362001)(36756003)(110136005)(54906003)(508600001)(66446008)(5660300002)(4326008)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?WWEzWUluTVVlU05JS1NrajFwem9vQ05Ta2VudkJrRDNRMzc3OFkzSUhicUlK?=
+ =?utf-8?B?ckVWYTZtVjZQcXlGa3lIU3hoTmxLRjZSZytoUDJHeVRoSEhBSS9sMlJxdzlE?=
+ =?utf-8?B?eXJRZHVQeDFZRXc5bGMyYld6N09GWnYzQUE2R2lzQ0hhV2hyYmlBVHM1bS9j?=
+ =?utf-8?B?UXFUTkM5eXpSaFNaYVVGV1pJeVpaQ0I5aEZCcVcxV0pUSU1vMDd2dU5Ca24r?=
+ =?utf-8?B?UE93ek1NckgrTHpJalB2MWVTNGtNUS9uT05nYXRqM3hDTkZzanBKK3JJQXdx?=
+ =?utf-8?B?RWlnU2tONUwvM1U3b0V0dTRaeWRrUm90cmxLdUs1QzY2NG9nZ0kzaTgzOHRV?=
+ =?utf-8?B?bDA5a2RWUy8xN04weHJyYmFlU0RtWEphODJGL24xNUY3YUl0V1JhSXNhS3Zh?=
+ =?utf-8?B?N1p4c1l6NUk4UVVmOHFIcHpBU1ZEc25rT2twTitUTlE0WE1sQWRSTGFnVUpQ?=
+ =?utf-8?B?QmUxYTlwdmJOTzYwZFQrWldWcmNpdDljblJMY29PU2ZTV0pLYXo5VDJKeFU5?=
+ =?utf-8?B?eWtZWkV4eHVTZnFUeGZOL3U5SUVaL1RqaWVzRElHdTdaTFN3RTRHaVArQVdj?=
+ =?utf-8?B?SHdFemVmMXE2dmZrUkozMW1ZMGp1bVR6LzlKUngxUGp4bGVpN0xlYkpTTjdS?=
+ =?utf-8?B?V202WkJNVW0vcDRzRmMyZVNSMVJkSFNXNTJvZTk5cGJBMDh3RFhtRjFvNmsv?=
+ =?utf-8?B?TllBVm9VL2pwM1F0OTBNTGZNaWkvZ2p4ZGtEN0lnNGd6WkRWUWZxK25mZ1RZ?=
+ =?utf-8?B?SDBWckU4cDBXTTAxdHVUbTBRYXl3WmwzdEUxajVPbm9CSlpsdndQRDdTWVVs?=
+ =?utf-8?B?M1ZzYnFQbE1HTDllZWMvL0RySHdBbnFINDJqQmE3dlJLODFQQTBRM094UElm?=
+ =?utf-8?B?MnRkd09mSldha1c3NEVBdkhPc2lISGpqNVZFTVY0aDBTNms0VVpEdjJvM3By?=
+ =?utf-8?B?VjdpOVZKQmw2enhBUXFKaWFFV05NdW5RZmlSY1E5ekNKSExxTUEzb1pIUEFq?=
+ =?utf-8?B?dmI4SGpWYmRGNWtKbUdSYmVpTzN6aWtxQjBwbTFiT2xhanFjTmVTeWpWREw4?=
+ =?utf-8?B?WEl2cGc0cEdEbHFHRWF5R3FhNXAvNHJtRTNzUWoxZk4wT0RBM1cvTHNneE0r?=
+ =?utf-8?B?c3hHU2lzMldJK2N4cTJTREE5YkRWc1VjR0wwNDY1NkIrclY3WUlTOGRuKzQ1?=
+ =?utf-8?B?M2QwVXhickxTamR6TDhvUFl5TE8rTkJ0UlBrTkU0a0pWTUF6VVkvWndIMFV0?=
+ =?utf-8?B?Sll1TXNZM2ZBOGxCMEV2b29DUklCMmhhLzUvUDNuK0pKVzhOMW03TldBbW1V?=
+ =?utf-8?Q?TpOW/ykyPcS3UG3GcEA0tx2V80sIxgu+R3?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <24700B1E18C5ED4FAEB47B4B0D10AEC6@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR13MB3957.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f6792f7-5c26-4fba-435a-08d89c63c3e6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2020 16:59:17.3794
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HPpyqAJ4kooL8p7sUR7wBlI92x4LENh0lThLvwtmKq+7eJYDAB4J1lfrg+YChnKKAXdYs4KvoVA8PHC4CiYUIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3359
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On Dec 9, 2020, at 11:47 AM, Olga Kornievskaia <aglo@umich.edu> wrote:
->=20
-> On Tue, Dec 8, 2020 at 6:31 PM Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>=20
->> Olga K. observed that rpcrdma_marsh_req() allocates sparse pages
->> only when it has determined that a Reply chunk is necessary. There
->> are plenty of cases where no Reply chunk is needed, but the
->> XDRBUF_SPARSE_PAGES flag is set. The result would be a crash in
->> rpcrdma_inline_fixup() when it tries to copy parts of the received
->> Reply into a missing page.
->>=20
->> To avoid crashing, handle sparse page allocation up front.
->>=20
->> Until XATTR support was added, this issue did not appear often
->> because the only SPARSE_PAGES consumer always expected a reply large
->> enough to always require a Reply chunk.
->>=20
->> Reported-by: Olga Kornievskaia <kolga@netapp.com>
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->> Cc: <stable@vger.kernel.org>
->> ---
->> net/sunrpc/xprtrdma/rpc_rdma.c |   40 =
-+++++++++++++++++++++++++++++++---------
->> 1 file changed, 31 insertions(+), 9 deletions(-)
->>=20
->> Hi-
->>=20
->> v4 had a bug, which I've fixed. This version has been tested.
->=20
-> This version on top of the same commit  (rc4) passes generic/013
-> without oopsing for me too.
-
-Excellent, thanks for confirming!
-
-
->> In kernels before 5.10-rc5, there are still problems with the way
->> LISTXATTRS and GETXATTR deal with the tail / XDR pad for the page
->> content that this patch does not address. So backporting this fix
->> alone is not enough to get those working again -- more surgery would
->> be required.
->>=20
->> Since none of the other SPARSE_PAGES users have a problem, let's
->> leave this one on the cutting room floor. It's here in the mail
->> archive if anyone needs it.
->>=20
->>=20
->> Changes since v4:
->> - xdr_buf_pagecount() was simply the wrong thing to use.
->>=20
->> Changes since v3:
->> - I swear I am not drunk. I forgot to commit the change before =
-mailing it.
->>=20
->> Changes since v2:
->> - Actually fix the xdr_buf_pagecount() problem
->>=20
->> Changes since RFC:
->> - Ensure xdr_buf_pagecount() is defined in rpc_rdma.c
->> - noinline the sparse page allocator -- it's an uncommon path
->>=20
->> diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c =
-b/net/sunrpc/xprtrdma/rpc_rdma.c
->> index 0f5120c7668f..c48536f2121f 100644
->> --- a/net/sunrpc/xprtrdma/rpc_rdma.c
->> +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
->> @@ -179,6 +179,31 @@ rpcrdma_nonpayload_inline(const struct =
-rpcrdma_xprt *r_xprt,
->>                r_xprt->rx_ep->re_max_inline_recv;
->> }
->>=20
->> +/* ACL likes to be lazy in allocating pages. For TCP, these
->> + * pages can be allocated during receive processing. Not true
->> + * for RDMA, which must always provision receive buffers
->> + * up front.
->> + */
->> +static noinline int
->> +rpcrdma_alloc_sparse_pages(struct xdr_buf *buf)
->> +{
->> +       struct page **ppages;
->> +       int len;
->> +
->> +       len =3D buf->page_len;
->> +       ppages =3D buf->pages + (buf->page_base >> PAGE_SHIFT);
->> +       while (len > 0) {
->> +               if (!*ppages)
->> +                       *ppages =3D alloc_page(GFP_NOWAIT | =
-__GFP_NOWARN);
->> +               if (!*ppages)
->> +                       return -ENOBUFS;
->> +               ppages++;
->> +               len -=3D PAGE_SIZE;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> /* Split @vec on page boundaries into SGEs. FMR registers pages, not
->>  * a byte range. Other modes coalesce these SGEs into a single MR
->>  * when they can.
->> @@ -233,15 +258,6 @@ rpcrdma_convert_iovs(struct rpcrdma_xprt =
-*r_xprt, struct xdr_buf *xdrbuf,
->>        ppages =3D xdrbuf->pages + (xdrbuf->page_base >> PAGE_SHIFT);
->>        page_base =3D offset_in_page(xdrbuf->page_base);
->>        while (len) {
->> -               /* ACL likes to be lazy in allocating pages - ACLs
->> -                * are small by default but can get huge.
->> -                */
->> -               if (unlikely(xdrbuf->flags & XDRBUF_SPARSE_PAGES)) {
->> -                       if (!*ppages)
->> -                               *ppages =3D alloc_page(GFP_NOWAIT | =
-__GFP_NOWARN);
->> -                       if (!*ppages)
->> -                               return -ENOBUFS;
->> -               }
->>                seg->mr_page =3D *ppages;
->>                seg->mr_offset =3D (char *)page_base;
->>                seg->mr_len =3D min_t(u32, PAGE_SIZE - page_base, =
-len);
->> @@ -867,6 +883,12 @@ rpcrdma_marshal_req(struct rpcrdma_xprt *r_xprt, =
-struct rpc_rqst *rqst)
->>        __be32 *p;
->>        int ret;
->>=20
->> +       if (unlikely(rqst->rq_rcv_buf.flags & XDRBUF_SPARSE_PAGES)) {
->> +               ret =3D =
-rpcrdma_alloc_sparse_pages(&rqst->rq_rcv_buf);
->> +               if (ret)
->> +                       return ret;
->> +       }
->> +
->>        rpcrdma_set_xdrlen(&req->rl_hdrbuf, 0);
->>        xdr_init_encode(xdr, &req->rl_hdrbuf, =
-rdmab_data(req->rl_rdmabuf),
->>                        rqst);
-
---
-Chuck Lever
-
-
-
+T24gRnJpLCAyMDIwLTEyLTA0IGF0IDE1OjAwIC0wNTAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
+ZToNCj4gSSBvYmplY3QgdG8gcHV0dGluZyB0aGUgZGlzYWJsZSBwYXRjaCBpbiwgSSB0aGluayB3
+ZSBuZWVkIHRvIGZpeCB0aGUNCj4gcHJvYmxlbS4NCg0KSSBjYW4ndCBzZWUgdGhlIHByb2JsZW0g
+aXMgZml4YWJsZSBpbiA1LjEwLiBUaGVyZSBhcmUgd2F5IHRvbyBtYW55DQpjaGFuZ2VzIHJlcXVp
+cmVkLCBhbmQgd2UncmUgaW4gdGhlIG1pZGRsZSBvZiB0aGUgd2VlayBvZiB0aGUgbGFzdCAtcmMN
+CmZvciA1LjEwLiBGdXJ0aGVybW9yZSwgdGhlcmUgYXJlIG5vIHJlZ3Jlc3Npb25zIGludHJvZHVj
+ZWQgYnkganVzdA0KZGlzYWJsaW5nIHRoZSBmdW5jdGlvbmFsaXR5LCBiZWNhdXNlIFJFQURfUExV
+UyBoYXMgb25seSBqdXN0IGJlZW4NCm1lcmdlZCBpbiB0aGlzIHJlbGVhc2UgY3ljbGUuDQoNCkkg
+dGhlcmVmb3JlIHN0cm9uZ2x5IHN1Z2dlc3Qgd2UganVzdCBzZW5kIFtQQVRDSCAxLzNdIE5GUzog
+RGlzYWJsZQ0KUkVBRF9QTFVTIGJ5IGRlZmF1bHQgYW5kIHRoZW4gZml4IHRoZSByZXN0IGluIDUu
+MTEuDQoNCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5l
+ciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
