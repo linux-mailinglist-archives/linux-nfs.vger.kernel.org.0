@@ -2,108 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64F932D91E5
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Dec 2020 03:56:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01B0F2D9BFB
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Dec 2020 17:10:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438068AbgLNCyn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 13 Dec 2020 21:54:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438109AbgLNCyi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 13 Dec 2020 21:54:38 -0500
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8526FC0617B0
-        for <linux-nfs@vger.kernel.org>; Sun, 13 Dec 2020 18:53:15 -0800 (PST)
-Received: by mail-pf1-x444.google.com with SMTP id 11so11139110pfu.4
-        for <linux-nfs@vger.kernel.org>; Sun, 13 Dec 2020 18:53:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NXvCHpzC4yHknkYUeuKH4ChAz6pAIcFQihq+5IBCqGs=;
-        b=Fddofxw8GEI7/ddW41jojqQlbr3awy3c+LUjmqsgXOgCU2mPSYisSbooN9UQ5+XovY
-         ltcvS+KRyuLoQImh7pI1I2alBShPFBH8Nn6NEqRAeZ8ZKd0SZBD7cDvs3ECeNhHf2Fnk
-         vI45LPU46Kzcz4bMBPws1Os8P04vvjvgIz9UI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NXvCHpzC4yHknkYUeuKH4ChAz6pAIcFQihq+5IBCqGs=;
-        b=R5+pMZeQGE4M1ysS6TVQhqpJen6S+u/dJHLyKYxW/zbpIfiYjc5uLKudVjSX96T+cZ
-         o0Ge8fo41+xmwmjn+BTfViuQ01Vy2MLYgxDV1YQ+NnZDfYWUmxPJZup2CpYzWB2nDMIY
-         ivqiZSjIgXI44rPChuDrKJRCqQvFrrE1jdzdOg+zEe8NhP0IlhrYHZz+Qe659ujEYhwr
-         ymLYczTl6BiN1QDIph67qDybbJkptGq3idXW+RVgEOVMgLtDx+pICRr9hNvXm8TfeaJL
-         Da5748+Ni6n176mC4O1yCM5LruN5WEUA8h8gq9uKvDIU5zU0VKMeE0b4wFidXNxO3pJi
-         FKPA==
-X-Gm-Message-State: AOAM531RSyjEThvmiu/GNckRvJRoyFHR38fkrwYqNXQ/hpLxIQcP1fUK
-        qkiJBmybR4ygBbr/L43Pksp3AQ==
-X-Google-Smtp-Source: ABdhPJximX80fxcq78BYwz5TJQ7tu7BbHSoBKBAOFQVEsxp9XuCENYTJEgjWvZOnf0LPVObh619vHQ==
-X-Received: by 2002:a63:4d12:: with SMTP id a18mr22071092pgb.17.1607914394956;
-        Sun, 13 Dec 2020 18:53:14 -0800 (PST)
-Received: from ubuntu.netflix.com (203.20.25.136.in-addr.arpa. [136.25.20.203])
-        by smtp.gmail.com with ESMTPSA id h20sm17102713pgv.23.2020.12.13.18.53.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Dec 2020 18:53:14 -0800 (PST)
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <schumaker.anna@gmail.com>,
-        "J . Bruce Fields" <bfields@fieldses.org>
-Cc:     Sargun Dhillon <sargun@sargun.me>,
-        David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mauricio@kinvolk.io, Alban Crequy <alban.crequy@gmail.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH RESEND v5 2/2] NFSv4: Refactor to use user namespaces for nfs4idmap
-Date:   Sun, 13 Dec 2020 18:53:05 -0800
-Message-Id: <20201214025305.25984-3-sargun@sargun.me>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201214025305.25984-1-sargun@sargun.me>
-References: <20201214025305.25984-1-sargun@sargun.me>
+        id S2439998AbgLNQFl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Dec 2020 11:05:41 -0500
+Received: from server.kenspensetc.com ([185.148.128.76]:48008 "EHLO
+        server.kenspensetc.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439358AbgLNQFj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Dec 2020 11:05:39 -0500
+Received: from localhost ([127.0.0.1]:47936 helo=server.kenspensetc.com)
+        by server.kenspensetc.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <sender@ridecals.com>)
+        id 1knLn0-00029V-6J; Thu, 10 Dec 2020 08:15:22 -0500
+Received: from [70.32.0.46] ([70.32.0.46]) by ridecals.com (Horde Framework)
+ with HTTPS; Thu, 10 Dec 2020 08:15:22 -0500
+Date:   Thu, 10 Dec 2020 08:15:22 -0500
+Message-ID: <20201210081522.Horde.GEA1j18D53oi4VTUxYWD_87@ridecals.com>
+From:   Russell Branting <sender@ridecals.com>
+Subject: Vital
+Reply-to: Goodagent01@gmail.com
+User-Agent: Horde Application Framework 5
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.kenspensetc.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - ridecals.com
+X-Get-Message-Sender-Via: server.kenspensetc.com: authenticated_id: sender9@ridecals.com
+X-Authenticated-Sender: server.kenspensetc.com: sender9@ridecals.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In several patches work has been done to enable NFSv4 to use user
-namespaces:
-58002399da65: NFSv4: Convert the NFS client idmapper to use the container user namespace
-3b7eb5e35d0f: NFS: When mounting, don't share filesystems between different user namespaces
 
-Unfortunately, the userspace APIs were only such that the userspace facing
-side of the filesystem (superblock s_user_ns) could be set to a non init
-user namespace. This furthers the fs_context related refactoring, and
-piggybacks on top of that logic, so the superblock user namespace, and the
-NFS user namespace are the same.
+I am instructed to inform you of your appointment as the next of kin  
+to your deceased relative estate. Kindly indicate your acceptance by  
+reconfirming your Full Name, Address & Phone Number for immediate  
+processing of the funds release to your control OR the deceased  
+deposited funds will be declared unclaimed.
 
-Users can still use rpc.idmapd if they choose to, but there are complexities
-with user namespaces and request-key that have yet to be addresssed.
-
-Eventually, we will need to at least:
-  * Separate out the keyring cache by namespace
-  * Come up with an upcall mechanism that can be triggered inside of the container,
-    or safely triggered outside, with the requisite context to do the right
-    mapping. * Handle whatever refactoring needs to be done in net/sunrpc.
-
-Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-Tested-by: Alban Crequy <alban.crequy@gmail.com>
----
- fs/nfs/nfs4client.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index be7915c861ce..86acffe7335c 100644
---- a/fs/nfs/nfs4client.c
-+++ b/fs/nfs/nfs4client.c
-@@ -1153,7 +1153,7 @@ struct nfs_server *nfs4_create_server(struct fs_context *fc)
- 	if (!server)
- 		return ERR_PTR(-ENOMEM);
- 
--	server->cred = get_cred(current_cred());
-+	server->cred = get_cred(fc->cred);
- 
- 	auth_probe = ctx->auth_info.flavor_len < 1;
- 
--- 
-2.25.1
 
