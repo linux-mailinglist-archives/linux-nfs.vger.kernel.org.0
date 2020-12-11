@@ -2,54 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B89BD2D6C64
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Dec 2020 01:28:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1464F2D7205
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Dec 2020 09:44:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgLKAMI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Dec 2020 19:12:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731044AbgLKALn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 10 Dec 2020 19:11:43 -0500
-Subject: Re: [GIT PULL] Please pull a few more NFS Client bugfixes for 5.10
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607645463;
-        bh=NWdDQcavlZHR3VnrSnJOcEFjoJmRR7JWvv9l4PPTKK0=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=qHLFG+TDN0PGRPECiK0O+kvrbwzG8fiBhOOrt4pSuLnoCVJPCxIZix72yB4t24LK/
-         ySryV09dpgO8iXb++CdKcFQrUTzhACBfgzrf6nsjn0LnXAayLnsuruiBXAdBb/ZTeI
-         9/XaQPWJdCp4NcWyjCPeWpMEHoSoKNhq2f2AJ0rEXDcGMLIpXArWQbpNi/2lNB0G/i
-         Q3CecHgRwjMEyfdwtaMcoSZlq3GjMGnSy3eLHT4xxA9Wa+F0UjoTtTwvyfHBPMbzUZ
-         X578ywq12o/zGQ9NPtbOPml6FQmdErLg/ChjYPDAwiUWtYVAzCBCz1O0vcvqodxHf0
-         blAXzxr55lk6w==
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAFX2JfmhOBA6n9P_hJK1AbEUD3-k5wP8a9oeWUEZ56E2trQw5g@mail.gmail.com>
-References: <CAFX2JfmhOBA6n9P_hJK1AbEUD3-k5wP8a9oeWUEZ56E2trQw5g@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAFX2JfmhOBA6n9P_hJK1AbEUD3-k5wP8a9oeWUEZ56E2trQw5g@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.10-3
-X-PR-Tracked-Commit-Id: 21e31401fc4595aeefa224cd36ab8175ec867b87
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6840a3dcc2447188e7bb8464b31a7620bc4423ee
-Message-Id: <160764546335.19993.5568351213696257743.pr-tracker-bot@kernel.org>
-Date:   Fri, 11 Dec 2020 00:11:03 +0000
-To:     Anna Schumaker <schumaker.anna@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+        id S2436964AbgLKImh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 11 Dec 2020 03:42:37 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9593 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436949AbgLKImS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Dec 2020 03:42:18 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Cskl93X2QzM3Qd;
+        Fri, 11 Dec 2020 16:40:53 +0800 (CST)
+Received: from ubuntu.network (10.175.138.68) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 11 Dec 2020 16:41:29 +0800
+From:   Zheng Yongjun <zhengyongjun3@huawei.com>
+To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
+        <bfields@fieldses.org>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Zheng Yongjun <zhengyongjun3@huawei.com>
+Subject: [PATCH -next] fs/lockd: convert comma to semicolon
+Date:   Fri, 11 Dec 2020 16:41:58 +0800
+Message-ID: <20201211084158.1984-1-zhengyongjun3@huawei.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.138.68]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Thu, 10 Dec 2020 16:57:17 -0500:
+Replace a comma between expression statements by a semicolon.
 
-> git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.10-3
+Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+---
+ fs/lockd/host.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6840a3dcc2447188e7bb8464b31a7620bc4423ee
-
-Thank you!
-
+diff --git a/fs/lockd/host.c b/fs/lockd/host.c
+index 0afb6d59bad0..497520bc00a7 100644
+--- a/fs/lockd/host.c
++++ b/fs/lockd/host.c
+@@ -163,7 +163,7 @@ static struct nlm_host *nlm_alloc_host(struct nlm_lookup_host_info *ni,
+ 	host->h_nsmhandle  = nsm;
+ 	host->h_addrbuf    = nsm->sm_addrbuf;
+ 	host->net	   = ni->net;
+-	host->h_cred	   = get_cred(ni->cred),
++	host->h_cred	   = get_cred(ni->cred);
+ 	strlcpy(host->nodename, utsname()->nodename, sizeof(host->nodename));
+ 
+ out:
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.22.0
+
