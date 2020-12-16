@@ -2,121 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 282A42DAFAB
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Dec 2020 16:05:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A31E62DB9CC
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Dec 2020 04:46:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbgLOPEF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Dec 2020 10:04:05 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:40760 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729741AbgLOPD7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Dec 2020 10:03:59 -0500
-Received: by mail-il1-f197.google.com with SMTP id g1so11019278ilq.7
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Dec 2020 07:03:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=K64y2CqQPgwbni6Mi9ojRmOoEZFFw3QJ3x9ANAUnctk=;
-        b=ZcwedpR/RUwOOdxHazl1zNuqeEMUP488PtqFnDiweAwzS1p4FU5+m3h9aW9SrupdLE
-         D11TOKY0p+8780PRF6AtvnsK8znUCfveDTP4eT+lkO4WcF1oxh+moxu9Lkm8oDcLqQdN
-         Y44keIJo+oacMunzhaKzBBhx4/UbFVOZQSv3HUGJqilEKox7et7pQc2F4v3DtqXRt0TO
-         +fsKS3YTSpwC9r9xW7WEty85/39/UrtfK2X8bPbAuDOg7WcurssPCbhjAcg4nU5ogY1N
-         PIBkdfaYpW0Xo7aZsv9v9Cm+E5tmzJ05TmlAlQfQlRJiWDTW1PsEmyhP60N8OPR10Pdd
-         4F6A==
-X-Gm-Message-State: AOAM530rr9Jczx9fNZRmyw6UVZduvq7Ezxnpsk7e9T05SOgUxR3UakoX
-        EXutAMcAAz6mIG7YGhJSCobcF9z8nqy6yKp5Cl1Wwk4b47vl
-X-Google-Smtp-Source: ABdhPJx0QLLOEDpvyqnnw63MJKEU6BpyO1KRdgi1yBWy4boc8sWV0fAW2I03bP9SPq0laheJ2iijH0ADbWkAd1fqs/rpRTtMuK3r
-MIME-Version: 1.0
-X-Received: by 2002:a02:c850:: with SMTP id r16mr39004056jao.18.1608044597854;
- Tue, 15 Dec 2020 07:03:17 -0800 (PST)
-Date:   Tue, 15 Dec 2020 07:03:17 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000009ca4c05b6820f9a@google.com>
-Subject: UBSAN: shift-out-of-bounds in xprt_calc_majortimeo
-From:   syzbot <syzbot+ba2e91df8f74809417fa@syzkaller.appspotmail.com>
-To:     anna.schumaker@netapp.com, bfields@fieldses.org,
-        chuck.lever@oracle.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        trond.myklebust@hammerspace.com
-Content-Type: text/plain; charset="UTF-8"
+        id S1725838AbgLPDpf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Dec 2020 22:45:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725837AbgLPDpb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 15 Dec 2020 22:45:31 -0500
+Subject: Re: [GIT PULL] nfsd changes for 5.11
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1608090258;
+        bh=y0DB4jaEiyrLaH6oYMTFSe14OftHTQZ1T+QPUHktxHE=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=ReWM+M+0wpg4A8G8Mq+dxMGuS2BUy27uu7FsGfFQJuBi6J6HUpkCZpdyQj2DKUbUX
+         yQgjFuTsodpsb5i50vbOwk856qe5gD/OsdzPYM5k97mvNQb3ojC79yffhtGGmG0nkQ
+         FgNpmzoAR4z7bIz4mwam+rp1Beoq98hjJUHSyxPBRnhVQc6Swk2A1ZtJ0P/4YWvsnR
+         GbMId85dlqGehRdbH7o15ri46CO6R03WY3svbCYEUOarTVBDgEfRZG9YyAy4OyHT+I
+         8C3G9/GzyiU4ghFhyGGbCZjkryKEHH3Sjlv/qY/JkAcvQ7iHbR6mtflflNZJr4MHwb
+         iWkMLqN1ndUOQ==
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <200F1E47-2C8E-42FB-A661-0139F424C0D4@oracle.com>
+References: <200F1E47-2C8E-42FB-A661-0139F424C0D4@oracle.com>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <200F1E47-2C8E-42FB-A661-0139F424C0D4@oracle.com>
+X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/cel/cel-2.6.git tags/nfsd-5.11
+X-PR-Tracked-Commit-Id: 716a8bc7f706eeef80ab42c99d9f210eda845c81
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 1a50ede2b3c846761a71c409f53e9121311a13c2
+Message-Id: <160809025822.9893.12720781442898862731.pr-tracker-bot@kernel.org>
+Date:   Wed, 16 Dec 2020 03:44:18 +0000
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+The pull request you sent on Mon, 14 Dec 2020 15:41:13 -0500:
 
-syzbot found the following issue on:
+> git://git.linux-nfs.org/projects/cel/cel-2.6.git tags/nfsd-5.11
 
-HEAD commit:    14240d4c Add linux-next specific files for 20201210
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1321cf17500000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6dbe20fdaa5aaebe
-dashboard link: https://syzkaller.appspot.com/bug?extid=ba2e91df8f74809417fa
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=174ecb9b500000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14ff9413500000
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/1a50ede2b3c846761a71c409f53e9121311a13c2
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ba2e91df8f74809417fa@syzkaller.appspotmail.com
+Thank you!
 
-================================================================================
-UBSAN: shift-out-of-bounds in net/sunrpc/xprt.c:658:14
-shift exponent 536871232 is too large for 64-bit type 'long unsigned int'
-CPU: 1 PID: 8494 Comm: syz-executor211 Not tainted 5.10.0-rc7-next-20201210-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:79 [inline]
- dump_stack+0x107/0x163 lib/dump_stack.c:120
- ubsan_epilogue+0xb/0x5a lib/ubsan.c:148
- __ubsan_handle_shift_out_of_bounds.cold+0xb1/0x181 lib/ubsan.c:395
- xprt_calc_majortimeo.isra.0.cold+0x17/0x46 net/sunrpc/xprt.c:658
- xprt_init_majortimeo net/sunrpc/xprt.c:686 [inline]
- xprt_request_init+0x486/0x9e0 net/sunrpc/xprt.c:1805
- xprt_do_reserve net/sunrpc/xprt.c:1815 [inline]
- xprt_reserve+0x18f/0x280 net/sunrpc/xprt.c:1836
- __rpc_execute+0x21d/0x1360 net/sunrpc/sched.c:891
- rpc_execute+0x230/0x350 net/sunrpc/sched.c:967
- rpc_run_task+0x5d0/0x8f0 net/sunrpc/clnt.c:1140
- rpc_call_sync+0xc6/0x1a0 net/sunrpc/clnt.c:1169
- rpc_ping net/sunrpc/clnt.c:2682 [inline]
- rpc_create_xprt+0x3f1/0x4a0 net/sunrpc/clnt.c:477
- rpc_create+0x354/0x670 net/sunrpc/clnt.c:593
- nfs_create_rpc_client+0x4eb/0x680 fs/nfs/client.c:536
- nfs_init_client fs/nfs/client.c:653 [inline]
- nfs_init_client+0x6d/0x100 fs/nfs/client.c:640
- nfs_get_client+0xcd7/0x1020 fs/nfs/client.c:430
- nfs_init_server.isra.0+0x2c0/0xed0 fs/nfs/client.c:692
- nfs_create_server+0x18f/0x650 fs/nfs/client.c:996
- nfs_try_get_tree+0x181/0x9f0 fs/nfs/super.c:939
- nfs_get_tree+0xaa1/0x1520 fs/nfs/fs_context.c:1350
- vfs_get_tree+0x89/0x2f0 fs/super.c:1496
- do_new_mount fs/namespace.c:2896 [inline]
- path_mount+0x12ae/0x1e70 fs/namespace.c:3227
- do_mount fs/namespace.c:3240 [inline]
- __do_sys_mount fs/namespace.c:3448 [inline]
- __se_sys_mount fs/namespace.c:3425 [inline]
- __x64_sys_mount+0x27f/0x300 fs/namespace.c:3425
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x440419
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffe282dde28 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 0030656c69662f2e RCX: 0000000000440419
-RDX: 0000000020fb5ffc RSI: 0000000020343ff8 RDI: 0000000020000100
-RBP: 00000000006ca018 R08: 000000002000a000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401c20
-R13: 0000000000401cb0 R14: 0000000000000000 R15: 0000000000000000
-================================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
