@@ -2,27 +2,27 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 094742DBA2F
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Dec 2020 05:44:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF4C12DBA33
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Dec 2020 05:45:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725852AbgLPEoS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Dec 2020 23:44:18 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58432 "EHLO mx2.suse.de"
+        id S1725924AbgLPEpA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Dec 2020 23:45:00 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59142 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgLPEoR (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 15 Dec 2020 23:44:17 -0500
+        id S1725926AbgLPEo7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 15 Dec 2020 23:44:59 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 942AEAD4D;
-        Wed, 16 Dec 2020 04:43:35 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 20B2AAF0C;
+        Wed, 16 Dec 2020 04:44:04 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
 To:     Steve Dickson <steved@redhat.com>
 Date:   Wed, 16 Dec 2020 15:43:03 +1100
-Subject: [PATCH 1/7] mount: configfile: remove whitesspace from end of lines
+Subject: [PATCH 7/7] mount: update nfsmount.conf man page
 Cc:     Justin Mitchell <jumitche@redhat.com>,
         Benjamin Coddington <bcodding@redhat.com>,
         linux-nfs@vger.kernel.org
-Message-ID: <160809378305.7232.11988628657352067133.stgit@noble>
+Message-ID: <160809378309.7232.17026645167363254754.stgit@noble>
 In-Reply-To: <160809318571.7232.10427700322834760606.stgit@noble>
 References: <160809318571.7232.10427700322834760606.stgit@noble>
 User-Agent: StGit/0.23
@@ -33,251 +33,193 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-While space at end of line is ugly..  especially when your editor is
-configured to show it in RED.
+Multiple changes including:
+- using \[dq] for double quotes rather than \(lq and \(rq.
+  In almost every case, a regular ASCII double quote is being
+  referred to, so that is what we should use.
+- clean up indenting in examples.
+- be explicit about case-insensitive matching.
+- give more details about permitted options, including the
+  need to use =true and =false for flags
+- explain Backgroud, Forground and Sloppy
+- remain trailing white space
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- utils/mount/configfile.c |   67 +++++++++++++++++++++++-----------------------
- 1 file changed, 33 insertions(+), 34 deletions(-)
+ utils/mount/nfsmount.conf.man |  110 ++++++++++++++++++++++++++---------------
+ 1 file changed, 70 insertions(+), 40 deletions(-)
 
-diff --git a/utils/mount/configfile.c b/utils/mount/configfile.c
-index 93fe500bc7a2..2470bc6a8bf6 100644
---- a/utils/mount/configfile.c
-+++ b/utils/mount/configfile.c
-@@ -1,5 +1,5 @@
- /*
-- * configfile.c -- mount configuration file manipulation 
-+ * configfile.c -- mount configuration file manipulation
-  * Copyright (C) 2008 Red Hat, Inc <nfs@redhat.com>
-  *
-  * - Routines use to create mount options from the mount
-@@ -77,10 +77,10 @@ int mnt_alias_sz = (sizeof(mnt_alias_tab)/sizeof(mnt_alias_tab[0]));
- static int strict;
- 
- /*
-- * See if the option is an alias, if so return the 
-+ * See if the option is an alias, if so return the
-  * real mount option along with the argument type.
-  */
--inline static 
-+inline static
- char *mountopts_alias(char *opt, int *argtype)
- {
- 	int i;
-@@ -99,7 +99,7 @@ char *mountopts_alias(char *opt, int *argtype)
- }
- /*
-  * Convert numeric strings that end with 'k', 'm' or 'g'
-- * into numeric strings with the real value. 
-+ * into numeric strings with the real value.
-  * Meaning '8k' becomes '8094'.
-  */
- char *mountopts_convert(char *value)
-@@ -146,26 +146,26 @@ static int list_size;
- /*
-  * Add option to the link list
-  */
--inline static void 
-+inline static void
- add_entry(char *opt)
- {
- 	struct entry *entry;
- 
- 	entry = calloc(1, sizeof(struct entry));
- 	if (entry == NULL) {
--		xlog_warn("Unable calloc memory for mount configs"); 
-+		xlog_warn("Unable calloc memory for mount configs");
- 		return;
- 	}
- 	entry->opt = strdup(opt);
- 	if (entry->opt == NULL) {
--		xlog_warn("Unable calloc memory for mount opts"); 
-+		xlog_warn("Unable calloc memory for mount opts");
- 		free(entry);
- 		return;
- 	}
- 	SLIST_INSERT_HEAD(&head, entry, entries);
- }
- /*
-- * Check the alias list to see if the given 
-+ * Check the alias list to see if the given
-  * opt is a alias
-  */
- char *is_alias(char *opt)
-@@ -174,7 +174,7 @@ char *is_alias(char *opt)
- 
- 	for (i=0; i < mnt_alias_sz; i++) {
- 		if (strcasecmp(opt, mnt_alias_tab[i].alias) == 0)
--			return mnt_alias_tab[i].opt; 
-+			return mnt_alias_tab[i].opt;
- 	}
- 	return NULL;
- }
-@@ -182,7 +182,7 @@ char *is_alias(char *opt)
-  * See if the given entry exists if the link list,
-  * if so return that entry
-  */
--inline static 
-+inline static
- char *lookup_entry(char *opt)
- {
- 	struct entry *entry;
-@@ -217,7 +217,7 @@ char *lookup_entry(char *opt)
- /*
-  * Free all entries on the link list
-  */
--inline static 
-+inline static
- void free_all(void)
- {
- 	struct entry *entry;
-@@ -236,10 +236,10 @@ extern sa_family_t config_default_family;
- 
- /*
-  * Check to see if a default value is being set.
-- * If so, set the appropriate global value which will 
-+ * If so, set the appropriate global value which will
-  * be used as the initial value in the server negation.
-  */
--static int 
-+static int
- default_value(char *mopt)
- {
- 	struct mount_options *options = NULL;
-@@ -253,11 +253,11 @@ default_value(char *mopt)
- 	if (strncasecmp(field, "proto", strlen("proto")) == 0) {
- 		if ((options = po_split(field)) != NULL) {
- 			if (!nfs_nfs_protocol(options, &config_default_proto)) {
--				xlog_warn("Unable to set default protocol : %s", 
-+				xlog_warn("Unable to set default protocol : %s",
- 					strerror(errno));
- 			}
- 			if (!nfs_nfs_proto_family(options, &config_default_family)) {
--				xlog_warn("Unable to set default family : %s", 
-+				xlog_warn("Unable to set default family : %s",
- 					strerror(errno));
- 			}
- 		} else {
-@@ -266,14 +266,13 @@ default_value(char *mopt)
- 	} else if (strncasecmp(field, "vers", strlen("vers")) == 0) {
- 		if ((options = po_split(field)) != NULL) {
- 			if (!nfs_nfs_version("nfs", options, &config_default_vers)) {
--				xlog_warn("Unable to set default version: %s", 
-+				xlog_warn("Unable to set default version: %s",
- 					strerror(errno));
--				
- 			}
- 		} else {
- 			xlog_warn("Unable to alloc memory for default version");
- 		}
--	} else 
-+	} else
- 		xlog_warn("Invalid default setting: '%s'", mopt);
- 
- 	if (options)
-@@ -282,11 +281,11 @@ default_value(char *mopt)
- 	return 1;
- }
- /*
-- * Parse the given section of the configuration 
-+ * Parse the given section of the configuration
-  * file to if there are any mount options set.
-  * If so, added them to link list.
-  */
--static void 
-+static void
- conf_parse_mntopts(char *section, char *arg, char *opts)
- {
- 	struct conf_list *list;
-@@ -300,7 +299,7 @@ conf_parse_mntopts(char *section, char *arg, char *opts)
- 		/* check first if this is an alias for another option */
- 		field = mountopts_alias(node->field, &argtype);
- 		/*
--		 * Do not overwrite options if already exists 
-+		 * Do not overwrite options if already exists
- 		 */
- 		snprintf(buf, BUFSIZ, "%s=", field);
- 		if (opts && strcasestr(opts, buf) != NULL)
-@@ -333,8 +332,8 @@ conf_parse_mntopts(char *section, char *arg, char *opts)
- 		}
- 		if (buf[0] == '\0')
- 			continue;
--		/* 
--		 * Keep a running tally of the list size adding 
-+		/*
-+		 * Keep a running tally of the list size adding
- 		 * one for the ',' that will be appened later
- 		 */
- 		list_size += strlen(buf) + 1;
-@@ -344,14 +343,14 @@ conf_parse_mntopts(char *section, char *arg, char *opts)
- }
- 
- /*
-- * Concatenate options from the configuration file with the 
-+ * Concatenate options from the configuration file with the
-  * given options by building a link list of options from the
-- * different sections in the conf file. Options that exists 
-- * in the either the given options or link list are not 
-+ * different sections in the conf file. Options that exists
-+ * in the either the given options or link list are not
-  * overwritten so it matter which when each section is
-- * parsed. 
-+ * parsed.
-  */
--char *conf_get_mntopts(char *spec, char *mount_point, 
-+char *conf_get_mntopts(char *spec, char *mount_point,
- 	char *mount_opts)
- {
- 	struct entry *entry;
-@@ -362,18 +361,18 @@ char *conf_get_mntopts(char *spec, char *mount_point,
- 	SLIST_INIT(&head);
- 	list_size = 0;
- 	/*
--	 * First see if there are any mount options relative 
-+	 * First see if there are any mount options relative
- 	 * to the mount point.
- 	 */
- 	conf_parse_mntopts(NFSMOUNT_MOUNTPOINT, mount_point, mount_opts);
- 
--	/* 
-+	/*
- 	 * Next, see if there are any mount options relative
- 	 * to the server
- 	 */
- 	server = strdup(spec);
- 	if (server == NULL) {
--		xlog_warn("conf_get_mountops: Unable calloc memory for server"); 
-+		xlog_warn("conf_get_mountops: Unable calloc memory for server");
- 		free_all();
- 		return mount_opts;
- 	}
-@@ -383,7 +382,7 @@ char *conf_get_mntopts(char *spec, char *mount_point,
- 	free(server);
- 
- 	/*
--	 * Finally process all the global mount options. 
-+	 * Finally process all the global mount options.
- 	 */
- 	conf_parse_mntopts(NFSMOUNT_GLOBAL_OPTS, NULL, mount_opts);
- 
-@@ -396,7 +395,7 @@ char *conf_get_mntopts(char *spec, char *mount_point,
- 
- 	/*
- 	 * Found options in the configuration file. So
--	 * concatenate the configuration options with the 
-+	 * concatenate the configuration options with the
- 	 * options that were passed in
- 	 */
- 	if (mount_opts)
-@@ -405,7 +404,7 @@ char *conf_get_mntopts(char *spec, char *mount_point,
- 	/* list_size + optlen + ',' + '\0' */
- 	config_opts = calloc(1, (list_size+optlen+2));
- 	if (config_opts == NULL) {
--		xlog_warn("conf_get_mountops: Unable calloc memory for config_opts"); 
-+		xlog_warn("conf_get_mountops: Unable calloc memory for config_opts");
- 		free_all();
- 		return mount_opts;
- 	}
+diff --git a/utils/mount/nfsmount.conf.man b/utils/mount/nfsmount.conf.man
+index 4f8f351addf4..73c3e1188541 100644
+--- a/utils/mount/nfsmount.conf.man
++++ b/utils/mount/nfsmount.conf.man
+@@ -1,53 +1,84 @@
+-.\"@(#)nfsmount.conf.5"
+-.TH NFSMOUNT.CONF 5 "9 October 2012"
++."@(#)nfsmount.conf.5"
++.TH NFSMOUNT.CONF 5 "16 December 2020"
+ .SH NAME
+ nfsmount.conf - Configuration file for NFS mounts
+ .SH SYNOPSIS
+ Configuration file for NFS mounts that allows options
+ to be set globally, per server or per mount point.
+ .SH DESCRIPTION
+-The configuration file is made up of multiple sections 
+-followed by variables associated with that section.
+-A section is defined by a string enclosed by 
++The configuration file is made up of multiple section headers
++followed by variable assignments associated with that section.
++A section header is defined by a string enclosed by
+ .BR [
+-and 
++and
+ .BR ]
+-branches.
+-Variables are assignment statements that assign values 
+-to particular variables using the  
+-.BR = 
+-operator, as in 
++brackets.
++Variable assignments are assignment statements that assign values
++to particular variables using the
++.BR =
++operator, as in
+ .BR Proto=Tcp .
+-The variables that can be assigned are exactly the set of NFS specific
++The variables that can be assigned are the set of NFS specific
+ mount options listed in
+-.BR nfs (5).
++.BR nfs (5)
++together with the filesystem-independant mount options listed in
++.BR mount (8)
++and three additions:
++.B Sloppy=True
++has the same effect as the
++.B -s
++option to
++.IR mount ,
++and
++.B Foreground=True
++and
++.B Background=True
++have the same effect as
++.B bg
++and
++.BR fg .
++.PP
++Options in the config file may be given in upper, lower, or mixed case
++and will be shifted to lower case before being passed to the filesystem.
++.PP
++Boolean mount options which do not need an equals sign must be given as
++.RI \[dq] option =True".
++Instead of preceeding such an option with
++.RB \[dq] no \[dq]
++its negation must be given as
++.RI \[dq] option =False".
+ .PP
+ Sections are broken up into three basic categories:
+ Global options, Server options and Mount Point options.
+ .HP
+ .B [ NFSMount_Global_Options ]
+ - This statically named section
+-defines all of the global mount options that can be 
++defines all of the global mount options that can be
+ applied to every NFS mount.
+ .HP
+-.B [ Server \(lqServer_Name\(rq ] 
+-- This section defines all the mount options that should 
+-be used on mounts to a particular NFS server. The 
+-.I \(lqServer_Name\(rq
+-strings needs to be surrounded by '\(lq' and 
+-be an exact match of the server name used in the 
++.B [ Server \[dq]Server_Name\[dq] ]
++- This section defines all the mount options that should
++be used on mounts to a particular NFS server. The
++.I \[dq]Server_Name\[dq]
++strings needs to be surrounded by '\[dq]' and be an exact match
++(ignoring case) of the server name used in the
+ .B mount
+-command. 
++command.
+ .HP
+-.B [ MountPoint \(lqMount_Point\(rq ]
+-- This section defines all the mount options that 
++.B [ MountPoint \[dq]Mount_Point\[dq] ]
++- This section defines all the mount options that
+ should be used on a particular mount point.
+-The 
+-.I \(lqMount_Point\(rq
+-string needs to be surrounded by '\(lq' and be an 
+-exact match of the mount point used in the 
+-.BR mount 
+-command.
++The
++.I \[dq]Mount_Point\[dq]
++string needs to be surrounded by '\[dq]' and be an
++exact match of the mount point used in the
++.BR mount
++command.  Though path names are usually case-sensitive, the Mount_Point
++name is matched insensitive to case.
++.PP
++The sections are processed in the reverse of the order listed above, and
++any options already seen, either in a previous section or on the
++command line, will be ignored when seen again.
+ .SH EXAMPLES
+ .PP
+ These are some example lines of how sections and variables
+@@ -57,43 +88,42 @@ are defined in the configuration file.
+ .br
+     Proto=Tcp
+ .RS
+-.HP
++.PP
+ The TCP/IPv4 protocol will be used on every NFS mount.
+-.HP
+ .RE
+-[ Server \(lqnfsserver.foo.com\(rq ]
++.PP
++[ Server \[dq]nfsserver.foo.com\[dq] ]
+ .br
+     rsize=32k
+ .br
+     wsize=32k
+ .br
+     proto=udp6
+-.HP
+ .RS
++.PP
+ A 32k (32768 bytes) block size will be used as the read and write
+ size on all mounts to the 'nfsserver.foo.com' server.  UDP/IPv6
+ is the protocol to be used.
+-.HP
+ .RE
+-.BR 
+-[ MountPoint \(lq/export/home\(rq ]
++.PP
++[ MountPoint \[dq]/export/home\[dq] ]
+ .br
+     Background=True
+ .RS
+-.HP
++.PP
+ All mounts to the '/export/home' export will be performed in
+ the background (i.e. done asynchronously).
+-.HP
++.RE
+ .SH FILES
+ .TP 10n
+ .I /etc/nfsmount.conf
+ Default NFS mount configuration file
+ .TP 10n
+ .I /etc/nfsmount.conf.d
+-When this directory exists and files ending 
++When this directory exists and files ending
+ with ".conf" exist, those files will be
+ used to set configuration variables. These
+-files will override variables set 
++files will override variables set
+ in /etc/nfsmount.conf
+ .PD
+ .SH SEE ALSO
 
 
