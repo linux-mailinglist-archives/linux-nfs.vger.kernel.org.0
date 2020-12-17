@@ -2,83 +2,112 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FF492DD369
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Dec 2020 15:59:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1B6E2DD3D4
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Dec 2020 16:12:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgLQO62 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Dec 2020 09:58:28 -0500
-Received: from elasmtp-kukur.atl.sa.earthlink.net ([209.86.89.65]:46288 "EHLO
-        elasmtp-kukur.atl.sa.earthlink.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727769AbgLQO61 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Dec 2020 09:58:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mindspring.com;
-        s=dk12062016; t=1608217107; bh=Inxo2ECnVZrBeZLCHxpNnsIiI8OZ/+5mZ73Z
-        bMhFzh0=; h=Received:From:To:References:In-Reply-To:Subject:Date:
-         Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:
-         X-Mailer:Content-Language:Thread-Index:X-ELNK-Trace:
-         X-Originating-IP; b=C2b6xHSCZiei+qggiWGjs8J1mXSv2jrz9AwcQ32Rt/hPGk
-        5p0WQh5gO52du8HR3UhI8fK3LsJbKGAWW2A4uHeBOQ/93rZJQL5Y4s1SRc0xGCGe2pA
-        q7r3URYymcG9yURG0YhrRrerFop14Z1lXGAUwZDMCh0X/I/Cr3m4DxWMdvEu2EXmhuD
-        w/JipEN/IujqWR6J/AErPXZEya9cIHMxJROoSeT3XSRwn1DXlhegoEhignmdfo82s1q
-        qyQJEzUZykNfqFTZaVZ52fnMpZ3WW02xtvQEVFdlDXjkLOR7jU12gumnJ3jXIcJtSds
-        rpBhZ0EYTZBBaJ+o3P6t5m/1448w==
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws;
-  s=dk12062016; d=mindspring.com;
-  b=CjyRyxyitvZKlEZT06K0OB0brpgx6TTo/AW6CC5icFtA2q9/FkkLvYtQfTdhabhQKY/zbc6mN8P69MKGbyCP2j7rNV/ML3KIs9+kgfE7qfIWzk9EuPRlvsxor26qXIFW3vdWp6uwpmUoUziZCTo0UkSS0AWE8ax48KSksJUt5A3uDZAOwBDsCcA79FzUFzTXK/3ZJgz+T/rBpq56F6JIR4KsJGlFLxYW+xmkbR9VwmM3upnhV3Ob7SGoFHNmqODROdJrDw05IiVnX7annD+tIqu81QczYkJ8AJr42bki1diDjF+It8k3Sh6N1mIbyJh4UP3OoWcIgXd3LYgKWidsLQ==;
-  h=Received:From:To:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:X-Mailer:Content-Language:Thread-Index:X-ELNK-Trace:X-Originating-IP;
-Received: from [76.105.143.216] (helo=FRANKSTHINKPAD)
-        by elasmtp-kukur.atl.sa.earthlink.net with esmtpa (Exim 4)
-        (envelope-from <ffilzlnx@mindspring.com>)
-        id 1kpuiw-00053m-Ji; Thu, 17 Dec 2020 09:57:46 -0500
-From:   "Frank Filz" <ffilzlnx@mindspring.com>
-To:     "'Suresh Jayaraman'" <sjayaraman@tintri.com>,
-        <linux-nfs@vger.kernel.org>
-References: <BY5PR11MB4152DF20ADAAC8F694C80AF1B8C40@BY5PR11MB4152.namprd11.prod.outlook.com>
-In-Reply-To: <BY5PR11MB4152DF20ADAAC8F694C80AF1B8C40@BY5PR11MB4152.namprd11.prod.outlook.com>
-Subject: RE: NFSv4x share reservations support
-Date:   Thu, 17 Dec 2020 06:57:46 -0800
-Message-ID: <034401d6d484$fb408710$f1c19530$@mindspring.com>
+        id S1728080AbgLQPL4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Dec 2020 10:11:56 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:41382 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727415AbgLQPL4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Dec 2020 10:11:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1608217830;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=q1rDDxisl5/JBeHD2lVp2yeJwDcNTaSH/97W798w0kI=;
+        b=QsSfDkRBZcwY75n8HR1G5Tpbn1noX+uJGmYe+oadP6KhvQ6h1s5x9XRDxdXBKUaQ61zhFF
+        1bc1OCXOWl7BsjSs0YtCEDIqSispvv+mkr0d/kdfrjjYApoZqCUf73HzyVPCmaZo8NWie8
+        LOFQBfFGl/nF8lJu/FKVhSVsSCyaDiA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-536-Z4_eLYzOPZ6KxzdnNkWd1Q-1; Thu, 17 Dec 2020 10:10:27 -0500
+X-MC-Unique: Z4_eLYzOPZ6KxzdnNkWd1Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42DF710054FF;
+        Thu, 17 Dec 2020 15:10:26 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-112-84.phx2.redhat.com [10.3.112.84])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 233E618A50;
+        Thu, 17 Dec 2020 15:10:22 +0000 (UTC)
+Subject: Re: [PATCH 0/7 nfs-utils] Assorted improvements to handling
+ nfsmount.conf
+To:     NeilBrown <neilb@suse.de>
+Cc:     Justin Mitchell <jumitche@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        linux-nfs@vger.kernel.org
+References: <160809318571.7232.10427700322834760606.stgit@noble>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <5c3e7332-b8f1-3cd7-2a38-e003688aa1e8@RedHat.com>
+Date:   Thu, 17 Dec 2020 10:11:02 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="US-ASCII"
+In-Reply-To: <160809318571.7232.10427700322834760606.stgit@noble>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Content-Language: en-us
-Thread-Index: AQKpveR4sxqLTOYksrFzWeTTlRkNcKhVjDOQ
-X-ELNK-Trace: 136157f01908a8929c7f779228e2f6aeda0071232e20db4d0cad08f40a69f903a2e973319cd3f5a0350badd9bab72f9c350badd9bab72f9c350badd9bab72f9c
-X-Originating-IP: 76.105.143.216
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> Does Linux NFS server disallow OPENs from SMB or local filesystem when a
-> DENY_READ/DENY_WRITE (share reservation) is set on a file? If so, how is
-it
-> implemented (with VFS flags)?
+
+
+On 12/15/20 11:43 PM, NeilBrown wrote:
+> The handling of version specifiers in mount.nfs, and even in the kernel,
+> is somewhat ideosyncratic when multiple versions are listed.
 > 
-> The packet captures show that the Linux NFS4x clients always OPEN with
-> DENY_NONE (as there is no POSIX support for DENY_READ/DENY_WRITE).
-> Looked at https://linux-
-> nfs.org/wiki/index.php/Cluster_Coherent_NFSv4_and_Share_Reservations but
-> was not sure if it uptodate.
+> For example,  "-o vers=4.1,nfsvers=3" will result in both versions being
+> passed to the kernel, and the kernel complaining because version 3
+> doesn't support minor version numbers.
+> Conversly, "-o nfsvers=4.1,vers=3" will result in the "nfsvers=4.1"
+> being stripped off and vers=3 being used.
 > 
-> Would like to understand what level of share reservations support is
-present in
-> Linux NFS server today.
+> Further, version settings found in /etc/nfsmount.conf are sometimes
+> ignored if a version is given on the command line, and sometimes not.
+> If "nfsvers=3" is in the config file, then the presense of "-o vers=4.1"
+> will cause it to be ignored, the presense of "-o nfsvers=4.1" will too, but
+> mainly because of sloppy code.  However "-o v4.1" won't cause the config
+> file setting to be ignored.
+> 
+> This series cleans up all of this and some related issues, and updates
+> the man page.
+> 
+> With other options, the last option listed on the command line wins.
+> I have not tried to provide that for version options.  Instead, if there
+> are multiple version options listed, and error is reported.
+> 
+> Thanks,
+> NeilBrown
+The series is Committed! (tag:  nfs-utils-2-5-3-rc3)
 
-Since the Linux vfs layer has no way to represent deny modes, there is no
-way for a Linux remote file system such as knfsd or Samba to coordinate on
-deny reservations. There was a patch set years ago that would have added
-deny modes to the Linux open system call, but it never got enough support to
-be merged.
-
-The only way to accomplish this is to either have a file system that
-implements deny modes with some kind of out of band means for applications
-and servers to communicate (such as an fcntl call) or for remote file system
-servers to coordinate in the background. There are proprietary out of tree
-file systems that provide this coordination, but nothing in tree to my
-knowledge (if there is, please let me know, nfs-ganesha COULD utilize such
-an out of band mechanism).
-
-Frank
+steved.
+ 
+> 
+> ---
+> 
+> NeilBrown (7):
+>       mount: configfile: remove whitesspace from end of lines
+>       mount: report error if multiple version specifiers are given.
+>       Revert "mount.nfs: merge in vers= and nfsvers= options"
+>       mount: convert configfile.c to use parse_opt.c
+>       mount: options in config file shouldn't over-ride command-line options.
+>       mount: don't add config-file protcol version options when already present.
+>       mount: update nfsmount.conf man page
+> 
+> 
+>  utils/mount/configfile.c      | 230 +++++++++++-----------------------
+>  utils/mount/network.c         |  36 +++---
+>  utils/mount/nfsmount.conf.man | 110 ++++++++++------
+>  utils/mount/parse_opt.c       |  12 +-
+>  utils/mount/parse_opt.h       |   3 +-
+>  5 files changed, 174 insertions(+), 217 deletions(-)
+> 
+> --
+> Signature
+> 
 
