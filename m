@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 577512DCA00
+	by mail.lfdr.de (Postfix) with ESMTP id C455A2DCA01
 	for <lists+linux-nfs@lfdr.de>; Thu, 17 Dec 2020 01:37:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgLQAhF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Dec 2020 19:37:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49470 "EHLO
+        id S1727571AbgLQAhG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Dec 2020 19:37:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727325AbgLQAhF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Dec 2020 19:37:05 -0500
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D529C061248
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Dec 2020 16:35:54 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id w16so18986370pga.9
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Dec 2020 16:35:54 -0800 (PST)
+        with ESMTP id S1727325AbgLQAhG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Dec 2020 19:37:06 -0500
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67236C061257
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Dec 2020 16:35:55 -0800 (PST)
+Received: by mail-pg1-x530.google.com with SMTP id p18so7394603pgm.11
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Dec 2020 16:35:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=f2p4NDEjDVimhO6Yt6W7ZOCtF0nLrqNvCiwHIwoKLpI=;
-        b=BfveUUfZd/sneh0dfS7tbX/O4mtFbWK0ypQakpg1DA5oqFeO+tFxV78qwZ/LciBTGy
-         Azfps75ftkRlH/xtO+UrX50kPO7Bx7JcXhnBY96JkKESbclpFh6+nRHYoT0C6wNsxf0j
-         C8axuhJJrouix9yce31RDFXMwSjXtZt7h4ULN7A8AHfvNGrFkFRVaF3ooCFXqxC6cQkI
-         P1T3LDSiVhSpOf4JzD1XQnuXg3zK9orqRIdcRabwS8k9fMJsiI6aZsu6OJ2kH+VRVzQ+
-         5xVUvm+Yb2sqZF5n8rd4T+oPvPhe04yuR8oCaN4XyYrpoIraMDndNaqa34l2rx0t0qjq
-         H0dw==
+        bh=amNE1/ZvbK41u6+sZBiwKUhq349CVzHsftZ5n2dksVU=;
+        b=PDOPoqjVxngXc12d2XyduKQ8HYafeWQDbXk1m1tSupt40rLCdsODI7Pw99kbW7mkZ/
+         7mCqGx3s19iVRfU8orf87v0z9oI9qV3BqgvuUOxmawz6CV7Fuv4zij+bQjtDC4xawZYK
+         l43XyFuXofhp9E6FomqqhGUoDkegKj0B8i/z9/Xa+nAp4Yu+ZOkohjq5GW1CCOIZ+0MD
+         +2vC78zc2S3TtrwV4wZA44ADlmSty2EhLQyzlPGiaLBaS5I9qJ6YFMdym5q7P4NrEtUl
+         FErv4QRL5H1nrClzrBNEbtrr+FbrV4gaeeeTWp6+937qVxV4yhuOgOR3boGH0i4qluGp
+         2+9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=f2p4NDEjDVimhO6Yt6W7ZOCtF0nLrqNvCiwHIwoKLpI=;
-        b=BQlcAXlH/w7kS1Fz3/qSChbLywwcc9Qw8tPICiCklUakJVLeFmn9EeLHj/aOcAftsp
-         F+WU2RFQt09tWwYQUbyTzpWMNH0ezQK3IoioCq16qpZwwZg/wAw5lI5XUvvi/rWA/Suh
-         txgRCeqqhtBRASQpiQC0aX/Rapw6HJI4JEAIWn9ZnG72+UUB8to/Mc5IqoNprtydXrVy
-         gmar+GUY36SaPzVHwKHFqfg71jVifk68rx+WrnRPgh+MAucdVp2aarTqWg4eV9SEhMpl
-         PrjeocNwTRC4+gQ5Gmc7tDhQNtxK86osQZI9cWY2yXEdCMs2dQpsnM1lv+lgo8cNSL15
-         +RuA==
-X-Gm-Message-State: AOAM530PQyRPpDoa0zX7GZHbntqghw45LKP2ichxHll+0nVyKxYahIui
-        OMBTHVpxv2ixzLiPAwANv9hxiga9qlFRBg==
-X-Google-Smtp-Source: ABdhPJzxNBaQf/byX6DuKm7fVHHsb/wV1MOr53HFdJo+JijHqcH1sZj5jOfaTTISuUas4fEYZe0L3Q==
-X-Received: by 2002:a63:550a:: with SMTP id j10mr4816591pgb.370.1608165353751;
-        Wed, 16 Dec 2020 16:35:53 -0800 (PST)
+        bh=amNE1/ZvbK41u6+sZBiwKUhq349CVzHsftZ5n2dksVU=;
+        b=kpFT2UIn6Q7hNf6vrifk/Ar4+n9NLPuCeNX8umHZCd2wraHn3vFg/dPE6c6zD0bzqG
+         kMC1zdbIz4snU5zOxCHxw/o735Ax5b8g2SbEpatsmiY2etoZO/35GiBmZ3PM1pFnxSTw
+         UwrM+Q7mALtRItNlqlD7UL5bYvqYWFj1UbJSUOcRph8WEeSfSfqwnptPxWwPfv+njjl4
+         +dbIf4XO6ITWf0stdxy4XKhbjojBXZxbv6c3/UsviEskUKmyAoCr5rCGnCMkk+3Zn7Vk
+         QCdpBjnwebzIqEtlwOpfP5P47NcM//2cfwc5QldFDghLPNo9dXojbZTeLbQkJUDX20Dd
+         WIrA==
+X-Gm-Message-State: AOAM531WJJRuOoo2BxVzNfsgn31Fw72QANDR2hy7hatISDk7bsNMIJ8t
+        TpOaoHzFgLBjD2of6r3ACEJHnDGMv3u6bQ==
+X-Google-Smtp-Source: ABdhPJzoqm9p1+titXv0qPwwZDxKt0RmJZMYFEWd2ETsVRhV4BIUL6Nk5lYx5mWvY4Jm7oafE729Cg==
+X-Received: by 2002:a63:1d59:: with SMTP id d25mr11398935pgm.259.1608165355037;
+        Wed, 16 Dec 2020 16:35:55 -0800 (PST)
 Received: from garbo.localdomain (c-69-181-67-218.hsd1.ca.comcast.net. [69.181.67.218])
-        by smtp.gmail.com with ESMTPSA id v24sm4011243pgi.61.2020.12.16.16.35.52
+        by smtp.gmail.com with ESMTPSA id v24sm4011243pgi.61.2020.12.16.16.35.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Dec 2020 16:35:53 -0800 (PST)
+        Wed, 16 Dec 2020 16:35:54 -0800 (PST)
 From:   Tom Haynes <loghyr@gmail.com>
 X-Google-Original-From: Tom Haynes <loghyr@hammerspace.com>
 To:     Bruce Fields <bfields@redhat.com>
 Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [pynfs 08/10] st_flex: Only do 100 layoutget/return in loop
-Date:   Wed, 16 Dec 2020 16:35:14 -0800
-Message-Id: <20201217003516.75438-9-loghyr@hammerspace.com>
+Subject: [pynfs 09/10] st_flex: We can't return the layout without a layout stateid
+Date:   Wed, 16 Dec 2020 16:35:15 -0800
+Message-Id: <20201217003516.75438-10-loghyr@hammerspace.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20201217003516.75438-1-loghyr@hammerspace.com>
 References: <20201217003516.75438-1-loghyr@hammerspace.com>
@@ -65,34 +65,22 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Signed-off-by: Tom Haynes <loghyr@hammerspace.com>
 ---
- nfs4.1/server41tests/st_flex.py | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ nfs4.1/server41tests/st_flex.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/nfs4.1/server41tests/st_flex.py b/nfs4.1/server41tests/st_flex.py
-index 63efdd2..596c75e 100644
+index 596c75e..c6df68f 100644
 --- a/nfs4.1/server41tests/st_flex.py
 +++ b/nfs4.1/server41tests/st_flex.py
-@@ -1074,16 +1074,16 @@ def testFlexLayoutReturnDelayWrite(t, env):
-     res = close_file(sess, fh, stateid=open_stateid)
-     check(res)
+@@ -605,6 +605,8 @@ def layoutget_return(sess, fh, open_stateid, allowed_errors=NFS4_OK,
+                         0, NFS4_UINT64_MAX, 4196, open_stateid, 0xffff)]
+     res = sess.compound(ops)
+     check(res, allowed_errors)
++    if nfsstat4[res.status] is not NFS4_OK:
++        return [res] # We can't return the layout without a stateid!
+     layout_stateid = res.resarray[-1].logr_stateid
  
--def testFlexLayoutReturn1K(t, env):
-+def testFlexLayoutReturn100(t, env):
-     """
--    Perform LAYOUTGET and LAYOUTRETURN 1K times with error being returned periodically
-+    Perform LAYOUTGET and LAYOUTRETURN 100 times with error being returned periodically
- 
-     FLAGS: flex layoutreturn
--    CODE: FFLOR1K
-+    CODE: FFLOR100
-     """
-     name = env.testname(t)
-     sess = env.c1.new_pnfs_client_session(env.testname(t))
--    count = 1000  # Repeat LAYOUTGET/LAYOUTRETURN count times
-+    count = 100  # Repeat LAYOUTGET/LAYOUTRETURN count times
-     layout_error_ratio = 10  # Send an error every layout_error_ratio layout returns
- 
-     # Create the file
+     # Return layout
 -- 
 2.26.2
 
