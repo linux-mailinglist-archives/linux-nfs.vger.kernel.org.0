@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A64132DF111
+	by mail.lfdr.de (Postfix) with ESMTP id 3A15C2DF110
 	for <lists+linux-nfs@lfdr.de>; Sat, 19 Dec 2020 19:32:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbgLSSbi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S1727254AbgLSSbi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Sat, 19 Dec 2020 13:31:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34708 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727267AbgLSSbi (ORCPT
+        with ESMTP id S1727280AbgLSSbi (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Sat, 19 Dec 2020 13:31:38 -0500
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D16C3C0611C5
-        for <linux-nfs@vger.kernel.org>; Sat, 19 Dec 2020 10:30:23 -0800 (PST)
-Received: by mail-pf1-x431.google.com with SMTP id w6so3600616pfu.1
-        for <linux-nfs@vger.kernel.org>; Sat, 19 Dec 2020 10:30:23 -0800 (PST)
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E121C0611CA
+        for <linux-nfs@vger.kernel.org>; Sat, 19 Dec 2020 10:30:25 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id b5so3304974pjl.0
+        for <linux-nfs@vger.kernel.org>; Sat, 19 Dec 2020 10:30:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=s6bMc0aGhzA4oq/xkgQc+hzFOQE775/LkpcBnjPq4e0=;
-        b=L0kU7eh3D0EepnHq0Hw8kiF8GSBtjHkoEly7BKQUhnLSZUnBdZEPpyPHYQ+3ppsiNd
-         ZwiyfIIJk77GWlHTauT06F+X179yvW8OB8VanB2diUDpv6OJ+UDWcuoVevM8AsXdU8Xk
-         uxmfNCl/OkYvcMZwLZJKn1CCs+oPTDv6lW02KNDZfQLpvvI2O38cG34ArwhcnuK9rgec
-         xCg2Mq0E5YaFMj5uUHtjBiU1kSGu13IobCi9WkWAF+HPfEG+UFUMWb+wo3eiNKbpYxIH
-         nXpDEHZwnWe0U5XxvtYJ8qEcUbDDHAxhS5eUWedGNivr5GIReOx6KplTsGdDl8g5fazF
-         FLnQ==
+        bh=2dQ16zpkiKKpGEq/9mPVqRKfARPz8/ZOcbiS4ymT8+s=;
+        b=doz7o2Gx4PtUwUoD6tVeWgOhl6F4CQ1gIsNWFIIredy1w+/0XUKZLil35uRGtFSCts
+         kh0pMdEAJuzwlHgMIZNG8F1saqJuqL6XvH1v7QAeMBtDSCeVG9lRUUPPIaIOQiiMyrcy
+         Ub3wls8q5yCJ0VQVgCCHLNEy3sUFWPMaTjFUi8+9pS2F2dHGWkV86z4hPWaz/Sele6b3
+         U4SyxhM44MEGosTNpfAw+6Qf5N+pnXOqYlD6UaiMjs6R6by2V+Qd4+cYtA3FPB9iHKFh
+         ctJlF+u+9Xc4cWT8+yyg9rHTIIFL72BRMh9GexXRJmXLf8COM6RQPaqEHx7qQZgHioa9
+         ZHVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=s6bMc0aGhzA4oq/xkgQc+hzFOQE775/LkpcBnjPq4e0=;
-        b=hN5dI8uYJc9lohO9RYk3igZ5c1jmEgG8arxjekb+e3Dz2xPZJOSiGeCJyzgm0srjgu
-         RmTg4IMR0fgRejE/0xl1TQkZBq1K7Ot+MSZDE90OSdm8dyC3NtR4lOAWVHdSed3Bq9xd
-         mMXCG536xMItmb3OcFjOk2VqpmrkIrCGl1YilqSi7JnREdnjyFbjD/vcpHK4pQH6JTjI
-         2Ij9izpn14hzB+IIGXHfZRG5NK3ewp6HV05xA3i3iLDsfppGXKD+49czk5BlpzjN4bXP
-         XkAmX48sdlPMUE41ZQlqx3seyunC4MGNbBI/regbYy0kWsa4WJTUrWWtQdFGXU3kiLpR
-         z82w==
-X-Gm-Message-State: AOAM533GOHfKfK4x9ibjmKjWbbVUgACoOs2EGat+o7Sk9X5zoXhRh3Hx
-        IOSJicMju2zatTYmaFAMh668Fu+hzysxzA==
-X-Google-Smtp-Source: ABdhPJyHGJNJdTs+H1TOfWmYM/wWlF/5AENw8sbEmYPoZ/dpGbqGCfxQbH6WXEpqNbmf9CyubZQs2g==
-X-Received: by 2002:a63:2045:: with SMTP id r5mr9257428pgm.6.1608402623404;
-        Sat, 19 Dec 2020 10:30:23 -0800 (PST)
+        bh=2dQ16zpkiKKpGEq/9mPVqRKfARPz8/ZOcbiS4ymT8+s=;
+        b=L36bHELz6u59jNMr474TWRXy6ra5XS+6Ce7XzpjbNmv3dhbEGh31uKEFoz6ci9pnY8
+         Wt1vbt7aOnoo1ZkfnE+4edKeenYuX+ePB9vUb72gRjbFbcvAhn3+nBjtHDwQIEs9+knk
+         JxMADhkP2ijQxFKdhGechX1uGfDWxiDUpYtVWa7kTBAlBSnfg2qAdyMmUKtYt4L5lo0c
+         YMydrbVyoMjyUP9P8fu/BtrdrAIRBpLH2OECQ59E+XPkFBwd77b5NWNjbEcnEAVnyoMJ
+         MxuQZxU65xPfNfnU4biGE5lh9sttGN3yy2aLkHKwRNWupE0N640KO/l8+vghzaKWj7+J
+         oSpw==
+X-Gm-Message-State: AOAM531XgUbrHsYl6nk1U+3+4OYoHjNanv3ze8SSPruiPn9TGPIaVAy/
+        imi42r/hNyGm2qHT2k/EYHg=
+X-Google-Smtp-Source: ABdhPJyrVEG0Yc8yCmSh5oYd6vuH3M29AK4d6hGsxBA1QbEs8YdzFYGwZzNCOY+lwE2siYT5Lbj/Zg==
+X-Received: by 2002:a17:90a:193:: with SMTP id 19mr10020163pjc.45.1608402624645;
+        Sat, 19 Dec 2020 10:30:24 -0800 (PST)
 Received: from garbo.localdomain (c-69-181-67-218.hsd1.ca.comcast.net. [69.181.67.218])
-        by smtp.gmail.com with ESMTPSA id l197sm12318471pfd.97.2020.12.19.10.30.22
+        by smtp.gmail.com with ESMTPSA id l197sm12318471pfd.97.2020.12.19.10.30.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Dec 2020 10:30:22 -0800 (PST)
+        Sat, 19 Dec 2020 10:30:24 -0800 (PST)
 From:   Tom Haynes <loghyr@gmail.com>
 X-Google-Original-From: Tom Haynes <loghyr@hammerspace.com>
 To:     Bruce Fields <bfields@redhat.com>
 Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [pynfs python3 6/7] st_flex: Return the layout before closing the file
-Date:   Sat, 19 Dec 2020 10:29:47 -0800
-Message-Id: <20201219182948.83000-7-loghyr@hammerspace.com>
+Subject: [pynfs python3 7/7] st_flex: testFlexLayoutStatsSmall needed loving to pass python3
+Date:   Sat, 19 Dec 2020 10:29:48 -0800
+Message-Id: <20201219182948.83000-8-loghyr@hammerspace.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20201219182948.83000-1-loghyr@hammerspace.com>
 References: <20201219182948.83000-1-loghyr@hammerspace.com>
@@ -67,102 +67,33 @@ From: Tom Haynes <loghyr@excfb.com>
 
 Signed-off-by: Tom Haynes <loghyr@excfb.com>
 ---
- nfs4.1/server41tests/st_flex.py | 40 +++++++++++++++++++++++++++------
- 1 file changed, 33 insertions(+), 7 deletions(-)
+ nfs4.1/server41tests/st_flex.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/nfs4.1/server41tests/st_flex.py b/nfs4.1/server41tests/st_flex.py
-index 3aae441..2b1820c 100644
+index 2b1820c..169db69 100644
 --- a/nfs4.1/server41tests/st_flex.py
 +++ b/nfs4.1/server41tests/st_flex.py
-@@ -56,6 +56,15 @@ def testStateid1(t, env):
-         # the server increments by one the value of the "seqid" in each
-         # subsequent LAYOUTGET and LAYOUTRETURN response,
-         check_seqid(lo_stateid, i + 2)
-+
-+    ops = [op.putfh(fh),
-+           op.layoutreturn(False, LAYOUT4_FLEX_FILES, LAYOUTIOMODE4_ANY,
-+                           layoutreturn4(LAYOUTRETURN4_FILE,
-+                                         layoutreturn_file4(0, NFS4_MAXFILELEN,
-+                                                            lo_stateid, empty_p.get_buffer())))]
-+    res = sess.compound(ops)
-+    check(res)
-+
-     res = close_file(sess, fh, stateid=open_stateid)
-     check(res)
+@@ -8,7 +8,7 @@ from xdrdef.nfs4_pack import NFS4Packer as FlexPacker, \
+     NFS4Unpacker as FlexUnpacker
+ from nfs4lib import FancyNFS4Packer, get_nfstime
  
-@@ -79,13 +88,13 @@ def testFlexLayoutReturnFile(t, env):
-     res = sess.compound(ops)
-     check(res)
-     # Return layout
--    layout_stateid = res.resarray[-1].logr_stateid
-+    lo_stateid = res.resarray[-1].logr_stateid
+-current_stateid = stateid4(1, '\0' * 12)
++current_stateid = stateid4(1, b'\0' * 12)
  
-     ops = [op.putfh(fh),
-            op.layoutreturn(False, LAYOUT4_FLEX_FILES, LAYOUTIOMODE4_ANY,
-                            layoutreturn4(LAYOUTRETURN4_FILE,
-                                          layoutreturn_file4(0, NFS4_MAXFILELEN,
--                                                            layout_stateid, empty_p.get_buffer())))]
-+                                                            lo_stateid, empty_p.get_buffer())))]
-     res = sess.compound(ops)
-     check(res)
-     res = close_file(sess, fh, stateid=open_stateid)
-@@ -150,6 +159,15 @@ def testFlexLayoutOldSeqid(t, env):
-                                                             lo_stateid, empty_p.get_buffer())))]
-     res = sess.compound(ops)
-     check(res, NFS4ERR_OLD_STATEID, "LAYOUTRETURN with an old stateid")
-+
-+    ops = [op.putfh(fh),
-+           op.layoutreturn(False, LAYOUT4_FLEX_FILES, LAYOUTIOMODE4_ANY,
-+                           layoutreturn4(LAYOUTRETURN4_FILE,
-+                                         layoutreturn_file4(0, NFS4_MAXFILELEN,
-+                                                            lo_stateid3, empty_p.get_buffer())))]
-+    res = sess.compound(ops)
-+    check(res)
-+
-     res = close_file(sess, fh, stateid=open_stateid)
-     check(res)
+ empty_fflr = ff_layoutreturn4([], [])
  
-@@ -260,8 +278,8 @@ def testFlexLayoutTestAccess(t, env):
-                         0, NFS4_MAXFILELEN, 8192, open_stateid, 0xffff)]
-     res = sess.compound(ops)
-     check(res)
--    lo_stateid = res.resarray[-1].logr_stateid
--    check_seqid(lo_stateid, 1)
-+    lo_stateid1 = res.resarray[-1].logr_stateid
-+    check_seqid(lo_stateid1, 1)
+@@ -347,8 +347,8 @@ def testFlexLayoutStatsSmall(t, env):
+     sess = env.c1.new_pnfs_client_session(env.testname(t))
  
-     layout = res.resarray[-1].logr_layout[-1]
-     p = FlexUnpacker(layout.loc_body)
-@@ -277,11 +295,11 @@ def testFlexLayoutTestAccess(t, env):
-     ops = [op.putfh(fh),
-            op.layoutget(False, LAYOUT4_FLEX_FILES,
-                         LAYOUTIOMODE4_READ,
--                        0, NFS4_MAXFILELEN, 8192, lo_stateid, 0xffff)]
-+                        0, NFS4_MAXFILELEN, 8192, lo_stateid1, 0xffff)]
-     res = sess.compound(ops)
-     check(res)
--    lo_stateid = res.resarray[-1].logr_stateid
--    check_seqid(lo_stateid, 2)
-+    lo_stateid2 = res.resarray[-1].logr_stateid
-+    check_seqid(lo_stateid2, 2)
- 
-     layout = res.resarray[-1].logr_layout[-1]
-     p = FlexUnpacker(layout.loc_body)
-@@ -300,6 +318,14 @@ def testFlexLayoutTestAccess(t, env):
-     if gid_rw != gid_rd:
-         fail("Expected gid_rd == %s, got %s" % (gid_rd, gid_rw))
- 
-+    ops = [op.putfh(fh),
-+           op.layoutreturn(False, LAYOUT4_FLEX_FILES, LAYOUTIOMODE4_ANY,
-+                           layoutreturn4(LAYOUTRETURN4_FILE,
-+                                         layoutreturn_file4(0, NFS4_MAXFILELEN,
-+                                                            lo_stateid2, empty_p.get_buffer())))]
-+    res = sess.compound(ops)
-+    check(res)
-+
-     res = close_file(sess, fh, stateid=open_stateid)
-     check(res)
- 
+     for i in range(len(lats)):
+-        open_op = open_create_file_op(sess, env.testname(t) + str(i), open_create=OPEN4_CREATE)
+-        res = sess.compound( open_op +
++        open_op = open_create_file_op(sess, b'%s_%i' % (env.testname(t), i), open_create=OPEN4_CREATE)
++        res = sess.compound(open_op +
+                [op.layoutget(False, LAYOUT4_FLEX_FILES, LAYOUTIOMODE4_RW,
+                             0, NFS4_MAXFILELEN, 4196, current_stateid, 0xffff)])
+         check(res, NFS4_OK)
 -- 
 2.26.2
 
