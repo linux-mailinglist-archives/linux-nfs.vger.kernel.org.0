@@ -2,227 +2,172 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F15422DF2F8
-	for <lists+linux-nfs@lfdr.de>; Sun, 20 Dec 2020 04:35:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 067482DF600
+	for <lists+linux-nfs@lfdr.de>; Sun, 20 Dec 2020 16:58:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgLTDfS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 19 Dec 2020 22:35:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbgLTDfS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 19 Dec 2020 22:35:18 -0500
-From:   Sasha Levin <sashal@kernel.org>
-Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.9 02/15] pNFS/flexfiles: Fix array overflow when flexfiles mirroring is enabled
-Date:   Sat, 19 Dec 2020 22:34:20 -0500
-Message-Id: <20201220033434.2728348-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201220033434.2728348-1-sashal@kernel.org>
-References: <20201220033434.2728348-1-sashal@kernel.org>
+        id S1727647AbgLTP5c (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 20 Dec 2020 10:57:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727641AbgLTP5c (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 20 Dec 2020 10:57:32 -0500
+Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [IPv6:2001:638:700:1038::1:9b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44C93C0613CF
+        for <linux-nfs@vger.kernel.org>; Sun, 20 Dec 2020 07:56:51 -0800 (PST)
+Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [131.169.56.165])
+        by smtp-o-2.desy.de (Postfix) with ESMTP id 893A6160FC0
+        for <linux-nfs@vger.kernel.org>; Sun, 20 Dec 2020 16:56:46 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 893A6160FC0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1608479806; bh=3kK3mhw+useqdgx5jLgtA9QBVnohbfPTJ7e3YpNHCCk=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=z3+StjpRrwT+IC+9avFy6Kibg/zBZUybcLu4URJcK4tdnbC8zbONt1fxNvyRLevZn
+         U845Lv6oczrDGyjzFGXh0L1MGzedVFYzz2OdbRLp6YZEIRvwzeeBWgb0lA6JAF2oDh
+         UBiS24HbHRpsYZ36jCrO5MskatXysfWN4SWYP+Oc=
+Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [131.169.56.130])
+        by smtp-buf-2.desy.de (Postfix) with ESMTP id 7C3DF1A01C7;
+        Sun, 20 Dec 2020 16:56:46 +0100 (CET)
+X-Virus-Scanned: amavisd-new at desy.de
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+        by smtp-intra-1.desy.de (Postfix) with ESMTP id 549D3C0177;
+        Sun, 20 Dec 2020 16:56:46 +0100 (CET)
+Date:   Sun, 20 Dec 2020 16:56:45 +0100 (CET)
+From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To:     Tom Haynes <loghyr@gmail.com>
+Cc:     bfields <bfields@redhat.com>, linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <2110076167.5569939.1608479805678.JavaMail.zimbra@desy.de>
+In-Reply-To: <20201219182948.83000-7-loghyr@hammerspace.com>
+References: <20201219182948.83000-1-loghyr@hammerspace.com> <20201219182948.83000-7-loghyr@hammerspace.com>
+Subject: Re: [pynfs python3 6/7] st_flex: Return the layout before closing
+ the file
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_3980 (ZimbraWebClient - FF83 (Linux)/8.8.15_GA_3980)
+Thread-Topic: st_flex: Return the layout before closing the file
+Thread-Index: 7wVd+MpsQbGPPzcZVDTEom3paTQXOw==
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+Hi Tom,
 
-[ Upstream commit 63e2fffa59a9dd91e443b08832656399fd80b7f0 ]
+works for me as well with fedora33 and dcache server.
 
-If the flexfiles mirroring is enabled, then the read code expects to be
-able to set pgio->pg_mirror_idx to point to the data server that is
-being used for this particular read. However it does not change the
-pg_mirror_count because we only need to send a single read.
+Thanks,
+   Tigran.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/flexfilelayout/flexfilelayout.c | 27 ++++++++++++++-----
- fs/nfs/pagelist.c                      | 36 +++++++++++++++++++-------
- include/linux/nfs_page.h               |  4 +++
- 3 files changed, 52 insertions(+), 15 deletions(-)
+----- Original Message -----
+> From: "Tom Haynes" <loghyr@gmail.com>
+> To: "bfields" <bfields@redhat.com>
+> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
+> Sent: Saturday, 19 December, 2020 19:29:47
+> Subject: [pynfs python3 6/7] st_flex: Return the layout before closing the file
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index a163533446fa3..24bf5797f88ae 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -838,7 +838,7 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 	struct nfs_pgio_mirror *pgm;
- 	struct nfs4_ff_layout_mirror *mirror;
- 	struct nfs4_pnfs_ds *ds;
--	u32 ds_idx, i;
-+	u32 ds_idx;
- 
- retry:
- 	ff_layout_pg_check_layout(pgio, req);
-@@ -864,11 +864,9 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 		goto retry;
- 	}
- 
--	for (i = 0; i < pgio->pg_mirror_count; i++) {
--		mirror = FF_LAYOUT_COMP(pgio->pg_lseg, i);
--		pgm = &pgio->pg_mirrors[i];
--		pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].rsize;
--	}
-+	mirror = FF_LAYOUT_COMP(pgio->pg_lseg, ds_idx);
-+	pgm = &pgio->pg_mirrors[0];
-+	pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].rsize;
- 
- 	pgio->pg_mirror_idx = ds_idx;
- 
-@@ -985,6 +983,21 @@ ff_layout_pg_get_mirror_count_write(struct nfs_pageio_descriptor *pgio,
- 	return 1;
- }
- 
-+static u32
-+ff_layout_pg_set_mirror_write(struct nfs_pageio_descriptor *desc, u32 idx)
-+{
-+	u32 old = desc->pg_mirror_idx;
-+
-+	desc->pg_mirror_idx = idx;
-+	return old;
-+}
-+
-+static struct nfs_pgio_mirror *
-+ff_layout_pg_get_mirror_write(struct nfs_pageio_descriptor *desc, u32 idx)
-+{
-+	return &desc->pg_mirrors[idx];
-+}
-+
- static const struct nfs_pageio_ops ff_layout_pg_read_ops = {
- 	.pg_init = ff_layout_pg_init_read,
- 	.pg_test = pnfs_generic_pg_test,
-@@ -998,6 +1011,8 @@ static const struct nfs_pageio_ops ff_layout_pg_write_ops = {
- 	.pg_doio = pnfs_generic_pg_writepages,
- 	.pg_get_mirror_count = ff_layout_pg_get_mirror_count_write,
- 	.pg_cleanup = pnfs_generic_pg_cleanup,
-+	.pg_get_mirror = ff_layout_pg_get_mirror_write,
-+	.pg_set_mirror = ff_layout_pg_set_mirror_write,
- };
- 
- static void ff_layout_reset_write(struct nfs_pgio_header *hdr, bool retry_pnfs)
-diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index 6985cacf4700d..78c9c4bdef2b6 100644
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -31,13 +31,29 @@
- static struct kmem_cache *nfs_page_cachep;
- static const struct rpc_call_ops nfs_pgio_common_ops;
- 
-+static struct nfs_pgio_mirror *
-+nfs_pgio_get_mirror(struct nfs_pageio_descriptor *desc, u32 idx)
-+{
-+	if (desc->pg_ops->pg_get_mirror)
-+		return desc->pg_ops->pg_get_mirror(desc, idx);
-+	return &desc->pg_mirrors[0];
-+}
-+
- struct nfs_pgio_mirror *
- nfs_pgio_current_mirror(struct nfs_pageio_descriptor *desc)
- {
--	return &desc->pg_mirrors[desc->pg_mirror_idx];
-+	return nfs_pgio_get_mirror(desc, desc->pg_mirror_idx);
- }
- EXPORT_SYMBOL_GPL(nfs_pgio_current_mirror);
- 
-+static u32
-+nfs_pgio_set_current_mirror(struct nfs_pageio_descriptor *desc, u32 idx)
-+{
-+	if (desc->pg_ops->pg_set_mirror)
-+		return desc->pg_ops->pg_set_mirror(desc, idx);
-+	return desc->pg_mirror_idx;
-+}
-+
- void nfs_pgheader_init(struct nfs_pageio_descriptor *desc,
- 		       struct nfs_pgio_header *hdr,
- 		       void (*release)(struct nfs_pgio_header *hdr))
-@@ -1259,7 +1275,7 @@ static void nfs_pageio_error_cleanup(struct nfs_pageio_descriptor *desc)
- 		return;
- 
- 	for (midx = 0; midx < desc->pg_mirror_count; midx++) {
--		mirror = &desc->pg_mirrors[midx];
-+		mirror = nfs_pgio_get_mirror(desc, midx);
- 		desc->pg_completion_ops->error_cleanup(&mirror->pg_list,
- 				desc->pg_error);
- 	}
-@@ -1293,12 +1309,12 @@ int nfs_pageio_add_request(struct nfs_pageio_descriptor *desc,
- 			goto out_failed;
- 		}
- 
--		desc->pg_mirror_idx = midx;
-+		nfs_pgio_set_current_mirror(desc, midx);
- 		if (!nfs_pageio_add_request_mirror(desc, dupreq))
- 			goto out_cleanup_subreq;
- 	}
- 
--	desc->pg_mirror_idx = 0;
-+	nfs_pgio_set_current_mirror(desc, 0);
- 	if (!nfs_pageio_add_request_mirror(desc, req))
- 		goto out_failed;
- 
-@@ -1320,10 +1336,12 @@ int nfs_pageio_add_request(struct nfs_pageio_descriptor *desc,
- static void nfs_pageio_complete_mirror(struct nfs_pageio_descriptor *desc,
- 				       u32 mirror_idx)
- {
--	struct nfs_pgio_mirror *mirror = &desc->pg_mirrors[mirror_idx];
--	u32 restore_idx = desc->pg_mirror_idx;
-+	struct nfs_pgio_mirror *mirror;
-+	u32 restore_idx;
-+
-+	restore_idx = nfs_pgio_set_current_mirror(desc, mirror_idx);
-+	mirror = nfs_pgio_current_mirror(desc);
- 
--	desc->pg_mirror_idx = mirror_idx;
- 	for (;;) {
- 		nfs_pageio_doio(desc);
- 		if (desc->pg_error < 0 || !mirror->pg_recoalesce)
-@@ -1331,7 +1349,7 @@ static void nfs_pageio_complete_mirror(struct nfs_pageio_descriptor *desc,
- 		if (!nfs_do_recoalesce(desc))
- 			break;
- 	}
--	desc->pg_mirror_idx = restore_idx;
-+	nfs_pgio_set_current_mirror(desc, restore_idx);
- }
- 
- /*
-@@ -1405,7 +1423,7 @@ void nfs_pageio_cond_complete(struct nfs_pageio_descriptor *desc, pgoff_t index)
- 	u32 midx;
- 
- 	for (midx = 0; midx < desc->pg_mirror_count; midx++) {
--		mirror = &desc->pg_mirrors[midx];
-+		mirror = nfs_pgio_get_mirror(desc, midx);
- 		if (!list_empty(&mirror->pg_list)) {
- 			prev = nfs_list_entry(mirror->pg_list.prev);
- 			if (index != prev->wb_index + 1) {
-diff --git a/include/linux/nfs_page.h b/include/linux/nfs_page.h
-index c32c15216da34..f0373a6cb5fb6 100644
---- a/include/linux/nfs_page.h
-+++ b/include/linux/nfs_page.h
-@@ -55,6 +55,7 @@ struct nfs_page {
- 	unsigned short		wb_nio;		/* Number of I/O attempts */
- };
- 
-+struct nfs_pgio_mirror;
- struct nfs_pageio_descriptor;
- struct nfs_pageio_ops {
- 	void	(*pg_init)(struct nfs_pageio_descriptor *, struct nfs_page *);
-@@ -64,6 +65,9 @@ struct nfs_pageio_ops {
- 	unsigned int	(*pg_get_mirror_count)(struct nfs_pageio_descriptor *,
- 				       struct nfs_page *);
- 	void	(*pg_cleanup)(struct nfs_pageio_descriptor *);
-+	struct nfs_pgio_mirror *
-+		(*pg_get_mirror)(struct nfs_pageio_descriptor *, u32);
-+	u32	(*pg_set_mirror)(struct nfs_pageio_descriptor *, u32);
- };
- 
- struct nfs_rw_ops {
--- 
-2.27.0
-
+> From: Tom Haynes <loghyr@excfb.com>
+> 
+> Signed-off-by: Tom Haynes <loghyr@excfb.com>
+> ---
+> nfs4.1/server41tests/st_flex.py | 40 +++++++++++++++++++++++++++------
+> 1 file changed, 33 insertions(+), 7 deletions(-)
+> 
+> diff --git a/nfs4.1/server41tests/st_flex.py b/nfs4.1/server41tests/st_flex.py
+> index 3aae441..2b1820c 100644
+> --- a/nfs4.1/server41tests/st_flex.py
+> +++ b/nfs4.1/server41tests/st_flex.py
+> @@ -56,6 +56,15 @@ def testStateid1(t, env):
+>         # the server increments by one the value of the "seqid" in each
+>         # subsequent LAYOUTGET and LAYOUTRETURN response,
+>         check_seqid(lo_stateid, i + 2)
+> +
+> +    ops = [op.putfh(fh),
+> +           op.layoutreturn(False, LAYOUT4_FLEX_FILES, LAYOUTIOMODE4_ANY,
+> +                           layoutreturn4(LAYOUTRETURN4_FILE,
+> +                                         layoutreturn_file4(0, NFS4_MAXFILELEN,
+> +                                                            lo_stateid,
+> empty_p.get_buffer())))]
+> +    res = sess.compound(ops)
+> +    check(res)
+> +
+>     res = close_file(sess, fh, stateid=open_stateid)
+>     check(res)
+> 
+> @@ -79,13 +88,13 @@ def testFlexLayoutReturnFile(t, env):
+>     res = sess.compound(ops)
+>     check(res)
+>     # Return layout
+> -    layout_stateid = res.resarray[-1].logr_stateid
+> +    lo_stateid = res.resarray[-1].logr_stateid
+> 
+>     ops = [op.putfh(fh),
+>            op.layoutreturn(False, LAYOUT4_FLEX_FILES, LAYOUTIOMODE4_ANY,
+>                            layoutreturn4(LAYOUTRETURN4_FILE,
+>                                          layoutreturn_file4(0, NFS4_MAXFILELEN,
+> -                                                            layout_stateid,
+> empty_p.get_buffer())))]
+> +                                                            lo_stateid,
+> empty_p.get_buffer())))]
+>     res = sess.compound(ops)
+>     check(res)
+>     res = close_file(sess, fh, stateid=open_stateid)
+> @@ -150,6 +159,15 @@ def testFlexLayoutOldSeqid(t, env):
+>                                                             lo_stateid, empty_p.get_buffer())))]
+>     res = sess.compound(ops)
+>     check(res, NFS4ERR_OLD_STATEID, "LAYOUTRETURN with an old stateid")
+> +
+> +    ops = [op.putfh(fh),
+> +           op.layoutreturn(False, LAYOUT4_FLEX_FILES, LAYOUTIOMODE4_ANY,
+> +                           layoutreturn4(LAYOUTRETURN4_FILE,
+> +                                         layoutreturn_file4(0, NFS4_MAXFILELEN,
+> +                                                            lo_stateid3,
+> empty_p.get_buffer())))]
+> +    res = sess.compound(ops)
+> +    check(res)
+> +
+>     res = close_file(sess, fh, stateid=open_stateid)
+>     check(res)
+> 
+> @@ -260,8 +278,8 @@ def testFlexLayoutTestAccess(t, env):
+>                         0, NFS4_MAXFILELEN, 8192, open_stateid, 0xffff)]
+>     res = sess.compound(ops)
+>     check(res)
+> -    lo_stateid = res.resarray[-1].logr_stateid
+> -    check_seqid(lo_stateid, 1)
+> +    lo_stateid1 = res.resarray[-1].logr_stateid
+> +    check_seqid(lo_stateid1, 1)
+> 
+>     layout = res.resarray[-1].logr_layout[-1]
+>     p = FlexUnpacker(layout.loc_body)
+> @@ -277,11 +295,11 @@ def testFlexLayoutTestAccess(t, env):
+>     ops = [op.putfh(fh),
+>            op.layoutget(False, LAYOUT4_FLEX_FILES,
+>                         LAYOUTIOMODE4_READ,
+> -                        0, NFS4_MAXFILELEN, 8192, lo_stateid, 0xffff)]
+> +                        0, NFS4_MAXFILELEN, 8192, lo_stateid1, 0xffff)]
+>     res = sess.compound(ops)
+>     check(res)
+> -    lo_stateid = res.resarray[-1].logr_stateid
+> -    check_seqid(lo_stateid, 2)
+> +    lo_stateid2 = res.resarray[-1].logr_stateid
+> +    check_seqid(lo_stateid2, 2)
+> 
+>     layout = res.resarray[-1].logr_layout[-1]
+>     p = FlexUnpacker(layout.loc_body)
+> @@ -300,6 +318,14 @@ def testFlexLayoutTestAccess(t, env):
+>     if gid_rw != gid_rd:
+>         fail("Expected gid_rd == %s, got %s" % (gid_rd, gid_rw))
+> 
+> +    ops = [op.putfh(fh),
+> +           op.layoutreturn(False, LAYOUT4_FLEX_FILES, LAYOUTIOMODE4_ANY,
+> +                           layoutreturn4(LAYOUTRETURN4_FILE,
+> +                                         layoutreturn_file4(0, NFS4_MAXFILELEN,
+> +                                                            lo_stateid2,
+> empty_p.get_buffer())))]
+> +    res = sess.compound(ops)
+> +    check(res)
+> +
+>     res = close_file(sess, fh, stateid=open_stateid)
+>     check(res)
+> 
+> --
+> 2.26.2
