@@ -2,167 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC3002E7931
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Dec 2020 14:08:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C70E2E8384
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Jan 2021 11:59:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgL3NHN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Dec 2020 08:07:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727446AbgL3NF2 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 30 Dec 2020 08:05:28 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8FA44225AC;
-        Wed, 30 Dec 2020 13:04:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1609333472;
-        bh=3kuHzY4yx1SVEHMeOsRR8JLpQJFo33DMO4NBlvtdluo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qoewPFnTQfcjh1tRTvO9X/FjCig4YkkfaW3WUcN/UHhSoGLGEe2W2mIROdVTL4esS
-         R4YzDPfB2HHMMGpW1hPNfjHpFpIc4YkV5xhk6L3GZzFTFHydI1VwTeQnaMks8FCf3C
-         /0CZYxjPEeqm+Vj4+PeJexgnoE0+Hq4fgrP9vMwe4xOGjV//PlO2K3MrpD+/qyAo64
-         VcD+weSDaizEl3LF598FKs9qOOMbmcqwAzUvQz8hQhl/mJR3lRn8Rq7CQgZ8O6Qviv
-         96ReA+drgYbET0XUpAey0wRkthy0NMpg9ZsXM+6tAoUd58ft1v0gQ6xsi9lAuY65zM
-         6RJsewIBts5MA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/10] NFSv4: Fix a pNFS layout related use-after-free race when freeing the inode
-Date:   Wed, 30 Dec 2020 08:04:19 -0500
-Message-Id: <20201230130422.3637448-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201230130422.3637448-1-sashal@kernel.org>
-References: <20201230130422.3637448-1-sashal@kernel.org>
+        id S1726795AbhAAK7x convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 1 Jan 2021 05:59:53 -0500
+Received: from mail.askinacable.net.np ([103.115.84.7]:40072 "EHLO
+        mail.askinacable.net.np" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbhAAK7x (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 Jan 2021 05:59:53 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.askinacable.net.np (Postfix) with ESMTP id 9054A411BE836;
+        Thu, 31 Dec 2020 17:50:41 +0545 (+0545)
+Received: from mail.askinacable.net.np ([127.0.0.1])
+        by localhost (mail.askinacable.net.np [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id jyk6KoNeR8oq; Thu, 31 Dec 2020 17:50:41 +0545 (+0545)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.askinacable.net.np (Postfix) with ESMTP id 4DBAF411B6ACB;
+        Thu, 31 Dec 2020 16:41:39 +0545 (+0545)
+X-Virus-Scanned: amavisd-new at mail.askinacable.net.np
+Received: from mail.askinacable.net.np ([127.0.0.1])
+        by localhost (mail.askinacable.net.np [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id E-NrhLbWkvIj; Thu, 31 Dec 2020 16:41:39 +0545 (+0545)
+Received: from Hp-??.tendawifi.com (unknown [31.202.16.82])
+        by mail.askinacable.net.np (Postfix) with ESMTPSA id D708841153B26;
+        Thu, 31 Dec 2020 15:39:19 +0545 (+0545)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: my subject
+To:     Recipients <facundo@telviso.com.ar>
+From:   Mavis <facundo@telviso.com.ar>
+Date:   Thu, 31 Dec 2020 12:03:58 +0200
+Reply-To: sheryllgoedertdonation@hotmail.com
+Message-Id: <20201231095419.D708841153B26@mail.askinacable.net.np>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+Mein Name ist Sheryll Goedert (geschäftsführendes Mitglied von Vacation Life LLC). Ich bin der Gewinner des Powerball-Jackpots in Höhe von 396,9 Millionen US-Dollar. Ich habe am 29. Januar 2020 gewonnen.
 
-[ Upstream commit b6d49ecd1081740b6e632366428b960461f8158b ]
+Dieser Gewinn ist ein Segen, daher haben wir beschlossen, der Gesellschaft etwas zurückzugeben, was bedeutet, dass wir Sie offiziell darüber informieren, dass Sie als einer der Begünstigten des Cash Aid-Programms für soziale Verantwortung von 2020 VACATION LIFE LLC ausgewählt wurden.
 
-When returning the layout in nfs4_evict_inode(), we need to ensure that
-the layout is actually done being freed before we can proceed to free the
-inode itself.
-
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/nfs4super.c |  2 +-
- fs/nfs/pnfs.c      | 33 +++++++++++++++++++++++++++++++--
- fs/nfs/pnfs.h      |  5 +++++
- 3 files changed, 37 insertions(+), 3 deletions(-)
-
-diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index 6fb7cb6b3f4b0..e7a10f5f54057 100644
---- a/fs/nfs/nfs4super.c
-+++ b/fs/nfs/nfs4super.c
-@@ -95,7 +95,7 @@ static void nfs4_evict_inode(struct inode *inode)
- 	nfs_inode_return_delegation_noreclaim(inode);
- 	/* Note that above delegreturn would trigger pnfs return-on-close */
- 	pnfs_return_layout(inode);
--	pnfs_destroy_layout(NFS_I(inode));
-+	pnfs_destroy_layout_final(NFS_I(inode));
- 	/* First call standard NFS clear_inode() code */
- 	nfs_clear_inode(inode);
- }
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 2b9e139a29975..a253384a4710b 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -294,6 +294,7 @@ void
- pnfs_put_layout_hdr(struct pnfs_layout_hdr *lo)
- {
- 	struct inode *inode;
-+	unsigned long i_state;
- 
- 	if (!lo)
- 		return;
-@@ -304,8 +305,12 @@ pnfs_put_layout_hdr(struct pnfs_layout_hdr *lo)
- 		if (!list_empty(&lo->plh_segs))
- 			WARN_ONCE(1, "NFS: BUG unfreed layout segments.\n");
- 		pnfs_detach_layout_hdr(lo);
-+		i_state = inode->i_state;
- 		spin_unlock(&inode->i_lock);
- 		pnfs_free_layout_hdr(lo);
-+		/* Notify pnfs_destroy_layout_final() that we're done */
-+		if (i_state & (I_FREEING | I_CLEAR))
-+			wake_up_var(lo);
- 	}
- }
- 
-@@ -713,8 +718,7 @@ pnfs_free_lseg_list(struct list_head *free_me)
- 	}
- }
- 
--void
--pnfs_destroy_layout(struct nfs_inode *nfsi)
-+static struct pnfs_layout_hdr *__pnfs_destroy_layout(struct nfs_inode *nfsi)
- {
- 	struct pnfs_layout_hdr *lo;
- 	LIST_HEAD(tmp_list);
-@@ -732,9 +736,34 @@ pnfs_destroy_layout(struct nfs_inode *nfsi)
- 		pnfs_put_layout_hdr(lo);
- 	} else
- 		spin_unlock(&nfsi->vfs_inode.i_lock);
-+	return lo;
-+}
-+
-+void pnfs_destroy_layout(struct nfs_inode *nfsi)
-+{
-+	__pnfs_destroy_layout(nfsi);
- }
- EXPORT_SYMBOL_GPL(pnfs_destroy_layout);
- 
-+static bool pnfs_layout_removed(struct nfs_inode *nfsi,
-+				struct pnfs_layout_hdr *lo)
-+{
-+	bool ret;
-+
-+	spin_lock(&nfsi->vfs_inode.i_lock);
-+	ret = nfsi->layout != lo;
-+	spin_unlock(&nfsi->vfs_inode.i_lock);
-+	return ret;
-+}
-+
-+void pnfs_destroy_layout_final(struct nfs_inode *nfsi)
-+{
-+	struct pnfs_layout_hdr *lo = __pnfs_destroy_layout(nfsi);
-+
-+	if (lo)
-+		wait_var_event(lo, pnfs_layout_removed(nfsi, lo));
-+}
-+
- static bool
- pnfs_layout_add_bulk_destroy_list(struct inode *inode,
- 		struct list_head *layout_list)
-diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
-index 3ba44819a88ae..80fafa29e567a 100644
---- a/fs/nfs/pnfs.h
-+++ b/fs/nfs/pnfs.h
-@@ -254,6 +254,7 @@ struct pnfs_layout_segment *pnfs_layout_process(struct nfs4_layoutget *lgp);
- void pnfs_layoutget_free(struct nfs4_layoutget *lgp);
- void pnfs_free_lseg_list(struct list_head *tmp_list);
- void pnfs_destroy_layout(struct nfs_inode *);
-+void pnfs_destroy_layout_final(struct nfs_inode *);
- void pnfs_destroy_all_layouts(struct nfs_client *);
- int pnfs_destroy_layouts_byfsid(struct nfs_client *clp,
- 		struct nfs_fsid *fsid,
-@@ -645,6 +646,10 @@ static inline void pnfs_destroy_layout(struct nfs_inode *nfsi)
- {
- }
- 
-+static inline void pnfs_destroy_layout_final(struct nfs_inode *nfsi)
-+{
-+}
-+
- static inline struct pnfs_layout_segment *
- pnfs_get_lseg(struct pnfs_layout_segment *lseg)
- {
--- 
-2.27.0
-
+Ihre E-Mail-Adresse wurde vom Topaz Ballot System zufällig ausgewählt. Sie haben von VACATION LIFE LLC die Summe von 4.800.000 EURO erhalten. Ich hoffe nur, dass Sie anderen in Ihrer Umgebung helfen können. Senden Sie mir eine E-Mail an (sheryllgoedertdonation@hotmail.com), um weitere Informationen darüber zu erhalten, wie Sie den gespendeten Betrag erhalten
