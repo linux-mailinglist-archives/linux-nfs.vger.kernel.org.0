@@ -2,134 +2,197 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAE832E99AD
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Jan 2021 17:06:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 06BF72E99DF
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Jan 2021 17:07:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbhADQC1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 4 Jan 2021 11:02:27 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51649 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728834AbhADQC1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 Jan 2021 11:02:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1609776059;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=l9xfUF5eayZFFF1hRq1v81sGQbl/LPcx9d10hqzkM50=;
-        b=aIO8HJgyez6mxrAaEMgdK6dD+MWT7zMji6qQzVmKQX2/JGJj8kCgLR5oeyFWvG+QRTW5d5
-        sW8d0KxXNZMqU3FZBVKM5GNeDjqQbE8LdSsSJBmskS+Bg43kQW6dvQYVwgxEDu1nylNW5a
-        ybuQ9akrTINvnPm8Weus+0b7HhZC3Kw=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-457-F0fAamopMZeKPsigqpiFqw-1; Mon, 04 Jan 2021 11:00:54 -0500
-X-MC-Unique: F0fAamopMZeKPsigqpiFqw-1
-Received: by mail-pl1-f197.google.com with SMTP id ba10so13734135plb.11
-        for <linux-nfs@vger.kernel.org>; Mon, 04 Jan 2021 08:00:54 -0800 (PST)
+        id S1729179AbhADQEL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 4 Jan 2021 11:04:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729171AbhADQEJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 Jan 2021 11:04:09 -0500
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B38AC061574
+        for <linux-nfs@vger.kernel.org>; Mon,  4 Jan 2021 08:03:28 -0800 (PST)
+Received: by mail-lf1-x12d.google.com with SMTP id a12so65525579lfl.6
+        for <linux-nfs@vger.kernel.org>; Mon, 04 Jan 2021 08:03:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=N/60JK33t4oUrdAxWdxnhjyWQgg49zVpewb8SKhK0TQ=;
+        b=tSv/cNHwBpjBGxhD9rfEIsRaMv0RD2fvsgNfwBtgEhdoLQUKFdJoUjdQMGdERWCjbO
+         Xl7RjSA3FjioomOxRehSg40ss6mKoUYlxogtX63yQtVDoZjOYq/lOYgqjvzE3FkrAoCj
+         waPj1GW9Z5DRu/aLKCCnDp0sPfAZ6FU5M34/NPgp0Vtp2S1Nmxkb2HqxbBK2Cy6muQil
+         GWuPHMPy6GVSIb9JItJYilkh4piVpbYp2CXKC+4hn0lOWBm8AKlaim642CT0RbDMke6H
+         9rDqsn2Q5f8Z5THtBobgh8evAHwk9nwI5TuOTTH5MrvZltpOlwh3zWAsO16R06KcaHyD
+         Z2Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l9xfUF5eayZFFF1hRq1v81sGQbl/LPcx9d10hqzkM50=;
-        b=a9Rf+xtBoK83hXNUwqwmxGfRhTkUk2UX8A8T45N/16QVzO4g2wgp+FqUzSXP668YTm
-         xap0E5sNv3yMvc+Upov5H6xlJojW/stlAOg7W2anP/+35qINAJ9ZI2/0TwFUTWT1TiEf
-         +dcSioClZ3jtG14yttvNbov6ApL0DY9uNKDbmVygHsjtrwPYdF0mJqa3Y28IGKsBPboe
-         RjBjCnzGkoP4JVoctrA/VTBYzBXdP9nCY+yCCtZ2BTqz7s2zcVmy/rZ3GBTopyrL5U97
-         zXvFOijYCvLH9279ik5+UQiRIyzUFfSojU7vsOkSMVe6SAmQnVwjAgWY7ecVhMNOnzjQ
-         X/Fw==
-X-Gm-Message-State: AOAM532i9T0fLevq/lrVBLTsvQ4NFw3ZK2QZGLMbOajAgsr7HDh5Xfjd
-        rDPMODqu1WoAsfdlDayj78Sfk7vbooAlDDHZta0VN+GzXv8Pn+y3MYpwtAinv8i3AGg0eP1wL0r
-        IwA5vacfB/bSRglJEHgkCQMHN9+DMyiJBdHrU
-X-Received: by 2002:a17:902:ee83:b029:da:3483:3957 with SMTP id a3-20020a170902ee83b02900da34833957mr48810429pld.38.1609776053162;
-        Mon, 04 Jan 2021 08:00:53 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzBKAZdaAi5eOEqf2n1LNoMbTyYFUSl+FuslLxzt+4m65BjBgYL1ZR+7IvXoqkErR5+wvcU4bG67cVDwqkSexo=
-X-Received: by 2002:a17:902:ee83:b029:da:3483:3957 with SMTP id
- a3-20020a170902ee83b02900da34833957mr48810409pld.38.1609776052907; Mon, 04
- Jan 2021 08:00:52 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=N/60JK33t4oUrdAxWdxnhjyWQgg49zVpewb8SKhK0TQ=;
+        b=Q02zgTrbSDHQSeBdc61CQQ7OFfGyiftf4Ed+AZnrcFXk2Y94oOWzzk+V5T1DXVJtZQ
+         My9A1EP4kc6h/1f6OGyDBiq37b+5W4fB4wrHBpQERbRiQRXl5Vz0YyHQk1aUxa03Rum0
+         pgwwzTMwu36VOGjHLBlPs8l7dFZoaLjmI19EUyruLUwmObhVPozRrE173Zffp1CsyF4v
+         j414/QEO61SG7tPB9EGAA21WFDs9uI6EiZMt2zmT4SaC8OJ3rAN/sRBWf9xdTONQZunT
+         pL23EI3hfuVfye31l7bxEQC6/gy/s0w9R6OTbIl7BN6fGMpqsH941yap/2e9gdIT/WEN
+         YrIA==
+X-Gm-Message-State: AOAM5324b/kWGPx4wec8Zf962jMqt9cYjXA8LRfMSwDxWgjY15rQeiuX
+        8D0BdvBqLGfRpKk+uLlDMIJouktqrQHfX/j8v5c=
+X-Google-Smtp-Source: ABdhPJwQEIQ3up6OfaEQ/itrn+ZIrG+hGl0h6D4hKKkYqPNUzJ3PXM33I2sS1pJuhS9+Ia7laE+Lwq1fAYhwfseAmxo=
+X-Received: by 2002:a05:651c:30f:: with SMTP id a15mr34197480ljp.503.1609776206870;
+ Mon, 04 Jan 2021 08:03:26 -0800 (PST)
 MIME-Version: 1.0
-References: <CALe0_74eB89Koni0i14aB=2CSitzg1WkRihe7KZGDJ5OoPSahw@mail.gmail.com>
- <ff7d4adc-2d4a-d5cc-fa0a-1f808b571fad@RedHat.com>
-In-Reply-To: <ff7d4adc-2d4a-d5cc-fa0a-1f808b571fad@RedHat.com>
-From:   Jacob Shivers <jshivers@redhat.com>
-Date:   Mon, 4 Jan 2021 11:00:16 -0500
-Message-ID: <CALe0_75aeott7xJn0FxSMSANx0AwsxLtjNLC6YZycuE7yN+mGA@mail.gmail.com>
-Subject: Re: gssd: set $HOME to prevent recursion when home dirs are on
- kerberized NFS mount revisted
-To:     Steve Dickson <SteveD@redhat.com>
-Cc:     linux-nfs@vger.kernel.org
+References: <CAL5u83HS=nurJ=r0tJU8ZqAXXkvu9-vWZpbVWoKALNh22WdKnw@mail.gmail.com>
+ <87F51982-465A-46D4-BFB9-4B5E5A7EB82C@oracle.com> <CAL5u83FRJQ_ys32S1KWjx72kamNw_3a2eFEAwH=MNMhruU9X=g@mail.gmail.com>
+ <6F313888-0355-4286-8692-E4685BCB2536@oracle.com> <CAL5u83Fxd2rGuYuaghcC4irUtscmXr5-p36Qqf4+FwtctZJFaQ@mail.gmail.com>
+ <07383012-D499-498E-A194-716ABE1DE4C2@oracle.com>
+In-Reply-To: <07383012-D499-498E-A194-716ABE1DE4C2@oracle.com>
+From:   Hackintosh Five <hackintoshfive@gmail.com>
+Date:   Mon, 4 Jan 2021 16:03:14 +0000
+Message-ID: <CAL5u83FRV_-sae4cXLN3VqFe_=3wXm5g911LFjzohCp+c+55aQ@mail.gmail.com>
+Subject: Re: Boot time improvement with systemd and nfs-utils
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+I see. Does rpc-statd-notify HAVE to start before nfs-client? If not,
+perhaps a one-off timer unit with no delay could be made so that the
+startup of rpc-statd-notify doesn't block the boot process, while
+still running after network-online?
 
-I completely missed this so please excuse the delay.
-
-> On 11/23/20 1:17 PM, Jacob Shivers wrote:
-> > Commit 2f682f25c642fcfe7c511d04bc9d67e732282348 changed existing
-> > behavior to avoid a deadlock for users using Kerberized NFS home dirs.
-> >
-> > However, this also prevents users leveraging their own k5identity
-> > files under their home directory and instead rpc.gssd uses a
-> > system-wide /.k5identity file. For users expecting to use their own
-> > k5identity file this is certainly unexpected.
-> So how is the deadlock not happening when ~/.k5identity is on a NFS
-> home directory? What am I missing?
-They are not using NFS for home directories. They are accessing
-systems with a local fs backing the /home
-
-> > Below is some pseudo code that was proposed and would just add a flag
-> > allowing for the behavior prior to
-> > 2f682f25c642fcfe7c511d04bc9d67e732282348:
-> >
-> > /* psudo code snippet starts here */
-> >         /*
-> >          * Some krb5 routines try to scrape info out of files in the user's
-> >          * home directory. This can easily deadlock when that homedir is on a
-> > -        * kerberized NFS mount. By setting $HOME unconditionally to "/", we
-> > +        * kerberized NFS mount. Some users may not have $HOME on NFS.
-> > +        * By default setting $HOME unconditionally to "/", we
-> >          * prevent this behavior in routines that use $HOME in preference to
-> >          * the results of getpw*.
-> > +        * Users who have $HOME on krb5-NFS should set
-> > `--home-not-kerberized` in argv
-> > +        * Users who have $HOME on krb5-NFS but want to use their
-> > $HOME anyway should set NFS_HOME_ACCESSIBLE=TRUE
-> >          */
-> > +       if (argv == '--home-not-kerberized') ||
-> > (getenv("NFS_HOME_ACCESSIBLE") == 'TRUE') {
-> > +               log.debug('Not masking $HOME, this breaks on Kerberized $HOME');
-> > +       }
-> > +       else {
-> > +               log.debug('Assuming $HOME requires Kerberos, use
-> > `--home-not-kerberized` to change this behavior');
-> >         if (setenv("HOME", "/", 1)) {
-> >                 printerr(1, "Unable to set $HOME: %s\n", strerror(errn));
-> >                 exit(1);
-> >         }
-> > +       }
-> > /* psudo code snippet ends here */
-> In general I'm pretty reluctant to add flags but what is needed
-> to do so is a company single letter flag '-H' and a man page
-> entry describing the flag.
-Ok.
-
-> >
-> > While acknowledging the use of this flag for Kerberized NFS home dirs
-> > is undesirable and would cause a deadlock, there should be no issue
-> > for users not using Kerberized NFS home dirs.
-> What apps are you using that is seeing this problem?
-It is just when accessing the Kerberized NFS share. Other Kerberos
-aware services/applications check for the existence of ~/.k5identify
-before reading /var/kerberos/krb5/user/${EUID}/client.keytab. rpc.gssd
-no longer does this and the intent of the patch would be to add
-granularity to choose the behavior or rpc.gssd with respect to
-scanning for a k5identity file.
-
-If any additional information is required, please inform me.
-
-Thanks,
-
-Jacob Shivers
-
+On Mon, Jan 4, 2021 at 1:26 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+> The problem is not in sm-notify itself, it's in the C library functions. =
+The system's DNS resolver configuration is set during network startup. When=
+ a process first attempts a DNS query, it retrieves the system DNS configur=
+ation as it is at that moment, and keeps that configuration until the proce=
+ss exits. If sm-notify starts before the system's DNS resolver is configure=
+d, then it simply doesn't work because it can't perform DNS queries correct=
+ly.
+>
+>
+> On Jan 4, 2021, at 8:13 AM, Hackintosh Five <hackintoshfive@gmail.com> wr=
+ote:
+>
+> Yep, sm-notify is Wanted by nfs-utils.target, and hence clients. But I ca=
+n't see anywhere in the source of lm-notify where being offline would make =
+a difference (beyond triggering a retry). If such a function does exist and=
+ I missed it, perhaps it could be moved to the end of the program (so the h=
+ostname is calculated only when the network is available, or whatever)
+>
+> On Mon, 4 Jan 2021, 12:54 Chuck Lever, <chuck.lever@oracle.com> wrote:
+>>
+>> Hi-
+>>
+>> > On Jan 4, 2021, at 7:51 AM, Hackintosh Five <hackintoshfive@gmail.com>=
+ wrote:
+>> >
+>> > Hi, thanks for the fast reply
+>> >
+>> > I have never even used nfs and I'm not a systemd expert, so I'm not at
+>> > all sure this interpretation is correct, but here goes. I only removed
+>> > the dependency from rpc.statd.notify, not rpc.statd.
+>>
+>> Same problem exists for sm-notify.
+>>
+>>
+>> > I didn't remove
+>> > the `After=3Dnfs-server` line, and for nfs-server to be up,
+>> > network-online must be up first (there's an After requirement in the
+>> > nfs-server unit). So if the nfs-server is enabled, the
+>> > rpc-statd-notify will order itself after the server is up, which
+>> > depends on the network.
+>>
+>> IIRC sm-notify runs on clients too. That's why the dependency is
+>> on the network and not on nfs-server.
+>>
+>>
+>> > That means that, if there is a server, the
+>> > server must be up before it sends notifications, so it will have the
+>> > right hostname. This only improves boot speed on nfs clients, where
+>> > nfs-client.target pulls in rpc-statd-notify.service.
+>> >
+>> >
+>> > On Mon, Jan 4, 2021 at 12:27 PM Chuck Lever <chuck.lever@oracle.com> w=
+rote:
+>> >>
+>> >> Hello, thanks for your report.
+>> >>
+>> >> The dependency you are removing addresses a bug -- if the network is =
+not configured when rpc.statd is started, the rpc.statd process continues t=
+o use incorrect local address information even after the network is up.
+>> >>
+>> >>
+>> >>> On Jan 4, 2021, at 6:32 AM, Hackintosh Five <hackintoshfive@gmail.co=
+m> wrote:
+>> >>>
+>> >>> rpc-statd-notify is causing a 10 second hang on my system during boo=
+t
+>> >>> due to an unwanted dependency on network-online.target. This
+>> >>> dependency isn't needed anyway, because rpc-statd-notify (sm-notify)
+>> >>> will wait for the network to come online if it isn't already (up to =
+15
+>> >>> minutes, so no risk of timeout that would be avoided by systemd)
+>> >>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> >>> From c90bd7e701c2558606907f08bf27ae9be3f8e0bf Mon Sep 17 00:00:00 20=
+01
+>> >>> From: Hackintosh 5 <git@hack5.dev>
+>> >>> Date: Sat, 2 Jan 2021 14:28:30 +0000
+>> >>> Subject: [PATCH] systemd: network-online.target is not needed for
+>> >>> rpc-statd-notify.service
+>> >>>
+>> >>> Commit 09e5c6c2 changed the After line for rpc-statd-notify to chang=
+e
+>> >>> network.target to network-online.target, which is incorrect, because
+>> >>> sm-notify has a default timeout of 15 minutes, which is longer than
+>> >>> the timeout for network-online.target. In other words, the dependenc=
+y
+>> >>> on network-online.target is useless and delays system boot by ~10
+>> >>> seconds.
+>> >>> ---
+>> >>> systemd/rpc-statd-notify.service | 4 ++--
+>> >>> 1 file changed, 2 insertions(+), 2 deletions(-)
+>> >>>
+>> >>> diff --git a/systemd/rpc-statd-notify.service
+>> >>> b/systemd/rpc-statd-notify.service
+>> >>> index aad4c0d2..8a40e862 100644
+>> >>> --- a/systemd/rpc-statd-notify.service
+>> >>> +++ b/systemd/rpc-statd-notify.service
+>> >>> @@ -1,8 +1,8 @@
+>> >>> [Unit]
+>> >>> Description=3DNotify NFS peers of a restart
+>> >>> DefaultDependencies=3Dno
+>> >>> -Wants=3Dnetwork-online.target
+>> >>> -After=3Dlocal-fs.target network-online.target nss-lookup.target
+>> >>> +Wants=3Dnetwork.target
+>> >>> +After=3Dlocal-fs.target network.target nss-lookup.target
+>> >>>
+>> >>> # if we run an nfs server, it needs to be running before we
+>> >>> # tell clients that it has restarted.
+>> >>> --
+>> >>> 2.29.2
+>> >>
+>> >> --
+>> >> Chuck Lever
+>> >>
+>> >>
+>> >>
+>>
+>> --
+>> Chuck Lever
+>>
+>>
+>>
+>
+> --
+> Chuck Lever
+>
+>
+>
