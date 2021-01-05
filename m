@@ -2,80 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EC442EAD8A
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Jan 2021 15:43:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16C2D2EADC9
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Jan 2021 16:00:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbhAEOls (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Jan 2021 09:41:48 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36129 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727178AbhAEOls (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Jan 2021 09:41:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1609857621;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yXFhB2iyx6hjWz/E/UcH4G+PRucSIF/NqnWLe1xbZ1o=;
-        b=c5aE+20xdgCH6K/IytmxXa3DElbK7l02hOXHXBFadVKxfi5UOAMCjFbiGPp4OkikwRXxXS
-        R9Vss0EHPDrb3eN0s6jkTVSfv0fPZCT3deukjBkG2T6QYFmLb4K83cYVEiaQ91EUd/oUOH
-        qrE1yid3UqK4nWIgjAUywaiwh1GNVAo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-187-D7jFd9XXPAiFftboI8MEXg-1; Tue, 05 Jan 2021 09:40:19 -0500
-X-MC-Unique: D7jFd9XXPAiFftboI8MEXg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE40E801817;
-        Tue,  5 Jan 2021 14:40:18 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-66.rdu2.redhat.com [10.10.64.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 31F5610016F4;
-        Tue,  5 Jan 2021 14:40:18 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Scott Mayhew" <smayhew@redhat.com>
-Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] NFS: Adjust fs_context error logging
-Date:   Tue, 05 Jan 2021 09:40:17 -0500
-Message-ID: <AC256A5D-88B8-4B96-8BE4-7BE8B7124027@redhat.com>
-In-Reply-To: <20210105135432.1605419-1-smayhew@redhat.com>
-References: <20210105135432.1605419-1-smayhew@redhat.com>
+        id S1726076AbhAEO62 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Jan 2021 09:58:28 -0500
+Received: from p3plsmtpa08-02.prod.phx3.secureserver.net ([173.201.193.103]:35125
+        "EHLO p3plsmtpa08-02.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725862AbhAEO61 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Jan 2021 09:58:27 -0500
+X-Greylist: delayed 528 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Jan 2021 09:58:27 EST
+Received: from [192.168.0.116] ([71.184.94.153])
+        by :SMTPAUTH: with ESMTPSA
+        id wndlk7fm2Goiawndlk52cS; Tue, 05 Jan 2021 07:48:54 -0700
+X-CMAE-Analysis: v=2.4 cv=SvJVVNC0 c=1 sm=1 tr=0 ts=5ff47c56
+ a=vbvdVb1zh1xTTaY8rfQfKQ==:117 a=vbvdVb1zh1xTTaY8rfQfKQ==:17
+ a=IkcTkHD0fZMA:10 a=hpq3dx3UihE8fCEceWMA:9 a=q_WKLyjDcRPOdKFa:21
+ a=6WrFwjtl4syCEMyO:21 a=QEXdDO2ut3YA:10
+X-SECURESERVER-ACCT: tom@talpey.com
+Subject: Re: [PATCH v2] systemd: rpc-statd-notify.service can run in the
+ background
+To:     Hackintosh 5 <hackintoshfive@gmail.com>, linux-nfs@vger.kernel.org
+Cc:     Hackintosh 5 <git@hack5.dev>
+References: <A5C09F1B-9309-40AC-99E6-BADA5CAD6CED@oracle.com>
+ <20210104185500.4018-1-git@hack5.dev>
+From:   Tom Talpey <tom@talpey.com>
+Message-ID: <dfd19b53-b774-989d-43ef-adee5bf71c42@talpey.com>
+Date:   Tue, 5 Jan 2021 09:48:54 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20210104185500.4018-1-git@hack5.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfNcumSPoSiYruaLzZWV6ABwK0cA8VSsnjDrLWD4/70uXzL1B7kE8ceD5ouvhZ5plMnUJ3EzsKJ8EUKHZNryVRCd5geOFbOv5UI524Rj1jYZzrNWNxaGF
+ XvLJFvqfU9uR4LtJjOjoQGubJ3iWmIqocngM0EOTpkBZ8ACwfT48F7lAmx+s6UuXVBjqHEGBAKxa7Ic74PArplrS9ZBYSjUtKnHc8SHIiy3xJMNNzdjcpQIc
+ nck3MWEBExr2W7iKmtauTQ==
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 5 Jan 2021, at 8:54, Scott Mayhew wrote:
+On 1/4/2021 1:55 PM, Hackintosh 5 wrote:
+> This allows rpc-statd-notify to run in the background when it is
+> only in use by a client. This is done by a timer unit with a one
+> second timeout, which is Wanted by nfs-client.target. The result
+> is that there is no longer a dependency on network-online.target
+> by multi-user.target, so everyone gets faster boot times yay.
 
-> Several existing dprink()/dfprintk() calls were converted to use the new
-> mount API logging macros by commit ce8866f0913f ("NFS: Attach
-> supplementary error information to fs_context").  If the fs_context was
-> not created using fsopen() then it will not have had a log buffer
-> allocated for it, and the new mount API logging macros will wind up
-> calling printk().
->
-> This can result in syslog messages being logged where previously there
-> were none... most notably "NFS4: Couldn't follow remote path", which can
-> happen if the client is auto-negotiating a protocol version with an NFS
-> server that doesn't support the higher v4.x versions.
->
-> Convert the nfs_errorf(), nfs_invalf(), and nfs_warnf() macros to check
-> for the existence of the fs_context's log buffer and call dprintk() if
-> it doesn't exist.  Add nfs_ferrorf(), nfs_finvalf(), and nfs_warnf(),
-> which do the same thing but take an NFS debug flag as an argument and
-> call dfprintk().  Finally, modify the "NFS4: Couldn't follow remote
-> path" message to use nfs_ferrorf().
->
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207385
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+I'm concerned that this change may allow the nfs client to start
+before the sm-notify has a chance to send its "I'm back" message
+to the server, and for the server to process it. This will lead
+to lock failures.
 
-I hope someday we can convert all the old debugging to tracepoints.  I know
-you considered just removing the debug lines or converting these to a
-tracepoint and decided to fix what we have for now.  It does make for a
-better stable fix.
+Also, I'm unclear how an apparently arbitrary 1-second delay is
+fixing this. Is this really a systemd thing? If so, changing the
+NFS behavior is the wrong approach.
 
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Tom.
 
+> ---
+>   systemd/nfs-client.target      | 2 +-
+>   systemd/rpc-statd-notify.timer | 9 +++++++++
+>   2 files changed, 10 insertions(+), 1 deletion(-)
+>   create mode 100644 systemd/rpc-statd-notify.timer
+> 
+> diff --git a/systemd/nfs-client.target b/systemd/nfs-client.target
+> index 8a8300a1..b7cce746 100644
+> --- a/systemd/nfs-client.target
+> +++ b/systemd/nfs-client.target
+> @@ -5,7 +5,7 @@ Wants=remote-fs-pre.target
+>   
+>   # Note: we don't "Wants=rpc-statd.service" as "mount.nfs" will arrange to
+>   # start that on demand if needed.
+> -Wants=rpc-statd-notify.service
+> +Wants=rpc-statd-notify.timer
+>   
+>   # GSS services dependencies and ordering
+>   Wants=auth-rpcgss-module.service
+> diff --git a/systemd/rpc-statd-notify.timer b/systemd/rpc-statd-notify.timer
+> new file mode 100644
+> index 00000000..bac68817
+> --- /dev/null
+> +++ b/systemd/rpc-statd-notify.timer
+> @@ -0,0 +1,9 @@
+> +[Unit]
+> +Description=Notify NFS peers of a restart
+> +RefuseManualStart=true
+> +RefuseManualStop=true
+> +
+> +[Timer]
+> +OnActiveSec=1
+> +Unit=rpc-statd-notify.service
+> +RemainAfterElapse=false
+> 
