@@ -2,63 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFB892EAE89
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Jan 2021 16:33:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D99B52EAE8B
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Jan 2021 16:33:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbhAEPdf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Jan 2021 10:33:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37990 "EHLO
+        id S1728094AbhAEPdk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Jan 2021 10:33:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbhAEPdf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Jan 2021 10:33:35 -0500
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC1D7C06179A
-        for <linux-nfs@vger.kernel.org>; Tue,  5 Jan 2021 07:33:19 -0800 (PST)
-Received: by mail-qk1-x735.google.com with SMTP id c7so26787483qke.1
-        for <linux-nfs@vger.kernel.org>; Tue, 05 Jan 2021 07:33:19 -0800 (PST)
+        with ESMTP id S1725838AbhAEPdk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Jan 2021 10:33:40 -0500
+Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3156CC061793
+        for <linux-nfs@vger.kernel.org>; Tue,  5 Jan 2021 07:33:25 -0800 (PST)
+Received: by mail-qv1-xf35.google.com with SMTP id a4so14788462qvd.12
+        for <linux-nfs@vger.kernel.org>; Tue, 05 Jan 2021 07:33:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=jGfOYjWuHpLahZsNYViQB8eHdJGH5wEjc/CCta9CnfY=;
-        b=BilD+gQRTnjPxJuEbzmnzQ4wg6EaCTPNzWd9Y+/A9f4Rzs9WFBcy5tg2i3/T7L1ReL
-         LFgOSuQAu0zmjAqQo+30dQxrOPrFwgXc9YeFNuNn76z8i6zpRT7/e851PxT1J8ajILTT
-         b7fHNUpEI91WtwsmN4NOryBfIifJtO+O5ag1GNdjojunYo8WQq8+IPE3koWCrmRdbBBV
-         MvXd80MJzm7t101ye4/YMzZ5bsIu6U9qlsQr8dXlmBzYN8xl2LCfWQ5aS3ZWLqQpXvYY
-         fwMhe4CXkebZ+ROFLnEpVPGC9feC3LrM1B9c1UG69zhkIEaNpHgqHFwxBKYiB2eSLVY7
-         XIDw==
+        bh=jFDcHPeUzcjs9y3sBQWD0TZmsBPaSp+m+XjxZ668Eqk=;
+        b=uwFYw0W0zqTTFZGW2D2h5uLr41fETfWJvTX3WKZIiv2LTTilKhoX7FSqA83uklLKsE
+         38TDCj6f6AoH802dOmR8koK5kf0iQ1Dh6I5zFZimRipyRChHu68zK2yuxv8WZXc/umx9
+         FC0mHx9rFrg6GPL8L5ihUVYXyFkVOEYCS6X6nCXlRbSZ4zuXwt4+PBhlHry+bjkpcwc2
+         DZh4oTheXGUz+l04HaxXO8DtQ7tCuE80YgZnZej7Myeo0pFE5l7IQIco7SbtkWB8RNz6
+         /n17xZjoLlNEGuUlZaN/irTbC1gfLRvl9kekdJgbIHJXuK1Mf5KyoXERdLeubzmCinc2
+         n5tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=jGfOYjWuHpLahZsNYViQB8eHdJGH5wEjc/CCta9CnfY=;
-        b=UfKig4MpM+acq/yxoH9s7ObZK2zB0JRbiN0GIKGE/1hpwcNY3DhOXWKIYyv4YGwVp6
-         TiTefS3aKSaTBAeIfhjpK5KREfCnW4NhJn4Gjysr2QyFqgW5AaJEd02ZNK4DowU9iJZZ
-         VLwq74SjOTduJhk5HObc4fTy6N94SkGQO7JftQBvWe2sW7RcG6aRFAnVUWCKumuBttIC
-         untMYO4pUee64mScOFd7sF7L2K2/6OanLDDxMzWmomGHojXIiz4HJcx/KFj6Pd3sAfF3
-         2kCWJfchN38NCHcWFKdJJvk/vAjKWVO5Qf/FGaBxSF1WJhKUK0QfAGaghxCSN00wy11W
-         Q67Q==
-X-Gm-Message-State: AOAM532Rl25Cu2b9+lpxknQR6kVzYKpS/mhCZlYXco27c72n+g9BNDG/
-        grOdCiWcjSwuASbBOM0Adpx4qQaGlOo=
-X-Google-Smtp-Source: ABdhPJzrsB4JWc2ekNKzEDFXO51jnqgDzY186wqCKbhZ7bi630ux85KJTEkN/BzK4NAcFz5glgAjUQ==
-X-Received: by 2002:a37:a50c:: with SMTP id o12mr99510qke.98.1609860798755;
-        Tue, 05 Jan 2021 07:33:18 -0800 (PST)
+        bh=jFDcHPeUzcjs9y3sBQWD0TZmsBPaSp+m+XjxZ668Eqk=;
+        b=NYwe0ZLKA08vxdSnqwfv3NmIcMi7dsMfUXhUkcYa9vqxiqFA4ymivMcoNHM1BnGdqO
+         kHatVzSnIB3bTc6/cGH0W35yiPP1f8zJ1lZfzwhWQQok1kLhpqYJlDmYinXV/RIQ2Ir6
+         EstXLpfpS/UGYyBMN1yTWTd84rAOFpmLg25Z6k4sgvgthAjuY7UNjbCJNLfL+8kw9a5l
+         COTgNFP//UlWGLaEygx2tqD9giZ+UedOuky8D0WuErwVRpjqSDtK3cOzNg1JPg+Zkzdc
+         uBX6YfMon+WRJJqEr8xhP+WahbmDUGs1z4+3uLYZ9dyqM8/llkNVa24EQ2GRWqjqqL8+
+         mmbw==
+X-Gm-Message-State: AOAM531TXZsFVeq9VbLhyAOeLEXlCDjJ2z3p20LePHtrP2P6fqWD0gsS
+        mJLUSDddSI3PmkJCuDhD1hUNEtazb/o=
+X-Google-Smtp-Source: ABdhPJx66FLOnr7hRBbNf5TbQ/LvagUsMUGY34egnsy8uHFykPYJV6N8OBG11RMjyHKeXK5fsZh5Dg==
+X-Received: by 2002:a0c:b797:: with SMTP id l23mr65169qve.42.1609860804128;
+        Tue, 05 Jan 2021 07:33:24 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id a203sm172206qkb.31.2021.01.05.07.33.17
+        by smtp.gmail.com with ESMTPSA id u5sm135575qkb.120.2021.01.05.07.33.23
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Jan 2021 07:33:18 -0800 (PST)
+        Tue, 05 Jan 2021 07:33:23 -0800 (PST)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 105FXHdQ020943
-        for <linux-nfs@vger.kernel.org>; Tue, 5 Jan 2021 15:33:17 GMT
-Subject: [PATCH v1 41/42] NFSD: Update the NFSv2 SETACL argument decoder to
- use struct xdr_stream
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 105FXMxY020946
+        for <linux-nfs@vger.kernel.org>; Tue, 5 Jan 2021 15:33:22 GMT
+Subject: [PATCH v1 42/42] NFSD: Clean up after updating NFSv3 ACL decoders
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Tue, 05 Jan 2021 10:33:17 -0500
-Message-ID: <160986079701.5532.7699961428525697515.stgit@klimt.1015granger.net>
+Date:   Tue, 05 Jan 2021 10:33:22 -0500
+Message-ID: <160986080235.5532.572599583334345770.stgit@klimt.1015granger.net>
 In-Reply-To: <160986050640.5532.16498408936966394862.stgit@klimt.1015granger.net>
 References: <160986050640.5532.16498408936966394862.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -71,54 +70,53 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs3acl.c |   31 +++++++++++++------------------
- 1 file changed, 13 insertions(+), 18 deletions(-)
+ fs/nfsd/nfs3xdr.c |   20 --------------------
+ fs/nfsd/xdr3.h    |    2 --
+ 2 files changed, 22 deletions(-)
 
-diff --git a/fs/nfsd/nfs3acl.c b/fs/nfsd/nfs3acl.c
-index addb0d7d5500..a568b842e9eb 100644
---- a/fs/nfsd/nfs3acl.c
-+++ b/fs/nfsd/nfs3acl.c
-@@ -140,28 +140,23 @@ static int nfs3svc_decode_getaclargs(struct svc_rqst *rqstp, __be32 *p)
- 
- static int nfs3svc_decode_setaclargs(struct svc_rqst *rqstp, __be32 *p)
- {
--	struct nfsd3_setaclargs *args = rqstp->rq_argp;
--	struct kvec *head = rqstp->rq_arg.head;
--	unsigned int base;
--	int n;
-+	struct xdr_stream *xdr = &rqstp->rq_arg_stream;
-+	struct nfsd3_setaclargs *argp = rqstp->rq_argp;
- 
--	p = nfs3svc_decode_fh(p, &args->fh);
--	if (!p)
-+	if (!svcxdr_decode_nfs_fh3(xdr, &argp->fh))
-+		return 0;
-+	if (xdr_stream_decode_u32(xdr, &argp->mask) < 0)
- 		return 0;
--	args->mask = ntohl(*p++);
--	if (args->mask & ~NFS_ACL_MASK ||
--	    !xdr_argsize_check(rqstp, p))
-+	if (argp->mask & ~NFS_ACL_MASK)
-+		return 0;
-+	if (!nfs_stream_decode_acl(xdr, NULL, (argp->mask & NFS_ACL) ?
-+				   &argp->acl_access : NULL))
-+		return 0;
-+	if (!nfs_stream_decode_acl(xdr, NULL, (argp->mask & NFS_DFACL) ?
-+				   &argp->acl_default : NULL))
- 		return 0;
- 
--	base = (char *)p - (char *)head->iov_base;
--	n = nfsacl_decode(&rqstp->rq_arg, base, NULL,
--			  (args->mask & NFS_ACL) ?
--			  &args->acl_access : NULL);
--	if (n > 0)
--		n = nfsacl_decode(&rqstp->rq_arg, base + n, NULL,
--				  (args->mask & NFS_DFACL) ?
--				  &args->acl_default : NULL);
--	return (n > 0);
-+	return 1;
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index 4be38599f331..023f310ba488 100644
+--- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -82,26 +82,6 @@ svcxdr_decode_nfs_fh3(struct xdr_stream *xdr, struct svc_fh *fhp)
+ 	return true;
  }
  
- /*
+-static __be32 *
+-decode_fh(__be32 *p, struct svc_fh *fhp)
+-{
+-	unsigned int size;
+-	fh_init(fhp, NFS3_FHSIZE);
+-	size = ntohl(*p++);
+-	if (size > NFS3_FHSIZE)
+-		return NULL;
+-
+-	memcpy(&fhp->fh_handle.fh_base, p, size);
+-	fhp->fh_handle.fh_size = size;
+-	return p + XDR_QUADLEN(size);
+-}
+-
+-/* Helper function for NFSv3 ACL code */
+-__be32 *nfs3svc_decode_fh(__be32 *p, struct svc_fh *fhp)
+-{
+-	return decode_fh(p, fhp);
+-}
+-
+ static __be32 *
+ encode_fh(__be32 *p, struct svc_fh *fhp)
+ {
+diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
+index 7456aee74f3d..3e1578953f54 100644
+--- a/fs/nfsd/xdr3.h
++++ b/fs/nfsd/xdr3.h
+@@ -307,8 +307,6 @@ int nfs3svc_encode_entry_plus(void *, const char *name,
+ /* Helper functions for NFSv3 ACL code */
+ __be32 *nfs3svc_encode_post_op_attr(struct svc_rqst *rqstp, __be32 *p,
+ 				struct svc_fh *fhp);
+-__be32 *nfs3svc_decode_fh(__be32 *p, struct svc_fh *fhp);
+ bool svcxdr_decode_nfs_fh3(struct xdr_stream *xdr, struct svc_fh *fhp);
+ 
+-
+ #endif /* _LINUX_NFSD_XDR3_H */
 
 
