@@ -2,63 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1BA52EAE82
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Jan 2021 16:33:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CB922EAE8A
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Jan 2021 16:33:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbhAEPdJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Jan 2021 10:33:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38210 "EHLO
+        id S1728088AbhAEPdj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Jan 2021 10:33:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728060AbhAEPdI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Jan 2021 10:33:08 -0500
-Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AE73C061574
-        for <linux-nfs@vger.kernel.org>; Tue,  5 Jan 2021 07:32:53 -0800 (PST)
-Received: by mail-qk1-x72c.google.com with SMTP id h4so26817368qkk.4
-        for <linux-nfs@vger.kernel.org>; Tue, 05 Jan 2021 07:32:53 -0800 (PST)
+        with ESMTP id S1725838AbhAEPdi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Jan 2021 10:33:38 -0500
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76DDEC061796
+        for <linux-nfs@vger.kernel.org>; Tue,  5 Jan 2021 07:32:58 -0800 (PST)
+Received: by mail-qk1-x730.google.com with SMTP id c7so26786301qke.1
+        for <linux-nfs@vger.kernel.org>; Tue, 05 Jan 2021 07:32:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:from:to:date:message-id:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=NO77RhHtUedYp4qFpiBBG4Tv5P6/osz6EYRha2NhNhk=;
-        b=LBH1OY977QFEYCShgeKGpDgu3FDfHV05KkXE9b+UwIqHtyvPMiXk4UbO3jmRAellJb
-         ZEpGVIsOtk0vyI8bkf4sDmCPY+lV2mV9pOWj0JlBF9k2arnMchAYv5BCl4K/0elMr7rk
-         6NSwp9thWx7TFtBhpyZxP3GQ+IyP+TUcs9TgHEoxz7abONTcsKoTod2tkD2VF0S4NhqC
-         S7cgp1rCkkwpXiTzIpOIk6ReSUTAp71DEtVYGcTUuqkxbV2de9ALP1qemwy9ZgZImI82
-         FoL63rgerMxbXHz7gMDZMSD4MYyiT8+kjTmH5hAWlOsNZmHTte6ZSBE7nnX6KLBgX6UL
-         mkfg==
+        bh=cxW0R+i2awO1nEIk/owL25UAcFkZS5u1R3IElRZBeEY=;
+        b=H42cFXUi7DGaNNN3yPQdczQPwDuA2J6wvjMPPQ1O3u94NwytvJY8AfYaRujqR/VbbR
+         l5LWMTjG7dHZsBQEQJsi3hwxrF2OemXy6YTgbfH65xCW0oI21qVqLU9+oCqTOs6eaSJt
+         ld3rgXQgj4fHimsoSqa66hO1JqKDRS3tHyWZU4iyk/ySTUbAOmVzHxjkpHkPHWI8so+5
+         QOeXRZIuxArLGsYAz9UvhZJyQYavbVZ0HobqNDhISkYAS9VLxfxLx5110aztUOk2zKWQ
+         wCH4j7/T/OqdkZbc6otbjDvzwMlmZMOGfK33J1dvmU7/piPqW7uHzxI9O8am67yuOHeB
+         SDkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:from:to:date:message-id
          :in-reply-to:references:user-agent:mime-version
          :content-transfer-encoding;
-        bh=NO77RhHtUedYp4qFpiBBG4Tv5P6/osz6EYRha2NhNhk=;
-        b=S9GtNyVw6ytbQJvrGb5cJjslytqDXK/8pqRYBNKMnrSBW52mTnZ9osZkgrmdg/DLOO
-         V6uucmhuIsLpTKZKxoviN0HGRrB/tsGr53462KtOnO0LlH/eNn2eJPRK6grsosmtIIFx
-         Qaq7LZ1DRutWnwR3L423vdQNUR6i7m67UrRHz5C2c/fzGuQ5p8+0y5EXYkrLPsO/QrPy
-         1Vp/7J0oBOnO20NlBuNkHvqglEYa0gGSFDJ/u/HsIHKQGhm/I35RX+rKhKbXMZ1IoVQ/
-         wa+syRde6NbrwGX8pRAlCqYSYzDsdWW4PgfHozj6uUwmcIbrJu3JcHPNWZuyomroZFQX
-         VxrQ==
-X-Gm-Message-State: AOAM533cKjbBEgb7mGZZ4JUqcJq2QioBVg2D7yer8ZWT2Y4QESgVeGK2
-        zTRm4JwUMI2xbmfVpUdvrb8CQHSIRSU=
-X-Google-Smtp-Source: ABdhPJw3E3IXEEUyfgTlyT2GRgiR1Lg7VJY9blwvgZYSQs9bzUF3EMrsXiTPrUbCgULnwpAmTENwDg==
-X-Received: by 2002:a37:2dc5:: with SMTP id t188mr48503qkh.5.1609860772287;
-        Tue, 05 Jan 2021 07:32:52 -0800 (PST)
+        bh=cxW0R+i2awO1nEIk/owL25UAcFkZS5u1R3IElRZBeEY=;
+        b=f/Wchu4CGPlATiFjAoJE/qnaGkjSGhTBktIf/mPDM1E8XfgesMoQdwzxO2lLIBUN4p
+         QcS9ySTKmtljvnobR/knFnS02a1jnSIsKu0gRXWFjEd/X10rEpk/qyXfp1llVaOf6K5I
+         plXfy17c4AspOiQDeoEcjanYe9ZUjNO+cl85XokI+Fd7+aa5JAG0OM7s5wocCux88HTc
+         2q1vhMlBRjLI+HidfrHnddTSp2s2RtviYLyxaH5iu7WGB+9zkqN+yo7IYx8V6jUsXxnO
+         4NZUNptmE5foscN3Bu1dqlAJ9rim5Ynpy0dKTuxYMmb1jxlvV4tEmxoTEKGySFnT/q/U
+         eWpA==
+X-Gm-Message-State: AOAM5305TGhWv5AYC5iltTi8vn3NfZcrU82RRilh4M5arClcsUPez/Pf
+        zRNggcsiUnYG4XGeaKwK288+v7ZJmZE=
+X-Google-Smtp-Source: ABdhPJxZgvy/2SqWKUSB5hLkZKu7onK10uqD21oTbF3cDswHH6/AmHw6l1J3oW7X+u271GYXxI3LCw==
+X-Received: by 2002:a05:620a:983:: with SMTP id x3mr27317qkx.231.1609860777465;
+        Tue, 05 Jan 2021 07:32:57 -0800 (PST)
 Received: from gateway.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id x28sm62386qtv.8.2021.01.05.07.32.51
+        by smtp.gmail.com with ESMTPSA id m64sm145269qkb.90.2021.01.05.07.32.56
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Jan 2021 07:32:51 -0800 (PST)
+        Tue, 05 Jan 2021 07:32:56 -0800 (PST)
 Sender: Chuck Lever <chucklever@gmail.com>
 Received: from klimt.1015granger.net (klimt.1015granger.net [192.168.1.55])
-        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 105FWoll020928
-        for <linux-nfs@vger.kernel.org>; Tue, 5 Jan 2021 15:32:50 GMT
-Subject: [PATCH v1 36/42] NFSD: Update the NFSv2 SETACL argument decoder to
- use struct xdr_stream
+        by gateway.1015granger.net (8.14.7/8.14.7) with ESMTP id 105FWt5u020931
+        for <linux-nfs@vger.kernel.org>; Tue, 5 Jan 2021 15:32:55 GMT
+Subject: [PATCH v1 37/42] NFSD: Update the NFSv2 ACL GETATTR argument decoder
+ to use struct xdr_stream
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Tue, 05 Jan 2021 10:32:50 -0500
-Message-ID: <160986077062.5532.1683255539753503273.stgit@klimt.1015granger.net>
+Date:   Tue, 05 Jan 2021 10:32:55 -0500
+Message-ID: <160986077591.5532.8940844074097535914.stgit@klimt.1015granger.net>
 In-Reply-To: <160986050640.5532.16498408936966394862.stgit@klimt.1015granger.net>
 References: <160986050640.5532.16498408936966394862.stgit@klimt.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -69,69 +69,43 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Since the ACL GETATTR procedure is the same as the normal GETATTR
+procedure, simply re-use nfssvc_decode_fhandleargs.
+
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs2acl.c |   29 ++++++++++++-----------------
- fs/nfsd/xdr3.h    |    2 +-
- 2 files changed, 13 insertions(+), 18 deletions(-)
+ fs/nfsd/nfs2acl.c |   12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
 diff --git a/fs/nfsd/nfs2acl.c b/fs/nfsd/nfs2acl.c
-index df2e145cfab0..123820ec79d3 100644
+index 123820ec79d3..0274348f6679 100644
 --- a/fs/nfsd/nfs2acl.c
 +++ b/fs/nfsd/nfs2acl.c
-@@ -201,28 +201,23 @@ static int nfsaclsvc_decode_getaclargs(struct svc_rqst *rqstp, __be32 *p)
- 
- static int nfsaclsvc_decode_setaclargs(struct svc_rqst *rqstp, __be32 *p)
- {
-+	struct xdr_stream *xdr = &rqstp->rq_arg_stream;
- 	struct nfsd3_setaclargs *argp = rqstp->rq_argp;
--	struct kvec *head = rqstp->rq_arg.head;
--	unsigned int base;
--	int n;
- 
--	p = nfs2svc_decode_fh(p, &argp->fh);
--	if (!p)
-+	if (!svcxdr_decode_fhandle(xdr, &argp->fh))
-+		return 0;
-+	if (xdr_stream_decode_u32(xdr, &argp->mask) < 0)
-+		return 0;
-+	if (argp->mask & ~NFS_ACL_MASK)
- 		return 0;
--	argp->mask = ntohl(*p++);
--	if (argp->mask & ~NFS_ACL_MASK ||
--	    !xdr_argsize_check(rqstp, p))
-+	if (!nfs_stream_decode_acl(xdr, NULL, (argp->mask & NFS_ACL) ?
-+				   &argp->acl_access : NULL))
-+		return 0;
-+	if (!nfs_stream_decode_acl(xdr, NULL, (argp->mask & NFS_DFACL) ?
-+				   &argp->acl_default : NULL))
- 		return 0;
- 
--	base = (char *)p - (char *)head->iov_base;
--	n = nfsacl_decode(&rqstp->rq_arg, base, NULL,
--			  (argp->mask & NFS_ACL) ?
--			  &argp->acl_access : NULL);
--	if (n > 0)
--		n = nfsacl_decode(&rqstp->rq_arg, base + n, NULL,
--				  (argp->mask & NFS_DFACL) ?
--				  &argp->acl_default : NULL);
--	return (n > 0);
-+	return 1;
+@@ -220,16 +220,6 @@ static int nfsaclsvc_decode_setaclargs(struct svc_rqst *rqstp, __be32 *p)
+ 	return 1;
  }
  
- static int nfsaclsvc_decode_fhandleargs(struct svc_rqst *rqstp, __be32 *p)
-diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
-index 43db4206cd25..5afb3ce4f062 100644
---- a/fs/nfsd/xdr3.h
-+++ b/fs/nfsd/xdr3.h
-@@ -108,7 +108,7 @@ struct nfsd3_getaclargs {
- struct posix_acl;
- struct nfsd3_setaclargs {
- 	struct svc_fh		fh;
--	int			mask;
-+	__u32			mask;
- 	struct posix_acl	*acl_access;
- 	struct posix_acl	*acl_default;
- };
+-static int nfsaclsvc_decode_fhandleargs(struct svc_rqst *rqstp, __be32 *p)
+-{
+-	struct nfsd_fhandle *argp = rqstp->rq_argp;
+-
+-	p = nfs2svc_decode_fh(p, &argp->fh);
+-	if (!p)
+-		return 0;
+-	return xdr_argsize_check(rqstp, p);
+-}
+-
+ static int nfsaclsvc_decode_accessargs(struct svc_rqst *rqstp, __be32 *p)
+ {
+ 	struct nfsd3_accessargs *argp = rqstp->rq_argp;
+@@ -392,7 +382,7 @@ static const struct svc_procedure nfsd_acl_procedures2[5] = {
+ 	},
+ 	[ACLPROC2_GETATTR] = {
+ 		.pc_func = nfsacld_proc_getattr,
+-		.pc_decode = nfsaclsvc_decode_fhandleargs,
++		.pc_decode = nfssvc_decode_fhandleargs,
+ 		.pc_encode = nfsaclsvc_encode_attrstatres,
+ 		.pc_release = nfsaclsvc_release_attrstat,
+ 		.pc_argsize = sizeof(struct nfsd_fhandle),
 
 
