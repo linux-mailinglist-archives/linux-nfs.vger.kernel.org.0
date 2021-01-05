@@ -2,94 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A8C52EAD57
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Jan 2021 15:27:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EC442EAD8A
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Jan 2021 15:43:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbhAEO0e (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Jan 2021 09:26:34 -0500
-Received: from mail.avm.de ([212.42.244.120]:56892 "EHLO mail.avm.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727005AbhAEO0e (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 5 Jan 2021 09:26:34 -0500
-X-Greylist: delayed 481 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Jan 2021 09:26:33 EST
-Received: from mail-notes.avm.de (mail-notes.avm.de [172.16.0.1])
-        by mail.avm.de (Postfix) with ESMTP;
-        Tue,  5 Jan 2021 15:17:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-        t=1609856221; bh=iq1gcBDStNSF/j5abRrh/cbLXnlSo3KAP9cP3A79D0k=;
-        h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-        b=H3mtxYFGPXwX9tuxCj+zr0Us3LXMUr6yqpWotwH+8e4QAMKhbJ4J6QORtsvM3USsj
-         wOHkflll3DdrCNDDRVQJxfU+3JVwwCQ/UNsUiS7qr+EOzt9MaucAOeTUZ8qzjSz3PM
-         xrWV1H8KKxCYo78TOBqleSYH1DXmY8WhITWhQ3Lc=
+        id S1727347AbhAEOls (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Jan 2021 09:41:48 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36129 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727178AbhAEOls (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Jan 2021 09:41:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1609857621;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yXFhB2iyx6hjWz/E/UcH4G+PRucSIF/NqnWLe1xbZ1o=;
+        b=c5aE+20xdgCH6K/IytmxXa3DElbK7l02hOXHXBFadVKxfi5UOAMCjFbiGPp4OkikwRXxXS
+        R9Vss0EHPDrb3eN0s6jkTVSfv0fPZCT3deukjBkG2T6QYFmLb4K83cYVEiaQ91EUd/oUOH
+        qrE1yid3UqK4nWIgjAUywaiwh1GNVAo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-187-D7jFd9XXPAiFftboI8MEXg-1; Tue, 05 Jan 2021 09:40:19 -0500
+X-MC-Unique: D7jFd9XXPAiFftboI8MEXg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE40E801817;
+        Tue,  5 Jan 2021 14:40:18 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-66.rdu2.redhat.com [10.10.64.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 31F5610016F4;
+        Tue,  5 Jan 2021 14:40:18 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Scott Mayhew" <smayhew@redhat.com>
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] NFS: Adjust fs_context error logging
+Date:   Tue, 05 Jan 2021 09:40:17 -0500
+Message-ID: <AC256A5D-88B8-4B96-8BE4-7BE8B7124027@redhat.com>
+In-Reply-To: <20210105135432.1605419-1-smayhew@redhat.com>
+References: <20210105135432.1605419-1-smayhew@redhat.com>
 MIME-Version: 1.0
-X-Disclaimed: 1
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-In-Reply-To: 
-References: 
-Subject: [PATCH] net: sunrpc: interpret the return value of kstrtou32  correctly
-From:   j.nixdorf@avm.de
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     linux-nfs@vger.kernel.org, j.nixdorf@avm.de
-Date:   Tue, 5 Jan 2021 15:17:01 +0100
-Message-ID: <OF1C398AD8.B0E6F4A9-ONC1258654.004DCC3E-C1258654.004E7674@avm.de>
-X-Mailer: Lotus Domino Web Server Release 11.0.1FP2 October 20, 2020
-X-MIMETrack: Serialize by http on ANIS1/AVM(Release 11.0.1FP2|October 20, 2020) at
- 05.01.2021 15:17:01,
-        Serialize complete at 05.01.2021 15:17:01,
-        Serialize by Router on ANIS1/AVM(Release 11.0.1FP2|October 20, 2020) at
- 05.01.2021 15:17:01
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-purgate-ID: 149429::1609856221-000005CB-99D4E818/0/0
-X-purgate-type: clean
-X-purgate-size: 1247
-X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
-X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
-X-purgate: clean
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-A return value of 0 means success. This is documented in lib/kstrtox.c.
+On 5 Jan 2021, at 8:54, Scott Mayhew wrote:
 
-This was found by trying to mount an NFS share from a link-local IPv6
-address with the interface specified by its index:
+> Several existing dprink()/dfprintk() calls were converted to use the new
+> mount API logging macros by commit ce8866f0913f ("NFS: Attach
+> supplementary error information to fs_context").  If the fs_context was
+> not created using fsopen() then it will not have had a log buffer
+> allocated for it, and the new mount API logging macros will wind up
+> calling printk().
+>
+> This can result in syslog messages being logged where previously there
+> were none... most notably "NFS4: Couldn't follow remote path", which can
+> happen if the client is auto-negotiating a protocol version with an NFS
+> server that doesn't support the higher v4.x versions.
+>
+> Convert the nfs_errorf(), nfs_invalf(), and nfs_warnf() macros to check
+> for the existence of the fs_context's log buffer and call dprintk() if
+> it doesn't exist.  Add nfs_ferrorf(), nfs_finvalf(), and nfs_warnf(),
+> which do the same thing but take an NFS debug flag as an argument and
+> call dfprintk().  Finally, modify the "NFS4: Couldn't follow remote
+> path" message to use nfs_ferrorf().
+>
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207385
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
 
-  mount("[fe80::1%1]:/srv/nfs", "/mnt", "nfs", 0, "nolock,addr=3Dfe80::1%1")
+I hope someday we can convert all the old debugging to tracepoints.  I know
+you considered just removing the debug lines or converting these to a
+tracepoint and decided to fix what we have for now.  It does make for a
+better stable fix.
 
-Before this commit this failed with EINVAL and also caused the following
-message in dmesg:
-
-  [...] NFS: bad IP address specified: addr=3Dfe80::1%1
-
-The syscall using the same address based on the interface name instead
-of its index succeeds.
-
-Credits for this patch go to my colleague Christian Speich, who traced
-the origin of this bug to this line of code.
-
-Signed-off-by: Johannes Nixdorf <j.nixdorf@avm.de>
----
- net/sunrpc/addr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
-index 010dcb876f9d..6e4dbd577a39 100644
---- a/net/sunrpc/addr.c
-+++ b/net/sunrpc/addr.c
-@@ -185,7 +185,7 @@ static int rpc=5Fparse=5Fscope=5Fid(struct net *net, co=
-nst char *buf,
- 			scope=5Fid =3D dev->ifindex;
- 			dev=5Fput(dev);
- 		} else {
--			if (kstrtou32(p, 10, &scope=5Fid) =3D=3D 0) {
-+			if (kstrtou32(p, 10, &scope=5Fid) !=3D 0) {
- 				kfree(p);
- 				return 0;
- 			}
---=20
-2.30.0
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 
