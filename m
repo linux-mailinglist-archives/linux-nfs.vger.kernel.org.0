@@ -2,118 +2,142 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4A4E2EB2A3
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Jan 2021 19:33:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F91B2EB3F5
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Jan 2021 21:13:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbhAEScq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Jan 2021 13:32:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38678 "EHLO
+        id S1729581AbhAEUN5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Jan 2021 15:13:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbhAEScq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Jan 2021 13:32:46 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A04E2C061574
-        for <linux-nfs@vger.kernel.org>; Tue,  5 Jan 2021 10:32:05 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id AEFC96E99; Tue,  5 Jan 2021 13:32:04 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org AEFC96E99
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1609871524;
-        bh=vABwaO9Nz0ylHlBnO0MrIZGwOkGr9F/nxWSnrlWin3Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wUsGu/G80Rr2JHLqyEfgv7K1JIgM1+/2YwI6s4z9Vre8t9T29oLGdlYEKEgy7MlQg
-         y3EaqOJuej7dNJfz1sBCdngAC3gHr354ezaL6hhV8UGiyXPjFCw/JzR6ioVcJlwAJ7
-         lIvFhsLlEgic6VFvc2+6eG9mGWju0LIrG+v10R98=
-Date:   Tue, 5 Jan 2021 13:32:04 -0500
-From:   "J . Bruce Fields" <bfields@fieldses.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Jeff Layton <jlayton@poochiereds.net>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 2/2] nfsd: report per-export stats
-Message-ID: <20210105183204.GD14893@fieldses.org>
-References: <20201228170344.22867-1-amir73il@gmail.com>
- <20201228170344.22867-3-amir73il@gmail.com>
- <20210104224930.GC27763@fieldses.org>
- <CAOQ4uxh18YYN=T3Ua3Bia=N+zw7RjGctnJqyyEDE53dp-p2Kuw@mail.gmail.com>
- <20210105153425.GB14893@fieldses.org>
- <CAOQ4uxhJA93JeNMHB5-Enhx1t-ZirRHs7MHtL02jhg8DAEz9BA@mail.gmail.com>
+        with ESMTP id S1729580AbhAEUN4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Jan 2021 15:13:56 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9676C061574
+        for <linux-nfs@vger.kernel.org>; Tue,  5 Jan 2021 12:13:16 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id lb18so291716pjb.5
+        for <linux-nfs@vger.kernel.org>; Tue, 05 Jan 2021 12:13:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j2S1tYS5+NYjC8/TKNpyIz56a8edTS06KuqKN4g/GrI=;
+        b=N1mK5oaSxNViB79C49abflHfH52FoH2TvZu7X12MduCz4WlG+lH59kyPPvMDJcvZ16
+         EhgzbwGAU3LxOS07jE90ovypj40A/CmmpJbO3iG4l+GecNHMjltIxTWUj8iMoDsPEVC9
+         vCuyw0AnZCMFt62l3BNPqwvGpUGvjxRbJDo9ZFeFKBSGNFE8u2JLn6s+RosfB7bF0IXo
+         Yb+BnWs0QG8L57Ssx1KrfZZjXLtygXxLof5zFDxHufTVSmKVCD2ykqfTqYEu48oikkMN
+         QQJL0tqKIsDdW87jNIDywzUD607d+OFB+9H4VLX+PCLyAiKN0dsuXskoFex33bQYAe93
+         12UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j2S1tYS5+NYjC8/TKNpyIz56a8edTS06KuqKN4g/GrI=;
+        b=pKUpTj+7Qcaho2GKuYKvBC5zAsYvAohuQwMQPyfVJ05AvzTNlZXNJL/yC7dJFhltCf
+         92qtTa5AWw5Wbe6TQzsFWit0FRueh2KFEGfZW0qWaJa+o8pEJyJL+9uvpXiSJiQiu/RV
+         DgW8aIEPAPNeypaAsPqLmkSb181doQ7ZnujGMYkUv2tIV+ILWyPXZ2ZiyLf50qNYAIpG
+         Vn7bU84Qjd2tQ35nTaW7A5Kg9gVpQ8WTnx4fyh6bKuIohr4KWXVezCRC8y84Z/dygQZR
+         QbvbL+2F8ZgpFoB9GnXNbCMAUnehikiDPGurOcc1PpDryKoB4M2zA0sh8PsUbUQ8GGob
+         Pp3Q==
+X-Gm-Message-State: AOAM5310Xci/a15AT9EMv8vx1lhJ5vmHs7PY2/+y7klPpjewQSXKPweN
+        bIwijEUk/2AnpqOLrmAGSA+DeICrkNJYlYoe75k=
+X-Google-Smtp-Source: ABdhPJyYHuSgIkB9r+N4uYhjpBzSN1UMq/Zdw7yuMSmWxTioEOlA60fQ6FaFCw2fHEiT4fRev6W3graMdK/eQyFpOU0=
+X-Received: by 2002:a17:902:7d84:b029:db:feae:425e with SMTP id
+ a4-20020a1709027d84b02900dbfeae425emr901330plm.43.1609877596151; Tue, 05 Jan
+ 2021 12:13:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxhJA93JeNMHB5-Enhx1t-ZirRHs7MHtL02jhg8DAEz9BA@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <85C06BBD-2861-4CDE-BCED-ACD974560D3A@redhat.com> <72FFA566-311D-4826-9F4A-29AE0F379327@oracle.com>
+In-Reply-To: <72FFA566-311D-4826-9F4A-29AE0F379327@oracle.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Tue, 5 Jan 2021 15:13:03 -0500
+Message-ID: <CAN-5tyHSs+Qu4pY+Vh+KsNrQzzVzziyYLAHxEMQE=eHtmrTgtA@mail.gmail.com>
+Subject: Re: [nfsv4] virtual/permanent bakeathon infrastructure
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Benjamin Coddington <bcodding@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        NFSv4 <nfsv4@ietf.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 05, 2021 at 05:45:07PM +0200, Amir Goldstein wrote:
-> On Tue, Jan 5, 2021 at 5:34 PM J . Bruce Fields <bfields@fieldses.org> wrote:
+On Mon, Jan 4, 2021 at 8:56 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+>
+>
+> > On Jan 4, 2021, at 8:46 AM, Benjamin Coddington <bcodding@redhat.com> wrote:
 > >
-> > On Tue, Jan 05, 2021 at 08:42:21AM +0200, Amir Goldstein wrote:
-> > > On Tue, Jan 5, 2021 at 12:49 AM J . Bruce Fields <bfields@fieldses.org> wrote:
-> > > >
-> > > > On Mon, Dec 28, 2020 at 07:03:44PM +0200, Amir Goldstein wrote:
-> > > > > Collect some nfsd stats per export in addition to the global stats.
-> > > >
-> > > > Seems like a reasonable thing to do.
-> > > >
-> > > > > A new nfsdfs export_stats file is created.  It uses the same ops as the
-> > > > > exports file to iterate the export entries and we use the file's name to
-> > > > > determine the reported info per export.  For example:
-> > > > >
-> > > > >  $ cat /proc/fs/nfsd/export_stats
-> > > > >  # Version 1.1
-> > > > >  # Path Client Start-time
-> > > > >  #    Stats
-> > > > >  /test        localhost       92
-> > > > >       fh_stale: 0
-> > > > >       io_read: 9
-> > > > >       io_write: 1
-> > > > >
-> > > > > Every export entry reports the start time when stats collection
-> > > > > started, so stats collecting scripts can know if stats where reset
-> > > > > between samples.
-> > > >
-> > > > Yes, you expect svc_export to be created (or destroyed) when a
-> > > > filesystem is exported (or unexported), or when nfsd starts (or stops).
-> > > >
-> > > > But actually it's just a cache entry and can be removed and recreated at
-> > > > any time.  Not much we can do about losing statistics when that happens,
-> > > > but the start time at least gives us some hope of interpreting the
-> > > > statistics.
-> > > >
-> > > > Why weren't there existing file system statistics that would do the job
-> > > > in your case?
-> > > >
-> > >
-> > > I am not sure what you mean.
-> > > We want to know the amount of read/write io for a specific export on
-> > > the server, including io to/from page cache, which isn't counted by stats
-> > > of most local filesystems.
+> > How are folks feeling about throwing time at a virtual bakeathon?  I had
+> > some ideas about how this might be possible by building out a virtual
+> > network of OpenVPN clients, and hacked together some infrastructure to make
+> > it happen:
 > >
-> > I was just curious what exactly your use case was.  (And incidentally
-> > if it explained the interest in STALE errors as well?)
-> 
-> Ah no I don't. I just added it as a public service.
-> Do you prefer that I drop fh_stale from per-export stats?
+> > https://vpn.nfsv4.dev/
+>
+> My colleague Bill Baker has suggested we aren't going to get the
+> rest of the way there until we have an actual event; ie, a moment
+> in time where we drop our everyday tasks and focus on testing.
+>
+> So, I'm all for a virtual event.
+>
+> We could pick a week, say, the traditional week of Connectathon
+> at the end of February.
 
-No, I've got no objection to it.
+Netapp is also saying that they will only allocate hardware for
+testing for a given period of time and not indefinitely. Thus, having
+an agreed upon date would be a good idea (even if it's a flexible
+date).
 
---b.
-
-> 
+> > That network exists today, and any systems that are able to join it can use
+> > it to test.  There are a number of problems/complications:
+> >    - the private network is ipv6-only by design to avoid conflicts with
+> >      overused ipv4 private addresses.
+> >    - it uses hacked-together PKI to protect the TLS certificates encrypting
+> >      the connections
+> >    - some implementations of NFS only run on systems that cannot run
+> >      OpenVPN software, requiring complicated routing/transalations
+> >    - it needs to be re-written from bash to something..  less bash.
+> >    - network latencies restrict testing to function; testing performance
+> >      doesn't make sense.
+>
+> And the only RDMA testing we can do is iWARP, which excludes some
+> NFS/RDMA implementations.
+>
+>
+> > With the ongoing work on NFS over TLS, my thought now is that if there is
+> > interest in standing up permanent infrastructure for testing, then that's
+> > probably sustainable way forward.  But until implementations mature, its not
+> > going to help us host a successful testing event in the near future.
+>
+> The community does need to integrate TLS testing into these events.
+> However at the moment, there are only a very few implementations. I
+> don't feel comfortable relying on RPC-over-TLS for general testing
+> yet.
+>
+>
+> > So, the second question -- should we instead work towards implementations of
+> > NFS over TLS as a way of creating a more permanent testing infrastructure?
+>
+> Yes, but given how far away that reality is, we shouldn't delay our
+> regular testing with the infrastructure you've set up already.
+>
+>
+> > I am aware that I am leaving out a lot of detail here in order to try to
+> > start a conversation and perhaps coalesce momentum.
 > >
-> > > Unrelated, in our search for those statistics, we were surprised (good
-> > > surprises)
-> > > to learn about s_op->show_stats(), but also surprised (bad surprise)
-> > > to learn how few filesystems implement this method.
+> > Happy new year!
+> > Ben
 > >
-> > Yes, Chuck added it for NFS (checks history...) in 2006.  NFS is unique
-> > in some ways, but I can imagine it'd be useful elsewhere too.
-> >
-> 
-> Well, we are exporting fuse, so I considered adding ->show_stats() for fuse,
-> but per export stats is MUCH easier ;-)
-> 
-> Thanks,
-> Amir.
+> > _______________________________________________
+> > nfsv4 mailing list
+> > nfsv4@ietf.org
+> > https://www.ietf.org/mailman/listinfo/nfsv4
+>
+> --
+> Chuck Lever
+>
+>
+>
+> _______________________________________________
+> nfsv4 mailing list
+> nfsv4@ietf.org
+> https://www.ietf.org/mailman/listinfo/nfsv4
