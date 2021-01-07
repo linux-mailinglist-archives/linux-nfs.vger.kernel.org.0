@@ -2,109 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 836A82ED211
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Jan 2021 15:27:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B97AD2ED3E1
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Jan 2021 17:04:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725965AbhAGO0L (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Jan 2021 09:26:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725960AbhAGO0L (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Jan 2021 09:26:11 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1B40C0612F4
-        for <linux-nfs@vger.kernel.org>; Thu,  7 Jan 2021 06:25:30 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 5B32E6191; Thu,  7 Jan 2021 09:25:29 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 5B32E6191
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1610029529;
-        bh=0lGKsJW2J/fRuHuQGA52TNJmCyFyxm2KuUejJWmi4uw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=snwalCJLMoWX8/4fPqr9qxKUiNQU9+e8ObwFeGe3hWLYEufVb7AruVSFWtqwfoyMo
-         0M3FH/iceCG85X1rg/74CVNQ1OEpJqFmb49YT9BoMZTWGQhlhgaltvF/t/SU0HLtIT
-         DEq+KQ3xbkb2w9Xb/gIFarE3Xr7GTwWeepaNq//w=
-Date:   Thu, 7 Jan 2021 09:25:29 -0500
-From:   "J . Bruce Fields" <bfields@fieldses.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] nfsd: protect concurrent access to nfsd stats
- counters
-Message-ID: <20210107142529.GA5730@fieldses.org>
-References: <20210106075236.4184-1-amir73il@gmail.com>
- <20210106075236.4184-3-amir73il@gmail.com>
- <20210106205017.GG13116@fieldses.org>
- <CAOQ4uxgh=f7fQ6Zf6ry8tC-WXMEoZzTo50y+K56paLTyadV7yw@mail.gmail.com>
+        id S1728460AbhAGQDl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Jan 2021 11:03:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36582 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728372AbhAGQDk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Jan 2021 11:03:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1610035334;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HiGyEcSMzvsRvPyubTsGoWxp+GS0lXaauZP0QWTraeU=;
+        b=BCHrsZzdTpn++IlcPm0jnmo99N0YTGQUf6UH0LkHeCVR84+OjtZrVgvQevBxTUoxhZQfph
+        TlrzDQM5bV5yB3dJthY0dsdYFp97bKqhDCMuwWlLnoW3SbGLwamTXyEDkeuGcyrSyYZR7m
+        1hSVVm39r00QBDf/0/cPaS7ABzS27FM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-527-cW1BAi_MMdyRQOOHgM5DLw-1; Thu, 07 Jan 2021 11:02:12 -0500
+X-MC-Unique: cW1BAi_MMdyRQOOHgM5DLw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BF7FD809DD6
+        for <linux-nfs@vger.kernel.org>; Thu,  7 Jan 2021 16:02:11 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-113-139.phx2.redhat.com [10.3.113.139])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F6245D9DC
+        for <linux-nfs@vger.kernel.org>; Thu,  7 Jan 2021 16:02:11 +0000 (UTC)
+Subject: Re: [PATCH] mount: parse default values correctly
+From:   Steve Dickson <SteveD@RedHat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20210106184028.150925-1-steved@redhat.com>
+Message-ID: <3b8cecf2-3f15-a05d-13f0-2cc5b2d50c79@RedHat.com>
+Date:   Thu, 7 Jan 2021 11:03:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxgh=f7fQ6Zf6ry8tC-WXMEoZzTo50y+K56paLTyadV7yw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20210106184028.150925-1-steved@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 07, 2021 at 09:17:42AM +0200, Amir Goldstein wrote:
-> On Wed, Jan 6, 2021 at 10:50 PM J . Bruce Fields <bfields@fieldses.org> wrote:
-> >
-> > These three patches seem fine.  To bikeshed just a bit more:
-> >
-> > On Wed, Jan 06, 2021 at 09:52:35AM +0200, Amir Goldstein wrote:
-> > >       /* We found a matching entry which is either in progress or done. */
-> > > -     nfsdstats.rchits++;
-> > > +     nfsd_stats_rc_hits_inc();
-> >
-> > Maybe make that something like
-> >
-> >         nfsd_stats_inc(NFSD_STATS_RC_HITS);
-> >
-> > and then we could avoid boilerplate like the below?
-> >
-> 
-> It looks like boilerplate, but every helper is a bit different,
-> so we would have to introduce several variants like:
-> 
->          nfsd_net_stats_inc(nn, NFSD_NET_PAYLOAD_MISSES);
-> 
-> Which is the way I started, but realized it opens a big hole for
-> human mistakes in the form of:
-> 
->          nfsd_net_stats_inc(nn, NFSD_STATS_RC_HITS);
->          nfsd_stats_inc(NFSD_NET_PAYLOAD_MISSES);
-> 
-> And we have no way to detect those errors at compile time
-> because enum types are not strict types.
-> 
-> Also, in the next patch, three more helpers become unique
-> as they are made into helpers to account for both global and per-export
-> stats (fh_stale, io_read, io_write).
-> Making those helpers generic would require aligning the start of global
-> stats enum values with the per-export enum values and that is a source
-> of more human errors.
-> 
-> See the end result of stats.h. All the helpers are unique and the only ones
-> that remain generic are nfsd_stats_rc_*.
-> Making those generic would also require checking the range of the index
-> value is in the NFSD_STATS_RC_* range.
-> 
-> I also tried a version with boilerplate defining macros, i.e.:
-> 
-> NFSD_STATS_FUNCS(rc_hits, RC_HITS)
-> NFSD_STATS_FUNCS(fh_stale, FH_STALE)
-> NFSD_STATS_FUNCS(io_read, IO_READ)
-> 
-> But when I realized in the end it can only serve the rc_* counters,
-> I dropped it.
 
-Yeah, OK.  I'm not a fan of that kind of macro use, either.  It's made
-me waste time when "grep" doesn't turn up a function definition, for
-example.
 
-> Thoughts?
+On 1/6/21 1:40 PM, Steve Dickson wrote:
+> Commit 88c22f92 converted the configfile.c routines
+> to use the parse_opt interfaces which broke how
+> default values from nfsmount.conf are managed.
+> 
+> Default values can not be added to the mount string
+> handed to the kernel. They must be interpreted into
+> the correct mount options then passed to the kernel.
+> 
+> Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=1912877
+> 
+> Signed-off-by: Steve Dickson <steved@redhat.com>
+Committed... (tag: nfs-utils-2-5-3-rc4)
 
-I've got no clever alternative, and you've tried a lot of alternatives,
-so I'll trust your judgement.  Thanks for the explanation.
+steved.
+> ---
+>  utils/mount/configfile.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/utils/mount/configfile.c b/utils/mount/configfile.c
+> index 7934f4f..e865998 100644
+> --- a/utils/mount/configfile.c
+> +++ b/utils/mount/configfile.c
+> @@ -277,8 +277,10 @@ conf_parse_mntopts(char *section, char *arg, struct mount_options *options)
+>  		}
+>  		if (buf[0] == '\0')
+>  			continue;
+> +		if (default_value(buf))
+> +			continue;
+> +
+>  		po_append(options, buf);
+> -		default_value(buf);
+>  	}
+>  	conf_free_list(list);
+>  }
+> 
 
---b.
