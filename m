@@ -2,59 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34BCA2F2209
+	by mail.lfdr.de (Postfix) with ESMTP id AC3B72F220A
 	for <lists+linux-nfs@lfdr.de>; Mon, 11 Jan 2021 22:43:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387864AbhAKVnH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 Jan 2021 16:43:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46460 "EHLO
+        id S2387911AbhAKVnI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 Jan 2021 16:43:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387911AbhAKVnG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Jan 2021 16:43:06 -0500
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB9BC0617A4
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Jan 2021 13:41:52 -0800 (PST)
-Received: by mail-il1-x12a.google.com with SMTP id q1so751667ilt.6
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Jan 2021 13:41:52 -0800 (PST)
+        with ESMTP id S2388032AbhAKVnH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Jan 2021 16:43:07 -0500
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD47C0617A5
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Jan 2021 13:41:53 -0800 (PST)
+Received: by mail-il1-x12d.google.com with SMTP id y13so716092ilm.12
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Jan 2021 13:41:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SW9sK2N6g/Ta8eXWJeE/yuBYQzAt4OFHO0Wdl6GzXf4=;
-        b=mM+mGeRyR0v8qN9T0jGRoCgAsb+iyvtD5nGj8K0ZtqGxLtftwCfIOblOCqTHCN0eH0
-         bIWTrs1x+wURSt7pgykAFjL+7zO0YQj46V+VoX65KGAnxHBASEuy5zh08Y/73alfq8gn
-         +KFAPSppVcpVUZiMoGSktgc+y/g3nM+U1wmo1JT4MsBgQUPI111bJuhWCX2rB6LwKXjw
-         87kOQ9XLi9ULOSQLFtPdoBbDZxOSCpl6nipj/32nTZbmvcFNR6pSlB1aQFZf8W/TWxA8
-         raie9/lPBBrHMU9OtZtDx3T9j0WhUj9qiySpstS6I+RR5TNjVsnTDpaBm36yC5dgfDnW
-         PHvA==
+        bh=2lwSYtzRiaoTDkNyVvPYOL0d/MoaKnDuy9kjU6EPUtA=;
+        b=bbk1r9mvRdg9Au2K5JE05aYYqY+CLpPZCOHl0b473nOvUR7dGhXMNJOlehAcayJgP3
+         Wt4IgrmfxQaMqmBcMEFv5/ZBQLaq8VfgUow371bF6dp27HVTlB+KjPv8lbX7fXZuAz6X
+         37jZ5vrW022KEPKW8S5U+o9WSLzI+rRd69gTj4AmBXBjmSzqRG1PHDNE++BvGjaRMWKA
+         FK55OiJ4cn7oM9jweh5BZ/TUjdte1txCnp10o0eXsoGbqxlFeDorXiJknBl9tIESroC4
+         V0nu4F0exFSpYT7KXsWP9v1iaAZuMFTyQr84xDmaevf1/6BbkBKy8zzF/RGt1Te9+ohB
+         lOqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=SW9sK2N6g/Ta8eXWJeE/yuBYQzAt4OFHO0Wdl6GzXf4=;
-        b=hMdkEMV0W4JrhKIRK0vDfk583aZvAxnzyWwo02luvmKQjXoIcF6VzQGZbDT86rOTk1
-         aTLvefybpEHPWXh4irEzS334P7xlD1LxVHh+QCHV8JDvSd36b0+VIjeBsOBGIObmK7jX
-         QvY0l6YJWMiofCS56M/7QdouWlw77+cNbMktvpEcoFLVoebxaVeuO8FPl5n7u335lMMm
-         bBeYf9xHvMh1wG/ZIcgMHuUdOQZVx/4yL8eezNWsqCvBGGpOaOUO2RiYgUwxYdz8Xa+3
-         vwtsgG/hbToEBgheGZD0pK4Jnnr+Y2zeWDYDQf6GZ6YJ0KbWZxVhq7LeY1pYqx+aWRw7
-         at4Q==
-X-Gm-Message-State: AOAM5320Q+JyaFuoEmh43BvdIXlOwaopoFqGpMyFK0+OzDx+uquKyYYF
-        8/PhEFS1TqHUWLHueTK0SRue/rfgYzZg6g==
-X-Google-Smtp-Source: ABdhPJx4B3GwY1vCSYOQKdbSCqHfqjBk9UO4lZahOysQAiYckk6InhPku3p2B/yPj31b1zgIhNGUHg==
-X-Received: by 2002:a05:6e02:cc7:: with SMTP id c7mr1089336ilj.218.1610401311360;
-        Mon, 11 Jan 2021 13:41:51 -0800 (PST)
+        bh=2lwSYtzRiaoTDkNyVvPYOL0d/MoaKnDuy9kjU6EPUtA=;
+        b=e3+/UiNO91k8TAF/1RZJNnO9nhIrZGFb0oAzbbgKgFCSYxZKtoPuLN8f1v/Aixs/nH
+         +QqNbdQo12qzd6MRrDoO/TRM9W8wY3HeWmr8Pbm6QUc75/hm1kQVt9a9GhauDr1I9KoC
+         WRzhLxw5Jm3rOdw0nj3kY2w+iPlzHzBVWDxFBze6D4GJxhQNLhxqXPQs1pSXdEBsh9UV
+         wh/bP3pMaiVt35dYigsUaAp5Uc8aRRCo9G9OVmIm09DH4WV8kfL7xf3OXCnMAjWt5HGh
+         G8QGEybvPxCR16C5FlExrFxkxbS2o9ag9Y+SqPMDsBtOu5GxZoc0h39vNvyWEXlPwwjP
+         ua/g==
+X-Gm-Message-State: AOAM531zD25zBRlfUJRul+2IkNMwM+J+wy0fzpm7/kXhfCO2Woyu3YX7
+        NsVilNJdhvyXK5IuHCD4ax3t3VoQj6VXjQ==
+X-Google-Smtp-Source: ABdhPJwjhFG2Sylmy40mCGV4UV5Cv7x6nkJCAgX2lFy5tl9oAOXEbm/NRliSBbLWa8vxcmT4UM2uwA==
+X-Received: by 2002:a92:d44e:: with SMTP id r14mr1034188ilm.299.1610401312393;
+        Mon, 11 Jan 2021 13:41:52 -0800 (PST)
 Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.gmail.com with ESMTPSA id 143sm681712ila.4.2021.01.11.13.41.50
+        by smtp.gmail.com with ESMTPSA id 143sm681712ila.4.2021.01.11.13.41.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jan 2021 13:41:50 -0800 (PST)
+        Mon, 11 Jan 2021 13:41:51 -0800 (PST)
 Sender: Anna Schumaker <schumakeranna@gmail.com>
 From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [RFC PATCH 6/7] sunrpc: Prepare xs_connect() for taking NULL tasks
-Date:   Mon, 11 Jan 2021 16:41:42 -0500
-Message-Id: <20210111214143.553479-7-Anna.Schumaker@Netapp.com>
+Subject: [RFC PATCH 7/7] sunrpc: Connect to a new IP address provided by the user
+Date:   Mon, 11 Jan 2021 16:41:43 -0500
+Message-Id: <20210111214143.553479-8-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210111214143.553479-1-Anna.Schumaker@Netapp.com>
 References: <20210111214143.553479-1-Anna.Schumaker@Netapp.com>
@@ -66,28 +66,32 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-We won't have a task structure when we go to change IP addresses, so
-check for one before calling the WARN_ON() to avoid crashing.
+We preserve the same port number, rather than providing a way to change
+it. This keeps the implementation simpler for now.
 
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- net/sunrpc/xprtsock.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sunrpc/sysfs.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index c56a66cdf4ac..250abf1aa018 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -2311,7 +2311,8 @@ static void xs_connect(struct rpc_xprt *xprt, struct rpc_task *task)
- 	struct sock_xprt *transport = container_of(xprt, struct sock_xprt, xprt);
- 	unsigned long delay = 0;
+diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
+index 537d83635670..47a7c9b8b143 100644
+--- a/net/sunrpc/sysfs.c
++++ b/net/sunrpc/sysfs.c
+@@ -70,6 +70,13 @@ static ssize_t rpc_netns_address_show(struct kobject *kobj,
+ static ssize_t rpc_netns_address_store(struct kobject *kobj,
+ 		struct kobj_attribute *attr, const char *buf, size_t count)
+ {
++	struct rpc_netns_client *c = container_of(kobj,
++				struct rpc_netns_client, kobject);
++	struct rpc_clnt *clnt = c->clnt;
++	struct rpc_xprt *xprt = rcu_dereference(clnt->cl_xprt);
++	struct sockaddr *saddr = (struct sockaddr *)&xprt->addr;
++
++	xprt->addrlen = rpc_pton(xprt->xprt_net, buf, count - 1, saddr, sizeof(*saddr));
+ 	return count;
+ }
  
--	WARN_ON_ONCE(!xprt_lock_connect(xprt, task, transport));
-+	if (task)
-+		WARN_ON_ONCE(!xprt_lock_connect(xprt, task, transport));
- 
- 	if (transport->sock != NULL) {
- 		dprintk("RPC:       xs_connect delayed xprt %p for %lu "
 -- 
 2.29.2
 
