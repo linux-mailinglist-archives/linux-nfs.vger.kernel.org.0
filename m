@@ -2,124 +2,154 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E0DB2F30D7
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jan 2021 14:16:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70F112F31D0
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jan 2021 14:34:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731029AbhALNL7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Jan 2021 08:11:59 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:32818 "EHLO
+        id S1726970AbhALNct (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Jan 2021 08:32:49 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:33226 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730986AbhALNL7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jan 2021 08:11:59 -0500
+        with ESMTP id S1726763AbhALNcs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jan 2021 08:32:48 -0500
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10CCxSCO012621;
-        Tue, 12 Jan 2021 13:11:14 GMT
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10CDTT9o071385;
+        Tue, 12 Jan 2021 13:32:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
  mime-version : subject : from : in-reply-to : date : cc :
  content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=k0brY9m6ZsPUMdwQU7yQdZWeGiWfgNVh29qTVRnXB/o=;
- b=YzOUme/unjSTXRe3xRZ0hN+/ZTkPg3bwxTXBjH4E7d4d32rF0Bf/H60hDgPQuTbw1zYd
- fJXuHjnZHq7GDQ6OL3WAaB2D6eTwM9w3nHWg7tT0bmoNiZYFDe9d+9uRnlkSDzJlwQBQ
- lOXlGCZG3YlmMrnCoYWrDVEmp2k9nWyWUzU57N1b8/Whm2YLjD7l1VMJ6xpzKOqilngR
- nvdq01k4tNtQmbyvZb2HuzeDoP1rn5LyHUwDxBOSBmFJwrracGZQw7AfgECfZwgCAIx6
- 3ORULaY8JQR0uZkq+hqFtRaDu3XFoU/6dq0l88hwa7Kt03/78Tpe/a8rfYEEppnom0ml KA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 360kvjx3da-1
+ s=corp-2020-01-29; bh=m1gPPfsTe4ekvcM8cBbTFylpNJfPJJy0Nm87TjuWGjI=;
+ b=DvlKrffMillt0zXaAe4rAbyosWf5qJ/fpGUqBlK820hPeOx6Xg5ojSNwz2rvPJTfBwV0
+ t8XbfxTWgeZjNHIHE0S25NYXbxZmjrttljj6oN9u8GESaHVFsptiICWUlBjWcEqY81SR
+ ipI0v0NlmAK5nxmx0kyi5GsJENrFbKtWhl0A/hEY+40jnSolhmknM/JeyON6Quo521Mv
+ iHV3ifLV9Xw0EJVAcA5vpuXNwE7ZFqNYru5DPuqW414knr/ytuojYOwWBYKjLYp/UPUg
+ 3WV157qeoT2GD/jIwdIBrwAQPk3ZgE0t1R7eOzeEOE0Jsa9rcR/22Utc5oD1PW5IxjXp zw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 360kvjx6dw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Jan 2021 13:11:14 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10CD0ZXv006178;
-        Tue, 12 Jan 2021 13:09:14 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 360kegwkxr-1
+        Tue, 12 Jan 2021 13:32:03 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10CDUWtv140012;
+        Tue, 12 Jan 2021 13:32:02 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 360kf5dg3d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Jan 2021 13:09:14 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 10CD9AuZ028025;
-        Tue, 12 Jan 2021 13:09:11 GMT
+        Tue, 12 Jan 2021 13:32:02 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 10CDW0Nw023394;
+        Tue, 12 Jan 2021 13:32:02 GMT
 Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 12 Jan 2021 05:09:10 -0800
+        with ESMTP ; Tue, 12 Jan 2021 05:32:00 -0800
 Content-Type: text/plain;
-        charset=us-ascii
+        charset=utf-8
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [RFC PATCH 0/7] SUNRPC: Create sysfs files for changing IP
+Subject: Re: [PATCH] nfsd4: readdirplus shouldn't return parent of export
 From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20210111214143.553479-1-Anna.Schumaker@Netapp.com>
-Date:   Tue, 12 Jan 2021 08:09:09 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <CE510EA5-1E3F-4516-A948-10A0FF31C94F@oracle.com>
-References: <20210111214143.553479-1-Anna.Schumaker@Netapp.com>
-To:     Anna Schumaker <schumaker.anna@gmail.com>
+In-Reply-To: <20210111210129.GA11652@fieldses.org>
+Date:   Tue, 12 Jan 2021 08:31:59 -0500
+Cc:     =?utf-8?B?5ZC05byC?= <wangzhibei1999@gmail.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <BF0A932D-82D7-4698-9BA6-2B5B709E7AE3@oracle.com>
+References: <20210105165633.GC14893@fieldses.org> <X/hEB8awvGyMKi6x@kroah.com>
+ <20210108152017.GA4183@fieldses.org>
+ <CAHxDmpSp1LHzKD5uqbfi+jcnb+nFaAZbc5++E0oOvLsYvyYDpw@mail.gmail.com>
+ <20210108164433.GB8699@fieldses.org>
+ <CAHxDmpSjwrcr_fqLJa5=Zo=xmbt2Eo9dcy6TQuoU8+F3yVVNhw@mail.gmail.com>
+ <20210110201740.GA8789@fieldses.org> <20210110202815.GB8789@fieldses.org>
+ <CAHxDmpR8S7NR8OU2nWJmWBdFU9a7wDuDnxviQ2E9RDOeW9fExg@mail.gmail.com>
+ <20210111192507.GB2600@fieldses.org> <20210111210129.GA11652@fieldses.org>
+To:     Bruce Fields <bfields@fieldses.org>
 X-Mailer: Apple Mail (2.3608.120.23.2.4)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9861 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
- malwarescore=0 suspectscore=0 mlxlogscore=999 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2101120073
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 spamscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101120075
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9861 signatures=668683
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
  lowpriorityscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
- clxscore=1015 impostorscore=0 spamscore=0 mlxscore=0 suspectscore=0
+ clxscore=1011 impostorscore=0 spamscore=0 mlxscore=0 suspectscore=0
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101120073
+ engine=8.12.0-2009150000 definitions=main-2101120075
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Anna-
-
-> On Jan 11, 2021, at 4:41 PM, schumaker.anna@gmail.com wrote:
-> 
-> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> 
-> It's possible for an NFS server to go down but come back up with a
-> different IP address. These patches provide a way for administrators to
-> handle this issue by providing a new IP address for xprt sockets to
-> connect to.
-> 
-> This is a first draft of the code, so any thoughts or suggestions would
-> be greatly appreciated!
-
-One implementation question, one future question.
-
-Would /sys/kernel/net be a little better? or /sys/kernel/sunrpc ?
-
-Do you have a plan to integrate support for fs_locations to probe
-servers for alternate IP addresses? Would that be a userspace
-utility that would plug values into this new /sys API?
 
 
-> Anna
-> 
-> 
-> Anna Schumaker (7):
->  net: Add a /sys/net directory to sysfs
->  sunrpc: Create a sunrpc directory under /sys/net/
->  sunrpc: Create a net/ subdirectory in the sunrpc sysfs
->  sunrpc: Create per-rpc_clnt sysfs kobjects
->  sunrpc: Create a per-rpc_clnt file for managing the IP address
->  sunrpc: Prepare xs_connect() for taking NULL tasks
->  sunrpc: Connect to a new IP address provided by the user
-> 
-> include/linux/sunrpc/clnt.h |   1 +
-> include/net/sock.h          |   4 +
-> net/socket.c                |   8 ++
-> net/sunrpc/Makefile         |   2 +-
-> net/sunrpc/clnt.c           |   5 ++
-> net/sunrpc/sunrpc_syms.c    |   8 ++
-> net/sunrpc/sysfs.c          | 160 ++++++++++++++++++++++++++++++++++++
-> net/sunrpc/sysfs.h          |  22 +++++
-> net/sunrpc/xprtsock.c       |   3 +-
-> 9 files changed, 211 insertions(+), 2 deletions(-)
-> create mode 100644 net/sunrpc/sysfs.c
-> create mode 100644 net/sunrpc/sysfs.h
-> 
-> -- 
+> On Jan 11, 2021, at 4:01 PM, J. Bruce Fields <bfields@fieldses.org> =
+wrote:
+>=20
+> From: "J. Bruce Fields" <bfields@redhat.com>
+>=20
+> If you export a subdirectory of a filesystem, a READDIRPLUS on the =
+root
+> of that export will return the filehandle of the parent with the ".."
+> entry.
+>=20
+> The filehandle is optional, so let's just not return the filehandle =
+for
+> ".." if we're at the root of an export.
+>=20
+> Note that once the client learns one filehandle outside of the export,
+> they can trivially access the rest of the export using further =
+lookups.
+>=20
+> However, it is also not very difficult to guess filehandles outside of
+> the export.  So exporting a subdirectory of a filesystem should
+> considered equivalent to providing access to the entire filesystem.  =
+To
+> avoid confusion, we recommend only exporting entire filesystems.
+>=20
+> Reported-by: =E5=90=B4=E5=BC=82 <wangzhibei1999@gmail.com>
+> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> ---
+> fs/nfsd/nfs3xdr.c | 7 ++++++-
+> 1 file changed, 6 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+> index 821db21ba072..34b880211e5e 100644
+> --- a/fs/nfsd/nfs3xdr.c
+> +++ b/fs/nfsd/nfs3xdr.c
+> @@ -865,9 +865,14 @@ compose_entry_fh(struct nfsd3_readdirres *cd, =
+struct svc_fh *fhp,
+> 	if (isdotent(name, namlen)) {
+> 		if (namlen =3D=3D 2) {
+> 			dchild =3D dget_parent(dparent);
+> -			/* filesystem root - cannot return filehandle =
+for ".." */
+> +			/*
+> +			 * Don't return filehandle for ".." if we're at
+> OA+			 * the filesystem or export root:
+> +			 */
+> 			if (dchild =3D=3D dparent)
+> 				goto out;
+> +			if (dparent =3D=3D exp->ex_path.dentry)
+> +				goto out;
+> 		} else
+> 			dchild =3D dget(dparent);
+> 	} else
+> --=20
 > 2.29.2
-> 
+
+Thanks for the fix!
+
+I've replaced the Reported-by: tag and pushed this to my
+cel-next topic branch, and intend to submit it with the
+next 5.11 -rc pull request. See:
+
+=
+https://git.linux-nfs.org/?p=3Dcel/cel-2.6.git;a=3Dshortlog;h=3Drefs/heads=
+/cel-next
+
+Is there additional context that should be added? A Link:
+tag that points to the discussion on security@ perhaps?
+
+Note there was some damage in the patch body: there's a
+spurious "OA" in the hunk that had to be removed before
+the patch would apply.
+
 
 --
 Chuck Lever
