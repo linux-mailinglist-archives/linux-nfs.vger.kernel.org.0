@@ -2,125 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEC092F3233
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jan 2021 14:51:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B76AB2F32CA
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jan 2021 15:18:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbhALNvc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Jan 2021 08:51:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56878 "EHLO
+        id S1725843AbhALORx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Jan 2021 09:17:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbhALNvc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jan 2021 08:51:32 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD1FC061575
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Jan 2021 05:50:51 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id EF2BB6E9F; Tue, 12 Jan 2021 08:50:50 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org EF2BB6E9F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1610459450;
-        bh=RQfDpDvEmhL2tyyGtyX4ECa4voBz+GNiPsPxJ99buS8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zfa4fM+JIhlbr7UfU5MuV+I0sNlEbUJ41P7LbuG+18xpWyYyC+SidNHnUynAy8TNe
-         z23b7UZbEogzEvqwnA6jG+DAnDenoNoYgfzruMIJLf+RWgAYH6npLe9/9OErhjQJhv
-         u+dgT2YLKVh76cvbye6O9btOm831l9UYUT41AQ4o=
-Date:   Tue, 12 Jan 2021 08:50:50 -0500
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     =?utf-8?B?5ZC05byC?= <wangzhibei1999@gmail.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] nfsd4: readdirplus shouldn't return parent of export
-Message-ID: <20210112135050.GA9248@fieldses.org>
-References: <20210108152017.GA4183@fieldses.org>
- <CAHxDmpSp1LHzKD5uqbfi+jcnb+nFaAZbc5++E0oOvLsYvyYDpw@mail.gmail.com>
- <20210108164433.GB8699@fieldses.org>
- <CAHxDmpSjwrcr_fqLJa5=Zo=xmbt2Eo9dcy6TQuoU8+F3yVVNhw@mail.gmail.com>
- <20210110201740.GA8789@fieldses.org>
- <20210110202815.GB8789@fieldses.org>
- <CAHxDmpR8S7NR8OU2nWJmWBdFU9a7wDuDnxviQ2E9RDOeW9fExg@mail.gmail.com>
- <20210111192507.GB2600@fieldses.org>
- <20210111210129.GA11652@fieldses.org>
- <BF0A932D-82D7-4698-9BA6-2B5B709E7AE3@oracle.com>
+        with ESMTP id S1725372AbhALORw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jan 2021 09:17:52 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34839C061575
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jan 2021 06:17:11 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id y23so2269985wmi.1
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jan 2021 06:17:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=akZMJ9+AQtzAE1/UTxU/FP25RPQa5JBHdNHm/8wjbAQ=;
+        b=r1Tr/Guyml0IF4kZIDj/2B1VCz0vDEOgrwzNnsBKwwzSEUwKoyeMkytMue1qP+niMN
+         fU9v5RcZt4t/M+zrV9RfxbDTe6zLpZFkDlEEQ6mBjZRjmhtOWP5fU3q6c25ZPgDkR6T1
+         O/1TWV4VNnHDa37s/J7YvSajFW9n0xvl36HNOV8iosT6Kr7IyhnvQxgz6/5OlC05V841
+         JCH4D+rNXr8yoayYIMvPkbO7BwhMZAB8kKVH16aSEok2UnTpOmtnVK34lib05oh6xEvs
+         x0Zmn1hTypzTmWE/t+kAp9oti0i9ABw+KnN+wRIuU7UkwX7LtxkPemAKz64fJ00CB7kM
+         vtyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=akZMJ9+AQtzAE1/UTxU/FP25RPQa5JBHdNHm/8wjbAQ=;
+        b=tcygxEhavvwxRqMh+TgxE5gJQT9iirE9yc/tM1T4QJ0ZFPwO7PuKqC8iozejjpaPdS
+         a5k4gmoPNDieV4JeMa/ndHJe5b5asw/UuWbsjw2rhTTr6DM5jdeWdEIQgd5uUwbFfOqe
+         Z0f+T01RLJsUmXM/lKkIUxWQ0Dc9+08uAFshk563GMuONx3TIweJwOecg8STMGKZjwq1
+         W3sE+vbDUIBCjz1aYDTkSw5wyC3aFP9xWG0cL7A4ggcsbGndXWyp7kV2Lh1qv6S+f/0G
+         DXRwYgapceHSjsiAYznMcUZdC3DBW7INsTrdntL1HEfI0p56kan07Qf5kOmmqjGv/cAW
+         gNBA==
+X-Gm-Message-State: AOAM531ut5McnzH0GkmBlgkvp7KqZUu4ZH+B4++yoryQfWNFXGv00YuA
+        wGY/dANbuOzNStRRXEs5bUNfqA==
+X-Google-Smtp-Source: ABdhPJzv3DwY+N98Ep9hwMmnAqd+MSVwlkG7qNcM5l7rbSKDLbRlNf/uhTuRHgbwna6COIngU970MA==
+X-Received: by 2002:a7b:c184:: with SMTP id y4mr3846898wmi.92.1610461029881;
+        Tue, 12 Jan 2021 06:17:09 -0800 (PST)
+Received: from gmail.com ([77.125.107.115])
+        by smtp.gmail.com with ESMTPSA id m14sm5206832wrh.94.2021.01.12.06.17.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Jan 2021 06:17:09 -0800 (PST)
+Date:   Tue, 12 Jan 2021 16:17:06 +0200
+From:   Dan Aloni <dan@kernelim.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org
+Cc:     Jim Foraker <foraker1@llnl.gov>, Ben Woodard <woodard@redhat.com>
+Subject: [RFC] NFSv3 RDMA multipath enhancements
+Message-ID: <20210112141706.GA3146539@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BF0A932D-82D7-4698-9BA6-2B5B709E7AE3@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 12, 2021 at 08:31:59AM -0500, Chuck Lever wrote:
-> 
-> 
-> > On Jan 11, 2021, at 4:01 PM, J. Bruce Fields <bfields@fieldses.org> wrote:
-> > 
-> > From: "J. Bruce Fields" <bfields@redhat.com>
-> > 
-> > If you export a subdirectory of a filesystem, a READDIRPLUS on the root
-> > of that export will return the filehandle of the parent with the ".."
-> > entry.
-> > 
-> > The filehandle is optional, so let's just not return the filehandle for
-> > ".." if we're at the root of an export.
-> > 
-> > Note that once the client learns one filehandle outside of the export,
-> > they can trivially access the rest of the export using further lookups.
-> > 
-> > However, it is also not very difficult to guess filehandles outside of
-> > the export.  So exporting a subdirectory of a filesystem should
-> > considered equivalent to providing access to the entire filesystem.  To
-> > avoid confusion, we recommend only exporting entire filesystems.
-> > 
-> > Reported-by: 吴异 <wangzhibei1999@gmail.com>
-> > Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> > ---
-> > fs/nfsd/nfs3xdr.c | 7 ++++++-
-> > 1 file changed, 6 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-> > index 821db21ba072..34b880211e5e 100644
-> > --- a/fs/nfsd/nfs3xdr.c
-> > +++ b/fs/nfsd/nfs3xdr.c
-> > @@ -865,9 +865,14 @@ compose_entry_fh(struct nfsd3_readdirres *cd, struct svc_fh *fhp,
-> > 	if (isdotent(name, namlen)) {
-> > 		if (namlen == 2) {
-> > 			dchild = dget_parent(dparent);
-> > -			/* filesystem root - cannot return filehandle for ".." */
-> > +			/*
-> > +			 * Don't return filehandle for ".." if we're at
-> > OA+			 * the filesystem or export root:
-> > +			 */
-> > 			if (dchild == dparent)
-> > 				goto out;
-> > +			if (dparent == exp->ex_path.dentry)
-> > +				goto out;
-> > 		} else
-> > 			dchild = dget(dparent);
-> > 	} else
-> > -- 
-> > 2.29.2
-> 
-> Thanks for the fix!
-> 
-> I've replaced the Reported-by: tag and pushed this to my
-> cel-next topic branch, and intend to submit it with the
-> next 5.11 -rc pull request. See:
-> 
-> https://git.linux-nfs.org/?p=cel/cel-2.6.git;a=shortlog;h=refs/heads/cel-next
-> 
-> Is there additional context that should be added? A Link:
-> tag that points to the discussion on security@ perhaps?
+Hi Trond, Anna,
 
-I don't think so.
+We currently have several field installations containing NFS and
+SunRPC-related patches that greatly improve performance of NFSv3 clients
+over RDMA setups, where link aggregation is not supported.
 
-I guess it should get a stable cc: too.
+I would like work to integrate several of these changes to upstream, and
+discuss their implementation. We managed to get a bandwidth of 33 GB/sec
+from single node NFSv3 mount, and later around 92 GB/sec from a single
+mount using further enhancements in RPC request dispatch.
 
-> Note there was some damage in the patch body: there's a
-> spurious "OA" in the hunk that had to be removed before
-> the patch would apply.
+The main change allows specifying multiple target IP addresses in a
+single mount, that combined with nconnect and multiple floating IPs,
+provides load balancing over several target nodes. This is good for
+systems where load balancing is managed by moving a group of floating IP
+addresses. This works especially well on RoCE setups.
 
-Whoops, apologies, I'm not sure how that happened....
+The networking setup on these clients comprises of multiple RDMA network
+interfaces that are connected to the same network, and each has its own
+IP address.
 
---b.
+The proposed change specifies a new `remoteports=<IP-addresses-ranges>`
+mount option providing a group of IP addresses, from which `nconnect` at
+sunrpc scope picks target transport address in round-robin. There's also
+an accompanying `localports` parameter that allows local address bind so
+that the source port is better controlled, in a way to ensure that
+transports are not hogging a single local interface. So essentially,
+this is a form of session trunking, that can be thought as an extension
+to the existing `nconnect` parameter.
+
+To my understanding NFSv4.x with pNFS has advanced dynamic transport
+management logic along file layouts supporting stripe over file offsets,
+however there are cases in which we would like to achieve good
+performance even with the older protocol.
+
+Before I adjust the patches I'm testing for v5.11, do you see other
+implementation or user interface considerations I should take into
+account?
+
+Thanks
+
+-- 
+Dan Aloni
