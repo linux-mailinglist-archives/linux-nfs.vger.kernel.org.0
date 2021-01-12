@@ -2,111 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 018DC2F221F
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Jan 2021 22:47:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E0DB2F30D7
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jan 2021 14:16:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730300AbhAKVqu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 Jan 2021 16:46:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728324AbhAKVqu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Jan 2021 16:46:50 -0500
-Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB68EC061786
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Jan 2021 13:46:09 -0800 (PST)
-Received: by mail-io1-xd2e.google.com with SMTP id 81so38781ioc.13
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Jan 2021 13:46:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LbP1OQZq+5+FFGKGb0LjAahO6kCFsRQ76eQrVUZXeys=;
-        b=ANucLuunrQH+L+xa6AzdtLNk6EHkN9ql71SFxW0KgUyr0uRF+X2ETAeZ+s0St6lDg7
-         XiI9K5nlk+6AHtRsDg8yBup5SETjdYxbHTXTNY3atl0o92bht1OrpUhInIuDIiLHExQF
-         IMzyhJmf/09vHw0URcEFVjlV/+QRfkmNA+Qyrb6OG7N/ndZ1f8eqk3IijDOGHWcfmDAj
-         1Jr2RgzBYDGiAOmnWwxdT1l8Nrg4ODrXtI9dcTofpXOTAgwK+6eDDnvDhNsqvlKjTvSU
-         7MKPEqnPiFy2SZUqWCmUuM2ZvAbL+jk/RWCNDwUoUJRRBqYh1J+umnRaDwcEbjGKl4Rr
-         DEiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=LbP1OQZq+5+FFGKGb0LjAahO6kCFsRQ76eQrVUZXeys=;
-        b=uY8lpLY0PJbCCjKN43E2EDyHUOU6DKW5UpRdiojYZkY1P8V4kHDyDv4vlVJNvOUgM5
-         wG/POKNVVcwjGnJNOZLYHTjfoPhUd6kAlE0tYhocVk/Qt1jeLoALf2sJ/BxTPitgHUeh
-         eiUUj3v8H8DzTW32WM8TP5dvAuEcaDAoeElvDZX8RcOoqWKL5tuFvqZ5JAErz2it8b6K
-         XwFCKZHO4W2SgNajHT6RfRZLozAerJfxEzSW0N8XPmZDkLLWjyIT1h9h4eardJQ+X+sA
-         AyF/vxl9KUktzY/KurZwholgasAgstOPTjVDgF5tyjpsH0ilkVkI337AYXPb5z9sp3u1
-         k+aA==
-X-Gm-Message-State: AOAM530Zdfr0rID82pH5qDTrEqlZa5iAnKIEKUFEKpG/V5Gt/mphXk2U
-        3AmEkCPPxYGANpHSgSLZGoKYc9CIVvJ48g==
-X-Google-Smtp-Source: ABdhPJxgrib6YiLoM51xwZ2Ym/mVFDSyfdNeqxy+jHBBqlbGiECfUEo4/waTyz5g3jNNPs0rDCdjwA==
-X-Received: by 2002:a02:650e:: with SMTP id u14mr1464274jab.143.1610401568974;
-        Mon, 11 Jan 2021 13:46:08 -0800 (PST)
-Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.gmail.com with ESMTPSA id o195sm655885ila.38.2021.01.11.13.46.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jan 2021 13:46:08 -0800 (PST)
-Sender: Anna Schumaker <schumakeranna@gmail.com>
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [RFC PATCH v2 7/7] sunrpc: Connect to a new IP address provided by the user
-Date:   Mon, 11 Jan 2021 16:46:07 -0500
-Message-Id: <20210111214607.553939-1-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.29.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1731029AbhALNL7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Jan 2021 08:11:59 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:32818 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730986AbhALNL7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jan 2021 08:11:59 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10CCxSCO012621;
+        Tue, 12 Jan 2021 13:11:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=k0brY9m6ZsPUMdwQU7yQdZWeGiWfgNVh29qTVRnXB/o=;
+ b=YzOUme/unjSTXRe3xRZ0hN+/ZTkPg3bwxTXBjH4E7d4d32rF0Bf/H60hDgPQuTbw1zYd
+ fJXuHjnZHq7GDQ6OL3WAaB2D6eTwM9w3nHWg7tT0bmoNiZYFDe9d+9uRnlkSDzJlwQBQ
+ lOXlGCZG3YlmMrnCoYWrDVEmp2k9nWyWUzU57N1b8/Whm2YLjD7l1VMJ6xpzKOqilngR
+ nvdq01k4tNtQmbyvZb2HuzeDoP1rn5LyHUwDxBOSBmFJwrracGZQw7AfgECfZwgCAIx6
+ 3ORULaY8JQR0uZkq+hqFtRaDu3XFoU/6dq0l88hwa7Kt03/78Tpe/a8rfYEEppnom0ml KA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 360kvjx3da-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Jan 2021 13:11:14 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10CD0ZXv006178;
+        Tue, 12 Jan 2021 13:09:14 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 360kegwkxr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Jan 2021 13:09:14 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 10CD9AuZ028025;
+        Tue, 12 Jan 2021 13:09:11 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 Jan 2021 05:09:10 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [RFC PATCH 0/7] SUNRPC: Create sysfs files for changing IP
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20210111214143.553479-1-Anna.Schumaker@Netapp.com>
+Date:   Tue, 12 Jan 2021 08:09:09 -0500
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <CE510EA5-1E3F-4516-A948-10A0FF31C94F@oracle.com>
+References: <20210111214143.553479-1-Anna.Schumaker@Netapp.com>
+To:     Anna Schumaker <schumaker.anna@gmail.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9861 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 mlxlogscore=999 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2101120073
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9861 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
+ clxscore=1015 impostorscore=0 spamscore=0 mlxscore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101120073
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Hi Anna-
 
-We preserve the same port number, rather than providing a way to change
-it. This keeps the implementation simpler for now.
+> On Jan 11, 2021, at 4:41 PM, schumaker.anna@gmail.com wrote:
+> 
+> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> 
+> It's possible for an NFS server to go down but come back up with a
+> different IP address. These patches provide a way for administrators to
+> handle this issue by providing a new IP address for xprt sockets to
+> connect to.
+> 
+> This is a first draft of the code, so any thoughts or suggestions would
+> be greatly appreciated!
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
-v2: Whoops, I forgot to commit the actual connection code to this patch!
----
- net/sunrpc/sysfs.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+One implementation question, one future question.
 
-diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index 537d83635670..5bf8d293ab7c 100644
---- a/net/sunrpc/sysfs.c
-+++ b/net/sunrpc/sysfs.c
-@@ -4,6 +4,7 @@
-  */
- #include <linux/sunrpc/clnt.h>
- #include <linux/sunrpc/addr.h>
-+#include <linux/sunrpc/xprtsock.h>
- #include <net/sock.h>
- #include "sysfs.h"
- 
-@@ -70,6 +71,20 @@ static ssize_t rpc_netns_address_show(struct kobject *kobj,
- static ssize_t rpc_netns_address_store(struct kobject *kobj,
- 		struct kobj_attribute *attr, const char *buf, size_t count)
- {
-+	struct rpc_netns_client *c = container_of(kobj,
-+				struct rpc_netns_client, kobject);
-+	struct rpc_clnt *clnt = c->clnt;
-+	struct rpc_xprt *xprt = rcu_dereference(clnt->cl_xprt);
-+	struct sockaddr *saddr = (struct sockaddr *)&xprt->addr;
-+	int port = rpc_get_port(saddr);
-+
-+	xprt->addrlen = rpc_pton(xprt->xprt_net, buf, count - 1, saddr, sizeof(*saddr));
-+	rpc_set_port(saddr, port);
-+
-+	kfree(xprt->address_strings[RPC_DISPLAY_ADDR]);
-+	xprt->address_strings[RPC_DISPLAY_ADDR] = kstrndup(buf, count - 1, GFP_KERNEL);
-+
-+	xprt->ops->connect(xprt, NULL);
- 	return count;
- }
- 
--- 
-2.29.2
+Would /sys/kernel/net be a little better? or /sys/kernel/sunrpc ?
+
+Do you have a plan to integrate support for fs_locations to probe
+servers for alternate IP addresses? Would that be a userspace
+utility that would plug values into this new /sys API?
+
+
+> Anna
+> 
+> 
+> Anna Schumaker (7):
+>  net: Add a /sys/net directory to sysfs
+>  sunrpc: Create a sunrpc directory under /sys/net/
+>  sunrpc: Create a net/ subdirectory in the sunrpc sysfs
+>  sunrpc: Create per-rpc_clnt sysfs kobjects
+>  sunrpc: Create a per-rpc_clnt file for managing the IP address
+>  sunrpc: Prepare xs_connect() for taking NULL tasks
+>  sunrpc: Connect to a new IP address provided by the user
+> 
+> include/linux/sunrpc/clnt.h |   1 +
+> include/net/sock.h          |   4 +
+> net/socket.c                |   8 ++
+> net/sunrpc/Makefile         |   2 +-
+> net/sunrpc/clnt.c           |   5 ++
+> net/sunrpc/sunrpc_syms.c    |   8 ++
+> net/sunrpc/sysfs.c          | 160 ++++++++++++++++++++++++++++++++++++
+> net/sunrpc/sysfs.h          |  22 +++++
+> net/sunrpc/xprtsock.c       |   3 +-
+> 9 files changed, 211 insertions(+), 2 deletions(-)
+> create mode 100644 net/sunrpc/sysfs.c
+> create mode 100644 net/sunrpc/sysfs.h
+> 
+> -- 
+> 2.29.2
+> 
+
+--
+Chuck Lever
+
+
 
