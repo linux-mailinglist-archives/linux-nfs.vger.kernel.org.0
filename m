@@ -2,79 +2,142 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C630C2F4F17
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Jan 2021 16:46:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC9E22F533C
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Jan 2021 20:24:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbhAMPqV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 Jan 2021 10:46:21 -0500
-Received: from elasmtp-curtail.atl.sa.earthlink.net ([209.86.89.64]:51826 "EHLO
-        elasmtp-curtail.atl.sa.earthlink.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726709AbhAMPqV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Jan 2021 10:46:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mindspring.com;
-        s=dk12062016; t=1610552780; bh=RC/1oew/GsS+TWnTlzLKkFZv5aCeenAdY8EJ
-        EiieuRE=; h=Received:From:To:Cc:References:In-Reply-To:Subject:Date:
-         Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:
-         X-Mailer:Content-Language:Thread-Index:X-ELNK-Trace:
-         X-Originating-IP; b=BJmVJPOtzZOIB7xNRxg6lohfALUkGzF8pZphNNHLvekEC6
-        Z7sIKC9U8XBAF893OUgiWjZ14aCsD4dsyhIgilyaCldGpR4FpPFl+2d9F7pP+fXP0ed
-        mIbU/PGJL3gplAzCGw5lhlVZjfwI4U1r4LlqdK8OI9GjN0Exrt7Sl2KZqeEQ5iRPTeY
-        hZ2Tq4mKucdSSDy0sLh5+mhLrRxUg+uKSoW5Q9H1L8ZzgOBmH/UMBihpgTB3QZLmw1h
-        N/+6tX4Lg1+GLvA9hPtiESUwvq7S1Cfzj7rZCTlX00K7i9GZRD+J10H2jACSOZ+gLhq
-        pujCoYE9mRgDcHes39KviRNZJagQ==
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws;
-  s=dk12062016; d=mindspring.com;
-  b=SvmQ6UdVaZEKswJG+8r8Zat8Y5k+iNoZXIA4bIrIXlPptCUCLXm9XyAT5wRg0loR77mQRr28wEA1LyGPCMvoTI2t9Vgddh1uh713WErfL2tZxG4CSFKOxj6LtuAhC1VNjK63fO/4SHqv6/EmcYhPyUggZ0T/S0l6i+9KPPGY9uBCQxlxkxZgeS23wNdpSTG/5cyBea078BEoY53fIo+duEJr3jR//A9leUYvFASv9cBdTV4fENfCuZOKKsR7bmTk2km9Lw35M2UGzG9DTz+IlbJn87vCm1bKPmflQR7ZNf+bL0IgiqWBd7m+pJ7E2+fgiWBtoC3eISyNl80+Zh2y/A==;
-  h=Received:From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:X-Mailer:Content-Language:Thread-Index:X-ELNK-Trace:X-Originating-IP;
-Received: from [76.105.143.216] (helo=FRANKSTHINKPAD)
-        by elasmtp-curtail.atl.sa.earthlink.net with esmtpa (Exim 4)
-        (envelope-from <ffilzlnx@mindspring.com>)
-        id 1kziL1-0005Ci-FY; Wed, 13 Jan 2021 10:45:35 -0500
-From:   "Frank Filz" <ffilzlnx@mindspring.com>
-To:     <hch@infradead.org>, "'Trond Myklebust'" <trondmy@hammerspace.com>
-Cc:     <pgoetz@math.utexas.edu>, <wangzhibei1999@gmail.com>,
-        <chuck.lever@oracle.com>, <greg@kroah.com>, <w@1wt.eu>,
-        <security@kernel.org>, <bfields@fieldses.org>,
-        <linux-nfs@vger.kernel.org>
-References: <CAHxDmpR1zG25ADfK2jat4VKGbAOCg6YM_0WA+a_jQE82hbnMjA@mail.gmail.com> <CAHxDmpRfmVukMR_yF4coioiuzrsp72zBraHWZ8gaMydUuLwKFg@mail.gmail.com> <20210112153208.GF9248@fieldses.org> <8296b696a7fa5591ad3fbb05bfcf6bdf6175cc38.camel@hammerspace.com> <42fcbc42-f1b3-5d99-c507-e1b579f5a37a@math.utexas.edu> <20210112180326.GI9248@fieldses.org> <20210113081238.GA1428651@infradead.org> <0da3d3f1fee1a70eab3f78212f9282b03e21fc4d.camel@hammerspace.com> <20210113144026.GA1517953@infradead.org> <cfe4b764e6a3a58e10d95dfe660afa12c30d8008.camel@hammerspace.com> <20210113153013.GA1527598@infradead.org>
-In-Reply-To: <20210113153013.GA1527598@infradead.org>
-Subject: RE: nfsd vurlerability submit
-Date:   Wed, 13 Jan 2021 07:45:34 -0800
-Message-ID: <05d301d6e9c3$228bcc50$67a364f0$@mindspring.com>
+        id S1726590AbhAMTYO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 Jan 2021 14:24:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbhAMTYO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Jan 2021 14:24:14 -0500
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07B2FC061575
+        for <linux-nfs@vger.kernel.org>; Wed, 13 Jan 2021 11:23:34 -0800 (PST)
+Received: by mail-ed1-x532.google.com with SMTP id g1so2519463edu.4
+        for <linux-nfs@vger.kernel.org>; Wed, 13 Jan 2021 11:23:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7KBbqWDRQ7UUBREJsNq4gXTjJjNr0zFU1m9UhbdNm6o=;
+        b=sfcJxQTRP2sPpzT+r4cAdtk1MRNK9f4wK5dtK0/qbwyfgsr4KuU555m3xN0AJT/UOx
+         blqYI9NAYCrx3QZOD+knDkWpHKzJ0REU43LAfh5g+dkmSsDJn+irt4mEttfKbi03IzwB
+         OJJlndJI6677h1Y2esbz2JyYBwzcsNArw+ivAhvFWgzpQR/tp+h5A7noJkfS4fqDUniH
+         s4ysPXPY7Q+qTJ5vx552DYAn6xGc97gRcx1PrMgGtMa/aWcDWLHPHtPKvyYZQ6m7qy7U
+         ojidxBU/IVAR2+PlTQAeChntej+bTk0aSZUCQTYOnOc0xBQ9OvqASNCkOqfKK+itXfjW
+         wwLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7KBbqWDRQ7UUBREJsNq4gXTjJjNr0zFU1m9UhbdNm6o=;
+        b=d9g9wMXxbDDgrriUJxr0H9WeqYFMbFA6rt4WWaSx5XGdarceWMhIBimHdV4Kgsh+m6
+         36sFaD6QtQWk6iUAaCT+ckuWhogT26TG0x955PTvkb5h6+NGxmC+TAQYM52E3ppleNXs
+         QZzp/aKsi5bg0R9na8sWzSe72Rsei8u5X6035GA2gImwtNQvgc+BQh1dQoikl7HYTwb+
+         W2S1YtthIZDypKb9308S1mX9iQq7ai2x8Ab3rRARhBpE47ZhlrSTmHZk1mgxlCTSZKKO
+         2jZ6fP22Y6Y6242+42PXJhKF4AYsHH9cFoSrJznHEZxjxrhbWLo3V+0b5IfF9yVLgTAe
+         ccAA==
+X-Gm-Message-State: AOAM532vbYM8RM5kF+OhldGseG6vWmAUIICk7aINDpGkzvruVAe1HShb
+        CHrLh+ZDmKgL62skmoznx1YmGVuN/1Ji0VZsTX0xN5uOvc4=
+X-Google-Smtp-Source: ABdhPJyyNs5xj+tiVaEcUw4eIDNf5BnoA7Yzh5gbOFyqQ8XxQMVMFUa3bJCQgjAk+r/T6W5JoRj0pEeio0fSdf3ZaeU=
+X-Received: by 2002:a50:c315:: with SMTP id a21mr3061981edb.50.1610565812675;
+ Wed, 13 Jan 2021 11:23:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Content-Language: en-us
-Thread-Index: AQLbBpV2WqwSH4ro3sg5DnHxNuogsAG1foYMAdPFeR8A7OUsxgJNtEcoAifwYVQBKcynSgGzjkOHAzIEykABCARvvwEuJyujp5Ps7jA=
-X-ELNK-Trace: 136157f01908a8929c7f779228e2f6aeda0071232e20db4dc441b88e89c558d0e8f4e45fa517a40a350badd9bab72f9c350badd9bab72f9c350badd9bab72f9c
-X-Originating-IP: 76.105.143.216
+References: <20210111214143.553479-1-Anna.Schumaker@Netapp.com>
+ <CE510EA5-1E3F-4516-A948-10A0FF31C94F@oracle.com> <20210112165911.GH9248@fieldses.org>
+In-Reply-To: <20210112165911.GH9248@fieldses.org>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Wed, 13 Jan 2021 14:23:16 -0500
+Message-ID: <CAFX2JfmYrCSYfCCGgQ0eghU3WSqk=T38wxkJ7Q42ORw-NFeFQg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/7] SUNRPC: Create sysfs files for changing IP
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> On Wed, Jan 13, 2021 at 03:16:52PM +0000, Trond Myklebust wrote:
-> > How would that work then? Would you just look at the project ID of the
-> > directory identified by the filehandle as the export point, and then
-> > match to the project ID on the target inode? That sounds like it
-> > doesn't even need to encode anything special in the filehandle.
-> 
-> True, we would not even have to encode them.
-> 
-> > How do you set a project ID in XFS?
-> 
-> With the XFS_IOC_SETXFLAGS ioctl.
-> 
-> On the command line side people usually do it using the xfs_quota tool as
-part
-> of setting up the tree quotas, but it can also be done separately using
-the chproj
-> subcommand of xfs_io.
+On Tue, Jan 12, 2021 at 11:59 AM J. Bruce Fields <bfields@fieldses.org> wrote:
+>
+> On Tue, Jan 12, 2021 at 08:09:09AM -0500, Chuck Lever wrote:
+> > Hi Anna-
+> >
+> > > On Jan 11, 2021, at 4:41 PM, schumaker.anna@gmail.com wrote:
+> > >
+> > > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> > >
+> > > It's possible for an NFS server to go down but come back up with a
+> > > different IP address. These patches provide a way for administrators to
+> > > handle this issue by providing a new IP address for xprt sockets to
+> > > connect to.
+> > >
+> > > This is a first draft of the code, so any thoughts or suggestions would
+> > > be greatly appreciated!
+> >
+> > One implementation question, one future question.
+> >
+> > Would /sys/kernel/net be a little better? or /sys/kernel/sunrpc ?
 
-Is this also queried via the ioctl? If this is a viable way of specifying
-sub-trees, nfs-ganesha could also use it, though making an ioctl call for
-each file system object would add some metadata performance hit.
+Possibly! I was trying to match /sys/fs/nfs, but I can definitely
+change this if another location is better.
 
-Frank
+> >
+> > Do you have a plan to integrate support for fs_locations to probe
+> > servers for alternate IP addresses? Would that be a userspace
+> > utility that would plug values into this new /sys API?
 
+Yeah, I would expect there to be a new utility to help with assigning
+new values. I haven't given any thought to using fs_locations yet, but
+it could probably work.
+>
+> We already have dns resolution for fs_locations, right?  Why can't we
+> use that here?  Is it that the mount call doesn't give us a host name?
+> Or we don't trust dns to have the updated IP address for some reason?
+
+The mount call doesn't give us a host name (that I can find, at
+least). By the time we get to the sunrpc layer we're dealing with just
+the IP address anyway. I'd expect there to be a userland utility to
+translate the dns name to the new IP address and pass it along to the
+new API.
+
+Anna
+>
+> --b.
+>
+> >
+> >
+> > > Anna
+> > >
+> > >
+> > > Anna Schumaker (7):
+> > >  net: Add a /sys/net directory to sysfs
+> > >  sunrpc: Create a sunrpc directory under /sys/net/
+> > >  sunrpc: Create a net/ subdirectory in the sunrpc sysfs
+> > >  sunrpc: Create per-rpc_clnt sysfs kobjects
+> > >  sunrpc: Create a per-rpc_clnt file for managing the IP address
+> > >  sunrpc: Prepare xs_connect() for taking NULL tasks
+> > >  sunrpc: Connect to a new IP address provided by the user
+> > >
+> > > include/linux/sunrpc/clnt.h |   1 +
+> > > include/net/sock.h          |   4 +
+> > > net/socket.c                |   8 ++
+> > > net/sunrpc/Makefile         |   2 +-
+> > > net/sunrpc/clnt.c           |   5 ++
+> > > net/sunrpc/sunrpc_syms.c    |   8 ++
+> > > net/sunrpc/sysfs.c          | 160 ++++++++++++++++++++++++++++++++++++
+> > > net/sunrpc/sysfs.h          |  22 +++++
+> > > net/sunrpc/xprtsock.c       |   3 +-
+> > > 9 files changed, 211 insertions(+), 2 deletions(-)
+> > > create mode 100644 net/sunrpc/sysfs.c
+> > > create mode 100644 net/sunrpc/sysfs.h
+> > >
+> > > --
+> > > 2.29.2
+> > >
+> >
+> > --
+> > Chuck Lever
+> >
+> >
