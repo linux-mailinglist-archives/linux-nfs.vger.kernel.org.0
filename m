@@ -2,120 +2,192 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB9772F5825
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Jan 2021 04:01:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40FCC2F5F35
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Jan 2021 11:48:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbhANCOw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 Jan 2021 21:14:52 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:42682 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729112AbhAMVYv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Jan 2021 16:24:51 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10DLE1F7126533;
-        Wed, 13 Jan 2021 21:23:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=FbrG/Ft8tlxoZfneZ1aPlwCIst/zjmGosaSkCznqS3M=;
- b=vl6RUwn31xjo97PhO9SRQz0EwQ0eL4zHlH17enskB4mUbOtHKioT8+qHChKpatacIaE/
- zea3pp8FJtJzSnrKYPxOHtS4IIMvrEOeP3XoYRfA90Ewx+3q9bg88C9Gd7yLh9vjIAx8
- XMd4wZbBYaZYu8mG3AcX/t2k0unvSGNF2y15bDuxf83SJ5YNkPqaU0z+kOTfSgkQe/Yp
- WFH97YezazU0iG70+jGazGfbiJIe0/ioFjynxsOpxrwltV7UvICfppaYN5TCPf8pT9v5
- 5LOLyM1oLZJFgQo0LIIdDlW8p3VTqZdW1R+uVZGblQ4aPfunQ7+WtVPJtE/6G+z8YPr/ Ew== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 360kg1wnay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Jan 2021 21:23:54 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10DLACQc015069;
-        Wed, 13 Jan 2021 21:23:54 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 360kf18x02-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Jan 2021 21:23:54 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 10DLNqMe011197;
-        Wed, 13 Jan 2021 21:23:54 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 13 Jan 2021 13:23:52 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [RFC PATCH 0/7] SUNRPC: Create sysfs files for changing IP
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <7003D8A9-3B95-4B36-84EC-99D4D1806366@oracle.com>
-Date:   Wed, 13 Jan 2021 16:23:51 -0500
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5EBDAA40-4F55-4EF2-956D-9877C4F4A9A7@oracle.com>
-References: <20210111214143.553479-1-Anna.Schumaker@Netapp.com>
- <CE510EA5-1E3F-4516-A948-10A0FF31C94F@oracle.com>
- <20210112165911.GH9248@fieldses.org>
- <CAFX2JfmYrCSYfCCGgQ0eghU3WSqk=T38wxkJ7Q42ORw-NFeFQg@mail.gmail.com>
- <7003D8A9-3B95-4B36-84EC-99D4D1806366@oracle.com>
-To:     Anna Schumaker <schumaker.anna@gmail.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9863 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 malwarescore=0
- suspectscore=0 adultscore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2101130129
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9863 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- clxscore=1015 impostorscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- phishscore=0 mlxlogscore=999 bulkscore=0 adultscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2101130129
+        id S1728705AbhANKrE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 14 Jan 2021 05:47:04 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47137 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728770AbhANKqq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Jan 2021 05:46:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1610621118;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=NFAkK5CyoahxNRi5k7hi2fue0ERjnOdXOmjImxzpbMM=;
+        b=D0A0d0pHghEVhcfsxCfTGTGytRzL6hioR2OWM1ArB5Qco/tTzfwdUVXdxPtQxPWrqSCyCn
+        6jsa+ziWNnuHKXRwBcBZdcIqMBaK8RGpuO1kxT6DGnBtEIFA2FSEmL21cBJp9vQ6CRzW/j
+        FqsbtDr33zICftz+YvAiS6hgsv+gtic=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-547--bCAKj4MNqC10Gxu7zSNiA-1; Thu, 14 Jan 2021 05:45:16 -0500
+X-MC-Unique: -bCAKj4MNqC10Gxu7zSNiA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1179F80666B;
+        Thu, 14 Jan 2021 10:45:14 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-8.rdu2.redhat.com [10.10.112.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9402F60C64;
+        Thu, 14 Jan 2021 10:45:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com
+cc:     dhowells@redhat.com, jlayton@redhat.com, dwysocha@redhat.com,
+        Matthew Wilcox <willy@infradead.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Steve French <sfrench@samba.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Christoph Hellwig <hch@lst.de>, dchinner@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        v9fs-developer@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Redesigning and modernising fscache
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2758810.1610621106.1@warthog.procyon.org.uk>
+Date:   Thu, 14 Jan 2021 10:45:06 +0000
+Message-ID: <2758811.1610621106@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi,
 
-> On Jan 13, 2021, at 2:48 PM, Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->=20
->> On Jan 13, 2021, at 2:23 PM, Anna Schumaker =
-<schumaker.anna@gmail.com> wrote:
->>=20
->> On Tue, Jan 12, 2021 at 11:59 AM J. Bruce Fields =
-<bfields@fieldses.org> wrote:
->>>=20
->>> On Tue, Jan 12, 2021 at 08:09:09AM -0500, Chuck Lever wrote:
->>>> Hi Anna-
->>>>=20
->>>>> On Jan 11, 2021, at 4:41 PM, schumaker.anna@gmail.com wrote:
->>>>>=20
->>>>> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
->>>>>=20
->>>>> It's possible for an NFS server to go down but come back up with a
->>>>> different IP address. These patches provide a way for =
-administrators to
->>>>> handle this issue by providing a new IP address for xprt sockets =
-to
->>>>> connect to.
->>>>>=20
->>>>> This is a first draft of the code, so any thoughts or suggestions =
-would
->>>>> be greatly appreciated!
->>>>=20
->>>> One implementation question, one future question.
->>>>=20
->>>> Would /sys/kernel/net be a little better? or /sys/kernel/sunrpc ?
->>=20
->> Possibly! I was trying to match /sys/fs/nfs, but I can definitely
->> change this if another location is better.
->=20
-> Ah... since this is a supplement to the mount() interface, maybe
-> placing this new API under /sys/fs/nfs/ might make some sense.
+I've been working on modernising fscache, primarily with help from Jeff Layton
+and Dave Wysochanski with porting Ceph and NFS to it, and with Willy helpfully
+reinventing the VM I/O interface beneath us;-).
 
-Or you could implement it with "-o remount,addr=3Dnew-address".
+However, there've been some objections to the approach I've taken to
+implementing this.  The way I've done it is to disable the use of fscache by
+the five network filesystems that use it, remove much of the old code, put in
+the reimplementation, then cut the filesystems over.  I.e. rip-and-replace.
+It leaves unported filesystems unable to use it - but three of the five are
+done (afs, ceph, nfs), and I've supplied partially-done patches for the other
+two (9p, cifs).
+
+It's been suggested that it's too hard to review this way and that either I
+should go for a gradual phasing in or build the new one in parallel.  The
+first is difficult because I want to change how almost everything in there
+works - but the parts are tied together; the second is difficult because there
+are areas that would *have* to overlap (the UAPI device file, the cache
+storage, the cache size limits and at least some state for managing these), so
+there would have to be interaction between the two variants.  One refinement
+of the latter would be to make the two implementations mutually exclusive: you
+can build one or the other, but not both.
+
+However.  Given that I want to replace the on-disk format in cachefiles at
+some point, and change what the userspace component does, maybe I should
+create a new, separate UAPI interface and do the on-disk format change at the
+same time.  In which case, it makes sense to build a parallel variant
 
 
---
-Chuck Lever
+Anyway, a bit of background into the why.  There are a number of things that
+need to be fixed in fscache/cachefiles:
+
+ (1) The use of bmap to test whether the backing fs contains a cache block.
+     This is not reliable in a modern extent-based filesystem as it can insert
+     and remove bridging blocks of zeros at will.
+
+     Having discussed this with Christoph Hellwig and Dave Chinner, I think I
+     that the cache really needs to keep track of this for itself.
+
+ (2) The use of pagecache waitlist snooping to find out if a backing
+     filesystem page has been updated yet.  I have the feeling that this is
+     not 100% reliable from untrackdownable bugs that seem to relate to this.
+
+     I really would rather be told directly by the backing fs that the op was
+     complete.  Switching over to kiocbs means that can be done.
+
+ (3) Having to go through the pagecache attached to the backing file, copying
+     data from it or using vfs_write() to write into it.  This doubles the
+     amount of pagecache required and adds a bunch of copies for good measure.
+
+     When I wrote the cachefiles caching backend, using direct I/O from within
+     the kernel wasn't possible - but, now that kiocbs are available, I can
+     actually do async DIO from the backing files to/from the netfs pages,
+     cutting out copies in both direction, and using the kiocb completion
+     function to tell me when it's done.
+
+ (4) fscache's structs have a number of pointers back into the netfs, which
+     makes it tricky if the netfs instance goes away whilst the cache is
+     active.
+
+     I really want no pointers back - apart from very transient I/O completion
+     callbacks.  I can store the metadata I need in the cookie.
+
+Modernising this affords the opportunity to make huge simplifications in the
+code (shaving off over 1000 lines, maybe as many as 3000).
+
+One thing I've done is to make a helper library that handles a number of
+features on behalf of a netfs if it wants to use the library:
+
+ (*) Local caching.
+
+ (*) Segmentation and shaping of read operations.
+
+     This takes a ->readahead() request from the VM and translates it into one
+     or more reads against the cache and the netfs, allowing both to
+     adjust/expand the size of the individual subops according to internal
+     alignments.
+
+     Allowing the cache to expand a read request to put it on a larger
+     granularity allows the cache to use less metadata to represent what it
+     contains.
+
+     It also provides a place to retry operations (something that's required
+     if a read against the cache fails and we need to send it to the server
+     instead).
+
+ (*) Transparent huge pages (Willy).
+
+ (*) A place to put fscrypt support (Jeff).
+
+We have the first three working - with some limitations - for afs, nfs and
+ceph, and I've produced partial patches for 9p and cifs. afs, nfs and ceph are
+able to handle xfstests with a cache now - which is something that the old
+fscache code will just explode with.
 
 
+So, as stated, much of that code is written and working.  However, if I do a
+complete replacement all the way out to userspace, there are further changes
+I'm thinking of making:
+
+ (*) Get rid of the ability to remove a cache that's in use.  This accounts
+     for a *lot* of the complexity in fscache.  All the synchronisation
+     required to effect the removal of a live cache at any time whilst it's
+     actually being used.
+
+ (*) Change cachefiles so that it uses an index file and a single data file
+     and perform culling by marking the index rather than deleting data files.
+     Culling would then be moved into the kernel.  cachefilesd is then
+     unnecessary, except to load the config and keep the cache open.
+
+     Moving the culling into an index would also make manual invalidation
+     easier.
+
+ (*) Rather than using cachefilesd to hold the cache open, do something akin
+     to swapon/swapoff to add and remove the cache.
+     
+     Attempting to remove an in-use cache would either fail EBUSY or mark the
+     cache to be removed when it becomes unused and not allow further new
+     users.
+
+ (*) Declare the size of the cache up front rather than declaring that it has
+     to maintain a certain amount of free space, reducing the cache to make
+     more space if the level drops.
+
+ (*) Merge cachefiles into fscache.  Give up the ability to have alternate
+     cache backends.  That would allow a bit more reduction in the complexity
+     and reduce the number of function pointers gone through.
+
+David
 
