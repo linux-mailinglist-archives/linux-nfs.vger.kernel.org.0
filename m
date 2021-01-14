@@ -2,115 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 159432F69B0
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Jan 2021 19:39:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EBF152F69B6
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Jan 2021 19:40:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbhANSga (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 14 Jan 2021 13:36:30 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:43982 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbhANSg3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Jan 2021 13:36:29 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10EIE0dd090600;
-        Thu, 14 Jan 2021 18:35:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=2kPd0eoKcI0UXs8lpE42ku1jYkaE+GT70viuohVfAbU=;
- b=wwn28XUWAy6ZeRauPHRNL6wIusSSu33fZk83x4b2bVc73h5Q77JDH+hhtXiTZPxCsU8E
- oQTGKJXJ4d/6vzxjC7xfoCKoahM0PhnymLpv+h4N7y58HxHl9uZlI4OiACnXGXrX87m5
- huxoPvSC+8cSf6jU7129z1k0SHbQ1muJBv+1xphF12jPNGFMRKAyszRUuGvjueYTO0ti
- E7dJoWz4TO/OKawi2agpm0eapWWrf5VLupseBapbD1auGdp59yNHaMx90j/DCi13TbE4
- lR+Qkbs6RRVWCNrsUAEVMj2+t8PKCN5d4A+14nxZS7HEO01jxhFjlri8byEzU0ZuiaNR lA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 360kd01mf5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Jan 2021 18:35:44 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10EIEsho150258;
-        Thu, 14 Jan 2021 18:35:43 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 360kenkx2d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Jan 2021 18:35:43 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 10EIZcAQ015580;
-        Thu, 14 Jan 2021 18:35:42 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 14 Jan 2021 10:35:38 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: nfsd vurlerability submit
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CAHk-=wic1CEkj_vjf3dUWv41=aKeazSW5ugGOfYsKQZnihQhMw@mail.gmail.com>
-Date:   Thu, 14 Jan 2021 13:35:37 -0500
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7E14D32D-1B39-4DB1-AE39-B8B34655DC7D@oracle.com>
+        id S1726131AbhANSia (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 14 Jan 2021 13:38:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbhANSi3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Jan 2021 13:38:29 -0500
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76641C061757
+        for <linux-nfs@vger.kernel.org>; Thu, 14 Jan 2021 10:37:49 -0800 (PST)
+Received: by mail-lj1-x233.google.com with SMTP id x23so7587736lji.7
+        for <linux-nfs@vger.kernel.org>; Thu, 14 Jan 2021 10:37:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hkNtbEGTwZJ6sJ64X8rspVr19ENTJTSpvUAXlKtllQI=;
+        b=Q7ohKsRMNh4Rc3WRHs3bzJHXz4sCpiCGuFg0wgPXdd6abZ4BN5HODklWo4nCfsJzoV
+         cDJqXdWG8+LIUi6wd+pO/FYsehPdglS77UP80eb8++xCD8QXOVzPu41ikIIR3j0ds/GO
+         tX7LXIjW5ol/pOSSYdU1B19U3II2TTTmSUjMU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hkNtbEGTwZJ6sJ64X8rspVr19ENTJTSpvUAXlKtllQI=;
+        b=eFC07Q5aVuPEkReoibcD26CPHAun1n1bCSIXUkOfQiflNAOmOLmDba70bceUeSCmXM
+         04DRtduFIODRKMuEPqS3rwcyiSJlvVLxkj1RE5kcGFd+8lTKLfIA6RYyuyc7Rnn2EcOZ
+         V197LLBYl3Y7dn/U2en2EgF/k5GD4xnS3//ES3BUpruYHK9/7MAq08r/jUxkrrU2QH4Y
+         SaidKcmMPksK6nElDQQS96138EfhVVQWkcRix2pd8s8varAa3N7Wc4XxQTwaXSfRBHnO
+         0P3a96L5IiQzARXyh2F6MlTcRaYRNxcj2oxPqv6t0AJ+5jwREgVpzAxkTlYxHvmTqudM
+         DoxQ==
+X-Gm-Message-State: AOAM530Se1grnC1LRsxQwSds/70NtIXs8fbTrGxqgtkf9D5MMw/cSMJ9
+        dIl/xqN3VROuvo2isOEb4DqCMAi6mmu0cw==
+X-Google-Smtp-Source: ABdhPJyRf0VKw44K0jm49b4J9Paldq+tRRRET8/nHb4nzhqIMaaZQAUQoPQM7dZqKHScDFNrLsa4Vg==
+X-Received: by 2002:a2e:9d8e:: with SMTP id c14mr3695650ljj.7.1610649467362;
+        Thu, 14 Jan 2021 10:37:47 -0800 (PST)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id i29sm622137lfc.193.2021.01.14.10.37.46
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Jan 2021 10:37:46 -0800 (PST)
+Received: by mail-lf1-f51.google.com with SMTP id o17so9477754lfg.4
+        for <linux-nfs@vger.kernel.org>; Thu, 14 Jan 2021 10:37:46 -0800 (PST)
+X-Received: by 2002:a05:6512:2287:: with SMTP id f7mr3646053lfu.40.1610649465741;
+ Thu, 14 Jan 2021 10:37:45 -0800 (PST)
+MIME-Version: 1.0
 References: <20210108154230.GB950@1wt.eu> <20210111193655.GC2600@fieldses.org>
  <CAHxDmpR1zG25ADfK2jat4VKGbAOCg6YM_0WA+a_jQE82hbnMjA@mail.gmail.com>
  <CAHxDmpRfmVukMR_yF4coioiuzrsp72zBraHWZ8gaMydUuLwKFg@mail.gmail.com>
- <20210112153208.GF9248@fieldses.org>
- <8296b696a7fa5591ad3fbb05bfcf6bdf6175cc38.camel@hammerspace.com>
+ <20210112153208.GF9248@fieldses.org> <8296b696a7fa5591ad3fbb05bfcf6bdf6175cc38.camel@hammerspace.com>
  <CAHxDmpTEBJ1jd_fr3GJ4k7KgzaBpe1LwKgyZn0AJ0D1ESK12fQ@mail.gmail.com>
  <96aea58bde3fe4c09cccd9ead2a1c85eb887d276.camel@hammerspace.com>
  <CAHxDmpTyrG74hOkzmDK834t+JiQduWHVWxCf_7nrDVa++EK2mA@mail.gmail.com>
  <74269493859fa65a7f594dadd5d86c74bd910e66.camel@hammerspace.com>
- <20210114180758.GB3914@fieldses.org>
- <CAHk-=wic1CEkj_vjf3dUWv41=aKeazSW5ugGOfYsKQZnihQhMw@mail.gmail.com>
-To:     Linus Torvalds <torvalds@linuxfoundation.org>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9864 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
- malwarescore=0 suspectscore=0 mlxlogscore=999 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2101140107
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9864 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0
- impostorscore=0 bulkscore=0 adultscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 clxscore=1011 mlxlogscore=999 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101140107
+ <20210114180758.GB3914@fieldses.org> <CAHk-=wic1CEkj_vjf3dUWv41=aKeazSW5ugGOfYsKQZnihQhMw@mail.gmail.com>
+ <7E14D32D-1B39-4DB1-AE39-B8B34655DC7D@oracle.com>
+In-Reply-To: <7E14D32D-1B39-4DB1-AE39-B8B34655DC7D@oracle.com>
+From:   Linus Torvalds <torvalds@linuxfoundation.org>
+Date:   Thu, 14 Jan 2021 10:37:29 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgXAdv07SOB01X+1c=3NP6qP+AgLdn33QOt073i4088DA@mail.gmail.com>
+Message-ID: <CAHk-=wgXAdv07SOB01X+1c=3NP6qP+AgLdn33QOt073i4088DA@mail.gmail.com>
+Subject: Re: nfsd vurlerability submit
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Thu, Jan 14, 2021 at 10:35 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+> If I understand your question correctly... there is a commit in
+> linux-next that simply doesn't return any filehandle for ".."
+> in the root directory.
 
-> On Jan 14, 2021, at 1:29 PM, Linus Torvalds =
-<torvalds@linuxfoundation.org> wrote:
->=20
-> On Thu, Jan 14, 2021 at 10:08 AM bfields@fieldses.org
-> <bfields@fieldses.org> wrote:
->>=20
->> I dug around a bit and couldn't find the idea of using filehandle
->> guessing plus mountd's following of symlinks to get access to other
->> filesystems.  That's kind of interesting.
->=20
-> [ Other people removed from cc, this is just a question about nfsd =
-cleanliness ]
->=20
-> I missed if Trond's suggestion to at least fix up ".." to have the
-> same filehandle as "." for the top export directory was done.
+Great.
 
-If I understand your question correctly... there is a commit in
-linux-next that simply doesn't return any filehandle for ".."
-in the root directory.
+> I intend to send you a PR after a few more days of soak time,
+> unless you'd like me to send it now.
 
-=
-https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/?h=3D=
-for-next&id=3D51b2ee7d006a736a9126e8111d1f24e4fd0afaa6
+No, no hurry. I was more just checking that Trond's suggestion didn't
+get lost in the discussion about guessing file handles.
 
-I intend to send you a PR after a few more days of soak time,
-unless you'd like me to send it now.
-
-
---
-Chuck Lever
-
-
-
+              Linus
