@@ -2,234 +2,170 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B27DA2FAF3B
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Jan 2021 04:51:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26D872FBB64
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Jan 2021 16:40:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbhASDs1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 18 Jan 2021 22:48:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728778AbhASDrN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Jan 2021 22:47:13 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2FB3C061573
-        for <linux-nfs@vger.kernel.org>; Mon, 18 Jan 2021 19:46:32 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id B03A36EAF; Mon, 18 Jan 2021 22:46:31 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org B03A36EAF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1611027991;
-        bh=PAHaAQKR/+/nVVIU1f3bGZ05TVx26wIC3skB22g0isQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pWek5Yry5q/DoHXX/ELQigxvNiYYTXhiOoZ9UOrYmC6L7jtvmTwNhb6U1/19qke3Q
-         zuTABjsMXJD6dYr6SDsvpvT0vR6UwqOas+yeKHhEF3+OXDwD1eEFjqYtie43NktVPe
-         iJ+3fBRzHS4va5oPIT6Sj4rAa2P+tzu8o9NXNSJg=
-Date:   Mon, 18 Jan 2021 22:46:31 -0500
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     =?utf-8?B?5ZC05byC?= <wangzhibei1999@gmail.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "security@kernel.org" <security@kernel.org>, "w@1wt.eu" <w@1wt.eu>,
-        "greg@kroah.com" <greg@kroah.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: Re: nfsd vurlerability submit
-Message-ID: <20210119034631.GC23934@fieldses.org>
-References: <20210108153237.GB4183@fieldses.org>
- <20210108154230.GB950@1wt.eu>
- <20210111193655.GC2600@fieldses.org>
- <CAHxDmpR1zG25ADfK2jat4VKGbAOCg6YM_0WA+a_jQE82hbnMjA@mail.gmail.com>
- <CAHxDmpRfmVukMR_yF4coioiuzrsp72zBraHWZ8gaMydUuLwKFg@mail.gmail.com>
- <20210112153208.GF9248@fieldses.org>
- <8296b696a7fa5591ad3fbb05bfcf6bdf6175cc38.camel@hammerspace.com>
- <CAHxDmpQVxOPmA6o535yEC34fNrA2Of=_W-f49L6gDvxVC3FH6w@mail.gmail.com>
- <20210118225557.GB23934@fieldses.org>
- <CAHxDmpQdYHrL8_voEMRJ6kNUuWApz3a_KxD_88LTrJviivTkpQ@mail.gmail.com>
+        id S2403746AbhASPjX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 19 Jan 2021 10:39:23 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:43780 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391600AbhASPjN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Jan 2021 10:39:13 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10JFYJwU151002;
+        Tue, 19 Jan 2021 15:38:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : content-type : content-id :
+ content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=Jl+MbuEJKtyMREkrDN4Doay8lfScMOZN4YQRbgKy0GE=;
+ b=ngZ3IP7vjdNRWDdkTup+AkvTC2VhIYct8Xj3tqoXXA/zDIcG8PBkhJhY5CLszKwRDiRo
+ gfcuFJADi+4IjDlLi8eWSb89010AOEAdwbXp7Q/8S+sKoboD56peUXroqFWQ8ACAY+dX
+ 0oM9584QA+CE6HJJbVqqDBB9R2qAshjA07JmjEleuxOexYqRha8NisJSyrBgZcH86Qgh
+ j7hu2GOuRjngpvwJUnXN18nx2D6jzNjohVICw1Gbd9vz+JuYM+ddOAitDPWCt3IfV96H
+ yfC9oehC9MZj0uSWEMnMeH0CJ8EqFkbAn4lL1YahQYqsPO/2MbFBy0QmhyC9B6wti4MM cQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 363r3ksmaj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Jan 2021 15:38:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10JFZewJ013921;
+        Tue, 19 Jan 2021 15:38:24 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
+        by userp3030.oracle.com with ESMTP id 3661njaw4v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Jan 2021 15:38:24 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S4wluStU7alI/s5GxqYjsb/DkurNy5EFyXjsgcAcFwlt98KD4xc/QpYOZaU4peWBr/yRTczdH5vBzp9sfiMWVYotMsJfVdmORsyPSP13E8S98CvmH2J+n/OkTdyXBazSpj6OIKwncXseS5bZR3reW1mJheP4FGID//IOajuKT/zf9C50JtxNfVEhr15yzEP3BUbnHfd93E/ix1DbXNNdBSsqxZZS1pU4wIuC3MCHu8hGVXLCHlUYZ0cJfognsny71wEqjnJf4FDVsnKiSQA2LgheqiOTSHBB5b/yf0ESV7N9MI5lemtef6nRNa/zdBOBp6wUuY5+uXRWTuVO1uF2ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Jl+MbuEJKtyMREkrDN4Doay8lfScMOZN4YQRbgKy0GE=;
+ b=GY+3D3Xs+u2UvjJQhp8N/e6ptAs9IHXSlq1LaxmstXHibVtIwV85NN9gSZktYt25ICqmtwtsibmaJTMDCItipk+tEsK2ltm5TUj/L13AL9RPzfII7e4GndI4qRoczF1ThkdBUQjDLwnJ6UzzpNpbuKM98pNqo4HSKT6NDLJzONSW1IkYmv3OOQzfWkvJJg/r/L6p4FVKfxSA1B9x8AjRxoNdnXmnATzOQx5/CVQb8o8UqwI2sKyfpcdNhjAIp0uURLx2m3dFj9AoGdtbS9OVkeA4MkqbHgJwOcFsBuxFSiehqQMhVhOfdb6NR2bsHX+ruXqoDtf+5XJB7oYRQrhC7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Jl+MbuEJKtyMREkrDN4Doay8lfScMOZN4YQRbgKy0GE=;
+ b=ao9IhshXTKTtPkNKJvMPJxTM8EmNvDFfzuXL7qzMB001DsKvL7Hq5pbi5FkePQK9uRnbbd8u9utoUOyfaRZFUn0YuJSODFbQ1QnHwrGneuFQN2/A3HNFGAhbiX9QVt5Iw2f03S2dVZaXiiF9nbYo/r1u39TeElDpUwPjOqwbZHM=
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
+ by BYAPR10MB3558.namprd10.prod.outlook.com (2603:10b6:a03:122::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.11; Tue, 19 Jan
+ 2021 15:38:22 +0000
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::6da8:6d28:b83:702b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::6da8:6d28:b83:702b%4]) with mapi id 15.20.3763.014; Tue, 19 Jan 2021
+ 15:38:22 +0000
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     Linus Torvalds <torvalds@linuxfoundation.org>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Bruce Fields <bfields@fieldses.org>
+Subject: [GIT PULL] nfsd changes for 5.11-rc (second round)
+Thread-Topic: [GIT PULL] nfsd changes for 5.11-rc (second round)
+Thread-Index: AQHW7nker3RHfQ/8Y0KCmbUv8yt90w==
+Date:   Tue, 19 Jan 2021 15:38:22 +0000
+Message-ID: <04E864E1-CE3F-4DEE-9A0E-CAC4DEE51D7B@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=oracle.com;
+x-originating-ip: [68.61.232.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b2d75312-7f53-4490-4238-08d8bc9040f0
+x-ms-traffictypediagnostic: BYAPR10MB3558:
+x-microsoft-antispam-prvs: <BYAPR10MB355868C57CF4480A9D45438793A30@BYAPR10MB3558.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:785;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: K0rKVoi65eE3VCer/aDWCIBpEQ2JchlI4goxSInqcnsbMyHG+bjdA05Z4F4CTPZVfQvfEc3fFHXRvnPQ9Bn3d55SOgTAMeEdilmsFp/IMwFZu0RbSkD0nV0BGYa0x5dvQ+1VqciUfKJPc3Mq/Ka/XiAOrkp9O/Zf8ym/ZuqGwHFXEq95b7m3d0SjwIx9Y+dkq7C4dMUtu/fhypeQO5Q2Xir0M0cvB5oIKUqjTczuxCebYOAP0toe/Fd8ir6TEWjjAT35XJEDjngXiQXYizdxyFh/0LQti5AEIJJ5CSmmVuHOUOrsGbJ4S6Z3f4jNOSS+WVBD1wL5aqfOFqK9CLE/+k/80qzTDeOWf15COjKGAUbT1z59tbgUUiGZ/tqWvGq6Yx6Ws6fdEDGIgzPkTn4k5P26HcDHa/nGcdmZd/nQt5aMFhDVtup6bkt3CqFy3FT6
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(39860400002)(346002)(366004)(396003)(376002)(71200400001)(66556008)(478600001)(8936002)(6506007)(64756008)(66476007)(86362001)(66446008)(66946007)(8676002)(2616005)(6916009)(316002)(6486002)(36756003)(6512007)(4326008)(2906002)(44832011)(186003)(5660300002)(33656002)(76116006)(91956017)(54906003)(26005)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?wHZvhYqZ9trIdHazhYdrg5gFNmrTmXVzU5tfK6/0dc/sSqQW0sFPCo2fOEZo?=
+ =?us-ascii?Q?kWOrn9IJqnRpsIoOiRLHzhN7hMiMdNzT86QsGiNHI6pRB/tMty3QDqpHPY3N?=
+ =?us-ascii?Q?mpZOtqQh58krTmH9ksH5GJvw2a2fpkHz6vQKJEAvigbtFQHwe3q9oJcTISbs?=
+ =?us-ascii?Q?rctE+lNA025kCBsgTVBU7dkv4xkJV4w0rXcBVX6OIuifcCqjeyWfyknD2cIp?=
+ =?us-ascii?Q?ygqtzvGXhyZarz4qRRevLl+eBO4qPdzO9Nd6AuVFrtzaKcpAwVe5E5ZTUyA/?=
+ =?us-ascii?Q?bw4cwTYs24OOJq5ePnxz24W/ZUK58KkRLAmpHuc32KWyJMSvDnwI9Q7qraKI?=
+ =?us-ascii?Q?Ll2ynRLrF+eYr/UpVFQs2krrFvdbf7TAlPC1JKhdnDhJNR6twg4tn8wlrXYH?=
+ =?us-ascii?Q?AzNn4P0wwcPMQ+bgSwBVjfXOQcO1bL/qM6yaf7tL5yRNENEyApxdhTulw0YD?=
+ =?us-ascii?Q?Y/h+2wMLZURLIWzbv1YItQnLfjbBhIjjWcgfoltBsSEEMRMQwVMr2T1LNw2z?=
+ =?us-ascii?Q?hzpBzmRNhVf4DbhnSK+ApPJsVcd8LzymzEn+ehgbeUGjWVWsGWZBxqqtCbuV?=
+ =?us-ascii?Q?VjZzBrqIw0VUyrjzfe0zpoi4Jup4sebR0mxfvMEmsk5+Abc4mhBk2Jk7cGZh?=
+ =?us-ascii?Q?gMtBjedF9i3wZdBPOZp/WYmDVM4IS+AvuZJ9p/MKHtIdeJEhg/0KXm6xCgoJ?=
+ =?us-ascii?Q?PaesujnDu+lxtUSAngmS1BGvbYYbG8aCK7Z/zlZfPXCKSrNjWI9yFFMo9wSP?=
+ =?us-ascii?Q?JvQf1vU6q9bw0iHKb7AVuwNjLWJcw/Wao2hGgk5sCnSAPYV/fCqW1ArjR+UJ?=
+ =?us-ascii?Q?/d0r7Q4FOSQ5fcfObixQ8PCvXi8sd65jDxp36J2FEwl1L918Kk0bQW0sf1Ho?=
+ =?us-ascii?Q?5DbJJRqJmkWMA+XjG8kA869uM9BVm2pLOZOfMJ3N8H8Nc/jT2sAWqkH0nDeQ?=
+ =?us-ascii?Q?ch9+ri6dz2tu9cNd+paM/vdtYv68RcfKoVVQX5ftXEfoJa/YfATU3eq0zxd2?=
+ =?us-ascii?Q?bNtN?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D64498AE356FF04A81095831B7C59832@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHxDmpQdYHrL8_voEMRJ6kNUuWApz3a_KxD_88LTrJviivTkpQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2d75312-7f53-4490-4238-08d8bc9040f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jan 2021 15:38:22.2211
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tv9cG7SS4ZR1ekDVE0/if8cN3MVNY93iW7Y3xeEC0h5VNWC0+In1ptH1x10FNeByqsUzvH68mQVRZZFES//jIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3558
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9868 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ phishscore=0 malwarescore=0 bulkscore=0 mlxscore=0 spamscore=0
+ mlxlogscore=945 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101190094
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9868 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 priorityscore=1501 mlxscore=0
+ malwarescore=0 phishscore=0 suspectscore=0 impostorscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2101190094
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 19, 2021 at 10:48:22AM +0800, 吴异 wrote:
-> My patch is below:
-> /fs/nfsd/nfsfh.c
-> 
-> nfsd_acceptable(void expv,struct dentry *dentry)
-> {
-> -     if(exp->ex_flags & NFSEXP_NOSUBTREEXHECK)
-> -     return 1;
-> 
-> +     if(is_root_export(exp))
-> +       return 1;
+Hi Linus,
 
-So you end up doing the SUBTREECHECK checks in cases where the
-filehandle doesn't actually have any parent information.  That means we
-may be stuck with no way to connect the file back up the export point,
-so this check will fail even though the file may be under the export
-point.  So users probably get spurious ESTALE errors.
+The following changes since commit a0d54b4f5b219fb31f0776e9f53aa137e78ae431=
+:
 
-To reproduce you probably need to do something like open a file on the
-client, reboot the server, then try to access the open file again.  The
-dentry cache will no longer know how to look up the parents after the
-reboot.
+  Merge tag 'trace-v5.11-rc2' of git://git.kernel.org/pub/scm/linux/kernel/=
+git/rostedt/linux-trace (2021-01-11 14:37:13 -0800)
 
---b.
+are available in the Git repository at:
 
-> 
-> +    /* If not subdirectory export, accept anything*/
-> 
-> }
-> 
-> 
-> 
-> 
-> 在 2021年1月19日星期二，bfields@fieldses.org <bfields@fieldses.org> 写道：
-> > On Tue, Jan 19, 2021 at 12:29:28AM +0800, 吴异 wrote:
-> >> I want to consult you on what is the original intention of designing
-> >> subtree_check and whether it is to solve the  'I want to export a
-> >> subtree of a filesystem' problem.
-> >>
-> >> As far as I know, when opening subtree_check, the folder's  file
-> >> handle does not contain the inode information of its parent directory
-> >> and
-> >> 'while (tdentry != exp->ex_path.dentry && !IS_ROOT(tdentry))' in
-> >> nfsd_acceptable can work well to Intercept handles beyond the export
-> >> point.
-> >>
-> >> This seems to delete code as follows in nfsfh.c could solve the  'I
-> >> want to export a subtree of a filesystem' problem and ensure safety:
-> >> if (exp->ex_flags & NFSEXP_NOSUBTREECHECK)
-> >> return 1;
-> >>
-> >> Or replace by follow:
-> >> if (exp->ex_path.dentry == exp->vfs_mount->mnt_root)
-> >> return 1;
-> >>
-> >> When I was reading the nfsd code, I was confused about whether the
-> >> designer used the file system as a security boundary or an export
-> >> point.Since exporting a complete file system is the safest, why not
-> >> directly prohibit unsafe practices, but add code like subtree_check to
-> >> try to verify the file handle.
-> >
-> > Sorry, I honestly don't understand the question.
-> >
-> > If you have a specific proposal, perhaps you could send a patch.
-> >
-> > --b.
-> >
-> >>
-> >> I may not understand your design ideas.
-> >>
-> >> Yours sincerely,
-> >>
-> >> Trond Myklebust <trondmy@hammerspace.com> 于2021年1月13日周三 上午12:53写道：
-> >> >
-> >> > On Tue, 2021-01-12 at 10:32 -0500, J. Bruce Fields wrote:
-> >> > > On Tue, Jan 12, 2021 at 10:48:00PM +0800, 吴异 wrote:
-> >> > > > Telling users how to configure the exported file system in the most
-> >> > > > secure
-> >> > > > way does
-> >> > > > mitigate the problem to some extent, but this does not seem to
-> >> > > > address the
-> >> > > > security risks posed by no_ subtree_ check in the code. In my
-> >> > > > opinion,when
-> >> > > > the generated filehandle does not contain the inode information of
-> >> > > > the
-> >> > > > parent directory,the nfsd_acceptable function can also recursively
-> >> > > > determine whether the request file exceeds the export path
-> >> > > > dentry.Enabling
-> >> > > > subtree_check to add parent directory information only brings some
-> >> > > > troubles.
-> >> > >
-> >> > > Filesystems don't necessarily provide us with an efficient way to
-> >> > > find
-> >> > > parent directories from any given file.  (And note a single file may
-> >> > > have multiple parent directories.)
-> >> > >
-> >> > > (I do wonder if we could do better in the directory case, though.  We
-> >> > > already reconnect directories all the way back up to the root.)
-> >> > >
-> >> > > > I have a bold idea, why not directly remove the file handle
-> >> > > > modification in
-> >> > > > subtree_check, and then normalize the judgment of whether dentry
-> >> > > > exceeds
-> >> > > > the export point directory in nfsd_acceptable (line 38 to 54 in
-> >> > > > /fs/nfsd/nfsfh.c) .
-> >> > > >
-> >> > > > As far as I understand it, the reason why subtree_check is not
-> >> > > > turned on by
-> >> > > > default is that it will cause problems when reading and writing
-> >> > > > files,
-> >> > > > rather than it wastes more time when nfsd_acceptable.
-> >> > > >
-> >> > > > In short,I think it's open to question whether the security of the
-> >> > > > system
-> >> > > > depends on the user's complete correct configuration(the system
-> >> > > > does not
-> >> > > > prohibit the export of a subdirectory).
-> >> > >
-> >> > > > Enabling subtree_check to add parent directoryinformation only
-> >> > > > brings
-> >> > > > some troubles.
-> >> > > >
-> >> > > > In short,I think it's open to question whether the security of the
-> >> > > > system depends on the user's complete correct configuration(the
-> >> > > > system
-> >> > > > does not prohibit the export of a subdirectory).
-> >> > >
-> >> > > I'd love to replace the export interface by one that prohibited
-> >> > > subdirectory exports (or at least made it more obvious where they're
-> >> > > being used.)
-> >> > >
-> >> > > But given the interface we already have, that would be a disruptive
-> >> > > and
-> >> > > time-consuming change.
-> >> > >
-> >> > > Another approach is to add more entropy to filehandles so they're
-> >> > > harder
-> >> > > to guess; see e.g.:
-> >> > >
-> >> > >         https://www.fsl.cs.stonybrook.edu/docs/nfscrack-tr/index.html
-> >> > >
-> >> > > In the end none of these change the fact that a filehandle has an
-> >> > > infinite lifetime, so once it's leaked, there's nothing you can do.
-> >> > > The
-> >> > > authors suggest NFSv4 volatile filehandles as a solution to that
-> >> > > problem, but I don't think they've thought through the obstacles to
-> >> > > making volatile filehandles work.
-> >> > >
-> >> > > --b.
-> >> >
-> >> > The point is that there is no good solution to the 'I want to export a
-> >> > subtree of a filesystem' problem, and so it is plainly wrong to try to
-> >> > make a default of those solutions, which break the one sane case of
-> >> > exporting the whole filesystem.
-> >> >
-> >> > Just a reminder that we kicked out subtree_check not only because a
-> >> > trivial rename of a file breaks the client's ability to perform I/O by
-> >> > invalidating the filehandle. In addition, that option causes filehandle
-> >> > aliasing (i.e. multiple filehandles pointing to the same file) which is
-> >> > a major PITA for clients to try to manage for more or less the same
-> >> > reason that it is a major PITA to try to manage these files using
-> >> > paths.
-> >> >
-> >> > The discussion on volatile filehandles in RFC5661 does try to address
-> >> > some of the above issues, but ends up concluding that you need to
-> >> > introduce POSIX-incompatible restrictions, such as trying to ban
-> >> > renames and deletions of open files in order to make it work.
-> >> >
-> >> > None of these compromises are necessary if you export a whole
-> >> > filesystem (or a hierarchy of whole filesystems). That's the sane case.
-> >> > That's the one that people should default to using.
-> >> >
-> >> > --
-> >> > Trond Myklebust
-> >> > Linux NFS client maintainer, Hammerspace
-> >> > trond.myklebust@hammerspace.com
-> >> >
-> >> >
-> >
+  git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-5.1=
+1-2
+
+for you to fetch changes up to 5f39d2713bd80e8a3e6d9299930aec8844872c0e:
+
+  SUNRPC: Move the svc_xdr_recvfrom tracepoint again (2021-01-13 09:13:20 -=
+0500)
+
+----------------------------------------------------------------
+Fixes:
+
+- Avoid exposing parent of root directory in NFSv3 READDIRPLUS results
+- Fix a tracepoint change that went in the initial 5.11 merge
+
+----------------------------------------------------------------
+Chuck Lever (1):
+      SUNRPC: Move the svc_xdr_recvfrom tracepoint again
+
+J. Bruce Fields (1):
+      nfsd4: readdirplus shouldn't return parent of export
+
+ fs/nfsd/nfs3xdr.c             |  7 ++++++-
+ include/trace/events/sunrpc.h | 61 +++++++++++++++++++++++++++++++++++++++=
++++++++++++++++-------
+ net/sunrpc/svc_xprt.c         |  4 ++--
+
