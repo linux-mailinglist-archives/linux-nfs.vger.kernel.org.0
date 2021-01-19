@@ -2,127 +2,244 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 584972FADD0
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Jan 2021 00:38:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C5B212FAEE7
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Jan 2021 03:49:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731602AbhARXiS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 18 Jan 2021 18:38:18 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49295 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726601AbhARXiR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Jan 2021 18:38:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611013010;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=evmA0OdyD5M8kY9qOkiMZu9GD1M5IQ2ieILxxBsie0w=;
-        b=NECGjpltR2w1zuBKhoVxpcc6//binQYjgCgF3OhBJsayl5MKDoTySHhN9Lzx0ZgG70q7cR
-        rm+Vx/5uuoAKa7jEWxujaSkonCmfhsymMzF6IrDEIuVGrlQ9abf/c+DolD7tfyJ/zWPXmm
-        AxIijtwewgvy6DBnUbNn+L8OlMc+7ZI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-7qf1DA_HP76SP8BqpolMWQ-1; Mon, 18 Jan 2021 18:36:49 -0500
-X-MC-Unique: 7qf1DA_HP76SP8BqpolMWQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7CA1359;
-        Mon, 18 Jan 2021 23:36:46 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B6B365D9CD;
-        Mon, 18 Jan 2021 23:36:39 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <2758811.1610621106@warthog.procyon.org.uk>
-References: <2758811.1610621106@warthog.procyon.org.uk>
-To:     linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com
-Cc:     dhowells@redhat.com, jlayton@redhat.com, dwysocha@redhat.com,
-        Matthew Wilcox <willy@infradead.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Steve French <sfrench@samba.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Christoph Hellwig <hch@lst.de>, dchinner@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Cut down implementation of fscache new API
+        id S2388016AbhASCtG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 18 Jan 2021 21:49:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728372AbhASCtE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Jan 2021 21:49:04 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65398C061573
+        for <linux-nfs@vger.kernel.org>; Mon, 18 Jan 2021 18:48:24 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id x20so26924636lfe.12
+        for <linux-nfs@vger.kernel.org>; Mon, 18 Jan 2021 18:48:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VP90uzRWG8ET0bUgTwgbH4HHBonlJmpV2GM64GHQE9o=;
+        b=EQs2Fb7yUeTlCeeR25s70PeRgIqP99wHBPKsQbxZLsoyHRJ4JTH1kLydP1E05pJM+c
+         K7S1VybMcPTnqqeNZBR7JGNPaNoPASNLmkvWd6XARLizWT/jLYKjYiZcsfI5UzfCe7im
+         JKzYx7qPbfeqR5iRwqMUXc2ZyvYfk5yLafUHQoy5hcvv/dOdf3zF6Rrt9myz2l0983A1
+         P+fJe4fVlTr6w66HMAKJONKu5vuxyN34Qv5cg43c/UVdbdmhngkzKTVLyHyZ5neYi2XH
+         XpWaC0l0KE0QQr1T7ABY/0fk/5L/lNKDSpNIoGl9Vdg78y2N9+DvVsDlAAI5mJyr9Xjp
+         V1BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VP90uzRWG8ET0bUgTwgbH4HHBonlJmpV2GM64GHQE9o=;
+        b=ATJNJmB0/ZwelFm3Q5w/yKT4+D0BaH46f7lnyY2BgcEh9LDU0sXYWXbQDGZcy87yYq
+         lgvGL7/PZ+rebrKKSUIA2gTpmcwYE0XkmN81VrWcMxGlmfem9LgrF/i6QIkVGoq1fgCp
+         acb5+95CiEgdg+XtC2jCVqr9pksGnlbjEnPcLef/xUtRQOjHgA70FCQMqnrFpzmn3K6d
+         MCpIJZG+ncKDNATJ83laM6DUTM8KqwM4FewuW4q7fnjUxDCM/lRb2aZKSGEHRhcLOMyy
+         aPktN/AeKDXnkexC5OjUM1r4kseJxf8AgIuM9nBGHVfD8LqBEIjrznoUJH1PXvka9jbz
+         uABw==
+X-Gm-Message-State: AOAM530iQ2VSwzmQxiOP0exFpYal3t9y9nWflDYwM9cDfUrWJr/7aptP
+        Rr/sJAOe6Lxmavg+PWBOQ4Zj2s5hBzG83SdXQQIOz1V5XXORWQ==
+X-Google-Smtp-Source: ABdhPJyXnbx9/hAxdvIrS8GQCMNTKcslGvUAwnnTLAD0TenTsqkmJhdxThTE10DiSV8d2g9kHNn+JPx6oT0bsA/HWWQ=
+X-Received: by 2002:ac2:46ca:: with SMTP id p10mr876519lfo.53.1611024502934;
+ Mon, 18 Jan 2021 18:48:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <160654.1611012999.1@warthog.procyon.org.uk>
-Date:   Mon, 18 Jan 2021 23:36:39 +0000
-Message-ID: <160655.1611012999@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Received: by 2002:a9a:1198:0:b029:ae:7594:3151 with HTTP; Mon, 18 Jan 2021
+ 18:48:22 -0800 (PST)
+In-Reply-To: <20210118225557.GB23934@fieldses.org>
+References: <20210108152017.GA4183@fieldses.org> <20210108152607.GA950@1wt.eu>
+ <20210108153237.GB4183@fieldses.org> <20210108154230.GB950@1wt.eu>
+ <20210111193655.GC2600@fieldses.org> <CAHxDmpR1zG25ADfK2jat4VKGbAOCg6YM_0WA+a_jQE82hbnMjA@mail.gmail.com>
+ <CAHxDmpRfmVukMR_yF4coioiuzrsp72zBraHWZ8gaMydUuLwKFg@mail.gmail.com>
+ <20210112153208.GF9248@fieldses.org> <8296b696a7fa5591ad3fbb05bfcf6bdf6175cc38.camel@hammerspace.com>
+ <CAHxDmpQVxOPmA6o535yEC34fNrA2Of=_W-f49L6gDvxVC3FH6w@mail.gmail.com> <20210118225557.GB23934@fieldses.org>
+From:   =?UTF-8?B?5ZC05byC?= <wangzhibei1999@gmail.com>
+Date:   Tue, 19 Jan 2021 10:48:22 +0800
+Message-ID: <CAHxDmpQdYHrL8_voEMRJ6kNUuWApz3a_KxD_88LTrJviivTkpQ@mail.gmail.com>
+Subject: Re: nfsd vurlerability submit
+To:     "bfields@fieldses.org" <bfields@fieldses.org>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "security@kernel.org" <security@kernel.org>, "w@1wt.eu" <w@1wt.eu>,
+        "greg@kroah.com" <greg@kroah.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Take a look at:
+My patch is below:
+/fs/nfsd/nfsfh.c
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/
+nfsd_acceptable(void expv,struct dentry *dentry)
+{
+-     if(exp->ex_flags & NFSEXP_NOSUBTREEXHECK)
+-     return 1;
 
-I've extracted the netfs helper library from my patch set and built an
-alternative cut-down I/O API for the existing fscache code as a bridge to
-moving to a new fscache implementation.  With this, a netfs now has two
-choices: use the existing API as is or use the netfs lib and the alternative
-API.  You can't mix the two APIs - a netfs has to use one or the other.
++     if(is_root_export(exp))
++       return 1;
 
-It works with AFS, at least for reading data through a cache, and without a
-cache, xfstests is quite happy.  I was able to take a bunch of the AFS patches
-from my fscache-iter branch (the full rewrite) and apply them with minimal
-changes.  Since it goes through the new I/O API in both cases, those changes
-should be the same.  The main differences are in the cookie wrangling API.
++    /* If not subdirectory export, accept anything*/
 
-The alternative API is different from the current in the following ways:
+}
 
- (1) It uses kiocbs to do async DIO rather than using readpage() with page
-     wake queue snooping and vfs_write().
 
- (2) It uses SEEK_HOLE/SEEK_DATA rather than bmap() to determine the location
-     of data in the file.  This is still broken because we can't rely on this
-     information in the backing filesystem.
 
- (3) It completely changes how PG_fscache is used.  As for the new API, it's
-     used to indicate an in progress write to the cache from a page rather
-     than a page the cache knows about.
 
- (4) It doesn't keep track of the netfs's pages beyond the termination of an
-     I/O operation.  The old API added pages that have outstanding writes to
-     the cache to a radix three for a background writer; now an async kiocb is
-     dispatched.
-
- (5) The netfs needs to call fscache_begin_read_operation() from its
-     ->begin_cache_operation() handler as passed to the netfs helper lib.
-     This tells the netfs helpers how to access the cache.
-
- (6) It relies on the netfs helper lib to reissue a failed cache read to the
-     server.
-
- (7) Handles THPs.
-
- (8) Implements completely ->readahead() and ->readpage() and implements a
-     chunk of ->write_begin().
-
-Things it doesn't address:
-
- (1) Mapping the content independently of the backing filesystem's metadata.
-
- (2) Getting rid of the backpointers into the netfs.
-
- (3) Simplifying the management of cookies and objects and their processing.
-
- (4) Holding an open file to the cache for any great length of time.  It gets
-     a new file struct for each read op it does on the cache and drops it
-     again afterwards.
-
- (5) Pinning the cache context/state required to handle a deferred write to
-     the cache from ->write_begin() as performed by, say, ->writepages().
-
-David
-
+=E5=9C=A8 2021=E5=B9=B41=E6=9C=8819=E6=97=A5=E6=98=9F=E6=9C=9F=E4=BA=8C=EF=
+=BC=8Cbfields@fieldses.org <bfields@fieldses.org> =E5=86=99=E9=81=93=EF=BC=
+=9A
+> On Tue, Jan 19, 2021 at 12:29:28AM +0800, =E5=90=B4=E5=BC=82 wrote:
+>> I want to consult you on what is the original intention of designing
+>> subtree_check and whether it is to solve the  'I want to export a
+>> subtree of a filesystem' problem.
+>>
+>> As far as I know, when opening subtree_check, the folder's  file
+>> handle does not contain the inode information of its parent directory
+>> and
+>> 'while (tdentry !=3D exp->ex_path.dentry && !IS_ROOT(tdentry))' in
+>> nfsd_acceptable can work well to Intercept handles beyond the export
+>> point.
+>>
+>> This seems to delete code as follows in nfsfh.c could solve the  'I
+>> want to export a subtree of a filesystem' problem and ensure safety:
+>> if (exp->ex_flags & NFSEXP_NOSUBTREECHECK)
+>> return 1;
+>>
+>> Or replace by follow:
+>> if (exp->ex_path.dentry =3D=3D exp->vfs_mount->mnt_root)
+>> return 1;
+>>
+>> When I was reading the nfsd code, I was confused about whether the
+>> designer used the file system as a security boundary or an export
+>> point.Since exporting a complete file system is the safest, why not
+>> directly prohibit unsafe practices, but add code like subtree_check to
+>> try to verify the file handle.
+>
+> Sorry, I honestly don't understand the question.
+>
+> If you have a specific proposal, perhaps you could send a patch.
+>
+> --b.
+>
+>>
+>> I may not understand your design ideas.
+>>
+>> Yours sincerely,
+>>
+>> Trond Myklebust <trondmy@hammerspace.com> =E4=BA=8E2021=E5=B9=B41=E6=9C=
+=8813=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=8812:53=E5=86=99=E9=81=93=
+=EF=BC=9A
+>> >
+>> > On Tue, 2021-01-12 at 10:32 -0500, J. Bruce Fields wrote:
+>> > > On Tue, Jan 12, 2021 at 10:48:00PM +0800, =E5=90=B4=E5=BC=82 wrote:
+>> > > > Telling users how to configure the exported file system in the mos=
+t
+>> > > > secure
+>> > > > way does
+>> > > > mitigate the problem to some extent, but this does not seem to
+>> > > > address the
+>> > > > security risks posed by no_ subtree_ check in the code. In my
+>> > > > opinion,when
+>> > > > the generated filehandle does not contain the inode information of
+>> > > > the
+>> > > > parent directory,the nfsd_acceptable function can also recursively
+>> > > > determine whether the request file exceeds the export path
+>> > > > dentry.Enabling
+>> > > > subtree_check to add parent directory information only brings some
+>> > > > troubles.
+>> > >
+>> > > Filesystems don't necessarily provide us with an efficient way to
+>> > > find
+>> > > parent directories from any given file.  (And note a single file may
+>> > > have multiple parent directories.)
+>> > >
+>> > > (I do wonder if we could do better in the directory case, though.  W=
+e
+>> > > already reconnect directories all the way back up to the root.)
+>> > >
+>> > > > I have a bold idea, why not directly remove the file handle
+>> > > > modification in
+>> > > > subtree_check, and then normalize the judgment of whether dentry
+>> > > > exceeds
+>> > > > the export point directory in nfsd_acceptable (line 38 to 54 in
+>> > > > /fs/nfsd/nfsfh.c) .
+>> > > >
+>> > > > As far as I understand it, the reason why subtree_check is not
+>> > > > turned on by
+>> > > > default is that it will cause problems when reading and writing
+>> > > > files,
+>> > > > rather than it wastes more time when nfsd_acceptable.
+>> > > >
+>> > > > In short,I think it's open to question whether the security of the
+>> > > > system
+>> > > > depends on the user's complete correct configuration(the system
+>> > > > does not
+>> > > > prohibit the export of a subdirectory).
+>> > >
+>> > > > Enabling subtree_check to add parent directoryinformation only
+>> > > > brings
+>> > > > some troubles.
+>> > > >
+>> > > > In short,I think it's open to question whether the security of the
+>> > > > system depends on the user's complete correct configuration(the
+>> > > > system
+>> > > > does not prohibit the export of a subdirectory).
+>> > >
+>> > > I'd love to replace the export interface by one that prohibited
+>> > > subdirectory exports (or at least made it more obvious where they're
+>> > > being used.)
+>> > >
+>> > > But given the interface we already have, that would be a disruptive
+>> > > and
+>> > > time-consuming change.
+>> > >
+>> > > Another approach is to add more entropy to filehandles so they're
+>> > > harder
+>> > > to guess; see e.g.:
+>> > >
+>> > >         https://www.fsl.cs.stonybrook.edu/docs/nfscrack-tr/index.htm=
+l
+>> > >
+>> > > In the end none of these change the fact that a filehandle has an
+>> > > infinite lifetime, so once it's leaked, there's nothing you can do.
+>> > > The
+>> > > authors suggest NFSv4 volatile filehandles as a solution to that
+>> > > problem, but I don't think they've thought through the obstacles to
+>> > > making volatile filehandles work.
+>> > >
+>> > > --b.
+>> >
+>> > The point is that there is no good solution to the 'I want to export a
+>> > subtree of a filesystem' problem, and so it is plainly wrong to try to
+>> > make a default of those solutions, which break the one sane case of
+>> > exporting the whole filesystem.
+>> >
+>> > Just a reminder that we kicked out subtree_check not only because a
+>> > trivial rename of a file breaks the client's ability to perform I/O by
+>> > invalidating the filehandle. In addition, that option causes filehandl=
+e
+>> > aliasing (i.e. multiple filehandles pointing to the same file) which i=
+s
+>> > a major PITA for clients to try to manage for more or less the same
+>> > reason that it is a major PITA to try to manage these files using
+>> > paths.
+>> >
+>> > The discussion on volatile filehandles in RFC5661 does try to address
+>> > some of the above issues, but ends up concluding that you need to
+>> > introduce POSIX-incompatible restrictions, such as trying to ban
+>> > renames and deletions of open files in order to make it work.
+>> >
+>> > None of these compromises are necessary if you export a whole
+>> > filesystem (or a hierarchy of whole filesystems). That's the sane case=
+.
+>> > That's the one that people should default to using.
+>> >
+>> > --
+>> > Trond Myklebust
+>> > Linux NFS client maintainer, Hammerspace
+>> > trond.myklebust@hammerspace.com
+>> >
+>> >
+>
