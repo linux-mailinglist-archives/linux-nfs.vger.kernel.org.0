@@ -2,178 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85EA52FC7CB
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Jan 2021 03:29:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59BDE2FCA1C
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Jan 2021 05:53:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbhATB1M (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 Jan 2021 20:27:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46128 "EHLO mail.kernel.org"
+        id S1728277AbhATEvU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 19 Jan 2021 23:51:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727333AbhATB0r (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 19 Jan 2021 20:26:47 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DB96D2312B;
-        Wed, 20 Jan 2021 01:26:05 +0000 (UTC)
+        id S1728289AbhATEvD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 19 Jan 2021 23:51:03 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 3FB652313A;
+        Wed, 20 Jan 2021 04:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611105966;
-        bh=fkcstxxU/HilblDrOzN3mkgJzNpErfSb4xMpwRpTRCI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XUEBTxZ/VAVQeNTBS/9qobw42MwBL+hSCI+xgR+8Nc9rmTLqryE+hZIcpf4Oa7zWo
-         OpuDGjkdtjaxf16U5/kjeeB8YyzsJyvMNmR2NRTAyUrCI1Mmjody1UnUbrpkqrKcRv
-         0pFTr72WDRRq0RggIzcctpegy0ULuTwPxrofswrEYw+saTTigwfET1BktUOyvOus1m
-         JytNimsK1jBIEkSkoEEjZbStm8C2+0flQyhwWwFRvIPtBaJPM4s00EUxTwkCRBCQmq
-         XsXeHAACHwTxT/4cZXtDCKAYiNzb1vMh5RK/OY0o5YDZWcrLrgI6LKi7YAgnWMOAEv
-         SH49Q3djwckVA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>, Daire Byrne <daire@dneg.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 03/45] SUNRPC: Handle TCP socket sends with kernel_sendpage() again
-Date:   Tue, 19 Jan 2021 20:25:20 -0500
-Message-Id: <20210120012602.769683-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210120012602.769683-1-sashal@kernel.org>
-References: <20210120012602.769683-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        s=k20201202; t=1611118222;
+        bh=MLrutSGoQ0+r8mDYryLJ4c98mV61Zooygjg7lFKDXJA=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=VTE4eX9kke/obWbH41IMn2QYJqwTwsYgWCVdjyHnupDK0iiYJRKgmw2PVnWrVqwE+
+         Ntdncb5LiaH/0UUNrlE5iXefW4/UDYjg0e3Kw3l8987FfHhKbgielJH+yzpZ7owjeF
+         fpb8C8nJU4hR4GE5B5555xA2plmWsGfvuhEogLz2WEdtT1XL/AojUi865LcwoX4Qs5
+         lfSmHW80//hK15AzvmhCR1IQa4Cg44LKJuRtisljFg/7qp/kD8bVhqC5N6qt3n8srK
+         2tDyPePnCZR4cEoPVQC7pPLeHvg6bd6MZGPS3bamUTWq9DdU1hRf+2MvJPks3tYcxA
+         Xo5tVRq0riwPA==
+Received: from pdx-korg-docbuild-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-1.ci.codeaurora.org (Postfix) with ESMTP id 37C10604FC;
+        Wed, 20 Jan 2021 04:50:22 +0000 (UTC)
+Subject: Re: [GIT PULL] nfsd changes for 5.11-rc (second round)
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <04E864E1-CE3F-4DEE-9A0E-CAC4DEE51D7B@oracle.com>
+References: <04E864E1-CE3F-4DEE-9A0E-CAC4DEE51D7B@oracle.com>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <04E864E1-CE3F-4DEE-9A0E-CAC4DEE51D7B@oracle.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-5.11-2
+X-PR-Tracked-Commit-Id: 5f39d2713bd80e8a3e6d9299930aec8844872c0e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f419f031de1498765b64ddf71590f40689a9b55c
+Message-Id: <161111822222.31434.13485546994322587969.pr-tracker-bot@kernel.org>
+Date:   Wed, 20 Jan 2021 04:50:22 +0000
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linus Torvalds <torvalds@linuxfoundation.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Bruce Fields <bfields@fieldses.org>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+The pull request you sent on Tue, 19 Jan 2021 15:38:22 +0000:
 
-[ Upstream commit 4a85a6a3320b4a622315d2e0ea91a1d2b013bce4 ]
+> git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-5.11-2
 
-Daire Byrne reports a ~50% aggregrate throughput regression on his
-Linux NFS server after commit da1661b93bf4 ("SUNRPC: Teach server to
-use xprt_sock_sendmsg for socket sends"), which replaced
-kernel_send_page() calls in NFSD's socket send path with calls to
-sock_sendmsg() using iov_iter.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f419f031de1498765b64ddf71590f40689a9b55c
 
-Investigation showed that tcp_sendmsg() was not using zero-copy to
-send the xdr_buf's bvec pages, but instead was relying on memcpy.
-This means copying every byte of a large NFS READ payload.
+Thank you!
 
-It looks like TLS sockets do indeed support a ->sendpage method,
-so it's really not necessary to use xprt_sock_sendmsg() to support
-TLS fully on the server. A mechanical reversion of da1661b93bf4 is
-not possible at this point, but we can re-implement the server's
-TCP socket sendmsg path using kernel_sendpage().
-
-Reported-by: Daire Byrne <daire@dneg.com>
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=209439
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/sunrpc/svcsock.c | 86 +++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 85 insertions(+), 1 deletion(-)
-
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index c2752e2b9ce34..4404c491eb388 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1062,6 +1062,90 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
- 	return 0;	/* record not complete */
- }
- 
-+static int svc_tcp_send_kvec(struct socket *sock, const struct kvec *vec,
-+			      int flags)
-+{
-+	return kernel_sendpage(sock, virt_to_page(vec->iov_base),
-+			       offset_in_page(vec->iov_base),
-+			       vec->iov_len, flags);
-+}
-+
-+/*
-+ * kernel_sendpage() is used exclusively to reduce the number of
-+ * copy operations in this path. Therefore the caller must ensure
-+ * that the pages backing @xdr are unchanging.
-+ *
-+ * In addition, the logic assumes that * .bv_len is never larger
-+ * than PAGE_SIZE.
-+ */
-+static int svc_tcp_sendmsg(struct socket *sock, struct msghdr *msg,
-+			   struct xdr_buf *xdr, rpc_fraghdr marker,
-+			   unsigned int *sentp)
-+{
-+	const struct kvec *head = xdr->head;
-+	const struct kvec *tail = xdr->tail;
-+	struct kvec rm = {
-+		.iov_base	= &marker,
-+		.iov_len	= sizeof(marker),
-+	};
-+	int flags, ret;
-+
-+	*sentp = 0;
-+	xdr_alloc_bvec(xdr, GFP_KERNEL);
-+
-+	msg->msg_flags = MSG_MORE;
-+	ret = kernel_sendmsg(sock, msg, &rm, 1, rm.iov_len);
-+	if (ret < 0)
-+		return ret;
-+	*sentp += ret;
-+	if (ret != rm.iov_len)
-+		return -EAGAIN;
-+
-+	flags = head->iov_len < xdr->len ? MSG_MORE | MSG_SENDPAGE_NOTLAST : 0;
-+	ret = svc_tcp_send_kvec(sock, head, flags);
-+	if (ret < 0)
-+		return ret;
-+	*sentp += ret;
-+	if (ret != head->iov_len)
-+		goto out;
-+
-+	if (xdr->page_len) {
-+		unsigned int offset, len, remaining;
-+		struct bio_vec *bvec;
-+
-+		bvec = xdr->bvec;
-+		offset = xdr->page_base;
-+		remaining = xdr->page_len;
-+		flags = MSG_MORE | MSG_SENDPAGE_NOTLAST;
-+		while (remaining > 0) {
-+			if (remaining <= PAGE_SIZE && tail->iov_len == 0)
-+				flags = 0;
-+			len = min(remaining, bvec->bv_len);
-+			ret = kernel_sendpage(sock, bvec->bv_page,
-+					      bvec->bv_offset + offset,
-+					      len, flags);
-+			if (ret < 0)
-+				return ret;
-+			*sentp += ret;
-+			if (ret != len)
-+				goto out;
-+			remaining -= len;
-+			offset = 0;
-+			bvec++;
-+		}
-+	}
-+
-+	if (tail->iov_len) {
-+		ret = svc_tcp_send_kvec(sock, tail, 0);
-+		if (ret < 0)
-+			return ret;
-+		*sentp += ret;
-+	}
-+
-+out:
-+	return 0;
-+}
-+
- /**
-  * svc_tcp_sendto - Send out a reply on a TCP socket
-  * @rqstp: completed svc_rqst
-@@ -1089,7 +1173,7 @@ static int svc_tcp_sendto(struct svc_rqst *rqstp)
- 	mutex_lock(&xprt->xpt_mutex);
- 	if (svc_xprt_is_dead(xprt))
- 		goto out_notconn;
--	err = xprt_sock_sendmsg(svsk->sk_sock, &msg, xdr, 0, marker, &sent);
-+	err = svc_tcp_sendmsg(svsk->sk_sock, &msg, xdr, marker, &sent);
- 	xdr_free_bvec(xdr);
- 	trace_svcsock_tcp_send(xprt, err < 0 ? err : sent);
- 	if (err < 0 || sent != (xdr->len + sizeof(marker)))
 -- 
-2.27.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
