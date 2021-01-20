@@ -2,48 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12ABE2FDD57
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 00:50:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03ED42FDD5B
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 00:51:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731553AbhATXpz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Jan 2021 18:45:55 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59703 "EHLO
+        id S1727283AbhATXqP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Jan 2021 18:46:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45318 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731469AbhATWXW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Jan 2021 17:23:22 -0500
+        by vger.kernel.org with ESMTP id S1731299AbhATWYO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Jan 2021 17:24:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611181316;
+        s=mimecast20190719; t=1611181361;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=YDYFlUMcHb7rqZcW5EVf9/4GBcX/Hls07OkMcI3MsDw=;
-        b=BziS5uQiNnagfMwiIGmyYaNWqUkW5c7707yrKrf0RzEVEjTnb6mgMaML6KwpoV3cBUtM4s
-        /CMCodKXkyQierjujkLea13ByyuN4lH0vc4MNAq/B7w9YiUU79WFZtXtNQCi5ezUWO1Knq
-        mhbjGToXXHJHudo9NWi82EhRskBWMkM=
+        bh=YedMCP9lMu2Cnddwp+/wzr1wQ5ddOE8Fl4udQS58Uic=;
+        b=gar6ErtcMZ7QdPGwvhmHCMoZZHKvfwQ6A2OryttC4h5laqqZ2cveDumS7byeOEgMK9dBgk
+        pfxicpNMR5QakvyzrDVFHOF3w7HZ37Lt/7fI9zB41EBocWZyj2qWOZZhMparVZsgYSMfiJ
+        8fBz7T53BFCDDCRtPrFU7k2Xy+2W3kM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-555-xFaa4qPFOFiVEU1Og4XnsQ-1; Wed, 20 Jan 2021 17:21:54 -0500
-X-MC-Unique: xFaa4qPFOFiVEU1Og4XnsQ-1
+ us-mta-554-Phb2yheGO86JpjJx1MlyLg-1; Wed, 20 Jan 2021 17:22:33 -0500
+X-MC-Unique: Phb2yheGO86JpjJx1MlyLg-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5A95801817;
-        Wed, 20 Jan 2021 22:21:52 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2A44580A5CB;
+        Wed, 20 Jan 2021 22:22:31 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE53972161;
-        Wed, 20 Jan 2021 22:21:49 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D7A72C161;
+        Wed, 20 Jan 2021 22:22:25 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 02/25] vm: Add wait/unlock functions for PG_fscache
+Subject: [PATCH 05/25] cachefiles: Drop superfluous readpages aops NULL check
 From:   David Howells <dhowells@redhat.com>
 To:     Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>
-Cc:     dhowells@redhat.com, Jeff Layton <jlayton@redhat.com>,
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        dhowells@redhat.com, Jeff Layton <jlayton@redhat.com>,
         David Wysochanski <dwysocha@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -51,8 +53,8 @@ Cc:     dhowells@redhat.com, Jeff Layton <jlayton@redhat.com>,
         linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
         ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 20 Jan 2021 22:21:49 +0000
-Message-ID: <161118130899.1232039.12854903243561277618.stgit@warthog.procyon.org.uk>
+Date:   Wed, 20 Jan 2021 22:22:24 +0000
+Message-ID: <161118134449.1232039.7782285502855946342.stgit@warthog.procyon.org.uk>
 In-Reply-To: <161118128472.1232039.11746799833066425131.stgit@warthog.procyon.org.uk>
 References: <161118128472.1232039.11746799833066425131.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.23
@@ -64,76 +66,47 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add functions to unlock and wait for unlock of PG_fscache analogously with
-those for PG_lock.
+From: Takashi Iwai <tiwai@suse.de>
 
+After the recent actions to convert readpages aops to readahead, the
+NULL checks of readpages aops in cachefiles_read_or_alloc_page() may
+hit falsely.  More badly, it's an ASSERT() call, and this panics.
+
+Drop the superfluous NULL checks for fixing this regression.
+
+[DH: Note that cachefiles never actually used readpages, so this check was
+ never actually necessary]
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=208883
+BugLink: https://bugzilla.opensuse.org/show_bug.cgi?id=1175245
+Fixes: 9ae326a69004 ("CacheFiles: A cache that backs onto a mounted filesystem")
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
 
- include/linux/pagemap.h |   14 ++++++++++++++
- mm/filemap.c            |   18 ++++++++++++++++++
- 2 files changed, 32 insertions(+)
+ fs/cachefiles/rdwr.c |    2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index d5570deff400..1fa160e682fa 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -591,6 +591,7 @@ extern int __lock_page_async(struct page *page, struct wait_page_queue *wait);
- extern int __lock_page_or_retry(struct page *page, struct mm_struct *mm,
- 				unsigned int flags);
- extern void unlock_page(struct page *page);
-+extern void unlock_page_fscache(struct page *page);
+diff --git a/fs/cachefiles/rdwr.c b/fs/cachefiles/rdwr.c
+index 8bda092e60c5..e027c718ca01 100644
+--- a/fs/cachefiles/rdwr.c
++++ b/fs/cachefiles/rdwr.c
+@@ -413,7 +413,6 @@ int cachefiles_read_or_alloc_page(struct fscache_retrieval *op,
  
- /*
-  * Return true if the page was successfully locked
-@@ -681,6 +682,19 @@ static inline int wait_on_page_locked_killable(struct page *page)
- 	return wait_on_page_bit_killable(compound_head(page), PG_locked);
- }
+ 	inode = d_backing_inode(object->backer);
+ 	ASSERT(S_ISREG(inode->i_mode));
+-	ASSERT(inode->i_mapping->a_ops->readpages);
  
-+/**
-+ * wait_on_page_fscache - Wait for PG_fscache to be cleared on a page
-+ * @page: The page
-+ *
-+ * Wait for the fscache mark to be removed from a page, usually signifying the
-+ * completion of a write from that page to the cache.
-+ */
-+static inline void wait_on_page_fscache(struct page *page)
-+{
-+	if (PagePrivate2(page))
-+		wait_on_page_bit(compound_head(page), PG_fscache);
-+}
-+
- extern void put_and_wait_on_page_locked(struct page *page);
+ 	/* calculate the shift required to use bmap */
+ 	shift = PAGE_SHIFT - inode->i_sb->s_blocksize_bits;
+@@ -713,7 +712,6 @@ int cachefiles_read_or_alloc_pages(struct fscache_retrieval *op,
  
- void wait_on_page_writeback(struct page *page);
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 5c9d564317a5..91fcae006d64 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -1466,6 +1466,24 @@ void unlock_page(struct page *page)
- }
- EXPORT_SYMBOL(unlock_page);
+ 	inode = d_backing_inode(object->backer);
+ 	ASSERT(S_ISREG(inode->i_mode));
+-	ASSERT(inode->i_mapping->a_ops->readpages);
  
-+/**
-+ * unlock_page_fscache - Unlock a page pinned with PG_fscache
-+ * @page: The page
-+ *
-+ * Unlocks the page and wakes up sleepers in wait_on_page_fscache().  Also
-+ * wakes those waiting for the lock and writeback bits because the wakeup
-+ * mechanism is shared.  But that's OK - those sleepers will just go back to
-+ * sleep.
-+ */
-+void unlock_page_fscache(struct page *page)
-+{
-+	page = compound_head(page);
-+	VM_BUG_ON_PAGE(!PagePrivate2(page), page);
-+	clear_bit_unlock(PG_fscache, &page->flags);
-+	wake_up_page_bit(page, PG_fscache);
-+}
-+EXPORT_SYMBOL(unlock_page_fscache);
-+
- /**
-  * end_page_writeback - end writeback against a page
-  * @page: the page
+ 	/* calculate the shift required to use bmap */
+ 	shift = PAGE_SHIFT - inode->i_sb->s_blocksize_bits;
 
 
