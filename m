@@ -2,70 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 246A32FCA3B
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Jan 2021 06:09:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25B612FCD16
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Jan 2021 10:03:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbhATFAP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Jan 2021 00:00:15 -0500
-Received: from namei.org ([65.99.196.166]:50792 "EHLO mail.namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbhATE7p (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 19 Jan 2021 23:59:45 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.namei.org (Postfix) with ESMTPS id 6BA181BC;
-        Wed, 20 Jan 2021 04:57:56 +0000 (UTC)
-Date:   Wed, 20 Jan 2021 15:57:56 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-cc:     linux-nfs@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        David Quigley <dpquigl@davequigley.com>
-Subject: Re: [PATCH] NFSv4.2: fix return value of
- _nfs4_get_security_label()
-In-Reply-To: <20210115174356.408688-1-omosnace@redhat.com>
-Message-ID: <2d85fd54-5c4d-391e-f01b-1537017aafa@namei.org>
-References: <20210115174356.408688-1-omosnace@redhat.com>
+        id S1728277AbhATJBh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Jan 2021 04:01:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728291AbhATJAk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Jan 2021 04:00:40 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2672C061575;
+        Wed, 20 Jan 2021 00:46:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=RaWLb5cuOxioAYXgsdU/4k1ily/oqbSWtIgPbTftsvU=; b=s/AYqCvKSMxlrqVI39kGzkvJ4D
+        SOw3rkTBfb/Y6ft2Eyhm+uD468TO6pnm5AsvXgJcK67X7JKDEJEwqb5FmYnpyc4RrraF8UmSwlYcs
+        NFWwPKPBJSOpq1DX6bzqgLh/ticV4GVt0b5O7ULzUwBFmfMbkeWE1bLYahKJZ5+9XXTwUhwJiL7ed
+        bhTSuPmw0kyEfj/ptp/PuBciYBJdhod9ECMH3FLWx8qcoGCeXKlO7gm2BAEmie1djvH9ZLBwEY9Q4
+        We/GMZ99CpMoTGOkX+4Ypg5LZviZzDzKtn5KjrXQBNRSalACfHrcxt8lVrsoDLFBJDrmuQyrShk1A
+        kKjv42Yw==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1l298Q-00FRAi-Av; Wed, 20 Jan 2021 08:46:39 +0000
+Date:   Wed, 20 Jan 2021 08:46:38 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <schumakeranna@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH 2/3] nfsd: move change attribute generation to filesystem
+Message-ID: <20210120084638.GA3678536@infradead.org>
+References: <1611084297-27352-1-git-send-email-bfields@redhat.com>
+ <1611084297-27352-3-git-send-email-bfields@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1611084297-27352-3-git-send-email-bfields@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 15 Jan 2021, Ondrej Mosnacek wrote:
-
-> An xattr 'get' handler is expected to return the length of the value on
-> success, yet _nfs4_get_security_label() (and consequently also
-> nfs4_xattr_get_nfs4_label(), which is used as an xattr handler) returns
-> just 0 on success.
+On Tue, Jan 19, 2021 at 02:24:56PM -0500, J. Bruce Fields wrote:
+> From: "J. Bruce Fields" <bfields@redhat.com>
 > 
-> Fix this by returning label.len instead, which contains the length of
-> the result.
+> After this, only filesystems lacking change attribute support will leave
+> the fetch_iversion export op NULL.
 > 
-> Fixes: aa9c2669626c ("NFS: Client implementation of Labeled-NFS")
-> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-> ---
->  fs/nfs/nfs4proc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 2f4679a62712a..28465d8aada64 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -5971,7 +5971,7 @@ static int _nfs4_get_security_label(struct inode *inode, void *buf,
->  		return ret;
->  	if (!(fattr.valid & NFS_ATTR_FATTR_V4_SECURITY_LABEL))
->  		return -ENOENT;
-> -	return 0;
-> +	return label.len;
->  }
+> This seems cleaner to me, and will allow some minor optimizations in the
+> nfsd code.
 
-
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
-
-
--- 
-James Morris
-<jmorris@namei.org>
-
+Another indirect call just to fetch the change attribute (which happens
+a lot IIRC) does not seem very optimal to me.  And the fact that we need
+three duplicate implementations also is not very nice.
