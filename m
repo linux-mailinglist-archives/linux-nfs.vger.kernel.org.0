@@ -2,59 +2,128 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25B612FCD16
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Jan 2021 10:03:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77BB92FD3E7
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Jan 2021 16:28:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbhATJBh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Jan 2021 04:01:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38810 "EHLO
+        id S1732023AbhATPXd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Jan 2021 10:23:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728291AbhATJAk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Jan 2021 04:00:40 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2672C061575;
-        Wed, 20 Jan 2021 00:46:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RaWLb5cuOxioAYXgsdU/4k1ily/oqbSWtIgPbTftsvU=; b=s/AYqCvKSMxlrqVI39kGzkvJ4D
-        SOw3rkTBfb/Y6ft2Eyhm+uD468TO6pnm5AsvXgJcK67X7JKDEJEwqb5FmYnpyc4RrraF8UmSwlYcs
-        NFWwPKPBJSOpq1DX6bzqgLh/ticV4GVt0b5O7ULzUwBFmfMbkeWE1bLYahKJZ5+9XXTwUhwJiL7ed
-        bhTSuPmw0kyEfj/ptp/PuBciYBJdhod9ECMH3FLWx8qcoGCeXKlO7gm2BAEmie1djvH9ZLBwEY9Q4
-        We/GMZ99CpMoTGOkX+4Ypg5LZviZzDzKtn5KjrXQBNRSalACfHrcxt8lVrsoDLFBJDrmuQyrShk1A
-        kKjv42Yw==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1l298Q-00FRAi-Av; Wed, 20 Jan 2021 08:46:39 +0000
-Date:   Wed, 20 Jan 2021 08:46:38 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <schumakeranna@gmail.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH 2/3] nfsd: move change attribute generation to filesystem
-Message-ID: <20210120084638.GA3678536@infradead.org>
-References: <1611084297-27352-1-git-send-email-bfields@redhat.com>
- <1611084297-27352-3-git-send-email-bfields@redhat.com>
+        with ESMTP id S1729113AbhATPIV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Jan 2021 10:08:21 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C5BAC061575
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Jan 2021 07:07:39 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id CB7186C0D; Wed, 20 Jan 2021 10:07:37 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CB7186C0D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1611155257;
+        bh=fes2ideAaPB5Yj0lwoll0Ulkg8QPY896Szrs4WHrXwg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UVyT4ksjCKkh10Sg37fuGiaBEv1UO8WHIOLFyMlNruYOwbS9Vx39BY2d45aejrPzh
+         qoMYJSvP15DviBbPCMIhLU6c6HQYTDWcqaAcqNbmoEmQe3zsCBLnSEhxbVJV/eH2sS
+         cp+ENQ10fDHzlFIM30njKjouMqUiM+ysNFAz8jaU=
+Date:   Wed, 20 Jan 2021 10:07:37 -0500
+From:   "bfields@fieldses.org" <bfields@fieldses.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "fsorenso@redhat.com" <fsorenso@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "aglo@umich.edu" <aglo@umich.edu>,
+        "bcodding@redhat.com" <bcodding@redhat.com>,
+        "jshivers@redhat.com" <jshivers@redhat.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Subject: Re: unsharing tcp connections from different NFS mounts
+Message-ID: <20210120150737.GA17548@fieldses.org>
+References: <20201007001814.GA5138@fieldses.org>
+ <57E3293C-5C49-4A80-957B-E490E6A9B32E@redhat.com>
+ <5B5CF80C-494A-42D3-8D3F-51C0277D9E1B@redhat.com>
+ <8ED5511E-25DE-4C06-9E26-A1947383C86A@oracle.com>
+ <20201007140502.GC23452@fieldses.org>
+ <85F496CD-9AAC-451C-A224-FCD138BDC591@oracle.com>
+ <20201007160556.GE23452@fieldses.org>
+ <e06c31e4211cefda52091c7710d871f44dc9160e.camel@hammerspace.com>
+ <20210119222229.GA29488@fieldses.org>
+ <2d77534fb8be557c6883c8c386ebf4175f64454a.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1611084297-27352-3-git-send-email-bfields@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2d77534fb8be557c6883c8c386ebf4175f64454a.camel@hammerspace.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 19, 2021 at 02:24:56PM -0500, J. Bruce Fields wrote:
-> From: "J. Bruce Fields" <bfields@redhat.com>
+On Tue, Jan 19, 2021 at 11:09:55PM +0000, Trond Myklebust wrote:
+> On Tue, 2021-01-19 at 17:22 -0500, bfields@fieldses.org wrote:
+> > On Wed, Oct 07, 2020 at 04:50:26PM +0000, Trond Myklebust wrote:
+> > > As far as I can tell, this thread started with a complaint that
+> > > performance suffers when we don't allow setups that hack the client
+> > > by
+> > > pretending that a multi-homed server is actually multiple different
+> > > servers.
+> > > 
+> > > AFAICS Tom Talpey's question is the relevant one. Why is there a
+> > > performance regression being seen by these setups when they share
+> > > the
+> > > same connection? Is it really the connection, or is it the fact
+> > > that
+> > > they all share the same fixed-slot session?
+> > > 
+> > > I did see Igor's claim that there is a QoS issue (which afaics
+> > > would
+> > > also affect NFSv3), but why do I care about QoS as a per-mountpoint
+> > > feature?
+> > 
+> > Sorry for being slow to get back to this.
+> > 
+> > Some more details:
+> > 
+> > Say an NFS server exports /data1 and /data2.
+> > 
+> > A client mounts both.  Process 'large' starts creating 10G+ files in
+> > /data1, queuing up a lot of nfs WRITE rpc_tasks.
+> > 
+> > Process 'small' creates a lot of small files in /data2, which
+> > requires a
+> > lot of synchronous rpc_tasks, each of which wait in line with the
+> > large
+> > WRITE tasks.
+> > 
+> > The 'small' process makes painfully slow progress.
+> > 
+> > The customer previously made things work for them by mounting two
+> > different server IP addresses, so the "small" and "large" processes
+> > effectively end up with their own queues.
+> > 
+> > Frank Sorenson has a test showing the difference; see
+> > 
+> >         https://bugzilla.redhat.com/show_bug.cgi?id=1703850#c42
+> >         https://bugzilla.redhat.com/show_bug.cgi?id=1703850#c43
+> > 
+> > In that test, the "small" process creates files at a rate thousands
+> > of
+> > times slower when the "large" process is also running.
+> > 
+> > Any suggestions?
+> > 
 > 
-> After this, only filesystems lacking change attribute support will leave
-> the fetch_iversion export op NULL.
-> 
-> This seems cleaner to me, and will allow some minor optimizations in the
-> nfsd code.
+> I don't see how this answers my questions above?
 
-Another indirect call just to fetch the change attribute (which happens
-a lot IIRC) does not seem very optimal to me.  And the fact that we need
-three duplicate implementations also is not very nice.
+So mainly:
+
+> > > Why is there a performance regression being seen by these setups
+> > > when they share the same connection? Is it really the connection,
+> > > or is it the fact that they all share the same fixed-slot session?
+
+I don't know.  Any pointers how we might go about finding the answer?
+
+It's easy to test the case of entirely seperate state & tcp connections.
+
+If we want to test with a shared connection but separate slots I guess
+we'd need to create a separate session for each nfs4_server, and a lot
+of functions that currently take an nfs4_client would need to take an
+nfs4_server?
+
+--b.
