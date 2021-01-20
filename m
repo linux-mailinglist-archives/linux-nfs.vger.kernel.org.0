@@ -2,14 +2,14 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4FB42FD66C
+	by mail.lfdr.de (Postfix) with ESMTP id 587E72FD66B
 	for <lists+linux-nfs@lfdr.de>; Wed, 20 Jan 2021 18:05:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390516AbhATRFR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Jan 2021 12:05:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:31225 "EHLO
+        id S2391612AbhATRFQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Jan 2021 12:05:16 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22916 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391640AbhATRBf (ORCPT
+        by vger.kernel.org with ESMTP id S2391623AbhATRBf (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Jan 2021 12:01:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1611161998;
@@ -17,190 +17,129 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GL8zcAAOe0LOWtBilVqSl72jNLzxzlhtqp7dMQVcB9E=;
-        b=Prhb4AY8TFCJZcwOk3111Bb8PjHzsTxLSVkXgY9ZibKUV3xIRsi80BQYGRy/2F4Gepvx8K
-        wSECTf7wg/beZGNxOM7lo7+e4I5QQAvG5Y9uiOHXTDQfjgcyKYoqbFpWpS6vllhCt10xMT
-        B+wwGA30iTcUZ+q0W4q8FBzZ1UOdpZA=
+        bh=xgc4giKWv6c746qHQMzY1X+v3rzPUg34NpKkwQbpZuU=;
+        b=FQFWMGpokjc8vzQt72bc/RIXHy8OajB6S6DcRCkC+/VT9aLl17uraZNrVenYfMpnNBPRmS
+        U7GeBo7IE8VdADr/dhi8lCqOOe/apmw2/J5vxSRzyHkle0hzyIMfVfPHtjf+Q0oCvFHOly
+        trlQvw2359W8W/SaSuT8xK97r7Vsgto=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-86-sA0O7YooOLWUi1ARmmSdzQ-1; Wed, 20 Jan 2021 11:59:56 -0500
-X-MC-Unique: sA0O7YooOLWUi1ARmmSdzQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-421-2pSIUINSN1mM_8kVR_1ToQ-1; Wed, 20 Jan 2021 11:59:56 -0500
+X-MC-Unique: 2pSIUINSN1mM_8kVR_1ToQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F7908735C6
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9FE6A192CC42
         for <linux-nfs@vger.kernel.org>; Wed, 20 Jan 2021 16:59:55 +0000 (UTC)
 Received: from bcodding.csb (ovpn-64-66.rdu2.redhat.com [10.10.64.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6CBAF5D9C2
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6CB2B5D6DC
         for <linux-nfs@vger.kernel.org>; Wed, 20 Jan 2021 16:59:55 +0000 (UTC)
 Received: by bcodding.csb (Postfix, from userid 24008)
-        id AC16810E3EFE; Wed, 20 Jan 2021 11:59:54 -0500 (EST)
+        id B98D210E5BC8; Wed, 20 Jan 2021 11:59:54 -0500 (EST)
 From:   Benjamin Coddington <bcodding@redhat.com>
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v1 05/10] NFS: readdir per-page cache validation
-Date:   Wed, 20 Jan 2021 11:59:49 -0500
-Message-Id: <885cd036b5400bd637b41003cdcae30ef28018fa.1611160121.git.bcodding@redhat.com>
+Subject: [PATCH v1 06/10] NFS: stash the readdir pagecache cursor on the open directory context
+Date:   Wed, 20 Jan 2021 11:59:50 -0500
+Message-Id: <27179777ef614728c54d76f6588567598eaf4057.1611160121.git.bcodding@redhat.com>
 In-Reply-To: <cover.1611160120.git.bcodding@redhat.com>
 References: <cover.1611160120.git.bcodding@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The current implementation of the readdir page cache requires that all
-pages contain entries ordered such that the cookie references lead to the
-first entry as represented by cookie 0.  The invalidation of the cache
-truncates either the entire cache or every page beyond a known good page.
+Now that we have per-page cache validation, we can allow filling of the
+pagecache from arbitrary offsets.  Store the pagecache cursor on the open
+directory context so it can be used to validate our entries the next time
+we enter nfs_readdir() without having to fill the pagecache from the
+beginning.
 
-A process that wants to emit directory entries near the end of a directory
-must first fill in any entries missing in the cache near the beginning of
-the directory in order that the entries decoded from READDIR XDR are
-appropriately page-aligned for any readers thay may come later (and for
-some error handling).
-
-However, if we're careful to check the alignment of directory entries on
-each page when the page is read, then it should be permissable to allow
-"disconnected" filling of the pagecache.  Rather than requiring pagecache
-data to always be positionally aligned, we can instead validate that each
-page is properly aligned to the reading process' directory context. If it
-doesn't match our alignment, we'll refresh the entries in the page so that
-it does.
-
-This patch implements a check for validity for each page as it is obtained
-from the pagecache.  A page is valid if it was filled within the client's
-current version of the directory and if the entries are aligned with the
-current reader's directory context.
-
-Invalid pages are re-filled by READDIR operations before being used to emit
-entries for the current reader.
+The open_directory_context's dir_cookie and index_cookie will store the
+same value between calls to nfs_readdir(), so we can save a little room in
+the struct by dropping dir_cookie.
 
 Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
 ---
- fs/nfs/dir.c | 71 +++++++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 57 insertions(+), 14 deletions(-)
+ fs/nfs/dir.c           | 15 ++++++++-------
+ include/linux/nfs_fs.h |  2 +-
+ 2 files changed, 9 insertions(+), 8 deletions(-)
 
 diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 7f6c84c8a412..5fc22d97054a 100644
+index 5fc22d97054a..4e21b21c75d0 100644
 --- a/fs/nfs/dir.c
 +++ b/fs/nfs/dir.c
-@@ -188,13 +188,16 @@ static void nfs_readdir_page_init_array(struct page *page, u64 last_cookie)
- 	array->last_cookie = last_cookie;
- 	array->cookies_are_ordered = 1;
- 	kunmap_atomic(array);
--	set_page_private(page, 0);
-+	if (page->mapping)
-+		set_page_private(page, nfs_save_change_attribute(page->mapping->host));
-+	SetPageUptodate(page);
- }
+@@ -81,7 +81,7 @@ static struct nfs_open_dir_context *alloc_nfs_open_dir_context(struct inode *dir
+ 	if (ctx != NULL) {
+ 		ctx->duped = 0;
+ 		ctx->attr_gencount = nfsi->attr_gencount;
+-		ctx->dir_cookie = 0;
++		memset(&ctx->pgc, 0, sizeof(struct nfs_dir_page_cursor));
+ 		ctx->dup_cookie = 0;
+ 		spin_lock(&dir->i_lock);
+ 		if (list_empty(&nfsi->open_files) &&
+@@ -365,7 +365,8 @@ nfs_readdir_page_valid(struct page *page, unsigned int entry_index, u64 index_co
+ 	ret = true;
+ 	array = kmap_atomic(page);
  
- static int
- nfs_readdir_clear_page(struct page *page, gfp_t gfp_mask)
- {
--	detach_page_private(page);
-+	unsigned long change_attr;
-+	change_attr = (unsigned long)detach_page_private(page);
- 	return 1;
- }
+-	if (array->size == 0 && array->last_cookie == index_cookie)
++	if ((array->size == 0 || array->size == entry_index)
++		&& array->last_cookie == index_cookie)
+ 		goto out_unmap;
  
-@@ -225,6 +228,15 @@ void nfs_readdir_clear_array(struct page *page)
- 		kfree(array->array[i].name);
- 	nfs_readdir_array_init(array);
- 	kunmap_atomic(array);
-+	ClearPageUptodate(page);
-+}
-+
-+static void
-+nfs_readdir_recycle_page(struct page *page, u64 last_cookie)
-+{
-+	nfs_readdir_clear_array(page);
-+	nfs_readdir_invalidatepage(page, 0, 0);
-+	nfs_readdir_page_init_array(page, last_cookie);
- }
+ 	if (array->size > entry_index &&
+@@ -1054,7 +1055,6 @@ static int readdir_search_pagecache(struct nfs_readdir_descriptor *desc)
+ 		if (desc->pgc.page_index == 0) {
+ 			desc->current_index = 0;
+ 			desc->prev_index = 0;
+-			desc->pgc.index_cookie = 0;
+ 		}
+ 		res = find_and_lock_cache_page(desc);
+ 	} while (res == -EAGAIN);
+@@ -1192,7 +1192,8 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 	desc->plus = nfs_use_readdirplus(inode, ctx);
  
- static struct page *
-@@ -341,18 +353,47 @@ int nfs_readdir_add_to_array(struct nfs_entry *entry, struct page *page)
- 	return ret;
- }
+ 	spin_lock(&file->f_lock);
+-	desc->dir_cookie = dir_ctx->dir_cookie;
++	desc->dir_cookie = dir_ctx->pgc.index_cookie;
++	desc->pgc = dir_ctx->pgc;
+ 	desc->dup_cookie = dir_ctx->dup_cookie;
+ 	desc->duped = dir_ctx->duped;
+ 	desc->attr_gencount = dir_ctx->attr_gencount;
+@@ -1231,7 +1232,7 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 	} while (!desc->eof);
  
-+static bool
-+nfs_readdir_page_valid(struct page *page, unsigned int entry_index, u64 index_cookie)
-+{
-+	bool ret = false;
-+	struct nfs_cache_array *array;
-+
-+	if (page_private(page) != nfs_save_change_attribute(page->mapping->host))
-+		goto out;
-+
-+	ret = true;
-+	array = kmap_atomic(page);
-+
-+	if (array->size == 0 && array->last_cookie == index_cookie)
-+		goto out_unmap;
-+
-+	if (array->size > entry_index &&
-+		array->array[entry_index].cookie == index_cookie)
-+		goto out_unmap;
-+
-+	ret = false;
-+out_unmap:
-+	kunmap_atomic(array);
-+out:
-+	return ret;
-+}
-+
- static struct page *nfs_readdir_page_get_locked(struct address_space *mapping,
--						pgoff_t index, u64 last_cookie)
-+						struct nfs_dir_page_cursor *pgc)
- {
- 	struct page *page;
- 
--	page = grab_cache_page(mapping, index);
--	if (page && !PageUptodate(page)) {
--		nfs_readdir_page_init_array(page, last_cookie);
--		if (invalidate_inode_pages2_range(mapping, index + 1, -1) < 0)
--			nfs_zap_mapping(mapping->host, mapping);
--		SetPageUptodate(page);
--	}
-+	page = grab_cache_page(mapping, pgc->page_index);
-+
-+	if (!page)
-+		return page;
-+
-+	if (!PageUptodate(page))
-+		nfs_readdir_page_init_array(page, pgc->index_cookie);
-+
-+	if (!nfs_readdir_page_valid(page, pgc->entry_index, pgc->index_cookie))
-+		nfs_readdir_recycle_page(page, pgc->index_cookie);
- 
- 	return page;
- }
-@@ -398,8 +439,12 @@ static struct page *nfs_readdir_page_get_next(struct address_space *mapping,
- 					      pgoff_t index, u64 cookie)
- {
- 	struct page *page;
-+	struct nfs_dir_page_cursor pgc = {
-+		.page_index = index,
-+		.index_cookie = cookie,
-+	};
- 
--	page = nfs_readdir_page_get_locked(mapping, index, cookie);
-+	page = nfs_readdir_page_get_locked(mapping, &pgc);
- 	if (page) {
- 		if (nfs_readdir_page_last_cookie(page) == cookie)
- 			return page;
-@@ -943,9 +988,7 @@ nfs_readdir_page_unlock_and_put_cached(struct nfs_readdir_descriptor *desc)
- static struct page *
- nfs_readdir_page_get_cached(struct nfs_readdir_descriptor *desc)
- {
--	return nfs_readdir_page_get_locked(desc->file->f_mapping,
--					   desc->pgc.page_index,
--					   desc->pgc.index_cookie);
-+	return nfs_readdir_page_get_locked(desc->file->f_mapping, &desc->pgc);
- }
- 
- /*
+ 	spin_lock(&file->f_lock);
+-	dir_ctx->dir_cookie = desc->dir_cookie;
++	dir_ctx->pgc = desc->pgc;
+ 	dir_ctx->dup_cookie = desc->dup_cookie;
+ 	dir_ctx->duped = desc->duped;
+ 	dir_ctx->attr_gencount = desc->attr_gencount;
+@@ -1273,9 +1274,9 @@ static loff_t nfs_llseek_dir(struct file *filp, loff_t offset, int whence)
+ 	if (offset != filp->f_pos) {
+ 		filp->f_pos = offset;
+ 		if (nfs_readdir_use_cookie(filp))
+-			dir_ctx->dir_cookie = offset;
++			dir_ctx->pgc.index_cookie = offset;
+ 		else
+-			dir_ctx->dir_cookie = 0;
++			dir_ctx->pgc.index_cookie = 0;
+ 		if (offset == 0)
+ 			memset(dir_ctx->verf, 0, sizeof(dir_ctx->verf));
+ 		dir_ctx->duped = 0;
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 557e54b7d555..cd35137a935b 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -101,7 +101,7 @@ struct nfs_open_dir_context {
+ 	struct list_head list;
+ 	unsigned long attr_gencount;
+ 	__be32	verf[NFS_DIR_VERIFIER_SIZE];
+-	__u64 dir_cookie;
++	struct nfs_dir_page_cursor pgc;
+ 	__u64 dup_cookie;
+ 	signed char duped;
+ };
 -- 
 2.25.4
 
