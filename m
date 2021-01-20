@@ -2,60 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59BDE2FCA1C
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Jan 2021 05:53:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 246A32FCA3B
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Jan 2021 06:09:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbhATEvU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 Jan 2021 23:51:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57202 "EHLO mail.kernel.org"
+        id S1729170AbhATFAP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Jan 2021 00:00:15 -0500
+Received: from namei.org ([65.99.196.166]:50792 "EHLO mail.namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728289AbhATEvD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 19 Jan 2021 23:51:03 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 3FB652313A;
-        Wed, 20 Jan 2021 04:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611118222;
-        bh=MLrutSGoQ0+r8mDYryLJ4c98mV61Zooygjg7lFKDXJA=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=VTE4eX9kke/obWbH41IMn2QYJqwTwsYgWCVdjyHnupDK0iiYJRKgmw2PVnWrVqwE+
-         Ntdncb5LiaH/0UUNrlE5iXefW4/UDYjg0e3Kw3l8987FfHhKbgielJH+yzpZ7owjeF
-         fpb8C8nJU4hR4GE5B5555xA2plmWsGfvuhEogLz2WEdtT1XL/AojUi865LcwoX4Qs5
-         lfSmHW80//hK15AzvmhCR1IQa4Cg44LKJuRtisljFg/7qp/kD8bVhqC5N6qt3n8srK
-         2tDyPePnCZR4cEoPVQC7pPLeHvg6bd6MZGPS3bamUTWq9DdU1hRf+2MvJPks3tYcxA
-         Xo5tVRq0riwPA==
-Received: from pdx-korg-docbuild-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-1.ci.codeaurora.org (Postfix) with ESMTP id 37C10604FC;
-        Wed, 20 Jan 2021 04:50:22 +0000 (UTC)
-Subject: Re: [GIT PULL] nfsd changes for 5.11-rc (second round)
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <04E864E1-CE3F-4DEE-9A0E-CAC4DEE51D7B@oracle.com>
-References: <04E864E1-CE3F-4DEE-9A0E-CAC4DEE51D7B@oracle.com>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <04E864E1-CE3F-4DEE-9A0E-CAC4DEE51D7B@oracle.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-5.11-2
-X-PR-Tracked-Commit-Id: 5f39d2713bd80e8a3e6d9299930aec8844872c0e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f419f031de1498765b64ddf71590f40689a9b55c
-Message-Id: <161111822222.31434.13485546994322587969.pr-tracker-bot@kernel.org>
-Date:   Wed, 20 Jan 2021 04:50:22 +0000
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Linus Torvalds <torvalds@linuxfoundation.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Bruce Fields <bfields@fieldses.org>
+        id S1729027AbhATE7p (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 19 Jan 2021 23:59:45 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.namei.org (Postfix) with ESMTPS id 6BA181BC;
+        Wed, 20 Jan 2021 04:57:56 +0000 (UTC)
+Date:   Wed, 20 Jan 2021 15:57:56 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+cc:     linux-nfs@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        David Quigley <dpquigl@davequigley.com>
+Subject: Re: [PATCH] NFSv4.2: fix return value of
+ _nfs4_get_security_label()
+In-Reply-To: <20210115174356.408688-1-omosnace@redhat.com>
+Message-ID: <2d85fd54-5c4d-391e-f01b-1537017aafa@namei.org>
+References: <20210115174356.408688-1-omosnace@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Tue, 19 Jan 2021 15:38:22 +0000:
+On Fri, 15 Jan 2021, Ondrej Mosnacek wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-5.11-2
+> An xattr 'get' handler is expected to return the length of the value on
+> success, yet _nfs4_get_security_label() (and consequently also
+> nfs4_xattr_get_nfs4_label(), which is used as an xattr handler) returns
+> just 0 on success.
+> 
+> Fix this by returning label.len instead, which contains the length of
+> the result.
+> 
+> Fixes: aa9c2669626c ("NFS: Client implementation of Labeled-NFS")
+> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+> ---
+>  fs/nfs/nfs4proc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 2f4679a62712a..28465d8aada64 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -5971,7 +5971,7 @@ static int _nfs4_get_security_label(struct inode *inode, void *buf,
+>  		return ret;
+>  	if (!(fattr.valid & NFS_ATTR_FATTR_V4_SECURITY_LABEL))
+>  		return -ENOENT;
+> -	return 0;
+> +	return label.len;
+>  }
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f419f031de1498765b64ddf71590f40689a9b55c
 
-Thank you!
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+James Morris
+<jmorris@namei.org>
+
