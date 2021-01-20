@@ -2,48 +2,46 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D1AD2FE25E
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 07:13:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20C0D2FE309
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 07:40:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731732AbhATXrM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Jan 2021 18:47:12 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39357 "EHLO
+        id S1725946AbhATXpX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Jan 2021 18:45:23 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60792 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731897AbhATWYt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Jan 2021 17:24:49 -0500
+        by vger.kernel.org with ESMTP id S1728259AbhATWXH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Jan 2021 17:23:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611181403;
+        s=mimecast20190719; t=1611181296;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=U4TzQhkQUMUsgQqVDfduaWESOp8N+csFxZi9CuGcDKM=;
-        b=TrCxBRSjr7WFx40AL5Zu8HmDBvNHlfY6QNfTYXPucO6GZ51k8UbEjiHrVe0CKwj2Ch6Q+b
-        4wZaIkp9z3yrevjB6JtGeBhomC2465zTt1lVYZyHMk4IOkQsBBoPY/ZzW9vxaVrda/GMmb
-        kpClPOVE9QsB4XTSeKIzWaj1Kylis5Q=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ZkCTUh6YIpz/AUkWavZvz8nrC1gxZflHJ+My0TUlYq8=;
+        b=IWTlpI18BdGNb8bCQlxL3IJuhfPpWpOhdBZ4nzBJXW0h2O/JRnmiHZJ89kDlSZBgpbABSz
+        fyo2o1kMWhVvbdgAeaQ2bTSbpFQHM4HDZm63wlce968NR2QuUO0pnPIAaTZE6doajpO6hC
+        JQzP6EKgRL48tfenENZRF9BQQJqyF/Y=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-11-PmuiEkvkN7KRxUZsQHG8tw-1; Wed, 20 Jan 2021 17:23:18 -0500
-X-MC-Unique: PmuiEkvkN7KRxUZsQHG8tw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-468-4jyfIjAkMxSc_5pS-0UlJg-1; Wed, 20 Jan 2021 17:21:34 -0500
+X-MC-Unique: 4jyfIjAkMxSc_5pS-0UlJg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 696D5180A095;
-        Wed, 20 Jan 2021 22:23:16 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA4DD800D55;
+        Wed, 20 Jan 2021 22:21:31 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 504A39CA0;
-        Wed, 20 Jan 2021 22:23:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 09/25] netfs: Gather stats
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 61F231992D;
+        Wed, 20 Jan 2021 22:21:25 +0000 (UTC)
+Subject: [RFC][PATCH 00/25] Network fs helper library & fscache kiocb API
 From:   David Howells <dhowells@redhat.com>
 To:     Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>
-Cc:     dhowells@redhat.com, Jeff Layton <jlayton@redhat.com>,
+Cc:     Takashi Iwai <tiwai@suse.de>, Matthew Wilcox <willy@infradead.org>,
+        linux-afs@lists.infradead.org,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        dhowells@redhat.com, Jeff Layton <jlayton@redhat.com>,
         David Wysochanski <dwysocha@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -51,299 +49,155 @@ Cc:     dhowells@redhat.com, Jeff Layton <jlayton@redhat.com>,
         linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
         ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 20 Jan 2021 22:23:12 +0000
-Message-ID: <161118139247.1232039.10556850937548511068.stgit@warthog.procyon.org.uk>
-In-Reply-To: <161118128472.1232039.11746799833066425131.stgit@warthog.procyon.org.uk>
-References: <161118128472.1232039.11746799833066425131.stgit@warthog.procyon.org.uk>
+Date:   Wed, 20 Jan 2021 22:21:24 +0000
+Message-ID: <161118128472.1232039.11746799833066425131.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Gather statistics from the netfs interface that can be exported through a
-seqfile.  This is intended to be called by a later patch when viewing
-/proc/fs/fscache/stats.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+Here's a set of patches to do two things:
+
+ (1) Add a helper library to handle the new VM readahead interface.  This
+     is intended to be used unconditionally by the filesystem (whether or
+     not caching is enabled) and provides a common framework for doing
+     caching, transparent huge pages and, in the future, possibly fscrypt
+     and read bandwidth maximisation.  It also allows the netfs and the
+     cache to align, expand and slice up a read request from the VM in
+     various ways; the netfs need only provide a function to read a stretch
+     of data to the pagecache and the helper takes care of the rest.
+
+ (2) Add an alternative fscache/cachfiles I/O API that uses the kiocb
+     facility to do async DIO to transfer data to/from the netfs's pages,
+     rather than using readpage with wait queue snooping on one side and
+     vfs_write() on the other.  It also uses less memory, since it doesn't
+     do buffered I/O on the backing file.
+
+     Note that this uses SEEK_HOLE/SEEK_DATA to locate the data available
+     to be read from the cache.  Whilst this is an improvement from the
+     bmap interface, it still has a problem with regard to a modern
+     extent-based filesystem inserting or removing bridging blocks of
+     zeros.  Fixing that requires a much greater overhaul.
+
+This is a step towards overhauling the fscache API.  The change is opt-in
+on the part of the network filesystem.  A netfs should not try to mix the
+old and the new API because of conflicting ways of handling pages and the
+PG_fscache page flag and because it would be mixing DIO with buffered I/O.
+Further, the helper library can't be used with the old API.
+
+This does not change any of the fscache cookie handling APIs or the way
+invalidation is done.
+
+In the near term, I intend to deprecate and remove the old I/O API
+(fscache_allocate_page{,s}(), fscache_read_or_alloc_page{,s}(),
+fscache_write_page() and fscache_uncache_page()) and eventually replace
+most of fscache/cachefiles with something simpler and easier to follow.
+
+The patchset contains four parts:
+
+ (1) Some helper patches, including provision of an ITER_XARRAY iov
+     iterator and a function to do readahead expansion.
+
+ (2) Patches to add the netfs helper library.
+
+ (3) A patch to add the fscache/cachefiles kiocb API
+
+ (4) Patches to add support in AFS for this.
+
+With this, AFS without a cache passes all expected xfstests; with a cache,
+there's an extra failure, but that's also there before these patches.
+Fixing that probably requires a greater overhaul.
+
+These patches can be found also on:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-netfs-lib
+
+David
 ---
+David Howells (24):
+      iov_iter: Add ITER_XARRAY
+      vm: Add wait/unlock functions for PG_fscache
+      mm: Implement readahead_control pageset expansion
+      vfs: Export rw_verify_area() for use by cachefiles
+      netfs: Make a netfs helper module
+      netfs: Provide readahead and readpage netfs helpers
+      netfs: Add tracepoints
+      netfs: Gather stats
+      netfs: Add write_begin helper
+      netfs: Define an interface to talk to a cache
+      fscache, cachefiles: Add alternate API to use kiocb for read/write to cache
+      afs: Disable use of the fscache I/O routines
+      afs: Pass page into dirty region helpers to provide THP size
+      afs: Print the operation debug_id when logging an unexpected data version
+      afs: Move key to afs_read struct
+      afs: Don't truncate iter during data fetch
+      afs: Log remote unmarshalling errors
+      afs: Set up the iov_iter before calling afs_extract_data()
+      afs: Use ITER_XARRAY for writing
+      afs: Wait on PG_fscache before modifying/releasing a page
+      afs: Extract writeback extension into its own function
+      afs: Prepare for use of THPs
+      afs: Use the fs operation ops to handle FetchData completion
+      afs: Use new fscache read helper API
 
- fs/netfs/Kconfig       |   15 ++++++++++++++
- fs/netfs/Makefile      |    3 +--
- fs/netfs/internal.h    |   34 +++++++++++++++++++++++++++++++
- fs/netfs/read_helper.c |   23 +++++++++++++++++++++
- fs/netfs/stats.c       |   53 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/netfs.h  |    1 +
- 6 files changed, 127 insertions(+), 2 deletions(-)
+Takashi Iwai (1):
+      cachefiles: Drop superfluous readpages aops NULL check
+
+
+ fs/Kconfig                    |    1 +
+ fs/Makefile                   |    1 +
+ fs/afs/Kconfig                |    1 +
+ fs/afs/dir.c                  |  225 ++++---
+ fs/afs/file.c                 |  472 ++++----------
+ fs/afs/fs_operation.c         |    4 +-
+ fs/afs/fsclient.c             |  108 ++--
+ fs/afs/inode.c                |    7 +-
+ fs/afs/internal.h             |   57 +-
+ fs/afs/rxrpc.c                |  150 ++---
+ fs/afs/write.c                |  610 ++++++++++--------
+ fs/afs/yfsclient.c            |   82 +--
+ fs/cachefiles/Makefile        |    1 +
+ fs/cachefiles/interface.c     |    5 +-
+ fs/cachefiles/internal.h      |    9 +
+ fs/cachefiles/rdwr.c          |    2 -
+ fs/cachefiles/rdwr2.c         |  406 ++++++++++++
+ fs/fscache/Makefile           |    3 +-
+ fs/fscache/internal.h         |    3 +
+ fs/fscache/page.c             |    2 +-
+ fs/fscache/page2.c            |  116 ++++
+ fs/fscache/stats.c            |    1 +
+ fs/internal.h                 |    5 -
+ fs/netfs/Kconfig              |   23 +
+ fs/netfs/Makefile             |    5 +
+ fs/netfs/internal.h           |   97 +++
+ fs/netfs/read_helper.c        | 1142 +++++++++++++++++++++++++++++++++
+ fs/netfs/stats.c              |   57 ++
+ fs/read_write.c               |    1 +
+ include/linux/fs.h            |    1 +
+ include/linux/fscache-cache.h |    4 +
+ include/linux/fscache.h       |   28 +-
+ include/linux/netfs.h         |  167 +++++
+ include/linux/pagemap.h       |   16 +
+ include/net/af_rxrpc.h        |    2 +-
+ include/trace/events/afs.h    |   74 +--
+ include/trace/events/netfs.h  |  201 ++++++
+ mm/filemap.c                  |   18 +
+ mm/readahead.c                |   70 ++
+ net/rxrpc/recvmsg.c           |    9 +-
+ 40 files changed, 3171 insertions(+), 1015 deletions(-)
+ create mode 100644 fs/cachefiles/rdwr2.c
+ create mode 100644 fs/fscache/page2.c
+ create mode 100644 fs/netfs/Kconfig
+ create mode 100644 fs/netfs/Makefile
+ create mode 100644 fs/netfs/internal.h
+ create mode 100644 fs/netfs/read_helper.c
  create mode 100644 fs/netfs/stats.c
-
-diff --git a/fs/netfs/Kconfig b/fs/netfs/Kconfig
-index 2ebf90e6ca95..578112713703 100644
---- a/fs/netfs/Kconfig
-+++ b/fs/netfs/Kconfig
-@@ -6,3 +6,18 @@ config NETFS_SUPPORT
- 	  This option enables support for network filesystems, including
- 	  helpers for high-level buffered I/O, abstracting out read
- 	  segmentation, local caching and transparent huge page support.
-+
-+config NETFS_STATS
-+	bool "Gather statistical information on local caching"
-+	depends on NETFS_SUPPORT && PROC_FS
-+	help
-+	  This option causes statistical information to be gathered on local
-+	  caching and exported through file:
-+
-+		/proc/fs/fscache/stats
-+
-+	  The gathering of statistics adds a certain amount of overhead to
-+	  execution as there are a quite a few stats gathered, and on a
-+	  multi-CPU system these may be on cachelines that keep bouncing
-+	  between CPUs.  On the other hand, the stats are very useful for
-+	  debugging purposes.  Saying 'Y' here is recommended.
-diff --git a/fs/netfs/Makefile b/fs/netfs/Makefile
-index 4b4eff2ba369..c15bfc966d96 100644
---- a/fs/netfs/Makefile
-+++ b/fs/netfs/Makefile
-@@ -1,6 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--netfs-y := \
--	read_helper.o
-+netfs-y := read_helper.o stats.o
- 
- obj-$(CONFIG_NETFS_SUPPORT) := netfs.o
-diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
-index b07f43f9130e..d83317b1eb9d 100644
---- a/fs/netfs/internal.h
-+++ b/fs/netfs/internal.h
-@@ -16,8 +16,42 @@
-  */
- extern unsigned int netfs_debug;
- 
-+/*
-+ * stats.c
-+ */
-+#ifdef CONFIG_NETFS_STATS
-+extern atomic_t netfs_n_rh_readahead;
-+extern atomic_t netfs_n_rh_readpage;
-+extern atomic_t netfs_n_rh_rreq;
-+extern atomic_t netfs_n_rh_sreq;
-+extern atomic_t netfs_n_rh_download;
-+extern atomic_t netfs_n_rh_download_done;
-+extern atomic_t netfs_n_rh_download_failed;
-+extern atomic_t netfs_n_rh_download_instead;
-+extern atomic_t netfs_n_rh_read;
-+extern atomic_t netfs_n_rh_read_done;
-+extern atomic_t netfs_n_rh_read_failed;
-+extern atomic_t netfs_n_rh_zero;
-+extern atomic_t netfs_n_rh_short_read;
-+extern atomic_t netfs_n_rh_write;
-+extern atomic_t netfs_n_rh_write_done;
-+extern atomic_t netfs_n_rh_write_failed;
-+
-+
-+static inline void netfs_stat(atomic_t *stat)
-+{
-+	atomic_inc(stat);
-+}
-+
-+static inline void netfs_stat_d(atomic_t *stat)
-+{
-+	atomic_dec(stat);
-+}
-+
-+#else
- #define netfs_stat(x) do {} while(0)
- #define netfs_stat_d(x) do {} while(0)
-+#endif
- 
- /*****************************************************************************/
- /*
-diff --git a/fs/netfs/read_helper.c b/fs/netfs/read_helper.c
-index 2a90314ea36f..275ac37e2834 100644
---- a/fs/netfs/read_helper.c
-+++ b/fs/netfs/read_helper.c
-@@ -55,6 +55,7 @@ static struct netfs_read_request *netfs_alloc_read_request(
- 		refcount_set(&rreq->usage, 1);
- 		__set_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
- 		ops->init_rreq(rreq, file);
-+		netfs_stat(&netfs_n_rh_rreq);
- 	}
- 
- 	return rreq;
-@@ -86,6 +87,7 @@ static void netfs_free_read_request(struct work_struct *work)
- 		rreq->netfs_ops->cleanup(rreq->mapping, rreq->netfs_priv);
- 	trace_netfs_rreq(rreq, netfs_rreq_trace_free);
- 	kfree(rreq);
-+	netfs_stat_d(&netfs_n_rh_rreq);
- }
- 
- static void netfs_put_read_request(struct netfs_read_request *rreq)
-@@ -114,6 +116,7 @@ static struct netfs_read_subrequest *netfs_alloc_subrequest(
- 		INIT_LIST_HEAD(&subreq->rreq_link);
- 		refcount_set(&subreq->usage, 2);
- 		subreq->rreq = rreq;
-+		netfs_stat(&netfs_n_rh_sreq);
- 	}
- 
- 	return subreq;
-@@ -129,6 +132,7 @@ static void __netfs_put_subrequest(struct netfs_read_subrequest *subreq)
- 	trace_netfs_sreq(subreq, netfs_sreq_trace_free);
- 	netfs_put_read_request(subreq->rreq);
- 	kfree(subreq);
-+	netfs_stat_d(&netfs_n_rh_sreq);
- }
- 
- /*
-@@ -150,6 +154,7 @@ static void netfs_clear_unread(struct netfs_read_subrequest *subreq)
- static void netfs_fill_with_zeroes(struct netfs_read_request *rreq,
- 				   struct netfs_read_subrequest *subreq)
- {
-+	netfs_stat(&netfs_n_rh_zero);
- 	__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
- 	netfs_subreq_terminated(subreq, 0);
- }
-@@ -173,6 +178,7 @@ static void netfs_fill_with_zeroes(struct netfs_read_request *rreq,
- static void netfs_read_from_server(struct netfs_read_request *rreq,
- 				   struct netfs_read_subrequest *subreq)
- {
-+	netfs_stat(&netfs_n_rh_download);
- 	rreq->netfs_ops->issue_op(subreq);
- }
- 
-@@ -278,6 +284,7 @@ static void netfs_rreq_short_read(struct netfs_read_request *rreq,
- 	__clear_bit(NETFS_SREQ_SHORT_READ, &subreq->flags);
- 	__set_bit(NETFS_SREQ_SEEK_DATA_READ, &subreq->flags);
- 
-+	netfs_stat(&netfs_n_rh_short_read);
- 	trace_netfs_sreq(subreq, netfs_sreq_trace_resubmit_short);
- 
- 	netfs_get_read_subrequest(subreq);
-@@ -309,6 +316,7 @@ static bool netfs_rreq_perform_resubmissions(struct netfs_read_request *rreq)
- 				break;
- 			subreq->source = NETFS_DOWNLOAD_FROM_SERVER;
- 			subreq->error = 0;
-+			netfs_stat(&netfs_n_rh_download_instead);
- 			trace_netfs_sreq(subreq, netfs_sreq_trace_download_instead);
- 			netfs_get_read_subrequest(subreq);
- 			atomic_inc(&rreq->nr_rd_ops);
-@@ -399,6 +407,17 @@ void netfs_subreq_terminated(struct netfs_read_subrequest *subreq,
- 	       subreq->debug_index, subreq->start, subreq->flags,
- 	       transferred_or_error);
- 
-+	switch (subreq->source) {
-+	case NETFS_READ_FROM_CACHE:
-+		netfs_stat(&netfs_n_rh_read_done);
-+		break;
-+	case NETFS_DOWNLOAD_FROM_SERVER:
-+		netfs_stat(&netfs_n_rh_download_done);
-+		break;
-+	default:
-+		break;
-+	}
-+
- 	if (IS_ERR_VALUE(transferred_or_error)) {
- 		subreq->error = transferred_or_error;
- 		goto failed;
-@@ -452,8 +471,10 @@ void netfs_subreq_terminated(struct netfs_read_subrequest *subreq,
- 
- failed:
- 	if (subreq->source == NETFS_READ_FROM_CACHE) {
-+		netfs_stat(&netfs_n_rh_read_failed);
- 		set_bit(NETFS_RREQ_INCOMPLETE_IO, &rreq->flags);
- 	} else {
-+		netfs_stat(&netfs_n_rh_download_failed);
- 		set_bit(NETFS_RREQ_FAILED, &rreq->flags);
- 		rreq->error = subreq->error;
- 	}
-@@ -636,6 +657,7 @@ void netfs_readahead(struct readahead_control *ractl,
- 	rreq->start	= readahead_pos(ractl);
- 	rreq->len	= readahead_length(ractl);
- 
-+	netfs_stat(&netfs_n_rh_readahead);
- 	trace_netfs_read(rreq, readahead_pos(ractl), readahead_length(ractl),
- 			 netfs_read_trace_readahead);
- 
-@@ -710,6 +732,7 @@ int netfs_readpage(struct file *file,
- 	rreq->start	= page->index * PAGE_SIZE;
- 	rreq->len	= thp_size(page);
- 
-+	netfs_stat(&netfs_n_rh_readpage);
- 	trace_netfs_read(rreq, rreq->start, rreq->len, netfs_read_trace_readpage);
- 
- 	netfs_get_read_request(rreq);
-diff --git a/fs/netfs/stats.c b/fs/netfs/stats.c
-new file mode 100644
-index 000000000000..3a7a3c10e1cd
---- /dev/null
-+++ b/fs/netfs/stats.c
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* Netfs support statistics
-+ *
-+ * Copyright (C) 2020 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ */
-+
-+#include <linux/seq_file.h>
-+#include <linux/netfs.h>
-+#include "internal.h"
-+
-+atomic_t netfs_n_rh_readahead;
-+atomic_t netfs_n_rh_readpage;
-+atomic_t netfs_n_rh_rreq;
-+atomic_t netfs_n_rh_sreq;
-+atomic_t netfs_n_rh_download;
-+atomic_t netfs_n_rh_download_done;
-+atomic_t netfs_n_rh_download_failed;
-+atomic_t netfs_n_rh_download_instead;
-+atomic_t netfs_n_rh_read;
-+atomic_t netfs_n_rh_read_done;
-+atomic_t netfs_n_rh_read_failed;
-+atomic_t netfs_n_rh_zero;
-+atomic_t netfs_n_rh_short_read;
-+atomic_t netfs_n_rh_write;
-+atomic_t netfs_n_rh_write_done;
-+atomic_t netfs_n_rh_write_failed;
-+
-+void netfs_stats_show(struct seq_file *m)
-+{
-+	seq_printf(m, "RdHelp : RA=%u RP=%u rr=%u sr=%u\n",
-+		   atomic_read(&netfs_n_rh_readahead),
-+		   atomic_read(&netfs_n_rh_readpage),
-+		   atomic_read(&netfs_n_rh_rreq),
-+		   atomic_read(&netfs_n_rh_sreq));
-+	seq_printf(m, "RdHelp : ZR=%u sh=%u\n",
-+		   atomic_read(&netfs_n_rh_zero),
-+		   atomic_read(&netfs_n_rh_short_read));
-+	seq_printf(m, "RdHelp : DL=%u ds=%u df=%u di=%u\n",
-+		   atomic_read(&netfs_n_rh_download),
-+		   atomic_read(&netfs_n_rh_download_done),
-+		   atomic_read(&netfs_n_rh_download_failed),
-+		   atomic_read(&netfs_n_rh_download_instead));
-+	seq_printf(m, "RdHelp : RD=%u rs=%u rf=%u\n",
-+		   atomic_read(&netfs_n_rh_read),
-+		   atomic_read(&netfs_n_rh_read_done),
-+		   atomic_read(&netfs_n_rh_read_failed));
-+	seq_printf(m, "RdHelp : WR=%u ws=%u wf=%u\n",
-+		   atomic_read(&netfs_n_rh_write),
-+		   atomic_read(&netfs_n_rh_write_done),
-+		   atomic_read(&netfs_n_rh_write_failed));
-+}
-+EXPORT_SYMBOL(netfs_stats_show);
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index 606fd6512b4a..9a262eb36b0f 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -106,5 +106,6 @@ extern int netfs_readpage(struct file *,
- 			  void *);
- 
- extern void netfs_subreq_terminated(struct netfs_read_subrequest *, ssize_t);
-+extern void netfs_stats_show(struct seq_file *);
- 
- #endif /* _LINUX_NETFS_H */
+ create mode 100644 include/linux/netfs.h
+ create mode 100644 include/trace/events/netfs.h
 
 
