@@ -2,104 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A43A02FF176
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 18:12:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D1A22FF177
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 18:12:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388387AbhAURLa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Jan 2021 12:11:30 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:39393 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388340AbhAUREz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 12:04:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611248598;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4KgVfQwgH0t00E0jREnBAYvp7Ag6zfsUmeWko7Cl/RY=;
-        b=TQd7qvZ2ktNKnX0pmkLIBUlKbOXeCWrQajd9H+ZJ4+r6rN+ccBT/AUNlH818GP3S0beWd6
-        ifbnja9V4LHUpem6MwKHPT3+2v8NkhViTwT2oap4AsQ7STAnhkP3es5zTfSMIrg5ECKU9R
-        8lIuBaSAFRmnTHRbjSqJzqgR+YB/A34=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-192-0Pnv6BdCNz6Oqh-N316exg-1; Thu, 21 Jan 2021 12:03:16 -0500
-X-MC-Unique: 0Pnv6BdCNz6Oqh-N316exg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1E648066FF;
-        Thu, 21 Jan 2021 17:03:14 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DCE6960C43;
-        Thu, 21 Jan 2021 17:02:57 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20210121164645.GA20964@fieldses.org>
-References: <20210121164645.GA20964@fieldses.org> <161118128472.1232039.11746799833066425131.stgit@warthog.procyon.org.uk>
-To:     bfields@fieldses.org (J. Bruce Fields)
-Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-afs@lists.infradead.org, Jeff Layton <jlayton@redhat.com>,
-        David Wysochanski <dwysocha@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-cachefs@redhat.com, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 00/25] Network fs helper library & fscache kiocb API
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1794285.1611248577.1@warthog.procyon.org.uk>
+        id S2388340AbhAURLc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Jan 2021 12:11:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388298AbhAURE5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 12:04:57 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABDDC0613D6;
+        Thu, 21 Jan 2021 09:03:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=QzyNyEp1YsTE5vSV+3cDru2rTzeX2CsFjS3xBz6a990=; b=m/sCpkjOMCVgP4VoWYhFT+pNFA
+        XsN5cp/1QMUAEvRGYKVrcCWtT0K0Qc1rUYrY8tnWtvRBGAzYQF1aJcWF3PjXrGGN5DB6crvK52Uhq
+        VmNi8hTrqhlV+i2i9NAfj+R5YQr9uVin10+P+GGGvl4s+Wro8U/2/QQy8nAXo/5hPnH9AZL+NWlnM
+        toPoiBaqrmygPeFA0pi51swSnxTXmB2rXAaBa2z16O2JBwXvSZdc+MGy9skDIY3SNinDpyuqYtJ3N
+        cyelbC61FxOX5f44I6+AYEzvIq/k8mhEfUgaLp9Knoar2TChae7OQQlHwtAFdMat/0mm5SWvcQ2ZF
+        9pImn9Kw==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1l2dMH-00HI8V-2u; Thu, 21 Jan 2021 17:03:07 +0000
 Date:   Thu, 21 Jan 2021 17:02:57 +0000
-Message-ID: <1794286.1611248577@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-ide@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] block: remove unnecessary argument from
+ blk_execute_rq_nowait
+Message-ID: <20210121170257.GA4120717@infradead.org>
+References: <20210121142905.13089-1-guoqing.jiang@cloud.ionos.com>
+ <20210121142905.13089-2-guoqing.jiang@cloud.ionos.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210121142905.13089-2-guoqing.jiang@cloud.ionos.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-J. Bruce Fields <bfields@fieldses.org> wrote:
+On Thu, Jan 21, 2021 at 03:29:04PM +0100, Guoqing Jiang wrote:
+> The 'q' is not used since commit a1ce35fa4985 ("block: remove dead
+> elevator code"), also update the comment of the function.
 
-> On Wed, Jan 20, 2021 at 10:21:24PM +0000, David Howells wrote:
-> >      Note that this uses SEEK_HOLE/SEEK_DATA to locate the data available
-> >      to be read from the cache.  Whilst this is an improvement from the
-> >      bmap interface, it still has a problem with regard to a modern
-> >      extent-based filesystem inserting or removing bridging blocks of
-> >      zeros.
-> 
-> What are the consequences from the point of view of a user?
+And more importantly it never really was needed to start with given
+that we can triviall derive it from struct request.
 
-The cache can get both false positive and false negative results on checks for
-the presence of data because an extent-based filesystem can, at will, insert
-or remove blocks of contiguous zeros to make the extents easier to encode
-(ie. bridge them or split them).
-
-A false-positive means that you get a block of zeros in the middle of your
-file that very probably shouldn't be there (ie. file corruption); a
-false-negative means that we go and reload the missing chunk from the server.
-
-The problem exists in cachefiles whether we use bmap or we use
-SEEK_HOLE/SEEK_DATA.  The only way round it is to keep track of what data is
-present independently of backing filesystem's metadata.
-
-To this end, it shouldn't (mis)behave differently than the code already there
-- except that it handles better the case in which the backing filesystem
-blocksize != PAGE_SIZE (which may not be relevant on an extent-based
-filesystem anyway if it packs parts of different files together in a single
-block) because the current implementation only bmaps the first block in a page
-and doesn't probe for the rest.
-
-Fixing this requires a much bigger overhaul of cachefiles than this patchset
-performs.
-
-Also, it works towards getting rid of this use of bmap, but that's not user
-visible.
-
-David
-
+> -extern void blk_execute_rq_nowait(struct request_queue *, struct gendisk *,
+> +extern void blk_execute_rq_nowait(struct gendisk *,
+>  				  struct request *, int, rq_end_io_fn *);
