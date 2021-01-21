@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A0D62FF3E7
+	by mail.lfdr.de (Postfix) with ESMTP id B641A2FF3E8
 	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 20:12:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbhAUTLP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Jan 2021 14:11:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56992 "EHLO
+        id S1726419AbhAUTLR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Jan 2021 14:11:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbhAUTLG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 14:11:06 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1032EC061786
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 11:10:26 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id c128so2445212wme.2
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 11:10:25 -0800 (PST)
+        with ESMTP id S1727009AbhAUTLH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 14:11:07 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F5C3C061788
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 11:10:27 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id c128so2445257wme.2
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 11:10:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelim-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uIv4doyMamsrAkZ+XiCAT/k8Wh6Lzr5DiAqhvZAFiGU=;
-        b=kG/RbXYvqpUzLqz5NEtIbmb58eS/WnaQSqsdjt1V80/cY+PAot2fvDeBkzjcA6F0/1
-         siLoG+LFqKeY1Z6j28ZgC7U9P3F1ElN7KTCe+jACH3dIfbrfirk59+gy+nyvhhr8lXX0
-         m8k/88JCkQ3KGsy4Tk0HZI38VuL+Gc1r4PvlziWX1wFYu1FYAbSHM387GWRJnLXMP0rq
-         cmW+KXaeqnWCKFnJ7lxWS7ER1s9tZucvlR4ksrdUyuz0KKXSoSfkUtXmu7J/3v24vw+H
-         Beaiwe0TSiDyp+lTRDLVW1dB4KURfIUC6QeN4ZxlBehPp4FEVaWRUjBdnIKEmvc3fUSb
-         7jBg==
+        bh=g8P88sp+8apegiLqVYCkvxoqom/NYU/MhhmjOAc/rTA=;
+        b=GAsQTs9ZnU4o9blg0z/z0aXltgvyeUgVzMbD7Ee2z2ippHLkSbvsqxNZ5jYDSpbOxm
+         B94q4VchO39YK3oFa1mRIAbBs+DyxyNhGcRDKPOoBF14ZjCDE21aE7N93FKGTMHg+dPM
+         OBgtueZE1W9SQVZ7P32YNHfqMWAFNiRnvaZ9gl/R1HfCysWCtyNOO+PGG1GrnjOsTdHK
+         E63yobWtq9z/a1R/WxpJugAMhSnrhCoFP6vvGhEwiSTI5VP6rlkoahTf1iLIQfesOkeB
+         IvuvJK0lroARDtsjK7rkWCTlemrjWUm3etABKxeXmVYlz+JtM89HiH/U5hz9SXDo2SgP
+         izBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uIv4doyMamsrAkZ+XiCAT/k8Wh6Lzr5DiAqhvZAFiGU=;
-        b=as8erSpyzAyLbI3J4QKhEX2eHv8Rvb/7n81/TJA/dVRr/phX4jZEplM1dXCAiNNqY5
-         ZvbHrWN/MiKU7ZEl4g+UogPULkfmFdn/WtQAvX3U9osRZL2zo2Ur8y/lNoTu8BJg2GEb
-         EDycpkomi/U287PO0aIruBoAF74ZJduxCI14JjIKpKPjg5UzfyYYL8zUxIwmy24VcySs
-         XaLmEc54m3ZV61p3pyTCpN71FWgJJY2pwU5YfteTqnO5L4jQNlkAsI5yPmQGhy9s6QZX
-         riESO3a2MQ9I6CoRQFWdoKZ7jtdVvjpgzPqxd42Q1PnJ4Ke3BUlyCc84WCvyDYsjPM+Z
-         3BsA==
-X-Gm-Message-State: AOAM531GkwyK2/0FqDzpjTSBJ6NZBYEeHRufWFiF3+EhdrYH9Ui7N7XI
-        9okAQqyOGOGfJLoEj0IrC6+RKVWs2haK/7ja
-X-Google-Smtp-Source: ABdhPJx1E6tyGU/GLSdzcN47Ef0TBrFPZUrQ+w4h3tWDByHLflSPGNPv48ZgH2Y5E/E1zsrJl4aqPA==
-X-Received: by 2002:a1c:5456:: with SMTP id p22mr724938wmi.81.1611256224409;
-        Thu, 21 Jan 2021 11:10:24 -0800 (PST)
+        bh=g8P88sp+8apegiLqVYCkvxoqom/NYU/MhhmjOAc/rTA=;
+        b=jAlBmzdBAsMmw6ErGjUOVSXmJBiOj3suNZngEFk3xX1dsgNA/FnNcGcCOHd2q3dGpY
+         Xzp5Fu4ZIfL6lSRS3anvRiBB0K3fNRc7ct9H2jsNgI0JoGLvCw1kF0zBebNA/yXYIz0+
+         AKk2USxY/BEHdGO13M5AI5Fcy9EvleNkNMmC2BeVScZhgtX72vDA4F1v1f7Ka0ja0x/z
+         lIdRFpr0VVcbnkiSP/TH6jWf/tQB4RzDXEl0tfWOCI5NgMsr8DW3qP45OMOe5lHpBP8s
+         VU8JYqh1k/s8+iAyBNMyIMAt39N0mTclXbsgtw5y3rLDvtNlA5+uQws89u0CfFkh17rP
+         DB3Q==
+X-Gm-Message-State: AOAM5332N5lwUM0//YKbweZzh7s1enraeLwlRc88aUL1yM4BMyY7luL6
+        Paw5g3hekmhym7R+JnfguG+yCnVyp0SN3Qgl
+X-Google-Smtp-Source: ABdhPJwACOKj9H9l0tt0km8LiGBmGFjsCkykdBfgZ9FikpY0aRMort2CWvui2jh0+qSLkFRmU3vGrg==
+X-Received: by 2002:a1c:a90f:: with SMTP id s15mr756035wme.154.1611256225810;
+        Thu, 21 Jan 2021 11:10:25 -0800 (PST)
 Received: from jupiter.home.aloni.org ([77.124.84.167])
-        by smtp.gmail.com with ESMTPSA id d30sm11160353wrc.92.2021.01.21.11.10.23
+        by smtp.gmail.com with ESMTPSA id d30sm11160353wrc.92.2021.01.21.11.10.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jan 2021 11:10:23 -0800 (PST)
+        Thu, 21 Jan 2021 11:10:25 -0800 (PST)
 From:   Dan Aloni <dan@kernelim.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>
-Subject: [PATCH v1 1/5] sunrpc: Allow specifying a vector of IP addresses for nconnect
-Date:   Thu, 21 Jan 2021 21:10:16 +0200
-Message-Id: <20210121191020.3144948-2-dan@kernelim.com>
+Subject: [PATCH v1 2/5] xprtrdma: Bind to a local address if requested
+Date:   Thu, 21 Jan 2021 21:10:17 +0200
+Message-Id: <20210121191020.3144948-3-dan@kernelim.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20210121191020.3144948-1-dan@kernelim.com>
 References: <20210121191020.3144948-1-dan@kernelim.com>
@@ -63,126 +63,82 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This adds an `rpc_portgroup` structure to describe a group of IP
-addresses comprising one logical server with multiple ports. The remote
-endpoint can be in a single server exposing multiple network interfaces,
-or multiple remote machines implementing a distributed server architecture.
-
-Combined with nconnect, the multiple transports try to make use of the
-multiple addresses given so that the connections are spread across the
-ports.
+Until now, rpcrdma did not make use of the local address when binding a
+QP. For subnets where the local machine has multiple IP addresses that
+are all connected to the same subnet, it may be desired to tell from
+which interface a QP is going out.
 
 Signed-off-by: Dan Aloni <dan@kernelim.com>
 ---
- include/linux/sunrpc/clnt.h |  9 +++++++
- net/sunrpc/clnt.c           | 47 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 56 insertions(+)
+ net/sunrpc/xprtrdma/transport.c |  7 +++++++
+ net/sunrpc/xprtrdma/verbs.c     | 15 ++++++++++++++-
+ net/sunrpc/xprtrdma/xprt_rdma.h |  2 ++
+ 3 files changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-index 02e7a5863d28..f8c0c33281a8 100644
---- a/include/linux/sunrpc/clnt.h
-+++ b/include/linux/sunrpc/clnt.h
-@@ -115,12 +115,21 @@ struct rpc_procinfo {
- 	const char *		p_name;		/* name of procedure */
- };
+diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+index 78d29d1bcc20..45726ab5f13a 100644
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -355,6 +355,13 @@ xprt_setup_rdma(struct xprt_create *args)
+ 	xprt_rdma_format_addresses(xprt, sap);
  
-+#define RPC_MAX_PORTS 64
+ 	new_xprt = rpcx_to_rdmax(xprt);
 +
-+struct rpc_portgroup {
-+	int nr;
-+	struct sockaddr_storage addrs[RPC_MAX_PORTS];
-+};
-+
- struct rpc_create_args {
- 	struct net		*net;
- 	int			protocol;
- 	struct sockaddr		*address;
- 	size_t			addrsize;
- 	struct sockaddr		*saddress;
-+	struct rpc_portgroup    *localports;    /* additional local addresses */
-+	struct rpc_portgroup    *remoteports;   /* additional remote addresses */
- 	const struct rpc_timeout *timeout;
- 	const char		*servername;
- 	const char		*nodename;
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 612f0a641f4c..5f335a873f03 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -500,6 +500,44 @@ static struct rpc_clnt *rpc_create_xprt(struct rpc_create_args *args,
- 	return clnt;
- }
- 
-+struct rpc_clnt_portgroup_iter {
-+	struct rpc_portgroup *pg;
-+	int idx;
-+};
-+
-+static void take_iter_portgroup_addr(struct rpc_clnt_portgroup_iter *iter,
-+				struct sockaddr	**address)
-+{
-+	struct rpc_portgroup *pg = iter->pg;
-+	struct sockaddr	*existing = *address;
-+	struct sockaddr	*new;
-+
-+	if (!pg || pg->nr == 0)
-+		return;
-+	if (iter->idx >= pg->nr)
-+		iter->idx = 0;
-+
-+	/* Take port from existing address, or use autobind (0) */
-+	new = (struct sockaddr *)&pg->addrs[iter->idx++];
-+
-+	switch (new->sa_family) {
-+	case AF_INET:
-+		((struct sockaddr_in *)new)->sin_port =
-+			existing ? ((struct sockaddr_in *)existing)->sin_port
-+			         : 0;
-+		break;
-+	case AF_INET6:
-+		((struct sockaddr_in6 *)new)->sin6_port =
-+			existing ? ((struct sockaddr_in6 *)existing)->sin6_port
-+			         : 0;
-+		break;
-+	default:
-+		return;
++	/* Copy source address if specified */
++	if (args->srcaddr) {
++		new_xprt->rx_has_srcaddr = true;
++		memcpy(&new_xprt->rx_saddr, args->srcaddr, args->addrlen);
 +	}
 +
-+	*address = new;
-+}
-+
- /**
-  * rpc_create - create an RPC client and transport with one call
-  * @args: rpc_clnt create argument structure
-@@ -522,6 +560,8 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *args)
- 		.servername = args->servername,
- 		.bc_xprt = args->bc_xprt,
- 	};
-+	struct rpc_clnt_portgroup_iter iter_localports = { .pg = args->localports };
-+	struct rpc_clnt_portgroup_iter iter_remoteports = { .pg = args->remoteports };
- 	char servername[48];
- 	struct rpc_clnt *clnt;
- 	int i;
-@@ -573,6 +613,10 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *args)
- 		xprtargs.servername = servername;
- 	}
+ 	rc = rpcrdma_buffer_create(new_xprt);
+ 	if (rc) {
+ 		xprt_rdma_free_addresses(xprt);
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index ec912cf9c618..64476161cf92 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -314,6 +314,7 @@ static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
+ 	unsigned long wtimeout = msecs_to_jiffies(RDMA_RESOLVE_TIMEOUT) + 1;
+ 	struct rpc_xprt *xprt = &r_xprt->rx_xprt;
+ 	struct rdma_cm_id *id;
++	struct sockaddr *saddr = NULL;
+ 	int rc;
  
-+	/* If localports or remoteports are specified, first entry overrides */
-+	take_iter_portgroup_addr(&iter_localports, &xprtargs.srcaddr);
-+	take_iter_portgroup_addr(&iter_remoteports, &xprtargs.dstaddr);
-+
- 	xprt = xprt_create_transport(&xprtargs);
- 	if (IS_ERR(xprt))
- 		return (struct rpc_clnt *)xprt;
-@@ -595,6 +639,9 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *args)
- 		return clnt;
+ 	init_completion(&ep->re_done);
+@@ -324,7 +325,19 @@ static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
+ 		return id;
  
- 	for (i = 0; i < args->nconnect - 1; i++) {
-+		take_iter_portgroup_addr(&iter_localports, &xprtargs.srcaddr);
-+		take_iter_portgroup_addr(&iter_remoteports, &xprtargs.dstaddr);
+ 	ep->re_async_rc = -ETIMEDOUT;
+-	rc = rdma_resolve_addr(id, NULL, (struct sockaddr *)&xprt->addr,
++	if (r_xprt->rx_has_srcaddr) {
++		char buf[0x50] = {0, };
++		saddr = (struct sockaddr *)&r_xprt->rx_saddr;
 +
- 		if (rpc_clnt_add_xprt(clnt, &xprtargs, NULL, NULL) < 0)
- 			break;
- 	}
++		rpc_ntop(saddr, buf, sizeof(buf));
++
++		dprintk("xprt=%p, source address port %s\n", xprt, buf);
++	}
++
++	dprintk("xprt=%p, %s:%s resolving addr\n", xprt,
++		rpcrdma_addrstr(r_xprt), rpcrdma_portstr(r_xprt));
++
++	rc = rdma_resolve_addr(id, saddr, (struct sockaddr *)&xprt->addr,
+ 			       RDMA_RESOLVE_TIMEOUT);
+ 	if (rc)
+ 		goto out;
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index 94b28657aeeb..cb4539d4740a 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -421,6 +421,8 @@ struct rpcrdma_stats {
+  */
+ struct rpcrdma_xprt {
+ 	struct rpc_xprt		rx_xprt;
++	struct sockaddr_storage rx_saddr;
++	bool			rx_has_srcaddr;
+ 	struct rpcrdma_ep	*rx_ep;
+ 	struct rpcrdma_buffer	rx_buf;
+ 	struct delayed_work	rx_connect_worker;
 -- 
 2.26.2
 
