@@ -2,184 +2,310 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B73682FF54C
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 21:02:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BC322FF582
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 21:10:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbhAUUBy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Jan 2021 15:01:54 -0500
-Received: from mail-dm6nam11on2107.outbound.protection.outlook.com ([40.107.223.107]:62629
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726868AbhAUUBt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 21 Jan 2021 15:01:49 -0500
+        id S1726532AbhAUUK3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Jan 2021 15:10:29 -0500
+Received: from esa12.utexas.iphmx.com ([216.71.154.221]:6254 "EHLO
+        esa12.utexas.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbhAUUKX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 15:10:23 -0500
+X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Thu, 21 Jan 2021 15:10:21 EST
+IronPort-SDR: UscwdDIBOi7a6FutncrV2FpkCnEdhv4U2gxgONrKCyuY1Sp7u9TemAK+h/dYlRExnPE9lmzkju
+ EwezZe9RCkXS9r+8Ihz7mk318bC3KyRkmFobULGDB3X8BQWu9xTG6xEN9Xt5gxH9ab2OB5/jAb
+ zi5uSTHGNL4NsxpKz+8F5rtpioDnRYVUE4YkrvKAlkQfrwtxkifLQuhJdrFST0SsevsvSCwgzv
+ db9Z+rqSNM33URLi7l5oR9GiDjtTLVEsv6nurzg06I8f2YAoeruqpISDmbHr3B8lEYAZLkrD+f
+ qY8=
+X-Utexas-Sender-Group: RELAYLIST-O365
+X-IronPort-MID: 260417166
+X-IPAS-Result: =?us-ascii?q?A2EnAwBI3Algh685L2hiGwEBAQEBAQEBBQEBARIBAQEDA?=
+ =?us-ascii?q?wEBAUCBT4FTKSh9U2YKhDaDSQEBhTmIJC0DmRaCUwMYPAIJAQEBAQEBAQEBB?=
+ =?us-ascii?q?wIjCgIEAQEChEgCNYFEJjgTAgMBAQEDAgMBAQEBBgEBAQEBAQUEAgIQAQEBA?=
+ =?us-ascii?q?YYBOQELg1VNOgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBA?=
+ =?us-ascii?q?QUCFFQkPgEBAQMSEQ8BBQgBATcBDwkCGAICJgICMiUGDQYCAQEXB4MEAYJVA?=
+ =?us-ascii?q?y4BDpYSjh4BgSg+AiMBQAEBC4EIigiBMoMFAQEGgUdBRIJNGEEJDYE6AwYJA?=
+ =?us-ascii?q?YEEKoJ2hFOBfQeDbUGBQT+BEScPgWV+PoJdA4FGgzGCYIFZLTwGAhVLLQEbD?=
+ =?us-ascii?q?gIEHAI+GwoMMhUEHwkDHgUZAi2PR4JwAYoSihuRP4MBkC2LLwUHAx+TE4lsh?=
+ =?us-ascii?q?XCUHYgkgQeTYw2ENgIEAgQFAg4BAQaBbYF7MxoIHRODJFAXAg2OIRqBCwECg?=
+ =?us-ascii?q?klqig1VAgEBMwIGAQkBAQMJfIoGAYEQAQE?=
+IronPort-PHdr: =?us-ascii?q?9a23=3AOiZtSxDqSNCRhzhdXtS9UyQJPHJ1sqjoPgMT9p?=
+ =?us-ascii?q?ssgq5PdaLm5Zn5IUjD/qw31g3OR4zQ7/8CgO3T4OjsWm0FtJCGtn1KMJlBTA?=
+ =?us-ascii?q?QMhshemQs8SNWEBkv2IL+PDWQ6Ec1OWUUj8yS9Nk5YS8HkblbWrzu56jtBUh?=
+ =?us-ascii?q?n6PBB+c+LyHIOahs+r1ue0rpvUZQgAhDe0bb5oahusqgCEs8AKgc1/Nqshww?=
+ =?us-ascii?q?CPr3dVKOk=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="5.79,365,1602565200"; 
+   d="scan'208";a="260417171"
+X-Utexas-Seen-Outbound: true
+Received: from mail-dm6nam11lp2175.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.175])
+  by esa12.utexas.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2021 14:01:18 -0600
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NelyUSur+MGKF1T5DTHAfK748CCKt07cYr0kw5OL+ndoM6CrdoxPhxLmNrjmSi/PT7NxN8eeuyM58ZhsncPx5zcrv8t7E0OgfvziTm3tej9N0QPT8ND0mNn7KoLu6/BmsC2NUPN+SsMHDLGkAIDw/iF5c1ZUaUOe+2nZxHd+SJa9UpkGKc22RWh+RDTVt2rL1Mr4bxh/2mhgXpVMH3rvaO+1wG3HnLH493s8ZsitqvZ9U6zNDYMU9ZvwzaKy3MYnS2SOcxK81Dly/myUWdxj4kGBxnY+5kVX4pPpt/DKltmoGx1LkRW3A2Q+zR1U1R6sooXrmHM1keBiPLWQ7mx+fw==
+ b=NedPNniA4Cx5XPmzcQxZAIANZewr2TOgIYWa6cnRog7F4OtW+CBVnqa5Pa/zrp0BitIWvWUx824rz0lDzYOog+j0tjKDErtZv+SmB0v2ZVDQpE6+qysF8k070COIyKBkbY60S1DVPK3FRoKndVl1CNPHKVqGfLbaEQ9GV41B4RuIJ4LEw1ui4BJ+uSeww5eJtdnh20TB5VznUO4IJSmv8rhogqf1Jbv9wEc2gtF5k8YIbi5AscSHkuxpeowjCpiZx057DDzC4cGkxuypNRmZpC/Jzss5E8I2VI/BAI8K6SWdN4SC/o1ndfdwVC5oDdZZKt509fcfRB77rdWbl6Wm7Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KVGHZBVgfTZsjc3/G5L6WiP5/zREJKH1uE2IvBfXJzg=;
- b=BwF0Q60Y/ao/Sh81fSRJ5ybvlf/60gNRs8b6REzXt/gPBJrBstD8LIi5hrwa7qKKS8ckglRVP9TiEkxryPppJ9xVtAga5ZBaxS303OaDWN/2+FRBmsoAUK7KauOJLW1ufskM2uVdPqosoPx28uJupFYzZl0FzHH4K/B0RlOCjiJSjvQuJj0u7BoZYJxljpKL5epDWF4jrQphjmK7xmGV6d5GP7pzRuCwvN2Ex8LcAuM9Jan2PzUbjDFXpQYdJRfnC9d5XMZtkoGF5J9HEnIvKra/AGFCsJ0KQjJqWLklRijtXrdtyCW5zTK1qDp764nCeFKiyW8B2FKDDKclUKRtFQ==
+ bh=WSjghXXj5RCv93+d+YYASkJWE8udPIBp3NShPYm/k5w=;
+ b=dIASvU8LVDsZBwwbBiQgHTJ2tL2WymOiyobyNZyP5KhBooTAjk8dA6ktPnbypDYT6gM4b92lMrARgm3ixkG1pJFVhxXRy11tI6R1l4GZmmI2VbekJcfzulYe34LbaX9QLG42HP8mKJ3h6mlB7U3lav6VmV+j4o5pAjgAey17/7Hu+f4CjNm7EybeJYXcuZvHlTjmWItUWzKiLYikmMshs1r39Wl2F/8Sl8YzWkt1Vz2GynEmSSCTDrYNR/rRtlhm+dO/9T1x6Qy0FBmSx574LPsjBelTX5V0s+Ghp4zQnGzOVOAhhWjIkxvzAyuPP2BhUFFpmbqb1h8P8wD4knUy3w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
+ smtp.mailfrom=math.utexas.edu; dmarc=pass action=none
+ header.from=math.utexas.edu; dkim=pass header.d=math.utexas.edu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=utexas.onmicrosoft.com; s=selector1-utexas-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KVGHZBVgfTZsjc3/G5L6WiP5/zREJKH1uE2IvBfXJzg=;
- b=W4Az21CC+damp7lXGY7VMBPW59F6z83YqnNWW82qyX8tesejG8UVYYKxg3qj3924zdOoDomYzmJFMypdjFgJ6siMTgbh0OxX3oqZxerq/fxeza7+H5OThxp9ykW+ahmM2a6fgpbcQeFtrlo4stVz2rlrVZRUexlTFeJ4TFXJP5g=
-Received: from (2603:10b6:610:21::29) by
- CH2PR13MB3895.namprd13.prod.outlook.com (2603:10b6:610:94::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3784.6; Thu, 21 Jan 2021 20:00:53 +0000
-Received: from CH2PR13MB3525.namprd13.prod.outlook.com
- ([fe80::f453:2dd2:675:d063]) by CH2PR13MB3525.namprd13.prod.outlook.com
- ([fe80::f453:2dd2:675:d063%3]) with mapi id 15.20.3805.006; Thu, 21 Jan 2021
- 20:00:53 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "bcodding@redhat.com" <bcodding@redhat.com>
-Subject: Re: [PATCH v1 04/10] NFS: Keep the readdir pagecache cursor updated
-Thread-Topic: [PATCH v1 04/10] NFS: Keep the readdir pagecache cursor updated
-Thread-Index: AQHW706uPXeu1qrbdUiJKwuBPKUG1aoygaAA
-Date:   Thu, 21 Jan 2021 20:00:53 +0000
-Message-ID: <76fd114e0f4018cf7e00f565759e10acd1f0ba92.camel@hammerspace.com>
-References: <cover.1611160120.git.bcodding@redhat.com>
-         <f803021382040dba38ce8414ed1db8e400c0cc49.1611160121.git.bcodding@redhat.com>
-In-Reply-To: <f803021382040dba38ce8414ed1db8e400c0cc49.1611160121.git.bcodding@redhat.com>
-Accept-Language: en-US, en-GB
+ bh=WSjghXXj5RCv93+d+YYASkJWE8udPIBp3NShPYm/k5w=;
+ b=lFP0EwzxYxRCdnNRm9S3l812/v4f2fBm1DD4wMssEvk+kU1o81bcv6cePqSPr7ERz7pMUIGzo8uV7ECRzQXExQgILwtCykAqB0Cj8C1No/9fUQQYacOTFulFh78dTaDXhtdoQHwnvp1mPmUeNCXEsYyuZKbkE+A7RJgfoJLKLw4=
+Authentication-Results: oracle.com; dkim=none (message not signed)
+ header.d=none;oracle.com; dmarc=none action=none header.from=math.utexas.edu;
+Received: from BYAPR06MB3848.namprd06.prod.outlook.com (2603:10b6:a02:8c::15)
+ by BY5PR06MB6484.namprd06.prod.outlook.com (2603:10b6:a03:23c::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.11; Thu, 21 Jan
+ 2021 20:01:16 +0000
+Received: from BYAPR06MB3848.namprd06.prod.outlook.com
+ ([fe80::a1fb:e18c:8af5:666e]) by BYAPR06MB3848.namprd06.prod.outlook.com
+ ([fe80::a1fb:e18c:8af5:666e%4]) with mapi id 15.20.3784.012; Thu, 21 Jan 2021
+ 20:01:16 +0000
+Subject: Re: nfsd vurlerability submit
+To:     "bfields@fieldses.org" <bfields@fieldses.org>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "wangzhibei1999@gmail.com" <wangzhibei1999@gmail.com>,
+        "security@kernel.org" <security@kernel.org>, "w@1wt.eu" <w@1wt.eu>,
+        "greg@kroah.com" <greg@kroah.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+References: <20210108152017.GA4183@fieldses.org> <20210108152607.GA950@1wt.eu>
+ <20210108153237.GB4183@fieldses.org> <20210108154230.GB950@1wt.eu>
+ <20210111193655.GC2600@fieldses.org>
+ <CAHxDmpR1zG25ADfK2jat4VKGbAOCg6YM_0WA+a_jQE82hbnMjA@mail.gmail.com>
+ <CAHxDmpRfmVukMR_yF4coioiuzrsp72zBraHWZ8gaMydUuLwKFg@mail.gmail.com>
+ <20210112153208.GF9248@fieldses.org>
+ <8296b696a7fa5591ad3fbb05bfcf6bdf6175cc38.camel@hammerspace.com>
+ <42fcbc42-f1b3-5d99-c507-e1b579f5a37a@math.utexas.edu>
+ <20210112180326.GI9248@fieldses.org>
+From:   Patrick Goetz <pgoetz@math.utexas.edu>
+Message-ID: <eb09db3a-9b43-cf03-5db4-3af33cb160e6@math.utexas.edu>
+Date:   Thu, 21 Jan 2021 14:01:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
+In-Reply-To: <20210112180326.GI9248@fieldses.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=hammerspace.com;
-x-originating-ip: [50.124.244.174]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: aba0390c-620f-483b-4bdc-08d8be474249
-x-ms-traffictypediagnostic: CH2PR13MB3895:
-x-microsoft-antispam-prvs: <CH2PR13MB389573DB1E6DF8A69AD3FA4CB8A19@CH2PR13MB3895.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZBNAkHjQ1pgRrRx9sOR6EfOZ1lauDD1k5QVyrRtlTEVSOh52HNTFMWApoPhD9XTU91dgimVT0zX4VhQTDWmx+GPaYwWCVZSELeonRXaFeAhAF6Xq8jdGw4yofOP2FYsHD6f0LEp4qDsfiPnPTU9U7adUqdT9ozAbkjH/zRKZ2BxYQV1Oi78PZoq+ljvpF6rGDAM2qQVQCcsw6fPldSp8jtzuX1Gi0NdypU/dia6XJWjvN/G7HT0sVMcvWafbuDprwvC4yTlmYMvNY0ApGM+94faWtVHTGo8dpzWt865KpaW5UoVcS0u38z20fe3JoVNyLxWdXi6+xqUClEszlSzclVjWBmi0vYvhS6fgzQWXzJEkUdXAl1gshNSyefXkyLXXWinZmeAeU8/8qlRjeFoaQ5sI+kaP5oz/cJ1/jXaHNO52KyHlA0GbNuEZHCk7eJd9PLps0R7c3RLPg5vhL6idDTyPN8Dw+jZ8Dgi41/8GfjYhLku+S1fpM2B1mzu8VBCD2xYdO4LzDFf+wg4MyCI7C1hbEbpT8dVjhoHJ9kw7DMof1gcfWlE8OGe2ym3M2Tf/NwJIYG7BTXf1oF7b+beY9LKqK+UZzJronbzCm6cKpT8=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3525.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(396003)(366004)(39840400004)(136003)(376002)(8936002)(2616005)(5660300002)(6486002)(8676002)(64756008)(36756003)(15974865002)(76116006)(86362001)(6512007)(83380400001)(66476007)(478600001)(15650500001)(110136005)(6506007)(66446008)(186003)(66556008)(66946007)(26005)(2906002)(316002)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?R2gva29qcnQ5M3ptUjNUK2xGS1lVTy82NTRIdmRNTWtPYlhxM25YWkp5OTJQ?=
- =?utf-8?B?SVFLODZFTDk3clF0aHhlSUJzS3JtN3RSR2pqUUx4a0pEOExnWFJlNFVDODR1?=
- =?utf-8?B?dzZ6Y1k3U0lDM0NSaXltMXlTWUxNekRCUUpLbytQc0N5WkFsWDNUNEVMWExz?=
- =?utf-8?B?NFBEOUt1SDJ2bFFDb0M5a0hleUZ3Ym5wcHNOSlg5ODF5RElaVVFPendPdG45?=
- =?utf-8?B?NU1QNmNaT05wZEFMQ0JTeVVLNjJlKytVL09uRnBHQ2xYRkszMEJ5TXRTbTR3?=
- =?utf-8?B?STdib293SVhWc3hEejdaVkZXUHYrZmVxY0Vta1JWams2eVZPSzVtYjBBTW9G?=
- =?utf-8?B?ZHJvbEFTRjFVem13L1lFWEdGT1B2Qm1jQ1lPbUlRU2R4OEI2bS9zT01CTzc1?=
- =?utf-8?B?cC9ORXQyYmZ3RDNBQWNBSitqOGMxMmI0b3d1NXVFOVFkTmlwdk55NU4zWUxW?=
- =?utf-8?B?Y3VqK2Ewd0U2M0FReHpRZmtHdUJJbERaYVdrclZlQ0NreWx1dkpiczU1NXY4?=
- =?utf-8?B?QVRmL0krcWFFaGczME5TK05ZWjdPSW1HTzFwa2NCOWpjbFA4bTEzaU1iREdI?=
- =?utf-8?B?VUxBTktmR1BCek5GaTdmamlialFtWnBaenhqNzNkZnQ1N3N6bnhnVmM0TXQv?=
- =?utf-8?B?MGx6MWtlY04vQm02aGo5RUNpbk5yRDF2RUo0eTNhVkh0UTljS0U4WWZRQnA0?=
- =?utf-8?B?ZEJ5UTczdlZCM0NKb3FvdEVQdWgwYUtSeHN4aGtYT0VOY3Nxc0xPeHJkZTFV?=
- =?utf-8?B?TWU4d2xTZHl2WXNvanRUZDdsb1FHajMrWUdDYm5TKzk4UURSc1hjUnVWOHZj?=
- =?utf-8?B?R1J3QkFBOVJIaUo5WXRXN0Jybm5zblFHNXN1Mzd5QlRYaE5YdXptamVXbWIw?=
- =?utf-8?B?aFhHWjllbW92UnhseWw0OTMyS0NudzFZS0p4WWZIYjl5cWQrM0YrdWV3TWZD?=
- =?utf-8?B?UjlDZ3JQaTRVMmNRdFU1aEVyWDFUU2Yvb1VYeEUrbHRtRnI2RHpmVUVOZXJo?=
- =?utf-8?B?aUJ4TkFBL0NsZzcySDhzYnpuUDNKZkp3UDRFS3FEcm9nU2dCTzk0Q2tNeTQ1?=
- =?utf-8?B?dXd0OUlwSXRnTDNua09TdDhSc1piNUZWVHBYbTFmL3lrQWExUC9waWVCQ0dj?=
- =?utf-8?B?ajBoY3I5a0NSdk9HQXV1YjlLYnBWK2VCM2hxb294MHFTbE5UTjR1c1E0QU4y?=
- =?utf-8?B?KzM5Z09ieFhBY2l6ODlnVTNLdkhuR1BLbzdIS2VZNFBqU1R5LzJkT2dieG1P?=
- =?utf-8?B?dCt3Tlc0dEZMRVRvTmhqVUJidU81UElHcVlnOE4xbkozcGdMeUpZTGFFN2pj?=
- =?utf-8?Q?uiZvOivJ7/7FXZAWY+2f96bNfjt65NlnvU?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <451F0A036B394C4A9CBB97D950E42949@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [67.198.113.142]
+X-ClientProxiedBy: SN4PR0201CA0007.namprd02.prod.outlook.com
+ (2603:10b6:803:2b::17) To BYAPR06MB3848.namprd06.prod.outlook.com
+ (2603:10b6:a02:8c::15)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.7] (67.198.113.142) by SN4PR0201CA0007.namprd02.prod.outlook.com (2603:10b6:803:2b::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3784.12 via Frontend Transport; Thu, 21 Jan 2021 20:01:15 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bf2ad9cc-937a-4bd7-3dc2-08d8be474f86
+X-MS-TrafficTypeDiagnostic: BY5PR06MB6484:
+X-Microsoft-Antispam-PRVS: <BY5PR06MB648415670FB1EA86CCC8B16883A10@BY5PR06MB6484.namprd06.prod.outlook.com>
+X-Utexas-From-ExO: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TLm8wJF60Ce4XUe+uTGGXtssbMILa/J2ft0qBE6WHNlTpbZ2n+EXhdnwkKnK/f52YkDIseIrKQmF2N10a7pi3xhxM/7GIsU4CGnQIJ6fy0KmGFUW08Fg6INp/ejLVViaHG+6DDN3w9axcTkjkjuyrQG+Z1Qrhx4cKQ4vcGBlQVwRCWUb3eRnCAx7oMY31Y7Ug6VMCrTiC6sZSkIabYq36QEZnxFA0GDBaAxGgAnhiAGCT5acSjZYgnzIfbW1kuuyZhxPbmsvRf7/ydKt9f3BpeE2lpz7N77tK6vAWwXfWneWfU9Nmq+e6lXbaIzK5zAmMlPa7G3XhNlnDzoHiy7VcgIams5As4sBR14IY5LNFlqfqPosYFygqyJLDkouhTDv42Hyfc6COTsm2lwt/McRZAnX+JoCX6wy0AvUbunxKFs1LjmRayu4FV/q2ONQWp3ak8KmgjXAmvzfZ9ko90hKrpjmhRv9mngkmi2kylkVVUTL7pTGO6CwRwdfZIrPKUDKsJ5QXHwP3GUtUk4bJ1VHMygF9bzBMGE+JbYL6kv7ID86BDFVrMoVR2ddw6KsPoYm
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR06MB3848.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(396003)(39860400002)(136003)(366004)(31686004)(8676002)(2906002)(316002)(2616005)(26005)(6916009)(54906003)(6486002)(4326008)(956004)(966005)(786003)(7116003)(16526019)(53546011)(31696002)(86362001)(52116002)(83380400001)(8936002)(186003)(75432002)(66556008)(478600001)(66946007)(3480700007)(5660300002)(16576012)(66476007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?Sk1NWHNzUnJqN1ZNb3oyZHBlQ1k1b3lHZUgzMmFEZWlLZTNIQndKcngxWG4z?=
+ =?utf-8?B?TUxKTGJxNEFXY0xwNUpDclRpK2xwQzg0OGhqMEp3VGZQWWI5MERTVUkzODgr?=
+ =?utf-8?B?THNVMzlqamxOZ1NHVXlwcTlDOUZweUNLUHRpZFFGZFYxMHRuZVhURUhPdVdC?=
+ =?utf-8?B?Tkg0NDdZSldSNGRwMkw4WERLczIrZVF2TEFhQWpzTENUQkxXMDdRcDJOdzQx?=
+ =?utf-8?B?RUpNdUtPN2JBeTVzNjBPb2Y1QmtrSUx5Qm4wWlUvbys0MXpBNkM5MStzKzdu?=
+ =?utf-8?B?eW90MEdwdVJIVDJMVVg4ZUxERWRJN1RIbkZhSGhONGxmUEhONzJKdkFObWxz?=
+ =?utf-8?B?TEo2amR5MGZlRUNJRUd3Y2srZmRNSHB2alBWU3ZZMUZCcS95YlhyMHU2endD?=
+ =?utf-8?B?bTBNeTRUMlBVd1I0N1BuVGZQTE1naVFtdFBPSGQ3L1dZdFBrdGFBaVdrL0pu?=
+ =?utf-8?B?b1ZLWHd5Nmd6UVB0VU03U0IvUHpGTi9Nd0hKeTZwdjdGZEpDbVpnaE90a1po?=
+ =?utf-8?B?VkFCamRYcHliZUZVeHNDSmNWMUJEKzUvY3ZraXFuRUN3aGUwRG5KZlRiOXdK?=
+ =?utf-8?B?VzlrTGx4UU9iMnpRQjBTdWhyWjhkbUJSWTYzSW5jaHgzeXppY2g3TFFtWUtj?=
+ =?utf-8?B?T1BldFlQb0NOcHU2ZXJzeUxxTjJZR1U3cFlnelJjNzIzaVN5SXB1dVFJUHR3?=
+ =?utf-8?B?VTlIL1JMRDYvUXU0TnBoaDRWRHF2dE96TnpYVnQzVHF1dGgyU3VOeGtpWTVs?=
+ =?utf-8?B?T1FNS3JaVFhWK2l4REVUbjN6NEEwV0tYYkl4aXdZcXFrelZxKy9mdFErME5P?=
+ =?utf-8?B?blBscDRibUh5cy94bzRrSzBFTXlzb05IR01LcmkyVytIZUZEVi8yMlMwMHht?=
+ =?utf-8?B?RjRrNU1EYmpTM3B0RTVmNVdlZnJkVEN6VjlZVmpZZlJWWGQwM1ozOG9PSVdh?=
+ =?utf-8?B?TDJ6dmxZN0kzRE5pQU1zKzJ1QnhzcGpSZkg3bWhRbzhHWFM0bG1Zd2ljUTlt?=
+ =?utf-8?B?YzJUNnBNTFNFM1hqNExZdWd6NXQ4Y0dNazhDNExMOVNsR0pKQnQ0dUgxcWIx?=
+ =?utf-8?B?WHJLbTNyZ1pqTDlva2hQVkFWSnAxVkt4OUZUcnhjVVpwWXc2ZThVZTRzVWZF?=
+ =?utf-8?B?YmIrakRFMmdTMDBuaG42U1NvTUVzUzh3ejNmZWNtb2lPQXNRRkM0cEVZSWN4?=
+ =?utf-8?B?NVVvV0IrTzdicWh4UFRzUnJYVHFBbk5Vb1BmbjBHdC9TZ3NVSGZvSllyb25l?=
+ =?utf-8?B?NzBPQWhlMW1XWFlLL29JQU9LUjU4Q0V5cmc3VXJndXcvSW1xa0p4VzNrN2hw?=
+ =?utf-8?Q?KwL3M4SVvUM+H1Nqkyl0P/qutfclRdhWFL?=
+X-OriginatorOrg: math.utexas.edu
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf2ad9cc-937a-4bd7-3dc2-08d8be474f86
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR06MB3848.namprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR13MB3525.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aba0390c-620f-483b-4bdc-08d8be474249
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2021 20:00:53.6230
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2021 20:01:16.0627
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +zZ1posX+vvJ+GNGHEsWwXkoXC3Mxst5+bxHItVR3mEyGiCyJfvUkiR4lhs3iTiviS6KgBax3FZSfdwTD/boOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3895
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 31d7e2a5-bdd8-414e-9e97-bea998ebdfe1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UzRagf5zF56fA6k00L+1ISj3JIv8D+jGVv5qClDxN913MH2slWAALBjUiQ1zf2D57nqsrW5P6IcY5HY8NjP69w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR06MB6484
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIxLTAxLTIwIGF0IDExOjU5IC0wNTAwLCBCZW5qYW1pbiBDb2RkaW5ndG9uIHdy
-b3RlOg0KPiBXaGVuZXZlciB3ZSBzdWNjZXNzZnVsbHkgbG9jYXRlIG91ciBkaXJfY29va2llIHdp
-dGhpbiB0aGUgcGFnZWNhY2hlLA0KPiBvcg0KPiBmaW5pc2ggZW1pdHRpbmcgZW50cmllcyB0byB1
-c2Vyc3BhY2UsIHVwZGF0ZSB0aGUgcGFnZWNhY2hlIGN1cnNvci7CoA0KPiBUaGVzZQ0KPiB1cGRh
-dGVzIHByb3ZpZGUgbWFya2VyIHBvaW50cyB0byB2YWxpZGF0ZSBwYWdlY2FjaGUgcGFnZXMgaW4g
-YSBmdXR1cmUNCj4gcGF0Y2guDQoNCkhvdyBpc24ndCB0aGlzIGdvaW5nIHRvIGVuZCB1cCBzdWJq
-ZWN0IHRvIHRoZSBleGFjdCBzYW1lIHByb2JsZW0gdGhhdA0KRGF2ZSBXeXNvY2hhbnNraSdzIHBh
-dGNoc2V0IGhhZD8NCg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQmVuamFtaW4gQ29kZGluZ3RvbiA8
-YmNvZGRpbmdAcmVkaGF0LmNvbT4NCj4gLS0tDQo+IMKgZnMvbmZzL2Rpci5jIHwgMjkgKysrKysr
-KysrKysrKysrKysrKysrKysrKy0tLS0NCj4gwqAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9u
-cygrKSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9mcy9uZnMvZGlyLmMgYi9m
-cy9uZnMvZGlyLmMNCj4gaW5kZXggNjYyNmFmZjlmNTRkLi43ZjZjODRjOGE0MTIgMTAwNjQ0DQo+
-IC0tLSBhL2ZzL25mcy9kaXIuYw0KPiArKysgYi9mcy9uZnMvZGlyLmMNCj4gQEAgLTE1MCw2ICsx
-NTAsMTAgQEAgc3RydWN0IG5mc19jYWNoZV9hcnJheSB7DQo+IMKgwqDCoMKgwqDCoMKgwqBzdHJ1
-Y3QgbmZzX2NhY2hlX2FycmF5X2VudHJ5IGFycmF5W107DQo+IMKgfTsNCj4gwqANCj4gK3N0YXRp
-YyBjb25zdCBpbnQgY2FjaGVfZW50cmllc19wZXJfcGFnZSA9DQo+ICvCoMKgwqDCoMKgwqDCoChQ
-QUdFX1NJWkUgLSBzaXplb2Yoc3RydWN0IG5mc19jYWNoZV9hcnJheSkpIC8NCj4gK8KgwqDCoMKg
-wqDCoMKgc2l6ZW9mKHN0cnVjdCBuZnNfY2FjaGVfYXJyYXlfZW50cnkpOw0KPiArDQo+IMKgc3Ry
-dWN0IG5mc19yZWFkZGlyX2Rlc2NyaXB0b3Igew0KPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IGZp
-bGXCoMKgwqDCoMKgKmZpbGU7DQo+IMKgwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgcGFnZcKgwqDCoMKg
-wqAqcGFnZTsNCj4gQEAgLTI1MSw2ICsyNTUsMjEgQEAgc3RhdGljIGJvb2wgbmZzX3JlYWRkaXJf
-YXJyYXlfaXNfZnVsbChzdHJ1Y3QNCj4gbmZzX2NhY2hlX2FycmF5ICphcnJheSkNCj4gwqDCoMKg
-wqDCoMKgwqDCoHJldHVybiBhcnJheS0+cGFnZV9mdWxsOw0KPiDCoH0NCj4gwqANCj4gK3N0YXRp
-YyB2b2lkIG5mc19yZWFkZGlyX3NldF9jdXJzb3Ioc3RydWN0IG5mc19yZWFkZGlyX2Rlc2NyaXB0
-b3INCj4gKmRlc2MsIGludCBpbmRleCkNCj4gK3sNCj4gK8KgwqDCoMKgwqDCoMKgZGVzYy0+cGdj
-LmVudHJ5X2luZGV4ID0gaW5kZXg7DQo+ICvCoMKgwqDCoMKgwqDCoGRlc2MtPnBnYy5pbmRleF9j
-b29raWUgPSBkZXNjLT5kaXJfY29va2llOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgdm9pZCBuZnNf
-cmVhZGRpcl9jdXJzb3JfbmV4dChzdHJ1Y3QgbmZzX2Rpcl9wYWdlX2N1cnNvciAqcGdjLA0KPiB1
-NjQgY29va2llKQ0KPiArew0KPiArwqDCoMKgwqDCoMKgwqBwZ2MtPmluZGV4X2Nvb2tpZSA9IGNv
-b2tpZTsNCj4gK8KgwqDCoMKgwqDCoMKgaWYgKCsrcGdjLT5lbnRyeV9pbmRleCA9PSBjYWNoZV9l
-bnRyaWVzX3Blcl9wYWdlKSB7DQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwZ2Mt
-PmVudHJ5X2luZGV4ID0gMDsNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBnYy0+
-cGFnZV9pbmRleCsrOw0KPiArwqDCoMKgwqDCoMKgwqB9DQo+ICt9DQo+ICsNCj4gwqAvKg0KPiDC
-oCAqIHRoZSBjYWxsZXIgaXMgcmVzcG9uc2libGUgZm9yIGZyZWVpbmcgcXN0ci5uYW1lDQo+IMKg
-ICogd2hlbiBjYWxsZWQgYnkgbmZzX3JlYWRkaXJfYWRkX3RvX2FycmF5LCB0aGUgc3RyaW5ncyB3
-aWxsIGJlDQo+IGZyZWVkIGluDQo+IEBAIC00MjQsNyArNDQzLDcgQEAgc3RhdGljIGludCBuZnNf
-cmVhZGRpcl9zZWFyY2hfZm9yX3BvcyhzdHJ1Y3QNCj4gbmZzX2NhY2hlX2FycmF5ICphcnJheSwN
-Cj4gwqANCj4gwqDCoMKgwqDCoMKgwqDCoGluZGV4ID0gKHVuc2lnbmVkIGludClkaWZmOw0KPiDC
-oMKgwqDCoMKgwqDCoMKgZGVzYy0+ZGlyX2Nvb2tpZSA9IGFycmF5LT5hcnJheVtpbmRleF0uY29v
-a2llOw0KPiAtwqDCoMKgwqDCoMKgwqBkZXNjLT5wZ2MuZW50cnlfaW5kZXggPSBpbmRleDsNCj4g
-K8KgwqDCoMKgwqDCoMKgbmZzX3JlYWRkaXJfc2V0X2N1cnNvcihkZXNjLCBpbmRleCk7DQo+IMKg
-wqDCoMKgwqDCoMKgwqByZXR1cm4gMDsNCj4gwqBvdXRfZW9mOg0KPiDCoMKgwqDCoMKgwqDCoMKg
-ZGVzYy0+ZW9mID0gdHJ1ZTsNCj4gQEAgLTQ5Miw3ICs1MTEsNyBAQCBzdGF0aWMgaW50IG5mc19y
-ZWFkZGlyX3NlYXJjaF9mb3JfY29va2llKHN0cnVjdA0KPiBuZnNfY2FjaGVfYXJyYXkgKmFycmF5
-LA0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBlbHNl
-DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqBkZXNjLT5jdHgtPnBvcyA9IG5ld19wb3M7DQo+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRlc2MtPnByZXZfaW5kZXggPSBuZXdfcG9z
-Ow0KPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRlc2Mt
-PnBnYy5lbnRyeV9pbmRleCA9IGk7DQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgbmZzX3JlYWRkaXJfc2V0X2N1cnNvcihkZXNjLCBpKTsNCj4gwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIDA7DQo+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfQ0KPiDCoMKgwqDCoMKgwqDCoMKgfQ0KPiBA
-QCAtNTE5LDkgKzUzOCw5IEBAIHN0YXRpYyBpbnQgbmZzX3JlYWRkaXJfc2VhcmNoX2FycmF5KHN0
-cnVjdA0KPiBuZnNfcmVhZGRpcl9kZXNjcmlwdG9yICpkZXNjKQ0KPiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoHN0YXR1cyA9IG5mc19yZWFkZGlyX3NlYXJjaF9mb3JfY29va2llKGFy
-cmF5LCBkZXNjKTsNCj4gwqANCj4gwqDCoMKgwqDCoMKgwqDCoGlmIChzdGF0dXMgPT0gLUVBR0FJ
-Tikgew0KPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGVzYy0+cGdjLmluZGV4X2Nv
-b2tpZSA9IGFycmF5LT5sYXN0X2Nvb2tpZTsNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoGRlc2MtPnBnYy5lbnRyeV9pbmRleCA9IGFycmF5LT5zaXplIC0gMTsNCj4gK8KgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoG5mc19yZWFkZGlyX2N1cnNvcl9uZXh0KCZkZXNjLT5wZ2Ms
-IGFycmF5LQ0KPiA+bGFzdF9jb29raWUpOw0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoGRlc2MtPmN1cnJlbnRfaW5kZXggKz0gYXJyYXktPnNpemU7DQo+IC3CoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqBkZXNjLT5wZ2MucGFnZV9pbmRleCsrOw0KPiDCoMKgwqDCoMKgwqDC
-oMKgfQ0KPiDCoMKgwqDCoMKgwqDCoMKga3VubWFwX2F0b21pYyhhcnJheSk7DQo+IMKgwqDCoMKg
-wqDCoMKgwqByZXR1cm4gc3RhdHVzOw0KPiBAQCAtMTAzNSw2ICsxMDU0LDggQEAgc3RhdGljIHZv
-aWQgbmZzX2RvX2ZpbGxkaXIoc3RydWN0DQo+IG5mc19yZWFkZGlyX2Rlc2NyaXB0b3IgKmRlc2Mp
-DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGVzYy0+ZW9mID0gdHJ1ZTsNCj4g
-wqANCj4gwqDCoMKgwqDCoMKgwqDCoGt1bm1hcChkZXNjLT5wYWdlKTsNCj4gK8KgwqDCoMKgwqDC
-oMKgZGVzYy0+cGdjLmVudHJ5X2luZGV4ID0gaS0xOw0KPiArwqDCoMKgwqDCoMKgwqBuZnNfcmVh
-ZGRpcl9jdXJzb3JfbmV4dCgmZGVzYy0+cGdjLCBkZXNjLT5kaXJfY29va2llKTsNCj4gwqDCoMKg
-wqDCoMKgwqDCoGRmcHJpbnRrKERJUkNBQ0hFLCAiTkZTOiBuZnNfZG9fZmlsbGRpcigpIGZpbGxp
-bmcgZW5kZWQgQA0KPiBjb29raWUgJWxsdVxuIiwNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgKHVuc2lnbmVkIGxvbmcgbG9uZylkZXNjLT5kaXJfY29v
-a2llKTsNCj4gwqB9DQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpDVE8sIEhhbW1lcnNwYWNlIElu
-Yw0KNDk4NCBFbCBDYW1pbm8gUmVhbCwgU3VpdGUgMjA4DQpMb3MgQWx0b3MsIENBIDk0MDIyDQri
-gIsNCnd3dy5oYW1tZXIuc3BhY2UNCg0K
+See below.
+
+On 1/12/21 12:03 PM, bfields@fieldses.org wrote:
+> On Tue, Jan 12, 2021 at 11:20:28AM -0600, Patrick Goetz wrote:
+>> I was under the impression that the best practice is to create
+>> something along the lines of
+>>
+>>    /srv/nfs
+>>
+>> and then bind mount everything you plan to export into that folder; e.g.
+>>
+>> /etc/fstab:
+>> /data2/xray      /srv/nfs/xray        none    defaults,bind    0
+> 
+> You can do that if you'd like.  I doesn't make much difference here.
+> 
+> You can think of a filehandle as just a (device number, inode number)
+> pair.  (It's actually more complicated, but ignore that for now.)
+> 
+> So if the server's given a filehandle, it can easily determine the
+> filehandle is for an object on /dev/sda2.  It *cannot* easily determine
+> whether that object is somewhere underneath /some/directory.
+> 
+> So in your example, if /data2/xray is on the same filesystem as /data2,
+> then the server will happily allow operations on filehandles anywhere in
+> /data2.
+> 
+> Every export point should be the root of a filesystem.
+> 
+> --b.
+> 
+
+I didn't respond to this message immediately, but it's been bothering me 
+ever since. When I do a bind mount like this in /etc/fstab:
+
+   /data2/xray      /srv/nfs/xray        none    defaults,bind    0
+
+it's my understanding that the kernel keeps track of the resulting 
+/srv/nfs/xray filesystem in it's vfs somehow.  Even when directly on the 
+server I can't "break out" of /srv/nfs/xray to get to the other 
+directories in /data.  Then how on earth would an NFS client do this?
+
+I thought the whole point of doing a bind mount like this is to solve 
+the problem of exporting leaves of a directory hierarchy. In particular,
+
+   "So in your example, if /data2/xray is on the same filesystem as
+   /data2, then the server will happily allow operations on
+   filehandles anywhere in /data2."
+
+Yes, sure; but I'm not exporting /data2/xray; I'm exporting 
+/srv/nfs/xray, a bind mount to the preceding.  Am I missing something, 
+or is NFS too insecure to use in any context requiring differentiated 
+security settings on different folders in the same directory structure? 
+  It's not practical to making everything you export its own partition; 
+although I suppose one could do this with ZFS datasets.
+
+
+>>
+>> Presumably this becomes a non-issue under these circumstances? Not
+>> sure it's a good idea to attempt to accommodate every wacky use case
+>> someone attempts to implement.
+>>
+>>
+>> On 1/12/21 10:53 AM, Trond Myklebust wrote:
+>>> On Tue, 2021-01-12 at 10:32 -0500, J. Bruce Fields wrote:
+>>>> On Tue, Jan 12, 2021 at 10:48:00PM +0800, 吴异 wrote:
+>>>>> Telling users how to configure the exported file system in the most
+>>>>> secure
+>>>>> way does
+>>>>> mitigate the problem to some extent, but this does not seem to
+>>>>> address the
+>>>>> security risks posed by no_ subtree_ check in the code. In my
+>>>>> opinion,when
+>>>>> the generated filehandle does not contain the inode information of
+>>>>> the
+>>>>> parent directory,the nfsd_acceptable function can also recursively
+>>>>> determine whether the request file exceeds the export path
+>>>>> dentry.Enabling
+>>>>> subtree_check to add parent directory information only brings some
+>>>>> troubles.
+>>>>
+>>>> Filesystems don't necessarily provide us with an efficient way to
+>>>> find
+>>>> parent directories from any given file.  (And note a single file may
+>>>> have multiple parent directories.)
+>>>>
+>>>> (I do wonder if we could do better in the directory case, though.  We
+>>>> already reconnect directories all the way back up to the root.)
+>>>>
+>>>>> I have a bold idea, why not directly remove the file handle
+>>>>> modification in
+>>>>> subtree_check, and then normalize the judgment of whether dentry
+>>>>> exceeds
+>>>>> the export point directory in nfsd_acceptable (line 38 to 54 in
+>>>>> /fs/nfsd/nfsfh.c) .
+>>>>>
+>>>>> As far as I understand it, the reason why subtree_check is not
+>>>>> turned on by
+>>>>> default is that it will cause problems when reading and writing
+>>>>> files,
+>>>>> rather than it wastes more time when nfsd_acceptable.
+>>>>>
+>>>>> In short,I think it's open to question whether the security of the
+>>>>> system
+>>>>> depends on the user's complete correct configuration(the system
+>>>>> does not
+>>>>> prohibit the export of a subdirectory).
+>>>>
+>>>>> Enabling subtree_check to add parent directoryinformation only
+>>>>> brings
+>>>>> some troubles.
+>>>>>
+>>>>> In short,I think it's open to question whether the security of the
+>>>>> system depends on the user's complete correct configuration(the
+>>>>> system
+>>>>> does not prohibit the export of a subdirectory).
+>>>>
+>>>> I'd love to replace the export interface by one that prohibited
+>>>> subdirectory exports (or at least made it more obvious where they're
+>>>> being used.)
+>>>>
+>>>> But given the interface we already have, that would be a disruptive
+>>>> and
+>>>> time-consuming change.
+>>>>
+>>>> Another approach is to add more entropy to filehandles so they're
+>>>> harder
+>>>> to guess; see e.g.:
+>>>>
+>>>>          https://www.fsl.cs.stonybrook.edu/docs/nfscrack-tr/index.html
+>>>>
+>>>> In the end none of these change the fact that a filehandle has an
+>>>> infinite lifetime, so once it's leaked, there's nothing you can do.
+>>>> The
+>>>> authors suggest NFSv4 volatile filehandles as a solution to that
+>>>> problem, but I don't think they've thought through the obstacles to
+>>>> making volatile filehandles work.
+>>>>
+>>>> --b.
+>>>
+>>> The point is that there is no good solution to the 'I want to export a
+>>> subtree of a filesystem' problem, and so it is plainly wrong to try to
+>>> make a default of those solutions, which break the one sane case of
+>>> exporting the whole filesystem.
+>>>
+>>> Just a reminder that we kicked out subtree_check not only because a
+>>> trivial rename of a file breaks the client's ability to perform I/O by
+>>> invalidating the filehandle. In addition, that option causes filehandle
+>>> aliasing (i.e. multiple filehandles pointing to the same file) which is
+>>> a major PITA for clients to try to manage for more or less the same
+>>> reason that it is a major PITA to try to manage these files using
+>>> paths.
+>>>
+>>> The discussion on volatile filehandles in RFC5661 does try to address
+>>> some of the above issues, but ends up concluding that you need to
+>>> introduce POSIX-incompatible restrictions, such as trying to ban
+>>> renames and deletions of open files in order to make it work.
+>>>
+>>> None of these compromises are necessary if you export a whole
+>>> filesystem (or a hierarchy of whole filesystems). That's the sane case.
+>>> That's the one that people should default to using.
+>>>
