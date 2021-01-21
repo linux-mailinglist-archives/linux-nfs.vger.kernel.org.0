@@ -2,112 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C820A2FF2AA
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 19:00:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B21C2FF2A8
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 19:00:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733269AbhAUR7T (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Jan 2021 12:59:19 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:28489 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389466AbhAUR6v (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 12:58:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611251838;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ldOFrN+medeAuQ19Km3Q/ag9cNAWn5zQXjM83eZLV2E=;
-        b=G2pa8U/DVXT7kbGOtdAdwW2f/dHVb3gyW0hnGPk5QOsVkEhOkEWck/UWvrPqo+Mi4ODgBl
-        zzNkY0B20fnWTGuCUp6I2+SvsUY/2yBMu9Qs/3Fs/LnKAqsrJOyVIQaaB4YbLLfCQWQ+Ui
-        UvI/VQ1gITeGYdrCHMH9hgY+bN65ijk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-405-o7NLf_WUNTaTfNhfVsElzg-1; Thu, 21 Jan 2021 12:57:14 -0500
-X-MC-Unique: o7NLf_WUNTaTfNhfVsElzg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC67715720;
-        Thu, 21 Jan 2021 17:57:13 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-130.rdu2.redhat.com [10.10.64.130])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 722465D9C6;
-        Thu, 21 Jan 2021 17:57:13 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Anna Schumaker" <schumaker.anna@gmail.com>
-Cc:     "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v1 07/10] NFS: Support headless readdir pagecache pages
-Date:   Thu, 21 Jan 2021 12:57:12 -0500
-Message-ID: <4DE5379B-E52D-4C94-8701-29FEFCE8C438@redhat.com>
-In-Reply-To: <CAFX2Jf=Kg+fbxSfgJ_Kzxe6LerQ8RcZu_8AYp2JFF4THDfy8fQ@mail.gmail.com>
-References: <cover.1611160120.git.bcodding@redhat.com>
- <7394b4d348d0c92b64cd0fb4fbf74bfa6e676d24.1611160121.git.bcodding@redhat.com>
- <CAFX2Jf=Kg+fbxSfgJ_Kzxe6LerQ8RcZu_8AYp2JFF4THDfy8fQ@mail.gmail.com>
+        id S2389349AbhAUR7u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Jan 2021 12:59:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389088AbhAUR7g (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 12:59:36 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ECA1C06174A
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 09:58:56 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 4ED1B6E97; Thu, 21 Jan 2021 12:58:55 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 4ED1B6E97
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1611251935;
+        bh=GSxga6nu7gUqvEO2XRJagz45lU4jbVdHeuCtDM5A2pQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y1NSxaS5KPSbU+lLeXHmQoSbK5E+6KVmq8bKoh0a//WtMR4gku9TBDLmSynrUBz+7
+         leLm6/jlWHIexEfxOZMUBNEbkTgvCFnAuTMsHt4g3tjUDOVas6tlEK34NPDuEWXbCC
+         f5saHl3x3aGNvlZU6ZzCls/PJF85aEmKBAE4p7nQ=
+Date:   Thu, 21 Jan 2021 12:58:55 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Benjamin Maynard <benmaynard@google.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: Linux 5.11 Kernel: NFS re-export errors with older nfs-utils
+ package versions
+Message-ID: <20210121175855.GC20964@fieldses.org>
+References: <CA+QRt4vb=DjgcOqGLtfdfKiDaqKED825xNpNyQaaK-df5tCSRQ@mail.gmail.com>
+ <20210119180204.GA24213@fieldses.org>
+ <CA+QRt4sxwMTTWpropg=O=XdJ42P+2H=jbrwC8E1n=gt+je6iXQ@mail.gmail.com>
+ <20210121153709.GA18310@fieldses.org>
+ <CA+QRt4u8eAX6F7RuR-yORULCatrEJdorZbKKDnDHZAPx+Y=wUA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+QRt4u8eAX6F7RuR-yORULCatrEJdorZbKKDnDHZAPx+Y=wUA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 21 Jan 2021, at 12:24, Anna Schumaker wrote:
+On Thu, Jan 21, 2021 at 05:46:31PM +0000, Benjamin Maynard wrote:
+> That makes sense, and thanks for explaining.
+> 
+> Seeing as the error message does not immediately point to an outdated
+> nfs-utils version would we be able to add a note to the Wiki
+> (http://wiki.linux-nfs.org/wiki/index.php/NFS_re-export) to help
+> others that may come across this issue?
 
-> Hi Ben,
->
-> On Wed, Jan 20, 2021 at 12:04 PM Benjamin Coddington
-> <bcodding@redhat.com> wrote:
->>
->> It is now possible that a reader will resume a directory listing 
->> after an
->> invalidation and fill the rest of the pages with the offset left over 
->> from
->> the last partially-filled page.  These pages will then be recycled 
->> and
->> refilled by the next reader since their alignment is incorrect.
->>
->> Add an index to the nfs_cache_array that will indicate where the next 
->> entry
->> should be filled.  This allows partially-filled pages to have the 
->> best
->> alignment possible.  They are more likely to be useful to readers 
->> that
->> follow.
->>
->> This optimization targets the case when there are multiple processes
->> listing the directory simultaneously.  Often the processes will 
->> collect and
->> block on the same page waiting for a READDIR call to fill the 
->> pagecache.
->> If the pagecache is invalidated, a partially-filled page will usually
->> result.  This partially-filled page can immediately be used by all
->> processes to emit entries rather than having to discard and refill it 
->> for
->> every process.
->>
->> The addition of another integer to struct nfs_cache_array increases 
->> its
->> size to 24 bytes. We do not lose the original capacity of 127 entries 
->> per
->> page.
->
-> This patch causes cthon basic test #6 to start failing with unexpected
-> dir entries across all NFS versions:
->
->   ./test6: readdir
->   basic tests failed
->       ./test6: (/mnt/test/anna/Connectathon/cthon04) unexpected dir 
-> entry 'h'
+Yep, done.
 
-Ah, yes -- because we /must/ revalidate before using any cached pages.  
-I
-think this test unlinks files and that would be a breakage.
+> It looks like the Wiki is locked down to registered collaborators
+> otherwise I would add it myself.
 
-> Luckily, the next patch seems to resolve this issue. Could they maybe
-> be squashed together?
+The log in page has a link to the form to request an account.
 
-Yes, they should be squashed - I'll do that in another pass.  I'd like 
-to
-get rid of uncached_readdir() altogether and then send another version.
-Thanks for the test!
+I think those requests are routinely granted, it's just there to deal
+with spam.
 
-Ben
+--b.
 
+> 
+> Kind regards
+> Benjamin Maynard
+> 
+> 
+> On Thu, 21 Jan 2021 at 15:37, J. Bruce Fields <bfields@fieldses.org> wrote:
+> >
+> > On Thu, Jan 21, 2021 at 11:21:56AM +0000, Benjamin Maynard wrote:
+> > > That is correct, there is an originating NFS Server (Ubuntu 20.04 -
+> > > 5.4.0-1034-gcp) that is exporting a directory from the local ext4
+> > > filesystem. This is exported with the following options:
+> > >
+> > > /files 10.0.0.0/8(rw,no_subtree_check,fsid=10)
+> > >
+> > > This is then mounted from the re-exporting server (export from /proc/mounts):
+> > >
+> > > 10.70.1.2:/files /files nfs
+> > > rw,sync,noatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,acregmin=600,acregmax=600,acdirmin=600,acdirmax=600,hard,nocto,proto=tcp,nconnect=16,timeo=600,retrans=2,sec=sys,mountaddr=10.70.1.2,mountvers=3,mountport=20048,mountproto=udp,fsc,local_lock=none,addr=10.70.1.2
+> > > 0 0
+> > >
+> > > We then attempt to re-export the mounted directory from the
+> > > re-exporting server with the following entry in /etc/exports:
+> > >
+> > > /files   10.67.0.0/16(rw,wdelay,no_root_squash,no_subtree_check,fsid=10,sec=sys,rw,secure,no_root_squash,no_all_squash)
+> > >
+> > > If you perform this set of steps with the 5.10 kernel with nfs-utils
+> > > 1.3.4 (Ubuntu & Debian default version), the re-export will work. If
+> > > you perform the same set of steps with the ba5e8187c555 patch applied
+> > > (still on nfs-utils 1.3.4) then the re-export will fail with the error
+> > > message "exportfs: /files does not support NFS export". dmesg further
+> > > reveals the cause "check_export: nfs does not support subtree
+> > > checking!".
+> > >
+> > > This message appears even though we have no_subtree_check set on both
+> > > the exports of the originating NFS server, and the re-export server.
+> > >
+> > > If you then upgrade nfs-utils to 2.5.2 on the re-export server, the
+> > > re-export works as expected.
+> >
+> > Oh, got it, looks like the bug fixed by nfs-utils commit 63f520e8f6f5
+> > "exportfs: Make sure pass all valid export flags to nfsd".
+> >
+> > Rough explanation: export information isn't normally passed down to the
+> > kernel when exportfs is called.  Instead the kernel waits till it needs
+> > to know about some new client and/or filesystem and calls up to mountd
+> > to ask for the relevant export entry.
+> >
+> > Anyway, that's fine but it means the user doesn't find about errors
+> > right away.
+> >
+> > So, trying to be helpful, exportfs actually does pass down a dummy
+> > export to the kernel at exportfs time, just to check for errors like a
+> > typo'd export path or an unexportable filesystem.
+> >
+> > Before that fix, it passed down that dumy export without the
+> > "no_subtree_check" flag, even when you set that flag.
+> >
+> > So, for nfs reexport, you need an nfs-utils new enough to include that
+> > patch.
+> >
+> > We're normally pretty strict about kernel regressions: if something
+> > stopped working on kernel upgrade, that's a bug.  But I think we really
+> > do need to fail attempts to re-export NFS with subtree checking, so
+> > we've got to make an exception here.  Re-export is still a bit of an
+> > experimental feature, so there may be hiccups like this.
+> >
+> > --b.
