@@ -2,216 +2,244 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E7292FF158
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 18:07:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D6B82FF1D1
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 18:26:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388413AbhAURGZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Jan 2021 12:06:25 -0500
-Received: from mail-dm6nam10on2105.outbound.protection.outlook.com ([40.107.93.105]:63756
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730613AbhAURGP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 21 Jan 2021 12:06:15 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c+UDjdJJPU90I83ezxzeswipX1GbrZYGEJYrNXkzRMMG0mH+07IqEg/BiFUbHI11TDtm0k1yjfXo+6lq0ABNP88sGfMX1s0BPZ76xLzewrwyh4PDsdpM5qDrkII7a47OXKP+fV60SV80uwH3emdgR5VPb70j/qcsdiHNxTHuijSJLFP9hk+PCD1geoTitfdM4NnGeNI62eameDIIc6GEQq2fl5Z5qtTzTT5X1txBbEmJuv2eZMoxLlNx0BmX+a4U5iQ/FQRTI//9/XmQG5fo/msWm1QX6xMEP3pKSKZyV3IBJ16Ernclien9N2Cs3z3v1lH9upgFKu9CHglSBfQIYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=moK76GuXCu2eeDgUoPIsWrpXatuHp2C+eHp2qPyQZcY=;
- b=HMgo0vyeBjxgM0DpIu0mg1vEdcgMuhFIcKge4b0XbKluPn+VK1c0LRZ4F/UD2ynHSoL0j2WaCmMv1zoYsUBBuX8fbPrpuaa8rTyaXxwoEz9teD7OQX7CcQyA+S64VdJsSSRH2E4PLS1ovC9AAZlOEqtjXJeDgu0aDF+omu6RRkc4EPREjpai2Xj8Z05inPjc5qF6wgEYq9jJ+G83BAlo4z+0q6ISyL5y2HO6MWCNKnB8kdYumMwFgjlOMHytMd9duf1EbIDfLqt0INxfj8h3kIbVPC3/AeHlp71/IhDwbL9aoVpO5EdyWJEAonYT1Xb6CIqcaRdiGvD98bFVchdEAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=moK76GuXCu2eeDgUoPIsWrpXatuHp2C+eHp2qPyQZcY=;
- b=XbKJg7PLh/6TMlyoR1x0oq0bXrloCBBFXTV3CC6CfYZF2h0qC2GfIsJDgEJXnSvMI/JlB1dLUBd8OiN+O/pTKNsr3AcdLahTIKnSxF1j9m9lB5fdEcm7S99SrMWaO+IJcvrytuRD8AdELdtlrEFl0OIQ+c9R8RtmpfTidrtqMFE=
-Received: from (2603:10b6:610:21::29) by
- CH2PR13MB3830.namprd13.prod.outlook.com (2603:10b6:610:9e::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3805.6; Thu, 21 Jan 2021 17:05:21 +0000
-Received: from CH2PR13MB3525.namprd13.prod.outlook.com
- ([fe80::f453:2dd2:675:d063]) by CH2PR13MB3525.namprd13.prod.outlook.com
- ([fe80::f453:2dd2:675:d063%3]) with mapi id 15.20.3805.006; Thu, 21 Jan 2021
- 17:05:21 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "dwysocha@redhat.com" <dwysocha@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        id S2388272AbhAUR0l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Jan 2021 12:26:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44060 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387848AbhAURZ0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 12:25:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611249839;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SZ8LycJ+F4Sr8OUibD8MTW+9AWyXf4FxW/0wGLz0O/0=;
+        b=edRuqq3mY8/g+9hmkiOuwvVaR0KQJ3LGii1kNXdZpkvSJoPT0qvho8mcpx7XfVj/OrJd9i
+        qz/CeglBFhzIzQIwgDdI3EuDsKyU8vf2NN4rULTDhPByNlqChEJl0fSg+PFfDMOoU4Lxqz
+        cUIURULTSdCQmSLZDxGGV9WGhGN26FM=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-427--lZbCy67Nn-cFBWcJYNtYQ-1; Thu, 21 Jan 2021 12:23:55 -0500
+X-MC-Unique: -lZbCy67Nn-cFBWcJYNtYQ-1
+Received: by mail-ed1-f71.google.com with SMTP id n18so1518621eds.2
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 09:23:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SZ8LycJ+F4Sr8OUibD8MTW+9AWyXf4FxW/0wGLz0O/0=;
+        b=SR0DhaSK0lCTBUkhkw6ryl6DW/ys8iZ6JRh3CVdPwiJGkBQTHt/gUb0vgaNp56Eu/h
+         oghDhLlStaqRfbtE7NYrfgb59/isrqYv4qtZK5LeswMT+LESZKHwLhTaDOEs7uBZA2s3
+         nJJVNC8Gk90cnnBmH9fQC0ZWBgTwhPpIvwG4I5mnRSmmyG5Uam7Txj3Aq9h66WB88Hk7
+         StUdFA2+0Yp0A7jyOI/OCu5ckR4Y4GDJNHOoOCGX8fs7DXPN6fgYx77hrnXRgG+H4xZu
+         4Ndc1NRU3MTu/F7uKZeOIdjbJeguq0ygz87ElmAJ8kdLd7nMHybXxnGtD1CznumRw6Fs
+         kvOQ==
+X-Gm-Message-State: AOAM531MciqhXxjp6v64pLCePY8oLSJwA8srpCJW5ZfYdwZhTNhyDHz1
+        IIu/+4HPpu6RLe2q8zygUvpAnO7jftwUyJlrW3ymf6Cpjt1J+ccgxud6nhRZGwRRC1e2IK8e3pf
+        ewIDGAr94dPLRmi3eA41+6NnMO+D594408LRk
+X-Received: by 2002:a17:906:705:: with SMTP id y5mr354142ejb.83.1611249833916;
+        Thu, 21 Jan 2021 09:23:53 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxvCHQDb5sk7iqXGLhEm7tnfiX0AHiznsKlHmiwf+4hRuQhGXca/dCzVuVvlBiLSd/4CUaBSMEtCZzrNJ4XMgE=
+X-Received: by 2002:a17:906:705:: with SMTP id y5mr354130ejb.83.1611249833755;
+ Thu, 21 Jan 2021 09:23:53 -0800 (PST)
+MIME-Version: 1.0
+References: <1611246016-21129-1-git-send-email-dwysocha@redhat.com>
+ <1611246016-21129-2-git-send-email-dwysocha@redhat.com> <4a3f8595d74221ca560e7f92f1b3abc68f5d48a1.camel@hammerspace.com>
+In-Reply-To: <4a3f8595d74221ca560e7f92f1b3abc68f5d48a1.camel@hammerspace.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Thu, 21 Jan 2021 12:23:17 -0500
+Message-ID: <CALF+zOmNZPNam11aX_qf1q_1gG1ZcHam_uPriURXydbWJAe0Fw@mail.gmail.com>
 Subject: Re: [PATCH v2 1/2] SUNRPC: Move simple_get_bytes and
  simple_get_netobj into xdr.h
-Thread-Topic: [PATCH v2 1/2] SUNRPC: Move simple_get_bytes and
- simple_get_netobj into xdr.h
-Thread-Index: AQHW8BFUpA/ZT1i+pEyZz1SO9zCmGqoyTvUA
-Date:   Thu, 21 Jan 2021 17:05:21 +0000
-Message-ID: <4a3f8595d74221ca560e7f92f1b3abc68f5d48a1.camel@hammerspace.com>
-References: <1611246016-21129-1-git-send-email-dwysocha@redhat.com>
-         <1611246016-21129-2-git-send-email-dwysocha@redhat.com>
-In-Reply-To: <1611246016-21129-2-git-send-email-dwysocha@redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: netapp.com; dkim=none (message not signed)
- header.d=none;netapp.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [50.36.164.28]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7c94cbcd-dc2a-40f0-5236-08d8be2ebcc8
-x-ms-traffictypediagnostic: CH2PR13MB3830:
-x-microsoft-antispam-prvs: <CH2PR13MB38300FC3BE9907149BAAC162B8A19@CH2PR13MB3830.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2ZqbB/KcgwmrvQLwnxIFQT5edkOYFgB1anBYmIYAJoUhpn52VvY8c25fOTzCwv63xbRjWaa4U0dLCo4AJeCyDI+C9nMqxi8IlSeNgwGI8zSw6HsgZ32BwB76aNA3myocY+xSN6s9RqZhN5e48GCE/XlGXlV+PrIISdjNhUPdIOuhTOcpDnmvbT0nxHRleq7B3OyxAL/PaV/UGIBl4ytrrfeUGmhdc1CcmF5FGFIyXEzBLneCzqSwIsklc6YVGODm2CsW7a06qIFCaQPnyqBC4cLaw9Z4B7Yp/46bMGCRZ8ipSxRF/Qzq6RKlxiYBmncj9VdkrblIWFku9Pe98skv70qXeu7pbxpbIXxVkCv/eGAQksgirH3nP8u/39YM5NU5gGzg71JzadmLPjUSBjfEpqusrxYBkD7pLoRR7CEMjtVHSWXNWXeRPD1lk075u8YAfncX19M9rWLNeViSHDRNZp2K/DtpC4jGzdKHi4XGq+TVDPWggXgX/PBi36WfSR5fIVqM/sBgAxs3xIZT/gChHQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3525.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(346002)(136003)(396003)(39840400004)(66476007)(6486002)(66556008)(6512007)(2906002)(5660300002)(76116006)(66946007)(86362001)(64756008)(66446008)(8936002)(316002)(71200400001)(4326008)(478600001)(2616005)(8676002)(26005)(6506007)(36756003)(186003)(83380400001)(110136005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?cnBnaHEzcVU0eW9oSnVrMmljMURZUlFvN3o4K3FxbWtGQjU5dG5kQ05VS3l4?=
- =?utf-8?B?NWt3VjZmck8rcFAzVng5T3RCTG9JTW4zMWdkV1VFblQ2elYwckNJVTRBd0ha?=
- =?utf-8?B?Q2N5eHo4ejN0K0VDbXRJaVFTOWNuSFdZdlBMaEZzYnVrTWRTbXQwUjNVZEdz?=
- =?utf-8?B?Tk1rUDdxeWdxM0lQSjg4Kzg3OWwxMkszQk5TcElkb2VQV1JiT1p4b2FWbFVC?=
- =?utf-8?B?Zk1wZjFrc1FDVlZsNXIyc1hkSGJZNEJZTGd5YklPL25Oak9mMlBseDMyTmpy?=
- =?utf-8?B?R1NmSjZSc3pHKzgzcVUyL2V5WitjQnlDV0taVC8rWk1vamwyMlE1emZMOG1w?=
- =?utf-8?B?VFZVUnFqTGxDNWRxMU9BZ0hHem5Ja0U0RHJkR3hqYnBmbDh1OXJhUXdKZ1BD?=
- =?utf-8?B?WG5MNFJxVmhzdG44T0NNd0ZBanNLZkhHZ21mbm5Za2x6Z2p4WWlrdFV4T3la?=
- =?utf-8?B?NmVONktLc2loMkZRdUZWMXdLeHZSeHVxY3NaVUwvSjBOOTdGUHlPVlQ2UXli?=
- =?utf-8?B?NW5DNGZMV2o1Rk5vRVlpUTV5VGlWOVZnL2g1eDQ0OUtPL2NHZ1FJMVQ0Rlls?=
- =?utf-8?B?eGpyZDRlUStlZFB2bDRxMGZVOFg4a0pVUVl0UlFHYk1zUTkrOFU5amliR0J2?=
- =?utf-8?B?QzBrakdTWVlFODBSMjZxK0NqUndCcUk4dmxFWG1sNWtmVzF5NjkwZURBRWhK?=
- =?utf-8?B?bVViS3AwczJOdUtTLzZIakgrbDZCWkZRRUVIMFN2U2NMbGtWZnRBcXdxeFVi?=
- =?utf-8?B?cDd2aFRnMkRyV2NDMnV1MjdUbE9QWmg3QXJ3bTAwZnBLS1lCWE1EN3FqU3h5?=
- =?utf-8?B?QmRpMnRTWHErSjJjbThpeDUxY2l4SFlJSEZGbFRiZ2k0WUkrbjJFTnJVYTFM?=
- =?utf-8?B?YW1Cb21md29WajhKdTBLdHJaa2tISGE0VklzdWJDdlJ4U28vaGJVeHF0MEE1?=
- =?utf-8?B?WDJsTmdBSnVLTTVnazY0MlI5OEhJV3NTRFNUZDNXdmtQb1E3V3ZvTXB3L2Fa?=
- =?utf-8?B?c0tDbmdPcHczazl0SFJTUmV3dzN6VElZcVJxQ2wwOEQ5akxkaEU2dGxaTVVI?=
- =?utf-8?B?Q2pWVkMyUGpBSnRPMG1pUmZCZnpZN1ZIbmN6WWg1RUMyRi9pMnRKWXo5anNJ?=
- =?utf-8?B?WWNxdHY0KzNXN3V5MkZCbDNvTjM2TkxKK08xa1Vjdk15UTF5TXgraFhQaWtS?=
- =?utf-8?B?UWlSNUprTnNkd2dvd213VWRKVnlXSHRkYm5tb1BQZEw2dnpZRCtuYW1YWVZQ?=
- =?utf-8?B?Y1kvR2YyQjdzL2ZWVWV0ZHNVRlprOHNyU2YwLzk5WUVsd3dUZHRtZFBLVC9z?=
- =?utf-8?Q?RofQv3LEZK2ZsUD2IoztDedaHYwN5E3Bpf?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5694E7961C19BD41A46D37C9B0248F34@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR13MB3525.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c94cbcd-dc2a-40f0-5236-08d8be2ebcc8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2021 17:05:21.6214
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: J3/4yIUqnSVBhqbxUl5G/YtY5smlpL/jnun/4llSO1503L6CnsraINF+v+SW2dhXp9JevPvSHljNO8/Uld0opQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3830
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVGh1LCAyMDIxLTAxLTIxIGF0IDExOjIwIC0wNTAwLCBEYXZlIFd5c29jaGFuc2tpIHdyb3Rl
-Og0KPiBSZW1vdmUgZHVwbGljYXRlZCBoZWxwZXIgZnVuY3Rpb25zIHRvIHBhcnNlIG9wYXF1ZSBY
-RFIgb2JqZWN0cw0KPiBhbmQgcGxhY2UgaW5zaWRlIHRoZSB4ZHIuaCBmaWxlLsKgIEFsc28gdXBk
-YXRlIGNvbW1lbnQgd2hpY2gNCj4gaXMgd3Jvbmcgc2luY2UgbG9ja2QgaXMgbm90IHRoZSBvbmx5
-IHVzZXIgb2YgeGRyX25ldG9iai4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IERhdmUgV3lzb2NoYW5z
-a2kgPGR3eXNvY2hhQHJlZGhhdC5jb20+DQo+IC0tLQ0KPiDCoGluY2x1ZGUvbGludXgvc3VucnBj
-L3hkci5owqDCoMKgwqDCoMKgwqDCoMKgIHwgMzMNCj4gKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKy0tDQo+IMKgbmV0L3N1bnJwYy9hdXRoX2dzcy9hdXRoX2dzcy5jwqDCoMKgwqDCoCB8
-IDI5IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAtLQ0KPiDCoG5ldC9zdW5ycGMvYXV0
-aF9nc3MvZ3NzX2tyYjVfbWVjaC5jIHwgMjkgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+
-IC0tDQo+IMKgMyBmaWxlcyBjaGFuZ2VkLCAzMSBpbnNlcnRpb25zKCspLCA2MCBkZWxldGlvbnMo
-LSkNCj4gDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3N1bnJwYy94ZHIuaCBiL2luY2x1
-ZGUvbGludXgvc3VucnBjL3hkci5oDQo+IGluZGV4IDE5YjZkZWEyNzM2Ny4uOGVmNzg4ZmY4MGI5
-IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3N1bnJwYy94ZHIuaA0KPiArKysgYi9pbmNs
-dWRlL2xpbnV4L3N1bnJwYy94ZHIuaA0KPiBAQCAtMjUsOCArMjUsNyBAQA0KPiDCoCNkZWZpbmUg
-WERSX1FVQURMRU4obCnCoMKgwqDCoMKgwqDCoMKgwqAoKChsKSArIDMpID4+IDIpDQo+IMKgDQo+
-IMKgLyoNCj4gLSAqIEdlbmVyaWMgb3BhcXVlIGBuZXR3b3JrIG9iamVjdC4nIEF0IHRoZSBrZXJu
-ZWwgbGV2ZWwsIHRoaXMgdHlwZQ0KPiAtICogaXMgdXNlZCBvbmx5IGJ5IGxvY2tkLg0KPiArICog
-R2VuZXJpYyBvcGFxdWUgYG5ldHdvcmsgb2JqZWN0LicNCj4gwqAgKi8NCj4gwqAjZGVmaW5lIFhE
-Ul9NQVhfTkVUT0JKwqDCoMKgwqDCoMKgwqDCoMKgMTAyNA0KPiDCoHN0cnVjdCB4ZHJfbmV0b2Jq
-IHsNCj4gQEAgLTM0LDYgKzMzLDM2IEBAIHN0cnVjdCB4ZHJfbmV0b2JqIHsNCj4gwqDCoMKgwqDC
-oMKgwqDCoHU4ICrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGF0YTsN
-Cj4gwqB9Ow0KPiDCoA0KPiArc3RhdGljIGlubGluZSBjb25zdCB2b2lkICoNCj4gK3NpbXBsZV9n
-ZXRfYnl0ZXMoY29uc3Qgdm9pZCAqcCwgY29uc3Qgdm9pZCAqZW5kLCB2b2lkICpyZXMsIHNpemVf
-dA0KPiBsZW4pDQo+ICt7DQo+ICvCoMKgwqDCoMKgwqDCoGNvbnN0IHZvaWQgKnEgPSAoY29uc3Qg
-dm9pZCAqKSgoY29uc3QgY2hhciAqKXAgKyBsZW4pOw0KPiArwqDCoMKgwqDCoMKgwqBpZiAodW5s
-aWtlbHkocSA+IGVuZCB8fCBxIDwgcCkpDQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqByZXR1cm4gRVJSX1BUUigtRUZBVUxUKTsNCj4gK8KgwqDCoMKgwqDCoMKgbWVtY3B5KHJlcywg
-cCwgbGVuKTsNCj4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIHE7DQo+ICt9DQo+ICsNCj4gK3N0YXRp
-YyBpbmxpbmUgY29uc3Qgdm9pZCAqDQo+ICtzaW1wbGVfZ2V0X25ldG9iaihjb25zdCB2b2lkICpw
-LCBjb25zdCB2b2lkICplbmQsIHN0cnVjdCB4ZHJfbmV0b2JqDQo+ICpkZXN0KQ0KPiArew0KPiAr
-wqDCoMKgwqDCoMKgwqBjb25zdCB2b2lkICpxOw0KPiArwqDCoMKgwqDCoMKgwqB1bnNpZ25lZCBp
-bnQgbGVuOw0KPiArDQo+ICvCoMKgwqDCoMKgwqDCoHAgPSBzaW1wbGVfZ2V0X2J5dGVzKHAsIGVu
-ZCwgJmxlbiwgc2l6ZW9mKGxlbikpOw0KPiArwqDCoMKgwqDCoMKgwqBpZiAoSVNfRVJSKHApKQ0K
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIHA7DQo+ICvCoMKgwqDCoMKg
-wqDCoHEgPSAoY29uc3Qgdm9pZCAqKSgoY29uc3QgY2hhciAqKXAgKyBsZW4pOw0KPiArwqDCoMKg
-wqDCoMKgwqBpZiAodW5saWtlbHkocSA+IGVuZCB8fCBxIDwgcCkpDQo+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gRVJSX1BUUigtRUZBVUxUKTsNCj4gK8KgwqDCoMKgwqDC
-oMKgZGVzdC0+ZGF0YSA9IGttZW1kdXAocCwgbGVuLCBHRlBfTk9GUyk7DQo+ICvCoMKgwqDCoMKg
-wqDCoGlmICh1bmxpa2VseShkZXN0LT5kYXRhID09IE5VTEwpKQ0KPiArwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgcmV0dXJuIEVSUl9QVFIoLUVOT01FTSk7DQo+ICvCoMKgwqDCoMKgwqDC
-oGRlc3QtPmxlbiA9IGxlbjsNCj4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIHE7DQo+ICt9DQo+ICsN
-Cg0KSG1tLi4uIEknbSBub3QgdG9vIGtlZW4gb24gaGF2aW5nIHRoZXNlIGluIHN1bnJwYy94ZHIu
-aC4gRm9yIG9uZSB0aGluZywNCnRoZXkgZG8gbm90IGRlc2NyaWJlIG9iamVjdHMgdGhhdCBhcmUg
-WERSIGVuY29kZWQuIFNlY29uZGx5LCB0aGVpcg0KbmFtaW5nIGlzbid0IHJlYWxseSBjb25zaXN0
-ZW50IHdpdGggYW55IG9mIHRoZSBleGlzdGluZyBjb252ZW50aW9ucyBmb3INCnhkci4NCg0KQ2Fu
-IHdlIHBsZWFzZSByYXRoZXIganVzdCBjcmVhdGUgYSBuZXcgaGVhZGVyIGZpbGUgdGhhdCBpcyBw
-cml2YXRlIGluDQpuZXQvc3VucnBjL2F1dGhfZ3NzLyA/DQoNCj4gKw0KPiDCoC8qDQo+IMKgICog
-QmFzaWMgc3RydWN0dXJlIGZvciB0cmFuc21pc3Npb24vcmVjZXB0aW9uIG9mIGEgY2xpZW50IFhE
-Ug0KPiBtZXNzYWdlLg0KPiDCoCAqIEZlYXR1cmVzIGEgaGVhZGVyIChmb3IgYSBsaW5lYXIgYnVm
-ZmVyIGNvbnRhaW5pbmcgUlBDIGhlYWRlcnMNCj4gZGlmZiAtLWdpdCBhL25ldC9zdW5ycGMvYXV0
-aF9nc3MvYXV0aF9nc3MuYw0KPiBiL25ldC9zdW5ycGMvYXV0aF9nc3MvYXV0aF9nc3MuYw0KPiBp
-bmRleCA0ZWNjMmE5NTk1NjcuLjIyODQ1NmIyMmIyMyAxMDA2NDQNCj4gLS0tIGEvbmV0L3N1bnJw
-Yy9hdXRoX2dzcy9hdXRoX2dzcy5jDQo+ICsrKyBiL25ldC9zdW5ycGMvYXV0aF9nc3MvYXV0aF9n
-c3MuYw0KPiBAQCAtMTI1LDM1ICsxMjUsNiBAQCBzdHJ1Y3QgZ3NzX2F1dGggew0KPiDCoMKgwqDC
-oMKgwqDCoMKgY2xlYXJfYml0KFJQQ0FVVEhfQ1JFRF9ORVcsICZjcmVkLT5jcl9mbGFncyk7DQo+
-IMKgfQ0KPiDCoA0KPiAtc3RhdGljIGNvbnN0IHZvaWQgKg0KPiAtc2ltcGxlX2dldF9ieXRlcyhj
-b25zdCB2b2lkICpwLCBjb25zdCB2b2lkICplbmQsIHZvaWQgKnJlcywgc2l6ZV90DQo+IGxlbikN
-Cj4gLXsNCj4gLcKgwqDCoMKgwqDCoMKgY29uc3Qgdm9pZCAqcSA9IChjb25zdCB2b2lkICopKChj
-b25zdCBjaGFyICopcCArIGxlbik7DQo+IC3CoMKgwqDCoMKgwqDCoGlmICh1bmxpa2VseShxID4g
-ZW5kIHx8IHEgPCBwKSkNCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiBF
-UlJfUFRSKC1FRkFVTFQpOw0KPiAtwqDCoMKgwqDCoMKgwqBtZW1jcHkocmVzLCBwLCBsZW4pOw0K
-PiAtwqDCoMKgwqDCoMKgwqByZXR1cm4gcTsNCj4gLX0NCj4gLQ0KPiAtc3RhdGljIGlubGluZSBj
-b25zdCB2b2lkICoNCj4gLXNpbXBsZV9nZXRfbmV0b2JqKGNvbnN0IHZvaWQgKnAsIGNvbnN0IHZv
-aWQgKmVuZCwgc3RydWN0IHhkcl9uZXRvYmoNCj4gKmRlc3QpDQo+IC17DQo+IC3CoMKgwqDCoMKg
-wqDCoGNvbnN0IHZvaWQgKnE7DQo+IC3CoMKgwqDCoMKgwqDCoHVuc2lnbmVkIGludCBsZW47DQo+
-IC0NCj4gLcKgwqDCoMKgwqDCoMKgcCA9IHNpbXBsZV9nZXRfYnl0ZXMocCwgZW5kLCAmbGVuLCBz
-aXplb2YobGVuKSk7DQo+IC3CoMKgwqDCoMKgwqDCoGlmIChJU19FUlIocCkpDQo+IC3CoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gcDsNCj4gLcKgwqDCoMKgwqDCoMKgcSA9IChj
-b25zdCB2b2lkICopKChjb25zdCBjaGFyICopcCArIGxlbik7DQo+IC3CoMKgwqDCoMKgwqDCoGlm
-ICh1bmxpa2VseShxID4gZW5kIHx8IHEgPCBwKSkNCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoHJldHVybiBFUlJfUFRSKC1FRkFVTFQpOw0KPiAtwqDCoMKgwqDCoMKgwqBkZXN0LT5k
-YXRhID0ga21lbWR1cChwLCBsZW4sIEdGUF9OT0ZTKTsNCj4gLcKgwqDCoMKgwqDCoMKgaWYgKHVu
-bGlrZWx5KGRlc3QtPmRhdGEgPT0gTlVMTCkpDQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqByZXR1cm4gRVJSX1BUUigtRU5PTUVNKTsNCj4gLcKgwqDCoMKgwqDCoMKgZGVzdC0+bGVu
-ID0gbGVuOw0KPiAtwqDCoMKgwqDCoMKgwqByZXR1cm4gcTsNCj4gLX0NCj4gLQ0KPiDCoHN0YXRp
-YyBzdHJ1Y3QgZ3NzX2NsX2N0eCAqDQo+IMKgZ3NzX2NyZWRfZ2V0X2N0eChzdHJ1Y3QgcnBjX2Ny
-ZWQgKmNyZWQpDQo+IMKgew0KPiBkaWZmIC0tZ2l0IGEvbmV0L3N1bnJwYy9hdXRoX2dzcy9nc3Nf
-a3JiNV9tZWNoLmMNCj4gYi9uZXQvc3VucnBjL2F1dGhfZ3NzL2dzc19rcmI1X21lY2guYw0KPiBp
-bmRleCBhZTlhY2YzYTczODkuLjk5ZWEzNmQ1ZWVmZSAxMDA2NDQNCj4gLS0tIGEvbmV0L3N1bnJw
-Yy9hdXRoX2dzcy9nc3Nfa3JiNV9tZWNoLmMNCj4gKysrIGIvbmV0L3N1bnJwYy9hdXRoX2dzcy9n
-c3Nfa3JiNV9tZWNoLmMNCj4gQEAgLTE0MywzNSArMTQzLDYgQEANCj4gwqDCoMKgwqDCoMKgwqDC
-oHJldHVybiBOVUxMOw0KPiDCoH0NCj4gwqANCj4gLXN0YXRpYyBjb25zdCB2b2lkICoNCj4gLXNp
-bXBsZV9nZXRfYnl0ZXMoY29uc3Qgdm9pZCAqcCwgY29uc3Qgdm9pZCAqZW5kLCB2b2lkICpyZXMs
-IGludCBsZW4pDQo+IC17DQo+IC3CoMKgwqDCoMKgwqDCoGNvbnN0IHZvaWQgKnEgPSAoY29uc3Qg
-dm9pZCAqKSgoY29uc3QgY2hhciAqKXAgKyBsZW4pOw0KPiAtwqDCoMKgwqDCoMKgwqBpZiAodW5s
-aWtlbHkocSA+IGVuZCB8fCBxIDwgcCkpDQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqByZXR1cm4gRVJSX1BUUigtRUZBVUxUKTsNCj4gLcKgwqDCoMKgwqDCoMKgbWVtY3B5KHJlcywg
-cCwgbGVuKTsNCj4gLcKgwqDCoMKgwqDCoMKgcmV0dXJuIHE7DQo+IC19DQo+IC0NCj4gLXN0YXRp
-YyBjb25zdCB2b2lkICoNCj4gLXNpbXBsZV9nZXRfbmV0b2JqKGNvbnN0IHZvaWQgKnAsIGNvbnN0
-IHZvaWQgKmVuZCwgc3RydWN0IHhkcl9uZXRvYmoNCj4gKnJlcykNCj4gLXsNCj4gLcKgwqDCoMKg
-wqDCoMKgY29uc3Qgdm9pZCAqcTsNCj4gLcKgwqDCoMKgwqDCoMKgdW5zaWduZWQgaW50IGxlbjsN
-Cj4gLQ0KPiAtwqDCoMKgwqDCoMKgwqBwID0gc2ltcGxlX2dldF9ieXRlcyhwLCBlbmQsICZsZW4s
-IHNpemVvZihsZW4pKTsNCj4gLcKgwqDCoMKgwqDCoMKgaWYgKElTX0VSUihwKSkNCj4gLcKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiBwOw0KPiAtwqDCoMKgwqDCoMKgwqBxID0g
-KGNvbnN0IHZvaWQgKikoKGNvbnN0IGNoYXIgKilwICsgbGVuKTsNCj4gLcKgwqDCoMKgwqDCoMKg
-aWYgKHVubGlrZWx5KHEgPiBlbmQgfHwgcSA8IHApKQ0KPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgcmV0dXJuIEVSUl9QVFIoLUVGQVVMVCk7DQo+IC3CoMKgwqDCoMKgwqDCoHJlcy0+
-ZGF0YSA9IGttZW1kdXAocCwgbGVuLCBHRlBfTk9GUyk7DQo+IC3CoMKgwqDCoMKgwqDCoGlmICh1
-bmxpa2VseShyZXMtPmRhdGEgPT0gTlVMTCkpDQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqByZXR1cm4gRVJSX1BUUigtRU5PTUVNKTsNCj4gLcKgwqDCoMKgwqDCoMKgcmVzLT5sZW4g
-PSBsZW47DQo+IC3CoMKgwqDCoMKgwqDCoHJldHVybiBxOw0KPiAtfQ0KPiAtDQo+IMKgc3RhdGlj
-IGlubGluZSBjb25zdCB2b2lkICoNCj4gwqBnZXRfa2V5KGNvbnN0IHZvaWQgKnAsIGNvbnN0IHZv
-aWQgKmVuZCwNCj4gwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBrcmI1X2N0eCAqY3R4LCBzdHJ1Y3Qg
-Y3J5cHRvX3N5bmNfc2tjaXBoZXIgKipyZXMpDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51
-eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFt
-bWVyc3BhY2UuY29tDQoNCg0K
+On Thu, Jan 21, 2021 at 12:05 PM Trond Myklebust
+<trondmy@hammerspace.com> wrote:
+>
+> On Thu, 2021-01-21 at 11:20 -0500, Dave Wysochanski wrote:
+> > Remove duplicated helper functions to parse opaque XDR objects
+> > and place inside the xdr.h file.  Also update comment which
+> > is wrong since lockd is not the only user of xdr_netobj.
+> >
+> > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> > ---
+> >  include/linux/sunrpc/xdr.h          | 33
+> > +++++++++++++++++++++++++++++++--
+> >  net/sunrpc/auth_gss/auth_gss.c      | 29 ---------------------------
+> > --
+> >  net/sunrpc/auth_gss/gss_krb5_mech.c | 29 ---------------------------
+> > --
+> >  3 files changed, 31 insertions(+), 60 deletions(-)
+> >
+> > diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+> > index 19b6dea27367..8ef788ff80b9 100644
+> > --- a/include/linux/sunrpc/xdr.h
+> > +++ b/include/linux/sunrpc/xdr.h
+> > @@ -25,8 +25,7 @@
+> >  #define XDR_QUADLEN(l)         (((l) + 3) >> 2)
+> >
+> >  /*
+> > - * Generic opaque `network object.' At the kernel level, this type
+> > - * is used only by lockd.
+> > + * Generic opaque `network object.'
+> >   */
+> >  #define XDR_MAX_NETOBJ         1024
+> >  struct xdr_netobj {
+> > @@ -34,6 +33,36 @@ struct xdr_netobj {
+> >         u8 *                    data;
+> >  };
+> >
+> > +static inline const void *
+> > +simple_get_bytes(const void *p, const void *end, void *res, size_t
+> > len)
+> > +{
+> > +       const void *q = (const void *)((const char *)p + len);
+> > +       if (unlikely(q > end || q < p))
+> > +               return ERR_PTR(-EFAULT);
+> > +       memcpy(res, p, len);
+> > +       return q;
+> > +}
+> > +
+> > +static inline const void *
+> > +simple_get_netobj(const void *p, const void *end, struct xdr_netobj
+> > *dest)
+> > +{
+> > +       const void *q;
+> > +       unsigned int len;
+> > +
+> > +       p = simple_get_bytes(p, end, &len, sizeof(len));
+> > +       if (IS_ERR(p))
+> > +               return p;
+> > +       q = (const void *)((const char *)p + len);
+> > +       if (unlikely(q > end || q < p))
+> > +               return ERR_PTR(-EFAULT);
+> > +       dest->data = kmemdup(p, len, GFP_NOFS);
+> > +       if (unlikely(dest->data == NULL))
+> > +               return ERR_PTR(-ENOMEM);
+> > +       dest->len = len;
+> > +       return q;
+> > +}
+> > +
+>
+> Hmm... I'm not too keen on having these in sunrpc/xdr.h. For one thing,
+> they do not describe objects that are XDR encoded. Secondly, their
+> naming isn't really consistent with any of the existing conventions for
+> xdr.
+>
+> Can we please rather just create a new header file that is private in
+> net/sunrpc/auth_gss/ ?
+>
+
+Sure.  Do you have any preference for the name?
+internal.h
+auth_gss.h
+something else...
+
+
+> > +
+> >  /*
+> >   * Basic structure for transmission/reception of a client XDR
+> > message.
+> >   * Features a header (for a linear buffer containing RPC headers
+> > diff --git a/net/sunrpc/auth_gss/auth_gss.c
+> > b/net/sunrpc/auth_gss/auth_gss.c
+> > index 4ecc2a959567..228456b22b23 100644
+> > --- a/net/sunrpc/auth_gss/auth_gss.c
+> > +++ b/net/sunrpc/auth_gss/auth_gss.c
+> > @@ -125,35 +125,6 @@ struct gss_auth {
+> >         clear_bit(RPCAUTH_CRED_NEW, &cred->cr_flags);
+> >  }
+> >
+> > -static const void *
+> > -simple_get_bytes(const void *p, const void *end, void *res, size_t
+> > len)
+> > -{
+> > -       const void *q = (const void *)((const char *)p + len);
+> > -       if (unlikely(q > end || q < p))
+> > -               return ERR_PTR(-EFAULT);
+> > -       memcpy(res, p, len);
+> > -       return q;
+> > -}
+> > -
+> > -static inline const void *
+> > -simple_get_netobj(const void *p, const void *end, struct xdr_netobj
+> > *dest)
+> > -{
+> > -       const void *q;
+> > -       unsigned int len;
+> > -
+> > -       p = simple_get_bytes(p, end, &len, sizeof(len));
+> > -       if (IS_ERR(p))
+> > -               return p;
+> > -       q = (const void *)((const char *)p + len);
+> > -       if (unlikely(q > end || q < p))
+> > -               return ERR_PTR(-EFAULT);
+> > -       dest->data = kmemdup(p, len, GFP_NOFS);
+> > -       if (unlikely(dest->data == NULL))
+> > -               return ERR_PTR(-ENOMEM);
+> > -       dest->len = len;
+> > -       return q;
+> > -}
+> > -
+> >  static struct gss_cl_ctx *
+> >  gss_cred_get_ctx(struct rpc_cred *cred)
+> >  {
+> > diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c
+> > b/net/sunrpc/auth_gss/gss_krb5_mech.c
+> > index ae9acf3a7389..99ea36d5eefe 100644
+> > --- a/net/sunrpc/auth_gss/gss_krb5_mech.c
+> > +++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
+> > @@ -143,35 +143,6 @@
+> >         return NULL;
+> >  }
+> >
+> > -static const void *
+> > -simple_get_bytes(const void *p, const void *end, void *res, int len)
+> > -{
+> > -       const void *q = (const void *)((const char *)p + len);
+> > -       if (unlikely(q > end || q < p))
+> > -               return ERR_PTR(-EFAULT);
+> > -       memcpy(res, p, len);
+> > -       return q;
+> > -}
+> > -
+> > -static const void *
+> > -simple_get_netobj(const void *p, const void *end, struct xdr_netobj
+> > *res)
+> > -{
+> > -       const void *q;
+> > -       unsigned int len;
+> > -
+> > -       p = simple_get_bytes(p, end, &len, sizeof(len));
+> > -       if (IS_ERR(p))
+> > -               return p;
+> > -       q = (const void *)((const char *)p + len);
+> > -       if (unlikely(q > end || q < p))
+> > -               return ERR_PTR(-EFAULT);
+> > -       res->data = kmemdup(p, len, GFP_NOFS);
+> > -       if (unlikely(res->data == NULL))
+> > -               return ERR_PTR(-ENOMEM);
+> > -       res->len = len;
+> > -       return q;
+> > -}
+> > -
+> >  static inline const void *
+> >  get_key(const void *p, const void *end,
+> >         struct krb5_ctx *ctx, struct crypto_sync_skcipher **res)
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
+
