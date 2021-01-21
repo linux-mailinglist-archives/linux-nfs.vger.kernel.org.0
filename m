@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 415D52FF3F3
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 20:12:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C92952FF3F2
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 20:12:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbhAUTMW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Jan 2021 14:12:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57010 "EHLO
+        id S1726057AbhAUTMV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Jan 2021 14:12:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbhAUTLQ (ORCPT
+        with ESMTP id S1727020AbhAUTLQ (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 14:11:16 -0500
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 517FBC06178A
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 11:10:29 -0800 (PST)
-Received: by mail-wm1-x335.google.com with SMTP id e15so2453883wme.0
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 11:10:29 -0800 (PST)
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC5F2C06178B
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 11:10:31 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id a12so2826781wrv.8
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 11:10:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelim-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rOugOCRo/rGPTtDDqtGndDinPnamB/mLfwUTnqd7MYE=;
-        b=MwIJLVaAcg32N9wmnf0aWV1gd/K8E1Rt+EBEpbjHM3lSPd0ECBNNeL8tatfoAZBUha
-         yS3lJNRAeSy7tUXzCweMlh2JqB8VgWEavNT1J/NXLB0kicaDdwpR8JRxiEPtj6T5OvtY
-         8Liynh/Slh3IfrFLks1TUzSRfwZrdS8r9Hhg6GjV9BtGfglozQiQVpDZIDQYh2Nyny7q
-         vjenQOGNl3fF+o+fpHsCWzyRXrWl7gr7UrCNP0di2YwTBFYZ1tXPa3jNgbX7pRak8tVZ
-         HtIItMptycKuWUbE5rb2cfb7obo9Urr2dhVZ8xCEq9Hoavf1lK2Kv4P37VYjO0Odgj86
-         ckQA==
+        bh=GUvQqrXJwEsvcapjHvIcxCJJ9kETeRu2eb40mzabFWw=;
+        b=p/zSJR1dd/9eC5z4yRE0h69Z5FvthstX4/8GJhmdN/XFAscBRbYoUE2qSQVj6W7YRj
+         i3HCWp2eoAPwjAMG8yOpCR5rHmySo1+YgT6ORB4PQpfFsT6zUXpZBY1T+awdCiMHs5tT
+         0QCT9VKVLQmHVehZ2FfLew0pfhmRcqwE9CNCz1HhhXwPjfchzenZKaFe9JF73Y/bkiDx
+         Pub2mlgzevfLYwRspY5oBjgFVfri4zGQFgHhHlI8Gn4ZNFDzsSnaGVM/g6jGHC/o7vZH
+         NrOibI/ZJwGSAsVT8utSndXVJRrfLt9EyXc9E4ye5nK923TdTlV7n1PoHAX+Ys2YmY4r
+         OXLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rOugOCRo/rGPTtDDqtGndDinPnamB/mLfwUTnqd7MYE=;
-        b=P/bsNXzh3GAOMyDzAXx3FHj+EVmVqw/17Sy8sqburkbVmcSdQpjdjsTjXNDm9YPya4
-         YQxxScN5N5Jj9wY7d7zVd1UJYbewmm3rI768hS+PpmFijLUm81ark1ocbqvLxEBTRoKV
-         O0euuKOCQWkYRHk9tui7NvtW7/JT4Dr7dOO7w/cRXtBEUqDLJ/j3+tQeu0jRYJCEX/UZ
-         WDM7eEPx8HnLOviLGxogfkQ6sZ+z1sRvnIh91d80yYKLoDd8xGywrOSsUx+titL9VKhC
-         i1zsziOq/B6dIqNidzASc2xWI6XJQpXY95YIWSR4lLch4em9anm2o4tQmcpgYDYgvR3x
-         JEZg==
-X-Gm-Message-State: AOAM5304ugIX2HSSzYYqAPPmJZctMYWKf6ypUZ8t5/VhG4reogXalaeH
-        ZiWWJJqjgJ4fbu6KpgoB3AhWYCGx+QQyUbEu
-X-Google-Smtp-Source: ABdhPJzoX5D6H4Kf+bJOANmQfHnE/d6E8+6Owe5Kj95tkUPwQboa7IusXrtwz71d1a/4wpNfg4FXDQ==
-X-Received: by 2002:a1c:5608:: with SMTP id k8mr713650wmb.91.1611256227640;
-        Thu, 21 Jan 2021 11:10:27 -0800 (PST)
+        bh=GUvQqrXJwEsvcapjHvIcxCJJ9kETeRu2eb40mzabFWw=;
+        b=PZzBl4mXFQFlT3qoggPeNpLqgd0sh2fUO5UpyuYn4pVLeRc4eJjmiO8p6lmIEOrZfh
+         lVjKtFkQVaXw09jYuuWeJFCeT3DsiFAOA7KIzqjx/jyTnNjCARSiOHFqKaR/hnGg77Um
+         X/ldJ9Lx3mTKQNwRR4UzQCYRMGlkr6B9P0vMQPNx5yeQh5nrrTynEEizKQNrO6FNULkg
+         hO6XEl/LiUVzCEV4bbmjGg/IV6+osvGVDpuBTOGwF2h/YkqBpT/nIkI+JRTEiAjiwg4m
+         avNW4f4AmXOoQyZssp9Sf+p6yzpknZhULLc9JNPdIw0LUgeKrPuvyadZqmSSa5UQ/44F
+         jUSA==
+X-Gm-Message-State: AOAM533N7Gwf4uSgWZIYiJg1LTBZRNtbXWvAq+diK35+BUmHOwAy1a+e
+        d24NDKW7Byd6t3ZuadbOonCZ+y5S5fPB6e6x
+X-Google-Smtp-Source: ABdhPJzJUU/o0LlaVN6MI33O9abAKEISaGunuiKy3Etwf+byAH12Hskrh9MHhnCtUt8IB+xlwRp2pQ==
+X-Received: by 2002:adf:f512:: with SMTP id q18mr913891wro.55.1611256229088;
+        Thu, 21 Jan 2021 11:10:29 -0800 (PST)
 Received: from jupiter.home.aloni.org ([77.124.84.167])
-        by smtp.gmail.com with ESMTPSA id d30sm11160353wrc.92.2021.01.21.11.10.25
+        by smtp.gmail.com with ESMTPSA id d30sm11160353wrc.92.2021.01.21.11.10.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jan 2021 11:10:26 -0800 (PST)
+        Thu, 21 Jan 2021 11:10:28 -0800 (PST)
 From:   Dan Aloni <dan@kernelim.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>
-Subject: [PATCH v1 3/5] nfs: Extend nconnect with remoteports and localports mount params
-Date:   Thu, 21 Jan 2021 21:10:18 +0200
-Message-Id: <20210121191020.3144948-4-dan@kernelim.com>
+Subject: [PATCH v1 4/5] sunrpc: Add srcaddr to xprt sysfs debug
+Date:   Thu, 21 Jan 2021 21:10:19 +0200
+Message-Id: <20210121191020.3144948-5-dan@kernelim.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20210121191020.3144948-1-dan@kernelim.com>
 References: <20210121191020.3144948-1-dan@kernelim.com>
@@ -63,355 +63,255 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The new added mount parameters allow passing a vector of IP addresses to
-be used with the extra transports that nconnect creates. The remoteports
-parameter provides the destination addresses, and localports specifies
-local address binds.
+For easier inspection of transport state with regard to nconnect, with
+remoteports and localports of NFS, this helps us to know what is the
+source address used for each established transport.
 
 Signed-off-by: Dan Aloni <dan@kernelim.com>
 ---
- fs/nfs/client.c           |  24 ++++++
- fs/nfs/fs_context.c       | 171 ++++++++++++++++++++++++++++++++++++++
- fs/nfs/internal.h         |   4 +
- include/linux/nfs_fs_sb.h |   2 +
- 4 files changed, 201 insertions(+)
+ include/linux/sunrpc/xprt.h                |  1 +
+ net/sunrpc/debugfs.c                       |  8 ++--
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |  2 +-
+ net/sunrpc/xprtrdma/transport.c            | 10 ++++-
+ net/sunrpc/xprtrdma/xprt_rdma.h            |  3 +-
+ net/sunrpc/xprtsock.c                      | 49 ++++++++++++++--------
+ 6 files changed, 48 insertions(+), 25 deletions(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index ff5c4d0d6d13..3560817ab5c4 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -166,6 +166,18 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
+diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
+index d2e97ee802af..2bdf9e806964 100644
+--- a/include/linux/sunrpc/xprt.h
++++ b/include/linux/sunrpc/xprt.h
+@@ -43,6 +43,7 @@ struct rpc_timeout {
  
- 	memcpy(&clp->cl_addr, cl_init->addr, cl_init->addrlen);
- 	clp->cl_addrlen = cl_init->addrlen;
-+	if (cl_init->localports) {
-+		clp->cl_localports = vmalloc(sizeof(*cl_init->localports));
-+		if (!clp->cl_localports)
-+			goto error_cleanup;
-+		*clp->cl_localports = *cl_init->localports;
-+	}
-+	if (cl_init->remoteports) {
-+		clp->cl_remoteports = vmalloc(sizeof(*cl_init->remoteports));
-+		if (!clp->cl_remoteports)
-+			goto error_cleanup;
-+		*clp->cl_remoteports = *cl_init->remoteports;
-+	}
+ enum rpc_display_format_t {
+ 	RPC_DISPLAY_ADDR = 0,
++	RPC_DISPLAY_SRC_ADDR,
+ 	RPC_DISPLAY_PORT,
+ 	RPC_DISPLAY_PROTO,
+ 	RPC_DISPLAY_HEX_ADDR,
+diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
+index 56029e3af6ff..4c65b64077f7 100644
+--- a/net/sunrpc/debugfs.c
++++ b/net/sunrpc/debugfs.c
+@@ -175,9 +175,11 @@ xprt_info_show(struct seq_file *f, void *v)
+ {
+ 	struct rpc_xprt *xprt = f->private;
  
- 	if (cl_init->hostname) {
- 		err = -ENOMEM;
-@@ -187,6 +199,10 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
- 	return clp;
- 
- error_cleanup:
-+	if (clp->cl_remoteports)
-+		vfree(clp->cl_remoteports);
-+	if (clp->cl_localports)
-+		vfree(clp->cl_localports);
- 	put_nfs_version(clp->cl_nfs_mod);
- error_dealloc:
- 	kfree(clp);
-@@ -245,6 +261,10 @@ void nfs_free_client(struct nfs_client *clp)
- 
- 	put_net(clp->cl_net);
- 	put_nfs_version(clp->cl_nfs_mod);
-+	if (clp->cl_localports)
-+		vfree(clp->cl_localports);
-+	if (clp->cl_remoteports)
-+		vfree(clp->cl_remoteports);
- 	kfree(clp->cl_hostname);
- 	kfree(clp->cl_acceptor);
- 	kfree(clp);
-@@ -508,6 +528,8 @@ int nfs_create_rpc_client(struct nfs_client *clp,
- 		.nconnect	= clp->cl_nconnect,
- 		.address	= (struct sockaddr *)&clp->cl_addr,
- 		.addrsize	= clp->cl_addrlen,
-+		.localports	= clp->cl_localports,
-+		.remoteports	= clp->cl_remoteports,
- 		.timeout	= cl_init->timeparms,
- 		.servername	= clp->cl_hostname,
- 		.nodename	= cl_init->nodename,
-@@ -678,6 +700,8 @@ static int nfs_init_server(struct nfs_server *server,
- 		.timeparms = &timeparms,
- 		.cred = server->cred,
- 		.nconnect = ctx->nfs_server.nconnect,
-+		.localports = ctx->localports,
-+		.remoteports = ctx->remoteports,
- 		.init_flags = (1UL << NFS_CS_REUSEPORT),
- 	};
- 	struct nfs_client *clp;
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 06894bcdea2d..3d41ba61b26d 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -49,6 +49,7 @@ enum nfs_param {
- 	Opt_hard,
- 	Opt_intr,
- 	Opt_local_lock,
-+	Opt_localports,
- 	Opt_lock,
- 	Opt_lookupcache,
- 	Opt_migration,
-@@ -65,6 +66,7 @@ enum nfs_param {
- 	Opt_proto,
- 	Opt_rdirplus,
- 	Opt_rdma,
-+	Opt_remoteports,
- 	Opt_resvport,
- 	Opt_retrans,
- 	Opt_retry,
-@@ -134,6 +136,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
- 		  fs_param_neg_with_no|fs_param_deprecated, NULL),
- 	fsparam_enum  ("local_lock",	Opt_local_lock, nfs_param_enums_local_lock),
- 	fsparam_flag_no("lock",		Opt_lock),
-+	fsparam_string("localports",	Opt_localports),
- 	fsparam_enum  ("lookupcache",	Opt_lookupcache, nfs_param_enums_lookupcache),
- 	fsparam_flag_no("migration",	Opt_migration),
- 	fsparam_u32   ("minorversion",	Opt_minorversion),
-@@ -150,6 +153,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
- 	fsparam_string("proto",		Opt_proto),
- 	fsparam_flag_no("rdirplus",	Opt_rdirplus),
- 	fsparam_flag  ("rdma",		Opt_rdma),
-+	fsparam_string("remoteports",	Opt_remoteports),
- 	fsparam_flag_no("resvport",	Opt_resvport),
- 	fsparam_u32   ("retrans",	Opt_retrans),
- 	fsparam_string("retry",		Opt_retry),
-@@ -430,6 +434,146 @@ static int nfs_parse_version_string(struct fs_context *fc,
+-	seq_printf(f, "netid: %s\n", xprt->address_strings[RPC_DISPLAY_NETID]);
+-	seq_printf(f, "addr:  %s\n", xprt->address_strings[RPC_DISPLAY_ADDR]);
+-	seq_printf(f, "port:  %s\n", xprt->address_strings[RPC_DISPLAY_PORT]);
++	seq_printf(f, "netid:   %s\n", xprt->address_strings[RPC_DISPLAY_NETID]);
++	seq_printf(f, "addr:    %s\n", xprt->address_strings[RPC_DISPLAY_ADDR]);
++	seq_printf(f, "port:    %s\n", xprt->address_strings[RPC_DISPLAY_PORT]);
++	seq_printf(f, "srcaddr: %s\n", xprt->address_strings[RPC_DISPLAY_SRC_ADDR]
++		   ? xprt->address_strings[RPC_DISPLAY_SRC_ADDR] : "");
+ 	seq_printf(f, "state: 0x%lx\n", xprt->state);
  	return 0;
  }
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+index 63f8be974df2..93e4dcb1a807 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+@@ -261,7 +261,7 @@ xprt_setup_rdma_bc(struct xprt_create *args)
  
-+static int nfs_portgroup_add_parsed(struct fs_context *fc, struct rpc_portgroup *pg,
-+				     const char *type, struct sockaddr_storage *addr,
-+				     int len)
-+{
-+	if (pg->nr >= RPC_MAX_PORTS) {
-+		nfs_invalf(fc, "NFS: portgroup for %s is too large, reached %d items",
-+			   type, pg->nr);
-+		return -ENOSPC;
+ 	memcpy(&xprt->addr, args->dstaddr, args->addrlen);
+ 	xprt->addrlen = args->addrlen;
+-	xprt_rdma_format_addresses(xprt, (struct sockaddr *)&xprt->addr);
++	xprt_rdma_format_addresses(xprt, (struct sockaddr *)&xprt->addr, NULL);
+ 	xprt->resvport = 0;
+ 
+ 	xprt->max_payload = xprt_rdma_max_inline_read;
+diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+index 45726ab5f13a..0d1cce310f13 100644
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -181,7 +181,8 @@ xprt_rdma_format_addresses6(struct rpc_xprt *xprt, struct sockaddr *sap)
+ }
+ 
+ void
+-xprt_rdma_format_addresses(struct rpc_xprt *xprt, struct sockaddr *sap)
++xprt_rdma_format_addresses(struct rpc_xprt *xprt, struct sockaddr *sap,
++			   struct sockaddr *src_sap)
+ {
+ 	char buf[128];
+ 
+@@ -200,6 +201,11 @@ xprt_rdma_format_addresses(struct rpc_xprt *xprt, struct sockaddr *sap)
+ 	(void)rpc_ntop(sap, buf, sizeof(buf));
+ 	xprt->address_strings[RPC_DISPLAY_ADDR] = kstrdup(buf, GFP_KERNEL);
+ 
++	if (src_sap) {
++		(void)rpc_ntop(src_sap, buf, sizeof(buf));
++		xprt->address_strings[RPC_DISPLAY_SRC_ADDR] = kstrdup(buf, GFP_KERNEL);
 +	}
 +
-+	if (pg->nr > 0 && pg->addrs[0].ss_family != addr->ss_family) {
-+		nfs_invalf(fc, "NFS: all portgroup addresses must be of the same family");
-+		return -EINVAL;
-+	}
-+
-+	pg->addrs[pg->nr] = *addr;
-+	pg->nr++;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Parse a single address and add to portgroup.
-+ */
-+static int nfs_portgroup_add_single(struct fs_context *fc, struct rpc_portgroup *pg,
-+				     const char *type, const char *single)
-+{
-+	struct sockaddr_storage addr;
-+	size_t len = rpc_pton(fc->net_ns, single, strlen(single),
-+			      (struct sockaddr *)&addr, sizeof(addr));
-+
-+	if (len == 0) {
-+		nfs_invalf(fc, "NFS: portgroup for %s, unable to parse address %s",
-+			   type, single);
-+		return -EINVAL;
-+	}
-+
-+	return nfs_portgroup_add_parsed(fc, pg, type, &addr, len);
-+}
-+
-+/*
-+ * Parse and add a portgroup address range. This is an inclusive address range
-+ * that is delimited by '-', e.g. '192.168.0.1-192.168.0.16'.
-+ */
-+static int nfs_portgroup_add_range(struct fs_context *fc, struct rpc_portgroup *pg,
-+				    const char *type, const char *begin, const char *end)
-+{
-+	struct sockaddr_storage addr;
-+	struct sockaddr_storage end_addr;
-+	int ret;
-+	size_t len = rpc_pton(fc->net_ns, begin, strlen(begin),
-+			      (struct sockaddr *)&addr, sizeof(addr)), end_len;
-+
-+	if (len == 0) {
-+		nfs_invalf(fc, "NFS: portgroup for %s, unable to parse address %s",
-+			   type, begin);
-+		return -EINVAL;
-+	}
-+
-+	end_len = rpc_pton(fc->net_ns, end, strlen(end),
-+			   (struct sockaddr *)&end_addr, sizeof(end_addr));
-+
-+	if (end_len == 0) {
-+		nfs_invalf(fc, "NFS: portgroup for %s, unable to parse address %s",
-+			   type, end);
-+		return -EINVAL;
-+	}
-+
-+	while (0 == (ret = nfs_portgroup_add_parsed(fc, pg, type, &addr, len))) {
-+		/* Check if end of range reached */
-+		if (rpc_cmp_addr((const struct sockaddr *)&addr,
-+				 (const struct sockaddr *)&end_addr))
-+			break;
-+
-+		/* Bump address by one */
-+		switch (addr.ss_family) {
-+		case AF_INET: {
-+			struct sockaddr_in *sin1 = (struct sockaddr_in *)&addr;
-+			sin1->sin_addr.s_addr = htonl(ntohl(sin1->sin_addr.s_addr) + 1);
-+			break;
-+		}
-+		case AF_INET6: {
-+			nfs_invalf(fc, "NFS: IPv6 in address ranges not supported");
-+			return -ENOTSUPP;
-+		}
-+		default:
-+			nfs_invalf(fc, "NFS: address family %d not supported in ranges",
-+				   addr.ss_family);
-+			return -ENOTSUPP;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+/*
-+ * Parse and add a portgroup string. These are `~`-delimited single addresses
-+ * or groups of addresses. An inclusive address range can be specified with '-'
-+ * instead of specifying a single address.
-+ */
-+static int nfs_parse_portgroup(char *string, struct fs_context *fc,
-+				struct rpc_portgroup **pg_out, const char *type)
-+{
-+	struct rpc_portgroup *pg = NULL;
-+	char *string_scan = string, *item;
-+	int ret;
-+
-+	if (!*pg_out) {
-+		pg = vmalloc(sizeof(*pg));
-+		if (!pg)
-+			return -ENOMEM;
-+
-+		memset(pg, 0, sizeof(*pg));
-+		*pg_out = pg;
-+	} else {
-+		pg = *pg_out;
-+	}
-+
-+	while ((item = strsep(&string_scan, "~")) != NULL) {
-+		const char *range_sep = strchr(item, '-');
-+
-+		if (range_sep != NULL) {
-+			const char *range_start = strsep(&item, "-");
-+			BUG_ON(range_start == NULL || item == NULL);
-+			ret = nfs_portgroup_add_range(fc, pg, type,
-+						       range_start, item);
-+		} else {
-+			ret = nfs_portgroup_add_single(fc, pg, type, item);
-+		}
-+
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (pg->nr == 0)
-+		return nfs_invalf(fc, "NFS: passed empty portgroup is invalid");
-+
-+	return 0;
-+}
-+
- /*
-  * Parse a single mount parameter.
+ 	snprintf(buf, sizeof(buf), "%u", rpc_get_port(sap));
+ 	xprt->address_strings[RPC_DISPLAY_PORT] = kstrdup(buf, GFP_KERNEL);
+ 
+@@ -352,7 +358,7 @@ xprt_setup_rdma(struct xprt_create *args)
+ 
+ 	if (rpc_get_port(sap))
+ 		xprt_set_bound(xprt);
+-	xprt_rdma_format_addresses(xprt, sap);
++	xprt_rdma_format_addresses(xprt, sap, args->srcaddr);
+ 
+ 	new_xprt = rpcx_to_rdmax(xprt);
+ 
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index cb4539d4740a..5fc36fdd2056 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -573,7 +573,8 @@ static inline void rpcrdma_set_xdrlen(struct xdr_buf *xdr, size_t len)
   */
-@@ -770,6 +914,24 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 			goto out_invalid_value;
- 		}
- 		break;
-+	case Opt_localports:
-+		ret = nfs_parse_portgroup(param->string, fc, &ctx->localports, "local");
-+
-+		switch (ret) {
-+		case -ENOMEM: goto out_nomem;
-+		case -ENOSPC: goto out_portgroup_too_large;
-+		case -EINVAL: goto out_invalid_address;
-+		}
-+		break;
-+	case Opt_remoteports:
-+		ret = nfs_parse_portgroup(param->string, fc, &ctx->remoteports, "remote");
-+
-+		switch (ret) {
-+		case -ENOMEM: goto out_nomem;
-+		case -ENOSPC: goto out_portgroup_too_large;
-+		case -EINVAL: goto out_invalid_address;
-+		}
-+		break;
- 
- 		/*
- 		 * Special options
-@@ -782,6 +944,9 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 
- 	return 0;
- 
-+out_nomem:
-+	nfs_errorf(fc, "NFS: not enough memory to parse device name");
-+	return -ENOMEM;
- out_invalid_value:
- 	return nfs_invalf(fc, "NFS: Bad mount option value specified");
- out_invalid_address:
-@@ -790,6 +955,8 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 	return nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
- out_bad_transport:
- 	return nfs_invalf(fc, "NFS: Unrecognized transport protocol");
-+out_portgroup_too_large:
-+	return -EINVAL;
+ extern unsigned int xprt_rdma_max_inline_read;
+ extern unsigned int xprt_rdma_max_inline_write;
+-void xprt_rdma_format_addresses(struct rpc_xprt *xprt, struct sockaddr *sap);
++void xprt_rdma_format_addresses(struct rpc_xprt *xprt, struct sockaddr *sap,
++				struct sockaddr *src_sap);
+ void xprt_rdma_free_addresses(struct rpc_xprt *xprt);
+ void xprt_rdma_close(struct rpc_xprt *xprt);
+ void xprt_rdma_print_stats(struct rpc_xprt *xprt, struct seq_file *seq);
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index c56a66cdf4ac..e8ea13f29dfe 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -229,6 +229,12 @@ static inline struct sockaddr *xs_addr(struct rpc_xprt *xprt)
+ 	return (struct sockaddr *) &xprt->addr;
  }
  
- /*
-@@ -1394,6 +1561,10 @@ static void nfs_fs_context_free(struct fs_context *fc)
- 		if (ctx->nfs_mod)
- 			put_nfs_version(ctx->nfs_mod);
- 		kfree(ctx->client_address);
-+		if (ctx->localports)
-+			vfree(ctx->localports);
-+		if (ctx->remoteports)
-+			vfree(ctx->remoteports);
- 		kfree(ctx->mount_server.hostname);
- 		kfree(ctx->nfs_server.export_path);
- 		kfree(ctx->nfs_server.hostname);
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 62d3189745cd..8efdbd896b77 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -63,6 +63,8 @@ struct nfs_client_initdata {
- 	const char *nodename;			/* Hostname of the client */
- 	const char *ip_addr;			/* IP address of the client */
- 	size_t addrlen;
-+	struct rpc_portgroup *localports;      /* Local addresses to bind */
-+	struct rpc_portgroup *remoteports;     /* Remote server addresses */
- 	struct nfs_subversion *nfs_mod;
- 	int proto;
- 	u32 minorversion;
-@@ -96,6 +98,8 @@ struct nfs_fs_context {
- 	char			*fscache_uniq;
- 	unsigned short		protofamily;
- 	unsigned short		mountfamily;
-+	struct rpc_portgroup	*localports;
-+	struct rpc_portgroup	*remoteports;
++static inline struct sockaddr *xs_srcaddr(struct rpc_xprt *xprt)
++{
++	struct sock_xprt *transport = container_of(xprt, struct sock_xprt, xprt);
++	return (struct sockaddr *) &transport->srcaddr;
++}
++
+ static inline struct sockaddr_un *xs_addr_un(struct rpc_xprt *xprt)
+ {
+ 	return (struct sockaddr_un *) &xprt->addr;
+@@ -244,9 +250,11 @@ static inline struct sockaddr_in6 *xs_addr_in6(struct rpc_xprt *xprt)
+ 	return (struct sockaddr_in6 *) &xprt->addr;
+ }
  
- 	struct {
- 		union {
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index 38e60ec742df..33fd23068546 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -50,6 +50,8 @@ struct nfs_client {
- #define NFS_CS_REUSEPORT	8		/* - reuse src port on reconnect */
- 	struct sockaddr_storage	cl_addr;	/* server identifier */
- 	size_t			cl_addrlen;
-+	struct rpc_portgroup *  cl_localports;  /* Local addresses to bind */
-+	struct rpc_portgroup *  cl_remoteports; /* Remote server addresses */
- 	char *			cl_hostname;	/* hostname of server */
- 	char *			cl_acceptor;	/* GSSAPI acceptor name */
- 	struct list_head	cl_share_link;	/* link in global client list */
+-static void xs_format_common_peer_addresses(struct rpc_xprt *xprt)
++static void xs_format_common_addresses(struct rpc_xprt *xprt,
++			               struct sockaddr *sap,
++			               int display_addr,
++			               int display_hex_addr)
+ {
+-	struct sockaddr *sap = xs_addr(xprt);
+ 	struct sockaddr_in6 *sin6;
+ 	struct sockaddr_in *sin;
+ 	struct sockaddr_un *sun;
+@@ -256,19 +264,19 @@ static void xs_format_common_peer_addresses(struct rpc_xprt *xprt)
+ 	case AF_LOCAL:
+ 		sun = xs_addr_un(xprt);
+ 		strlcpy(buf, sun->sun_path, sizeof(buf));
+-		xprt->address_strings[RPC_DISPLAY_ADDR] =
++		xprt->address_strings[display_addr] =
+ 						kstrdup(buf, GFP_KERNEL);
+ 		break;
+ 	case AF_INET:
+ 		(void)rpc_ntop(sap, buf, sizeof(buf));
+-		xprt->address_strings[RPC_DISPLAY_ADDR] =
++		xprt->address_strings[display_addr] =
+ 						kstrdup(buf, GFP_KERNEL);
+ 		sin = xs_addr_in(xprt);
+ 		snprintf(buf, sizeof(buf), "%08x", ntohl(sin->sin_addr.s_addr));
+ 		break;
+ 	case AF_INET6:
+ 		(void)rpc_ntop(sap, buf, sizeof(buf));
+-		xprt->address_strings[RPC_DISPLAY_ADDR] =
++		xprt->address_strings[display_addr] =
+ 						kstrdup(buf, GFP_KERNEL);
+ 		sin6 = xs_addr_in6(xprt);
+ 		snprintf(buf, sizeof(buf), "%pi6", &sin6->sin6_addr);
+@@ -277,7 +285,8 @@ static void xs_format_common_peer_addresses(struct rpc_xprt *xprt)
+ 		BUG();
+ 	}
+ 
+-	xprt->address_strings[RPC_DISPLAY_HEX_ADDR] = kstrdup(buf, GFP_KERNEL);
++	if (display_hex_addr != -1)
++		xprt->address_strings[display_hex_addr] = kstrdup(buf, GFP_KERNEL);
+ }
+ 
+ static void xs_format_common_peer_ports(struct rpc_xprt *xprt)
+@@ -292,13 +301,17 @@ static void xs_format_common_peer_ports(struct rpc_xprt *xprt)
+ 	xprt->address_strings[RPC_DISPLAY_HEX_PORT] = kstrdup(buf, GFP_KERNEL);
+ }
+ 
+-static void xs_format_peer_addresses(struct rpc_xprt *xprt,
+-				     const char *protocol,
+-				     const char *netid)
++static void xs_format_addresses(struct rpc_xprt *xprt,
++			        const char *protocol,
++			        const char *netid)
+ {
+ 	xprt->address_strings[RPC_DISPLAY_PROTO] = protocol;
+ 	xprt->address_strings[RPC_DISPLAY_NETID] = netid;
+-	xs_format_common_peer_addresses(xprt);
++	xs_format_common_addresses(xprt, xs_addr(xprt),
++				   RPC_DISPLAY_ADDR, RPC_DISPLAY_HEX_ADDR);
++	if (xs_srcaddr(xprt)->sa_family != 0)
++		xs_format_common_addresses(xprt, xs_srcaddr(xprt),
++					   RPC_DISPLAY_SRC_ADDR, -1);
+ 	xs_format_common_peer_ports(xprt);
+ }
+ 
+@@ -2793,7 +2806,7 @@ static struct rpc_xprt *xs_setup_local(struct xprt_create *args)
+ 			goto out_err;
+ 		}
+ 		xprt_set_bound(xprt);
+-		xs_format_peer_addresses(xprt, "local", RPCBIND_NETID_LOCAL);
++		xs_format_addresses(xprt, "local", RPCBIND_NETID_LOCAL);
+ 		ret = ERR_PTR(xs_local_setup_socket(transport));
+ 		if (ret)
+ 			goto out_err;
+@@ -2860,13 +2873,13 @@ static struct rpc_xprt *xs_setup_udp(struct xprt_create *args)
+ 		if (((struct sockaddr_in *)addr)->sin_port != htons(0))
+ 			xprt_set_bound(xprt);
+ 
+-		xs_format_peer_addresses(xprt, "udp", RPCBIND_NETID_UDP);
++		xs_format_addresses(xprt, "udp", RPCBIND_NETID_UDP);
+ 		break;
+ 	case AF_INET6:
+ 		if (((struct sockaddr_in6 *)addr)->sin6_port != htons(0))
+ 			xprt_set_bound(xprt);
+ 
+-		xs_format_peer_addresses(xprt, "udp", RPCBIND_NETID_UDP6);
++		xs_format_addresses(xprt, "udp", RPCBIND_NETID_UDP6);
+ 		break;
+ 	default:
+ 		ret = ERR_PTR(-EAFNOSUPPORT);
+@@ -2942,13 +2955,13 @@ static struct rpc_xprt *xs_setup_tcp(struct xprt_create *args)
+ 		if (((struct sockaddr_in *)addr)->sin_port != htons(0))
+ 			xprt_set_bound(xprt);
+ 
+-		xs_format_peer_addresses(xprt, "tcp", RPCBIND_NETID_TCP);
++		xs_format_addresses(xprt, "tcp", RPCBIND_NETID_TCP);
+ 		break;
+ 	case AF_INET6:
+ 		if (((struct sockaddr_in6 *)addr)->sin6_port != htons(0))
+ 			xprt_set_bound(xprt);
+ 
+-		xs_format_peer_addresses(xprt, "tcp", RPCBIND_NETID_TCP6);
++		xs_format_addresses(xprt, "tcp", RPCBIND_NETID_TCP6);
+ 		break;
+ 	default:
+ 		ret = ERR_PTR(-EAFNOSUPPORT);
+@@ -3006,11 +3019,11 @@ static struct rpc_xprt *xs_setup_bc_tcp(struct xprt_create *args)
+ 
+ 	switch (addr->sa_family) {
+ 	case AF_INET:
+-		xs_format_peer_addresses(xprt, "tcp",
+-					 RPCBIND_NETID_TCP);
++		xs_format_addresses(xprt, "tcp",
++				   RPCBIND_NETID_TCP);
+ 		break;
+ 	case AF_INET6:
+-		xs_format_peer_addresses(xprt, "tcp",
++		xs_format_addresses(xprt, "tcp",
+ 				   RPCBIND_NETID_TCP6);
+ 		break;
+ 	default:
 -- 
 2.26.2
 
