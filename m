@@ -2,104 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D72F2FEF10
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 16:40:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED0BF2FF015
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 17:23:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733131AbhAUPiL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Jan 2021 10:38:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733159AbhAUPhu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 10:37:50 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7427C061788
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 07:37:10 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 172956E97; Thu, 21 Jan 2021 10:37:09 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 172956E97
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1611243429;
-        bh=zYYBFnv46PLZedrNhXxBIzRuNZv8Kjh7QMOKWphno7Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y3/W3IZ9QR6LA/qd1X6BCndohge538Wpk9t65iLWOHcrWOzLRm4sj7MZRo3Qkl18Q
-         tc/lZRG7JUd8nxz7aDOdDY3ef/V3iC2CGchBT52lOf+fgWzGXnK7o46bBFqXlaafGp
-         r4oCxOSfMGKFev38/2SHArb+LKnjEIH/j+ftd5IM=
-Date:   Thu, 21 Jan 2021 10:37:09 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Benjamin Maynard <benmaynard@google.com>
+        id S1726574AbhAUQV7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Jan 2021 11:21:59 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46522 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732786AbhAUQVs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 11:21:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611246021;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=B77pImGVlPsw/RIYAIYbui87mrHnzpnWVNf4T08blD8=;
+        b=XaPjEn0+ZEy+4DYtNTdLM23tf0qHZJgNxndiTjjpckFZ83L5JDS7def83an9WyLyi9L3Zp
+        elaOebRVuxJpUJOJbrveupWV+lXWrmIxjUevYzPBW9qYAAgAeC/rQFFnQWWCvlZvy52nkg
+        cylXiS0uSa0IeZJt43ae+W1AaaqLzUM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-223-w5crbgy9NCONStyMGs13kA-1; Thu, 21 Jan 2021 11:20:20 -0500
+X-MC-Unique: w5crbgy9NCONStyMGs13kA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 17E921800D41;
+        Thu, 21 Jan 2021 16:20:19 +0000 (UTC)
+Received: from dwysocha.rdu.csb (ovpn-113-28.rdu2.redhat.com [10.10.113.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 67D2974ACB;
+        Thu, 21 Jan 2021 16:20:18 +0000 (UTC)
+From:   Dave Wysochanski <dwysocha@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: Re: Linux 5.11 Kernel: NFS re-export errors with older nfs-utils
- package versions
-Message-ID: <20210121153709.GA18310@fieldses.org>
-References: <CA+QRt4vb=DjgcOqGLtfdfKiDaqKED825xNpNyQaaK-df5tCSRQ@mail.gmail.com>
- <20210119180204.GA24213@fieldses.org>
- <CA+QRt4sxwMTTWpropg=O=XdJ42P+2H=jbrwC8E1n=gt+je6iXQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+QRt4sxwMTTWpropg=O=XdJ42P+2H=jbrwC8E1n=gt+je6iXQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Subject: [PATCH v2 0/2] Fix crash in trace_rpcgss_context due to 0-length acceptor
+Date:   Thu, 21 Jan 2021 11:20:14 -0500
+Message-Id: <1611246016-21129-1-git-send-email-dwysocha@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 21, 2021 at 11:21:56AM +0000, Benjamin Maynard wrote:
-> That is correct, there is an originating NFS Server (Ubuntu 20.04 -
-> 5.4.0-1034-gcp) that is exporting a directory from the local ext4
-> filesystem. This is exported with the following options:
-> 
-> /files 10.0.0.0/8(rw,no_subtree_check,fsid=10)
-> 
-> This is then mounted from the re-exporting server (export from /proc/mounts):
-> 
-> 10.70.1.2:/files /files nfs
-> rw,sync,noatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,acregmin=600,acregmax=600,acdirmin=600,acdirmax=600,hard,nocto,proto=tcp,nconnect=16,timeo=600,retrans=2,sec=sys,mountaddr=10.70.1.2,mountvers=3,mountport=20048,mountproto=udp,fsc,local_lock=none,addr=10.70.1.2
-> 0 0
-> 
-> We then attempt to re-export the mounted directory from the
-> re-exporting server with the following entry in /etc/exports:
-> 
-> /files   10.67.0.0/16(rw,wdelay,no_root_squash,no_subtree_check,fsid=10,sec=sys,rw,secure,no_root_squash,no_all_squash)
-> 
-> If you perform this set of steps with the 5.10 kernel with nfs-utils
-> 1.3.4 (Ubuntu & Debian default version), the re-export will work. If
-> you perform the same set of steps with the ba5e8187c555 patch applied
-> (still on nfs-utils 1.3.4) then the re-export will fail with the error
-> message "exportfs: /files does not support NFS export". dmesg further
-> reveals the cause "check_export: nfs does not support subtree
-> checking!".
-> 
-> This message appears even though we have no_subtree_check set on both
-> the exports of the originating NFS server, and the re-export server.
-> 
-> If you then upgrade nfs-utils to 2.5.2 on the re-export server, the
-> re-export works as expected.
+This small patchset fixes a kernel crash when the rpcgss_context trace event is
+enabled and IO is in flight when a kerberos ticket expires.  The crash occurs
+because the acceptor name may be 0 bytes long and the gss_fill_context() function
+does not handle it properly.  This causes the ctx->gc_acceptor.data to be
+ZERO_SIZE_PTR which is not properly recognized by the tracepoint code.
 
-Oh, got it, looks like the bug fixed by nfs-utils commit 63f520e8f6f5
-"exportfs: Make sure pass all valid export flags to nfsd".
+The first patch is a simple refactor and eliminates duplicate helper functions
+related to the crash.  The second patch is the actual fix inside one of the
+helper functions due to the definition of an opaque XDR object.  This object
+is defined in RFC 4506 (see section 4.10), where 'length' is an integer in a
+range including 0.
 
-Rough explanation: export information isn't normally passed down to the
-kernel when exportfs is called.  Instead the kernel waits till it needs
-to know about some new client and/or filesystem and calls up to mountd
-to ask for the relevant export entry.
+Reproducer
 
-Anyway, that's fine but it means the user doesn't find about errors
-right away.
+# Enable the tracepoint and mount the share
+trace-cmd start -e rpcgss:*
+mount -osec=krb5 nfs-server:/export /mnt/nfs
 
-So, trying to be helpful, exportfs actually does pass down a dummy
-export to the kernel at exportfs time, just to check for errors like a
-typo'd export path or an unexportable filesystem.
+# Obtain a kerberos ticket
+# Set ticket lifetime to something small like 20 seconds
+su test -c "kinit -l 20 test"
 
-Before that fix, it passed down that dumy export without the
-"no_subtree_check" flag, even when you set that flag.
+# Sleep for a portion of the ticket lifetime so we are writing while the ticket expires
+sleep 10
 
-So, for nfs reexport, you need an nfs-utils new enough to include that
-patch.
+# Now run some IO long enough that the ticket expires midway
+dd if=/dev/urandom of=/mnt/nfs/file bs=1M count=100
 
-We're normally pretty strict about kernel regressions: if something
-stopped working on kernel upgrade, that's a bug.  But I think we really
-do need to fail attempts to re-export NFS with subtree checking, so
-we've got to make an exception here.  Re-export is still a bit of an
-experimental feature, so there may be hiccups like this.
 
---b.
+Dave Wysochanski (2):
+  SUNRPC: Move simple_get_bytes and simple_get_netobj into xdr.h
+  SUNRPC: Handle 0 length opaque XDR object data properly
+
+ include/linux/sunrpc/xdr.h          | 36 ++++++++++++++++++++++++++++++++++--
+ net/sunrpc/auth_gss/auth_gss.c      | 29 -----------------------------
+ net/sunrpc/auth_gss/gss_krb5_mech.c | 29 -----------------------------
+ 3 files changed, 34 insertions(+), 60 deletions(-)
+
+-- 
+1.8.3.1
+
