@@ -2,94 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AB8B2FF478
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 20:30:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3F3C2FF3DF
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 20:11:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbhAUTaO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Jan 2021 14:30:14 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34103 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725983AbhAUTI0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 14:08:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611256021;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8cQVBtElgHkrZu0TCW+Tp+86juePWkkpr+KAAgOabXU=;
-        b=AxZpqlQJb1pHt5uGjm8luNMnTQZTydxW6KIwP9Ong4xVAVsXwJ3CE5sbgI+V689RuOhQoH
-        HKKT0sV4SMuzK38w8tI3LpI7/epeaBOQwkrquCX/Z3MTL+1KI0m6WnF6tnnGem70hppMcn
-        KAicaTNawAi9iD42dY+QSnQuEVjKl1s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-594-ogR02f57MSGANxw_NhZwKQ-1; Thu, 21 Jan 2021 13:55:23 -0500
-X-MC-Unique: ogR02f57MSGANxw_NhZwKQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 570368066F2;
-        Thu, 21 Jan 2021 18:55:21 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 810576EF42;
-        Thu, 21 Jan 2021 18:55:14 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20210121174306.GB20964@fieldses.org>
-References: <20210121174306.GB20964@fieldses.org> <20210121164645.GA20964@fieldses.org> <161118128472.1232039.11746799833066425131.stgit@warthog.procyon.org.uk> <1794286.1611248577@warthog.procyon.org.uk>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
+        id S1725883AbhAUTKd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Jan 2021 14:10:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbhAUTJy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 14:09:54 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F210AC0613ED
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 10:58:18 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id a9so2790241wrt.5
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 10:58:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OKw0ZYFzMtpOMM08Mm3InuewDzOdzcoJxbqdwYvyWfQ=;
+        b=mSViQzbBlhrFgwyRpbEBzfAgQ/hf6aqj9nOWcuLb8cKuXDRLyL9JVMQFuZJO4Ow9uP
+         02eSqaGtzOsX4aIOY8X6PTD6wtaQOwyxhArN/CntSYy0Ox0+xL51xh7DXPdMpUaIE5Wl
+         Say7XizujsCiWL52EHBGfec9C51pXeQozjEKyHMH1LYYWSIKp/EgFbv3JjZd9sLon8vn
+         cLxK22IwZ85Mao5e4yiZqmg3fXSitVgDaB3xDRKnZRvdGwfvsdtGwlM9D7/auxlRUXeu
+         t2JqKEmoqCjgPZ+ylluCRjZxqx76rQlsRuWMgBjoP0TP2LRHF0an3d+3OL45psteg2bp
+         axOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OKw0ZYFzMtpOMM08Mm3InuewDzOdzcoJxbqdwYvyWfQ=;
+        b=K4plr8iG7Dt+cHyjYMZfiAHzsZT4xlXEpQk7g71+ROxgwxgTaMREGr5jz7PMHVlqAH
+         dSrfJhFrUptlGb1zhAhVmu3iC/J5kmbKvgJI9NwKnx2+cTdn/F2GGsmt0f0sZAokjh9L
+         CBsUSYnrxqS6cnasd+9JZVkbta+c8J4DQcY2JlyAddyY6x1SLSYw+EMotQccS7EzjNxF
+         LiCvu8dd10xImyWq2DBMJxvMtvxMdlG3S6/Dwh1zbNqst+ymi5zCMbT6ndju/kTEDHUq
+         Bz2rnNXnuDAPGgTGW+kmCDlkMWVVOdgd9BE5YneVBL7D5zPJdgLxXDIfT34mh6tAsDKm
+         LWSg==
+X-Gm-Message-State: AOAM532zUxeSd/j6onL8EyQG1ncySnq2OxEpj2AJAxoa4JXjwHn75MJi
+        8CCmsrvXPM/fNFD65sd0JGvvhQ==
+X-Google-Smtp-Source: ABdhPJxlsvZHJSO4GeMwHFhBGPE/S6zqSZFKrAAlug0SzLoThgZK/5p0f70ZWnhnkqRSFIXLTe2O6A==
+X-Received: by 2002:adf:b781:: with SMTP id s1mr896988wre.290.1611255497693;
+        Thu, 21 Jan 2021 10:58:17 -0800 (PST)
+Received: from gmail.com ([77.124.84.167])
+        by smtp.gmail.com with ESMTPSA id v4sm9541391wrw.42.2021.01.21.10.58.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Jan 2021 10:58:16 -0800 (PST)
+Date:   Thu, 21 Jan 2021 20:58:13 +0200
+From:   Dan Aloni <dan@kernelim.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-afs@lists.infradead.org, Jeff Layton <jlayton@redhat.com>,
-        David Wysochanski <dwysocha@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-cachefs@redhat.com, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 00/25] Network fs helper library & fscache kiocb API
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Jim Foraker <foraker1@llnl.gov>,
+        Ben Woodard <woodard@redhat.com>
+Subject: Re: [RFC] NFSv3 RDMA multipath enhancements
+Message-ID: <20210121185813.GA3135951@gmail.com>
+References: <20210112141706.GA3146539@gmail.com>
+ <3AB7389B-2EA9-4894-9656-9C8512166E0E@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1851803.1611255313.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Thu, 21 Jan 2021 18:55:13 +0000
-Message-ID: <1851804.1611255313@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3AB7389B-2EA9-4894-9656-9C8512166E0E@oracle.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-J. Bruce Fields <bfields@fieldses.org> wrote:
+On Wed, Jan 13, 2021 at 09:59:58AM -0500, Chuck Lever wrote:
+> > To my understanding NFSv4.x with pNFS has advanced dynamic transport
+> > management logic along file layouts supporting stripe over file offsets,
+> > however there are cases in which we would like to achieve good
+> > performance even with the older protocol.
+>
+> Hi Dan, my curiosity is piqued about the RPC request dispatch changes
+> you have in mind. Can you post them here for review?
 
-> > Fixing this requires a much bigger overhaul of cachefiles than this pa=
-tchset
-> > performs.
-> =
+These changes depend on the initial changes I'd like to contribute. The
+gist of them concerns the xprt multipath algorithm where in addition to
+round robin, we add further considerations regarding transport picking.
+For example, for data IOs, the NUMA node to which the memory pages
+attached to the RPC request may be used to pick a transport with an
+outgoing local port that is closer to that memory in the server
+architecture compared to the other local ports. So the idea is to lessen
+data transfer bottlenecks in hardware.
 
-> That sounds like "sometimes you may get file corruption and there's
-> nothing you can do about it".  But I know people actually use fscache,
-> so it must be reliable at least for some use cases.
+> Also, if you can tell us, what NFS server supports NFS/RDMA but not
+> NFSv4 ?
 
-Yes.  That's true for the upstream code because that uses bmap.  I'm switc=
-hing
-to use SEEK_HOLE/SEEK_DATA to get rid of the bmap usage, but it doesn't ch=
-ange
-the issue.
+For example, there are VAST Data clusters currently supporting NFSv3 (as
+one logical server), with the NFSv4 support coming soon.
 
-> Is it that those "bridging" blocks only show up in certain corner cases
-> that users can arrange to avoid?  Or that it's OK as long as you use
-> certain specific file systems whose behavior goes beyond what's
-> technically required by the bamp or seek interfaces?
-
-That's a question for the xfs, ext4 and btrfs maintainers, and may vary
-between kernel versions and fsck or filesystem packing utility versions.
-
-David
-
+--
+Dan Aloni
