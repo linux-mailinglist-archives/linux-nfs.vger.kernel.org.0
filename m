@@ -2,105 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0148D2FF39B
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 19:53:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AB8B2FF478
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 20:30:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbhAUSwR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Jan 2021 13:52:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbhAUSux (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 13:50:53 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A32D8C06178C
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Jan 2021 10:49:59 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 898646EA0; Thu, 21 Jan 2021 13:49:58 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 898646EA0
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5/9] nfsd: refactor lookup_clientid
-Date:   Thu, 21 Jan 2021 13:49:51 -0500
-Message-Id: <1611254995-23131-5-git-send-email-bfields@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1611254995-23131-1-git-send-email-bfields@redhat.com>
-References: <6D288689-85E5-4E3E-9117-B71FB45FFABB@oracle.com>
- <1611254995-23131-1-git-send-email-bfields@redhat.com>
+        id S1727015AbhAUTaO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Jan 2021 14:30:14 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34103 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725983AbhAUTI0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 14:08:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611256021;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8cQVBtElgHkrZu0TCW+Tp+86juePWkkpr+KAAgOabXU=;
+        b=AxZpqlQJb1pHt5uGjm8luNMnTQZTydxW6KIwP9Ong4xVAVsXwJ3CE5sbgI+V689RuOhQoH
+        HKKT0sV4SMuzK38w8tI3LpI7/epeaBOQwkrquCX/Z3MTL+1KI0m6WnF6tnnGem70hppMcn
+        KAicaTNawAi9iD42dY+QSnQuEVjKl1s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-594-ogR02f57MSGANxw_NhZwKQ-1; Thu, 21 Jan 2021 13:55:23 -0500
+X-MC-Unique: ogR02f57MSGANxw_NhZwKQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 570368066F2;
+        Thu, 21 Jan 2021 18:55:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 810576EF42;
+        Thu, 21 Jan 2021 18:55:14 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20210121174306.GB20964@fieldses.org>
+References: <20210121174306.GB20964@fieldses.org> <20210121164645.GA20964@fieldses.org> <161118128472.1232039.11746799833066425131.stgit@warthog.procyon.org.uk> <1794286.1611248577@warthog.procyon.org.uk>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Takashi Iwai <tiwai@suse.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-afs@lists.infradead.org, Jeff Layton <jlayton@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-cachefs@redhat.com, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH 00/25] Network fs helper library & fscache kiocb API
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1851803.1611255313.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Thu, 21 Jan 2021 18:55:13 +0000
+Message-ID: <1851804.1611255313@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+J. Bruce Fields <bfields@fieldses.org> wrote:
 
-This'll be useful elsewhere.
+> > Fixing this requires a much bigger overhaul of cachefiles than this pa=
+tchset
+> > performs.
+> =
 
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
- fs/nfsd/nfs4state.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+> That sounds like "sometimes you may get file corruption and there's
+> nothing you can do about it".  But I know people actually use fscache,
+> so it must be reliable at least for some use cases.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 4bdd90074e24..c74bf3b5b0de 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -4633,40 +4633,40 @@ static __be32 nfsd4_check_seqid(struct nfsd4_compound_state *cstate, struct nfs4
- 	return nfserr_bad_seqid;
- }
- 
-+static struct nfs4_client *lookup_clientid(clientid_t *clid, bool sessions,
-+						struct nfsd_net *nn)
-+{
-+	struct nfs4_client *found;
-+
-+	spin_lock(&nn->client_lock);
-+	found = find_confirmed_client(clid, sessions, nn);
-+	if (found)
-+		atomic_inc(&found->cl_rpc_users);
-+	spin_unlock(&nn->client_lock);
-+	return found;
-+}
-+
- static __be32 set_client(clientid_t *clid,
- 		struct nfsd4_compound_state *cstate,
- 		struct nfsd_net *nn,
- 		bool sessions)
- {
--	struct nfs4_client *found;
--
- 	if (cstate->clp) {
--		found = cstate->clp;
--		if (!same_clid(&found->cl_clientid, clid))
-+		if (!same_clid(&cstate->clp->cl_clientid, clid))
- 			return nfserr_stale_clientid;
- 		return nfs_ok;
- 	}
--
- 	if (STALE_CLIENTID(clid, nn))
- 		return nfserr_stale_clientid;
--
- 	/*
- 	 * For v4.1+ we get the client in the SEQUENCE op. If we don't have one
- 	 * cached already then we know this is for is for v4.0 and "sessions"
- 	 * will be false.
- 	 */
- 	WARN_ON_ONCE(cstate->session);
--	spin_lock(&nn->client_lock);
--	found = find_confirmed_client(clid, sessions, nn);
--	if (!found) {
--		spin_unlock(&nn->client_lock);
-+	cstate->clp = lookup_clientid(clid, sessions, nn);
-+	if (!cstate->clp)
- 		return nfserr_expired;
--	}
--	atomic_inc(&found->cl_rpc_users);
--	spin_unlock(&nn->client_lock);
--
--	/* Cache the nfs4_client in cstate! */
--	cstate->clp = found;
- 	return nfs_ok;
- }
- 
--- 
-2.29.2
+Yes.  That's true for the upstream code because that uses bmap.  I'm switc=
+hing
+to use SEEK_HOLE/SEEK_DATA to get rid of the bmap usage, but it doesn't ch=
+ange
+the issue.
+
+> Is it that those "bridging" blocks only show up in certain corner cases
+> that users can arrange to avoid?  Or that it's OK as long as you use
+> certain specific file systems whose behavior goes beyond what's
+> technically required by the bamp or seek interfaces?
+
+That's a question for the xfs, ext4 and btrfs maintainers, and may vary
+between kernel versions and fsck or filesystem packing utility versions.
+
+David
 
