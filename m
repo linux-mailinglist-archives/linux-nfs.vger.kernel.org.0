@@ -2,66 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 493342FF703
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 22:18:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7FC22FF71F
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jan 2021 22:23:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbhAUVSi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Jan 2021 16:18:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726567AbhAUUyt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 21 Jan 2021 15:54:49 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3D24523A5D;
-        Thu, 21 Jan 2021 20:53:13 +0000 (UTC)
-Subject: [PATCH v1 2/2] svcrdma: DMA-sync the receive buffer in
- svc_rdma_recvfrom()
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Thu, 21 Jan 2021 15:53:12 -0500
-Message-ID: <161126239239.8979.7995314438640511469.stgit@klimt.1015granger.net>
-In-Reply-To: <161126216710.8979.7145432546367265892.stgit@klimt.1015granger.net>
-References: <161126216710.8979.7145432546367265892.stgit@klimt.1015granger.net>
-User-Agent: StGit/0.23-29-ga622f1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        id S1726000AbhAUVXa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Jan 2021 16:23:30 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24669 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726286AbhAUVX1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jan 2021 16:23:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611264121;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=zbWs5oPcE4nzYe2QsPBjXZwgm0sLaHUc5dN1GqtXWGU=;
+        b=Fx8b4/UzU66yP6Vbrrky0rRlbcsgQ5BAkSKWdzsmcDCgmZ+Vot4WD2J5oUAVsEg3AC/QH1
+        3TBnETBaeOmM4plJNFkTTrfHrsgnWl74OCMKPVeznb3HBLBQpKFhrAnUAWjU7dmc89PSav
+        MMVF3uUbKNiXj4ZTcVXqlO19yCxw6ZY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-559-yMIMXtyPOv-JBLzdQUO0iQ-1; Thu, 21 Jan 2021 16:17:38 -0500
+X-MC-Unique: yMIMXtyPOv-JBLzdQUO0iQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5BC7418C8C01;
+        Thu, 21 Jan 2021 21:17:37 +0000 (UTC)
+Received: from dwysocha.rdu.csb (ovpn-113-28.rdu2.redhat.com [10.10.113.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 682DE61F55;
+        Thu, 21 Jan 2021 21:17:36 +0000 (UTC)
+From:   Dave Wysochanski <dwysocha@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v3 0/2] Fix crash in trace_rpcgss_context due to 0-length acceptor
+Date:   Thu, 21 Jan 2021 16:17:22 -0500
+Message-Id: <1611263844-32608-1-git-send-email-dwysocha@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The Receive completion handler doesn't look at the contents of the
-Receive buffer. The DMA sync isn't terribly expensive but it's one
-less thing that needs to be done by the Receive completion handler,
-which is single-threaded (per svc_xprt). This helps scalability.
+Changes from v2
+* Move simple_get_bytes and simple_get_netobj into private header
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This small patchset fixes a kernel crash when the rpcgss_context trace event is
+enabled and IO is in flight when a kerberos ticket expires.  The crash occurs
+because the acceptor name may be 0 bytes long and the gss_fill_context() function
+does not handle it properly.  This causes the ctx->gc_acceptor.data to be
+ZERO_SIZE_PTR which is not properly recognized by the tracepoint code.
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index ab0b7e9777bc..6d28f23ceb35 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -342,9 +342,6 @@ static void svc_rdma_wc_receive(struct ib_cq *cq, struct ib_wc *wc)
- 
- 	/* All wc fields are now known to be valid */
- 	ctxt->rc_byte_len = wc->byte_len;
--	ib_dma_sync_single_for_cpu(rdma->sc_pd->device,
--				   ctxt->rc_recv_sge.addr,
--				   wc->byte_len, DMA_FROM_DEVICE);
- 
- 	spin_lock(&rdma->sc_rq_dto_lock);
- 	list_add_tail(&ctxt->rc_list, &rdma->sc_rq_dto_q);
-@@ -851,6 +848,9 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
- 	spin_unlock(&rdma_xprt->sc_rq_dto_lock);
- 	percpu_counter_inc(&svcrdma_stat_recv);
- 
-+	ib_dma_sync_single_for_cpu(rdma_xprt->sc_pd->device,
-+				   ctxt->rc_recv_sge.addr, ctxt->rc_byte_len,
-+				   DMA_FROM_DEVICE);
- 	svc_rdma_build_arg_xdr(rqstp, ctxt);
- 
- 	/* Prevent svc_xprt_release from releasing pages in rq_pages
+The first patch is a simple refactor and eliminates duplicate helper functions
+related to the crash.  The second patch is the actual fix inside one of the
+helper functions due to the definition of an opaque XDR object.  This object
+is defined in RFC 4506 (see section 4.10), where 'length' is an integer in a
+range including 0.
 
+Reproducer
+
+# Enable the tracepoint and mount the share
+trace-cmd start -e rpcgss:*
+mount -osec=krb5 nfs-server:/export /mnt/nfs
+
+# Obtain a kerberos ticket
+# Set ticket lifetime to something small like 20 seconds
+su test -c "kinit -l 20 test"
+
+# Sleep for a portion of the ticket lifetime so we are writing while the ticket expires
+sleep 10
+
+# Now run some IO long enough that the ticket expires midway
+dd if=/dev/urandom of=/mnt/nfs/file bs=1M count=100
+
+
+Dave Wysochanski (2):
+  SUNRPC: Move simple_get_bytes and simple_get_netobj into private
+    header
+  SUNRPC: Handle 0 length opaque XDR object data properly
+
+ include/linux/sunrpc/xdr.h              |  3 +--
+ net/sunrpc/auth_gss/auth_gss.c          | 30 +---------------------
+ net/sunrpc/auth_gss/auth_gss_internal.h | 45 +++++++++++++++++++++++++++++++++
+ net/sunrpc/auth_gss/gss_krb5_mech.c     | 31 ++---------------------
+ 4 files changed, 49 insertions(+), 60 deletions(-)
+ create mode 100644 net/sunrpc/auth_gss/auth_gss_internal.h
+
+-- 
+1.8.3.1
 
