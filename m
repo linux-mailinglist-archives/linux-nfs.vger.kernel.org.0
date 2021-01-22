@@ -2,32 +2,46 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97AFD30081D
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jan 2021 17:04:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 755C430084C
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jan 2021 17:11:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbhAVQCV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Jan 2021 11:02:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729305AbhAVQCR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jan 2021 11:02:17 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0248FC0613D6;
-        Fri, 22 Jan 2021 08:01:31 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 465896EA0; Fri, 22 Jan 2021 11:01:29 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 465896EA0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1611331289;
-        bh=C1uyBn2BQyVBzkzoIFDiDLUaJ4GVYrCTmuJOgOCNLm0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wS+CszPvgU+UvUOL7glyffz488y1gAW2j+6KJGj+4oMkNlv7gRF31pfQZjlqnHUT0
-         1yUos2dQdiC5ry8dTqU/3rvAsvNqyzNB3vhDLNVSC8R0w+7zf0DydKatw+L5rjSrFG
-         VKX7er2E95K03LAilNk+NFD2lxGQVieg6S9d4xhI=
-Date:   Fri, 22 Jan 2021 11:01:29 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        id S1729466AbhAVQJy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Jan 2021 11:09:54 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60749 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729550AbhAVQI1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jan 2021 11:08:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611331620;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LxEIC8hGatT2o24RK/5B1chyfP2tF4vZvBCyA+dON/4=;
+        b=Y7hsAtYYnc/JZKobskOxYidVuXpQN6j3IN7ndP4R6BydWPRvYcm3Skf8pqdSDEXR4docl5
+        C+pNvBWbWEECx5m8walyTF6RTmA8ken3nXcA2tYq9w32NjBY+xZfmvFXBfs37URrPjVEEd
+        xU4RYIFGN2HBRB+5N6+IUlSS1WqbIx8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-WxgM7MKlOBu2zSsKQiqVFw-1; Fri, 22 Jan 2021 11:06:58 -0500
+X-MC-Unique: WxgM7MKlOBu2zSsKQiqVFw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78A118144E0;
+        Fri, 22 Jan 2021 16:06:55 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A07F418993;
+        Fri, 22 Jan 2021 16:06:47 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20210122160129.GB18583@fieldses.org>
+References: <20210122160129.GB18583@fieldses.org> <20210121190937.GE20964@fieldses.org> <20210121174306.GB20964@fieldses.org> <20210121164645.GA20964@fieldses.org> <161118128472.1232039.11746799833066425131.stgit@warthog.procyon.org.uk> <1794286.1611248577@warthog.procyon.org.uk> <1851804.1611255313@warthog.procyon.org.uk> <1856291.1611259704@warthog.procyon.org.uk>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>,
@@ -41,31 +55,36 @@ Cc:     Trond Myklebust <trondmy@hammerspace.com>,
         v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [RFC][PATCH 00/25] Network fs helper library & fscache kiocb API
-Message-ID: <20210122160129.GB18583@fieldses.org>
-References: <20210121190937.GE20964@fieldses.org>
- <20210121174306.GB20964@fieldses.org>
- <20210121164645.GA20964@fieldses.org>
- <161118128472.1232039.11746799833066425131.stgit@warthog.procyon.org.uk>
- <1794286.1611248577@warthog.procyon.org.uk>
- <1851804.1611255313@warthog.procyon.org.uk>
- <1856291.1611259704@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1856291.1611259704@warthog.procyon.org.uk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2085146.1611331606.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Fri, 22 Jan 2021 16:06:46 +0000
+Message-ID: <2085147.1611331606@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 21, 2021 at 08:08:24PM +0000, David Howells wrote:
-> J. Bruce Fields <bfields@fieldses.org> wrote:
-> > So, I'm still confused: there must be some case where we know fscache
-> > actually works reliably and doesn't corrupt your data, right?
-> 
-> Using ext2/3, for example.  I don't know under what circumstances xfs, ext4
-> and btrfs might insert/remove blocks of zeros, but I'm told it can happen.
+J. Bruce Fields <bfields@fieldses.org> wrote:
 
-Do ext2/3 work well for fscache in other ways?
+> > J. Bruce Fields <bfields@fieldses.org> wrote:
+> > > So, I'm still confused: there must be some case where we know fscach=
+e
+> > > actually works reliably and doesn't corrupt your data, right?
+> > =
 
---b.
+> > Using ext2/3, for example.  I don't know under what circumstances xfs,=
+ ext4
+> > and btrfs might insert/remove blocks of zeros, but I'm told it can hap=
+pen.
+> =
+
+> Do ext2/3 work well for fscache in other ways?
+
+Ext3 shouldn't be a problem.  That's what I used when developing it.  I'm =
+not
+sure if ext2 supports xattrs, though.
+
+David
+
