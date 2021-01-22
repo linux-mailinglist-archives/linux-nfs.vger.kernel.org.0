@@ -2,115 +2,136 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59EEE300CB9
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jan 2021 20:38:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D353C300CC1
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jan 2021 20:40:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbhAVTdh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Jan 2021 14:33:37 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44904 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730148AbhAVSsV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jan 2021 13:48:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611341214;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DgZksRNGLKOso9EgtpnMOO8M2vQqiNnVtzZmopG4+kA=;
-        b=V8ADB3R3aL2R6XwZ3za1TxLhTx6hVcVYYwibYp4Q+l/vOElf+asSSOZ8KEa+zcarRBJjOY
-        Sgkia6zjHuZzhUHCNlhb+Av6pcavrlN9e0ZKVSNsN6snKW8VL/gIvr3MHk7VnqES9WpFDD
-        ZbPnoQ+/4bJOepxcEVJ1E/WRTTRg1bA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-575-O781iRt_O3SMO4zdn1AXmA-1; Fri, 22 Jan 2021 13:46:52 -0500
-X-MC-Unique: O781iRt_O3SMO4zdn1AXmA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2775107ACE8;
-        Fri, 22 Jan 2021 18:46:50 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-118-99.rdu2.redhat.com [10.10.118.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A0969CA0;
-        Fri, 22 Jan 2021 18:46:50 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id EEBD81204EC; Fri, 22 Jan 2021 13:46:48 -0500 (EST)
-Date:   Fri, 22 Jan 2021 13:46:48 -0500
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <schumakeranna@gmail.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH 2/3] nfsd: move change attribute generation to filesystem
-Message-ID: <20210122184648.GD52753@pick.fieldses.org>
-References: <1611084297-27352-1-git-send-email-bfields@redhat.com>
- <1611084297-27352-3-git-send-email-bfields@redhat.com>
- <20210120084638.GA3678536@infradead.org>
- <20210121202756.GA13298@pick.fieldses.org>
- <20210122082059.GA119852@infradead.org>
- <20210122144753.GA52753@pick.fieldses.org>
- <20210122173248.GB241302@infradead.org>
+        id S1728890AbhAVThj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Jan 2021 14:37:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730189AbhAVSsf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jan 2021 13:48:35 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E2EC061786
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Jan 2021 10:47:55 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 160576E97; Fri, 22 Jan 2021 13:47:54 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 160576E97
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1611341274;
+        bh=6qYDmKUQQN9uy1WwJye0hryd/s38VuaiUyV+IeNFclY=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=YtPfjUfIRfSiH/LTonIkLI+NoG0GA8pFUaJTZxC1sSU1XUEKfAdVPKPMfOXc0omCF
+         gf8L9qfGC0QOMJfQDoJoK204+JSvJ9u9m/plees479TxLBzxwJDLOp9ezAmfa150zD
+         KMWZ53e2Ym4IEj5a1le5/wY4/4ZRNfx823beJtKA=
+Date:   Fri, 22 Jan 2021 13:47:54 -0500
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v1 07/42] NFSD: Update WRITE3arg decoder to use struct
+ xdr_stream
+Message-ID: <20210122184754.GC18583@fieldses.org>
+References: <160986050640.5532.16498408936966394862.stgit@klimt.1015granger.net>
+ <160986061812.5532.3122782251888690881.stgit@klimt.1015granger.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210122173248.GB241302@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <160986061812.5532.3122782251888690881.stgit@klimt.1015granger.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jan 22, 2021 at 05:32:48PM +0000, Christoph Hellwig wrote:
-> On Fri, Jan 22, 2021 at 09:47:53AM -0500, J. Bruce Fields wrote:
-> > > > I also have a vague idea that some filesystem-specific improvements
-> > > > might be possible.  (E.g., if a filesystem had some kind of boot count
-> > > > in the superblock, maybe that would be a better way to prevent the
-> > > > change attribute from going backwards on reboot than the thing
-> > > > generic_fetch_iversion is currently doing with ctime.  But I have no
-> > > > concrete plan there, maybe I'm dreaming.)
-> > > 
-> > > Even without the ctime i_version never goes backward, what is the
-> > > problem here?
-> > 
-> > Suppose a modification bumps the change attribute, a client reads
-> > the new value of the change attribute before it's committed to disk,
-> > then the server crashes.  After the server comes back up, the client
-> > requests the change attribute again and sees an older value.
-> 
-> So all metadata operations kicked off by nfsd are synchronous due
-> to ->commit_metadata/sync_inode_metadata, so this could only happen
-> for operations not kicked off by nfsd.
+On Tue, Jan 05, 2021 at 10:30:18AM -0500, Chuck Lever wrote:
+> As part of the update, open code that sanity-checks the size of the
+> data payload against the length of the RPC Call message has to be
+> re-implemented to use xdr_stream infrastructure.
 
-Plain old nfs write also bumps the change attribute.
-
-> More importanly ctime will
-> also be lost as i_version and the ctime are commited together.
-
-That's not the reason for using ctime.
-
-The ctime is so that change attributes due to new changes that happen
-after the boot will not collide with change attributes used before.
-
-So:
-
-	0. file has change attribute i.
-	1. write bumps change attribute to i+1.
-	2. client fetches new data and change attribute i+1.
-	3. server crashes and comes back up.
-	4. a new write with different data bumps change attribute to i+1.
-	5. client fetches change attribute again, incorrectly concludes
-	   its data cache is still correct.
-
-Including the ctime ensures the change attributes at step 2 and 4 are no
-longer the same.
-
-> > That's actually not too bad.  What I'd mainly like to avoid is
-> > incrementing the change attribute further and risking reuse of an old
-> > value for a different new state of the file.
-> 
-> Ok but that is an issue if we need to deal with changes that did not
-> come in through NFSD.
-
-Those matter too, of course.
+I'm having a little trouble parsing that.  Did you mean "write code"?
 
 --b.
 
+> 
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs3xdr.c |   51 ++++++++++++++++++++-------------------------------
+>  1 file changed, 20 insertions(+), 31 deletions(-)
+> 
+> diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+> index ff98eae5db81..0aafb096de91 100644
+> --- a/fs/nfsd/nfs3xdr.c
+> +++ b/fs/nfsd/nfs3xdr.c
+> @@ -405,52 +405,41 @@ nfs3svc_decode_readargs(struct svc_rqst *rqstp, __be32 *p)
+>  int
+>  nfs3svc_decode_writeargs(struct svc_rqst *rqstp, __be32 *p)
+>  {
+> +	struct xdr_stream *xdr = &rqstp->rq_arg_stream;
+>  	struct nfsd3_writeargs *args = rqstp->rq_argp;
+> -	unsigned int len, hdr, dlen;
+>  	u32 max_blocksize = svc_max_payload(rqstp);
+>  	struct kvec *head = rqstp->rq_arg.head;
+>  	struct kvec *tail = rqstp->rq_arg.tail;
+> +	size_t remaining;
+>  
+> -	p = decode_fh(p, &args->fh);
+> -	if (!p)
+> +	if (!svcxdr_decode_nfs_fh3(xdr, &args->fh))
+>  		return 0;
+> -	p = xdr_decode_hyper(p, &args->offset);
+> -
+> -	args->count = ntohl(*p++);
+> -	args->stable = ntohl(*p++);
+> -	len = args->len = ntohl(*p++);
+> -	if ((void *)p > head->iov_base + head->iov_len)
+> +	if (xdr_stream_decode_u64(xdr, &args->offset) < 0)
+>  		return 0;
+> -	/*
+> -	 * The count must equal the amount of data passed.
+> -	 */
+> -	if (args->count != args->len)
+> +	if (xdr_stream_decode_u32(xdr, &args->count) < 0)
+> +		return 0;
+> +	if (xdr_stream_decode_u32(xdr, &args->stable) < 0)
+>  		return 0;
+>  
+> -	/*
+> -	 * Check to make sure that we got the right number of
+> -	 * bytes.
+> -	 */
+> -	hdr = (void*)p - head->iov_base;
+> -	dlen = head->iov_len + rqstp->rq_arg.page_len + tail->iov_len - hdr;
+> -	/*
+> -	 * Round the length of the data which was specified up to
+> -	 * the next multiple of XDR units and then compare that
+> -	 * against the length which was actually received.
+> -	 * Note that when RPCSEC/GSS (for example) is used, the
+> -	 * data buffer can be padded so dlen might be larger
+> -	 * than required.  It must never be smaller.
+> -	 */
+> -	if (dlen < XDR_QUADLEN(len)*4)
+> +	/* opaque data */
+> +	if (xdr_stream_decode_u32(xdr, &args->len) < 0)
+>  		return 0;
+>  
+> +	/* request sanity */
+> +	if (args->count != args->len)
+> +		return 0;
+> +	remaining = head->iov_len + rqstp->rq_arg.page_len + tail->iov_len;
+> +	remaining -= xdr_stream_pos(xdr);
+> +	if (remaining < xdr_align_size(args->len))
+> +		return 0;
+>  	if (args->count > max_blocksize) {
+>  		args->count = max_blocksize;
+> -		len = args->len = max_blocksize;
+> +		args->len = max_blocksize;
+>  	}
+>  
+> -	args->first.iov_base = (void *)p;
+> -	args->first.iov_len = head->iov_len - hdr;
+> +	args->first.iov_base = xdr->p;
+> +	args->first.iov_len = head->iov_len - xdr_stream_pos(xdr);
+> +
+>  	return 1;
+>  }
+>  
+> 
