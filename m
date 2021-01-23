@@ -2,99 +2,208 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABA2F3010A5
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Jan 2021 00:12:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 87CC6301220
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 Jan 2021 02:51:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbhAVTiR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Jan 2021 14:38:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730158AbhAVTYM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jan 2021 14:24:12 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB185C061786
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jan 2021 11:23:31 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id c2so7559483edr.11
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jan 2021 11:23:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EHkKA0SOvAxdor7YGNW/4jTUyWoPWoOOdjiWjrjEynY=;
-        b=GRr8xUycUe99wQjmbNBJk/Gn6bETCDEAn/FtKH99rKcnycQZQgyQsJ5uSkacTIYyc7
-         MmK7yKSMWBR2f9/JrxeEylL4yhbf0p2HZard6U2gv+wN9bWnaArSc2//lY4NDj5NippY
-         zmyYzI/NnLDTKu5aWTcliRuKQgsj7iUFS2dT0NyJPkFPLkoXMdef1WrXKsu83pYsC24E
-         RqA9uc49Pa/2iDdZ67XoNLYI5L87lkTUabcW5DWCtv5EgcLopChGFN+8uMKZBCi8fdXt
-         IqI9dA8rRxObtDUlJA6vTfxClo080Ogh5FeNp7haSdkcczr0OjcSNKvunn1gqn0987FR
-         7OmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EHkKA0SOvAxdor7YGNW/4jTUyWoPWoOOdjiWjrjEynY=;
-        b=OoHzk/W1QlLSV4fDWekQl5DfvkdViaBIe/yyR2xr13t02moDqI4vc1Sm360GzzImvd
-         3YO8JRbxKT7pWrhNgXQbT6h4ukSRuF07zhXbAlFo1jQaBai0AnWIXqVaudWn7O6dqmeF
-         cdz8tbsQAUOxWuAGPztGtf+gIGsHZD7HfIa1sgr45nwnRk/CuDdfDnYmo4UhcJidMtpI
-         gH9iNjxjXNfI2WEmnRTuI5uAmhgxBGwqULfqCz+JmgR9I334ZVjBliDNxPmnJqmBCDIj
-         W10sxHdkkWnxmPibgdlmXMt930MCmzbDvVe02ku4fJpi4Fiyu/Wzx0I8pNYj0UPUsqo9
-         eBzg==
-X-Gm-Message-State: AOAM530DAeaFPOM7yz4T6GZdZEO4xygjDpVo6RdVU2/r/YZFPnPW8GiV
-        nmq2SNktn6MmgYgmZ/NY28DJ4KADaL7poRUhmXqR
-X-Google-Smtp-Source: ABdhPJzT10q1bu1UPFwSuzjQxK3sjeXcPvz3DG75lRloWm85Qrqipie1IDcEOrq/CVmI6bnHaC5GvT0v7KUxd8BRx+k=
-X-Received: by 2002:a05:6402:4391:: with SMTP id o17mr4433163edc.196.1611343410639;
- Fri, 22 Jan 2021 11:23:30 -0800 (PST)
+        id S1726048AbhAWBvi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Jan 2021 20:51:38 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:50018 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbhAWBvf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jan 2021 20:51:35 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10N1nt1X094555;
+        Sat, 23 Jan 2021 01:50:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=BriLrr+Z1Q6Z2RH281crJTXSbMO0HZ1hDgVq4wspCTQ=;
+ b=o7pJA+ZAWiOxctF9vOTJ4t4FAgfpjYzxwweBrxGzux2u80QeW+1FMbi/on/Goy5RkmX/
+ 3aj1yirH/e75PwBe/HD1+ircYnXPq3glsCRN1JimhIoFiLdx+oEkWm8nYPt9xe+aBwkP
+ ZmFR3G1SJk9tgY5521XUdJMRYkcAsAB0BpsQggo9cmuLt5IpO4PRRbn3l9VmW5MlwSVI
+ zxRp+GI8Fi5recBDWO6l9yR6M+uJiVCqmazJTsI9ieR9sXFCYyi0V1ceTeanP1L+ET/o
+ ez1Ys0Ib1+TPt3I7G+aPTEe64EF08Avl9nZMmJ05M8YDswka3HpnuGr/t2BMs/F9VRrv 3w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 3689aa83ev-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 23 Jan 2021 01:50:49 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10N1om5m133077;
+        Sat, 23 Jan 2021 01:50:48 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 3689u8s8m4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 23 Jan 2021 01:50:48 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10N1omZl133105;
+        Sat, 23 Jan 2021 01:50:48 GMT
+Received: from userp3030.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
+        by aserp3030.oracle.com with ESMTP id 3689u8s8ga-1;
+        Sat, 23 Jan 2021 01:50:48 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSv4_2: SSC helper should use its own config.
+Date:   Fri, 22 Jan 2021 20:50:13 -0500
+Message-Id: <20210123015013.34609-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
 MIME-Version: 1.0
-References: <20210115174356.408688-1-omosnace@redhat.com>
-In-Reply-To: <20210115174356.408688-1-omosnace@redhat.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 22 Jan 2021 14:23:19 -0500
-Message-ID: <CAHC9VhQV6k3LhgyvGmWSn+rQpuFY1wK4K-5p=xk-mVdUK6eDnQ@mail.gmail.com>
-Subject: Re: [PATCH] NFSv4.2: fix return value of _nfs4_get_security_label()
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     linux-nfs@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        David Quigley <dpquigl@davequigley.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9872 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 phishscore=0 bulkscore=0
+ spamscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2101230008
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jan 15, 2021 at 12:47 PM Ondrej Mosnacek <omosnace@redhat.com> wrote:
->
-> An xattr 'get' handler is expected to return the length of the value on
-> success, yet _nfs4_get_security_label() (and consequently also
-> nfs4_xattr_get_nfs4_label(), which is used as an xattr handler) returns
-> just 0 on success.
->
-> Fix this by returning label.len instead, which contains the length of
-> the result.
->
-> Fixes: aa9c2669626c ("NFS: Client implementation of Labeled-NFS")
-> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-> ---
->  fs/nfs/nfs4proc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Currently NFSv4_2 SSC helper, nfs_ssc, incorrectly uses GRACE_PERIOD
+as its config. Fix by adding new config NFS_V4_2_SSC_HELPER which
+depends on NFS_V4_2 and is automatically selected when NFSD_V4 is
+enabled. Also removed the file name from a comment in nfs_ssc.c.
 
-Reviewed-by: Paul Moore <paul@paul-moore.com>
+Fixes: 0cfcd405e758 (NFSv4.2: Fix NFS4ERR_STALE error when doing inter server copy)
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ fs/Kconfig              |  3 +++
+ fs/nfs/nfs4file.c       |  4 ++++
+ fs/nfs/super.c          | 12 ++++++++++++
+ fs/nfs_common/Makefile  |  2 +-
+ fs/nfs_common/nfs_ssc.c |  2 --
+ fs/nfsd/Kconfig         |  1 +
+ 6 files changed, 21 insertions(+), 3 deletions(-)
 
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 2f4679a62712a..28465d8aada64 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -5971,7 +5971,7 @@ static int _nfs4_get_security_label(struct inode *inode, void *buf,
->                 return ret;
->         if (!(fattr.valid & NFS_ATTR_FATTR_V4_SECURITY_LABEL))
->                 return -ENOENT;
-> -       return 0;
-> +       return label.len;
->  }
->
->  static int nfs4_get_security_label(struct inode *inode, void *buf,
-> --
-> 2.29.2
-
+diff --git a/fs/Kconfig b/fs/Kconfig
+index aa4c12282301..d33a31239cbc 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -333,6 +333,9 @@ config NFS_COMMON
+ 	depends on NFSD || NFS_FS || LOCKD
+ 	default y
+ 
++config NFS_V4_2_SSC_HELPER
++	tristate
++
+ source "net/sunrpc/Kconfig"
+ source "fs/ceph/Kconfig"
+ source "fs/cifs/Kconfig"
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index 57b3821d975a..441a2fa073c8 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -420,7 +420,9 @@ static const struct nfs4_ssc_client_ops nfs4_ssc_clnt_ops_tbl = {
+  */
+ void nfs42_ssc_register_ops(void)
+ {
++#ifdef CONFIG_NFSD_V4
+ 	nfs42_ssc_register(&nfs4_ssc_clnt_ops_tbl);
++#endif
+ }
+ 
+ /**
+@@ -431,7 +433,9 @@ void nfs42_ssc_register_ops(void)
+  */
+ void nfs42_ssc_unregister_ops(void)
+ {
++#ifdef CONFIG_NFSD_V4
+ 	nfs42_ssc_unregister(&nfs4_ssc_clnt_ops_tbl);
++#endif
+ }
+ #endif /* CONFIG_NFS_V4_2 */
+ 
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 4034102010f0..c7a924580eec 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -86,9 +86,11 @@ const struct super_operations nfs_sops = {
+ };
+ EXPORT_SYMBOL_GPL(nfs_sops);
+ 
++#ifdef CONFIG_NFS_V4_2
+ static const struct nfs_ssc_client_ops nfs_ssc_clnt_ops_tbl = {
+ 	.sco_sb_deactive = nfs_sb_deactive,
+ };
++#endif
+ 
+ #if IS_ENABLED(CONFIG_NFS_V4)
+ static int __init register_nfs4_fs(void)
+@@ -111,15 +113,21 @@ static void unregister_nfs4_fs(void)
+ }
+ #endif
+ 
++#ifdef CONFIG_NFS_V4_2
+ static void nfs_ssc_register_ops(void)
+ {
++#ifdef CONFIG_NFSD_V4
+ 	nfs_ssc_register(&nfs_ssc_clnt_ops_tbl);
++#endif
+ }
+ 
+ static void nfs_ssc_unregister_ops(void)
+ {
++#ifdef CONFIG_NFSD_V4
+ 	nfs_ssc_unregister(&nfs_ssc_clnt_ops_tbl);
++#endif
+ }
++#endif /* CONFIG_NFS_V4_2 */
+ 
+ static struct shrinker acl_shrinker = {
+ 	.count_objects	= nfs_access_cache_count,
+@@ -148,7 +156,9 @@ int __init register_nfs_fs(void)
+ 	ret = register_shrinker(&acl_shrinker);
+ 	if (ret < 0)
+ 		goto error_3;
++#ifdef CONFIG_NFS_V4_2
+ 	nfs_ssc_register_ops();
++#endif
+ 	return 0;
+ error_3:
+ 	nfs_unregister_sysctl();
+@@ -168,7 +178,9 @@ void __exit unregister_nfs_fs(void)
+ 	unregister_shrinker(&acl_shrinker);
+ 	nfs_unregister_sysctl();
+ 	unregister_nfs4_fs();
++#ifdef CONFIG_NFS_V4_2
+ 	nfs_ssc_unregister_ops();
++#endif
+ 	unregister_filesystem(&nfs_fs_type);
+ }
+ 
+diff --git a/fs/nfs_common/Makefile b/fs/nfs_common/Makefile
+index fa82f5aaa6d9..119c75ab9fd0 100644
+--- a/fs/nfs_common/Makefile
++++ b/fs/nfs_common/Makefile
+@@ -7,4 +7,4 @@ obj-$(CONFIG_NFS_ACL_SUPPORT) += nfs_acl.o
+ nfs_acl-objs := nfsacl.o
+ 
+ obj-$(CONFIG_GRACE_PERIOD) += grace.o
+-obj-$(CONFIG_GRACE_PERIOD) += nfs_ssc.o
++obj-$(CONFIG_NFS_V4_2_SSC_HELPER) += nfs_ssc.o
+diff --git a/fs/nfs_common/nfs_ssc.c b/fs/nfs_common/nfs_ssc.c
+index f43bbb373913..7c1509e968c8 100644
+--- a/fs/nfs_common/nfs_ssc.c
++++ b/fs/nfs_common/nfs_ssc.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * fs/nfs_common/nfs_ssc_comm.c
+- *
+  * Helper for knfsd's SSC to access ops in NFS client modules
+  *
+  * Author: Dai Ngo <dai.ngo@oracle.com>
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index dbbc583d6273..821e5913faee 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -76,6 +76,7 @@ config NFSD_V4
+ 	select CRYPTO_MD5
+ 	select CRYPTO_SHA256
+ 	select GRACE_PERIOD
++	select NFS_V4_2_SSC_HELPER if NFS_V4_2
+ 	help
+ 	  This option enables support in your system's NFS server for
+ 	  version 4 of the NFS protocol (RFC 3530).
 -- 
-paul moore
-www.paul-moore.com
+2.9.5
+
