@@ -2,208 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87CC6301220
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Jan 2021 02:51:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 892F7301DF0
+	for <lists+linux-nfs@lfdr.de>; Sun, 24 Jan 2021 18:38:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726048AbhAWBvi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Jan 2021 20:51:38 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:50018 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbhAWBvf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jan 2021 20:51:35 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10N1nt1X094555;
-        Sat, 23 Jan 2021 01:50:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2020-01-29; bh=BriLrr+Z1Q6Z2RH281crJTXSbMO0HZ1hDgVq4wspCTQ=;
- b=o7pJA+ZAWiOxctF9vOTJ4t4FAgfpjYzxwweBrxGzux2u80QeW+1FMbi/on/Goy5RkmX/
- 3aj1yirH/e75PwBe/HD1+ircYnXPq3glsCRN1JimhIoFiLdx+oEkWm8nYPt9xe+aBwkP
- ZmFR3G1SJk9tgY5521XUdJMRYkcAsAB0BpsQggo9cmuLt5IpO4PRRbn3l9VmW5MlwSVI
- zxRp+GI8Fi5recBDWO6l9yR6M+uJiVCqmazJTsI9ieR9sXFCYyi0V1ceTeanP1L+ET/o
- ez1Ys0Ib1+TPt3I7G+aPTEe64EF08Avl9nZMmJ05M8YDswka3HpnuGr/t2BMs/F9VRrv 3w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 3689aa83ev-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 23 Jan 2021 01:50:49 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10N1om5m133077;
-        Sat, 23 Jan 2021 01:50:48 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 3689u8s8m4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 23 Jan 2021 01:50:48 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10N1omZl133105;
-        Sat, 23 Jan 2021 01:50:48 GMT
-Received: from userp3030.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
-        by aserp3030.oracle.com with ESMTP id 3689u8s8ga-1;
-        Sat, 23 Jan 2021 01:50:48 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     bfields@fieldses.org
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] NFSv4_2: SSC helper should use its own config.
-Date:   Fri, 22 Jan 2021 20:50:13 -0500
-Message-Id: <20210123015013.34609-1-dai.ngo@oracle.com>
-X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
+        id S1726007AbhAXRiJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 24 Jan 2021 12:38:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbhAXRiH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 24 Jan 2021 12:38:07 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E56CCC061573
+        for <linux-nfs@vger.kernel.org>; Sun, 24 Jan 2021 09:37:26 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id e15so8766039wme.0
+        for <linux-nfs@vger.kernel.org>; Sun, 24 Jan 2021 09:37:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4ufeqGz0DcNtinbDqKb4c8WbsA32OLFbjcs/oZ5nelI=;
+        b=mT/wJXFFxI9mEdHKEBNjoPQSUKHiJvVuN72Cdq0Tf+mv6JD88mEWRZ9GMB1sTi09Sg
+         JUlewKnAXlIuzumfbGw4JgQ3jQhbnsYXCUM9KDNmVk4gI9TJQi6+5RpfO3ggqqJvxchM
+         uirGmy/05pEvWWqUJ+9swaiPukCt6NN/3QtylCZIj/aQddrnc5aDO9ypSe0q6umPoZcO
+         XWOW/8jGOqrWqQQKuG0syk6YHysmI4Y581NG9GeYqHoZ3SjuSIe+WeAKhARX+lmDrDwF
+         VPLxFvZnwxnnU14l5IlGehWGfiY8uxhHmfhgbsLt2WYKG7H3lA1E3xep7W34l5xglome
+         YK0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4ufeqGz0DcNtinbDqKb4c8WbsA32OLFbjcs/oZ5nelI=;
+        b=qUiiSonltq/IqV7fPzcvNGqG7AvaUtp605LJfOXm0UXZHUhPzrFJ5e1yr8vVei1Vg5
+         Dd7Fk/Z5oNf5yU4c9tZ2AW1ekYWpJe9YjSXnV3rqVldNhxGaS+AoDjX0fg69/yEup1/k
+         sx7WQsgCe1sdIhC/TARmcXKlvS6I4oE3grsFdPoakGZjlcZDinPVvfMSh5CGzoX8gIDN
+         Rb36mYHSL+GFb6fCpnNLFxAJc60Ik2lvQonM455NvpPoRn/H+cj4ZHVkxghnAMZzZCLD
+         yZrniMxkzrnM442GNvbe2EDpcc6JJcnWbC0g7/CcrLVnbDK/box38DC6KRo+dmyNd9Ay
+         KNDg==
+X-Gm-Message-State: AOAM530P6LWM56zo6Bx7n+MS32ckcqTr0ATT9xq+6jDz5oVE9NM45CBo
+        ZfXTfimm3+ovQj4kaHMW8zxaIG4H3mI2SMqo
+X-Google-Smtp-Source: ABdhPJwZnki6v8keEIf0jrA7M4qrSibYynp9PUSV3HSKYIkx6H4Hu45DwW382NMfNf6H2z5u14qLKw==
+X-Received: by 2002:a1c:11:: with SMTP id 17mr4282586wma.12.1611509845462;
+        Sun, 24 Jan 2021 09:37:25 -0800 (PST)
+Received: from gmail.com ([77.124.84.167])
+        by smtp.gmail.com with ESMTPSA id b69sm18986009wmb.36.2021.01.24.09.37.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Jan 2021 09:37:24 -0800 (PST)
+Date:   Sun, 24 Jan 2021 19:37:21 +0200
+From:   Dan Aloni <dan@kernelim.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Subject: Re: [PATCH v1 0/5] NFSv3 client RDMA multipath enhancements
+Message-ID: <20210124173721.lck7p4pf2i375bwl@gmail.com>
+References: <20210121191020.3144948-1-dan@kernelim.com>
+ <55B302B4-7202-45A7-84F3-8F33A79C138F@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9872 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
- lowpriorityscore=0 mlxlogscore=999 clxscore=1015 phishscore=0 bulkscore=0
- spamscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2101230008
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <55B302B4-7202-45A7-84F3-8F33A79C138F@oracle.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently NFSv4_2 SSC helper, nfs_ssc, incorrectly uses GRACE_PERIOD
-as its config. Fix by adding new config NFS_V4_2_SSC_HELPER which
-depends on NFS_V4_2 and is automatically selected when NFSD_V4 is
-enabled. Also removed the file name from a comment in nfs_ssc.c.
+On Thu, Jan 21, 2021 at 07:50:41PM +0000, Chuck Lever wrote:
+> I worked with the IETF's nfsv4 WG a couple years ago to produce
+> a document that describes how we want NFS servers to advertise
+> their network configuration to clients.
+> 
+> https://datatracker.ietf.org/doc/rfc8587/
+> 
+> That gives a flavor for what we've done for NFSv4. IMO anything
+> done for NFSv3 ought to leverage similar principles and tactics.
+ 
+Thanks for the pointer - I'll read and take it into consideration.
 
-Fixes: 0cfcd405e758 (NFSv4.2: Fix NFS4ERR_STALE error when doing inter server copy)
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/Kconfig              |  3 +++
- fs/nfs/nfs4file.c       |  4 ++++
- fs/nfs/super.c          | 12 ++++++++++++
- fs/nfs_common/Makefile  |  2 +-
- fs/nfs_common/nfs_ssc.c |  2 --
- fs/nfsd/Kconfig         |  1 +
- 6 files changed, 21 insertions(+), 3 deletions(-)
+> > we can achieve load
+> > balancing and much greater throughput, especially on RDMA setups,
+> > even with the older NFSv3 protocol.
+> 
+> I support the basic goal of increasing transport parallelism.
+> 
+> As you probably became aware as you worked on these patches, the
+> Linux client shares one or a small set of connections across all
+> mount points of the same server. So a mount option that adds this
+> kind of control is going to be awkward.
 
-diff --git a/fs/Kconfig b/fs/Kconfig
-index aa4c12282301..d33a31239cbc 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -333,6 +333,9 @@ config NFS_COMMON
- 	depends on NFSD || NFS_FS || LOCKD
- 	default y
- 
-+config NFS_V4_2_SSC_HELPER
-+	tristate
-+
- source "net/sunrpc/Kconfig"
- source "fs/ceph/Kconfig"
- source "fs/cifs/Kconfig"
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 57b3821d975a..441a2fa073c8 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -420,7 +420,9 @@ static const struct nfs4_ssc_client_ops nfs4_ssc_clnt_ops_tbl = {
-  */
- void nfs42_ssc_register_ops(void)
- {
-+#ifdef CONFIG_NFSD_V4
- 	nfs42_ssc_register(&nfs4_ssc_clnt_ops_tbl);
-+#endif
- }
- 
- /**
-@@ -431,7 +433,9 @@ void nfs42_ssc_register_ops(void)
-  */
- void nfs42_ssc_unregister_ops(void)
- {
-+#ifdef CONFIG_NFSD_V4
- 	nfs42_ssc_unregister(&nfs4_ssc_clnt_ops_tbl);
-+#endif
- }
- #endif /* CONFIG_NFS_V4_2 */
- 
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 4034102010f0..c7a924580eec 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -86,9 +86,11 @@ const struct super_operations nfs_sops = {
- };
- EXPORT_SYMBOL_GPL(nfs_sops);
- 
-+#ifdef CONFIG_NFS_V4_2
- static const struct nfs_ssc_client_ops nfs_ssc_clnt_ops_tbl = {
- 	.sco_sb_deactive = nfs_sb_deactive,
- };
-+#endif
- 
- #if IS_ENABLED(CONFIG_NFS_V4)
- static int __init register_nfs4_fs(void)
-@@ -111,15 +113,21 @@ static void unregister_nfs4_fs(void)
- }
- #endif
- 
-+#ifdef CONFIG_NFS_V4_2
- static void nfs_ssc_register_ops(void)
- {
-+#ifdef CONFIG_NFSD_V4
- 	nfs_ssc_register(&nfs_ssc_clnt_ops_tbl);
-+#endif
- }
- 
- static void nfs_ssc_unregister_ops(void)
- {
-+#ifdef CONFIG_NFSD_V4
- 	nfs_ssc_unregister(&nfs_ssc_clnt_ops_tbl);
-+#endif
- }
-+#endif /* CONFIG_NFS_V4_2 */
- 
- static struct shrinker acl_shrinker = {
- 	.count_objects	= nfs_access_cache_count,
-@@ -148,7 +156,9 @@ int __init register_nfs_fs(void)
- 	ret = register_shrinker(&acl_shrinker);
- 	if (ret < 0)
- 		goto error_3;
-+#ifdef CONFIG_NFS_V4_2
- 	nfs_ssc_register_ops();
-+#endif
- 	return 0;
- error_3:
- 	nfs_unregister_sysctl();
-@@ -168,7 +178,9 @@ void __exit unregister_nfs_fs(void)
- 	unregister_shrinker(&acl_shrinker);
- 	nfs_unregister_sysctl();
- 	unregister_nfs4_fs();
-+#ifdef CONFIG_NFS_V4_2
- 	nfs_ssc_unregister_ops();
-+#endif
- 	unregister_filesystem(&nfs_fs_type);
- }
- 
-diff --git a/fs/nfs_common/Makefile b/fs/nfs_common/Makefile
-index fa82f5aaa6d9..119c75ab9fd0 100644
---- a/fs/nfs_common/Makefile
-+++ b/fs/nfs_common/Makefile
-@@ -7,4 +7,4 @@ obj-$(CONFIG_NFS_ACL_SUPPORT) += nfs_acl.o
- nfs_acl-objs := nfsacl.o
- 
- obj-$(CONFIG_GRACE_PERIOD) += grace.o
--obj-$(CONFIG_GRACE_PERIOD) += nfs_ssc.o
-+obj-$(CONFIG_NFS_V4_2_SSC_HELPER) += nfs_ssc.o
-diff --git a/fs/nfs_common/nfs_ssc.c b/fs/nfs_common/nfs_ssc.c
-index f43bbb373913..7c1509e968c8 100644
---- a/fs/nfs_common/nfs_ssc.c
-+++ b/fs/nfs_common/nfs_ssc.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * fs/nfs_common/nfs_ssc_comm.c
-- *
-  * Helper for knfsd's SSC to access ops in NFS client modules
-  *
-  * Author: Dai Ngo <dai.ngo@oracle.com>
-diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-index dbbc583d6273..821e5913faee 100644
---- a/fs/nfsd/Kconfig
-+++ b/fs/nfsd/Kconfig
-@@ -76,6 +76,7 @@ config NFSD_V4
- 	select CRYPTO_MD5
- 	select CRYPTO_SHA256
- 	select GRACE_PERIOD
-+	select NFS_V4_2_SSC_HELPER if NFS_V4_2
- 	help
- 	  This option enables support in your system's NFS server for
- 	  version 4 of the NFS protocol (RFC 3530).
+I tend to agree, from a developer perspective, but just to give an
+idea that from an admin POV it is often is not immediately apparent that
+this is what happens behind the scenes (i.e. the `nfs_match_client`
+function), so in our case the users have not reported back that our
+addition to the mount parameters looked weird, considering it as
+naturally extending nconnect, which I think falls under similar
+considerations - giving deeper details regarding how transports should
+behave during the mount command and not afterwards, regarding what
+actual NFS sessions are established.
+
+Surely there may be better ways to do this, following from what's
+discussed next.
+
+> Anna has proposed a /sys API that would enable this information to
+> be programmed into the kernel for all mount points sharing the
+> same set of connections. That would be a little nicer for building
+> separate administrator tools against, or even for providing an
+> automation mechanism (like an orchestrator) that would enable
+> clients to automatically fail over to a different server interface.
+>
+> IMO I'd prefer to see a user space policy / tool that manages
+> endpoint lists and passes them to the kernel client dynamically
+> via Anna's API instead of adding one or more mount options, which
+> would be fixed for the life of the mount and shared with other
+> mount points that use the same transports to communicate with
+> the NFS server.
+
+I see now that these are fairly recent patches that I've unfortunately
+missed while working on other things. If this is the intended API to
+help manage active NFS sessions, I would very much like to help on
+testing and extending this code.
+
+So a good way to go with this would be to look into supporting an 'add
+transport' op by extending on the new interface, and for optionally
+specifying local address bind similarly to the work I've done for the
+mount options.
+
+I'll also be glad to contribute to nfs-utils so that we'd have the
+anticipated userspace tool, maybe 'nfs' (like `/sbin/ip` from iproute),
+that can executed for this purpose, e.g. 'nfs transport add <IP> mnt
+<PATH>'.
+
+Also, from a lower level API perspective, we would need a way to figure
+out client ID from a mount point, so that ID can be used at the relevant
+sysfs directory. Perhaps this can be done via a new ioctl on the
+mount point itself?
+
+> As far as the NUMA affinity issues go, in the past I've attempted
+> to provide some degree of CPU affinity between RPC Call and Reply
+> handling only to find that it reduced performance unacceptably.
+> Perhaps something that is node-aware or LLC-aware would be better
+> than CPU affinity, and I'm happy to discuss that and any other
+> ways we think can improve NFS behavior on NUMA systems. It's quite
+> true that RDMA transports are more sensitive to NUMA than
+> traditional socket-based ones.
+
+Also to consider that RDMA is special for this as CPU memory caching can
+be skipped, and even main memory - for example a special case where the
+NFS read/write payload memory is not the main system memory but mapped
+from PCI, and the kernel's own PCI_P2PDMA distance matrix can be used
+for better xprt selection.
+
 -- 
-2.9.5
-
+Dan Aloni
