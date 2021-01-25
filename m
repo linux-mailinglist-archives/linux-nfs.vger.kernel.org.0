@@ -2,87 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78EDF301FDF
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jan 2021 02:25:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22D34302054
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jan 2021 03:23:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbhAYBZJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 24 Jan 2021 20:25:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726699AbhAYBYu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 24 Jan 2021 20:24:50 -0500
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FF13C061756
-        for <linux-nfs@vger.kernel.org>; Sun, 24 Jan 2021 17:24:10 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id q7so7850801pgm.5
-        for <linux-nfs@vger.kernel.org>; Sun, 24 Jan 2021 17:24:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MSpVHwkCX6jn2zmjsM3ERb1RCWT/CaWYVTGYkGxLPMQ=;
-        b=cANH8e1JsQWWCA6K7c2yEeTbdiEO1GVf52BOvOvHMuuzuOwLMbDpTIG8lwpolK0icK
-         0L3S/ocwk1bn0K4m4mezLZfUoMQFkPMVdzF0swABRaRDvhjPdS//d4rYF/hhSVlIj0e5
-         GCTjUL4+USqxWngHHgmkMMISuZnFlCQ/DjAcXqZTPP+gCqtwV9N6H5Us2R2RTf4/Wm3l
-         v9dC6xJ3eOcxO2kdzsIP9/VK8pDSh3vIrWiQigEURvRp6ZKeNDds2ga8oMas6khTZbUU
-         bAXCXf9s6wkbPhLdiUZZx1F3c1+XzZivD4vAPVU1i93DCZ5GpPiHbaFqNE9Ar2HplqEB
-         J7+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MSpVHwkCX6jn2zmjsM3ERb1RCWT/CaWYVTGYkGxLPMQ=;
-        b=tRK0YuibgXI6AcYX/Ng74A2nIkEk9goMr0iqSz1o8uVUYCv5n4XPgicqUDUNSmHtue
-         lXhMjLd9uldSdbDRsul7EYwTQ3PQ4Eb9gtCWxJ/zSxfTfiinKFxndtcCr0wFLokZ+heR
-         klB62gBmfrAfTgfpwNdApV+5bSb8/KTiA2wNUZiaJZasnoStmm2p0QVsy+sq12aOLDSP
-         SEa+ZuPHr7TXNMWzP6Pu5GCf91XYk7a0gVXoayU8bUhFP5Ch93KG+auolz6mD/3yhYjV
-         w+jfExWZn9TA7ObYStIriSHLzMvNAc/1yUjkfmAO7B6O3rCkOKLkv8YwKTDMHcoO0tXK
-         +yAw==
-X-Gm-Message-State: AOAM530g0q6Ys2J52Qmr8SjIaQn0wJ70D6iICsdAUmh2UoPGLh8qPb6q
-        D8aMnXDT1q6dgI++3AdyFEj4pw==
-X-Google-Smtp-Source: ABdhPJwGmmoJHjWbM4oOrfmGt+RyPavosTLmBxchZDys8SFvm/6ZSwmX7zSbzb/FwCp9pNaqXVDW9g==
-X-Received: by 2002:a63:e30d:: with SMTP id f13mr8331115pgh.39.1611537849731;
-        Sun, 24 Jan 2021 17:24:09 -0800 (PST)
-Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id b18sm15216556pfi.173.2021.01.24.17.24.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 Jan 2021 17:24:08 -0800 (PST)
-Subject: Re: [PATCH V2 0/2] remove unused argument from blk_execute_rq_nowait
- and blk_execute_rq
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     linux-block@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-scsi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-ide@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org,
-        hch@infradead.org
-References: <20210122092824.20971-1-guoqing.jiang@cloud.ionos.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <683e16be-1146-e60c-cfea-e4606844f080@kernel.dk>
-Date:   Sun, 24 Jan 2021 18:24:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726873AbhAYCWy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 24 Jan 2021 21:22:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726915AbhAYBzY (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 24 Jan 2021 20:55:24 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4AE79207AB
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Jan 2021 01:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611539677;
+        bh=Kq8s+A5QRTVAgmNA6JsSa0lAbw1Txw9em9g6cujZzJY=;
+        h=From:To:Subject:Date:From;
+        b=lP5cuMNPz3ocT0W7ZZ7gDuqgNa+6kiJxuy2aYh8ZdYf+zTE3Tz4rCKtyRVhRR3XOF
+         m76gnbdr7+17TQqMnj/9uuBdtrrXdEgi0G91KzwfvyUUlhOyRpsgpfFgY7X4k7iHZr
+         Ohvx8eD7x2tsEt7RfXheje9tFgK493sSwRc/hZV3s/MoNiIsIsKrfWoajcepEMhk+A
+         ah05MQE9UCa0RsZ9kFkdddPDOmHeO+LeYrt4ETGLzE3nXSqyrSjUrJT96jDKfaCa4q
+         cw0B2jcaWJv7oasTwpOgCjMfDmbUPOZlghdMtmkL0Uf3CuVIRMFxg5KFrpMg46d8pa
+         HF2JhdK4gY0Fg==
+From:   trondmy@kernel.org
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/4] pNFS/NFSv4: Fix a layout segment leak in pnfs_layout_process()
+Date:   Sun, 24 Jan 2021 20:54:32 -0500
+Message-Id: <20210125015435.45979-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-In-Reply-To: <20210122092824.20971-1-guoqing.jiang@cloud.ionos.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 1/22/21 2:28 AM, Guoqing Jiang wrote:
-> V2 changes:
-> 1. update commit header per Christoph's comment.
-> 
-> Hi Jens,
-> 
-> This series remove unused 'q' from blk_execute_rq_nowait and blk_execute_rq.
-> Also update the comment for blk_execute_rq_nowait.
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-What's this against? The lightnvm patch doesn't apply.
+If the server returns a new stateid that does not match the one in our
+cache, then pnfs_layout_process() will leak the layout segments returned
+by pnfs_mark_layout_stateid_invalid().
 
+Fixes: 9888d837f3cf ("pNFS: Force a retry of LAYOUTGET if the stateid doesn't match our cache")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/pnfs.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index 4f274f21c4ab..e68e6f8cb407 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -2417,6 +2417,7 @@ pnfs_layout_process(struct nfs4_layoutget *lgp)
+ 	spin_unlock(&ino->i_lock);
+ 	lseg->pls_layout = lo;
+ 	NFS_SERVER(ino)->pnfs_curr_ld->free_lseg(lseg);
++	pnfs_free_lseg_list(&free_me);
+ 	return ERR_PTR(-EAGAIN);
+ }
+ 
 -- 
-Jens Axboe
+2.29.2
 
