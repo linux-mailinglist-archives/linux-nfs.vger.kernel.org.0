@@ -2,314 +2,705 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A270E302861
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jan 2021 18:03:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E8C1302DE1
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jan 2021 22:35:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730053AbhAYRCc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 25 Jan 2021 12:02:32 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:42746 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728304AbhAYRCL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jan 2021 12:02:11 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10PGtNmk102432;
-        Mon, 25 Jan 2021 17:01:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=rZEfH189gDECEf10A3LdWoBVjtyuJehQPHxLMfsjTVM=;
- b=AZyyXt6oGBJ+F7lMca8j165FHedT1nOultShoUr8erEgYo0o4ukQrKAJnHu1u+MmIr8h
- xHQxl9n5xgvnpZp/1kpbqvJqFbGi1He8Ea1hhXF9RcerXs7OCQWX1sYYvdSbTo1oSjDO
- xc/dtMspwRcJf3oZnxMymL1DwHaz6gHZ8ssOoXMc+4bc480gMV7xETXaDxUvwJD7x/vC
- 3yjvObZQN907dVLuS1AT/CbgpqRGlvflgif1Ommqa5n+54R0jzEckgieG2auAc5RHLrT
- Pq8fCEGdYN2OKtck+mgGD6etS0ECijY3QWcVfBxd+eeh/C88c0dijBGk10IV6x1Al3O8 kA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 368brke78w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Jan 2021 17:01:14 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10PGuSXG040472;
-        Mon, 25 Jan 2021 17:01:14 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2041.outbound.protection.outlook.com [104.47.66.41])
-        by aserp3020.oracle.com with ESMTP id 368wpwu6y2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Jan 2021 17:01:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l87hXGizJhevTlO5PmaHYkTau9V3GDNdP0WAzFY9rKgtXpvJbpYloZleTXXOiemWzlu29fHffVo1xCiz6zZeOo23QSewpkdKH7Q9zusf/JlVaC+sDUgdSWIK3ougRJZxnGLa9hgIYCcmersVd7sjfyFij9+Fq5hT3M20khEqsjvQfmM47swCdVRXlA01b8qUHCXDBWe0RD0iMMMLnmevPzmmsm9BicjBW7nkqHxNGpmNfw2vOOHIRWAFDTBI5iVWjKfXhBg68yw9teqB+xR8T6XmwD4VufKOzburDvVQhpRdX6HzOVL2wNy+CDH2NQ/sfWh6YS8WugBaYo3lgqFwTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rZEfH189gDECEf10A3LdWoBVjtyuJehQPHxLMfsjTVM=;
- b=fldFHCzI33Hc9Y+WWuynhMSwgP1M0Bs9Mr0O+mVjpNVLX+cL0KwYf8hLcVjh6NwZffY44ztasPoi153pPGw9NzNE0h76+DNJ0CA9wprIF4c4WGU5BKOQOBf+9g86dRlBdY1jXvGH8NqVLwX3tRrk2btkzs+whSdPuCB4CAbSnLeEQK2njeDILyMhDvhjV8enSnebZTzU1WVUPv22wiDDmdl0mW64yIRRbPtxHK72izOvpLSGCm1zleO8O7WRxsPj6JswMCVEAxKAK+kU43a44DrjxmPNEmPUmwjYYlKo01HpIL65EzRVQqVMfo3PyIMa7cJ/k+iJTYikdpzNdtXRAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rZEfH189gDECEf10A3LdWoBVjtyuJehQPHxLMfsjTVM=;
- b=fJLnZLNyIHNU1rwT7JLmg7Yo72XAAuG9cQHcnGHu25w3UKPZu6CxR0mmp9wKVJLKfMMLgOAv/WF7iotGwBrAqGdweB7f12FCkXbTB7V1oLTni2uomjm0yVmo3St8nflhV7BEpEl08Ed/PIIdKUXgetmBychBds3A+BttGSY0MNU=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=oracle.com;
-Received: from BN7PR10MB2434.namprd10.prod.outlook.com (2603:10b6:406:c8::25)
- by BN6PR10MB1441.namprd10.prod.outlook.com (2603:10b6:404:43::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3784.17; Mon, 25 Jan
- 2021 17:01:12 +0000
-Received: from BN7PR10MB2434.namprd10.prod.outlook.com
- ([fe80::20d8:7ca1:a6d5:be6b]) by BN7PR10MB2434.namprd10.prod.outlook.com
- ([fe80::20d8:7ca1:a6d5:be6b%3]) with mapi id 15.20.3784.017; Mon, 25 Jan 2021
- 17:01:12 +0000
-Subject: Re: [PATCH] NFSv4_2: SSC helper should use its own config.
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        Bruce Fields <bfields@fieldses.org>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <20210123015013.34609-1-dai.ngo@oracle.com>
- <3F738386-929D-403A-9876-1063C52BAE4D@oracle.com>
-From:   dai.ngo@oracle.com
-Message-ID: <eecbf018-dc67-7537-0523-7a9f894d6a28@oracle.com>
-Date:   Mon, 25 Jan 2021 09:01:08 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.6.1
-In-Reply-To: <3F738386-929D-403A-9876-1063C52BAE4D@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [72.219.112.78]
-X-ClientProxiedBy: DM5PR1101CA0006.namprd11.prod.outlook.com
- (2603:10b6:4:4c::16) To BN7PR10MB2434.namprd10.prod.outlook.com
- (2603:10b6:406:c8::25)
+        id S1732173AbhAYVcz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Jan 2021 16:32:55 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:25548 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732739AbhAYVcp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jan 2021 16:32:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611610276;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PZM8pkEUldgdjLQDWcAKh2bd4L+mVbppYa1yiaIR8h0=;
+        b=MZQqE8P7evPmysZNdI4+/Kxo4H2/YwvAj5CkWb1RlBbKIRtwib1+u0Wz0zGPKLO7HKjsfy
+        d32b76bHkT+L9+EHhDQaWRMbJ+zUPz0LKrusYTMCgSyR3G49olpLz51cVDARYAf8oal/YS
+        ymWj66gjU5GdAipDlZxwvArNPquhDt8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-38-fG0h-sBvNJ2Vw4LRO-7LLQ-1; Mon, 25 Jan 2021 16:31:12 -0500
+X-MC-Unique: fG0h-sBvNJ2Vw4LRO-7LLQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1EC381015C81;
+        Mon, 25 Jan 2021 21:31:10 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EE1D76315F;
+        Mon, 25 Jan 2021 21:31:03 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 01/32] iov_iter: Add ITER_XARRAY
+From:   David Howells <dhowells@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>
+Cc:     Matthew Wilcox <willy@infradead.org>, dhowells@redhat.com,
+        Jeff Layton <jlayton@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 25 Jan 2021 21:31:03 +0000
+Message-ID: <161161026313.2537118.14676007075365418649.stgit@warthog.procyon.org.uk>
+In-Reply-To: <161161025063.2537118.2009249444682241405.stgit@warthog.procyon.org.uk>
+References: <161161025063.2537118.2009249444682241405.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from dhcp-10-154-123-8.vpn.oracle.com (72.219.112.78) by DM5PR1101CA0006.namprd11.prod.outlook.com (2603:10b6:4:4c::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3784.11 via Frontend Transport; Mon, 25 Jan 2021 17:01:11 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7ce770e0-120c-473b-6646-08d8c152d169
-X-MS-TrafficTypeDiagnostic: BN6PR10MB1441:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN6PR10MB1441B6224E2095485514C61C87BD9@BN6PR10MB1441.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YZcRBxZRCDH1IjVRmP6PY9L0eaGoqPQhnjSA8ZW1l4brfUMEI6H41wScAjMJq1lCxu7c9T1B6V7JKSxwJSkaRmbGWi0OQHEef9pO8aDG3DEy3MidRQF6iRqsPqWiCpy7lESs+c1bFqJDfaIadpNBsEGzuIQvg7avMtea4Qk4tt6RmREvO0zboRMfb/bsSrXCTgwCbQqU+AJycP6cPC4Z7RfcIfxHbFqA6UtLT0FY1mNci/RXQ/FcVSZRoK2UXcOt94oxxq+WCVTUUyQzYvHz0bUlddNubwTDzay+YfXKx0eHX0o9Y5iCX0qLZhDUmskTGb8wwIy3ip5myNhjvr05IIzggO8QrSzbefu2Ba2GkKVoL0PJlD0steInfKBDEHC3m7oTgIVEWWTzE6TMt48Isqg0/18kvwHcVhnuQ2i1nRfh1ZhnwDyomtLoQ0MohJ8/
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR10MB2434.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(39860400002)(366004)(396003)(376002)(346002)(83380400001)(6666004)(8676002)(478600001)(2616005)(6486002)(36756003)(956004)(7696005)(2906002)(26005)(16526019)(66946007)(31696002)(8936002)(66556008)(86362001)(31686004)(186003)(66476007)(9686003)(110136005)(53546011)(4326008)(316002)(5660300002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?QS9VS25Tbml3MWtZWDZTUFZwbHRtcWJyeFFJVllYSzJBMXhYUkdqOHA2aUxs?=
- =?utf-8?B?UGtSaXkwdEp1NFhPOXIzMU14K21tQnQ3NXRTWXJqRC91WmQzQWY4L3ZqYUJY?=
- =?utf-8?B?MmoxMkc3Z2lmbDF5bGRhMkFaeEFYU2FLK1hQSFM2anN6eEZaeFpmbU1KN2J2?=
- =?utf-8?B?RUVjd2tDRDB3OU42NFpnbDc1SmtlZGd2VWY3enViVlV3VWpURnVaQlByaVRY?=
- =?utf-8?B?Zk5DaUJVQ21heit1TjVaZFFVd3NiNTIvYnlhTEVSOExsSnVSdFVkbXFuQkRZ?=
- =?utf-8?B?Nmh1T0lxUkdjNm5XdUswL1h3b1A2R3o2MmlPcVhOaHNTRytmQTkvQzJKelpZ?=
- =?utf-8?B?VENUNHkyUTNFaDBmV2Voa1g2NG1GM3I0a2liRStIcTZRTlBma3p6T0szWlFz?=
- =?utf-8?B?bXFVNTRkeVZ3SnhqTXoxTndjTGswQkNRTFlRQ2ludWhoQ0lhTDRJamZtVmxC?=
- =?utf-8?B?anBmR2EyTFFNcDgvR202VW15NGJMLzdFVTdoYzFuK3pIaHpjZGFxWGFSdzdl?=
- =?utf-8?B?dGQzYlp0eEpHMUpNRFlQQ2x4WC9aUk03cWRaRHVPcWJZcy9DYll1L1FzaEJl?=
- =?utf-8?B?bDl2UE02WXdKaTJ6Zmx2Tmw2aEJQTGVHSFd5eU9KZG9aWjUzZEtNOUdwN29N?=
- =?utf-8?B?RFc4YURLWjVVdURxN2R6VHViRXZLMm9FOENsMEswUjNVOUtqN2h3SmlCb3p6?=
- =?utf-8?B?MlY3UE4vajdTVHB5Q3RobG9oODJrY2xESDNiS2dLRmREYzJMd2JkYjl3bmF6?=
- =?utf-8?B?MEtHamg2RmZ1WHZGYjY5b3VLNHJGMnU4dWt1RlRBNmM5MHRuNHpEbUZxTEFS?=
- =?utf-8?B?SXlzbWlQQ29qUGh4dWlhQ05UYWxhSVZjenRBWnhkOXhRQVRBRHVRVXQ3Y1d3?=
- =?utf-8?B?Q1BUSG9tLzNJTUwyVU5XZXFwcjd3THk4UFNzUXBYTlYwczhQUU95Yzg4anhI?=
- =?utf-8?B?S1IzUVIyelNhZ0lZZlFYTzBqVWw4Q2h1U1g1dGc0UjlPNC9TYmgydFU4bHU5?=
- =?utf-8?B?MmNsRGxDdm5UeDltcUEyeUhxcDlobHVkeVRQVFU0RndNTkF0cGlYaDdVYVNa?=
- =?utf-8?B?N2RTTGoramhyamtLeVVKVlVxVFhRNElvcFNBeURDbTd6d296dHJPWXRmRktW?=
- =?utf-8?B?bEFzUStDdjd6S3BRZzBqVFhrdHFCRGpUY1VFRlZGODNnbTR1dDhINFFqTE8v?=
- =?utf-8?B?YkRhMXd2c3ovTTRmY2dVbDlCMVVQejhhYjNWeUg0V1IxUEtJeWRURVBTM2wx?=
- =?utf-8?B?bzdQWmgrVE5lNVFlZS8rY3ZqakNsLzEvMkU4Y2txV3l0M0pNU0FWOGt3bDdy?=
- =?utf-8?B?TmhaSDBIclJzbWhwVlo5dDg3SDBLVnozejZSRkk0YW5nTnpWbGdMMVAxUVh1?=
- =?utf-8?B?RzJMS1JUYkZSaHdaSEZuNlFQTEpBM2R4cnBQcHROUFhEMzVaclFMK2d1TldI?=
- =?utf-8?Q?A8iKdRi8?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ce770e0-120c-473b-6646-08d8c152d169
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR10MB2434.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2021 17:01:11.9628
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BdhO0h08IrE0CTlVJY6CnMzbKSFdYBaIc6rlLdBAsChDUjj56yv9WcmtO5TSQGmw3olTw4bXKFNX/CKvNRZ/jw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR10MB1441
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9875 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 spamscore=0
- adultscore=0 bulkscore=0 phishscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2101250093
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9875 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- phishscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999
- lowpriorityscore=0 spamscore=0 mlxscore=0 suspectscore=0 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101250093
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Add an iterator, ITER_XARRAY, that walks through a set of pages attached to
+an xarray, starting at a given page and offset and walking for the
+specified amount of bytes.  The iterator supports transparent huge pages.
 
-On 1/25/21 6:32 AM, Chuck Lever wrote:
->
->> On Jan 22, 2021, at 8:50 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
->>
->> Currently NFSv4_2 SSC helper, nfs_ssc, incorrectly uses GRACE_PERIOD
->> as its config. Fix by adding new config NFS_V4_2_SSC_HELPER which
->> depends on NFS_V4_2 and is automatically selected when NFSD_V4 is
->> enabled. Also removed the file name from a comment in nfs_ssc.c.
->>
->> Fixes: 0cfcd405e758 (NFSv4.2: Fix NFS4ERR_STALE error when doing inter server copy)
-> This patch feels more like a clean up / refactor then a fix,
-> so I'm not certain we want to request an automatic backport
-> to stable for it. Dai, would you mind if we dropped the
-> Fixes: tag, or is there something I missed?
+The caller must guarantee that the pages are all present and they must be
+locked using PG_locked, PG_writeback or PG_fscache to prevent them from
+going away or being migrated whilst they're being accessed.
 
-Yes, it's a cleanup. The Fixes: tag is not needed.
-Thank you Chuck,
+This is useful for copying data from socket buffers to inodes in network
+filesystems and for transferring data between those inodes and the cache
+using direct I/O.
 
--Dai
+Whilst it is true that ITER_BVEC could be used instead, that would require
+a bio_vec array to be allocated to refer to all the pages - which should be
+redundant if inode->i_pages also points to all these pages.
 
->
->> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
->> ---
->> fs/Kconfig              |  3 +++
->> fs/nfs/nfs4file.c       |  4 ++++
->> fs/nfs/super.c          | 12 ++++++++++++
->> fs/nfs_common/Makefile  |  2 +-
->> fs/nfs_common/nfs_ssc.c |  2 --
->> fs/nfsd/Kconfig         |  1 +
->> 6 files changed, 21 insertions(+), 3 deletions(-)
->>
->> diff --git a/fs/Kconfig b/fs/Kconfig
->> index aa4c12282301..d33a31239cbc 100644
->> --- a/fs/Kconfig
->> +++ b/fs/Kconfig
->> @@ -333,6 +333,9 @@ config NFS_COMMON
->> 	depends on NFSD || NFS_FS || LOCKD
->> 	default y
->>
->> +config NFS_V4_2_SSC_HELPER
->> +	tristate
->> +
->> source "net/sunrpc/Kconfig"
->> source "fs/ceph/Kconfig"
->> source "fs/cifs/Kconfig"
->> diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
->> index 57b3821d975a..441a2fa073c8 100644
->> --- a/fs/nfs/nfs4file.c
->> +++ b/fs/nfs/nfs4file.c
->> @@ -420,7 +420,9 @@ static const struct nfs4_ssc_client_ops nfs4_ssc_clnt_ops_tbl = {
->>   */
->> void nfs42_ssc_register_ops(void)
->> {
->> +#ifdef CONFIG_NFSD_V4
->> 	nfs42_ssc_register(&nfs4_ssc_clnt_ops_tbl);
->> +#endif
->> }
->>
->> /**
->> @@ -431,7 +433,9 @@ void nfs42_ssc_register_ops(void)
->>   */
->> void nfs42_ssc_unregister_ops(void)
->> {
->> +#ifdef CONFIG_NFSD_V4
->> 	nfs42_ssc_unregister(&nfs4_ssc_clnt_ops_tbl);
->> +#endif
->> }
->> #endif /* CONFIG_NFS_V4_2 */
->>
->> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
->> index 4034102010f0..c7a924580eec 100644
->> --- a/fs/nfs/super.c
->> +++ b/fs/nfs/super.c
->> @@ -86,9 +86,11 @@ const struct super_operations nfs_sops = {
->> };
->> EXPORT_SYMBOL_GPL(nfs_sops);
->>
->> +#ifdef CONFIG_NFS_V4_2
->> static const struct nfs_ssc_client_ops nfs_ssc_clnt_ops_tbl = {
->> 	.sco_sb_deactive = nfs_sb_deactive,
->> };
->> +#endif
->>
->> #if IS_ENABLED(CONFIG_NFS_V4)
->> static int __init register_nfs4_fs(void)
->> @@ -111,15 +113,21 @@ static void unregister_nfs4_fs(void)
->> }
->> #endif
->>
->> +#ifdef CONFIG_NFS_V4_2
->> static void nfs_ssc_register_ops(void)
->> {
->> +#ifdef CONFIG_NFSD_V4
->> 	nfs_ssc_register(&nfs_ssc_clnt_ops_tbl);
->> +#endif
->> }
->>
->> static void nfs_ssc_unregister_ops(void)
->> {
->> +#ifdef CONFIG_NFSD_V4
->> 	nfs_ssc_unregister(&nfs_ssc_clnt_ops_tbl);
->> +#endif
->> }
->> +#endif /* CONFIG_NFS_V4_2 */
->>
->> static struct shrinker acl_shrinker = {
->> 	.count_objects	= nfs_access_cache_count,
->> @@ -148,7 +156,9 @@ int __init register_nfs_fs(void)
->> 	ret = register_shrinker(&acl_shrinker);
->> 	if (ret < 0)
->> 		goto error_3;
->> +#ifdef CONFIG_NFS_V4_2
->> 	nfs_ssc_register_ops();
->> +#endif
->> 	return 0;
->> error_3:
->> 	nfs_unregister_sysctl();
->> @@ -168,7 +178,9 @@ void __exit unregister_nfs_fs(void)
->> 	unregister_shrinker(&acl_shrinker);
->> 	nfs_unregister_sysctl();
->> 	unregister_nfs4_fs();
->> +#ifdef CONFIG_NFS_V4_2
->> 	nfs_ssc_unregister_ops();
->> +#endif
->> 	unregister_filesystem(&nfs_fs_type);
->> }
->>
->> diff --git a/fs/nfs_common/Makefile b/fs/nfs_common/Makefile
->> index fa82f5aaa6d9..119c75ab9fd0 100644
->> --- a/fs/nfs_common/Makefile
->> +++ b/fs/nfs_common/Makefile
->> @@ -7,4 +7,4 @@ obj-$(CONFIG_NFS_ACL_SUPPORT) += nfs_acl.o
->> nfs_acl-objs := nfsacl.o
->>
->> obj-$(CONFIG_GRACE_PERIOD) += grace.o
->> -obj-$(CONFIG_GRACE_PERIOD) += nfs_ssc.o
->> +obj-$(CONFIG_NFS_V4_2_SSC_HELPER) += nfs_ssc.o
->> diff --git a/fs/nfs_common/nfs_ssc.c b/fs/nfs_common/nfs_ssc.c
->> index f43bbb373913..7c1509e968c8 100644
->> --- a/fs/nfs_common/nfs_ssc.c
->> +++ b/fs/nfs_common/nfs_ssc.c
->> @@ -1,7 +1,5 @@
->> // SPDX-License-Identifier: GPL-2.0-only
->> /*
->> - * fs/nfs_common/nfs_ssc_comm.c
->> - *
->>   * Helper for knfsd's SSC to access ops in NFS client modules
->>   *
->>   * Author: Dai Ngo <dai.ngo@oracle.com>
->> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
->> index dbbc583d6273..821e5913faee 100644
->> --- a/fs/nfsd/Kconfig
->> +++ b/fs/nfsd/Kconfig
->> @@ -76,6 +76,7 @@ config NFSD_V4
->> 	select CRYPTO_MD5
->> 	select CRYPTO_SHA256
->> 	select GRACE_PERIOD
->> +	select NFS_V4_2_SSC_HELPER if NFS_V4_2
->> 	help
->> 	  This option enables support in your system's NFS server for
->> 	  version 4 of the NFS protocol (RFC 3530).
->> -- 
->> 2.9.5
->>
-> --
-> Chuck Lever
->
->
->
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Matthew Wilcox <willy@infradead.org>
+---
+
+ include/linux/uio.h |   11 ++
+ lib/iov_iter.c      |  313 +++++++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 301 insertions(+), 23 deletions(-)
+
+diff --git a/include/linux/uio.h b/include/linux/uio.h
+index 72d88566694e..08b186df54ac 100644
+--- a/include/linux/uio.h
++++ b/include/linux/uio.h
+@@ -10,6 +10,7 @@
+ #include <uapi/linux/uio.h>
+ 
+ struct page;
++struct address_space;
+ struct pipe_inode_info;
+ 
+ struct kvec {
+@@ -24,6 +25,7 @@ enum iter_type {
+ 	ITER_BVEC = 16,
+ 	ITER_PIPE = 32,
+ 	ITER_DISCARD = 64,
++	ITER_XARRAY = 128,
+ };
+ 
+ struct iov_iter {
+@@ -39,6 +41,7 @@ struct iov_iter {
+ 		const struct iovec *iov;
+ 		const struct kvec *kvec;
+ 		const struct bio_vec *bvec;
++		struct xarray *xarray;
+ 		struct pipe_inode_info *pipe;
+ 	};
+ 	union {
+@@ -47,6 +50,7 @@ struct iov_iter {
+ 			unsigned int head;
+ 			unsigned int start_head;
+ 		};
++		loff_t xarray_start;
+ 	};
+ };
+ 
+@@ -80,6 +84,11 @@ static inline bool iov_iter_is_discard(const struct iov_iter *i)
+ 	return iov_iter_type(i) == ITER_DISCARD;
+ }
+ 
++static inline bool iov_iter_is_xarray(const struct iov_iter *i)
++{
++	return iov_iter_type(i) == ITER_XARRAY;
++}
++
+ static inline unsigned char iov_iter_rw(const struct iov_iter *i)
+ {
+ 	return i->type & (READ | WRITE);
+@@ -221,6 +230,8 @@ void iov_iter_bvec(struct iov_iter *i, unsigned int direction, const struct bio_
+ void iov_iter_pipe(struct iov_iter *i, unsigned int direction, struct pipe_inode_info *pipe,
+ 			size_t count);
+ void iov_iter_discard(struct iov_iter *i, unsigned int direction, size_t count);
++void iov_iter_xarray(struct iov_iter *i, unsigned int direction, struct xarray *xarray,
++		     loff_t start, size_t count);
+ ssize_t iov_iter_get_pages(struct iov_iter *i, struct page **pages,
+ 			size_t maxsize, unsigned maxpages, size_t *start);
+ ssize_t iov_iter_get_pages_alloc(struct iov_iter *i, struct page ***pages,
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index a21e6a5792c5..f53a57588489 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -78,7 +78,44 @@
+ 	}						\
+ }
+ 
+-#define iterate_all_kinds(i, n, v, I, B, K) {			\
++#define iterate_xarray(i, n, __v, skip, STEP) {		\
++	struct page *head = NULL;				\
++	size_t wanted = n, seg, offset;				\
++	loff_t start = i->xarray_start + skip;			\
++	pgoff_t index = start >> PAGE_SHIFT;			\
++	int j;							\
++								\
++	XA_STATE(xas, i->xarray, index);			\
++								\
++	rcu_read_lock();						\
++	xas_for_each(&xas, head, ULONG_MAX) {				\
++		if (xas_retry(&xas, head))				\
++			continue;					\
++		if (WARN_ON(xa_is_value(head)))				\
++			break;						\
++		if (WARN_ON(PageHuge(head)))				\
++			break;						\
++		for (j = (head->index < index) ? index - head->index : 0; \
++		     j < thp_nr_pages(head); j++) {			\
++			__v.bv_page = head + j;				\
++			offset = (i->xarray_start + skip) & ~PAGE_MASK;	\
++			seg = PAGE_SIZE - offset;			\
++			__v.bv_offset = offset;				\
++			__v.bv_len = min(n, seg);			\
++			(void)(STEP);					\
++			n -= __v.bv_len;				\
++			skip += __v.bv_len;				\
++			if (n == 0)					\
++				break;					\
++		}							\
++		if (n == 0)						\
++			break;						\
++	}							\
++	rcu_read_unlock();					\
++	n = wanted - n;						\
++}
++
++#define iterate_all_kinds(i, n, v, I, B, K, X) {		\
+ 	if (likely(n)) {					\
+ 		size_t skip = i->iov_offset;			\
+ 		if (unlikely(i->type & ITER_BVEC)) {		\
+@@ -90,6 +127,9 @@
+ 			struct kvec v;				\
+ 			iterate_kvec(i, n, v, kvec, skip, (K))	\
+ 		} else if (unlikely(i->type & ITER_DISCARD)) {	\
++		} else if (unlikely(i->type & ITER_XARRAY)) {	\
++			struct bio_vec v;			\
++			iterate_xarray(i, n, v, skip, (X));	\
+ 		} else {					\
+ 			const struct iovec *iov;		\
+ 			struct iovec v;				\
+@@ -98,7 +138,7 @@
+ 	}							\
+ }
+ 
+-#define iterate_and_advance(i, n, v, I, B, K) {			\
++#define iterate_and_advance(i, n, v, I, B, K, X) {		\
+ 	if (unlikely(i->count < n))				\
+ 		n = i->count;					\
+ 	if (i->count) {						\
+@@ -123,6 +163,9 @@
+ 			i->kvec = kvec;				\
+ 		} else if (unlikely(i->type & ITER_DISCARD)) {	\
+ 			skip += n;				\
++		} else if (unlikely(i->type & ITER_XARRAY)) {	\
++			struct bio_vec v;			\
++			iterate_xarray(i, n, v, skip, (X))	\
+ 		} else {					\
+ 			const struct iovec *iov;		\
+ 			struct iovec v;				\
+@@ -636,7 +679,9 @@ size_t _copy_to_iter(const void *addr, size_t bytes, struct iov_iter *i)
+ 		copyout(v.iov_base, (from += v.iov_len) - v.iov_len, v.iov_len),
+ 		memcpy_to_page(v.bv_page, v.bv_offset,
+ 			       (from += v.bv_len) - v.bv_len, v.bv_len),
+-		memcpy(v.iov_base, (from += v.iov_len) - v.iov_len, v.iov_len)
++		memcpy(v.iov_base, (from += v.iov_len) - v.iov_len, v.iov_len),
++		memcpy_to_page(v.bv_page, v.bv_offset,
++			       (from += v.bv_len) - v.bv_len, v.bv_len)
+ 	)
+ 
+ 	return bytes;
+@@ -752,6 +797,16 @@ size_t _copy_mc_to_iter(const void *addr, size_t bytes, struct iov_iter *i)
+ 			bytes = curr_addr - s_addr - rem;
+ 			return bytes;
+ 		}
++		}),
++		({
++		rem = copy_mc_to_page(v.bv_page, v.bv_offset,
++				      (from += v.bv_len) - v.bv_len, v.bv_len);
++		if (rem) {
++			curr_addr = (unsigned long) from;
++			bytes = curr_addr - s_addr - rem;
++			rcu_read_unlock();
++			return bytes;
++		}
+ 		})
+ 	)
+ 
+@@ -773,7 +828,9 @@ size_t _copy_from_iter(void *addr, size_t bytes, struct iov_iter *i)
+ 		copyin((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
+ 		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
+ 				 v.bv_offset, v.bv_len),
+-		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len)
++		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
++		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
++				 v.bv_offset, v.bv_len)
+ 	)
+ 
+ 	return bytes;
+@@ -799,7 +856,9 @@ bool _copy_from_iter_full(void *addr, size_t bytes, struct iov_iter *i)
+ 		0;}),
+ 		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
+ 				 v.bv_offset, v.bv_len),
+-		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len)
++		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
++		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
++				 v.bv_offset, v.bv_len)
+ 	)
+ 
+ 	iov_iter_advance(i, bytes);
+@@ -819,7 +878,9 @@ size_t _copy_from_iter_nocache(void *addr, size_t bytes, struct iov_iter *i)
+ 					 v.iov_base, v.iov_len),
+ 		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
+ 				 v.bv_offset, v.bv_len),
+-		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len)
++		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
++		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
++				 v.bv_offset, v.bv_len)
+ 	)
+ 
+ 	return bytes;
+@@ -854,7 +915,9 @@ size_t _copy_from_iter_flushcache(void *addr, size_t bytes, struct iov_iter *i)
+ 		memcpy_page_flushcache((to += v.bv_len) - v.bv_len, v.bv_page,
+ 				 v.bv_offset, v.bv_len),
+ 		memcpy_flushcache((to += v.iov_len) - v.iov_len, v.iov_base,
+-			v.iov_len)
++			v.iov_len),
++		memcpy_page_flushcache((to += v.bv_len) - v.bv_len, v.bv_page,
++				 v.bv_offset, v.bv_len)
+ 	)
+ 
+ 	return bytes;
+@@ -878,7 +941,9 @@ bool _copy_from_iter_full_nocache(void *addr, size_t bytes, struct iov_iter *i)
+ 		0;}),
+ 		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
+ 				 v.bv_offset, v.bv_len),
+-		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len)
++		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
++		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
++				 v.bv_offset, v.bv_len)
+ 	)
+ 
+ 	iov_iter_advance(i, bytes);
+@@ -915,7 +980,7 @@ size_t copy_page_to_iter(struct page *page, size_t offset, size_t bytes,
+ {
+ 	if (unlikely(!page_copy_sane(page, offset, bytes)))
+ 		return 0;
+-	if (i->type & (ITER_BVEC|ITER_KVEC)) {
++	if (i->type & (ITER_BVEC | ITER_KVEC | ITER_XARRAY)) {
+ 		void *kaddr = kmap_atomic(page);
+ 		size_t wanted = copy_to_iter(kaddr + offset, bytes, i);
+ 		kunmap_atomic(kaddr);
+@@ -938,7 +1003,7 @@ size_t copy_page_from_iter(struct page *page, size_t offset, size_t bytes,
+ 		WARN_ON(1);
+ 		return 0;
+ 	}
+-	if (i->type & (ITER_BVEC|ITER_KVEC)) {
++	if (i->type & (ITER_BVEC | ITER_KVEC | ITER_XARRAY)) {
+ 		void *kaddr = kmap_atomic(page);
+ 		size_t wanted = _copy_from_iter(kaddr + offset, bytes, i);
+ 		kunmap_atomic(kaddr);
+@@ -982,7 +1047,8 @@ size_t iov_iter_zero(size_t bytes, struct iov_iter *i)
+ 	iterate_and_advance(i, bytes, v,
+ 		clear_user(v.iov_base, v.iov_len),
+ 		memzero_page(v.bv_page, v.bv_offset, v.bv_len),
+-		memset(v.iov_base, 0, v.iov_len)
++		memset(v.iov_base, 0, v.iov_len),
++		memzero_page(v.bv_page, v.bv_offset, v.bv_len)
+ 	)
+ 
+ 	return bytes;
+@@ -1006,7 +1072,9 @@ size_t iov_iter_copy_from_user_atomic(struct page *page,
+ 		copyin((p += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
+ 		memcpy_from_page((p += v.bv_len) - v.bv_len, v.bv_page,
+ 				 v.bv_offset, v.bv_len),
+-		memcpy((p += v.iov_len) - v.iov_len, v.iov_base, v.iov_len)
++		memcpy((p += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
++		memcpy_from_page((p += v.bv_len) - v.bv_len, v.bv_page,
++				 v.bv_offset, v.bv_len)
+ 	)
+ 	kunmap_atomic(kaddr);
+ 	return bytes;
+@@ -1077,7 +1145,12 @@ void iov_iter_advance(struct iov_iter *i, size_t size)
+ 		i->count -= size;
+ 		return;
+ 	}
+-	iterate_and_advance(i, size, v, 0, 0, 0)
++	if (unlikely(iov_iter_is_xarray(i))) {
++		i->iov_offset += size;
++		i->count -= size;
++		return;
++	}
++	iterate_and_advance(i, size, v, 0, 0, 0, 0)
+ }
+ EXPORT_SYMBOL(iov_iter_advance);
+ 
+@@ -1121,7 +1194,12 @@ void iov_iter_revert(struct iov_iter *i, size_t unroll)
+ 		return;
+ 	}
+ 	unroll -= i->iov_offset;
+-	if (iov_iter_is_bvec(i)) {
++	if (iov_iter_is_xarray(i)) {
++		BUG(); /* We should never go beyond the start of the specified
++			* range since we might then be straying into pages that
++			* aren't pinned.
++			*/
++	} else if (iov_iter_is_bvec(i)) {
+ 		const struct bio_vec *bvec = i->bvec;
+ 		while (1) {
+ 			size_t n = (--bvec)->bv_len;
+@@ -1158,9 +1236,9 @@ size_t iov_iter_single_seg_count(const struct iov_iter *i)
+ 		return i->count;	// it is a silly place, anyway
+ 	if (i->nr_segs == 1)
+ 		return i->count;
+-	if (unlikely(iov_iter_is_discard(i)))
++	if (unlikely(iov_iter_is_discard(i) || iov_iter_is_xarray(i)))
+ 		return i->count;
+-	else if (iov_iter_is_bvec(i))
++	if (iov_iter_is_bvec(i))
+ 		return min(i->count, i->bvec->bv_len - i->iov_offset);
+ 	else
+ 		return min(i->count, i->iov->iov_len - i->iov_offset);
+@@ -1208,6 +1286,31 @@ void iov_iter_pipe(struct iov_iter *i, unsigned int direction,
+ }
+ EXPORT_SYMBOL(iov_iter_pipe);
+ 
++/**
++ * iov_iter_xarray - Initialise an I/O iterator to use the pages in an xarray
++ * @i: The iterator to initialise.
++ * @direction: The direction of the transfer.
++ * @xarray: The xarray to access.
++ * @start: The start file position.
++ * @count: The size of the I/O buffer in bytes.
++ *
++ * Set up an I/O iterator to either draw data out of the pages attached to an
++ * inode or to inject data into those pages.  The pages *must* be prevented
++ * from evaporation, either by taking a ref on them or locking them by the
++ * caller.
++ */
++void iov_iter_xarray(struct iov_iter *i, unsigned int direction,
++		     struct xarray *xarray, loff_t start, size_t count)
++{
++	BUG_ON(direction & ~1);
++	i->type = ITER_XARRAY | (direction & (READ | WRITE));
++	i->xarray = xarray;
++	i->xarray_start = start;
++	i->count = count;
++	i->iov_offset = 0;
++}
++EXPORT_SYMBOL(iov_iter_xarray);
++
+ /**
+  * iov_iter_discard - Initialise an I/O iterator that discards data
+  * @i: The iterator to initialise.
+@@ -1241,7 +1344,8 @@ unsigned long iov_iter_alignment(const struct iov_iter *i)
+ 	iterate_all_kinds(i, size, v,
+ 		(res |= (unsigned long)v.iov_base | v.iov_len, 0),
+ 		res |= v.bv_offset | v.bv_len,
+-		res |= (unsigned long)v.iov_base | v.iov_len
++		res |= (unsigned long)v.iov_base | v.iov_len,
++		res |= v.bv_offset | v.bv_len
+ 	)
+ 	return res;
+ }
+@@ -1263,7 +1367,9 @@ unsigned long iov_iter_gap_alignment(const struct iov_iter *i)
+ 		(res |= (!res ? 0 : (unsigned long)v.bv_offset) |
+ 			(size != v.bv_len ? size : 0)),
+ 		(res |= (!res ? 0 : (unsigned long)v.iov_base) |
+-			(size != v.iov_len ? size : 0))
++			(size != v.iov_len ? size : 0)),
++		(res |= (!res ? 0 : (unsigned long)v.bv_offset) |
++			(size != v.bv_len ? size : 0))
+ 		);
+ 	return res;
+ }
+@@ -1313,6 +1419,75 @@ static ssize_t pipe_get_pages(struct iov_iter *i,
+ 	return __pipe_get_pages(i, min(maxsize, capacity), pages, iter_head, start);
+ }
+ 
++static ssize_t iter_xarray_copy_pages(struct page **pages, struct xarray *xa,
++				       pgoff_t index, unsigned int nr_pages)
++{
++	XA_STATE(xas, xa, index);
++	struct page *page;
++	unsigned int ret = 0;
++
++	rcu_read_lock();
++	for (page = xas_load(&xas); page; page = xas_next(&xas)) {
++		if (xas_retry(&xas, page))
++			continue;
++
++		/* Has the page moved or been split? */
++		if (unlikely(page != xas_reload(&xas))) {
++			xas_reset(&xas);
++			continue;
++		}
++
++		pages[ret] = find_subpage(page, xas.xa_index);
++		get_page(pages[ret]);
++		if (++ret == nr_pages)
++			break;
++	}
++	rcu_read_unlock();
++	return ret;
++}
++
++static ssize_t iter_xarray_get_pages(struct iov_iter *i,
++				     struct page **pages, size_t maxsize,
++				     unsigned maxpages, size_t *_start_offset)
++{
++	unsigned nr, offset;
++	pgoff_t index, count;
++	size_t size = maxsize, actual;
++	loff_t pos;
++
++	if (!size || !maxpages)
++		return 0;
++
++	pos = i->xarray_start + i->iov_offset;
++	index = pos >> PAGE_SHIFT;
++	offset = pos & ~PAGE_MASK;
++	*_start_offset = offset;
++
++	count = 1;
++	if (size > PAGE_SIZE - offset) {
++		size -= PAGE_SIZE - offset;
++		count += size >> PAGE_SHIFT;
++		size &= ~PAGE_MASK;
++		if (size)
++			count++;
++	}
++
++	if (count > maxpages)
++		count = maxpages;
++
++	nr = iter_xarray_copy_pages(pages, i->xarray, index, count);
++	if (nr == 0)
++		return 0;
++
++	actual = PAGE_SIZE * nr;
++	actual -= offset;
++	if (nr == count && size > 0) {
++		unsigned last_offset = (nr > 1) ? 0 : offset;
++		actual -= PAGE_SIZE - (last_offset + size);
++	}
++	return actual;
++}
++
+ ssize_t iov_iter_get_pages(struct iov_iter *i,
+ 		   struct page **pages, size_t maxsize, unsigned maxpages,
+ 		   size_t *start)
+@@ -1322,6 +1497,8 @@ ssize_t iov_iter_get_pages(struct iov_iter *i,
+ 
+ 	if (unlikely(iov_iter_is_pipe(i)))
+ 		return pipe_get_pages(i, pages, maxsize, maxpages, start);
++	if (unlikely(iov_iter_is_xarray(i)))
++		return iter_xarray_get_pages(i, pages, maxsize, maxpages, start);
+ 	if (unlikely(iov_iter_is_discard(i)))
+ 		return -EFAULT;
+ 
+@@ -1348,7 +1525,8 @@ ssize_t iov_iter_get_pages(struct iov_iter *i,
+ 		return v.bv_len;
+ 	}),({
+ 		return -EFAULT;
+-	})
++	}),
++	0
+ 	)
+ 	return 0;
+ }
+@@ -1392,6 +1570,51 @@ static ssize_t pipe_get_pages_alloc(struct iov_iter *i,
+ 	return n;
+ }
+ 
++static ssize_t iter_xarray_get_pages_alloc(struct iov_iter *i,
++					   struct page ***pages, size_t maxsize,
++					   size_t *_start_offset)
++{
++	struct page **p;
++	unsigned nr, offset;
++	pgoff_t index, count;
++	size_t size = maxsize, actual;
++	loff_t pos;
++
++	if (!size)
++		return 0;
++
++	pos = i->xarray_start + i->iov_offset;
++	index = pos >> PAGE_SHIFT;
++	offset = pos & ~PAGE_MASK;
++	*_start_offset = offset;
++
++	count = 1;
++	if (size > PAGE_SIZE - offset) {
++		size -= PAGE_SIZE - offset;
++		count += size >> PAGE_SHIFT;
++		size &= ~PAGE_MASK;
++		if (size)
++			count++;
++	}
++
++	p = get_pages_array(count);
++	if (!p)
++		return -ENOMEM;
++	*pages = p;
++
++	nr = iter_xarray_copy_pages(p, i->xarray, index, count);
++	if (nr == 0)
++		return 0;
++
++	actual = PAGE_SIZE * nr;
++	actual -= offset;
++	if (nr == count && size > 0) {
++		unsigned last_offset = (nr > 1) ? 0 : offset;
++		actual -= PAGE_SIZE - (last_offset + size);
++	}
++	return actual;
++}
++
+ ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
+ 		   struct page ***pages, size_t maxsize,
+ 		   size_t *start)
+@@ -1403,6 +1626,8 @@ ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
+ 
+ 	if (unlikely(iov_iter_is_pipe(i)))
+ 		return pipe_get_pages_alloc(i, pages, maxsize, start);
++	if (unlikely(iov_iter_is_xarray(i)))
++		return iter_xarray_get_pages_alloc(i, pages, maxsize, start);
+ 	if (unlikely(iov_iter_is_discard(i)))
+ 		return -EFAULT;
+ 
+@@ -1435,7 +1660,7 @@ ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
+ 		return v.bv_len;
+ 	}),({
+ 		return -EFAULT;
+-	})
++	}), 0
+ 	)
+ 	return 0;
+ }
+@@ -1473,6 +1698,13 @@ size_t csum_and_copy_from_iter(void *addr, size_t bytes, __wsum *csum,
+ 				      v.iov_base, v.iov_len,
+ 				      sum, off);
+ 		off += v.iov_len;
++	}), ({
++		char *p = kmap_atomic(v.bv_page);
++		sum = csum_and_memcpy((to += v.bv_len) - v.bv_len,
++				      p + v.bv_offset, v.bv_len,
++				      sum, off);
++		kunmap_atomic(p);
++		off += v.bv_len;
+ 	})
+ 	)
+ 	*csum = sum;
+@@ -1514,6 +1746,13 @@ bool csum_and_copy_from_iter_full(void *addr, size_t bytes, __wsum *csum,
+ 				      v.iov_base, v.iov_len,
+ 				      sum, off);
+ 		off += v.iov_len;
++	}), ({
++		char *p = kmap_atomic(v.bv_page);
++		sum = csum_and_memcpy((to += v.bv_len) - v.bv_len,
++				      p + v.bv_offset, v.bv_len,
++				      sum, off);
++		kunmap_atomic(p);
++		off += v.bv_len;
+ 	})
+ 	)
+ 	*csum = sum;
+@@ -1559,6 +1798,13 @@ size_t csum_and_copy_to_iter(const void *addr, size_t bytes, void *csump,
+ 				     (from += v.iov_len) - v.iov_len,
+ 				     v.iov_len, sum, off);
+ 		off += v.iov_len;
++	}), ({
++		char *p = kmap_atomic(v.bv_page);
++		sum = csum_and_memcpy(p + v.bv_offset,
++				      (from += v.bv_len) - v.bv_len,
++				      v.bv_len, sum, off);
++		kunmap_atomic(p);
++		off += v.bv_len;
+ 	})
+ 	)
+ 	*csum = sum;
+@@ -1608,6 +1854,21 @@ int iov_iter_npages(const struct iov_iter *i, int maxpages)
+ 		npages = pipe_space_for_user(iter_head, pipe->tail, pipe);
+ 		if (npages >= maxpages)
+ 			return maxpages;
++	} else if (unlikely(iov_iter_is_xarray(i))) {
++		unsigned offset;
++
++		offset = (i->xarray_start + i->iov_offset) & ~PAGE_MASK;
++
++		npages = 1;
++		if (size > PAGE_SIZE - offset) {
++			size -= PAGE_SIZE - offset;
++			npages += size >> PAGE_SHIFT;
++			size &= ~PAGE_MASK;
++			if (size)
++				npages++;
++		}
++		if (npages >= maxpages)
++			return maxpages;
+ 	} else iterate_all_kinds(i, size, v, ({
+ 		unsigned long p = (unsigned long)v.iov_base;
+ 		npages += DIV_ROUND_UP(p + v.iov_len, PAGE_SIZE)
+@@ -1624,7 +1885,8 @@ int iov_iter_npages(const struct iov_iter *i, int maxpages)
+ 			- p / PAGE_SIZE;
+ 		if (npages >= maxpages)
+ 			return maxpages;
+-	})
++	}),
++	0
+ 	)
+ 	return npages;
+ }
+@@ -1637,7 +1899,7 @@ const void *dup_iter(struct iov_iter *new, struct iov_iter *old, gfp_t flags)
+ 		WARN_ON(1);
+ 		return NULL;
+ 	}
+-	if (unlikely(iov_iter_is_discard(new)))
++	if (unlikely(iov_iter_is_discard(new) || iov_iter_is_xarray(new)))
+ 		return NULL;
+ 	if (iov_iter_is_bvec(new))
+ 		return new->bvec = kmemdup(new->bvec,
+@@ -1842,7 +2104,12 @@ int iov_iter_for_each_range(struct iov_iter *i, size_t bytes,
+ 		kunmap(v.bv_page);
+ 		err;}), ({
+ 		w = v;
+-		err = f(&w, context);})
++		err = f(&w, context);}), ({
++		w.iov_base = kmap(v.bv_page) + v.bv_offset;
++		w.iov_len = v.bv_len;
++		err = f(&w, context);
++		kunmap(v.bv_page);
++		err;})
+ 	)
+ 	return err;
+ }
+
+
