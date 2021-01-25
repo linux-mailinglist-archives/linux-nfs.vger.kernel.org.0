@@ -2,49 +2,48 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E8C1302DE1
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jan 2021 22:35:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88B6B302E09
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jan 2021 22:38:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732173AbhAYVcz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 25 Jan 2021 16:32:55 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:25548 "EHLO
+        id S1732787AbhAYVhZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Jan 2021 16:37:25 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38619 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732739AbhAYVcp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jan 2021 16:32:45 -0500
+        by vger.kernel.org with ESMTP id S1732847AbhAYVg1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jan 2021 16:36:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611610276;
+        s=mimecast20190719; t=1611610497;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=PZM8pkEUldgdjLQDWcAKh2bd4L+mVbppYa1yiaIR8h0=;
-        b=MZQqE8P7evPmysZNdI4+/Kxo4H2/YwvAj5CkWb1RlBbKIRtwib1+u0Wz0zGPKLO7HKjsfy
-        d32b76bHkT+L9+EHhDQaWRMbJ+zUPz0LKrusYTMCgSyR3G49olpLz51cVDARYAf8oal/YS
-        ymWj66gjU5GdAipDlZxwvArNPquhDt8=
+        bh=+Y11n5/UO8WH8kGS7CUqxbwe9ffMO78jIcPd9LH2q6A=;
+        b=ctbK1/Lc/Njyiuka5zb/2FgDePMS+xkF9t4o8uuzPZ8HKje0dE/9GJRc4Y0JDyzn69BBlK
+        ljJiBy/d25c0sAqy1vcyhrZH217pplxV5PUaOVY7rQVXIMEJHUFrmrwDS+HFaLSgzfP/Dp
+        t7sYm42ENy521RYR/TKul0z5p+Fz8oQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-38-fG0h-sBvNJ2Vw4LRO-7LLQ-1; Mon, 25 Jan 2021 16:31:12 -0500
-X-MC-Unique: fG0h-sBvNJ2Vw4LRO-7LLQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-149-9x2TJJGlMCyeGFrYsXhOGg-1; Mon, 25 Jan 2021 16:34:50 -0500
+X-MC-Unique: 9x2TJJGlMCyeGFrYsXhOGg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1EC381015C81;
-        Mon, 25 Jan 2021 21:31:10 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B48E10054FF;
+        Mon, 25 Jan 2021 21:34:48 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EE1D76315F;
-        Mon, 25 Jan 2021 21:31:03 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B36865D6DC;
+        Mon, 25 Jan 2021 21:34:42 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 01/32] iov_iter: Add ITER_XARRAY
+Subject: [PATCH 19/32] afs: Use ITER_XARRAY for writing
 From:   David Howells <dhowells@redhat.com>
 To:     Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>
-Cc:     Matthew Wilcox <willy@infradead.org>, dhowells@redhat.com,
-        Jeff Layton <jlayton@redhat.com>,
+Cc:     dhowells@redhat.com, Jeff Layton <jlayton@redhat.com>,
         David Wysochanski <dwysocha@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -52,655 +51,661 @@ Cc:     Matthew Wilcox <willy@infradead.org>, dhowells@redhat.com,
         linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
         ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 25 Jan 2021 21:31:03 +0000
-Message-ID: <161161026313.2537118.14676007075365418649.stgit@warthog.procyon.org.uk>
+Date:   Mon, 25 Jan 2021 21:34:41 +0000
+Message-ID: <161161048194.2537118.13763612220937637316.stgit@warthog.procyon.org.uk>
 In-Reply-To: <161161025063.2537118.2009249444682241405.stgit@warthog.procyon.org.uk>
 References: <161161025063.2537118.2009249444682241405.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add an iterator, ITER_XARRAY, that walks through a set of pages attached to
-an xarray, starting at a given page and offset and walking for the
-specified amount of bytes.  The iterator supports transparent huge pages.
+Use a single ITER_XARRAY iterator to describe the portion of a file to be
+transmitted to the server rather than generating a series of small
+ITER_BVEC iterators on the fly.  This will make it easier to implement AIO
+in afs.
 
-The caller must guarantee that the pages are all present and they must be
-locked using PG_locked, PG_writeback or PG_fscache to prevent them from
-going away or being migrated whilst they're being accessed.
-
-This is useful for copying data from socket buffers to inodes in network
-filesystems and for transferring data between those inodes and the cache
-using direct I/O.
-
-Whilst it is true that ITER_BVEC could be used instead, that would require
-a bio_vec array to be allocated to refer to all the pages - which should be
-redundant if inode->i_pages also points to all these pages.
+In theory we could maybe use one giant ITER_BVEC, but that means
+potentially allocating a huge array of bio_vec structs (max 256 per page)
+when in fact the pagecache already has a structure listing all the relevant
+pages (radix_tree/xarray) that can be walked over.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Matthew Wilcox <willy@infradead.org>
 ---
 
- include/linux/uio.h |   11 ++
- lib/iov_iter.c      |  313 +++++++++++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 301 insertions(+), 23 deletions(-)
+ fs/afs/fsclient.c          |   50 +++++++++------------
+ fs/afs/internal.h          |   15 +++---
+ fs/afs/rxrpc.c             |  103 ++++++--------------------------------------
+ fs/afs/write.c             |  100 ++++++++++++++++++++++++-------------------
+ fs/afs/yfsclient.c         |   25 +++--------
+ include/trace/events/afs.h |   51 ++++++++--------------
+ 6 files changed, 126 insertions(+), 218 deletions(-)
 
-diff --git a/include/linux/uio.h b/include/linux/uio.h
-index 72d88566694e..08b186df54ac 100644
---- a/include/linux/uio.h
-+++ b/include/linux/uio.h
-@@ -10,6 +10,7 @@
- #include <uapi/linux/uio.h>
- 
- struct page;
-+struct address_space;
- struct pipe_inode_info;
- 
- struct kvec {
-@@ -24,6 +25,7 @@ enum iter_type {
- 	ITER_BVEC = 16,
- 	ITER_PIPE = 32,
- 	ITER_DISCARD = 64,
-+	ITER_XARRAY = 128,
- };
- 
- struct iov_iter {
-@@ -39,6 +41,7 @@ struct iov_iter {
- 		const struct iovec *iov;
- 		const struct kvec *kvec;
- 		const struct bio_vec *bvec;
-+		struct xarray *xarray;
- 		struct pipe_inode_info *pipe;
- 	};
- 	union {
-@@ -47,6 +50,7 @@ struct iov_iter {
- 			unsigned int head;
- 			unsigned int start_head;
- 		};
-+		loff_t xarray_start;
- 	};
- };
- 
-@@ -80,6 +84,11 @@ static inline bool iov_iter_is_discard(const struct iov_iter *i)
- 	return iov_iter_type(i) == ITER_DISCARD;
- }
- 
-+static inline bool iov_iter_is_xarray(const struct iov_iter *i)
-+{
-+	return iov_iter_type(i) == ITER_XARRAY;
-+}
-+
- static inline unsigned char iov_iter_rw(const struct iov_iter *i)
+diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
+index 897b37301851..31e6b3635541 100644
+--- a/fs/afs/fsclient.c
++++ b/fs/afs/fsclient.c
+@@ -1055,8 +1055,7 @@ static const struct afs_call_type afs_RXFSStoreData64 = {
+ /*
+  * store a set of pages to a very large file
+  */
+-static void afs_fs_store_data64(struct afs_operation *op,
+-				loff_t pos, loff_t size, loff_t i_size)
++static void afs_fs_store_data64(struct afs_operation *op)
  {
- 	return i->type & (READ | WRITE);
-@@ -221,6 +230,8 @@ void iov_iter_bvec(struct iov_iter *i, unsigned int direction, const struct bio_
- void iov_iter_pipe(struct iov_iter *i, unsigned int direction, struct pipe_inode_info *pipe,
- 			size_t count);
- void iov_iter_discard(struct iov_iter *i, unsigned int direction, size_t count);
-+void iov_iter_xarray(struct iov_iter *i, unsigned int direction, struct xarray *xarray,
-+		     loff_t start, size_t count);
- ssize_t iov_iter_get_pages(struct iov_iter *i, struct page **pages,
- 			size_t maxsize, unsigned maxpages, size_t *start);
- ssize_t iov_iter_get_pages_alloc(struct iov_iter *i, struct page ***pages,
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index a21e6a5792c5..f53a57588489 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -78,7 +78,44 @@
- 	}						\
+ 	struct afs_vnode_param *vp = &op->file[0];
+ 	struct afs_call *call;
+@@ -1071,7 +1070,7 @@ static void afs_fs_store_data64(struct afs_operation *op,
+ 	if (!call)
+ 		return afs_op_nomem(op);
+ 
+-	call->send_pages = true;
++	call->write_iter = op->store.write_iter;
+ 
+ 	/* marshall the parameters */
+ 	bp = call->request;
+@@ -1087,47 +1086,38 @@ static void afs_fs_store_data64(struct afs_operation *op,
+ 	*bp++ = 0; /* unix mode */
+ 	*bp++ = 0; /* segment size */
+ 
+-	*bp++ = htonl(upper_32_bits(pos));
+-	*bp++ = htonl(lower_32_bits(pos));
+-	*bp++ = htonl(upper_32_bits(size));
+-	*bp++ = htonl(lower_32_bits(size));
+-	*bp++ = htonl(upper_32_bits(i_size));
+-	*bp++ = htonl(lower_32_bits(i_size));
++	*bp++ = htonl(upper_32_bits(op->store.pos));
++	*bp++ = htonl(lower_32_bits(op->store.pos));
++	*bp++ = htonl(upper_32_bits(op->store.size));
++	*bp++ = htonl(lower_32_bits(op->store.size));
++	*bp++ = htonl(upper_32_bits(op->store.i_size));
++	*bp++ = htonl(lower_32_bits(op->store.i_size));
+ 
+ 	trace_afs_make_fs_call(call, &vp->fid);
+ 	afs_make_op_call(op, call, GFP_NOFS);
  }
  
--#define iterate_all_kinds(i, n, v, I, B, K) {			\
-+#define iterate_xarray(i, n, __v, skip, STEP) {		\
-+	struct page *head = NULL;				\
-+	size_t wanted = n, seg, offset;				\
-+	loff_t start = i->xarray_start + skip;			\
-+	pgoff_t index = start >> PAGE_SHIFT;			\
-+	int j;							\
-+								\
-+	XA_STATE(xas, i->xarray, index);			\
-+								\
-+	rcu_read_lock();						\
-+	xas_for_each(&xas, head, ULONG_MAX) {				\
-+		if (xas_retry(&xas, head))				\
-+			continue;					\
-+		if (WARN_ON(xa_is_value(head)))				\
-+			break;						\
-+		if (WARN_ON(PageHuge(head)))				\
-+			break;						\
-+		for (j = (head->index < index) ? index - head->index : 0; \
-+		     j < thp_nr_pages(head); j++) {			\
-+			__v.bv_page = head + j;				\
-+			offset = (i->xarray_start + skip) & ~PAGE_MASK;	\
-+			seg = PAGE_SIZE - offset;			\
-+			__v.bv_offset = offset;				\
-+			__v.bv_len = min(n, seg);			\
-+			(void)(STEP);					\
-+			n -= __v.bv_len;				\
-+			skip += __v.bv_len;				\
-+			if (n == 0)					\
-+				break;					\
-+		}							\
-+		if (n == 0)						\
-+			break;						\
-+	}							\
-+	rcu_read_unlock();					\
-+	n = wanted - n;						\
-+}
-+
-+#define iterate_all_kinds(i, n, v, I, B, K, X) {		\
- 	if (likely(n)) {					\
- 		size_t skip = i->iov_offset;			\
- 		if (unlikely(i->type & ITER_BVEC)) {		\
-@@ -90,6 +127,9 @@
- 			struct kvec v;				\
- 			iterate_kvec(i, n, v, kvec, skip, (K))	\
- 		} else if (unlikely(i->type & ITER_DISCARD)) {	\
-+		} else if (unlikely(i->type & ITER_XARRAY)) {	\
-+			struct bio_vec v;			\
-+			iterate_xarray(i, n, v, skip, (X));	\
- 		} else {					\
- 			const struct iovec *iov;		\
- 			struct iovec v;				\
-@@ -98,7 +138,7 @@
- 	}							\
- }
- 
--#define iterate_and_advance(i, n, v, I, B, K) {			\
-+#define iterate_and_advance(i, n, v, I, B, K, X) {		\
- 	if (unlikely(i->count < n))				\
- 		n = i->count;					\
- 	if (i->count) {						\
-@@ -123,6 +163,9 @@
- 			i->kvec = kvec;				\
- 		} else if (unlikely(i->type & ITER_DISCARD)) {	\
- 			skip += n;				\
-+		} else if (unlikely(i->type & ITER_XARRAY)) {	\
-+			struct bio_vec v;			\
-+			iterate_xarray(i, n, v, skip, (X))	\
- 		} else {					\
- 			const struct iovec *iov;		\
- 			struct iovec v;				\
-@@ -636,7 +679,9 @@ size_t _copy_to_iter(const void *addr, size_t bytes, struct iov_iter *i)
- 		copyout(v.iov_base, (from += v.iov_len) - v.iov_len, v.iov_len),
- 		memcpy_to_page(v.bv_page, v.bv_offset,
- 			       (from += v.bv_len) - v.bv_len, v.bv_len),
--		memcpy(v.iov_base, (from += v.iov_len) - v.iov_len, v.iov_len)
-+		memcpy(v.iov_base, (from += v.iov_len) - v.iov_len, v.iov_len),
-+		memcpy_to_page(v.bv_page, v.bv_offset,
-+			       (from += v.bv_len) - v.bv_len, v.bv_len)
- 	)
- 
- 	return bytes;
-@@ -752,6 +797,16 @@ size_t _copy_mc_to_iter(const void *addr, size_t bytes, struct iov_iter *i)
- 			bytes = curr_addr - s_addr - rem;
- 			return bytes;
- 		}
-+		}),
-+		({
-+		rem = copy_mc_to_page(v.bv_page, v.bv_offset,
-+				      (from += v.bv_len) - v.bv_len, v.bv_len);
-+		if (rem) {
-+			curr_addr = (unsigned long) from;
-+			bytes = curr_addr - s_addr - rem;
-+			rcu_read_unlock();
-+			return bytes;
-+		}
- 		})
- 	)
- 
-@@ -773,7 +828,9 @@ size_t _copy_from_iter(void *addr, size_t bytes, struct iov_iter *i)
- 		copyin((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
- 		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
- 				 v.bv_offset, v.bv_len),
--		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len)
-+		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
-+		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
-+				 v.bv_offset, v.bv_len)
- 	)
- 
- 	return bytes;
-@@ -799,7 +856,9 @@ bool _copy_from_iter_full(void *addr, size_t bytes, struct iov_iter *i)
- 		0;}),
- 		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
- 				 v.bv_offset, v.bv_len),
--		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len)
-+		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
-+		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
-+				 v.bv_offset, v.bv_len)
- 	)
- 
- 	iov_iter_advance(i, bytes);
-@@ -819,7 +878,9 @@ size_t _copy_from_iter_nocache(void *addr, size_t bytes, struct iov_iter *i)
- 					 v.iov_base, v.iov_len),
- 		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
- 				 v.bv_offset, v.bv_len),
--		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len)
-+		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
-+		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
-+				 v.bv_offset, v.bv_len)
- 	)
- 
- 	return bytes;
-@@ -854,7 +915,9 @@ size_t _copy_from_iter_flushcache(void *addr, size_t bytes, struct iov_iter *i)
- 		memcpy_page_flushcache((to += v.bv_len) - v.bv_len, v.bv_page,
- 				 v.bv_offset, v.bv_len),
- 		memcpy_flushcache((to += v.iov_len) - v.iov_len, v.iov_base,
--			v.iov_len)
-+			v.iov_len),
-+		memcpy_page_flushcache((to += v.bv_len) - v.bv_len, v.bv_page,
-+				 v.bv_offset, v.bv_len)
- 	)
- 
- 	return bytes;
-@@ -878,7 +941,9 @@ bool _copy_from_iter_full_nocache(void *addr, size_t bytes, struct iov_iter *i)
- 		0;}),
- 		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
- 				 v.bv_offset, v.bv_len),
--		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len)
-+		memcpy((to += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
-+		memcpy_from_page((to += v.bv_len) - v.bv_len, v.bv_page,
-+				 v.bv_offset, v.bv_len)
- 	)
- 
- 	iov_iter_advance(i, bytes);
-@@ -915,7 +980,7 @@ size_t copy_page_to_iter(struct page *page, size_t offset, size_t bytes,
+ /*
+- * store a set of pages
++ * Write data to a file on the server.
+  */
+ void afs_fs_store_data(struct afs_operation *op)
  {
- 	if (unlikely(!page_copy_sane(page, offset, bytes)))
- 		return 0;
--	if (i->type & (ITER_BVEC|ITER_KVEC)) {
-+	if (i->type & (ITER_BVEC | ITER_KVEC | ITER_XARRAY)) {
- 		void *kaddr = kmap_atomic(page);
- 		size_t wanted = copy_to_iter(kaddr + offset, bytes, i);
- 		kunmap_atomic(kaddr);
-@@ -938,7 +1003,7 @@ size_t copy_page_from_iter(struct page *page, size_t offset, size_t bytes,
- 		WARN_ON(1);
- 		return 0;
- 	}
--	if (i->type & (ITER_BVEC|ITER_KVEC)) {
-+	if (i->type & (ITER_BVEC | ITER_KVEC | ITER_XARRAY)) {
- 		void *kaddr = kmap_atomic(page);
- 		size_t wanted = _copy_from_iter(kaddr + offset, bytes, i);
- 		kunmap_atomic(kaddr);
-@@ -982,7 +1047,8 @@ size_t iov_iter_zero(size_t bytes, struct iov_iter *i)
- 	iterate_and_advance(i, bytes, v,
- 		clear_user(v.iov_base, v.iov_len),
- 		memzero_page(v.bv_page, v.bv_offset, v.bv_len),
--		memset(v.iov_base, 0, v.iov_len)
-+		memset(v.iov_base, 0, v.iov_len),
-+		memzero_page(v.bv_page, v.bv_offset, v.bv_len)
- 	)
+ 	struct afs_vnode_param *vp = &op->file[0];
+ 	struct afs_call *call;
+-	loff_t size, pos, i_size;
+ 	__be32 *bp;
  
- 	return bytes;
-@@ -1006,7 +1072,9 @@ size_t iov_iter_copy_from_user_atomic(struct page *page,
- 		copyin((p += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
- 		memcpy_from_page((p += v.bv_len) - v.bv_len, v.bv_page,
- 				 v.bv_offset, v.bv_len),
--		memcpy((p += v.iov_len) - v.iov_len, v.iov_base, v.iov_len)
-+		memcpy((p += v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
-+		memcpy_from_page((p += v.bv_len) - v.bv_len, v.bv_page,
-+				 v.bv_offset, v.bv_len)
- 	)
- 	kunmap_atomic(kaddr);
- 	return bytes;
-@@ -1077,7 +1145,12 @@ void iov_iter_advance(struct iov_iter *i, size_t size)
- 		i->count -= size;
- 		return;
- 	}
--	iterate_and_advance(i, size, v, 0, 0, 0)
-+	if (unlikely(iov_iter_is_xarray(i))) {
-+		i->iov_offset += size;
-+		i->count -= size;
-+		return;
-+	}
-+	iterate_and_advance(i, size, v, 0, 0, 0, 0)
+ 	_enter(",%x,{%llx:%llu},,",
+ 	       key_serial(op->key), vp->fid.vid, vp->fid.vnode);
+ 
+-	size = (loff_t)op->store.last_to - (loff_t)op->store.first_offset;
+-	if (op->store.first != op->store.last)
+-		size += (loff_t)(op->store.last - op->store.first) << PAGE_SHIFT;
+-	pos = (loff_t)op->store.first << PAGE_SHIFT;
+-	pos += op->store.first_offset;
+-
+-	i_size = i_size_read(&vp->vnode->vfs_inode);
+-	if (pos + size > i_size)
+-		i_size = size + pos;
+-
+ 	_debug("size %llx, at %llx, i_size %llx",
+-	       (unsigned long long) size, (unsigned long long) pos,
+-	       (unsigned long long) i_size);
++	       (unsigned long long)op->store.size,
++	       (unsigned long long)op->store.pos,
++	       (unsigned long long)op->store.i_size);
+ 
+-	if (upper_32_bits(pos) || upper_32_bits(i_size) || upper_32_bits(size) ||
+-	    upper_32_bits(pos + size))
+-		return afs_fs_store_data64(op, pos, size, i_size);
++	if (upper_32_bits(op->store.pos) ||
++	    upper_32_bits(op->store.size) ||
++	    upper_32_bits(op->store.i_size))
++		return afs_fs_store_data64(op);
+ 
+ 	call = afs_alloc_flat_call(op->net, &afs_RXFSStoreData,
+ 				   (4 + 6 + 3) * 4,
+@@ -1135,7 +1125,7 @@ void afs_fs_store_data(struct afs_operation *op)
+ 	if (!call)
+ 		return afs_op_nomem(op);
+ 
+-	call->send_pages = true;
++	call->write_iter = op->store.write_iter;
+ 
+ 	/* marshall the parameters */
+ 	bp = call->request;
+@@ -1151,9 +1141,9 @@ void afs_fs_store_data(struct afs_operation *op)
+ 	*bp++ = 0; /* unix mode */
+ 	*bp++ = 0; /* segment size */
+ 
+-	*bp++ = htonl(lower_32_bits(pos));
+-	*bp++ = htonl(lower_32_bits(size));
+-	*bp++ = htonl(lower_32_bits(i_size));
++	*bp++ = htonl(lower_32_bits(op->store.pos));
++	*bp++ = htonl(lower_32_bits(op->store.size));
++	*bp++ = htonl(lower_32_bits(op->store.i_size));
+ 
+ 	trace_afs_make_fs_call(call, &vp->fid);
+ 	afs_make_op_call(op, call, GFP_NOFS);
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index 6f1e6badf391..d4163f9babfd 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -107,6 +107,7 @@ struct afs_call {
+ 	void			*request;	/* request data (first part) */
+ 	size_t			iov_len;	/* Size of *iter to be used */
+ 	struct iov_iter		def_iter;	/* Default buffer/data iterator */
++	struct iov_iter		*write_iter;	/* Iterator defining write to be made */
+ 	struct iov_iter		*iter;		/* Iterator currently in use */
+ 	union {	/* Convenience for ->def_iter */
+ 		struct kvec	kvec[1];
+@@ -133,7 +134,6 @@ struct afs_call {
+ 	unsigned char		unmarshall;	/* unmarshalling phase */
+ 	unsigned char		addr_ix;	/* Address in ->alist */
+ 	bool			drop_ref;	/* T if need to drop ref for incoming call */
+-	bool			send_pages;	/* T if data from mapping should be sent */
+ 	bool			need_attention;	/* T if RxRPC poked us */
+ 	bool			async;		/* T if asynchronous */
+ 	bool			upgrade;	/* T to request service upgrade */
+@@ -811,12 +811,13 @@ struct afs_operation {
+ 			afs_lock_type_t type;
+ 		} lock;
+ 		struct {
+-			struct address_space *mapping;	/* Pages being written from */
+-			pgoff_t		first;		/* first page in mapping to deal with */
+-			pgoff_t		last;		/* last page in mapping to deal with */
+-			unsigned	first_offset;	/* offset into mapping[first] */
+-			unsigned	last_to;	/* amount of mapping[last] */
+-			bool		laundering;	/* Laundering page, PG_writeback not set */
++			struct iov_iter	*write_iter;
++			loff_t	pos;
++			loff_t	size;
++			loff_t	i_size;
++			pgoff_t	first;		/* first page in mapping to deal with */
++			pgoff_t	last;		/* last page in mapping to deal with */
++			bool	laundering;	/* Laundering page, PG_writeback not set */
+ 		} store;
+ 		struct {
+ 			struct iattr	*attr;
+diff --git a/fs/afs/rxrpc.c b/fs/afs/rxrpc.c
+index ae68576f822f..23a1a92d64bb 100644
+--- a/fs/afs/rxrpc.c
++++ b/fs/afs/rxrpc.c
+@@ -271,40 +271,6 @@ void afs_flat_call_destructor(struct afs_call *call)
+ 	call->buffer = NULL;
  }
- EXPORT_SYMBOL(iov_iter_advance);
  
-@@ -1121,7 +1194,12 @@ void iov_iter_revert(struct iov_iter *i, size_t unroll)
- 		return;
- 	}
- 	unroll -= i->iov_offset;
--	if (iov_iter_is_bvec(i)) {
-+	if (iov_iter_is_xarray(i)) {
-+		BUG(); /* We should never go beyond the start of the specified
-+			* range since we might then be straying into pages that
-+			* aren't pinned.
-+			*/
-+	} else if (iov_iter_is_bvec(i)) {
- 		const struct bio_vec *bvec = i->bvec;
- 		while (1) {
- 			size_t n = (--bvec)->bv_len;
-@@ -1158,9 +1236,9 @@ size_t iov_iter_single_seg_count(const struct iov_iter *i)
- 		return i->count;	// it is a silly place, anyway
- 	if (i->nr_segs == 1)
- 		return i->count;
--	if (unlikely(iov_iter_is_discard(i)))
-+	if (unlikely(iov_iter_is_discard(i) || iov_iter_is_xarray(i)))
- 		return i->count;
--	else if (iov_iter_is_bvec(i))
-+	if (iov_iter_is_bvec(i))
- 		return min(i->count, i->bvec->bv_len - i->iov_offset);
- 	else
- 		return min(i->count, i->iov->iov_len - i->iov_offset);
-@@ -1208,6 +1286,31 @@ void iov_iter_pipe(struct iov_iter *i, unsigned int direction,
+-#define AFS_BVEC_MAX 8
+-
+-/*
+- * Load the given bvec with the next few pages.
+- */
+-static void afs_load_bvec(struct afs_call *call, struct msghdr *msg,
+-			  struct bio_vec *bv, pgoff_t first, pgoff_t last,
+-			  unsigned offset)
+-{
+-	struct afs_operation *op = call->op;
+-	struct page *pages[AFS_BVEC_MAX];
+-	unsigned int nr, n, i, to, bytes = 0;
+-
+-	nr = min_t(pgoff_t, last - first + 1, AFS_BVEC_MAX);
+-	n = find_get_pages_contig(op->store.mapping, first, nr, pages);
+-	ASSERTCMP(n, ==, nr);
+-
+-	msg->msg_flags |= MSG_MORE;
+-	for (i = 0; i < nr; i++) {
+-		to = PAGE_SIZE;
+-		if (first + i >= last) {
+-			to = op->store.last_to;
+-			msg->msg_flags &= ~MSG_MORE;
+-		}
+-		bv[i].bv_page = pages[i];
+-		bv[i].bv_len = to - offset;
+-		bv[i].bv_offset = offset;
+-		bytes += to - offset;
+-		offset = 0;
+-	}
+-
+-	iov_iter_bvec(&msg->msg_iter, WRITE, bv, nr, bytes);
+-}
+-
+ /*
+  * Advance the AFS call state when the RxRPC call ends the transmit phase.
+  */
+@@ -317,42 +283,6 @@ static void afs_notify_end_request_tx(struct sock *sock,
+ 	afs_set_call_state(call, AFS_CALL_CL_REQUESTING, AFS_CALL_CL_AWAIT_REPLY);
  }
- EXPORT_SYMBOL(iov_iter_pipe);
  
-+/**
-+ * iov_iter_xarray - Initialise an I/O iterator to use the pages in an xarray
-+ * @i: The iterator to initialise.
-+ * @direction: The direction of the transfer.
-+ * @xarray: The xarray to access.
-+ * @start: The start file position.
-+ * @count: The size of the I/O buffer in bytes.
-+ *
-+ * Set up an I/O iterator to either draw data out of the pages attached to an
-+ * inode or to inject data into those pages.  The pages *must* be prevented
-+ * from evaporation, either by taking a ref on them or locking them by the
-+ * caller.
-+ */
-+void iov_iter_xarray(struct iov_iter *i, unsigned int direction,
-+		     struct xarray *xarray, loff_t start, size_t count)
-+{
-+	BUG_ON(direction & ~1);
-+	i->type = ITER_XARRAY | (direction & (READ | WRITE));
-+	i->xarray = xarray;
-+	i->xarray_start = start;
-+	i->count = count;
-+	i->iov_offset = 0;
-+}
-+EXPORT_SYMBOL(iov_iter_xarray);
+-/*
+- * attach the data from a bunch of pages on an inode to a call
+- */
+-static int afs_send_pages(struct afs_call *call, struct msghdr *msg)
+-{
+-	struct afs_operation *op = call->op;
+-	struct bio_vec bv[AFS_BVEC_MAX];
+-	unsigned int bytes, nr, loop, offset;
+-	pgoff_t first = op->store.first, last = op->store.last;
+-	int ret;
+-
+-	offset = op->store.first_offset;
+-	op->store.first_offset = 0;
+-
+-	do {
+-		afs_load_bvec(call, msg, bv, first, last, offset);
+-		trace_afs_send_pages(call, msg, first, last, offset);
+-
+-		offset = 0;
+-		bytes = msg->msg_iter.count;
+-		nr = msg->msg_iter.nr_segs;
+-
+-		ret = rxrpc_kernel_send_data(op->net->socket, call->rxcall, msg,
+-					     bytes, afs_notify_end_request_tx);
+-		for (loop = 0; loop < nr; loop++)
+-			put_page(bv[loop].bv_page);
+-		if (ret < 0)
+-			break;
+-
+-		first += nr;
+-	} while (first <= last);
+-
+-	trace_afs_sent_pages(call, op->store.first, last, first, ret);
+-	return ret;
+-}
+-
+ /*
+  * Initiate a call and synchronously queue up the parameters for dispatch.  Any
+  * error is stored into the call struct, which the caller must check for.
+@@ -384,21 +314,8 @@ void afs_make_call(struct afs_addr_cursor *ac, struct afs_call *call, gfp_t gfp)
+ 	 * after the initial fixed part.
+ 	 */
+ 	tx_total_len = call->request_size;
+-	if (call->send_pages) {
+-		struct afs_operation *op = call->op;
+-
+-		if (op->store.last == op->store.first) {
+-			tx_total_len += op->store.last_to - op->store.first_offset;
+-		} else {
+-			/* It looks mathematically like you should be able to
+-			 * combine the following lines with the ones above, but
+-			 * unsigned arithmetic is fun when it wraps...
+-			 */
+-			tx_total_len += PAGE_SIZE - op->store.first_offset;
+-			tx_total_len += op->store.last_to;
+-			tx_total_len += (op->store.last - op->store.first - 1) * PAGE_SIZE;
+-		}
+-	}
++	if (call->write_iter)
++		tx_total_len += iov_iter_count(call->write_iter);
+ 
+ 	/* If the call is going to be asynchronous, we need an extra ref for
+ 	 * the call to hold itself so the caller need not hang on to its ref.
+@@ -440,7 +357,7 @@ void afs_make_call(struct afs_addr_cursor *ac, struct afs_call *call, gfp_t gfp)
+ 	iov_iter_kvec(&msg.msg_iter, WRITE, iov, 1, call->request_size);
+ 	msg.msg_control		= NULL;
+ 	msg.msg_controllen	= 0;
+-	msg.msg_flags		= MSG_WAITALL | (call->send_pages ? MSG_MORE : 0);
++	msg.msg_flags		= MSG_WAITALL | (call->write_iter ? MSG_MORE : 0);
+ 
+ 	ret = rxrpc_kernel_send_data(call->net->socket, rxcall,
+ 				     &msg, call->request_size,
+@@ -448,8 +365,18 @@ void afs_make_call(struct afs_addr_cursor *ac, struct afs_call *call, gfp_t gfp)
+ 	if (ret < 0)
+ 		goto error_do_abort;
+ 
+-	if (call->send_pages) {
+-		ret = afs_send_pages(call, &msg);
++	if (call->write_iter) {
++		msg.msg_iter = *call->write_iter;
++		msg.msg_flags &= ~MSG_MORE;
++		trace_afs_send_data(call, &msg);
 +
- /**
-  * iov_iter_discard - Initialise an I/O iterator that discards data
-  * @i: The iterator to initialise.
-@@ -1241,7 +1344,8 @@ unsigned long iov_iter_alignment(const struct iov_iter *i)
- 	iterate_all_kinds(i, size, v,
- 		(res |= (unsigned long)v.iov_base | v.iov_len, 0),
- 		res |= v.bv_offset | v.bv_len,
--		res |= (unsigned long)v.iov_base | v.iov_len
-+		res |= (unsigned long)v.iov_base | v.iov_len,
-+		res |= v.bv_offset | v.bv_len
- 	)
- 	return res;
- }
-@@ -1263,7 +1367,9 @@ unsigned long iov_iter_gap_alignment(const struct iov_iter *i)
- 		(res |= (!res ? 0 : (unsigned long)v.bv_offset) |
- 			(size != v.bv_len ? size : 0)),
- 		(res |= (!res ? 0 : (unsigned long)v.iov_base) |
--			(size != v.iov_len ? size : 0))
-+			(size != v.iov_len ? size : 0)),
-+		(res |= (!res ? 0 : (unsigned long)v.bv_offset) |
-+			(size != v.bv_len ? size : 0))
- 		);
- 	return res;
- }
-@@ -1313,6 +1419,75 @@ static ssize_t pipe_get_pages(struct iov_iter *i,
- 	return __pipe_get_pages(i, min(maxsize, capacity), pages, iter_head, start);
- }
- 
-+static ssize_t iter_xarray_copy_pages(struct page **pages, struct xarray *xa,
-+				       pgoff_t index, unsigned int nr_pages)
-+{
-+	XA_STATE(xas, xa, index);
++		ret = rxrpc_kernel_send_data(call->net->socket,
++					     call->rxcall, &msg,
++					     iov_iter_count(&msg.msg_iter),
++					     afs_notify_end_request_tx);
++		*call->write_iter = msg.msg_iter;
++
++		trace_afs_sent_data(call, &msg, ret);
+ 		if (ret < 0)
+ 			goto error_do_abort;
+ 	}
+diff --git a/fs/afs/write.c b/fs/afs/write.c
+index e78a9bc3b02d..dd4dc1c868b5 100644
+--- a/fs/afs/write.c
++++ b/fs/afs/write.c
+@@ -325,36 +325,27 @@ static void afs_redirty_pages(struct writeback_control *wbc,
+ /*
+  * completion of write to server
+  */
+-static void afs_pages_written_back(struct afs_vnode *vnode,
+-				   pgoff_t first, pgoff_t last)
++static void afs_pages_written_back(struct afs_vnode *vnode, pgoff_t start, pgoff_t last)
+ {
+-	struct pagevec pv;
+-	unsigned count, loop;
++	struct address_space *mapping = vnode->vfs_inode.i_mapping;
 +	struct page *page;
-+	unsigned int ret = 0;
 +
++	XA_STATE(xas, &mapping->i_pages, start);
+ 
+ 	_enter("{%llx:%llu},{%lx-%lx}",
+-	       vnode->fid.vid, vnode->fid.vnode, first, last);
++	       vnode->fid.vid, vnode->fid.vnode, start, last);
+ 
+-	pagevec_init(&pv);
 +	rcu_read_lock();
-+	for (page = xas_load(&xas); page; page = xas_next(&xas)) {
-+		if (xas_retry(&xas, page))
-+			continue;
-+
-+		/* Has the page moved or been split? */
-+		if (unlikely(page != xas_reload(&xas))) {
-+			xas_reset(&xas);
-+			continue;
-+		}
-+
-+		pages[ret] = find_subpage(page, xas.xa_index);
-+		get_page(pages[ret]);
-+		if (++ret == nr_pages)
-+			break;
+ 
+-	do {
+-		_debug("done %lx-%lx", first, last);
++	xas_for_each(&xas, page, last) {
++		ASSERT(PageWriteback(page));
+ 
+-		count = last - first + 1;
+-		if (count > PAGEVEC_SIZE)
+-			count = PAGEVEC_SIZE;
+-		pv.nr = find_get_pages_contig(vnode->vfs_inode.i_mapping,
+-					      first, count, pv.pages);
+-		ASSERTCMP(pv.nr, ==, count);
++		detach_page_private(page);
++		trace_afs_page_dirty(vnode, tracepoint_string("clear"), page);
++		page_endio(page, true, 0);
 +	}
+ 
+-		for (loop = 0; loop < count; loop++) {
+-			detach_page_private(pv.pages[loop]);
+-			trace_afs_page_dirty(vnode, tracepoint_string("clear"),
+-					     pv.pages[loop]);
+-			end_page_writeback(pv.pages[loop]);
+-		}
+-		first += count;
+-		__pagevec_release(&pv);
+-	} while (first <= last);
 +	rcu_read_unlock();
-+	return ret;
-+}
-+
-+static ssize_t iter_xarray_get_pages(struct iov_iter *i,
-+				     struct page **pages, size_t maxsize,
-+				     unsigned maxpages, size_t *_start_offset)
-+{
-+	unsigned nr, offset;
-+	pgoff_t index, count;
-+	size_t size = maxsize, actual;
-+	loff_t pos;
-+
-+	if (!size || !maxpages)
-+		return 0;
-+
-+	pos = i->xarray_start + i->iov_offset;
-+	index = pos >> PAGE_SHIFT;
-+	offset = pos & ~PAGE_MASK;
-+	*_start_offset = offset;
-+
-+	count = 1;
-+	if (size > PAGE_SIZE - offset) {
-+		size -= PAGE_SIZE - offset;
-+		count += size >> PAGE_SHIFT;
-+		size &= ~PAGE_MASK;
-+		if (size)
-+			count++;
-+	}
-+
-+	if (count > maxpages)
-+		count = maxpages;
-+
-+	nr = iter_xarray_copy_pages(pages, i->xarray, index, count);
-+	if (nr == 0)
-+		return 0;
-+
-+	actual = PAGE_SIZE * nr;
-+	actual -= offset;
-+	if (nr == count && size > 0) {
-+		unsigned last_offset = (nr > 1) ? 0 : offset;
-+		actual -= PAGE_SIZE - (last_offset + size);
-+	}
-+	return actual;
-+}
-+
- ssize_t iov_iter_get_pages(struct iov_iter *i,
- 		   struct page **pages, size_t maxsize, unsigned maxpages,
- 		   size_t *start)
-@@ -1322,6 +1497,8 @@ ssize_t iov_iter_get_pages(struct iov_iter *i,
  
- 	if (unlikely(iov_iter_is_pipe(i)))
- 		return pipe_get_pages(i, pages, maxsize, maxpages, start);
-+	if (unlikely(iov_iter_is_xarray(i)))
-+		return iter_xarray_get_pages(i, pages, maxsize, maxpages, start);
- 	if (unlikely(iov_iter_is_discard(i)))
- 		return -EFAULT;
- 
-@@ -1348,7 +1525,8 @@ ssize_t iov_iter_get_pages(struct iov_iter *i,
- 		return v.bv_len;
- 	}),({
- 		return -EFAULT;
--	})
-+	}),
-+	0
- 	)
- 	return 0;
- }
-@@ -1392,6 +1570,51 @@ static ssize_t pipe_get_pages_alloc(struct iov_iter *i,
- 	return n;
- }
- 
-+static ssize_t iter_xarray_get_pages_alloc(struct iov_iter *i,
-+					   struct page ***pages, size_t maxsize,
-+					   size_t *_start_offset)
-+{
-+	struct page **p;
-+	unsigned nr, offset;
-+	pgoff_t index, count;
-+	size_t size = maxsize, actual;
-+	loff_t pos;
-+
-+	if (!size)
-+		return 0;
-+
-+	pos = i->xarray_start + i->iov_offset;
-+	index = pos >> PAGE_SHIFT;
-+	offset = pos & ~PAGE_MASK;
-+	*_start_offset = offset;
-+
-+	count = 1;
-+	if (size > PAGE_SIZE - offset) {
-+		size -= PAGE_SIZE - offset;
-+		count += size >> PAGE_SHIFT;
-+		size &= ~PAGE_MASK;
-+		if (size)
-+			count++;
-+	}
-+
-+	p = get_pages_array(count);
-+	if (!p)
-+		return -ENOMEM;
-+	*pages = p;
-+
-+	nr = iter_xarray_copy_pages(p, i->xarray, index, count);
-+	if (nr == 0)
-+		return 0;
-+
-+	actual = PAGE_SIZE * nr;
-+	actual -= offset;
-+	if (nr == count && size > 0) {
-+		unsigned last_offset = (nr > 1) ? 0 : offset;
-+		actual -= PAGE_SIZE - (last_offset + size);
-+	}
-+	return actual;
-+}
-+
- ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
- 		   struct page ***pages, size_t maxsize,
- 		   size_t *start)
-@@ -1403,6 +1626,8 @@ ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
- 
- 	if (unlikely(iov_iter_is_pipe(i)))
- 		return pipe_get_pages_alloc(i, pages, maxsize, start);
-+	if (unlikely(iov_iter_is_xarray(i)))
-+		return iter_xarray_get_pages_alloc(i, pages, maxsize, start);
- 	if (unlikely(iov_iter_is_discard(i)))
- 		return -EFAULT;
- 
-@@ -1435,7 +1660,7 @@ ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
- 		return v.bv_len;
- 	}),({
- 		return -EFAULT;
--	})
-+	}), 0
- 	)
- 	return 0;
- }
-@@ -1473,6 +1698,13 @@ size_t csum_and_copy_from_iter(void *addr, size_t bytes, __wsum *csum,
- 				      v.iov_base, v.iov_len,
- 				      sum, off);
- 		off += v.iov_len;
-+	}), ({
-+		char *p = kmap_atomic(v.bv_page);
-+		sum = csum_and_memcpy((to += v.bv_len) - v.bv_len,
-+				      p + v.bv_offset, v.bv_len,
-+				      sum, off);
-+		kunmap_atomic(p);
-+		off += v.bv_len;
- 	})
- 	)
- 	*csum = sum;
-@@ -1514,6 +1746,13 @@ bool csum_and_copy_from_iter_full(void *addr, size_t bytes, __wsum *csum,
- 				      v.iov_base, v.iov_len,
- 				      sum, off);
- 		off += v.iov_len;
-+	}), ({
-+		char *p = kmap_atomic(v.bv_page);
-+		sum = csum_and_memcpy((to += v.bv_len) - v.bv_len,
-+				      p + v.bv_offset, v.bv_len,
-+				      sum, off);
-+		kunmap_atomic(p);
-+		off += v.bv_len;
- 	})
- 	)
- 	*csum = sum;
-@@ -1559,6 +1798,13 @@ size_t csum_and_copy_to_iter(const void *addr, size_t bytes, void *csump,
- 				     (from += v.iov_len) - v.iov_len,
- 				     v.iov_len, sum, off);
- 		off += v.iov_len;
-+	}), ({
-+		char *p = kmap_atomic(v.bv_page);
-+		sum = csum_and_memcpy(p + v.bv_offset,
-+				      (from += v.bv_len) - v.bv_len,
-+				      v.bv_len, sum, off);
-+		kunmap_atomic(p);
-+		off += v.bv_len;
- 	})
- 	)
- 	*csum = sum;
-@@ -1608,6 +1854,21 @@ int iov_iter_npages(const struct iov_iter *i, int maxpages)
- 		npages = pipe_space_for_user(iter_head, pipe->tail, pipe);
- 		if (npages >= maxpages)
- 			return maxpages;
-+	} else if (unlikely(iov_iter_is_xarray(i))) {
-+		unsigned offset;
-+
-+		offset = (i->xarray_start + i->iov_offset) & ~PAGE_MASK;
-+
-+		npages = 1;
-+		if (size > PAGE_SIZE - offset) {
-+			size -= PAGE_SIZE - offset;
-+			npages += size >> PAGE_SHIFT;
-+			size &= ~PAGE_MASK;
-+			if (size)
-+				npages++;
-+		}
-+		if (npages >= maxpages)
-+			return maxpages;
- 	} else iterate_all_kinds(i, size, v, ({
- 		unsigned long p = (unsigned long)v.iov_base;
- 		npages += DIV_ROUND_UP(p + v.iov_len, PAGE_SIZE)
-@@ -1624,7 +1885,8 @@ int iov_iter_npages(const struct iov_iter *i, int maxpages)
- 			- p / PAGE_SIZE;
- 		if (npages >= maxpages)
- 			return maxpages;
--	})
-+	}),
-+	0
- 	)
- 	return npages;
- }
-@@ -1637,7 +1899,7 @@ const void *dup_iter(struct iov_iter *new, struct iov_iter *old, gfp_t flags)
- 		WARN_ON(1);
- 		return NULL;
+ 	afs_prune_wb_keys(vnode);
+ 	_leave("");
+@@ -411,9 +402,7 @@ static void afs_store_data_success(struct afs_operation *op)
+ 		if (!op->store.laundering)
+ 			afs_pages_written_back(vnode, op->store.first, op->store.last);
+ 		afs_stat_v(vnode, n_stores);
+-		atomic_long_add((op->store.last * PAGE_SIZE + op->store.last_to) -
+-				(op->store.first * PAGE_SIZE + op->store.first_offset),
+-				&afs_v2net(vnode)->n_store_bytes);
++		atomic_long_add(op->store.size, &afs_v2net(vnode)->n_store_bytes);
  	}
--	if (unlikely(iov_iter_is_discard(new)))
-+	if (unlikely(iov_iter_is_discard(new) || iov_iter_is_xarray(new)))
- 		return NULL;
- 	if (iov_iter_is_bvec(new))
- 		return new->bvec = kmemdup(new->bvec,
-@@ -1842,7 +2104,12 @@ int iov_iter_for_each_range(struct iov_iter *i, size_t bytes,
- 		kunmap(v.bv_page);
- 		err;}), ({
- 		w = v;
--		err = f(&w, context);})
-+		err = f(&w, context);}), ({
-+		w.iov_base = kmap(v.bv_page) + v.bv_offset;
-+		w.iov_len = v.bv_len;
-+		err = f(&w, context);
-+		kunmap(v.bv_page);
-+		err;})
- 	)
- 	return err;
  }
+ 
+@@ -426,21 +415,21 @@ static const struct afs_operation_ops afs_store_data_operation = {
+ /*
+  * write to a file
+  */
+-static int afs_store_data(struct address_space *mapping,
+-			  pgoff_t first, pgoff_t last,
+-			  unsigned offset, unsigned to, bool laundering)
++static int afs_store_data(struct afs_vnode *vnode, struct iov_iter *iter,
++			  loff_t pos, pgoff_t first, pgoff_t last,
++			  bool laundering)
+ {
+-	struct afs_vnode *vnode = AFS_FS_I(mapping->host);
+ 	struct afs_operation *op;
+ 	struct afs_wb_key *wbk = NULL;
+-	int ret;
++	loff_t size = iov_iter_count(iter), i_size;
++	int ret = -ENOKEY;
+ 
+-	_enter("%s{%llx:%llu.%u},%lx,%lx,%x,%x",
++	_enter("%s{%llx:%llu.%u},%llx,%llx",
+ 	       vnode->volume->name,
+ 	       vnode->fid.vid,
+ 	       vnode->fid.vnode,
+ 	       vnode->fid.unique,
+-	       first, last, offset, to);
++	       size, pos);
+ 
+ 	ret = afs_get_writeback_key(vnode, &wbk);
+ 	if (ret) {
+@@ -454,13 +443,16 @@ static int afs_store_data(struct address_space *mapping,
+ 		return -ENOMEM;
+ 	}
+ 
++	i_size = i_size_read(&vnode->vfs_inode);
++
+ 	afs_op_set_vnode(op, 0, vnode);
+ 	op->file[0].dv_delta = 1;
+-	op->store.mapping = mapping;
++	op->store.write_iter = iter;
++	op->store.pos = pos;
+ 	op->store.first = first;
+ 	op->store.last = last;
+-	op->store.first_offset = offset;
+-	op->store.last_to = to;
++	op->store.size = size;
++	op->store.i_size = max(pos + size, i_size);
+ 	op->store.laundering = laundering;
+ 	op->mtime = vnode->vfs_inode.i_mtime;
+ 	op->flags |= AFS_OPERATION_UNINTR;
+@@ -503,11 +495,12 @@ static int afs_write_back_from_locked_page(struct address_space *mapping,
+ 					   pgoff_t final_page)
+ {
+ 	struct afs_vnode *vnode = AFS_FS_I(mapping->host);
++	struct iov_iter iter;
+ 	struct page *pages[8], *page;
+ 	unsigned long count, priv;
+ 	unsigned n, offset, to, f, t;
+ 	pgoff_t start, first, last;
+-	loff_t i_size, end;
++	loff_t i_size, pos, end;
+ 	int loop, ret;
+ 
+ 	_enter(",%lx", primary_page->index);
+@@ -604,15 +597,28 @@ static int afs_write_back_from_locked_page(struct address_space *mapping,
+ 
+ 	first = primary_page->index;
+ 	last = first + count - 1;
++	_debug("write back %lx[%u..] to %lx[..%u]", first, offset, last, to);
+ 
+-	end = (loff_t)last * PAGE_SIZE + to;
+-	i_size = i_size_read(&vnode->vfs_inode);
++	pos = first;
++	pos <<= PAGE_SHIFT;
++	pos += offset;
++	end = last;
++	end <<= PAGE_SHIFT;
++	end += to;
+ 
+-	_debug("write back %lx[%u..] to %lx[..%u]", first, offset, last, to);
++	/* Trim the actual write down to the EOF */
++	i_size = i_size_read(&vnode->vfs_inode);
+ 	if (end > i_size)
+-		to = i_size & ~PAGE_MASK;
++		end = i_size;
++
++	if (pos < i_size) {
++		iov_iter_xarray(&iter, WRITE, &mapping->i_pages, pos, end - pos);
++		ret = afs_store_data(vnode, &iter, pos, first, last, false);
++	} else {
++		/* The dirty region was entirely beyond the EOF. */
++		ret = 0;
++	}
+ 
+-	ret = afs_store_data(mapping, first, last, offset, to, false);
+ 	switch (ret) {
+ 	case 0:
+ 		ret = count;
+@@ -913,6 +919,8 @@ int afs_launder_page(struct page *page)
+ {
+ 	struct address_space *mapping = page->mapping;
+ 	struct afs_vnode *vnode = AFS_FS_I(mapping->host);
++	struct iov_iter iter;
++	struct bio_vec bv[1];
+ 	unsigned long priv;
+ 	unsigned int f, t;
+ 	int ret = 0;
+@@ -928,8 +936,14 @@ int afs_launder_page(struct page *page)
+ 			t = afs_page_dirty_to(page, priv);
+ 		}
+ 
++		bv[0].bv_page = page;
++		bv[0].bv_offset = f;
++		bv[0].bv_len = t - f;
++		iov_iter_bvec(&iter, WRITE, bv, 1, bv[0].bv_len);
++
+ 		trace_afs_page_dirty(vnode, tracepoint_string("launder"), page);
+-		ret = afs_store_data(mapping, page->index, page->index, t, f, true);
++		ret = afs_store_data(vnode, &iter, (loff_t)page->index << PAGE_SHIFT,
++				     page->index, page->index, true);
+ 	}
+ 
+ 	detach_page_private(page);
+diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
+index abcec145db4b..363d6dd276c0 100644
+--- a/fs/afs/yfsclient.c
++++ b/fs/afs/yfsclient.c
+@@ -1078,25 +1078,15 @@ void yfs_fs_store_data(struct afs_operation *op)
+ {
+ 	struct afs_vnode_param *vp = &op->file[0];
+ 	struct afs_call *call;
+-	loff_t size, pos, i_size;
+ 	__be32 *bp;
+ 
+ 	_enter(",%x,{%llx:%llu},,",
+ 	       key_serial(op->key), vp->fid.vid, vp->fid.vnode);
+ 
+-	size = (loff_t)op->store.last_to - (loff_t)op->store.first_offset;
+-	if (op->store.first != op->store.last)
+-		size += (loff_t)(op->store.last - op->store.first) << PAGE_SHIFT;
+-	pos = (loff_t)op->store.first << PAGE_SHIFT;
+-	pos += op->store.first_offset;
+-
+-	i_size = i_size_read(&vp->vnode->vfs_inode);
+-	if (pos + size > i_size)
+-		i_size = size + pos;
+-
+ 	_debug("size %llx, at %llx, i_size %llx",
+-	       (unsigned long long)size, (unsigned long long)pos,
+-	       (unsigned long long)i_size);
++	       (unsigned long long)op->store.size,
++	       (unsigned long long)op->store.pos,
++	       (unsigned long long)op->store.i_size);
+ 
+ 	call = afs_alloc_flat_call(op->net, &yfs_RXYFSStoreData64,
+ 				   sizeof(__be32) +
+@@ -1109,8 +1099,7 @@ void yfs_fs_store_data(struct afs_operation *op)
+ 	if (!call)
+ 		return afs_op_nomem(op);
+ 
+-	call->key = op->key;
+-	call->send_pages = true;
++	call->write_iter = op->store.write_iter;
+ 
+ 	/* marshall the parameters */
+ 	bp = call->request;
+@@ -1118,9 +1107,9 @@ void yfs_fs_store_data(struct afs_operation *op)
+ 	bp = xdr_encode_u32(bp, 0); /* RPC flags */
+ 	bp = xdr_encode_YFSFid(bp, &vp->fid);
+ 	bp = xdr_encode_YFSStoreStatus_mtime(bp, &op->mtime);
+-	bp = xdr_encode_u64(bp, pos);
+-	bp = xdr_encode_u64(bp, size);
+-	bp = xdr_encode_u64(bp, i_size);
++	bp = xdr_encode_u64(bp, op->store.pos);
++	bp = xdr_encode_u64(bp, op->store.size);
++	bp = xdr_encode_u64(bp, op->store.i_size);
+ 	yfs_check_req(call, bp);
+ 
+ 	trace_afs_make_fs_call(call, &vp->fid);
+diff --git a/include/trace/events/afs.h b/include/trace/events/afs.h
+index 9203cf6a8c53..3ccf591b2374 100644
+--- a/include/trace/events/afs.h
++++ b/include/trace/events/afs.h
+@@ -886,65 +886,52 @@ TRACE_EVENT(afs_call_done,
+ 		      __entry->rx_call)
+ 	    );
+ 
+-TRACE_EVENT(afs_send_pages,
+-	    TP_PROTO(struct afs_call *call, struct msghdr *msg,
+-		     pgoff_t first, pgoff_t last, unsigned int offset),
++TRACE_EVENT(afs_send_data,
++	    TP_PROTO(struct afs_call *call, struct msghdr *msg),
+ 
+-	    TP_ARGS(call, msg, first, last, offset),
++	    TP_ARGS(call, msg),
+ 
+ 	    TP_STRUCT__entry(
+ 		    __field(unsigned int,		call		)
+-		    __field(pgoff_t,			first		)
+-		    __field(pgoff_t,			last		)
+-		    __field(unsigned int,		nr		)
+-		    __field(unsigned int,		bytes		)
+-		    __field(unsigned int,		offset		)
+ 		    __field(unsigned int,		flags		)
++		    __field(loff_t,			offset		)
++		    __field(loff_t,			count		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+ 		    __entry->call = call->debug_id;
+-		    __entry->first = first;
+-		    __entry->last = last;
+-		    __entry->nr = msg->msg_iter.nr_segs;
+-		    __entry->bytes = msg->msg_iter.count;
+-		    __entry->offset = offset;
+ 		    __entry->flags = msg->msg_flags;
++		    __entry->offset = msg->msg_iter.xarray_start + msg->msg_iter.iov_offset;
++		    __entry->count = iov_iter_count(&msg->msg_iter);
+ 			   ),
+ 
+-	    TP_printk(" c=%08x %lx-%lx-%lx b=%x o=%x f=%x",
+-		      __entry->call,
+-		      __entry->first, __entry->first + __entry->nr - 1, __entry->last,
+-		      __entry->bytes, __entry->offset,
++	    TP_printk(" c=%08x o=%llx n=%llx f=%x",
++		      __entry->call, __entry->offset, __entry->count,
+ 		      __entry->flags)
+ 	    );
+ 
+-TRACE_EVENT(afs_sent_pages,
+-	    TP_PROTO(struct afs_call *call, pgoff_t first, pgoff_t last,
+-		     pgoff_t cursor, int ret),
++TRACE_EVENT(afs_sent_data,
++	    TP_PROTO(struct afs_call *call, struct msghdr *msg, int ret),
+ 
+-	    TP_ARGS(call, first, last, cursor, ret),
++	    TP_ARGS(call, msg, ret),
+ 
+ 	    TP_STRUCT__entry(
+ 		    __field(unsigned int,		call		)
+-		    __field(pgoff_t,			first		)
+-		    __field(pgoff_t,			last		)
+-		    __field(pgoff_t,			cursor		)
+ 		    __field(int,			ret		)
++		    __field(loff_t,			offset		)
++		    __field(loff_t,			count		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+ 		    __entry->call = call->debug_id;
+-		    __entry->first = first;
+-		    __entry->last = last;
+-		    __entry->cursor = cursor;
+ 		    __entry->ret = ret;
++		    __entry->offset = msg->msg_iter.xarray_start + msg->msg_iter.iov_offset;
++		    __entry->count = iov_iter_count(&msg->msg_iter);
+ 			   ),
+ 
+-	    TP_printk(" c=%08x %lx-%lx c=%lx r=%d",
+-		      __entry->call,
+-		      __entry->first, __entry->last,
+-		      __entry->cursor, __entry->ret)
++	    TP_printk(" c=%08x o=%llx n=%llx r=%x",
++		      __entry->call, __entry->offset, __entry->count,
++		      __entry->ret)
+ 	    );
+ 
+ TRACE_EVENT(afs_dir_check_failed,
 
 
