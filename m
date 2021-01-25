@@ -2,48 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66439302FE1
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 Jan 2021 00:14:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F8A8302FD8
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 Jan 2021 00:11:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732031AbhAYXNW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 25 Jan 2021 18:13:22 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45738 "EHLO
+        id S1732585AbhAYXJN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Jan 2021 18:09:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49925 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732760AbhAYVcy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jan 2021 16:32:54 -0500
+        by vger.kernel.org with ESMTP id S1732765AbhAYVdD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jan 2021 16:33:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611610287;
+        s=mimecast20190719; t=1611610297;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=YDYFlUMcHb7rqZcW5EVf9/4GBcX/Hls07OkMcI3MsDw=;
-        b=hTEdITOYM46xw7wZKKsJmjXEpPhMzRWB7Bc0EzZfMxVjNlomqRGCyNfmQ5AizId7iJljI6
-        0qcyThf7s7HMUC04TAKDJBZYfq7mEq9Qu07CVL8yU5ep87yFSEmv0YkBhCXM9G1/GYO9g3
-        GfbGw6kf0ACbk1cvaa6Dd7hFLimmbxE=
+        bh=Ta1g480Zfhxsf7RxeAZRD47eVsihdAM3Ih4ZNeZrIos=;
+        b=BQWxWVuc4tK+zd0zhJY2EuJSGTyyjQTLTeuAEcYzzfu8poyRyuklKkAyZ7Y6k4QHB5fEug
+        zJYyt2WlKvjhXduGedGo7+C0n7P7NQIgPQ30q3A6XEX5uh1wBHjM6WzUmNHRDLeGmbmYfV
+        lS3+hpbcoXUqO7GtpQC7ZBizVKkG09I=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-526-iRyQYZTiMyOO2zSMc9v-pA-1; Mon, 25 Jan 2021 16:31:23 -0500
-X-MC-Unique: iRyQYZTiMyOO2zSMc9v-pA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-241-kvjMlv5bPOabTUTLg6aSnA-1; Mon, 25 Jan 2021 16:31:35 -0500
+X-MC-Unique: kvjMlv5bPOabTUTLg6aSnA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7F451107ACE3;
-        Mon, 25 Jan 2021 21:31:21 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9CB69801FAE;
+        Mon, 25 Jan 2021 21:31:33 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1730419C47;
-        Mon, 25 Jan 2021 21:31:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 855165D6DC;
+        Mon, 25 Jan 2021 21:31:27 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 02/32] vm: Add wait/unlock functions for PG_fscache
+Subject: [PATCH 03/32] mm: Implement readahead_control pageset expansion
 From:   David Howells <dhowells@redhat.com>
 To:     Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>
-Cc:     dhowells@redhat.com, Jeff Layton <jlayton@redhat.com>,
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        dhowells@redhat.com, Jeff Layton <jlayton@redhat.com>,
         David Wysochanski <dwysocha@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -51,89 +52,133 @@ Cc:     dhowells@redhat.com, Jeff Layton <jlayton@redhat.com>,
         linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
         ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 25 Jan 2021 21:31:15 +0000
-Message-ID: <161161027533.2537118.12169854340786015662.stgit@warthog.procyon.org.uk>
+Date:   Mon, 25 Jan 2021 21:31:26 +0000
+Message-ID: <161161028670.2537118.13831420617039766044.stgit@warthog.procyon.org.uk>
 In-Reply-To: <161161025063.2537118.2009249444682241405.stgit@warthog.procyon.org.uk>
 References: <161161025063.2537118.2009249444682241405.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add functions to unlock and wait for unlock of PG_fscache analogously with
-those for PG_lock.
+Provide a function, readahead_expand(), that expands the set of pages
+specified by a readahead_control object to encompass a revised area with a
+proposed size and length.
 
+The proposed area must include all of the old area and may be expanded yet
+more by this function so that the edges align on (transparent huge) page
+boundaries as allocated.
+
+The expansion will be cut short if a page already exists in either of the
+areas being expanded into.  Note that any expansion made in such a case is
+not rolled back.
+
+This will be used by fscache so that reads can be expanded to cache granule
+boundaries, thereby allowing whole granules to be stored in the cache, but
+there are other potential users also.
+
+Suggested-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
 ---
 
- include/linux/pagemap.h |   14 ++++++++++++++
- mm/filemap.c            |   18 ++++++++++++++++++
- 2 files changed, 32 insertions(+)
+ include/linux/pagemap.h |    2 +
+ mm/readahead.c          |   70 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 72 insertions(+)
 
 diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index d5570deff400..1fa160e682fa 100644
+index 1fa160e682fa..4935ad6171c1 100644
 --- a/include/linux/pagemap.h
 +++ b/include/linux/pagemap.h
-@@ -591,6 +591,7 @@ extern int __lock_page_async(struct page *page, struct wait_page_queue *wait);
- extern int __lock_page_or_retry(struct page *page, struct mm_struct *mm,
- 				unsigned int flags);
- extern void unlock_page(struct page *page);
-+extern void unlock_page_fscache(struct page *page);
+@@ -774,6 +774,8 @@ extern void __delete_from_page_cache(struct page *page, void *shadow);
+ int replace_page_cache_page(struct page *old, struct page *new, gfp_t gfp_mask);
+ void delete_from_page_cache_batch(struct address_space *mapping,
+ 				  struct pagevec *pvec);
++void readahead_expand(struct readahead_control *ractl,
++		      loff_t new_start, size_t new_len);
  
  /*
-  * Return true if the page was successfully locked
-@@ -681,6 +682,19 @@ static inline int wait_on_page_locked_killable(struct page *page)
- 	return wait_on_page_bit_killable(compound_head(page), PG_locked);
+  * Like add_to_page_cache_locked, but used to add newly allocated pages:
+diff --git a/mm/readahead.c b/mm/readahead.c
+index c5b0457415be..4446dada0bc2 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -638,3 +638,73 @@ SYSCALL_DEFINE3(readahead, int, fd, loff_t, offset, size_t, count)
+ {
+ 	return ksys_readahead(fd, offset, count);
  }
- 
-+/**
-+ * wait_on_page_fscache - Wait for PG_fscache to be cleared on a page
-+ * @page: The page
-+ *
-+ * Wait for the fscache mark to be removed from a page, usually signifying the
-+ * completion of a write from that page to the cache.
-+ */
-+static inline void wait_on_page_fscache(struct page *page)
-+{
-+	if (PagePrivate2(page))
-+		wait_on_page_bit(compound_head(page), PG_fscache);
-+}
 +
- extern void put_and_wait_on_page_locked(struct page *page);
- 
- void wait_on_page_writeback(struct page *page);
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 5c9d564317a5..91fcae006d64 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -1466,6 +1466,24 @@ void unlock_page(struct page *page)
- }
- EXPORT_SYMBOL(unlock_page);
- 
 +/**
-+ * unlock_page_fscache - Unlock a page pinned with PG_fscache
-+ * @page: The page
++ * readahead_expand - Expand a readahead request
++ * @ractl: The request to be expanded
++ * @new_start: The revised start
++ * @new_len: The revised size of the request
 + *
-+ * Unlocks the page and wakes up sleepers in wait_on_page_fscache().  Also
-+ * wakes those waiting for the lock and writeback bits because the wakeup
-+ * mechanism is shared.  But that's OK - those sleepers will just go back to
-+ * sleep.
++ * Attempt to expand a readahead request outwards from the current size to the
++ * specified size by inserting locked pages before and after the current window
++ * to increase the size to the new window.  This may involve the insertion of
++ * THPs, in which case the window may get expanded even beyond what was
++ * requested.
++ *
++ * The algorithm will stop if it encounters a conflicting page already in the
++ * pagecache and leave a smaller expansion than requested.
++ *
++ * The caller must check for this by examining the revised @ractl object for a
++ * different expansion than was requested.
 + */
-+void unlock_page_fscache(struct page *page)
++void readahead_expand(struct readahead_control *ractl,
++		      loff_t new_start, size_t new_len)
 +{
-+	page = compound_head(page);
-+	VM_BUG_ON_PAGE(!PagePrivate2(page), page);
-+	clear_bit_unlock(PG_fscache, &page->flags);
-+	wake_up_page_bit(page, PG_fscache);
-+}
-+EXPORT_SYMBOL(unlock_page_fscache);
++	struct address_space *mapping = ractl->mapping;
++	pgoff_t new_index, new_nr_pages;
++	gfp_t gfp_mask = readahead_gfp_mask(mapping);
 +
- /**
-  * end_page_writeback - end writeback against a page
-  * @page: the page
++	new_index = new_start / PAGE_SIZE;
++
++	/* Expand the leading edge downwards */
++	while (ractl->_index > new_index) {
++		unsigned long index = ractl->_index - 1;
++		struct page *page = xa_load(&mapping->i_pages, index);
++
++		if (page && !xa_is_value(page))
++			return; /* Page apparently present */
++
++		page = __page_cache_alloc(gfp_mask);
++		if (!page)
++			return;
++		if (add_to_page_cache_lru(page, mapping, index, gfp_mask) < 0) {
++			put_page(page);
++			return;
++		}
++
++		ractl->_nr_pages++;
++		ractl->_index = page->index;
++	}
++
++	new_len += new_start - readahead_pos(ractl);
++	new_nr_pages = DIV_ROUND_UP(new_len, PAGE_SIZE);
++
++	/* Expand the trailing edge upwards */
++	while (ractl->_nr_pages < new_nr_pages) {
++		unsigned long index = ractl->_index + ractl->_nr_pages;
++		struct page *page = xa_load(&mapping->i_pages, index);
++
++		if (page && !xa_is_value(page))
++			return; /* Page apparently present */
++
++		page = __page_cache_alloc(gfp_mask);
++		if (!page)
++			return;
++		if (add_to_page_cache_lru(page, mapping, index, gfp_mask) < 0) {
++			put_page(page);
++			return;
++		}
++		ractl->_nr_pages++;
++	}
++}
++EXPORT_SYMBOL(readahead_expand);
 
 
