@@ -2,105 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB53C302EF1
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jan 2021 23:26:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E68F9302EB7
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jan 2021 23:13:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732608AbhAYV65 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 25 Jan 2021 16:58:57 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:27247 "EHLO
+        id S1726468AbhAYWNE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Jan 2021 17:13:04 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:57122 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732923AbhAYVhn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jan 2021 16:37:43 -0500
+        by vger.kernel.org with ESMTP id S1731936AbhAYWMZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jan 2021 17:12:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611610574;
+        s=mimecast20190719; t=1611612659;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=m/jJWmyA2+poctNq5G0VdmcEbmCQkA+CfKhQbvw3Sok=;
-        b=SHFwIlhANGe2k5WY2e6kbl7sRJQJqjDJVg1VcBXxs0gFUYCpRkqPqsSKen/WILXEXYrHn3
-        aZlDm+/OOJUBs9BW9s/9FgnRkmvxdqkoeCe1IJLPWqJ5m0unWSMlC+Y0ukUJt8pWFF4FBc
-        UMoiLrc1T2lWNFKGyg9ERzR0A3lVBPU=
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=XxzIZYfJbXzf8XFHtDGnmq7KPaRYstlqB3o28is+DnY=;
+        b=eL4a48pvNBMcEZxVKVTxxR4XFWzsCVQuiH2OgzpzOF/wiSMDtzMaG1zmPMqfTtL/PfwXds
+        f1R70+Aux+KcIYH/7TJj/jaHsVHaudpdo2dWfvkXh4AKzGHsl8t/4sOTyuuv+xuWoGW8uG
+        aegAVlCy31YiiKikYUcIugKYn+Wqm1c=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-463-9_HLUwZmOv2dJ-b2PcUTtQ-1; Mon, 25 Jan 2021 16:36:10 -0500
-X-MC-Unique: 9_HLUwZmOv2dJ-b2PcUTtQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-579-H9LQIQ72MUOXzfe9Mxz5Bw-1; Mon, 25 Jan 2021 17:10:57 -0500
+X-MC-Unique: H9LQIQ72MUOXzfe9Mxz5Bw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 557E08735C1;
-        Mon, 25 Jan 2021 21:36:08 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B9C118C8C01;
+        Mon, 25 Jan 2021 22:10:56 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 827814D;
-        Mon, 25 Jan 2021 21:36:02 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A714B5D9DB;
+        Mon, 25 Jan 2021 22:10:51 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 26/32] NFS: In nfs_readpage() only increment NFSIOS_READPAGES
- when read succeeds
 From:   David Howells <dhowells@redhat.com>
 To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>
-Cc:     Dave Wysochanski <dwysocha@redhat.com>, dhowells@redhat.com,
+        Anna Schumaker <anna.schumaker@netapp.com>
+cc:     dhowells@redhat.com, Dave Wysochanski <dwysocha@redhat.com>,
         Jeff Layton <jlayton@redhat.com>,
-        David Wysochanski <dwysocha@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 25 Jan 2021 21:36:01 +0000
-Message-ID: <161161056169.2537118.7782201331459075721.stgit@warthog.procyon.org.uk>
-In-Reply-To: <161161025063.2537118.2009249444682241405.stgit@warthog.procyon.org.uk>
-References: <161161025063.2537118.2009249444682241405.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        linux-nfs@vger.kernel.org, linux-cachefs@redhat.com
+Subject: How to handle NFS patches for fscache I/O partial rewrite?
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2543103.1611612650.1@warthog.procyon.org.uk>
+Date:   Mon, 25 Jan 2021 22:10:50 +0000
+Message-ID: <2543104.1611612650@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Dave Wysochanski <dwysocha@redhat.com>
+Hi Trond, Anna,
 
-There is a small inconsistency with nfs_readpage() vs nfs_readpages() with
-regards to NFSIOS_READPAGES.  In readpage we unconditionally increment
-NFSIOS_READPAGES at the top, which means even if the read fails.  In
-readpages, we increment NFSIOS_READPAGES at the bottom based on how
-many pages were successfully read.  Change readpage to be consistent with
-readpages and so NFSIOS_READPAGES only reflects successful, non-fscache
-reads.
+As you may have seen, I've managed to cut down the fscache overhaul to add a
+glue layer to handle reads and switch to using async DIO through kiocbs rather
+than using sync write and async reads with page wait list snooping.  All the
+rest of the API is unchanged (for the moment).
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
----
+The glue layer (netfs helper library) handles the new VM readahead stuff and
+reading transparent huge pages on behalf of the netfs, plus read shaping,
+splitting and retrying.
 
- fs/nfs/read.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Dave Wysochanski created some NFS patches for it, which I posted as part of my
+branch.  I'd like to get them into linux-next with an eye to having them
+pulled by Linus in the next merge window, along with the rest of my branch.
 
-diff --git a/fs/nfs/read.c b/fs/nfs/read.c
-index a05fb3904ddf..1153c4e0a155 100644
---- a/fs/nfs/read.c
-+++ b/fs/nfs/read.c
-@@ -319,7 +319,6 @@ int nfs_readpage(struct file *filp, struct page *page)
- 	dprintk("NFS: nfs_readpage (%p %ld@%lu)\n",
- 		page, PAGE_SIZE, page_index(page));
- 	nfs_inc_stats(inode, NFSIOS_VFSREADPAGE);
--	nfs_add_stats(inode, NFSIOS_READPAGES, 1);
- 
- 	/*
- 	 * Try to flush any pending writes to the file..
-@@ -359,6 +358,7 @@ int nfs_readpage(struct file *filp, struct page *page)
- 		if (!PageUptodate(page) && !ret)
- 			ret = xchg(&ctx->error, 0);
- 	}
-+	nfs_add_stats(inode, NFSIOS_READPAGES, 1);
- out:
- 	put_nfs_open_context(ctx);
- 	return ret;
+Should I keep them in my branch and thence into linux-next, or do they need to
+go through one of your branches?
 
+Thanks,
+David
 
