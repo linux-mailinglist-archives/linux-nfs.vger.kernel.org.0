@@ -2,118 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E2F2302052
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jan 2021 03:23:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69D9630212A
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jan 2021 05:37:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbhAYCWv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 24 Jan 2021 21:22:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbhAYBzZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 24 Jan 2021 20:55:25 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9E53B229EF
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Jan 2021 01:54:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611539680;
-        bh=cssEzPA45nM1tOBRahmnYgwGo+srnNnOi9EIslPzwps=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=ZM44+ZY7KMoAdkD8k0/7iuZmHFmoF0TyqcmnMjVWseSkeOwP8rYbFTLUfQcudsJI0
-         MRHktDkwnjO7tDUYX4GlzRbGhSRGcb+vWd1ravqhxFY40I0wgxSnb8t06zG55tuUc2
-         1RSU9jOORrdC3c5WMizkgHaAROIaZfB4+JFUcXJcr1CV17nTl3NuR7nupkeiICVlmK
-         +nLpEZmELLTSDTqw8uAqBAMWUhedvYicUqSDwvXJT4seY1p5Nf6gFTqnL0PXst/ehY
-         FRqbHK+SGH4bU5/+a/GbA4B9e+UMNizg0sCwrxTeQ5acZIDCPla65u3MrzIBt1hzpJ
-         2vaxiqw2RpxCg==
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 4/4] pNFS/NFSv4: Improve rejection of out-of-order layouts
-Date:   Sun, 24 Jan 2021 20:54:35 -0500
-Message-Id: <20210125015435.45979-4-trondmy@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210125015435.45979-3-trondmy@kernel.org>
-References: <20210125015435.45979-1-trondmy@kernel.org>
- <20210125015435.45979-2-trondmy@kernel.org>
- <20210125015435.45979-3-trondmy@kernel.org>
+        id S1726760AbhAYEgY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 24 Jan 2021 23:36:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbhAYEgW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 24 Jan 2021 23:36:22 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C39C061788
+        for <linux-nfs@vger.kernel.org>; Sun, 24 Jan 2021 20:35:12 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id s15so6811061plr.9
+        for <linux-nfs@vger.kernel.org>; Sun, 24 Jan 2021 20:35:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RF+U31mjU+vQtmYKwQP7k4EqO/12hyWNFfFTp846sxc=;
+        b=CfOwQ7limljMA7zl/lIAXVsTIKtNDlhwsicqotNl3TtlKhEjyZeIlEEJtHYW4c2U31
+         UY4hC8hbmTVMaTURi/h7AUevTqeIqn+Q1FFnUUJ35BV9ke4apIRUY5I8NbeB8KXYicfU
+         +trWj06hwAqSeMB9yfxG8wvJYR9/caMYTWeGkZl5KTSBZfynGCBz84SyjX0hbk7AWcGA
+         /222IeHt9HOYYROpDQ0wb25k1uTdAAL1nhrslb3U6So17SP9tJY8mfEDx1CUbEE7qC63
+         qpRcjNyJveRtr7uQu1UM1fJCkiAbkBaCmTSnXoAaT+i+isB4hYXJxGmrbyMs7d8MUbF7
+         BPGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RF+U31mjU+vQtmYKwQP7k4EqO/12hyWNFfFTp846sxc=;
+        b=s7AsU9Qvmpg6tc9b5dgkd8/vsozd+0+/2YgZAs1wQ0HHXq3OXtg5+Ck+oQYSovfVI5
+         Pj43vQEDdSzm2PnU3a5wtcDVIy5DXf/WuQro91TOvvuiQNIRk2ZRZp2QQrRUGTufeKYy
+         6NnciCcKF2CIjNM293hrHFb0mey73LPnNVlOLpPvuKxWBPD/t6vo8A63qahBbLhJRtJ+
+         W8nmToEaXUPSVjS/QP2nUORh5dId8PKgxvCmolMARhVEnZekZ6KsBrXLXAnLWkZN7UTJ
+         TlBMo+XlUjW6ULy4HgLhEyYBEpdFTPKgk9tbY7TXVxwIjA9VdSSU2AeunrqzlLHmmvpC
+         xxJw==
+X-Gm-Message-State: AOAM532oyr0JSSPX6Ukma7M9KaheHjxkC20SBVxMhbg/Najg4Rb3SqcU
+        fisQhsGUobOlasyrtRLRd+MRnA==
+X-Google-Smtp-Source: ABdhPJwcVIfcZhKpz36wBWgY9pEAr1Osy03vWby4EQev/6n4B5mRbyHylHT/8WSUq/UooHKSU12Q8g==
+X-Received: by 2002:a17:90a:1c09:: with SMTP id s9mr6518112pjs.83.1611549310994;
+        Sun, 24 Jan 2021 20:35:10 -0800 (PST)
+Received: from [10.8.2.15] ([185.125.207.232])
+        by smtp.gmail.com with ESMTPSA id x21sm15191515pgi.75.2021.01.24.20.35.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 24 Jan 2021 20:35:10 -0800 (PST)
+Subject: Re: [PATCH V2 0/2] remove unused argument from blk_execute_rq_nowait
+ and blk_execute_rq
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-scsi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-ide@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org,
+        hch@infradead.org
+References: <20210122092824.20971-1-guoqing.jiang@cloud.ionos.com>
+ <683e16be-1146-e60c-cfea-e4606844f080@kernel.dk>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <73fd70be-90bc-9c6c-dcbe-7981f8fef4f5@cloud.ionos.com>
+Date:   Mon, 25 Jan 2021 05:34:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <683e16be-1146-e60c-cfea-e4606844f080@kernel.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-If a layoutget ends up being reordered w.r.t. a layoutreturn, e.g. due
-to a layoutget-on-open not knowing a priori which file to lock, then we
-must assume the layout is no longer being considered valid state by the
-server.
-Incrementally improve our ability to reject such states by using the
-cached old stateid in conjunction with the plh_barrier to try to
-identify them.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/pnfs.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+On 1/25/21 02:24, Jens Axboe wrote:
+> On 1/22/21 2:28 AM, Guoqing Jiang wrote:
+>> V2 changes:
+>> 1. update commit header per Christoph's comment.
+>>
+>> Hi Jens,
+>>
+>> This series remove unused 'q' from blk_execute_rq_nowait and blk_execute_rq.
+>> Also update the comment for blk_execute_rq_nowait.
+> 
+> What's this against? The lightnvm patch doesn't apply.
+> 
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index acb63ec00053..af64b4e6fd1f 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1000,7 +1000,7 @@ pnfs_layout_stateid_blocked(const struct pnfs_layout_hdr *lo,
- {
- 	u32 seqid = be32_to_cpu(stateid->seqid);
- 
--	return !pnfs_seqid_is_newer(seqid, lo->plh_barrier);
-+	return !pnfs_seqid_is_newer(seqid, lo->plh_barrier) && lo->plh_barrier;
- }
- 
- /* lget is set to 1 if called from inside send_layoutget call chain */
-@@ -1912,6 +1912,11 @@ static void nfs_layoutget_end(struct pnfs_layout_hdr *lo)
- 		wake_up_var(&lo->plh_outstanding);
- }
- 
-+static bool pnfs_is_first_layoutget(struct pnfs_layout_hdr *lo)
-+{
-+	return test_bit(NFS_LAYOUT_FIRST_LAYOUTGET, &lo->plh_flags);
-+}
-+
- static void pnfs_clear_first_layoutget(struct pnfs_layout_hdr *lo)
- {
- 	unsigned long *bitlock = &lo->plh_flags;
-@@ -2386,17 +2391,17 @@ pnfs_layout_process(struct nfs4_layoutget *lgp)
- 		goto out_forget;
- 	}
- 
--	if (!pnfs_layout_is_valid(lo)) {
--		/* We have a completely new layout */
--		pnfs_set_layout_stateid(lo, &res->stateid, lgp->cred, true);
--	} else if (nfs4_stateid_match_other(&lo->plh_stateid, &res->stateid)) {
-+	if (nfs4_stateid_match_other(&lo->plh_stateid, &res->stateid)) {
- 		/* existing state ID, make sure the sequence number matches. */
- 		if (pnfs_layout_stateid_blocked(lo, &res->stateid)) {
-+			if (!pnfs_layout_is_valid(lo) &&
-+			    pnfs_is_first_layoutget(lo))
-+				lo->plh_barrier = 0;
- 			dprintk("%s forget reply due to sequence\n", __func__);
- 			goto out_forget;
- 		}
- 		pnfs_set_layout_stateid(lo, &res->stateid, lgp->cred, false);
--	} else {
-+	} else if (pnfs_layout_is_valid(lo)) {
- 		/*
- 		 * We got an entirely new state ID.  Mark all segments for the
- 		 * inode invalid, and retry the layoutget
-@@ -2409,6 +2414,11 @@ pnfs_layout_process(struct nfs4_layoutget *lgp)
- 		pnfs_mark_matching_lsegs_return(lo, &lo->plh_return_segs,
- 						&range, 0);
- 		goto out_forget;
-+	} else {
-+		/* We have a completely new layout */
-+		if (!pnfs_is_first_layoutget(lo))
-+			goto out_forget;
-+		pnfs_set_layout_stateid(lo, &res->stateid, lgp->cred, true);
- 	}
- 
- 	pnfs_get_lseg(lseg);
--- 
-2.29.2
+Sorry for that, will resend against for-5.12/block.
 
+Thanks,
+Guoqing
