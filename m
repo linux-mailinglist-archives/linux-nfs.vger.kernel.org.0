@@ -2,111 +2,114 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95D1B303C22
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 Jan 2021 12:53:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 953BD304123
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 Jan 2021 15:58:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405502AbhAZLw0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 26 Jan 2021 06:52:26 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33299 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405472AbhAZLv4 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 26 Jan 2021 06:51:56 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4DQ4nV6mb8z9s24;
-        Tue, 26 Jan 2021 22:51:10 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1611661874;
-        bh=0eQMEVT1gu8ENfr5plp+NINmLwG2I10lGKyNJgzw5vE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GAy6Kjkg6QqVM0ykQfOxUS/GvLwBnPbHCUqpb/7Vud2BiIN9Z6pSmvf38+wjACZUl
-         nwjc01rIIfA9aY7/3RZBpiSx2ZDthJREj7htY8vJ3rDHgbtusbu39uyYUtg8KjPrPL
-         lyI3kHfLs3t3dpGK+BHZDEDwUtWI96L3ltK/7NcsPjYt6GGl+olzujIkT1kP4Bbk8K
-         IZmgDT6bVxCFu0itRIPiayBdcmDdODhVJPWHOJBuu8cJoVdnmE/nUAYEDAVR+aHJ6l
-         89ilHgzT3sVa/3/t5mcsMWxlEbCrrIXGz4pvU45LPW0trihzOYOoGyvHCwgM4nHYcQ
-         tqWCQMt3XLyaw==
-Date:   Tue, 26 Jan 2021 22:51:09 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Jeff Layton <jlayton@redhat.com>,
-        David Wysochanski <dwysocha@redhat.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        linux-cachefs@redhat.com, linux-nfs@vger.kernel.org
-Subject: Re: Adding my fscache-next branch to linux-next
-Message-ID: <20210126225109.594f3df4@canb.auug.org.au>
-In-Reply-To: <2541781.1611611590@warthog.procyon.org.uk>
-References: <2541781.1611611590@warthog.procyon.org.uk>
+        id S2406001AbhAZO6Z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 26 Jan 2021 09:58:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405967AbhAZO6L (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 26 Jan 2021 09:58:11 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36854C0698C2;
+        Tue, 26 Jan 2021 06:57:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=DlGuhvUuF5545bhBTyuoYUED18e0Xo1tptPGH+ZCVWM=; b=jMQTwjqfgxOzhYVUlZs0z9WFMS
+        HRM3mdeuPCtX41haFTd6hK9e25Otzz6mCyGNcv34gLl3lwXKlK5lNyLTebUWNNaFab+hdAbStB327
+        6X13dSBciQr1C4yXzcvGmt62gd3mz/quTqo9WjsRSWJx4E4YtRztVJUQF2aYf33t7c4ozLh5cmFBq
+        jtTnUIVw6VgPNfzXwq64Crdqp9Bei9fIWZOg+evdMuBCYdR8RMjwHbP99COwLm/oF7u4+vzFrU+Tm
+        2WUpSisrQMH9uO9aOlv+vEiHmHKQMMIj8qQj2cijQqFQjcvZAiJ5jVKPz8liZXt3v3QT/yndTE765
+        OTjGoq6g==;
+Received: from [2001:4bb8:191:e347:5918:ac86:61cb:8801] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
+        id 1l4Pi4-005luv-Pc; Tue, 26 Jan 2021 14:53:04 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Coly Li <colyli@suse.de>, Mike Snitzer <snitzer@redhat.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        linux-nilfs@vger.kernel.org, dm-devel@redhat.com,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-block@vger.kernel.org, drbd-dev@lists.linbit.com,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-mm@kvack.org
+Subject: misc bio allocation cleanups
+Date:   Tue, 26 Jan 2021 15:52:30 +0100
+Message-Id: <20210126145247.1964410-1-hch@lst.de>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/igtUeq_GukrXnQJV32zrjEn";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---Sig_/igtUeq_GukrXnQJV32zrjEn
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Jens,
 
-Hi David,
+this series contains various cleanups for how bios are allocated or
+initialized plus related fallout.
 
-On Mon, 25 Jan 2021 21:53:10 +0000 David Howells <dhowells@redhat.com> wrot=
-e:
->
-> Could you add my fscache-next branch, which is in this repo:
->=20
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
->=20
-> to linux-next please?
->=20
-> Note that it might conflict with anything Trond and/or Anna ask you to pu=
-ll
-> for NFS, in which case I'll drop the NFS patches from it and seek to get =
-Trond
-> and Anna to take them into the NFS tree.
-
-Added from tomorrow.
-
-Thanks for adding your subsystem tree as a participant of linux-next.  As
-you may know, this is not a judgement of your code.  The purpose of
-linux-next is for integration testing and to lower the impact of
-conflicts between subsystems in the next merge window.=20
-
-You will need to ensure that the patches/commits in your tree/series have
-been:
-     * submitted under GPL v2 (or later) and include the Contributor's
-        Signed-off-by,
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
-
-Basically, this should be just what you would send to Linus (or ask him
-to fetch).  It is allowed to be rebased if you deem it necessary.
-
---=20
-Cheers,
-Stephen Rothwell=20
-sfr@canb.auug.org.au
-
---Sig_/igtUeq_GukrXnQJV32zrjEn
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmAQAi0ACgkQAVBC80lX
-0Gwewgf/W9iXTJLgvqX+o6h/9cNBCUruxn6AQnHP+wwxQ/RRdXuOYKe2MJTPjXYJ
-BUVI8esFmg1z7qETiWxaBpluIhB8mZowjZw8jcyV2ulz59PYzek8nQLhPrOBRziM
-M95T5dy52HxAcAELaIv42unKsTO8Gwp/W219Q4uv+MP6XXHzmGbSoGLnYIM8TQXb
-0yATAV6TouDEK0NcoUql9Mhk3vSQPEsN8ca6b8S4pOVynwjmGCqF60qvKf4jQ6lc
-8XnN5pS+mGW393w04i4Rb5kmbpew/IbhkkAGqq/1eNxu2KhY3w6XkG4OiP2vpA0R
-HPdLCjk7cBnF1F/rxccWBUOIV8QaTQ==
-=Dno6
------END PGP SIGNATURE-----
-
---Sig_/igtUeq_GukrXnQJV32zrjEn--
+Diffstat:
+ Documentation/filesystems/f2fs.rst |    1 
+ block/bio.c                        |  167 ++++++++++++++++++-------------------
+ block/blk-crypto-fallback.c        |    2 
+ block/blk-flush.c                  |   17 +--
+ drivers/block/drbd/drbd_actlog.c   |    2 
+ drivers/block/drbd/drbd_bitmap.c   |    2 
+ drivers/block/drbd/drbd_int.h      |    2 
+ drivers/block/drbd/drbd_main.c     |   13 --
+ drivers/block/drbd/drbd_req.c      |    5 -
+ drivers/block/drbd/drbd_req.h      |   12 --
+ drivers/block/drbd/drbd_worker.c   |    5 -
+ drivers/md/dm-clone-target.c       |   14 ---
+ drivers/md/dm-zoned-metadata.c     |    6 -
+ drivers/md/md.c                    |   48 +++-------
+ drivers/md/md.h                    |    2 
+ drivers/md/raid1.c                 |    2 
+ drivers/md/raid10.c                |    2 
+ drivers/md/raid5-ppl.c             |    2 
+ drivers/md/raid5.c                 |  108 +++++++++--------------
+ drivers/nvme/target/io-cmd-bdev.c  |    2 
+ fs/block_dev.c                     |    2 
+ fs/btrfs/volumes.c                 |    2 
+ fs/exfat/file.c                    |    2 
+ fs/ext4/fast_commit.c              |    4 
+ fs/ext4/fsync.c                    |    2 
+ fs/ext4/ialloc.c                   |    2 
+ fs/ext4/super.c                    |    2 
+ fs/f2fs/data.c                     |   28 ------
+ fs/f2fs/f2fs.h                     |    2 
+ fs/f2fs/segment.c                  |   12 --
+ fs/f2fs/super.c                    |    1 
+ fs/fat/file.c                      |    2 
+ fs/hfsplus/inode.c                 |    2 
+ fs/hfsplus/super.c                 |    2 
+ fs/jbd2/checkpoint.c               |    2 
+ fs/jbd2/commit.c                   |    4 
+ fs/jbd2/recovery.c                 |    2 
+ fs/libfs.c                         |    2 
+ fs/nfs/blocklayout/blocklayout.c   |    5 -
+ fs/nilfs2/segbuf.c                 |    4 
+ fs/nilfs2/the_nilfs.h              |    2 
+ fs/ocfs2/file.c                    |    2 
+ fs/reiserfs/file.c                 |    2 
+ fs/xfs/xfs_super.c                 |    2 
+ fs/zonefs/super.c                  |    4 
+ include/linux/bio.h                |    6 -
+ include/linux/blkdev.h             |    4 
+ include/linux/swap.h               |    1 
+ mm/page_io.c                       |   45 ++-------
+ mm/swapfile.c                      |   10 --
+ 50 files changed, 213 insertions(+), 363 deletions(-)
