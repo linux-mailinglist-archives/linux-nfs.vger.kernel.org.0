@@ -2,225 +2,174 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 970543054B6
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Jan 2021 08:33:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96C9E30554A
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Jan 2021 09:09:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S316575AbhA0A0Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 26 Jan 2021 19:26:24 -0500
-Received: from sonic314-26.consmr.mail.ne1.yahoo.com ([66.163.189.152]:39792
-        "EHLO sonic314-26.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727946AbhAZRBH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 26 Jan 2021 12:01:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1611680421; bh=BDpZa6uDYOE05u5pBk0jLHUArgaNqV9t7H74QtOFt6Q=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=RhxVG8a+ZS5PU9/n8iklHD91rU1KyZEsb6FoToJkyjBvhC6FCEaCmtK9eNevdMlXRXhlfpT6rw8HI6srCO1fdqJtScRXpCZB0nkMMR3QMIAmKUBfbPXWN61BifKxN6JithI+bb9kgJmUBCNpl+wi5wbkIuT/UsHSyHXWwwQI0hVl92tzhwGTISovSkdtJsj4TTpaO2e9fKz71T1MNhBVkTs97LRm/ObwUkMkipsEDfwBu/ibLjUOu09dNpMdcQKCH6amck38O9imqdVZrHmvla69XWPj3ztvHY8qKpv3NQjZK1cHvockoIRAQOV7xzVVWh/h2MBtP9n/5FRbg8xyxw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1611680421; bh=gwNOCaEy6yt0WOFccZALi7eVruQJp7eZE72TWotB/iV=; h=From:To:Subject:Date:From:Subject:Reply-To; b=sWJhDg1ncVxvrbKBzQWHWvNcrHCm20z4Ni4cvcBd9nq0J2wLAcwlp80hXP9lzRCCoREheCAGMJKMaFQ2DeHaLporGstFl0knxLTr4Ew9jJo3e1NgEQ3D48hTxfmL4hCDA9vxgMXG+Nr5DuAjpi1T6ck8bRp7Yq4JIToNoDjPkJ9Cnay7xaQkDIBFEA2jFcsqLXbfcqZrhrOHWvGJNgXYlTqRPVMFad5b7dKxpi5pkZ0UdrinFKdEMhMASqasDD4k+xYENzPiZQhcGuOiCnaGcWywq+cGJmMsSlEZ0VmhPbIFsFEnjmj5SrkJN3JDp4TihzNwmFH8hd9LzSzJwkRRQg==
-X-YMail-OSG: VLVKbmgVM1m01P9Y9_afw3QuK9jJDTtjs6eCjC0NpBsEYrjrV2bosNpmZMLMLFe
- VK_a0Tz5QVMI8MerDRHZPI6iKBA83_yQhncoOa6sEkwvMf8GavV1WgxjiPzvLBGwCqzLgTptlKID
- i.C9EIVZ_4G8Kc0I5QN6VuGegQtCi5UJJXWVw.M.Ns1jdaT8_EfZltKodKBwkFQy4w4MmKeHhp8V
- D52azi.nVwZB7PB3w5PPxSieJ.TnQJFgZXxuJMdIy3xaaeEV0I3r0ASF3EXBtD2wl7rMlx.aXOzT
- 5ZjX70V3jcEvY.eY.1yjG5X.SeLDExt1.0mp3FSJgbIUukoCdO0RNHXYeNOw2XvdP4rtNJFCvcrI
- Y4dm57FVmdfYZsYsKSNSWr83H5BcCBSMZLxaHNI1UUS8o6nMxZF_bVDWkD3dx7b3b.VtyEhH.DFU
- Nrs1e7pZFpvM6V0.oq.oyx.wZXrwxypGSipcsXh3ii6a5d9uRjv9b_TJ.jF.jraeO0YDJIKQk35j
- P_vuWTwHfl4A_DrPQJ5GE5WH..O9sQQIo08Hszq5SL2Gx2r5DVXZIDLlBGbF6FeQbuuiefbgljTI
- RpETRk2n2LMdDkJ.XcEwR4wK2eL5Z.wtdxVS8gv3mf5GbgLRx34oamQFIr.anKnJ5kcFtIDTa3q4
- IKi3Zq9a_6XRJRq.iX90ExKztwFnYAh7QJ4KlZ7T3C19HWI9WeMUFYgkoL9aNz3CKnHnnrDeMe.K
- ihCdY8edOFXgNtOThdZUrEOLaV1AE6DXvL5GHjC6uEyrQ2WQI9D4Hx2lNOp8lpvbz2n0yiYl0bNp
- mvLCd_unoK5grSkRSXFO4rbnX4Oj2AWCrGgR4HM3iR3n_4fuNHmAhO4LbZDF4B.hCaXSUO6B0Ua3
- jJCyXNvZdfs9hkfo.CBSUh3yO6jg0ad8En1u4QbNSccD42hOVl1fQokXTA2EmjcYkLzSeqo7ibxw
- wmrMc2Y85EiAWWNLP8mymkPW4ZWqn1Tndh1mraYZMu9hIgCxUByAVQ3Qoydkiz9hPpQbBW_Hp8GP
- mdqaAIAPVwJwpq608wHGfHyjME3jIJpvAfa3eCL9SS1S.bt4jPAIFVVPmvYxaaWq8UjT__3vnsT3
- X5T6ApMOS3tWRBRIX6ZuXPjzncEXmOIR0ukgnbHIMruISNew4LFIrcF.g3Yv_KIVLDsydIrG.FEW
- OpdpECyPN.UjD72Iex9wMs3CDGw7cyOSpswCzW8MS6Wrv4n3oUpL7o0sBZ9hNRMiNK73YhW40kdy
- .CGdro9UE5eif_AQ0ZXFNn4bZbfQnoC5MmfnDDXanmZVpolQuoZV4VVQmi5sv_Vm1pAczR0wqOZm
- IvJgtuJZii2_.cnLLdnIcBd.J37v71cJjqaiNoycmUTSpC6tcafWQ1ru2jeyqMbyz.f19z2.B8ra
- qiBCM5TV7Zmc6EHQAKTpWLXmdxQcyfsoSLwLYfxwyOj.jk5KUBm77lEyLSaQ5BTXPXuLELnOaDGl
- 9RpuxEC6SAskw2163oXgPU3hNgHTPCM6grRtXgSnuIWF61iUWJkivqgpNhvPlIprSDNyj1C5mbaS
- wQcMrWjNiTUmPmIMD8lW8mHV9IB0PCWSdh.vWt1bl0_Q_uJeEPmZm.jWcZSd0r9rRg53ObfrUFsm
- 8NcmIqq04ZzwXRuzHo0JA0HJK0872zHiY7QHLMTRje5NBcypoyd6leYJTOx35LcrXWuZ6niYHWYY
- Ke8.cXiz5D3BYNLnOrTtinUdHatZT_pBLUDqwWN5K80E1lICAiRUoVvDZfMS6YmZowPYEUXUOyiU
- CEN7jbPkl9RjCyVlMm3zTVis1XBRuYuH4dwWRd5r3NHXO5t0ttNFQdIe.dWkP2YuEPBSeP9RoHKY
- db36aP7JGBGm05.h5zMSBHkyqeKjnhic3uVozaykMqEx2YiS6IpX4EGDqppI2l5RU0bT6W2iYmTU
- sF2AKkA1J99bQmLDWa0uSxyLhiuIjNZ.pT9Azq_q0KyA.rDgZZMwmYbbm1aBCS5fVhXyQD1J2ozw
- 47aIdnNEfuIy73EvJfMOB.vjqjFleTan4BshDX.9_uiOgw9K5YnVNIK6wsv4Ry9fPljlSHJIUhiA
- AGnod7jXncg7Da9ohSNYD27_ujwZD0A8ZWkG8vm0KI3X1HWeX0KO23I60CyfT79k9fCLthYJhxHn
- ngTRlsu1SzUqoW7_YSD6jrmOOEccsQZDwCxd8Vpe.Ttw.MOadIcVklGvHZbr06Ito1GQ3JuhXCLi
- fzGrffSsgtDbdz6MwNNFglsmMDQtie61OKCVWNcK5zTXWtz.n5bUOqHE0l.enNrRrDNtkVSwJjBG
- HQ_Zum.ZTDxDP7tpiHLYxrAnooMGdXfhmVlzxNaFITlB3SomE3n2fd_3N7SzM4bMxTjO8rVFYGcQ
- KICwgh8sXj5i4ysJ5UnF9QMOdr8Iu8K2KgCd7sckRDJ8kgSzY7IpAL62WbweiTBkZLIWqVnLhcvv
- ZMC4N1XIZSAXjzfrTIhR_.MHpW7EIbgP1_Vh.4saJG1TYFbfGlOEU4ikzrLoLj9HrAGlizjmxMrw
- VEmZoNLYzEqC9k06GhqzqNXunSod_66ToBfJYPNcYd3..LGWQRMWhQ4RUcUlwGnkpbM_AfagLjdd
- B6hrn57b.sPWUjqcQGz35p4c5QG9uTR.TwHcsLsCr_QtXWkDWwWVjhs3EhC4Lfls0qJDbixOnVVy
- dcX204NOVcZWnr9i26SFkxDgirRnUrkesdRbTIQ42kQccuPjUqJhk.TDQtTJdu9H3HZN3LshtQ_e
- 4EtwXD5xbqX5SinhTM5i0e9mHLgIyUb3aSxg.VTTPYz3j2LTML6Up2G3N6pNR1XE7dRcaqO.A96a
- PFdFv3.tS4cz.S8fi3bRaKFTsRC1r0dgDmoPp4GAD0ZHD_N74y4IyClCC5KecdHkRkbIOsQcAarX
- Uv2.tEpR.Mc6a5f3aI5VvhpFLtT_JuwlCsNawKiIKqBEVHGzmOluy1.y3Yl1W4oFLy0XO3qQiW4G
- x8VSKb4G8GnvGLzL3Zyqm1nUcSQ8rbN9_esmztUTxa.lCQ4o5BVFVSTqMHGzT21JUMmlc4lLVf_Q
- 932dtNBrucGSHdTPTIlWGBeqNVs8KeiBnlUY7kIEe0NqNq8BArlEMDIeAGqs3QxGRgcX4z007IL6
- jgA295Y7T_8oq2y4bmYV0jK1HadMYTXKd2Wg-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ne1.yahoo.com with HTTP; Tue, 26 Jan 2021 17:00:21 +0000
-Received: by smtp416.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 65f04a03bde3b39170d266c6e909c123;
-          Tue, 26 Jan 2021 17:00:15 +0000 (UTC)
-From:   Casey Schaufler <casey@schaufler-ca.com>
-To:     casey.schaufler@intel.com, jmorris@namei.org,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org
-Cc:     casey@schaufler-ca.com, linux-audit@redhat.com,
-        keescook@chromium.org, john.johansen@canonical.com,
-        penguin-kernel@i-love.sakura.ne.jp, paul@paul-moore.com,
-        sds@tycho.nsa.gov, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH v24 17/25] LSM: Use lsmcontext in security_inode_getsecctx
-Date:   Tue, 26 Jan 2021 08:41:00 -0800
-Message-Id: <20210126164108.1958-18-casey@schaufler-ca.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20210126164108.1958-1-casey@schaufler-ca.com>
-References: <20210126164108.1958-1-casey@schaufler-ca.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S231405AbhA0IJT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 27 Jan 2021 03:09:19 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:37252 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234435AbhA0IE6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Jan 2021 03:04:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611734611;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=C7JSaegbH3sjrXxobnyvZOPnCDkpgSHCAZrjn1vGB3A=;
+        b=F3gUOVQO3zUoBE2uxIhsslpTvOnt9DJRAE2SXUtCcEGeYnPf0upsV5msz3SwiQ3KyRZc2e
+        ljKQYz91ICMBfCAU59nlUF6jewc3Gxp8C1PiPJ5A5u9Hf7E7SNdsFUYJT/XE3Q02nPLBZQ
+        H1jRd71TCFSUFFtkgtndF5xzrgnJS/I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-410-WyjPaEqWOke9YcV3yt6sbA-1; Wed, 27 Jan 2021 03:03:29 -0500
+X-MC-Unique: WyjPaEqWOke9YcV3yt6sbA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B445C801AB8;
+        Wed, 27 Jan 2021 08:03:28 +0000 (UTC)
+Received: from dwysocha.rdu.csb (ovpn-112-111.rdu2.redhat.com [10.10.112.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B8D26F92F;
+        Wed, 27 Jan 2021 08:03:28 +0000 (UTC)
+From:   Dave Wysochanski <dwysocha@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/8] NFS: Clean up nfs_readpage() and nfs_readpages()
+Date:   Wed, 27 Jan 2021 03:03:10 -0500
+Message-Id: <1611734597-14754-2-git-send-email-dwysocha@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Change the security_inode_getsecctx() interface to fill
-a lsmcontext structure instead of data and length pointers.
-This provides the information about which LSM created the
-context so that security_release_secctx() can use the
-correct hook.
+In prep for the new fscache netfs API, refactor nfs_readpage()
+and nfs_readpages() for future patches.  No functional change.
 
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
-Acked-by: Paul Moore <paul@paul-moore.com>
-Reviewed-by: John Johansen <john.johansen@canonical.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-Cc: linux-nfs@vger.kernel.org
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
 ---
- fs/nfsd/nfs4xdr.c        | 23 +++++++++--------------
- include/linux/security.h |  5 +++--
- security/security.c      | 13 +++++++++++--
- 3 files changed, 23 insertions(+), 18 deletions(-)
+ fs/nfs/read.c | 45 +++++++++++++++++++++++----------------------
+ 1 file changed, 23 insertions(+), 22 deletions(-)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 43698f15a52b..ac855bf37869 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2717,11 +2717,11 @@ nfsd4_encode_layout_types(struct xdr_stream *xdr, u32 layout_types)
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- static inline __be32
- nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
--			    void *context, int len)
-+			    struct lsmcontext *context)
+diff --git a/fs/nfs/read.c b/fs/nfs/read.c
+index eb854f1f86e2..dd92156e27c5 100644
+--- a/fs/nfs/read.c
++++ b/fs/nfs/read.c
+@@ -314,7 +314,7 @@ int nfs_readpage(struct file *file, struct page *page)
  {
- 	__be32 *p;
+ 	struct nfs_open_context *ctx;
+ 	struct inode *inode = page_file_mapping(page)->host;
+-	int		error;
++	int ret;
  
--	p = xdr_reserve_space(xdr, len + 4 + 4 + 4);
-+	p = xdr_reserve_space(xdr, context->len + 4 + 4 + 4);
- 	if (!p)
- 		return nfserr_resource;
- 
-@@ -2731,13 +2731,13 @@ nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
+ 	dprintk("NFS: nfs_readpage (%p %ld@%lu)\n",
+ 		page, PAGE_SIZE, page_index(page));
+@@ -328,18 +328,18 @@ int nfs_readpage(struct file *file, struct page *page)
+ 	 * be any new pending writes generated at this point
+ 	 * for this page (other pages can be written to).
  	 */
- 	*p++ = cpu_to_be32(0); /* lfs */
- 	*p++ = cpu_to_be32(0); /* pi */
--	p = xdr_encode_opaque(p, context, len);
-+	p = xdr_encode_opaque(p, context->context, context->len);
- 	return 0;
- }
- #else
- static inline __be32
- nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
--			    void *context, int len)
-+			    struct lsmcontext *context)
- { return 0; }
- #endif
+-	error = nfs_wb_page(inode, page);
+-	if (error)
++	ret = nfs_wb_page(inode, page);
++	if (ret)
+ 		goto out_unlock;
+ 	if (PageUptodate(page))
+ 		goto out_unlock;
  
-@@ -2834,9 +2834,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	int err;
- 	struct nfs4_acl *acl = NULL;
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--	struct lsmcontext scaff; /* scaffolding */
--	void *context = NULL;
--	int contextlen;
-+	struct lsmcontext context = { };
- #endif
- 	bool contextsupport = false;
- 	struct nfsd4_compoundres *resp = rqstp->rq_resp;
-@@ -2894,7 +2892,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	     bmval0 & FATTR4_WORD0_SUPPORTED_ATTRS) {
- 		if (exp->ex_flags & NFSEXP_SECURITY_LABEL)
- 			err = security_inode_getsecctx(d_inode(dentry),
--						&context, &contextlen);
-+						       &context);
- 		else
- 			err = -EOPNOTSUPP;
- 		contextsupport = (err == 0);
-@@ -3314,8 +3312,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+-	error = -ESTALE;
++	ret = -ESTALE;
+ 	if (NFS_STALE(inode))
+ 		goto out_unlock;
  
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- 	if (bmval2 & FATTR4_WORD2_SECURITY_LABEL) {
--		status = nfsd4_encode_security_label(xdr, rqstp, context,
--								contextlen);
-+		status = nfsd4_encode_security_label(xdr, rqstp, &context);
- 		if (status)
+ 	if (file == NULL) {
+-		error = -EBADF;
++		ret = -EBADF;
+ 		ctx = nfs_find_open_context(inode, NULL, FMODE_READ);
+ 		if (ctx == NULL)
+ 			goto out_unlock;
+@@ -347,24 +347,24 @@ int nfs_readpage(struct file *file, struct page *page)
+ 		ctx = get_nfs_open_context(nfs_file_open_context(file));
+ 
+ 	if (!IS_SYNC(inode)) {
+-		error = nfs_readpage_from_fscache(ctx, inode, page);
+-		if (error == 0)
++		ret = nfs_readpage_from_fscache(ctx, inode, page);
++		if (ret == 0)
  			goto out;
  	}
-@@ -3336,10 +3333,8 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
  
+ 	xchg(&ctx->error, 0);
+-	error = nfs_readpage_async(ctx, inode, page);
+-	if (!error) {
+-		error = wait_on_page_locked_killable(page);
+-		if (!PageUptodate(page) && !error)
+-			error = xchg(&ctx->error, 0);
++	ret = nfs_readpage_async(ctx, inode, page);
++	if (!ret) {
++		ret = wait_on_page_locked_killable(page);
++		if (!PageUptodate(page) && !ret)
++			ret = xchg(&ctx->error, 0);
+ 	}
  out:
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--	if (context) {
--		lsmcontext_init(&scaff, context, contextlen, 0); /*scaffolding*/
--		security_release_secctx(&scaff);
--	}
-+	if (context.context)
-+		security_release_secctx(&context);
- #endif /* CONFIG_NFSD_V4_SECURITY_LABEL */
- 	kfree(acl);
- 	if (tempfh) {
-diff --git a/include/linux/security.h b/include/linux/security.h
-index ead44674cea2..e5740e08bc0c 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -571,7 +571,7 @@ void security_release_secctx(struct lsmcontext *cp);
- void security_inode_invalidate_secctx(struct inode *inode);
- int security_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen);
- int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen);
--int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
-+int security_inode_getsecctx(struct inode *inode, struct lsmcontext *cp);
- int security_locked_down(enum lockdown_reason what);
- #else /* CONFIG_SECURITY */
+ 	put_nfs_open_context(ctx);
+-	return error;
++	return ret;
+ out_unlock:
+ 	unlock_page(page);
+-	return error;
++	return ret;
+ }
  
-@@ -1418,7 +1418,8 @@ static inline int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32
- {
- 	return -EOPNOTSUPP;
+ struct nfs_readdesc {
+@@ -404,17 +404,15 @@ struct nfs_readdesc {
+ 	return error;
  }
--static inline int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
-+static inline int security_inode_getsecctx(struct inode *inode,
-+					   struct lsmcontext *cp)
- {
- 	return -EOPNOTSUPP;
- }
-diff --git a/security/security.c b/security/security.c
-index aab6d3f86e4a..ba39b9b13e08 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -2324,9 +2324,18 @@ int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen)
- }
- EXPORT_SYMBOL(security_inode_setsecctx);
  
--int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
-+int security_inode_getsecctx(struct inode *inode, struct lsmcontext *cp)
+-int nfs_readpages(struct file *filp, struct address_space *mapping,
++int nfs_readpages(struct file *file, struct address_space *mapping,
+ 		struct list_head *pages, unsigned nr_pages)
  {
--	return call_int_hook(inode_getsecctx, -EOPNOTSUPP, inode, ctx, ctxlen);
-+	struct security_hook_list *hp;
-+
-+	memset(cp, 0, sizeof(*cp));
-+
-+	hlist_for_each_entry(hp, &security_hook_heads.inode_getsecctx, list) {
-+		cp->slot = hp->lsmid->slot;
-+		return hp->hook.inode_getsecctx(inode, (void **)&cp->context,
-+						&cp->len);
-+	}
-+	return -EOPNOTSUPP;
- }
- EXPORT_SYMBOL(security_inode_getsecctx);
+ 	struct nfs_pageio_descriptor pgio;
+ 	struct nfs_pgio_mirror *pgm;
+-	struct nfs_readdesc desc = {
+-		.pgio = &pgio,
+-	};
++	struct nfs_readdesc desc;
+ 	struct inode *inode = mapping->host;
+ 	unsigned long npages;
+-	int ret = -ESTALE;
++	int ret;
+ 
+ 	dprintk("NFS: nfs_readpages (%s/%Lu %d)\n",
+ 			inode->i_sb->s_id,
+@@ -422,15 +420,17 @@ int nfs_readpages(struct file *filp, struct address_space *mapping,
+ 			nr_pages);
+ 	nfs_inc_stats(inode, NFSIOS_VFSREADPAGES);
+ 
++	ret = -ESTALE;
+ 	if (NFS_STALE(inode))
+ 		goto out;
+ 
+-	if (filp == NULL) {
++	if (file == NULL) {
++		ret = -EBADF;
+ 		desc.ctx = nfs_find_open_context(inode, NULL, FMODE_READ);
+ 		if (desc.ctx == NULL)
+-			return -EBADF;
++			goto out;
+ 	} else
+-		desc.ctx = get_nfs_open_context(nfs_file_open_context(filp));
++		desc.ctx = get_nfs_open_context(nfs_file_open_context(file));
+ 
+ 	/* attempt to read as many of the pages as possible from the cache
+ 	 * - this returns -ENOBUFS immediately if the cookie is negative
+@@ -440,6 +440,7 @@ int nfs_readpages(struct file *filp, struct address_space *mapping,
+ 	if (ret == 0)
+ 		goto read_complete; /* all pages were read */
+ 
++	desc.pgio = &pgio;
+ 	nfs_pageio_init_read(&pgio, inode, false,
+ 			     &nfs_async_read_completion_ops);
  
 -- 
-2.25.4
+1.8.3.1
 
