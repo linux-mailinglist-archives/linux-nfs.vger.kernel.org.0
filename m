@@ -2,208 +2,193 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFE8A3078E1
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Jan 2021 16:01:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C112930791B
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Jan 2021 16:09:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232064AbhA1O54 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 28 Jan 2021 09:57:56 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37699 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232116AbhA1O4p (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Jan 2021 09:56:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611845718;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=2P/rwSjNCoYd4avmdMx0l+RddiVM5l4pLZya+yBf2Mg=;
-        b=Q7gI8MNlLGPl00VmBRiSO2R2a37eiXHDKogVYvkDI/CJscyPZIcguaOeG//v5XSviFYcMF
-        hbY1sVEXODxYYb5bz/Y2UnfZFK36RgncewwaC9KAiORhN1PXxKuA5nax/BEO+OyMoHcV9I
-        mitA0X9nlA5cP/UDIHpGXoFapJ9XwHc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-293-7Y4N65r2MF20EMgpM4Ru9w-1; Thu, 28 Jan 2021 09:55:16 -0500
-X-MC-Unique: 7Y4N65r2MF20EMgpM4Ru9w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81803195D562;
-        Thu, 28 Jan 2021 14:55:15 +0000 (UTC)
-Received: from dwysocha.rdu.csb (ovpn-112-111.rdu2.redhat.com [10.10.112.111])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F07F179B3;
-        Thu, 28 Jan 2021 14:55:15 +0000 (UTC)
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 10/10] NFS: update various invalidation code paths for new IO API
-Date:   Thu, 28 Jan 2021 09:55:08 -0500
-Message-Id: <1611845708-6752-11-git-send-email-dwysocha@redhat.com>
-In-Reply-To: <1611845708-6752-1-git-send-email-dwysocha@redhat.com>
-References: <1611845708-6752-1-git-send-email-dwysocha@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        id S231649AbhA1PGY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 28 Jan 2021 10:06:24 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:48034 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232454AbhA1PFy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Jan 2021 10:05:54 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10SF4jIf132909;
+        Thu, 28 Jan 2021 15:05:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=ybFBCebPTNNK4jU2wyuUl88EsWtCfanHyqxinEL8QrA=;
+ b=p04sCoukSgSUifntrkWbJlefCsyh50a5xfw15Ekz3IxbWNIMKEntoXCIW/RAV23ant4q
+ Y3wsNjYauwEk5iAiMYt5fdRxz9GitINU2/oXPWQIn9zobYpXU1Uv4vEC7L9eYzKKJwT5
+ QFV6FnEFXWViXdvSWlknPVE4cC+BYaNYjwVHg5WMECtphqhFE1L7rzKk5MRZnoRuZ3bc
+ 1RlO+54YQht+cI7uHPsatAbzE6zwpr017RUvNa6/uuptvYs9qXVlrdrWgT6OM+cALTif
+ Mb09DH5HBCi1dUd7DzMrfn/jk3RwiPT3zy/ggnRbsQTbQz5jsRFPoPIAkMid2tahvdr4 0w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 368brkvg73-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Jan 2021 15:05:09 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10SF1Cju008897;
+        Thu, 28 Jan 2021 15:05:08 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2171.outbound.protection.outlook.com [104.47.55.171])
+        by aserp3030.oracle.com with ESMTP id 368wcqsyff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Jan 2021 15:05:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=geFhNchZsuAk45krI7G9IgyN9ubFciqrWue/pTrP8JxsP3kvf8d7C9I94aG+YKO7YbfsHH1dH4gOMMm3ejPCGnoQtkIz4ulnadyGHdSdOzja6uYwsLvROSTch8m4bmT6/Jv8pPuZphP+cMv7cFbtP/BriKKkYpFy1BjtRbkz2alLplqKTT/pYcYD8c3v9nHiNjK3OiPa+qtI/pGkbujOeJSEdGbPvI7oF6JhzjOEUvb0qICKH0duLMdNcc0KZy16h10vPjvt6LjU3mDWy1x3LX6WTSg5tyH7gqv8Z8bmeNU/grQYZ2T/YFgI9WFyVFY6MhQGPKZZF1inVx5gBZFSwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ybFBCebPTNNK4jU2wyuUl88EsWtCfanHyqxinEL8QrA=;
+ b=KAtQs6Gxm2/6qjelTuiSI8amceukYa2Zcc4Dfik7D5FKfvNs57rtR1659IY1gP5kV+CdnvzVeykgiVxufzuu7AjRAIEJR6LCoUbcSY/RBuJCYgu3t36mIulp10FlOxUMoXa7pWxHLIXZCZE5Wefa2eEmygkbj4ps8Myc6QA06owC6q2FM0+A1G0qWh+UIVP2L2D41tGpdaxObOFmyXduYTPKjj+k/LHuigNb9UGeGDMaa1IKx35cRadjZxXQSWs2+JRLnXUZ4N5p4+WwHlH0Jfo1L1Hvxox3JNGQRFAtxy2uqyuDH5tlUPJmWy6GBV67Q4x/QaRFz2UnSQXuT4FhiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ybFBCebPTNNK4jU2wyuUl88EsWtCfanHyqxinEL8QrA=;
+ b=EnitQwkHqaMAifx1KcW5tp+DZwcJoLLkPZ8R7jwwH1MPmqljWc/8gLwy9J+rfVopU7z4MS0OoKdZVcFSCMxE3z4W26620f/4xi0hocr5+8wtQn+VrDOMNeQsyrvmdAsl+ZD6fMv9coHDxD0HRZWg/ZsuiH9Tbt1p6PN5Gc1aXuc=
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
+ by BYAPR10MB2517.namprd10.prod.outlook.com (2603:10b6:a02:b4::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3784.17; Thu, 28 Jan
+ 2021 15:05:06 +0000
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::6da8:6d28:b83:702b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::6da8:6d28:b83:702b%4]) with mapi id 15.20.3805.017; Thu, 28 Jan 2021
+ 15:05:06 +0000
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+CC:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next] nfsd: fix check of statid returned from call to
+ find_stateid_by_type
+Thread-Topic: [PATCH][next] nfsd: fix check of statid returned from call to
+ find_stateid_by_type
+Thread-Index: AQHW9YTPCLLIIxyNd0a0oDXS4LB/Gao9IuIA
+Date:   Thu, 28 Jan 2021 15:05:06 +0000
+Message-ID: <793C88A3-B117-4138-B74A-845E0BD383C9@oracle.com>
+References: <20210128144935.640026-1-colin.king@canonical.com>
+In-Reply-To: <20210128144935.640026-1-colin.king@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: canonical.com; dkim=none (message not signed)
+ header.d=none;canonical.com; dmarc=none action=none header.from=oracle.com;
+x-originating-ip: [68.61.232.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 212166b5-d0ec-4401-5200-08d8c39e193a
+x-ms-traffictypediagnostic: BYAPR10MB2517:
+x-microsoft-antispam-prvs: <BYAPR10MB2517D63C78B14C94C53612F193BA9@BYAPR10MB2517.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:663;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5XR0ddYEwv6z6R6Kg49g8g2YIyMtbtt64VASQF+dHyezwKQZOyEvmHMQkxYSawjZdZ2PF3RFGYfPJ0HIgKmrgcFtrLdonwJZflkJ66uGRTcq+L+a6P7aMLPmbHk7+LpI30wdPUiwnxt8z74HiBDrw+bs2SolAX9j/fh5IlxPL1S2aL0RiTLPMSCjdr4SeFyzcDEQkF+OT5rHPzAaD7nfCWtj/bUfpzu+GMo2WGiShbk/PvStFZJIjOS58TG+hrjKZjHbjy5XLiKdiDzjX7vtBf8fiqul77k72vb/yAywxQf731kNDyKyJ0tPCaP2Lwej2qMbNa0h80INKb5IwaPq13OAVJl5Cbs18qtfiBTb2kZPFtG6rt9AWwWDc/WP9O7cVrPbt7PyWaWd3LqAAPzF1D4j9vKxThaULoEUPZKKv4qcxg+6aHz2S9iMECO0OqYH4bzmLsCTI57yYjjzACxbLvlwfpmLtvkD2PUY8Z5qaY2idKlUPUFep66YEOZR7yASJdZ/CuqxftVgthtBMclxD+Y9h9y/hhEPAPLK1BhyZSUDStER8MPRX89iS8TtiJ/SMyprNLu4yWwOW9SMA/h2lbAIAmX8WELWDa/8q1nhl4w=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(396003)(346002)(376002)(136003)(39860400002)(316002)(6512007)(86362001)(2906002)(5660300002)(4326008)(44832011)(66476007)(66556008)(36756003)(6486002)(76116006)(6506007)(66446008)(33656002)(53546011)(54906003)(71200400001)(6916009)(66946007)(26005)(8936002)(91956017)(186003)(83380400001)(64756008)(8676002)(478600001)(2616005)(37363001)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?N5IAtfUEN1CGvmdyUrKTrWKQ+EOP9R6fH3ZoAoqATciSPuNB9AXGW1FC7oR3?=
+ =?us-ascii?Q?ND4r48RI+2eKf2zyMlP4xHQSzIo33XZOWJGLCIIF67bQfez1dbQ3BpLlN2Rp?=
+ =?us-ascii?Q?nInlrU5W791rE4RMpoaqpMxnuvF/8s9zfS7FYaCsQVouUdnP/bvJzR2RSLiZ?=
+ =?us-ascii?Q?hzrSCVTYCGGwUhw+KcrHlcQ+TLGRrTgbdPiBvoKpj7xl67kXhZvnVVLzlHno?=
+ =?us-ascii?Q?Yf5UxiJzxODxYo9ttuvgToFHEbpjwdF2wlpqJRXRE6YO54Udx4nkNjGX8hSi?=
+ =?us-ascii?Q?MGoCZ8qkqA2Ytmih7EJ1mfqk5jonbgMEaC7nNyb0+VX/B9pI9NDqS5d1YU73?=
+ =?us-ascii?Q?fw2kL3XoNFQMqTyXNYv5gfAGABo/4z+tkzN2f36MGassgTfdqpvu3LUpmLNz?=
+ =?us-ascii?Q?VzFQqPfN30xpXB+A93CydGY2GFBta1siofUvpiBDAHzm2YScI1HqrIbLmIMg?=
+ =?us-ascii?Q?GBxH0MHqwqK5vSvBgJkI3B62jInhvB3wSzsRJBbaYETQ/UyyoRIcatSjMaR3?=
+ =?us-ascii?Q?vZfckr7z8U1ng5Qz9Cc/pVu424D1479opRnabGx/XwIzGdFkJDCFfwxSzDhw?=
+ =?us-ascii?Q?2A4umEJklG1cONDfBmCsANfVEq3oUb6UkSjfYRHVl2W4k/AMBgd8Cw0Eruzs?=
+ =?us-ascii?Q?LzahqE8LXG59+tl2BrEqVG1xw3gNJMx6W8u6LaRiajLukLRz+iYrWTZsJ+a6?=
+ =?us-ascii?Q?dkkG6Zl36LWkBPXNvF824JzmH7mkty2Pr+f+kzhJIoiETtLG+lOnYMp63ibz?=
+ =?us-ascii?Q?ZLYWwlepUM8OMbXBA2eBkoLZalTHVnjyOimdoqZD8bzJhVmivbyP1crPKMRJ?=
+ =?us-ascii?Q?wrajm0uGjQQGjzcahaVEA0eMIAoCmWwNrRBCcVzcnJXp55/BFM5c4MdURNtQ?=
+ =?us-ascii?Q?qM3PClINgnVWEbM5LA+4oXYpu4hDt9y2mDhPjNWXID3l8CBb3bdwZK/hc6pQ?=
+ =?us-ascii?Q?RAEuLGYcxVP6J4j3yTks3egbSXx1PjybKk1/LDkQ5gGezQ8WwGZi5OlDtlaL?=
+ =?us-ascii?Q?RbvYMLkvpWFXs3iYd5On6bxEnH/xp/v63Z26MxiDC4L7bDlGlAPPS9jQySp0?=
+ =?us-ascii?Q?V3W+DA7G6XWe8f4riDt+h/jq9cn0jg=3D=3D?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <FD4CCB98771DBE43BFFAE0EB018E71C2@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 212166b5-d0ec-4401-5200-08d8c39e193a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2021 15:05:06.7361
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dqfcIRXJKbrQ2TYTFO9XthBfM7LgihuoT0BY9FElAwwkdRSGAShRozE4ijzbGdq5Q8ihGpEutEHm/oS5qk7l8A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2517
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9877 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2101280077
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9877 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ phishscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999
+ lowpriorityscore=0 spamscore=0 mlxscore=0 suspectscore=0 malwarescore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101280077
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The new fscache IO API removes the following invalidation related
-older APIs: fscache_uncache_all_inode_pages, fscache_uncache_page,
-and fscache_wait_on_page_write.  Update various code paths to the
-new API which only requires we wait for PG_fscache which indicates
-fscache IO in progress on the page.
+Hi Colin-
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
----
- fs/nfs/file.c    |  9 +++++----
- fs/nfs/fscache.c | 23 +----------------------
- fs/nfs/fscache.h | 28 +---------------------------
- 3 files changed, 7 insertions(+), 53 deletions(-)
+> On Jan 28, 2021, at 9:49 AM, Colin King <colin.king@canonical.com> wrote:
+>=20
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> The call to find_stateid_by_type is setting the return value in *stid
+> yet the NULL check of the return is checking stid instead of *stid.
+> Fix this by adding in the missing pointer * operator.
+>=20
+> Addresses-Coverity: ("Dereference before null check")
+> Fixes: 6cdaa72d4dde ("nfsd: find_cpntf_state cleanup")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 9e41745c3faf..e81e11603b9a 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -416,7 +416,7 @@ static void nfs_invalidate_page(struct page *page, unsigned int offset,
- 	/* Cancel any unstarted writes on this page */
- 	nfs_wb_page_cancel(page_file_mapping(page)->host, page);
- 
--	nfs_fscache_invalidate_page(page, page->mapping->host);
-+	wait_on_page_fscache(page);
- }
- 
- /*
-@@ -482,12 +482,11 @@ static void nfs_check_dirty_writeback(struct page *page,
- static int nfs_launder_page(struct page *page)
- {
- 	struct inode *inode = page_file_mapping(page)->host;
--	struct nfs_inode *nfsi = NFS_I(inode);
- 
- 	dfprintk(PAGECACHE, "NFS: launder_page(%ld, %llu)\n",
- 		inode->i_ino, (long long)page_offset(page));
- 
--	nfs_fscache_wait_on_page_write(nfsi, page);
-+	wait_on_page_fscache(page);
- 	return nfs_wb_page(inode, page);
- }
- 
-@@ -562,7 +561,9 @@ static vm_fault_t nfs_vm_page_mkwrite(struct vm_fault *vmf)
- 	sb_start_pagefault(inode->i_sb);
- 
- 	/* make sure the cache has finished storing the page */
--	nfs_fscache_wait_on_page_write(NFS_I(inode), page);
-+	if (PageFsCache(vmf->page) &&
-+		wait_on_page_bit_killable(vmf->page, PG_fscache) < 0)
-+		return VM_FAULT_RETRY;
- 
- 	wait_on_bit_action(&NFS_I(inode)->flags, NFS_INO_INVALIDATING,
- 			nfs_wait_bit_killable, TASK_KILLABLE);
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index dd8cf3cfed0a..d18eeea9c1b5 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -16,6 +16,7 @@
- #include <linux/slab.h>
- #include <linux/iversion.h>
- #include <linux/xarray.h>
-+#define FSCACHE_USE_NEW_IO_API
- #include <linux/fscache.h>
- #include <linux/netfs.h>
- 
-@@ -320,7 +321,6 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
- 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);
- 		clear_bit(NFS_INO_FSCACHE, &nfsi->flags);
- 		fscache_disable_cookie(cookie, &auxdata, true);
--		fscache_uncache_all_inode_pages(cookie, inode);
- 	} else {
- 		dfprintk(FSCACHE, "NFS: nfsi 0x%p enabling cache\n", nfsi);
- 		fscache_enable_cookie(cookie, &auxdata, nfsi->vfs_inode.i_size,
-@@ -331,27 +331,6 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
- }
- EXPORT_SYMBOL_GPL(nfs_fscache_open_file);
- 
--/*
-- * Release the caching state associated with a page if undergoing complete page
-- * invalidation.
-- */
--void __nfs_fscache_invalidate_page(struct page *page, struct inode *inode)
--{
--	struct fscache_cookie *cookie = nfs_i_fscache(inode);
--
--	BUG_ON(!cookie);
--
--	dfprintk(FSCACHE, "NFS: fscache invalidatepage (0x%p/0x%p/0x%p)\n",
--		 cookie, page, NFS_I(inode));
--
--	fscache_wait_on_page_write(cookie, page);
--
--	BUG_ON(!PageLocked(page));
--	fscache_uncache_page(cookie, page);
--	nfs_inc_fscache_stats(page->mapping->host,
--			      NFSIOS_FSCACHE_PAGES_UNCACHED);
--}
--
- static void nfs_issue_op(struct netfs_read_subrequest *subreq)
- {
- 	struct inode *inode = subreq->rreq->inode;
-diff --git a/fs/nfs/fscache.h b/fs/nfs/fscache.h
-index 9f8b1f8e69f3..f9d0464188af 100644
---- a/fs/nfs/fscache.h
-+++ b/fs/nfs/fscache.h
-@@ -11,6 +11,7 @@
- #include <linux/nfs_fs.h>
- #include <linux/nfs_mount.h>
- #include <linux/nfs4_mount.h>
-+#define FSCACHE_USE_NEW_IO_API
- #include <linux/fscache.h>
- 
- #ifdef CONFIG_NFS_FSCACHE
-@@ -93,7 +94,6 @@ struct nfs_fscache_inode_auxdata {
- extern void nfs_fscache_clear_inode(struct inode *);
- extern void nfs_fscache_open_file(struct inode *, struct file *);
- 
--extern void __nfs_fscache_invalidate_page(struct page *, struct inode *);
- extern int nfs_readpage_from_fscache(struct file *file,
- 				     struct page *page,
- 				     struct nfs_readdesc *desc);
-@@ -102,27 +102,6 @@ extern int nfs_readahead_from_fscache(struct nfs_readdesc *desc,
- extern void nfs_read_completion_to_fscache(struct nfs_pgio_header *hdr,
- 					   unsigned long bytes);
- /*
-- * wait for a page to complete writing to the cache
-- */
--static inline void nfs_fscache_wait_on_page_write(struct nfs_inode *nfsi,
--						  struct page *page)
--{
--	if (PageFsCache(page))
--		fscache_wait_on_page_write(nfsi->fscache, page);
--}
--
--/*
-- * release the caching state associated with a page if undergoing complete page
-- * invalidation
-- */
--static inline void nfs_fscache_invalidate_page(struct page *page,
--					       struct inode *inode)
--{
--	if (PageFsCache(page))
--		__nfs_fscache_invalidate_page(page, inode);
--}
--
--/*
-  * Invalidate the contents of fscache for this inode.  This will not sleep.
-  */
- static inline void nfs_fscache_invalidate(struct inode *inode)
-@@ -162,11 +141,6 @@ static inline void nfs_fscache_clear_inode(struct inode *inode) {}
- static inline void nfs_fscache_open_file(struct inode *inode,
- 					 struct file *filp) {}
- 
--static inline void nfs_fscache_invalidate_page(struct page *page,
--					       struct inode *inode) {}
--static inline void nfs_fscache_wait_on_page_write(struct nfs_inode *nfsi,
--						  struct page *page) {}
--
- static inline int nfs_readpage_from_fscache(struct file *file,
- 					    struct page *page,
- 					    struct nfs_readdesc *desc)
--- 
-1.8.3.1
+Thanks for your patch. I've committed it to the for-next branch at
+
+git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
+
+in preparation for the v5.12 merge window, with the following changes:
+
+- ^statid^stateid
+- Fixes: tag removed, since no stable backport is necessary
+
+The commit you are fixing has not been merged upstream yet.
+
+
+> ---
+> fs/nfsd/nfs4state.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index f554e3480bb1..423fd6683f3a 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -5824,7 +5824,7 @@ static __be32 find_cpntf_state(struct nfsd_net *nn,=
+ stateid_t *st,
+>=20
+> 	*stid =3D find_stateid_by_type(found, &cps->cp_p_stateid,
+> 			NFS4_DELEG_STID|NFS4_OPEN_STID|NFS4_LOCK_STID);
+> -	if (stid)
+> +	if (*stid)
+> 		status =3D nfs_ok;
+> 	else
+> 		status =3D nfserr_bad_stateid;
+> --=20
+> 2.29.2
+>=20
+
+--
+Chuck Lever
+
+
 
