@@ -2,93 +2,208 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31D29306157
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Jan 2021 17:54:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D763306DD2
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Jan 2021 07:48:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232310AbhA0Qxp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 27 Jan 2021 11:53:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233393AbhA0Qx1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Jan 2021 11:53:27 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72445C061788
-        for <linux-nfs@vger.kernel.org>; Wed, 27 Jan 2021 08:52:15 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id b8so1345052plh.12
-        for <linux-nfs@vger.kernel.org>; Wed, 27 Jan 2021 08:52:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lQKD9AgPexRDubj64bboSIKnHej4WVBTeYTVGyeOaHk=;
-        b=0n7IOfJztdBvyCO+NwquWZO/9oDoBxQCCGXsafUQ/GvUYsfJ9GMPAPuFm/2AHz2s7h
-         uCjspaY6eWonaZrU5TNO1bFTgmPIbBbshQEov2cSyySKuYe6JHBj4YtmSsCgqqeJQ0sz
-         TEp+kDX55Ttsnc0J6mELqLNa4WTTuqIBpHFd3WA2ygVL+9LP+Y/h3dPZ0HRlZG6rjvCq
-         o8+mzv9CEKGMlgIZqlWOyLBHKwUPEfZAqrHsgb5eQJ8jwi6mY18MiLv0LfN195kWsU1I
-         9aIP573InHU/7bIMgKM0aes7wOoE1YqdbZK7PAc68mg/7wVOpXqK0JLzoUJL/hUqxtsf
-         yCNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lQKD9AgPexRDubj64bboSIKnHej4WVBTeYTVGyeOaHk=;
-        b=ayn4eZHF+m/sBDkOArZokCvuGr+J5nDsnKwgfj6UV7XSLjXAuCB7rjySAa7rdY8cqf
-         vAa4pHO8jJGIUTMPE2uTAiR2ZDm2kUP+XAWmAI7WcScRaTfnwd4QUfvuKUJ2s3O7bfpa
-         ksTcKIEC8Oi8kBtBS5CezkLe+Ap1VWATfnGsRdPxkJfL1UI9GNDXVkx6pOVNSJmHCjwI
-         RPQES2t31nLuUCoFHbbGW8wa7F8bJxxfq/k/bmSW96sE/Lmbpknx4O//RRikmPyGlvw3
-         FP9E0XnvpMnLq648tA4bjNln2PpWLzdZoEzwV1U2D6RlUsD+h9fjQM4StXS+g3JWmZOb
-         Hfbg==
-X-Gm-Message-State: AOAM5330EXBywnlqZpvtP9Kg779Uw1b3adwCgB3T/4TUZr3NhWjl5TAr
-        Z3qbmM6QSF8CQ5NWV+s1yQ9/1A==
-X-Google-Smtp-Source: ABdhPJznkZAkmGjzE0K3XJ7r+1OuPOB/uSu+0QVk0qZGt1uSi7gcicfz36VtRv3b8tVtY1Mr6zsRVA==
-X-Received: by 2002:a17:90a:b782:: with SMTP id m2mr6555276pjr.220.1611766334716;
-        Wed, 27 Jan 2021 08:52:14 -0800 (PST)
-Received: from [192.168.4.41] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id z13sm2914261pgf.89.2021.01.27.08.52.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Jan 2021 08:52:14 -0800 (PST)
-Subject: Re: misc bio allocation cleanups
-To:     Christoph Hellwig <hch@lst.de>, Song Liu <song@kernel.org>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Coly Li <colyli@suse.de>, Mike Snitzer <snitzer@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        linux-nilfs@vger.kernel.org, dm-devel@redhat.com,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-block@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-mm@kvack.org
-References: <20210126145247.1964410-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <53e9b2e0-7169-f2fe-3c33-5f8a28cbd01b@kernel.dk>
-Date:   Wed, 27 Jan 2021 09:52:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S231386AbhA1Gp4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 28 Jan 2021 01:45:56 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:51398 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231346AbhA1Gpn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Jan 2021 01:45:43 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10S6duwI126552;
+        Thu, 28 Jan 2021 06:44:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=sj+RauG6p0Quw7dBsk3AdGlN2qOQjguTXQLf7S6EjkM=;
+ b=sOqQ4/VOA2gHF4uYVgEYU8wmzpYlrXmcdu8NP73idK4qfiFw+guYVXZN97dn1kYjIYOf
+ 7vOoGhvKLNTdK5ClkW4LrgGk+kyB3umBRKawcjVyNB+hK5vShAF/4DECtKdA6qYjeFSa
+ pBy0g87nqBeOc48kcwY27BkQPVVs1ArhCtAIs1f6BWNreDGqX6bo1bpwYm8OWp0csfA5
+ cyV3K7nI5+z9Auak4hwKb77/r+r7QYybGY0MBEjOj870gO+GistYuz9uTcvK8y/EE38P
+ oP823J9pPmhCAa5Vu8O99nH+zztzfkwlm9e8HbsZMwr+Z8IPYG59dUjA8T+8EOD8HL8u xQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 368b7r2m7w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Jan 2021 06:44:47 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10S6aDjL122199;
+        Thu, 28 Jan 2021 06:42:47 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 368wqyuqpv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Jan 2021 06:42:47 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10S6gUT9143708;
+        Thu, 28 Jan 2021 06:42:46 GMT
+Received: from userp3020.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
+        by userp3030.oracle.com with ESMTP id 368wqyuqpd-1;
+        Thu, 28 Jan 2021 06:42:46 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com
+Cc:     bfields@fieldses.org, linux-nfs@vger.kernel.org
+Subject: [PATCH v2] NFSv4_2: SSC helper should use its own config.
+Date:   Thu, 28 Jan 2021 01:42:26 -0500
+Message-Id: <20210128064226.85025-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
 MIME-Version: 1.0
-In-Reply-To: <20210126145247.1964410-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9877 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 phishscore=0
+ adultscore=0 impostorscore=0 malwarescore=0 lowpriorityscore=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 clxscore=1015 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2101280033
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 1/26/21 7:52 AM, Christoph Hellwig wrote:
-> Hi Jens,
-> 
-> this series contains various cleanups for how bios are allocated or
-> initialized plus related fallout.
+Currently NFSv4_2 SSC helper, nfs_ssc, incorrectly uses GRACE_PERIOD
+as its config. Fix by adding new config NFS_V4_2_SSC_HELPER which
+depends on NFS_V4_2 and is automatically selected when NFSD_V4 is
+enabled. Also removed the file name from a comment in nfs_ssc.c.
 
-Applied, thanks.
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ fs/Kconfig              |  4 ++++
+ fs/nfs/nfs4file.c       |  4 ++++
+ fs/nfs/super.c          | 12 ++++++++++++
+ fs/nfs_common/Makefile  |  2 +-
+ fs/nfs_common/nfs_ssc.c |  2 --
+ fs/nfsd/Kconfig         |  1 +
+ 6 files changed, 22 insertions(+), 3 deletions(-)
 
+diff --git a/fs/Kconfig b/fs/Kconfig
+index aa4c12282301..a55bda4233bb 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -333,6 +333,10 @@ config NFS_COMMON
+ 	depends on NFSD || NFS_FS || LOCKD
+ 	default y
+ 
++config NFS_V4_2_SSC_HELPER
++	tristate
++	default y if NFS_V4=y || NFS_FS=y
++
+ source "net/sunrpc/Kconfig"
+ source "fs/ceph/Kconfig"
+ source "fs/cifs/Kconfig"
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index 57b3821d975a..441a2fa073c8 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -420,7 +420,9 @@ static const struct nfs4_ssc_client_ops nfs4_ssc_clnt_ops_tbl = {
+  */
+ void nfs42_ssc_register_ops(void)
+ {
++#ifdef CONFIG_NFSD_V4
+ 	nfs42_ssc_register(&nfs4_ssc_clnt_ops_tbl);
++#endif
+ }
+ 
+ /**
+@@ -431,7 +433,9 @@ void nfs42_ssc_register_ops(void)
+  */
+ void nfs42_ssc_unregister_ops(void)
+ {
++#ifdef CONFIG_NFSD_V4
+ 	nfs42_ssc_unregister(&nfs4_ssc_clnt_ops_tbl);
++#endif
+ }
+ #endif /* CONFIG_NFS_V4_2 */
+ 
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 4034102010f0..c7a924580eec 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -86,9 +86,11 @@ const struct super_operations nfs_sops = {
+ };
+ EXPORT_SYMBOL_GPL(nfs_sops);
+ 
++#ifdef CONFIG_NFS_V4_2
+ static const struct nfs_ssc_client_ops nfs_ssc_clnt_ops_tbl = {
+ 	.sco_sb_deactive = nfs_sb_deactive,
+ };
++#endif
+ 
+ #if IS_ENABLED(CONFIG_NFS_V4)
+ static int __init register_nfs4_fs(void)
+@@ -111,15 +113,21 @@ static void unregister_nfs4_fs(void)
+ }
+ #endif
+ 
++#ifdef CONFIG_NFS_V4_2
+ static void nfs_ssc_register_ops(void)
+ {
++#ifdef CONFIG_NFSD_V4
+ 	nfs_ssc_register(&nfs_ssc_clnt_ops_tbl);
++#endif
+ }
+ 
+ static void nfs_ssc_unregister_ops(void)
+ {
++#ifdef CONFIG_NFSD_V4
+ 	nfs_ssc_unregister(&nfs_ssc_clnt_ops_tbl);
++#endif
+ }
++#endif /* CONFIG_NFS_V4_2 */
+ 
+ static struct shrinker acl_shrinker = {
+ 	.count_objects	= nfs_access_cache_count,
+@@ -148,7 +156,9 @@ int __init register_nfs_fs(void)
+ 	ret = register_shrinker(&acl_shrinker);
+ 	if (ret < 0)
+ 		goto error_3;
++#ifdef CONFIG_NFS_V4_2
+ 	nfs_ssc_register_ops();
++#endif
+ 	return 0;
+ error_3:
+ 	nfs_unregister_sysctl();
+@@ -168,7 +178,9 @@ void __exit unregister_nfs_fs(void)
+ 	unregister_shrinker(&acl_shrinker);
+ 	nfs_unregister_sysctl();
+ 	unregister_nfs4_fs();
++#ifdef CONFIG_NFS_V4_2
+ 	nfs_ssc_unregister_ops();
++#endif
+ 	unregister_filesystem(&nfs_fs_type);
+ }
+ 
+diff --git a/fs/nfs_common/Makefile b/fs/nfs_common/Makefile
+index fa82f5aaa6d9..119c75ab9fd0 100644
+--- a/fs/nfs_common/Makefile
++++ b/fs/nfs_common/Makefile
+@@ -7,4 +7,4 @@ obj-$(CONFIG_NFS_ACL_SUPPORT) += nfs_acl.o
+ nfs_acl-objs := nfsacl.o
+ 
+ obj-$(CONFIG_GRACE_PERIOD) += grace.o
+-obj-$(CONFIG_GRACE_PERIOD) += nfs_ssc.o
++obj-$(CONFIG_NFS_V4_2_SSC_HELPER) += nfs_ssc.o
+diff --git a/fs/nfs_common/nfs_ssc.c b/fs/nfs_common/nfs_ssc.c
+index f43bbb373913..7c1509e968c8 100644
+--- a/fs/nfs_common/nfs_ssc.c
++++ b/fs/nfs_common/nfs_ssc.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * fs/nfs_common/nfs_ssc_comm.c
+- *
+  * Helper for knfsd's SSC to access ops in NFS client modules
+  *
+  * Author: Dai Ngo <dai.ngo@oracle.com>
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index dbbc583d6273..821e5913faee 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -76,6 +76,7 @@ config NFSD_V4
+ 	select CRYPTO_MD5
+ 	select CRYPTO_SHA256
+ 	select GRACE_PERIOD
++	select NFS_V4_2_SSC_HELPER if NFS_V4_2
+ 	help
+ 	  This option enables support in your system's NFS server for
+ 	  version 4 of the NFS protocol (RFC 3530).
 -- 
-Jens Axboe
+2.9.5
 
