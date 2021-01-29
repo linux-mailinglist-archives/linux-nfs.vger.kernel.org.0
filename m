@@ -2,71 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DD883083EC
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Jan 2021 03:51:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF6ED308D56
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Jan 2021 20:26:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231517AbhA2CvZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 28 Jan 2021 21:51:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32862 "EHLO
+        id S232856AbhA2T0V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 29 Jan 2021 14:26:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231470AbhA2CvX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Jan 2021 21:51:23 -0500
+        with ESMTP id S232816AbhA2T0N (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Jan 2021 14:26:13 -0500
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31E5C061574
-        for <linux-nfs@vger.kernel.org>; Thu, 28 Jan 2021 18:50:42 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BC8EC061574;
+        Fri, 29 Jan 2021 11:25:33 -0800 (PST)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id D2A194599; Thu, 28 Jan 2021 21:50:41 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org D2A194599
+        id A2DD64163; Fri, 29 Jan 2021 14:25:32 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org A2DD64163
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1611888641;
-        bh=/PNiZBSBHkdCLynmfVXpV/UcnWGC24yhrG6mM4fz0vA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nfSRm87a+p97/ZmMnMh8VQ/0pmOv/vzQmLYrj6UN2aFBDo6fqtzHMFx6D04smqvYp
-         vil+rYniVb3AEmDccW/VQcMTugZMqTNInx24eSJ9uFA4CGJc/e0/8ScrKP2gtKDSHC
-         19sNoaU6f1UOMmB6NGMwpHpqRQTinWX5TGVgAIuM=
-Date:   Thu, 28 Jan 2021 21:50:41 -0500
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "guy@vastdata.com" <guy@vastdata.com>,
-        "schumakeranna@gmail.com" <schumakeranna@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] nfs: we don't support removing system.nfs4_acl
-Message-ID: <20210129025041.GA12151@fieldses.org>
-References: <20210128223638.GE29887@fieldses.org>
- <95e5f9e4-76d4-08c4-ece3-35a10c06073b@vastdata.com>
- <cbc7115cc5d5aeb7ffb9e9b3880e453bf54ecbdb.camel@hammerspace.com>
- <20210129023527.GA11864@fieldses.org>
+        s=default; t=1611948332;
+        bh=2OXpG3Hcaog/fSQGoGDbfK1ZRo4tNm//iS7itlsCAXU=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=Ms0I1PAVUulw+5Of3gVNHQjPBLf6g5kfOO3v6cpmOPM1c7mAaPwYII1B9a5by5tYX
+         svK2R+2iGtJcrIT2Q1Y3zlpEz7d49qKZElpWECRcgIoAkFPWEsMzl7A7Mf3IUMJ8nv
+         QE5Itbk+s43nJrtw0cpDCtyavWRXnklN8T1dlg5o=
+Date:   Fri, 29 Jan 2021 14:25:32 -0500
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <schumakeranna@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH 2/3] nfsd: move change attribute generation to filesystem
+Message-ID: <20210129192532.GB8033@fieldses.org>
+References: <1611084297-27352-1-git-send-email-bfields@redhat.com>
+ <1611084297-27352-3-git-send-email-bfields@redhat.com>
+ <20210120084638.GA3678536@infradead.org>
+ <20210121202756.GA13298@pick.fieldses.org>
+ <20210122082059.GA119852@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210129023527.GA11864@fieldses.org>
+In-Reply-To: <20210122082059.GA119852@infradead.org>
 User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 28, 2021 at 09:35:27PM -0500, bfields@fieldses.org wrote:
-> Note that this patch doesn't prevent an application from setting a
-> zero-length ACL.  The xattr format is XDR with the first four bytes
-> representing the number of ACEs, so you'd set a zero-length ACL by
-> passing down a 4-byte all-zero buffer as the new value of the
-> system.nfs4_acl xattr.
+On Fri, Jan 22, 2021 at 08:20:59AM +0000, Christoph Hellwig wrote:
+> On Thu, Jan 21, 2021 at 03:27:56PM -0500, J. Bruce Fields wrote:
+> > > Another indirect call just to fetch the change attribute (which happens
+> > > a lot IIRC) does not seem very optimal to me.
+> > 
+> > In the next patch we're removing an fh_getattr (vfs_getattr) in the case
+> > we call the new op, so that's typically a net decrease in indirect
+> > calls.
+> > 
+> > Though maybe we could use a flag here and do without either.
+> > 
+> > > And the fact that we need three duplicate implementations also is not
+> > > very nice.
+> > 
+> > Ext4 and xfs are identical, btrfs is a little different since it doesn't
+> > consult I_VERSION.  (And then there's nfs, which uses the origin
+> > server's i_version if it can.)
 > 
-> A zero-length NULL buffer is what's used to implement removexattr:
-> 
-> int
-> __vfs_removexattr(struct dentry *dentry, const char *name)
-> {
-> 	...
-> 	return handler->set(handler, dentry, inode, name, NULL, 0, XATTR_REPLACE);
-> }
-> 
-> That's the case this patch covers.
+> I'd much prefer to just keep consulting the I_VERSION flag and only
+> add the new op as an override for the NFS export.
 
-So, I should have said in the changelog, apologies--the behavior without
-this patch is that when it gets a removexattr, the client sends a
-SETATTR with a bitmap claiming there's an ACL attribute, but a
-zero-length attribute value list, and the server (correctly) returns
-BADXDR.
+OK, sorry for the delay, I'm not wedded to that second patch; I can just
+replace the test for the new export op by a test for either that or
+SB_I_VERSION, and it ends up being the same.  Will follow up in a
+moment.....
 
 --b.
