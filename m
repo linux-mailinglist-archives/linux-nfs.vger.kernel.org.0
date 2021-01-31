@@ -2,64 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08A7430CF22
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Feb 2021 23:37:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C36E309F92
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Feb 2021 00:46:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235831AbhBBWe3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Feb 2021 17:34:29 -0500
-Received: from [20.39.40.203] ([20.39.40.203]:61037 "EHLO optinix.in"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S230091AbhBBWeU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 2 Feb 2021 17:34:20 -0500
-dkim-signature: v=1; a=rsa-sha256; d=digitalsol.in; s=dkim;
-        c=relaxed/relaxed; q=dns/txt; h=From:Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=wK2neTcOXNiSQ+RBxrnFed+mRrGUU/ndLGEgvo8IMCc=;
-        b=Z/qoYR5e93G/1E5Uh8tLreepyziGYShILI7fcXozE97A3DqZKBadv9kcBZBcmHZnqAUcLkt0g+COxgI6WqJ5gdfKqksQSW540KJaAE4DNiZ+EZYtErJhsiZnZCgjfp9yI8W2dpgN2EsH5zUvgVY6Bl2MWU8ziaGqy1DCXSk4DXXi+2CTtkJX9uQrf2ohPvP7bhav6zr4dJxTQjQYoopWjV3h9j7RqQq/UIXqX3VBjVDZARoXQTZUB0KN0A
-        F7X8DeijiSCFEdYkkdQwasjHi3K0B6KloKBXegK0TgQ39PHt5t2MVnmtmeZadY0DbdImfujjk25mqjLTG700JJRoTl9A==
-Received: from User (Unknown [52.231.31.5])
-        by optinix.in with ESMTP
-        ; Sat, 30 Jan 2021 02:14:15 +0000
-Message-ID: <B0CC978E-0149-4652-A2D0-17DE1F49BCC1@optinix.in>
-Reply-To: <ms.reem@yandex.com>
-From:   "Ms. Reem" <support@digitalsol.in>
-Subject: Re:read
-Date:   Sat, 30 Jan 2021 02:14:13 -0000
+        id S229506AbhAaXqX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 31 Jan 2021 18:46:23 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60766 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229495AbhAaXqT (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 31 Jan 2021 18:46:19 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 5A490AC4F;
+        Sun, 31 Jan 2021 23:45:36 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Date:   Mon, 01 Feb 2021 10:45:31 +1100
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: releasing result pages in svc_xprt_release()
+In-Reply-To: <597824E7-3942-4F11-958F-A6E247330A9E@oracle.com>
+References: <811BE98B-F196-4EC1-899F-6B62F313640C@oracle.com>
+ <87im7ffjp0.fsf@notabene.neil.brown.name>
+ <597824E7-3942-4F11-958F-A6E247330A9E@oracle.com>
+Message-ID: <878s88fz6s.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
-and Petroleum" also "Minister of State for International Cooperation"
-in UAE. I write to you on behalf of my other "three (3) colleagues"
-who has approved me to solicit for your "partnership in claiming of
-{us$47=Million}" from a Financial Home in Cambodia on their behalf and
-for our "Mutual Benefits".
+On Fri, Jan 29 2021, Chuck Lever wrote:
 
-The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
-deal with Cambodian/Vietnam Government within 2013/2014, however, we
-don't want our government to know about the fund. If this proposal
-interests you, let me know, by sending me an email and I will send to
-you detailed information on how this business would be successfully
-transacted. Be informed that nobody knows about the secret of this
-fund except us, and we know how to carry out the entire transaction.
-So I am compelled to ask, that you will stand on our behalf and
-receive this fund into any account that is solely controlled by you.
+>> On Jan 29, 2021, at 5:43 PM, NeilBrown <neilb@suse.de> wrote:
+>>=20
+>> On Fri, Jan 29 2021, Chuck Lever wrote:
+>>=20
+>>> Hi Neil-
+>>>=20
+>>> I'd like to reduce the amount of page allocation that NFSD does,
+>>> and was wondering about the release and reset of pages in
+>>> svc_xprt_release(). This logic was added when the socket transport
+>>> was converted to use kernel_sendpage() back in 2002. Do you
+>>> remember why releasing the result pages is necessary?
+>>>=20
+>>=20
+>> Hi Chuck,
+>> as I recall, kernel_sendpage() (or sock->ops->sendpage() as it was
+>> then) takes a reference to the page and will hold that reference until
+>> the content has been sent and ACKed.  nfsd has no way to know when the
+>> ACK comes, so cannot know when the page can be re-used, so it must
+>> release the page and allocate a new one.
+>>=20
+>> This is the price we pay for zero-copy, and I acknowledge that it is a
+>> real price.  I wouldn't be surprised if the trade-offs between
+>> zero-copy and single-copy change over time, and between different
+>> hardware.
+>
+> Very interesting, thanks for the history! Two observations:
+>
+> - I thought without MSG_DONTWAIT, the sendpage operation would be
+> total synchronous -- when the network layer was done with retransmissions,
+> it would unblock the caller. But that's likely a mistaken assumption
+> on my part. That could be why sendmsg is so much slower than sendpage
+> in this particular application.
+>
 
-We will compensate you with 15% of the total amount involved as
-gratification for being our partner in this transaction. Reply to:
-ms.reem@yandex.com
+On the "send" side, I think MSG_DONTWAIT is primarily about memory
+allocation.  send_msg() can only return when the message is queued.  If
+it needs to allocate memory (or wait for space in a restricted queue),
+then MSG_DONTWAIT says "fail instead".  It certainly doesn't wait for
+successful xmit and ack.
+On the "recv" side it is quite different of course.
 
-Regards,
-Ms. Reem.
+> - IIUC, nfsd_splice_read() replaces anonymous pages in rq_pages with
+> actual page cache pages. Those of course cannot be used to construct
+> subsequent RPC Replies, so that introduces a second release requirement.
 
+Yep.  I wonder if those pages are protected against concurrent updates
+.. so that a computed checksum will remain accurate.
+
+>
+> So I have a way to make the first case unnecessary for RPC/RDMA. It
+> has a reliable Send completion mechanism. Sounds like releasing is
+> still necessary for TCP, though; maybe that could be done in the
+> xpo_release_rqst callback.
+
+It isn't clear to me what particular cost you are trying to reduce.  Is
+handing a page back from RDMA to nfsd cheaper than nfsd calling
+alloc_page(), or do you hope to keep batches of pages together to avoid
+multi-page overheads, or is this about cache-hot pages, or ???
+
+>
+> As far as nfsd_splice_read(), I had thought of moving those pages to
+> a separate array which would always be released. That would need to
+> deal with the transport requirements above.
+>
+> If nothing else, I would like to add mention of these requirements
+> somewhere in the code too.
+
+Strongly agree with that.
+
+>
+> What's your opinion?
+
+To form a coherent opinion, I would need to know what that problem is.
+I certainly accept that there could be performance problems in releasing
+and re-allocating pages which might be resolved by batching, or by copying,
+or by better tracking.  But without knowing what hot-spot you want to
+cool down, I cannot think about how that fits into the big picture.
+So: what exactly is the problem that you see?
+
+Thanks,
+NeilBrown
+
+
+>
+>
+> --
+> Chuck Lever
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJCBAEBCAAsFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAmAXQRwOHG5laWxiQHN1
+c2UuZGUACgkQOeye3VZigbm/5g//VnCiYNAm1U02K3RsE+30dsK9rKHYUsZC3YL0
+oqJRJ+xst4qgaF3/n3kPgu6w5tdVvr1G5hWK02+VJbm/yUkAkz8MI1nnfXzWqcjt
+atdnaAMfb2a9tGG1On7S1aH79E2P/tNUFrD6faki8lAmlCaeVbgNVjD6PvN2W8Ak
+hxuCAnGL1Ah54Ma3t4TFBfQ0fqII+NdUgwjpV3EBY8zIxNi43p7NzyZ8+U+9FhTZ
+q/pJI11Vm8JDWlQBOR/VBNJZlidAFLz8/HkBWgVB4cTs4VzSHkF7zzGP//H6pChl
+XHIOGU4x4IpuRdkEkRfGn4LkFlZpsw3DPCr/dkHasAITL63Y2t/HyMj9W20faCU0
+C1hWYGNqw/aQc44jardvV3nCpQwNusAUOI9fliZOh9BX/1wYi9PaxFJMXozSVS5n
+UWwhG5nWSYzI6/l0o4ArviBQw+SWFgul0v6mK8hDjWWJWbYt8iFls86SDU4rQFgt
+QeLu8ggx7c/33fnbtPvGbj7nyUFqwFTIC5eEXl0Qp2UM53tK2kNF69Wiol9WiZqX
+vP2wLNerAUoWvloKaS8fpZRYg7kBUQraO30/NqxKfXQZlm0iuzjB4sB+0BCf7+3C
+197SO6LX1oM4UWtJzBnP4ypEtDH8nmWoqt+FICELYl3MbboswqoajBeVNoxhTAL+
+LAEOuuU=
+=p+KS
+-----END PGP SIGNATURE-----
+--=-=-=--
