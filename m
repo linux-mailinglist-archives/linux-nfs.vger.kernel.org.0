@@ -2,160 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01AAB31116C
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Feb 2021 20:45:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF1BF3111B0
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Feb 2021 21:01:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230035AbhBESBp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 5 Feb 2021 13:01:45 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22964 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233217AbhBEPWo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 5 Feb 2021 10:22:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612544551;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=2q18CzBcxJvAu8Vj/9Xv+8eYOiYLfIpMMBqp/lRA8Jc=;
-        b=U72yp1HgA9Cwsen4QvMB9seFW1rnkekQDuVz1X4t7m80hOvQ79/4oeStIDub+EbCGn/b/v
-        73Gyur8BCA7x3lGaJq6aL49VIx2wxhar09Oy+ckSUWVRALQsEJ08b9KKKwDO3v3vQvYgMz
-        DupvEzFMgYiD9fJYiUwiXdDMhWrUBWA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-511-Ui2ao1J7MTWjBnKX2-SeOQ-1; Fri, 05 Feb 2021 12:02:24 -0500
-X-MC-Unique: Ui2ao1J7MTWjBnKX2-SeOQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD1AE100A625;
-        Fri,  5 Feb 2021 17:02:21 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1D00E1A353;
-        Fri,  5 Feb 2021 17:02:14 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        David Wysochanski <dwysocha@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        ceph-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cachefs@redhat.com, linux-cifs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Upcoming for next merge window: fscache and netfs lib
+        id S229702AbhBESRf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 5 Feb 2021 13:17:35 -0500
+Received: from [20.39.40.203] ([20.39.40.203]:55697 "EHLO optinix.in"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S233183AbhBEPTk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 5 Feb 2021 10:19:40 -0500
+dkim-signature: v=1; a=rsa-sha256; d=digitalsol.in; s=dkim;
+        c=relaxed/relaxed; q=dns/txt; h=From:Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=wK2neTcOXNiSQ+RBxrnFed+mRrGUU/ndLGEgvo8IMCc=;
+        b=JFt3cjfr2gf0oZFNAIkKMxcz4dJD/YGkc0fGvOoSd3DydZ6om7JzTU837vBFVq1NIPU0D2QA5BLHZXE1+7cBmkJlbZjYCUFmJkkaBVbP88e4KHnDVRcctmBLIZ1pL5VerRqjcciKkL4DSuyXFJlGk3Z0CRoskvUoLBM7ZhpxLeqIU2BKsbHQXJZ1h2qHQhaHiD+VrGx+bGKjZzbhmRvwLDQIByq6jRcjht5MzYCcxpzOzp/k+Dev9dQj7B
+        WId68CyP4XonlI4wIMRo1xiGfUtKZ+P3cZo2ejPWBjr+ynq3dK3OxibTTEKfmOc5W1zmJFMAPQ+ZKxsa3M4d1PiYxHmg==
+Received: from User (Unknown [52.231.31.5])
+        by optinix.in with ESMTP
+        ; Mon, 1 Feb 2021 08:50:14 +0000
+Message-ID: <D474448D-A325-42CC-A881-8334C6C84BA7@optinix.in>
+Reply-To: <ms.reem@yandex.com>
+From:   "Ms. Reem" <support@digitalsol.in>
+Subject: Re:read
+Date:   Mon, 1 Feb 2021 08:50:13 -0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date:   Fri, 05 Feb 2021 17:02:14 +0000
-Message-ID: <2522190.1612544534@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hello,
 
-Hi Linus,
+My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
+and Petroleum" also "Minister of State for International Cooperation"
+in UAE. I write to you on behalf of my other "three (3) colleagues"
+who has approved me to solicit for your "partnership in claiming of
+{us$47=Million}" from a Financial Home in Cambodia on their behalf and
+for our "Mutual Benefits".
 
-To apprise you in advance, I'm intending to submit a pull request for a
-partial modernisation of the fscache I/O subsystem, which can be found here:
+The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
+deal with Cambodian/Vietnam Government within 2013/2014, however, we
+don't want our government to know about the fund. If this proposal
+interests you, let me know, by sending me an email and I will send to
+you detailed information on how this business would be successfully
+transacted. Be informed that nobody knows about the secret of this
+fund except us, and we know how to carry out the entire transaction.
+So I am compelled to ask, that you will stand on our behalf and
+receive this fund into any account that is solely controlled by you.
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/=
-?h=3Dfscache-next
+We will compensate you with 15% of the total amount involved as
+gratification for being our partner in this transaction. Reply to:
+ms.reem@yandex.com
 
-The main parts of it are:
-
- (1) Institute a helper library for network filesystems.  The first stage of
-     this handles ->readpage(), ->readahead() and part of ->write_begin() on
-     behalf of the netfs, requiring the netfs to provide a vector to perfor=
-m a
-     read to some part of an inode.
-
-     This allows handling of the following to be (at least partially) moved
-     out of all the network filesystems and consolidated in one place:
-
-	- changes in VM vectors (Matthew Wilcox's Grand Plans=E2=84=A2;-)
-	  - transparent huge page support
-	- shaping of reads
-	  - readahead expansion
-	  - fs alignment/granularity (ceph, pnfs)
-	  - cache alignment/granularity
-	- slicing of reads
-	  - rsize
-	  - keeping multiple read in flight	} Steve French would like
-	  - multichannel distribution		} but for the future
-	  - multiserver distribution (ceph, pnfs)
-	  - stitching together reads from the cache and reads from the network
-	- saving data read from the server into the cache
-	- retry/reissue handling
-	  - fallback after cache failure
-     	- short reads
-	- fscrypt data decryption (Jeff Layton is considering for the future)
-
- (2) Add an alternate cache I/O API for use with the netfs lib that makes u=
-se
-     of kiocbs in the cache to do direct I/O between the cache files and the
-     netfs pages.
-
-     This is intended to replace the current I/O API that calls the backing=
- fs
-     readpage op and than snooping the wait queues for completion to read a=
-nd
-     using vfs_write() to write.  It wasn't possible to do in-kernel DIO wh=
-en
-     I first wrote cachefiles - and this makes it a lot simpler and more
-     robust (and uses a lot less memory).
-
- (3) Add an ITER_XARRAY iov_iter that allows I/O iteration to be done on an
-     xarray of pinned pages (such as inode->i_mapping->i_pages), thereby
-     avoiding the need to allocate a bvec array to represent this.
-
-     This is used to present a set of netfs pages to the cache to do DIO on
-     and is also used by afs to present netfs pages to sendmsg.  It could a=
-lso
-     be used by unencrypted cifs to pass the pages to the TCP socket it uses
-     (if it's doing TCP) and my patch for 9p (which isn't included here) can
-     make use of it.
-
- (4) Make afs use the above.  It passes the same xfstests (and has the same
-     failures) as the unpatched afs client.
-
- (5) Make ceph use the above (I've merged a branch from Jeff Layton for thi=
-s).
-     This also passes xfstests.
-
-Dave Wysochanski has a patch series for nfs.  Normal nfs works fine and pas=
-ses
-various tests, but it turned out pnfs has a problem - pnfs does splitting of
-requests itself and sending them to various places, but it needs to coopera=
-te
-more closely with netfs over this.  He's working on this.
-
-I've given Dominique Martinet a patch for 9p and Steve French a partial pat=
-ch
-for cifs, but neither of those is going to be ready this merge window eithe=
-r.
-
--~-
-
-Assuming you're willing to take this, should I submit one pull request for =
-the
-combined lot, or should I break it up into smaller requests (say with a
-separate request from Jeff for the ceph stuff).
-
-If we can get the netfs lib in this merge window, that simplifies dealing w=
-ith
-nfs and cifs particularly as the changes specific to those can go through t=
-he
-maintainer trees.
-
-Thanks,
-David
+Regards,
+Ms. Reem.
 
