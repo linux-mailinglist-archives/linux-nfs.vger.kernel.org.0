@@ -2,120 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2802F30A0FE
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Feb 2021 06:01:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC5A530A214
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Feb 2021 07:39:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229525AbhBAFBQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 1 Feb 2021 00:01:16 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50680 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229522AbhBAFBO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 1 Feb 2021 00:01:14 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4CADEAC45;
-        Mon,  1 Feb 2021 05:00:32 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Steve Dickson <steved@redhat.com>,
-        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Date:   Mon, 01 Feb 2021 16:00:27 +1100
-Subject: [PATCH nfs-utils v2] mount: fix parsing of default options
-In-Reply-To: <87lfccfx5t.fsf@notabene.neil.brown.name>
-References: <20210106184028.150925-1-steved@redhat.com>
- <87o8h8fx7a.fsf@notabene.neil.brown.name>
- <87lfccfx5t.fsf@notabene.neil.brown.name>
-Message-ID: <875z3cfklw.fsf@notabene.neil.brown.name>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        id S231760AbhBAGjA convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Mon, 1 Feb 2021 01:39:00 -0500
+Received: from 202-142-134-175.ca8e86.mel.static.aussiebb.net ([202.142.134.175]:51444
+        "EHLO mail.extremenerds.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232153AbhBAGQX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Feb 2021 01:16:23 -0500
+Received: from [192.168.1.81] (unknown [192.168.1.81])
+        by mail.extremenerds.net (Postfix) with ESMTPS id 47B2647696;
+        Mon,  1 Feb 2021 17:14:59 +1100 (AEDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.17\))
+Subject: Re: [PATCH v1] SUNRPC: Fix NFS READs that start at non-page-aligned
+ offsets
+From:   "A. Duvnjak" <avian@extremenerds.net>
+In-Reply-To: <161214078155.1093.2334504504623797564.stgit@klimt.1015granger.net>
+Date:   Mon, 1 Feb 2021 17:14:53 +1100
+Cc:     linux-nfs@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <A1D67DE8-6DA9-432C-B91D-A2AD6B148656@extremenerds.net>
+References: <161214078155.1093.2334504504623797564.stgit@klimt.1015granger.net>
+To:     Chuck Lever <chuck.lever@oracle.com>
+X-Mailer: Apple Mail (2.3445.104.17)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+I tried this patch on 5.10.12 (which would normally produce streaming errors).  So far it works well.   Have tried it in the three situations that would previously cause issues -  Kodi on Windows,  Kodi on Mac, and the Windows 10 NFS client with VLC.  All check out fine.
 
 
-A recent patch to change configfile.c to use parse_opt.c contained code
-which was intended to remove all "default*" options from the list before
-that could be passed to the kernel.  This code didn't work, so default*
-options WERE passed to the kernel, and the kernel complained and failed
-the mount attempt.
+> On 1 Feb 2021, at 11:53 am, Chuck Lever <chuck.lever@oracle.com> wrote:
+> 
+> Anj Duvnjak reports that the Kodi.tv NFS client is not able to read
+> video files from a v5.10.11 Linux NFS server.
+> 
+> The new sendpage-based TCP sendto logic was not attentive to non-
+> zero page_base values. nfsd_splice_read() sets that field when a
+> READ payload starts in the middle of a page.
+> 
+> The Linux NFS client rarely emits an NFS READ that is not page-
+> aligned. All of my testing so far has been with Linux clients, so I
+> missed this one.
+> 
+> Reported-by: A. Duvnjak <avian@extremenerds.net>
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=211471
+> Fixes: 4a85a6a3320b ("SUNRPC: Handle TCP socket sends with kernel_sendpage() again")
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+> net/sunrpc/svcsock.c |    7 ++++---
+> 1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> index c9766d07eb81..5a809c64dc7b 100644
+> --- a/net/sunrpc/svcsock.c
+> +++ b/net/sunrpc/svcsock.c
+> @@ -1113,14 +1113,15 @@ static int svc_tcp_sendmsg(struct socket *sock, struct msghdr *msg,
+> 		unsigned int offset, len, remaining;
+> 		struct bio_vec *bvec;
+> 
+> -		bvec = xdr->bvec;
+> -		offset = xdr->page_base;
+> +		bvec = xdr->bvec + (xdr->page_base >> PAGE_SHIFT);
+> +		offset = offset_in_page(xdr->page_base);
+> 		remaining = xdr->page_len;
+> 		flags = MSG_MORE | MSG_SENDPAGE_NOTLAST;
+> 		while (remaining > 0) {
+> 			if (remaining <= PAGE_SIZE && tail->iov_len == 0)
+> 				flags = 0;
+> -			len = min(remaining, bvec->bv_len);
+> +
+> +			len = min(remaining, bvec->bv_len - offset);
+> 			ret = kernel_sendpage(sock, bvec->bv_page,
+> 					      bvec->bv_offset + offset,
+> 					      len, flags);
+> 
+> 
 
-A more recent patch attempted to fix this by not including the
-"default*" options in the option list at all.  This resulting in
-global-default defaults over-riding per-mount or per-server defaults.
-
-This patch reverse the "more recent" patch, and fixes the original patch
-by providing correct code to remove all "default*" options before the
-kernel can see them.
-
-Fixes: 88c22f924f1b ("mount: convert configfile.c to use parse_opt.c")
-Fixes: 8142542bda28 ("mount: parse default values correctly")
-Signed-off-by: NeilBrown <neilb@suse.de>
-=2D--
-
-I realized that po_remove_all() could free 'ptr' and then compare it
-against the next option, which would have undefined results.
-So best to strdup and free it.
-
-
- utils/mount/configfile.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/utils/mount/configfile.c b/utils/mount/configfile.c
-index e865998dd5a9..3d3684efa186 100644
-=2D-- a/utils/mount/configfile.c
-+++ b/utils/mount/configfile.c
-@@ -277,10 +277,9 @@ conf_parse_mntopts(char *section, char *arg, struct mo=
-unt_options *options)
- 		}
- 		if (buf[0] =3D=3D '\0')
- 			continue;
-=2D		if (default_value(buf))
-=2D			continue;
-=20
- 		po_append(options, buf);
-+		default_value(buf);
- 	}
- 	conf_free_list(list);
- }
-@@ -335,7 +334,11 @@ char *conf_get_mntopts(char *spec, char *mount_point,
- 	 * Strip out defaults, which have already been handled,
- 	 * then join the rest and return.
- 	 */
-=2D	po_remove_all(options, "default");
-+	while (po_contains_prefix(options, "default", &ptr, 0) =3D=3D PO_FOUND) {
-+		ptr =3D strdup(ptr);
-+		po_remove_all(options, ptr);
-+		free(ptr);
-+	}
-=20
- 	po_join(options, &mount_opts);
- 	po_destroy(options);
-=2D-=20
-2.30.0
-
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJCBAEBCAAsFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAmAXiusOHG5laWxiQHN1
-c2UuZGUACgkQOeye3VZigbkxAhAAi9v0Jdv1NzjBZmhlYle6KYL51M62ZWgJfDmG
-WNnm9V/J/EoQBorKsVmqLtfEQvz7+hrUvJQSmww5Q7y1AFtBYOZX0ZqEMTN0742X
-90LTrymjCUt+P6JwZrFgDyuTHZgyJRyNB10YB/+FGVf5zH8+P6jcxrYDxmjssuRk
-3I2cMWyIh18F0vepAp5WVV8sp4/aw5JyOrzhb+KEUr7wqYxfzibI13HKZy8s4Umv
-j1ILaKdq6KKlwKqp+upzZc8gIdOaxTOXWQNfNCv9w2Dl/jCXrVaUAuAmI4ORVDj6
-8PqEaurWLlpL8otSimBd/ik4Ua6fjfTVs4GqN5V3J4n24f1aUDRmqSt3XZbd2umW
-l72vTpHixxX8IFTwbKo18hX89UpjyeZgIGjUAWM7NqmQgngRXbrEtBBYkGu0O0gn
-lqLXe2Qd4LUMdSGlaB2JnG+TNkQ8PaLFlAZKQRv5zFGn1bvjnIwTz+duaZWuZO5j
-IFvNqU6n0Oe4nYDIUK8Z4b4pgrw7HarHAwVvkrotr+74QSU+1jxMtmk8ilKkh4jI
-aHXl4Zaf1i49uPNeZYSlYRcW+z4FbyRyDBXkO9HXZR68xMk6IyW8lOJR7HUtp+s2
-M0DDxtctbO5wdf5g3qyZrUjSeD1stCix1LIfEfOP5IEkY+pIYzR2mWz/8TWS1zwd
-9SXCUpM=
-=l9QY
------END PGP SIGNATURE-----
---=-=-=--
