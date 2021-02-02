@@ -2,127 +2,79 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B5D630C23D
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Feb 2021 15:45:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4711830C526
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Feb 2021 17:15:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234707AbhBBOpa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Feb 2021 09:45:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57674 "EHLO mail.kernel.org"
+        id S232034AbhBBQOG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Feb 2021 11:14:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234431AbhBBOn3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 2 Feb 2021 09:43:29 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C38A864F49;
-        Tue,  2 Feb 2021 14:42:48 +0000 (UTC)
-Subject: [PATCH v1] xprtrdma: Simplify rpcrdma_convert_kvec() and frwr_map()
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Tue, 02 Feb 2021 09:42:47 -0500
-Message-ID: <161227696787.3689758.305854118266206775.stgit@manet.1015granger.net>
-User-Agent: StGit/0.23-29-ga622f1
+        id S235148AbhBBPJm (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 2 Feb 2021 10:09:42 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4462F64F54;
+        Tue,  2 Feb 2021 15:06:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612278386;
+        bh=F/psQyLY+nbOsPUKh+KYGIt8h2uncLnKEicsxK83SlI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vPB+rNHuFUo5rEImpTJbRd/U7N/EA7Angm38exKTTo/6RbTeGfC2xHlTVlDet5wWP
+         bjUtPoXviAxZ7hHvTcqyKVoSqOUAg4cBt+i7ZwkY9NNp+eL1DqO61RSzuHW6Fkaerf
+         FyjfQfo3j9YFlcex92v4h4ArKSSpoTGC2ztNNGP/6+0SpmB2K3pyursl70W93sPMwn
+         tRGVIFT0ag7tGZDS7saxeFqgayZ7luOb/ALKtVaYE9jWd+rys6eR4/aTis2ycpiTDh
+         407evaIDvnopC4zBCRFjx1cqisPFMjcY7WNHWrEMXQNrM/FHgUKDRVQXJLvOrBQ+iY
+         TAvkOPuInwioA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 08/25] pNFS/NFSv4: Try to return invalid layout in pnfs_layout_process()
+Date:   Tue,  2 Feb 2021 10:05:58 -0500
+Message-Id: <20210202150615.1864175-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20210202150615.1864175-1-sashal@kernel.org>
+References: <20210202150615.1864175-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up.
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Support for FMR was removed by commit ba69cd122ece ("xprtrdma:
-Remove support for FMR memory registration") [Dec 2018]. That means
-the buffer-splitting behavior of rpcrdma_convert_kvec(), added by
-commit 821c791a0bde ("xprtrdma: Segment head and tail XDR buffers
-on page boundaries") [Mar 2016], is no longer necessary. FRWR
-memory registration handles this case with aplomb.
+[ Upstream commit 08bd8dbe88825760e953759d7ec212903a026c75 ]
 
-A related simplification removes an extra conditional branch from
-the SGL set-up loop in frwr_map(): Instead of using either
-sg_set_page() or sg_set_buf(), initialize the mr_page field properly
-when rpcrdma_convert_kvec() converts the kvec to an SGL entry.
-frwr_map() can then invoke sg_set_page() unconditionally.
+If the server returns a new stateid that does not match the one in our
+cache, then try to return the one we hold instead of just invalidating
+it on the client side. This ensures that both client and server will
+agree that the stateid is invalid.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/frwr_ops.c  |   10 ++--------
- net/sunrpc/xprtrdma/rpc_rdma.c  |   21 +++++----------------
- net/sunrpc/xprtrdma/xprt_rdma.h |    2 +-
- 3 files changed, 8 insertions(+), 25 deletions(-)
+ fs/nfs/pnfs.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
-index baca49fe83af..5eb044a5f0be 100644
---- a/net/sunrpc/xprtrdma/frwr_ops.c
-+++ b/net/sunrpc/xprtrdma/frwr_ops.c
-@@ -306,14 +306,8 @@ struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
- 	if (nsegs > ep->re_max_fr_depth)
- 		nsegs = ep->re_max_fr_depth;
- 	for (i = 0; i < nsegs;) {
--		if (seg->mr_page)
--			sg_set_page(&mr->mr_sg[i],
--				    seg->mr_page,
--				    seg->mr_len,
--				    offset_in_page(seg->mr_offset));
--		else
--			sg_set_buf(&mr->mr_sg[i], seg->mr_offset,
--				   seg->mr_len);
-+		sg_set_page(&mr->mr_sg[i], seg->mr_page,
-+			    seg->mr_len, offset_in_page(seg->mr_offset));
- 
- 		++seg;
- 		++i;
-diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index 8f5d0cb68360..529adb6ad4db 100644
---- a/net/sunrpc/xprtrdma/rpc_rdma.c
-+++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -204,9 +204,7 @@ rpcrdma_alloc_sparse_pages(struct xdr_buf *buf)
- 	return 0;
- }
- 
--/* Split @vec on page boundaries into SGEs. FMR registers pages, not
-- * a byte range. Other modes coalesce these SGEs into a single MR
-- * when they can.
-+/* Convert @vec to a single SGL element.
-  *
-  * Returns pointer to next available SGE, and bumps the total number
-  * of SGEs consumed.
-@@ -215,21 +213,12 @@ static struct rpcrdma_mr_seg *
- rpcrdma_convert_kvec(struct kvec *vec, struct rpcrdma_mr_seg *seg,
- 		     unsigned int *n)
- {
--	u32 remaining, page_offset;
--	char *base;
--
--	base = vec->iov_base;
--	page_offset = offset_in_page(base);
--	remaining = vec->iov_len;
--	while (remaining) {
--		seg->mr_page = NULL;
--		seg->mr_offset = base;
--		seg->mr_len = min_t(u32, PAGE_SIZE - page_offset, remaining);
--		remaining -= seg->mr_len;
--		base += seg->mr_len;
-+	if (vec->iov_len) {
-+		seg->mr_page = virt_to_page(vec->iov_base);
-+		seg->mr_offset = vec->iov_base;
-+		seg->mr_len = vec->iov_len;
- 		++seg;
- 		++(*n);
--		page_offset = 0;
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index 471bfa273dade..cbe7a82d55824 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -2399,7 +2399,13 @@ pnfs_layout_process(struct nfs4_layoutget *lgp)
+ 		 * We got an entirely new state ID.  Mark all segments for the
+ 		 * inode invalid, and retry the layoutget
+ 		 */
+-		pnfs_mark_layout_stateid_invalid(lo, &free_me);
++		struct pnfs_layout_range range = {
++			.iomode = IOMODE_ANY,
++			.length = NFS4_MAX_UINT64,
++		};
++		pnfs_set_plh_return_info(lo, IOMODE_ANY, 0);
++		pnfs_mark_matching_lsegs_return(lo, &lo->plh_return_segs,
++						&range, 0);
+ 		goto out_forget;
  	}
- 	return seg;
- }
-diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
-index 94b28657aeeb..4a9fe6592795 100644
---- a/net/sunrpc/xprtrdma/xprt_rdma.h
-+++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-@@ -285,7 +285,7 @@ enum {
  
- struct rpcrdma_mr_seg {		/* chunk descriptors */
- 	u32		mr_len;		/* length of chunk or segment */
--	struct page	*mr_page;	/* owning page, if any */
-+	struct page	*mr_page;	/* underlying struct page */
- 	char		*mr_offset;	/* kva if no page, else offset */
- };
- 
-
+-- 
+2.27.0
 
