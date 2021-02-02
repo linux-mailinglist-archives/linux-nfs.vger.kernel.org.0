@@ -2,119 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C543C30CA93
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Feb 2021 19:56:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DF3F30CB53
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Feb 2021 20:21:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239108AbhBBSyL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Feb 2021 13:54:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239061AbhBBSxJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Feb 2021 13:53:09 -0500
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73FCDC06174A
-        for <linux-nfs@vger.kernel.org>; Tue,  2 Feb 2021 10:52:28 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id w1so31557767ejf.11
-        for <linux-nfs@vger.kernel.org>; Tue, 02 Feb 2021 10:52:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CQPbkej7XcLGbeGWq2tIkGYl9st7pwxv867zteDGzuA=;
-        b=pDMXQonMauO0+k8LnLFafpO0z59c5nepQcISMRHPmJpImktnPIyg+j7TQIh7S+zOge
-         48rm6XGPIFWrZt3jwzkL4TNrsALqd7NWcgXSQu7lsuv2EsecIIz8Q/FciuNvzHSI+ZvS
-         pFAJSOT2YRIqZkaKtOzycD9w/N9onf1RTI/+pjtY1WbnOMA+dsf+QCp77+JqA+onJ7pe
-         yfQCNomEKlhq7ta79qbcDCRXtt85somDOS4Gsz61OAt50V3NN1dR6/b3pzTYkJkMx7S1
-         hkaQWbB+bGpFrvqrZYrPxphzfJ+MFwAN18X4Er/JdiQ7MyTUFqFgBMGhQQ77KE3hen9K
-         rFvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CQPbkej7XcLGbeGWq2tIkGYl9st7pwxv867zteDGzuA=;
-        b=kNJMWUuA1QK9R+2dexOooYcZzxi5fHO/e3c7pzgeeBvtCdq6P17xgLi8YcyK6uQLAA
-         Q5WaLZ9NhSUsgAMoSDbxOwvCQ+88StKNcOLiwWbEZYs8R5kDWuIgeEbQfcU9kyIuofmw
-         aOqXSV+uXfufKAs6+N1IQ00k80IGCPIFM8PSecfA7r6HoKreSANhNqm00sxe0bbhAE3I
-         YSEEbHEDB75l5MvtJFo9N4hc3e9D5RvmlFBdjG1KnxuQS0rfopPK31/u4uopkWRg2Bx8
-         /dlqsVHWZRXQav6k1ux3n9KtA/ftH2AUpuFXFLURYuKSJty+d7xfRSXDN7hGtyzL7pzY
-         BfDQ==
-X-Gm-Message-State: AOAM53164hDP7XEQr4/9I2cbOsVFHKoyDoWSQ8YL/SBp3NkcbrOaXoWr
-        cFhaTCSNwXBfjcLbA1ifM0gYlWUj2Gjc2pgBp+E=
-X-Google-Smtp-Source: ABdhPJxjamK1MrtISLcR7q2tuD2Pcyy9TreicFeN1wNYkesiC+JEp/CwJlDgzstevF6ojIxTRh/+beTxdfBvsBXJmAE=
-X-Received: by 2002:a17:906:980b:: with SMTP id lm11mr725317ejb.46.1612291947109;
- Tue, 02 Feb 2021 10:52:27 -0800 (PST)
+        id S239328AbhBBTUu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Feb 2021 14:20:50 -0500
+Received: from p3plsmtpa08-09.prod.phx3.secureserver.net ([173.201.193.110]:57620
+        "EHLO p3plsmtpa08-09.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S239601AbhBBTTB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Feb 2021 14:19:01 -0500
+Received: from [192.168.0.116] ([71.184.94.153])
+        by :SMTPAUTH: with ESMTPSA
+        id 71Bal9vSjLcNc71BaluHVh; Tue, 02 Feb 2021 12:18:03 -0700
+X-CMAE-Analysis: v=2.4 cv=avt3tQVV c=1 sm=1 tr=0 ts=6019a56b
+ a=vbvdVb1zh1xTTaY8rfQfKQ==:117 a=vbvdVb1zh1xTTaY8rfQfKQ==:17
+ a=IkcTkHD0fZMA:10 a=yPCof4ZbAAAA:8 a=eBu2ZcF3FvbrOdrAn-4A:9 a=QEXdDO2ut3YA:10
+X-SECURESERVER-ACCT: tom@talpey.com
+Subject: Re: [PATCH v1] xprtrdma: Simplify rpcrdma_convert_kvec() and
+ frwr_map()
+To:     Chuck Lever <chuck.lever@oracle.com>, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
+References: <161227696787.3689758.305854118266206775.stgit@manet.1015granger.net>
+From:   Tom Talpey <tom@talpey.com>
+Message-ID: <e53cc3c2-2209-5f35-c487-9e59b9b9e526@talpey.com>
+Date:   Tue, 2 Feb 2021 14:18:03 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-References: <20210202184244.288898-1-Anna.Schumaker@Netapp.com> <75F3F315-84AA-41A0-A43A-C531042A9C47@oracle.com>
-In-Reply-To: <75F3F315-84AA-41A0-A43A-C531042A9C47@oracle.com>
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Tue, 2 Feb 2021 13:52:10 -0500
-Message-ID: <CAFX2JfktYGe4vDtXogFHurdyz4TJx5APj9pb-J5HmsDGC99kaA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] SUNRPC: Create sysfs files for changing IP
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Dan Aloni <dan@kernelim.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <161227696787.3689758.305854118266206775.stgit@manet.1015granger.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfFL3nY6CFG8AC38X5hM/0VaAVk+Uf8kqz7jbubdtKlVsXD3LU3eOBhayMc061k+8ROPa9dE038Xfw9hyi6XnsBOyqdqI/yYRhnuftC46uy19M0DhzQck
+ peELLxXftPsCDInvuKXyKAYZ36emKulJU/1gjBfe/LFSRFI8PWE3YFtasKqttpXp4hPQa+GJ5APgjEOWV3jrvpK7gAZ0Qux5GgGHRsOiJOGRhGbDnP4Wt4+S
+ grAEb/PG+598znT92zRewmnqeknu6at9z131C6GIDO29roplGI4k3Uqj6hSfq10GVtE8ZG9uEsLqf5ypeiDCSw==
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-You're welcome! I'll try to remember to CC him on future versions
+What's not to like about a log that uses the words "with aplomb"? :)
 
-On Tue, Feb 2, 2021 at 1:51 PM Chuck Lever <chuck.lever@oracle.com> wrote:
->
-> I want to ensure Dan is aware of this work. Thanks for posting, Anna!
->
-> > On Feb 2, 2021, at 1:42 PM, schumaker.anna@gmail.com wrote:
-> >
-> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> >
-> > It's possible for an NFS server to go down but come back up with a
-> > different IP address. These patches provide a way for administrators to
-> > handle this issue by providing a new IP address for xprt sockets to
-> > connect to.
-> >
-> > Chuck has suggested some ideas for future work that could also use this
-> > interface, such as:
-> > - srcaddr: To move between network devices on the client
-> > - type: "tcp", "rdma", "local"
-> > - bound: 0 for autobind, or the result of the most recent rpcbind query
-> > - connected: either true or false
-> > - last: read-only timestamp of the last operation to use the transport
-> > - device: A symlink to the physical network device
-> >
-> > Changes in v2:
-> > - Put files under /sys/kernel/sunrpc/ instead of /sys/net/sunrpc/
-> > - Rename file from "address" to "dstaddr"
-> >
-> > Thoughts?
-> > Anna
-> >
-> >
-> > Anna Schumaker (5):
-> >  sunrpc: Create a sunrpc directory under /sys/kernel/
-> >  sunrpc: Create a net/ subdirectory in the sunrpc sysfs
-> >  sunrpc: Create per-rpc_clnt sysfs kobjects
-> >  sunrpc: Prepare xs_connect() for taking NULL tasks
-> >  sunrpc: Create a per-rpc_clnt file for managing the destination IP
-> >    address
-> >
-> > include/linux/sunrpc/clnt.h |   1 +
-> > net/sunrpc/Makefile         |   2 +-
-> > net/sunrpc/clnt.c           |   5 ++
-> > net/sunrpc/sunrpc_syms.c    |   8 ++
-> > net/sunrpc/sysfs.c          | 168 ++++++++++++++++++++++++++++++++++++
-> > net/sunrpc/sysfs.h          |  22 +++++
-> > net/sunrpc/xprtsock.c       |   3 +-
-> > 7 files changed, 207 insertions(+), 2 deletions(-)
-> > create mode 100644 net/sunrpc/sysfs.c
-> > create mode 100644 net/sunrpc/sysfs.h
-> >
-> > --
-> > 2.29.2
-> >
->
-> --
-> Chuck Lever
->
->
->
+Minor related comment/question below.
+
+On 2/2/2021 9:42 AM, Chuck Lever wrote:
+> Clean up.
+> 
+> Support for FMR was removed by commit ba69cd122ece ("xprtrdma:
+> Remove support for FMR memory registration") [Dec 2018]. That means
+> the buffer-splitting behavior of rpcrdma_convert_kvec(), added by
+> commit 821c791a0bde ("xprtrdma: Segment head and tail XDR buffers
+> on page boundaries") [Mar 2016], is no longer necessary. FRWR
+> memory registration handles this case with aplomb.
+> 
+> A related simplification removes an extra conditional branch from
+> the SGL set-up loop in frwr_map(): Instead of using either
+> sg_set_page() or sg_set_buf(), initialize the mr_page field properly
+> when rpcrdma_convert_kvec() converts the kvec to an SGL entry.
+> frwr_map() can then invoke sg_set_page() unconditionally.
+> 
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>   net/sunrpc/xprtrdma/frwr_ops.c  |   10 ++--------
+>   net/sunrpc/xprtrdma/rpc_rdma.c  |   21 +++++----------------
+>   net/sunrpc/xprtrdma/xprt_rdma.h |    2 +-
+>   3 files changed, 8 insertions(+), 25 deletions(-)
+> 
+> diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
+> index baca49fe83af..5eb044a5f0be 100644
+> --- a/net/sunrpc/xprtrdma/frwr_ops.c
+> +++ b/net/sunrpc/xprtrdma/frwr_ops.c
+> @@ -306,14 +306,8 @@ struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
+>   	if (nsegs > ep->re_max_fr_depth)
+>   		nsegs = ep->re_max_fr_depth;
+>   	for (i = 0; i < nsegs;) {
+> -		if (seg->mr_page)
+> -			sg_set_page(&mr->mr_sg[i],
+> -				    seg->mr_page,
+> -				    seg->mr_len,
+> -				    offset_in_page(seg->mr_offset));
+> -		else
+> -			sg_set_buf(&mr->mr_sg[i], seg->mr_offset,
+> -				   seg->mr_len);
+> +		sg_set_page(&mr->mr_sg[i], seg->mr_page,
+> +			    seg->mr_len, offset_in_page(seg->mr_offset));
+>   
+>   		++seg;
+>   		++i;
+> diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
+> index 8f5d0cb68360..529adb6ad4db 100644
+> --- a/net/sunrpc/xprtrdma/rpc_rdma.c
+> +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+> @@ -204,9 +204,7 @@ rpcrdma_alloc_sparse_pages(struct xdr_buf *buf)
+>   	return 0;
+>   }
+>   
+> -/* Split @vec on page boundaries into SGEs. FMR registers pages, not
+> - * a byte range. Other modes coalesce these SGEs into a single MR
+> - * when they can.
+> +/* Convert @vec to a single SGL element.
+>    *
+>    * Returns pointer to next available SGE, and bumps the total number
+>    * of SGEs consumed.
+> @@ -215,21 +213,12 @@ static struct rpcrdma_mr_seg *
+>   rpcrdma_convert_kvec(struct kvec *vec, struct rpcrdma_mr_seg *seg,
+>   		     unsigned int *n)
+>   {
+> -	u32 remaining, page_offset;
+> -	char *base;
+> -
+> -	base = vec->iov_base;
+> -	page_offset = offset_in_page(base);
+> -	remaining = vec->iov_len;
+> -	while (remaining) {
+> -		seg->mr_page = NULL;
+> -		seg->mr_offset = base;
+> -		seg->mr_len = min_t(u32, PAGE_SIZE - page_offset, remaining);
+> -		remaining -= seg->mr_len;
+> -		base += seg->mr_len;
+> +	if (vec->iov_len) {
+> +		seg->mr_page = virt_to_page(vec->iov_base);
+> +		seg->mr_offset = vec->iov_base;
+> +		seg->mr_len = vec->iov_len;
+>   		++seg;
+>   		++(*n);
+> -		page_offset = 0;
+>   	}
+>   	return seg;
+>   }
+> diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+> index 94b28657aeeb..4a9fe6592795 100644
+> --- a/net/sunrpc/xprtrdma/xprt_rdma.h
+> +++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+> @@ -285,7 +285,7 @@ enum {
+>   
+>   struct rpcrdma_mr_seg {		/* chunk descriptors */
+>   	u32		mr_len;		/* length of chunk or segment */
+> -	struct page	*mr_page;	/* owning page, if any */
+> +	struct page	*mr_page;	/* underlying struct page */
+>   	char		*mr_offset;	/* kva if no page, else offset */
+
+Is this comment ("kva if no page") actually correct? The hunk just
+above is an example of a case where mr_page is set, yet mr_offset
+is an iov_base. Is iov_base not a kva?
+
+Tom.
+
+>   };
+>   
+> 
+> 
+> 
