@@ -2,118 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94C1230C395
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Feb 2021 16:24:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB62A30C6EC
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Feb 2021 18:06:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233118AbhBBPXD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Feb 2021 10:23:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235361AbhBBPQz (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 2 Feb 2021 10:16:55 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 73BED64FA9;
-        Tue,  2 Feb 2021 15:07:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612278477;
-        bh=7HAX9sU+l6BNdNYSlFXNawad2Tcj2aC8xHHqNBYP1s8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XKvx3yKCr3Aet+YOW3UkW7IkbzSa74OLdT8mMUHQNwg6a9eXn3X4XRVquyJ601nlO
-         frR1KPWYwsQzVaX+PA0SGq4yHP3diH9dXNc8h55udX2VkaITK8mWJvAzsFPKKtTViq
-         HIn6mOKkh2xsqGeVFdx/loynQiJZHBGXWPBF6UNief//5VSQvo9UwUBEtJgBfLmTfk
-         MFqfsj6R2xOoecDMYaRp8MsaE7UvX/uMXRu7SGVZ/0HjCZL4V9K72j5s12qjmbEyD4
-         25b9KJNwDKfwEullOzRoVGxGudaStqbdgjTohcNjr+gsaE70sQkokjW2LYBYxb7+zs
-         tCKyoYTseOVqw==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Wysochanski <dwysocha@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 5/5] SUNRPC: Handle 0 length opaque XDR object data properly
-Date:   Tue,  2 Feb 2021 10:07:50 -0500
-Message-Id: <20210202150750.1864953-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210202150750.1864953-1-sashal@kernel.org>
-References: <20210202150750.1864953-1-sashal@kernel.org>
+        id S237170AbhBBREd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Feb 2021 12:04:33 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:27565 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236318AbhBBRAv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Feb 2021 12:00:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1612285162;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LqPjowFOIhHHzFKRXTk+xJ9T1CMz1/doRKVSIXtmAf4=;
+        b=Rfc3diGilomWUNPFmyC3fFFc/L6KiArjheswMUcvpA8Rmj28tfR8iaBbG1g3f3unV71r7P
+        tryxExBOGYHGQoCWEHwtV+qVfagSyWa+aO7pnA7Ag7KIArjj/yLCbZ6U6rr52mBMPuRJfm
+        rwRvX1I0Nn19YH49PgCKySrrrEEcDN4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-596-Qgg8fp4dORaQpbvmK-sJ0A-1; Tue, 02 Feb 2021 11:59:21 -0500
+X-MC-Unique: Qgg8fp4dORaQpbvmK-sJ0A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 324DB804004;
+        Tue,  2 Feb 2021 16:59:20 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-114-82.phx2.redhat.com [10.3.114.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E00625C1CF;
+        Tue,  2 Feb 2021 16:59:19 +0000 (UTC)
+Subject: Re: [PATCH nfs-utils v2] mount: fix parsing of default options
+To:     NeilBrown <neilb@suse.de>,
+        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20210106184028.150925-1-steved@redhat.com>
+ <87o8h8fx7a.fsf@notabene.neil.brown.name>
+ <87lfccfx5t.fsf@notabene.neil.brown.name>
+ <875z3cfklw.fsf@notabene.neil.brown.name>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <6a5fc99d-90e7-b58b-7650-d1d294cad6ef@RedHat.com>
+Date:   Tue, 2 Feb 2021 12:00:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <875z3cfklw.fsf@notabene.neil.brown.name>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Dave Wysochanski <dwysocha@redhat.com>
 
-[ Upstream commit e4a7d1f7707eb44fd953a31dd59eff82009d879c ]
 
-When handling an auth_gss downcall, it's possible to get 0-length
-opaque object for the acceptor.  In the case of a 0-length XDR
-object, make sure simple_get_netobj() fills in dest->data = NULL,
-and does not continue to kmemdup() which will set
-dest->data = ZERO_SIZE_PTR for the acceptor.
+On 2/1/21 12:00 AM, NeilBrown wrote:
+> 
+> A recent patch to change configfile.c to use parse_opt.c contained code
+> which was intended to remove all "default*" options from the list before
+> that could be passed to the kernel.  This code didn't work, so default*
+> options WERE passed to the kernel, and the kernel complained and failed
+> the mount attempt.
+> 
+> A more recent patch attempted to fix this by not including the
+> "default*" options in the option list at all.  This resulting in
+> global-default defaults over-riding per-mount or per-server defaults.
+> 
+> This patch reverse the "more recent" patch, and fixes the original patch
+> by providing correct code to remove all "default*" options before the
+> kernel can see them.
+> 
+> Fixes: 88c22f924f1b ("mount: convert configfile.c to use parse_opt.c")
+> Fixes: 8142542bda28 ("mount: parse default values correctly")
+> Signed-off-by: NeilBrown <neilb@suse.de>
+Committed.... (tag: nfs-utils-2-5-3-rc5)
 
-The trace event code can handle NULL but not ZERO_SIZE_PTR for a
-string, and so without this patch the rpcgss_context trace event
-will crash the kernel as follows:
-
-[  162.887992] BUG: kernel NULL pointer dereference, address: 0000000000000010
-[  162.898693] #PF: supervisor read access in kernel mode
-[  162.900830] #PF: error_code(0x0000) - not-present page
-[  162.902940] PGD 0 P4D 0
-[  162.904027] Oops: 0000 [#1] SMP PTI
-[  162.905493] CPU: 4 PID: 4321 Comm: rpc.gssd Kdump: loaded Not tainted 5.10.0 #133
-[  162.908548] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-[  162.910978] RIP: 0010:strlen+0x0/0x20
-[  162.912505] Code: 48 89 f9 74 09 48 83 c1 01 80 39 00 75 f7 31 d2 44 0f b6 04 16 44 88 04 11 48 83 c2 01 45 84 c0 75 ee c3 0f 1f 80 00 00 00 00 <80> 3f 00 74 10 48 89 f8 48 83 c0 01 80 38 00 75 f7 48 29 f8 c3 31
-[  162.920101] RSP: 0018:ffffaec900c77d90 EFLAGS: 00010202
-[  162.922263] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00000000fffde697
-[  162.925158] RDX: 000000000000002f RSI: 0000000000000080 RDI: 0000000000000010
-[  162.928073] RBP: 0000000000000010 R08: 0000000000000e10 R09: 0000000000000000
-[  162.930976] R10: ffff8e698a590cb8 R11: 0000000000000001 R12: 0000000000000e10
-[  162.933883] R13: 00000000fffde697 R14: 000000010034d517 R15: 0000000000070028
-[  162.936777] FS:  00007f1e1eb93700(0000) GS:ffff8e6ab7d00000(0000) knlGS:0000000000000000
-[  162.940067] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  162.942417] CR2: 0000000000000010 CR3: 0000000104eba000 CR4: 00000000000406e0
-[  162.945300] Call Trace:
-[  162.946428]  trace_event_raw_event_rpcgss_context+0x84/0x140 [auth_rpcgss]
-[  162.949308]  ? __kmalloc_track_caller+0x35/0x5a0
-[  162.951224]  ? gss_pipe_downcall+0x3a3/0x6a0 [auth_rpcgss]
-[  162.953484]  gss_pipe_downcall+0x585/0x6a0 [auth_rpcgss]
-[  162.955953]  rpc_pipe_write+0x58/0x70 [sunrpc]
-[  162.957849]  vfs_write+0xcb/0x2c0
-[  162.959264]  ksys_write+0x68/0xe0
-[  162.960706]  do_syscall_64+0x33/0x40
-[  162.962238]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  162.964346] RIP: 0033:0x7f1e1f1e57df
-
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/sunrpc/auth_gss/auth_gss_internal.h | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/net/sunrpc/auth_gss/auth_gss_internal.h b/net/sunrpc/auth_gss/auth_gss_internal.h
-index c5603242b54bf..f6d9631bd9d00 100644
---- a/net/sunrpc/auth_gss/auth_gss_internal.h
-+++ b/net/sunrpc/auth_gss/auth_gss_internal.h
-@@ -34,9 +34,12 @@ simple_get_netobj(const void *p, const void *end, struct xdr_netobj *dest)
- 	q = (const void *)((const char *)p + len);
- 	if (unlikely(q > end || q < p))
- 		return ERR_PTR(-EFAULT);
--	dest->data = kmemdup(p, len, GFP_NOFS);
--	if (unlikely(dest->data == NULL))
--		return ERR_PTR(-ENOMEM);
-+	if (len) {
-+		dest->data = kmemdup(p, len, GFP_NOFS);
-+		if (unlikely(dest->data == NULL))
-+			return ERR_PTR(-ENOMEM);
-+	} else
-+		dest->data = NULL;
- 	dest->len = len;
- 	return q;
- }
--- 
-2.27.0
+steved.
+> ---
+> 
+> I realized that po_remove_all() could free 'ptr' and then compare it
+> against the next option, which would have undefined results.
+> So best to strdup and free it.
+> 
+> 
+>  utils/mount/configfile.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/utils/mount/configfile.c b/utils/mount/configfile.c
+> index e865998dd5a9..3d3684efa186 100644
+> --- a/utils/mount/configfile.c
+> +++ b/utils/mount/configfile.c
+> @@ -277,10 +277,9 @@ conf_parse_mntopts(char *section, char *arg, struct mount_options *options)
+>  		}
+>  		if (buf[0] == '\0')
+>  			continue;
+> -		if (default_value(buf))
+> -			continue;
+>  
+>  		po_append(options, buf);
+> +		default_value(buf);
+>  	}
+>  	conf_free_list(list);
+>  }
+> @@ -335,7 +334,11 @@ char *conf_get_mntopts(char *spec, char *mount_point,
+>  	 * Strip out defaults, which have already been handled,
+>  	 * then join the rest and return.
+>  	 */
+> -	po_remove_all(options, "default");
+> +	while (po_contains_prefix(options, "default", &ptr, 0) == PO_FOUND) {
+> +		ptr = strdup(ptr);
+> +		po_remove_all(options, ptr);
+> +		free(ptr);
+> +	}
+>  
+>  	po_join(options, &mount_opts);
+>  	po_destroy(options);
+> 
 
