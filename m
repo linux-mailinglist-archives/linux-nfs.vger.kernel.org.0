@@ -2,34 +2,36 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 130A630C509
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Feb 2021 17:11:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C98230C4CE
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Feb 2021 17:04:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235838AbhBBQKR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Feb 2021 11:10:17 -0500
+        id S236000AbhBBQCO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Feb 2021 11:02:14 -0500
 Received: from mail.kernel.org ([198.145.29.99]:38142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234968AbhBBPJm (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 2 Feb 2021 10:09:42 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5549564F64;
-        Tue,  2 Feb 2021 15:06:27 +0000 (UTC)
+        id S235189AbhBBPL6 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 2 Feb 2021 10:11:58 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3340F64F6B;
+        Tue,  2 Feb 2021 15:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612278387;
-        bh=VqIb8zJZ2BP7IvgMgSZbFaL0F0xc3/d7IDt5OBYA6D0=;
+        s=k20201202; t=1612278404;
+        bh=KGm6BrRijFSMwbWk/+YuKTspHhjNHf8+XnDYSjl74TE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CZRPWCs6l5m17DTf4UVBz4NexL+6cX2yUHdjDODbvGfd+EezncCDIKfzQLyTx7z/1
-         l2enfpKO4uA1BJp9S3KsVs0+rDKPZ2TOZeKcTisA+OijniY8DQtY2D4MshPFVX1N77
-         8YuQBqytjqPpvDrDE5+fdQWsS2dIZ6Yf2n7veI2bSMH2AuleF2hKkuBnbBbrFewwKI
-         VDAKaxGqrKzaC7u3denZPqDqu969m7GiZ7vwVe23iEvsVDaOvW2uvYIXjFNsiqTB1N
-         bxxMEGwt2cG8jurb2tnA+MIXA0zEJkSQgQKK6fQgEI6KDCttxLec/l9YqQx2XjjsJq
-         5EDg3rphjy1yg==
+        b=momhxDZ8/GJm0MUayCIKMOUBQHY4RPO215s5Vm0BdqpHdW6A17jRDQDkItllwMgXM
+         xgILRu4/M/BnXpNY9wcEJoWYVmGivRWTn+na0UjVY8+5xEx9vwxkRv/iqIGlvkiSkV
+         Kg+VYCYVgQX/7eKrXMFqxuEcFJ/qGEERG9MJ83Dcy2q8+I0kb4+aMsHp8zs93Pudvp
+         QBrtSuUlr76KrfVZq4sykgUphQLHFXGnGBMbhAJjeymLkcCxGTyein+8JGwQMUqGss
+         iAE2bhrR6CHDc/adRUb4sdNF5F9nGbi2M03wacd7SqOU64N/mdDN/VJMqRg/XbRlh8
+         M5eTD8NbMUekQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 09/25] pNFS/NFSv4: Improve rejection of out-of-order layouts
-Date:   Tue,  2 Feb 2021 10:05:59 -0500
-Message-Id: <20210202150615.1864175-9-sashal@kernel.org>
+Cc:     Dave Wysochanski <dwysocha@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 21/25] SUNRPC: Move simple_get_bytes and simple_get_netobj into private header
+Date:   Tue,  2 Feb 2021 10:06:11 -0500
+Message-Id: <20210202150615.1864175-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210202150615.1864175-1-sashal@kernel.org>
 References: <20210202150615.1864175-1-sashal@kernel.org>
@@ -41,84 +43,187 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Dave Wysochanski <dwysocha@redhat.com>
 
-[ Upstream commit d29b468da4f940bd2bff2628ba8d2d652671d244 ]
+[ Upstream commit ba6dfce47c4d002d96cd02a304132fca76981172 ]
 
-If a layoutget ends up being reordered w.r.t. a layoutreturn, e.g. due
-to a layoutget-on-open not knowing a priori which file to lock, then we
-must assume the layout is no longer being considered valid state by the
-server.
-Incrementally improve our ability to reject such states by using the
-cached old stateid in conjunction with the plh_barrier to try to
-identify them.
+Remove duplicated helper functions to parse opaque XDR objects
+and place inside new file net/sunrpc/auth_gss/auth_gss_internal.h.
+In the new file carry the license and copyright from the source file
+net/sunrpc/auth_gss/auth_gss.c.  Finally, update the comment inside
+include/linux/sunrpc/xdr.h since lockd is not the only user of
+struct xdr_netobj.
 
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pnfs.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ include/linux/sunrpc/xdr.h              |  3 +-
+ net/sunrpc/auth_gss/auth_gss.c          | 30 +-----------------
+ net/sunrpc/auth_gss/auth_gss_internal.h | 42 +++++++++++++++++++++++++
+ net/sunrpc/auth_gss/gss_krb5_mech.c     | 31 ++----------------
+ 4 files changed, 46 insertions(+), 60 deletions(-)
+ create mode 100644 net/sunrpc/auth_gss/auth_gss_internal.h
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index cbe7a82d55824..bbf1d34d79a44 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -994,7 +994,7 @@ pnfs_layout_stateid_blocked(const struct pnfs_layout_hdr *lo,
+diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+index 9548d075e06da..b998e4b736912 100644
+--- a/include/linux/sunrpc/xdr.h
++++ b/include/linux/sunrpc/xdr.h
+@@ -25,8 +25,7 @@ struct rpc_rqst;
+ #define XDR_QUADLEN(l)		(((l) + 3) >> 2)
+ 
+ /*
+- * Generic opaque `network object.' At the kernel level, this type
+- * is used only by lockd.
++ * Generic opaque `network object.'
+  */
+ #define XDR_MAX_NETOBJ		1024
+ struct xdr_netobj {
+diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
+index 4ecc2a9595674..5f42aa5fc6128 100644
+--- a/net/sunrpc/auth_gss/auth_gss.c
++++ b/net/sunrpc/auth_gss/auth_gss.c
+@@ -29,6 +29,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/hashtable.h>
+ 
++#include "auth_gss_internal.h"
+ #include "../netns.h"
+ 
+ #include <trace/events/rpcgss.h>
+@@ -125,35 +126,6 @@ gss_cred_set_ctx(struct rpc_cred *cred, struct gss_cl_ctx *ctx)
+ 	clear_bit(RPCAUTH_CRED_NEW, &cred->cr_flags);
+ }
+ 
+-static const void *
+-simple_get_bytes(const void *p, const void *end, void *res, size_t len)
+-{
+-	const void *q = (const void *)((const char *)p + len);
+-	if (unlikely(q > end || q < p))
+-		return ERR_PTR(-EFAULT);
+-	memcpy(res, p, len);
+-	return q;
+-}
+-
+-static inline const void *
+-simple_get_netobj(const void *p, const void *end, struct xdr_netobj *dest)
+-{
+-	const void *q;
+-	unsigned int len;
+-
+-	p = simple_get_bytes(p, end, &len, sizeof(len));
+-	if (IS_ERR(p))
+-		return p;
+-	q = (const void *)((const char *)p + len);
+-	if (unlikely(q > end || q < p))
+-		return ERR_PTR(-EFAULT);
+-	dest->data = kmemdup(p, len, GFP_NOFS);
+-	if (unlikely(dest->data == NULL))
+-		return ERR_PTR(-ENOMEM);
+-	dest->len = len;
+-	return q;
+-}
+-
+ static struct gss_cl_ctx *
+ gss_cred_get_ctx(struct rpc_cred *cred)
  {
- 	u32 seqid = be32_to_cpu(stateid->seqid);
- 
--	return !pnfs_seqid_is_newer(seqid, lo->plh_barrier);
-+	return !pnfs_seqid_is_newer(seqid, lo->plh_barrier) && lo->plh_barrier;
- }
- 
- /* lget is set to 1 if called from inside send_layoutget call chain */
-@@ -1910,6 +1910,11 @@ static void nfs_layoutget_end(struct pnfs_layout_hdr *lo)
- 		wake_up_var(&lo->plh_outstanding);
- }
- 
-+static bool pnfs_is_first_layoutget(struct pnfs_layout_hdr *lo)
+diff --git a/net/sunrpc/auth_gss/auth_gss_internal.h b/net/sunrpc/auth_gss/auth_gss_internal.h
+new file mode 100644
+index 0000000000000..c5603242b54bf
+--- /dev/null
++++ b/net/sunrpc/auth_gss/auth_gss_internal.h
+@@ -0,0 +1,42 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * linux/net/sunrpc/auth_gss/auth_gss_internal.h
++ *
++ * Internal definitions for RPCSEC_GSS client authentication
++ *
++ * Copyright (c) 2000 The Regents of the University of Michigan.
++ * All rights reserved.
++ *
++ */
++#include <linux/err.h>
++#include <linux/string.h>
++#include <linux/sunrpc/xdr.h>
++
++static inline const void *
++simple_get_bytes(const void *p, const void *end, void *res, size_t len)
 +{
-+	return test_bit(NFS_LAYOUT_FIRST_LAYOUTGET, &lo->plh_flags);
++	const void *q = (const void *)((const char *)p + len);
++	if (unlikely(q > end || q < p))
++		return ERR_PTR(-EFAULT);
++	memcpy(res, p, len);
++	return q;
 +}
 +
- static void pnfs_clear_first_layoutget(struct pnfs_layout_hdr *lo)
- {
- 	unsigned long *bitlock = &lo->plh_flags;
-@@ -2384,17 +2389,17 @@ pnfs_layout_process(struct nfs4_layoutget *lgp)
- 		goto out_forget;
- 	}
++static inline const void *
++simple_get_netobj(const void *p, const void *end, struct xdr_netobj *dest)
++{
++	const void *q;
++	unsigned int len;
++
++	p = simple_get_bytes(p, end, &len, sizeof(len));
++	if (IS_ERR(p))
++		return p;
++	q = (const void *)((const char *)p + len);
++	if (unlikely(q > end || q < p))
++		return ERR_PTR(-EFAULT);
++	dest->data = kmemdup(p, len, GFP_NOFS);
++	if (unlikely(dest->data == NULL))
++		return ERR_PTR(-ENOMEM);
++	dest->len = len;
++	return q;
++}
+diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
+index ae9acf3a73898..1c092b05c2bba 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_mech.c
++++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
+@@ -21,6 +21,8 @@
+ #include <linux/sunrpc/xdr.h>
+ #include <linux/sunrpc/gss_krb5_enctypes.h>
  
--	if (!pnfs_layout_is_valid(lo)) {
--		/* We have a completely new layout */
--		pnfs_set_layout_stateid(lo, &res->stateid, lgp->cred, true);
--	} else if (nfs4_stateid_match_other(&lo->plh_stateid, &res->stateid)) {
-+	if (nfs4_stateid_match_other(&lo->plh_stateid, &res->stateid)) {
- 		/* existing state ID, make sure the sequence number matches. */
- 		if (pnfs_layout_stateid_blocked(lo, &res->stateid)) {
-+			if (!pnfs_layout_is_valid(lo) &&
-+			    pnfs_is_first_layoutget(lo))
-+				lo->plh_barrier = 0;
- 			dprintk("%s forget reply due to sequence\n", __func__);
- 			goto out_forget;
- 		}
- 		pnfs_set_layout_stateid(lo, &res->stateid, lgp->cred, false);
--	} else {
-+	} else if (pnfs_layout_is_valid(lo)) {
- 		/*
- 		 * We got an entirely new state ID.  Mark all segments for the
- 		 * inode invalid, and retry the layoutget
-@@ -2407,6 +2412,11 @@ pnfs_layout_process(struct nfs4_layoutget *lgp)
- 		pnfs_mark_matching_lsegs_return(lo, &lo->plh_return_segs,
- 						&range, 0);
- 		goto out_forget;
-+	} else {
-+		/* We have a completely new layout */
-+		if (!pnfs_is_first_layoutget(lo))
-+			goto out_forget;
-+		pnfs_set_layout_stateid(lo, &res->stateid, lgp->cred, true);
- 	}
++#include "auth_gss_internal.h"
++
+ #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+ # define RPCDBG_FACILITY	RPCDBG_AUTH
+ #endif
+@@ -143,35 +145,6 @@ get_gss_krb5_enctype(int etype)
+ 	return NULL;
+ }
  
- 	pnfs_get_lseg(lseg);
+-static const void *
+-simple_get_bytes(const void *p, const void *end, void *res, int len)
+-{
+-	const void *q = (const void *)((const char *)p + len);
+-	if (unlikely(q > end || q < p))
+-		return ERR_PTR(-EFAULT);
+-	memcpy(res, p, len);
+-	return q;
+-}
+-
+-static const void *
+-simple_get_netobj(const void *p, const void *end, struct xdr_netobj *res)
+-{
+-	const void *q;
+-	unsigned int len;
+-
+-	p = simple_get_bytes(p, end, &len, sizeof(len));
+-	if (IS_ERR(p))
+-		return p;
+-	q = (const void *)((const char *)p + len);
+-	if (unlikely(q > end || q < p))
+-		return ERR_PTR(-EFAULT);
+-	res->data = kmemdup(p, len, GFP_NOFS);
+-	if (unlikely(res->data == NULL))
+-		return ERR_PTR(-ENOMEM);
+-	res->len = len;
+-	return q;
+-}
+-
+ static inline const void *
+ get_key(const void *p, const void *end,
+ 	struct krb5_ctx *ctx, struct crypto_sync_skcipher **res)
 -- 
 2.27.0
 
