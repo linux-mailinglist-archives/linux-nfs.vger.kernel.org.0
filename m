@@ -2,39 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E9D230C4C9
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Feb 2021 17:04:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E283930C485
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Feb 2021 16:55:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235929AbhBBQBy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Feb 2021 11:01:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38189 "EHLO mail.kernel.org"
+        id S235879AbhBBPyg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Feb 2021 10:54:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235190AbhBBPL6 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 2 Feb 2021 10:11:58 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 66E8C64F63;
-        Tue,  2 Feb 2021 15:06:44 +0000 (UTC)
+        id S229631AbhBBPMZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 2 Feb 2021 10:12:25 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 95F8B64F89;
+        Tue,  2 Feb 2021 15:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612278405;
-        bh=7HAX9sU+l6BNdNYSlFXNawad2Tcj2aC8xHHqNBYP1s8=;
+        s=k20201202; t=1612278419;
+        bh=CNutUJLVZeWVeQ6N54+/9JrTYSbl7T40hQXRsJiEKd0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X30bbJ7i9VoBr6LQjWgHMbhfJ9K272vgqwmIJCJlC+yMsrx5wY6KUI5dIfyTRkicL
-         j5+S5xBlUVvRre3xMkv/7lx9kcx0+P/EiOHyroYFe/DV+lrBo3OFxBk7hKoTAC5u8F
-         FO9wVns3wknwcvkuakcoXhb2DJ/mNsRoEfeN00bsL+2TGPRAGqZQ6nDUVZMtg2okcQ
-         Lr9XOVbDDinqtwgdTHb8w8cG97Ny5Qq20r5U8/wKTTJG22vd+6uQGH0erw5RYw01Ym
-         KYICWUU1wbPYlR8i7nAn6NZNBDHaW7f5Lu4Bs6x+ZYQrIyrJJOMAaLtdLoFQE/Z1Cq
-         f4VsYQA2pfJ8w==
+        b=adHu5DUbuqzwbmfrp/rk1ub25W8HXjYkuyPWzT01rjNSqXh2SQHkls/k8Nty2YBOW
+         K4ZTAUcLco9RdjuE+N89cOycpCju3fSyTLri0/73rpllfAUUl8cR8CCasoe7IixCfK
+         AF7ctqCzqx6E3but3yBj+rGXEMLY15ZcJUNY6DMXdFY6XM1zYEuyGw4dVe17QGW8QV
+         UIuMfc9NVlSfPxCeNZtWFJF0hqbus0fKyhZcQG0pveOQVb2DftDmGLdfZ7yIr8mLXN
+         n5t7QZv6oTI9BIQp6iYq9RtCkNcduGx2Q6ARdUgXvB8dzdORvxhkKYRj/6awNkkfsd
+         laos/UHBh0Rdg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Wysochanski <dwysocha@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 22/25] SUNRPC: Handle 0 length opaque XDR object data properly
-Date:   Tue,  2 Feb 2021 10:06:12 -0500
-Message-Id: <20210202150615.1864175-22-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 06/17] pNFS/NFSv4: Try to return invalid layout in pnfs_layout_process()
+Date:   Tue,  2 Feb 2021 10:06:40 -0500
+Message-Id: <20210202150651.1864426-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210202150615.1864175-1-sashal@kernel.org>
-References: <20210202150615.1864175-1-sashal@kernel.org>
+In-Reply-To: <20210202150651.1864426-1-sashal@kernel.org>
+References: <20210202150651.1864426-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,77 +41,40 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Dave Wysochanski <dwysocha@redhat.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit e4a7d1f7707eb44fd953a31dd59eff82009d879c ]
+[ Upstream commit 08bd8dbe88825760e953759d7ec212903a026c75 ]
 
-When handling an auth_gss downcall, it's possible to get 0-length
-opaque object for the acceptor.  In the case of a 0-length XDR
-object, make sure simple_get_netobj() fills in dest->data = NULL,
-and does not continue to kmemdup() which will set
-dest->data = ZERO_SIZE_PTR for the acceptor.
+If the server returns a new stateid that does not match the one in our
+cache, then try to return the one we hold instead of just invalidating
+it on the client side. This ensures that both client and server will
+agree that the stateid is invalid.
 
-The trace event code can handle NULL but not ZERO_SIZE_PTR for a
-string, and so without this patch the rpcgss_context trace event
-will crash the kernel as follows:
-
-[  162.887992] BUG: kernel NULL pointer dereference, address: 0000000000000010
-[  162.898693] #PF: supervisor read access in kernel mode
-[  162.900830] #PF: error_code(0x0000) - not-present page
-[  162.902940] PGD 0 P4D 0
-[  162.904027] Oops: 0000 [#1] SMP PTI
-[  162.905493] CPU: 4 PID: 4321 Comm: rpc.gssd Kdump: loaded Not tainted 5.10.0 #133
-[  162.908548] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-[  162.910978] RIP: 0010:strlen+0x0/0x20
-[  162.912505] Code: 48 89 f9 74 09 48 83 c1 01 80 39 00 75 f7 31 d2 44 0f b6 04 16 44 88 04 11 48 83 c2 01 45 84 c0 75 ee c3 0f 1f 80 00 00 00 00 <80> 3f 00 74 10 48 89 f8 48 83 c0 01 80 38 00 75 f7 48 29 f8 c3 31
-[  162.920101] RSP: 0018:ffffaec900c77d90 EFLAGS: 00010202
-[  162.922263] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00000000fffde697
-[  162.925158] RDX: 000000000000002f RSI: 0000000000000080 RDI: 0000000000000010
-[  162.928073] RBP: 0000000000000010 R08: 0000000000000e10 R09: 0000000000000000
-[  162.930976] R10: ffff8e698a590cb8 R11: 0000000000000001 R12: 0000000000000e10
-[  162.933883] R13: 00000000fffde697 R14: 000000010034d517 R15: 0000000000070028
-[  162.936777] FS:  00007f1e1eb93700(0000) GS:ffff8e6ab7d00000(0000) knlGS:0000000000000000
-[  162.940067] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  162.942417] CR2: 0000000000000010 CR3: 0000000104eba000 CR4: 00000000000406e0
-[  162.945300] Call Trace:
-[  162.946428]  trace_event_raw_event_rpcgss_context+0x84/0x140 [auth_rpcgss]
-[  162.949308]  ? __kmalloc_track_caller+0x35/0x5a0
-[  162.951224]  ? gss_pipe_downcall+0x3a3/0x6a0 [auth_rpcgss]
-[  162.953484]  gss_pipe_downcall+0x585/0x6a0 [auth_rpcgss]
-[  162.955953]  rpc_pipe_write+0x58/0x70 [sunrpc]
-[  162.957849]  vfs_write+0xcb/0x2c0
-[  162.959264]  ksys_write+0x68/0xe0
-[  162.960706]  do_syscall_64+0x33/0x40
-[  162.962238]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  162.964346] RIP: 0033:0x7f1e1f1e57df
-
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/auth_gss/auth_gss_internal.h | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ fs/nfs/pnfs.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/auth_gss/auth_gss_internal.h b/net/sunrpc/auth_gss/auth_gss_internal.h
-index c5603242b54bf..f6d9631bd9d00 100644
---- a/net/sunrpc/auth_gss/auth_gss_internal.h
-+++ b/net/sunrpc/auth_gss/auth_gss_internal.h
-@@ -34,9 +34,12 @@ simple_get_netobj(const void *p, const void *end, struct xdr_netobj *dest)
- 	q = (const void *)((const char *)p + len);
- 	if (unlikely(q > end || q < p))
- 		return ERR_PTR(-EFAULT);
--	dest->data = kmemdup(p, len, GFP_NOFS);
--	if (unlikely(dest->data == NULL))
--		return ERR_PTR(-ENOMEM);
-+	if (len) {
-+		dest->data = kmemdup(p, len, GFP_NOFS);
-+		if (unlikely(dest->data == NULL))
-+			return ERR_PTR(-ENOMEM);
-+	} else
-+		dest->data = NULL;
- 	dest->len = len;
- 	return q;
- }
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index 4232f956bdac0..412ccb4f3bc14 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -2369,7 +2369,13 @@ pnfs_layout_process(struct nfs4_layoutget *lgp)
+ 		 * We got an entirely new state ID.  Mark all segments for the
+ 		 * inode invalid, and retry the layoutget
+ 		 */
+-		pnfs_mark_layout_stateid_invalid(lo, &free_me);
++		struct pnfs_layout_range range = {
++			.iomode = IOMODE_ANY,
++			.length = NFS4_MAX_UINT64,
++		};
++		pnfs_set_plh_return_info(lo, IOMODE_ANY, 0);
++		pnfs_mark_matching_lsegs_return(lo, &lo->plh_return_segs,
++						&range, 0);
+ 		goto out_forget;
+ 	}
+ 
 -- 
 2.27.0
 
