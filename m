@@ -2,94 +2,103 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A84B30E3D9
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Feb 2021 21:08:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5543630E4DC
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Feb 2021 22:22:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231879AbhBCUIm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 3 Feb 2021 15:08:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43856 "EHLO
+        id S229685AbhBCVVX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Feb 2021 16:21:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231873AbhBCUIh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Feb 2021 15:08:37 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18BC3C061573
-        for <linux-nfs@vger.kernel.org>; Wed,  3 Feb 2021 12:07:57 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 246DC6EB8; Wed,  3 Feb 2021 15:07:56 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 246DC6EB8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1612382876;
-        bh=pu2VPU3aIAT0BtDQJatlzHnNI8ERYChbCeLzIXlk06Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a46SGtasuaRMRN0w3UzmA6Lv/H2/Es82OQeG0DcJqbuP56FACQfK+5V2r/icpt4aZ
-         kTlmNgEXgmQrpbcUJVupcOC/Sb22FsHJeI4VVZtRrGaXoAPehaQvwB90WbnZn6Zlgi
-         TUNYM+OHpqH1R2H8diT/OWqqHopsbmC4pwZBK80A=
-Date:   Wed, 3 Feb 2021 15:07:56 -0500
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "guy@vastdata.com" <guy@vastdata.com>,
-        "schumakeranna@gmail.com" <schumakeranna@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] nfs: we don't support removing system.nfs4_acl
-Message-ID: <20210203200756.GA30996@fieldses.org>
-References: <20210128223638.GE29887@fieldses.org>
- <95e5f9e4-76d4-08c4-ece3-35a10c06073b@vastdata.com>
- <cbc7115cc5d5aeb7ffb9e9b3880e453bf54ecbdb.camel@hammerspace.com>
- <20210129023527.GA11864@fieldses.org>
- <20210129025041.GA12151@fieldses.org>
- <7a078b4d22c8d769a42a0c2b47fd501479e47a7b.camel@hammerspace.com>
- <20210131215843.GA9273@fieldses.org>
+        with ESMTP id S229548AbhBCVVW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Feb 2021 16:21:22 -0500
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F266C061573
+        for <linux-nfs@vger.kernel.org>; Wed,  3 Feb 2021 13:20:41 -0800 (PST)
+Received: by mail-ej1-x632.google.com with SMTP id bl23so1434311ejb.5
+        for <linux-nfs@vger.kernel.org>; Wed, 03 Feb 2021 13:20:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+i7Fbby6koCWySpt5IeWtiZv0Jn7cmBlsI9o+GJsTPc=;
+        b=vNMtd4SXhvB6NJT1hKVaH0bVwvnJ9b5xm7muPcFLAs5EWySTe/sUOaMT+nX5DfjqD2
+         QcmZilbpXb5J0BqO5iVClTE9VprBdu0GxBbxs4hGC9CSt04eqbqP07DIhMyOv/4HLGeI
+         NPc/ZaAYpYgaJo72CdAE3/7j1XfHtGi+wL8vMl+7TNSabNh93bK9k/x59bvvUgSlhmdp
+         /laP4hTbQv4R3T9rrvz8ur/y4GSPPiKvoytvr9BNNY4AMr34YkIuDRdphHbu0oSVfn36
+         a/+BTG8ziJu9b+5UsxCHMrAiNCkL8QBpmKhgvcH/1STEsW7BQA41qf1rGp6vE3b9H+GA
+         zq5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+i7Fbby6koCWySpt5IeWtiZv0Jn7cmBlsI9o+GJsTPc=;
+        b=E054Ktp7XN1gnvxMSyHUe4eKj0Cj1gWapiuYHtKN39zXOTTWbjbOCKIyZ0ZjqntPaS
+         R/e4UpfyM6b46ynraZb+koUYsAlk9CvBSdpJUpnidjM0oTALsE0u8MDFLvbUY1b8iQs0
+         l4Ygt8ziPhTx5OUy2gY6Cxs6wlkdTyvgG1UYMDN3c7yVelF0QSEdtJkfp9HUA5xDDZx1
+         3ThCOFF+CfN7L9waLRPSWOVDWnuuHMlc2WHPxcJouB7TGhtXHOGCGPXRE/wvIcmF01Xg
+         0xzwljViV27UZk6pxN0sjeHrZn9NcW+oIPKiWgwT30sZ7KhB4gVuEbynYX0A7isq2tT+
+         dnlQ==
+X-Gm-Message-State: AOAM531GgbTaRqvBQ0pQO6bvQE1IT+9xa2SAxoenmSOzFSfBcTmwAUrn
+        id2y8csk4LUyD+aGzF7pVR/Dow==
+X-Google-Smtp-Source: ABdhPJw80bCbuCtsu7/4U6KnD+I0JJ0l93vbnHqCOk24IfYgftBWfWlQhVBBaEW7Bd/9YEvednmSEA==
+X-Received: by 2002:a17:906:494c:: with SMTP id f12mr5243078ejt.56.1612387240066;
+        Wed, 03 Feb 2021 13:20:40 -0800 (PST)
+Received: from gmail.com ([77.124.84.167])
+        by smtp.gmail.com with ESMTPSA id u17sm1496764ejr.59.2021.02.03.13.20.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Feb 2021 13:20:39 -0800 (PST)
+Date:   Wed, 3 Feb 2021 23:20:35 +0200
+From:   Dan Aloni <dan@kernelim.com>
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     Anna Schumaker <schumaker.anna@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v2 0/5] SUNRPC: Create sysfs files for changing IP
+Message-ID: <20210203212035.qncen4u3o6pr57h6@gmail.com>
+References: <20210202184244.288898-1-Anna.Schumaker@Netapp.com>
+ <75F3F315-84AA-41A0-A43A-C531042A9C47@oracle.com>
+ <CAFX2JfktYGe4vDtXogFHurdyz4TJx5APj9pb-J5HmsDGC99kaA@mail.gmail.com>
+ <20210202192417.ug32gmuc2uciik54@gmail.com>
+ <8A686173-B3FF-4122-990C-6E8795D35161@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210131215843.GA9273@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <8A686173-B3FF-4122-990C-6E8795D35161@redhat.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Jan 31, 2021 at 04:58:43PM -0500, bfields@fieldses.org wrote:
-> On Sun, Jan 31, 2021 at 08:41:37PM +0000, Trond Myklebust wrote:
-> > On Thu, 2021-01-28 at 21:50 -0500, bfields@fieldses.org wrote:
-> > > On Thu, Jan 28, 2021 at 09:35:27PM -0500, bfields@fieldses.org wrote:
-> > > > Note that this patch doesn't prevent an application from setting a
-> > > > zero-length ACL.  The xattr format is XDR with the first four bytes
-> > > > representing the number of ACEs, so you'd set a zero-length ACL by
-> > > > passing down a 4-byte all-zero buffer as the new value of the
-> > > > system.nfs4_acl xattr.
-> > > > 
-> > > > A zero-length NULL buffer is what's used to implement removexattr:
-> > > > 
-> > > > int
-> > > > __vfs_removexattr(struct dentry *dentry, const char *name)
-> > > > {
-> > > >         ...
-> > > >         return handler->set(handler, dentry, inode, name, NULL, 0,
-> > > > XATTR_REPLACE);
-> > > > }
-> > > > 
-> > > > That's the case this patch covers.
-> > > 
-> > > So, I should have said in the changelog, apologies--the behavior
-> > > without
-> > > this patch is that when it gets a removexattr, the client sends a
-> > > SETATTR with a bitmap claiming there's an ACL attribute, but a
-> > > zero-length attribute value list, and the server (correctly) returns
-> > > BADXDR.
-> > > 
-> > 
-> > I don't see anything in the spec that prohibits a zero length array
-> > size for nfs41_aces<> or states that should return NFS4ERR_BADXDR. Why
-> > shouldn't we allow that?
+On Tue, Feb 02, 2021 at 02:49:38PM -0500, Benjamin Coddington wrote:
+> On 2 Feb 2021, at 14:24, Dan Aloni wrote:
+> > Also, what do you think would be a straightforward way for a userspace
+> > program to find what sunrpc client id serves a mountpoint? If we add an
+> > ioctl for the mountdir AFAIK it would be the first one that the NFS
+> > client supports, so I wonder if there's a better interface that can work
+> > for that.
 > 
-> Again: I agree.  And we do allow that, both before and after this patch.
-> 
-> There's a difference between a SETATTR with a zero-length body and a
-> SETATTR with a body containing a zero-length ACL.  The former is bad
-> protocol, the latter is, I agree, fine.
+> I'm a fan of adding an ioctl interface for userspace, but I think we'd
+> better avoid using NFS itself because it would be nice to someday implement
+> an NFS "shutdown" for non-responsive servers, but sending any ioctl to the
+> mountpoint could revalidate it, and we'd hang on the GETATTR.
 
-Are we on the same page now?  Or should I update the changelog and
-resend?
+For that, I was looking into using openat2() with the very recently
+added RESOLVE_CACHED flag. However from some experimentation I see that it
+still sleeps on the unresponsive mount in nfs_weak_revalidate(), and the
+latter cannot tell whether LOOKUP_CACHED flag was passed to
+d_weak_revalidate().
 
---b.
+> Maybe we can figure out a way to expose the superblock via sysfs for each
+> mount.
+
+Essentially this is what fspick() syscall lets you do. I imagine that it
+can be implemented entirely under fs/nfs, using fsconfig() from under a
+FSCONFIG_SET_STRING passing a special string such as
+"report-clients-ids", causing a list of sunrpc client IDs to get written
+to the fs_context log.
+
+However even with this interface we may still need to verify that the
+path lookup that `fspick` does using `user_path_at` is not blocking on
+non-responsive NFS mounts.
+
+-- 
+Dan Aloni
