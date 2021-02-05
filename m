@@ -2,98 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BF1231129E
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Feb 2021 21:37:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 32165311336
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Feb 2021 22:14:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232651AbhBESwp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 5 Feb 2021 13:52:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233088AbhBEPEk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 5 Feb 2021 10:04:40 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0A87864E92;
-        Fri,  5 Feb 2021 16:31:35 +0000 (UTC)
-Subject: [PATCH v1] xprtrdma: Clean up rpcrdma_prepare_readch()
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Fri, 05 Feb 2021 11:31:34 -0500
-Message-ID: <161254265485.1728.15776929905868209914.stgit@manet.1015granger.net>
-User-Agent: StGit/0.23-29-ga622f1
+        id S231455AbhBEVOw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 5 Feb 2021 16:14:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233189AbhBEVOd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 5 Feb 2021 16:14:33 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7DC2C06174A
+        for <linux-nfs@vger.kernel.org>; Fri,  5 Feb 2021 13:13:52 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 0AA4C14D4; Fri,  5 Feb 2021 16:13:51 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 0AA4C14D4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1612559631;
+        bh=XGZLOAkvciIpfu/nSYSfEQWp+WXnvr/pic1GWFUyw/E=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=XcDiY3an1jSVg6HGO4ory7L2v45XAh7c0V6s49RJqds9iuaSldlWf0vZspxyaksAJ
+         uvnnEHR5R2s75h7yTHOckMBr9dp9cC78IrZ01+cMZ1S82/VPIDSWQ9T1anuj5D5aRp
+         GjB4FaixczOEHKIG0Uq6v3IEfBXLwgtMReIAKnzA=
+Date:   Fri, 5 Feb 2021 16:13:51 -0500
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Neil Brown <neilb@suse.de>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: releasing result pages in svc_xprt_release()
+Message-ID: <20210205211351.GC32030@fieldses.org>
+References: <811BE98B-F196-4EC1-899F-6B62F313640C@oracle.com>
+ <87im7ffjp0.fsf@notabene.neil.brown.name>
+ <597824E7-3942-4F11-958F-A6E247330A9E@oracle.com>
+ <878s88fz6s.fsf@notabene.neil.brown.name>
+ <700333BB-0928-4772-ADFB-77D92CCE169C@oracle.com>
+ <87wnvre5cy.fsf@notabene.neil.brown.name>
+ <9FC8FB98-2DD7-4B78-BD72-918F91FA11D9@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9FC8FB98-2DD7-4B78-BD72-918F91FA11D9@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Since commit 9ed5af268e88 ("SUNRPC: Clean up the handling of page
-padding in rpc_prepare_reply_pages()") [Dec 2020] the NFS client
-passes payload data to the transport with the padding in xdr->pages
-instead of in the send buffer's tail kvec. There's no need for the
-extra logic to advance the base of the tail kvec because the upper
-layer no longer places XDR padding there.
+On Fri, Feb 05, 2021 at 08:20:28PM +0000, Chuck Lever wrote:
+> Baby steps.
+> 
+> Because I'm perverse I started with bulk page freeing. In the course
+> of trying to invent a new API, I discovered there already is a batch
+> free_page() function called release_pages().
+> 
+> It seems to work as advertised for pages that are truly no longer
+> in use (ie RPC/RDMA pages) but not for pages that are still in flight
+> but released (ie TCP pages).
+> 
+> release_pages() chains the pages in the passed-in array onto a list
+> by their page->lru fields. This seems to be a problem if a page
+> is still in use.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/rpc_rdma.c |   27 +++++++++------------------
- 1 file changed, 9 insertions(+), 18 deletions(-)
+I thought I remembered reading an lwn article about bulk page
+allocation.  Looking around now all I can see is
 
-Hi Anna-
+	https://lwn.net/Articles/684616/
+	https://lwn.net/Articles/711075/
 
-Found one more clean-up related to the series I sent yesterday.
+and I can't tell if any of that work was ever finished.
 
-
-diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index 1c3e377272e0..292f066d006e 100644
---- a/net/sunrpc/xprtrdma/rpc_rdma.c
-+++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -628,9 +628,8 @@ static bool rpcrdma_prepare_pagelist(struct rpcrdma_req *req,
- 	return false;
- }
- 
--/* The tail iovec may include an XDR pad for the page list,
-- * as well as additional content, and may not reside in the
-- * same page as the head iovec.
-+/* The tail iovec might not reside in the same page as the
-+ * head iovec.
-  */
- static bool rpcrdma_prepare_tail_iov(struct rpcrdma_req *req,
- 				     struct xdr_buf *xdr,
-@@ -748,27 +747,19 @@ static bool rpcrdma_prepare_readch(struct rpcrdma_xprt *r_xprt,
- 				   struct rpcrdma_req *req,
- 				   struct xdr_buf *xdr)
- {
-+	struct kvec *tail = &xdr->tail[0];
-+
- 	if (!rpcrdma_prepare_head_iov(r_xprt, req, xdr->head[0].iov_len))
- 		return false;
- 
--	/* If there is a Read chunk, the page list is being handled
-+	/* If there is a Read chunk, the page list is handled
- 	 * via explicit RDMA, and thus is skipped here.
- 	 */
- 
--	/* Do not include the tail if it is only an XDR pad */
--	if (xdr->tail[0].iov_len > 3) {
--		unsigned int page_base, len;
--
--		/* If the content in the page list is an odd length,
--		 * xdr_write_pages() adds a pad at the beginning of
--		 * the tail iovec. Force the tail's non-pad content to
--		 * land at the next XDR position in the Send message.
--		 */
--		page_base = offset_in_page(xdr->tail[0].iov_base);
--		len = xdr->tail[0].iov_len;
--		page_base += len & 3;
--		len -= len & 3;
--		if (!rpcrdma_prepare_tail_iov(req, xdr, page_base, len))
-+	if (tail->iov_len) {
-+		if (!rpcrdma_prepare_tail_iov(req, xdr,
-+					      offset_in_page(tail->iov_base),
-+					      tail->iov_len))
- 			return false;
- 		kref_get(&req->rl_kref);
- 	}
-
-
+--b.
