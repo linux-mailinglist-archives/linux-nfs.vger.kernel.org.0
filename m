@@ -2,121 +2,160 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F064331100E
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Feb 2021 19:38:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01AAB31116C
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Feb 2021 20:45:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231428AbhBEQzA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 5 Feb 2021 11:55:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233778AbhBEQw3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 5 Feb 2021 11:52:29 -0500
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E209FC061756
-        for <linux-nfs@vger.kernel.org>; Fri,  5 Feb 2021 10:34:09 -0800 (PST)
-Received: by mail-ej1-x630.google.com with SMTP id r12so13388311ejb.9
-        for <linux-nfs@vger.kernel.org>; Fri, 05 Feb 2021 10:34:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uYvWoXXb/xX6WF/cu+UQgzpQ8ORkfD5dpS/I/THEHD4=;
-        b=EP9d8Ia/YdZmFpm+sDPl9mra0JWV7oC4y7q7/Etyx5DLUGvH4zoZjP7OE16EO0gLgH
-         0kpspq5yeDHrGrUOq1P6prhdfrrd8L9su5807qSjbzf34cMBRCM+57po/ITlS/A5PX2b
-         bzDxY/rbNKK504LkNck37x4VLJbnYLjcpjeLf4rm5R8nSBT1iwIT0dp/Tm4N0tc4wIkL
-         cG2Q//xlI1c0c53j8/Xi6mT5uqPCQovTRBheDkpLNgJD0VAtvr/4tp0Rj2G/blDQFn7J
-         pBFqh1HJymRStHDqy+jjtgktxJnwGTnfhYv4SVCpYnZyx2/a0n1bC1Qo6qgsH6wz3GjJ
-         PB2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uYvWoXXb/xX6WF/cu+UQgzpQ8ORkfD5dpS/I/THEHD4=;
-        b=XsGm3TXfj6hgJKQ9h/b8Kkc8YYzGmfvBYzvOrM//tI7Ey3McTTAGVy9y85AEq4a5Xd
-         4omb4qSi+G0k1wR3NTwhcUO24dbAGqxRI5bpGyvj4vT0cY5QYVb4H8kvwz5a7zSgeEv/
-         xsDOVhVy7L0drsEnfafUZn5o0Py/gdE7kKsF8qcE6rWNiqz2uB9DIWYKHUtM0e5awfB5
-         ZVqyG0OUtJ2bEPY/qkQ+zRiVmuqL1sgLAOoYRxvcyUwd5QY6CNwY/EnIYjdGujYXCFRF
-         uNrUeRmNQwpwyJcgSXLZ0TFOOzRkRwW69C+yPfLA/4TXAKvOSO5+GxwqVnJjBSM6fZqt
-         6akw==
-X-Gm-Message-State: AOAM530YVdfiHt4rC3/DoB9nOGKY09PGmkDYvCws7xkUGRaOBmSIGf12
-        zcTwrcJfpDMtNhYiwMmFARLRQIRslIJnmyDyHNS8pZKFcz0=
-X-Google-Smtp-Source: ABdhPJzXMtSFPJu5lbdxdR5rif10nHgb9Qnr86ZXoclgyhZ1Sc47u6kPvS/pHkixJpHBpq8XLXMn0+Nas8VPM8L/DaQ=
-X-Received: by 2002:a17:906:3e42:: with SMTP id t2mr5320518eji.439.1612550048580;
- Fri, 05 Feb 2021 10:34:08 -0800 (PST)
+        id S230035AbhBESBp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 5 Feb 2021 13:01:45 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22964 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233217AbhBEPWo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 5 Feb 2021 10:22:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1612544551;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=2q18CzBcxJvAu8Vj/9Xv+8eYOiYLfIpMMBqp/lRA8Jc=;
+        b=U72yp1HgA9Cwsen4QvMB9seFW1rnkekQDuVz1X4t7m80hOvQ79/4oeStIDub+EbCGn/b/v
+        73Gyur8BCA7x3lGaJq6aL49VIx2wxhar09Oy+ckSUWVRALQsEJ08b9KKKwDO3v3vQvYgMz
+        DupvEzFMgYiD9fJYiUwiXdDMhWrUBWA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-511-Ui2ao1J7MTWjBnKX2-SeOQ-1; Fri, 05 Feb 2021 12:02:24 -0500
+X-MC-Unique: Ui2ao1J7MTWjBnKX2-SeOQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD1AE100A625;
+        Fri,  5 Feb 2021 17:02:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1D00E1A353;
+        Fri,  5 Feb 2021 17:02:14 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        ceph-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-cachefs@redhat.com, linux-cifs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Upcoming for next merge window: fscache and netfs lib
 MIME-Version: 1.0
-References: <20210202184244.288898-1-Anna.Schumaker@Netapp.com>
- <20210202184244.288898-5-Anna.Schumaker@Netapp.com> <4eaf0c288d97a2d03c5cd2a7ed728a73085b2719.camel@hammerspace.com>
- <67497ea4a7d22726112e0083893e85a17f1ca681.camel@hammerspace.com>
-In-Reply-To: <67497ea4a7d22726112e0083893e85a17f1ca681.camel@hammerspace.com>
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Fri, 5 Feb 2021 13:33:52 -0500
-Message-ID: <CAFX2JfkGZbvgvxKJyPuxO9NG_RJGj-3BNH6jJDYGJV0pVhwipA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] sunrpc: Prepare xs_connect() for taking NULL tasks
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date:   Fri, 05 Feb 2021 17:02:14 +0000
+Message-ID: <2522190.1612544534@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Feb 2, 2021 at 4:59 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Tue, 2021-02-02 at 16:49 -0500, Trond Myklebust wrote:
-> > On Tue, 2021-02-02 at 13:42 -0500, schumaker.anna@gmail.com wrote:
-> > > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > >
-> > > We won't have a task structure when we go to change IP addresses,
-> > > so
-> > > check for one before calling the WARN_ON() to avoid crashing.
-> > >
-> > > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > > ---
-> > >  net/sunrpc/xprtsock.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-> > > index c56a66cdf4ac..250abf1aa018 100644
-> > > --- a/net/sunrpc/xprtsock.c
-> > > +++ b/net/sunrpc/xprtsock.c
-> > > @@ -2311,7 +2311,8 @@ static void xs_connect(struct rpc_xprt *xprt,
-> > > struct rpc_task *task)
-> > >         struct sock_xprt *transport = container_of(xprt, struct
-> > > sock_xprt, xprt);
-> > >         unsigned long delay = 0;
-> > >
-> > > -       WARN_ON_ONCE(!xprt_lock_connect(xprt, task, transport));
-> > > +       if (task)
-> > > +               WARN_ON_ONCE(!xprt_lock_connect(xprt, task,
-> > > transport));
-> >
-> > Nit: That's the same as
-> >    WARN_ON_ONCE(task && !xprt_lock_connect(xprt, task, transport));
-> >
-> > >
-> > >         if (transport->sock != NULL) {
-> > >                 dprintk("RPC:       xs_connect delayed xprt %p for
-> > > %lu "
-> >
->
-> So, the problem with this patch is that you're deliberately
-> circumventing the process of locking the socket. That's not going to
-> work.
-> What you could do is follow the example set by xprt_destroy() and
-> xs_enable_swap(), to call wait_on_bit_lock() when there is no task.
-> That should work, but you'd better make sure that your process holds a
-> reference to the xprt->kref before doing that, or else you could easily
-> end up deadlocking with xprt_destroy().
 
-I've tried this, and the kref isn't a problem but no matter where I
-put the wait_on_bit_lock() call it ends up deadlocking. I think it's
-happening in the xs_tcp_setup_socket() function, but I'm still trying
-to figure out exactly where.
+Hi Linus,
 
-Anna
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+To apprise you in advance, I'm intending to submit a pull request for a
+partial modernisation of the fscache I/O subsystem, which can be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/=
+?h=3Dfscache-next
+
+The main parts of it are:
+
+ (1) Institute a helper library for network filesystems.  The first stage of
+     this handles ->readpage(), ->readahead() and part of ->write_begin() on
+     behalf of the netfs, requiring the netfs to provide a vector to perfor=
+m a
+     read to some part of an inode.
+
+     This allows handling of the following to be (at least partially) moved
+     out of all the network filesystems and consolidated in one place:
+
+	- changes in VM vectors (Matthew Wilcox's Grand Plans=E2=84=A2;-)
+	  - transparent huge page support
+	- shaping of reads
+	  - readahead expansion
+	  - fs alignment/granularity (ceph, pnfs)
+	  - cache alignment/granularity
+	- slicing of reads
+	  - rsize
+	  - keeping multiple read in flight	} Steve French would like
+	  - multichannel distribution		} but for the future
+	  - multiserver distribution (ceph, pnfs)
+	  - stitching together reads from the cache and reads from the network
+	- saving data read from the server into the cache
+	- retry/reissue handling
+	  - fallback after cache failure
+     	- short reads
+	- fscrypt data decryption (Jeff Layton is considering for the future)
+
+ (2) Add an alternate cache I/O API for use with the netfs lib that makes u=
+se
+     of kiocbs in the cache to do direct I/O between the cache files and the
+     netfs pages.
+
+     This is intended to replace the current I/O API that calls the backing=
+ fs
+     readpage op and than snooping the wait queues for completion to read a=
+nd
+     using vfs_write() to write.  It wasn't possible to do in-kernel DIO wh=
+en
+     I first wrote cachefiles - and this makes it a lot simpler and more
+     robust (and uses a lot less memory).
+
+ (3) Add an ITER_XARRAY iov_iter that allows I/O iteration to be done on an
+     xarray of pinned pages (such as inode->i_mapping->i_pages), thereby
+     avoiding the need to allocate a bvec array to represent this.
+
+     This is used to present a set of netfs pages to the cache to do DIO on
+     and is also used by afs to present netfs pages to sendmsg.  It could a=
+lso
+     be used by unencrypted cifs to pass the pages to the TCP socket it uses
+     (if it's doing TCP) and my patch for 9p (which isn't included here) can
+     make use of it.
+
+ (4) Make afs use the above.  It passes the same xfstests (and has the same
+     failures) as the unpatched afs client.
+
+ (5) Make ceph use the above (I've merged a branch from Jeff Layton for thi=
+s).
+     This also passes xfstests.
+
+Dave Wysochanski has a patch series for nfs.  Normal nfs works fine and pas=
+ses
+various tests, but it turned out pnfs has a problem - pnfs does splitting of
+requests itself and sending them to various places, but it needs to coopera=
+te
+more closely with netfs over this.  He's working on this.
+
+I've given Dominique Martinet a patch for 9p and Steve French a partial pat=
+ch
+for cifs, but neither of those is going to be ready this merge window eithe=
+r.
+
+-~-
+
+Assuming you're willing to take this, should I submit one pull request for =
+the
+combined lot, or should I break it up into smaller requests (say with a
+separate request from Jeff for the ceph stuff).
+
+If we can get the netfs lib in this merge window, that simplifies dealing w=
+ith
+nfs and cifs particularly as the changes specific to those can go through t=
+he
+maintainer trees.
+
+Thanks,
+David
+
