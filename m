@@ -2,49 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C720312663
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Feb 2021 18:28:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 652D031286D
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Feb 2021 00:43:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229705AbhBGRZc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 7 Feb 2021 12:25:32 -0500
-Received: from outbound-mail-qk39.uniserve.ca ([204.239.30.184]:22825 "EHLO
-        outbound-mail-qk39.uniserve.ca" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229506AbhBGRZ2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 7 Feb 2021 12:25:28 -0500
-X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Feb 2021 12:25:28 EST
-Received: from uniserve.com (<unknown> [204.239.30.179])
-        by outbound-mail-qk39.uniserve.ca (OpenSMTPD) with ESMTPS id 5bf4cc33 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO)
-        for <linux-nfs@vger.kernel.org>;
-        Sun, 7 Feb 2021 09:18:01 -0800 (PST)
-X-Default-Received-SPF: pass (skip=loggedin (res=PASS)) x-ip-name=50.92.153.236; envelope-from=<sn0297@sunshine.net>;
-Received: from [192.168.8.240] (unverified [50.92.153.236]) 
-        by uniserve.com (SurgeMail 7.4c) with ESMTP (TLS) id 47655965-1392368 
-        for <linux-nfs@vger.kernel.org>; Sun, 07 Feb 2021 09:18:01 -0800
-Message-ID: <602020C9.50705@sunshine.net>
-Date:   Sun, 07 Feb 2021 09:18:01 -0800
-From:   Rue Mohr <sn0297@sunshine.net>
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:10.0.4) Gecko/20120510 Icedove/10.0.4
+        id S229692AbhBGXmy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 7 Feb 2021 18:42:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34294 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229691AbhBGXmx (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 7 Feb 2021 18:42:53 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 403FDAC6E;
+        Sun,  7 Feb 2021 23:42:12 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Date:   Mon, 08 Feb 2021 10:42:08 +1100
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: releasing result pages in svc_xprt_release()
+In-Reply-To: <9FC8FB98-2DD7-4B78-BD72-918F91FA11D9@oracle.com>
+References: <811BE98B-F196-4EC1-899F-6B62F313640C@oracle.com>
+ <87im7ffjp0.fsf@notabene.neil.brown.name>
+ <597824E7-3942-4F11-958F-A6E247330A9E@oracle.com>
+ <878s88fz6s.fsf@notabene.neil.brown.name>
+ <700333BB-0928-4772-ADFB-77D92CCE169C@oracle.com>
+ <87wnvre5cy.fsf@notabene.neil.brown.name>
+ <9FC8FB98-2DD7-4B78-BD72-918F91FA11D9@oracle.com>
+Message-ID: <874kine97z.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-To:     linux-nfs@vger.kernel.org
-Subject: nfs kernel server bug
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authenticated-User: sn0297@uniserve.com 
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
 
-I'm having an issue where the kernel server is dishing out all zeros for file content being read over NFS. The file byte 
-count is correct.
-Writing files is fine.
-With the same client, a different server works just fine.
+On Fri, Feb 05 2021, Chuck Lever wrote:
+>
+> Baby steps.
+>
+> Because I'm perverse I started with bulk page freeing. In the course
+> of trying to invent a new API, I discovered there already is a batch
+> free_page() function called release_pages().
+>
+> It seems to work as advertised for pages that are truly no longer
+> in use (ie RPC/RDMA pages) but not for pages that are still in flight
+> but released (ie TCP pages).
+>
+> release_pages() chains the pages in the passed-in array onto a list
+> by their page->lru fields. This seems to be a problem if a page
+> is still in use.
 
-I have been trying to pin this down, so far all I know is that the packets from the server actually contain zeros for 
-the file contents.
+But if a page is still in use, it is not put on the list.
 
-The troubled server kernel is 5.4.1
+		if (!put_page_testzero(page))
+			continue;
 
-Has anyone encountered this or is it just me?
+NeilBrown
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQJCBAEBCAAsFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAmAgetAOHG5laWxiQHN1
+c2UuZGUACgkQOeye3VZigbmVig//SRaYwWMTFaUFnWyv+sdBcSJLWsoh3IYDVYVh
+m/nDlyX7MGT4lQg2tJs5+CaC/vVNdUEOSXXc7wGN9geuWqyzvXtVgnt6UaZsSX52
+bBz6wBolrwK9EvKi3qBAzz9lu6V/7OHy99sqW7G8cPwIaJ0UeZAKalb1kkVdDBRI
+st+QjXfOmDMdKDbqy3lRGUFzEkiVAOOSr+uEO98xkjG9cephJBxpTgo3RE+10br+
+Z1Jm7MtsYGwf3Qj5zJlYXqDAfSDGgqs5lJdbq4s//ySt+okb5cY3nOb6LMG9eQbI
+ENAYA3avkyf83UR9HqcaCwwDH8I5jFPvJJ+9dZDh5l7k9bv2d+BkQdlaf1W+YmRB
+3R5B4eRtoCZrdVLipatYBpVMCSmzfmKBrtN1D+kE+U2XXMiUM1QMFd1+qHbINW73
+b1ELs2OOETIDOlnpxluJvUZoCCm8PO3AO919SD4RkcAl7tPcUzJyXI9Z/ZGsCNlC
+Zp4ZdLlHHevXsApznEgu3ZW2koF18TkChGLRrktGLBTCmKSYHShDCc1GvDMzIT/J
+PbGzN2EXvTC5Tqg1vi75pvLioVnhX/0vji7mdB9vjVfiwbKUiUgSKbkAwbGiAaii
+KbskgIOlejC7vtKmUIW6AJeltYGQW79AtZN9Nl0/FI37uezoN1W5O4XnjwEcH1ue
+CX7mGjg=
+=Z+jB
+-----END PGP SIGNATURE-----
+--=-=-=--
