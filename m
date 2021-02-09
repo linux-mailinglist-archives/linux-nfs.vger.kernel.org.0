@@ -2,157 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95BA53159C5
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Feb 2021 23:59:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C049315A4E
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Feb 2021 00:52:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234247AbhBIW4I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 9 Feb 2021 17:56:08 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33884 "EHLO
+        id S234129AbhBIXwD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 9 Feb 2021 18:52:03 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50090 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234282AbhBIWob (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Feb 2021 17:44:31 -0500
+        by vger.kernel.org with ESMTP id S234138AbhBIWOy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Feb 2021 17:14:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612910566;
+        s=mimecast20190719; t=1612908799;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=GZ7uCNlA2uIi2Zywr96bupyWhGmv/tkzQj/R8fIDK/I=;
-        b=ThvLC+nBruinLXAt+KzOnl0zWjRSAnDcz1kVNE55hsaIZfbUmxiHEY61pthiU7cP38Bore
-        HoPznRghZz3aAkDCqQKThIumgqZsCY3B5ESoNrCjbwLWkINo4KcIHV7uR0ZVX9oBs7zIl0
-        y3PZufAQ0+G4yYiuZj/tcA6XjIuPg+o=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-415-IqqOR_xQO0qU6hmLOPNKQw-1; Tue, 09 Feb 2021 17:42:41 -0500
-X-MC-Unique: IqqOR_xQO0qU6hmLOPNKQw-1
-Received: by mail-ej1-f72.google.com with SMTP id bx12so269414ejc.15
-        for <linux-nfs@vger.kernel.org>; Tue, 09 Feb 2021 14:42:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GZ7uCNlA2uIi2Zywr96bupyWhGmv/tkzQj/R8fIDK/I=;
-        b=UcJwNgeKKEenobL0BvMypTmS0Bmk7meOAuEJoSLnqHs/jphH+BHgJSBHoCdZXdqGoc
-         ffiSw6Z6nHvKX66balUc3olhVrHpdY3kRZzTunQWu0q3DktprJqQGIWOb2sft9XrIwLH
-         C4f2dX2cuVU5Xvio50SaHPQAHwAfbaiNCyjsk1RHFg/bwp+3U492fgPQHt/h8l01lbbj
-         phWcLbm6TPqcGY7fFyFu1CBNlgS7TDMZo0Gu7mw4+3nckYgKaXkc5YOkii4LNxpDMiQf
-         3ScD9fB24FksC8L95a3lxY7fB2loat3TwkOTUVLKXEILWgbZmyOUYoolr4yXFyfj+2PP
-         RKnw==
-X-Gm-Message-State: AOAM531x+OAI46tPy78Nv/+NftGZw9pyFb93HqfM3Jlwunc6vjX7SVen
-        UMRM436w1WV97OLYeDvoRbHcxpSJMMezX96zNpuq7AY0y49fmzGX6qAhZwx1cu8LHju7lAcY7ZF
-        DxjBepvee9fLq80ge7U1c0EWo9w4AmfDXRsbp
-X-Received: by 2002:a17:906:b351:: with SMTP id cd17mr24871301ejb.110.1612910560580;
-        Tue, 09 Feb 2021 14:42:40 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxWZ/SxMb2EYr3Wx/r9tLm+ytvzx5rNbM3Mu7nYLvi+QXirS/jRZBjDCWHtM3Wa2pEsJ4PdxjPocMuO52GFZ9o=
-X-Received: by 2002:a17:906:b351:: with SMTP id cd17mr24871281ejb.110.1612910560352;
- Tue, 09 Feb 2021 14:42:40 -0800 (PST)
-MIME-Version: 1.0
-References: <591237.1612886997@warthog.procyon.org.uk> <CAHk-=wj-k86FOqAVQ4ScnBkX3YEKuMzqTEB2vixdHgovJpHc9w@mail.gmail.com>
-In-Reply-To: <CAHk-=wj-k86FOqAVQ4ScnBkX3YEKuMzqTEB2vixdHgovJpHc9w@mail.gmail.com>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Tue, 9 Feb 2021 17:42:04 -0500
-Message-ID: <CALF+zOkMKqvidLf8WZD889PUN-KofdiRPOcbO4hxboVmUGiOgw@mail.gmail.com>
-Subject: Re: [GIT PULL] fscache: I/O API modernisation and netfs helper library
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
+        bh=njyj2XCXYGtI5AX/JV14IYXR8Ipi7RDaSVkhJ8oSglg=;
+        b=UefyHNbYqf67ArC+LWa8eLd98C3qghKmJwIrkefcPmete97BHKJ8kVaCMYTUlVKaKp6JDm
+        4lxRpzoN4OOZBsbR6GWx29Hw1owF5xXPS/OD4rB8zFQCBoCyTfCQLpyAPtcXjtXwjDWKFs
+        lLYV+clM+k6eG4raJ1cb+/XmpjJVLnI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-Ez0mEz_fP32izAfxafFp3w-1; Tue, 09 Feb 2021 16:25:32 -0500
+X-MC-Unique: Ez0mEz_fP32izAfxafFp3w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B7E8FCC626;
+        Tue,  9 Feb 2021 21:25:30 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E044519C78;
+        Tue,  9 Feb 2021 21:25:23 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20210209202134.GA308988@casper.infradead.org>
+References: <20210209202134.GA308988@casper.infradead.org> <591237.1612886997@warthog.procyon.org.uk> <CAHk-=wj-k86FOqAVQ4ScnBkX3YEKuMzqTEB2vixdHgovJpHc9w@mail.gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     dhowells@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Jeff Layton <jlayton@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Trond Myklebust <trondmy@hammerspace.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         ceph-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cachefs <linux-cachefs@redhat.com>,
-        CIFS <linux-cifs@vger.kernel.org>,
+        linux-cachefs@redhat.com, CIFS <linux-cifs@vger.kernel.org>,
         linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
         v9fs-developer@lists.sourceforge.net,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [GIT PULL] fscache: I/O API modernisation and netfs helper library
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <618608.1612905923.1@warthog.procyon.org.uk>
+Date:   Tue, 09 Feb 2021 21:25:23 +0000
+Message-ID: <618609.1612905923@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Feb 9, 2021 at 2:07 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> So I'm looking at this early, because I have more time now than I will
-> have during the merge window, and honestly, your pull requests have
-> been problematic in the past.
->
-> The PG_fscache bit waiting functions are completely crazy. The comment
-> about "this will wake up others" is actively wrong, and the waiting
-> function looks insane, because you're mixing the two names for
-> "fscache" which makes the code look totally incomprehensible. Why
-> would we wait for PF_fscache, when PG_private_2 was set? Yes, I know
-> why, but the code looks entirely nonsensical.
->
-> So just looking at the support infrastructure changes, I get a big "Hmm".
->
-> But the thing that makes me go "No, I won't pull this", is that it has
-> all the same hallmark signs of trouble that I've complained about
-> before: I see absolutely zero sign of "this has more developers
-> involved".
->
-> There's not a single ack from a VM person for the VM changes. There's
-> no sign that this isn't yet another "David Howells went off alone and
-> did something that absolutely nobody else cared about".
->
+Matthew Wilcox <willy@infradead.org> wrote:
 
-I care about it.
+> Yeah, I have trouble with the private2 vs fscache bit too.  I've been
+> trying to persuade David that he doesn't actually need an fscache
+> bit at all; he can just increment the page's refcount to prevent it
+> from being freed while he writes data to the cache.
 
-I cannot speak to your concerns about the infrastructure changes, nor
-can I comment about a given maintainers involvement or lack thereof.
-However, I can tell you what my involvement has been.  I got involved
-with it because some of our customers use fscache with NFS and I've
-supported it.  I saw dhowells rewriting it to greatly simplify the
-code and make it easier to debug and wanted to support the effort.
+That's not what the bit is primarily being used for.  It's being used to
+prevent the starting of a second write to the cache whilst the first is in
+progress and also to prevent modification whilst DMA to the cache is in
+progress.  This isn't so obvious in this cut-down patchset, but comes more in
+to play with full caching of local writes in my fscache-iter branch.
 
-I have been working on the NFS conversion as dhowells has been
-evolving the fscache-iter API.  David first posted the series I think
-in Dec 2019 and I started with NFS about mid-year 2020, and had my
-first post of NFS patches in July:
-https://marc.info/?l=linux-nfs&m=159482591232752&w=2
+I can't easily share PG_writeback for this because each bit covers a write to
+a different place.  PG_writeback covers the write to the server and PG_fscache
+the write to the cache.  These writes may get split up differently and will
+most likely finish at different times.
 
-One thing that came out of the earlier iterations as a result of my
-testing was the need for the network filesystem to be able to 'cap'
-the IO size based on its parameters, hence the "clamp_length()"
-function.  So the next iteration dhowells further evolved it into a
-'netfs' API and a 'fscache' API, and my November post was based on
-that:
-https://marc.info/?l=linux-nfs&m=160596540022461&w=2
+If I have to share PG_writeback, that will mean storing both states for each
+page somewhere else and then "OR'ing" them together to drive PG_writeback.
 
-Each iteration has greatly simplified the interface to the network
-filesystem until today where the API is pretty simple.  I have done
-extensive tests with each iteration with all the main NFS versions,
-specific unit tests, xfstests, etc.  However my test matrix did not
-hit enough fscache + pNFS servers, and I found a problem too late to
-include in his pull request.  This is mostly why my patches were not
-included to convert NFS to the new fscache API, but I intend to work
-out the remaining issues for the next merge window, and I'll have an
-opportunity to do more testing last week of Feb with the NFS "remote
-bakeathon".  My most recent post was at the end of Jan, and Anna is
-taking the first 5 refactoring patches in the next merge window:
-https://marc.info/?l=linux-nfs&m=161184595127618&w=2
-
-I do not have the skills of a Trond or Anna NFS developers, but I have
-worked in this in earnest and intend to see it through to completion
-and support NFS and fscache work.  I have received some feedback on
-the NFS patches though it's not been a lot, I do know I have some
-things to address still.  With open source, no feedback is hard to
-draw conclusions other than it's not "super popular" area, but we
-always knew that about fscache - it's an "add on" that some customers
-require but not everyone. I know Trond speaks up when I make a mistake
-and/or something will cause a problem, so I consider the silence
-mostly a positive sign.
-
-
-
-> See my problem? I need to be convinced that this makes sense outside
-> of your world, and it's not yet another thing that will cause problems
-> down the line because nobody else really ever used it or cared about
-> it until we hit a snag.
->
->                   Linus
->
+David
 
