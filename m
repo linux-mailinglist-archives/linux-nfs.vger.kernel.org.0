@@ -2,90 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C049315A4E
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Feb 2021 00:52:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE269315A4D
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Feb 2021 00:52:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234129AbhBIXwD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 9 Feb 2021 18:52:03 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50090 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234138AbhBIWOy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Feb 2021 17:14:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612908799;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=njyj2XCXYGtI5AX/JV14IYXR8Ipi7RDaSVkhJ8oSglg=;
-        b=UefyHNbYqf67ArC+LWa8eLd98C3qghKmJwIrkefcPmete97BHKJ8kVaCMYTUlVKaKp6JDm
-        4lxRpzoN4OOZBsbR6GWx29Hw1owF5xXPS/OD4rB8zFQCBoCyTfCQLpyAPtcXjtXwjDWKFs
-        lLYV+clM+k6eG4raJ1cb+/XmpjJVLnI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-166-Ez0mEz_fP32izAfxafFp3w-1; Tue, 09 Feb 2021 16:25:32 -0500
-X-MC-Unique: Ez0mEz_fP32izAfxafFp3w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B7E8FCC626;
-        Tue,  9 Feb 2021 21:25:30 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E044519C78;
-        Tue,  9 Feb 2021 21:25:23 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20210209202134.GA308988@casper.infradead.org>
-References: <20210209202134.GA308988@casper.infradead.org> <591237.1612886997@warthog.procyon.org.uk> <CAHk-=wj-k86FOqAVQ4ScnBkX3YEKuMzqTEB2vixdHgovJpHc9w@mail.gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        David Wysochanski <dwysocha@redhat.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        ceph-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cachefs@redhat.com, CIFS <linux-cifs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        v9fs-developer@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] fscache: I/O API modernisation and netfs helper library
+        id S233999AbhBIXvx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 9 Feb 2021 18:51:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234129AbhBIWOx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Feb 2021 17:14:53 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDA2FC08EC44
+        for <linux-nfs@vger.kernel.org>; Tue,  9 Feb 2021 14:01:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=iz8v7WB8rAGB4dR54Ek5r1ashQ2mtNeQY3DSOI1ePbM=; b=VcBQA8MMzx3QcTXwVmuTEW1jsd
+        wYKfAMFZkSCiFIifea10qRixkxsFSHXIcCtHkkHR4Kea0GwOYmaDVzH0m7zDTNEmrrYSRbhgCLeyw
+        u7IUcthEKP+N+V4ipaz22OBI1NMCZaquvSHvgClYMRbHW3kgNHxxqqMua1tRjwAGxNyMYkQoQ6Nnd
+        iJ+d+SAUYVrP/fSMMo+cdTbOV7tkvoDR1lnPlsFRGQ1csKopW+5Ms6MCVSSwdjZ2Gp82C7WyoniGU
+        ngKPbn9Q3J53KJ1u2gd34evnq9D13S1aMa0/o8wfePbebAub2Efvx3RwT1vRtCJjC5XEwh2MYpGfx
+        TQx03e2w==;
+Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1l9b4Z-0080z9-0n; Tue, 09 Feb 2021 22:01:28 +0000
+Date:   Tue, 9 Feb 2021 22:01:27 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     "mgorman@suse.de" <mgorman@suse.de>,
+        "brouer@redhat.com" <brouer@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: Fwd: alloc_pages_bulk()
+Message-ID: <20210209220127.GB308988@casper.infradead.org>
+References: <2A0C36E7-8CB0-486F-A8DB-463CA28C5C5D@oracle.com>
+ <EEB0B974-6E63-41A0-9C01-F0DEA39FC4BF@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <618608.1612905923.1@warthog.procyon.org.uk>
-Date:   Tue, 09 Feb 2021 21:25:23 +0000
-Message-ID: <618609.1612905923@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <EEB0B974-6E63-41A0-9C01-F0DEA39FC4BF@oracle.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
+On Mon, Feb 08, 2021 at 05:50:51PM +0000, Chuck Lever wrote:
+> > We've been discussing how NFSD can more efficiently refill its
+> > receive buffers (currently alloc_page() in a loop; see
+> > net/sunrpc/svc_xprt.c::svc_alloc_arg()).
 
-> Yeah, I have trouble with the private2 vs fscache bit too.  I've been
-> trying to persuade David that he doesn't actually need an fscache
-> bit at all; he can just increment the page's refcount to prevent it
-> from being freed while he writes data to the cache.
-
-That's not what the bit is primarily being used for.  It's being used to
-prevent the starting of a second write to the cache whilst the first is in
-progress and also to prevent modification whilst DMA to the cache is in
-progress.  This isn't so obvious in this cut-down patchset, but comes more in
-to play with full caching of local writes in my fscache-iter branch.
-
-I can't easily share PG_writeback for this because each bit covers a write to
-a different place.  PG_writeback covers the write to the server and PG_fscache
-the write to the cache.  These writes may get split up differently and will
-most likely finish at different times.
-
-If I have to share PG_writeback, that will mean storing both states for each
-page somewhere else and then "OR'ing" them together to drive PG_writeback.
-
-David
+I'm not familiar with the sunrpc architecture, but this feels like you're
+trying to optimise something that shouldn't exist.  Ideally a write
+would ask the page cache for the pages that correspond to the portion
+of the file which is being written to.  I appreciate that doesn't work
+well for, eg, NFS-over-TCP, but for NFS over any kind of RDMA, that
+should be possible, right?
 
