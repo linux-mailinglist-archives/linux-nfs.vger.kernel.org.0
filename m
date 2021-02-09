@@ -2,118 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DBB83142FB
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Feb 2021 23:28:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43FF3314D2A
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Feb 2021 11:35:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231480AbhBHW2b (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 8 Feb 2021 17:28:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49076 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231235AbhBHW2W (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 8 Feb 2021 17:28:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 91CADACF4;
-        Mon,  8 Feb 2021 22:27:33 +0000 (UTC)
-From:   NeilBrown <neil@brown.name>
-To:     Steve Dickson <SteveD@RedHat.com>,
-        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Date:   Tue, 09 Feb 2021 09:27:29 +1100
-Subject: Re: [PATCH 2/2] mountd: Add debug processing from nfs.conf
-In-Reply-To: <66fbe743-aa9d-ca60-8955-c2859d9ab9df@RedHat.com>
-References: <20210201230147.45593-1-steved@redhat.com>
- <20210201230147.45593-2-steved@redhat.com>
- <87y2fzcsfc.fsf@notabene.neil.brown.name>
- <66fbe743-aa9d-ca60-8955-c2859d9ab9df@RedHat.com>
-Message-ID: <87sg66ci0e.fsf@notabene.neil.brown.name>
+        id S231809AbhBIKe6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 9 Feb 2021 05:34:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40215 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231902AbhBIKcs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Feb 2021 05:32:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1612866680;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sgD3C97UhFZC9s4wn06Vwgzb0NXoGpd4WUSuY/zq4Jg=;
+        b=XbNeZNd4vtGrzuWZ+OKZYoVKRRXmbZt5z/+12b1CRbTARfLTVaEEHpHD6yo65wH58D8F5V
+        ofl+5H6rod0XHqEUKl90msIaKc8Jbp+crXW2/TRWs2wfx7hgTL8odeNlF4s6982Bqmbsfl
+        b96l7k6lpiST9vjF6Nil2KF4/UAhz68=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-520-hesut35RP6ufkaImScVnVA-1; Tue, 09 Feb 2021 05:31:16 -0500
+X-MC-Unique: hesut35RP6ufkaImScVnVA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21E85107ACE6;
+        Tue,  9 Feb 2021 10:31:15 +0000 (UTC)
+Received: from carbon (unknown [10.36.110.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7154B39A65;
+        Tue,  9 Feb 2021 10:31:09 +0000 (UTC)
+Date:   Tue, 9 Feb 2021 11:31:08 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     "mgorman@suse.de" <mgorman@suse.de>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>, brouer@redhat.com,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: Re: alloc_pages_bulk()
+Message-ID: <20210209113108.1ca16cfa@carbon>
+In-Reply-To: <EEB0B974-6E63-41A0-9C01-F0DEA39FC4BF@oracle.com>
+References: <2A0C36E7-8CB0-486F-A8DB-463CA28C5C5D@oracle.com>
+        <EEB0B974-6E63-41A0-9C01-F0DEA39FC4BF@oracle.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Mon, 8 Feb 2021 17:50:51 +0000
+Chuck Lever <chuck.lever@oracle.com> wrote:
 
-On Mon, Feb 08 2021, Steve Dickson wrote:
+> Sorry for resending. I misremembered the linux-mm address.
+> 
+> > Begin forwarded message:
+> > 
+> > [ please Cc: me, I'm not subscribed to linux-mm ]
+> > 
+> > We've been discussing how NFSD can more efficiently refill its
+> > receive buffers (currently alloc_page() in a loop; see
+> > net/sunrpc/svc_xprt.c::svc_alloc_arg()).
+> > 
 
-> On 2/7/21 7:30 PM, NeilBrown wrote:
->> On Mon, Feb 01 2021, Steve Dickson wrote:
->>=20
->>> Signed-off-by: Steve Dickson <steved@redhat.com>
->>> ---
->>>  nfs.conf              | 2 +-
->>>  utils/mountd/mountd.c | 3 +++
->>>  2 files changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/nfs.conf b/nfs.conf
->>> index 186a5b19..9fcf1bf0 100644
->>> --- a/nfs.conf
->>> +++ b/nfs.conf
->>> @@ -30,7 +30,7 @@
->>>  # udp-port=3D0
->>>  #
->>>  [mountd]
->>> -# debug=3D0
->>> +# debug=3D"all|auth|call|general|parse"
->>>  # manage-gids=3Dn
->>>  # descriptors=3D0
->>>  # port=3D0
->>> diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
->>> index 988e51c5..a480265a 100644
->>> --- a/utils/mountd/mountd.c
->>> +++ b/utils/mountd/mountd.c
->>> @@ -684,6 +684,9 @@ read_mount_conf(char **argv)
->>>  	if (s && !state_setup_basedir(argv[0], s))
->>>  		exit(1);
->>>=20=20
->>> +	if ((s =3D conf_get_str("mountd", "debug")) !=3D NULL)
->>> +		xlog_sconfig(s, 1);
->>> +
->>=20
->> Why is this needed?
->> A few lines higher up is
->>   	xlog_from_conffile("mountd");
->> which calls
->>  	kinds =3D conf_get_list(service, "debug");
->> and passes each word that it finds to xlog_sconfig()
->> ??
->>=20
->> I just tested setting "debug=3Dall" in the mountd section of nfs.conf,
->> and it seems to work without this patch.
-> No it is not... I didn't realize xlog_from_conffile() process
-> the debug config variable... maybe we should change the name
-> to something like xlog_debug_conffile()... something more
-> descriptive as to what it does.
->
-> I will clean it up... in a bit.
+It looks like you could also take advantage of bulk free in:
+ svc_free_res_pages()
 
-Thanks.  I agree that including "debug" in that function name would
-help. Maybe "conffile_set_debug()", or your suggestion.
+I would like to use the page bulk alloc API here:
+ https://github.com/torvalds/linux/blob/master/net/core/page_pool.c#L201-L209
 
-Thanks,
-NeilBrown
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> > Neil Brown pointed me to this old thread:
+> > 
+> > https://lore.kernel.org/lkml/20170109163518.6001-1-mgorman@techsingularity.net/
+> > 
+> > We see that many of the prerequisites are in v5.11-rc, but
+> > alloc_page_bulk() is not. I tried forward-porting 4/4 in that
+> > series, but enough internal APIs have changed since 2017 that
+> > the patch does not come close to applying and compiling.
 
------BEGIN PGP SIGNATURE-----
+I forgot that this was never merged.  It is sad as Mel showed huge
+improvement with his work.
 
-iQJEBAEBCAAuFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAmAhutEQHG5laWxAYnJv
-d24ubmFtZQAKCRA57J7dVmKBuXcTEACoZJXrmp2B+ruTDCThBg37IhG3c8MpGFyU
-PeV7gvK9wm0Cnps2K2mREAgfcmpfeITpVFeFdTmpnEwyzLGw3PdC/iPjP+Lt3Dz+
-vdTien4r82aQkzZYNSloUlOxj3sxBdUKpI0TNA7zjU7hW2MymOrzfdJzHvTPTqq5
-oV7E9e04v+9gXjOmKbO8taO1Y+oQBVNdVv5TXMpN6/ptKEx4C1/9G+w3hMNo5Mjy
-hGoSSNgJFXjJgOCKP83JNuyxgfHh5Hi4viIhz4kNIjXTbR4vhzDMkfbvMqugqtgC
-gDAbTjzrL6UFizh+B3/U4Scfs52HF8F4bLWDAywu0qB1UXyXJ0QYV4kjEzKIiSXe
-3Om5B3JPN0lNpOgspPlIhhD0zKg0AMYMM5d8q20oKU/yJVh67l6Tt9MGPKVzLVJE
-gVQRxse22YJ4RxPOYVWcHSGut0VVBG2gxrYiZsmTnrSATHH5OjlFFZl74ZLZr4O7
-siEHN9s235VJB8bmnY4GrIFMEFCsOQFdgEcnlv4skHefZg6/4O7OFWLXxw3CVKyt
-mFyd7EquoIKdta1lAswRUhWblm+LWDP6ysaWsaNd5ohpOMEOLgAZVj7ViHk7eOcp
-S1C/iH9OlFtJ39TQOttTdWmVi8YsxZu/x3TO5bzHNEA8yYQutSvPfQGAb5BvhfEI
-knSZxqj6Qg==
-=/YU1
------END PGP SIGNATURE-----
---=-=-=--
+> > I'm wondering:
+> > 
+> > a) is there a newer version of that work?
+> > 
+
+Mel, why was this work never merged upstream?
+
+
+> > b) if not, does there exist a preferred API in 5.11 for bulk
+> > page allocation?
+> > 
+> > Many thanks for any guidance!
+
+I have a kernel module that micro-bench the API alloc_pages_bulk() here:
+ https://github.com/netoptimizer/prototype-kernel/blob/master/kernel/mm/bench/page_bench04_bulk.c#L97
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
