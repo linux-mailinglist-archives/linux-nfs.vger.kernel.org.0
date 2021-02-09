@@ -2,115 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F985315C2E
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Feb 2021 02:27:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0992A3160B5
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Feb 2021 09:14:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234659AbhBJB0X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 9 Feb 2021 20:26:23 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:34015 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234561AbhBJBY7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Feb 2021 20:24:59 -0500
-Received: by mail-il1-f199.google.com with SMTP id c16so777993ile.1
-        for <linux-nfs@vger.kernel.org>; Tue, 09 Feb 2021 17:24:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=2vMkVRm2x4zbU65Zq94duQZfZU4RCzVVhgNBmR6/9hQ=;
-        b=OS/9JZu3r0WDAsH9j1sGqC3S0805pWw/TuUjamd1Y2XRPNOT+t5dR1LdQZjmZkYDnn
-         TAZpt69cVzm/7qXNeZ/2TgNa92vzcbyFw2zJSHum2S/wHt2HqSAOL7USiskhULQG/ivp
-         WA+/wxJhjm7a+Zo4tdGysZlzjcG/THVTSFivWQf/DNmFLZoTeQEdfQFhM+jDOW47rUlo
-         4WsFAiiTX5au+o37yv+UQJhs74HU7Rm9l5XmkPL+ryDXMD6NLgw2LB6OOw4192Y5qSQR
-         mqMShF44rSkENUqEb5T1pC7giX+Nh/vYC/Wd/TlQD3Q2Etc6u1QhfQJGJcHp94diDBc3
-         vZIA==
-X-Gm-Message-State: AOAM530u39mpwQK8Xfj/2hnk5RZfuOe5lkt9P4ysT65DTrlmEUzTa3SS
-        osk6EqAb0t+zhhUnL8da0Sm0DhvonDy5G/zeGBJocA3wFDdd
-X-Google-Smtp-Source: ABdhPJzqkqqDFx8Mjm98Xwt5yO10GQ6mjXcZkdI+PWhSxcUD19xgunM/mIya0VQyZ4vkI7kEhl9Lk6bDVUcPRbju0rvNeMd50Dn6
+        id S231324AbhBJINh convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 10 Feb 2021 03:13:37 -0500
+Received: from spam.auroraoh.com ([24.56.89.101]:55912 "EHLO
+        barracuda.auroraoh.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S233761AbhBJIN1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 10 Feb 2021 03:13:27 -0500
+X-ASG-Debug-ID: 1612944670-112c0d6a799cb90001-suBQlS
+Received: from COASRV-MAIL2.auroraoh.loc (coasrv-mail2.auroraoh.loc [10.3.1.15]) by barracuda.auroraoh.com with ESMTP id jJ81a9DkExpcgPkc; Wed, 10 Feb 2021 03:11:10 -0500 (EST)
+X-Barracuda-Envelope-From: JanuskaD@auroraoh.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.3.1.15
+Received: from [172.20.10.5] (197.210.29.8) by COASRV-MAIL2.auroraoh.loc
+ (10.3.1.15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 9 Feb 2021
+ 02:45:33 -0500
+Content-Type: text/plain; charset="iso-8859-1"
+X-Barracuda-RBL-Trusted-Forwarder: 172.20.10.5
 MIME-Version: 1.0
-X-Received: by 2002:a92:dd0a:: with SMTP id n10mr619114ilm.191.1612920258517;
- Tue, 09 Feb 2021 17:24:18 -0800 (PST)
-Date:   Tue, 09 Feb 2021 17:24:18 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000f622105baf14335@google.com>
-Subject: UBSAN: shift-out-of-bounds in xprt_do_reserve
-From:   syzbot <syzbot+f3a0fa110fd630ab56c8@syzkaller.appspotmail.com>
-To:     anna.schumaker@netapp.com, bfields@fieldses.org,
-        chuck.lever@oracle.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        trond.myklebust@hammerspace.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: We are a registered Private Loan Investment Company in the United Kingdom,
+ we also registered with the Turkish British Chamber of Commerce and Industry
+ (TBCCI) we have operations in Europe and Asia.
+To:     Recipients <januskad@auroraoh.com>
+X-ASG-Orig-Subj: We are a registered Private Loan Investment Company in the United Kingdom,
+ we also registered with the Turkish British Chamber of Commerce and Industry
+ (TBCCI) we have operations in Europe and Asia.
+From:   <januskad@auroraoh.com>
+Date:   Tue, 9 Feb 2021 15:44:47 +0800
+Reply-To: <cfolimiited@gmail.com>
+X-Priority: 1 (High)
+X-Antivirus: Avast (VPS 210207-2, 02/07/2021), Outbound message
+X-Antivirus-Status: Clean
+Message-ID: <04dad0e2-2f3b-46a3-bb30-cab23ca007d4@COASRV-MAIL2.auroraoh.loc>
+X-Originating-IP: [197.210.29.8]
+X-ClientProxiedBy: COASRV-MAIL3.auroraoh.loc (10.3.1.13) To
+ COASRV-MAIL2.auroraoh.loc (10.3.1.15)
+X-Barracuda-Connect: coasrv-mail2.auroraoh.loc[10.3.1.15]
+X-Barracuda-Start-Time: 1612944670
+X-Barracuda-URL: https://10.3.1.12:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at auroraoh.com
+X-Barracuda-Scan-Msg-Size: 755
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Spam-Score: 1.61
+X-Barracuda-Spam-Status: No, SCORE=1.61 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=5.0 tests=BSF_SC0_SA609_NRN, BSF_SC0_SA912_RP_FR, BSF_SC0_SA_TO_FROM_ADDR_MATCH, NO_REAL_NAME
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.87880
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
+        0.00 NO_REAL_NAME           From: does not include a real name
+        0.01 BSF_SC0_SA912_RP_FR    Custom Rule BSF_SC0_SA912_RP_FR
+        0.50 BSF_SC0_SA_TO_FROM_ADDR_MATCH Sender Address Matches Recipient
+                                   Address
+        1.10 BSF_SC0_SA609_NRN      Custom Rule SA609_NRN
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+We are seeking for beneficiaries who source for fund to expand/relocating their business interest abroad. We are ready to fund projects outside Turkey and United Kingdom in the form of Soft Loan. We grant loans to both corporate and private entities at a low interest rate of 2% R.O.I per annul.
 
-syzbot found the following issue on:
+We like to grant loan in the following sectors: oil/Gas, banking, real estate, stock speculation and mining, transportation, health sector and tobacco, Communication Services, Agriculture Forestry & Fishing, thus any sector. The terms are very flexible and interesting.
 
-HEAD commit:    dd86e7fa Merge tag 'pci-v5.11-fixes-2' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=105930c4d00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=266a5362c89c8127
-dashboard link: https://syzkaller.appspot.com/bug?extid=f3a0fa110fd630ab56c8
-compiler:       Debian clang version 11.0.1-2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ba3038d00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15cf0d64d00000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f3a0fa110fd630ab56c8@syzkaller.appspotmail.com
-
-================================================================================
-UBSAN: shift-out-of-bounds in net/sunrpc/xprt.c:658:14
-shift exponent 536870976 is too large for 64-bit type 'unsigned long'
-CPU: 1 PID: 8411 Comm: syz-executor902 Not tainted 5.11.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:79 [inline]
- dump_stack+0x137/0x1be lib/dump_stack.c:120
- ubsan_epilogue lib/ubsan.c:148 [inline]
- __ubsan_handle_shift_out_of_bounds+0x432/0x4d0 lib/ubsan.c:395
- xprt_calc_majortimeo net/sunrpc/xprt.c:658 [inline]
- xprt_init_majortimeo net/sunrpc/xprt.c:686 [inline]
- xprt_request_init net/sunrpc/xprt.c:1805 [inline]
- xprt_do_reserve+0x751/0x770 net/sunrpc/xprt.c:1815
- __rpc_execute+0x1e1/0xb00 net/sunrpc/sched.c:891
- rpc_run_task+0x5a4/0x740 net/sunrpc/clnt.c:1140
- rpc_call_sync net/sunrpc/clnt.c:1169 [inline]
- rpc_ping net/sunrpc/clnt.c:2682 [inline]
- rpc_create_xprt+0x2f3/0x700 net/sunrpc/clnt.c:477
- rpc_create+0x5df/0x8a0 net/sunrpc/clnt.c:593
- nfs_create_rpc_client+0x5a0/0x740 fs/nfs/client.c:536
- nfs_init_client+0x53/0xf0 fs/nfs/client.c:653
- nfs_init_server fs/nfs/client.c:692 [inline]
- nfs_create_server+0x82d/0x2130 fs/nfs/client.c:996
- nfs_try_get_tree+0x385/0x1040 fs/nfs/super.c:939
- vfs_get_tree+0x86/0x270 fs/super.c:1496
- do_new_mount fs/namespace.c:2881 [inline]
- path_mount+0x17ad/0x2a00 fs/namespace.c:3211
- do_mount fs/namespace.c:3224 [inline]
- __do_sys_mount fs/namespace.c:3432 [inline]
- __se_sys_mount+0x28c/0x320 fs/namespace.c:3409
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x43ef89
-Code: 28 c3 e8 2a 14 00 00 66 2e 0f 1f 84 00 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe0a856338 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 0030656c69662f2e RCX: 000000000043ef89
-RDX: 0000000020fb5ffc RSI: 0000000020000080 RDI: 00000000200000c0
-RBP: 0000000000402f70 R08: 000000002000a000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000403000
-R13: 0000000000000000 R14: 00000000004ac018 R15: 0000000000400488
-================================================================================
+Please contact us for more details;
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Kind regards,
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Paul McCann
+
+-- 
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
+
