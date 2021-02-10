@@ -2,78 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0992A3160B5
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Feb 2021 09:14:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53CDD316181
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Feb 2021 09:53:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231324AbhBJINh convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 10 Feb 2021 03:13:37 -0500
-Received: from spam.auroraoh.com ([24.56.89.101]:55912 "EHLO
-        barracuda.auroraoh.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S233761AbhBJIN1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 10 Feb 2021 03:13:27 -0500
-X-ASG-Debug-ID: 1612944670-112c0d6a799cb90001-suBQlS
-Received: from COASRV-MAIL2.auroraoh.loc (coasrv-mail2.auroraoh.loc [10.3.1.15]) by barracuda.auroraoh.com with ESMTP id jJ81a9DkExpcgPkc; Wed, 10 Feb 2021 03:11:10 -0500 (EST)
-X-Barracuda-Envelope-From: JanuskaD@auroraoh.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.3.1.15
-Received: from [172.20.10.5] (197.210.29.8) by COASRV-MAIL2.auroraoh.loc
- (10.3.1.15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 9 Feb 2021
- 02:45:33 -0500
-Content-Type: text/plain; charset="iso-8859-1"
-X-Barracuda-RBL-Trusted-Forwarder: 172.20.10.5
+        id S229562AbhBJIx2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 10 Feb 2021 03:53:28 -0500
+Received: from outbound-smtp13.blacknight.com ([46.22.139.230]:37291 "EHLO
+        outbound-smtp13.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229452AbhBJIwZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 10 Feb 2021 03:52:25 -0500
+X-Greylist: delayed 570 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Feb 2021 03:52:24 EST
+Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
+        by outbound-smtp13.blacknight.com (Postfix) with ESMTPS id 5BCA11C3429
+        for <linux-nfs@vger.kernel.org>; Wed, 10 Feb 2021 08:42:00 +0000 (GMT)
+Received: (qmail 21703 invoked from network); 10 Feb 2021 08:42:00 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 10 Feb 2021 08:42:00 -0000
+Date:   Wed, 10 Feb 2021 08:41:55 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: alloc_pages_bulk()
+Message-ID: <20210210084155.GA3697@techsingularity.net>
+References: <2A0C36E7-8CB0-486F-A8DB-463CA28C5C5D@oracle.com>
+ <EEB0B974-6E63-41A0-9C01-F0DEA39FC4BF@oracle.com>
+ <20210209113108.1ca16cfa@carbon>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: We are a registered Private Loan Investment Company in the United Kingdom,
- we also registered with the Turkish British Chamber of Commerce and Industry
- (TBCCI) we have operations in Europe and Asia.
-To:     Recipients <januskad@auroraoh.com>
-X-ASG-Orig-Subj: We are a registered Private Loan Investment Company in the United Kingdom,
- we also registered with the Turkish British Chamber of Commerce and Industry
- (TBCCI) we have operations in Europe and Asia.
-From:   <januskad@auroraoh.com>
-Date:   Tue, 9 Feb 2021 15:44:47 +0800
-Reply-To: <cfolimiited@gmail.com>
-X-Priority: 1 (High)
-X-Antivirus: Avast (VPS 210207-2, 02/07/2021), Outbound message
-X-Antivirus-Status: Clean
-Message-ID: <04dad0e2-2f3b-46a3-bb30-cab23ca007d4@COASRV-MAIL2.auroraoh.loc>
-X-Originating-IP: [197.210.29.8]
-X-ClientProxiedBy: COASRV-MAIL3.auroraoh.loc (10.3.1.13) To
- COASRV-MAIL2.auroraoh.loc (10.3.1.15)
-X-Barracuda-Connect: coasrv-mail2.auroraoh.loc[10.3.1.15]
-X-Barracuda-Start-Time: 1612944670
-X-Barracuda-URL: https://10.3.1.12:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at auroraoh.com
-X-Barracuda-Scan-Msg-Size: 755
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Spam-Score: 1.61
-X-Barracuda-Spam-Status: No, SCORE=1.61 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=5.0 tests=BSF_SC0_SA609_NRN, BSF_SC0_SA912_RP_FR, BSF_SC0_SA_TO_FROM_ADDR_MATCH, NO_REAL_NAME
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.87880
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
-        0.00 NO_REAL_NAME           From: does not include a real name
-        0.01 BSF_SC0_SA912_RP_FR    Custom Rule BSF_SC0_SA912_RP_FR
-        0.50 BSF_SC0_SA_TO_FROM_ADDR_MATCH Sender Address Matches Recipient
-                                   Address
-        1.10 BSF_SC0_SA609_NRN      Custom Rule SA609_NRN
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20210209113108.1ca16cfa@carbon>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-We are seeking for beneficiaries who source for fund to expand/relocating their business interest abroad. We are ready to fund projects outside Turkey and United Kingdom in the form of Soft Loan. We grant loans to both corporate and private entities at a low interest rate of 2% R.O.I per annul.
+On Tue, Feb 09, 2021 at 11:31:08AM +0100, Jesper Dangaard Brouer wrote:
+> > > Neil Brown pointed me to this old thread:
+> > > 
+> > > https://lore.kernel.org/lkml/20170109163518.6001-1-mgorman@techsingularity.net/
+> > > 
+> > > We see that many of the prerequisites are in v5.11-rc, but
+> > > alloc_page_bulk() is not. I tried forward-porting 4/4 in that
+> > > series, but enough internal APIs have changed since 2017 that
+> > > the patch does not come close to applying and compiling.
+> 
+> I forgot that this was never merged.  It is sad as Mel showed huge
+> improvement with his work.
+> 
+> > > I'm wondering:
+> > > 
+> > > a) is there a newer version of that work?
+> > > 
+> 
+> Mel, why was this work never merged upstream?
+> 
 
-We like to grant loan in the following sectors: oil/Gas, banking, real estate, stock speculation and mining, transportation, health sector and tobacco, Communication Services, Agriculture Forestry & Fishing, thus any sector. The terms are very flexible and interesting.
-
-Please contact us for more details;
-
-
-Kind regards,
-
-Paul McCann
+Lack of realistic consumers to drive it forward, finalise the API and
+confirm it was working as expected. It eventually died as a result. If it
+was reintroduced, it would need to be forward ported and then implement
+at least one user on top.
 
 -- 
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
-
+Mel Gorman
+SUSE Labs
