@@ -2,296 +2,213 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B826131677F
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Feb 2021 14:08:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73C8E316B46
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Feb 2021 17:33:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230148AbhBJNIW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 10 Feb 2021 08:08:22 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53800 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231781AbhBJNHu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 10 Feb 2021 08:07:50 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 5445BAEB9;
-        Wed, 10 Feb 2021 13:07:07 +0000 (UTC)
-Date:   Wed, 10 Feb 2021 13:07:05 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: alloc_pages_bulk()
-Message-ID: <20210210130705.GC3629@suse.de>
-References: <2A0C36E7-8CB0-486F-A8DB-463CA28C5C5D@oracle.com>
- <EEB0B974-6E63-41A0-9C01-F0DEA39FC4BF@oracle.com>
- <20210209113108.1ca16cfa@carbon>
- <20210210084155.GA3697@techsingularity.net>
- <20210210124103.56ed1e95@carbon>
+        id S232314AbhBJQbQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 10 Feb 2021 11:31:16 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:24294 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232487AbhBJQar (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 10 Feb 2021 11:30:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1612974560;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MizTFqaPr9s83orSxyP4M9HI4/HyznwEJQAwf0cC91A=;
+        b=TmZibWHbb7DvB6E0/P/SyloUADQuyFpEB2ikHXEYPUl447OJcJTRxpoNJyAYTZt6GlOXV/
+        hhLh2wJxNr4sKglGtV4R7JwBuQa61U6oK8dKR+5oizUDHYRuAhwWJsnroiwVQmXERC1nNG
+        SwILLMkkdgqtVJabFs94/Szktn2Htdc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-416-IuDV1FoyPIq_VD0rQY5azw-1; Wed, 10 Feb 2021 11:29:16 -0500
+X-MC-Unique: IuDV1FoyPIq_VD0rQY5azw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F6421005501;
+        Wed, 10 Feb 2021 16:29:14 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-115-23.rdu2.redhat.com [10.10.115.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4622660C0F;
+        Wed, 10 Feb 2021 16:29:08 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wj-k86FOqAVQ4ScnBkX3YEKuMzqTEB2vixdHgovJpHc9w@mail.gmail.com>
+References: <CAHk-=wj-k86FOqAVQ4ScnBkX3YEKuMzqTEB2vixdHgovJpHc9w@mail.gmail.com> <591237.1612886997@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        ceph-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-cachefs@redhat.com, CIFS <linux-cifs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        v9fs-developer@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] fscache: I/O API modernisation and netfs helper library
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20210210124103.56ed1e95@carbon>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1330472.1612974547.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Wed, 10 Feb 2021 16:29:07 +0000
+Message-ID: <1330473.1612974547@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 10, 2021 at 12:41:03PM +0100, Jesper Dangaard Brouer wrote:
-> On Wed, 10 Feb 2021 08:41:55 +0000
-> Mel Gorman <mgorman@techsingularity.net> wrote:
-> 
-> > On Tue, Feb 09, 2021 at 11:31:08AM +0100, Jesper Dangaard Brouer wrote:
-> > > > > Neil Brown pointed me to this old thread:
-> > > > > 
-> > > > > https://lore.kernel.org/lkml/20170109163518.6001-1-mgorman@techsingularity.net/
-> > > > > 
-> > > > > We see that many of the prerequisites are in v5.11-rc, but
-> > > > > alloc_page_bulk() is not. I tried forward-porting 4/4 in that
-> > > > > series, but enough internal APIs have changed since 2017 that
-> > > > > the patch does not come close to applying and compiling.  
-> > > 
-> > > I forgot that this was never merged.  It is sad as Mel showed huge
-> > > improvement with his work.
-> > >   
-> > > > > I'm wondering:
-> > > > > 
-> > > > > a) is there a newer version of that work?
-> > > > >   
-> > > 
-> > > Mel, why was this work never merged upstream?
-> > >   
-> > 
-> > Lack of realistic consumers to drive it forward, finalise the API and
-> > confirm it was working as expected. It eventually died as a result. If it
-> > was reintroduced, it would need to be forward ported and then implement
-> > at least one user on top.
-> 
-> I guess I misunderstood you back in 2017. I though that I had presented
-> a clear use-case/consumer in page_pool[1]. 
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-You did but it was never integrated and/or tested AFAIK. I see page_pool
-accepts orders so even by the original prototype, it would only have seen
-a benefit for order-0 pages. It would also have needed some supporting
-data that it actually helped with drivers using the page_pool interface
-which I was not in the position to properly test at the time.
+> The PG_fscache bit waiting functions are completely crazy. The comment
+> about "this will wake up others" is actively wrong, and the waiting
+> function looks insane, because you're mixing the two names for
+> "fscache" which makes the code look totally incomprehensible. Why
+> would we wait for PF_fscache, when PG_private_2 was set? Yes, I know
+> why, but the code looks entirely nonsensical.
 
-> But you wanted the code as
-> part of the patchset I guess.  I though, I could add it later via the
-> net-next tree.
-> 
+How about the attached change to make it more coherent and fix the doc
+comment?
 
-Yes, a consumer of the code should go in at the same time with supporting
-data showing it actually helps because otherwise it's dead code.
+David
+---
+commit 9a28f7e68602193ce020a41f855f71cc55f693b9
+Author: David Howells <dhowells@redhat.com>
+Date:   Wed Feb 10 10:53:02 2021 +0000
 
-> It seems that Chuck now have a NFS use-case, and Hellwig also have a
-> use-case for DMA-iommu in __iommu_dma_alloc_pages.
-> 
-> The performance improvement (in above link) were really impressive!
-> 
-> Quote:
->  "It's roughly a 50-70% reduction of allocation costs and roughly a halving of the
->  overall cost of allocating/freeing batches of pages."
-> 
-> Who have time to revive this patchset?
-> 
+    netfs: Rename unlock_page_fscache() and wait_on_page_fscache()
+    =
 
-Not in the short term due to bug load and other obligations.
+    Rename unlock_page_fscache() to unlock_page_private_2() and
+    wait_on_page_fscache() to wait_on_page_private_2() and change the
+    references to PG_fscache to PG_private_2 also.  This makes these funct=
+ions
+    look more generic and doesn't mix the terminology.
+    =
 
-The original series had "mm, page_allocator: Only use per-cpu allocator
-for irq-safe requests" but that was ultimately rejected because softirqs
-were affected so it would have to be done without that patch.
+    Fix the kdoc comment as the wake up mechanism doesn't wake up all the
+    sleepers.  Note the example usage case for the functions in conjunctio=
+n
+    with the cache also.
+    =
 
-The last patch can be rebased easily enough but it only batch allocates
-order-0 pages. It's also only build tested and could be completely
-miserable in practice and as I didn't even try boot test let, let alone
-actually test it, it could be a giant pile of crap. To make high orders
-work, it would need significant reworking but if the API showed even
-partial benefit, it might motiviate someone to reimplement the bulk
-interfaces to perform better.
+    Alias the functions in linux/netfs.h.
+    =
 
-Rebased diff, build tested only, might not even work
+    Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+    Signed-off-by: David Howells <dhowells@redhat.com>
 
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index 6e479e9c48ce..d1b586e5b4b8 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -511,6 +511,29 @@ __alloc_pages(gfp_t gfp_mask, unsigned int order, int preferred_nid)
- 	return __alloc_pages_nodemask(gfp_mask, order, preferred_nid, NULL);
- }
- 
-+unsigned long
-+__alloc_pages_bulk_nodemask(gfp_t gfp_mask, unsigned int order,
-+			struct zonelist *zonelist, nodemask_t *nodemask,
-+			unsigned long nr_pages, struct list_head *alloc_list);
-+
-+static inline unsigned long
-+__alloc_pages_bulk(gfp_t gfp_mask, unsigned int order,
-+		struct zonelist *zonelist, unsigned long nr_pages,
-+		struct list_head *list)
-+{
-+	return __alloc_pages_bulk_nodemask(gfp_mask, order, zonelist, NULL,
-+						nr_pages, list);
-+}
-+
-+static inline unsigned long
-+alloc_pages_bulk(gfp_t gfp_mask, unsigned int order,
-+		unsigned long nr_pages, struct list_head *list)
-+{
-+	int nid = numa_mem_id();
-+	return __alloc_pages_bulk(gfp_mask, order,
-+			node_zonelist(nid, gfp_mask), nr_pages, list);
-+}
-+
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index 2ffdef1ded91..d4cb6e6f704c 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -24,6 +24,8 @@
+ #define ClearPageFsCache(page)		ClearPagePrivate2((page))
+ #define TestSetPageFsCache(page)	TestSetPagePrivate2((page))
+ #define TestClearPageFsCache(page)	TestClearPagePrivate2((page))
++#define wait_on_page_fscache(page)	wait_on_page_private_2((page))
++#define unlock_page_fscache(page)	unlock_page_private_2((page))
+ =
+
+ enum netfs_read_source {
+ 	NETFS_FILL_WITH_ZEROES,
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 4935ad6171c1..a88ccc9ab0b1 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -591,7 +591,7 @@ extern int __lock_page_async(struct page *page, struct=
+ wait_page_queue *wait);
+ extern int __lock_page_or_retry(struct page *page, struct mm_struct *mm,
+ 				unsigned int flags);
+ extern void unlock_page(struct page *page);
+-extern void unlock_page_fscache(struct page *page);
++extern void unlock_page_private_2(struct page *page);
+ =
+
  /*
-  * Allocate pages, preferring the node given as nid. The node must be valid and
-  * online. For more general interface, see alloc_pages_node().
-@@ -580,6 +603,7 @@ void * __meminit alloc_pages_exact_nid(int nid, size_t size, gfp_t gfp_mask);
- 
- extern void __free_pages(struct page *page, unsigned int order);
- extern void free_pages(unsigned long addr, unsigned int order);
-+extern void free_pages_bulk(struct list_head *list);
- 
- struct page_frag_cache;
- extern void __page_frag_cache_drain(struct page *page, unsigned int count);
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 519a60d5b6f7..f8353ea7b977 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3254,7 +3254,7 @@ void free_unref_page(struct page *page)
+  * Return true if the page was successfully locked
+@@ -683,16 +683,17 @@ static inline int wait_on_page_locked_killable(struc=
+t page *page)
  }
- 
- /*
-- * Free a list of 0-order pages
-+ * Free a list of 0-order pages whose reference count is already zero.
+ =
+
+ /**
+- * wait_on_page_fscache - Wait for PG_fscache to be cleared on a page
++ * wait_on_page_private_2 - Wait for PG_private_2 to be cleared on a page
+  * @page: The page
+  *
+- * Wait for the fscache mark to be removed from a page, usually signifyin=
+g the
+- * completion of a write from that page to the cache.
++ * Wait for the PG_private_2 page bit to be removed from a page.  This is=
+, for
++ * example, used to handle a netfs page being written to a local disk cac=
+he,
++ * thereby allowing writes to the cache for the same page to be serialise=
+d.
   */
- void free_unref_page_list(struct list_head *list)
+-static inline void wait_on_page_fscache(struct page *page)
++static inline void wait_on_page_private_2(struct page *page)
  {
-@@ -4435,6 +4435,21 @@ static void wake_all_kswapds(unsigned int order, gfp_t gfp_mask,
- 	}
+ 	if (PagePrivate2(page))
+-		wait_on_page_bit(compound_head(page), PG_fscache);
++		wait_on_page_bit(compound_head(page), PG_private_2);
  }
- 
-+/* Drop reference counts and free pages from a list */
-+void free_pages_bulk(struct list_head *list)
-+{
-+	struct page *page, *next;
-+
-+	list_for_each_entry_safe(page, next, list, lru) {
-+		trace_mm_page_free_batched(page);
-+		if (put_page_testzero(page)) {
-+			list_del(&page->lru);
-+			__free_pages_ok(page, 0, FPI_NONE);
-+		}
-+	}
-+}
-+EXPORT_SYMBOL_GPL(free_pages_bulk);
-+
- static inline unsigned int
- gfp_to_alloc_flags(gfp_t gfp_mask)
- {
-@@ -5818,6 +5833,99 @@ static int find_next_best_node(int node, nodemask_t *used_node_mask)
- }
- 
- 
-+/*
-+ * This is a batched version of the page allocator that attempts to
-+ * allocate nr_pages quickly from the preferred zone and add them to list.
-+ * Note that there is no guarantee that nr_pages will be allocated although
-+ * every effort will be made to allocate at least one. Unlike the core
-+ * allocator, no special effort is made to recover from transient
-+ * failures caused by changes in cpusets. It should only be used from !IRQ
-+ * context. An attempt to allocate a batch of patches from an interrupt
-+ * will allocate a single page.
-+ */
-+unsigned long
-+__alloc_pages_bulk_nodemask(gfp_t gfp_mask, unsigned int order,
-+			struct zonelist *zonelist, nodemask_t *nodemask,
-+			unsigned long nr_pages, struct list_head *alloc_list)
-+{
-+	struct page *page;
-+	unsigned long alloced = 0;
-+	unsigned int alloc_flags = ALLOC_WMARK_LOW;
-+	unsigned long flags;
-+	struct zone *zone;
-+	struct per_cpu_pages *pcp;
-+	struct list_head *pcp_list;
-+	int migratetype;
-+	gfp_t alloc_mask = gfp_mask; /* The gfp_t that was actually used for allocation */
-+	struct alloc_context ac = { };
-+
-+	/* If there are already pages on the list, don't bother */
-+	if (!list_empty(alloc_list))
-+		return 0;
-+
-+	/* Order-0 cannot go through per-cpu lists */
-+	if (order)
-+		goto failed;
-+
-+	gfp_mask &= gfp_allowed_mask;
-+
-+	if (!prepare_alloc_pages(gfp_mask, order, numa_mem_id(), nodemask, &ac, &alloc_mask, &alloc_flags))
-+		return 0;
-+
-+	if (!ac.preferred_zoneref)
-+		return 0;
-+
-+	/*
-+	 * Only attempt a batch allocation if watermarks on the preferred zone
-+	 * are safe.
-+	 */
-+	zone = ac.preferred_zoneref->zone;
-+	if (!zone_watermark_fast(zone, order, high_wmark_pages(zone) + nr_pages,
-+				 zonelist_zone_idx(ac.preferred_zoneref), alloc_flags, gfp_mask))
-+		goto failed;
-+
-+	/* Attempt the batch allocation */
-+	migratetype = ac.migratetype;
-+
-+	local_irq_save(flags);
-+	pcp = &this_cpu_ptr(zone->pageset)->pcp;
-+	pcp_list = &pcp->lists[migratetype];
-+
-+	while (nr_pages) {
-+		page = __rmqueue_pcplist(zone, gfp_mask, migratetype,
-+								pcp, pcp_list);
-+		if (!page)
-+			break;
-+
-+		prep_new_page(page, order, gfp_mask, 0);
-+		nr_pages--;
-+		alloced++;
-+		list_add(&page->lru, alloc_list);
-+	}
-+
-+	if (!alloced) {
-+		preempt_enable_no_resched();
-+		goto failed;
-+	}
-+
-+	__count_zid_vm_events(PGALLOC, zone_idx(zone), alloced);
-+	zone_statistics(zone, zone);
-+
-+	local_irq_restore(flags);
-+
-+	return alloced;
-+
-+failed:
-+	page = __alloc_pages_nodemask(gfp_mask, order, numa_node_id(), nodemask);
-+	if (page) {
-+		alloced++;
-+		list_add(&page->lru, alloc_list);
-+	}
-+
-+	return alloced;
-+}
-+EXPORT_SYMBOL(__alloc_pages_bulk_nodemask);
-+
- /*
-  * Build zonelists ordered by node and zones within node.
-  * This results in maximum locality--normal zone overflows into local
+ =
 
--- 
-Mel Gorman
-SUSE Labs
+ extern void put_and_wait_on_page_locked(struct page *page);
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 91fcae006d64..7d321152d579 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -1467,22 +1467,24 @@ void unlock_page(struct page *page)
+ EXPORT_SYMBOL(unlock_page);
+ =
+
+ /**
+- * unlock_page_fscache - Unlock a page pinned with PG_fscache
++ * unlock_page_private_2 - Unlock a page that's locked with PG_private_2
+  * @page: The page
+  *
+- * Unlocks the page and wakes up sleepers in wait_on_page_fscache().  Als=
+o
+- * wakes those waiting for the lock and writeback bits because the wakeup
+- * mechanism is shared.  But that's OK - those sleepers will just go back=
+ to
+- * sleep.
++ * Unlocks a page that's locked with PG_private_2 and wakes up sleepers i=
+n
++ * wait_on_page_private_2().
++ *
++ * This is, for example, used when a netfs page is being written to a loc=
+al
++ * disk cache, thereby allowing writes to the cache for the same page to =
+be
++ * serialised.
+  */
+-void unlock_page_fscache(struct page *page)
++void unlock_page_private_2(struct page *page)
+ {
+ 	page =3D compound_head(page);
+ 	VM_BUG_ON_PAGE(!PagePrivate2(page), page);
+-	clear_bit_unlock(PG_fscache, &page->flags);
+-	wake_up_page_bit(page, PG_fscache);
++	clear_bit_unlock(PG_private_2, &page->flags);
++	wake_up_page_bit(page, PG_private_2);
+ }
+-EXPORT_SYMBOL(unlock_page_fscache);
++EXPORT_SYMBOL(unlock_page_private_2);
+ =
+
+ /**
+  * end_page_writeback - end writeback against a page
+
