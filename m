@@ -2,113 +2,147 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4411318899
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Feb 2021 11:52:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8479C318AC8
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Feb 2021 13:35:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230461AbhBKKuF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 11 Feb 2021 05:50:05 -0500
-Received: from mail-oln040092005057.outbound.protection.outlook.com ([40.92.5.57]:45182
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230116AbhBKKsD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 11 Feb 2021 05:48:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K1hWq9TNqUHgxlG1P6telgjda/sKuzeujU6gurf+zHx9TPGH5VbYNn6XCIUYmOMnqhGd3DxqlpMC+zZ03e+3jSa9vL+ZeYXqbLqT8RnmuOo7AroAR4DdAuF1vKedTsqEPG439C4UdgnLBl+UeAzkzAqzLrZPuaLHoCbiYJHNICcQDpkDnMQ8HtzMaZStmt1ZKM8OS1Bov42LnT+RLmGmYEdj9AzHn9u7KfL4gDa4vgDLiVQoqW664LcYSPNRpPT10s4ak2MjQHxTY6TFpTVXORe2ywfAKncHlpRDr1nhGpPIVrkXoOk2jhrE079rWtRcMm8KrQ437bDDkCusXtyYRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hlPB8m2HwHUpeym8qXFe4phU8wAsMlpD5SlnuoL3DCg=;
- b=ei4PtGf5yPsa+qY3nMGdzRIibXZceB9d4mQPocMXJuX4ElFenOW77TsGUYqxkXClUxukTR7g5HJfbhCWnGO4l4a9QmZ1H9di4ZQS+8n1YgF7ktEBoGcUYfHVX5XFMr0P0w6abaTHJpmwfisVHPsMfiw8gK7pE2TA2MRgUaugkp9wsyxg1KHFt1ELk5UlukkvsHwWkjKTWw0LWAFDOF4eivXexLyi+cUPSBLyWPFYvzGCwftWsrESpqsIAgbv6GrK2wpzRrmSOa0YA8bJzwnkvPUM/H97fRuKdUmmlRXY2Cs+A9PZT+jSnlcNaY2EOq4hlBXdw3kxMYXHP88NdNOqKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=msn.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hlPB8m2HwHUpeym8qXFe4phU8wAsMlpD5SlnuoL3DCg=;
- b=eaOYZVicU0ZEBqiXeDqSavDAntORW3lDWkyPqP132Y5zJF1G4J87ShFf7/sGcNRMWThu+ulnLAIhc669+RBrz8HH+Q7I+iXrLeRMv+eiyf+f1XfGXzqM/vUWAdnoD8RPtAryByXkKJf68elksMD/8cPQ92vplH3srsge1nxbhGB/zw/kuhEFz8tZDAzMAxBfOTVi+Cn71ahRibgibroeFfHMfsdAeVGKVEI5UWTnC/x0RQTFmj5fVKySkvavsmbKO6KgsDtLfwBtO/qAYv2UnuCKJyXY42zFAQSPYxDb/jHfAAeo3aqpmF7Vq8KUgMFBo/bIP89J2x05oMyDe8JKKg==
-Received: from BL2NAM02FT028.eop-nam02.prod.protection.outlook.com
- (10.152.76.55) by BL2NAM02HT146.eop-nam02.prod.protection.outlook.com
- (10.152.76.233) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.25; Thu, 11 Feb
- 2021 10:47:07 +0000
-Received: from MWHPR15MB1821.namprd15.prod.outlook.com (10.152.76.53) by
- BL2NAM02FT028.mail.protection.outlook.com (10.152.77.165) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3846.25 via Frontend Transport; Thu, 11 Feb 2021 10:47:07 +0000
-Received: from MWHPR15MB1821.namprd15.prod.outlook.com
- ([fe80::b987:f7af:fef2:bd39]) by MWHPR15MB1821.namprd15.prod.outlook.com
- ([fe80::b987:f7af:fef2:bd39%7]) with mapi id 15.20.3825.030; Thu, 11 Feb 2021
- 10:47:07 +0000
-From:   MIDWEST HERITAGE <antooonio766@msn.com>
-Subject: REF/PAYMENTS CODE: 09284B
-Thread-Topic: REF/PAYMENTS CODE: 09284B
-Thread-Index: AQHXAGM9LU/KsWqtOkyr0jtF99dJsA==
-Date:   Thu, 11 Feb 2021 10:47:06 +0000
-Message-ID: <MWHPR15MB18211AF25D49B47B44DE79C58E8C9@MWHPR15MB1821.namprd15.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-incomingtopheadermarker: OriginalChecksum:DD808437F6B42E6E363454EE2761319A41ECF6AD6B8C98E6D90BEE0035BD6178;UpperCasedChecksum:95C78D2BBF9D864D9C511CAA8AF559C5AE5317D50B9496C91DD6800F07130E75;SizeAsReceived:12156;Count:40
-x-tmn:  [mdUL3q6VltDuEEFnvTeJf4kfh9C8jeiHrbC5a0QVnbs=]
-x-ms-publictraffictype: Email
-x-incomingheadercount: 40
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 6bf88b25-2fff-49eb-ed0e-08d8ce7a605c
-x-ms-exchange-slblob-mailprops: vJxI5U0j4N5NgHV1XdUJ85T1c/ZXG42rHacfM9fTyiWhv9sFyGkSCEIYIuocStg5+xg/m2ZweFZzx8QS/kIXjwABgPWi9T10KB6HNxu0ck6L4Gd1e784hW74yCRxTEtY/guAEcyZKnH00VYFrhegaUR4lIb0zBKPzHLbh2RgH6u7CS6OdjYXomj7C3IjA5RJt08PQnSRhGNrcN8xEtNLyih7bbJxd++CRSXQf+MyjlWfWhVtJOFT394N98Xwba8nCDtNLXUl3PuozmphOAedFeJpjlSfGAoZrKFcM2nz3WesF6/+rSEvMLhDI4JX8ISfwnYfHKNIM1s0cf9WfJZmGkYqG8s7rk1pZjerrzc21zdBaQz36pZxTi1OYeJbu9AcE7QXn/FBeBPuRTRCxQSLm+rGMvv1JajFh7UkamRdbrPZPp5fHlc59ECcFMDTBXTPbXOWKZx/A4wtE1+HRM0Ye92i92ILMGZkdO51xkw7/Xw743IRzhPjZcjsYjZCP9HT0yYUH7mFaxRI4dhBHlacENevBmeUxmTxud7xI/70YDpc9eLqTbFS6eRJpDNS+QFh8gcxcvq1W+iiqgkMl/TeDecbM27PpoKWHegI04F2Btc6zB+6xrUqLEtnk+7edLdlWh1lHIkkaVuSfjLmBniPoqP0adxgFd0wXOtiHqiGcldaSmIhlUZ+BRToN3DOj90Jw2awdYS5JOF0uHXH2kbUl4LzHZSSkTLw
-x-ms-traffictypediagnostic: BL2NAM02HT146:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0pNRJcOPOVkgdgvIe4dQ1ZHLLtTNeRi3cF2bFqH/cEyhkmAyWpknP4MkrRVhMcC6QnqEki2tclhy8ymiVDs4jB0R04VcW9SZHTk6EHvuxBnNNDWIaVgNaEWt8kUkzxZz+5z4be6dke8ehhsHXa7H91rZp2Yc6d2gYRFXjw2coAONjVHjiXzJqB3ASSL7j/WIbtTiYAxSMdK1D1oOFkj5nlFA0OxV575B8D/ac2a6IK34SaQnH5Kq4IXTHCY/5U5NQ8i1CQsa37xJFo3+uycUco8vq+GrbIslscwe5Tk3pTuDuwztLB33Mp7ONG+LYsjmPM+Ve2xVDoWCXdAiPF/j7QKBft5Mkd20pAU9ffOHTcjh62D89JNPr0/F0XAChotz
-x-ms-exchange-antispam-messagedata: xm/fQJoYBjT1UWDh5nzninDViIE5sHei/+7UWH143n1X0XY5OCxF0ZzGqXwSM/WyjxWE3+Slo0srH6XPraTqML6xmIS7d8IJqBCM9W3l1i1g9elni1v8FGOo3d5rvRgaQdJ0B8OwNZZ32628ajE/lg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S229649AbhBKMfY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 11 Feb 2021 07:35:24 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52286 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231304AbhBKM2I (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Feb 2021 07:28:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1613046400;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6m4kGX2cdA+VMa271XYlfXwmWuiLyNeCkG21zKLMcdM=;
+        b=MsA0f7e0VOhHS8Bu0oXXLov258ExUH0BoKAn71kxDLHGG5kX4foEsZpDuZjRLUyK6Jhbb1
+        9GwnAD1tu7sEZ/ZZuyT7VOIyCCUr69orVmR2rtjjhBxtm0QMZXEk4jixpj106hnU6MqiQa
+        2zZXmhUs+KNiqeKSTPzFKUzszmLVf+k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-513-Yy0NX-JmMby4iEnbsn-ggA-1; Thu, 11 Feb 2021 07:26:36 -0500
+X-MC-Unique: Yy0NX-JmMby4iEnbsn-ggA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 058809126D;
+        Thu, 11 Feb 2021 12:26:35 +0000 (UTC)
+Received: from carbon (unknown [10.36.110.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D5BF23A3;
+        Thu, 11 Feb 2021 12:26:29 +0000 (UTC)
+Date:   Thu, 11 Feb 2021 13:26:28 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Chuck Lever <chuck.lever@oracle.com>, Mel Gorman <mgorman@suse.de>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Jakub Kicinski <kuba@kernel.org>, brouer@redhat.com
+Subject: Re: alloc_pages_bulk()
+Message-ID: <20210211132628.1fe4f10b@carbon>
+In-Reply-To: <20210211091235.GC3697@techsingularity.net>
+References: <2A0C36E7-8CB0-486F-A8DB-463CA28C5C5D@oracle.com>
+        <EEB0B974-6E63-41A0-9C01-F0DEA39FC4BF@oracle.com>
+        <20210209113108.1ca16cfa@carbon>
+        <20210210084155.GA3697@techsingularity.net>
+        <20210210124103.56ed1e95@carbon>
+        <20210210130705.GC3629@suse.de>
+        <B123FB11-661F-45A6-8235-2982BF3C4B83@oracle.com>
+        <20210211091235.GC3697@techsingularity.net>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT028.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6bf88b25-2fff-49eb-ed0e-08d8ce7a605c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2021 10:47:06.9830
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL2NAM02HT146
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-=0A=
-=0A=
-REF/PAYMENTS CODE: 09284B=0A=
-AMOUNT: $3 Million USD.=0A=
-ADDRESS: 3580 Ep Des Moines Iowa=0A=
-Contact E-mail:   midwestheritage@citromail.hu=0A=
-=0A=
-=0A=
-=0A=
-Good Day,=0A=
-=0A=
-=0A=
-Your payment file was submitted to our office from INTERNATIONAL MONETARY F=
-UND (I.M.F) to release your long overdue payment of $3 Million USD to you.=
-=0A=
-=0A=
-However we will open an account for you in our Bank here, and deposit the t=
-otal fund into the new account, and your account and online logging details=
- will be sent to you, and you can be able to access the online and transfer=
- your fund through the online to your own bank account.=0A=
-=0A=
-Kindly send below information for processing.=0A=
-=0A=
-Your full name, address, Age, Next Of Kin, and your zip code and a copy of =
-your passport photograph. As soon as we receive below information, Your Onl=
-ine account will be set-up and the total fund will be deposited and you wil=
-l be able to transfer from your account to any account of your choice.=0A=
-=0A=
-Yours in Service.=0A=
-Mr. Tony S. Kaska=0A=
-MIDWEST HERITAGE=0A=
-BANK (C.E.O)=0A=
-Contact E-mail:   midwestheritage@citromail.hu=0A=
+On Thu, 11 Feb 2021 09:12:35 +0000
+Mel Gorman <mgorman@techsingularity.net> wrote:
+
+> On Wed, Feb 10, 2021 at 10:58:37PM +0000, Chuck Lever wrote:
+> > > Not in the short term due to bug load and other obligations.
+> > > 
+> > > The original series had "mm, page_allocator: Only use per-cpu allocator
+> > > for irq-safe requests" but that was ultimately rejected because softirqs
+> > > were affected so it would have to be done without that patch.
+> > > 
+> > > The last patch can be rebased easily enough but it only batch allocates
+> > > order-0 pages. It's also only build tested and could be completely
+> > > miserable in practice and as I didn't even try boot test let, let alone
+> > > actually test it, it could be a giant pile of crap. To make high orders
+> > > work, it would need significant reworking but if the API showed even
+> > > partial benefit, it might motiviate someone to reimplement the bulk
+> > > interfaces to perform better.
+> > > 
+> > > Rebased diff, build tested only, might not even work  
+> > 
+> > Thanks, Mel, for kicking off a forward port.
+> > 
+> > It compiles. I've added a patch to replace the page allocation loop
+> > in svc_alloc_arg() with a call to alloc_pages_bulk().
+> > 
+> > The server system deadlocks pretty quickly with any NFS traffic. Based
+> > on some initial debugging, it appears that a pcplist is getting corrupted
+> > and this causes the list_del() in __rmqueue_pcplist() to fail during a
+> > a call to alloc_pages_bulk().
+> >   
+> 
+> Parameters to __rmqueue_pcplist are garbage as the parameter order changed.
+> I'm surprised it didn't blow up in a spectacular fashion. Again, this
+> hasn't been near any testing and passing a list with high orders to
+> free_pages_bulk() will corrupt lists too. Mostly it's a curiousity to see
+> if there is justification for reworking the allocator to fundamentally
+> deal in batches and then feed batches to pcp lists and the bulk allocator
+> while leaving the normal GFP API as single page "batches". While that
+> would be ideal, it's relatively high risk for regressions. There is still
+> some scope for adding a basic bulk allocator before considering a major
+> refactoring effort.
+
+The alloc_flags reminds me that I have some asks around the semantics
+of the API.  I'm concerned about the latency impact on preemption.  I
+want us to avoid creating something that runs for too long with
+IRQs/preempt disabled.
+
+(With SLUB kmem_cache_free_bulk() we manage to run most of the time with
+preempt and IRQs enabled.  So, I'm not worried about large slab bulk
+free. For SLUB kmem_cache_alloc_bulk() we run with local_irq_disable(),
+so I always recommend users not to do excessive bulk-alloc.)
+
+For this page bulk alloc API, I'm fine with limiting it to only support
+order-0 pages. (This will also fit nicely with the PCP system it think).
+
+I also suggest the API can return less pages than requested. Because I
+want to to "exit"/return if it need to go into an expensive code path
+(like buddy allocator or compaction).  I'm assuming we have a flags to
+give us this behavior (via gfp_flags or alloc_flags)?
+
+My use-case is in page_pool where I can easily handle not getting exact
+number of pages, and I want to handle low-latency network traffic.
+
+
+
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index f8353ea7b977..8f3fe7de2cf7 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5892,7 +5892,7 @@ __alloc_pages_bulk_nodemask(gfp_t gfp_mask, unsigned int order,
+>  	pcp_list = &pcp->lists[migratetype];
+>  
+>  	while (nr_pages) {
+> -		page = __rmqueue_pcplist(zone, gfp_mask, migratetype,
+> +		page = __rmqueue_pcplist(zone, migratetype, alloc_flags,
+>  								pcp, pcp_list);
+>  		if (!page)
+>  			break;
+
+
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
