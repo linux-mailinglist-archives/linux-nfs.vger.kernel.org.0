@@ -2,131 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D1A1319681
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Feb 2021 00:22:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CED8319D99
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Feb 2021 12:53:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229762AbhBKXW3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 11 Feb 2021 18:22:29 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:38113 "EHLO
+        id S229994AbhBLLvi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Feb 2021 06:51:38 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49250 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229737AbhBKXWZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Feb 2021 18:22:25 -0500
+        by vger.kernel.org with ESMTP id S229710AbhBLLvf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Feb 2021 06:51:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613085659;
+        s=mimecast20190719; t=1613130608;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6IjqWhQ0S9zeiEfAx5Yk7ukP5YPF6bWEm9sEktZ4FzI=;
-        b=idI8fsl1FVyeRh3Hd+cqpVz72/tOPbb3LCrp1djQ5+mKbQ87d3Ne6ZOQtnkS3Pu4VtJt01
-        q49vQWarI/XX9TyoapxpzzMP+zw4z5xAZLoVnOfgFW38Swl2sVBzv7y8tLQdg0b0OGfbm5
-        GA3jTumDDfKI68RrbNQciAS26c+uzag=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-vgOPstjGMz6AfI60Xa_BHQ-1; Thu, 11 Feb 2021 18:20:55 -0500
-X-MC-Unique: vgOPstjGMz6AfI60Xa_BHQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 66AA4107ACC7;
-        Thu, 11 Feb 2021 23:20:53 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-119-68.rdu2.redhat.com [10.10.119.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2932F60657;
-        Thu, 11 Feb 2021 23:20:47 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wjgA-74ddehziVk=XAEMTKswPu1Yw4uaro1R3ibs27ztw@mail.gmail.com>
-References: <CAHk-=wjgA-74ddehziVk=XAEMTKswPu1Yw4uaro1R3ibs27ztw@mail.gmail.com> <CAHk-=wj-k86FOqAVQ4ScnBkX3YEKuMzqTEB2vixdHgovJpHc9w@mail.gmail.com> <591237.1612886997@warthog.procyon.org.uk> <1330473.1612974547@warthog.procyon.org.uk> <1330751.1612974783@warthog.procyon.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        David Wysochanski <dwysocha@redhat.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        ceph-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cachefs@redhat.com, CIFS <linux-cifs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        v9fs-developer@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] fscache: I/O API modernisation and netfs helper library
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=MRe9D2DvN9CRahuGfAz+865YI1MdnzxfHymN+Tpznf8=;
+        b=KmXr8KSl6N8Frxa+k9YLZsxpPGR0tjQetc+y5BTsDYFEq1voFS1Kqfiz+uetzU0ckqlABV
+        29WLeWkXaMY/Dv7MCHRaZT1yStghJIdBV0ivs1CT3bJR+XeK9UDciLjUNxsbAKb2OMoOss
+        iCIH4iQqWKjWgQ+2zN4vKQEcsTph0Co=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-449-zRyjoQYONBSK62nc69tL4Q-1; Fri, 12 Feb 2021 06:50:06 -0500
+X-MC-Unique: zRyjoQYONBSK62nc69tL4Q-1
+Received: by mail-io1-f69.google.com with SMTP id o4so1482328ioh.14
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Feb 2021 03:50:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=MRe9D2DvN9CRahuGfAz+865YI1MdnzxfHymN+Tpznf8=;
+        b=tPceFY95AODLsrGQdzhG+ZpJr8etL1GCbJq/PmYSC698KRTr3qrlt/rfxxgaR8yCdP
+         4VBOyLzpioukXfnZcQzb7jnwg3VtTn2aEMZzp6d4Nl4i8PDXcGH9B7adZ9l1UUSut3XN
+         ZAbfVtF92FNrLwaJoukCePb2b47/2Jb/LMuCGXj8gdjxnZ6mSCN/tekf+AR3geRMdrL2
+         NYKHULx30SzJ042jmJLzEVlLXptXUoeoSuaH1aCMUoIXOgSLBDUJf6AMT2LRAWmaahb2
+         FK8VYjRV2KZEW30zYjgALHr5xdTJeb9/HR81Z76AwRnsDsYIndaWdZ54esW+VYnF+Ih+
+         wPlg==
+X-Gm-Message-State: AOAM531Stjng8S9xGQ+a7LWNlifPZfiiH54aUBfN4SPMwvMTT6wgPk24
+        G0YY0Q5SdKBRASb041A7kBjrCz/Ld4tMlveqkSac3v6BZDJ07DXaG/X89UDBsVIjl1oDfkVOPuk
+        mSl0mceOLbV6/vqB5gdHA4zSIZ9zLnlTXUVlx
+X-Received: by 2002:a05:6638:152:: with SMTP id y18mr2317455jao.16.1613130605978;
+        Fri, 12 Feb 2021 03:50:05 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyhkfD85o8mnLM+99mc1sUuTTUPCH80XtUAtzKM0DdTWJ6iXmvfxZthV1huqYCCU/ZdEw2j9bQExJS+owq1zlI=
+X-Received: by 2002:a05:6638:152:: with SMTP id y18mr2317434jao.16.1613130605648;
+ Fri, 12 Feb 2021 03:50:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27815.1613085646.1@warthog.procyon.org.uk>
-Date:   Thu, 11 Feb 2021 23:20:46 +0000
-Message-ID: <27816.1613085646@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+From:   Roberto Bergantinos Corpas <rbergant@redhat.com>
+Date:   Fri, 12 Feb 2021 12:49:54 +0100
+Message-ID: <CACWnjLw2H7Ev6Tz_c=1AHDCxCGW5NZ_wzy6oHVMFD+GjJDjV2g@mail.gmail.com>
+Subject: about nfs_wait_client_init_complete/concurrent mounts
+To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Hi All,
 
-> Also, honestly, I really *REALLY* want your commit messages to talk
-> about who has been cc'd, who has been part of development, and point
-> to the PUBLIC MAILING LISTS WHERE THAT DISCUSSION WAS TAKING PLACE, so
-> that I can actually see that "yes, other people were involved"
+ Sorry for wide distribution, but i think it might be an interesting topic.
 
-Most of the development discussion took place on IRC and waving snippets of
-code about in pastebin rather than email - the latency of email is just too
-high.  There's not a great deal I can do about that now as I haven't kept IRC
-logs.  I can do that in future if you want.
+  There's this issue with concurrent mounts.nfs commands (NFS4.1) to
+different NFS servers where if one or some of
+servers are unreachable i.e a firewall blocks NFS server, other mounts
+may wait on one of the consumers of
+nfs_wait_client_init_complete : nfs_match_client, nfs4_match_client,
+nfs41_discover_server_trunking...
+since we need to check if we can reuse a client or not. Typically we
+wait on nfs_match_client until client is marked
+NFS_CS_READY or timeout.
 
-> No, I don't require this in general, but exactly because of the
-> history we have, I really really want to see that. I want to see a
->
->    Link: https://lore.kernel.org/r/....
+  This happens even if mount requests are for different servers, IP,
+NFS version etc...
+depending on timing, a mount to a reachable server might wait for
+other broken mount
+to timeout. I tested on kernels 4.18 and 5.8.
 
-I can add links to where I've posted the stuff for review.  Do you want this
-on a per-patch basis or just in the cover for now?
+ A more impacting version of this is i.e a rather big autofs map
+contain some broken mounts that got triggered
+from time to time, as a result other mounts i.e. users mounting remote
+home were affected and can cause
+user impact, delays etc...
 
-Also, do you want things like these:
+  Of course once broken mounts are removed, issue is fixed but I was
+wondering if there's a way on NFS client to skip
+reusing some clients a priori without them to be necessary NFS_CS_READY.
 
- https://lore.kernel.org/linux-fsdevel/3326.1579019665@warthog.procyon.org.uk/
- https://lore.kernel.org/linux-fsdevel/4467.1579020509@warthog.procyon.org.uk/
+  While doing some local patch testing to skip some candidates with
+client-side information i could see we still get
+a problem with trunking. As far as i could see, with trunking we need
+a dialog with
+NFS server to get session information in order to decide if we can
+discard a client or reuse it, so we need to wait for that
+to happen or timeout. That's my understanding of code, i can be wrong of course.
 
-which pertain to the overall fscache rewrite, but where the relevant changes
-didn't end up included in this particular patchset?  Or this:
+   If my premises are true, *looks* to me pretty hard to optimize the
+"concurrent mounts with
+broken servers" scenario with trunking "in the game" without some
+major and careful change.
 
- https://listman.redhat.com/archives/linux-cachefs/2020-December/msg00000.html
+  What are your thoughts about the problem described above ? Any way
+to optimize the above scenario where
+some mount operation might wait for other broken mounts that have
+nothing to do it ? Maybe some on-going
+change on this topic ? (i did not found any)
 
-where someone was testing the overall patchset of which this is a subset?
-
-> and the Cc's - or better yet, the Reviewed-by's etc - so that when I
-> get a pull request, it really is very obvious to me when I look at it
-> that others really have been involved.
-> 
-> So if I continue to see just
-> 
->     Signed-off-by: David Howells <dhowells@redhat.com>
-> 
-> at the end of the commit messages, I will not pull.
-> 
-> Yes, in this thread a couple of people have piped up and said that
-> they were part of the discussion and that they are interested, but if
-> I have to start asking around just to see that, then it's too little,
-> too late.
-> 
-> No more of this "it looks like David Howells did things in private". I
-> want links I can follow to see the discussion, and I really want to
-> see that others really have been involved.
-> 
-> Ok?
-
-Sure.
-
-I can go and edit in link pointers into the existing patches if you want and
-add Jeff's Review-and-tested-by into the appropriate ones.  You would be able
-to compare against the existing tag, so it wouldn't entirely invalidate the
-testing.
-
-Also, do you want links inserting into all the patches of the two keyrings
-pull requests I've sent you?
-
-David
+rgds
+roberto
 
