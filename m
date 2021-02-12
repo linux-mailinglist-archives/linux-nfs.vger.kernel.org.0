@@ -2,37 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F30931A717
+	by mail.lfdr.de (Postfix) with ESMTP id C009031A718
 	for <lists+linux-nfs@lfdr.de>; Fri, 12 Feb 2021 22:50:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229660AbhBLVui (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S229798AbhBLVui (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Fri, 12 Feb 2021 16:50:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36316 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:36322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229798AbhBLVug (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        id S229815AbhBLVug (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
         Fri, 12 Feb 2021 16:50:36 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E565E64E26;
-        Fri, 12 Feb 2021 21:49:54 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 736E964E8D;
+        Fri, 12 Feb 2021 21:49:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1613166595;
-        bh=MGBYksKj9YOAWZcv1wlY9+qUNr0pAjdxQkdH40fJq6o=;
+        bh=qJuFeeAcnlXPKGSJA0Yl43HBriEos2VfMxdKc4eyybY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AIjlfvBMBYldwgNJwC6RDDvbaOl2bibqIp9RhKaNXyPmlwR42h433Ph5sVdNL7WZV
-         M7DjPRdTzVhYtFCOzAalHr/xgeiEU0MxFQpkMXAUt1lduJy4aMFFFJ/qilFyy+5Ahp
-         Vz2tay86tFXsmprhsa7KBy7ODkMWzGTisrNsMbaWHiC5sLzyBj0L0wJd6lzW3h4dcb
-         1GGMHrAH2K3kB0Cg6b2w3+ZtAw8FURQlBeTBgfiRZyet5zOSPrPvNdMU/7Is3n2jvZ
-         chIy+ohF22NE1d/NRkeWbMg7KReH2/I0q5Q3otsK3OVjFlijPIADZyFpGQK+gNbOxH
-         0ySxleRHWswmQ==
+        b=Lz7ow4NDHJCwrhN1yTa6i/nCXlumTENIyMFYHv+WINhV4XRxdviC9kIbhqcWt/8ec
+         UPs0UAIL343EfOwUDlACnGzrdNKIn5u7O9EWrPqcwtmMpjO9BrJvM6CYkbU2GfDdHa
+         H6/8LRNuNX4r8oRcL8polYQufjAsCkRpNitsxW7Jc5BA1TJsuemO28LnKEG5z3pEoy
+         icFZpai5ToqM9dH9amxa43UIA4fq4YE1uEP8qJl7Hpg7B18I9lswIa7LTWj5UNaQ8c
+         bDqoq5QWWTKh/8KQnnkIKYWl0YXsvP7obuGGX2obiimodhvTu6ZoD1TGhAGk7g21wY
+         M9/92v5oUpriQ==
 From:   trondmy@kernel.org
 To:     Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/3] NFS: Add support for eager writes
-Date:   Fri, 12 Feb 2021 16:49:48 -0500
-Message-Id: <20210212214949.4408-3-trondmy@kernel.org>
+Subject: [PATCH 3/3] NFS: Add mount options supporting eager writes
+Date:   Fri, 12 Feb 2021 16:49:49 -0500
+Message-Id: <20210212214949.4408-4-trondmy@kernel.org>
 X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210212214949.4408-2-trondmy@kernel.org>
+In-Reply-To: <20210212214949.4408-3-trondmy@kernel.org>
 References: <20210212214949.4408-1-trondmy@kernel.org>
  <20210212214949.4408-2-trondmy@kernel.org>
+ <20210212214949.4408-3-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -41,100 +42,76 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Support eager writing to the server, meaning that we write the data to
-cache on the server, and wait for that to complete. This ensures that we
-see ENOSPC errors immediately.
-
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/file.c             | 19 +++++++++++++++++--
- fs/nfs/write.c            | 17 ++++++++++++-----
- include/linux/nfs_fs_sb.h |  2 ++
- 3 files changed, 31 insertions(+), 7 deletions(-)
+ fs/nfs/fs_context.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 03fd1dcc96bd..16ad5050e046 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -606,8 +606,8 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- {
- 	struct file *file = iocb->ki_filp;
- 	struct inode *inode = file_inode(file);
--	unsigned long written = 0;
--	ssize_t result;
-+	unsigned int mntflags = NFS_SERVER(inode)->flags;
-+	ssize_t result, written;
- 	errseq_t since;
- 	int error;
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 06894bcdea2d..b6be02aa79f0 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -82,6 +82,7 @@ enum nfs_param {
+ 	Opt_v,
+ 	Opt_vers,
+ 	Opt_wsize,
++	Opt_write,
+ };
  
-@@ -648,6 +648,21 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
+ enum {
+@@ -113,6 +114,19 @@ static const struct constant_table nfs_param_enums_lookupcache[] = {
+ 	{}
+ };
  
- 	written = result;
- 	iocb->ki_pos += written;
++enum {
++	Opt_write_lazy,
++	Opt_write_eager,
++	Opt_write_wait,
++};
 +
-+	if (mntflags & NFS_MOUNT_WRITE_EAGER) {
-+		result = filemap_fdatawrite_range(file->f_mapping,
-+						  iocb->ki_pos - written,
-+						  iocb->ki_pos - 1);
-+		if (result < 0)
-+			goto out;
-+	}
-+	if (mntflags & NFS_MOUNT_WRITE_WAIT) {
-+		result = filemap_fdatawait_range(file->f_mapping,
-+						 iocb->ki_pos - written,
-+						 iocb->ki_pos - 1);
-+		if (result < 0)
-+			goto out;
-+	}
- 	result = generic_write_sync(iocb, written);
- 	if (result < 0)
- 		goto out;
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 6193350356a8..82bdcb982186 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -712,16 +712,23 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
- {
- 	struct inode *inode = mapping->host;
- 	struct nfs_pageio_descriptor pgio;
--	struct nfs_io_completion *ioc;
-+	struct nfs_io_completion *ioc = NULL;
-+	unsigned int mntflags = NFS_SERVER(inode)->flags;
-+	int priority = 0;
- 	int err;
++static const struct constant_table nfs_param_enums_write[] = {
++	{ "lazy",		Opt_write_lazy },
++	{ "eager",		Opt_write_eager },
++	{ "wait",		Opt_write_wait },
++	{}
++};
++
+ static const struct fs_parameter_spec nfs_fs_parameters[] = {
+ 	fsparam_flag_no("ac",		Opt_ac),
+ 	fsparam_u32   ("acdirmax",	Opt_acdirmax),
+@@ -171,6 +185,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
+ 	fsparam_flag  ("v4.1",		Opt_v),
+ 	fsparam_flag  ("v4.2",		Opt_v),
+ 	fsparam_string("vers",		Opt_vers),
++	fsparam_enum  ("write",		Opt_write, nfs_param_enums_write),
+ 	fsparam_u32   ("wsize",		Opt_wsize),
+ 	{}
+ };
+@@ -770,6 +785,24 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ 			goto out_invalid_value;
+ 		}
+ 		break;
++	case Opt_write:
++		switch (result.uint_32) {
++		case Opt_write_lazy:
++			ctx->flags &=
++				~(NFS_MOUNT_WRITE_EAGER | NFS_MOUNT_WRITE_WAIT);
++			break;
++		case Opt_write_eager:
++			ctx->flags |= NFS_MOUNT_WRITE_EAGER;
++			ctx->flags &= ~NFS_MOUNT_WRITE_WAIT;
++			break;
++		case Opt_write_wait:
++			ctx->flags |=
++				NFS_MOUNT_WRITE_EAGER | NFS_MOUNT_WRITE_WAIT;
++			break;
++		default:
++			goto out_invalid_value;
++		}
++		break;
  
- 	nfs_inc_stats(inode, NFSIOS_VFSWRITEPAGES);
- 
--	ioc = nfs_io_completion_alloc(GFP_KERNEL);
--	if (ioc)
--		nfs_io_completion_init(ioc, nfs_io_completion_commit, inode);
-+	if (!(mntflags & NFS_MOUNT_WRITE_EAGER) || wbc->for_kupdate ||
-+	    wbc->for_background || wbc->for_sync || wbc->for_reclaim) {
-+		ioc = nfs_io_completion_alloc(GFP_KERNEL);
-+		if (ioc)
-+			nfs_io_completion_init(ioc, nfs_io_completion_commit,
-+					       inode);
-+		priority = wb_priority(wbc);
-+	}
- 
--	nfs_pageio_init_write(&pgio, inode, wb_priority(wbc), false,
-+	nfs_pageio_init_write(&pgio, inode, priority, false,
- 				&nfs_async_write_completion_ops);
- 	pgio.pg_io_completion = ioc;
- 	err = write_cache_pages(mapping, wbc, nfs_writepages_callback, &pgio);
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index 962e8313f007..6f76b32a0238 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -153,6 +153,8 @@ struct nfs_server {
- #define NFS_MOUNT_LOCAL_FCNTL		0x200000
- #define NFS_MOUNT_SOFTERR		0x400000
- #define NFS_MOUNT_SOFTREVAL		0x800000
-+#define NFS_MOUNT_WRITE_EAGER		0x01000000
-+#define NFS_MOUNT_WRITE_WAIT		0x02000000
- 
- 	unsigned int		caps;		/* server capabilities */
- 	unsigned int		rsize;		/* read size */
+ 		/*
+ 		 * Special options
 -- 
 2.29.2
 
