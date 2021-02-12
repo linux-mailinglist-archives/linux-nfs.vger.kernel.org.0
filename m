@@ -2,207 +2,151 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85DE931A6BD
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Feb 2021 22:21:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5672A31A6C2
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Feb 2021 22:21:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231932AbhBLVUv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 12 Feb 2021 16:20:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41280 "EHLO
+        id S232079AbhBLVUw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Feb 2021 16:20:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232035AbhBLVUl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Feb 2021 16:20:41 -0500
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B19BC061574;
-        Fri, 12 Feb 2021 13:20:01 -0800 (PST)
-Received: by mail-il1-x12a.google.com with SMTP id g9so500968ilc.3;
-        Fri, 12 Feb 2021 13:20:01 -0800 (PST)
+        with ESMTP id S232066AbhBLVUm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Feb 2021 16:20:42 -0500
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 374B8C061756;
+        Fri, 12 Feb 2021 13:20:02 -0800 (PST)
+Received: by mail-il1-x134.google.com with SMTP id y15so449762ilj.11;
+        Fri, 12 Feb 2021 13:20:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=0Y3RJK3vxi+QhNIpzjNBegnGJj+h/AGZkLMsaZUQL3o=;
-        b=iig/5IGXEtufIDVHhOxGQDevi3GZk8c1kwaI4Ysh/5rMsTUxqckm8zEm0DSTW6iBDd
-         aM8irtmQsmQc4BSeupA2Q0MjCb+xJfrhtG5HRpkacjt0swLzEEzXUGxIT+QaPvmVO6/0
-         fzbCf4QSTw0siT6wjK2+A/k/Cq1BBUIkHk7hdNenz/Bz+wtIc63CkNKAx6AcH4CDE/d6
-         UCYQJKdHFh582piBR01C+mhih8qIVhLx18kpiRMPHYvqhKjK9X78QfKXLUjdb0yNXsMG
-         Z5Q3VMvFNKzJxXM11Hqf16Bb+Mpj8fnhHhOAHgBTQ7U+mI/7jffWq5HCA+ncCZkGOTUv
-         hD+w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ZFoPlC9Ox6zK6lUP8unB6mEMSEpKmVAmcqkIvxGgLK4=;
+        b=hSZZOE71IN3CjEqQK8VS+pu+X1LbA62C3V5J62sXSKRYcLrCn3Oh85hNVOm8EsdyS9
+         vC8VQUXGEuGAgL6mI07S5XX2nfihYT5SVhk8xvPJ6xMbeGqU4UyfCniJH6JliaVTX0uw
+         ie1ajml3LQtblOCBIIKu37P+sJhdql0jeTvID7XxGjj39i+x7IYiEWsMFBWtZDN1br6x
+         bcHX1Da7Xf4aSWH36njxcQIbPWZUkie0/v2MGKW+HN9oiJ4BSOBHZ9VI3Yxv1xX7o9rn
+         oykr0o2fJHXvTtx+f5wC9xaui6msMMBsa2opR+y4ReRMX46ndC8xeKlVlVQElqVJVhoS
+         vnng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0Y3RJK3vxi+QhNIpzjNBegnGJj+h/AGZkLMsaZUQL3o=;
-        b=Yf6+TcbGYPQ+5G+MZlHbFFujApR5sbpFBAUcmeWKDxejqCLGTGyRCxKwBAdkzhGkts
-         3V524YXZOOg8InEUoi85WQZt2+P4Sfeiy7xtZ338L1Ai2KWUp3l4EFCgfufCybjYmcW9
-         iOsWeAyTocLhveUbhSfLelqnZm82x8qRtU6oePD78Zymia7h8BSDc1S1YnKBIOcZUnEP
-         BXnaoi4vDCHTvb+ABUKbHu2oacBCDS2wEQlDGJ+FWTnyCpbZ/kiljIhmpE86MKjVFlOr
-         7tNdrdd3koRJGPtLLtjClOVYtWspxbW9gzLI7A8+50d6rPVP2OhjtbOpuC1JA0bZnMA3
-         w9Xg==
-X-Gm-Message-State: AOAM5306aHAtuoP6XUOY1i6fBZ2B+qj4KeTf01AFa2cwCEA0uRXNR23N
-        hhZ43xfr6rtnSLfBbqjgq2xgYjbQTaeh8w==
-X-Google-Smtp-Source: ABdhPJx6/LwfGstOn9Ozmrb0FJGjAxVPAeNmwhx6imbh78LeKd7jSGl1RkQctVKo4ldRnX673XkG8Q==
-X-Received: by 2002:a92:b011:: with SMTP id x17mr3844690ilh.179.1613164800672;
-        Fri, 12 Feb 2021 13:20:00 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ZFoPlC9Ox6zK6lUP8unB6mEMSEpKmVAmcqkIvxGgLK4=;
+        b=YM1tFcbkMNXvWRG9LwOQmZ3QCMov6EA4XucIrE5dLdbjnPURnnlx7XH+Vu2bBnWyKT
+         fserhgXyOsgu8Nmzif2p8AMtTQrD5YoEzYJGjRyF1korwysPIBVGeZeY0atbBz2dCyc4
+         JJieNtzDbNGNt/8N7RsELxuWFsxfwchP5+aVglALdPSiFIKvwfdgGsqvqzUnlH9f++5U
+         R6ibTR2wMlwgH0+Dv8WwtgIZ/uPo73chobBz19BXaGrxGYRmZaEBZDt7hYTsCkA+XOuc
+         sAXxym58viJ4Jp8dSm7Dih3BLKrFfhMcsEAGCRg/qrpetplsyIADIVd5S8sQ+y/wcRuT
+         N68w==
+X-Gm-Message-State: AOAM5322/DwmWWuObMHeF5N3oCPURM86wvkGOO3dgHlQMlFcNl2B9Srr
+        qfWDCBrZLyM9KKT1PjxY72oTrb/pH2o7VA==
+X-Google-Smtp-Source: ABdhPJzx5eE7PXldjvPvTehXqaQjzJe+J+I412FXoSM0yb9Rigf4AwDhoWZzAaty1HH0zxlA2I5VTQ==
+X-Received: by 2002:a92:870d:: with SMTP id m13mr3878147ild.104.1613164801697;
+        Fri, 12 Feb 2021 13:20:01 -0800 (PST)
 Received: from Olgas-MBP-444.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id k11sm4685570iop.45.2021.02.12.13.19.59
+        by smtp.gmail.com with ESMTPSA id k11sm4685570iop.45.2021.02.12.13.20.00
         (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Fri, 12 Feb 2021 13:19:59 -0800 (PST)
+        Fri, 12 Feb 2021 13:20:01 -0800 (PST)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
         selinux@vger.kernel.org
-Subject: [PATCH 1/2] [security] Add new hook to compare new mount to an existing mount
-Date:   Fri, 12 Feb 2021 16:19:54 -0500
-Message-Id: <20210212211955.11239-1-olga.kornievskaia@gmail.com>
+Subject: [PATCH 2/2] NFSv4 account for selinux security context when deciding to share superblock
+Date:   Fri, 12 Feb 2021 16:19:55 -0500
+Message-Id: <20210212211955.11239-2-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.10.1 (Apple Git-78)
+In-Reply-To: <20210212211955.11239-1-olga.kornievskaia@gmail.com>
+References: <20210212211955.11239-1-olga.kornievskaia@gmail.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-Add a new hook that takes an existing super block and a new mount
-with new options and determines if new options confict with an
-existing mount or not.
+Keep track of whether or not there was an selinux context mount
+options during the mount. While deciding if the superblock can be
+shared for the new mount, check for if we had selinux context on
+the existing mount and call into selinux to tell if new passed
+in selinux context is compatible with the existing mount's options.
+
+Previously, NFS wasn't able to do the following 2mounts:
+mount -o vers=4.2,sec=sys,context=system_u:object_r:root_t:s0
+<serverip>:/ /mnt
+mount -o vers=4.2,sec=sys,context=system_u:object_r:swapfile_t:s0
+<serverip>:/scratch /scratch
+
+2nd mount would fail with "mount.nfs: an incorrect mount option was
+specified" and var log messages would have:
+"SElinux: mount invalid. Same superblock, different security
+settings for.."
 
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- include/linux/lsm_hook_defs.h |  1 +
- include/linux/lsm_hooks.h     |  6 ++++
- include/linux/security.h      |  1 +
- security/security.c           |  7 +++++
- security/selinux/hooks.c      | 54 +++++++++++++++++++++++++++++++++++
- 5 files changed, 69 insertions(+)
+ fs/nfs/fs_context.c       | 3 +++
+ fs/nfs/internal.h         | 1 +
+ fs/nfs/super.c            | 4 ++++
+ include/linux/nfs_fs_sb.h | 1 +
+ 4 files changed, 9 insertions(+)
 
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index 7aaa753b8608..fbfc07d0b3d5 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -62,6 +62,7 @@ LSM_HOOK(int, 0, sb_alloc_security, struct super_block *sb)
- LSM_HOOK(void, LSM_RET_VOID, sb_free_security, struct super_block *sb)
- LSM_HOOK(void, LSM_RET_VOID, sb_free_mnt_opts, void *mnt_opts)
- LSM_HOOK(int, 0, sb_eat_lsm_opts, char *orig, void **mnt_opts)
-+LSM_HOOK(int, 0, sb_do_mnt_opts_match, struct super_block *sb, void *mnt_opts)
- LSM_HOOK(int, 0, sb_remount, struct super_block *sb, void *mnt_opts)
- LSM_HOOK(int, 0, sb_kern_mount, struct super_block *sb)
- LSM_HOOK(int, 0, sb_show_options, struct seq_file *m, struct super_block *sb)
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index a19adef1f088..a11b062c1847 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -142,6 +142,12 @@
-  *	@orig the original mount data copied from userspace.
-  *	@copy copied data which will be passed to the security module.
-  *	Returns 0 if the copy was successful.
-+ * @sb_do_mnt_opts_match:
-+ *	Determine if the existing mount options are compatible with the new
-+ *	mount options being used.
-+ *	@sb superblock being compared
-+ *	@mnt_opts new mount options
-+ *	Return 1 if options are the same.
-  * @sb_remount:
-  *	Extracts security system specific mount options and verifies no changes
-  *	are being made to those options.
-diff --git a/include/linux/security.h b/include/linux/security.h
-index c35ea0ffccd9..07026db7304d 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -291,6 +291,7 @@ int security_sb_alloc(struct super_block *sb);
- void security_sb_free(struct super_block *sb);
- void security_free_mnt_opts(void **mnt_opts);
- int security_sb_eat_lsm_opts(char *options, void **mnt_opts);
-+int security_sb_do_mnt_opts_match(struct super_block *sb, void *mnt_opts);
- int security_sb_remount(struct super_block *sb, void *mnt_opts);
- int security_sb_kern_mount(struct super_block *sb);
- int security_sb_show_options(struct seq_file *m, struct super_block *sb);
-diff --git a/security/security.c b/security/security.c
-index 7b09cfbae94f..dae380916c6a 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -890,6 +890,13 @@ int security_sb_eat_lsm_opts(char *options, void **mnt_opts)
- }
- EXPORT_SYMBOL(security_sb_eat_lsm_opts);
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 06894bcdea2d..8067f055d842 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -448,6 +448,9 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ 	if (opt < 0)
+ 		return ctx->sloppy ? 1 : opt;
  
-+int security_sb_do_mnt_opts_match(struct super_block *sb,
-+				 void *mnt_opts)
-+{
-+	return call_int_hook(sb_do_mnt_opts_match, 0, sb, mnt_opts);
-+}
-+EXPORT_SYMBOL(security_sb_do_mnt_opts_match);
++	if (fc->security)
++		ctx->has_sec_mnt_opts = 1;
 +
- int security_sb_remount(struct super_block *sb,
- 			void *mnt_opts)
- {
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 644b17ec9e63..aaa3a725da94 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -2656,6 +2656,59 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
- 	return rc;
+ 	switch (opt) {
+ 	case Opt_source:
+ 		if (fc->source)
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 62d3189745cd..08f4f34e8cf5 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -96,6 +96,7 @@ struct nfs_fs_context {
+ 	char			*fscache_uniq;
+ 	unsigned short		protofamily;
+ 	unsigned short		mountfamily;
++	bool			has_sec_mnt_opts;
+ 
+ 	struct {
+ 		union {
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 4034102010f0..ea4e5252a1f0 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1058,6 +1058,7 @@ static void nfs_fill_super(struct super_block *sb, struct nfs_fs_context *ctx)
+ 						 &sb->s_blocksize_bits);
+ 
+ 	nfs_super_set_maxbytes(sb, server->maxfilesize);
++	server->has_sec_mnt_opts = ctx->has_sec_mnt_opts;
  }
  
-+static int selinux_sb_do_mnt_opts_match(struct super_block *sb, void *mnt_opts)
-+{
-+	struct selinux_mnt_opts *opts = mnt_opts;
-+	struct superblock_security_struct *sbsec = sb->s_security;
-+	u32 sid;
-+	int rc;
-+
-+	/* superblock not initialized (i.e. no options) - reject if any
-+	 * options specified, otherwise accept
-+	 */
-+	if (!(sbsec->flags & SE_SBINITIALIZED))
-+		return opts ? 0 : 1;
-+
-+	/* superblock initialized and no options specified - reject if
-+	 * superblock has any options set, otherwise accept
-+	 */
-+	if (!opts)
-+		return (sbsec->flags & SE_MNTMASK) ? 0 : 1;
-+
-+	if (opts->fscontext) {
-+		rc = parse_sid(sb, opts->fscontext, &sid);
-+		if (rc)
-+			return 0;
-+		if (bad_option(sbsec, FSCONTEXT_MNT, sbsec->sid, sid))
-+			return 0;
-+	}
-+	if (opts->context) {
-+		rc = parse_sid(sb, opts->context, &sid);
-+		if (rc)
-+			return 0;
-+		if (bad_option(sbsec, CONTEXT_MNT, sbsec->mntpoint_sid, sid))
-+			return 0;
-+	}
-+	if (opts->rootcontext) {
-+		struct inode_security_struct *root_isec;
-+
-+		root_isec = backing_inode_security(sb->s_root);
-+		rc = parse_sid(sb, opts->rootcontext, &sid);
-+		if (rc)
-+			return 0;
-+		if (bad_option(sbsec, ROOTCONTEXT_MNT, root_isec->sid, sid))
-+			return 0;
-+	}
-+	if (opts->defcontext) {
-+		rc = parse_sid(sb, opts->defcontext, &sid);
-+		if (rc)
-+			return 0;
-+		if (bad_option(sbsec, DEFCONTEXT_MNT, sbsec->def_sid, sid))
-+			return 0;
-+	}
-+	return 1;
-+}
-+
- static int selinux_sb_remount(struct super_block *sb, void *mnt_opts)
- {
- 	struct selinux_mnt_opts *opts = mnt_opts;
-@@ -6984,6 +7037,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
+ static int nfs_compare_mount_options(const struct super_block *s, const struct nfs_server *b,
+@@ -1174,6 +1175,9 @@ static int nfs_compare_super(struct super_block *sb, struct fs_context *fc)
+ 		return 0;
+ 	if (!nfs_compare_userns(old, server))
+ 		return 0;
++	if ((old->has_sec_mnt_opts || fc->security) &&
++			!security_sb_do_mnt_opts_match(sb, fc->security))
++		return 0;
+ 	return nfs_compare_mount_options(sb, server, fc);
+ }
  
- 	LSM_HOOK_INIT(sb_free_security, selinux_sb_free_security),
- 	LSM_HOOK_INIT(sb_free_mnt_opts, selinux_free_mnt_opts),
-+	LSM_HOOK_INIT(sb_do_mnt_opts_match, selinux_sb_do_mnt_opts_match),
- 	LSM_HOOK_INIT(sb_remount, selinux_sb_remount),
- 	LSM_HOOK_INIT(sb_kern_mount, selinux_sb_kern_mount),
- 	LSM_HOOK_INIT(sb_show_options, selinux_sb_show_options),
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index 38e60ec742df..3f0acada5794 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -254,6 +254,7 @@ struct nfs_server {
+ 
+ 	/* User namespace info */
+ 	const struct cred	*cred;
++	bool			has_sec_mnt_opts;
+ };
+ 
+ /* Server capabilities */
 -- 
 2.27.0
 
