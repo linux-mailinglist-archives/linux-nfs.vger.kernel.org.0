@@ -2,239 +2,285 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DE1031B199
-	for <lists+linux-nfs@lfdr.de>; Sun, 14 Feb 2021 18:42:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D68E631B1BC
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Feb 2021 19:01:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229789AbhBNRmI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 14 Feb 2021 12:42:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229730AbhBNRmH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 14 Feb 2021 12:42:07 -0500
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C38ACC061574
-        for <linux-nfs@vger.kernel.org>; Sun, 14 Feb 2021 09:41:26 -0800 (PST)
-Received: by mail-ej1-x629.google.com with SMTP id lg21so7660116ejb.3
-        for <linux-nfs@vger.kernel.org>; Sun, 14 Feb 2021 09:41:26 -0800 (PST)
+        id S229792AbhBNR7a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 14 Feb 2021 12:59:30 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:59712 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229813AbhBNR72 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 14 Feb 2021 12:59:28 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11EHt2pA132481;
+        Sun, 14 Feb 2021 17:58:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=euIygGKwq3FihN1gfq1fXcmNGbUfsoPhu4tPGZwUT3o=;
+ b=E/pQFoYqYDPa0vsxtRV3cLC9raJCb/UFbuFdHtk0oP5LTNvQ58W1yV3PdsR1qnY4K9PB
+ 19TU64Yw69p4QtpiXTuaz8rvXbdN5aCVQ1TKnQfrUuT+Z4xVCDM3apIvscMbEnGZursU
+ Dq/qubkqrMdbH05K1eeApAGRFYH12MjaDjaQfddfmgjYbLqDQ8p1xmI1Hb2bUiKNglOf
+ j7I/pzmuur4SxIMUhBj3+HXQvUK/Ghfm3mHniCHcPJRnoyFhxAihT6dzWFt+Oh22YgMc
+ g09mf5hUhkBYU245dMjykXbtTMcZc0i5FjB6g7x1ZCASjbrXO4JnXSAGVlIxDmRRw2Kb Pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 36p49b2e8p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 14 Feb 2021 17:58:42 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11EHuBxV174096;
+        Sun, 14 Feb 2021 17:58:42 GMT
+Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam08lp2043.outbound.protection.outlook.com [104.47.74.43])
+        by aserp3030.oracle.com with ESMTP id 36prbk9ru4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 14 Feb 2021 17:58:42 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dpow5BgXbnWiKLRzCHoVMDJItK+XZqBjxn504iQwHgeVYAPC89izuuAWJzcB+6P7+ae1VHHeYUhf1vfBAevSHyQ3D3Klpn+Dy/k+uh7dwpDJZYwVq9YqCJQuOlAMKj9snQ7VocTh28wd7ljkVh6/7otaFHn3CfKKBtB/RitxIyl56mXwn8bPVQtpfIb5ZKfmE80ExNV4yCViu0gd5SflEs2odw+Z6W/piNuwxw66O1B/QZfKCKtW0RyULh0AAqKgltnwlt2I/fhb9blvjMvR4j503U9re7tBFZnC/A9KH2sWU5eNZp4WmWpYKqLAKJQm9ByW5rQyOEqnk+KmAUCJ8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=euIygGKwq3FihN1gfq1fXcmNGbUfsoPhu4tPGZwUT3o=;
+ b=AdXapLsnXVcwJ9spEGLbC4Ed6opWM7ZI3p6HlACTo9T8e7st9NcKylAlT64bIKerT4yjXP2tKaD9TWkF0kb7iV+vqlFwxtaMdUO5zmtnLWpuQ7dl6dNR/RbhIcYZs5JZkotmSoaVPs4a/I8CuqiSupNw4zrA1mdfQmMMVRsuLy4R3JPfwquiS+gRmfuJt2KVIO7aq+3uIRfQuJ8KV2rwvx7HkhZxVmNP0cAG1taUZlkDJ6C+B1K+bYX88mSnBsVRWYZjz909pmpcrOJTpB69DPaTRUlz4DXgNq30aIv5YgYatcpAts88miHRn0P4jcvggaoukirrQ9j+lUXojmF5Fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MB4xb1KU+v2EsUfLSLO02BE9ItBBcIJkzgSb9EQ/3Ws=;
-        b=JqiAvPd84zAod+lXF8V3GbJvDCc+THWyhaVemy6LPY0VbCwlKmIyO0OxsGz1AfvqMz
-         DXLSrTqcuRCCZllYWI40PhOGuTjenVrAkGOOPIZmaYoqIq49JqCIfS+AFmEggdNHbpLu
-         QNY/pvircmLOUFIgB+onbYSS5x+fLp1LUh230UHnRAMH5J1ONn3lXUBQeZS5Zg2MXbmE
-         X2IMs6zXNGNTZtJTWDaxScrz6ihl1Ff3+I9rWwD2tYeLgkzEHH8GfKn0c9bPuJmoc6fC
-         Yv8RiVhzo5+hCIOMGei4dvBRxgM3G1RVjuUqrrfFV+yTt/aHedkCrFK0iiGtXvXZW3Wa
-         ySHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MB4xb1KU+v2EsUfLSLO02BE9ItBBcIJkzgSb9EQ/3Ws=;
-        b=TTX7C5N4U/V44aO3GlghVci2c5uFI2VzaDOGyQD+gzswq6W/RmlBW/G9ZMz010o9r2
-         Zao7e6USqR0veMDVQAVFvjpyFoa2di13Pwm9dzeo5mH6JYJZ28tpTxrkpUy/hZc2QAbM
-         KuReP4k+Uc7E7bQyDw27DP7A1e8Esx71eAw+rqeiEnltWj3IRXeto0cr6CjZLIr3iH4o
-         QDIUVDXwhRbiws7t63XoBP7wSkp2NoldMary9JjCx5RhMozfCs2iMGWSXiP1MBNCVSCP
-         QXODe5SCYAQBaP5gZteswa9Q1hizNhtgM/HjhQyAcC1O0Eksx/kjv2FLRnNUy9TwGuUU
-         L5Zg==
-X-Gm-Message-State: AOAM532ZQmdj+VamVucPjqoypDDdLjE7Bcfz8IMeZXDkTbX4bQiHfdS4
-        JH1YKJS+r3pWVXywHi+39LVZZg==
-X-Google-Smtp-Source: ABdhPJwlGaQW64EV7ZPlc0jwrWq3a6quonzhDKRNHsQFhGfLbInslsMGkPUFe3KXv8zhn1OqLvpJKQ==
-X-Received: by 2002:a17:906:1457:: with SMTP id q23mr10578917ejc.43.1613324485501;
-        Sun, 14 Feb 2021 09:41:25 -0800 (PST)
-Received: from gmail.com ([77.124.84.167])
-        by smtp.gmail.com with ESMTPSA id p25sm8708539eds.55.2021.02.14.09.41.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Feb 2021 09:41:24 -0800 (PST)
-Date:   Sun, 14 Feb 2021 19:41:21 +0200
-From:   Dan Aloni <dan@kernelim.com>
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     Anna Schumaker <schumaker.anna@gmail.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2 0/5] SUNRPC: Create sysfs files for changing IP
-Message-ID: <20210214174121.3n7lxeal4ifdoygn@gmail.com>
-References: <20210202184244.288898-1-Anna.Schumaker@Netapp.com>
- <75F3F315-84AA-41A0-A43A-C531042A9C47@oracle.com>
- <CAFX2JfktYGe4vDtXogFHurdyz4TJx5APj9pb-J5HmsDGC99kaA@mail.gmail.com>
- <20210202192417.ug32gmuc2uciik54@gmail.com>
- <8A686173-B3FF-4122-990C-6E8795D35161@redhat.com>
- <20210203212035.qncen4u3o6pr57h6@gmail.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=euIygGKwq3FihN1gfq1fXcmNGbUfsoPhu4tPGZwUT3o=;
+ b=weVyreAv/n1qjXQvByqFNTeHukBHeUJ+nquaFu5TkTbnXymLt2dIDeU9XZ0MFjlCsg4aMUIggPzFanxayitv8ReC2to1pCUkBO0cgLn2T5V5hmY32RB96uMu2i6z5eWLcb0KylBj1oER2N8M56cxoNqENaU3QM41fqBS3WTkeec=
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
+ by SJ0PR10MB4814.namprd10.prod.outlook.com (2603:10b6:a03:2d5::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.27; Sun, 14 Feb
+ 2021 17:58:39 +0000
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::6da8:6d28:b83:702b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::6da8:6d28:b83:702b%4]) with mapi id 15.20.3846.038; Sun, 14 Feb 2021
+ 17:58:39 +0000
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Bruce Fields <bfields@redhat.com>
+Subject: Re: [PATCH] SUNRPC: Use TCP_CORK to optimise send performance on the
+ server
+Thread-Topic: [PATCH] SUNRPC: Use TCP_CORK to optimise send performance on the
+ server
+Thread-Index: AQHXAkZmunoZe40LXUmxO15yQAmlIKpWoMoAgAAEs4CAABZCgIABGpyAgAASgACAAAO3AIAABO2A
+Date:   Sun, 14 Feb 2021 17:58:39 +0000
+Message-ID: <BE094630-AA8E-4C7E-ACF8-B153AECA2EDA@oracle.com>
+References: <20210213202532.23146-1-trondmy@kernel.org>
+ <952C605B-C072-4C6B-B9C0-88C25A3B891E@oracle.com>
+ <f025fa709f923255b9cb8e76a9b5ad4cca9355c4.camel@hammerspace.com>
+ <4CD2739A-D39B-48C9-BCCF-A9DF1047D507@oracle.com>
+ <8ce015080f2f4eb57a81e10041947ad7e6f31499.camel@hammerspace.com>
+ <C3A48B63-63AF-4308-A499-15665AB2FF9C@oracle.com>
+ <6f49449343dc7ee4efda1c9d9cc56d272c984502.camel@hammerspace.com>
+In-Reply-To: <6f49449343dc7ee4efda1c9d9cc56d272c984502.camel@hammerspace.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: hammerspace.com; dkim=none (message not signed)
+ header.d=none;hammerspace.com; dmarc=none action=none header.from=oracle.com;
+x-originating-ip: [68.61.232.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 96f06196-0e2b-4058-69e1-08d8d11228e6
+x-ms-traffictypediagnostic: SJ0PR10MB4814:
+x-microsoft-antispam-prvs: <SJ0PR10MB4814D91323577EE6B7E4151593899@SJ0PR10MB4814.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: s9revc06OeVhWSKvSBYHC7ZEwS+u04AKwpP9iRomEToSfTUUO5Y4Q/P47q4X+8zews34jhRw0dc7z8j5v3lfIN/qWjuaMTgVFl8xTNcEqx5zLnwFaj/7JaFtkAWl62U+dvKce8KBjRr+eTAO58ppLVp21jF1qGOdEmfmhxx4LJvX7AFiuRpNy5qHVEl65U8/sZUkAYKN8D8/6An0Tiv5dHtKijgtlyJfv7Y+koOYL/Bd8qIw+2dIQqdV9ZOGJz1PltRlF8qGKYU2SsqzaxALCZ+q2FK8rYJoVfu8ZrXTn6KV3reJF/bpU0NcCQ5MQ6Cpdd+XKVQFEIeeiipNi9mBafWYN+PZ1NuoDApmjWf5FXuxuqAR0d4fbp/17Ti3+nM4d+i+GwY8FFurIbbjNWRLvnUcVAHpKTOjqNkmL6XvclVLodxR+NmhFNLO+mVGwAA0IP9X1iIdiRsHN6EImq3j8tecQ5jqQLbY/mUcRGXHmRquWJopq3COCkffzEeoPYEo0jccLUZ5/H1J+ldPq8MjZQ3y8cPkMw6l6Ib7t+r6sDhuMGO3Gbr/4dyTngcet2E54WnWm6LfwQe0mDpuLQCbVA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(376002)(346002)(366004)(136003)(39860400002)(33656002)(6506007)(8936002)(53546011)(86362001)(6486002)(316002)(5660300002)(6512007)(66556008)(2906002)(2616005)(66946007)(66446008)(8676002)(36756003)(4326008)(478600001)(66476007)(26005)(44832011)(83380400001)(6916009)(54906003)(186003)(76116006)(64756008)(71200400001)(91956017)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?VW2nY3cR41aGpkYTCeQhsjAhf6RBlfw1Tt6sWueer9JSKTEBtkCvZtnZaw6k?=
+ =?us-ascii?Q?9TYib6I9edQPOWY5zNZNIs8cRAqGNV35BSXh3JIn87qCgKz8q4oN2/+9vTA6?=
+ =?us-ascii?Q?2HQl7zWB36Mez5uJCqejRe6rcURfoPUFyAN8jQKRUF87JESOwVblRwpTziE4?=
+ =?us-ascii?Q?p00uNxvhu63t/L3Ltnu6hvUE34zUAAgMRlEv+dBhfjjSGSXN/nUC2sloxqmn?=
+ =?us-ascii?Q?3tpsF6x2ZsCJO+m5BkEYjkSGgWRzjXs79GioIM74jPXsGiLgCCutEQT8Txlg?=
+ =?us-ascii?Q?UBEniZXl7Zmv4j/nVcfE4x0AHHl9QPoGnjGuBBgBsBPNyd09yOcb+aJbeWQW?=
+ =?us-ascii?Q?JLQ4iJcMfTTTVhMvKbRLOdIiSN2YW3npjq7L1oX6RUGJw6DJWSfn5fcgz5TR?=
+ =?us-ascii?Q?AcSVXIeo8xUtzHp+zr4Ii7twTqNYMRT4sITA2eVOy/nOWP0gbcUXZFhS9s1n?=
+ =?us-ascii?Q?2q5VkqcCacUyW6H0/OBhH+OW+7iqulKKhVauULhnbUqoPVNaDOTiPrGZa8f/?=
+ =?us-ascii?Q?rhUW55+U8C8trAg2aAgYj2SZXvE3Z/c3RYAA1ucmhyL4DRw3JSztnSrXSE+m?=
+ =?us-ascii?Q?4adQYx674h0DCbM8EKkw34nt6qRNVi/5LKDvEq+tKsr83bnaDLd0mGCevnnZ?=
+ =?us-ascii?Q?wGOrcnTlJYTPDoal2BuSyG+7BfvFb5zzDnz7QHtCFteJIkByYxh6OT+ZyfVM?=
+ =?us-ascii?Q?8vC4zF9GAL0czRl1LrY5mM0A8GIRBiqP+D/loIvQLIW4jeTYtVOfKr0MHGMb?=
+ =?us-ascii?Q?wTqelRxF71njrmyOQKQ3O/vGdDuY/lzVvroPbVr191DlYifJ8hDD50dw9oOl?=
+ =?us-ascii?Q?XH4HqlUKN+mRIjZZkk5XqkAUjy4JV7dQ03DLYbqqtFHlW3TKKIZTv5/qy8eu?=
+ =?us-ascii?Q?I2YXgHgFUgNN1x4XAG54tpGYUCmBA40ZmiqNhnhFd9JQB8JnRgz27A0UN0Td?=
+ =?us-ascii?Q?cUAmIdZZf/GK905k1vy/Plg4nl/E4TnV9mP+wyNjL+8ztdAY5NRLjKV3jXo7?=
+ =?us-ascii?Q?GuMAtLqeu17+hw32bZoTJpH4PjKhGflivfOoNRO4PLqPjfQ3J4Tdss4z1Fgi?=
+ =?us-ascii?Q?W/sDbAH+fcgVEGvmqv+Gb8X2t3oRHKzn6EmpA5+mOg0DzFFjt0oShQFjeLFj?=
+ =?us-ascii?Q?yaUWATTeTIegHTRagOC3immeCeBG70gsLTFyJadFy5sfjiLxDyYPuUaZMiGa?=
+ =?us-ascii?Q?/zmLzboL3nOdhR4LPfbmfnox9F2+tsuqiKFDISHAj3r/KVr4qRoevFuo7lVu?=
+ =?us-ascii?Q?EMiqtHrpFjW2wUGtI38cHtRA98dtP9GaDkkxtJF9rA9IBrZIjVMd0TehAkjI?=
+ =?us-ascii?Q?rYlmYV5RJuKoy3ToMdcaNwGD?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <82C8B654732E19458A0390DEBB1CF832@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210203212035.qncen4u3o6pr57h6@gmail.com>
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96f06196-0e2b-4058-69e1-08d8d11228e6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Feb 2021 17:58:39.7993
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: elrjlCZRUY15V6rv1/60VSVtSQeCwX8DfCcHAX3Ng0wiJvXSZEtb4gtzQXZOCf9107XmgDdEd9saSr+KkGSzMw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4814
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9895 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 mlxscore=0
+ phishscore=0 adultscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2102140155
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9895 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 phishscore=0 clxscore=1015 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102140155
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 03, 2021 at 11:20:35PM +0200, Dan Aloni wrote:
-> On Tue, Feb 02, 2021 at 02:49:38PM -0500, Benjamin Coddington wrote:
-> > On 2 Feb 2021, at 14:24, Dan Aloni wrote:
-> > > Also, what do you think would be a straightforward way for a userspace
-> > > program to find what sunrpc client id serves a mountpoint? If we add an
-> > > ioctl for the mountdir AFAIK it would be the first one that the NFS
-> > > client supports, so I wonder if there's a better interface that can work
-> > > for that.
-> > 
-> > I'm a fan of adding an ioctl interface for userspace, but I think we'd
-> > better avoid using NFS itself because it would be nice to someday implement
-> > an NFS "shutdown" for non-responsive servers, but sending any ioctl to the
-> > mountpoint could revalidate it, and we'd hang on the GETATTR.
-> 
-> For that, I was looking into using openat2() with the very recently
-> added RESOLVE_CACHED flag. However from some experimentation I see that it
-> still sleeps on the unresponsive mount in nfs_weak_revalidate(), and the
-> latter cannot tell whether LOOKUP_CACHED flag was passed to
-> d_weak_revalidate().
-> 
-> > Maybe we can figure out a way to expose the superblock via sysfs for each
-> > mount.
-> 
-> Essentially this is what fspick() syscall lets you do. I imagine that it
-> can be implemented entirely under fs/nfs, using fsconfig() from under a
-> FSCONFIG_SET_STRING passing a special string such as
-> "report-clients-ids", causing a list of sunrpc client IDs to get written
-> to the fs_context log.
-> 
-> However even with this interface we may still need to verify that the
-> path lookup that `fspick` does using `user_path_at` is not blocking on
-> non-responsive NFS mounts.
-
-Pending a response from Anna about this, in the meanwhile I've prepared
-patch for the fspick approach. My experiments show that it does not
-block over hung mounts compared to the ioctl method. I'll repost
-following comments.
-
--
-
-Using a flag named "sunrpc-id" with set-flags following fspick syscall,
-the information regarding related sunrpc client IDs can be determined on
-a mountpoint:
-
-    int fd = fspick(AT_FDCWD, "/mnt/export", FSPICK_CLOEXEC |
-	FSPICK_NO_AUTOMOUNT);
-    fsconfig(fd, FSCONFIG_SET_FLAG, "sunrpcid", NULL, 0);
-
-Example output:
-
-    i sunrpc-id main 4
-    i sunrpc-id shared 0
-    i sunrpc-id acl 5
-    i sunrpc-id nlm 3
-    i sunrpc-id -
-
-Here `-` is used as end-of-list sentinel.
-
-The advantage over adding a potential NFS ioctl is that no `open`
-syscall is needed, therefore caching invalidation issues that
-may result in a hung query are avoided.
-
-Signed-off-by: Dan Aloni <dan@kernelim.com>
----
- fs/nfs/fs_context.c | 41 +++++++++++++++++++++++++++++++++++++++++
- fs/nfs/internal.h   |  4 ++++
- 2 files changed, 45 insertions(+)
-
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 06894bcdea2d..a63aeeaaf6ce 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -14,6 +14,7 @@
- #include <linux/fs.h>
- #include <linux/fs_context.h>
- #include <linux/fs_parser.h>
-+#include <linux/lockd/lockd.h>
- #include <linux/nfs_fs.h>
- #include <linux/nfs_mount.h>
- #include <linux/nfs4_mount.h>
-@@ -76,6 +77,7 @@ enum nfs_param {
- 	Opt_softerr,
- 	Opt_softreval,
- 	Opt_source,
-+	Opt_sunrpcid,
- 	Opt_tcp,
- 	Opt_timeo,
- 	Opt_udp,
-@@ -161,6 +163,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
- 	fsparam_flag  ("softerr",	Opt_softerr),
- 	fsparam_flag  ("softreval",	Opt_softreval),
- 	fsparam_string("source",	Opt_source),
-+	fsparam_flag  ("sunrpcid",	Opt_sunrpcid),
- 	fsparam_flag  ("tcp",		Opt_tcp),
- 	fsparam_u32   ("timeo",		Opt_timeo),
- 	fsparam_flag  ("udp",		Opt_udp),
-@@ -430,6 +433,41 @@ static int nfs_parse_version_string(struct fs_context *fc,
- 	return 0;
- }
- 
-+static void nfs_client_report_sunrpcid(struct fs_context *fc,
-+					struct rpc_clnt *clnt,
-+					const char *kind)
-+{
-+	/* Client ID representation here must match /sys/kernel/sunrpc/net! */
-+	nfs_resultf(fc, "sunrpcid %s %x", kind, clnt->cl_clid);
-+}
-+
-+static int nfs_client_report_clients(struct fs_context *fc)
-+{
-+	struct nfs_server *server;
-+
-+	if (!fc->root) {
-+		nfs_errorf(fc, "NFS: no root yet");
-+		return 0;
-+	}
-+
-+	server = NFS_SB(fc->root->d_sb);
-+	if (!server) {
-+		nfs_errorf(fc, "NFS: no superblock yet");
-+		return 0;
-+	}
-+
-+	nfs_client_report_sunrpcid(fc, server->client, "main");
-+	nfs_client_report_sunrpcid(fc, server->nfs_client->cl_rpcclient, "shared");
-+	nfs_client_report_sunrpcid(fc, server->client_acl, "acl");
-+
-+	if (server->nlm_host != NULL)
-+		nfs_client_report_sunrpcid(
-+			fc, server->nlm_host->h_rpcclnt, "nlm");
-+
-+	nfs_resultf(fc, "sunrpcid -");
-+	return 0;
-+}
-+
- /*
-  * Parse a single mount parameter.
-  */
-@@ -778,6 +816,9 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 		ctx->sloppy = true;
- 		dfprintk(MOUNT, "NFS:   relaxing parsing rules\n");
- 		break;
-+	case Opt_sunrpcid:
-+		nfs_client_report_clients(fc);
-+		break;
- 	}
- 
- 	return 0;
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index c8939d2cce1b..fd061304434e 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -160,6 +160,10 @@ struct nfs_fs_context {
- 	warnf(fc, fmt, ## __VA_ARGS__) :			\
- 	({ dfprintk(fac, fmt "\n", ## __VA_ARGS__); }))
- 
-+#define nfs_resultf(fc, fmt, ...) ((fc)->log.log ?		\
-+	infof(fc, fmt, ## __VA_ARGS__) :			\
-+	({ ; }))
-+
- static inline struct nfs_fs_context *nfs_fc2context(const struct fs_context *fc)
- {
- 	return fc->fs_private;
--- 
-2.26.2
 
 
--- 
-Dan Aloni
+> On Feb 14, 2021, at 12:41 PM, Trond Myklebust <trondmy@hammerspace.com> w=
+rote:
+>=20
+> On Sun, 2021-02-14 at 17:27 +0000, Chuck Lever wrote:
+>>=20
+>>=20
+>>> On Feb 14, 2021, at 11:21 AM, Trond Myklebust
+>>> <trondmy@hammerspace.com> wrote:
+>>>=20
+>>> On Sat, 2021-02-13 at 23:30 +0000, Chuck Lever wrote:
+>>>>=20
+>>>>=20
+>>>>> On Feb 13, 2021, at 5:10 PM, Trond Myklebust <
+>>>>> trondmy@hammerspace.com> wrote:
+>>>>>=20
+>>>>> On Sat, 2021-02-13 at 21:53 +0000, Chuck Lever wrote:
+>>>>>> Hi Trond-
+>>>>>>=20
+>>>>>>> On Feb 13, 2021, at 3:25 PM, trondmy@kernel.org wrote:
+>>>>>>>=20
+>>>>>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>>>>>>=20
+>>>>>>> Use a counter to keep track of how many requests are queued
+>>>>>>> behind
+>>>>>>> the
+>>>>>>> xprt->xpt_mutex, and keep TCP_CORK set until the queue is
+>>>>>>> empty.
+>>>>>>=20
+>>>>>> I'm intrigued, but IMO, the patch description needs to
+>>>>>> explain
+>>>>>> why this change should be made. Why abandon Nagle?
+>>>>>>=20
+>>>>>=20
+>>>>> This doesn't change the Nagle/TCP_NODELAY settings. It just
+>>>>> switches to
+>>>>> using the new documented kernel interface.
+>>>>>=20
+>>>>> The only change is to use TCP_CORK so that we don't send out
+>>>>> partially
+>>>>> filled TCP frames, when we can see that there are other RPC
+>>>>> replies
+>>>>> that are queued up for transmission.
+>>>>>=20
+>>>>> Note the combination TCP_CORK+TCP_NODELAY is common, and the
+>>>>> main
+>>>>> effect of the latter is that when we turn off the TCP_CORK,
+>>>>> then
+>>>>> there
+>>>>> is an immediate forced push of the TCP queue.
+>>>>=20
+>>>> The description above suggests the patch is just a
+>>>> clean-up, but a forced push has potential to change
+>>>> the server's behavior.
+>>>=20
+>>> Well, yes. That's very much the point.
+>>>=20
+>>> Right now, the TCP_NODELAY/Nagle setting means that we're doing
+>>> that
+>>> forced push at the end of _every_ RPC reply, whether or not there
+>>> is
+>>> more stuff that can be queued up in the socket. The MSG_MORE is the
+>>> only thing that keeps us from doing the forced push on every
+>>> sendpage()
+>>> call.
+>>> So the TCP_CORK is there to _further delay_ that forced push until
+>>> we
+>>> think the queue is empty.
+>>=20
+>> My concern is that waiting for the queue to empty before pushing
+>> could
+>> improve throughput at the cost of increased average round-trip
+>> latency.
+>> That concern is based on experience I've had attempting to batch
+>> sends
+>> in the RDMA transport.
+>>=20
+>>=20
+>>> IOW: it attempts to optimise the scheduling of that push until
+>>> we're
+>>> actually done pushing more stuff into the socket.
+>>=20
+>> Yep, clear, thanks. It would help a lot if the above were included in
+>> the patch description.
+>>=20
+>> And, I presume that the TCP layer will push anyway if it needs to
+>> reclaim resources to handle more queued sends.
+>>=20
+>> Let's also consider starvation; ie, that the server will continue
+>> queuing replies such that it never uncorks. The logic in the patch
+>> appears to depend on the client stopping at some point to wait for
+>> the
+>> server to catch up. There probably should be a trap door that uncorks
+>> after a few requests (say, 8) or certain number of bytes are pending
+>> without a break.
+>=20
+> So, firstly, the TCP layer will still push every time a frame is full,
+> so traffic does not stop altogether while TCP_CORK is set.
+
+OK.
+
+
+> Secondly, TCP will also always push on send errors (e.g. when out of free=
+ socket
+> buffer).
+
+As I presumed. OK.
+
+
+> Thirdly, it will always push after hitting the 200ms ceiling,
+> as described in the tcp(7) manpage.
+
+That's the trap door we need to ensure no starvation or deadlock,
+assuming there are no bugs in the TCP layer's logic.
+
+200ms seems a long time to wait, though, when average round trip
+latencies are usually under 1ms on typical Ethernet. It would be
+good to know how often sending has to wait this long.
+
+
+> IOW: The TCP_CORK feature is not designed to block the socket forever.
+> It is there to allow the application to hint to the TCP layer what it
+> needs to do in exactly the same way that MSG_MORE does.
+
+As long as it is only a hint, then we're good.
+
+Out of interest, why not use only MSG_MORE, or remove the use
+of MSG_MORE in favor of only cork? If these are essentially the
+same mechanism, seems like we need only one or the other.
+
+
+--
+Chuck Lever
+
+
+
