@@ -2,84 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 665A331AED3
-	for <lists+linux-nfs@lfdr.de>; Sun, 14 Feb 2021 04:40:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7933D31B0BA
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Feb 2021 15:24:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229694AbhBNDkQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 13 Feb 2021 22:40:16 -0500
-Received: from btbn.de ([5.9.118.179]:52564 "EHLO btbn.de"
+        id S229637AbhBNOXo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 14 Feb 2021 09:23:44 -0500
+Received: from natter.dneg.com ([193.203.89.68]:46336 "EHLO natter.dneg.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229615AbhBNDkP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 13 Feb 2021 22:40:15 -0500
-X-Greylist: delayed 493 seconds by postgrey-1.27 at vger.kernel.org; Sat, 13 Feb 2021 22:40:14 EST
-Received: from [IPv6:2001:16b8:64a9:df00:1919:ab25:6f81:b8e4] (200116b864a9df001919ab256f81b8e4.dip.versatel-1u1.de [IPv6:2001:16b8:64a9:df00:1919:ab25:6f81:b8e4])
-        by btbn.de (Postfix) with ESMTPSA id 0EA3D11C62C;
-        Sun, 14 Feb 2021 04:31:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rothenpieler.org;
-        s=mail; t=1613273480;
-        bh=gGdDHyBr690J6lMUdcn244aIllFpV/2H37cOhwF6h2k=;
-        h=To:From:Subject:Date;
-        b=e+nsjcb72kMcdz7ZAgG6lfyXfjxtb3bVcTeM8DLv4bwJuxYfWsEei1OnBBmNr7O2q
-         oDxSdic132Mjw/JkNIIc7wTDam4/Rwz3SbGzKbccAbrlJfjQ56I6ZOs4KiUh2G8uWA
-         rZBpJ4H1H8GiqiF0qA0i+7RqIfDO7i4FoLSiTxAzkwr67JDO38Zl8P6YTJEXhUHxRU
-         klbkG1FgdTMjPhuxTTYnUk4hC0SzcITgSIWGnT4i8akY+Owdh4oCDUpIvVKOl+WGsD
-         74zB23YWOa2TEQglrAMC9/8ubyfv9x1rTzWBVZPooGrMcV6fvBHfJcWpPq1uZQzgm/
-         RaHd7W+sOUblQ==
-To:     linux-rdma@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-From:   Timo Rothenpieler <timo@rothenpieler.org>
-Subject: copy_file_range() infinitely hangs on NFSv4.2 over RDMA
-Message-ID: <57f67888-160f-891c-6217-69e174d7e42b@rothenpieler.org>
-Date:   Sun, 14 Feb 2021 04:31:16 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        id S229576AbhBNOXo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 14 Feb 2021 09:23:44 -0500
+X-Greylist: delayed 564 seconds by postgrey-1.27 at vger.kernel.org; Sun, 14 Feb 2021 09:23:43 EST
+Received: from localhost (localhost [127.0.0.1])
+        by natter.dneg.com (Postfix) with ESMTP id 6064D1FC4042;
+        Sun, 14 Feb 2021 14:13:38 +0000 (GMT)
+X-Virus-Scanned: amavisd-new at mx-dneg
+Received: from natter.dneg.com ([127.0.0.1])
+        by localhost (natter.dneg.com [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id ps7792vXtIcl; Sun, 14 Feb 2021 14:13:38 +0000 (GMT)
+Received: from zrozimbrai.dneg.com (zrozimbrai.dneg.com [10.11.20.12])
+        by natter.dneg.com (Postfix) with ESMTPS id 43FF91FC20B7;
+        Sun, 14 Feb 2021 14:13:38 +0000 (GMT)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 34D5581B36EE;
+        Sun, 14 Feb 2021 14:13:38 +0000 (GMT)
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id arbstbi_Rv9c; Sun, 14 Feb 2021 14:13:37 +0000 (GMT)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id D61F081B36F0;
+        Sun, 14 Feb 2021 14:13:37 +0000 (GMT)
+X-Virus-Scanned: amavisd-new at zrozimbrai.dneg.com
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id gb6ZiYKPSq-1; Sun, 14 Feb 2021 14:13:37 +0000 (GMT)
+Received: from zrozimbra1.dneg.com (zrozimbra1.dneg.com [10.11.16.16])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 94F5B81B36EE;
+        Sun, 14 Feb 2021 14:13:37 +0000 (GMT)
+Date:   Sun, 14 Feb 2021 14:13:36 +0000 (GMT)
+From:   Daire Byrne <daire@dneg.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Message-ID: <285652682.9476664.1613312016960.JavaMail.zimbra@dneg.com>
+In-Reply-To: <4CD2739A-D39B-48C9-BCCF-A9DF1047D507@oracle.com>
+References: <20210213202532.23146-1-trondmy@kernel.org> <952C605B-C072-4C6B-B9C0-88C25A3B891E@oracle.com> <f025fa709f923255b9cb8e76a9b5ad4cca9355c4.camel@hammerspace.com> <4CD2739A-D39B-48C9-BCCF-A9DF1047D507@oracle.com>
+Subject: Re: [PATCH] SUNRPC: Use TCP_CORK to optimise send performance on
+ the server
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 9.0.0_GA_3990 (ZimbraWebClient - GC78 (Linux)/9.0.0_GA_3990)
+Thread-Topic: SUNRPC: Use TCP_CORK to optimise send performance on the server
+Thread-Index: AQHXAkZmunoZe40LXUmxO15yQAmlIKpWoMoAgAAEs4CAABZCgMgY7/PB
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On our Fileserver, running a few weeks old 5.10, we are running into a 
-weird issue with NFS 4.2 Server-Side Copy and RDMA (and ZFS, though I'm 
-not sure how relevant that is to the issue).
-The servers are connected via InfiniBand, on a Mellanox ConnectX-4 card, 
-using the mlx5 driver.
 
-Anything using the copy_file_range() syscall to copy stuff just hangs.
-In strace, the syscall never returns.
+----- On 13 Feb, 2021, at 23:30, Chuck Lever chuck.lever@oracle.com wrote:
 
-Simple way to reproduce on the client:
- > xfs_io -fc "pwrite 0 1M" testfile
- > xfs_io -fc "copy_range testfile" testfile.copy
+>> I don't have a performance system to measure the improvement
+>> accurately.
+> 
+> Then let's have Daire try it out, if possible.
 
-The second call just never exits. It sits in S+ state, with no CPU 
-usage, and can easily be killed via Ctrl+C.
-I let it sit for a couple hours as well, it does not seem to ever complete.
+I'm happy to test it out on one of our 2 x 40G NFS servers with 100 x 1G clients (but it's trickier to patch the clients too atm).
 
-Some more observations about it:
+Just so I'm clear, this is in addition to Chuck's "Handle TCP socket sends with kernel_sendpage() again" patch from bz #209439 (which I think is now in 5.11 rc)? Or you want to see what this patch looks like on it's own without that (e.g. v5.10)?
 
-If I do a fresh reboot of the client, the operation works fine for a 
-short while (like, 10~15 minutes). No load is on the system during that 
-time, it's effectively idle.
-
-The operation actually does successfully copy all data. The size and 
-checksum of the target file is as expected. It just never returns.
-
-This only happens when mounting via RDMA. Mounting the same NFS share 
-via plain TCP has the operation work reliably.
-
-Had this issue with Kernel 5.4 already, and had hoped that 5.10 might 
-have fixed it, but unfortunately it didn't.
-
-I tried two server and 30 different client machines, they all exhibit 
-the exact same behaviour. So I'd carefully rule out a hardware issue.
-
-
-Any pointers on how to debug or maybe even fix this?
-
-
-
-Thanks,
-Timo
+Daire
