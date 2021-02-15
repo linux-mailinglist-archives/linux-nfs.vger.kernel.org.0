@@ -2,68 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9178231C2E2
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Feb 2021 21:15:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1163C31C2E5
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Feb 2021 21:18:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229497AbhBOUPu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Feb 2021 15:15:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229469AbhBOUPu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 15 Feb 2021 15:15:50 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DF40464DDA;
-        Mon, 15 Feb 2021 20:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1613420110;
-        bh=xoVG1a3XwJKuGPZNDgpZio79voqPVD3cw0d8BZupMYU=;
-        h=Subject:From:To:Cc:Date:From;
-        b=SDtxFmNiwMydvYVRZhXov0IEEDjJvqRxOZ4wdRxMTzzX2nhRdrDiB3iuMmM3l5ruZ
-         HgHxLS7sQp579lwv89vK5MwozM8BejmTquE6CAGtVfklotPtEtucMhRPoZW/i5g5yr
-         bYDoWei4qy914eTlbSUC2vDDtAvj82BMYQeRaeii2uqMTBlSgLg5OjJtWOvTrhCVwb
-         khKujVVdWFqCOjCgHHg1gtacKfVJ28QW3MAIhvI0fL5ogUefv2cBVkNKFAmwpaRMH+
-         Qpp5NISLRoncb4x5Uvd+1WzoHKeHJSJ0a4Jab/QPpffsOAqi4woHF8uU9r0owk7kNv
-         ovq8KObouvb/w==
-Message-ID: <804830ba7fdd91cbf9348050b07f9922801d20f0.camel@kernel.org>
-Subject: pynfs breakage
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Bruce Fields <bfields@fieldses.org>
+        id S229608AbhBOUSK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Feb 2021 15:18:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229469AbhBOUSK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Feb 2021 15:18:10 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8F0FC061574
+        for <linux-nfs@vger.kernel.org>; Mon, 15 Feb 2021 12:17:29 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 58A69410D; Mon, 15 Feb 2021 15:17:28 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 58A69410D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1613420248;
+        bh=+//eqeYnV+BYPGZTR06GW1sy7gZd1IShTiYlW6ZsgTo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RsEoH0OlTN+aNR2BYaVDmNiOmLHx9bNNvsnCa8MuUkT0JWNlRaDBqvkxSgkXlBXcg
+         Bkn4fV+CuekubpZEbTDqmpq3W8OeVj/YY+kiMWUFvvpr38C3W3BMAAyyD3MI+8H917
+         KoA9ljlAeHhYG3Diuai2J3sP1yV9Epx7icJ8UlNg=
+Date:   Mon, 15 Feb 2021 15:17:28 -0500
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Jeff Layton <jlayton@kernel.org>
 Cc:     "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>
-Date:   Mon, 15 Feb 2021 15:15:08 -0500
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+Subject: Re: pynfs breakage
+Message-ID: <20210215201728.GC30742@fieldses.org>
+References: <804830ba7fdd91cbf9348050b07f9922801d20f0.camel@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <804830ba7fdd91cbf9348050b07f9922801d20f0.camel@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce!
+On Mon, Feb 15, 2021 at 03:15:08PM -0500, Jeff Layton wrote:
+> Hi Bruce!
+> 
+> The latest HEAD in pynfs doesn't run for me:
+> 
+> $ ./nfs4.1/testserver.py --help
+> Traceback (most recent call last):
+>   File "/home/jlayton/git/pynfs/nfs4.1/./testserver.py", line 38, in <module>
+>     import server41tests.environment as environment
+>   File "/home/jlayton/git/pynfs/nfs4.1/server41tests/environment.py", line 593
+>     def write_file(sess, file, data, offset=0 stateid=stateid4(0, b''),
+>                                               ^
+> SyntaxError: invalid syntax
+> 
+> If I revert this commit, then it works:
 
-The latest HEAD in pynfs doesn't run for me:
+Yeah, sorry about that, I pushed out quickly thinking I'd tested it, but
+in fact it has a bunch of mistakes.  Fixing....
 
-$ ./nfs4.1/testserver.py --help
-Traceback (most recent call last):
-  File "/home/jlayton/git/pynfs/nfs4.1/./testserver.py", line 38, in <module>
-    import server41tests.environment as environment
-  File "/home/jlayton/git/pynfs/nfs4.1/server41tests/environment.py", line 593
-    def write_file(sess, file, data, offset=0 stateid=stateid4(0, b''),
-                                              ^
-SyntaxError: invalid syntax
+--b.
 
-If I revert this commit, then it works:
-
-commit 49ae5ba83dd98936b3f5c24431a166866b70f34a (HEAD -> master, origin/master, origin/HEAD)
-Author: J. Bruce Fields <bfields@redhat.com>
-Date:   Thu Feb 11 16:22:58 2021 -0500
-
-    nfs41: read_file and write_file helpers
-    
-    A couple simple helpers copied from 4.0.
-    
-    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-
-
-Cheers,
--- 
-Jeff Layton <jlayton@kernel.org>
-
+> 
+> commit 49ae5ba83dd98936b3f5c24431a166866b70f34a (HEAD -> master, origin/master, origin/HEAD)
+> Author: J. Bruce Fields <bfields@redhat.com>
+> Date:   Thu Feb 11 16:22:58 2021 -0500
+> 
+>     nfs41: read_file and write_file helpers
+>     
+>     A couple simple helpers copied from 4.0.
+>     
+>     Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> 
+> 
+> Cheers,
+> -- 
+> Jeff Layton <jlayton@kernel.org>
