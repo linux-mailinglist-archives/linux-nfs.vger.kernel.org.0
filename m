@@ -2,142 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C9EE31B8BC
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Feb 2021 13:08:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C601D31BABF
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Feb 2021 15:09:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229666AbhBOMHG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Feb 2021 07:07:06 -0500
-Received: from outbound-smtp14.blacknight.com ([46.22.139.231]:41883 "EHLO
-        outbound-smtp14.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229994AbhBOMHD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Feb 2021 07:07:03 -0500
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-        by outbound-smtp14.blacknight.com (Postfix) with ESMTPS id 6AC3A1C3421
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Feb 2021 12:06:10 +0000 (GMT)
-Received: (qmail 31181 invoked from network); 15 Feb 2021 12:06:10 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 15 Feb 2021 12:06:10 -0000
-Date:   Mon, 15 Feb 2021 12:06:09 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
+        id S230356AbhBOOJI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Feb 2021 09:09:08 -0500
+Received: from natter.dneg.com ([193.203.89.68]:43316 "EHLO natter.dneg.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229816AbhBOOJB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 15 Feb 2021 09:09:01 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by natter.dneg.com (Postfix) with ESMTP id 0D8BC2871536;
+        Mon, 15 Feb 2021 14:08:19 +0000 (GMT)
+X-Virus-Scanned: amavisd-new at mx-dneg
+Received: from natter.dneg.com ([127.0.0.1])
+        by localhost (natter.dneg.com [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id pFg_rmG3bJxT; Mon, 15 Feb 2021 14:08:18 +0000 (GMT)
+Received: from zrozimbrai.dneg.com (zrozimbrai.dneg.com [10.11.20.12])
+        by natter.dneg.com (Postfix) with ESMTPS id D8CC02871533;
+        Mon, 15 Feb 2021 14:08:18 +0000 (GMT)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id CA97F81B32AB;
+        Mon, 15 Feb 2021 14:08:18 +0000 (GMT)
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id kvjJ2Fr7hUuJ; Mon, 15 Feb 2021 14:08:18 +0000 (GMT)
+Received: from localhost (localhost [127.0.0.1])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 8C2DD81B2F6C;
+        Mon, 15 Feb 2021 14:08:18 +0000 (GMT)
+X-Virus-Scanned: amavisd-new at zrozimbrai.dneg.com
+Received: from zrozimbrai.dneg.com ([127.0.0.1])
+        by localhost (zrozimbrai.dneg.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id GHOa8PlelrOH; Mon, 15 Feb 2021 14:08:18 +0000 (GMT)
+Received: from zrozimbra1.dneg.com (zrozimbra1.dneg.com [10.11.16.16])
+        by zrozimbrai.dneg.com (Postfix) with ESMTP id 6D60781B32D9;
+        Mon, 15 Feb 2021 14:08:18 +0000 (GMT)
+Date:   Mon, 15 Feb 2021 14:08:18 +0000 (GMT)
+From:   Daire Byrne <daire@dneg.com>
 To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Mel Gorman <mgorman@suse.de>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: alloc_pages_bulk()
-Message-ID: <20210215120608.GE3697@techsingularity.net>
-References: <2A0C36E7-8CB0-486F-A8DB-463CA28C5C5D@oracle.com>
- <EEB0B974-6E63-41A0-9C01-F0DEA39FC4BF@oracle.com>
- <20210209113108.1ca16cfa@carbon>
- <20210210084155.GA3697@techsingularity.net>
- <20210210124103.56ed1e95@carbon>
- <20210210130705.GC3629@suse.de>
- <B123FB11-661F-45A6-8235-2982BF3C4B83@oracle.com>
- <20210211091235.GC3697@techsingularity.net>
- <F3CD435E-905F-4262-B4DA-0C721A4235E1@oracle.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Message-ID: <608881118.10473767.1613398098205.JavaMail.zimbra@dneg.com>
+In-Reply-To: <E39E6630-91A9-48DA-A6CF-6AE5BF6CEDD1@oracle.com>
+References: <20210213202532.23146-1-trondmy@kernel.org> <952C605B-C072-4C6B-B9C0-88C25A3B891E@oracle.com> <f025fa709f923255b9cb8e76a9b5ad4cca9355c4.camel@hammerspace.com> <4CD2739A-D39B-48C9-BCCF-A9DF1047D507@oracle.com> <285652682.9476664.1613312016960.JavaMail.zimbra@dneg.com> <E39E6630-91A9-48DA-A6CF-6AE5BF6CEDD1@oracle.com>
+Subject: Re: [PATCH] SUNRPC: Use TCP_CORK to optimise send performance on
+ the server
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <F3CD435E-905F-4262-B4DA-0C721A4235E1@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 9.0.0_GA_3990 (ZimbraWebClient - GC78 (Linux)/9.0.0_GA_3990)
+Thread-Topic: SUNRPC: Use TCP_CORK to optimise send performance on the server
+Thread-Index: AQHXAkZmunoZe40LXUmxO15yQAmlIKpWoMoAgAAEs4CAABZCgMgY7/PBt+g1IgC0y9QTNg==
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Feb 11, 2021 at 04:20:31PM +0000, Chuck Lever wrote:
-> > On Feb 11, 2021, at 4:12 AM, Mel Gorman <mgorman@techsingularity.net> wrote:
-> > 
-> > <SNIP>
-> > 
-> > Parameters to __rmqueue_pcplist are garbage as the parameter order changed.
-> > I'm surprised it didn't blow up in a spectacular fashion. Again, this
-> > hasn't been near any testing and passing a list with high orders to
-> > free_pages_bulk() will corrupt lists too. Mostly it's a curiousity to see
-> > if there is justification for reworking the allocator to fundamentally
-> > deal in batches and then feed batches to pcp lists and the bulk allocator
-> > while leaving the normal GFP API as single page "batches". While that
-> > would be ideal, it's relatively high risk for regressions. There is still
-> > some scope for adding a basic bulk allocator before considering a major
-> > refactoring effort.
-> > 
-> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > index f8353ea7b977..8f3fe7de2cf7 100644
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> > @@ -5892,7 +5892,7 @@ __alloc_pages_bulk_nodemask(gfp_t gfp_mask, unsigned int order,
-> > 	pcp_list = &pcp->lists[migratetype];
-> > 
-> > 	while (nr_pages) {
-> > -		page = __rmqueue_pcplist(zone, gfp_mask, migratetype,
-> > +		page = __rmqueue_pcplist(zone, migratetype, alloc_flags,
-> > 								pcp, pcp_list);
-> > 		if (!page)
-> > 			break;
-> 
-> The NFS server is considerably more stable now. Thank you!
-> 
 
-Thanks for testing!
+----- On 14 Feb, 2021, at 16:59, Chuck Lever chuck.lever@oracle.com wrote:
 
-> I confirmed that my patch is requesting and getting multiple pages.
-> The new NFSD code and the API seem to be working as expected.
+>>>> I don't have a performance system to measure the improvement
+>>>> accurately.
+>>> 
+>>> Then let's have Daire try it out, if possible.
+>> 
+>> I'm happy to test it out on one of our 2 x 40G NFS servers with 100 x 1G clients
+>> (but it's trickier to patch the clients too atm).
 > 
-> The results are stunning. Each svc_alloc_arg() call here allocates
-> 65 pages to satisfy a 256KB NFS READ request.
+> Yes, that's exactly what we need. Thank you!
 > 
-> Before:
+>> Just so I'm clear, this is in addition to Chuck's "Handle TCP socket sends with
+>> kernel_sendpage() again" patch from bz #209439 (which I think is now in 5.11
+>> rc)? Or you want to see what this patch looks like on it's own without that
+>> (e.g. v5.10)?
 > 
->             nfsd-972   [000]   584.513817: funcgraph_entry:      + 35.385 us  |  svc_alloc_arg();
->             nfsd-979   [002]   584.513870: funcgraph_entry:      + 29.051 us  |  svc_alloc_arg();
->             nfsd-980   [001]   584.513951: funcgraph_entry:      + 29.178 us  |  svc_alloc_arg();
->             nfsd-983   [000]   584.514014: funcgraph_entry:      + 29.211 us  |  svc_alloc_arg();
->             nfsd-976   [002]   584.514059: funcgraph_entry:      + 29.315 us  |  svc_alloc_arg();
->             nfsd-974   [001]   584.514127: funcgraph_entry:      + 29.237 us  |  svc_alloc_arg();
-> 
-> After:
-> 
->             nfsd-977   [002]    87.049425: funcgraph_entry:        4.293 us   |  svc_alloc_arg();
->             nfsd-981   [000]    87.049478: funcgraph_entry:        4.059 us   |  svc_alloc_arg();
->             nfsd-988   [001]    87.049549: funcgraph_entry:        4.474 us   |  svc_alloc_arg();
->             nfsd-983   [003]    87.049612: funcgraph_entry:        3.819 us   |  svc_alloc_arg();
->             nfsd-976   [000]    87.049619: funcgraph_entry:        3.869 us   |  svc_alloc_arg();
->             nfsd-980   [002]    87.049738: funcgraph_entry:        4.124 us   |  svc_alloc_arg();
->             nfsd-975   [000]    87.049769: funcgraph_entry:        3.734 us   |  svc_alloc_arg();
-> 
+> Please include the "Handle TCP socket sends with kernel_sendpage() again" fix.
+> Or, you can pull a recent stable kernel, I think that fix is already in there.
 
-Uhhhh, that is much better than I expected given how lame the
-implementation is. Sure -- it works, but it has more overhead than it
-should with the downside that reducing it requires fairly deep surgery. It
-may be enough to tidy this up to handle order-0 pages only to start with
-and see how far it gets. That's a fairly trivial modification.
+I took v5.10.16 and used a ~100Gbit capable server with ~150 x 1 gbit clients all reading the same file from the server's pagecache as the test. Both with and without the patch, I consistently see around 90gbit worth of sends from the server for sustained periods. Any differences between them are well within margins of error for repeat runs of the benchmark.
 
-> There appears to be little cost change for single-page allocations
-> using the bulk allocator (nr_pages=1):
-> 
-> Before:
-> 
->             nfsd-985   [003]   572.324517: funcgraph_entry:        0.332 us   |  svc_alloc_arg();
->             nfsd-986   [001]   572.324531: funcgraph_entry:        0.311 us   |  svc_alloc_arg();
->             nfsd-985   [003]   572.324701: funcgraph_entry:        0.311 us   |  svc_alloc_arg();
->             nfsd-986   [001]   572.324727: funcgraph_entry:        0.424 us   |  svc_alloc_arg();
->             nfsd-985   [003]   572.324760: funcgraph_entry:        0.332 us   |  svc_alloc_arg();
->             nfsd-986   [001]   572.324786: funcgraph_entry:        0.390 us   |  svc_alloc_arg();
-> 
-> After:
-> 
->             nfsd-989   [002]    75.043226: funcgraph_entry:        0.322 us   |  svc_alloc_arg();
->             nfsd-988   [001]    75.043436: funcgraph_entry:        0.368 us   |  svc_alloc_arg();
->             nfsd-989   [002]    75.043464: funcgraph_entry:        0.424 us   |  svc_alloc_arg();
->             nfsd-988   [001]    75.043490: funcgraph_entry:        0.317 us   |  svc_alloc_arg();
->             nfsd-989   [002]    75.043517: funcgraph_entry:        0.425 us   |  svc_alloc_arg();
->             nfsd-988   [001]    75.050025: funcgraph_entry:        0.407 us   |  svc_alloc_arg();
-> 
+The only noticeable difference is in the output of perf top where svc_xprt_do_enqueue goes from ~0.9% without the patch to ~3% with the patch. It now takes up second place (up from 17th place) behind native_queued_spin_lock_slowpath:
 
-That is not too surprising given that there would be some additional
-overhead to manage a list of 1 page. I would hope that users of the bulk
-allocator are not routinely calling it with nr_pages == 1.
+   3.57%  [kernel]                     [k] native_queued_spin_lock_slowpath
+   3.07%  [kernel]                     [k] svc_xprt_do_enqueue
 
--- 
-Mel Gorman
-SUSE Labs
+I also don't really see much difference in the softirq cpu usage.
+
+So there doesn't seem to be any negative impacts of the patch but because I'm already pushing the server to it's network hardware limit (without the patch), it's also not clear if it is improving performance for this benchmark either.
+
+I also tried with 50 clients and sustained the expected 50gbit sends from the server in both with and without the patch.
+
+Daire
