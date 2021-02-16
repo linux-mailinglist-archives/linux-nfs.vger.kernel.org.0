@@ -2,313 +2,242 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5F0231D259
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Feb 2021 22:49:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6733531D26A
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Feb 2021 23:05:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230363AbhBPVsW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Feb 2021 16:48:22 -0500
-Received: from mail-ej1-f44.google.com ([209.85.218.44]:40550 "EHLO
-        mail-ej1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230305AbhBPVry (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Feb 2021 16:47:54 -0500
-Received: by mail-ej1-f44.google.com with SMTP id b14so12986281eju.7
-        for <linux-nfs@vger.kernel.org>; Tue, 16 Feb 2021 13:47:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W6FwiDChSQJK8iWKsUJ7NhcOXbmxWJ2sYAPiDgApT/s=;
-        b=kApeFlh4xf06+MGr2YHxyGJzDZJm5g7GlUsgVaeo3pOpqwtId2YHo7Ea0rsP3shnUO
-         x3bORfP/9pLMGeUWFJhVWATVo80KkEDomaGpiw+7eZ0P4ODNNdPZP+0w943NKhH0CRx3
-         wcOLrRfNcF1j+cuVI5u6pfC9ys6OaX9sQhCUJlcErGXxkskl0ziPIGCfECo2DZ3xlClu
-         gztK3w/1m/qLRf8MfV+FfSdYf1zXdYnyHMXA4QI68A7PE5wVI/lLQ5ZWWxfhMMAl+I+i
-         UVY4TMdThu+28X3cSYpy55Y/628rUutQBmTMS1A5+VIrEjILAwiiVAS6QcPiUg0lCyvA
-         VUzw==
-X-Gm-Message-State: AOAM530T7/z4p7r+em8jaczU0gBrp4YJtufCbhC4EUfNFDwZYSIpXgRr
-        KctATC89MfYZKriZfKpY/wurV/DMBdVBAw2PWmF8Rq9AMPZ4dQ==
-X-Google-Smtp-Source: ABdhPJyxa/MQPjM2e1GRRsSAvO85ABdzbRmxwdksA/cLttYoBWGi66LtczwI1D/yYyCLbi/uZzglHvVVZh8KjMgdNrI=
-X-Received: by 2002:a17:906:5655:: with SMTP id v21mr4310181ejr.264.1613512031206;
- Tue, 16 Feb 2021 13:47:11 -0800 (PST)
+        id S230245AbhBPWFM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Feb 2021 17:05:12 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:51846 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230162AbhBPWFL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Feb 2021 17:05:11 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11GM4NQ5134735;
+        Tue, 16 Feb 2021 22:04:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ to : cc : from : subject : content-type : mime-version; s=corp-2020-01-29;
+ bh=a0qob9988aXz0b9PbdGXxF0vLpXY+eUHg35OUsIgW9I=;
+ b=QIdYmtu1kdugNgEGHRNRCLa5j6g/gNAI/P77YtGZCHYmDjj1BcRnsLe4GW2XHB1EvZBZ
+ la2tBmZtyvsQLClyaZeGpKYjfsq8SMp8P8sSlcccIpVseBQo+E71YeC1tyViVnSoi6+G
+ umVi3qLqdfeL+LAc+SDQoxO//eQqLHNYwNzUHqPYgNoIE13cTXfMktGweEQLSfh6JP2L
+ jU3dA2IikADalDg3xTcSo5ja0cyzxsJD3P+JzmK4Gs1c6eyNAfDRAjHsVFyjITYy/GCa
+ aUmjoDljiWfDK+ynlYncOzfYufHmLuZkeJCBszH51D+c29k5r3HEkmQA1fbYUjIYYmu4 /A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 36p7dngcma-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Feb 2021 22:04:26 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11GLtXLO115036;
+        Tue, 16 Feb 2021 22:04:25 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2171.outbound.protection.outlook.com [104.47.55.171])
+        by userp3020.oracle.com with ESMTP id 36prhs3ksy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Feb 2021 22:04:25 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l4TR3OrOoFpuaUQuFm3ye0Y5dpQN/LkP3bGFaJAV7Neo7FSI0pweVW0/3LUPwn9emYB4+9AG2u5DWHPJZ4L+V+HqZvDiI+6OQAz8HzQDVpkL1royO8Q/OIdu0F1Cl4LHyrrffj5LfuTQjieenqBVEIHdQCw42GqxiZa8X64iVpv2YivBr0iSIt3f9N0mbV8mOWuCVKlTKZDLs3UptINSBfSrvQgypYWyaWSaOMB803GdbjfchCBTqkpxcqskhSuqKh8JGwhFCZPkyzO8PqgzNnRkXRhvrGtZsUvmX5lu3c35EynA7CO1Z4NiuMoLeNN7DdTAaxsfs99gCXWHSn66Ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a0qob9988aXz0b9PbdGXxF0vLpXY+eUHg35OUsIgW9I=;
+ b=C+o8wfuCqnuTIbk7o6FmtYjMxT/XH9wu3525hyRZ95teTtznEDVPIqGo+0tWwiB+ZJKwhOM4+XSxohlfy4TviTa3bbxXoOzUogf/2nY51PrGC5X/EQphCZns7wWj3/+L/vAWJrsYqW9vkTVRP9ZyI7AkxnsTD8R0DwSUAyHWe+gBBTKGMd/W/OpiRc4YRSHU70+D/bqjSIehW7uVEYycis0VadmuKOb4kBtYYAh74N3JtV4ZyE2Jl8a/zizOhT1IFuilcxeNSj4rgUlh0XPuSJsZUlWCoilOrCKb9teNyp+cDehyDOwidjZlWJjkjlbTxqRvxw3QR+PjO4WWt1K8KQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a0qob9988aXz0b9PbdGXxF0vLpXY+eUHg35OUsIgW9I=;
+ b=LAtUFS11t4hadywbdikpYZobMbR5PGP8I27sM8Lf7ROAzKkwuadsoiEvzq2Z0KJexFSEE30Rt4DAbXN5Rpi90lxI4q49nfmZH6IcdUoA/ax2wm+13rQWcw9nsta07WGx5TEYHVIfU3YGsE/bmHwTpBH37P+v5fuS99psyHg5Fds=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=oracle.com;
+Received: from CY4PR1001MB2119.namprd10.prod.outlook.com
+ (2603:10b6:910:3f::15) by CY4PR1001MB2213.namprd10.prod.outlook.com
+ (2603:10b6:910:44::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3784.16; Tue, 16 Feb
+ 2021 22:04:11 +0000
+Received: from CY4PR1001MB2119.namprd10.prod.outlook.com
+ ([fe80::848c:1057:dabd:55b2]) by CY4PR1001MB2119.namprd10.prod.outlook.com
+ ([fe80::848c:1057:dabd:55b2%7]) with mapi id 15.20.3846.043; Tue, 16 Feb 2021
+ 22:04:11 +0000
+Message-ID: <47d31c15-7467-6abb-9e62-96ffca1c6ec0@oracle.com>
+Date:   Tue, 16 Feb 2021 22:04:05 +0000
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0)
+ Gecko/20100101 Thunderbird/87.0a1
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Calum Mackay <calum.mackay@oracle.com>, linux-nfs@vger.kernel.org
+Content-Language: en-GB
+From:   Calum Mackay <calum.mackay@oracle.com>
+Organization: Oracle
+Subject: [RFC] pynfs: add courteous server tests
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="NfzQdLJiLupm9ibYaXydn4rs2MYDq6YF1"
+X-Originating-IP: [90.243.38.146]
+X-ClientProxiedBy: LO2P265CA0500.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:13b::7) To CY4PR1001MB2119.namprd10.prod.outlook.com
+ (2603:10b6:910:3f::15)
 MIME-Version: 1.0
-References: <20210215174002.2376333-1-dan@kernelim.com> <20210215174002.2376333-4-dan@kernelim.com>
-In-Reply-To: <20210215174002.2376333-4-dan@kernelim.com>
-From:   Anna Schumaker <anna.schumaker@netapp.com>
-Date:   Tue, 16 Feb 2021 16:46:55 -0500
-Message-ID: <CAFX2JfkkYA=6gg9UzyT1=nuKrYJ+0c+Jd4BhasAgCR=T5Rgokw@mail.gmail.com>
-Subject: Re: [PATCH v1 3/8] sunrpc: add a directory per sunrpc xprt
-To:     Dan Aloni <dan@kernelim.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mbp2018.cdmnet.org (90.243.38.146) by LO2P265CA0500.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:13b::7) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.36 via Frontend Transport; Tue, 16 Feb 2021 22:04:09 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8f157707-7927-4b67-3de0-08d8d2c6c9e2
+X-MS-TrafficTypeDiagnostic: CY4PR1001MB2213:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR1001MB2213D5A2D85666CB4EA273BDE7879@CY4PR1001MB2213.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /cNe2WD9Ja4EXfGtgUP4j0Rv2k+87Q6uaMG90pQEcOimp3K2kbLRUfHRrXpD+wj9JDhBSt8Qw44Byp4W9i6X3HDE/WE+EcLL/320WO2nuIg4mxbTHooNRte5Fg/pQNZVZi4J29B/nEuViI0PorgODfVwZ5H8fLmOXb5ck/P4iiHikAD/z/K9G4u90EHZplpqQcF511bAMNrtPzPvjxPwRByeONNZIBryJ6+IV+/OZduyXodNgscfhRPXVndU6FnixQGEwLKBco2dFs6mFkXDeyo2Cxol/IE9/0R2cC8GVIGEYqr99kHNoHQMsiiwOl9FT+IFscmCHeDW0foV0Kb+cCQ/qPMTsYx5sLrnKCwkLlrOQ8w/tZPJn/z8SEPiG9OgZGiVQNSQAZBQYbCPT27rGxsB62NqixoxRGI/aXy7y9w5amn5b8TBqxwSQHpCg7POHJ8dfkG4plpSygPWJNPYooJOqEDpu1uxoUQxxhzUfKq2RuGGGbp80IrXyHF+/ZyoP0aEKla55t5lQlUSwveG0z3ef1w2zAM1uLf89LDrlVo7QQDtNvyoMfOkQnUG9ROTfmP+jcnnaL+5mCd+lRX11xDvnzF+CwJFP5FD4A9Rmj8=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR1001MB2119.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(366004)(346002)(396003)(376002)(136003)(2906002)(21480400003)(6666004)(6506007)(6486002)(16526019)(186003)(66946007)(4326008)(33964004)(8936002)(66556008)(66476007)(83380400001)(36756003)(44832011)(6512007)(31686004)(6916009)(36916002)(31696002)(316002)(2616005)(8676002)(478600001)(5660300002)(956004)(86362001)(235185007)(26005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?Q01yaENIL3ZpVnFFV2FnQzQ0aVlESzF0MHZBTzQyNy9IRnpjdmQxdlp0VVhD?=
+ =?utf-8?B?OFAzUWx2L3I0VmdseGtLMERVYm9iWXh5SFl6VVJTaDRyNjBrK3JYR3ZXdjBW?=
+ =?utf-8?B?R2s3RnNEVDdEUEVVbEt1elpUNjA0UEhNWmZVQW80dWVSWGw4RU5lMkZOeWNa?=
+ =?utf-8?B?clRtSHBKUDRJNktXeTBSa1UraXYzUmVScktGNVQza0l0SGFseldBUUdoVmdQ?=
+ =?utf-8?B?Nko3em5Pa2UxeTZSUjgyRFBDMzM4eFB5eU1aNW5JL0E4bFBEaUc1SmUxZTZT?=
+ =?utf-8?B?dmNzb0hHN0NGWSthYjNWb05xMzZzczNlbWUzZHlBMFc3Sll1NHNIa0JrcnBO?=
+ =?utf-8?B?Wi85dlI4N0hNaGpsd3FKZkp2V09KSHMxUVhtTnAzZWdKc1NlMDIzSWV0YWVi?=
+ =?utf-8?B?d2hYbXNNcC9OQVdVS2NTVE94NE5KQ3BzMWlVRmdHUlltTzVXQk1DSHBva1FD?=
+ =?utf-8?B?WVVwTmV1SVRHb3ByZTZ2b2JHVi9oWE1PcVdlUVFCbHVoMkNKMlVzNjdqNmFt?=
+ =?utf-8?B?MWliTzk0cUliU3k4RURBTkRzTjdxM253Z3MwQ1ErWmVYOXM4RnpSYXN4TFhS?=
+ =?utf-8?B?eFFienhFRjkzbTJDakNHbjJiM2hsS0lPNkNCUkRVV2EwY2NkOStnNUxDQWN5?=
+ =?utf-8?B?N3NJVjM4Z3RkaUtYdmpTaDQ4Skc2QStRdWROL05CV0RmWUViWXdUeGVncDhu?=
+ =?utf-8?B?eVBnamV0SllDWE05WjdtMTRnOFNRaTVyWG9qckZJU08xKytJYi95YVEzREMv?=
+ =?utf-8?B?NG5Eakk5aXlFSjIyQkdIQkZPRjk4OS9WWjA4Qk5WVEVYUXdwZWwzZjFndUIx?=
+ =?utf-8?B?NVE0Z053YWJnLzVNUURHalc4UzgrQSs0dkZnS0VUTEtVNTNqdi9wWUZ6R0wr?=
+ =?utf-8?B?Zytldk5USXdaMktkekcxUFhnNHl1T1ZHTXdoMWZjY3IrNGZLQXBDMkkxRzU4?=
+ =?utf-8?B?VGk5U2xwRm9BalJZM3M3WERjd3FkV1ViMEZWdU0rSlFqdFFyazc0aWY2Vk4r?=
+ =?utf-8?B?RVAxeDVNeHppTmxaOUhnMUwva0xqUHRlQTJWS3pRUEZtakl6aU5NLytUOGpi?=
+ =?utf-8?B?VVU2dVAyanM1b3I2cVcydDN1K2VBcit0NTBzM0Zia0pTSDVVOGVZWmtkSUM3?=
+ =?utf-8?B?LzFJakljY296KzlZU0EycUg1d3Q5RmdBTGtFUEZ0N1Z2RXJJZW5Za3dYS2h1?=
+ =?utf-8?B?V3ZTcVE2cFN0ZFhXSjZ6QUpiZE5XLy9ZUDc3a25sMWlSNFVMTjR3ekU1UTZ6?=
+ =?utf-8?B?ZmhyNHhNemx4TGRWV3pWbEFBTTRWRURCaU5VY0IzTjJoNk84Q1BZSWVXSG50?=
+ =?utf-8?B?bWdPa3pNV0ZSTGpmNWxmNXJTYytPNzJCYXUxRWM5ZU12ZjhBNnpWRnh2d1l6?=
+ =?utf-8?B?Sk01WWIrY01EVkxJdlVDbDNlVDdqU0diZGk1d1J5OW84bFd5Sko1dEtWb1Z5?=
+ =?utf-8?B?M2tCb0FjbUhRVGVrOFUwWkpFNHdYV2hyZy9CQVVaRzVFYkFLZkNuWHkxbktr?=
+ =?utf-8?B?RG5SUFNKeGQvRzQ5ZzhLbnA0VjJLVFM4UU1sWVJ6aXQ1OTNvRlZRK0V6cm1w?=
+ =?utf-8?B?SDRpYVFZU1VWUmRCUWNlT1I1bEdzV1EzUWh0SE93TWlsM1gwUm12dmZ6NUZB?=
+ =?utf-8?B?ZVVmMGpFNnE3MlFlMHZNcVlvSXpTOUpNTlN2QjBWNFRzdVlpOXY2bFNuSVpM?=
+ =?utf-8?B?ZTc5UzlaVEhqMmxGdE5rTmNUbHZyUjJBZ05aRXJDZEVrRWdsd09lcGJ2M0JG?=
+ =?utf-8?Q?C0EAV6/e39RPZF8vizuayRtE5CAN060yWJq3XqK?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f157707-7927-4b67-3de0-08d8d2c6c9e2
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR1001MB2119.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2021 22:04:11.3285
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cDqWD0yE93D+Hw2esTNUYYMvT4tEa3ea6u3TeCRS58z+N3FAKONrIcTIR7dnY5/KdYZ1mCGyw19BSl3OXTyIgg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1001MB2213
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9897 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0 mlxscore=0
+ bulkscore=0 suspectscore=0 malwarescore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2102160175
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9897 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 mlxscore=0
+ phishscore=0 spamscore=0 adultscore=0 clxscore=1011 impostorscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2102160176
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Dan,
+--NfzQdLJiLupm9ibYaXydn4rs2MYDq6YF1
+Content-Type: multipart/mixed; boundary="YKGelao1VitDZ0gA1Cmz0TktmqCXiY1XX";
+ protected-headers="v1"
+From: Calum Mackay <calum.mackay@oracle.com>
+To: "J. Bruce Fields" <bfields@redhat.com>
+Cc: Calum Mackay <calum.mackay@oracle.com>, linux-nfs@vger.kernel.org
+Message-ID: <47d31c15-7467-6abb-9e62-96ffca1c6ec0@oracle.com>
+Subject: [RFC] pynfs: add courteous server tests
 
-On Mon, Feb 15, 2021 at 12:42 PM Dan Aloni <dan@kernelim.com> wrote:
->
-> This uses much of the code from the per-client directory, except that
-> now we have direct access to the transport struct. The per-client
-> direct is adjusted in a subsequent commit.
+--YKGelao1VitDZ0gA1Cmz0TktmqCXiY1XX
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-Just a heads up that I've changed the per-client functions a bit, so
-you'll probably need to adjust for that once I post v3 of my patches.
+hi Bruce,
+
+At Chuck's suggestion, I've added an initial PyNFS test to aid work on a =
+
+courteous server. A simple test, along the lines you indicated, that=20
+locks a file, waits twice the lease period, and tries to unlock:
+
+OK -> PASS (courteous server)
+BADSESSION -> WARNING (discourteous server)
 
 
->
-> Signed-off-by: Dan Aloni <dan@kernelim.com>
-> ---
->  include/linux/sunrpc/xprt.h |   1 +
->  net/sunrpc/sysfs.c          | 131 ++++++++++++++++++++++++++++++++++--
->  net/sunrpc/sysfs.h          |   9 +++
->  net/sunrpc/xprt.c           |   3 +
->  4 files changed, 139 insertions(+), 5 deletions(-)
->
-> diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
-> index fbf57a87dc47..df0252de58f4 100644
-> --- a/include/linux/sunrpc/xprt.h
-> +++ b/include/linux/sunrpc/xprt.h
-> @@ -260,6 +260,7 @@ struct rpc_xprt {
->                                                  * items */
->         struct list_head        bc_pa_list;     /* List of preallocated
->                                                  * backchannel rpc_rqst's */
-> +       void                    *sysfs;         /* /sys/kernel/sunrpc/xprt/<id> */
->  #endif /* CONFIG_SUNRPC_BACKCHANNEL */
->
->         struct rb_root          recv_queue;     /* Receive queue */
-> diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-> index 3fe814795ed9..687d4470b90d 100644
-> --- a/net/sunrpc/sysfs.c
-> +++ b/net/sunrpc/sysfs.c
-> @@ -9,6 +9,7 @@
->  #include "sysfs.h"
->
->  struct kobject *rpc_client_kobj;
-> +struct kobject *rpc_xprt_kobj;
->  static struct kset *rpc_sunrpc_kset;
->
->  static void rpc_netns_object_release(struct kobject *kobj)
-> @@ -48,13 +49,24 @@ int rpc_sysfs_init(void)
->         rpc_sunrpc_kset = kset_create_and_add("sunrpc", NULL, kernel_kobj);
->         if (!rpc_sunrpc_kset)
->                 return -ENOMEM;
-> +
->         rpc_client_kobj = rpc_netns_object_alloc("client", rpc_sunrpc_kset, NULL);
-> -       if (!rpc_client_kobj) {
-> -               kset_unregister(rpc_sunrpc_kset);
-> -               rpc_sunrpc_kset = NULL;
-> -               return -ENOMEM;
-> -       }
-> +       if (!rpc_client_kobj)
-> +               goto err_kset;
-> +
-> +       rpc_xprt_kobj = rpc_netns_object_alloc("transport", rpc_sunrpc_kset, NULL);
-> +       if (!rpc_xprt_kobj)
-> +               goto err_client;
-> +
->         return 0;
-> +
-> +err_client:
-> +       kobject_put(rpc_client_kobj);
-> +       rpc_client_kobj = NULL;
-> +err_kset:
-> +       kset_unregister(rpc_sunrpc_kset);
-> +       rpc_sunrpc_kset = NULL;
-> +       return -ENOMEM;
->  }
->
->  static ssize_t rpc_netns_dstaddr_show(struct kobject *kobj,
-> @@ -118,6 +130,7 @@ static struct kobj_type rpc_netns_client_type = {
->
->  void rpc_sysfs_exit(void)
->  {
-> +       kobject_put(rpc_xprt_kobj);
->         kobject_put(rpc_client_kobj);
->         kset_unregister(rpc_sunrpc_kset);
->  }
-> @@ -166,3 +179,111 @@ void rpc_netns_client_sysfs_destroy(struct rpc_clnt *clnt)
->                 clnt->cl_sysfs = NULL;
->         }
->  }
-> +
-> +static ssize_t rpc_netns_xprt_dstaddr_show(struct kobject *kobj,
-> +               struct kobj_attribute *attr, char *buf)
-> +{
-> +       struct rpc_netns_xprt *c = container_of(kobj,
-> +                               struct rpc_netns_xprt, kobject);
-> +       struct rpc_xprt *xprt = c->xprt;
-> +
-> +       if (!(xprt->prot & (IPPROTO_TCP | XPRT_TRANSPORT_RDMA))) {
+Before sending my patch, Chuck asked me to add the second test you=20
+suggested:
 
-We might want to change these restrictions later on, so if we're going
-to put this into each function then maybe it would make sense to have
-a quick inline to check protocol support?
+	- A second test creates a new client, acquires a file lock, and
+	  waits two lease periods.  Then creates a second client, which
+	  attempts to acquire the lock.  The second client should
+	  succeed.
 
-I do the same check in the setup function for my patches, so if you
-want I can add the inline function and then it'll just be there for
-you to use.
 
-> +               sprintf(buf, "N/A");
-> +               return 0;
 
-I'm guessing the point of putting "N/A" here is so userspace tools
-don't have to guess which files exist or not for each protocol type?
-Should I change my patches to match this style too?
+This doesn't seem to differentiate between these three cases:
 
-Anna
+1. a discourteous server, which invalidates the client 1 state, and=20
+frees all client 1's locks, upon lease expiry, then allows client 2 to=20
+lock the file. The above test spec would result in a PASS for a=20
+discourteous server, which doesn't seem right.
 
-> +       }
-> +
-> +       return rpc_ntop((struct sockaddr *)&xprt->addr, buf, PAGE_SIZE);
-> +}
-> +
-> +static ssize_t rpc_netns_xprt_dstaddr_store(struct kobject *kobj,
-> +               struct kobj_attribute *attr, const char *buf, size_t count)
-> +{
-> +       struct rpc_netns_xprt *c = container_of(kobj,
-> +                               struct rpc_netns_xprt, kobject);
-> +       struct rpc_xprt *xprt = c->xprt;
-> +       struct sockaddr *saddr = (struct sockaddr *)&xprt->addr;
-> +       int port;
-> +
-> +       if (!(xprt->prot & (IPPROTO_TCP | XPRT_TRANSPORT_RDMA)))
-> +               return -EINVAL;
-> +
-> +       port = rpc_get_port(saddr);
-> +
-> +       xprt->addrlen = rpc_pton(xprt->xprt_net, buf, count - 1, saddr, sizeof(*saddr));
-> +       rpc_set_port(saddr, port);
-> +
-> +       kfree(xprt->address_strings[RPC_DISPLAY_ADDR]);
-> +       xprt->address_strings[RPC_DISPLAY_ADDR] = kstrndup(buf, count - 1, GFP_KERNEL);
-> +
-> +       xprt->ops->connect(xprt, NULL);
-> +       return count;
-> +}
-> +
-> +static void rpc_netns_xprt_release(struct kobject *kobj)
-> +{
-> +       struct rpc_netns_xprt *c;
-> +
-> +       c = container_of(kobj, struct rpc_netns_xprt, kobject);
-> +       kfree(c);
-> +}
-> +
-> +static const void *rpc_netns_xprt_namespace(struct kobject *kobj)
-> +{
-> +       return container_of(kobj, struct rpc_netns_xprt, kobject)->net;
-> +}
-> +
-> +static struct kobj_attribute rpc_netns_xprt_dstaddr = __ATTR(dstaddr,
-> +               0644, rpc_netns_xprt_dstaddr_show, rpc_netns_xprt_dstaddr_store);
-> +
-> +static struct attribute *rpc_netns_xprt_attrs[] = {
-> +       &rpc_netns_xprt_dstaddr.attr,
-> +       NULL,
-> +};
-> +
-> +static struct kobj_type rpc_netns_xprt_type = {
-> +       .release = rpc_netns_xprt_release,
-> +       .default_attrs = rpc_netns_xprt_attrs,
-> +       .sysfs_ops = &kobj_sysfs_ops,
-> +       .namespace = rpc_netns_xprt_namespace,
-> +};
-> +
-> +static struct rpc_netns_xprt *rpc_netns_xprt_alloc(struct kobject *parent,
-> +                                                  struct net *net, int id)
-> +{
-> +       struct rpc_netns_xprt *p;
-> +
-> +       p = kzalloc(sizeof(*p), GFP_KERNEL);
-> +       if (p) {
-> +               p->net = net;
-> +               p->kobject.kset = rpc_sunrpc_kset;
-> +               if (kobject_init_and_add(&p->kobject, &rpc_netns_xprt_type,
-> +                                        parent, "%d", id) == 0)
-> +                       return p;
-> +               kobject_put(&p->kobject);
-> +       }
-> +       return NULL;
-> +}
-> +
-> +void rpc_netns_xprt_sysfs_setup(struct rpc_xprt *xprt, struct net *net)
-> +{
-> +       struct rpc_netns_xprt *rpc_xprt;
-> +
-> +       rpc_xprt = rpc_netns_xprt_alloc(rpc_xprt_kobj, net, xprt->id);
-> +       if (rpc_xprt) {
-> +               xprt->sysfs = rpc_xprt;
-> +               rpc_xprt->xprt = xprt;
-> +               kobject_uevent(&rpc_xprt->kobject, KOBJ_ADD);
-> +       }
-> +}
-> +
-> +void rpc_netns_xprt_sysfs_destroy(struct rpc_xprt *xprt)
-> +{
-> +       struct rpc_netns_xprt *rpc_xprt = xprt->sysfs;
-> +
-> +       if (rpc_xprt) {
-> +               kobject_uevent(&rpc_xprt->kobject, KOBJ_REMOVE);
-> +               kobject_del(&rpc_xprt->kobject);
-> +               kobject_put(&rpc_xprt->kobject);
-> +               xprt->sysfs = NULL;
-> +       }
-> +}
-> diff --git a/net/sunrpc/sysfs.h b/net/sunrpc/sysfs.h
-> index ab75c3cc91b6..e08dd7f6a1ec 100644
-> --- a/net/sunrpc/sysfs.h
-> +++ b/net/sunrpc/sysfs.h
-> @@ -11,12 +11,21 @@ struct rpc_netns_client {
->         struct rpc_clnt *clnt;
->  };
->
-> +struct rpc_netns_xprt {
-> +       struct kobject kobject;
-> +       struct net *net;
-> +       struct rpc_xprt *xprt;
-> +};
-> +
->  extern struct kobject *rpc_client_kobj;
-> +extern struct kobject *rpc_xprt_kobj;
->
->  extern int rpc_sysfs_init(void);
->  extern void rpc_sysfs_exit(void);
->
->  void rpc_netns_client_sysfs_setup(struct rpc_clnt *clnt, struct net *net);
->  void rpc_netns_client_sysfs_destroy(struct rpc_clnt *clnt);
-> +void rpc_netns_xprt_sysfs_setup(struct rpc_xprt *xprt, struct net *net);
-> +void rpc_netns_xprt_sysfs_destroy(struct rpc_xprt *xprt);
->
->  #endif
-> diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-> index e30acd1f0e31..4098cb6b1453 100644
-> --- a/net/sunrpc/xprt.c
-> +++ b/net/sunrpc/xprt.c
-> @@ -55,6 +55,7 @@
->  #include <trace/events/sunrpc.h>
->
->  #include "sunrpc.h"
-> +#include "sysfs.h"
->
->  /*
->   * Local variables
-> @@ -1768,6 +1769,7 @@ struct rpc_xprt *xprt_alloc(struct net *net, size_t size,
->                 xprt->max_reqs = num_prealloc;
->         xprt->min_reqs = num_prealloc;
->         xprt->num_reqs = num_prealloc;
-> +       rpc_netns_xprt_sysfs_setup(xprt, net);
->
->         return xprt;
->
-> @@ -1780,6 +1782,7 @@ EXPORT_SYMBOL_GPL(xprt_alloc);
->
->  void xprt_free(struct rpc_xprt *xprt)
->  {
-> +       rpc_netns_xprt_sysfs_destroy(xprt);
->         put_net(xprt->xprt_net);
->         xprt_free_all_slots(xprt);
->         xprt_free_id(xprt);
-> --
-> 2.26.2
->
+2. a broad-grained courteous server, which invalidates the client 1=20
+state, and frees all client 1's locks, because of conflicting access=20
+from client 2 (after client 1's lease expiry), who is then granted the=20
+lock. A PASS here would be correct.
+
+3. a fine-grained courteous server, which persists the session, but=20
+revokes that particular client 1 lock, because of conflicting access=20
+from client 2 (after client 1's lease expiry), who is granted the lock.=20
+A PASS here would be correct.
+
+Or am I misreading your suggestion?
+
+
+If I've read it right, the test could differentiate between cases 2) and =
+
+3), by having client 1 try to unlock, after client 2 successfully locks, =
+
+where client 1 will see either BADSESSION (case 2) or SOME_STATE_REVOKED =
+
+/ EXPIRED (case 3). But we don't need to differentiate cases 2) and 3),=20
+since a PASS would be correct in either case.
+
+However that won't differentiate between cases 1) and 2), where client 1 =
+
+will see BADSESSION in each case. Yet case 1) ought to result in a=20
+WARNING, and case 2) in a PASS?
+
+
+cheers,
+calum.
+
+--YKGelao1VitDZ0gA1Cmz0TktmqCXiY1XX--
+
+--NfzQdLJiLupm9ibYaXydn4rs2MYDq6YF1
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEE1GBbrQYgx8o9Vdw+hSPvAG3BU+IFAmAsQVUFAwAAAAAACgkQhSPvAG3BU+LV
+LQ/+NpJUUmo/NmXE1mSXiclSPpE5bsMu7LDWieBXVzKAxKkRySrl6heoXdv43lUdLo7Odj8/q63l
+szvDcrogcA0DItwqMZpXIaZqmcetE3J424XqjeGfTEgiB5rWDGz6yJV7xGXhAUsrAvHTwROvN7V8
+zSe4JM1fNwnoP2iCd0Ph2BTYQqjkTanBy23EeRGQ9EKWnBLn/rfiAMiZHuT33BB3Kp1qZE3KP1mz
+LgYD/q91JYvJRsyVohO23fJOoOaVpxfB15cmCHwgS+vSsE2x9kGpoWZpQccOh2IFu90eRj3vMEkr
+WUnUZtVISbYtOEFTU0yED4eVsXAAxpp8TLdEY5q0Uh6yDKeYZjDmEpfMXr2QUOz+uLJzkq/FmHzj
+WKX2oGG7y0qKCiyeTyV43hJKmb3bBB8XgwLIt6VXjUHhqMG6CSIxr/zYvryg7ILkMi3vc5nTKcKo
+c96CThIUxKYu45ENDYO0+shC0FwOEb6TcWf/J7D70IQpetLN4CvUkyzSpYImIBG74iePnWGunDmo
+pp6IhTdYa/VXDqLASvx5e8Y79XC3zHk7UkQUc33pu+d5FbDjU6xK6K0rFA7fkNRnNmadGUCjZ3Ab
+gv9rIHktxxAjS/T261ZdCSh0C9LP+kLQzsrXWEGZnr3MUd3Z73u/syeJ48KV4Ln/YEM/1gk1vQDb
+0lg=
+=Zy7/
+-----END PGP SIGNATURE-----
+
+--NfzQdLJiLupm9ibYaXydn4rs2MYDq6YF1--
