@@ -2,243 +2,310 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E0DF31CCA5
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Feb 2021 16:10:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC03031CDC4
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Feb 2021 17:16:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229985AbhBPPJs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Feb 2021 10:09:48 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52488 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229635AbhBPPJp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Feb 2021 10:09:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613488098;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JCnbKFxVherPJvijqokAmpOf4MBIzvDJNcC9jg92S8M=;
-        b=PAV4LeqAeFHKGmIkku9vrAS/YDdUMPgfgtXebctwyCRHTc57RABBBy+e+wOL5zgiwSDiib
-        MZKk4IopOy1cEeU6AFpK3C6H1xWWRUaYfIIQi//7dISMBBPHtm4khzIU1KCpG5OMJdHe0e
-        diwP9spfO/ICFMNdLJlBKoI59Qeywpw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-239-o3PEyjdyPCSTBJfIKqjt2A-1; Tue, 16 Feb 2021 10:08:16 -0500
-X-MC-Unique: o3PEyjdyPCSTBJfIKqjt2A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E88CE100CCC1;
-        Tue, 16 Feb 2021 15:08:13 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-119-68.rdu2.redhat.com [10.10.119.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5855219D6C;
-        Tue, 16 Feb 2021 15:08:07 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20210216104914.GA28196@lst.de>
-References: <20210216104914.GA28196@lst.de> <161340385320.1303470.2392622971006879777.stgit@warthog.procyon.org.uk> <161340402057.1303470.8038373593844486698.stgit@warthog.procyon.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jeff Layton <jlayton@redhat.com>, linux-cachefs@redhat.com,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org,
-        David Wysochanski <dwysocha@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 14/33] fscache, cachefiles: Add alternate API to use kiocb for read/write to cache
-MIME-Version: 1.0
+        id S230516AbhBPQOv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Feb 2021 11:14:51 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:58890 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230452AbhBPQOE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Feb 2021 11:14:04 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11GFsxeI098297;
+        Tue, 16 Feb 2021 16:13:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : content-type : content-id :
+ content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=mvpEcZ518mpWZeN6ej0t/fCE2ExXVZfXT/B8IpgbYXI=;
+ b=V1AcMGCb+j6daCJzx91EwB05efKvssP9ScFhlj4+qc2gM7jeURW5N1u1pKPnyWlt0nIN
+ WHhTZeqfhA2Th2YFT9MPT4NWo5qJNLDOy5zaZnR/Uaif1+sMWMLjmr4LoXPL9qV9EVLK
+ 5SaPhN7QYYLXqC+UCm3+GLaO7sCgNkBzLQXr8hiYjK1M4QIa0xFUJiYMC30VWJkPItQX
+ M2r6DJ8jApssyrsRN2oUg5ZbZW+e+4n4D0oKqc1fs8ki0seJVRaIh109JHCmLSV0C4sy
+ Z+af3UEVwCwpekXkAAJEkUwUMRva0HH+iWBYsefxlTH7uAIhT5XDHpk6N6iYMX6bSYDz XA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 36p66qycca-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Feb 2021 16:13:17 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11GGCDBl009389;
+        Tue, 16 Feb 2021 16:13:16 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2172.outbound.protection.outlook.com [104.47.57.172])
+        by aserp3020.oracle.com with ESMTP id 36prny3vju-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Feb 2021 16:13:16 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NozAcSZErrqIZu/frIq7js7XbDgizGEEIALRgl+V6bMXHHVDu94PwvAOb+AtH0HBvdGARijRrF9wEu3Lm4YrZQSjgxsFmDXx0PbTJ0qZEVO2LZZGHTi8pDtc2zPIkRODBVDAlhc/pio89Rav4Cl9FQP5ZhDhQcym9Yb5AvQSgCdvhtrE8VSzaZv369jJPX6n6Ck2Wo1LWPBPY1diQQhf4mljIUkU++RKzufEK73goCpRWm+07oMS/oVk+cUnM3VSKbpkTtx02yjNTRAH8fXt39Hi8tySyK8TeQwhfbM9O5aGkrWHUHNlc5guJ3mt7gnlcQkiYo1i366zY56qr7NuvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mvpEcZ518mpWZeN6ej0t/fCE2ExXVZfXT/B8IpgbYXI=;
+ b=ni7vATHlVl/NLlBolLjbxrpP2JXHl55NKPy040HQmTX8uI/UjG6SSEzkmnYfOGuelvcT7lCUVTCSBqeBJFNLOB3S0BxCI4ayTWDEaOrqeupLjOk6qmJLT5JDGbUsR1ItKLRJwnFib8zOOnsFq/laFzX0y4emjQkTPocjNPV44TgXK6pfwkEdPI74MKEtaPAIEd8zY19bot9q4pO1nVjkVWkDa59tmEbO0lNIV4OJgSiuynI1WkRMZvNWsucqQgNlgrwko27NNk3gx8vKl/KgT22uS1S/7U49B8eA+amRjVNQLvr78D5yFZgvmbp5xHNgWP48UcB2c8j+g8Xnq0g9TA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mvpEcZ518mpWZeN6ej0t/fCE2ExXVZfXT/B8IpgbYXI=;
+ b=HZafTM9P5EKcKr2+U8PmJaA8swQVORp0bB3aBatqi7LoNOPVqFhIwqSXiwLYY85TZinOH9Y9kQShHA1ka8t7q1/xKIQTNU6hRpTGkrSW2di7xWADm/PRXm7j7krcobUf+ob56LpSXQWw3HqSjp80OQ9hr4UEwLxdghmjwg6Q/Ac=
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
+ by BYAPR10MB3670.namprd10.prod.outlook.com (2603:10b6:a03:124::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.25; Tue, 16 Feb
+ 2021 16:13:13 +0000
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::6da8:6d28:b83:702b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::6da8:6d28:b83:702b%4]) with mapi id 15.20.3846.043; Tue, 16 Feb 2021
+ 16:13:13 +0000
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Bruce Fields <bfields@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: [GIT PULL] nfsd changes for 5.12
+Thread-Topic: [GIT PULL] nfsd changes for 5.12
+Thread-Index: AQHXBH6gxh+Z8W2lf0Cp+1yEL5JVWw==
+Date:   Tue, 16 Feb 2021 16:13:13 +0000
+Message-ID: <E90C3C1D-7D82-40E5-ACF1-44CB86B362BB@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linux-foundation.org; dkim=none (message not signed)
+ header.d=none;linux-foundation.org; dmarc=none action=none
+ header.from=oracle.com;
+x-originating-ip: [68.61.232.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 995727c4-0951-432b-f500-08d8d295c334
+x-ms-traffictypediagnostic: BYAPR10MB3670:
+x-microsoft-antispam-prvs: <BYAPR10MB367012C64FAEB2AD587E12ED93879@BYAPR10MB3670.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2201;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Mnaf0ys86McY7HqvqDU6CrqLWlzhkIzRIuCNvYGNoacGtn7q1hFCv3J/n+hOuHvCphd1jJcXdH5BMh6WutMHoBAcTCbKo/YuBHuJ0RG8v78g5irEp9ow2ryDd9jp6g/v9cQtd/gIFyOdlCp/fH5xKBJEKVt237S2QSGY77tMd4PXIgDLxSl0IE6i4TSwex1oCS8aHL4qjqGvq1Yed1eBYviMXNOOFgmnx2siawTWK2jgryypDVOd246wmR9I78DLljKMyKBL27Si+4gdgCzppvDXYf4deTONjP0c2tBuMt3FjkIoNBCbjJa7/YPYHyJ3S8KVPgNfqXkpsIR/6wU/M2EQzLhQDmfPv4CTGbghWfxdIZtZVCTgroCZpQbMz/mSFyRHuA+i+iboY48afCVy2mjzgd3Qy/Q/TZhNb8wG4tFd/WuBj+9+l8Gt5az/bEKlCvQNO4b/vo3qJvT/KDvtg3eqSYJWMptdJLy3SaVg2rJ6FLNLlDPEVEruRJtd8oKR0cPotK9B/q9dBwmyLoclQr2dYfoD2kU+b2bCDFoB0cR5iM9wK1IdfLEdCD72sJU16zLVITb3c2JZNKRbe+1dMb+mpaYQWizIzy0QnTpIYqKgdHC9rFh17JmlSLn6xnMuZtg3gVsg/BtOaDeL/VIasg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(396003)(136003)(346002)(376002)(39860400002)(66476007)(66556008)(66446008)(2906002)(6486002)(76116006)(26005)(478600001)(64756008)(4326008)(8676002)(54906003)(6916009)(33656002)(6506007)(71200400001)(66946007)(5660300002)(36756003)(186003)(8936002)(966005)(83380400001)(6512007)(316002)(86362001)(44832011)(2616005)(91956017)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?b02RN329oppOLy7cpQYJDXnwKu3lxFUgV43fpT1UHbGSO9aV9Tl2Pi/5cGtU?=
+ =?us-ascii?Q?sKOgubBwgrobeOWgytgDZPS3kpHWVf68h5Zoe8M8bl73kenD1BybEVqqISlb?=
+ =?us-ascii?Q?VYMLkloZfHwOLJ6Vxu8wOp1d8YoVmLRfaQmZYHh1CXPqLMbWtO/aDDkxayj3?=
+ =?us-ascii?Q?P9JeXh2roWMl3qw3ChZwueeFJtAFwvSdN8R8TsroDtbWaoGAEHRr/PL52QiS?=
+ =?us-ascii?Q?TAYb1nekKJxZQKsvnskLBcdcKGCYsT1cOcetLwYOiF4y3M253jRIMqZNBPFO?=
+ =?us-ascii?Q?DtPTK3SG75fTYBHe2dkW22G/zdMy6UBVsrEDCsZvV+0y6L19XT9UdEqczILs?=
+ =?us-ascii?Q?rg6iZkpus4ZhSZ0yM744pOjGCubyVNKMuDrLw9HXVtnRc0qJ55culMOf9vSP?=
+ =?us-ascii?Q?aR4gumGWS5XkfQtJOLORJSTPZrbPfjKqdwIAdhUzI7BacBJuAJn4CQJXc3Pu?=
+ =?us-ascii?Q?HShOtEsrM5MUXzDg2EnWiGf/hMfJLkPtxr6tCpKkQi0oflpJjDZFdoJvDpwV?=
+ =?us-ascii?Q?usCB/Anqzv6JSNZijmm3iDOZVgKW0UIhVj94Smiay/VrJAv41xmFzLBGSqtC?=
+ =?us-ascii?Q?JT2HE8uQJlaSXTKtZra5GPIwtMBpkanbPrPR4WRxCaGc+wxHyyFIABYnTwV4?=
+ =?us-ascii?Q?SF2FeYTSNnERktyzyHzpafqO7zZRSVPozrbPE2+mlmJ0kYRgPdyVy598bSZL?=
+ =?us-ascii?Q?P2PWLu1mkd22VqzRD1rbL5cVOt9RLYp/4zBURh12GbANIcdL0MazVBIbuHk+?=
+ =?us-ascii?Q?R4zX9EOK59Wtrd5jle/NNMEXZrgHxWhrguby5OvgqgN6BNOpZIR7JuF+kq4x?=
+ =?us-ascii?Q?S1saW3sdOzhWGf9QjYP32Q3Tl7UCN2A9hJ5WrS/yWInitlmSmSuAP1e9mM+k?=
+ =?us-ascii?Q?IJryvjlSq3tRJkziPYck17jPDLyliaM6hpBBK/TQ42I7JxtZLSrYvqL2UpBL?=
+ =?us-ascii?Q?bXi0rFBVyLukg9aS78JjQIlfxsh6wkvJO0BOvaiKcFwi+Y0sYjcVjNqSQp8D?=
+ =?us-ascii?Q?2I+Io/Rml0eCqsY5tHiGFWA3va/tjF6kpRzvVQ/G3UWogwEicPo6iwnNK9pz?=
+ =?us-ascii?Q?0zt5foe/8mcc/nn6PGkitgSu5IuGzwcoe6c8Rr1FL3tdaJDAOE4aj0q9L6Vm?=
+ =?us-ascii?Q?h1eZ4AwxyrdSNFK6AHkaNaqymhWVD2sYBTDZI3g9btqantkDuUjCfbHSkRPL?=
+ =?us-ascii?Q?f+CYMUwgZJwJY7rKK4ByiOYYj9RP92nCtq6P9R+Xvd61Bxxvaa96grx9ZOVE?=
+ =?us-ascii?Q?ukt3DZ7makze4uop57iOLP8xY6bHxSSRoFibborrG26/QYH7pvY3gix1sQWz?=
+ =?us-ascii?Q?/lcp9AOTPhFHtwm2dmVI4u4J?=
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1444258.1613488086.1@warthog.procyon.org.uk>
+Content-ID: <1BB966621066F144B30FD0142EA561C6@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 16 Feb 2021 15:08:06 +0000
-Message-ID: <1444259.1613488086@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+MIME-Version: 1.0
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 995727c4-0951-432b-f500-08d8d295c334
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Feb 2021 16:13:13.9036
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: y202so/p9jbrYpmAz/Y/lZ1u+npir8S1pUQ9oos76mvWcNNa8o5HgS2+/0Shfrz8Lc5AbpuTC7HxWPx1iIeTCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3670
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9897 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 suspectscore=0 spamscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102160143
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9896 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ impostorscore=0 priorityscore=1501 clxscore=1011 spamscore=0 mlxscore=0
+ phishscore=0 malwarescore=0 bulkscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2102160142
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> wrote:
+Hi Linus-
 
-> > Filesystems wanting to use the new API must #define FSCACHE_USE_NEW_IO=
-_API
-> > before #including the header
-> =
+The following changes since commit 6ee1d745b7c9fd573fba142a2efdad76a9f1cb04=
+:
 
-> What exactly does this ifdef buys us?  It seems like the old and new
-> APIs don't even conflict.
+  Linux 5.11-rc5 (2021-01-24 16:47:14 -0800)
 
-I was asked to add this.  The APIs look like they don't conflict, but you
-can't mix them for a given file because of the differing behaviour of the
-PG_fscache flag.  It also makes it much easier to make sure you don't miss
-something.  That has happened and it led to some strange effects before we
-worked out what was going on.
+are available in the Git repository at:
 
-> And if we really need an ifdef I'd rather use that for the old code to m=
-ake
-> grepping for that easier.
+  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/ tags/nfsd-=
+5.12
 
-I can do it that way - but this doesn't require changing filesystems that
-aren't being changed.  The intent would be to eliminate the #ifdef in a cy=
-cle
-or two anyway.
+for you to fetch changes up to 428a23d2bf0ca8fd4d364a464c3e468f0e81671e:
 
-Besides, there are 5 filesystems that use this, and two of them are conver=
-ted
-here.  grep would only return three hits: one each in fs/9p/cache.h,
-fs/cifs/fscache.h and fs/nfs/fscache.h.
+  nfsd: skip some unnecessary stats in the v4 case (2021-01-30 11:47:21 -05=
+00)
 
-OTOH, I suppose it might dissuade people from adding new usages of the old
-API.
+----------------------------------------------------------------
+Highlights:
 
-> > +	if (ki->term_func) {
-> > +		if (ret < 0)
-> > +			ki->term_func(ki->term_func_priv, ret);
-> > +		else
-> > +			ki->term_func(ki->term_func_priv, ki->skipped + ret);
-> =
+- Update NFSv2 and NFSv3 XDR decoding functions
+- Further improve support for re-exporting NFS mounts
+- Convert NFSD stats to per-CPU counters
+- Add batch Receive posting to the server's RPC/RDMA transport
 
-> Why not simplify:
-> =
+----------------------------------------------------------------
+Amir Goldstein (3):
+      nfsd: remove unused stats counters
+      nfsd: protect concurrent access to nfsd stats counters
+      nfsd: report per-export stats
 
-> 		if (ret > 0)
-> 			ret +=3D ki->skipped;
-> 		ki->term_func(ki->term_func_priv, ret);
+Chuck Lever (50):
+      SUNRPC: Make trace_svc_process() display the RPC procedure symbolical=
+ly
+      SUNRPC: Display RPC procedure names instead of proc numbers
+      SUNRPC: Move definition of XDR_UNIT
+      NFSD: Update GETATTR3args decoder to use struct xdr_stream
+      NFSD: Update ACCESS3arg decoder to use struct xdr_stream
+      NFSD: Update READ3arg decoder to use struct xdr_stream
+      NFSD: Update WRITE3arg decoder to use struct xdr_stream
+      NFSD: Update READLINK3arg decoder to use struct xdr_stream
+      NFSD: Fix returned READDIR offset cookie
+      NFSD: Add helper to set up the pages where the dirlist is encoded
+      NFSD: Update READDIR3args decoders to use struct xdr_stream
+      NFSD: Update COMMIT3arg decoder to use struct xdr_stream
+      NFSD: Update the NFSv3 DIROPargs decoder to use struct xdr_stream
+      NFSD: Update the RENAME3args decoder to use struct xdr_stream
+      NFSD: Update the LINK3args decoder to use struct xdr_stream
+      NFSD: Update the SETATTR3args decoder to use struct xdr_stream
+      NFSD: Update the CREATE3args decoder to use struct xdr_stream
+      NFSD: Update the MKDIR3args decoder to use struct xdr_stream
+      NFSD: Update the SYMLINK3args decoder to use struct xdr_stream
+      NFSD: Update the MKNOD3args decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 GETATTR argument decoder to use struct xdr_str=
+eam
+      NFSD: Update the NFSv2 READ argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 WRITE argument decoder to use struct xdr_strea=
+m
+      NFSD: Update the NFSv2 READLINK argument decoder to use struct xdr_st=
+ream
+      NFSD: Add helper to set up the pages where the dirlist is encoded
+      NFSD: Update the NFSv2 READDIR argument decoder to use struct xdr_str=
+eam
+      NFSD: Update NFSv2 diropargs decoding to use struct xdr_stream
+      NFSD: Update the NFSv2 RENAME argument decoder to use struct xdr_stre=
+am
+      NFSD: Update the NFSv2 LINK argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 SETATTR argument decoder to use struct xdr_str=
+eam
+      NFSD: Update the NFSv2 CREATE argument decoder to use struct xdr_stre=
+am
+      NFSD: Update the NFSv2 SYMLINK argument decoder to use struct xdr_str=
+eam
+      NFSD: Remove argument length checking in nfsd_dispatch()
+      NFSD: Update the NFSv2 GETACL argument decoder to use struct xdr_stre=
+am
+      NFSD: Add an xdr_stream-based decoder for NFSv2/3 ACLs
+      NFSD: Update the NFSv2 SETACL argument decoder to use struct xdr_stre=
+am
+      NFSD: Update the NFSv2 ACL GETATTR argument decoder to use struct xdr=
+_stream
+      NFSD: Update the NFSv2 ACL ACCESS argument decoder to use struct xdr_=
+stream
+      NFSD: Clean up after updating NFSv2 ACL decoders
+      NFSD: Update the NFSv3 GETACL argument decoder to use struct xdr_stre=
+am
+      NFSD: Update the NFSv2 SETACL argument decoder to use struct xdr_stre=
+am
+      NFSD: Clean up after updating NFSv3 ACL decoders
+      svcrdma: Refactor svc_rdma_init() and svc_rdma_clean_up()
+      svcrdma: Convert rdma_stat_recv to a per-CPU counter
+      svcrdma: Convert rdma_stat_sq_starve to a per-CPU counter
+      svcrdma: Restore read and write stats
+      svcrdma: Deprecate stat variables that are no longer used
+      svcrdma: Reduce Receive doorbell rate
+      svcrdma: DMA-sync the receive buffer in svc_rdma_recvfrom()
+      SUNRPC: Correct a comment
 
-Could do that I suppose.  The optimiser will make them the same anyway.
+Dai Ngo (1):
+      NFSv4_2: SSC helper should use its own config.
 
-I still wonder if I should do something with ret2 as obtained from the kio=
-cb
-completion function:
+J. Bruce Fields (11):
+      nfsd4: simplify process_lookup1
+      nfsd: simplify process_lock
+      nfsd: simplify nfsd_renew
+      nfsd: rename lookup_clientid->set_client
+      nfsd: refactor set_client
+      nfsd: find_cpntf_state cleanup
+      nfsd: remove unused set_client argument
+      nfsd: simplify nfsd4_check_open_reclaim
+      nfsd: cstate->session->se_client -> cstate->clp
+      nfs: use change attribute for NFS re-exports
+      nfsd: skip some unnecessary stats in the v4 case
 
-  static void cachefiles_read_complete(struct kiocb *iocb, long ret, long =
-ret2)
+ fs/Kconfig                              |   4 +
+ fs/lockd/svc4proc.c                     |  24 ++++
+ fs/lockd/svcproc.c                      |  24 ++++
+ fs/nfs/callback_xdr.c                   |   2 +
+ fs/nfs/export.c                         |  18 +++
+ fs/nfs/nfs4file.c                       |   4 +
+ fs/nfs/super.c                          |  12 ++
+ fs/nfs_common/Makefile                  |   2 +-
+ fs/nfs_common/nfs_ssc.c                 |   2 -
+ fs/nfs_common/nfsacl.c                  |  52 +++++++++
+ fs/nfsd/Kconfig                         |   1 +
+ fs/nfsd/export.c                        |  68 +++++++++--
+ fs/nfsd/export.h                        |  15 +++
+ fs/nfsd/netns.h                         |  23 ++--
+ fs/nfsd/nfs2acl.c                       |  67 +++++------
+ fs/nfsd/nfs3acl.c                       |  45 ++++----
+ fs/nfsd/nfs3proc.c                      |  93 ++++++++++++----
+ fs/nfsd/nfs3xdr.c                       | 588 ++++++++++++++++++++++++++++=
++++++++++++++++++++++++++-------------------------------------------
+ fs/nfsd/nfs4proc.c                      |  12 +-
+ fs/nfsd/nfs4state.c                     | 124 +++++++++------------
+ fs/nfsd/nfscache.c                      |  52 ++++++---
+ fs/nfsd/nfsctl.c                        |   8 +-
+ fs/nfsd/nfsd.h                          |   2 +-
+ fs/nfsd/nfsfh.c                         |   4 +-
+ fs/nfsd/nfsfh.h                         |   5 +-
+ fs/nfsd/nfsproc.c                       |  92 +++++++++------
+ fs/nfsd/nfssvc.c                        |  34 ------
+ fs/nfsd/nfsxdr.c                        | 348 ++++++++++++++++++++++++++--=
+-----------------------------
+ fs/nfsd/state.h                         |   3 +-
+ fs/nfsd/stats.c                         | 118 +++++++++++++-------
+ fs/nfsd/stats.h                         |  98 ++++++++++++----
+ fs/nfsd/vfs.c                           |   4 +-
+ fs/nfsd/xdr.h                           |  12 +-
+ fs/nfsd/xdr3.h                          |  20 +---
+ include/linux/exportfs.h                |   1 +
+ include/linux/nfsacl.h                  |   3 +
+ include/linux/sunrpc/msg_prot.h         |   3 -
+ include/linux/sunrpc/svc.h              |   1 +
+ include/linux/sunrpc/svc_rdma.h         |  15 +--
+ include/linux/sunrpc/xdr.h              |  13 ++-
+ include/trace/events/sunrpc.h           |  15 ++-
+ include/uapi/linux/nfs3.h               |   6 +
+ net/sunrpc/svc.c                        |   2 +-
+ net/sunrpc/xprtrdma/svc_rdma.c          | 196 ++++++++++++++++++++--------=
+----
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |  91 +++++++--------
+ net/sunrpc/xprtrdma/svc_rdma_rw.c       |   3 +
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c   |   2 +-
+ 47 files changed, 1386 insertions(+), 945 deletions(-)
 
-Can we consolidate to one return value?
+--
+Chuck Lever
 
-> > +	/* If the caller asked us to seek for data before doing the read, th=
-en
-> > +	 * we should do that now.  If we find a gap, we fill it with zeros.
-> > +	 */
-> =
 
-> FYI, this is not the normal kernel comment style..
-
-I've been following the network style.
-
-> > +	ret =3D rw_verify_area(READ, file, &ki->iocb.ki_pos, len - skipped);
-> > +	if (ret < 0)
-> > +		goto presubmission_error_free;
-> > +
-> > +	get_file(ki->iocb.ki_filp);
-> > +
-> > +	old_nofs =3D memalloc_nofs_save();
-> > +	ret =3D call_read_iter(file, &ki->iocb, iter);
-> > +	memalloc_nofs_restore(old_nofs);
-> =
-
-> As mentioned before I think all this magic belongs in to a helper
-> in the VFS.
-
-You suggested vfs_iocb_iter_read() in your reply to another patch, but it
-occurs to me that that doesn't have memalloc_nofs_*() in it.  I could hois=
-t
-the memalloc_nofs stuff out and use those helpers.
-
-> > +static const struct netfs_cache_ops cachefiles_netfs_cache_ops =3D {
-> > +	.end_operation		=3D cachefiles_end_operation,
-> > +	.read			=3D cachefiles_read,
-> > +	.write			=3D cachefiles_write,
-> > +	.expand_readahead	=3D NULL,
-> > +	.prepare_read		=3D cachefiles_prepare_read,
-> > +};
-> ...
-> Also at least in linux-next ->read and ->write seem to never actually
-> be called.
-
-See netfs_read_from_cache() and netfs_rreq_do_write_to_cache() in
-fs/netfs/read_helper.c.  Look for "cres->ops->".
-
-> > +{
-> > +	struct cachefiles_object *object;
-> > +	struct cachefiles_cache *cache;
-> > +	struct path path;
-> > +	struct file *file;
-> > +
-> > +	_enter("");
-> > +
-> > +	object =3D container_of(op->op.object,
-> > +			      struct cachefiles_object, fscache);
-> > +	cache =3D container_of(object->fscache.cache,
-> > +			     struct cachefiles_cache, cache);
-> > +
-> > +	path.mnt =3D cache->mnt;
-> > +	path.dentry =3D object->backer;
-> > +	file =3D open_with_fake_path(&path, O_RDWR | O_LARGEFILE | O_DIRECT,
-> > +				   d_inode(object->backer), cache->cache_cred);
-> =
-
-> I think this should be plain old dentry_open?
-
-open_with_fake_path() sets FMODE_NOACCOUNT.  In the fscache-iter branch, t=
-he
-file is held open a lot longer and then ENFILE/EMFILE starts being a serio=
-us
-problem.
-
-That said, I'm considering changing things so that all the data in the cac=
-he
-is held in one or a few files with an index to locate things - at which po=
-int
-this issue goes away.
-
-> > +	op =3D fscache_alloc_retrieval(cookie, NULL, NULL, NULL);
-> > +	if (!op)
-> > +		return -ENOMEM;
-> > +	//atomic_set(&op->n_pages, 1);
-> =
-
-> ???
-
-I should remove that - it kind of got left behind.  That was necessary for=
- the
-old API, but a whole load of this code, including the fscache_retrieval st=
-ruct
-will be going away when the cookie and operation handling get rewritten.
-
-> > +{
-> > +	if (fscache_cookie_valid(cookie) && fscache_cookie_enabled(cookie))
-> > +		return __fscache_begin_read_operation(rreq, cookie);
-> > +	else
-> > +		return -ENOBUFS;
-> > +}
-> =
-
-> No need for an else after a return.  I personally also prefer to always
-> handle the error case first, ala:
-
-It's not precisely an error case, more a "fallback required" case.
-
->         if (!fscache_cookie_valid(cookie) || !fscache_cookie_enabled(coo=
-kie))
-> 	                return -ENOBUFS;
-> 	return __fscache_begin_read_operation(rreq, cookie);
-> =
-
-> Also do we really need this inline fast path to start with?
-
-Yes.  fscache might be compiled out, in which case we'll never go down the
-slow path.  And the common case is that cookie =3D=3D NULL, so let's not j=
-ump out
-of line if we don't have to.
-
-David
 
