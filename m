@@ -2,147 +2,205 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26B1731D2D4
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Feb 2021 23:49:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AA1631D4B2
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Feb 2021 05:47:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231281AbhBPWsq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Feb 2021 17:48:46 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:32814 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231280AbhBPWsp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Feb 2021 17:48:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613515639;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uXp5UMOouYnIdmSeJ/6TdGsSmJa3ZXTZQTkrYiYlCOo=;
-        b=RkoK/f3kk26Su60RdIMrfiqfROkX5Auj/+UICWlIW4g/9wAujZBwGXp/eF4Qo6X85CgpDf
-        c70I1e3etQ0YAg9S90qkp9tsggJ+TPT/mHLd5SGA/HnBMDAIpgfC+Ap2HSGyMSBtNThp9j
-        ATAFXYl5tdL9NrAzn+5rO3INztaLvCs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-296-0BNyfCG7O0euhXAUYX7t5g-1; Tue, 16 Feb 2021 17:47:17 -0500
-X-MC-Unique: 0BNyfCG7O0euhXAUYX7t5g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45EEE108C303;
-        Tue, 16 Feb 2021 22:47:16 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-117-197.rdu2.redhat.com [10.10.117.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 01C1E5C1B4;
-        Tue, 16 Feb 2021 22:47:15 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id 026EE1203A4; Tue, 16 Feb 2021 17:47:14 -0500 (EST)
-Date:   Tue, 16 Feb 2021 17:47:14 -0500
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Calum Mackay <calum.mackay@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [RFC] pynfs: add courteous server tests
-Message-ID: <YCxLcm8FFFWzZELr@pick.fieldses.org>
-References: <47d31c15-7467-6abb-9e62-96ffca1c6ec0@oracle.com>
+        id S230526AbhBQEqm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Feb 2021 23:46:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229623AbhBQEqe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Feb 2021 23:46:34 -0500
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F286EC061574
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Feb 2021 20:45:53 -0800 (PST)
+Received: by mail-vs1-xe32.google.com with SMTP id u7so5976659vsp.12
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Feb 2021 20:45:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uktxjKQwz4TfwBjCYOOJzA5Rs1qSh3+bpu7dP8/xG98=;
+        b=Ob7vhkngcs5SWjWVOtXougGOBUPgdqIiyzX5uKLWMlq6lQTrZ2PUjthoQjHous+cx7
+         d5pWfI4ADzGXpZb/8wNemgCNGcoJK7h2gX/SNiWUbKVfPuoN7gLueEhhCh06bQp2D4kj
+         nO7uch7pPugyX+oLuzb8DPlSpoKToPbcLYd6M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uktxjKQwz4TfwBjCYOOJzA5Rs1qSh3+bpu7dP8/xG98=;
+        b=P2+QB2CLnxyhUjN16K3b00NbVinfQoa2igUhDQxJV8J0yPpLnXaobhY5wZ0MAeQ+5J
+         AW1lD4n8quqJhHYtK8JY5eRsqQRMfOkldrPevrsjq71Ozyy0mhS+SgqXTE3GBBZp08IG
+         LrfQ6vvoBigohzvdmm7ekXgWgDsYc1MFad0W2KclwlDWpa9Ekr8bwW8OaCZGnXbvUAZZ
+         gtbHFivvPbKfHpyIrKSNoUDM3zA/lJv3RLEY4GUOss0j0jj2MlHdeXMI/Fdz43mkxBhF
+         eCO7bW38L5vVpe1zWaUk6ZBW0Y4iriF0129AZMMB3eNEDbK6WrKBcpKOfEthF3XqQWZn
+         9Y1A==
+X-Gm-Message-State: AOAM532Q3a/FUFkMpMnC05c8bBIbD6+w9fHLbtw8ChzaiP4Vb0ZcAKTy
+        g1L8ySUEkIcFyeWks1pvv/3l5S3aDRXxX2Ww9Zivqg==
+X-Google-Smtp-Source: ABdhPJxI8u0RvnOp3BypDJ/HZUdf2uePEnqUeAieLHAvwOaNch0GOwf7JSOHb1NAP4ygE7Ttv2XRYC6P0KVm2+/QFtU=
+X-Received: by 2002:a67:8945:: with SMTP id l66mr13422008vsd.48.1613537153038;
+ Tue, 16 Feb 2021 20:45:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <47d31c15-7467-6abb-9e62-96ffca1c6ec0@oracle.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <CAOQ4uxiFGjdvX2-zh5o46pn7RZhvbGHH0wpzLPuPOom91FwWeQ@mail.gmail.com>
+ <20210215154317.8590-1-lhenriques@suse.de>
+In-Reply-To: <20210215154317.8590-1-lhenriques@suse.de>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 17 Feb 2021 12:45:41 +0800
+Message-ID: <CANMq1KCWF=yucGZ_DizvdzytW8RCXKPaQeC9huML2FJkqNWjQw@mail.gmail.com>
+Subject: Re: [PATCH v2] vfs: prevent copy_file_range to copy across devices
+To:     Luis Henriques <lhenriques@suse.de>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Steve French <sfrench@samba.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Ian Lance Taylor <iant@google.com>,
+        Luis Lozano <llozano@chromium.org>, ceph-devel@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Feb 16, 2021 at 10:04:05PM +0000, Calum Mackay wrote:
-> hi Bruce,
-> 
-> At Chuck's suggestion, I've added an initial PyNFS test to aid work on a
-> courteous server. A simple test, along the lines you indicated, that locks a
-> file, waits twice the lease period, and tries to unlock:
-> 
-> OK -> PASS (courteous server)
-> BADSESSION -> WARNING (discourteous server)
-> 
-> 
-> Before sending my patch, Chuck asked me to add the second test you
-> suggested:
-> 
-> 	- A second test creates a new client, acquires a file lock, and
-> 	  waits two lease periods.  Then creates a second client, which
-> 	  attempts to acquire the lock.  The second client should
-> 	  succeed.
-> 
-> 
-> 
-> This doesn't seem to differentiate between these three cases:
-> 
-> 1. a discourteous server, which invalidates the client 1 state, and frees
-> all client 1's locks, upon lease expiry, then allows client 2 to lock the
-> file. The above test spec would result in a PASS for a discourteous server,
-> which doesn't seem right.
+On Mon, Feb 15, 2021 at 11:42 PM Luis Henriques <lhenriques@suse.de> wrote:
+>
+> Nicolas Boichat reported an issue when trying to use the copy_file_range
+> syscall on a tracefs file.  It failed silently because the file content is
+> generated on-the-fly (reporting a size of zero) and copy_file_range needs
+> to know in advance how much data is present.
 
-Apologies for the confusing suggestion.  I think all I really wanted to
-verify was that the server will grant the lock to a second client after
-a lease period has gone by.
+Not sure if you have the whole history, these links and discussion can
+help if you want to expand on the commit message:
+[1] http://issuetracker.google.com/issues/178332739
+[2] https://lkml.org/lkml/2021/1/25/64
+[3] https://lkml.org/lkml/2021/1/26/1736
+[4] https://patchwork.kernel.org/project/linux-fsdevel/cover/20210212044405.4120619-1-drinkcat@chromium.org/
 
-That's a simple test that *any* server (courteous or discourteous)
-should pass.  (We probably do have a test for that at least in the 4.0
-case.  It'd be nice to have one in the 4.1 case.  Maybe just look into
-porting some 4.0 tests over to 4.1.)
+> This commit restores the cross-fs restrictions that existed prior to
+> 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") and
+> removes generic_copy_file_range() calls from ceph, cifs, fuse, and nfs.
 
-Anyway, it seems like a simple thing that would be useful to verify
-while doing courteous server implementation.  I mean, we want to make
-sure we don't accidentally implement a "courteous" server that works by
-just never dropping any client's state ever.
+It goes beyond that, I think this also prevents copies within the same
+FS if copy_file_range is not implemented. Which is IMHO a good thing
+since this has been broken on procfs and friends ever since
+copy_file_range was implemented (but I assume that nobody ever hit
+that before cross-fs became available).
 
-> 2. a broad-grained courteous server, which invalidates the client 1 state,
-> and frees all client 1's locks, because of conflicting access from client 2
-> (after client 1's lease expiry), who is then granted the lock. A PASS here
-> would be correct.
-> 
-> 3. a fine-grained courteous server, which persists the session, but revokes
-> that particular client 1 lock, because of conflicting access from client 2
-> (after client 1's lease expiry), who is granted the lock. A PASS here would
-> be correct.
+>
+> Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
+> Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
+> Cc: Nicolas Boichat <drinkcat@chromium.org>
 
-> If I've read it right, the test could differentiate between cases 2) and 3),
-> by having client 1 try to unlock, after client 2 successfully locks, where
-> client 1 will see either BADSESSION (case 2) or SOME_STATE_REVOKED / EXPIRED
-> (case 3).
+You could replace that with Reported-by: Nicolas Boichat <drinkcat@chromium.org>
 
-Sounds like a good idea to test those two cases.
+> Signed-off-by: Luis Henriques <lhenriques@suse.de>
+> ---
+> Changes since v1 (after Amir review)
+> - restored do_copy_file_range() helper
+> - return -EOPNOTSUPP if fs doesn't implement CFR
+> - updated commit description
+>
+>  fs/ceph/file.c     | 21 +++-----------------
+>  fs/cifs/cifsfs.c   |  3 ---
+>  fs/fuse/file.c     | 21 +++-----------------
+>  fs/nfs/nfs4file.c  | 20 +++----------------
+>  fs/read_write.c    | 49 ++++++++++------------------------------------
+>  include/linux/fs.h |  3 ---
+>  6 files changed, 19 insertions(+), 98 deletions(-)
+>
+[snip]
+> diff --git a/fs/read_write.c b/fs/read_write.c
+> index 75f764b43418..b217cd62ae0d 100644
+> --- a/fs/read_write.c
+> +++ b/fs/read_write.c
+> @@ -1358,40 +1358,12 @@ COMPAT_SYSCALL_DEFINE4(sendfile64, int, out_fd, int, in_fd,
+>  }
+>  #endif
+>
+> -/**
+> - * generic_copy_file_range - copy data between two files
+> - * @file_in:   file structure to read from
+> - * @pos_in:    file offset to read from
+> - * @file_out:  file structure to write data to
+> - * @pos_out:   file offset to write data to
+> - * @len:       amount of data to copy
+> - * @flags:     copy flags
+> - *
+> - * This is a generic filesystem helper to copy data from one file to another.
+> - * It has no constraints on the source or destination file owners - the files
+> - * can belong to different superblocks and different filesystem types. Short
+> - * copies are allowed.
+> - *
+> - * This should be called from the @file_out filesystem, as per the
+> - * ->copy_file_range() method.
+> - *
+> - * Returns the number of bytes copied or a negative error indicating the
+> - * failure.
+> - */
+> -
+> -ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
+> -                               struct file *file_out, loff_t pos_out,
+> -                               size_t len, unsigned int flags)
+> -{
+> -       return do_splice_direct(file_in, &pos_in, file_out, &pos_out,
+> -                               len > MAX_RW_COUNT ? MAX_RW_COUNT : len, 0);
+> -}
+> -EXPORT_SYMBOL(generic_copy_file_range);
+> -
+>  static ssize_t do_copy_file_range(struct file *file_in, loff_t pos_in,
+>                                   struct file *file_out, loff_t pos_out,
+>                                   size_t len, unsigned int flags)
+>  {
+> +       ssize_t ret = -EXDEV;
+> +
+>         /*
+>          * Although we now allow filesystems to handle cross sb copy, passing
+>          * a file of the wrong filesystem type to filesystem driver can result
+> @@ -1400,14 +1372,14 @@ static ssize_t do_copy_file_range(struct file *file_in, loff_t pos_in,
+>          * several different file_system_type structures, but they all end up
+>          * using the same ->copy_file_range() function pointer.
+>          */
+> -       if (file_out->f_op->copy_file_range &&
+> -           file_out->f_op->copy_file_range == file_in->f_op->copy_file_range)
+> -               return file_out->f_op->copy_file_range(file_in, pos_in,
+> -                                                      file_out, pos_out,
+> -                                                      len, flags);
+> +       if (!file_out->f_op->copy_file_range)
+> +               ret = -EOPNOTSUPP;
 
-> But we don't need to differentiate cases 2) and 3), since a PASS
-> would be correct in either case.
+This doesn't work as the 0-filesize check is done before that in
+vfs_copy_file_range (so the syscall still returns 0, works fine if you
+comment out `if (len == 0)`).
 
-But, yes, they're both "courteous" cases.
+Also, you need to check for file_in->f_op->copy_file_range instead,
+the problem is if the _input_ filesystem doesn't report sizes or can't
+seek properly.
 
-I do wish sometimes that we had states other than "PASS/FAIL/WARN";
-sometimes you want to know stuff about a server that isn't just whether
-it's "right" or not.
-
-Bit it's not really a big deal.  Note if you leave the "all" flag off a
-test, it won't be run by default.  And if a test flagged "courteous" but
-not "all" fails on a correct but uncourteous server, that's probably
-fine.
-
-I think it'd also be fine to WARN about anything short of the
-finest-grained possible behavior.  You can give more details in the
-wording of the warning.
-
-> However that won't differentiate between cases 1) and 2), where client 1
-> will see BADSESSION in each case. Yet case 1) ought to result in a WARNING,
-> and case 2) in a PASS?
-
-We could also do something like:
-
-	client 1 acquires two different locks.
-	wait a lease period or two
-	client 2 attempts to acquire one of the locks.
-	client 1 attempts to unlock the other one.
-
-And that'd be another way to test whether we have a coarse- or fine-
-grained courteous server.
-
-My test suggestions were very off-the-cuff, if you have ideas then go
-for it.
-
---b.
-
+> +       else if (file_out->f_op->copy_file_range == file_in->f_op->copy_file_range)
+> +               ret = file_out->f_op->copy_file_range(file_in, pos_in,
+> +                                                     file_out, pos_out,
+> +                                                     len, flags);
+>
+> -       return generic_copy_file_range(file_in, pos_in, file_out, pos_out, len,
+> -                                      flags);
+> +       return ret;
+>  }
+>
+>  /*
+> @@ -1514,8 +1486,7 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
+>         }
+>
+>         ret = do_copy_file_range(file_in, pos_in, file_out, pos_out, len,
+> -                               flags);
+> -       WARN_ON_ONCE(ret == -EOPNOTSUPP);
+> +                                flags);
+>  done:
+>         if (ret > 0) {
+>                 fsnotify_access(file_in);
