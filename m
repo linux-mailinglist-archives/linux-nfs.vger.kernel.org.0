@@ -2,101 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 571C631DF59
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Feb 2021 20:02:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2367731DFBF
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Feb 2021 20:42:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231976AbhBQTCd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Feb 2021 14:02:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229752AbhBQTCc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Feb 2021 14:02:32 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC9AC061574
-        for <linux-nfs@vger.kernel.org>; Wed, 17 Feb 2021 11:01:52 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id l12so17898675edt.3
-        for <linux-nfs@vger.kernel.org>; Wed, 17 Feb 2021 11:01:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TCo+YNJ4/itDDlR0170lhTKFf8mNEKh93PYPg809NQM=;
-        b=ooojZqF4omD/L6Hs89uYdNcQ0+VEGyiIP56vH+tzjk4yiU/Bf5+5gkEyWWmILmGG4z
-         /BwNiD2qhcgdK/81gh95tIt7YjFxKdM5lAGRLfvecXDOPxyzGZB2M3SIVZLoLj6SmKO1
-         FPNOg3ZaoFca3sVSUuwf/kfw8t1AwEhBYCTn6Zg2r7FAaUdDe1MU7+ZaKoy6+HviFCnM
-         F5gvm+X2mwhPflGiDvO8aB3Ii2JWmAIIkHC0BaB+hfbCRurS9EaP0OID/VEpOlTATO79
-         dcseKiQ0ZiE+5yfTGDRhBEy1E5dJPdm+b1wn+SB2vWXlTxjJo/QoMSa1MFkPfLIXRq/O
-         eXkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TCo+YNJ4/itDDlR0170lhTKFf8mNEKh93PYPg809NQM=;
-        b=aZn0vlpuO18rLm15ouhDbWhtzzqAuUSAAQvVsxurtYXoKKqaaaco7Q7wF+dxD7r/aF
-         8WWfvbqVoLubqCHDWA2L5/yqUnqxeegCG3dYZyJ9ZcDroN4b5GHR+0xDw/0UE4VfdRq5
-         BWajMYU6jNNrNu4Bn8FaDaOula8cxMHcfCGxb93gIcUjgNEZA+l4SRC2PGjsWftSIHnF
-         KJ/XIgXup4ssaNyWoLFjH3JO567YqMT8XEICpvs1B4gSh5BGczrnIS6Y+HcpubnYoB50
-         mHZ36FY33Xx+gFOirDU7FdYl8U+K4idCq5KHcwyDXCVjkmiUm5unZY1wYlQbEEQaBekk
-         ryXg==
-X-Gm-Message-State: AOAM532BN1ZAh5/U2GequyIbU4TlStUMxLbQlqiv31ZTQRvr7yQQEHJQ
-        BT9ZFw5Jh1d7bVTl6kSKKtRuN1PE7PBnaw==
-X-Google-Smtp-Source: ABdhPJxfHTcsbOigOfcP0yPsJwSzi4JVMVTk+3bSGm7i+5kMs2/cpDRx/zz9bw1ecEaqLFickKNlLQ==
-X-Received: by 2002:a50:fa91:: with SMTP id w17mr249004edr.195.1613588510654;
-        Wed, 17 Feb 2021 11:01:50 -0800 (PST)
-Received: from gmail.com ([77.124.84.167])
-        by smtp.gmail.com with ESMTPSA id e19sm904196eds.10.2021.02.17.11.01.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Feb 2021 11:01:50 -0800 (PST)
-Date:   Wed, 17 Feb 2021 21:01:47 +0200
-From:   Dan Aloni <dan@kernelim.com>
-To:     Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: Re: [PATCH v1 3/8] sunrpc: add a directory per sunrpc xprt
-Message-ID: <20210217190147.d4xbhlkyk4in3qlc@gmail.com>
-References: <20210215174002.2376333-1-dan@kernelim.com>
- <20210215174002.2376333-4-dan@kernelim.com>
- <CAFX2JfkkYA=6gg9UzyT1=nuKrYJ+0c+Jd4BhasAgCR=T5Rgokw@mail.gmail.com>
+        id S233390AbhBQTmd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Feb 2021 14:42:33 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:44388 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231803AbhBQTmd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Feb 2021 14:42:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1613590866;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=gclTDJG5h62uL+V5q/OhtFFFrPcfAHZKDvJ34Y7giX0=;
+        b=JtJI2eZ/iN79sf/6HP85A4zIKQ4Y/XjfO6ULiLlcIcbhNLBzLwBjn0UEbsEwSxLnWj+BDZ
+        dOEMHcNEKg12FrAQ9rRR9r5VniukS5fPC3Afres8ua1lRMDl0KvsKZb4MViNMaydkuEEh7
+        1Kbuuva3NqU2TNP2vZZSkk0EWf4Xehs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-ZBj_r0G2PF-BZ8-XkSPZ1g-1; Wed, 17 Feb 2021 14:41:04 -0500
+X-MC-Unique: ZBj_r0G2PF-BZ8-XkSPZ1g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ECEEEEC1A0
+        for <linux-nfs@vger.kernel.org>; Wed, 17 Feb 2021 19:41:03 +0000 (UTC)
+Received: from madhat.home.dicksonnet.net (ovpn-112-108.phx2.redhat.com [10.3.112.108])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AD06C60657
+        for <linux-nfs@vger.kernel.org>; Wed, 17 Feb 2021 19:41:03 +0000 (UTC)
+From:   Steve Dickson <steved@redhat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH 0/6 V2] exportd: The NFSv4 only mounting daemon.
+Date:   Wed, 17 Feb 2021 14:42:34 -0500
+Message-Id: <20210217194240.79915-1-steved@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFX2JfkkYA=6gg9UzyT1=nuKrYJ+0c+Jd4BhasAgCR=T5Rgokw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Feb 16, 2021 at 04:46:55PM -0500, Anna Schumaker wrote:
-> > +static ssize_t rpc_netns_xprt_dstaddr_show(struct kobject *kobj,
-> > +               struct kobj_attribute *attr, char *buf)
-> > +{
-> > +       struct rpc_netns_xprt *c = container_of(kobj,
-> > +                               struct rpc_netns_xprt, kobject);
-> > +       struct rpc_xprt *xprt = c->xprt;
-> > +
-> > +       if (!(xprt->prot & (IPPROTO_TCP | XPRT_TRANSPORT_RDMA))) {
-> 
-> We might want to change these restrictions later on, so if we're going
-> to put this into each function then maybe it would make sense to have
-> a quick inline to check protocol support?
+exportd is a daemon that will listen for only v4 mount upcalls.
+The idea is to allow distros to build a v4 only package
+which will have a much smaller footprint than the
+entire nfs-utils package.
 
-Yeah, I agree.
+exportd uses no RPC code, which means none of the 
+code or arguments that deal with v3 was ported, 
+this again, makes the footprint much smaller. 
 
-> I do the same check in the setup function for my patches, so if you
-> want I can add the inline function and then it'll just be there for
-> you to use.
+The following options were ported:
+    * multiple threads
+    * state-directory-path option
+    * junction support (not tested)
 
-Sure, go ahead.
+The rest of the mountd options were v3 only options.
 
-> 
-> > +               sprintf(buf, "N/A");
-> > +               return 0;
-> 
-> I'm guessing the point of putting "N/A" here is so userspace tools
-> don't have to guess which files exist or not for each protocol type?
-> Should I change my patches to match this style too?
+V2:
+  * Added two systemd services: nfsv4-exportd and nfsv4-server
+  * nfsv4-server starts rpc.nfsd -N 3, so nfs.conf mod not needed.
 
-Yes, though I'm not sure what are the common kernel convention here.
-Maybe a "-" string is sufficient?
+Steve Dickson (6):
+  exportd: the initial shell of the v4 export support
+  exportd: Moved cache upcalls routines into libexport.a
+  exportd: multiple threads
+  exportd/exportfs: Add the state-directory-path option
+  exportd: Enabled junction support
+  exportd: systemd unit files
+
+ .gitignore                                |   1 +
+ configure.ac                              |   1 +
+ nfs.conf                                  |   4 +
+ support/export/Makefile.am                |   3 +-
+ {utils/mountd => support/export}/auth.c   |   4 +-
+ {utils/mountd => support/export}/cache.c  |  46 +++-
+ support/export/export.h                   |  34 +++
+ {utils/mountd => support/export}/fsloc.c  |   0
+ {utils/mountd => support/export}/v4root.c |   0
+ {utils/mountd => support/include}/fsloc.h |   0
+ systemd/nfs.conf.man                      |  10 +
+ systemd/nfsv4-exportd.service             |  12 +
+ systemd/nfsv4-server.service              |  31 +++
+ utils/Makefile.am                         |   1 +
+ utils/exportd/Makefile.am                 |  63 +++++
+ utils/exportd/exportd.c                   | 276 ++++++++++++++++++++++
+ utils/exportd/exportd.man                 |  81 +++++++
+ utils/exportfs/exportfs.c                 |  25 +-
+ utils/exportfs/exportfs.man               |   7 +-
+ utils/mountd/Makefile.am                  |   5 +-
+ 20 files changed, 586 insertions(+), 18 deletions(-)
+ rename {utils/mountd => support/export}/auth.c (99%)
+ rename {utils/mountd => support/export}/cache.c (98%)
+ create mode 100644 support/export/export.h
+ rename {utils/mountd => support/export}/fsloc.c (100%)
+ rename {utils/mountd => support/export}/v4root.c (100%)
+ rename {utils/mountd => support/include}/fsloc.h (100%)
+ create mode 100644 systemd/nfsv4-exportd.service
+ create mode 100644 systemd/nfsv4-server.service
+ create mode 100644 utils/exportd/Makefile.am
+ create mode 100644 utils/exportd/exportd.c
+ create mode 100644 utils/exportd/exportd.man
 
 -- 
-Dan Aloni
+2.29.2
+
