@@ -2,111 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3171631DD24
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Feb 2021 17:19:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B780631DDCE
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Feb 2021 18:01:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233833AbhBQQSk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Feb 2021 11:18:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43550 "EHLO
+        id S234310AbhBQRAM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Feb 2021 12:00:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233070AbhBQQSi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Feb 2021 11:18:38 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA9CFC061574;
-        Wed, 17 Feb 2021 08:17:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VfrUoqOUihVjvmCvSLv9mlyS0o00nDdsmdN3qvEoA00=; b=cSa+ST1CT82tnPFcDFN6385/gf
-        fX5ue2PIy1WjeGVEzkDGZMTsFzLmqC7c+WYAQLnYutzJbsajtl2Jh42nC0w4lqBcrHrlZkXESMSyp
-        xlcoDR3Wp9R6AuEdsi/ty3h3DDMfecTJMK444IMwUHEhC9geKbbRqshaygCMw7xBUsOlIbyDSduNy
-        dmDRIklz83kii8sK5gQXi1rPYZtyfyYvM4vvxJRvwGML8x9D7AnF0WgJAsIE2nAV7DOSN//6W8z37
-        7Iss1QwTmm8FBDB49gMScTNNT7Ln/Ocl0tdU2/isZxvLSBXMpl/SURMPrdCcTpYsHSkF0tAUW3gJk
-        KVjidQgA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lCPSg-000e1H-2j; Wed, 17 Feb 2021 16:14:28 +0000
-Date:   Wed, 17 Feb 2021 16:13:58 +0000
-From:   Matthew Wilcox <willy@infradead.org>
+        with ESMTP id S234311AbhBQRAH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Feb 2021 12:00:07 -0500
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2618BC061786
+        for <linux-nfs@vger.kernel.org>; Wed, 17 Feb 2021 08:59:27 -0800 (PST)
+Received: by mail-ot1-x334.google.com with SMTP id b16so10200326otq.1
+        for <linux-nfs@vger.kernel.org>; Wed, 17 Feb 2021 08:59:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=omnibond-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7sO3sUZqmmuiy5ZWICfkEsaBnSxzPGcJa4JjW5AEhLI=;
+        b=wkvcOIo/YOiyjJMcPp9t49oCoUuB0gAAXQOA0MaUAjtskFk4Y0zabPTmfPgIVj7S9X
+         6m4bAQCAN+3eyk2moKhxkMLMHHsa4aCZhxjaV8ydaA1JKvJevC6E7yHwnT+GGn2n6Ozi
+         46vBTDf/msm46ed3SMv2GWg6LW7yHHgTcQP8J1x7kK5lUTCGzzB3bPk5SP4FKAeyEFDz
+         p6ciTaj85L6iXgw0dC/67tFnsvY0vAY/nZ4dNNdw2UUOJTgGSEEbrdVEXlJxJJZIm1BJ
+         TuwrXToQ9KalPFlBbTGo7eqFOHbfFuTrqO8W7W9EGN/qBxvcyw3G+iuQ9petlOE3k5Wu
+         UoWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7sO3sUZqmmuiy5ZWICfkEsaBnSxzPGcJa4JjW5AEhLI=;
+        b=lLY4kVxQ3GUS9pvXEho4wH7sbHdxFUUddt04z34zE/GmGVjZ8fFthMdnpa+0GgaG2i
+         lZ+4J7t1LJyia3N5FYrqZ8zAW61f7+Wc63VO5DxUWxOni+OHDR/sk9DtAq7A9xiEd30e
+         Qu3E704jh8ZHeqZcepK13WswVdPlifgCN6vU+9sg9fg5ajq9REnzuAM+hAZi4cbULycV
+         0RNYWHBtJcJWcwxTL7K9YsFWvUfBwkrqzn9BS1ub7oLMUnA++TFOYrkgLGAuXUTHKeV2
+         OM9ycmTU/PZjx/ytG8ck5szV5dX13/VSyiqHyR1h0lLAWj2hCv/0TsJQ1oC+ofMNslQz
+         tvmg==
+X-Gm-Message-State: AOAM533JiLEdqzu30611R+ylgh8c1exzbcuLlhNwAGn7JG4psu2WqOry
+        ZrUOlCtYFrEEYu6n80UqP6eiSm9RJGNw4PGI6hnZRw==
+X-Google-Smtp-Source: ABdhPJwChss0o2dxG2RNWJW1xeyysww7AKgNgkTjjECbssh7P0+Vree7tQLd/y6uY6aD7E7WIsZvOGZ0HXpRVi3fZGQ=
+X-Received: by 2002:a9d:6c4c:: with SMTP id g12mr66707otq.53.1613581166449;
+ Wed, 17 Feb 2021 08:59:26 -0800 (PST)
+MIME-Version: 1.0
+References: <161340385320.1303470.2392622971006879777.stgit@warthog.procyon.org.uk>
+ <161340389201.1303470.14353807284546854878.stgit@warthog.procyon.org.uk>
+ <20210216103215.GB27714@lst.de> <20210216132251.GI2858050@casper.infradead.org>
+ <CAOg9mSQYBjnMsDj5pMd6MOGTY5w_ZR=pw7VRYKfP5ZwmHBj2=Q@mail.gmail.com> <1586931.1613576553@warthog.procyon.org.uk>
+In-Reply-To: <1586931.1613576553@warthog.procyon.org.uk>
+From:   Mike Marshall <hubcap@omnibond.com>
+Date:   Wed, 17 Feb 2021 11:59:15 -0500
+Message-ID: <CAOg9mSTyFX+2MMSV77hLDUpHogQ=KXO5oNduA90FLoowPGk0Jw@mail.gmail.com>
+Subject: Re: [PATCH 03/33] mm: Implement readahead_control pageset expansion
 To:     David Howells <dhowells@redhat.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@redhat.com>,
+        linux-mm <linux-mm@kvack.org>, linux-cachefs@redhat.com,
+        linux-afs@lists.infradead.org,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-cifs@vger.kernel.org,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        V9FS Developers <v9fs-developer@lists.sourceforge.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jeff Layton <jlayton@redhat.com>,
         David Wysochanski <dwysocha@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/33] mm: Implement readahead_control pageset expansion
-Message-ID: <20210217161358.GM2858050@casper.infradead.org>
-References: <161340385320.1303470.2392622971006879777.stgit@warthog.procyon.org.uk>
- <161340389201.1303470.14353807284546854878.stgit@warthog.procyon.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <161340389201.1303470.14353807284546854878.stgit@warthog.procyon.org.uk>
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Feb 15, 2021 at 03:44:52PM +0000, David Howells wrote:
-> +++ b/include/linux/pagemap.h
-> @@ -761,6 +761,8 @@ extern void __delete_from_page_cache(struct page *page, void *shadow);
->  int replace_page_cache_page(struct page *old, struct page *new, gfp_t gfp_mask);
->  void delete_from_page_cache_batch(struct address_space *mapping,
->  				  struct pagevec *pvec);
-> +void readahead_expand(struct readahead_control *ractl,
-> +		      loff_t new_start, size_t new_len);
+Matthew has looked at how I'm fumbling about
+trying to deal with Orangefs's need for much larger
+than page-sized IO...
 
-If we're revising this patchset, I'd rather this lived with the other
-readahead declarations, ie after the definition of readahead_control.
+I think I need to implement orangefs_readahead
+and from there fire off an asynchronous read
+and while that's going I'll call readahead_page
+with a rac that I've cranked up with readahead_expand
+and when the read gets done I'll have plenty of pages
+for the large IO I did.
 
-> +	/* Expand the trailing edge upwards */
-> +	while (ractl->_nr_pages < new_nr_pages) {
-> +		unsigned long index = ractl->_index + ractl->_nr_pages;
-> +		struct page *page = xa_load(&mapping->i_pages, index);
-> +
-> +		if (page && !xa_is_value(page))
-> +			return; /* Page apparently present */
-> +
-> +		page = __page_cache_alloc(gfp_mask);
-> +		if (!page)
-> +			return;
-> +		if (add_to_page_cache_lru(page, mapping, index, gfp_mask) < 0) {
-> +			put_page(page);
-> +			return;
-> +		}
-> +		ractl->_nr_pages++;
-> +	}
+Even if what I think I need to do is somewhere
+near right, the async code in the Orangefs
+kernel module didn't make it into the upstream
+version, so I have to refurbish that. All that to
+say: I don't need readahead_expand
+"tomorrow", but it fits into my plan to
+get Orangefs the extra pages it needs
+without me having open-coded page cache
+code in orangefs_readpage.
 
-We're defeating the ondemand_readahead() algorithm here.  Let's suppose
-userspace is doing 64kB reads, the filesystem is OrangeFS which only
-wants to do 4MB reads, the page cache is initially empty and there's
-only one thread doing a sequential read.  ondemand_readahead() calls
-get_init_ra_size() which tells it to allocate 128kB and set the async
-marker at 64kB.  Then orangefs calls readahead_expand() to allocate the
-remainder of the 4MB.  After the app has read the first 64kB, it comes
-back to read the next 64kB, sees the readahead marker and tries to trigger
-the next batch of readahead, but it's already present, so it does nothing
-(see page_cache_ra_unbounded() for what happens with pages present).
+-Mike
 
-Then it keeps going through the 4MB that's been read, not seeing any more
-readahead markers, gets to 4MB and asks for ... 256kB?  Not quite sure.
-Anyway, it then has to wait for the next 4MB because the readahead didn't
-overlap with the application processing.
-
-So readahead_expand() needs to adjust the file's f_ra so that when the
-application gets to 64kB, it kicks off the readahead of 4MB-8MB chunk (and
-then when we get to 4MB+256kB, it kicks off the readahead of 8MB-12MB,
-and so on).
-
-Unless someone sees a better way to do this?  I don't
-want to inadvertently break POSIX_FADV_WILLNEED which calls
-force_page_cache_readahead() and should not perturb the kernel's
-ondemand algorithm.  Perhaps we need to add an 'ra' pointer to the
-ractl to indicate whether the file_ra_state should be updated by
-readahead_expand()?
+On Wed, Feb 17, 2021 at 10:42 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Mike Marshall <hubcap@omnibond.com> wrote:
+>
+> > I plan to try and use readahead_expand in Orangefs...
+>
+> Would it help if I shuffled the readahead_expand patch to the bottom of the
+> pack?
+>
+> David
+>
