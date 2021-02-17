@@ -2,285 +2,223 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4587F31E01B
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Feb 2021 21:18:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 30AE231E0C7
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Feb 2021 21:48:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233510AbhBQUS3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Feb 2021 15:18:29 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36811 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232892AbhBQUS3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Feb 2021 15:18:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613593022;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=h9c5BclFX+SPBS367656804qkXT3YE+JsszvZYIVqtI=;
-        b=ePfXFMFC1WcfrLU4UDkQl4Z0h8f8r0bRxk0Jp8BMrBlg+NFZI6OMITVkgt8ZaQB4NqKUQL
-        9JfWu6fD9yfpNpqtj0WzM1t41qdCtSNWd4QudJpVBYWS0moW2yxmfh9brI6n2XOeRwxEcR
-        o/2798BgBsl2jSifPJ4oh3tyvVwYFhI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-567-sEtrPU1xPaSoWufjvmoTMQ-1; Wed, 17 Feb 2021 15:17:00 -0500
-X-MC-Unique: sEtrPU1xPaSoWufjvmoTMQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 885E5107ACE6
-        for <linux-nfs@vger.kernel.org>; Wed, 17 Feb 2021 20:16:59 +0000 (UTC)
-Received: from madhat.home.dicksonnet.net (ovpn-112-108.phx2.redhat.com [10.3.112.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4295D19D6C
-        for <linux-nfs@vger.kernel.org>; Wed, 17 Feb 2021 20:16:59 +0000 (UTC)
-From:   Steve Dickson <steved@redhat.com>
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH 1/1] nfs-utiles: rename xlog_from_conffile() to xlog_set_debug()
-Date:   Wed, 17 Feb 2021 15:18:36 -0500
-Message-Id: <20210217201836.95788-1-steved@redhat.com>
+        id S235103AbhBQUs3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Feb 2021 15:48:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234469AbhBQUsX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Feb 2021 15:48:23 -0500
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B44C5C061574;
+        Wed, 17 Feb 2021 12:47:43 -0800 (PST)
+Received: by mail-il1-x12d.google.com with SMTP id g9so12588749ilc.3;
+        Wed, 17 Feb 2021 12:47:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=36J8v8GcH0x9Wqo2pW5kCC6+tAea+frYUujmEbPD8JY=;
+        b=EHG39DHe2zUwLnGbzMrWPQMvmSl8upXvtYlyQ9u9dlyfiiSuT2JC8ELoKzr6WpptkN
+         3JIsTo8q+IfvY4bHSOuyHNyxDfACJR4+sIpfwHk5JHgzBaQcSfJcBNqbR71A53xRIodv
+         3WFEbgruXKD1y2sQNNn6PYSwrU/Ldp5LpXuzKCJq1phqteLj/YC7dKiE/TMPteB3+dPI
+         IYDH74sfRZpmCLblx01Ucss9/e2GFqDTHfqRURp0G04p3WEWBivyB8qWVvM92mhEdxIy
+         yVKwYgIkehVQ7N/vVIcck0Yw/Vr4k+9SPgnJ+iXtfLOby+yEQrvMet2VzWRW470LuOjd
+         WOIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=36J8v8GcH0x9Wqo2pW5kCC6+tAea+frYUujmEbPD8JY=;
+        b=YE0bit75DwWvfquq22mUwhZiCNbNVGz6MiihmYEZu6TpETkK0GlLAW1kFdVDbL8eZB
+         lfk3tNReq3hH+YMjcCE5+lQSaQwSyNOZitG1okg2MzWT1N3TfeIH04APAaa9SGYHbp10
+         wqXmTjBj+X/JuZHDMnLHmUZPp18a9eDWimeM3I+99IG97Us37Uz4F2xcsS/MFNFhblOa
+         LPo7rEwV0uAGcOMMQWj+Ae7b1nuaq8dghfWUXZnbj1QrqFwDRMC5yIQp85GTGCuKbHPL
+         yxNubgQBcJLpuXLndu9F3os08LkFpVgQlQmaQdA96bXAwkxuPSYOmUVVMh7vUDwwifBQ
+         RKSQ==
+X-Gm-Message-State: AOAM533Dv2kihBbuNWrVC4q9E1sPinZ/Y4/rja3h9ICmxD5wxr1jINzi
+        0rVcCzukSetftiPVgwejRufWfds+tqmWGlel2pE=
+X-Google-Smtp-Source: ABdhPJzYkAHI/b+3jQMEdQXB+iRBVamaK5rWR+tLyf4FlWaxVbdV7OF2k1+Ohh+hilknNdvyyqFx0zNjCFgMTzTsKE4=
+X-Received: by 2002:a05:6e02:8ab:: with SMTP id a11mr736193ilt.137.1613594863093;
+ Wed, 17 Feb 2021 12:47:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <CAOQ4uxii=7KUKv1w32VbjkwS+Z1a0ge0gezNzpn_BiY6MFWkpA@mail.gmail.com>
+ <20210217172654.22519-1-lhenriques@suse.de>
+In-Reply-To: <20210217172654.22519-1-lhenriques@suse.de>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 17 Feb 2021 22:47:31 +0200
+Message-ID: <CAOQ4uxisQicRLso-i=5jWfAQX1kxSc=Bb9BaU5Wezs=QKbuciA@mail.gmail.com>
+Subject: Re: [PATCH v3] vfs: fix copy_file_range regression in cross-fs copies
+To:     Luis Henriques <lhenriques@suse.de>
+Cc:     Jeff Layton <jlayton@kernel.org>, Steve French <sfrench@samba.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Ian Lance Taylor <iant@google.com>,
+        Luis Lozano <llozano@chromium.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Standardized how config setting are set as
-well as the rename
+On Wed, Feb 17, 2021 at 7:25 PM Luis Henriques <lhenriques@suse.de> wrote:
+>
+> A regression has been reported by Nicolas Boichat, found while using the
+> copy_file_range syscall to copy a tracefs file.  Before commit
+> 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
+> kernel would return -EXDEV to userspace when trying to copy a file across
+> different filesystems.  After this commit, the syscall doesn't fail anymore
+> and instead returns zero (zero bytes copied), as this file's content is
+> generated on-the-fly and thus reports a size of zero.
+>
+> This patch restores some cross-filesystems copy restrictions that existed
+> prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
+> devices").  It also introduces a flag (COPY_FILE_SPLICE) that can be used
+> by filesystems calling directly into the vfs copy_file_range to override
+> these restrictions.  Right now, only NFS needs to set this flag.
+>
+> Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
+> Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
+> Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
+> Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
+> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+> Signed-off-by: Luis Henriques <lhenriques@suse.de>
+> ---
+> Ok, I've tried to address all the issues and comments.  Hopefully this v3
+> is a bit closer to the final fix.
+>
+> Changes since v2
+> - do all the required checks earlier, in generic_copy_file_checks(),
+>   adding new checks for ->remap_file_range
+> - new COPY_FILE_SPLICE flag
+> - don't remove filesystem's fallback to generic_copy_file_range()
+> - updated commit changelog (and subject)
+> Changes since v1 (after Amir review)
+> - restored do_copy_file_range() helper
+> - return -EOPNOTSUPP if fs doesn't implement CFR
+> - updated commit description
+>
+>  fs/nfsd/vfs.c      |  3 ++-
+>  fs/read_write.c    | 44 +++++++++++++++++++++++++++++++++++++++++---
+>  include/linux/fs.h |  7 +++++++
+>  3 files changed, 50 insertions(+), 4 deletions(-)
+>
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 04937e51de56..14e55822c223 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -578,7 +578,8 @@ ssize_t nfsd_copy_file_range(struct file *src, u64 src_pos, struct file *dst,
+>          * limit like this and pipeline multiple COPY requests.
+>          */
+>         count = min_t(u64, count, 1 << 22);
+> -       return vfs_copy_file_range(src, src_pos, dst, dst_pos, count, 0);
+> +       return vfs_copy_file_range(src, src_pos, dst, dst_pos, count,
+> +                                  COPY_FILE_SPLICE);
+>  }
+>
+>  __be32 nfsd4_vfs_fallocate(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> diff --git a/fs/read_write.c b/fs/read_write.c
+> index 75f764b43418..40a16003fb05 100644
+> --- a/fs/read_write.c
+> +++ b/fs/read_write.c
+> @@ -1410,6 +1410,33 @@ static ssize_t do_copy_file_range(struct file *file_in, loff_t pos_in,
+>                                        flags);
+>  }
+>
+> +/*
+> + * This helper function checks whether copy_file_range can actually be used,
+> + * depending on the source and destination filesystems being the same.
+> + *
+> + * In-kernel callers may set COPY_FILE_SPLICE to override these checks.
+> + */
+> +static int fops_copy_file_checks(struct file *file_in, struct file *file_out,
+> +                                unsigned int flags)
+> +{
+> +       if (WARN_ON_ONCE(flags & ~COPY_FILE_SPLICE))
+> +               return -EINVAL;
+> +
+> +       if (flags & COPY_FILE_SPLICE)
+> +               return 0;
+> +       /*
+> +        * We got here from userspace, so forbid copies if copy_file_range isn't
+> +        * implemented or if we're doing a cross-fs copy.
+> +        */
 
-Signed-off-by: Steve Dickson <steved@redhat.com>
----
- support/include/xlog.h          |  2 +-
- support/nfs/xlog.c              |  2 +-
- utils/exportfs/exportfs.c       | 12 +++++++++---
- utils/mountd/mountd.c           |  9 +++------
- utils/nfsd/nfsd.c               | 11 +++++++++--
- utils/nfsdcltrack/nfsdcltrack.c | 20 ++++++++++++--------
- utils/statd/sm-notify.c         |  7 ++++---
- utils/statd/statd.c             |  8 ++++----
- 8 files changed, 43 insertions(+), 28 deletions(-)
+Suggest:
 
-diff --git a/support/include/xlog.h b/support/include/xlog.h
-index 32ff5a1..69cdf61 100644
---- a/support/include/xlog.h
-+++ b/support/include/xlog.h
-@@ -51,7 +51,7 @@ void			xlog_stderr(int on);
- void			xlog_syslog(int on);
- void			xlog_config(int fac, int on);
- void			xlog_sconfig(char *, int on);
--void			xlog_from_conffile(char *);
-+void			xlog_set_debug(char *);
- int			xlog_enabled(int fac);
- void			xlog(int fac, const char *fmt, ...) XLOG_FORMAT((printf, 2, 3));
- void			xlog_warn(const char *fmt, ...) XLOG_FORMAT((printf, 1, 2));
-diff --git a/support/nfs/xlog.c b/support/nfs/xlog.c
-index 86acd6a..e5861b9 100644
---- a/support/nfs/xlog.c
-+++ b/support/nfs/xlog.c
-@@ -129,7 +129,7 @@ xlog_sconfig(char *kind, int on)
- }
- 
- void
--xlog_from_conffile(char *service)
-+xlog_set_debug(char *service)
- {
- 	struct conf_list *kinds;
- 	struct conf_list_node *n;
-diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-index 9fcae0b..f8b446a 100644
---- a/utils/exportfs/exportfs.c
-+++ b/utils/exportfs/exportfs.c
-@@ -91,7 +91,12 @@ release_lockfile()
- 		_lockfd = -1;
- 	}
- }
--
-+inline static void 
-+read_exportfs_conf(void)
-+{
-+	conf_init_file(NFS_CONFFILE);
-+	xlog_set_debug("exportfs");
-+}
- int
- main(int argc, char **argv)
- {
-@@ -116,8 +121,9 @@ main(int argc, char **argv)
- 	xlog_stderr(1);
- 	xlog_syslog(0);
- 
--	conf_init_file(NFS_CONFFILE);
--	xlog_from_conffile("exportfs");
-+	/* Read in config setting */
-+	read_exportfs_conf();
-+
- 	nfsd_path_init();
- 
- 	/* NOTE: following uses "mountd" section of nfs.conf !!!! */
-diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
-index a480265..612063b 100644
---- a/utils/mountd/mountd.c
-+++ b/utils/mountd/mountd.c
-@@ -666,13 +666,13 @@ int	port = 0;
- int	descriptors = 0;
- 
- inline static void 
--read_mount_conf(char **argv)
-+read_mountd_conf(char **argv)
- {
- 	char	*s;
- 
- 	conf_init_file(NFS_CONFFILE);
- 
--	xlog_from_conffile("mountd");
-+	xlog_set_debug("mountd");
- 	manage_gids = conf_get_bool("mountd", "manage-gids", manage_gids);
- 	descriptors = conf_get_num("mountd", "descriptors", descriptors);
- 	port = conf_get_num("mountd", "port", port);
-@@ -684,9 +684,6 @@ read_mount_conf(char **argv)
- 	if (s && !state_setup_basedir(argv[0], s))
- 		exit(1);
- 
--	if ((s = conf_get_str("mountd", "debug")) != NULL)
--		xlog_sconfig(s, 1);
--
- 	/* NOTE: following uses "nfsd" section of nfs.conf !!!! */
- 	if (conf_get_bool("nfsd", "udp", NFSCTL_UDPISSET(_rpcprotobits)))
- 		NFSCTL_UDPSET(_rpcprotobits);
-@@ -726,7 +723,7 @@ main(int argc, char **argv)
- 	xlog_open(progname);
- 
- 	/* Read in config setting */
--	read_mount_conf(argv);
-+	read_mountd_conf(argv);
- 
- 	/* Parse the command line options and arguments. */
- 	opterr = 0;
-diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
-index c9f0385..b074171 100644
---- a/utils/nfsd/nfsd.c
-+++ b/utils/nfsd/nfsd.c
-@@ -56,6 +56,13 @@ static struct option longopts[] =
- 	{ NULL, 0, 0, 0 }
- };
- 
-+inline static void 
-+read_nfsd_conf(void)
-+{
-+	conf_init_file(NFS_CONFFILE); 
-+	xlog_set_debug("nfsd");
-+}
-+
- int
- main(int argc, char **argv)
- {
-@@ -81,8 +88,8 @@ main(int argc, char **argv)
- 	xlog_syslog(0);
- 	xlog_stderr(1);
- 
--	conf_init_file(NFS_CONFFILE); 
--	xlog_from_conffile("nfsd");
-+	/* Read in config setting */
-+	read_nfsd_conf();
- 
- 	nfssvc_get_minormask(&minormask);
- 
-diff --git a/utils/nfsdcltrack/nfsdcltrack.c b/utils/nfsdcltrack/nfsdcltrack.c
-index b45a904..ee85167 100644
---- a/utils/nfsdcltrack/nfsdcltrack.c
-+++ b/utils/nfsdcltrack/nfsdcltrack.c
-@@ -549,7 +549,17 @@ find_cmd(char *cmdname)
- 			__func__, cmdname);
- 	return NULL;
- }
-+inline static void 
-+read_nfsdcltrack_conf(void)
-+{
-+	char *val;
- 
-+	conf_init_file(NFS_CONFFILE); 
-+	xlog_set_debug("nfsdcltrack");
-+	val = conf_get_str("nfsdcltrack", "storagedir");
-+	if (val)
-+		storagedir = val;
-+}
- int
- main(int argc, char **argv)
- {
-@@ -564,14 +574,8 @@ main(int argc, char **argv)
- 	xlog_syslog(1);
- 	xlog_stderr(0);
- 
--	conf_init_file(NFS_CONFFILE); 
--	xlog_from_conffile("nfsdcltrack");
--	val = conf_get_str("nfsdcltrack", "storagedir");
--	if (val)
--		storagedir = val;
--	rc = conf_get_num("nfsdcltrack", "debug", 0);
--	if (rc > 0)
--		xlog_config(D_ALL, 1);
-+	/* Read in config setting */
-+	read_nfsdcltrack_conf();
- 
- 	/* process command-line options */
- 	while ((arg = getopt_long(argc, argv, "hdfs:", longopts,
-diff --git a/utils/statd/sm-notify.c b/utils/statd/sm-notify.c
-index 739731f..606b912 100644
---- a/utils/statd/sm-notify.c
-+++ b/utils/statd/sm-notify.c
-@@ -482,12 +482,12 @@ nsm_lift_grace_period(void)
- 	return;
- }
- inline static void 
--read_nfsconf(char **argv)
-+read_smnotify_conf(char **argv)
- {
- 	char *s;
- 
- 	conf_init_file(NFS_CONFFILE);
--	xlog_from_conffile("sm-notify");
-+	xlog_set_debug("sm-notify");
- 	opt_max_retry = conf_get_num("sm-notify", "retry-time", opt_max_retry / 60) * 60;
- 	opt_srcport = conf_get_str("sm-notify", "outgoing-port");
- 	opt_srcaddr = conf_get_str("sm-notify", "outgoing-addr");
-@@ -512,7 +512,8 @@ main(int argc, char **argv)
- 	else
- 		progname = argv[0];
- 
--	read_nfsconf(argv);
-+	/* Read in config setting */
-+	read_smnotify_conf(argv);
- 
- 	while ((c = getopt(argc, argv, "dm:np:v:P:f")) != -1) {
- 		switch (c) {
-diff --git a/utils/statd/statd.c b/utils/statd/statd.c
-index e4a1df4..32169d4 100644
---- a/utils/statd/statd.c
-+++ b/utils/statd/statd.c
-@@ -243,12 +243,12 @@ int port = 0, out_port = 0;
- int nlm_udp = 0, nlm_tcp = 0;
- 
- inline static void 
--read_nfsconf(char **argv)
-+read_statd_conf(char **argv)
- {
- 	char *s;
- 
- 	conf_init_file(NFS_CONFFILE);
--	xlog_from_conffile("statd");
-+	xlog_set_debug("statd");
- 
- 	out_port = conf_get_num("statd", "outgoing-port", out_port);
- 	port = conf_get_num("statd", "port", port);
-@@ -306,8 +306,8 @@ int main (int argc, char **argv)
- 	/* Set hostname */
- 	MY_NAME = NULL;
- 
--	/* Read nfs.conf */
--	read_nfsconf(argv);
-+	/* Read in config setting */
-+	read_statd_conf(argv);
- 
- 	/* Process command line switches */
- 	while ((arg = getopt_long(argc, argv, "h?vVFNH:dn:p:o:P:LT:U:", longopts, NULL)) != EOF) {
--- 
-2.29.2
+       if (!file_in->f_op->copy_file_range) {
+               if (file_in->f_op->copy_file_range !=
+                   file_out->f_op->copy_file_range)
+                   return -EXDEV;
+       } else if (file_in->f_op->remap_file_range) {
+               if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
+                    return -EXDEV;
+       } else {
+                return -EOPNOTSUPP;
+       }
 
+       return 0;
+}
+
+> +
+>  /*
+>   * Performs necessary checks before doing a file copy
+>   *
+> @@ -1427,6 +1454,14 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
+>         loff_t size_in;
+>         int ret;
+>
+> +       /* Only check f_ops if we're not trying to clone */
+> +       if (!file_in->f_op->remap_file_range ||
+> +           (file_inode(file_in)->i_sb == file_inode(file_out)->i_sb)) {
+> +               ret = fops_copy_file_checks(file_in, file_out, flags);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+
+and then you don't need this special casing of clone here.
+
+>         ret = generic_file_rw_checks(file_in, file_out);
+>         if (ret)
+>                 return ret;
+> @@ -1474,9 +1509,6 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
+>  {
+>         ssize_t ret;
+>
+> -       if (flags != 0)
+> -               return -EINVAL;
+> -
+>         ret = generic_copy_file_checks(file_in, pos_in, file_out, pos_out, &len,
+>                                        flags);
+>         if (unlikely(ret))
+> @@ -1511,6 +1543,9 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
+>                         ret = cloned;
+>                         goto done;
+>                 }
+> +               ret = fops_copy_file_checks(file_in, file_out, flags);
+> +               if (ret)
+> +                       return ret;
+
+and you don't need this here (right?)
+
+and you can remove the checks for same i_sb and same copy_file_range
+op that were already tested from vfs_copy_file_range().
+
+Hope I am not missing anything.
+
+Thanks,
+Amir.
