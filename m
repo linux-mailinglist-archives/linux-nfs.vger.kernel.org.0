@@ -2,78 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84D4F31DC9D
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Feb 2021 16:45:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3171631DD24
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Feb 2021 17:19:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233476AbhBQPoP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Feb 2021 10:44:15 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:32953 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233758AbhBQPoM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Feb 2021 10:44:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613576566;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZcLEsH31tuwsh/4DX1Q5nBlV7w+3XG/SIyqKK0hnVM0=;
-        b=hkCVrxYUxXy06vRNVMxv1Fe9AOz4nJxocpvzEXRlhKSZTgq9xmFv4Yn96u44yaWdxPL2UE
-        OhhtxCgpjhoS0s9lZfqQRY7WsyeUTGamajmRrCRSYdejb37vQNfR9AxvQ4JrsuX2V7nl9V
-        deUnwuB8t8KSAsHTys7fGq72LeQr7kA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-droMoF7zMQSpyOmj-QQ_fw-1; Wed, 17 Feb 2021 10:42:42 -0500
-X-MC-Unique: droMoF7zMQSpyOmj-QQ_fw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0E76A0BC8;
-        Wed, 17 Feb 2021 15:42:40 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-119-68.rdu2.redhat.com [10.10.119.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 35BDC5C3E4;
-        Wed, 17 Feb 2021 15:42:34 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAOg9mSQYBjnMsDj5pMd6MOGTY5w_ZR=pw7VRYKfP5ZwmHBj2=Q@mail.gmail.com>
-References: <CAOg9mSQYBjnMsDj5pMd6MOGTY5w_ZR=pw7VRYKfP5ZwmHBj2=Q@mail.gmail.com> <161340385320.1303470.2392622971006879777.stgit@warthog.procyon.org.uk> <161340389201.1303470.14353807284546854878.stgit@warthog.procyon.org.uk> <20210216103215.GB27714@lst.de> <20210216132251.GI2858050@casper.infradead.org>
-To:     Mike Marshall <hubcap@omnibond.com>
-Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Trond Myklebust <trondmy@hammerspace.com>,
+        id S233833AbhBQQSk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Feb 2021 11:18:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233070AbhBQQSi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Feb 2021 11:18:38 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA9CFC061574;
+        Wed, 17 Feb 2021 08:17:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=VfrUoqOUihVjvmCvSLv9mlyS0o00nDdsmdN3qvEoA00=; b=cSa+ST1CT82tnPFcDFN6385/gf
+        fX5ue2PIy1WjeGVEzkDGZMTsFzLmqC7c+WYAQLnYutzJbsajtl2Jh42nC0w4lqBcrHrlZkXESMSyp
+        xlcoDR3Wp9R6AuEdsi/ty3h3DDMfecTJMK444IMwUHEhC9geKbbRqshaygCMw7xBUsOlIbyDSduNy
+        dmDRIklz83kii8sK5gQXi1rPYZtyfyYvM4vvxJRvwGML8x9D7AnF0WgJAsIE2nAV7DOSN//6W8z37
+        7Iss1QwTmm8FBDB49gMScTNNT7Ln/Ocl0tdU2/isZxvLSBXMpl/SURMPrdCcTpYsHSkF0tAUW3gJk
+        KVjidQgA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lCPSg-000e1H-2j; Wed, 17 Feb 2021 16:14:28 +0000
+Date:   Wed, 17 Feb 2021 16:13:58 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-mm <linux-mm@kvack.org>, linux-cachefs@redhat.com,
-        linux-afs@lists.infradead.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-cifs@vger.kernel.org,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        V9FS Developers <v9fs-developer@lists.sourceforge.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jeff Layton <jlayton@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@redhat.com>,
         David Wysochanski <dwysocha@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
+        linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 03/33] mm: Implement readahead_control pageset expansion
+Message-ID: <20210217161358.GM2858050@casper.infradead.org>
+References: <161340385320.1303470.2392622971006879777.stgit@warthog.procyon.org.uk>
+ <161340389201.1303470.14353807284546854878.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1586930.1613576553.1@warthog.procyon.org.uk>
-Date:   Wed, 17 Feb 2021 15:42:33 +0000
-Message-ID: <1586931.1613576553@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <161340389201.1303470.14353807284546854878.stgit@warthog.procyon.org.uk>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Mike Marshall <hubcap@omnibond.com> wrote:
+On Mon, Feb 15, 2021 at 03:44:52PM +0000, David Howells wrote:
+> +++ b/include/linux/pagemap.h
+> @@ -761,6 +761,8 @@ extern void __delete_from_page_cache(struct page *page, void *shadow);
+>  int replace_page_cache_page(struct page *old, struct page *new, gfp_t gfp_mask);
+>  void delete_from_page_cache_batch(struct address_space *mapping,
+>  				  struct pagevec *pvec);
+> +void readahead_expand(struct readahead_control *ractl,
+> +		      loff_t new_start, size_t new_len);
 
-> I plan to try and use readahead_expand in Orangefs...
+If we're revising this patchset, I'd rather this lived with the other
+readahead declarations, ie after the definition of readahead_control.
 
-Would it help if I shuffled the readahead_expand patch to the bottom of the
-pack?
+> +	/* Expand the trailing edge upwards */
+> +	while (ractl->_nr_pages < new_nr_pages) {
+> +		unsigned long index = ractl->_index + ractl->_nr_pages;
+> +		struct page *page = xa_load(&mapping->i_pages, index);
+> +
+> +		if (page && !xa_is_value(page))
+> +			return; /* Page apparently present */
+> +
+> +		page = __page_cache_alloc(gfp_mask);
+> +		if (!page)
+> +			return;
+> +		if (add_to_page_cache_lru(page, mapping, index, gfp_mask) < 0) {
+> +			put_page(page);
+> +			return;
+> +		}
+> +		ractl->_nr_pages++;
+> +	}
 
-David
+We're defeating the ondemand_readahead() algorithm here.  Let's suppose
+userspace is doing 64kB reads, the filesystem is OrangeFS which only
+wants to do 4MB reads, the page cache is initially empty and there's
+only one thread doing a sequential read.  ondemand_readahead() calls
+get_init_ra_size() which tells it to allocate 128kB and set the async
+marker at 64kB.  Then orangefs calls readahead_expand() to allocate the
+remainder of the 4MB.  After the app has read the first 64kB, it comes
+back to read the next 64kB, sees the readahead marker and tries to trigger
+the next batch of readahead, but it's already present, so it does nothing
+(see page_cache_ra_unbounded() for what happens with pages present).
 
+Then it keeps going through the 4MB that's been read, not seeing any more
+readahead markers, gets to 4MB and asks for ... 256kB?  Not quite sure.
+Anyway, it then has to wait for the next 4MB because the readahead didn't
+overlap with the application processing.
+
+So readahead_expand() needs to adjust the file's f_ra so that when the
+application gets to 64kB, it kicks off the readahead of 4MB-8MB chunk (and
+then when we get to 4MB+256kB, it kicks off the readahead of 8MB-12MB,
+and so on).
+
+Unless someone sees a better way to do this?  I don't
+want to inadvertently break POSIX_FADV_WILLNEED which calls
+force_page_cache_readahead() and should not perturb the kernel's
+ondemand algorithm.  Perhaps we need to add an 'ra' pointer to the
+ractl to indicate whether the file_ra_state should be updated by
+readahead_expand()?
