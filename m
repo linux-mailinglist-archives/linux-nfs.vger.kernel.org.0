@@ -2,205 +2,291 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AA1631D4B2
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Feb 2021 05:47:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75F4831D651
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Feb 2021 09:11:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230526AbhBQEqm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Feb 2021 23:46:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37140 "EHLO
+        id S231948AbhBQIJt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Feb 2021 03:09:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229623AbhBQEqe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Feb 2021 23:46:34 -0500
-Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F286EC061574
-        for <linux-nfs@vger.kernel.org>; Tue, 16 Feb 2021 20:45:53 -0800 (PST)
-Received: by mail-vs1-xe32.google.com with SMTP id u7so5976659vsp.12
-        for <linux-nfs@vger.kernel.org>; Tue, 16 Feb 2021 20:45:53 -0800 (PST)
+        with ESMTP id S231937AbhBQIJn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Feb 2021 03:09:43 -0500
+Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71BD2C061574;
+        Wed, 17 Feb 2021 00:09:02 -0800 (PST)
+Received: by mail-io1-xd30.google.com with SMTP id u8so12884234ior.13;
+        Wed, 17 Feb 2021 00:09:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uktxjKQwz4TfwBjCYOOJzA5Rs1qSh3+bpu7dP8/xG98=;
-        b=Ob7vhkngcs5SWjWVOtXougGOBUPgdqIiyzX5uKLWMlq6lQTrZ2PUjthoQjHous+cx7
-         d5pWfI4ADzGXpZb/8wNemgCNGcoJK7h2gX/SNiWUbKVfPuoN7gLueEhhCh06bQp2D4kj
-         nO7uch7pPugyX+oLuzb8DPlSpoKToPbcLYd6M=
+        bh=60b9v0H0STWe9jp9TgGW0msx3Kevx/T0ZBvLTkBeFkY=;
+        b=qqBJbXEv0eN5xb2J43Y0tqEdun/Qg9WrPKKmzhltkvdJC+PColXrzdz55p9Us96LG6
+         T4Vx1MI+0Oy0dGn7CQsVl7fUJFIvmmQRlCGqDWIA2skLN0I9o6Hw7O7duA2OBvLZka5S
+         NCd+BhxX5/IlyD/rSkqukyZPZ+2z1QfpPNIyz8d55HysVnjEGajZ+VZB88FV0SyvbKj8
+         M1RuivuvPxYRpZQMIkMNAYQL2TA4soN18OTLnVD1tNS/zeDeM00h+F7QrlVYEFSDu7ng
+         JEOraTd+Xhw56CnPU+53i9z1hypQSIhOzzynqgy/RhVUE61yRLSa1Ez4VvzTDtoQ0fvc
+         9BxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uktxjKQwz4TfwBjCYOOJzA5Rs1qSh3+bpu7dP8/xG98=;
-        b=P2+QB2CLnxyhUjN16K3b00NbVinfQoa2igUhDQxJV8J0yPpLnXaobhY5wZ0MAeQ+5J
-         AW1lD4n8quqJhHYtK8JY5eRsqQRMfOkldrPevrsjq71Ozyy0mhS+SgqXTE3GBBZp08IG
-         LrfQ6vvoBigohzvdmm7ekXgWgDsYc1MFad0W2KclwlDWpa9Ekr8bwW8OaCZGnXbvUAZZ
-         gtbHFivvPbKfHpyIrKSNoUDM3zA/lJv3RLEY4GUOss0j0jj2MlHdeXMI/Fdz43mkxBhF
-         eCO7bW38L5vVpe1zWaUk6ZBW0Y4iriF0129AZMMB3eNEDbK6WrKBcpKOfEthF3XqQWZn
-         9Y1A==
-X-Gm-Message-State: AOAM532Q3a/FUFkMpMnC05c8bBIbD6+w9fHLbtw8ChzaiP4Vb0ZcAKTy
-        g1L8ySUEkIcFyeWks1pvv/3l5S3aDRXxX2Ww9Zivqg==
-X-Google-Smtp-Source: ABdhPJxI8u0RvnOp3BypDJ/HZUdf2uePEnqUeAieLHAvwOaNch0GOwf7JSOHb1NAP4ygE7Ttv2XRYC6P0KVm2+/QFtU=
-X-Received: by 2002:a67:8945:: with SMTP id l66mr13422008vsd.48.1613537153038;
- Tue, 16 Feb 2021 20:45:53 -0800 (PST)
+        bh=60b9v0H0STWe9jp9TgGW0msx3Kevx/T0ZBvLTkBeFkY=;
+        b=gUkyVk8sG6QZqpVnJfy6iQQoxUnA1XbkW2b2buwy8V9Mtu2LuXxoMrezV9sbFZ19th
+         pSEkxgYyp+R/0g2AugqZwTeyt3CLijjPsHxl+xUxTTg4ljdhR1vFf7CjGcJrUjuWZD2Y
+         09mxYbakpSrOpGgxgzyYUN2Bqgt2ivHtI18+q2Lmnn4W0wo5w4vz12viLsUqYXt4rMK0
+         KgFkyyci7UyM1Y0JavwEDXQjOiM0mkp7rJZRvs6+Hzdti5RKqiWaRx3cedjpgexYMYI2
+         7QfOxXZn8tR9b25tcH0s5E26u6hIMZ3qbjPr6gMd7LulJWErZhiRscEK0WN6H3VSSdXc
+         6WQQ==
+X-Gm-Message-State: AOAM531idI9I83ErwLEv0+w8ENn7yHQ86JqFlcHpfYS15H3qYeeluiiO
+        U9Ti5uIv2Z7IuJ5n7JXvz4kIXIofE3AEgrNd8tA=
+X-Google-Smtp-Source: ABdhPJwDmtn78XWgpYA4mv3JnlJ5W8Lb/VJcBqNsSlA1iwnoNnnCX3tidGHS87OppI+gqgoUuErowEgJispdhvXALxI=
+X-Received: by 2002:a02:bb16:: with SMTP id y22mr6497672jan.123.1613549341820;
+ Wed, 17 Feb 2021 00:09:01 -0800 (PST)
 MIME-Version: 1.0
 References: <CAOQ4uxiFGjdvX2-zh5o46pn7RZhvbGHH0wpzLPuPOom91FwWeQ@mail.gmail.com>
- <20210215154317.8590-1-lhenriques@suse.de>
-In-Reply-To: <20210215154317.8590-1-lhenriques@suse.de>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 17 Feb 2021 12:45:41 +0800
-Message-ID: <CANMq1KCWF=yucGZ_DizvdzytW8RCXKPaQeC9huML2FJkqNWjQw@mail.gmail.com>
+ <20210215154317.8590-1-lhenriques@suse.de> <CAOQ4uxgjcCrzDkj-0ukhvHRgQ-D+A3zU5EAe0A=s1Gw2dnTJSA@mail.gmail.com>
+ <73ab4951f48d69f0183548c7a82f7ae37e286d1c.camel@hammerspace.com>
+ <CAOQ4uxgPtqG6eTi2AnAV4jTAaNDbeez+Xi2858mz1KLGMFntfg@mail.gmail.com>
+ <92d27397479984b95883197d90318ee76995b42e.camel@hammerspace.com>
+ <CAOQ4uxjUf15fDjz11pCzT3GkFmw=2ySXR_6XF-Bf-TfUwpj77Q@mail.gmail.com>
+ <87r1lgjm7l.fsf@suse.de> <CAOQ4uxgucdN8hi=wkcvnFhBoZ=L5=ZDc7-6SwKVHYaRODdcFkg@mail.gmail.com>
+ <87blckj75z.fsf@suse.de> <CAOQ4uxiiy_Jdi3V1ait56=zfDQRBu_5gb+UsCo8GjMZ6XRhozw@mail.gmail.com>
+ <874kibkflh.fsf@suse.de> <CAOQ4uxgRK3vXH8uAJKy8cFLL8siKnMMN8h6hx4yZeA5Fe0ZZYA@mail.gmail.com>
+ <CAFX2Jfk0X=jKBpOzjq7k-U6SEwFn1Atw62BK2DzavM8XgeLUaQ@mail.gmail.com>
+ <CAH2r5mvybG3mRUfHUub9B+nk5WrQ5Fvzu5pZ+ZynqZg4c4ct2A@mail.gmail.com>
+ <CAOQ4uxhqaTUwD8Lw+9HWWj61EXRv4X-eE3u4DFeWnv_VOUZF5A@mail.gmail.com> <CAH2r5msmtuk0f8FuZxdRBQ2d_VKXexctcP0OmnLXoDEBien-nQ@mail.gmail.com>
+In-Reply-To: <CAH2r5msmtuk0f8FuZxdRBQ2d_VKXexctcP0OmnLXoDEBien-nQ@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 17 Feb 2021 10:08:49 +0200
+Message-ID: <CAOQ4uxii=7KUKv1w32VbjkwS+Z1a0ge0gezNzpn_BiY6MFWkpA@mail.gmail.com>
 Subject: Re: [PATCH v2] vfs: prevent copy_file_range to copy across devices
-To:     Luis Henriques <lhenriques@suse.de>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <sfrench@samba.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ian Lance Taylor <iant@google.com>,
-        Luis Lozano <llozano@chromium.org>, ceph-devel@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org
+To:     Steve French <smfrench@gmail.com>
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Luis Henriques <lhenriques@suse.de>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
+        "drinkcat@chromium.org" <drinkcat@chromium.org>,
+        "iant@google.com" <iant@google.com>,
+        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "llozano@chromium.org" <llozano@chromium.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "miklos@szeredi.hu" <miklos@szeredi.hu>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "dchinner@redhat.com" <dchinner@redhat.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "sfrench@samba.org" <sfrench@samba.org>,
+        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Feb 15, 2021 at 11:42 PM Luis Henriques <lhenriques@suse.de> wrote:
+On Tue, Feb 16, 2021 at 11:15 PM Steve French <smfrench@gmail.com> wrote:
 >
-> Nicolas Boichat reported an issue when trying to use the copy_file_range
-> syscall on a tracefs file.  It failed silently because the file content is
-> generated on-the-fly (reporting a size of zero) and copy_file_range needs
-> to know in advance how much data is present.
-
-Not sure if you have the whole history, these links and discussion can
-help if you want to expand on the commit message:
-[1] http://issuetracker.google.com/issues/178332739
-[2] https://lkml.org/lkml/2021/1/25/64
-[3] https://lkml.org/lkml/2021/1/26/1736
-[4] https://patchwork.kernel.org/project/linux-fsdevel/cover/20210212044405.4120619-1-drinkcat@chromium.org/
-
-> This commit restores the cross-fs restrictions that existed prior to
-> 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") and
-> removes generic_copy_file_range() calls from ceph, cifs, fuse, and nfs.
-
-It goes beyond that, I think this also prevents copies within the same
-FS if copy_file_range is not implemented. Which is IMHO a good thing
-since this has been broken on procfs and friends ever since
-copy_file_range was implemented (but I assume that nobody ever hit
-that before cross-fs became available).
-
+> On Tue, Feb 16, 2021 at 1:40 PM Amir Goldstein <amir73il@gmail.com> wrote:
+> >
+> > On Tue, Feb 16, 2021 at 9:31 PM Steve French <smfrench@gmail.com> wrote:
+> > >
+> > > On Tue, Feb 16, 2021 at 1:29 PM Anna Schumaker
+> > > <anna.schumaker@netapp.com> wrote:
+> > > >
+> > > > On Tue, Feb 16, 2021 at 2:22 PM Amir Goldstein <amir73il@gmail.com> wrote:
+> > > > >
+> > > > > On Tue, Feb 16, 2021 at 8:54 PM Luis Henriques <lhenriques@suse.de> wrote:
+> > > > > >
+> > > > > > Amir Goldstein <amir73il@gmail.com> writes:
+> > > > > >
+> > > > > > > On Tue, Feb 16, 2021 at 6:41 PM Luis Henriques <lhenriques@suse.de> wrote:
+> > > > > > >>
+> > > > > > >> Amir Goldstein <amir73il@gmail.com> writes:
+> > > > > > >>
+> > > > > > >> >> Ugh.  And I guess overlayfs may have a similar problem.
+> > > > > > >> >
+> > > > > > >> > Not exactly.
+> > > > > > >> > Generally speaking, overlayfs should call vfs_copy_file_range()
+> > > > > > >> > with the flags it got from layer above, so if called from nfsd it
+> > > > > > >> > will allow cross fs copy and when called from syscall it won't.
+> > > > > > >> >
+> > > > > > >> > There are some corner cases where overlayfs could benefit from
+> > > > > > >> > COPY_FILE_SPLICE (e.g. copy from lower file to upper file), but
+> > > > > > >> > let's leave those for now. Just leave overlayfs code as is.
+> > > > > > >>
+> > > > > > >> Got it, thanks for clarifying.
+> > > > > > >>
+> > > > > > >> >> > This is easy to solve with a flag COPY_FILE_SPLICE (or something) that
+> > > > > > >> >> > is internal to kernel users.
+> > > > > > >> >> >
+> > > > > > >> >> > FWIW, you may want to look at the loop in ovl_copy_up_data()
+> > > > > > >> >> > for improvements to nfsd_copy_file_range().
+> > > > > > >> >> >
+> > > > > > >> >> > We can move the check out to copy_file_range syscall:
+> > > > > > >> >> >
+> > > > > > >> >> >         if (flags != 0)
+> > > > > > >> >> >                 return -EINVAL;
+> > > > > > >> >> >
+> > > > > > >> >> > Leave the fallback from all filesystems and check for the
+> > > > > > >> >> > COPY_FILE_SPLICE flag inside generic_copy_file_range().
+> > > > > > >> >>
+> > > > > > >> >> Ok, the diff bellow is just to make sure I understood your suggestion.
+> > > > > > >> >>
+> > > > > > >> >> The patch will also need to:
+> > > > > > >> >>
+> > > > > > >> >>  - change nfs and overlayfs calls to vfs_copy_file_range() so that they
+> > > > > > >> >>    use the new flag.
+> > > > > > >> >>
+> > > > > > >> >>  - check flags in generic_copy_file_checks() to make sure only valid flags
+> > > > > > >> >>    are used (COPY_FILE_SPLICE at the moment).
+> > > > > > >> >>
+> > > > > > >> >> Also, where should this flag be defined?  include/uapi/linux/fs.h?
+> > > > > > >> >
+> > > > > > >> > Grep for REMAP_FILE_
+> > > > > > >> > Same header file, same Documentation rst file.
+> > > > > > >> >
+> > > > > > >> >>
+> > > > > > >> >> Cheers,
+> > > > > > >> >> --
+> > > > > > >> >> Luis
+> > > > > > >> >>
+> > > > > > >> >> diff --git a/fs/read_write.c b/fs/read_write.c
+> > > > > > >> >> index 75f764b43418..341d315d2a96 100644
+> > > > > > >> >> --- a/fs/read_write.c
+> > > > > > >> >> +++ b/fs/read_write.c
+> > > > > > >> >> @@ -1383,6 +1383,13 @@ ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
+> > > > > > >> >>                                 struct file *file_out, loff_t pos_out,
+> > > > > > >> >>                                 size_t len, unsigned int flags)
+> > > > > > >> >>  {
+> > > > > > >> >> +       if (!(flags & COPY_FILE_SPLICE)) {
+> > > > > > >> >> +               if (!file_out->f_op->copy_file_range)
+> > > > > > >> >> +                       return -EOPNOTSUPP;
+> > > > > > >> >> +               else if (file_out->f_op->copy_file_range !=
+> > > > > > >> >> +                        file_in->f_op->copy_file_range)
+> > > > > > >> >> +                       return -EXDEV;
+> > > > > > >> >> +       }
+> > > > > > >> >
+> > > > > > >> > That looks strange, because you are duplicating the logic in
+> > > > > > >> > do_copy_file_range(). Maybe better:
+> > > > > > >> >
+> > > > > > >> > if (WARN_ON_ONCE(flags & ~COPY_FILE_SPLICE))
+> > > > > > >> >         return -EINVAL;
+> > > > > > >> > if (flags & COPY_FILE_SPLICE)
+> > > > > > >> >        return do_splice_direct(file_in, &pos_in, file_out, &pos_out,
+> > > > > > >> >                                  len > MAX_RW_COUNT ? MAX_RW_COUNT : len, 0);
+> > > > > > >>
+> > > > > > >> My initial reasoning for duplicating the logic in do_copy_file_range() was
+> > > > > > >> to allow the generic_copy_file_range() callers to be left unmodified and
+> > > > > > >> allow the filesystems to default to this implementation.
+> > > > > > >>
+> > > > > > >> With this change, I guess that the calls to generic_copy_file_range() from
+> > > > > > >> the different filesystems can be dropped, as in my initial patch, as they
+> > > > > > >> will always get -EINVAL.  The other option would be to set the
+> > > > > > >> COPY_FILE_SPLICE flag in those calls, but that would get us back to the
+> > > > > > >> problem we're trying to solve.
+> > > > > > >
+> > > > > > > I don't understand the problem.
+> > > > > > >
+> > > > > > > What exactly is wrong with the code I suggested?
+> > > > > > > Why should any filesystem be changed?
+> > > > > > >
+> > > > > > > Maybe I am missing something.
+> > > > > >
+> > > > > > Ok, I have to do a full brain reboot and start all over.
+> > > > > >
+> > > > > > Before that, I picked the code you suggested and tested it.  I've mounted
+> > > > > > a cephfs filesystem and used xfs_io to execute a 'copy_range' command
+> > > > > > using /sys/kernel/debug/sched_features as source.  The result was a
+> > > > > > 0-sized file in cephfs.  And the reason is thevfs_copy_file_range()
+> > > > > > early exit in:
+> > > > > >
+> > > > > >         if (len == 0)
+> > > > > >                 return 0;
+> > > > > >
+> > > > > > 'len' is set in generic_copy_file_checks().
+> > > > >
+> > > > > Good point.. I guess we will need to do all the checks earlier in
+> > > > > generic_copy_file_checks() including the logic of:
+> > > > >
+> > > > >         if (file_in->f_op->remap_file_range &&
+> > > > >             file_inode(file_in)->i_sb == file_inode(file_out)->i_sb)
+> > > > >
+> > > > >
+> > > > > >
+> > > > > > This means that we're not solving the original problem anymore (probably
+> > > > > > since v1 of this patch, haven't checked).
+> > > > > >
+> > > > > > Also, re-reading Trond's emails, I read: "... also disallowing the copy
+> > > > > > from, say, an XFS formatted partition to an ext4 partition".  Isn't that
+> > > > > > *exactly* what we're trying to do here?  I.e. _prevent_ these copies from
+> > > > > > happening so that tracefs files can't be CFR'ed?
+> > > > > >
+> > > > >
+> > > > > We want to address the report which means calls coming from
+> > > > > copy_file_range() syscall.
+> > > > >
+> > > > > Trond's use case is vfs_copy_file_range() coming from nfsd.
+> > > > > When he writes about copy from XFS to ext4, he means an
+> > > > > NFS client is issuing server side copy (on same or different NFS mounts)
+> > > > > and the NFS server is executing nfsd_copy_file_range() on a source
+> > > > > file that happens to be on XFS and destination happens to be on ext4.
+> > > >
+> > > > NFS also supports a server-to-server copy where the destination server
+> > > > mounts the source server and reads the data to be copied. Please don't
+> > > > break that either :)
+> > >
+> >
+> > As long as the copy is via nfsd_copy_file_range() and not from the syscall
+> > it should not regress.
+> >
+> > > This is a case we will eventually need to support for cifs (SMB3) as well.
+> > >
+> >
+> > samba already does server side copy very well without needing any support
+> > from the kernel.
+> >
+> > nfsd also doesn't *need* to use vfs_copy_file_range() it can use kernel APIs
+> > like the loop in ovl_copy_up_data(). But it does, so we should not regress it.
+> >
+> > samba/nfsd can try to use copy_file_range() and it will work if the
+> > source/target
+> > fs support it. Otherwise, the server can perfectly well do the copy via other
+> > available interfaces, just like userspace copy tools.
 >
-> Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
-> Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
-> Cc: Nicolas Boichat <drinkcat@chromium.org>
+> I was thinking about cifsd ("ksmbd") the kernel server from
+> Namjae/Sergey etc. which is making excellent progress.
+>
 
-You could replace that with Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+You are missing my point.
+Never mind which server. The server does not *need* to rely on
+vfs_copy_file_range() to copy files from XFS to ext4.
+The server is very capable of implementing the fallback generic copy
+in case source/target fs do not support native {copy,remap}_file_range().
 
-> Signed-off-by: Luis Henriques <lhenriques@suse.de>
-> ---
-> Changes since v1 (after Amir review)
-> - restored do_copy_file_range() helper
-> - return -EOPNOTSUPP if fs doesn't implement CFR
-> - updated commit description
->
->  fs/ceph/file.c     | 21 +++-----------------
->  fs/cifs/cifsfs.c   |  3 ---
->  fs/fuse/file.c     | 21 +++-----------------
->  fs/nfs/nfs4file.c  | 20 +++----------------
->  fs/read_write.c    | 49 ++++++++++------------------------------------
->  include/linux/fs.h |  3 ---
->  6 files changed, 19 insertions(+), 98 deletions(-)
->
-[snip]
-> diff --git a/fs/read_write.c b/fs/read_write.c
-> index 75f764b43418..b217cd62ae0d 100644
-> --- a/fs/read_write.c
-> +++ b/fs/read_write.c
-> @@ -1358,40 +1358,12 @@ COMPAT_SYSCALL_DEFINE4(sendfile64, int, out_fd, int, in_fd,
->  }
->  #endif
->
-> -/**
-> - * generic_copy_file_range - copy data between two files
-> - * @file_in:   file structure to read from
-> - * @pos_in:    file offset to read from
-> - * @file_out:  file structure to write data to
-> - * @pos_out:   file offset to write data to
-> - * @len:       amount of data to copy
-> - * @flags:     copy flags
-> - *
-> - * This is a generic filesystem helper to copy data from one file to another.
-> - * It has no constraints on the source or destination file owners - the files
-> - * can belong to different superblocks and different filesystem types. Short
-> - * copies are allowed.
-> - *
-> - * This should be called from the @file_out filesystem, as per the
-> - * ->copy_file_range() method.
-> - *
-> - * Returns the number of bytes copied or a negative error indicating the
-> - * failure.
-> - */
-> -
-> -ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
-> -                               struct file *file_out, loff_t pos_out,
-> -                               size_t len, unsigned int flags)
-> -{
-> -       return do_splice_direct(file_in, &pos_in, file_out, &pos_out,
-> -                               len > MAX_RW_COUNT ? MAX_RW_COUNT : len, 0);
-> -}
-> -EXPORT_SYMBOL(generic_copy_file_range);
-> -
->  static ssize_t do_copy_file_range(struct file *file_in, loff_t pos_in,
->                                   struct file *file_out, loff_t pos_out,
->                                   size_t len, unsigned int flags)
->  {
-> +       ssize_t ret = -EXDEV;
-> +
->         /*
->          * Although we now allow filesystems to handle cross sb copy, passing
->          * a file of the wrong filesystem type to filesystem driver can result
-> @@ -1400,14 +1372,14 @@ static ssize_t do_copy_file_range(struct file *file_in, loff_t pos_in,
->          * several different file_system_type structures, but they all end up
->          * using the same ->copy_file_range() function pointer.
->          */
-> -       if (file_out->f_op->copy_file_range &&
-> -           file_out->f_op->copy_file_range == file_in->f_op->copy_file_range)
-> -               return file_out->f_op->copy_file_range(file_in, pos_in,
-> -                                                      file_out, pos_out,
-> -                                                      len, flags);
-> +       if (!file_out->f_op->copy_file_range)
-> +               ret = -EOPNOTSUPP;
+w.r.t semantics of copy_file_range() syscall vs. the fallback to userespace
+'cp' tool (check source file size before copy or not), please note that the
+semantics of CIFS_IOC_COPYCHUNK_FILE are that of the former:
 
-This doesn't work as the 0-filesize check is done before that in
-vfs_copy_file_range (so the syscall still returns 0, works fine if you
-comment out `if (len == 0)`).
+        rc = cifs_file_copychunk_range(xid, src_file.file, 0, dst_file, 0,
+                                        src_inode->i_size, 0);
 
-Also, you need to check for file_in->f_op->copy_file_range instead,
-the problem is if the _input_ filesystem doesn't report sizes or can't
-seek properly.
+It will copy zero bytes if advertised source file size if zero.
 
-> +       else if (file_out->f_op->copy_file_range == file_in->f_op->copy_file_range)
-> +               ret = file_out->f_op->copy_file_range(file_in, pos_in,
-> +                                                     file_out, pos_out,
-> +                                                     len, flags);
->
-> -       return generic_copy_file_range(file_in, pos_in, file_out, pos_out, len,
-> -                                      flags);
-> +       return ret;
->  }
->
->  /*
-> @@ -1514,8 +1486,7 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
->         }
->
->         ret = do_copy_file_range(file_in, pos_in, file_out, pos_out, len,
-> -                               flags);
-> -       WARN_ON_ONCE(ret == -EOPNOTSUPP);
-> +                                flags);
->  done:
->         if (ret > 0) {
->                 fsnotify_access(file_in);
+NFS server side copy semantics are currently de-facto the same
+because both the client and the server will have to pass through this
+line in vfs_copy_file_range():
+
+        if (len == 0)
+                return 0;
+
+IMO, and this opinion was voiced by several other filesystem developers,
+the shortend copy semantics are the correct semantics for copy_file_range()
+syscall as well as for vfs_copy_file_range() for internal kernel users.
+
+I guess what this means is that if the 'cp' tool ever tries an opportunistic
+copy_file_range() syscall (e.g. --cfr=auto), it may result in zero size copy.
+
+Thanks,
+Amir.
