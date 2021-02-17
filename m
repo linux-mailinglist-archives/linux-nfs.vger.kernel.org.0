@@ -2,88 +2,106 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32CAE31E2A5
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Feb 2021 23:42:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36C2831E2A7
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Feb 2021 23:42:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233940AbhBQWlu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Feb 2021 17:41:50 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:58049 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234039AbhBQWge (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Feb 2021 17:36:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613601299;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zG7FxA5GztnCQS45ZSuVJT+MqV0RLaZ+4XZ4Hnsp3v0=;
-        b=OURscICE/O/oj5jQSHNeBiCWvlUDQ4l42kZioxcjwghgIyjrA957oHBaU9QhhVXNPoJXef
-        NyW8QlG8TvrcF2/6BhRCU6suKnDijcUuQTqm3Hmdo8u4iL1gANbkJhz9P+p9bemYsnkblm
-        lngxvKLFzbYQFPLVO8vC+/NZYaeuC3c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-96-q2CSv0q5Mky64VzDZGuXqA-1; Wed, 17 Feb 2021 17:34:57 -0500
-X-MC-Unique: q2CSv0q5Mky64VzDZGuXqA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BEC63189CD2E;
-        Wed, 17 Feb 2021 22:34:55 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-119-68.rdu2.redhat.com [10.10.119.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D0F6E60C61;
-        Wed, 17 Feb 2021 22:34:40 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20210217161358.GM2858050@casper.infradead.org>
-References: <20210217161358.GM2858050@casper.infradead.org> <161340385320.1303470.2392622971006879777.stgit@warthog.procyon.org.uk> <161340389201.1303470.14353807284546854878.stgit@warthog.procyon.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com, Christoph Hellwig <hch@lst.de>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@redhat.com>,
-        David Wysochanski <dwysocha@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/33] mm: Implement readahead_control pageset expansion
+        id S231340AbhBQWly (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Feb 2021 17:41:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233924AbhBQWij (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Feb 2021 17:38:39 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3F47C061574;
+        Wed, 17 Feb 2021 14:37:58 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id h10so14314438edl.6;
+        Wed, 17 Feb 2021 14:37:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KVIoHO4yLgyzmuWH+SOf2f2/4NBVU+UwahR9cFp89G0=;
+        b=gBMuwDwTj8uaEWUe4VLHWhZOehWRGkocdAulowPof2NqCQJ7xS4triz+0uROQYhUfg
+         iOVjBp3Frm5cnLd2jIz5Cihst3x80KvnExQqB+on91GkQysv+1l9hYHJf1v3Vrtizwc/
+         IKx3LZjTp8/DqxoOQGNQgsgcnFFoioG506YcG4ElVTILk4tmoe274DyaOS4wY95/5ggT
+         9H/9S2PMuBurH9d0KT6D5kmUf5VwQyLvZ3nJlIzszmxxWdzuL4DIVZYxW6WD/sSuFYJA
+         q44gKD4oq8axRIdTMPQ5/SedivTm0b6J+R4rpLvQWM5FO4g0wH6Q3rk8PZ6rTrlt9PDd
+         zpOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KVIoHO4yLgyzmuWH+SOf2f2/4NBVU+UwahR9cFp89G0=;
+        b=rGbGm+4f4FN8rsY7r8/NLyOL27na/4mPiHEtHwEUtnNwox30tAv2jtJwKDvogkRZXT
+         4PIEDgM2TZu7z4bUgZZOdcdRgMWzAdZyokJKlc4KiDqtqwOpoj0uXSEaHF1gieSQDgWs
+         o9U6DWf3Y4yeZ/IHpgpTKnlWHqK2gaOY28iARBLZ1lUEfu0DF9WBEQvDmJRd7AR/aB/W
+         GL5HwFKUkSxX57j+iIR6ergBHqLJEejTbR3VXvYalo9Uwvr1Fcq0214oYf8/VVWKnTZ2
+         vhVoLte6oUjjKFOH0LYjaEFaeFgLgdJ6BbdlfW4wRofpy9AJoGuwVhLq1VU+laDXqfd5
+         olsg==
+X-Gm-Message-State: AOAM530XXi4JEVFQcckzaTk6eJjzxv55txuJugaM2DQjQAvjpH1nzgZr
+        McMXD/B/NynLCa3QZ07gcVBLqokRWPLhLcDJ71z66jzTBVg=
+X-Google-Smtp-Source: ABdhPJwR5ek1UbBEt2DjTRvajw5A6WVzQTWu4MPdbpvbfvTWnOc3wy+brBszgdfb5kkGLLFN6b7AJMKVpSm551weorM=
+X-Received: by 2002:a05:6402:10c3:: with SMTP id p3mr1004747edu.67.1613601477532;
+ Wed, 17 Feb 2021 14:37:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1901186.1613601279.1@warthog.procyon.org.uk>
-Date:   Wed, 17 Feb 2021 22:34:39 +0000
-Message-ID: <1901187.1613601279@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <57f67888-160f-891c-6217-69e174d7e42b@rothenpieler.org>
+ <CAN-5tyE4OyNOZRXGnyONcdGsHaRAF39LSE5416Kj964m-+_C2A@mail.gmail.com>
+ <81cb9aef-c10d-f11c-42c0-5144ee2608bc@rothenpieler.org> <0e49471c-e640-a331-c7b4-4e0a49a7a967@rothenpieler.org>
+In-Reply-To: <0e49471c-e640-a331-c7b4-4e0a49a7a967@rothenpieler.org>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Wed, 17 Feb 2021 17:37:46 -0500
+Message-ID: <CAN-5tyG9Ly9tqKxguFNhg_PGXCxE2=Zn6LQPLY59twdVkD3Auw@mail.gmail.com>
+Subject: Re: copy_file_range() infinitely hangs on NFSv4.2 over RDMA
+To:     Timo Rothenpieler <timo@rothenpieler.org>
+Cc:     linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
+On Tue, Feb 16, 2021 at 5:27 PM Timo Rothenpieler <timo@rothenpieler.org> wrote:
+>
+> On 16.02.2021 21:37, Timo Rothenpieler wrote:
+> > I can't get a network (I assume just TCP/20049 is fine, and not also
+> > some RDMA trace?) right now, but I will once a user has finished their
+> > work on the machine.
+>
+> There wasn't any TCP traffic to dump on the NFSoRDMA Port, probably
+> because everything is handled via RDMA/IB.
 
-> We're defeating the ondemand_readahead() algorithm here.  Let's suppose
-> userspace is doing 64kB reads, the filesystem is OrangeFS which only
-> wants to do 4MB reads, the page cache is initially empty and there's
-> only one thread doing a sequential read.  ondemand_readahead() calls
-> get_init_ra_size() which tells it to allocate 128kB and set the async
-> marker at 64kB.  Then orangefs calls readahead_expand() to allocate the
-> remainder of the 4MB.  After the app has read the first 64kB, it comes
-> back to read the next 64kB, sees the readahead marker and tries to trigger
-> the next batch of readahead, but it's already present, so it does nothing
-> (see page_cache_ra_unbounded() for what happens with pages present).
+Yeah, I'm not sure if tcpdump can snoop on the IB traffic. I know that
+upstream tcpdump can snoop on RDMA mellanox card (but I only know
+about the Roce mode).
 
-It sounds like Christoph is right on the right track and the vm needs to ask
-the filesystem (and by extension, the cache) before doing the allocation and
-before setting the trigger flag.  Then we don't need to call back into the vm
-to expand the readahead.
+> But I recorded a trace log of rpcrdma and sunrpc observing the situation.
+>
+> To me it looks like the COPY task (task:15886@7) completes successfully?
+> The compressed trace.dat is attached.
 
-Also, there's Steve's request to try and keep at least two requests in flight
-for CIFS/SMB at the same time to consider.
+I'm having a hard time reproducing the problem. But I only tried
+"xfs", "btrfs", "ext4" (first two send a CLONE since the file system
+supports it), the last one exercises a copy. In all my tries your
+xfs_io commands succeed. The differences between our environments are
+(1) ZFS vs (xfs, etc) and (2) IB vs RoCE. Question is: does any
+copy_file_range work over RDMA/IB. One thing to try a synchronous
+copy: create a small file 10bytes and do a copy. Is this the case
+where we have copy and the callback racing, so instead do a really
+large copy: create a >=1GB file and do a copy. that will be an async
+copy but will not have a racy condition. Can you try those 2 examples
+for me?
 
-David
+Not sure how useful tracepoints here are. The results of the COPY
+isn't interesting as this is an async copy. The server should have
+sent a CB_COMPOUND with the copy's results. The process stack tells me
+that COPY is waiting for the results (waiting for the callback). So
+the question is there a problem of sending a callback over RDMA/IB? Or
+did the client receive it and missed it somehow? We really do need
+some better tracepoints in the copy (but we don't have them
+currently).
 
+Would you be willing to install the upstream libpcap/tcpdump to see if
+it can capture RDMA/IB traffic or perhaps Chunk knows that it doesn't
+work for sure?
+
+Thank you.
