@@ -2,57 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E9F131ECD0
+	by mail.lfdr.de (Postfix) with ESMTP id B0C4131ECD1
 	for <lists+linux-nfs@lfdr.de>; Thu, 18 Feb 2021 18:06:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231126AbhBRRDr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 18 Feb 2021 12:03:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35804 "EHLO
+        id S231234AbhBRREE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 Feb 2021 12:04:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232815AbhBRPy0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Feb 2021 10:54:26 -0500
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73CE1C06178A;
-        Thu, 18 Feb 2021 07:53:45 -0800 (PST)
-Received: by mail-il1-x12f.google.com with SMTP id w1so1844968ilm.12;
-        Thu, 18 Feb 2021 07:53:45 -0800 (PST)
+        with ESMTP id S233019AbhBRQ3n (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Feb 2021 11:29:43 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8254EC061574;
+        Thu, 18 Feb 2021 08:28:59 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id hs11so6718263ejc.1;
+        Thu, 18 Feb 2021 08:28:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=umich.edu; s=google-2016-06-03;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jHTepAlgTB29GedvBS59O+ZCtpomsphnsV6+Q0YzaKA=;
-        b=rh06aKoeJZqVRP33hjROHoKd/qSMoZCoo3TwZOv3WnZOLPIVpCyj9huZGaAx9W0QSc
-         ouVZ+SzP+qYt0nZImmvgN9wE6A0RVITwEniF6KIp9rfrZd05RQG0Tpet2qu9VwMtoN/8
-         YNnBMuxco6dxHVokc4GdEyfwGPixHb9UU1PxOvVU9Frq2KyHIsdg1T+ooHoaIfqIS6nD
-         AORQV/jA9yfxAtwN62q5Z3Fr6NQOptyysokkmb5fJIqtVnFGXTal9XOCDFT1CE3hrt5/
-         T0Fu+YQTNq1sKawIyxv57mKie0SkMpd34/uce7jTxsLDY6BPsLBpTIWRJy7oJxn/jidO
-         JFtw==
+        bh=y38daONDwdDmDv1VoddeHBWWftl202hO6P8yucZxYa8=;
+        b=iNFjWjKl+LQN0COFhBnybPiIzwQZeq8Ix9Q6VeVsYt0rK/aNZ2CJ8MGnct0Nn2Uq44
+         HkSGMORn3xukzFLyjCcoKGIp5LxBAd6UeElElN4KqyH6chlqEH2OTZWAMVZey9T/m2ws
+         z9wIkKJaekgRy6SOjUdAjB3t3H8GCoyK4yI0XjwpQmOi4Mdm4DvieCwmo4GzDqp5788B
+         Eg6Y8VCfYsymemfvGfC7VGF7AJty6+2K26GYFtEdYuZhHrdXANbWixTJG329KJFpE8HM
+         Szr4l+twMHlN4WuxLmvOo9yhavF5EE/XWlSHyHrQF+UY3xBcyp9/PSYQQBciIvSR31Y0
+         hq7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jHTepAlgTB29GedvBS59O+ZCtpomsphnsV6+Q0YzaKA=;
-        b=hhlzFshOr+4EjHoEex3Uf79OzZSJSjHFdK9OWMpFJ0kkPxpZzN8k0Ha3DsQaiHqMEo
-         0qnJ6tCgH74ik1OlsHfH7v15baF5hXd1ABBzInLIVEyXweOqPvaAMnx0rPFLvwZxQz46
-         7IMH8CUQKlI+xrgEcdb1QlsRLbSHb1HSu7RoAPMkN/M0wYMWYOhWgpBCOAOvkmMC2epo
-         LIXXzWcz68QR993WSSMVMl6AclBPaAVfvIIarIYWjLqzWlsbyOJ80m450rTQnLa4MVoq
-         ePsizHBIkkN/joaDd3mMWxgXavbM9jUVwkGEI/Fm0j48bfplJ0OUPTsqExTk6T76V0Z5
-         T9pg==
-X-Gm-Message-State: AOAM533Xq5v7/JLs68kQ+GRiI3WyeX7Ayy4GpBy9WlpYUQUGR3k+KLHf
-        nUlKLKZ8bE7hHxpk7wOdymD7fhU/mBE22WvAoTE=
-X-Google-Smtp-Source: ABdhPJzX4e5mLMreJslRfH45oHpKARb9BPN/u3cMRDZ7OC9QXf/dJ7aDlICxgGSnOYq4QhM4PQD2699e4RN20kEKijo=
-X-Received: by 2002:a92:8e42:: with SMTP id k2mr4398912ilh.250.1613663624156;
- Thu, 18 Feb 2021 07:53:44 -0800 (PST)
+        bh=y38daONDwdDmDv1VoddeHBWWftl202hO6P8yucZxYa8=;
+        b=Y5o19VpDbqcVFzF6J2Z31otZo0oyeoh2j+6sEpRROLv2GEH68oukY4iezokurCkK8Q
+         gmLQVLfZVwEWdaRgu5nHmRjj3k63FGbuCet0TROfeJGy1vxjlPq2JZkxFEX1E+PETmJG
+         nMRtNB8HbEmDRJr15++DG2VathV2Xw+A37755PtuMAIxateklFv/rWjOMsuRV6sJ968i
+         T+mqjkHsqwjfK4nLsGCTDyKni1RIevgCx6zkYp9Fr7d02taKqt9ARW74dwx+I6nSQfz9
+         iaEekpUT0dNolVKnc8ywBJd0EiMS0Y7BHATtktzSTDvU6Tfua0YGuJCEChcL5wdUJgeu
+         qG+w==
+X-Gm-Message-State: AOAM5313l5uHZwB8VCHhQAiunjfjbyWu6fR3x23LFMe96v7oVeArCs5B
+        Xn0R5RG6suRumiQQ1qYrD6SpXqoeA8hOas6y+ls=
+X-Google-Smtp-Source: ABdhPJzGgUkLYZUEL1Zpo08T7oMdth0EfHuMaJ6hNGLf8X0W8W6hosNZC+ES+g1w9t5wa73zBypNYGQnlkbDPFG7yko=
+X-Received: by 2002:a17:907:35ca:: with SMTP id ap10mr4739637ejc.451.1613665738066;
+ Thu, 18 Feb 2021 08:28:58 -0800 (PST)
 MIME-Version: 1.0
-References: <CAOQ4uxj=ZeJ0HYtivP=pg5mSDaiQGU8Fz8qw0Egfa2Ert5Ra7A@mail.gmail.com>
- <20210218151752.26710-1-lhenriques@suse.de>
-In-Reply-To: <20210218151752.26710-1-lhenriques@suse.de>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Thu, 18 Feb 2021 17:53:33 +0200
-Message-ID: <CAOQ4uxgO45cqKLRsXBxn04fVkqH483G3ngCtV_gZGHMQDFixig@mail.gmail.com>
-Subject: Re: [PATCH v5] vfs: fix copy_file_range regression in cross-fs copies
-To:     Luis Henriques <lhenriques@suse.de>
-Cc:     Jeff Layton <jlayton@kernel.org>, Steve French <sfrench@samba.org>,
+References: <CAOQ4uxii=7KUKv1w32VbjkwS+Z1a0ge0gezNzpn_BiY6MFWkpA@mail.gmail.com>
+ <20210217172654.22519-1-lhenriques@suse.de> <CAN-5tyHVOphSkp3n+V=1gGQ40WNZGHQURSMMdFBS3jRVGfEXhA@mail.gmail.com>
+ <CAOQ4uxi08oG9=Oadvt6spA9+zA=dcb-UK8AL-+o2Fn3d57d7iw@mail.gmail.com>
+In-Reply-To: <CAOQ4uxi08oG9=Oadvt6spA9+zA=dcb-UK8AL-+o2Fn3d57d7iw@mail.gmail.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Thu, 18 Feb 2021 11:28:47 -0500
+Message-ID: <CAN-5tyExn=N6ii3vK3La9gS_XncrhOqJ5E7QU-T9Tak+EbajLg@mail.gmail.com>
+Subject: Re: [PATCH v3] vfs: fix copy_file_range regression in cross-fs copies
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Luis Henriques <lhenriques@suse.de>,
+        Jeff Layton <jlayton@kernel.org>,
+        Steve French <sfrench@samba.org>,
         Miklos Szeredi <miklos@szeredi.hu>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
@@ -63,52 +66,71 @@ Cc:     Jeff Layton <jlayton@kernel.org>, Steve French <sfrench@samba.org>,
         Nicolas Boichat <drinkcat@chromium.org>,
         Ian Lance Taylor <iant@google.com>,
         Luis Lozano <llozano@chromium.org>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Christoph Hellwig <hch@infradead.org>,
         ceph-devel <ceph-devel@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         CIFS <linux-cifs@vger.kernel.org>,
         samba-technical <samba-technical@lists.samba.org>,
         linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+        linux-nfs <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Feb 18, 2021 at 5:16 PM Luis Henriques <lhenriques@suse.de> wrote:
+On Thu, Feb 18, 2021 at 1:48 AM Amir Goldstein <amir73il@gmail.com> wrote:
 >
-> A regression has been reported by Nicolas Boichat, found while using the
-> copy_file_range syscall to copy a tracefs file.  Before commit
-> 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
-> kernel would return -EXDEV to userspace when trying to copy a file across
-> different filesystems.  After this commit, the syscall doesn't fail anymore
-> and instead returns zero (zero bytes copied), as this file's content is
-> generated on-the-fly and thus reports a size of zero.
+> On Thu, Feb 18, 2021 at 7:33 AM Olga Kornievskaia <aglo@umich.edu> wrote:
+> >
+> > On Wed, Feb 17, 2021 at 3:30 PM Luis Henriques <lhenriques@suse.de> wrote:
+> > >
+> > > A regression has been reported by Nicolas Boichat, found while using the
+> > > copy_file_range syscall to copy a tracefs file.  Before commit
+> > > 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
+> > > kernel would return -EXDEV to userspace when trying to copy a file across
+> > > different filesystems.  After this commit, the syscall doesn't fail anymore
+> > > and instead returns zero (zero bytes copied), as this file's content is
+> > > generated on-the-fly and thus reports a size of zero.
+> > >
+> > > This patch restores some cross-filesystems copy restrictions that existed
+> > > prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
+> > > devices").  It also introduces a flag (COPY_FILE_SPLICE) that can be used
+> > > by filesystems calling directly into the vfs copy_file_range to override
+> > > these restrictions.  Right now, only NFS needs to set this flag.
+> > >
+> > > Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
+> > > Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
+> > > Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
+> > > Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
+> > > Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+> > > Signed-off-by: Luis Henriques <lhenriques@suse.de>
+> > > ---
+> > > Ok, I've tried to address all the issues and comments.  Hopefully this v3
+> > > is a bit closer to the final fix.
+> > >
+> > > Changes since v2
+> > > - do all the required checks earlier, in generic_copy_file_checks(),
+> > >   adding new checks for ->remap_file_range
+> > > - new COPY_FILE_SPLICE flag
+> > > - don't remove filesystem's fallback to generic_copy_file_range()
+> > > - updated commit changelog (and subject)
+> > > Changes since v1 (after Amir review)
+> > > - restored do_copy_file_range() helper
+> > > - return -EOPNOTSUPP if fs doesn't implement CFR
+> > > - updated commit description
+> >
+> > In my testing, this patch breaks NFS server-to-server copy file.
 >
-> This patch restores some cross-filesystem copy restrictions that existed
-> prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
-> devices").  Filesystems are still allowed to fall-back to the VFS
-> generic_copy_file_range() implementation, but that has now to be done
-> explicitly.
+> Hi Olga,
 >
-> nfsd is also modified to fall-back into generic_copy_file_range() in case
-> vfs_copy_file_range() fails with -EOPNOTSUPP or -EXDEV.
+> Can you please provide more details on the failed tests.
 >
-> Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
-> Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
-> Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
-> Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
-> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-> Signed-off-by: Luis Henriques <lhenriques@suse.de>
-> ---
-> And v5!  Sorry.  Sure, it makes sense to go through the all the vfs_cfr()
-> checks first.
+> Does it fail on the client between two nfs mounts or does it fail
+> on the server? If the latter, between which two filesystems on the server?
+>
 
-You missed my other comment on v4...
+It was a pilot error. V3 worked. I'm having some other issues with
+server to server copy code but they seem to be unrelated to this. I
+will test the new v6 versions when it comes out.
 
-not checking NULL copy_file_range case.
-
-Thanks,
-Amir.
+> Thanks,
+> Amir.
