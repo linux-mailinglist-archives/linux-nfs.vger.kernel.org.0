@@ -2,34 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5098831E713
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Feb 2021 08:47:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA68131E89A
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Feb 2021 11:59:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231370AbhBRHqq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 18 Feb 2021 02:46:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44218 "EHLO
+        id S230396AbhBRKCZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 Feb 2021 05:02:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230436AbhBRHo5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Feb 2021 02:44:57 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4A0FC061786;
-        Wed, 17 Feb 2021 23:44:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=x/KF+DF1pYoW9EgF5c6O1WsHFfGsng3na0X3aUUo6kI=; b=t2dYxkyqC2yN1twmdBB9+kkB9d
-        fmKnH0oOks7QGRGWLRRBR62uPZkHvqo9FNkU934CuOVlaoEUD8Mo8rU1qNpv9FlFWMvzVmDIdACU9
-        +NUhDfEuslH5OSuaenz3NuIrjhDo8bbaE0QqKpI1Cbi4tRIKYu9vroSEPJWk2w2HL8cUiNj2u4esN
-        gNV/+iTZZd2weGDgWeSXwEfI8v6+FjLjbdvwdG1hFqu+ySLzwe//64EG02TEZ7mTvBu3f4IzolTe7
-        kldFSx1OB0BVAGY6JWX8O6wj9GLH+t8gnDDaGsLP42abmiI4IbrTTVOL8p7iS/b3XDHXsOstjoHoV
-        yMn932ng==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lCdyX-001Nra-QE; Thu, 18 Feb 2021 07:43:50 +0000
-Date:   Thu, 18 Feb 2021 07:43:49 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Luis Henriques <lhenriques@suse.de>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
+        with ESMTP id S231450AbhBRJMu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Feb 2021 04:12:50 -0500
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E849C061756;
+        Thu, 18 Feb 2021 01:10:12 -0800 (PST)
+Received: by mail-il1-x12f.google.com with SMTP id a16so852681ilq.5;
+        Thu, 18 Feb 2021 01:10:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OgQOiOPnq0DRvI2eZdQvsHnaIaMA+0qyu71WaKASe+E=;
+        b=KIj9uV247HXRj8/OdXi7y7ObktVMiQkfY1zBawc3yoqptXXOeQTlt477Lr0LhrSGE9
+         8E18Bxidf9al2BaaL4xQC/16sB1fQQ8/NXtUzgFeb2Tl+lMz/7TeP3pg/dihjZBohG7+
+         Se3QMaNt+hpWGzO7FbyL236gNrhjqG1KqA1QlNO2w/DwML7TfhYsXFaNCZB4laQDaY+F
+         oZkmK4iDfnSJRr1w54d303Bkhc5/PFzSLgJ4odjLMS35jswywGq2QGEUU14unumiNnAN
+         qpHtfXb5gITTwAbd5vZpb18FanWx4e2pmi6XDDLIZ6epHqg+bRzfy3Pt7kKhL+hAezW9
+         +e+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OgQOiOPnq0DRvI2eZdQvsHnaIaMA+0qyu71WaKASe+E=;
+        b=kSJOO/Y2azAc3u998nFl7nQ5qNLFNurdH8g+1BiNILdwFp3z/Cbg78Ec3DCYtGUTkW
+         G6TzrJ0qfnjiMtaLJB1p0nZTfLWl5xll32yNzUn9mekD6hDBSvR4+N6ZtNozRa5BeH+D
+         w1SuBK6ayuobWjB6Z0AK5RkI2a5d+yAAx5Vv7QlOvQUZfs03XWVp2Zud57dUClRjg31g
+         PjowJCqgQp9j2ZW+3OKKMQ3KrS5Xrclw6lIdYTSdGpYc/0Fhnm9+tLiE6TXD5jIjyJ7L
+         M0RAANv/Hzs9Uim4X99ye5dx1RKvxfvr0kplb7o0Csom3MGhMJ5N2XaNUQM+2URgCZOa
+         JOtA==
+X-Gm-Message-State: AOAM530FXwNwJvZiX1Idh5R0/zAXMxrgje0AjryZmgQmZWm9alLI+PHZ
+        5vQd2MnwpuMmkt2hwpITPklgq8+0qjAuO5FYR6o=
+X-Google-Smtp-Source: ABdhPJwxXq4k2yVJ6n1V7pcmcKjBIF0kyD/ZKAbc2Dz8lUF9r8GD81APTW8Ak1u3Tadv0KMLHxr+7GYAW078rcvAOLg=
+X-Received: by 2002:a92:8b89:: with SMTP id i131mr2975061ild.9.1613639411616;
+ Thu, 18 Feb 2021 01:10:11 -0800 (PST)
+MIME-Version: 1.0
+References: <CAOQ4uxiFGjdvX2-zh5o46pn7RZhvbGHH0wpzLPuPOom91FwWeQ@mail.gmail.com>
+ <20210215154317.8590-1-lhenriques@suse.de> <20210218074207.GA329605@infradead.org>
+In-Reply-To: <20210218074207.GA329605@infradead.org>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 18 Feb 2021 11:10:00 +0200
+Message-ID: <CAOQ4uxgreB=TywvWQXfcHYMBcFm5OKSdwUC8YJY1WuVja6PccQ@mail.gmail.com>
+Subject: Re: [PATCH v2] vfs: prevent copy_file_range to copy across devices
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Luis Henriques <lhenriques@suse.de>,
         Jeff Layton <jlayton@kernel.org>,
         Steve French <sfrench@samba.org>,
         Miklos Szeredi <miklos@szeredi.hu>,
@@ -41,37 +64,32 @@ Cc:     Amir Goldstein <amir73il@gmail.com>,
         Greg KH <gregkh@linuxfoundation.org>,
         Nicolas Boichat <drinkcat@chromium.org>,
         Ian Lance Taylor <iant@google.com>,
-        Luis Lozano <llozano@chromium.org>, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v3] vfs: fix copy_file_range regression in cross-fs copies
-Message-ID: <20210218074349.GB329605@infradead.org>
-References: <CAOQ4uxii=7KUKv1w32VbjkwS+Z1a0ge0gezNzpn_BiY6MFWkpA@mail.gmail.com>
- <20210217172654.22519-1-lhenriques@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210217172654.22519-1-lhenriques@suse.de>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        Luis Lozano <llozano@chromium.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 17, 2021 at 05:26:54PM +0000, Luis Henriques wrote:
-> A regression has been reported by Nicolas Boichat, found while using the
-> copy_file_range syscall to copy a tracefs file.  Before commit
-> 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
-> kernel would return -EXDEV to userspace when trying to copy a file across
-> different filesystems.  After this commit, the syscall doesn't fail anymore
-> and instead returns zero (zero bytes copied), as this file's content is
-> generated on-the-fly and thus reports a size of zero.
-> 
-> This patch restores some cross-filesystems copy restrictions that existed
-> prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
-> devices").  It also introduces a flag (COPY_FILE_SPLICE) that can be used
-> by filesystems calling directly into the vfs copy_file_range to override
-> these restrictions.  Right now, only NFS needs to set this flag.
+On Thu, Feb 18, 2021 at 9:42 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> Looks good:
+>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>
+> This whole idea of cross-device copie has always been a horrible idea,
+> and I've been arguing against it since the patches were posted.
 
-No need for the flag.  Jyst fall back to splicing in the only caller
-that wants it.
+Ok. I'm good with this v2 as well, but need to add the fallback to
+do_splice_direct()
+in nfsd_copy_file_range(), because this patch breaks it.
+
+And the commit message of v3 is better in describing the reported issue.
+
+Thanks,
+Amir.
