@@ -2,298 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42FF631EF1E
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Feb 2021 20:01:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 024A931EF20
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Feb 2021 20:02:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231396AbhBRTAm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 18 Feb 2021 14:00:42 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30002 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234906AbhBRR6Q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Feb 2021 12:58:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613671008;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bRx/Q3QG2sOCHa5ufjDWidZYmQgMzEKTWuCSpPFUFA8=;
-        b=bDekC9V2rPM3S3lUa5EOVkOjmGO1v/QrIffeC0PaJGJrGDbN2Ezgtq5f2H6r5BzsQmNRo+
-        a8PUKF5rIppfKtxXXv50OdWdaPI0YVKkEexE6YXG+YMWsMsoPo6E5wHW80PaztY7sYn7Xo
-        h6gPZK5H/QwXwWQuDWoOqXN5Wb73uhE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-179-rFO6k0GkPPWnxqnz3rUmIw-1; Thu, 18 Feb 2021 12:56:46 -0500
-X-MC-Unique: rFO6k0GkPPWnxqnz3rUmIw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 070C1801978
-        for <linux-nfs@vger.kernel.org>; Thu, 18 Feb 2021 17:56:45 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-112-108.phx2.redhat.com [10.3.112.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B33F019C47
-        for <linux-nfs@vger.kernel.org>; Thu, 18 Feb 2021 17:56:44 +0000 (UTC)
-Subject: Re: [PATCH 1/1] nfs-utiles: rename xlog_from_conffile() to
- xlog_set_debug()
-From:   Steve Dickson <SteveD@RedHat.com>
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20210217201836.95788-1-steved@redhat.com>
-Message-ID: <dc24d931-3eb3-2911-2f7a-8d2ae7229ad6@RedHat.com>
-Date:   Thu, 18 Feb 2021 12:58:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S233399AbhBRTAo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 Feb 2021 14:00:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232539AbhBRSdL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Feb 2021 13:33:11 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60EE6C061222;
+        Thu, 18 Feb 2021 10:30:15 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id h10so5584738edl.6;
+        Thu, 18 Feb 2021 10:30:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+smuLYtbr/pzemzJUHohUAfEz52XBhtosdIvQ0wrqg8=;
+        b=p8U5MG0k3+1HciOGF7IZXB+1Wnmt8sThOBtsc0rYJgvhVlKrlqvMVko/Hj/SnS3kEe
+         24LN2WWbsMx6Gj5hNuRh8+s1MOJLrS5ZE5SQHWHY4KC0HX87TXqKVllySxp2JFWU7tbo
+         7vJ0aEW6cAj+vl3AvWqPo67XCbyw4p4dE756IRSZMU5GlF3shHDbJSRMUYASzD/DSqg8
+         zMTo9XCZzxz3rJI8WMzQbZttmjCxZwASkZ/YWB4WcpMr4LSZzuikOwwp5yieJCjbO/LO
+         uJlxFStZ97uy5DynkS739xvrw1hnBBCzOC3cYSE1Nzfb4HfxPTaTCjDnkAseNcaJNRvw
+         2QIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+smuLYtbr/pzemzJUHohUAfEz52XBhtosdIvQ0wrqg8=;
+        b=Q3TJQCaQmeeTPl48B+zYyW8cV7I/OFQBhTp5A7RMBVBAWObJ4lgQSkc8PuwDFe8rIc
+         u625CRS0vCcGfsr73BYLkwu0BifY/OC/jbO6tC7tytYoIjBJTPaCQ/TMpokj0bmCdBJj
+         qdVkCOa/r2DwFzmvSmxU3T87YXqEvhf/gYBqtHZR7PMEXsYUdHeTEbE9Fzxg5sgVSEdG
+         w/jyu78zd1jDCRnE9afIbdZigCCuIjTSLxT2AxJI2/c4XrBnWNwnTaVu5NWZzzqWlyzT
+         9It/Ot+sy/Wp4DRBQZgcOwnBusNRS/tpIF3/55CxnmMjj4Dib3hb6zUzW05IbhuRgbZ5
+         Us7g==
+X-Gm-Message-State: AOAM532lFBtBwpJmcpt1+El+Tl7DmkoveYrMtcBa3KsR3+zhOmjiRZFL
+        61G4zkuhy6seWlkLLFQ59Kbv2L+ZXAOm0dZ0RVk=
+X-Google-Smtp-Source: ABdhPJyf3ejHIWkfPUgk6HLgxVDu8fNZiyGqobWsyDibisA6N7HUoBpBe/cTXXUHsOGb+Ht6+jThj1fg7X72BM8Rpos=
+X-Received: by 2002:a05:6402:10c3:: with SMTP id p3mr5331883edu.67.1613673014085;
+ Thu, 18 Feb 2021 10:30:14 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20210217201836.95788-1-steved@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <57f67888-160f-891c-6217-69e174d7e42b@rothenpieler.org>
+ <CAN-5tyE4OyNOZRXGnyONcdGsHaRAF39LSE5416Kj964m-+_C2A@mail.gmail.com>
+ <81cb9aef-c10d-f11c-42c0-5144ee2608bc@rothenpieler.org> <0e49471c-e640-a331-c7b4-4e0a49a7a967@rothenpieler.org>
+ <CAN-5tyG9Ly9tqKxguFNhg_PGXCxE2=Zn6LQPLY59twdVkD3Auw@mail.gmail.com>
+ <51a8caa7-52c2-8155-10a7-1e8d21866924@rothenpieler.org> <CAN-5tyFT4+kkqk6E0Jxe-vMYm7q5mHyTeq0Ht7AEYasA30ZaGw@mail.gmail.com>
+ <3f946e6b-6872-641c-8828-35ddd5c8fed0@rothenpieler.org> <e89ab742-7984-6a2c-2f01-402283ba6e89@rothenpieler.org>
+In-Reply-To: <e89ab742-7984-6a2c-2f01-402283ba6e89@rothenpieler.org>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Thu, 18 Feb 2021 13:30:02 -0500
+Message-ID: <CAN-5tyGhyh0ZF77voaN4TNgMt+jSUG0PMp-KixfTvgUhDdhDUQ@mail.gmail.com>
+Subject: Re: copy_file_range() infinitely hangs on NFSv4.2 over RDMA
+To:     Timo Rothenpieler <timo@rothenpieler.org>
+Cc:     linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Thu, Feb 18, 2021 at 10:55 AM Timo Rothenpieler
+<timo@rothenpieler.org> wrote:
+>
+> On 18.02.2021 14:28, Timo Rothenpieler wrote:
+> > I'll report back once I got a trace log.
+>
+> Find the trace log attached.
+> It also grabbed quite a bit of unrelated noise, but I think it's still
+> helpful:
+>
+> >            nfsd-7226  [025] 2228027.306471: nfsd_compound:        xid=0xbca1d6e9 opcnt=5
+> >             nfsd-7226  [025] 2228027.306472: nfsd_compound_status: op=1/5 OP_SEQUENCE status=0
+> >             nfsd-7226  [025] 2228027.306479: nfsd_compound_status: op=2/5 OP_PUTFH status=0
+> >             nfsd-7226  [025] 2228027.306480: nfsd_compound_status: op=3/5 OP_SAVEFH status=0
+> >             nfsd-7226  [025] 2228027.306483: nfsd_compound_status: op=4/5 OP_PUTFH status=0
+> >             nfsd-7226  [025] 2228027.306590: nfsd_compound_status: op=5/5 OP_COPY status=0
+> >             nfsd-7226  [025] 2228027.306702: nfsd_compound:        xid=0xbda1d6e9 opcnt=2
+> >             nfsd-7226  [025] 2228027.306703: nfsd_compound_status: op=1/2 OP_SEQUENCE status=0
+> >             nfsd-7226  [025] 2228027.306703: nfsd_compound_status: op=2/2 OP_TEST_STATEID status=0
+> >             nfsd-7226  [025] 2228027.306741: nfsd_compound:        xid=0xbea1d6e9 opcnt=2
+> >             nfsd-7226  [025] 2228027.306742: nfsd_compound_status: op=1/2 OP_SEQUENCE status=0
+> >             nfsd-7226  [025] 2228027.306747: nfsd_compound_status: op=2/2 OP_TEST_STATEID status=0
+> >             nfsd-7226  [025] 2228027.306791: nfsd_compound:        xid=0xbfa1d6e9 opcnt=2
+> >             nfsd-7226  [025] 2228027.306792: nfsd_compound_status: op=1/2 OP_SEQUENCE status=0
+> >             nfsd-7226  [025] 2228027.306793: nfsd_compound_status: op=2/2 OP_TEST_STATEID status=0
+> >             nfsd-7226  [025] 2228027.306829: nfsd_compound:        xid=0xc0a1d6e9 opcnt=2
+> >             nfsd-7226  [025] 2228027.306830: nfsd_compound_status: op=1/2 OP_SEQUENCE status=0
+> >             nfsd-7226  [025] 2228027.306831: nfsd_compound_status: op=2/2 OP_TEST_STATEID status=0
+> >             nfsd-7226  [025] 2228027.306865: nfsd_compound:        xid=0xc1a1d6e9 opcnt=2
+> >             nfsd-7226  [025] 2228027.306866: nfsd_compound_status: op=1/2 OP_SEQUENCE status=0
+> >             nfsd-7226  [025] 2228027.306866: nfsd_compound_status: op=2/2 OP_TEST_STATEID status=0
+> >            <...>-2019374 [012] 2228027.307694: nfsd_file_put:        hash=0x275 inode=0x0xffffa0c8c35ab490 ref=4 flags=HASHED|REFERENCED may=READ file=0xffffa0e819758800
+> >            <...>-2019374 [012] 2228027.307694: nfsd_file_put:        hash=0x365 inode=0x0xffffa0d70dd5dec0 ref=5 flags=HASHED|REFERENCED may=READ|WRITE file=0xffffa0e819759000
+> >            <...>-2019374 [012] 2228027.307701: nfsd_file_put:        hash=0x365 inode=0x0xffffa0d70dd5dec0 ref=4 flags=HASHED|REFERENCED may=READ|WRITE file=0xffffa0e819759000
+> >            <...>-2019374 [012] 2228027.307701: nfsd_file_put:        hash=0x275 inode=0x0xffffa0c8c35ab490 ref=3 flags=HASHED|REFERENCED may=READ file=0xffffa0e819758800
+> >            <...>-1885588 [029] 2228027.307725: nfsd_cb_work:         addr=10.110.10.252:0 client 600c8efc:868a6681 procedure=CB_OFFLOAD
+> >            <...>-1885588 [029] 2228027.307746: nfsd_cb_done:         addr=10.110.10.252:0 client 600c8efc:868a6681 status=-107
+> >            <...>-1885588 [029] 2228027.307747: nfsd_cb_state:        addr=10.110.10.252:0 client 600c8efc:868a6681 state=FAULT
 
-
-On 2/17/21 3:18 PM, Steve Dickson wrote:
-> Standardized how config setting are set as
-> well as the rename
-> 
-> Signed-off-by: Steve Dickson <steved@redhat.com>
-Committed... 
-
-steved.
-> ---
->  support/include/xlog.h          |  2 +-
->  support/nfs/xlog.c              |  2 +-
->  utils/exportfs/exportfs.c       | 12 +++++++++---
->  utils/mountd/mountd.c           |  9 +++------
->  utils/nfsd/nfsd.c               | 11 +++++++++--
->  utils/nfsdcltrack/nfsdcltrack.c | 20 ++++++++++++--------
->  utils/statd/sm-notify.c         |  7 ++++---
->  utils/statd/statd.c             |  8 ++++----
->  8 files changed, 43 insertions(+), 28 deletions(-)
-> 
-> diff --git a/support/include/xlog.h b/support/include/xlog.h
-> index 32ff5a1..69cdf61 100644
-> --- a/support/include/xlog.h
-> +++ b/support/include/xlog.h
-> @@ -51,7 +51,7 @@ void			xlog_stderr(int on);
->  void			xlog_syslog(int on);
->  void			xlog_config(int fac, int on);
->  void			xlog_sconfig(char *, int on);
-> -void			xlog_from_conffile(char *);
-> +void			xlog_set_debug(char *);
->  int			xlog_enabled(int fac);
->  void			xlog(int fac, const char *fmt, ...) XLOG_FORMAT((printf, 2, 3));
->  void			xlog_warn(const char *fmt, ...) XLOG_FORMAT((printf, 1, 2));
-> diff --git a/support/nfs/xlog.c b/support/nfs/xlog.c
-> index 86acd6a..e5861b9 100644
-> --- a/support/nfs/xlog.c
-> +++ b/support/nfs/xlog.c
-> @@ -129,7 +129,7 @@ xlog_sconfig(char *kind, int on)
->  }
->  
->  void
-> -xlog_from_conffile(char *service)
-> +xlog_set_debug(char *service)
->  {
->  	struct conf_list *kinds;
->  	struct conf_list_node *n;
-> diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-> index 9fcae0b..f8b446a 100644
-> --- a/utils/exportfs/exportfs.c
-> +++ b/utils/exportfs/exportfs.c
-> @@ -91,7 +91,12 @@ release_lockfile()
->  		_lockfd = -1;
->  	}
->  }
-> -
-> +inline static void 
-> +read_exportfs_conf(void)
-> +{
-> +	conf_init_file(NFS_CONFFILE);
-> +	xlog_set_debug("exportfs");
-> +}
->  int
->  main(int argc, char **argv)
->  {
-> @@ -116,8 +121,9 @@ main(int argc, char **argv)
->  	xlog_stderr(1);
->  	xlog_syslog(0);
->  
-> -	conf_init_file(NFS_CONFFILE);
-> -	xlog_from_conffile("exportfs");
-> +	/* Read in config setting */
-> +	read_exportfs_conf();
-> +
->  	nfsd_path_init();
->  
->  	/* NOTE: following uses "mountd" section of nfs.conf !!!! */
-> diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
-> index a480265..612063b 100644
-> --- a/utils/mountd/mountd.c
-> +++ b/utils/mountd/mountd.c
-> @@ -666,13 +666,13 @@ int	port = 0;
->  int	descriptors = 0;
->  
->  inline static void 
-> -read_mount_conf(char **argv)
-> +read_mountd_conf(char **argv)
->  {
->  	char	*s;
->  
->  	conf_init_file(NFS_CONFFILE);
->  
-> -	xlog_from_conffile("mountd");
-> +	xlog_set_debug("mountd");
->  	manage_gids = conf_get_bool("mountd", "manage-gids", manage_gids);
->  	descriptors = conf_get_num("mountd", "descriptors", descriptors);
->  	port = conf_get_num("mountd", "port", port);
-> @@ -684,9 +684,6 @@ read_mount_conf(char **argv)
->  	if (s && !state_setup_basedir(argv[0], s))
->  		exit(1);
->  
-> -	if ((s = conf_get_str("mountd", "debug")) != NULL)
-> -		xlog_sconfig(s, 1);
-> -
->  	/* NOTE: following uses "nfsd" section of nfs.conf !!!! */
->  	if (conf_get_bool("nfsd", "udp", NFSCTL_UDPISSET(_rpcprotobits)))
->  		NFSCTL_UDPSET(_rpcprotobits);
-> @@ -726,7 +723,7 @@ main(int argc, char **argv)
->  	xlog_open(progname);
->  
->  	/* Read in config setting */
-> -	read_mount_conf(argv);
-> +	read_mountd_conf(argv);
->  
->  	/* Parse the command line options and arguments. */
->  	opterr = 0;
-> diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
-> index c9f0385..b074171 100644
-> --- a/utils/nfsd/nfsd.c
-> +++ b/utils/nfsd/nfsd.c
-> @@ -56,6 +56,13 @@ static struct option longopts[] =
->  	{ NULL, 0, 0, 0 }
->  };
->  
-> +inline static void 
-> +read_nfsd_conf(void)
-> +{
-> +	conf_init_file(NFS_CONFFILE); 
-> +	xlog_set_debug("nfsd");
-> +}
-> +
->  int
->  main(int argc, char **argv)
->  {
-> @@ -81,8 +88,8 @@ main(int argc, char **argv)
->  	xlog_syslog(0);
->  	xlog_stderr(1);
->  
-> -	conf_init_file(NFS_CONFFILE); 
-> -	xlog_from_conffile("nfsd");
-> +	/* Read in config setting */
-> +	read_nfsd_conf();
->  
->  	nfssvc_get_minormask(&minormask);
->  
-> diff --git a/utils/nfsdcltrack/nfsdcltrack.c b/utils/nfsdcltrack/nfsdcltrack.c
-> index b45a904..ee85167 100644
-> --- a/utils/nfsdcltrack/nfsdcltrack.c
-> +++ b/utils/nfsdcltrack/nfsdcltrack.c
-> @@ -549,7 +549,17 @@ find_cmd(char *cmdname)
->  			__func__, cmdname);
->  	return NULL;
->  }
-> +inline static void 
-> +read_nfsdcltrack_conf(void)
-> +{
-> +	char *val;
->  
-> +	conf_init_file(NFS_CONFFILE); 
-> +	xlog_set_debug("nfsdcltrack");
-> +	val = conf_get_str("nfsdcltrack", "storagedir");
-> +	if (val)
-> +		storagedir = val;
-> +}
->  int
->  main(int argc, char **argv)
->  {
-> @@ -564,14 +574,8 @@ main(int argc, char **argv)
->  	xlog_syslog(1);
->  	xlog_stderr(0);
->  
-> -	conf_init_file(NFS_CONFFILE); 
-> -	xlog_from_conffile("nfsdcltrack");
-> -	val = conf_get_str("nfsdcltrack", "storagedir");
-> -	if (val)
-> -		storagedir = val;
-> -	rc = conf_get_num("nfsdcltrack", "debug", 0);
-> -	if (rc > 0)
-> -		xlog_config(D_ALL, 1);
-> +	/* Read in config setting */
-> +	read_nfsdcltrack_conf();
->  
->  	/* process command-line options */
->  	while ((arg = getopt_long(argc, argv, "hdfs:", longopts,
-> diff --git a/utils/statd/sm-notify.c b/utils/statd/sm-notify.c
-> index 739731f..606b912 100644
-> --- a/utils/statd/sm-notify.c
-> +++ b/utils/statd/sm-notify.c
-> @@ -482,12 +482,12 @@ nsm_lift_grace_period(void)
->  	return;
->  }
->  inline static void 
-> -read_nfsconf(char **argv)
-> +read_smnotify_conf(char **argv)
->  {
->  	char *s;
->  
->  	conf_init_file(NFS_CONFFILE);
-> -	xlog_from_conffile("sm-notify");
-> +	xlog_set_debug("sm-notify");
->  	opt_max_retry = conf_get_num("sm-notify", "retry-time", opt_max_retry / 60) * 60;
->  	opt_srcport = conf_get_str("sm-notify", "outgoing-port");
->  	opt_srcaddr = conf_get_str("sm-notify", "outgoing-addr");
-> @@ -512,7 +512,8 @@ main(int argc, char **argv)
->  	else
->  		progname = argv[0];
->  
-> -	read_nfsconf(argv);
-> +	/* Read in config setting */
-> +	read_smnotify_conf(argv);
->  
->  	while ((c = getopt(argc, argv, "dm:np:v:P:f")) != -1) {
->  		switch (c) {
-> diff --git a/utils/statd/statd.c b/utils/statd/statd.c
-> index e4a1df4..32169d4 100644
-> --- a/utils/statd/statd.c
-> +++ b/utils/statd/statd.c
-> @@ -243,12 +243,12 @@ int port = 0, out_port = 0;
->  int nlm_udp = 0, nlm_tcp = 0;
->  
->  inline static void 
-> -read_nfsconf(char **argv)
-> +read_statd_conf(char **argv)
->  {
->  	char *s;
->  
->  	conf_init_file(NFS_CONFFILE);
-> -	xlog_from_conffile("statd");
-> +	xlog_set_debug("statd");
->  
->  	out_port = conf_get_num("statd", "outgoing-port", out_port);
->  	port = conf_get_num("statd", "port", port);
-> @@ -306,8 +306,8 @@ int main (int argc, char **argv)
->  	/* Set hostname */
->  	MY_NAME = NULL;
->  
-> -	/* Read nfs.conf */
-> -	read_nfsconf(argv);
-> +	/* Read in config setting */
-> +	read_statd_conf(argv);
->  
->  	/* Process command line switches */
->  	while ((arg = getopt_long(argc, argv, "h?vVFNH:dn:p:o:P:LT:U:", longopts, NULL)) != EOF) {
-> 
-
+Thank you for getting tracepoints from a busy server but can you get
+more? As suspected, the server is having issues sending the callback.
+I'm not sure why. Any chance to turn on the server's sunrpc
+tracespoints, probably both sunrpc and rdmas tracepoints, I wonder if
+we can any more info about why it's failing?
