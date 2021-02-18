@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D802A31F295
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Feb 2021 23:55:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54D9E31F296
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Feb 2021 23:55:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbhBRWyp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 18 Feb 2021 17:54:45 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59799 "EHLO
+        id S229598AbhBRWyq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 Feb 2021 17:54:46 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31476 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229684AbhBRWyo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Feb 2021 17:54:44 -0500
+        by vger.kernel.org with ESMTP id S229652AbhBRWyp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Feb 2021 17:54:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613688797;
+        s=mimecast20190719; t=1613688799;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=C852xBmX9sqhFt2KctvOtg+o/FhIV7JjeKkxhkSwoLU=;
-        b=RvZGM0Ds/sXbMiSGbQtWa9hGNtI11jav+/VDrfspOw/aZ5NfidKVhIpfP5HOsmsusZQYfa
-        YarsrbGzykw+s8r6A4quOqpsCS1MiBs8fYWVK5gwuPXAG14Kg767IVUw/irwgcfA/Fnard
-        l2AeYGaWjgh66VzRx2vSIReFabrZ6GM=
+        bh=Sgwxhz8gxuq+JNCh7YtYmopfxScAxC6V8+cRfi+fb7M=;
+        b=MTU0BxoKUJx8S3tfM2Kw5V6L3kMs108zqCLkOq4G1RGEcfutLhuZh0E/47V+TUlc3QJ5Ax
+        hhG2BudFbJXQqs8P7GXlgI4/iJEydQEMQtoQeresG1P1oy2oJEp0YL3Kq9gNk+vYW4Z57w
+        2588I9fTrsXCRk3JsC0ydQqrCE9wQCg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-123-j-_x9TziPHi2eCVTM1Q8IQ-1; Thu, 18 Feb 2021 17:53:16 -0500
-X-MC-Unique: j-_x9TziPHi2eCVTM1Q8IQ-1
+ us-mta-321-1oTmy3QcOguj2extX0fuQQ-1; Thu, 18 Feb 2021 17:53:16 -0500
+X-MC-Unique: 1oTmy3QcOguj2extX0fuQQ-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 165371966322
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A69A1966320
         for <linux-nfs@vger.kernel.org>; Thu, 18 Feb 2021 22:53:15 +0000 (UTC)
 Received: from madhat.home.dicksonnet.net (ovpn-112-108.phx2.redhat.com [10.3.112.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CAF1B60BE5
-        for <linux-nfs@vger.kernel.org>; Thu, 18 Feb 2021 22:53:14 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A69B60BE5
+        for <linux-nfs@vger.kernel.org>; Thu, 18 Feb 2021 22:53:15 +0000 (UTC)
 From:   Steve Dickson <steved@redhat.com>
 To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH 4/6] exportd/exportfs: Add the state-directory-path option
-Date:   Thu, 18 Feb 2021 17:54:48 -0500
-Message-Id: <20210218225450.674466-5-steved@redhat.com>
+Subject: [PATCH 5/6] exportd: Enabled junction support
+Date:   Thu, 18 Feb 2021 17:54:49 -0500
+Message-Id: <20210218225450.674466-6-steved@redhat.com>
 In-Reply-To: <20210218225450.674466-1-steved@redhat.com>
 References: <20210218225450.674466-1-steved@redhat.com>
 MIME-Version: 1.0
@@ -47,239 +47,70 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Ported state-directory-path option from mountd (commit a15bd948)
+Moved the junction support from mountd to libexport.a
+so both exportd and mountd can use the code.
+
 Signed-off-by: Steve Dickson <steved@redhat.com>
 ---
- nfs.conf                    |  1 +
- systemd/nfs.conf.man        |  3 ++-
- utils/exportd/exportd.c     | 35 +++++++++++++++++++++++++++--------
- utils/exportfs/exportfs.c   | 21 +++++++++++++--------
- utils/exportfs/exportfs.man |  7 +++++--
- 5 files changed, 48 insertions(+), 19 deletions(-)
+ support/export/Makefile.am                | 2 +-
+ {utils/mountd => support/export}/fsloc.c  | 0
+ {utils/mountd => support/include}/fsloc.h | 0
+ utils/exportd/Makefile.am                 | 3 +++
+ utils/mountd/Makefile.am                  | 3 +--
+ 5 files changed, 5 insertions(+), 3 deletions(-)
+ rename {utils/mountd => support/export}/fsloc.c (100%)
+ rename {utils/mountd => support/include}/fsloc.h (100%)
 
-diff --git a/nfs.conf b/nfs.conf
-index 4b344fa..bebb2e3 100644
---- a/nfs.conf
-+++ b/nfs.conf
-@@ -31,6 +31,7 @@
- #
- [exportd]
- # debug="all|auth|call|general|parse"
-+# state-directory-path=/var/lib/nfs
- # threads=1
- [mountd]
- # debug="all|auth|call|general|parse"
-diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
-index a4379fd..d2187f8 100644
---- a/systemd/nfs.conf.man
-+++ b/systemd/nfs.conf.man
-@@ -131,7 +131,8 @@ but on the server, this will resolve to the path
- .TP
- .B exportd
- Recognized values:
--.B threads
-+.BR threads ,
-+.BR state-directory-path
+diff --git a/support/export/Makefile.am b/support/export/Makefile.am
+index 7de82a8..a9e710c 100644
+--- a/support/export/Makefile.am
++++ b/support/export/Makefile.am
+@@ -12,7 +12,7 @@ EXTRA_DIST	= mount.x
+ noinst_LIBRARIES = libexport.a
+ libexport_a_SOURCES = client.c export.c hostname.c \
+ 		      xtab.c mount_clnt.c mount_xdr.c \
+-			  cache.c auth.c v4root.c
++			  cache.c auth.c v4root.c fsloc.c
+ BUILT_SOURCES 	= $(GENFILES)
  
- See
- .BR exportd (8)
-diff --git a/utils/exportd/exportd.c b/utils/exportd/exportd.c
-index c814503..7130bcb 100644
---- a/utils/exportd/exportd.c
-+++ b/utils/exportd/exportd.c
-@@ -26,7 +26,6 @@
- extern void my_svc_run(void);
+ noinst_HEADERS = mount.h
+diff --git a/utils/mountd/fsloc.c b/support/export/fsloc.c
+similarity index 100%
+rename from utils/mountd/fsloc.c
+rename to support/export/fsloc.c
+diff --git a/utils/mountd/fsloc.h b/support/include/fsloc.h
+similarity index 100%
+rename from utils/mountd/fsloc.h
+rename to support/include/fsloc.h
+diff --git a/utils/exportd/Makefile.am b/utils/exportd/Makefile.am
+index eb0f0a8..eb521f1 100644
+--- a/utils/exportd/Makefile.am
++++ b/utils/exportd/Makefile.am
+@@ -1,6 +1,9 @@
+ ## Process this file with automake to produce Makefile.in
  
- struct state_paths etab;
--struct state_paths rmtab;
+ OPTLIBS		=
++if CONFIG_JUNCTION
++OPTLIBS		+= ../../support/junction/libjunction.la $(LIBXML2)
++endif
  
- /* Number of mountd threads to start.   Default is 1 and
-  * that's probably enough unless you need hundreds of
-@@ -80,6 +79,12 @@ wait_for_workers (void)
- 	}
- }
+ man8_MANS	= exportd.man
+ EXTRA_DIST	= $(man8_MANS)
+diff --git a/utils/mountd/Makefile.am b/utils/mountd/Makefile.am
+index cac3275..859f28e 100644
+--- a/utils/mountd/Makefile.am
++++ b/utils/mountd/Makefile.am
+@@ -12,9 +12,8 @@ RPCPREFIX	= rpc.
+ KPREFIX		= @kprefix@
+ sbin_PROGRAMS	= mountd
  
-+inline void
-+cleanup_lockfiles (void)
-+{
-+	unlink(etab.lockfn);
-+}
-+
- /* Fork num_threads worker children and wait for them */
- static void
- fork_workers(void)
-@@ -117,6 +122,8 @@ fork_workers(void)
- 
- 	/* in parent */
- 	wait_for_workers();
-+	cleanup_lockfiles();
-+	free_state_path_names(&etab);
- 	xlog(L_NOTICE, "exportd: no more workers, exiting\n");
- 	exit(0);
- }
-@@ -129,6 +136,8 @@ killer (int sig)
- 		kill(0, SIGTERM);
- 		wait_for_workers();
- 	}
-+	cleanup_lockfiles();
-+	free_state_path_names(&etab);
- 	xlog (L_NOTICE, "Caught signal %d, exiting.", sig);
- 
- 	exit(0);
-@@ -159,24 +168,33 @@ set_signals(void)
- 	sa.sa_handler = sig_hup;
- 	sigaction(SIGHUP, &sa, NULL);
- }
-+
- static void
- usage(const char *prog, int n)
- {
- 	fprintf(stderr,
- 		"Usage: %s [-f|--foreground] [-h|--help] [-d kind|--debug kind]\n"
-+"	[-s|--state-directory-path path]\n"
- "	[-t num|--num-threads=num]\n", prog);
- 	exit(n);
- }
- 
- inline static void 
--read_exportd_conf(char *progname)
-+read_exportd_conf(char *progname, char **argv)
- {
-+	char *s;
-+
- 	conf_init_file(NFS_CONFFILE);
- 
- 	xlog_set_debug(progname);
- 
- 	num_threads = conf_get_num("exportd", "threads", num_threads);
-+
-+	s = conf_get_str("exportd", "state-directory-path");
-+	if (s && !state_setup_basedir(argv[0], s))
-+		exit(1);
- }
-+
- int
- main(int argc, char **argv)
- {
-@@ -194,9 +212,9 @@ main(int argc, char **argv)
- 	xlog_open(progname);
- 
- 	/* Read in config setting */
--	read_exportd_conf(progname);
-+	read_exportd_conf(progname, argv);
- 
--	while ((c = getopt_long(argc, argv, "d:fht:", longopts, NULL)) != EOF) {
-+	while ((c = getopt_long(argc, argv, "d:fhs:t:", longopts, NULL)) != EOF) {
- 		switch (c) {
- 		case 'd':
- 			xlog_sconfig(optarg, 1);
-@@ -207,6 +225,10 @@ main(int argc, char **argv)
- 		case 'h':
- 			usage(progname, 0);
- 			break;
-+		case 's':
-+			if (!state_setup_basedir(argv[0], optarg))
-+				exit(1);
-+			break;
- 		case 't':
- 			num_threads = atoi (optarg);
- 			break;
-@@ -219,9 +241,7 @@ main(int argc, char **argv)
- 
- 	if (!setup_state_path_names(progname, ETAB, ETABTMP, ETABLCK, &etab))
- 		return 1;
--	if (!setup_state_path_names(progname, RMTAB, RMTABTMP, RMTABLCK, &rmtab))
--		return 1;
--
-+	
- 	if (!foreground) 
- 		xlog_stderr(0);
- 
-@@ -252,6 +272,5 @@ main(int argc, char **argv)
- 		progname);
- 
- 	free_state_path_names(&etab);
--	free_state_path_names(&rmtab);
- 	exit(1);
- }
-diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-index f8b446a..262dd19 100644
---- a/utils/exportfs/exportfs.c
-+++ b/utils/exportfs/exportfs.c
-@@ -92,10 +92,21 @@ release_lockfile()
- 	}
- }
- inline static void 
--read_exportfs_conf(void)
-+read_exportfs_conf(char **argv)
- {
-+	char *s;
-+
- 	conf_init_file(NFS_CONFFILE);
- 	xlog_set_debug("exportfs");
-+
-+	/* NOTE: following uses "mountd" section of nfs.conf !!!! */
-+	s = conf_get_str("mountd", "state-directory-path");
-+	/* Also look in the exportd section */
-+	if (s == NULL)
-+		s = conf_get_str("exportd", "state-directory-path");
-+	if (s && !state_setup_basedir(argv[0], s))
-+		exit(1);
-+
- }
- int
- main(int argc, char **argv)
-@@ -110,7 +121,6 @@ main(int argc, char **argv)
- 	int	f_ignore = 0;
- 	int	i, c;
- 	int	force_flush = 0;
--	char	*s;
- 
- 	if ((progname = strrchr(argv[0], '/')) != NULL)
- 		progname++;
-@@ -122,15 +132,10 @@ main(int argc, char **argv)
- 	xlog_syslog(0);
- 
- 	/* Read in config setting */
--	read_exportfs_conf();
-+	read_exportfs_conf(argv);
- 
- 	nfsd_path_init();
- 
--	/* NOTE: following uses "mountd" section of nfs.conf !!!! */
--	s = conf_get_str("mountd", "state-directory-path");
--	if (s && !state_setup_basedir(argv[0], s))
--		exit(1);
--
- 	while ((c = getopt(argc, argv, "ad:fhio:ruvs")) != EOF) {
- 		switch(c) {
- 		case 'a':
-diff --git a/utils/exportfs/exportfs.man b/utils/exportfs/exportfs.man
-index 91d3589..6d417a7 100644
---- a/utils/exportfs/exportfs.man
-+++ b/utils/exportfs/exportfs.man
-@@ -167,9 +167,11 @@ When a list is given, the members should be comma-separated.
- .B exportfs
- will also recognize the
- .B state-directory-path
--value from the
-+value from both the 
- .B [mountd]
--section.
-+section and the
-+.B [exportd]
-+section
- 
- .SH DISCUSSION
- .SS Exporting Directories
-@@ -327,6 +329,7 @@ table of clients accessing server's exports
- .BR exports (5),
- .BR nfs.conf (5),
- .BR rpc.mountd (8),
-+.BR exportd (8),
- .BR netgroup (5)
- .SH AUTHORS
- Olaf Kirch <okir@monad.swb.de>
+-noinst_HEADERS = fsloc.h
+ mountd_SOURCES = mountd.c mount_dispatch.c rmtab.c \
+-		 svc_run.c fsloc.c mountd.h
++		 svc_run.c mountd.h
+ mountd_LDADD = ../../support/export/libexport.a \
+ 	       ../../support/nfs/libnfs.la \
+ 	       ../../support/misc/libmisc.a \
 -- 
 2.29.2
 
