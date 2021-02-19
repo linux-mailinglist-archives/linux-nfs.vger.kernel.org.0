@@ -2,92 +2,157 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 281533200FD
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Feb 2021 22:57:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DD6632014A
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Feb 2021 23:21:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230029AbhBSV4y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 19 Feb 2021 16:56:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54254 "EHLO
+        id S229577AbhBSWUn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 19 Feb 2021 17:20:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229967AbhBSV4i (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 Feb 2021 16:56:38 -0500
-Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11E26C061574;
-        Fri, 19 Feb 2021 13:56:13 -0800 (PST)
-Received: by mail-qv1-xf31.google.com with SMTP id dg2so1213445qvb.12;
-        Fri, 19 Feb 2021 13:56:13 -0800 (PST)
+        with ESMTP id S229515AbhBSWUm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 Feb 2021 17:20:42 -0500
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C3ABC061574
+        for <linux-nfs@vger.kernel.org>; Fri, 19 Feb 2021 14:20:02 -0800 (PST)
+Received: by mail-ed1-x532.google.com with SMTP id n1so12398492edv.2
+        for <linux-nfs@vger.kernel.org>; Fri, 19 Feb 2021 14:20:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/kAaj2fbex8MjFjSBtp8cDY0E9z10TFEo1e5YFhbJNI=;
-        b=C2EWjFWjCNfVw/NoIV4dCcPC36RUwTqMnkItllRXstEgzg71zYXYNmlmqENWt3E8cK
-         0aykDxTXJ38Q9RcEkIV1XXOdl6RfwHr4us+uykLD8AFFVtn+JrU7ONufj3kYMpNEGONh
-         vDlfqS9VWh8KSyQv6vX/yuTCz3ZaCUAJLTLcBMDLodVAetigynXAT2QrQwo4QfeWYc3I
-         PBNZT3Bbjgv4gY1c1hyO0aGbawTEQa3+CNLpOAUsKYqewxl4/V8H2JrZrVqycPzeqfn+
-         5hs+q88anhZ9/ho9Zrb7UW3ZzeOYgW8v7wyJIURDQOuipNHpfsRJI8nDhg9CW1vdVyOW
-         3rHQ==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=nbHA4iC4EUOT+QLsUXHkjW3bne4PQ5OWrJDYNh6xJ0E=;
+        b=Lz4ZSF8+GkiGgYMdao6EbxoC0Xy2NeZQkT0bmQkbSB10k4QYHh8VEGmPmH3p0NdV+V
+         Ac/t6KvnaLDjbYCRoDjSXuxbOGjhUnVb+dqzk1HrUJ1Kc6EiYUPvdIURGR5rCGM03OP9
+         2XX9Ifa8VbyjyJDbQvd54UbhulSd1W/BB55UxZF1yo7nQHJLtlwLv3HXztzPp4DTHxqb
+         k2S+detuGMs/JlPPJe1zhacZF79EoqlnT/nf05LT8MKK9eO6IVl1vsRionPStmLJm9YD
+         asxjMNjtxJNGoKABBDMbGHyuuB46Z6LUwPqrx5hRRga0vY6ApZBWw1gK3KWsZ7dN2FJ6
+         lsyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=/kAaj2fbex8MjFjSBtp8cDY0E9z10TFEo1e5YFhbJNI=;
-        b=U6+5FY1PGNuIUHYyF8PoryFtM/Hy4U2VDn29QNUI60H+ixh5d6yIFwLElLNxsTJS88
-         i/oCVh8iWgRikw6KutlGC5cbyDbL3lIqxywvBvujfuToNGj26BueXTNqLtkWMgmKTjsC
-         /9pHUBLwd9Yl+AlJf8esUCdLqw//Vfx9mV4b9L3JbIXQz3hGnoLcyv2xHOZacNmBz6au
-         mQIxZHi1GYn5Nk8oFbacrIIJFp28mUlgnpG9U+mKFxdFlKakjG6zlRFHdJQM2/IghFtA
-         5MsZIjbWf5jbOxivg7sy3gyJ8OE4KLmQEuz9qUOCoR1re/f5o8N+yrQihA/7opAHAxtR
-         JRnQ==
-X-Gm-Message-State: AOAM533yHOQGAYkJY0aPB2kkGqcebkWndQ1TV8HszxamoK7qD0XxrBF8
-        11jWIbqTNP8PLUt4d05qhKClDiemQq8F8A==
-X-Google-Smtp-Source: ABdhPJxXdHIJNZiXVqgd3fOtZL7u7xnLhZpSXX3mMalKstjbwGVcNPfEuPHfkirbF/vWDncGzDoVNA==
-X-Received: by 2002:a05:6214:f6d:: with SMTP id iy13mr11503721qvb.24.1613771772228;
-        Fri, 19 Feb 2021 13:56:12 -0800 (PST)
-Received: from ubuntu-mate-laptop.localnet ([208.64.158.253])
-        by smtp.gmail.com with ESMTPSA id b82sm7317694qkc.34.2021.02.19.13.56.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Feb 2021 13:56:11 -0800 (PST)
-Sender: Julian Braha <julian.braha@gmail.com>
-From:   Julian Braha <julianbraha@gmail.com>
-To:     bfields@fieldses.org
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fs: nfsd: fix kconfig dependency warning for NFSD_V4
-Date:   Fri, 19 Feb 2021 16:56:10 -0500
-Message-ID: <4276512.Scm06nC1gK@ubuntu-mate-laptop>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=nbHA4iC4EUOT+QLsUXHkjW3bne4PQ5OWrJDYNh6xJ0E=;
+        b=m3LBzNVEo13lZxLQjhfO9jXS7+WcMVm3Q6hYxZ0wSYvqLURSbdoTMD7X1aCKJtJVeV
+         yxNVM5c2IyLksOW2YiUxoJvFYv1vBhFDHxX43uaBCEnT3jSs+Rz+bOwCE+sd7vi2C5Rj
+         aWBHdB9hRUq+sQXPxzoyJDJknjA0ORdSIc6EyPfKI7JKB12xXky7hPAeM6pflz+TKg5F
+         uBAZFRzy/otTgnqEGqXOVgqVjO/7MJerUebqdJW9Y3xKYcibn7U+RHw1HRumK5v2LMFY
+         yf0Q+DeYMRrEZmjppKty9mQC75C09HUkxy7Udu3oQwAlcVI97r+YwFqVjrA+rqMLh1w8
+         mC5w==
+X-Gm-Message-State: AOAM530cEWUYfdfRkvaE1X2EYMVXQ0dEFHc3gkquIzzGp39ctzb3DeLO
+        85Odh0qdc0P11zS290SKLwFZCADynpBVC1bylAbaLAqKoZvHIA==
+X-Google-Smtp-Source: ABdhPJwSgzBKdrW36xx2FDasEKG8Hm9xWqlJ3abkV1d04beRehm/hgsQVdAXlzTLVx3R5ejEmFnmS1rkZ2UhITd+Dt0=
+X-Received: by 2002:a05:6402:26d5:: with SMTP id x21mr11446092edd.50.1613773201193;
+ Fri, 19 Feb 2021 14:20:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Fri, 19 Feb 2021 17:19:45 -0500
+Message-ID: <CAFX2JfnuPuE7Bd5nAwgwrVQQ84vAMVwpPf0SFZFTwpX0rib+Hg@mail.gmail.com>
+Subject: [GIT PULL] Please pull NFS Client Updates for Linux 5.12
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When NFSD_V4 is enabled and CRYPTO is disabled,
-Kbuild gives the following warning:
+Hi Linus,
 
-WARNING: unmet direct dependencies detected for CRYPTO_SHA256
-  Depends on [n]: CRYPTO [=n]
-  Selected by [y]:
-  - NFSD_V4 [=y] && NETWORK_FILESYSTEMS [=y] && NFSD [=y] && PROC_FS [=y]
+The following changes since commit 1048ba83fb1c00cd24172e23e8263972f6b5d9ac:
 
-WARNING: unmet direct dependencies detected for CRYPTO_MD5
-  Depends on [n]: CRYPTO [=n]
-  Selected by [y]:
-  - NFSD_V4 [=y] && NETWORK_FILESYSTEMS [=y] && NFSD [=y] && PROC_FS [=y]
+  Linux 5.11-rc6 (2021-01-31 13:50:09 -0800)
 
-This is because NFSD_V4 selects CRYPTO_MD5 and CRYPTO_SHA256,
-without depending on or selecting CRYPTO, despite those config options
-being subordinate to CRYPTO.
+are available in the Git repository at:
 
-Signed-off-by: Julian Braha <julianbraha@gmail.com>
---- a/fs/nfsd/Kconfig 2021-02-09 22:05:29.462030761 -0500
-+++ b/fs/nfsd/Kconfig 2021-02-11 12:00:48.974076992 -0500
-@@ -73,6 +73,7 @@
-   select NFSD_V3
-   select FS_POSIX_ACL
-   select SUNRPC_GSS
-+ select CRYPTO
-   select CRYPTO_MD5
-   select CRYPTO_SHA256
-   select GRACE_PERIOD
+  git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.12-1
 
+for you to fetch changes up to 7ae017c7322e2b12472033e65a48aa25cde2fb22:
 
+  NFS: Support the '-owrite=' option in /proc/self/mounts and
+mountinfo (2021-02-17 15:36:03 -0500)
+
+----------------------------------------------------------------
+- New Features:
+  - Support for eager writes, and the write=eager and write=wait mount options
+
+- Other Bugfixes and Cleanups:
+  - Fix typos in some comments
+  - Fix up fall-through warnings for Clang
+  - Cleanups to the NFS readpage codepath
+  - Remove FMR support in rpcrdma_convert_iovs()
+  - Various other cleanups to xprtrdma
+  - Fix xprtrdma pad optimization for servers that don't support RFC 8797
+  - Improvements to rpcrdma tracepoints
+  - Fix up nfs4_bitmask_adjust()
+  - Optimize sparse writes past the end of files
+
+Thanks,
+Anna
+----------------------------------------------------------------
+Bhaskar Chowdhury (1):
+      net: sunrpc: xprtsock.c: Corrected few spellings ,in comments
+
+Calum Mackay (1):
+      SUNRPC: correct error code comment in xs_tcp_setup_socket()
+
+Chuck Lever (7):
+      xprtrdma: Remove FMR support in rpcrdma_convert_iovs()
+      xprtrdma: Simplify rpcrdma_convert_kvec() and frwr_map()
+      xprtrdma: Refactor invocations of offset_in_page()
+      rpcrdma: Fix comments about reverse-direction operation
+      xprtrdma: Pad optimization, revisited
+      rpcrdma: Capture bytes received in Receive completion tracepoints
+      xprtrdma: Clean up rpcrdma_prepare_readch()
+
+Dave Wysochanski (5):
+      NFS: Clean up nfs_readpage() and nfs_readpages()
+      NFS: In nfs_readpage() only increment NFSIOS_READPAGES when read succeeds
+      NFS: Refactor nfs_readpage() and nfs_readpage_async() to use nfs_readdesc
+      NFS: Call readpage_async_filler() from nfs_readpage_async()
+      NFS: Add nfs_pageio_complete_read() and remove nfs_readpage_async()
+
+Gustavo A. R. Silva (2):
+      SUNRPC: Fix fall-through warnings for Clang
+      nfs: Fix fall-through warnings for Clang
+
+Menglong Dong (1):
+      fs/nfs: remove duplicate include
+
+Trond Myklebust (10):
+      NFSv4: Fixes for nfs4_bitmask_adjust()
+      NFS: Fix documenting comment for nfs_revalidate_file_size()
+      NFS: Optimise sparse writes past the end of file
+      NFS: Always clear an invalid mapping when attempting a buffered write
+      NFS: Don't set NFS_INO_INVALID_XATTR if there is no xattr cache
+      NFS: 'flags' field should be unsigned in struct nfs_server
+      NFS: Add support for eager writes
+      NFS: Add mount options supporting eager writes
+      NFS: Set the stable writes flag when initialising the super block
+      NFS: Support the '-owrite=' option in /proc/self/mounts and mountinfo
+
+ fs/nfs/file.c                              |  27 +++++++++++++++++++++------
+ fs/nfs/fs_context.c                        |  35
++++++++++++++++++++++++++++++++++++
+ fs/nfs/fscache.c                           |   4 ----
+ fs/nfs/inode.c                             | 111
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------------------------------
+ fs/nfs/nfs3acl.c                           |   1 +
+ fs/nfs/nfs4client.c                        |   1 +
+ fs/nfs/nfs4proc.c                          |  21 ++++++++++-----------
+ fs/nfs/nfs4state.c                         |   1 +
+ fs/nfs/pnfs.c                              |   2 ++
+ fs/nfs/read.c                              | 206
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------------------------------------------------------------------------------
+ fs/nfs/super.c                             |   7 +++++++
+ fs/nfs/write.c                             |  37
+++++++++++++++++++++++++-------------
+ include/linux/nfs_fs.h                     |   3 +--
+ include/linux/nfs_fs_sb.h                  |   4 +++-
+ include/trace/events/rpcrdma.h             |  50
+++++++++++++++++++++++++++++++++++++++++++++++++--
+ net/sunrpc/rpc_pipe.c                      |   1 +
+ net/sunrpc/xprtrdma/backchannel.c          |   4 ++--
+ net/sunrpc/xprtrdma/frwr_ops.c             |  12 +++---------
+ net/sunrpc/xprtrdma/rpc_rdma.c             |  67
++++++++++++++++++++------------------------------------------------
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   4 ++--
+ net/sunrpc/xprtrdma/xprt_rdma.h            |  15 ++++++++-------
+ net/sunrpc/xprtsock.c                      |  17 ++++++++---------
+ 22 files changed, 357 insertions(+), 273 deletions(-)
