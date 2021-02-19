@@ -2,253 +2,193 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2688232003E
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Feb 2021 22:20:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA59832004A
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Feb 2021 22:26:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbhBSVTd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 19 Feb 2021 16:19:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbhBSVT2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 Feb 2021 16:19:28 -0500
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE24DC061574;
-        Fri, 19 Feb 2021 13:18:47 -0800 (PST)
-Received: by mail-ej1-x631.google.com with SMTP id n13so16005856ejx.12;
-        Fri, 19 Feb 2021 13:18:47 -0800 (PST)
+        id S229649AbhBSV0C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 19 Feb 2021 16:26:02 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:36846 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229553AbhBSV0A (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 Feb 2021 16:26:00 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11JLOvoK074022;
+        Fri, 19 Feb 2021 21:25:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : content-type : mime-version;
+ s=corp-2020-01-29; bh=XFqOLVFldgLvw2+HTDSraAOn69BFrmLtCod8pSamVJ4=;
+ b=AcjzwIa6I4g98KFJFVnx3IND2EDf5K+7bRuVfnVuV4AOA2e9oHmR/R1UmrR9h9gwTJNY
+ aTu9cNhWj5bEsw0Gu5Nba9xm5mJcge/BQl539ks9868MDA4n1UdfaGrleK4yaR4nHrfw
+ rsii/UK6rldk69QVPmIjK72v3XZ6vPqWpLXMokTm5a3UzwPTUZnS3ONMfJpQoZ5pApo8
+ n7jpiOlrWdmNjXCfo1rEruMawV8PhqChv/ez13wcGZ6v+UAk82n8efGP1ht/sK/r3ktP
+ Gw4CfpS9bQbHY8ow5plQR12q1DtjXFn9LjLwTYef/V5gdyUd04ND9b45ClLPPpYeqDfR ZQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 36p7dnts29-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Feb 2021 21:25:16 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11JLANpZ193545;
+        Fri, 19 Feb 2021 21:25:15 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam07lp2047.outbound.protection.outlook.com [104.47.56.47])
+        by aserp3020.oracle.com with ESMTP id 36prp3cn2a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Feb 2021 21:25:15 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fRU7SKUI4viaBdr3BNWA8VmLhKLWGE2ApT+XzirPrvS1YaGRmjfo/NvWt0+muDRSRxwNfYfjZuNU/tFIPbvHPaBCmmOtvuink8YiFOl2mtGF2CmV9kBwF8J/ES9KwQKUQklezp7qOfT4cA3v0hRHUL7bZQ/OEnpJntzR7C4/PPJO89z8B7f+HfhM3w9UUIz4qxqp6K4byD9ttiBeT6WwoIQGFVgepEqOcTVOIPU1x6CsHlWrdvG/li6htudSCLIOMzonAHJ19ZOTuaXGJRIoynX3rI2Fq7TVkBhzuVIQcOt3IEtHTigTpamkeRTf8dVW4bB0Dn81qkBVRNEp7pj5Tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XFqOLVFldgLvw2+HTDSraAOn69BFrmLtCod8pSamVJ4=;
+ b=Mh2u6ZyNSmjb97i5SkeasB+a5k3uBlcxz9EedzRIispPAPyChuMDZ7Pq0G8J1OMfrwHGgy+A0dJS0jhVJc9yGk/SWxF4B8tNs8hTZbSHDBHqftyCrp0hKqlf2S1cC8oa0NISZoI1GTnlVAzyw+dcBtbYIWQzptbdB/ZAJR7w9HwqYRH3CKX964IFjmLQGfdFh2v4KgCP0LSBX3BvkcpYEPehn6mbTyEu+mFYj+WTR548CPMi6Bo76e3S0Op0l7dO3/MxFOcj0DCa9mWHHineRoLmWTbHfJ/9Gm5iT3KRMyuVtxAWK1fp4IaFUgsZdMMJsj7B9HsC2H44tWjZxZlstw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qpiK1eBI0JH4fXJaDNdYBec2kwtlwlrLH5l2qwbU48E=;
-        b=BgUvBjZ0dBKGyL/A+0c3x7nKESw3o2u6jWXCxCXFjxXgQqRzMzD5lXi+RualLobuNJ
-         HJRJk7uDx+RYeLp3woC7TF2BiVhw5luZOiFbU6owlNGj9RAfsCPdRX1ew1omNrjegPMX
-         jtpAwGb64n+TfmRYrQ3e+wGy+d3/3pKxJIDj3ZkT9gMUFTDbGCDrX1H5M5E6mOTQuy0N
-         8O/JkH3Yy54orKAxskn+A8KDt2TWBSd91hrg+FYVOimH21huB++R3w4aBXMYCLyLoCj6
-         kxq9RKj+6xKXT9+qwjSptk7rabm6iU8gs6KjpxuHBOWrliccAPR4NR+xXG7gAQBa0V0E
-         MoaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qpiK1eBI0JH4fXJaDNdYBec2kwtlwlrLH5l2qwbU48E=;
-        b=gTqfveSnyfMezqTMqPlxVMuRzsaigdgK8aY2YnsMIl6n+cHv24fXR4ujU0Z8AY6Gs4
-         tGy7e+ep4AzqqHX9zi9+JrNeuXQpVhJS0lhPCATEnaEe+LaQRIc6lyiQ4VP6r6ovfDlb
-         dc4/LCQuYMaAClKI/kJh6B0tWae+XfRX1xG6Ak+YQTuvBPZRM1LyXfXr33L7aUrxZT0P
-         xLyZ5jLQEVEjfVPft7dYx9V2oiWLFqxOCl4OreH5ocsSNy1rCzWec9Qa9nbtippHutaz
-         QWKcWRIdiP77XpcmNrDBg7SafKbmUa/mPztXmCo3uJZLdfsFunD+SwU1hFVe/oe6a3cf
-         825w==
-X-Gm-Message-State: AOAM532gStmXjrQZmrR3NFNqNVcC+tNlDyviNGj2v7RJU3EaNdsJderz
-        FPhf1mLM6z0/tGYw5kIHe8TZxLrvyZjk/1zxZJk=
-X-Google-Smtp-Source: ABdhPJyrt30hl968yFjbmr8YBcPMTwCpQsN9tK3+5AHXqpyHJBg2FHYMqVsr8C7G9o2LC3P1Wbf4Y5jBQxwqyg6msrY=
-X-Received: by 2002:a17:907:1b1f:: with SMTP id mp31mr10515874ejc.348.1613769526395;
- Fri, 19 Feb 2021 13:18:46 -0800 (PST)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XFqOLVFldgLvw2+HTDSraAOn69BFrmLtCod8pSamVJ4=;
+ b=q60thjuDX+31ZpcP13EBGt6CvBa/rHwlhSA8rto0B6pqT5IgMrCJpiACb8+RsVUZgRIVLnNr/N+6m5DI10SkA5UDQmuO4x6fMO2AuctZtLkH4XTZkOlqhqiff9ZKeqqtJZo3goYF2Pi/rLTTfi8QPighpZRkhue7uOeqUXpQAuk=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=oracle.com;
+Received: from CY4PR1001MB2119.namprd10.prod.outlook.com
+ (2603:10b6:910:3f::15) by CY4PR1001MB2214.namprd10.prod.outlook.com
+ (2603:10b6:910:41::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27; Fri, 19 Feb
+ 2021 21:25:14 +0000
+Received: from CY4PR1001MB2119.namprd10.prod.outlook.com
+ ([fe80::848c:1057:dabd:55b2]) by CY4PR1001MB2119.namprd10.prod.outlook.com
+ ([fe80::848c:1057:dabd:55b2%6]) with mapi id 15.20.3846.043; Fri, 19 Feb 2021
+ 21:25:14 +0000
+From:   Calum Mackay <calum.mackay@oracle.com>
+To:     bfields@redhat.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] pynfs: add courteous server tests
+Date:   Fri, 19 Feb 2021 21:24:47 +0000
+Message-Id: <20210219212447.15549-1-calum.mackay@oracle.com>
+X-Mailer: git-send-email 2.18.4
+Content-Type: text/plain
+X-Originating-IP: [141.143.213.42]
+X-ClientProxiedBy: LO4P123CA0012.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:150::17) To CY4PR1001MB2119.namprd10.prod.outlook.com
+ (2603:10b6:910:3f::15)
 MIME-Version: 1.0
-References: <87blchibaf.fsf@suse.de> <20210218171806.26930-1-lhenriques@suse.de>
-In-Reply-To: <20210218171806.26930-1-lhenriques@suse.de>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 19 Feb 2021 16:18:34 -0500
-Message-ID: <CAN-5tyGs9skFZ=ghd8Vz2F35S70QYi+kujdyRYLSkcEi8Jm9gw@mail.gmail.com>
-Subject: Re: [PATCH v6] vfs: fix copy_file_range regression in cross-fs copies
-To:     Luis Henriques <lhenriques@suse.de>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <sfrench@samba.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Ian Lance Taylor <iant@google.com>,
-        Luis Lozano <llozano@chromium.org>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from cdmvmol7.uk.oracle.com (141.143.213.42) by LO4P123CA0012.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:150::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.38 via Frontend Transport; Fri, 19 Feb 2021 21:25:12 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7065a540-903e-4f28-f401-08d8d51cd82c
+X-MS-TrafficTypeDiagnostic: CY4PR1001MB2214:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR1001MB2214E03BA20088D4D0AE2A88E7849@CY4PR1001MB2214.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fbm4V0Z0pa/n3aFOTldFGTs+iNzXkm7TdclmfR5eVHmo0lkh0jfr00wDFFEoftKbvbslXbmfGiPsu/ejnTtFN/uD/mCalkz89V1br4RPLTNXwwN2T4qXlLuQ+/R1yxH1CnTyqDlcS76ghMCLdNGrk/3A3KpnZxN5oIo7bOEdqOq1WikjOBFNu5dGMsJ3UvVjeqjijydmbAE+Ugg0ewUaSf2998qepzhVD2csADl91v+GF1eBgvgh0ANSiLDm+oCALIks8ngtcLDT238hjYVi/qJE7djU0tuwoHbMV4LQXN8RIZs0UR2uhPAsChsrkB17wv2YI1aXBfDKh+FuuEiprmq+atXJdo2iGk6zbepolaB09Cn1yApKKW7eE4oRsVJXbAxz3IslPoVGp7/hVqqZkyLFPj/9i1/RZMeRqkk8qlwUEp1H9dwei8javOA0Tu7GzGRCxEg71nkD2Vznhap0ROXvxY8wU3v/qX24lDJd6IKzIPfCY8bX9/2iW6XROA/H7HSm/qwTtMulcproT65Rdw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR1001MB2119.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(376002)(366004)(39860400002)(136003)(346002)(478600001)(2906002)(6666004)(2616005)(44832011)(36756003)(186003)(26005)(16526019)(52116002)(7696005)(956004)(316002)(5660300002)(8936002)(6916009)(86362001)(66476007)(66946007)(1076003)(83380400001)(8676002)(4326008)(66556008)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: fKro4QLOdWwB9o3e8g9sY2ewB2FNAViFk97Khs7p8CixKwSrbnTnYMRLcl0L2TkF6alDvGwZwQS9SfFxvxhohHOLAuzJiQQi7AWNIYNQdHms1oQ8Dkxi5EyamBj8UR3MWr8gDwN82YcYol9tK5SXnODKSpI5UaMIvKldHB0rILkoAZYTK+om3fotDtPwrxaGfnh+b8XGMYKkbnlaLQzXGDbnvPZqYRFBp/F08VbgkzYgnW4MWDP/FdWpvTPnupOlEbE0U7ECwXUajOyj+CIlo29v9h8k3bz91BUElM3PNzSV0c+cueUFXYvjt6tsxrFCcCQHH8CwCGDbgZvMBJjeABReL4bQsXgSQchI3BLwRAXs/H3biwVKRD0JMvCJxlauXPKEC/cG3/TDRGwB4p8T+381VwFo8Plz0BtqhVhxY3ShSjLMsfwr2owduxuA23ooeFut4ThNEGzajQvzq6MGdwG4VIckYESNQYJk99fkrt2CBIyh/+04fFa1+0DgJrNYOnylRzPhiQbgPEb66XFEQH+J9WSTg+zdOTu5o3jXTHxlIM6Ibk6V96SwwQU+3rgW4tRybl11Zr8K8+O0ltHui9fOqr3KsnsYSUQyPHd0U5FF3dNTp3ZAgoduzXTtNzZvr8xFFxzVFv/eb53NTcnufHls6xQ8tczvRJYcFQvpkIOpdtmULrtOB1raFfjuGJ4xDbnNNlCYte0EaAzUrGSC765aJAN2b4qg7Uc2E2g6fGJOJ+96fDCGLlYnwliXYDoD
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7065a540-903e-4f28-f401-08d8d51cd82c
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR1001MB2119.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2021 21:25:13.8698
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 10HHBmShO1df6im9tgwiH9VHr1RCsrwZ0LXDnRScLteiVAb6p8Jb53fn7L0jI8u8rofMs4xc/N1ntIIaQRpK7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1001MB2214
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9900 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 suspectscore=0 spamscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102190171
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9900 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 mlxscore=0
+ phishscore=0 spamscore=0 adultscore=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2102190172
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Feb 18, 2021 at 12:33 PM Luis Henriques <lhenriques@suse.de> wrote:
->
-> A regression has been reported by Nicolas Boichat, found while using the
-> copy_file_range syscall to copy a tracefs file.  Before commit
-> 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
-> kernel would return -EXDEV to userspace when trying to copy a file across
-> different filesystems.  After this commit, the syscall doesn't fail anymore
-> and instead returns zero (zero bytes copied), as this file's content is
-> generated on-the-fly and thus reports a size of zero.
->
-> This patch restores some cross-filesystem copy restrictions that existed
-> prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
-> devices").  Filesystems are still allowed to fall-back to the VFS
-> generic_copy_file_range() implementation, but that has now to be done
-> explicitly.
->
-> nfsd is also modified to fall-back into generic_copy_file_range() in case
-> vfs_copy_file_range() fails with -EOPNOTSUPP or -EXDEV.
->
-> Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
-> Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
-> Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
-> Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
-> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-> Signed-off-by: Luis Henriques <lhenriques@suse.de>
-> ---
-> And v6 is upon us.  Behold!
+Add a first test that simply locks, sleeps for twice the lease period,
+then unlocks.
 
+Signed-off-by: Calum Mackay <calum.mackay@oracle.com>
+---
 
-> Changes since v5
-> - check if ->copy_file_range is NULL before calling it
-> Changes since v4
-> - nfsd falls-back to generic_copy_file_range() only *if* it gets -EOPNOTSUPP
->   or -EXDEV.
-> Changes since v3
-> - dropped the COPY_FILE_SPLICE flag
-> - kept the f_op's checks early in generic_copy_file_checks, implementing
->   Amir's suggestions
-> - modified nfsd to use generic_copy_file_range()
-> Changes since v2
-> - do all the required checks earlier, in generic_copy_file_checks(),
->   adding new checks for ->remap_file_range
-> - new COPY_FILE_SPLICE flag
-> - don't remove filesystem's fallback to generic_copy_file_range()
-> - updated commit changelog (and subject)
-> Changes since v1 (after Amir review)
-> - restored do_copy_file_range() helper
-> - return -EOPNOTSUPP if fs doesn't implement CFR
-> - updated commit description
->
->  fs/nfsd/vfs.c   |  8 +++++++-
->  fs/read_write.c | 53 ++++++++++++++++++++++++-------------------------
->  2 files changed, 33 insertions(+), 28 deletions(-)
->
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 04937e51de56..23dab0fa9087 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -568,6 +568,7 @@ __be32 nfsd4_clone_file_range(struct nfsd_file *nf_src, u64 src_pos,
->  ssize_t nfsd_copy_file_range(struct file *src, u64 src_pos, struct file *dst,
->                              u64 dst_pos, u64 count)
->  {
-> +       ssize_t ret;
->
->         /*
->          * Limit copy to 4MB to prevent indefinitely blocking an nfsd
-> @@ -578,7 +579,12 @@ ssize_t nfsd_copy_file_range(struct file *src, u64 src_pos, struct file *dst,
->          * limit like this and pipeline multiple COPY requests.
->          */
->         count = min_t(u64, count, 1 << 22);
-> -       return vfs_copy_file_range(src, src_pos, dst, dst_pos, count, 0);
-> +       ret = vfs_copy_file_range(src, src_pos, dst, dst_pos, count, 0);
-> +
-> +       if (ret == -EOPNOTSUPP || ret == -EXDEV)
-> +               ret = generic_copy_file_range(src, src_pos, dst, dst_pos,
-> +                                             count, 0);
-> +       return ret;
->  }
->
->  __be32 nfsd4_vfs_fallocate(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> diff --git a/fs/read_write.c b/fs/read_write.c
-> index 75f764b43418..0348aaa9e237 100644
-> --- a/fs/read_write.c
-> +++ b/fs/read_write.c
-> @@ -1388,28 +1388,6 @@ ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
->  }
->  EXPORT_SYMBOL(generic_copy_file_range);
->
-> -static ssize_t do_copy_file_range(struct file *file_in, loff_t pos_in,
-> -                                 struct file *file_out, loff_t pos_out,
-> -                                 size_t len, unsigned int flags)
-> -{
-> -       /*
-> -        * Although we now allow filesystems to handle cross sb copy, passing
-> -        * a file of the wrong filesystem type to filesystem driver can result
-> -        * in an attempt to dereference the wrong type of ->private_data, so
-> -        * avoid doing that until we really have a good reason.  NFS defines
-> -        * several different file_system_type structures, but they all end up
-> -        * using the same ->copy_file_range() function pointer.
-> -        */
-> -       if (file_out->f_op->copy_file_range &&
-> -           file_out->f_op->copy_file_range == file_in->f_op->copy_file_range)
-> -               return file_out->f_op->copy_file_range(file_in, pos_in,
-> -                                                      file_out, pos_out,
-> -                                                      len, flags);
-> -
-> -       return generic_copy_file_range(file_in, pos_in, file_out, pos_out, len,
-> -                                      flags);
-> -}
-> -
->  /*
->   * Performs necessary checks before doing a file copy
->   *
-> @@ -1427,6 +1405,25 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
->         loff_t size_in;
->         int ret;
->
-> +       /*
-> +        * Although we now allow filesystems to handle cross sb copy, passing
-> +        * a file of the wrong filesystem type to filesystem driver can result
-> +        * in an attempt to dereference the wrong type of ->private_data, so
-> +        * avoid doing that until we really have a good reason.  NFS defines
-> +        * several different file_system_type structures, but they all end up
-> +        * using the same ->copy_file_range() function pointer.
-> +        */
-> +       if (file_out->f_op->copy_file_range) {
-> +               if (file_in->f_op->copy_file_range !=
-> +                   file_out->f_op->copy_file_range)
-> +                       return -EXDEV;
-> +       } else if (file_in->f_op->remap_file_range) {
-> +               if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
-> +                       return -EXDEV;
-> +       } else {
-> +                return -EOPNOTSUPP;
-> +       }
-> +
->         ret = generic_file_rw_checks(file_in, file_out);
->         if (ret)
->                 return ret;
-> @@ -1499,8 +1496,7 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
->          * Try cloning first, this is supported by more file systems, and
->          * more efficient if both clone and copy are supported (e.g. NFS).
->          */
-> -       if (file_in->f_op->remap_file_range &&
-> -           file_inode(file_in)->i_sb == file_inode(file_out)->i_sb) {
-> +       if (file_in->f_op->remap_file_range) {
->                 loff_t cloned;
+I plan to add some more tests shortly, but will send what I have now,
+in case it's useful for the upcoming BAT. This first test has been tried
+against Solaris & Linux (discourteous) servers.
 
-This chunk breaks NFS. You are removing the check that the source and
-destination for the CLONE operation are the same superblock and that
-leads to the fact that when NFS does a copy between 2 different NFS
-servers, it would try CLONE first which is not allowed. NFS relied on
-this check to be done by the VFS layer. Either don't remove it or,
-otherwise, fix the NFS clone's code to not send the CLONE and error
-accordingly so that the COPY is done as it should have been.
+ nfs4.1/server41tests/__init__.py    |  1 +
+ nfs4.1/server41tests/st_courtesy.py | 47 +++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+ create mode 100644 nfs4.1/server41tests/st_courtesy.py
 
->                 cloned = file_in->f_op->remap_file_range(file_in, pos_in,
-> @@ -1511,11 +1507,14 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
->                         ret = cloned;
->                         goto done;
->                 }
-> +               /* Resort to copy_file_range if implemented. */
-> +               ret = -EOPNOTSUPP;
->         }
->
-> -       ret = do_copy_file_range(file_in, pos_in, file_out, pos_out, len,
-> -                               flags);
-> -       WARN_ON_ONCE(ret == -EOPNOTSUPP);
-> +       if (file_out->f_op->copy_file_range)
-> +               ret = file_out->f_op->copy_file_range(file_in, pos_in,
-> +                                                     file_out, pos_out,
-> +                                                     len, flags);
->  done:
->         if (ret > 0) {
->                 fsnotify_access(file_in);
+diff --git a/nfs4.1/server41tests/__init__.py b/nfs4.1/server41tests/__init__.py
+index a4d7ee65fb5e..ebb4e8847151 100644
+--- a/nfs4.1/server41tests/__init__.py
++++ b/nfs4.1/server41tests/__init__.py
+@@ -25,4 +25,5 @@ __all__ = ["st_exchange_id.py", # draft 21
+            "st_sparse.py",
+            "st_flex.py",
+            "st_xattr.py",
++           "st_courtesy.py",
+            ]
+diff --git a/nfs4.1/server41tests/st_courtesy.py b/nfs4.1/server41tests/st_courtesy.py
+new file mode 100644
+index 000000000000..5e13dad44a01
+--- /dev/null
++++ b/nfs4.1/server41tests/st_courtesy.py
+@@ -0,0 +1,47 @@
++from .st_create_session import create_session
++from xdrdef.nfs4_const import *
++
++from .environment import check, fail, create_file, open_file, close_file
++from .environment import open_create_file_op, use_obj
++from xdrdef.nfs4_type import open_owner4, openflag4, createhow4, open_claim4
++from xdrdef.nfs4_type import creatverfattr, fattr4, stateid4, locker4, lock_owner4
++from xdrdef.nfs4_type import open_to_lock_owner4
++import nfs_ops
++op = nfs_ops.NFS4ops()
++import threading
++
++
++def _getleasetime(sess):
++    res = sess.compound([op.putrootfh(), op.getattr(1 << FATTR4_LEASE_TIME)])
++    return res.resarray[-1].obj_attributes[FATTR4_LEASE_TIME]
++
++def testLockSleepLockU(t, env):
++    """test server courtesy by having LOCK and LOCKU
++       in separate compounds, separated by a sleep of twice the lease period
++
++    FLAGS: courteous
++    CODE: COUR1
++    """
++    sess1 = env.c1.new_client_session(env.testname(t))
++
++    res = create_file(sess1, env.testname(t))
++    check(res)
++
++    fh = res.resarray[-1].object
++    stateid = res.resarray[-2].stateid
++    open_to_lock_owner = open_to_lock_owner4( 0, stateid, 0, lock_owner4(0, b"lock1"))
++    lock_owner = locker4(open_owner=open_to_lock_owner, new_lock_owner=True)
++    lock_ops = [ op.lock(WRITE_LT, False, 0, NFS4_UINT64_MAX, lock_owner) ]
++    res = sess1.compound([op.putfh(fh)] + lock_ops)
++    check(res, NFS4_OK)
++
++    lease_time = _getleasetime(sess1)
++    env.sleep(lease_time * 2, "twice the lease period")
++
++    lock_stateid = res.resarray[-1].lock_stateid
++    lock_ops = [ op.locku(WRITE_LT, 0, lock_stateid, 0, NFS4_UINT64_MAX) ]
++    res = sess1.compound([op.putfh(fh)] + lock_ops)
++    check(res, NFS4_OK, warnlist = [NFS4ERR_BADSESSION])
++
++    res = close_file(sess1, fh, stateid=stateid)
++    check(res)
+-- 
+2.18.4
+
