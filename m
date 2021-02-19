@@ -2,60 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F59E31FDAE
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Feb 2021 18:13:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B66DF31FDC5
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Feb 2021 18:21:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbhBSRMB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 19 Feb 2021 12:12:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49970 "EHLO
+        id S229555AbhBSRVf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 19 Feb 2021 12:21:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229863AbhBSRL7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 Feb 2021 12:11:59 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24AFDC061574;
-        Fri, 19 Feb 2021 09:11:19 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id gg8so3422351ejb.13;
-        Fri, 19 Feb 2021 09:11:19 -0800 (PST)
+        with ESMTP id S229515AbhBSRVf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 Feb 2021 12:21:35 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8493C061756;
+        Fri, 19 Feb 2021 09:20:54 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id d8so14861916ejc.4;
+        Fri, 19 Feb 2021 09:20:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XlqBDH4lx9E/5HEGbcZSk9Z6LSm2PgQK4YV9Qbu628Y=;
-        b=qKwMj+buSqM+D5CS8EAGZ+SiZXZGgFhh64xtJTk3BOsLmNNhHehKGK0fzMdZF8BWe/
-         TNzvrlsjSEWXO8pjuTBSrxv8fAIVnmIu2bxLc3iieK5N45HbEBHqsTa41/MwYan4eJKz
-         AF3T4n93tDfpLxbx91Hib9jwuog4Rl8g8sf5YRrr3hx9y+zsMrG6aAr5LJPcLoYFSNUG
-         tgplNxl0DoST4/Q/mamwbgNDvJkC+vhiOSDJX+1nBICOkV1kvadzNYxZ5oblQ3J0ihDG
-         TBiKOFNzKAoDOB3deFMay+/KDTIpG4BZBebw4MCi+ULz4yVzlqmKe235gj1Cszwcslcw
-         L9oA==
+        bh=KHhz1KT9c2LKcLUC0DzO36WEiHbnqm0z++7FywL/tuQ=;
+        b=N8TBz4RwewzCmJd03lPfMFXvbyBn0IuO4u//QVuwWImsj40ip1PVOtQCyc2JEO6r70
+         EQyXcGwHMhFaEkh5Spx1/Dc6AIQYw20uTDblHvjA07IaGMc56SeIg9lzYmMPNHjPQCK0
+         2b7ybUGP30yKsfwxeNJisEgUu+JjDGWPQerxFbEGgeD7UkONG0f84g3rHUO+E6XlJSr7
+         wwHRvz2F4Z9UUAISLSLO+p1Lxrgm0fCRxCWpYC9gZbeUndKjTGOpi6K1MXKiRBIB3Rwk
+         zsMa+DhG4YznI7VSAlt06lZdijLuVuXkN5ZKqCHH7IbeFYA2d8O43mBbVR959yeMW2qC
+         yvsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XlqBDH4lx9E/5HEGbcZSk9Z6LSm2PgQK4YV9Qbu628Y=;
-        b=QroreEno7XfRSiC5P0s68tY8DXVMnK1wA6i8MApraZRWB1qzijP6Eeldj/PZJRZsIJ
-         1vdhJBOncEbOgn1S1iNr0zn+NxWKjonf2Lwamz4nVnM5F5O41SZNdebJ2SetaYPcJ9Vy
-         pC/EJwLOdcO3olBjCQYCcdmklwPkowpQgoHsC4opIgXS2y+DuUN07HurHn/IRI7tbE64
-         jRbl5MVtqj4t1lQ8c4J/ZnIb65VH3bm7ddeBHjQkq5XlN1pyVDeIk9TQhftkhtkyTfxZ
-         RzDurju6P+xJh2I3fyCA6HzK+07b/i/6idazqbY2lOuNa61qKlWv7WpPOa7xUsJo2TrY
-         j//A==
-X-Gm-Message-State: AOAM533sh8xICz+UyeDIr5x3PWFgKLazsrsnRuD/EO4AGI1gEMyOUim3
-        Er9f4vpgdEQ9iKJeCgqikTq2JwpPljL8JbMSRyWwFba8
-X-Google-Smtp-Source: ABdhPJwSe/72XmbTSWFdmsoVvKWZguFKHBkrXFR6IF7ZQzpMbMkF/EImVFYJ32ZOs8MsPHRy9lVjEnw6pwRc7e4VVyU=
-X-Received: by 2002:a17:907:1b1f:: with SMTP id mp31mr9673574ejc.348.1613754677790;
- Fri, 19 Feb 2021 09:11:17 -0800 (PST)
+        bh=KHhz1KT9c2LKcLUC0DzO36WEiHbnqm0z++7FywL/tuQ=;
+        b=i6AI7n3J4EFGxgjCqfXdBnVa2MDStMX7h/MgKKfeESPqQTnAXQ2RbUGPIq4lYFG+1V
+         7XmRWnJy2nFMRY8nAfXA/xcFKm377r3QQ9e/h+3LSMFx/68fc7INrtKjFZYqclple7xW
+         6zNsCpTY5jnLx+maBTsc0jjLByvDHsvrtHDCq7O30vkXYZufYDLYutTh9iTKinCYCj3M
+         yxbEJFvYj/iqyT63UOTKzctcz/99dE8gwC5gjt9q5XGxGQzu3XjGoUFQ6mMLb67k5EaL
+         OEotqwpG9iT7N5kAdJ8mdM4sEBPHoJpoSK1GPcNpEHw1xwwp9XUDc5W9R8I/zUl/HDmh
+         Ab9Q==
+X-Gm-Message-State: AOAM5336OftrXTPK/214/lJ87q8D99eVLsbfxF6DXvosdlLuP0if5Qh1
+        kmJkaf6jrA00IWxlhV1W4AgNQcwLhL4rsjwnBTY=
+X-Google-Smtp-Source: ABdhPJwftaOBR2h+vgda1jIxROpU1ExJYjdDBtKDbDhziEvTcgSsSrvr28jwOb3hy4/HlYzskHRhOn3UKYx8DC6Lnw0=
+X-Received: by 2002:a17:906:145b:: with SMTP id q27mr9875777ejc.432.1613755253494;
+ Fri, 19 Feb 2021 09:20:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20210218195046.19280-1-olga.kornievskaia@gmail.com>
- <20210218195046.19280-2-olga.kornievskaia@gmail.com> <7587df15-6f6f-3581-8bae-a648315cfae9@schaufler-ca.com>
- <CAN-5tyGff24KwP-sTezU=h39_zTVTgh10D-6eT220SO=HSk3+w@mail.gmail.com> <9da50d82-85d3-3a2f-df00-586b8e3e890f@schaufler-ca.com>
-In-Reply-To: <9da50d82-85d3-3a2f-df00-586b8e3e890f@schaufler-ca.com>
+References: <20210218195046.19280-2-olga.kornievskaia@gmail.com> <20210219081908.GQ2087@kadam>
+In-Reply-To: <20210219081908.GQ2087@kadam>
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Fri, 19 Feb 2021 12:11:10 -0500
-Message-ID: <CAN-5tyEkaiePjMhssvOw_JbAB57n0d_QZEgJwHk3362eJjdM8w@mail.gmail.com>
+Date:   Fri, 19 Feb 2021 12:20:46 -0500
+Message-ID: <CAN-5tyGrDtfLBXg42XLzp2med482QWPKN_KGXwNH_SP3V5buew@mail.gmail.com>
 Subject: Re: [PATCH v2 2/2] NFSv4 account for selinux security context when
  deciding to share superblock
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <schumaker.anna@gmail.com>
+Cc:     kbuild@lists.01.org, lkp@intel.com, kbuild-all@lists.01.org,
         linux-nfs <linux-nfs@vger.kernel.org>,
         Linux Security Module list 
         <linux-security-module@vger.kernel.org>,
@@ -65,162 +64,91 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Feb 18, 2021 at 6:17 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
->
-> On 2/18/2021 2:39 PM, Olga Kornievskaia wrote:
-> > On Thu, Feb 18, 2021 at 5:07 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> >> On 2/18/2021 11:50 AM, Olga Kornievskaia wrote:
-> >>> From: Olga Kornievskaia <kolga@netapp.com>
-> >>>
-> >>> Keep track of whether or not there was an selinux context mount
-> >>> options during the mount.
-> >> This may be the intention, but it's not what the change you're
-> >> introducing here does.
-> > Can you explain why, as I must be doing something wrong? I'm familiar
-> > with NFS but not with Selinux and I thought I was doing the correct
-> > changes to the Selinux. If that's not the case would you share what
-> > has been done incorrectly.
->
-> The code in this patch is generic for any LSM that wants to provide
-> a security_sb_mnt_opts_compat() hook. Your 1/2 patch deals with how
-> the hook provided by SELinux behaves.  All the behavior that is specific
-> to SELinux should be in the SELinux hook. If you can state the behavior
-> generically you should do that here.
+Trond/Anna,
 
-Hopefully by removing specific reference to the selinux and sticking
-with LSM addresses your comment. To NFS it's a security context it
-doesn't care if it's selinux or something else.
+I'd like your opinion here. Some static checking flags a "ctx"
+assignment in nfs_fill_super() in the new patch. In an existing code
+there is a check for it is NULL before dereferencing. However, "ctx"
+can never be null. nfs_get_tree_common() which calls nfs_fill_super()
+and passes in "ctx" gets it from the passed in "fs_context". If the
+passed in arg can be null then we are dereferencing in var assignment
+so things would blow up there. So "ctx" can never be null.
 
-> >>>  While deciding if the superblock can be
-> >>> shared for the new mount, check for if we had selinux context on
-> >>> the existing mount and call into selinux to tell if new passed
-> >>> in selinux context is compatible with the existing mount's options.
-> >> You're describing how you expect the change to be used, not
-> >> what it does. If I am the author of a security module other
-> >> than SELinux (which, it turns out, I am) what would I use this
-> >> for? How might this change interact with my security module?
-> >> Is this something I might exploit? If I am the author of a
-> >> filesystem other than NFS (which I am not) should I be doing
-> >> the same thing?
-> > I'm not sure I'm understanding your questions. I'm solving a bug that
-> > exists when NFS interacts with selinux.
->
-> Right, but you're introducing an LSM interface to do so. LSM interfaces
-> are expected to be usable by any security module. Smack ought to be able
-> to provide NFS support, so might be expected to provide a hook for
-> security_sb_mnt_opts_compat().
+Should I create another clean up patch to remove the check for null
+ctx in nfs_fill_super() to make static analyzers happy?
 
-So I thought to address how a filesystem uses the hooks should have
-been in the first patch and I added it here. But addressing how
-another LSM module (like Smack) would use it again should be coming
-from the first patch. It's a new hook to compare mount options and if
-Smack were to implement some security mount options it would implement
-a comparison function of the two.
-
-
+On Fri, Feb 19, 2021 at 3:19 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 >
-> >  This is really not a feature
-> > that I'm introducing. I thought it was somewhat descriptive with an
-> > example that if you want to mount with different security contexts but
-> > whatever you are mounting has a possibility of sharing the same
-> > superblock, we need to be careful and take security contexts that are
-> > being used by those mount into account to decide whether or not to
-> > share the superblock. Again I thought that's exactly what the commit
-> > states. A different security module, if it acts on security context,
-> > would have to have the same ability to compare if one context options
-> > are compatible with anothers.
+> Hi Olga,
 >
-> Not everyone is going to extrapolate the general behavior from
-> the SELinux behavior. Your description of the SELinux behavior in 1/2
-> is fine. I'm looking for how a module other than SELinux would use
-> this.
+> url:    https://github.com/0day-ci/linux/commits/Olga-Kornievskaia/Add-new-hook-to-compare-new-mount-to-an-existing-mount/20210219-035957
+> base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+> config: i386-randconfig-m021-20210215 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-15) 9.3.0
 >
-> >  Another filesystem can decide if it
-> > wants to share superblocks based on compatibility of existing security
-> > context and new one. Is that what you are asking?
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 >
-> What I'm asking is whether this should be a concern for filesystems
-> in general, in which case this isn't the right place to make this change.
+> smatch warnings:
+> fs/nfs/super.c:1061 nfs_fill_super() error: we previously assumed 'ctx' could be null (see line 1029)
 >
-> >
-> >
-> >>> Previously, NFS wasn't able to do the following 2mounts:
-> >>> mount -o vers=4.2,sec=sys,context=system_u:object_r:root_t:s0
-> >>> <serverip>:/ /mnt
-> >>> mount -o vers=4.2,sec=sys,context=system_u:object_r:swapfile_t:s0
-> >>> <serverip>:/scratch /scratch
-> >>>
-> >>> 2nd mount would fail with "mount.nfs: an incorrect mount option was
-> >>> specified" and var log messages would have:
-> >>> "SElinux: mount invalid. Same superblock, different security
-> >>> settings for.."
-> >>>
-> >>> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> >>> ---
-> >>>  fs/nfs/fs_context.c       | 3 +++
-> >>>  fs/nfs/internal.h         | 1 +
-> >>>  fs/nfs/super.c            | 4 ++++
-> >>>  include/linux/nfs_fs_sb.h | 1 +
-> >>>  4 files changed, 9 insertions(+)
-> >>>
-> >>> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-> >>> index 06894bcdea2d..8067f055d842 100644
-> >>> --- a/fs/nfs/fs_context.c
-> >>> +++ b/fs/nfs/fs_context.c
-> >>> @@ -448,6 +448,9 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
-> >>>       if (opt < 0)
-> >>>               return ctx->sloppy ? 1 : opt;
-> >>>
-> >>> +     if (fc->security)
-> >>> +             ctx->has_sec_mnt_opts = 1;
-> >>> +
-> >>>       switch (opt) {
-> >>>       case Opt_source:
-> >>>               if (fc->source)
-> >>> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-> >>> index 62d3189745cd..08f4f34e8cf5 100644
-> >>> --- a/fs/nfs/internal.h
-> >>> +++ b/fs/nfs/internal.h
-> >>> @@ -96,6 +96,7 @@ struct nfs_fs_context {
-> >>>       char                    *fscache_uniq;
-> >>>       unsigned short          protofamily;
-> >>>       unsigned short          mountfamily;
-> >>> +     bool                    has_sec_mnt_opts;
-> >>>
-> >>>       struct {
-> >>>               union {
-> >>> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-> >>> index 4034102010f0..0a2d252cf90f 100644
-> >>> --- a/fs/nfs/super.c
-> >>> +++ b/fs/nfs/super.c
-> >>> @@ -1058,6 +1058,7 @@ static void nfs_fill_super(struct super_block *sb, struct nfs_fs_context *ctx)
-> >>>                                                &sb->s_blocksize_bits);
-> >>>
-> >>>       nfs_super_set_maxbytes(sb, server->maxfilesize);
-> >>> +     server->has_sec_mnt_opts = ctx->has_sec_mnt_opts;
-> >>>  }
-> >>>
-> >>>  static int nfs_compare_mount_options(const struct super_block *s, const struct nfs_server *b,
-> >>> @@ -1174,6 +1175,9 @@ static int nfs_compare_super(struct super_block *sb, struct fs_context *fc)
-> >>>               return 0;
-> >>>       if (!nfs_compare_userns(old, server))
-> >>>               return 0;
-> >>> +     if ((old->has_sec_mnt_opts || fc->security) &&
-> >>> +                     security_sb_mnt_opts_compat(sb, fc->security))
-> >>> +             return 0;
-> >>>       return nfs_compare_mount_options(sb, server, fc);
-> >>>  }
-> >>>
-> >>> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-> >>> index 38e60ec742df..3f0acada5794 100644
-> >>> --- a/include/linux/nfs_fs_sb.h
-> >>> +++ b/include/linux/nfs_fs_sb.h
-> >>> @@ -254,6 +254,7 @@ struct nfs_server {
-> >>>
-> >>>       /* User namespace info */
-> >>>       const struct cred       *cred;
-> >>> +     bool                    has_sec_mnt_opts;
-> >>>  };
-> >>>
-> >>>  /* Server capabilities */
+> vim +/ctx +1061 fs/nfs/super.c
 >
+> 62a55d088cd87d Scott Mayhew      2019-12-10  1021  static void nfs_fill_super(struct super_block *sb, struct nfs_fs_context *ctx)
+> f7b422b17ee5ee David Howells     2006-06-09  1022  {
+> 54ceac45159860 David Howells     2006-08-22  1023       struct nfs_server *server = NFS_SB(sb);
+> f7b422b17ee5ee David Howells     2006-06-09  1024
+> f7b422b17ee5ee David Howells     2006-06-09  1025       sb->s_blocksize_bits = 0;
+> f7b422b17ee5ee David Howells     2006-06-09  1026       sb->s_blocksize = 0;
+> 6a74490dca8974 Bryan Schumaker   2012-07-30  1027       sb->s_xattr = server->nfs_client->cl_nfs_mod->xattr;
+> 6a74490dca8974 Bryan Schumaker   2012-07-30  1028       sb->s_op = server->nfs_client->cl_nfs_mod->sops;
+> 5eb005caf5383d David Howells     2019-12-10 @1029       if (ctx && ctx->bsize)
+>                                                             ^^^
+> Check for NULL
+>
+> 5eb005caf5383d David Howells     2019-12-10  1030               sb->s_blocksize = nfs_block_size(ctx->bsize, &sb->s_blocksize_bits);
+> f7b422b17ee5ee David Howells     2006-06-09  1031
+> 6a74490dca8974 Bryan Schumaker   2012-07-30  1032       if (server->nfs_client->rpc_ops->version != 2) {
+> 54ceac45159860 David Howells     2006-08-22  1033               /* The VFS shouldn't apply the umask to mode bits. We will do
+> 54ceac45159860 David Howells     2006-08-22  1034                * so ourselves when necessary.
+> 54ceac45159860 David Howells     2006-08-22  1035                */
+> 1751e8a6cb935e Linus Torvalds    2017-11-27  1036               sb->s_flags |= SB_POSIXACL;
+> 54ceac45159860 David Howells     2006-08-22  1037               sb->s_time_gran = 1;
+> 20fa1902728698 Peng Tao          2017-06-29  1038               sb->s_export_op = &nfs_export_ops;
+> 1fcb79c1b21801 Deepa Dinamani    2019-03-26  1039       } else
+> 1fcb79c1b21801 Deepa Dinamani    2019-03-26  1040               sb->s_time_gran = 1000;
+> 1fcb79c1b21801 Deepa Dinamani    2019-03-26  1041
+> 1fcb79c1b21801 Deepa Dinamani    2019-03-26  1042       if (server->nfs_client->rpc_ops->version != 4) {
+> 1fcb79c1b21801 Deepa Dinamani    2019-03-26  1043               sb->s_time_min = 0;
+> 1fcb79c1b21801 Deepa Dinamani    2019-03-26  1044               sb->s_time_max = U32_MAX;
+> 1fcb79c1b21801 Deepa Dinamani    2019-03-26  1045       } else {
+> 1fcb79c1b21801 Deepa Dinamani    2019-03-26  1046               sb->s_time_min = S64_MIN;
+> 1fcb79c1b21801 Deepa Dinamani    2019-03-26  1047               sb->s_time_max = S64_MAX;
+> 54ceac45159860 David Howells     2006-08-22  1048       }
+> f7b422b17ee5ee David Howells     2006-06-09  1049
+> ab88dca311a372 Al Viro           2019-12-10  1050       sb->s_magic = NFS_SUPER_MAGIC;
+> 54ceac45159860 David Howells     2006-08-22  1051
+> ab88dca311a372 Al Viro           2019-12-10  1052       /* We probably want something more informative here */
+> ab88dca311a372 Al Viro           2019-12-10  1053       snprintf(sb->s_id, sizeof(sb->s_id),
+> ab88dca311a372 Al Viro           2019-12-10  1054                "%u:%u", MAJOR(sb->s_dev), MINOR(sb->s_dev));
+> 1fcb79c1b21801 Deepa Dinamani    2019-03-26  1055
+> ab88dca311a372 Al Viro           2019-12-10  1056       if (sb->s_blocksize == 0)
+> ab88dca311a372 Al Viro           2019-12-10  1057               sb->s_blocksize = nfs_block_bits(server->wsize,
+> ab88dca311a372 Al Viro           2019-12-10  1058                                                &sb->s_blocksize_bits);
+> f7b422b17ee5ee David Howells     2006-06-09  1059
+> ab88dca311a372 Al Viro           2019-12-10  1060       nfs_super_set_maxbytes(sb, server->maxfilesize);
+> 52a2a3a4af9af7 Olga Kornievskaia 2021-02-18 @1061       server->has_sec_mnt_opts = ctx->has_sec_mnt_opts;
+>                                                                                    ^^^^^^^^^^^^^^^^^^^^^
+> Unchecked dereference.  Is the earlier NULL check necessary?  (Actually
+> on my system with a built cross function DB, I see that the earlier
+> NULL check can be removed.  If the cross function DB were built then
+> Smatch would not have printed this warning about inconsistent NULL
+> checks).
+>
+> f7b422b17ee5ee David Howells     2006-06-09  1062  }
+> f7b422b17ee5ee David Howells     2006-06-09  1063
+>
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
