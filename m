@@ -2,128 +2,126 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 690143205A2
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Feb 2021 15:10:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E645A320633
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Feb 2021 17:36:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbhBTOJi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 20 Feb 2021 09:09:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229525AbhBTOJh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 20 Feb 2021 09:09:37 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22291C061574
-        for <linux-nfs@vger.kernel.org>; Sat, 20 Feb 2021 06:08:57 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id d2so15720821edq.10
-        for <linux-nfs@vger.kernel.org>; Sat, 20 Feb 2021 06:08:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ae3qYOfHqRj3gCzYg2lPzRV59DPhsFz46J7BQUDlJTE=;
-        b=kqEFMVG1bcFyUU8GBlr6Gy69PpvaT+smTLdZScgNmuA+zAvHJqfbzyPQqDbYpXyE1l
-         7b3HTrm9kBDzycLpwCHqLR9c0enHBCDltLWtfv/pgGWc/37TA5zPgjYRGkM0gjwKlOyo
-         5NfXmqphxHmusl/cBNp2umSEn+AgDJ9kq8C7G9auqfdOtWHnb9DMrufOxLEqN/v7Iw/P
-         RZ03GCKp5unPZO5225iImiSUM88cq3MiNdOtyOu6kgv8rwCA+zZ21nbw0gXkq4nnR4XH
-         ecwjHdoZvhlPOEgrV7g8ZXy/iHSWzLHmIm/2H+AmnaQKfoW312Dn1cmp8J1zu8KBKUkw
-         d9yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ae3qYOfHqRj3gCzYg2lPzRV59DPhsFz46J7BQUDlJTE=;
-        b=qnEv9Yx4v8hfSb7M88DLLCh+PkcTIq17aAQixx0Ywc9k4pGAu7KdcBQqVcC91+Eeli
-         7LfNZkl32KbDK74Ns+X0PdFj8wgJLLZ5O0Ybf00m+vFUanf4d8JUCMYHA0bJZ3XvnlQo
-         8X0ytSFtfS1H75Z1DsoL1WZgFTLz8vGt0IZvDbALrA71vVKFLDHXTN85voEDCmeo3dVo
-         wEGxM2vF3PWeKtu2DR0XqSJ1z+1Q7/iYaCKXrHbRwTM+e1VszHAi3MhrYx7KgRlzvOeA
-         5EwB+TZNOgsxzDQmbqFZUyz2pF0IRGKBABj1aaV9Re8Inhv6eKBIG3e0XxE8BhdNWFJN
-         ptsw==
-X-Gm-Message-State: AOAM533C5OjhczBND+n2ckdzSo53YayO3Guylhd7JV9um8kulg8ZHlzC
-        S6BlqvWFqkKQrjhWh5bauIQuaYHjyoi0ZZQBJ0LqZoukF4um/g==
-X-Google-Smtp-Source: ABdhPJxwVDCQlLgAanxqYbXuRWBKarR7TgP2qECB+H+9oS93jXwtZPoqbS3IHehtfRGdyMMRlE9UFVn8ABGIcAQ07vM=
-X-Received: by 2002:a05:6402:10c3:: with SMTP id p3mr13987947edu.67.1613830134889;
- Sat, 20 Feb 2021 06:08:54 -0800 (PST)
+        id S229847AbhBTQdY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 20 Feb 2021 11:33:24 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:52972 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229774AbhBTQdY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 20 Feb 2021 11:33:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1613838717;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QCTLYWLPRGF0u5p4NUN4JTWNXO71M0Gjfmg9U6ck/o4=;
+        b=fqrPV+6n020+6qRr7E8o2gg78yz3xNTwTYsm4788fz9y8aB+YvKu76xexDN2XoODfRObIz
+        2KnrytLoxwJBBLzsu1GqUGYwL4xQtgUhFy+DeL+eG1yVutK9jq8ty+jUeRJsTNFmpfrXZZ
+        i03Nb1HREU9bJEyqUwH8yk9Y2eCZH94=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-274--qdwaBAZM0iPaFsQebhpvQ-1; Sat, 20 Feb 2021 11:31:34 -0500
+X-MC-Unique: -qdwaBAZM0iPaFsQebhpvQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40FB118449E4
+        for <linux-nfs@vger.kernel.org>; Sat, 20 Feb 2021 16:31:33 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-112-108.phx2.redhat.com [10.3.112.108])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E54D50DD5
+        for <linux-nfs@vger.kernel.org>; Sat, 20 Feb 2021 16:31:32 +0000 (UTC)
+Subject: Re: [PATCH 0/7 V4] The NFSv4 only mounting daemon.
+From:   Steve Dickson <SteveD@RedHat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20210219200815.792667-1-steved@redhat.com>
+Message-ID: <14a861eb-1a89-1ce7-6d2a-6fa3495b25aa@RedHat.com>
+Date:   Sat, 20 Feb 2021 11:33:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-References: <20201029190716.70481-1-dai.ngo@oracle.com> <20201029190716.70481-2-dai.ngo@oracle.com>
- <CAN-5tyFnTSuMivnBPD9Aur+KDxX8fCOuSaF7qGKe6bFB7roK6Q@mail.gmail.com>
- <20210220010903.GE5357@fieldses.org> <69ea46ff-80d1-acfa-22a5-3d1b6230728f@oracle.com>
- <20210220032057.GA25183@fieldses.org>
-In-Reply-To: <20210220032057.GA25183@fieldses.org>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Sat, 20 Feb 2021 09:08:43 -0500
-Message-ID: <CAN-5tyHq2NcQRbx01cSyJob=72MDUnwjK_t6GiDjTc3twbnvwA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] NFSD: Fix use-after-free warning when doing
- inter-server copy
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Dai Ngo <dai.ngo@oracle.com>, linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210219200815.792667-1-steved@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Feb 19, 2021 at 10:21 PM J. Bruce Fields <bfields@fieldses.org> wrote:
->
-> On Fri, Feb 19, 2021 at 05:31:58PM -0800, dai.ngo@oracle.com wrote:
-> > If this is the cause why we don't drop the mount after the copy
-> > then I can restore the patch and look into this problem. Unfortunately,
-> > all my test machines are down for maintenance until Sunday/Monday.
->
-> I think we can take some time to figure out what's actually going on
-> here before reverting anything.
 
-Yes I agree. We need to fix the use-after-free and also make sure that
-reference will go away. I'm assuming to reproduce the use-after-free I
-need to run with kazan, is that what you did Dai?
 
->
-> --b.
->
-> >
-> > -Dai
-> >
-> > On 2/19/21 5:09 PM, J. Bruce Fields wrote:
-> > >Dai, do you have a copy of the original use-after-free warning?
-> > >
-> > >--b.
-> > >
-> > >On Fri, Feb 19, 2021 at 07:18:53PM -0500, Olga Kornievskaia wrote:
-> > >>Hi Dai (Bruce),
-> > >>
-> > >>This patch is what broke the mount that's now left behind between the
-> > >>source server and the destination server. We are no longer dropping
-> > >>the necessary reference on the mount to go away. I haven't been paying
-> > >>as much attention as I should have been to the changes. The original
-> > >>code called fput(src) so a simple refcount of the file. Then things
-> > >>got complicated and moved to nfsd_file_put(). So I don't understand
-> > >>complexity. But we need to do some kind of put to decrement the needed
-> > >>reference on the superblock. Bruce any ideas? Can we go back to
-> > >>fput()?
-> > >>
-> > >>On Thu, Oct 29, 2020 at 3:08 PM Dai Ngo <dai.ngo@oracle.com> wrote:
-> > >>>The source file nfsd_file is not constructed the same as other
-> > >>>nfsd_file's via nfsd_file_alloc. nfsd_file_put should not be
-> > >>>called to free the object; nfsd_file_put is not the inverse of
-> > >>>kzalloc, instead kfree is called by nfsd4_do_async_copy when done.
-> > >>>
-> > >>>Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
-> > >>>Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> > >>>---
-> > >>>  fs/nfsd/nfs4proc.c | 2 +-
-> > >>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >>>
-> > >>>diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > >>>index ad2fa1a8e7ad..9c43cad7e408 100644
-> > >>>--- a/fs/nfsd/nfs4proc.c
-> > >>>+++ b/fs/nfsd/nfs4proc.c
-> > >>>@@ -1299,7 +1299,7 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct nfsd_file *src,
-> > >>>                         struct nfsd_file *dst)
-> > >>>  {
-> > >>>         nfs42_ssc_close(src->nf_file);
-> > >>>-       nfsd_file_put(src);
-> > >>>+       /* 'src' is freed by nfsd4_do_async_copy */
-> > >>>         nfsd_file_put(dst);
-> > >>>         mntput(ss_mnt);
-> > >>>  }
-> > >>>--
-> > >>>2.20.1.1226.g1595ea5.dirty
-> > >>>
+On 2/19/21 3:08 PM, Steve Dickson wrote:
+> nfsv4.exportd is a daemon that will listen for only v4 mount upcalls.
+> The idea is to allow distros to build a v4 only package
+> which will have a much smaller footprint than the
+> entire nfs-utils package.
+> 
+> exportd uses no RPC code, which means none of the 
+> code or arguments that deal with v3 was ported, 
+> this again, makes the footprint much smaller. 
+> 
+> The following options were ported:
+>     * multiple threads
+>     * state-directory-path option
+>     * junction support (not tested)
+> 
+> The rest of the mountd options were v3 only options.
+> 
+> V2:
+>   * Added two systemd services: nfsv4-exportd and nfsv4-server
+>   * nfsv4-server starts rpc.nfsd -N 3, so nfs.conf mod not needed.
+> 
+> V3: Changed the name from exportd to nfsv4.exportd
+> 
+> V4: Added compile flag that will compile in the NFSv4 only server
+Patch set Committed... (tag:  nfs-utils-2-5-3-rc6)
+
+steved.
+> 
+> Steve Dickson (7):
+>   exportd: the initial shell of the v4 export support
+>   exportd: Moved cache upcalls routines into libexport.a
+>   exportd: multiple threads
+>   exportd/exportfs: Add the state-directory-path option
+>   exportd: Enabled junction support
+>   exportd: systemd unit files
+>   exportd: Added config variable to compile in the NFSv4 only server.
+> 
+>  .gitignore                                |   1 +
+>  configure.ac                              |  14 ++
+>  nfs.conf                                  |   4 +
+>  support/export/Makefile.am                |   3 +-
+>  {utils/mountd => support/export}/auth.c   |   4 +-
+>  {utils/mountd => support/export}/cache.c  |  46 +++-
+>  support/export/export.h                   |  34 +++
+>  {utils/mountd => support/export}/fsloc.c  |   0
+>  {utils/mountd => support/export}/v4root.c |   0
+>  {utils/mountd => support/include}/fsloc.h |   0
+>  systemd/Makefile.am                       |   6 +
+>  systemd/nfs.conf.man                      |  10 +
+>  systemd/nfsv4-exportd.service             |  12 +
+>  systemd/nfsv4-server.service              |  31 +++
+>  utils/Makefile.am                         |   4 +
+>  utils/exportd/Makefile.am                 |  65 +++++
+>  utils/exportd/exportd.c                   | 276 ++++++++++++++++++++++
+>  utils/exportd/exportd.man                 |  81 +++++++
+>  utils/exportfs/exportfs.c                 |  21 +-
+>  utils/exportfs/exportfs.man               |   7 +-
+>  utils/mountd/Makefile.am                  |   5 +-
+>  21 files changed, 606 insertions(+), 18 deletions(-)
+>  rename {utils/mountd => support/export}/auth.c (99%)
+>  rename {utils/mountd => support/export}/cache.c (98%)
+>  create mode 100644 support/export/export.h
+>  rename {utils/mountd => support/export}/fsloc.c (100%)
+>  rename {utils/mountd => support/export}/v4root.c (100%)
+>  rename {utils/mountd => support/include}/fsloc.h (100%)
+>  create mode 100644 systemd/nfsv4-exportd.service
+>  create mode 100644 systemd/nfsv4-server.service
+>  create mode 100644 utils/exportd/Makefile.am
+>  create mode 100644 utils/exportd/exportd.c
+>  create mode 100644 utils/exportd/exportd.man
+> 
+
