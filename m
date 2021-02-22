@@ -2,108 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D4E5321462
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Feb 2021 11:47:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C5827321553
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Feb 2021 12:44:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230400AbhBVKrk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Feb 2021 05:47:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230384AbhBVKre (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Feb 2021 05:47:34 -0500
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EC58C06178C;
-        Mon, 22 Feb 2021 02:46:32 -0800 (PST)
-Received: by mail-il1-x134.google.com with SMTP id z18so10338453ile.9;
-        Mon, 22 Feb 2021 02:46:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FHZQdAl+UcOWFEKhnz51zgke6JFt0Apq4o1l3JnjKAI=;
-        b=BR+j5tJ76HJ/MrYsYUrbRAckIqs5GbHwJGeClmEn6L96g5exlOi5QZeYy7ZvvUq4wG
-         JynsiK3Ygr53wwHj/6xTghe+kBd/tlpV+84eFX7WAr43T3wJM6RxORvPN/SWBOQcmm/V
-         OoKN52LfbVvqCkqFMVdKThs3kIt7ud25jOtaGGi27pwzkLMpfZkfWDMXhO/0XWVxeHNW
-         YNFiJrC+vbItmaQ0DB6DrpAZa5DxlS9iPabxEwCvsI56Fg7CXnHrPIstiiguxxU8trtS
-         UEN2f5vaSNWxCzmhs+clpU2Tne/l4pqXV4nSiWT8T5wYJUusloUdhy2E0X1FJyMMETi5
-         rX9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FHZQdAl+UcOWFEKhnz51zgke6JFt0Apq4o1l3JnjKAI=;
-        b=LNh4N6sPXV7BizilQviZVG0NxTW+YGvAJV56Vmc0n2Qmf+D47Sz4Imy41Bx3U22brU
-         Bpl5BGl/NNBkGnm+626cTlJB4Kn8ea1J6ostS1O1Cs0Yjaz7O2B1ywdoDiKobLU69W0e
-         3ZUjwZeNnmAn5HxgESxxpu7knlOvjtthAQshTNDankoWYZlleUhA2De7HiTh9YnqUw/I
-         ZrHjfucI1Q84k2DwMzL6UuxMiMe2hbdXtDViBC2jWJAXylBbJrm6WdXf5H3K/8d5Hpz1
-         NxwFuwbbJKWD5FTVlPewX6hT/+fMY9+BQ8KnRszKTZHvnceMexIYwcrjPz1yFTXDcYXF
-         PUAw==
-X-Gm-Message-State: AOAM531mRTTUAgIKBv3SEBJK95koZ2d+cnLrM9y2TxzdDnsN+a6GF8v9
-        qOOTK3/8v7cdNjnQOW5uKwxAMYc8AKYJl6TNSa0=
-X-Google-Smtp-Source: ABdhPJwCt22ShOeNCpiOnTx3JXmkEO2/x+8xvzSi9yrlR8q5F2qEMQngv4H4MSPX9tkAXc2eNDJvntVrkaQKi+YyX+Y=
-X-Received: by 2002:a92:740c:: with SMTP id p12mr1161730ilc.9.1613990791635;
- Mon, 22 Feb 2021 02:46:31 -0800 (PST)
+        id S230045AbhBVLok (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Feb 2021 06:44:40 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40075 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229918AbhBVLoi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Feb 2021 06:44:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1613994192;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MmzZCjQQYbObSyV51XAvsCh6DM7Wnhv+Pu08wvezplw=;
+        b=hSSb8Nm6yeDTVyHjQGbr+ODepJ0TwSkaAz3nuzN7ffmdmInsAVzO5hR+dlGwcBAbBca9VH
+        ZiXATQLWCibddCTEnUmi5TLl6sqIAYe0syYam51CJ0NZW3QiXzzfdOpmLe8+/7z8jJ7+Hq
+        7JG1o88Viz9AgT/n1/iMKBfiPcNbH20=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-486-41D8J8JmPjKTNYMKtidFaQ-1; Mon, 22 Feb 2021 06:43:09 -0500
+X-MC-Unique: 41D8J8JmPjKTNYMKtidFaQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45731102C7F4;
+        Mon, 22 Feb 2021 11:43:07 +0000 (UTC)
+Received: from carbon (unknown [10.36.110.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 04C861F0;
+        Mon, 22 Feb 2021 11:42:57 +0000 (UTC)
+Date:   Mon, 22 Feb 2021 12:42:46 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Chuck Lever <chuck.lever@oracle.com>, Mel Gorman <mgorman@suse.de>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Jakub Kicinski <kuba@kernel.org>, brouer@redhat.com,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: alloc_pages_bulk()
+Message-ID: <20210222124246.690414a2@carbon>
+In-Reply-To: <20210222094256.GH3697@techsingularity.net>
+References: <EEB0B974-6E63-41A0-9C01-F0DEA39FC4BF@oracle.com>
+        <20210209113108.1ca16cfa@carbon>
+        <20210210084155.GA3697@techsingularity.net>
+        <20210210124103.56ed1e95@carbon>
+        <20210210130705.GC3629@suse.de>
+        <B123FB11-661F-45A6-8235-2982BF3C4B83@oracle.com>
+        <20210211091235.GC3697@techsingularity.net>
+        <20210211132628.1fe4f10b@carbon>
+        <20210215120056.GD3697@techsingularity.net>
+        <20210215171038.42f62438@carbon>
+        <20210222094256.GH3697@techsingularity.net>
 MIME-Version: 1.0
-References: <20210221195833.23828-1-lhenriques@suse.de> <20210222102456.6692-1-lhenriques@suse.de>
-In-Reply-To: <20210222102456.6692-1-lhenriques@suse.de>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Mon, 22 Feb 2021 12:46:20 +0200
-Message-ID: <CAOQ4uxjwEyQkY3WKiWD9X4nJpgjZ9640evoSPRxtw9iPsigGyA@mail.gmail.com>
-Subject: Re: [PATCH v8] vfs: fix copy_file_range regression in cross-fs copies
-To:     Luis Henriques <lhenriques@suse.de>
-Cc:     Jeff Layton <jlayton@kernel.org>, Steve French <sfrench@samba.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Ian Lance Taylor <iant@google.com>,
-        Luis Lozano <llozano@chromium.org>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Christoph Hellwig <hch@infradead.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Feb 22, 2021 at 12:23 PM Luis Henriques <lhenriques@suse.de> wrote:
->
-> A regression has been reported by Nicolas Boichat, found while using the
-> copy_file_range syscall to copy a tracefs file.  Before commit
-> 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
-> kernel would return -EXDEV to userspace when trying to copy a file across
-> different filesystems.  After this commit, the syscall doesn't fail anymore
-> and instead returns zero (zero bytes copied), as this file's content is
-> generated on-the-fly and thus reports a size of zero.
->
-> This patch restores some cross-filesystem copy restrictions that existed
-> prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
-> devices").  Filesystems are still allowed to fall-back to the VFS
-> generic_copy_file_range() implementation, but that has now to be done
-> explicitly.
->
-> nfsd is also modified to fall-back into generic_copy_file_range() in case
-> vfs_copy_file_range() fails with -EOPNOTSUPP or -EXDEV.
->
-> Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
-> Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
-> Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
-> Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
-> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-> Signed-off-by: Luis Henriques <lhenriques@suse.de>
-> ---
+On Mon, 22 Feb 2021 09:42:56 +0000
+Mel Gorman <mgorman@techsingularity.net> wrote:
 
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+> On Mon, Feb 15, 2021 at 05:10:38PM +0100, Jesper Dangaard Brouer wrote:
+> > 
+> > On Mon, 15 Feb 2021 12:00:56 +0000
+> > Mel Gorman <mgorman@techsingularity.net> wrote:
+> >   
+> > > On Thu, Feb 11, 2021 at 01:26:28PM +0100, Jesper Dangaard Brouer wrote:  
+> > [...]  
+> > >   
+> > > > I also suggest the API can return less pages than requested. Because I
+> > > > want to to "exit"/return if it need to go into an expensive code path
+> > > > (like buddy allocator or compaction).  I'm assuming we have a flags to
+> > > > give us this behavior (via gfp_flags or alloc_flags)?
+> > > >     
+> > > 
+> > > The API returns the number of pages returned on a list so policies
+> > > around how aggressive it should be allocating the requested number of
+> > > pages could be adjusted without changing the API. Passing in policy
+> > > requests via gfp_flags may be problematic as most (all?) bits are
+> > > already used.  
+> > 
+> > Well, I was just thinking that I would use GFP_ATOMIC instead of
+> > GFP_KERNEL to "communicate" that I don't want this call to take too
+> > long (like sleeping).  I'm not requesting any fancy policy :-)
+> >   
+> 
+> The NFS use case requires opposite semantics
+> -- it really needs those allocations to succeed
+> https://lore.kernel.org/r/161340498400.7780.962495219428962117.stgit@klimt.1015granger.net.
 
-Thanks,
-Amir.
+Sorry, but that is not how I understand the code.
+
+The code is doing exactly what I'm requesting. If the alloc_pages_bulk()
+doesn't return expected number of pages, then check if others need to
+run.  The old code did schedule_timeout(msecs_to_jiffies(500)), while
+Chuck's patch change this to ask for cond_resched().  Thus, it tries to
+avoid blocking the CPU for too long (when allocating many pages).
+
+And the nfsd code seems to handle that the code can be interrupted (via
+return -EINTR) via signal_pending(current).  Thus, the nfsd code seems
+to be able to handle if the page allocations failed.
+
+
+> I've asked what code it's based on as it's not 5.11 and I'll iron that
+> out first.
+>
+> Then it might be clearer what the "can fail" semantics should look like.
+> I think it would be best to have pairs of patches where the first patch
+> adjusts the semantics of the bulk allocator and the second adds a user.
+> That will limit the amount of code code carried in the implementation.
+> When the initial users are in place then the implementation can be
+> optimised as the optimisations will require significant refactoring and
+> I not want to refactor multiple times.
+
+I guess, I should try to code-up the usage in page_pool.
+
+What is the latest patch for adding alloc_pages_bulk() ?
+
+The nfsd code (svc_alloc_arg) is called in a context where it can
+sleep, and thus use GFP_KERNEL.  In most cases the page_pool will be
+called with GFP_ATOMIC.  I don't think I/page_pool will retry the call
+like Chuck did, as I cannot (re)schedule others to run.
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
