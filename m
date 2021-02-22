@@ -2,129 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12986320F9A
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Feb 2021 04:02:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F260C32135A
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Feb 2021 10:45:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231648AbhBVDBs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 21 Feb 2021 22:01:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231849AbhBVDBq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 21 Feb 2021 22:01:46 -0500
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEF28C06178B
-        for <linux-nfs@vger.kernel.org>; Sun, 21 Feb 2021 19:01:05 -0800 (PST)
-Received: by mail-vs1-xe30.google.com with SMTP id t23so5802038vsk.2
-        for <linux-nfs@vger.kernel.org>; Sun, 21 Feb 2021 19:01:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bj008TzA91yeOQfW1fAghRLR+ASOodj9cM7GwstAIME=;
-        b=imn9aZ2j3Wc5I4qvtgMJytqp6zEdNE4LeSMoNNryFUBCZrV7FE1azq3l+13vXM++Cu
-         cz7Z3z9xT98T5chMANc6ZJLQ678xFeZTDGLZYNpK+ISQQLnCmrZQ8SouthHoMGb+aL0l
-         CNKCU0qYSO02Pu0zkz7jCNHHx70wtPXDK4Ho0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bj008TzA91yeOQfW1fAghRLR+ASOodj9cM7GwstAIME=;
-        b=ZKfFW/kohDxdsp78T1uQcoz2k8niTK5Qcvb8FoSlIEx5WWa4WzePU4/6Jx2ikCBSJ1
-         ii25dzdQGb5iHrxaXJiPBNi6j/ZBLkyA+7CeRASaWn42nC60reV8+YbeIOJxBK+DvZfl
-         Fe1TYs1K72zzBHev8RmNt9W9KTzsmbeal7crHNZcyftx/YM+DC9GDk/14cmOGqNp4wpO
-         Frc208GR7JgNH/VMzIxW7Pgt6LD206FtyRQwuDdRbNPPSOmgX98AgEKzTL8EtAKY/v/4
-         UmgJxGuis8xI4+8yUog0of6JNNQXUOwh3PhRIIUM9gY5vHf6euXaZMmVametKcb9wh9q
-         89eA==
-X-Gm-Message-State: AOAM533wXGOOvPj9jRozBA6iOO/8RzuT2hETkb4g5VtDQPB7M/xIdfd5
-        ygcw56XDyx7UbR1OTWgSXbFPHSNAY0rnvJpa8FT6sA==
-X-Google-Smtp-Source: ABdhPJzu00J2jyLPd7KbgiPCKHQxN149b3F53M+u5NFqNCJwlFsWdb6wAPdM4uLfZXt8qvbnDsys07L1jvDhzmMSIc8=
-X-Received: by 2002:a67:1046:: with SMTP id 67mr7467152vsq.21.1613962864510;
- Sun, 21 Feb 2021 19:01:04 -0800 (PST)
+        id S230122AbhBVJoq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Feb 2021 04:44:46 -0500
+Received: from outbound-smtp48.blacknight.com ([46.22.136.219]:35019 "EHLO
+        outbound-smtp48.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230340AbhBVJoh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Feb 2021 04:44:37 -0500
+X-Greylist: delayed 510 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Feb 2021 04:44:36 EST
+Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
+        by outbound-smtp48.blacknight.com (Postfix) with ESMTPS id A3920FA9C3
+        for <linux-nfs@vger.kernel.org>; Mon, 22 Feb 2021 09:35:06 +0000 (GMT)
+Received: (qmail 3587 invoked from network); 22 Feb 2021 09:35:06 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 22 Feb 2021 09:35:06 -0000
+Date:   Mon, 22 Feb 2021 09:35:05 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org, kuba@kernel.org
+Subject: Re: [PATCH RFC] SUNRPC: Refresh rq_pages using a bulk page allocator
+Message-ID: <20210222093505.GG3697@techsingularity.net>
+References: <161340498400.7780.962495219428962117.stgit@klimt.1015granger.net>
 MIME-Version: 1.0
-References: <CAN-5tyGs9skFZ=ghd8Vz2F35S70QYi+kujdyRYLSkcEi8Jm9gw@mail.gmail.com>
- <20210221195833.23828-1-lhenriques@suse.de>
-In-Reply-To: <20210221195833.23828-1-lhenriques@suse.de>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Mon, 22 Feb 2021 11:00:53 +0800
-Message-ID: <CANMq1KDOSfsVC0Akk8xm2=kPBsU9WfZVDrqnQZSViwZUT=wO+A@mail.gmail.com>
-Subject: Re: [PATCH v7] vfs: fix copy_file_range regression in cross-fs copies
-To:     Luis Henriques <lhenriques@suse.de>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <sfrench@samba.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ian Lance Taylor <iant@google.com>,
-        Luis Lozano <llozano@chromium.org>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Christoph Hellwig <hch@infradead.org>,
-        ceph-devel@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <161340498400.7780.962495219428962117.stgit@klimt.1015granger.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Feb 22, 2021 at 3:57 AM Luis Henriques <lhenriques@suse.de> wrote:
->
-> A regression has been reported by Nicolas Boichat, found while using the
-> copy_file_range syscall to copy a tracefs file.  Before commit
-> 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
-> kernel would return -EXDEV to userspace when trying to copy a file across
-> different filesystems.  After this commit, the syscall doesn't fail anymore
-> and instead returns zero (zero bytes copied), as this file's content is
-> generated on-the-fly and thus reports a size of zero.
->
-> This patch restores some cross-filesystem copy restrictions that existed
-> prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
-> devices").  Filesystems are still allowed to fall-back to the VFS
-> generic_copy_file_range() implementation, but that has now to be done
-> explicitly.
->
-> nfsd is also modified to fall-back into generic_copy_file_range() in case
-> vfs_copy_file_range() fails with -EOPNOTSUPP or -EXDEV.
->
-> Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
-> Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
-> Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
-> Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
-> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+On Mon, Feb 15, 2021 at 11:06:07AM -0500, Chuck Lever wrote:
+> Reduce the rate at which nfsd threads hammer on the page allocator.
+> This improves throughput scalability by enabling the nfsd threads to
+> run more independently of each other.
+> 
 
-Tested-by: Nicolas Boichat <drinkcat@chromium.org>
+Sorry this is taking so long, there is a lot going on.
 
-> Signed-off-by: Luis Henriques <lhenriques@suse.de>
-> ---
-> Changes since v6
-> - restored i_sb checks for the clone operation
-> Changes since v5
-> - check if ->copy_file_range is NULL before calling it
-> Changes since v4
-> - nfsd falls-back to generic_copy_file_range() only *if* it gets -EOPNOTSUPP
->   or -EXDEV.
-> Changes since v3
-> - dropped the COPY_FILE_SPLICE flag
-> - kept the f_op's checks early in generic_copy_file_checks, implementing
->   Amir's suggestions
-> - modified nfsd to use generic_copy_file_range()
-> Changes since v2
-> - do all the required checks earlier, in generic_copy_file_checks(),
->   adding new checks for ->remap_file_range
-> - new COPY_FILE_SPLICE flag
-> - don't remove filesystem's fallback to generic_copy_file_range()
-> - updated commit changelog (and subject)
-> Changes since v1 (after Amir review)
-> - restored do_copy_file_range() helper
-> - return -EOPNOTSUPP if fs doesn't implement CFR
-> - updated commit description
->
->  fs/nfsd/vfs.c   |  8 +++++++-
->  fs/read_write.c | 50 ++++++++++++++++++++++++-------------------------
->  2 files changed, 32 insertions(+), 26 deletions(-)
-> [snip]
+This patch has pre-requisites that are not in mainline which makes it
+harder to evaluate what the semantics of the API should be.
+
+> @@ -659,19 +659,33 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
+>  		/* use as many pages as possible */
+>  		pages = RPCSVC_MAXPAGES;
+>  	}
+> -	for (i = 0; i < pages ; i++)
+> -		while (rqstp->rq_pages[i] == NULL) {
+> -			struct page *p = alloc_page(GFP_KERNEL);
+> -			if (!p) {
+> -				set_current_state(TASK_INTERRUPTIBLE);
+> -				if (signalled() || kthread_should_stop()) {
+> -					set_current_state(TASK_RUNNING);
+> -					return -EINTR;
+> -				}
+> -				schedule_timeout(msecs_to_jiffies(500));
+> +
+> +	for (needed = 0, i = 0; i < pages ; i++)
+> +		if (!rqstp->rq_pages[i])
+> +			needed++;
+> +	if (needed) {
+> +		LIST_HEAD(list);
+> +
+> +retry:
+> +		alloc_pages_bulk(GFP_KERNEL, 0,
+> +				 /* to test the retry logic: */
+> +				 min_t(unsigned long, needed, 13),
+> +				 &list);
+> +		for (i = 0; i < pages; i++) {
+> +			if (!rqstp->rq_pages[i]) {
+> +				struct page *page;
+> +
+> +				page = list_first_entry_or_null(&list,
+> +								struct page,
+> +								lru);
+> +				if (unlikely(!page))
+> +					goto empty_list;
+> +				list_del(&page->lru);
+> +				rqstp->rq_pages[i] = page;
+> +				needed--;
+>  			}
+> -			rqstp->rq_pages[i] = p;
+>  		}
+> +	}
+>  	rqstp->rq_page_end = &rqstp->rq_pages[pages];
+>  	rqstp->rq_pages[pages] = NULL; /* this might be seen in nfsd_splice_actor() */
+>  
+
+There is a conflict at the end where rq_page_end gets updated. The 5.11
+code assumes that the loop around the allocator definitely gets all
+the required pages. What tree is this patch based on and is it going in
+during this merge window? While the conflict is "trivial" to resolve,
+it would be buggy because on retry, "i" will be pointing to the wrong
+index and pages potentially leak. Rather than guessing, I'd prefer to
+base a series on code you've tested.
+
+The slowpath for the bulk allocator also sucks a bit for the semantics
+required by this caller. As the bulk allocator does not walk the zonelist,
+it can return failures prematurely -- fine for an optimistic bulk allocator
+that can return a subset of pages but not for this caller which really
+wants those pages. The allocator may need NOFAIL-like semantics to walk
+the zonelist if the caller really requires success or at least walk the
+zonelist if the preferred zone is low on pages. This patch would also
+need to preserve the schedule_timeout behaviour so it does not use a lot
+of CPU time retrying allocations in the presense of memory pressure.
+
+-- 
+Mel Gorman
+SUSE Labs
