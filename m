@@ -2,123 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E3FC320EF6
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Feb 2021 02:14:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12986320F9A
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Feb 2021 04:02:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229918AbhBVBO2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 21 Feb 2021 20:14:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58532 "EHLO
+        id S231648AbhBVDBs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 21 Feb 2021 22:01:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229889AbhBVBO0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 21 Feb 2021 20:14:26 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CEA9C061574
-        for <linux-nfs@vger.kernel.org>; Sun, 21 Feb 2021 17:13:46 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id c19so7406407pjq.3
-        for <linux-nfs@vger.kernel.org>; Sun, 21 Feb 2021 17:13:46 -0800 (PST)
+        with ESMTP id S231849AbhBVDBq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 21 Feb 2021 22:01:46 -0500
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEF28C06178B
+        for <linux-nfs@vger.kernel.org>; Sun, 21 Feb 2021 19:01:05 -0800 (PST)
+Received: by mail-vs1-xe30.google.com with SMTP id t23so5802038vsk.2
+        for <linux-nfs@vger.kernel.org>; Sun, 21 Feb 2021 19:01:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=asPAwIwv5YWihV4Iy5aP0HAHXRz5lLWKE7DGULAH8VQ=;
-        b=thTlxgFKsLa+WGvUiKAu0tzwu4mlI0f0bcgGR3b4dQA985gMr6/S4aXGYshm0GmQrB
-         uGSFBTXGaETH6VQ1ZCCFw7211Nat+Dkf5jIl4zlKuVIxbjYd5Gs0maiHuee/8rvSZibi
-         AZNnNxyzqtSnKZmdfQaQScDczrN5r/ZupcGqw9IVGbGLJ2r2u9nvQotqQO3k9vXNgRfW
-         EikaXW3wBZ5oE0h3bJwvlSy40kxQuxvScVoNzgXJxFqNB+H6O6mWsEuoKRTweOLHlBZE
-         Dc68t8sri09r7+pxBgIlpK91veJP0g6JuEEK0bC+5O6dKBPRwpG4HDvsRn7cZ/egukzD
-         +0ww==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Bj008TzA91yeOQfW1fAghRLR+ASOodj9cM7GwstAIME=;
+        b=imn9aZ2j3Wc5I4qvtgMJytqp6zEdNE4LeSMoNNryFUBCZrV7FE1azq3l+13vXM++Cu
+         cz7Z3z9xT98T5chMANc6ZJLQ678xFeZTDGLZYNpK+ISQQLnCmrZQ8SouthHoMGb+aL0l
+         CNKCU0qYSO02Pu0zkz7jCNHHx70wtPXDK4Ho0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=asPAwIwv5YWihV4Iy5aP0HAHXRz5lLWKE7DGULAH8VQ=;
-        b=K6N30R/uMF4JCFhK939Ynui2f3UVYTKwap/5ZhKy5ItC1gEnQnOinbKS4xGcgbAkB0
-         aOerKKcSh0qpKQMmLwiOHceyjJbb5ibbhRU8dWuWX/1rtkbw1Xj2nVxrhifkXuE2E094
-         00not3RdtkqKwKZKj6TcDXYYyDwCFK+osBXwWjxRBicrUHayrfv1YWm+cU3hGX0xX76w
-         uChMyBpzJ9vRxYoDA3QsFtySz372Zq5CQqQuff+tzbwPwYJxqqgOPyJ9/029+Zbi9H4m
-         5XSiQFD8EVeSgqoaHRIVc/6xeMX3yaXVKYrbnR+FPrsYraCFq3LJT5y3iS+gAWJ2P24H
-         0eKQ==
-X-Gm-Message-State: AOAM532Dn0HLs6aJwRrn09h0dNRtzt+Vwl6DUoW1Z4C6e01PzBPfP07V
-        Y1CvNgfi0Cw8lR9mlFcRUaO5hj69N9Y=
-X-Google-Smtp-Source: ABdhPJxEI+Gg8S0aOD1h/sdfrVG4/6kpBJp4sEtX4w6i1QBVo/qceX38Yt6GxNYmqXyRuyRmx+aSOw==
-X-Received: by 2002:a17:902:9a48:b029:e1:268d:e800 with SMTP id x8-20020a1709029a48b02900e1268de800mr19512004plv.69.1613956425382;
-        Sun, 21 Feb 2021 17:13:45 -0800 (PST)
-Received: from athena.localdomain ([27.78.217.99])
-        by smtp.gmail.com with ESMTPSA id o13sm16486896pgv.40.2021.02.21.17.13.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Feb 2021 17:13:44 -0800 (PST)
-From:   =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?= 
-        <congdanhqx@gmail.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?= 
-        <congdanhqx@gmail.com>
-Subject: [PATCH] nfsdcltrack: don't assume time_t is long int
-Date:   Mon, 22 Feb 2021 08:11:28 +0700
-Message-Id: <20210222011128.30378-1-congdanhqx@gmail.com>
-X-Mailer: git-send-email 2.30.1.629.g12f37433bd
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bj008TzA91yeOQfW1fAghRLR+ASOodj9cM7GwstAIME=;
+        b=ZKfFW/kohDxdsp78T1uQcoz2k8niTK5Qcvb8FoSlIEx5WWa4WzePU4/6Jx2ikCBSJ1
+         ii25dzdQGb5iHrxaXJiPBNi6j/ZBLkyA+7CeRASaWn42nC60reV8+YbeIOJxBK+DvZfl
+         Fe1TYs1K72zzBHev8RmNt9W9KTzsmbeal7crHNZcyftx/YM+DC9GDk/14cmOGqNp4wpO
+         Frc208GR7JgNH/VMzIxW7Pgt6LD206FtyRQwuDdRbNPPSOmgX98AgEKzTL8EtAKY/v/4
+         UmgJxGuis8xI4+8yUog0of6JNNQXUOwh3PhRIIUM9gY5vHf6euXaZMmVametKcb9wh9q
+         89eA==
+X-Gm-Message-State: AOAM533wXGOOvPj9jRozBA6iOO/8RzuT2hETkb4g5VtDQPB7M/xIdfd5
+        ygcw56XDyx7UbR1OTWgSXbFPHSNAY0rnvJpa8FT6sA==
+X-Google-Smtp-Source: ABdhPJzu00J2jyLPd7KbgiPCKHQxN149b3F53M+u5NFqNCJwlFsWdb6wAPdM4uLfZXt8qvbnDsys07L1jvDhzmMSIc8=
+X-Received: by 2002:a67:1046:: with SMTP id 67mr7467152vsq.21.1613962864510;
+ Sun, 21 Feb 2021 19:01:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CAN-5tyGs9skFZ=ghd8Vz2F35S70QYi+kujdyRYLSkcEi8Jm9gw@mail.gmail.com>
+ <20210221195833.23828-1-lhenriques@suse.de>
+In-Reply-To: <20210221195833.23828-1-lhenriques@suse.de>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Mon, 22 Feb 2021 11:00:53 +0800
+Message-ID: <CANMq1KDOSfsVC0Akk8xm2=kPBsU9WfZVDrqnQZSViwZUT=wO+A@mail.gmail.com>
+Subject: Re: [PATCH v7] vfs: fix copy_file_range regression in cross-fs copies
+To:     Luis Henriques <lhenriques@suse.de>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Steve French <sfrench@samba.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Ian Lance Taylor <iant@google.com>,
+        Luis Lozano <llozano@chromium.org>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Olga Kornievskaia <aglo@umich.edu>,
+        Christoph Hellwig <hch@infradead.org>,
+        ceph-devel@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In musl 1.2.x, time_t is defined to 64 bit integer unconditionally.
-Let's not assume time_t is long int, but always cast to int64_t for
-printf(3).
+On Mon, Feb 22, 2021 at 3:57 AM Luis Henriques <lhenriques@suse.de> wrote:
+>
+> A regression has been reported by Nicolas Boichat, found while using the
+> copy_file_range syscall to copy a tracefs file.  Before commit
+> 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
+> kernel would return -EXDEV to userspace when trying to copy a file across
+> different filesystems.  After this commit, the syscall doesn't fail anymore
+> and instead returns zero (zero bytes copied), as this file's content is
+> generated on-the-fly and thus reports a size of zero.
+>
+> This patch restores some cross-filesystem copy restrictions that existed
+> prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
+> devices").  Filesystems are still allowed to fall-back to the VFS
+> generic_copy_file_range() implementation, but that has now to be done
+> explicitly.
+>
+> nfsd is also modified to fall-back into generic_copy_file_range() in case
+> vfs_copy_file_range() fails with -EOPNOTSUPP or -EXDEV.
+>
+> Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
+> Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
+> Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
+> Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
+> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
 
-Signed-off-by: Đoàn Trần Công Danh <congdanhqx@gmail.com>
----
- inttypes.h and PRId64 is being used by utils/idmapd, so I think we won't have
- more incompatibility problem with this change.
- utils/nfsdcltrack/nfsdcltrack.c | 3 ++-
- utils/nfsdcltrack/sqlite.c      | 5 +++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
+Tested-by: Nicolas Boichat <drinkcat@chromium.org>
 
-diff --git a/utils/nfsdcltrack/nfsdcltrack.c b/utils/nfsdcltrack/nfsdcltrack.c
-index e926f1c0..5edf0ca4 100644
---- a/utils/nfsdcltrack/nfsdcltrack.c
-+++ b/utils/nfsdcltrack/nfsdcltrack.c
-@@ -27,6 +27,7 @@
- #include <stdlib.h>
- #include <ctype.h>
- #include <errno.h>
-+#include <inttypes.h>
- #include <stdbool.h>
- #include <getopt.h>
- #include <string.h>
-@@ -525,7 +526,7 @@ cltrack_gracedone(const char *timestr)
- 	if (*tail)
- 		return -EINVAL;
- 
--	xlog(D_GENERAL, "%s: grace done. gracetime=%ld", __func__, gracetime);
-+	xlog(D_GENERAL, "%s: grace done. gracetime=%" PRId64, __func__, (int64_t)gracetime);
- 
- 	ret = sqlite_remove_unreclaimed(gracetime);
- 
-diff --git a/utils/nfsdcltrack/sqlite.c b/utils/nfsdcltrack/sqlite.c
-index f79aebb3..4ac805b3 100644
---- a/utils/nfsdcltrack/sqlite.c
-+++ b/utils/nfsdcltrack/sqlite.c
-@@ -40,6 +40,7 @@
- 
- #include <dirent.h>
- #include <errno.h>
-+#include <inttypes.h>
- #include <stdio.h>
- #include <stdbool.h>
- #include <string.h>
-@@ -544,8 +545,8 @@ sqlite_remove_unreclaimed(time_t grace_start)
- 	int ret;
- 	char *err = NULL;
- 
--	ret = snprintf(buf, sizeof(buf), "DELETE FROM clients WHERE time < %ld",
--			grace_start);
-+	ret = snprintf(buf, sizeof(buf), "DELETE FROM clients WHERE time < %" PRId64,
-+			(int64_t)grace_start);
- 	if (ret < 0) {
- 		return ret;
- 	} else if ((size_t)ret >= sizeof(buf)) {
--- 
-2.30.1.629.g12f37433bd
-
+> Signed-off-by: Luis Henriques <lhenriques@suse.de>
+> ---
+> Changes since v6
+> - restored i_sb checks for the clone operation
+> Changes since v5
+> - check if ->copy_file_range is NULL before calling it
+> Changes since v4
+> - nfsd falls-back to generic_copy_file_range() only *if* it gets -EOPNOTSUPP
+>   or -EXDEV.
+> Changes since v3
+> - dropped the COPY_FILE_SPLICE flag
+> - kept the f_op's checks early in generic_copy_file_checks, implementing
+>   Amir's suggestions
+> - modified nfsd to use generic_copy_file_range()
+> Changes since v2
+> - do all the required checks earlier, in generic_copy_file_checks(),
+>   adding new checks for ->remap_file_range
+> - new COPY_FILE_SPLICE flag
+> - don't remove filesystem's fallback to generic_copy_file_range()
+> - updated commit changelog (and subject)
+> Changes since v1 (after Amir review)
+> - restored do_copy_file_range() helper
+> - return -EOPNOTSUPP if fs doesn't implement CFR
+> - updated commit description
+>
+>  fs/nfsd/vfs.c   |  8 +++++++-
+>  fs/read_write.c | 50 ++++++++++++++++++++++++-------------------------
+>  2 files changed, 32 insertions(+), 26 deletions(-)
+> [snip]
