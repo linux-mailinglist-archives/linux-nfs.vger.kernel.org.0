@@ -2,60 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E0753229FB
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Feb 2021 13:01:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 617FA322C16
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Feb 2021 15:21:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232718AbhBWL5E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Feb 2021 06:57:04 -0500
-Received: from mail.jvpinto.com ([65.49.11.60]:54491 "EHLO mail.JVPinto.com"
+        id S232331AbhBWOUI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Feb 2021 09:20:08 -0500
+Received: from btbn.de ([5.9.118.179]:47692 "EHLO btbn.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232501AbhBWLyb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 23 Feb 2021 06:54:31 -0500
-Received: from RW-EXC1.JVPinto.com (2002:ac20:10d::ac20:10d) by
- RW-EXC1.JVPinto.com (2002:ac20:10d::ac20:10d) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Tue, 23 Feb 2021 03:52:35 -0800
-Received: from User (52.231.198.195) by RW-EXC1.JVPinto.com (172.32.1.13) with
- Microsoft SMTP Server id 15.0.1497.2 via Frontend Transport; Tue, 23 Feb 2021
- 03:52:20 -0800
-Reply-To: <ms.reem@yandex.com>
-From:   "Ms. Reem" <johnpinto@jvpinto.com>
-Subject: Hello okay
-Date:   Tue, 23 Feb 2021 11:52:34 +0000
+        id S232326AbhBWOUB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 23 Feb 2021 09:20:01 -0500
+Received: from Kryux.localdomain (muedsl-82-207-208-080.citykom.de [82.207.208.80])
+        by btbn.de (Postfix) with ESMTPSA id A5DEE1AEB02;
+        Tue, 23 Feb 2021 15:19:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rothenpieler.org;
+        s=mail; t=1614089953;
+        bh=Xl2QeGfjkw+/jsAo3UmqfX4hZcY0AWMiTfAH7eUsO48=;
+        h=From:To:Cc:Subject:Date;
+        b=aOV5+v6mzt2Lm+gsqvH4Gmg2pXJo38MHwO/LrXybjt5DgDvUOwlNNnXsTR3unxhpN
+         mAXDNWV45GdRi48I4XgPg0GgiYeI7yWU2SwhfsbKmIzpnb1naMyaMyBrJQZpheWXUa
+         azRqYE1wsgnwFmsxJxLQqeluwNnbJ70m3R6MI2HQYEs8jw2Y2eJ7jG06k9ii1lWOmL
+         QvUYkg2COCJMYayNt6pD5M9rFilKra7fbwz2fWGx/eWol8mXvoKotI6/CG79s5orZ3
+         v725zDPQ3jfPI6anlQGFUvw88SLdGVbiEfK9wrEA7YXep06Ppk5SPPwyNc3qm8Jgec
+         IVZo1hBtzuI5g==
+From:   Timo Rothenpieler <timo@rothenpieler.org>
+To:     linux-nfs@vger.kernel.org
+Cc:     Timo Rothenpieler <timo@rothenpieler.org>
+Subject: [PATCH] nfs: fix PNFS_FLEXFILE_LAYOUT Kconfig default
+Date:   Tue, 23 Feb 2021 15:19:01 +0100
+Message-Id: <20210223141901.1652-1-timo@rothenpieler.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-ID: <933f089f49b04946b97b7d0f2a305064@RW-EXC1.JVPinto.com>
-To:     Undisclosed recipients:;
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+This follows what was done in 8c2fabc6542d9d0f8b16bd1045c2eda59bdcde13.
+With the default being m, it's impossible to build the module into the
+kernel.
 
-My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
-and Petroleum" also "Minister of State for International Cooperation"
-in UAE. I write to you on behalf of my other "three (3) colleagues"
-who has approved me to solicit for your "partnership in claiming of
-{us$47=Million}" from a Financial Home in Cambodia on their behalf and
-for our "Mutual Benefits".
+Signed-off-by: Timo Rothenpieler <timo@rothenpieler.org>
+---
+ fs/nfs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
-deal with Cambodian/Vietnam Government within 2013/2014, however, we
-don't want our government to know about the fund. If this proposal
-interests you, let me know, by sending me an email and I will send to
-you detailed information on how this business would be successfully
-transacted. Be informed that nobody knows about the secret of this
-fund except us, and we know how to carry out the entire transaction.
-So I am compelled to ask, that you will stand on our behalf and
-receive this fund into any account that is solely controlled by you.
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index e2a488d403a6..14a72224b657 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -127,7 +127,7 @@ config PNFS_BLOCK
+ config PNFS_FLEXFILE_LAYOUT
+ 	tristate
+ 	depends on NFS_V4_1 && NFS_V3
+-	default m
++	default NFS_V4
+ 
+ config NFS_V4_1_IMPLEMENTATION_ID_DOMAIN
+ 	string "NFSv4.1 Implementation ID Domain"
+-- 
+2.25.1
 
-We will compensate you with 15% of the total amount involved as
-gratification for being our partner in this transaction. Reply to:
-ms.reem@yandex.com
-
-Regards,
-Ms. Reem.
