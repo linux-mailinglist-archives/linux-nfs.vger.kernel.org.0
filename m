@@ -2,33 +2,33 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E46B32453A
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 21:32:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43527324576
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 21:50:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235560AbhBXUbo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Feb 2021 15:31:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48620 "EHLO
+        id S235366AbhBXUu1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Feb 2021 15:50:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235559AbhBXUbf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 15:31:35 -0500
+        with ESMTP id S229598AbhBXUu0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 15:50:26 -0500
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E698DC061574
-        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 12:30:54 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D79FC061574
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 12:49:46 -0800 (PST)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id C46832050; Wed, 24 Feb 2021 15:30:53 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C46832050
+        id B096321DD; Wed, 24 Feb 2021 15:49:44 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org B096321DD
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1614198653;
-        bh=MXykIT61z2hZ1T34raGBdkozDwV87aMHLYM5MSKT3/g=;
+        s=default; t=1614199784;
+        bh=zmW78dCzPCndNBi6GIzrgluaJ7+krpVi/9TaqVGcvLk=;
         h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=nl8KYi581bN7fxPLVUWn4P5qRCCQqgxThgy/+MNhIc/8DR0rEdhWobvOlLCRp8gMc
-         ogOh7hfF+3kBKaj9t1/JQClSW05GweZeYOKYw4HisVQIoAbfDkoGeT+a1KOL3rDAMv
-         blVNJ2yTcuXKAyfEVAGuHIe/VKipLUNGAb+FKs00=
-Date:   Wed, 24 Feb 2021 15:30:53 -0500
+        b=OFusuDKRTkujSpQpMd9gvIchoD260BQUuKj08IH6cguSEhHM3dyr+VEvHiD4IB1+W
+         8YWEj3HvamPSNyg5ovOt0AQzJF3Equt1604F5/J4oBjZ2r8HUGaw8R0jCjEH7VuDEp
+         2V/1jO4bNjVynRhwDCm1RnAec309lLwr/CPHxrv0=
+Date:   Wed, 24 Feb 2021 15:49:44 -0500
 To:     Steve Dickson <steved@redhat.com>
 Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH 0/7 V4]  The NFSv4 only mounting daemon.
-Message-ID: <20210224203053.GF11591@fieldses.org>
+Message-ID: <20210224204944.GG11591@fieldses.org>
 References: <20210219200815.792667-1-steved@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -49,30 +49,25 @@ On Fri, Feb 19, 2021 at 03:08:08PM -0500, Steve Dickson wrote:
 > exportd uses no RPC code, which means none of the 
 > code or arguments that deal with v3 was ported, 
 > this again, makes the footprint much smaller. 
-
-How much smaller?
-
+> 
 > The following options were ported:
 >     * multiple threads
 >     * state-directory-path option
 >     * junction support (not tested)
 > 
 > The rest of the mountd options were v3 only options.
-
-There's also --manage-gids.
-
-If you want nfsv4-only at runtime, you can always run rpc.mountd with
--N2 -N3 to turn off the MOUNT protocol support.
-
-If you don't even want v2/f3 code on your system, then you may have to
-do something like this, but why is that important?
-
---b.
-
 > 
 > V2:
 >   * Added two systemd services: nfsv4-exportd and nfsv4-server
 >   * nfsv4-server starts rpc.nfsd -N 3, so nfs.conf mod not needed.
+
+We really shouldn't make users change how they do things.
+
+Whatever we do, "systemctl start nfs-server" should still be how they
+start the NFS server.
+
+--b.
+
 > 
 > V3: Changed the name from exportd to nfsv4.exportd
 > 
