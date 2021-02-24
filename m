@@ -2,107 +2,168 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D138232443F
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 20:00:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3719C3244A8
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 20:33:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235834AbhBXTAE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Feb 2021 14:00:04 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:47071 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235136AbhBXS62 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 13:58:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614193021;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=v9LQLzVj/XgMadw/p7LX8ICKSHncxAimW+HcgNIftlg=;
-        b=T5aQWn04vqa99pRTcn6gVBczT/hG4lOGbJuqbElB3RAqOJ1mFORjuAhbGH75QCTeL+G9hZ
-        6s+xFOBbUwCoWAICegKi9FaYz1l3F75RnF8l3T0ln+38D1Im2AmfLNJraHNxHInMiYPWIq
-        yvg9BensDhz/DxlEHjyn2UKynHckedU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-464-kM7Hat76MumCvQC04j4t3Q-1; Wed, 24 Feb 2021 13:56:57 -0500
-X-MC-Unique: kM7Hat76MumCvQC04j4t3Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7C6431868405;
-        Wed, 24 Feb 2021 18:56:55 +0000 (UTC)
-Received: from firesoul.localdomain (unknown [10.40.208.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 696C39CA0;
-        Wed, 24 Feb 2021 18:56:52 +0000 (UTC)
-Received: from [192.168.42.3] (localhost [IPv6:::1])
-        by firesoul.localdomain (Postfix) with ESMTP id 5ACFA30736C73;
-        Wed, 24 Feb 2021 19:56:51 +0100 (CET)
-Subject: [PATCH RFC net-next 3/3] mm: make zone->free_area[order] access
- faster
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>, chuck.lever@oracle.com,
-        netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 24 Feb 2021 19:56:51 +0100
-Message-ID: <161419301128.2718959.4838557038019199822.stgit@firesoul>
-In-Reply-To: <161419296941.2718959.12575257358107256094.stgit@firesoul>
-References: <161419296941.2718959.12575257358107256094.stgit@firesoul>
-User-Agent: StGit/0.19
+        id S234495AbhBXTcX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Feb 2021 14:32:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234302AbhBXTcQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 14:32:16 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83447C061788
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 11:31:36 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 79E482501; Wed, 24 Feb 2021 14:31:35 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 79E482501
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1614195095;
+        bh=roWvfjCK0FPYROblIPqUILDQ5YNFF8q/h2VopAB96+8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0PfunF6nAZumQn7SWHfyWWG6ailvi+RYm+oDuW0grm7BYSULiwxdmGffiCGBfJbdQ
+         s+coU/40Z7yFHtCqXNGNCGxQiFXxaBPLOLPWct85VekOzqSlpiEhuDnJmqTI3yeKWt
+         jRj638gKv88OkMIb0Hw41nfEbYDK2eRPP87Jd2ks=
+Date:   Wed, 24 Feb 2021 14:31:35 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>
+Subject: Re: [PATCH] nfsd: don't abort copies early
+Message-ID: <20210224193135.GC11591@fieldses.org>
+References: <20210224183950.GB11591@fieldses.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210224183950.GB11591@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Avoid multiplication (imul) operations when accessing:
- zone->free_area[order].nr_free
+I confess I always have to stare at these comparisons for a minute to
+figure out which way they should go.  And the logic in each of these
+loops is a little repetitive.
 
-This was really tricky to find. I was puzzled why perf reported that
-rmqueue_bulk was using 44% of the time in an imul operation:
+Would it be worth creating a little state_expired() helper to work out
+the comparison and the new timeout?
 
-       │     del_page_from_free_list():
- 44,54 │ e2:   imul   $0x58,%rax,%rax
+--b.
 
-This operation was generated (by compiler) because the struct free_area have
-size 88 bytes or 0x58 hex. The compiler cannot find a shift operation to use
-and instead choose to use a more expensive imul, to find the offset into the
-array free_area[].
-
-The patch align struct free_area to a cache-line, which cause the
-compiler avoid the imul operation. The imul operation is very fast on
-modern Intel CPUs. To help fast-path that decrement 'nr_free' move the
-member 'nr_free' to be first element, which saves one 'add' operation.
-
-Looking up instruction latency this exchange a 3-cycle imul with a
-1-cycle shl, saving 2-cycles. It does trade some space to do this.
-
-Used: gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2)
-
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
----
- include/linux/mmzone.h |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index b593316bff3d..4d83201717e1 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -93,10 +93,12 @@ extern int page_group_by_mobility_disabled;
- #define get_pageblock_migratetype(page)					\
- 	get_pfnblock_flags_mask(page, page_to_pfn(page), MIGRATETYPE_MASK)
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 61552e89bd89..00fb3603c29e 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -5363,6 +5363,22 @@ static bool clients_still_reclaiming(struct nfsd_net *nn)
+ 	return true;
+ }
  
-+/* Aligned struct to make zone->free_area[order] access faster */
- struct free_area {
--	struct list_head	free_list[MIGRATE_TYPES];
- 	unsigned long		nr_free;
--};
-+	unsigned long		__pad_to_align_free_list;
-+	struct list_head	free_list[MIGRATE_TYPES];
-+}  ____cacheline_aligned_in_smp;
++struct laundry_time {
++	time64_t cutoff;
++	time64_t new_timeo;
++};
++
++bool state_expired(struct laundry_time *lt, time64_t last_refresh)
++{
++	time64_t time_remaining;
++
++	if (last_refresh > lt->cutoff)
++		return true;
++	time_remaining = lt->cutoff - last_refresh;
++	lt->new_timeo = min(lt->new_timeo, time_remaining);
++	return false;
++}
++
+ static time64_t
+ nfs4_laundromat(struct nfsd_net *nn)
+ {
+@@ -5372,14 +5388,16 @@ nfs4_laundromat(struct nfsd_net *nn)
+ 	struct nfs4_ol_stateid *stp;
+ 	struct nfsd4_blocked_lock *nbl;
+ 	struct list_head *pos, *next, reaplist;
+-	time64_t cutoff = ktime_get_boottime_seconds() - nn->nfsd4_lease;
+-	time64_t t, new_timeo = nn->nfsd4_lease;
++	struct laundry_time lt = {
++		.cutoff = ktime_get_boottime_seconds() - nn->nfsd4_lease,
++		.new_timeo = nn->nfsd4_lease
++	};
+ 	struct nfs4_cpntf_state *cps;
+ 	copy_stateid_t *cps_t;
+ 	int i;
  
- static inline struct page *get_page_from_free_area(struct free_area *area,
- 					    int migratetype)
-
-
+ 	if (clients_still_reclaiming(nn)) {
+-		new_timeo = 0;
++		lt.new_timeo = 0;
+ 		goto out;
+ 	}
+ 	nfsd4_end_grace(nn);
+@@ -5389,7 +5407,7 @@ nfs4_laundromat(struct nfsd_net *nn)
+ 	idr_for_each_entry(&nn->s2s_cp_stateids, cps_t, i) {
+ 		cps = container_of(cps_t, struct nfs4_cpntf_state, cp_stateid);
+ 		if (cps->cp_stateid.sc_type == NFS4_COPYNOTIFY_STID &&
+-				cps->cpntf_time < cutoff)
++				state_expired(&lt, cps->cpntf_time))
+ 			_free_cpntf_state_locked(nn, cps);
+ 	}
+ 	spin_unlock(&nn->s2s_cp_lock);
+@@ -5397,11 +5415,8 @@ nfs4_laundromat(struct nfsd_net *nn)
+ 	spin_lock(&nn->client_lock);
+ 	list_for_each_safe(pos, next, &nn->client_lru) {
+ 		clp = list_entry(pos, struct nfs4_client, cl_lru);
+-		if (clp->cl_time > cutoff) {
+-			t = clp->cl_time - cutoff;
+-			new_timeo = min(new_timeo, t);
++		if (!state_expired(&lt, clp->cl_time))
+ 			break;
+-		}
+ 		if (mark_client_expired_locked(clp)) {
+ 			trace_nfsd_clid_expired(&clp->cl_clientid);
+ 			continue;
+@@ -5418,11 +5433,8 @@ nfs4_laundromat(struct nfsd_net *nn)
+ 	spin_lock(&state_lock);
+ 	list_for_each_safe(pos, next, &nn->del_recall_lru) {
+ 		dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
+-		if (dp->dl_time > cutoff) {
+-			t = dp->dl_time - cutoff;
+-			new_timeo = min(new_timeo, t);
++		if (!state_expired(&lt, clp->cl_time))
+ 			break;
+-		}
+ 		WARN_ON(!unhash_delegation_locked(dp));
+ 		list_add(&dp->dl_recall_lru, &reaplist);
+ 	}
+@@ -5438,11 +5450,8 @@ nfs4_laundromat(struct nfsd_net *nn)
+ 	while (!list_empty(&nn->close_lru)) {
+ 		oo = list_first_entry(&nn->close_lru, struct nfs4_openowner,
+ 					oo_close_lru);
+-		if (oo->oo_time > cutoff) {
+-			t = oo->oo_time - cutoff;
+-			new_timeo = min(new_timeo, t);
++		if (!state_expired(&lt, oo->oo_time))
+ 			break;
+-		}
+ 		list_del_init(&oo->oo_close_lru);
+ 		stp = oo->oo_last_closed_stid;
+ 		oo->oo_last_closed_stid = NULL;
+@@ -5468,11 +5477,8 @@ nfs4_laundromat(struct nfsd_net *nn)
+ 	while (!list_empty(&nn->blocked_locks_lru)) {
+ 		nbl = list_first_entry(&nn->blocked_locks_lru,
+ 					struct nfsd4_blocked_lock, nbl_lru);
+-		if (nbl->nbl_time > cutoff) {
+-			t = nbl->nbl_time - cutoff;
+-			new_timeo = min(new_timeo, t);
++		if (!state_expired(&lt, oo->oo_time))
+ 			break;
+-		}
+ 		list_move(&nbl->nbl_lru, &reaplist);
+ 		list_del_init(&nbl->nbl_list);
+ 	}
+@@ -5485,8 +5491,7 @@ nfs4_laundromat(struct nfsd_net *nn)
+ 		free_blocked_lock(nbl);
+ 	}
+ out:
+-	new_timeo = max_t(time64_t, new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
+-	return new_timeo;
++	return max_t(time64_t, lt.new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
+ }
+ 
+ static struct workqueue_struct *laundry_wq;
