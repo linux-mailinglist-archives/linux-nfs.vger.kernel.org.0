@@ -2,123 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B21F324515
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 21:18:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E46B32453A
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 21:32:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235547AbhBXURX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Feb 2021 15:17:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45306 "EHLO
+        id S235560AbhBXUbo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Feb 2021 15:31:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235685AbhBXUQH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 15:16:07 -0500
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFB7CC06174A
-        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 12:15:26 -0800 (PST)
-Received: by mail-wm1-x32e.google.com with SMTP id i9so2545741wml.0
-        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 12:15:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=J1gJV1o9Sl1Wnh9xWJQFa/KkawfMsaygfgB8RdQE8os=;
-        b=PcA0tffJHzRc0QDxWkZcmb6WbGBYLYs9WEMRBSGCgpFlPrgGJCTauBZS1e0nR+TIuo
-         P7bS/cIRp3mXEScNS+sPOjB/weotyBiu2bFS8B4AIMQmUHok6E0B6AqYR3HHAytYr24i
-         uN8Z4aDXQlcyRdC8w9kyOasCEF5+QrJ0cMzcCNw7vE4fgPegZEsEMmV9qVhb+IEOTzYA
-         Kng0odzvZpmNLSNsAfEgTkIEpPQYeei+X7ma2gcmv4yxuiRcwOtHljf2UzuxtGwIGhVd
-         M8mDL6Ir4geuuDKHscHvoJ6c5rfKglpo4UMtOUmkY3h9yFYWzfiF7Cz65NRfB9RHhRnT
-         vkKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=J1gJV1o9Sl1Wnh9xWJQFa/KkawfMsaygfgB8RdQE8os=;
-        b=unQqLQUBAuEeDUiC3U4vOgC0GohyaAr+iUZidGVxa6+SOhSXLehc3oQ7uNby4kYJgo
-         LY/FD1iEPkE9OVhmDInnXigPaS5ArjL0lgtGTnGfEjyGRq2VsYFJdWcgXqng9n20FPhM
-         o8UynZ75VGI5ZOpZnh+5QsABxsgd1dw6rv7HfoIzeqAHx43dUKKKl/Md1zTPsUG0seR/
-         2+VpKbz+2z3zHIcDs91co3b+FRx1dfGvjJrf+HH1R7/JUTNYHZ5XBfS46O+dEpT4WeXc
-         fv1xVGz4xdEsg75iSGB8jTg+td1V3gegVSs/Jrh8dPn+eAtX9d3L1ydrFfS9Rp3kb50V
-         07SQ==
-X-Gm-Message-State: AOAM530RRETmhz9NXiS2039t8OT2C1aI1KBcxaPutSw0T9ST9K+1sP3/
-        tqV/MNmY9KIwWadGtath9oX/GWTiaL8W6+4T
-X-Google-Smtp-Source: ABdhPJxf2wBacwv+7nH21lGN1XxSnXmyTznri5GC7Ka7XM0MNYSpX5qm+NtljVGMt7wCrErHGVhWNQ==
-X-Received: by 2002:a1c:f60b:: with SMTP id w11mr5227838wmc.3.1614197725456;
-        Wed, 24 Feb 2021 12:15:25 -0800 (PST)
-Received: from apalos.home (ppp-94-64-113-158.home.otenet.gr. [94.64.113.158])
-        by smtp.gmail.com with ESMTPSA id y9sm1850442wrm.88.2021.02.24.12.15.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Feb 2021 12:15:25 -0800 (PST)
-Date:   Wed, 24 Feb 2021 22:15:22 +0200
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
-        chuck.lever@oracle.com, netdev@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC net-next 2/3] net: page_pool: use alloc_pages_bulk in
- refill code path
-Message-ID: <YDaz2tXXxEkcBfRR@apalos.home>
-References: <161419296941.2718959.12575257358107256094.stgit@firesoul>
- <161419300618.2718959.11165518489200268845.stgit@firesoul>
+        with ESMTP id S235559AbhBXUbf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 15:31:35 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E698DC061574
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 12:30:54 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C46832050; Wed, 24 Feb 2021 15:30:53 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C46832050
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1614198653;
+        bh=MXykIT61z2hZ1T34raGBdkozDwV87aMHLYM5MSKT3/g=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=nl8KYi581bN7fxPLVUWn4P5qRCCQqgxThgy/+MNhIc/8DR0rEdhWobvOlLCRp8gMc
+         ogOh7hfF+3kBKaj9t1/JQClSW05GweZeYOKYw4HisVQIoAbfDkoGeT+a1KOL3rDAMv
+         blVNJ2yTcuXKAyfEVAGuHIe/VKipLUNGAb+FKs00=
+Date:   Wed, 24 Feb 2021 15:30:53 -0500
+To:     Steve Dickson <steved@redhat.com>
+Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 0/7 V4]  The NFSv4 only mounting daemon.
+Message-ID: <20210224203053.GF11591@fieldses.org>
+References: <20210219200815.792667-1-steved@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <161419300618.2718959.11165518489200268845.stgit@firesoul>
+In-Reply-To: <20210219200815.792667-1-steved@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Jesper, 
-
-On Wed, Feb 24, 2021 at 07:56:46PM +0100, Jesper Dangaard Brouer wrote:
-> There are cases where the page_pool need to refill with pages from the
-> page allocator. Some workloads cause the page_pool to release pages
-> instead of recycling these pages.
+On Fri, Feb 19, 2021 at 03:08:08PM -0500, Steve Dickson wrote:
+> nfsv4.exportd is a daemon that will listen for only v4 mount upcalls.
+> The idea is to allow distros to build a v4 only package
+> which will have a much smaller footprint than the
+> entire nfs-utils package.
 > 
-> For these workload it can improve performance to bulk alloc pages from
-> the page-allocator to refill the alloc cache.
+> exportd uses no RPC code, which means none of the 
+> code or arguments that deal with v3 was ported, 
+> this again, makes the footprint much smaller. 
+
+How much smaller?
+
+> The following options were ported:
+>     * multiple threads
+>     * state-directory-path option
+>     * junction support (not tested)
 > 
-> For XDP-redirect workload with 100G mlx5 driver (that use page_pool)
-> redirecting xdp_frame packets into a veth, that does XDP_PASS to create
-> an SKB from the xdp_frame, which then cannot return the page to the
-> page_pool. In this case, we saw[1] an improvement of 18.8% from using
-> the alloc_pages_bulk API (3,677,958 pps -> 4,368,926 pps).
+> The rest of the mountd options were v3 only options.
+
+There's also --manage-gids.
+
+If you want nfsv4-only at runtime, you can always run rpc.mountd with
+-N2 -N3 to turn off the MOUNT protocol support.
+
+If you don't even want v2/f3 code on your system, then you may have to
+do something like this, but why is that important?
+
+--b.
+
 > 
-> [1] https://github.com/xdp-project/xdp-project/blob/master/areas/mem/page_pool06_alloc_pages_bulk.org
+> V2:
+>   * Added two systemd services: nfsv4-exportd and nfsv4-server
+>   * nfsv4-server starts rpc.nfsd -N 3, so nfs.conf mod not needed.
 > 
-> Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-
-[...]
-
-> +	/* Remaining pages store in alloc.cache */
-> +	list_for_each_entry_safe(page, next, &page_list, lru) {
-> +		list_del(&page->lru);
-> +		if (pp_flags & PP_FLAG_DMA_MAP) {
-> +			page = page_pool_dma_map(pool, page);
-> +			if (!page)
-
-As I commented on the previous patch, i'd prefer the put_page() here to be
-explicitly called, instead of hiding in the page_pool_dma_map()
-
-> +				continue;
-> +		}
-> +		if (likely(pool->alloc.count < PP_ALLOC_CACHE_SIZE)) {
-> +			pool->alloc.cache[pool->alloc.count++] = page;
-> +			pool->pages_state_hold_cnt++;
-> +			trace_page_pool_state_hold(pool, page,
-> +						   pool->pages_state_hold_cnt);
-> +		} else {
-> +			put_page(page);
-> +		}
-> +	}
-> +out:
->  	if (pool->p.flags & PP_FLAG_DMA_MAP) {
-> -		page = page_pool_dma_map(pool, page);
-> -		if (!page)
-> +		first_page = page_pool_dma_map(pool, first_page);
-> +		if (!first_page)
->  			return NULL;
->  	}
->  
-[...]
-
-Cheers
-/Ilias
+> V3: Changed the name from exportd to nfsv4.exportd
+> 
+> V4: Added compile flag that will compile in the NFSv4 only server
+> 
+> Steve Dickson (7):
+>   exportd: the initial shell of the v4 export support
+>   exportd: Moved cache upcalls routines into libexport.a
+>   exportd: multiple threads
+>   exportd/exportfs: Add the state-directory-path option
+>   exportd: Enabled junction support
+>   exportd: systemd unit files
+>   exportd: Added config variable to compile in the NFSv4 only server.
+> 
+>  .gitignore                                |   1 +
+>  configure.ac                              |  14 ++
+>  nfs.conf                                  |   4 +
+>  support/export/Makefile.am                |   3 +-
+>  {utils/mountd => support/export}/auth.c   |   4 +-
+>  {utils/mountd => support/export}/cache.c  |  46 +++-
+>  support/export/export.h                   |  34 +++
+>  {utils/mountd => support/export}/fsloc.c  |   0
+>  {utils/mountd => support/export}/v4root.c |   0
+>  {utils/mountd => support/include}/fsloc.h |   0
+>  systemd/Makefile.am                       |   6 +
+>  systemd/nfs.conf.man                      |  10 +
+>  systemd/nfsv4-exportd.service             |  12 +
+>  systemd/nfsv4-server.service              |  31 +++
+>  utils/Makefile.am                         |   4 +
+>  utils/exportd/Makefile.am                 |  65 +++++
+>  utils/exportd/exportd.c                   | 276 ++++++++++++++++++++++
+>  utils/exportd/exportd.man                 |  81 +++++++
+>  utils/exportfs/exportfs.c                 |  21 +-
+>  utils/exportfs/exportfs.man               |   7 +-
+>  utils/mountd/Makefile.am                  |   5 +-
+>  21 files changed, 606 insertions(+), 18 deletions(-)
+>  rename {utils/mountd => support/export}/auth.c (99%)
+>  rename {utils/mountd => support/export}/cache.c (98%)
+>  create mode 100644 support/export/export.h
+>  rename {utils/mountd => support/export}/fsloc.c (100%)
+>  rename {utils/mountd => support/export}/v4root.c (100%)
+>  rename {utils/mountd => support/include}/fsloc.h (100%)
+>  create mode 100644 systemd/nfsv4-exportd.service
+>  create mode 100644 systemd/nfsv4-server.service
+>  create mode 100644 utils/exportd/Makefile.am
+>  create mode 100644 utils/exportd/exportd.c
+>  create mode 100644 utils/exportd/exportd.man
+> 
+> -- 
+> 2.29.2
