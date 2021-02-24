@@ -2,190 +2,172 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40BC63246E9
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 23:34:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D14F3246F1
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 23:36:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235057AbhBXWed (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Feb 2021 17:34:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46692 "EHLO
+        id S235408AbhBXWgh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Feb 2021 17:36:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234983AbhBXWec (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 17:34:32 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3A1EC061756
-        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 14:33:51 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 75FC221DD; Wed, 24 Feb 2021 17:33:49 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 75FC221DD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1614206029;
-        bh=/lYHEVu4ZGeGowBZy4yyy8RYP1cxkl9zS9Fg4I3iK70=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PGFXY9rxKYPHqrNNQ2XUKHDeWOLZOv3cn6S8zF0deEdhw2H+QtLyXCKIlyL0i1QmW
-         dRfyx4ANsDDmyfMufFXaEol9gCzDk/IdwvBcAw9cZLRtxf6gRx+eBrsjR2g64WAgt5
-         1kDbJjUEQrvtu6pK7K8FwtBbtQs1OnX79RW2j5+U=
-Date:   Wed, 24 Feb 2021 17:33:49 -0500
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Olga Kornievskaia <kolga@netapp.com>
-Subject: Re: [PATCH] nfsd: don't abort copies early
-Message-ID: <20210224223349.GB25689@fieldses.org>
-References: <20210224183950.GB11591@fieldses.org>
- <20210224193135.GC11591@fieldses.org>
- <59A5F476-EE0C-454F-8365-3F16505D9D45@oracle.com>
+        with ESMTP id S235406AbhBXWgg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 17:36:36 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A8CFC061574
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 14:35:55 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id v22so4487547edx.13
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 14:35:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fMWjHQWY/HQm6szCDew+AP9/PfoMPcQCLYvu32uFHyk=;
+        b=Vdx5AbGFbrCFy5UqT5YH2qHDmnaBMSBL6o1/tfYQGwUa7ZHOfa+BUcmf9ZFbE7D03O
+         d3nxLSPMKMluHI53viqqwhkX9MVL1MtWFHJYJxVKiVnbmi6qlu+0DDJXghdqMdkg8nF0
+         D+HZKWNBsQAJtUpnbQpf86N+1IhJ6urrJNaiTBjFFzOJsgh85WvtYFRkP4+nBKz9EtFZ
+         anb9dPbPMJVHKjiAY0quoIjE0LaDg35WrR/BhkP+NpI8zWJqOQayl56CHBK/jmJ7c8eM
+         RUcaNNFKI4vk7enPnGCaX8L3ZyWoBrhAJ9p9APxUW+e/d9L2m/gpOw35FzdFOaL0mC6c
+         O3gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fMWjHQWY/HQm6szCDew+AP9/PfoMPcQCLYvu32uFHyk=;
+        b=JlAXya3STh9JyQWbkCLVWtIT/Vwb9Q5C5rE0VnEF8AJY7qBuoCZzjdLc8gJbLaYOCz
+         UFJ/B3mKG8U1PbpSDO1qI0xouR5uBcBXjFcT2jvAmvbaP87bI6top7lx4HOIh1xNn8Nb
+         329J+9MjSePXZCWwYDNHCxpAIJ+CoYRM0sfDbNsKzAtTjLfRyvAbY+Zj/CV+sO1KRKn3
+         hmC8LrqZ3sid7PkPa/NoJF6OggAuoXxmdW5pjZ9AkbynKu1qOq+2WPenTER3srhiDYoK
+         iwl5FA+QurL/Gb+9LIB0jMnxQuVr49ZxnMGifpUepl6BUPjlIM8I9AYI5f6gJgvDPVby
+         niWg==
+X-Gm-Message-State: AOAM531R7SZPaqYxj5LtH4sIQqQAqNgiPYRwKrnqUVQh7Tcqs8l7/pSv
+        O7pl4P/r3PgnXQyl5V1B2mwdZmR5BlFKPiwxoDw=
+X-Google-Smtp-Source: ABdhPJz46cyVm2fF+Qkr9TCLJV8dN0FHU8HOvYQoKrYNnqXi2OH7WqG93Pzb6gkV/wLcG+XRn0TfUr2ambaTm0BUKzI=
+X-Received: by 2002:a05:6402:c96:: with SMTP id cm22mr66249edb.128.1614206154364;
+ Wed, 24 Feb 2021 14:35:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <59A5F476-EE0C-454F-8365-3F16505D9D45@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20201029190716.70481-1-dai.ngo@oracle.com> <20201029190716.70481-2-dai.ngo@oracle.com>
+ <CAN-5tyFnTSuMivnBPD9Aur+KDxX8fCOuSaF7qGKe6bFB7roK6Q@mail.gmail.com>
+ <20210220010903.GE5357@fieldses.org> <69ea46ff-80d1-acfa-22a5-3d1b6230728f@oracle.com>
+ <20210220032057.GA25183@fieldses.org> <CAN-5tyHq2NcQRbx01cSyJob=72MDUnwjK_t6GiDjTc3twbnvwA@mail.gmail.com>
+ <ef11a2f9-f84b-7efc-ba5b-ca36c33d1825@oracle.com> <52e26138-0d3d-bd3c-6110-5a41e1fdf526@oracle.com>
+ <517d8f58-4a00-8fe1-ad5a-b19ed50a8fe3@oracle.com> <ff068f05-c9cd-9772-4be7-74ae28a268d7@oracle.com>
+ <a5cc3d04-06bc-6f3b-3ac2-c96a8efb1194@oracle.com>
+In-Reply-To: <a5cc3d04-06bc-6f3b-3ac2-c96a8efb1194@oracle.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Wed, 24 Feb 2021 17:35:43 -0500
+Message-ID: <CAN-5tyEXPxb7SZv_qmCECPUSdUgWSrPigrWxTORC0ZrMAj08Fg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] NFSD: Fix use-after-free warning when doing
+ inter-server copy
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 24, 2021 at 07:34:10PM +0000, Chuck Lever wrote:
-> 
-> 
-> > On Feb 24, 2021, at 2:31 PM, J. Bruce Fields <bfields@fieldses.org> wrote:
-> > 
-> > I confess I always have to stare at these comparisons for a minute to
-> > figure out which way they should go.  And the logic in each of these
-> > loops is a little repetitive.
-> > 
-> > Would it be worth creating a little state_expired() helper to work out
-> > the comparison and the new timeout?
-> 
-> That's better, but aren't there already operators on time64_t data objects
-> that can be used for this?
+On Mon, Feb 22, 2021 at 5:09 PM <dai.ngo@oracle.com> wrote:
+>
+>
+> On 2/22/21 2:01 PM, dai.ngo@oracle.com wrote:
+> >
+> > On 2/22/21 1:46 PM, dai.ngo@oracle.com wrote:
+> >>
+> >> On 2/22/21 10:34 AM, dai.ngo@oracle.com wrote:
+> >>>
+> >>> On 2/20/21 8:16 PM, dai.ngo@oracle.com wrote:
+> >>>> On 2/20/21 6:08 AM, Olga Kornievskaia wrote:
+> >>>>> On Fri, Feb 19, 2021 at 10:21 PM J. Bruce Fields
+> >>>>> <bfields@fieldses.org> wrote:
+> >>>>>> On Fri, Feb 19, 2021 at 05:31:58PM -0800, dai.ngo@oracle.com wrote:
+> >>>>>>> If this is the cause why we don't drop the mount after the copy
+> >>>>>>> then I can restore the patch and look into this problem.
+> >>>>>>> Unfortunately,
+> >>>>>>> all my test machines are down for maintenance until Sunday/Monday.
+> >>>>>> I think we can take some time to figure out what's actually going on
+> >>>>>> here before reverting anything.
+> >>>>> Yes I agree. We need to fix the use-after-free and also make sure
+> >>>>> that
+> >>>>> reference will go away.
+> >>>
+> >>> I reverted the patch, verified the warning message is back:
+> >>>
+> >>> Feb 22 10:07:45 nfsvmf24 kernel: ------------[ cut here ]------------
+> >>> Feb 22 10:07:45 nfsvmf24 kernel: refcount_t: underflow; use-after-free.
+> >>>
+> >>> then did a inter-server copy and waited for more than 20 mins and
+> >>> the destination server still maintains the session with the source
+> >>> server.  It must be some other references that prevent the mount
+> >>> to go away.
+> >>
+> >> This change fixed the unmount after inter-server copy problem:
+> >>
+> >> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> >> index 8d6d2678abad..87687cd18938 100644
+> >> --- a/fs/nfsd/nfs4proc.c
+> >> +++ b/fs/nfsd/nfs4proc.c
+> >> @@ -1304,7 +1304,7 @@ nfsd4_cleanup_inter_ssc(struct vfsmount
+> >> *ss_mnt, struct nfsd_file *src,
+> >>                         struct nfsd_file *dst)
+> >>  {
+> >>         nfs42_ssc_close(src->nf_file);
+> >> -       /* 'src' is freed by nfsd4_do_async_copy */
+> >> +       nfsd_file_put(src);
+> >>         nfsd_file_put(dst);
+> >>         mntput(ss_mnt);
+> >>  }
+>
+> This change is not need. It's left over from my testing to
+> reproduce the warning messages. Only the change in
+> nfsd4_do_async_copy is needed for the unmount problem.
+>
+> -Dai
+>
+> >> @@ -1472,14 +1472,12 @@ static int nfsd4_do_async_copy(void *data)
+> >>                 copy->nf_src = kzalloc(sizeof(struct nfsd_file),
+> >> GFP_KERNEL);
+> >>                 if (!copy->nf_src) {
+> >>                         copy->nfserr = nfserr_serverfault;
+> >> - nfsd4_interssc_disconnect(copy->ss_mnt);
+> >>                         goto do_callback;
+> >>                 }
+> >>                 copy->nf_src->nf_file = nfs42_ssc_open(copy->ss_mnt,
+> >> &copy->c_fh,
+> >> &copy->stateid);
+> >>                 if (IS_ERR(copy->nf_src->nf_file)) {
+> >>                         copy->nfserr = nfserr_offload_denied;
+> >> - nfsd4_interssc_disconnect(copy->ss_mnt);
+> >>                         goto do_callback;
+> >>                 }
+> >>         }
+> >> @@ -1498,6 +1496,7 @@ static int nfsd4_do_async_copy(void *data)
+> >>                         &nfsd4_cb_offload_ops,
+> >> NFSPROC4_CLNT_CB_OFFLOAD);
+> >>         nfsd4_run_cb(&cb_copy->cp_cb);
+> >>  out:
+> >> +       nfsd4_interssc_disconnect(copy->ss_mnt);
+> >>         if (!copy->cp_intra)
+> >>                 kfree(copy->nf_src);
+> >>         cleanup_async_copy(copy);
+> >>
+> >> But there is something new. I tried inter-server copy twice.
+> >> First time I can verify from tshark capture that a session was
+> >> created and destroy, along with all the NFS ops. On 2nd try,
+> >> I can
 
-No idea.
+Hi Dai/Bruce,
 
---b.
+While I believe the fix works (as in the mount goes away), I'm not
+comfortable with this fix as I believe we will be leaking resources.
+Server calls nfs42_ssc_open() which creates a legit file pointer (yes
+it takes a reference on superblock but it also allocates memory for
+"file" structure). Normally a file structure requires doing an fput()
+which if I look thru the code does a bunch of things before in the end
+calling mntput(). While we free the copy->nf_src in
+nfs4_do_asyn_copy(), the copy->nf_src->nf_file was allocated
+separately and would have been freed from calling fput() on it.
 
-> 
-> 
-> > --b.
-> > 
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index 61552e89bd89..00fb3603c29e 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -5363,6 +5363,22 @@ static bool clients_still_reclaiming(struct nfsd_net *nn)
-> > 	return true;
-> > }
-> > 
-> > +struct laundry_time {
-> > +	time64_t cutoff;
-> > +	time64_t new_timeo;
-> > +};
-> > +
-> > +bool state_expired(struct laundry_time *lt, time64_t last_refresh)
-> > +{
-> > +	time64_t time_remaining;
-> > +
-> > +	if (last_refresh > lt->cutoff)
-> > +		return true;
-> > +	time_remaining = lt->cutoff - last_refresh;
-> > +	lt->new_timeo = min(lt->new_timeo, time_remaining);
-> > +	return false;
-> > +}
-> > +
-> > static time64_t
-> > nfs4_laundromat(struct nfsd_net *nn)
-> > {
-> > @@ -5372,14 +5388,16 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > 	struct nfs4_ol_stateid *stp;
-> > 	struct nfsd4_blocked_lock *nbl;
-> > 	struct list_head *pos, *next, reaplist;
-> > -	time64_t cutoff = ktime_get_boottime_seconds() - nn->nfsd4_lease;
-> > -	time64_t t, new_timeo = nn->nfsd4_lease;
-> > +	struct laundry_time lt = {
-> > +		.cutoff = ktime_get_boottime_seconds() - nn->nfsd4_lease,
-> > +		.new_timeo = nn->nfsd4_lease
-> > +	};
-> > 	struct nfs4_cpntf_state *cps;
-> > 	copy_stateid_t *cps_t;
-> > 	int i;
-> > 
-> > 	if (clients_still_reclaiming(nn)) {
-> > -		new_timeo = 0;
-> > +		lt.new_timeo = 0;
-> > 		goto out;
-> > 	}
-> > 	nfsd4_end_grace(nn);
-> > @@ -5389,7 +5407,7 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > 	idr_for_each_entry(&nn->s2s_cp_stateids, cps_t, i) {
-> > 		cps = container_of(cps_t, struct nfs4_cpntf_state, cp_stateid);
-> > 		if (cps->cp_stateid.sc_type == NFS4_COPYNOTIFY_STID &&
-> > -				cps->cpntf_time < cutoff)
-> > +				state_expired(&lt, cps->cpntf_time))
-> > 			_free_cpntf_state_locked(nn, cps);
-> > 	}
-> > 	spin_unlock(&nn->s2s_cp_lock);
-> > @@ -5397,11 +5415,8 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > 	spin_lock(&nn->client_lock);
-> > 	list_for_each_safe(pos, next, &nn->client_lru) {
-> > 		clp = list_entry(pos, struct nfs4_client, cl_lru);
-> > -		if (clp->cl_time > cutoff) {
-> > -			t = clp->cl_time - cutoff;
-> > -			new_timeo = min(new_timeo, t);
-> > +		if (!state_expired(&lt, clp->cl_time))
-> > 			break;
-> > -		}
-> > 		if (mark_client_expired_locked(clp)) {
-> > 			trace_nfsd_clid_expired(&clp->cl_clientid);
-> > 			continue;
-> > @@ -5418,11 +5433,8 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > 	spin_lock(&state_lock);
-> > 	list_for_each_safe(pos, next, &nn->del_recall_lru) {
-> > 		dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
-> > -		if (dp->dl_time > cutoff) {
-> > -			t = dp->dl_time - cutoff;
-> > -			new_timeo = min(new_timeo, t);
-> > +		if (!state_expired(&lt, clp->cl_time))
-> > 			break;
-> > -		}
-> > 		WARN_ON(!unhash_delegation_locked(dp));
-> > 		list_add(&dp->dl_recall_lru, &reaplist);
-> > 	}
-> > @@ -5438,11 +5450,8 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > 	while (!list_empty(&nn->close_lru)) {
-> > 		oo = list_first_entry(&nn->close_lru, struct nfs4_openowner,
-> > 					oo_close_lru);
-> > -		if (oo->oo_time > cutoff) {
-> > -			t = oo->oo_time - cutoff;
-> > -			new_timeo = min(new_timeo, t);
-> > +		if (!state_expired(&lt, oo->oo_time))
-> > 			break;
-> > -		}
-> > 		list_del_init(&oo->oo_close_lru);
-> > 		stp = oo->oo_last_closed_stid;
-> > 		oo->oo_last_closed_stid = NULL;
-> > @@ -5468,11 +5477,8 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > 	while (!list_empty(&nn->blocked_locks_lru)) {
-> > 		nbl = list_first_entry(&nn->blocked_locks_lru,
-> > 					struct nfsd4_blocked_lock, nbl_lru);
-> > -		if (nbl->nbl_time > cutoff) {
-> > -			t = nbl->nbl_time - cutoff;
-> > -			new_timeo = min(new_timeo, t);
-> > +		if (!state_expired(&lt, oo->oo_time))
-> > 			break;
-> > -		}
-> > 		list_move(&nbl->nbl_lru, &reaplist);
-> > 		list_del_init(&nbl->nbl_list);
-> > 	}
-> > @@ -5485,8 +5491,7 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > 		free_blocked_lock(nbl);
-> > 	}
-> > out:
-> > -	new_timeo = max_t(time64_t, new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
-> > -	return new_timeo;
-> > +	return max_t(time64_t, lt.new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
-> > }
-> > 
-> > static struct workqueue_struct *laundry_wq;
-> 
-> --
-> Chuck Lever
-> 
-> 
+So I guess it's not correct to do kfree(copy->nf_src) in teh
+nfs4_do_async_copy() I think that's probably where use-after-free
+comes in. We need to keep it until the cleanup. I'm thinking perhaps
+call fput(copy->nf_src->nf_file) first and then free it? Just an idea
+but I haven't tested it.
