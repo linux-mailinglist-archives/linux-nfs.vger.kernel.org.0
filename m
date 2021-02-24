@@ -2,94 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA35C323A73
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 11:24:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3AB9323A7D
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 11:27:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234374AbhBXKXM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Feb 2021 05:23:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:51778 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234650AbhBXKXD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 24 Feb 2021 05:23:03 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 92C26B03A;
-        Wed, 24 Feb 2021 10:22:20 +0000 (UTC)
-Received: from localhost (brahms [local])
-        by brahms (OpenSMTPD) with ESMTPA id 4d05c3a6;
-        Wed, 24 Feb 2021 10:23:26 +0000 (UTC)
-Date:   Wed, 24 Feb 2021 10:23:25 +0000
-From:   Luis Henriques <lhenriques@suse.de>
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <sfrench@samba.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Ian Lance Taylor <iant@google.com>,
-        Luis Lozano <llozano@chromium.org>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v8] vfs: fix copy_file_range regression in cross-fs copies
-Message-ID: <YDYpHccgM7agpdTQ@suse.de>
-References: <20210221195833.23828-1-lhenriques@suse.de>
- <20210222102456.6692-1-lhenriques@suse.de>
- <CAN-5tyELMY7b7CKO-+an47ydq8r_4+SOyhuvdH0qE0-JmdZ44Q@mail.gmail.com>
+        id S233374AbhBXK05 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Feb 2021 05:26:57 -0500
+Received: from outbound-smtp35.blacknight.com ([46.22.139.218]:48079 "EHLO
+        outbound-smtp35.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234344AbhBXK04 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 05:26:56 -0500
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp35.blacknight.com (Postfix) with ESMTPS id 2ACF11E23
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 10:26:04 +0000 (GMT)
+Received: (qmail 23429 invoked from network); 24 Feb 2021 10:26:04 -0000
+Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.22.4])
+  by 81.17.254.9 with ESMTPA; 24 Feb 2021 10:26:03 -0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux-NFS <linux-nfs@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: [RFC PATCH 0/3] Introduce a bulk order-0 page allocator for sunrpc
+Date:   Wed, 24 Feb 2021 10:26:00 +0000
+Message-Id: <20210224102603.19524-1-mgorman@techsingularity.net>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAN-5tyELMY7b7CKO-+an47ydq8r_4+SOyhuvdH0qE0-JmdZ44Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Feb 23, 2021 at 08:00:54PM -0500, Olga Kornievskaia wrote:
-> On Mon, Feb 22, 2021 at 5:25 AM Luis Henriques <lhenriques@suse.de> wrote:
-> >
-> > A regression has been reported by Nicolas Boichat, found while using the
-> > copy_file_range syscall to copy a tracefs file.  Before commit
-> > 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
-> > kernel would return -EXDEV to userspace when trying to copy a file across
-> > different filesystems.  After this commit, the syscall doesn't fail anymore
-> > and instead returns zero (zero bytes copied), as this file's content is
-> > generated on-the-fly and thus reports a size of zero.
-> >
-> > This patch restores some cross-filesystem copy restrictions that existed
-> > prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
-> > devices").  Filesystems are still allowed to fall-back to the VFS
-> > generic_copy_file_range() implementation, but that has now to be done
-> > explicitly.
-> >
-> > nfsd is also modified to fall-back into generic_copy_file_range() in case
-> > vfs_copy_file_range() fails with -EOPNOTSUPP or -EXDEV.
-> >
-> > Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
-> > Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
-> > Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
-> > Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
-> > Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-> > Signed-off-by: Luis Henriques <lhenriques@suse.de>
-> 
-> I tested v8 and I believe it works for NFS.
+This is a prototype series that introduces a bulk order-0 page allocator
+with sunrpc being the first user. The implementation is not particularly
+efficient and the intention is to iron out what the semantics of the API
+should be. That said, sunrpc was reported to have reduced allocation
+latency when refilling a pool.
 
-Thanks a lot for the testing.  And to everyone else for reviews,
-feedback,... and patience.
+As a side-note, while the implementation could be more efficient, it
+would require fairly deep surgery in numerous places. The lock scope would
+need to be significantly reduced, particularly as vmstat, per-cpu and the
+buddy allocator have different locking protocol that overal -- e.g. all
+partially depend on irqs being disabled at various points. Secondly,
+the core of the allocator deals with single pages where as both the bulk
+allocator and per-cpu allocator operate in batches. All of that has to
+be reconciled with all the existing users and their constraints (memory
+offline, CMA and cpusets being the trickiest).
 
-I'll now go look into the manpage and see what needs to be changed.
+In terms of semantics required by new users, my preference is that a pair
+of patches be applied -- the first which adds the required semantic to
+the bulk allocator and the second which adds the new user.
 
-Cheers,
---
-Luís
+Patch 1 of this series is a cleanup to sunrpc, it could be merged
+	separately but is included here for convenience.
+
+Patch 2 is the prototype bulk allocator
+
+Patch 3 is the sunrpc user. Chuck also has a patch which further caches
+	pages but is not included in this series. It's not directly
+	related to the bulk allocator and as it caches pages, it might
+	have other concerns (e.g. does it need a shrinker?)
+
+This has only been lightly tested on a low-end NFS server. It did not break
+but would benefit from an evaluation to see how much, if any, the headline
+performance changes. The biggest concern is that a light test case showed
+that there are a *lot* of bulk requests for 1 page which gets delegated to
+the normal allocator.  The same criteria should apply to any other users.
+
+ include/linux/gfp.h   |  13 +++++
+ mm/page_alloc.c       | 113 +++++++++++++++++++++++++++++++++++++++++-
+ net/sunrpc/svc_xprt.c |  47 ++++++++++++------
+ 3 files changed, 157 insertions(+), 16 deletions(-)
+
+-- 
+2.26.2
+
