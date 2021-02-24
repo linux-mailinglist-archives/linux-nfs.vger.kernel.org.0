@@ -2,151 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 079E1323BA9
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 12:57:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75DD1323BB1
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 12:57:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235211AbhBXL4D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Feb 2021 06:56:03 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:55427 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235188AbhBXLzU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 06:55:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614167633;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rL0rqJykzi+068H31HVXzImuu55OZFksWorJVNSie2w=;
-        b=fR/yDIqRTkiFGb6NTOsVr1uAvTHpDhEa2l9JWuPh5aEhi9zZ7Zdf8iyVFvTfh2mBaI/KSe
-        788/Su/JUOZ775XEmMexbTHJ2XwtEhHBtCOhcos1sug8GarKBvxhO580XZMRejwpfxo5Av
-        uzmwbhxsSb/HBMlb7zJTPQwS8Y2Us8w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-525-f_kFJMjjM8aoNLA5ErJwfQ-1; Wed, 24 Feb 2021 06:53:48 -0500
-X-MC-Unique: f_kFJMjjM8aoNLA5ErJwfQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9EB0A18B6142;
-        Wed, 24 Feb 2021 11:53:42 +0000 (UTC)
-Received: from localhost (ovpn-115-137.ams2.redhat.com [10.36.115.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A20EE10016F0;
-        Wed, 24 Feb 2021 11:53:30 +0000 (UTC)
-Date:   Wed, 24 Feb 2021 11:53:29 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-ide@vger.kernel.org, linux-mmc@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-block@vger.kernel.org, dm-devel@redhat.com, axboe@kernel.dk,
-        fujita.tomonori@lab.ntt.co.jp, tim@cyberelk.net, mst@redhat.com,
-        jasowang@redhat.com, pbonzini@redhat.com, davem@davemloft.net,
-        bp@alien8.de, agk@redhat.com, snitzer@redhat.com,
-        ulf.hansson@linaro.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, dgilbert@interlog.com,
-        Kai.Makisara@kolumbus.fi, alim.akhtar@samsung.com,
-        avri.altman@wdc.com, bfields@fieldses.org, chuck.lever@oracle.com,
-        baolin.wang@linaro.org, vbadigan@codeaurora.org, zliua@micron.com,
-        richard.peng@oppo.com, guoqing.jiang@cloud.ionos.com,
-        stanley.chu@mediatek.com, cang@codeaurora.org,
-        asutoshd@codeaurora.org, beanhuo@micron.com, jaegeuk@kernel.org
-Subject: Re: [RFC PATCH] blk-core: remove blk_put_request()
-Message-ID: <YDY+ObNNiBMMuSEt@stefanha-x1.localdomain>
-References: <20210222211115.30416-1-chaitanya.kulkarni@wdc.com>
+        id S235196AbhBXL5T (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Feb 2021 06:57:19 -0500
+Received: from outbound-smtp57.blacknight.com ([46.22.136.241]:41865 "EHLO
+        outbound-smtp57.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235208AbhBXL4K (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 06:56:10 -0500
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp57.blacknight.com (Postfix) with ESMTPS id 49FBBFAD3C
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 11:55:11 +0000 (GMT)
+Received: (qmail 8759 invoked from network); 24 Feb 2021 11:55:11 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 24 Feb 2021 11:55:11 -0000
+Date:   Wed, 24 Feb 2021 11:55:08 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux-NFS <linux-nfs@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/3] Introduce a bulk order-0 page allocator for
+ sunrpc
+Message-ID: <20210224115508.GL3697@techsingularity.net>
+References: <20210224102603.19524-1-mgorman@techsingularity.net>
+ <20210224122723.15943e95@carbon>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nED3gpEEOc5iD8Dg"
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20210222211115.30416-1-chaitanya.kulkarni@wdc.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20210224122723.15943e95@carbon>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Wed, Feb 24, 2021 at 12:27:23PM +0100, Jesper Dangaard Brouer wrote:
+> On Wed, 24 Feb 2021 10:26:00 +0000
+> Mel Gorman <mgorman@techsingularity.net> wrote:
+> 
+> > This is a prototype series that introduces a bulk order-0 page allocator
+> > with sunrpc being the first user. The implementation is not particularly
+> > efficient and the intention is to iron out what the semantics of the API
+> > should be. That said, sunrpc was reported to have reduced allocation
+> > latency when refilling a pool.
+> 
+> I also have a use-case in page_pool, and I've been testing with the
+> earlier patches, results are here[1]
+> 
+> [1] https://github.com/xdp-project/xdp-project/blob/master/areas/mem/page_pool06_alloc_pages_bulk.org
+> 
+> Awesome to see this newer patchset! thanks a lot for working on this!
+> I'll run some new tests based on this.
+> 
 
---nED3gpEEOc5iD8Dg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks and if they get finalised, a patch on top for review would be
+nice with the results included in the changelog. Obviously any change
+that would need to be made to the allocator would happen first.
 
-On Mon, Feb 22, 2021 at 01:11:15PM -0800, Chaitanya Kulkarni wrote:
-> The function blk_put_request() is just a wrapper to
-> blk_mq_free_request(), remove the unnecessary wrapper.
->=20
-> Any feedback is welcome on this RFC.
->=20
-> Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-> ---
->  block/blk-core.c                   |  6 ------
->  block/blk-merge.c                  |  2 +-
->  block/bsg-lib.c                    |  4 ++--
->  block/bsg.c                        |  4 ++--
->  block/scsi_ioctl.c                 |  6 +++---
->  drivers/block/paride/pd.c          |  2 +-
->  drivers/block/pktcdvd.c            |  2 +-
->  drivers/block/virtio_blk.c         |  2 +-
->  drivers/cdrom/cdrom.c              |  4 ++--
->  drivers/ide/ide-atapi.c            |  2 +-
->  drivers/ide/ide-cd.c               |  4 ++--
->  drivers/ide/ide-cd_ioctl.c         |  2 +-
->  drivers/ide/ide-devsets.c          |  2 +-
->  drivers/ide/ide-disk.c             |  2 +-
->  drivers/ide/ide-ioctls.c           |  4 ++--
->  drivers/ide/ide-park.c             |  2 +-
->  drivers/ide/ide-pm.c               |  4 ++--
->  drivers/ide/ide-tape.c             |  2 +-
->  drivers/ide/ide-taskfile.c         |  2 +-
->  drivers/md/dm-mpath.c              |  2 +-
->  drivers/mmc/core/block.c           | 10 +++++-----
->  drivers/scsi/scsi_error.c          |  2 +-
->  drivers/scsi/scsi_lib.c            |  2 +-
->  drivers/scsi/sg.c                  |  6 +++---
->  drivers/scsi/st.c                  |  4 ++--
->  drivers/scsi/ufs/ufshcd.c          |  6 +++---
->  drivers/target/target_core_pscsi.c |  4 ++--
->  fs/nfsd/blocklayout.c              |  4 ++--
->  include/linux/blkdev.h             |  1 -
->  29 files changed, 46 insertions(+), 53 deletions(-)
->=20
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index fc60ff208497..1754f5e7cc80 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -642,12 +642,6 @@ struct request *blk_get_request(struct request_queue=
- *q, unsigned int op,
->  }
->  EXPORT_SYMBOL(blk_get_request);
-> =20
-> -void blk_put_request(struct request *req)
-> -{
-> -	blk_mq_free_request(req);
-> -}
-> -EXPORT_SYMBOL(blk_put_request);
+> > As a side-note, while the implementation could be more efficient, it
+> > would require fairly deep surgery in numerous places. The lock scope would
+> > need to be significantly reduced, particularly as vmstat, per-cpu and the
+> > buddy allocator have different locking protocol that overal -- e.g. all
+> > partially depend on irqs being disabled at various points. Secondly,
+> > the core of the allocator deals with single pages where as both the bulk
+> > allocator and per-cpu allocator operate in batches. All of that has to
+> > be reconciled with all the existing users and their constraints (memory
+> > offline, CMA and cpusets being the trickiest).
+> 
+> As you can see in[1], I'm getting a significant speedup from this.  I
+> guess that the cost of finding the "zone" is higher than I expected, as
+> this basically what we/you amortize for the bulk.
+> 
 
-blk_get_request() still exists after this patch. A "get" API usually has
-a corresponding "put" API. I'm not sure this patch helps the consistency
-and clarity of the code.
+The obvious goal would be that if a refactoring did happen that the
+performance would be at least neutral but hopefully improved.
 
-If you do go ahead, please update the blk_get_request() doc comment
-explicitly mentioning that blk_mq_free_request() needs to be called.
+> > In terms of semantics required by new users, my preference is that a pair
+> > of patches be applied -- the first which adds the required semantic to
+> > the bulk allocator and the second which adds the new user.
+> > 
+> > Patch 1 of this series is a cleanup to sunrpc, it could be merged
+> > 	separately but is included here for convenience.
+> > 
+> > Patch 2 is the prototype bulk allocator
+> > 
+> > Patch 3 is the sunrpc user. Chuck also has a patch which further caches
+> > 	pages but is not included in this series. It's not directly
+> > 	related to the bulk allocator and as it caches pages, it might
+> > 	have other concerns (e.g. does it need a shrinker?)
+> > 
+> > This has only been lightly tested on a low-end NFS server. It did not break
+> > but would benefit from an evaluation to see how much, if any, the headline
+> > performance changes. The biggest concern is that a light test case showed
+> > that there are a *lot* of bulk requests for 1 page which gets delegated to
+> > the normal allocator.  The same criteria should apply to any other users.
+> 
+> If you change local_irq_save(flags) to local_irq_disable() then you can
+> likely get better performance for 1 page requests via this API.  This
+> limits the API to be used in cases where IRQs are enabled (which is
+> most cases).  (For my use-case I will not do 1 page requests).
+> 
 
-Stefan
+I do not want to constrain the API to being IRQ-only prematurely. An
+obvious alternative use case is the SLUB allocation path when a high-order
+allocation fails. It's known that if the SLUB order is reduced that it has
+an impact on hackbench communicating over sockets.  It would be interesting
+to see what happens if order-0 pages are bulk allocated when s->min == 0
+and that can be called from a blocking context. Tricky to test but could
+be fudged by forcing all high-order allocations to fail when s->min ==
+0 to evaluate the worst case scenario.  In addition, it would constrain
+any potential refactoring if the lower levels have to choose between
+local_irq_disable() vs local_irq_save() depending on the caller context.
 
---nED3gpEEOc5iD8Dg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmA2PjkACgkQnKSrs4Gr
-c8hCowf/apCHcJenx6DM1jzpYo1NNnpfJb2nifukyVLP2UVasntjvQM1WD7v1t84
-WZMQu4BXSLlqhke4oxGQpx0/dNYaC3vi0/XB4yedtojqiAeLYqUgZf17ZDRybfvo
-o0JmcTVjGtEm48hmt4kulUe9VTeIBaMh8c+IkEjxAEjFN45LgERG9YKRDdTVDCIg
-ozqQR2DJJDN7ND80Mu397WnT32WJAJnpU5fLYIKrp8Y3ZINRly5h9F6rn87RmbHq
-KdfZiGjiKMHIOnF1hP1oXi+a9xckj9US9MbvSBiMovQhs5zxuI0hBnpmsO1J6Pnl
-6OYJzeRg/xtmqSUt8yY53YS9Hur9zg==
-=4OR2
------END PGP SIGNATURE-----
-
---nED3gpEEOc5iD8Dg--
-
+-- 
+Mel Gorman
+SUSE Labs
