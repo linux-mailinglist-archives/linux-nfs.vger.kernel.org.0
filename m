@@ -2,135 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A77DC323ABA
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 11:46:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4F4D323B4D
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 12:30:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234870AbhBXKp7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Feb 2021 05:45:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234920AbhBXKpb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 05:45:31 -0500
-Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05621C06178B
-        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 02:44:50 -0800 (PST)
-Received: by mail-vk1-xa2a.google.com with SMTP id q17so290585vkd.3
-        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 02:44:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7IeVrluan2r2kYEdEBttnfq/zM9jcQl9nm+rI5Hkr4o=;
-        b=av1wcjABNicK94u3ElvqGuVPfJykZiudez3NH0qMVLgXPS7gyUY6TPG5Uu5OEuYCsM
-         sJ+9LQeebUu6iRayXoqXLEhXxqLpGm8ar+uwgnNpWp0YFFIi9vPezL7VykoxNJrLW9Zo
-         QcwhNWs8X3Gx/1fqCcCv+wtkuRdJHjiuy7qW8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7IeVrluan2r2kYEdEBttnfq/zM9jcQl9nm+rI5Hkr4o=;
-        b=IW/W6khjVm7NhrxrzggmqeRAR49CzBUmo52/1M4OJzwIs43OoHfm787eNt98wsIebw
-         Ez0dhx8++vTxi5XlCAHgDpaHi5pVmwj4iwvr728X2VGkEfVhRaICmnpBt5g1gTKhBDtt
-         BUGhiPxllhO0mJgAB0P989OQ4daW1BrvjfV3nm1WuY5Gwk0nrhocKcM+L+R3EIGxk41o
-         LBBFydQPCvEwDbocfsonJcjhkS7N5W7KKOVr64FjvV4nS5a5K7R8Kehv7bnWPjf62lNF
-         8BrwAWhlQt8UHHxHQUTa7NkMJi/vz80EAk6Z7c1xWarD8Xb6Xbnc4KcJubHhcboMwox9
-         dTrQ==
-X-Gm-Message-State: AOAM530hI5PWVPm3/EHwad+BxYZfPIjIFgjfocRLye7CQQR6jU5bXBZ0
-        /MS3YkPZ6YSXt8/bEyz/Lxm4ZwyTE6SC4LEfEaPi5w==
-X-Google-Smtp-Source: ABdhPJwcNF1awAfqI71jc+osdOvaKBSAu3tcjeQYXjwNeU8VD31ZIj0UmTyh4zCeNoXqu9c1BxTl4zi+NBhRQ2wYoTw=
-X-Received: by 2002:a1f:ab52:: with SMTP id u79mr19791797vke.9.1614163489899;
- Wed, 24 Feb 2021 02:44:49 -0800 (PST)
+        id S233753AbhBXLaS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Feb 2021 06:30:18 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39772 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233942AbhBXLaQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 06:30:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614166130;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uKVLad2iARoW1c2dRwOltL8pSbyE/6ChbP13Q5obmTg=;
+        b=Wq9XHpHEl9THuBxu4QMJ+/hknIyFSqd9Y074+Vd0+BOeh7oHrt4bhOkxy3gWN2zEHCp9l4
+        iud2u/2YZgZIcGZla73PQagaHSxrlBVgcvnIq5xFsqwD1b/3zN/Epw5ac80xlOB8BeaK5F
+        k9P32ew/8WARY59BLvt8vp2WTknT4RU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-595-VNUKl0siP7qMYyLUDwGloA-1; Wed, 24 Feb 2021 06:27:31 -0500
+X-MC-Unique: VNUKl0siP7qMYyLUDwGloA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 349E6104ED67;
+        Wed, 24 Feb 2021 11:27:30 +0000 (UTC)
+Received: from carbon (unknown [10.36.110.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7922360C5F;
+        Wed, 24 Feb 2021 11:27:24 +0000 (UTC)
+Date:   Wed, 24 Feb 2021 12:27:23 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux-NFS <linux-nfs@vger.kernel.org>, brouer@redhat.com
+Subject: Re: [RFC PATCH 0/3] Introduce a bulk order-0 page allocator for
+ sunrpc
+Message-ID: <20210224122723.15943e95@carbon>
+In-Reply-To: <20210224102603.19524-1-mgorman@techsingularity.net>
+References: <20210224102603.19524-1-mgorman@techsingularity.net>
 MIME-Version: 1.0
-References: <20210221195833.23828-1-lhenriques@suse.de> <20210222102456.6692-1-lhenriques@suse.de>
- <CAN-5tyELMY7b7CKO-+an47ydq8r_4+SOyhuvdH0qE0-JmdZ44Q@mail.gmail.com> <YDYpHccgM7agpdTQ@suse.de>
-In-Reply-To: <YDYpHccgM7agpdTQ@suse.de>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 24 Feb 2021 18:44:38 +0800
-Message-ID: <CANMq1KBgwEXFh8AxpPW2t1SA0NVsyR45m0paLEU4D4w80dc_fA@mail.gmail.com>
-Subject: Re: [PATCH v8] vfs: fix copy_file_range regression in cross-fs copies
-To:     Luis Henriques <lhenriques@suse.de>
-Cc:     Olga Kornievskaia <aglo@umich.edu>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <sfrench@samba.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ian Lance Taylor <iant@google.com>,
-        Luis Lozano <llozano@chromium.org>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 24, 2021 at 6:22 PM Luis Henriques <lhenriques@suse.de> wrote:
->
-> On Tue, Feb 23, 2021 at 08:00:54PM -0500, Olga Kornievskaia wrote:
-> > On Mon, Feb 22, 2021 at 5:25 AM Luis Henriques <lhenriques@suse.de> wro=
-te:
-> > >
-> > > A regression has been reported by Nicolas Boichat, found while using =
-the
-> > > copy_file_range syscall to copy a tracefs file.  Before commit
-> > > 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") th=
-e
-> > > kernel would return -EXDEV to userspace when trying to copy a file ac=
-ross
-> > > different filesystems.  After this commit, the syscall doesn't fail a=
-nymore
-> > > and instead returns zero (zero bytes copied), as this file's content =
-is
-> > > generated on-the-fly and thus reports a size of zero.
-> > >
-> > > This patch restores some cross-filesystem copy restrictions that exis=
-ted
-> > > prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy acr=
-oss
-> > > devices").  Filesystems are still allowed to fall-back to the VFS
-> > > generic_copy_file_range() implementation, but that has now to be done
-> > > explicitly.
-> > >
-> > > nfsd is also modified to fall-back into generic_copy_file_range() in =
-case
-> > > vfs_copy_file_range() fails with -EOPNOTSUPP or -EXDEV.
-> > >
-> > > Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devic=
-es")
-> > > Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-=
-drinkcat@chromium.org/
-> > > Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+=
-BnvW=3DZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
-> > > Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cd=
-c3ff707bc1efa17f5366057d60603c45f@changeid/
-> > > Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-> > > Signed-off-by: Luis Henriques <lhenriques@suse.de>
-> >
-> > I tested v8 and I believe it works for NFS.
->
-> Thanks a lot for the testing.  And to everyone else for reviews,
-> feedback,... and patience.
+On Wed, 24 Feb 2021 10:26:00 +0000
+Mel Gorman <mgorman@techsingularity.net> wrote:
 
-Thanks so much to you!!!
+> This is a prototype series that introduces a bulk order-0 page allocator
+> with sunrpc being the first user. The implementation is not particularly
+> efficient and the intention is to iron out what the semantics of the API
+> should be. That said, sunrpc was reported to have reduced allocation
+> latency when refilling a pool.
 
-Works here, you can add my
-Tested-by: Nicolas Boichat <drinkcat@chromium.org>
+I also have a use-case in page_pool, and I've been testing with the
+earlier patches, results are here[1]
 
->
-> I'll now go look into the manpage and see what needs to be changed.
->
-> Cheers,
-> --
-> Lu=C3=ADs
+[1] https://github.com/xdp-project/xdp-project/blob/master/areas/mem/page_pool06_alloc_pages_bulk.org
+
+Awesome to see this newer patchset! thanks a lot for working on this!
+I'll run some new tests based on this.
+
+> As a side-note, while the implementation could be more efficient, it
+> would require fairly deep surgery in numerous places. The lock scope would
+> need to be significantly reduced, particularly as vmstat, per-cpu and the
+> buddy allocator have different locking protocol that overal -- e.g. all
+> partially depend on irqs being disabled at various points. Secondly,
+> the core of the allocator deals with single pages where as both the bulk
+> allocator and per-cpu allocator operate in batches. All of that has to
+> be reconciled with all the existing users and their constraints (memory
+> offline, CMA and cpusets being the trickiest).
+
+As you can see in[1], I'm getting a significant speedup from this.  I
+guess that the cost of finding the "zone" is higher than I expected, as
+this basically what we/you amortize for the bulk.
+
+ 
+> In terms of semantics required by new users, my preference is that a pair
+> of patches be applied -- the first which adds the required semantic to
+> the bulk allocator and the second which adds the new user.
+> 
+> Patch 1 of this series is a cleanup to sunrpc, it could be merged
+> 	separately but is included here for convenience.
+> 
+> Patch 2 is the prototype bulk allocator
+> 
+> Patch 3 is the sunrpc user. Chuck also has a patch which further caches
+> 	pages but is not included in this series. It's not directly
+> 	related to the bulk allocator and as it caches pages, it might
+> 	have other concerns (e.g. does it need a shrinker?)
+> 
+> This has only been lightly tested on a low-end NFS server. It did not break
+> but would benefit from an evaluation to see how much, if any, the headline
+> performance changes. The biggest concern is that a light test case showed
+> that there are a *lot* of bulk requests for 1 page which gets delegated to
+> the normal allocator.  The same criteria should apply to any other users.
+
+If you change local_irq_save(flags) to local_irq_disable() then you can
+likely get better performance for 1 page requests via this API.  This
+limits the API to be used in cases where IRQs are enabled (which is
+most cases).  (For my use-case I will not do 1 page requests).
+
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
