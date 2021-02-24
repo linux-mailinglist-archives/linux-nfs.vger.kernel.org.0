@@ -2,149 +2,155 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49D8A3241E5
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 17:19:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1071324278
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Feb 2021 17:50:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233963AbhBXQOx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Feb 2021 11:14:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49302 "EHLO
+        id S234935AbhBXQtM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Feb 2021 11:49:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235723AbhBXQLo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 11:11:44 -0500
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 598BBC061574;
-        Wed, 24 Feb 2021 08:10:57 -0800 (PST)
-Received: by mail-il1-x12a.google.com with SMTP id o1so2151788ila.11;
-        Wed, 24 Feb 2021 08:10:57 -0800 (PST)
+        with ESMTP id S235469AbhBXQtF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Feb 2021 11:49:05 -0500
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9A4C061788
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 08:48:23 -0800 (PST)
+Received: by mail-io1-xd35.google.com with SMTP id z13so2668376iox.8
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Feb 2021 08:48:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2ZrSVmIV6Jr6Xzq9w2halpbi749GnRBmns1YcidehFs=;
-        b=r3dq2T5c+ijM7x/v5M2Ih6l9XYck+ODuIBBH/x/tc8VLT4NzFTAhL9D3TZ6jTzrJJq
-         eugIbm+8R7AQp92iu2jisPEHOPF5prsHO22C4RidgNthdTrWu/ceOAHHfszPHMnCKcxv
-         Gv4BbuarQ7HbOtkmu9tGicT/SldHKpXN6lmjQ4Uaq42vd1xz8ZJdRBNV/EK9uAsj4s7T
-         k5rFhA5yK01XI5R3OMU9bbvNTJbOQ4LF1diQEiX9JocNwiTOIVOxicHR4IxcNhDAhuth
-         pLD+WsER2zvUqw2fDq1pdI5bmVsw8frmULC55LYgieenK2nSB4qGm+3vGfRwLQ3SxKxY
-         oNuQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1+mpX7zx0n4pKPlEw3hBAnsSTnEgaecbMXBQXh8Z37U=;
+        b=bJRnx9a0JrFxWlYgyk2jyiRpJPQJNXNMPWbL5EnUxyVSch3NY812m+zPkaOOeQG9gE
+         rs0rCo0fJuj/glleu3wdzyZ1sbMyHYwsV5BHTbcMpvcNSEN1VzYR9JpF1EJFbPokIpRP
+         pQFA9x0cFcUm+wj/d9C7MittCB6Pzu9NBrIWj0+f0KwN2z25gJ9NY8wag2SjQO0ua0ev
+         ZVb26i7aH9IF/twGU677bbnoqNxjoX/YznSaZOR126/+xhxo8OHS4QMUdKCTDjp0BRQo
+         RNRen7wNfFOzqDylSea/+a0RlJ08r6OWvecZNFxJhZUCe5oZYOK06fy2FnZ88SyWM37D
+         dX/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2ZrSVmIV6Jr6Xzq9w2halpbi749GnRBmns1YcidehFs=;
-        b=L7fWw1b68DCWXB2RbxPGCKPVoZuTAhKKIesaBuOngy0jBh9mQTV5x7e0hcQCYJ5Mmp
-         jOkzIMJcMTFTvN3OycaI0PHNpwZfRkAzMFxoUfVsW5Ak8u7LOTa9q2t371bT5p6eaW/a
-         ntVNA7xLp0jZFks2dFxixmvYdk9mS4ZrVm/n6jENh0hQJRXQ1LdMSGjmUtwUl8E4XTin
-         BhBBOa907hNM7xiu8eLngPoFGkrIzNL8QcdBhUEqe8l31Vgij9AkKz1KfmPItsSgX1eU
-         wPU2WR1cltAfDEBbdjKqa138TUVhiFg3XF1bZxNPxkfQ36Xi/+ylFnv8GSBYLwSdURtr
-         2Nig==
-X-Gm-Message-State: AOAM530qFcoBT/OcVOA6cyg/9XT8K1f3pZ0qMQpzdLjb0mJu06UUsEdE
-        FL2RX8Z35mDs81EVz+23Go1izGiJSgUkuwcJ3lI=
-X-Google-Smtp-Source: ABdhPJz4biK9u+kKEn+Yhj/dHN3DjRGLVsZYeMNfF4JnDvxaL1ZCEPjGW6kxF+q3wWlmBl3wBcd+uAy5Oim6wcaso64=
-X-Received: by 2002:a92:2c08:: with SMTP id t8mr24098439ile.72.1614183056681;
- Wed, 24 Feb 2021 08:10:56 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1+mpX7zx0n4pKPlEw3hBAnsSTnEgaecbMXBQXh8Z37U=;
+        b=WPgGrThON9j9G9B/2QdOMXXyUvq6IEEXjjx/LDn0UcsevRSwxHmUhSDaW0ohVfPn0/
+         NIvl87Plcp8q07IqWUFQS0P4KF5WEa+2tsiLmzxvr7ceFPs+MuKCvzHkc4QL8uDznUEd
+         LhGMFqWnFy9ZMpqJGCqekWY0ZQaq1FiV/xHEqkqHtYxDBhGbInk3YE1amuy1YqsU1Fpe
+         Lkj9xz2k4CSZyZykEVPIzZx4wOZ/ODPvTNGPz3sjzhQobF2SkXMWyHg9H2mtoZIz4tZY
+         0sjLeMkzP1Yev9BgzIeFF/9u+QIqrpn53GSQTyoIgKQiHt8vwxjp/1kaYGhi9UVI64ko
+         +GMw==
+X-Gm-Message-State: AOAM532r+GoTAMFPZuq4oxn8ccN51NWf4xGtygeRlv1gmU7TlliYN+Z9
+        SVU1NQyzTwlUr9Rk7IyZ145M3A==
+X-Google-Smtp-Source: ABdhPJwss97019ILy/7qQcv1GNjekopW38KQaiSTkiRj6pTu3XozM6UbMn7yxILO9vbNkFv7yo9ZjA==
+X-Received: by 2002:a02:1c49:: with SMTP id c70mr34122809jac.136.1614185303233;
+        Wed, 24 Feb 2021 08:48:23 -0800 (PST)
+Received: from [192.168.1.30] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id m15sm1760501ilh.6.2021.02.24.08.48.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Feb 2021 08:48:22 -0800 (PST)
+Subject: Re: [RFC PATCH] blk-core: remove blk_put_request()
+To:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-ide@vger.kernel.org, linux-mmc@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        fujita.tomonori@lab.ntt.co.jp, tim@cyberelk.net, mst@redhat.com,
+        jasowang@redhat.com, pbonzini@redhat.com, davem@davemloft.net,
+        bp@alien8.de, agk@redhat.com, snitzer@redhat.com,
+        ulf.hansson@linaro.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, dgilbert@interlog.com,
+        Kai.Makisara@kolumbus.fi, alim.akhtar@samsung.com,
+        avri.altman@wdc.com, bfields@fieldses.org, chuck.lever@oracle.com,
+        baolin.wang@linaro.org, vbadigan@codeaurora.org, zliua@micron.com,
+        richard.peng@oppo.com, guoqing.jiang@cloud.ionos.com,
+        stanley.chu@mediatek.com, cang@codeaurora.org,
+        asutoshd@codeaurora.org, beanhuo@micron.com, jaegeuk@kernel.org
+References: <20210222211115.30416-1-chaitanya.kulkarni@wdc.com>
+ <YDY+ObNNiBMMuSEt@stefanha-x1.localdomain>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f3141eb3-9938-a216-a9f8-cb193589a657@kernel.dk>
+Date:   Wed, 24 Feb 2021 09:48:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20210222102456.6692-1-lhenriques@suse.de> <20210224142307.7284-1-lhenriques@suse.de>
-In-Reply-To: <20210224142307.7284-1-lhenriques@suse.de>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 24 Feb 2021 18:10:45 +0200
-Message-ID: <CAOQ4uxi3-+tOgHV_GUnWtJoQXbV5ZS9qDZsLsd9sJxX5Aftyew@mail.gmail.com>
-Subject: Re: [PATCH] copy_file_range.2: Kernel v5.12 updates
-To:     Luis Henriques <lhenriques@suse.de>
-Cc:     Alejandro Colomar <alx.manpages@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <sfrench@samba.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Ian Lance Taylor <iant@google.com>,
-        Luis Lozano <llozano@chromium.org>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Christoph Hellwig <hch@infradead.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <YDY+ObNNiBMMuSEt@stefanha-x1.localdomain>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 24, 2021 at 4:22 PM Luis Henriques <lhenriques@suse.de> wrote:
->
-> Update man-page with recent changes to this syscall.
->
-> Signed-off-by: Luis Henriques <lhenriques@suse.de>
-> ---
-> Hi!
->
-> Here's a suggestion for fixing the manpage for copy_file_range().  Note that
-> I've assumed the fix will hit 5.12.
->
->  man2/copy_file_range.2 | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/man2/copy_file_range.2 b/man2/copy_file_range.2
-> index 611a39b8026b..b0fd85e2631e 100644
-> --- a/man2/copy_file_range.2
-> +++ b/man2/copy_file_range.2
-> @@ -169,6 +169,9 @@ Out of memory.
->  .B ENOSPC
->  There is not enough space on the target filesystem to complete the copy.
->  .TP
-> +.B EOPNOTSUPP
-> +The filesystem does not support this operation.
-> +.TP
->  .B EOVERFLOW
->  The requested source or destination range is too large to represent in the
->  specified data types.
-> @@ -187,7 +190,7 @@ refers to an active swap file.
->  .B EXDEV
->  The files referred to by
->  .IR fd_in " and " fd_out
-> -are not on the same mounted filesystem (pre Linux 5.3).
-> +are not on the same mounted filesystem (pre Linux 5.3 and post Linux 5.12).
+On 2/24/21 4:53 AM, Stefan Hajnoczi wrote:
+> On Mon, Feb 22, 2021 at 01:11:15PM -0800, Chaitanya Kulkarni wrote:
+>> The function blk_put_request() is just a wrapper to
+>> blk_mq_free_request(), remove the unnecessary wrapper.
+>>
+>> Any feedback is welcome on this RFC.
+>>
+>> Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+>> ---
+>>  block/blk-core.c                   |  6 ------
+>>  block/blk-merge.c                  |  2 +-
+>>  block/bsg-lib.c                    |  4 ++--
+>>  block/bsg.c                        |  4 ++--
+>>  block/scsi_ioctl.c                 |  6 +++---
+>>  drivers/block/paride/pd.c          |  2 +-
+>>  drivers/block/pktcdvd.c            |  2 +-
+>>  drivers/block/virtio_blk.c         |  2 +-
+>>  drivers/cdrom/cdrom.c              |  4 ++--
+>>  drivers/ide/ide-atapi.c            |  2 +-
+>>  drivers/ide/ide-cd.c               |  4 ++--
+>>  drivers/ide/ide-cd_ioctl.c         |  2 +-
+>>  drivers/ide/ide-devsets.c          |  2 +-
+>>  drivers/ide/ide-disk.c             |  2 +-
+>>  drivers/ide/ide-ioctls.c           |  4 ++--
+>>  drivers/ide/ide-park.c             |  2 +-
+>>  drivers/ide/ide-pm.c               |  4 ++--
+>>  drivers/ide/ide-tape.c             |  2 +-
+>>  drivers/ide/ide-taskfile.c         |  2 +-
+>>  drivers/md/dm-mpath.c              |  2 +-
+>>  drivers/mmc/core/block.c           | 10 +++++-----
+>>  drivers/scsi/scsi_error.c          |  2 +-
+>>  drivers/scsi/scsi_lib.c            |  2 +-
+>>  drivers/scsi/sg.c                  |  6 +++---
+>>  drivers/scsi/st.c                  |  4 ++--
+>>  drivers/scsi/ufs/ufshcd.c          |  6 +++---
+>>  drivers/target/target_core_pscsi.c |  4 ++--
+>>  fs/nfsd/blocklayout.c              |  4 ++--
+>>  include/linux/blkdev.h             |  1 -
+>>  29 files changed, 46 insertions(+), 53 deletions(-)
+>>
+>> diff --git a/block/blk-core.c b/block/blk-core.c
+>> index fc60ff208497..1754f5e7cc80 100644
+>> --- a/block/blk-core.c
+>> +++ b/block/blk-core.c
+>> @@ -642,12 +642,6 @@ struct request *blk_get_request(struct request_queue *q, unsigned int op,
+>>  }
+>>  EXPORT_SYMBOL(blk_get_request);
+>>  
+>> -void blk_put_request(struct request *req)
+>> -{
+>> -	blk_mq_free_request(req);
+>> -}
+>> -EXPORT_SYMBOL(blk_put_request);
+> 
+> blk_get_request() still exists after this patch. A "get" API usually has
+> a corresponding "put" API. I'm not sure this patch helps the consistency
+> and clarity of the code.
+> 
+> If you do go ahead, please update the blk_get_request() doc comment
+> explicitly mentioning that blk_mq_free_request() needs to be called.
 
-I think you need to drop the (Linux range) altogether.
-What's missing here is the NFS cross server copy use case.
-Maybe:
+Would make sense to rename blk_get_request() to blk_mq_alloc_request()
+and then we have API symmetry. The get/put don't make sense when there
+are no references involved.
 
-...are not on the same mounted filesystem and the source and target filesystems
-do not support cross-filesystem copy.
+But it's a lot of churn for very little reward, which is always kind
+of annoying. Especially for the person that has to carry the patches.
 
-You may refer the reader to VERSIONS section where it will say which
-filesystems support cross-fs copy as of kernel version XXX (i.e. cifs and nfs).
+-- 
+Jens Axboe
 
->  .SH VERSIONS
->  The
->  .BR copy_file_range ()
-> @@ -202,6 +205,11 @@ Applications should target the behaviour and requirements of 5.3 kernels.
->  .PP
->  First support for cross-filesystem copies was introduced in Linux 5.3.
->  Older kernels will return -EXDEV when cross-filesystem copies are attempted.
-> +.PP
-> +After Linux 5.12, support for copies between different filesystems was dropped.
-> +However, individual filesystems may still provide
-> +.BR copy_file_range ()
-> +implementations that allow copies across different devices.
-
-Again, this is not likely to stay uptodate for very long.
-The stable kernels are expected to apply your patch (because it fixes
-a regression)
-so this should be phrased differently.
-If it were me, I would provide all the details of the situation to
-Michael and ask him
-to write the best description for this section.
-
-Thanks,
-Amir.
