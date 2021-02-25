@@ -2,124 +2,236 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49FE232528D
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Feb 2021 16:40:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA4FF3252D2
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Feb 2021 16:57:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232903AbhBYPjT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Feb 2021 10:39:19 -0500
-Received: from outbound-smtp50.blacknight.com ([46.22.136.234]:59399 "EHLO
-        outbound-smtp50.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232816AbhBYPjO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Feb 2021 10:39:14 -0500
-Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
-        by outbound-smtp50.blacknight.com (Postfix) with ESMTPS id 091B4FA891
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Feb 2021 15:38:16 +0000 (GMT)
-Received: (qmail 7514 invoked from network); 25 Feb 2021 15:38:16 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 25 Feb 2021 15:38:16 -0000
-Date:   Thu, 25 Feb 2021 15:38:15 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     linux-mm@kvack.org, chuck.lever@oracle.com, netdev@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC net-next 3/3] mm: make zone->free_area[order] access
- faster
-Message-ID: <20210225153815.GN3697@techsingularity.net>
-References: <161419296941.2718959.12575257358107256094.stgit@firesoul>
- <161419301128.2718959.4838557038019199822.stgit@firesoul>
- <20210225112849.GM3697@techsingularity.net>
- <20210225161633.53e5f910@carbon>
+        id S229561AbhBYP6A (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Feb 2021 10:58:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229548AbhBYP57 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Feb 2021 10:57:59 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8390BC06174A
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Feb 2021 07:57:17 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 7C83D21DD; Thu, 25 Feb 2021 10:57:15 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 7C83D21DD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1614268635;
+        bh=xz6ll3H7VkDX6GEfcCmfguC7czvEnr8WItIMDwx0Cmw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PSS6eTji1GwY8cp3iWhcbn1I6exau0N5rosMVXlaS5P89JLdcGXgxcIguX/pgWTKw
+         L32lDUgr8NYWgbHdPDoG1GJ9gqdis34AaXHbGR5fLc8ndt+zShcA1uf3oRTx8TVQ2V
+         CEy1FETdT1STvbGULUbZofSH0z7aiaGWmlGRHwuM=
+Date:   Thu, 25 Feb 2021 10:57:15 -0500
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Olga Kornievskaia <aglo@umich.edu>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Olga Kornievskaia <kolga@netapp.com>
+Subject: Re: [PATCH] nfsd: don't abort copies early
+Message-ID: <20210225155715.GD17634@fieldses.org>
+References: <20210224183950.GB11591@fieldses.org>
+ <20210224193135.GC11591@fieldses.org>
+ <59A5F476-EE0C-454F-8365-3F16505D9D45@oracle.com>
+ <20210224223349.GB25689@fieldses.org>
+ <CDFF4F84-1A0C-4E4C-A18B-AC39F715E6D8@oracle.com>
+ <CAN-5tyFLLLfMwZVFrnQaCnR36Rfq_hPsmLEOLG2Qtrpc+pT7fA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210225161633.53e5f910@carbon>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAN-5tyFLLLfMwZVFrnQaCnR36Rfq_hPsmLEOLG2Qtrpc+pT7fA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Feb 25, 2021 at 04:16:33PM +0100, Jesper Dangaard Brouer wrote:
-> > On Wed, Feb 24, 2021 at 07:56:51PM +0100, Jesper Dangaard Brouer wrote:
-> > > Avoid multiplication (imul) operations when accessing:
-> > >  zone->free_area[order].nr_free
-> > > 
-> > > This was really tricky to find. I was puzzled why perf reported that
-> > > rmqueue_bulk was using 44% of the time in an imul operation:
-> > > 
-> > >        ???     del_page_from_free_list():
-> > >  44,54 ??? e2:   imul   $0x58,%rax,%rax
-> > > 
-> > > This operation was generated (by compiler) because the struct free_area have
-> > > size 88 bytes or 0x58 hex. The compiler cannot find a shift operation to use
-> > > and instead choose to use a more expensive imul, to find the offset into the
-> > > array free_area[].
-> > > 
-> > > The patch align struct free_area to a cache-line, which cause the
-> > > compiler avoid the imul operation. The imul operation is very fast on
-> > > modern Intel CPUs. To help fast-path that decrement 'nr_free' move the
-> > > member 'nr_free' to be first element, which saves one 'add' operation.
-> > > 
-> > > Looking up instruction latency this exchange a 3-cycle imul with a
-> > > 1-cycle shl, saving 2-cycles. It does trade some space to do this.
-> > > 
-> > > Used: gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2)
-> > >   
-> > 
-> > I'm having some trouble parsing this and matching it to the patch itself.
-> > 
-> > First off, on my system (x86-64), the size of struct free area is 72,
-> > not 88 bytes. For either size, cache-aligning the structure is a big
-> > increase in the struct size.
-> 
-> Yes, the increase in size is big. For the struct free_area 40 bytes for
-> my case and 56 bytes for your case.  The real problem is that this is
-> multiplied by 11 (MAX_ORDER) and multiplied by number of zone structs
-> (is it 5?).  Thus, 56*11*5 = 3080 bytes.
-> 
-> Thus, I'm not sure it is worth it!  As I'm only saving 2-cycles, for
-> something that depends on the compiler generating specific code.  And
-> the compiler can easily change, and "fix" this on-its-own in a later
-> release, and then we are just wasting memory.
-> 
-> I did notice this imul happens 45 times in mm/page_alloc.o, with this
-> offset 0x58, but still this is likely not on hot-path.
-> 
-
-Yeah, I'm not convinced it's worth it. The benefit of 2 cycles is small and
-it's config-dependant. While some configurations will benefit, others do
-not but the increased consumption is universal. I think there are better
-ways to save 2 cycles in the page allocator and this seems like a costly
-micro-optimisation.
-
-> > <SNIP>
+On Thu, Feb 25, 2021 at 10:33:04AM -0500, Olga Kornievskaia wrote:
+> On Thu, Feb 25, 2021 at 10:30 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+> > > On Feb 24, 2021, at 5:33 PM, Bruce Fields <bfields@fieldses.org> wrote:
+> > > On Wed, Feb 24, 2021 at 07:34:10PM +0000, Chuck Lever wrote:
+> > >>> On Feb 24, 2021, at 2:31 PM, J. Bruce Fields <bfields@fieldses.org> wrote:
+> > >>>
+> > >>> I confess I always have to stare at these comparisons for a minute to
+> > >>> figure out which way they should go.  And the logic in each of these
+> > >>> loops is a little repetitive.
+> > >>>
+> > >>> Would it be worth creating a little state_expired() helper to work out
+> > >>> the comparison and the new timeout?
+> > >>
+> > >> That's better, but aren't there already operators on time64_t data objects
+> > >> that can be used for this?
+> > >
+> > > No idea.
 > >
-> > With gcc-9, I'm also not seeing the imul instruction outputted like you
-> > described in rmqueue_pcplist which inlines rmqueue_bulk. At the point
-> > where it calls get_page_from_free_area, it's using shl for the page list
-> > operation. This might be a compiler glitch but given that free_area is a
-> > different size, I'm less certain and wonder if something else is going on.
+> > I was thinking of jiffies, I guess. time_before() and time_after().
 > 
-> I think it is the size variation.
+> Just my 2c. My initial original patches used time_after(). It was
+> specifically changed by somebody later to use the current api.
+
+Yes, that was part of some Y2038 project on Arnd Bergman's part:
+
+	20b7d86f29d3 nfsd: use boottime for lease expiry calculation
+
+I think 64-bit time_t is good for something like a hundred billion
+years, so wraparound isn't an issue.
+
+I think the conversion was correct, so the bug was there from the start.
+
+Easy mistake to make, and hard to hit in testing, because on an
+otherwise unoccupied server and fast network the laundromat probably
+won't run while your COPY is in progress.
+
+--b.
+
 > 
-
-Yes.
-
-> > Finally, moving nr_free to the end and cache aligning it will make the
-> > started of each free_list cache-aligned because of its location in the
-> > struct zone so what purpose does __pad_to_align_free_list serve?
-> 
-> The purpose of purpose of __pad_to_align_free_list is because struct
-> list_head is 16 bytes, thus I wanted to align free_list to 16, given we
-> already have wasted the space.
-> 
-
-Ok, that's fair enough but it's also somewhat of a micro-optimisation as
-whether it helps or not depends on the architecture.
-
-I don't think I'll pick this up, certainly in the context of the bulk
-allocator but it's worth keeping in mind. It's an interesting corner case
-at least.
-
--- 
-Mel Gorman
-SUSE Labs
+> > Checking the definition of time64_t, from include/linux/time64.h:
+> >
+> > typedef __s64 time64_t;
+> >
+> > Signed, hrm. And no comparison helpers.
+> >
+> > I might be a little concerned about wrapping time values. But any
+> > concerns can be addressed in the new common helper state_expired(),
+> > possibly as a subsequent patch.
+> >
+> > If you feel it's ready, can you send me the below clean-up as an
+> > official patch with description and SoB?
+> >
+> >
+> > > --b.
+> > >
+> > >>
+> > >>
+> > >>> --b.
+> > >>>
+> > >>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > >>> index 61552e89bd89..00fb3603c29e 100644
+> > >>> --- a/fs/nfsd/nfs4state.c
+> > >>> +++ b/fs/nfsd/nfs4state.c
+> > >>> @@ -5363,6 +5363,22 @@ static bool clients_still_reclaiming(struct nfsd_net *nn)
+> > >>>     return true;
+> > >>> }
+> > >>>
+> > >>> +struct laundry_time {
+> > >>> +   time64_t cutoff;
+> > >>> +   time64_t new_timeo;
+> > >>> +};
+> > >>> +
+> > >>> +bool state_expired(struct laundry_time *lt, time64_t last_refresh)
+> > >>> +{
+> > >>> +   time64_t time_remaining;
+> > >>> +
+> > >>> +   if (last_refresh > lt->cutoff)
+> > >>> +           return true;
+> > >>> +   time_remaining = lt->cutoff - last_refresh;
+> > >>> +   lt->new_timeo = min(lt->new_timeo, time_remaining);
+> > >>> +   return false;
+> > >>> +}
+> > >>> +
+> > >>> static time64_t
+> > >>> nfs4_laundromat(struct nfsd_net *nn)
+> > >>> {
+> > >>> @@ -5372,14 +5388,16 @@ nfs4_laundromat(struct nfsd_net *nn)
+> > >>>     struct nfs4_ol_stateid *stp;
+> > >>>     struct nfsd4_blocked_lock *nbl;
+> > >>>     struct list_head *pos, *next, reaplist;
+> > >>> -   time64_t cutoff = ktime_get_boottime_seconds() - nn->nfsd4_lease;
+> > >>> -   time64_t t, new_timeo = nn->nfsd4_lease;
+> > >>> +   struct laundry_time lt = {
+> > >>> +           .cutoff = ktime_get_boottime_seconds() - nn->nfsd4_lease,
+> > >>> +           .new_timeo = nn->nfsd4_lease
+> > >>> +   };
+> > >>>     struct nfs4_cpntf_state *cps;
+> > >>>     copy_stateid_t *cps_t;
+> > >>>     int i;
+> > >>>
+> > >>>     if (clients_still_reclaiming(nn)) {
+> > >>> -           new_timeo = 0;
+> > >>> +           lt.new_timeo = 0;
+> > >>>             goto out;
+> > >>>     }
+> > >>>     nfsd4_end_grace(nn);
+> > >>> @@ -5389,7 +5407,7 @@ nfs4_laundromat(struct nfsd_net *nn)
+> > >>>     idr_for_each_entry(&nn->s2s_cp_stateids, cps_t, i) {
+> > >>>             cps = container_of(cps_t, struct nfs4_cpntf_state, cp_stateid);
+> > >>>             if (cps->cp_stateid.sc_type == NFS4_COPYNOTIFY_STID &&
+> > >>> -                           cps->cpntf_time < cutoff)
+> > >>> +                           state_expired(&lt, cps->cpntf_time))
+> > >>>                     _free_cpntf_state_locked(nn, cps);
+> > >>>     }
+> > >>>     spin_unlock(&nn->s2s_cp_lock);
+> > >>> @@ -5397,11 +5415,8 @@ nfs4_laundromat(struct nfsd_net *nn)
+> > >>>     spin_lock(&nn->client_lock);
+> > >>>     list_for_each_safe(pos, next, &nn->client_lru) {
+> > >>>             clp = list_entry(pos, struct nfs4_client, cl_lru);
+> > >>> -           if (clp->cl_time > cutoff) {
+> > >>> -                   t = clp->cl_time - cutoff;
+> > >>> -                   new_timeo = min(new_timeo, t);
+> > >>> +           if (!state_expired(&lt, clp->cl_time))
+> > >>>                     break;
+> > >>> -           }
+> > >>>             if (mark_client_expired_locked(clp)) {
+> > >>>                     trace_nfsd_clid_expired(&clp->cl_clientid);
+> > >>>                     continue;
+> > >>> @@ -5418,11 +5433,8 @@ nfs4_laundromat(struct nfsd_net *nn)
+> > >>>     spin_lock(&state_lock);
+> > >>>     list_for_each_safe(pos, next, &nn->del_recall_lru) {
+> > >>>             dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
+> > >>> -           if (dp->dl_time > cutoff) {
+> > >>> -                   t = dp->dl_time - cutoff;
+> > >>> -                   new_timeo = min(new_timeo, t);
+> > >>> +           if (!state_expired(&lt, clp->cl_time))
+> > >>>                     break;
+> > >>> -           }
+> > >>>             WARN_ON(!unhash_delegation_locked(dp));
+> > >>>             list_add(&dp->dl_recall_lru, &reaplist);
+> > >>>     }
+> > >>> @@ -5438,11 +5450,8 @@ nfs4_laundromat(struct nfsd_net *nn)
+> > >>>     while (!list_empty(&nn->close_lru)) {
+> > >>>             oo = list_first_entry(&nn->close_lru, struct nfs4_openowner,
+> > >>>                                     oo_close_lru);
+> > >>> -           if (oo->oo_time > cutoff) {
+> > >>> -                   t = oo->oo_time - cutoff;
+> > >>> -                   new_timeo = min(new_timeo, t);
+> > >>> +           if (!state_expired(&lt, oo->oo_time))
+> > >>>                     break;
+> > >>> -           }
+> > >>>             list_del_init(&oo->oo_close_lru);
+> > >>>             stp = oo->oo_last_closed_stid;
+> > >>>             oo->oo_last_closed_stid = NULL;
+> > >>> @@ -5468,11 +5477,8 @@ nfs4_laundromat(struct nfsd_net *nn)
+> > >>>     while (!list_empty(&nn->blocked_locks_lru)) {
+> > >>>             nbl = list_first_entry(&nn->blocked_locks_lru,
+> > >>>                                     struct nfsd4_blocked_lock, nbl_lru);
+> > >>> -           if (nbl->nbl_time > cutoff) {
+> > >>> -                   t = nbl->nbl_time - cutoff;
+> > >>> -                   new_timeo = min(new_timeo, t);
+> > >>> +           if (!state_expired(&lt, oo->oo_time))
+> > >>>                     break;
+> > >>> -           }
+> > >>>             list_move(&nbl->nbl_lru, &reaplist);
+> > >>>             list_del_init(&nbl->nbl_list);
+> > >>>     }
+> > >>> @@ -5485,8 +5491,7 @@ nfs4_laundromat(struct nfsd_net *nn)
+> > >>>             free_blocked_lock(nbl);
+> > >>>     }
+> > >>> out:
+> > >>> -   new_timeo = max_t(time64_t, new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
+> > >>> -   return new_timeo;
+> > >>> +   return max_t(time64_t, lt.new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
+> > >>> }
+> > >>>
+> > >>> static struct workqueue_struct *laundry_wq;
+> > >>
+> > >> --
+> > >> Chuck Lever
+> > >>
+> > >>
+> >
+> > --
+> > Chuck Lever
+> >
+> >
+> >
