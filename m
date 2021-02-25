@@ -2,26 +2,25 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFD933248F3
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Feb 2021 03:45:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 015F93248F5
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Feb 2021 03:45:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234205AbhBYCoH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Feb 2021 21:44:07 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41996 "EHLO mx2.suse.de"
+        id S234384AbhBYCoW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Feb 2021 21:44:22 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42032 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229722AbhBYCoF (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 24 Feb 2021 21:44:05 -0500
+        id S229722AbhBYCoU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 24 Feb 2021 21:44:20 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 80056AE7F;
-        Thu, 25 Feb 2021 02:43:23 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id CD181AE84;
+        Thu, 25 Feb 2021 02:43:31 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
 To:     Steve Dickson <SteveD@RedHat.com>
 Date:   Thu, 25 Feb 2021 13:42:47 +1100
-Subject: [PATCH 3/5] mountd: add logging for authentication results for
- accesses.
+Subject: [PATCH 5/5] mountd: make default ttl settable by option
 Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Message-ID: <161422096788.28256.6306810361070404010.stgit@noble>
+Message-ID: <161422096790.28256.1355829309363969536.stgit@noble>
 In-Reply-To: <161422077024.28256.15543036625096419495.stgit@noble>
 References: <161422077024.28256.15543036625096419495.stgit@noble>
 User-Agent: StGit/0.23
@@ -34,171 +33,213 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: NeilBrown <neil@brown.name>
 
-When NFSv3 is used to mount a filesystem, success/failure messages are
-logged by mountd and can be used for auditing.
-When NFSv4 is used, there is no distinct "MOUNT" request, and nothing is
-logged.
+The DEFAULT_TTL affects the rate at which authentication messages are
+logged.  So it is useful to make it settable.
 
-We can instead log authentication requests from the kernel.  These will
-happen regularly - typically every 15 minutes of ongoing access - so
-they may be too noisy, or might be more useful.  As they might not be
-wanted, make them selectable with the "AUTH" facility in xlog().
-
-Add a "-l" to enable these logs.  Alternately "debug = auth" will have
-the same effect.
+Add "-ttl" and "-T", and add clear statement in the documentation of
+both the benefits and the possible negative effects of choosing a larger
+value
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- support/export/cache.c  |   18 +++++++++++++++++-
- utils/mountd/mountd.c   |    7 ++++++-
- utils/mountd/mountd.man |   39 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 62 insertions(+), 2 deletions(-)
+ support/export/cache.c     |    6 +++---
+ support/export/v4root.c    |    3 ++-
+ support/include/exportfs.h |    3 ++-
+ support/nfs/exports.c      |    4 +++-
+ utils/mountd/mountd.c      |   18 +++++++++++++++++-
+ utils/mountd/mountd.man    |   19 ++++++++++++++++---
+ 6 files changed, 43 insertions(+), 10 deletions(-)
 
 diff --git a/support/export/cache.c b/support/export/cache.c
-index 49a761749ec6..50f7c7a15ceb 100644
+index 50f7c7a15ceb..c0848c3e437b 100644
 --- a/support/export/cache.c
 +++ b/support/export/cache.c
-@@ -145,6 +145,15 @@ static void auth_unix_ip(int f)
- 		client = client_compose(ai);
- 		nfs_freeaddrinfo(ai);
- 	}
-+	if (!client)
-+		xlog(D_AUTH, "failed authentication for IP %s", ipaddr);
-+	else if	(!use_ipaddr)
-+		xlog(D_AUTH, "successful authentication for IP %s as %s",
-+		     ipaddr, *client ? client : "DEFAULT");
-+	else
-+		xlog(D_AUTH, "successful authentication for IP %s",
-+			     ipaddr);
-+
+@@ -157,7 +157,7 @@ static void auth_unix_ip(int f)
  	bp = buf; blen = sizeof(buf);
  	qword_add(&bp, &blen, "nfsd");
  	qword_add(&bp, &blen, ipaddr);
-@@ -896,6 +905,8 @@ static void nfsd_fh(int f)
- 	qword_addeol(&bp, &blen);
- 	if (blen <= 0 || cache_write(f, buf, bp - buf) != bp - buf)
- 		xlog(L_ERROR, "nfsd_fh: error writing reply");
-+	if (!found)
-+		xlog(D_AUTH, "denied access to %s", *dom == '$' ? dom+1 : dom);
- out:
- 	if (found_path)
- 		free(found_path);
-@@ -987,8 +998,13 @@ static int dump_to_cache(int f, char *buf, int blen, char *domain,
- 			qword_add(&bp, &blen, "uuid");
- 			qword_addhex(&bp, &blen, u, 16);
- 		}
--	} else
-+		xlog(D_AUTH, "granted access to %s for %s",
-+		     path, *domain == '$' ? domain+1 : domain);
-+	} else {
- 		qword_adduint(&bp, &blen, now + ttl);
-+		xlog(D_AUTH, "denied access to %s for %s",
-+		     path, *domain == '$' ? domain+1 : domain);
-+	}
- 	qword_addeol(&bp, &blen);
- 	if (blen <= 0) {
- 		errno = ENOBUFS;
+-	qword_adduint(&bp, &blen, time(0) + DEFAULT_TTL);
++	qword_adduint(&bp, &blen, time(0) + default_ttl);
+ 	if (use_ipaddr && client) {
+ 		memmove(ipaddr + 1, ipaddr, strlen(ipaddr) + 1);
+ 		ipaddr[0] = '$';
+@@ -230,7 +230,7 @@ static void auth_unix_gid(int f)
+ 
+ 	bp = buf; blen = sizeof(buf);
+ 	qword_adduint(&bp, &blen, uid);
+-	qword_adduint(&bp, &blen, time(0) + DEFAULT_TTL);
++	qword_adduint(&bp, &blen, time(0) + default_ttl);
+ 	if (rv >= 0) {
+ 		qword_adduint(&bp, &blen, ngroups);
+ 		for (i=0; i<ngroups; i++)
+@@ -968,7 +968,7 @@ static int dump_to_cache(int f, char *buf, int blen, char *domain,
+ 	ssize_t err;
+ 
+ 	if (ttl <= 1)
+-		ttl = DEFAULT_TTL;
++		ttl = default_ttl;
+ 
+ 	qword_add(&bp, &blen, domain);
+ 	qword_add(&bp, &blen, path);
+diff --git a/support/export/v4root.c b/support/export/v4root.c
+index 6f640aa9aa3f..3654bd7c10c0 100644
+--- a/support/export/v4root.c
++++ b/support/export/v4root.c
+@@ -45,7 +45,7 @@ static nfs_export pseudo_root = {
+ 		.e_nsqgids = 0,
+ 		.e_fsid = 0,
+ 		.e_mountpoint = NULL,
+-		.e_ttl = DEFAULT_TTL,
++		.e_ttl = 0,
+ 	},
+ 	.m_exported = 0,
+ 	.m_xtabent = 1,
+@@ -84,6 +84,7 @@ v4root_create(char *path, nfs_export *export)
+ 	struct exportent *curexp = &export->m_export;
+ 
+ 	dupexportent(&eep, &pseudo_root.m_export);
++	eep.e_ttl = default_ttl;
+ 	eep.e_hostname = curexp->e_hostname;
+ 	strncpy(eep.e_path, path, sizeof(eep.e_path)-1);
+ 	if (strcmp(path, "/") != 0)
+diff --git a/support/include/exportfs.h b/support/include/exportfs.h
+index daa7e2a06d82..81d137210862 100644
+--- a/support/include/exportfs.h
++++ b/support/include/exportfs.h
+@@ -105,7 +105,8 @@ typedef struct mexport {
+ } nfs_export;
+ 
+ #define HASH_TABLE_SIZE 1021
+-#define DEFAULT_TTL	(30 * 60)
++
++extern int default_ttl;
+ 
+ typedef struct _exp_hash_entry {
+ 	nfs_export * p_first;
+diff --git a/support/nfs/exports.c b/support/nfs/exports.c
+index 037febd08d9b..2c8f0752ad9d 100644
+--- a/support/nfs/exports.c
++++ b/support/nfs/exports.c
+@@ -47,6 +47,8 @@ struct flav_info flav_map[] = {
+ 
+ const int flav_map_size = sizeof(flav_map)/sizeof(flav_map[0]);
+ 
++int default_ttl = 30 * 60;
++
+ static char	*efname = NULL;
+ static XFILE	*efp = NULL;
+ static int	first;
+@@ -100,7 +102,7 @@ static void init_exportent (struct exportent *ee, int fromkernel)
+ 	ee->e_nsquids = 0;
+ 	ee->e_nsqgids = 0;
+ 	ee->e_uuid = NULL;
+-	ee->e_ttl = DEFAULT_TTL;
++	ee->e_ttl = default_ttl;
+ }
+ 
+ struct exportent *
 diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
-index 612063ba2340..59eddf79fd2e 100644
+index dafcc35ca9c2..22279e9afe48 100644
 --- a/utils/mountd/mountd.c
 +++ b/utils/mountd/mountd.c
-@@ -74,8 +74,10 @@ static struct option longopts[] =
- 	{ "reverse-lookup", 0, 0, 'r' },
- 	{ "manage-gids", 0, 0, 'g' },
+@@ -76,9 +76,10 @@ static struct option longopts[] =
  	{ "no-udp", 0, 0, 'u' },
-+	{ "log-auth", 0, 0, 'l'},
+ 	{ "log-auth", 0, 0, 'l'},
+ 	{ "cache-use-ipaddr", 0, 0, 'i'},
++	{ "ttl", 1, 0, 'T'},
  	{ NULL, 0, 0, 0 }
  };
-+static char shortopts[] = "o:nFd:p:P:hH:N:V:vurs:t:gl";
+-static char shortopts[] = "o:nFd:p:P:hH:N:V:vurs:t:gli";
++static char shortopts[] = "o:nFd:p:P:hH:N:V:vurs:t:gliT";
  
  #define NFSVERSBIT(vers)	(0x1 << (vers - 1))
  #define NFSVERSBIT_ALL		(NFSVERSBIT(2) | NFSVERSBIT(3) | NFSVERSBIT(4))
-@@ -727,7 +729,7 @@ main(int argc, char **argv)
+@@ -672,6 +673,7 @@ inline static void
+ read_mountd_conf(char **argv)
+ {
+ 	char	*s;
++	int	ttl;
  
- 	/* Parse the command line options and arguments. */
- 	opterr = 0;
--	while ((c = getopt_long(argc, argv, "o:nFd:p:P:hH:N:V:vurs:t:g", longopts, NULL)) != EOF)
-+	while ((c = getopt_long(argc, argv, shortopts, longopts, NULL)) != EOF)
- 		switch (c) {
- 		case 'g':
- 			manage_gids = 1;
-@@ -798,6 +800,9 @@ main(int argc, char **argv)
- 		case 'u':
- 			NFSCTL_UDPUNSET(_rpcprotobits);
+ 	conf_init_file(NFS_CONFFILE);
+ 
+@@ -706,6 +708,10 @@ read_mountd_conf(char **argv)
+ 		else
+ 			NFSCTL_VERUNSET(nfs_version, vers);
+ 	}
++
++	ttl = conf_get_num("mountd", "ttl", default_ttl);
++	if (ttl > 0)
++		default_ttl = ttl;
+ }
+ 
+ int
+@@ -715,6 +721,7 @@ main(int argc, char **argv)
+ 	unsigned int listeners = 0;
+ 	int	foreground = 0;
+ 	int	c;
++	int	ttl;
+ 	struct sigaction sa;
+ 	struct rlimit rlim;
+ 
+@@ -809,6 +816,15 @@ main(int argc, char **argv)
+ 		case 'i':
+ 			use_ipaddr = 2;
  			break;
-+		case 'l':
-+			xlog_sconfig("auth", 1);
++		case 'T':
++			ttl = atoi(optarg);
++			if (ttl <= 0) {
++				fprintf(stderr, "%s: bad ttl number of seconds: %s\n",
++					argv[0], optarg);
++				usage(argv[0], 1);
++			}
++			default_ttl = ttl;
 +			break;
  		case 0:
  			break;
  		case '?':
 diff --git a/utils/mountd/mountd.man b/utils/mountd/mountd.man
-index 9978afcdb4cc..df4e5356cb05 100644
+index 44d237e56110..82e07cf221fa 100644
 --- a/utils/mountd/mountd.man
 +++ b/utils/mountd/mountd.man
-@@ -13,6 +13,8 @@ The
- .B rpc.mountd
- daemon implements the server side of the NFS MOUNT protocol,
- an NFS side protocol used by NFS version 2 [RFC1094] and NFS version 3 [RFC1813].
-+It also responds to requests from the Linux kernel to authenticate
-+clients and provides details of access permissions.
- .PP
- An NFS server maintains a table of local physical file systems
- that are accessible to NFS clients.
-@@ -78,11 +80,44 @@ A client may continue accessing an export even after invoking UMNT.
- If the client reboots without sending a UMNT request, stale entries
- remain for that client in
- .IR /var/lib/nfs/rmtab .
-+.SS Mounting File Systems with NFSv4
-+Version 4 (and later) of NFS does not use a separate NFS MOUNT
-+protocol.  Instead mounting is performed using regular NFS requests
-+handled by the NFS server in the Linux kernel
-+.RI ( nfsd ).
-+When
-+.I nfsd
-+needs to confirm if a client has access to a particular filesystem, it
-+communicates with
-+.B rpc.mountd
-+to authenticate the client and to then determine what access that client
-+has to a given filesystem.
- .SH OPTIONS
+@@ -99,9 +99,10 @@ Turn on debugging. Valid kinds are: all, auth, call, general and parse.
  .TP
- .B \-d kind " or " \-\-debug kind
- Turn on debugging. Valid kinds are: all, auth, call, general and parse.
+ .BR \-l " or " \-\-log\-auth
+ Enable logging of responses to authentication and access requests from
+-nfsd.  Each response is then cached by the kernel for 30 minutes, and
+-will be refreshed after 15 minutes if the relevant client remains
+-active.
++nfsd.  Each response is then cached by the kernel for 30 minutes (or as set by
++.B \-\-ttl
++below), and will be refreshed after 15 minutes (half the ttl time) if
++the relevant client remains active.
+ Note that
+ .B -l
+ is equivalent to
+@@ -135,6 +136,17 @@ log messages produced by the
+ .B -l
+ option easier to read.
  .TP
-+.BR \-l " or " \-\-log\-auth
-+Enable logging of responses to authentication and access requests from
-+nfsd.  Each response is then cached by the kernel for 30 minutes, and
-+will be refreshed after 15 minutes if the relevant client remains
-+active.
-+Note that
-+.B -l
-+is equivalent to
-+.B "-d auth"
-+and so can be enabled in
-+.B /etc/nfs.conf
-+with
-+.B "\[dq]debug = auth\[dq]"
-+in the
-+.B "[mountd]"
-+section.
-+.IP
-+.B rpc.mountd
-+will always log authentication responses to MOUNT requests when NFSv3 is
-+used, but to get similar logs for NFSv4, this option is required.
++.B \-T " or " \-\-ttl
++Provide a time-to-live (TTL) for cached information given to the kernel.
++The kernel will normally request an update if the information is needed
++after half of this time has expired.  Increasing the provided number,
++which is in seconds, reduces the rate of cache update requests, and this
++is particularly noticeable when these requests are logged with
++.BR \-l .
++However increasing also means that changes to hostname to address
++mappings can take longer to be noticed.
++The default TTL is 1800 (30 minutes).
 +.TP
  .B \-F " or " \-\-foreground
  Run in foreground (do not daemonize)
  .TP
-@@ -295,5 +330,9 @@ table of clients accessing server's exports
- RFC 1094 - "NFS: Network File System Protocol Specification"
- .br
- RFC 1813 - "NFS Version 3 Protocol Specification"
-+.br
-+RFC 7530 - "Network File System (NFS) Version 4 Protocol"
-+.br
-+RFC 8881 - "Network File System (NFS) Version 4 Minor Version 1 Protocol"
- .SH AUTHOR
- Olaf Kirch, H. J. Lu, G. Allan Morris III, and a host of others.
+@@ -269,6 +281,7 @@ section include
+ .BR descriptors ,
+ .BR port ,
+ .BR threads ,
++.BR ttl ,
+ .BR reverse-lookup ", and"
+ .BR state-directory-path ,
+ .B ha-callout
 
 
