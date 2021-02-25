@@ -2,236 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA4FF3252D2
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Feb 2021 16:57:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1798A3254F1
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Feb 2021 18:56:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbhBYP6A (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Feb 2021 10:58:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44264 "EHLO
+        id S232608AbhBYRzS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Feb 2021 12:55:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbhBYP57 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Feb 2021 10:57:59 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8390BC06174A
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Feb 2021 07:57:17 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 7C83D21DD; Thu, 25 Feb 2021 10:57:15 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 7C83D21DD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1614268635;
-        bh=xz6ll3H7VkDX6GEfcCmfguC7czvEnr8WItIMDwx0Cmw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PSS6eTji1GwY8cp3iWhcbn1I6exau0N5rosMVXlaS5P89JLdcGXgxcIguX/pgWTKw
-         L32lDUgr8NYWgbHdPDoG1GJ9gqdis34AaXHbGR5fLc8ndt+zShcA1uf3oRTx8TVQ2V
-         CEy1FETdT1STvbGULUbZofSH0z7aiaGWmlGRHwuM=
-Date:   Thu, 25 Feb 2021 10:57:15 -0500
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Olga Kornievskaia <kolga@netapp.com>
-Subject: Re: [PATCH] nfsd: don't abort copies early
-Message-ID: <20210225155715.GD17634@fieldses.org>
-References: <20210224183950.GB11591@fieldses.org>
- <20210224193135.GC11591@fieldses.org>
- <59A5F476-EE0C-454F-8365-3F16505D9D45@oracle.com>
- <20210224223349.GB25689@fieldses.org>
- <CDFF4F84-1A0C-4E4C-A18B-AC39F715E6D8@oracle.com>
- <CAN-5tyFLLLfMwZVFrnQaCnR36Rfq_hPsmLEOLG2Qtrpc+pT7fA@mail.gmail.com>
+        with ESMTP id S233132AbhBYRy2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Feb 2021 12:54:28 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28ACCC061756
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Feb 2021 09:53:48 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id cf12so7210449edb.8
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Feb 2021 09:53:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IgNSI6OFSfnppaC+GMrdAWjNalo2gYA8gIH9UOQ8AyI=;
+        b=EInhMibNQy7yoPTPdzoBOkEWw/tMNCXklzkCg9G6gGpqiKFEvNk1t3g3PlWN9ABngP
+         95lwEZ2BIvfh1UgOe+RbVF8gfaj7tKOQVRp9lVvC/Duz7MAR5LoZLY63eZxkZizfiam/
+         wnhMpzaHUWqfFGEAeuFG0tDiuB2HLTXENPGGhrWVQa8vNECb/88YYB9ckUs5b8N/PgGb
+         m9lUbKUwMX1pGUZLoqvT9/VWmGIHcwwwnnCS930jFrJHeNBoiDwLVknudEBYZJnBt9T0
+         FiV0AF8Mz6UkS8kmqtNooPwefwQ51D8dVFPTqgxrFuKsHO1A4VC4NZBWFvm2+RWNBGez
+         WdTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IgNSI6OFSfnppaC+GMrdAWjNalo2gYA8gIH9UOQ8AyI=;
+        b=JWZDqu450wK59ZKD7l2phoJMqWL3G9LeYKlJclXuRFIFcgoRorvQpiT0CN5hvPDf9/
+         Eqv0eNS8DPmAEzRnF9F7UL6n+DnPRzE7ZqmxGZueX6o9LjTg/iO88p5mvsuz70oVE7rd
+         rPDK3wJkc56QesScL4+SqaW+I0Yy07ShYE7ZlAOHK3SIgsaNuli1WD2HpiDShXczqWgf
+         pUfSSaNnr8NizvQ8+0CIqSZ2oOBrXLTnzxeeMcnwkr5j2UEWILuw64AVBKW1PcUstfHh
+         VoDivlJkxHi3bhf7jdAcY9JSCWZnqZ4h7HvznY02EkMKEVx7KC2KUiwP6IixKPAYgbFr
+         ezDg==
+X-Gm-Message-State: AOAM530bg2TpAqRQ/y371/jXSuAk0NbIiB9JxW/gJTBxXVhzlqGHZEiF
+        2dw8IUL7sF8GGCyaPt2zJuROAGSbRooe/MTDlQZVAB5pnsgK
+X-Google-Smtp-Source: ABdhPJz/O6xMq/eAU3Tt16scLm3nsGPZAvfSl4Uf27U//Dy+Smsnb0KhHRqVnGVDWvdz90JjpiBiPNMoSidkS4U1Rss=
+X-Received: by 2002:aa7:c410:: with SMTP id j16mr4097065edq.135.1614275626835;
+ Thu, 25 Feb 2021 09:53:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAN-5tyFLLLfMwZVFrnQaCnR36Rfq_hPsmLEOLG2Qtrpc+pT7fA@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20210219222233.20748-1-olga.kornievskaia@gmail.com>
+In-Reply-To: <20210219222233.20748-1-olga.kornievskaia@gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 25 Feb 2021 12:53:35 -0500
+Message-ID: <CAHC9VhRKLBNNfUE0FMgGJBR5eBQ+Et=oK1rcErUU_i62AGhfsQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] [security] Add new hook to compare new mount to an
+ existing mount
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Feb 25, 2021 at 10:33:04AM -0500, Olga Kornievskaia wrote:
-> On Thu, Feb 25, 2021 at 10:30 AM Chuck Lever <chuck.lever@oracle.com> wrote:
-> > > On Feb 24, 2021, at 5:33 PM, Bruce Fields <bfields@fieldses.org> wrote:
-> > > On Wed, Feb 24, 2021 at 07:34:10PM +0000, Chuck Lever wrote:
-> > >>> On Feb 24, 2021, at 2:31 PM, J. Bruce Fields <bfields@fieldses.org> wrote:
-> > >>>
-> > >>> I confess I always have to stare at these comparisons for a minute to
-> > >>> figure out which way they should go.  And the logic in each of these
-> > >>> loops is a little repetitive.
-> > >>>
-> > >>> Would it be worth creating a little state_expired() helper to work out
-> > >>> the comparison and the new timeout?
-> > >>
-> > >> That's better, but aren't there already operators on time64_t data objects
-> > >> that can be used for this?
-> > >
-> > > No idea.
-> >
-> > I was thinking of jiffies, I guess. time_before() and time_after().
-> 
-> Just my 2c. My initial original patches used time_after(). It was
-> specifically changed by somebody later to use the current api.
+On Fri, Feb 19, 2021 at 5:25 PM Olga Kornievskaia
+<olga.kornievskaia@gmail.com> wrote:
+>
+> From: Olga Kornievskaia <kolga@netapp.com>
+>
+> Add a new hook that takes an existing super block and a new mount
+> with new options and determines if new options confict with an
+> existing mount or not.
+>
+> A filesystem can use this new hook to determine if it can share
+> the an existing superblock with a new superblock for the new mount.
+>
+> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> ---
+>  include/linux/lsm_hook_defs.h |  1 +
+>  include/linux/lsm_hooks.h     |  6 ++++
+>  include/linux/security.h      |  8 +++++
+>  security/security.c           |  7 +++++
+>  security/selinux/hooks.c      | 56 +++++++++++++++++++++++++++++++++++
+>  5 files changed, 78 insertions(+)
 
-Yes, that was part of some Y2038 project on Arnd Bergman's part:
+...
 
-	20b7d86f29d3 nfsd: use boottime for lease expiry calculation
+> diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+> index a19adef1f088..d76aaecfdf0f 100644
+> --- a/include/linux/lsm_hooks.h
+> +++ b/include/linux/lsm_hooks.h
+> @@ -142,6 +142,12 @@
+>   *     @orig the original mount data copied from userspace.
+>   *     @copy copied data which will be passed to the security module.
+>   *     Returns 0 if the copy was successful.
+> + * @sb_mnt_opts_compat:
+> + *     Determine if the existing mount options are compatible with the new
+> + *     mount options being used.
 
-I think 64-bit time_t is good for something like a hundred billion
-years, so wraparound isn't an issue.
+Full disclosure: I'm a big fan of good documentation, regardless of if
+it lives in comments or a separate dedicated resource.  Looking at the
+comment above, and the SELinux implementation of this hook below, it
+appears that the comment is a bit vague; specifically the use of
+"compatible".  Based on the SELinux implementation, "compatible" would
+seem to equal, do you envision that to be the case for every
+LSM/security-model?  If the answer is yes, then let's say that (and
+possibly rename the hook to "sb_mnt_opts_equal").  If the answer is
+no, then I think we need to do a better job explaining what
+compatibility really means; put yourself in the shoes of someone
+writing a LSM, what would they need to know to write an implementation
+for this hook?
 
-I think the conversion was correct, so the bug was there from the start.
+> + *     @sb superblock being compared
+> + *     @mnt_opts new mount options
+> + *     Return 0 if options are compatible.
 
-Easy mistake to make, and hard to hit in testing, because on an
-otherwise unoccupied server and fast network the laundromat probably
-won't run while your COPY is in progress.
-
---b.
-
-> 
-> > Checking the definition of time64_t, from include/linux/time64.h:
-> >
-> > typedef __s64 time64_t;
-> >
-> > Signed, hrm. And no comparison helpers.
-> >
-> > I might be a little concerned about wrapping time values. But any
-> > concerns can be addressed in the new common helper state_expired(),
-> > possibly as a subsequent patch.
-> >
-> > If you feel it's ready, can you send me the below clean-up as an
-> > official patch with description and SoB?
-> >
-> >
-> > > --b.
-> > >
-> > >>
-> > >>
-> > >>> --b.
-> > >>>
-> > >>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > >>> index 61552e89bd89..00fb3603c29e 100644
-> > >>> --- a/fs/nfsd/nfs4state.c
-> > >>> +++ b/fs/nfsd/nfs4state.c
-> > >>> @@ -5363,6 +5363,22 @@ static bool clients_still_reclaiming(struct nfsd_net *nn)
-> > >>>     return true;
-> > >>> }
-> > >>>
-> > >>> +struct laundry_time {
-> > >>> +   time64_t cutoff;
-> > >>> +   time64_t new_timeo;
-> > >>> +};
-> > >>> +
-> > >>> +bool state_expired(struct laundry_time *lt, time64_t last_refresh)
-> > >>> +{
-> > >>> +   time64_t time_remaining;
-> > >>> +
-> > >>> +   if (last_refresh > lt->cutoff)
-> > >>> +           return true;
-> > >>> +   time_remaining = lt->cutoff - last_refresh;
-> > >>> +   lt->new_timeo = min(lt->new_timeo, time_remaining);
-> > >>> +   return false;
-> > >>> +}
-> > >>> +
-> > >>> static time64_t
-> > >>> nfs4_laundromat(struct nfsd_net *nn)
-> > >>> {
-> > >>> @@ -5372,14 +5388,16 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > >>>     struct nfs4_ol_stateid *stp;
-> > >>>     struct nfsd4_blocked_lock *nbl;
-> > >>>     struct list_head *pos, *next, reaplist;
-> > >>> -   time64_t cutoff = ktime_get_boottime_seconds() - nn->nfsd4_lease;
-> > >>> -   time64_t t, new_timeo = nn->nfsd4_lease;
-> > >>> +   struct laundry_time lt = {
-> > >>> +           .cutoff = ktime_get_boottime_seconds() - nn->nfsd4_lease,
-> > >>> +           .new_timeo = nn->nfsd4_lease
-> > >>> +   };
-> > >>>     struct nfs4_cpntf_state *cps;
-> > >>>     copy_stateid_t *cps_t;
-> > >>>     int i;
-> > >>>
-> > >>>     if (clients_still_reclaiming(nn)) {
-> > >>> -           new_timeo = 0;
-> > >>> +           lt.new_timeo = 0;
-> > >>>             goto out;
-> > >>>     }
-> > >>>     nfsd4_end_grace(nn);
-> > >>> @@ -5389,7 +5407,7 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > >>>     idr_for_each_entry(&nn->s2s_cp_stateids, cps_t, i) {
-> > >>>             cps = container_of(cps_t, struct nfs4_cpntf_state, cp_stateid);
-> > >>>             if (cps->cp_stateid.sc_type == NFS4_COPYNOTIFY_STID &&
-> > >>> -                           cps->cpntf_time < cutoff)
-> > >>> +                           state_expired(&lt, cps->cpntf_time))
-> > >>>                     _free_cpntf_state_locked(nn, cps);
-> > >>>     }
-> > >>>     spin_unlock(&nn->s2s_cp_lock);
-> > >>> @@ -5397,11 +5415,8 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > >>>     spin_lock(&nn->client_lock);
-> > >>>     list_for_each_safe(pos, next, &nn->client_lru) {
-> > >>>             clp = list_entry(pos, struct nfs4_client, cl_lru);
-> > >>> -           if (clp->cl_time > cutoff) {
-> > >>> -                   t = clp->cl_time - cutoff;
-> > >>> -                   new_timeo = min(new_timeo, t);
-> > >>> +           if (!state_expired(&lt, clp->cl_time))
-> > >>>                     break;
-> > >>> -           }
-> > >>>             if (mark_client_expired_locked(clp)) {
-> > >>>                     trace_nfsd_clid_expired(&clp->cl_clientid);
-> > >>>                     continue;
-> > >>> @@ -5418,11 +5433,8 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > >>>     spin_lock(&state_lock);
-> > >>>     list_for_each_safe(pos, next, &nn->del_recall_lru) {
-> > >>>             dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
-> > >>> -           if (dp->dl_time > cutoff) {
-> > >>> -                   t = dp->dl_time - cutoff;
-> > >>> -                   new_timeo = min(new_timeo, t);
-> > >>> +           if (!state_expired(&lt, clp->cl_time))
-> > >>>                     break;
-> > >>> -           }
-> > >>>             WARN_ON(!unhash_delegation_locked(dp));
-> > >>>             list_add(&dp->dl_recall_lru, &reaplist);
-> > >>>     }
-> > >>> @@ -5438,11 +5450,8 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > >>>     while (!list_empty(&nn->close_lru)) {
-> > >>>             oo = list_first_entry(&nn->close_lru, struct nfs4_openowner,
-> > >>>                                     oo_close_lru);
-> > >>> -           if (oo->oo_time > cutoff) {
-> > >>> -                   t = oo->oo_time - cutoff;
-> > >>> -                   new_timeo = min(new_timeo, t);
-> > >>> +           if (!state_expired(&lt, oo->oo_time))
-> > >>>                     break;
-> > >>> -           }
-> > >>>             list_del_init(&oo->oo_close_lru);
-> > >>>             stp = oo->oo_last_closed_stid;
-> > >>>             oo->oo_last_closed_stid = NULL;
-> > >>> @@ -5468,11 +5477,8 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > >>>     while (!list_empty(&nn->blocked_locks_lru)) {
-> > >>>             nbl = list_first_entry(&nn->blocked_locks_lru,
-> > >>>                                     struct nfsd4_blocked_lock, nbl_lru);
-> > >>> -           if (nbl->nbl_time > cutoff) {
-> > >>> -                   t = nbl->nbl_time - cutoff;
-> > >>> -                   new_timeo = min(new_timeo, t);
-> > >>> +           if (!state_expired(&lt, oo->oo_time))
-> > >>>                     break;
-> > >>> -           }
-> > >>>             list_move(&nbl->nbl_lru, &reaplist);
-> > >>>             list_del_init(&nbl->nbl_list);
-> > >>>     }
-> > >>> @@ -5485,8 +5491,7 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > >>>             free_blocked_lock(nbl);
-> > >>>     }
-> > >>> out:
-> > >>> -   new_timeo = max_t(time64_t, new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
-> > >>> -   return new_timeo;
-> > >>> +   return max_t(time64_t, lt.new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
-> > >>> }
-> > >>>
-> > >>> static struct workqueue_struct *laundry_wq;
-> > >>
-> > >> --
-> > >> Chuck Lever
-> > >>
-> > >>
-> >
-> > --
-> > Chuck Lever
-> >
-> >
-> >
+-- 
+paul moore
+www.paul-moore.com
