@@ -2,25 +2,26 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF30C3248F1
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Feb 2021 03:45:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFD933248F3
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Feb 2021 03:45:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236802AbhBYCn5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Feb 2021 21:43:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41946 "EHLO mx2.suse.de"
+        id S234205AbhBYCoH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Feb 2021 21:44:07 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41996 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234384AbhBYCn4 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 24 Feb 2021 21:43:56 -0500
+        id S229722AbhBYCoF (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 24 Feb 2021 21:44:05 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 227B2AE05;
-        Thu, 25 Feb 2021 02:43:15 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 80056AE7F;
+        Thu, 25 Feb 2021 02:43:23 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
 To:     Steve Dickson <SteveD@RedHat.com>
 Date:   Thu, 25 Feb 2021 13:42:47 +1100
-Subject: [PATCH 1/5] mountd: reject unknown client IP when !use_ipaddr.
+Subject: [PATCH 3/5] mountd: add logging for authentication results for
+ accesses.
 Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Message-ID: <161422096786.28256.16255172827545591674.stgit@noble>
+Message-ID: <161422096788.28256.6306810361070404010.stgit@noble>
 In-Reply-To: <161422077024.28256.15543036625096419495.stgit@noble>
 References: <161422077024.28256.15543036625096419495.stgit@noble>
 User-Agent: StGit/0.23
@@ -33,62 +34,171 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: NeilBrown <neil@brown.name>
 
-When use_ipaddr is not in effect, an auth_unix_ip lookup request from
-the kernel for an unknown client will be rejected.
-When it IS in effect, these requests are always granted with the IP
-address being mapped to a string form of the address, preceded by a '$'.
+When NFSv3 is used to mount a filesystem, success/failure messages are
+logged by mountd and can be used for auditing.
+When NFSv4 is used, there is no distinct "MOUNT" request, and nothing is
+logged.
 
-This is inconsistent behaviour and could present a small information
-leak.
-It means that, for example, a SETCLIENT NFSv4 request may or may not
-succeed depending on an internal setting in rpc.mountd.
+We can instead log authentication requests from the kernel.  These will
+happen regularly - typically every 15 minutes of ongoing access - so
+they may be too noisy, or might be more useful.  As they might not be
+wanted, make them selectable with the "AUTH" facility in xlog().
 
-This is easily rectified by always checking if the client is known.
+Add a "-l" to enable these logs.  Alternately "debug = auth" will have
+the same effect.
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- support/export/cache.c |   17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ support/export/cache.c  |   18 +++++++++++++++++-
+ utils/mountd/mountd.c   |    7 ++++++-
+ utils/mountd/mountd.man |   39 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 62 insertions(+), 2 deletions(-)
 
 diff --git a/support/export/cache.c b/support/export/cache.c
-index f1569afb558c..156ebfd4087c 100644
+index 49a761749ec6..50f7c7a15ceb 100644
 --- a/support/export/cache.c
 +++ b/support/export/cache.c
-@@ -114,6 +114,7 @@ static void auth_unix_ip(int f)
- 	char class[20];
- 	char ipaddr[INET6_ADDRSTRLEN + 1];
- 	char *client = NULL;
-+	struct addrinfo *ai = NULL;
- 	struct addrinfo *tmp = NULL;
- 	char buf[RPC_CHAN_BUF_SIZE], *bp;
- 	int blen;
-@@ -139,21 +140,17 @@ static void auth_unix_ip(int f)
- 
- 	auth_reload();
- 
--	/* addr is a valid, interesting address, find the domain name... */
--	if (!use_ipaddr) {
--		struct addrinfo *ai = NULL;
--
--		ai = client_resolve(tmp->ai_addr);
--		if (ai) {
--			client = client_compose(ai);
--			nfs_freeaddrinfo(ai);
--		}
-+	/* addr is a valid address, find the domain name... */
-+	ai = client_resolve(tmp->ai_addr);
-+	if (ai) {
-+		client = client_compose(ai);
-+		nfs_freeaddrinfo(ai);
+@@ -145,6 +145,15 @@ static void auth_unix_ip(int f)
+ 		client = client_compose(ai);
+ 		nfs_freeaddrinfo(ai);
  	}
++	if (!client)
++		xlog(D_AUTH, "failed authentication for IP %s", ipaddr);
++	else if	(!use_ipaddr)
++		xlog(D_AUTH, "successful authentication for IP %s as %s",
++		     ipaddr, *client ? client : "DEFAULT");
++	else
++		xlog(D_AUTH, "successful authentication for IP %s",
++			     ipaddr);
++
  	bp = buf; blen = sizeof(buf);
  	qword_add(&bp, &blen, "nfsd");
  	qword_add(&bp, &blen, ipaddr);
- 	qword_adduint(&bp, &blen, time(0) + DEFAULT_TTL);
--	if (use_ipaddr) {
-+	if (use_ipaddr && client) {
- 		memmove(ipaddr + 1, ipaddr, strlen(ipaddr) + 1);
- 		ipaddr[0] = '$';
- 		qword_add(&bp, &blen, ipaddr);
+@@ -896,6 +905,8 @@ static void nfsd_fh(int f)
+ 	qword_addeol(&bp, &blen);
+ 	if (blen <= 0 || cache_write(f, buf, bp - buf) != bp - buf)
+ 		xlog(L_ERROR, "nfsd_fh: error writing reply");
++	if (!found)
++		xlog(D_AUTH, "denied access to %s", *dom == '$' ? dom+1 : dom);
+ out:
+ 	if (found_path)
+ 		free(found_path);
+@@ -987,8 +998,13 @@ static int dump_to_cache(int f, char *buf, int blen, char *domain,
+ 			qword_add(&bp, &blen, "uuid");
+ 			qword_addhex(&bp, &blen, u, 16);
+ 		}
+-	} else
++		xlog(D_AUTH, "granted access to %s for %s",
++		     path, *domain == '$' ? domain+1 : domain);
++	} else {
+ 		qword_adduint(&bp, &blen, now + ttl);
++		xlog(D_AUTH, "denied access to %s for %s",
++		     path, *domain == '$' ? domain+1 : domain);
++	}
+ 	qword_addeol(&bp, &blen);
+ 	if (blen <= 0) {
+ 		errno = ENOBUFS;
+diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
+index 612063ba2340..59eddf79fd2e 100644
+--- a/utils/mountd/mountd.c
++++ b/utils/mountd/mountd.c
+@@ -74,8 +74,10 @@ static struct option longopts[] =
+ 	{ "reverse-lookup", 0, 0, 'r' },
+ 	{ "manage-gids", 0, 0, 'g' },
+ 	{ "no-udp", 0, 0, 'u' },
++	{ "log-auth", 0, 0, 'l'},
+ 	{ NULL, 0, 0, 0 }
+ };
++static char shortopts[] = "o:nFd:p:P:hH:N:V:vurs:t:gl";
+ 
+ #define NFSVERSBIT(vers)	(0x1 << (vers - 1))
+ #define NFSVERSBIT_ALL		(NFSVERSBIT(2) | NFSVERSBIT(3) | NFSVERSBIT(4))
+@@ -727,7 +729,7 @@ main(int argc, char **argv)
+ 
+ 	/* Parse the command line options and arguments. */
+ 	opterr = 0;
+-	while ((c = getopt_long(argc, argv, "o:nFd:p:P:hH:N:V:vurs:t:g", longopts, NULL)) != EOF)
++	while ((c = getopt_long(argc, argv, shortopts, longopts, NULL)) != EOF)
+ 		switch (c) {
+ 		case 'g':
+ 			manage_gids = 1;
+@@ -798,6 +800,9 @@ main(int argc, char **argv)
+ 		case 'u':
+ 			NFSCTL_UDPUNSET(_rpcprotobits);
+ 			break;
++		case 'l':
++			xlog_sconfig("auth", 1);
++			break;
+ 		case 0:
+ 			break;
+ 		case '?':
+diff --git a/utils/mountd/mountd.man b/utils/mountd/mountd.man
+index 9978afcdb4cc..df4e5356cb05 100644
+--- a/utils/mountd/mountd.man
++++ b/utils/mountd/mountd.man
+@@ -13,6 +13,8 @@ The
+ .B rpc.mountd
+ daemon implements the server side of the NFS MOUNT protocol,
+ an NFS side protocol used by NFS version 2 [RFC1094] and NFS version 3 [RFC1813].
++It also responds to requests from the Linux kernel to authenticate
++clients and provides details of access permissions.
+ .PP
+ An NFS server maintains a table of local physical file systems
+ that are accessible to NFS clients.
+@@ -78,11 +80,44 @@ A client may continue accessing an export even after invoking UMNT.
+ If the client reboots without sending a UMNT request, stale entries
+ remain for that client in
+ .IR /var/lib/nfs/rmtab .
++.SS Mounting File Systems with NFSv4
++Version 4 (and later) of NFS does not use a separate NFS MOUNT
++protocol.  Instead mounting is performed using regular NFS requests
++handled by the NFS server in the Linux kernel
++.RI ( nfsd ).
++When
++.I nfsd
++needs to confirm if a client has access to a particular filesystem, it
++communicates with
++.B rpc.mountd
++to authenticate the client and to then determine what access that client
++has to a given filesystem.
+ .SH OPTIONS
+ .TP
+ .B \-d kind " or " \-\-debug kind
+ Turn on debugging. Valid kinds are: all, auth, call, general and parse.
+ .TP
++.BR \-l " or " \-\-log\-auth
++Enable logging of responses to authentication and access requests from
++nfsd.  Each response is then cached by the kernel for 30 minutes, and
++will be refreshed after 15 minutes if the relevant client remains
++active.
++Note that
++.B -l
++is equivalent to
++.B "-d auth"
++and so can be enabled in
++.B /etc/nfs.conf
++with
++.B "\[dq]debug = auth\[dq]"
++in the
++.B "[mountd]"
++section.
++.IP
++.B rpc.mountd
++will always log authentication responses to MOUNT requests when NFSv3 is
++used, but to get similar logs for NFSv4, this option is required.
++.TP
+ .B \-F " or " \-\-foreground
+ Run in foreground (do not daemonize)
+ .TP
+@@ -295,5 +330,9 @@ table of clients accessing server's exports
+ RFC 1094 - "NFS: Network File System Protocol Specification"
+ .br
+ RFC 1813 - "NFS Version 3 Protocol Specification"
++.br
++RFC 7530 - "Network File System (NFS) Version 4 Protocol"
++.br
++RFC 8881 - "Network File System (NFS) Version 4 Minor Version 1 Protocol"
+ .SH AUTHOR
+ Olaf Kirch, H. J. Lu, G. Allan Morris III, and a host of others.
 
 
