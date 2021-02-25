@@ -2,140 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BE49324E27
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Feb 2021 11:31:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9F3D324F3C
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Feb 2021 12:31:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235420AbhBYK1H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Feb 2021 05:27:07 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59690 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235096AbhBYKVA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 25 Feb 2021 05:21:00 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D3ABAAAAE;
-        Thu, 25 Feb 2021 10:19:59 +0000 (UTC)
-Received: from localhost (brahms [local])
-        by brahms (OpenSMTPD) with ESMTPA id a21891c8;
-        Thu, 25 Feb 2021 10:21:04 +0000 (UTC)
-Date:   Thu, 25 Feb 2021 10:21:04 +0000
-From:   Luis Henriques <lhenriques@suse.de>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Alejandro Colomar <alx.manpages@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <sfrench@samba.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Ian Lance Taylor <iant@google.com>,
-        Luis Lozano <llozano@chromium.org>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Christoph Hellwig <hch@infradead.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: [PATCH] copy_file_range.2: Kernel v5.12 updates
-Message-ID: <YDd6EMpvZhHq6ncM@suse.de>
-References: <20210222102456.6692-1-lhenriques@suse.de>
- <20210224142307.7284-1-lhenriques@suse.de>
- <CAOQ4uxi3-+tOgHV_GUnWtJoQXbV5ZS9qDZsLsd9sJxX5Aftyew@mail.gmail.com>
+        id S235330AbhBYLai (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Feb 2021 06:30:38 -0500
+Received: from outbound-smtp57.blacknight.com ([46.22.136.241]:42131 "EHLO
+        outbound-smtp57.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235197AbhBYL3u (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Feb 2021 06:29:50 -0500
+Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
+        by outbound-smtp57.blacknight.com (Postfix) with ESMTPS id 50873FA94E
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Feb 2021 11:28:51 +0000 (GMT)
+Received: (qmail 7064 invoked from network); 25 Feb 2021 11:28:51 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 25 Feb 2021 11:28:50 -0000
+Date:   Thu, 25 Feb 2021 11:28:49 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     linux-mm@kvack.org, chuck.lever@oracle.com, netdev@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC net-next 3/3] mm: make zone->free_area[order] access
+ faster
+Message-ID: <20210225112849.GM3697@techsingularity.net>
+References: <161419296941.2718959.12575257358107256094.stgit@firesoul>
+ <161419301128.2718959.4838557038019199822.stgit@firesoul>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxi3-+tOgHV_GUnWtJoQXbV5ZS9qDZsLsd9sJxX5Aftyew@mail.gmail.com>
+In-Reply-To: <161419301128.2718959.4838557038019199822.stgit@firesoul>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 24, 2021 at 06:10:45PM +0200, Amir Goldstein wrote:
-> On Wed, Feb 24, 2021 at 4:22 PM Luis Henriques <lhenriques@suse.de> wrote:
-> >
-> > Update man-page with recent changes to this syscall.
-> >
-> > Signed-off-by: Luis Henriques <lhenriques@suse.de>
-> > ---
-> > Hi!
-> >
-> > Here's a suggestion for fixing the manpage for copy_file_range().  Note that
-> > I've assumed the fix will hit 5.12.
-> >
-> >  man2/copy_file_range.2 | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/man2/copy_file_range.2 b/man2/copy_file_range.2
-> > index 611a39b8026b..b0fd85e2631e 100644
-> > --- a/man2/copy_file_range.2
-> > +++ b/man2/copy_file_range.2
-> > @@ -169,6 +169,9 @@ Out of memory.
-> >  .B ENOSPC
-> >  There is not enough space on the target filesystem to complete the copy.
-> >  .TP
-> > +.B EOPNOTSUPP
-> > +The filesystem does not support this operation.
-> > +.TP
-> >  .B EOVERFLOW
-> >  The requested source or destination range is too large to represent in the
-> >  specified data types.
-> > @@ -187,7 +190,7 @@ refers to an active swap file.
-> >  .B EXDEV
-> >  The files referred to by
-> >  .IR fd_in " and " fd_out
-> > -are not on the same mounted filesystem (pre Linux 5.3).
-> > +are not on the same mounted filesystem (pre Linux 5.3 and post Linux 5.12).
-> 
-> I think you need to drop the (Linux range) altogether.
-> What's missing here is the NFS cross server copy use case.
-> Maybe:
-> 
-> ...are not on the same mounted filesystem and the source and target filesystems
-> do not support cross-filesystem copy.
-> 
-> You may refer the reader to VERSIONS section where it will say which
-> filesystems support cross-fs copy as of kernel version XXX (i.e. cifs and nfs).
-> 
-> >  .SH VERSIONS
-> >  The
-> >  .BR copy_file_range ()
-> > @@ -202,6 +205,11 @@ Applications should target the behaviour and requirements of 5.3 kernels.
-> >  .PP
-> >  First support for cross-filesystem copies was introduced in Linux 5.3.
-> >  Older kernels will return -EXDEV when cross-filesystem copies are attempted.
-> > +.PP
-> > +After Linux 5.12, support for copies between different filesystems was dropped.
-> > +However, individual filesystems may still provide
-> > +.BR copy_file_range ()
-> > +implementations that allow copies across different devices.
-> 
-> Again, this is not likely to stay uptodate for very long.
-> The stable kernels are expected to apply your patch (because it fixes
-> a regression)
-> so this should be phrased differently.
-> If it were me, I would provide all the details of the situation to
-> Michael and ask him
-> to write the best description for this section.
+As a side-node, I didn't pick up the other patches as there is review
+feedback and I didn't have strong opinions either way. Patch 3 is curious
+though, it probably should be split out and sent separetly but still;
 
-Thanks Amir.
+On Wed, Feb 24, 2021 at 07:56:51PM +0100, Jesper Dangaard Brouer wrote:
+> Avoid multiplication (imul) operations when accessing:
+>  zone->free_area[order].nr_free
+> 
+> This was really tricky to find. I was puzzled why perf reported that
+> rmqueue_bulk was using 44% of the time in an imul operation:
+> 
+>        ???     del_page_from_free_list():
+>  44,54 ??? e2:   imul   $0x58,%rax,%rax
+> 
+> This operation was generated (by compiler) because the struct free_area have
+> size 88 bytes or 0x58 hex. The compiler cannot find a shift operation to use
+> and instead choose to use a more expensive imul, to find the offset into the
+> array free_area[].
+> 
+> The patch align struct free_area to a cache-line, which cause the
+> compiler avoid the imul operation. The imul operation is very fast on
+> modern Intel CPUs. To help fast-path that decrement 'nr_free' move the
+> member 'nr_free' to be first element, which saves one 'add' operation.
+> 
+> Looking up instruction latency this exchange a 3-cycle imul with a
+> 1-cycle shl, saving 2-cycles. It does trade some space to do this.
+> 
+> Used: gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2)
+> 
 
-Yeah, it's tricky.  Support was added and then dropped.   Since stable
-kernels will be picking this patch,  maybe the best thing to do is to no
-mention the generic cross-filesystem support at all...?  Or simply say
-that 5.3 temporarily supported it but that support was later dropped.
+I'm having some trouble parsing this and matching it to the patch itself.
 
-Michael (or Alejandro), would you be OK handling this yourself as Amir
-suggested?
+First off, on my system (x86-64), the size of struct free area is 72,
+not 88 bytes. For either size, cache-aligning the structure is a big
+increase in the struct size.
 
-Cheers,
---
-Luís
+struct free_area {
+        struct list_head           free_list[4];         /*     0    64 */
+        /* --- cacheline 1 boundary (64 bytes) --- */
+        long unsigned int          nr_free;              /*    64     8 */
+
+        /* size: 72, cachelines: 2, members: 2 */
+        /* last cacheline: 8 bytes */
+};
+
+Are there other patches in the tree? What does pahole say?
+
+With gcc-9, I'm also not seeing the imul instruction outputted like you
+described in rmqueue_pcplist which inlines rmqueue_bulk. At the point
+where it calls get_page_from_free_area, it's using shl for the page list
+operation. This might be a compiler glitch but given that free_area is a
+different size, I'm less certain and wonder if something else is going on.
+
+Finally, moving nr_free to the end and cache aligning it will make the
+started of each free_list cache-aligned because of its location in the
+struct zone so what purpose does __pad_to_align_free_list serve?
+
+-- 
+Mel Gorman
+SUSE Labs
