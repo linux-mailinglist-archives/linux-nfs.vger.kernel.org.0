@@ -2,57 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69E173261DA
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Feb 2021 12:16:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05B6F326399
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Feb 2021 15:00:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230401AbhBZLP4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Feb 2021 06:15:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230107AbhBZLPy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Feb 2021 06:15:54 -0500
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9521C061574;
-        Fri, 26 Feb 2021 03:15:13 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id x16so7108633wmk.3;
-        Fri, 26 Feb 2021 03:15:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=k9sgvuu+Qg7wjNtisoO7UUJtH7RFCSXcGRmLfuSyvbk=;
-        b=OAzPZsAKVzOOVk/lVwdaN7WCTeTKAS+mUNsholcGXOu+X8jjx7HMZ8C3pqb6iDPL17
-         gFQzW+tyuhdZTIMcw6kK9dDvlxagLHfNyy0+3/VXGekWkABdR/RtJ1lJQ7m37E9IaXV+
-         ObcCxwk8GacZFucrwObVzBobJwVvQirVAzUJVomaeXMIGmSAa7CRRI8aLPex3mmI4nRZ
-         8ai7sEXyxpF/JGSLrLvhAx/CXWqMkZcTGXlXWcfeKWDge74fGEYiFwa2kw5FrG0x1mWC
-         Wl4w8UwwPD9Zr1fu6oEIjEsSpQQSAGRpANKf57sBTH/xj3VbKoziVY5ayS1wTdLMimVx
-         zY3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k9sgvuu+Qg7wjNtisoO7UUJtH7RFCSXcGRmLfuSyvbk=;
-        b=oCwGnKlouDZna3L3VPpYTMMs2xNqtbs7RVOaea84jRFdsJp8Cek/4gByMdw3iaOVlw
-         W7pBo93hscPMNQzPrarAEU47cFcUdZl/26DtVY9+r+Epn6YquaDXItG4uvRhvmgHjzkv
-         psQpckPHBupJgUwwSuJXs88YH7QSd2eTQLbZ5cFw4j0Yf8/WYhmSa4GJZ6McOq2RxBZj
-         p4ZuemdNid0ffyVN/8B5Uxil3XGKUzfFq6eb+MYZNyLq5LVtTpYkHlTxe6I3YPtguCi0
-         CeRNPTwfyEcesdTHjBUoU1s4vWBBCd46rarYXb/mf7xldVUpCD8cGtj7sENhFJAI2Ndv
-         5w3w==
-X-Gm-Message-State: AOAM5331APQQlglaqxp6lEq6urRUNvhoweJwDawX6M41RJjRfgEzx5l6
-        mgUsJSe2nrbfp5kuYVPmEXhhZt1IvXuWlQ==
-X-Google-Smtp-Source: ABdhPJw53tMXBEIgjj5Ydx1dx2zknCtn2TrKdJOPUiAyxh8gwjNqu3cCzVaxU88Bf3Vqq3INSHd1wQ==
-X-Received: by 2002:a7b:c303:: with SMTP id k3mr2366345wmj.67.1614338112576;
-        Fri, 26 Feb 2021 03:15:12 -0800 (PST)
-Received: from [192.168.1.143] ([170.253.51.130])
-        by smtp.gmail.com with ESMTPSA id r9sm10358838wmq.26.2021.02.26.03.15.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Feb 2021 03:15:11 -0800 (PST)
+        id S229707AbhBZOAm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Feb 2021 09:00:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229550AbhBZOAl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 26 Feb 2021 09:00:41 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 50F5F64EE7;
+        Fri, 26 Feb 2021 13:59:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614347999;
+        bh=BMSFrJi4c0wVHcWkPrJYSSmWsdZe2GehkTFStvm+2Ig=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=VC4Vi//e+SEFROFzp+BPUah0KUtgvvqR8cwUnr9EMVqMV9PZTTSIipqun+8oAnlL3
+         R4Tfk2lumJrYsmSEbfNZk6ycB2mjJ8PVO9b57scDjjqkOAlviLEWCHGtYJOs+n9DW7
+         R67JohGjysNk+rbqhiyIUGPtYEOV7hukucYNTYSpfqqB76/hQ5d7IA5VZY53yWre56
+         tOA+up7IJ+H+OKcWiQV0pNbUXxNTjmTu6cqVnsmgQYIl7xvMyACE4McGQimAFK8zuA
+         9kbMc+SZenqCcZBSaw7BrrCM5rIYPI6s/1u5tt4z3ftRw8NMzDcOq8Jdsdfg+l3YSL
+         +W32agANE0eGQ==
+Message-ID: <5da210ecdf9d01552f1f69f928ce68747a68bf08.camel@kernel.org>
 Subject: Re: [PATCH] copy_file_range.2: Kernel v5.12 updates
-To:     Amir Goldstein <amir73il@gmail.com>
+From:   Jeff Layton <jlayton@kernel.org>
+To:     "Alejandro Colomar (man-pages)" <alx.manpages@gmail.com>,
+        Amir Goldstein <amir73il@gmail.com>
 Cc:     Luis Henriques <lhenriques@suse.de>,
         Michael Kerrisk <mtk.manpages@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
         Steve French <sfrench@samba.org>,
         Miklos Szeredi <miklos@szeredi.hu>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
@@ -74,51 +51,52 @@ Cc:     Luis Henriques <lhenriques@suse.de>,
         linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         linux-man <linux-man@vger.kernel.org>
+Date:   Fri, 26 Feb 2021 08:59:56 -0500
+In-Reply-To: <abf61760-2099-634a-7519-2138bb75e41b@gmail.com>
 References: <20210222102456.6692-1-lhenriques@suse.de>
- <20210224142307.7284-1-lhenriques@suse.de>
- <CAOQ4uxi3-+tOgHV_GUnWtJoQXbV5ZS9qDZsLsd9sJxX5Aftyew@mail.gmail.com>
- <YDd6EMpvZhHq6ncM@suse.de> <fd5d0d24-35e3-6097-31a9-029475308f15@gmail.com>
- <CAOQ4uxiVxEwvgFhdHGWLpdCk==NcGXgu52r_mXA+ebbLp_XPzQ@mail.gmail.com>
-From:   "Alejandro Colomar (man-pages)" <alx.manpages@gmail.com>
-Message-ID: <abf61760-2099-634a-7519-2138bb75e41b@gmail.com>
-Date:   Fri, 26 Feb 2021 12:15:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+         <20210224142307.7284-1-lhenriques@suse.de>
+         <CAOQ4uxi3-+tOgHV_GUnWtJoQXbV5ZS9qDZsLsd9sJxX5Aftyew@mail.gmail.com>
+         <YDd6EMpvZhHq6ncM@suse.de> <fd5d0d24-35e3-6097-31a9-029475308f15@gmail.com>
+         <CAOQ4uxiVxEwvgFhdHGWLpdCk==NcGXgu52r_mXA+ebbLp_XPzQ@mail.gmail.com>
+         <abf61760-2099-634a-7519-2138bb75e41b@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-In-Reply-To: <CAOQ4uxiVxEwvgFhdHGWLpdCk==NcGXgu52r_mXA+ebbLp_XPzQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello Amir,
-
-On 2/26/21 11:34 AM, Amir Goldstein wrote:
-> Is this detailed enough? ;-)
+On Fri, 2021-02-26 at 12:15 +0100, Alejandro Colomar (man-pages) wrote:
+> Hello Amir,
 > 
-> https://lwn.net/Articles/846403/
+> On 2/26/21 11:34 AM, Amir Goldstein wrote:
+> > Is this detailed enough? ;-)
+> > 
+> > https://lwn.net/Articles/846403/
+> 
+> I'm sorry I can't read it yet:
+> 
+> [
+> Subscription required
+> The page you have tried to view (How useful should copy_file_range() 
+> be?) is currently available to LWN subscribers only. Reader 
+> subscriptions are a necessary way to fund the continued existence of LWN 
+> and the quality of its content.
+> [...]
+> (Alternatively, this item will become freely available on March 4, 2021)
+> ]
+> 
 
-I'm sorry I can't read it yet:
 
-[
-Subscription required
-The page you have tried to view (How useful should copy_file_range() 
-be?) is currently available to LWN subscribers only. Reader 
-subscriptions are a necessary way to fund the continued existence of LWN 
-and the quality of its content.
-[...]
-(Alternatively, this item will become freely available on March 4, 2021)
-]
+Here's a link that should work. I'm probably breaking the rules a bit as
+a subscriber, but hopefully Jon won't mind too much. FWIW, I've found it
+to be worthwhile to subscribe to LWN if you're doing a lot of kernel
+development:
 
-However, the 4th of March is close enough, i guess.
+    https://lwn.net/SubscriberLink/846403/0fd639403e629cab/
 
-Thanks,
-
-Alex
-
+Cheers,
 -- 
-Alejandro Colomar
-Linux man-pages comaintainer; https://www.kernel.org/doc/man-pages/
-http://www.alejandro-colomar.es/
+Jeff Layton <jlayton@kernel.org>
+
