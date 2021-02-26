@@ -2,227 +2,122 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EF46325E3A
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Feb 2021 08:22:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BB8832611E
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Feb 2021 11:16:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230148AbhBZHUw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Feb 2021 02:20:52 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60356 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230164AbhBZHUo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 26 Feb 2021 02:20:44 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C524BAAAE;
-        Fri, 26 Feb 2021 07:20:01 +0000 (UTC)
-From:   NeilBrown <neil@brown.name>
-To:     Chuck Lever <chuck.lever@oracle.com>, mgorman@techsingularity.net
-Date:   Fri, 26 Feb 2021 18:19:56 +1100
-Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org, kuba@kernel.org
-Subject: Re: [PATCH v2 4/4] SUNRPC: Cache pages that were replaced during a
- read splice
-In-Reply-To: <161400740732.195066.3792261943053910900.stgit@klimt.1015granger.net>
-References: <161400722731.195066.9584156841718557193.stgit@klimt.1015granger.net>
- <161400740732.195066.3792261943053910900.stgit@klimt.1015granger.net>
-Message-ID: <87k0qvi9cz.fsf@notabene.neil.brown.name>
+        id S230178AbhBZKPj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Feb 2021 05:15:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231272AbhBZKN7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Feb 2021 05:13:59 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A68C06174A;
+        Fri, 26 Feb 2021 02:13:19 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id o10so749575wmc.1;
+        Fri, 26 Feb 2021 02:13:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UcwXbjPspvdQ4b6hP2yUf/RnFbzT9dnV8toQVcT9t0Q=;
+        b=W/Z3NYQvkwE7RJz0m8fThZtcPXZa52gGx5QJa1TIfz7B1mvKdmTy7955/+wL9msJN/
+         U1qAMheJC4I/zW3KnQ7gaLaQhEw3Kcm/VA0SO1OjuyX6jsUE4g03vSfkty0u6jvT+w0o
+         0YxboNCAWX2b/ws6rvL0bkQSA6RQ0cKU7wx81r8vJMRZGav0LhWse6BUS+jmju/k62tx
+         Ssvmn6mh+FPePI1qiiQ6EnJTLXa/Pw4oDiD/ZuwepvNAVjTgwwAqSG3rf9Y+lOe6+RjH
+         ewGEosyyc751yQfq+/5p018C0U2kOUpZUerF3ds6fXNGnbSnh5AM8rSaAOPHkFxivLrp
+         oDIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UcwXbjPspvdQ4b6hP2yUf/RnFbzT9dnV8toQVcT9t0Q=;
+        b=Uxr6m2VZv/WpsfeIcL6CPhsYmqJL//ZFd21rsbVaYrTsSmfJC8weFPWwmoavssBLcZ
+         9TYIkOqPvea8IXbb5qCWS6OtV+kINxbjopUzgxAg9bmvVQdGl53H7GNqC1t8McH9CRCM
+         0U0ukm5R6I4k1+6vHBwQ2gjNDgtKFwCeHf9k7DJD5B3HZWtuDq2dh4NTYAK0qx87GbuB
+         X1CCayrMlxKh1YlPQkduo/rDyBPuW8PpkuY25YP+cEuq12vwOdtLAUDE8k7gl1GHOvYp
+         cnLsUx5p3rQDmgTuI4NuDQl/AgJZMG+OKP4a/QkaMv19ieMwpr/oA3fYyk0PR8rOg4EE
+         FBPQ==
+X-Gm-Message-State: AOAM533Pol4bnyePSiZl5x3F1QUp+K4T9P928fihhJmMHm9NnWC0bTZJ
+        rxMSQTNbyWbW439ubNsczJ2hwhz5vCgEJw==
+X-Google-Smtp-Source: ABdhPJz+kl3sKdVAUjZUW1w6qXbEODQ2vpK+v7Ynjy6o1JFRa9VgJCMlLmgI9oC0gBY/DWPSryH7NA==
+X-Received: by 2002:a1c:721a:: with SMTP id n26mr2088010wmc.181.1614334397997;
+        Fri, 26 Feb 2021 02:13:17 -0800 (PST)
+Received: from [192.168.1.143] ([170.253.51.130])
+        by smtp.gmail.com with ESMTPSA id v9sm12426835wrt.76.2021.02.26.02.13.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Feb 2021 02:13:17 -0800 (PST)
+Subject: Re: [PATCH] copy_file_range.2: Kernel v5.12 updates
+To:     Luis Henriques <lhenriques@suse.de>,
+        Amir Goldstein <amir73il@gmail.com>
+Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Steve French <sfrench@samba.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Ian Lance Taylor <iant@google.com>,
+        Luis Lozano <llozano@chromium.org>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Olga Kornievskaia <aglo@umich.edu>,
+        Christoph Hellwig <hch@infradead.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+References: <20210222102456.6692-1-lhenriques@suse.de>
+ <20210224142307.7284-1-lhenriques@suse.de>
+ <CAOQ4uxi3-+tOgHV_GUnWtJoQXbV5ZS9qDZsLsd9sJxX5Aftyew@mail.gmail.com>
+ <YDd6EMpvZhHq6ncM@suse.de>
+From:   "Alejandro Colomar (man-pages)" <alx.manpages@gmail.com>
+Message-ID: <fd5d0d24-35e3-6097-31a9-029475308f15@gmail.com>
+Date:   Fri, 26 Feb 2021 11:13:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <YDd6EMpvZhHq6ncM@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hello Luis,
 
-On Mon, Feb 22 2021, Chuck Lever wrote:
+On 2/25/21 11:21 AM, Luis Henriques wrote:
+> On Wed, Feb 24, 2021 at 06:10:45PM +0200, Amir Goldstein wrote:
+>> If it were me, I would provide all the details of the situation to
+>> Michael and ask him
+>> to write the best description for this section.
+> 
+> Thanks Amir.
+> 
+> Yeah, it's tricky.  Support was added and then dropped.   Since stable
+> kernels will be picking this patch,  maybe the best thing to do is to no
+> mention the generic cross-filesystem support at all...?  Or simply say
+> that 5.3 temporarily supported it but that support was later dropped.
+> 
+> Michael (or Alejandro), would you be OK handling this yourself as Amir
+> suggested?
 
-> To avoid extra trips to the page allocator, don't free unused pages
-> in nfsd_splice_actor(), but instead place them in a local cache.
-> That cache is then used first when refilling rq_pages.
->
-> On workloads that perform large NFS READs on splice-capable file
-> systems, this saves a considerable amount of work.
->
-> Suggested-by: NeilBrown <neilb@suse.de>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/vfs.c                   |    4 ++--
->  include/linux/sunrpc/svc.h      |    1 +
->  include/linux/sunrpc/svc_xprt.h |   28 ++++++++++++++++++++++++++++
->  net/sunrpc/svc.c                |    7 +++++++
->  net/sunrpc/svc_xprt.c           |   12 ++++++++++++
->  5 files changed, 50 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index d316e11923c5..25cf41eaf3c4 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -852,14 +852,14 @@ nfsd_splice_actor(struct pipe_inode_info *pipe, str=
-uct pipe_buffer *buf,
->=20=20
->  	if (rqstp->rq_res.page_len =3D=3D 0) {
->  		get_page(page);
-> -		put_page(*rqstp->rq_next_page);
-> +		svc_rqst_put_unused_page(rqstp, *rqstp->rq_next_page);
->  		*(rqstp->rq_next_page++) =3D page;
->  		rqstp->rq_res.page_base =3D buf->offset;
->  		rqstp->rq_res.page_len =3D size;
->  	} else if (page !=3D pp[-1]) {
->  		get_page(page);
->  		if (*rqstp->rq_next_page)
-> -			put_page(*rqstp->rq_next_page);
-> +			svc_rqst_put_unused_page(rqstp, *rqstp->rq_next_page);
->  		*(rqstp->rq_next_page++) =3D page;
->  		rqstp->rq_res.page_len +=3D size;
->  	} else
-> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> index 31ee3b6047c3..340f4f3989c0 100644
-> --- a/include/linux/sunrpc/svc.h
-> +++ b/include/linux/sunrpc/svc.h
-> @@ -250,6 +250,7 @@ struct svc_rqst {
->  	struct xdr_stream	rq_arg_stream;
->  	struct page		*rq_scratch_page;
->  	struct xdr_buf		rq_res;
-> +	struct list_head	rq_unused_pages;
->  	struct page		*rq_pages[RPCSVC_MAXPAGES + 1];
->  	struct page *		*rq_respages;	/* points into rq_pages */
->  	struct page *		*rq_next_page; /* next reply page to use */
-> diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_x=
-prt.h
-> index 571f605bc91e..49ef86499876 100644
-> --- a/include/linux/sunrpc/svc_xprt.h
-> +++ b/include/linux/sunrpc/svc_xprt.h
-> @@ -150,6 +150,34 @@ static inline void svc_xprt_get(struct svc_xprt *xpr=
-t)
->  {
->  	kref_get(&xprt->xpt_ref);
->  }
-> +
-> +/**
-> + * svc_rqst_get_unused_page - Tap a page from the local cache
-> + * @rqstp: svc_rqst with cached unused pages
-> + *
-> + * To save an allocator round trip, pages can be added to a
-> + * local cache and re-used later by svc_alloc_arg().
-> + *
-> + * Returns an unused page, or NULL if the cache is empty.
-> + */
-> +static inline struct page *svc_rqst_get_unused_page(struct svc_rqst *rqs=
-tp)
-> +{
-> +	return list_first_entry_or_null(&rqstp->rq_unused_pages,
-> +					struct page, lru);
-> +}
-> +
-> +/**
-> + * svc_rqst_put_unused_page - Stash a page in the local cache
-> + * @rqstp: svc_rqst with cached unused pages
-> + * @page: page to cache
-> + *
-> + */
-> +static inline void svc_rqst_put_unused_page(struct svc_rqst *rqstp,
-> +					    struct page *page)
-> +{
-> +	list_add(&page->lru, &rqstp->rq_unused_pages);
-> +}
-> +
->  static inline void svc_xprt_set_local(struct svc_xprt *xprt,
->  				      const struct sockaddr *sa,
->  				      const size_t salen)
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index 61fb8a18552c..3920fa8f1146 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -570,6 +570,8 @@ svc_init_buffer(struct svc_rqst *rqstp, unsigned int =
-size, int node)
->  	if (svc_is_backchannel(rqstp))
->  		return 1;
->=20=20
-> +	INIT_LIST_HEAD(&rqstp->rq_unused_pages);
-> +
->  	pages =3D size / PAGE_SIZE + 1; /* extra page as we hold both request a=
-nd reply.
->  				       * We assume one is at most one page
->  				       */
-> @@ -593,8 +595,13 @@ svc_init_buffer(struct svc_rqst *rqstp, unsigned int=
- size, int node)
->  static void
->  svc_release_buffer(struct svc_rqst *rqstp)
->  {
-> +	struct page *page;
->  	unsigned int i;
->=20=20
-> +	while ((page =3D svc_rqst_get_unused_page(rqstp))) {
-> +		list_del(&page->lru);
-> +		put_page(page);
-> +	}
->  	for (i =3D 0; i < ARRAY_SIZE(rqstp->rq_pages); i++)
->  		if (rqstp->rq_pages[i])
->  			put_page(rqstp->rq_pages[i]);
-> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> index 15aacfa5ca21..84210e546a66 100644
-> --- a/net/sunrpc/svc_xprt.c
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -678,6 +678,18 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
->  	for (needed =3D 0, i =3D 0; i < pages ; i++)
->  		if (!rqstp->rq_pages[i])
->  			needed++;
-> +	if (needed) {
-> +		for (i =3D 0; i < pages; i++) {
-> +			if (!rqstp->rq_pages[i]) {
-> +				page =3D svc_rqst_get_unused_page(rqstp);
-> +				if (!page)
-> +					break;
-> +				list_del(&page->lru);
-> +				rqstp->rq_pages[i] =3D page;
-> +				needed--;
-> +			}
-> +		}
-> +	}
->  	if (needed) {
->  		LIST_HEAD(list);
->=20=20
-This looks good!  Probably simpler than the way I imagined it :-)
-I would do that last bit of code differently though...
-
-  for (needed =3D 0, i =3D 0; i < pages ; i++)
-          if (!rqstp->rq_pages[i]) {
-                  page =3D svc_rqst_get_unused_pages(rqstp);
-                  if (page) {
-                          list_del(&page->lru);
-                          rqstp->rq_pages[i] =3D page;
-                  } else
-                          needed++;
-          }
-
-but it is really a minor style difference - I don't object to your
-version.
-
-Reviewed-by: NeilBrown <neilb@suse.de>
+Could you please provide a more detailed history of what is to be 
+documented?
 
 Thanks,
-NeilBrown
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Alex
 
------BEGIN PGP SIGNATURE-----
-
-iQJEBAEBCAAuFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAmA4oRwQHG5laWxAYnJv
-d24ubmFtZQAKCRA57J7dVmKBuYkCEACCwjdOIz4QAwZUH166WdVF8+mPmPYFilq1
-OzTzVDDFN4oDZoUBDGWFd4xZAhwVNCJ/dJhLoAJo0znCOHeckM3mTWFF9fOdEhXM
-67/+IXe6keX/8d9d/Vv3KN6vGN+IMjT2MfrW5Lvx7CnV3fYMQsQPAACeUkVtrDR5
-s+DffgIlltKAKlFapA9x73h8nMzxvU6ngogsfKGWGd5dhhWVq6XlbzCbeVBAl4sL
-SG+PAcU+/1Fzubppob5xM8+p9EgpCiLdSbwSZcjZfDFgPFTWDU/xn3/40ikixQl7
-mLWW/vcOjgOCniVibXSrlc0fAB4po/8/pZWvUCzoUOp1A2bJq3TASHGXSEIFzKWL
-lPuVurZvPKbhj96HAIr4Gio24HndDAqbI8zqH6r4idu6YGziSVMY8yYH4a/nFHFz
-Wuwf14NUSXR10v8Q9hi3CX31WLlpObcmTEd7E0ryB5ADPSRCJp7GSKal5XnMtOe4
-+YVOiFbXVxZIduJsFmkcJE9YrcnZ+32spnQ2lXw7k5Nk7YAiIiGj+ayVfHsPieg0
-vid2WcV4WVodzTkodql+F+dGWLJNOLBq2ISQLntB5FJCw0zCNTRfPOBME41cvT1a
-qYnyJ4TtqXyWDlpkP082hZXuzjAJwmoRcyd8ZnB6bG6T2IaYxzJHO9/J9UDaZ3by
-nVfm0AULsQ==
-=GFpw
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+Alejandro Colomar
+Linux man-pages comaintainer; https://www.kernel.org/doc/man-pages/
+http://www.alejandro-colomar.es/
