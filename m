@@ -2,56 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BB8832611E
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Feb 2021 11:16:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D775326168
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Feb 2021 11:37:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230178AbhBZKPj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Feb 2021 05:15:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53140 "EHLO
+        id S230445AbhBZKhL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Feb 2021 05:37:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231272AbhBZKN7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Feb 2021 05:13:59 -0500
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A68C06174A;
-        Fri, 26 Feb 2021 02:13:19 -0800 (PST)
-Received: by mail-wm1-x335.google.com with SMTP id o10so749575wmc.1;
-        Fri, 26 Feb 2021 02:13:19 -0800 (PST)
+        with ESMTP id S231201AbhBZKfS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Feb 2021 05:35:18 -0500
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6901AC061574;
+        Fri, 26 Feb 2021 02:34:38 -0800 (PST)
+Received: by mail-il1-x131.google.com with SMTP id e7so7591221ile.7;
+        Fri, 26 Feb 2021 02:34:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UcwXbjPspvdQ4b6hP2yUf/RnFbzT9dnV8toQVcT9t0Q=;
-        b=W/Z3NYQvkwE7RJz0m8fThZtcPXZa52gGx5QJa1TIfz7B1mvKdmTy7955/+wL9msJN/
-         U1qAMheJC4I/zW3KnQ7gaLaQhEw3Kcm/VA0SO1OjuyX6jsUE4g03vSfkty0u6jvT+w0o
-         0YxboNCAWX2b/ws6rvL0bkQSA6RQ0cKU7wx81r8vJMRZGav0LhWse6BUS+jmju/k62tx
-         Ssvmn6mh+FPePI1qiiQ6EnJTLXa/Pw4oDiD/ZuwepvNAVjTgwwAqSG3rf9Y+lOe6+RjH
-         ewGEosyyc751yQfq+/5p018C0U2kOUpZUerF3ds6fXNGnbSnh5AM8rSaAOPHkFxivLrp
-         oDIg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dKPWJ2vXHOJ7BygK8wqPKLpAtkdMRDyOo5zcEtzB+lQ=;
+        b=aDCpldvU7pTZUlcU0bh6o6izJC3pMqDFf8ZoDaybY8UHQjifgj4QKmw6tHh6dmWjs3
+         g/6JzYFlohIuHURl2qjlVa45z5RI1iWkiPBqRsOYYWUyvzR3k/kUjIuCBYbGP9x6+pSy
+         a8EUhKcyvGGm8hQBgvPLAM+KJcKKKQcxqT2E+w55xSfNV6k8QxIPLxE/Mi5YQ7V8aWmI
+         uR5PCEOJqUV3yfiJwcLovgZnaSB0/E+uV8qd11D7DH1KFuREX0JZ2R4e/bmS+fAbG5fo
+         q6kOEL485/WcHBRPc3Oiv0OQ0T1YXAgROhbbjEsROUg2CiABoxGyLa4mHWXc6atJxf8y
+         Oidg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UcwXbjPspvdQ4b6hP2yUf/RnFbzT9dnV8toQVcT9t0Q=;
-        b=Uxr6m2VZv/WpsfeIcL6CPhsYmqJL//ZFd21rsbVaYrTsSmfJC8weFPWwmoavssBLcZ
-         9TYIkOqPvea8IXbb5qCWS6OtV+kINxbjopUzgxAg9bmvVQdGl53H7GNqC1t8McH9CRCM
-         0U0ukm5R6I4k1+6vHBwQ2gjNDgtKFwCeHf9k7DJD5B3HZWtuDq2dh4NTYAK0qx87GbuB
-         X1CCayrMlxKh1YlPQkduo/rDyBPuW8PpkuY25YP+cEuq12vwOdtLAUDE8k7gl1GHOvYp
-         cnLsUx5p3rQDmgTuI4NuDQl/AgJZMG+OKP4a/QkaMv19ieMwpr/oA3fYyk0PR8rOg4EE
-         FBPQ==
-X-Gm-Message-State: AOAM533Pol4bnyePSiZl5x3F1QUp+K4T9P928fihhJmMHm9NnWC0bTZJ
-        rxMSQTNbyWbW439ubNsczJ2hwhz5vCgEJw==
-X-Google-Smtp-Source: ABdhPJz+kl3sKdVAUjZUW1w6qXbEODQ2vpK+v7Ynjy6o1JFRa9VgJCMlLmgI9oC0gBY/DWPSryH7NA==
-X-Received: by 2002:a1c:721a:: with SMTP id n26mr2088010wmc.181.1614334397997;
-        Fri, 26 Feb 2021 02:13:17 -0800 (PST)
-Received: from [192.168.1.143] ([170.253.51.130])
-        by smtp.gmail.com with ESMTPSA id v9sm12426835wrt.76.2021.02.26.02.13.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Feb 2021 02:13:17 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dKPWJ2vXHOJ7BygK8wqPKLpAtkdMRDyOo5zcEtzB+lQ=;
+        b=ZFLJ3fXAeJovWGhtUQZWjcDMIf41JuKHp8d+l/XHcQlVDCgIhNJ4E/UFy1a6siBWc8
+         rITx5AkJxeE40cIdrB7jMAZJayK3oHLBeXVR2Rc0UYpIEiNpFG8lBFJHRkBqAaZFELdG
+         lpFLP9AUn67oj39BKz73dM0zDzJp7OxJsFxoIg3pPjrnbr1cEApAms0QZFoeFKW2UMrd
+         oTeMtyGTxFQICxWM7wp7R3RBmRSTez277HZR/m30YFVtqmYLDzqvFf0nZ9owZnzp5WcK
+         NyyZS3/oLwDbEH64PKSbwres1ITbQ/l2r8e82cUYyc4/rlzqpcDQAQ1/t+1XXRgfblTH
+         HMdw==
+X-Gm-Message-State: AOAM530mkxc/rGqFSM5iDYbToO7stEEhnJ03E4vZgZU68D+/aCo3Utzv
+        stM+U9DUTvpM7HYR2y142Yf+ghGQ40KXXkWl0AI=
+X-Google-Smtp-Source: ABdhPJyVvQafC62ZZanNVOmiYZS+T7dRdoUjzY7ufrxA7FhWOl4Xvpul8DKSph5sHFpVYsYNJ4N2URBdaIKR7OVs1xg=
+X-Received: by 2002:a92:da90:: with SMTP id u16mr1918861iln.275.1614335677822;
+ Fri, 26 Feb 2021 02:34:37 -0800 (PST)
+MIME-Version: 1.0
+References: <20210222102456.6692-1-lhenriques@suse.de> <20210224142307.7284-1-lhenriques@suse.de>
+ <CAOQ4uxi3-+tOgHV_GUnWtJoQXbV5ZS9qDZsLsd9sJxX5Aftyew@mail.gmail.com>
+ <YDd6EMpvZhHq6ncM@suse.de> <fd5d0d24-35e3-6097-31a9-029475308f15@gmail.com>
+In-Reply-To: <fd5d0d24-35e3-6097-31a9-029475308f15@gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Fri, 26 Feb 2021 12:34:26 +0200
+Message-ID: <CAOQ4uxiVxEwvgFhdHGWLpdCk==NcGXgu52r_mXA+ebbLp_XPzQ@mail.gmail.com>
 Subject: Re: [PATCH] copy_file_range.2: Kernel v5.12 updates
-To:     Luis Henriques <lhenriques@suse.de>,
-        Amir Goldstein <amir73il@gmail.com>
-Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
+To:     "Alejandro Colomar (man-pages)" <alx.manpages@gmail.com>
+Cc:     Luis Henriques <lhenriques@suse.de>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
         Jeff Layton <jlayton@kernel.org>,
         Steve French <sfrench@samba.org>,
         Miklos Szeredi <miklos@szeredi.hu>,
@@ -74,50 +77,39 @@ Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
         linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         linux-man <linux-man@vger.kernel.org>
-References: <20210222102456.6692-1-lhenriques@suse.de>
- <20210224142307.7284-1-lhenriques@suse.de>
- <CAOQ4uxi3-+tOgHV_GUnWtJoQXbV5ZS9qDZsLsd9sJxX5Aftyew@mail.gmail.com>
- <YDd6EMpvZhHq6ncM@suse.de>
-From:   "Alejandro Colomar (man-pages)" <alx.manpages@gmail.com>
-Message-ID: <fd5d0d24-35e3-6097-31a9-029475308f15@gmail.com>
-Date:   Fri, 26 Feb 2021 11:13:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
-MIME-Version: 1.0
-In-Reply-To: <YDd6EMpvZhHq6ncM@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello Luis,
+On Fri, Feb 26, 2021 at 12:13 PM Alejandro Colomar (man-pages)
+<alx.manpages@gmail.com> wrote:
+>
+> Hello Luis,
+>
+> On 2/25/21 11:21 AM, Luis Henriques wrote:
+> > On Wed, Feb 24, 2021 at 06:10:45PM +0200, Amir Goldstein wrote:
+> >> If it were me, I would provide all the details of the situation to
+> >> Michael and ask him
+> >> to write the best description for this section.
+> >
+> > Thanks Amir.
+> >
+> > Yeah, it's tricky.  Support was added and then dropped.   Since stable
+> > kernels will be picking this patch,  maybe the best thing to do is to no
+> > mention the generic cross-filesystem support at all...?  Or simply say
+> > that 5.3 temporarily supported it but that support was later dropped.
+> >
+> > Michael (or Alejandro), would you be OK handling this yourself as Amir
+> > suggested?
+>
+> Could you please provide a more detailed history of what is to be
+> documented?
+>
 
-On 2/25/21 11:21 AM, Luis Henriques wrote:
-> On Wed, Feb 24, 2021 at 06:10:45PM +0200, Amir Goldstein wrote:
->> If it were me, I would provide all the details of the situation to
->> Michael and ask him
->> to write the best description for this section.
-> 
-> Thanks Amir.
-> 
-> Yeah, it's tricky.  Support was added and then dropped.   Since stable
-> kernels will be picking this patch,  maybe the best thing to do is to no
-> mention the generic cross-filesystem support at all...?  Or simply say
-> that 5.3 temporarily supported it but that support was later dropped.
-> 
-> Michael (or Alejandro), would you be OK handling this yourself as Amir
-> suggested?
+Is this detailed enough? ;-)
 
-Could you please provide a more detailed history of what is to be 
-documented?
+https://lwn.net/Articles/846403/
 
 Thanks,
-
-Alex
-
--- 
-Alejandro Colomar
-Linux man-pages comaintainer; https://www.kernel.org/doc/man-pages/
-http://www.alejandro-colomar.es/
+Amir.
