@@ -2,205 +2,220 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27D44326474
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Feb 2021 16:02:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E3D0326479
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Feb 2021 16:04:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229571AbhBZPCI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Feb 2021 10:02:08 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:55460 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229535AbhBZPCH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Feb 2021 10:02:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614351641;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DCvRIc6aFyDWWBSHSRb4uuO8gchdZno7LFN7Leg6qNQ=;
-        b=Hv78KcfoBgClGINgzOxYutr123AeP0O/f+T+s0kpcBdUYi06uz5saz+pQuF1YbGhpRbX4D
-        pLuNsOljOmueGdjLoQPxJdEwxG5vwZkO92KDsVN7G94SnGgCXGaK6+UkhSAeVRbRRkg5um
-        NH4eOyY6QtwOC0ppC5yVr7iTw5TXh9U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-418-pJ3hftgcMNej6d5E3QjHUA-1; Fri, 26 Feb 2021 10:00:39 -0500
-X-MC-Unique: pJ3hftgcMNej6d5E3QjHUA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A0DFC801975;
-        Fri, 26 Feb 2021 15:00:37 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-114-99.rdu2.redhat.com [10.10.114.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2817A1001E73;
-        Fri, 26 Feb 2021 15:00:37 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id 34808120400; Fri, 26 Feb 2021 10:00:36 -0500 (EST)
-Date:   Fri, 26 Feb 2021 10:00:36 -0500
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Joe Korty <joe.korty@concurrent-rt.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] Repair misuse of sv_lock in 5.10.16-rt30.
-Message-ID: <YDkNFKmzb7rbumYf@pick.fieldses.org>
-References: <20210226143820.GA49043@zipoli.concurrent-rt.com>
+        id S230081AbhBZPEe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Feb 2021 10:04:34 -0500
+Received: from btbn.de ([5.9.118.179]:41120 "EHLO btbn.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230042AbhBZPEc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 26 Feb 2021 10:04:32 -0500
+Received: from [IPv6:2001:16b8:64c0:6700:50d3:5f50:f141:161] (200116b864c0670050d35f50f1410161.dip.versatel-1u1.de [IPv6:2001:16b8:64c0:6700:50d3:5f50:f141:161])
+        by btbn.de (Postfix) with ESMTPSA id B1B3625EA8D;
+        Fri, 26 Feb 2021 16:03:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rothenpieler.org;
+        s=mail; t=1614351828;
+        bh=c30HSZJschWPSlpWwlIXJRzxEJlkwoEp2JzTZidoWRk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=MlQh8/ocq183ogh1pxnesAlZL6A9mZxITtDfH5C06bOOPIbktITCOikozLVTAq+B4
+         er8yHRhhD1Cy5wl8RKSNxvsBevwnAuTgHnNincCg38+6mShRrnJTw8Hf6lTbtPgaAj
+         yB0xbCDHbLIwjhPBINCWvrcxkHpBc679o0l90pSu48Qxo9DHLF3/hAH4WNA393Cx7+
+         iI/NRDaaaev/iPZpJbxr7lfXXmXUUTlQVbK3HpH+CkI9HcIIT0POFW3tDzIrBGkpIi
+         z/cxwqsiKk2qhJvPLAihDxZIRYHlaoed0M7QVcoJv9WOz6Z9Wx7v/R74q35+x4qJYH
+         3TMc7B4OMVTcA==
+Subject: Re: NFS Caching broken in 4.19.37
+To:     Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Bruce Fields <bfields@fieldses.org>
+Cc:     Salvatore Bonaccorso <carnil@debian.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "940821@bugs.debian.org" <940821@bugs.debian.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+References: <5022bdc4-9f3e-9756-cbca-ada37f88ecc7@cambridgegreys.com>
+ <YDFrN0rZAJBbouly@eldamar.lan>
+ <af5cebbd-74c9-9345-9fe8-253fb96033f6@cambridgegreys.com>
+ <BEBA9809-373A-4172-B4AD-E19D82E56DB1@oracle.com>
+ <YDIkH6yVgLoALT6x@eldamar.lan>
+ <9305dc03-5557-5e18-e5c9-aaf886a03fff@cambridgegreys.com>
+ <20210221143712.GA15975@fieldses.org>
+ <f0edfaf5-457d-2334-ee4f-a6bf9d13917b@cambridgegreys.com>
+From:   Timo Rothenpieler <timo@rothenpieler.org>
+Message-ID: <1b701f2b-d185-dd30-0aca-ba6d280221d5@rothenpieler.org>
+Date:   Fri, 26 Feb 2021 16:03:46 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210226143820.GA49043@zipoli.concurrent-rt.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <f0edfaf5-457d-2334-ee4f-a6bf9d13917b@cambridgegreys.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms050206020807030402020003"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Adding Chuck, linux-nfs.
+This is a cryptographically signed message in MIME format.
 
-Makes sense to me.--b.
+--------------ms050206020807030402020003
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 26, 2021 at 09:38:20AM -0500, Joe Korty wrote:
-> Repair misuse of sv_lock in 5.10.16-rt30.
-> 
-> [ This problem is in mainline, but only rt has the chops to be
-> able to detect it. ]
-> 
-> Lockdep reports a circular lock dependency between serv->sv_lock and
-> softirq_ctl.lock on system shutdown, when using a kernel built with
-> CONFIG_PREEMPT_RT=y, and a nfs mount exists.
-> 
-> This is due to the definition of spin_lock_bh on rt:
-> 
-> 	local_bh_disable();
-> 	rt_spin_lock(lock);
-> 
-> which forces a softirq_ctl.lock -> serv->sv_lock dependency.  This is
-> not a problem as long as _every_ lock of serv->sv_lock is a:
-> 
-> 	spin_lock_bh(&serv->sv_lock);
-> 
-> but there is one of the form:
-> 
-> 	spin_lock(&serv->sv_lock);
-> 
-> This is what is causing the circular dependency splat.  The spin_lock()
-> grabs the lock without first grabbing softirq_ctl.lock via local_bh_disable.
-> If later on in the critical region,  someone does a local_bh_disable, we
-> get a serv->sv_lock -> softirq_ctrl.lock dependency established.  Deadlock.
-> 
-> Fix is to make serv->sv_lock be locked with spin_lock_bh everywhere, no
-> exceptions.
-> 
-> Signed-off-by: Joe Korty <joe.korty@concurrent-rt.com>
-> 
-> 
-> 
-> 
-> [  OK  ] Stopped target NFS client services.
->          Stopping Logout off all iSCSI sessions on shutdown...
->          Stopping NFS server and services...
-> [  109.442380] 
-> [  109.442385] ======================================================
-> [  109.442386] WARNING: possible circular locking dependency detected
-> [  109.442387] 5.10.16-rt30 #1 Not tainted
-> [  109.442389] ------------------------------------------------------
-> [  109.442390] nfsd/1032 is trying to acquire lock:
-> [  109.442392] ffff994237617f60 ((softirq_ctrl.lock).lock){+.+.}-{2:2}, at: __local_bh_disable_ip+0xd9/0x270
-> [  109.442405] 
-> [  109.442405] but task is already holding lock:
-> [  109.442406] ffff994245cb00b0 (&serv->sv_lock){+.+.}-{0:0}, at: svc_close_list+0x1f/0x90
-> [  109.442415] 
-> [  109.442415] which lock already depends on the new lock.
-> [  109.442415] 
-> [  109.442416] 
-> [  109.442416] the existing dependency chain (in reverse order) is:
-> [  109.442417] 
-> [  109.442417] -> #1 (&serv->sv_lock){+.+.}-{0:0}:
-> [  109.442421]        rt_spin_lock+0x2b/0xc0
-> [  109.442428]        svc_add_new_perm_xprt+0x42/0xa0
-> [  109.442430]        svc_addsock+0x135/0x220
-> [  109.442434]        write_ports+0x4b3/0x620
-> [  109.442438]        nfsctl_transaction_write+0x45/0x80
-> [  109.442440]        vfs_write+0xff/0x420
-> [  109.442444]        ksys_write+0x4f/0xc0
-> [  109.442446]        do_syscall_64+0x33/0x40
-> [  109.442450]        entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [  109.442454] 
-> [  109.442454] -> #0 ((softirq_ctrl.lock).lock){+.+.}-{2:2}:
-> [  109.442457]        __lock_acquire+0x1264/0x20b0
-> [  109.442463]        lock_acquire+0xc2/0x400
-> [  109.442466]        rt_spin_lock+0x2b/0xc0
-> [  109.442469]        __local_bh_disable_ip+0xd9/0x270
-> [  109.442471]        svc_xprt_do_enqueue+0xc0/0x4d0
-> [  109.442474]        svc_close_list+0x60/0x90
-> [  109.442476]        svc_close_net+0x49/0x1a0
-> [  109.442478]        svc_shutdown_net+0x12/0x40
-> [  109.442480]        nfsd_destroy+0xc5/0x180
-> [  109.442482]        nfsd+0x1bc/0x270
-> [  109.442483]        kthread+0x194/0x1b0
-> [  109.442487]        ret_from_fork+0x22/0x30
-> [  109.442492] 
-> [  109.442492] other info that might help us debug this:
-> [  109.442492] 
-> [  109.442493]  Possible unsafe locking scenario:
-> [  109.442493] 
-> [  109.442493]        CPU0                    CPU1
-> [  109.442494]        ----                    ----
-> [  109.442495]   lock(&serv->sv_lock);
-> [  109.442496]                                lock((softirq_ctrl.lock).lock);
-> [  109.442498]                                lock(&serv->sv_lock);
-> [  109.442499]   lock((softirq_ctrl.lock).lock);
-> [  109.442501] 
-> [  109.442501]  *** DEADLOCK ***
-> [  109.442501] 
-> [  109.442501] 3 locks held by nfsd/1032:
-> [  109.442503]  #0: ffffffff93b49258 (nfsd_mutex){+.+.}-{3:3}, at: nfsd+0x19a/0x270
-> [  109.442508]  #1: ffff994245cb00b0 (&serv->sv_lock){+.+.}-{0:0}, at: svc_close_list+0x1f/0x90
-> [  109.442512]  #2: ffffffff93a81b20 (rcu_read_lock){....}-{1:2}, at: rt_spin_lock+0x5/0xc0
-> [  109.442518] 
-> [  109.442518] stack backtrace:
-> [  109.442519] CPU: 0 PID: 1032 Comm: nfsd Not tainted 5.10.16-rt30 #1
-> [  109.442522] Hardware name: Supermicro X9DRL-3F/iF/X9DRL-3F/iF, BIOS 3.2 09/22/2015
-> [  109.442524] Call Trace:
-> [  109.442527]  dump_stack+0x77/0x97
-> [  109.442533]  check_noncircular+0xdc/0xf0
-> [  109.442546]  __lock_acquire+0x1264/0x20b0
-> [  109.442553]  lock_acquire+0xc2/0x400
-> [  109.442564]  rt_spin_lock+0x2b/0xc0
-> [  109.442570]  __local_bh_disable_ip+0xd9/0x270
-> [  109.442573]  svc_xprt_do_enqueue+0xc0/0x4d0
-> [  109.442577]  svc_close_list+0x60/0x90
-> [  109.442581]  svc_close_net+0x49/0x1a0
-> [  109.442585]  svc_shutdown_net+0x12/0x40
-> [  109.442588]  nfsd_destroy+0xc5/0x180
-> [  109.442590]  nfsd+0x1bc/0x270
-> [  109.442595]  kthread+0x194/0x1b0
-> [  109.442600]  ret_from_fork+0x22/0x30
-> [  109.518225] nfsd: last server has exited, flushing export cache
-> [  OK  ] Stopped NFSv4 ID-name mapping service.
-> [  OK  ] Stopped GSSAPI Proxy Daemon.
-> [  OK  ] Stopped NFS Mount Daemon.
-> [  OK  ] Stopped NFS status monitor for NFSv2/3 locking..
-> Index: b/net/sunrpc/svc_xprt.c
-> ===================================================================
-> --- a/net/sunrpc/svc_xprt.c
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -1062,7 +1062,7 @@ static int svc_close_list(struct svc_ser
->  	struct svc_xprt *xprt;
->  	int ret = 0;
->  
-> -	spin_lock(&serv->sv_lock);
-> +	spin_lock_bh(&serv->sv_lock);
->  	list_for_each_entry(xprt, xprt_list, xpt_list) {
->  		if (xprt->xpt_net != net)
->  			continue;
-> @@ -1070,7 +1070,7 @@ static int svc_close_list(struct svc_ser
->  		set_bit(XPT_CLOSE, &xprt->xpt_flags);
->  		svc_xprt_enqueue(xprt);
->  	}
-> -	spin_unlock(&serv->sv_lock);
-> +	spin_unlock_bh(&serv->sv_lock);
->  	return ret;
->  }
->  
-> 
+I think I can reproduce this, or something that at least looks very=20
+similar to this, on 5.10. Namely on 5.10.17 (On both Client and Server).
 
+We are running slurm, and since a while now (coincides with updating=20
+from 5.4 to 5.10, but a whole bunch of other stuff was updated at the=20
+same time, so it took me a while to correlate this) the logs it writes=20
+have been truncated, but only while they're being observed on the=20
+client, using tail -f or something like that.
+
+Looks like this then:
+
+On Server:
+> store01 /srv/export/home/users/timo/TestRun # ls -l slurm-41101.out
+> -rw-r--r-- 1 timo timo 1931 Feb 26 15:46 slurm-41101.out
+> store01 /srv/export/home/users/timo/TestRun # wc -l slurm-41101.out
+> 61 slurm-41101.out
+
+On Client:
+> timo@login01 ~/TestRun $ ls -l slurm-41101.out
+> -rw-r--r-- 1 timo timo 1931 Feb 26 15:46 slurm-41101.out
+> timo@login01 ~/TestRun $ wc -l slurm-41101.out
+> 24 slurm-41101.out
+
+See https://gist.github.com/BtbN/b9eb4fc08ccc53bb20087bce0bf9f826 for=20
+the respective file-contents.
+
+If I run the same test job, wait until its done, and then look at its=20
+slurm.out file, it matches between NFS Client and Server.
+If I tail -f the slurm.out on an NFS client, the file stops getting=20
+updated on the client, but keeps getting more logs written to it on the=20
+NFS server.
+
+The slurm.out file is being written to by another NFS client, which is=20
+running on one of the compute nodes of the system. It's being reads from =
+
+a login node.
+
+
+
+Timo
+
+
+On 21.02.2021 16:53, Anton Ivanov wrote:
+> Client side. This seems to be an entirely client side issue.
+>=20
+> A variety of kernels on the clients starting from 4.9 and up to 5.10=20
+> using 4.19 servers. I have observed it on a 4.9 client versus 4.9 serve=
+r=20
+> earlier.
+>=20
+> 4.9 fails, 4.19 fails, 5.2 fails, 5.4 fails, 5.10 works.
+>=20
+> At present the server is at 4.19.67 in all tests.
+>=20
+> Linux jain 4.19.0-6-amd64 #1 SMP Debian 4.19.67-2+deb10u2 (2019-11-11) =
+
+> x86_64 GNU/Linux
+>=20
+> I can set-up a couple of alternative servers during the week, but so fa=
+r=20
+> everything is pointing towards a client fs cache issue, not a server on=
+e.
+>=20
+> Brgds,
+>=20
+
+
+
+--------------ms050206020807030402020003
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+LnAuQS4xLDAqBgNVBAMMI0FjdGFsaXMgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIENBIEczMIIC
+IjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA7eaHlqHBpLbtwkJV9z8PDyJgXxPgpkOI
+hkmReRwbLxpQD9xGAe72ujqGzFFh78QPgAhxKVqtGHzYeq0VJVCzhnCKRBbVX+JwIhL3ULYh
+UAZrViUp952qDB6qTL5sGeJS9F69VPSR5k6pFNw7mHDTTt0voWFg2aVkG3khomzVXoieJGOi
+Q4dH76paCtQbLkt59joAKz2BnwGLQ4wr09nfumJt5AKx2YxHK2XgSPslVZ4z8G00gimsfA7U
+tjT/wiekY6Z0b7ksLrEcvODncHQe9VSrNRA149SE3AlkWaZM/joVei/GYfj9K5jkiReinR4m
+qM353FEceLOeBhSTURpMdQ5wsXLi9DSTGBuNv4aw2Dozb/qBlkhGTvwk92mi0jAecE22Sn3A
+9UfrU2p1w/uRs+TIteQ0xO0B/J2mY2caqocsS9SsriIGlQ8b0LT0o6Ob07KGtPa5/lIvMmx5
+72Dv2v+vDiECByxm1Hdgjp8JtE4mdyYP6GBscJyT71NZw1zXHnFkyCbxReag9qaSR9x4CVVX
+j1BDmNROCqd5NAfIXUXYTFeZ/jukQigkxXGWhEhfLBC4Ha6pwizz9fq1+wwPKcWaF9P/SZOu
+BDrG30MiyCZa66G9mEtF5ZLuh4rGfKqxy4Z5Mxecuzt+MZmrSKfKGeXOeED/iuX5Z02M1o7i
+MS8CAwEAAaOCAfQwggHwMA8GA1UdEwEB/wQFMAMBAf8wHwYDVR0jBBgwFoAUUtiIOsifeGbt
+ifN7OHCUyQICNtAwQQYIKwYBBQUHAQEENTAzMDEGCCsGAQUFBzABhiVodHRwOi8vb2NzcDA1
+LmFjdGFsaXMuaXQvVkEvQVVUSC1ST09UMEUGA1UdIAQ+MDwwOgYEVR0gADAyMDAGCCsGAQUF
+BwIBFiRodHRwczovL3d3dy5hY3RhbGlzLml0L2FyZWEtZG93bmxvYWQwHQYDVR0lBBYwFAYI
+KwYBBQUHAwIGCCsGAQUFBwMEMIHjBgNVHR8EgdswgdgwgZaggZOggZCGgY1sZGFwOi8vbGRh
+cDA1LmFjdGFsaXMuaXQvY24lM2RBY3RhbGlzJTIwQXV0aGVudGljYXRpb24lMjBSb290JTIw
+Q0EsbyUzZEFjdGFsaXMlMjBTLnAuQS4lMmYwMzM1ODUyMDk2NyxjJTNkSVQ/Y2VydGlmaWNh
+dGVSZXZvY2F0aW9uTGlzdDtiaW5hcnkwPaA7oDmGN2h0dHA6Ly9jcmwwNS5hY3RhbGlzLml0
+L1JlcG9zaXRvcnkvQVVUSC1ST09UL2dldExhc3RDUkwwHQYDVR0OBBYEFL6XqaqEv4C/EFN9
+CTL54S4yG893MA4GA1UdDwEB/wQEAwIBBjANBgkqhkiG9w0BAQsFAAOCAgEAJpvnG1kNdLMS
+A+nnVfeEgIXNQsM7YRxXx6bmEt9IIrFlH1qYKeNw4NV8xtop91Rle168wghmYeCTP10FqfuK
+MZsleNkI8/b3PBkZLIKOl9p2Dmz2Gc0I3WvcMbAgd/IuBtx998PJX/bBb5dMZuGV2drNmxfz
+3ar6ytGYLxedfjKCD55Yv8CQcN6e9sW5OUm9TJ3kjt7Wdvd1hcw5s+7bhlND38rWFJBuzump
+5xqm1NSOggOkFSlKnhSz6HUjgwBaid6Ypig9L1/TLrkmtEIpx+wpIj7WTA9JqcMMyLJ0rN6j
+jpetLSGUDk3NCOpQntSy4a8+0O+SepzS/Tec1cGdSN6Ni2/A7ewQNd1Rbmb2SM2qVBlfN0e6
+ZklWo9QYpNZyf0d/d3upsKabE9eNCg1S4eDnp8sJqdlaQQ7hI/UYCAgDtLIm7/J9+/S2zuwE
+WtJMPcvaYIBczdjwF9uW+8NJ/Zu/JKb98971uua7OsJexPFRBzX7/PnJ2/NXcTdwudShJc/p
+d9c3IRU7qw+RxRKchIczv3zEuQJMHkSSM8KM8TbOzi/0v0lU6SSyS9bpGdZZxx19Hd8Qs0cv
++R6nyt7ohttizwefkYzQ6GzwIwM9gSjH5Bf/r9Kc5/JqqpKKUGicxAGy2zKYEGB0Qo761Mcc
+IyclBW9mfuNFDbTBeDEyu80xggPzMIID7wIBATCBljCBgTELMAkGA1UEBhMCSVQxEDAOBgNV
+BAgMB0JlcmdhbW8xGTAXBgNVBAcMEFBvbnRlIFNhbiBQaWV0cm8xFzAVBgNVBAoMDkFjdGFs
+aXMgUy5wLkEuMSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBH
+MwIQCP8se1eXTyBvFrjHrZ83LDANBglghkgBZQMEAgEFAKCCAi0wGAYJKoZIhvcNAQkDMQsG
+CSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjEwMjI2MTUwMzQ2WjAvBgkqhkiG9w0BCQQx
+IgQguq9c27oQJweY3lR8gZbjy5cGNtTTgN/QwEUmuBplubcwbAYJKoZIhvcNAQkPMV8wXTAL
+BglghkgBZQMEASowCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDAN
+BggqhkiG9w0DAgIBQDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBpwYJKwYBBAGCNxAEMYGZ
+MIGWMIGBMQswCQYDVQQGEwJJVDEQMA4GA1UECAwHQmVyZ2FtbzEZMBcGA1UEBwwQUG9udGUg
+U2FuIFBpZXRybzEXMBUGA1UECgwOQWN0YWxpcyBTLnAuQS4xLDAqBgNVBAMMI0FjdGFsaXMg
+Q2xpZW50IEF1dGhlbnRpY2F0aW9uIENBIEczAhAI/yx7V5dPIG8WuMetnzcsMIGpBgsqhkiG
+9w0BCRACCzGBmaCBljCBgTELMAkGA1UEBhMCSVQxEDAOBgNVBAgMB0JlcmdhbW8xGTAXBgNV
+BAcMEFBvbnRlIFNhbiBQaWV0cm8xFzAVBgNVBAoMDkFjdGFsaXMgUy5wLkEuMSwwKgYDVQQD
+DCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBHMwIQCP8se1eXTyBvFrjHrZ83
+LDANBgkqhkiG9w0BAQEFAASCAQAnM5zTplSrYLBf4xb7+nRkuwAaahJssIkWz0F+BWVNdFzU
+PQVyNz5FEd2vtST1LbP6kxK0NaAbDNY5O7UIBDVUGkeRwuP2QHyeOw5MWyujfoqigq9e6/AL
+NVWoL/G7h45Knubgs0sIqjsnx5U7KJHd/OVRUKriTulerFxOquUMjYQNIPoBu4eVnuptLoFq
+XUS0ikEvYIroJ8JJY6yJloAkdSpekfZDMBqGiEj2IqxL3yN98C2A038oarSiy/4xiCIs9947
+dJNVn43xy7wMh73fS/DtCUdynG7yA6DG8z5gq79/BOzLKJDI9wQ/nVBJB7d2gJTokyMFckan
+6Q1XtTJxAAAAAAAA
+--------------ms050206020807030402020003--
