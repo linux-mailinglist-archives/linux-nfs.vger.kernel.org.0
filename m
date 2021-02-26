@@ -2,82 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2020B32663E
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Feb 2021 18:21:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 084933266B1
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Feb 2021 19:07:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229769AbhBZRVJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Feb 2021 12:21:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60088 "EHLO
+        id S229885AbhBZSHl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Feb 2021 13:07:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229752AbhBZRVH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Feb 2021 12:21:07 -0500
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1122CC061574
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Feb 2021 09:20:27 -0800 (PST)
-Received: by mail-lj1-x22e.google.com with SMTP id p15so2542507ljc.13
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Feb 2021 09:20:26 -0800 (PST)
+        with ESMTP id S229745AbhBZSHl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Feb 2021 13:07:41 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B1E3C061574
+        for <linux-nfs@vger.kernel.org>; Fri, 26 Feb 2021 10:07:01 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id w21so12072923edc.7
+        for <linux-nfs@vger.kernel.org>; Fri, 26 Feb 2021 10:07:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Vndn5oTxJ/m3PkFwHqrmxGrBZ1ijQqRjFXcAaocq8ac=;
-        b=UJrukWoj6vwXj2H5cURtG20SWW0/83Ar42gqV2vnUwB2ofJ+dpeSTPxmLtNc+tAQ3g
-         db2KTo4DAL/mnCvgiBtxXYlPsLtVxw56U6qHndqGwHmcFH+4IXxwLQosxU/z/HVbvlK8
-         eMNQanPn8nYqzQFViVW9/nwtSZUYfZeJ9MtZw=
+        bh=wGi1eLuYic5m4rcYZqNh8mgkAlwEDiN0QXT/nR+gYhM=;
+        b=j4nHZM4rmYMAKi97XFVuSkMvILjYb0WTCznfeUC1mODwmV8CeX7apvC+a/dAL1Qxfq
+         FCRiqE+4lvkq/Q/zA9O8j1WpBFSJ3R3CvlIMI91RTrF11a6BOGbLGSdVWPSfQkQae1Qr
+         edeSfWkZ5STK7SQ1zKgP7WUDJ2fMJH22f05GzsWplwC/Fi6wCLWcqAvm/UO1wcaWWE3f
+         Y7Pmlbl4hNe+vC413vn6SuMtjJbHsIA4H28rUBC81Teo3RX58WiqP4DL1W/PL5f+79oz
+         zwff8mDbSyqqCc9CIClC7ubEQelTnlIDvjTYaIszlIwY0zbVJrS9GhK4on3QnR0/0UHx
+         rXlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Vndn5oTxJ/m3PkFwHqrmxGrBZ1ijQqRjFXcAaocq8ac=;
-        b=CDvsvkpyPptBzg8GcvgT4oQuaFJ3NkCiPzCsWwxvdMhej/pULrmvtDADhjvOQthPXC
-         Iuj/dnSkAYfO9MXvcQU4YdynOFVgO3+Jv+oMx1K7xgNoNUgs6mP2Oj8wS8hmYCSCACSP
-         oGeZxCZ13+B37s3r17hhh0Iq1hu1l9NLw16ne9E/KAB/GH2znt1z15n3xMJtb3pZNz8n
-         7dq+26ENNauZd/1LygtKL/JDJgZPS8uhCsJst6rFCMwxjEUDzoElIHvrxG2XtizXGOiT
-         IszasU1Yurz7Eq6K0A1Kw6Bujs71+LHr0wQCiXUoaRBGS6M5J1f/tS/9a+GVcp6Ufx5L
-         9arA==
-X-Gm-Message-State: AOAM533Il7SqH70IYuHqJ23EgVNWRwLVMV3K2ryZOtcJuVel0CEfZRLB
-        IATd+c+yTDJhEqBLrRkVLA9NGyhjL55+8Q==
-X-Google-Smtp-Source: ABdhPJyzcMp61s4iKxj8EZzO2BNx85tZxFHHWcGnQIyyl5BmTD22WtQGEBvuy77/BmhDrxBnH2Fuww==
-X-Received: by 2002:a2e:530a:: with SMTP id h10mr2312356ljb.63.1614360025298;
-        Fri, 26 Feb 2021 09:20:25 -0800 (PST)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id h62sm593571lfd.234.2021.02.26.09.20.24
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Feb 2021 09:20:24 -0800 (PST)
-Received: by mail-lf1-f41.google.com with SMTP id p21so14870915lfu.11
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Feb 2021 09:20:24 -0800 (PST)
-X-Received: by 2002:ac2:41d5:: with SMTP id d21mr1781907lfi.487.1614360024177;
- Fri, 26 Feb 2021 09:20:24 -0800 (PST)
+        bh=wGi1eLuYic5m4rcYZqNh8mgkAlwEDiN0QXT/nR+gYhM=;
+        b=JQtjvEWRI8QT3niNmNviUo/rhSGEfMU6QoV2U0RKmK41+Zdnk3mcZO+mZCuU/hLeqw
+         6OO+74iwOJJgojI2CYD0nD6+TQwTZpjS9z3PJITPYCfxLtY2/Twy5WtrI2RiGn7iMW/B
+         vS188Kc9dM/7u1BAAAEmGvxhMNCqCBpEPBWAdWK66RhradtbkEfgiP6HfKq4hbkt1d+k
+         RUNqGHiEJ/voS/r8KJHtYz3c3tH+47UPRZu5Ylc8A60LpPb4r2HtR8G1nlTq5Zg9ajFP
+         cRwddZai+qYe/7Lug1qUrRUGBw48vh5hkblB1HT62QjeL+EEYttvsfMljYwJt7c4ewS5
+         i5dw==
+X-Gm-Message-State: AOAM532hifZMDbDBf06w4Gr5J+R+gARUnwz9rvxS9EPyFR+vRtUbX6+o
+        /Xtk1kzVCl7JVtT3EPMrP/rkHRqdUWB83iA4ms4aIiWCnug=
+X-Google-Smtp-Source: ABdhPJz5AJ77utsh8ESVtu+7SdB/ldhXaMC+5l0XBUy7aMnAQ4U1ir9mcJ2x283x4w3si40M/VyOuSv2H0Mu0PjqdsQ=
+X-Received: by 2002:a05:6402:26d5:: with SMTP id x21mr4837615edd.50.1614362819845;
+ Fri, 26 Feb 2021 10:06:59 -0800 (PST)
 MIME-Version: 1.0
 References: <CAFX2JfnuPuE7Bd5nAwgwrVQQ84vAMVwpPf0SFZFTwpX0rib+Hg@mail.gmail.com>
- <CAFX2Jf=SXFy4PbWBGJeFUq5TQbVXpYMNZL8B=kckN_tFX-j01w@mail.gmail.com>
-In-Reply-To: <CAFX2Jf=SXFy4PbWBGJeFUq5TQbVXpYMNZL8B=kckN_tFX-j01w@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 26 Feb 2021 09:20:07 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi8guJetYqTaypq44Et49d3ABEJiOqdNwXU=ztZ=JwBng@mail.gmail.com>
-Message-ID: <CAHk-=wi8guJetYqTaypq44Et49d3ABEJiOqdNwXU=ztZ=JwBng@mail.gmail.com>
+ <CAFX2Jf=SXFy4PbWBGJeFUq5TQbVXpYMNZL8B=kckN_tFX-j01w@mail.gmail.com> <CAHk-=wi8guJetYqTaypq44Et49d3ABEJiOqdNwXU=ztZ=JwBng@mail.gmail.com>
+In-Reply-To: <CAHk-=wi8guJetYqTaypq44Et49d3ABEJiOqdNwXU=ztZ=JwBng@mail.gmail.com>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Fri, 26 Feb 2021 13:06:43 -0500
+Message-ID: <CAFX2Jf=Kf18mdUkmVe4XM-Qh3WfDGz63hPhnGgc-o9apz33Sdg@mail.gmail.com>
 Subject: Re: [GIT PULL] Please pull NFS Client Updates for Linux 5.12
-To:     Anna Schumaker <schumaker.anna@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Feb 25, 2021 at 2:17 PM Anna Schumaker <schumaker.anna@gmail.com> wrote:
+On Fri, Feb 26, 2021 at 12:20 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> Sorry to bother you since I know you're busy. I haven't seen this get
-> pulled yet, and I'm worried it's slipped through the cracks since
-> we're getting close to the end of the merge window.
+> On Thu, Feb 25, 2021 at 2:17 PM Anna Schumaker <schumaker.anna@gmail.com> wrote:
+> >
+> > Sorry to bother you since I know you're busy. I haven't seen this get
+> > pulled yet, and I'm worried it's slipped through the cracks since
+> > we're getting close to the end of the merge window.
+>
+> Hmm. I don't have this original email AT ALL in my mailbox.
+>
+> Maybe it was marked as spam and I never noticed it. Or maybe there was
+> some other issue with it  getting delivered.
+>
+> Anyway, re-sending was the right thing to do. Will pull asap.
 
-Hmm. I don't have this original email AT ALL in my mailbox.
+Weird. Thanks for pulling!
 
-Maybe it was marked as spam and I never noticed it. Or maybe there was
-some other issue with it  getting delivered.
+Anna
 
-Anyway, re-sending was the right thing to do. Will pull asap.
-
-Thanks,
-
-     Linus
+>
+> Thanks,
+>
+>      Linus
