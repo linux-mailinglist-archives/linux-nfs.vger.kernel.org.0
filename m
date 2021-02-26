@@ -2,171 +2,227 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02030325986
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Feb 2021 23:20:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EF46325E3A
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Feb 2021 08:22:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbhBYWTN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Feb 2021 17:19:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233454AbhBYWR7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Feb 2021 17:17:59 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C8CDC061788
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Feb 2021 14:17:04 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id cf12so7958159edb.8
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Feb 2021 14:17:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=Dj1l3CLesHckRpCiYdbWEyp1aCRlGYtCamIMKd+9tUg=;
-        b=Ro9OpODrWid3i8rah0tF1OIkKUnps4VOYMbIpcljasQrhC4LN9f9PLx8QChMxVYqOM
-         g+Wo3YeBwrDcfR1llSld/rBCHLj9MlG0el2i8PUMsluHzHuqdk9zpP2uszy/gVtuG0SE
-         6muSwWoieVPkGa6SDn59pz0QyBH42QfK9tTOIPU4dT30vwFpRHXOtIsplGsJJwF1XDCV
-         auG039f36tlht+BkupjXj0cRwL0rBnP8AGHzK0qKEphhrm/6LIVMTH2Q/1/6blXIkAZs
-         DdCIo8MkTjqzqf0sJD9v6kptGFolOh/nQkWv5Nd28BRNJb7oiy1C227VqFwJeXXP7s4P
-         oPMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=Dj1l3CLesHckRpCiYdbWEyp1aCRlGYtCamIMKd+9tUg=;
-        b=E1aNKZa/9mTAaJ4j4NOJIZ8Ox03IQlnKKP2N8B+Oh7Td1K73htyHW+98Q8vs2gx3cO
-         TISNEf7esFC+uZmEJ540SpZX1RBZjJrWoSFBDKrinn2dIc55GJeeeUrm5EFHUD7gaL5m
-         1TiaYUmO85xrJT4IhWhVYhwit/im89rpdS/NMtT8E9ruMcriQwmvrWgV8jfBM/aJENIa
-         CAN+yayr1rUpR4U7O97GzVBH+3oQQcOLKwJec0E7gUEo5zyNjvxFyVA7vFMZ7olxOGz6
-         yWEVOTUmKMMyPCyWpIDqs6hEXp5q+RO3gVSdH0QxUqz0Cc6voWK3iEQ6xVaBHyJ3O+0t
-         WXIA==
-X-Gm-Message-State: AOAM530lDPEc3ibRRaIg7lC3K6iRbRxJ897QtZgVSWfsiTx4F2i4osvW
-        CHanJwnFC0v64PXjnSy3/F5bUvGxVQsG6dXUdOqQzgTj0Go=
-X-Google-Smtp-Source: ABdhPJy1lQO5EZfLd3yHOb/3CTSd6Yo32ptsO/oy4X254puIPfyQ/Q9HeHe1DuIaOK3sI/Pj+YX0aK/bjJd2wnXpirE=
-X-Received: by 2002:aa7:d451:: with SMTP id q17mr93746edr.381.1614291422283;
- Thu, 25 Feb 2021 14:17:02 -0800 (PST)
+        id S230148AbhBZHUw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Feb 2021 02:20:52 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60356 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230164AbhBZHUo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 26 Feb 2021 02:20:44 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C524BAAAE;
+        Fri, 26 Feb 2021 07:20:01 +0000 (UTC)
+From:   NeilBrown <neil@brown.name>
+To:     Chuck Lever <chuck.lever@oracle.com>, mgorman@techsingularity.net
+Date:   Fri, 26 Feb 2021 18:19:56 +1100
+Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org, kuba@kernel.org
+Subject: Re: [PATCH v2 4/4] SUNRPC: Cache pages that were replaced during a
+ read splice
+In-Reply-To: <161400740732.195066.3792261943053910900.stgit@klimt.1015granger.net>
+References: <161400722731.195066.9584156841718557193.stgit@klimt.1015granger.net>
+ <161400740732.195066.3792261943053910900.stgit@klimt.1015granger.net>
+Message-ID: <87k0qvi9cz.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-References: <CAFX2JfnuPuE7Bd5nAwgwrVQQ84vAMVwpPf0SFZFTwpX0rib+Hg@mail.gmail.com>
-In-Reply-To: <CAFX2JfnuPuE7Bd5nAwgwrVQQ84vAMVwpPf0SFZFTwpX0rib+Hg@mail.gmail.com>
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Thu, 25 Feb 2021 17:16:46 -0500
-Message-ID: <CAFX2Jf=SXFy4PbWBGJeFUq5TQbVXpYMNZL8B=kckN_tFX-j01w@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull NFS Client Updates for Linux 5.12
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Sorry to bother you since I know you're busy. I haven't seen this get
-pulled yet, and I'm worried it's slipped through the cracks since
-we're getting close to the end of the merge window.
+On Mon, Feb 22 2021, Chuck Lever wrote:
+
+> To avoid extra trips to the page allocator, don't free unused pages
+> in nfsd_splice_actor(), but instead place them in a local cache.
+> That cache is then used first when refilling rq_pages.
+>
+> On workloads that perform large NFS READs on splice-capable file
+> systems, this saves a considerable amount of work.
+>
+> Suggested-by: NeilBrown <neilb@suse.de>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/vfs.c                   |    4 ++--
+>  include/linux/sunrpc/svc.h      |    1 +
+>  include/linux/sunrpc/svc_xprt.h |   28 ++++++++++++++++++++++++++++
+>  net/sunrpc/svc.c                |    7 +++++++
+>  net/sunrpc/svc_xprt.c           |   12 ++++++++++++
+>  5 files changed, 50 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index d316e11923c5..25cf41eaf3c4 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -852,14 +852,14 @@ nfsd_splice_actor(struct pipe_inode_info *pipe, str=
+uct pipe_buffer *buf,
+>=20=20
+>  	if (rqstp->rq_res.page_len =3D=3D 0) {
+>  		get_page(page);
+> -		put_page(*rqstp->rq_next_page);
+> +		svc_rqst_put_unused_page(rqstp, *rqstp->rq_next_page);
+>  		*(rqstp->rq_next_page++) =3D page;
+>  		rqstp->rq_res.page_base =3D buf->offset;
+>  		rqstp->rq_res.page_len =3D size;
+>  	} else if (page !=3D pp[-1]) {
+>  		get_page(page);
+>  		if (*rqstp->rq_next_page)
+> -			put_page(*rqstp->rq_next_page);
+> +			svc_rqst_put_unused_page(rqstp, *rqstp->rq_next_page);
+>  		*(rqstp->rq_next_page++) =3D page;
+>  		rqstp->rq_res.page_len +=3D size;
+>  	} else
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index 31ee3b6047c3..340f4f3989c0 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -250,6 +250,7 @@ struct svc_rqst {
+>  	struct xdr_stream	rq_arg_stream;
+>  	struct page		*rq_scratch_page;
+>  	struct xdr_buf		rq_res;
+> +	struct list_head	rq_unused_pages;
+>  	struct page		*rq_pages[RPCSVC_MAXPAGES + 1];
+>  	struct page *		*rq_respages;	/* points into rq_pages */
+>  	struct page *		*rq_next_page; /* next reply page to use */
+> diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_x=
+prt.h
+> index 571f605bc91e..49ef86499876 100644
+> --- a/include/linux/sunrpc/svc_xprt.h
+> +++ b/include/linux/sunrpc/svc_xprt.h
+> @@ -150,6 +150,34 @@ static inline void svc_xprt_get(struct svc_xprt *xpr=
+t)
+>  {
+>  	kref_get(&xprt->xpt_ref);
+>  }
+> +
+> +/**
+> + * svc_rqst_get_unused_page - Tap a page from the local cache
+> + * @rqstp: svc_rqst with cached unused pages
+> + *
+> + * To save an allocator round trip, pages can be added to a
+> + * local cache and re-used later by svc_alloc_arg().
+> + *
+> + * Returns an unused page, or NULL if the cache is empty.
+> + */
+> +static inline struct page *svc_rqst_get_unused_page(struct svc_rqst *rqs=
+tp)
+> +{
+> +	return list_first_entry_or_null(&rqstp->rq_unused_pages,
+> +					struct page, lru);
+> +}
+> +
+> +/**
+> + * svc_rqst_put_unused_page - Stash a page in the local cache
+> + * @rqstp: svc_rqst with cached unused pages
+> + * @page: page to cache
+> + *
+> + */
+> +static inline void svc_rqst_put_unused_page(struct svc_rqst *rqstp,
+> +					    struct page *page)
+> +{
+> +	list_add(&page->lru, &rqstp->rq_unused_pages);
+> +}
+> +
+>  static inline void svc_xprt_set_local(struct svc_xprt *xprt,
+>  				      const struct sockaddr *sa,
+>  				      const size_t salen)
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index 61fb8a18552c..3920fa8f1146 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -570,6 +570,8 @@ svc_init_buffer(struct svc_rqst *rqstp, unsigned int =
+size, int node)
+>  	if (svc_is_backchannel(rqstp))
+>  		return 1;
+>=20=20
+> +	INIT_LIST_HEAD(&rqstp->rq_unused_pages);
+> +
+>  	pages =3D size / PAGE_SIZE + 1; /* extra page as we hold both request a=
+nd reply.
+>  				       * We assume one is at most one page
+>  				       */
+> @@ -593,8 +595,13 @@ svc_init_buffer(struct svc_rqst *rqstp, unsigned int=
+ size, int node)
+>  static void
+>  svc_release_buffer(struct svc_rqst *rqstp)
+>  {
+> +	struct page *page;
+>  	unsigned int i;
+>=20=20
+> +	while ((page =3D svc_rqst_get_unused_page(rqstp))) {
+> +		list_del(&page->lru);
+> +		put_page(page);
+> +	}
+>  	for (i =3D 0; i < ARRAY_SIZE(rqstp->rq_pages); i++)
+>  		if (rqstp->rq_pages[i])
+>  			put_page(rqstp->rq_pages[i]);
+> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> index 15aacfa5ca21..84210e546a66 100644
+> --- a/net/sunrpc/svc_xprt.c
+> +++ b/net/sunrpc/svc_xprt.c
+> @@ -678,6 +678,18 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
+>  	for (needed =3D 0, i =3D 0; i < pages ; i++)
+>  		if (!rqstp->rq_pages[i])
+>  			needed++;
+> +	if (needed) {
+> +		for (i =3D 0; i < pages; i++) {
+> +			if (!rqstp->rq_pages[i]) {
+> +				page =3D svc_rqst_get_unused_page(rqstp);
+> +				if (!page)
+> +					break;
+> +				list_del(&page->lru);
+> +				rqstp->rq_pages[i] =3D page;
+> +				needed--;
+> +			}
+> +		}
+> +	}
+>  	if (needed) {
+>  		LIST_HEAD(list);
+>=20=20
+This looks good!  Probably simpler than the way I imagined it :-)
+I would do that last bit of code differently though...
+
+  for (needed =3D 0, i =3D 0; i < pages ; i++)
+          if (!rqstp->rq_pages[i]) {
+                  page =3D svc_rqst_get_unused_pages(rqstp);
+                  if (page) {
+                          list_del(&page->lru);
+                          rqstp->rq_pages[i] =3D page;
+                  } else
+                          needed++;
+          }
+
+but it is really a minor style difference - I don't object to your
+version.
+
+Reviewed-by: NeilBrown <neilb@suse.de>
 
 Thanks,
-Anna
+NeilBrown
 
-On Fri, Feb 19, 2021 at 5:19 PM Anna Schumaker <schumaker.anna@gmail.com> wrote:
->
-> Hi Linus,
->
-> The following changes since commit 1048ba83fb1c00cd24172e23e8263972f6b5d9ac:
->
->   Linux 5.11-rc6 (2021-01-31 13:50:09 -0800)
->
-> are available in the Git repository at:
->
->   git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.12-1
->
-> for you to fetch changes up to 7ae017c7322e2b12472033e65a48aa25cde2fb22:
->
->   NFS: Support the '-owrite=' option in /proc/self/mounts and
-> mountinfo (2021-02-17 15:36:03 -0500)
->
-> ----------------------------------------------------------------
-> - New Features:
->   - Support for eager writes, and the write=eager and write=wait mount options
->
-> - Other Bugfixes and Cleanups:
->   - Fix typos in some comments
->   - Fix up fall-through warnings for Clang
->   - Cleanups to the NFS readpage codepath
->   - Remove FMR support in rpcrdma_convert_iovs()
->   - Various other cleanups to xprtrdma
->   - Fix xprtrdma pad optimization for servers that don't support RFC 8797
->   - Improvements to rpcrdma tracepoints
->   - Fix up nfs4_bitmask_adjust()
->   - Optimize sparse writes past the end of files
->
-> Thanks,
-> Anna
-> ----------------------------------------------------------------
-> Bhaskar Chowdhury (1):
->       net: sunrpc: xprtsock.c: Corrected few spellings ,in comments
->
-> Calum Mackay (1):
->       SUNRPC: correct error code comment in xs_tcp_setup_socket()
->
-> Chuck Lever (7):
->       xprtrdma: Remove FMR support in rpcrdma_convert_iovs()
->       xprtrdma: Simplify rpcrdma_convert_kvec() and frwr_map()
->       xprtrdma: Refactor invocations of offset_in_page()
->       rpcrdma: Fix comments about reverse-direction operation
->       xprtrdma: Pad optimization, revisited
->       rpcrdma: Capture bytes received in Receive completion tracepoints
->       xprtrdma: Clean up rpcrdma_prepare_readch()
->
-> Dave Wysochanski (5):
->       NFS: Clean up nfs_readpage() and nfs_readpages()
->       NFS: In nfs_readpage() only increment NFSIOS_READPAGES when read succeeds
->       NFS: Refactor nfs_readpage() and nfs_readpage_async() to use nfs_readdesc
->       NFS: Call readpage_async_filler() from nfs_readpage_async()
->       NFS: Add nfs_pageio_complete_read() and remove nfs_readpage_async()
->
-> Gustavo A. R. Silva (2):
->       SUNRPC: Fix fall-through warnings for Clang
->       nfs: Fix fall-through warnings for Clang
->
-> Menglong Dong (1):
->       fs/nfs: remove duplicate include
->
-> Trond Myklebust (10):
->       NFSv4: Fixes for nfs4_bitmask_adjust()
->       NFS: Fix documenting comment for nfs_revalidate_file_size()
->       NFS: Optimise sparse writes past the end of file
->       NFS: Always clear an invalid mapping when attempting a buffered write
->       NFS: Don't set NFS_INO_INVALID_XATTR if there is no xattr cache
->       NFS: 'flags' field should be unsigned in struct nfs_server
->       NFS: Add support for eager writes
->       NFS: Add mount options supporting eager writes
->       NFS: Set the stable writes flag when initialising the super block
->       NFS: Support the '-owrite=' option in /proc/self/mounts and mountinfo
->
->  fs/nfs/file.c                              |  27 +++++++++++++++++++++------
->  fs/nfs/fs_context.c                        |  35
-> +++++++++++++++++++++++++++++++++++
->  fs/nfs/fscache.c                           |   4 ----
->  fs/nfs/inode.c                             | 111
-> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------------------------------
->  fs/nfs/nfs3acl.c                           |   1 +
->  fs/nfs/nfs4client.c                        |   1 +
->  fs/nfs/nfs4proc.c                          |  21 ++++++++++-----------
->  fs/nfs/nfs4state.c                         |   1 +
->  fs/nfs/pnfs.c                              |   2 ++
->  fs/nfs/read.c                              | 206
-> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------------------------------------------------------------------------------
->  fs/nfs/super.c                             |   7 +++++++
->  fs/nfs/write.c                             |  37
-> ++++++++++++++++++++++++-------------
->  include/linux/nfs_fs.h                     |   3 +--
->  include/linux/nfs_fs_sb.h                  |   4 +++-
->  include/trace/events/rpcrdma.h             |  50
-> ++++++++++++++++++++++++++++++++++++++++++++++++--
->  net/sunrpc/rpc_pipe.c                      |   1 +
->  net/sunrpc/xprtrdma/backchannel.c          |   4 ++--
->  net/sunrpc/xprtrdma/frwr_ops.c             |  12 +++---------
->  net/sunrpc/xprtrdma/rpc_rdma.c             |  67
-> +++++++++++++++++++------------------------------------------------
->  net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   4 ++--
->  net/sunrpc/xprtrdma/xprt_rdma.h            |  15 ++++++++-------
->  net/sunrpc/xprtsock.c                      |  17 ++++++++---------
->  22 files changed, 357 insertions(+), 273 deletions(-)
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJEBAEBCAAuFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAmA4oRwQHG5laWxAYnJv
+d24ubmFtZQAKCRA57J7dVmKBuYkCEACCwjdOIz4QAwZUH166WdVF8+mPmPYFilq1
+OzTzVDDFN4oDZoUBDGWFd4xZAhwVNCJ/dJhLoAJo0znCOHeckM3mTWFF9fOdEhXM
+67/+IXe6keX/8d9d/Vv3KN6vGN+IMjT2MfrW5Lvx7CnV3fYMQsQPAACeUkVtrDR5
+s+DffgIlltKAKlFapA9x73h8nMzxvU6ngogsfKGWGd5dhhWVq6XlbzCbeVBAl4sL
+SG+PAcU+/1Fzubppob5xM8+p9EgpCiLdSbwSZcjZfDFgPFTWDU/xn3/40ikixQl7
+mLWW/vcOjgOCniVibXSrlc0fAB4po/8/pZWvUCzoUOp1A2bJq3TASHGXSEIFzKWL
+lPuVurZvPKbhj96HAIr4Gio24HndDAqbI8zqH6r4idu6YGziSVMY8yYH4a/nFHFz
+Wuwf14NUSXR10v8Q9hi3CX31WLlpObcmTEd7E0ryB5ADPSRCJp7GSKal5XnMtOe4
++YVOiFbXVxZIduJsFmkcJE9YrcnZ+32spnQ2lXw7k5Nk7YAiIiGj+ayVfHsPieg0
+vid2WcV4WVodzTkodql+F+dGWLJNOLBq2ISQLntB5FJCw0zCNTRfPOBME41cvT1a
+qYnyJ4TtqXyWDlpkP082hZXuzjAJwmoRcyd8ZnB6bG6T2IaYxzJHO9/J9UDaZ3by
+nVfm0AULsQ==
+=GFpw
+-----END PGP SIGNATURE-----
+--=-=-=--
