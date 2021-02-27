@@ -2,229 +2,251 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97C5B326B6C
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 Feb 2021 04:39:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21F7D326BDA
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Feb 2021 06:42:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229949AbhB0Dig (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Feb 2021 22:38:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50862 "EHLO
+        id S230018AbhB0FmN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 27 Feb 2021 00:42:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229864AbhB0Die (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Feb 2021 22:38:34 -0500
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E6EC06174A;
-        Fri, 26 Feb 2021 19:37:54 -0800 (PST)
-Received: by mail-il1-x12b.google.com with SMTP id q9so9845941ilo.1;
-        Fri, 26 Feb 2021 19:37:54 -0800 (PST)
+        with ESMTP id S229953AbhB0FmL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 27 Feb 2021 00:42:11 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C02BCC06174A;
+        Fri, 26 Feb 2021 21:41:30 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id v15so10615993wrx.4;
+        Fri, 26 Feb 2021 21:41:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MscsHg94nVorJ9ejqi2xSc24V46t1Ul1I8oZ9O6YXlc=;
-        b=AlMXpUD93UAKhH6Dru3TTFUd/TGO9oGLVzG5NTijFq5t3LKi3JHhAWOjeCnESv+5mf
-         1sRSKguS/qgUpWCes4qVtZr7weffhVEqYFKHqmcDFTWqFXYjxQMv8bSsJdf9Z02k6rVZ
-         9TOSb9zEgs4o6jKa7LBeegZ6mtwtVXD5F2EOxREEhPNfNz0d6ioLyCDsz0vW5X9K7/S4
-         gZvuYp2HkttfsmMJylo5SAD3/jTrJGgq/g9XMIShluuCnISKeHcLgl0xTMdbQPl0V9DW
-         p3bwcBVkNl4jYGBXZHX55ILMf1IhpUmY64jV3uWpWoR1acikLAoSmpjC1ipUH3Rogir7
-         Yh+A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m1RH7kOprlcYCkHIz9337og2jIDcCDQatwXLX3f0ckQ=;
+        b=qSzafnsK33iUZyV7k2SyXkgfZxwaNqqx442mNFv/5kLws0kDnigmE90q63d1VQOBTH
+         JPEga9SEq58hgI5GnTMMC4AjxzFvJl4SJH/9lp0xWJ7uNMi9BERRXokUBMeV0xwk24LU
+         2l2AOAOW8mA2Q7+DDnPIApOgBVbfI6VS7zQyd+9pyuX9Vdd3UvsWlHVNtU+0nvFpp2kK
+         tdbUOZ8AKnXREKAdVY1C5dzT3ijCJgRxRZ2aXIbl0v29bNv9Wn5wOZB7KzTjz6FPpQoo
+         vlciKdXH2KUfhtTNjZh25E65TCHViUbMBJ4XH/cNeuXPfmZav9ZGJqrPcCR6HObuuYpV
+         X+Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=MscsHg94nVorJ9ejqi2xSc24V46t1Ul1I8oZ9O6YXlc=;
-        b=pzPbhBPZhATKLoWqpgB/0X8PkPgzg+rYuv0KtgzG/LiwzCebXy87153uI/isoLpNdM
-         7oll4He6Km/vu7XzbVqxSdLo9Oa0J+mwwXH97t1wflHQfdGdikecR/OvNtZf+Twr1H7S
-         YWmIReKMt4x6Kyf+zcVdQAxFJRR8erqdr2A429NddOv9K3yI1VCvfj9AkSfmu9BGSSDH
-         fQJPZu7xq+4Grut+ebFh3TnruExH28XP4UcHiVVFmBpBhFGiZcBbJmXCGud6X85k0Hy+
-         IUsI7KmWbo/PSikhDJ/1Afh5Nvch2oU9fdXWsIQmd0rF0PiKl2ePivsP5jpdUZi8CBCS
-         cvKg==
-X-Gm-Message-State: AOAM5307dNCCSPlKD9zCspujYN09qe3mG0Y4CD9dgrtz4UPooS2LqmkM
-        FmulDw7oNsIHNvyS/5M+NF4J/CBjEgs=
-X-Google-Smtp-Source: ABdhPJy4p+fV7z2FTgDwlQGO5QqygRgAXjsFrvdPJ/J94AJfBIPkEEd892+Vjvx+wO/b/OnvzmEzfw==
-X-Received: by 2002:a92:cd8a:: with SMTP id r10mr4993706ilb.110.1614397073934;
-        Fri, 26 Feb 2021 19:37:53 -0800 (PST)
-Received: from Olgas-MBP-470.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id w16sm5445499ilh.35.2021.02.26.19.37.52
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Fri, 26 Feb 2021 19:37:53 -0800 (PST)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-Subject: [PATCH v4 1/3] [security] Add new hook to compare new mount to an existing mount
-Date:   Fri, 26 Feb 2021 22:37:55 -0500
-Message-Id: <20210227033755.24460-1-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.10.1 (Apple Git-78)
-In-Reply-To: <CAN-5tyGuV-gs0KzVbKSj42ZMx553zy9wOfVb1SoHoE-WCoN1_w@mail.gmail.com>
-References: <CAN-5tyGuV-gs0KzVbKSj42ZMx553zy9wOfVb1SoHoE-WCoN1_w@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m1RH7kOprlcYCkHIz9337og2jIDcCDQatwXLX3f0ckQ=;
+        b=JA2Zm0+n6sSDToZ5E6wDYT7lQmRtoVuFkSMLgFWL9FyVWYVTUuzfLdHgGeF0v3WauO
+         8/vbmknCXf62Xw58a3xwqkp6lKaqleQRNLNT/IfQvAszUhSfnTCOWf/XUjxYE6NMLNoE
+         0BSU20LkFrRVhFpIlAZ5+4eHwIS5t5jzLZ1jVVO/GiIT/d9YPb7DuQ1FDk/4pPxpJiqS
+         d/K725a89dYc32zMj/yKAHVtKs7AGcrvzMjLcpah6NlkKouNpvtV31ldrlReaSYsJUsd
+         B0XtzMMlgJsDvby4H9Yh2b2l7HSLLCWxJjhw/wu6Sg4s3yBY2UKdMZtv9XoXIkK/gTRH
+         YjcQ==
+X-Gm-Message-State: AOAM533v4pMqmrAfiAzCO964+H+GdbWQnk4ERQb2lRocM192EyTUgXEd
+        Yvwf0gxVrDxLwbvCboDsHePd6VKByO/TZ4wBhAY=
+X-Google-Smtp-Source: ABdhPJz4DaeIHyU9NFWTqNtqUY7RSg6mU7q9XcHyLsWkYyLn51TaLcx0MJ5TpNf8MSUsYBhW1a9Hup+qDkuyCrz+Q7U=
+X-Received: by 2002:a5d:6b03:: with SMTP id v3mr6334029wrw.371.1614404489364;
+ Fri, 26 Feb 2021 21:41:29 -0800 (PST)
+MIME-Version: 1.0
+References: <20210222102456.6692-1-lhenriques@suse.de> <20210224142307.7284-1-lhenriques@suse.de>
+ <CAOQ4uxi3-+tOgHV_GUnWtJoQXbV5ZS9qDZsLsd9sJxX5Aftyew@mail.gmail.com> <6b896b29-6fc1-0586-ef31-f2f3298b56b0@gmail.com>
+In-Reply-To: <6b896b29-6fc1-0586-ef31-f2f3298b56b0@gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sat, 27 Feb 2021 07:41:18 +0200
+Message-ID: <CAOQ4uxgFCBNwRD7e1srwaVrZMGfOE_JXENL4Q2En52srdj2AYA@mail.gmail.com>
+Subject: Re: [PATCH] copy_file_range.2: Kernel v5.12 updates
+To:     "Alejandro Colomar (man-pages)" <alx.manpages@gmail.com>
+Cc:     Luis Henriques <lhenriques@suse.de>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Steve French <sfrench@samba.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Ian Lance Taylor <iant@google.com>,
+        Luis Lozano <llozano@chromium.org>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Olga Kornievskaia <aglo@umich.edu>,
+        Christoph Hellwig <hch@infradead.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+On Sat, Feb 27, 2021 at 12:19 AM Alejandro Colomar (man-pages)
+<alx.manpages@gmail.com> wrote:
+>
+> Hello Amir, Luis,
+>
+> On 2/24/21 5:10 PM, Amir Goldstein wrote:
+> > On Wed, Feb 24, 2021 at 4:22 PM Luis Henriques <lhenriques@suse.de> wrote:
+> >>
+> >> Update man-page with recent changes to this syscall.
+> >>
+> >> Signed-off-by: Luis Henriques <lhenriques@suse.de>
+> >> ---
+> >> Hi!
+> >>
+> >> Here's a suggestion for fixing the manpage for copy_file_range().  Note that
+> >> I've assumed the fix will hit 5.12.
+> >>
+> >>   man2/copy_file_range.2 | 10 +++++++++-
+> >>   1 file changed, 9 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/man2/copy_file_range.2 b/man2/copy_file_range.2
+> >> index 611a39b8026b..b0fd85e2631e 100644
+> >> --- a/man2/copy_file_range.2
+> >> +++ b/man2/copy_file_range.2
+> >> @@ -169,6 +169,9 @@ Out of memory.
+> >>   .B ENOSPC
+> >>   There is not enough space on the target filesystem to complete the copy.
+> >>   .TP
+> >> +.B EOPNOTSUPP
+>
+> I'll add the kernel version here:
+>
+> .BR EOPNOTSUPP " (since Linux 5.12)"
 
-Add a new hook that takes an existing super block and a new mount
-with new options and determines if new options confict with an
-existing mount or not.
+Error could be returned prior to 5.3 and would be probably returned
+by future stable kernels 5.3..5.12 too
 
-A filesystem can use this new hook to determine if it can share
-the an existing superblock with a new superblock for the new mount.
+>
+> >> +The filesystem does not support this operation >> +.TP
+> >>   .B EOVERFLOW
+> >>   The requested source or destination range is too large to represent in the
+> >>   specified data types.
+> >> @@ -187,7 +190,7 @@ refers to an active swap file.
+> >>   .B EXDEV
+> >>   The files referred to by
+> >>   .IR fd_in " and " fd_out
+> >> -are not on the same mounted filesystem (pre Linux 5.3).
+> >> +are not on the same mounted filesystem (pre Linux 5.3 and post Linux 5.12).
+>
+> I'm not sure that 'mounted' adds any value here.  Would you remove the
+> word here?
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
----
- include/linux/lsm_hook_defs.h |  1 +
- include/linux/lsm_hooks.h     |  6 ++++
- include/linux/security.h      |  8 +++++
- security/security.c           |  7 +++++
- security/selinux/hooks.c      | 56 +++++++++++++++++++++++++++++++++++
- 5 files changed, 78 insertions(+)
+See rename(2). 'mounted' in this context is explained there.
+HOWEVER, it does not fit here.
+copy_file_range() IS allowed between two mounts of the same filesystem instance.
 
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index 7aaa753b8608..1b12a5266a51 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -62,6 +62,7 @@ LSM_HOOK(int, 0, sb_alloc_security, struct super_block *sb)
- LSM_HOOK(void, LSM_RET_VOID, sb_free_security, struct super_block *sb)
- LSM_HOOK(void, LSM_RET_VOID, sb_free_mnt_opts, void *mnt_opts)
- LSM_HOOK(int, 0, sb_eat_lsm_opts, char *orig, void **mnt_opts)
-+LSM_HOOK(int, 0, sb_mnt_opts_compat, struct super_block *sb, void *mnt_opts)
- LSM_HOOK(int, 0, sb_remount, struct super_block *sb, void *mnt_opts)
- LSM_HOOK(int, 0, sb_kern_mount, struct super_block *sb)
- LSM_HOOK(int, 0, sb_show_options, struct seq_file *m, struct super_block *sb)
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index a19adef1f088..0de8eb2ea547 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -142,6 +142,12 @@
-  *	@orig the original mount data copied from userspace.
-  *	@copy copied data which will be passed to the security module.
-  *	Returns 0 if the copy was successful.
-+ * @sb_mnt_opts_compat:
-+ * 	Determine if the new mount options in @mnt_opts are allowed given
-+ * 	the existing mounted filesystem at @sb.
-+ *	@sb superblock being compared
-+ *	@mnt_opts new mount options
-+ *	Return 0 if options are compatible.
-  * @sb_remount:
-  *	Extracts security system specific mount options and verifies no changes
-  *	are being made to those options.
-diff --git a/include/linux/security.h b/include/linux/security.h
-index c35ea0ffccd9..50db3d5d1608 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -291,6 +291,7 @@ int security_sb_alloc(struct super_block *sb);
- void security_sb_free(struct super_block *sb);
- void security_free_mnt_opts(void **mnt_opts);
- int security_sb_eat_lsm_opts(char *options, void **mnt_opts);
-+int security_sb_mnt_opts_compat(struct super_block *sb, void *mnt_opts);
- int security_sb_remount(struct super_block *sb, void *mnt_opts);
- int security_sb_kern_mount(struct super_block *sb);
- int security_sb_show_options(struct seq_file *m, struct super_block *sb);
-@@ -635,6 +636,13 @@ static inline int security_sb_remount(struct super_block *sb,
- 	return 0;
- }
- 
-+static inline int security_sb_mnt_opts_compat(struct super_block *sb,
-+					      void *mnt_opts)
-+{
-+	return 0;
-+}
-+
-+
- static inline int security_sb_kern_mount(struct super_block *sb)
- {
- 	return 0;
-diff --git a/security/security.c b/security/security.c
-index 7b09cfbae94f..56cf5563efde 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -890,6 +890,13 @@ int security_sb_eat_lsm_opts(char *options, void **mnt_opts)
- }
- EXPORT_SYMBOL(security_sb_eat_lsm_opts);
- 
-+int security_sb_mnt_opts_compat(struct super_block *sb,
-+				void *mnt_opts)
-+{
-+	return call_int_hook(sb_mnt_opts_compat, 0, sb, mnt_opts);
-+}
-+EXPORT_SYMBOL(security_sb_mnt_opts_compat);
-+
- int security_sb_remount(struct super_block *sb,
- 			void *mnt_opts)
- {
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 644b17ec9e63..afee3a222a0e 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -2656,6 +2656,61 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
- 	return rc;
- }
- 
-+static int selinux_sb_mnt_opts_compat(struct super_block *sb, void *mnt_opts)
-+{
-+	struct selinux_mnt_opts *opts = mnt_opts;
-+	struct superblock_security_struct *sbsec = sb->s_security;
-+	u32 sid;
-+	int rc;
-+
-+	/*
-+	 * Superblock not initialized (i.e. no options) - reject if any
-+	 * options specified, otherwise accept.
-+	 */
-+	if (!(sbsec->flags & SE_SBINITIALIZED))
-+		return opts ? 1 : 0;
-+
-+	/*
-+	 * Superblock initialized and no options specified - reject if
-+	 * superblock has any options set, otherwise accept.
-+	 */
-+	if (!opts)
-+		return (sbsec->flags & SE_MNTMASK) ? 1 : 0;
-+
-+	if (opts->fscontext) {
-+		rc = parse_sid(sb, opts->fscontext, &sid);
-+		if (rc)
-+			return 1;
-+		if (bad_option(sbsec, FSCONTEXT_MNT, sbsec->sid, sid))
-+			return 1;
-+	}
-+	if (opts->context) {
-+		rc = parse_sid(sb, opts->context, &sid);
-+		if (rc)
-+			return 1;
-+		if (bad_option(sbsec, CONTEXT_MNT, sbsec->mntpoint_sid, sid))
-+			return 1;
-+	}
-+	if (opts->rootcontext) {
-+		struct inode_security_struct *root_isec;
-+
-+		root_isec = backing_inode_security(sb->s_root);
-+		rc = parse_sid(sb, opts->rootcontext, &sid);
-+		if (rc)
-+			return 1;
-+		if (bad_option(sbsec, ROOTCONTEXT_MNT, root_isec->sid, sid))
-+			return 1;
-+	}
-+	if (opts->defcontext) {
-+		rc = parse_sid(sb, opts->defcontext, &sid);
-+		if (rc)
-+			return 1;
-+		if (bad_option(sbsec, DEFCONTEXT_MNT, sbsec->def_sid, sid))
-+			return 1;
-+	}
-+	return 0;
-+}
-+
- static int selinux_sb_remount(struct super_block *sb, void *mnt_opts)
- {
- 	struct selinux_mnt_opts *opts = mnt_opts;
-@@ -6984,6 +7039,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
- 
- 	LSM_HOOK_INIT(sb_free_security, selinux_sb_free_security),
- 	LSM_HOOK_INIT(sb_free_mnt_opts, selinux_free_mnt_opts),
-+	LSM_HOOK_INIT(sb_mnt_opts_compat, selinux_sb_mnt_opts_compat),
- 	LSM_HOOK_INIT(sb_remount, selinux_sb_remount),
- 	LSM_HOOK_INIT(sb_kern_mount, selinux_sb_kern_mount),
- 	LSM_HOOK_INIT(sb_show_options, selinux_sb_show_options),
--- 
-2.27.0
+To make things more complicated, it appears that cross mount clone is not
+allowed via FICLONE/FICLONERANGE ioctl, so ioctl_ficlonerange(2) man page
+also uses the 'mounted filesystem' terminology for EXDEV
 
+As things stand now, because of the fallback to clone logic,
+copy_file_range() provides a way for users to clone across different mounts
+of the same filesystem instance, which they cannot do with the FICLONE ioctl.
+
+Fun :)
+
+BTW, I don't know if preventing cross mount clone was done intentionally,
+but as I wrote in a comment in the code once:
+
+        /*
+         * FICLONE/FICLONERANGE ioctls enforce that src and dest files are on
+         * the same mount. Practically, they only need to be on the same file
+         * system.
+         */
+
+>
+> It reads as if two separate devices with the same filesystem type would
+> still give this error.
+>
+> Per the LWN.net article Amir shared, this is permitted ("When called
+> from user space, copy_file_range() will only try to copy a file across
+> filesystems if the two are of the same type").
+>
+> This behavior was slightly different before 5.3 AFAICR (was it?) ("until
+> then, copy_file_range() refused to copy between files that were not
+> located on the same filesystem.").  If that's the case, I'd specify the
+> difference, or more probably split the error into two, one before 5.3,
+> and one since 5.12.
+>
+
+True.
+
+> >
+> > I think you need to drop the (Linux range) altogether.
+>
+> I'll keep the range.  Users of 5.3..5.11 might be surprised if the
+> filesystems are different and they don't get an error, I think.
+>
+> I reworded it to follow other pages conventions:
+>
+> .BR EXDEV " (before Linux 5.3; or since Linux 5.12)"
+>
+> which renders as:
+>
+>         EXDEV (before Linux 5.3; or since Linux 5.12)
+>                The files referred to by fd_in and fd_out are not on
+>                the same mounted filesystem.
+>
+
+drop 'mounted'
+
+>
+> > What's missing here is the NFS cross server copy use case.
+> > Maybe:
+> >
+> > ...are not on the same mounted filesystem and the source and target filesystems
+> > do not support cross-filesystem copy.
+>
+> Yes.
+>
+> Again, this wasn't true before 5.3, right?
+>
+
+Right.
+Actually, v5.3 provides the vfs capabilities for filesystems to support
+cross fs copy. I am not sure if NFS already implements cross fs copy in
+v5.3 and not sure about cifs. Need to get input from nfs/cis developers
+or dig in the release notes for server-side copy.
+
+> >
+> > You may refer the reader to VERSIONS section where it will say which
+> > filesystems support cross-fs copy as of kernel version XXX (i.e. cifs and nfs).
+> >
+> >>   .SH VERSIONS
+> >>   The
+> >>   .BR copy_file_range ()
+> >> @@ -202,6 +205,11 @@ Applications should target the behaviour and requirements of 5.3 kernels.
+> >>   .PP
+> >>   First support for cross-filesystem copies was introduced in Linux 5.3.
+> >>   Older kernels will return -EXDEV when cross-filesystem copies are attempted.
+> >> +.PP
+> >> +After Linux 5.12, support for copies between different filesystems was dropped.
+> >> +However, individual filesystems may still provide
+> >> +.BR copy_file_range ()
+> >> +implementations that allow copies across different devices.
+> >
+> > Again, this is not likely to stay uptodate for very long.
+> > The stable kernels are expected to apply your patch (because it fixes
+> > a regression)
+> > so this should be phrased differently.
+> > If it were me, I would provide all the details of the situation to
+> > Michael and ask him
+> > to write the best description for this section.
+>
+> I'll look into more detail at this part in a later review.
+>
+>
+> On 2/26/21 11:34 AM, Amir Goldstein wrote:
+>  > Is this detailed enough? ;-)
+>  >
+>  > https://lwn.net/Articles/846403/
+>
+> Yes, it is!
+>
+
+Thanks to LWN :)
+
+Thanks,
+Amir.
