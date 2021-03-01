@@ -2,98 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 202BC328C5B
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Mar 2021 19:54:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D1AB328C95
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Mar 2021 19:55:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237978AbhCASuX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 1 Mar 2021 13:50:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38218 "EHLO
+        id S240336AbhCASyY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 1 Mar 2021 13:54:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240455AbhCASrP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Mar 2021 13:47:15 -0500
+        with ESMTP id S240376AbhCASvS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Mar 2021 13:51:18 -0500
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF92DC061788
-        for <linux-nfs@vger.kernel.org>; Mon,  1 Mar 2021 10:46:34 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2EE7C061756
+        for <linux-nfs@vger.kernel.org>; Mon,  1 Mar 2021 10:50:37 -0800 (PST)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id D8BA835DC; Mon,  1 Mar 2021 13:46:33 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org D8BA835DC
+        id 4FDCE35DC; Mon,  1 Mar 2021 13:50:37 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 4FDCE35DC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1614624393;
-        bh=tR9FV74TG7aboiff8kX9ITnog8YKtirnO6H1axkeC/M=;
+        s=default; t=1614624637;
+        bh=wOJJT/sl35x8OpqOSh0EQgJMKhFjWDyyGlhLk+IMYtI=;
         h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=UaZVdh2Rtc7Wgntlr/jzcUpTvXDOMUbEQlT2akHSPMDMYYlhKEi6ku/XKXQutZfqI
-         yivxI5bUZIgUG+X9uWZPQvV9HUPI3CUvLfR11SCJ5gGqb2q5qk+chYFHX74iqmANwP
-         HuW1/KKdPbk31MjZY4WOLmMH/+POddowXWmhCTrk=
-Date:   Mon, 1 Mar 2021 13:46:33 -0500
-To:     Timo Rothenpieler <timo@rothenpieler.org>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: Re: NFSD Regression: client observing a file while other client
- writes to it leads to stale local cache
-Message-ID: <20210301184633.GA14881@fieldses.org>
-References: <c3efd7e8-dc08-ac1f-9bee-7a7b0d8ac5fb@rothenpieler.org>
+        b=zuZt6+gd4YkPUm4h5TGzxgN5UtcCYd2hVtsIwVVFqTzF38PNrecj9T0PLXNGWf/4c
+         G3rc09D0PIjJ0l6JAk0mu6zLA+X2Cke+a3Tz+NNi6mHFlAYgaGZv6uo9zis51YMLjk
+         KzNC0PMbU+2HTbd+Anqv/CfOfLQdk56iDuJEStDs=
+Date:   Mon, 1 Mar 2021 13:50:37 -0500
+To:     NeilBrown <neilb@suse.de>
+Cc:     Steve Dickson <SteveD@RedHat.com>,
+        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 0/5 v2] nfs-utils: provide audit-logging of NFSv4 access
+Message-ID: <20210301185037.GB14881@fieldses.org>
+References: <161456493684.22801.323431390819102360.stgit@noble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c3efd7e8-dc08-ac1f-9bee-7a7b0d8ac5fb@rothenpieler.org>
+In-Reply-To: <161456493684.22801.323431390819102360.stgit@noble>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Thanks for the bisecting this and reporting the results.
+I've gotten requests for similar functionality, and intended to
+implement it using directory notifications on /proc/fs/nfsd/clients.
 
-The behavior you describe is probably not a bug: NFS close-to-open
-caching semantics don't guarantee you'll see updates on the reading
-client in this case.
-
-Nevertheless, I don't understand why the behavior changed with that
-commit, and I'd like to.
-
-The only change in behavior I'd expect would be that the writing client
-would be granted a read delegation.  But I wouldn't expect that to
-change how it writes back data, or how the reading client checks for
-file changes.  (The reading client still shouldn't be granted a
-delegation.)
-
-I'll take a look.
+But this is another way to do it that I hadn't thought of.  That's
+interesting.  I haven't thought about the relative advantages or
+disadvantages.
 
 --b.
 
-On Sun, Feb 28, 2021 at 11:27:53PM +0100, Timo Rothenpieler wrote:
-> I've been observing an issue where an NFS client reading(tail -f to
-> be precise) a file to which another NFS client is writing(or rather,
-> appending. It's a log file of a cluster job), the reading client
-> gets stuck, and does not update its view of the file anymore.
+On Mon, Mar 01, 2021 at 01:17:15PM +1100, NeilBrown wrote:
+> V1 of this series didn't update the usage() message for mountd,
+> and omited the required ':' after the 'T' sort-option.  This 
+> series fixes those two omissions.
 > 
-> On the server, the file still gets new lines of log added as expected.
-> On the reading client, the file gets stuck in the state of the
-> moment it's being read.
-> And stays that way until the writing site closes it, and some time
-> passes after that.
+> Original series comment:
 > 
-> So, with the NFS Server being on 5.4, the issue did not appear.
-> On 5.10, it does. So I bisected the server it with the following setup:
+> When NFSv3 is used mountd provides logs of successful and failed mount
+> attempts which can be used for auditing.
+> When NFSv4 is used there are no such logs as NFSv4 does not have a
+> distinct "mount" request.
 > 
-> One Client opening and appending to a file:
+> However mountd still knows about which filesysytems are being accessed
+> from which clients, and can actually provide more reliable logs than it
+> currently does, though they must be more verbose - with periodic "is
+> being accessed" message replacing a single "was mounted" message.
 > 
-> > ( for i in $(seq 1 60); do date; sleep 1; done ) > testfile
+> This series adds support for that logging, and adds some related
+> improvements to make the logs as useful as possible.
 > 
-> The other just does "fail -f" on the selfsame file.
+> NeilBrown
 > 
-> On the good side of the bisect, the file updates as expected, and
-> tail -f shows new lines as they are added. On the bad side, it just
-> gets stuck and never updates. The file size in "ls -l" also gets
-> stuck.
+> ---
 > 
-> At the end of that bisect, git pointed me at commit
-> 94415b06eb8aed13481646026dc995f04a3a534a.
+> NeilBrown (5):
+>       mountd: reject unknown client IP when !use_ipaddr.
+>       mountd: Don't proactively add export info when fh info is requested.
+>       mountd: add logging for authentication results for accesses.
+>       mountd: add --cache-use-ipaddr option to force use_ipaddr
+>       mountd: make default ttl settable by option
 > 
-> > nfsd4: a client's own opens needn't prevent delegations
 > 
-> And indeed, reverting that commit on top of a current 5.10 kernel
-> makes the issue go away.
+>  support/export/auth.c      |  4 +++
+>  support/export/cache.c     | 32 +++++++++++------
+>  support/export/v4root.c    |  3 +-
+>  support/include/exportfs.h |  3 +-
+>  support/nfs/exports.c      |  4 ++-
+>  utils/mountd/mountd.c      | 30 +++++++++++++++-
+>  utils/mountd/mountd.man    | 70 ++++++++++++++++++++++++++++++++++++++
+>  7 files changed, 131 insertions(+), 15 deletions(-)
 > 
-
-
+> --
+> Signature
