@@ -2,132 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 751C63281D4
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Mar 2021 16:09:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2824932820E
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Mar 2021 16:17:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236903AbhCAPI7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 1 Mar 2021 10:08:59 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36927 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236881AbhCAPIr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Mar 2021 10:08:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614611240;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3CcxvPbENRoxnpPYUhLzxCww37f6skYKB+CD+PRX/BM=;
-        b=BQ8MCEw+1QNI2PI5g4e578hWtzX2pqcJrV5NfVHddplua6iLB0cdz23bwB44HnMzsCsNW0
-        4M4kNjr3Zrt0KgABCCFx3X3eJRPZgg2xoQPnpfWqhrF5DApvW7qWyxulgMIGeHSOe/s4Q3
-        k0voAVzIxPwumQNixiBjAS+tQ6SuBfk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-251-t7bwRF9dOFm6QxJxl1AHCQ-1; Mon, 01 Mar 2021 10:07:18 -0500
-X-MC-Unique: t7bwRF9dOFm6QxJxl1AHCQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8B47107ACE6;
-        Mon,  1 Mar 2021 15:07:15 +0000 (UTC)
-Received: from ovpn-114-130.ams2.redhat.com (ovpn-114-130.ams2.redhat.com [10.36.114.130])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7AC695C3E5;
-        Mon,  1 Mar 2021 15:07:12 +0000 (UTC)
-Message-ID: <51bd5e035546937b8c46264b52e149f0331d0b60.camel@redhat.com>
-Subject: Re: possible deadlock in ipv6_sock_mc_close
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        syzbot <syzbot+e2fa57709a385e6db10f@syzkaller.appspotmail.com>
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "dsahern@kernel.org" <dsahern@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Linux-Net <netdev@vger.kernel.org>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
-Date:   Mon, 01 Mar 2021 16:07:11 +0100
-In-Reply-To: <974A6057-4DE8-4C9A-A71E-4EC08BD8E81B@oracle.com>
-References: <0000000000001d8e2c05bc79e2fd@google.com>
-         <974A6057-4DE8-4C9A-A71E-4EC08BD8E81B@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+        id S237073AbhCAPQc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 1 Mar 2021 10:16:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236841AbhCAPP7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 1 Mar 2021 10:15:59 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 37801600CC
+        for <linux-nfs@vger.kernel.org>; Mon,  1 Mar 2021 15:15:19 +0000 (UTC)
+Subject: [PATCH v1 00/42] NFSv2/3 XDR encoder overhaul
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Date:   Mon, 01 Mar 2021 10:15:18 -0500
+Message-ID: <161461145466.8508.13379815439337754427.stgit@klimt.1015granger.net>
+User-Agent: StGit/1.0-5-g755c
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+Hi-
 
-On Mon, 2021-03-01 at 14:52 +0000, Chuck Lever wrote:
-> > On Mar 1, 2021, at 8:49 AM, syzbot <syzbot+e2fa57709a385e6db10f@syzkaller.appspotmail.com> wrote:
-> > 
-> > Hello,
-> > 
-> > syzbot found the following issue on:
-> > 
-> > HEAD commit:    eee7ede6 Merge branch 'bnxt_en-error-recovery-bug-fixes'
-> > git tree:       net
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=123ad632d00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=e2d5ba72abae4f14
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=e2fa57709a385e6db10f
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=109d89b6d00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12e9e0dad00000
-> > 
-> > The issue was bisected to:
-> > 
-> > commit c8e88e3aa73889421461f878cd569ef84f231ceb
-> > Author: Chuck Lever <chuck.lever@oracle.com>
-> > Date:   Tue Nov 3 20:06:04 2020 +0000
-> > 
-> >    NFSD: Replace READ* macros in nfsd4_decode_layoutget()
-> > 
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13bef9ccd00000
-> > final oops:     https://syzkaller.appspot.com/x/report.txt?x=107ef9ccd00000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=17bef9ccd00000
-> > 
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+e2fa57709a385e6db10f@syzkaller.appspotmail.com
-> > Fixes: c8e88e3aa738 ("NFSD: Replace READ* macros in nfsd4_decode_layoutget()")
-> > 
-> > ======================================================
-> > WARNING: possible circular locking dependency detected
-> > 5.11.0-syzkaller #0 Not tainted
-> > ------------------------------------------------------
-> > syz-executor905/8822 is trying to acquire lock:
-> > ffffffff8d678fe8 (rtnl_mutex){+.+.}-{3:3}, at: ipv6_sock_mc_close+0xd7/0x110 net/ipv6/mcast.c:323
-> > 
-> > but task is already holding lock:
-> > ffff888024390120 (sk_lock-AF_INET6){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1600 [inline]
-> > ffff888024390120 (sk_lock-AF_INET6){+.+.}-{0:0}, at: mptcp6_release+0x57/0x130 net/mptcp/protocol.c:3507
-> > 
-> > which lock already depends on the new lock.
-> 
-> Hi, thanks for the report.
-> 
-> Initial analysis:
-> 
-> c8e88e3aa738 ("NFSD: Replace READ* macros in nfsd4_decode_layoutget()"
-> changes code several layers above the network layer. In addition,
-> neither of the stack traces contain NFSD functions. And, repro.c does
-> not appear to exercise any filesystem code.
-> 
-> Therefore the bisect result looks implausible to me. I don't see any
-> obvious connection between the lockdep splat and c8e88e3aa738. (If
-> someone else does, please let me know where to look).
+This patch series updates the server-side XDR encoder functions for
+NFS versions 2 and 3. The series was available on both test servers
+I maintained at last week's virtual bake-a-thon event.
 
-I agree the bisect result is unexpected.
+I expect that the only controversial part of the series is the
+changes to NFSv3 READDIR and the per-entry encoders. If the reader
+has no time for anything else, please have a close look at those.
 
-This looks really as an MPTCP-specific issue, likely introduced by:
+The series is also available in the for-next topic branch here:
 
-32fcc880e0a9 ("mptcp: provide subflow aware release function")
+git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
 
-and should be fixed inside MPTCP.
+---
 
-Cheers,
+Chuck Lever (42):
+      NFSD: Extract the svcxdr_init_encode() helper
+      NFSD: Update the GETATTR3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 ACCESS3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 LOOKUP3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 wccstat result encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 READLINK3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 READ3res encode to use struct xdr_stream
+      NFSD: Update the NFSv3 WRITE3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 CREATE family of encoders to use struct xdr_stream
+      NFSD: Update the NFSv3 RENAMEv3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 LINK3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 FSSTAT3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 FSINFO3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 PATHCONF3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 COMMIT3res encoder to use struct xdr_stream
+      NFSD: Add a helper that encodes NFSv3 directory offset cookies
+      NFSD: Count bytes instead of pages in the NFSv3 READDIR encoder
+      NFSD: Update the NFSv3 READDIR3res encoder to use struct xdr_stream
+      SUNRPC: Fix xdr_get_next_encode_buffer() page boundary handling
+      NFSD: Update NFSv3 READDIR entry encoders to use struct xdr_stream
+      NFSD: Remove unused NFSv3 directory entry encoders
+      NFSD: Reduce svc_rqst::rq_pages churn during READDIR operations
+      NFSD: Update the NFSv2 stat encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 attrstat encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 diropres encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 READLINK result encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 READ result encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 STATFS result encoder to use struct xdr_stream
+      NFSD: Add a helper that encodes NFSv3 directory offset cookies
+      NFSD: Count bytes instead of pages in the NFSv2 READDIR encoder
+      NFSD: Update the NFSv2 READDIR result encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 READDIR entry encoder to use struct xdr_stream
+      NFSD: Remove unused NFSv2 directory entry encoders
+      NFSD: Add an xdr_stream-based encoder for NFSv2/3 ACLs
+      NFSD: Update the NFSv2 GETACL result encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 SETACL result encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 ACL GETATTR result encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 ACL ACCESS result encoder to use struct xdr_stream
+      NFSD: Clean up after updating NFSv2 ACL encoders
+      NFSD: Update the NFSv3 GETACL result encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 SETACL result encoder to use struct xdr_stream
+      NFSD: Clean up after updating NFSv3 ACL encoders
 
-Paolo
+
+ fs/nfs_common/nfsacl.c     |   71 +++
+ fs/nfsd/nfs2acl.c          |   87 ++-
+ fs/nfsd/nfs3acl.c          |   39 +-
+ fs/nfsd/nfs3proc.c         |   97 ++--
+ fs/nfsd/nfs3xdr.c          | 1044 ++++++++++++++++++++++--------------
+ fs/nfsd/nfsfh.c            |    2 +-
+ fs/nfsd/nfsfh.h            |    2 +-
+ fs/nfsd/nfsproc.c          |   53 +-
+ fs/nfsd/nfsxdr.c           |  411 ++++++++------
+ fs/nfsd/vfs.h              |    2 +-
+ fs/nfsd/xdr.h              |   23 +-
+ fs/nfsd/xdr3.h             |   37 +-
+ include/linux/nfsacl.h     |    3 +
+ include/linux/sunrpc/xdr.h |   20 +
+ net/sunrpc/xdr.c           |    2 +-
+ 15 files changed, 1143 insertions(+), 750 deletions(-)
+
+--
+Chuck Lever
 
