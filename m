@@ -2,23 +2,23 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4416D328210
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Mar 2021 16:17:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31F91328212
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Mar 2021 16:17:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236943AbhCAPQs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 1 Mar 2021 10:16:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40346 "EHLO mail.kernel.org"
+        id S236965AbhCAPQx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 1 Mar 2021 10:16:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236921AbhCAPQR (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 1 Mar 2021 10:16:17 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5F1F664DF5
-        for <linux-nfs@vger.kernel.org>; Mon,  1 Mar 2021 15:15:37 +0000 (UTC)
-Subject: [PATCH v1 03/42] NFSD: Update the NFSv3 ACCESS3res encoder to use
+        id S237043AbhCAPQZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 1 Mar 2021 10:16:25 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 63D5764E12
+        for <linux-nfs@vger.kernel.org>; Mon,  1 Mar 2021 15:15:43 +0000 (UTC)
+Subject: [PATCH v1 04/42] NFSD: Update the NFSv3 LOOKUP3res encoder to use
  struct xdr_stream
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Mon, 01 Mar 2021 10:15:36 -0500
-Message-ID: <161461173665.8508.1057988392558545100.stgit@klimt.1015granger.net>
+Date:   Mon, 01 Mar 2021 10:15:42 -0500
+Message-ID: <161461174266.8508.12126784460493352342.stgit@klimt.1015granger.net>
 In-Reply-To: <161461145466.8508.13379815439337754427.stgit@klimt.1015granger.net>
 References: <161461145466.8508.13379815439337754427.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.0-5-g755c
@@ -29,94 +29,107 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Also, clean up: Rename the encoder function to match the name of
+the result structure in RFC 1813, consistent with other encoder
+function names in nfs3xdr.c. "diropres" is an NFSv2 thingie.
+
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs3xdr.c |   50 +++++++++++++++++++++++++++++++++++++++++++++-----
- fs/nfsd/vfs.h     |    2 +-
- 2 files changed, 46 insertions(+), 6 deletions(-)
+ fs/nfsd/nfs3proc.c |    2 +-
+ fs/nfsd/nfs3xdr.c  |   43 +++++++++++++++++++++++++++++++++++--------
+ fs/nfsd/xdr3.h     |    2 +-
+ 3 files changed, 37 insertions(+), 10 deletions(-)
 
+diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+index 76a84481d526..49b018afc6ea 100644
+--- a/fs/nfsd/nfs3proc.c
++++ b/fs/nfsd/nfs3proc.c
+@@ -758,7 +758,7 @@ static const struct svc_procedure nfsd_procedures3[22] = {
+ 	[NFS3PROC_LOOKUP] = {
+ 		.pc_func = nfsd3_proc_lookup,
+ 		.pc_decode = nfs3svc_decode_diropargs,
+-		.pc_encode = nfs3svc_encode_diropres,
++		.pc_encode = nfs3svc_encode_lookupres,
+ 		.pc_release = nfs3svc_release_fhandle2,
+ 		.pc_argsize = sizeof(struct nfsd3_diropargs),
+ 		.pc_ressize = sizeof(struct nfsd3_diropres),
 diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-index 75739861d235..9d6c989df6d8 100644
+index 9d6c989df6d8..2bb998b3834b 100644
 --- a/fs/nfsd/nfs3xdr.c
 +++ b/fs/nfsd/nfs3xdr.c
-@@ -383,6 +383,35 @@ encode_saved_post_attr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp)
- 	return encode_fattr3(rqstp, p, fhp, &fhp->fh_post_attr);
+@@ -104,6 +104,23 @@ svcxdr_encode_nfsstat3(struct xdr_stream *xdr, __be32 status)
+ 	return true;
  }
  
 +static bool
-+svcxdr_encode_post_op_attr(struct svc_rqst *rqstp, struct xdr_stream *xdr,
-+			   const struct svc_fh *fhp)
++svcxdr_encode_nfs_fh3(struct xdr_stream *xdr, const struct svc_fh *fhp)
 +{
-+	struct dentry *dentry = fhp->fh_dentry;
-+	struct kstat stat;
++	u32 size = fhp->fh_handle.fh_size;
++	__be32 *p;
 +
-+	/*
-+	 * The inode may be NULL if the call failed because of a
-+	 * stale file handle. In this case, no attributes are
-+	 * returned.
-+	 */
-+	if (fhp->fh_no_wcc || !dentry || !d_really_is_positive(dentry))
-+		goto no_post_op_attrs;
-+	if (fh_getattr(fhp, &stat) != nfs_ok)
-+		goto no_post_op_attrs;
-+
-+	if (xdr_stream_encode_item_present(xdr) < 0)
++	p = xdr_reserve_space(xdr, XDR_UNIT + size);
++	if (!p)
 +		return false;
-+	lease_get_mtime(d_inode(dentry), &stat.mtime);
-+	if (!svcxdr_encode_fattr3(rqstp, xdr, fhp, &stat))
-+		return false;
++	*p++ = cpu_to_be32(size);
++	if (size)
++		p[XDR_QUADLEN(size) - 1] = 0;
++	memcpy(p, &fhp->fh_handle.fh_base, size);
 +
 +	return true;
-+
-+no_post_op_attrs:
-+	return xdr_stream_encode_item_absent(xdr) > 0;
 +}
 +
- /*
-  * Encode post-operation attributes.
-  * The inode may be NULL if the call failed because of a stale file
-@@ -835,13 +864,24 @@ nfs3svc_encode_diropres(struct svc_rqst *rqstp, __be32 *p)
- int
- nfs3svc_encode_accessres(struct svc_rqst *rqstp, __be32 *p)
+ static __be32 *
+ encode_fh(__be32 *p, struct svc_fh *fhp)
+ {
+@@ -846,18 +863,28 @@ nfs3svc_encode_wccstat(struct svc_rqst *rqstp, __be32 *p)
+ }
+ 
+ /* LOOKUP */
+-int
+-nfs3svc_encode_diropres(struct svc_rqst *rqstp, __be32 *p)
++int nfs3svc_encode_lookupres(struct svc_rqst *rqstp, __be32 *p)
  {
 +	struct xdr_stream *xdr = &rqstp->rq_res_stream;
- 	struct nfsd3_accessres *resp = rqstp->rq_resp;
+ 	struct nfsd3_diropres *resp = rqstp->rq_resp;
  
 -	*p++ = resp->status;
--	p = encode_post_op_attr(rqstp, p, &resp->fh);
--	if (resp->status == 0)
--		*p++ = htonl(resp->access);
--	return xdr_ressize_check(rqstp, p);
+-	if (resp->status == 0) {
+-		p = encode_fh(p, &resp->fh);
+-		p = encode_post_op_attr(rqstp, p, &resp->fh);
 +	if (!svcxdr_encode_nfsstat3(xdr, resp->status))
 +		return 0;
 +	switch (resp->status) {
 +	case nfs_ok:
++		if (!svcxdr_encode_nfs_fh3(xdr, &resp->fh))
++			return 0;
 +		if (!svcxdr_encode_post_op_attr(rqstp, xdr, &resp->fh))
 +			return 0;
-+		if (xdr_stream_encode_u32(xdr, resp->access) < 0)
++		if (!svcxdr_encode_post_op_attr(rqstp, xdr, &resp->dirfh))
 +			return 0;
 +		break;
 +	default:
-+		if (!svcxdr_encode_post_op_attr(rqstp, xdr, &resp->fh))
++		if (!svcxdr_encode_post_op_attr(rqstp, xdr, &resp->dirfh))
 +			return 0;
-+	}
+ 	}
+-	p = encode_post_op_attr(rqstp, p, &resp->dirfh);
+-	return xdr_ressize_check(rqstp, p);
 +
 +	return 1;
  }
  
- /* READLINK */
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index a2442ebe5acf..b21b76e6b9a8 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -152,7 +152,7 @@ static inline void fh_drop_write(struct svc_fh *fh)
- 	}
- }
- 
--static inline __be32 fh_getattr(struct svc_fh *fh, struct kstat *stat)
-+static inline __be32 fh_getattr(const struct svc_fh *fh, struct kstat *stat)
- {
- 	struct path p = {.mnt = fh->fh_export->ex_path.mnt,
- 			 .dentry = fh->fh_dentry};
+ /* ACCESS */
+diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
+index 0822981c61b9..7db4ee17aa20 100644
+--- a/fs/nfsd/xdr3.h
++++ b/fs/nfsd/xdr3.h
+@@ -282,7 +282,7 @@ int nfs3svc_decode_readdirplusargs(struct svc_rqst *, __be32 *);
+ int nfs3svc_decode_commitargs(struct svc_rqst *, __be32 *);
+ int nfs3svc_encode_getattrres(struct svc_rqst *, __be32 *);
+ int nfs3svc_encode_wccstat(struct svc_rqst *, __be32 *);
+-int nfs3svc_encode_diropres(struct svc_rqst *, __be32 *);
++int nfs3svc_encode_lookupres(struct svc_rqst *, __be32 *);
+ int nfs3svc_encode_accessres(struct svc_rqst *, __be32 *);
+ int nfs3svc_encode_readlinkres(struct svc_rqst *, __be32 *);
+ int nfs3svc_encode_readres(struct svc_rqst *, __be32 *);
 
 
