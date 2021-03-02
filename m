@@ -2,164 +2,231 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 864F432A95C
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Mar 2021 19:26:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15B1B32A976
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Mar 2021 19:33:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1580794AbhCBSU2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Mar 2021 13:20:28 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:48480 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1579484AbhCBQ6a (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Mar 2021 11:58:30 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 122GikYe173845;
-        Tue, 2 Mar 2021 16:57:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=VMG91BM7RxrPNiTQ4i65nRvfthKJH8gyNc/Pyf0Ojm4=;
- b=CWO9jueQqINvGYbSuhz+SMJXvbxX620svU03ejCSd6Mcic5uP+55J1tQWaFQ1AY3J6FX
- 9Vx1yriNlOQ9Zt7rdRfU1rOMoRQbQVOuAMC2WtkoAPpR9gq/f3eqmkZtGRi6KKZo8rA1
- oSyHIcm0+eOeCDtbQVPVjf+OnIApSn6D9xqLcGZqp7Vz9WFd85ASWJCuGPtHcsDC4X+v
- f427xecpU5NrSLBJz3whHGnznuGiPEHQvpsfoBGZTaMAGbxcyHHcDYZTBHq9umAWk+Yb
- clvZO04n87TNEptiz+tvbBiEizMENQ9telgwO5hlvI0B2Ii+jjdFHYAyfIuGb/YD4/i0 Kg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 36ye1m8bqt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Mar 2021 16:57:32 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 122Gj3Im152085;
-        Tue, 2 Mar 2021 16:57:32 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2173.outbound.protection.outlook.com [104.47.58.173])
-        by aserp3020.oracle.com with ESMTP id 370000527y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Mar 2021 16:57:32 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G86l+6URJ38C7PFfkR/EmJ35AVhif5j5i8FGh1lcnoK/8CmOnAHU6SKE4nZyUmDUVeYB9Y5xMkQJ0tEVNzG3ndXea1NIub8b/hTrk+tbIrULPquxpF6NtvzqiA593R0bUx/tXfn+NmaIencaHuGo8zmq69KqTwOHbeib5Bs+9oJcFh7dUgB74x493n1xJhQ82zrLkTxg49DXTZWO/sTNmARm7zTyZmAALG9u53uqNb+z0inWEYzjRtZuxiARPsrOdH/fWIxAIwpIBfXL2zo14j3LPtiDtDqgKtzWvMO/9yKtCaET+npjwf04vbe8F2xaiz/WQ5/4u34GbCoE5gqGjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VMG91BM7RxrPNiTQ4i65nRvfthKJH8gyNc/Pyf0Ojm4=;
- b=TzAV91COW9fGc4nK8FETskfYVcZxTEOOu9WCohdn1Tg3+irtwIc/WBLZuJDZJqaO3YU7h6zAzEn1c+iIKoUZZPw/ILVXZ1JIB8AmqdHXB8ra5LrCaFDWhRfxuf1zAVrq33yO1nwjwdD6EIgVi15SfSl1TTyZbuzHTqsQ4L78yGBD0R9WpVlGYrKN5aC7BaFu978O9ewEPziXp3xgO0Jhq0PifL5jmCQAppG6iMZFsDLroocDW2fOQC6ePrNf/a27xhyL+fJ2ZroMzvQSrlyoKDLqBkEfVxEfKk9qB9ALN1wW4KUcnaTUoRtmBM3oGm10bHmeCf6gOYl3t5wTH5Fx+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VMG91BM7RxrPNiTQ4i65nRvfthKJH8gyNc/Pyf0Ojm4=;
- b=tIoNI6VaWHsYNmfbqnw+vCBBiGf968LWtz5oFG6hDYTyoHVUeqqn8YK4uixSCia4Ol+n07AgkYOiQx0JtAtrI4nf0GqDSImRL/hAyw1R+4aWMCIqcu6jGBduWRXX1X/vhgOb/XnnoTPqkIz5+iQLiP74zgv5gPtauG4w3mQ3Vh8=
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by BYAPR10MB3030.namprd10.prod.outlook.com (2603:10b6:a03:92::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.20; Tue, 2 Mar
- 2021 16:57:28 +0000
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::6da8:6d28:b83:702b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::6da8:6d28:b83:702b%4]) with mapi id 15.20.3890.030; Tue, 2 Mar 2021
- 16:57:28 +0000
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     Bruce Fields <bfields@fieldses.org>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v1 01/42] NFSD: Extract the svcxdr_init_encode() helper
-Thread-Topic: [PATCH v1 01/42] NFSD: Extract the svcxdr_init_encode() helper
-Thread-Index: AQHXDq46iTwkJHRyYEevA5aYNnyw7Kpw6i+AgAACtIA=
-Date:   Tue, 2 Mar 2021 16:57:28 +0000
-Message-ID: <C152432E-C7D2-455B-9193-3D020A23E82F@oracle.com>
-References: <161461145466.8508.13379815439337754427.stgit@klimt.1015granger.net>
- <161461172449.8508.5387365342766187229.stgit@klimt.1015granger.net>
- <20210302164747.GA3400@fieldses.org>
-In-Reply-To: <20210302164747.GA3400@fieldses.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: fieldses.org; dkim=none (message not signed)
- header.d=none;fieldses.org; dmarc=none action=none header.from=oracle.com;
-x-originating-ip: [68.61.232.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b2c9b45a-0ad5-4228-da2d-08d8dd9c4352
-x-ms-traffictypediagnostic: BYAPR10MB3030:
-x-microsoft-antispam-prvs: <BYAPR10MB3030D02C3049BA6B79A37A7493999@BYAPR10MB3030.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 42WegUewgzRD86u8bPgaBFkYL7sx/K9LN/FkUdlfnxpYRDgH9C56ougMoll2OR6ubCHg9HJ0tBkeVqKV0zyDNRdlDr70IibCWlflzE0Kh7S4F9Eus7abHZEVLg75FCi9LfKZIrkK1GubRRDnf9ztufpk1DvM5etzls2aLWR76+CTJArAk7JDMnN+iLG9wCsDRJc+kcxuPOAxi/mqbbfD+6MVk3melyBpphS65XTm5NEYEAsqQ1idPGaCJqDVcKCcWxzyo8UbnM6HIq0qO+izxUxZNBbmuiViMwsQJ9Mt81FXLskRVWc0kbPSHChrewGnDbCz4JUfc98F+IMhBgmRqV90ofwpgJUafzGAN9GzNai1wv0F+qazoRD8npiTNGGZ7oJHdS4mvYYGI9OucdADIMKiAh1xNA1rG3rK+TsM0uM0Ev4e7di2yqxOIx3rFz6Zw+XJV6r3rhQO53oMRExVQgkhJZGV9itn3peZGC19Bv69/Fg5F2xvDkPhgbVQIa3Fpg4umZZs1+utPEk8gDdWBFpJNouOCMz2DN3BsCtHzDrO/cJim11NDPyxfiAEpCcS0Sb7oknezVSbqzBpi3sLjw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(39860400002)(396003)(346002)(376002)(136003)(33656002)(76116006)(8936002)(2616005)(478600001)(4326008)(66446008)(2906002)(8676002)(64756008)(71200400001)(44832011)(66946007)(66476007)(91956017)(6486002)(6506007)(53546011)(66556008)(86362001)(26005)(316002)(4744005)(6916009)(186003)(6512007)(36756003)(5660300002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?K/RTNBBYecVmt6vrJc4ZSdsTDH7XjBT7DD8fgy38kGOYME+YRVNqguznxBkk?=
- =?us-ascii?Q?WkFbCngOvgWRW8XEvSaqThn1ZlDygaIm7UFdyuNd9lDsiXn86D32uccVmWu5?=
- =?us-ascii?Q?qRgBQviqgEsY8ab0YbGB9M5phACmz30XEFT9JWa6IOl2dP1D8sxCGjD+rWaG?=
- =?us-ascii?Q?UG3UN95DGj5EmqvYosx4h3ahASSNMjj4qDoG5YBd1KZFaebSmIYmrE/9q1rX?=
- =?us-ascii?Q?50DHfIJEmVfbeQCGthSRcOdKsoPD+dArtexm2wb2IC8O8xMZjdIW4787zwMe?=
- =?us-ascii?Q?nyEV2B7TcmhBURBWiGGe+hBkbjjFuAdKz67v6IEtP1AUQt2jD20HMftxNJhx?=
- =?us-ascii?Q?EBBYSW/uMDbQa2UHqcB8t+HWck/gsw762DMWWFpmXIpi3ottec7nMG+a/+5O?=
- =?us-ascii?Q?HxEcMmfmMlRcr+ya8gpHwEOS/NUgIHtLZn/8xvpjRiBfCwmKpMBxt6hrSbs+?=
- =?us-ascii?Q?rlG7TDqOPEuBErBw/LfX4mttfGxAs6urNRCAkOUtywfuDT3pjyjx4ofa/l1e?=
- =?us-ascii?Q?D0HoSWF8EF/6OZ2gX+IFqGbeAGCMLY7/heQFNepBiHHMOVD3yzy4mPs1pN0Y?=
- =?us-ascii?Q?gj+GCWnKCkowXcCvXoQ9iAojCKwFz75k56MsPXYO4k+652SFlKsel1gzRwsN?=
- =?us-ascii?Q?te8NLC8AMBShqpHav85R+5Zemmj6OLIEmNtl5f44tSJGhxqJTvj7b9vu4j0b?=
- =?us-ascii?Q?I0zkZFmjew2yYNXXzDrvLrQK1heEVvKPc2PtKh7ua+hBc3CInLqk1Uo7O/67?=
- =?us-ascii?Q?XGO1iqRmiZoSCx2MhOfBU7FVU/5fC9WjqZSOY4+uqsmT+nYES80GBSoSkT1w?=
- =?us-ascii?Q?JUpHxkO8Sm7xQRUSbQhTN6EtrQhp2bLDIA3H1Sa56BCyiVMvylaik6U6eXMY?=
- =?us-ascii?Q?HJL1n8ErNqWMPdFvTCEKjyhuEyOy4+p+W2PL5bWnhqo6V/KIfx81Wevt6LhH?=
- =?us-ascii?Q?GzG2+bkvO0MQkG184yAQEeTy3mNHUnt46D2oTLmqrP2AH61cPWYDeg1onin6?=
- =?us-ascii?Q?AWV7Qn+INnw80KvRNU0zelA0ye+wLVtirKNlURanBrFFvSuqRKvXuzr5nsar?=
- =?us-ascii?Q?INwoYbO8nuYFGNvM8+4OfIwb2v07F98ctLeygGKI/B4T2IZT/S1fpYcaq9wp?=
- =?us-ascii?Q?LsU3PDjKPtZLJCJmtefc/ie2vZB1vI7b8VMQEizMvf/LbvQo3BKyGaFcH49N?=
- =?us-ascii?Q?rX5z9uYK0xD2LGubHNXGrhNfXaZzPbqfmf4P5xSYRGAO1rBL38tbfudZcVaY?=
- =?us-ascii?Q?o/aRDUPeZPL1Qg3bDNhimMP0qoEbUYWh9yhR7v0hkcb4ODKJJ2ER5eN+TjUE?=
- =?us-ascii?Q?YE3yR/aem8yDJ/UXwfXSpK6o?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5F5F38D7B828B043A87BC04B53E1F86D@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S235202AbhCBSXY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Mar 2021 13:23:24 -0500
+Received: from mail-ej1-f47.google.com ([209.85.218.47]:40821 "EHLO
+        mail-ej1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1580760AbhCBSVV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Mar 2021 13:21:21 -0500
+Received: by mail-ej1-f47.google.com with SMTP id ci14so18088799ejc.7;
+        Tue, 02 Mar 2021 10:20:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6pNEu7KQLcXSJZyITrmV1pUTE9NtYAwDbH+VjXoKaew=;
+        b=BOveuMS8u9ePiWp+k3D7UBpNBRIj/XDLgR2LPkZZqH1aEu6BlXCXqFd0bbm7ad23A8
+         YiLvVPVo9HJMukBOT8po3pBqtphyA/pMwoUGZJm7ZxpqPQ7eoh+duP3O4Ns3PZBDcItJ
+         SfybSP/M8Hk9GcvDJKoYqB+NU5WfiJPARA7UTCBC3twLwSxY1ttnNQH4AlZ/S0OUy4ss
+         7iDJqooOzBdd/NKkYL4XVqblpGoGxYQG9lNSyDjkrgoEwTgzGjlyP1L4yJ6YxCy/7ttS
+         84CYXmOipQhlEYHQ1VvuweeCw3jGDtBgKlxbGX6QY2ji6/KJHuELOK6M9GneYV6YW4ht
+         T8UA==
+X-Gm-Message-State: AOAM5315D5IwmEUeMFYpK3cTJjMsLnFpQsrgALiwlSXbawOqX3xn89Gk
+        WQnaA7k6jYGKHLANN6BWUv5zlU9cnX5ruXeBQKk=
+X-Google-Smtp-Source: ABdhPJx+VRxciomDvLVgvTm07NKqU2Xf0GxHlyss8gTFZGpdlMA8V5dIvUeirFiXZi04/Le6ee9l/Cy0ApO7VvOQ6dw=
+X-Received: by 2002:a17:906:4e17:: with SMTP id z23mr20564237eju.439.1614709232401;
+ Tue, 02 Mar 2021 10:20:32 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2c9b45a-0ad5-4228-da2d-08d8dd9c4352
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2021 16:57:28.6079
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: T+AAOYR4m5ZoyJqeq6HbUqwLof74RP1kCta/yfaEtF/4KDLFT8J5Sw5EK/bZAH1fDpQ9snZhN+KKqhdslQG3bQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3030
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9911 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=922
- phishscore=0 bulkscore=0 mlxscore=0 spamscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103020130
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9911 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
- mlxlogscore=999 impostorscore=0 suspectscore=0 adultscore=0 malwarescore=0
- mlxscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103020130
+References: <CAN-5tyGuV-gs0KzVbKSj42ZMx553zy9wOfVb1SoHoE-WCoN1_w@mail.gmail.com>
+ <20210227033755.24460-1-olga.kornievskaia@gmail.com>
+In-Reply-To: <20210227033755.24460-1-olga.kornievskaia@gmail.com>
+From:   Anna Schumaker <anna.schumaker@netapp.com>
+Date:   Tue, 2 Mar 2021 13:20:16 -0500
+Message-ID: <CAFX2Jfk--KwkAss1gqTPnQt-bKvUUapNdHbuicu=m+jOtjrMyQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] [security] Add new hook to compare new mount to an
+ existing mount
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        casey@schaufler-ca.com
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Casey,
 
+On Fri, Feb 26, 2021 at 10:40 PM Olga Kornievskaia
+<olga.kornievskaia@gmail.com> wrote:
+>
+> From: Olga Kornievskaia <kolga@netapp.com>
+>
+> Add a new hook that takes an existing super block and a new mount
+> with new options and determines if new options confict with an
+> existing mount or not.
+>
+> A filesystem can use this new hook to determine if it can share
+> the an existing superblock with a new superblock for the new mount.
+>
+> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 
-> On Mar 2, 2021, at 11:47 AM, J. Bruce Fields <bfields@fieldses.org> wrote=
-:
->=20
-> On Mon, Mar 01, 2021 at 10:15:24AM -0500, Chuck Lever wrote:
->> NFSD initializes an encode xdr_stream only after the RPC layer has
->> already inserted the RPC Reply header.
->=20
-> Out of curiosity: does it need to be this way?
+Do you have any other thoughts on this patch? I'm also wondering how
+you want to handle sending it upstream. I'm happy to take it through
+the NFS tree (with an acked-by) for a 5.12-rc with Olga's bugfix
+patches, but if you have other thoughts or plans then let me know!
 
-The code in svc.c uses the old-school svc_putu32() and friends macros.
-I don't think there's another reason.
+Thanks,
+Anna
 
-IMHO they could be replaced, but I didn't have the stones to go that
-far.
-
-
---
-Chuck Lever
-
-
-
+> ---
+>  include/linux/lsm_hook_defs.h |  1 +
+>  include/linux/lsm_hooks.h     |  6 ++++
+>  include/linux/security.h      |  8 +++++
+>  security/security.c           |  7 +++++
+>  security/selinux/hooks.c      | 56 +++++++++++++++++++++++++++++++++++
+>  5 files changed, 78 insertions(+)
+>
+> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+> index 7aaa753b8608..1b12a5266a51 100644
+> --- a/include/linux/lsm_hook_defs.h
+> +++ b/include/linux/lsm_hook_defs.h
+> @@ -62,6 +62,7 @@ LSM_HOOK(int, 0, sb_alloc_security, struct super_block *sb)
+>  LSM_HOOK(void, LSM_RET_VOID, sb_free_security, struct super_block *sb)
+>  LSM_HOOK(void, LSM_RET_VOID, sb_free_mnt_opts, void *mnt_opts)
+>  LSM_HOOK(int, 0, sb_eat_lsm_opts, char *orig, void **mnt_opts)
+> +LSM_HOOK(int, 0, sb_mnt_opts_compat, struct super_block *sb, void *mnt_opts)
+>  LSM_HOOK(int, 0, sb_remount, struct super_block *sb, void *mnt_opts)
+>  LSM_HOOK(int, 0, sb_kern_mount, struct super_block *sb)
+>  LSM_HOOK(int, 0, sb_show_options, struct seq_file *m, struct super_block *sb)
+> diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+> index a19adef1f088..0de8eb2ea547 100644
+> --- a/include/linux/lsm_hooks.h
+> +++ b/include/linux/lsm_hooks.h
+> @@ -142,6 +142,12 @@
+>   *     @orig the original mount data copied from userspace.
+>   *     @copy copied data which will be passed to the security module.
+>   *     Returns 0 if the copy was successful.
+> + * @sb_mnt_opts_compat:
+> + *     Determine if the new mount options in @mnt_opts are allowed given
+> + *     the existing mounted filesystem at @sb.
+> + *     @sb superblock being compared
+> + *     @mnt_opts new mount options
+> + *     Return 0 if options are compatible.
+>   * @sb_remount:
+>   *     Extracts security system specific mount options and verifies no changes
+>   *     are being made to those options.
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index c35ea0ffccd9..50db3d5d1608 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -291,6 +291,7 @@ int security_sb_alloc(struct super_block *sb);
+>  void security_sb_free(struct super_block *sb);
+>  void security_free_mnt_opts(void **mnt_opts);
+>  int security_sb_eat_lsm_opts(char *options, void **mnt_opts);
+> +int security_sb_mnt_opts_compat(struct super_block *sb, void *mnt_opts);
+>  int security_sb_remount(struct super_block *sb, void *mnt_opts);
+>  int security_sb_kern_mount(struct super_block *sb);
+>  int security_sb_show_options(struct seq_file *m, struct super_block *sb);
+> @@ -635,6 +636,13 @@ static inline int security_sb_remount(struct super_block *sb,
+>         return 0;
+>  }
+>
+> +static inline int security_sb_mnt_opts_compat(struct super_block *sb,
+> +                                             void *mnt_opts)
+> +{
+> +       return 0;
+> +}
+> +
+> +
+>  static inline int security_sb_kern_mount(struct super_block *sb)
+>  {
+>         return 0;
+> diff --git a/security/security.c b/security/security.c
+> index 7b09cfbae94f..56cf5563efde 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -890,6 +890,13 @@ int security_sb_eat_lsm_opts(char *options, void **mnt_opts)
+>  }
+>  EXPORT_SYMBOL(security_sb_eat_lsm_opts);
+>
+> +int security_sb_mnt_opts_compat(struct super_block *sb,
+> +                               void *mnt_opts)
+> +{
+> +       return call_int_hook(sb_mnt_opts_compat, 0, sb, mnt_opts);
+> +}
+> +EXPORT_SYMBOL(security_sb_mnt_opts_compat);
+> +
+>  int security_sb_remount(struct super_block *sb,
+>                         void *mnt_opts)
+>  {
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 644b17ec9e63..afee3a222a0e 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -2656,6 +2656,61 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
+>         return rc;
+>  }
+>
+> +static int selinux_sb_mnt_opts_compat(struct super_block *sb, void *mnt_opts)
+> +{
+> +       struct selinux_mnt_opts *opts = mnt_opts;
+> +       struct superblock_security_struct *sbsec = sb->s_security;
+> +       u32 sid;
+> +       int rc;
+> +
+> +       /*
+> +        * Superblock not initialized (i.e. no options) - reject if any
+> +        * options specified, otherwise accept.
+> +        */
+> +       if (!(sbsec->flags & SE_SBINITIALIZED))
+> +               return opts ? 1 : 0;
+> +
+> +       /*
+> +        * Superblock initialized and no options specified - reject if
+> +        * superblock has any options set, otherwise accept.
+> +        */
+> +       if (!opts)
+> +               return (sbsec->flags & SE_MNTMASK) ? 1 : 0;
+> +
+> +       if (opts->fscontext) {
+> +               rc = parse_sid(sb, opts->fscontext, &sid);
+> +               if (rc)
+> +                       return 1;
+> +               if (bad_option(sbsec, FSCONTEXT_MNT, sbsec->sid, sid))
+> +                       return 1;
+> +       }
+> +       if (opts->context) {
+> +               rc = parse_sid(sb, opts->context, &sid);
+> +               if (rc)
+> +                       return 1;
+> +               if (bad_option(sbsec, CONTEXT_MNT, sbsec->mntpoint_sid, sid))
+> +                       return 1;
+> +       }
+> +       if (opts->rootcontext) {
+> +               struct inode_security_struct *root_isec;
+> +
+> +               root_isec = backing_inode_security(sb->s_root);
+> +               rc = parse_sid(sb, opts->rootcontext, &sid);
+> +               if (rc)
+> +                       return 1;
+> +               if (bad_option(sbsec, ROOTCONTEXT_MNT, root_isec->sid, sid))
+> +                       return 1;
+> +       }
+> +       if (opts->defcontext) {
+> +               rc = parse_sid(sb, opts->defcontext, &sid);
+> +               if (rc)
+> +                       return 1;
+> +               if (bad_option(sbsec, DEFCONTEXT_MNT, sbsec->def_sid, sid))
+> +                       return 1;
+> +       }
+> +       return 0;
+> +}
+> +
+>  static int selinux_sb_remount(struct super_block *sb, void *mnt_opts)
+>  {
+>         struct selinux_mnt_opts *opts = mnt_opts;
+> @@ -6984,6 +7039,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
+>
+>         LSM_HOOK_INIT(sb_free_security, selinux_sb_free_security),
+>         LSM_HOOK_INIT(sb_free_mnt_opts, selinux_free_mnt_opts),
+> +       LSM_HOOK_INIT(sb_mnt_opts_compat, selinux_sb_mnt_opts_compat),
+>         LSM_HOOK_INIT(sb_remount, selinux_sb_remount),
+>         LSM_HOOK_INIT(sb_kern_mount, selinux_sb_kern_mount),
+>         LSM_HOOK_INIT(sb_show_options, selinux_sb_show_options),
+> --
+> 2.27.0
+>
