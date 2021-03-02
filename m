@@ -2,76 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3174532A93E
+	by mail.lfdr.de (Postfix) with ESMTP id A4E2332A93F
 	for <lists+linux-nfs@lfdr.de>; Tue,  2 Mar 2021 19:24:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352144AbhCBSRN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Mar 2021 13:17:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1573909AbhCBD2P (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Mar 2021 22:28:15 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00CF5C061756
-        for <linux-nfs@vger.kernel.org>; Mon,  1 Mar 2021 19:27:34 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 6DBEF2501; Mon,  1 Mar 2021 22:27:33 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6DBEF2501
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1614655653;
-        bh=9HBFXOOrXbANcO931Pqx56oVgID/LiNT2qjHGnB9S1Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IhYwmnv9pp0ZpT2wt7IxKX0jvR0znxHcNgJ34nx/wsmE05zajN7NGIN9ZqSWOwgdP
-         imx3JeOu6ob0e5WzbOgP+HcCdJQSntt6kdVJWaIgwuhv/4KsRuYWRdWqjNrYANekAd
-         Z7P3WHYbJzaGDx4ebnX4lUIftmtiYg7IUL66WwL0=
-Date:   Mon, 1 Mar 2021 22:27:33 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Steve Dickson <SteveD@RedHat.com>,
-        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 0/5 v2] nfs-utils: provide audit-logging of NFSv4 access
-Message-ID: <20210302032733.GC16303@fieldses.org>
-References: <161456493684.22801.323431390819102360.stgit@noble>
- <20210301185037.GB14881@fieldses.org>
- <874khui7hr.fsf@notabene.neil.brown.name>
+        id S1443547AbhCBSSP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Mar 2021 13:18:15 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:13191 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243024AbhCBDpK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Mar 2021 22:45:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1614656753; x=1646192753;
+  h=date:from:to:subject:message-id:mime-version;
+  bh=h7FdbR/XINx+jRNsTGstOKAfTQIAJ5P/wwbwJhKYUKQ=;
+  b=CKkBgYTQkaKDXtyKOOLijocUAvbAwfE0R47WTXoOkZlCMYQXvP93NmJi
+   BNLFaJAzM4Wz24yZr7Mrd2UzuNSpzHgZz/L04BphJ3yYWREZoiq3WvBAT
+   wxy1DRy3L1qRw5BPofEOmgWxnzOvUb51RNQDY/k9qfb81S+jaoQRCsKBc
+   I=;
+X-IronPort-AV: E=Sophos;i="5.81,216,1610409600"; 
+   d="scan'208";a="89962955"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 02 Mar 2021 03:45:12 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
+        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id CCD86A1F8F
+        for <linux-nfs@vger.kernel.org>; Tue,  2 Mar 2021 03:45:11 +0000 (UTC)
+Received: from EX13D06UEA003.ant.amazon.com (10.43.61.20) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 2 Mar 2021 03:45:10 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
+ EX13D06UEA003.ant.amazon.com (10.43.61.20) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 2 Mar 2021 03:45:10 +0000
+Received: from dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com
+ (10.200.231.78) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Tue, 2 Mar 2021 03:45:10 +0000
+Received: by dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com (Postfix, from userid 5408343)
+        id E1C0E56B; Tue,  2 Mar 2021 03:45:10 +0000 (UTC)
+Date:   Tue, 2 Mar 2021 03:45:10 +0000
+From:   Geert Jansen <gerardu@amazon.com>
+To:     <linux-nfs@vger.kernel.org>
+Subject: Access cache and lookupcache=pos
+Message-ID: <20210302034510.GA61130@dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <874khui7hr.fsf@notabene.neil.brown.name>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Mar 02, 2021 at 02:01:36PM +1100, NeilBrown wrote:
-> On Mon, Mar 01 2021, J. Bruce Fields wrote:
-> 
-> > I've gotten requests for similar functionality, and intended to
-> > implement it using directory notifications on /proc/fs/nfsd/clients.
-> 
-> I've been exploring this a bit.
-> When I mount a filesystem, 2 clients get created.
-> With NFSv4.0, the second client is immediately deleted, and the first
-> client is deleted one grace period after the filesystem is unmounted.
-> With NFSv4.1 and 4.2, the first client is immediately deleted, and the
-> second client is deleted immediately after the unmount.
+Hi,
 
-Yeah, internally it's creating an "unconfirmed client" on SETCLIENTID
-(or EXCHANGE_ID) and then a new "confirmed client" on
-SETCLIENTID_CONFIRM (or CREATE_SESSION).
+some of our customers run applications that require the lookupcache=pos
+mount option. One example of such an application is Gitlab [1]. Recently we
+profiled a Gitlab workload and noticed that 38% of compound operations and
+27% of EFS server time were spent on an ACCESS compound (SEQUENCE, PUTFH,
+ACCESS, GETATTR) that we weren't sure is necessary.
 
-I'm not sure why the ordering's a little different between the 4.0/4.1+
-cases.
+To reproduce:
 
-The difference on unmount is because 4.1+ clients immediately send a
-DESTROY_CLIENTID on unmount, but that op was new to 4.1.
+1. Mount an NFS file system with -o lookupcache=pos.
+2. $ mkdir /mnt/a
+3. $ for i in `seq 1 10`; do ls /mnt/a/nonex.txt; done
 
-(Note of course this isn't precisely mount/unmount, as the same client
-can be used for multiple filesystems.)
+There are two compounds that are emitted for every iteration in step 3:
 
-Honestly, I think this is exposing an implementation detail and it's
-dumb.  I'll look into fixing it.
+1. SEQUENCE, PUTFH, ACCESS, GETATTR
+2. SEQUENCE, PUTFH, LOOKUP, GETFH, GETATTR
 
-(I don't know if that change itself would cause additional difficulty.)
+In the first compound, ACCESS has FH=</mnt/a> and access=0x1f. The result is
+NFS4_OK with supported=0x1f and access=1f. In the second compound, LOOKUP
+has FH=</mnt/a> and objname="nonex.txt". The result is NFS4ERR_NOENT.
 
---b.
+If I understand lookupcache=pos correctly, it causes the result of LOOKUP
+not to be cached because of the ENOENT, which is what's happening. Is there
+a reason that the succesful ACCESS is not cached in the parent directory's
+access_cache? Caching it would reduce the runtime of this application by
+about 27% which would be a nice speedup.
+
+[1] https://docs.gitlab.com/ee/administration/nfs.html
