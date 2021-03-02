@@ -2,278 +2,720 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7857632A952
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Mar 2021 19:25:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EFF132A95F
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Mar 2021 19:26:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1580778AbhCBSUU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Mar 2021 13:20:20 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:56784 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382690AbhCBQUH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Mar 2021 11:20:07 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 122FjWD9012965;
-        Tue, 2 Mar 2021 15:48:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=1FpwGNuiKqdJ64zSSYufRW9NCEBnUQR4xxeHtpJ3HdE=;
- b=rFSrwzB0+i5QbVhQ9AiwNPd4IqNxLu6PaPR1l8lYe/3+vEl3nFBVyTEHHBnjzdr23Vkc
- 2NfScqH5txVXcX8XpKQn6r6UaYOhGZN+mwneXF0rk8iFuBgWd3zZ2Jerb4ZhOqBe+mBW
- e4OIgXHf/j8HQiHl4ug/Hjct+8NspA6Dieci+GGARtxUn+W5PQtJxjeZVTGsdPhXwQ3g
- 4n6OBkwjlt9VnZ+BVJvX37mbJiZ9AjFTgFzcGXgS3SIiufh9QkzC/GbuH75SwaYdogbn
- 9S+AvOyTNCqWb6npGjL3FYrsnD/o2LLyHAyYFfyQTxpskm5ZaHRjR5/71r2L1af5p6or 5Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 36ybkb8739-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Mar 2021 15:48:09 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 122Fj0LY159521;
-        Tue, 2 Mar 2021 15:48:09 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2048.outbound.protection.outlook.com [104.47.66.48])
-        by aserp3030.oracle.com with ESMTP id 36yynparrf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Mar 2021 15:48:09 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KhR9iUOfZQYHK9WkniDWMdUsHjTt8C327j+ViftcwnIBA8jSiw/wrwlxp3cr7bdLbIaMXwWDpSievVDTBsH/eSUByVlJZ4ERZFxI6Nb13u94xk4RtDUcN+XgmzxBt5g+h3GRqYePPyMlgHUgwYVT9HCewxdWeawXQQHlRroLBfhhjRfxQOONozwVn6wDfQUVcNoKoW5CNzhLpwPucuCxhrIbQzTydOEKMjckt4a1u/u6yLs/m3Mv/rucSLudpkqWRXH0MjkspSBcmv4/VO8pOGN3K/GM4J+bk7aCogcYMaRPZ0kgv6VSk1V8oqoDPsqm9yIfFO44WJEvQb6faXaV2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1FpwGNuiKqdJ64zSSYufRW9NCEBnUQR4xxeHtpJ3HdE=;
- b=NSLmJgT5YXdmMtiqWyzCQKRSAZiaVAHESR9dec38tZsbOHy8SwrW61eCVtrYYnQf35whcE4QWd7JeOnlLPHAL1bNztV6HEOc3gKtWQdVYwmCjZXPnXSiJEDUyjSI78xVXSktCe5wskowDRIe4QcwRZrcJoScta3bjtrGH5JsDoJZuGZvUSX9+LalS1X8uHnh+fY6nf1Vsf7JpJU/XBkxBjhjpCs1rDVLzStAnK6U350zZRJGAG6Uxkk3CYGjF/yPxinG83KCHED+IYMWBM+GOq41J/2BluY80CR/y/6ZQhfuf7xCPWlsKGsM6eHH/GKpxyhDsBdtexc6rjrWEhaQSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1FpwGNuiKqdJ64zSSYufRW9NCEBnUQR4xxeHtpJ3HdE=;
- b=odOtxG2xLYYUrd+7wnReIq4qIg4fHlhaNzbhBD+Ra+aGXp8tbJOdWaK5Kn/HOLVpnz3uXNl/3S53cRv+jjVy/Q7Z0yiRXAwJ1LXL+ocfW0wpwG+ynxEmDN5p6ZnIEiw/kLHhsvTEeBIdWKGT8Z6+17JlD/99iYyeNdY72D7yl7c=
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by BY5PR10MB4275.namprd10.prod.outlook.com (2603:10b6:a03:210::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.20; Tue, 2 Mar
- 2021 15:48:07 +0000
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::6da8:6d28:b83:702b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::6da8:6d28:b83:702b%4]) with mapi id 15.20.3890.030; Tue, 2 Mar 2021
- 15:48:07 +0000
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     Daniel Kobras <kobras@puzzle-itc.de>
-CC:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] sunrpc: fix refcount leak for rpc auth modules
-Thread-Topic: [PATCH] sunrpc: fix refcount leak for rpc auth modules
-Thread-Index: AQHXDJPLGG4N2gFkYEKpGIw1cGBThqpvQ6UAgAAS+wCAABUlgIABL6oAgABCSAA=
-Date:   Tue, 2 Mar 2021 15:48:06 +0000
-Message-ID: <3F1B347F-B809-478F-A1E9-0BE98E22B0F0@oracle.com>
-References: <20210226230437.jfgagcq5magzlrtv@tuedko18.puzzle-itc.de>
- <C2704113-2581-4B58-806B-BB65148AC14B@oracle.com>
- <20210301162820.GB11772@fieldses.org>
- <F2DE890D-C2D7-476A-AF6F-949B105728E9@oracle.com>
- <61920dd6-31d6-b12a-9a9b-7e7a662a12c3@puzzle-itc.de>
-In-Reply-To: <61920dd6-31d6-b12a-9a9b-7e7a662a12c3@puzzle-itc.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: puzzle-itc.de; dkim=none (message not signed)
- header.d=none;puzzle-itc.de; dmarc=none action=none header.from=oracle.com;
-x-originating-ip: [68.61.232.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cefe606a-3a1b-47e9-8d1a-08d8dd9292c5
-x-ms-traffictypediagnostic: BY5PR10MB4275:
-x-ms-exchange-minimumurldomainage: puzzle-itc.de#0
-x-microsoft-antispam-prvs: <BY5PR10MB42754AC222269C8420DA9E7F93999@BY5PR10MB4275.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: q0rE/OnET7TuBdHSkK290yrpMQqTfUNV61Lk86PsRuo1ADOUMSaebHWtBYZgKBx8RA68reLDctnZ5Wy1Jq99cabDclyM25vc9t2+7eMXiSTjG91ic6vHT8kewPVWNGPAmCJPmxxn8acoy8tfLBmyErr1uciqE0IgVEJQCCCNTJNpfXpbJOL8bhbm32m2IFOVd+miAD/IaMnlFJHcSN2XB9+O6ZXkzxUtMOxS0P+1IWYcM/vFYllEHRNly2Zpdtikx9mtjHoVUsPONG/jWFeOaf67QdoZlfklMj8mYOmbQMc3w9XA/aJ5/4201XLgc1YPr2Bn5RwFn/UXz70UrHpjhwafES74c5fD6CJPWSUHkP55ABVl7P4zXKNTWmmMGHW74QWzSaB1+8jJcxw5JiPC0XuYvvvctps3jknJUj1tJVUg/2j2wI/qYWL42oU9ZtCdOiU9T57sbLh2canPAXjxLtQGLhjCW6F9poPsCZBnZhFT2kwcqLKR2O0BlHaUejbudGDsuGA4nghONhPrLkpkmexYm0nCeCDs6hqxu8+mykQ75l98x5xtTJPqMd2UehsaLxYjHVA+B7WhLpouNSSYPO3RtmLi5eOqf1xbVhj8MYl68QKZIDJGu7gKtnr2kXTquYHybAN3HgcBzu/sjqDvND3ImPdjKLMJVteMNmJNHYo=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(39860400002)(346002)(396003)(136003)(66556008)(91956017)(64756008)(66476007)(83380400001)(186003)(76116006)(6512007)(66446008)(66946007)(15974865002)(26005)(6506007)(53546011)(71200400001)(66574015)(478600001)(54906003)(8676002)(2906002)(6486002)(44832011)(4326008)(33656002)(316002)(6916009)(86362001)(2616005)(5660300002)(8936002)(36756003)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?RDBXWUlYczlybUx0MDVtSzFGZ2hLNkxZZGJrM25XeE4zOGQ5Z0hEVjdpMGxl?=
- =?utf-8?B?VmdCd21IUFFXRlhheWlETDBmRkxaMXRDZ3hSZWYrQXd5cGVuK3BBS3dublJm?=
- =?utf-8?B?a3F4RktQSFBlSjEzRkJhaUZMMUZ2WVhabDdLWld3RXhaWVZjOEYyOGNrV0Rm?=
- =?utf-8?B?QzlDL1JPamRRTHBJcVRabUZud29hS2dJT2dFL2wxS3dqQm12TXdpdmN0MHB1?=
- =?utf-8?B?eTVDRXcyWFVZNzliUUVDTU9FVWFvS2VVVGpwUXloUGtsOE1TaUNqNDNmNmZM?=
- =?utf-8?B?eEF3VGF2NXNVWlBkM1QreEdpcmxHbkxCTGZnVjFiVE1GdjNiNlVEZlZ0Njcv?=
- =?utf-8?B?NTdpUjYwZkhxQ09SbU1RRkx5U0NWRmNwak4xcDFtNThGQTBoRWVVU3dFTGln?=
- =?utf-8?B?ejNoSFlRaisybmJta3UvNHNSYmV0b2lHNllmNHhnL05MdndDS21vTTZsMngr?=
- =?utf-8?B?VHExUkFpL0hiVFlGQlR4N3NjaDBtU1R1aTNkMFM3Y3YxMk1aRFo4akh5Tzhh?=
- =?utf-8?B?UWlRL0J1WHdnM0RqTXpieXA2MVNybTFkc0dVd05KbU5rMEl3aTJIaHZNMStD?=
- =?utf-8?B?bFpEWWt5M1NxbVZuQWFsYndQWHRVUnAvTnRQQWl5ckt4NnlyU0dlSXNGME9L?=
- =?utf-8?B?aVhUNWZ1MVVFTzkyajNnWUVuTkJ6dGtzK1VoRHoxQWZpZmtQSFRTdEVrZnpx?=
- =?utf-8?B?SFppYSswdEdkeGZ6UEdpS3ExV01SaFJLdEJwcHAxZzdOY3p1Z3JEcVRVUE5z?=
- =?utf-8?B?L0lyNllJZU1SYzVaUHNVUFEreFI0eDJSNzNOR0pzai9VVXZnV2JnamhHeVJR?=
- =?utf-8?B?RVZkVy9uaml4NThqTDZQRmZQYWRScWJkQWhVdzh6WitJdmliNEVwRVhvTTJC?=
- =?utf-8?B?cEd0ODhMTVJUSG83WTVXVDJRWnVFcTVQWnV3NXd3cUJlZVNneGhPc2xTR3A5?=
- =?utf-8?B?VS9Rc3hUNStRQ3RiOFB4UkZuRlV6bExYR3Q2aG9GOEZKbHd0UHV2ejN3K09X?=
- =?utf-8?B?QjhJeVI3NEVxUzhvbFMxRjhBY1ljazFLeTIvekN4UFZ2Z1I0WmZlMi9VSUpF?=
- =?utf-8?B?cXBHN0VodjYzZU5kckdlR0Jadjhkb0Y2SkwrQUZGQmhpVUNJZ0NmNXhsQkxh?=
- =?utf-8?B?Rk1pUjQwaTJMWTVTQnhZa1pGQUdMY0FxMW9ObUFLcFFMQVF6c2xIOURwZE1q?=
- =?utf-8?B?ZEpqVUJLQ0pQUEpsMFpVNDhVQ3A5N2ZHOGkvN2tzMTV2RW4xTVZzSXdxaHBC?=
- =?utf-8?B?RlBRRDJ3a1lkQ0lOdGtUUlpaUHBjU0RSM3lvZ3gvOEN2QU1HMmZXR3Q1NURY?=
- =?utf-8?B?d2Q4dUpQc3QvS01RSUdCbWFlYXg0UFF0aC96dGd6TlNRNjZtazMremNqdzFU?=
- =?utf-8?B?c2JzcXdkZzhMbVFwalh2MHFUM3E5YWlSKzRrYiswcFNQcmVwb0dDanhGS1Rr?=
- =?utf-8?B?c3dRQm9wUVlWeDNBV2Rvdm1Od3RVeGIxZk5MdDVFang2QjQ4NjNqVEErbThC?=
- =?utf-8?B?Wm8xZC85MzcrWWdVMFZVd2RvL3lwaHlrTGlrK0I1akhpR1lJLy85Zk1xVEJs?=
- =?utf-8?B?Rks5NE1HT3pXR3hrRnBSQjAzalRZT3A0RWNWRlFEQlBEdzl1Z0NvVlYvY3VJ?=
- =?utf-8?B?YUdhRHhJMXF1T0FtNmVoSnpHRVVtdnd2NDg5amtQNEU4ZEJlTXowVk9Ra25E?=
- =?utf-8?B?RU8vdnBRZ21lV2QxVXlyNkVWT2tlL0ZzU3pCM2NIMUtjQ1F5TFRvUHJySXpi?=
- =?utf-8?Q?3e76xaB/CAMAoJuThTTqMY8VLoDtLmvtGwrBUYA?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <81B330A06A47D0439B0F7A59816B3C6B@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1580797AbhCBSUb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Mar 2021 13:20:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345941AbhCBRXs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Mar 2021 12:23:48 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18330C0617A7
+        for <linux-nfs@vger.kernel.org>; Tue,  2 Mar 2021 08:47:50 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id EF9191E3B; Tue,  2 Mar 2021 11:47:47 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org EF9191E3B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1614703667;
+        bh=QDBn2TGMp6cpPlOX8eaUbRYgcjoj7Qm/o+4ym2aLio4=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=JQFIz/HbTEQjzw/xVB5z8PtCV8ia5aRMYUTTpGQ0kPVmkVm+Tzwz6x3QeZmeT8iWc
+         DcsMp5Uel4ElD0uOlhYsZLddiC5RjcLxnol8Eo9XlboGwC6UdMbdTtQaphYcLZI7Rw
+         1J+cb9gyYJ3MuwAkK+W6XQUZuIQTZxemeHLIw81A=
+Date:   Tue, 2 Mar 2021 11:47:47 -0500
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v1 01/42] NFSD: Extract the svcxdr_init_encode() helper
+Message-ID: <20210302164747.GA3400@fieldses.org>
+References: <161461145466.8508.13379815439337754427.stgit@klimt.1015granger.net>
+ <161461172449.8508.5387365342766187229.stgit@klimt.1015granger.net>
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cefe606a-3a1b-47e9-8d1a-08d8dd9292c5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2021 15:48:06.9194
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fHWWZX73JZVaw/n+v2shORWldySgTofuLeCFeCNWGR/e0wMBgF5/2nv6cWwo29KgwMmT23Xu79rU0aa95eHmxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4275
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9911 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 spamscore=0
- bulkscore=0 suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103020126
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9911 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 impostorscore=0
- suspectscore=0 phishscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1015 mlxlogscore=999 adultscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103020126
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <161461172449.8508.5387365342766187229.stgit@klimt.1015granger.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-RXhjZWxsZW50LCBEYW5pZWwuIFRoYW5rcyBmb3IgZm9sbG93aW5nIHVwISBJIHdpbGwgYWRkIGEg
-TGluazogdGFnDQp0byB0aGlzIHRocmVhZCBpbiB0aGUgcGF0Y2ggZGVzY3JpcHRpb24uDQoNCg0K
-PiBPbiBNYXIgMiwgMjAyMSwgYXQgNjo1MCBBTSwgRGFuaWVsIEtvYnJhcyA8a29icmFzQHB1enps
-ZS1pdGMuZGU+IHdyb3RlOg0KPiANCj4gSGkgYWxsIQ0KPiANCj4gQW0gMDEuMDMuMjEgdW0gMTg6
-NDQgc2NocmllYiBDaHVjayBMZXZlcjoNCj4+PiBPbiBNYXIgMSwgMjAyMSwgYXQgMTE6MjggQU0s
-IEJydWNlIEZpZWxkcyA8YmZpZWxkc0BmaWVsZHNlcy5vcmc+IHdyb3RlOg0KPj4+IA0KPj4+IE9u
-IE1vbiwgTWFyIDAxLCAyMDIxIGF0IDAzOjIwOjI0UE0gKzAwMDAsIENodWNrIExldmVyIHdyb3Rl
-Og0KPj4+PiANCj4+Pj4+IE9uIEZlYiAyNiwgMjAyMSwgYXQgNjowNCBQTSwgRGFuaWVsIEtvYnJh
-cyA8a29icmFzQHB1enpsZS1pdGMuZGU+IHdyb3RlOg0KPj4+Pj4gDQo+Pj4+PiBJZiBhbiBhdXRo
-IG1vZHVsZSdzIGFjY2VwdCBvcCByZXR1cm5zIFNWQ19DTE9TRSwgc3ZjX3Byb2Nlc3NfY29tbW9u
-KCkNCj4+Pj4+IGVudGVycyBhIGNhbGwgcGF0aCB0aGF0IGRvZXMgbm90IGNhbGwgc3ZjX2F1dGhv
-cmlzZSgpIGJlZm9yZSBsZWF2aW5nIHRoZQ0KPj4+Pj4gZnVuY3Rpb24sIGFuZCB0aHVzIGxlYWtz
-IGEgcmVmZXJlbmNlIG9uIHRoZSBhdXRoIG1vZHVsZSdzIHJlZmNvdW50LiBIZW5jZSwNCj4+Pj4+
-IG1ha2Ugc3VyZSBjYWxscyB0byBzdmNfYXV0aGVudGljYXRlKCkgYW5kIHN2Y19hdXRob3Jpc2Uo
-KSBhcmUgcGFpcmVkIGZvcg0KPj4+Pj4gYWxsIGNhbGwgcGF0aHMsIHRvIG1ha2Ugc3VyZSBycGMg
-YXV0aCBtb2R1bGVzIGNhbiBiZSB1bmxvYWRlZC4NCj4+Pj4+IA0KPj4+Pj4gRml4ZXM6IDRkNzEy
-ZWYxZGIwNSAoInN2Y2F1dGhfZ3NzOiBDbG9zZSBjb25uZWN0aW9uIHdoZW4gZHJvcHBpbmcgYW4g
-aW5jb21pbmcgbWVzc2FnZSIpDQo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBEYW5pZWwgS29icmFzIDxr
-b2JyYXNAcHV6emxlLWl0Yy5kZT4NCj4+Pj4+IC0tLQ0KPj4+Pj4gSGkhDQo+Pj4+PiANCj4+Pj4+
-IFdoaWxlIGRlYnVnZ2luZyBORlMgb24gYSBzeXN0ZW0gd2l0aCBtaXNjb25maWd1cmVkIGtyYjUg
-c2V0dGluZ3MsIHdlIG5vdGljZWQNCj4+Pj4+IGEgc3VzcGljaW91c2x5IGhpZ2ggcmVmY291bnQg
-b24gdGhlIGF1dGhfcnBjZ3NzIG1vZHVsZSwgZGVzcGl0ZSBhbGwgb2YgaXRzDQo+Pj4+PiBjb25z
-dW1lcnMgYWxyZWFkeSB1bmxvYWRlZC4gSSB3YXNuJ3QgYWJsZSB0byBhbmFseXplIGFueSBmdXJ0
-aGVyIG9uIHRoZSBsaXZlDQo+Pj4+PiBzeXN0ZW0sIGJ1dCBoYWQgYSBsb29rIGF0IHRoZSBjb2Rl
-IGFmdGVyd2FyZHMsIGFuZCBmb3VuZCBhIHBhdGggdGhhdCBzZWVtcw0KPj4+Pj4gdG8gbGVhayBy
-ZWZlcmVuY2VzIGlmIHRoZSBtZWNoYW5pc20ncyBhY2NlcHQoKSBvcCBzaHV0cyBkb3duIGEgY29u
-bmVjdGlvbg0KPj4+Pj4gZWFybHkuIEFsdGhvdWdoIEkgY291bGRuJ3QgdmVyaWZ5LCB0aGlzIHNl
-ZW0gdG8gYmUgYSBwbGF1c2libGUgZml4Lg0KPj4+Pj4gDQo+Pj4+PiBLaW5kIHJlZ2FyZHMsDQo+
-Pj4+PiANCj4+Pj4+IERhbmllbA0KPj4+PiANCj4+Pj4gSGkgRGFuaWVsLQ0KPj4+PiANCj4+Pj4g
-SSd2ZSBwcm92aXNpb25hbGx5IGluY2x1ZGVkIHlvdXIgcGF0Y2ggaW4gbXkgTkZTRCBmb3ItcmMg
-dG9waWMgYnJhbmNoDQo+Pj4+IGhlcmU6DQo+Pj4+IA0KPj4+PiBnaXQ6Ly9naXQua2VybmVsLm9y
-Zy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvY2VsL2xpbnV4LmdpdA0KPj4+PiANCj4+Pj4gWW91
-ciBidWcgcmVwb3J0IHNlZW1zIHBsYXVzaWJsZSwgYnV0IEkgbmVlZCB0byB0YWtlIGEgY2xvc2Vy
-IGxvb2sgYXQgdGhhdA0KPj4+PiBjb2RlIGFuZCB5b3VyIHByb3Bvc2VkIGNoYW5nZS4gV291bGQg
-dmVyeSBtdWNoIGxpa2UgdG8gaGVhciBmcm9tIG90aGVycywNCj4+Pj4gdG9vLg0KPj4+IA0KPj4+
-IFNvLCB0aGUgZWZmZWN0IG9mIHRoaXMgaXMgdG8gY2FsbCBzdmNfYXV0aG9yaXNlIG1vcmUgb2Z0
-ZW4uICBJIHRoaW5rDQo+Pj4gdGhhdCdzIGFsd2F5cyBzYWZlLCBiZWNhdXNlIHN2Y19hdXRob3Jp
-c2UgaXMgYSBuby1vcCB1bmxlc3MgcnFfYXV0aG9wcw0KPj4+IGlzIHNldCwgaXQgY2xlYXJzIHJx
-X2F1dGhvcHMgaXRzZWxmLCBhbmQgcnFfYXV0aG9wcyBiZWluZyBzZXQgaXMgYQ0KPj4+IGd1YXJh
-bnRlZSB0aGF0IC0+YWNjZXB0KCkgYWxyZWFkeSByYW4uDQo+Pj4gDQo+Pj4gSXQncyBoYXJkZXIg
-dG8ga25vdyBpZiB0aGlzIHNvbHZlcyB0aGUgcHJvYmxlbSwgYXMgSSBzZWUgYSBsb3Qgb2Ygb3Ro
-ZXINCj4+PiBtZW50aW9ucyBvZiBUSElTX01PRFVMRSBpbiBzdmNhdXRoX2dzcy5jLg0KPj4gDQo+
-PiBQZXJoYXBzIGEgZGVlcGVyIGF1ZGl0IGlzIG5lY2Vzc2FyeS4NCj4+IA0KPj4gQSBzbWFsbCBj
-b2RlIGNoYW5nZSB0byBpbmplY3QgU1ZDX0NMT1NFIHJldHVybnMgYXQgcmFuZG9tIHdvdWxkIGVu
-YWJsZQ0KPj4gYSBtb3JlIGR5bmFtaWMgYW5hbHlzaXMuDQo+IA0KPiBJJ3ZlIG1hbmFnZWQgdG8g
-Y29tZSB1cCB3aXRoIHNpbXBsZSByZXByb2R1Y2VyIGZvciB0aGlzIGJ1ZzoNCj4gDQo+IE9uIGEg
-d29ya2luZyBrcmI1IE5GUyBtb3VudCBmcm9tIGEgdGVzdCBjbGllbnQsIGNoZWNrIHdoaWNoIGVu
-Y3R5cGUgaXMNCj4gdXNlZCBpbiB0aGUgdGlja2V0IGZvciB0aGUgTkZTIHNlcnZpY2UuIFRoZW4g
-dW5tb3VudCwgYW5kIGV4Y2x1ZGUgdGhpcw0KPiBlbmN0eXBlIGZyb20gcGVybWl0dGVkX2VuY3R5
-cGVzIGluIHRoZSBzZXJ2ZXIncyAvZXRjL2tyYjUuY29uZi5bKl0NCj4gVHJ5aW5nIHRvIG1vdW50
-IGFnYWluIGZyb20gdGhlIHRlc3QgY2xpZW50IHNob3VsZCBub3cgZmFpbCAoRVBFUk0pLCBhbmQN
-Cj4gZWFjaCBtb3VudCBhdHRlbXB0IGluY3JlYXNlcyB0aGUgcmVmY291bnQgb2YgdGhlIHNlcnZl
-cidzIGF1dGhfcnBjZ3NzDQo+IG1vZHVsZSAoYnkgMjIgaW4gbXkgdGVzdCkuDQo+IA0KPiBFeGNo
-YW5naW5nIHN1bnJwYy5rbyBmb3IgYSB2ZXJzaW9uIHdpdGggdGhlIHBhdGNoIGFwcGxpZWQsIGFu
-ZA0KPiByZS1ydW5uaW5nIHRoZSBzYW1lIHRlc3QsIHRoZSByZWZjb3VudCByZW1haW5zIGNvbnN0
-YW50IGluc3RlYWQuIFRoaXMNCj4gY29uZmlybXMgdGhlIGluaXRpYWwgYW5hbHlzaXMsIGFuZCBp
-bmRpY2F0ZXMgdGhlIGZpeCBpcyBhY3R1YWxseSBjb3JyZWN0Lg0KPiANCj4gWypdIEZvciBhIHF1
-aWNrIHRlc3QgaW4gYSBzdGFuZGFyZCBzZXR1cCwgSSd2ZSB1c2VkDQo+ICAgICAgW2xpYmRlZmF1
-bHRzXQ0KPiAgICAgIHBlcm1pdHRlZF9lbmN0eXBlcyA9IGFlczEyOC1jdHMtaG1hYy1zaGExLTk2
-DQo+ICAgICAgKC4uLikNCj4gICAgdG8gbWFrZSB0aGUgbm9ybWFsIEFFUzI1NiB0aWNrZXRzIGZh
-aWwuIEEgbW9yZSByZWFsaXN0aWMgc2NlbmFyaW8NCj4gICAgd291bGQgYmUgYSBjbGllbnQgdGhh
-dCdzIHJlc3RyaWN0ZWQgdG8gUkM0LCBhbmQgYSBzZXJ2ZXIgd2l0aA0KPiAgICBSQzQga2V5cyBv
-biB0aGUgS0RDLCBidXQgb25seSBBRVMgYWxsb3dlZCBpbiBrcmI1LmNvbmYuIERlZmF1bHQNCj4g
-ICAgYmVoYXZpb3VyIG9mIHR5cGljYWwgQUQgam9pbiB0b29scyBtYWtlcyBpdCBlYXN5IHRvIGVu
-ZCB1cCBpbiBhDQo+ICAgIHNpdHVhdGlvbiBsaWtlIHRoaXMuDQo+IA0KPj4+IFBvc3NpYmx5IG9y
-dGhvZ29uYWwgdG8gdGhpcyBwcm9ibGVtLCBidXQ6IHN2Y2F1dGhfZ3NzX3JlbGVhc2UNCj4+PiB1
-bmNvbmRpdGlvbmFsbHkgZGVyZWZlcmVuY2VzIHJxc3RwLT5ycV9hdXRoX2RhdGEuICBJc24ndCB0
-aGF0IGEgTlVMTA0KPj4+IGRlcmVmZXJlbmNlIGlmIHRoZSBrbWFsbG9jIGF0IHRoZSBzdGFydCBv
-ZiBzdmNhdXRoX2dzc19hY2NlcHQoKSBmYWlscz8NCj4+PiANCj4+PiBGaW5hbGx5LCBzaG91bGQg
-d2UgY2FyZSBhYm91dCBtb2R1bGUgcmVmZXJlbmNlIGxlYWtzPw0KPj4gDQo+PiBJIHdvdWxkIHBy
-ZWZlciB0aGF0IG1vZHVsZSByZWZlcmVuY2UgY291bnRpbmcgd29yayBhcyBleHBlY3RlZC4gV2hl
-biBpdA0KPj4gZG9lc24ndCB0aGF0IHRlbmRzIHRvIGxlYWQgdG8gcGVvcGxlIChzYXksIG1lKSBo
-dW50aW5nIGZvciBidWdzIHRoYXQNCj4+IG1pZ2h0IGFjdHVhbGx5IGJlIHNlcmlvdXMuDQo+IA0K
-PiBUaGUgcmVmY291bnQgbGVhayBpcyB0aGUgZWFzaWx5IHZpc2libGUgY29uc2VxdWVuY2UsIGJ1
-dCB0aGUgc2tpcHBlZA0KPiBjYWxsIHRvIHN2Y2F1dGhfZ3NzX3JlbGVhc2UoKSBwcm9iYWJseSBh
-bHNvIGxlYWtzIGEgc21hbGwgYW1vdW50IG9mDQo+IG1lbW9yeSBmb3IgZWFjaCByZXF1ZXN0LiBS
-ZXBlYXRpbmcgdGhlIHRlc3QgY2FzZSBhYm92ZSBmb3IgYSBsb25nZXINCj4gcGVyaW9kIG9mIHRp
-bWUgKGVnLiBieSB0aHJvd2luZyBhbiBhdXRvbW91bnRlciBpbnRvIHRoZSBtaXgpLCB0aGlzIG1p
-Z2h0DQo+IGV2ZW50dWFsbHkgYmVjb21lIG5vdGljZWFibGUuDQo+IA0KPj4+IERvZXMgYW55b25l
-IHJlYWxseSAqbmVlZCogdG8gdW5sb2FkIG1vZHVsZXM/DQo+PiANCj4+IEFueW9uZSB3aG8gd2Fu
-dHMgdG8gcmVwbGFjZSB0aGUgbW9kdWxlIHdpdGggYSBuZXdlciBidWlsZCB0aGF0IGZpeGVzIGEN
-Cj4+IGJ1Zy4gSXQgYXZvaWRzIGEgZnVsbCByZWJvb3QsIGFuZCBmb3Igc29tZSB0aGF0J3MgaW1w
-b3J0YW50Lg0KPiANCj4gU3dpdGNoaW5nIGZyb20gcnBjLnN2Y2dzc2QgdG8gZ3NzcHJveHkgd2l0
-aG91dCB0YWtpbmcgZG93biB0aGUgbWFjaGluZQ0KPiBhcyBhIHdob2xlIHdhcyB0aGUgc2l0dWF0
-aW9uIHRoYXQgb3JpZ2luYWxseSBwcm9tcHRlZCBtZSB0byBsb29rIGludG8NCj4gdGhpcywgYnV0
-IEkgYWRtaXQgdGhhdCdzIGEgcmF0aGVyIHJhcmUgdXNlIGNhc2UuDQo+IA0KPj4+IEFuZCB3aWxs
-IGJhZCBzdHVmZiBoYXBwZW4gd2hlbiB0aGUNCj4+PiBjb3VudCBvdmVyZmxvd3MsIG9yIGRvZXMg
-dGhlIG1vZHVsZSBjb2RlIGZhaWwgc2FmZWx5IHNvbWVob3cgaW4gdGhlDQo+Pj4gb3ZlcmZsb3cg
-Y2FzZT8gIEkga25vdywgYnVncyBhcmUgYnVncywgSSBzaG91bGQgY2FyZSBhYm91dCBmaXhpbmcg
-YWxsIG9mDQo+Pj4gdGhlbSwgc2hhbWUgb24gbWUuLi4uDQo+Pj4gDQo+Pj4gLS1iLg0KPj4+IA0K
-Pj4+PiANCj4+Pj4gDQo+Pj4+PiBuZXQvc3VucnBjL3N2Yy5jIHwgNiArKysrLS0NCj4+Pj4+IDEg
-ZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+Pj4+PiANCj4+
-Pj4+IGRpZmYgLS1naXQgYS9uZXQvc3VucnBjL3N2Yy5jIGIvbmV0L3N1bnJwYy9zdmMuYw0KPj4+
-Pj4gaW5kZXggNjFmYjhhMTg1NTJjLi5kNzZkYzlkOTVkMTYgMTAwNjQ0DQo+Pj4+PiAtLS0gYS9u
-ZXQvc3VucnBjL3N2Yy5jDQo+Pj4+PiArKysgYi9uZXQvc3VucnBjL3N2Yy5jDQo+Pj4+PiBAQCAt
-MTQxMyw3ICsxNDEzLDcgQEAgc3ZjX3Byb2Nlc3NfY29tbW9uKHN0cnVjdCBzdmNfcnFzdCAqcnFz
-dHAsIHN0cnVjdCBrdmVjICphcmd2LCBzdHJ1Y3Qga3ZlYyAqcmVzdikNCj4+Pj4+IA0KPj4+Pj4g
-c2VuZGl0Og0KPj4+Pj4gCWlmIChzdmNfYXV0aG9yaXNlKHJxc3RwKSkNCj4+Pj4+IC0JCWdvdG8g
-Y2xvc2U7DQo+Pj4+PiArCQlnb3RvIGNsb3NlX3hwcnQ7DQo+Pj4+PiAJcmV0dXJuIDE7CQkvKiBD
-YWxsZXIgY2FuIG5vdyBzZW5kIGl0ICovDQo+Pj4+PiANCj4+Pj4+IHJlbGVhc2VfZHJvcGl0Og0K
-Pj4+Pj4gQEAgLTE0MjUsNiArMTQyNSw4IEBAIHN2Y19wcm9jZXNzX2NvbW1vbihzdHJ1Y3Qgc3Zj
-X3Jxc3QgKnJxc3RwLCBzdHJ1Y3Qga3ZlYyAqYXJndiwgc3RydWN0IGt2ZWMgKnJlc3YpDQo+Pj4+
-PiAJcmV0dXJuIDA7DQo+Pj4+PiANCj4+Pj4+IGNsb3NlOg0KPj4+Pj4gKwlzdmNfYXV0aG9yaXNl
-KHJxc3RwKTsNCj4+Pj4+ICtjbG9zZV94cHJ0Og0KPj4+Pj4gCWlmIChycXN0cC0+cnFfeHBydCAm
-JiB0ZXN0X2JpdChYUFRfVEVNUCwgJnJxc3RwLT5ycV94cHJ0LT54cHRfZmxhZ3MpKQ0KPj4+Pj4g
-CQlzdmNfY2xvc2VfeHBydChycXN0cC0+cnFfeHBydCk7DQo+Pj4+PiAJZHByaW50aygic3ZjOiBz
-dmNfcHJvY2VzcyBjbG9zZVxuIik7DQo+Pj4+PiBAQCAtMTQzMyw3ICsxNDM1LDcgQEAgc3ZjX3By
-b2Nlc3NfY29tbW9uKHN0cnVjdCBzdmNfcnFzdCAqcnFzdHAsIHN0cnVjdCBrdmVjICphcmd2LCBz
-dHJ1Y3Qga3ZlYyAqcmVzdikNCj4+Pj4+IGVycl9zaG9ydF9sZW46DQo+Pj4+PiAJc3ZjX3ByaW50
-ayhycXN0cCwgInNob3J0IGxlbiAlemQsIGRyb3BwaW5nIHJlcXVlc3RcbiIsDQo+Pj4+PiAJCQlh
-cmd2LT5pb3ZfbGVuKTsNCj4+Pj4+IC0JZ290byBjbG9zZTsNCj4+Pj4+ICsJZ290byBjbG9zZV94
-cHJ0Ow0KPj4+Pj4gDQo+Pj4+PiBlcnJfYmFkX3JwYzoNCj4+Pj4+IAlzZXJ2LT5zdl9zdGF0cy0+
-cnBjYmFkZm10Kys7DQo+Pj4+PiAtLSANCj4+Pj4+IDIuMjUuMQ0KPj4+Pj4gDQo+Pj4+PiANCj4+
-Pj4+IC0tIA0KPj4+Pj4gUHV6emxlIElUQyBEZXV0c2NobGFuZCBHbWJIDQo+Pj4+PiBTaXR6IGRl
-ciBHZXNlbGxzY2hhZnQ6IEVpc2VuYmFobnN0cmHDn2UgMSwgNzIwNzIgDQo+Pj4+PiBUw7xiaW5n
-ZW4NCj4+Pj4+IA0KPj4+Pj4gRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgU3R1dHRnYXJ0IEhS
-QiA3NjU4MDINCj4+Pj4+IEdlc2Now6RmdHNmw7xocmVyOiANCj4+Pj4+IEx1a2FzIEthbGxpZXMs
-IERhbmllbCBLb2JyYXMsIE1hcmsgUHLDtmhsDQo+Pj4+PiANCj4+Pj4gDQo+Pj4+IC0tDQo+Pj4+
-IENodWNrIExldmVyDQo+PiANCj4+IC0tDQo+PiBDaHVjayBMZXZlcg0KPiANCj4gS2luZCByZWdh
-cmRzLA0KPiANCj4gRGFuaWVsDQo+IC0tIA0KPiBEYW5pZWwgS29icmFzDQo+IFByaW5jaXBhbCBB
-cmNoaXRlY3QNCj4gUHV6emxlIElUQyBEZXV0c2NobGFuZA0KPiArNDkgNzA3MSAxNDMxNiAwDQo+
-IHd3dy5wdXp6bGUtaXRjLmRlDQo+IA0KPiAtLSANCj4gUHV6emxlIElUQyBEZXV0c2NobGFuZCBH
-bWJIDQo+IFNpdHogZGVyIEdlc2VsbHNjaGFmdDogRWlzZW5iYWhuc3RyYcOfZSAxLCA3MjA3MiAN
-Cj4gVMO8YmluZ2VuDQo+IA0KPiBFaW5nZXRyYWdlbiBhbSBBbXRzZ2VyaWNodCBTdHV0dGdhcnQg
-SFJCIDc2NTgwMg0KPiBHZXNjaMOkZnRzZsO8aHJlcjogDQo+IEx1a2FzIEthbGxpZXMsIERhbmll
-bCBLb2JyYXMsIE1hcmsgUHLDtmhsDQoNCi0tDQpDaHVjayBMZXZlcg0KDQoNCg0K
+On Mon, Mar 01, 2021 at 10:15:24AM -0500, Chuck Lever wrote:
+> NFSD initializes an encode xdr_stream only after the RPC layer has
+> already inserted the RPC Reply header.
+
+Out of curiosity: does it need to be this way?
+
+--b.
+
+> Thus it behaves differently
+> than xdr_init_encode does, which assumes the passed-in xdr_buf is
+> entirely devoid of content.
+> 
+> nfs4proc.c has this server-side stream initialization helper, but
+> it is visible only to the NFSv4 code. Move this helper to a place
+> that can be accessed by NFSv2 and NFSv3 server XDR functions.
+> 
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs4proc.c         |   31 +++---------
+>  fs/nfsd/nfs4state.c        |    6 +-
+>  fs/nfsd/nfs4xdr.c          |  110 ++++++++++++++++++++++----------------------
+>  fs/nfsd/nfssvc.c           |    4 +-
+>  fs/nfsd/xdr4.h             |    2 -
+>  include/linux/sunrpc/svc.h |   25 ++++++++++
+>  6 files changed, 94 insertions(+), 84 deletions(-)
+> 
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index acdb3cd806a1..b749033e467f 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -2262,25 +2262,6 @@ static bool need_wrongsec_check(struct svc_rqst *rqstp)
+>  	return !(nextd->op_flags & OP_HANDLES_WRONGSEC);
+>  }
+>  
+> -static void svcxdr_init_encode(struct svc_rqst *rqstp,
+> -			       struct nfsd4_compoundres *resp)
+> -{
+> -	struct xdr_stream *xdr = &resp->xdr;
+> -	struct xdr_buf *buf = &rqstp->rq_res;
+> -	struct kvec *head = buf->head;
+> -
+> -	xdr->buf = buf;
+> -	xdr->iov = head;
+> -	xdr->p   = head->iov_base + head->iov_len;
+> -	xdr->end = head->iov_base + PAGE_SIZE - rqstp->rq_auth_slack;
+> -	/* Tail and page_len should be zero at this point: */
+> -	buf->len = buf->head[0].iov_len;
+> -	xdr_reset_scratch_buffer(xdr);
+> -	xdr->page_ptr = buf->pages - 1;
+> -	buf->buflen = PAGE_SIZE * (1 + rqstp->rq_page_end - buf->pages)
+> -		- rqstp->rq_auth_slack;
+> -}
+> -
+>  #ifdef CONFIG_NFSD_V4_2_INTER_SSC
+>  static void
+>  check_if_stalefh_allowed(struct nfsd4_compoundargs *args)
+> @@ -2335,10 +2316,14 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+>  	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
+>  	__be32		status;
+>  
+> -	svcxdr_init_encode(rqstp, resp);
+> -	resp->tagp = resp->xdr.p;
+> +	resp->xdr = &rqstp->rq_res_stream;
+> +
+> +	/* reserve space for: NFS status code */
+> +	xdr_reserve_space(resp->xdr, XDR_UNIT);
+> +
+> +	resp->tagp = resp->xdr->p;
+>  	/* reserve space for: taglen, tag, and opcnt */
+> -	xdr_reserve_space(&resp->xdr, 8 + args->taglen);
+> +	xdr_reserve_space(resp->xdr, XDR_UNIT * 2 + args->taglen);
+>  	resp->taglen = args->taglen;
+>  	resp->tag = args->tag;
+>  	resp->rqstp = rqstp;
+> @@ -2444,7 +2429,7 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+>  encode_op:
+>  		if (op->status == nfserr_replay_me) {
+>  			op->replay = &cstate->replay_owner->so_replay;
+> -			nfsd4_encode_replay(&resp->xdr, op);
+> +			nfsd4_encode_replay(resp->xdr, op);
+>  			status = op->status = op->replay->rp_status;
+>  		} else {
+>  			nfsd4_encode_operation(resp, op);
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 61552e89bd89..83a498ccab19 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -2903,7 +2903,7 @@ gen_callback(struct nfs4_client *clp, struct nfsd4_setclientid *se, struct svc_r
+>  static void
+>  nfsd4_store_cache_entry(struct nfsd4_compoundres *resp)
+>  {
+> -	struct xdr_buf *buf = resp->xdr.buf;
+> +	struct xdr_buf *buf = resp->xdr->buf;
+>  	struct nfsd4_slot *slot = resp->cstate.slot;
+>  	unsigned int base;
+>  
+> @@ -2973,7 +2973,7 @@ nfsd4_replay_cache_entry(struct nfsd4_compoundres *resp,
+>  			 struct nfsd4_sequence *seq)
+>  {
+>  	struct nfsd4_slot *slot = resp->cstate.slot;
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  	__be32 status;
+>  
+> @@ -3708,7 +3708,7 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  {
+>  	struct nfsd4_sequence *seq = &u->sequence;
+>  	struct nfsd4_compoundres *resp = rqstp->rq_resp;
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	struct nfsd4_session *session;
+>  	struct nfs4_client *clp;
+>  	struct nfsd4_slot *slot;
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index eaaa1605b5b5..e0f06d3cbd44 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -3581,7 +3581,7 @@ nfsd4_encode_stateid(struct xdr_stream *xdr, stateid_t *sid)
+>  static __be32
+>  nfsd4_encode_access(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_access *access)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, 8);
+> @@ -3594,7 +3594,7 @@ nfsd4_encode_access(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_
+>  
+>  static __be32 nfsd4_encode_bind_conn_to_session(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_bind_conn_to_session *bcts)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, NFS4_MAX_SESSIONID_LEN + 8);
+> @@ -3611,7 +3611,7 @@ static __be32 nfsd4_encode_bind_conn_to_session(struct nfsd4_compoundres *resp,
+>  static __be32
+>  nfsd4_encode_close(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_close *close)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  
+>  	return nfsd4_encode_stateid(xdr, &close->cl_stateid);
+>  }
+> @@ -3620,7 +3620,7 @@ nfsd4_encode_close(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_c
+>  static __be32
+>  nfsd4_encode_commit(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_commit *commit)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, NFS4_VERIFIER_SIZE);
+> @@ -3634,7 +3634,7 @@ nfsd4_encode_commit(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_
+>  static __be32
+>  nfsd4_encode_create(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_create *create)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, 20);
+> @@ -3649,7 +3649,7 @@ static __be32
+>  nfsd4_encode_getattr(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_getattr *getattr)
+>  {
+>  	struct svc_fh *fhp = getattr->ga_fhp;
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  
+>  	return nfsd4_encode_fattr(xdr, fhp, fhp->fh_export, fhp->fh_dentry,
+>  				    getattr->ga_bmval, resp->rqstp, 0);
+> @@ -3658,7 +3658,7 @@ nfsd4_encode_getattr(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4
+>  static __be32
+>  nfsd4_encode_getfh(struct nfsd4_compoundres *resp, __be32 nfserr, struct svc_fh **fhpp)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	struct svc_fh *fhp = *fhpp;
+>  	unsigned int len;
+>  	__be32 *p;
+> @@ -3713,7 +3713,7 @@ nfsd4_encode_lock_denied(struct xdr_stream *xdr, struct nfsd4_lock_denied *ld)
+>  static __be32
+>  nfsd4_encode_lock(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_lock *lock)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  
+>  	if (!nfserr)
+>  		nfserr = nfsd4_encode_stateid(xdr, &lock->lk_resp_stateid);
+> @@ -3726,7 +3726,7 @@ nfsd4_encode_lock(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_lo
+>  static __be32
+>  nfsd4_encode_lockt(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_lockt *lockt)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  
+>  	if (nfserr == nfserr_denied)
+>  		nfsd4_encode_lock_denied(xdr, &lockt->lt_denied);
+> @@ -3736,7 +3736,7 @@ nfsd4_encode_lockt(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_l
+>  static __be32
+>  nfsd4_encode_locku(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_locku *locku)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  
+>  	return nfsd4_encode_stateid(xdr, &locku->lu_stateid);
+>  }
+> @@ -3745,7 +3745,7 @@ nfsd4_encode_locku(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_l
+>  static __be32
+>  nfsd4_encode_link(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_link *link)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, 20);
+> @@ -3759,7 +3759,7 @@ nfsd4_encode_link(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_li
+>  static __be32
+>  nfsd4_encode_open(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_open *open)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	nfserr = nfsd4_encode_stateid(xdr, &open->op_stateid);
+> @@ -3853,7 +3853,7 @@ nfsd4_encode_open(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_op
+>  static __be32
+>  nfsd4_encode_open_confirm(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_open_confirm *oc)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  
+>  	return nfsd4_encode_stateid(xdr, &oc->oc_resp_stateid);
+>  }
+> @@ -3861,7 +3861,7 @@ nfsd4_encode_open_confirm(struct nfsd4_compoundres *resp, __be32 nfserr, struct
+>  static __be32
+>  nfsd4_encode_open_downgrade(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_open_downgrade *od)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  
+>  	return nfsd4_encode_stateid(xdr, &od->od_stateid);
+>  }
+> @@ -3871,7 +3871,7 @@ static __be32 nfsd4_encode_splice_read(
+>  				struct nfsd4_read *read,
+>  				struct file *file, unsigned long maxcount)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	struct xdr_buf *buf = xdr->buf;
+>  	int status, space_left;
+>  	u32 eof;
+> @@ -3937,7 +3937,7 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
+>  				 struct nfsd4_read *read,
+>  				 struct file *file, unsigned long maxcount)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	u32 eof;
+>  	int starting_len = xdr->buf->len - 8;
+>  	__be32 nfserr;
+> @@ -3976,7 +3976,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  		  struct nfsd4_read *read)
+>  {
+>  	unsigned long maxcount;
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	struct file *file;
+>  	int starting_len = xdr->buf->len;
+>  	__be32 *p;
+> @@ -3990,7 +3990,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  		WARN_ON_ONCE(test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags));
+>  		return nfserr_resource;
+>  	}
+> -	if (resp->xdr.buf->page_len &&
+> +	if (resp->xdr->buf->page_len &&
+>  	    test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags)) {
+>  		WARN_ON_ONCE(1);
+>  		return nfserr_resource;
+> @@ -4020,7 +4020,7 @@ nfsd4_encode_readlink(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd
+>  	int maxcount;
+>  	__be32 wire_count;
+>  	int zero = 0;
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	int length_offset = xdr->buf->len;
+>  	int status;
+>  	__be32 *p;
+> @@ -4072,7 +4072,7 @@ nfsd4_encode_readdir(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4
+>  	int bytes_left;
+>  	loff_t offset;
+>  	__be64 wire_offset;
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	int starting_len = xdr->buf->len;
+>  	__be32 *p;
+>  
+> @@ -4083,8 +4083,8 @@ nfsd4_encode_readdir(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4
+>  	/* XXX: Following NFSv3, we ignore the READDIR verifier for now. */
+>  	*p++ = cpu_to_be32(0);
+>  	*p++ = cpu_to_be32(0);
+> -	resp->xdr.buf->head[0].iov_len = ((char *)resp->xdr.p)
+> -				- (char *)resp->xdr.buf->head[0].iov_base;
+> +	xdr->buf->head[0].iov_len = (char *)xdr->p -
+> +				    (char *)xdr->buf->head[0].iov_base;
+>  
+>  	/*
+>  	 * Number of bytes left for directory entries allowing for the
+> @@ -4159,7 +4159,7 @@ nfsd4_encode_readdir(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4
+>  static __be32
+>  nfsd4_encode_remove(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_remove *remove)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, 20);
+> @@ -4172,7 +4172,7 @@ nfsd4_encode_remove(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_
+>  static __be32
+>  nfsd4_encode_rename(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_rename *rename)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, 40);
+> @@ -4255,7 +4255,7 @@ static __be32
+>  nfsd4_encode_secinfo(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  		     struct nfsd4_secinfo *secinfo)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  
+>  	return nfsd4_do_encode_secinfo(xdr, secinfo->si_exp);
+>  }
+> @@ -4264,7 +4264,7 @@ static __be32
+>  nfsd4_encode_secinfo_no_name(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  		     struct nfsd4_secinfo_no_name *secinfo)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  
+>  	return nfsd4_do_encode_secinfo(xdr, secinfo->sin_exp);
+>  }
+> @@ -4276,7 +4276,7 @@ nfsd4_encode_secinfo_no_name(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  static __be32
+>  nfsd4_encode_setattr(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_setattr *setattr)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, 16);
+> @@ -4300,7 +4300,7 @@ nfsd4_encode_setattr(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4
+>  static __be32
+>  nfsd4_encode_setclientid(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_setclientid *scd)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	if (!nfserr) {
+> @@ -4324,7 +4324,7 @@ nfsd4_encode_setclientid(struct nfsd4_compoundres *resp, __be32 nfserr, struct n
+>  static __be32
+>  nfsd4_encode_write(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_write *write)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, 16);
+> @@ -4341,7 +4341,7 @@ static __be32
+>  nfsd4_encode_exchange_id(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  			 struct nfsd4_exchange_id *exid)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  	char *major_id;
+>  	char *server_scope;
+> @@ -4419,7 +4419,7 @@ static __be32
+>  nfsd4_encode_create_session(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  			    struct nfsd4_create_session *sess)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, 24);
+> @@ -4472,7 +4472,7 @@ static __be32
+>  nfsd4_encode_sequence(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  		      struct nfsd4_sequence *seq)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, NFS4_MAX_SESSIONID_LEN + 20);
+> @@ -4495,7 +4495,7 @@ static __be32
+>  nfsd4_encode_test_stateid(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  			  struct nfsd4_test_stateid *test_stateid)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	struct nfsd4_test_stateid_id *stateid, *next;
+>  	__be32 *p;
+>  
+> @@ -4516,7 +4516,7 @@ static __be32
+>  nfsd4_encode_getdeviceinfo(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  		struct nfsd4_getdeviceinfo *gdev)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	const struct nfsd4_layout_ops *ops;
+>  	u32 starting_len = xdr->buf->len, needed_len;
+>  	__be32 *p;
+> @@ -4572,7 +4572,7 @@ static __be32
+>  nfsd4_encode_layoutget(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  		struct nfsd4_layoutget *lgp)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	const struct nfsd4_layout_ops *ops;
+>  	__be32 *p;
+>  
+> @@ -4599,7 +4599,7 @@ static __be32
+>  nfsd4_encode_layoutcommit(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  			  struct nfsd4_layoutcommit *lcp)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, 4);
+> @@ -4620,7 +4620,7 @@ static __be32
+>  nfsd4_encode_layoutreturn(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  		struct nfsd4_layoutreturn *lrp)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, 4);
+> @@ -4638,7 +4638,7 @@ nfsd42_encode_write_res(struct nfsd4_compoundres *resp,
+>  		struct nfsd42_write_res *write, bool sync)
+>  {
+>  	__be32 *p;
+> -	p = xdr_reserve_space(&resp->xdr, 4);
+> +	p = xdr_reserve_space(resp->xdr, 4);
+>  	if (!p)
+>  		return nfserr_resource;
+>  
+> @@ -4647,11 +4647,11 @@ nfsd42_encode_write_res(struct nfsd4_compoundres *resp,
+>  	else {
+>  		__be32 nfserr;
+>  		*p++ = cpu_to_be32(1);
+> -		nfserr = nfsd4_encode_stateid(&resp->xdr, &write->cb_stateid);
+> +		nfserr = nfsd4_encode_stateid(resp->xdr, &write->cb_stateid);
+>  		if (nfserr)
+>  			return nfserr;
+>  	}
+> -	p = xdr_reserve_space(&resp->xdr, 8 + 4 + NFS4_VERIFIER_SIZE);
+> +	p = xdr_reserve_space(resp->xdr, 8 + 4 + NFS4_VERIFIER_SIZE);
+>  	if (!p)
+>  		return nfserr_resource;
+>  
+> @@ -4665,7 +4665,7 @@ nfsd42_encode_write_res(struct nfsd4_compoundres *resp,
+>  static __be32
+>  nfsd42_encode_nl4_server(struct nfsd4_compoundres *resp, struct nl4_server *ns)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	struct nfs42_netaddr *addr;
+>  	__be32 *p;
+>  
+> @@ -4713,7 +4713,7 @@ nfsd4_encode_copy(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  	if (nfserr)
+>  		return nfserr;
+>  
+> -	p = xdr_reserve_space(&resp->xdr, 4 + 4);
+> +	p = xdr_reserve_space(resp->xdr, 4 + 4);
+>  	*p++ = xdr_one; /* cr_consecutive */
+>  	*p++ = cpu_to_be32(copy->cp_synchronous);
+>  	return 0;
+> @@ -4723,7 +4723,7 @@ static __be32
+>  nfsd4_encode_offload_status(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  			    struct nfsd4_offload_status *os)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, 8 + 4);
+> @@ -4740,7 +4740,7 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
+>  			    unsigned long *maxcount, u32 *eof,
+>  			    loff_t *pos)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	struct file *file = read->rd_nf->nf_file;
+>  	int starting_len = xdr->buf->len;
+>  	loff_t hole_pos;
+> @@ -4799,7 +4799,7 @@ nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp,
+>  	count = data_pos - read->rd_offset;
+>  
+>  	/* Content type, offset, byte count */
+> -	p = xdr_reserve_space(&resp->xdr, 4 + 8 + 8);
+> +	p = xdr_reserve_space(resp->xdr, 4 + 8 + 8);
+>  	if (!p)
+>  		return nfserr_resource;
+>  
+> @@ -4817,7 +4817,7 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  		       struct nfsd4_read *read)
+>  {
+>  	unsigned long maxcount, count;
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	struct file *file;
+>  	int starting_len = xdr->buf->len;
+>  	int last_segment = xdr->buf->len;
+> @@ -4888,7 +4888,7 @@ static __be32
+>  nfsd4_encode_copy_notify(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  			 struct nfsd4_copy_notify *cn)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	if (nfserr)
+> @@ -4924,7 +4924,7 @@ nfsd4_encode_seek(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  {
+>  	__be32 *p;
+>  
+> -	p = xdr_reserve_space(&resp->xdr, 4 + 8);
+> +	p = xdr_reserve_space(resp->xdr, 4 + 8);
+>  	*p++ = cpu_to_be32(seek->seek_eof);
+>  	p = xdr_encode_hyper(p, seek->seek_pos);
+>  
+> @@ -4985,7 +4985,7 @@ static __be32
+>  nfsd4_encode_getxattr(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  		      struct nfsd4_getxattr *getxattr)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p, err;
+>  
+>  	p = xdr_reserve_space(xdr, 4);
+> @@ -5009,7 +5009,7 @@ static __be32
+>  nfsd4_encode_setxattr(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  		      struct nfsd4_setxattr *setxattr)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, 20);
+> @@ -5050,7 +5050,7 @@ static __be32
+>  nfsd4_encode_listxattrs(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  			struct nfsd4_listxattrs *listxattrs)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	u32 cookie_offset, count_offset, eof;
+>  	u32 left, xdrleft, slen, count;
+>  	u32 xdrlen, offset;
+> @@ -5161,7 +5161,7 @@ static __be32
+>  nfsd4_encode_removexattr(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  			 struct nfsd4_removexattr *removexattr)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	__be32 *p;
+>  
+>  	p = xdr_reserve_space(xdr, 20);
+> @@ -5301,7 +5301,7 @@ __be32 nfsd4_check_resp_size(struct nfsd4_compoundres *resp, u32 respsize)
+>  void
+>  nfsd4_encode_operation(struct nfsd4_compoundres *resp, struct nfsd4_op *op)
+>  {
+> -	struct xdr_stream *xdr = &resp->xdr;
+> +	struct xdr_stream *xdr = resp->xdr;
+>  	struct nfs4_stateowner *so = resp->cstate.replay_owner;
+>  	struct svc_rqst *rqstp = resp->rqstp;
+>  	const struct nfsd4_operation *opdesc = op->opdesc;
+> @@ -5430,14 +5430,14 @@ int
+>  nfs4svc_encode_compoundres(struct svc_rqst *rqstp, __be32 *p)
+>  {
+>  	struct nfsd4_compoundres *resp = rqstp->rq_resp;
+> -	struct xdr_buf *buf = resp->xdr.buf;
+> +	struct xdr_buf *buf = resp->xdr->buf;
+>  
+>  	WARN_ON_ONCE(buf->len != buf->head[0].iov_len + buf->page_len +
+>  				 buf->tail[0].iov_len);
+>  
+>  	*p = resp->cstate.status;
+>  
+> -	rqstp->rq_next_page = resp->xdr.page_ptr + 1;
+> +	rqstp->rq_next_page = resp->xdr->page_ptr + 1;
+>  
+>  	p = resp->tagp;
+>  	*p++ = htonl(resp->taglen);
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 6de406322106..d909e4956244 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -997,7 +997,7 @@ int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+>  	 * NFSv4 does some encoding while processing
+>  	 */
+>  	p = resv->iov_base + resv->iov_len;
+> -	resv->iov_len += sizeof(__be32);
+> +	svcxdr_init_encode(rqstp);
+>  
+>  	*statp = proc->pc_func(rqstp);
+>  	if (*statp == rpc_drop_reply || test_bit(RQ_DROPME, &rqstp->rq_flags))
+> @@ -1052,7 +1052,7 @@ int nfssvc_decode_voidarg(struct svc_rqst *rqstp, __be32 *p)
+>   */
+>  int nfssvc_encode_voidres(struct svc_rqst *rqstp, __be32 *p)
+>  {
+> -        return xdr_ressize_check(rqstp, p);
+> +	return 1;
+>  }
+>  
+>  int nfsd_pool_stats_open(struct inode *inode, struct file *file)
+> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+> index c300885ae75d..fe540a3415c6 100644
+> --- a/fs/nfsd/xdr4.h
+> +++ b/fs/nfsd/xdr4.h
+> @@ -698,7 +698,7 @@ struct nfsd4_compoundargs {
+>  
+>  struct nfsd4_compoundres {
+>  	/* scratch variables for XDR encode */
+> -	struct xdr_stream		xdr;
+> +	struct xdr_stream		*xdr;
+>  	struct svc_rqst *		rqstp;
+>  
+>  	u32				taglen;
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index 31ee3b6047c3..e91d51ea028b 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -248,6 +248,7 @@ struct svc_rqst {
+>  	size_t			rq_xprt_hlen;	/* xprt header len */
+>  	struct xdr_buf		rq_arg;
+>  	struct xdr_stream	rq_arg_stream;
+> +	struct xdr_stream	rq_res_stream;
+>  	struct page		*rq_scratch_page;
+>  	struct xdr_buf		rq_res;
+>  	struct page		*rq_pages[RPCSVC_MAXPAGES + 1];
+> @@ -574,4 +575,28 @@ static inline void svcxdr_init_decode(struct svc_rqst *rqstp)
+>  	xdr_set_scratch_page(xdr, rqstp->rq_scratch_page);
+>  }
+>  
+> +/**
+> + * svcxdr_init_encode - Prepare an xdr_stream for svc Reply encoding
+> + * @rqstp: controlling server RPC transaction context
+> + *
+> + */
+> +static inline void svcxdr_init_encode(struct svc_rqst *rqstp)
+> +{
+> +	struct xdr_stream *xdr = &rqstp->rq_res_stream;
+> +	struct xdr_buf *buf = &rqstp->rq_res;
+> +	struct kvec *resv = buf->head;
+> +
+> +	xdr_reset_scratch_buffer(xdr);
+> +
+> +	xdr->buf = buf;
+> +	xdr->iov = resv;
+> +	xdr->p   = resv->iov_base + resv->iov_len;
+> +	xdr->end = resv->iov_base + PAGE_SIZE - rqstp->rq_auth_slack;
+> +	buf->len = resv->iov_len;
+> +	xdr->page_ptr = buf->pages - 1;
+> +	buf->buflen = PAGE_SIZE * (1 + rqstp->rq_page_end - buf->pages);
+> +	buf->buflen -= rqstp->rq_auth_slack;
+> +	xdr->rqst = NULL;
+> +}
+> +
+>  #endif /* SUNRPC_SVC_H */
+> 
