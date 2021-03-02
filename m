@@ -2,97 +2,181 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 849AE32A913
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Mar 2021 19:14:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C82732A938
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Mar 2021 19:23:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239171AbhCBSGX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Mar 2021 13:06:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344521AbhCBAUY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Mar 2021 19:20:24 -0500
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D1F4C061788;
-        Mon,  1 Mar 2021 16:19:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=T+DlXRF5bBzpgRo6D9piJcBL+4Ne8yKqxm/gj/HQjiY=; b=cQYeaPzjgUUqWKvk+1OtVg8BC2
-        Mv9wiJp0xIGGvGbpLqn4rlobqTpN32KFrM3nG7cgw9gPwwhF+CzAGiUdzhItBf3Bxtw8BOlPPUlzg
-        tBEyfeQId+Nmgb5D5V+Ml4x/TA1yO80Nfewaa0MVzHQhBSbj6vNx7w4dB7EDaNdAqh3viGttaBD9N
-        OVVvbFuc/rCGUwjy6KjoafF8Jv8bSM7s06d7WIuVMyPj9ULLmDlc66vW/8DV+Zd+xrKDHsBm25c7K
-        u8fXUyPBo4TgCf4BvOnZcNGW1r8r63/812Hj43/v+KoGFv3aeKUXbJk8yUZheQ91jyYbjRYqU9jIs
-        5llSPHdA==;
-Received: from [2601:1c0:6280:3f0::3ba4] (helo=merlin.infradead.org)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1lGslF-0007vO-Q6; Tue, 02 Mar 2021 00:19:38 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        syzbot+ba2e91df8f74809417fa@syzkaller.appspotmail.com,
-        syzbot+f3a0fa110fd630ab56c8@syzkaller.appspotmail.com,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org
-Subject: [PATCH] NFS: fs_context: validate UDP retrans to prevent shift out-of-bounds
-Date:   Mon,  1 Mar 2021 16:19:30 -0800
-Message-Id: <20210302001930.2253-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
+        id S244223AbhCBSMd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Mar 2021 13:12:33 -0500
+Received: from btbn.de ([5.9.118.179]:43156 "EHLO btbn.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1378187AbhCBBEo (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 1 Mar 2021 20:04:44 -0500
+Received: from [IPv6:2001:16b8:647f:900:5b1:3b4d:6454:acc0] (200116b8647f090005b13b4d6454acc0.dip.versatel-1u1.de [IPv6:2001:16b8:647f:900:5b1:3b4d:6454:acc0])
+        by btbn.de (Postfix) with ESMTPSA id 7591B27C1F4;
+        Tue,  2 Mar 2021 02:04:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rothenpieler.org;
+        s=mail; t=1614647040;
+        bh=G46sA5CsqEX3mcsd7CQD9ZKVsGsVUBGPdTIzNYsFr6w=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=K2qIuDvf6VUc35mV9V6k7/YCRDqXqWGCjJm/yhgBFOzwhsUsloUKlThWMFIPSyFq9
+         a6An48ZoyUckEBVtC1PFEMR9WGSbsuV/uAgH29B/U8kSXj9n4XRBkDoD8HIpjnHxJU
+         t8qisfRAZ6KXvFvZqwvitef4ba9DFvK0/tTxPbEV0ED+clfc/4USSHKWoA+QNvQF5D
+         vZ3NUrjfpbXwdi6OeJJWZs7fDbe5W22/zPR0nYDhhbPe+yt8GCJX1sQuUcSQtpauyx
+         Ky2nJS0Q2m11DxI1bPtrNuDKOTgquBJlUbx7l+v9UTvcyHW69HQlSSAtdizn868f5c
+         CN5FPf4/gftCQ==
+Subject: Re: NFSD Regression: client observing a file while other client
+ writes to it leads to stale local cache
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <c3efd7e8-dc08-ac1f-9bee-7a7b0d8ac5fb@rothenpieler.org>
+ <20210301184633.GA14881@fieldses.org>
+From:   Timo Rothenpieler <timo@rothenpieler.org>
+Message-ID: <86ef3b71-bcb4-767c-40a0-461d082f5d44@rothenpieler.org>
+Date:   Tue, 2 Mar 2021 02:03:58 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210301184633.GA14881@fieldses.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms070008070302030309060607"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Fix shift out-of-bounds in xprt_calc_majortimeo(). This is caused
-by a garbage timeout (retrans) mount option being passed to nfs mount,
-in this case from syzkaller.
+This is a cryptographically signed message in MIME format.
 
-If the protocol is XPRT_TRANSPORT_UDP, then 'retrans' is a shift
-value for a 64-bit long integer, so 'retrans' cannot be >= 64.
-If it is >= 64, fail the mount and return an error.
+--------------ms070008070302030309060607
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 9954bf92c0cd ("NFS: Move mount parameterisation bits into their own file")
-Reported-by: syzbot+ba2e91df8f74809417fa@syzkaller.appspotmail.com
-Reported-by: syzbot+f3a0fa110fd630ab56c8@syzkaller.appspotmail.com
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna.schumaker@netapp.com>
-Cc: linux-nfs@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: stable@vger.kernel.org
----
- fs/nfs/fs_context.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+On 01.03.2021 19:46, J. Bruce Fields wrote:
+> Thanks for the bisecting this and reporting the results.
+>=20
+> The behavior you describe is probably not a bug: NFS close-to-open
+> caching semantics don't guarantee you'll see updates on the reading
+> client in this case.
+>=20
+> Nevertheless, I don't understand why the behavior changed with that
+> commit, and I'd like to.
+>=20
+> The only change in behavior I'd expect would be that the writing client=
 
---- lnx-512-rc1.orig/fs/nfs/fs_context.c
-+++ lnx-512-rc1/fs/nfs/fs_context.c
-@@ -974,6 +974,15 @@ static int nfs23_parse_monolithic(struct
- 			       sizeof(mntfh->data) - mntfh->size);
- 
- 		/*
-+		 * for proto == XPRT_TRANSPORT_UDP, which is what uses
-+		 * to_exponential, implying shift: limit the shift value
-+		 * to BITS_PER_LONG (majortimeo is unsigned long)
-+		 */
-+		if (!(data->flags & NFS_MOUNT_TCP)) /* this will be UDP */
-+			if (data->retrans >= 64) /* shift value is too large */
-+				goto out_invalid_data;
-+
-+		/*
- 		 * Translate to nfs_fs_context, which nfs_fill_super
- 		 * can deal with.
- 		 */
-@@ -1073,6 +1082,9 @@ out_no_address:
- 
- out_invalid_fh:
- 	return nfs_invalf(fc, "NFS: invalid root filehandle");
-+
-+out_invalid_data:
-+	return nfs_invalf(fc, "NFS: invalid binary mount data");
- }
- 
- #if IS_ENABLED(CONFIG_NFS_V4)
+> would be granted a read delegation.  But I wouldn't expect that to
+> change how it writes back data, or how the reading client checks for
+
+The writing side of things does not seem to be affected.
+At any point during testing, the file on the servers filesystem is in=20
+the state I'd expect it to be, growing by one line per second.
+
+What's also a bit odd about this is that after both clients have closed=20
+the file, the reading client still sees an older version of the file,=20
+the one state it was in when it was first opened on the client.
+The file size in stat()/ls -l mismatches between the reading client and=20
+the server.
+It stays in that state for some seemingly arbitrary amount of time.
+Observing the file in any way(cat/tail, or even just ls) appears to=20
+extend the wait time.
+After leaving the file alone for long enough on the reading client, it=20
+snaps back to reality.
+
+
+This change in behavior, while clearly an edge case, is quite=20
+devastating for our use case. And also somewhat counter-intuitive.
+
+It's the log output of cluster jobs sent off to compute nodes by the user=
+s.
+They then observe what the job is doing via tail -f on the log file on=20
+the login node.
+
+
+--------------ms070008070302030309060607
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+LnAuQS4xLDAqBgNVBAMMI0FjdGFsaXMgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIENBIEczMIIC
+IjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA7eaHlqHBpLbtwkJV9z8PDyJgXxPgpkOI
+hkmReRwbLxpQD9xGAe72ujqGzFFh78QPgAhxKVqtGHzYeq0VJVCzhnCKRBbVX+JwIhL3ULYh
+UAZrViUp952qDB6qTL5sGeJS9F69VPSR5k6pFNw7mHDTTt0voWFg2aVkG3khomzVXoieJGOi
+Q4dH76paCtQbLkt59joAKz2BnwGLQ4wr09nfumJt5AKx2YxHK2XgSPslVZ4z8G00gimsfA7U
+tjT/wiekY6Z0b7ksLrEcvODncHQe9VSrNRA149SE3AlkWaZM/joVei/GYfj9K5jkiReinR4m
+qM353FEceLOeBhSTURpMdQ5wsXLi9DSTGBuNv4aw2Dozb/qBlkhGTvwk92mi0jAecE22Sn3A
+9UfrU2p1w/uRs+TIteQ0xO0B/J2mY2caqocsS9SsriIGlQ8b0LT0o6Ob07KGtPa5/lIvMmx5
+72Dv2v+vDiECByxm1Hdgjp8JtE4mdyYP6GBscJyT71NZw1zXHnFkyCbxReag9qaSR9x4CVVX
+j1BDmNROCqd5NAfIXUXYTFeZ/jukQigkxXGWhEhfLBC4Ha6pwizz9fq1+wwPKcWaF9P/SZOu
+BDrG30MiyCZa66G9mEtF5ZLuh4rGfKqxy4Z5Mxecuzt+MZmrSKfKGeXOeED/iuX5Z02M1o7i
+MS8CAwEAAaOCAfQwggHwMA8GA1UdEwEB/wQFMAMBAf8wHwYDVR0jBBgwFoAUUtiIOsifeGbt
+ifN7OHCUyQICNtAwQQYIKwYBBQUHAQEENTAzMDEGCCsGAQUFBzABhiVodHRwOi8vb2NzcDA1
+LmFjdGFsaXMuaXQvVkEvQVVUSC1ST09UMEUGA1UdIAQ+MDwwOgYEVR0gADAyMDAGCCsGAQUF
+BwIBFiRodHRwczovL3d3dy5hY3RhbGlzLml0L2FyZWEtZG93bmxvYWQwHQYDVR0lBBYwFAYI
+KwYBBQUHAwIGCCsGAQUFBwMEMIHjBgNVHR8EgdswgdgwgZaggZOggZCGgY1sZGFwOi8vbGRh
+cDA1LmFjdGFsaXMuaXQvY24lM2RBY3RhbGlzJTIwQXV0aGVudGljYXRpb24lMjBSb290JTIw
+Q0EsbyUzZEFjdGFsaXMlMjBTLnAuQS4lMmYwMzM1ODUyMDk2NyxjJTNkSVQ/Y2VydGlmaWNh
+dGVSZXZvY2F0aW9uTGlzdDtiaW5hcnkwPaA7oDmGN2h0dHA6Ly9jcmwwNS5hY3RhbGlzLml0
+L1JlcG9zaXRvcnkvQVVUSC1ST09UL2dldExhc3RDUkwwHQYDVR0OBBYEFL6XqaqEv4C/EFN9
+CTL54S4yG893MA4GA1UdDwEB/wQEAwIBBjANBgkqhkiG9w0BAQsFAAOCAgEAJpvnG1kNdLMS
+A+nnVfeEgIXNQsM7YRxXx6bmEt9IIrFlH1qYKeNw4NV8xtop91Rle168wghmYeCTP10FqfuK
+MZsleNkI8/b3PBkZLIKOl9p2Dmz2Gc0I3WvcMbAgd/IuBtx998PJX/bBb5dMZuGV2drNmxfz
+3ar6ytGYLxedfjKCD55Yv8CQcN6e9sW5OUm9TJ3kjt7Wdvd1hcw5s+7bhlND38rWFJBuzump
+5xqm1NSOggOkFSlKnhSz6HUjgwBaid6Ypig9L1/TLrkmtEIpx+wpIj7WTA9JqcMMyLJ0rN6j
+jpetLSGUDk3NCOpQntSy4a8+0O+SepzS/Tec1cGdSN6Ni2/A7ewQNd1Rbmb2SM2qVBlfN0e6
+ZklWo9QYpNZyf0d/d3upsKabE9eNCg1S4eDnp8sJqdlaQQ7hI/UYCAgDtLIm7/J9+/S2zuwE
+WtJMPcvaYIBczdjwF9uW+8NJ/Zu/JKb98971uua7OsJexPFRBzX7/PnJ2/NXcTdwudShJc/p
+d9c3IRU7qw+RxRKchIczv3zEuQJMHkSSM8KM8TbOzi/0v0lU6SSyS9bpGdZZxx19Hd8Qs0cv
++R6nyt7ohttizwefkYzQ6GzwIwM9gSjH5Bf/r9Kc5/JqqpKKUGicxAGy2zKYEGB0Qo761Mcc
+IyclBW9mfuNFDbTBeDEyu80xggPzMIID7wIBATCBljCBgTELMAkGA1UEBhMCSVQxEDAOBgNV
+BAgMB0JlcmdhbW8xGTAXBgNVBAcMEFBvbnRlIFNhbiBQaWV0cm8xFzAVBgNVBAoMDkFjdGFs
+aXMgUy5wLkEuMSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBH
+MwIQCP8se1eXTyBvFrjHrZ83LDANBglghkgBZQMEAgEFAKCCAi0wGAYJKoZIhvcNAQkDMQsG
+CSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjEwMzAyMDEwMzU4WjAvBgkqhkiG9w0BCQQx
+IgQgte2YwFRzjaRt8zQtZl1EWrI3WJ+Suf/Yrq16kGqHXFgwbAYJKoZIhvcNAQkPMV8wXTAL
+BglghkgBZQMEASowCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDAN
+BggqhkiG9w0DAgIBQDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBpwYJKwYBBAGCNxAEMYGZ
+MIGWMIGBMQswCQYDVQQGEwJJVDEQMA4GA1UECAwHQmVyZ2FtbzEZMBcGA1UEBwwQUG9udGUg
+U2FuIFBpZXRybzEXMBUGA1UECgwOQWN0YWxpcyBTLnAuQS4xLDAqBgNVBAMMI0FjdGFsaXMg
+Q2xpZW50IEF1dGhlbnRpY2F0aW9uIENBIEczAhAI/yx7V5dPIG8WuMetnzcsMIGpBgsqhkiG
+9w0BCRACCzGBmaCBljCBgTELMAkGA1UEBhMCSVQxEDAOBgNVBAgMB0JlcmdhbW8xGTAXBgNV
+BAcMEFBvbnRlIFNhbiBQaWV0cm8xFzAVBgNVBAoMDkFjdGFsaXMgUy5wLkEuMSwwKgYDVQQD
+DCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBHMwIQCP8se1eXTyBvFrjHrZ83
+LDANBgkqhkiG9w0BAQEFAASCAQBXkoj3VJZxKsvVuvJTvQOsuZMFok+BxouriISlcutZ4RL3
+T9m7O8exjBHKQLOR0h/pspFGEatypTErOWwphZk8Lawsgj6PHmDDy1WDcAQyZt7M/FeytluH
++SGlYwCYcmOqiatqtTD0GVh++BeFFrLOK1cqefKbgPe8ZQRwBGhK8HSAONZYLpygM1zN1DpS
+IFaewCeiE1ZGRmmpIhIfOtu2zb7ESUQXHjWx4RbBhKaErNcAOhnXUmzSqPQjP1Ufq3/gY7PK
+WQD/4LiNwMmUs34mkepG+pckZIMiaQ9zrGb0leCr1NpS7czKVtWIVWkR0Y0KQH+iy+YZFjsC
+MtAItnnxAAAAAAAA
+--------------ms070008070302030309060607--
