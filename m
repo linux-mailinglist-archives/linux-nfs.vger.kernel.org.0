@@ -2,298 +2,189 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CE2332B745
+	by mail.lfdr.de (Postfix) with ESMTP id A6AEF32B746
 	for <lists+linux-nfs@lfdr.de>; Wed,  3 Mar 2021 12:06:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233745AbhCCKwS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 3 Mar 2021 05:52:18 -0500
-Received: from sonic310-30.consmr.mail.ne1.yahoo.com ([66.163.186.211]:44882
-        "EHLO sonic310-30.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1835394AbhCBTF1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Mar 2021 14:05:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1614711881; bh=qgaMXq3MepzUdSISmshqlJxIDGrGpWmnZTDhOMv/VX8=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject:Reply-To; b=L5mBNuaohw33W39aCoXPpRpeuvfZnLgCyj6JT82gH+kVGb4C17exQKefwCG+AfKecFPaLeQlP+jjWsqdXk+zO/mpji58Duv4zlLvd+E8O+XJOIfTL+aPzp3arWYrGLcbtiVM7RXSlOdODbveOrKfJOAQH+ho4mxdWWLBMYo3sxLd/NPvhHoS3F3J+QwOy2Z1pu4Jz2k+kS/6ZA67hFjQpQArYAD53/qamyTVtavAYaiZBR75LGygsv4eOOLkQVU18USdkn8FAQ/4Jck3Kbog7kC8xYt9FNMsJkMyel5QspWyB1s88bQxSDo1hX9B2P0Zzcqwpp3ZWqLGYfiCyiDSnQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1614711881; bh=433c+zgqKntqloCcepJKuQTJJqT8B5MuZh1Dg8G2+K9=; h=X-Sonic-MF:Subject:To:From:Date:From:Subject; b=ZdteVmq4OfN3/UJv03hwIsywlsQWRd3pUyqRMzm6eCLf0bSjAn/IGC7i3Mr2E8RbuYdr7ZB1VBh+Gl4PxdgXxAIGURYL/RiqPd0d/h4jnnMKNZ54Vw+J//BsjVPWVATgiJdFMD1zDQ4N6Lu0I/JfYZZ+wGcXqXi1xpWbTWHupIV8rc1akyDzTEeQ4Yi92lrP81ildQ3noRneAuBeG6DTQFn2Bp8oCqCPcoutDE8KnualjAXeX3a3gmdWpwKxrh5OC0ZydyUpGTvXiHX3TROqJgowlc9NY3ZQa8Qd6O8Twzf3X41qjXliXl6sW9tU1iaqfXpZ05rrY0TqIG8AMvHNyg==
-X-YMail-OSG: BzbRTpMVM1lK7LD1V29fiwhyWBrVxYjeRmN7PPSM9pAG_sV7bvWyDWM8_xu7zd6
- uuDoELKiBcTzVLLzOnjcFXfyeLaRVvepXgXrahLgxHE0YNV6OPwTJYsfB42UNSzslCaVaXj2rgmY
- qSwusdOjU.yZKnqGE4hEBUK5dAnUgo0fC1i8Hk5DsEFYPILoAfUiwpsSRc94PZOsZIqAvucB1VPP
- nFk.qAsI8fmab4CDdvGIXZaznnzNkiHNz96C3oQ9cEJ_zGwPiEMUoMq5.fqRAtJW.oBm7ROAtzlJ
- vUBmSVK6L4vZdXUKEsEHIia5D3Lk36oD1NRvF556z6zV1A99Ss1_rGirgulYqJd1pABCf9iZaqMj
- zjDsIdKu4KPwuLQCsOgErfgLuExwhyk.uyWHjy_dRPkv8Q5dP5fFj19HHj6Lrq_9m2Swr1jYFXkN
- lm4zG5POnp867z.tHy1x9uWK1SHWWEim5lU9i_f6_lXI1ACvMsXBM0Issx.smrnDf1IFNQ0GSLRU
- 5p6mVzGBVmo5qOcyifNPCfPDkC7rRFy75D78IIr4w_BmCQ_lEca7JBKZj5R9tp9hkXkPwi4zbLYj
- oFS92.Ye2_9cRZ2zIHJvYfs7Lymutf8wY0L1z8PN26SB3ka21xjHcupoY_q7uSQEASMm1LLDZ.Az
- 4JJ1YGNrkvgrKnu1b0fZfIy3evnI_vUXEGSvrggwVk5efeGOHCl6JwqEpGOCcIGZs_2rt.7eRH6G
- UuAYKSWn71PIOLhEdEG1y0Z86jBc34q.nO9Bec_Vy8oj4Z5XBKQOo_dh_45BikKmhCgGGeMXsLQr
- v9D.m.uwE.4MiSGbURJMi0zcaqwosayUxM0UlIHRVysRJ2MkuxEaCdNAvYBLSDYerhoCCsjrFSTn
- 94EpaPwwkIwRR7RUB.fBZWIwjzRpJLAekQ3MCLrOyYXcW4yuXNF9p2OuU9uAA9lk9hDIjh5Lp.zD
- qT0V9GMVw6rUa3NYywTmiffVUTru0zxwmqL9rfdyOgHQwgI8Gchf9B9yuYnrbuMqW7fS4.r7CzBY
- DBkhgtf1UG0_1uqzth7U_D.Yaln5zjSLHSH2Jl3hWNTiF5qpvsszM.IXlpkM3la6NEYZPg1226wa
- AnqUxiSbq07G28WG4WLvo6XUGzeud8ObOguJjim1rhyMTfrwb8ZmXs7E3c9Fk6RKX2tgwxB852L_
- sl6Oibby6JwRVDfmsBZ769zR8z.Q_Zu5OUWoklatNOkCUQKY1TGbniUPXuVJFud0eiCMuEwtbzu_
- YlcgwZtc3dilhNgRgSxm6kN8ZC3TdMZx1ipWkofzx_DWjZDyzD3hb8vwZf6652g2TICAnJEhbNaJ
- SQcXP57zSQ97nhrKVbNSd.l0GC1f_4MB2IZd.Nx6br.UXav7eqtv2aa1zaXilI2x0Ljlspbfu7FS
- lGmc0BPLd0cEmnJ35CYLFr2RAGvbVdxmxA_m8Hp4l6u.CDsGwT8c__DxV6qF.sRRqgIMz047dnz7
- NgRLF7gV5xE9S.aShqWKHPAKrWUpbCHSgjqs4ikXVKE1sgsH_TOm6LqOTCX11gpdWu.M9kLFKWL.
- rkSGTGAOyhcFHcHfUWgK0HqEORTSP081abFTAim0efLhNk8._PDHv4GhWJa.MLUMlcOyEVjp23xm
- wWJ5ipuJ_X58HI_Pi53RDZmLMyL5KVfxk.xO.rxkPVpX2FcALdXe09_12VQIJ3P3Y6GjW_hKZsxE
- J7NRB88M9aW01ZJRmq8FAaV3h2x2S0qQT16Evt1S2v.9FyOXoO8M5DqtsEvWUrva4G1lRYG9Yr5y
- zEnxpwWkZ9WY28bLLHAhTgzzmDnxqVhC0j8kv7J.5rQ9QOi4DTpntt5FZtVtUEQx4flKXUzKdT8g
- FA8E_Cz_472rOG9_zfdCl9g9sbWsVCVF28RLtSjKwZLzZcQmOuw1NFtFx6c.PFxQho_5aEP8V8SH
- ad4Lh.j7lnQTYWK1gWRanjjlMjw4CZbLzKe1rUU_AGoo9LbQvpRCIw_WhGmMLGv6GSJr0bioBz7L
- Oyrv3STdVoeoNoajywqQBKWxcYxCjLr9PHHCA9BWG5aMALRVhcUHkneF21RBsbpLKDVA.v4xA0Y2
- gJqMNLZaKRDxsDhMXT0pvgnj_TGTEG7zy4bqY.WJy_cZ_cUtfkJHqilR9SSlsA6d0sWCne8diqiy
- z2wQXbA6HB2w59.NYpB6EQRxW0E4sWPAJ2AHzk6q0SRZLcTolSCfEQbfcWPW6vMbAa_p4TIcHfy8
- dvQPdthvyb20UHSJhU8BkAwEATjH8Qa5thQabKWm2_gS2RC4vK5QZxvOqi7Yhn6l0_px9Gb_Cpfx
- EkrMT1LBnMf9RzJpg2cqoLjoA0iX72sVSrGBP5sA.YD5KvIhrDGegvqVOkoVFF1z7FHh8u4k2QN2
- prZWM5FgHJbxFJMefu..jC0W2zXlc3vYrT3YfO2m.1ZfCpEOqVkf4H8sIHHQfj65AlVwQIJg2PGL
- AItDAhX22LzhFo.0TaF48cNMHrDnA9YWHDuaXnqGQSQvbUAhOvJcUDFJJkGzStffs1eoNg5sVAvh
- 8T35ImP4uDUo1fHzAtjL9mqVaBeOgY08E1fjjkmCvxJuHGW6DxzQE_egyxXaJcn2yNQJJ3MMjnF1
- aHtbemlNgyXocdGB2paYEbT4vO45ZUOJgIohDf_gjkUz2vSE1gtJ2UWaggzMRnykhIywRLQZRjMu
- yytuCV3AP_wnFJyp5v3lW8hHU6INX1wnM8eO4QB4Eayc3SjnMBSMXcBmXzoA1gYCW_K133fgLqFR
- o2k6z9nYNoAozvD8xN0Tr5TAvDJZZAkxqN9U9XxocrfC_tKnvUJrf.M4_9BZet0gZygqO4hGT_Pk
- CF4ZYM71TAcdZjZ0E2c88H2YBGSTfBLbS8Ox52jDKSvQM58EGNu9z5FLNVasCUL2W7VJFiMNRone
- USd8688li63sAv74dJBjRzix7Kjq2TDFO3LfYDlAgfEVrZhz.O63lye_ez7dBAqpEAbbqqIuJAq5
- PB.3HCzPxLto-
-X-Sonic-MF: <casey@schaufler-ca.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.ne1.yahoo.com with HTTP; Tue, 2 Mar 2021 19:04:41 +0000
-Received: by kubenode534.mail-prod1.omega.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 31fae7b590c07b63d8a1e296bc7c1804;
-          Tue, 02 Mar 2021 18:51:35 +0000 (UTC)
-Subject: Re: [PATCH v4 1/3] [security] Add new hook to compare new mount to an
- existing mount
-To:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <CAN-5tyGuV-gs0KzVbKSj42ZMx553zy9wOfVb1SoHoE-WCoN1_w@mail.gmail.com>
- <20210227033755.24460-1-olga.kornievskaia@gmail.com>
- <CAFX2Jfk--KwkAss1gqTPnQt-bKvUUapNdHbuicu=m+jOtjrMyQ@mail.gmail.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Message-ID: <f8f5323c-cdfd-92e8-b359-43caaf9d7490@schaufler-ca.com>
-Date:   Tue, 2 Mar 2021 10:51:33 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S237769AbhCCKwe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Mar 2021 05:52:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1835413AbhCBTGF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Mar 2021 14:06:05 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CE2AC06178B
+        for <linux-nfs@vger.kernel.org>; Tue,  2 Mar 2021 11:05:25 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id v13so10186236edw.9
+        for <linux-nfs@vger.kernel.org>; Tue, 02 Mar 2021 11:05:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IWjRxM3BJNSSNLSyfa3eh6ihqC0CKmNble6MwHX7TZ8=;
+        b=WNobh3ZSAAuczykbptnYIagUpVUuoYwaIhIs+hCxctsa1jVqcqN38dAgfrLg/cV4Al
+         mHWS7EWkl12Dy14obEMW4+TZfzlHweWbSo7WZgiZaJAxT31osiodYBNNdN0bIcLFk2yl
+         W+Ngl+peQvuOuahiX9clEkm0Ukvzb5LU6cAeug14zU3NrJ5RJ4QDy51nr89EJY57uXoO
+         vCj1jQvQ0H3b3FH6ZmYH97IdGS/79/yt+NfhA6qcBVLjEKrdbhfdaAh/ujrz9ZLuC8Kc
+         45lA4zp2i7WxI5iwms9448AEI0azMUTdzbwQMaxfpBiHWwR1Y2F3Hyil/9ow0TOFq96J
+         NVUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IWjRxM3BJNSSNLSyfa3eh6ihqC0CKmNble6MwHX7TZ8=;
+        b=B7jtIzxmkjypU3opuDeYE5vG4RdC2AhH9MPvv8qd6W61d80q4uxzyD0VjlmlJGwysF
+         xeGjmZUpMDkbfSUBYj+HEAGH68Hq0cunzxPW5vx0S3jm2K0Ix22l/qU3IjgPCPJn+2lM
+         Xs2dVCZSGnyiCH6/wSmcDNCSDGU9ypoWz/efB/Frem4RfLH6tPEX94ZNIlH8LtlpaOuK
+         mu+PjY569EYHMDT3TIt39T8oPio2c2J5GOl4w3sYCQFNWi0jOM7Zpw+s0JQGJyy52BuA
+         YXioTpmCNGuSXJBRPk7K58nSNgTJPB8jOPdjtBtP9sl3EYJ7ZZgh1oscKaEDHyDCjY/t
+         U9oQ==
+X-Gm-Message-State: AOAM531sa+JzZ3c7TLmpBh1/JfVl2U1r4AeT3/Gca1se06CQTn1/QZIc
+        HaEhoGSBoALUmlMaiTsB0rnA6w==
+X-Google-Smtp-Source: ABdhPJxy8NRAbw0sZbUArpeN9STepv29hrNXbBmKuZrs1/zaW7I4nPiBtikZu+nXHWjP5fludKaUKg==
+X-Received: by 2002:a05:6402:10ce:: with SMTP id p14mr21754174edu.348.1614711923840;
+        Tue, 02 Mar 2021 11:05:23 -0800 (PST)
+Received: from enceladus (ppp-94-64-113-158.home.otenet.gr. [94.64.113.158])
+        by smtp.gmail.com with ESMTPSA id l1sm18218405eje.12.2021.03.02.11.05.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Mar 2021 11:05:23 -0800 (PST)
+Date:   Tue, 2 Mar 2021 21:05:20 +0200
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux-NFS <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 5/5] net: page_pool: use alloc_pages_bulk in refill code
+ path
+Message-ID: <YD6McJNYbMqeu3pR@enceladus>
+References: <20210301161200.18852-1-mgorman@techsingularity.net>
+ <20210301161200.18852-6-mgorman@techsingularity.net>
 MIME-Version: 1.0
-In-Reply-To: <CAFX2Jfk--KwkAss1gqTPnQt-bKvUUapNdHbuicu=m+jOtjrMyQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Mailer: WebService/1.1.17828 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.9.1)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210301161200.18852-6-mgorman@techsingularity.net>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 3/2/2021 10:20 AM, Anna Schumaker wrote:
-> Hi Casey,
->
-> On Fri, Feb 26, 2021 at 10:40 PM Olga Kornievskaia
-> <olga.kornievskaia@gmail.com> wrote:
->> From: Olga Kornievskaia <kolga@netapp.com>
->>
->> Add a new hook that takes an existing super block and a new mount
->> with new options and determines if new options confict with an
->> existing mount or not.
->>
->> A filesystem can use this new hook to determine if it can share
->> the an existing superblock with a new superblock for the new mount.
->>
->> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> Do you have any other thoughts on this patch? I'm also wondering how
-> you want to handle sending it upstream.=20
+On Mon, Mar 01, 2021 at 04:12:00PM +0000, Mel Gorman wrote:
+> From: Jesper Dangaard Brouer <brouer@redhat.com>
+> 
+> There are cases where the page_pool need to refill with pages from the
+> page allocator. Some workloads cause the page_pool to release pages
+> instead of recycling these pages.
+> 
+> For these workload it can improve performance to bulk alloc pages from
+> the page-allocator to refill the alloc cache.
+> 
+> For XDP-redirect workload with 100G mlx5 driver (that use page_pool)
+> redirecting xdp_frame packets into a veth, that does XDP_PASS to create
+> an SKB from the xdp_frame, which then cannot return the page to the
+> page_pool. In this case, we saw[1] an improvement of 18.8% from using
+> the alloc_pages_bulk API (3,677,958 pps -> 4,368,926 pps).
+> 
+> [1] https://github.com/xdp-project/xdp-project/blob/master/areas/mem/page_pool06_alloc_pages_bulk.org
+> 
+> Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+> ---
+>  net/core/page_pool.c | 63 ++++++++++++++++++++++++++++----------------
+>  1 file changed, 40 insertions(+), 23 deletions(-)
+> 
+> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+> index a26f2ceb6a87..567680bd91c4 100644
+> --- a/net/core/page_pool.c
+> +++ b/net/core/page_pool.c
+> @@ -208,44 +208,61 @@ noinline
+>  static struct page *__page_pool_alloc_pages_slow(struct page_pool *pool,
+>  						 gfp_t _gfp)
+>  {
+> +	const int bulk = PP_ALLOC_CACHE_REFILL;
+> +	struct page *page, *next, *first_page;
+>  	unsigned int pp_flags = pool->p.flags;
+> -	struct page *page;
+> +	unsigned int pp_order = pool->p.order;
+> +	int pp_nid = pool->p.nid;
+> +	LIST_HEAD(page_list);
+>  	gfp_t gfp = _gfp;
+>  
+> -	/* We could always set __GFP_COMP, and avoid this branch, as
+> -	 * prep_new_page() can handle order-0 with __GFP_COMP.
+> -	 */
+> -	if (pool->p.order)
+> +	/* Don't support bulk alloc for high-order pages */
+> +	if (unlikely(pp_order)) {
+>  		gfp |= __GFP_COMP;
+> +		first_page = alloc_pages_node(pp_nid, gfp, pp_order);
+> +		if (unlikely(!first_page))
+> +			return NULL;
+> +		goto out;
+> +	}
+>  
+> -	/* FUTURE development:
+> -	 *
+> -	 * Current slow-path essentially falls back to single page
+> -	 * allocations, which doesn't improve performance.  This code
+> -	 * need bulk allocation support from the page allocator code.
+> -	 */
+> -
+> -	/* Cache was empty, do real allocation */
+> -#ifdef CONFIG_NUMA
+> -	page = alloc_pages_node(pool->p.nid, gfp, pool->p.order);
+> -#else
+> -	page = alloc_pages(gfp, pool->p.order);
+> -#endif
+> -	if (!page)
+> +	if (unlikely(!__alloc_pages_bulk_nodemask(gfp, pp_nid, NULL,
+> +						  bulk, &page_list)))
+>  		return NULL;
+>  
+> +	/* First page is extracted and returned to caller */
+> +	first_page = list_first_entry(&page_list, struct page, lru);
+> +	list_del(&first_page->lru);
+> +
+> +	/* Remaining pages store in alloc.cache */
+> +	list_for_each_entry_safe(page, next, &page_list, lru) {
+> +		list_del(&page->lru);
+> +		if (pp_flags & PP_FLAG_DMA_MAP &&
+> +		    unlikely(!page_pool_dma_map(pool, page))) {
+> +			put_page(page);
+> +			continue;
+> +		}
+> +		if (likely(pool->alloc.count < PP_ALLOC_CACHE_SIZE)) {
+> +			pool->alloc.cache[pool->alloc.count++] = page;
+> +			pool->pages_state_hold_cnt++;
+> +			trace_page_pool_state_hold(pool, page,
+> +						   pool->pages_state_hold_cnt);
+> +		} else {
+> +			put_page(page);
+> +		}
+> +	}
+> +out:
+>  	if (pp_flags & PP_FLAG_DMA_MAP &&
+> -	    unlikely(!page_pool_dma_map(pool, page))) {
+> -		put_page(page);
+> +	    unlikely(!page_pool_dma_map(pool, first_page))) {
+> +		put_page(first_page);
+>  		return NULL;
+>  	}
+>  
+>  	/* Track how many pages are held 'in-flight' */
+>  	pool->pages_state_hold_cnt++;
+> -	trace_page_pool_state_hold(pool, page, pool->pages_state_hold_cnt);
+> +	trace_page_pool_state_hold(pool, first_page, pool->pages_state_hold_cnt);
+>  
+>  	/* When page just alloc'ed is should/must have refcnt 1. */
+> -	return page;
+> +	return first_page;
+>  }
+>  
+>  /* For using page_pool replace: alloc_pages() API calls, but provide
+> -- 
+> 2.26.2
+> 
 
-James Morris is the maintainer for the security sub-system,
-so you'll want to send this through him. He will want you to
-have an ACK from Paul Moore, who is the SELinux maintainer.
-
-> I'm happy to take it through
-> the NFS tree (with an acked-by) for a 5.12-rc with Olga's bugfix
-> patches, but if you have other thoughts or plans then let me know!
->
-> Thanks,
-> Anna
->
->> ---
->>  include/linux/lsm_hook_defs.h |  1 +
->>  include/linux/lsm_hooks.h     |  6 ++++
->>  include/linux/security.h      |  8 +++++
->>  security/security.c           |  7 +++++
->>  security/selinux/hooks.c      | 56 ++++++++++++++++++++++++++++++++++=
-+
->>  5 files changed, 78 insertions(+)
->>
->> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_de=
-fs.h
->> index 7aaa753b8608..1b12a5266a51 100644
->> --- a/include/linux/lsm_hook_defs.h
->> +++ b/include/linux/lsm_hook_defs.h
->> @@ -62,6 +62,7 @@ LSM_HOOK(int, 0, sb_alloc_security, struct super_blo=
-ck *sb)
->>  LSM_HOOK(void, LSM_RET_VOID, sb_free_security, struct super_block *sb=
-)
->>  LSM_HOOK(void, LSM_RET_VOID, sb_free_mnt_opts, void *mnt_opts)
->>  LSM_HOOK(int, 0, sb_eat_lsm_opts, char *orig, void **mnt_opts)
->> +LSM_HOOK(int, 0, sb_mnt_opts_compat, struct super_block *sb, void *mn=
-t_opts)
->>  LSM_HOOK(int, 0, sb_remount, struct super_block *sb, void *mnt_opts)
->>  LSM_HOOK(int, 0, sb_kern_mount, struct super_block *sb)
->>  LSM_HOOK(int, 0, sb_show_options, struct seq_file *m, struct super_bl=
-ock *sb)
->> diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
->> index a19adef1f088..0de8eb2ea547 100644
->> --- a/include/linux/lsm_hooks.h
->> +++ b/include/linux/lsm_hooks.h
->> @@ -142,6 +142,12 @@
->>   *     @orig the original mount data copied from userspace.
->>   *     @copy copied data which will be passed to the security module.=
-
->>   *     Returns 0 if the copy was successful.
->> + * @sb_mnt_opts_compat:
->> + *     Determine if the new mount options in @mnt_opts are allowed gi=
-ven
->> + *     the existing mounted filesystem at @sb.
->> + *     @sb superblock being compared
->> + *     @mnt_opts new mount options
->> + *     Return 0 if options are compatible.
->>   * @sb_remount:
->>   *     Extracts security system specific mount options and verifies n=
-o changes
->>   *     are being made to those options.
->> diff --git a/include/linux/security.h b/include/linux/security.h
->> index c35ea0ffccd9..50db3d5d1608 100644
->> --- a/include/linux/security.h
->> +++ b/include/linux/security.h
->> @@ -291,6 +291,7 @@ int security_sb_alloc(struct super_block *sb);
->>  void security_sb_free(struct super_block *sb);
->>  void security_free_mnt_opts(void **mnt_opts);
->>  int security_sb_eat_lsm_opts(char *options, void **mnt_opts);
->> +int security_sb_mnt_opts_compat(struct super_block *sb, void *mnt_opt=
-s);
->>  int security_sb_remount(struct super_block *sb, void *mnt_opts);
->>  int security_sb_kern_mount(struct super_block *sb);
->>  int security_sb_show_options(struct seq_file *m, struct super_block *=
-sb);
->> @@ -635,6 +636,13 @@ static inline int security_sb_remount(struct supe=
-r_block *sb,
->>         return 0;
->>  }
->>
->> +static inline int security_sb_mnt_opts_compat(struct super_block *sb,=
-
->> +                                             void *mnt_opts)
->> +{
->> +       return 0;
->> +}
->> +
->> +
->>  static inline int security_sb_kern_mount(struct super_block *sb)
->>  {
->>         return 0;
->> diff --git a/security/security.c b/security/security.c
->> index 7b09cfbae94f..56cf5563efde 100644
->> --- a/security/security.c
->> +++ b/security/security.c
->> @@ -890,6 +890,13 @@ int security_sb_eat_lsm_opts(char *options, void =
-**mnt_opts)
->>  }
->>  EXPORT_SYMBOL(security_sb_eat_lsm_opts);
->>
->> +int security_sb_mnt_opts_compat(struct super_block *sb,
->> +                               void *mnt_opts)
->> +{
->> +       return call_int_hook(sb_mnt_opts_compat, 0, sb, mnt_opts);
->> +}
->> +EXPORT_SYMBOL(security_sb_mnt_opts_compat);
->> +
->>  int security_sb_remount(struct super_block *sb,
->>                         void *mnt_opts)
->>  {
->> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
->> index 644b17ec9e63..afee3a222a0e 100644
->> --- a/security/selinux/hooks.c
->> +++ b/security/selinux/hooks.c
->> @@ -2656,6 +2656,61 @@ static int selinux_sb_eat_lsm_opts(char *option=
-s, void **mnt_opts)
->>         return rc;
->>  }
->>
->> +static int selinux_sb_mnt_opts_compat(struct super_block *sb, void *m=
-nt_opts)
->> +{
->> +       struct selinux_mnt_opts *opts =3D mnt_opts;
->> +       struct superblock_security_struct *sbsec =3D sb->s_security;
->> +       u32 sid;
->> +       int rc;
->> +
->> +       /*
->> +        * Superblock not initialized (i.e. no options) - reject if an=
-y
->> +        * options specified, otherwise accept.
->> +        */
->> +       if (!(sbsec->flags & SE_SBINITIALIZED))
->> +               return opts ? 1 : 0;
->> +
->> +       /*
->> +        * Superblock initialized and no options specified - reject if=
-
->> +        * superblock has any options set, otherwise accept.
->> +        */
->> +       if (!opts)
->> +               return (sbsec->flags & SE_MNTMASK) ? 1 : 0;
->> +
->> +       if (opts->fscontext) {
->> +               rc =3D parse_sid(sb, opts->fscontext, &sid);
->> +               if (rc)
->> +                       return 1;
->> +               if (bad_option(sbsec, FSCONTEXT_MNT, sbsec->sid, sid))=
-
->> +                       return 1;
->> +       }
->> +       if (opts->context) {
->> +               rc =3D parse_sid(sb, opts->context, &sid);
->> +               if (rc)
->> +                       return 1;
->> +               if (bad_option(sbsec, CONTEXT_MNT, sbsec->mntpoint_sid=
-, sid))
->> +                       return 1;
->> +       }
->> +       if (opts->rootcontext) {
->> +               struct inode_security_struct *root_isec;
->> +
->> +               root_isec =3D backing_inode_security(sb->s_root);
->> +               rc =3D parse_sid(sb, opts->rootcontext, &sid);
->> +               if (rc)
->> +                       return 1;
->> +               if (bad_option(sbsec, ROOTCONTEXT_MNT, root_isec->sid,=
- sid))
->> +                       return 1;
->> +       }
->> +       if (opts->defcontext) {
->> +               rc =3D parse_sid(sb, opts->defcontext, &sid);
->> +               if (rc)
->> +                       return 1;
->> +               if (bad_option(sbsec, DEFCONTEXT_MNT, sbsec->def_sid, =
-sid))
->> +                       return 1;
->> +       }
->> +       return 0;
->> +}
->> +
->>  static int selinux_sb_remount(struct super_block *sb, void *mnt_opts)=
-
->>  {
->>         struct selinux_mnt_opts *opts =3D mnt_opts;
->> @@ -6984,6 +7039,7 @@ static struct security_hook_list selinux_hooks[]=
- __lsm_ro_after_init =3D {
->>
->>         LSM_HOOK_INIT(sb_free_security, selinux_sb_free_security),
->>         LSM_HOOK_INIT(sb_free_mnt_opts, selinux_free_mnt_opts),
->> +       LSM_HOOK_INIT(sb_mnt_opts_compat, selinux_sb_mnt_opts_compat),=
-
->>         LSM_HOOK_INIT(sb_remount, selinux_sb_remount),
->>         LSM_HOOK_INIT(sb_kern_mount, selinux_sb_kern_mount),
->>         LSM_HOOK_INIT(sb_show_options, selinux_sb_show_options),
->> --
->> 2.27.0
->>
-
+Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
