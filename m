@@ -2,118 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C86032A949
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Mar 2021 19:24:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85F6232A94A
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Mar 2021 19:25:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1448437AbhCBSSj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Mar 2021 13:18:39 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36788 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1574720AbhCBDtT (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 1 Mar 2021 22:49:19 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E8FD9ABF4;
-        Tue,  2 Mar 2021 03:49:17 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Date:   Tue, 02 Mar 2021 14:49:13 +1100
-Cc:     Steve Dickson <SteveD@RedHat.com>,
-        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 0/5 v2] nfs-utils: provide audit-logging of NFSv4 access
-In-Reply-To: <20210302032733.GC16303@fieldses.org>
-References: <161456493684.22801.323431390819102360.stgit@noble>
- <20210301185037.GB14881@fieldses.org>
- <874khui7hr.fsf@notabene.neil.brown.name>
- <20210302032733.GC16303@fieldses.org>
-Message-ID: <871rcyi5ae.fsf@notabene.neil.brown.name>
+        id S1574998AbhCBSTc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Mar 2021 13:19:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1575616AbhCBD5Q (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Mar 2021 22:57:16 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FDF0C061756
+        for <linux-nfs@vger.kernel.org>; Mon,  1 Mar 2021 19:56:35 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id b13so14350425edx.1
+        for <linux-nfs@vger.kernel.org>; Mon, 01 Mar 2021 19:56:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0ogtEITfPsgDYDIa1aMvZZ9jIbFzpIK4PGkCCwyGrmk=;
+        b=B8CtsPZBCfOxLejVMoG9QP/JrwrPYcFuWvrs8cEOw05DRHoK1w7QJikoYUQ0TvpWkh
+         D/n0GI58nL7xF+5GGrEmpiVUTMAfsIs/76V9mPV6q+igyW9E1xJjvdtj3ckMB2Sun/tl
+         x4XNGy0jaMFy8s+SOPQpGN9sFXHORahWx11ZbNUsyq5fcSkVdLQ+9PiONtrJQAqkuatZ
+         B+72k8cQu1KS7/LTzpg/TS63vBMgQ+3GN5Nn/YjWphaeRw/xOqZljQuxlt3rpIs/bma0
+         nVMV7hPQSDQyYw7uavGuGFpjJv9AcbnYm/KfKFtdRWQ5pyrfc90t6a8k9YGR264UCz5p
+         X/cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0ogtEITfPsgDYDIa1aMvZZ9jIbFzpIK4PGkCCwyGrmk=;
+        b=ShniVgKO+Ney0YHMZGEpovtunmJrYYE4ZtQ/IANTJWfiEh6pr4QNqCVJgjpEpxLrT3
+         tEnfOiFKPi9t4iDmduIG6JPgkVYoy0WkvDb8cZP3bPDGmFK3oG8H6TwUCJxNurfnXt+d
+         Ay40ELy6JVEEZNjtphfa2JPKPuQ4+nLgneFlxOgIKK5Ex9NhCUk6tH2R0jY83+WckSj9
+         rXWcWmjGK/2rpFUSNYfxYSirW37NAh+Sssg8aIEyUOwbPHDoDczG5qlp/3MKoHztbs5D
+         nLGOyYcYmNDgwf4aECC3+VRtCh8kJVqclNQAYg5fRuiNNSBHa8x34r8k0OdRrQaDJm5C
+         6wig==
+X-Gm-Message-State: AOAM533k41cODd+lQ6vieGhLvFZCjojwfy2kzvZcW/x5/9Py8awfmyOl
+        r44AntUfFPLKPw0nI2hCHwHE5J/0YEeY9c337Og3ou0I
+X-Google-Smtp-Source: ABdhPJxS8efEKc068hmotGruOgj1y1lO+RjqRUDIDlrP/b5E+5ji/elM8OO76U1nwdPLayx1RI+S2gUc7m3/MnDMHYk=
+X-Received: by 2002:a05:6402:34c4:: with SMTP id w4mr2943948edc.367.1614657394044;
+ Mon, 01 Mar 2021 19:56:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <20210215174002.2376333-1-dan@kernelim.com>
+In-Reply-To: <20210215174002.2376333-1-dan@kernelim.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Mon, 1 Mar 2021 22:56:22 -0500
+Message-ID: <CAN-5tyGw3D-+emeQhu31agom9yuZ9=PL6YUVyEKiR-n2q9uE3A@mail.gmail.com>
+Subject: Re: [PATCH v1 0/8] sysfs files for multipath transport control
+To:     Dan Aloni <dan@kernelim.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Dan,
 
-On Mon, Mar 01 2021, J. Bruce Fields wrote:
-
-> On Tue, Mar 02, 2021 at 02:01:36PM +1100, NeilBrown wrote:
->> On Mon, Mar 01 2021, J. Bruce Fields wrote:
->>=20
->> > I've gotten requests for similar functionality, and intended to
->> > implement it using directory notifications on /proc/fs/nfsd/clients.
->>=20
->> I've been exploring this a bit.
->> When I mount a filesystem, 2 clients get created.
->> With NFSv4.0, the second client is immediately deleted, and the first
->> client is deleted one grace period after the filesystem is unmounted.
->> With NFSv4.1 and 4.2, the first client is immediately deleted, and the
->> second client is deleted immediately after the unmount.
+On Mon, Feb 15, 2021 at 12:43 PM Dan Aloni <dan@kernelim.com> wrote:
 >
-> Yeah, internally it's creating an "unconfirmed client" on SETCLIENTID
-> (or EXCHANGE_ID) and then a new "confirmed client" on
-> SETCLIENTID_CONFIRM (or CREATE_SESSION).
-
-Of course - the "confirm" step.  That would explain it.
-
+> Hi Anna,
 >
-> I'm not sure why the ordering's a little different between the 4.0/4.1+
-> cases.
+> This patchset builds ontop v2 of your 'sysfs files for changing IP' changeset.
 >
-> The difference on unmount is because 4.1+ clients immediately send a
-> DESTROY_CLIENTID on unmount, but that op was new to 4.1.
-
-I thought it would be something like that - a protocol improvements.
-
+> - The patchset adds two more sysfs objects, for one for transport and another
+>   for multipath.
+> - Also, `net` renamed to `client`, and `client` now has symlink to its principal
+>   transport. A client also has a symlink to its `multipath` object.
+> - The transport interface lets you change `dstaddr` of individual transports,
+>   when `nconnect` is used (or if it wasn't used and these were added with the
+>   new interface).
+> - The interface to add a transport is using a single string written to 'add',
+>   for example:
 >
-> (Note of course this isn't precisely mount/unmount, as the same client
-> can be used for multiple filesystems.)
+>        echo 'dstaddr 192.168.40.8 kind rdma' \
+>                > /sys/kernel/sunrpc/client/0/multipath/add
+>
+> These changes are independent of the method used to obtain a sunrpc ID for a
+> mountpoint. For that I've sent a concept patch showing an fspick-based
+> implementation: https://marc.info/?l=linux-nfs&m=161332454821849&w=4
 
-True.  It could also be a network disconnect, not an explicit unmount.
-Still I think it could be useful to log.
+I'm confused: does this allow adding arbitrary connections between a
+client and some server IP to an existing RPC client? Given the above
+description, that's how it reads to me, can you clarify please. I
+thought it was something specifically for v3 (because it has no
+concept of trunking). As for NFSv4 there is a notion of getting server
+locations via FS_LOCATION and doing trunking (ie multipathing)? I
+don't see how this code restricts the addition of transports to v3.
 
 >
-> Honestly, I think this is exposing an implementation detail and it's
-> dumb.  I'll look into fixing it.
-
-Thanks.
-
+> Thanks
 >
-> (I don't know if that change itself would cause additional difficulty.)
-
-I doubt it.  You would need to look at "info" in a directory to do
-anything useful, and in my simple testing that always said
-  cat: /proc/fs/nfsd/clients/41/info: No such file or directory
-or similar in the transient directory.  So code is mostly likely to
-quickly ignore any such directory.
-
-I'll see how easy it is to add "client added" and "client removed" log
-messages to mountd before resending my series.
-
-Thanks,
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJCBAEBCAAsFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAmA9tbkOHG5laWxiQHN1
-c2UuZGUACgkQOeye3VZigbmSBBAAqY9+o0ncai+Y5iX9C5/lG3PssOlOLwbsEopS
-IkyKqlTWCi6dXtEDHyqnztp6q29Mc8jBXsrdtZDBxOngadMwAaxcTXOd+MKLizXD
-CwrmDQgI6Md08y0/oZ0ltKKIVHfjroP+ESF+eYKWHZRtAnQPONcdWz5Co8U3xxx2
-VhkQWnqTWEOJFLst69/V4LUMaGuGVENOgfHl0nrLI17Ir+TMHR0j+xFx9rz8lNVx
-frn1Q1ov9xeKcxpjm5CuW6qtCbaSZWdzQqazSm5ILcmmDD7agzKJV6YsTzqB1Lyv
-ixiJUxaHJuY1xJogjtSiFW2aJHkkALPgZNOlH701z3QPlicpKILkYNPUFOJcx4Oe
-EWiK7+mb5b+gLQjJEUsI0LLOm7SjUR3ntLP9FGiryxqls5m5IlaIBJynnvD+BmSC
-Iw+yXe+xWidXnIFEkk54DCD/JMncaw9jBU4oMK+2lPMEDCKcM/SgAHD/OH15kxIB
-49YXXT9qYPGPhXiRy/g4AAi9wqsaD5RC0pSNPoOEw9RSntHbN8R2c026jL27zf5A
-Ve6h6WK+O6tw7WNFuK67180NA4V52WuLVKpCb9CpEtWVogMn2KRdnRC2gdc3zBUG
-MjamZR0ohXVH/qIRDSQAnUUNX7S/pgaCbgDUKuWwndeZ4SM2SNm0OTIkyTNlEPhd
-c1Vu8eA=
-=Cfqr
------END PGP SIGNATURE-----
---=-=-=--
+> Dan Aloni (8):
+>   sunrpc: rename 'net' to 'client'
+>   sunrpc: add xprt id
+>   sunrpc: add a directory per sunrpc xprt
+>   sunrpc: have client directory a symlink to the root transport
+>   sunrpc: add IDs to multipath
+>   sunrpc: add multipath directory and symlink from client
+>   sunrpc: change rpc_clnt_add_xprt() to rpc_add_xprt()
+>   sunrpc: introduce an 'add' node to 'multipath' sysfs directory
+>
+>  fs/nfs/pnfs_nfs.c                    |  12 +-
+>  include/linux/sunrpc/clnt.h          |  12 +-
+>  include/linux/sunrpc/xprt.h          |   3 +
+>  include/linux/sunrpc/xprtmultipath.h |   6 +
+>  net/sunrpc/clnt.c                    |  39 +--
+>  net/sunrpc/sunrpc_syms.c             |   2 +
+>  net/sunrpc/sysfs.c                   | 403 +++++++++++++++++++++++----
+>  net/sunrpc/sysfs.h                   |  21 +-
+>  net/sunrpc/xprt.c                    |  29 ++
+>  net/sunrpc/xprtmultipath.c           |  37 +++
+>  10 files changed, 487 insertions(+), 77 deletions(-)
+>
+> --
+> 2.26.2
+>
