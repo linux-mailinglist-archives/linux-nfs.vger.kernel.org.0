@@ -2,75 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3187032A93C
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Mar 2021 19:24:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3174532A93E
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Mar 2021 19:24:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352152AbhCBSQF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Mar 2021 13:16:05 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52788 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1445803AbhCBDCW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 1 Mar 2021 22:02:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A4C4EAD21;
-        Tue,  2 Mar 2021 03:01:40 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Date:   Tue, 02 Mar 2021 14:01:36 +1100
+        id S1352144AbhCBSRN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Mar 2021 13:17:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1573909AbhCBD2P (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Mar 2021 22:28:15 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00CF5C061756
+        for <linux-nfs@vger.kernel.org>; Mon,  1 Mar 2021 19:27:34 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 6DBEF2501; Mon,  1 Mar 2021 22:27:33 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6DBEF2501
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1614655653;
+        bh=9HBFXOOrXbANcO931Pqx56oVgID/LiNT2qjHGnB9S1Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IhYwmnv9pp0ZpT2wt7IxKX0jvR0znxHcNgJ34nx/wsmE05zajN7NGIN9ZqSWOwgdP
+         imx3JeOu6ob0e5WzbOgP+HcCdJQSntt6kdVJWaIgwuhv/4KsRuYWRdWqjNrYANekAd
+         Z7P3WHYbJzaGDx4ebnX4lUIftmtiYg7IUL66WwL0=
+Date:   Mon, 1 Mar 2021 22:27:33 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     NeilBrown <neilb@suse.de>
 Cc:     Steve Dickson <SteveD@RedHat.com>,
         Linux NFS Mailing list <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH 0/5 v2] nfs-utils: provide audit-logging of NFSv4 access
-In-Reply-To: <20210301185037.GB14881@fieldses.org>
+Message-ID: <20210302032733.GC16303@fieldses.org>
 References: <161456493684.22801.323431390819102360.stgit@noble>
  <20210301185037.GB14881@fieldses.org>
-Message-ID: <874khui7hr.fsf@notabene.neil.brown.name>
+ <874khui7hr.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874khui7hr.fsf@notabene.neil.brown.name>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Tue, Mar 02, 2021 at 02:01:36PM +1100, NeilBrown wrote:
+> On Mon, Mar 01 2021, J. Bruce Fields wrote:
+> 
+> > I've gotten requests for similar functionality, and intended to
+> > implement it using directory notifications on /proc/fs/nfsd/clients.
+> 
+> I've been exploring this a bit.
+> When I mount a filesystem, 2 clients get created.
+> With NFSv4.0, the second client is immediately deleted, and the first
+> client is deleted one grace period after the filesystem is unmounted.
+> With NFSv4.1 and 4.2, the first client is immediately deleted, and the
+> second client is deleted immediately after the unmount.
 
-On Mon, Mar 01 2021, J. Bruce Fields wrote:
+Yeah, internally it's creating an "unconfirmed client" on SETCLIENTID
+(or EXCHANGE_ID) and then a new "confirmed client" on
+SETCLIENTID_CONFIRM (or CREATE_SESSION).
 
-> I've gotten requests for similar functionality, and intended to
-> implement it using directory notifications on /proc/fs/nfsd/clients.
+I'm not sure why the ordering's a little different between the 4.0/4.1+
+cases.
 
-I've been exploring this a bit.
-When I mount a filesystem, 2 clients get created.
-With NFSv4.0, the second client is immediately deleted, and the first
-client is deleted one grace period after the filesystem is unmounted.
-With NFSv4.1 and 4.2, the first client is immediately deleted, and the
-second client is deleted immediately after the unmount.
+The difference on unmount is because 4.1+ clients immediately send a
+DESTROY_CLIENTID on unmount, but that op was new to 4.1.
 
-Do you know why two clients are created?  I could dig through the code
-... but maybe you already know.
+(Note of course this isn't precisely mount/unmount, as the same client
+can be used for multiple filesystems.)
 
-Thanks,
-NeilBrown
+Honestly, I think this is exposing an implementation detail and it's
+dumb.  I'll look into fixing it.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+(I don't know if that change itself would cause additional difficulty.)
 
------BEGIN PGP SIGNATURE-----
-
-iQJCBAEBCAAsFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAmA9qpAOHG5laWxiQHN1
-c2UuZGUACgkQOeye3VZigbmTLQ/+PivXd/sPlNEungFMeZV+eKxMRuRONZLp5v7p
-M6ovh0CpwBRTNjusbNoXWFmlrSlld4DjVdOy/OmAtID4LoX3H0g0EQz91cYVvnoo
-59/CrnHBjcqvdr0QDQ112cqFIXTX0C3vrLlrMASRIhsICShlWW/ViWVB5upRdpUK
-1h0fvQDzHlKBrh/bZN0JgDdjIvfmSuBBSVgSoJRNO+gFde9aaKpD4e73ZZm31qWz
-BrNhsDYX43cJp+AH5hLfDOjDqGzuLwj0lIzPJctCOcwefmGLZCBn/K/CVrs6MW62
-bFriVlS+RUFgEagCkw1ZxYmqe3X4NJObqvB2NBYj41Ax2hr58/h+BSMwb6wA1nuP
-TVTa/SclWSZ+zuXgLtq/UL3tl47iIcnZpdoFWx/6kmpoWcz5tnwB5h8aVXmOOaxo
-5HvgDLuY3ikY3MOlxKnP/4ZaFZSrVCHcYKCkBIUb02aMfupyyDFcpi4EsEHRqnxQ
-z94w3iERsZHJVminQf4ZIE4cKSp8GNd6RHPhhJi9SA8APlDeStU8DOsDoLS0CuRG
-wfIr5lG3m2RPFc1+fpsV4IfW/esb1ANk2EJtkc5SCXQMI+PEX90EeuV+ELvg9okp
-ihJQTLpKKfixOvkYeuR9udaiwgpxYdioWKOBmbuCLf9z6tJKKIP/IoWPlzqKI+jJ
-FFVY7qE=
-=8qXR
------END PGP SIGNATURE-----
---=-=-=--
+--b.
