@@ -2,60 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2ED4432B752
+	by mail.lfdr.de (Postfix) with ESMTP id A03D132B753
 	for <lists+linux-nfs@lfdr.de>; Wed,  3 Mar 2021 12:06:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344994AbhCCK6E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 3 Mar 2021 05:58:04 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51694 "EHLO
+        id S241857AbhCCK6J (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Mar 2021 05:58:09 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26164 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349564AbhCBWe1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Mar 2021 17:34:27 -0500
+        by vger.kernel.org with ESMTP id S1383541AbhCBWi7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Mar 2021 17:38:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614724312;
+        s=mimecast20190719; t=1614724652;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=j9qpvanEXquHxvS03LpEsxCAgPSPROkSDHj6p+/2Ct8=;
-        b=F+PUAl56DbuC9VHArDpNLUTbh72tcu0x3ddFZ4QMX/Zmp5IdKedwBJF+9T7EFgBfKwk6o8
-        B3VZR1qpedXcHQirerG7WQhtUYqFjgVlrlxGNNJ6bsbxe+Veqrrm3nVderhwWf3906VzxD
-        o3ddMg49O4Tr5R/BLsIfangEnTSe6J0=
+        bh=9SHG2cGMqrDhCQqqOFzuCqo7EkLMav0c7Mw1UaRtYVk=;
+        b=EZrUOJQy+907pgodmWt8q/kDShTacU7EQSdXb2BJeL3ihfIwzJSpgC+WOrLSq9c2/CqJs4
+        GxTSxqeSwRrfpv5k+RFrphmGYZkgGK899P81VWOVs1usln8X1HIb8y5/1og5+XcrxwhyMM
+        UzFQIa3zQ89/0Kb1Qgmm4iLRFrInenw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-302-XobSyJG6OJC_gvSOCDnlOQ-1; Tue, 02 Mar 2021 17:31:38 -0500
-X-MC-Unique: XobSyJG6OJC_gvSOCDnlOQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-383-4FhX-U0wO_aLhuV_2qVxCQ-1; Tue, 02 Mar 2021 17:37:21 -0500
+X-MC-Unique: 4FhX-U0wO_aLhuV_2qVxCQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 57DEDC2A6;
-        Tue,  2 Mar 2021 22:31:37 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93035804023;
+        Tue,  2 Mar 2021 22:37:20 +0000 (UTC)
 Received: from madhat.boston.devel.redhat.com (ovpn-112-24.phx2.redhat.com [10.3.112.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BE95162690;
-        Tue,  2 Mar 2021 22:31:36 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D0A61346D;
+        Tue,  2 Mar 2021 22:37:20 +0000 (UTC)
 Subject: Re: [PATCH 0/7 V4] The NFSv4 only mounting daemon.
 To:     "J. Bruce Fields" <bfields@fieldses.org>
 Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
 References: <20210219200815.792667-1-steved@redhat.com>
- <20210224203053.GF11591@fieldses.org>
+ <20210224204944.GG11591@fieldses.org>
 From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <1553fb2d-9b8e-f8eb-8c72-edcd14a2ad08@RedHat.com>
-Date:   Tue, 2 Mar 2021 17:33:23 -0500
+Message-ID: <0dcefec0-1fbf-d43a-b508-cb06edfea866@RedHat.com>
+Date:   Tue, 2 Mar 2021 17:39:06 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.0
 MIME-Version: 1.0
-In-Reply-To: <20210224203053.GF11591@fieldses.org>
+In-Reply-To: <20210224204944.GG11591@fieldses.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 2/24/21 3:30 PM, J. Bruce Fields wrote:
+On 2/24/21 3:49 PM, J. Bruce Fields wrote:
 > On Fri, Feb 19, 2021 at 03:08:08PM -0500, Steve Dickson wrote:
 >> nfsv4.exportd is a daemon that will listen for only v4 mount upcalls.
 >> The idea is to allow distros to build a v4 only package
@@ -65,41 +65,32 @@ On 2/24/21 3:30 PM, J. Bruce Fields wrote:
 >> exportd uses no RPC code, which means none of the 
 >> code or arguments that deal with v3 was ported, 
 >> this again, makes the footprint much smaller. 
-> 
-> How much smaller?
-Will a bit smaller... but a number of daemons like nfsd[cld,clddb,cldnts]
-need to also come a long. 
-> 
+>>
 >> The following options were ported:
 >>     * multiple threads
 >>     * state-directory-path option
 >>     * junction support (not tested)
 >>
 >> The rest of the mountd options were v3 only options.
-> 
-> There's also --manage-gids.
-Right... a patch was posted... 
-
-> 
-> If you want nfsv4-only at runtime, you can always run rpc.mountd with
-> -N2 -N3 to turn off the MOUNT protocol support.
-The end game is not to run mountd at all... 
-
-> 
-> If you don't even want v2/f3 code on your system, then you may have to
-> do something like this, but why is that important?
-Container friendly... Not bring in all the extra daemons v3
-needs is a good thing... esp rpcbind. 
-
-steved.
-
-> 
-> --b.
-> 
 >>
 >> V2:
 >>   * Added two systemd services: nfsv4-exportd and nfsv4-server
 >>   * nfsv4-server starts rpc.nfsd -N 3, so nfs.conf mod not needed.
+> 
+> We really shouldn't make users change how they do things.
+If they only want v4 support...  I'm thinking is a lot easier to
+simple do a nfsv4.server start verse edit config files.
+  
+> 
+> Whatever we do, "systemctl start nfs-server" should still be how they
+> start the NFS server.
+Again.. if they install the nfsv4-utils verse the nfs-utils package
+they should expect change... IMHO..
+
+steved.
+> 
+> --b.
+> 
 >>
 >> V3: Changed the name from exportd to nfsv4.exportd
 >>
