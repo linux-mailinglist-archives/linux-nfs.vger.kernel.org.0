@@ -2,173 +2,140 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A1DE32C694
+	by mail.lfdr.de (Postfix) with ESMTP id C7CA432C696
 	for <lists+linux-nfs@lfdr.de>; Thu,  4 Mar 2021 02:03:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356165AbhCDA3V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 3 Mar 2021 19:29:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1448227AbhCCPYf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Mar 2021 10:24:35 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C020C0613DC
-        for <linux-nfs@vger.kernel.org>; Wed,  3 Mar 2021 07:23:49 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id CBF0F2824; Wed,  3 Mar 2021 10:23:42 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CBF0F2824
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1614785022;
-        bh=ZecVwdAF2q3Qu4UOjZtHg1fZFYa3SMTpiMF2Qtw6RpY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hUGIVFLH/oxFgYcHA0JgFe9HUQ28MbQSB+sdQBZbXhhRuGYfp9mv1XyYBmt2m3ifF
-         gviK59LH4fLehDcu9C56cIHKtoPo6o9axTx8aLkLZaTS5vN/QiKbVWIdgK981sQGK3
-         PZfiPZ0NZ1lSiy1R5fCvXdblzy/F0rh+1IRva7a4=
-Date:   Wed, 3 Mar 2021 10:23:42 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Steve Dickson <SteveD@RedHat.com>
-Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 0/7 V4] The NFSv4 only mounting daemon.
-Message-ID: <20210303152342.GA1282@fieldses.org>
-References: <20210219200815.792667-1-steved@redhat.com>
- <20210224203053.GF11591@fieldses.org>
- <1553fb2d-9b8e-f8eb-8c72-edcd14a2ad08@RedHat.com>
+        id S1355536AbhCDA3Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Mar 2021 19:29:24 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22132 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1383754AbhCCPep (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Mar 2021 10:34:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614785593;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=GyWRKLVucVyW/0Jo4xUcQLBrgZiINDhy5XfjWJ+w02Q=;
+        b=SJ3qE7ADIHn5MuN8GMdP97popLyMczmkAmfw+vnuCbLw/+qCi/5uXEYDqyzjdxaG5qePWC
+        ffptOPOPs2vcKlecBzqODu4PPiewBJpWjvHXHaOgpxgkb3G+43k+Ko7J4/SRtRnagETkEM
+        gJIr/1y74gzv51fXqrNBXy6i17+yA/M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-341-q_5CdsvkNDyEmLP-B51dqQ-1; Wed, 03 Mar 2021 10:33:11 -0500
+X-MC-Unique: q_5CdsvkNDyEmLP-B51dqQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93C83100728F;
+        Wed,  3 Mar 2021 15:33:10 +0000 (UTC)
+Received: from idlethread.redhat.com (unknown [10.33.36.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E2C3150DE6;
+        Wed,  3 Mar 2021 15:33:08 +0000 (UTC)
+From:   Roberto Bergantinos Corpas <rbergant@redhat.com>
+To:     trond.myklebust@hammerspace.com
+Cc:     anna.schumaker@netapp.com, linux-nfs@vger.kernel.org
+Subject: [PATCH] pNFS: make DS availability problems visible in log
+Date:   Wed,  3 Mar 2021 16:33:07 +0100
+Message-Id: <20210303153307.3147-1-rbergant@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553fb2d-9b8e-f8eb-8c72-edcd14a2ad08@RedHat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Mar 02, 2021 at 05:33:23PM -0500, Steve Dickson wrote:
-> 
-> 
-> On 2/24/21 3:30 PM, J. Bruce Fields wrote:
-> > On Fri, Feb 19, 2021 at 03:08:08PM -0500, Steve Dickson wrote:
-> >> nfsv4.exportd is a daemon that will listen for only v4 mount upcalls.
-> >> The idea is to allow distros to build a v4 only package
-> >> which will have a much smaller footprint than the
-> >> entire nfs-utils package.
-> >>
-> >> exportd uses no RPC code, which means none of the 
-> >> code or arguments that deal with v3 was ported, 
-> >> this again, makes the footprint much smaller. 
-> > 
-> > How much smaller?
-> Will a bit smaller... but a number of daemons like nfsd[cld,clddb,cldnts]
-> need to also come a long. 
+Would be interesting to promote DS availability logging outside debug
+so that we are more aware that I/O is diverted to MDS and some part
+of the infraestructure failed.
 
-Could we get some numbers?
+Also added logging for failed DS connection attempts.
 
-Looks like nfs-utils in F33 is about 1.2M:
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+---
+ fs/nfs/filelayout/filelayout.c         | 4 ++--
+ fs/nfs/flexfilelayout/flexfilelayout.c | 6 +++---
+ fs/nfs/pnfs_nfs.c                      | 6 +++++-
+ 3 files changed, 10 insertions(+), 6 deletions(-)
 
-$ rpm -qi nfs-utils|grep ^Size
-Size        : 1243512
+diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filelayout.c
+index 7f5aa0403e16..fef2d31a501a 100644
+--- a/fs/nfs/filelayout/filelayout.c
++++ b/fs/nfs/filelayout/filelayout.c
+@@ -181,7 +181,7 @@ static int filelayout_async_handle_error(struct rpc_task *task,
+ 	case -EIO:
+ 	case -ETIMEDOUT:
+ 	case -EPIPE:
+-		dprintk("%s DS connection error %d\n", __func__,
++		pr_warn("%s DS connection error %d\n", __func__,
+ 			task->tk_status);
+ 		nfs4_mark_deviceid_unavailable(devid);
+ 		pnfs_error_mark_layout_for_return(inode, lseg);
+@@ -190,7 +190,7 @@ static int filelayout_async_handle_error(struct rpc_task *task,
+ 		fallthrough;
+ 	default:
+ reset:
+-		dprintk("%s Retry through MDS. Error %d\n", __func__,
++		pr_warn("%s Retry through MDS. Error %d\n", __func__,
+ 			task->tk_status);
+ 		return -NFS4ERR_RESET_TO_MDS;
+ 	}
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index a163533446fa..7150d94e80e6 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -1129,7 +1129,7 @@ static int ff_layout_async_handle_error_v4(struct rpc_task *task,
+ 	case -EIO:
+ 	case -ETIMEDOUT:
+ 	case -EPIPE:
+-		dprintk("%s DS connection error %d\n", __func__,
++		pr_warn("%s DS connection error %d\n", __func__,
+ 			task->tk_status);
+ 		nfs4_delete_deviceid(devid->ld, devid->nfs_client,
+ 				&devid->deviceid);
+@@ -1139,7 +1139,7 @@ static int ff_layout_async_handle_error_v4(struct rpc_task *task,
+ 		if (ff_layout_avoid_mds_available_ds(lseg))
+ 			return -NFS4ERR_RESET_TO_PNFS;
+ reset:
+-		dprintk("%s Retry through MDS. Error %d\n", __func__,
++		pr_warn("%s Retry through MDS. Error %d\n", __func__,
+ 			task->tk_status);
+ 		return -NFS4ERR_RESET_TO_MDS;
+ 	}
+@@ -1167,7 +1167,7 @@ static int ff_layout_async_handle_error_v3(struct rpc_task *task,
+ 		nfs_inc_stats(lseg->pls_layout->plh_inode, NFSIOS_DELAY);
+ 		goto out_retry;
+ 	default:
+-		dprintk("%s DS connection error %d\n", __func__,
++		pr_warn("%s DS connection error %d\n", __func__,
+ 			task->tk_status);
+ 		nfs4_delete_deviceid(devid->ld, devid->nfs_client,
+ 				&devid->deviceid);
+diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
+index 679767ac258d..322661a48348 100644
+--- a/fs/nfs/pnfs_nfs.c
++++ b/fs/nfs/pnfs_nfs.c
+@@ -934,8 +934,11 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 						(struct sockaddr *)&da->da_addr,
+ 						da->da_addrlen, IPPROTO_TCP,
+ 						timeo, retrans, minor_version);
+-			if (IS_ERR(clp))
++			if (IS_ERR(clp)) {
++				pr_warn("%s: DS: %s unable to connect with address %s, error: %ld\n",
++					__func__, ds->ds_remotestr, da->da_remotestr, PTR_ERR(clp));
+ 				continue;
++			}
+ 
+ 			status = nfs4_init_ds_session(clp,
+ 					mds_srv->nfs_client->cl_lease_time);
+@@ -949,6 +952,7 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 	}
+ 
+ 	if (IS_ERR(clp)) {
++		pr_warn("%s: no DS available\n", __func__);
+ 		status = PTR_ERR(clp);
+ 		goto out;
+ 	}
+-- 
+2.21.0
 
-$ strip utils/mountd/mountd
-$ ls -lh utils/mountd/mountd
--rwxrwxr-x. 1 bfields bfields 128K Mar  3 10:12 utils/mountd/mountd
-$ strip utils/exportd/exportd
-$ ls -lh utils/exportd/exportd
--rwxrwxr-x. 1 bfields bfields 106K Mar  3 10:12 utils/exportd/exportd
-
-So replacing mountd by exportd saves us about 20K out of 1.2M.  Is it
-worth it?
-
-> >> The following options were ported:
-> >>     * multiple threads
-> >>     * state-directory-path option
-> >>     * junction support (not tested)
-> >>
-> >> The rest of the mountd options were v3 only options.
-> > 
-> > There's also --manage-gids.
-> Right... a patch was posted... 
-> 
-> > 
-> > If you want nfsv4-only at runtime, you can always run rpc.mountd with
-> > -N2 -N3 to turn off the MOUNT protocol support.
-> The end game is not to run mountd at all... 
-> 
-> > 
-> > If you don't even want v2/f3 code on your system, then you may have to
-> > do something like this, but why is that important?
-> Container friendly... Not bring in all the extra daemons v3
-> needs is a good thing... esp rpcbind. 
-
-Looking at the output of
-$ for f in $(rpm -ql nfs-utils); do if [ -f $f ]; then ls -ls $f; fi; done|sort -n
-
-It looks like removing statd, sm-notify, showount and their man pages
-would free about another 170K.
-
-I think that's about how much we'd save by seperating out a separate
-documentation package.
-
-I don't know, what sort of gains are container folks asking for?
-
---b.
-
-> 
-> steved.
-> 
-> > 
-> > --b.
-> > 
-> >>
-> >> V2:
-> >>   * Added two systemd services: nfsv4-exportd and nfsv4-server
-> >>   * nfsv4-server starts rpc.nfsd -N 3, so nfs.conf mod not needed.
-> >>
-> >> V3: Changed the name from exportd to nfsv4.exportd
-> >>
-> >> V4: Added compile flag that will compile in the NFSv4 only server
-> >>
-> >> Steve Dickson (7):
-> >>   exportd: the initial shell of the v4 export support
-> >>   exportd: Moved cache upcalls routines into libexport.a
-> >>   exportd: multiple threads
-> >>   exportd/exportfs: Add the state-directory-path option
-> >>   exportd: Enabled junction support
-> >>   exportd: systemd unit files
-> >>   exportd: Added config variable to compile in the NFSv4 only server.
-> >>
-> >>  .gitignore                                |   1 +
-> >>  configure.ac                              |  14 ++
-> >>  nfs.conf                                  |   4 +
-> >>  support/export/Makefile.am                |   3 +-
-> >>  {utils/mountd => support/export}/auth.c   |   4 +-
-> >>  {utils/mountd => support/export}/cache.c  |  46 +++-
-> >>  support/export/export.h                   |  34 +++
-> >>  {utils/mountd => support/export}/fsloc.c  |   0
-> >>  {utils/mountd => support/export}/v4root.c |   0
-> >>  {utils/mountd => support/include}/fsloc.h |   0
-> >>  systemd/Makefile.am                       |   6 +
-> >>  systemd/nfs.conf.man                      |  10 +
-> >>  systemd/nfsv4-exportd.service             |  12 +
-> >>  systemd/nfsv4-server.service              |  31 +++
-> >>  utils/Makefile.am                         |   4 +
-> >>  utils/exportd/Makefile.am                 |  65 +++++
-> >>  utils/exportd/exportd.c                   | 276 ++++++++++++++++++++++
-> >>  utils/exportd/exportd.man                 |  81 +++++++
-> >>  utils/exportfs/exportfs.c                 |  21 +-
-> >>  utils/exportfs/exportfs.man               |   7 +-
-> >>  utils/mountd/Makefile.am                  |   5 +-
-> >>  21 files changed, 606 insertions(+), 18 deletions(-)
-> >>  rename {utils/mountd => support/export}/auth.c (99%)
-> >>  rename {utils/mountd => support/export}/cache.c (98%)
-> >>  create mode 100644 support/export/export.h
-> >>  rename {utils/mountd => support/export}/fsloc.c (100%)
-> >>  rename {utils/mountd => support/export}/v4root.c (100%)
-> >>  rename {utils/mountd => support/include}/fsloc.h (100%)
-> >>  create mode 100644 systemd/nfsv4-exportd.service
-> >>  create mode 100644 systemd/nfsv4-server.service
-> >>  create mode 100644 utils/exportd/Makefile.am
-> >>  create mode 100644 utils/exportd/exportd.c
-> >>  create mode 100644 utils/exportd/exportd.man
-> >>
-> >> -- 
-> >> 2.29.2
-> > 
