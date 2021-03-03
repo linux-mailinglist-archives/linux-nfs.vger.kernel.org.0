@@ -2,84 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D48632B754
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Mar 2021 12:06:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CCFE32B757
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Mar 2021 12:06:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345001AbhCCK6Q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 3 Mar 2021 05:58:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1444005AbhCCE3U (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 2 Mar 2021 23:29:20 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8878564EC0;
-        Wed,  3 Mar 2021 04:28:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614745718;
-        bh=0stP7r4ZoXAMNXgPuZItc5apuDtDXhbakYQ5nIw0v10=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gk/JY9pCIpF+oc6tEhkAIL/Jao/GnvTE7m+JmxXowom+YLx70/9J4EV/x+xx8sZ0p
-         WuBXsUCx8VVQG15ut3DAWUlDgyVd11qvnfDsmb3jcXY29YI5SSOxjjRlqC3vizW3co
-         tgUaSCaLFZErxa1lgmw4bzOkUD4FQE+1a6V4E5zpxT0USNPPLA/h0LrXnTu/1EXY5I
-         DqpOMN1+0qbRKDaebSjiAG4jzvNFap/jAF7CH5CNRSYqPWNgUCRYMh5VtdPkFXxtbD
-         7Ge4BN37sHu/pQph5p3jRbBv7NAyjZR29/UM/ZDfGhA11Ghg22O8Me6D/nAHKleuSn
-         UBJ6Vnxxg/BwA==
-From:   trondmy@kernel.org
-To:     Geert Jansen <gerardu@amazon.com>
+        id S1346472AbhCCK7C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Mar 2021 05:59:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347723AbhCCHOa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Mar 2021 02:14:30 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6AECC061756
+        for <linux-nfs@vger.kernel.org>; Tue,  2 Mar 2021 23:13:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=deBjUIw7o+5FrL5cMAMC5oZOFMRRuWN1/zCIz0A/P5I=; b=bL53yZ+p2+y9M/j7v7JtBh5Cqk
+        ZTAflsO4MCaAffr+25sUsXEOLdiwHpH4XQJY+lv0jZDkot4r2puiJACddPSskVpUceUgNd3yt5EK+
+        hvWgtLaxESzTAcQolUoJUCqWOzjStgLCJ0lvgFgrWK/uwD6eLhg9EmLUVhhuAc2wYD36lFKqQLpFK
+        CPH02xx99TKjPFMMX1n76xzaWcjA8Cy42/oaW5EQye0ulygkII6/0oOhZZR/jDOP/UKAwdyunX3O3
+        HovfW6tOLL+0FtbpijStng55BjNPtBMdcyX/my+vz+IVueX+hXCOeZsscLcFvkAXvC8+5Arwb1C+t
+        VVdiCtYw==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lHLhZ-001eDF-LO; Wed, 03 Mar 2021 07:13:45 +0000
+Date:   Wed, 3 Mar 2021 07:13:45 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] NFS: Don't gratuitously clear the inode cache when lookup failed
-Date:   Tue,  2 Mar 2021 23:28:36 -0500
-Message-Id: <20210303042836.200413-2-trondmy@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210303042836.200413-1-trondmy@kernel.org>
-References: <20210303042836.200413-1-trondmy@kernel.org>
+Subject: Re: [PATCH v1 14/42] NFSD: Update the NFSv3 PATHCONF3res encoder to
+ use struct xdr_stream
+Message-ID: <20210303071345.GA388507@infradead.org>
+References: <161461145466.8508.13379815439337754427.stgit@klimt.1015granger.net>
+ <161461180307.8508.9954286154242416300.stgit@klimt.1015granger.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <161461180307.8508.9954286154242416300.stgit@klimt.1015granger.net>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Mon, Mar 01, 2021 at 10:16:43AM -0500, Chuck Lever wrote:
+> +	*p++ = resp->p_no_trunc ? xdr_one : xdr_zero;
+> +	*p++ = resp->p_chown_restricted ? xdr_one : xdr_zero;
+> +	*p++ = resp->p_case_insensitive ? xdr_one : xdr_zero;
+> +	*p = resp->p_case_preserving ? xdr_one : xdr_zero;
 
-The fact that the lookup revalidation failed, does not mean that the
-inode contents have changed.
-
-Fixes: 5ceb9d7fdaaf ("NFS: Refactor nfs_lookup_revalidate()")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/dir.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
-
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 6350873cb8bd..deb6ad0622ed 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -1444,18 +1444,14 @@ nfs_lookup_revalidate_done(struct inode *dir, struct dentry *dentry,
- 			__func__, dentry);
- 		return 1;
- 	case 0:
--		if (inode && S_ISDIR(inode->i_mode)) {
--			/* Purge readdir caches. */
--			nfs_zap_caches(inode);
--			/*
--			 * We can't d_drop the root of a disconnected tree:
--			 * its d_hash is on the s_anon list and d_drop() would hide
--			 * it from shrink_dcache_for_unmount(), leading to busy
--			 * inodes on unmount and further oopses.
--			 */
--			if (IS_ROOT(dentry))
--				return 1;
--		}
-+		/*
-+		 * We can't d_drop the root of a disconnected tree:
-+		 * its d_hash is on the s_anon list and d_drop() would hide
-+		 * it from shrink_dcache_for_unmount(), leading to busy
-+		 * inodes on unmount and further oopses.
-+		 */
-+		if (inode && IS_ROOT(dentry))
-+			return 1;
- 		dfprintk(LOOKUPCACHE, "NFS: %s(%pd2) is invalid\n",
- 				__func__, dentry);
- 		return 0;
--- 
-2.29.2
-
+Wouldn't a little xdr_encode_bool helper for this common pattern be
+nice?
