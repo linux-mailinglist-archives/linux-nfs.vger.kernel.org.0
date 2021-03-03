@@ -2,144 +2,210 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28D2F32C6C8
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Mar 2021 02:08:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D17FF32C6CD
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Mar 2021 02:08:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1390852AbhCDA37 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 3 Mar 2021 19:29:59 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33192 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1346978AbhCCWa0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 3 Mar 2021 17:30:26 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A473CADDB;
-        Wed,  3 Mar 2021 22:28:39 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Steve Dickson <SteveD@RedHat.com>
-Date:   Thu, 04 Mar 2021 09:28:35 +1100
-Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 0/5] nfs-utils: provide audit-logging of NFSv4 access
-In-Reply-To: <6ddbe801-d107-5cbd-7362-c3e84321f203@RedHat.com>
-References: <161422077024.28256.15543036625096419495.stgit@noble>
- <6ddbe801-d107-5cbd-7362-c3e84321f203@RedHat.com>
-Message-ID: <87pn0fhnxo.fsf@notabene.neil.brown.name>
+        id S1347642AbhCDAaG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Mar 2021 19:30:06 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41446 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1355337AbhCDAXb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Mar 2021 19:23:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614817324;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=gXOtBmgY5MdqpQGzSKCvOP3QkZbnNtvngwVGLI4VAgk=;
+        b=Ko7cgZT+UXhXXj2Ryc6TZpH+61ZK5Kr9uJq0MW8+KPxg4P4rSnrhAzmGDK+OzXK9zH5E4r
+        c96DVSRNeor/yvn/7ms5T96r14JNQ0lSE+tkhkRoeCV0EQoExb4HMeazlf1NVDNMlA+FVK
+        3UrOW2hrPhZYsj24UIBsHspfsdu2rt8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-415-dv_IBc6QNiipp5PAUfyt4w-1; Wed, 03 Mar 2021 18:20:21 -0500
+X-MC-Unique: dv_IBc6QNiipp5PAUfyt4w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ECB8D193578C;
+        Wed,  3 Mar 2021 23:20:18 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-119-68.rdu2.redhat.com [10.10.119.68])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E6AC612D7E;
+        Wed,  3 Mar 2021 23:20:12 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     linux-cachefs@redhat.com
+Cc:     dhowells@redhat.com, Jeff Layton <jlayton@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: fscache: Redesigning the on-disk cache
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2653260.1614813611.1@warthog.procyon.org.uk>
+Date:   Wed, 03 Mar 2021 23:20:11 +0000
+Message-ID: <2653261.1614813611@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+I'm looking at redesigning the on-disk cache format used by fscache's
+cachefiles driver to try and eliminate the number of synchronous metadata
+operations done by the driver, to improve culling performance and to reduce
+the amount of opens/files open.  I also need to stop relying on the backing
+filesystem to track where I have data stored.
 
-On Tue, Mar 02 2021, Steve Dickson wrote:
+There are a number of options that I've considered:
 
-> Hey!
->
-> A couple comments...=20
->
-> On 2/24/21 9:42 PM, NeilBrown wrote:
->> When NFSv3 is used mountd provides logs of successful and failed mount
->> attempts which can be used for auditing.
->> When NFSv4 is used there are no such logs as NFSv4 does not have a
->> distinct "mount" request.
->>=20
->> However mountd still knows about which filesysytems are being accessed
->> from which clients, and can actually provide more reliable logs than it
->> currently does, though they must be more verbose - with periodic "is
->> being accessed" message replacing a single "was mounted" message.
->>=20
->> This series adds support for that logging, and adds some related
->> improvements to make the logs as useful as possible.
->>=20
->> NeilBrown
->>=20
->> ---
->>=20
->> NeilBrown (5):
->>       mountd: reject unknown client IP when !use_ipaddr.
->>       mountd: Don't proactively add export info when fh info is requeste=
-d.
->>       mountd: add logging for authentication results for accesses.
-> I wonder if we should mention setting "debug=3Dauth" enables
-> this logging in the mountd manpage=20
+ (0) The current format lays out a directory tree, with directories for each
+     level of index (so in AFS's terms, you've got an overall "afs" dir
+     containing a dir for each cell.  In each cell dir, there's a dir for each
+     volume and within that there's a file for each afs vnode cached.  Extra
+     levels of directory are also interposed to reduce the number of entries
+     in a directory.
 
-That is already in the mountd man page :-)
+     - Pathwalk cost to open a cache file.
+     - Netfs coherency data is in xattrs.
+     - Invalidation done by truncate or unlink.
+     - Uses backing filesystem metadata to keep track of present data.
+       - Determined by bmap() on the cache file.
+     - Culling performed by userspace daemon.
+     - Data file opened for every write.
+     - Read done by readpage without file.
 
->
->>       mountd: add --cache-use-ipaddr option to force use_ipaddr
->>       mountd: make default ttl settable by option
-> These two probably need to be put into the nfs.conf file=20
-> and the nfs.conf man page since the conf_get_num()
-> and conf_get_bool() calls were added.
+ (0a) As (0) but using SEEK_DATA/SEEK_HOLE instead of bmap and opening the
+      file for every whole operation (which may combine reads and writes).
 
-That's done now too.
+ (1) Structured the same as (0), but keeping an independent content map and
+     not relying on backing fs metadata.  Use a larger blocksize, say 256K, to
+     reduce the size of the content map.
 
->
-> Finally, I'll add this to my plate, but I'm thinking
-> the new log-auth and ttl flags probably should be=20
-> introduce into nfsv4.exported.
->
+     - Netfs coherency data in xattrs.
+     - Invalidation done by tmpfile creation and link-replace.
+     - Content bitmap kept in xattr.
+       - Limited capacity.  Could use multiple bitmaps.
+       - Can skip the bitmap for a non-sparse file that we have all of.
+     - "Open" state kept in xattr.
+     - File is kept open
+     - Culling performed by userspace daemon.
+     - Cache file open whilst netfs file is open.
 
-I'll add that to my patches before resubmitting.
+ (2) Structured the same as (1), but keeping an extent list instead of a
+     bitmap.
 
-> I didn't port over the use-ipaddr flag to exportd,
-> since I though it was only used in the v3 mount path
-> but may that was an oversight on my part.=20
+     - Content extent map kept in xattr.
+       - Limited capacity.
+       - Highly scattered extents use a lot of map space.
 
-use-ipaddr it not at all v3 specific.
-It was originally introduced to handle the fact that a single host could
-be in a large number of netgroups, and concatenating the names of all
-those netgroups could produce a "domain" name that is too long.
-The new option to force it on is useful for access logging, particularly
-with NFSv4.
+ (3) OpenAFS-style format.  One index file to look up {file_key,block#} and an
+     array of data files, each holding one block (e.g. a 256KiB-aligned chunk
+     of a file).  Each index entry has valid start/end offsets for easy
+     truncation.
 
-I'll add that to my patches too.
+     The index has a hash to facilitate the lookup and an LRU that allows a
+     block to be recycled at any time.
 
-Thanks,
-NeilBrown
+     - File keys, are highly variable in length and can be rather long,
+       particularly NFS FIDs.
+       - Might want a separate file index that maps file keys to a slot ID
+       	 that can then be used in the block index.
+     - Netfs coherency data in vnode index entry.
+     - Invalidation done by clearing matching entries in the index.
+       - Dead data files can be lazily unlinked or truncated or just
+         overwritten.
+     - Content mapping by lookup in block index hash table.
+       - Fine if the hash table is large and scatter is good.
+     - Potential coherency problem between indices and data file.
+     - Culling performed by block index LRU.
+     - Really want to retain entire block index in RAM.
+     - Data files are opened for every read/write.
 
+ (4) Similar format to (3), but could put entirety of data in one file.
 
->
-> Thoughts?
->
-> steved.
->>=20
->>=20
->>  support/export/auth.c      |  4 +++
->>  support/export/cache.c     | 32 +++++++++++------
->>  support/export/v4root.c    |  3 +-
->>  support/include/exportfs.h |  3 +-
->>  support/nfs/exports.c      |  4 ++-
->>  utils/mountd/mountd.c      | 29 +++++++++++++++-
->>  utils/mountd/mountd.man    | 70 ++++++++++++++++++++++++++++++++++++++
->>  7 files changed, 130 insertions(+), 15 deletions(-)
->>=20
->> --
->> Signature
->>=20
+     - Data file open entire time cache online.
+     - Unused block bitmap.
+     - Can use fallocate to punch out dead blocks.
+     - Could put data file on blockdev.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+ (5) Similar idea to (4), but just have a file index and use block pointers
+     and indirection blocks instead.  Use an LRU in the file index and cull
+     whole files only, not individual blocks.
 
------BEGIN PGP SIGNATURE-----
+     - File keys, are highly variable in length and can be rather long,
+       particularly NFS FIDs.
+     - Netfs coherency data in vnode index entry.
+     - Unused data block bitmap.
+     - Invalidation done by clearing entries in the file index.
+       - Data blocks must be recycled and returned to bitmap.
+       - Dead data blocks can be lazily punched out with fallocate.
+     - Potential coherency problem between index, pointers/indirection and
+       bitmap.
+     - Culling performed by file index LRU.
+     - Really want to retain entire file index and block bitmap in RAM.
+       - May be less memory than block index.
+     - Data file open entire time cache online.
+     - Could put data file on blockdev.
+     - If the block size is large, lots of dead space in indirection blocks.
 
-iQJCBAEBCAAsFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAmBADZMOHG5laWxiQHN1
-c2UuZGUACgkQOeye3VZigbmktw/+Mc3JJcKpDD5QKTTwG24dQZYNK251QvPKxA5n
-CVA9Iev6l4ZaLp4J3ffriPswW77sSJ4vuoAAXJmTLbABeT8KetkmcpQ+xblgj5ZW
-gqlLKObyXwFqVFz0lxYuEIoSAqRv95W5J6vxJsHqj6cPxDZj6UfqmzmqP/kb2qn/
-dsuCA2VqlDqDwa269kM5AavcSVu3hbu27NTo9MD7naklviAB3XoT3NoN2J5W/k00
-Z0e4ncsjiphdl5zfynKqWGYMorA+EHJXnyQYeT+cDCly3G8kq+zxR5gwKFsEIQhy
-YgBpji8Nvs5mdx7WSscQGNjAkZSah7/u9VnVAiOGisgQ8yHTYULoHyPtrBtMVsvb
-HFCAPtsQf/LKJyRr7L0UR4x62CTssJEyjXCpc/rznlzUx6rLT2Tj4V3FZC6VPLuF
-/OSfP2eBNEdo1qURsF0/VJZ0cg2HJX66aprxXjq80siAtXrXepJ812mscZ65Mwa6
-bvhuRxHm9PRGXv37jrVpFHZ008KXFOTFAWBy/SlxwgnMLqDVBtMfgM9AQGyrK9JZ
-vbItMhNkWwtKqONnvwPAstZOZDqQscsTiVHnkGtCt4j7yM5qQm9frYIPH0diaueB
-pV13XA6Pl5xRUUGTvdv+jT9TWSIf9oNJQvfak5Rd72yVKwNR+BpH7Vju3mzr2dJH
-A6KuVl8=
-=Qjw5
------END PGP SIGNATURE-----
---=-=-=--
+ (6) Similar to (5), but use extent lists rather than indirection blocks.
+
+     - Requires allocation of contiguous space to be worthwhile.
+     - Buddy allocator approach?
+       - Can always arbitrarily recycle buddies to make larger spaces - if we
+       	 can find them...
+
+ (7) Hybrid approach.  Stick the first block of every netfs file in one big
+     cache file.  For a lot of cases, that would suffice for the entire file
+     if the block size is large enough.  Store the tails of larger files in
+     separate files.
+
+     - File index with LRU.
+     - More complicated to manage.
+     - Fewer files open.
+
+So (0) is what's upstream.  I have (0a) implemented in my fscache-netfs-lib
+branch and (1) implemented in my fscache-iter branch.  However, it spends a
+lot of cpu time doing synchronous metadata ops, such as creating tmpfiles,
+link creation and setting xattrs, particularly when unmounting the filesystem
+or disabling the cache - both of which are done during shutdown.
+
+I'm leaning towards (4) or (5).  I could use extent maps, but I don't
+necessarily have a good idea of what access patterns I have to deal with till
+later.  With network filesystems that are going to read and cache large blocks
+(say 2MiB), extents would allow reduction of the metadata, particularly where
+it would span a bitmap.
+
+Using a block index (4) allows me to easily recycle a large chunk of cache in
+one go - even if it means arbitrarily kicking out blocks that weren't near the
+end of the LRU yet.
+
+Using block pointers and indirection blocks (5) means I only need this data in
+RAM when I need it; with the LRU management being done in the file index.
+
+Either way with (4) and (5), at least one index really needs to be resident in
+RAM to make LRU wangling efficient.  Also, I need to decide how to handle
+coherency management - setting an "in use" flag on the file index entry and
+flushing it before making any modifications might work.
+
+On the other hand, sticking with (1) or (2) makes it easier to add extra
+metadata very easily (say to handle disconnected operation), though it's
+harder to manage culling and manage the capacity of the cache.
+
+I have a suspicion that the answer is "it depends" and that the best choice is
+very much going to be workload dependent - and may even vary from volume to
+volume within the same workload.
+
+Any thoughts or better solutions?
+
+David
+
