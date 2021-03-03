@@ -2,221 +2,173 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68C9F32C692
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Mar 2021 02:03:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A1DE32C694
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Mar 2021 02:03:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355473AbhCDA3S (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 3 Mar 2021 19:29:18 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:58066 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1448075AbhCCPR1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Mar 2021 10:17:27 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 123FEr8U085461;
-        Wed, 3 Mar 2021 15:16:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=e8MvjY2bCwvuJqe3/qez+ukQHO4tzKli5awx80Bb59M=;
- b=TX6UOeqwC8fwL5VfrDfY9rS6qbDBIXmIAM/V90mGMpH+tbY39xgZMYdoD94/IWt0o7Zw
- J28G+2w6FwjWc45d99ZWk62rdXsdrPeETbw36mXQWvpuGbGxbzoALiwR88hywKAIlsd+
- CkGl7ecpZCDb5A4hxiyLEXjTpDZe1q+sUjr51jkPPWiEICkoOHkW8K/X/k7pvZcXTLkX
- tkNOrsZ3D6lsM/rISIMQiaK5DklwRYKfrisx+fiif9JfOz/p0VDfaC2m1RzumITqnGUv
- RH4E8msnlXnvAFZMCl0d+41YP8tTfxJSQe6cF7E+eqcQrd3kfPfZy+EWV2PmhTBMt1w3 eA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 36yeqn3q5n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Mar 2021 15:16:40 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 123FF1E0067695;
-        Wed, 3 Mar 2021 15:16:40 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2171.outbound.protection.outlook.com [104.47.57.171])
-        by userp3030.oracle.com with ESMTP id 37000yjmep-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Mar 2021 15:16:40 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=laRHPHKufsIdUpA7P+GUE6nEddhAShc/JpqZ8Vz4FYcZM06oxPSK1A6Jo/XfM3vQ4Ri8UPgZiYfdCtQ9f5gzbMt1HUFPdb6/deriiw+kp9Yj+CuWkJ0MMyYEtIphVFIBwyh9qY9CuyxfRAavnwzt4LoiGfxD6clduaEEZyne6TWs6KMWQWf8LYws7rbe8qLOxAf+8Ml98OxZWFtm8lubmRevx5BpDLYgrly/oZzr6OQ+pPjQGwkvz7L9ap5qqpwKLcUwXEl9N7UOUuCtyvNNJiSEzGeODPTWXA3PEnGqU9TGebLQRAZvwYaANdsM/VMEcucv8XSzbkE+l7pGqTojng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e8MvjY2bCwvuJqe3/qez+ukQHO4tzKli5awx80Bb59M=;
- b=dlxgRf4J8gk4DtqE0Ji9lClciP+CEqud1feMkmuhEg/8ahQmgvO+C7PpYtc2emsZMNxsuw9VMZVHhppQexCFuoW3bfZMw3Ivxc9mCzr5+4LaBx5k3UdT8YTwzZ/g815Oy22Y2gmNJrrF4UZr6fbvYRvLsGPdeFLBHQbJlFAKRukrMF4g/21fx10aCmKjIifMSaX3OJwYyptlfsSNICJyIwlLNzDNLm/yKyH7zfHLRRl45jpvXRDIVl8bNRM9TgB01H4BGUlUpS2nwyWVDNf4zfYQZRqk6o3fsplt4cPr4MJdab8uzPqFtBQXd/sAcJKXZjw6JNxMiyIkVXuoAnisDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e8MvjY2bCwvuJqe3/qez+ukQHO4tzKli5awx80Bb59M=;
- b=ZwVm1YC4yMK3OVhy46KpvBSDXNzHUtohGV+FAQ1o2Ozdgj7IOND3m20gkGaVvnV0FkCOF9p5TNOKWNe7TLJniBU/+6JA3jfgLIuBmEDr0ypc0/usEdO6JbkHQ+fNv3pTPnx9tQAuo8xV/V5SgREDacYuw4Sn7J7gjzsWLF2EkFA=
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by SJ0PR10MB4429.namprd10.prod.outlook.com (2603:10b6:a03:2d1::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.17; Wed, 3 Mar
- 2021 15:16:38 +0000
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::6da8:6d28:b83:702b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::6da8:6d28:b83:702b%4]) with mapi id 15.20.3912.017; Wed, 3 Mar 2021
- 15:16:38 +0000
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     Bruce Fields <bfields@fieldses.org>
-CC:     Daniel Kobras <kobras@puzzle-itc.de>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] rpc: fix NULL dereference on kmalloc failure
-Thread-Topic: [PATCH] rpc: fix NULL dereference on kmalloc failure
-Thread-Index: AQHXD3uGhYxnELw7z0+r35pAs8NkU6pyYXGA
-Date:   Wed, 3 Mar 2021 15:16:38 +0000
-Message-ID: <598D1A69-B5BF-4F77-91EE-C9C0344530D3@oracle.com>
-References: <20210226230437.jfgagcq5magzlrtv@tuedko18.puzzle-itc.de>
- <C2704113-2581-4B58-806B-BB65148AC14B@oracle.com>
- <20210301162820.GB11772@fieldses.org> <20210302154838.GB2263@fieldses.org>
-In-Reply-To: <20210302154838.GB2263@fieldses.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: fieldses.org; dkim=none (message not signed)
- header.d=none;fieldses.org; dmarc=none action=none header.from=oracle.com;
-x-originating-ip: [68.61.232.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 09743c99-75f6-4264-5a34-08d8de57578e
-x-ms-traffictypediagnostic: SJ0PR10MB4429:
-x-microsoft-antispam-prvs: <SJ0PR10MB4429AB292CB1F35FD750BD8C93989@SJ0PR10MB4429.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fFPF0FnyGnNd8cUP5Ho+K2taly5eoVAshOKhfcsEwezyj99Z5vvtfoBMXbQU4lndwtFFYuSjGgw+u66eFfpaUrN3f2iTx9M/7KQD8z01buZ9xWF70YhSnLEGr+soGFqrAfVNJqJffacVl+qpkBNxYbrv++8B3HBLnmwz5Svb5mLlAEzv1M/Z6xTHnDCoifUI/XrG3RH/Xg+LAJyONBpY7fEfe+Zh6/35AGJaLEsQIedZ+vA1TuEGyOv9TsbvNQwJiuAW3MhB0syWqwoama5xcsqIkIY1pV4G33B/etFoHmBf9pXbKS+SHp4RxXNBXhRMZaR1ESuC2ESq0mW+quqwWiwOZph+qm4K63KeXxvreBPDiJ9pjc71muT4hdg3QXC6UjtzU/szVltYTskxpwSGiprGod0p2gHZxa6u7cXD/Qkla08vVWjlqU8JGcDwFuZC5D2ePZE4uXLPNWSl7iL5Vu2YZxYPk2maybg5jQxonLMWV992NF3mEuogegO7e9wSH/h8jVWLexcz9aBoE7cZI4RWhJJUuqy4grqrZV7vkvZQxnBkuKh1u5URdEfrPaS26h5Pl7/4NiOYYgQrht10bQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(39860400002)(396003)(376002)(346002)(136003)(316002)(86362001)(53546011)(8676002)(6916009)(6512007)(8936002)(26005)(6506007)(4326008)(36756003)(54906003)(71200400001)(76116006)(91956017)(5660300002)(64756008)(66946007)(66446008)(66476007)(66556008)(6486002)(2906002)(33656002)(186003)(2616005)(44832011)(83380400001)(478600001)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?8UalXIxnotGUsTsL5HZ5cvglwVNH/UmRiTQwgE/xx3r3DZT5irDa8Wgj5Oy9?=
- =?us-ascii?Q?OcugbZ1rQKjHTAxPjsVlPZV7tp9WAh0E7tjE14cEgGam6Oaua4iKiJQBS3V6?=
- =?us-ascii?Q?UquPNCjyN9Mv8ZX4pS06cHg0D+3gIes4PaCnSEDV3PQ0KJOq2+UEY2bwrQOY?=
- =?us-ascii?Q?PlUIkIJDc03Y5GxgV1hZNBphmVHt39qqvIfrUJWKLD0SruqmQMb/hIccXBkU?=
- =?us-ascii?Q?daKUfliFJgfCV6Jrv+Jk6sEqv+XbN3vrl2uEluKrH9nHBnZ4fdjHdgzDoQA3?=
- =?us-ascii?Q?gk01FvpjWszhK8jFKetnFO8GAONxkvtXcp19kBUQTcOwtL1ZD6zKFi+xveTr?=
- =?us-ascii?Q?qs8meA8ycIYHNmq5s44NGA5IBkJ6hYmDnZRQ/w9klOFaQWseaYNEiTWfOXLY?=
- =?us-ascii?Q?VnBix6IVMx5TTZmE3n2Ym7wdO5pnDSEAOoI6TOO3VqigU8u51O5gADq6Wdn+?=
- =?us-ascii?Q?hSSJKcGbK3wYmnTTaq0WtEYHryZr5n1cKtCvAatmtN+PPEv/5GkWskRe+5c8?=
- =?us-ascii?Q?rCKwNPbEZmqk2k7/KryhioO3QvZEemaCP9MKcV97QsEopx0OLhl5YaFha2UN?=
- =?us-ascii?Q?+utP50WPNVhFW9Ll9t1cWuocJMOBKksBD9w7j99pqf+hNeEgbnCokZb7zm0G?=
- =?us-ascii?Q?LB1iwX/av4v98a9YT0DYka4iaUJPZw1q8p4cBVfXpQl637xUBvq2dBZHSDBS?=
- =?us-ascii?Q?KPHpTANscY3c9S2FlnbICTeykWdSvMDDhAONvXCxBPN2ziBb0u93//B6DEQS?=
- =?us-ascii?Q?qs4AHfnxVtJ/LQ8clbrjcPKDalLvfKowAeKwzoAXm+BEJN3cG5ys85PaaMIr?=
- =?us-ascii?Q?MLEDxAiocuwnbbBHfPw+TR42rwm1v4Lnxt24wrQ0BwLvbjzn5WwGjMFlNM0F?=
- =?us-ascii?Q?qEQrXAdIwZ+gcfqv29lWubnbaDy3bXeXAoBXxPg0OY3h8Yq1Upw76TO9XWZv?=
- =?us-ascii?Q?P2iNqspEYzQgphpDLUQU7cJYInydZMNshD7qKbjhWCoJQbJ/cG1oeHRPqTZY?=
- =?us-ascii?Q?f/iWewOTD+4nPaqr9rg56+S3mUVSKlRQHZD6uBOvelzy9VfwCZHEV4kEVZFs?=
- =?us-ascii?Q?HtFFfRlnpLD4gNQ3BzcNZQ80fQ22YVcX9xj1nrdoqebt2vSNOpgMfU7viAkd?=
- =?us-ascii?Q?zXLNwqwYEaJx7k8rQcvOV7wZUh9hYg4IfZiLGGvkiViVnxTFuaP/pn5ZUyh3?=
- =?us-ascii?Q?gemGB2PVbUpqSDk6zT8A0ot6uZpvxr7SalUJOa6NSKvpOcHQX5e4YQNhYMoF?=
- =?us-ascii?Q?9MNciuROg4XjsGXxa0noKWnMny9d737M0Lr6VoflbEoxei4fOrnult5hJve7?=
- =?us-ascii?Q?oDTq12wbGGC4CuqC83bT+s3MXHQB/pZRdcoJtEQ/EEc1cg=3D=3D?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E3BDF1001F2A3E4BBAD409A3037EF279@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1356165AbhCDA3V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Mar 2021 19:29:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1448227AbhCCPYf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Mar 2021 10:24:35 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C020C0613DC
+        for <linux-nfs@vger.kernel.org>; Wed,  3 Mar 2021 07:23:49 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id CBF0F2824; Wed,  3 Mar 2021 10:23:42 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CBF0F2824
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1614785022;
+        bh=ZecVwdAF2q3Qu4UOjZtHg1fZFYa3SMTpiMF2Qtw6RpY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hUGIVFLH/oxFgYcHA0JgFe9HUQ28MbQSB+sdQBZbXhhRuGYfp9mv1XyYBmt2m3ifF
+         gviK59LH4fLehDcu9C56cIHKtoPo6o9axTx8aLkLZaTS5vN/QiKbVWIdgK981sQGK3
+         PZfiPZ0NZ1lSiy1R5fCvXdblzy/F0rh+1IRva7a4=
+Date:   Wed, 3 Mar 2021 10:23:42 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Steve Dickson <SteveD@RedHat.com>
+Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 0/7 V4] The NFSv4 only mounting daemon.
+Message-ID: <20210303152342.GA1282@fieldses.org>
+References: <20210219200815.792667-1-steved@redhat.com>
+ <20210224203053.GF11591@fieldses.org>
+ <1553fb2d-9b8e-f8eb-8c72-edcd14a2ad08@RedHat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09743c99-75f6-4264-5a34-08d8de57578e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2021 15:16:38.4666
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6tPNGqFhH1PenzhpQh7JGbHvzX1D+kSylCDviZuHsthYQpZUrqMSYGc4WibCk9nl132hwMGncvM551zDn1nSaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4429
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9912 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 phishscore=0
- malwarescore=0 spamscore=0 mlxlogscore=952 suspectscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103030118
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9912 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 mlxlogscore=999 suspectscore=0 malwarescore=0
- impostorscore=0 bulkscore=0 adultscore=0 mlxscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103030118
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553fb2d-9b8e-f8eb-8c72-edcd14a2ad08@RedHat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce-
+On Tue, Mar 02, 2021 at 05:33:23PM -0500, Steve Dickson wrote:
+> 
+> 
+> On 2/24/21 3:30 PM, J. Bruce Fields wrote:
+> > On Fri, Feb 19, 2021 at 03:08:08PM -0500, Steve Dickson wrote:
+> >> nfsv4.exportd is a daemon that will listen for only v4 mount upcalls.
+> >> The idea is to allow distros to build a v4 only package
+> >> which will have a much smaller footprint than the
+> >> entire nfs-utils package.
+> >>
+> >> exportd uses no RPC code, which means none of the 
+> >> code or arguments that deal with v3 was ported, 
+> >> this again, makes the footprint much smaller. 
+> > 
+> > How much smaller?
+> Will a bit smaller... but a number of daemons like nfsd[cld,clddb,cldnts]
+> need to also come a long. 
 
-> On Mar 2, 2021, at 10:48 AM, Bruce Fields <bfields@fieldses.org> wrote:
->=20
-> From: "J. Bruce Fields" <bfields@redhat.com>
->=20
-> I think this is unlikely but possible:
->=20
-> svc_authenticate sets rq_authop and calls svcauth_gss_accept.  The
-> kmalloc(sizeof(*svcdata), GFP_KERNEL) fails, leaving rq_auth_data NULL,
-> and returning SVC_DENIED.
->=20
-> This causes svc_process_common to go to err_bad_auth, and eventually
-> call svc_authorise.  That calls ->release =3D=3D svcauth_gss_release, whi=
-ch
-> tries to dereference rq_auth_data.
->=20
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Could we get some numbers?
 
-Thanks, now included in the for-rc topic branch at:
+Looks like nfs-utils in F33 is about 1.2M:
 
-git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
+$ rpm -qi nfs-utils|grep ^Size
+Size        : 1243512
 
-with the addition of a Link: tag to reference the extra text below.
+$ strip utils/mountd/mountd
+$ ls -lh utils/mountd/mountd
+-rwxrwxr-x. 1 bfields bfields 128K Mar  3 10:12 utils/mountd/mountd
+$ strip utils/exportd/exportd
+$ ls -lh utils/exportd/exportd
+-rwxrwxr-x. 1 bfields bfields 106K Mar  3 10:12 utils/exportd/exportd
 
+So replacing mountd by exportd saves us about 20K out of 1.2M.  Is it
+worth it?
 
-> ---
-> net/sunrpc/auth_gss/svcauth_gss.c | 11 +++++++----
-> 1 file changed, 7 insertions(+), 4 deletions(-)
->=20
-> On Mon, Mar 01, 2021 at 11:28:20AM -0500, Bruce Fields wrote:
->> Possibly orthogonal to this problem, but: svcauth_gss_release
->> unconditionally dereferences rqstp->rq_auth_data.  Isn't that a NULL
->> dereference if the kmalloc at the start of svcauth_gss_accept() fails?
->=20
-> diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svca=
-uth_gss.c
-> index bd4678db9d76..6dff64374bfe 100644
-> --- a/net/sunrpc/auth_gss/svcauth_gss.c
-> +++ b/net/sunrpc/auth_gss/svcauth_gss.c
-> @@ -1825,11 +1825,14 @@ static int
-> svcauth_gss_release(struct svc_rqst *rqstp)
-> {
-> 	struct gss_svc_data *gsd =3D (struct gss_svc_data *)rqstp->rq_auth_data;
-> -	struct rpc_gss_wire_cred *gc =3D &gsd->clcred;
-> +	struct rpc_gss_wire_cred *gc;
-> 	struct xdr_buf *resbuf =3D &rqstp->rq_res;
-> 	int stat =3D -EINVAL;
-> 	struct sunrpc_net *sn =3D net_generic(SVC_NET(rqstp), sunrpc_net_id);
->=20
-> +	if (!gsd)
-> +		goto out;
-> +	gc =3D &gsd->clcred;
-> 	if (gc->gc_proc !=3D RPC_GSS_PROC_DATA)
-> 		goto out;
-> 	/* Release can be called twice, but we only wrap once. */
-> @@ -1870,10 +1873,10 @@ svcauth_gss_release(struct svc_rqst *rqstp)
-> 	if (rqstp->rq_cred.cr_group_info)
-> 		put_group_info(rqstp->rq_cred.cr_group_info);
-> 	rqstp->rq_cred.cr_group_info =3D NULL;
-> -	if (gsd->rsci)
-> +	if (gsd && gsd->rsci) {
-> 		cache_put(&gsd->rsci->h, sn->rsc_cache);
-> -	gsd->rsci =3D NULL;
-> -
-> +		gsd->rsci =3D NULL;
-> +	}
-> 	return stat;
-> }
->=20
-> --=20
-> 2.29.2
->=20
+> >> The following options were ported:
+> >>     * multiple threads
+> >>     * state-directory-path option
+> >>     * junction support (not tested)
+> >>
+> >> The rest of the mountd options were v3 only options.
+> > 
+> > There's also --manage-gids.
+> Right... a patch was posted... 
+> 
+> > 
+> > If you want nfsv4-only at runtime, you can always run rpc.mountd with
+> > -N2 -N3 to turn off the MOUNT protocol support.
+> The end game is not to run mountd at all... 
+> 
+> > 
+> > If you don't even want v2/f3 code on your system, then you may have to
+> > do something like this, but why is that important?
+> Container friendly... Not bring in all the extra daemons v3
+> needs is a good thing... esp rpcbind. 
 
---
-Chuck Lever
+Looking at the output of
+$ for f in $(rpm -ql nfs-utils); do if [ -f $f ]; then ls -ls $f; fi; done|sort -n
 
+It looks like removing statd, sm-notify, showount and their man pages
+would free about another 170K.
 
+I think that's about how much we'd save by seperating out a separate
+documentation package.
 
+I don't know, what sort of gains are container folks asking for?
+
+--b.
+
+> 
+> steved.
+> 
+> > 
+> > --b.
+> > 
+> >>
+> >> V2:
+> >>   * Added two systemd services: nfsv4-exportd and nfsv4-server
+> >>   * nfsv4-server starts rpc.nfsd -N 3, so nfs.conf mod not needed.
+> >>
+> >> V3: Changed the name from exportd to nfsv4.exportd
+> >>
+> >> V4: Added compile flag that will compile in the NFSv4 only server
+> >>
+> >> Steve Dickson (7):
+> >>   exportd: the initial shell of the v4 export support
+> >>   exportd: Moved cache upcalls routines into libexport.a
+> >>   exportd: multiple threads
+> >>   exportd/exportfs: Add the state-directory-path option
+> >>   exportd: Enabled junction support
+> >>   exportd: systemd unit files
+> >>   exportd: Added config variable to compile in the NFSv4 only server.
+> >>
+> >>  .gitignore                                |   1 +
+> >>  configure.ac                              |  14 ++
+> >>  nfs.conf                                  |   4 +
+> >>  support/export/Makefile.am                |   3 +-
+> >>  {utils/mountd => support/export}/auth.c   |   4 +-
+> >>  {utils/mountd => support/export}/cache.c  |  46 +++-
+> >>  support/export/export.h                   |  34 +++
+> >>  {utils/mountd => support/export}/fsloc.c  |   0
+> >>  {utils/mountd => support/export}/v4root.c |   0
+> >>  {utils/mountd => support/include}/fsloc.h |   0
+> >>  systemd/Makefile.am                       |   6 +
+> >>  systemd/nfs.conf.man                      |  10 +
+> >>  systemd/nfsv4-exportd.service             |  12 +
+> >>  systemd/nfsv4-server.service              |  31 +++
+> >>  utils/Makefile.am                         |   4 +
+> >>  utils/exportd/Makefile.am                 |  65 +++++
+> >>  utils/exportd/exportd.c                   | 276 ++++++++++++++++++++++
+> >>  utils/exportd/exportd.man                 |  81 +++++++
+> >>  utils/exportfs/exportfs.c                 |  21 +-
+> >>  utils/exportfs/exportfs.man               |   7 +-
+> >>  utils/mountd/Makefile.am                  |   5 +-
+> >>  21 files changed, 606 insertions(+), 18 deletions(-)
+> >>  rename {utils/mountd => support/export}/auth.c (99%)
+> >>  rename {utils/mountd => support/export}/cache.c (98%)
+> >>  create mode 100644 support/export/export.h
+> >>  rename {utils/mountd => support/export}/fsloc.c (100%)
+> >>  rename {utils/mountd => support/export}/v4root.c (100%)
+> >>  rename {utils/mountd => support/include}/fsloc.h (100%)
+> >>  create mode 100644 systemd/nfsv4-exportd.service
+> >>  create mode 100644 systemd/nfsv4-server.service
+> >>  create mode 100644 utils/exportd/Makefile.am
+> >>  create mode 100644 utils/exportd/exportd.c
+> >>  create mode 100644 utils/exportd/exportd.man
+> >>
+> >> -- 
+> >> 2.29.2
+> > 
