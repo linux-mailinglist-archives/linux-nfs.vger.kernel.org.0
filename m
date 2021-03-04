@@ -2,133 +2,141 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBBD932CA7C
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Mar 2021 03:32:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F35232CB2D
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Mar 2021 04:57:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231532AbhCDCbY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 3 Mar 2021 21:31:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231530AbhCDCbU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Mar 2021 21:31:20 -0500
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 869EFC061574
-        for <linux-nfs@vger.kernel.org>; Wed,  3 Mar 2021 18:30:40 -0800 (PST)
-Received: by mail-ej1-x62d.google.com with SMTP id r17so46332764ejy.13
-        for <linux-nfs@vger.kernel.org>; Wed, 03 Mar 2021 18:30:40 -0800 (PST)
+        id S232364AbhCDD4z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Mar 2021 22:56:55 -0500
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:63784 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232934AbhCDD4s (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Mar 2021 22:56:48 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fzkyTOpORJkwMKl6ksirEOX5tk28DlOruenWLu3QRq8=;
-        b=Pj/q4qWhPGa+QBcIFjlb8FuMiqB3XGbkGFKXdXZ68xBkdqRv9vHi93brseqNOoUmN2
-         uqqY8r1difzjZ3akw1GEyzDP8xfyOpj+T8HLCioxGugJqZJGYqrTR0jXK1+eJ/0OFMQq
-         u5g1L7OM/dxlbejlDneJpGFnOstVLdprIZOigXZfaGshdxNb7IAT5C9KJKzA9MwA8bGi
-         SBGGBxejHqcHzedr2Qizgqv82iugxrJh7qJXKAoZQZrJnNRSV331T0978BEk0FTdz1+A
-         B0x2qdf6tYOTyJF4gHjzpp7rxvywpN0kr5SXLE0ahFmswnoL4hJh9iMOLklWEv7dEkrF
-         yn+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fzkyTOpORJkwMKl6ksirEOX5tk28DlOruenWLu3QRq8=;
-        b=kzSFnaTKPoi6yblEtip9vOf5Ou3qtoji90flYkV4BRDIOnQhLJHmknoQaV0LZWzNSW
-         DF4xnkUeXEWbMiOz9SGvSITYHeowkzNGIXWdu1iWglvuyJwQpwz1DNVR4L37ymGcEVTM
-         c05ALWWJ/p1wKJ2TAwIIbvYG9EUlYzyd0irnbkJRLpevpjkQBEm6/v64DsAZznDpmgGP
-         r1j2J7AaBk4XiLK12jZ7JLN/Eo6YqdwwXgO75cmQp+DzH4LkWIIF3ma4fhK1cIRBgmSP
-         IBgEE7foC8v9Sfa0uqguolYhToqmc7PfzjPbhPEClezF45U6M3G4Am4TyTTf7ObeO8WP
-         UP4g==
-X-Gm-Message-State: AOAM5333DgzLKm6NYgn8vQ4yI0uxEcuG02oONNqhKuMAYvHGsvHLDDGd
-        tss4repvTKLwdSLO1nAZZKmzitUYW5nCA+nbWRY=
-X-Google-Smtp-Source: ABdhPJweFv0xMd/VRpDLoDjWHZ8CrKFfO4tUpcbt2o3FSrxVfArehTLQAwqE/CmDKhBCMEsATFPokXjiqkHCF6PrvA4=
-X-Received: by 2002:a17:906:2bce:: with SMTP id n14mr1683650ejg.171.1614825039313;
- Wed, 03 Mar 2021 18:30:39 -0800 (PST)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1614830209; x=1646366209;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hDq43FgTjMQqVeHa2y9bAHKINabF4wyv9pW3HHBaFu0=;
+  b=qdlEEufMTiyjsWHFjZStk7o/Txok7GfvBOqpwtSFSsFqV2nvCGbMCcRk
+   o3recBfvoZV7RMOkIvjSWcNni+jmR0QoBzTAmp+9mtXRueqpuBpleCZtn
+   Lu/JoPzMAaIwCAHBuS3iOVzepRdmWHNEaRr7QAB6EvtkX+Wc72Sgd6e6w
+   I=;
+X-IronPort-AV: E=Sophos;i="5.81,221,1610409600"; 
+   d="scan'208";a="89715014"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 04 Mar 2021 03:56:07 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id C4311A253C;
+        Thu,  4 Mar 2021 03:56:06 +0000 (UTC)
+Received: from EX13D30UEE001.ant.amazon.com (10.43.62.85) by
+ EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 4 Mar 2021 03:56:06 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
+ EX13D30UEE001.ant.amazon.com (10.43.62.85) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 4 Mar 2021 03:56:06 +0000
+Received: from dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com
+ (10.200.231.78) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Thu, 4 Mar 2021 03:56:06 +0000
+Received: by dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com (Postfix, from userid 5408343)
+        id 55B924A3; Thu,  4 Mar 2021 03:56:06 +0000 (UTC)
+Date:   Thu, 4 Mar 2021 03:56:06 +0000
+From:   Geert Jansen <gerardu@amazon.com>
+To:     <trondmy@kernel.org>
+CC:     <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 1/2] NFS: Don't revalidate the directory permissions on a
+ lookup failure
+Message-ID: <20210304035605.GA13323@dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com>
+References: <20210303042836.200413-1-trondmy@kernel.org>
 MIME-Version: 1.0
-References: <20210128223638.GE29887@fieldses.org> <95e5f9e4-76d4-08c4-ece3-35a10c06073b@vastdata.com>
- <cbc7115cc5d5aeb7ffb9e9b3880e453bf54ecbdb.camel@hammerspace.com>
- <20210129023527.GA11864@fieldses.org> <20210129025041.GA12151@fieldses.org>
- <7a078b4d22c8d769a42a0c2b47fd501479e47a7b.camel@hammerspace.com>
- <20210131215843.GA9273@fieldses.org> <20210203200756.GA30996@fieldses.org>
- <6dc98a594a21b86316bf77000dc620d6cca70be6.camel@hammerspace.com>
- <20210208220855.GA15116@fieldses.org> <20210211185444.GA6048@fieldses.org>
-In-Reply-To: <20210211185444.GA6048@fieldses.org>
-From:   Murphy Zhou <jencce.kernel@gmail.com>
-Date:   Thu, 4 Mar 2021 10:30:28 +0800
-Message-ID: <CADJHv_vH5Ocf8D4hXNSKc4PcdwJWCeXe+nvwiOqRWVQ7HOoNfg@mail.gmail.com>
-Subject: Re: [PATCH] nfs: we don't support removing system.nfs4_acl
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "guy@vastdata.com" <guy@vastdata.com>,
-        "schumakeranna@gmail.com" <schumakeranna@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20210303042836.200413-1-trondmy@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+On Tue, Mar 02, 2021 at 11:28:35PM -0500, trondmy@kernel.org wrote:
 
-On Fri, Feb 12, 2021 at 2:58 AM bfields@fieldses.org
-<bfields@fieldses.org> wrote:
->
-> From: "J. Bruce Fields" <bfields@redhat.com>
->
-> The contents of the system.nfs4_acl xattr are literally just the
-> xdr-encoded ACL attribute.  That attribute starts with a 4-byte integer
-> representing the number of ACEs in the ACL.  So even a zero-ACE ACL will
-> be at least 4 bytes.
->
-> We've never actually bothered to sanity-check the ACL encoding that
-> userspace gives us.  The only problem that causes is that we return an
-> error that's probably wrong.  (The server will return BADXDR, which
-> we'll translate to EIO, when EINVAL would make more sense.)
->
-> It's not much a problem in practice since the standard utilities give us
-> well-formed XDR.  The one case we're likely to see from userspace in
-> practice is a set of a zero-length xattr since that's how
->
->         removexattr(path, "system.nfs4_acl")
->
-> is implemented.  It's worth trying to give a better error for that case.
->
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> 
+> There should be no reason to expect the directory permissions to change
+> just because the directory contents changed or a negative lookup timed
+> out. So let's avoid doing a full call to nfs_mark_for_revalidate() in
+> that case.
+> Furthermore, if this is a negative dentry, and we haven't actually done
+> a new lookup, then we have no reason yet to believe the directory has
+> changed at all. So let's remove the gratuitous directory inode
+> invalidation altogether when called from
+> nfs_lookup_revalidate_negative().
+
+Thanks! I tested this patch and 2/2 from this series, and I can confirm
+that it addresses the issue that we were seeing.
+
+Tested-by: Geert Jansen <gerardu@amazon.com>
+
+> Reported-by: Geert Jansen <gerardu@amazon.com>
+> Fixes: 5ceb9d7fdaaf ("NFS: Refactor nfs_lookup_revalidate()")
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
->  fs/nfs/nfs4proc.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> On Mon, Feb 08, 2021 at 05:08:55PM -0500, bfields@fieldses.org wrote:
-> > On Mon, Feb 08, 2021 at 07:31:38PM +0000, Trond Myklebust wrote:
-> > > OK. So you're not really saying that the SETATTR has a zero length
-> > > body, but that the ACL attribute in this case has a zero length body,
-> > > whereas in the 'empty acl' case, it is supposed to have a body
-> > > containing a zero-length nfsace4<> array. Fair enough.
-> >
-> > Yep!  I'll see if I can think of a helpful concise comment, and resend.
->
-> Oops, forgot about this, here you go.--b.
->
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 2f4679a62712..86e87f7d7686 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -5895,6 +5895,12 @@ static int __nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t bufl
->         unsigned int npages = DIV_ROUND_UP(buflen, PAGE_SIZE);
->         int ret, i;
->
-> +       /*
-> +        * We don't support removing system.nfs4_acl, and even a
-> +        * 0-length ACL needs at least 4 bytes for the number of ACEs:
-> +        */
-> +       if (buflen < 4)
-> +               return -EINVAL;
->         if (!nfs4_server_supports_acls(server))
->                 return -EOPNOTSUPP;
->         if (npages > ARRAY_SIZE(pages))
+>  fs/nfs/dir.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index 19a9f434442f..6350873cb8bd 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -1401,6 +1401,15 @@ int nfs_lookup_verify_inode(struct inode *inode, unsigned int flags)
+>         goto out;
+>  }
+> 
+> +static void nfs_mark_dir_for_revalidate(struct inode *inode)
+> +{
+> +       struct nfs_inode *nfsi = NFS_I(inode);
+> +
+> +       spin_lock(&inode->i_lock);
+> +       nfsi->cache_validity |= NFS_INO_REVAL_PAGECACHE;
+> +       spin_unlock(&inode->i_lock);
+> +}
+> +
+>  /*
+>   * We judge how long we want to trust negative
+>   * dentries by looking at the parent inode mtime.
+> @@ -1435,7 +1444,6 @@ nfs_lookup_revalidate_done(struct inode *dir, struct dentry *dentry,
+>                         __func__, dentry);
+>                 return 1;
+>         case 0:
+> -               nfs_mark_for_revalidate(dir);
+>                 if (inode && S_ISDIR(inode->i_mode)) {
+>                         /* Purge readdir caches. */
+>                         nfs_zap_caches(inode);
+> @@ -1525,6 +1533,8 @@ nfs_lookup_revalidate_dentry(struct inode *dir, struct dentry *dentry,
+>         nfs_free_fattr(fattr);
+>         nfs_free_fhandle(fhandle);
+>         nfs4_label_free(label);
+> +       if (!ret)
+> +               nfs_mark_dir_for_revalidate(dir);
+>         return nfs_lookup_revalidate_done(dir, dentry, inode, ret);
+>  }
+> 
+> @@ -1567,7 +1577,7 @@ nfs_do_lookup_revalidate(struct inode *dir, struct dentry *dentry,
+>                 error = nfs_lookup_verify_inode(inode, flags);
+>                 if (error) {
+>                         if (error == -ESTALE)
+> -                               nfs_zap_caches(dir);
+> +                               nfs_mark_dir_for_revalidate(dir);
+>                         goto out_bad;
+>                 }
+>                 nfs_advise_use_readdirplus(dir);
+> @@ -2064,7 +2074,7 @@ nfs_add_or_obtain(struct dentry *dentry, struct nfs_fh *fhandle,
+>         dput(parent);
+>         return d;
+>  out_error:
+> -       nfs_mark_for_revalidate(dir);
+> +       nfs_mark_dir_for_revalidate(dir);
+>         d = ERR_PTR(error);
+>         goto out;
+>  }
 > --
 > 2.29.2
->
-
-Has this queued up for the next RC ?
-
-
-Thanks,
+> 
