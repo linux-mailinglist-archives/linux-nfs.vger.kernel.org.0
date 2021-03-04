@@ -2,206 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01C6432CFE2
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Mar 2021 10:42:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA7D932D21F
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Mar 2021 13:00:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237727AbhCDJlT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 Mar 2021 04:41:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57008 "EHLO
+        id S239441AbhCDL7N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 Mar 2021 06:59:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237792AbhCDJlA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Mar 2021 04:41:00 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0431DC061574;
-        Thu,  4 Mar 2021 01:40:20 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id b18so20376314wrn.6;
-        Thu, 04 Mar 2021 01:40:19 -0800 (PST)
+        with ESMTP id S239670AbhCDL6u (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Mar 2021 06:58:50 -0500
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BD6EC061756
+        for <linux-nfs@vger.kernel.org>; Thu,  4 Mar 2021 03:58:10 -0800 (PST)
+Received: by mail-ej1-x62e.google.com with SMTP id mj10so28757632ejb.5
+        for <linux-nfs@vger.kernel.org>; Thu, 04 Mar 2021 03:58:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=O9B1qRNEkgiYM5e4Rnx0MUxTJfW3B+WFA4nF4a8IG1Q=;
-        b=kqVtZTrb2w1p+loQqs+tswteQ6Z300X2ogL0nfpDZwRrJloEuka6Qw3vbUznk9C/mP
-         vAc+7/i3tCgseKniKiFZ1FEGT5USitOdaHx8q+dlr9Gp0Botig2yuooK/Ga3uM5o7uSW
-         qpU9D7pKZrXxLKa8M9REIDyLjIJZ37+CRU8kz8lRGssHKNu7J2k1uG8GF4xO80RZDvhr
-         fbYoyaFU+22zZHyXCX88e/XZW0Y/TjXyh8wWm0ch3ylVn8cabBUR9rXuPQEzViDMDg7d
-         kQZB2RWb34DjYLTMuQCoJ/iHGnUvORj8TL3mM06a4mhPCETW0ncNxqQ5seEmMo4C2CGA
-         DTpA==
+        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Wz8blI5X/mdLoe+6RR9OBaMVX3ZF+8PLlcTD3L8p2oI=;
+        b=MqB6H8/lqDqw3jw1NfTT+JkONIVEOLSK09V9qxSOq7FQ5VIo7iK9FhnIYrKQEmZQdD
+         zt0yjqJHmI87NYtoK3vWe0jVQ1fzlHNxDvWmeDFzGV0fLiuGphfPbCOKwmidevulMw6Y
+         HZN0Icw+wbrqHjEoyma3uE07w0u+2LNMm4W2Kn6KX/Y8H/qoaEiZcB/KHgtwVXlcw1Z/
+         CseL1lzTiuV8XbRezShVb3D5I46tYauxM4FNBL0kwBTStCf/T/zjMXZZvfzWvAcwMk/e
+         IJO1SjzvrG1PAY8VXAVIQwLRM9olm7U8GXqwU5cdJM1yuwf+lVw7TJB8wLF5oJy0f5ok
+         EY8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=O9B1qRNEkgiYM5e4Rnx0MUxTJfW3B+WFA4nF4a8IG1Q=;
-        b=T3HVI2d+hszN9lVlEVDupyluYALtUu7ihUfzjwD+x3XXHFn4gpBvpCW7u5Xp84FmyN
-         36QK0H2aP5ITOljw8/zpdzx/gGUTma5yOxdTUkl/yb/tG4j6FnC4H0HuB7zXjIzKdkSY
-         gNryaruLatfPTZF5XwL4ztx3UqcRVS3vAT/m77dZ3eIvCGFA46ZA5vfv6zDbcIb3A3q9
-         eSPN+KOtVKbZt3+AbOyGlqWc73NLd3UI8Yp765pVTnb/bvEzi8VEjwiaqCyddlpDzPKq
-         liv6tmoRtqYLTjPOAmiruSpKCCbc1Kot5nlS7M3Rmp75KjVJToz/teFANAJ3ygkFPeOz
-         6YxQ==
-X-Gm-Message-State: AOAM531Uo60oam7pmhGi/X9Qvyv8MslIihtOTu4yvPnsxy4oSg/XJqE4
-        eQtRq2FJb4GKwoMFGIeTinX9mhDhQKcz/Q==
-X-Google-Smtp-Source: ABdhPJy5rhRh3oIwq+uQ7c2BFcomsa5X6e0OMtaarr4aRCxsiyv3xNoF5kJaWXKyZ+4A1ooWqFB6Uw==
-X-Received: by 2002:adf:a219:: with SMTP id p25mr3049987wra.400.1614850818747;
-        Thu, 04 Mar 2021 01:40:18 -0800 (PST)
-Received: from localhost.localdomain ([170.253.51.130])
-        by smtp.googlemail.com with ESMTPSA id l2sm6127295wml.38.2021.03.04.01.40.17
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Wz8blI5X/mdLoe+6RR9OBaMVX3ZF+8PLlcTD3L8p2oI=;
+        b=icAEpYzjcgp/8wNFOlK392TYY6T1a8LoEB3rh2m36jbIsU+ep8ylkSZMrzgL9B4Yeo
+         tCHVFZ2b8RQXUUcVJWYeLskL3LwYtSuKgTpXKKjK+mC0TCVZ4LfZfPrGMuOhxwhqXrZB
+         am903d+8ay2cBku3KO3klmPu/qMP6fX8XAr/IymRMZzTueBSSF+ShOoH23lZlZt+on3p
+         JQtYCaB/UK8ob1yFeLCCqInxo0Joc6vrdKgaIf9h7Otgaqq5OLaouI29V/RAHx25idrg
+         9zVhWFksAVpTnMNy0p8skF+eHCXY1K6GmPgnpf881yZL+MAIt+V6CrpIRj4hInDakqhp
+         caqQ==
+X-Gm-Message-State: AOAM530zzzL+ANijrtsPC9QxlEoqNLfbKUZSn8LjhSOfpqudC52Pquun
+        gO7CrgSj+54hTwqOyJZvL+kDemaM0YtUZg==
+X-Google-Smtp-Source: ABdhPJxrZRSG7GnKgdgXmUt0RNKDWCzs/dYOFFNEmfy5EtfUNC21hrXeKlKRsRjTdyW7X+8F5+HRJw==
+X-Received: by 2002:a17:906:3685:: with SMTP id a5mr3962786ejc.352.1614859089242;
+        Thu, 04 Mar 2021 03:58:09 -0800 (PST)
+Received: from gmail.com ([77.126.34.224])
+        by smtp.gmail.com with ESMTPSA id f21sm9831062ejw.124.2021.03.04.03.58.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Mar 2021 01:40:18 -0800 (PST)
-From:   Alejandro Colomar <alx.manpages@gmail.com>
-To:     linux-man@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Luis Henriques <lhenriques@suse.de>,
-        Steve French <sfrench@samba.org>
-Cc:     Alejandro Colomar <alx.manpages@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
+        Thu, 04 Mar 2021 03:58:08 -0800 (PST)
+Date:   Thu, 4 Mar 2021 13:58:06 +0200
+From:   Dan Aloni <dan@kernelim.com>
+To:     Olga Kornievskaia <aglo@umich.edu>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
         Anna Schumaker <anna.schumaker@netapp.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Ian Lance Taylor <iant@google.com>,
-        Luis Lozano <llozano@chromium.org>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Christoph Hellwig <hch@infradead.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Walter Harms <wharms@bfs.de>
-Subject: [RFC v4] copy_file_range.2: Update cross-filesystem support for 5.12
-Date:   Thu,  4 Mar 2021 10:38:07 +0100
-Message-Id: <20210304093806.10589-1-alx.manpages@gmail.com>
-X-Mailer: git-send-email 2.30.1.721.g45526154a5
-In-Reply-To: <20210224142307.7284-1-lhenriques@suse.de>
-References: <20210224142307.7284-1-lhenriques@suse.de>
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: Re: [PATCH v1 0/8] sysfs files for multipath transport control
+Message-ID: <20210304115806.rvoeju7gmqyd3v6i@gmail.com>
+References: <20210215174002.2376333-1-dan@kernelim.com>
+ <CAN-5tyGw3D-+emeQhu31agom9yuZ9=PL6YUVyEKiR-n2q9uE3A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAN-5tyGw3D-+emeQhu31agom9yuZ9=PL6YUVyEKiR-n2q9uE3A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Linux 5.12 fixes a regression.
+On Mon, Mar 01, 2021 at 10:56:22PM -0500, Olga Kornievskaia wrote:
+> Hi Dan,
+> 
+> On Mon, Feb 15, 2021 at 12:43 PM Dan Aloni <dan@kernelim.com> wrote:
+> >
+> > Hi Anna,
+> >
+> > This patchset builds ontop v2 of your 'sysfs files for changing IP' changeset.
+> >
+> > - The patchset adds two more sysfs objects, for one for transport and another
+> >   for multipath.
+> > - Also, `net` renamed to `client`, and `client` now has symlink to its principal
+> >   transport. A client also has a symlink to its `multipath` object.
+> > - The transport interface lets you change `dstaddr` of individual transports,
+> >   when `nconnect` is used (or if it wasn't used and these were added with the
+> >   new interface).
+> > - The interface to add a transport is using a single string written to 'add',
+> >   for example:
+> >
+> >        echo 'dstaddr 192.168.40.8 kind rdma' \
+> >                > /sys/kernel/sunrpc/client/0/multipath/add
+> >
+> > These changes are independent of the method used to obtain a sunrpc ID for a
+> > mountpoint. For that I've sent a concept patch showing an fspick-based
+> > implementation: https://marc.info/?l=linux-nfs&m=161332454821849&w=4
+> 
+> I'm confused: does this allow adding arbitrary connections between a
+> client and some server IP to an existing RPC client? Given the above
+> description, that's how it reads to me, can you clarify please. I
+> thought it was something specifically for v3 (because it has no
+> concept of trunking). As for NFSv4 there is a notion of getting server
+> locations via FS_LOCATION and doing trunking (ie multipathing)? I
+> don't see how this code restricts the addition of transports to v3.
 
-Cross-filesystem (introduced in 5.3) copies were buggy.
+Indeed, there's no restriction to NFSv3.
 
-Move the statements documenting cross-fs to BUGS.
-Kernels 5.3..5.11 should be patched soon.
+There can be potential uses for this for NFSv4 too. FS_LOCATIONS serving
+as recommendation to which hosts the client can connect, while smart
+load-balancing logic in userspace can determine to which subset of these
+servers each client in a cluster should actually connect (a full mesh
+is not always desired).
 
-State version information for some errors related to this.
+At any case, if this restriction is desired, we can add a new sunrpc
+client flag for that and pass it only in NFSv3 client init.
 
-Reported-by: Luis Henriques <lhenriques@suse.de>
-Reported-by: Amir Goldstein <amir73il@gmail.com>
-Related: <https://lwn.net/Articles/846403/>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Michael Kerrisk <mtk.manpages@gmail.com>
-Cc: Anna Schumaker <anna.schumaker@netapp.com>
-Cc: Jeff Layton <jlayton@kernel.org>
-Cc: Steve French <sfrench@samba.org>
-Cc: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc: Dave Chinner <dchinner@redhat.com>
-Cc: Nicolas Boichat <drinkcat@chromium.org>
-Cc: Ian Lance Taylor <iant@google.com>
-Cc: Luis Lozano <llozano@chromium.org>
-Cc: Andreas Dilger <adilger@dilger.ca>
-Cc: Olga Kornievskaia <aglo@umich.edu>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: ceph-devel <ceph-devel@vger.kernel.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: CIFS <linux-cifs@vger.kernel.org>
-Cc: samba-technical <samba-technical@lists.samba.org>
-Cc: linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Cc: Walter Harms <wharms@bfs.de>
-Signed-off-by: Alejandro Colomar <alx.manpages@gmail.com>
----
-
-v3:
-        - Don't remove some important text.
-        - Reword BUGS.
-v4:
-	- Reword.
-	- Link to BUGS.
-
-Thanks, Amir, for all the help and better wordings.
-
-Cheers,
-
-Alex
-
----
- man2/copy_file_range.2 | 27 +++++++++++++++++++++++----
- 1 file changed, 23 insertions(+), 4 deletions(-)
-
-diff --git a/man2/copy_file_range.2 b/man2/copy_file_range.2
-index 611a39b80..f58bfea8f 100644
---- a/man2/copy_file_range.2
-+++ b/man2/copy_file_range.2
-@@ -169,6 +169,9 @@ Out of memory.
- .B ENOSPC
- There is not enough space on the target filesystem to complete the copy.
- .TP
-+.BR EOPNOTSUPP " (since Linux 5.12)"
-+The filesystem does not support this operation.
-+.TP
- .B EOVERFLOW
- The requested source or destination range is too large to represent in the
- specified data types.
-@@ -184,10 +187,17 @@ or
- .I fd_out
- refers to an active swap file.
- .TP
--.B EXDEV
-+.BR EXDEV " (before Linux 5.3)"
-+The files referred to by
-+.IR fd_in " and " fd_out
-+are not on the same filesystem.
-+.TP
-+.BR EXDEV " (since Linux 5.12)"
- The files referred to by
- .IR fd_in " and " fd_out
--are not on the same mounted filesystem (pre Linux 5.3).
-+are not on the same filesystem,
-+and the source and target filesystems are not of the same type,
-+or do not support cross-filesystem copy.
- .SH VERSIONS
- The
- .BR copy_file_range ()
-@@ -200,8 +210,11 @@ Areas of the API that weren't clearly defined were clarified and the API bounds
- are much more strictly checked than on earlier kernels.
- Applications should target the behaviour and requirements of 5.3 kernels.
- .PP
--First support for cross-filesystem copies was introduced in Linux 5.3.
--Older kernels will return -EXDEV when cross-filesystem copies are attempted.
-+Since Linux 5.12,
-+cross-filesystem copies can be achieved
-+when both filesystems are of the same type,
-+and that filesystem implements support for it.
-+See BUGS for behavior prior to 5.12.
- .SH CONFORMING TO
- The
- .BR copy_file_range ()
-@@ -226,6 +239,12 @@ gives filesystems an opportunity to implement "copy acceleration" techniques,
- such as the use of reflinks (i.e., two or more inodes that share
- pointers to the same copy-on-write disk blocks)
- or server-side-copy (in the case of NFS).
-+.SH BUGS
-+In Linux kernels 5.3 to 5.11,
-+cross-filesystem copies were implemented by the kernel,
-+if the operation was not supported by individual filesystems.
-+However, on some virtual filesystems,
-+the call failed to copy, while still reporting success.
- .SH EXAMPLES
- .EX
- #define _GNU_SOURCE
 -- 
-2.30.1.721.g45526154a5
-
+Dan Aloni
