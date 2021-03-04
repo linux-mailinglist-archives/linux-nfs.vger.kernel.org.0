@@ -2,113 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA7D932D21F
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Mar 2021 13:00:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA39F32D417
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Mar 2021 14:25:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239441AbhCDL7N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 Mar 2021 06:59:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239670AbhCDL6u (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Mar 2021 06:58:50 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BD6EC061756
-        for <linux-nfs@vger.kernel.org>; Thu,  4 Mar 2021 03:58:10 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id mj10so28757632ejb.5
-        for <linux-nfs@vger.kernel.org>; Thu, 04 Mar 2021 03:58:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Wz8blI5X/mdLoe+6RR9OBaMVX3ZF+8PLlcTD3L8p2oI=;
-        b=MqB6H8/lqDqw3jw1NfTT+JkONIVEOLSK09V9qxSOq7FQ5VIo7iK9FhnIYrKQEmZQdD
-         zt0yjqJHmI87NYtoK3vWe0jVQ1fzlHNxDvWmeDFzGV0fLiuGphfPbCOKwmidevulMw6Y
-         HZN0Icw+wbrqHjEoyma3uE07w0u+2LNMm4W2Kn6KX/Y8H/qoaEiZcB/KHgtwVXlcw1Z/
-         CseL1lzTiuV8XbRezShVb3D5I46tYauxM4FNBL0kwBTStCf/T/zjMXZZvfzWvAcwMk/e
-         IJO1SjzvrG1PAY8VXAVIQwLRM9olm7U8GXqwU5cdJM1yuwf+lVw7TJB8wLF5oJy0f5ok
-         EY8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Wz8blI5X/mdLoe+6RR9OBaMVX3ZF+8PLlcTD3L8p2oI=;
-        b=icAEpYzjcgp/8wNFOlK392TYY6T1a8LoEB3rh2m36jbIsU+ep8ylkSZMrzgL9B4Yeo
-         tCHVFZ2b8RQXUUcVJWYeLskL3LwYtSuKgTpXKKjK+mC0TCVZ4LfZfPrGMuOhxwhqXrZB
-         am903d+8ay2cBku3KO3klmPu/qMP6fX8XAr/IymRMZzTueBSSF+ShOoH23lZlZt+on3p
-         JQtYCaB/UK8ob1yFeLCCqInxo0Joc6vrdKgaIf9h7Otgaqq5OLaouI29V/RAHx25idrg
-         9zVhWFksAVpTnMNy0p8skF+eHCXY1K6GmPgnpf881yZL+MAIt+V6CrpIRj4hInDakqhp
-         caqQ==
-X-Gm-Message-State: AOAM530zzzL+ANijrtsPC9QxlEoqNLfbKUZSn8LjhSOfpqudC52Pquun
-        gO7CrgSj+54hTwqOyJZvL+kDemaM0YtUZg==
-X-Google-Smtp-Source: ABdhPJxrZRSG7GnKgdgXmUt0RNKDWCzs/dYOFFNEmfy5EtfUNC21hrXeKlKRsRjTdyW7X+8F5+HRJw==
-X-Received: by 2002:a17:906:3685:: with SMTP id a5mr3962786ejc.352.1614859089242;
-        Thu, 04 Mar 2021 03:58:09 -0800 (PST)
-Received: from gmail.com ([77.126.34.224])
-        by smtp.gmail.com with ESMTPSA id f21sm9831062ejw.124.2021.03.04.03.58.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Mar 2021 03:58:08 -0800 (PST)
-Date:   Thu, 4 Mar 2021 13:58:06 +0200
-From:   Dan Aloni <dan@kernelim.com>
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: Re: [PATCH v1 0/8] sysfs files for multipath transport control
-Message-ID: <20210304115806.rvoeju7gmqyd3v6i@gmail.com>
-References: <20210215174002.2376333-1-dan@kernelim.com>
- <CAN-5tyGw3D-+emeQhu31agom9yuZ9=PL6YUVyEKiR-n2q9uE3A@mail.gmail.com>
+        id S236534AbhCDNYD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 Mar 2021 08:24:03 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34869 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234774AbhCDNXv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Mar 2021 08:23:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614864145;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=t5GEGtp+5B7rSnc2dXQu5VRIFFXEfx9E7/3pypUiGUo=;
+        b=dZp5ooBWQp+fySPIFO2/8zxLG+xy/1XnkiQmreM9QlscAw9HarzfN0PfqExvJ1DpQpANCF
+        WDUp8YSz6I0E71dDOVrZl7afcO+ta6APK8nrcxphqcAwLGN6ARcR5RCzRVNhO35fEkd/EG
+        J696u4bcPCyU0AK3/mqHLp0RJKSltvw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-585-pLKnVquaP5Oy-xATSn79lw-1; Thu, 04 Mar 2021 08:22:23 -0500
+X-MC-Unique: pLKnVquaP5Oy-xATSn79lw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C652E814313;
+        Thu,  4 Mar 2021 13:22:22 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-112-45.phx2.redhat.com [10.3.112.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E2315D762;
+        Thu,  4 Mar 2021 13:22:22 +0000 (UTC)
+Subject: Re: [PATCH 0/5] nfs-utils: provide audit-logging of NFSv4 access
+To:     NeilBrown <neilb@suse.de>
+Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <161422077024.28256.15543036625096419495.stgit@noble>
+ <6ddbe801-d107-5cbd-7362-c3e84321f203@RedHat.com>
+ <87pn0fhnxo.fsf@notabene.neil.brown.name>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <e9bbf5bc-1d78-746b-1d93-8e414801dadd@RedHat.com>
+Date:   Thu, 4 Mar 2021 08:24:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAN-5tyGw3D-+emeQhu31agom9yuZ9=PL6YUVyEKiR-n2q9uE3A@mail.gmail.com>
+In-Reply-To: <87pn0fhnxo.fsf@notabene.neil.brown.name>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Mar 01, 2021 at 10:56:22PM -0500, Olga Kornievskaia wrote:
-> Hi Dan,
+
+
+On 3/3/21 5:28 PM, NeilBrown wrote:
+> On Tue, Mar 02 2021, Steve Dickson wrote:
 > 
-> On Mon, Feb 15, 2021 at 12:43 PM Dan Aloni <dan@kernelim.com> wrote:
-> >
-> > Hi Anna,
-> >
-> > This patchset builds ontop v2 of your 'sysfs files for changing IP' changeset.
-> >
-> > - The patchset adds two more sysfs objects, for one for transport and another
-> >   for multipath.
-> > - Also, `net` renamed to `client`, and `client` now has symlink to its principal
-> >   transport. A client also has a symlink to its `multipath` object.
-> > - The transport interface lets you change `dstaddr` of individual transports,
-> >   when `nconnect` is used (or if it wasn't used and these were added with the
-> >   new interface).
-> > - The interface to add a transport is using a single string written to 'add',
-> >   for example:
-> >
-> >        echo 'dstaddr 192.168.40.8 kind rdma' \
-> >                > /sys/kernel/sunrpc/client/0/multipath/add
-> >
-> > These changes are independent of the method used to obtain a sunrpc ID for a
-> > mountpoint. For that I've sent a concept patch showing an fspick-based
-> > implementation: https://marc.info/?l=linux-nfs&m=161332454821849&w=4
+>> Hey!
+>>
+>> A couple comments... 
+>>
+>> On 2/24/21 9:42 PM, NeilBrown wrote:
+>>> When NFSv3 is used mountd provides logs of successful and failed mount
+>>> attempts which can be used for auditing.
+>>> When NFSv4 is used there are no such logs as NFSv4 does not have a
+>>> distinct "mount" request.
+>>>
+>>> However mountd still knows about which filesysytems are being accessed
+>>> from which clients, and can actually provide more reliable logs than it
+>>> currently does, though they must be more verbose - with periodic "is
+>>> being accessed" message replacing a single "was mounted" message.
+>>>
+>>> This series adds support for that logging, and adds some related
+>>> improvements to make the logs as useful as possible.
+>>>
+>>> NeilBrown
+>>>
+>>> ---
+>>>
+>>> NeilBrown (5):
+>>>       mountd: reject unknown client IP when !use_ipaddr.
+>>>       mountd: Don't proactively add export info when fh info is requested.
+>>>       mountd: add logging for authentication results for accesses.
+>> I wonder if we should mention setting "debug=auth" enables
+>> this logging in the mountd manpage 
 > 
-> I'm confused: does this allow adding arbitrary connections between a
-> client and some server IP to an existing RPC client? Given the above
-> description, that's how it reads to me, can you clarify please. I
-> thought it was something specifically for v3 (because it has no
-> concept of trunking). As for NFSv4 there is a notion of getting server
-> locations via FS_LOCATION and doing trunking (ie multipathing)? I
-> don't see how this code restricts the addition of transports to v3.
+> That is already in the mountd man page :-)
+Sorry I must have missed it...
 
-Indeed, there's no restriction to NFSv3.
+> 
+>>
+>>>       mountd: add --cache-use-ipaddr option to force use_ipaddr
+>>>       mountd: make default ttl settable by option
+>> These two probably need to be put into the nfs.conf file 
+>> and the nfs.conf man page since the conf_get_num()
+>> and conf_get_bool() calls were added.
+> 
+> That's done now too.
+Thank you!
 
-There can be potential uses for this for NFSv4 too. FS_LOCATIONS serving
-as recommendation to which hosts the client can connect, while smart
-load-balancing logic in userspace can determine to which subset of these
-servers each client in a cluster should actually connect (a full mesh
-is not always desired).
+> 
+>>
+>> Finally, I'll add this to my plate, but I'm thinking
+>> the new log-auth and ttl flags probably should be 
+>> introduce into nfsv4.exported.
+>>
+> 
+> I'll add that to my patches before resubmitting.
+Thank you again!
 
-At any case, if this restriction is desired, we can add a new sunrpc
-client flag for that and pass it only in NFSv3 client init.
+> 
+>> I didn't port over the use-ipaddr flag to exportd,
+>> since I though it was only used in the v3 mount path
+>> but may that was an oversight on my part. 
+> 
+> use-ipaddr it not at all v3 specific.
+> It was originally introduced to handle the fact that a single host could
+> be in a large number of netgroups, and concatenating the names of all
+> those netgroups could produce a "domain" name that is too long.
+> The new option to force it on is useful for access logging, particularly
+> with NFSv4.
+> 
+> I'll add that to my patches too.
+Perfect!
 
--- 
-Dan Aloni
+steved.
+> 
+> Thanks,
+> NeilBrown
+> 
+> 
+>>
+>> Thoughts?
+>>
+>> steved.
+>>>
+>>>
+>>>  support/export/auth.c      |  4 +++
+>>>  support/export/cache.c     | 32 +++++++++++------
+>>>  support/export/v4root.c    |  3 +-
+>>>  support/include/exportfs.h |  3 +-
+>>>  support/nfs/exports.c      |  4 ++-
+>>>  utils/mountd/mountd.c      | 29 +++++++++++++++-
+>>>  utils/mountd/mountd.man    | 70 ++++++++++++++++++++++++++++++++++++++
+>>>  7 files changed, 130 insertions(+), 15 deletions(-)
+>>>
+>>> --
+>>> Signature
+>>>
+
