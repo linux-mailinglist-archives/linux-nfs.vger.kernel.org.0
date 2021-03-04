@@ -2,123 +2,128 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C54AD32D48B
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Mar 2021 14:49:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E010E32D4B9
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Mar 2021 14:58:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239280AbhCDNtH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 Mar 2021 08:49:07 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21839 "EHLO
+        id S232252AbhCDN5j (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 Mar 2021 08:57:39 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:22200 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241484AbhCDNsl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Mar 2021 08:48:41 -0500
+        by vger.kernel.org with ESMTP id S233485AbhCDN5H (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Mar 2021 08:57:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614865635;
+        s=mimecast20190719; t=1614866141;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hNSJeU6DHgk1JDrXPc6wXwBH7UNAGKwi0d2+igWtU6Y=;
-        b=SnjAsjpErilPN7UqsfPvyID4eHUhI97DdfqH6C27rpzEgZ4XX8+k3y8fOv/jX8xdlEVTbe
-        hYBBWHINrJpRx05l7CyqMnaOS/tsL2HMjhtWd7IuXrGtkYGtwFANUXhWvvI9JFrF/u5YFJ
-        e7ketTp5CzVunoohCB7NSRKFsjcTMvA=
+        bh=mMvAeCEktMdz+D9aCnw76gT81Ro1wc0BtvAjQaA7cOw=;
+        b=PO8kMlW0hfVQYA/OsyqgiDO0pq4Vvtlp80+cgoH8x9+9K4BzVvsxauJNC8Mb2f/D2KHeuN
+        0EKsFJkEcPUYN4Os8ethDUmceXa83bn3fBe0Plfott0DglTA7kFCvwR4DQKsys73aRV+GZ
+        /WwBGvLN0+ks8vWvTM7wmOOosdx+3u0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-167-hcFeYL5qNHGg6spmwsZ5Zw-1; Thu, 04 Mar 2021 08:47:13 -0500
-X-MC-Unique: hcFeYL5qNHGg6spmwsZ5Zw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-492-evuzhI0hNRCzBacBaXxs9Q-1; Thu, 04 Mar 2021 08:55:40 -0500
+X-MC-Unique: evuzhI0hNRCzBacBaXxs9Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 76E8BEC1A3;
-        Thu,  4 Mar 2021 13:47:11 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-66.rdu2.redhat.com [10.10.112.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D08AD5C1A1;
-        Thu,  4 Mar 2021 13:47:05 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <2653261.1614813611@warthog.procyon.org.uk>
-References: <2653261.1614813611@warthog.procyon.org.uk>
-To:     linux-cachefs@redhat.com
-Cc:     dhowells@redhat.com, Jeff Layton <jlayton@redhat.com>,
-        David Wysochanski <dwysocha@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: fscache: Redesigning the on-disk cache - LRU handling
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29CB91923761;
+        Thu,  4 Mar 2021 13:55:39 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-112-45.phx2.redhat.com [10.3.112.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D813919C48;
+        Thu,  4 Mar 2021 13:55:38 +0000 (UTC)
+Subject: Re: [PATCH 0/7 V4] The NFSv4 only mounting daemon.
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20210219200815.792667-1-steved@redhat.com>
+ <20210224203053.GF11591@fieldses.org>
+ <1553fb2d-9b8e-f8eb-8c72-edcd14a2ad08@RedHat.com>
+ <20210303152342.GA1282@fieldses.org>
+ <376b6b0a-5679-4692-cfdb-b8c7919393a5@RedHat.com>
+ <20210303215415.GE3949@fieldses.org>
+ <d9e766cb-9af8-0c66-efb1-a3d0a291aa48@RedHat.com>
+ <20210303221730.GH3949@fieldses.org>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <80610f08-6f8d-1390-1875-068e63e744eb@RedHat.com>
+Date:   Thu, 4 Mar 2021 08:57:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2973222.1614865624.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Thu, 04 Mar 2021 13:47:04 +0000
-Message-ID: <2973223.1614865624@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20210303221730.GH3949@fieldses.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-David Howells <dhowells@redhat.com> wrote:
 
-> =
 
->  (3) OpenAFS-style format.  One index file to look up {file_key,block#} =
-and an
->      array of data files, each holding one block (e.g. a 256KiB-aligned =
-chunk
->      of a file).  Each index entry has valid start/end offsets for easy
->      truncation.
-> =
+On 3/3/21 5:17 PM, J. Bruce Fields wrote:
+> On Wed, Mar 03, 2021 at 05:07:56PM -0500, Steve Dickson wrote:
+>>
+>>
+>> On 3/3/21 4:54 PM, J. Bruce Fields wrote:
+>>> On Wed, Mar 03, 2021 at 04:22:28PM -0500, Steve Dickson wrote:
+>>>> Hey!
+>>>>
+>>>> On 3/3/21 10:23 AM, J. Bruce Fields wrote:
+>>>>> On Tue, Mar 02, 2021 at 05:33:23PM -0500, Steve Dickson wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 2/24/21 3:30 PM, J. Bruce Fields wrote:
+>>>>>>> On Fri, Feb 19, 2021 at 03:08:08PM -0500, Steve Dickson wrote:
+>>>>>>>> nfsv4.exportd is a daemon that will listen for only v4 mount upcalls.
+>>>>>>>> The idea is to allow distros to build a v4 only package
+>>>>>>>> which will have a much smaller footprint than the
+>>>>>>>> entire nfs-utils package.
+>>>>>>>>
+>>>>>>>> exportd uses no RPC code, which means none of the 
+>>>>>>>> code or arguments that deal with v3 was ported, 
+>>>>>>>> this again, makes the footprint much smaller. 
+>>>>>>>
+>>>>>>> How much smaller?
+>>>>>> Will a bit smaller... but a number of daemons like nfsd[cld,clddb,cldnts]
+>>>>>> need to also come a long. 
+>>>>>
+>>>>> Could we get some numbers?
+>>>>>
+>>>>> Looks like nfs-utils in F33 is about 1.2M:
+>>>>>
+>>>>> $ rpm -qi nfs-utils|grep ^Size
+>>>>> Size        : 1243512
+>>>>>
+>>>>> $ strip utils/mountd/mountd
+>>>>> $ ls -lh utils/mountd/mountd
+>>>>> -rwxrwxr-x. 1 bfields bfields 128K Mar  3 10:12 utils/mountd/mountd
+>>>>> $ strip utils/exportd/exportd
+>>>>> $ ls -lh utils/exportd/exportd
+>>>>> -rwxrwxr-x. 1 bfields bfields 106K Mar  3 10:12 utils/exportd/exportd
+>>>>>
+>>>>> So replacing mountd by exportd saves us about 20K out of 1.2M.  Is it
+>>>>> worth it?
+>>>> In smaller foot print I guess I meant no v3 daemons, esp rpcbind. 
+>>>
+>>> The rpcbind rpm is 120K installed, so if the new v4-only rpm has no
+>>> dependency on rpcbind then we save 120K.
+>> I believe it is more of a functionally thing than a size thing
+>> WRT to containers. 
+> 
+> OK.  But if it's not about size, then we can use "rpc.mountd -N2 -N3",
+> we don't need a separate daemon.
+Personally I see this is the first step away from V3... 
 
->      The index has a hash to facilitate the lookup and an LRU that allow=
-s a
->      block to be recycled at any time.
+So what we don't need is all that RPC code, all the different mounting
+versions... no RPC code at all,  which also means no need for libtirpc... 
+That is a lot of code that goes away, which I think is a good thing.
 
-The LRU would probably have to be a doubly-linked list so that entries can=
- be
-removed from it easily.  This means typically touching two other entries,
-which might not be in the same page; further, if the entry is being freed,
-we'd need to excise it from the hash chain also, necessitating touching ma=
-ybe
-two more entries - which might also be in different pages.
+I never thought it was a good idea to have mountd process
+the v4 upcalls... I always thought it should be a different
+deamon... and now we have one.
 
-Maybe the LRU idea plus a free block bitmap could be combined, however.
+A simple daemon that only processes v4 upcalls.
 
- (1) Say that there's a bit-pair map, with one bit pair per block.  The pa=
-ir
-     is set to 0 when the block is free.  When the block is accessed, the =
-pair
-     is set to 3.
-
- (2) When we run out of free blocks (ie. pairs that are zero), we decremen=
-t
-     all the pairs and then look again.
-
- (3) Excision from the old hash chain would need to be done at allocation,
-     though it does give a block whose usage has been reduced to 0 the cha=
-nce
-     to be resurrected.
-
-Possible variations on the theme could be:
-
- (*) Set the pair to 2, not 3 when accessed.  Set the block to 3 to pin it=
-;
-     the process of decrementing all the pairs would leave it at 3.
-
- (*) Rather than decrementing all pairs at once, have a rotating window th=
-at
-     does a part of the map at once.
-
- (*) If a round of decrementing doesn't reduce any pairs to zero, reject a
-     request for space.
-
-This would also work for a file index.
-
-David
+steved.
 
