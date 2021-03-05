@@ -2,26 +2,25 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F41132DE6E
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Mar 2021 01:44:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BEF3732DE6F
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Mar 2021 01:44:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231400AbhCEAos (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 Mar 2021 19:44:48 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39558 "EHLO mx2.suse.de"
+        id S231403AbhCEAow (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 Mar 2021 19:44:52 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39592 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230408AbhCEAos (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 4 Mar 2021 19:44:48 -0500
+        id S230408AbhCEAow (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 4 Mar 2021 19:44:52 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id DF052AD29;
-        Fri,  5 Mar 2021 00:44:46 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 25B07AD29;
+        Fri,  5 Mar 2021 00:44:51 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
 To:     Steve Dickson <SteveD@RedHat.com>
 Date:   Fri, 05 Mar 2021 11:43:24 +1100
-Subject: [PATCH 4/7] mountd: add logging for authentication results for
- accesses.
+Subject: [PATCH 5/7] mountd: add --cache-use-ipaddr option to force use_ipaddr
 Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Message-ID: <161490500400.15291.1321839163191458161.stgit@noble>
+Message-ID: <161490500400.15291.3579997095787553405.stgit@noble>
 In-Reply-To: <161490464823.15291.13358214486203434566.stgit@noble>
 References: <161490464823.15291.13358214486203434566.stgit@noble>
 User-Agent: StGit/0.23
@@ -34,250 +33,256 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: NeilBrown <neil@brown.name>
 
-When NFSv3 is used to mount a filesystem, success/failure messages are
-logged by mountd and can be used for auditing.
-When NFSv4 is used, there is no distinct "MOUNT" request, and nothing is
-logged.
+When logging authentication requests, it can be easier to read the logs
+if clients are always identified by IP address, not intermediate names
+like netgroups or subnets.
 
-We can instead log authentication requests from the kernel.  These will
-happen regularly - typically every 15 minutes of ongoing access - so
-they may be too noisy, or might be more useful.  As they might not be
-wanted, make them selectable with the "AUTH" facility in xlog().
-
-Add a "-l" to enable these logs.  Alternately "debug = auth" will have
-the same effect.
-
-The same changes are made to both rpc.mountd and nfsv4.exportd.
+To allow this, add --cache-use-ipaddr or -i which tell mountd to always
+enable use_ipaddr.
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- support/export/cache.c    |   18 +++++++++++++++++-
- systemd/nfs.conf.man      |   16 ++++++++++++++++
- utils/exportd/exportd.c   |    9 +++++++--
- utils/exportd/exportd.man |   17 +++++++++++++++++
- utils/mountd/mountd.c     |    8 +++++++-
- utils/mountd/mountd.man   |   21 +++++++++++++++++++++
- 6 files changed, 85 insertions(+), 4 deletions(-)
+ nfs.conf                  |    2 ++
+ support/export/auth.c     |    4 ++++
+ systemd/nfs.conf.man      |    2 ++
+ utils/exportd/exportd.c   |   16 +++++++++++-----
+ utils/exportd/exportd.man |   18 ++++++++++++++++++
+ utils/mountd/mountd.c     |   10 ++++++++--
+ utils/mountd/mountd.man   |   18 ++++++++++++++++++
+ 7 files changed, 63 insertions(+), 7 deletions(-)
 
-diff --git a/support/export/cache.c b/support/export/cache.c
-index 49a761749ec6..50f7c7a15ceb 100644
---- a/support/export/cache.c
-+++ b/support/export/cache.c
-@@ -145,6 +145,15 @@ static void auth_unix_ip(int f)
- 		client = client_compose(ai);
- 		nfs_freeaddrinfo(ai);
- 	}
-+	if (!client)
-+		xlog(D_AUTH, "failed authentication for IP %s", ipaddr);
-+	else if	(!use_ipaddr)
-+		xlog(D_AUTH, "successful authentication for IP %s as %s",
-+		     ipaddr, *client ? client : "DEFAULT");
-+	else
-+		xlog(D_AUTH, "successful authentication for IP %s",
-+			     ipaddr);
+diff --git a/nfs.conf b/nfs.conf
+index e69ec16d9c19..0c32eed1a5be 100644
+--- a/nfs.conf
++++ b/nfs.conf
+@@ -34,6 +34,7 @@
+ # manage-gids=n
+ # state-directory-path=/var/lib/nfs
+ # threads=1
++# cache-use-ipaddr=n
+ [mountd]
+ # debug="all|auth|call|general|parse"
+ # manage-gids=n
+@@ -43,6 +44,7 @@
+ # reverse-lookup=n
+ # state-directory-path=/var/lib/nfs
+ # ha-callout=
++# cache-use-ipaddr=n
+ #
+ [nfsdcld]
+ # debug=0
+diff --git a/support/export/auth.c b/support/export/auth.c
+index 0bfa77d18469..cea376300d01 100644
+--- a/support/export/auth.c
++++ b/support/export/auth.c
+@@ -66,6 +66,10 @@ check_useipaddr(void)
+ 	int old_use_ipaddr = use_ipaddr;
+ 	unsigned int len = 0;
+ 
++	if (use_ipaddr > 1)
++		/* fixed - don't check */
++		return;
 +
- 	bp = buf; blen = sizeof(buf);
- 	qword_add(&bp, &blen, "nfsd");
- 	qword_add(&bp, &blen, ipaddr);
-@@ -896,6 +905,8 @@ static void nfsd_fh(int f)
- 	qword_addeol(&bp, &blen);
- 	if (blen <= 0 || cache_write(f, buf, bp - buf) != bp - buf)
- 		xlog(L_ERROR, "nfsd_fh: error writing reply");
-+	if (!found)
-+		xlog(D_AUTH, "denied access to %s", *dom == '$' ? dom+1 : dom);
- out:
- 	if (found_path)
- 		free(found_path);
-@@ -987,8 +998,13 @@ static int dump_to_cache(int f, char *buf, int blen, char *domain,
- 			qword_add(&bp, &blen, "uuid");
- 			qword_addhex(&bp, &blen, u, 16);
- 		}
--	} else
-+		xlog(D_AUTH, "granted access to %s for %s",
-+		     path, *domain == '$' ? domain+1 : domain);
-+	} else {
- 		qword_adduint(&bp, &blen, now + ttl);
-+		xlog(D_AUTH, "denied access to %s for %s",
-+		     path, *domain == '$' ? domain+1 : domain);
-+	}
- 	qword_addeol(&bp, &blen);
- 	if (blen <= 0) {
- 		errno = ENOBUFS;
+ 	/* add length of m_hostname + 1 for the comma */
+ 	for (clp = clientlist[MCL_NETGROUP]; clp; clp = clp->m_next)
+ 		len += (strlen(clp->m_hostname) + 1);
 diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
-index d2187f8aca1a..8a02e154b1a2 100644
+index 8a02e154b1a2..8af4445d49c9 100644
 --- a/systemd/nfs.conf.man
 +++ b/systemd/nfs.conf.man
-@@ -138,6 +138,14 @@ See
- .BR exportd (8)
- for details.
- 
-+Note that setting 
-+.B "\[dq]debug = auth\[dq]"
-+for
-+.B exportd
-+is equivalent to providing the
-+.B \-\-log\-auth
-+option.
-+
- .TP
- .B nfsdcltrack
+@@ -132,6 +132,7 @@ but on the server, this will resolve to the path
+ .B exportd
  Recognized values:
-@@ -197,6 +205,14 @@ section, are used to configure mountd.  See
- .BR rpc.mountd (8)
- for details.
+ .BR threads ,
++.BR cache-use-upaddr ,
+ .BR state-directory-path
  
-+Note that setting 
-+.B "\[dq]debug = auth\[dq]"
-+for
-+.B mountd
-+is equivalent to providing the
-+.B \-\-log\-auth
-+option.
-+
- The
- .B state-directory-path
- value in the
+ See
+@@ -196,6 +197,7 @@ Recognized values:
+ .BR port ,
+ .BR threads ,
+ .BR reverse-lookup ,
++.BR cache-use-upaddr ,
+ .BR state-directory-path ,
+ .BR ha-callout .
+ 
 diff --git a/utils/exportd/exportd.c b/utils/exportd/exportd.c
-index 0d7782becd51..8ea2f160773e 100644
+index 8ea2f160773e..f2f209028284 100644
 --- a/utils/exportd/exportd.c
 +++ b/utils/exportd/exportd.c
-@@ -44,8 +44,10 @@ static struct option longopts[] =
- 	{ "help", 0, 0, 'h' },
+@@ -45,9 +45,10 @@ static struct option longopts[] =
  	{ "manage-gids", 0, 0, 'g' },
  	{ "num-threads", 1, 0, 't' },
-+	{ "log-auth", 0, 0, 'l' },
+ 	{ "log-auth", 0, 0, 'l' },
++	{ "cache-use-ipaddr", 0, 0, 'i'},
  	{ NULL, 0, 0, 0 }
  };
-+static char shortopts[] = "d:fghs:t:l"
+-static char shortopts[] = "d:fghs:t:l"
++static char shortopts[] = "d:fghs:t:li"
  
  /*
   * Signal handlers.
-@@ -175,7 +177,7 @@ usage(const char *prog, int n)
+@@ -177,13 +178,13 @@ usage(const char *prog, int n)
  {
  	fprintf(stderr,
  		"Usage: %s [-f|--foreground] [-h|--help] [-d kind|--debug kind]\n"
--"	[-g|--manage-gids]\n"
-+"	[-g|--manage-gids] [-l|--log-auth]\n"
+-"	[-g|--manage-gids] [-l|--log-auth]\n"
++"	[-g|--manage-gids] [-l|--log-auth] [-i|--cache-use-ipaddr]\n"
  "	[-s|--state-directory-path path]\n"
  "	[-t num|--num-threads=num]\n", prog);
  	exit(n);
-@@ -217,11 +219,14 @@ main(int argc, char **argv)
- 	/* Read in config setting */
- 	read_exportd_conf(progname, argv);
+ }
  
--	while ((c = getopt_long(argc, argv, "d:fghs:t:", longopts, NULL)) != EOF) {
-+	while ((c = getopt_long(argc, argv, shortopts, longopts, NULL)) != EOF) {
- 		switch (c) {
- 		case 'd':
- 			xlog_sconfig(optarg, 1);
+-inline static void 
++inline static void
+ read_exportd_conf(char *progname, char **argv)
+ {
+ 	char *s;
+@@ -194,6 +195,8 @@ read_exportd_conf(char *progname, char **argv)
+ 
+ 	manage_gids = conf_get_bool("exportd", "manage-gids", manage_gids);
+ 	num_threads = conf_get_num("exportd", "threads", num_threads);
++	if (conf_get_bool("mountd", "cache-use-ipaddr", 0))
++		use_ipaddr = 2;
+ 
+ 	s = conf_get_str("exportd", "state-directory-path");
+ 	if (s && !state_setup_basedir(argv[0], s))
+@@ -236,6 +239,9 @@ main(int argc, char **argv)
+ 		case 'h':
+ 			usage(progname, 0);
  			break;
-+		case 'l':
-+			xlog_sconfig("auth", 1);
++		case 'i':
++			use_ipaddr = 2;
 +			break;
- 		case 'f':
- 			foreground++;
- 			break;
+ 		case 's':
+ 			if (!state_setup_basedir(argv[0], optarg))
+ 				exit(1);
+@@ -252,8 +258,8 @@ main(int argc, char **argv)
+ 
+ 	if (!setup_state_path_names(progname, ETAB, ETABTMP, ETABLCK, &etab))
+ 		return 1;
+-	
+-	if (!foreground) 
++
++	if (!foreground)
+ 		xlog_stderr(0);
+ 
+ 	daemon_init(foreground);
 diff --git a/utils/exportd/exportd.man b/utils/exportd/exportd.man
-index 0dbf0c80466a..9435e98703e1 100644
+index 9435e98703e1..a4e659f5fa4a 100644
 --- a/utils/exportd/exportd.man
 +++ b/utils/exportd/exportd.man
-@@ -32,6 +32,23 @@ to respond to each request.
- .B \-d kind " or " \-\-debug kind
- Turn on debugging. Valid kinds are: all, auth, call, general and parse.
+@@ -49,6 +49,23 @@ in the
+ .B "[exportd]"
+ section.
  .TP
-+.BR \-l " or " \-\-log\-auth
-+Enable logging of responses to authentication and access requests from
-+nfsd.  Each response is then cached by the kernel for 30 minutes, and
-+will be refreshed after 15 minutes if the relevant client remains
-+active.
-+Note that
++.BR \-i " or " \-\-cache\-use\-ipaddr
++Normally each client IP address is matched against each host identifier
++(name, wildcard, netgroup etc) found in
++.B /etc/exports
++and a combined identity is formed from all matching identifiers.
++Often many clients will map to the same combined identity so performing
++this mapping reduces the number of distinct access details that the
++kernel needs to store.
++Specifying the
++.B \-i
++option suppresses this mapping so that access to each filesystem is
++requested and cached separately for each client IP address.  Doing this
++can increase the burden of updating the cache slightly, but can make the
++log messages produced by the
 +.B -l
-+is equivalent to
-+.B "-d auth"
-+and so can be enabled in
-+.B /etc/nfs.conf
-+with
-+.B "\[dq]debug = auth\[dq]"
-+in the
-+.B "[exportd]"
-+section.
++option easier to read.
 +.TP
  .B \-F " or " \-\-foreground
  Run in foreground (do not daemonize)
  .TP
+@@ -89,6 +106,7 @@ configuration file.
+ Values recognized in the
+ .B [exportd]
+ section include 
++.B cache\-use\-ipaddr ,
+ .BR manage-gids ", and"
+ .B debug 
+ which each have the same effect as the option with the same name.
 diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
-index 612063ba2340..9fecf2f04c3b 100644
+index 9fecf2f04c3b..b9260aeb86a3 100644
 --- a/utils/mountd/mountd.c
 +++ b/utils/mountd/mountd.c
-@@ -74,8 +74,10 @@ static struct option longopts[] =
- 	{ "reverse-lookup", 0, 0, 'r' },
+@@ -75,9 +75,10 @@ static struct option longopts[] =
  	{ "manage-gids", 0, 0, 'g' },
  	{ "no-udp", 0, 0, 'u' },
-+	{ "log-auth", 0, 0, 'l'},
+ 	{ "log-auth", 0, 0, 'l'},
++	{ "cache-use-ipaddr", 0, 0, 'i'},
  	{ NULL, 0, 0, 0 }
  };
-+static char shortopts[] = "o:nFd:p:P:hH:N:V:vurs:t:gl";
+-static char shortopts[] = "o:nFd:p:P:hH:N:V:vurs:t:gl";
++static char shortopts[] = "o:nFd:p:P:hH:N:V:vurs:t:gli";
  
  #define NFSVERSBIT(vers)	(0x1 << (vers - 1))
  #define NFSVERSBIT_ALL		(NFSVERSBIT(2) | NFSVERSBIT(3) | NFSVERSBIT(4))
-@@ -727,7 +729,7 @@ main(int argc, char **argv)
+@@ -681,6 +682,8 @@ read_mountd_conf(char **argv)
+ 	num_threads = conf_get_num("mountd", "threads", num_threads);
+ 	reverse_resolve = conf_get_bool("mountd", "reverse-lookup", reverse_resolve);
+ 	ha_callout_prog = conf_get_str("mountd", "ha-callout");
++	if (conf_get_bool("mountd", "cache-use-ipaddr", 0))
++		use_ipaddr = 2;
  
- 	/* Parse the command line options and arguments. */
- 	opterr = 0;
--	while ((c = getopt_long(argc, argv, "o:nFd:p:P:hH:N:V:vurs:t:g", longopts, NULL)) != EOF)
-+	while ((c = getopt_long(argc, argv, shortopts, longopts, NULL)) != EOF)
- 		switch (c) {
- 		case 'g':
- 			manage_gids = 1;
-@@ -798,6 +800,9 @@ main(int argc, char **argv)
- 		case 'u':
- 			NFSCTL_UDPUNSET(_rpcprotobits);
+ 	s = conf_get_str("mountd", "state-directory-path");
+ 	if (s && !state_setup_basedir(argv[0], s))
+@@ -803,6 +806,9 @@ main(int argc, char **argv)
+ 		case 'l':
+ 			xlog_sconfig("auth", 1);
  			break;
-+		case 'l':
-+			xlog_sconfig("auth", 1);
++		case 'i':
++			use_ipaddr = 2;
 +			break;
  		case 0:
  			break;
  		case '?':
-@@ -913,6 +918,7 @@ usage(const char *prog, int n)
+@@ -918,7 +924,7 @@ usage(const char *prog, int n)
  {
  	fprintf(stderr,
  "Usage: %s [-F|--foreground] [-h|--help] [-v|--version] [-d kind|--debug kind]\n"
-+"	[-l|--log-auth]\n"
+-"	[-l|--log-auth]\n"
++"	[-l|--log-auth] [-i|--cache-use-ipaddr]\n"
  "	[-o num|--descriptors num]\n"
  "	[-p|--port port] [-V version|--nfs-version version]\n"
  "	[-N version|--no-nfs-version version] [-n|--no-tcp]\n"
 diff --git a/utils/mountd/mountd.man b/utils/mountd/mountd.man
-index 2e191074c65f..f6d6fdddda95 100644
+index f6d6fdddda95..97d4518fa2e6 100644
 --- a/utils/mountd/mountd.man
 +++ b/utils/mountd/mountd.man
-@@ -91,6 +91,27 @@ is not updated to reflect any NFSv4 activity.
- .B \-d kind " or " \-\-debug kind
- Turn on debugging. Valid kinds are: all, auth, call, general and parse.
+@@ -112,6 +112,23 @@ section.
+ will always log authentication responses to MOUNT requests when NFSv3 is
+ used, but to get similar logs for NFSv4, this option is required.
  .TP
-+.BR \-l " or " \-\-log\-auth
-+Enable logging of responses to authentication and access requests from
-+nfsd.  Each response is then cached by the kernel for 30 minutes, and
-+will be refreshed after 15 minutes if the relevant client remains
-+active.
-+Note that
++.BR \-i " or " \-\-cache\-use\-ipaddr
++Normally each client IP address is matched against each host identifier
++(name, wildcard, netgroup etc) found in
++.B /etc/exports
++and a combined identity is formed from all matching identifiers.
++Often many clients will map to the same combined identity so performing
++this mapping reduces the number of distinct access details that the
++kernel needs to store.
++Specifying the
++.B \-i
++option suppresses this mapping so that access to each filesystem is
++requested and cached separately for each client IP address.  Doing this
++can increase the burden of updating the cache slightly, but can make the
++log messages produced by the
 +.B -l
-+is equivalent to
-+.B "-d auth"
-+and so can be enabled in
-+.B /etc/nfs.conf
-+with
-+.B "\[dq]debug = auth\[dq]"
-+in the
-+.B "[mountd]"
-+section.
-+.IP
-+.B rpc.mountd
-+will always log authentication responses to MOUNT requests when NFSv3 is
-+used, but to get similar logs for NFSv4, this option is required.
++option easier to read.
 +.TP
  .B \-F " or " \-\-foreground
  Run in foreground (do not daemonize)
  .TP
+@@ -242,6 +259,7 @@ Values recognized in the
+ .B [mountd]
+ section include
+ .BR manage-gids ,
++.BR cache\-use\-ipaddr ,
+ .BR descriptors ,
+ .BR port ,
+ .BR threads ,
 
 
