@@ -2,114 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3623332DE03
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Mar 2021 00:50:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 036BC32DE6B
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Mar 2021 01:44:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233295AbhCDXuL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 Mar 2021 18:50:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50612 "EHLO mail.kernel.org"
+        id S231359AbhCEAof (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 Mar 2021 19:44:35 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39284 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232543AbhCDXuK (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 4 Mar 2021 18:50:10 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A8F7F64FEA;
-        Thu,  4 Mar 2021 23:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614901809;
-        bh=la+/LlUFeQYvhLySDR4vAFpG+8JYc37BPuVHhh/Xkwo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AKCe315TTti7vXaDkftIB9RAiJKo7klEiBS5CoaUGufcb2RT0N6rraHjbpFBjG670
-         zodPbs7P67fX4UvV0tbq0GuaoGMl+f1YGJH0AEnJlMT0VvH9OaDMjs0G7F+djIB13h
-         a0QayLF3Cc7bYfl/Z5x44VhKF8ijlhkS0SIFIfcYQF0tTzhgzvM3R806Sptq/7AztU
-         cSeOmck9FCU63eeS3robzcrzFCv5XDlbI2/l9MdYA8V6nKY80KiwbQ5zc0waiij5NO
-         TkD8cNwNDDV3xmipHZWxB8s3i4hBiAdk6vwUDsVQrT1O3ZqiSHDlshsRU2xFJoEbjj
-         pT3Qz5nwZR4SQ==
-Date:   Thu, 4 Mar 2021 15:50:06 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     "Alejandro Colomar (man-pages)" <alx.manpages@gmail.com>
-Cc:     linux-man@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Luis Henriques <lhenriques@suse.de>,
-        Steve French <sfrench@samba.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Ian Lance Taylor <iant@google.com>,
-        Luis Lozano <llozano@chromium.org>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Christoph Hellwig <hch@infradead.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Walter Harms <wharms@bfs.de>
-Subject: Re: [RFC v4] copy_file_range.2: Update cross-filesystem support for
- 5.12
-Message-ID: <20210304235006.GW7269@magnolia>
-References: <20210224142307.7284-1-lhenriques@suse.de>
- <20210304093806.10589-1-alx.manpages@gmail.com>
- <20210304171350.GC7267@magnolia>
- <37df00f9-a88e-3f16-d0b4-3297248aee66@gmail.com>
+        id S230408AbhCEAof (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 4 Mar 2021 19:44:35 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 272E3AEC3;
+        Fri,  5 Mar 2021 00:44:34 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Steve Dickson <SteveD@RedHat.com>
+Date:   Fri, 05 Mar 2021 11:43:23 +1100
+Subject: [PATCH 1/7] mountd: reject unknown client IP when !use_ipaddr.
+Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Message-ID: <161490500398.15291.17202034046729749702.stgit@noble>
+In-Reply-To: <161490464823.15291.13358214486203434566.stgit@noble>
+References: <161490464823.15291.13358214486203434566.stgit@noble>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <37df00f9-a88e-3f16-d0b4-3297248aee66@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Mar 04, 2021 at 07:24:02PM +0100, Alejandro Colomar (man-pages) wrote:
-> Hi Darrick,
-> 
-> On 3/4/21 6:13 PM, Darrick J. Wong wrote:
-> > On Thu, Mar 04, 2021 at 10:38:07AM +0100, Alejandro Colomar wrote:
-> > > +However, on some virtual filesystems,
-> > > +the call failed to copy, while still reporting success.
-> > 
-> > ...success, or merely a short copy?
-> 
-> Okay.
-> 
-> > 
-> > (The rest looks reasonable (at least by c_f_r standards) to me.)
-> 
-> I'm curious, what does "c_f_r standards" mean? :)
+From: NeilBrown <neil@brown.name>
 
-c_f_r is shorthand for "copy_file_range".
+When use_ipaddr is not in effect, an auth_unix_ip lookup request from
+the kernel for an unknown client will be rejected.
+When it IS in effect, these requests are always granted with the IP
+address being mapped to a string form of the address, preceded by a '$'.
 
-As for standards... well... I'll just say that this being the /second/
-major shift in behavior reflects our poor community development
-processes.  The door to general cross-fs copies should not have been
-thrown open with as little testing as it did.  There are legendary
-dchinner rants about how obviously broken the generic fallback was when
-it was introduced.
+This is inconsistent behaviour and could present a small information
+leak.
+It means that, for example, a SETCLIENT NFSv4 request may or may not
+succeed depending on an internal setting in rpc.mountd.
 
-There's a reason why we usually wire up new kernel functionality on an
-opt-in basis, and that is to foster gradual enablement as QA resources
-permit.  It's one thing for maintainers to blow up their own subsystems
-in isolation, and an entirely different thing to do it between projects
-with no coordination.
+This is easily rectified by always checking if the client is known.
 
-Did c_f_r work between an ext4 and an xfs?  I have no idea.  It seemed
-to work between xfses of a similar vintage and featureset, at least, but
-that's about as much testing as I have ever managed.
+Signed-off-by: NeilBrown <neil@brown.name>
+---
+ support/export/cache.c |   17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
---D
+diff --git a/support/export/cache.c b/support/export/cache.c
+index f1569afb558c..156ebfd4087c 100644
+--- a/support/export/cache.c
++++ b/support/export/cache.c
+@@ -114,6 +114,7 @@ static void auth_unix_ip(int f)
+ 	char class[20];
+ 	char ipaddr[INET6_ADDRSTRLEN + 1];
+ 	char *client = NULL;
++	struct addrinfo *ai = NULL;
+ 	struct addrinfo *tmp = NULL;
+ 	char buf[RPC_CHAN_BUF_SIZE], *bp;
+ 	int blen;
+@@ -139,21 +140,17 @@ static void auth_unix_ip(int f)
+ 
+ 	auth_reload();
+ 
+-	/* addr is a valid, interesting address, find the domain name... */
+-	if (!use_ipaddr) {
+-		struct addrinfo *ai = NULL;
+-
+-		ai = client_resolve(tmp->ai_addr);
+-		if (ai) {
+-			client = client_compose(ai);
+-			nfs_freeaddrinfo(ai);
+-		}
++	/* addr is a valid address, find the domain name... */
++	ai = client_resolve(tmp->ai_addr);
++	if (ai) {
++		client = client_compose(ai);
++		nfs_freeaddrinfo(ai);
+ 	}
+ 	bp = buf; blen = sizeof(buf);
+ 	qword_add(&bp, &blen, "nfsd");
+ 	qword_add(&bp, &blen, ipaddr);
+ 	qword_adduint(&bp, &blen, time(0) + DEFAULT_TTL);
+-	if (use_ipaddr) {
++	if (use_ipaddr && client) {
+ 		memmove(ipaddr + 1, ipaddr, strlen(ipaddr) + 1);
+ 		ipaddr[0] = '$';
+ 		qword_add(&bp, &blen, ipaddr);
 
-> 
-> Cheers,
-> 
-> Alex
-> 
-> -- 
-> Alejandro Colomar
-> Linux man-pages comaintainer; https://www.kernel.org/doc/man-pages/
-> http://www.alejandro-colomar.es/
+
