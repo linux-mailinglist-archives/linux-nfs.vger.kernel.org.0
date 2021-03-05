@@ -2,25 +2,26 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 036BC32DE6B
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Mar 2021 01:44:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CEEF432DE6C
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Mar 2021 01:44:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231359AbhCEAof (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 Mar 2021 19:44:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39284 "EHLO mx2.suse.de"
+        id S231386AbhCEAoj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 Mar 2021 19:44:39 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39402 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230408AbhCEAof (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 4 Mar 2021 19:44:35 -0500
+        id S230408AbhCEAoj (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 4 Mar 2021 19:44:39 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 272E3AEC3;
-        Fri,  5 Mar 2021 00:44:34 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 67521AD29;
+        Fri,  5 Mar 2021 00:44:38 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
 To:     Steve Dickson <SteveD@RedHat.com>
 Date:   Fri, 05 Mar 2021 11:43:23 +1100
-Subject: [PATCH 1/7] mountd: reject unknown client IP when !use_ipaddr.
+Subject: [PATCH 2/7] mountd: Don't proactively add export info when fh info is
+ requested.
 Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Message-ID: <161490500398.15291.17202034046729749702.stgit@noble>
+Message-ID: <161490500399.15291.13593759203688291532.stgit@noble>
 In-Reply-To: <161490464823.15291.13358214486203434566.stgit@noble>
 References: <161490464823.15291.13358214486203434566.stgit@noble>
 User-Agent: StGit/0.23
@@ -33,62 +34,62 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: NeilBrown <neil@brown.name>
 
-When use_ipaddr is not in effect, an auth_unix_ip lookup request from
-the kernel for an unknown client will be rejected.
-When it IS in effect, these requests are always granted with the IP
-address being mapped to a string form of the address, preceded by a '$'.
+When an "nfsd.fh" request is received from the kernel, we map the
+file-handle prefix to a path name and report that (as required) and then
+also add "nfsd.export" information with export flags applicable to that
+path.
 
-This is inconsistent behaviour and could present a small information
-leak.
-It means that, for example, a SETCLIENT NFSv4 request may or may not
-succeed depending on an internal setting in rpc.mountd.
+This is not necessary and was added as a perceived optimisation.
+When updating data already in the kernel, it is unlikely to help as the
+kernel can be expected to ask for both details at much the same time.
+With NFSv3, new information is normally added by a MOUNT rpc request, so
+this is irrelevant.
+With NFSv4, the kernel requests the "nfsd.export" information when
+walking down from ROOT, *before* requesting the nfsd.fh information, so
+this "optimisation" causes unnecessary work.
 
-This is easily rectified by always checking if the client is known.
+A future patch will add logging of authentication requests, and this
+double-handling would result in extra unnecessary log messages.
+
+As this "optimisation" appears to have no practical value and some
+(small) cost, let's remove it.
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- support/export/cache.c |   17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ support/export/cache.c |    8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/support/export/cache.c b/support/export/cache.c
-index f1569afb558c..156ebfd4087c 100644
+index 156ebfd4087c..49a761749ec6 100644
 --- a/support/export/cache.c
 +++ b/support/export/cache.c
-@@ -114,6 +114,7 @@ static void auth_unix_ip(int f)
- 	char class[20];
- 	char ipaddr[INET6_ADDRSTRLEN + 1];
- 	char *client = NULL;
-+	struct addrinfo *ai = NULL;
- 	struct addrinfo *tmp = NULL;
- 	char buf[RPC_CHAN_BUF_SIZE], *bp;
- 	int blen;
-@@ -139,21 +140,17 @@ static void auth_unix_ip(int f)
+@@ -96,7 +96,6 @@ static bool path_lookup_error(int err)
+  * Record is terminated with newline.
+  *
+  */
+-static int cache_export_ent(char *buf, int buflen, char *domain, struct exportent *exp, char *path);
  
- 	auth_reload();
+ #define INITIAL_MANAGED_GROUPS 100
  
--	/* addr is a valid, interesting address, find the domain name... */
--	if (!use_ipaddr) {
--		struct addrinfo *ai = NULL;
--
--		ai = client_resolve(tmp->ai_addr);
--		if (ai) {
--			client = client_compose(ai);
--			nfs_freeaddrinfo(ai);
--		}
-+	/* addr is a valid address, find the domain name... */
-+	ai = client_resolve(tmp->ai_addr);
-+	if (ai) {
-+		client = client_compose(ai);
-+		nfs_freeaddrinfo(ai);
+@@ -870,18 +869,13 @@ static void nfsd_fh(int f)
+ 	    !is_mountpoint(found->e_mountpoint[0]?
+ 			   found->e_mountpoint:
+ 			   found->e_path)) {
+-		/* Cannot export this yet 
++		/* Cannot export this yet
+ 		 * should log a warning, but need to rate limit
+ 		   xlog(L_WARNING, "%s not exported as %d not a mountpoint",
+ 		   found->e_path, found->e_mountpoint);
+ 		 */
+ 		/* FIXME we need to make sure we re-visit this later */
+ 		goto out;
+-	} else if (cache_export_ent(buf, sizeof(buf), dom, found, found_path) < 0) {
+-		if (!path_lookup_error(errno))
+-			goto out;
+-		/* The kernel is saying the path is unexportable */
+-		found = NULL;
  	}
+ 
  	bp = buf; blen = sizeof(buf);
- 	qword_add(&bp, &blen, "nfsd");
- 	qword_add(&bp, &blen, ipaddr);
- 	qword_adduint(&bp, &blen, time(0) + DEFAULT_TTL);
--	if (use_ipaddr) {
-+	if (use_ipaddr && client) {
- 		memmove(ipaddr + 1, ipaddr, strlen(ipaddr) + 1);
- 		ipaddr[0] = '$';
- 		qword_add(&bp, &blen, ipaddr);
 
 
