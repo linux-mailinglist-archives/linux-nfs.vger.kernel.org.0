@@ -2,23 +2,23 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42BAF32FDD7
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Mar 2021 23:33:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE4A732FDDC
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Mar 2021 23:33:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbhCFWcr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S229955AbhCFWcr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Sat, 6 Mar 2021 17:32:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34590 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:34608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229955AbhCFWcc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 6 Mar 2021 17:32:32 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6D7186509D
-        for <linux-nfs@vger.kernel.org>; Sat,  6 Mar 2021 22:32:32 +0000 (UTC)
-Subject: [PATCH v2 33/43] NFSD: Add an xdr_stream-based encoder for NFSv2/3
- ACLs
+        id S229853AbhCFWci (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 6 Mar 2021 17:32:38 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 71F6F6509D
+        for <linux-nfs@vger.kernel.org>; Sat,  6 Mar 2021 22:32:38 +0000 (UTC)
+Subject: [PATCH v2 34/43] NFSD: Update the NFSv2 GETACL result encoder to use
+ struct xdr_stream
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Sat, 06 Mar 2021 17:32:31 -0500
-Message-ID: <161506995167.4312.487114288405058622.stgit@klimt.1015granger.net>
+Date:   Sat, 06 Mar 2021 17:32:37 -0500
+Message-ID: <161506995770.4312.6550531153478592976.stgit@klimt.1015granger.net>
 In-Reply-To: <161506956174.4312.17478383686779759287.stgit@klimt.1015granger.net>
 References: <161506956174.4312.17478383686779759287.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.0-5-g755c
@@ -31,104 +31,137 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs_common/nfsacl.c |   71 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/nfsacl.h |    3 ++
- 2 files changed, 74 insertions(+)
+ fs/nfsd/nfs2acl.c |   42 ++++++++++++++++--------------------------
+ fs/nfsd/nfsxdr.c  |   24 ++++++++++++++++++++++--
+ fs/nfsd/xdr.h     |    3 +++
+ 3 files changed, 41 insertions(+), 28 deletions(-)
 
-diff --git a/fs/nfs_common/nfsacl.c b/fs/nfs_common/nfsacl.c
-index 79c563c1a5e8..5a5bd85d08f8 100644
---- a/fs/nfs_common/nfsacl.c
-+++ b/fs/nfs_common/nfsacl.c
-@@ -136,6 +136,77 @@ int nfsacl_encode(struct xdr_buf *buf, unsigned int base, struct inode *inode,
- }
- EXPORT_SYMBOL_GPL(nfsacl_encode);
+diff --git a/fs/nfsd/nfs2acl.c b/fs/nfsd/nfs2acl.c
+index 855e17772eba..4a15ae6fdbc2 100644
+--- a/fs/nfsd/nfs2acl.c
++++ b/fs/nfsd/nfs2acl.c
+@@ -242,51 +242,41 @@ static int nfsaclsvc_decode_accessargs(struct svc_rqst *rqstp, __be32 *p)
+ /* GETACL */
+ static int nfsaclsvc_encode_getaclres(struct svc_rqst *rqstp, __be32 *p)
+ {
++	struct xdr_stream *xdr = &rqstp->rq_res_stream;
+ 	struct nfsd3_getaclres *resp = rqstp->rq_resp;
+ 	struct dentry *dentry = resp->fh.fh_dentry;
+ 	struct inode *inode;
+-	struct kvec *head = rqstp->rq_res.head;
+-	unsigned int base;
+-	int n;
+ 	int w;
  
+-	*p++ = resp->status;
+-	if (resp->status != nfs_ok)
+-		return xdr_ressize_check(rqstp, p);
++	if (!svcxdr_encode_stat(xdr, resp->status))
++		return 0;
+ 
+-	/*
+-	 * Since this is version 2, the check for nfserr in
+-	 * nfsd_dispatch actually ensures the following cannot happen.
+-	 * However, it seems fragile to depend on that.
+-	 */
+ 	if (dentry == NULL || d_really_is_negative(dentry))
+-		return 0;
++		return 1;
+ 	inode = d_inode(dentry);
+ 
+-	p = nfs2svc_encode_fattr(rqstp, p, &resp->fh, &resp->stat);
+-	*p++ = htonl(resp->mask);
+-	if (!xdr_ressize_check(rqstp, p))
++	if (!svcxdr_encode_fattr(rqstp, xdr, &resp->fh, &resp->stat))
++		return 0;
++	if (xdr_stream_encode_u32(xdr, resp->mask) < 0)
+ 		return 0;
+-	base = (char *)p - (char *)head->iov_base;
+ 
+ 	rqstp->rq_res.page_len = w = nfsacl_size(
+ 		(resp->mask & NFS_ACL)   ? resp->acl_access  : NULL,
+ 		(resp->mask & NFS_DFACL) ? resp->acl_default : NULL);
+ 	while (w > 0) {
+ 		if (!*(rqstp->rq_next_page++))
+-			return 0;
++			return 1;
+ 		w -= PAGE_SIZE;
+ 	}
+ 
+-	n = nfsacl_encode(&rqstp->rq_res, base, inode,
+-			  resp->acl_access,
+-			  resp->mask & NFS_ACL, 0);
+-	if (n > 0)
+-		n = nfsacl_encode(&rqstp->rq_res, base + n, inode,
+-				  resp->acl_default,
+-				  resp->mask & NFS_DFACL,
+-				  NFS_ACL_DEFAULT);
+-	return (n > 0);
++	if (!nfs_stream_encode_acl(xdr, inode, resp->acl_access,
++				   resp->mask & NFS_ACL, 0))
++		return 0;
++	if (!nfs_stream_encode_acl(xdr, inode, resp->acl_default,
++				   resp->mask & NFS_DFACL, NFS_ACL_DEFAULT))
++		return 0;
++
++	return 1;
+ }
+ 
+ static int nfsaclsvc_encode_attrstatres(struct svc_rqst *rqstp, __be32 *p)
+diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
+index 5df6f00d76fd..1fed3a8deb18 100644
+--- a/fs/nfsd/nfsxdr.c
++++ b/fs/nfsd/nfsxdr.c
+@@ -26,7 +26,16 @@ static const u32 nfs_ftypes[] = {
+  * Basic NFSv2 data types (RFC 1094 Section 2.3)
+  */
+ 
+-static bool
 +/**
-+ * nfs_stream_encode_acl - Encode an NFSv3 ACL
-+ *
-+ * @xdr: an xdr_stream positioned to receive an encoded ACL
-+ * @inode: inode of file whose ACL this is
-+ * @acl: posix_acl to encode
-+ * @encode_entries: whether to encode ACEs as well
-+ * @typeflag: ACL type: NFS_ACL_DEFAULT or zero
++ * svcxdr_encode_stat - Encode an NFSv2 status code
++ * @xdr: XDR stream
++ * @status: status value to encode
 + *
 + * Return values:
-+ *   %false: The ACL could not be encoded
-+ *   %true: @xdr is advanced to the next available position
++ *   %false: Send buffer space was exhausted
++ *   %true: Success
 + */
-+bool nfs_stream_encode_acl(struct xdr_stream *xdr, struct inode *inode,
-+			   struct posix_acl *acl, int encode_entries,
-+			   int typeflag)
-+{
-+	const size_t elem_size = XDR_UNIT * 3;
-+	u32 entries = (acl && acl->a_count) ? max_t(int, acl->a_count, 4) : 0;
-+	struct nfsacl_encode_desc nfsacl_desc = {
-+		.desc = {
-+			.elem_size = elem_size,
-+			.array_len = encode_entries ? entries : 0,
-+			.xcode = xdr_nfsace_encode,
-+		},
-+		.acl = acl,
-+		.typeflag = typeflag,
-+		.uid = inode->i_uid,
-+		.gid = inode->i_gid,
-+	};
-+	struct nfsacl_simple_acl aclbuf;
-+	unsigned int base;
-+	int err;
-+
-+	if (entries > NFS_ACL_MAX_ENTRIES)
-+		return false;
-+	if (xdr_stream_encode_u32(xdr, entries) < 0)
-+		return false;
-+
-+	if (encode_entries && acl && acl->a_count == 3) {
-+		struct posix_acl *acl2 = &aclbuf.acl;
-+
-+		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
-+		 * invoked in contexts where a memory allocation failure is
-+		 * fatal.  Fortunately this fake ACL is small enough to
-+		 * construct on the stack. */
-+		posix_acl_init(acl2, 4);
-+
-+		/* Insert entries in canonical order: other orders seem
-+		 to confuse Solaris VxFS. */
-+		acl2->a_entries[0] = acl->a_entries[0];  /* ACL_USER_OBJ */
-+		acl2->a_entries[1] = acl->a_entries[1];  /* ACL_GROUP_OBJ */
-+		acl2->a_entries[2] = acl->a_entries[1];  /* ACL_MASK */
-+		acl2->a_entries[2].e_tag = ACL_MASK;
-+		acl2->a_entries[3] = acl->a_entries[2];  /* ACL_OTHER */
-+		nfsacl_desc.acl = acl2;
-+	}
-+
-+	base = xdr_stream_pos(xdr);
-+	if (!xdr_reserve_space(xdr, XDR_UNIT +
-+			       elem_size * nfsacl_desc.desc.array_len))
-+		return false;
-+	err = xdr_encode_array2(xdr->buf, base, &nfsacl_desc.desc);
-+	if (err)
-+		return false;
-+
-+	return true;
-+}
-+EXPORT_SYMBOL_GPL(nfs_stream_encode_acl);
-+
-+
- struct nfsacl_decode_desc {
- 	struct xdr_array2_desc desc;
- 	unsigned int count;
-diff --git a/include/linux/nfsacl.h b/include/linux/nfsacl.h
-index 0ba99c513649..8e76a79cdc6a 100644
---- a/include/linux/nfsacl.h
-+++ b/include/linux/nfsacl.h
-@@ -41,5 +41,8 @@ nfsacl_decode(struct xdr_buf *buf, unsigned int base, unsigned int *aclcnt,
- extern bool
- nfs_stream_decode_acl(struct xdr_stream *xdr, unsigned int *aclcnt,
- 		      struct posix_acl **pacl);
-+extern bool
-+nfs_stream_encode_acl(struct xdr_stream *xdr, struct inode *inode,
-+		      struct posix_acl *acl, int encode_entries, int typeflag);
++bool
+ svcxdr_encode_stat(struct xdr_stream *xdr, __be32 status)
+ {
+ 	__be32 *p;
+@@ -250,7 +259,18 @@ encode_fattr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp,
+ 	return p;
+ }
  
- #endif  /* __LINUX_NFSACL_H */
+-static bool
++/**
++ * svcxdr_encode_fattr - Encode NFSv2 file attributes
++ * @rqstp: Context of a completed RPC transaction
++ * @xdr: XDR stream
++ * @fhp: File handle to encode
++ * @stat: Attributes to encode
++ *
++ * Return values:
++ *   %false: Send buffer space was exhausted
++ *   %true: Success
++ */
++bool
+ svcxdr_encode_fattr(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 		    const struct svc_fh *fhp, const struct kstat *stat)
+ {
+diff --git a/fs/nfsd/xdr.h b/fs/nfsd/xdr.h
+index bfffcb70a5f8..ad7f7eabf41a 100644
+--- a/fs/nfsd/xdr.h
++++ b/fs/nfsd/xdr.h
+@@ -170,5 +170,8 @@ void nfssvc_release_readres(struct svc_rqst *rqstp);
+ /* Helper functions for NFSv2 ACL code */
+ __be32 *nfs2svc_encode_fattr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp, struct kstat *stat);
+ bool svcxdr_decode_fhandle(struct xdr_stream *xdr, struct svc_fh *fhp);
++bool svcxdr_encode_stat(struct xdr_stream *xdr, __be32 status);
++bool svcxdr_encode_fattr(struct svc_rqst *rqstp, struct xdr_stream *xdr,
++			 const struct svc_fh *fhp, const struct kstat *stat);
+ 
+ #endif /* LINUX_NFSD_H */
 
 
