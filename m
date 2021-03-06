@@ -2,23 +2,22 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4C8432FDDE
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Mar 2021 23:33:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48CE532FDE2
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Mar 2021 23:33:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229709AbhCFWdW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S229869AbhCFWdW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Sat, 6 Mar 2021 17:33:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34730 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:34754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229869AbhCFWdO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 6 Mar 2021 17:33:14 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 843B1650D0
-        for <linux-nfs@vger.kernel.org>; Sat,  6 Mar 2021 22:33:14 +0000 (UTC)
-Subject: [PATCH v2 40/43] NFSD: Update the NFSv3 SETACL result encoder to use
- struct xdr_stream
+        id S229980AbhCFWdU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 6 Mar 2021 17:33:20 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 87A9F650D0
+        for <linux-nfs@vger.kernel.org>; Sat,  6 Mar 2021 22:33:20 +0000 (UTC)
+Subject: [PATCH v2 41/43] NFSD: Clean up after updating NFSv3 ACL encoders
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Sat, 06 Mar 2021 17:33:13 -0500
-Message-ID: <161506999379.4312.6200804985899934848.stgit@klimt.1015granger.net>
+Date:   Sat, 06 Mar 2021 17:33:19 -0500
+Message-ID: <161506999979.4312.10999325608617602061.stgit@klimt.1015granger.net>
 In-Reply-To: <161506956174.4312.17478383686779759287.stgit@klimt.1015granger.net>
 References: <161506956174.4312.17478383686779759287.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.0-5-g755c
@@ -31,27 +30,133 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs3acl.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/nfsd/nfs3xdr.c |   86 -----------------------------------------------------
+ fs/nfsd/xdr3.h    |    2 -
+ 2 files changed, 88 deletions(-)
 
-diff --git a/fs/nfsd/nfs3acl.c b/fs/nfsd/nfs3acl.c
-index 11991026ab3a..a1591feeea22 100644
---- a/fs/nfsd/nfs3acl.c
-+++ b/fs/nfsd/nfs3acl.c
-@@ -219,11 +219,11 @@ static int nfs3svc_encode_getaclres(struct svc_rqst *rqstp, __be32 *p)
- /* SETACL */
- static int nfs3svc_encode_setaclres(struct svc_rqst *rqstp, __be32 *p)
- {
-+	struct xdr_stream *xdr = &rqstp->rq_res_stream;
- 	struct nfsd3_attrstat *resp = rqstp->rq_resp;
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index 941740a97f8f..fcfa0d611b93 100644
+--- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -48,13 +48,6 @@ static const u32 nfs3_ftypes[] = {
+  * Basic NFSv3 data types (RFC 1813 Sections 2.5 and 2.6)
+  */
  
--	*p++ = resp->status;
--	p = nfs3svc_encode_post_op_attr(rqstp, p, &resp->fh);
--	return xdr_ressize_check(rqstp, p);
-+	return svcxdr_encode_nfsstat3(xdr, resp->status) &&
-+		svcxdr_encode_post_op_attr(rqstp, xdr, &resp->fh);
+-static __be32 *
+-encode_time3(__be32 *p, struct timespec64 *time)
+-{
+-	*p++ = htonl((u32) time->tv_sec); *p++ = htonl(time->tv_nsec);
+-	return p;
+-}
+-
+ static __be32 *
+ encode_nfstime3(__be32 *p, const struct timespec64 *time)
+ {
+@@ -396,54 +389,6 @@ svcxdr_encode_fattr3(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 	return true;
  }
  
+-static __be32 *encode_fsid(__be32 *p, struct svc_fh *fhp)
+-{
+-	u64 f;
+-	switch(fsid_source(fhp)) {
+-	default:
+-	case FSIDSOURCE_DEV:
+-		p = xdr_encode_hyper(p, (u64)huge_encode_dev
+-				     (fhp->fh_dentry->d_sb->s_dev));
+-		break;
+-	case FSIDSOURCE_FSID:
+-		p = xdr_encode_hyper(p, (u64) fhp->fh_export->ex_fsid);
+-		break;
+-	case FSIDSOURCE_UUID:
+-		f = ((u64*)fhp->fh_export->ex_uuid)[0];
+-		f ^= ((u64*)fhp->fh_export->ex_uuid)[1];
+-		p = xdr_encode_hyper(p, f);
+-		break;
+-	}
+-	return p;
+-}
+-
+-static __be32 *
+-encode_fattr3(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp,
+-	      struct kstat *stat)
+-{
+-	struct user_namespace *userns = nfsd_user_namespace(rqstp);
+-	*p++ = htonl(nfs3_ftypes[(stat->mode & S_IFMT) >> 12]);
+-	*p++ = htonl((u32) (stat->mode & S_IALLUGO));
+-	*p++ = htonl((u32) stat->nlink);
+-	*p++ = htonl((u32) from_kuid_munged(userns, stat->uid));
+-	*p++ = htonl((u32) from_kgid_munged(userns, stat->gid));
+-	if (S_ISLNK(stat->mode) && stat->size > NFS3_MAXPATHLEN) {
+-		p = xdr_encode_hyper(p, (u64) NFS3_MAXPATHLEN);
+-	} else {
+-		p = xdr_encode_hyper(p, (u64) stat->size);
+-	}
+-	p = xdr_encode_hyper(p, ((u64)stat->blocks) << 9);
+-	*p++ = htonl((u32) MAJOR(stat->rdev));
+-	*p++ = htonl((u32) MINOR(stat->rdev));
+-	p = encode_fsid(p, fhp);
+-	p = xdr_encode_hyper(p, stat->ino);
+-	p = encode_time3(p, &stat->atime);
+-	p = encode_time3(p, &stat->mtime);
+-	p = encode_time3(p, &stat->ctime);
+-
+-	return p;
+-}
+-
+ static bool
+ svcxdr_encode_wcc_attr(struct xdr_stream *xdr, const struct svc_fh *fhp)
+ {
+@@ -512,37 +457,6 @@ svcxdr_encode_post_op_attr(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 	return xdr_stream_encode_item_absent(xdr) > 0;
+ }
+ 
+-/*
+- * Encode post-operation attributes.
+- * The inode may be NULL if the call failed because of a stale file
+- * handle. In this case, no attributes are returned.
+- */
+-static __be32 *
+-encode_post_op_attr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp)
+-{
+-	struct dentry *dentry = fhp->fh_dentry;
+-	if (!fhp->fh_no_wcc && dentry && d_really_is_positive(dentry)) {
+-	        __be32 err;
+-		struct kstat stat;
+-
+-		err = fh_getattr(fhp, &stat);
+-		if (!err) {
+-			*p++ = xdr_one;		/* attributes follow */
+-			lease_get_mtime(d_inode(dentry), &stat.mtime);
+-			return encode_fattr3(rqstp, p, fhp, &stat);
+-		}
+-	}
+-	*p++ = xdr_zero;
+-	return p;
+-}
+-
+-/* Helper for NFSv3 ACLs */
+-__be32 *
+-nfs3svc_encode_post_op_attr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp)
+-{
+-	return encode_post_op_attr(rqstp, p, fhp);
+-}
+-
  /*
+  * Encode weak cache consistency data
+  */
+diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
+index 746c5f79964f..933008382bbe 100644
+--- a/fs/nfsd/xdr3.h
++++ b/fs/nfsd/xdr3.h
+@@ -305,8 +305,6 @@ int nfs3svc_encode_entry3(void *data, const char *name, int namlen,
+ int nfs3svc_encode_entryplus3(void *data, const char *name, int namlen,
+ 			      loff_t offset, u64 ino, unsigned int d_type);
+ /* Helper functions for NFSv3 ACL code */
+-__be32 *nfs3svc_encode_post_op_attr(struct svc_rqst *rqstp, __be32 *p,
+-				struct svc_fh *fhp);
+ bool svcxdr_decode_nfs_fh3(struct xdr_stream *xdr, struct svc_fh *fhp);
+ bool svcxdr_encode_nfsstat3(struct xdr_stream *xdr, __be32 status);
+ bool svcxdr_encode_post_op_attr(struct svc_rqst *rqstp, struct xdr_stream *xdr,
 
 
