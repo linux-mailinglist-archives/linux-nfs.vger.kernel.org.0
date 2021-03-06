@@ -2,22 +2,23 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48CE532FDE2
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Mar 2021 23:33:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99D9C32FDE4
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Mar 2021 23:34:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229869AbhCFWdW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 6 Mar 2021 17:33:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34754 "EHLO mail.kernel.org"
+        id S229758AbhCFWdy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 6 Mar 2021 17:33:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229980AbhCFWdU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 6 Mar 2021 17:33:20 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 87A9F650D0
-        for <linux-nfs@vger.kernel.org>; Sat,  6 Mar 2021 22:33:20 +0000 (UTC)
-Subject: [PATCH v2 41/43] NFSD: Clean up after updating NFSv3 ACL encoders
+        id S229839AbhCFWd0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 6 Mar 2021 17:33:26 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8AF896509D
+        for <linux-nfs@vger.kernel.org>; Sat,  6 Mar 2021 22:33:26 +0000 (UTC)
+Subject: [PATCH v2 42/43] NFSD: Add a tracepoint to record directory entry
+ encoding
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Sat, 06 Mar 2021 17:33:19 -0500
-Message-ID: <161506999979.4312.10999325608617602061.stgit@klimt.1015granger.net>
+Date:   Sat, 06 Mar 2021 17:33:25 -0500
+Message-ID: <161507000581.4312.9786948538926639585.stgit@klimt.1015granger.net>
 In-Reply-To: <161506956174.4312.17478383686779759287.stgit@klimt.1015granger.net>
 References: <161506956174.4312.17478383686779759287.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.0-5-g755c
@@ -28,135 +29,94 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Enable watching the progress of directory encoding to capture the
+timing of any issues with reading or encoding a directory. The
+new tracepoint captures dirent encoding for all NFS versions.
+
+For example, here's what a few NFSv4 directory entries might look
+like:
+
+nfsd-989   [002]   468.596265: nfsd_dirent:          fh_hash=0x5d162594 ino=2 name=.
+nfsd-989   [002]   468.596267: nfsd_dirent:          fh_hash=0x5d162594 ino=1 name=..
+nfsd-989   [002]   468.596299: nfsd_dirent:          fh_hash=0x5d162594 ino=3827 name=zlib.c
+nfsd-989   [002]   468.596325: nfsd_dirent:          fh_hash=0x5d162594 ino=3811 name=xdiff
+nfsd-989   [002]   468.596351: nfsd_dirent:          fh_hash=0x5d162594 ino=3810 name=xdiff-interface.h
+nfsd-989   [002]   468.596377: nfsd_dirent:          fh_hash=0x5d162594 ino=3809 name=xdiff-interface.c
+
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs3xdr.c |   86 -----------------------------------------------------
- fs/nfsd/xdr3.h    |    2 -
- 2 files changed, 88 deletions(-)
+ fs/nfsd/trace.h |   24 ++++++++++++++++++++++++
+ fs/nfsd/vfs.c   |    9 ++++++---
+ 2 files changed, 30 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-index 941740a97f8f..fcfa0d611b93 100644
---- a/fs/nfsd/nfs3xdr.c
-+++ b/fs/nfsd/nfs3xdr.c
-@@ -48,13 +48,6 @@ static const u32 nfs3_ftypes[] = {
-  * Basic NFSv3 data types (RFC 1813 Sections 2.5 and 2.6)
-  */
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index 92a0973dd671..27a93ebd1d80 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -391,6 +391,30 @@ DEFINE_EVENT(nfsd_err_class, nfsd_##name,	\
+ DEFINE_NFSD_ERR_EVENT(read_err);
+ DEFINE_NFSD_ERR_EVENT(write_err);
  
--static __be32 *
--encode_time3(__be32 *p, struct timespec64 *time)
--{
--	*p++ = htonl((u32) time->tv_sec); *p++ = htonl(time->tv_nsec);
--	return p;
--}
--
- static __be32 *
- encode_nfstime3(__be32 *p, const struct timespec64 *time)
- {
-@@ -396,54 +389,6 @@ svcxdr_encode_fattr3(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 	return true;
++TRACE_EVENT(nfsd_dirent,
++	TP_PROTO(struct svc_fh *fhp,
++		 u64 ino,
++		 const char *name,
++		 int namlen),
++	TP_ARGS(fhp, ino, name, namlen),
++	TP_STRUCT__entry(
++		__field(u32, fh_hash)
++		__field(u64, ino)
++		__field(int, len)
++		__dynamic_array(unsigned char, name, namlen)
++	),
++	TP_fast_assign(
++		__entry->fh_hash = fhp ? knfsd_fh_hash(&fhp->fh_handle) : 0;
++		__entry->ino = ino;
++		__entry->len = namlen;
++		memcpy(__get_str(name), name, namlen);
++		__assign_str(name, name);
++	),
++	TP_printk("fh_hash=0x%08x ino=%llu name=%.*s",
++		__entry->fh_hash, __entry->ino,
++		__entry->len, __get_str(name))
++)
++
+ #include "state.h"
+ #include "filecache.h"
+ #include "vfs.h"
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index fd6be35a1642..15adf1f6ab21 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1968,8 +1968,9 @@ static int nfsd_buffered_filldir(struct dir_context *ctx, const char *name,
+ 	return 0;
  }
  
--static __be32 *encode_fsid(__be32 *p, struct svc_fh *fhp)
--{
--	u64 f;
--	switch(fsid_source(fhp)) {
--	default:
--	case FSIDSOURCE_DEV:
--		p = xdr_encode_hyper(p, (u64)huge_encode_dev
--				     (fhp->fh_dentry->d_sb->s_dev));
--		break;
--	case FSIDSOURCE_FSID:
--		p = xdr_encode_hyper(p, (u64) fhp->fh_export->ex_fsid);
--		break;
--	case FSIDSOURCE_UUID:
--		f = ((u64*)fhp->fh_export->ex_uuid)[0];
--		f ^= ((u64*)fhp->fh_export->ex_uuid)[1];
--		p = xdr_encode_hyper(p, f);
--		break;
--	}
--	return p;
--}
--
--static __be32 *
--encode_fattr3(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp,
--	      struct kstat *stat)
--{
--	struct user_namespace *userns = nfsd_user_namespace(rqstp);
--	*p++ = htonl(nfs3_ftypes[(stat->mode & S_IFMT) >> 12]);
--	*p++ = htonl((u32) (stat->mode & S_IALLUGO));
--	*p++ = htonl((u32) stat->nlink);
--	*p++ = htonl((u32) from_kuid_munged(userns, stat->uid));
--	*p++ = htonl((u32) from_kgid_munged(userns, stat->gid));
--	if (S_ISLNK(stat->mode) && stat->size > NFS3_MAXPATHLEN) {
--		p = xdr_encode_hyper(p, (u64) NFS3_MAXPATHLEN);
--	} else {
--		p = xdr_encode_hyper(p, (u64) stat->size);
--	}
--	p = xdr_encode_hyper(p, ((u64)stat->blocks) << 9);
--	*p++ = htonl((u32) MAJOR(stat->rdev));
--	*p++ = htonl((u32) MINOR(stat->rdev));
--	p = encode_fsid(p, fhp);
--	p = xdr_encode_hyper(p, stat->ino);
--	p = encode_time3(p, &stat->atime);
--	p = encode_time3(p, &stat->mtime);
--	p = encode_time3(p, &stat->ctime);
--
--	return p;
--}
--
- static bool
- svcxdr_encode_wcc_attr(struct xdr_stream *xdr, const struct svc_fh *fhp)
+-static __be32 nfsd_buffered_readdir(struct file *file, nfsd_filldir_t func,
+-				    struct readdir_cd *cdp, loff_t *offsetp)
++static __be32 nfsd_buffered_readdir(struct file *file, struct svc_fh *fhp,
++				    nfsd_filldir_t func, struct readdir_cd *cdp,
++				    loff_t *offsetp)
  {
-@@ -512,37 +457,6 @@ svcxdr_encode_post_op_attr(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 	return xdr_stream_encode_item_absent(xdr) > 0;
- }
+ 	struct buffered_dirent *de;
+ 	int host_err;
+@@ -2015,6 +2016,8 @@ static __be32 nfsd_buffered_readdir(struct file *file, nfsd_filldir_t func,
+ 			if (cdp->err != nfs_ok)
+ 				break;
  
--/*
-- * Encode post-operation attributes.
-- * The inode may be NULL if the call failed because of a stale file
-- * handle. In this case, no attributes are returned.
-- */
--static __be32 *
--encode_post_op_attr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp)
--{
--	struct dentry *dentry = fhp->fh_dentry;
--	if (!fhp->fh_no_wcc && dentry && d_really_is_positive(dentry)) {
--	        __be32 err;
--		struct kstat stat;
--
--		err = fh_getattr(fhp, &stat);
--		if (!err) {
--			*p++ = xdr_one;		/* attributes follow */
--			lease_get_mtime(d_inode(dentry), &stat.mtime);
--			return encode_fattr3(rqstp, p, fhp, &stat);
--		}
--	}
--	*p++ = xdr_zero;
--	return p;
--}
--
--/* Helper for NFSv3 ACLs */
--__be32 *
--nfs3svc_encode_post_op_attr(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp)
--{
--	return encode_post_op_attr(rqstp, p, fhp);
--}
--
- /*
-  * Encode weak cache consistency data
-  */
-diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
-index 746c5f79964f..933008382bbe 100644
---- a/fs/nfsd/xdr3.h
-+++ b/fs/nfsd/xdr3.h
-@@ -305,8 +305,6 @@ int nfs3svc_encode_entry3(void *data, const char *name, int namlen,
- int nfs3svc_encode_entryplus3(void *data, const char *name, int namlen,
- 			      loff_t offset, u64 ino, unsigned int d_type);
- /* Helper functions for NFSv3 ACL code */
--__be32 *nfs3svc_encode_post_op_attr(struct svc_rqst *rqstp, __be32 *p,
--				struct svc_fh *fhp);
- bool svcxdr_decode_nfs_fh3(struct xdr_stream *xdr, struct svc_fh *fhp);
- bool svcxdr_encode_nfsstat3(struct xdr_stream *xdr, __be32 status);
- bool svcxdr_encode_post_op_attr(struct svc_rqst *rqstp, struct xdr_stream *xdr,
++			trace_nfsd_dirent(fhp, de->ino, de->name, de->namlen);
++
+ 			reclen = ALIGN(sizeof(*de) + de->namlen,
+ 				       sizeof(u64));
+ 			size -= reclen;
+@@ -2062,7 +2065,7 @@ nfsd_readdir(struct svc_rqst *rqstp, struct svc_fh *fhp, loff_t *offsetp,
+ 		goto out_close;
+ 	}
+ 
+-	err = nfsd_buffered_readdir(file, func, cdp, offsetp);
++	err = nfsd_buffered_readdir(file, fhp, func, cdp, offsetp);
+ 
+ 	if (err == nfserr_eof || err == nfserr_toosmall)
+ 		err = nfs_ok; /* can still be found in ->err */
 
 
