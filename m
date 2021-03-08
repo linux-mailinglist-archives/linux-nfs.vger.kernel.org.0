@@ -2,39 +2,33 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3E8333177E
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Mar 2021 20:43:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 244A7331782
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Mar 2021 20:44:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230250AbhCHTnM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 8 Mar 2021 14:43:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51026 "EHLO mail.kernel.org"
+        id S231263AbhCHTno (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 8 Mar 2021 14:43:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230342AbhCHTm7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 8 Mar 2021 14:42:59 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B55BA652B5;
-        Mon,  8 Mar 2021 19:42:58 +0000 (UTC)
+        id S231219AbhCHTn3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 8 Mar 2021 14:43:29 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CBD66652B2
+        for <linux-nfs@vger.kernel.org>; Mon,  8 Mar 2021 19:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615232579;
-        bh=wF7CqdMQYwmdlB5JCqNIxSPxz4U5thdgyXyv83AMSwY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VahfjflxUur9YXgMP+0WZNDboMrVQPwdnt3be9u6uAtluhq6Cfl7RVV47OwZ1qor1
-         ATXqUdPYk8kE/nLQ/2RyvG3+E02jR99iZo3gcyKNGYKviGw02BzzX3CFBllP65zPZK
-         1YpvX8etdPB1/QwzYbUZ9UqxP8ogmZVHd3aV8yOzYJFbasGTftk2v/9yxPVvUB6tQw
-         GivmdpGtijwT3iPsDrbNKzwQQYIu2X92jn+u72NmQqB+Wj0XjXb0N9c70gbwVUUVY3
-         6G989DrD9RHDVaQxPXDaMZ54ACno5tN1F4mv7q6qe58O0eakb43xSD1T4TPJTcJoGf
-         llocpMNBb/YGA==
+        s=k20201202; t=1615232609;
+        bh=3dls5Lehj3HTNjGCPSxEDhbMyenje5Grp4Pgb6i4Nn4=;
+        h=From:To:Subject:Date:From;
+        b=pW4ehFUhoYsXBXaSr8SZfP395aTsmxW7MC0gpBxXtarcbCUWzIO2qzoNWyEt/dT+n
+         M+tDiYwbYDeVA66by6z1UZgngv9f4k28w6hMb46Oq+zBwOz5iz2k8TiWvlEawFJqS1
+         GIbodV9Rxvgp1ENb8w15VAzc7Itv5jnZwjTQ38aHcI6hQdfRj8fHwyKtbuvRU9z+/x
+         3u7tWFaRY+TKazv9lbg/uwdPpVepi85j5XiKvYiETLLAYlCb2imYR1lD0UJNiahTHL
+         P3EJzfZG5zXOVZ0kEHJj0bkux3IRRIIwq0fNdU/UpvdcMf/Dm4DSpjqFvrBaXRmk10
+         yKoduE3mHQzeA==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Cc:     Geert Jansen <gerardu@amazon.com>
-Subject: [PATCH v2 5/5] NFS: Fix open coded versions of nfs_set_cache_invalid() in NFSv4
-Date:   Mon,  8 Mar 2021 14:42:55 -0500
-Message-Id: <20210308194255.7873-5-trondmy@kernel.org>
+Subject: [PATCH] NFS: Fix up incorrect documentation
+Date:   Mon,  8 Mar 2021 14:43:27 -0500
+Message-Id: <20210308194327.7969-1-trondmy@kernel.org>
 X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210308194255.7873-4-trondmy@kernel.org>
-References: <20210308194255.7873-1-trondmy@kernel.org>
- <20210308194255.7873-2-trondmy@kernel.org>
- <20210308194255.7873-3-trondmy@kernel.org>
- <20210308194255.7873-4-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -43,130 +37,102 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-nfs_set_cache_invalid() has code to handle delegations, and other
-optimisations, so let's use it when appropriate.
-
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/inode.c     |  1 +
- fs/nfs/nfs42proc.c | 12 +++++++-----
- fs/nfs/nfs4proc.c  | 28 ++++++++++++----------------
- 3 files changed, 20 insertions(+), 21 deletions(-)
+ fs/nfs/delegation.c | 8 ++++----
+ fs/nfs/io.c         | 2 +-
+ fs/nfs/nfs4state.c  | 2 +-
+ fs/nfs/pagelist.c   | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index eb1ae77f411a..a7fb076a5f44 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -229,6 +229,7 @@ void nfs_set_cache_invalid(struct inode *inode, unsigned long flags)
- 	if (flags & NFS_INO_INVALID_DATA)
- 		nfs_fscache_invalidate(inode);
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 04bf8066980c..6a29de964268 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -114,7 +114,7 @@ nfs4_do_check_delegation(struct inode *inode, fmode_t flags, bool mark)
+ 	return ret;
  }
-+EXPORT_SYMBOL_GPL(nfs_set_cache_invalid);
- 
- /*
-  * Invalidate the local caches
-diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index f3fd935620fc..094024b0aca1 100644
---- a/fs/nfs/nfs42proc.c
-+++ b/fs/nfs/nfs42proc.c
-@@ -357,13 +357,15 @@ static ssize_t _nfs42_proc_copy(struct file *src,
- 	truncate_pagecache_range(dst_inode, pos_dst,
- 				 pos_dst + res->write_res.count);
- 	spin_lock(&dst_inode->i_lock);
--	NFS_I(dst_inode)->cache_validity |= (NFS_INO_REVAL_PAGECACHE |
--			NFS_INO_REVAL_FORCED | NFS_INO_INVALID_SIZE |
--			NFS_INO_INVALID_ATTR | NFS_INO_INVALID_DATA);
-+	nfs_set_cache_invalid(
-+		dst_inode, NFS_INO_REVAL_PAGECACHE | NFS_INO_REVAL_FORCED |
-+				   NFS_INO_INVALID_SIZE | NFS_INO_INVALID_ATTR |
-+				   NFS_INO_INVALID_DATA);
- 	spin_unlock(&dst_inode->i_lock);
- 	spin_lock(&src_inode->i_lock);
--	NFS_I(src_inode)->cache_validity |= (NFS_INO_REVAL_PAGECACHE |
--			NFS_INO_REVAL_FORCED | NFS_INO_INVALID_ATIME);
-+	nfs_set_cache_invalid(src_inode, NFS_INO_REVAL_PAGECACHE |
-+						 NFS_INO_REVAL_FORCED |
-+						 NFS_INO_INVALID_ATIME);
- 	spin_unlock(&src_inode->i_lock);
- 	status = res->write_res.count;
- out:
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 2c8fdb911361..39d9552b7495 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -1169,14 +1169,14 @@ int nfs4_call_sync(struct rpc_clnt *clnt,
- static void
- nfs4_inc_nlink_locked(struct inode *inode)
- {
--	NFS_I(inode)->cache_validity |= NFS_INO_INVALID_OTHER;
-+	nfs_set_cache_invalid(inode, NFS_INO_INVALID_OTHER);
- 	inc_nlink(inode);
+ /**
+- * nfs_have_delegation - check if inode has a delegation, mark it
++ * nfs4_have_delegation - check if inode has a delegation, mark it
+  * NFS_DELEGATION_REFERENCED if there is one.
+  * @inode: inode to check
+  * @flags: delegation types to check for
+@@ -674,7 +674,7 @@ void nfs_inode_evict_delegation(struct inode *inode)
  }
  
- static void
- nfs4_dec_nlink_locked(struct inode *inode)
- {
--	NFS_I(inode)->cache_validity |= NFS_INO_INVALID_OTHER;
-+	nfs_set_cache_invalid(inode, NFS_INO_INVALID_OTHER);
- 	drop_nlink(inode);
+ /**
+- * nfs_inode_return_delegation - synchronously return a delegation
++ * nfs4_inode_return_delegation - synchronously return a delegation
+  * @inode: inode to process
+  *
+  * This routine will always flush any dirty data to disk on the
+@@ -697,7 +697,7 @@ int nfs4_inode_return_delegation(struct inode *inode)
  }
  
-@@ -1187,35 +1187,31 @@ nfs4_update_changeattr_locked(struct inode *inode,
- {
- 	struct nfs_inode *nfsi = NFS_I(inode);
- 
--	nfsi->cache_validity |= NFS_INO_INVALID_CTIME
--		| NFS_INO_INVALID_MTIME
--		| cache_validity;
-+	cache_validity |= NFS_INO_INVALID_CTIME | NFS_INO_INVALID_MTIME;
- 
- 	if (cinfo->atomic && cinfo->before == inode_peek_iversion_raw(inode)) {
- 		nfsi->cache_validity &= ~NFS_INO_REVAL_PAGECACHE;
- 		nfsi->attrtimeo_timestamp = jiffies;
- 	} else {
- 		if (S_ISDIR(inode->i_mode)) {
--			nfsi->cache_validity |= NFS_INO_INVALID_DATA;
-+			cache_validity |= NFS_INO_INVALID_DATA;
- 			nfs_force_lookup_revalidate(inode);
- 		} else {
- 			if (!NFS_PROTO(inode)->have_delegation(inode,
- 							       FMODE_READ))
--				nfsi->cache_validity |= NFS_INO_REVAL_PAGECACHE;
-+				cache_validity |= NFS_INO_REVAL_PAGECACHE;
- 		}
- 
- 		if (cinfo->before != inode_peek_iversion_raw(inode))
--			nfsi->cache_validity |= NFS_INO_INVALID_ACCESS |
--						NFS_INO_INVALID_ACL |
--						NFS_INO_INVALID_XATTR;
-+			cache_validity |= NFS_INO_INVALID_ACCESS |
-+					  NFS_INO_INVALID_ACL |
-+					  NFS_INO_INVALID_XATTR;
- 	}
- 	inode_set_iversion_raw(inode, cinfo->after);
- 	nfsi->read_cache_jiffies = timestamp;
- 	nfsi->attr_gencount = nfs_inc_attr_generation_counter();
-+	nfs_set_cache_invalid(inode, cache_validity);
- 	nfsi->cache_validity &= ~NFS_INO_INVALID_CHANGE;
--
--	if (nfsi->cache_validity & NFS_INO_INVALID_DATA)
--		nfs_fscache_invalidate(inode);
+ /**
+- * nfs_inode_return_delegation_on_close - asynchronously return a delegation
++ * nfs4_inode_return_delegation_on_close - asynchronously return a delegation
+  * @inode: inode to process
+  *
+  * This routine is called on file close in order to determine if the
+@@ -811,7 +811,7 @@ void nfs_expire_all_delegations(struct nfs_client *clp)
  }
  
- void
-@@ -5915,9 +5911,9 @@ static int __nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t bufl
- 	 * so mark the attribute cache invalid.
- 	 */
- 	spin_lock(&inode->i_lock);
--	NFS_I(inode)->cache_validity |= NFS_INO_INVALID_CHANGE
--		| NFS_INO_INVALID_CTIME
--		| NFS_INO_REVAL_FORCED;
-+	nfs_set_cache_invalid(inode, NFS_INO_INVALID_CHANGE |
-+					     NFS_INO_INVALID_CTIME |
-+					     NFS_INO_REVAL_FORCED);
- 	spin_unlock(&inode->i_lock);
- 	nfs_access_zap_cache(inode);
- 	nfs_zap_acl_cache(inode);
+ /**
+- * nfs_super_return_all_delegations - return delegations for one superblock
++ * nfs_server_return_all_delegations - return delegations for one superblock
+  * @server: pointer to nfs_server to process
+  *
+  */
+diff --git a/fs/nfs/io.c b/fs/nfs/io.c
+index 5088fda9b453..b5551ed8f648 100644
+--- a/fs/nfs/io.c
++++ b/fs/nfs/io.c
+@@ -104,7 +104,7 @@ static void nfs_block_buffered(struct nfs_inode *nfsi, struct inode *inode)
+ }
+ 
+ /**
+- * nfs_end_io_direct - declare the file is being used for direct i/o
++ * nfs_start_io_direct - declare the file is being used for direct i/o
+  * @inode: file inode
+  *
+  * Declare that a direct I/O operation is about to start, and ensure
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 3a51351bdc6a..9db9b11acb2a 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -645,7 +645,7 @@ void nfs4_purge_state_owners(struct nfs_server *server, struct list_head *head)
+ }
+ 
+ /**
+- * nfs4_purge_state_owners - Release all cached state owners
++ * nfs4_free_state_owners - Release all cached state owners
+  * @head: resulting list of state owners
+  *
+  * Frees a list of state owners that was generated by
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index 78c9c4bdef2b..6c20b28d9d7c 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -577,7 +577,7 @@ static void nfs_clear_request(struct nfs_page *req)
+ }
+ 
+ /**
+- * nfs_release_request - Release the count on an NFS read/write request
++ * nfs_free_request - Release the count on an NFS read/write request
+  * @req: request to release
+  *
+  * Note: Should never be called with the spinlock held!
+@@ -1152,7 +1152,7 @@ nfs_pageio_cleanup_request(struct nfs_pageio_descriptor *desc,
+ }
+ 
+ /**
+- * nfs_pageio_add_request - Attempt to coalesce a request into a page list.
++ * __nfs_pageio_add_request - Attempt to coalesce a request into a page list.
+  * @desc: destination io descriptor
+  * @req: request
+  *
 -- 
 2.29.2
 
