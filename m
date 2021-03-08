@@ -2,126 +2,219 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 047673303F2
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Mar 2021 19:31:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E02A330A0E
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Mar 2021 10:14:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231430AbhCGSap (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 7 Mar 2021 13:30:45 -0500
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:43459 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231464AbhCGSaZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 7 Mar 2021 13:30:25 -0500
-Received: from [192.168.0.5] (ip5f5aea7c.dynamic.kabel-deutschland.de [95.90.234.124])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S230051AbhCHJOR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 8 Mar 2021 04:14:17 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40950 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229458AbhCHJOI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 Mar 2021 04:14:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1615194847;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fWnNUTDO1hly14NTXoKrUQ+xczjUU5YkbfVHZZK6bcA=;
+        b=MHKbHGC/1VQ6/6g/ooW/T7uM86qIM0l4OlC8CRhowwZ6zTPgU0x4imH881W82Hjp/Nojq0
+        NxwMYF4/UJ78P5CkeZanuJHUnW5u/vW6MUiKYqcMiEfCpfNJ8OWR7mvI1pveSytQ97Vps2
+        lFfg+XUzPjO1umyyAUKMvT71jSlmdNA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-81-L_eZHGN_Ph2p8Nw_BC8gZQ-1; Mon, 08 Mar 2021 04:14:05 -0500
+X-MC-Unique: L_eZHGN_Ph2p8Nw_BC8gZQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: buczek)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id D7FAF206446A2;
-        Sun,  7 Mar 2021 19:30:16 +0100 (CET)
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-From:   Donald Buczek <buczek@molgen.mpg.de>
-Subject: [BUG] nfs-utils: mountd doesn't work with elder glibc versions
-Message-ID: <ed75ac87-04ca-c1fe-ad70-7e9f47eef456@molgen.mpg.de>
-Date:   Sun, 7 Mar 2021 19:30:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 92E7C1084C95;
+        Mon,  8 Mar 2021 09:14:03 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-79.rdu2.redhat.com [10.10.112.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AE6B36267B;
+        Mon,  8 Mar 2021 09:13:56 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAOQ4uxhxwKHLT559f8v5aFTheKgPUndzGufg0E58rkEqa9oQ3Q@mail.gmail.com>
+References: <CAOQ4uxhxwKHLT559f8v5aFTheKgPUndzGufg0E58rkEqa9oQ3Q@mail.gmail.com> <2653261.1614813611@warthog.procyon.org.uk>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
+        Jeff Layton <jlayton@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-afs@lists.infradead.org,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Subject: Re: fscache: Redesigning the on-disk cache
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <517183.1615194835.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 08 Mar 2021 09:13:55 +0000
+Message-ID: <517184.1615194835@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+Amir Goldstein <amir73il@gmail.com> wrote:
 
-we noticed that our exports don't work with nfs-utils 2.5.3.
+> >  (0a) As (0) but using SEEK_DATA/SEEK_HOLE instead of bmap and opening=
+ the
+> >       file for every whole operation (which may combine reads and writ=
+es).
+> =
 
-The reason is, that 76c21e3f ("mountd: Check the stat() return values in match_fsid()") added a new error handling. It sets errno to 0 and assumes that it is stable when there are no errors. However, this conflicts with the logic in support/misc/xstat.c, which sets errno to ENOSYS if glibc doesn't support statx() or has an incomplete emulation.
+> I read that NFSv4 supports hole punching, so when using ->bmap() or SEEK=
+_DATA
+> to keep track of present data, it's hard to distinguish between an
+> invalid cached range and a valid "cached hole".
 
-We have glibc 2.27 which doesn't support statx().
+I wasn't exactly intending to permit caching over NFS.  That leads to fun
+making sure that the superblock you're caching isn't the one that has the
+cache in it.
 
-root@dose:~# findmnt /amd/dose/0
-TARGET      SOURCE    FSTYPE OPTIONS
-/amd/dose/0 /dev/vda2 xfs    rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota
-root@dose:~# /usr/sbin/rpc.mountd --foreground --manage-gids -d all &
-[1] 26777
-root@dose:~# rpc.mountd: Version 2.5.3 starting
-root@dose:~# exportfs dose:/amd/dose/0
-root@dose:~# mount dose:/amd/dose/0 /mnt
-rpc.mountd: auth_unix_ip: inbuf 'nfsd 141.14.17.51'
-rpc.mountd: auth_unix_ip: inbuf 'nfsd 141.14.17.51'
-rpc.mountd: auth_unix_ip: client 0x459850 'dose.molgen.mpg.de'
-rpc.mountd: v4root_create: path '/' flags 0x12403
-rpc.mountd: auth_unix_ip: inbuf 'nfsd 141.14.17.51'
-rpc.mountd: auth_unix_ip: client 0x459850 'dose.molgen.mpg.de'
-rpc.mountd: v4root_create: path '/amd' flags 0x10403
-rpc.mountd: v4root_create: path '/amd/dose' flags 0x10403
-rpc.mountd: auth_unix_ip: client 0x451010 'dose.molgen.mpg.de'
-rpc.mountd: rpc.mountd: nfsd_fh: inbuf 'dose.molgen.mpg.de 1 \x00000000'nfsd_fh: inbuf 'dose.molgen.mpg.de 1 \x00000000'
+However, we will need to handle hole-punching being done on a cached netfs=
+,
+even if that's just to completely invalidate the cache for that file.
 
-rpc.mountd: nfsd_fh: found 0x45b1c0 path /
-rpc.mountd: nfsd_fh: found 0x45c070 path /
-rpc.mountd: nfsd_export: inbuf 'dose.molgen.mpg.de /amd'rpc.mountd:
-nfsd_export: inbuf 'dose.molgen.mpg.de /amd'
-rpc.mountd: nfsd_export: found 0x442eb0 path /amdrpc.mountd:
-nfsd_export: found 0x45b6d0 path /amd
-rpc.mountd: rpc.mountd: nfsd_fh: inbuf 'dose.molgen.mpg.de 7 \x83000000000000005e2eaee859174457bcd564e9512178dc'nfsd_fh: inbuf 'dose.molgen.mpg.de 7 \x83000000000000005e2eaee859174457bcd564e9512178dc'
+> With ->fiemap() you can at least make the distinction between a non exis=
+ting
+> and an UNWRITTEN extent.
 
-rpc.mountd: nfsd_fh: found 0x442ec0 path /amdrpc.mountd:
-nfsd_fh: found 0x45b6e0 path /amd
-rpc.mountd: nfsd_export: inbuf 'dose.molgen.mpg.de /amd/dose'
-rpc.mountd: nfsd_export: inbuf 'dose.molgen.mpg.de /amd/dose'
-rpc.mountd: rpc.mountd: nfsd_export: found 0x4433d0 path /amd/dosenfsd_export: found 0x45bbf0 path /amd/dose
+I can't use that for XFS, Ext4 or btrfs, I suspect.  Christoph and Dave's
+assertion is that the cache can't rely on the backing filesystem's metadat=
+a
+because these can arbitrarily insert or remove blocks of zeros to bridge o=
+r
+split extents.
 
-rpc.mountd: nfsd_fh: inbuf 'dose.molgen.mpg.de 7 \x81000820000000005e2eaee859174457bcd564e9512178dc'rpc.mountd:
-nfsd_fh: inbuf 'dose.molgen.mpg.de 7 \x81000820000000005e2eaee859174457bcd564e9512178dc'
-rpc.mountd: nfsd_fh: found 0x4433e0 path /amd/dose
-rpc.mountd: nfsd_fh: found 0x45bc00 path /amd/dose
-rpc.mountd: nfsd_export: inbuf 'dose.molgen.mpg.de /amd/dose/0'
-rpc.mountd: nfsd_export: inbuf 'dose.molgen.mpg.de /amd/dose/0'
-rpc.mountd: nfsd_export: found 0x443550 path /amd/dose/0
-rpc.mountd: nfsd_fh: inbuf 'dose.molgen.mpg.de 6 \xa7287020bece44b09df5b577a4b82823'
-rpc.mountd: nfsd_export: found 0x45bb40 path /amd/dose/0
-rpc.mountd: nfsd_fh: found (nil) path (null)rpc.mountd:
-nfsd_fh: inbuf 'dose.molgen.mpg.de 6 \xa7287020bece44b09df5b577a4b82823'
-rpc.mountd: nfsd_fh: found (nil) path (null)
+> You didn't say much about crash consistency or durability requirements o=
+f the
+> cache. Since cachefiles only syncs the cache on shutdown, I guess you
+> rely on the hosting filesystem to provide the required ordering guarante=
+es.
 
-( mount hangs until interrupted )
+There's an xattr on each file in the cache to record the state.  I use thi=
+s
+mark a cache file "open".  If, when I look up a file, the file is marked o=
+pen,
+it is just discarded at the moment.
 
-With the following workaround, things works again:
+Now, there are two types of data stored in the cache: data that has to be
+stored as a single complete blob and is replaced as such (e.g. symlinks an=
+d
+AFS dirs) and data that might be randomly modified (e.g. regular files).
 
-diff --git a/support/export/cache.c b/support/export/cache.c
-index f1569afb..1b671c32 100644
---- a/support/export/cache.c
-+++ b/support/export/cache.c
-@@ -722,7 +722,7 @@ match:
-  path_error:
-         if (path_lookup_error(errno))
-                 goto nomatch;
--       return -1;
-+       return 0;
-  }
-  
-  static struct addrinfo *lookup_client_addr(char *dom)
+For the former, I have code, though in yet another branch, that writes thi=
+s in
+a tmpfile, sets the xattrs and then uses vfs_link(LINK_REPLACE) to cut ove=
+r.
 
-Another minor one, I noticed when searching for the above:
+For the latter, that's harder to do as it would require copying the data t=
+o
+the tmpfile before we're allowed to modify it.  However, if it's possible =
+to
+create a tmpfile that's a CoW version of a data file, I could go down that
+route.
 
-diff --git a/support/misc/mountpoint.c b/support/misc/mountpoint.c
-index 14d6731d..ae664d6a 100644
---- a/support/misc/mountpoint.c
-+++ b/support/misc/mountpoint.c
-@@ -37,7 +37,7 @@ check_is_mountpoint(const char *path, int (mystat)(const char *, struct stat *))
-                 rv = 0;
-         else
-                 if (stb.st_dev != pstb.st_dev ||
--                   stb.st_ino == pstb.st_ino)
-+                   stb.st_ino != pstb.st_ino)
-                         rv = 1;
-                 else
-                         rv = 0;
+But after I've written and sync'd the data, I set the xattr to mark the fi=
+le
+not open.  At the moment I'm doing this too lazily, only doing it when a n=
+etfs
+file gets evicted or when the cache gets withdrawn, but I really need to a=
+dd a
+queue of objects to be sealed as they're closed.  The balance is working o=
+ut
+how often to do the sealing as something like a shell script can do a lot =
+of
+consecutive open/write/close ops.
 
-I just assume, this would be right and might be relevant to exported bind mounts. But I didn't try to trigger the assumed bug here.
+> How does this work with write through network fs cache if the client sys=
+tem
+> crashes but the write gets to the server?
 
-Best
-   Donald
+The presumption is that the coherency info on the server will change, but
+won't get updated in the cache.
+
+> Client system get restart with older cached data because disk caches wer=
+e
+> not flushed before crash. Correct?  Is that case handled? Are the caches
+> invalidated on unclean shutdown?
+
+The netfs provides some coherency info for the cache to store.  For AFS, f=
+or
+example, this is the data version number (though it should probably includ=
+e
+the volume creation time too).  This is stored with the state info in the =
+same
+xattr and is only updated when the "open" state is cleared.
+
+When the cache file is reopened, if the coherency info doesn't match what
+we're expecting (presumably we queried the server), the file is discarded.
+
+(Note that the coherency info is netfs-specific)
+
+> Anyway, how are those ordering requirements going to be handled when ent=
+ire
+> indexing is in a file? You'd practically need to re-implement a filesyst=
+em
+
+Yes, the though has occurred to me too.  I would be implementing a "simple=
+"
+filesystem - and we have lots of those:-/.  The most obvious solution is t=
+o
+use the backing filesystem's metadata - except that that's not possible.
+
+> journal or only write cache updates to a temp file that can be discarded=
+ at
+> any time?
+
+It might involve keeping a bitmap of "open" blocks.  Those blocks get
+invalidated when the cache restarts.  The simplest solution would be to wi=
+pe
+the entire cache in such a situation, but that goes against one of the
+important features I want out of it.
+
+Actually, a journal of open and closed blocks might be better, though all =
+I
+really need to store for each block is a 32-bit number.
+
+It's a particular problem if I'm doing DIO to the data storage area but
+buffering the changes to the metadata.  Further, the metadata and data mig=
+ht
+be on different media, just to add to the complexity.
+
+Another possibility is only to cull blocks when the parent file is culled.
+That probably makes more sense as, as long as the file is registered culle=
+d on
+disk first and I don't reuse the file slot too quickly, I can write to the
+data store before updating the metadata.
+
+> If you come up with a useful generic implementation of a "file data
+> overlay", overlayfs could also use it for "partial copy up" as well as f=
+or
+> implementation of address space operations, so please keep that in mind.
+
+I'm trying to implement things so that the netfs does look-aside when read=
+ing,
+and multi-destination write-back when writing - but the netfs is in the
+driving seat and the cache is invisible to the user.  I really want to avo=
+id
+overlaying the cache on the netfs so that the cache is the primary access
+point.
+
+David
+
