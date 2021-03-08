@@ -2,38 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7D7A33177B
+	by mail.lfdr.de (Postfix) with ESMTP id F3E8333177E
 	for <lists+linux-nfs@lfdr.de>; Mon,  8 Mar 2021 20:43:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229813AbhCHTnM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S230250AbhCHTnM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Mon, 8 Mar 2021 14:43:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51024 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:51026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230299AbhCHTm6 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 8 Mar 2021 14:42:58 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3031E652AC;
+        id S230342AbhCHTm7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 8 Mar 2021 14:42:59 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B55BA652B5;
         Mon,  8 Mar 2021 19:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615232578;
-        bh=L0Wr9TfqAZnW5Uf3pPdj2QB5+gEcD0shx11hM0QzNlQ=;
+        s=k20201202; t=1615232579;
+        bh=wF7CqdMQYwmdlB5JCqNIxSPxz4U5thdgyXyv83AMSwY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Di5Vnf339+yEN4rYFHPSeAtR/WWnYOodRWR9rmNjtXDubmBkKsWNIE88rbM5M2AKQ
-         1w0LhW/CBfCzhMlkYMAyF+27uajGd0GkHSbWMH4yWIx/0pJEafh9dVRMXLS9s7BTYr
-         1X0Grxcd3pZ8Tuxmaku0zUGXkjWlcn/hKP3zbW+fzmshgSkvLaDtjUhMN1tn83fJFH
-         1oT7M53AtRsXyL0ICBuA0jM+NpXY1/E329fUeOeWW2kuBYaLjoYactWQf/m1IiP4iL
-         kmUFzelSrwOFp6x+Kvg+r1Ip6FknU+yEtb7+Iz+304mD6tptTUrFbkO1fU+DVYspbT
-         yCv7gpX82tWkQ==
+        b=VahfjflxUur9YXgMP+0WZNDboMrVQPwdnt3be9u6uAtluhq6Cfl7RVV47OwZ1qor1
+         ATXqUdPYk8kE/nLQ/2RyvG3+E02jR99iZo3gcyKNGYKviGw02BzzX3CFBllP65zPZK
+         1YpvX8etdPB1/QwzYbUZ9UqxP8ogmZVHd3aV8yOzYJFbasGTftk2v/9yxPVvUB6tQw
+         GivmdpGtijwT3iPsDrbNKzwQQYIu2X92jn+u72NmQqB+Wj0XjXb0N9c70gbwVUUVY3
+         6G989DrD9RHDVaQxPXDaMZ54ACno5tN1F4mv7q6qe58O0eakb43xSD1T4TPJTcJoGf
+         llocpMNBb/YGA==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
 Cc:     Geert Jansen <gerardu@amazon.com>
-Subject: [PATCH v2 4/5] NFS: Fix open coded versions of nfs_set_cache_invalid()
-Date:   Mon,  8 Mar 2021 14:42:54 -0500
-Message-Id: <20210308194255.7873-4-trondmy@kernel.org>
+Subject: [PATCH v2 5/5] NFS: Fix open coded versions of nfs_set_cache_invalid() in NFSv4
+Date:   Mon,  8 Mar 2021 14:42:55 -0500
+Message-Id: <20210308194255.7873-5-trondmy@kernel.org>
 X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210308194255.7873-3-trondmy@kernel.org>
+In-Reply-To: <20210308194255.7873-4-trondmy@kernel.org>
 References: <20210308194255.7873-1-trondmy@kernel.org>
  <20210308194255.7873-2-trondmy@kernel.org>
  <20210308194255.7873-3-trondmy@kernel.org>
+ <20210308194255.7873-4-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -47,122 +48,125 @@ optimisations, so let's use it when appropriate.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/dir.c    | 20 ++++++++++----------
- fs/nfs/inode.c  |  4 ++--
- fs/nfs/unlink.c |  6 +++---
- fs/nfs/write.c  |  8 ++++----
- 4 files changed, 19 insertions(+), 19 deletions(-)
+ fs/nfs/inode.c     |  1 +
+ fs/nfs/nfs42proc.c | 12 +++++++-----
+ fs/nfs/nfs4proc.c  | 28 ++++++++++++----------------
+ 3 files changed, 20 insertions(+), 21 deletions(-)
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 02ac982846f4..fc4f490f2d78 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -81,8 +81,9 @@ static struct nfs_open_dir_context *alloc_nfs_open_dir_context(struct inode *dir
- 		spin_lock(&dir->i_lock);
- 		if (list_empty(&nfsi->open_files) &&
- 		    (nfsi->cache_validity & NFS_INO_DATA_INVAL_DEFER))
--			nfsi->cache_validity |= NFS_INO_INVALID_DATA |
--				NFS_INO_REVAL_FORCED;
-+			nfs_set_cache_invalid(dir,
-+					      NFS_INO_INVALID_DATA |
-+						      NFS_INO_REVAL_FORCED);
- 		list_add(&ctx->list, &nfsi->open_files);
- 		spin_unlock(&dir->i_lock);
- 		return ctx;
-@@ -1700,10 +1701,9 @@ static void nfs_drop_nlink(struct inode *inode)
- 	if (inode->i_nlink > 0)
- 		drop_nlink(inode);
- 	NFS_I(inode)->attr_gencount = nfs_inc_attr_generation_counter();
--	NFS_I(inode)->cache_validity |= NFS_INO_INVALID_CHANGE
--		| NFS_INO_INVALID_CTIME
--		| NFS_INO_INVALID_OTHER
--		| NFS_INO_REVAL_FORCED;
-+	nfs_set_cache_invalid(
-+		inode, NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_CTIME |
-+			       NFS_INO_INVALID_OTHER | NFS_INO_REVAL_FORCED);
- 	spin_unlock(&inode->i_lock);
- }
- 
-@@ -1715,7 +1715,7 @@ static void nfs_dentry_iput(struct dentry *dentry, struct inode *inode)
- {
- 	if (S_ISDIR(inode->i_mode))
- 		/* drop any readdir cache as it could easily be old */
--		NFS_I(inode)->cache_validity |= NFS_INO_INVALID_DATA;
-+		nfs_set_cache_invalid(inode, NFS_INO_INVALID_DATA);
- 
- 	if (dentry->d_flags & DCACHE_NFSFS_RENAMED) {
- 		nfs_complete_unlink(dentry, inode);
-@@ -2481,9 +2481,9 @@ int nfs_rename(struct user_namespace *mnt_userns, struct inode *old_dir,
- 	if (error == 0) {
- 		spin_lock(&old_inode->i_lock);
- 		NFS_I(old_inode)->attr_gencount = nfs_inc_attr_generation_counter();
--		NFS_I(old_inode)->cache_validity |= NFS_INO_INVALID_CHANGE
--			| NFS_INO_INVALID_CTIME
--			| NFS_INO_REVAL_FORCED;
-+		nfs_set_cache_invalid(old_inode, NFS_INO_INVALID_CHANGE |
-+							 NFS_INO_INVALID_CTIME |
-+							 NFS_INO_REVAL_FORCED);
- 		spin_unlock(&old_inode->i_lock);
- 	}
- out:
 diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index d21bfaac10b0..eb1ae77f411a 100644
+index eb1ae77f411a..a7fb076a5f44 100644
 --- a/fs/nfs/inode.c
 +++ b/fs/nfs/inode.c
-@@ -1067,8 +1067,8 @@ void nfs_inode_attach_open_context(struct nfs_open_context *ctx)
- 	spin_lock(&inode->i_lock);
- 	if (list_empty(&nfsi->open_files) &&
- 	    (nfsi->cache_validity & NFS_INO_DATA_INVAL_DEFER))
--		nfsi->cache_validity |= NFS_INO_INVALID_DATA |
--			NFS_INO_REVAL_FORCED;
-+		nfs_set_cache_invalid(inode, NFS_INO_INVALID_DATA |
-+						     NFS_INO_REVAL_FORCED);
- 	list_add_tail_rcu(&ctx->list, &nfsi->open_files);
- 	spin_unlock(&inode->i_lock);
+@@ -229,6 +229,7 @@ void nfs_set_cache_invalid(struct inode *inode, unsigned long flags)
+ 	if (flags & NFS_INO_INVALID_DATA)
+ 		nfs_fscache_invalidate(inode);
  }
-diff --git a/fs/nfs/unlink.c b/fs/nfs/unlink.c
-index b27ebdccef70..5fa11e1aca4c 100644
---- a/fs/nfs/unlink.c
-+++ b/fs/nfs/unlink.c
-@@ -500,9 +500,9 @@ nfs_sillyrename(struct inode *dir, struct dentry *dentry)
- 		nfs_set_verifier(dentry, nfs_save_change_attribute(dir));
- 		spin_lock(&inode->i_lock);
- 		NFS_I(inode)->attr_gencount = nfs_inc_attr_generation_counter();
--		NFS_I(inode)->cache_validity |= NFS_INO_INVALID_CHANGE
--			| NFS_INO_INVALID_CTIME
--			| NFS_INO_REVAL_FORCED;
-+		nfs_set_cache_invalid(inode, NFS_INO_INVALID_CHANGE |
-+						     NFS_INO_INVALID_CTIME |
-+						     NFS_INO_REVAL_FORCED);
- 		spin_unlock(&inode->i_lock);
- 		d_move(dentry, sdentry);
- 		break;
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 82bdcb982186..f05a90338a76 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -303,9 +303,9 @@ static void nfs_set_pageerror(struct address_space *mapping)
- 	nfs_zap_mapping(mapping->host, mapping);
- 	/* Force file size revalidation */
- 	spin_lock(&inode->i_lock);
--	NFS_I(inode)->cache_validity |= NFS_INO_REVAL_FORCED |
--					NFS_INO_REVAL_PAGECACHE |
--					NFS_INO_INVALID_SIZE;
-+	nfs_set_cache_invalid(inode, NFS_INO_REVAL_FORCED |
-+					     NFS_INO_REVAL_PAGECACHE |
-+					     NFS_INO_INVALID_SIZE);
- 	spin_unlock(&inode->i_lock);
++EXPORT_SYMBOL_GPL(nfs_set_cache_invalid);
+ 
+ /*
+  * Invalidate the local caches
+diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+index f3fd935620fc..094024b0aca1 100644
+--- a/fs/nfs/nfs42proc.c
++++ b/fs/nfs/nfs42proc.c
+@@ -357,13 +357,15 @@ static ssize_t _nfs42_proc_copy(struct file *src,
+ 	truncate_pagecache_range(dst_inode, pos_dst,
+ 				 pos_dst + res->write_res.count);
+ 	spin_lock(&dst_inode->i_lock);
+-	NFS_I(dst_inode)->cache_validity |= (NFS_INO_REVAL_PAGECACHE |
+-			NFS_INO_REVAL_FORCED | NFS_INO_INVALID_SIZE |
+-			NFS_INO_INVALID_ATTR | NFS_INO_INVALID_DATA);
++	nfs_set_cache_invalid(
++		dst_inode, NFS_INO_REVAL_PAGECACHE | NFS_INO_REVAL_FORCED |
++				   NFS_INO_INVALID_SIZE | NFS_INO_INVALID_ATTR |
++				   NFS_INO_INVALID_DATA);
+ 	spin_unlock(&dst_inode->i_lock);
+ 	spin_lock(&src_inode->i_lock);
+-	NFS_I(src_inode)->cache_validity |= (NFS_INO_REVAL_PAGECACHE |
+-			NFS_INO_REVAL_FORCED | NFS_INO_INVALID_ATIME);
++	nfs_set_cache_invalid(src_inode, NFS_INO_REVAL_PAGECACHE |
++						 NFS_INO_REVAL_FORCED |
++						 NFS_INO_INVALID_ATIME);
+ 	spin_unlock(&src_inode->i_lock);
+ 	status = res->write_res.count;
+ out:
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 2c8fdb911361..39d9552b7495 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1169,14 +1169,14 @@ int nfs4_call_sync(struct rpc_clnt *clnt,
+ static void
+ nfs4_inc_nlink_locked(struct inode *inode)
+ {
+-	NFS_I(inode)->cache_validity |= NFS_INO_INVALID_OTHER;
++	nfs_set_cache_invalid(inode, NFS_INO_INVALID_OTHER);
+ 	inc_nlink(inode);
  }
  
-@@ -1604,7 +1604,7 @@ static int nfs_writeback_done(struct rpc_task *task,
- 	/* Deal with the suid/sgid bit corner case */
- 	if (nfs_should_remove_suid(inode)) {
- 		spin_lock(&inode->i_lock);
--		NFS_I(inode)->cache_validity |= NFS_INO_INVALID_OTHER;
-+		nfs_set_cache_invalid(inode, NFS_INO_INVALID_OTHER);
- 		spin_unlock(&inode->i_lock);
+ static void
+ nfs4_dec_nlink_locked(struct inode *inode)
+ {
+-	NFS_I(inode)->cache_validity |= NFS_INO_INVALID_OTHER;
++	nfs_set_cache_invalid(inode, NFS_INO_INVALID_OTHER);
+ 	drop_nlink(inode);
+ }
+ 
+@@ -1187,35 +1187,31 @@ nfs4_update_changeattr_locked(struct inode *inode,
+ {
+ 	struct nfs_inode *nfsi = NFS_I(inode);
+ 
+-	nfsi->cache_validity |= NFS_INO_INVALID_CTIME
+-		| NFS_INO_INVALID_MTIME
+-		| cache_validity;
++	cache_validity |= NFS_INO_INVALID_CTIME | NFS_INO_INVALID_MTIME;
+ 
+ 	if (cinfo->atomic && cinfo->before == inode_peek_iversion_raw(inode)) {
+ 		nfsi->cache_validity &= ~NFS_INO_REVAL_PAGECACHE;
+ 		nfsi->attrtimeo_timestamp = jiffies;
+ 	} else {
+ 		if (S_ISDIR(inode->i_mode)) {
+-			nfsi->cache_validity |= NFS_INO_INVALID_DATA;
++			cache_validity |= NFS_INO_INVALID_DATA;
+ 			nfs_force_lookup_revalidate(inode);
+ 		} else {
+ 			if (!NFS_PROTO(inode)->have_delegation(inode,
+ 							       FMODE_READ))
+-				nfsi->cache_validity |= NFS_INO_REVAL_PAGECACHE;
++				cache_validity |= NFS_INO_REVAL_PAGECACHE;
+ 		}
+ 
+ 		if (cinfo->before != inode_peek_iversion_raw(inode))
+-			nfsi->cache_validity |= NFS_INO_INVALID_ACCESS |
+-						NFS_INO_INVALID_ACL |
+-						NFS_INO_INVALID_XATTR;
++			cache_validity |= NFS_INO_INVALID_ACCESS |
++					  NFS_INO_INVALID_ACL |
++					  NFS_INO_INVALID_XATTR;
  	}
- 	return 0;
+ 	inode_set_iversion_raw(inode, cinfo->after);
+ 	nfsi->read_cache_jiffies = timestamp;
+ 	nfsi->attr_gencount = nfs_inc_attr_generation_counter();
++	nfs_set_cache_invalid(inode, cache_validity);
+ 	nfsi->cache_validity &= ~NFS_INO_INVALID_CHANGE;
+-
+-	if (nfsi->cache_validity & NFS_INO_INVALID_DATA)
+-		nfs_fscache_invalidate(inode);
+ }
+ 
+ void
+@@ -5915,9 +5911,9 @@ static int __nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t bufl
+ 	 * so mark the attribute cache invalid.
+ 	 */
+ 	spin_lock(&inode->i_lock);
+-	NFS_I(inode)->cache_validity |= NFS_INO_INVALID_CHANGE
+-		| NFS_INO_INVALID_CTIME
+-		| NFS_INO_REVAL_FORCED;
++	nfs_set_cache_invalid(inode, NFS_INO_INVALID_CHANGE |
++					     NFS_INO_INVALID_CTIME |
++					     NFS_INO_REVAL_FORCED);
+ 	spin_unlock(&inode->i_lock);
+ 	nfs_access_zap_cache(inode);
+ 	nfs_zap_acl_cache(inode);
 -- 
 2.29.2
 
