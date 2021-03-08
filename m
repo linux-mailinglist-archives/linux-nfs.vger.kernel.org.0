@@ -2,295 +2,206 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37AC333129E
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Mar 2021 16:55:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70EF13312D0
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Mar 2021 17:04:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbhCHPyj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 8 Mar 2021 10:54:39 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:35804 "EHLO
+        id S230327AbhCHQEJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 8 Mar 2021 11:04:09 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:41596 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbhCHPy0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 Mar 2021 10:54:26 -0500
+        with ESMTP id S229690AbhCHQDi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 Mar 2021 11:03:38 -0500
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 128FnMkH084981;
-        Mon, 8 Mar 2021 15:54:24 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 128FxPeS104552;
+        Mon, 8 Mar 2021 16:03:35 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=4AL/aPNT8gMjszvpuYjwd7GrJkU0z/u6ofuBBgu8EjQ=;
- b=t5rDbWdRNmfH6A/kJoXY4cnQd4/Wyb3PI/wrQro4TL3AHN1ATzq1PtjTZ+uKYpNMRN4y
- QjQBCGGP12kWHJi6H1tdtNUnb/opXma275hXu5A5cSUoxOlStaaBXHWQa5WW40omD7bN
- xKAfA0ij1s298RjbuK3l/+fAKXhOue0sonhc4QvpBo9qX8BngqwrBqF+7LOh5on8Jr2v
- xG+6kNgUUhWgq7jwnH7mkbonwmRU2nYe3UXTRIwiaYbHMBSq+hH3RbPBhUj+IB270ncn
- UrlxmCqKdgTc2eNVzWQs6CEU79LYLSh3UbKQGulr7OAbu9fTIB8jds0wjsThLwX3ac1h FA== 
+ bh=0c5NDgUt6KwSAzmEi7Voi/eTfHplgUp5FozjoRzLAYc=;
+ b=rk7z5n5igewCdsR9sY7Irs9dav/n56dZxT6lb47qZMbfyxVFeG5Xkv7AcPM13KwnQoTl
+ miOozTzCVa1cArju87CuUFcVoJTBKvPZLU9Hhs/DNesYdC/234ybf/9Anmw78/kAXULR
+ agZx//j6imA0uEzfuftVHFwXIf0Cvx3lXf57d3S9QBKWRdpn3OBpUQWTYaRx4103+of5
+ Tm3HVZ3Rk+cEo5mELcxOMKw0WoKHITzcg1LR7ZE+ZIx07Se8zgYR78TC0XE47TMeVG1k
+ zz+93czQ9uN+wVvYJffPDWsqHb7mK8zCMBWUM23G3yUROogRmgyrz2Fe3BopcQHsLdaS mg== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 3742cn40fp-1
+        by userp2120.oracle.com with ESMTP id 3742cn41r4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Mar 2021 15:54:24 +0000
+        Mon, 08 Mar 2021 16:03:35 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 128Fotlp120810;
-        Mon, 8 Mar 2021 15:54:24 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2103.outbound.protection.outlook.com [104.47.58.103])
-        by userp3020.oracle.com with ESMTP id 374kgqfbjh-1
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 128G0wJL171929;
+        Mon, 8 Mar 2021 16:03:35 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2175.outbound.protection.outlook.com [104.47.56.175])
+        by userp3020.oracle.com with ESMTP id 374kgqfqtt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Mar 2021 15:54:23 +0000
+        Mon, 08 Mar 2021 16:03:35 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i4Bn7FJ6JsEP0vBk5hx+7X8ktB7oLWRplRfJG1XtTeJnh+9+D3/fZVeXly3ZyR8BUYOpDOfkiKD0xRnW6Au9euvps4Ly2i+FLBKx7AAA/9l8Nmcj1wa3m75Opc6sbRomF097LqfvGu4pttXo2pcMa8CKbOAqqlH3KhJ46HiUjHtkRefHrNSHvwaWuDgTghqS6n+BppJ+r+0SrPBoLlgQwEg8odEF9WZjRT49W5O97dFhE9lZGCw0vz52Hh97qC1C/1/iTe160+Fu/vmsRZCXGe7vS1vMLCCisVWnA6wgPT4VHOP42GUlDeXmk6FrnrvMbkijz6bXrzg3aDwmP0+64w==
+ b=PpSCg3l/jCkEIUMM3ofUcNBJxWwL2PAOF8jxhOa4Q0ZGR3gGN561QSVfzS2gsasdstnGN/HYYsV2XJEty7XjrWyIsA27dOQda/K7VK3HXFMxoGBvbjRSBp3RBLFYBMuscCgH8w4d8DJyiQhzho6We5+O5m1m41YuhQt9kAZkQRRVJ5gsCw8XytYgC4cYUhEgFXu6oLT33yinODPiA0Bej1eOYFAQ5R9ea3eBod6+WYEPyGfSyG4VDJ5Dxw5Ysl34pwt6SOCUtMVQURD1ye70iYrfem22FbhekuHDeIIDNrxPEoOUqoMBjU/lOiSuj0T22N6vGyHhQSh0XxGoCuMWNw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4AL/aPNT8gMjszvpuYjwd7GrJkU0z/u6ofuBBgu8EjQ=;
- b=bAVc4XZXHGfWH0gp0GYeB5vF5ds1SgE5ib7N/mqTdtrQiGtZfT6YsbaUJHO+0HFthD87cfAl9fkw1EEVMZly3MrhMysxim0ZoRjKaQbsZ2WJloVk0ZAm8G2mk0ZHF7wg966xmMt0aUDGKVUEYs8EgZ2CqViQNgFY/I/fiw0plx27veoWcmMdhyV338b/M9bKtWhVBfmdZ/5iYqWvbrBnDHmgLCUCKQRtcW3cr66NO4G5S+wwvt119epjUdbOjVbwZD2D47uAS15mIruETOcmcikoidSpO/j2bP+5JHaO3J4tavkcmFFvcFwGerABw2V6oxTe4HatIvFkRxeVPcqUaA==
+ bh=0c5NDgUt6KwSAzmEi7Voi/eTfHplgUp5FozjoRzLAYc=;
+ b=N7LZ+IUsJ0KcpqyH8C2M6X4KijQnMDz2NxoU38EUpFvrGYD5JURiCf3mIWkTnZ6eTbIAL643IJqQCTEQUwO4Mnlz1yFjlex/3SHxoEcTz1mnLFMls+xUsLWAe37aRPj+z2F5Q2lBs1YC0Xd0f8boMvUyKCMiYDiJpVuY0YKTNVIVVO3q0F2RfQjE6OJ9w72s736xmXbn5qUK9gGz0ndzBUDm5lROr0cI8OiK5SKkFW/GKhjzyeYYm03rV+mCLVeJWTAACGVYRC4phyICUJ9D9xUSXHi78pqSEskRmSfZu6zu/kaonfGIYETvEpvKRH5yWjLPSTk/HZMndXNYXLRAfQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4AL/aPNT8gMjszvpuYjwd7GrJkU0z/u6ofuBBgu8EjQ=;
- b=LpkMaR8HMJgyfafs2ONzFYPvwu41lhcfKw8kf4YTwx84G1kOMJ9lAd8r8G7Ra84DHAqiOMvJWIfcpNripiC64fd6MB+D2LTkl0rpS0JA624QNl1FFsnInTOswjmlgSUqo7uhrWHrY/W82Px5ftSR19zH/FRicTB/QRLnDpdi7Y4=
+ bh=0c5NDgUt6KwSAzmEi7Voi/eTfHplgUp5FozjoRzLAYc=;
+ b=u1NH+vMdByxmahNaq8JMQ/XXkQVNaKRzUs6GK+jAOUG8qBdTgMC+NdNZIy7rEq6Fn1PV0W1REi6YUH8HbPD+aohBrWiwzGgS5lb1//oqJOAh5aYMyQeBs/MSdYh5FlNflVtDylE/hrmp2evdDFx/PkAwoR1PFDsUsQVFWDqR5VU=
 Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by BY5PR10MB4049.namprd10.prod.outlook.com (2603:10b6:a03:1b2::18) with
+ by BYAPR10MB2565.namprd10.prod.outlook.com (2603:10b6:a02:b2::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.18; Mon, 8 Mar
- 2021 15:54:21 +0000
+ 2021 16:03:31 +0000
 Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
  ([fe80::6da8:6d28:b83:702b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
  ([fe80::6da8:6d28:b83:702b%4]) with mapi id 15.20.3912.027; Mon, 8 Mar 2021
- 15:54:21 +0000
+ 16:03:31 +0000
 From:   Chuck Lever <chuck.lever@oracle.com>
-To:     Bruce Fields <bfields@fieldses.org>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 2/2] Revert "nfsd4: a client's own opens needn't prevent
- delegations"
-Thread-Topic: [PATCH 2/2] Revert "nfsd4: a client's own opens needn't prevent
- delegations"
-Thread-Index: AQHXFDMNQbn31a+2PUeMNtliARrSqKp6PjWA
-Date:   Mon, 8 Mar 2021 15:54:21 +0000
-Message-ID: <7BC3CBA0-36AF-4F51-A5E4-ED0A1FABF16F@oracle.com>
-References: <20210308155151.GC7284@fieldses.org>
- <20210308155229.GD7284@fieldses.org>
-In-Reply-To: <20210308155229.GD7284@fieldses.org>
+To:     Dai Ngo <dai.ngo@oracle.com>
+CC:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] NFSD: dst server needs to unmount src server's export
+ after copy is done.
+Thread-Topic: [PATCH] NFSD: dst server needs to unmount src server's export
+ after copy is done.
+Thread-Index: AQHXEEhPoGFYV6g8wE+zCNesw4ToFap6SJqA
+Date:   Mon, 8 Mar 2021 16:03:31 +0000
+Message-ID: <5018A43B-8132-4882-9F16-37CFD475807D@oracle.com>
+References: <20210302194843.98612-1-dai.ngo@oracle.com>
+In-Reply-To: <20210302194843.98612-1-dai.ngo@oracle.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: fieldses.org; dkim=none (message not signed)
- header.d=none;fieldses.org; dmarc=none action=none header.from=oracle.com;
 x-originating-ip: [68.61.232.219]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c9374a85-e356-457b-7655-08d8e24a70a2
-x-ms-traffictypediagnostic: BY5PR10MB4049:
-x-microsoft-antispam-prvs: <BY5PR10MB4049BA1649BD8C882683A3C793939@BY5PR10MB4049.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-ms-office365-filtering-correlation-id: ad88421b-24dc-4749-f2a8-08d8e24bb881
+x-ms-traffictypediagnostic: BYAPR10MB2565:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR10MB2565BF31B4D8517EE0C67C2B93939@BYAPR10MB2565.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: M4DVtJVSKdh9KRak13FXqgpS7phmke6WO6++8T74fi8vBdjOmz7N38udIDKwa7Mz8ldY9zm92oGhroPf3wdbhzGBNqkkUV/8l+LL6qDNSnKoqN3j9yqJ2TkS6bK8KL5FIbdtmpzFlKVz+oXPn1DANT0Fv8JqGpk0q5tUaLnCXsamBd85C8JIgeIebQjPZOHzSqW5RwqAuPBhWPoPm1hwWFQjtkhcF/2/8tls/dMaQtTTp/Pl6wvuvsNO5UFN3c7hIPvBaEeiTap3MjxvQ2BRb5DOhqo4cRIsOPdGrdTXJwfpC16yAfmzqdeDMxKdSDR2HRh5E3zxtbJ7cdQCZxUkk3GQqDzvlo4tTbyboMIDtKjY8QKPbXpT2KP/4xuHkHAkDnVWt9Utzqw4JLK5cDm714f/PZaYM0C2e1mGOiVIUp/Zqy5BGmj3fy6/TBF3Rd2LoVD4uF6QSjD4x1fILFGfhRd+AXGuvNLobSluMK81W0Pgzq3meo7vf6/fyNVSyjD+sTYxn5s9ssXfui0meKME+26JNZFDXQ5E1p3Hc7OJLMhtkVeyM8tVbWEKVGtjtN9bZIinJwwWD8ad+0fbGTiNoA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(366004)(136003)(376002)(39860400002)(396003)(6916009)(8676002)(2616005)(186003)(478600001)(26005)(316002)(66946007)(66476007)(71200400001)(66446008)(36756003)(44832011)(86362001)(2906002)(64756008)(6506007)(6512007)(76116006)(66556008)(53546011)(83380400001)(4326008)(8936002)(33656002)(91956017)(6486002)(5660300002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?cF58zO/m7e/d3SABHJXOt0YohQCZgGHdjt+OBG9VWRPe8SeUY38wSUxWFwXb?=
- =?us-ascii?Q?6XtpgtBwu5PIhkdDfQNm8jBfh4mBM6uDdMyZNEUDOsKdY8dcqrDV/B6lU4vJ?=
- =?us-ascii?Q?CiVtBwsHbknrrI/KZnEglOEDW/MlT8Dsb5+2I/u+TXvOrbJMDShzVP9fpix1?=
- =?us-ascii?Q?Rv/AGggFnIhfn/i0jxuqkImCTUxZnvjPBXxQmCYMkW85WM1QghFekUD3RThM?=
- =?us-ascii?Q?ZFbb1MtVBfj4/oBcztWl9eGLTuyGgGaoSxnf7uAfykohyBCXIuHLlwmMw4g8?=
- =?us-ascii?Q?xUo01VgllM0c0d5XWjbkc8dqAob+mzjteRH80vAok5hH7U7riiHEw+PmWoFK?=
- =?us-ascii?Q?FoI27L4J2D2L5snqcIzlqI92UfQZxgysfX+nXAMWG+RLxzsXJfnTHZ9PwIkf?=
- =?us-ascii?Q?kFuyqhq3zJqeVtCuPp7aoVVONFU+sWDGZjQ3XJzQhlkxzpKPpyvrOcG20BT7?=
- =?us-ascii?Q?gxRcr8w7YQr+cFgA8KqJXy61OWsapfFwXz+ygSvDOxvl5uLljr6oNdYwzWJu?=
- =?us-ascii?Q?2ay1qdL0Z8Voa5SqqHGLRF9eqUmTUzIExn8KEOmR5iu1lrn9FilXDWo0kcbU?=
- =?us-ascii?Q?YLotE3BNoAEvkKEgAi/lV3FywzeAs/vi4LRVk1aVYXiHSNzcvAYKpGFEY5JZ?=
- =?us-ascii?Q?Qe3Kz4nb9139O6HSQWd64sb8qwcUgYUud9R0U82lSRvy6bTJ4A3UKjGprbXJ?=
- =?us-ascii?Q?A8M6W5t17HTAsOST3tZ0wh+wtMvzB/7dddK2CO4LGFwn6TtvQ9UyPkXv2i5G?=
- =?us-ascii?Q?PCWO67V5lDfus/Wh9QKRGBIm1tj9zFyjcMqYgv55JtoPJ5gquZfffEiiL3Ia?=
- =?us-ascii?Q?s1gSfCFaPMu8bhwCHh8+Jz0/u7/DlqHR//HklUg2xPo6HXvRpa/fZKIhA527?=
- =?us-ascii?Q?/0tGYNfjM4hGy7reGeASsAqDWHp6stEgw3rMHQSWLqLxG35QmT2fKJwt32ow?=
- =?us-ascii?Q?GF8mZKrN/3PoiU+bAfVHu+JHS9N2yQZK2gIabpgeXj+NiJw7qJoTp1FDRZeS?=
- =?us-ascii?Q?Qpzi/tp1n6VR6jptk49n4sC5104Ebs8QBjLEYsnT/Q/W0a9Ax2C1kMjKuQ0P?=
- =?us-ascii?Q?bwXxQ1cWddeFz16qLvYwFmEwcIdYhGuUoL58uebiqlmU2SNUXfQupRXPGzyA?=
- =?us-ascii?Q?nEVmtuxCPVn+ArpiyfUK/X6FAtgOxhKAOjGKrILJi7hJHEpCCoNJ1Aub53UF?=
- =?us-ascii?Q?XH8vW5tnX3jiexSywm5F1EKyi45TUi+07UjRW45MYlad3TbonRLb8qXSv0vb?=
- =?us-ascii?Q?a5TG4X+R7P3vt/3h0NS1eo8AF9nHfJ+0sN+bfkWfiL0JJGO0XTNZTiQNwa4x?=
- =?us-ascii?Q?kkB74pyQXiN5457Mau+7Xrsu?=
-x-ms-exchange-transport-forked: True
+x-microsoft-antispam-message-info: hU77O31MvE0tAjLSyqgrRVAlhHRCykwNGZQgLdyi7N6h0Hs4o9ut4IQ77EEidv6qESRtEGDIIuFcMidGqj0eiIW1edTyJKtU6J85e9vNMPQ06lfQmHa8t3e852SlKsJMOx/y8OFKznqbQfFwz/AB4/9xPw3NRC0D0/6bph6iaZN5zp9ypj+WJ+LSWn1yi/MVt1w7ynGNta2CgkZaZaCh8DpE8/4mV/JIacsT1X8k3Es5rF8yKUp/3fpZ4gpmaRmYSBruHhONwSia3TkO4AYZMRRqQK8r/0uVx8Qs/xVZRoPgiYBnjMtf47gbHzSUkat4/mVV78YXuWYSns6kS6puXhnoC9RWVbqRqAEYkeKi1J4S+LUpc/98ZTv/eCyd5gSP3+DaL03DJ9IcxgSWaG90h+si0k3fDmdQcTICAFkMaTNopLGzTIUfH/d2aZdl+H37FJoGgHlVrdNlm4Lh93CwoPoa25nrSKbf3+cCKSynlNhGa9HdfrjAnLIlGaVS8EDgKyXBrZbEf4/J508YyXoIPdGf2UO9zvBxlN+uwZGDaQyQACHGXxTGb1yJLbAwxnItS78FsMjTGNhRM/T6IRfJYQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(346002)(39860400002)(396003)(136003)(376002)(8936002)(6512007)(33656002)(53546011)(44832011)(6506007)(71200400001)(478600001)(5660300002)(54906003)(66556008)(66476007)(66446008)(66946007)(64756008)(6636002)(76116006)(91956017)(316002)(6862004)(8676002)(4326008)(86362001)(6486002)(37006003)(2616005)(83380400001)(186003)(2906002)(36756003)(26005)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?FO7Hyx6KP2OYgkkCbHwBiRINNxWKHJqJsUl6//sQAWWjdZIuJgVp256l+YDZ?=
+ =?us-ascii?Q?d6TY66zAc7Ml6/3CvxA8cjqOSJFDCo/dWFMLCWNd0dEj18B+M4xmzPlPid3F?=
+ =?us-ascii?Q?lE7loJCB9+8Oe42QRJyC3pJd2QtIIeDgzNEyV2Ll3gHE6tdqXLf7BiBbTgvb?=
+ =?us-ascii?Q?qSQ9zOAmwtWhDLunCsZnGdfDZhf3/eYAUj9HM7Qzygbox05NQbiK78PunRln?=
+ =?us-ascii?Q?TmOsUUOzPuuHTA+cR9syHTxK/GnbQr0uVjiXSFc3YUQInP76MqSRXWvOtrtH?=
+ =?us-ascii?Q?V5hjYM2dgm2XOEBSiPyFgcCxVlkWcdfq9aRbr/rRzg4YDasLvDCrATbU3z1B?=
+ =?us-ascii?Q?zSrq1LuYGspJ2ai0Rgxc1dRrntzf/h7oq6QcIc3BNutlPS948ENDzAUYaCT6?=
+ =?us-ascii?Q?bZp1lxERvBkLhlgB1JT/yzQy3S83/bNwGR+Xo2c1gN7297nqaUB2/1WfcOXN?=
+ =?us-ascii?Q?Yz+dzsLybnLgri7hrjWhTBaWED8UwUdnZCgtliu7/DIOKOZ1ayXzz22xABVj?=
+ =?us-ascii?Q?h+6i/2yrAuEBNBXdddceZnyqKfWCxYsGFIoaiM5XllWBBy2qg1MTNbRIwnzs?=
+ =?us-ascii?Q?Wgn5RyWybBSXTEuTf1fve+a5WY1TH0qnifm9phWwHl9l1Hrq6cnYVJl7CcUm?=
+ =?us-ascii?Q?qWhUvy0nj2QAxPtYTixadhfH2e0h/3ZNNWAwrvVEbqKu1WdJb/bcuDykanKC?=
+ =?us-ascii?Q?/SYOfogQOBe/oA7VNKUAAELDyvB0w3zi8CmSMUikCJN6d70wf8DQn7x9Uo2h?=
+ =?us-ascii?Q?voES8Bad1CPLrpf5hBk6XwIqcgHhAPPpJ8Z1DRzwIl30wdXhW1TlHJsDjfOl?=
+ =?us-ascii?Q?YFwoWsRlk261OEz2/c86x6JqweWwI0PKUCPYKvso7W+ONHpWYnuNlGHA40Bm?=
+ =?us-ascii?Q?NgJvadY3ln8OJ957T/ojim+ucr2kkwUl2I3jdn7l4z6hMuf2kB1AvTk1q560?=
+ =?us-ascii?Q?Gif3Wbkt7EfmE+MrvYERsoegyI5XJ5rT/yIRIljRtlnYt7ubXR7UjBVxgLok?=
+ =?us-ascii?Q?ltMnZrfv0dopT2PNYhshjNxwk/7amgx+Uv4PLsYcvHO58Vg9mIqUDn22MEIG?=
+ =?us-ascii?Q?E4lfOUVq9R9lXFtOuoGbim4SV9tY+4NmdfYiWciLApM4cGdWGOUQQE9HlvKe?=
+ =?us-ascii?Q?0hrrdvrdnTzWZ7+JZnBWo5nsOXth5+yrUy+EgVc66tZNIw6nEWytnY0hPYMO?=
+ =?us-ascii?Q?QmdpgZ3q7rTRJ18bj6hHI08eqhxeAogG4ai7AM2pQYZ+RFX+o3VaYYblSKwQ?=
+ =?us-ascii?Q?fxE8hc4v6dko4N/qbSo8uCbPG7pIRUUZ0mP3GV33pIsmP/BWR5IaNWXrQQD9?=
+ =?us-ascii?Q?7UnvUhNoZ3Sx2RwJMvhfdnoO?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <FB8DDE1592F2BE45956C522022144030@namprd10.prod.outlook.com>
+Content-ID: <4D3E5E9B657BCE48A0E28FE3A2C3A070@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9374a85-e356-457b-7655-08d8e24a70a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2021 15:54:21.7420
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad88421b-24dc-4749-f2a8-08d8e24bb881
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2021 16:03:31.7300
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: huIJbziElcEY6+Y/cQWIgxRwGkCa4OY0m7UTeo9HsmN9PO12Eis96OaZpez60Zv8GG+Q4vcqlOSTCIn6nYLLUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4049
+X-MS-Exchange-CrossTenant-userprincipalname: DCR/QBULv9RofVY2LP15mkhUATi1Pxj5BIZdX00UWXkk4SK7ToZnnYjY6L/MOn/wx6e2fx6F/b390QmxsyUuVA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2565
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9917 signatures=668683
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0
  malwarescore=0 bulkscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999
  spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103080086
+ engine=8.12.0-2009150000 definitions=main-2103080087
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9917 signatures=668683
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
- clxscore=1015 phishscore=0 adultscore=0 mlxlogscore=999 priorityscore=1501
+ clxscore=1011 phishscore=0 adultscore=0 mlxlogscore=999 priorityscore=1501
  lowpriorityscore=0 bulkscore=0 mlxscore=0 impostorscore=0 malwarescore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103080086
+ definitions=main-2103080087
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Mar 8, 2021, at 10:52 AM, J. Bruce Fields <bfields@fieldses.org> wrote=
-:
+> On Mar 2, 2021, at 2:48 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
 >=20
-> From: "J. Bruce Fields" <bfields@redhat.com>
+> Currently the destination server leaves the source server's export
+> intact on the destination after copy is done. This patch fixes this
+> by doing ssc disconnect from nfsd4_do_async_copy after copy is done.
 >=20
-> This reverts commit 94415b06eb8aed13481646026dc995f04a3a534a.
->=20
-> That commit claimed to allow a client to get a read delegation when it
-> was the only writer.  Actually it allowed a client to get a read
-> delegation when *any* client has a write open!
->=20
-> The main problem is that it's depending on nfs4_clnt_odstate structures
-> that are actually only maintained for pnfs exports.
->=20
-> This causes clients to miss writes performed by other clients, even when
-> there have been intervening closes and opens, violating close-to-open
-> cache consistency.
->=20
-> We can do this a different way, but first we should just revert this.
->=20
-> I've added pynfs 4.1 test DELEG19 to test for this, as I should have
-> done originally!
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 
-Excellent, Bruce. I'll get these into for-rc right away so it can get
-some testing with the 0-day infrastructure.
+I haven't seen any negative comments on this patch, so I've added it
+to the for-rc topic branch at
+
+git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
 
 
-> Cc: stable@vger.kernel.org
-> Reported-by: Timo Rothenpieler <timo@rothenpieler.org>
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 > ---
-> fs/locks.c          |  3 ---
-> fs/nfsd/nfs4state.c | 54 ++++++++++++---------------------------------
-> 2 files changed, 14 insertions(+), 43 deletions(-)
+> fs/nfsd/nfs4proc.c | 7 +++----
+> 1 file changed, 3 insertions(+), 4 deletions(-)
 >=20
-> diff --git a/fs/locks.c b/fs/locks.c
-> index 99ca97e81b7a..6125d2de39b8 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -1808,9 +1808,6 @@ check_conflicting_open(struct file *filp, const lon=
-g arg, int flags)
->=20
-> 	if (flags & FL_LAYOUT)
-> 		return 0;
-> -	if (flags & FL_DELEG)
-> -		/* We leave these checks to the caller. */
-> -		return 0;
->=20
-> 	if (arg =3D=3D F_RDLCK)
-> 		return inode_is_open_for_write(inode) ? -EAGAIN : 0;
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 408e2c4db926..27983a50435e 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -4940,32 +4940,6 @@ static struct file_lock *nfs4_alloc_init_lease(str=
-uct nfs4_delegation *dp,
-> 	return fl;
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index 8d6d2678abad..d3d864b8ee4f 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -1306,7 +1306,6 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, st=
+ruct nfsd_file *src,
+> 	nfs42_ssc_close(src->nf_file);
+> 	/* 'src' is freed by nfsd4_do_async_copy */
+> 	nfsd_file_put(dst);
+> -	mntput(ss_mnt);
 > }
 >=20
-> -static int nfsd4_check_conflicting_opens(struct nfs4_client *clp,
-> -						struct nfs4_file *fp)
-> -{
-> -	struct nfs4_clnt_odstate *co;
-> -	struct file *f =3D fp->fi_deleg_file->nf_file;
-> -	struct inode *ino =3D locks_inode(f);
-> -	int writes =3D atomic_read(&ino->i_writecount);
-> -
-> -	if (fp->fi_fds[O_WRONLY])
-> -		writes--;
-> -	if (fp->fi_fds[O_RDWR])
-> -		writes--;
-> -	WARN_ON_ONCE(writes < 0);
-> -	if (writes > 0)
-> -		return -EAGAIN;
-> -	spin_lock(&fp->fi_lock);
-> -	list_for_each_entry(co, &fp->fi_clnt_odstate, co_perfile) {
-> -		if (co->co_client !=3D clp) {
-> -			spin_unlock(&fp->fi_lock);
-> -			return -EAGAIN;
-> -		}
-> -	}
-> -	spin_unlock(&fp->fi_lock);
-> -	return 0;
-> -}
-> -
-> static struct nfs4_delegation *
-> nfs4_set_delegation(struct nfs4_client *clp, struct svc_fh *fh,
-> 		    struct nfs4_file *fp, struct nfs4_clnt_odstate *odstate)
-> @@ -4985,12 +4959,9 @@ nfs4_set_delegation(struct nfs4_client *clp, struc=
-t svc_fh *fh,
->=20
-> 	nf =3D find_readable_file(fp);
-> 	if (!nf) {
-> -		/*
-> -		 * We probably could attempt another open and get a read
-> -		 * delegation, but for now, don't bother until the
-> -		 * client actually sends us one.
-> -		 */
-> -		return ERR_PTR(-EAGAIN);
-> +		/* We should always have a readable file here */
-> +		WARN_ON_ONCE(1);
-> +		return ERR_PTR(-EBADF);
+> #else /* CONFIG_NFSD_V4_2_INTER_SSC */
+> @@ -1472,14 +1471,12 @@ static int nfsd4_do_async_copy(void *data)
+> 		copy->nf_src =3D kzalloc(sizeof(struct nfsd_file), GFP_KERNEL);
+> 		if (!copy->nf_src) {
+> 			copy->nfserr =3D nfserr_serverfault;
+> -			nfsd4_interssc_disconnect(copy->ss_mnt);
+> 			goto do_callback;
+> 		}
+> 		copy->nf_src->nf_file =3D nfs42_ssc_open(copy->ss_mnt, &copy->c_fh,
+> 					      &copy->stateid);
+> 		if (IS_ERR(copy->nf_src->nf_file)) {
+> 			copy->nfserr =3D nfserr_offload_denied;
+> -			nfsd4_interssc_disconnect(copy->ss_mnt);
+> 			goto do_callback;
+> 		}
 > 	}
-> 	spin_lock(&state_lock);
-> 	spin_lock(&fp->fi_lock);
-> @@ -5020,19 +4991,11 @@ nfs4_set_delegation(struct nfs4_client *clp, stru=
-ct svc_fh *fh,
-> 	if (!fl)
-> 		goto out_clnt_odstate;
->=20
-> -	status =3D nfsd4_check_conflicting_opens(clp, fp);
-> -	if (status) {
-> -		locks_free_lock(fl);
-> -		goto out_clnt_odstate;
-> -	}
-> 	status =3D vfs_setlease(fp->fi_deleg_file->nf_file, fl->fl_type, &fl, NU=
-LL);
-> 	if (fl)
-> 		locks_free_lock(fl);
-> 	if (status)
-> 		goto out_clnt_odstate;
-> -	status =3D nfsd4_check_conflicting_opens(clp, fp);
-> -	if (status)
-> -		goto out_clnt_odstate;
->=20
-> 	spin_lock(&state_lock);
-> 	spin_lock(&fp->fi_lock);
-> @@ -5114,6 +5077,17 @@ nfs4_open_delegation(struct svc_fh *fh, struct nfs=
-d4_open *open,
-> 				goto out_no_deleg;
-> 			if (!cb_up || !(oo->oo_flags & NFS4_OO_CONFIRMED))
-> 				goto out_no_deleg;
-> +			/*
-> +			 * Also, if the file was opened for write or
-> +			 * create, there's a good chance the client's
-> +			 * about to write to it, resulting in an
-> +			 * immediate recall (since we don't support
-> +			 * write delegations):
-> +			 */
-> +			if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE)
-> +				goto out_no_deleg;
-> +			if (open->op_create =3D=3D NFS4_OPEN_CREATE)
-> +				goto out_no_deleg;
-> 			break;
-> 		default:
-> 			goto out_no_deleg;
+> @@ -1498,8 +1495,10 @@ static int nfsd4_do_async_copy(void *data)
+> 			&nfsd4_cb_offload_ops, NFSPROC4_CLNT_CB_OFFLOAD);
+> 	nfsd4_run_cb(&cb_copy->cp_cb);
+> out:
+> -	if (!copy->cp_intra)
+> +	if (!copy->cp_intra) {
+> +		nfsd4_interssc_disconnect(copy->ss_mnt);
+> 		kfree(copy->nf_src);
+> +	}
+> 	cleanup_async_copy(copy);
+> 	return 0;
+> }
 > --=20
-> 2.29.2
+> 2.9.5
 >=20
 
 --
