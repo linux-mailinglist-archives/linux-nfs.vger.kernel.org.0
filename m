@@ -2,91 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06A04332C6E
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Mar 2021 17:43:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 873E8332C80
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Mar 2021 17:47:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230328AbhCIQmm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 9 Mar 2021 11:42:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59452 "EHLO
+        id S230391AbhCIQq7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 9 Mar 2021 11:46:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230489AbhCIQmc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Mar 2021 11:42:32 -0500
-Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05F3CC06174A
-        for <linux-nfs@vger.kernel.org>; Tue,  9 Mar 2021 08:42:32 -0800 (PST)
-Received: by mail-io1-xd2e.google.com with SMTP id n132so14638223iod.0
-        for <linux-nfs@vger.kernel.org>; Tue, 09 Mar 2021 08:42:31 -0800 (PST)
+        with ESMTP id S229775AbhCIQqm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Mar 2021 11:46:42 -0500
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C94ABC06174A
+        for <linux-nfs@vger.kernel.org>; Tue,  9 Mar 2021 08:46:41 -0800 (PST)
+Received: by mail-ej1-x636.google.com with SMTP id mm21so29474968ejb.12
+        for <linux-nfs@vger.kernel.org>; Tue, 09 Mar 2021 08:46:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qaP35OolCuh0JJuDAfWuBYmqQlAoAW6aR7EacpzqKaA=;
-        b=kciBaUb60gt6Eogdd9b3P0CQiLWafkrvUDl85pIgLmvPi6JZzcnBiaNnK0iEdhDSdp
-         Myw+WHb3tXbkImjjDSRzVnuxuBdUNep5/DDU8K4H53bc8eoKU/71E47qMXVyd3wSiy+Y
-         rL9CezCBIWqgepJKmBMhvJlMrmaMTUEpgjjp9ADTUOHXixjgsMYKrrSbDKhznxDR8S/R
-         5s245PrD0tebgcpxvkf+rXwwhgIfV4r3bd5+ouFioGQ50okXvEWhMb5W4cQFOoMkbyj1
-         +EePjPYkIV+jGWCwY13tLlbAIaB0DzruROUpMspgyHRL9QY6m0LFND2Tgdoumc4GtitN
-         41kg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DlJQQiI+2KtMRCT723Gi1SnSu+2f4QkI2kcfN0Kd4so=;
+        b=AAplqRJUOQdV9sMrPmstGvYhgjxNxAyiV0cP/1I/LwHypGSZiPy26WgBUXfGghVsm1
+         ep6rTJoyaGhsoFm09BVQJviFScbhB67K/jS7bZpnDGNtP78tL0BpAbnsBHSX2VRhvbeA
+         mH2HHashieVEQK/gobmDR6MO7//Zy4XO/2F7hd7vHm7pnjtHMZs4m72bp7XvW+WxoZ7H
+         GGOrN89u8h6q3L1jiEoBS7296oeaLrqF8Vi+Pum+g1o0mE+eG/BWZ2Ki5Hh4yiEgRcqn
+         mO4wBBqrGJoWaujDLEchqp5bPVSoRFYawIEiDPiHxfjwfsS8xv2RZy9Yq4U8lbYe2TK0
+         YIsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qaP35OolCuh0JJuDAfWuBYmqQlAoAW6aR7EacpzqKaA=;
-        b=lr5uCj9ZC7b40dyLe8uWlinquzpWHW96s2IoryYhkMC32LRQGBKluOuwzgjcR3/Qcq
-         5exlXi5koqV9PwWd+6mBeJmw40e5SWCrwVnAuqtaf4QCwm3+j9EfGkIdPCF5nn0LsCpP
-         7jaq8DltCNlP5yMSajhh51YPwWeQqte8wCcVLFUIOF2X9t2+kPyd6Ie/kFIV9v2hNlsv
-         v2Ig8Kba14m4NenLZsCGDoeZmELBWoUuv9/KoPM5m0xz8auzUco01olFDNyUQLsbN5lO
-         wVoYwPxhtkRErRf7oJL+rBSFU966tvZqDDJBplXH/yV97naaJHqXke5zjpNSDfNEZW7w
-         sOeg==
-X-Gm-Message-State: AOAM531FaJ+FQR/lOtCkxeJLXfJk1V6hnGRyxiOMdR4E5gNaTEfD2g91
-        LcGGqQIR+TWvZ7hK6nwBi88=
-X-Google-Smtp-Source: ABdhPJyPKVKqDf7TntFFu+GLTdCNy5nd9D+iqCGyZgVRcp7yBLil+rwScHLErnkElzXKJB8k5gmVhQ==
-X-Received: by 2002:a6b:610d:: with SMTP id v13mr23517997iob.132.1615308151506;
-        Tue, 09 Mar 2021 08:42:31 -0800 (PST)
-Received: from kolga-mac-1.lan (50-124-244-195.alma.mi.frontiernet.net. [50.124.244.195])
-        by smtp.gmail.com with ESMTPSA id d3sm8090314ilo.32.2021.03.09.08.42.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Mar 2021 08:42:31 -0800 (PST)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     bfields@redhat.com, chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 1/1] NFSD: fix error handling in NFSv4.0 callbacks
-Date:   Tue,  9 Mar 2021 11:42:29 -0500
-Message-Id: <20210309164229.60153-1-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DlJQQiI+2KtMRCT723Gi1SnSu+2f4QkI2kcfN0Kd4so=;
+        b=CcYYLSlspEyhTEz9uPd6HSmnZW8B8eogX+CTUG3KbTZ89EUOZj2TuhyYmeSJVXBy5C
+         PmV+Lb4P6tcRP2QknAaCG0guq/X6Fd5HZVOtkaQA/VPwk521LQhfheO/PcPg3QsMAV2y
+         /uYuDwNSTvFIVvI8nfwCVU39T7OZovKBTqqePGgKLESwLu1f7ux3rQSiY51QXQ6A2iO2
+         IKdxMKA5EsW42O89qf6dxHKIN8HJcwlUP+b+2kA5pZMS0LzprrstYvm7UkOIKC680b5y
+         kX+tZJduNLDoS30fS0gGC6KmXcM4XD+3Df+jVgUWEoc6wusVYQKPMYEDiXclRIJSseFs
+         BOsg==
+X-Gm-Message-State: AOAM532ItxYcVycttUlclgg6mB99pxBi2EdrwAn/0luQKjU/7NOUoKQO
+        1EXIw9GjWmKAiR3xQjrlY340ofHd/ivrqZr+JCr2FTl6
+X-Google-Smtp-Source: ABdhPJyS4iJt3JbYUw+AtZmAErr78w0T5oJ5WxuBLntPzuRhnKrbJJqA1SVH5dJ3XbtHReeGFY/FqasGnBTuRAjfo7s=
+X-Received: by 2002:a17:906:9243:: with SMTP id c3mr21660249ejx.388.1615308399959;
+ Tue, 09 Mar 2021 08:46:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210309144127.57833-1-olga.kornievskaia@gmail.com>
+ <YEeWK+gs4c8O7k0u@pick.fieldses.org> <CAN-5tyEFRiA2xcHBy63cgD+zAKDOR56A+Vo3te0zmdWVD72gDw@mail.gmail.com>
+In-Reply-To: <CAN-5tyEFRiA2xcHBy63cgD+zAKDOR56A+Vo3te0zmdWVD72gDw@mail.gmail.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Tue, 9 Mar 2021 11:46:28 -0500
+Message-ID: <CAN-5tyHUWJR6MP-PHc6=26Rz1tO_LYtGmjmU2HFf3uyg4NMXsg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] NFSD: fix error handling in callbacks
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When the server tries to do a callback and a client fails it due to
-authentication problems, we need the server to set callback down
-flag in RENEW so that client can recover.
+On Tue, Mar 9, 2021 at 11:39 AM Olga Kornievskaia
+<olga.kornievskaia@gmail.com> wrote:
+>
+> On Tue, Mar 9, 2021 at 10:37 AM J. Bruce Fields <bfields@redhat.com> wrote:
+> >
+> > On Tue, Mar 09, 2021 at 09:41:27AM -0500, Olga Kornievskaia wrote:
+> > > From: Olga Kornievskaia <kolga@netapp.com>
+> > >
+> > > When the server tries to do a callback and a client fails it due to
+> > > authentication problems, we need the server to set callback down
+> > > flag in RENEW so that client can recover.
+> >
+> > I was looking at this.  It looks to me like this should really be just:
+> >
+> >         case 1:
+> >                 if (task->tk_status)
+> >                         nfsd4_mark_cb_down(clp, task->tk_status);
+> >
+> > If tk_status showed an error, and the ->done method doesn't return 0 to
+> > tell us it something worth retrying, then the callback failed
+> > permanently, so we should mark the callback path down, regardless of the
+> > exact error.
+>
+> Ok. v2 coming (will change the title to make it 4.0 callback)
 
-Suggested-by: Bruce Fields <bfields@redhat.com>
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
----
- fs/nfsd/nfs4callback.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Sigh, I didn't change the wording of the commit and left the
+authentication problem which is not accurate enough for this patch (as
+say connection errors are also covered by this patch). Do you need me
+to change the wording of the commit and send v3?
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 052be5bf9ef5..f436d2ca5223 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1186,11 +1186,8 @@ static void nfsd4_cb_done(struct rpc_task *task, void *calldata)
- 		rpc_restart_call_prepare(task);
- 		return;
- 	case 1:
--		switch (task->tk_status) {
--		case -EIO:
--		case -ETIMEDOUT:
-+		if (task->tk_status)
- 			nfsd4_mark_cb_down(clp, task->tk_status);
--		}
- 		break;
- 	default:
- 		BUG();
--- 
-2.27.0
-
+>
+> >
+> > --b.
+> >
+> > >
+> > > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > > ---
+> > >  fs/nfsd/nfs4callback.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> > > index 052be5bf9ef5..7325592b456e 100644
+> > > --- a/fs/nfsd/nfs4callback.c
+> > > +++ b/fs/nfsd/nfs4callback.c
+> > > @@ -1189,6 +1189,7 @@ static void nfsd4_cb_done(struct rpc_task *task, void *calldata)
+> > >               switch (task->tk_status) {
+> > >               case -EIO:
+> > >               case -ETIMEDOUT:
+> > > +             case -EACCES:
+> > >                       nfsd4_mark_cb_down(clp, task->tk_status);
+> > >               }
+> > >               break;
+> > > --
+> > > 2.27.0
+> > >
+> >
