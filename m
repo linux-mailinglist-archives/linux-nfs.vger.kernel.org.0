@@ -2,91 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E079332E39
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Mar 2021 19:24:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 583EE332E8B
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Mar 2021 19:51:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230319AbhCISYB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 9 Mar 2021 13:24:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230433AbhCISXl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Mar 2021 13:23:41 -0500
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 379EEC06174A
-        for <linux-nfs@vger.kernel.org>; Tue,  9 Mar 2021 10:23:41 -0800 (PST)
-Received: by mail-qt1-x830.google.com with SMTP id o1so10917365qta.13
-        for <linux-nfs@vger.kernel.org>; Tue, 09 Mar 2021 10:23:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PMvBwUr43sXk816z08e0HPkkGATwk/3iFEDn175IbAs=;
-        b=Qv4G8rOrQe7HcLDBuePZyJ2tnRNB24pCtNEsXWy8E3bf3IYdN64IB3TwrAL5fZ2VNg
-         u9qDrfqfuQ1lmA+kcrIGyikS9+oiw5QNqNgyCJFl8W4OgAVtgIgkuhDpLSEuEh+3zxah
-         Kns6OZwp+0vLU1i4os+Uxc+eUUk1+dZf6iBzDYEmUyGJrzHo+JYiIixVnlkAzB/wTkTe
-         /7QtvY3zllZOdW0SudXAladaKudzpx9Gifouz/wru5U6thBYySbJZt+FWvu3aaygRf6B
-         Y187t5lGQPVymCgAcLfUfmnE0nJlel6BvDwOyYq3EouHnBvzfAngbfjp1BoOzIPZcQpx
-         K2Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PMvBwUr43sXk816z08e0HPkkGATwk/3iFEDn175IbAs=;
-        b=n3ZgrH57C4JmervgcZTSvYkML4aEy3ccXnlIo9IGH7F4nB55Atz2mR4/R+5p/R/f/Y
-         ftuj35NmztOveN6L/MHL77swzFVrPG+zBqlVfEmg0SMR1g0YsgMw3ynMJMIi9I1PzI+l
-         MDBBwJaYIH7Rhv/3yV1AO8tH6a0paRAFXfU1dHfsvQt6+96Ol9/ogZCMgdcNmI0wTKeZ
-         pIbvfBAobGYlehkYzfzkcn7JOzjYotFHO66mRsIK6olxczSrPy5koOmxbA0zeg2WSn6c
-         yBEOx7U1QFjrFleJLexxYWMgt6lViuE0eCW8zzdZ9DMoiiJYVGVkUNi6Pmmyk/6dwFbc
-         wBrA==
-X-Gm-Message-State: AOAM533jhwNhE/hanhf/uMGLy1cfbG/lb56lyA5vwB56USJ+yTCjF4si
-        HUlP4Oh+W0Mi0kBduPJ5lBGnguxex70=
-X-Google-Smtp-Source: ABdhPJzTM8eqaWtCbHfIz7ZIjz+laT5DTEobiUApwK59ByO6vSBOtDAx735tb2BmiTHRpN97scRolA==
-X-Received: by 2002:ac8:5c0a:: with SMTP id i10mr25416327qti.356.1615314220261;
-        Tue, 09 Mar 2021 10:23:40 -0800 (PST)
-Received: from kolga-mac-1.vpn.netapp.com (nat-216-240-30-11.netapp.com. [216.240.30.11])
-        by smtp.gmail.com with ESMTPSA id l5sm10058032qtj.21.2021.03.09.10.23.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Mar 2021 10:23:39 -0800 (PST)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     bfields@redhat.com, chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 1/1] NFSD: fix error handling in NFSv4.0 callbacks
-Date:   Tue,  9 Mar 2021 13:23:37 -0500
-Message-Id: <20210309182337.62308-1-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+        id S230035AbhCISvO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 9 Mar 2021 13:51:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231248AbhCISvK (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 9 Mar 2021 13:51:10 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 83C1664F25
+        for <linux-nfs@vger.kernel.org>; Tue,  9 Mar 2021 18:51:09 +0000 (UTC)
+Subject: [PATCH v1] SUNRPC: Add tracepoint that fires when an RPC is
+ retransmitted
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Date:   Tue, 09 Mar 2021 13:51:08 -0500
+Message-ID: <161531586831.10829.14305258381691709676.stgit@manet.1015granger.net>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If the server's attempts at sending a callback request fails either due
-to connection or authentication issues, the server needs to set
-NFS4ERR_CB_PATH_DOWN in response to RENEW so that client can recover.
+A separate tracepoint can be left enabled all the time to capture
+rare but important retransmission events. So for example:
 
-Suggested-by: Bruce Fields <bfields@redhat.com>
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+kworker/u26:3-568   [009]   156.967933: xprt_retransmit:      task:44093@5 xid=0xa25dbc79 nfsv3 WRITE ntrans=2
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4callback.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ include/trace/events/sunrpc.h |   40 ++++++++++++++++++++++++++++++++++++++++
+ net/sunrpc/xprt.c             |    4 +++-
+ 2 files changed, 43 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 052be5bf9ef5..f436d2ca5223 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1186,11 +1186,8 @@ static void nfsd4_cb_done(struct rpc_task *task, void *calldata)
- 		rpc_restart_call_prepare(task);
- 		return;
- 	case 1:
--		switch (task->tk_status) {
--		case -EIO:
--		case -ETIMEDOUT:
-+		if (task->tk_status)
- 			nfsd4_mark_cb_down(clp, task->tk_status);
--		}
- 		break;
- 	default:
- 		BUG();
--- 
-2.27.0
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 036eb1f5c133..430b42f2351f 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -1079,6 +1079,46 @@ TRACE_EVENT(xprt_transmit,
+ 		__entry->seqno, __entry->status)
+ );
+ 
++TRACE_EVENT(xprt_retransmit,
++	TP_PROTO(
++		const struct rpc_rqst *rqst
++	),
++
++	TP_ARGS(rqst),
++
++	TP_STRUCT__entry(
++		__field(unsigned int, task_id)
++		__field(unsigned int, client_id)
++		__field(u32, xid)
++		__field(int, ntrans)
++		__field(int, version)
++		__string(progname,
++			 rqst->rq_task->tk_client->cl_program->name)
++		__string(procedure,
++			 rqst->rq_task->tk_msg.rpc_proc->p_name)
++	),
++
++	TP_fast_assign(
++		struct rpc_task *task = rqst->rq_task;
++
++		__entry->task_id = task->tk_pid;
++		__entry->client_id = task->tk_client ?
++			task->tk_client->cl_clid : -1;
++		__entry->xid = be32_to_cpu(rqst->rq_xid);
++		__entry->ntrans = rqst->rq_ntrans;
++		__assign_str(progname,
++			     task->tk_client->cl_program->name)
++		__entry->version = task->tk_client->cl_vers;
++		__assign_str(procedure, task->tk_msg.rpc_proc->p_name)
++	),
++
++	TP_printk(
++		"task:%u@%u xid=0x%08x %sv%d %s ntrans=%d",
++		__entry->task_id, __entry->client_id, __entry->xid,
++		__get_str(progname), __entry->version, __get_str(procedure),
++		__entry->ntrans)
++);
++
+ TRACE_EVENT(xprt_ping,
+ 	TP_PROTO(const struct rpc_xprt *xprt, int status),
+ 
+diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+index 691ccf8049a4..801b23157a42 100644
+--- a/net/sunrpc/xprt.c
++++ b/net/sunrpc/xprt.c
+@@ -1537,8 +1537,10 @@ xprt_request_transmit(struct rpc_rqst *req, struct rpc_task *snd_task)
+ 		return status;
+ 	}
+ 
+-	if (is_retrans)
++	if (is_retrans) {
+ 		task->tk_client->cl_stats->rpcretrans++;
++		trace_xprt_retransmit(req);
++	}
+ 
+ 	xprt_inject_disconnect(xprt);
+ 
+
 
