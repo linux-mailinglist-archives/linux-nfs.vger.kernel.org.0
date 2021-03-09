@@ -2,116 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 873E8332C80
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Mar 2021 17:47:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59E76332CFA
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Mar 2021 18:14:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230391AbhCIQq7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 9 Mar 2021 11:46:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60346 "EHLO
+        id S230173AbhCIRNe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 9 Mar 2021 12:13:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229775AbhCIQqm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Mar 2021 11:46:42 -0500
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C94ABC06174A
-        for <linux-nfs@vger.kernel.org>; Tue,  9 Mar 2021 08:46:41 -0800 (PST)
-Received: by mail-ej1-x636.google.com with SMTP id mm21so29474968ejb.12
-        for <linux-nfs@vger.kernel.org>; Tue, 09 Mar 2021 08:46:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DlJQQiI+2KtMRCT723Gi1SnSu+2f4QkI2kcfN0Kd4so=;
-        b=AAplqRJUOQdV9sMrPmstGvYhgjxNxAyiV0cP/1I/LwHypGSZiPy26WgBUXfGghVsm1
-         ep6rTJoyaGhsoFm09BVQJviFScbhB67K/jS7bZpnDGNtP78tL0BpAbnsBHSX2VRhvbeA
-         mH2HHashieVEQK/gobmDR6MO7//Zy4XO/2F7hd7vHm7pnjtHMZs4m72bp7XvW+WxoZ7H
-         GGOrN89u8h6q3L1jiEoBS7296oeaLrqF8Vi+Pum+g1o0mE+eG/BWZ2Ki5Hh4yiEgRcqn
-         mO4wBBqrGJoWaujDLEchqp5bPVSoRFYawIEiDPiHxfjwfsS8xv2RZy9Yq4U8lbYe2TK0
-         YIsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DlJQQiI+2KtMRCT723Gi1SnSu+2f4QkI2kcfN0Kd4so=;
-        b=CcYYLSlspEyhTEz9uPd6HSmnZW8B8eogX+CTUG3KbTZ89EUOZj2TuhyYmeSJVXBy5C
-         PmV+Lb4P6tcRP2QknAaCG0guq/X6Fd5HZVOtkaQA/VPwk521LQhfheO/PcPg3QsMAV2y
-         /uYuDwNSTvFIVvI8nfwCVU39T7OZovKBTqqePGgKLESwLu1f7ux3rQSiY51QXQ6A2iO2
-         IKdxMKA5EsW42O89qf6dxHKIN8HJcwlUP+b+2kA5pZMS0LzprrstYvm7UkOIKC680b5y
-         kX+tZJduNLDoS30fS0gGC6KmXcM4XD+3Df+jVgUWEoc6wusVYQKPMYEDiXclRIJSseFs
-         BOsg==
-X-Gm-Message-State: AOAM532ItxYcVycttUlclgg6mB99pxBi2EdrwAn/0luQKjU/7NOUoKQO
-        1EXIw9GjWmKAiR3xQjrlY340ofHd/ivrqZr+JCr2FTl6
-X-Google-Smtp-Source: ABdhPJyS4iJt3JbYUw+AtZmAErr78w0T5oJ5WxuBLntPzuRhnKrbJJqA1SVH5dJ3XbtHReeGFY/FqasGnBTuRAjfo7s=
-X-Received: by 2002:a17:906:9243:: with SMTP id c3mr21660249ejx.388.1615308399959;
- Tue, 09 Mar 2021 08:46:39 -0800 (PST)
+        with ESMTP id S231522AbhCIRNJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Mar 2021 12:13:09 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DBEAC06174A;
+        Tue,  9 Mar 2021 09:13:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5U491TQdNsjhbIYsUSmgNKAf6MVmCm1WHLEIdhpS/JU=; b=gPUvkAbBbisJ6IK3aBstPSkfYW
+        LukBQjq/CPDnD0C7fLKVYWPdq9Iiad/BOrw2QSQfrb6a4muKVZ7KrqbRUBTR+lMUA+KCNg3xdtlQt
+        sAGf6WDADgoDIcO5wmX6UkX1Vtz2XQLXRFYZef49Hn4NcdwbVdoz428WnEGx+0zTA6zvcLTpbvHjG
+        JJHVj+uGRN8OrHg62WGpB64yAOFpCqCyhmX2wvRrNOMuWd4IqrETREBWRWrMGnYY5TilXWe3EhFwK
+        goyU/0YkSUWwsxfFfzhkhX6/4xLVqLCC2FMOQ8KfyjAGZ0OS7LGeC2XNoorKDvehK520r4/YMpWxB
+        UAOpD0Yg==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lJfuI-000q0x-T5; Tue, 09 Mar 2021 17:12:39 +0000
+Date:   Tue, 9 Mar 2021 17:12:30 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux-NFS <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 2/5] mm/page_alloc: Add a bulk page allocator
+Message-ID: <20210309171230.GA198878@infradead.org>
+References: <20210301161200.18852-1-mgorman@techsingularity.net>
+ <20210301161200.18852-3-mgorman@techsingularity.net>
 MIME-Version: 1.0
-References: <20210309144127.57833-1-olga.kornievskaia@gmail.com>
- <YEeWK+gs4c8O7k0u@pick.fieldses.org> <CAN-5tyEFRiA2xcHBy63cgD+zAKDOR56A+Vo3te0zmdWVD72gDw@mail.gmail.com>
-In-Reply-To: <CAN-5tyEFRiA2xcHBy63cgD+zAKDOR56A+Vo3te0zmdWVD72gDw@mail.gmail.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Tue, 9 Mar 2021 11:46:28 -0500
-Message-ID: <CAN-5tyHUWJR6MP-PHc6=26Rz1tO_LYtGmjmU2HFf3uyg4NMXsg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] NFSD: fix error handling in callbacks
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210301161200.18852-3-mgorman@techsingularity.net>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Mar 9, 2021 at 11:39 AM Olga Kornievskaia
-<olga.kornievskaia@gmail.com> wrote:
->
-> On Tue, Mar 9, 2021 at 10:37 AM J. Bruce Fields <bfields@redhat.com> wrote:
-> >
-> > On Tue, Mar 09, 2021 at 09:41:27AM -0500, Olga Kornievskaia wrote:
-> > > From: Olga Kornievskaia <kolga@netapp.com>
-> > >
-> > > When the server tries to do a callback and a client fails it due to
-> > > authentication problems, we need the server to set callback down
-> > > flag in RENEW so that client can recover.
-> >
-> > I was looking at this.  It looks to me like this should really be just:
-> >
-> >         case 1:
-> >                 if (task->tk_status)
-> >                         nfsd4_mark_cb_down(clp, task->tk_status);
-> >
-> > If tk_status showed an error, and the ->done method doesn't return 0 to
-> > tell us it something worth retrying, then the callback failed
-> > permanently, so we should mark the callback path down, regardless of the
-> > exact error.
->
-> Ok. v2 coming (will change the title to make it 4.0 callback)
+Would vmalloc be another good user of this API? 
 
-Sigh, I didn't change the wording of the commit and left the
-authentication problem which is not accurate enough for this patch (as
-say connection errors are also covered by this patch). Do you need me
-to change the wording of the commit and send v3?
+> +	/* May set ALLOC_NOFRAGMENT, fragmentation will return 1 page. */
+> +	if (!prepare_alloc_pages(gfp_mask, 0, preferred_nid, nodemask, &ac, &alloc_mask, &alloc_flags))
 
->
-> >
-> > --b.
-> >
-> > >
-> > > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> > > ---
-> > >  fs/nfsd/nfs4callback.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> > > index 052be5bf9ef5..7325592b456e 100644
-> > > --- a/fs/nfsd/nfs4callback.c
-> > > +++ b/fs/nfsd/nfs4callback.c
-> > > @@ -1189,6 +1189,7 @@ static void nfsd4_cb_done(struct rpc_task *task, void *calldata)
-> > >               switch (task->tk_status) {
-> > >               case -EIO:
-> > >               case -ETIMEDOUT:
-> > > +             case -EACCES:
-> > >                       nfsd4_mark_cb_down(clp, task->tk_status);
-> > >               }
-> > >               break;
-> > > --
-> > > 2.27.0
-> > >
-> >
+This crazy long line is really hard to follow.
+
+> +		return 0;
+> +	gfp_mask = alloc_mask;
+> +
+> +	/* Find an allowed local zone that meets the high watermark. */
+> +	for_each_zone_zonelist_nodemask(zone, z, ac.zonelist, ac.highest_zoneidx, ac.nodemask) {
+
+Same here.
+
+> +		unsigned long mark;
+> +
+> +		if (cpusets_enabled() && (alloc_flags & ALLOC_CPUSET) &&
+> +		    !__cpuset_zone_allowed(zone, gfp_mask)) {
+> +			continue;
+> +		}
+
+No need for the curly braces.
+
+>  	}
+>  
+> -	gfp_mask &= gfp_allowed_mask;
+> -	alloc_mask = gfp_mask;
+
+Is this change intentional?
