@@ -2,281 +2,152 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87E6A332407
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Mar 2021 12:28:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 871A83327EA
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Mar 2021 14:58:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230111AbhCIL2W (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 9 Mar 2021 06:28:22 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:55889 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231200AbhCIL2Q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Mar 2021 06:28:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1615289296;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LvGBiPlaIdzFAXyfsy1qEVyMatChi1ggtZKGPfWh9R0=;
-        b=LVNz0z1YXL803AlW9Gs/ynHrnvWU4RjOIPNSJpN5vQ32F89xgpyktcLJuHIXad+HeePI48
-        BvjtiUJkYDV5Q5qqEtYG491cFSm2XS80I9WHSikQOO1DntMDYWo5KN49l1KijwoM5Ud1PC
-        Cb6GwYpLZ0bF2u+LRsvXeD3BSHsWrVM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-p4rhjGRAM9idlqpMeWWWYA-1; Tue, 09 Mar 2021 06:28:12 -0500
-X-MC-Unique: p4rhjGRAM9idlqpMeWWWYA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7E714881D50;
-        Tue,  9 Mar 2021 11:28:10 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-118-152.rdu2.redhat.com [10.10.118.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 542A75D9CD;
-        Tue,  9 Mar 2021 11:27:55 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20210308223247.GB63242@dread.disaster.area>
-References: <20210308223247.GB63242@dread.disaster.area> <CAOQ4uxjYWprb7trvamCx+DaP2yn8HCaZeZx1dSvPyFH2My303w@mail.gmail.com> <2653261.1614813611@warthog.procyon.org.uk> <CAOQ4uxhxwKHLT559f8v5aFTheKgPUndzGufg0E58rkEqa9oQ3Q@mail.gmail.com> <517184.1615194835@warthog.procyon.org.uk> <584529.1615202921@warthog.procyon.org.uk>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     dhowells@redhat.com, Amir Goldstein <amir73il@gmail.com>,
-        linux-cachefs@redhat.com, Jeff Layton <jlayton@redhat.com>,
-        David Wysochanski <dwysocha@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-afs@lists.infradead.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Subject: Re: Metadata writtenback notification? -- was Re: fscache: Redesigning the on-disk cache
+        id S231660AbhCIN52 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 9 Mar 2021 08:57:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230359AbhCIN5Z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Mar 2021 08:57:25 -0500
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B080C06174A
+        for <linux-nfs@vger.kernel.org>; Tue,  9 Mar 2021 05:57:24 -0800 (PST)
+Received: by mail-ej1-x631.google.com with SMTP id mj10so27897056ejb.5
+        for <linux-nfs@vger.kernel.org>; Tue, 09 Mar 2021 05:57:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xw4prKFIV71j3r5FDBwxwDqhwqt4DbdRefFH2AydYfw=;
+        b=MqfqFIwfDH0yVdx1fT9GW5t9qjCO7m+z6cKng4k+nOaHoDRViaqdKeg6rlxDvtHUxM
+         OlcuEv9KkfcQ8/L/igUF9zJgqUnjdIT4L1bmJKRky9wDrFfxkZ84sjsbaiBmpeJ/0fE3
+         8m7JqN3xzhS37LqW4DfHHAlhRokXukN1tRBT36ihFaDFji8zwILErQxmkslPPNaMPsuT
+         uJP7vfDSwQ+otsuwJ2PQVvs+H9wBit7p/VeeggJXqKdcPYERveflp+0/+F64+lVMsFSW
+         Srzqv2WEyfgha1PPfouyC1peTnidsQOYF6GB3WVjUxW7fipH9RO5FzRiOf9m2m+oa/Ip
+         UIKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xw4prKFIV71j3r5FDBwxwDqhwqt4DbdRefFH2AydYfw=;
+        b=GSqYkUIAHVsbTk7bhc0qMvCNziYqP/FHBfCU+d26JId8q5GlZAd6uoSrNtX84Kzfp1
+         OJo4PRssRW4qiH8SPhDeKh+lV1dHNIor0qzyHCrUYVH4sqbr1QU1Q4gaPqgn5nGL/59T
+         OlYZVo/j9ztEmK3BFDnuMyrpdxZOWTHqTB4r4S1RBRwNazjcpolObkaZDENUcISl6v2/
+         aNQDlqzq2m6ynmby3jJmFmXYz5AwWYpgZxs0ORtHHZDCoBBiFzlytZ0hD3BMWCjXVBbS
+         sMm1+xpnnWS2C9EK76cAd0tz5lvrIGYDx9sR/Fbjx0cNdQEhuUTsrfTg2sknIE30SW58
+         gFBA==
+X-Gm-Message-State: AOAM533YQMMfwLTiTs1b0/Q9tZQBr0FyP4V1OGo6c2IBSWHtlEucxKg1
+        pEqzoG1jlHin5TC9RHzPgC3mUfkxi1HPvjXdCt0=
+X-Google-Smtp-Source: ABdhPJzEaRsHISJWw/egT6cQk+nRAi/7CSRO1+oa33TOkfs57qdZ0fP2crcepshCDl7s5EewtDnMM3U8Cc8S+uJ7i2E=
+X-Received: by 2002:a17:906:30d9:: with SMTP id b25mr3059058ejb.348.1615298243178;
+ Tue, 09 Mar 2021 05:57:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <156604.1615289274.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 09 Mar 2021 11:27:54 +0000
-Message-ID: <156605.1615289274@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20210302194659.98563-1-dai.ngo@oracle.com> <CAN-5tyHr6VEfBubU_gBRyCfzkAzGkwiBvO-0S9Kbnpj_LnVdQQ@mail.gmail.com>
+ <4d18eb5e-b1b8-7f26-85b9-b6f9e1b1b231@oracle.com>
+In-Reply-To: <4d18eb5e-b1b8-7f26-85b9-b6f9e1b1b231@oracle.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Tue, 9 Mar 2021 08:57:11 -0500
+Message-ID: <CAN-5tyF8hvRZujiCt6e3shNXdEGEQ=kJvOYbFhWx2DCGVo9qPA@mail.gmail.com>
+Subject: Re: [PATCH] NFSv4.2: destination file needs to be released after
+ inter-server copy is done.
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dave Chinner <david@fromorbit.com> wrote:
+On Mon, Mar 8, 2021 at 3:10 PM <dai.ngo@oracle.com> wrote:
+>
+> Thanks Olga for reviewing the patch, reply inline below:
+>
+> On 3/8/21 10:35 AM, Olga Kornievskaia wrote:
+> > On Tue, Mar 2, 2021 at 2:47 PM Dai Ngo <dai.ngo@oracle.com> wrote:
+> >> This patch is to fix the resource leak problem of the source file
+> >> when doing inter-server copy. The fix is to close and release the
+> >> file in __nfs42_ssc_close after the copy is done.
+> >>
+> >> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> >> ---
+> >>   fs/nfs/nfs4file.c | 6 ++++++
+> >>   1 file changed, 6 insertions(+)
+> >>
+> >> diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+> >> index 57b3821d975a..20163fe702a7 100644
+> >> --- a/fs/nfs/nfs4file.c
+> >> +++ b/fs/nfs/nfs4file.c
+> >> @@ -405,6 +405,12 @@ static void __nfs42_ssc_close(struct file *filep)
+> >>          struct nfs_open_context *ctx = nfs_file_open_context(filep);
+> >>
+> >>          ctx->state->flags = 0;
+> >> +
+> >> +       if (!filep)
+> >> +               return;
+> >> +       get_file(filep);
+> >> +       filp_close(filep, NULL);
+> >> +       fput(filep);
+> >>   }
+> > I don't understand this logic. There is no reason to call
+> > filp_close()?
+>
+> This is to follow the steps done in nfsd_file_put/.../nfsd_file_free.
+> However since this is the source file the flush is probably not needed,
+> just there to be safe. I will remove it.
 
-> > > There was a discussion about fsyncing a range of files on LSFMM [1].
-> > > In the last comment on the article dchinner argues why we already ha=
-ve that
-> > > API (and now also with io_uring(), but AFAIK, we do not have a usefu=
-l
-> > > wait_for_sync() API. And it doesn't need to be exposed to userspace =
-at all.
-> > > =
+As I said before the only thing that's needed is the fput() which was
+originally in the code (but got incorrectly changed to nfsd_put()). I
+prefer to keep it there because this deals with cleaning up the SSC
+state. I don't see any significant reason to move it out.
 
-> > > [1] https://lwn.net/Articles/789024/
-> > =
+> > All this would be done by doing a fput(). Also fput()
+> > would drop a reference on the mount point. So we are doing this then
+> > we can't call that extra disconnect that was added by another patch.
+>
+> nfsd4_interssc_disconnect does not need to access the source file.
+> I tested both patches together and did not see any problem. If there
+> is use-after_free condition the code detects it and there would be
+> warning messages in /var/log/messages.
 
-> > This sounds like an interesting idea.  Actually, what I probably want =
-is a
-> > notification to say that a particular object has been completely sync'=
-d to
-> > disk, metadata and all.
-> =
+We don't need and don't want to do the nfsd4_interssc_disconnect in
+the non-error path. All the ref-counting on the superblock is
+accomplished already. The other patch is not needed and neither is
+correct, it makes the incorrect refcounts in failure cases.
 
-> This isn't hard to do yourself in the kernel. All it takes is a
-> workqueue to run vfs_fsync() calls asynchronously and for the work
-> to queue a local notification/wakeup when the fsync completes...
-> =
+I nack both patches. The only patch which I will send that's needed is this:
 
-> That's all aio_fsync() does - the notification it queues on
-> completion is the AIO completion event for userspace - so I think
-> you could do this in about 50 lines of code if you really needed
-> it...
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 8d6d2678abad..3581ce737e85 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1304,7 +1304,7 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt,
+struct nfsd_file *src,
+                        struct nfsd_file *dst)
+ {
+        nfs42_ssc_close(src->nf_file);
+-       /* 'src' is freed by nfsd4_do_async_copy */
++       fput(src->nf_file);
+        nfsd_file_put(dst);
+        mntput(ss_mnt);
+ }
 
-I was thinking more in terms of passively finding out when metadata has be=
-en
-flushed to disk rather than actively forcing it.  Obviously I can manually
-flush from a worker thread, but that ties up a thread per file I want to
-flush (unless I want to do a higher-level sync).
+> > Anyway I don't see why there is any reason to call anything but the
+> > fput(), I'm not sure why __nfs42_ssc_close() is a better function and
+> > doesn't lead to the "use_after_free".
+>
+> Since __nfs42_ssc_open was called open the file, I think __nfs42_ssc_close
+> is an appropriate place to close the file.
 
-Btw, looking at aio_fsync(), is there any reason it copies the current cre=
-ds
-rather than just taking a ref on them?  (Granted, this may not be a questi=
-on
-for you)
-
-> > However, there are some performance problems are arising in my fscache=
--iter
-> > branch:
-> > =
-
-> >  (1) It's doing a lot of synchronous metadata operations (tmpfile, tru=
-ncate,
-> >      setxattr).
-> =
-
-> Async pipelines using unbound workqueues are your friend.
-
-Maybe.  I could just throw everything into a workqueue and let the workque=
-ue
-deal with it.  There still have to be synchronisation points, though - I c=
-an't
-schedule a cache-write from a server-read to the cache following a 3rd-par=
-ty
-induced invalidation until after the invalidation has happened - and that
-holds up userspace from writing to the cache.  But maybe it will work.
-
-Btw, how expensive is it to throw an operation off to a workqueue versus d=
-oing
-it in thread?  Particularly if it's a synchronous op that the thread is go=
-ing
-to have to wait for (e.g. write_begin()).
-
-> >  (2) It's retaining a lot of open file structs on cache files.  Cachef=
-iles
-> >      opens the file when it's first asked to access it and retains tha=
-t till
-> >      the cookie is relinquished or the cache withdrawn (the file* does=
-n't
-> >      contribute to ENFILE/EMFILE but it still eats memory).
-> =
-
-> Sounds similar to the problem that the NFSd open file cache solves.
-> (fs/nfsd/filecache.c)
-
-Looks similiarish to what I was thinking of with having a queue of
-currently-not-in-use cookies to go through and commit and close.
-
-> >      but if the file is truncated
-> >      larger, that excess data now becomes part of the file.
-> =
-
-> Keep the actual file size in your tracking xattr.
-
-I do that, but it doesn't help entirely.  If someone truncates the file la=
-rger
-and then writes non-contiguously, the problem occurs.
-
-I've tried truncating the file down and then truncating it up, but that
-requires two synchronous ops - though the latter is relatively cheap.  I'v=
-e
-also tried fallocate() to clear the block.  What I've found is that the ne=
-xt
-DIO write then has to sync because these may read data into the pagecache =
-of
-the backing file.
-
-Apart from clearing the tail of a page on writing, it might be better for =
-me
-to read the data into a spare page, clear the tail and write it back.
-
-> >      Possibly it's sufficient to just clear the excess page space befo=
-re
-> >      writing, but that doesn't necessarily stop a writable mmap from
-> >      scribbling on it.
-> =
-
-> We can't stop mmap from scribbling in it. All filesystems have this
-> problem, so to prevent data leaks we have to zero the post-eof tail
-> region on every write of the EOF block, anyway.
-
-I meant an mmap scribbling on it after it's been cleared - but I guess tak=
-ing
-away the PTE-writeable flag and making page_mkwrite() wait should solve th=
-at.
-
-> >  (4) Committing outstanding cache metadata at cache withdrawal or netf=
-s
-> >      unmount.  I've previously mentioned this: it ends up with a whole
-> >      slew of synchronous metadata changes being committed to the cache=
- in
-> >      one go (truncates, fallocates, fsync, xattrs, unlink+link of tmpf=
-ile)
-> >      - and this can take quite a long time.  The cache needs to be mor=
-e
-> >      proactive in getting stuff committed as it goes along.
-> =
-
-> Workqueues give you an easy mechanism for async dispatch and
-> concurrency for synchronous operations. This is a largely solved
-> problem...
-
-Yes and no.  Yes, I can fan out the number of threads doing the committing=
-,
-but there's still a limit on the I/O bandwidth - and a lot of the operatio=
-ns
-still have to hit the disk in the right order.  It still stuffs up the use=
-r
-experience if the cache eats up the entirety of the disk I/O for a few sec=
-onds
-just because an automount expired.
-
-Probably the progressive committing approach is a better one so that there=
-'s
-less to do at the end.
-
-> >  (5) Attaching to an object requires a pathwalk to it (normally only t=
-wo
-> >      steps) and then reading various xattrs on it - all synchronous, b=
-ut can
-> >      be punted to a background threadpool.
-> =
-
-> a.k.a. punting to a workqueue :)
-
-I do that, but it doesn't help so much.  Whilst it can mitigate the effect=
- by
-running parallel to userspace, userspace tends to move pretty quickly from
-open() to read() - at which point we have to wait anyway.
-
-The problem is that all the steps are synchronous and, for the most part, =
-have
-to be sequential because there's a dependency chain: 2 x dir-lookup, get L=
-SM
-xattrs, get cache xattrs - then read the data if it's present.  I might be
-able to speculate at the end and read two cache xattrs in parallel, but ea=
-ch
-one requires a separate thread to do it.
-
-On top of that, if the user is running a parallel application such as buil=
-ding
-a kernel, a CPU running an offloaded I/O thread isn't running a user threa=
-d.
-What I've found is that increasing the size of the threadpool doesn't actu=
-ally
-affect the time taken.
-
-What I've done in my fscache-iter branch is to have a small thread pool an=
-d
-offload work to it if there's a thread free - otherwise process the work i=
-n
-the calling userspace thread and avoid the context switching.
+Again let's keep the cleaning of the server's SSC state in one place.
 
 
-One reason I was wondering about moving to an approach whereby I have an i=
-ndex
-that locates all the blocks (which are then kept in a single file) is that=
- I
-can probably keep the entire index in RAM and so the lookup costs are vast=
-ly
-reduced.  The downside as Amir pointed out is that metadata coherency is m=
-uch
-harder if I don't just want to blow the cache away if cache isn't properly
-committed when the machine is rebooted.
 
-Note that OpenAFS has been using a single-index approach, with each 256K b=
-lock
-of data in its own file.  They then zap any file that's newer than the ind=
-ex
-file when the cache is started, assuming that that file might be corrupted=
-.
-
-David
-
+> -Dai
+>
+> >
+> >>   static const struct nfs4_ssc_client_ops nfs4_ssc_clnt_ops_tbl = {
+> >> --
+> >> 2.9.5
+> >>
