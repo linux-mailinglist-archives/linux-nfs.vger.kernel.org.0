@@ -2,187 +2,312 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBA763378AF
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Mar 2021 17:03:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E3D03379BB
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Mar 2021 17:43:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234067AbhCKQDY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 11 Mar 2021 11:03:24 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:44768 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234417AbhCKQDJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Mar 2021 11:03:09 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12BFtXSO045293;
-        Thu, 11 Mar 2021 16:03:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=AkWzmvBzjG68h+WKeHJFhilsbQGvj69M444UL1A+o2Y=;
- b=DjiUPjWSdV4mNrcC0g0Wr3vWvFvs5nLOrWWzbvBVKqDMPVBhMq1pk/7fWYmRGPAosk0m
- QmrmZjkJrUDB/qrhr6tA4PYpwXCrdhTikpvi3RrEk4AwsS/x3rTYZhpEZwhVy3zutMrO
- ukLKTUk+z0OO1Nc79MTG7HGsKTWuHdpfoQYQsTcn5uzAw7hv8oY7RCeJm2OV81kiCU7I
- WrQ3OmO2Dh5F/uaDgEnJFq6+BSUBJCQvVasvwvZyRlKCGrf0kSRt/NLUVOgIRu+Xl6BD
- tMk63OyMZj8h89/+0ql0UjdbqpxwEnagzlrQgRlptBka6AWr7M1gqEEXJ/CqUFAUUReF jQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 3742cnf2ju-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Mar 2021 16:03:02 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12BFttmF065064;
-        Thu, 11 Mar 2021 16:03:01 GMT
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2053.outbound.protection.outlook.com [104.47.36.53])
-        by aserp3020.oracle.com with ESMTP id 374kn2qfuc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Mar 2021 16:03:01 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZOzAZGspnpVk7BV0F+SEc6dy8LC0bkyUCC2xmtPz0+jXUc1XnzzZFQlww7wOwOQRxM+4fq5IuKZsy/0dUMFFjie+xo8kXbL6fbKQAA8qRlT5WMkJXrE4x2cOp1w2Nn9xODN2HPPeHs1b3L6ytdAvrLUUkr6icaMIxG+0HoG2oexf3u+O0QhUCNjKWAZvP5Ww+B7PLGQ3leYbW08Wt7wg6+siMxGHzFJdvXN5rem/EX24LvSPi8s3ViwpfWR5qLgz4e0ys40t/lVcDfIbdBjSXhHpANaVOgYzVyIVsH4URGSjEaMf1sez1oZmCcuggI1TrUdzqbvxF2bQYXbUH3o2aw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AkWzmvBzjG68h+WKeHJFhilsbQGvj69M444UL1A+o2Y=;
- b=JeW/+x83xu7/puqbpYg28FKwvKEfU0keM5E6xi90kJqAdAz59T8vXcSgGVLboMSHtaGOstiTLsVGbGNx4cwOtTZFBQ0GAoXgfOqugy1xbDAWH7KtOlKxsWQdKaZhZduA8lXw0bxacuz2ryh8plFM92rqTAW7r84RBs1B2D4Rybuh1oZFffjWMXR1conqpxURVvStlXkI4HKmi+nteODIzmlyykFB64ApWTk7OINnbeGSw/XC0aWPMLHVnWuQShf6gk+bY0oAok52oxF9gKkB2KbPjzCe1b7BUUjfEK25c2tQsBby5W7VQpJDLVZFvi4VYPDIE/82GUcnxyerR3uGvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        id S229562AbhCKQmy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 11 Mar 2021 11:42:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229673AbhCKQm2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Mar 2021 11:42:28 -0500
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D2C9C061574;
+        Thu, 11 Mar 2021 08:42:28 -0800 (PST)
+Received: by mail-io1-xd35.google.com with SMTP id y20so4274505iot.4;
+        Thu, 11 Mar 2021 08:42:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AkWzmvBzjG68h+WKeHJFhilsbQGvj69M444UL1A+o2Y=;
- b=lgIsCbEcsMtF3P9uyWZz2hXDahxKwGyiRTyP7PxrLWsytFGBPX+7zOIJTIApHYr+NmJ3f3RyKLuYgSCcMqPh+kdizRo+NQrWm0aY4iiHGuaRgTkvmBc4kLPX+vvud6ngq/sDyOXFf5mCp8f0T6/Lqwo6WVgMiwd1x7cs/O0sVVk=
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by BYAPR10MB2792.namprd10.prod.outlook.com (2603:10b6:a03:87::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.28; Thu, 11 Mar
- 2021 16:02:59 +0000
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::6da8:6d28:b83:702b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::6da8:6d28:b83:702b%4]) with mapi id 15.20.3912.030; Thu, 11 Mar 2021
- 16:02:59 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-CC:     Bruce Fields <bfields@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v4 1/1] NFSD: fix error handling in NFSv4.0 callbacks
-Thread-Topic: [PATCH v4 1/1] NFSD: fix error handling in NFSv4.0 callbacks
-Thread-Index: AQHXFo7o3JLy/Gvzh0im1bdfEfIZyKp+8uQA
-Date:   Thu, 11 Mar 2021 16:02:59 +0000
-Message-ID: <9BD1A9B5-4105-4612-9599-A990ABE1A42C@oracle.com>
-References: <20210311155500.14209-1-olga.kornievskaia@gmail.com>
-In-Reply-To: <20210311155500.14209-1-olga.kornievskaia@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=oracle.com;
-x-originating-ip: [68.61.232.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e130de18-0633-41e3-5b6f-08d8e4a72478
-x-ms-traffictypediagnostic: BYAPR10MB2792:
-x-microsoft-antispam-prvs: <BYAPR10MB2792B7C787F76F54360A220593909@BYAPR10MB2792.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YNBiHP9jwo5eN0BQdMF3pmnt/yuFW16GBCfGm/DqHTyRAomnLHYxjBdxBBTDDYDBZm6AO5wzyaIPiYIWZUzGJNScFhuqNOzlnC4DAlEb4DUsff20JSzpaLqmsoZJA/RdN0Vsr2Kiy+7eh4hF5bLfwj7/zxj9SxelT0+XV9bx906CLAz2eSVl2CDWplWuyf2JAE6U3qGid3o1gggHV5vRM831fmbsULIwZR0U8JHialyGvxjZnPC+EwsX5x+hq+TuY46kn5S1DTLUTAThAHbo0hxulZUxY0dqffBPbRGhjwSi6b4Wr5H2t06buOoZl41hckuNMsw6Jbi1OgaX8zKkFCZeRnLaUpYrqwgbAkxpkJznP9YapMCNe1UO/BvKsG5jBN4MP+0LYvfhjuAvYgdp0kewe2oo4SO0EliKm7IavWFhRHaiqyYIEV5gc0Mi5LgS/CQsUm4zBGt1EsujMFGpLcc8OfahRUTjRCycQikepTGBvRS4Mj1zOW+PEJSLufkV42njsiRHjvYFjUzioZviokUlLT8AXtmlHHUC4FS0cAwOfQF9gUaPSm7F5cZPrWcJsWGh8DJLKTWNKHmIPnpt2A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(346002)(376002)(396003)(39860400002)(366004)(71200400001)(4744005)(2906002)(6916009)(4326008)(316002)(36756003)(5660300002)(66946007)(66556008)(66446008)(86362001)(64756008)(8676002)(8936002)(91956017)(66476007)(6512007)(76116006)(6486002)(53546011)(478600001)(6506007)(54906003)(186003)(2616005)(26005)(33656002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?uvoHC2PI5iciTPl76YZqnDgXJG1Wg4iNjaabGgW9ZAJb42hHNdkm/f0SuS6w?=
- =?us-ascii?Q?hw5trFB9W8RdJj60ApGh1BFBqMcAAEOUTMl5u3M+FeMGPIfUNyyfwtbW9Mmu?=
- =?us-ascii?Q?hBGaKQJQZQumgZjsXOfadZOG/+HSuU7OuYI6BKq4cGMZQfrFuSDmj1ez3RXB?=
- =?us-ascii?Q?xCO3uXdFdg4Cmv9MrupakVrkcK8VOT16fXabP8wuaCZfpAeDZjqkq0ylwGcd?=
- =?us-ascii?Q?vv161WijFl6FEKSi8clVO7Q+mk+YjpsE8T2dkkew64vbaFWtS8RvaAE4doo2?=
- =?us-ascii?Q?nL8k2o8gohdPzHOYk6pqF86751/yCVFKWfQWHip5dncMrUq3C8pjVZRwLmRp?=
- =?us-ascii?Q?2AragWV6u2OZzwMuz6lFgCXzOecN3UzPZA0oj0JCANCIyUdl96ZSRG8zyF9l?=
- =?us-ascii?Q?WsQJQoci0LzYUVS3MmfPauC/XD34LZRw0FB2M0WCE2jydtSHv2tdU7rdavia?=
- =?us-ascii?Q?ofwXlEhtmgFOD037KbFG7bvEvIjBzdZCHpe6XACrxiUj/k9p8VZtojiyN89a?=
- =?us-ascii?Q?4DvJT3ChkvNvakz9c/tECVzKOHaRIchxx2vMSSjq2KcmyNocISlr0OfYnKlF?=
- =?us-ascii?Q?6hY3rwGaYMqB93YS+aU496atKB+kp4RVW/fQhA8Ww1EzyKCohCV/hqWUhVRA?=
- =?us-ascii?Q?5REB/XEt+HgirVb4AhHl+XihP1QSAivXGjRLMh75VbevSg6Q7qOJxmz7p/Ow?=
- =?us-ascii?Q?iYdVhtohxM4jXpIwWBEB++0RG3th37NbjVAIBJMlHwD74iipkPOicaPVL91a?=
- =?us-ascii?Q?PgRpW+vzP2GTrr1TGpemOH2HH1TUhv0lXvIXbE5G1dtfFCo4tISbBlqHIPgX?=
- =?us-ascii?Q?VU+GxrQCqYz8GVSx1FgpZbFKp33wg4DJv0qk/uq+AarPX6Om/Ma0YUFYNH96?=
- =?us-ascii?Q?ijiAZRPWxZKYXYrG7JMUrOa4r7l04B9iBg8cM9J6p0UWBqsEmMcZbaEIjSBP?=
- =?us-ascii?Q?q3kvyFI/YSYoOPF3x1UZTOR1nrVRyvWmn1yJTKqgbA/6f9XmC3m/t/bj600M?=
- =?us-ascii?Q?N1ExkvWmZzIAsNtbPnY3MzkBcP0WRBShuPfIuzodmUQbiqEMV6neo5mGE7pN?=
- =?us-ascii?Q?aLFrlWiDBPlzBejRSOjtRT6zdPGPk/PHrloVqyinBeKMJtDlt0Xr8R8QzrRj?=
- =?us-ascii?Q?ZAiWVSDxHGDtzhqo1XlvKkMt1+j/x2JhNqceIZyCF6jJ01ELvoT6I9zdsKak?=
- =?us-ascii?Q?Dim9avtu5weytfDpHv/BJPRlJo7HzLFCMiU/rFhLEXnFyaq2dcmvsL0+/nz7?=
- =?us-ascii?Q?kLZkKvFYqebxWvztesvkQmcPrEb0jsXJfAMozlpgQsIvCZpfBZrn7mhV5nCJ?=
- =?us-ascii?Q?eH25kjY8vbllTXS7omCJLHM9?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A31E357AF8E860409AD17C6294B21754@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=85YCALcXdYdlt5hBAqGVrxlQ+tcI4W++hP/xGI3GPIg=;
+        b=SpSDrjjgCXXsmnhjzJldSUJKGFqiQr0RGU0laB1cgVYxXT2FezwKH/nHOuBwYECIs1
+         gzhw0HRKXoXZkalzPYjorZcx8wE/SJL7RIoLkM/p9CVXijfC1GcprA4gHqXu7zHnGlRh
+         DKYiB5c1sTCKTlyWygqjhTY/SHoN+2EBM1sNZwEEQo+gSE09ad3mod5v5gHDNHyoZtkT
+         yqnbs2TTSocz0ba5YP8+CTqMtaX2rT6Ap4Molv/UsGd6pa3UjJRGqycuwEp6K8il1MW9
+         jq4Ze9IYuWiLEZ5+17h0cIdC/3PnnUqBbb6AAxT5b22K7k15RAki5Vkl7f+g2vPadAV/
+         jYyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=85YCALcXdYdlt5hBAqGVrxlQ+tcI4W++hP/xGI3GPIg=;
+        b=Wf+hoZ/a2uCEcbyMrpRcP9bn4dYW/e24tUD7SeT/Sop1f6xFHU9wHdEJkQf2QU9WQr
+         70kqsyfjsmeRSBJsekQo/Lbe1ZSd9jvX/iUaDyu8UDHKlrwBPGdc+5lDusG7eJeifdwr
+         FSP33qkcKiSZhLJpsdabDRmzbQE5Vptim4sCTwxcGKB5uM9LSvwwo4kOhHwQ5YqXU2Ma
+         ZJVLcag5mX23oOlOKH5D/9YGG6lMHwoWZmWE44g+xKql8VtBnxYhrR35W0VMq7Rb0cpx
+         MOspNc92iLLf1RnHq+T2vauWSRkNy7+nD7WIyJWCUos1hprBNE9/uAF87Lr+fdSS9w38
+         Hrbg==
+X-Gm-Message-State: AOAM5313TvxrzpnQNzyETCNJMqZQjmmKjpcXVUKxK+xPep9R7gyzDBS1
+        d+sg5ch+ivopVofnr0T3gPugOvo0EdTlzp/Ip5M=
+X-Google-Smtp-Source: ABdhPJzdwLWqA0vHm16sIX64k5YxxEfmprvL4krrXgLvdXiezVI8RFEpZV2UfL1vYB6W0T/6g2JAT5ZD696fPq803H4=
+X-Received: by 2002:a5d:938e:: with SMTP id c14mr7022561iol.88.1615480947405;
+ Thu, 11 Mar 2021 08:42:27 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e130de18-0633-41e3-5b6f-08d8e4a72478
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2021 16:02:59.5065
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TnTYUjCGMzEJsFJEMtvutf191Cj371L1bFJtZPVK89pTGN3prycdZMXtHYdbbrzENhmBt22Q+E+JF85SOPRsLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2792
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9920 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 malwarescore=0
- spamscore=0 mlxlogscore=999 phishscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103110085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9920 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
- clxscore=1015 phishscore=0 adultscore=0 mlxlogscore=999 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 mlxscore=0 impostorscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103110085
+References: <20210311114935.11379-1-mgorman@techsingularity.net> <20210311114935.11379-3-mgorman@techsingularity.net>
+In-Reply-To: <20210311114935.11379-3-mgorman@techsingularity.net>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 11 Mar 2021 08:42:16 -0800
+Message-ID: <CAKgT0UcgiS0DpU4weOeVUN7o9dzoP=R20ytWC434sY4FxgQbtg@mail.gmail.com>
+Subject: Re: [PATCH 2/5] mm/page_alloc: Add a bulk page allocator
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux-NFS <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On Mar 11, 2021, at 10:55 AM, Olga Kornievskaia <olga.kornievskaia@gmail.=
-com> wrote:
->=20
-> From: Olga Kornievskaia <kolga@netapp.com>
->=20
-> When the server tries to do a callback and a client fails it due to
-> authentication problems, we need the server to set callback down
-> flag in RENEW so that client can recover.
->=20
-> Suggested-by: Bruce Fields <bfields@redhat.com>
-> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-
-Thanks. This patch has been included in the for-rc topic
-branch in the repo at
-
-git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
-
-I added Ben's Tested-by.
-
-
+On Thu, Mar 11, 2021 at 3:49 AM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> This patch adds a new page allocator interface via alloc_pages_bulk,
+> and __alloc_pages_bulk_nodemask. A caller requests a number of pages
+> to be allocated and added to a list. They can be freed in bulk using
+> free_pages_bulk().
+>
+> The API is not guaranteed to return the requested number of pages and
+> may fail if the preferred allocation zone has limited free memory, the
+> cpuset changes during the allocation or page debugging decides to fail
+> an allocation. It's up to the caller to request more pages in batch
+> if necessary.
+>
+> Note that this implementation is not very efficient and could be improved
+> but it would require refactoring. The intent is to make it available early
+> to determine what semantics are required by different callers. Once the
+> full semantics are nailed down, it can be refactored.
+>
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 > ---
-> fs/nfsd/nfs4callback.c | 1 +
-> 1 file changed, 1 insertion(+)
->=20
-> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index 052be5bf9ef5..7325592b456e 100644
-> --- a/fs/nfsd/nfs4callback.c
-> +++ b/fs/nfsd/nfs4callback.c
-> @@ -1189,6 +1189,7 @@ static void nfsd4_cb_done(struct rpc_task *task, vo=
-id *calldata)
-> 		switch (task->tk_status) {
-> 		case -EIO:
-> 		case -ETIMEDOUT:
-> +		case -EACCES:
-> 			nfsd4_mark_cb_down(clp, task->tk_status);
-> 		}
-> 		break;
-> --=20
-> 2.18.2
+>  include/linux/gfp.h |  13 +++++
+>  mm/page_alloc.c     | 118 +++++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 129 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+> index 8572a1474e16..4903d1cc48dc 100644
+> --- a/include/linux/gfp.h
+> +++ b/include/linux/gfp.h
+> @@ -515,6 +515,10 @@ static inline int arch_make_page_accessible(struct page *page)
+>  }
+>  #endif
+>
+> +int __alloc_pages_bulk_nodemask(gfp_t gfp_mask, int preferred_nid,
+> +                               nodemask_t *nodemask, int nr_pages,
+> +                               struct list_head *list);
+> +
+>  struct page *
+>  __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
+>                                                         nodemask_t *nodemask);
+> @@ -525,6 +529,14 @@ __alloc_pages(gfp_t gfp_mask, unsigned int order, int preferred_nid)
+>         return __alloc_pages_nodemask(gfp_mask, order, preferred_nid, NULL);
+>  }
+>
+> +/* Bulk allocate order-0 pages */
+> +static inline unsigned long
+> +alloc_pages_bulk(gfp_t gfp_mask, unsigned long nr_pages, struct list_head *list)
+> +{
+> +       return __alloc_pages_bulk_nodemask(gfp_mask, numa_mem_id(), NULL,
+> +                                                       nr_pages, list);
+> +}
+> +
+>  /*
+>   * Allocate pages, preferring the node given as nid. The node must be valid and
+>   * online. For more general interface, see alloc_pages_node().
+> @@ -594,6 +606,7 @@ void * __meminit alloc_pages_exact_nid(int nid, size_t size, gfp_t gfp_mask);
+>
+>  extern void __free_pages(struct page *page, unsigned int order);
+>  extern void free_pages(unsigned long addr, unsigned int order);
+> +extern void free_pages_bulk(struct list_head *list);
+>
+>  struct page_frag_cache;
+>  extern void __page_frag_cache_drain(struct page *page, unsigned int count);
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3e4b29ee2b1e..415059324dc3 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -4436,6 +4436,21 @@ static void wake_all_kswapds(unsigned int order, gfp_t gfp_mask,
+>         }
+>  }
+>
+> +/* Drop reference counts and free order-0 pages from a list. */
+> +void free_pages_bulk(struct list_head *list)
+> +{
+> +       struct page *page, *next;
+> +
+> +       list_for_each_entry_safe(page, next, list, lru) {
+> +               trace_mm_page_free_batched(page);
+> +               if (put_page_testzero(page)) {
+> +                       list_del(&page->lru);
+> +                       __free_pages_ok(page, 0, FPI_NONE);
+> +               }
+> +       }
+> +}
+> +EXPORT_SYMBOL_GPL(free_pages_bulk);
+> +
+>  static inline unsigned int
+>  gfp_to_alloc_flags(gfp_t gfp_mask)
+>  {
+> @@ -4919,6 +4934,9 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
+>                 struct alloc_context *ac, gfp_t *alloc_mask,
+>                 unsigned int *alloc_flags)
+>  {
+> +       gfp_mask &= gfp_allowed_mask;
+> +       *alloc_mask = gfp_mask;
+> +
+>         ac->highest_zoneidx = gfp_zone(gfp_mask);
+>         ac->zonelist = node_zonelist(preferred_nid, gfp_mask);
+>         ac->nodemask = nodemask;
 
---
-Chuck Lever
+It might be better to pull this and the change from the bottom out
+into a seperate patch. I was reviewing this and when I hit the bottom
+I apparently had the same question other reviewers had wondering if it
+was intentional. By splitting it out it would be easier to review.
 
+> @@ -4960,6 +4978,104 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
+>         return true;
+>  }
+>
+> +/*
+> + * This is a batched version of the page allocator that attempts to
+> + * allocate nr_pages quickly from the preferred zone and add them to list.
+> + *
+> + * Returns the number of pages allocated.
+> + */
+> +int __alloc_pages_bulk_nodemask(gfp_t gfp_mask, int preferred_nid,
+> +                       nodemask_t *nodemask, int nr_pages,
+> +                       struct list_head *alloc_list)
+> +{
+> +       struct page *page;
+> +       unsigned long flags;
+> +       struct zone *zone;
+> +       struct zoneref *z;
+> +       struct per_cpu_pages *pcp;
+> +       struct list_head *pcp_list;
+> +       struct alloc_context ac;
+> +       gfp_t alloc_mask;
+> +       unsigned int alloc_flags;
+> +       int alloced = 0;
+> +
+> +       if (nr_pages == 1)
+> +               goto failed;
 
+I might change this to "<= 1" just to cover the case where somebody
+messed something up and passed a negative value.
 
+> +
+> +       /* May set ALLOC_NOFRAGMENT, fragmentation will return 1 page. */
+> +       if (!prepare_alloc_pages(gfp_mask, 0, preferred_nid, nodemask, &ac, &alloc_mask, &alloc_flags))
+> +               return 0;
+> +       gfp_mask = alloc_mask;
+> +
+> +       /* Find an allowed local zone that meets the high watermark. */
+> +       for_each_zone_zonelist_nodemask(zone, z, ac.zonelist, ac.highest_zoneidx, ac.nodemask) {
+> +               unsigned long mark;
+> +
+> +               if (cpusets_enabled() && (alloc_flags & ALLOC_CPUSET) &&
+> +                   !__cpuset_zone_allowed(zone, gfp_mask)) {
+> +                       continue;
+> +               }
+> +
+> +               if (nr_online_nodes > 1 && zone != ac.preferred_zoneref->zone &&
+> +                   zone_to_nid(zone) != zone_to_nid(ac.preferred_zoneref->zone)) {
+> +                       goto failed;
+> +               }
+> +
+> +               mark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK) + nr_pages;
+> +               if (zone_watermark_fast(zone, 0,  mark,
+> +                               zonelist_zone_idx(ac.preferred_zoneref),
+> +                               alloc_flags, gfp_mask)) {
+> +                       break;
+> +               }
+> +       }
+> +       if (!zone)
+> +               return 0;
+> +
+> +       /* Attempt the batch allocation */
+> +       local_irq_save(flags);
+> +       pcp = &this_cpu_ptr(zone->pageset)->pcp;
+> +       pcp_list = &pcp->lists[ac.migratetype];
+> +
+> +       while (alloced < nr_pages) {
+> +               page = __rmqueue_pcplist(zone, ac.migratetype, alloc_flags,
+> +                                                               pcp, pcp_list);
+> +               if (!page)
+> +                       break;
+> +
+> +               list_add(&page->lru, alloc_list);
+> +               alloced++;
+> +       }
+> +
+> +       if (!alloced)
+> +               goto failed_irq;
+
+Since we already covered the case above verifying the nr_pages is
+greater than one it might make sense to move this check inside the
+loop for the !page case. Then we only are checking this if we failed
+an allocation.
+
+> +
+> +       if (alloced) {
+
+Isn't this redundant? In the previous lines you already checked
+"alloced" was zero before jumping to the label so you shouldn't need a
+second check as it isn't going to change after we already verified it
+is non-zero.
+
+Also not a fan of the name "alloced". Maybe nr_alloc or something.
+Trying to make that abbreviation past tense just doesn't read right.
+
+> +               __count_zid_vm_events(PGALLOC, zone_idx(zone), alloced);
+> +               zone_statistics(zone, zone);
+> +       }
+> +
+> +       local_irq_restore(flags);
+> +
+> +       /* Prep page with IRQs enabled to reduce disabled times */
+> +       list_for_each_entry(page, alloc_list, lru)
+> +               prep_new_page(page, 0, gfp_mask, 0);
+> +
+> +       return alloced;
+> +
+> +failed_irq:
+> +       local_irq_restore(flags);
+> +
+> +failed:
+> +       page = __alloc_pages_nodemask(gfp_mask, 0, preferred_nid, nodemask);
+> +       if (page) {
+> +               alloced++;
+
+You could be explicit here and just set alloced to 1 and make this a
+write instead of bothering with the increment. Either that or just
+simplify this and return 1 after the list_add, and return 0 in the
+default case assuming you didn't allocate a page.
+
+> +               list_add(&page->lru, alloc_list);
+> +       }
+> +
+> +       return alloced;
+> +}
+> +EXPORT_SYMBOL_GPL(__alloc_pages_bulk_nodemask);
+> +
+>  /*
+>   * This is the 'heart' of the zoned buddy allocator.
+>   */
+> @@ -4981,8 +5097,6 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
+>                 return NULL;
+>         }
+>
+> -       gfp_mask &= gfp_allowed_mask;
+> -       alloc_mask = gfp_mask;
+>         if (!prepare_alloc_pages(gfp_mask, order, preferred_nid, nodemask, &ac, &alloc_mask, &alloc_flags))
+>                 return NULL;
+>
+> --
+> 2.26.2
+>
+>
