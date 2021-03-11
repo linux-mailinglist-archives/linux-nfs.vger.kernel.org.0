@@ -2,252 +2,182 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2EAC337597
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Mar 2021 15:25:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35F3133764E
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Mar 2021 15:59:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233802AbhCKOY6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 11 Mar 2021 09:24:58 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:59010 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234131AbhCKOYr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Mar 2021 09:24:47 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12BEIuXr138017;
-        Thu, 11 Mar 2021 14:23:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=wBvGh0zhwelsUreG1OZibGpyGAkgIn+cl8MC0A+dMKk=;
- b=beMZnKO9PhzRl//r18ZEDQYigOv5Y4Lse9Pb5YQs26IL6+PpwzgA2o8TWDhU5MLVNxth
- UwFmN24pDugal5Jy8ZNDOE9HVDKK9H1wKkpiqQE4rhDYXAcAd6lr2pSjvrfLEDqPiDRn
- 0YgYdkQWNUvc6mVTd9m3d25HRIaieKb+q0WCZKkj+CrnT0F9VxU9LsI9AGw3AJ3Xj5Uy
- /wCg9atY3rbRt3NQchoK6Ny+R7A28dU0w1akc2fgYn2P3PmisE4dLCSOjqkiS4P64gqg
- TDG2D0+EkzteNWiT9FHXOjOokCO38SzImDXtBCe/FkLSDL+5AleH8Mhkx3L+LIZfJxTG ow== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 3741pmpqvk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Mar 2021 14:23:59 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12BEJWgs086771;
-        Thu, 11 Mar 2021 14:23:58 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
-        by userp3030.oracle.com with ESMTP id 374kp11aea-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Mar 2021 14:23:58 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=geuVFNYw7u7Ud2VRZ4OxRefIy6acUo0rx2+ohlZee9zZ4XmP9zunsVGVyyPjEQb18p2nXBqmrxLW2e3Di7L2MveGvrVlbpDoJ3j0Ecd4QZrNjJRH+55pX7ToocN/8stAeAbIYDMMtwnNyZ4cGrqzX8ho80edM4fv0xVNpVAieiHmlpUz9ALUKn/WWzt3AgLQ+fAVofW6/f3Mg+q5JszAWA3QmFLe8EfUKjgtl2y5RWa7f7bGigUf2JjC7DR7TiF/phUB7guoiyfeRTxJQU74ds/hZTcgzNXL9SBYXzPDmAf8WBjk+6wF9NwhM7QqF2sB3lz1+LpVGPtWLBEd90ixJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wBvGh0zhwelsUreG1OZibGpyGAkgIn+cl8MC0A+dMKk=;
- b=CACh981tOZgG6cxr8lPQUN9eSHVCo3BRJwmU+v8CKDj1ykHJ+pntcvkT7tFVi09pfSeGErtoeEQqaopTOmyS69/DeABqtQb2eDs5p/QG0g4yvz++yL/9YO705tdwBvhRrCQjhMvPZs34lU2fnq1oNV6pxx5R5WBwd2U0mjCTaaU1JVFqcp8aNFGOmkGDQAoOoG1Sb+tLebGei45kRIQThmZUSBUyLAPG46QmFgtH0MaoSQguhOox2dXPkLtwWXGoxiLYpu9zJRlnHatAPZY+EaI0ZW57x2CFUPBhtXC45evssy2Lz2PCpy99QFuugD2XQwWx9nNONfch/ie1qCcPQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wBvGh0zhwelsUreG1OZibGpyGAkgIn+cl8MC0A+dMKk=;
- b=oFd4UOa+M3bcLA8CFmNO48ZPWXsbG4GZ/MwcnNMX0w4vf7hXVoWU4u6+Jm3n6W/6RUecg0MvYXwH3rwOwyUKKDJyWZx5hYjuiOmNDbWdxuXPduhPHUY6zdaju4RJtQ6IQH3gX++/CSa0Cciosq1/nCfWFAzz/DFT/SUxRJIKskw=
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by SJ0PR10MB4608.namprd10.prod.outlook.com (2603:10b6:a03:2d4::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.28; Thu, 11 Mar
- 2021 14:23:54 +0000
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::6da8:6d28:b83:702b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::6da8:6d28:b83:702b%4]) with mapi id 15.20.3912.030; Thu, 11 Mar 2021
- 14:23:53 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Mel Gorman <mgorman@techsingularity.net>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Net <netdev@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 3/5] SUNRPC: Refresh rq_pages using a bulk page allocator
-Thread-Topic: [PATCH 3/5] SUNRPC: Refresh rq_pages using a bulk page allocator
-Thread-Index: AQHXFmygcjHo9VnTG0yxtwtZKdm64Kp+13mA
-Date:   Thu, 11 Mar 2021 14:23:53 +0000
-Message-ID: <8F34578A-A5AC-4D6A-BF32-1578B14FDE45@oracle.com>
-References: <20210311114935.11379-1-mgorman@techsingularity.net>
- <20210311114935.11379-4-mgorman@techsingularity.net>
-In-Reply-To: <20210311114935.11379-4-mgorman@techsingularity.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: techsingularity.net; dkim=none (message not signed)
- header.d=none;techsingularity.net; dmarc=none action=none
- header.from=oracle.com;
-x-originating-ip: [68.61.232.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0a284d03-8179-4dae-af5b-08d8e4994ca0
-x-ms-traffictypediagnostic: SJ0PR10MB4608:
-x-microsoft-antispam-prvs: <SJ0PR10MB4608638CD4BF20128C4D675C93909@SJ0PR10MB4608.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1169;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1uKpr40sefA57bV6WXnQfxCl0pwOFny6NGa+lhOASKhWbphczKcBaohOy4hfqUrEC3Scwvl6WI1ihv//M6ZWQpWqG3AXiV4wlFNJeo8SuroZnL0yMeXZvyog55xTKO0SMLoWGtzdUC3R7Wyns/2DqJTt5UVrrhdpzni0RDp8Zd0Pn+ccBtLc9tcVyNcfeHAmtluUTlo5PNNM5mks/l6ueHpiJM283M4YSU2UbudtkFEgdmwYBEawsaoVAm65z1s99iM0skQc4Gd+syavGaWuobIQlWU9H8FAJZGZG+u/UD52Kvaz8PtxcovLL8Pq5QWzzsTXV2DConasPbzCNYDRqRi3d69QUsPK5soPhmz7ekFuxalYNGtxA1u+RFC/TjNkUJduzfSdp2uFNaj0IZZgWSetB9C+baLTDshbADeg4qcaIhrk18s4dOSa0dmJUJij1w3nww7s78uXGZSlbT7Kw+seDLEMccWK3jPOcNAoa2J7j0Jq8l++jMshP2O8UNxE3Ksh54y/NYAGjDYQy+IAzheZgPiVcb7UeBI1Jzb+Nk0jIaTiEF+KBUercGHyNCo1HX+7mpQvk3EGcWxLxChUvw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(39860400002)(136003)(396003)(366004)(376002)(6512007)(2616005)(6486002)(6916009)(4326008)(66476007)(76116006)(2906002)(83380400001)(66556008)(478600001)(71200400001)(36756003)(54906003)(86362001)(8936002)(6506007)(53546011)(33656002)(66946007)(5660300002)(91956017)(8676002)(66446008)(316002)(64756008)(26005)(186003)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?MtZydzWb5GU7UjD409k+Tg/f9CCvkLGfHdfUXqWpQJ6NtoViEZWWFwQzu4vZ?=
- =?us-ascii?Q?/Fi72sJLnoW/N5+IzVqKQsIQ9WCjsV8jwZaJk69JPVLuLxKlgG0yZSzY1LTF?=
- =?us-ascii?Q?fXBsnAlqKLvbv6prhlYXdRpBvRfu/YA5toltV3hb2aAtAoOZll2NijZMxfjd?=
- =?us-ascii?Q?VyP9SN1PECbLf0Dy0QsquG14i4x4BR0XL0XngN2ArhGVlhl136e9/7nPEx6k?=
- =?us-ascii?Q?ZqhS0YMsc33ilYVvxGIV++kMLLosQyi5QgFDo4hTC16wM/LkZ2IP1fkLwu3t?=
- =?us-ascii?Q?auWWwg/gJVlsMkjw4XxGLqQxRjROYHZEiu5gw7QWgCD4JBz/zS9Puas2edvf?=
- =?us-ascii?Q?th2284w4VRR7Z6tRe+zSuWYwGHe4xVR3/kxvX9tIZg65kIyc5NAbaaAD+WND?=
- =?us-ascii?Q?eeBHiv+Le1u5rKdTmoBplhnj5V5hA9rLTcn2KBSCtM/3SN4g0Kq469D5V9Mk?=
- =?us-ascii?Q?HYH/qjDYvmYSwDU4SEfJlQSvF/r1Mhj7LAHo6ZVK27WTqWW1f3W5cvpZaepj?=
- =?us-ascii?Q?YfyccO2WKvXfGRGU/oCbRor5rg3AOpRUMt7zoTK98vJ2ec8lkcfmH1Vp65G7?=
- =?us-ascii?Q?39zqsm/nh6kJLRs7RLOfgxL3PQugEYA/vVB8uoULP7LlWAX4PyLhPNwbtFp7?=
- =?us-ascii?Q?Co6V26Pur6LYpnoGLPM7+83cba7y3xplYc5n0cVjOLe/9Nt0t23ukeWgwvmF?=
- =?us-ascii?Q?LyJoo/M6x9tYrdtx9n2Vm+6AgpBPbF4Pa3YIqBCKZsadcQ/I4AGUSR6o6CIX?=
- =?us-ascii?Q?VGekkLEUtNMngzNGJMLnDUXyDo2Nsf2e9Aw8wbmFWd10OQgqDkhH4Uvyj97M?=
- =?us-ascii?Q?lnWmTbvujWwJNI3FT71bSVAptfZq71yVdVUCoJXxBZC1tVdBzU3X3vGnOQKc?=
- =?us-ascii?Q?6HdHRoeqf3YTtRa4ejT5v0mn3Uxa+ZeAnvbgvw3OvM4Hb4KV/TeQXHCOeWmm?=
- =?us-ascii?Q?gVSznmFXPasIWoLHrlpAfDuxglIA/ZIlDKNGJjIWQwmTkVmj/d3RxVJ56nfT?=
- =?us-ascii?Q?2lApcbsuawnkCSOq131cg226MgKN000lactNhx74D+SVNFM1cndlumb9kipX?=
- =?us-ascii?Q?GoHiDw7TMJSAYJfKEe/Li2HU1YbCo6vLQtQJp2aU3d0mplF0KQwBFkicWXzK?=
- =?us-ascii?Q?zW7B+ftJPqkJDifNTQtQdXxAin4ZO5GHfsjUFzKzTYSnXaUHumO6U7vxYJT8?=
- =?us-ascii?Q?sMZByE9tfdEidcFML8fBmJ4rUV/kRFZh7fkXH//rtmq0OPxBwRO55kpCl8Gz?=
- =?us-ascii?Q?rAIRrRorV1mtNVnZCPns0eIjVAmGYD7YWesDAQPPk0OH/ICViqJFkX5HAiL+?=
- =?us-ascii?Q?puqBXB3n80m/ec/+tEei7Spe?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <054189F63B037747BBEF5A1408F536B3@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S233908AbhCKO6l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 11 Mar 2021 09:58:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:20140 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233958AbhCKO6d (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Mar 2021 09:58:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1615474712;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dnOkybMhuFH3yNEufwmFGOEIUcqakUYVWHwF79JbOIA=;
+        b=M+dkLKeGB4Y+0v578iB94SV2F6bEzJoleb3n9D2E931YmtsPRjLg6R4GYb+hCl1S468b9d
+        pBiSPHLBG/R9u3XdgpBVkrJ21as3WfYOcwur0Brk52M6zs/wuvsdSCaAoDxShhXxEYNqmO
+        AwQOk4hY6OGRy4iH8k9NK73xitkXD9o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-352-vmE4r3_ENwa9LRzR_lZjLQ-1; Thu, 11 Mar 2021 09:58:27 -0500
+X-MC-Unique: vmE4r3_ENwa9LRzR_lZjLQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 92523107ACCA;
+        Thu, 11 Mar 2021 14:58:26 +0000 (UTC)
+Received: from pick.fieldses.org (ovpn-114-209.rdu2.redhat.com [10.10.114.209])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 02ADC60C03;
+        Thu, 11 Mar 2021 14:58:26 +0000 (UTC)
+Received: by pick.fieldses.org (Postfix, from userid 2815)
+        id 2669412077D; Thu, 11 Mar 2021 09:58:25 -0500 (EST)
+Date:   Thu, 11 Mar 2021 09:58:25 -0500
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Subject: Re: [PATCH 1/1] NFSD: fix error handling in callbacks
+Message-ID: <YEowERpnfmBd9HpH@pick.fieldses.org>
+References: <20210309144127.57833-1-olga.kornievskaia@gmail.com>
+ <YEeWK+gs4c8O7k0u@pick.fieldses.org>
+ <4ca27c770577376b0a39f0cfcfb529b96d6d5aae.camel@hammerspace.com>
+ <CAN-5tyFttTHRdnELORJwCER_KPGBNk4W3eLwG0Z=QkwmPQh1UQ@mail.gmail.com>
+ <d205a6a77273534666b3c33065934b9f66e7b103.camel@hammerspace.com>
+ <YEjb9ZadFqa9Vu9O@pick.fieldses.org>
+ <CAN-5tyFZ8fS6fjOJEu2NkRYUX6HrA5XNKPWyWN+UVtQT6Gp4kQ@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a284d03-8179-4dae-af5b-08d8e4994ca0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2021 14:23:53.8508
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ecgx/pBtkRNvtkCd2cIUjtv1YfbE2V3UaE8lS4kkutRRjFUshZGKydtbFau8JRApr7GXBa4FQlOhxU8CRHPOJA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4608
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9920 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 adultscore=0
- phishscore=0 malwarescore=0 mlxscore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103110078
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9920 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 mlxlogscore=999
- adultscore=0 impostorscore=0 suspectscore=0 clxscore=1011 malwarescore=0
- priorityscore=1501 phishscore=0 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103110078
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAN-5tyFZ8fS6fjOJEu2NkRYUX6HrA5XNKPWyWN+UVtQT6Gp4kQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Wed, Mar 10, 2021 at 05:09:20PM -0500, Olga Kornievskaia wrote:
+> On Wed, Mar 10, 2021 at 9:47 AM J. Bruce Fields <bfields@redhat.com> wrote:
+> >
+> > On Tue, Mar 09, 2021 at 08:59:51PM +0000, Trond Myklebust wrote:
+> > > On Tue, 2021-03-09 at 15:41 -0500, Olga Kornievskaia wrote:
+> > > > On Tue, Mar 9, 2021 at 3:22 PM Trond Myklebust <
+> > > > trondmy@hammerspace.com> wrote:
+> > > > >
+> > > > > On Tue, 2021-03-09 at 10:37 -0500, J. Bruce Fields wrote:
+> > > > > > On Tue, Mar 09, 2021 at 09:41:27AM -0500, Olga Kornievskaia
+> > > > > > wrote:
+> > > > > > > From: Olga Kornievskaia <kolga@netapp.com>
+> > > > > > >
+> > > > > > > When the server tries to do a callback and a client fails it
+> > > > > > > due to
+> > > > > > > authentication problems, we need the server to set callback
+> > > > > > > down
+> > > > > > > flag in RENEW so that client can recover.
+> > > > > >
+> > > > > > I was looking at this.  It looks to me like this should really be
+> > > > > > just:
+> > > > > >
+> > > > > >         case 1:
+> > > > > >                 if (task->tk_status)
+> > > > > >                         nfsd4_mark_cb_down(clp, task->tk_status);
+> > > > > >
+> > > > > > If tk_status showed an error, and the ->done method doesn't
+> > > > > > return 0
+> > > > > > to
+> > > > > > tell us it something worth retrying, then the callback failed
+> > > > > > permanently, so we should mark the callback path down, regardless
+> > > > > > of
+> > > > > > the
+> > > > > > exact error.
+> > > > >
+> > > > > I disagree. task->tk_status could be an unhandled NFSv4 error (see
+> > > > > nfsd4_cb_recall_done()). The client might, for instance, be in the
+> > > > > process of returning the delegation being recalled. Why should that
+> > > > > result in the callback channel being marked as down?
+> > > > >
+> > > >
+> > > > Are you talking about say the connection going down and server should
+> > > > just reconnect instead of recovering the callback channel. I assumed
+> > > > that connection break is something that's not  recoverable by the
+> > > > callback but perhaps I'm wrong.
+> > >
+> > > No. I'm saying that nfsd4_cb_recall_done() will return a value of '1'
+> > > for both task->tk_status == -EBADHANDLE and -NFS4ERR_BAD_STATEID. I'm
+> > > not seeing why either of those errors should be handled by marking the
+> > > callback channel as being down.
+> > >
+> > > Looking further, it seems that the same function will also return '1'
+> > > without checking the value of task->tk_status if the delegation has
+> > > been revoked or returned. So that would mean that even NFS4ERR_DELAY
+> > > could trigger the call to nfsd4_mark_cb_down() with the above change.
+> >
+> > Yeah, OK, that's wrong, apologies.
+> >
+> > I'm just a little worried about the attempt to enumerate transport level
+> > errors in nfsd4_cb_done().  Are we sure that EIO, ETIMEDOUT, EACCESS is
+> > the right list?
+> 
+> Looking at call_transmit_status error handling, I don't think
+> connection errors are returned. Instead the code tries to fix the
+> connection by retrying unless the rpc_timeout is reached and then only
+> EIO,TIMEDOUT is returned.
+> 
+> Can then my original patch be considered without resubmission?
 
+Sure, thanks for checking that.
 
-> On Mar 11, 2021, at 6:49 AM, Mel Gorman <mgorman@techsingularity.net> wro=
-te:
->=20
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> Reduce the rate at which nfsd threads hammer on the page allocator.
-> This improve throughput scalability by enabling the threads to run
-> more independently of each other.
+--b.
 
-Mel, if you should repost this series: ^improve^improves
-
-
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-> ---
-> net/sunrpc/svc_xprt.c | 43 +++++++++++++++++++++++++++++++------------
-> 1 file changed, 31 insertions(+), 12 deletions(-)
->=20
-> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> index cfa7e4776d0e..38a8d6283801 100644
-> --- a/net/sunrpc/svc_xprt.c
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -642,11 +642,12 @@ static void svc_check_conn_limits(struct svc_serv *=
-serv)
-> static int svc_alloc_arg(struct svc_rqst *rqstp)
-> {
-> 	struct svc_serv *serv =3D rqstp->rq_server;
-> +	unsigned long needed;
-> 	struct xdr_buf *arg;
-> +	struct page *page;
-> 	int pages;
-> 	int i;
->=20
-> -	/* now allocate needed pages.  If we get a failure, sleep briefly */
-> 	pages =3D (serv->sv_max_mesg + 2 * PAGE_SIZE) >> PAGE_SHIFT;
-> 	if (pages > RPCSVC_MAXPAGES) {
-> 		pr_warn_once("svc: warning: pages=3D%u > RPCSVC_MAXPAGES=3D%lu\n",
-> @@ -654,19 +655,28 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
-> 		/* use as many pages as possible */
-> 		pages =3D RPCSVC_MAXPAGES;
-> 	}
-> -	for (i =3D 0; i < pages ; i++)
-> -		while (rqstp->rq_pages[i] =3D=3D NULL) {
-> -			struct page *p =3D alloc_page(GFP_KERNEL);
-> -			if (!p) {
-> -				set_current_state(TASK_INTERRUPTIBLE);
-> -				if (signalled() || kthread_should_stop()) {
-> -					set_current_state(TASK_RUNNING);
-> -					return -EINTR;
-> -				}
-> -				schedule_timeout(msecs_to_jiffies(500));
-> +
-> +	for (needed =3D 0, i =3D 0; i < pages ; i++)
-> +		if (!rqstp->rq_pages[i])
-> +			needed++;
-> +	if (needed) {
-> +		LIST_HEAD(list);
-> +
-> +retry:
-> +		alloc_pages_bulk(GFP_KERNEL, needed, &list);
-> +		for (i =3D 0; i < pages; i++) {
-> +			if (!rqstp->rq_pages[i]) {
-> +				page =3D list_first_entry_or_null(&list,
-> +								struct page,
-> +								lru);
-> +				if (unlikely(!page))
-> +					goto empty_list;
-> +				list_del(&page->lru);
-> +				rqstp->rq_pages[i] =3D page;
-> +				needed--;
-> 			}
-> -			rqstp->rq_pages[i] =3D p;
-> 		}
-> +	}
-> 	rqstp->rq_page_end =3D &rqstp->rq_pages[pages];
-> 	rqstp->rq_pages[pages] =3D NULL; /* this might be seen in nfsd_splice_ac=
-tor() */
->=20
-> @@ -681,6 +691,15 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
-> 	arg->len =3D (pages-1)*PAGE_SIZE;
-> 	arg->tail[0].iov_len =3D 0;
-> 	return 0;
-> +
-> +empty_list:
-> +	set_current_state(TASK_INTERRUPTIBLE);
-> +	if (signalled() || kthread_should_stop()) {
-> +		set_current_state(TASK_RUNNING);
-> +		return -EINTR;
-> +	}
-> +	schedule_timeout(msecs_to_jiffies(500));
-> +	goto retry;
-> }
->=20
-> static bool
-> --=20
-> 2.26.2
->=20
-
---
-Chuck Lever
-
-
+> 
+> >
+> > --b.
+> >
+> > >
+> > > >
+> > > > > >
+> > > > > > --b.
+> > > > > >
+> > > > > > >
+> > > > > > > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > > > > > > ---
+> > > > > > >  fs/nfsd/nfs4callback.c | 1 +
+> > > > > > >  1 file changed, 1 insertion(+)
+> > > > > > >
+> > > > > > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> > > > > > > index 052be5bf9ef5..7325592b456e 100644
+> > > > > > > --- a/fs/nfsd/nfs4callback.c
+> > > > > > > +++ b/fs/nfsd/nfs4callback.c
+> > > > > > > @@ -1189,6 +1189,7 @@ static void nfsd4_cb_done(struct rpc_task
+> > > > > > > *task, void *calldata)
+> > > > > > >                 switch (task->tk_status) {
+> > > > > > >                 case -EIO:
+> > > > > > >                 case -ETIMEDOUT:
+> > > > > > > +               case -EACCES:
+> > > > > > >                         nfsd4_mark_cb_down(clp, task-
+> > > > > > > >tk_status);
+> > > > > > >                 }
+> > > > > > >                 break;
+> > > > > > > --
+> > > > > > > 2.27.0
+> > > > > > >
+> > > > > >
+> > > > >
+> > > > > --
+> > > > > Trond Myklebust
+> > > > > Linux NFS client maintainer, Hammerspace
+> > > > > trond.myklebust@hammerspace.com
+> > > > >
+> > > > >
+> > >
+> > > --
+> > > Trond Myklebust
+> > > Linux NFS client maintainer, Hammerspace
+> > > trond.myklebust@hammerspace.com
+> > >
+> > >
+> >
+> 
 
