@@ -2,88 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6C99339992
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 23:17:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DEE8733999C
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 23:26:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235467AbhCLWRJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 12 Mar 2021 17:17:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235531AbhCLWQt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 17:16:49 -0500
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3895CC061574;
-        Fri, 12 Mar 2021 14:16:49 -0800 (PST)
-Received: by mail-io1-xd2c.google.com with SMTP id y20so9051822iot.4;
-        Fri, 12 Mar 2021 14:16:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ow2p0xO1hotn6RJOItrtDiyN/JeHanAbeq4vQ3SfL3Q=;
-        b=ca8qSuxHMylJkf9hpLyRjp/Lol2CkO36rE6egf5H5JN5eI3b6iTEL/fbQnmfD7v8RO
-         yZWhE84LScpT7GbGaqCoAaP0WaoREHhGnBmlZN5HTtwRcQL5uQ4U1b86yAr7SHM7AKtl
-         ZtRUX0KButFkQukRno//Ub+D781me/+qZ7nlmeqE+By32gH/DPuRaX5hBoNJOYYGOTPf
-         AlM+aytVEXO0CdK/7+6/r4TmJj+k85QG/VGkdEdCPfxaI6y9ZkBLiO8MV3FnzitzfrZA
-         tMg6yZWfvr8ee8xR6PYOYlKUJtiPIxMMUaFdoJ4wlgDr/U+OtXRtd2Bomtnt+BwF6t0S
-         bYsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ow2p0xO1hotn6RJOItrtDiyN/JeHanAbeq4vQ3SfL3Q=;
-        b=E14bB5zfSUp3BnUsG7cSCl4ty9p6LVQEacHeb/HRNW1BsXWM998rCDJpvFOsYaJXGl
-         osdbD4ZnFXtv3D+a6FnbLfEAZyHFBvtJdpwQJCEWHzYSgbjG9ubHD6DNq2LxBVxEXiP1
-         zn5Y7z3BHhnWeWZLgxqw9Dz8PSrNqZsi+eIBMrKaHBsKDOGsFnDqH113zjy02gBBQivQ
-         zb3uV5sysPgBiAbozDE16oMVckEofmbOp79mea7Hd3cYgnUYB5fSqoDReTM5Dki5fNnP
-         AnZH+pECqJt9UZ3y+ooNDgqD2XBi/nHi2xfsAjlZLhxKmT5wZ5i25+SX91uvapPLE7Kg
-         sgRg==
-X-Gm-Message-State: AOAM530yhkK1cxoxAk9pNIEzy8XG+oPtEzoUimSiWGIVUCYfBv3fqtmW
-        tHTXbcnoH1ktEsnExIt/DFN0bMiSg4nogdJVoico9zN2g6E=
-X-Google-Smtp-Source: ABdhPJw4pENv2yhmlx0fcfNkJOaKYdFrSOwU7MnjJ4DmsXBoc7adHRZNZlntn33952ydymnXbYqzCKVZOzwv+b1gXE8=
-X-Received: by 2002:a02:53:: with SMTP id 80mr1335477jaa.96.1615587408621;
- Fri, 12 Mar 2021 14:16:48 -0800 (PST)
-MIME-Version: 1.0
-References: <161558613209.1366.1492710238067504151.stgit@klimt.1015granger.net>
-In-Reply-To: <161558613209.1366.1492710238067504151.stgit@klimt.1015granger.net>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 12 Mar 2021 14:16:37 -0800
-Message-ID: <CAKgT0UdzgsfhNMDMYcAt3xR4U0=LOeMWO3+3tt0_omxu1OupaA@mail.gmail.com>
-Subject: Re: [PATCH] SUNRPC: Refresh rq_pages using a bulk page allocator
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Linux-NFS <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S235469AbhCLWZm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Mar 2021 17:25:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235529AbhCLWZh (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 12 Mar 2021 17:25:37 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 6975F64F5E;
+        Fri, 12 Mar 2021 22:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615587937;
+        bh=c5626PkGoJoyJZCO+jd67VofuyjDwRm2obPYVjDaLqw=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=u7Yo7eZdzvDcL3w4ux+SdLdPgdBA95MmZyVg0kj6JOsnlncNZABr9pNATSpQcyqIo
+         To6oyJ5NbR7ADWT/cnlEDUXT3xLl4gr5r1oJlFL5xxRXivmmX2hSZVHCd5hgvRdmR4
+         wy44OAN6DNhJRbkQ6gXH/acxs/Sk/oTzPLSIYwx7V0iR4m0T3E9lxswf6OUQfCPkW3
+         B2dSmnJQZRnhqmNOT/Taoex+y3Nb/grK390l+S7Q3/btZZYsbPDLAO6gUNit8Kz/w2
+         9/xUbnZAeyN1Kh/nIIXDNDeFOuD98myM+IGK4B/ZEBrSIB7K1Q5T9HmAivcN4OTADL
+         fy23RlP244OeA==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 51BEF60A2D;
+        Fri, 12 Mar 2021 22:25:37 +0000 (UTC)
+Subject: Re: [GIT PULL] Please pull NFS client bugfixes for 5.12-rc3
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAFX2Jfks7yEAs9xhG-9Znwzzmiz8JpRQv9XDpOAEM=EaxhiEpA@mail.gmail.com>
+References: <CAFX2Jfks7yEAs9xhG-9Znwzzmiz8JpRQv9XDpOAEM=EaxhiEpA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAFX2Jfks7yEAs9xhG-9Znwzzmiz8JpRQv9XDpOAEM=EaxhiEpA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.12-2
+X-PR-Tracked-Commit-Id: 4f8be1f53bf615102d103c0509ffa9596f65b718
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f296bfd5cd04cbb49b8fc9585adc280ab2b58624
+Message-Id: <161558793727.5966.2318231053158541850.pr-tracker-bot@kernel.org>
+Date:   Fri, 12 Mar 2021 22:25:37 +0000
+To:     Anna Schumaker <schumaker.anna@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Mar 12, 2021 at 1:57 PM Chuck Lever <chuck.lever@oracle.com> wrote:
->
-> Reduce the rate at which nfsd threads hammer on the page allocator.
-> This improves throughput scalability by enabling the threads to run
-> more independently of each other.
->
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
-> Hi Mel-
->
-> This patch replaces patch 5/7 in v4 of your alloc_pages_bulk()
-> series. It implements code clean-ups suggested by Alexander Duyck.
-> It builds and has seen some light testing.
->
->
->  net/sunrpc/svc_xprt.c |   39 +++++++++++++++++++++++++++------------
->  1 file changed, 27 insertions(+), 12 deletions(-)
+The pull request you sent on Fri, 12 Mar 2021 15:28:44 -0500:
 
-The updated patch looks good to me. I am good with having my
-Reviewed-by added for patches 1-6. I think the only one that still
-needs work is patch 7.
+> git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.12-2
 
-Reviewed-by: Alexander Duyck <alexanderduyck@fb.com>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f296bfd5cd04cbb49b8fc9585adc280ab2b58624
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
