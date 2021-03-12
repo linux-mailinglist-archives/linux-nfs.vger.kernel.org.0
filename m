@@ -2,86 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3F01338F9E
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 15:16:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FB32339089
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 15:59:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230388AbhCLOQP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 12 Mar 2021 09:16:15 -0500
-Received: from outbound-smtp21.blacknight.com ([81.17.249.41]:35813 "EHLO
-        outbound-smtp21.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229968AbhCLOPv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 09:15:51 -0500
-Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
-        by outbound-smtp21.blacknight.com (Postfix) with ESMTPS id CACB4CCAED
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Mar 2021 14:15:45 +0000 (GMT)
-Received: (qmail 20309 invoked from network); 12 Mar 2021 14:15:45 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 12 Mar 2021 14:15:45 -0000
-Date:   Fri, 12 Mar 2021 14:15:44 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        id S231336AbhCLO6j (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Mar 2021 09:58:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231642AbhCLO6h (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 09:58:37 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99C87C061574;
+        Fri, 12 Mar 2021 06:58:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=gbwXnklzt/GG9mR0QlG6dEwq91Rd29SehOBGiJv9f4I=; b=CpQ/MsjIbARHlgT6/AtQcg8Ca1
+        AlCQYEU5FW9EGK2Rh6SM3snZpU86x48JpBlCdpy5TpenJW/oXb2UTZDN1/V0FUv6ChVHZYKr3xOek
+        dAbLoi2hZdasuqQ0TQcHeJxAU6/LvEsR3Wr9F+tZDJ4S8y1sWwAW95zs9m4MAt1Lq4UMFztOHzWJt
+        Pr5Vr3ICL7BxnigC+pwYsEqwbXIYVcHlx9CHqjYYDbr7mho/t1vPUDDy9j9onA912rxluott0fDxB
+        3DX/ErLlSB6dKS7zBPlRyvG3jYtRzNXhXsphl3ghNthhllxd5SJEcymDO1Yj4K8gTgKRAjQzi1wEG
+        2n+zmszA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lKjF0-00AvFJ-OO; Fri, 12 Mar 2021 14:58:16 +0000
+Date:   Fri, 12 Mar 2021 14:58:14 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Chuck Lever <chuck.lever@oracle.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
         Christoph Hellwig <hch@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Linux-Net <netdev@vger.kernel.org>,
         Linux-MM <linux-mm@kvack.org>,
         Linux-NFS <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH 2/5] mm/page_alloc: Add a bulk page allocator
-Message-ID: <20210312141544.GV3697@techsingularity.net>
+Message-ID: <20210312145814.GA2577561@casper.infradead.org>
 References: <20210310104618.22750-1-mgorman@techsingularity.net>
  <20210310104618.22750-3-mgorman@techsingularity.net>
- <20210312124331.GY3479805@casper.infradead.org>
+ <20210310154650.ad9760cd7cb9ac4acccf77ee@linux-foundation.org>
+ <20210311084200.GR3697@techsingularity.net>
+ <20210312124609.33d4d4ba@carbon>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210312124331.GY3479805@casper.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210312124609.33d4d4ba@carbon>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Mar 12, 2021 at 12:43:31PM +0000, Matthew Wilcox wrote:
-> On Wed, Mar 10, 2021 at 10:46:15AM +0000, Mel Gorman wrote:
-> > +int __alloc_pages_bulk_nodemask(gfp_t gfp_mask, int preferred_nid,
-> > +				nodemask_t *nodemask, int nr_pages,
-> > +				struct list_head *list);
+On Fri, Mar 12, 2021 at 12:46:09PM +0100, Jesper Dangaard Brouer wrote:
+> In my page_pool patch I'm bulk allocating 64 pages. I wanted to ask if
+> this is too much? (PP_ALLOC_CACHE_REFILL=64).
 > 
-> For the next revision, can you ditch the '_nodemask' part of the name?
-> Andrew just took this patch from me:
+> The mlx5 driver have a while loop for allocation 64 pages, which it
+> used in this case, that is why 64 is chosen.  If we choose a lower
+> bulk number, then the bulk-alloc will just be called more times.
+
+The thing about batching is that smaller batches are often better.
+Let's suppose you need to allocate 100 pages for something, and the page
+allocator takes up 90% of your latency budget.  Batching just ten pages
+at a time is going to reduce the overhead to 9%.  Going to 64 pages
+reduces the overhead from 9% to 2% -- maybe that's important, but
+possibly not.
+
+> The result of the API is to deliver pages as a double-linked list via
+> LRU (page->lru member).  If you are planning to use llist, then how to
+> handle this API change later?
 > 
+> Have you notice that the two users store the struct-page pointers in an
+> array?  We could have the caller provide the array to store struct-page
+> pointers, like we do with kmem_cache_alloc_bulk API.
 
-Ok, the first three patches are needed from that series. For convenience,
-I'm going to post the same series with the rest of the patches as a
-pre-requisite to avoid people having to take patches out of mmotm to test.
-For review purposes, they can be ignored.
+My preference would be for a pagevec.  That does limit you to 15 pages
+per call [1], but I do think that might be enough.  And the overhead of
+manipulating a linked list isn't free.
 
-> > <SNIP>
-> >
-> > @@ -4919,6 +4934,9 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
-> >  		struct alloc_context *ac, gfp_t *alloc_mask,
-> >  		unsigned int *alloc_flags)
-> >  {
-> > +	gfp_mask &= gfp_allowed_mask;
-> > +	*alloc_mask = gfp_mask;
-> 
-> Also I renamed alloc_mask to alloc_gfp.
-> 
-
-It then becomes obvious that prepare_alloc_pages does not share the same
-naming convention as __alloc_pages(). In an effort to keep the naming
-convention consistent, I updated the patch to also rename gfp_mask to
-gfp in prepare_alloc_pages.
-
-As a complete aside, I don't actually like the gfp name and would have
-preferred gfp_flags because GFP is just an acronym and the context of the
-variable is that it's a set of GFP Flags. The mask naming was wrong I admit
-because it's not a mask but I'm not interested in naming the bike shed :)
-
-Thanks for pointing this out early because it would have been a merge
-headache!
-
--- 
-Mel Gorman
-SUSE Labs
+[1] patches exist to increase this, because it turns out that 15 may
+not be enough for all systems!  but it would limit to 255 as an absolute
+hard cap.
