@@ -2,112 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7D5F33995D
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 22:57:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6C99339992
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 23:17:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235357AbhCLV52 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 12 Mar 2021 16:57:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235424AbhCLV5N (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 12 Mar 2021 16:57:13 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 906DF64DAF;
-        Fri, 12 Mar 2021 21:57:12 +0000 (UTC)
-Subject: [PATCH] SUNRPC: Refresh rq_pages using a bulk page allocator
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     mgorman@techsingularity.net
-Cc:     akpm@linux-foundation.org, brouer@redhat.com, hch@infradead.org,
-        alexander.duyck@gmail.com, willy@infradead.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, linux-nfs@vger.kernel.org
-Date:   Fri, 12 Mar 2021 16:57:11 -0500
-Message-ID: <161558613209.1366.1492710238067504151.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.0-5-g755c
+        id S235467AbhCLWRJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Mar 2021 17:17:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235531AbhCLWQt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 17:16:49 -0500
+Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3895CC061574;
+        Fri, 12 Mar 2021 14:16:49 -0800 (PST)
+Received: by mail-io1-xd2c.google.com with SMTP id y20so9051822iot.4;
+        Fri, 12 Mar 2021 14:16:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ow2p0xO1hotn6RJOItrtDiyN/JeHanAbeq4vQ3SfL3Q=;
+        b=ca8qSuxHMylJkf9hpLyRjp/Lol2CkO36rE6egf5H5JN5eI3b6iTEL/fbQnmfD7v8RO
+         yZWhE84LScpT7GbGaqCoAaP0WaoREHhGnBmlZN5HTtwRcQL5uQ4U1b86yAr7SHM7AKtl
+         ZtRUX0KButFkQukRno//Ub+D781me/+qZ7nlmeqE+By32gH/DPuRaX5hBoNJOYYGOTPf
+         AlM+aytVEXO0CdK/7+6/r4TmJj+k85QG/VGkdEdCPfxaI6y9ZkBLiO8MV3FnzitzfrZA
+         tMg6yZWfvr8ee8xR6PYOYlKUJtiPIxMMUaFdoJ4wlgDr/U+OtXRtd2Bomtnt+BwF6t0S
+         bYsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ow2p0xO1hotn6RJOItrtDiyN/JeHanAbeq4vQ3SfL3Q=;
+        b=E14bB5zfSUp3BnUsG7cSCl4ty9p6LVQEacHeb/HRNW1BsXWM998rCDJpvFOsYaJXGl
+         osdbD4ZnFXtv3D+a6FnbLfEAZyHFBvtJdpwQJCEWHzYSgbjG9ubHD6DNq2LxBVxEXiP1
+         zn5Y7z3BHhnWeWZLgxqw9Dz8PSrNqZsi+eIBMrKaHBsKDOGsFnDqH113zjy02gBBQivQ
+         zb3uV5sysPgBiAbozDE16oMVckEofmbOp79mea7Hd3cYgnUYB5fSqoDReTM5Dki5fNnP
+         AnZH+pECqJt9UZ3y+ooNDgqD2XBi/nHi2xfsAjlZLhxKmT5wZ5i25+SX91uvapPLE7Kg
+         sgRg==
+X-Gm-Message-State: AOAM530yhkK1cxoxAk9pNIEzy8XG+oPtEzoUimSiWGIVUCYfBv3fqtmW
+        tHTXbcnoH1ktEsnExIt/DFN0bMiSg4nogdJVoico9zN2g6E=
+X-Google-Smtp-Source: ABdhPJw4pENv2yhmlx0fcfNkJOaKYdFrSOwU7MnjJ4DmsXBoc7adHRZNZlntn33952ydymnXbYqzCKVZOzwv+b1gXE8=
+X-Received: by 2002:a02:53:: with SMTP id 80mr1335477jaa.96.1615587408621;
+ Fri, 12 Mar 2021 14:16:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <161558613209.1366.1492710238067504151.stgit@klimt.1015granger.net>
+In-Reply-To: <161558613209.1366.1492710238067504151.stgit@klimt.1015granger.net>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 12 Mar 2021 14:16:37 -0800
+Message-ID: <CAKgT0UdzgsfhNMDMYcAt3xR4U0=LOeMWO3+3tt0_omxu1OupaA@mail.gmail.com>
+Subject: Re: [PATCH] SUNRPC: Refresh rq_pages using a bulk page allocator
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Linux-NFS <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Reduce the rate at which nfsd threads hammer on the page allocator.
-This improves throughput scalability by enabling the threads to run
-more independently of each other.
+On Fri, Mar 12, 2021 at 1:57 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+> Reduce the rate at which nfsd threads hammer on the page allocator.
+> This improves throughput scalability by enabling the threads to run
+> more independently of each other.
+>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+> Hi Mel-
+>
+> This patch replaces patch 5/7 in v4 of your alloc_pages_bulk()
+> series. It implements code clean-ups suggested by Alexander Duyck.
+> It builds and has seen some light testing.
+>
+>
+>  net/sunrpc/svc_xprt.c |   39 +++++++++++++++++++++++++++------------
+>  1 file changed, 27 insertions(+), 12 deletions(-)
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
-Hi Mel-
+The updated patch looks good to me. I am good with having my
+Reviewed-by added for patches 1-6. I think the only one that still
+needs work is patch 7.
 
-This patch replaces patch 5/7 in v4 of your alloc_pages_bulk()
-series. It implements code clean-ups suggested by Alexander Duyck.
-It builds and has seen some light testing.
-
-
- net/sunrpc/svc_xprt.c |   39 +++++++++++++++++++++++++++------------
- 1 file changed, 27 insertions(+), 12 deletions(-)
-
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 4d58424db009..791ea24159b1 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -661,11 +661,13 @@ static void svc_check_conn_limits(struct svc_serv *serv)
- static int svc_alloc_arg(struct svc_rqst *rqstp)
- {
- 	struct svc_serv *serv = rqstp->rq_server;
-+	unsigned long needed;
- 	struct xdr_buf *arg;
-+	struct page *page;
-+	LIST_HEAD(list);
- 	int pages;
- 	int i;
- 
--	/* now allocate needed pages.  If we get a failure, sleep briefly */
- 	pages = (serv->sv_max_mesg + 2 * PAGE_SIZE) >> PAGE_SHIFT;
- 	if (pages > RPCSVC_MAXPAGES) {
- 		pr_warn_once("svc: warning: pages=%u > RPCSVC_MAXPAGES=%lu\n",
-@@ -673,19 +675,32 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
- 		/* use as many pages as possible */
- 		pages = RPCSVC_MAXPAGES;
- 	}
--	for (i = 0; i < pages ; i++)
--		while (rqstp->rq_pages[i] == NULL) {
--			struct page *p = alloc_page(GFP_KERNEL);
--			if (!p) {
--				set_current_state(TASK_INTERRUPTIBLE);
--				if (signalled() || kthread_should_stop()) {
--					set_current_state(TASK_RUNNING);
--					return -EINTR;
--				}
--				schedule_timeout(msecs_to_jiffies(500));
-+
-+	for (needed = 0, i = 0; i < pages ; i++) {
-+		if (!rqstp->rq_pages[i])
-+			needed++;
-+	}
-+	i = 0;
-+	while (needed) {
-+		needed -= alloc_pages_bulk(GFP_KERNEL, 0, needed, &list);
-+		for (; i < pages; i++) {
-+			if (rqstp->rq_pages[i])
-+				continue;
-+			page = list_first_entry_or_null(&list, struct page, lru);
-+			if (likely(page)) {
-+				list_del(&page->lru);
-+				rqstp->rq_pages[i] = page;
-+				continue;
- 			}
--			rqstp->rq_pages[i] = p;
-+			set_current_state(TASK_INTERRUPTIBLE);
-+			if (signalled() || kthread_should_stop()) {
-+				set_current_state(TASK_RUNNING);
-+				return -EINTR;
-+			}
-+			schedule_timeout(msecs_to_jiffies(500));
-+			break;
- 		}
-+	}
- 	rqstp->rq_page_end = &rqstp->rq_pages[pages];
- 	rqstp->rq_pages[pages] = NULL; /* this might be seen in nfsd_splice_actor() */
- 
-
-
+Reviewed-by: Alexander Duyck <alexanderduyck@fb.com>
