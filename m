@@ -2,139 +2,118 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C16D3397F8
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 21:06:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BD56339872
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 21:31:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234490AbhCLUGU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 12 Mar 2021 15:06:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47328 "EHLO
+        id S234765AbhCLU3Q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Mar 2021 15:29:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234532AbhCLUFv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 15:05:51 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98529C061761
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Mar 2021 12:05:50 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id v4so2438332wrp.13
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Mar 2021 12:05:50 -0800 (PST)
+        with ESMTP id S234770AbhCLU3B (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 15:29:01 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AFC1C061574
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Mar 2021 12:29:01 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id lr13so55815475ejb.8
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Mar 2021 12:29:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QGcOUOWYrtlGEtGtp6CRhZz9BsHqr4gvekeyWTQX/+U=;
-        b=qXjLpE1SzOwXL9eMZ4sVgx+Ho7QAI/X5+cU88dH2+5FstbM+imrk9OxnjbVeUcR6YI
-         rx0szxhQCI8AwDfNdyCzkSp6a+z9FHIl/SnJa9covZXzclAP8CNUjmxCgD7/534BDM6l
-         D5x0bFj0S+9CccUOvMiSnHZUhUyL4Nt9dfbwP5yvfRMnIxL7OfxWIDZJJgqN5xGHElo3
-         TzGsWFTFsxG3nrEYYJI+xiF1cTm5NaPZ7HLpKzP+u5x/paqU7X6VgvZCJ0OZpm/IBXfF
-         6pwmLJN2F3lsXuNQqTo21sTgShG48HUbToep4zwaSQVJ3Y5HPCcjdZGdYD0SEp5qRrJg
-         IczQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=2pngxSMEkD3zujekYOOR2iRAViH6b04JymttWnLOPSE=;
+        b=Dvkx6OQTsCOqXzklEl1dHqXFJfkUDrFfAoMm8i7Qodv7SXOgA5H+/utYNMrOMMnDQC
+         UKGyzYu8kx5CT16pz8t2TMcu2RumQF8N3R6r+Yy/LKR9zIv0ndSE71SinyjrQhjMoxcv
+         VK69VuHF5DN+TuolSaFsPK0jTiHfrmiDdSBOoS6EzTnXRmF8UjWq2bycMBHKdloQymzb
+         3RDtE5DhaC3X70aVjFu2huzL5UcLVtOvMultCwxPmC48VYicuA/2Cp9HEhLlRNTBerMj
+         jflU8uywwfMOl2Ce+s2mgTasSnF8MOBpsHrZX/LGN9dV/FJJgPNeZ2DDrQcFwq67PC6I
+         onqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QGcOUOWYrtlGEtGtp6CRhZz9BsHqr4gvekeyWTQX/+U=;
-        b=kqz53mT6VcuEhCt518Rz8gThZgF2RAlWzr4ii5uyAy9Z+AHsGkNV9AsGKh97PbpDnY
-         3ql1BjPzl70F6isZkStLm88WmvdkiTDNVlDckh9jGNDnLPCnnMFowGbxHvUgrPX/yeSR
-         Exx1HFY1IA+0jiyGG6YHLByvDniVi3zZVAZK1tIphil8scN7B+bOI4Dj5UG1UL1J1+Sl
-         Y/j4mGzIuQGAP0BYfXx9c+GUejxuuQD2HGP8O4FGbRABK6+7NKnQ4bbm0IqOWXM81EWm
-         n+jiompxnkVs7PfTX5GQXt2foCGz/U/5HzVSZWKr2crkmFIlhcSGfJGlPKlFWx4zxhwe
-         b1Sg==
-X-Gm-Message-State: AOAM533ppB5PeQS2hRLK6G8/nhTima13lw+r/1xiCdgVJZfie/mo6aez
-        3JB5MXh4kwPG/g4WJ3Th8E6Img==
-X-Google-Smtp-Source: ABdhPJw8cRrGcaQUUVnqA8Tyww1Pzpw79qa1UHk7Y7H/248bMIaCPg9pzS91Nl7GhXEgRhZp4++izQ==
-X-Received: by 2002:adf:f04e:: with SMTP id t14mr15854532wro.100.1615579549084;
-        Fri, 12 Mar 2021 12:05:49 -0800 (PST)
-Received: from apalos.home (ppp-94-64-113-158.home.otenet.gr. [94.64.113.158])
-        by smtp.gmail.com with ESMTPSA id i11sm9148238wro.53.2021.03.12.12.05.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Mar 2021 12:05:48 -0800 (PST)
-Date:   Fri, 12 Mar 2021 22:05:45 +0200
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Net <netdev@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux-NFS <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 7/7] net: page_pool: use alloc_pages_bulk in refill code
- path
-Message-ID: <YEvJmVrnTzKT1XAY@apalos.home>
-References: <20210312154331.32229-1-mgorman@techsingularity.net>
- <20210312154331.32229-8-mgorman@techsingularity.net>
- <CAKgT0UebK=mMwDV+UH8CqBRt0E0Koc7EB42kwgf0hYHDT_2OfQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=2pngxSMEkD3zujekYOOR2iRAViH6b04JymttWnLOPSE=;
+        b=mXe8qidF8uQb0EXTbFRFmcY+6YJipNmptB2wQypzWp4xVX6st2fZUe4qDP7jodhMpF
+         Yup2Pg0E46+HjWbnAmFbAYfnhlIfHHgp3z4yOoTewGi3d9sJuENxXaeOMJJ6dTwXs4mH
+         x+HnvgrKpzQGqTQHQym505UuDOQMfM4ufQ77+kE3CBFIx9d7vCkYgO3gSqE4DbkQ52lA
+         xAN3WY89W6AZypEgU/AU8yiSOKRS3dMOrY8mfnoYU9IsKs6/XDgEm67+7fV+BLMcEN78
+         mmkl31w1Z43yU0m0z/aGzQS2EdAPCRsogKAUQklxK1ZHMGqgafU4MkSuQhPE4wEVcyRo
+         tgpQ==
+X-Gm-Message-State: AOAM532hid18Z6re1QcVj16Wdlcr0JIY9BFHXQEdLCz6PcIPd1TqN12P
+        aF3ZaxHJiiYH/+sNDdcXXx091leg3zf4QW+0KbgNG1TE5nioAw==
+X-Google-Smtp-Source: ABdhPJyvN+YpXgEfHEBpHn0VnQ6shoRfcjtMam8zwkMFKpkqCDvn1OZ2lkZiXjPpZThqZk/NAKdjFqZ3yJ5TyeM65/E=
+X-Received: by 2002:a17:906:4e17:: with SMTP id z23mr10683602eju.439.1615580939944;
+ Fri, 12 Mar 2021 12:28:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0UebK=mMwDV+UH8CqBRt0E0Koc7EB42kwgf0hYHDT_2OfQ@mail.gmail.com>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Fri, 12 Mar 2021 15:28:44 -0500
+Message-ID: <CAFX2Jfks7yEAs9xhG-9Znwzzmiz8JpRQv9XDpOAEM=EaxhiEpA@mail.gmail.com>
+Subject: [GIT PULL] Please pull NFS client bugfixes for 5.12-rc3
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-[...]
-> 6. return last_page
-> 
-> > +       /* Remaining pages store in alloc.cache */
-> > +       list_for_each_entry_safe(page, next, &page_list, lru) {
-> > +               list_del(&page->lru);
-> > +               if ((pp_flags & PP_FLAG_DMA_MAP) &&
-> > +                   unlikely(!page_pool_dma_map(pool, page))) {
-> > +                       put_page(page);
-> > +                       continue;
-> > +               }
-> 
-> So if you added a last_page pointer what you could do is check for it
-> here and assign it to the alloc cache. If last_page is not set the
-> block would be skipped.
-> 
-> > +               if (likely(pool->alloc.count < PP_ALLOC_CACHE_SIZE)) {
-> > +                       pool->alloc.cache[pool->alloc.count++] = page;
-> > +                       pool->pages_state_hold_cnt++;
-> > +                       trace_page_pool_state_hold(pool, page,
-> > +                                                  pool->pages_state_hold_cnt);
-> > +               } else {
-> > +                       put_page(page);
-> 
-> If you are just calling put_page here aren't you leaking DMA mappings?
-> Wouldn't you need to potentially unmap the page before you call
-> put_page on it?
+Hi Linus,
 
-Oops, I completely missed that. Alexander is right here.
+The following changes since commit a38fd8748464831584a19438cbb3082b5a2dab15:
 
-> 
-> > +               }
-> > +       }
-> > +out:
-> >         if ((pp_flags & PP_FLAG_DMA_MAP) &&
-> > -           unlikely(!page_pool_dma_map(pool, page))) {
-> > -               put_page(page);
-> > +           unlikely(!page_pool_dma_map(pool, first_page))) {
-> > +               put_page(first_page);
-> 
-> I would probably move this block up and make it a part of the pp_order
-> block above. Also since you are doing this in 2 spots it might make
-> sense to look at possibly making this an inline function.
-> 
-> >                 return NULL;
-> >         }
-> >
-> >         /* Track how many pages are held 'in-flight' */
-> >         pool->pages_state_hold_cnt++;
-> > -       trace_page_pool_state_hold(pool, page, pool->pages_state_hold_cnt);
-> > +       trace_page_pool_state_hold(pool, first_page, pool->pages_state_hold_cnt);
-> >
-> >         /* When page just alloc'ed is should/must have refcnt 1. */
-> > -       return page;
-> > +       return first_page;
-> >  }
-> >
-> >  /* For using page_pool replace: alloc_pages() API calls, but provide
-> > --
-> > 2.26.2
-> >
+  Linux 5.12-rc2 (2021-03-05 17:33:41 -0800)
 
-Cheers
-/Ilias
+are available in the Git repository at:
+
+  git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.12-2
+
+for you to fetch changes up to 4f8be1f53bf615102d103c0509ffa9596f65b718:
+
+  nfs: we don't support removing system.nfs4_acl (2021-03-11 13:17:42 -0500)
+
+----------------------------------------------------------------
+These are mostly fixes for issues discovered at the recent NFS bakeathon
+
+  - Fix PNFS_FLEXFILE_LAYOUT kconfig so it is possible to build into the kernel
+  - Correct size calculationn for create reply length
+  - Set memalloc_nofs_save() for sync tasks to prevent deadlocks
+  - Don't revalidate directory permissions on lookup failure
+  - Don't clear inode cache when lookup fails
+  - Change functions to use nfs_set_cache_invalid() for proper
+delegation handling
+  - Fix return value of _nfs4_get_security_label()
+  - Return an error when attempting to remove system.nfs4_acl
+
+Thanks,
+Anna
+----------------------------------------------------------------
+Benjamin Coddington (1):
+      SUNRPC: Set memalloc_nofs_save() for sync tasks
+
+Frank Sorenson (1):
+      NFS: Correct size calculation for create reply length
+
+J. Bruce Fields (1):
+      nfs: we don't support removing system.nfs4_acl
+
+Ondrej Mosnacek (1):
+      NFSv4.2: fix return value of _nfs4_get_security_label()
+
+Timo Rothenpieler (1):
+      nfs: fix PNFS_FLEXFILE_LAYOUT Kconfig default
+
+Trond Myklebust (5):
+      NFS: Don't revalidate the directory permissions on a lookup failure
+      NFS: Don't gratuitously clear the inode cache when lookup failed
+      NFS: Clean up function nfs_mark_dir_for_revalidate()
+      NFS: Fix open coded versions of nfs_set_cache_invalid()
+      NFS: Fix open coded versions of nfs_set_cache_invalid() in NFSv4
+
+ fs/nfs/Kconfig     |  2 +-
+ fs/nfs/dir.c       | 58
++++++++++++++++++++++++++++++++++-------------------------
+ fs/nfs/inode.c     |  7 ++++---
+ fs/nfs/internal.h  |  3 ++-
+ fs/nfs/nfs3xdr.c   |  3 ++-
+ fs/nfs/nfs42proc.c | 12 +++++++-----
+ fs/nfs/nfs4proc.c  | 33 ++++++++++++++++-----------------
+ fs/nfs/unlink.c    |  6 +++---
+ fs/nfs/write.c     |  8 ++++----
+ net/sunrpc/sched.c |  5 ++++-
+ 10 files changed, 76 insertions(+), 61 deletions(-)
