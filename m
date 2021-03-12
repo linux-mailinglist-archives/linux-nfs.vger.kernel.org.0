@@ -2,90 +2,138 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58140338D57
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 13:44:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3C13338F0E
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 14:45:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231346AbhCLMoR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 12 Mar 2021 07:44:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36350 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231201AbhCLMoM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 07:44:12 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C65C061574;
-        Fri, 12 Mar 2021 04:44:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kA2zAbVU2u9LtJpiwYGKaIj40CL11SeMzPwy8fqCxkY=; b=kf7NOn2KwwvzyGg78S230QQcFN
-        MIXvadkSKEGfs3IHGJYDuqpq7MQvxUHU8YT1P8C7AoXgk/YM55DC8ixq3tLScOup5+O6bBCL/4JCg
-        c8aAkcRMZMUU0iPxI0YHCmqB1j5nivVV7u8fXzId29IajJupo3WZOMQVJ9HjrGxBlvU60ue7gnFmr
-        aQP7ZFF+qIVomRCv4AL4WFChMBhJDpQLWNHdV57AFLYIdTvsWmWrbJg0sCLvBYRXn9GAKns6AoM56
-        3q48mGoGEOR8JwVIwMbtxOA5aND4OcK+zojxIaDwMqVwZQV5n2xLMvdZ37fEFAJUe34nQeuv2S+kk
-        /+WdLXCg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lKh8d-00Af8Y-Mi; Fri, 12 Mar 2021 12:43:38 +0000
-Date:   Fri, 12 Mar 2021 12:43:31 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
+        id S231252AbhCLNpR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Mar 2021 08:45:17 -0500
+Received: from outbound-smtp11.blacknight.com ([46.22.139.106]:58019 "EHLO
+        outbound-smtp11.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231480AbhCLNo6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 08:44:58 -0500
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp11.blacknight.com (Postfix) with ESMTPS id 3056A1C3E83
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Mar 2021 13:44:57 +0000 (GMT)
+Received: (qmail 26842 invoked from network); 12 Mar 2021 13:44:57 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 12 Mar 2021 13:44:57 -0000
+Date:   Fri, 12 Mar 2021 13:44:55 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Chuck Lever <chuck.lever@oracle.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
         Christoph Hellwig <hch@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Linux-Net <netdev@vger.kernel.org>,
         Linux-MM <linux-mm@kvack.org>,
         Linux-NFS <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH 2/5] mm/page_alloc: Add a bulk page allocator
-Message-ID: <20210312124331.GY3479805@casper.infradead.org>
+Message-ID: <20210312134455.GU3697@techsingularity.net>
 References: <20210310104618.22750-1-mgorman@techsingularity.net>
  <20210310104618.22750-3-mgorman@techsingularity.net>
+ <20210310154650.ad9760cd7cb9ac4acccf77ee@linux-foundation.org>
+ <20210311084200.GR3697@techsingularity.net>
+ <20210312124609.33d4d4ba@carbon>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20210310104618.22750-3-mgorman@techsingularity.net>
+In-Reply-To: <20210312124609.33d4d4ba@carbon>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Mar 10, 2021 at 10:46:15AM +0000, Mel Gorman wrote:
-> +int __alloc_pages_bulk_nodemask(gfp_t gfp_mask, int preferred_nid,
-> +				nodemask_t *nodemask, int nr_pages,
-> +				struct list_head *list);
+On Fri, Mar 12, 2021 at 12:46:09PM +0100, Jesper Dangaard Brouer wrote:
+> > > > <SNIP>
+> > > > +	if (!zone)
+> > > > +		return 0;
+> > > > +
+> > > > +	/* Attempt the batch allocation */
+> > > > +	local_irq_save(flags);
+> > > > +	pcp = &this_cpu_ptr(zone->pageset)->pcp;
+> > > > +	pcp_list = &pcp->lists[ac.migratetype];
+> > > > +
+> > > > +	while (alloced < nr_pages) {
+> > > > +		page = __rmqueue_pcplist(zone, ac.migratetype, alloc_flags,
+> > > > +								pcp, pcp_list);
+> > > > +		if (!page)
+> > > > +			break;
+> > > > +
+> > > > +		prep_new_page(page, 0, gfp_mask, 0);  
+> > > 
+> > > I wonder if it would be worth running prep_new_page() in a second pass,
+> > > after reenabling interrupts.
+> > >   
+> > 
+> > Possibly, I could add another patch on top that does this because it's
+> > trading the time that IRQs are disabled for a list iteration.
+> 
+> I for one like this idea, of moving prep_new_page() to a second pass.
+> As per below realtime concern, to reduce the time that IRQs are
+> disabled.
+> 
 
-For the next revision, can you ditch the '_nodemask' part of the name?
-Andrew just took this patch from me:
+Already done.
 
-    mm/page_alloc: combine __alloc_pages and __alloc_pages_nodemask
-    
-    There are only two callers of __alloc_pages() so prune the thicket of
-    alloc_page variants by combining the two functions together.  Current
-    callers of __alloc_pages() simply add an extra 'NULL' parameter and
-    current callers of __alloc_pages_nodemask() call __alloc_pages() instead.
+> > > Speaking of which, will the realtime people get upset about the
+> > > irqs-off latency?  How many pages are we talking about here?
+> > >   
+> 
+> In my page_pool patch I'm bulk allocating 64 pages. I wanted to ask if
+> this is too much? (PP_ALLOC_CACHE_REFILL=64).
+> 
 
-...
+I expect no, it's not too much. The refill path should be short.
 
--__alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
--                                                       nodemask_t *nodemask);
--
--static inline struct page *
--__alloc_pages(gfp_t gfp_mask, unsigned int order, int preferred_nid)
--{
--       return __alloc_pages_nodemask(gfp_mask, order, preferred_nid, NULL);
--}
-+struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
-+               nodemask_t *nodemask);
+> > At the moment, it looks like batches of up to a few hundred at worst. I
+> > don't think realtime sensitive applications are likely to be using the
+> > bulk allocator API at this point.
+> > 
+> > The realtime people have a worse problem in that the per-cpu list does
+> > not use local_lock and disable IRQs more than it needs to on x86 in
+> > particular. I've a prototype series for this as well which splits the
+> > locking for the per-cpu list and statistic handling and then converts the
+> > per-cpu list to local_lock but I'm getting this off the table first because
+> > I don't want multiple page allocator series in flight at the same time.
+> > Thomas, Peter and Ingo would need to be cc'd on that series to review
+> > the local_lock aspects.
+> > 
+> > Even with local_lock, it's not clear to me why per-cpu lists need to be
+> > locked at all because potentially it could use a lock-free llist with some
+> > struct page overloading. That one is harder to predict when batches are
+> > taken into account as splicing a batch of free pages with llist would be
+> > unsafe so batch free might exchange IRQ disabling overhead with multiple
+> > atomics. I'd need to recheck things like whether NMI handlers ever call
+> > the page allocator (they shouldn't but it should be checked).  It would
+> > need a lot of review and testing.
+> 
+> The result of the API is to deliver pages as a double-linked list via
+> LRU (page->lru member).  If you are planning to use llist, then how to
+> handle this API change later?
+> 
 
-So calling this function __alloc_pages_bulk() fits with the new naming
-scheme.
+I would not have to. The per-cpu list internally can use llist internally
+while pages returned to the bulk allocator user can still be a doubly
+linked list. An llist_node fits in less space than the list_head lru.
 
-> @@ -4919,6 +4934,9 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
->  		struct alloc_context *ac, gfp_t *alloc_mask,
->  		unsigned int *alloc_flags)
->  {
-> +	gfp_mask &= gfp_allowed_mask;
-> +	*alloc_mask = gfp_mask;
+> Have you notice that the two users store the struct-page pointers in an
+> array?  We could have the caller provide the array to store struct-page
+> pointers, like we do with kmem_cache_alloc_bulk API.
+> 
 
-Also I renamed alloc_mask to alloc_gfp.
+That is a possibility but it ties the caller into declaring an array,
+either via kmalloc, within an existing struct or on-stack. They would
+then need to ensure that nr_pages does not exceed the array size or pass
+in the array size. It's more error prone and a harder API to use.
 
+> You likely have good reasons for returning the pages as a list (via
+> lru), as I can see/imagine that there are some potential for grabbing
+> the entire PCP-list.
+> 
+
+I used a list so that user was only required to define a list_head on
+the stack to use the API.
+
+-- 
+Mel Gorman
+SUSE Labs
