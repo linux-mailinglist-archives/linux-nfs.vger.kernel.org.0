@@ -2,141 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E98D3391A5
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 16:44:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2293E33922A
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 16:47:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232334AbhCLPoG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 12 Mar 2021 10:44:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232020AbhCLPn7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 10:43:59 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08E1DC061574
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Mar 2021 07:43:59 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id k16so672235ejx.1
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Mar 2021 07:43:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+1kUnnL0O4N2cXdE1HqPvJg6HjXrUtNq/T/BfMnv3aA=;
-        b=K0nf8gQ2nre0A6/R/UJbQCXVTZRS7vnxZFkf6fdlQvK4uFSPa7j3Hjiv4mRJ1iYH4f
-         A+nV7ui31Ujw8fXpqfNpoBP6312nwpmV4PbNR/Ah4fqrDwZff5tN0f64b7i2Y1TO9W8l
-         fXuloNzF2mEP1i/sMOWdjbVpapt8JS4z6aI81QEOLsU9GkGqoCwGGqN2s0VsUUgGIcQo
-         h3Mk9fa+nEmkZX8hdeVss55hPdya29LlNFZq1RUCkpYzk73+afFf3/Ql1djOSUB2XdDq
-         PWkD/LsUUiiIdOhthEowiF9RGIrvuaVGQlTGO8maIYHPb4LhXsdlsdGHrR25zrq0pU4l
-         x0pg==
+        id S231601AbhCLPqJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Mar 2021 10:46:09 -0500
+Received: from mail-ej1-f51.google.com ([209.85.218.51]:42968 "EHLO
+        mail-ej1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233410AbhCLPqA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 10:46:00 -0500
+Received: by mail-ej1-f51.google.com with SMTP id c10so54125251ejx.9;
+        Fri, 12 Mar 2021 07:45:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+1kUnnL0O4N2cXdE1HqPvJg6HjXrUtNq/T/BfMnv3aA=;
-        b=C7ldjbbDxZpIkAYjQBNOgVTfX+OXYPSemeUjCNJe+Mw+vDzhvKrZ5HeT7d1lJ1hCOH
-         VAuXHTLT/vZQITjxXMX5oycQ6ljE9bpxs1DixS8cQ5KzH/VdtB3tZrmdLO7/q0PmMZGB
-         t5qTq95qDlO7GOkJsHIZEQr6LbmtrBkt9QKoYYw5Ur5UpWzVa/3iNDSP2H4wTtSTeyqm
-         Pag1xvxjwZ2QY+v3cT3bNeQ9NLsrdaKYpVfZG3+1cAwN42LwRx3+xiu/3iavX8Bvv2Za
-         +Rw9rlHUpZxq5dwPY4hKQLmQE18JPVA0MOYqNE48ZLljHol/GNpT9cgWYIs142UgYarp
-         Bz+Q==
-X-Gm-Message-State: AOAM533G8sDIdAMKXwHzrsvOTcHewnoaoRBAG0Vnn332EZnjVEIvQdMD
-        7rAi1O2ADO+B3v8x+Q47wYAGRbXUzyPEvDkI+pE=
-X-Google-Smtp-Source: ABdhPJyFVwr9UPFmJgCxzZ0FSTgABoIxlyVRSXfOiI2+qHdWtWFGXb0Y4jUj8d9JlLOox0N+UpKjGD157NBKw4za+84=
-X-Received: by 2002:a17:906:4e17:: with SMTP id z23mr9308725eju.439.1615563837727;
- Fri, 12 Mar 2021 07:43:57 -0800 (PST)
+        bh=X1HpxgHYTFg/Fiy9HzFnN5aYrg8PdK4Zz6eNMkByZOQ=;
+        b=ZrAPaEwWBHF9ZTjyxisxeO6fCV9jOuA4NbZcM8ejc9lZsVgK/66NJ9rSn7ZHk5sWZz
+         g4b9GEnFWtbZh+mtWkphj+bI934MoBwfUVaeX+LAQ177w7/j4j3nbQihlDVgsMXsI4ZW
+         GRgzeHjGE41oMhGJEh4pS1TMtpg7Ahn2aDKu2pCJLzvVb9gSy5h2xF6e61latQvM9qB/
+         qtlNfxjDpGIQESkC2vRP16emnaQekGQmQabdJCgEKL0kyFwdWVbNLt2Y5VBtmwjkOAHS
+         cSrcPTiwEEyix/DK8tNnhi2/id6ZWLDEFn85t6oOYgkO02MREaeNFCOeJkhl5j+/HSBF
+         u23w==
+X-Gm-Message-State: AOAM531hM0dom4lp2WJsLg0VI/KiX1SMYYvo3qZLRU0VbJIm3Tbw3091
+        CZaOB8bZK8S8/IhQWnO+2uno6NusmF0OMyAdTltPHtjtGh8=
+X-Google-Smtp-Source: ABdhPJzSxuuHpVvuY/3fx7VuVAza8CeQXKqJM7E6/bn3Tg/YFxUIAenXMt+sKbScJmPABZa6Duhd/VeUZoKutXD5WHI=
+X-Received: by 2002:a17:906:4e17:: with SMTP id z23mr9318713eju.439.1615563958756;
+ Fri, 12 Mar 2021 07:45:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20210128223638.GE29887@fieldses.org> <95e5f9e4-76d4-08c4-ece3-35a10c06073b@vastdata.com>
- <cbc7115cc5d5aeb7ffb9e9b3880e453bf54ecbdb.camel@hammerspace.com>
- <20210129023527.GA11864@fieldses.org> <20210129025041.GA12151@fieldses.org>
- <7a078b4d22c8d769a42a0c2b47fd501479e47a7b.camel@hammerspace.com>
- <20210131215843.GA9273@fieldses.org> <20210203200756.GA30996@fieldses.org>
- <6dc98a594a21b86316bf77000dc620d6cca70be6.camel@hammerspace.com>
- <20210208220855.GA15116@fieldses.org> <20210211185444.GA6048@fieldses.org> <CADJHv_vH5Ocf8D4hXNSKc4PcdwJWCeXe+nvwiOqRWVQ7HOoNfg@mail.gmail.com>
-In-Reply-To: <CADJHv_vH5Ocf8D4hXNSKc4PcdwJWCeXe+nvwiOqRWVQ7HOoNfg@mail.gmail.com>
-From:   Anna Schumaker <schumakeranna@gmail.com>
-Date:   Fri, 12 Mar 2021 10:43:41 -0500
-Message-ID: <CAFX2JfnH1JWBWS5zm03mnvHDAfMAqmNKCH9fsjWu2u8sGvGO1g@mail.gmail.com>
-Subject: Re: [PATCH] nfs: we don't support removing system.nfs4_acl
-To:     Murphy Zhou <jencce.kernel@gmail.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "guy@vastdata.com" <guy@vastdata.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>
+References: <CAN-5tyGuV-gs0KzVbKSj42ZMx553zy9wOfVb1SoHoE-WCoN1_w@mail.gmail.com>
+ <20210227033755.24460-1-olga.kornievskaia@gmail.com> <CAFX2Jfk--KwkAss1gqTPnQt-bKvUUapNdHbuicu=m+jOtjrMyQ@mail.gmail.com>
+ <f8f5323c-cdfd-92e8-b359-43caaf9d7490@schaufler-ca.com> <CAHC9VhR=+uwN8U17JhYWKcXSc9=ExCrG4O9-y+DPJg6xZ=WoYA@mail.gmail.com>
+In-Reply-To: <CAHC9VhR=+uwN8U17JhYWKcXSc9=ExCrG4O9-y+DPJg6xZ=WoYA@mail.gmail.com>
+From:   Anna Schumaker <anna.schumaker@netapp.com>
+Date:   Fri, 12 Mar 2021 10:45:42 -0500
+Message-ID: <CAFX2JfnT49o-CkaAE3=c0KW9SDS1U+scP0RD++nmWwyKoBDWkA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] [security] Add new hook to compare new mount to an
+ existing mount
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Murphy,
-
-On Wed, Mar 3, 2021 at 9:30 PM Murphy Zhou <jencce.kernel@gmail.com> wrote:
+On Thu, Mar 4, 2021 at 8:34 PM Paul Moore <paul@paul-moore.com> wrote:
 >
-> Hi,
->
-> On Fri, Feb 12, 2021 at 2:58 AM bfields@fieldses.org
-> <bfields@fieldses.org> wrote:
-> >
-> > From: "J. Bruce Fields" <bfields@redhat.com>
-> >
-> > The contents of the system.nfs4_acl xattr are literally just the
-> > xdr-encoded ACL attribute.  That attribute starts with a 4-byte integer
-> > representing the number of ACEs in the ACL.  So even a zero-ACE ACL will
-> > be at least 4 bytes.
-> >
-> > We've never actually bothered to sanity-check the ACL encoding that
-> > userspace gives us.  The only problem that causes is that we return an
-> > error that's probably wrong.  (The server will return BADXDR, which
-> > we'll translate to EIO, when EINVAL would make more sense.)
-> >
-> > It's not much a problem in practice since the standard utilities give us
-> > well-formed XDR.  The one case we're likely to see from userspace in
-> > practice is a set of a zero-length xattr since that's how
-> >
-> >         removexattr(path, "system.nfs4_acl")
-> >
-> > is implemented.  It's worth trying to give a better error for that case.
-> >
-> > Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> > ---
-> >  fs/nfs/nfs4proc.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > On Mon, Feb 08, 2021 at 05:08:55PM -0500, bfields@fieldses.org wrote:
-> > > On Mon, Feb 08, 2021 at 07:31:38PM +0000, Trond Myklebust wrote:
-> > > > OK. So you're not really saying that the SETATTR has a zero length
-> > > > body, but that the ACL attribute in this case has a zero length body,
-> > > > whereas in the 'empty acl' case, it is supposed to have a body
-> > > > containing a zero-length nfsace4<> array. Fair enough.
+> On Tue, Mar 2, 2021 at 10:53 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> > On 3/2/2021 10:20 AM, Anna Schumaker wrote:
+> > > Hi Casey,
 > > >
-> > > Yep!  I'll see if I can think of a helpful concise comment, and resend.
+> > > On Fri, Feb 26, 2021 at 10:40 PM Olga Kornievskaia
+> > > <olga.kornievskaia@gmail.com> wrote:
+> > >> From: Olga Kornievskaia <kolga@netapp.com>
+> > >>
+> > >> Add a new hook that takes an existing super block and a new mount
+> > >> with new options and determines if new options confict with an
+> > >> existing mount or not.
+> > >>
+> > >> A filesystem can use this new hook to determine if it can share
+> > >> the an existing superblock with a new superblock for the new mount.
+> > >>
+> > >> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > > Do you have any other thoughts on this patch? I'm also wondering how
+> > > you want to handle sending it upstream.
 > >
-> > Oops, forgot about this, here you go.--b.
-> >
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index 2f4679a62712..86e87f7d7686 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -5895,6 +5895,12 @@ static int __nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t bufl
-> >         unsigned int npages = DIV_ROUND_UP(buflen, PAGE_SIZE);
-> >         int ret, i;
-> >
-> > +       /*
-> > +        * We don't support removing system.nfs4_acl, and even a
-> > +        * 0-length ACL needs at least 4 bytes for the number of ACEs:
-> > +        */
-> > +       if (buflen < 4)
-> > +               return -EINVAL;
-> >         if (!nfs4_server_supports_acls(server))
-> >                 return -EOPNOTSUPP;
-> >         if (npages > ARRAY_SIZE(pages))
-> > --
-> > 2.29.2
-> >
+> > James Morris is the maintainer for the security sub-system,
+> > so you'll want to send this through him. He will want you to
+> > have an ACK from Paul Moore, who is the SELinux maintainer.
 >
-> Has this queued up for the next RC ?
+> In the past I've pulled patches such as this (new LSM hook, with only
+> a SELinux implementation of the new hook) in via the selinux/next tree
+> after the other LSMs have ACK'd the new hook.  This helps limit merge
+> problems with other SELinux changes and allows us (the SELinux folks)
+> to include it in the ongoing testing that we do during the -rcX
+> releases.
+>
+> So Anna, if you or anyone else on the NFS side of the house want to
+> add your ACKs/REVIEWs/etc. please do so as I don't like merging
+> patches that cross subsystem boundaries without having all the
+> associated ACKs.  Casey, James, and other LSM folks please do the
+> same.
 
-Yeah, I have this queued up for the next bugfixes pull request.
+Sure:
+Acked-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+
+Are you also going to take patch 3/3 that uses the new hook, or should
+that go through the NFS tree? Patch 2/3 is a cleanup that can go
+through the NFS tree.
 
 Anna
+
 >
->
-> Thanks,
+> --
+> paul moore
+> www.paul-moore.com
