@@ -2,128 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0030338C3E
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 13:02:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58140338D57
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 13:44:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229900AbhCLMBv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 12 Mar 2021 07:01:51 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58225 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231594AbhCLMB1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 07:01:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1615550486;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/YD6Q71Aksymyb9dGOjs1wIYzShPMYRZ/V0FzuY3l0I=;
-        b=LpbC3R8QKZ1iaXO+uHrU1JSWRgL2AhJFIR093tBbYEJRC2KZ3zJt6i/MZ+Voah8A+UibVZ
-        lfN6Y4da+aJbkjXHY5+OpFsYFNoQMmOum8fqrpwnvMaEN9wv4CL/pIBoJBDcRUSSBwbrkb
-        pYyf0GOtHmwEhNEKRB7ZPIHiciHlM6Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-112-FaWDElQNOj-6zJZCRj3vow-1; Fri, 12 Mar 2021 07:01:24 -0500
-X-MC-Unique: FaWDElQNOj-6zJZCRj3vow-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF313D6809;
-        Fri, 12 Mar 2021 12:01:12 +0000 (UTC)
-Received: from carbon (unknown [10.36.110.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A5CF5C1C4;
-        Fri, 12 Mar 2021 12:01:10 +0000 (UTC)
-Date:   Fri, 12 Mar 2021 13:01:08 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
+        id S231346AbhCLMoR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Mar 2021 07:44:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231201AbhCLMoM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 07:44:12 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C65C061574;
+        Fri, 12 Mar 2021 04:44:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kA2zAbVU2u9LtJpiwYGKaIj40CL11SeMzPwy8fqCxkY=; b=kf7NOn2KwwvzyGg78S230QQcFN
+        MIXvadkSKEGfs3IHGJYDuqpq7MQvxUHU8YT1P8C7AoXgk/YM55DC8ixq3tLScOup5+O6bBCL/4JCg
+        c8aAkcRMZMUU0iPxI0YHCmqB1j5nivVV7u8fXzId29IajJupo3WZOMQVJ9HjrGxBlvU60ue7gnFmr
+        aQP7ZFF+qIVomRCv4AL4WFChMBhJDpQLWNHdV57AFLYIdTvsWmWrbJg0sCLvBYRXn9GAKns6AoM56
+        3q48mGoGEOR8JwVIwMbtxOA5aND4OcK+zojxIaDwMqVwZQV5n2xLMvdZ37fEFAJUe34nQeuv2S+kk
+        /+WdLXCg==;
+Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lKh8d-00Af8Y-Mi; Fri, 12 Mar 2021 12:43:38 +0000
+Date:   Fri, 12 Mar 2021 12:43:31 +0000
+From:   Matthew Wilcox <willy@infradead.org>
 To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Shay Agroskin <shayagr@amazon.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Chuck Lever <chuck.lever@oracle.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Linux-Net <netdev@vger.kernel.org>,
         Linux-MM <linux-mm@kvack.org>,
-        Linux-NFS <linux-nfs@vger.kernel.org>, brouer@redhat.com
+        Linux-NFS <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH 2/5] mm/page_alloc: Add a bulk page allocator
-Message-ID: <20210312130108.65b83747@carbon>
-In-Reply-To: <20210310113836.GQ3697@techsingularity.net>
-References: <20210301161200.18852-1-mgorman@techsingularity.net>
-        <20210301161200.18852-3-mgorman@techsingularity.net>
-        <pj41zl7dmfnuby.fsf@u570694869fb251.ant.amazon.com>
-        <20210310113836.GQ3697@techsingularity.net>
+Message-ID: <20210312124331.GY3479805@casper.infradead.org>
+References: <20210310104618.22750-1-mgorman@techsingularity.net>
+ <20210310104618.22750-3-mgorman@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210310104618.22750-3-mgorman@techsingularity.net>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 10 Mar 2021 11:38:36 +0000
-Mel Gorman <mgorman@techsingularity.net> wrote:
+On Wed, Mar 10, 2021 at 10:46:15AM +0000, Mel Gorman wrote:
+> +int __alloc_pages_bulk_nodemask(gfp_t gfp_mask, int preferred_nid,
+> +				nodemask_t *nodemask, int nr_pages,
+> +				struct list_head *list);
 
-> On Wed, Mar 10, 2021 at 01:04:17PM +0200, Shay Agroskin wrote:
-> > 
-> > Mel Gorman <mgorman@techsingularity.net> writes:
-> >   
-> > > 
-> > > diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-> > > index 8572a1474e16..4903d1cc48dc 100644
-> > > --- a/include/linux/gfp.h
-> > > +++ b/include/linux/gfp.h
-> > > @@ -515,6 +515,10 @@ static inline int arch_make_page_accessible(struct
-> > > page *page)
-> > >  }
-> > >  #endif
-> > >   +int __alloc_pages_bulk_nodemask(gfp_t gfp_mask, int preferred_nid,
-> > > +				nodemask_t *nodemask, int nr_pages,
-> > > +				struct list_head *list);
-> > > +
-> > >  struct page *
-> > >  __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int
-> > > preferred_nid,
-> > >  							nodemask_t  *nodemask);
-> > > @@ -525,6 +529,14 @@ __alloc_pages(gfp_t gfp_mask, unsigned int order,
-> > > int preferred_nid)
-> > >  	return __alloc_pages_nodemask(gfp_mask, order,  preferred_nid, NULL);
-> > >  }
-> > > +/* Bulk allocate order-0 pages */
-> > > +static inline unsigned long
-> > > +alloc_pages_bulk(gfp_t gfp_mask, unsigned long nr_pages, struct
-> > > list_head *list)
-> > > +{
-> > > +	return __alloc_pages_bulk_nodemask(gfp_mask, numa_mem_id(), NULL,
-> > > +							nr_pages, list);  
-> > 
-> > Is the second line indentation intentional ? Why not align it to the first
-> > argument (gfp_mask) ?
-> >   
-> 
-> No particular reason. I usually pick this as it's visually clearer to me
-> that it's part of the same line when the multi-line is part of an if block.
-> 
-> > > +}
-> > > +
-[...]
-> > 
-> > Same indentation comment as before
-> >   
-> 
-> Again, simple personal perference to avoid any possibility it's mixed
-> up with a later line. There has not been consistent code styling
-> enforcement of what indentation style should be used for a multi-line
-> within mm/page_alloc.c
+For the next revision, can you ditch the '_nodemask' part of the name?
+Andrew just took this patch from me:
 
-Hi Shay, it is might be surprising that indentation style actually
-differs slightly in different parts of the kernel.  I started in
-networking area of the kernel, and I was also surprised when I started
-working in MM area that the coding style differs.  I can tell you that
-the indentation style Mel choose is consistent with the code styling in
-MM area.  I usually respect that even-though I prefer the networking
-style as I was "raised" with that style.
+    mm/page_alloc: combine __alloc_pages and __alloc_pages_nodemask
+    
+    There are only two callers of __alloc_pages() so prune the thicket of
+    alloc_page variants by combining the two functions together.  Current
+    callers of __alloc_pages() simply add an extra 'NULL' parameter and
+    current callers of __alloc_pages_nodemask() call __alloc_pages() instead.
 
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+...
+
+-__alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
+-                                                       nodemask_t *nodemask);
+-
+-static inline struct page *
+-__alloc_pages(gfp_t gfp_mask, unsigned int order, int preferred_nid)
+-{
+-       return __alloc_pages_nodemask(gfp_mask, order, preferred_nid, NULL);
+-}
++struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
++               nodemask_t *nodemask);
+
+So calling this function __alloc_pages_bulk() fits with the new naming
+scheme.
+
+> @@ -4919,6 +4934,9 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
+>  		struct alloc_context *ac, gfp_t *alloc_mask,
+>  		unsigned int *alloc_flags)
+>  {
+> +	gfp_mask &= gfp_allowed_mask;
+> +	*alloc_mask = gfp_mask;
+
+Also I renamed alloc_mask to alloc_gfp.
 
