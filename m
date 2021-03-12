@@ -2,207 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A211339904
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 22:19:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9D9D339957
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Mar 2021 22:55:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235217AbhCLVS5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 12 Mar 2021 16:18:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34872 "EHLO
+        id S235346AbhCLVzQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 12 Mar 2021 16:55:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235200AbhCLVSe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 16:18:34 -0500
-Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DD8C061761
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Mar 2021 13:18:33 -0800 (PST)
-Received: by mail-qv1-xf2b.google.com with SMTP id h13so4971460qvu.6
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Mar 2021 13:18:33 -0800 (PST)
+        with ESMTP id S235335AbhCLVzL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 12 Mar 2021 16:55:11 -0500
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91435C061762
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Mar 2021 13:55:10 -0800 (PST)
+Received: by mail-ej1-x630.google.com with SMTP id ci14so55997665ejc.7
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Mar 2021 13:55:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BzNFTGct5MhKKiBQpMofrakEf443iloQC0nODv3x+L4=;
-        b=NVRMiEy6/+Ut5EICf6B/eN9+F6xTdeaWivoUQ8YW3D4Ix5ixVSPlE85U72pTryDp1e
-         ZHbpeL2BhorjdFrwMG/Fq7qTFE5DC9NkhJD1B2ge/C40FcrhwtPCwh+czrYEaUIsy3Wr
-         xDP8Eha5ZZXNHGe+HokLADxLoqF1rwKeqP/Fwt82nb9DO0QpnxeZuIY/EARVh/KGwCKj
-         4l1/A9wcWaFs5LfDurigSTUoANEf7yc3E84YKsoW9RvGOzd+dpXzrSEOYk/8ejeKMX4Q
-         /KpuZFmtVOSwSsuy77xDnZHMRaPsVaSJvnGUVjKOzj76bMz17uqNzxvY1pfbIGwn88p5
-         Jruw==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Yu+3WtjZJFNN7iqcDPjrgTHYecSIT+nbgpA6AtNWKQ=;
+        b=x13yyZJmzbMrEVCHpmcnGoC2lyJyY1Gu5t1/FqRXdJRT6NmWNk+s7qwQnU40keBU3f
+         /eW29oVPvJWWg9ZeYg06UgESqM3r6IHwRVM0EZOD5cFQ3Asp49XBf2lydLZbNaSDNNVh
+         rERbfCohO2WDq/TOCZehd9z2tfCLROLrrs+2EmkIo+j8t9vm4DcDI1IwO0IkgotNlvfH
+         U8MkIfZBk7Reh6NalYvSfdxpbD3bBq78CsAjx/kVafqOwVmsWd1q/n1qcFFFsOoEesFc
+         JCQW1+83tgDN1DmkTjupAdcWXPixyPJYSJEddgjqJlt3SlLBK/lyGbbsxkD8NPtVwW6r
+         n4Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=BzNFTGct5MhKKiBQpMofrakEf443iloQC0nODv3x+L4=;
-        b=HeowwfQ+52QRHb5JMXfLi8xtPfpIvEF3Vm54xZTuV5IZ4zBvA0UY+M7BsiRYHni21x
-         r2hRX4iNCPyxBDKyrkz9hC0z4UROqxhiO+OfIhm9GsFm+ur/5KWWMw2Q9zgbiryxlONf
-         DIUxPwG665zqxtSc07zsyOYScFmx5v23h8K9fd138fK91PDfU9zR1E5DQiQ5Ui5HeI7O
-         gikYTAa9bIFla52lwMDuKdVzPMZ7SUoJTc1g3SBpb68Syezb5qbnLtSaLY8vqw56nmVs
-         unbc46hnFmqZzvdboSiqEM0RqYPLHk25hPu/0IURD1xwNSLpH6IhU6M/W/H6+UO54nMe
-         6dwg==
-X-Gm-Message-State: AOAM530eEWJ0NUlAnXBaMaqTgIu6nsmRMlsn2g6WFeRcpXjZuQN2s3OW
-        zFISQGuzEH5ZdBSTX5QyqEC+2MNoPHYRYA==
-X-Google-Smtp-Source: ABdhPJwKd5C+9grOEfQ1SKXSAZFuZC3yyvvtnPHpuufX8+QkvyfpUoMg2bdJmLhzxX/IppY3Y885Kg==
-X-Received: by 2002:ad4:4e23:: with SMTP id dm3mr14199333qvb.4.1615583912690;
-        Fri, 12 Mar 2021 13:18:32 -0800 (PST)
-Received: from gouda.nowheycreamery.com (c-68-32-74-190.hsd1.mi.comcast.net. [68.32.74.190])
-        by smtp.gmail.com with ESMTPSA id d24sm5177490qko.54.2021.03.12.13.18.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Mar 2021 13:18:32 -0800 (PST)
-Sender: Anna Schumaker <schumakeranna@gmail.com>
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v3 5/5] sunrpc: Create a per-rpc_clnt file for managing the destination IP address
-Date:   Fri, 12 Mar 2021 16:18:26 -0500
-Message-Id: <20210312211826.360959-6-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210312211826.360959-1-Anna.Schumaker@Netapp.com>
-References: <20210312211826.360959-1-Anna.Schumaker@Netapp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Yu+3WtjZJFNN7iqcDPjrgTHYecSIT+nbgpA6AtNWKQ=;
+        b=M37b6rRg+pgs9QuBanLxWHaCk+sh6KPJ6dnnb0XoBlvJFdLvEursJn/M3WzqxzW0ws
+         3LPFR4swEgeA3rSBbo2QN6byAe/9t1GXMy0H+Jv/rs89HQwssr/a9styZge7PMp9PQI4
+         PlMTFfcqk98Q78vJAKiaSnS7K9Rvk92YaMHlZv6IEe2+W0uYbTBX6yjrGnXYMZzgswC6
+         zrWc0n+2Re/L70QjwQ5g2kATo1uTt6DA3p3ZnMUnCpqervU64y5fHQ/tokAp1GzBvWfa
+         4SWmGHGWJTwt9N7tiEGV99Am9yy6Egcc1Yx+5h3vKMwWjmhwxUP56InRINN50RZN6NCx
+         CdHw==
+X-Gm-Message-State: AOAM532GjJYcP8lwc6UK+mqXpfAjsUqSzusKyVRBZDrujbZ0ca5dYz8s
+        Rd5Uud8YFT9coR2zzi/E7SZwiaoa6Y9u0XRcfa0z
+X-Google-Smtp-Source: ABdhPJx/r2LPJxhnkP5OkwX7KIRS/TErPw1DulH9L3bH9xCetBaBfA/cyUiVYJQEGuk4mkQlQfODRAjlmpsw9ZaWkI0=
+X-Received: by 2002:a17:906:3d62:: with SMTP id r2mr10660838ejf.488.1615586109189;
+ Fri, 12 Mar 2021 13:55:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAN-5tyGuV-gs0KzVbKSj42ZMx553zy9wOfVb1SoHoE-WCoN1_w@mail.gmail.com>
+ <20210227033755.24460-1-olga.kornievskaia@gmail.com> <CAFX2Jfk--KwkAss1gqTPnQt-bKvUUapNdHbuicu=m+jOtjrMyQ@mail.gmail.com>
+ <f8f5323c-cdfd-92e8-b359-43caaf9d7490@schaufler-ca.com> <CAHC9VhR=+uwN8U17JhYWKcXSc9=ExCrG4O9-y+DPJg6xZ=WoYA@mail.gmail.com>
+ <CAFX2JfnT49o-CkaAE3=c0KW9SDS1U+scP0RD++nmWwyKoBDWkA@mail.gmail.com>
+In-Reply-To: <CAFX2JfnT49o-CkaAE3=c0KW9SDS1U+scP0RD++nmWwyKoBDWkA@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 12 Mar 2021 16:54:58 -0500
+Message-ID: <CAHC9VhQNp-GQ6SMABNdN00RcDz30Os5SK217W-5swS8quakxPA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] [security] Add new hook to compare new mount to an
+ existing mount
+To:     Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+On Fri, Mar 12, 2021 at 10:45 AM Anna Schumaker
+<anna.schumaker@netapp.com> wrote:
+> On Thu, Mar 4, 2021 at 8:34 PM Paul Moore <paul@paul-moore.com> wrote:
+> > On Tue, Mar 2, 2021 at 10:53 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> > > On 3/2/2021 10:20 AM, Anna Schumaker wrote:
+> > > > Hi Casey,
+> > > >
+> > > > On Fri, Feb 26, 2021 at 10:40 PM Olga Kornievskaia
+> > > > <olga.kornievskaia@gmail.com> wrote:
+> > > >> From: Olga Kornievskaia <kolga@netapp.com>
+> > > >>
+> > > >> Add a new hook that takes an existing super block and a new mount
+> > > >> with new options and determines if new options confict with an
+> > > >> existing mount or not.
+> > > >>
+> > > >> A filesystem can use this new hook to determine if it can share
+> > > >> the an existing superblock with a new superblock for the new mount.
+> > > >>
+> > > >> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > > > Do you have any other thoughts on this patch? I'm also wondering how
+> > > > you want to handle sending it upstream.
+> > >
+> > > James Morris is the maintainer for the security sub-system,
+> > > so you'll want to send this through him. He will want you to
+> > > have an ACK from Paul Moore, who is the SELinux maintainer.
+> >
+> > In the past I've pulled patches such as this (new LSM hook, with only
+> > a SELinux implementation of the new hook) in via the selinux/next tree
+> > after the other LSMs have ACK'd the new hook.  This helps limit merge
+> > problems with other SELinux changes and allows us (the SELinux folks)
+> > to include it in the ongoing testing that we do during the -rcX
+> > releases.
+> >
+> > So Anna, if you or anyone else on the NFS side of the house want to
+> > add your ACKs/REVIEWs/etc. please do so as I don't like merging
+> > patches that cross subsystem boundaries without having all the
+> > associated ACKs.  Casey, James, and other LSM folks please do the
+> > same.
+>
+> Sure:
+> Acked-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+>
+> Are you also going to take patch 3/3 that uses the new hook, or should
+> that go through the NFS tree? Patch 2/3 is a cleanup that can go
+> through the NFS tree.
 
-Reading the file displays the current destination address, and writing
-to it allows users to change the address.
+Generally when patches are posted as patchsets I would apply the whole
+patchset assuming they patches were all good, however it does seem
+like patch 2/3 is not strictly related to the other two?  That said,
+as long as your ACK applies to all three patches in the patchset I
+have no problem applying all of them to the selinux/next tree once
+some of the other LSM maintainers provide their ACKs (while there may
+only a SELinux implementation of the hook at the moment, we need to
+make sure the other LSMs are okay with the basic hook concept).
 
-And since we're using IP here, restrict to only creating sysfs files for
-TCP and RDMA connections.
+Also, did the v4 posting only include patch 1/3?  I see v3 postings
+for the other two patches, but the only v4 patch I see is 1/3 ... ?
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
-v3: Fix suspicious RCU usage warnings
-    Fix up xprt locking and reference counting
-    s/netns/sysfs/
-    Unconditionally create files instead of looking at protocol type
-        during client setup (this makes it easier for userspace tools)
-    Add a newline character to the buffer returned in "show" handler
-v2: Change filename and related functions from "address" to "dstaddr"
-    Combine patches for reading and writing to this file
----
- net/sunrpc/sysfs.c | 70 ++++++++++++++++++++++++++++++++++++++++++++++
- net/sunrpc/sysfs.h |  1 +
- 2 files changed, 71 insertions(+)
-
-diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index abfe8c0b3108..1ae15c4729c0 100644
---- a/net/sunrpc/sysfs.c
-+++ b/net/sunrpc/sysfs.c
-@@ -3,6 +3,8 @@
-  * Copyright (c) 2020 Anna Schumaker <Anna.Schumaker@Netapp.com>
-  */
- #include <linux/sunrpc/clnt.h>
-+#include <linux/sunrpc/addr.h>
-+#include <linux/sunrpc/xprtsock.h>
- #include <linux/kobject.h>
- #include "sysfs.h"
- 
-@@ -55,6 +57,64 @@ int rpc_sysfs_init(void)
- 	return 0;
- }
- 
-+static inline struct rpc_xprt *rpc_sysfs_client_kobj_get_xprt(struct kobject *kobj)
-+{
-+	struct rpc_sysfs_client *c = container_of(kobj,
-+				struct rpc_sysfs_client, kobject);
-+	struct rpc_xprt *xprt;
-+
-+	rcu_read_lock();
-+	xprt = xprt_get(rcu_dereference(c->clnt->cl_xprt));
-+	rcu_read_unlock();
-+	return xprt;
-+}
-+
-+static ssize_t rpc_sysfs_dstaddr_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	struct rpc_xprt *xprt = rpc_sysfs_client_kobj_get_xprt(kobj);
-+	ssize_t ret;
-+
-+	if (!xprt)
-+		return 0;
-+	if (!(xprt->prot & (IPPROTO_TCP | XPRT_TRANSPORT_RDMA)))
-+		ret = sprintf(buf, "Not Supported");
-+	else
-+		ret = rpc_ntop((struct sockaddr *)&xprt->addr, buf, PAGE_SIZE);
-+	buf[ret] = '\n';
-+	xprt_put(xprt);
-+	return ret + 1;
-+}
-+
-+static ssize_t rpc_sysfs_dstaddr_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	struct rpc_xprt *xprt = rpc_sysfs_client_kobj_get_xprt(kobj);
-+	struct sockaddr *saddr;
-+	int port;
-+
-+	if (!xprt)
-+		return 0;
-+	if (!(xprt->prot & (IPPROTO_TCP | XPRT_TRANSPORT_RDMA))) {
-+		xprt_put(xprt);
-+		return -ENOTSUPP;
-+	}
-+
-+	wait_on_bit_lock(&xprt->state, XPRT_LOCKED, TASK_KILLABLE);
-+	saddr = (struct sockaddr *)&xprt->addr;
-+	port = rpc_get_port(saddr);
-+
-+	kfree(xprt->address_strings[RPC_DISPLAY_ADDR]);
-+	xprt->address_strings[RPC_DISPLAY_ADDR] = kstrndup(buf, count - 1, GFP_KERNEL);
-+	xprt->addrlen = rpc_pton(xprt->xprt_net, buf, count - 1, saddr, sizeof(*saddr));
-+	rpc_set_port(saddr, port);
-+
-+	xprt->ops->connect(xprt, NULL);
-+	clear_bit(XPRT_LOCKED, &xprt->state);
-+	xprt_put(xprt);
-+	return count;
-+}
-+
- static void rpc_sysfs_client_release(struct kobject *kobj)
- {
- 	struct rpc_sysfs_client *c;
-@@ -68,8 +128,17 @@ static const void *rpc_sysfs_client_namespace(struct kobject *kobj)
- 	return container_of(kobj, struct rpc_sysfs_client, kobject)->net;
- }
- 
-+static struct kobj_attribute rpc_sysfs_client_dstaddr = __ATTR(dstaddr,
-+		0644, rpc_sysfs_dstaddr_show, rpc_sysfs_dstaddr_store);
-+
-+static struct attribute *rpc_sysfs_client_attrs[] = {
-+	&rpc_sysfs_client_dstaddr.attr,
-+	NULL,
-+};
-+
- static struct kobj_type rpc_sysfs_client_type = {
- 	.release = rpc_sysfs_client_release,
-+	.default_attrs = rpc_sysfs_client_attrs,
- 	.sysfs_ops = &kobj_sysfs_ops,
- 	.namespace = rpc_sysfs_client_namespace,
- };
-@@ -104,6 +173,7 @@ void rpc_sysfs_client_setup(struct rpc_clnt *clnt, struct net *net)
- 	rpc_client = rpc_sysfs_client_alloc(rpc_sunrpc_client_kobj, net, clnt->cl_clid);
- 	if (rpc_client) {
- 		clnt->cl_sysfs = rpc_client;
-+		rpc_client->clnt = clnt;
- 		kobject_uevent(&rpc_client->kobject, KOBJ_ADD);
- 	}
- }
-diff --git a/net/sunrpc/sysfs.h b/net/sunrpc/sysfs.h
-index 443679d71f38..5093f93a83cb 100644
---- a/net/sunrpc/sysfs.h
-+++ b/net/sunrpc/sysfs.h
-@@ -8,6 +8,7 @@
- struct rpc_sysfs_client {
- 	struct kobject kobject;
- 	struct net *net;
-+	struct rpc_clnt *clnt;
- };
- 
- extern int rpc_sysfs_init(void);
 -- 
-2.29.2
-
+paul moore
+www.paul-moore.com
