@@ -2,228 +2,240 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02E0B33A14C
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Mar 2021 22:09:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6720533A4E1
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Mar 2021 13:53:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234427AbhCMVJP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 13 Mar 2021 16:09:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234299AbhCMVIt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 13 Mar 2021 16:08:49 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 149B96157E;
-        Sat, 13 Mar 2021 21:08:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615669729;
-        bh=zbGdaw7qizh4MZvSBnBCylvPPdbAZYhaY/eo1FBRb6s=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RaA6it2gIPQ5UzQBh7ru2TtUHTpVNwkrtK3KqcqF2NSksUF6dhR41mIjoxiZgFJPA
-         JSGOFmfvz9Z5qFLOLzJUxWEdYEUZhRUb6u6q0Lt16nueXOF0vHMCvxeTNRbRwTdqN/
-         5lMxURUl2WRhQRb9Holqk4brM9kvFyq+Vj3JY0ty9QWkWyRSkCRgWr+0Dyyt3FTsBy
-         crYQC9xf7oekm78JUNDKGABDhSVO7anvQ50qpj1iP8E77m3DbZyc/6eB2aTo0STX+O
-         SNXUMRuQToqLOZF4qQgeGYZdVadFbPsP4m1pCVL86vZ4JxMF4rwurrXK2di7/rWJuQ
-         +bK6h1/PeWwYw==
-From:   trondmy@kernel.org
-To:     "J. Bruce Fields" <bfields@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] nfsd: Ensure knfsd shuts down when the "nfsd" pseudofs is unmounted
-Date:   Sat, 13 Mar 2021 16:08:47 -0500
-Message-Id: <20210313210847.569041-1-trondmy@kernel.org>
-X-Mailer: git-send-email 2.30.2
+        id S235250AbhCNMwv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 14 Mar 2021 08:52:51 -0400
+Received: from outbound-smtp54.blacknight.com ([46.22.136.238]:42781 "EHLO
+        outbound-smtp54.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235207AbhCNMwf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 14 Mar 2021 08:52:35 -0400
+Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
+        by outbound-smtp54.blacknight.com (Postfix) with ESMTPS id 12CBBFA889
+        for <linux-nfs@vger.kernel.org>; Sun, 14 Mar 2021 12:52:34 +0000 (GMT)
+Received: (qmail 30256 invoked from network); 14 Mar 2021 12:52:33 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 14 Mar 2021 12:52:33 -0000
+Date:   Sun, 14 Mar 2021 12:52:32 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 2/5] mm/page_alloc: Add a bulk page allocator
+Message-ID: <20210314125231.GA3697@techsingularity.net>
+References: <20210310154650.ad9760cd7cb9ac4acccf77ee@linux-foundation.org>
+ <20210311084200.GR3697@techsingularity.net>
+ <20210312124609.33d4d4ba@carbon>
+ <20210312145814.GA2577561@casper.infradead.org>
+ <20210312160350.GW3697@techsingularity.net>
+ <20210312210823.GE2577561@casper.infradead.org>
+ <20210313131648.GY3697@techsingularity.net>
+ <20210313163949.GI2577561@casper.infradead.org>
+ <7D8C62E1-77FD-4B41-90D7-253D13715A6F@oracle.com>
+ <20210313193343.GJ2577561@casper.infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20210313193343.GJ2577561@casper.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Sat, Mar 13, 2021 at 07:33:43PM +0000, Matthew Wilcox wrote:
+> On Sat, Mar 13, 2021 at 04:56:31PM +0000, Chuck Lever III wrote:
+> > IME lists are indeed less CPU-efficient, but I wonder if that
+> > expense is insignificant compared to serialization primitives like
+> > disabling and re-enabling IRQs, which we are avoiding by using
+> > bulk page allocation.
+> 
+> Cache misses are a worse problem than serialisation.  Paul McKenney had
+> a neat demonstration where he took a sheet of toilet paper to represent
+> an instruction, and then unrolled two rolls of toilet paper around the
+> lecture theatre to represent an L3 cache miss.  Obviously a serialising
+> instruction is worse than an add instruction, but i'm thinking maybe
+> 50-100 sheets of paper, not an entire roll?
+> 
 
-In order to ensure that knfsd threads don't linger once the nfsd
-pseudofs is unmounted (e.g. when the container is killed) we let
-nfsd_umount() shut down those threads and wait for them to exit.
+I'm well array of the advantages of arrays over lists. The reality is that
+the penalty is incurred unconditionally as the pages have to be removed
+from the per-cpu or buddy lists and the cache footprint of the allocator
+and the data copies are already large. It's also the case that bulk free
+interfaces already exist that operate on lists (free_unref_page_list)
+so there is existing precedent. The bulk free API in this series was not
+used by the callers so I've deleted it.
 
-This also should ensure that we don't need to do a kernel mount of
-the pseudofs, since the thread lifetime is now limited by the
-lifetime of the filesystem.
+Obviously the callers would need to be adjusted to use the array
+interface. The sunrpc user has an array but it is coded in a way that
+expects the array could be partially populated or has holes so the API has
+to skip populated elements. The caller is responsible for making sure that
+there are enough NULL elements available to store nr_pages or the buffer
+overruns. nr_elements could be passed in to avoid the buffer overrun but
+then further logic is needed to distinguish between a failed allocation
+and a failure to have enough space in the array to store the pointer.
+It also means that prep_new_page() should not be deferred outside of
+the IRQ disabled section as it does not have the storage to track which
+pages were freshly allocated and which ones were already on the array. It
+could be tracked using the lower bit of the pointer but that is not free
+either. Ideally the callers simply would ensure the array does not have
+valid struct page pointers in it already so prepping the new page could
+always be deferred.  Obviously the callers are also responsible for
+ensuring protecting the array from parallel access if necessary while
+calling into the allocator.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfsd/netns.h     |  6 +++---
- fs/nfsd/nfs4state.c |  8 +-------
- fs/nfsd/nfsctl.c    | 14 ++------------
- fs/nfsd/nfsd.h      |  3 +--
- fs/nfsd/nfssvc.c    | 35 ++++++++++++++++++++++++++++++++++-
- 5 files changed, 41 insertions(+), 25 deletions(-)
+> Anyway, I'm not arguing against a bulk allocator, nor even saying this
+> is a bad interface.  It just maybe could be better.
+> 
 
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index c330f5bd0cf3..a75abeb1e698 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -51,9 +51,6 @@ struct nfsd_net {
- 	bool grace_ended;
- 	time64_t boot_time;
+I think it puts more responsibility on the caller to use the API correctly
+but I also see no value in arguing about it further because there is no
+supporting data either way (I don't have routine access to a sufficiently
+fast network to generate the data). I can add the following patch and let
+callers figure out which interface is preferred. If one of the interfaces
+is dead in a year, it can be removed.
+
+As there are a couple of ways the arrays could be used, I'm leaving it
+up to Jesper and Chuck which interface they want to use. In particular,
+it would be preferred if the array has no valid struct pages in it but
+it's up to them to judge how practical that is.
+
+Patch is only lightly tested with a poor conversion of the sunrpc code
+to use the array interface.
+
+---8<---
+mm/page_alloc: Add an array-based interface to the bulk page allocator
+
+The existing callers for the bulk allocator are storing the pages in
+arrays. This patch adds an array-based interface to the API to avoid
+multiple list iterations. The page list interface is preserved to
+avoid requiring all users of the bulk API to allocate and manage
+enough storage to store the pages.
+
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+
+diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+index 4a304fd39916..fb6234e1fe59 100644
+--- a/include/linux/gfp.h
++++ b/include/linux/gfp.h
+@@ -520,13 +520,20 @@ struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
  
--	/* internal mount of the "nfsd" pseudofilesystem: */
--	struct vfsmount *nfsd_mnt;
--
- 	struct dentry *nfsd_client_dir;
+ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 				nodemask_t *nodemask, int nr_pages,
+-				struct list_head *list);
++				struct list_head *page_list,
++				struct page **page_array);
  
- 	/*
-@@ -130,6 +127,9 @@ struct nfsd_net {
- 	wait_queue_head_t ntf_wq;
- 	atomic_t ntf_refcnt;
- 
-+	/* Allow umount to wait for nfsd state cleanup */
-+	struct completion nfsd_shutdown_complete;
-+
- 	/*
- 	 * clientid and stateid data for construction of net unique COPY
- 	 * stateids.
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 423fd6683f3a..8bf840661d67 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -7346,14 +7346,9 @@ nfs4_state_start_net(struct net *net)
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	int ret;
- 
--	ret = get_nfsdfs(net);
--	if (ret)
--		return ret;
- 	ret = nfs4_state_create_net(net);
--	if (ret) {
--		mntput(nn->nfsd_mnt);
-+	if (ret)
- 		return ret;
--	}
- 	locks_start_grace(net, &nn->nfsd4_manager);
- 	nfsd4_client_tracking_init(net);
- 	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
-@@ -7423,7 +7418,6 @@ nfs4_state_shutdown_net(struct net *net)
- 
- 	nfsd4_client_tracking_exit(net);
- 	nfs4_state_destroy_net(net);
--	mntput(nn->nfsd_mnt);
- }
- 
- void
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index ef86ed23af82..02ff7f762e2d 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1416,6 +1416,8 @@ static void nfsd_umount(struct super_block *sb)
+ /* Bulk allocate order-0 pages */
+ static inline unsigned long
+-alloc_pages_bulk(gfp_t gfp, unsigned long nr_pages, struct list_head *list)
++alloc_pages_bulk_list(gfp_t gfp, unsigned long nr_pages, struct list_head *list)
  {
- 	struct net *net = sb->s_fs_info;
- 
-+	nfsd_shutdown_threads(net);
-+
- 	kill_litter_super(sb);
- 	put_net(net);
- }
-@@ -1428,18 +1430,6 @@ static struct file_system_type nfsd_fs_type = {
- };
- MODULE_ALIAS_FS("nfsd");
- 
--int get_nfsdfs(struct net *net)
--{
--	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
--	struct vfsmount *mnt;
--
--	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
--	if (IS_ERR(mnt))
--		return PTR_ERR(mnt);
--	nn->nfsd_mnt = mnt;
--	return 0;
--}
--
- #ifdef CONFIG_PROC_FS
- static int create_proc_exports_entry(void)
- {
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 8bdc37aa2c2e..27c1308ffc2b 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -93,13 +93,12 @@ int		nfsd_get_nrthreads(int n, int *, struct net *);
- int		nfsd_set_nrthreads(int n, int *, struct net *);
- int		nfsd_pool_stats_open(struct inode *, struct file *);
- int		nfsd_pool_stats_release(struct inode *, struct file *);
-+void		nfsd_shutdown_threads(struct net *net);
- 
- void		nfsd_destroy(struct net *net);
- 
- bool		i_am_nfsd(void);
- 
--int get_nfsdfs(struct net *);
--
- struct nfsdfs_client {
- 	struct kref cl_ref;
- 	void (*cl_release)(struct kref *kref);
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 6de406322106..f014b7aa0726 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -596,6 +596,37 @@ static const struct svc_serv_ops nfsd_thread_sv_ops = {
- 	.svo_module		= THIS_MODULE,
- };
- 
-+static void nfsd_complete_shutdown(struct net *net)
-+{
-+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+
-+	WARN_ON(!mutex_is_locked(&nfsd_mutex));
-+
-+	nn->nfsd_serv = NULL;
-+	complete(&nn->nfsd_shutdown_complete);
+-	return __alloc_pages_bulk(gfp, numa_mem_id(), NULL, nr_pages, list);
++	return __alloc_pages_bulk(gfp, numa_mem_id(), NULL, nr_pages, list, NULL);
 +}
 +
-+void nfsd_shutdown_threads(struct net *net)
++static inline unsigned long
++alloc_pages_bulk_array(gfp_t gfp, unsigned long nr_pages, struct page **page_array)
 +{
-+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv;
-+
-+	mutex_lock(&nfsd_mutex);
-+	serv = nn->nfsd_serv;
-+	if (serv == NULL) {
-+		mutex_unlock(&nfsd_mutex);
-+		return;
-+	}
-+
-+	svc_get(serv);
-+	/* Kill outstanding nfsd threads */
-+	serv->sv_ops->svo_setup(serv, NULL, 0);
-+	nfsd_destroy(net);
-+	mutex_unlock(&nfsd_mutex);
-+	/* Wait for shutdown of nfsd_serv to complete */
-+	wait_for_completion(&nn->nfsd_shutdown_complete);
-+}
-+
- bool i_am_nfsd(void)
- {
- 	return kthread_func(current) == nfsd;
-@@ -618,11 +649,13 @@ int nfsd_create_serv(struct net *net)
- 						&nfsd_thread_sv_ops);
- 	if (nn->nfsd_serv == NULL)
- 		return -ENOMEM;
-+	init_completion(&nn->nfsd_shutdown_complete);
++	return __alloc_pages_bulk(gfp, numa_mem_id(), NULL, nr_pages, NULL, page_array);
+ }
  
- 	nn->nfsd_serv->sv_maxconn = nn->max_connections;
- 	error = svc_bind(nn->nfsd_serv, net);
- 	if (error < 0) {
- 		svc_destroy(nn->nfsd_serv);
-+		nfsd_complete_shutdown(net);
- 		return error;
+ /*
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 3e0c87c588d3..96590f0726c7 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -4965,13 +4965,20 @@ static inline bool prepare_alloc_pages(gfp_t gfp, unsigned int order,
+ 
+ /*
+  * This is a batched version of the page allocator that attempts to
+- * allocate nr_pages quickly from the preferred zone and add them to list.
++ * allocate nr_pages quickly from the preferred zone. Pages are added
++ * to page_list if page_list is not NULL, otherwise it is assumed
++ * that the page_array is valid.
++ *
++ * If using page_array, only NULL elements are populated with pages.
++ * The caller must ensure that the array has enough NULL elements
++ * to store nr_pages or the buffer overruns.
+  *
+  * Returns the number of pages allocated.
+  */
+ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 			nodemask_t *nodemask, int nr_pages,
+-			struct list_head *alloc_list)
++			struct list_head *page_list,
++			struct page **page_array)
+ {
+ 	struct page *page;
+ 	unsigned long flags;
+@@ -4987,6 +4994,9 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 	if (WARN_ON_ONCE(nr_pages <= 0))
+ 		return 0;
+ 
++	if (WARN_ON_ONCE(!page_list && !page_array))
++		return 0;
++
+ 	if (nr_pages == 1)
+ 		goto failed;
+ 
+@@ -5035,7 +5045,24 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 			break;
+ 		}
+ 
+-		list_add(&page->lru, alloc_list);
++		if (page_list) {
++			/* New page prep is deferred */
++			list_add(&page->lru, page_list);
++		} else {
++			/* Skip populated elements */
++			while (*page_array)
++				page_array++;
++
++			/*
++			 * Array pages must be prepped immediately to
++			 * avoid tracking which pages are new and
++			 * which ones were already on the array.
++			 */
++			prep_new_page(page, 0, gfp, 0);
++			*page_array = page;
++			page_array++;
++		}
++
+ 		allocated++;
  	}
  
-@@ -671,7 +704,7 @@ void nfsd_destroy(struct net *net)
- 		svc_shutdown_net(nn->nfsd_serv, net);
- 	svc_destroy(nn->nfsd_serv);
- 	if (destroy)
--		nn->nfsd_serv = NULL;
-+		nfsd_complete_shutdown(net);
- }
+@@ -5044,9 +5071,12 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
  
- int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
--- 
-2.30.2
-
+ 	local_irq_restore(flags);
+ 
+-	/* Prep page with IRQs enabled to reduce disabled times */
+-	list_for_each_entry(page, alloc_list, lru)
+-		prep_new_page(page, 0, gfp, 0);
++	/* Prep pages with IRQs enabled if using a list */
++	if (page_list) {
++		list_for_each_entry(page, page_list, lru) {
++			prep_new_page(page, 0, gfp, 0);
++		}
++	}
+ 
+ 	return allocated;
+ 
+@@ -5056,7 +5086,10 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ failed:
+ 	page = __alloc_pages(gfp, 0, preferred_nid, nodemask);
+ 	if (page) {
+-		list_add(&page->lru, alloc_list);
++		if (page_list)
++			list_add(&page->lru, page_list);
++		else
++			*page_array = page;
+ 		allocated = 1;
+ 	}
+ 
