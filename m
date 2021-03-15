@@ -2,154 +2,141 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44FDC33BFBE
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Mar 2021 16:31:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0FAC33C123
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Mar 2021 17:04:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230269AbhCOPbL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Mar 2021 11:31:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231598AbhCOPbE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Mar 2021 11:31:04 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 675C6C06174A;
-        Mon, 15 Mar 2021 08:31:04 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id c10so66866539ejx.9;
-        Mon, 15 Mar 2021 08:31:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=64X34bhEu2CD4Cj0a1kh10CwAhIg45vGeoEortJGqEI=;
-        b=pdeyMiPqUWXw0wj4NTdwpSsQuWE/eNpD+xq9PLRjaShfJOr4j8o4/Sw1ZI6JLIAnBw
-         caaaprG7KzEZYaTbQN+fN2Z2PelKUzf69fTjg69SGKIjB5VZeKQGzI4tcJmJUAbQSgr2
-         GsJHyrgO7dg7JKarzOHQUULOHth1hpdNBBqQAl2K+YXveqowqFiwUiXuCsm0EvFZayYj
-         kH1mMHLvYn0SnLvNCdiqfUD1cEIWJBc2gPv03bvhCH08ljRfBLKFab9IvZwswre2BynU
-         SQf8ypBxMhi9BDXlJ8rl0nJwjdek0SLUKc1D7a3PTarHw4e7tdofImRiTxHzMUcA55Zo
-         ODEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=64X34bhEu2CD4Cj0a1kh10CwAhIg45vGeoEortJGqEI=;
-        b=iAIq0Rs+eQ6Z7OQUmj9qZW113snzvRf0yYdfH6YQuaB29sSSkUTmzF762I6q86GG/1
-         uoJPF7OYEOAfGBlT7Wt+HtnBqV4Ku6oVr7dHeDo7tn4e02NrflG6svHb8+0yEbLJ9paX
-         sYRvhV3ojCEeuohtQSRTk13Lcpq0PRsoqC+1eY//zdkRkDYWNbxSU1C27vSbVM3NhGB2
-         JRa3eSbdujZ0jZsipkbFerzJhaaYV9VQXAKFsflaOJ/7LeNLzAYDdWF5JkERSzvdBfwF
-         9/mU/z8C7swzz+PalgiyUdb192RKukOEf366n/gjvI4z6spxnnGe7/YYZnSSsk1TsmPU
-         Z2gQ==
-X-Gm-Message-State: AOAM530mphQFcZp7e4CEB41dib6149ZUoTxzSTK/MvjgcAwQ+4i8aAEW
-        Ciu8rIS0JZs2ZQMox4XrblzgulVftnl2jMz00PA=
-X-Google-Smtp-Source: ABdhPJxcge7lnTHMouIBxSQoPnrryLugp62QtIQuXmZVtKNqbqTHBdXvJvWz9OvlmUnTTs6CFORClbYDvG5PTEeIEd8=
-X-Received: by 2002:a17:906:b20b:: with SMTP id p11mr24674890ejz.0.1615822263078;
- Mon, 15 Mar 2021 08:31:03 -0700 (PDT)
+        id S232793AbhCOQES (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Mar 2021 12:04:18 -0400
+Received: from mail-eopbgr700120.outbound.protection.outlook.com ([40.107.70.120]:51104
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232149AbhCOQEM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 15 Mar 2021 12:04:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eVeTKe58kLyJGQZKqGnGgB6S+UOVXj+zvJPipBEgHZc8RS71iFujKSRwRDEehEITjKyg9DcVGv1VVHkSsmlRVeyPg3elJlC72A4sA+1jpkk3pkwmvkAU6jER02y7yBOGqYupOJAw0U7xySrJJHnYuELkD/leVzNM3MHlSXxRSK7ZieBp/x5PMmpt77to1ScAbh9hhyR7oDOwjWYDxjidWHbVLPOa/yPMeCSgKPqq/BLOLD5/OtcfApUk15nps5VOnZfOqSsFVwzAQfDcoyaIZeT8sIZMr2GaZRw5p4XrGovqgph1ThrQzVfSnUL2TVAWBDBTMj7YiMkZBjwhKUudDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QgZEQEdSrar4Lh0Zj6Cw/WS8yh2utiIjP8t9/Nu32cs=;
+ b=ccGNjImaZEjIDHVmttgMNPRnWdj48MVjqZbeSEfxpKVVg9Cu9We/zpT7Qixph5fNJK16fD1Yi+xJbkz8uq4Vd1ymMglppHJJHjW+sNb2g3MHrnbtGGlbv+F1xdTRDVVeMDCX+ijNeo8vsqZ7J0U/tYsiZZaM8GlZntdcFnC8ewuXwytFlcYr4aMF+aiZr1/09Jz0S0M5YucgPbEIXIK1k21+j10BxEO4GNjpM7CnuR4bk1J8IEH5CFyENiDf4KM+C3SLUu+kbmRsh+0igyWkhu/Y8zDqYyzeNVqZCQ2U3qYx90UgAViO/pDUCMqVvRCPD+kjBuQVgSgIN6dz2TvJ1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QgZEQEdSrar4Lh0Zj6Cw/WS8yh2utiIjP8t9/Nu32cs=;
+ b=GHoIdUKftksQQ4XCCiJseSWJBRm4XdWPvMXABBnDcdPsUbhHphGttzgA1bJ6dkk1EKWObQhhqy/luIE3nrPpYA4QrH5M9iIWbDqQ5k/+2AD1rzOBvPWREel/7vb2I3g/xPYSEdw4wNZyYJ0F5gSi9KdSwGPriq2/T+eU3+3dFwM=
+Received: from CH2PR13MB3525.namprd13.prod.outlook.com (2603:10b6:610:21::29)
+ by CH0PR13MB4729.namprd13.prod.outlook.com (2603:10b6:610:d9::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.11; Mon, 15 Mar
+ 2021 16:04:05 +0000
+Received: from CH2PR13MB3525.namprd13.prod.outlook.com
+ ([fe80::f453:2dd2:675:d063]) by CH2PR13MB3525.namprd13.prod.outlook.com
+ ([fe80::f453:2dd2:675:d063%3]) with mapi id 15.20.3955.010; Mon, 15 Mar 2021
+ 16:04:05 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "bfields@redhat.com" <bfields@redhat.com>,
+        "trondmy@kernel.org" <trondmy@kernel.org>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Subject: Re: [PATCH] nfsd: Ensure knfsd shuts down when the "nfsd" pseudofs is
+ unmounted
+Thread-Topic: [PATCH] nfsd: Ensure knfsd shuts down when the "nfsd" pseudofs
+ is unmounted
+Thread-Index: AQHXGE01uwS1nZ4gC0yGl2iynxTjiKqFI1eAgAAVsgA=
+Date:   Mon, 15 Mar 2021 16:04:05 +0000
+Message-ID: <51c84f27cf5c950c63ef2be570fd647d93d80036.camel@hammerspace.com>
+References: <20210313210847.569041-1-trondmy@kernel.org>
+         <YE9zQQhyfHmLLVVJ@pick.fieldses.org>
+In-Reply-To: <YE9zQQhyfHmLLVVJ@pick.fieldses.org>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c1b90251-5dbf-4871-accf-08d8e7cbf549
+x-ms-traffictypediagnostic: CH0PR13MB4729:
+x-microsoft-antispam-prvs: <CH0PR13MB47290B8EEDB1DA2BACEA2DABB86C9@CH0PR13MB4729.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /7XgG5MvS28HF3LrGx0XckLIIpSJZCkYpFygHp9j0kNLJPGolrfCLq/ElwOAJZZHs7HVBikSkN6i8pDV/b+nN9kFbdYhUbERy6skSLByO/R/KG2JcqDXjHX6aJHizGEoLQ4hDo78NYDYH58PuZ+I6P3G0NQd658zLDz4PI9x80gq26FjlkGOGAAC3DGlTstxWUzGjyw/OO6lSA1l0V5whXIe9cu6UK1l0gufGFuNppmw/bgVInSGT2ocVMMtnAjJTGIVjyx/idFK6cu5AJkND2sT74mnjvo19z+1ijr0S1N1kLIaPKviOkWcvyJTDNvPwjDCDLUed+dlCIr4HUtsgddljrFU5ROuXssXWXRjcfoIB9bBXxTPQJRJ8W7GzR73/OleqphKRbFvwMYUqnGV3Izc+9FENnF3L8qmdRkIg7unuZr/f5JHRH1IlowDAhztZ/bs09NWbXNcvI/axLlet1DMhQm0wQh0l0puMJt7ygxx9DixHs8oMUKMAX+k1wCGlwzuPSRoCWhsXr/SFaqstfvrnjgwPbo/aotRv1CFamlZ2dmo83vQ9mDLfeU2NXRE
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3525.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(346002)(136003)(396003)(376002)(39830400003)(66446008)(64756008)(66556008)(478600001)(2616005)(26005)(76116006)(66476007)(8676002)(186003)(6486002)(5660300002)(66946007)(2906002)(86362001)(6512007)(4326008)(6506007)(110136005)(316002)(54906003)(71200400001)(36756003)(83380400001)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?dkVwMThhUkU0NHlseEQwV3EybThWenkrR1JnTGYyZWNVeklnM1EvNG02UEVJ?=
+ =?utf-8?B?Vm14R0E2bGl4blN5ZVh6aEsrZmp5cmlUTG5DclM2Sy9GQkdpNnhUa2hDcFFo?=
+ =?utf-8?B?UC9ORU1FekozZm9tcEV3Mi9nWVlJeWhxZ2oyYXB1TjhKa2J1dlArV2R4NnFo?=
+ =?utf-8?B?a29Xd3J4NUY1Rm9BSndhV0pOd3UvWTh4UTFWQmtwYnRwTnk4ZUlUblRBZWk1?=
+ =?utf-8?B?RW1hTkNxRzZ1ZHF0K25KRXNsVmhZMlhrbURxcENGNE1FNWxWR2gzMjc2bzRH?=
+ =?utf-8?B?K3hQT1N4RmltSjMrYVpuL2p1d05rYThlL1RpQ2s1empncnJkNG5sdVVpRTBa?=
+ =?utf-8?B?Sms5ZVV3SHI4MUJCNGxIRXZHUHNkcktZalVuVkJ6cGcxajYwV1dtUXVZTm03?=
+ =?utf-8?B?QVVMckNBNzhrWW9kVXpQbCt3bmNKY2l1ZS9BWVNpY0pUSE56RHc1aThmNDA3?=
+ =?utf-8?B?QWJtOG5NV3psRDBjM0J4bTJvQSt1Zzh6M092bUtKcTFYUE5mZ1pYZFdpeWhU?=
+ =?utf-8?B?b0FKUDErVlY0cDlLUnFrUVV6aU1WVVMzaWR5N09iM2lJUEhJdjZZNTVjT2FC?=
+ =?utf-8?B?dnYrMzUyMlpVa2NDNGxqNU1zeEFCMHYwSW4xck9ZUnl5WXh3eisvR2tST2lH?=
+ =?utf-8?B?U2lRT1RWSUEvcThyZ2JsZ2JId3BsMlpxTmN6c3N3bVNjMkxGWDJDV2FhWFV3?=
+ =?utf-8?B?eDl3Yi9EdVp3OTFLUFVLNU1Oa1lQQWQ4RDdtaVRacWZQTFl0Mk9NMk9MK1dK?=
+ =?utf-8?B?T3hkT245YkVFUjFXdjRVb2NEMjQwVTFxNm93Q3g4U01Ocjl5RDJNZ0Y2cFFC?=
+ =?utf-8?B?L3IyT1ZDeWRRMHFoN1B1Q3JZRzR4SjErem8ybnpuOG83RFJyK1d6ZXYzVGxt?=
+ =?utf-8?B?M2tpN25tSFB1czZoN0xWeWI1V1pwTFJqRnlibXQvMFN2Z1AzL2dlK1pZYkxF?=
+ =?utf-8?B?NDlmdVZKem1CZlovaERYeG4vTkI5ZVRFT0poMXBDL0tPcDV6czcvYllEOVlS?=
+ =?utf-8?B?RFVOSTF5N0FCblNFUGczeWorN1NEV3hsZ0toSjNLZTFSYXJqWTB2MHM0aWhq?=
+ =?utf-8?B?b3hqMCtKYUZiVWFpNGxaU1BhRVczM1NJUlliaGlVQ1F4N01sVzZyeDFmT2lP?=
+ =?utf-8?B?Q2FjMU01QUhrekRKQ0hxajY5V0ZQd2k2K0ZnUzJxNG9ybTN6N25XSk83NG9P?=
+ =?utf-8?B?MzhjWDhaRk0yRitqeUVuWS9yTFhwL0NrYU1yV29MR1c2TUJVS0l0YTBkRTJO?=
+ =?utf-8?B?T3NwTDgvQ05GY0N6TE5LR1l0eWY4akdpbEdQQ0dsVEd3Zk53MUFQVjJVb1NW?=
+ =?utf-8?B?QVdlTm80c2gvWFZYZ1ZMOEw5TzNCY0tIYW1CNmhsaHdmZ1RvK3dvSzJzR1Ix?=
+ =?utf-8?B?QnprdDA4bDJsM1I1YnhOaENnYlpQWXA4VmIzaTFCUGdzbXJLYzZUWFhmdURH?=
+ =?utf-8?B?RVhlZDJzZ2dGUVJIVTdzNk5HbEZwS1RGcUltbnpscXVTT01HZTZrY2FzSWhx?=
+ =?utf-8?B?bGQ1c1pMZE4ybTByQTJRT1llR3hTS1NCcGN3MnVXZmtJZ2V2SDlKRXVKYzBh?=
+ =?utf-8?B?ZkI3aHpJOTlCZTFtaUgyaFJEZjJlT3NMQ1oyenRzYmZ3NzF3ZC8xeEkxN3JI?=
+ =?utf-8?B?QVoxa3BVNUR2bTVnYnhQZ0VpMWhDYkcraTVRUEtPWmsyVGJmUFJUekU1UkZM?=
+ =?utf-8?B?RUtlVlpCWVNmN2s4R3F6MTVnQU1acVQ0UE9RWVZGMnN3OE5CMHRqd3cxRGs3?=
+ =?utf-8?Q?JbDgXXgoML80sitTQa8a8Ro3cbtpkV+QqxAc9pC?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <73B5A71C63C6854E81F5827CE18B812C@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CAN-5tyGuV-gs0KzVbKSj42ZMx553zy9wOfVb1SoHoE-WCoN1_w@mail.gmail.com>
- <20210227033755.24460-1-olga.kornievskaia@gmail.com> <CAFX2Jfk--KwkAss1gqTPnQt-bKvUUapNdHbuicu=m+jOtjrMyQ@mail.gmail.com>
- <f8f5323c-cdfd-92e8-b359-43caaf9d7490@schaufler-ca.com> <CAHC9VhR=+uwN8U17JhYWKcXSc9=ExCrG4O9-y+DPJg6xZ=WoYA@mail.gmail.com>
- <CAFX2JfnT49o-CkaAE3=c0KW9SDS1U+scP0RD++nmWwyKoBDWkA@mail.gmail.com>
- <CAHC9VhQNp-GQ6SMABNdN00RcDz30Os5SK217W-5swS8quakxPA@mail.gmail.com>
- <CAN-5tyG95bL8vbkG5B9OmAAXremJ-X5z09f+0ekLyigzibsZ5A@mail.gmail.com> <CAHC9VhTwqt0TDEWV97GaM8B5m4qmEwo+BYXYDeMs2D1LtZzUFg@mail.gmail.com>
-In-Reply-To: <CAHC9VhTwqt0TDEWV97GaM8B5m4qmEwo+BYXYDeMs2D1LtZzUFg@mail.gmail.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Mon, 15 Mar 2021 11:30:51 -0400
-Message-ID: <CAN-5tyHdiuiOBX2bkZBGOTK-AMOccm27=qE-AZ_J9QQ00P91-Q@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] [security] Add new hook to compare new mount to an
- existing mount
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR13MB3525.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1b90251-5dbf-4871-accf-08d8e7cbf549
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2021 16:04:05.0849
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UZYyoXTvRXU15PTcEYuCYmnpZ57W/LLTd6F2any4EqU99YySowPnFAHyvfszgcaDPeMtKdLgDZtfXslG5etcsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR13MB4729
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Mar 14, 2021 at 9:44 PM Paul Moore <paul@paul-moore.com> wrote:
->
-> On Fri, Mar 12, 2021 at 5:35 PM Olga Kornievskaia
-> <olga.kornievskaia@gmail.com> wrote:
-> > On Fri, Mar 12, 2021 at 4:55 PM Paul Moore <paul@paul-moore.com> wrote:
-> > >
-> > > On Fri, Mar 12, 2021 at 10:45 AM Anna Schumaker
-> > > <anna.schumaker@netapp.com> wrote:
-> > > > On Thu, Mar 4, 2021 at 8:34 PM Paul Moore <paul@paul-moore.com> wrote:
-> > > > > On Tue, Mar 2, 2021 at 10:53 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> > > > > > On 3/2/2021 10:20 AM, Anna Schumaker wrote:
-> > > > > > > Hi Casey,
-> > > > > > >
-> > > > > > > On Fri, Feb 26, 2021 at 10:40 PM Olga Kornievskaia
-> > > > > > > <olga.kornievskaia@gmail.com> wrote:
-> > > > > > >> From: Olga Kornievskaia <kolga@netapp.com>
-> > > > > > >>
-> > > > > > >> Add a new hook that takes an existing super block and a new mount
-> > > > > > >> with new options and determines if new options confict with an
-> > > > > > >> existing mount or not.
-> > > > > > >>
-> > > > > > >> A filesystem can use this new hook to determine if it can share
-> > > > > > >> the an existing superblock with a new superblock for the new mount.
-> > > > > > >>
-> > > > > > >> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> > > > > > > Do you have any other thoughts on this patch? I'm also wondering how
-> > > > > > > you want to handle sending it upstream.
-> > > > > >
-> > > > > > James Morris is the maintainer for the security sub-system,
-> > > > > > so you'll want to send this through him. He will want you to
-> > > > > > have an ACK from Paul Moore, who is the SELinux maintainer.
-> > > > >
-> > > > > In the past I've pulled patches such as this (new LSM hook, with only
-> > > > > a SELinux implementation of the new hook) in via the selinux/next tree
-> > > > > after the other LSMs have ACK'd the new hook.  This helps limit merge
-> > > > > problems with other SELinux changes and allows us (the SELinux folks)
-> > > > > to include it in the ongoing testing that we do during the -rcX
-> > > > > releases.
-> > > > >
-> > > > > So Anna, if you or anyone else on the NFS side of the house want to
-> > > > > add your ACKs/REVIEWs/etc. please do so as I don't like merging
-> > > > > patches that cross subsystem boundaries without having all the
-> > > > > associated ACKs.  Casey, James, and other LSM folks please do the
-> > > > > same.
-> > > >
-> > > > Sure:
-> > > > Acked-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > > >
-> > > > Are you also going to take patch 3/3 that uses the new hook, or should
-> > > > that go through the NFS tree? Patch 2/3 is a cleanup that can go
-> > > > through the NFS tree.
-> > >
-> > > Generally when patches are posted as patchsets I would apply the whole
-> > > patchset assuming they patches were all good, however it does seem
-> > > like patch 2/3 is not strictly related to the other two?  That said,
-> > > as long as your ACK applies to all three patches in the patchset I
-> > > have no problem applying all of them to the selinux/next tree once
-> > > some of the other LSM maintainers provide their ACKs (while there may
-> > > only a SELinux implementation of the hook at the moment, we need to
-> > > make sure the other LSMs are okay with the basic hook concept).
-> > >
-> > > Also, did the v4 posting only include patch 1/3?  I see v3 postings
-> > > for the other two patches, but the only v4 patch I see is 1/3 ... ?
-> >
-> > I didn't not repost patches that didn't change.
->
-> Okay, so I'm guessing that means path 2/3 and 3/3 didn't change?
->
-> While I suppose there are cases where people do not do this, it has
-> been my experience that if someone posts a patchset and some portion
-> of the patchset changes, due to feedback or other factors, the entire
-> patchset is reposted under the new version number.  If nothing else
-> this helps ensure people are always looking at the latest draft of a
-> particular patch instead of having to dig through the list to
-> determine which patch is the most recent.
-
-Correct, patches 2&3 didn't change and selinux patch generated several
-iterations. Would you like me to repost a series? I'm not sure what
-I'm supposed to do at this point.
-
->
-> --
-> paul moore
-> www.paul-moore.com
+T24gTW9uLCAyMDIxLTAzLTE1IGF0IDEwOjQ2IC0wNDAwLCBKLiBCcnVjZSBGaWVsZHMgd3JvdGU6
+DQo+IE9uIFNhdCwgTWFyIDEzLCAyMDIxIGF0IDA0OjA4OjQ3UE0gLTA1MDAsIHRyb25kbXlAa2Vy
+bmVsLm9yZ8Kgd3JvdGU6DQo+ID4gRnJvbTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWtsZWJ1
+c3RAaGFtbWVyc3BhY2UuY29tPg0KPiA+IA0KPiA+IEluIG9yZGVyIHRvIGVuc3VyZSB0aGF0IGtu
+ZnNkIHRocmVhZHMgZG9uJ3QgbGluZ2VyIG9uY2UgdGhlIG5mc2QNCj4gPiBwc2V1ZG9mcyBpcyB1
+bm1vdW50ZWQgKGUuZy4gd2hlbiB0aGUgY29udGFpbmVyIGlzIGtpbGxlZCkgd2UgbGV0DQo+ID4g
+bmZzZF91bW91bnQoKSBzaHV0IGRvd24gdGhvc2UgdGhyZWFkcyBhbmQgd2FpdCBmb3IgdGhlbSB0
+byBleGl0Lg0KPiA+IA0KPiA+IFRoaXMgYWxzbyBzaG91bGQgZW5zdXJlIHRoYXQgd2UgZG9uJ3Qg
+bmVlZCB0byBkbyBhIGtlcm5lbCBtb3VudCBvZg0KPiA+IHRoZSBwc2V1ZG9mcywgc2luY2UgdGhl
+IHRocmVhZCBsaWZldGltZSBpcyBub3cgbGltaXRlZCBieSB0aGUNCj4gPiBsaWZldGltZSBvZiB0
+aGUgZmlsZXN5c3RlbS4NCj4gDQo+IFRoZSBuZnNkIGZpbGVzeXN0ZW0gaXMgcGVyLWNvbnRhaW5l
+ciwgYW5kIHRocmVhZHMgYXJlIGdsb2JhbCwgc28gSQ0KPiBkb24ndA0KPiB1bmRlcnN0YW5kIGhv
+dyB0aGlzIHdvcmtzLg0KPiANCg0KVGhlIGtuZnNkIHRocmVhZHMgYXJlIG5vdCBnbG9iYWwuDQoN
+ClRoZXkgYXJlIGFzc2lnbmVkIGF0IGNyZWF0aW9uIHRpbWUgdG8gYSBzdHJ1Y3Qgc3ZjX3NlcnYs
+IHdoaWNoIGlzIGENCnBlci1jb250YWluZXIgb2JqZWN0LiBBcyB5b3Ugc2F5IGFib3ZlLCBhbGwg
+dGhlIGNvbnRyb2wgc3RydWN0dXJlcyBpbg0KdGhlIG5mc2QgZmlsZXN5c3RlbSBhcmUgcGVyLWNv
+bnRhaW5lci4NCg0KV2l0aG91dCB0aGlzIGZhaWxzYWZlIHRoYXQgc2h1dHMgZG93biB0aG9zZSB0
+aHJlYWRzIHdoZW4gdGhlIGNvbnRhaW5lcg0KaXMga2lsbGVkLCB0aGVuIHlvdSBlbmQgdXAgd2l0
+aCBvcnBoYW5lZCB0aHJlYWRzLiBUaGlzIGlzIGEgcmVhbA0KcHJvYmxlbSB3aGVuIGRvY2tlciBj
+cmFzaGVzIGFuZCBnZXRzIHJlc3RhcnRlZCAob3IgaWYgeW91IGRvIGEgJ2tpbGwgLQ0KOScgb24g
+dGhlIGtuZnNkIGNvbnRhaW5lcidzIGluaXQgcHJvY2VzcykuDQoNCi0tIA0KVHJvbmQgTXlrbGVi
+dXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWts
+ZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
