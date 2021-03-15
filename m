@@ -2,88 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1849833C2AD
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Mar 2021 17:57:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E064733C6AE
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Mar 2021 20:19:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234028AbhCOQ5H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Mar 2021 12:57:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234276AbhCOQ4u (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Mar 2021 12:56:50 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE2CC06175F
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Mar 2021 09:56:49 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id u20so17080167lja.13
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Mar 2021 09:56:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=nn1W9Wc+k1CJYE8WxkSJGXK0N+qf/mcCb4Whw81sCBc=;
-        b=EBuLzQXKFMUEHW+1lNwttvGa3MBy9lF/0rW5p6tFfgkbbvSijj0gelSVFmYcPYsOyl
-         7JV7QE/J74OIBrgdrE6r3u/pBlNK4VBJTuf9HXiTpXeyUQVLelNdRPntKDuE0cl2hhAv
-         HIn4QeVimzokIavcMqC4L4Fwqs1Z2IXu81pshv4/9kQE4cE1uZKCi9/Bz5o5aTCAj8PP
-         wxHgbfM0Ks6cgcnhuOzKXrgnhNz//QtxWlesxsXvqRpvuQEKbMNbFobAXPsGWjXHgpR+
-         sVDZMUrU12BM+UK5OVSPE5Sm4Ohv+Hf1Hsuo0Y3AsWaQ6Xv99vxpnuM4kUIh/kvHIZ5C
-         bHJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=nn1W9Wc+k1CJYE8WxkSJGXK0N+qf/mcCb4Whw81sCBc=;
-        b=Tc8SnMtqtoEgWr7rTRfhxGwgsQ6XBrrmXkgJzWEt5wWnIIbCNN22JanF4CeJUEx6nQ
-         GYO6ql5s8BMcA+qsJdNsbaLmDfsndgEcQh2KY4izL/BZDfrARRGHvgQOx2BPwSfqbYDM
-         71UkZUf0lE1dxRz9MVnGmXPm3tVoQo3tv3hvzu4DYIfg5yGEDUF7m6zeYwd0fQf+KEKX
-         KycOJwKr9h2eHrtya4T6dhtXTMvP1UYthw99/icz8cyUr958Hwg3u2zhl9wx/tc53nfc
-         28f3l2tQmBos25ujHWHa95ADzNmn2XE7jNBbkxHYbS/dwyq6ZLTzh2VWR83KRYotrJhc
-         TGpQ==
-X-Gm-Message-State: AOAM532SZKXETc2T3DEGCfMGc2ZHF/iQMLQI/QsmS5sxGUms2mvIpCej
-        3pcJY7BVO6nSsz5RMKy2cVf6Yjp9XvcMAjpWcXg=
-X-Google-Smtp-Source: ABdhPJykexIua6HZp98HD6UAPL7YfB6FGSx7A8zAjyvMQr16MUrsRq3gFWvq/Yb3+V08//YEY1bPAa06stZYp5H39x0=
-X-Received: by 2002:a2e:98d2:: with SMTP id s18mr3237ljj.412.1615827408052;
- Mon, 15 Mar 2021 09:56:48 -0700 (PDT)
+        id S233328AbhCOTSt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Mar 2021 15:18:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:34364 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233324AbhCOTSq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Mar 2021 15:18:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1615835925;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=of8PfpoOkEtpG02vpJK6TjufKldJYeene6jyxjtno2w=;
+        b=fuIh+JR5HHN3dWRCv5d7tbUslOItYVILRVOIIZY15588XK43zz/MxVre2OiZlBy7aIsA9j
+        2krcteDF9ZFSqm9+hqk3b92KQ1QOSHckdUJzqb7ys+OKLGTPRxxi8YNSgb3LdKksj2Rtc7
+        eXGNj1fxZV41PyoOl8+rgKa3yunk2ts=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-446-9pNwCQU0Pe29jKKEqvsbng-1; Mon, 15 Mar 2021 15:18:42 -0400
+X-MC-Unique: 9pNwCQU0Pe29jKKEqvsbng-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF19118460E4;
+        Mon, 15 Mar 2021 19:18:40 +0000 (UTC)
+Received: from pick.fieldses.org (ovpn-118-77.rdu2.redhat.com [10.10.118.77])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A828E19719;
+        Mon, 15 Mar 2021 19:18:40 +0000 (UTC)
+Received: by pick.fieldses.org (Postfix, from userid 2815)
+        id 72EFB1209D2; Mon, 15 Mar 2021 15:18:39 -0400 (EDT)
+Date:   Mon, 15 Mar 2021 15:18:39 -0400
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "trondmy@kernel.org" <trondmy@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Subject: Re: [PATCH] nfsd: Ensure knfsd shuts down when the "nfsd" pseudofs
+ is unmounted
+Message-ID: <YE+zD9bM6/ki0XgS@pick.fieldses.org>
+References: <20210313210847.569041-1-trondmy@kernel.org>
+ <YE9zQQhyfHmLLVVJ@pick.fieldses.org>
+ <51c84f27cf5c950c63ef2be570fd647d93d80036.camel@hammerspace.com>
 MIME-Version: 1.0
-Received: by 2002:a05:651c:1382:0:0:0:0 with HTTP; Mon, 15 Mar 2021 09:56:47
- -0700 (PDT)
-Reply-To: ezbtg22@gmail.com
-From:   "Mrs.Glenn" <mrganuserge@gmail.com>
-Date:   Mon, 15 Mar 2021 09:56:47 -0700
-Message-ID: <CA+Wfa7Z3_JiLGKA=BHLEmmn85uCV7+VaoML7oMoh+4b-+VC3DQ@mail.gmail.com>
-Subject: From Mrs.Glenn
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <51c84f27cf5c950c63ef2be570fd647d93d80036.camel@hammerspace.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
--- 
-Dear Beloved,
+On Mon, Mar 15, 2021 at 04:04:05PM +0000, Trond Myklebust wrote:
+> On Mon, 2021-03-15 at 10:46 -0400, J. Bruce Fields wrote:
+> > On Sat, Mar 13, 2021 at 04:08:47PM -0500, trondmy@kernel.org wrote:
+> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > 
+> > > In order to ensure that knfsd threads don't linger once the nfsd
+> > > pseudofs is unmounted (e.g. when the container is killed) we let
+> > > nfsd_umount() shut down those threads and wait for them to exit.
+> > > 
+> > > This also should ensure that we don't need to do a kernel mount of
+> > > the pseudofs, since the thread lifetime is now limited by the
+> > > lifetime of the filesystem.
+> > 
+> > The nfsd filesystem is per-container, and threads are global, so I
+> > don't
+> > understand how this works.
+> > 
+> 
+> The knfsd threads are not global.
+> 
+> They are assigned at creation time to a struct svc_serv, which is a
+> per-container object. As you say above, all the control structures in
+> the nfsd filesystem are per-container.
 
-I am Mrs Elizabet Glenn from Israel. I am a missionary but right now
-in a hospital bed in Israel. I am 59 years and childless; my husband
-is dead. I was diagnosed with terminal cancer. And my doctor just
-predicted that I have but very limited time to live due to damages in
-my system and as a result of that I decided to dispose my 10.5 million
-US dollars to a God-fearing one for the continuation of charitable
-work. This is why I located you.My guess about you may not be accurate
-because I came across your contact at the humanitarian calendar event
-of the year but I believe in God who  divinely directed me to you for
-this solemn proposal of charitable work. I wholeheartedly wish to
-bequeath my fortune to you as a God-fearing person for the
-continuation of charitable work anywhere around the world.
+(Looks.)  And it's been that way from the start.  I don't know why I
+thought otherwise.  Thanks!
 
-I shall be going in for a surgery operations soonest and desire this
-money to be transferred to you as I do not wish to leave this money in
-the bank because bankers might misuse it for their own interest after
-my death. As soon as I receive your quick reply assuring me that you
-will utilize the money as I instructed you for the benefit of the less
-privilege, I shall give you more details and also instruct my bank to
-release the money to you for the charity project. I hope you receive
-this mail in good health.
+> Without this failsafe that shuts down those threads when the container
+> is killed, then you end up with orphaned threads. This is a real
+> problem when docker crashes and gets restarted (or if you do a 'kill -
+> 9' on the knfsd container's init process).
 
-Because I don t know what will be my situation in next minute,
+Makes sense, thanks again!
 
-I am waiting for your reply.
+--b.
 
-Yours sincerely,
-Mrs Elizabet Glenn.
