@@ -2,94 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E064733C6AE
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Mar 2021 20:19:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D61633C6DF
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Mar 2021 20:34:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233328AbhCOTSt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Mar 2021 15:18:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:34364 "EHLO
+        id S230136AbhCOTdp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Mar 2021 15:33:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59012 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233324AbhCOTSq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Mar 2021 15:18:46 -0400
+        by vger.kernel.org with ESMTP id S232773AbhCOTde (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Mar 2021 15:33:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1615835925;
+        s=mimecast20190719; t=1615836813;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=of8PfpoOkEtpG02vpJK6TjufKldJYeene6jyxjtno2w=;
-        b=fuIh+JR5HHN3dWRCv5d7tbUslOItYVILRVOIIZY15588XK43zz/MxVre2OiZlBy7aIsA9j
-        2krcteDF9ZFSqm9+hqk3b92KQ1QOSHckdUJzqb7ys+OKLGTPRxxi8YNSgb3LdKksj2Rtc7
-        eXGNj1fxZV41PyoOl8+rgKa3yunk2ts=
+        bh=RFIjDQlgAbDZb84hCcz/nIlskkxfDKDLDVdmAvsZ6QA=;
+        b=a+SC14pf8METtE5z7CEnSeVPnHPeXq6P6HgB8jUCthVZahqCNDXD4i6vXttgaxvZojmJYZ
+        IMEOaKxf1kfVO0t7oL/Bvs81ds9/HDVxbovKzNf/CU+m7gzy8hA5T8OkszCS6lMhbRQ7/F
+        PxqEDzEY9VS4D5YS8OplNrPOaaNopsE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-446-9pNwCQU0Pe29jKKEqvsbng-1; Mon, 15 Mar 2021 15:18:42 -0400
-X-MC-Unique: 9pNwCQU0Pe29jKKEqvsbng-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-275-2zLsoK69PWCE-vaq_Q0KEw-1; Mon, 15 Mar 2021 15:33:31 -0400
+X-MC-Unique: 2zLsoK69PWCE-vaq_Q0KEw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF19118460E4;
-        Mon, 15 Mar 2021 19:18:40 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-118-77.rdu2.redhat.com [10.10.118.77])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A828E19719;
-        Mon, 15 Mar 2021 19:18:40 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id 72EFB1209D2; Mon, 15 Mar 2021 15:18:39 -0400 (EDT)
-Date:   Mon, 15 Mar 2021 15:18:39 -0400
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "trondmy@kernel.org" <trondmy@kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: Re: [PATCH] nfsd: Ensure knfsd shuts down when the "nfsd" pseudofs
- is unmounted
-Message-ID: <YE+zD9bM6/ki0XgS@pick.fieldses.org>
-References: <20210313210847.569041-1-trondmy@kernel.org>
- <YE9zQQhyfHmLLVVJ@pick.fieldses.org>
- <51c84f27cf5c950c63ef2be570fd647d93d80036.camel@hammerspace.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42B7B100C618;
+        Mon, 15 Mar 2021 19:33:29 +0000 (UTC)
+Received: from firesoul.localdomain (unknown [10.40.208.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D1FE210023AB;
+        Mon, 15 Mar 2021 19:33:25 +0000 (UTC)
+Received: from [10.1.1.1] (localhost [IPv6:::1])
+        by firesoul.localdomain (Postfix) with ESMTP id 524D93250E696;
+        Mon, 15 Mar 2021 20:33:24 +0100 (CET)
+Subject: [PATCH mel-git] Followup: Update [PATCH 7/7] in Mel's series
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>, chuck.lever@oracle.com,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 15 Mar 2021 20:33:24 +0100
+Message-ID: <161583677541.3715498.6118778324185171839.stgit@firesoul>
+In-Reply-To: <20210315094038.22d6d79a@carbon>
+References: <20210315094038.22d6d79a@carbon>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <51c84f27cf5c950c63ef2be570fd647d93d80036.camel@hammerspace.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Mar 15, 2021 at 04:04:05PM +0000, Trond Myklebust wrote:
-> On Mon, 2021-03-15 at 10:46 -0400, J. Bruce Fields wrote:
-> > On Sat, Mar 13, 2021 at 04:08:47PM -0500, trondmy@kernel.org wrote:
-> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > > 
-> > > In order to ensure that knfsd threads don't linger once the nfsd
-> > > pseudofs is unmounted (e.g. when the container is killed) we let
-> > > nfsd_umount() shut down those threads and wait for them to exit.
-> > > 
-> > > This also should ensure that we don't need to do a kernel mount of
-> > > the pseudofs, since the thread lifetime is now limited by the
-> > > lifetime of the filesystem.
-> > 
-> > The nfsd filesystem is per-container, and threads are global, so I
-> > don't
-> > understand how this works.
-> > 
-> 
-> The knfsd threads are not global.
-> 
-> They are assigned at creation time to a struct svc_serv, which is a
-> per-container object. As you say above, all the control structures in
-> the nfsd filesystem are per-container.
+This patch is against Mel's git-tree:
+ git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git
 
-(Looks.)  And it's been that way from the start.  I don't know why I
-thought otherwise.  Thanks!
+Using branch: mm-bulk-rebase-v4r2 but replacing the last patch related to
+the page_pool using __alloc_pages_bulk().
 
-> Without this failsafe that shuts down those threads when the container
-> is killed, then you end up with orphaned threads. This is a real
-> problem when docker crashes and gets restarted (or if you do a 'kill -
-> 9' on the knfsd container's init process).
+ https://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git/log/?h=mm-bulk-rebase-v4r2
 
-Makes sense, thanks again!
+While implementing suggestions by Alexander Duyck, I realised that I could
+simplify the code further, and simply take the last page from the
+pool->alloc.cache given this avoids special casing the last page.
 
---b.
+I re-ran performance tests and the improvement have been reduced to 13% from
+18% before, but I don't think the rewrite of the specific patch have
+anything to do with this.
+
+Notes on tests:
+ https://github.com/xdp-project/xdp-project/blob/master/areas/mem/page_pool06_alloc_pages_bulk.org#test-on-mel-git-tree
+
+---
+
+Jesper Dangaard Brouer (1):
+      net: page_pool: use alloc_pages_bulk in refill code path
+
+
+ net/core/page_pool.c |   73 ++++++++++++++++++++++++++++++++------------------
+ 1 file changed, 47 insertions(+), 26 deletions(-)
+
+--
 
