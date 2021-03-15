@@ -2,59 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7165333AE18
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Mar 2021 09:59:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CDE5B33B026
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Mar 2021 11:42:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbhCOI6m (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Mar 2021 04:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229562AbhCOI60 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Mar 2021 04:58:26 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE34FC06175F
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Mar 2021 01:58:25 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id x7-20020a17090a2b07b02900c0ea793940so13985133pjc.2
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Mar 2021 01:58:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=LbXdRz8hPnZqXslejUsgqIR1UD+ZWrpimEiaxIRNV2xNX9e7brdrBT+330tAZDGZ76
-         Z44Aj1/yyzeGeEkcMYIH//MrHNptNc2k8UMVVIbEobpJRFQZA5XUdWQqiNvRvLYVAtMv
-         xoKQqrZLhKUh1J45nJIpEkqDSvu1Tr5FBCilwjOhp0zEm3xGoD9/vG7Dh8s+ZnaHk+U5
-         aC4U8SAWGye+HmhE2PCrqjaznbIw1afwdXDR2ixAMyaUV9dRzZFQUIU2zeRr2wSRJLp7
-         p1AlF+JfxodPPIujXbeP44SJwrB9ufhws/ELF19RzCKTBjiq4R1k6O0qwSqq/Q2I9TSg
-         kWVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=e6XSeOvYF0qSmypzHqwo/7lHXNr3jwNerIMThz6cOPZu3La+uboTmVlAfRCRqx5sB4
-         jNWfY1n3goTXksuay3xSkgxsWX6iXdlix7k31GvQTWxY4m1AwI8pRO4EG3PVDLu3iLYF
-         /lF7kcAYnsSjMKfjTwdVYWsjouZ4+PJGgR6C2xp2W+fmndrb+mZouZOgBtzEcvXqHer9
-         4lZvso1YSyRCuTi4gQaP4YnjSkOTcnuEilzlg8SSP86pUZnnIlbXPdu1V5o5QpzV3QTA
-         RQhI9PLWizkPi3GIyTxxgOJrI8/z8pn+XR7evMW8+ZZuAnREHwmMEdRvRpOkeyQeyvkj
-         AC/g==
-X-Gm-Message-State: AOAM531vQpSp9AIlRc0xg5QkxH+ZcBmg2BmQ2HjSyjHY0o/Oj51tbof9
-        47FCsF6/57VM5y7lFCprkokDnTRqtnxau8XXLKI=
-X-Google-Smtp-Source: ABdhPJzM3716DwOVGJCGkipl2s83y6Vr9QPdVnYrrkkfjWixAG+vz2jlo87ubzFNH0zawvhQR6gAd9jVx3Jr5JWxmEQ=
-X-Received: by 2002:a17:902:da91:b029:e5:e7cf:d737 with SMTP id
- j17-20020a170902da91b02900e5e7cfd737mr10466389plx.24.1615798705311; Mon, 15
- Mar 2021 01:58:25 -0700 (PDT)
+        id S229931AbhCOKmS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Mar 2021 06:42:18 -0400
+Received: from outbound-smtp09.blacknight.com ([46.22.139.14]:56701 "EHLO
+        outbound-smtp09.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229923AbhCOKmI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Mar 2021 06:42:08 -0400
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp09.blacknight.com (Postfix) with ESMTPS id 7B1341C34BE
+        for <linux-nfs@vger.kernel.org>; Mon, 15 Mar 2021 10:42:06 +0000 (GMT)
+Received: (qmail 9896 invoked from network); 15 Mar 2021 10:42:06 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 15 Mar 2021 10:42:06 -0000
+Date:   Mon, 15 Mar 2021 10:42:05 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 2/5] mm/page_alloc: Add a bulk page allocator
+Message-ID: <20210315104204.GB3697@techsingularity.net>
+References: <20210312124609.33d4d4ba@carbon>
+ <20210312145814.GA2577561@casper.infradead.org>
+ <20210312160350.GW3697@techsingularity.net>
+ <20210312210823.GE2577561@casper.infradead.org>
+ <20210313131648.GY3697@techsingularity.net>
+ <20210313163949.GI2577561@casper.infradead.org>
+ <7D8C62E1-77FD-4B41-90D7-253D13715A6F@oracle.com>
+ <20210313193343.GJ2577561@casper.infradead.org>
+ <20210314125231.GA3697@techsingularity.net>
+ <325875A2-A98A-4ECF-AFDF-0B70BCCB79AD@oracle.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:b086:0:0:0:0 with HTTP; Mon, 15 Mar 2021 01:58:24
- -0700 (PDT)
-From:   Kevin Roberts <kossietenou@gmail.com>
-Date:   Mon, 15 Mar 2021 08:58:24 +0000
-Message-ID: <CAG0ufbSHz-LVYuzP1751truEWnrY1BuqX3DX+9fBeaRHrW_inQ@mail.gmail.com>
-Subject: I sent you a mail earlier but not sure if you received it, kindly
- check your email and get back to me for I have very urgent information to
- pass to you.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <325875A2-A98A-4ECF-AFDF-0B70BCCB79AD@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Sun, Mar 14, 2021 at 03:22:02PM +0000, Chuck Lever III wrote:
+> >> Anyway, I'm not arguing against a bulk allocator, nor even saying this
+> >> is a bad interface.  It just maybe could be better.
+> >> 
+> > 
+> > I think it puts more responsibility on the caller to use the API correctly
+> > but I also see no value in arguing about it further because there is no
+> > supporting data either way (I don't have routine access to a sufficiently
+> > fast network to generate the data). I can add the following patch and let
+> > callers figure out which interface is preferred. If one of the interfaces
+> > is dead in a year, it can be removed.
+> > 
+> > As there are a couple of ways the arrays could be used, I'm leaving it
+> > up to Jesper and Chuck which interface they want to use. In particular,
+> > it would be preferred if the array has no valid struct pages in it but
+> > it's up to them to judge how practical that is.
+> 
+> I'm interested to hear from Jesper.
+> 
+> My two cents (US):
+> 
+> If svc_alloc_arg() is the /only/ consumer that wants to fill
+> a partially populated array of page pointers, then there's no
+> code-duplication benefit to changing the synopsis of
+> alloc_pages_bulk() at this point.
+> 
+> Also, if the consumers still have to pass in the number of
+> pages the array needs, rather than having the bulk allocator
+> figure it out, then there's not much additional benefit, IMO.
+> 
+> Ideally (for SUNRPC) alloc_pages_bulk() would take a pointer
+> to a sparsely-populated array and the total number of elements
+> in that array, and fill in the NULL elements. The return value
+> would be "success -- all elements are populated" or "failure --
+> some elements remain NULL".
+> 
 
+If the array API interface was expected to handle sparse arrays, it would
+make sense to define nr_pages are the number of pages that need to be
+in the array instead of the number of pages to allocate. The preamble
+would skip the first N number of allocated pages and decrement nr_pages
+accordingly before the watermark check. The return value would then be the
+last populated array element and the caller decides if that is enough to
+proceed or if the API needs to be called again. There is a slight risk
+that with a spare array that only needed 1 page in reality would fail
+the watermark check but on low memory, allocations take more work anyway.
+That definition of nr_pages would avoid the potential buffer overrun but
+both you and Jesper would need to agree that it's an appropriate API.
+
+-- 
+Mel Gorman
+SUSE Labs
