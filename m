@@ -2,158 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C415033C25F
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Mar 2021 17:43:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1849833C2AD
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Mar 2021 17:57:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232995AbhCOQmm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Mar 2021 12:42:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:27825 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232519AbhCOQmf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Mar 2021 12:42:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1615826554;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fGluRhk+PJrpzTtViETCiWQbIPiyTfmSvpP2ZDxvRgw=;
-        b=VWEhKfsOYLHURNavR871EhK8f7kwwtw1W8PTLX/61eNdCin2havzT+5LeClsJ53mXbj6s0
-        GqOboAjRmFJXIHeez14l6zKvIjXUYZ2NJ69Vqgp+PH9Zo4E3v9DSvj7+Z8CGPMr6zzNeVU
-        VNGYPCPgpzytJIvrNcG0WNVng7F2+b0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-243-cl6paFfuOZioICwlchD9fw-1; Mon, 15 Mar 2021 12:42:30 -0400
-X-MC-Unique: cl6paFfuOZioICwlchD9fw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2C9EDF8A0;
-        Mon, 15 Mar 2021 16:42:28 +0000 (UTC)
-Received: from carbon (unknown [10.36.110.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D91A55C3E6;
-        Mon, 15 Mar 2021 16:42:22 +0000 (UTC)
-Date:   Mon, 15 Mar 2021 17:42:21 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Net <netdev@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        brouer@redhat.com, Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: Re: [PATCH 2/5] mm/page_alloc: Add a bulk page allocator
-Message-ID: <20210315174221.1c9e0fe7@carbon>
-In-Reply-To: <20210315104204.GB3697@techsingularity.net>
-References: <20210312124609.33d4d4ba@carbon>
-        <20210312145814.GA2577561@casper.infradead.org>
-        <20210312160350.GW3697@techsingularity.net>
-        <20210312210823.GE2577561@casper.infradead.org>
-        <20210313131648.GY3697@techsingularity.net>
-        <20210313163949.GI2577561@casper.infradead.org>
-        <7D8C62E1-77FD-4B41-90D7-253D13715A6F@oracle.com>
-        <20210313193343.GJ2577561@casper.infradead.org>
-        <20210314125231.GA3697@techsingularity.net>
-        <325875A2-A98A-4ECF-AFDF-0B70BCCB79AD@oracle.com>
-        <20210315104204.GB3697@techsingularity.net>
+        id S234028AbhCOQ5H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Mar 2021 12:57:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234276AbhCOQ4u (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Mar 2021 12:56:50 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE2CC06175F
+        for <linux-nfs@vger.kernel.org>; Mon, 15 Mar 2021 09:56:49 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id u20so17080167lja.13
+        for <linux-nfs@vger.kernel.org>; Mon, 15 Mar 2021 09:56:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=nn1W9Wc+k1CJYE8WxkSJGXK0N+qf/mcCb4Whw81sCBc=;
+        b=EBuLzQXKFMUEHW+1lNwttvGa3MBy9lF/0rW5p6tFfgkbbvSijj0gelSVFmYcPYsOyl
+         7JV7QE/J74OIBrgdrE6r3u/pBlNK4VBJTuf9HXiTpXeyUQVLelNdRPntKDuE0cl2hhAv
+         HIn4QeVimzokIavcMqC4L4Fwqs1Z2IXu81pshv4/9kQE4cE1uZKCi9/Bz5o5aTCAj8PP
+         wxHgbfM0Ks6cgcnhuOzKXrgnhNz//QtxWlesxsXvqRpvuQEKbMNbFobAXPsGWjXHgpR+
+         sVDZMUrU12BM+UK5OVSPE5Sm4Ohv+Hf1Hsuo0Y3AsWaQ6Xv99vxpnuM4kUIh/kvHIZ5C
+         bHJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=nn1W9Wc+k1CJYE8WxkSJGXK0N+qf/mcCb4Whw81sCBc=;
+        b=Tc8SnMtqtoEgWr7rTRfhxGwgsQ6XBrrmXkgJzWEt5wWnIIbCNN22JanF4CeJUEx6nQ
+         GYO6ql5s8BMcA+qsJdNsbaLmDfsndgEcQh2KY4izL/BZDfrARRGHvgQOx2BPwSfqbYDM
+         71UkZUf0lE1dxRz9MVnGmXPm3tVoQo3tv3hvzu4DYIfg5yGEDUF7m6zeYwd0fQf+KEKX
+         KycOJwKr9h2eHrtya4T6dhtXTMvP1UYthw99/icz8cyUr958Hwg3u2zhl9wx/tc53nfc
+         28f3l2tQmBos25ujHWHa95ADzNmn2XE7jNBbkxHYbS/dwyq6ZLTzh2VWR83KRYotrJhc
+         TGpQ==
+X-Gm-Message-State: AOAM532SZKXETc2T3DEGCfMGc2ZHF/iQMLQI/QsmS5sxGUms2mvIpCej
+        3pcJY7BVO6nSsz5RMKy2cVf6Yjp9XvcMAjpWcXg=
+X-Google-Smtp-Source: ABdhPJykexIua6HZp98HD6UAPL7YfB6FGSx7A8zAjyvMQr16MUrsRq3gFWvq/Yb3+V08//YEY1bPAa06stZYp5H39x0=
+X-Received: by 2002:a2e:98d2:: with SMTP id s18mr3237ljj.412.1615827408052;
+ Mon, 15 Mar 2021 09:56:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Received: by 2002:a05:651c:1382:0:0:0:0 with HTTP; Mon, 15 Mar 2021 09:56:47
+ -0700 (PDT)
+Reply-To: ezbtg22@gmail.com
+From:   "Mrs.Glenn" <mrganuserge@gmail.com>
+Date:   Mon, 15 Mar 2021 09:56:47 -0700
+Message-ID: <CA+Wfa7Z3_JiLGKA=BHLEmmn85uCV7+VaoML7oMoh+4b-+VC3DQ@mail.gmail.com>
+Subject: From Mrs.Glenn
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 15 Mar 2021 10:42:05 +0000
-Mel Gorman <mgorman@techsingularity.net> wrote:
-
-> On Sun, Mar 14, 2021 at 03:22:02PM +0000, Chuck Lever III wrote:
-> > >> Anyway, I'm not arguing against a bulk allocator, nor even saying this
-> > >> is a bad interface.  It just maybe could be better.
-> > >>   
-> > > 
-> > > I think it puts more responsibility on the caller to use the API correctly
-> > > but I also see no value in arguing about it further because there is no
-> > > supporting data either way (I don't have routine access to a sufficiently
-> > > fast network to generate the data). I can add the following patch and let
-> > > callers figure out which interface is preferred. If one of the interfaces
-> > > is dead in a year, it can be removed.
-> > > 
-> > > As there are a couple of ways the arrays could be used, I'm leaving it
-> > > up to Jesper and Chuck which interface they want to use. In particular,
-> > > it would be preferred if the array has no valid struct pages in it but
-> > > it's up to them to judge how practical that is.  
-> > 
-> > I'm interested to hear from Jesper.
-> > 
-> > My two cents (US):
-> > 
-> > If svc_alloc_arg() is the /only/ consumer that wants to fill
-> > a partially populated array of page pointers, then there's no
-> > code-duplication benefit to changing the synopsis of
-> > alloc_pages_bulk() at this point.
-> > 
-> > Also, if the consumers still have to pass in the number of
-> > pages the array needs, rather than having the bulk allocator
-> > figure it out, then there's not much additional benefit, IMO.
-> > 
-> > Ideally (for SUNRPC) alloc_pages_bulk() would take a pointer
-> > to a sparsely-populated array and the total number of elements
-> > in that array, and fill in the NULL elements. The return value
-> > would be "success -- all elements are populated" or "failure --
-> > some elements remain NULL".
-> >   
-> 
-> If the array API interface was expected to handle sparse arrays, it would
-> make sense to define nr_pages are the number of pages that need to be
-> in the array instead of the number of pages to allocate. The preamble
-> would skip the first N number of allocated pages and decrement nr_pages
-> accordingly before the watermark check. The return value would then be the
-> last populated array element and the caller decides if that is enough to
-> proceed or if the API needs to be called again. There is a slight risk
-> that with a spare array that only needed 1 page in reality would fail
-> the watermark check but on low memory, allocations take more work anyway.
-> That definition of nr_pages would avoid the potential buffer overrun but
-> both you and Jesper would need to agree that it's an appropriate API.
-
-I actually like the idea of doing it this way.  Even-though the
-page_pool fast-path (__page_pool_get_cached()) doesn't clear/mark the
-"consumed" elements with NULL.  I'm ready to change page_pool to handle
-this when calling this API, as I think it will be faster than walking
-the linked list.
-
-Even-though my page_pool use-case doesn't have a sparse array to
-populate (like NFS/SUNRPC) then I can still use this API that Chuck is
-suggesting. Thus, I'm fine with this :-)
-
-
-(p.s. working on implementing Alexander Duyck's suggestions, but I
-don't have it ready yet, I will try to send new patch tomorrow. And I
-do realize that with this API change I have to reimplement it again,
-but as long as we make forward progress then I'll happily do it).
 -- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+Dear Beloved,
 
-/* fast path */
-static struct page *__page_pool_get_cached(struct page_pool *pool)
-{
-	struct page *page;
+I am Mrs Elizabet Glenn from Israel. I am a missionary but right now
+in a hospital bed in Israel. I am 59 years and childless; my husband
+is dead. I was diagnosed with terminal cancer. And my doctor just
+predicted that I have but very limited time to live due to damages in
+my system and as a result of that I decided to dispose my 10.5 million
+US dollars to a God-fearing one for the continuation of charitable
+work. This is why I located you.My guess about you may not be accurate
+because I came across your contact at the humanitarian calendar event
+of the year but I believe in God who  divinely directed me to you for
+this solemn proposal of charitable work. I wholeheartedly wish to
+bequeath my fortune to you as a God-fearing person for the
+continuation of charitable work anywhere around the world.
 
-	/* Caller MUST guarantee safe non-concurrent access, e.g. softirq */
-	if (likely(pool->alloc.count)) {
-		/* Fast-path */
-		page = pool->alloc.cache[--pool->alloc.count];
-	} else {
-		page = page_pool_refill_alloc_cache(pool);
-	}
+I shall be going in for a surgery operations soonest and desire this
+money to be transferred to you as I do not wish to leave this money in
+the bank because bankers might misuse it for their own interest after
+my death. As soon as I receive your quick reply assuring me that you
+will utilize the money as I instructed you for the benefit of the less
+privilege, I shall give you more details and also instruct my bank to
+release the money to you for the charity project. I hope you receive
+this mail in good health.
 
-	return page;
-}
+Because I don t know what will be my situation in next minute,
 
+I am waiting for your reply.
+
+Yours sincerely,
+Mrs Elizabet Glenn.
