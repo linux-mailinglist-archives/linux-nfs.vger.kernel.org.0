@@ -2,35 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9457833E364
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Mar 2021 01:57:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A2A8133E39F
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Mar 2021 01:58:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230468AbhCQA4f (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Mar 2021 20:56:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33084 "EHLO mail.kernel.org"
+        id S229883AbhCQA5K (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Mar 2021 20:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230228AbhCQA4E (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 16 Mar 2021 20:56:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 648F764F99;
-        Wed, 17 Mar 2021 00:56:03 +0000 (UTC)
+        id S231240AbhCQA4r (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 16 Mar 2021 20:56:47 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 43B2C64FB4;
+        Wed, 17 Mar 2021 00:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615942564;
-        bh=vQ9jruZV5MO/69WlijaSDOFKPbNF0BPnqPswopqhNys=;
+        s=k20201202; t=1615942605;
+        bh=nV3ayq95eKEymLPuLam7wmH8009qcnNKR9AP8PNetRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rEtFjnkkefNKIVGXuTZLDAiOmh9ZdxUGAyHKL7BVsjaiVd7pMfO0NlLAYWTBfJl+O
-         RtkUF4/oG+5Z/imEfQChdMqUhhTWlRNemoRnUucUStikCCc+LajYMOQ8g2/6BzCqdQ
-         neAz8FtsikXsiLnapcjXcCI75ETxYN7wxrvMupW853gDNRYYmdw6QBISIqXbCPKC8X
-         EZ/Ejici3SL3aputCzVLsKX7tzxSv7wQxND4TRMO9oGRtVdnhVY8QiAhmXYtNOKRlu
-         0PSdJ1BL/mMpLGzFwlTT3QF3KOj3mYKhSsJIdwLZv1ifiuJIeHMw5uBflIt2w31bQB
-         V0cDsT5SXEiqA==
+        b=by7Wz0rtUe23BC96qIKRl5B3Mbave+A49NYtYvZ2P9KBmxw6uatAoW1tMuK2HscK1
+         riLdeYVhm1zQPyTBkeYYfXk25s6emMInLDJ4jcoL2kwAl050RL8EteZ8zwn//r7vxj
+         0xto9U7PdH4twEGZuwOFlq8NoE5MvaKT9zjg1Eqqs5luNpmCllGkEKGIR1wyb/BdA7
+         XMvKG0EQfZMtBioNjvHrX7cX0lg6JowwLGi+K0V1iDoiTmHiJqCtEosTFKNoU2JqKr
+         93sWdYevo5wWtZsAyTE2fB7xT3nIDn9TZJavu3yR9oRc+KLiqJSIR4NLSz7gJlQQII
+         g42fs5wdWytpA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frank Sorenson <sorenson@redhat.com>,
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.11 22/61] NFS: Correct size calculation for create reply length
-Date:   Tue, 16 Mar 2021 20:54:56 -0400
-Message-Id: <20210317005536.724046-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.11 56/61] nfs: we don't support removing system.nfs4_acl
+Date:   Tue, 16 Mar 2021 20:55:30 -0400
+Message-Id: <20210317005536.724046-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210317005536.724046-1-sashal@kernel.org>
 References: <20210317005536.724046-1-sashal@kernel.org>
@@ -42,47 +42,38 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Frank Sorenson <sorenson@redhat.com>
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-[ Upstream commit ad3dbe35c833c2d4d0bbf3f04c785d32f931e7c9 ]
+[ Upstream commit 4f8be1f53bf615102d103c0509ffa9596f65b718 ]
 
-CREATE requests return a post_op_fh3, rather than nfs_fh3. The
-post_op_fh3 includes an extra word to indicate 'handle_follows'.
+The NFSv4 protocol doesn't have any notion of reomoving an attribute, so
+removexattr(path,"system.nfs4_acl") doesn't make sense.
 
-Without that additional word, create fails when full 64-byte
-filehandles are in use.
+There's no documented return value.  Arguably it could be EOPNOTSUPP but
+I'm a little worried an application might take that to mean that we
+don't support ACLs or xattrs.  How about EINVAL?
 
-Add NFS3_post_op_fh_sz, and correct the size calculation for
-NFS3_createres_sz.
-
-Signed-off-by: Frank Sorenson <sorenson@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs3xdr.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfs/nfs4proc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
-index ca10072644ff..ed1c83738c30 100644
---- a/fs/nfs/nfs3xdr.c
-+++ b/fs/nfs/nfs3xdr.c
-@@ -36,6 +36,7 @@
- #define NFS3_pagepad_sz		(1) /* Page padding */
- #define NFS3_fhandle_sz		(1+16)
- #define NFS3_fh_sz		(NFS3_fhandle_sz)	/* shorthand */
-+#define NFS3_post_op_fh_sz	(1+NFS3_fh_sz)
- #define NFS3_sattr_sz		(15)
- #define NFS3_filename_sz	(1+(NFS3_MAXNAMLEN>>2))
- #define NFS3_path_sz		(1+(NFS3_MAXPATHLEN>>2))
-@@ -73,7 +74,7 @@
- #define NFS3_readlinkres_sz	(1+NFS3_post_op_attr_sz+1+NFS3_pagepad_sz)
- #define NFS3_readres_sz		(1+NFS3_post_op_attr_sz+3+NFS3_pagepad_sz)
- #define NFS3_writeres_sz	(1+NFS3_wcc_data_sz+4)
--#define NFS3_createres_sz	(1+NFS3_fh_sz+NFS3_post_op_attr_sz+NFS3_wcc_data_sz)
-+#define NFS3_createres_sz	(1+NFS3_post_op_fh_sz+NFS3_post_op_attr_sz+NFS3_wcc_data_sz)
- #define NFS3_renameres_sz	(1+(2 * NFS3_wcc_data_sz))
- #define NFS3_linkres_sz		(1+NFS3_post_op_attr_sz+NFS3_wcc_data_sz)
- #define NFS3_readdirres_sz	(1+NFS3_post_op_attr_sz+2+NFS3_pagepad_sz)
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index fc8bbfd9beb3..2bd64bfcc11a 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5896,6 +5896,9 @@ static int __nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t bufl
+ 	unsigned int npages = DIV_ROUND_UP(buflen, PAGE_SIZE);
+ 	int ret, i;
+ 
++	/* You can't remove system.nfs4_acl: */
++	if (buflen == 0)
++		return -EINVAL;
+ 	if (!nfs4_server_supports_acls(server))
+ 		return -EOPNOTSUPP;
+ 	if (npages > ARRAY_SIZE(pages))
 -- 
 2.30.1
 
