@@ -2,40 +2,40 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F18433ED01
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Mar 2021 10:30:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0973233EE6C
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Mar 2021 11:40:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbhCQJ3a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Mar 2021 05:29:30 -0400
-Received: from mail-eopbgr1310092.outbound.protection.outlook.com ([40.107.131.92]:23146
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        id S230076AbhCQKjk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Mar 2021 06:39:40 -0400
+Received: from mail-eopbgr1320092.outbound.protection.outlook.com ([40.107.132.92]:23675
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229472AbhCQJ3Q (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 17 Mar 2021 05:29:16 -0400
+        id S230050AbhCQKjh (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 17 Mar 2021 06:39:37 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a6JXLun4BcyxZVAZfhER0iimEF3OLly7HS+f/7AkgJwBVaafWVDPUtqXqZxefUgPZtr4ZZI4HyojUGoYQ0s545NVeRKgrLQwBMC7eqEIyFa1esH5yubVhxx3FAA12n9tH9aF2OLlo40RhZjYSt8h/aRUK7J8zCn7RELFh8Sr0pAE5xszv17zNb2j5CKHVV0OTP0tJqKh+Q4WqF5EwAJn185TP+t9XYmkm+pyYVlj1AZdCRlv3Kl4JQDrn0Gea8I253Sjea/qbOe31Y3CQ73GiAXQU58a9uEDTKzvOsYFes698uJiIdIlLDlukdCzbeiJKNlmj2YrR2xasqQhIdytrw==
+ b=F1j7zaC9MUmMvomX+UCuQEOustcQANzXGQykKEAIBfBHFjCF142C3bJLCorOHDK6yMzjrwMvvWHqd+/SiHPMMlg/BFdP2SS7zJMdjemqCdrvQEcF0OPSOutLSBGUlBUXrXAvZNXQVhDV0g97U/4jDqHBolZJIVyOu2k17QUAtV+vGVwsf6cN3kQ27Tf/zeHTc7MgRC3jS7d3uE90jPb3KUjBiCYoTmg3lndsJ7w6V5FwGFGL3EwXLFsq5m6iV+om6v3EJIaWRD5/ELtPcOFiBfWcRWpLolRMz9J0nnXXee6bOFHmVQGE3OwoJQaoSZpMzpuTbxZ/nTbAnCHEjwxkSw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BP2zktnl8ImPa3fF+9JAUa3oWTJhdl14zZcu7bsw23c=;
- b=FX/TJIISAQufrJ3ND8T5ozPWXonpWm8Uk56l/4ULrAw269OiDkwSwYi8JKFcgYb6ODrBmHF+7zt7sQSLFgaxxRscwe96C4xNUS3AR6SraaUxqcti332eC5PWF4QkCirs0bZSRuR/aGj2af5OivRrLTuvONnMA+vlgf/2KRr5ZJEVAUo95R2yudUVPK6ntbpclCieVyr+YC2F7wGMuGpRoZYfKdWIfgMVbzQDM/DVxKnQZm8c+gWvKCpARcvWyB3gCSQvLUz0RCQGesXtSYNDipPR+Y7fRnEvwFsJk8crr1zZJtFmYzF//fPxKSciHSv/vNahrE7LkBkQ/dIS8DS1rA==
+ bh=Afk00X/7kGXkRfMAb4kvQP1KQsXyH+YmVVqd18YgBEI=;
+ b=ccAaGk6EML7F+D/qXGF1pfeAbssBwnC02+x1vjsdoB+QU8QG/WhLRYFaPpCy6r1LALg+qvn6Usmu5a5p0SJDB/GRR9W88cSOBtkem7PhfUhMYzb928lZvQriE8X7esoe3+FBYrf9UkM5G5jnx3U3Pb3q1a9+iWhkCw9fbvvHyMNs5R7C6RrQUbU7kq+ODFtHExaWGlM7CTSGGsk2bB9XPSoXWPZXqBpCtN83hwfdCowWGAoSbFDxPquvq545UqTUOTEKnZAtGMmFdmJoXAUklf4irS9a+BcQr9IazKA0Zy+TbivM0TqExTFhUrCgxDPJbBdUGlC4o1PBUI/FVnJ5jw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BP2zktnl8ImPa3fF+9JAUa3oWTJhdl14zZcu7bsw23c=;
- b=QhWWz/lOLWZs2/5wZumsgopK9ZavMZimjrbVRcosqD0fxqc6Ua9j/+Kiqp+iSIOKli1+y//kQudsHVqQGDzcJQbZBT6RPiT8Ww2Fp3/+I1tg0JTM0z2Ob9+JCa+RkGQmb01we1WPeq16F0XkAHxW5eJ/lLbHG87jSsm3qRJngGg=
+ bh=Afk00X/7kGXkRfMAb4kvQP1KQsXyH+YmVVqd18YgBEI=;
+ b=At4FYKh9NhCvCcSmkJRuxy88p5Bg+cCnkqA4TTWCCpydNgVKtye35wU9KBPi7YkXmitx3iQPUWWAV7/h8fmAlyX7bw8qXS78bRov86MUh1c3J+RX50lSFcTWzwEQZ3bhFT6WLLtxL4Ojncfpnj6nmhy+teNTK95SXLXpLFqZyy8=
 Received: from KU1P153MB0197.APCP153.PROD.OUTLOOK.COM (2603:1096:802:20::18)
- by KL1P15301MB0344.APCP153.PROD.OUTLOOK.COM (2603:1096:820:17::14) with
+ by KL1P15301MB0039.APCP153.PROD.OUTLOOK.COM (2603:1096:802:10::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.4; Wed, 17 Mar
- 2021 09:29:12 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.5; Wed, 17 Mar
+ 2021 10:39:33 +0000
 Received: from KU1P153MB0197.APCP153.PROD.OUTLOOK.COM
  ([fe80::d8b8:963c:f1a8:fe42]) by KU1P153MB0197.APCP153.PROD.OUTLOOK.COM
  ([fe80::d8b8:963c:f1a8:fe42%2]) with mapi id 15.20.3977.005; Wed, 17 Mar 2021
- 09:29:12 +0000
+ 10:39:33 +0000
 From:   Nagendra Tomar <Nagendra.Tomar@microsoft.com>
 To:     "trondmy@kernel.org" <trondmy@kernel.org>
 CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
@@ -43,11 +43,12 @@ Subject: RE: [EXTERNAL] [PATCH] NFS: Fix handling of cookie verifier in
  uncached_readdir()
 Thread-Topic: [EXTERNAL] [PATCH] NFS: Fix handling of cookie verifier in
  uncached_readdir()
-Thread-Index: AQHXGmlShDXHBmMWxkiQPuK+CMYpjaqH5mWQ
-Date:   Wed, 17 Mar 2021 09:29:12 +0000
-Message-ID: <KU1P153MB019739728B8BC81A2D5FABC69E6A9@KU1P153MB0197.APCP153.PROD.OUTLOOK.COM>
+Thread-Index: AQHXGmlShDXHBmMWxkiQPuK+CMYpjaqH5mWQgAATm9A=
+Date:   Wed, 17 Mar 2021 10:39:32 +0000
+Message-ID: <KU1P153MB019740C5B86FFA134C7458DE9E6A9@KU1P153MB0197.APCP153.PROD.OUTLOOK.COM>
 References: <20210316133603.1228154-1-trondmy@kernel.org>
-In-Reply-To: <20210316133603.1228154-1-trondmy@kernel.org>
+ <KU1P153MB019739728B8BC81A2D5FABC69E6A9@KU1P153MB0197.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <KU1P153MB019739728B8BC81A2D5FABC69E6A9@KU1P153MB0197.APCP153.PROD.OUTLOOK.COM>
 Accept-Language: en-IN, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -64,37 +65,37 @@ authentication-results: kernel.org; dkim=none (message not signed)
 x-originating-ip: [122.172.188.128]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: eba42655-64c3-4e62-1226-08d8e9272017
-x-ms-traffictypediagnostic: KL1P15301MB0344:
-x-microsoft-antispam-prvs: <KL1P15301MB03448A284D5D57F6E86679E79E6A9@KL1P15301MB0344.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:2803;
+x-ms-office365-filtering-correlation-id: 4cb2b3d5-8b7c-4785-1b5f-08d8e930f3f4
+x-ms-traffictypediagnostic: KL1P15301MB0039:
+x-microsoft-antispam-prvs: <KL1P15301MB0039DCE7119D06CE48CFC2B49E6A9@KL1P15301MB0039.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3LyuUHSy4qjHbNenJDfIZT0S7hukyyRPDnXN7fjwMwjm8M5e920BKMo/y0eNA7XXwU2YVqZrHdOJtqXeS4V6FURAqhcA1Az576A+WwZqu9sBJIEux20d77eYhHLNpy4ZLZ29TcE4EfzVIgS3QANTpEfjmOTOcPymYp855gAiOVYqlNIR66n8G9CbcbN0+M3QbwkV9XRVi4N7bN+iNHSHNY9jRZalFUNmlXEkOG4HspyvmhPef8eFzqw6r9QldwnY86PhUthlrlWtmAHjCPv2UII1KekIFByOK0SfeNIKbtoRXcp2lPDaoTIkThtdxqkgN9FELzNU3bemRNTdLx/fY/IrUDNa0iLjWHY+rAWRvPoMjeKZiQqOAPr2j2K8h5YHVeSUuZhxC/Zc8MUjrZwUC3gYxCZwyWYaLFfnUY3HqMW/bb/+LypEgrbIq1IZEuxGx3b+4eg+hKdQO94N6l/juIFn8WlT6fNmkOOqsI1EClxZfpWz3g/dngOFhr9m1RX5xxcewJdMU7UHNsg9+RJOPrlSAjifoSWIyQpFgPpzKFDJ5G8IjfEubGFoifNWIine
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KU1P153MB0197.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(396003)(39860400002)(366004)(346002)(376002)(136003)(33656002)(10290500003)(6506007)(4326008)(8676002)(478600001)(53546011)(55016002)(83380400001)(5660300002)(316002)(186003)(8936002)(86362001)(71200400001)(66946007)(66446008)(55236004)(66476007)(76116006)(8990500004)(66556008)(64756008)(26005)(6916009)(82950400001)(9686003)(7696005)(82960400001)(2906002)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?/z0OTKz+W0Y6DvJDhuIkRn397YTafEJWb/kK10/4yhplS329HFAAut/gVLc6?=
- =?us-ascii?Q?qd3p4W3JJdGBJgRESaERazOpTGOhsf0TpGOKNlF8tWG6d70tuhOOEXPkZ+GU?=
- =?us-ascii?Q?ZYpqz6NyNlJ5HlZQYw+DSI8l+/fM7XS3Mb4OjplYbMbrdgA0ydZYZsE+gH71?=
- =?us-ascii?Q?F/vaYxN6smQ+9FI/ltdGsU++t4hHVi++mHyjFVWENYMIRS1zShaVnGiFFktm?=
- =?us-ascii?Q?VzQ462uAIeQx+8irWi4XOVCcRcKeTkyzFu6hLdCvKGqK0jW0A8gXEFjDsmrZ?=
- =?us-ascii?Q?xhdxT03kUsGOxsStR9awXUQDsnLlhjQxQNfF99fmn5vymX9sTuDlvyuLaqVz?=
- =?us-ascii?Q?brJbdPK3WvFnYzsbHPNOPvFB8v14g/o3AmV2AbukFGBa6Lmn2SIbh8bfsL7d?=
- =?us-ascii?Q?5qqlT7P9g4DpCwFPgQ7uTlZSiRlsVVC64YfkLF8bZNUZz+55kwqz2xK4s32j?=
- =?us-ascii?Q?Er/OVUT7/NALUkiJlHcQ6pHBWAjskoGa5BLj/m6JJD3b34/AL8Y95TnClAtT?=
- =?us-ascii?Q?ZqexzpyCKzWVpRiKRbSq8VotazAl6cCK+L5jnZlQcDgebDMQ6UnAoabEwlUV?=
- =?us-ascii?Q?m1ATacFJR66I635jIGS9LdoY1UzsTJcucQCT3yDe8cbAsxTDgegJbKdOgOum?=
- =?us-ascii?Q?lBTnfGfFIVeuzpQACS1ECGDDfFz6axrynPWBgkhbYafNGSY89Fn6tGK3jqUK?=
- =?us-ascii?Q?Tk0rsMKqShN+cNc40xNFhzoy5g9LQojICWFHsLddVE9jbHEZGAQ6fk5eRc03?=
- =?us-ascii?Q?7eHV7uQgh4N5GGE4dXZLGCiqnUI9ZtL3IXi3eVqe9kmOtXM7052UVeXdF44v?=
- =?us-ascii?Q?X7XRrVIEbQHDMSm+PD9+QxlAePSn5G/gefLtxt5Yfbcgk0yvOX2D5xyMgqtM?=
- =?us-ascii?Q?JAzbKSSzoDUjLZOD3w8lbA/EDJYo/GmKYg8ZB0KPZQVLTABV//FwqFli2LFk?=
- =?us-ascii?Q?GFvSNhvj6iAF9k17kDYvdjHjUjjvldB0RaKkhPzKbrqDnh9xebTDdf3bJWWb?=
- =?us-ascii?Q?OyvjNyaRCWJiNQE9+TJBe9nm8RxOgtfa/KX2+w4GcAK7bqN2oPQ7/mX1t5LS?=
- =?us-ascii?Q?31C6QsqLdFlbHcCUcRAZl5iR7Pi+snL8cho0gWBypi6h5wqkosbGhH4lXDAa?=
- =?us-ascii?Q?pMfRUy89ajQg+H+rD0W4T+kLWu51fKn2n5Ct15ytT4sGM9ns3FNlCpbPeYeI?=
- =?us-ascii?Q?T2zf4/FhpzZC7r9KKC/JOE/0/kOOjCe1sRKTkIzi0GwpFzi6rB6nejCIND36?=
- =?us-ascii?Q?Q7QOhZn99v+5bW3wlCjTe9KGijMG3OMWr9VHAXQ186CwyjVUnPAQqTRVGRT/?=
- =?us-ascii?Q?t+ZqiK2SjEZm3LMoDW6q7Zxz?=
+x-microsoft-antispam-message-info: Ess/1tlnfbtxeHsTdOICcD42H1PPHYwcqwgx5OV8Ud+Uwu3HHMltFpV3txqrkxsFkGYoKbI/yW41tPrItimVA0m+ex1viBRy8aejGC8h8g5L2kRVVUEwY9VEu/yvTfAIREv4RYyE68S1lFbwot0aRUY+gJTmUoBF4hDYu4dyuVS23JhgAMbqJj+iK5ucLQJqw9prtr4eEQT0CrgwDCjpqLYNyBbi1m1mvdRAVw7B0fLVg8+q8GPmZNsMtFxih0q++SdjhflPDhZDDrSA0Z/cAYTmGd0h/6BkBLSCyyqfDI7pokc11iBbj3rPZlt7Z8b4pEZK2eCPxw6o0T/nULVkerQiDn7zbw3YVN9sVrYkGl8U77LUArOagBixVvSVGYLoD3xO7WJWYbkseNkW4as8vbhRYR49tT7I7mOKqvy9+sC2l9X35jsxdlrhGqk/TT2cRi9yPQ8lCQtQxPkc7sk0RTOC5YpaOlRqDXmvEZwuwu6bCNxDo8jRUDtiBwi6iQZ4OeRYoUkwQgxkOU0QkVfrieNKw5K6SqwDkFdU5otugin/HmlQPu9/9+DnDYJFh49A
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KU1P153MB0197.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(346002)(136003)(396003)(39860400002)(52536014)(66946007)(186003)(66446008)(26005)(478600001)(71200400001)(66476007)(64756008)(66556008)(82960400001)(55016002)(10290500003)(76116006)(316002)(83380400001)(8676002)(2940100002)(8936002)(2906002)(82950400001)(86362001)(6916009)(55236004)(33656002)(6506007)(5660300002)(53546011)(8990500004)(4326008)(9686003)(7696005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?ddxkhNfx51Eyhs2kA8j8YBF8UAJi4WvXERuyLhLD4xlAn5LzEZpcux44QN6Q?=
+ =?us-ascii?Q?EibASp07Uv8dvuYPts20cjxywn4nofHl8VCWw1AdjR9T4km/OGUUd4U7Z+g9?=
+ =?us-ascii?Q?eymhGgUoPIswkDVFifBUklBVBeSNcy+ugYvncdz2tZ5HTktaRqhwLc4yNJn3?=
+ =?us-ascii?Q?JIhXswzI06rGuZyJikP8QAVTOLjKkHKNNbgGOOVlo16GQHghawLcb5sshjZO?=
+ =?us-ascii?Q?N1O6+qwVhOka2pr1hA/h/MSgx6EIrqFqJs1UnoSXq7sLwv9TJ/HDmBCHt1Xs?=
+ =?us-ascii?Q?fgfitjDineDxHspT0bvKMZ0PBZ3G8ATwkSt4grQ4GiyEVH67vJc7LAMBeV6c?=
+ =?us-ascii?Q?vf5FL2NPflFSCgeCc495RGK1MyQB+/EM5h7vuFFn0i0k2kGhrtXkYRzsfAFx?=
+ =?us-ascii?Q?vszcTAACpDij0U5V1wY0QKEsd2lUqvBw+mcZm7B+tut4VqmaZTc0NqWP/hkS?=
+ =?us-ascii?Q?iPX4bTZ6JK5q3r5DlRdCaJFuoZ3/kl+d0FkbTgElWhH2zl2f8ddlNlF03euS?=
+ =?us-ascii?Q?T5q94Qal+/BxKHBFCiQX46yRlRZEKlkezbkk2zoHS4zyDB+rX5xuT8V+anP/?=
+ =?us-ascii?Q?OCGYvue2o/GiI6FmUJc3/Xr+wIWCn+vnNHYnAU+iEwdm+RELNy0R7lns90kP?=
+ =?us-ascii?Q?bSnq4QnEHj+Axz84FDgzttQp6lWxCuMH0VAvil3d+9GOi/SAykz/axfF5rUU?=
+ =?us-ascii?Q?YtTmB0xnelf3DjFr+rnWs3vilCY8Y/YO2/ymrIxqIhK/NVJE+BvLp+O46qpc?=
+ =?us-ascii?Q?0W2Ous1TouhPlcXQ7RDWOQK9FcP9pyWinDsb/lYS11ipKQoeLY0BhtzmD1rF?=
+ =?us-ascii?Q?DQU2j6oeZBRxnT6EnKfu6JqOf+RdeIeadQ15Atk+RtU10gSj8pWr1FtqL9QX?=
+ =?us-ascii?Q?8+ZbpIG/YwlBAAhNgaA5jAvWe0AwLr+pyGXy/IqMC6fGswzWDqlLMv+1BYdn?=
+ =?us-ascii?Q?CPu5iweyMvheg56a4yyQFbdN7kN1gmkuC39xUbqbL14s4v7QooZ6fi8qRa5d?=
+ =?us-ascii?Q?eMDsGDPN/btwoXRkpPHSa/nT44Ga5geCLp2gIX+effPPjBmloiyK8xhxdt5s?=
+ =?us-ascii?Q?G+MItozVKL1Cfgjtebi6OhppbQzSYUTIyq2R6MzuXIbvKYn1sQ1mSNaNj15l?=
+ =?us-ascii?Q?toDl5BXhklPy0rlEiMHSXmrqYZTpzF+8Z6LimYiEwr+RMr7qasXkwwV4XlA5?=
+ =?us-ascii?Q?u+ga9DGg0qNJzvSnk3OoMgDOYN9emOI2G2Bh77+za+BAZ3pJ1l9gyX9rWXjp?=
+ =?us-ascii?Q?d1ITO6yJ8Ebdh78hrPLppE/9oGM0oiQmt1fbpRcdb626CRt6IL2D71CtXso4?=
+ =?us-ascii?Q?H9Ejj0dSv36qzs1CosDu5voS?=
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -102,17 +103,46 @@ MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: KU1P153MB0197.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: eba42655-64c3-4e62-1226-08d8e9272017
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2021 09:29:12.1815
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4cb2b3d5-8b7c-4785-1b5f-08d8e930f3f4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2021 10:39:33.0340
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8erEFGC4s1Vp3GvD0ZT2IJBTDZ9NoK4TSHueM0+Pxj+oNuvVVA7MLpt2wf0Sv9wTAeWfO31VHBB+wTuoZX0vmw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1P15301MB0344
+X-MS-Exchange-CrossTenant-userprincipalname: J6jaCnNUIkEIqFnKGyTTq/kzMKpj77TshOonRJZx2yWZbPmdwZZi6nT1sggbutcXolNZ+ONCgK/jgC59f6s9Wg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1P15301MB0039
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
+
+Ignore this, we do need the inode cookieverifier for the cached cookies in =
+the absence
+of any open dir handle. I was clearly overthinking!
+
+I've a question on your patch:
+If the server changes the cookieverifier for a directory, shouldn't we zap =
+the
+cached directory pages since the cached cookies do not correspond to this n=
+ew cookie
+verifier for this directory? Or, do we depend on the server to return BADCO=
+OKIE when we
+present a bad cookieverifier+cookie combo, and then we invalidate. I guess =
+that's fine too.
+
+Also my earlier comment about find_and_lock_cache_page() accessing nfsi->co=
+okieverf
+w/o locking the inode. This one is not introduced by your current patch.
+
+Thanks,
+Tomar=20
+
+-----Original Message-----
+From: Nagendra Tomar=20
+Sent: 17 March 2021 14:59
+To: trondmy@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Subject: RE: [EXTERNAL] [PATCH] NFS: Fix handling of cookie verifier in unc=
+ached_readdir()
 
 Hi Trond,
      I think it'll be better to remove cookieverifier from nfs_inode, as tr=
