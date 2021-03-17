@@ -2,38 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A0E033E531
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Mar 2021 02:03:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92FF833E534
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Mar 2021 02:03:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230169AbhCQBCf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Mar 2021 21:02:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41842 "EHLO mail.kernel.org"
+        id S230137AbhCQBCg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Mar 2021 21:02:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232022AbhCQBAF (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 16 Mar 2021 21:00:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A02D064FB9;
-        Wed, 17 Mar 2021 01:00:04 +0000 (UTC)
+        id S232457AbhCQBAS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 16 Mar 2021 21:00:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1CE7B65007;
+        Wed, 17 Mar 2021 01:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615942805;
-        bh=1KPbUYhaWp6hA5Ue7gb6u5s2tDDB64Pg0keovq1ZddA=;
+        s=k20201202; t=1615942817;
+        bh=RMOjAYX1vm174Y9ksn1z6Hf+kiX9gRDRZjgDW5Hq9zA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FDoeuuEsoBVyYwvxfzAFe3iU3tQId0LKdq7juLzYSZkyTYjDhEPv0b76pPReTw7Fc
-         f6W5f4OXDByzAPdu2G3jOkgaymr54QBgXuBwLdc4jfCapV6OUWc4Vomf+Yf1wsWrJ8
-         pEicgY4LqZJgyM3zqbdwyTDpQgH2qJ27+84UbRy1/JmxAtJiHSw5iRGpZx3BAXYbgR
-         MUAgCH8opjevEr88/TpdWgKFxfi+mlY+ISRLmb8gAAw2hJIhOqLfgR4+/QOEwTSMFX
-         uPcbQKCWIEiBjou4t61O24bVqqKKaOB3WXTpS+VkIKClSJZNZYfCiqoIzPR0cIB2Na
-         ZvBo2SZ/+Tcpg==
+        b=DWPAhOGacG/ssDHEzOGnpNd92/2kJ5HOrZlgNbH2GxoUUkemIBLPZYDddnG6mmygm
+         I1KQ7f4QGvDkW86Mi7uLorRcSuQjAdQ5cJVZe0XDrGzLp2D9s5LUGAZUyURFVWkR4C
+         1/jqDxYcSKUCglg5row723xha1fjJaA7MCWOWfzK//QmWPvjGe76HFk9fs6lBwzy5N
+         EW7qiFxTk1N/b1L3CJ3P1bhCuOmHArqtgN9CNNgzZT4da7cntFagbwS/1TrLn5dY9W
+         /8sRVVtZJHG0S6e3W+2+yDbUyP+gtv/kd20lmG6h/V1KkxoyQkFO3LUVAZssPEQ9Qs
+         I5CN+2M0refAw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+Cc:     Timo Rothenpieler <timo@rothenpieler.org>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/16] nfs: we don't support removing system.nfs4_acl
-Date:   Tue, 16 Mar 2021 20:59:45 -0400
-Message-Id: <20210317005948.727250-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 07/14] nfs: fix PNFS_FLEXFILE_LAYOUT Kconfig default
+Date:   Tue, 16 Mar 2021 21:00:01 -0400
+Message-Id: <20210317010008.727496-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210317005948.727250-1-sashal@kernel.org>
-References: <20210317005948.727250-1-sashal@kernel.org>
+In-Reply-To: <20210317010008.727496-1-sashal@kernel.org>
+References: <20210317010008.727496-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -42,38 +42,34 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+From: Timo Rothenpieler <timo@rothenpieler.org>
 
-[ Upstream commit 4f8be1f53bf615102d103c0509ffa9596f65b718 ]
+[ Upstream commit a0590473c5e6c4ef17c3132ad08fbad170f72d55 ]
 
-The NFSv4 protocol doesn't have any notion of reomoving an attribute, so
-removexattr(path,"system.nfs4_acl") doesn't make sense.
+This follows what was done in 8c2fabc6542d9d0f8b16bd1045c2eda59bdcde13.
+With the default being m, it's impossible to build the module into the
+kernel.
 
-There's no documented return value.  Arguably it could be EOPNOTSUPP but
-I'm a little worried an application might take that to mean that we
-don't support ACLs or xattrs.  How about EINVAL?
-
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Timo Rothenpieler <timo@rothenpieler.org>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/nfs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 2abdb2070c87..27644b068ce1 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5144,6 +5144,9 @@ static int __nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t bufl
- 	unsigned int npages = DIV_ROUND_UP(buflen, PAGE_SIZE);
- 	int ret, i;
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index c3428767332c..55ebf9f4a824 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -132,7 +132,7 @@ config PNFS_OBJLAYOUT
+ config PNFS_FLEXFILE_LAYOUT
+ 	tristate
+ 	depends on NFS_V4_1 && NFS_V3
+-	default m
++	default NFS_V4
  
-+	/* You can't remove system.nfs4_acl: */
-+	if (buflen == 0)
-+		return -EINVAL;
- 	if (!nfs4_server_supports_acls(server))
- 		return -EOPNOTSUPP;
- 	if (npages > ARRAY_SIZE(pages))
+ config NFS_V4_1_IMPLEMENTATION_ID_DOMAIN
+ 	string "NFSv4.1 Implementation ID Domain"
 -- 
 2.30.1
 
