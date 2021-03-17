@@ -2,123 +2,192 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84DE033F8B3
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Mar 2021 20:04:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E729133FB15
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Mar 2021 23:26:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231378AbhCQTEM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Mar 2021 15:04:12 -0400
-Received: from mail-dm6nam12on2101.outbound.protection.outlook.com ([40.107.243.101]:17729
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229796AbhCQTED (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 17 Mar 2021 15:04:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dhBE+sJm2UCtL2Q5FhmoLRKvQZEgPBDesGd5myOntMEtpcSv2wxQpNsg1GVF/8Rv4m51IMInolaU8F9jmli2Q1LyqL3z7vwohXayRoxWkdL4vcXI0Z5TkjTpyCpnBFOkA0Ni/kJ+pFfIxDQBqOQArCrI8u6GmM5xxMC5snNbsdfmg0Grk3ayOqRQ2IQlCegTY/WO3dtmuSKcbiFPaELGVznFUxtXVIptzdaqW9AzdfF6cHe+jqwITpD6IKKZdaUC5009+75UW9sOxvDjy0oLaMiCO8tKtBKAjKIGoodiqfbV0yqD4jwm6QyzD5EyohDJFi+NNcau94KqW8merwsV3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zVFE16kWv+Y1LaL4mr6+HjYmL+PcxJ1htPKUj+y8Bzs=;
- b=EixOEuMCVMD1Izn3hGWR5VLXXgA9D5M4tL4jdUPryBllXIpMdIAl+9vHKLRr76eeS8ZdbZeB0zIYDAIImnQFlPO2Rix7eZBzlRaTrBq+CnUuMpFXPlRqR7yUqpFkvASmjyYbC3iaxxE99GiZpquE8linaTz/Dq+szl7sinaS9uBZXXSnQQMDGgqofUedB5LsUDg+G8Hxj1u7lHTEDZyjLFUCNoN0jb7f9WIcgq24rgnKREIRfxgRK1eq6TueFtzj7tu3KJ4Sh30znDg0kgN/LYEr/kx/g8d11KLz60vMqE5MdOoWbbWgVqzJPPag8bf0dHi48vHegCfQiwMPuz7h2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=rutgers.edu; dmarc=pass action=none header.from=rutgers.edu;
- dkim=pass header.d=rutgers.edu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rutgers.edu;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zVFE16kWv+Y1LaL4mr6+HjYmL+PcxJ1htPKUj+y8Bzs=;
- b=crNIJqxA9Md6AoYWMLx5nAdzBGHF2iUc09Rv4sTBvuB+V2ivrDJloJQ86zAB6rfQY5emzBjWJNXEE3wj+4/uCnIfxJ8H7zXdRWkvgBI5MPq1XQ0gpyneuoHqmlLyeKGxRbkIpqb2L7ZL5Ptb+Ye+SlEX0B/NQ17Exx3VHZM7jCo=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=rutgers.edu;
-Received: from BL0PR14MB3588.namprd14.prod.outlook.com (2603:10b6:208:1cb::7)
- by BL0PR14MB3651.namprd14.prod.outlook.com (2603:10b6:208:1c8::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3933.32; Wed, 17 Mar
- 2021 19:04:01 +0000
-Received: from BL0PR14MB3588.namprd14.prod.outlook.com
- ([fe80::ac70:fcf7:df8f:f589]) by BL0PR14MB3588.namprd14.prod.outlook.com
- ([fe80::ac70:fcf7:df8f:f589%3]) with mapi id 15.20.3933.032; Wed, 17 Mar 2021
- 19:04:01 +0000
-From:   hedrick@rutgers.edu
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Subject: time treated as signed 32 bit in svcgssd
-Message-Id: <BB5BAD44-C804-40CD-A257-A1DA7FAA9974@rutgers.edu>
-Date:   Wed, 17 Mar 2021 15:04:00 -0400
-To:     linux-nfs@vger.kernel.org
-X-Mailer: Apple Mail (2.3654.40.0.2.32)
-X-Originating-IP: [2620:0:d60:ac1a::a]
-X-ClientProxiedBy: MN2PR05CA0006.namprd05.prod.outlook.com
- (2603:10b6:208:c0::19) To BL0PR14MB3588.namprd14.prod.outlook.com
- (2603:10b6:208:1cb::7)
+        id S229608AbhCQWZv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Mar 2021 18:25:51 -0400
+Received: from mail2.protonmail.ch ([185.70.40.22]:17987 "EHLO
+        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230518AbhCQWZa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Mar 2021 18:25:30 -0400
+Date:   Wed, 17 Mar 2021 22:25:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
+        t=1616019928; bh=5n1xnqSMFADL1/lMD7qStSm5B6KLSEf5T3JUcTW1bsY=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=biwV2HLcM/lhcnM9SIzEGveA/OmmawFLe2izpoqh/Gf6KgxJXs4y6+W3ds+y0G6Q2
+         TCyzuC+8sxYNqryLGBGD8uGKOyPB3jx02wpAyCTIX5oxHy2XhIdXIAgqobUi4Jrj55
+         tfE0cMC8e1YjDOUEnPnCQOpHpvrRJiM77azXOp03/boZXTWrrByZp0RLP4iRzQwZAw
+         cLyFPKvk+OzXAy51wytOZN2R5AhfdIQBCk4J27iX15Uzoy/0ZfJn8RTav1ajA0PbVe
+         59PLXrSpjoxeIVtn0WHzB7tRvQ9zbF18GHSGCqylh5ADZ5eqhMENY+WzsXwz2LtoON
+         NbS+Orj8kTxAg==
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+From:   Alexander Lobakin <alobakin@pm.me>
+Cc:     Alexander Lobakin <alobakin@pm.me>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux-NFS <linux-nfs@vger.kernel.org>
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: Re: [PATCH 0/7 v4] Introduce a bulk order-0 page allocator with two in-tree users
+Message-ID: <20210317222506.1266004-1-alobakin@pm.me>
+In-Reply-To: <20210317181943.1a339b1e@carbon>
+References: <20210312154331.32229-1-mgorman@techsingularity.net> <20210317163055.800210-1-alobakin@pm.me> <20210317173844.6b10f879@carbon> <20210317165220.808975-1-alobakin@pm.me> <20210317181943.1a339b1e@carbon>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from heidelberg.cs.rutgers.edu (2620:0:d60:ac1a::a) by MN2PR05CA0006.namprd05.prod.outlook.com (2603:10b6:208:c0::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.9 via Frontend Transport; Wed, 17 Mar 2021 19:04:01 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 209bd617-15f0-40a9-9cd3-08d8e9776d41
-X-MS-TrafficTypeDiagnostic: BL0PR14MB3651:
-X-Microsoft-Antispam-PRVS: <BL0PR14MB3651A063C362935A13E8F60EAA6A9@BL0PR14MB3651.namprd14.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BPLv5aoD2sqTT2KpstrMD4cmtHNr6vlC6I+y9Y65GLfEt33625zFT5k5iw/9itFt96Sp/xg79VWMJLzl/TTEiimXSeVkRWXmMkIDbjTAWVl0LkOwCerCMutz+Y4D9ObxamMbg/xU0Nm3FOkV8lalWYvLkeVzJMQUG05iwU/MRWE33gmV5uz/oRpf9IEE2J+kUzrqnlv/dyw6OPOix955P7apKlbvnbEdYTQr+gNaWoI48uzuluMCdb+NzN5NDbmBkCvPGQyDI403UcBLoAH8jrUlYRkAHkn4V4+DS9Jw5qH5hUiFG+dxLs5VUhWnTQX7/zaN/VhNIvmsQIMpo5V3zGLpl0MfL4BYlcmKSRGoPYSFIGIR7U+WciIMWSDgZgK1QiTCwlzFOIYrlwBiAd4bIEFjOz5XoLWFvNBWBP9a7/VPYrTaBb2ChR4jOqn7XxKBiTKQ6PFXB7kaI+VFYU/Z0cRZgwmxmq8BJbQGVncyfufYinf1mv5Vn4FGYuuyTAJ9wrZaqT0nftAgC1tl7XDuwIfRKvoftD3P1iStqFG9EnRS3q/FuCDYO9+6YdJpRUrUrlZjtZ2//hB05qzc+HplMhzpvshAdhPpnqctwDwSLQ0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR14MB3588.namprd14.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(136003)(366004)(39860400002)(9686003)(186003)(6916009)(66556008)(75432002)(316002)(8676002)(4744005)(478600001)(2616005)(786003)(33656002)(6486002)(86362001)(16526019)(52116002)(66946007)(36756003)(7696005)(66476007)(8936002)(83380400001)(2906002)(5660300002)(2292003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?joPsGPZXbJlrSlNiSa2I9I54CoHleG8Z4Lmd1HekZiO7aZVygYYP3eyJfq0D?=
- =?us-ascii?Q?YWPrkV2dgK4UYNJbKizoI5Rwt1RMkGjAS/vX7Z/xzb+77326/cwbl99MCr+X?=
- =?us-ascii?Q?h5bedpcYv3rNuGaQm6P9ruS7Kd/B4TtmNwX8va6sBBLlEkdWx3daHP4Rdp8X?=
- =?us-ascii?Q?pQSKWZ3g0PLQz4dbXdHeRw1ieKLJrCw57EqqmqXrlfpCExrnWDiuXjY2YVXK?=
- =?us-ascii?Q?6XDBmRuVBj/0hGfguvvno+VyMEAyvbq/RkklLla4B8alGbuI8b1Y8fSYIcSh?=
- =?us-ascii?Q?QaJZ8wdPhuyQ2c8OKRdmxahlBJEZo2/ebJNVmHeQBAHbD0gl8xJg4cj8KsGJ?=
- =?us-ascii?Q?CaG36MuQvRZYriunreyUNj3XnAjiP7/iovO6eNZuRdW1cVXQ2wwE0ou3WO+S?=
- =?us-ascii?Q?9eNIc6gCN1WPqVXw671w9i5DDCfpiuNrFCifB4TYKmpg8yR/oQocGaeG6myx?=
- =?us-ascii?Q?RYS7aAQATBI9KuEGBCH5+8lziLNmRjTl1uBNK6wZYSQ8BEOy9/LeAD8Irg8O?=
- =?us-ascii?Q?hP4wCbul/Du9vocbnAFdXje+vZEkmWHKsmS+3P9Ba8NcbGaAf+FumAubquyj?=
- =?us-ascii?Q?Vg+9NlMlNR0cAIuPHsHLrLdhLutUuB20cuddytVcvd1epzpgThPfWDh5ZvwZ?=
- =?us-ascii?Q?6Pz7fbS6z96zNVXK90QbIyvcSnT7LAXAxJdbozKIEMLpgWw+MExfzRboWuef?=
- =?us-ascii?Q?93nVbg3fOdFiBDjyyZjPIEQp6mRIv4+ek9MMKHKorG+b4uideXQHeWlk90DA?=
- =?us-ascii?Q?J6CTab73n4Y2Nsbmp33zKoTEUq8gAV6ljYw7IhOr6UtbfdbCdq72pVtX39Eo?=
- =?us-ascii?Q?0XqrdxR3HmfVBJ/REzmUIiTEmHsChiPgEQlHwHIEU1hVcc2C8R6L86MjmXwg?=
- =?us-ascii?Q?fn6SfLStiWIAcHQomFaAwiVihuL7WQtqZVRDdIXPP32qEj1Oyo/lgBeRxaKB?=
- =?us-ascii?Q?V3UzFHEmM5+r3DGRVl/vOwhKUqZ3BOlSocXl6chxTnR+oAXhO9lfcvT38hqu?=
- =?us-ascii?Q?LDry7oTETmv4g1OTdVyExCNd3rpVbeWoSwRouiwXD87cSeUbdQBMkBUSWGO9?=
- =?us-ascii?Q?FrHTDyZ5qhw7I2sjtz8/y3VcVv3JltGoviD7ukvclRq9EhZCnogf747sUx+A?=
- =?us-ascii?Q?7K/wYCxTtvP1Fv+VshDmhUmUF20IliDMYAM9CnhHxht71W238pFTRN1baazM?=
- =?us-ascii?Q?7OK5YzokXvlFYiLhpanVkoZBNTTL81x4r5VDIp6zyDCu+ha1lGFzogyoPCA+?=
- =?us-ascii?Q?PfQm4HIpURDn6ne3clJF9ugqEIRvhqCkizDXxg40GQ77naG2O27CMYu0x6F5?=
- =?us-ascii?Q?PX1oBqg+lrDfZU8xLZ3klAxwiFdcOkIhJLsxQ1a4StSrcg=3D=3D?=
-X-OriginatorOrg: rutgers.edu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 209bd617-15f0-40a9-9cd3-08d8e9776d41
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR14MB3588.namprd14.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2021 19:04:01.7168
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b92d2b23-4d35-4470-93ff-69aca6632ffe
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cA+/fOGjl6mm/XljYWj9KoaVsK194Pl/Sb2/qV/SEhzqxunasLztn7nFaa14/C72egDMen0XvMp2JEU/iarNqg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR14MB3651
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF shortcircuit=no
+        autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+        mailout.protonmail.ch
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Patch eb3a145789b9eedd39b56e1d76f412435abaa747 adds code to rpc.svcgssd to =
-set an expiration date for nfs contexts. (It doesn't work, but that's the s=
-ubject of a different bug.) That code treats the date is int32. It is sent =
-into the kernel using code that ends up as a printf %d. In 2038 the date wi=
-ll go negative. Because the kernel uses 64-bit dates I believe that will pr=
-oduce the wrong result.
+From: Jesper Dangaard Brouer <brouer@redhat.com>
+Date: Wed, 17 Mar 2021 18:19:43 +0100
 
-The code should use date_t, not int32_t.
+> On Wed, 17 Mar 2021 16:52:32 +0000
+> Alexander Lobakin <alobakin@pm.me> wrote:
+>
+> > From: Jesper Dangaard Brouer <brouer@redhat.com>
+> > Date: Wed, 17 Mar 2021 17:38:44 +0100
+> >
+> > > On Wed, 17 Mar 2021 16:31:07 +0000
+> > > Alexander Lobakin <alobakin@pm.me> wrote:
+> > >
+> > > > From: Mel Gorman <mgorman@techsingularity.net>
+> > > > Date: Fri, 12 Mar 2021 15:43:24 +0000
+> > > >
+> > > > Hi there,
+> > > >
+> > > > > This series is based on top of Matthew Wilcox's series "Rationali=
+se
+> > > > > __alloc_pages wrapper" and does not apply to 5.12-rc2. If you wan=
+t to
+> > > > > test and are not using Andrew's tree as a baseline, I suggest usi=
+ng the
+> > > > > following git tree
+> > > > >
+> > > > > git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git mm-bu=
+lk-rebase-v4r2
+> > > >
+> > > > I gave this series a go on my setup, it showed a bump of 10 Mbps on
+> > > > UDP forwarding, but dropped TCP forwarding by almost 50 Mbps.
+> > > >
+> > > > (4 core 1.2GHz MIPS32 R2, page size of 16 Kb, Page Pool order-0
+> > > > allocations with MTU of 1508 bytes, linear frames via build_skb(),
+> > > > GRO + TSO/USO)
+> > >
+> > > What NIC driver is this?
+> >
+> > Ah, forgot to mention. It's a WIP driver, not yet mainlined.
+> > The NIC itself is basically on-SoC 1G chip.
+>
+> Hmm, then it is really hard to check if your driver is doing something
+> else that could cause this.
+>
+> Well, can you try to lower the page_pool bulking size, to test the
+> theory from Wilcox that we should do smaller bulking to avoid pushing
+> cachelines into L2 when walking the LRU list.  You might have to go as
+> low as bulk=3D8 (for N-way associative level of L1 cache).
 
-This is complicated by the fact that it gets the date from a Kerberos ticke=
-t. Kerberos declares date as int32. For historical reasons, they have decid=
-ed to retain it as int32, but whenever there's a comparison or arithemtic t=
-hat would break in 2038, they cast it (date_t)(u_int32_t). Thus Kerberos is=
- considered safe for 2038, even though date is declared as signed 32 bit. I=
- believe the code in svcgssdd should use this cast. All variables should be=
- date_t. Anything retrieved from a Kerberos ticket should be cast (date_t)(=
-u_int32_t).
+Turned out it suffered from GCC's decisions.
+All of the following was taken on GCC 10.2.0 with -O2 in dotconfig.
 
+vmlinux differences between baseline and this series:
 
+(I used your followup instead of the last patch from the tree)
+
+Function                                     old     new   delta
+__rmqueue_pcplist                              -    2024   +2024
+__alloc_pages_bulk                             -    1456   +1456
+__page_pool_alloc_pages_slow                 284     600    +316
+page_pool_dma_map                              -     164    +164
+get_page_from_freelist                      5676    3760   -1916
+
+The uninlining of __rmqueue_pcplist() hurts a lot. It slightly slows
+down the "regular" page allocator, but makes __alloc_pages_bulk()
+much slower than the per-page (in my case at least) due to calling
+this function out from the loop.
+
+One possible solution is to mark __rmqueue_pcplist() and
+rmqueue_bulk() as __always_inline. Only both and only with
+__always_inline, or GCC will emit rmqueue_bulk.constprop and
+make the numbers even poorer.
+This nearly doubles the size of bulk allocator, but eliminates
+all performance hits.
+
+Function                                     old     new   delta
+__alloc_pages_bulk                          1456    3512   +2056
+get_page_from_freelist                      3760    5744   +1984
+find_suitable_fallback.part                    -     160    +160
+min_free_kbytes_sysctl_handler                96     128     +32
+find_suitable_fallback                       164      28    -136
+__rmqueue_pcplist                           2024       -   -2024
+
+Between baseline and this series with __always_inline hints:
+
+Function                                     old     new   delta
+__alloc_pages_bulk                             -    3512   +3512
+find_suitable_fallback.part                    -     160    +160
+get_page_from_freelist                      5676    5744     +68
+min_free_kbytes_sysctl_handler                96     128     +32
+find_suitable_fallback                       164      28    -136
+
+Another suboptimal place I've found is two functions in Page Pool
+code which are marked as 'noinline'.
+Maybe there's a reason behind this, but removing the annotations
+and additionally marking page_pool_dma_map() as inline simplifies
+the object code and in fact improves the performance (+15 Mbps on
+my setup):
+
+add/remove: 0/3 grow/shrink: 1/0 up/down: 1024/-1096 (-72)
+Function                                     old     new   delta
+page_pool_alloc_pages                        100    1124   +1024
+page_pool_dma_map                            164       -    -164
+page_pool_refill_alloc_cache                 332       -    -332
+__page_pool_alloc_pages_slow                 600       -    -600
+
+1124 is a normal size for a hotpath function.
+These fragmentation and jumps between page_pool_alloc_pages(),
+__page_pool_alloc_pages_slow() and page_pool_refill_alloc_cache()
+are really excessive and unhealthy for performance, as well as
+page_pool_dma_map() uninlined by GCC.
+
+So the best results I got so far were with these additional changes:
+ - mark __rmqueue_pcplist() as __always_inline;
+ - mark rmqueue_bulk() as __always_inline;
+ - drop 'noinline' from page_pool_refill_alloc_cache();
+ - drop 'noinline' from __page_pool_alloc_pages_slow();
+ - mark page_pool_dma_map() as inline.
+
+(inlines in C files aren't generally recommended, but well, GCC
+ is far from perfect)
+
+> In function: __page_pool_alloc_pages_slow() adjust variable:
+>   const int bulk =3D PP_ALLOC_CACHE_REFILL;
+
+Regarding bulk size, it makes no sense on my machine. I tried
+{ 8, 16, 32, 64 } and they differed by 1-2 Mbps max / standard
+deviation.
+Most of the bulk operations I've seen usually take the value of
+16 as a "golden ratio" though.
+
+>
+> --
+> Best regards,
+>   Jesper Dangaard Brouer
+>   MSc.CS, Principal Kernel Engineer at Red Hat
+>   LinkedIn: http://www.linkedin.com/in/brouer
+
+Thanks,
+Al
 
