@@ -2,78 +2,161 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CCAA33E512
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Mar 2021 02:03:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5AC733E6A8
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Mar 2021 03:13:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230508AbhCQBBv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Mar 2021 21:01:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232511AbhCQBAX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 16 Mar 2021 21:00:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id ACAC564F9F;
-        Wed, 17 Mar 2021 01:00:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615942823;
-        bh=Z/ViK3Yxx3NBj4j43iKicqYY8wXPPy/h7p6c8I0fbrA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fkp7g5cBDXpfkY/TXQ0xf/OzcMprG5Dn8UoCBsRSQUMrXtubesWNs+NQfw8at8Ml3
-         404OrGeeZfzYm6UhKagfxbr6txXZqrLE94eLg+v61QsUxfqMEvbSsxKLQS6BNTWVr8
-         Tk+jQpQ1lsl9sHW9lCw0fSOd3J/WVHINObt6aKb7q12o0AqdtHy05tw+v2E9nprHa2
-         /bb8dVk5O2rBkIqOtbOFqkP2o/oyEFhuSh3JXerbJWg1/5b+0hW1RVqpo+mTx1TOHb
-         tJe5LhdWsqPI1/MJqBWcR81uATkQbKwELr2fhKmTCZcDKRsg+xgUWYv0NAoGHXMujK
-         Z0/CRYSLtJhdQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 12/14] nfs: we don't support removing system.nfs4_acl
-Date:   Tue, 16 Mar 2021 21:00:06 -0400
-Message-Id: <20210317010008.727496-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210317010008.727496-1-sashal@kernel.org>
-References: <20210317010008.727496-1-sashal@kernel.org>
+        id S229996AbhCQCM2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Mar 2021 22:12:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229927AbhCQCMZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Mar 2021 22:12:25 -0400
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0356EC061763
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Mar 2021 19:12:24 -0700 (PDT)
+Received: by mail-qv1-xf32.google.com with SMTP id o19so751401qvu.0
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Mar 2021 19:12:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KA0cQX0H+fedUmZSqotKHkFt9nfBS2lV4mSDduYC1Vo=;
+        b=CfwgdSSKwnQ510ZsN0+CUYSCMnJvGTNOF0qgo3PkrJT/Da/ZELVOKWL/gvdjXbwGIJ
+         +O24SS0hCf6GGdRpdBSk7N5NbLn2iWfl25SUnaP3oNJ7WiJXrG4UqOuQVtPZMqv1UvLq
+         1k9Y29haYQb7OJLIFpq9Ca/2lmePu+tE/YxOqCC7/pjN0ZJm/td3809+dpAOb2cIbaOB
+         JIelDCwL+8ebDLqZ3W53s0y9QKt1RRSRn3jACZJpraJ6VtSZoPGPLIHKRuVw6WXLF8mu
+         NSaPFQU3F6l0ReQyu9G5Yv+r+f2QbaVUKOhZkjsn1XroEHm2K1q3C9v7SyUY5WN5Z7ln
+         hDeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KA0cQX0H+fedUmZSqotKHkFt9nfBS2lV4mSDduYC1Vo=;
+        b=JNhCPs/J876hcH+JBfOSPWr9S7K45fOYmKGsQEcYnuMAOZk3+M0aoO7UYHA5zJavxZ
+         uuI9CP+AhS1j2VwTboPXwEfh8NnXbcqORweAAqbP6vH2BZRMunMzP5ESyRGZQv2UEYWC
+         +1F292TK7ZZfiK+zcI036CAXGa6qE9FWVSspQ8RD17hDO6FOcUwwSffzB0zTfEmZEK/Q
+         WtxZDQQCIyjhIqp9pwNwjNtNoINlywLJJ0VcwJUbF0zUABVGXy4l+J0CYU3hGeP4dhjf
+         DkSZpAzmEhB/xMSSWaLFCELSWEFvoVsyDDMdnZ6GweNntHtcGBujVYfigdKTc+YI9TyY
+         MVWw==
+X-Gm-Message-State: AOAM530XiEJJiFVmQwQtRkEZ2QYIUVj4WovPeQEsRkxoCwJ4tbzzYexZ
+        2stZCdrrnaPLerq6ORPyptJP1g==
+X-Google-Smtp-Source: ABdhPJyCVi9KcQuRC+jk9afKmHcOxIGMxGHzjm2jLRzMICkswTbEAhqzEZ42z+xpCoNkmkSraZlwfQ==
+X-Received: by 2002:a05:6214:1744:: with SMTP id dc4mr2746704qvb.40.1615947143864;
+        Tue, 16 Mar 2021 19:12:23 -0700 (PDT)
+Received: from [192.168.1.45] (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
+        by smtp.gmail.com with ESMTPSA id r3sm16393336qkm.129.2021.03.16.19.12.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Mar 2021 19:12:23 -0700 (PDT)
+Subject: Re: [PATCH v4 02/28] mm: Add an unlock function for
+ PG_private_2/PG_fscache
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux-MM <linux-mm@kvack.org>, linux-cachefs@redhat.com,
+        linux-afs@lists.infradead.org,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <161539526152.286939.8589700175877370401.stgit@warthog.procyon.org.uk>
+ <161539528910.286939.1252328699383291173.stgit@warthog.procyon.org.uk>
+ <20210316190707.GD3420@casper.infradead.org>
+ <CAHk-=wjSGsRj7xwhSMQ6dAQiz53xA39pOG+XA_WeTgwBBu4uqg@mail.gmail.com>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <887b9eb7-2764-3659-d0bf-6a034a031618@toxicpanda.com>
+Date:   Tue, 16 Mar 2021 22:12:21 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.7.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wjSGsRj7xwhSMQ6dAQiz53xA39pOG+XA_WeTgwBBu4uqg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+On 3/16/21 8:43 PM, Linus Torvalds wrote:
+> [ Adding btrfs people explicitly, maybe they see this on the fs-devel
+> list, but maybe they don't react .. ]
+> 
+> On Tue, Mar 16, 2021 at 12:07 PM Matthew Wilcox <willy@infradead.org> wrote:
+>>
+>> This isn't a problem with this patch per se, but I'm concerned about
+>> private2 and expected page refcounts.
+> 
+> Ugh. You are very right.
+> 
+> It would be good to just change the rules - I get the feeling nobody
+> actually depended on them anyway because they were _so_ esoteric.
+> 
+>> static inline int is_page_cache_freeable(struct page *page)
+>> {
+>>          /*
+>>           * A freeable page cache page is referenced only by the caller
+>>           * that isolated the page, the page cache and optional buffer
+>>           * heads at page->private.
+>>           */
+>>          int page_cache_pins = thp_nr_pages(page);
+>>          return page_count(page) - page_has_private(page) == 1 + page_cache_pins;
+> 
+> You're right, that "page_has_private()" is really really nasty.
+> 
+> The comment is, I think, the traditional usage case, which used to be
+> about page->buffers. Obviously these days it is now about
+> page->private with PG_private set, pointing to buffers
+> (attach_page_private() and detach_page_private()).
+> 
+> But as you point out:
+> 
+>> #define PAGE_FLAGS_PRIVATE                              \
+>>          (1UL << PG_private | 1UL << PG_private_2)
+>>
+>> So ... a page with both flags cleared should have a refcount of N.
+>> A page with one or both flags set should have a refcount of N+1.
+> 
+> Could we just remove the PG_private_2 thing in this context entirely,
+> and make the rule be that
+> 
+>   (a) PG_private means that you have some local private data in
+> page->private, and that's all that matters for the "freeable" thing.
+> 
+>   (b) PG_private_2 does *not* have the same meaning, and has no bearing
+> on freeability (and only the refcount matters)
+> 
+> I _)think_ the btrfs behavior is to only use PagePrivate2() when it
+> has a reference to the page, so btrfs doesn't care?
+> 
+> I think fscache is already happy to take the page count when using
+> PG_private_2 for locking, exactly because I didn't want to have any
+> confusion about lifetimes. But this "page_has_private()" math ends up
+> meaning it's confusing anyway.
+> 
+> btrfs people? What are the semantics for PG_private_2? Is it just a
+> flag, and you really don't want it to have anything to do with any
+> page lifetime decisions? Or?
+> 
 
-[ Upstream commit 4f8be1f53bf615102d103c0509ffa9596f65b718 ]
+Yeah it's just a flag, we use it to tell that the page is part of a range that 
+has been allocated for IO.  The lifetime of the page is independent of the page, 
+but is generally either dirty or under writeback, so either it goes through 
+truncate and we clear PagePrivate2 there, or it actually goes through IO and is 
+cleared before we drop the page in our endio.  We _always_ have PG_private set 
+on the page as long as we own it, and PG_private_2 is only set in this IO 
+related context, so we're safe there because of the rules around 
+PG_dirty/PG_writeback.  We don't need it to have an extra ref for it being set. 
+  Thanks,
 
-The NFSv4 protocol doesn't have any notion of reomoving an attribute, so
-removexattr(path,"system.nfs4_acl") doesn't make sense.
-
-There's no documented return value.  Arguably it could be EOPNOTSUPP but
-I'm a little worried an application might take that to mean that we
-don't support ACLs or xattrs.  How about EINVAL?
-
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/nfs4proc.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 3c15291ba1aa..bc48b7769982 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -4848,6 +4848,9 @@ static int __nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t bufl
- 	unsigned int npages = DIV_ROUND_UP(buflen, PAGE_SIZE);
- 	int ret, i;
- 
-+	/* You can't remove system.nfs4_acl: */
-+	if (buflen == 0)
-+		return -EINVAL;
- 	if (!nfs4_server_supports_acls(server))
- 		return -EOPNOTSUPP;
- 	if (npages > ARRAY_SIZE(pages))
--- 
-2.30.1
+Josef
 
