@@ -2,35 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D514433E489
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Mar 2021 02:01:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28E4D33E48C
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Mar 2021 02:01:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231996AbhCQBAE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Mar 2021 21:00:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36062 "EHLO mail.kernel.org"
+        id S232019AbhCQBAF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Mar 2021 21:00:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232305AbhCQA7I (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 16 Mar 2021 20:59:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C5B0164F06;
-        Wed, 17 Mar 2021 00:59:04 +0000 (UTC)
+        id S230452AbhCQA7P (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 16 Mar 2021 20:59:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5884C64FC2;
+        Wed, 17 Mar 2021 00:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615942745;
-        bh=MV/3/qb1PE/vzEFEs3JRSELdMgkH0lcziOW1fw2UHGE=;
+        s=k20201202; t=1615942755;
+        bh=5SjYFQdghaiaOZr6LqSuf4POlm9p1T31oMvQ7ufK9Vc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YDk7Ng2hZVdB08UOpWHSy5aQBW1vKoM2eWcKrPfg2EjxVcWzooghQf4aN0793Ypbs
-         JyI6tLO9od/IEAOXFIVkeIr+aBLvcdhIB2fUgfxzpUxAWxAIF4+CBDNNGpsz06DAh1
-         EBch7VfOZMY0niraQdM7D0A4n2+5ldNP2n7+tFkkn09JUFX/BylWDP+tYNcwnEEtsb
-         3f/6hpSSzKOCJdnH9mhDzaqpUW++POw96ccCp8XEqmY5E1zBH6/mUWMnlnm1uef+EM
-         /YGm2mS05+xPumOGT+AC14iNCyo9LKRtwZbxYE8Qo9RzOAX82XFp39fmmCtTiVfg9G
-         4x9exrzVTfdRQ==
+        b=BHMMow/hd/JGTik2Nh92RmFFCRDZ0vPPX6UrEnBVm9G/fteFY9BvoCppuEt2dl8FG
+         xs2xgdw5yLgIqYnTrxu61m28RyFfGdngiiSM6S2758vs7uSaknQmpEy6XzyFYPDzM4
+         Rh1KIWzdFjplcsSB/E/N9wyaFaK5NBzyU8ltD4oXCSO4Ka/+WArgNPuvhcpQrhA8g3
+         6oPr+2YqPMJbtay6Nsr9l31++/M1WjnuzrrB0Bz3NDFVPORC0DrY9E8t8LBvhXrSow
+         mvRLSWhMKtEhCjRFq2zzsU6yV4dKrvZaBgRdalnwx8ulbRih326oZ9DVb1r5dVzMYJ
+         wjILESxAWsWMw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frank Sorenson <sorenson@redhat.com>,
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/23] NFS: Correct size calculation for create reply length
-Date:   Tue, 16 Mar 2021 20:58:38 -0400
-Message-Id: <20210317005850.726479-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 20/23] nfs: we don't support removing system.nfs4_acl
+Date:   Tue, 16 Mar 2021 20:58:46 -0400
+Message-Id: <20210317005850.726479-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210317005850.726479-1-sashal@kernel.org>
 References: <20210317005850.726479-1-sashal@kernel.org>
@@ -42,47 +42,38 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Frank Sorenson <sorenson@redhat.com>
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-[ Upstream commit ad3dbe35c833c2d4d0bbf3f04c785d32f931e7c9 ]
+[ Upstream commit 4f8be1f53bf615102d103c0509ffa9596f65b718 ]
 
-CREATE requests return a post_op_fh3, rather than nfs_fh3. The
-post_op_fh3 includes an extra word to indicate 'handle_follows'.
+The NFSv4 protocol doesn't have any notion of reomoving an attribute, so
+removexattr(path,"system.nfs4_acl") doesn't make sense.
 
-Without that additional word, create fails when full 64-byte
-filehandles are in use.
+There's no documented return value.  Arguably it could be EOPNOTSUPP but
+I'm a little worried an application might take that to mean that we
+don't support ACLs or xattrs.  How about EINVAL?
 
-Add NFS3_post_op_fh_sz, and correct the size calculation for
-NFS3_createres_sz.
-
-Signed-off-by: Frank Sorenson <sorenson@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs3xdr.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfs/nfs4proc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
-index 9956453aa6ff..0ed419bb02b0 100644
---- a/fs/nfs/nfs3xdr.c
-+++ b/fs/nfs/nfs3xdr.c
-@@ -34,6 +34,7 @@
-  */
- #define NFS3_fhandle_sz		(1+16)
- #define NFS3_fh_sz		(NFS3_fhandle_sz)	/* shorthand */
-+#define NFS3_post_op_fh_sz	(1+NFS3_fh_sz)
- #define NFS3_sattr_sz		(15)
- #define NFS3_filename_sz	(1+(NFS3_MAXNAMLEN>>2))
- #define NFS3_path_sz		(1+(NFS3_MAXPATHLEN>>2))
-@@ -71,7 +72,7 @@
- #define NFS3_readlinkres_sz	(1+NFS3_post_op_attr_sz+1)
- #define NFS3_readres_sz		(1+NFS3_post_op_attr_sz+3)
- #define NFS3_writeres_sz	(1+NFS3_wcc_data_sz+4)
--#define NFS3_createres_sz	(1+NFS3_fh_sz+NFS3_post_op_attr_sz+NFS3_wcc_data_sz)
-+#define NFS3_createres_sz	(1+NFS3_post_op_fh_sz+NFS3_post_op_attr_sz+NFS3_wcc_data_sz)
- #define NFS3_renameres_sz	(1+(2 * NFS3_wcc_data_sz))
- #define NFS3_linkres_sz		(1+NFS3_post_op_attr_sz+NFS3_wcc_data_sz)
- #define NFS3_readdirres_sz	(1+NFS3_post_op_attr_sz+2)
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index d89a815f7c31..f0dc5e0e5d5a 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5535,6 +5535,9 @@ static int __nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t bufl
+ 	unsigned int npages = DIV_ROUND_UP(buflen, PAGE_SIZE);
+ 	int ret, i;
+ 
++	/* You can't remove system.nfs4_acl: */
++	if (buflen == 0)
++		return -EINVAL;
+ 	if (!nfs4_server_supports_acls(server))
+ 		return -EOPNOTSUPP;
+ 	if (npages > ARRAY_SIZE(pages))
 -- 
 2.30.1
 
