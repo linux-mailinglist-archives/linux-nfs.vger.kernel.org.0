@@ -2,102 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 91B2E340EFD
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Mar 2021 21:23:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C32F8341082
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Mar 2021 23:52:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229996AbhCRUWf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 18 Mar 2021 16:22:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230220AbhCRUWa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Mar 2021 16:22:30 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0335EC06174A
-        for <linux-nfs@vger.kernel.org>; Thu, 18 Mar 2021 13:22:30 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id h10so8229686edt.13
-        for <linux-nfs@vger.kernel.org>; Thu, 18 Mar 2021 13:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Tp/+jbjDyBNtEsdivQVzYfqVjVIfluGVYZuRVeEynEI=;
-        b=R7H9hwglIug+iGOTMajNpWYPoCz48B6hsKraQhBAFhVJXysbPxCsuWiaqs4E57TUya
-         a9PRR/Qmj6KLYehNH16JU/k4oA4dDWj6E5Y6wCB/f7ijq33O2jruOwTHDNUN3fqeaHOy
-         QIyfNEdGi+yYjqFdqgmGZBj/7hwuRkuTXUkq8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Tp/+jbjDyBNtEsdivQVzYfqVjVIfluGVYZuRVeEynEI=;
-        b=aNv7E7/ETZ4fAffdFdNRPrzgMZi/KVfRMq/Ed8lBEuk/jc2V9fTetB706vhpXSzDXU
-         ddWFPd2Dkw8gEP47VHxMXacNYndfZYSPhsgTErWfxV3FVt4pqXnzsMqdGnOviHixtKOo
-         noriDLQDjzXcU7nDodveWarpVzLGWj6H/fTS9L/00EYfuD73Y2zEDgIE/cfQnA5zyAI2
-         EXgsI087kFvnJMIqWTqB6tTGvtKahuoo2m4YrbQfySNOD7Oz0/16B+aSS8dHKQmIexLd
-         ptkeC7rMszOLOZR/B++s7uJaI3LywkSMjTOtHEfL0tE2NRxknByWlaEDMvDaG9fRhTqt
-         7wYg==
-X-Gm-Message-State: AOAM530OJyyLrmV5noj+AF73jdEyNvWXBVTEvBrAhvXiyOdwLF4GhVEF
-        gAqNNvZa/BrYY7c7dP8H4ScunQ==
-X-Google-Smtp-Source: ABdhPJxonRJfkXSyhcDw883+mkEfPNTWR1MErLS/unD5NwkYtmpVIUigSaPYidOGtbFJArHEisA2+w==
-X-Received: by 2002:a50:ec96:: with SMTP id e22mr5824338edr.385.1616098948763;
-        Thu, 18 Mar 2021 13:22:28 -0700 (PDT)
-Received: from alco.lan ([80.71.134.83])
-        by smtp.gmail.com with ESMTPSA id e16sm2481120ejc.63.2021.03.18.13.22.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Mar 2021 13:22:28 -0700 (PDT)
-From:   Ricardo Ribalda <ribalda@chromium.org>
-To:     trivial@kernel.org
-Cc:     Ricardo Ribalda <ribalda@chromium.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH 7/9] nfsd: Fix typo "accesible"
-Date:   Thu, 18 Mar 2021 21:22:21 +0100
-Message-Id: <20210318202223.164873-7-ribalda@chromium.org>
-X-Mailer: git-send-email 2.31.0.rc2.261.g7f71774620-goog
-In-Reply-To: <20210318202223.164873-1-ribalda@chromium.org>
-References: <20210318202223.164873-1-ribalda@chromium.org>
+        id S233249AbhCRWwF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 Mar 2021 18:52:05 -0400
+Received: from namei.org ([65.99.196.166]:45956 "EHLO mail.namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230368AbhCRWvr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 18 Mar 2021 18:51:47 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.namei.org (Postfix) with ESMTPS id 9E1ACC6B;
+        Thu, 18 Mar 2021 22:49:03 +0000 (UTC)
+Date:   Fri, 19 Mar 2021 09:49:03 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     Paul Moore <paul@paul-moore.com>
+cc:     Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Subject: Re: [PATCH v4 1/3] [security] Add new hook to compare new mount to
+ an existing mount
+In-Reply-To: <CAHC9VhQyck5HKGKBcv-q70fv6zwTHD2hdfJ3e3SnjqoVty6inA@mail.gmail.com>
+Message-ID: <1e3cd4d7-2a80-a5c1-b5cd-919bfb1e493@namei.org>
+References: <CAN-5tyGuV-gs0KzVbKSj42ZMx553zy9wOfVb1SoHoE-WCoN1_w@mail.gmail.com> <20210227033755.24460-1-olga.kornievskaia@gmail.com> <CAFX2Jfk--KwkAss1gqTPnQt-bKvUUapNdHbuicu=m+jOtjrMyQ@mail.gmail.com> <f8f5323c-cdfd-92e8-b359-43caaf9d7490@schaufler-ca.com>
+ <CAHC9VhR=+uwN8U17JhYWKcXSc9=ExCrG4O9-y+DPJg6xZ=WoYA@mail.gmail.com> <CAFX2JfnT49o-CkaAE3=c0KW9SDS1U+scP0RD++nmWwyKoBDWkA@mail.gmail.com> <CAHC9VhQNp-GQ6SMABNdN00RcDz30Os5SK217W-5swS8quakxPA@mail.gmail.com> <CAN-5tyG95bL8vbkG5B9OmAAXremJ-X5z09f+0ekLyigzibsZ5A@mail.gmail.com>
+ <CAHC9VhTwqt0TDEWV97GaM8B5m4qmEwo+BYXYDeMs2D1LtZzUFg@mail.gmail.com> <CAN-5tyHdiuiOBX2bkZBGOTK-AMOccm27=qE-AZ_J9QQ00P91-Q@mail.gmail.com> <CAHC9VhTZe0azgqt_OSk0cy-nM+upz9z2_i0j1wQQLD8UgbX9+Q@mail.gmail.com>
+ <CAHC9VhQyck5HKGKBcv-q70fv6zwTHD2hdfJ3e3SnjqoVty6inA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Trivial fix.
+On Thu, 18 Mar 2021, Paul Moore wrote:
 
-Cc: linux-nfs@vger.kernel.org
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- fs/nfsd/Kconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> On Mon, Mar 15, 2021 at 12:15 PM Paul Moore <paul@paul-moore.com> wrote:
+> > As long as we are clear that the latest draft of patch 1/3 is to be
+> > taken from the v4 patch{set} and patches 2/3 and 3/3 are to be taken
+> > from v3 of the patchset I don't think you need to do anything further.
+> > The important bit is for the other LSM folks to ACK the new hook; if I
+> > don't see anything from them, either positive or negative, I'll merge
+> > it towards the end of this week or early next.
+> 
+> LSM folks, this is a reminder that if you want to object you've got
+> until Monday morning to do so :)
 
-diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-index 821e5913faee..d160cd4c6f71 100644
---- a/fs/nfsd/Kconfig
-+++ b/fs/nfsd/Kconfig
-@@ -98,7 +98,7 @@ config NFSD_BLOCKLAYOUT
- 	help
- 	  This option enables support for the exporting pNFS block layouts
- 	  in the kernel's NFS server. The pNFS block layout enables NFS
--	  clients to directly perform I/O to block devices accesible to both
-+	  clients to directly perform I/O to block devices accessible to both
- 	  the server and the clients.  See RFC 5663 for more details.
- 
- 	  If unsure, say N.
-@@ -112,7 +112,7 @@ config NFSD_SCSILAYOUT
- 	help
- 	  This option enables support for the exporting pNFS SCSI layouts
- 	  in the kernel's NFS server. The pNFS SCSI layout enables NFS
--	  clients to directly perform I/O to SCSI devices accesible to both
-+	  clients to directly perform I/O to SCSI devices accessible to both
- 	  the server and the clients.  See draft-ietf-nfsv4-scsi-layout for
- 	  more details.
- 
-@@ -126,7 +126,7 @@ config NFSD_FLEXFILELAYOUT
- 	  This option enables support for the exporting pNFS Flex File
- 	  layouts in the kernel's NFS server. The pNFS Flex File  layout
- 	  enables NFS clients to directly perform I/O to NFSv3 devices
--	  accesible to both the server and the clients.  See
-+	  accessible to both the server and the clients.  See
- 	  draft-ietf-nfsv4-flex-files for more details.
- 
- 	  Warning, this server implements the bare minimum functionality
+I'm unclear on whether a new v5 patchset was being posted -- I assume not?
+
 -- 
-2.31.0.rc2.261.g7f71774620-goog
+James Morris
+<jmorris@namei.org>
 
