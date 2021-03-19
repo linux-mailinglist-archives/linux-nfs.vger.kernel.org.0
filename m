@@ -2,21 +2,20 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 540DE34217C
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Mar 2021 17:12:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B62E3421BF
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Mar 2021 17:23:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230084AbhCSQMJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 19 Mar 2021 12:12:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34622 "EHLO mx2.suse.de"
+        id S229942AbhCSQWx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 19 Mar 2021 12:22:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42742 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229987AbhCSQLl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 19 Mar 2021 12:11:41 -0400
+        id S229960AbhCSQWg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 19 Mar 2021 12:22:36 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id DF226AC75;
-        Fri, 19 Mar 2021 16:11:39 +0000 (UTC)
-Subject: Re: [PATCH 1/7] mm/page_alloc: Move gfp_allowed_mask enforcement to
- prepare_alloc_pages
+        by mx2.suse.de (Postfix) with ESMTP id CD551AC17;
+        Fri, 19 Mar 2021 16:22:34 +0000 (UTC)
+Subject: Re: [PATCH 2/7] mm/page_alloc: Rename alloced to allocated
 To:     Mel Gorman <mgorman@techsingularity.net>,
         Andrew Morton <akpm@linux-foundation.org>
 Cc:     Chuck Lever <chuck.lever@oracle.com>,
@@ -29,14 +28,14 @@ Cc:     Chuck Lever <chuck.lever@oracle.com>,
         Linux-MM <linux-mm@kvack.org>,
         Linux-NFS <linux-nfs@vger.kernel.org>
 References: <20210312154331.32229-1-mgorman@techsingularity.net>
- <20210312154331.32229-2-mgorman@techsingularity.net>
+ <20210312154331.32229-3-mgorman@techsingularity.net>
 From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <2b5b3bea-c247-0564-f2d4-1dad28f176ed@suse.cz>
-Date:   Fri, 19 Mar 2021 17:11:39 +0100
+Message-ID: <327c53ee-dcdd-f8a0-b822-208fe6483a96@suse.cz>
+Date:   Fri, 19 Mar 2021 17:22:34 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.0
 MIME-Version: 1.0
-In-Reply-To: <20210312154331.32229-2-mgorman@techsingularity.net>
+In-Reply-To: <20210312154331.32229-3-mgorman@techsingularity.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -45,64 +44,58 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 On 3/12/21 4:43 PM, Mel Gorman wrote:
-> __alloc_pages updates GFP flags to enforce what flags are allowed
-> during a global context such as booting or suspend. This patch moves the
-> enforcement from __alloc_pages to prepare_alloc_pages so the code can be
-> shared between the single page allocator and a new bulk page allocator.
+> Review feedback of the bulk allocator twice found problems with "alloced"
+> being a counter for pages allocated. The naming was based on the API name
+> "alloc" and was based on the idea that verbal communication about malloc
+> tends to use the fake word "malloced" instead of the fake word mallocated.
+> To be consistent, this preparation patch renames alloced to allocated
+> in rmqueue_bulk so the bulk allocator and per-cpu allocator use similar
+> names when the bulk allocator is introduced.
 > 
-> When moving, it is obvious that __alloc_pages() and __alloc_pages
-> use different names for the same variable. This is an unnecessary
-> complication so rename gfp_mask to gfp in prepare_alloc_pages() so the
-> name is consistent.
-> 
-> No functional change.
-
-Hm, I have some doubts.
-
 > Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
 > ---
->  mm/page_alloc.c | 25 +++++++++++++------------
->  1 file changed, 13 insertions(+), 12 deletions(-)
+>  mm/page_alloc.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
 > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 00b67c47ad87..f0c1d74ead6f 100644
+> index f0c1d74ead6f..880b1d6368bd 100644
 > --- a/mm/page_alloc.c
 > +++ b/mm/page_alloc.c
-> @@ -4914,15 +4914,18 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
->  	return page;
+> @@ -2904,7 +2904,7 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
+>  			unsigned long count, struct list_head *list,
+>  			int migratetype, unsigned int alloc_flags)
+>  {
+> -	int i, alloced = 0;
+> +	int i, allocated = 0;
+>  
+>  	spin_lock(&zone->lock);
+>  	for (i = 0; i < count; ++i) {
+> @@ -2927,7 +2927,7 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
+>  		 * pages are ordered properly.
+>  		 */
+>  		list_add_tail(&page->lru, list);
+> -		alloced++;
+> +		allocated++;
+>  		if (is_migrate_cma(get_pcppage_migratetype(page)))
+>  			__mod_zone_page_state(zone, NR_FREE_CMA_PAGES,
+>  					      -(1 << order));
+> @@ -2936,12 +2936,12 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
+>  	/*
+>  	 * i pages were removed from the buddy list even if some leak due
+>  	 * to check_pcp_refill failing so adjust NR_FREE_PAGES based
+> -	 * on i. Do not confuse with 'alloced' which is the number of
+> +	 * on i. Do not confuse with 'allocated' which is the number of
+>  	 * pages added to the pcp list.
+>  	 */
+>  	__mod_zone_page_state(zone, NR_FREE_PAGES, -(i << order));
+>  	spin_unlock(&zone->lock);
+> -	return alloced;
+> +	return allocated;
 >  }
 >  
-> -static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
-> +static inline bool prepare_alloc_pages(gfp_t gfp, unsigned int order,
->  		int preferred_nid, nodemask_t *nodemask,
->  		struct alloc_context *ac, gfp_t *alloc_gfp,
->  		unsigned int *alloc_flags)
->  {
-> -	ac->highest_zoneidx = gfp_zone(gfp_mask);
-> -	ac->zonelist = node_zonelist(preferred_nid, gfp_mask);
-> +	gfp &= gfp_allowed_mask;
-> +	*alloc_gfp = gfp;
-> +
-
-...
-
-> @@ -4980,8 +4983,6 @@ struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
->  		return NULL;
->  	}
->  
-> -	gfp &= gfp_allowed_mask;
-> -	alloc_gfp = gfp;
->  	if (!prepare_alloc_pages(gfp, order, preferred_nid, nodemask, &ac,
->  			&alloc_gfp, &alloc_flags))
->  		return NULL;
-
-As a result, "gfp" doesn't have the restrictions by gfp_allowed_mask applied,
-only alloc_gfp does. But in case we go to slowpath, before
-going there we throw away the current alloc_gfp:
-
-    alloc_gfp = current_gfp_context(gfp);
-    ...
-    page = __alloc_pages_slowpath(alloc_gfp, ...);
-
-So we lost the gfp_allowed_mask restrictions here?
+>  #ifdef CONFIG_NUMA
+> 
 
