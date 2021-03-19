@@ -2,91 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6EB2342088
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Mar 2021 16:08:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 540DE34217C
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Mar 2021 17:12:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231126AbhCSPHj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 19 Mar 2021 11:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230406AbhCSPHP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 Mar 2021 11:07:15 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C32F2C06174A
-        for <linux-nfs@vger.kernel.org>; Fri, 19 Mar 2021 08:07:14 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id jy13so10232913ejc.2
-        for <linux-nfs@vger.kernel.org>; Fri, 19 Mar 2021 08:07:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bGD6x0tPecnhinDKnHZu/CdzaVF9l2QBFMD0XEfM6uI=;
-        b=aQIC3IO8ekz1FCCQkelvLZnY4qS+9jJQRg2pw4Io5Y0leEYvLhBVWmFmcxZ14TQVA6
-         VRTgTB1QYMY5ix3RsYZ3r06KNWaWPDZNnFNLCyguhSJhNsqGGcTfdU+hbDfVnHf1LfJy
-         T68fnAxtMO5Rj6VJr0/GHvPEw2DKVASe+9LHw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bGD6x0tPecnhinDKnHZu/CdzaVF9l2QBFMD0XEfM6uI=;
-        b=qUdwF8RWPiV373vSGzQgkUNf1w4+M/B6/zPGBKZjM7+RO3ErbFzefZSJMLUi84Dxaz
-         lMrvBKjgl1ggJQaIeIWQk9RmhanyNX0c5zpJAD9pEqMxZAqxkp9S8DetRHhX/SzIcYzP
-         3xuP9EWyO7R6IJaXnqVS6nEDSKG3PUUMXaJBusrTSr4J/MPnUs9ZEOgkzKVF7PNVxzMr
-         GQO4RQ6Y5OANfX6a4XKItwyIZ1La+YLjb/TIm2daQk9JdjepXuU+0LM0jvzirEe9cjaJ
-         dvLczB1jmZmwMfnf9pyGCRN2UWApIX782oNqrqE9nQc8MlWO/iENFFNcn+p7hMYvZScg
-         S39A==
-X-Gm-Message-State: AOAM531jkA3KtFvR8kPEFFn6etihit4WxIEPnuAGXlPPusY1yqoGXSmF
-        0HCQLUDfkObwkxNZK8bK01vgwg==
-X-Google-Smtp-Source: ABdhPJz+lP+srO1DUhiDPl6417LDuRyqXKPV5TLJWUSrcf8gzEjr5zExnXdLwd7rRxpWnazgrRW38Q==
-X-Received: by 2002:a17:906:405b:: with SMTP id y27mr4954560ejj.332.1616166433503;
-        Fri, 19 Mar 2021 08:07:13 -0700 (PDT)
-Received: from localhost ([2a01:4b00:8432:8a00:fa59:71ff:fe7e:8d21])
-        by smtp.gmail.com with ESMTPSA id e17sm3783613ejb.54.2021.03.19.08.07.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Mar 2021 08:07:13 -0700 (PDT)
-Date:   Fri, 19 Mar 2021 15:07:12 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Linux-Net <netdev@vger.kernel.org>,
+        id S230084AbhCSQMJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 19 Mar 2021 12:12:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34622 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229987AbhCSQLl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 19 Mar 2021 12:11:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id DF226AC75;
+        Fri, 19 Mar 2021 16:11:39 +0000 (UTC)
+Subject: Re: [PATCH 1/7] mm/page_alloc: Move gfp_allowed_mask enforcement to
+ prepare_alloc_pages
+To:     Mel Gorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Bruce Fields <bfields@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] SUNRPC: Output oversized frag reclen as ASCII if
- printable
-Message-ID: <YFS+IFFRs5f1itQN@chrisdown.name>
-References: <YFS7L4FIQBDtIY9d@chrisdown.name>
- <3844BF67-8820-4D6C-95BA-8BA0B0956BD0@oracle.com>
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux-NFS <linux-nfs@vger.kernel.org>
+References: <20210312154331.32229-1-mgorman@techsingularity.net>
+ <20210312154331.32229-2-mgorman@techsingularity.net>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <2b5b3bea-c247-0564-f2d4-1dad28f176ed@suse.cz>
+Date:   Fri, 19 Mar 2021 17:11:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <3844BF67-8820-4D6C-95BA-8BA0B0956BD0@oracle.com>
-User-Agent: Mutt/2.0.5 (da5e3282) (2021-01-21)
+In-Reply-To: <20210312154331.32229-2-mgorman@techsingularity.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hey Chuck,
+On 3/12/21 4:43 PM, Mel Gorman wrote:
+> __alloc_pages updates GFP flags to enforce what flags are allowed
+> during a global context such as booting or suspend. This patch moves the
+> enforcement from __alloc_pages to prepare_alloc_pages so the code can be
+> shared between the single page allocator and a new bulk page allocator.
+> 
+> When moving, it is obvious that __alloc_pages() and __alloc_pages
+> use different names for the same variable. This is an unnecessary
+> complication so rename gfp_mask to gfp in prepare_alloc_pages() so the
+> name is consistent.
+> 
+> No functional change.
 
-Thanks for the (very) fast reply! :-)
+Hm, I have some doubts.
 
-Chuck Lever III writes:
->> This can be confusing for downstream users, who don't know what messages
->> like "fragment too large: 1195725856" actually mean, or that they
->> indicate some misconfigured infrastructure elsewhere.
->
->One wonders whether that error message is actually useful at all.
->We could, for example, turn this into a tracepoint, or just get
->rid of it.
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+> ---
+>  mm/page_alloc.c | 25 +++++++++++++------------
+>  1 file changed, 13 insertions(+), 12 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 00b67c47ad87..f0c1d74ead6f 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -4914,15 +4914,18 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+>  	return page;
+>  }
+>  
+> -static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
+> +static inline bool prepare_alloc_pages(gfp_t gfp, unsigned int order,
+>  		int preferred_nid, nodemask_t *nodemask,
+>  		struct alloc_context *ac, gfp_t *alloc_gfp,
+>  		unsigned int *alloc_flags)
+>  {
+> -	ac->highest_zoneidx = gfp_zone(gfp_mask);
+> -	ac->zonelist = node_zonelist(preferred_nid, gfp_mask);
+> +	gfp &= gfp_allowed_mask;
+> +	*alloc_gfp = gfp;
+> +
 
-Indeed, that's also a good outcome. Personally I've never seen these 
-legitimately fire in production outside of cases like the one described, and we 
-historically ran a pretty diverse set of use cases for NFS.
+...
 
-Maybe safer to convert to a tracepoint just in case? Either way sounds fine 
-though -- let me know what you'd like for v2 and I'll send it over. :-)
+> @@ -4980,8 +4983,6 @@ struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
+>  		return NULL;
+>  	}
+>  
+> -	gfp &= gfp_allowed_mask;
+> -	alloc_gfp = gfp;
+>  	if (!prepare_alloc_pages(gfp, order, preferred_nid, nodemask, &ac,
+>  			&alloc_gfp, &alloc_flags))
+>  		return NULL;
 
-Thanks!
+As a result, "gfp" doesn't have the restrictions by gfp_allowed_mask applied,
+only alloc_gfp does. But in case we go to slowpath, before
+going there we throw away the current alloc_gfp:
 
-Chris
+    alloc_gfp = current_gfp_context(gfp);
+    ...
+    page = __alloc_pages_slowpath(alloc_gfp, ...);
+
+So we lost the gfp_allowed_mask restrictions here?
+
