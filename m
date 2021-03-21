@@ -2,136 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36C90343088
-	for <lists+linux-nfs@lfdr.de>; Sun, 21 Mar 2021 02:43:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AD72343201
+	for <lists+linux-nfs@lfdr.de>; Sun, 21 Mar 2021 11:53:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229987AbhCUBm6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 20 Mar 2021 21:42:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229787AbhCUBml (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 20 Mar 2021 21:42:41 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56484C061574;
-        Sat, 20 Mar 2021 18:42:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=OHbnhUmSKXKUNQXDuUhAYkDR4SHYPZJ41RILLR4eq0o=; b=WJD6WJqsGwCY3P1j5e3ovPL//F
-        5RbS0a3Lg88hg9MB0jYULiy/rFKJzbGCbrOapYTb266XbbyKA8CTrtvek66/nG33VaFg7VdMBRbZR
-        rnPMGsBm9j06adyP+A8QTZhRk0UEwOFu8zRa/WX5OeKUuZ+8YrF+LcaXS/z87nWR3tKlZ6cwW0Syp
-        kq9Y5/xMHFDtxNLwNsH9lKI3RuLMynoTNQK4hzK4Vqwfsf9J1ZXgGgduQBDRr8PlJm3OFdHS6ZrwQ
-        3fhRurJFVDu4wmnenxltcI7MoWu83uWJo+ueqXyOwnSdoY74gjndAyvqk62MAvIAKmI/huMjFZFAX
-        h7v56bTQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lNn6Q-006Ymd-I3; Sun, 21 Mar 2021 01:42:05 +0000
-Date:   Sun, 21 Mar 2021 01:42:02 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jeff Layton <jlayton@redhat.com>, linux-mm@kvack.org,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org,
-        David Wysochanski <dwysocha@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 08/28] netfs: Provide readahead and readpage netfs
- helpers
-Message-ID: <20210321014202.GF3420@casper.infradead.org>
-References: <161539526152.286939.8589700175877370401.stgit@warthog.procyon.org.uk>
- <161539537375.286939.16642940088716990995.stgit@warthog.procyon.org.uk>
+        id S229879AbhCUKu5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 21 Mar 2021 06:50:57 -0400
+Received: from smtp.h3c.com ([60.191.123.56]:1565 "EHLO h3cspam01-ex.h3c.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229766AbhCUKu2 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 21 Mar 2021 06:50:28 -0400
+X-Greylist: delayed 6991 seconds by postgrey-1.27 at vger.kernel.org; Sun, 21 Mar 2021 06:50:27 EDT
+Received: from h3cspam01-ex.h3c.com (localhost [127.0.0.2] (may be forged))
+        by h3cspam01-ex.h3c.com with ESMTP id 12L8rrZp088876;
+        Sun, 21 Mar 2021 16:53:53 +0800 (GMT-8)
+        (envelope-from xi.fengfei@h3c.com)
+Received: from DAG2EX05-BASE.srv.huawei-3com.com ([10.8.0.68])
+        by h3cspam01-ex.h3c.com with ESMTP id 12L8r01H088652;
+        Sun, 21 Mar 2021 16:53:00 +0800 (GMT-8)
+        (envelope-from xi.fengfei@h3c.com)
+Received: from localhost.localdomain (10.99.222.162) by
+ DAG2EX05-BASE.srv.huawei-3com.com (10.8.0.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Sun, 21 Mar 2021 16:53:03 +0800
+From:   Fengfei Xi <xi.fengfei@h3c.com>
+To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>
+CC:     <bfields@fieldses.org>, <chuck.lever@oracle.com>,
+        <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Fengfei Xi <xi.fengfei@h3c.com>
+Subject: [PATCH] nfs_common: modify the comments for locks_end_grace and locks_in_grace
+Date:   Sun, 21 Mar 2021 16:38:06 +0800
+Message-ID: <20210321083806.842-1-xi.fengfei@h3c.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <161539537375.286939.16642940088716990995.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain
+X-Originating-IP: [10.99.222.162]
+X-ClientProxiedBy: BJSMTP02-EX.srv.huawei-3com.com (10.63.20.133) To
+ DAG2EX05-BASE.srv.huawei-3com.com (10.8.0.68)
+X-DNSRBL: 
+X-MAIL: h3cspam01-ex.h3c.com 12L8rrZp088876
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Mar 10, 2021 at 04:56:13PM +0000, David Howells wrote:
-> +void netfs_readahead(struct readahead_control *ractl,
-> +		     const struct netfs_read_request_ops *ops,
-> +		     void *netfs_priv)
-> +{
-> +	struct netfs_read_request *rreq;
-> +	struct page *page;
-> +	unsigned int debug_index = 0;
-> +
-> +	_enter("%lx,%x", readahead_index(ractl), readahead_count(ractl));
-> +
-> +	if (readahead_count(ractl) == 0)
-> +		goto cleanup;
-> +
-> +	rreq = netfs_alloc_read_request(ops, netfs_priv, ractl->file);
-> +	if (!rreq)
-> +		goto cleanup;
-> +	rreq->mapping	= ractl->mapping;
-> +	rreq->start	= readahead_pos(ractl);
-> +	rreq->len	= readahead_length(ractl);
-> +
-> +	netfs_rreq_expand(rreq, ractl);
-> +
-> +	atomic_set(&rreq->nr_rd_ops, 1);
-> +	do {
-> +		if (!netfs_rreq_submit_slice(rreq, &debug_index))
-> +			break;
-> +
-> +	} while (rreq->submitted < rreq->len);
-> +
-> +	while ((page = readahead_page(ractl)))
-> +		put_page(page);
+This patch moves the comment for the @net parameter to the right place.
 
-You don't need this pair of lines (unless I'm missing something).
-read_pages() in mm/readahead.c puts the reference and unlocks any
-pages which are not read by the readahead op.  Indeed, I think doing
-this is buggy because you don't unlock the page.
+Signed-off-by: Fengfei Xi <xi.fengfei@h3c.com>
+---
+ fs/nfs_common/grace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +	/* If we decrement nr_rd_ops to 0, the ref belongs to us. */
-> +	if (atomic_dec_and_test(&rreq->nr_rd_ops))
-> +		netfs_rreq_assess(rreq, false);
-> +	return;
-> +
-> +cleanup:
-> +	if (netfs_priv)
-> +		ops->cleanup(ractl->mapping, netfs_priv);
-> +	return;
-> +}
-> +EXPORT_SYMBOL(netfs_readahead);
-
-> +int netfs_readpage(struct file *file,
-> +		   struct page *page,
-> +		   const struct netfs_read_request_ops *ops,
-> +		   void *netfs_priv)
-> +{
-> +	struct netfs_read_request *rreq;
-> +	unsigned int debug_index = 0;
-> +	int ret;
-> +
-> +	_enter("%lx", page->index);
-> +
-> +	rreq = netfs_alloc_read_request(ops, netfs_priv, file);
-> +	if (!rreq) {
-> +		if (netfs_priv)
-> +			ops->cleanup(netfs_priv, page->mapping);
-> +		unlock_page(page);
-> +		return -ENOMEM;
-> +	}
-> +	rreq->mapping	= page->mapping;
-
-FYI, this isn't going to work with swap-over-NFS.  You have to use
-page_file_mapping().
-
-> +	rreq->start	= page->index * PAGE_SIZE;
-
-and page_index() here.
-
-I rather dislike it that swap-over-NFS uses readpage which makes this
-need to exist.  If somebody were to switch SWP_FS_OPS to using kiocbs,
-some of this pain could go away.
+diff --git a/fs/nfs_common/grace.c b/fs/nfs_common/grace.c
+index 26f2a50ec..9b1a5c7d3 100644
+--- a/fs/nfs_common/grace.c
++++ b/fs/nfs_common/grace.c
+@@ -42,7 +42,6 @@ EXPORT_SYMBOL_GPL(locks_start_grace);
+ 
+ /**
+  * locks_end_grace
+- * @net: net namespace that this lock manager belongs to
+  * @lm: who this grace period is for
+  *
+  * Call this function to state that the given lock manager is ready to
+@@ -82,6 +81,7 @@ __state_in_grace(struct net *net, bool open)
+ 
+ /**
+  * locks_in_grace
++ * @net: net namespace that this lock manager belongs to
+  *
+  * Lock managers call this function to determine when it is OK for them
+  * to answer ordinary lock requests, and when they should accept only
+-- 
+2.17.1
 
