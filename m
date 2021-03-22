@@ -2,98 +2,177 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B7DB344F95
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 20:05:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11B7434503E
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 20:51:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231869AbhCVTEv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Mar 2021 15:04:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231883AbhCVTEY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 15:04:24 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 680E3C061756
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Mar 2021 12:04:19 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id w3so23076527ejc.4
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Mar 2021 12:04:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0Mzx7dABocbFixc4b986h6yG+hI02Gitp8VvueIfB4I=;
-        b=XxDku5bGoGMWgU04zqmwIPgsp44/uwmSatZM1QpHroiJjlMehDBLzTZs0WRjFTYS6F
-         S5doTrEFCd4RoMoxmKKbEBoS1udESoEzcIwrs5UfxSvf046sqxRoe9eIwqE4FLohBOGM
-         oi2AEaADE35Fopq0G6hlONdlNhvXT9AupFGmsrZ+j6ysii91vVh3nFKlqETIpyCbgum2
-         zMwxot4h2So4tEKd82boQ5+yqKYgK7banbBYU4uCLqb3IB00joIegdL490vU8NjZwelX
-         BKS4ca2bV/0GcvR1C4jLAWH5IjL93I4TfA+zYs9g/RTvfqE7UZHTjhETiiv3p9urxS4g
-         d/Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Mzx7dABocbFixc4b986h6yG+hI02Gitp8VvueIfB4I=;
-        b=Uqufa3S88bgdeL8uf19YaqGqKy+5YwJFk95YNV7U3PcJZwzKyzef2wvYdMtdZLIPZn
-         bAt5DJsihTIxv0EwDQHaOorqlLaY9a+PyweueXVoSvY6udvgpTFvtgLbv+JT55g+N34T
-         IkwUWoZMvC3z7nErnG52Ej+wFVBoQPWm08SnPSe3h/iLkhoIk2iGDwLKfAjtWXg1H+yz
-         kNkReM0ZEc6kTd1d6UmC3iwdxWHR0oH9nTPTIr+Dv2tRRhSNvq2S52N4CSv1iDrbq6Rx
-         txGIDRroSNPJG3NLLSHaHjOmR67BKmo3HaedMnvBSzu4PxOOR6Idq8GuJXln6Oyt2/uS
-         P8Dg==
-X-Gm-Message-State: AOAM530PrzwEByyCt7VI8fIXXdn+2sSAuy3lzOTGbOb38PSFbBv7KoXR
-        PxIYbXSIlesBlBhiZXaZk4bA3DJ93KGNQ70mCM6B
-X-Google-Smtp-Source: ABdhPJx9/sqHzy6WGenbl4ERiZZdnZwOTEEIMZyqgV13jNwmI0i8sPqrXoJvGE5un4Kz9bFCd1WGmLGZxEKsoN/SgYs=
-X-Received: by 2002:a17:906:3b84:: with SMTP id u4mr1209220ejf.431.1616439858067;
- Mon, 22 Mar 2021 12:04:18 -0700 (PDT)
+        id S230484AbhCVTuW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Mar 2021 15:50:22 -0400
+Received: from outbound-smtp19.blacknight.com ([46.22.139.246]:58363 "EHLO
+        outbound-smtp19.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230338AbhCVTtv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 15:49:51 -0400
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp19.blacknight.com (Postfix) with ESMTPS id D7F961C47AD
+        for <linux-nfs@vger.kernel.org>; Mon, 22 Mar 2021 19:49:49 +0000 (GMT)
+Received: (qmail 32117 invoked from network); 22 Mar 2021 19:49:49 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 22 Mar 2021 19:49:49 -0000
+Date:   Mon, 22 Mar 2021 19:49:48 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 0/3 v5] Introduce a bulk order-0 page allocator
+Message-ID: <20210322194948.GI3697@techsingularity.net>
+References: <20210322091845.16437-1-mgorman@techsingularity.net>
+ <C1DEE677-47B2-4B12-BA70-6E29F0D199D9@oracle.com>
 MIME-Version: 1.0
-References: <20210219222233.20748-1-olga.kornievskaia@gmail.com> <20210219222233.20748-3-olga.kornievskaia@gmail.com>
-In-Reply-To: <20210219222233.20748-3-olga.kornievskaia@gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 22 Mar 2021 15:04:07 -0400
-Message-ID: <CAHC9VhT30AjmsqN1RwT+At18W3Svr952EFSWsZ53D=qtV=4Wvw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] NFSv4 account for selinux security context when
- deciding to share superblock
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <C1DEE677-47B2-4B12-BA70-6E29F0D199D9@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Feb 19, 2021 at 5:25 PM Olga Kornievskaia
-<olga.kornievskaia@gmail.com> wrote:
->
-> From: Olga Kornievskaia <kolga@netapp.com>
->
-> Keep track of whether or not there were LSM security context
-> options passed during mount (ie creation of the superblock).
-> Then, while deciding if the superblock can be shared for the new
-> mount, check if the newly passed in LSM security context options
-> are compatible with the existing superblock's ones by calling
-> security_sb_mnt_opts_compat().
->
-> Previously, with selinux enabled, NFS wasn't able to do the
-> following 2mounts:
-> mount -o vers=4.2,sec=sys,context=system_u:object_r:root_t:s0
-> <serverip>:/ /mnt
-> mount -o vers=4.2,sec=sys,context=system_u:object_r:swapfile_t:s0
-> <serverip>:/scratch /scratch
->
-> 2nd mount would fail with "mount.nfs: an incorrect mount option was
-> specified" and var log messages would have:
-> "SElinux: mount invalid. Same superblock, different security
-> settings for.."
->
-> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> ---
->  fs/nfs/fs_context.c       | 3 +++
->  fs/nfs/internal.h         | 1 +
->  fs/nfs/super.c            | 4 ++++
->  include/linux/nfs_fs_sb.h | 1 +
->  4 files changed, 9 insertions(+)
+On Mon, Mar 22, 2021 at 06:25:03PM +0000, Chuck Lever III wrote:
+> 
+> 
+> > On Mar 22, 2021, at 5:18 AM, Mel Gorman <mgorman@techsingularity.net> wrote:
+> > 
+> > This series is based on top of Matthew Wilcox's series "Rationalise
+> > __alloc_pages wrapper" and does not apply to 5.12-rc2. If you want to
+> > test and are not using Andrew's tree as a baseline, I suggest using the
+> > following git tree
+> > 
+> > git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git mm-bulk-rebase-v5r9
+> > 
+> > The users of the API have been dropped in this version as the callers
+> > need to check whether they prefer an array or list interface (whether
+> > preference is based on convenience or performance).
+> 
+> I now have a consumer implementation that uses the array
+> API. If I understand the contract correctly, the return
+> value is the last array index that __alloc_pages_bulk()
+> visits. My consumer uses the return value to determine
+> if it needs to call the allocator again.
+> 
 
-Merged into selinux/next, thanks.
+For either arrays or lists, the return value is the number of valid
+pages. For arrays, the pattern is expected to be
+
+nr_pages = alloc_pages_bulk(gfp, nr_requested, page_array);
+for (i = 0; i < nr_pages; i++) {
+	do something with page_array[i] 
+}
+
+There *could* be populated valid elements on and after nr_pages but the
+implementation did not visit those elements. The implementation can abort
+early if the array looks like this
+
+PPP....PPP
+
+Where P is a page and . is NULL. The implementation would skip the
+first three pages, allocate four pages and then abort when a new page
+was encountered. This is an implementation detail around how I handled
+prep_new_page. It could be addressed if many callers expect to pass in
+an array that has holes in the middle.
+
+> It is returning some confusing (to me) results. I'd like
+> to get these resolved before posting any benchmark
+> results.
+> 
+> 1. When it has visited every array element, it returns the
+> same value as was passed in @nr_pages. That's the N + 1th
+> array element, which shouldn't be touched. Should the
+> allocator return nr_pages - 1 in the fully successful case?
+> Or should the documentation describe the return value as
+> "the number of elements visited" ?
+> 
+
+I phrased it as "the known number of populated elements in the
+page_array". I did not want to write it as "the number of valid elements
+in the array" because that is not necessarily the case if an array is
+passed in with holes in the middle. I'm open to any suggestions on how
+the __alloc_pages_bulk description can be improved.
+
+The definition of the return value as-is makes sense for either a list
+or an array. Returning "nr_pages - 1" suits an array because it's the
+last valid index but it makes less sense when returning a list.
+
+> 2. Frequently the allocator returns a number smaller than
+> the total number of elements. As you may recall, sunrpc
+> will delay a bit (via a call to schedule_timeout) then call
+> again. This is supposed to be a rare event, and the delay
+> is substantial. But with the array-based API, a not-fully-
+> successful allocator call seems to happen more than half
+> the time. Is that expected? I'm calling with GFP_KERNEL,
+> seems like the allocator should be trying harder.
+> 
+
+It's not expected that the array implementation would be worse *unless*
+you are passing in arrays with holes in the middle. Otherwise, the success
+rate should be similar.
+
+> 3. Is the current design intended so that if the consumer
+> does call again, is it supposed to pass in the array address
+> + the returned index (and @nr_pages reduced by the returned
+> index) ?
+> 
+
+The caller does not have to pass in array address + returned index but
+it's more efficient if it does.
+
+If you are passing in arrays with holes in the middle then the following
+might work (not tested)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index c83d38dfe936..4dc38516a5bd 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5002,6 +5002,7 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 	gfp_t alloc_gfp;
+ 	unsigned int alloc_flags;
+ 	int nr_populated = 0, prep_index = 0;
++	bool hole = false;
+ 
+ 	if (WARN_ON_ONCE(nr_pages <= 0))
+ 		return 0;
+@@ -5057,6 +5058,7 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 	if (!zone)
+ 		goto failed;
+ 
++retry_hole:
+ 	/* Attempt the batch allocation */
+ 	local_irq_save(flags);
+ 	pcp = &this_cpu_ptr(zone->pageset)->pcp;
+@@ -5069,6 +5071,7 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 		 * IRQs are enabled.
+ 		 */
+ 		if (page_array && page_array[nr_populated]) {
++			hole = true;
+ 			nr_populated++;
+ 			break;
+ 		}
+@@ -5109,6 +5112,9 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 			prep_new_page(page_array[prep_index++], 0, gfp, 0);
+ 	}
+ 
++	if (hole && nr_populated < nr_pages && hole)
++		goto retry_hole;
++
+ 	return nr_populated;
+ 
+ failed_irq:
 
 -- 
-paul moore
-www.paul-moore.com
+Mel Gorman
+SUSE Labs
