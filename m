@@ -2,158 +2,172 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A6AC34406D
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 13:06:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77D14344606
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 14:41:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230242AbhCVMFf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Mar 2021 08:05:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:46800 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230012AbhCVMFE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 08:05:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616414702;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=U/bXzYpa0lKIDumM59ovfcEAUhcz1AW0rt4Zc9RBDwI=;
-        b=M0Up/iKJpZnbO7t0K1fd0fLiSB5tvOGtQ2oMOod88DocD1ooqXrD5pFawtrIqFYO8BqGzK
-        7mA8WxqcOu+t2c9Zbjp7R+l6vIWpGakuaO7ZONX+1OLLpN2P8Wy5tdpUM2hEGDIQGzB41x
-        dLOc6toXvsotH28sHtfkEgj4UeNLnuY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-600-G68X7_svO-SvZ5akdVQh2w-1; Mon, 22 Mar 2021 08:04:58 -0400
-X-MC-Unique: G68X7_svO-SvZ5akdVQh2w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 968B97BA0;
-        Mon, 22 Mar 2021 12:04:56 +0000 (UTC)
-Received: from carbon (unknown [10.36.110.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 74A3219C99;
-        Mon, 22 Mar 2021 12:04:48 +0000 (UTC)
-Date:   Mon, 22 Mar 2021 13:04:46 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Net <netdev@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux-NFS <linux-nfs@vger.kernel.org>, brouer@redhat.com
-Subject: Re: [PATCH 0/3 v5] Introduce a bulk order-0 page allocator
-Message-ID: <20210322130446.0a505db0@carbon>
-In-Reply-To: <20210322091845.16437-1-mgorman@techsingularity.net>
-References: <20210322091845.16437-1-mgorman@techsingularity.net>
+        id S230006AbhCVNkp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Mar 2021 09:40:45 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40720 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230355AbhCVNka (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 09:40:30 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12MDZKbF106261;
+        Mon, 22 Mar 2021 13:40:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=jQ25x+ftjWyfzLJDEBnax4q4SW53NUcu8W2d2t+lfe8=;
+ b=PvW+93Mud1kgpWhVYumd98VuZbY+SIEpEPbuDoJFJ1l418vCvqSGsHNgjtvMTLbbNQFA
+ zDJsYGBgsOqKect2ObeQBoEn2SluyBb2BrWD/6GJ9Du3ibDXepNmGzspL5d/cbeFa+7C
+ VL1gooNC/pUjJ1ebx91LONkI0xqJ2bCRb6l47JjeGftDDTCXhH8PXo8zaNJuWUwG28K9
+ 5/44HuJWpEsiChMkRY1ITotQ1oltvV3YRt7PRlFFAgQopqFsdltuNXi/u0FZ3rVSRcGV
+ rhaG5j8/poMYHjn5C/PZKXu5pRmGa7BSyNG8hAxizr3YXthmwSAPmwWbOGQAbhscjfjX TA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 37d90mbggx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Mar 2021 13:40:26 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12MDaZVU145039;
+        Mon, 22 Mar 2021 13:40:24 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 37dtyw3q66-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Mar 2021 13:40:24 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 12MDeLjL016907;
+        Mon, 22 Mar 2021 13:40:24 GMT
+Received: from mwanda (/10.175.191.120)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 22 Mar 2021 13:40:20 +0000
+Date:   Mon, 22 Mar 2021 16:40:15 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [bug report] NFSv4: Deal more correctly with duplicate delegations
+Message-ID: <YFieP4B3XmHsUn/a@mwanda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Proofpoint-IMR: 1
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9930 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 suspectscore=0 spamscore=0 malwarescore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2103220098
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9930 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 lowpriorityscore=0
+ phishscore=0 mlxlogscore=999 suspectscore=0 clxscore=1011 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2103220098
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 22 Mar 2021 09:18:42 +0000
-Mel Gorman <mgorman@techsingularity.net> wrote:
+Hello Trond Myklebust,
 
-> This series is based on top of Matthew Wilcox's series "Rationalise
-> __alloc_pages wrapper" and does not apply to 5.12-rc2. If you want to
-> test and are not using Andrew's tree as a baseline, I suggest using the
-> following git tree
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git mm-bulk-rebase-v5r9
+The patch 57bfa89171e5: "NFSv4: Deal more correctly with duplicate
+delegations" from Jan 25, 2008, leads to the following static checker
+warning:
 
-page_bench04_bulk[1] micro-benchmark on branch: mm-bulk-rebase-v5r9
- [1] https://github.com/netoptimizer/prototype-kernel/blob/master/kernel/mm/bench/page_bench04_bulk.c
+	fs/nfs/delegation.c:482 nfs_inode_set_delegation()
+	warn: missing error code here? 'nfs_detach_delegation_locked()' failed. 'status' = '0'
 
-BASELINE
- single_page alloc+put: Per elem: 199 cycles(tsc) 55.472 ns
+fs/nfs/delegation.c
+   421  int nfs_inode_set_delegation(struct inode *inode, const struct cred *cred,
+   422                                    fmode_t type,
+   423                                    const nfs4_stateid *stateid,
+   424                                    unsigned long pagemod_limit)
+   425  {
+   426          struct nfs_server *server = NFS_SERVER(inode);
+   427          struct nfs_client *clp = server->nfs_client;
+   428          struct nfs_inode *nfsi = NFS_I(inode);
+   429          struct nfs_delegation *delegation, *old_delegation;
+   430          struct nfs_delegation *freeme = NULL;
+   431          int status = 0;
+                    ^^^^^^^^^^
+"status" is always success.
 
-LIST variant: time_bulk_page_alloc_free_list: step=bulk size
+   432  
+   433          delegation = kmalloc(sizeof(*delegation), GFP_NOFS);
+   434          if (delegation == NULL)
+   435                  return -ENOMEM;
+   436          nfs4_stateid_copy(&delegation->stateid, stateid);
+   437          refcount_set(&delegation->refcount, 1);
+   438          delegation->type = type;
+   439          delegation->pagemod_limit = pagemod_limit;
+   440          delegation->change_attr = inode_peek_iversion_raw(inode);
+   441          delegation->cred = get_cred(cred);
+   442          delegation->inode = inode;
+   443          delegation->flags = 1<<NFS_DELEGATION_REFERENCED;
+   444          spin_lock_init(&delegation->lock);
+   445  
+   446          spin_lock(&clp->cl_lock);
+   447          old_delegation = rcu_dereference_protected(nfsi->delegation,
+   448                                          lockdep_is_held(&clp->cl_lock));
+   449          if (old_delegation == NULL)
+   450                  goto add_new;
+   451          /* Is this an update of the existing delegation? */
+   452          if (nfs4_stateid_match_other(&old_delegation->stateid,
+   453                                  &delegation->stateid)) {
+   454                  spin_lock(&old_delegation->lock);
+   455                  nfs_update_inplace_delegation(old_delegation,
+   456                                  delegation);
+   457                  spin_unlock(&old_delegation->lock);
+   458                  goto out;
 
- Per elem: 206 cycles(tsc) 57.478 ns (step:1)
- Per elem: 154 cycles(tsc) 42.861 ns (step:2)
- Per elem: 145 cycles(tsc) 40.536 ns (step:3)
- Per elem: 142 cycles(tsc) 39.477 ns (step:4)
- Per elem: 142 cycles(tsc) 39.610 ns (step:8)
- Per elem: 137 cycles(tsc) 38.155 ns (step:16)
- Per elem: 135 cycles(tsc) 37.739 ns (step:32)
- Per elem: 134 cycles(tsc) 37.282 ns (step:64)
- Per elem: 133 cycles(tsc) 36.993 ns (step:128)
+I think these used to return -EIO back in the day.
 
-ARRAY variant: time_bulk_page_alloc_free_array: step=bulk size
+   459          }
+   460          if (!test_bit(NFS_DELEGATION_REVOKED, &old_delegation->flags)) {
+   461                  /*
+   462                   * Deal with broken servers that hand out two
+   463                   * delegations for the same file.
+   464                   * Allow for upgrades to a WRITE delegation, but
+   465                   * nothing else.
+   466                   */
+   467                  dfprintk(FILE, "%s: server %s handed out "
+   468                                  "a duplicate delegation!\n",
+   469                                  __func__, clp->cl_hostname);
+   470                  if (delegation->type == old_delegation->type ||
+   471                      !(delegation->type & FMODE_WRITE)) {
+   472                          freeme = delegation;
+   473                          delegation = NULL;
+   474                          goto out;
+   475                  }
+   476                  if (test_and_set_bit(NFS_DELEGATION_RETURNING,
+   477                                          &old_delegation->flags))
+   478                          goto out;
+   479          }
+   480          freeme = nfs_detach_delegation_locked(nfsi, old_delegation, clp);
+   481          if (freeme == NULL)
+   482                  goto out;
 
- Per elem: 202 cycles(tsc) 56.383 ns (step:1)
- Per elem: 144 cycles(tsc) 40.047 ns (step:2)
- Per elem: 134 cycles(tsc) 37.339 ns (step:3)
- Per elem: 128 cycles(tsc) 35.578 ns (step:4)
- Per elem: 120 cycles(tsc) 33.592 ns (step:8)
- Per elem: 116 cycles(tsc) 32.362 ns (step:16)
- Per elem: 113 cycles(tsc) 31.476 ns (step:32)
- Per elem: 110 cycles(tsc) 30.633 ns (step:64)
- Per elem: 110 cycles(tsc) 30.596 ns (step:128)
+status isn't set
 
-Compared to the previous results (see below) list-variant got faster,
-but array-variant is still faster.  The array variant lost a little
-performance.  I think this can be related to the stats counters got
-added/moved inside the loop, in this patchset.
+   483  add_new:
+   484          list_add_tail_rcu(&delegation->super_list, &server->delegations);
+   485          rcu_assign_pointer(nfsi->delegation, delegation);
+   486          delegation = NULL;
+   487  
+   488          atomic_long_inc(&nfs_active_delegations);
+   489  
+   490          trace_nfs4_set_delegation(inode, type);
+   491  
+   492          spin_lock(&inode->i_lock);
+   493          if (NFS_I(inode)->cache_validity & (NFS_INO_INVALID_ATTR|NFS_INO_INVALID_ATIME))
+   494                  NFS_I(inode)->cache_validity |= NFS_INO_REVAL_FORCED;
+   495          spin_unlock(&inode->i_lock);
+   496  out:
+   497          spin_unlock(&clp->cl_lock);
+   498          if (delegation != NULL)
+   499                  __nfs_free_delegation(delegation);
+   500          if (freeme != NULL) {
+   501                  nfs_do_return_delegation(inode, freeme, 0);
+   502                  nfs_free_delegation(freeme);
+   503          }
+   504          return status;
+   505  }
 
-Previous results from:
- https://lore.kernel.org/netdev/20210319181031.44dd3113@carbon/
-
-On Fri, 19 Mar 2021 18:10:31 +0100 Jesper Dangaard Brouer <brouer@redhat.com> wrote:
-
-> BASELINE
->  single_page alloc+put: 207 cycles(tsc) 57.773 ns
-> 
-> LIST variant: time_bulk_page_alloc_free_list: step=bulk size
-> 
->  Per elem: 294 cycles(tsc) 81.866 ns (step:1)
->  Per elem: 214 cycles(tsc) 59.477 ns (step:2)
->  Per elem: 199 cycles(tsc) 55.504 ns (step:3)
->  Per elem: 192 cycles(tsc) 53.489 ns (step:4)
->  Per elem: 188 cycles(tsc) 52.456 ns (step:8)
->  Per elem: 184 cycles(tsc) 51.346 ns (step:16)
->  Per elem: 183 cycles(tsc) 50.883 ns (step:32)
->  Per elem: 184 cycles(tsc) 51.236 ns (step:64)
->  Per elem: 189 cycles(tsc) 52.620 ns (step:128)
-> 
-> ARRAY variant: time_bulk_page_alloc_free_array: step=bulk size
-> 
->  Per elem: 195 cycles(tsc) 54.174 ns (step:1)
->  Per elem: 123 cycles(tsc) 34.224 ns (step:2)
->  Per elem: 113 cycles(tsc) 31.430 ns (step:3)
->  Per elem: 108 cycles(tsc) 30.003 ns (step:4)
->  Per elem: 102 cycles(tsc) 28.417 ns (step:8)
->  Per elem:  98 cycles(tsc) 27.475 ns (step:16)
->  Per elem:  96 cycles(tsc) 26.901 ns (step:32)
->  Per elem:  95 cycles(tsc) 26.487 ns (step:64)
->  Per elem:  94 cycles(tsc) 26.170 ns (step:128)
-
-> The users of the API have been dropped in this version as the callers
-> need to check whether they prefer an array or list interface (whether
-> preference is based on convenience or performance).
-
-I'll start coding up the page_pool API user and benchmark that.
-
-> Changelog since v4
-> o Drop users of the API
-> o Remove free_pages_bulk interface, no users
-
-In [1] benchmark I just open-coded free_pages_bulk():
- https://github.com/netoptimizer/prototype-kernel/commit/49d224b19850b767c
-
-> o Add array interface
-> o Allocate single page if watermark checks on local zones fail
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+regards,
+dan carpenter
