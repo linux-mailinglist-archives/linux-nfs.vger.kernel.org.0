@@ -2,215 +2,276 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15FE3344E6A
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 19:23:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CB51344E85
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 19:26:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231376AbhCVSW4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Mar 2021 14:22:56 -0400
-Received: from mail-vi1eur05on2059.outbound.protection.outlook.com ([40.107.21.59]:27315
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229868AbhCVSWe (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 22 Mar 2021 14:22:34 -0400
+        id S231437AbhCVS0J (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Mar 2021 14:26:09 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36774 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232210AbhCVSZo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 14:25:44 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12MIOGLR158440;
+        Mon, 22 Mar 2021 18:25:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=Z2dk7K7T9DAppWx/xHWRtkZuAUvhZOoYyufY6yoM9pk=;
+ b=YAgg9HmRIzgAZg88AtEh91JXhGsbdf0kfGAskLxHHYgbnD/sL2etP7ANV1m1vXiH2pDG
+ iqjCkB/uL5sY08wVLplHhyCiHM90UCLZYEjMZOLtyKWiMCh+VgcJqqoFNU5of7iS26TC
+ acTaaV37MWPsDoU4MaB+sqOcA8LrpPV2hMzgu878iZZPunNYQIMohOSCVlLjMxrisTBq
+ pO0EB//9xUGHXZ4RyGQ507A65MOLyH4qJOIMaGPj74jQf+5FY9eUJrL15jtRhhmThFi4
+ ++EpX762dOfVxWaO70Fl4mzqBsvVswGpbDEJNYNAISVDCq3TnbSjfYBdmN4gKqt6iuBe nA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 37d9pmvd6c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Mar 2021 18:25:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12MIA8Lk187091;
+        Mon, 22 Mar 2021 18:25:06 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2171.outbound.protection.outlook.com [104.47.58.171])
+        by userp3020.oracle.com with ESMTP id 37dttqwx5m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Mar 2021 18:25:06 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Pl8SpadKlNlu/25ZH+UcXH+G++eq+drSyvBebrRQNTn4dR6nLfwooMDxENarvwBC3J0U1G0lnfBzo99kPxvzvjsL3rk50QBhHA0o1uhzOuaIXeGcX8XzDeUI6Q3pMphL/eEvhUtodtw5OJxzucdiSEQUGGu/CTMKL2K5R6Vu/kdvJQrrDsRtxxiMSuBlbZ+EQWv1GaxzYMe1MNZse277V7q4cHd90KvvLuqjjuBgk1opjWFyMH9+8Qj4rEnyFwbvAQJ0IRbkrT1ysVZVE78SgNjwbxbtumQ8DnhVzo8l67mNynOBtteT6y1Eqmt7VvewDLNjKPHFloq99k8FvviuHQ==
+ b=jE/OhS0t0bxbly7qivKCMymQPAd5GtyuWFQSS8B5DW2JohDPuylVC+/3blgCo+y57/1qYfuEodkYpy490LpVpyGdCiDfFZMAfHuk7kdvkpjHlWcfquNeQoi/vtkYQ15pcFXa06i2iTfnRE1Tu3Tv3SMSnRBljBfBTvuLkuWIomIeZZYTl0QSSjWu59MSbpwOfmkPjN6xL9q8rPoP6XvXvzWyYIFxgCdAwrEc2daxgdiGt7UGAhDSQ6G6z4+C1n1OVeQQImOuMh2+6jvDDUIlgJqBCrCbRQ29REF7cUKVkhHMKdGeGn+QqYUU1jkYaJpl7IXizvFm8afmAxcLDtCYkA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AVKqBNaWrHuLhA8e/1O6o5ianaZwlQ9zaJgHZ0PV6w0=;
- b=Lt45Ghwn3X9ijdhSZz0Md7fA1IKTqv8E3GYbz8mHOLTWl6fBDBV6JAt1+ULm8G4logF6MdNSNPrDR6k5IJ76foRSL9dlRzjG7yd3kPTzBJo4uGvU5bR6Tfrua4tAcH4bRKioZVO8t/bMiUnQxFuN3PWReD/6+kEs1CRCckGUkka8xIUgklM6bGiwLHd6L7c8IvxfVUCTpth27QIJrBsXeckjVyekmvz2LUyq0tksrKb6PFz9mQA4IKYa0o2Kjle0iqRijK2XgSpsq3Kih0J31n/CTBeNE1hpJLkTALj4QyVJQkUfN9LSkXPQLp6C1UeCrxVZrqy/RJ745eMx1A7fwg==
+ bh=Z2dk7K7T9DAppWx/xHWRtkZuAUvhZOoYyufY6yoM9pk=;
+ b=LupkM5j0F6UKzNEJDcNXzpPgJphMBs/IaQTj1T5beWCtLFxqD54MCKv9PqieNxXX8+2kkwundn4a9XligzRKjzV3OV5YeewdZ/u6QSYfWghQ0ORZfMRfW/f+xthanEpRE+OOV0nBXx56SYFAXhXvPOtjOfG2cBnRJ+KvMQNAp7uPHjKmtLxMnIJVF82XUuBLHrFJCYDsk4ykCIKbnZxmSoFMreMbnI/4iIu6ENYiC6wyzK/DUefu5hLLr60kysPOm1Kj7uzrepRXzIQVGbjCY8Xn1EosQw7ch9AAhYkac5CzVToCNtlJFVj/sIA8fnIf9Qew81l8dAbrtKZVcCTFdA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=spinetix.com; dmarc=pass action=none header.from=spinetix.com;
- dkim=pass header.d=spinetix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spinetix.com;
- s=selector2;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AVKqBNaWrHuLhA8e/1O6o5ianaZwlQ9zaJgHZ0PV6w0=;
- b=a+Ix33aoKh6yo/IXoVmp++0HrrE1asoI8fiSt4r6Ltrvai9/6PuypBdBznToj/W5wA4Wj8d27gjbNENMzsBm/C4zrX1+gBReTBG7Ab+z4VIzeYYXB7qVFllYHvwou3yXUZC3f6d2nMkqtbUNF8qWk96/8czQA2u43j8N8rC2ebQ=
-Received: from DB6PR0102MB2630.eurprd01.prod.exchangelabs.com
- (2603:10a6:6:e::19) by DBAPR01MB6838.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:190::13) with Microsoft SMTP Server (version=TLS1_2,
+ bh=Z2dk7K7T9DAppWx/xHWRtkZuAUvhZOoYyufY6yoM9pk=;
+ b=bwwiNZ0p7NTkbkIuh9dx/T4PsUIj4dAmDg56zyL2qvXY9+DPDhAyOLmax2AWv6TqI+idkgUfQfKR+t+A23XnJfpH4B4eQW+XwkPl1pqM5GyjPzmF6k5dm/hPo4Hm3o0itU24MtIliTYGZVOuOydEFhIXFb3G7F6aNGmPnAR+01Y=
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
+ by BY5PR10MB4034.namprd10.prod.outlook.com (2603:10b6:a03:1b1::31) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Mon, 22 Mar
- 2021 18:22:29 +0000
-Received: from DB6PR0102MB2630.eurprd01.prod.exchangelabs.com
- ([fe80::a979:e5e4:3b20:ba6b]) by
- DB6PR0102MB2630.eurprd01.prod.exchangelabs.com
- ([fe80::a979:e5e4:3b20:ba6b%7]) with mapi id 15.20.3955.027; Mon, 22 Mar 2021
- 18:22:29 +0000
-From:   Diego Santa Cruz <Diego.SantaCruz@spinetix.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: symlinkat() behavior with NFS depends on dentry being on cache or
- not
-Thread-Topic: symlinkat() behavior with NFS depends on dentry being on cache
- or not
-Thread-Index: AdcPQlxlz0o0+PGxRoKy1LGtL+Fk7AQBWUaw
-Date:   Mon, 22 Mar 2021 18:22:28 +0000
-Message-ID: <DB6PR0102MB2630FFEE12410EC97457114488659@DB6PR0102MB2630.eurprd01.prod.exchangelabs.com>
-References: <DB6PR0102MB2630902B2569060CD5E802EA88999@DB6PR0102MB2630.eurprd01.prod.exchangelabs.com>
-In-Reply-To: <DB6PR0102MB2630902B2569060CD5E802EA88999@DB6PR0102MB2630.eurprd01.prod.exchangelabs.com>
-Accept-Language: en-GB, fr-CH, fr-FR, en-US
+ 2021 18:25:04 +0000
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::50bf:7319:321c:96c9]) by SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::50bf:7319:321c:96c9%4]) with mapi id 15.20.3955.027; Mon, 22 Mar 2021
+ 18:25:04 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 0/3 v5] Introduce a bulk order-0 page allocator
+Thread-Topic: [PATCH 0/3 v5] Introduce a bulk order-0 page allocator
+Thread-Index: AQHXHvxh39vYR/ByH0SHQRVYSjGN/KqQU18A
+Date:   Mon, 22 Mar 2021 18:25:03 +0000
+Message-ID: <C1DEE677-47B2-4B12-BA70-6E29F0D199D9@oracle.com>
+References: <20210322091845.16437-1-mgorman@techsingularity.net>
+In-Reply-To: <20210322091845.16437-1-mgorman@techsingularity.net>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: hammerspace.com; dkim=none (message not signed)
- header.d=none;hammerspace.com; dmarc=none action=none
- header.from=spinetix.com;
-x-originating-ip: [178.198.240.12]
+authentication-results: techsingularity.net; dkim=none (message not signed)
+ header.d=none;techsingularity.net; dmarc=none action=none
+ header.from=oracle.com;
+x-originating-ip: [68.61.232.219]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a4b4db7a-0e12-4a49-7281-08d8ed5f73b7
-x-ms-traffictypediagnostic: DBAPR01MB6838:
-x-microsoft-antispam-prvs: <DBAPR01MB68382AE6F1EC743FB01B09ED88659@DBAPR01MB6838.eurprd01.prod.exchangelabs.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-office365-filtering-correlation-id: c986b3ef-c477-49a1-3b67-08d8ed5fcffd
+x-ms-traffictypediagnostic: BY5PR10MB4034:
+x-microsoft-antispam-prvs: <BY5PR10MB403405E19A0247784AD37DEE93659@BY5PR10MB4034.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ohxpqP0bd91ZKmvI5F0N7KsFLc3LdECcKOR+36sPQCb2HBfeFyabnGEVjjvbcIaeNSOqmBwJeg54sBXl7Ox4mxZqvRpObsLIcfwv10LI/rs/DuOeMtQfIOsjS9Jz/1t1kGVaHNrtQ4bntQ4B7kFz6oiYziIsIWkAXN/dCZM5cgqTycgkY6m4jk13IgTXdDgUeQPwsnQ99JnT58leoRFKREvjdYxCzClX1WMzBXsbNhZ8fe4h6DdspQjTDxJEwNYUuXVot8ykjEC7IvYur5McX+IY40GXjov61r6l9oWd2fmDp9l3T2uSbZVCFoRoe9lvsAx9juTc2wOGiU7X66Kc9UfCjpu6FNox5LnGs6d5vYg2vudwve/kHibemlMI4T0d+/EnqfeDIeH8gUt5DQ7XNu9CTgP6v+wVtX4c/dzFV1Nbz1nz13lr0B323a61LWmdMMDTuLsFzdHjHlI/DLeDlTWowcSanQDMIsntB0S2sJQBqwg/4578WwUvkJfl7i8T9UepE1mjuzuWs+vGUp+C3Wh8w45ZJA0UFK1RfEdxZesaE4TCq/RiFU6XTR1hfA2EBCWfmE/YoiPqtWNgxmGyPmECFsMwx81ZPWBLVJn5qh+F4rwAocUD5ztU7UWQKBCVC6mMJkPdZOqVi0BsHww6vTEAwx66GJB7PcRvYbIB7ZjNDPULRCIoBb2UNRo/2eyQtJpHpYRMF13hTN70wgda7zFGWrugebDX0EcK5UE2nVLY3fUFpSDhbDYSIijsvgr8
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0102MB2630.eurprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(366004)(396003)(39830400003)(346002)(9686003)(38100700001)(71200400001)(55016002)(4326008)(33656002)(8676002)(2906002)(86362001)(186003)(83380400001)(54906003)(110136005)(316002)(66446008)(8936002)(64756008)(26005)(52536014)(478600001)(76116006)(966005)(7696005)(66946007)(66556008)(6506007)(66476007)(53546011)(5660300002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?RH0UgI+Pa180HpmPpxZfqinlNmG3Cl3kuYmtSJKvYxAFc0eZ2om4bL8fTlsE?=
- =?us-ascii?Q?ry/pZHqlJh6xXKeFcNb3uua/EGOk4kwrK4k0TbDpzlpbv4bNEtMeaOccnVCi?=
- =?us-ascii?Q?ZSs/6lGq+uof6Hu5dG5VhZOPifkn1M93MVxMDsyN2xEXeQtyNKBYUi+wxUK6?=
- =?us-ascii?Q?jHbB6U9e0x3vHuUYRoXpwC7sVWH/0SaCPeZzXchhjv1bgu6wN5NUS/MF9YLH?=
- =?us-ascii?Q?iQy5HrShk5ewwRX3YYm92X5BosqID2ujIanIyntk62/oCxBhfCDulMbZwLjp?=
- =?us-ascii?Q?o1rJ0kUdWXbzl4p6rGysuIFM1wI3o23v1xzYLpM1JRGU26h+aMTrp9LaPlmq?=
- =?us-ascii?Q?uec9a/Z9yV3yE2IFRYoFJrXwluksqz824byZXiTD8xuTVJu7cZxxAYkKbGKw?=
- =?us-ascii?Q?BeoIPVpJrnBNMc0MLrbp5epbk02EJ/uq6SKCy/hmKWDIiu5ityf1Wjn59zme?=
- =?us-ascii?Q?Z3o1D4KzPwJVzOI7KcbK/XAvkUKrxVv2n1pE8ZBYX3rqvwROoRDQTv/XIzdQ?=
- =?us-ascii?Q?W8Ubl8IBIwrFnTb6A4wuIeHbeBJ0PRZB6VVzGYFIcTVexvj1oQdyGj5CPTzx?=
- =?us-ascii?Q?YBvCBREmHuGTeWFYwXqbpnWNReuXQIshXoySKotNUQ+JX+N4mn1YLMIkqHNt?=
- =?us-ascii?Q?wNXt8ElsLi0uFc056vtXbVgrwtYDfJDnzc28NbFqDR3P0qAmDcWOZxAFK3N8?=
- =?us-ascii?Q?YmIexH7/e6bcULOlNaUHYLI9v6Q4n2mGJ+MCrzAhlzKLIqpI1zXFJJI9gpz/?=
- =?us-ascii?Q?rGn7M229nkZkJ5UsdNd3Zo7DTTxC41Z93x2tPvjhtD+29H3ysYn3I2iL0OcV?=
- =?us-ascii?Q?52pCH5gFX0KqCw7j/LmGtu1zcG+K9cpxt3+9elLXUbzXxEBU4Ivz7PjJC5MG?=
- =?us-ascii?Q?IWcuglFH0dx6yGiUKF150XvNxS07MQGI0js8neRuYW8IoyPHO0Mrx0vMxv7s?=
- =?us-ascii?Q?Om5UXL6/kIXU4QzY61t+t6vNLNJj2Gs+Keq+M1Na1PDttazUUeTPDN4+t9EP?=
- =?us-ascii?Q?unVoOalscKoogDdHE35OkQ0gSZqz4FJVBMSE22IBk/1eG0qU9ijUEpawO42q?=
- =?us-ascii?Q?kUKIFfvxWyCXVebrWxPNxaRLSxNmbJ+zGJMK1F4nmPAR96r2QE0rMNOrm2fX?=
- =?us-ascii?Q?smZ6jEds5T5mSOSgx33llAUVb7giYk0nc62U2CuiQIdqcPgvNq82X5TZbWzV?=
- =?us-ascii?Q?ikxGmsZK1tbOYUErV8/wj+LV/Uqp90Aq0kVZ1TxtC0Jjl98Sk0xXuq0hVLZF?=
- =?us-ascii?Q?nASk1VQrVixgYTxXtpQANgTWkr6oqftzrI4h4kED2F3p81M3azSsTjoiBn6O?=
- =?us-ascii?Q?1VpsGS+/vtrfqC1A91LA4//H?=
+x-microsoft-antispam-message-info: tcicPTytUdJGLyA57TLfs4Ljmb2YUheBsMH84w4OSqS1ntpLHtKfuRqF0Xs/biPD4mzffOPugw7FrkkScLQCqL8fnxnH4IWZXc6QU1Jil2gycUDrn/FZpmUP0bDvYkp56oxpuk0gUMBF3hBxgRIl43qBf9CXk+5ITSdVmpcH/DsGUfK/MLxySSUwi95VoI3W6nT/CIsobnFE7tJRm2QLo+nRR7M/VgtBF+zY0WK1Fyf8tMHTxWv8ScORuK6pIHKKx5Chu/EPvqBZ0J1RDT/G/C0S1L2IRlC+T9ZWiET98Yhuqf68o0W5xsijb2STdr2nJraXF94kkbylphbmXAlRjJ9RZBMQACsW+52ZPJPlbxlvi5DICV5ouiQ4/uwlBFXwWj6T2kQcc1louymFltv4JPhpVtdYt2ybvJGTTi7713qKd8oia37DwdOFjI1AP13FO3T+wTeDIxyQvFX1RyVOUXc84AR4p9gwFs1Lbzesiqr63ADJFotUZGn2lU2GSwKew4yf5ZXatfZq7SA6gsezXGTC8uPTImyWAAvE2HD4+RqS6cuUXKRr2lXmUd5bggJGusnzYbHsYmKvUTKh05J49oE3QWGI3gOrtO/jvwYn1cZjmWzDYM/OmGw4YsN3FLAoPbftZHN7KN/EbXAPAHwJDunPTpj6HH2bhQacjrsdUjt/tavvdFsagtbbVY0d9NIl
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(39860400002)(346002)(366004)(136003)(376002)(7416002)(8676002)(8936002)(83380400001)(6486002)(86362001)(478600001)(2906002)(6916009)(66946007)(66556008)(38100700001)(64756008)(66446008)(76116006)(91956017)(66476007)(54906003)(316002)(5660300002)(6506007)(53546011)(71200400001)(33656002)(36756003)(2616005)(4326008)(6512007)(26005)(186003)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?d2pXZS+ZgXYbU+Ry3kwiI+gmj+hXwQhZ9dYL8EOUyCv3fNheifB2UdXjhFT6?=
+ =?us-ascii?Q?PEPwU+1kndjJdnBCkgQpp907foxGZZxGZDzuTyq/wQe4YTXlgJzS+aG+xLuI?=
+ =?us-ascii?Q?IJ27yN0hYKiw/MI3iK85p7zsLuYwPOEKF+aFAFQNVUsaNOUrOO65Vsb5eIES?=
+ =?us-ascii?Q?KIJn1cFsKnjZwB/CrvTx1Pk4rwpAQ+Ux4MBKCXHpyqrpZQ9peaWsNTXl2bui?=
+ =?us-ascii?Q?1DJ4//i3ZkbCYrOeZWu7GjLcuVlR8hyhe+xdFROCtqePmSrSHfYLyYNX4gEF?=
+ =?us-ascii?Q?f4f0d37UoJcytothDdDPh+jBvhUtjAbI49U4yuyjyDJAIEPtTh8PWagjH9+k?=
+ =?us-ascii?Q?x6nOFOSl5GPv29UOdt8SbokKM0EwTY33ztj9w94/qr4p7Kb/gJKHaqPp7cBd?=
+ =?us-ascii?Q?eIH1WqINPaL/rr7BaYLZ3F6vUzhXg1g7fV1n+Bxf791caCEjsCSf6spkYMAd?=
+ =?us-ascii?Q?AFaxGTYNz1IIptCg1VqttrfYU2HkO6SXR0fRykj7M+8BfX9+0ZbBdtTD/Av/?=
+ =?us-ascii?Q?E6UiluHbE1NL+ZiIi60FM1WgknpKYhHgq9LRIBNMHHiFzGItlQYHLTUNmIdw?=
+ =?us-ascii?Q?ZKIU4eoIN441jvB+olZoKWhPxt2dsWsuFLHhzZAPR52WOX9Ft3Df4DUPuTyV?=
+ =?us-ascii?Q?9g3zFBWxkR9YjMZn3lMgqMkAt36VbDPgn35prP8TaAlkSupADQ7k+GUTq+hq?=
+ =?us-ascii?Q?UlBpDBAJ9QKZCEq2DZqcYwMco53LO8n9lJIypxAfBgapUdaoXgmXazBCGd6x?=
+ =?us-ascii?Q?mQ7VyBi8Hc8qY2edFBuqRFI6VUUyJ3PrtM7GnrhPft3ogBDAfOZRkrJg75ys?=
+ =?us-ascii?Q?X21zX3bf65is41Xx3bkqkS4QOPhyUs/vgc/j04yV1Rhfn6ovfR8+eOk6jQws?=
+ =?us-ascii?Q?HkJikNVvzdCxt8+TTPIX4w4FslRAjg9etMMZNaqN/ExIsFhfl6M4w3wmKzqC?=
+ =?us-ascii?Q?aiLTkD1SkQzOKm1tMat4hQdAZd4DDDTku/0TaX7oJhzlnNd2dKAHcA7v1ldK?=
+ =?us-ascii?Q?LbGMHbmkZYzyGxc5XhJrOSLSZYLq3Pla4Dk2UTlqTyDVWMlq9RsfMsWRPMhE?=
+ =?us-ascii?Q?wEKQeXW1u108NJFxqj/I2U42NsZlGW5Xc3y9ZW0HBywn123t1sR82sInxh6p?=
+ =?us-ascii?Q?ILVAm9qZHueGnB3kEZNIL/YgPyrynkHElHSri7iWdO+TRcn5aa62OzpxMysJ?=
+ =?us-ascii?Q?33b6NcGkhD93WSe0WDy+RYx26YOMpElTNZQe3y3uL+7ib0numZwgySW3CLtD?=
+ =?us-ascii?Q?63+I2A0OKk2IZkx5CybC1lFSbJBZxjgzfapgXLObMzqVgGtZL10XpBjLayri?=
+ =?us-ascii?Q?8O4mICAn0An1zNLQXnSDgcnw?=
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
+Content-ID: <605D5AD6155EF3448FBD4206E1189DD6@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: spinetix.com
+X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR0102MB2630.eurprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4b4db7a-0e12-4a49-7281-08d8ed5f73b7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2021 18:22:29.0664
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c986b3ef-c477-49a1-3b67-08d8ed5fcffd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2021 18:25:03.8895
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5f4034fa-ed2d-4840-a93f-acb1e9633b93
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NCoUwv/DhOQfWt5CLbu3W32iLaAbx8laElVzCr17JiLpOe1ASNio4GJ4AkkE2WW3W08AcJ5/HAhALP6jUkQhR+UZqjeTBuy91BbZMcUNy2U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR01MB6838
+X-MS-Exchange-CrossTenant-userprincipalname: oq0gDaNaYLFXqo1xQYEY/Kn012n8JtgGg44TamRvQAoHpSTHgtNH8ug7m6GSTEzt0t0wDHeR9t8cMdzjxz+hOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4034
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9931 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
+ mlxscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2103220133
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9931 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 phishscore=0
+ mlxlogscore=999 priorityscore=1501 impostorscore=0 bulkscore=0 spamscore=0
+ adultscore=0 clxscore=1011 malwarescore=0 mlxscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2103220134
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> -----Original Message-----
-> From: Diego Santa Cruz
-> Sent: 02 March 2021 10:02
-> To: 'Trond Myklebust' <trond.myklebust@hammerspace.com>;
-> 'anna.schumaker@netapp.com' <anna.schumaker@netapp.com>
-> Cc: 'linux-nfs@vger.kernel.org' <linux-nfs@vger.kernel.org>; 'linux-
-> kernel@vger.kernel.org' <linux-kernel@vger.kernel.org>
-> Subject: symlinkat() behavior with NFS depends on dentry being on cache o=
-r
-> not
+
+
+> On Mar 22, 2021, at 5:18 AM, Mel Gorman <mgorman@techsingularity.net> wro=
+te:
 >=20
-> Hello,
+> This series is based on top of Matthew Wilcox's series "Rationalise
+> __alloc_pages wrapper" and does not apply to 5.12-rc2. If you want to
+> test and are not using Andrew's tree as a baseline, I suggest using the
+> following git tree
 >=20
-> [resending as plain-text, sorry for the noise]
+> git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git mm-bulk-rebas=
+e-v5r9
 >=20
-> I noticed that the symlinkat() syscall changes behavior when the newpath
-> (i.e. link name) has a trailing slash and is the path to a directory resi=
-ding on
-> NFS depending on this path being in the dentry cache or not. I stumbled
-> upon this in the context of a Yocto / OE-Core system where I updated
-> coreutils from version 8.30 to 8.31. This creates problems with ln in cor=
-eutils
-> in 8.31. I am currently using kernel 5.4.90.
+> The users of the API have been dropped in this version as the callers
+> need to check whether they prefer an array or list interface (whether
+> preference is based on convenience or performance).
+
+I now have a consumer implementation that uses the array
+API. If I understand the contract correctly, the return
+value is the last array index that __alloc_pages_bulk()
+visits. My consumer uses the return value to determine
+if it needs to call the allocator again.
+
+It is returning some confusing (to me) results. I'd like
+to get these resolved before posting any benchmark
+results.
+
+1. When it has visited every array element, it returns the
+same value as was passed in @nr_pages. That's the N + 1th
+array element, which shouldn't be touched. Should the
+allocator return nr_pages - 1 in the fully successful case?
+Or should the documentation describe the return value as
+"the number of elements visited" ?
+
+2. Frequently the allocator returns a number smaller than
+the total number of elements. As you may recall, sunrpc
+will delay a bit (via a call to schedule_timeout) then call
+again. This is supposed to be a rare event, and the delay
+is substantial. But with the array-based API, a not-fully-
+successful allocator call seems to happen more than half
+the time. Is that expected? I'm calling with GFP_KERNEL,
+seems like the allocator should be trying harder.
+
+3. Is the current design intended so that if the consumer
+does call again, is it supposed to pass in the array address
++ the returned index (and @nr_pages reduced by the returned
+index) ?
+
+Thanks for all your hard work, Mel.
+
+
+> Changelog since v4
+> o Drop users of the API
+> o Remove free_pages_bulk interface, no users
+> o Add array interface
+> o Allocate single page if watermark checks on local zones fail
 >=20
-> What I observe is that sylinkat("name", AT_FDCWD,
-> "/path/to/nfs/existing/dir/") returns ENOENT when
-> "/path/to/nfs/existing/dir/" is not in the dentry cache but EEXIST when i=
-t is,
-> but only when "/path/to/nfs/existing/dir/" is on NFS (NFSv3 in my case).
-> Note that if I remove the trailing slash from the newpath argument then i=
-t
-> returns EEXIST in all cases.
+> Changelog since v3
+> o Rebase on top of Matthew's series consolidating the alloc_pages API
+> o Rename alloced to allocated
+> o Split out preparation patch for prepare_alloc_pages
+> o Defensive check for bulk allocation or <=3D 0 pages
+> o Call single page allocation path only if no pages were allocated
+> o Minor cosmetic cleanups
+> o Reorder patch dependencies by subsystem. As this is a cross-subsystem
+>  series, the mm patches have to be merged before the sunrpc and net
+>  users.
 >=20
-> Following change
-> https://github.com/coreutils/coreutils/commit/571f63f5010b047a8a32503040
-> 53f05949faded4 in coreutils this makes "ln -sf name
-> /path/to/nfs/existing/dir/" sometimes fail with a "cannot overwrite
-> directory" error (when the path is not in the dentry cache). There was no
-> problem before this change because ln did a stat of the link name path
-> before calling symlinkat, so the entry was in the dentry cache when symli=
-nkat
-> executes.
+> Changelog since v2
+> o Prep new pages with IRQs enabled
+> o Minor documentation update
+>=20
+> Changelog since v1
+> o Parenthesise binary and boolean comparisons
+> o Add reviewed-bys
+> o Rebase to 5.12-rc2
+>=20
+> This series introduces a bulk order-0 page allocator with the
+> intent that sunrpc and the network page pool become the first users.
+> The implementation is not particularly efficient and the intention is to
+> iron out what the semantics of the API should have for users. Despite
+> that, this is a performance-related enhancement for users that require
+> multiple pages for an operation without multiple round-trips to the page
+> allocator. Quoting the last patch for the prototype high-speed networking
+> use-case.
+>=20
+>    For XDP-redirect workload with 100G mlx5 driver (that use page_pool)
+>    redirecting xdp_frame packets into a veth, that does XDP_PASS to
+>    create an SKB from the xdp_frame, which then cannot return the page
+>    to the page_pool. In this case, we saw[1] an improvement of 18.8%
+>    from using the alloc_pages_bulk API (3,677,958 pps -> 4,368,926 pps).
+>=20
+> Both potential users in this series are corner cases (NFS and high-speed
+> networks) so it is unlikely that most users will see any benefit in the
+> short term. Other potential other users are batch allocations for page
+> cache readahead, fault around and SLUB allocations when high-order pages
+> are unavailable. It's unknown how much benefit would be seen by convertin=
+g
+> multiple page allocation calls to a single batch or what difference it ma=
+y
+> make to headline performance. It's a chicken and egg problem given that
+> the potential benefit cannot be investigated without an implementation
+> to test against.
+>=20
+> Light testing passed, I'm relying on Chuck and Jesper to test their
+> implementations, choose whether to use lists or arrays and document
+> performance gains/losses in the changelogs.
+>=20
+> Patch 1 renames a variable name that is particularly unpopular
+>=20
+> Patch 2 adds a bulk page allocator
+>=20
+> Patch 3 adds an array-based version of the bulk allocator
+>=20
+> include/linux/gfp.h |  18 +++++
+> mm/page_alloc.c     | 171 ++++++++++++++++++++++++++++++++++++++++++--
+> 2 files changed, 185 insertions(+), 4 deletions(-)
+>=20
+> --=20
+> 2.26.2
 >=20
 
-Any feedback on this problem I'm seeing? Or should I report it using Bugzil=
-la at https://bugzilla.kernel.org/ instead? Or elsewhere?
+--
+Chuck Lever
 
-> I have created a simple program to reproduce this more easily, which I ha=
-ve
-> attached.
->=20
-> To reproduce do this.
->   - Compile the attached symlinkat.c
->   - Mount a NFSv3 filesystem at /mnt
->   - mkdir /mnt/test
->   - To test the error with no dentry cache and trailing slash:
->     sync; echo 3 > /proc/sys/vm/drop_caches; ./symlinkat name /mnt/test/
->     symlinkat name /mnt/test/ failed: No such file or directory (2)
->   - To test with the dentry cache:
->     ls -d /mnt/test/; ./symlinkat name /mnt/test/
->     symlinkat name /mnt/test/ failed: File exists (17)
->   - To test the error with no dentry cache and no trailing slash:
->     sync; echo 3 > /proc/sys/vm/drop_caches; ./symlinkat name /mnt/test
->     symlinkat name /mnt/test failed: File exists (17)
->=20
-> Although I'm no kernel expert, from what I've understood of the kernel
-> code this seems to be a bad interaction between the generic fs handling i=
-n
-> fs/namei.c and the NFS client implementation. The filename_create()
-> function will call __lookup_hash() after setting LOOKUP_EXCL in the flags=
- and
-> if there is no dentry cache for the path then nfs_lookup() will be called=
-, will
-> notice this flag in the nfs_is_exclusive_create() test, optimize away the
-> lookup and not fill d_inode in the dentry. When execution returns to
-> filename_create() the special casing will notice that is_dir is not set a=
-nd
-> last.name has a trailing slash and thus returns ENOENT. Looking for
-> LOOKUP_EXCL usage in the kernel only NFS does this kind of optimization i=
-n
-> current kernels, but in 3.5 and older the same optimization was also done=
- by
-> CIFS.
->=20
-> According to the symlink and symlinkat man pages ENOENT is returned when
-> a directory component of newpath does not exist or is a dangling symbolic
-> link, which is not the case here.
->=20
-> What would be the best course of action to address this issue?
->=20
-> Thanks,
->=20
-> Diego
-> --
-> Diego Santa Cruz, PhD
-> Technology Architect
-> spinetix.com
-
---=20
-Diego Santa Cruz, PhD
-Technology Architect
-spinetix.com
 
 
