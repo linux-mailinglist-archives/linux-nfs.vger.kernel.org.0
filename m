@@ -2,102 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9A82344C09
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 17:45:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA31F344CC4
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 18:07:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229961AbhCVQp1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Mar 2021 12:45:27 -0400
-Received: from outbound-smtp20.blacknight.com ([46.22.139.247]:47171 "EHLO
-        outbound-smtp20.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229872AbhCVQo6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 12:44:58 -0400
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-        by outbound-smtp20.blacknight.com (Postfix) with ESMTPS id 3D43F1C4F2F
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Mar 2021 16:44:55 +0000 (GMT)
-Received: (qmail 4119 invoked from network); 22 Mar 2021 16:44:55 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 22 Mar 2021 16:44:55 -0000
-Date:   Mon, 22 Mar 2021 16:44:53 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Net <netdev@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux-NFS <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 0/3 v5] Introduce a bulk order-0 page allocator
-Message-ID: <20210322164453.GH3697@techsingularity.net>
-References: <20210322091845.16437-1-mgorman@techsingularity.net>
- <20210322130446.0a505db0@carbon>
+        id S231488AbhCVRGf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Mar 2021 13:06:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230367AbhCVRG2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 13:06:28 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7911C061574
+        for <linux-nfs@vger.kernel.org>; Mon, 22 Mar 2021 10:06:27 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 916DC24F6; Mon, 22 Mar 2021 13:06:26 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 916DC24F6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1616432786;
+        bh=VcKAumEty+hY5tRWpynN75G0WdWb5fKgBpzEDfuFUJ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C5B7Mt1VXX2fARVv8PaFhBIBYaFGHwzdqQMrbuzdrgR9LTuJSR3ZC2AneNw5t6d3j
+         ww8BEzCxyO8U095z92X7cnuo50TPv4GohvutdwZkPFQVnutQXr8LLVvXvPO69ju2Bu
+         K/TW49u3fnVrM4ii1Ffi/2pzlXcKHjEeN1LDru8k=
+Date:   Mon, 22 Mar 2021 13:06:26 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Steve Dickson <SteveD@RedHat.com>,
+        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 0/5 v2] nfs-utils: provide audit-logging of NFSv4 access
+Message-ID: <20210322170626.GA24580@fieldses.org>
+References: <161456493684.22801.323431390819102360.stgit@noble>
+ <20210301185037.GB14881@fieldses.org>
+ <874khui7hr.fsf@notabene.neil.brown.name>
+ <20210302032733.GC16303@fieldses.org>
+ <87y2ejerwn.fsf@notabene.neil.brown.name>
+ <20210319132820.GA31533@fieldses.org>
+ <87lfaieuoj.fsf@notabene.neil.brown.name>
+ <20210319210922.GD31533@fieldses.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210322130446.0a505db0@carbon>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210319210922.GD31533@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Mar 22, 2021 at 01:04:46PM +0100, Jesper Dangaard Brouer wrote:
-> On Mon, 22 Mar 2021 09:18:42 +0000
-> Mel Gorman <mgorman@techsingularity.net> wrote:
-> 
-> > This series is based on top of Matthew Wilcox's series "Rationalise
-> > __alloc_pages wrapper" and does not apply to 5.12-rc2. If you want to
-> > test and are not using Andrew's tree as a baseline, I suggest using the
-> > following git tree
+On Fri, Mar 19, 2021 at 05:09:22PM -0400, J. Bruce Fields wrote:
+> On Sat, Mar 20, 2021 at 07:48:44AM +1100, NeilBrown wrote:
+> > For NFSv4.1, only the EXCHANGE_ID is duplicate.  There is only one
+> > CREATE_SESSION, and that is where the client is confirmed.  So only one
+> > confirmed client.
 > > 
-> > git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git mm-bulk-rebase-v5r9
+> > For NFSv4.0 bother SETCLIENTID and SETCLIENDID_CONFIRM are duplicate.
+> > So maybe both clients get confirmed.  I should check that.
 > 
-> page_bench04_bulk[1] micro-benchmark on branch: mm-bulk-rebase-v5r9
->  [1] https://github.com/netoptimizer/prototype-kernel/blob/master/kernel/mm/bench/page_bench04_bulk.c
-> 
-> BASELINE
->  single_page alloc+put: Per elem: 199 cycles(tsc) 55.472 ns
-> 
-> LIST variant: time_bulk_page_alloc_free_list: step=bulk size
-> 
->  Per elem: 206 cycles(tsc) 57.478 ns (step:1)
->  Per elem: 154 cycles(tsc) 42.861 ns (step:2)
->  Per elem: 145 cycles(tsc) 40.536 ns (step:3)
->  Per elem: 142 cycles(tsc) 39.477 ns (step:4)
->  Per elem: 142 cycles(tsc) 39.610 ns (step:8)
->  Per elem: 137 cycles(tsc) 38.155 ns (step:16)
->  Per elem: 135 cycles(tsc) 37.739 ns (step:32)
->  Per elem: 134 cycles(tsc) 37.282 ns (step:64)
->  Per elem: 133 cycles(tsc) 36.993 ns (step:128)
-> 
-> ARRAY variant: time_bulk_page_alloc_free_array: step=bulk size
-> 
->  Per elem: 202 cycles(tsc) 56.383 ns (step:1)
->  Per elem: 144 cycles(tsc) 40.047 ns (step:2)
->  Per elem: 134 cycles(tsc) 37.339 ns (step:3)
->  Per elem: 128 cycles(tsc) 35.578 ns (step:4)
->  Per elem: 120 cycles(tsc) 33.592 ns (step:8)
->  Per elem: 116 cycles(tsc) 32.362 ns (step:16)
->  Per elem: 113 cycles(tsc) 31.476 ns (step:32)
->  Per elem: 110 cycles(tsc) 30.633 ns (step:64)
->  Per elem: 110 cycles(tsc) 30.596 ns (step:128)
-> 
-> Compared to the previous results (see below) list-variant got faster,
-> but array-variant is still faster.  The array variant lost a little
-> performance.  I think this can be related to the stats counters got
-> added/moved inside the loop, in this patchset.
-> 
+> Drifting off topic, but I don't see how this client behavior makes
+> sense.  Mount is chatty enough without the unnecessary duplication.
+> Looking at the code....
 
-If you are feeling particularly brave, take a look at
-git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git mm-percpu-local_lock-v1r10
+I spent a little time tracing through the code and couldn't figure out
+what's going on.
 
-It's a prototype series rebased on top of the bulk allocator and this
-version has not even been boot tested.  While it'll get rough treatment
-during review, it should reduce the cost of the stat updates in the
-bulk allocator as a side-effect.
+Just a note for the future that it'd be worth figuring out why the
+client is repeating SETCLIENTID+SETCLIENTID_CONFIRM or
+EXCHANGE_ID+CREATE_SESSION.  I understand why it might be needed for
+trunking detection when there are multiple addresses involved, but
+otherwise it seems unnecessary.
 
--- 
-Mel Gorman
-SUSE Labs
+--b.
