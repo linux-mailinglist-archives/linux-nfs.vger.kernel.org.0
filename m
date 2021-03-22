@@ -2,73 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B75134470E
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 15:24:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB64C344721
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 15:29:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230181AbhCVOXk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Mar 2021 10:23:40 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:35052 "EHLO
+        id S230219AbhCVO3A (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Mar 2021 10:29:00 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38174 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230331AbhCVOXY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 10:23:24 -0400
+        with ESMTP id S230280AbhCVO2o (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 10:28:44 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12MEJtk2161157;
-        Mon, 22 Mar 2021 14:23:20 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12MENtUX164783;
+        Mon, 22 Mar 2021 14:28:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=DzDXefA4yYZuEL/9IicB6qIgH7i1tCsmFeQ1Sm9sRHY=;
- b=wChqLQy4gcrx58iqipp4afba66A36d2QGxJCl+g0ab96+4Jvs6Tv9spcp6ViF9qCMT4a
- ilO8bLDey3y4mCAKSE4/lkVIu5B/85PIlZ/GZmR3dJxbyVgOB9kDKhkB6Bwk3Hkdbkav
- gLDFao0c9ag0B3hVwj3jiiRMopqtjoTHyhJmiRPvTHyDOaRhHv/xle4pjJf0lGc9Ab/V
- U7KATratiiP9YmC2aumIEamBvO6oPG2xf9535QE0g9nhvUjqAP3phQXnnKkMffsmAJ2M
- l/x8s5beeOnQzXeV5ujA2ZfUsOGt/nw5+fu1VllamXouS1/J7AAa5sY1N9nSpljMgKJl /A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 37d9pmukhf-1
+ bh=PjE0JOc6XCVuVPh36oWmoAoJM65fBUwMKXsQfMVqCpE=;
+ b=t87elVXT7hGhGQhYSAjiJVYelJP0g6lrBznazSMy7OkkZnABqi0e0Lo5DkOgoW2xOlKP
+ I58v+w4CRplDnIONcqyAbr5kq5ifJCs8NV9ZH6JCWnGOoLS16gYf5VhhQlqG868G8W7D
+ QEhgNiUBvQ/Itgk6PZv0ryC9dKEl9kxPc9rNdzPZjvbWNWzVFRfx1xZWEScTrXWKojAM
+ qslnVvIb8IBnykTdtiNo3Uz+t0PiPUYv/3P0zHgckis/zl8nHNs33UU56H6gXRROEL6R
+ tuTgZk2aobmYcccy5YGqabBl13p2ywZ+uS82KQU7EmXKfbILnzrKpCiD9Y3EhLCLYmQj zA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 37d9pmum3u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Mar 2021 14:23:19 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12MEKJC8094614;
-        Mon, 22 Mar 2021 14:23:19 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2171.outbound.protection.outlook.com [104.47.58.171])
-        by aserp3020.oracle.com with ESMTP id 37dtxx0utu-1
+        Mon, 22 Mar 2021 14:28:32 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12MEP50m081145;
+        Mon, 22 Mar 2021 14:28:32 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam08lp2044.outbound.protection.outlook.com [104.47.73.44])
+        by aserp3030.oracle.com with ESMTP id 37dtmn97jf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Mar 2021 14:23:19 +0000
+        Mon, 22 Mar 2021 14:28:31 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XIgA6eVA8w0RusWYNwu2AVUqVQFi7mst/DU3EP1gyulpTIKMbnrIeXtyxbdcdfDaSyLhOWFF5N5lf0WxJw4qZzDQQXTdmIuL9csaGl7SWmgAmB+1KJBFF46bF67JXgk25xE/SVinT8+CShBjRC67Z6ei+m/nDI7jYOeIpfQNO2t1P08MxOjokLHqTK0pzs/+j7gwxunBirGkCeHeWhosQ3G/deX+f5ibgwvlyO8HBLI5TMVr/FyE+XyBR2DHapDOFT2QvN3bcCiZs0xDhyck6g+m2QjEzEtiXvrxi6mUT3s6Xe9DJ9bbExUuvrmnWQD55NaWqDXdAY49Y5JER+Apaw==
+ b=fX7XK5sCSKaSWl15aYnoCtgoNvdTMAVd2dNah3MsEY7YE5JLCCWJkO1BMLY0QiAaIjlI9z7z0WsdubHyskjaXcv/L65bFqTUpUmaPs44kdx3dMkTIGEvfg+HBtxllMueDyU8JszAZ59slWocNAhFRFt/5hJrXQSIk8ggcroVrcGvK2U3vVrChCTARm+ryOkWAuNecGv7LI5WoHKw1FcqJcyPJeokeAPHmO/scHH7sPqrdUs8bg8BhBxbabI8Mz0/KvH8ODeSUApOZicu9CQsmg88vZdRD4oopMa7MGLdC3mGSNMC15cjOi/urS/OdF+0vLDu3G+vQMc3ADgrpP2ykQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DzDXefA4yYZuEL/9IicB6qIgH7i1tCsmFeQ1Sm9sRHY=;
- b=BTHiE5SmSucICFS6kGQwgBMRtw276X0hiY8VrhVmey0WpJxgQy6H1xLQWs64EH5sfdRPujNFYp5IFRt5Tt/hBh/FbRyhBUk8IrwsZfomWxX5kQ+dRo8cOjjGAh0WhdTzpKT0HA+Uam7rp6kkhoMsKQO3nOIppx3VK/4QFRM5D4KysTo3/UA1lXM53p23tci5OW/M5WW9FrqIPd3OZbYU+II0eJPzDAQPQMnbXVKfEelrGZ2QyhDGlIYsPeGdN/OPVs+2oaI1saKZbC4oc2j/CUCv/WqZwSguMCnaqoSaWZ80B9W1ZcukVzALWD/bAM85Kgu6ACKT8TQZA8OAWHlkEg==
+ bh=PjE0JOc6XCVuVPh36oWmoAoJM65fBUwMKXsQfMVqCpE=;
+ b=hyQt/y4QX8q/Z21OJtkW6UeF3fDEPuu0B6f6vXBfdT8FTxkdUoXdJMrSgOfAylJuEl6pMMPfvAEP8Y+7eQIxeTCRA0sYcIG48Czp81wHa9eFoFNX6hrTY0guCCP+5NQYjTrY4312TdXD+NQ+xo3np+YHsa9xcWma/Ed1eBf1ylD+gsYuCsBDpwRFt95zBdvqBCYr+806lkCbu7EMqR5Lg192QJEs9AN6NrENeG5f6BBMNTB5nD1L0Ksd50Vi4K1iObMnkHNYDVgpoMTLdAEquq2lIwL3JiMTf+pdYUGHHg1tJwkro2blWhxG9dfr5F0Q/Ipf0h4fCgFI6b5t9YjR1w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DzDXefA4yYZuEL/9IicB6qIgH7i1tCsmFeQ1Sm9sRHY=;
- b=jQfA0nSRLIF5nQJNqiRbgQbWl/ARiIVoYBwOryCOuo4NYUmc98RpQWaiO5mitbeiL+BL4hRS4udIJ0RhOBMs/oRyMPvqKSW7L0pfa/MOYop2u3UFsJKhi8d60WaIhri+ad7kEiWVVMGwO8NptPuUVgyTdrRjKDBI8fE08fAki6Q=
+ bh=PjE0JOc6XCVuVPh36oWmoAoJM65fBUwMKXsQfMVqCpE=;
+ b=r45S85ccfY/diqIuzJ6E7Udkf6phg+wi3bZhYEVReQzV0gPDoCMBK3NPzSanzVh1jlB5Se35bM9v6wsyX1v1HVVCnOYqvFM2nI+/Dxn4hUnxr3ou/i1nShxg+bXYfSzbq7t7JI3kDOdbM619zwk4D0StekZLRKsR3C57x+iMPNI=
 Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by BYAPR10MB3048.namprd10.prod.outlook.com (2603:10b6:a03:91::16) with
+ by BY5PR10MB3857.namprd10.prod.outlook.com (2603:10b6:a03:1b0::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Mon, 22 Mar
- 2021 14:23:17 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.23; Mon, 22 Mar
+ 2021 14:28:29 +0000
 Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
  ([fe80::50bf:7319:321c:96c9]) by SJ0PR10MB4688.namprd10.prod.outlook.com
  ([fe80::50bf:7319:321c:96c9%4]) with mapi id 15.20.3955.027; Mon, 22 Mar 2021
- 14:23:17 +0000
+ 14:28:29 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Bruce Fields <bfields@redhat.com>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 2/2] nfsd: COPY with length 0 should copy to end of file
-Thread-Topic: [PATCH 2/2] nfsd: COPY with length 0 should copy to end of file
-Thread-Index: AQHXHFNU830eg5Y6X0WV8w4eduDkKKqQFSUA
-Date:   Mon, 22 Mar 2021 14:23:17 +0000
-Message-ID: <A06DEECA-E34A-4E9C-B7E1-8ABBED01545D@oracle.com>
-References: <1616112203-14672-1-git-send-email-bfields@redhat.com>
- <1616112203-14672-2-git-send-email-bfields@redhat.com>
-In-Reply-To: <1616112203-14672-2-git-send-email-bfields@redhat.com>
+To:     Bruce Fields <bfields@redhat.com>,
+        Chris Down <chris@chrisdown.name>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] SUNRPC: Output oversized frag reclen as ASCII if
+ printable
+Thread-Topic: [PATCH] SUNRPC: Output oversized frag reclen as ASCII if
+ printable
+Thread-Index: AQHXHM/NVCtugqioaUyypXdJqaYWcqqLZvMAgAB4GYCABDaVgA==
+Date:   Mon, 22 Mar 2021 14:28:29 +0000
+Message-ID: <117735A5-0545-451E-AFD8-28440F7E2DBE@oracle.com>
+References: <YFS7L4FIQBDtIY9d@chrisdown.name>
+ <3844BF67-8820-4D6C-95BA-8BA0B0956BD0@oracle.com>
+ <YFUgxdSXu34SvFsd@pick.fieldses.org>
+In-Reply-To: <YFUgxdSXu34SvFsd@pick.fieldses.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -77,111 +85,222 @@ authentication-results: redhat.com; dkim=none (message not signed)
  header.d=none;redhat.com; dmarc=none action=none header.from=oracle.com;
 x-originating-ip: [68.61.232.219]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5fe4be49-1ceb-4abf-0bae-08d8ed3e0939
-x-ms-traffictypediagnostic: BYAPR10MB3048:
-x-microsoft-antispam-prvs: <BYAPR10MB304848B21C9F6E4F2FD8F46E93659@BYAPR10MB3048.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-office365-filtering-correlation-id: 62578d2a-a1ef-410a-7405-08d8ed3ec35c
+x-ms-traffictypediagnostic: BY5PR10MB3857:
+x-microsoft-antispam-prvs: <BY5PR10MB38577D0B52730F5D94A62A4293659@BY5PR10MB3857.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1751;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vPBszxOM+P6/8oKZ9TmKUme0e/LZTIjRmPxrY5CQdRQW40iJwN2F08ckvoTMKpJZj+9MgmjuJbMVh5hZ3XQRpH3i1uvReSKF3cN3Xpy0qu2QEIHdWampcFF/A4ZxV+yTUPVPWjLSweXQFF0A6BY7djXW5nnGfrbaISESki0UQXaRbst09z1BvKfpCB6bxLwg8ZZeZxrzqsIA+27kWZzBKlUWwtxLEgWb1reW7O2plqV7/2uPiVJni1i/YMeZ3mADwZJ6OLt7U7OsHRC8Z7/c/kM8RKgK1LqMI15369I8V9ol1fUfe0H3EdaXUmkcWJFjC7/Y2GZeEZC3khtzabsIYP/L3xqTUzTJnztQmp6txfopodYD9wxlQVK7WmAnm3/YcIqxwWmePuFMNqOCM17dbZWCRFUqvpc1OasP4OIf73QDKb6j+4VEMeNk1tcWRX1tM5T87u7a9fE54HBGrfMjVmFv/TUEK8UPmqFkszVtdPXrwuYj18iT2QKA9ZIjGgp1PxUTea/YjbF3c6RDhJg0L99xV3fJbDllUZTm+ddKyBYJaIG0OwN+wul3DxvrjUD2xB8aTVm4Szfqu+EDe8QqxM/R7dq8yRWcsNFIMaFY2RvyGXY/w83CU6rEJwqg+CR0i702GeBbGRYhEGzNMfX9PFthzIzZnhAi8WBm9NQp4CiWmBtBLWE+IIdrq94oLBFjj0PeZNkzlM5tPN6CJZN9kq99iedSsrAqVYooFGlPc1oWims1b53FNgY0C1yzjms2G9Def0m7Ja1XqwLcJQRJ6A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(346002)(396003)(39860400002)(366004)(136003)(66556008)(66446008)(76116006)(91956017)(64756008)(66946007)(316002)(86362001)(66476007)(4744005)(8936002)(83380400001)(33656002)(2906002)(8676002)(2616005)(26005)(36756003)(186003)(4326008)(53546011)(478600001)(6486002)(5660300002)(71200400001)(966005)(6506007)(6512007)(6916009)(38100700001)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?7XyOQBCGQHhCog9/UH1uOk0CyA+SBWs2/tmkke2jZeU6PLa228fRID7H2VNN?=
- =?us-ascii?Q?3IjVg5uB7FiJ7zO24cILBEKnTPfQ/7Xa8Y/beQu/0Qdnv+A96HG1nFf/Z3ua?=
- =?us-ascii?Q?Pr6MlX+WkLKLACAGwIXoPG2A0MbvFQVKr+26nPNaw4pdy0dvHCtLyS/I8D8P?=
- =?us-ascii?Q?ISESdoaIhbYAvYEqu1fZjHV76tiMi35dS3yybFlandU+fAbecf8EvIRkSzVe?=
- =?us-ascii?Q?ot1HYfjFOthmU7D70LGX9U7SHEOb4NmE5uqEhhxprRGUz7R1U6bxGKBM8mN+?=
- =?us-ascii?Q?Rayn5XqCvqebUb65qWmwo9oziqOsu6bfBjEGwKH8U3qGhwCmIRRum4lkR8UW?=
- =?us-ascii?Q?IRIiHjnlvCZbQq/qlLG1yt7mfVgokbYAqyIgsiZTJ9Rad+IC0XMTgLUi88LX?=
- =?us-ascii?Q?dxW1VANc61bixB0Ic+NMch9lo0y1cB5Fx7mw57i5bfm4Q+YKc33ygIohqaQh?=
- =?us-ascii?Q?EVGIqmyntCKZmNsMOwGRARhKGiFw25LSfsVFRXZsFp/zxxfDabfqbDnkHrQO?=
- =?us-ascii?Q?XpH9mYs4gYYhUdpiqw44auMWAZzFVk1dqwgmP1mx1JfxAEK1Al0xBXP71h5v?=
- =?us-ascii?Q?3iyTXVrhVXIQzcecNFPdvjEan2MvaJDzFD04CJzxCMT7phOITlesW59mlfpv?=
- =?us-ascii?Q?YD2dnQZ6phYo9FgatMraVBWFfrCSC0Umxa+SInoi2WJl5WecWXLsS8znPbKv?=
- =?us-ascii?Q?TxK37Pr1YyHPdAkju4YK1bm3sadwThSfTnLwczlu3xV499nBzuoKIXnLcfxD?=
- =?us-ascii?Q?aIpl2qVoIQlfuddxZtQutelAdo/20GiNLRIEn1VP4yPdh7LsxW6sV6qtwleU?=
- =?us-ascii?Q?5ZCmFqxgwKP5htL1Ia7pspEeh5K//iPMMmJiBXTDnyzMb8aV470W+a1xxGU8?=
- =?us-ascii?Q?osnZTOg8aMQcO4EKZaNPFdo9uUOSaJjyS92QNec4n+0ALBNT6W2sU22x8Srm?=
- =?us-ascii?Q?M6HhnmTpbnIoIp+uFWCfsNU6j91+7JFcGmVw7TWrthUGO1ChdmE+ASfPJTH0?=
- =?us-ascii?Q?s0/6VKFMYVI+ST/GawjXGBPZZAfl9JL8ci1yr9uFMlGxCC+CzTQwbFNQB9X7?=
- =?us-ascii?Q?13ZQu46VKFAcLDSWfTJg+rN6WtSHYMUpYWqXKnowOpSdpEGVDcLjeCiXR3uB?=
- =?us-ascii?Q?GYs5+zaPlkD3nze5Y/bSGcjWRNY/kCGhl+X1FsqsMFvt3b3pbgEXIm1vqTKe?=
- =?us-ascii?Q?JbNK9qdPDaRrNyINBKQDwXH/tIG1EoJPSFb2pkSDrUD0WG7reYzHjrErYCT0?=
- =?us-ascii?Q?rVzLEj9BKLPrPHGtiC84xX/jH2ZYRSOkJLj/q/56HpvPdDwrzCUeOKvc4zWj?=
- =?us-ascii?Q?1dfNNQtu3l9NRQ+svJP7YbXw?=
+x-microsoft-antispam-message-info: UgBXaXPp58Eu31zof60/u/uo/C/1yXgevCIOLEV3Q8aDfP0g658KH6YsEV8Q2HNVVXY2nVaZ0SRYFId5i3WhBCqTEAYgs4gtyKcOisJymPSZ/xAezfIpfL/ySH+ClN5Zcnitu1s2G+06wTnOiFxWZMiLFTO7DYWpyL2eBhpL0I5YtJSQda0KicDQzQBtpt4DF5+ZcFWz7XjxPAfEtf7+LXl8faVO7/NJrcVvqngx9C/MVwh1vmv096VNtcsVTrT/qPwdrHAzTSZzmsQfTwIOMRoh3aUVFkBX1WgSPt8HGRz3NeuSbibDIfbLg8yIkptfG+S+zM9unT2DDjTQJxKehpAiXOGAdhZ29ZKMetcraE5IOA8siRZVJiabPpzoLccnki1+7sy6PhiQBowv4xN7J2dAu61pWzibu+B+J+339v4syUh+WLbcr+3mBH/TDz3MNfokZ8DPKr5KJrSQrmnDU/PEYZKst2CykQsLwjEKb6xFDYtf4gv8T72daJB8GWGbBJVWQJAtCg9/QRxVbgZrOHgoz+yHKNTeevwL89w/vx9LFxR3CAyyhFCB6LlMPplPCViJn9lnhGtsbqDDFzEaINO35fdtGsWkvFSstYhZOQ8xt9QWFwCHJ4/pQIm1TQeIFU/9bKmpncFmjubiuCBfFdXA5yyRJzeQxPMCnHKArkMOZUXW6nwRQz+JYODI2mgD
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(346002)(39860400002)(396003)(366004)(376002)(6486002)(6506007)(26005)(83380400001)(86362001)(38100700001)(53546011)(66946007)(64756008)(66446008)(76116006)(316002)(91956017)(110136005)(54906003)(4326008)(478600001)(5660300002)(8676002)(66476007)(8936002)(6512007)(2616005)(186003)(2906002)(71200400001)(33656002)(36756003)(66556008)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?ZZTV742kmlSoAOJ6yIrfpfTjKPHCSzJNLhap8/cmkN3m+l7r91X6kFT5npq9?=
+ =?us-ascii?Q?vtM33up4PDZ/WRVX39Syaew3QQksVxcQDMc8M4G3m5PcNki0n7+tB/BEuPE5?=
+ =?us-ascii?Q?WoYMoaSVQDNieHX4OpQEK4FkOiK2AyzHp4jAkDeVn4Nl3MEAuJeB7+YVa/Jy?=
+ =?us-ascii?Q?BQzODc39ZDGyT1P7SjSrxbzr/CIUVBKbMbjpmvZPwiH2y7XGF41wBq9PUblM?=
+ =?us-ascii?Q?qaF0nemOOu3/macc8uvTmpzwkUICd9WukELdQUTcZqWGkdEsVk0Eaxk1nZx2?=
+ =?us-ascii?Q?x7xZoONf+4CWBNnN9oNmk86LcaBC6KbWJZG8hJrqlbOnInRp91P64AuNurrN?=
+ =?us-ascii?Q?sHYREQYJeM3rS8JMMCnFv5iK1eR01M87b6lnIzVtibUISX10avbfayvyjbEe?=
+ =?us-ascii?Q?lyWRfyNsiciVIKF0BD5AleZcTn0zeFemGlVslS4s9abiNG0mzMrroV+se2xW?=
+ =?us-ascii?Q?YyMrOj+G89riVngrxvRo94NyLwFgcIwDK/ecZCYPYE5TUjEsF4X5u6EtXdCB?=
+ =?us-ascii?Q?M751ML4htYk6VrY55HIF9wc+sP4h/MAYt6f30ar2iZaF3uKr/HzvYql6xx4X?=
+ =?us-ascii?Q?cDyhVl5zjYRIkyeil5NYqdu/y6b65K36SMSIjokqc9LAzVQtM5Zn7EBgklcY?=
+ =?us-ascii?Q?a7O5EO/53T1ME7gYVFlkbWico1/+uLe0F87nzPyOBKr2FFOJQV9/vgyqASDk?=
+ =?us-ascii?Q?usPcGx5WeZY6uIjT2Z1Ozf2WHPVUWQdFQv6VH6fqK1f+duMwrLJ4n1Fn9hac?=
+ =?us-ascii?Q?lyoET0qS1ocWpGdEDo01Htej1/GNNaolkB2gQbQzM5w53IRdtIqPNkuX/7E0?=
+ =?us-ascii?Q?9Z0hPH2vYxykemYb/7HfmgxzObhHA5cax5Lw10Zd1VSFQmkbhmrSmpb78R5J?=
+ =?us-ascii?Q?D9xDWfGXHnE+Lmg7gok/x4PMkDBqiIRnUwvVpfTQ9otmHc1f7ZSMEVT4FTeV?=
+ =?us-ascii?Q?JO7pCGu81S08XQ3jAJmMra2I7VUrqkwQQJdbDObYngujSSp+cyRRhcujhLMr?=
+ =?us-ascii?Q?dzO30al9YZ1MYjDPOLXgSM82LBEEBr2BJyhnGdUGJ4bQKs1W+4MfJHrZxMyM?=
+ =?us-ascii?Q?LsBKMhmdoXgQjjD+M+q/fivxZOJOWlhA7/gHplWDGNeXZaZzNcuLr6aZgrNd?=
+ =?us-ascii?Q?pLAh02jSQdwTeoIXjdhOQFiqQnT0mjWxVzrQKqZUhGm6LgG1WZzw+iCKguLE?=
+ =?us-ascii?Q?qmzA8iDQEnUBY9t1t0hAPILXlh2whYRt2gtSWTxXlosnBDIQE4PGPvSQuVM6?=
+ =?us-ascii?Q?AUWUbd8UtmzfwxQ0tSafbGggBG/ebhd5XFT3NwQVTbSPk155d/TuoDSnXNZY?=
+ =?us-ascii?Q?l/njAK1mogKSb6qmc2UjvX89?=
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8F9358E3476C0548A9B822C70140B760@namprd10.prod.outlook.com>
+Content-ID: <E06A01D4EFA94F4EA36AD7EA52B6F73D@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fe4be49-1ceb-4abf-0bae-08d8ed3e0939
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2021 14:23:17.0318
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62578d2a-a1ef-410a-7405-08d8ed3ec35c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2021 14:28:29.3619
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ngp1/LF5589OLjXY/zZXJl6DwqXQ01JBU52TVXAGPkGysOoeYHPrsQeAGngXPioEzGxGt2ZcOwCx6WSm6c4pQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3048
+X-MS-Exchange-CrossTenant-userprincipalname: kY2btQ7TmU62+iP+SSafJBD0dcb2Rl10E12qfLixMlWW+fPE1TyHgI3dSgUHYJm0ZOiL2chK4XFNKzPRgIj2Yg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB3857
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9931 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- malwarescore=0 phishscore=0 bulkscore=0 mlxscore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103220105
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 phishscore=0
+ bulkscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2103220106
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9931 signatures=668683
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 phishscore=0
  mlxlogscore=999 priorityscore=1501 impostorscore=0 bulkscore=0 spamscore=0
  adultscore=0 clxscore=1015 malwarescore=0 mlxscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103220105
+ definitions=main-2103220106
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Mar 18, 2021, at 8:03 PM, J. Bruce Fields <bfields@redhat.com> wrote:
+> On Mar 19, 2021, at 6:08 PM, J. Bruce Fields <bfields@redhat.com> wrote:
 >=20
-> From: "J. Bruce Fields" <bfields@redhat.com>
+> On Fri, Mar 19, 2021 at 02:58:14PM +0000, Chuck Lever III wrote:
+>> Hi Chris-
+>>=20
+>>> On Mar 19, 2021, at 10:54 AM, Chris Down <chris@chrisdown.name> wrote:
+>>>=20
+>>> The reclen is taken directly from the first four bytes of the message
+>>> with the highest bit stripped, which makes it ripe for protocol mixups.
+>>> For example, if someone tries to send a HTTP GET request to us, we'll
+>>> interpret it as a 1195725856-sized fragment (ie. (u32)'GET '), and prin=
+t
+>>> a ratelimited KERN_NOTICE with that number verbatim.
+>>>=20
+>>> This can be confusing for downstream users, who don't know what message=
+s
+>>> like "fragment too large: 1195725856" actually mean, or that they
+>>> indicate some misconfigured infrastructure elsewhere.
+>>=20
+>> One wonders whether that error message is actually useful at all.
+>> We could, for example, turn this into a tracepoint, or just get
+>> rid of it.
 >=20
-> From https://tools.ietf.org/html/rfc7862#page-65
+> Just going on vague memories here, but: I think we've seen both spurious
+> and real bugs reported based on this.
 >=20
-> 	A count of 0 (zero) requests that all bytes from ca_src_offset
-> 	through EOF be copied to the destination.
->=20
-> Reported-by: <radchenkoy@gmail.com>
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> I'm inclined to go with a dprintk or tracepoint but not removing it
+> entirely.
 
-Hi Bruce -
+Because this event can be chatty in some cases, I would prefer making
+it a tracepoint rather than directing it to the log. Note also it would
+be helpful if the server's net namespace and the client's IP address
+and port were recorded.
 
-These two have been committed to the for-next topic branch at
+Chris, there exists some boilerplate in fs/nfsd/trace.h to help with
+the latter (just so you can see how to build the trace event definition;
+you don't have to copy the macros to include/trace/events/sunrpc.h).
 
-git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
 
-
-> ---
-> fs/nfsd/nfs4proc.c | 3 +++
-> 1 file changed, 3 insertions(+)
+> --b.
 >=20
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 5419342df360..62354229f0b0 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -1387,6 +1387,9 @@ static ssize_t _nfsd_copy_file_range(struct nfsd4_c=
-opy *copy)
-> 	u64 src_pos =3D copy->cp_src_pos;
-> 	u64 dst_pos =3D copy->cp_dst_pos;
->=20
-> +	/* See RFC 7862 p.67: */
-> +	if (bytes_total =3D=3D 0)
-> +		bytes_total =3D ULLONG_MAX;
-> 	do {
-> 		if (kthread_should_stop())
-> 			break;
-> --=20
-> 2.30.2
->=20
+>>=20
+>>=20
+>>> To allow users to more easily understand and debug these cases, add the
+>>> number interpreted as ASCII if all characters are printable:
+>>>=20
+>>>   RPC: fragment too large: 1195725856 (ASCII "GET ")
+>>>=20
+>>> If demand grows elsewhere, a new printk format that takes a number and
+>>> outputs it in various formats is also a possible solution. For now, it
+>>> seems reasonable to put this here since this particular code path is th=
+e
+>>> one that has repeatedly come up in production.
+>>>=20
+>>> Signed-off-by: Chris Down <chris@chrisdown.name>
+>>> Cc: Chuck Lever <chuck.lever@oracle.com>
+>>> Cc: J. Bruce Fields <bfields@redhat.com>
+>>> Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>> Cc: David S. Miller <davem@davemloft.net>
+>>> ---
+>>> net/sunrpc/svcsock.c | 39 +++++++++++++++++++++++++++++++++++++--
+>>> 1 file changed, 37 insertions(+), 2 deletions(-)
+>>>=20
+>>> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+>>> index 2e2f007dfc9f..046b1d104340 100644
+>>> --- a/net/sunrpc/svcsock.c
+>>> +++ b/net/sunrpc/svcsock.c
+>>> @@ -46,6 +46,7 @@
+>>> #include <linux/uaccess.h>
+>>> #include <linux/highmem.h>
+>>> #include <asm/ioctls.h>
+>>> +#include <linux/ctype.h>
+>>>=20
+>>> #include <linux/sunrpc/types.h>
+>>> #include <linux/sunrpc/clnt.h>
+>>> @@ -863,6 +864,34 @@ static void svc_tcp_clear_pages(struct svc_sock *s=
+vsk)
+>>> 	svsk->sk_datalen =3D 0;
+>>> }
+>>>=20
+>>> +/* The reclen is taken directly from the first four bytes of the messa=
+ge with
+>>> + * the highest bit stripped, which makes it ripe for protocol mixups. =
+For
+>>> + * example, if someone tries to send a HTTP GET request to us, we'll i=
+nterpret
+>>> + * it as a 1195725856-sized fragment (ie. (u32)'GET '), and print a ra=
+telimited
+>>> + * KERN_NOTICE with that number verbatim.
+>>> + *
+>>> + * To allow users to more easily understand and debug these cases, thi=
+s
+>>> + * function decodes the purported length as ASCII, and returns it if a=
+ll
+>>> + * characters were printable. Otherwise, we return NULL.
+>>> + *
+>>> + * WARNING: Since we reuse the u32 directly, the return value is not n=
+ull
+>>> + * terminated, and must be printed using %.*s with
+>>> + * sizeof(svc_sock_reclen(svsk)).
+>>> + */
+>>> +static char *svc_sock_reclen_ascii(struct svc_sock *svsk)
+>>> +{
+>>> +	u32 len_be =3D cpu_to_be32(svc_sock_reclen(svsk));
+>>> +	char *len_be_ascii =3D (char *)&len_be;
+>>> +	size_t i;
+>>> +
+>>> +	for (i =3D 0; i < sizeof(len_be); i++) {
+>>> +		if (!isprint(len_be_ascii[i]))
+>>> +			return NULL;
+>>> +	}
+>>> +
+>>> +	return len_be_ascii;
+>>> +}
+>>> +
+>>> /*
+>>> * Receive fragment record header into sk_marker.
+>>> */
+>>> @@ -870,6 +899,7 @@ static ssize_t svc_tcp_read_marker(struct svc_sock =
+*svsk,
+>>> 				   struct svc_rqst *rqstp)
+>>> {
+>>> 	ssize_t want, len;
+>>> +	char *reclen_ascii;
+>>>=20
+>>> 	/* If we haven't gotten the record length yet,
+>>> 	 * get the next four bytes.
+>>> @@ -898,9 +928,14 @@ static ssize_t svc_tcp_read_marker(struct svc_sock=
+ *svsk,
+>>> 	return svc_sock_reclen(svsk);
+>>>=20
+>>> err_too_large:
+>>> -	net_notice_ratelimited("svc: %s %s RPC fragment too large: %d\n",
+>>> +	reclen_ascii =3D svc_sock_reclen_ascii(svsk);
+>>> +	net_notice_ratelimited("svc: %s %s RPC fragment too large: %d%s%.*s%s=
+\n",
+>>> 			       __func__, svsk->sk_xprt.xpt_server->sv_name,
+>>> -			       svc_sock_reclen(svsk));
+>>> +			       svc_sock_reclen(svsk),
+>>> +			       reclen_ascii ? " (ASCII \"" : "",
+>>> +			       (int)sizeof(u32),
+>>> +			       reclen_ascii ?: "",
+>>> +			       reclen_ascii ? "\")" : "");
+>>> 	set_bit(XPT_CLOSE, &svsk->sk_xprt.xpt_flags);
+>>> err_short:
+>>> 	return -EAGAIN;
+>>> --=20
+>>> 2.30.2
+>>>=20
+>>=20
+>> --
+>> Chuck Lever
 
 --
 Chuck Lever
