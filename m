@@ -2,116 +2,117 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A72A234320A
-	for <lists+linux-nfs@lfdr.de>; Sun, 21 Mar 2021 11:54:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 004E1343888
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 06:30:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229949AbhCUKy2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 21 Mar 2021 06:54:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229926AbhCUKx6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 21 Mar 2021 06:53:58 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 476BAC061574;
-        Sun, 21 Mar 2021 03:53:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IPWTpmNlwvQD2iMEaDZM4gbTBQw2JCKTcw+XHs6sAEA=; b=MycDLrIcd3ic8F/80A6VFdemDq
-        mP6wMKgaJ+5fZ8A/5UZohpMbjrn0frButsf5ebBykDEX/RU1WPXs8HsON7xXx/0rh1H8iKU1zW2Bo
-        gQnxM6q4iczEUtjYAhChY4xbcUghuUJ8SxLKS+Scas5RUAPIY1QVsjBRYZNB4Td9A/GdUbK+pGXzm
-        ZxqPcKHFmjWFBOpIOxuPGE2Ge3lH75MgJq4zOA4kCUIW8QztYln6orsFPBg70IOQjgwHxMTUkpQvT
-        sP5/cIEzN7DAaOGyHDRzy6+/swS96oUDvvYZzfmO85Y4+6qJHHEg0lpaPO9kP30HPHtXl8+ynO5/A
-        9oZufQ3g==;
-Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lNvhl-007173-MX; Sun, 21 Mar 2021 10:53:12 +0000
-Date:   Sun, 21 Mar 2021 10:53:09 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@redhat.com>,
-        David Wysochanski <dwysocha@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 02/28] mm: Add an unlock function for
- PG_private_2/PG_fscache
-Message-ID: <20210321105309.GG3420@casper.infradead.org>
-References: <161539526152.286939.8589700175877370401.stgit@warthog.procyon.org.uk>
- <161539528910.286939.1252328699383291173.stgit@warthog.procyon.org.uk>
+        id S229621AbhCVF3g (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Mar 2021 01:29:36 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:39132 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229613AbhCVF3e (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 01:29:34 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=eguan@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0USrrR4H_1616390972;
+Received: from localhost(mailfrom:eguan@linux.alibaba.com fp:SMTPD_---0USrrR4H_1616390972)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 22 Mar 2021 13:29:32 +0800
+From:   Eryu Guan <eguan@linux.alibaba.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     Eryu Guan <eguan@linux.alibaba.com>
+Subject: [PATCH 1/2] nfs: hornor timeo and retrans option when mounting NFSv3
+Date:   Mon, 22 Mar 2021 13:29:03 +0800
+Message-Id: <20210322052904.83508-1-eguan@linux.alibaba.com>
+X-Mailer: git-send-email 2.26.1.107.gefe3874
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <161539528910.286939.1252328699383291173.stgit@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Mar 10, 2021 at 04:54:49PM +0000, David Howells wrote:
-> Add a function, unlock_page_private_2(), to unlock PG_private_2 analogous
-> to that of PG_lock.  Add a kerneldoc banner to that indicating the example
-> usage case.
+Mounting NFSv3 uses default timeout parameters specified by underlying
+sunrpc transport, and mount options like 'timeo' and 'retrans', unlike
+NFSv4, are not honored.
 
-One of the things which confused me about this was ... where's the other
-side?  Where's lock_page_private_2()?  Then I found this:
+But sometimes we want to set non-default timeout value when mounting
+NFSv3, so pass 'timeo' and 'retrans' to nfs_mount() and fill the
+'timeout' field of struct rpc_create_args before creating RPC
+connection. This is also consistent with NFSv4 behavior.
 
-#ifdef CONFIG_AFS_FSCACHE
-        if (PageFsCache(page) &&
-            wait_on_page_bit_killable(page, PG_fscache) < 0)
-                return VM_FAULT_RETRY;
-#endif
+Note that this only sets the timeout value of rpc connection to mountd,
+but the timeout of rpcbind connection should be set as well. A later
+patch will fix the rpcbind part.
 
-Please respect the comment!
+Signed-off-by: Eryu Guan <eguan@linux.alibaba.com>
+---
+ fs/nfs/internal.h   |  2 +-
+ fs/nfs/mount_clnt.c | 12 +++++++-----
+ fs/nfs/super.c      |  2 +-
+ 3 files changed, 9 insertions(+), 7 deletions(-)
 
-/*
- * This is exported only for wait_on_page_locked/wait_on_page_writeback, etc.,
- * and should not be used directly.
- */
-extern void wait_on_page_bit(struct page *page, int bit_nr);
-extern int wait_on_page_bit_killable(struct page *page, int bit_nr);
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 7b644d6c09e4..cf0d7db24d44 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -180,7 +180,7 @@ struct nfs_mount_request {
+ 	struct net		*net;
+ };
+ 
+-extern int nfs_mount(struct nfs_mount_request *info);
++extern int nfs_mount(struct nfs_mount_request *info, int timeo, int retrans);
+ extern void nfs_umount(const struct nfs_mount_request *info);
+ 
+ /* client.c */
+diff --git a/fs/nfs/mount_clnt.c b/fs/nfs/mount_clnt.c
+index dda5c3e65d8d..248319254672 100644
+--- a/fs/nfs/mount_clnt.c
++++ b/fs/nfs/mount_clnt.c
+@@ -137,13 +137,13 @@ struct mnt_fhstatus {
+  * nfs_mount - Obtain an NFS file handle for the given host and path
+  * @info: pointer to mount request arguments
+  *
+- * Uses default timeout parameters specified by underlying transport. On
+- * successful return, the auth_flavs list and auth_flav_len will be populated
+- * with the list from the server or a faked-up list if the server didn't
+- * provide one.
++ * Uses timeout parameters specified by caller. On successful return, the
++ * auth_flavs list and auth_flav_len will be populated with the list from the
++ * server or a faked-up list if the server didn't provide one.
+  */
+-int nfs_mount(struct nfs_mount_request *info)
++int nfs_mount(struct nfs_mount_request *info, int timeo, int retrans)
+ {
++	static struct rpc_timeout mnt_timeout;
+ 	struct mountres	result = {
+ 		.fh		= info->fh,
+ 		.auth_count	= info->auth_flav_len,
+@@ -158,6 +158,7 @@ int nfs_mount(struct nfs_mount_request *info)
+ 		.protocol	= info->protocol,
+ 		.address	= info->sap,
+ 		.addrsize	= info->salen,
++		.timeout	= &mnt_timeout,
+ 		.servername	= info->hostname,
+ 		.program	= &mnt_program,
+ 		.version	= info->version,
+@@ -177,6 +178,7 @@ int nfs_mount(struct nfs_mount_request *info)
+ 	if (info->noresvport)
+ 		args.flags |= RPC_CLNT_CREATE_NONPRIVPORT;
+ 
++	nfs_init_timeout_values(&mnt_timeout, info->protocol, timeo, retrans);
+ 	mnt_clnt = rpc_create(&args);
+ 	if (IS_ERR(mnt_clnt))
+ 		goto out_clnt_err;
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 94885c6f8f54..13a650750f04 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -867,7 +867,7 @@ static int nfs_request_mount(struct fs_context *fc,
+ 	 * Now ask the mount server to map our export path
+ 	 * to a file handle.
+ 	 */
+-	status = nfs_mount(&request);
++	status = nfs_mount(&request, ctx->timeo, ctx->retrans);
+ 	if (status != 0) {
+ 		dfprintk(MOUNT, "NFS: unable to mount server %s, error %d\n",
+ 				request.hostname, status);
+-- 
+2.26.1.107.gefe3874
 
-I think we need the exported API to be wait_on_page_private_2(), and
-AFS needs to not tinker in the guts of filemap.  Otherwise you miss
-out on bugfixes like c2407cf7d22d0c0d94cf20342b3b8f06f1d904e7 (see also
-https://lore.kernel.org/linux-fsdevel/20210320054104.1300774-4-willy@infradead.org/T/#u
-).
-
-That also brings up that there is no set_page_private_2().  I think
-that's OK -- you only set PageFsCache() immediately after reading the
-page from the server.  But I feel this "unlock_page_private_2" is actually
-"clear_page_private_2" -- ie it's equivalent to writeback, not to lock.
-
-> +++ b/mm/filemap.c
-> @@ -1432,6 +1432,26 @@ void unlock_page(struct page *page)
->  }
->  EXPORT_SYMBOL(unlock_page);
->  
-> +/**
-> + * unlock_page_private_2 - Unlock a page that's locked with PG_private_2
-> + * @page: The page
-> + *
-> + * Unlocks a page that's locked with PG_private_2 and wakes up sleepers in
-> + * wait_on_page_private_2().
-> + *
-> + * This is, for example, used when a netfs page is being written to a local
-> + * disk cache, thereby allowing writes to the cache for the same page to be
-> + * serialised.
-> + */
-> +void unlock_page_private_2(struct page *page)
-> +{
-> +	page = compound_head(page);
-> +	VM_BUG_ON_PAGE(!PagePrivate2(page), page);
-> +	clear_bit_unlock(PG_private_2, &page->flags);
-> +	wake_up_page_bit(page, PG_private_2);
-> +}
-> +EXPORT_SYMBOL(unlock_page_private_2);
-> +
->  /**
