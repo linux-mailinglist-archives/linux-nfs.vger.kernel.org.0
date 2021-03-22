@@ -2,228 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ABEE343C8A
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 10:20:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 261CD343E91
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 11:57:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229952AbhCVJTd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Mar 2021 05:19:33 -0400
-Received: from outbound-smtp38.blacknight.com ([46.22.139.221]:41331 "EHLO
-        outbound-smtp38.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229912AbhCVJTF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 05:19:05 -0400
-Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
-        by outbound-smtp38.blacknight.com (Postfix) with ESMTPS id 0F886273E
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Mar 2021 09:18:47 +0000 (GMT)
-Received: (qmail 16194 invoked from network); 22 Mar 2021 09:18:46 -0000
-Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.22.4])
-  by 81.17.254.9 with ESMTPA; 22 Mar 2021 09:18:46 -0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Net <netdev@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux-NFS <linux-nfs@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 3/3] mm/page_alloc: Add an array-based interface to the bulk page allocator
-Date:   Mon, 22 Mar 2021 09:18:45 +0000
-Message-Id: <20210322091845.16437-4-mgorman@techsingularity.net>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210322091845.16437-1-mgorman@techsingularity.net>
-References: <20210322091845.16437-1-mgorman@techsingularity.net>
+        id S230227AbhCVK46 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Mar 2021 06:56:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:47708 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230440AbhCVK4i (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 06:56:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1616410598;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QWqNRl3St0myqfYb/YgoRI1vcQ7ggUTH0MpgdoanYXM=;
+        b=Dx0WgpMK72PEo6sA0hWuOWE4QE6KMA/B7sSmIdR1trGTqvLTEUL06awviPnnyaMOO6+/9M
+        DXuPWygiYOUtAUJQVpu9IDXpsX/O3VJvrtRYpOD05ehymOsg4vf55Gv9uFvli5m7JZFDyD
+        D6hAIAIRsyKiaC0Y3n4w+d7IeoZN/xU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-552-FCLoq-t8N6KUPH3xmAXDmQ-1; Mon, 22 Mar 2021 06:56:36 -0400
+X-MC-Unique: FCLoq-t8N6KUPH3xmAXDmQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 34BE081622;
+        Mon, 22 Mar 2021 10:56:34 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-58.rdu2.redhat.com [10.10.112.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7152A54478;
+        Mon, 22 Mar 2021 10:56:27 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20210321105309.GG3420@casper.infradead.org>
+References: <20210321105309.GG3420@casper.infradead.org> <161539526152.286939.8589700175877370401.stgit@warthog.procyon.org.uk> <161539528910.286939.1252328699383291173.stgit@warthog.procyon.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 02/28] mm: Add an unlock function for PG_private_2/PG_fscache
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1885295.1616410586.1@warthog.procyon.org.uk>
+Date:   Mon, 22 Mar 2021 10:56:26 +0000
+Message-ID: <1885296.1616410586@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The proposed callers for the bulk allocator store pages from the bulk
-allocator in an array. This patch adds an array-based interface to the API
-to avoid multiple list iterations. The page list interface is preserved
-to avoid requiring all users of the bulk API to allocate and manage enough
-storage to store the pages.
+Matthew Wilcox <willy@infradead.org> wrote:
 
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- include/linux/gfp.h | 13 ++++++--
- mm/page_alloc.c     | 75 ++++++++++++++++++++++++++++++++++-----------
- 2 files changed, 67 insertions(+), 21 deletions(-)
+> That also brings up that there is no set_page_private_2().  I think
+> that's OK -- you only set PageFsCache() immediately after reading the
+> page from the server.  But I feel this "unlock_page_private_2" is actually
+> "clear_page_private_2" -- ie it's equivalent to writeback, not to lock.
 
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index 4a304fd39916..fb6234e1fe59 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -520,13 +520,20 @@ struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
- 
- int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 				nodemask_t *nodemask, int nr_pages,
--				struct list_head *list);
-+				struct list_head *page_list,
-+				struct page **page_array);
- 
- /* Bulk allocate order-0 pages */
- static inline unsigned long
--alloc_pages_bulk(gfp_t gfp, unsigned long nr_pages, struct list_head *list)
-+alloc_pages_bulk_list(gfp_t gfp, unsigned long nr_pages, struct list_head *list)
- {
--	return __alloc_pages_bulk(gfp, numa_mem_id(), NULL, nr_pages, list);
-+	return __alloc_pages_bulk(gfp, numa_mem_id(), NULL, nr_pages, list, NULL);
-+}
-+
-+static inline unsigned long
-+alloc_pages_bulk_array(gfp_t gfp, unsigned long nr_pages, struct page **page_array)
-+{
-+	return __alloc_pages_bulk(gfp, numa_mem_id(), NULL, nr_pages, NULL, page_array);
- }
- 
- /*
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 3f4d56854c74..c83d38dfe936 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4966,22 +4966,31 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
- }
- 
- /*
-- * __alloc_pages_bulk - Allocate a number of order-0 pages to a list
-+ * __alloc_pages_bulk - Allocate a number of order-0 pages to a list or array
-  * @gfp: GFP flags for the allocation
-  * @preferred_nid: The preferred NUMA node ID to allocate from
-  * @nodemask: Set of nodes to allocate from, may be NULL
-  * @nr_pages: The number of pages requested
-- * @page_list: List to store the allocated pages, must be empty
-+ * @page_list: Optional list to store the allocated pages
-+ * @page_array: Optional array to store the pages
-  *
-  * This is a batched version of the page allocator that attempts to
-- * allocate nr_pages quickly and add them to a list. The list must be
-- * empty to allow new pages to be prepped with IRQs enabled.
-+ * allocate nr_pages quickly. Pages are added to page_list if page_list
-+ * is not NULL, otherwise it is assumed that the page_array is valid.
-  *
-- * Returns the number of pages allocated.
-+ * For lists, nr_pages is the number of pages that should be allocated.
-+ *
-+ * For arrays, only NULL elements are populated with pages and nr_pages
-+ * is the maximum number of pages that will be stored in the array. Note
-+ * that arrays with NULL holes in the middle may return prematurely.
-+ *
-+ * Returns the number of pages added to the page_list or the known
-+ * number of populated elements in the page_array.
-  */
- int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 			nodemask_t *nodemask, int nr_pages,
--			struct list_head *page_list)
-+			struct list_head *page_list,
-+			struct page **page_array)
- {
- 	struct page *page;
- 	unsigned long flags;
-@@ -4992,14 +5001,23 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 	struct alloc_context ac;
- 	gfp_t alloc_gfp;
- 	unsigned int alloc_flags;
--	int allocated = 0;
-+	int nr_populated = 0, prep_index = 0;
- 
- 	if (WARN_ON_ONCE(nr_pages <= 0))
- 		return 0;
- 
--	if (WARN_ON_ONCE(!list_empty(page_list)))
-+	if (WARN_ON_ONCE(page_list && !list_empty(page_list)))
- 		return 0;
- 
-+	/* Skip populated array elements. */
-+	if (page_array) {
-+		while (nr_populated < nr_pages && page_array[nr_populated])
-+			nr_populated++;
-+		if (nr_populated == nr_pages)
-+			return nr_populated;
-+		prep_index = nr_populated;
-+	}
-+
- 	if (nr_pages == 1)
- 		goto failed;
- 
-@@ -5044,12 +5062,22 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 	pcp = &this_cpu_ptr(zone->pageset)->pcp;
- 	pcp_list = &pcp->lists[ac.migratetype];
- 
--	while (allocated < nr_pages) {
-+	while (nr_populated < nr_pages) {
-+		/*
-+		 * Stop allocating if the next index has a populated
-+		 * page or the page will be prepared a second time when
-+		 * IRQs are enabled.
-+		 */
-+		if (page_array && page_array[nr_populated]) {
-+			nr_populated++;
-+			break;
-+		}
-+
- 		page = __rmqueue_pcplist(zone, ac.migratetype, alloc_flags,
- 								pcp, pcp_list);
- 		if (!page) {
- 			/* Try and get at least one page */
--			if (!allocated)
-+			if (!nr_populated)
- 				goto failed_irq;
- 			break;
- 		}
-@@ -5063,17 +5091,25 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 		__count_zid_vm_events(PGALLOC, zone_idx(zone), 1);
- 		zone_statistics(ac.preferred_zoneref->zone, zone);
- 
--		list_add(&page->lru, page_list);
--		allocated++;
-+		if (page_list)
-+			list_add(&page->lru, page_list);
-+		else
-+			page_array[nr_populated] = page;
-+		nr_populated++;
- 	}
- 
- 	local_irq_restore(flags);
- 
- 	/* Prep pages with IRQs enabled. */
--	list_for_each_entry(page, page_list, lru)
--		prep_new_page(page, 0, gfp, 0);
-+	if (page_list) {
-+		list_for_each_entry(page, page_list, lru)
-+			prep_new_page(page, 0, gfp, 0);
-+	} else {
-+		while (prep_index < nr_populated)
-+			prep_new_page(page_array[prep_index++], 0, gfp, 0);
-+	}
- 
--	return allocated;
-+	return nr_populated;
- 
- failed_irq:
- 	local_irq_restore(flags);
-@@ -5081,11 +5117,14 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- failed:
- 	page = __alloc_pages(gfp, 0, preferred_nid, nodemask);
- 	if (page) {
--		list_add(&page->lru, page_list);
--		allocated = 1;
-+		if (page_list)
-+			list_add(&page->lru, page_list);
-+		else
-+			page_array[nr_populated] = page;
-+		nr_populated++;
- 	}
- 
--	return allocated;
-+	return nr_populated;
- }
- EXPORT_SYMBOL_GPL(__alloc_pages_bulk);
- 
--- 
-2.26.2
+How about I do the following:
+
+ (1) Add set_page_private_2() or mark_page_private_2() to set the PG_fscache_2
+     bit.  It could take a ref on the page here.
+
+ (2) Rename unlock_page_private_2() to end_page_private_2().  It could drop
+     the ref on the page here, but that then means I can't use
+     pagevec_release().
+
+ (3) Add wait_on_page_private_2() an analogue of wait_on_page_writeback()
+     rather than wait_on_page_locked().
+
+ (4) Provide fscache synonyms of the above.
+
+David
 
