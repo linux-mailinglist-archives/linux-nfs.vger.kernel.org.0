@@ -2,182 +2,271 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA4D234671C
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Mar 2021 19:02:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4230F346793
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Mar 2021 19:27:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230489AbhCWSCD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Mar 2021 14:02:03 -0400
-Received: from mail-eopbgr1320130.outbound.protection.outlook.com ([40.107.132.130]:57568
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230370AbhCWSBx (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 23 Mar 2021 14:01:53 -0400
+        id S231881AbhCWS0e (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Mar 2021 14:26:34 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37524 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231449AbhCWS0Z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Mar 2021 14:26:25 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12NIO10j166571;
+        Tue, 23 Mar 2021 18:26:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=F7GnaoTM3T59D6UXjR6jvAEC1nn6QtAZFa/mq757LVY=;
+ b=gPk+rqWouYBgUmZwC+fRylgEC3EL2sP+lRYT8xaIEQfRu/ui0WQUzDFlekNPHbEN2Mnz
+ +FUTm8bGfbas2YRhEv82/Pn50ZuE6neHw+FOCAH9B5V0sKxN75o3RDkY5h6xm72UOfs2
+ M9iUG2x+BT278aXOmr7zBd/k/oBbYT/Yp/KcykXZF5bPFWIoEWbAnhbWmP35Vf1aegYs
+ ocD3sFq2lApa+faY39gG4vhQ16CtDI3ThlRrqcogr18n4CO7DZx9MrCsVn6VCu6yDGXW
+ UumjQda9xao6L+DqnkbMUqdy8nt7F0LBLgJJwUKTpoe15rcT6We4BXKifEiUsKBMAL+9 Yw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 37d9pn04qw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Mar 2021 18:26:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12NIQAHB037784;
+        Tue, 23 Mar 2021 18:26:13 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2172.outbound.protection.outlook.com [104.47.59.172])
+        by userp3020.oracle.com with ESMTP id 37dttsa7pu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Mar 2021 18:26:12 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Cd/ypMTWJbc1VDFC64emzCRjBVIN3Gli3ewRr7eiAOkBnFK/WvVgDTfuF2gD8Vb8lpXimUHcrPrfzIKqZvv21WDlpVbggBdvwEQzxYT3RlNsI2FditwlOreDoI/BdrvJ4+GjzGmRC2huSZjYle8WpSR8DkSDG/KPHKu/1hgktzxVW3GvxITEK2oMWd84F7Mdo54h3kLfttdXnpxJmCpLTlYWrWTWnbh+GK0+dxYOE1i4mDaH73yQEx4GmhgUHmJ/yJxy+alnVdL+g+EWk8YdqaWFVuz6aH2Y1s/Jxra83bWq4QIO6MS0EmFIT/REL/Hybby4zquAWV8zTz8sxWhxqA==
+ b=COrB1hZ+qnPshmbtld2BigEQ6HuRFkQRl/X2OCPLKCv3owWNN8OoZ+V3VAJ7lRAVSoIfB+yCqQFmrulKeEhCFZ0PkFbEZpfeOgXM49gJMv/LKY6fRvoEBipYUXuRVT32L/j77tbzYPo+YowCdF2g8TaiSgpvgo6ECAmsOmcY4hQEE8hQoLh41w96GuOF1VupXEU92vsRbrTCjan8jbdMuk6r0mJ37oBh0ZoWfT/9y7GL4GfySJehV+59bWZXg79a/gocoZvxYtJWH41XeOpdSPskhQuVhj3qUfcVUS88SrRUl+BwGUx5mhZ8tbULvJTb8PUnaOkXhFHP3Xie7AeGgw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OUK/6Amz9tPAiH1UVz7JVcCXD+foKSr7lqpJTPso6VE=;
- b=Bvb0qaBwdY81ZCS/FevhWqV6nI4zrRyTR8ARnB+LSWnvEktGbW1JKldt7ub8f4pwcU5qkkYcm8Nl30IKdPhLulC+DAZjGBoJ1q5sjmaYWr4jBErtf+Mkzb6wUGCyZ9UInlw8hL1U+Z+WVN1/KIFywF7RWV11j1/c1jgFO7PJhzrLGwiHVqrgsyK1nZPBPI25m7NawLQSmW8v2LacK4bhJaCkrc2dUxkFcNEnWDFG9+Ci8NpCeIQ1FD0ZyJL1533OxoiapLIksjE1JJl33IHAKJd+Jogf0AlWq0PirmNfH7vhXWfAikTNqO1zBy4lPTRKLf+huxgw/3s6jltxuv+zeA==
+ bh=F7GnaoTM3T59D6UXjR6jvAEC1nn6QtAZFa/mq757LVY=;
+ b=YWss+goMJbBwmMW1HBpfHvz1sEe+dokEupzMfFjCsnFHCqT4y5Ibh2jYmWMxC1d2TjnWsGiCworAWiE058pumjNXL9j9cg5MN/o+3Nm0A6MIaIWL+6vFAo+R4A0ZkHKvFRLsiQW0kDbvYz8aXVidksqqyd+ypgGUSfm0M23vUGYx4Kv/zhcFWewt8Rkh0bRbwN0a6J4Avd1wBRTA73udD1GCAVUWLiLKG6oxtFX60VlEFu4zTaIwl/AoV1xlc3pu0DC959T9vq6EkeEJl95f/+6uH2rd8G+9veLp/wvZULyqx++cl7HNT94NszvY0dpE6qs1/YpDGKAuNBgLb1qlMQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OUK/6Amz9tPAiH1UVz7JVcCXD+foKSr7lqpJTPso6VE=;
- b=Sj3I0vURI2P8sJN2+b0KgrvdBw8x3FeOjnlk8us9/wcHIdZc1buEBQA7H3Se+GXWQdn30BnaOmxFV30JIPZFln/iFc6TqV+iemEUpRGd2B6AQdZi36f9SbEeYQuY2OKKubwSbEDMuCHKmojThKoVhtutmBC+JeIgb6vVQhldSNA=
-Received: from SG2P153MB0361.APCP153.PROD.OUTLOOK.COM (2603:1096:0:4::11) by
- SG2P153MB0254.APCP153.PROD.OUTLOOK.COM (2603:1096:4:df::23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3999.2; Tue, 23 Mar 2021 18:01:49 +0000
-Received: from SG2P153MB0361.APCP153.PROD.OUTLOOK.COM
- ([fe80::cd6e:9dc1:85ac:f488]) by SG2P153MB0361.APCP153.PROD.OUTLOOK.COM
- ([fe80::cd6e:9dc1:85ac:f488%5]) with mapi id 15.20.3999.008; Tue, 23 Mar 2021
- 18:01:48 +0000
-From:   Nagendra Tomar <Nagendra.Tomar@microsoft.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
+ bh=F7GnaoTM3T59D6UXjR6jvAEC1nn6QtAZFa/mq757LVY=;
+ b=Ze2w5DMByv5By5flbmYOjUjkVbV7ApFAXS5TYIpEtqpKug93RHClLeHGAEZi+l/Rl5MZQNYSimVwmbBbHiuVSghC2u9Tawul9g6JTfpfTLMf/sFlRfHw9WpngUlMtnTiTqEOM5sYwjit8JAp8oaMjW8q8ccFK1pVKWE1xte5UG4=
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
+ by BYAPR10MB3223.namprd10.prod.outlook.com (2603:10b6:a03:157::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Tue, 23 Mar
+ 2021 18:25:57 +0000
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::50bf:7319:321c:96c9]) by SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::50bf:7319:321c:96c9%4]) with mapi id 15.20.3955.027; Tue, 23 Mar 2021
+ 18:25:57 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Nagendra Tomar <Nagendra.Tomar@microsoft.com>
 CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>
-Subject: RE: [PATCH 0/5] nfs: Add mount option for forcing RPC requests for
+Subject: Re: [PATCH 0/5] nfs: Add mount option for forcing RPC requests for
  one file over one connection
 Thread-Topic: [PATCH 0/5] nfs: Add mount option for forcing RPC requests for
  one file over one connection
-Thread-Index: Adcfp3hcmhRvn3IHQv25MQlIHJPMUAARGOoAAAMHR+AAAek9AAAAU0WQAAIhaYAAALhG4A==
-Date:   Tue, 23 Mar 2021 18:01:48 +0000
-Message-ID: <SG2P153MB0361455966B8436516A355729E649@SG2P153MB0361.APCP153.PROD.OUTLOOK.COM>
+Thread-Index: Adcfp3hcmhRvn3IHQv25MQlIHJPMUAARGOoAAAMHR+AAAek9AAAAU0WQAAIhaYAAALhG4AABaUIA
+Date:   Tue, 23 Mar 2021 18:25:57 +0000
+Message-ID: <D13EEDD3-522C-4AA3-9FC8-907A582EC57D@oracle.com>
 References: <SG2P153MB0361E2D69F8AD8AFBF9E7CD89E649@SG2P153MB0361.APCP153.PROD.OUTLOOK.COM>
  <CD47CE3E-0C07-4019-94AF-5474D531B12D@oracle.com>
  <SG2P153MB0361BCD6D1F8F86E0648E3EB9E649@SG2P153MB0361.APCP153.PROD.OUTLOOK.COM>
  <5B030422-09B7-470D-9C7A-18C666F5817D@oracle.com>
  <SG2P153MB0361DC1EF8EDD02356D29E579E649@SG2P153MB0361.APCP153.PROD.OUTLOOK.COM>
  <575FF32B-463E-41D8-882F-6A746DF7FDFA@oracle.com>
-In-Reply-To: <575FF32B-463E-41D8-882F-6A746DF7FDFA@oracle.com>
-Accept-Language: en-IN, en-US
+ <SG2P153MB0361455966B8436516A355729E649@SG2P153MB0361.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <SG2P153MB0361455966B8436516A355729E649@SG2P153MB0361.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [122.172.188.128]
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none header.from=oracle.com;
+x-originating-ip: [68.61.232.219]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f5bbb2a4-6763-45ee-651d-08d8ee25bae0
-x-ms-traffictypediagnostic: SG2P153MB0254:
-x-microsoft-antispam-prvs: <SG2P153MB025482F5EC39EC95843FB82E9E649@SG2P153MB0254.APCP153.PROD.OUTLOOK.COM>
+x-ms-office365-filtering-correlation-id: 42dbb916-5298-4fbb-f295-08d8ee291a5f
+x-ms-traffictypediagnostic: BYAPR10MB3223:
+x-microsoft-antispam-prvs: <BYAPR10MB3223C57C6B1644790FA0BC2293649@BYAPR10MB3223.namprd10.prod.outlook.com>
 x-ms-oob-tlc-oobclassifiers: OLM:392;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iMqf/3OEHyIeQUp9F9GSH00IFItS5G2VE3jqQbNcEXQvnUsmxc5ODmQybVvrvAMIC9ep6KDOneszXNY0GHLoM5Y9unVCs+YtwtgmgE7x9hqLVMN4KN/Lr5l79LWG3mO8wDKOSxnDnjFio9OosSPuoEMDNFvX5wlFZS1l++woTPOJNVw4dd3UvnlHp/T8TCdtgEnNJu+g3LwBYcR978aXr4HGhs+YOI9sNEf0iLaZwS1tV7AFq3lRkDy7hVJfkdOE9v2PpkQ0/tv0iDz6fGvCozMv+BWtBL0LckMLVfDdtUbV2j3TvxVbMs8iVGBBbx1UJzt+Jv8byGVZTg+RUoWLk5CLcYpUOyoSY9xHEuzRMXFAg+uuJ3UjAlEw2NxkIfiTreqJ9m6ts5D/S23uZ6nrqkr6TQbXfOvD2R91wsPzxxSV2/4xbGp+G6FKg7j5XYU1kCvmOBgEgV3I2uDq/j2deCi3x6G1DnT9xaGYqNHLJvN6rmbG0NUwzsrPE23KBmfiMaYlebZRp32fsjxl9i1Z39w3naIN7Z4qIbhSsGPrHeIzitRLHpL1S67QeErCeq3kwd0ILUt0JLtF7Yku2LmSSbPUbxtZtr952/nzprLSynGPBCUSH3Fsf84UsFu/2hIl6CvXunUX72Jknj6d1MS+tSfh2DWYZmxS1tDV8oGSgXE=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2P153MB0361.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(366004)(4326008)(66446008)(66556008)(54906003)(82960400001)(8676002)(82950400001)(66476007)(38100700001)(2906002)(8990500004)(33656002)(55236004)(8936002)(86362001)(64756008)(83380400001)(10290500003)(186003)(76116006)(5660300002)(26005)(6506007)(498600001)(66946007)(52536014)(53546011)(6916009)(55016002)(71200400001)(9686003)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?N2hlRmxnRGc4dDB6YTE0NE9hby80M3VkcHNiVXg5OWp3Uk5NOXZRVTRxUXpL?=
- =?utf-8?B?TGRDWW4wWHpDYytvTGxLMlBEZFZmZWh5bkhaYUp3bFBxQU50TnN3SzRQaWd6?=
- =?utf-8?B?Unh4UmtnNGIvZDF0djNpSVNBRGVxN2JtUjBqYmo3elN3VG10RjBlRG9lTDNE?=
- =?utf-8?B?WUlKTnZxeDFFMC8weTV4Smd3WmZjYklUQjlIbnBrbWFGOUdrVjcyMCtqTXY1?=
- =?utf-8?B?Q0xxa1I1ZUtRdVVqQTllYXFuN2gzRVdpOUhIRFdXUENiMXRWdE9OeExCRWN3?=
- =?utf-8?B?dGxXSW9jL3A1dEVKSlRQdnNOOWFiVEVDUTkxWURLREQzSkpnaDlJUFZsRnJO?=
- =?utf-8?B?NElpb2pRYmdxQWJTaVlFL3owT2ZiemVMTXZDWGhoUlVwODJCZzFEVXhmcU9B?=
- =?utf-8?B?R3UxVUVVaFFPL296TWEzamI3QlN1dUlQMDJRb0lYTkhGU2hFSU16ekJWUmdL?=
- =?utf-8?B?TmJGUlZXN1BYbEtoZXo0QUh5djFVVFJYN1hmUDhjR1hZY1U2cjlTYW5WQjJT?=
- =?utf-8?B?cTJCdlVjL05aY2NpSkRZcHU5eUpSd2cxVm9hcGhJMHF5d2RzQW1yOXVYMXZV?=
- =?utf-8?B?ZzJUQUlUbGtEdTRia0g3YnFBVW9JamJ2SnZYdEludzRXeHNOQ2d3bnBlWHNp?=
- =?utf-8?B?eU91RGNaK2ZkWjhKai9VZzlhSjgwcUd1MHd1ZmdlTmxEa0ZRcW1XZWZmYTIz?=
- =?utf-8?B?RUdEdnYwQlZMWi92Y1ZaTDBTQ2dad0Q3OGtGdGJod3Y3UjhPSUFxRVp0UGlE?=
- =?utf-8?B?Z0x1ckx4ejR2U1UvMmRuYzRMSHVTMkxET3oyZVdoZnc2ZUlFekNja1ZuVlFF?=
- =?utf-8?B?OFp2NGVtSDNEanRtK3VhbVhsbWhwVllSTnVpdDBJOVNTV09Nc1BjWlFMUUNH?=
- =?utf-8?B?MCtjY1U3MXBYV1FGNm9XTFJvSGtKb2VqRVdFaW0rYzRUcHlpV28wSFNTZHNx?=
- =?utf-8?B?MmxKQmlremFwNnUrZ0VIUzMxNTVEMmFEY2x4QlJSSVI0anphbHBReGpJM0h3?=
- =?utf-8?B?QjJBeGR1b0VLbDZyVzFpRFgyS05oTmR0SURGMW54MlUwMzY3QWwyTjR5ZkFw?=
- =?utf-8?B?Tkgvc2QzT0ZwdkFVblJNVGZNb1lRNWgybXJQb3NMZ0NDMnI2cy93K3dEWDNS?=
- =?utf-8?B?UitMaTRxTVJ5c1J6ZkNtYkpQRmpKdkgxTDVjVUplUk9wYlR4SWpJZS9Ndk43?=
- =?utf-8?B?MmtjaDVVcXZTZjlSQnZLQ3ZJaUk2cmZnYndLNWg5ZjhuMk9NZGQrRkppWUZV?=
- =?utf-8?B?MXVzQW9UbzJoSVpWMjljTnB3OURhTVdoNEVuREt2eHRZS29rcGk4UHJDZ2Mv?=
- =?utf-8?B?cXQ5bzFoa2NUU1h1czY2bDB3VnBSWmtxWWFydldwazhOMnlQdWc4WE56UGlE?=
- =?utf-8?B?RVo4V2NCc25tUWhHcWp4VVcxeUhPYXRvWEwrWGU3ZUd5aGtiM2RjWEdxL3Ux?=
- =?utf-8?B?V3NhbklQSDBUTlVkWHgwaFRUM2QxNWcwMDgrVytqN0s0bEpEdG93T3RwTlhY?=
- =?utf-8?B?L1UwZCs3emRIZ2htYTIzeHhXVGRUVmt5TndlaEVmVFdTelZaSVRRWkNIRUlx?=
- =?utf-8?B?VGMvdDFTRmZFMjh4TE9BNXdLL2pBTkltZ3dNQk1lWHpaVEE5c3ZHWXJUSjFC?=
- =?utf-8?B?M3NIRmJucFFONzVXdnkyZUd6MUx1U2UzbVRidFN3S3M4TUNjbnkvREsyNXJx?=
- =?utf-8?B?SVc2YVVpbS8wU2gvWjc4WGxUUC92ZE40VjVnbXp4dzlWbVkrQytSa3N0MFVD?=
- =?utf-8?Q?TjcR05EYFWFRGc6ERzopl/ogsCprHpSdZC5joe8?=
+x-microsoft-antispam-message-info: 3e015b+wXj2hQC8LEbkaXGh5jreHlPNcNZCNQLW/JhIutp0VQJafYySe78bJ08p4poqktNR+SqoFje24P82N2+DlDhvymzkSRXoP7h2daPqPiK24pXugKuaGRQ4gi6ZsrnH5aih30mwsaQA1t0b/9HSMtY2Thfewh2D2KzeVC12xwFe5rMAWvOm8CabZ0/iqlrWJGdy6FbvtQdzm0cYBchpIb44DbS9N6PTGwrXRyOJHvFHQLfYvE25ZSyUJFFDib8cbzV8YqQHpipHj9p9u1pyIG1ozK8RTPctBrEIVnL6OBgyFlyNbotmBv11U/lyDGra5/qcPG3hROa7xzvR/dr+apiuRjZLDS4nPezw39x9QqI8+oIkZ+dpFD0jlAh3+DtMacT0HET+PfzRUwY4aU4h1CLuYXuktfKWX2DU8SntaydsZYTvRjxFyNle55Iw/18evYaRLdArUe/2cNagEscOmxD57H0qLSYZxZmKMOhkBlY/9w2STuFMf2dw4dnb8S247GiYJshmyFfXWOqOGifzfKeKlAlsWzx8H7yh3/bxU53VMcFWps8KRyon+eiTFnisgH8EOLIEw3V8DS1uBfl6CJvQyhFzPjDOqnoKcyOswq0WbHwYnyz5kHK9bpE0kMq6mpSvUAVHenvLmtQGkx54KEoTWXMg0sy2sY0+mlZ2kDAf0aDHm3GACs+tmstpr
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(396003)(376002)(39860400002)(366004)(136003)(4326008)(6916009)(5660300002)(8936002)(53546011)(86362001)(66946007)(66476007)(66446008)(64756008)(66556008)(8676002)(83380400001)(76116006)(6512007)(38100700001)(6506007)(33656002)(478600001)(91956017)(71200400001)(36756003)(54906003)(316002)(2906002)(2616005)(186003)(6486002)(26005)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?YYJ7135V+zpZLpoF8hZklKyd4E01RBD/6aoEyOTVf0elfTija6WPtb+PxL1m?=
+ =?us-ascii?Q?+h0S/NcrBDEZ+GnvuHMC23wQYzEkujkso8LijFlgwpMMw4z9vni5//87I7lg?=
+ =?us-ascii?Q?qYkMRvqYzwVlgypXorwgrH56dXDiz0HaftjP08D13gn7lsT5OZxvyQAwTQAG?=
+ =?us-ascii?Q?Mb+BnLGzVwU7KemmfMazkZenzOevn3VPAUXEJ1q7PeiTRU9zvwzCz3LTWfip?=
+ =?us-ascii?Q?AbTtH3p1EZfLxm4/eamywN1FwTG0HEVv91MnfqzwAKzhcf0dWk7zdKqxu2m+?=
+ =?us-ascii?Q?ltkClGQxWBU7W3hTsugfe0ha61eVLhfB175yP62YzW/CZt4eTPDOtDgZd+qD?=
+ =?us-ascii?Q?+dNQNyMy9II1cqiX2uk9f355DUbOPMUbyH8X2vrr+h662k81dUNNeWQGpcs8?=
+ =?us-ascii?Q?9e9wrj2vxh0NZmfbKujVMnnHN6z/jiZZCdTOMGErcMO5hf7a13lG/Ewsyyna?=
+ =?us-ascii?Q?O/FKRozFnx72az4a4lXAUG3kgOxVvAmHRKALE0fy4OTSVmcFA1/veTcdHG7+?=
+ =?us-ascii?Q?ofHXoYgFUcqXpbTW4ARQHmAcfEIdlHP1gUgE/+ddqw/zyyD3tlIB2RHfJ7ad?=
+ =?us-ascii?Q?0NtEcMSbIPwm75CnOXp6k40CSAfekiU079+B183BxkNsRrBANp+MfEb1AE/i?=
+ =?us-ascii?Q?F/XHhLQYUU9fiYTXrz2CCqRZQkOoc+S0OcfQi2pPmjRviAXBK49AvyWhJnC/?=
+ =?us-ascii?Q?hmXMKhEopMF68j5Tu3nvtF1T/P0nPx2dxewh++A34i6TwjErlLe1numc4Lup?=
+ =?us-ascii?Q?qhMd+0fOpUXd5CVdz+UXz8m4RtTsoG9WraKM3NvwRjDB5hCZrecUBr9iPtZr?=
+ =?us-ascii?Q?cBpHSJymJ5AN4xG8GtaF6JKzF49sZlFeFI9BpHS+Ol4EvGwTyyiW+ojN3Lqs?=
+ =?us-ascii?Q?bqq4DZkOu20oYOCo4+p/CiB+Gz79Nl3N1rThGIgDiaEI3pduuS9Rci6kvUmJ?=
+ =?us-ascii?Q?uctxBTXVjUxnKQjLO78MYYkvk37bZgKN0wAAJ1P/nG63gA2oFzSGxklKwS/C?=
+ =?us-ascii?Q?9wWQBZWdsFJVZ+lBXqu2ldvfdsSIa+rYBFhsOy0aNVeY6plC2rXE+XjysWCH?=
+ =?us-ascii?Q?vShNGqJOq7JLXEa1y1ng0CSYu/t0JeT2Psxzwx+rcCvGbsTHTDwoQL6PBOFE?=
+ =?us-ascii?Q?c6yKKdeLE9MK64/1B9dT/CMNAHoO6UCoHyJjnHHeOBLdH10dBs7G9W29OvMj?=
+ =?us-ascii?Q?Ibc8+tfFgLr2y2LzE2v6qgvR7MINPqs/nIP2d8DtoWIbRt+eiRwNpTN5FiWf?=
+ =?us-ascii?Q?eeTm3fp9pQOzBgZCVcpMN7M38tv4auh1sUzeL9coP8Yg0a3lZ2y1t2IlfoHS?=
+ =?us-ascii?Q?JfaAJ5WcI9dV/sEbhGONkZOY?=
 x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3C7F832C29FF844890F2BF7F93FDCE3E@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SG2P153MB0361.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5bbb2a4-6763-45ee-651d-08d8ee25bae0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2021 18:01:48.7084
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42dbb916-5298-4fbb-f295-08d8ee291a5f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2021 18:25:57.4837
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hkLaon3/5ym4YB4K71eoPWTJDhRlfgO1HZ3h+GYCFMPjAx5foENvvAjyHhbS4vM7nfn/avs1Mv2bfFw4sZaP1A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0254
+X-MS-Exchange-CrossTenant-userprincipalname: s1pQeC47iMGAzJntq7dbbkG/HY+5fuvTwA+NYidJ0Fl2fGL8Vr60rrUo2vDY6V3B89oVdPH0G868Zygaw25bpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3223
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9932 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
+ mlxscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2103230135
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9932 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 phishscore=0
+ mlxlogscore=999 priorityscore=1501 impostorscore=0 bulkscore=0 spamscore=0
+ adultscore=0 clxscore=1015 malwarescore=0 mlxscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2103230135
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-ID4gPiBPbiBNYXIgMjMsIDIwMjEsIGF0IDEyOjI5IFBNLCBOYWdlbmRyYSBUb21hcg0KPiA8TmFn
-ZW5kcmEuVG9tYXJAbWljcm9zb2Z0LmNvbT4gd3JvdGU6DQo+ID4NCj4gPj4+IE9uIE1hciAyMywg
-MjAyMSwgYXQgMTE6NTcgQU0sIE5hZ2VuZHJhIFRvbWFyDQo+ID4+IDxOYWdlbmRyYS5Ub21hckBt
-aWNyb3NvZnQuY29tPiB3cm90ZToNCj4gPj4+DQo+ID4+Pj4+IE9uIE1hciAyMywgMjAyMSwgYXQg
-MTo0NiBBTSwgTmFnZW5kcmEgVG9tYXINCj4gPj4+PiA8TmFnZW5kcmEuVG9tYXJAbWljcm9zb2Z0
-LmNvbT4gd3JvdGU6DQo+ID4+Pj4+DQo+ID4+Pj4+IEZyb206IE5hZ2VuZHJhIFMgVG9tYXIgPG5h
-dG9tYXJAbWljcm9zb2Z0LmNvbT4NCj4gPj4+Pg0KPiA+Pj4+IFRoZSBmbGV4ZmlsZXMgbGF5b3V0
-IGNhbiBoYW5kbGUgYW4gTkZTdjQuMSBjbGllbnQgYW5kIE5GU3YzIGRhdGENCj4gPj4+PiBzZXJ2
-ZXJzLiBJbiBmYWN0IGl0IHdhcyBkZXNpZ25lZCBmb3IgZXhhY3RseSB0aGlzIGtpbmQgb2YgbWl4
-IG9mDQo+ID4+Pj4gTkZTIHZlcnNpb25zLg0KPiA+Pj4+DQo+ID4+Pj4gTm8gY2xpZW50IGNvZGUg
-Y2hhbmdlIHdpbGwgYmUgbmVjZXNzYXJ5IC0tIHRoZXJlIGFyZSBhIGxvdCBtb3JlDQo+ID4+Pj4g
-Y2xpZW50cyB0aGFuIHNlcnZlcnMuIFRoZSBNRFMgY2FuIGJlIG1hZGUgdG8gd29yayBzbWFydGx5
-IGluDQo+ID4+Pj4gY29uY2VydCB3aXRoIHRoZSBsb2FkIGJhbGFuY2VyLCBvdmVyIHRpbWU7IG9y
-IGl0IGNhbiBhZG9wdCBvdGhlcg0KPiA+Pj4+IGNsZXZlciBzdHJhdGVnaWVzLg0KPiA+Pj4+DQo+
-ID4+Pj4gSU1ITyBwTkZTIGlzIHRoZSBiZXR0ZXIgbG9uZy10ZXJtIHN0cmF0ZWd5IGhlcmUuDQo+
-ID4+Pg0KPiA+Pj4gVGhlIGZ1bmRhbWVudGFsIGRpZmZlcmVuY2UgaGVyZSBpcyB0aGF0IHRoZSBj
-bHVzdGVyZWQgTkZTdjMgc2VydmVyDQo+ID4+PiBpcyBhdmFpbGFibGUgb3ZlciBhIHNpbmdsZSB2
-aXJ0dWFsIElQLCBzbyBJSVVDIGV2ZW4gaWYgd2Ugd2VyZSB0byB1c2UNCj4gPj4+IE5GU3Y0MSB3
-aXRoIGZsZXhmaWxlcyBsYXlvdXQsIGFsbCBpdCBjYW4gaGFuZG92ZXIgdG8gdGhlIGNsaWVudCBp
-cyB0aGF0IHNpbmdsZQ0KPiA+Pj4gKGxvYWQtYmFsYW5jZWQpIHZpcnR1YWwgSVAgYW5kIG5vdyB3
-aGVuIHRoZSBjbGllbnRzIGRvIGNvbm5lY3QgdG8gdGhlDQo+ID4+PiBORlN2MyBEUyB3ZSBzdGls
-bCBoYXZlIHRoZSBzYW1lIGlzc3VlLiBBbSBJIHVuZGVyc3RhbmRpbmcgeW91IHJpZ2h0Pw0KPiA+
-Pj4gQ2FuIHlvdSBwbHMgZWxhYm9yYXRlIHdoYXQgeW91IG1lYW4gYnkgIk1EUyBjYW4gYmUgbWFk
-ZSB0byB3b3JrDQo+ID4+PiBzbWFydGx5IGluIGNvbmNlcnQgd2l0aCB0aGUgbG9hZCBiYWxhbmNl
-ciI/DQo+ID4+DQo+ID4+IEkgaGFkIHRob3VnaHQgdGhlcmUgd2VyZSBtdWx0aXBsZSBORlN2MyBz
-ZXJ2ZXIgdGFyZ2V0cyBpbiBwbGF5Lg0KPiA+Pg0KPiA+PiBJZiB0aGUgbG9hZCBiYWxhbmNlciBp
-cyBtYWtpbmcgdGhlbSBsb29rIGxpa2UgYSBzaW5nbGUgSVAgYWRkcmVzcywNCj4gPj4gdGhlbiB0
-YWtlIGl0IG91dCBvZiB0aGUgZXF1YXRpb246IGV4cG9zZSBhbGwgdGhlIE5GU3YzIHNlcnZlcnMg
-dG8NCj4gPj4gdGhlIGNsaWVudHMgYW5kIGxldCB0aGUgTURTIGRpcmVjdCBvcGVyYXRpb25zIHRv
-IGVhY2ggZGF0YSBzZXJ2ZXIuDQo+ID4+DQo+ID4+IEFJVUkgdGhpcyBpcyB0aGUgYXBwcm9hY2gg
-KHdpdGhvdXQgdGhlIHVzZSBvZiBORlN2MykgdGFrZW4gYnkNCj4gPj4gTmV0QXBwIG5leHQgZ2Vu
-ZXJhdGlvbiBjbHVzdGVycy4NCj4gPg0KPiA+IFllYWgsIGlmIGNvdWxkIGhhdmUgY2xpZW50cyBh
-Y2Nlc3MgYWxsIHRoZSBORlN2MyBzZXJ2ZXJzIHRoZW4gSSBhZ3JlZSwgcE5GUw0KPiA+IHdvdWxk
-IGJlIGEgdmlhYmxlIG9wdGlvbi4gVW5mb3J0dW5hdGVseSB0aGF0J3Mgbm90IGFuIG9wdGlvbiBp
-biB0aGlzIGNhc2UuIFRoZQ0KPiA+IGNsdXN0ZXIgaGFzIDEwMCdzIG9mIG5vZGVzIGFuZCBpdCdz
-IG5vdCBhbiBvbi1wcmVtIHNlcnZlciwgYnV0IGEgY2xvdWQgc2VydmljZSwNCj4gPiBzbyB0aGUg
-c2ltcGxpY2l0eSBvZiB0aGUgc2luZ2xlIExCIFZJUCBpcyBjcml0aWNhbC4NCj4gDQo+IFRoZSBj
-bGllbnRzIG1vdW50IG9ubHkgdGhlIE1EUy4gVGhlIE1EUyBwcm92aWRlcyB0aGUgRFMgYWRkcmVz
-c2VzLCB0aGV5IGFyZQ0KPiBub3QgZXhwb3NlZCB0byBjbGllbnQgYWRtaW5pc3RyYXRvcnMuIElm
-IHRoZSBNRFMgYWRvcHRzIHRoZSBsb2FkIGJhbGFuY2VyJ3MgSVANCj4gYWRkcmVzcywgdGhlbiB0
-aGUgY2xpZW50cyB3b3VsZCBzaW1wbHkgbW91bnQgdGhhdCBzYW1lIHNlcnZlciBhZGRyZXNzIHVz
-aW5nDQo+IE5GU3Y0LjEuDQoNCkkgdW5kZXJzdGFuZC9hZ3JlZSB3aXRoIHRoZSAiY2xpZW50IG1v
-dW50cyB0aGUgc2luZ2xlIE1EUyBJUCIgcGFydC4gV2hhdCBJIG1lYW50IA0KYnkgInNpbXBsaWNp
-dHkgb2YgdGhlIHNpbmdsZSBMQiBWSVAiIGlzIHRvIG5vdCBoYXZpbmcgdG8gaGF2ZSBzbyBtYW55
-IHJvdXRhYmxlIA0KSVAgYWRkcmVzc2VzLCBzaW5jZSB0aGUgY2xpZW50cyBjb3VsZCBiZSBvbiBh
-ICh2ZXJ5KSBkaWZmZXJlbnQgbmV0d29yayB0aGFuIHRoZSANCnN0b3JhZ2UgY2x1c3RlciB0aGV5
-IGFyZSBhY2Nlc3NpbmcsIGV2ZW4gdGhvdWdoIGNsaWVudCBhZG1pbnMgd2lsbCBub3QgZGVhbCB3
-aXRoDQp0aG9zZSBhZGRyZXNzZXMgdGhlbXNlbHZlcywgYXMgeW91IG1lbnRpb24uDQoNCj4gDQo+
-IFRoZSBvdGhlciBhbHRlcm5hdGl2ZSBpcyB0byBtYWtlIHRoZSBsb2FkIGJhbGFuY2VyIHNuaWZm
-IHRoZSBGSCBmcm9tIGVhY2gNCj4gTkZTIHJlcXVlc3QgYW5kIGRpcmVjdCBpdCB0byBhIGNvbnNp
-c3RlbnQgTkZTdjMgRFMuIEkgc3RpbGwgcHJlZmVyIHRoYXQNCj4gb3ZlciBhZGRpbmcgYSB2ZXJ5
-IHNwZWNpYWwtY2FzZSBtb3VudCBvcHRpb24gdG8gdGhlIExpbnV4IGNsaWVudC4gQWdhaW4sDQo+
-IHlvdSdkIGJlIGRlcGxveWluZyBhIGNvZGUgY2hhbmdlIGluIG9uZSBwbGFjZSwgdW5kZXIgeW91
-ciBjb250cm9sLCBpbnN0ZWFkDQo+IG9mIG9uIDEwMCdzIG9mIGNsaWVudHMuDQoNClRoYXQgaXMg
-b25lIG9wdGlvbiBidXQgdGhhdCBtYWtlcyBMQiBhcHBsaWNhdGlvbiBhd2FyZSBhbmQgcG90ZW50
-aWFsbHkgbGVzcyANCnBlcmZvcm1hbnQuIEFwcHJlY2lhdGUgeW91ciBzdWdnZXN0aW9uLCB0aG91
-Z2ghDQpJIHdhcyBob3BpbmcgdGhhdCBzdWNoIGEgY2xpZW50IHNpZGUgY2hhbmdlIGNvdWxkIGJl
-IHVzZWZ1bCB0byBwb3NzaWJseSBtb3JlIA0KdXNlcnMgd2l0aCBzaW1pbGFyIHNldHVwcywgYWZ0
-ZXIgYWxsIGZpbGUtPmNvbm5lY3Rpb24gYWZmaW5pdHkgZG9lc24ndCBzb3VuZCB0b28gDQphcmNh
-bmUgYW5kIG9uZSBjYW4gdGhpbmsgb2YgYmVuZWZpdHMgb2Ygb25lIG5vZGUgcHJvY2Vzc2luZyBv
-bmUgZmlsZS4gTm8/DQoNCj4gDQo+IA0KPiAtLQ0KPiBDaHVjayBMZXZlcg0KPiANCj4gDQoNCg==
+
+
+> On Mar 23, 2021, at 2:01 PM, Nagendra Tomar <Nagendra.Tomar@microsoft.com=
+> wrote:
+>=20
+>>> On Mar 23, 2021, at 12:29 PM, Nagendra Tomar
+>> <Nagendra.Tomar@microsoft.com> wrote:
+>>>=20
+>>>>> On Mar 23, 2021, at 11:57 AM, Nagendra Tomar
+>>>> <Nagendra.Tomar@microsoft.com> wrote:
+>>>>>=20
+>>>>>>> On Mar 23, 2021, at 1:46 AM, Nagendra Tomar
+>>>>>> <Nagendra.Tomar@microsoft.com> wrote:
+>>>>>>>=20
+>>>>>>> From: Nagendra S Tomar <natomar@microsoft.com>
+>>>>>>=20
+>>>>>> The flexfiles layout can handle an NFSv4.1 client and NFSv3 data
+>>>>>> servers. In fact it was designed for exactly this kind of mix of
+>>>>>> NFS versions.
+>>>>>>=20
+>>>>>> No client code change will be necessary -- there are a lot more
+>>>>>> clients than servers. The MDS can be made to work smartly in
+>>>>>> concert with the load balancer, over time; or it can adopt other
+>>>>>> clever strategies.
+>>>>>>=20
+>>>>>> IMHO pNFS is the better long-term strategy here.
+>>>>>=20
+>>>>> The fundamental difference here is that the clustered NFSv3 server
+>>>>> is available over a single virtual IP, so IIUC even if we were to use
+>>>>> NFSv41 with flexfiles layout, all it can handover to the client is th=
+at single
+>>>>> (load-balanced) virtual IP and now when the clients do connect to the
+>>>>> NFSv3 DS we still have the same issue. Am I understanding you right?
+>>>>> Can you pls elaborate what you mean by "MDS can be made to work
+>>>>> smartly in concert with the load balancer"?
+>>>>=20
+>>>> I had thought there were multiple NFSv3 server targets in play.
+>>>>=20
+>>>> If the load balancer is making them look like a single IP address,
+>>>> then take it out of the equation: expose all the NFSv3 servers to
+>>>> the clients and let the MDS direct operations to each data server.
+>>>>=20
+>>>> AIUI this is the approach (without the use of NFSv3) taken by
+>>>> NetApp next generation clusters.
+>>>=20
+>>> Yeah, if could have clients access all the NFSv3 servers then I agree, =
+pNFS
+>>> would be a viable option. Unfortunately that's not an option in this ca=
+se. The
+>>> cluster has 100's of nodes and it's not an on-prem server, but a cloud =
+service,
+>>> so the simplicity of the single LB VIP is critical.
+>>=20
+>> The clients mount only the MDS. The MDS provides the DS addresses, they =
+are
+>> not exposed to client administrators. If the MDS adopts the load balance=
+r's IP
+>> address, then the clients would simply mount that same server address us=
+ing
+>> NFSv4.1.
+>=20
+> I understand/agree with the "client mounts the single MDS IP" part. What =
+I meant=20
+> by "simplicity of the single LB VIP" is to not having to have so many rou=
+table=20
+> IP addresses, since the clients could be on a (very) different network th=
+an the=20
+> storage cluster they are accessing, even though client admins will not de=
+al with
+> those addresses themselves, as you mention.
+
+Got it.
+
+
+>> The other alternative is to make the load balancer sniff the FH from eac=
+h
+>> NFS request and direct it to a consistent NFSv3 DS. I still prefer that
+>> over adding a very special-case mount option to the Linux client. Again,
+>> you'd be deploying a code change in one place, under your control, inste=
+ad
+>> of on 100's of clients.
+>=20
+> That is one option but that makes LB application aware and potentially le=
+ss=20
+> performant. Appreciate your suggestion, though!
+
+You might get part of the way there by having the LB direct
+traffic from a particular client to a particular backend NFS
+server. The client and its applications are bound to have a
+narrow file working set.
+
+
+> I was hoping that such a client side change could be useful to possibly m=
+ore=20
+> users with similar setups, after all file->connection affinity doesn't so=
+und too=20
+> arcane and one can think of benefits of one node processing one file. No?
+
+That's where I'm getting hung up (outside the personal preference
+that we not introduce yes another mount option). While I understand
+what's going on now (thanks!) I'm not sure this is a common usage
+scenario for NFSv3. Other opinions welcome here!
+
+Nor does it seem like one that we want to encourage over solutions
+like pNFS. Generally the Linux community has taken the position
+that server bugs should be addressed on the server, and this seems
+like a problem that is introduced by your middlebox and server
+combination. The client is working properly and is complying with
+spec.
+
+If the server cluster prefers particular requests to go to particular
+targets, a layout is the way to go, IMHO.
+
+(I'm not speaking for the NFS client maintainers, just offering an
+opinion and hoping my comments clarify the scenario for others on
+the list paying attention to this thread).
+
+--
+Chuck Lever
+
+
+
