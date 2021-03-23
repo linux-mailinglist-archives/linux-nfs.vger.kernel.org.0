@@ -2,77 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9419A345462
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Mar 2021 02:02:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 02DDE3455CC
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Mar 2021 03:58:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230465AbhCWBB3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Mar 2021 21:01:29 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:12449 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230284AbhCWBBA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 21:01:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1616461260; x=1647997260;
-  h=date:from:to:subject:message-id:mime-version;
-  bh=4Ivdx/d+hB+n3G6dvXqqW4p2PsE6/U7qnL5uBk0w9kg=;
-  b=soOto8lrMhmvr6t+h4+j5m7zgp22ZSoGaKXOHnNhKoYVe/RDJyHTP/+D
-   3D3WBS03aIVBt5hbsKCr4e/3Z1sKOn9FOSKIyQVrwEbxmYEjRLLSm1aUh
-   CZqae+de+fWi5rN+IZ9w5TdpegwE8GWI095GxvoGCNaMhYfXQhKnnEx6q
-   g=;
-X-IronPort-AV: E=Sophos;i="5.81,269,1610409600"; 
-   d="scan'208";a="96920125"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 23 Mar 2021 01:00:59 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id D4C99C02A3
-        for <linux-nfs@vger.kernel.org>; Tue, 23 Mar 2021 01:00:58 +0000 (UTC)
-Received: from EX13D36UWA002.ant.amazon.com (10.43.160.24) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 23 Mar 2021 01:00:58 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D36UWA002.ant.amazon.com (10.43.160.24) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 23 Mar 2021 01:00:58 +0000
-Received: from dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com
- (10.200.231.78) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Tue, 23 Mar 2021 01:00:58 +0000
-Received: by dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com (Postfix, from userid 5408343)
-        id EBA171F2D; Tue, 23 Mar 2021 01:00:57 +0000 (UTC)
-Date:   Tue, 23 Mar 2021 01:00:57 +0000
-From:   Geert Jansen <gerardu@amazon.com>
-To:     <linux-nfs@vger.kernel.org>
-Subject: RFC: return d_type for non-plus READDIR
-Message-ID: <20210323010057.GA129497@dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com>
+        id S229854AbhCWC5m (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Mar 2021 22:57:42 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:38680 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229639AbhCWC5a (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 22:57:30 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=eguan@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0UT129ij_1616468247;
+Received: from localhost(mailfrom:eguan@linux.alibaba.com fp:SMTPD_---0UT129ij_1616468247)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 23 Mar 2021 10:57:28 +0800
+From:   Eryu Guan <eguan@linux.alibaba.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     Eryu Guan <eguan@linux.alibaba.com>
+Subject: [PATCH v2 1/2] nfs: hornor timeo and retrans option when mounting NFSv3
+Date:   Tue, 23 Mar 2021 10:57:13 +0800
+Message-Id: <20210323025714.28510-1-eguan@linux.alibaba.com>
+X-Mailer: git-send-email 2.26.1.107.gefe3874
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+Mounting NFSv3 uses default timeout parameters specified by underlying
+sunrpc transport, and mount options like 'timeo' and 'retrans', unlike
+NFSv4, are not honored.
 
-recursively listing a directory tree requires that you know which entries are
-directories so that you can recurse into them. The getdents() API can provide
-this information through the d_type field.
+But sometimes we want to set non-default timeout value when mounting
+NFSv3, so pass 'timeo' and 'retrans' to nfs_mount() and fill the
+'timeout' field of struct rpc_create_args before creating RPC
+connection. This is also consistent with NFSv4 behavior.
 
-Today, d_type is available if we use READDIRPLUS. A non-plus READDIR requests
-only the "rdattr_error" and "mounted_on_fileid" attributes, but not "type", and
-consequently sets d_type to DT_UNKNOWN.
+Note that this only sets the timeout value of rpc connection to mountd,
+but the timeout of rpcbind connection should be set as well. A later
+patch will fix the rpcbind part.
 
-Requesting the "type" attribute for regular, non-plus READDIR would allow us to
-always return d_type, even for large directories where we switch to a non-plus
-READDIR. It would allow the user to recursively list directories of any size
-without the need for GETATTRs, and, if the server supports this, without any
-stat() or equivalent calls on the server. For some use cases, you could also
-mount with '-o nordirplus' to scan an entire file system efficiently.
+Signed-off-by: Eryu Guan <eguan@linux.alibaba.com>
+---
+v2:
+- describe timeo and retrans param in nfs_mount() kernel-doc
 
-Since not all file servers may be able to produce the directory entry type
-efficiently, this could be implemented as a mount option that defaults off.
+ fs/nfs/internal.h   |  2 +-
+ fs/nfs/mount_clnt.c | 14 +++++++++-----
+ fs/nfs/super.c      |  2 +-
+ 3 files changed, 11 insertions(+), 7 deletions(-)
 
-Some local file systems offer a similar choice. For example, both ext4 and xfs
-have an (in this case mkfs-time) option to store the inode type in the
-directory. If this option is set, then getdents() always returns d_type.
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 7b644d6c09e4..cf0d7db24d44 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -180,7 +180,7 @@ struct nfs_mount_request {
+ 	struct net		*net;
+ };
+ 
+-extern int nfs_mount(struct nfs_mount_request *info);
++extern int nfs_mount(struct nfs_mount_request *info, int timeo, int retrans);
+ extern void nfs_umount(const struct nfs_mount_request *info);
+ 
+ /* client.c */
+diff --git a/fs/nfs/mount_clnt.c b/fs/nfs/mount_clnt.c
+index dda5c3e65d8d..edac6ff74b41 100644
+--- a/fs/nfs/mount_clnt.c
++++ b/fs/nfs/mount_clnt.c
+@@ -136,14 +136,16 @@ struct mnt_fhstatus {
+ /**
+  * nfs_mount - Obtain an NFS file handle for the given host and path
+  * @info: pointer to mount request arguments
++ * @timeo: deciseconds the mount waits for a response before it retries
++ * @retrans: number of times the mount retries a request
+  *
+- * Uses default timeout parameters specified by underlying transport. On
+- * successful return, the auth_flavs list and auth_flav_len will be populated
+- * with the list from the server or a faked-up list if the server didn't
+- * provide one.
++ * Uses timeout parameters specified by caller. On successful return, the
++ * auth_flavs list and auth_flav_len will be populated with the list from the
++ * server or a faked-up list if the server didn't provide one.
+  */
+-int nfs_mount(struct nfs_mount_request *info)
++int nfs_mount(struct nfs_mount_request *info, int timeo, int retrans)
+ {
++	static struct rpc_timeout mnt_timeout;
+ 	struct mountres	result = {
+ 		.fh		= info->fh,
+ 		.auth_count	= info->auth_flav_len,
+@@ -158,6 +160,7 @@ int nfs_mount(struct nfs_mount_request *info)
+ 		.protocol	= info->protocol,
+ 		.address	= info->sap,
+ 		.addrsize	= info->salen,
++		.timeout	= &mnt_timeout,
+ 		.servername	= info->hostname,
+ 		.program	= &mnt_program,
+ 		.version	= info->version,
+@@ -177,6 +180,7 @@ int nfs_mount(struct nfs_mount_request *info)
+ 	if (info->noresvport)
+ 		args.flags |= RPC_CLNT_CREATE_NONPRIVPORT;
+ 
++	nfs_init_timeout_values(&mnt_timeout, info->protocol, timeo, retrans);
+ 	mnt_clnt = rpc_create(&args);
+ 	if (IS_ERR(mnt_clnt))
+ 		goto out_clnt_err;
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 94885c6f8f54..13a650750f04 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -867,7 +867,7 @@ static int nfs_request_mount(struct fs_context *fc,
+ 	 * Now ask the mount server to map our export path
+ 	 * to a file handle.
+ 	 */
+-	status = nfs_mount(&request);
++	status = nfs_mount(&request, ctx->timeo, ctx->retrans);
+ 	if (status != 0) {
+ 		dfprintk(MOUNT, "NFS: unable to mount server %s, error %d\n",
+ 				request.hostname, status);
+-- 
+2.26.1.107.gefe3874
 
-Would a patch that adds such a mount option be acceptable?
