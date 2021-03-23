@@ -2,200 +2,227 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C99CC3462BF
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Mar 2021 16:26:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D07643463E1
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Mar 2021 16:57:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232578AbhCWP0R (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Mar 2021 11:26:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49522 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232750AbhCWP0H (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Mar 2021 11:26:07 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12NFOtB8159374;
-        Tue, 23 Mar 2021 15:26:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=wMocz+BjtmLPB7Di9RVUczZG1et7TdEr5GeATJbaSuQ=;
- b=HYb7tEhZr7nBN0LaOA2R7GOLFxzacXwf5YtQtUbfSmgnnKf+SQGzXoS+2ar2Ypc2KCve
- AR9h7BgqQmwxO7udkw4ZwPJ5MEQeo1XimF9vBzE3Ln5AiVKvlR2QcywzaMzJjJxx0zFe
- fd3JnvXisDZxU/jDtbcpHvAFryZRwfu+WPhPVbX035ncU3dEgK4/zYmX/3ZgctEb0rIk
- ma5Oktgi7si6IP+CBbfKKacZKumtv+euP/sS/z1Zj/+Qri2XsJfiKNacZZxul5RDCZDM
- TTeu44wO8JPP0MyMfaQ+notMqn/53q1x7BMCFj29IeHgZ18gCnPCNftTW4vw2tS1mnf2 mg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 37d8fr7g9t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Mar 2021 15:26:05 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12NFAjQI061987;
-        Tue, 23 Mar 2021 15:26:05 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2174.outbound.protection.outlook.com [104.47.59.174])
-        by userp3030.oracle.com with ESMTP id 37dtyxk75k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Mar 2021 15:26:05 +0000
+        id S232835AbhCWP5V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Mar 2021 11:57:21 -0400
+Received: from mail-eopbgr1310135.outbound.protection.outlook.com ([40.107.131.135]:40742
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232912AbhCWP5P (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 23 Mar 2021 11:57:15 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N2W1XeDxhVXEFfHFEoJoj6TT4KPCOlm2pAhee0L8LHox7YXyQRuHfL4mYXNBkUnVEGp9OQ8dewuy5avGAEngr1sxzUxtAsSM+2/QJmUpsg3UXSKNEAcsnIc9UA2QhSvjtlUeQkwy+HSflaMyBTV5BlNi6kfm+eQCbeX8PczIjvBCsIWAX0cB1nJr1xupfrgEsx8JuNm4Y4wRoSIOl6SOR8ULS0iJDk3Tzo/9+pS++JBbdd7K9qwUsdNeRmChzsfBCwSQtaYaZRYYjvNqeo9KalGvX5+UDbCk11NxH2OKr/EVfjz3fTgum31tbAQzVI/+zZjQrFRJMa7k3jRMvbPw6g==
+ b=PvXP0/Yt/l9HmhdzyOlXncHurWlUMMXDEtzMfyG3qSeBIQ40aw3tcQAKMnmAK3tXd105BEUglKjQDk6NTs17XIHy8xFzHbkD97up7PXtA9a0ctM2dViJ1OEGQUNqPMZmV3MBjHliUXk0RzzOWu/yReOIn2atw+VQBmGZopvVIVT/yOZ+gshty/qDpXgrPq5tgiZpnJH5TBHxNgTwbm9BDytHBO3PFQem553WOQlVgwPewPAftVv70S0DHi490N1slUpBMdjrLXhm9p+jsxrBRdQoG/RaypG8+60hIxB4nN2rH5sqvgQcWqB5CMa98ZtouXgg9x5pRu7Kr5/ZT9JiEw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wMocz+BjtmLPB7Di9RVUczZG1et7TdEr5GeATJbaSuQ=;
- b=Rb6mrum7FRigyrztdQAqeY1g0G+KRcGz0L6o9dPEJadlhIx0qnVPSSYC+uM05PReBm/wSrT0DFjMP4zWueL+WIDKhejT0MWwkyfrmphT/fwCb2lPX0kp7WEgrvT5gPCyqG3pjVFb47nUd2YRdJjfIbSetcktgdbbR4Zum7ym887OtJELtOuZP5R9Qv+ZATwWT3kyEgHcvvNgrFsLla2103sAj2U5mf7Pgsnjxx8RssWbQw4LYL1QSVT+3VyKhbZeGsuDN7DWeQbRdEhM7QNmKiYTwWi5lsY6lFGfSO5KCfxRmEnOxpSfTxVDK47mPm+8RRX5VPck5QDq1gpQy52bOA==
+ bh=CVR61r3wmzGB2ExUTF+fREznZCGbivVNx3pf0y9aO0U=;
+ b=asta/47uKs8PR0hY5yBtogHZO5RwCSc3u21gF/Ezh7toKJML2x32YfkVNjsI4EhaVP2RILxH0XYwCDuaA89S6I+pWJJIJIKYT4SXi2/wz04dgvwlmSnaNJHB1XbjrvlS98+M4ZMDp48IdVCUu9sWAj+PjF+UeoTMx+X8glS1+COGoTgAU30SbqWpRDlJDRjkYc3HFny0m0qdhFfPqOMAQYvSlIGpn5bpdetx/MX7ILWyLvAkThV3E3PXS6MNlsBPL9p7CouFeCzmLwFvikmoUSDNTVeaXhV7tCo/42QWrlafqZGhFx6emNepXXFHgqgGMtKw1Pbuwj/ucdA2i+lJ3g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wMocz+BjtmLPB7Di9RVUczZG1et7TdEr5GeATJbaSuQ=;
- b=GbHMtbQXy9Q9o3pTXihB8UlQcMWBJdw0UIlN0nWDOqfVNJdLgfibwYz+AKbyv7kZ0PaqHAel67M/P2XSLGKbF3AMaxvalPqP4bKP1aS1Glp+RYJ4+gDa5ukV0Bol8Rz6QkU2kXd87UEvgIIVHxGJolGEKpoIE/VbowlV+i5Oo1Q=
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.24; Tue, 23 Mar
- 2021 15:26:02 +0000
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::50bf:7319:321c:96c9]) by SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::50bf:7319:321c:96c9%4]) with mapi id 15.20.3955.027; Tue, 23 Mar 2021
- 15:26:02 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Geert Jansen <gerardu@amazon.com>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: RFC: return d_type for non-plus READDIR
-Thread-Topic: RFC: return d_type for non-plus READDIR
-Thread-Index: AQHXH4An0zoT5whq90uvEbXY1zJqrqqRsqoA
-Date:   Tue, 23 Mar 2021 15:26:02 +0000
-Message-ID: <689DD4DF-17C0-4776-BE53-7F10F7FFE720@oracle.com>
-References: <20210323010057.GA129497@dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com>
-In-Reply-To: <20210323010057.GA129497@dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com>
-Accept-Language: en-US
+ bh=CVR61r3wmzGB2ExUTF+fREznZCGbivVNx3pf0y9aO0U=;
+ b=A+YHWSAUoR+f0dtSgab2HpmaJgxpr5MseZWVl6NsEL7qMNQQBQIlslxwirb3SitvvJr4NZH0PUaolrqIHCE/H5rwv3LPu0qBt0E8KkvZ1wV23oVjVGg7c+xBp61jW4QAmd6RuFGJMLNzku7h/eYoZnU5k5eDq9oMiL7lZPJ3kqA=
+Received: from SG2P153MB0361.APCP153.PROD.OUTLOOK.COM (2603:1096:0:4::11) by
+ SG2P15301MB0032.APCP153.PROD.OUTLOOK.COM (2603:1096:3:10::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3999.2; Tue, 23 Mar 2021 15:57:12 +0000
+Received: from SG2P153MB0361.APCP153.PROD.OUTLOOK.COM
+ ([fe80::cd6e:9dc1:85ac:f488]) by SG2P153MB0361.APCP153.PROD.OUTLOOK.COM
+ ([fe80::cd6e:9dc1:85ac:f488%5]) with mapi id 15.20.3999.008; Tue, 23 Mar 2021
+ 15:57:12 +0000
+From:   Nagendra Tomar <Nagendra.Tomar@microsoft.com>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Subject: RE: [PATCH 0/5] nfs: Add mount option for forcing RPC requests for
+ one file over one connection
+Thread-Topic: [PATCH 0/5] nfs: Add mount option for forcing RPC requests for
+ one file over one connection
+Thread-Index: Adcfp3hcmhRvn3IHQv25MQlIHJPMUAARGOoAAAMHR+A=
+Date:   Tue, 23 Mar 2021 15:57:12 +0000
+Message-ID: <SG2P153MB0361BCD6D1F8F86E0648E3EB9E649@SG2P153MB0361.APCP153.PROD.OUTLOOK.COM>
+References: <SG2P153MB0361E2D69F8AD8AFBF9E7CD89E649@SG2P153MB0361.APCP153.PROD.OUTLOOK.COM>
+ <CD47CE3E-0C07-4019-94AF-5474D531B12D@oracle.com>
+In-Reply-To: <CD47CE3E-0C07-4019-94AF-5474D531B12D@oracle.com>
+Accept-Language: en-IN, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: amazon.com; dkim=none (message not signed)
- header.d=none;amazon.com; dmarc=none action=none header.from=oracle.com;
-x-originating-ip: [68.61.232.219]
+authentication-results: oracle.com; dkim=none (message not signed)
+ header.d=none;oracle.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [122.172.188.128]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 70fdc06d-2a6f-4723-0379-08d8ee0ff83c
-x-ms-traffictypediagnostic: BY5PR10MB4257:
-x-microsoft-antispam-prvs: <BY5PR10MB4257044CCFFEB9AED0C578FC93649@BY5PR10MB4257.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f58d9e78-5073-46a7-97e2-08d8ee1452c2
+x-ms-traffictypediagnostic: SG2P15301MB0032:
+x-microsoft-antispam-prvs: <SG2P15301MB0032B8DD303CB0E31726EF769E649@SG2P15301MB0032.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VFa0tjIaqkZN/98QV8N9W+L8ZAmEVvmHtQJpBte3qxDFKrXM3pq79lWgTgkXUYU8RGPNTsNOYkpLSMhLrDNdMmYDEx5QwwejgXZ43vMq5tQtpKyBNwZL+y7ZBv4rhBx2HjV/hiJH8aFfYryIiRxlf0EfE+LQm96Y6HWNMJSjv9YqyJFWDg+VLmZMalmW3OHRzx5Ig3SmPLoYLe/4Pck1ZE9Yablk5h5nyvTwF+lgCqwjgNU+8grJ9GJzE+zTNDt2Fw96Y3deGdVhWZCJLfTZ6jPhM7E6/0W3qQvcIs8hn5H0Jjzmq23tYMy8higil/re+yPc521pSVkrU66o78VIVnfW1I8hwnsMx31sYK9Tq2SWOuDovjaaVJ1DXZ03wUbjbnDeGRJBj2me9hNYjXIMzgxkbDVx2piKd65KrK4nYtb07rwK38YBmNBjOY9y7TMjXbHsXlSwNFgRpIma+xhbYQho1TjMwHcgFo99nEWrJ8lRyIpoUTVybY9z/P6LnbsCC0o6Nhp1gJuoBqw4l+IGH6Ec6QLZesZ2AiHplhq3Dr57mJepHLgGq13J0OKhq41KWFxm7NrLqE314ilagZ97K8ydVED7O4Qf2T+swcrUcTLd1BNLcIdml8lEZUE1ROmKeF11MZLsCHQMgr7WCb7UWAX9AulEcN0oO8p5x8uzCcq9zZ3lRFSfXw3QkTOri5b1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(39860400002)(346002)(366004)(396003)(376002)(76116006)(66446008)(91956017)(478600001)(66946007)(83380400001)(6506007)(86362001)(8936002)(6486002)(5660300002)(64756008)(53546011)(71200400001)(38100700001)(66476007)(316002)(33656002)(66556008)(26005)(4326008)(2906002)(36756003)(6512007)(8676002)(2616005)(186003)(6916009)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?fMfOyy6ab+ZWrqL5mJQj/onM59mOCiEMfT0oCu+/NjfOeHiSQrDP2Vrfz4UZ?=
- =?us-ascii?Q?sA0itSD0xnFFC4R3hEeEnnhUxCkgfoPk7R8vduimYSBBJr9OBC3mQ/LtIZs6?=
- =?us-ascii?Q?oAROfGgjQ07/BWXi8ciMBcjY2fvlvjcYGDN7ih0vBGvXELJhPKUi901yoI12?=
- =?us-ascii?Q?1biHkW/N2BeQ3tzxw+uGgZKsZy7hKQfl+AFg3xU8HMf4mejVYEViSzjf/5fC?=
- =?us-ascii?Q?Wun8zvbNFsn5fWc/A37a/aQZsa0HNsKosSIGS7izP+mSw4D5azaNZJ5gV2rx?=
- =?us-ascii?Q?yfkGOgZnPYS6Z/AzFtwf+cCk30PROP9C0kHUIj+1hNlX5z6yvgjgEg2HEnkC?=
- =?us-ascii?Q?ggvgybbK7LOS60RFnhYGdH3ySP0j4bgOXV0g5aA3EWbtUhKVbLYEtPoAk3MS?=
- =?us-ascii?Q?rhuJ2NLOAXAO2wCxK/JYC42nJDdvZBXS9Rlejf0QQAhomfbfolIw9FhcfwsT?=
- =?us-ascii?Q?WqKUzR5m0qS9Rlk/sBwP8j3FeyHXKU95VtpYaHF1A4VRAstDd63woJOscwb9?=
- =?us-ascii?Q?bKk2NBAzgxyrNWv54wGFS1JrSQLm+5Cyc5/A1EnLhAgJ5uq5Y+citVu7g/Ya?=
- =?us-ascii?Q?4BqlSHnZ7AfjLyNq6ALw+DRUkwGGB3vLvlGNpIQmJJM2UV1iHZxmVhYMgxaf?=
- =?us-ascii?Q?nKvU44uBRbudrdCD9ZR3oZ7A53UG7Lf6jtHPDDFz/WLPQQYboVR4TcZZ7xrM?=
- =?us-ascii?Q?h5PnIDJuha8UZLozROgoUq7M7Bpzmq4t9AR82+wpw4NdZFDYKRpAPAc/FGz4?=
- =?us-ascii?Q?YNC7/BGdTaX7Esen3iN8+FKDZtKkZYc/ZoZeoidIwzn+3MoRAzkwYopsFBut?=
- =?us-ascii?Q?XTsPkFcWc+fJUmwfKC6GwrhWgHGCkDcxXHhMTexPCliWPB6TMEb7x4M2Nyr/?=
- =?us-ascii?Q?na5m76DbYLXcpUhASdYtvsy6yLVgUROAEssAaIJT6Rk+hvHZ0YMHdyLbBBdD?=
- =?us-ascii?Q?wTJ3NvF1Zfqjwz+ZIXWZH7+bk4d7zFrSjV2luwBFTc7Ro0l7jNmbApv/PRpy?=
- =?us-ascii?Q?hAPLrsLKj6uMtXigK1Hk/tNlUuN8ndnUikCXTmOcDbO7U4Bhq3kaw0ZaHx3U?=
- =?us-ascii?Q?Z+OlRtymFmHg70Bzku/XWkLUllgvXNVwPagVCzuJ7A3XwRbRexuG6BmrFN8X?=
- =?us-ascii?Q?GokXtmZe2DJuZPx4DulQuOkOyysxk7GAVoEiUwcwo7C0GW7e3OPjMeonMxbq?=
- =?us-ascii?Q?/rgs9Vg8W+QbG+Xv3jpTgABC+lIE0xjnGgfqPNi4MUXm1LUVJZ2W2V4EEXo5?=
- =?us-ascii?Q?7WsmeLmVxzD6gvPMft/ZYGwk/RF/Cx036jhgMeUjSo7aT7qw7/1ZOYxmFiVA?=
- =?us-ascii?Q?/IWPnoMmT/JIzbEIVXtuBNeg?=
+x-microsoft-antispam-message-info: tBa4whQ1EcXJWq9tUqeyoi0Cu9rdQGMLPW/MQXygX+ags/usq5MDOvRHgyqAITlyCFIPNybYQR2X0GVP4oNl7OClUrZL5ivzvxgc1MLZpmLuIMiZcYApVrBpFbMcTybZHceoM+4YxeeCGDnUps22uRlw8P2q624LOBhV2Vj5VNvkRlfrpgpiyFNQI6twvKNJi8noPix+pyz3HZUVleXKiPdwQbyoHhCYIxnh63f6JOEOmb0t4SzbLlJFtJpLF0fiL6bmEPSBt6SRKGJCzT80ukieOebLK920GB88Y4HlJh2sEPza03+yUYpDhrqpGMdKnndO3imsNOduZAOLxYgM/nR6zd8ApMPSCYnNgc+ioXMx9U58nWhMTHGQ6D/CAdJQjjailVJeeWLVCQOVXn7kEzFAck+RnK3Jt83K52OVn0/ALfyD99ENAHdWvFG5TXJw+W11Y2l4RnJOaCln2TKiHK4G8osGCCGpufgzz7/qCEqPOhH7boQjEfFrrBqB7AKMsVGQqQDUQ6hAyXl5Nnav5ZD/AAOLQO++wRYmofUrtjP5DrGAAwq8kLCdR1SomzBi7bEv77D69rlQ88ZgTKYPerXFMovtFFWfPVycFoJD5chICIOq7TvlWrpdWrD9j4NEK0pS0Tl9XbJhFIBqJwvIdQZGHFKHbARhYHX2n0AJU8w=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2P153MB0361.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(39860400002)(376002)(346002)(136003)(71200400001)(86362001)(7696005)(66946007)(82950400001)(8676002)(33656002)(82960400001)(186003)(66556008)(6916009)(76116006)(8936002)(5660300002)(64756008)(66446008)(2906002)(66476007)(478600001)(54906003)(38100700001)(8990500004)(26005)(53546011)(9686003)(4326008)(55236004)(6506007)(55016002)(83380400001)(316002)(10290500003)(52536014);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?nrhQ5RBFq0hV+EuPA2a36j5LIz38yRUIyY6CsgsjxGrDh1e3R8eanfXRQnIW?=
+ =?us-ascii?Q?bi1zWwBdkBe7zFuPMp/KLO9Oq1RnOXcNzkKwPSoPuzi/Lq10nF+8yzUUJ6mn?=
+ =?us-ascii?Q?ZZJ+OuR4s3clamuErWHOY9v4LvRWVxirOHPvI+yGntHNLdGa3g+omXipj2a1?=
+ =?us-ascii?Q?lU3CN4erUmztTZ3wQmTwtkUnxfOdbWJsCuSTnriODfNPppuj4yBo+MwwF/Vu?=
+ =?us-ascii?Q?RnGzgbag697B981NKIZYw2BGGUQ+pxa3FJVtJuLarSWpUh6swGK+v7pWuAdD?=
+ =?us-ascii?Q?jxEC77CsiKgBzLOD/Bf5xSsSUcHS4nCLyxR2L4k4bOB0K1N4kNDN9WpSHMdE?=
+ =?us-ascii?Q?Wba0OIKTC+JL+L7juFasspHN5DqFC+MD4+mXZOx0PRO/j4bjnAXNaWF9F+l6?=
+ =?us-ascii?Q?uLTPmacrYSHn4BHVG7SXLzterDGvUBs40/iwbOTIYYCSPSki3MmfmW2j2Fak?=
+ =?us-ascii?Q?QhrvtjjqmlKYbDE2nmjXFv68fLe9egClCw0vWI0e2tD5Rd0Q0KKcz965NYgB?=
+ =?us-ascii?Q?jSZRkK80HXl9/knHgd+Ls4Z3LIaVG5/1I2U0Nh9SGSekWkc0BO1FOARTRTXB?=
+ =?us-ascii?Q?ckd5zPzF8DUAniy0XPUli8pP6kHOjSykmLiOvJWcckIWo/+M8B5f18eIAcSl?=
+ =?us-ascii?Q?UMRN81xj5qJ1dxJPUcoMOWCv6JXGFOx3ZJd96N9DEHnyi6b785PSZuJWsbB+?=
+ =?us-ascii?Q?sEBYH9KToNImdGiykRkyGizLEOkl2YhPqcsTFKSKhf4fWvDZP8pORxqfenxI?=
+ =?us-ascii?Q?Lg3ex5v8t+ZC/SvoZfzLFR4NQ7gpho8V/ULugy6s52ySluviy2uwU899XPUb?=
+ =?us-ascii?Q?vvwyHolfo90PytgM04ms8pyQ+yoIkzrYAQbBt/h2OpqmUA6cSJzj5ai/DAjV?=
+ =?us-ascii?Q?Jb9cX7+Bvckwpge6+7w2TrasCGCaYySooiK9yOJrJVrQPLRW23W9A4ROTk2z?=
+ =?us-ascii?Q?mIHdvbzgcheWxkYsTH5BT7VYatrTbA/Zv66SedewkiE7jt1Mn1VcHKWI3aIM?=
+ =?us-ascii?Q?a7EqvX26OHDOD9sxg2esjaZ2V/bJoziRVQN5TLhj1t5EdpyYmZjXbyC7ngkY?=
+ =?us-ascii?Q?EzFeyBsD0+PuktclUtOMnZZtEtJvZ0mCC1AsEJM7s6iVZuWmBLDUM07XCyCA?=
+ =?us-ascii?Q?29ep0Pokalo+g/7tXoL9ku0wnp1eC10Kv7cXwTu6O+P1zM1Eq1hhbcEifJxb?=
+ =?us-ascii?Q?Bk9qFRFAT5NvVn+/qPivmnTP1p+C/XtT6eT7lqA+Yae6mmEtir0UKCKXiwxY?=
+ =?us-ascii?Q?WPdGuzwZtrV/aQWyzkH/43Om/9KR6yuwOqRy57Z88H7BmxBQht1mhFpPsZ1v?=
+ =?us-ascii?Q?x1womzjx6XZcC3hIIfEWGnHW?=
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D78B5C8C87D02648966A881B562D3B04@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
+X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70fdc06d-2a6f-4723-0379-08d8ee0ff83c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2021 15:26:02.8532
+X-MS-Exchange-CrossTenant-AuthSource: SG2P153MB0361.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: f58d9e78-5073-46a7-97e2-08d8ee1452c2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2021 15:57:12.5647
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 34nr3SGxmwL6s0bIaVUWt7/oNluGp7ft5id1IIC6R3CoregUqnjiYwuxG1BIuImHv8Qr0mxF3MKpJ63MVka+mw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4257
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9931 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 spamscore=0 malwarescore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103230113
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9931 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 spamscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
- phishscore=0 bulkscore=0 adultscore=0 malwarescore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103230114
+X-MS-Exchange-CrossTenant-userprincipalname: M1bBBSi7/yJFlaeBmvLqwE4mpQTiBy2n23+Dcvq17+euQhKegruX34qd8cGTlEchHS6MLw7eUaJTL6uD/lM1mA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P15301MB0032
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Geert -
-
-> On Mar 22, 2021, at 9:00 PM, Geert Jansen <gerardu@amazon.com> wrote:
+ > > On Mar 23, 2021, at 1:46 AM, Nagendra Tomar
+> <Nagendra.Tomar@microsoft.com> wrote:
+> >
+> > From: Nagendra S Tomar <natomar@microsoft.com>
+> >
+> > If a clustered NFS server is behind an L4 loadbalancer the default
+> > nconnect roundrobin policy may cause RPC requests to a file to be
+> > sent to different cluster nodes. This is because the source port
+> > would be different for all the nconnect connections.
+> > While this should functionally work (since the cluster will usually
+> > have a consistent view irrespective of which node is serving the
+> > request), it may not be desirable from performance pov. As an
+> > example we have an NFSv3 frontend to our Object store, where every
+> > NFSv3 file is an object. Now if writes to the same file are sent
+> > roundrobin to different cluster nodes, the writes become very
+> > inefficient due to the consistency requirement for object update
+> > being done from different nodes.
+> > Similarly each node may maintain some kind of cache to serve the file
+> > data/metadata requests faster and even in that case it helps to have
+> > a xprt affinity for a file/dir.
+> > In general we have seen such scheme to scale very well.
+> >
+> > This patch introduces a new rpc_xprt_iter_ops for using an additional
+> > u32 (filehandle hash) to affine RPCs to the same file to one xprt.
+> > It adds a new mount option "ncpolicy=3Droundrobin|hash" which can be
+> > used to select the nconnect multipath policy for a given mount and
+> > pass the selected policy to the RPC client.
 >=20
-> Hi,
+> This sets off my "not another administrative knob that has
+> to be tested and maintained, and can be abused" allergy.
 >=20
-> recursively listing a directory tree requires that you know which entries=
- are
-> directories so that you can recurse into them. The getdents() API can pro=
-vide
-> this information through the d_type field.
+> Also, my "because connections are shared by mounts of the same
+> server, all those mounts will all adopt this behavior" rhinitis.
+
+Yes, it's fair to call this out, but ncpolicy behaves like the nconnect
+parameter in this regards.
+
+> And my "why add a new feature to a legacy NFS version" hives.
 >=20
-> Today, d_type is available if we use READDIRPLUS. A non-plus READDIR requ=
-ests
-> only the "rdattr_error" and "mounted_on_fileid" attributes, but not "type=
-", and
-> consequently sets d_type to DT_UNKNOWN.
 >=20
-> Requesting the "type" attribute for regular, non-plus READDIR would allow=
- us to
-> always return d_type, even for large directories where we switch to a non=
--plus
-> READDIR. It would allow the user to recursively list directories of any s=
-ize
-> without the need for GETATTRs, and, if the server supports this, without =
-any
-> stat() or equivalent calls on the server. For some use cases, you could a=
-lso
-> mount with '-o nordirplus' to scan an entire file system efficiently.
+> I agree that your scenario can and should be addressed somehow.
+> I'd really rather see this done with pNFS.
 >=20
-> Since not all file servers may be able to produce the directory entry typ=
-e
-> efficiently, this could be implemented as a mount option that defaults of=
-f.
+> Since you are proposing patches against the upstream NFS client,
+> I presume all your clients /can/ support NFSv4.1+. It's the NFS
+> servers that are stuck on NFSv3, correct?
 
-Can you say more about the impact of requesting this attribute
-from servers that cannot efficiently provide it? Which servers
-and filesystems find it a problem, and how much of a problem is
-it?
+Yes.
 
-
-> Some local file systems offer a similar choice. For example, both ext4 an=
-d xfs
-> have an (in this case mkfs-time) option to store the inode type in the
-> directory. If this option is set, then getdents() always returns d_type.
 >=20
-> Would a patch that adds such a mount option be acceptable?
+> The flexfiles layout can handle an NFSv4.1 client and NFSv3 data
+> servers. In fact it was designed for exactly this kind of mix of
+> NFS versions.
+>=20
+> No client code change will be necessary -- there are a lot more
+> clients than servers. The MDS can be made to work smartly in
+> concert with the load balancer, over time; or it can adopt other
+> clever strategies.
+>=20
+> IMHO pNFS is the better long-term strategy here.
 
-I'd rather avoid adding another administrative knob unless it is
-absolutely necessary... are there other options for controlling
-whether the client requests this attribute?
+The fundamental difference here is that the clustered NFSv3 server
+is available over a single virtual IP, so IIUC even if we were to use
+NFSv41 with flexfiles layout, all it can handover to the client is that sin=
+gle
+(load-balanced) virtual IP and now when the clients do connect to the
+NFSv3 DS we still have the same issue. Am I understanding you right?
+Can you pls elaborate what you mean by "MDS can be made to work
+smartly in concert with the load balancer"?
 
-For example, is there a way for a server to decide not to provide
-it if it would be burdensome to do so? ie, the client always asks,
-but it would be up to the server to provide it if it can do so.
-
---
-Chuck Lever
-
-
+>=20
+> > It adds a new rpc_procinfo member p_fhhash, which can be supplied
+> > by the specific RPC programs to return a u32 hash of the file/dir the
+> > RPC is targetting, and lastly it provides p_fhhash implementation
+> > for various NFS v3/v4/v41/v42 RPCs to generate the hash correctly.
+> >
+> > Thoughts?
+> >
+> > Thanks,
+> > Tomar
+> >
+> > Nagendra S Tomar (5):
+> >  SUNRPC: Add a new multipath xprt policy for xprt selection based
+> >    on target filehandle hash
+> >  SUNRPC/NFSv3/NFSv4: Introduce "enum ncpolicy" to represent the
+> nconnect
+> >    policy and pass it down from mount option to rpc layer
+> >  SUNRPC/NFSv4: Rename RPC_TASK_NO_ROUND_ROBIN ->
+> RPC_TASK_USE_MAIN_XPRT
+> >  NFSv3: Add hash computation methods for NFSv3 RPCs
+> >  NFSv4: Add hash computation methods for NFSv4/NFSv42 RPCs
+> >
+> > fs/nfs/client.c                      |   3 +
+> > fs/nfs/fs_context.c                  |  26 ++
+> > fs/nfs/internal.h                    |   2 +
+> > fs/nfs/nfs3client.c                  |   4 +-
+> > fs/nfs/nfs3xdr.c                     | 154 +++++++++++
+> > fs/nfs/nfs42xdr.c                    | 112 ++++++++
+> > fs/nfs/nfs4client.c                  |  14 +-
+> > fs/nfs/nfs4proc.c                    |  18 +-
+> > fs/nfs/nfs4xdr.c                     | 516 ++++++++++++++++++++++++++++=
+++-----
+> > fs/nfs/super.c                       |   7 +-
+> > include/linux/nfs_fs_sb.h            |   1 +
+> > include/linux/sunrpc/clnt.h          |  15 +
+> > include/linux/sunrpc/sched.h         |   2 +-
+> > include/linux/sunrpc/xprtmultipath.h |   9 +-
+> > include/trace/events/sunrpc.h        |   4 +-
+> > net/sunrpc/clnt.c                    |  38 ++-
+> > net/sunrpc/xprtmultipath.c           |  91 +++++-
+> > 17 files changed, 913 insertions(+), 103 deletions(-)
+>=20
+> --
+> Chuck Lever
+>=20
+>=20
 
