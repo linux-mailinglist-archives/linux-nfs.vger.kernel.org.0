@@ -2,210 +2,155 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5F8D3461C0
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Mar 2021 15:46:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00BE3346263
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Mar 2021 16:09:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232228AbhCWOqQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Mar 2021 10:46:16 -0400
-Received: from outbound-smtp07.blacknight.com ([46.22.139.12]:32865 "EHLO
-        outbound-smtp07.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232356AbhCWOpr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Mar 2021 10:45:47 -0400
-Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
-        by outbound-smtp07.blacknight.com (Postfix) with ESMTPS id 4FAEA1C3F65
-        for <linux-nfs@vger.kernel.org>; Tue, 23 Mar 2021 14:45:43 +0000 (GMT)
-Received: (qmail 30414 invoked from network); 23 Mar 2021 14:45:43 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 23 Mar 2021 14:45:43 -0000
-Date:   Tue, 23 Mar 2021 14:45:41 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        id S232673AbhCWPIv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Mar 2021 11:08:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35237 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232686AbhCWPI2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Mar 2021 11:08:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1616512108;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7Dk+kTaXIBxkfJmBKu6XikBMXUgoktdgDa5FmOR121g=;
+        b=DCNnizOGr1mD3hmIQ2ADe1YeF5+vIzvH8jwPoLCMwmeMr6ZvzVesjeVKWk1NGZcQ9BWOG/
+        OqzlrGDlFvR+WGQcnnvIg9MvNvxTuUJLODjA1qNAg7XwzU3zb4u3tv1WQJZlUc3VvPc8c4
+        wZ8BAES5PqAF3M7HxQXFwSegxPWlGWI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-201-d0GLNY50MHKwkdaeWWEmNA-1; Tue, 23 Mar 2021 11:08:23 -0400
+X-MC-Unique: d0GLNY50MHKwkdaeWWEmNA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD5B4612A1;
+        Tue, 23 Mar 2021 15:08:21 +0000 (UTC)
+Received: from carbon (unknown [10.36.110.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 69805196E3;
+        Tue, 23 Mar 2021 15:08:15 +0000 (UTC)
+Date:   Tue, 23 Mar 2021 16:08:14 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
         Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Christoph Hellwig <hch@infradead.org>,
         Alexander Duyck <alexander.duyck@gmail.com>,
         Matthew Wilcox <willy@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Linux-Net <netdev@vger.kernel.org>,
         Linux-MM <linux-mm@kvack.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+        Linux-NFS <linux-nfs@vger.kernel.org>, brouer@redhat.com
 Subject: Re: [PATCH 0/3 v5] Introduce a bulk order-0 page allocator
-Message-ID: <20210323144541.GL3697@techsingularity.net>
+Message-ID: <20210323160814.62a248fb@carbon>
+In-Reply-To: <20210323104421.GK3697@techsingularity.net>
 References: <20210322091845.16437-1-mgorman@techsingularity.net>
- <C1DEE677-47B2-4B12-BA70-6E29F0D199D9@oracle.com>
- <20210322194948.GI3697@techsingularity.net>
- <0E0B33DE-9413-4849-8E78-06B0CDF2D503@oracle.com>
- <20210322205827.GJ3697@techsingularity.net>
- <20210323120851.18d430cf@carbon>
+        <20210323104421.GK3697@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20210323120851.18d430cf@carbon>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Mar 23, 2021 at 12:08:51PM +0100, Jesper Dangaard Brouer wrote:
-> > > <SNIP>
-> > > My results show that, because svc_alloc_arg() ends up calling
-> > > __alloc_pages_bulk() twice in this case, it ends up being
-> > > twice as expensive as the list case, on average, for the same
-> > > workload.
-> > >   
+On Tue, 23 Mar 2021 10:44:21 +0000
+Mel Gorman <mgorman@techsingularity.net> wrote:
+
+> On Mon, Mar 22, 2021 at 09:18:42AM +0000, Mel Gorman wrote:
+> > This series is based on top of Matthew Wilcox's series "Rationalise
+> > __alloc_pages wrapper" and does not apply to 5.12-rc2. If you want to
+> > test and are not using Andrew's tree as a baseline, I suggest using the
+> > following git tree
 > > 
-> > Ok, so in this case the caller knows that holes are always at the
-> > start. If the API returns an index that is a valid index and populated,
-> > it can check the next index and if it is valid then the whole array
-> > must be populated.
-> > 
-> > <SNIP>
+> > git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git mm-bulk-rebase-v5r9
+> >   
 > 
-> I do know that I suggested moving prep_new_page() out of the
-> IRQ-disabled loop, but maybe was a bad idea, for several reasons.
+> Jesper and Chuck, would you mind rebasing on top of the following branch
+> please? 
 > 
-> All prep_new_page does is to write into struct page, unless some
-> debugging stuff (like kasan) is enabled. This cache-line is hot as
-> LRU-list update just wrote into this cache-line.  As the bulk size goes
-> up, as Matthew pointed out, this cache-line might be pushed into
-> L2-cache, and then need to be accessed again when prep_new_page() is
-> called.
+> git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git mm-bulk-rebase-v6r2
 > 
-> Another observation is that moving prep_new_page() into loop reduced
-> function size with 253 bytes (which affect I-cache).
+> The interface is the same so the rebase should be trivial.
 > 
->    ./scripts/bloat-o-meter mm/page_alloc.o-prep_new_page-outside mm/page_alloc.o-prep_new_page-inside
->     add/remove: 18/18 grow/shrink: 0/1 up/down: 144/-397 (-253)
->     Function                                     old     new   delta
->     __alloc_pages_bulk                          1965    1712    -253
->     Total: Before=60799, After=60546, chg -0.42%
-> 
-> Maybe it is better to keep prep_new_page() inside the loop.  This also
-> allows list vs array variant to share the call.  And it should simplify
-> the array variant code.
-> 
+> Jesper, I'm hoping you see no differences in performance but it's best
+> to check.
 
-I agree. I did not like the level of complexity it incurred for arrays
-or the fact it required that a list to be empty when alloc_pages_bulk()
-is called. I thought the concern for calling prep_new_page() with IRQs
-disabled was a little overblown but did not feel strongly enough to push
-back on it hard given that we've had problems with IRQs being disabled
-for long periods before. At worst, at some point in the future we'll have
-to cap the number of pages that can be requested or enable/disable IRQs
-every X pages.
+I will rebase and check again.
 
-New candidate
+The current performance tests that I'm running, I observe that the
+compiler layout the code in unfortunate ways, which cause I-cache
+performance issues.  I wonder if you could integrate below patch with
+your patchset? (just squash it)
 
-git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git mm-bulk-rebase-v6r4
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
 
-Interface is still the same so a rebase should be trivial. Diff between
-v6r2 and v6r4 is as follows. I like the diffstat if nothing else :P
+[PATCH] mm: optimize code layout for __alloc_pages_bulk
 
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
- mm/page_alloc.c | 54 +++++++++++++-----------------------------------------
- 1 file changed, 13 insertions(+), 41 deletions(-)
+Looking at perf-report and ASM-code for __alloc_pages_bulk() then the code
+activated is suboptimal. The compiler guess wrong and place unlikely code in
+the beginning. Due to the use of WARN_ON_ONCE() macro the UD2 asm
+instruction is added to the code, which confuse the I-cache prefetcher in
+the CPU
+
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+---
+ mm/page_alloc.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 547a84f11310..be1e33a4df39 100644
+index f60f51a97a7b..88a5c1ce5b87 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -4999,25 +4999,20 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 	struct alloc_context ac;
- 	gfp_t alloc_gfp;
+@@ -5003,10 +5003,10 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
  	unsigned int alloc_flags;
--	int nr_populated = 0, prep_index = 0;
--	bool hole = false;
-+	int nr_populated = 0;
+ 	int nr_populated = 0, prep_index = 0;
  
- 	if (WARN_ON_ONCE(nr_pages <= 0))
+-	if (WARN_ON_ONCE(nr_pages <= 0))
++	if (unlikely(nr_pages <= 0))
  		return 0;
  
 -	if (WARN_ON_ONCE(page_list && !list_empty(page_list)))
--		return 0;
--
--	/* Skip populated array elements. */
--	if (page_array) {
--		while (nr_populated < nr_pages && page_array[nr_populated])
--			nr_populated++;
--		if (nr_populated == nr_pages)
--			return nr_populated;
--		prep_index = nr_populated;
--	}
-+	/*
-+	 * Skip populated array elements to determine if any pages need
-+	 * to be allocated before disabling IRQs.
-+	 */
-+	while (page_array && page_array[nr_populated] && nr_populated < nr_pages)
-+		nr_populated++;
++	if (unlikely(page_list && !list_empty(page_list)))
+ 		return 0;
+ 
+ 	/* Skip populated array elements. */
+@@ -5018,7 +5018,7 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 		prep_index = nr_populated;
+ 	}
  
 -	if (nr_pages == 1)
-+	/* Use the single page allocator for one page. */
-+	if (nr_pages - nr_populated == 1)
++	if (unlikely(nr_pages == 1))
  		goto failed;
  
  	/* May set ALLOC_NOFRAGMENT, fragmentation will return 1 page. */
-@@ -5056,22 +5051,17 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 	if (!zone)
+@@ -5054,7 +5054,7 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 	 * If there are no allowed local zones that meets the watermarks then
+ 	 * try to allocate a single page and reclaim if necessary.
+ 	 */
+-	if (!zone)
++	if (unlikely(!zone))
  		goto failed;
  
--retry_hole:
  	/* Attempt the batch allocation */
- 	local_irq_save(flags);
- 	pcp = &this_cpu_ptr(zone->pageset)->pcp;
- 	pcp_list = &pcp->lists[ac.migratetype];
- 
- 	while (nr_populated < nr_pages) {
--		/*
--		 * Stop allocating if the next index has a populated
--		 * page or the page will be prepared a second time when
--		 * IRQs are enabled.
--		 */
-+
-+		/* Skip existing pages */
- 		if (page_array && page_array[nr_populated]) {
--			hole = true;
- 			nr_populated++;
--			break;
-+			continue;
- 		}
+@@ -5075,7 +5075,7 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
  
  		page = __rmqueue_pcplist(zone, ac.migratetype, alloc_flags,
-@@ -5092,6 +5082,7 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 		__count_zid_vm_events(PGALLOC, zone_idx(zone), 1);
- 		zone_statistics(ac.preferred_zoneref->zone, zone);
- 
-+		prep_new_page(page, 0, gfp, 0);
- 		if (page_list)
- 			list_add(&page->lru, page_list);
- 		else
-@@ -5101,25 +5092,6 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 
- 	local_irq_restore(flags);
- 
--	/* Prep pages with IRQs enabled. */
--	if (page_list) {
--		list_for_each_entry(page, page_list, lru)
--			prep_new_page(page, 0, gfp, 0);
--	} else {
--		while (prep_index < nr_populated)
--			prep_new_page(page_array[prep_index++], 0, gfp, 0);
--
--		/*
--		 * If the array is sparse, check whether the array is
--		 * now fully populated. Continue allocations if
--		 * necessary.
--		 */
--		while (nr_populated < nr_pages && page_array[nr_populated])
--			nr_populated++;
--		if (hole && nr_populated < nr_pages)
--			goto retry_hole;
--	}
--
- 	return nr_populated;
- 
- failed_irq:
+ 								pcp, pcp_list);
+-		if (!page) {
++		if (unlikely(!page)) {
+ 			/* Try and get at least one page */
+ 			if (!nr_populated)
+ 				goto failed_irq;
 
--- 
-Mel Gorman
-SUSE Labs
