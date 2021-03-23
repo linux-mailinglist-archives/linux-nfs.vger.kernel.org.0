@@ -2,252 +2,205 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FEDA34652E
+	by mail.lfdr.de (Postfix) with ESMTP id 2801334652D
 	for <lists+linux-nfs@lfdr.de>; Tue, 23 Mar 2021 17:30:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233216AbhCWQaH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Mar 2021 12:30:07 -0400
-Received: from mail-eopbgr1300097.outbound.protection.outlook.com ([40.107.130.97]:6221
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233358AbhCWQ3t (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 23 Mar 2021 12:29:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V13wOAY2iBy5mDxaZclYeRbJGN8t4klo7j5Dv9PZUrkcGQhLdjHF36Bie7+gTQ4EaTXwtg9f2LcqLSJXtDg5UpwySpLuBowr/O+ePFBmDho+3Ac+E/jspTeRr5B0ZPY0yx0pmqKlUTDuurRozlOVMdha045Fj7eLCU2Lllxp9agUO+daSiA9+vzD1lLpKtWzJ7s5gN5FJWd0WUorjOLQPqA5XDVpwxz0wWyyXLnz1h6UKSqQxY/64RYm/UtjelkvgjcDH53V177gVcVC0U+waO/CVuYWrsctFbLWraGnFEhA0Cow7v4bSC81HgEHYmrt/27hdfj0VoM1eiP/zlafSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xB8kUrScf1hiCrN20rl/PhqYP7Q17sd/8rsWkhgcyoc=;
- b=MkrcoEYNpnoMnS85os6D20fls0gUegToeTOc05gxEb89gX5AGTVChciyiAw4+7kuRh5029/VPqrVYN9a+49/NTAeYykTyzgWuW7HZ4RZ7H2ZLCUPWfqU5PSH/sS8k6kSx7p/XUYcG0SQOu30DaeBHwINP5asWOtgmCncseKd1cdgnvEXPv8wfJoD4eShwUBnC98YnBB41XQRFMmgxIj4W0KWHov2q8Bwh6cTR70TTRh55xRfwZLoI3QFOgGTlymJbavw2HDu1TiPYWlnFBxe20CKXURs8f+Zby/914QmEZn2K5BNLJzu4ILCQmwdo9UBtSG2CPCMw9UF3s7tXWb9Cw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xB8kUrScf1hiCrN20rl/PhqYP7Q17sd/8rsWkhgcyoc=;
- b=PDAIr8T/2zDjH2VcV9pXQAztg7Pjb3QAVpndjTGIloUWXsxi1Ys8ol0biQzlxlWFbxR5Y+4c6u2bZt+4X3GduNVdciyCTPYYLtkmHdARE/WkVR01uLh4UBAKlU0pGDakxF+GXAqlKqpaHWPIYL5M1VkFsHxzdTDMr/ebr3hCqbg=
-Received: from SG2P153MB0361.APCP153.PROD.OUTLOOK.COM (2603:1096:0:4::11) by
- SG2P153MB0301.APCP153.PROD.OUTLOOK.COM (2603:1096:4:d1::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3999.2; Tue, 23 Mar 2021 16:29:45 +0000
-Received: from SG2P153MB0361.APCP153.PROD.OUTLOOK.COM
- ([fe80::cd6e:9dc1:85ac:f488]) by SG2P153MB0361.APCP153.PROD.OUTLOOK.COM
- ([fe80::cd6e:9dc1:85ac:f488%5]) with mapi id 15.20.3999.008; Tue, 23 Mar 2021
- 16:29:45 +0000
-From:   Nagendra Tomar <Nagendra.Tomar@microsoft.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Subject: RE: [PATCH 0/5] nfs: Add mount option for forcing RPC requests for
- one file over one connection
-Thread-Topic: [PATCH 0/5] nfs: Add mount option for forcing RPC requests for
- one file over one connection
-Thread-Index: Adcfp3hcmhRvn3IHQv25MQlIHJPMUAARGOoAAAMHR+AAAek9AAAAU0WQ
-Date:   Tue, 23 Mar 2021 16:29:45 +0000
-Message-ID: <SG2P153MB0361DC1EF8EDD02356D29E579E649@SG2P153MB0361.APCP153.PROD.OUTLOOK.COM>
-References: <SG2P153MB0361E2D69F8AD8AFBF9E7CD89E649@SG2P153MB0361.APCP153.PROD.OUTLOOK.COM>
- <CD47CE3E-0C07-4019-94AF-5474D531B12D@oracle.com>
- <SG2P153MB0361BCD6D1F8F86E0648E3EB9E649@SG2P153MB0361.APCP153.PROD.OUTLOOK.COM>
- <5B030422-09B7-470D-9C7A-18C666F5817D@oracle.com>
-In-Reply-To: <5B030422-09B7-470D-9C7A-18C666F5817D@oracle.com>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [122.172.188.128]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4850b5a6-6bdb-414d-5bf3-08d8ee18ded7
-x-ms-traffictypediagnostic: SG2P153MB0301:
-x-microsoft-antispam-prvs: <SG2P153MB0301818D68F335CCF2CF842B9E649@SG2P153MB0301.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wpMTI3jRETEA2Rk2bbW+u4K9++km7cjUlZJFG6WfCdE64I1PLBqmbAXk8IhZ8F+1jVMEMoXIUHke1p72urWy0HqXm+hs6LSkBL5oxEU6MeBZ1omNW6jbjF7d05DarHkoExvZ9UCvywD7x5Sdtz1pwVI6Fu+R3gvnuh6JZcnEgvAhJzd5wck3A7TnR4BBG6zI3i3+4GDjeqSexRGjSs5QY3w0YCy5bHWxTdQKAmcNSfyOqdJcQ8G9ALeCvhtDgYOpfCw5g4H5MPNz6RQl6e+8iRwxLR1TpR1B5VzXBspwAqSubFwigWmDh04ZbiFTbybk8NMsy6ojzgIta/GeJ3Jo7evbObt36ONQZ4MkGKcngyYaX7Uf2dwWyPoE1j/qGFLXbt0djHEzvcdl4HTn21oPBoIM4LftYzYNm6ZthEYSYy6L/QBWjUlT3vD+QDJlQfVlrEK3tzF8wKqssdAhOHkMpBoml+m6D1ufo6AV71GDhungmM/3n1PmvM2kOL7r4UcbPzeLhrLGwiFon5aCLYAxkLjs1SORwtb+YNTKxPJdo8k6Yy4Yz3NMHsdbkZD0cWD+VfX1T4o8Fdy+gYBFBcSsPLr8jch/FycnWqNy0fpI7NDW6kZ3JERALRBl6vdIrC4Aq6x2BRm2Z7k3KcQx8eru0zGEaYmM4jt0kkUfRov85VQ=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2P153MB0361.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(136003)(39860400002)(366004)(71200400001)(66446008)(10290500003)(6506007)(52536014)(26005)(7696005)(53546011)(5660300002)(8936002)(76116006)(4326008)(316002)(83380400001)(66556008)(82960400001)(82950400001)(66476007)(55236004)(66946007)(2906002)(54906003)(478600001)(64756008)(33656002)(38100700001)(186003)(8676002)(8990500004)(9686003)(6916009)(86362001)(55016002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?v/nHb3sAKMNpd5XV4rU5UqXjr4IBHsqSx72CCEWXP5HGqx7rrbuud7WVz+lx?=
- =?us-ascii?Q?ATs7y3bOn7i7AUFCvPhzXEGN9K9OL+pbvxUXQ+BVB1M7lMLQp7XxsmnCoMy7?=
- =?us-ascii?Q?BNcbuGLodwYTS6Usqb3S6VyJVM8Z0zUMUtev8kx8qC+ryErQo7vRd9xbMmzl?=
- =?us-ascii?Q?hzRE4oyw1TpJUxxfWRDwGlwNx4DEuLgoGaPL93rJcGeKkMENxoasdmD6lj/h?=
- =?us-ascii?Q?6tMQr3Lb4GcYqjfhZaUs+bQD8SeMtjqPpfFkxNcic4p509F+5CMXx6NkiYll?=
- =?us-ascii?Q?wreOeeDluOIVo/atZqAGMyL+0ylNbwGUT561EDNAGCqWSVMixidsLx1bs9rw?=
- =?us-ascii?Q?OcYXTCBxTKyB/9lZCEY2OzFjGkHCNwIvwgXgNb0fXyDTUyr2CeLgMdRGUd9U?=
- =?us-ascii?Q?rVGsisVwNQFdYIUbk+OCpBuyUnXSPUwzkJhCFCljUnEWK516e4PS/rIPLndp?=
- =?us-ascii?Q?5ToCn3+Eze1KxtC8mPqVwHi4wjgp5soqMQjNDiODQNA+Zpv6nN1v1epAQSc8?=
- =?us-ascii?Q?ZF8cJRZYAaczhq8b6t0LldM3MkY0xHF1br1ZQRBdi2gcesbEsb03TQD9lgJf?=
- =?us-ascii?Q?E9k3cAEGyF5fEfKgzeo5+Ld8eSBl70wlTapxC/MP5D07KxQ67y7tl/Kit+UK?=
- =?us-ascii?Q?AvoAgOwqhiAI01kcs4EQYYN0goyAqXLCu0m3FtfkZuYx62Z5iozbYIHPplyZ?=
- =?us-ascii?Q?2kXjWe6a2JEiEEbfn5S2p7eG7mkZkXci/CgQM+1lHSnP5MBepatqkgGD3K32?=
- =?us-ascii?Q?8p2Kv+oCwbr1q28Sb9IadugIRoVmUWqsLwtePzAmEfrhdE++f8z8K7J/iRgL?=
- =?us-ascii?Q?5/tjYvduE+yfHNc686xOcFiv5jjVE3hcwwxMHoDZ76aZq+IQjgGZa5Qud1KT?=
- =?us-ascii?Q?dhOziMSZlzcjNB5diVITwPDPfkPdKqoHUXzYc3xVS5pOYYSfFFidG+IEPy5Z?=
- =?us-ascii?Q?DkHtVHPlUa6qFeP+kbWGeXk9OipH5zr877kDqwHDEDB9CLNm4Q+tzlby5jJ2?=
- =?us-ascii?Q?/Gez71ESWe67E1a4CNzcf1YvcSgwfR6a77lw8OEzDoJrIbvVXOlo1t7qYdoz?=
- =?us-ascii?Q?VE3FwixQ1Tl6nOZ3XgCss5Z8dBJNKa5pVMrlrphHa85GC3fPVFhzGA8sWNQo?=
- =?us-ascii?Q?AIRop8fQOfs5Lz7Kztto2PQJLGBpAVq8YgduFTDza6O0Aq3MNndh0oHorNS/?=
- =?us-ascii?Q?8NFK/9LGngKyaM6JdL1QVw6ppS7svm4+mZsPh6cyB0NU2KfgoJytJArDn+r6?=
- =?us-ascii?Q?gtHh+qHJYB1qgdP03p3gaMoSvWcDfHH4Y/sU14vxYKyfp7VjX46RurawsYjQ?=
- =?us-ascii?Q?WmkVRCANkEaif/1XjA4MDrUr?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S233308AbhCWQaI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Mar 2021 12:30:08 -0400
+Received: from outbound-smtp07.blacknight.com ([46.22.139.12]:59659 "EHLO
+        outbound-smtp07.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233367AbhCWQ3w (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Mar 2021 12:29:52 -0400
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp07.blacknight.com (Postfix) with ESMTPS id 231A91C3ED1
+        for <linux-nfs@vger.kernel.org>; Tue, 23 Mar 2021 16:29:51 +0000 (GMT)
+Received: (qmail 4407 invoked from network); 23 Mar 2021 16:29:50 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 23 Mar 2021 16:29:50 -0000
+Date:   Tue, 23 Mar 2021 16:29:49 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux-NFS <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 0/3 v5] Introduce a bulk order-0 page allocator
+Message-ID: <20210323162949.GM3697@techsingularity.net>
+References: <20210322091845.16437-1-mgorman@techsingularity.net>
+ <20210323104421.GK3697@techsingularity.net>
+ <20210323160814.62a248fb@carbon>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SG2P153MB0361.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4850b5a6-6bdb-414d-5bf3-08d8ee18ded7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2021 16:29:45.5528
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: X3CiQFla7702pDXOXcNjc3AwvkTJBT7FpAj99NfbS0RIvp6ezrE5LZegwhRldPN5Vmouc9MfR0CYN+vdw6/8Ew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0301
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20210323160814.62a248fb@carbon>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> > On Mar 23, 2021, at 11:57 AM, Nagendra Tomar
-> <Nagendra.Tomar@microsoft.com> wrote:
-> >
-> >>> On Mar 23, 2021, at 1:46 AM, Nagendra Tomar
-> >> <Nagendra.Tomar@microsoft.com> wrote:
-> >>>
-> >>> From: Nagendra S Tomar <natomar@microsoft.com>
-> >>>
-> >>> If a clustered NFS server is behind an L4 loadbalancer the default
-> >>> nconnect roundrobin policy may cause RPC requests to a file to be
-> >>> sent to different cluster nodes. This is because the source port
-> >>> would be different for all the nconnect connections.
-> >>> While this should functionally work (since the cluster will usually
-> >>> have a consistent view irrespective of which node is serving the
-> >>> request), it may not be desirable from performance pov. As an
-> >>> example we have an NFSv3 frontend to our Object store, where every
-> >>> NFSv3 file is an object. Now if writes to the same file are sent
-> >>> roundrobin to different cluster nodes, the writes become very
-> >>> inefficient due to the consistency requirement for object update
-> >>> being done from different nodes.
-> >>> Similarly each node may maintain some kind of cache to serve the file
-> >>> data/metadata requests faster and even in that case it helps to have
-> >>> a xprt affinity for a file/dir.
-> >>> In general we have seen such scheme to scale very well.
-> >>>
-> >>> This patch introduces a new rpc_xprt_iter_ops for using an additional
-> >>> u32 (filehandle hash) to affine RPCs to the same file to one xprt.
-> >>> It adds a new mount option "ncpolicy=3Droundrobin|hash" which can be
-> >>> used to select the nconnect multipath policy for a given mount and
-> >>> pass the selected policy to the RPC client.
-> >>
-> >> This sets off my "not another administrative knob that has
-> >> to be tested and maintained, and can be abused" allergy.
-> >>
-> >> Also, my "because connections are shared by mounts of the same
-> >> server, all those mounts will all adopt this behavior" rhinitis.
-> >
-> > Yes, it's fair to call this out, but ncpolicy behaves like the nconnect
-> > parameter in this regards.
-> >
-> >> And my "why add a new feature to a legacy NFS version" hives.
-> >>
-> >>
-> >> I agree that your scenario can and should be addressed somehow.
-> >> I'd really rather see this done with pNFS.
-> >>
-> >> Since you are proposing patches against the upstream NFS client,
-> >> I presume all your clients /can/ support NFSv4.1+. It's the NFS
-> >> servers that are stuck on NFSv3, correct?
-> >
-> > Yes.
-> >
-> >>
-> >> The flexfiles layout can handle an NFSv4.1 client and NFSv3 data
-> >> servers. In fact it was designed for exactly this kind of mix of
-> >> NFS versions.
-> >>
-> >> No client code change will be necessary -- there are a lot more
-> >> clients than servers. The MDS can be made to work smartly in
-> >> concert with the load balancer, over time; or it can adopt other
-> >> clever strategies.
-> >>
-> >> IMHO pNFS is the better long-term strategy here.
-> >
-> > The fundamental difference here is that the clustered NFSv3 server
-> > is available over a single virtual IP, so IIUC even if we were to use
-> > NFSv41 with flexfiles layout, all it can handover to the client is that=
- single
-> > (load-balanced) virtual IP and now when the clients do connect to the
-> > NFSv3 DS we still have the same issue. Am I understanding you right?
-> > Can you pls elaborate what you mean by "MDS can be made to work
-> > smartly in concert with the load balancer"?
->=20
-> I had thought there were multiple NFSv3 server targets in play.
->=20
-> If the load balancer is making them look like a single IP address,
-> then take it out of the equation: expose all the NFSv3 servers to
-> the clients and let the MDS direct operations to each data server.
->=20
-> AIUI this is the approach (without the use of NFSv3) taken by
-> NetApp next generation clusters.
+On Tue, Mar 23, 2021 at 04:08:14PM +0100, Jesper Dangaard Brouer wrote:
+> On Tue, 23 Mar 2021 10:44:21 +0000
+> Mel Gorman <mgorman@techsingularity.net> wrote:
+> 
+> > On Mon, Mar 22, 2021 at 09:18:42AM +0000, Mel Gorman wrote:
+> > > This series is based on top of Matthew Wilcox's series "Rationalise
+> > > __alloc_pages wrapper" and does not apply to 5.12-rc2. If you want to
+> > > test and are not using Andrew's tree as a baseline, I suggest using the
+> > > following git tree
+> > > 
+> > > git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git mm-bulk-rebase-v5r9
+> > >   
+> > 
+> > Jesper and Chuck, would you mind rebasing on top of the following branch
+> > please? 
+> > 
+> > git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git mm-bulk-rebase-v6r2
+> > 
+> > The interface is the same so the rebase should be trivial.
+> > 
+> > Jesper, I'm hoping you see no differences in performance but it's best
+> > to check.
+> 
+> I will rebase and check again.
+> 
+> The current performance tests that I'm running, I observe that the
+> compiler layout the code in unfortunate ways, which cause I-cache
+> performance issues.  I wonder if you could integrate below patch with
+> your patchset? (just squash it)
+> 
 
-Yeah, if could have clients access all the NFSv3 servers then I agree, pNFS=
-=20
-would be a viable option. Unfortunately that's not an option in this case. =
-The=20
-cluster has 100's of nodes and it's not an on-prem server, but a cloud serv=
-ice,
-so the simplicity of the single LB VIP is critical.
+Yes but I'll keep it as a separate patch that is modified slightly.
+Otherwise it might get "fixed" as likely/unlikely has been used
+inappropriately in the past. If there is pushback, I'll squash them
+together.
 
->=20
-> >>> It adds a new rpc_procinfo member p_fhhash, which can be supplied
-> >>> by the specific RPC programs to return a u32 hash of the file/dir the
-> >>> RPC is targetting, and lastly it provides p_fhhash implementation
-> >>> for various NFS v3/v4/v41/v42 RPCs to generate the hash correctly.
-> >>>
-> >>> Thoughts?
-> >>>
-> >>> Thanks,
-> >>> Tomar
-> >>>
-> >>> Nagendra S Tomar (5):
-> >>> SUNRPC: Add a new multipath xprt policy for xprt selection based
-> >>>   on target filehandle hash
-> >>> SUNRPC/NFSv3/NFSv4: Introduce "enum ncpolicy" to represent the
-> >> nconnect
-> >>>   policy and pass it down from mount option to rpc layer
-> >>> SUNRPC/NFSv4: Rename RPC_TASK_NO_ROUND_ROBIN ->
-> >> RPC_TASK_USE_MAIN_XPRT
-> >>> NFSv3: Add hash computation methods for NFSv3 RPCs
-> >>> NFSv4: Add hash computation methods for NFSv4/NFSv42 RPCs
-> >>>
-> >>> fs/nfs/client.c                      |   3 +
-> >>> fs/nfs/fs_context.c                  |  26 ++
-> >>> fs/nfs/internal.h                    |   2 +
-> >>> fs/nfs/nfs3client.c                  |   4 +-
-> >>> fs/nfs/nfs3xdr.c                     | 154 +++++++++++
-> >>> fs/nfs/nfs42xdr.c                    | 112 ++++++++
-> >>> fs/nfs/nfs4client.c                  |  14 +-
-> >>> fs/nfs/nfs4proc.c                    |  18 +-
-> >>> fs/nfs/nfs4xdr.c                     | 516 ++++++++++++++++++++++++++=
-++++-----
-> >>> fs/nfs/super.c                       |   7 +-
-> >>> include/linux/nfs_fs_sb.h            |   1 +
-> >>> include/linux/sunrpc/clnt.h          |  15 +
-> >>> include/linux/sunrpc/sched.h         |   2 +-
-> >>> include/linux/sunrpc/xprtmultipath.h |   9 +-
-> >>> include/trace/events/sunrpc.h        |   4 +-
-> >>> net/sunrpc/clnt.c                    |  38 ++-
-> >>> net/sunrpc/xprtmultipath.c           |  91 +++++-
-> >>> 17 files changed, 913 insertions(+), 103 deletions(-)
-> >>
-> >> --
-> >> Chuck Lever
->=20
-> --
-> Chuck Lever
->=20
->=20
+> From: Jesper Dangaard Brouer <brouer@redhat.com>
+> 
+> Looking at perf-report and ASM-code for __alloc_pages_bulk() then the code
+> activated is suboptimal. The compiler guess wrong and place unlikely code in
+> the beginning. Due to the use of WARN_ON_ONCE() macro the UD2 asm
+> instruction is added to the code, which confuse the I-cache prefetcher in
+> the CPU
+> 
+> Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+> ---
+>  mm/page_alloc.c |   10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index f60f51a97a7b..88a5c1ce5b87 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5003,10 +5003,10 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+>  	unsigned int alloc_flags;
+>  	int nr_populated = 0, prep_index = 0;
+>  
+> -	if (WARN_ON_ONCE(nr_pages <= 0))
+> +	if (unlikely(nr_pages <= 0))
+>  		return 0;
+>  
 
+Ok, I can make this change. It was a defensive check for the new callers
+in case insane values were being passed in. 
+
+> -	if (WARN_ON_ONCE(page_list && !list_empty(page_list)))
+> +	if (unlikely(page_list && !list_empty(page_list)))
+>  		return 0;
+>  
+>  	/* Skip populated array elements. */
+
+FWIW, this check is now gone. The list only had to be empty if
+prep_new_page was deferred until IRQs were enabled to avoid accidentally
+calling prep_new_page() on a page that was already on the list when
+alloc_pages_bulk was called.
+
+> @@ -5018,7 +5018,7 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+>  		prep_index = nr_populated;
+>  	}
+>  
+> -	if (nr_pages == 1)
+> +	if (unlikely(nr_pages == 1))
+>  		goto failed;
+>  
+>  	/* May set ALLOC_NOFRAGMENT, fragmentation will return 1 page. */
+
+I'm dropping this because nr_pages == 1 is common for the sunrpc user.
+
+> @@ -5054,7 +5054,7 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+>  	 * If there are no allowed local zones that meets the watermarks then
+>  	 * try to allocate a single page and reclaim if necessary.
+>  	 */
+> -	if (!zone)
+> +	if (unlikely(!zone))
+>  		goto failed;
+>  
+>  	/* Attempt the batch allocation */
+
+Ok.
+
+> @@ -5075,7 +5075,7 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+>  
+>  		page = __rmqueue_pcplist(zone, ac.migratetype, alloc_flags,
+>  								pcp, pcp_list);
+> -		if (!page) {
+> +		if (unlikely(!page)) {
+>  			/* Try and get at least one page */
+>  			if (!nr_populated)
+>  				goto failed_irq;
+
+Hmmm, ok. It depends on memory pressure but I agree !page is unlikely.
+
+Current version applied is
+
+--8<--
+mm/page_alloc: optimize code layout for __alloc_pages_bulk
+
+From: Jesper Dangaard Brouer <brouer@redhat.com>
+
+Looking at perf-report and ASM-code for __alloc_pages_bulk() it is clear
+that the code activated is suboptimal. The compiler guesses wrong and
+places unlikely code at the beginning. Due to the use of WARN_ON_ONCE()
+macro the UD2 asm instruction is added to the code, which confuse the
+I-cache prefetcher in the CPU.
+
+[mgorman: Minor changes and rebasing]
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index be1e33a4df39..1ec18121268b 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5001,7 +5001,7 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 	unsigned int alloc_flags;
+ 	int nr_populated = 0;
+ 
+-	if (WARN_ON_ONCE(nr_pages <= 0))
++	if (unlikely(nr_pages <= 0))
+ 		return 0;
+ 
+ 	/*
+@@ -5048,7 +5048,7 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 	 * If there are no allowed local zones that meets the watermarks then
+ 	 * try to allocate a single page and reclaim if necessary.
+ 	 */
+-	if (!zone)
++	if (unlikely(!zone))
+ 		goto failed;
+ 
+ 	/* Attempt the batch allocation */
+@@ -5066,7 +5066,7 @@ int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 
+ 		page = __rmqueue_pcplist(zone, ac.migratetype, alloc_flags,
+ 								pcp, pcp_list);
+-		if (!page) {
++		if (unlikely(!page)) {
+ 			/* Try and get at least one page */
+ 			if (!nr_populated)
+ 				goto failed_irq;
