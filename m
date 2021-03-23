@@ -2,104 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9EF434515D
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Mar 2021 22:03:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9419A345462
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Mar 2021 02:02:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231406AbhCVVDJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Mar 2021 17:03:09 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:33276 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231390AbhCVVCp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 17:02:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616446964;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=LcT+neX6hHDp3dxXEc+zJuiHWMlSgtoooqJLzcgrtF8=;
-        b=e/X9YJ10mm3UejFZ51hELV2M8K8C6dBXJQUlXX11z1vE7FQEgJTP4M3KlDP2sbUSOwdr09
-        iOs/Zszr5XapHTf4TmcCLofjl0++upbgSs1gRklAeBVBTjvr922I+3DHiRfTEMq4Nw64gU
-        xtGokT+AbgJjrO7HDlsPGDZVJbOulzE=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-240-1g79kc6lOrqt5KmTruAhxg-1; Mon, 22 Mar 2021 17:02:42 -0400
-X-MC-Unique: 1g79kc6lOrqt5KmTruAhxg-1
-Received: by mail-ej1-f72.google.com with SMTP id r26so12560eja.22
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Mar 2021 14:02:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LcT+neX6hHDp3dxXEc+zJuiHWMlSgtoooqJLzcgrtF8=;
-        b=oPZL9RsiBBegnx+CDgbL2jVhIE9Qi7oVr7Fi+SU+zwPfq2iwBDu4GWQR/CCvYgC6ns
-         EuX4Zx9scBcuERWJmNFYUWD57AXbSSvCRZYej2eTNok6llRiP0E6G42tzLW42Ru0D2IL
-         kDDB/bk2XQ/GPKZXNso42ZMyDMkPFYjIq15B2XyR3uhXwDoX7mLZv2jiSoOSFdaBbGOC
-         v9X1opNCARI1hpCjQ6EZmBHv3nPb6Py1m+As9+E5CDBPK/kABPotnl9XPMJaEGnjWTHD
-         TNvn8Pr9FK2U+4AX0OQ6Cv+U9ymihQ5/5rxuhD1Dy9EE0DyyVbOQIHR9RK1I1iQv6m5n
-         R9WQ==
-X-Gm-Message-State: AOAM533huLANkbR5pDsHXcRp79F82uTv+HOwQ5oMwUCuD7xtm38TKYOE
-        k9ZIDPEEFcTypr28GiCNWbvr1vcybDFOvv1PfTeSPVv2lUmQEUCQ59u/J9xy/woJSK1qTSB08Qi
-        vIwsU/0EbiuE69tyXApDY
-X-Received: by 2002:a17:907:3d8d:: with SMTP id he13mr1666863ejc.530.1616446960817;
-        Mon, 22 Mar 2021 14:02:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw1Vxhjj8JpZo/GEEvhf8EZdJ+pUfOQDOI7HvAM4DIEF+57uCU0EsGMdBZZWjTKhws1bcp1yg==
-X-Received: by 2002:a17:907:3d8d:: with SMTP id he13mr1666850ejc.530.1616446960607;
-        Mon, 22 Mar 2021 14:02:40 -0700 (PDT)
-Received: from omos.redhat.com ([2a02:8308:b105:dd00:277b:6436:24db:9466])
-        by smtp.gmail.com with ESMTPSA id m14sm11764986edd.63.2021.03.22.14.02.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Mar 2021 14:02:40 -0700 (PDT)
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] exportfs: fix unexporting of '/'
-Date:   Mon, 22 Mar 2021 22:02:38 +0100
-Message-Id: <20210322210238.96915-1-omosnace@redhat.com>
-X-Mailer: git-send-email 2.30.2
+        id S230465AbhCWBB3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Mar 2021 21:01:29 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:12449 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230284AbhCWBBA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Mar 2021 21:01:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1616461260; x=1647997260;
+  h=date:from:to:subject:message-id:mime-version;
+  bh=4Ivdx/d+hB+n3G6dvXqqW4p2PsE6/U7qnL5uBk0w9kg=;
+  b=soOto8lrMhmvr6t+h4+j5m7zgp22ZSoGaKXOHnNhKoYVe/RDJyHTP/+D
+   3D3WBS03aIVBt5hbsKCr4e/3Z1sKOn9FOSKIyQVrwEbxmYEjRLLSm1aUh
+   CZqae+de+fWi5rN+IZ9w5TdpegwE8GWI095GxvoGCNaMhYfXQhKnnEx6q
+   g=;
+X-IronPort-AV: E=Sophos;i="5.81,269,1610409600"; 
+   d="scan'208";a="96920125"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 23 Mar 2021 01:00:59 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id D4C99C02A3
+        for <linux-nfs@vger.kernel.org>; Tue, 23 Mar 2021 01:00:58 +0000 (UTC)
+Received: from EX13D36UWA002.ant.amazon.com (10.43.160.24) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 23 Mar 2021 01:00:58 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D36UWA002.ant.amazon.com (10.43.160.24) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 23 Mar 2021 01:00:58 +0000
+Received: from dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com
+ (10.200.231.78) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Tue, 23 Mar 2021 01:00:58 +0000
+Received: by dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com (Postfix, from userid 5408343)
+        id EBA171F2D; Tue, 23 Mar 2021 01:00:57 +0000 (UTC)
+Date:   Tue, 23 Mar 2021 01:00:57 +0000
+From:   Geert Jansen <gerardu@amazon.com>
+To:     <linux-nfs@vger.kernel.org>
+Subject: RFC: return d_type for non-plus READDIR
+Message-ID: <20210323010057.GA129497@dev-dsk-gerardu-1d-3da90cb4.us-east-1.amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The code that has been added to strip trailing slashes from path in
-unexportfs_parsed() forgot to account for the case of the root
-directory, which is simply '/'. In that case it accesses path[-1] and
-reduces the path to an empty string, which then fails to match any
-export.
+Hi,
 
-Fix it by stopping the stripping when the path is just a single
-character - it doesn't matter if it's a '/' or not, we want to keep it
-either way in that case.
+recursively listing a directory tree requires that you know which entries are
+directories so that you can recurse into them. The getdents() API can provide
+this information through the d_type field.
 
-Reproducer:
+Today, d_type is available if we use READDIRPLUS. A non-plus READDIR requests
+only the "rdattr_error" and "mounted_on_fileid" attributes, but not "type", and
+consequently sets d_type to DT_UNKNOWN.
 
-    exportfs localhost:/
-    exportfs -u localhost:/
+Requesting the "type" attribute for regular, non-plus READDIR would allow us to
+always return d_type, even for large directories where we switch to a non-plus
+READDIR. It would allow the user to recursively list directories of any size
+without the need for GETATTRs, and, if the server supports this, without any
+stat() or equivalent calls on the server. For some use cases, you could also
+mount with '-o nordirplus' to scan an entire file system efficiently.
 
-Without this patch, the unexport step fails with "exportfs: Could not
-find 'localhost:/' to unexport."
+Since not all file servers may be able to produce the directory entry type
+efficiently, this could be implemented as a mount option that defaults off.
 
-Fixes: a9a7728d8743 ("exportfs: Deal with path's trailing "/" in unexportfs_parsed()")
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=1941171
-Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
----
- utils/exportfs/exportfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Some local file systems offer a similar choice. For example, both ext4 and xfs
+have an (in this case mkfs-time) option to store the inode type in the
+directory. If this option is set, then getdents() always returns d_type.
 
-diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-index 262dd19a..1aedd3d6 100644
---- a/utils/exportfs/exportfs.c
-+++ b/utils/exportfs/exportfs.c
-@@ -383,7 +383,7 @@ unexportfs_parsed(char *hname, char *path, int verbose)
- 	 * so need to deal with it.
- 	*/
- 	size_t nlen = strlen(path);
--	while (path[nlen - 1] == '/')
-+	while (nlen > 1 && path[nlen - 1] == '/')
- 		nlen--;
- 
- 	for (exp = exportlist[htype].p_head; exp; exp = exp->m_next) {
--- 
-2.30.2
-
+Would a patch that adds such a mount option be acceptable?
