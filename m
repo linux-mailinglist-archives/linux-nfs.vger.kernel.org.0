@@ -2,100 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5348E348390
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Mar 2021 22:24:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3F163483CC
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Mar 2021 22:35:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238277AbhCXVXt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Mar 2021 17:23:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:21755 "EHLO
+        id S233998AbhCXVfY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Mar 2021 17:35:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30555 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238292AbhCXVXs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Mar 2021 17:23:48 -0400
+        by vger.kernel.org with ESMTP id S233801AbhCXVez (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Mar 2021 17:34:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616621028;
+        s=mimecast20190719; t=1616621693;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7XUIbWuoAOjbMJGwp7K2r0/RMkw4ElcGdb9YG/13DPM=;
-        b=E82fp94GAIqEt7BzgMXrjASkx4+p9YbFOaVIX4zg236z/pxVeXYs9NWVH13ZHKO207IaCN
-        E1/Q6qnVIOVrgHhPvdLOhf9njqv2yTAyOuO4LK29iWZ9f96kjYNj7Ws2BTD31o3zA8Ak6+
-        /whFVYBRjTYyQiJiG0ijSEFqAfJuklU=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=VMcJL0oGgKCDOvoRw9WcoSULP+k/Om/qzonQD9lQGaM=;
+        b=Rz+FdDJDvXaHhsxjOf0x+J4/cnGkxnkDO6D3smpZMw8J+28eQbNSdIMpI43k6rCD2BYjNc
+        92nsfeX4A1L/C2DMvSiNTDqhv+u/+0Lj36Pb7o5giHN0XblYol6TEsQtXKbmWTqUZqAp/c
+        WGWk1zxS+sajhVveYJxsCvfXyf7HfYk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-218-stFEObQKOhaosDurdUdx-A-1; Wed, 24 Mar 2021 17:23:44 -0400
-X-MC-Unique: stFEObQKOhaosDurdUdx-A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-418-y8newqq5Otia-uXv6uJcgw-1; Wed, 24 Mar 2021 17:34:49 -0400
+X-MC-Unique: y8newqq5Otia-uXv6uJcgw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84E32801817;
-        Wed, 24 Mar 2021 21:23:43 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-116-27.rdu2.redhat.com [10.10.116.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4B6791992D;
-        Wed, 24 Mar 2021 21:23:43 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id C76BF120207; Wed, 24 Mar 2021 17:23:39 -0400 (EDT)
-Date:   Wed, 24 Mar 2021 17:23:39 -0400
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     trondmy@kernel.org
-Cc:     linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH] NFS: fix nfs_fetch_iversion()
-Message-ID: <YFut25Sq1wvv8Zii@pick.fieldses.org>
-References: <20210324195353.577432-1-trondmy@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 43D368030B5;
+        Wed, 24 Mar 2021 21:34:48 +0000 (UTC)
+Received: from firesoul.localdomain (unknown [10.40.208.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 34A2D614FF;
+        Wed, 24 Mar 2021 21:34:45 +0000 (UTC)
+Received: from [10.1.1.1] (localhost [IPv6:::1])
+        by firesoul.localdomain (Postfix) with ESMTP id 1BBFE300A2A79;
+        Wed, 24 Mar 2021 22:34:44 +0100 (CET)
+Subject: [PATCH mel-git 0/3] page_pool using alloc_pages_bulk API
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>, chuck.lever@oracle.com,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 24 Mar 2021 22:34:44 +0100
+Message-ID: <161662166301.940814.9765023867613542235.stgit@firesoul>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210324195353.577432-1-trondmy@kernel.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Mar 24, 2021 at 03:53:53PM -0400, trondmy@kernel.org wrote:
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> 
-> The change attribute is always set by all NFS client versions so get rid
-> of the open-coded version.
+This patchset is against Mel's tree:
+ - git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git
+ - Branch: mm-bulk-rebase-v6r5
+ - https://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git/log/?h=mm-bulk-rebase-v6r5
 
-Thanks!
+The benchmarks are here:
+ - https://github.com/xdp-project/xdp-project/blob/master/areas/mem/page_pool06_alloc_pages_bulk.org#test-on-mel-git-tree-mm-bulk-rebase-v6r5
 
-I'm unclear whether there's a user-visible bug here or whether it's
-mainly cleanup?
+The compiler choose a strange code layout see here:
+ - https://github.com/xdp-project/xdp-project/blob/master/areas/mem/page_pool06_alloc_pages_bulk.org#strange-code-layout
+ - Used: gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2)
 
---b.
+Intent is for Mel to pickup these patches.
+---
 
-> Fixes: 3cc55f4434b4 ("nfs: use change attribute for NFS re-exports")
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
->  fs/nfs/export.c | 15 ++++-----------
->  1 file changed, 4 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/nfs/export.c b/fs/nfs/export.c
-> index f2b34cfe286c..b347e3ce0cc8 100644
-> --- a/fs/nfs/export.c
-> +++ b/fs/nfs/export.c
-> @@ -171,17 +171,10 @@ static u64 nfs_fetch_iversion(struct inode *inode)
->  {
->  	struct nfs_server *server = NFS_SERVER(inode);
->  
-> -	/* Is this the right call?: */
-> -	nfs_revalidate_inode(server, inode);
-> -	/*
-> -	 * Also, note we're ignoring any returned error.  That seems to be
-> -	 * the practice for cache consistency information elsewhere in
-> -	 * the server, but I'm not sure why.
-> -	 */
-> -	if (server->nfs_client->rpc_ops->version >= 4)
-> -		return inode_peek_iversion_raw(inode);
-> -	else
-> -		return time_to_chattr(&inode->i_ctime);
-> +	if (nfs_check_cache_invalid(inode, NFS_INO_INVALID_CHANGE |
-> +						   NFS_INO_REVAL_PAGECACHE))
-> +		__nfs_revalidate_inode(server, inode);
-> +	return inode_peek_iversion_raw(inode);
->  }
->  
->  const struct export_operations nfs_export_ops = {
-> -- 
-> 2.30.2
-> 
+Jesper Dangaard Brouer (3):
+      net: page_pool: refactor dma_map into own function page_pool_dma_map
+      net: page_pool: use alloc_pages_bulk in refill code path
+      net: page_pool: convert to use alloc_pages_bulk_array variant
+
+
+ include/net/page_pool.h |    2 -
+ net/core/page_pool.c    |  111 +++++++++++++++++++++++++++++++----------------
+ 2 files changed, 75 insertions(+), 38 deletions(-)
+
+--
 
