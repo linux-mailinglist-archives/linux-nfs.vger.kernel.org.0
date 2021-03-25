@@ -2,111 +2,190 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE9B5349CA4
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Mar 2021 00:02:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 207D3349BB6
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 22:35:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231349AbhCYXBx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Mar 2021 19:01:53 -0400
-Received: from gateway20.websitewelcome.com ([192.185.44.20]:26919 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231191AbhCYXBa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 19:01:30 -0400
-X-Greylist: delayed 1498 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Mar 2021 19:01:30 EDT
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 756D9400CF499
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Mar 2021 17:02:48 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id PYDOltgAUMGeEPYDOlZrfD; Thu, 25 Mar 2021 17:12:30 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7TQTeKIn3sX0KsX2Mb0uRTUpgZvCak4GKsqbc414Wao=; b=pM3ggMFhvLF1rSSPG2yQdv1Gf1
-        NxC1t9XwOXj0/2/YYBi+vEA/Ev2EUruApSVMDory3nxcvUjnf8jds2BGwgkqXkDNRRnThzGZX9H/W
-        K0PThy6C9tomaK5gJ0yQ8IgIT956p7vP0qQJO7eHH1BXeJmbRbVdDcspBqtxoCskps4+j2Rk5NHdw
-        tCdz7LWXpsW8HVYHbKIdRkMVB0HafwSazDaJfsxgD9cZTh6m+wMABD0hldJFHg9ABOcTbjSzKJp+S
-        xYApizT15wf8vdktx8+BOO9uJCQ7vMOZBdoV/+pQF2gLCjKhMYwo/ufi73PKmsOwVJg9NVr8qkY0X
-        PwBFs7QA==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:49220 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lPYDO-003hVs-2j; Thu, 25 Mar 2021 17:12:30 -0500
-Subject: Re: [PATCH][next] UAPI: nfsfh.h: Replace one-element array with
- flexible-array member
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "'Gustavo A. R. Silva'" <gustavoars@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-References: <20210323224858.GA293698@embeddedor>
- <629154ce566b4c9c9b7f4124b3260fc3@AcuMS.aculab.com>
- <5331b4e2-eeef-1c27-5efe-bf3986fd6683@embeddedor.com>
- <1efa90cc6bc24cfb860084e0b888cd4b@AcuMS.aculab.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <e2e93993-e64b-ce7d-88cf-4c367b747e40@embeddedor.com>
-Date:   Thu, 25 Mar 2021 16:12:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        id S230468AbhCYVed (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Mar 2021 17:34:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230483AbhCYVeW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 17:34:22 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF198C06174A
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Mar 2021 14:34:22 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C26566D16; Thu, 25 Mar 2021 17:34:21 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C26566D16
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1616708061;
+        bh=5KrUTVgQrTVlUzS34jfxzrAzcye/x4HcoSBTBwe3eCI=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=b8niUMIFyXR+Bn2453A4GoM/fvXiNuOhPhMoiO8SdgVunuYMIknxepT/t+DYDdCTH
+         ppMfCzycUwziTVeXPk0K9x0rZBY3Oz3jP+Cef/tBTgnhvwqbwWqzYqQi1LDqCaXhkx
+         4+u5UrYElQol0NnTjjDG8Vf+phHBV9ehv6Off5LU=
+Date:   Thu, 25 Mar 2021 17:34:21 -0400
+To:     Benjamin Maynard <benmaynard@google.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: Input/output errors when mounting re-exported directories that
+ use crossmounts
+Message-ID: <20210325213421.GC18351@fieldses.org>
+References: <CA+QRt4vr+CUgP-4xkVQwLWNZMHo-w6TwU8bFwzuZcUc1RPi-RA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1efa90cc6bc24cfb860084e0b888cd4b@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lPYDO-003hVs-2j
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:49220
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+QRt4vr+CUgP-4xkVQwLWNZMHo-w6TwU8bFwzuZcUc1RPi-RA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-On 3/25/21 10:29, David Laight wrote:
-
->>>
->>> Could you use the simpler:
->>>> struct nfs_fhbase_new {
->>>>          __u8       fb_version;
->>>>          __u8       fb_auth_type;
->>>>          __u8       fb_fsid_type;
->>>>          __u8       fb_fileid_type;
->>>>          union {
->>>>                 __u32      fb_auth[1];
->>>>                 __u32      fb_auth_flex[0];
->>>>          };
->>>> };
->>>
->>> Although I'm not certain flexible arrays are supported
->>> as the last element of a union.
->>
->> Nope; this is not allowed: https://godbolt.org/z/14vd4o8na
+On Tue, Mar 23, 2021 at 08:08:38PM +0000, Benjamin Maynard wrote:
+> Hi Linux NFS Mailing List,
 > 
-> Nothing an extra 'struct {__u32 fb_auth_flex[0]; }'; won't solve.
+> Please excuse any incorrect terminology - I'm not an expert in this
+> space but am learning :).
+> 
+> I have recently been experimenting with NFS re-exporting in the 5.11
+> kernel and have come across an interesting quirk when re-exporting a
+> directory that has subdirectories on different filesystems. I'll do my
+> best to give a concise overview of my setup and the issue I am seeing
+> below.
 
-We don't want to introduce zero-length arrays [1].
+I bet you're encountering a special case of the rule that the "fsid="
+option is required on any export of an NFS filesystem.
 
---
-Gustavo
+The "fsid=" option on the parent export doesn't help us with any
+children found underneath that export, different filesystems have to
+have different fsids.
 
-[1] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+So, you probably hit the first -EINVAL in fs/nfsd/export.c
+check_export().  You could confirm that by turning on some debugging on
+the re-exporting server (rpcdebug -m nfsd -s export) and checking the
+logs, which should get "exp_export: export of non-dev fs without fsid"
+when you hit the IO error.
+
+The re-export server wants to encode into each filehandle something that
+identifies the specific filesystem being exported.  Otherwise it's stuck
+when it gets a filehandle back from the client--the operation it uses to
+map the incoming filehandle to a dentry can't work without a superblock.
+
+In theory, if it can at least determine that the filehandle is for an
+object on an NFS filesystem, and figure out which server the
+filesystem's from, it could (given some new interface) ask the NFS
+client to work out the rest....  I've got only vague ideas here and no
+real plan for a fix.
+
+So, for now at least, this just doesn't work.
+
+--b.
+
+> 
+> I'll use the following terms to describe the components from here on out:
+> 
+> Source NFS Filer: Refers to the originating NFS Server that contains
+> the exports that we want to re-export (Ubuntu 20.04.2 /
+> 5.4.0-1038-gcp).
+> Re-exporting NFS Filer: Refers to the NFS Server that is mounting and
+> re-exporting the Source NFS Filer (Ubuntu 20.10 /
+> 5.11.0-051100-generic).
+> NFS Client: Refers to the server that is mounting the re-exported
+> directories on the Re-exporting NFS Filer (Ubuntu 18.04 /
+> 5.4.0-1036-gcp).
+> 
+> (Source NFS Filer <-- Re-exporting NFS Filer <-- NFS Client)
+> 
+> ---
+> Source NFS Filer:
+> 
+> The source NFS Filer consists of two directories that are each mounted
+> to filesystems on different disks:
+> 
+> root@demo-nfs-filer-kernel-community:/home/benmaynard# lsblk
+> NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+> sdb 8:16 0 100G 0 disk /files
+> sdc 8:32 0 100G 0 disk /files/disk2
+> 
+> The /files directory is then exported from the source filer, with the
+> crossmnt option set so that clients can move to the child filesystems:
+> 
+> root@demo-nfs-filer-kernel-community:/files# cat /etc/exports
+> /files 10.0.0.0/8(rw,wdelay,no_root_squash,no_subtree_check,fsid=10,sec=sys,rw,secure,no_root_squash,no_all_squash,crossmnt)
+> 
+> -- 
+> Re-exporting NFS Filer:
+> 
+> >From the Re-exporting NFS Filer, I can then mount this exported directory:
+> 
+> root@reexport-server:/home/benmaynard# mount -t nfs -o vers=3,sync
+> 10.67.10.54:/files /files
+> 
+> I am able to successfully list the contents of both the /files and
+> /files/disk2 directories:
+> 
+> root@reexport-server:/home/benmaynard# ls /files/
+> a_file disk2 lost+found
+> 
+> root@reexport-server:/home/benmaynard# ls /files/disk2/
+> b_file lost+found
+> 
+> Now time to re-export (using the same options as the Source NFS Filer
+> including crossmnt):
+> 
+> root@reexport-server:/home/benmaynard# cat /etc/exports
+> /files 10.0.0.0/8(rw,wdelay,no_root_squash,no_subtree_check,fsid=10,sec=sys,rw,secure,no_root_squash,no_all_squash,crossmnt)
+> 
+> --
+> NFS Client:
+> 
+> I now want to mount the re-exported directory from my NFS Client:
+> root@client-vm:/home/benmaynard# mount -t nfs -o vers=3,sync
+> 10.67.10.51:/files /files
+> 
+> The mount completes successfully, but when listing the contents of the
+> directory I receive a Input/output error for the directory that is on
+> a different filesystem:
+> 
+> root@client-vm:/home/benmaynard# ls /files
+> ls: cannot access '/files/disk2': Input/output error
+> a_file disk2 lost+found
+> 
+> 
+> root@client-vm:/home/benmaynard# ls /files/disk2
+> ls: cannot access '/files/disk2': Input/output error
+> 
+> If I unmount and mount the Source NFS Filer directly, I am able to
+> read all of the files. The problem seems to be caused by the
+> re-export.
+> 
+> In my efforts to resolve this I tried a number of different options,
+> and the only way I was able to get things working was to explicitly
+> re-export the directories that are on different filesystems from the
+> Re-Exporting NFS Filer (Source NFS Filer exports and NFS Client mount
+> command remains unchanged):
+> 
+> root@reexport-server:/home/benmaynard# cat /etc/exports
+> /files 10.0.0.0/8(rw,wdelay,no_root_squash,no_subtree_check,fsid=10,sec=sys,rw,secure,no_root_squash,no_all_squash,crossmnt)
+> /files/disk2 10.0.0.0/8(rw,wdelay,no_root_squash,no_subtree_check,fsid=20,sec=sys,rw,secure,no_root_squash,no_all_squash,crossmnt)
+> 
+> With these export options I can successfully mount the Re-exporting
+> NFS filer and browse both directores:
+> 
+> root@client-vm:/home/benmaynard# mount -t nfs -o vers=3,sync
+> 10.67.10.51:/files /files
+> root@client-vm:/home/benmaynard# ls /files
+> a_file disk2 lost+found
+> root@client-vm:/home/benmaynard# ls /files/disk2/
+> b_file lost+found
+> 
+> It appears as if the issue is something to do with the re-export, but
+> I am struggling to track down the actual cause.
+> 
+> This is causing some challenges as the source NFS filer that I am
+> using in production has 1000's of subdirectories on different volumes.
+> Manually re-exporting each of these from our re-export server is a
+> challenge.
+> 
+> I have a lab environment configured so happy to do some more testing
+> or run commands if it helps with troubleshooting.
