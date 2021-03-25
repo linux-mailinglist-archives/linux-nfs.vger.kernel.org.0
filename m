@@ -2,57 +2,25 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CFD03493D5
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 15:14:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAC053493FA
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 15:27:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230525AbhCYON6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Mar 2021 10:13:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230113AbhCYONX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 10:13:23 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56861C06174A;
-        Thu, 25 Mar 2021 07:13:20 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id n138so2758742lfa.3;
-        Thu, 25 Mar 2021 07:13:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VAvP7bHgJVthEA6tXep78PEg1OIgagyy2ck803C3+C8=;
-        b=QmBr4F3dyAhpQDZi73XbNsQ2sHduQfoFXI2Q2/+dUFFqxAipew/I6QUdQ4Z5pNWc54
-         cIuUbg1Y0GHU5u3D/DICn8ZEkxXhVOz/AT9Lz3/lYf0MXLT9qhqSK8ta6yTphtcujRVx
-         S+p4sBF/LODeJo9pAJL8vq4+g3o6iJkkARj6XD+Sh2Vh7jz9mb8ohU/4ton2D9HDs40F
-         SrKsBKYlJAUfN1oPgmxk/YyAF0Cu3vNyIKzZI2rWosl5RXWJF94hSqIWa937GHh0xqCQ
-         sumd6+0yML8dmVr/rGB6xl1gSEWUb0ld+lMqL+cm+YLN8IoAiGKykZQDYkVCQw2NFH1F
-         Fn6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VAvP7bHgJVthEA6tXep78PEg1OIgagyy2ck803C3+C8=;
-        b=HDZnq8MmO9LEkUXi9zLP2XnJcVKZ+6ofCWG7gDzosGeNmxPnkb+i1Bm5Lv4x87hYzG
-         qdRUKAhVWG0ms1UbPi1H3ZIFdd6yfSyJe0iAdq0XURNXXOL2SBlx6s4FNx/Rk1Wp3lCu
-         HT/wmJ/jgpZ2Ciccnjs49N3S3oskUYS9ouDZJErxtd1fqlc6414N7yGEUAh7gHqKZPAK
-         L97Q6RSMtOB9pQi+fnN3TKzs2CJDSNZHg3gv7Aw2J3gW2izgTMlKFLoFqpJpyYt0RBOi
-         qblWEKItem7OZ9TeEEdSYLX67mYGILb3/4KpcZoijZuxAOZZmQjhogQcTtitQRXif0hD
-         bV3w==
-X-Gm-Message-State: AOAM533fYmoJcUZYoe6TbSoIUEHJ2sAmufIOJknZC4kEbmKC0Puiwr3D
-        SlnTDsXkkdOJEt3WeHWjars=
-X-Google-Smtp-Source: ABdhPJxoNKK13uTKp11JZ98lxY1Zh1fctCxAwf6AVllaevDLbiGzUpnEJIgZXQcof0kFpWiNxS2ooA==
-X-Received: by 2002:ac2:520f:: with SMTP id a15mr4921497lfl.223.1616681598809;
-        Thu, 25 Mar 2021 07:13:18 -0700 (PDT)
-Received: from pc638.lan (h5ef52e3d.seluork.dyn.perspektivbredband.net. [94.245.46.61])
-        by smtp.gmail.com with ESMTPSA id m8sm562303lfa.274.2021.03.25.07.13.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Mar 2021 07:13:18 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc638.lan>
-Date:   Thu, 25 Mar 2021 15:13:16 +0100
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
+        id S231288AbhCYO1C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Mar 2021 10:27:02 -0400
+Received: from outbound-smtp09.blacknight.com ([46.22.139.14]:46901 "EHLO
+        outbound-smtp09.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231297AbhCYO02 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 10:26:28 -0400
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp09.blacknight.com (Postfix) with ESMTPS id 06C521C34BB
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Mar 2021 14:26:26 +0000 (GMT)
+Received: (qmail 8307 invoked from network); 25 Mar 2021 14:26:25 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 25 Mar 2021 14:26:25 -0000
+Date:   Thu, 25 Mar 2021 14:26:24 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Chuck Lever <chuck.lever@oracle.com>,
         Jesper Dangaard Brouer <brouer@redhat.com>,
@@ -66,39 +34,82 @@ Cc:     Uladzislau Rezki <urezki@gmail.com>,
         Linux-NFS <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH 0/9 v6] Introduce a bulk order-0 page allocator with two
  in-tree users
-Message-ID: <20210325141316.GA2558@pc638.lan>
+Message-ID: <20210325142624.GT3697@techsingularity.net>
 References: <20210325114228.27719-1-mgorman@techsingularity.net>
  <20210325125001.GW1719932@casper.infradead.org>
  <20210325132556.GS3697@techsingularity.net>
  <20210325140657.GA1908@pc638.lan>
- <20210325140927.GX1719932@casper.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20210325140927.GX1719932@casper.infradead.org>
+In-Reply-To: <20210325140657.GA1908@pc638.lan>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Mar 25, 2021 at 02:09:27PM +0000, Matthew Wilcox wrote:
-> On Thu, Mar 25, 2021 at 03:06:57PM +0100, Uladzislau Rezki wrote:
-> > For the vmalloc we should be able to allocating on a specific NUMA node,
-> > at least the current interface takes it into account. As far as i see
-> > the current interface allocate on a current node:
+On Thu, Mar 25, 2021 at 03:06:57PM +0100, Uladzislau Rezki wrote:
+> > On Thu, Mar 25, 2021 at 12:50:01PM +0000, Matthew Wilcox wrote:
+> > > On Thu, Mar 25, 2021 at 11:42:19AM +0000, Mel Gorman wrote:
+> > > > This series introduces a bulk order-0 page allocator with sunrpc and
+> > > > the network page pool being the first users. The implementation is not
+> > > > efficient as semantics needed to be ironed out first. If no other semantic
+> > > > changes are needed, it can be made more efficient.  Despite that, this
+> > > > is a performance-related for users that require multiple pages for an
+> > > > operation without multiple round-trips to the page allocator. Quoting
+> > > > the last patch for the high-speed networking use-case
+> > > > 
+> > > >             Kernel          XDP stats       CPU     pps           Delta
+> > > >             Baseline        XDP-RX CPU      total   3,771,046       n/a
+> > > >             List            XDP-RX CPU      total   3,940,242    +4.49%
+> > > >             Array           XDP-RX CPU      total   4,249,224   +12.68%
+> > > > 
+> > > > >From the SUNRPC traces of svc_alloc_arg()
+> > > > 
+> > > > 	Single page: 25.007 us per call over 532,571 calls
+> > > > 	Bulk list:    6.258 us per call over 517,034 calls
+> > > > 	Bulk array:   4.590 us per call over 517,442 calls
+> > > > 
+> > > > Both potential users in this series are corner cases (NFS and high-speed
+> > > > networks) so it is unlikely that most users will see any benefit in the
+> > > > short term. Other potential other users are batch allocations for page
+> > > > cache readahead, fault around and SLUB allocations when high-order pages
+> > > > are unavailable. It's unknown how much benefit would be seen by converting
+> > > > multiple page allocation calls to a single batch or what difference it may
+> > > > make to headline performance.
+> > > 
+> > > We have a third user, vmalloc(), with a 16% perf improvement.  I know the
+> > > email says 21% but that includes the 5% improvement from switching to
+> > > kvmalloc() to allocate area->pages.
+> > > 
+> > > https://lore.kernel.org/linux-mm/20210323133948.GA10046@pc638.lan/
+> > > 
 > > 
-> > static inline unsigned long
-> > alloc_pages_bulk_array(gfp_t gfp, unsigned long nr_pages, struct page **page_array)
-> > {
-> >     return __alloc_pages_bulk(gfp, numa_mem_id(), NULL, nr_pages, NULL, page_array);
-> > }
+> > That's fairly promising. Assuming the bulk allocator gets merged, it would
+> > make sense to add vmalloc on top. That's for bringing it to my attention
+> > because it's far more relevant than my imaginary potential use cases.
 > > 
-> > Or am i missing something?
+> For the vmalloc we should be able to allocating on a specific NUMA node,
+> at least the current interface takes it into account. As far as i see
+> the current interface allocate on a current node:
 > 
-> You can call __alloc_pages_bulk() directly; there's no need to indirect
-> through alloc_pages_bulk_array().
->
-OK. It is accessible then.
+> static inline unsigned long
+> alloc_pages_bulk_array(gfp_t gfp, unsigned long nr_pages, struct page **page_array)
+> {
+>     return __alloc_pages_bulk(gfp, numa_mem_id(), NULL, nr_pages, NULL, page_array);
+> }
+> 
+> Or am i missing something?
+> 
 
---
-Vlad Rezki
+No, you're not missing anything. Options would be to add a helper similar
+alloc_pages_node or to directly call __alloc_pages_bulk specifying a node
+and using GFP_THISNODE. prepare_alloc_pages() should pick the correct
+zonelist containing only the required node.
+
+> --
+> Vlad Rezki
+
+-- 
+Mel Gorman
+SUSE Labs
