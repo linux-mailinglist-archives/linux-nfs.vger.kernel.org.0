@@ -2,31 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB53734918C
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 13:08:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AFBC3491B8
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 13:16:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230308AbhCYMHf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Mar 2021 08:07:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48296 "EHLO
+        id S230242AbhCYMQL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Mar 2021 08:16:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230191AbhCYMH3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 08:07:29 -0400
+        with ESMTP id S229533AbhCYMPx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 08:15:53 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F01A9C06174A;
-        Thu, 25 Mar 2021 05:07:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F2D5C06174A;
+        Thu, 25 Mar 2021 05:15:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=SX63SSXBBS8pfUBjqJXaKRwLtoxqCsaqqgX1eXw+KL8=; b=BlpX2J9DGfGSWThsGnCnGaLc8M
-        IzFqTU3JIj7wN37putBxoc6ddcJ+pMmBH60tPqfy5guBXz+ObmQBpNkNwoDGlVvt1QuI+2ihyYdeX
-        JOmM3sABRl/iWfAdzl8qRZVaTtYAKNuGvRQK3eZlHm3CUbmtOemmWoGwsUIKUZT8KJaRDaWJvzQbW
-        0GrNHjHvJMHENl3NDzMNXzYMJ7OmmNVzenNTO920WJuWtEQrZg+vFhrPPXbM1jCTNA97WDzQFVu0f
-        VsdOatqvv7RRv6/hmyQF6ROHBW9b+UqmiCwHVBW0jMvGRvpcjS9lh77rgsYfZHBJI6Dvfnr5s/G3Z
-        C+TY7v2g==;
+        bh=WHCc14VHAl0E1rtR7XCz+SysoOI7DyQ6FX+b+kCG0A4=; b=WX3isQ84S9El/isa7ddU7bux/K
+        0g1qr4leAT3T3g+/U2/EIojJLVifkLuv8ZJUKt7zAYkAK7mlzuuFTk/lprNEvmef4B9OSfJ//NaiR
+        IKlbOkCZDm5yeeYuShQW9BJnJmYYwmXQ5pS3xtJNxEezEhEyHt2+mXYFVCvCOdzIyYG+kZjbWG0mX
+        YrCxxafw2sWKP2dqRhTE1wc9FJMcSvDt95L2gArFbIavef2PHRIodcCFNhEXuujcxb420RnyJrAFp
+        Cv1DTpQ6Niz4eDLMj4TGJJo1tKKIgDFMkapxdycn9vgDdUlsKeF2PUVsCvkwWWgS0VWiNtgOfncf5
+        y8ML6fOg==;
 Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lPOjt-00CrhC-DX; Thu, 25 Mar 2021 12:05:34 +0000
-Date:   Thu, 25 Mar 2021 12:05:25 +0000
+        id 1lPOqX-00CsAu-Ma; Thu, 25 Mar 2021 12:12:50 +0000
+Date:   Thu, 25 Mar 2021 12:12:17 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     Mel Gorman <mgorman@techsingularity.net>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -40,34 +40,27 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Linux-Net <netdev@vger.kernel.org>,
         Linux-MM <linux-mm@kvack.org>,
         Linux-NFS <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 2/9] mm/page_alloc: Add a bulk page allocator
-Message-ID: <20210325120525.GU1719932@casper.infradead.org>
+Subject: Re: [PATCH 4/9] mm/page_alloc: optimize code layout for
+ __alloc_pages_bulk
+Message-ID: <20210325121217.GV1719932@casper.infradead.org>
 References: <20210325114228.27719-1-mgorman@techsingularity.net>
- <20210325114228.27719-3-mgorman@techsingularity.net>
+ <20210325114228.27719-5-mgorman@techsingularity.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210325114228.27719-3-mgorman@techsingularity.net>
+In-Reply-To: <20210325114228.27719-5-mgorman@techsingularity.net>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Mar 25, 2021 at 11:42:21AM +0000, Mel Gorman wrote:
-> +int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
-> +				nodemask_t *nodemask, int nr_pages,
-> +				struct list_head *list);
-> +
-> +/* Bulk allocate order-0 pages */
-> +static inline unsigned long
-> +alloc_pages_bulk(gfp_t gfp, unsigned long nr_pages, struct list_head *list)
-> +{
-> +	return __alloc_pages_bulk(gfp, numa_mem_id(), NULL, nr_pages, list);
-
-Discrepancy in the two return types here.  Suspect they should both
-be 'unsigned int' so there's no question about "can it return an errno".
-
+On Thu, Mar 25, 2021 at 11:42:23AM +0000, Mel Gorman wrote:
 >  
-> +/*
+> -	if (WARN_ON_ONCE(nr_pages <= 0))
+> +	if (unlikely(nr_pages <= 0))
+>  		return 0;
 
-If you could make that "/**" instead ...
+If we made nr_pages unsigned, we wouldn't need this check at all (ok,
+we'd still need to figure out what to do with 0).  But then, if a user
+inadvertently passes in -ENOMEM, we'll try to allocate 4 billion pages.
+So maybe we should check it.  Gah, API design is hard.
 
