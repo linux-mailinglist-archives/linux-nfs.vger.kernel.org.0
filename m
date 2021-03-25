@@ -2,40 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE97C348FC1
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 12:30:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B794B348FFB
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 12:33:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231476AbhCYL3t (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Mar 2021 07:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35906 "EHLO mail.kernel.org"
+        id S230346AbhCYLbY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Mar 2021 07:31:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231516AbhCYL10 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 25 Mar 2021 07:27:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 649AC61A7F;
-        Thu, 25 Mar 2021 11:27:09 +0000 (UTC)
+        id S231352AbhCYL3V (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 25 Mar 2021 07:29:21 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E98C661A3B;
+        Thu, 25 Mar 2021 11:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616671630;
-        bh=hswCQyZZ2Qmd89Jdq4tJKYt9JtQSZWQ6mdU4q/xSxXg=;
+        s=k20201202; t=1616671647;
+        bh=Y0ZCc5Bmanmc/FIOXXPlkJRrjauYRsPgoYbUy4EQJ90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NC92YHvbxuy1qbT8YOn4s36UkkMcuxC/xR/EKsAiUeQH/081ezLcm3CaXpBTD3Pw8
-         adyf9i9rjGvkJqf9RMYdJlRp4AmfQeUmUcU5pjtGI5QIqqsKV8QvNrSl+pXCz7JBXq
-         65W+SdPe7EIJ7BS0QPUh1ei4KNgiLOcNoNXGXqaDzJj3Liro+8KwjZXT7KH01YsS4R
-         RL9DCBLM3tdULaTFFWm2wU2pnbrOycjODBWbEJEJwNQ4/xPKn0LPE/bqvcSUqkflpn
-         DNPz2SoesNTCHK0AazCGMNLSb9RZEOhuU6BQ+3WnAf9XvHuWDdBO5cYtfctCCibQNS
-         3wffC1CRfYcDw==
+        b=YWffYd9ocFP8oVaLmIA8+JUvNwWvmNPhZy9fEjtdWdFj6Shle/9o+rRYC5p6YpCs8
+         UbnCD89js+ZkyWRtya6S0xyOJosZsGK+61542SB1eCqUwhapYq9C18lZsEW64mA9ML
+         62sdFc7rgXdul0BqESswW8QnnC1Q3hG9iQEwOrn67bTtLDLAfZZdTpKZ1DE1tWuTC8
+         hZ2MRgrfe/Ab1y1/eROYj0AwhQgosQzh+pn9dtU7hDY6iQ5mSGBgf6yow+tD2pq+Mb
+         wBb1Q/gWqiyKZszxm30dp1mQp4sc2RgE45yQ9V1vCxAEtYX/xq6O/uTbW9c9qd5KiA
+         vEjJ54RmLibZw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <kolga@netapp.com>,
-        Bruce Fields <bfields@redhat.com>,
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
         Chuck Lever <chuck.lever@oracle.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 14/24] NFSD: fix error handling in NFSv4.0 callbacks
-Date:   Thu, 25 Mar 2021 07:26:40 -0400
-Message-Id: <20210325112651.1927828-14-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/20] rpc: fix NULL dereference on kmalloc failure
+Date:   Thu, 25 Mar 2021 07:27:06 -0400
+Message-Id: <20210325112724.1928174-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210325112651.1927828-1-sashal@kernel.org>
-References: <20210325112651.1927828-1-sashal@kernel.org>
+In-Reply-To: <20210325112724.1928174-1-sashal@kernel.org>
+References: <20210325112724.1928174-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,36 +43,62 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-[ Upstream commit b4250dd868d1b42c0a65de11ef3afbee67ba5d2f ]
+[ Upstream commit 0ddc942394013f08992fc379ca04cffacbbe3dae ]
 
-When the server tries to do a callback and a client fails it due to
-authentication problems, we need the server to set callback down
-flag in RENEW so that client can recover.
+I think this is unlikely but possible:
 
-Suggested-by: Bruce Fields <bfields@redhat.com>
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+svc_authenticate sets rq_authop and calls svcauth_gss_accept.  The
+kmalloc(sizeof(*svcdata), GFP_KERNEL) fails, leaving rq_auth_data NULL,
+and returning SVC_DENIED.
+
+This causes svc_process_common to go to err_bad_auth, and eventually
+call svc_authorise.  That calls ->release == svcauth_gss_release, which
+tries to dereference rq_auth_data.
+
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Link: https://lore.kernel.org/linux-nfs/3F1B347F-B809-478F-A1E9-0BE98E22B0F0@oracle.com/T/#t
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Tested-by: Benjamin Coddington <bcodding@redhat.com>
-Link: https://lore.kernel.org/linux-nfs/FB84E90A-1A03-48B3-8BF7-D9D10AC2C9FE@oracle.com/T/#t
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4callback.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/sunrpc/auth_gss/svcauth_gss.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index efe55d101b0e..3c50d18fe8a9 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1121,6 +1121,7 @@ static void nfsd4_cb_done(struct rpc_task *task, void *calldata)
- 		switch (task->tk_status) {
- 		case -EIO:
- 		case -ETIMEDOUT:
-+		case -EACCES:
- 			nfsd4_mark_cb_down(clp, task->tk_status);
- 		}
- 		break;
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index ab086081be9c..a85d78d2bdb7 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -1766,11 +1766,14 @@ static int
+ svcauth_gss_release(struct svc_rqst *rqstp)
+ {
+ 	struct gss_svc_data *gsd = (struct gss_svc_data *)rqstp->rq_auth_data;
+-	struct rpc_gss_wire_cred *gc = &gsd->clcred;
++	struct rpc_gss_wire_cred *gc;
+ 	struct xdr_buf *resbuf = &rqstp->rq_res;
+ 	int stat = -EINVAL;
+ 	struct sunrpc_net *sn = net_generic(SVC_NET(rqstp), sunrpc_net_id);
+ 
++	if (!gsd)
++		goto out;
++	gc = &gsd->clcred;
+ 	if (gc->gc_proc != RPC_GSS_PROC_DATA)
+ 		goto out;
+ 	/* Release can be called twice, but we only wrap once. */
+@@ -1811,10 +1814,10 @@ svcauth_gss_release(struct svc_rqst *rqstp)
+ 	if (rqstp->rq_cred.cr_group_info)
+ 		put_group_info(rqstp->rq_cred.cr_group_info);
+ 	rqstp->rq_cred.cr_group_info = NULL;
+-	if (gsd->rsci)
++	if (gsd && gsd->rsci) {
+ 		cache_put(&gsd->rsci->h, sn->rsc_cache);
+-	gsd->rsci = NULL;
+-
++		gsd->rsci = NULL;
++	}
+ 	return stat;
+ }
+ 
 -- 
 2.30.1
 
