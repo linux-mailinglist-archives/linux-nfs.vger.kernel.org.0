@@ -2,39 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66E04349028
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 12:33:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF1DA34905F
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 12:36:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230337AbhCYLdD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Mar 2021 07:33:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35460 "EHLO mail.kernel.org"
+        id S231854AbhCYLe0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Mar 2021 07:34:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230417AbhCYLau (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 25 Mar 2021 07:30:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3AD1161A61;
-        Thu, 25 Mar 2021 11:27:54 +0000 (UTC)
+        id S232034AbhCYLck (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 25 Mar 2021 07:32:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 92D9361A78;
+        Thu, 25 Mar 2021 11:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616671675;
-        bh=7+/xmXOtKBsHg7XwHtan05NXhF776FAi9Srk7V44K+Y=;
+        s=k20201202; t=1616671697;
+        bh=Djuzw98xhm/Hl7YY7pTPWL/sO2TVHVXcGcWRCaWdbZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TmEuajCdvMdRvDiM0v01X3O3euFRpFj2dYedupDdnjh/OwJmsuih89DUgCgWosSUP
-         5W5s/5ebZr0UrMG/h6h5abuZ+GX2lQiqlkpzuePffve3Y6145Ym74yymrsTsnZYQ3u
-         iFTarb0bda9WSONcJgojZSYlN2UtbHSLiydmbOZ36WTvIFRJPfmrYLvbxTFbj5SQsR
-         WVhFxsYvSIigGJhhmxvBDVW4AS6O48oIuSQGxfd1RHOY2h4vV1XEXMmC0EdFIBTzpY
-         NYMHdArh3NI/MWZ3rIQeyl7BDjworGNIuG7i+825CGjsCGvoq0HyEn4zMvxKxcXtbc
-         n1XTXsa79ZUEQ==
+        b=vQoa1CeLj8kxVJJGJwIfKT0Bfy41Q48AYcriUe/AE1c+LY2frHbwipuEbNDm0zcjc
+         iMy6RUIU1CiGj79z6eTIte3wIROTYl+OzCAjJRhw99DIaPmiBgnGEn/Cw0aNFRytu1
+         2/XB7hnqswVLkSsR3EMMGOELinv5WH3VLa/bAzx4OXKFb5Hjqf9kOhUtqw3IaJ5BxD
+         elweZrvX2Op/xf09yAfSqwWz6+UyiwUzAsTxIiJB5Ne15ui8w6btBlo/CeVNVAnbJ+
+         8FbGrVBO+fWQJAtVfVqVzJgf1bIySihAk1DRrP6GXX30Tz7EUWBG7hyDeAV9kqyPyK
+         dYH5OeAf/fn2w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "J. Bruce Fields" <bfields@redhat.com>,
         Chuck Lever <chuck.lever@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/16] rpc: fix NULL dereference on kmalloc failure
-Date:   Thu, 25 Mar 2021 07:27:37 -0400
-Message-Id: <20210325112751.1928421-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 02/13] rpc: fix NULL dereference on kmalloc failure
+Date:   Thu, 25 Mar 2021 07:28:02 -0400
+Message-Id: <20210325112814.1928637-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210325112751.1928421-1-sashal@kernel.org>
-References: <20210325112751.1928421-1-sashal@kernel.org>
+In-Reply-To: <20210325112814.1928637-1-sashal@kernel.org>
+References: <20210325112814.1928637-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -66,10 +66,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-index 03043d5221e9..27dfd85830d8 100644
+index fd897d900d12..85ad23d9a8a9 100644
 --- a/net/sunrpc/auth_gss/svcauth_gss.c
 +++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -1713,11 +1713,14 @@ static int
+@@ -1705,11 +1705,14 @@ static int
  svcauth_gss_release(struct svc_rqst *rqstp)
  {
  	struct gss_svc_data *gsd = (struct gss_svc_data *)rqstp->rq_auth_data;
@@ -85,7 +85,7 @@ index 03043d5221e9..27dfd85830d8 100644
  	if (gc->gc_proc != RPC_GSS_PROC_DATA)
  		goto out;
  	/* Release can be called twice, but we only wrap once. */
-@@ -1758,10 +1761,10 @@ svcauth_gss_release(struct svc_rqst *rqstp)
+@@ -1750,10 +1753,10 @@ svcauth_gss_release(struct svc_rqst *rqstp)
  	if (rqstp->rq_cred.cr_group_info)
  		put_group_info(rqstp->rq_cred.cr_group_info);
  	rqstp->rq_cred.cr_group_info = NULL;
