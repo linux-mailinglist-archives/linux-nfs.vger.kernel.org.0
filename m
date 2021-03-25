@@ -2,227 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D31B349323
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 14:35:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB391349353
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 14:52:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230478AbhCYNed (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Mar 2021 09:34:33 -0400
-Received: from mail2.protonmail.ch ([185.70.40.22]:23537 "EHLO
-        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230140AbhCYNeH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 09:34:07 -0400
-Date:   Thu, 25 Mar 2021 13:33:57 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
-        t=1616679243; bh=TNcqNIUGi5IWLeEp3KkdTlzXyUEpBuLEIC37/Wa1Bno=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=NlvHt1XOAsoKLYbRojzvQhEKl/dCwJH25h2fND3oo6JGcBeJOaQ6uOHTcrdu8bAWy
-         YaxG6wwQ/wzjIFrsu1uc9DoU+oN8ML3ReRR0B0PrTwPA+/EBTBht46sonbfO+cS7WY
-         /Dcm3VDXbNq5UeMyGdcsv75ryM+ofhL8VSXEiy/WFWx1nezNk3Gw0/Ehj3Zz3D6rZA
-         5INj5uRlIMIdBMMlu5kXDEuek6OnsdoUmCiYDAqcgfcVBCQDKCpPIBn43yfS+fXem2
-         4/eI/oTNgPa6rXbwupzm8d39KtK8sjR/o7nfkLkXqXlKtqIW0sqine4Fuzl5Akyheq
-         Yk2KHi8rPXA7w==
-To:     Mel Gorman <mgorman@techsingularity.net>
-From:   Alexander Lobakin <alobakin@pm.me>
-Cc:     Alexander Lobakin <alobakin@pm.me>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Net <netdev@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux-NFS <linux-nfs@vger.kernel.org>
-Reply-To: Alexander Lobakin <alobakin@pm.me>
-Subject: Re: [PATCH 9/9] net: page_pool: use alloc_pages_bulk in refill code path
-Message-ID: <20210325133340.14527-1-alobakin@pm.me>
-In-Reply-To: <20210325114228.27719-10-mgorman@techsingularity.net>
-References: <20210325114228.27719-1-mgorman@techsingularity.net> <20210325114228.27719-10-mgorman@techsingularity.net>
+        id S231211AbhCYNvx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Mar 2021 09:51:53 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151]:30794 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231182AbhCYNvg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 09:51:36 -0400
+X-Greylist: delayed 368 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Mar 2021 09:51:34 EDT
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-172-SGVHtB3kMiW7IbuAL5VZgw-1; Thu, 25 Mar 2021 13:45:17 +0000
+X-MC-Unique: SGVHtB3kMiW7IbuAL5VZgw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.2; Thu, 25 Mar 2021 13:45:16 +0000
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.012; Thu, 25 Mar 2021 13:45:16 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Gustavo A. R. Silva'" <gustavoars@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH][next] UAPI: nfsfh.h: Replace one-element array with
+ flexible-array member
+Thread-Topic: [PATCH][next] UAPI: nfsfh.h: Replace one-element array with
+ flexible-array member
+Thread-Index: AQHXID829xNnc1F6eUqUVWy7MwUgYKqUt3Ig
+Date:   Thu, 25 Mar 2021 13:45:16 +0000
+Message-ID: <629154ce566b4c9c9b7f4124b3260fc3@AcuMS.aculab.com>
+References: <20210323224858.GA293698@embeddedor>
+In-Reply-To: <20210323224858.GA293698@embeddedor>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF shortcircuit=no
-        autolearn=disabled version=3.4.4
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
-        mailout.protonmail.ch
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Mel Gorman <mgorman@techsingularity.net>
-Date: Thu, 25 Mar 2021 11:42:28 +0000
-
-> From: Jesper Dangaard Brouer <brouer@redhat.com>
->
-> There are cases where the page_pool need to refill with pages from the
-> page allocator. Some workloads cause the page_pool to release pages
-> instead of recycling these pages.
->
-> For these workload it can improve performance to bulk alloc pages from
-> the page-allocator to refill the alloc cache.
->
-> For XDP-redirect workload with 100G mlx5 driver (that use page_pool)
-> redirecting xdp_frame packets into a veth, that does XDP_PASS to create
-> an SKB from the xdp_frame, which then cannot return the page to the
-> page_pool.
->
-> Performance results under GitHub xdp-project[1]:
->  [1] https://github.com/xdp-project/xdp-project/blob/master/areas/mem/pag=
-e_pool06_alloc_pages_bulk.org
->
-> Mel: The patch "net: page_pool: convert to use alloc_pages_bulk_array
-> variant" was squashed with this patch. From the test page, the array
-> variant was superior with one of the test results as follows.
->
-> =09Kernel=09=09XDP stats       CPU     pps           Delta
-> =09Baseline=09XDP-RX CPU      total   3,771,046       n/a
-> =09List=09=09XDP-RX CPU      total   3,940,242    +4.49%
-> =09Array=09=09XDP-RX CPU      total   4,249,224   +12.68%
->
-> Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-
-I tested it a lot for past two weeks and I'm very satisfied with
-the results, especially the new array-based version.
-Haven't had a chance to test this particular set yet, but still.
-
-Reviewed-by: Alexander Lobakin <alobakin@pm.me>
-
-Great work, thank you all guys!
-
-> ---
->  include/net/page_pool.h |  2 +-
->  net/core/page_pool.c    | 82 ++++++++++++++++++++++++++++-------------
->  2 files changed, 57 insertions(+), 27 deletions(-)
->
-> diff --git a/include/net/page_pool.h b/include/net/page_pool.h
-> index b5b195305346..6d517a37c18b 100644
-> --- a/include/net/page_pool.h
-> +++ b/include/net/page_pool.h
-> @@ -65,7 +65,7 @@
->  #define PP_ALLOC_CACHE_REFILL=0964
->  struct pp_alloc_cache {
->  =09u32 count;
-> -=09void *cache[PP_ALLOC_CACHE_SIZE];
-> +=09struct page *cache[PP_ALLOC_CACHE_SIZE];
->  };
->
->  struct page_pool_params {
-> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> index 40e1b2beaa6c..9ec1aa9640ad 100644
-> --- a/net/core/page_pool.c
-> +++ b/net/core/page_pool.c
-> @@ -203,38 +203,17 @@ static bool page_pool_dma_map(struct page_pool *poo=
-l, struct page *page)
->  =09return true;
->  }
->
-> -/* slow path */
-> -noinline
-> -static struct page *__page_pool_alloc_pages_slow(struct page_pool *pool,
-> -=09=09=09=09=09=09 gfp_t _gfp)
-> +static struct page *__page_pool_alloc_page_order(struct page_pool *pool,
-> +=09=09=09=09=09=09 gfp_t gfp)
->  {
-> -=09unsigned int pp_flags =3D pool->p.flags;
->  =09struct page *page;
-> -=09gfp_t gfp =3D _gfp;
-> -
-> -=09/* We could always set __GFP_COMP, and avoid this branch, as
-> -=09 * prep_new_page() can handle order-0 with __GFP_COMP.
-> -=09 */
-> -=09if (pool->p.order)
-> -=09=09gfp |=3D __GFP_COMP;
-> -
-> -=09/* FUTURE development:
-> -=09 *
-> -=09 * Current slow-path essentially falls back to single page
-> -=09 * allocations, which doesn't improve performance.  This code
-> -=09 * need bulk allocation support from the page allocator code.
-> -=09 */
->
-> -=09/* Cache was empty, do real allocation */
-> -#ifdef CONFIG_NUMA
-> +=09gfp |=3D __GFP_COMP;
->  =09page =3D alloc_pages_node(pool->p.nid, gfp, pool->p.order);
-> -#else
-> -=09page =3D alloc_pages(gfp, pool->p.order);
-> -#endif
-> -=09if (!page)
-> +=09if (unlikely(!page))
->  =09=09return NULL;
->
-> -=09if ((pp_flags & PP_FLAG_DMA_MAP) &&
-> +=09if ((pool->p.flags & PP_FLAG_DMA_MAP) &&
->  =09    unlikely(!page_pool_dma_map(pool, page))) {
->  =09=09put_page(page);
->  =09=09return NULL;
-> @@ -243,6 +222,57 @@ static struct page *__page_pool_alloc_pages_slow(str=
-uct page_pool *pool,
->  =09/* Track how many pages are held 'in-flight' */
->  =09pool->pages_state_hold_cnt++;
->  =09trace_page_pool_state_hold(pool, page, pool->pages_state_hold_cnt);
-> +=09return page;
-> +}
-> +
-> +/* slow path */
-> +noinline
-> +static struct page *__page_pool_alloc_pages_slow(struct page_pool *pool,
-> +=09=09=09=09=09=09 gfp_t gfp)
-> +{
-> +=09const int bulk =3D PP_ALLOC_CACHE_REFILL;
-> +=09unsigned int pp_flags =3D pool->p.flags;
-> +=09unsigned int pp_order =3D pool->p.order;
-> +=09struct page *page;
-> +=09int i, nr_pages;
-> +
-> +=09/* Don't support bulk alloc for high-order pages */
-> +=09if (unlikely(pp_order))
-> +=09=09return __page_pool_alloc_page_order(pool, gfp);
-> +
-> +=09/* Unnecessary as alloc cache is empty, but guarantees zero count */
-> +=09if (unlikely(pool->alloc.count > 0))
-> +=09=09return pool->alloc.cache[--pool->alloc.count];
-> +
-> +=09/* Mark empty alloc.cache slots "empty" for alloc_pages_bulk_array */
-> +=09memset(&pool->alloc.cache, 0, sizeof(void *) * bulk);
-> +
-> +=09nr_pages =3D alloc_pages_bulk_array(gfp, bulk, pool->alloc.cache);
-> +=09if (unlikely(!nr_pages))
-> +=09=09return NULL;
-> +
-> +=09/* Pages have been filled into alloc.cache array, but count is zero a=
-nd
-> +=09 * page element have not been (possibly) DMA mapped.
-> +=09 */
-> +=09for (i =3D 0; i < nr_pages; i++) {
-> +=09=09page =3D pool->alloc.cache[i];
-> +=09=09if ((pp_flags & PP_FLAG_DMA_MAP) &&
-> +=09=09    unlikely(!page_pool_dma_map(pool, page))) {
-> +=09=09=09put_page(page);
-> +=09=09=09continue;
-> +=09=09}
-> +=09=09pool->alloc.cache[pool->alloc.count++] =3D page;
-> +=09=09/* Track how many pages are held 'in-flight' */
-> +=09=09pool->pages_state_hold_cnt++;
-> +=09=09trace_page_pool_state_hold(pool, page,
-> +=09=09=09=09=09   pool->pages_state_hold_cnt);
-> +=09}
-> +
-> +=09/* Return last page */
-> +=09if (likely(pool->alloc.count > 0))
-> +=09=09page =3D pool->alloc.cache[--pool->alloc.count];
-> +=09else
-> +=09=09page =3D NULL;
->
->  =09/* When page just alloc'ed is should/must have refcnt 1. */
->  =09return page;
-> --
-> 2.26.2
-
-Al
+RnJvbTogR3VzdGF2byBBLiBSLiBTaWx2YQ0KPiBTZW50OiAyMyBNYXJjaCAyMDIxIDIyOjQ5DQo+
+IA0KPiBUaGVyZSBpcyBhIHJlZ3VsYXIgbmVlZCBpbiB0aGUga2VybmVsIHRvIHByb3ZpZGUgYSB3
+YXkgdG8gZGVjbGFyZSBoYXZpbmcNCj4gYSBkeW5hbWljYWxseSBzaXplZCBzZXQgb2YgdHJhaWxp
+bmcgZWxlbWVudHMgaW4gYSBzdHJ1Y3R1cmUuIEtlcm5lbCBjb2RlDQo+IHNob3VsZCBhbHdheXMg
+dXNlIOKAnGZsZXhpYmxlIGFycmF5IG1lbWJlcnPigJ1bMV0gZm9yIHRoZXNlIGNhc2VzLiBUaGUg
+b2xkZXINCj4gc3R5bGUgb2Ygb25lLWVsZW1lbnQgb3IgemVyby1sZW5ndGggYXJyYXlzIHNob3Vs
+ZCBubyBsb25nZXIgYmUgdXNlZFsyXS4NCj4gDQo+IFVzZSBhbiBhbm9ueW1vdXMgdW5pb24gd2l0
+aCBhIGNvdXBsZSBvZiBhbm9ueW1vdXMgc3RydWN0cyBpbiBvcmRlciB0bw0KPiBrZWVwIHVzZXJz
+cGFjZSB1bmNoYW5nZWQ6DQo+IA0KPiAkIHBhaG9sZSAtQyBuZnNfZmhiYXNlX25ldyBmcy9uZnNk
+L25mc2ZoLm8NCj4gc3RydWN0IG5mc19maGJhc2VfbmV3IHsNCj4gICAgICAgICB1bmlvbiB7DQo+
+ICAgICAgICAgICAgICAgICBzdHJ1Y3Qgew0KPiAgICAgICAgICAgICAgICAgICAgICAgICBfX3U4
+ICAgICAgIGZiX3ZlcnNpb25fYXV4OyAgICAgICAvKiAgICAgMCAgICAgMSAqLw0KPiAgICAgICAg
+ICAgICAgICAgICAgICAgICBfX3U4ICAgICAgIGZiX2F1dGhfdHlwZV9hdXg7ICAgICAvKiAgICAg
+MSAgICAgMSAqLw0KPiAgICAgICAgICAgICAgICAgICAgICAgICBfX3U4ICAgICAgIGZiX2ZzaWRf
+dHlwZV9hdXg7ICAgICAvKiAgICAgMiAgICAgMSAqLw0KPiAgICAgICAgICAgICAgICAgICAgICAg
+ICBfX3U4ICAgICAgIGZiX2ZpbGVpZF90eXBlX2F1eDsgICAvKiAgICAgMyAgICAgMSAqLw0KPiAg
+ICAgICAgICAgICAgICAgICAgICAgICBfX3UzMiAgICAgIGZiX2F1dGhbMV07ICAgICAgICAgICAv
+KiAgICAgNCAgICAgNCAqLw0KPiAgICAgICAgICAgICAgICAgfTsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAvKiAgICAgMCAgICAgOCAqLw0KPiAgICAgICAgICAgICAgICAg
+c3RydWN0IHsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgX191OCAgICAgICBmYl92ZXJzaW9u
+OyAgICAgICAgICAgLyogICAgIDAgICAgIDEgKi8NCj4gICAgICAgICAgICAgICAgICAgICAgICAg
+X191OCAgICAgICBmYl9hdXRoX3R5cGU7ICAgICAgICAgLyogICAgIDEgICAgIDEgKi8NCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgX191OCAgICAgICBmYl9mc2lkX3R5cGU7ICAgICAgICAgLyog
+ICAgIDIgICAgIDEgKi8NCj4gICAgICAgICAgICAgICAgICAgICAgICAgX191OCAgICAgICBmYl9m
+aWxlaWRfdHlwZTsgICAgICAgLyogICAgIDMgICAgIDEgKi8NCj4gICAgICAgICAgICAgICAgICAg
+ICAgICAgX191MzIgICAgICBmYl9hdXRoX2ZsZXhbMF07ICAgICAgLyogICAgIDQgICAgIDAgKi8N
+Cj4gICAgICAgICAgICAgICAgIH07ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgLyogICAgIDAgICAgIDQgKi8NCj4gICAgICAgICB9OyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgLyogICAgIDAgICAgIDggKi8NCj4gDQo+ICAgICAgICAg
+Lyogc2l6ZTogOCwgY2FjaGVsaW5lczogMSwgbWVtYmVyczogMSAqLw0KPiAgICAgICAgIC8qIGxh
+c3QgY2FjaGVsaW5lOiA4IGJ5dGVzICovDQo+IH07DQoNCkNvdWxkIHlvdSB1c2UgdGhlIHNpbXBs
+ZXI6DQo+IHN0cnVjdCBuZnNfZmhiYXNlX25ldyB7DQo+ICAgICAgICAgIF9fdTggICAgICAgZmJf
+dmVyc2lvbjsNCj4gICAgICAgICAgX191OCAgICAgICBmYl9hdXRoX3R5cGU7DQo+ICAgICAgICAg
+IF9fdTggICAgICAgZmJfZnNpZF90eXBlOw0KPiAgICAgICAgICBfX3U4ICAgICAgIGZiX2ZpbGVp
+ZF90eXBlOw0KPiAgICAgICAgICB1bmlvbiB7DQo+ICAgICAgICAgICAgICAgICBfX3UzMiAgICAg
+IGZiX2F1dGhbMV07DQo+ICAgICAgICAgICAgICAgICBfX3UzMiAgICAgIGZiX2F1dGhfZmxleFsw
+XTsNCj4gICAgICAgICAgfTsNCj4gfTsNCg0KQWx0aG91Z2ggSSdtIG5vdCBjZXJ0YWluIGZsZXhp
+YmxlIGFycmF5cyBhcmUgc3VwcG9ydGVkDQphcyB0aGUgbGFzdCBlbGVtZW50IG9mIGEgdW5pb24u
+DQpZb3UgbWlnaHQgbmVlZCB0byB1c2UgYSBuYW1lZCBhbm9ueW1vdXMgc3RydWN0dXJlIGZvciB0
+aGUNCmZvdXIgX191OCBmaWVsZHMgYW5kIGNyZWF0ZSB0d28gZGlmZmVyZW50IHN0cnVjdHVyZXMg
+dGhhdA0KaW5jbHVkZSB0aGUgZXh0cmEgZmllbGQgb24gdGhlIGVuZC4NCg0KCURhdmlkDQoNCi0N
+ClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBN
+aWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxl
+cykNCg==
 
