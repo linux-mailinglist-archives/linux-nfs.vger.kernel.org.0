@@ -2,22 +2,22 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10649349224
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 13:38:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7498734923B
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 13:41:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230155AbhCYMhk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Mar 2021 08:37:40 -0400
-Received: from outbound-smtp57.blacknight.com ([46.22.136.241]:52099 "EHLO
-        outbound-smtp57.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230452AbhCYMhQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 08:37:16 -0400
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-        by outbound-smtp57.blacknight.com (Postfix) with ESMTPS id 398CAFA852
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Mar 2021 12:37:15 +0000 (GMT)
-Received: (qmail 32076 invoked from network); 25 Mar 2021 12:37:15 -0000
+        id S230281AbhCYMk4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Mar 2021 08:40:56 -0400
+Received: from outbound-smtp26.blacknight.com ([81.17.249.194]:36065 "EHLO
+        outbound-smtp26.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231211AbhCYMkf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 08:40:35 -0400
+Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
+        by outbound-smtp26.blacknight.com (Postfix) with ESMTPS id E07D6CAB4D
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Mar 2021 12:40:33 +0000 (GMT)
+Received: (qmail 19824 invoked from network); 25 Mar 2021 12:40:33 -0000
 Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 25 Mar 2021 12:37:14 -0000
-Date:   Thu, 25 Mar 2021 12:37:13 +0000
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 25 Mar 2021 12:40:33 -0000
+Date:   Thu, 25 Mar 2021 12:40:32 +0000
 From:   Mel Gorman <mgorman@techsingularity.net>
 To:     Matthew Wilcox <willy@infradead.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -31,84 +31,42 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Linux-Net <netdev@vger.kernel.org>,
         Linux-MM <linux-mm@kvack.org>,
         Linux-NFS <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 2/9] mm/page_alloc: Add a bulk page allocator
-Message-ID: <20210325123713.GQ3697@techsingularity.net>
+Subject: Re: [PATCH 4/9] mm/page_alloc: optimize code layout for
+ __alloc_pages_bulk
+Message-ID: <20210325124032.GR3697@techsingularity.net>
 References: <20210325114228.27719-1-mgorman@techsingularity.net>
- <20210325114228.27719-3-mgorman@techsingularity.net>
- <20210325120525.GU1719932@casper.infradead.org>
+ <20210325114228.27719-5-mgorman@techsingularity.net>
+ <20210325121217.GV1719932@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20210325120525.GU1719932@casper.infradead.org>
+In-Reply-To: <20210325121217.GV1719932@casper.infradead.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Mar 25, 2021 at 12:05:25PM +0000, Matthew Wilcox wrote:
-> On Thu, Mar 25, 2021 at 11:42:21AM +0000, Mel Gorman wrote:
-> > +int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
-> > +				nodemask_t *nodemask, int nr_pages,
-> > +				struct list_head *list);
-> > +
-> > +/* Bulk allocate order-0 pages */
-> > +static inline unsigned long
-> > +alloc_pages_bulk(gfp_t gfp, unsigned long nr_pages, struct list_head *list)
-> > +{
-> > +	return __alloc_pages_bulk(gfp, numa_mem_id(), NULL, nr_pages, list);
-> 
-> Discrepancy in the two return types here.  Suspect they should both
-> be 'unsigned int' so there's no question about "can it return an errno".
-> 
-
-I'll make it unsigned long as the nr_pages parameter is unsigned long.
-It's a silly range to have for pages but it matches alloc_contig_range
-even though free_contig_range takes unsigned int *sigh*
-
+On Thu, Mar 25, 2021 at 12:12:17PM +0000, Matthew Wilcox wrote:
+> On Thu, Mar 25, 2021 at 11:42:23AM +0000, Mel Gorman wrote:
 > >  
-> > +/*
+> > -	if (WARN_ON_ONCE(nr_pages <= 0))
+> > +	if (unlikely(nr_pages <= 0))
+> >  		return 0;
 > 
-> If you could make that "/**" instead ...
-> 
+> If we made nr_pages unsigned, we wouldn't need this check at all (ok,
+> we'd still need to figure out what to do with 0).  But then, if a user
+> inadvertently passes in -ENOMEM, we'll try to allocate 4 billion pages.
 
-I decided not to until we're reasonably sure the semantics are not going
-to change.
+This is exactly why nr_pages is signed. An error in accounting by the
+caller potentially puts the system under severe memory pressure. This
+*should* only be a problem when a new caller of the API is being
+implemented. The warning goes away in a later patch for reasons explained
+in the changelog.
 
----8<---
-mm/page_alloc: Add a bulk page allocator -fix
+> So maybe we should check it.  Gah, API design is hard.
 
-Matthew Wilcox pointed out that the return type for alloc_pages_bulk()
-and __alloc_pages_bulk() is inconsistent. Fix it.
+Yep.
 
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- include/linux/gfp.h | 2 +-
- mm/page_alloc.c     | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index 4a304fd39916..a2be8f4174a9 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -518,7 +518,7 @@ static inline int arch_make_page_accessible(struct page *page)
- struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
- 		nodemask_t *nodemask);
- 
--int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
-+unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 				nodemask_t *nodemask, int nr_pages,
- 				struct list_head *list);
- 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index eb547470a7e4..92d55f80c289 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4978,7 +4978,7 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
-  *
-  * Returns the number of pages on the list.
-  */
--int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
-+unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 			nodemask_t *nodemask, int nr_pages,
- 			struct list_head *page_list)
- {
+-- 
+Mel Gorman
+SUSE Labs
