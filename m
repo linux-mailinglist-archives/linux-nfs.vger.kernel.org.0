@@ -2,103 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44DC2349082
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 12:36:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 132793490FC
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 12:44:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230250AbhCYLf3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Mar 2021 07:35:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230484AbhCYLdE (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 25 Mar 2021 07:33:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8970261A86;
-        Thu, 25 Mar 2021 11:28:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616671715;
-        bh=HAaJak4bHpPnuRXInyA1iSQlO0XhkFJmnK63h0bmJ+o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TGPjJyztns2LMHxkt40y6m7/jv/azZkTR8qSuY1+qtP6CK+cHY4IInLX76AAPtr0p
-         4cwqW+5UkEh58qMdEAri/DCoYl0iJdZXQF0ONfpn2exG8LwJpFkQv4T1WlkUfJlUC9
-         Vr6joGBFf3Xk1+2TjINMso+FumcIVH25iaRVrjFF0tpoLJcI57inA6h7hxkB5s+pvh
-         hWI6G6xfKQE/D5M2uDGxcXSbN5I9CIyMMJj1lnROduJaEkKROzlpz2lh812MNV1dVn
-         HuahVHPInLXLEyE5SPvICxQwGDkCAUebXMLF8qVI+bkIkyFP7zwd2tqS/7AT8kuw0a
-         CtNatd94FKQ8A==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/10] rpc: fix NULL dereference on kmalloc failure
-Date:   Thu, 25 Mar 2021 07:28:23 -0400
-Message-Id: <20210325112832.1928898-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210325112832.1928898-1-sashal@kernel.org>
-References: <20210325112832.1928898-1-sashal@kernel.org>
+        id S231479AbhCYLnb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Mar 2021 07:43:31 -0400
+Received: from outbound-smtp56.blacknight.com ([46.22.136.240]:40285 "EHLO
+        outbound-smtp56.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232224AbhCYLmm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 07:42:42 -0400
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp56.blacknight.com (Postfix) with ESMTPS id 4FA18FA825
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Mar 2021 11:42:39 +0000 (GMT)
+Received: (qmail 14641 invoked from network); 25 Mar 2021 11:42:39 -0000
+Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.22.4])
+  by 81.17.254.9 with ESMTPA; 25 Mar 2021 11:42:39 -0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux-NFS <linux-nfs@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: [PATCH 0/9 v6] Introduce a bulk order-0 page allocator with two in-tree users
+Date:   Thu, 25 Mar 2021 11:42:19 +0000
+Message-Id: <20210325114228.27719-1-mgorman@techsingularity.net>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+This series is based on top of Matthew Wilcox's series "Rationalise
+__alloc_pages wrapper" and does not apply to 5.14-rc4. If Andrew's tree
+is not the testing baseline then the following git tree will work.
 
-[ Upstream commit 0ddc942394013f08992fc379ca04cffacbbe3dae ]
+git://git.kernel.org/pub/scm/linux/kernel/git/mel/linux.git mm-bulk-rebase-v6r7
 
-I think this is unlikely but possible:
+Changelog since v5
+o Add micro-optimisations from Jesper
+o Add array-based versions of the sunrpc and page_pool users
+o Allocate 1 page if local zone watermarks are not met
+o Fix statistics
+o prep_new_pages as they are allocated. Batching prep_new_pages with
+  IRQs enabled limited how the API could be used (e.g. list must be
+  empty) and added too much complexity.
 
-svc_authenticate sets rq_authop and calls svcauth_gss_accept.  The
-kmalloc(sizeof(*svcdata), GFP_KERNEL) fails, leaving rq_auth_data NULL,
-and returning SVC_DENIED.
+Changelog since v4
+o Drop users of the API
+o Remove free_pages_bulk interface, no users
+o Add array interface
+o Allocate single page if watermark checks on local zones fail
 
-This causes svc_process_common to go to err_bad_auth, and eventually
-call svc_authorise.  That calls ->release == svcauth_gss_release, which
-tries to dereference rq_auth_data.
+Changelog since v3
+o Rebase on top of Matthew's series consolidating the alloc_pages API
+o Rename alloced to allocated
+o Split out preparation patch for prepare_alloc_pages
+o Defensive check for bulk allocation or <= 0 pages
+o Call single page allocation path only if no pages were allocated
+o Minor cosmetic cleanups
+o Reorder patch dependencies by subsystem. As this is a cross-subsystem
+  series, the mm patches have to be merged before the sunrpc and net
+  users.
 
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Link: https://lore.kernel.org/linux-nfs/3F1B347F-B809-478F-A1E9-0BE98E22B0F0@oracle.com/T/#t
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/sunrpc/auth_gss/svcauth_gss.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Changelog since v2
+o Prep new pages with IRQs enabled
+o Minor documentation update
 
-diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-index 91263d6a103b..bb8b0ef5de82 100644
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -1697,11 +1697,14 @@ static int
- svcauth_gss_release(struct svc_rqst *rqstp)
- {
- 	struct gss_svc_data *gsd = (struct gss_svc_data *)rqstp->rq_auth_data;
--	struct rpc_gss_wire_cred *gc = &gsd->clcred;
-+	struct rpc_gss_wire_cred *gc;
- 	struct xdr_buf *resbuf = &rqstp->rq_res;
- 	int stat = -EINVAL;
- 	struct sunrpc_net *sn = net_generic(SVC_NET(rqstp), sunrpc_net_id);
- 
-+	if (!gsd)
-+		goto out;
-+	gc = &gsd->clcred;
- 	if (gc->gc_proc != RPC_GSS_PROC_DATA)
- 		goto out;
- 	/* Release can be called twice, but we only wrap once. */
-@@ -1742,10 +1745,10 @@ svcauth_gss_release(struct svc_rqst *rqstp)
- 	if (rqstp->rq_cred.cr_group_info)
- 		put_group_info(rqstp->rq_cred.cr_group_info);
- 	rqstp->rq_cred.cr_group_info = NULL;
--	if (gsd->rsci)
-+	if (gsd && gsd->rsci) {
- 		cache_put(&gsd->rsci->h, sn->rsc_cache);
--	gsd->rsci = NULL;
--
-+		gsd->rsci = NULL;
-+	}
- 	return stat;
- }
- 
+Changelog since v1
+o Parenthesise binary and boolean comparisons
+o Add reviewed-bys
+o Rebase to 5.12-rc2
+
+This series introduces a bulk order-0 page allocator with sunrpc and
+the network page pool being the first users. The implementation is not
+efficient as semantics needed to be ironed out first. If no other semantic
+changes are needed, it can be made more efficient.  Despite that, this
+is a performance-related for users that require multiple pages for an
+operation without multiple round-trips to the page allocator. Quoting
+the last patch for the high-speed networking use-case
+
+            Kernel          XDP stats       CPU     pps           Delta
+            Baseline        XDP-RX CPU      total   3,771,046       n/a
+            List            XDP-RX CPU      total   3,940,242    +4.49%
+            Array           XDP-RX CPU      total   4,249,224   +12.68%
+
+From the SUNRPC traces of svc_alloc_arg()
+
+	Single page: 25.007 us per call over 532,571 calls
+	Bulk list:    6.258 us per call over 517,034 calls
+	Bulk array:   4.590 us per call over 517,442 calls
+
+Both potential users in this series are corner cases (NFS and high-speed
+networks) so it is unlikely that most users will see any benefit in the
+short term. Other potential other users are batch allocations for page
+cache readahead, fault around and SLUB allocations when high-order pages
+are unavailable. It's unknown how much benefit would be seen by converting
+multiple page allocation calls to a single batch or what difference it may
+make to headline performance.
+
+Light testing of my own running dbench over NFS passed. Chuck and Jesper
+conducted their own tests and details are included in the changelogs.
+
+Patch 1 renames a variable name that is particularly unpopular
+
+Patch 2 adds a bulk page allocator
+
+Patch 3 adds an array-based version of the bulk allocator
+
+Patches 4-5 adds micro-optimisations to the implementation
+
+Patches 6-7 SUNRPC user
+
+Patches 8-9 Network page_pool user
+
+ include/linux/gfp.h     |  18 +++++
+ include/net/page_pool.h |   2 +-
+ mm/page_alloc.c         | 157 ++++++++++++++++++++++++++++++++++++++--
+ net/core/page_pool.c    | 111 ++++++++++++++++++----------
+ net/sunrpc/svc_xprt.c   |  38 +++++-----
+ 5 files changed, 263 insertions(+), 63 deletions(-)
+
 -- 
-2.30.1
+2.26.2
 
