@@ -2,205 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9D50348D35
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 10:41:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3FC1348EE6
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 12:26:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbhCYJlV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Mar 2021 05:41:21 -0400
-Received: from outbound-smtp20.blacknight.com ([46.22.139.247]:37477 "EHLO
-        outbound-smtp20.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229631AbhCYJlC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 05:41:02 -0400
-Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
-        by outbound-smtp20.blacknight.com (Postfix) with ESMTPS id A5DB91C3527
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Mar 2021 09:40:59 +0000 (GMT)
-Received: (qmail 15163 invoked from network); 25 Mar 2021 09:40:59 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.22.4])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 25 Mar 2021 09:40:59 -0000
-Date:   Thu, 25 Mar 2021 09:40:58 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     linux-mm@kvack.org, chuck.lever@oracle.com,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH mel-git 3/3] net: page_pool: convert to use
- alloc_pages_bulk_array variant
-Message-ID: <20210325094058.GP3697@techsingularity.net>
-References: <161662166301.940814.9765023867613542235.stgit@firesoul>
- <161662169926.940814.10878534922009676003.stgit@firesoul>
+        id S230113AbhCYLZ1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Mar 2021 07:25:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229869AbhCYLZI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 25 Mar 2021 07:25:08 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7C8FA61A2E;
+        Thu, 25 Mar 2021 11:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616671508;
+        bh=xuUmS80t1X4JLO/dQPmcfEov7ygVrHQ0Zbrwlc7eCRo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dLKYO19q6O0UFQRvgp+24d92q/C0utg2d7Uu4JkpRzfsXrDZGHjkWcNb2PABOPv9Y
+         cnjcq2EdYyPMEO/DFW5QWnUAG/3WEYEIoM51wOB0u/noQa3yL2POfbdpOXNrlPHZDw
+         fMgQqSpPpVeb0usu6kIxK+GguqRqvMhd09kgCtDTNXcI4Q4cHxGPsVkdkq0NDSsuli
+         A1paA4NKlKCtAXn47YoiyQlRuKYvgNWAp34KlXpQWDKwAumO4DSHF8KvCrX2ymP0xP
+         kaCvui86ydpI1B/A+unUz8jqDF2bGzvgbb+VFOCUo6Zo1Q+qsH0D8kt/KQ6ff/0TDn
+         KwbTmmI9BgwDA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Julian Braha <julianbraha@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.11 06/44] fs: nfsd: fix kconfig dependency warning for NFSD_V4
+Date:   Thu, 25 Mar 2021 07:24:21 -0400
+Message-Id: <20210325112459.1926846-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.1
+In-Reply-To: <20210325112459.1926846-1-sashal@kernel.org>
+References: <20210325112459.1926846-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <161662169926.940814.10878534922009676003.stgit@firesoul>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Mar 24, 2021 at 10:34:59PM +0100, Jesper Dangaard Brouer wrote:
-> Using the API variant alloc_pages_bulk_array from page_pool
-> was done in a separate patch to ease benchmarking the
-> variants separately.  Maintainers can squash patch if preferred.
-> 
-> Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Julian Braha <julianbraha@gmail.com>
 
-I decided to squash the patches and add some details from your github page
-in case it ever disappears and I hope that's ok. This is the version of
-the patch I'm currently looking at.
+[ Upstream commit 7005227369079963d25fb2d5d736d0feb2c44cf6 ]
 
----8<---
-Subject: [PATCH] net: page_pool: use alloc_pages_bulk in refill code path
+When NFSD_V4 is enabled and CRYPTO is disabled,
+Kbuild gives the following warning:
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+WARNING: unmet direct dependencies detected for CRYPTO_SHA256
+  Depends on [n]: CRYPTO [=n]
+  Selected by [y]:
+  - NFSD_V4 [=y] && NETWORK_FILESYSTEMS [=y] && NFSD [=y] && PROC_FS [=y]
 
-There are cases where the page_pool need to refill with pages from the
-page allocator. Some workloads cause the page_pool to release pages
-instead of recycling these pages.
+WARNING: unmet direct dependencies detected for CRYPTO_MD5
+  Depends on [n]: CRYPTO [=n]
+  Selected by [y]:
+  - NFSD_V4 [=y] && NETWORK_FILESYSTEMS [=y] && NFSD [=y] && PROC_FS [=y]
 
-For these workload it can improve performance to bulk alloc pages from
-the page-allocator to refill the alloc cache.
+This is because NFSD_V4 selects CRYPTO_MD5 and CRYPTO_SHA256,
+without depending on or selecting CRYPTO, despite those config options
+being subordinate to CRYPTO.
 
-For XDP-redirect workload with 100G mlx5 driver (that use page_pool)
-redirecting xdp_frame packets into a veth, that does XDP_PASS to create
-an SKB from the xdp_frame, which then cannot return the page to the
-page_pool.
-
-Performance results under GitHub xdp-project[1]:
- [1] https://github.com/xdp-project/xdp-project/blob/master/areas/mem/page_pool06_alloc_pages_bulk.org
-
-Mel: The patch "net: page_pool: convert to use alloc_pages_bulk_array
-variant" was squashed with this patch. From the test page, the array
-variant was superior with one of the test results as follows.
-
-	Kernel		XDP stats       CPU     pps           Delta
-	Baseline	XDP-RX CPU      total   3,771,046       n/a
-	List		XDP-RX CPU      total   3,940,242    +4.49%
-	Array		XDP-RX CPU      total   4,249,224   +12.68%
-
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Signed-off-by: Julian Braha <julianbraha@gmail.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/page_pool.h |  2 +-
- net/core/page_pool.c    | 82 +++++++++++++++++++++++++++++++++----------------
- 2 files changed, 57 insertions(+), 27 deletions(-)
+ fs/nfsd/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/net/page_pool.h b/include/net/page_pool.h
-index b5b195305346..6d517a37c18b 100644
---- a/include/net/page_pool.h
-+++ b/include/net/page_pool.h
-@@ -65,7 +65,7 @@
- #define PP_ALLOC_CACHE_REFILL	64
- struct pp_alloc_cache {
- 	u32 count;
--	void *cache[PP_ALLOC_CACHE_SIZE];
-+	struct page *cache[PP_ALLOC_CACHE_SIZE];
- };
- 
- struct page_pool_params {
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index 40e1b2beaa6c..9ec1aa9640ad 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -203,38 +203,17 @@ static bool page_pool_dma_map(struct page_pool *pool, struct page *page)
- 	return true;
- }
- 
--/* slow path */
--noinline
--static struct page *__page_pool_alloc_pages_slow(struct page_pool *pool,
--						 gfp_t _gfp)
-+static struct page *__page_pool_alloc_page_order(struct page_pool *pool,
-+						 gfp_t gfp)
- {
--	unsigned int pp_flags = pool->p.flags;
- 	struct page *page;
--	gfp_t gfp = _gfp;
--
--	/* We could always set __GFP_COMP, and avoid this branch, as
--	 * prep_new_page() can handle order-0 with __GFP_COMP.
--	 */
--	if (pool->p.order)
--		gfp |= __GFP_COMP;
--
--	/* FUTURE development:
--	 *
--	 * Current slow-path essentially falls back to single page
--	 * allocations, which doesn't improve performance.  This code
--	 * need bulk allocation support from the page allocator code.
--	 */
- 
--	/* Cache was empty, do real allocation */
--#ifdef CONFIG_NUMA
-+	gfp |= __GFP_COMP;
- 	page = alloc_pages_node(pool->p.nid, gfp, pool->p.order);
--#else
--	page = alloc_pages(gfp, pool->p.order);
--#endif
--	if (!page)
-+	if (unlikely(!page))
- 		return NULL;
- 
--	if ((pp_flags & PP_FLAG_DMA_MAP) &&
-+	if ((pool->p.flags & PP_FLAG_DMA_MAP) &&
- 	    unlikely(!page_pool_dma_map(pool, page))) {
- 		put_page(page);
- 		return NULL;
-@@ -243,6 +222,57 @@ static struct page *__page_pool_alloc_pages_slow(struct page_pool *pool,
- 	/* Track how many pages are held 'in-flight' */
- 	pool->pages_state_hold_cnt++;
- 	trace_page_pool_state_hold(pool, page, pool->pages_state_hold_cnt);
-+	return page;
-+}
-+
-+/* slow path */
-+noinline
-+static struct page *__page_pool_alloc_pages_slow(struct page_pool *pool,
-+						 gfp_t gfp)
-+{
-+	const int bulk = PP_ALLOC_CACHE_REFILL;
-+	unsigned int pp_flags = pool->p.flags;
-+	unsigned int pp_order = pool->p.order;
-+	struct page *page;
-+	int i, nr_pages;
-+
-+	/* Don't support bulk alloc for high-order pages */
-+	if (unlikely(pp_order))
-+		return __page_pool_alloc_page_order(pool, gfp);
-+
-+	/* Unnecessary as alloc cache is empty, but guarantees zero count */
-+	if (unlikely(pool->alloc.count > 0))
-+		return pool->alloc.cache[--pool->alloc.count];
-+
-+	/* Mark empty alloc.cache slots "empty" for alloc_pages_bulk_array */
-+	memset(&pool->alloc.cache, 0, sizeof(void *) * bulk);
-+
-+	nr_pages = alloc_pages_bulk_array(gfp, bulk, pool->alloc.cache);
-+	if (unlikely(!nr_pages))
-+		return NULL;
-+
-+	/* Pages have been filled into alloc.cache array, but count is zero and
-+	 * page element have not been (possibly) DMA mapped.
-+	 */
-+	for (i = 0; i < nr_pages; i++) {
-+		page = pool->alloc.cache[i];
-+		if ((pp_flags & PP_FLAG_DMA_MAP) &&
-+		    unlikely(!page_pool_dma_map(pool, page))) {
-+			put_page(page);
-+			continue;
-+		}
-+		pool->alloc.cache[pool->alloc.count++] = page;
-+		/* Track how many pages are held 'in-flight' */
-+		pool->pages_state_hold_cnt++;
-+		trace_page_pool_state_hold(pool, page,
-+					   pool->pages_state_hold_cnt);
-+	}
-+
-+	/* Return last page */
-+	if (likely(pool->alloc.count > 0))
-+		page = pool->alloc.cache[--pool->alloc.count];
-+	else
-+		page = NULL;
- 
- 	/* When page just alloc'ed is should/must have refcnt 1. */
- 	return page;
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index dbbc583d6273..248f1459c039 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -73,6 +73,7 @@ config NFSD_V4
+ 	select NFSD_V3
+ 	select FS_POSIX_ACL
+ 	select SUNRPC_GSS
++	select CRYPTO
+ 	select CRYPTO_MD5
+ 	select CRYPTO_SHA256
+ 	select GRACE_PERIOD
+-- 
+2.30.1
+
