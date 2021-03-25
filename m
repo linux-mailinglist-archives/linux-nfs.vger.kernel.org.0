@@ -2,114 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 513F7349AD4
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 21:10:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE9B5349CA4
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Mar 2021 00:02:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230009AbhCYUJf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Mar 2021 16:09:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229576AbhCYUJ1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 16:09:27 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8268AC06174A
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Mar 2021 13:09:27 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 680FE6D18; Thu, 25 Mar 2021 16:09:26 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 680FE6D18
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1616702966;
-        bh=+zf/AwflHb+wUTy9m4OXGAJWxxRZvXgH601Os6n4K/U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rqiSQ91hhCFDzJ+imD9FFmC7i8Rv0udO+zDy/ppbGs8Sn3TxYdd0PJC/ecbUqGO9I
-         MSOZECXaZilne0jWfy/SboTCPE4rtzBX+ospUdnnX6hur4S0P4fSWk9ebnL6qTqkNP
-         CSo9sj5EFIv/TnylTjvJjloP+g7+kbW7uNvolBks=
-Date:   Thu, 25 Mar 2021 16:09:26 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     Steve Dickson <steved@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] exportfs: fix unexporting of '/'
-Message-ID: <20210325200926.GB18351@fieldses.org>
-References: <20210322210238.96915-1-omosnace@redhat.com>
- <20210325191903.GA18351@fieldses.org>
- <CAFqZXNsg7XTEbzxEz+7oO9DLFTu=6-LzwXJpOdTZTzj5Td_2Ng@mail.gmail.com>
+        id S231349AbhCYXBx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Mar 2021 19:01:53 -0400
+Received: from gateway20.websitewelcome.com ([192.185.44.20]:26919 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231191AbhCYXBa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 19:01:30 -0400
+X-Greylist: delayed 1498 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Mar 2021 19:01:30 EDT
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 756D9400CF499
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Mar 2021 17:02:48 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id PYDOltgAUMGeEPYDOlZrfD; Thu, 25 Mar 2021 17:12:30 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7TQTeKIn3sX0KsX2Mb0uRTUpgZvCak4GKsqbc414Wao=; b=pM3ggMFhvLF1rSSPG2yQdv1Gf1
+        NxC1t9XwOXj0/2/YYBi+vEA/Ev2EUruApSVMDory3nxcvUjnf8jds2BGwgkqXkDNRRnThzGZX9H/W
+        K0PThy6C9tomaK5gJ0yQ8IgIT956p7vP0qQJO7eHH1BXeJmbRbVdDcspBqtxoCskps4+j2Rk5NHdw
+        tCdz7LWXpsW8HVYHbKIdRkMVB0HafwSazDaJfsxgD9cZTh6m+wMABD0hldJFHg9ABOcTbjSzKJp+S
+        xYApizT15wf8vdktx8+BOO9uJCQ7vMOZBdoV/+pQF2gLCjKhMYwo/ufi73PKmsOwVJg9NVr8qkY0X
+        PwBFs7QA==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:49220 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1lPYDO-003hVs-2j; Thu, 25 Mar 2021 17:12:30 -0500
+Subject: Re: [PATCH][next] UAPI: nfsfh.h: Replace one-element array with
+ flexible-array member
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "'Gustavo A. R. Silva'" <gustavoars@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+References: <20210323224858.GA293698@embeddedor>
+ <629154ce566b4c9c9b7f4124b3260fc3@AcuMS.aculab.com>
+ <5331b4e2-eeef-1c27-5efe-bf3986fd6683@embeddedor.com>
+ <1efa90cc6bc24cfb860084e0b888cd4b@AcuMS.aculab.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <e2e93993-e64b-ce7d-88cf-4c367b747e40@embeddedor.com>
+Date:   Thu, 25 Mar 2021 16:12:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFqZXNsg7XTEbzxEz+7oO9DLFTu=6-LzwXJpOdTZTzj5Td_2Ng@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <1efa90cc6bc24cfb860084e0b888cd4b@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1lPYDO-003hVs-2j
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:49220
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Mar 25, 2021 at 08:48:57PM +0100, Ondrej Mosnacek wrote:
-> On Thu, Mar 25, 2021 at 8:27 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> > On Mon, Mar 22, 2021 at 10:02:38PM +0100, Ondrej Mosnacek wrote:
-> > > The code that has been added to strip trailing slashes from path in
-> > > unexportfs_parsed() forgot to account for the case of the root
-> > > directory, which is simply '/'. In that case it accesses path[-1] and
-> > > reduces the path to an empty string, which then fails to match any
-> > > export.
-> > >
-> > > Fix it by stopping the stripping when the path is just a single
-> > > character - it doesn't matter if it's a '/' or not, we want to keep it
-> > > either way in that case.
-> >
-> > Makes sense to me.
-> >
-> > (Note nfs-exporting / is often a bad idea.  I assume you had some good
-> > reason in this case.)
-> 
-> I hit it in a test, so if the only issue is that it exposes more than
-> necessary, then I guess it's fine in this case :)
 
-Yes, in a lot of typical setups, exporting "/" would expose files to the
-network that you don't really want to.
 
-But, anyway, it should work.  Looks like a good fix.
+On 3/25/21 10:29, David Laight wrote:
 
---b.
+>>>
+>>> Could you use the simpler:
+>>>> struct nfs_fhbase_new {
+>>>>          __u8       fb_version;
+>>>>          __u8       fb_auth_type;
+>>>>          __u8       fb_fsid_type;
+>>>>          __u8       fb_fileid_type;
+>>>>          union {
+>>>>                 __u32      fb_auth[1];
+>>>>                 __u32      fb_auth_flex[0];
+>>>>          };
+>>>> };
+>>>
+>>> Although I'm not certain flexible arrays are supported
+>>> as the last element of a union.
+>>
+>> Nope; this is not allowed: https://godbolt.org/z/14vd4o8na
+> 
+> Nothing an extra 'struct {__u32 fb_auth_flex[0]; }'; won't solve.
 
-> 
-> >
-> > --b.
-> >
-> > >
-> > > Reproducer:
-> > >
-> > >     exportfs localhost:/
-> > >     exportfs -u localhost:/
-> > >
-> > > Without this patch, the unexport step fails with "exportfs: Could not
-> > > find 'localhost:/' to unexport."
-> > >
-> > > Fixes: a9a7728d8743 ("exportfs: Deal with path's trailing "/" in unexportfs_parsed()")
-> > > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1941171
-> > > Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-> > > ---
-> > >  utils/exportfs/exportfs.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-> > > index 262dd19a..1aedd3d6 100644
-> > > --- a/utils/exportfs/exportfs.c
-> > > +++ b/utils/exportfs/exportfs.c
-> > > @@ -383,7 +383,7 @@ unexportfs_parsed(char *hname, char *path, int verbose)
-> > >        * so need to deal with it.
-> > >       */
-> > >       size_t nlen = strlen(path);
-> > > -     while (path[nlen - 1] == '/')
-> > > +     while (nlen > 1 && path[nlen - 1] == '/')
-> > >               nlen--;
-> > >
-> > >       for (exp = exportlist[htype].p_head; exp; exp = exp->m_next) {
-> > > --
-> > > 2.30.2
-> >
-> 
-> 
-> --
-> Ondrej Mosnacek
-> Software Engineer, Linux Security - SELinux kernel
-> Red Hat, Inc.
+We don't want to introduce zero-length arrays [1].
+
+--
+Gustavo
+
+[1] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
