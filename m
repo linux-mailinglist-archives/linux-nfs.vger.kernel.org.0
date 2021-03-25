@@ -2,90 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68C8E34926F
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 13:52:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AA14349453
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Mar 2021 15:40:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230231AbhCYMwZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Mar 2021 08:52:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230322AbhCYMwJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 08:52:09 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31285C06174A;
-        Thu, 25 Mar 2021 05:52:09 -0700 (PDT)
+        id S231264AbhCYOjw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Mar 2021 10:39:52 -0400
+Received: from gateway23.websitewelcome.com ([192.185.48.251]:20982 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229731AbhCYOjs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Mar 2021 10:39:48 -0400
+X-Greylist: delayed 1278 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Mar 2021 10:39:48 EDT
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 0389AA26B
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Mar 2021 09:18:20 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id PQoWlldsMmJLsPQoWlS4a9; Thu, 25 Mar 2021 09:18:20 -0500
+X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+fJyRPjPHNtlghEko2J6bkm8lY/1dD+5carH2dkRuBY=; b=A54uDjel/l4krSoFnRy/JdfLER
-        qeJhhESqagjhx8b7io6lqkwGBhhoSEta5dPJoijGsTJ0QwK1EKxLi2XKv0eUa2pMdj4M+VKv+9+Ss
-        LxU8E8mh9hzYI+tc3wU29i6e1QG9eHMFADnARRDg93i7elTemxwP/hccNuc0Gm5lP1GKlgiBbfEUi
-        gj0+meXzcXIQFpV7zrYlhAESkDdpOStg40WFVeRPGJuCQGeia/ftJrH0e2v3Fe5oQd0uBcr2PK5EN
-        LgAG8CK2bXfnHT0XBAfIniFa/xDR53t9k2btD6RNVC7ajWgpu34wRUY4aOk5LvnpkPvH8uRc8CZwH
-        0Oa5ybVw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lPPR3-00Cv3Q-IW; Thu, 25 Mar 2021 12:50:42 +0000
-Date:   Thu, 25 Mar 2021 12:50:01 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Net <netdev@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux-NFS <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 0/9 v6] Introduce a bulk order-0 page allocator with two
- in-tree users
-Message-ID: <20210325125001.GW1719932@casper.infradead.org>
-References: <20210325114228.27719-1-mgorman@techsingularity.net>
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ftWEDx8v476hGOZEcPFPchsIBVQcBxVefriypsWkOc8=; b=kD/h5OHFeyxFsVx3dDayCG9hzk
+        aE2yU+0QElXNw+W4f29/uEglzeoqZyJNjWrcmWlaZujl6IzVIdfgYyzYjBAWdgZUPRGo3LTiSzvtQ
+        Au5XKzQJGTpmQ91qKWm0Fv9tX5XFGg1TCiYzSJKreVaeeDxvfa+AxEchFrD26Iy9YYxGqaU0u9p6j
+        UvIVOF14+OAO2tWGRKfaJzl72SM+aeszkSOw7VIlvUzm7rYvxlrhRikDKd7xW876xsGVD5zChhgkk
+        kKp09cNAczXKzsaggpL9DFtFvjvK+VroFpKHoOKeKl3HG+tHtntCcSChIZtRR1+23/jmNvG20yRqe
+        HVn34eNg==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:45782 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1lPQoW-004LKQ-EH; Thu, 25 Mar 2021 09:18:20 -0500
+Subject: Re: [PATCH][next] UAPI: nfsfh.h: Replace one-element array with
+ flexible-array member
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "'Gustavo A. R. Silva'" <gustavoars@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+References: <20210323224858.GA293698@embeddedor>
+ <629154ce566b4c9c9b7f4124b3260fc3@AcuMS.aculab.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <5331b4e2-eeef-1c27-5efe-bf3986fd6683@embeddedor.com>
+Date:   Thu, 25 Mar 2021 08:18:18 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210325114228.27719-1-mgorman@techsingularity.net>
+In-Reply-To: <629154ce566b4c9c9b7f4124b3260fc3@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1lPQoW-004LKQ-EH
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:45782
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Mar 25, 2021 at 11:42:19AM +0000, Mel Gorman wrote:
-> This series introduces a bulk order-0 page allocator with sunrpc and
-> the network page pool being the first users. The implementation is not
-> efficient as semantics needed to be ironed out first. If no other semantic
-> changes are needed, it can be made more efficient.  Despite that, this
-> is a performance-related for users that require multiple pages for an
-> operation without multiple round-trips to the page allocator. Quoting
-> the last patch for the high-speed networking use-case
-> 
->             Kernel          XDP stats       CPU     pps           Delta
->             Baseline        XDP-RX CPU      total   3,771,046       n/a
->             List            XDP-RX CPU      total   3,940,242    +4.49%
->             Array           XDP-RX CPU      total   4,249,224   +12.68%
-> 
-> >From the SUNRPC traces of svc_alloc_arg()
-> 
-> 	Single page: 25.007 us per call over 532,571 calls
-> 	Bulk list:    6.258 us per call over 517,034 calls
-> 	Bulk array:   4.590 us per call over 517,442 calls
-> 
-> Both potential users in this series are corner cases (NFS and high-speed
-> networks) so it is unlikely that most users will see any benefit in the
-> short term. Other potential other users are batch allocations for page
-> cache readahead, fault around and SLUB allocations when high-order pages
-> are unavailable. It's unknown how much benefit would be seen by converting
-> multiple page allocation calls to a single batch or what difference it may
-> make to headline performance.
 
-We have a third user, vmalloc(), with a 16% perf improvement.  I know the
-email says 21% but that includes the 5% improvement from switching to
-kvmalloc() to allocate area->pages.
 
-https://lore.kernel.org/linux-mm/20210323133948.GA10046@pc638.lan/
+On 3/25/21 08:45, David Laight wrote:
+> From: Gustavo A. R. Silva
+>> Sent: 23 March 2021 22:49
+>>
+>> There is a regular need in the kernel to provide a way to declare having
+>> a dynamically sized set of trailing elements in a structure. Kernel code
+>> should always use “flexible array members”[1] for these cases. The older
+>> style of one-element or zero-length arrays should no longer be used[2].
+>>
+>> Use an anonymous union with a couple of anonymous structs in order to
+>> keep userspace unchanged:
+>>
+>> $ pahole -C nfs_fhbase_new fs/nfsd/nfsfh.o
+>> struct nfs_fhbase_new {
+>>         union {
+>>                 struct {
+>>                         __u8       fb_version_aux;       /*     0     1 */
+>>                         __u8       fb_auth_type_aux;     /*     1     1 */
+>>                         __u8       fb_fsid_type_aux;     /*     2     1 */
+>>                         __u8       fb_fileid_type_aux;   /*     3     1 */
+>>                         __u32      fb_auth[1];           /*     4     4 */
+>>                 };                                       /*     0     8 */
+>>                 struct {
+>>                         __u8       fb_version;           /*     0     1 */
+>>                         __u8       fb_auth_type;         /*     1     1 */
+>>                         __u8       fb_fsid_type;         /*     2     1 */
+>>                         __u8       fb_fileid_type;       /*     3     1 */
+>>                         __u32      fb_auth_flex[0];      /*     4     0 */
+>>                 };                                       /*     0     4 */
+>>         };                                               /*     0     8 */
+>>
+>>         /* size: 8, cachelines: 1, members: 1 */
+>>         /* last cacheline: 8 bytes */
+>> };
+> 
+> Could you use the simpler:
+>> struct nfs_fhbase_new {
+>>          __u8       fb_version;
+>>          __u8       fb_auth_type;
+>>          __u8       fb_fsid_type;
+>>          __u8       fb_fileid_type;
+>>          union {
+>>                 __u32      fb_auth[1];
+>>                 __u32      fb_auth_flex[0];
+>>          };
+>> };
+> 
+> Although I'm not certain flexible arrays are supported
+> as the last element of a union.
 
-I don't know how many _frequent_ vmalloc users we have that will benefit
-from this, but it's probably more than will benefit from improvements
-to 200Gbit networking performance.
+Nope; this is not allowed: https://godbolt.org/z/14vd4o8na
+
+--
+Gustavo
