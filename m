@@ -2,62 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3550934BE05
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Mar 2021 20:08:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 715F934CE4E
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Mar 2021 12:55:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231526AbhC1SHd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 28 Mar 2021 14:07:33 -0400
-Received: from mail.hanoi.gov.vn ([113.160.32.33]:31610 "EHLO
-        mx01.hanoi.gov.vn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229647AbhC1SHR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 28 Mar 2021 14:07:17 -0400
-X-Greylist: delayed 474 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Mar 2021 14:07:01 EDT
-Received: from mx01.hanoi.gov.vn (localhost [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30259EC3D8;
-        Mon, 29 Mar 2021 00:57:51 +0700 (+07)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hanoi.gov.vn;
-        s=default; t=1616954272;
-        bh=FuW10Z6fSdeNlf/0u/BQ1jcwkjYBw0uHUPQgn0LGo7I=; h=Date:From:To;
-        b=R9blPfqJCHUsZAyZxsyyryS61fl4krmBjYKWM6eGGwB8ZdbTBVPL1mmKOmZXMqNlA
-         7CEqA0MXgUAy+X4oK/wthh4vC9Xoov1Ce8tjf/qJvnL7KGsGNVg9ic0krGeHrdNzGM
-         5cIEKsz0emmHL/izbEfCtadst3HYllOJWdonlm5o=
-X-IMSS-DKIM-Authentication-Result: mx01.hanoi.gov.vn; sigcount=0
-Received: from mx01.hanoi.gov.vn (localhost [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 50FCBEC3DD;
-        Mon, 29 Mar 2021 00:57:49 +0700 (+07)
-Received: from mail.hanoi.gov.vn (mail.hanoi.gov.vn [10.1.1.25])
-        by mx01.hanoi.gov.vn (Postfix) with ESMTPS;
-        Mon, 29 Mar 2021 00:57:49 +0700 (+07)
-Received: from mail.hanoi.gov.vn (localhost [127.0.0.1])
-        by mail.hanoi.gov.vn (Postfix) with ESMTPS id 02AFC7F41B42;
-        Mon, 29 Mar 2021 00:57:44 +0700 (+07)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.hanoi.gov.vn (Postfix) with ESMTP id 08FE47F41B5D;
-        Mon, 29 Mar 2021 00:57:41 +0700 (+07)
-Received: from mail.hanoi.gov.vn ([127.0.0.1])
-        by localhost (mail.hanoi.gov.vn [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 1D3oZsOAVsx3; Mon, 29 Mar 2021 00:57:36 +0700 (+07)
-Received: from mail.hanoi.gov.vn (mail.hanoi.gov.vn [10.1.1.25])
-        by mail.hanoi.gov.vn (Postfix) with ESMTP id 478CE7F41B59;
-        Mon, 29 Mar 2021 00:57:33 +0700 (+07)
-Date:   Mon, 29 Mar 2021 00:57:33 +0700 (ICT)
-From:   Mackenzie Scott <ttptqd_thanhoai@hanoi.gov.vn>
-Reply-To: Mackenzie Scott <propack@propck.net>
-Message-ID: <354204758.25920932.1616954253215.JavaMail.zimbra@hanoi.gov.vn>
-Subject: Congratulations ($ 100,800,000.00)
+        id S232955AbhC2Ky6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Mar 2021 06:54:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:33915 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232732AbhC2Kyl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Mar 2021 06:54:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617015281;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=lyuNER0tnmAWlz8o0UjdsaE81EyYtAWD8vYhYdwCO4U=;
+        b=blQI2w+4gflA5xMfgCxMHKkuqmpGlno2+Fg8ZWnK5CPulE7UF8JvJGKwExKm3MEDyszHoq
+        Ok80yhM4kNUBgPrvsAGBm7HXbMYrIABTSU0MlVZy1Wm0POqi4ehzouG6RZOfdensre5nx2
+        Nu0QlApYKI5E75ocx7/Sylk7TJApEuM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-262-gCpNfFXbP6C81hy0Rmv0iQ-1; Mon, 29 Mar 2021 06:54:39 -0400
+X-MC-Unique: gCpNfFXbP6C81hy0Rmv0iQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D6A47501F8
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Mar 2021 10:54:38 +0000 (UTC)
+Received: from idlethread.redhat.com (ovpn-113-30.ams2.redhat.com [10.36.113.30])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E35A619706;
+        Mon, 29 Mar 2021 10:54:37 +0000 (UTC)
+From:   Roberto Bergantinos Corpas <rbergant@redhat.com>
+To:     steved@redhat.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] exportfs: make root unexportable
+Date:   Mon, 29 Mar 2021 12:54:35 +0200
+Message-Id: <20210329105435.17431-1-rbergant@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [185.107.80.217]
-X-Mailer: Zimbra 8.8.15_GA_3894 (zclient/8.8.15_GA_3894)
-Thread-Index: ao/APhyKX+JH1nE2Rn/kAmnh2LEgkw==
-Thread-Topic: Congratulations ($ 100,800,000.00)
-To:     undisclosed-recipients:;
-X-TM-AS-GCONF: 00
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+If root of the filesystem is exported, it cannot be explicitly
+unexported, since unexportfs_parsed, in order to deal with trailing
+'/', will leave nlen at 0 for root exported case
 
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+---
+ utils/exportfs/exportfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hello,i&#39;m Mackenzie Scott,Ex-wife of Amazon founder i&#39;m donating $4 billion to charities,individuals,universities across the Globe from my divorce funds,i&#39;m donating part of it to provide immediate support to people suffering economically during the COVID-19 pandemic,i have a donation worth $100,800,000.00 Dollars for you,you can contact me for more information if you&#39;re interested.
+diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
+index 9fcae0b3..9b6f4f5a 100644
+--- a/utils/exportfs/exportfs.c
++++ b/utils/exportfs/exportfs.c
+@@ -372,7 +372,7 @@ unexportfs_parsed(char *hname, char *path, int verbose)
+ 	 * so need to deal with it.
+ 	*/
+ 	size_t nlen = strlen(path);
+-	while (path[nlen - 1] == '/')
++	while ((path[nlen - 1] == '/') && (nlen > 1))
+ 		nlen--;
+ 
+ 	for (exp = exportlist[htype].p_head; exp; exp = exp->m_next) {
+-- 
+2.21.0
+
