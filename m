@@ -2,71 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 715F934CE4E
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Mar 2021 12:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 151B734D287
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Mar 2021 16:40:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232955AbhC2Ky6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Mar 2021 06:54:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:33915 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232732AbhC2Kyl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Mar 2021 06:54:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617015281;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=lyuNER0tnmAWlz8o0UjdsaE81EyYtAWD8vYhYdwCO4U=;
-        b=blQI2w+4gflA5xMfgCxMHKkuqmpGlno2+Fg8ZWnK5CPulE7UF8JvJGKwExKm3MEDyszHoq
-        Ok80yhM4kNUBgPrvsAGBm7HXbMYrIABTSU0MlVZy1Wm0POqi4ehzouG6RZOfdensre5nx2
-        Nu0QlApYKI5E75ocx7/Sylk7TJApEuM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-262-gCpNfFXbP6C81hy0Rmv0iQ-1; Mon, 29 Mar 2021 06:54:39 -0400
-X-MC-Unique: gCpNfFXbP6C81hy0Rmv0iQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D6A47501F8
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Mar 2021 10:54:38 +0000 (UTC)
-Received: from idlethread.redhat.com (ovpn-113-30.ams2.redhat.com [10.36.113.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E35A619706;
-        Mon, 29 Mar 2021 10:54:37 +0000 (UTC)
-From:   Roberto Bergantinos Corpas <rbergant@redhat.com>
-To:     steved@redhat.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] exportfs: make root unexportable
-Date:   Mon, 29 Mar 2021 12:54:35 +0200
-Message-Id: <20210329105435.17431-1-rbergant@redhat.com>
+        id S231124AbhC2OkN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Mar 2021 10:40:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40386 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230401AbhC2Ojr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 29 Mar 2021 10:39:47 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 54FC56192C;
+        Mon, 29 Mar 2021 14:39:47 +0000 (UTC)
+Subject: [PATCH v1 0/6] Restructure how svcrdma handles RDMA Read
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
+Date:   Mon, 29 Mar 2021 10:39:46 -0400
+Message-ID: <161702808762.5937.3596341039481819410.stgit@klimt.1015granger.net>
+User-Agent: StGit/1.0-5-g755c
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If root of the filesystem is exported, it cannot be explicitly
-unexported, since unexportfs_parsed, in order to deal with trailing
-'/', will leave nlen at 0 for root exported case
+Hi-
 
-Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+I'm on a "mission" to reduce the amount of page allocator churn
+that happens during server-side RPC call processing.
+
+In the case where svcrdma needs to perform an RDMA Read to pull
+Read chunks from a client, currently two calls to svc_rdma_recvfrom
+are necessary:
+
+Call 1:
+
+An ingress Receive is processed. If there are Read chunks, the
+transport strips the pages out of the passed-in svc_rqst, sets up
+the RDMA Read with those pages and posts the Read, then returns
+the svc_rqst with missing pages. Return value of zero means no
+RPC Call is ready yet.
+
 ---
- utils/exportfs/exportfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-index 9fcae0b3..9b6f4f5a 100644
---- a/utils/exportfs/exportfs.c
-+++ b/utils/exportfs/exportfs.c
-@@ -372,7 +372,7 @@ unexportfs_parsed(char *hname, char *path, int verbose)
- 	 * so need to deal with it.
- 	*/
- 	size_t nlen = strlen(path);
--	while (path[nlen - 1] == '/')
-+	while ((path[nlen - 1] == '/') && (nlen > 1))
- 		nlen--;
- 
- 	for (exp = exportlist[htype].p_head; exp; exp = exp->m_next) {
--- 
-2.21.0
+Meanwhile svc has to refill those pages in the svc_rqst to
+prepare it for the next incoming RPC.
+
+---
+
+Call 2:
+
+The Read completion has occurred. The transport strips the pages
+out of the passed-in svc_rqst and frees them. It copies the
+pages from the Read sink buffer into the svc_rqst, and returns
+the completed RPC.
+
+---
+
+
+Instead, let's do the RDMA Reads synchronously with a single call to
+svc_rdma_recvfrom(). When svc_rdma_recvfrom() handles an ingress
+Receive with Read chunks, set up the RDMA Read sink buffer using the
+available pages in the svc_rqst, and wait right there for
+completion.
+
+For large Read chunks, this avoids freeing a bunch of pages and then
+allocating them again. Fewer trips to the page allocator means less
+time with IRQs disabled, and measurably faster turn-around for the
+next RPC.
+
+Also, now that XPT_BUSY is cleared immediately when a Receive is
+dequeued, the transport can handle a higher rate of incoming RPCs.
+
+
+---
+
+Chuck Lever (6):
+      SUNRPC: Export svc_xprt_received()
+      SUNRPC: Move svc_xprt_received() call sites
+      svcrdma: Single-stage RDMA Read
+      svcrdma: Remove sc_read_complete_q
+      svcrdma: Remove svc_rdma_recv_ctxt::rc_pages and ::rc_arg
+      svcrdma: Clean up dto_q critical section in svc_rdma_recvfrom()
+
+
+ include/linux/sunrpc/svc_rdma.h          |   5 --
+ net/sunrpc/svc_xprt.c                    |   7 +-
+ net/sunrpc/svcsock.c                     |   9 +-
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  |  76 +++-------------
+ net/sunrpc/xprtrdma/svc_rdma_rw.c        | 108 ++++++++---------------
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |   1 -
+ 6 files changed, 60 insertions(+), 146 deletions(-)
+
+--
+Chuck Lever
 
