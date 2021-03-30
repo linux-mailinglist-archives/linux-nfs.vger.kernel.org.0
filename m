@@ -2,34 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B35C934DCE2
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Mar 2021 02:19:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ACA434DCE3
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Mar 2021 02:19:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230202AbhC3ATO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S229911AbhC3ATO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Mon, 29 Mar 2021 20:19:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50394 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:50396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230089AbhC3ASp (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        id S230202AbhC3ASp (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
         Mon, 29 Mar 2021 20:18:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 478C560295
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AF2F16192F
         for <linux-nfs@vger.kernel.org>; Tue, 30 Mar 2021 00:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1617063524;
-        bh=J67vLtRvz42GCjVC65Be19f7hcrnAW6aklVdUkkLOAo=;
+        bh=p/OMKjhUArmSpnat1QOTaqJaDV7aS6IGAzkiE+kmxE8=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=OYrNfL7NcNSrxuV2GXWsB8NEBZzKVGzNa8s8CLOgPUl7qFq5IEfBoKW5VC1l7NWZq
-         MK2zlaeTOVJ/Y7SSlCRBGhbQEPwG/Qsh/G8DtEr5UkKlkKPd2RZBvp+++WyTzzaXCV
-         L+x0RBAREKugQIVYuT5qhu1fuLS1vxcjNA+Yk8jtCVIYms62ozeLovkZZx9dCFzeNT
-         v2FNI67sXdsD1mBC5LzvYdUczWp0qlV6Rhi2pLdUhTocSYqvQPpjr+IxRzE5nR9OtT
-         IzdEciaqNk9tUkPNtijxsVOpQfMp3P2gPP2V4Upcq3oAFs62Sl9LmSXd+wtHMi9tRR
-         X3S1Y3+6h8ggQ==
+        b=QYvOPstaB+Ppnnmlfn3Ak1vRUUvzD20LDUGnYry1pMLJ0CcWbVaGqNbfNlfV3DV54
+         CtbX6vKeeG6mYGHQ7K5cLyi72ygrngVfGyfDaSfTPSy+lnqB/1SgQIQfaQLFKI6DbJ
+         lEHXDPKboZvKHsNFXdRwosCHROKQFj+CffmGg4xten+b6tlo1mTDnqDtCPD9F3yj3Z
+         xMHMOyPe2TNZZtB/fLC0h+hrS7s+mJ/yMQHOT9d9KZpsIk0iYUSOglQCYazVXKTVcC
+         5YA2EG491XrWeRBE7OGloi6xVPJ+lvlpjmgUJ1+f+iFMDl1wW0LOKUf/ddkWUg167W
+         A8rLxT0b9VsYA==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 09/17] NFS: Replace use of NFS_INO_REVAL_PAGECACHE when checking cache validity
-Date:   Mon, 29 Mar 2021 20:18:27 -0400
-Message-Id: <20210330001835.41914-10-trondmy@kernel.org>
+Subject: [PATCH 10/17] NFS: Don't set NFS_INO_REVAL_PAGECACHE in the inode cache validity
+Date:   Mon, 29 Mar 2021 20:18:28 -0400
+Message-Id: <20210330001835.41914-11-trondmy@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210330001835.41914-9-trondmy@kernel.org>
+In-Reply-To: <20210330001835.41914-10-trondmy@kernel.org>
 References: <20210330001835.41914-1-trondmy@kernel.org>
  <20210330001835.41914-2-trondmy@kernel.org>
  <20210330001835.41914-3-trondmy@kernel.org>
@@ -39,6 +39,7 @@ References: <20210330001835.41914-1-trondmy@kernel.org>
  <20210330001835.41914-7-trondmy@kernel.org>
  <20210330001835.41914-8-trondmy@kernel.org>
  <20210330001835.41914-9-trondmy@kernel.org>
+ <20210330001835.41914-10-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -47,104 +48,68 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-When checking cache validity, be more specific than just 'we want to
-check the page cache validity'. In almost all cases, we want to check
-that change attribute, and possibly also the size.
+It is no longer necessary to preserve the NFS_INO_REVAL_PAGECACHE flag.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/file.c     |  2 +-
- fs/nfs/inode.c    | 19 +++++++++----------
- fs/nfs/nfs4proc.c |  4 ++--
- fs/nfs/write.c    |  2 +-
- 4 files changed, 13 insertions(+), 14 deletions(-)
+ fs/nfs/inode.c    | 6 ++----
+ fs/nfs/nfs4proc.c | 1 -
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 16ad5050e046..1fef107961bc 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -105,7 +105,7 @@ static int nfs_revalidate_file_size(struct inode *inode, struct file *filp)
- 
- 	if (filp->f_flags & O_DIRECT)
- 		goto force_reval;
--	if (nfs_check_cache_invalid(inode, NFS_INO_REVAL_PAGECACHE))
-+	if (nfs_check_cache_invalid(inode, NFS_INO_INVALID_SIZE))
- 		goto force_reval;
- 	return 0;
- force_reval:
 diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index be014c492c8a..484e1e3c500e 100644
+index 484e1e3c500e..25dc70adab87 100644
 --- a/fs/nfs/inode.c
 +++ b/fs/nfs/inode.c
-@@ -169,7 +169,8 @@ static bool nfs_check_cache_invalid_delegated(struct inode *inode, unsigned long
- 	unsigned long cache_validity = READ_ONCE(NFS_I(inode)->cache_validity);
+@@ -218,11 +218,12 @@ void nfs_set_cache_invalid(struct inode *inode, unsigned long flags)
+ 			flags &= ~NFS_INO_INVALID_OTHER;
+ 		flags &= ~(NFS_INO_INVALID_CHANGE
+ 				| NFS_INO_INVALID_SIZE
+-				| NFS_INO_REVAL_PAGECACHE
+ 				| NFS_INO_INVALID_XATTR);
+ 	} else if (flags & NFS_INO_REVAL_PAGECACHE)
+ 		flags |= NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_SIZE;
  
- 	/* Special case for the pagecache or access cache */
--	if (flags == NFS_INO_REVAL_PAGECACHE &&
-+	if (flags & (NFS_INO_INVALID_SIZE | NFS_INO_INVALID_CHANGE) &&
-+	    !(flags & ~(NFS_INO_INVALID_SIZE | NFS_INO_INVALID_CHANGE)) &&
- 	    !(cache_validity & NFS_INO_REVAL_FORCED))
- 		return false;
- 	return (cache_validity & flags) != 0;
-@@ -803,14 +804,12 @@ static u32 nfs_get_valid_attrmask(struct inode *inode)
++	flags &= ~NFS_INO_REVAL_PAGECACHE;
++
+ 	if (!nfs_has_xattr_cache(nfsi))
+ 		flags &= ~NFS_INO_INVALID_XATTR;
+ 	if (flags & NFS_INO_INVALID_DATA)
+@@ -1927,7 +1928,6 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 	nfsi->cache_validity &= ~(NFS_INO_INVALID_ATTR
+ 			| NFS_INO_INVALID_ATIME
+ 			| NFS_INO_REVAL_FORCED
+-			| NFS_INO_REVAL_PAGECACHE
+ 			| NFS_INO_INVALID_BLOCKS);
  
- 	if (!(cache_validity & NFS_INO_INVALID_ATIME))
- 		reply_mask |= STATX_ATIME;
--	if (!(cache_validity & NFS_INO_REVAL_PAGECACHE)) {
--		if (!(cache_validity & NFS_INO_INVALID_CTIME))
--			reply_mask |= STATX_CTIME;
--		if (!(cache_validity & NFS_INO_INVALID_MTIME))
--			reply_mask |= STATX_MTIME;
--		if (!(cache_validity & NFS_INO_INVALID_SIZE))
--			reply_mask |= STATX_SIZE;
--	}
-+	if (!(cache_validity & NFS_INO_INVALID_CTIME))
-+		reply_mask |= STATX_CTIME;
-+	if (!(cache_validity & NFS_INO_INVALID_MTIME))
-+		reply_mask |= STATX_MTIME;
-+	if (!(cache_validity & NFS_INO_INVALID_SIZE))
-+		reply_mask |= STATX_SIZE;
- 	if (!(cache_validity & NFS_INO_INVALID_OTHER))
- 		reply_mask |= STATX_UID | STATX_GID | STATX_MODE | STATX_NLINK;
- 	if (!(cache_validity & NFS_INO_INVALID_BLOCKS))
-@@ -1356,7 +1355,7 @@ int nfs_clear_invalid_mapping(struct address_space *mapping)
- 
- bool nfs_mapping_need_revalidate_inode(struct inode *inode)
- {
--	return nfs_check_cache_invalid(inode, NFS_INO_REVAL_PAGECACHE) ||
-+	return nfs_check_cache_invalid(inode, NFS_INO_INVALID_CHANGE) ||
- 		NFS_STALE(inode);
- }
- 
+ 	/* Do atomic weak cache consistency updates */
+@@ -1966,7 +1966,6 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 	} else {
+ 		nfsi->cache_validity |= save_cache_validity &
+ 				(NFS_INO_INVALID_CHANGE
+-				| NFS_INO_REVAL_PAGECACHE
+ 				| NFS_INO_REVAL_FORCED);
+ 		cache_revalidated = false;
+ 	}
+@@ -2018,7 +2017,6 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 	} else {
+ 		nfsi->cache_validity |= save_cache_validity &
+ 				(NFS_INO_INVALID_SIZE
+-				| NFS_INO_REVAL_PAGECACHE
+ 				| NFS_INO_REVAL_FORCED);
+ 		cache_revalidated = false;
+ 	}
 diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index b53c312fc982..2f2cea64f40a 100644
+index 2f2cea64f40a..64b3438aed78 100644
 --- a/fs/nfs/nfs4proc.c
 +++ b/fs/nfs/nfs4proc.c
-@@ -5451,9 +5451,9 @@ static void nfs4_bitmask_set(__u32 bitmask[NFS4_BITMASK_SZ], const __u32 *src,
- 		goto out;
- 	}
+@@ -1191,7 +1191,6 @@ nfs4_update_changeattr_locked(struct inode *inode,
+ 	cache_validity |= NFS_INO_INVALID_CTIME | NFS_INO_INVALID_MTIME;
  
--	if (cache_validity & (NFS_INO_INVALID_CHANGE | NFS_INO_REVAL_PAGECACHE))
-+	if (cache_validity & NFS_INO_INVALID_CHANGE)
- 		bitmask[0] |= FATTR4_WORD0_CHANGE;
--	if (cache_validity & (NFS_INO_INVALID_SIZE | NFS_INO_REVAL_PAGECACHE))
-+	if (cache_validity & NFS_INO_INVALID_SIZE)
- 		bitmask[0] |= FATTR4_WORD0_SIZE;
- out:
- 	for (i = 0; i < NFS4_BITMASK_SZ; i++)
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index f05a90338a76..7a39b3d424da 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -1293,7 +1293,7 @@ static bool nfs_write_pageuptodate(struct page *page, struct inode *inode,
- 	if (nfs_have_delegated_attributes(inode))
- 		goto out;
- 	if (nfsi->cache_validity &
--	    (NFS_INO_REVAL_PAGECACHE | NFS_INO_INVALID_SIZE))
-+	    (NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_SIZE))
- 		return false;
- 	smp_rmb();
- 	if (test_bit(NFS_INO_INVALIDATING, &nfsi->flags) && pagelen != 0)
+ 	if (cinfo->atomic && cinfo->before == inode_peek_iversion_raw(inode)) {
+-		nfsi->cache_validity &= ~NFS_INO_REVAL_PAGECACHE;
+ 		nfsi->attrtimeo_timestamp = jiffies;
+ 	} else {
+ 		if (S_ISDIR(inode->i_mode)) {
 -- 
 2.30.2
 
