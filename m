@@ -2,35 +2,36 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67B2E34DCE1
+	by mail.lfdr.de (Postfix) with ESMTP id 1BA5F34DCE0
 	for <lists+linux-nfs@lfdr.de>; Tue, 30 Mar 2021 02:19:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbhC3ATM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S229655AbhC3ATM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Mon, 29 Mar 2021 20:19:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50354 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:50356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229655AbhC3ASk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        id S229630AbhC3ASk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
         Mon, 29 Mar 2021 20:18:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B36D261920
-        for <linux-nfs@vger.kernel.org>; Tue, 30 Mar 2021 00:18:38 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 28B7361985
+        for <linux-nfs@vger.kernel.org>; Tue, 30 Mar 2021 00:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617063518;
-        bh=Av2mTAvTPBRR6n/iApvQ7Kz11QtjqJfgvAB+6CQmYVc=;
+        s=k20201202; t=1617063519;
+        bh=V5X6yA3MN6KRnuZ82v7bhzecoijFgN0fpVDH5KVCCl0=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=jp7L5oYkLAXQ4QN89wy1N/yMcX6I4RvNrkS08FEkpb8RNZaR9pP8OGdSZcdGfsCcX
-         jJ4d5u0sfTSIX3dNViCNitcUVfsFAKsS8F0GbpXvgYy5oKwhe6le/ogRCjx8Rml6nj
-         4HLYYT65wmwAM2Q1NaNRH1QQ3QBZlqP4bPlE8mOOzYJxzPq8RaOgEqNinkb+a8vMCe
-         OECeFD/A+JnGqy3k7cgoCbeqCFnPFfM+w9VYkKoZVm6YZTLu9hRPthtuEZRVbQkBq+
-         Qwt/9k3+W2Md4E27Xc0KoH1aN31NPEEC8HdZQ/UpOwUdwc6l9THXRA3XHlN2fi/vV+
-         xkgYFnNcXhFVQ==
+        b=m6cJHcr/h4+U9oe73ajDtX7vY+XViZk+wyssnO/4o693QjoTr2xulUUd7Tu4vhXAm
+         Ur+YQ7ukri4Map0oXFMcIxWsDaJGij4WNxnsgfcwHJFgUnwHVI6hqUCi/YrGTooC5X
+         u5PBolUBdPGuLbpdFvN5nxMBJ3kc4KHVX/hQMJ1uxRATyOron6I3bX9bCfyRY1p+FH
+         CEzUYNYETxo3J0eRVC2un0NdXKOPz2i2SSeSJC7BGw2PL5hgzEavhEDXB/I504BMmU
+         GPZLZr1JKiOEFNxl2WS0ISt9Oj2IXJaTokNeM2And1iW5pA89biWbmlmVNZFtccdhT
+         QEOjA2wyNAyeA==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 01/17] NFS: Deal correctly with attribute generation counter overflow
-Date:   Mon, 29 Mar 2021 20:18:19 -0400
-Message-Id: <20210330001835.41914-2-trondmy@kernel.org>
+Subject: [PATCH 02/17] NFS: Fix up inode cache tracing
+Date:   Mon, 29 Mar 2021 20:18:20 -0400
+Message-Id: <20210330001835.41914-3-trondmy@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210330001835.41914-1-trondmy@kernel.org>
+In-Reply-To: <20210330001835.41914-2-trondmy@kernel.org>
 References: <20210330001835.41914-1-trondmy@kernel.org>
+ <20210330001835.41914-2-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -39,42 +40,37 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-We need to use unsigned long subtraction and then convert to signed in
-order to deal correcly with C overflow rules.
+Add missing enum definitions and missing entries for
+nfs_show_cache_validity().
 
-Fixes: f5062003465c ("NFS: Set an attribute barrier on all updates")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/inode.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/nfs/nfstrace.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index ff737be559dc..8de5b3b9da91 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -1662,10 +1662,10 @@ EXPORT_SYMBOL_GPL(_nfs_display_fhandle);
-  */
- static int nfs_inode_attrs_need_update(const struct inode *inode, const struct nfs_fattr *fattr)
- {
--	const struct nfs_inode *nfsi = NFS_I(inode);
-+	unsigned long attr_gencount = NFS_I(inode)->attr_gencount;
+diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
+index 5a59dcdce0b2..cdba6eebe3cb 100644
+--- a/fs/nfs/nfstrace.h
++++ b/fs/nfs/nfstrace.h
+@@ -45,6 +45,9 @@ TRACE_DEFINE_ENUM(NFS_INO_INVALID_CTIME);
+ TRACE_DEFINE_ENUM(NFS_INO_INVALID_MTIME);
+ TRACE_DEFINE_ENUM(NFS_INO_INVALID_SIZE);
+ TRACE_DEFINE_ENUM(NFS_INO_INVALID_OTHER);
++TRACE_DEFINE_ENUM(NFS_INO_DATA_INVAL_DEFER);
++TRACE_DEFINE_ENUM(NFS_INO_INVALID_BLOCKS);
++TRACE_DEFINE_ENUM(NFS_INO_INVALID_XATTR);
  
--	return ((long)fattr->gencount - (long)nfsi->attr_gencount) > 0 ||
--		((long)nfsi->attr_gencount - (long)nfs_read_attr_generation_counter() > 0);
-+	return (long)(fattr->gencount - attr_gencount) > 0 ||
-+	       (long)(attr_gencount - nfs_read_attr_generation_counter()) > 0;
- }
+ #define nfs_show_cache_validity(v) \
+ 	__print_flags(v, "|", \
+@@ -60,6 +63,8 @@ TRACE_DEFINE_ENUM(NFS_INO_INVALID_OTHER);
+ 			{ NFS_INO_INVALID_MTIME, "INVALID_MTIME" }, \
+ 			{ NFS_INO_INVALID_SIZE, "INVALID_SIZE" }, \
+ 			{ NFS_INO_INVALID_OTHER, "INVALID_OTHER" }, \
++			{ NFS_INO_DATA_INVAL_DEFER, "DATA_INVAL_DEFER" }, \
++			{ NFS_INO_INVALID_BLOCKS, "INVALID_BLOCKS" }, \
+ 			{ NFS_INO_INVALID_XATTR, "INVALID_XATTR" })
  
- static int nfs_refresh_inode_locked(struct inode *inode, struct nfs_fattr *fattr)
-@@ -2094,7 +2094,7 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 			nfsi->attrtimeo_timestamp = now;
- 		}
- 		/* Set the barrier to be more recent than this fattr */
--		if ((long)fattr->gencount - (long)nfsi->attr_gencount > 0)
-+		if ((long)(fattr->gencount - nfsi->attr_gencount) > 0)
- 			nfsi->attr_gencount = fattr->gencount;
- 	}
- 
+ TRACE_DEFINE_ENUM(NFS_INO_ADVISE_RDPLUS);
 -- 
 2.30.2
 
