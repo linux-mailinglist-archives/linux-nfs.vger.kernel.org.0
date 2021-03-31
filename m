@@ -2,208 +2,369 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1D843505F5
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Mar 2021 20:05:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BC15350669
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Mar 2021 20:35:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234704AbhCaSEy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 Mar 2021 14:04:54 -0400
-Received: from mail-mw2nam10on2116.outbound.protection.outlook.com ([40.107.94.116]:54994
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234665AbhCaSEk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 31 Mar 2021 14:04:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aECRxnu8QwWx0U3V0Ca0AGOujUlceYsbJutxUkNSGR62YKvZtu6RmHbPBCL2Vm7XcKjhTKMGRr2rgid50NXYKCLGVlhZnXlGEpGH0Fea910UeVL7QNgu+3cEW5Gb0e7CwZ0dAVfNWOWDsD5p9vJPRLGyB0Ud0+U47QstcnIAmpSpl2gxcplCclsC7Gj30LTVpZ54mlidnU7VE+N4WYwy0CYzyHRkH6K2Pg1r0hhndm/5qIU1Xb/Jemy5PyMiYa64q9ayUgLit4LCLh1E4cnVqHB2tyS0mSDcFejvTFWCRuK1Vcn6hKOdmcqPowCX8bliFaUDloPv0td67aVdAy6loQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P5zXQrpEjn3fvqkuG47nMiCV3z2k7PCqC4RD4X3wPC4=;
- b=QhPof/fmwzjU7kwx+7QMhcePAqQzBedcSLY3TjXXxTypfKjYmmNgDgVsTGPY0Nhd9YmQ3o9zdewWKXc2n6Qf+jhDBoZ9Kn2m3VYX28ewA94YmSgohWo6Zt0BjLC5O1SAJAZa2kkBNnYLlIrpsHrOHvMWBmiqpwben5DdTCR6TWLNpH6MfwLMgIInV1HS+3T9YMHrrx3z8c5ENu7uw5l/EEolT9prdGXkAKSGBVm5CJV0E4j64SI2In/6fFibW/+0PJrPvw2vZHJUraZnuJxdgmByjdJ91cq0iF3VrYXMEL4RVsA0wnBhmuR0t/G/1Ltjd3N4u18gR8gEoqWg1k8lsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P5zXQrpEjn3fvqkuG47nMiCV3z2k7PCqC4RD4X3wPC4=;
- b=dVOM8N6r21/HveUbBDzlZ41pWTtkMIxwMDLO3kqEUSp3q1fM0LHRfaQwFAVhc0uw3wPKPxDblB1KEghq6ttl5SlEvAnyqL5QZsml73l/bArKdnGFHNIVJaMcHhrEasJaBsizvNSLsjXAnL9rdB6KsBQBSmpjDOoLhJ4sP/Br35g=
-Received: from CH2PR13MB3525.namprd13.prod.outlook.com (2603:10b6:610:21::29)
- by CH2PR13MB3301.namprd13.prod.outlook.com (2603:10b6:610:15::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.16; Wed, 31 Mar
- 2021 18:04:36 +0000
-Received: from CH2PR13MB3525.namprd13.prod.outlook.com
- ([fe80::69bf:b8e4:7fa0:ae74]) by CH2PR13MB3525.namprd13.prod.outlook.com
- ([fe80::69bf:b8e4:7fa0:ae74%7]) with mapi id 15.20.3999.027; Wed, 31 Mar 2021
- 18:04:36 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "dwysocha@redhat.com" <dwysocha@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
-        "dhowells@redhat.com" <dhowells@redhat.com>
-Subject: Re: RFC: Approaches to resolve netfs API interface to NFS multiple
- completions problem
-Thread-Topic: RFC: Approaches to resolve netfs API interface to NFS multiple
- completions problem
-Thread-Index: AQHXJlZK3AOTzzfwiE65ZpH9xPMWkaqeY/CA
-Date:   Wed, 31 Mar 2021 18:04:36 +0000
-Message-ID: <49e123c6702cb6b27f114dfa64157d9a73463fad.camel@hammerspace.com>
-References: <CALF+zOnCisFWTubWEHhTLpt6=CUb7n86YvrNX3nreCYS73_v_Q@mail.gmail.com>
-In-Reply-To: <CALF+zOnCisFWTubWEHhTLpt6=CUb7n86YvrNX3nreCYS73_v_Q@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 61606177-778e-44fb-b721-08d8f46f71e3
-x-ms-traffictypediagnostic: CH2PR13MB3301:
-x-microsoft-antispam-prvs: <CH2PR13MB3301FA863B3EE095B95B1974B87C9@CH2PR13MB3301.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2T0Gl69wUluYikT4CgO7NE5OEEFuvP/dOb3IZHQdbrdXpe2HP0lekzwYbJj8CRW9yzmP8/R8LYOgipVKUkQFPJz8eNYlNaP4OOcpshDf3SRUMknEXfzZmzrdobjlOLyeXV8SXyv9DBlHWuwPkk5dmdXqTeR/hchnx5FY08IaL57Mx4XUusEvA84MBDLwRkm4PNReHNtR/E348CGl6L83ocsjnyY3MFYlAB+P1Z0q+hGNjZlk6ArnIK//nHeifza8tbYZXfnwIRniXzQu+JuHCpp8Ue4Bl5OlBbvcnrd7OA2uySf7H9RGaFW5Zf1hQFLLHEssp2PsXLyMAnLGw0NkssMibhW86j4AUgZC9d4fihC4wdZAkDQoOtSa8eeTZ9HKJ3mcbTlUsd2QyV9+DAYFO7nOSb3AhksWXvbZ6GREQx7SVAecyNV1drU2ypeNadC/wLE1AtVLU4CxOWeMzwNG4cgVbi3MmcA5E6s51JSAR0BBGN+EHXekHnfg1nv3KG5mBc4lDOR03+BCnzXduyG5bwZLiZDYrVV7pWBawiRKluqX8WlB7HtC585XptGxrOJwQ2374jeY4cc0I4b/2BLrJSl1fq9AHXge6Nne0h0chH8MxDh4OkndtVC5D9TeHdo9IsnSEv7B4bJqYB3SkV3AV4NKSvbnC3th80F1h6wN8lM=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3525.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(39840400004)(376002)(366004)(396003)(136003)(8936002)(186003)(6506007)(86362001)(66476007)(8676002)(83380400001)(478600001)(6486002)(26005)(76116006)(316002)(66556008)(6512007)(71200400001)(38100700001)(6916009)(4326008)(2616005)(54906003)(36756003)(64756008)(2906002)(5660300002)(66946007)(66446008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?a3FOTWdBNTFyN2tEZlA1c1Z0VTNoQWpqaFpoTHEvRDMxakdaYWFpZzBlRDVk?=
- =?utf-8?B?RFFNT1pWeTl0T2VJN0loMGMrZW5wRTZxcE5yYzRQMjUySGxTR1d5Rlk5TXJt?=
- =?utf-8?B?U2hZNTNXWHFqQ1RCMzZXQzJaZTNEbHJCeUc4cEUwNEtCUjJMcklsd1hWWWxS?=
- =?utf-8?B?NHl6SUxNNzN4L0t5ZXNkWWl4dm5SMEU1THJRWkZScFBTdVl5RG9jNG1iRkJB?=
- =?utf-8?B?Nldja3kvWnRZaFV5OUdKOFlEeGJnZVlhV1ZaZml6c09nSmFrY1ZQSThaS1FU?=
- =?utf-8?B?WGY1TVlMRkhMTUtRWDdaU2EzTFJndXdKS1RQNy9BbjZHVmdEZjQyRHl6NzF5?=
- =?utf-8?B?WkxRaDRmbnhLZ211N0tqcnBpYnYyYmZoRC8zUW1LNGkzQVQzUlpNZ1BsWVJW?=
- =?utf-8?B?by93RUxhcWJxWHN6TGNtK004N0RiWjkyUExJY2E2YXkralozNVBob2h5MEd5?=
- =?utf-8?B?SDhuY1phVk1DSFZ3QjYwNHZtZmpjdVpuRHpIRDN3QUVjZlpPd1lYVW9wMWZa?=
- =?utf-8?B?Zy9aNmd5cE9sSklGM21Pd25LMmtkTEZxbWN0OXZycncyNUJ4Rmp6QjVXYU9l?=
- =?utf-8?B?MUUzTjB1RnFOV0hvR3RIQmVIRlNZdENmb3o2RjN5eGlabnVPeGt0Q0JQeHB4?=
- =?utf-8?B?M2RydkFGVmpCWElHOFY5NmxpVUQzQTZVNEhJcmhuU2lldXVTWUYxS1gyaEpk?=
- =?utf-8?B?WHFPQkFkZ294b2pteXo2OE1GNFM3ZFcxem1naUp4azNCRWtMb0d1S1NIK0hr?=
- =?utf-8?B?VDU0RnpNaWIyWCtnaFpWc01RV1pVampvNnVoQlRocnBIWlRaTkhhN3JIM0hS?=
- =?utf-8?B?TElrU1FWWjdEWGh1cWV5RWlOTWlkaTR1M0RML3IrZEZ1MUhEd1lxWllXallk?=
- =?utf-8?B?YnRLUGVUdUZaN0piZFM2dTdnbm9FQnlVbG5qQTVucGFjcmIrZFlWQmNZNUlL?=
- =?utf-8?B?TDFseGFNV0l5SzR0UkVIcSsyNEVBckh4RVBhWWVmSWlNeUNYSDFadWF0SjlQ?=
- =?utf-8?B?aGZLMmNYYzltK1pCeUI2ZW9kTlB6Q0pyZFBhVXVvRXE4NGdhY1BhT1RSdXM1?=
- =?utf-8?B?UnFDdXpLdTJ1bzVnemdBMC9NM2hpNkc0ZksvVEVtbkVjd3N4NmEzL0RLRUMy?=
- =?utf-8?B?NjhEN1UzS2w3aUEwR2tKbzNuWkNtMmtQTkkzOFVieXpLMFlWL3BnQ3J6Ny8r?=
- =?utf-8?B?YmJFTlZTeUUxL2RpRTV1NEVJdVc0Um01Z1JZZ3NqN2dqRzFGTVV2WDlhNlh1?=
- =?utf-8?B?cWRJK2VvbFRxckRJUlBuSENhRklSZEpJYnRVU2E4MS9zNzZjRHdhWnhFRXYw?=
- =?utf-8?B?UEE0b0M0UHhDRm9sYUR3a2RoRU80WS9iQ0pNUGVGK1pHS1h3b1ErN01rVWgz?=
- =?utf-8?B?QVRuTnExaUkyVkFNVXM5T0syRmR6enArdUltR1I2dVBNWldzdkE5R09rM203?=
- =?utf-8?B?ZUNJeTVNOTdnK1BjbzJBLzVkQzh1UWtVdGpESTlZQ1o2NVFZN05uWk1WT0pH?=
- =?utf-8?B?YkFkQytkZlplN1A1bzlrOHBqaEVQOVZERFBFTU83dGF1bnVSRlU3NG0vRkZl?=
- =?utf-8?B?cUo2d2xMRTZYcy83bzJnVUZ0aTd4OXFQanJYSWgvVXRBUWptUkthZnoyZVhk?=
- =?utf-8?B?b2ZpaUh4bzV4bTdzZnMrYm53cEo5TFFaUHB4TXdJU0hFcWlWYkZiM1VmRTdp?=
- =?utf-8?B?bUFsenB1azBOUzhPcWN5dHhxVVI2cmZpZnFXRUFFc042T01JeEw0TWQxTXEv?=
- =?utf-8?Q?jrSS5CgeLqQ4zj7O7SC+qW3jiXrNW5HO+xlUAEm?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6DAFF07A12E54D4FB6042CA8C4484D37@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S235113AbhCaSfQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 Mar 2021 14:35:16 -0400
+Received: from p3plsmtpa06-06.prod.phx3.secureserver.net ([173.201.192.107]:54377
+        "EHLO p3plsmtpa06-06.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235049AbhCaSex (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Mar 2021 14:34:53 -0400
+Received: from [192.168.0.116] ([71.184.94.153])
+        by :SMTPAUTH: with ESMTPSA
+        id Rfg3lTrp8EYmdRfg4lMBUB; Wed, 31 Mar 2021 11:34:53 -0700
+X-CMAE-Analysis: v=2.4 cv=adukITkt c=1 sm=1 tr=0 ts=6064c0cd
+ a=vbvdVb1zh1xTTaY8rfQfKQ==:117 a=vbvdVb1zh1xTTaY8rfQfKQ==:17
+ a=IkcTkHD0fZMA:10 a=yPCof4ZbAAAA:8 a=lL-2mxAqt3xvjKFoJToA:9
+ a=BHe9X83ukKFsioB5:21 a=kY07DDXhWyfrgdHn:21 a=QEXdDO2ut3YA:10
+X-SECURESERVER-ACCT: tom@talpey.com
+Subject: Re: [PATCH v1 3/6] svcrdma: Single-stage RDMA Read
+To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+References: <161702808762.5937.3596341039481819410.stgit@klimt.1015granger.net>
+ <161702880518.5937.11588469087361545361.stgit@klimt.1015granger.net>
+From:   Tom Talpey <tom@talpey.com>
+Message-ID: <42ab6f1b-8809-b20b-4a7c-aad9cfa7145e@talpey.com>
+Date:   Wed, 31 Mar 2021 14:34:52 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR13MB3525.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61606177-778e-44fb-b721-08d8f46f71e3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2021 18:04:36.0872
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WozTThQ7C1gSEB2JMWsGZQ3Wy95J60TYFXrtTEr0PYNEdWyO/xwOdfaMWvQkTlVBsCQ2OyJCFGLey/3AKK0HkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3301
+In-Reply-To: <161702880518.5937.11588469087361545361.stgit@klimt.1015granger.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfKaVwi08sQn5YEGZlEQ81gzXnqLuAzaCNxHAAv6XgLmJOc7HCQoaBbdkoVh6tL/kq/Eqg9vkHuFLUHk+2RERS9ZR+/KpzUEbJSC76GRD/cElZwlQkViD
+ CAfuOH5bHF/0L2WegTqMNr615SdyFmx7o7sGUbqa4O/ASKDEMUgEh+nhN0LOSqM8owCISe8LUc7u25mn+5by3Ui19SnkwadXqolq5Z7RiixCrdrw5w5a7+jY
+ LHUhO3Ojic9IYP43WFTGI1ifZLurp+yuAssmbefHFkA=
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIxLTAzLTMxIGF0IDEzOjQ5IC0wNDAwLCBEYXZpZCBXeXNvY2hhbnNraSB3cm90
-ZToNCj4gVHJvbmQsDQo+IA0KPiBJJ3ZlIGJlZW4gd29ya2luZyBvbiBnZXR0aW5nIE5GUyBjb252
-ZXJ0ZWQgdG8gZGhvd2VsbHMgbmV3IGZzY2FjaGUNCj4gYW5kDQo+IG5ldGZzIEFQSXMgYW5kIHJ1
-bm5pbmcgaW50byBhIHByb2JsZW0gd2l0aCBob3cgTkZTIGlzIGRlc2lnbmVkIGFuZCBpdA0KPiBp
-bnZvbHZlcyB0aGUgTkZTIHBhZ2VsaXN0LmMgLyBwZ2lvIEFQSS7CoCBJJ2QgYXBwcmVjaWF0ZSBp
-dCBpZiB5b3UNCj4gY291bGQgcmV2aWV3IGFuZCBnaXZlIHlvdXIgdGhvdWdodHMgb24gcG9zc2li
-bGUgYXBwcm9hY2hlcy7CoCBJJ3ZlDQo+IHRyaWVkIHRvIG91dGxpbmUgc29tZSBvZiB0aGUgcG9z
-c2liaWxpdGllcyBiZWxvdy7CoCBJIHRyaWVkIGNvZGluZw0KPiBvcHRpb24gIzMgYW5kIHJhbiBp
-bnRvIHNvbWUgcHJvYmxlbXMsIGFuZCBpdCBoYXMgYSBzZXJpYWxpemF0aW9uDQo+IGxpbWl0YXRp
-b24uwqAgQXQgdGhpcyBwb2ludCBJJ20gbGVhbmluZyB0b3dhcmRzIG9wdGlvbiAyLCBzbyBJJ2xs
-DQo+IHByb2JhYmx5IHRyeSB0aGF0IGFwcHJvYWNoIGlmIHlvdSBkb24ndCBoYXZlIHRpbWUgZm9y
-IHJldmlldyBvciBoYXZlDQo+IHN0cm9uZyB0aG91Z2h0cyBvbiBpdC4NCj4gDQoNCkkgYW0gbm90
-IGdvaW5nIHRocm91Z2ggYW5vdGhlciByZWRlc2lnbiBvZiB0aGUgTkZTIGNvZGUgaW4gb3JkZXIg
-dG8NCmFjY29tbW9kYXRlIGFub3RoZXIgY2FjaGVmcyBkZXNpZ24uIElmIG5ldGZzIG5lZWRzIGEg
-cmVmYWN0b3Jpbmcgb3INCnJlZGVzaWduIG9mIHRoZSBJL08gY29kZSB0aGVuIGl0IHdpbGwgYmUg
-aW1tZWRpYXRlbHkgTkFDS2VkLg0KDQpXaHkgZG9lcyBuZXRmcyBuZWVkIHRvIGtub3cgdGhlc2Ug
-ZGV0YWlscyBhYm91dCB0aGUgTkZTIGNvZGUgYW55d2F5Pw0KDQo+IFRoYW5rcy4NCj4gDQo+IA0K
-PiBQcm9ibGVtOiBUaGUgTkZTIHBhZ2VpbyBpbnRlcmZhY2UgZG9lcyBub3QgZXhwb3NlIGEgbWF4
-IHJlYWQgbGVuZ3RoDQo+IHRoYXQNCj4gd2UgY2FuIGVhc2lseSB1c2UgaW5zaWRlIG5ldGZzIGNs
-YW1wX2xlbmd0aCgpIGZ1bmN0aW9uLsKgIEFzIGEgcmVzdWx0LA0KPiB3aGVuDQo+IGlzc3VlX29w
-KCkgaXMgY2FsbGVkIGluZGljYXRpbmcgYSBzaW5nbGUgbmV0ZnMgc3VicmVxdWVzdCwgdGhpcyBj
-YW4NCj4gYmUNCj4gc3BsaXQgaW50bw0KPiBtdWx0aXBsZSBORlMgc3VicmVxdWVzdHMgLyBSUENz
-IGluc2lkZSBndXRzIG9mIE5GUyBwYWdlaW8gY29kZS7CoA0KPiBNdWx0aXBsZQ0KPiBORlMgc3Vi
-cmVxdWVzdHMgcmVxdWVzdHMgbGVhZHMgdG8gbXVsdGlwbGUgY29tcGxldGlvbnMsIGFuZCB0aGUg
-bmV0ZnMNCj4gQVBJIGV4cGVjdHMgYSAxOjEgbWFwcGluZyBiZXR3ZWVuIGlzc3VlX29wKCkgYW5k
-DQo+IG5ldGZzX3N1YnJlcV90ZXJtaW5hdGVkKCkgY2FsbHMuDQo+IA0KPiBEZXRhaWxzIG9mIHRo
-ZSBORlMgcGFnZWlvIEFQSSAoc2VlIGluY2x1ZGUvbGludXgvbmZzX3BhZ2UuaCBhbmQNCj4gZnMv
-bmZzL3BhZ2VsaXN0LmMpDQo+IERldGFpbHMgb2YgdGhlIG5ldGZzIEFQSSAoc2VlIGluY2x1ZGUv
-bGludXgvbmV0ZnMuaCBhbmQNCj4gZnMvbmV0ZnMvcmVhZF9oZWxwZXIuYykNCj4gDQo+IFRoZSBO
-RlMgcGFnZWlvIEFQSSAzIG1haW4gY2FsbHMgYXJlIGFzIGZvbGxvd3M6DQo+IDEuIG5mc19wYWdl
-aW9faW5pdCgpOiBpbml0aWFsaXplIGEgcGFnZWlvIHN0cnVjdHVyZSAoUi9XIElPIG9mIE4NCj4g
-cGFnZXMpDQo+IDIuIG5mc19wYWdlaW9fYWRkX3JlcXVlc3QoKTogY2FsbGVkIGZvciBlYWNoIHBh
-Z2UgdG8gYWRkIHRvIGFuIElPDQo+ICogQ2FsbHMgbmZzX3BhZ2Vpb19hZGRfcmVxdWVzdF9taXJy
-b3IgLT4gX19uZnNfcGFnZWlvX2FkZF9yZXF1ZXN0DQo+IMKgICogX19uZnNfcGFnZWlvX2FkZF9y
-ZXF1ZXN0IG1heSBjYWxsIG5mc19wYWdlaW9fZG9pbygpIHdoaWNoDQo+IGFjdHVhbGx5DQo+IMKg
-wqDCoCBzZW5kcyBhbiBSUEMgb3ZlciB0aGUgd2lyZSBpZiBwYWdlIGNhbm5vdCBiZSBhZGRlZCB0
-byB0aGUgcmVxdWVzdA0KPiDCoMKgwqAgKCJjb2FsZXNjZWQiKSBkdWUgdG8gdmFyaW91cyBmYWN0
-b3JzLsKgIEZvciBtb3JlIGRldGFpbHMsIHNlZQ0KPiDCoMKgwqAgbmZzX3BhZ2Vpb19kb19hZGRf
-cmVxdWVzdCgpIGFuZCBhbGwgdW5kZXJseWluZyBjb2RlIGl0IGNhbGxzIHN1Y2gNCj4gwqDCoMKg
-IGFzIG5mc19jb2FsZXNjZV9zaXplKCkgYW5kIHN1YnNlcXVlbnQgcGdpby0+cGdfb3BzLT5wZ190
-ZXN0KCkNCj4gY2FsbHMNCj4gMy4gbmZzX3BhZ2Vpb19jb21wbGV0ZSgpIC0gImNvbXBsZXRlIiB0
-aGUgcGFnZWlvDQo+ICogY2FsbHMgbmZzX3BhZ2Vpb19jb21wbGV0ZV9taXJyb3IgLT4gbmZzX3Bh
-Z2Vpb19kb2lvKCkNCj4gDQo+IFRoZSBORlMgcGFnZWlvIEFQSSB0aHVzIG1heSBnZW5lcmF0ZSBt
-dWx0aXBsZSBvdmVyIHRoZSB3aXJlIFJQQ3MNCj4gYW5kIHRodXMgbXVsdGlwbGUgY29tcGxldGlv
-bnMgZXZlbiB0aG91Z2ggYXQgdGhlIGhpZ2ggbGV2ZWwgb25seQ0KPiBvbmUgY2FsbCB0byBuZnNf
-cGFnZWlvX2NvbXBsZXRlKCkgaXMgbWFkZS4NCj4gDQo+IE9wdGlvbiAxOiBKdXN0IHVzZSBORlMg
-cGFnZWlvIEFQSSBhcyBpcywgYW5kIGRlYWwgd2l0aCBwb3NzaWJsZQ0KPiBtdWx0aXBsZQ0KPiBj
-b21wbGV0aW9ucy4NCj4gLSBJbmNvbnNpc3RlbnQgd2l0aCBuZXRmcyBkZXNpZ24gaW50ZW50DQo+
-IC0gTmVlZCB0byBrZWVwIHRyYWNrIG9mIHRoZSBSUEMgY29tcGxldGlvbiBzdGF0dXMsIGFuZCBm
-b3IgZXhhbXBsZSwNCj4gaWYgb25lIGNvbXBsZXRlcyB3aXRoIHN1Y2Nlc3MgYW5kIG9uZSBhbiBl
-cnJvciwgcHJvYmFibHkgY2FsbA0KPiBuZXRmc19zdWJyZXFfdGVybWluYXRlZCgpIHdpdGggdGhl
-IGVycm9yLg0KPiAtIFRoZXJlJ3Mgbm8gd2F5IGZvciB0aGUgY2FsbGVyIG9mIHRoZSBORlMgcGFn
-ZWlvIEFQSSB0byBrbm93IGhvdw0KPiBtYW55IFJQQ3MgYW5kIHRodXMgY29tcGxldGlvbnMgbWF5
-IG9jY3VyLsKgIFRodXMsIGl0J3MgdW5jbGVhciBob3cNCj4gb25lIHdvdWxkIGRpc3Rpbmd1aXNo
-IGJldHdlZW4gYSBSRUFEIHRoYXQgcmVzdWx0ZWQgaW4gYSBzaW5nbGUgUlBDDQo+IG92ZXIgdGhl
-IHdpcmUgdGhhdCBjb21wbGV0ZWQgYXMgYSBzaG9ydCByZWFkLCBhbmQgYSBSRUFEIHRoYXQNCj4g
-cmVzdWx0ZWQgaW4gbXVsdGlwbGUgUlBDcyB0aGF0IHdvdWxkIGVhY2ggY29tcGxldGUgc2VwYXJh
-dGVseSwNCj4gYnV0IHdvdWxkIGV2ZW50dWFsbHkgY29tcGxldGUNCj4gDQo+IE9wdGlvbiAyOiBD
-cmVhdGUgYSBtb3JlIGNvbXBsZXggJ2NsYW1wX2xlbmd0aCgpJyBmdW5jdGlvbiBmb3IgTkZTLA0K
-PiB0YWtpbmcgaW50byBhY2NvdW50IGFsbCB3YXlzIE5GUyAvIHBORlMgY29kZSBjYW4gc3BsaXQg
-YSByZWFkLg0KPiArIENvbnNpc3RlbnQgd2l0aCBuZXRmcyBkZXNpZ24gaW50ZW50DQo+ICsgTXVs
-dGlwbGUgInNwbGl0IiByZXF1ZXN0cyB3b3VsZCBiZSBjYWxsZWQgaW4gcGFyYWxsZWwgKHNlZSBs
-b29wDQo+IGluc2lkZSBuZXRmc19yZWFkYWhlYWQsIHdoaWNoIHJlcGVhdGVkbHkgY2FsbHMNCj4g
-bmV0ZnNfcnJlcV9zdWJtaXRfc2xpY2UpDQo+IC0gTG9va3MgaW1wb3NzaWJsZSB3aXRob3V0IHJl
-ZmFjdG9yaW5nIG9mIE5GUyBwZ2lvIEFQSS7CoCBXZSBuZWVkDQo+IHRvIHByZXZlbnQgbmZzX3Bh
-Z2Vpb19hZGRfcmVxdWVzdCgpIGZyb20gY2FsbGluZyBuZnNfcGFnaW9fZG9pbygpLA0KPiBhbmQg
-cmV0dXJuIHNvbWUgaW5kaWNhdGlvbiBjb2FsZXNjZSBmYWlsZWQuwqAgSW4gYWRkaXRpb24sIGl0
-IG1heQ0KPiBydW4gaW50byBwcm9ibGVtcyB3aXRoIGZhbGxiYWNrIGZyb20gRFMgdG8gTURTIGZv
-ciBleGFtcGxlIChzZWUNCj4gY29tbWl0IGQ5MTU2ZjlmMzY0ODk3ZTkzYmRkOThiNGFkMjIxMzhk
-ZTE4ZjdjMjQpLg0KPiANCj4gT3B0aW9uIDM6IFV0aWxpemUgTkVURlNfU1JFUV9TSE9SVF9SRUFE
-IGZsYWcgYXMgbmVlZGVkLg0KPiArIENvbnNpc3RlbnQgd2l0aCBuZXRmcyBkZXNpZ24gaW50ZW50
-DQo+IC0gTXVsdGlwbGUgInNwbGl0IiByZXF1ZXN0cyB3b3VsZCBiZSBzZXJpYWxpemVkIChzZWUg
-Y29kZQ0KPiBwYXRocyBpbnNpZGUgbmV0ZnNfc3VicmVxX3Rlcm1pbmF0ZWQgdGhhdCBjaGVjayBm
-b3IgdGhpcyBmbGFnKS4NCj4gLSBMb29rcyBpbXBvc3NpYmxlIHdpdGhvdXQgc29tZSByZWZhY3Rv
-cmluZyBvZiBORlMgcGdpbyBBUEkuDQo+ICogTm90ZXM6IFRlcm1pbmF0ZSBORlMgcGFnZWlvIHBh
-Z2UgYmFzZWQgbG9vcCBhdCB0aGUgZmlyc3QgY2FsbA0KPiB0byBuZnNfcGFnZWlvX2RvaW8oKS7C
-oCBXaGVuIGEgUkVBRCBjb21wbGV0ZXMsIE5GUyBjYWxscw0KPiBuZXRmc19zdWJyZXFfdGVybWlu
-YXRlZCgpIHdpdGggTkVURlNfU1JFUV9TSE9SVF9SRUFEDQo+IGFuZCBpcyBwcmVwYXJlZCB0byBo
-YXZlIHRoZSByZXN0IG9mIHRoZSBzdWJyZXF1ZXN0IGJlIHJlc3VibWl0dGVkLg0KPiBOZWVkIHRv
-IHNvbWVob3cgZmFpbCBlYXJseSBvciBhdm9pZCBlbnRpcmVseSBzdWJzZXF1ZW50IGNhbGxzIHRv
-DQo+IG5mc19wYWdpb19kb2lvKCkgZm9yIHRoZSBvcmlnaW5hbCByZXF1ZXN0IHRob3VnaCwgYW5k
-IGhhbmRsZQ0KPiBlcnJvciBzdGF0dXMgb25seSBmcm9tIHRoZSBmaXJzdCBSUEMuDQo+IA0KPiBP
-cHRpb24gNDogQWRkIHNvbWUgZmluYWwgY29tcGxldGlvbiByb3V0aW5lIHRvIGJlIGNhbGxlZCBu
-ZWFyDQo+IGJvdHRvbSBvZiBuZnNfcGFnZWlvX2NvbXBsZXRlKCkgYW5kIHdvdWxkIHBhc3MgaW4g
-YXQgbGVhc3QNCj4gbmV0ZnNfcmVhZF9zdWJyZXF1ZXN0KCksIHBvc3NpYmx5IG5mc19wYWdlaW9f
-ZGVzY3JpcHRvci4NCj4gKyBJbmNvbnNpc3RlbnQgd2l0aCBuZXRmcyBkZXNpZ24gaW50ZW50DQo+
-IC0gV291bGQgYmUgYSBuZXcgTkZTIEFQSSBvciBjYWxsIG9uIHRvcCBvZiBldmVyeXRoaW5nDQo+
-IC0gTmVlZCB0byBoYW5kbGUgdGhlICJtdWx0aXBsZSBjb21wbGV0aW9uIHdpdGggZGlmZmVyZW50
-DQo+IHN0YXR1cyIgcHJvYmxlbSAoc2VlICMxKS4NCj4gDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0
-DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1
-c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+On 3/29/2021 10:40 AM, Chuck Lever wrote:
+> Currently the generic RPC server layer calls svc_rdma_recvfrom()
+> twice to retrieve an RPC message that uses Read chunks. I'm not
+> exactly sure why this design was chosen originally.
+
+I'm not either, but remember the design was written over a decade
+ago. I vaguely recall there was some bounce buffering for strange
+memreg corner cases. The RDMA stack has improved greatly.
+
+> Instead, let's wait for the Read chunk completion inline in the
+> first call to svc_rdma_recvfrom().
+> 
+> The goal is to eliminate some page allocator churn.
+> rdma_read_complete() replaces pages in the second svc_rqst by
+> calling put_page() repeatedly while the upper layer waits for
+> the request to be constructed, which adds unnecessary round-
+> trip latency.
+
+Local API round-trip, right? Same wire traffic either way. In fact,
+I don't see any Verbs changes too.
+
+Some comments/question below.
+
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>   net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   10 +--
+>   net/sunrpc/xprtrdma/svc_rdma_rw.c       |   96 +++++++++++--------------------
+>   2 files changed, 39 insertions(+), 67 deletions(-)
+> 
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+> index 9cb5a09c4a01..b857a6805e95 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+> @@ -853,6 +853,9 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
+>   	spin_unlock(&rdma_xprt->sc_rq_dto_lock);
+>   	percpu_counter_inc(&svcrdma_stat_recv);
+>   
+> +	/* Start receiving the next incoming message */
+
+This comment confused me. This call just unblocks the xprt to move
+to the next message, it does not necessarily "start". So IIUC, it
+might be clearer to state "transport processing complete" or similar.
+
+> +	svc_xprt_received(xprt);
+> +
+>   	ib_dma_sync_single_for_cpu(rdma_xprt->sc_pd->device,
+>   				   ctxt->rc_recv_sge.addr, ctxt->rc_byte_len,
+>   				   DMA_FROM_DEVICE);
+> @@ -884,33 +887,28 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
+>   	rqstp->rq_xprt_ctxt = ctxt;
+>   	rqstp->rq_prot = IPPROTO_MAX;
+>   	svc_xprt_copy_addrs(rqstp, xprt);
+> -	svc_xprt_received(xprt);
+>   	return rqstp->rq_arg.len;
+>   
+>   out_readlist:
+>   	ret = svc_rdma_process_read_list(rdma_xprt, rqstp, ctxt);
+>   	if (ret < 0)
+>   		goto out_readfail;
+> -	svc_xprt_received(xprt);
+> -	return 0;
+> +	goto complete;
+>   
+>   out_err:
+>   	svc_rdma_send_error(rdma_xprt, ctxt, ret);
+>   	svc_rdma_recv_ctxt_put(rdma_xprt, ctxt);
+> -	svc_xprt_received(xprt);
+>   	return 0;
+>   
+>   out_readfail:
+>   	if (ret == -EINVAL)
+>   		svc_rdma_send_error(rdma_xprt, ctxt, ret);
+>   	svc_rdma_recv_ctxt_put(rdma_xprt, ctxt);
+> -	svc_xprt_received(xprt);
+>   	return ret;
+>   
+>   out_backchannel:
+>   	svc_rdma_handle_bc_reply(rqstp, ctxt);
+>   out_drop:
+>   	svc_rdma_recv_ctxt_put(rdma_xprt, ctxt);
+> -	svc_xprt_received(xprt);
+>   	return 0;
+>   }
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> index d7054e3a8e33..9163ab690288 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> @@ -150,6 +150,8 @@ struct svc_rdma_chunk_ctxt {
+>   	struct svcxprt_rdma	*cc_rdma;
+>   	struct list_head	cc_rwctxts;
+>   	int			cc_sqecount;
+> +	enum ib_wc_status	cc_status;
+> +	struct completion	cc_done;
+>   };
+>   
+>   static void svc_rdma_cc_cid_init(struct svcxprt_rdma *rdma,
+> @@ -299,29 +301,15 @@ static void svc_rdma_wc_read_done(struct ib_cq *cq, struct ib_wc *wc)
+>   	struct svc_rdma_chunk_ctxt *cc =
+>   			container_of(cqe, struct svc_rdma_chunk_ctxt, cc_cqe);
+>   	struct svcxprt_rdma *rdma = cc->cc_rdma;
+> -	struct svc_rdma_read_info *info =
+> -			container_of(cc, struct svc_rdma_read_info, ri_cc);
+>   
+>   	trace_svcrdma_wc_read(wc, &cc->cc_cid);
+>   
+>   	atomic_add(cc->cc_sqecount, &rdma->sc_sq_avail);
+>   	wake_up(&rdma->sc_send_wait);
+>   
+> -	if (unlikely(wc->status != IB_WC_SUCCESS)) {
+> -		set_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags);
+> -		svc_rdma_recv_ctxt_put(rdma, info->ri_readctxt);
+> -	} else {
+> -		spin_lock(&rdma->sc_rq_dto_lock);
+> -		list_add_tail(&info->ri_readctxt->rc_list,
+> -			      &rdma->sc_read_complete_q);
+> -		/* Note the unlock pairs with the smp_rmb in svc_xprt_ready: */
+> -		set_bit(XPT_DATA, &rdma->sc_xprt.xpt_flags);
+> -		spin_unlock(&rdma->sc_rq_dto_lock);
+> -
+> -		svc_xprt_enqueue(&rdma->sc_xprt);
+> -	}
+> -
+> -	svc_rdma_read_info_free(info);
+> +	cc->cc_status = wc->status;
+> +	complete(&cc->cc_done);
+> +	return;
+>   }
+>   
+>   /* This function sleeps when the transport's Send Queue is congested.
+> @@ -676,8 +664,8 @@ static int svc_rdma_build_read_segment(struct svc_rdma_read_info *info,
+>   	struct svc_rdma_recv_ctxt *head = info->ri_readctxt;
+>   	struct svc_rdma_chunk_ctxt *cc = &info->ri_cc;
+>   	struct svc_rqst *rqstp = info->ri_rqst;
+> -	struct svc_rdma_rw_ctxt *ctxt;
+>   	unsigned int sge_no, seg_len, len;
+> +	struct svc_rdma_rw_ctxt *ctxt;
+>   	struct scatterlist *sg;
+>   	int ret;
+>   
+> @@ -693,8 +681,8 @@ static int svc_rdma_build_read_segment(struct svc_rdma_read_info *info,
+>   		seg_len = min_t(unsigned int, len,
+>   				PAGE_SIZE - info->ri_pageoff);
+>   
+> -		head->rc_arg.pages[info->ri_pageno] =
+> -			rqstp->rq_pages[info->ri_pageno];
+> +		/* XXX: ri_pageno and rc_page_count might be exactly the same */
+> +
+
+What is this comment conveying? It looks like a note-to-self that
+resulted in deleting the prior line. If the "XXX" notation is
+still significant, it needs more detail on what needs to be
+fixed in future.
+
+>   		if (!info->ri_pageoff)
+>   			head->rc_page_count++;
+>   
+> @@ -788,12 +776,10 @@ static int svc_rdma_copy_inline_range(struct svc_rdma_read_info *info,
+>   		page_len = min_t(unsigned int, remaining,
+>   				 PAGE_SIZE - info->ri_pageoff);
+>   
+> -		head->rc_arg.pages[info->ri_pageno] =
+> -			rqstp->rq_pages[info->ri_pageno];
+>   		if (!info->ri_pageoff)
+>   			head->rc_page_count++;
+>   
+> -		dst = page_address(head->rc_arg.pages[info->ri_pageno]);
+> +		dst = page_address(rqstp->rq_pages[info->ri_pageno]);
+>   		memcpy(dst + info->ri_pageno, src + offset, page_len);
+>   
+>   		info->ri_totalbytes += page_len;
+> @@ -813,7 +799,7 @@ static int svc_rdma_copy_inline_range(struct svc_rdma_read_info *info,
+>    * svc_rdma_read_multiple_chunks - Construct RDMA Reads to pull data item Read chunks
+>    * @info: context for RDMA Reads
+>    *
+> - * The chunk data lands in head->rc_arg as a series of contiguous pages,
+> + * The chunk data lands in rqstp->rq_arg as a series of contiguous pages,
+>    * like an incoming TCP call.
+>    *
+>    * Return values:
+> @@ -827,8 +813,8 @@ static noinline int svc_rdma_read_multiple_chunks(struct svc_rdma_read_info *inf
+>   {
+>   	struct svc_rdma_recv_ctxt *head = info->ri_readctxt;
+>   	const struct svc_rdma_pcl *pcl = &head->rc_read_pcl;
+> +	struct xdr_buf *buf = &info->ri_rqst->rq_arg;
+>   	struct svc_rdma_chunk *chunk, *next;
+> -	struct xdr_buf *buf = &head->rc_arg;
+>   	unsigned int start, length;
+>   	int ret;
+>   
+> @@ -864,9 +850,9 @@ static noinline int svc_rdma_read_multiple_chunks(struct svc_rdma_read_info *inf
+>   	buf->len += info->ri_totalbytes;
+>   	buf->buflen += info->ri_totalbytes;
+>   
+> -	head->rc_hdr_count = 1;
+> -	buf->head[0].iov_base = page_address(head->rc_pages[0]);
+> +	buf->head[0].iov_base = page_address(info->ri_rqst->rq_pages[0]);
+>   	buf->head[0].iov_len = min_t(size_t, PAGE_SIZE, info->ri_totalbytes);
+> +	buf->pages = &info->ri_rqst->rq_pages[1];
+>   	buf->page_len = info->ri_totalbytes - buf->head[0].iov_len;
+>   	return 0;
+>   }
+> @@ -875,9 +861,9 @@ static noinline int svc_rdma_read_multiple_chunks(struct svc_rdma_read_info *inf
+>    * svc_rdma_read_data_item - Construct RDMA Reads to pull data item Read chunks
+>    * @info: context for RDMA Reads
+>    *
+> - * The chunk data lands in the page list of head->rc_arg.pages.
+> + * The chunk data lands in the page list of rqstp->rq_arg.pages.
+>    *
+> - * Currently NFSD does not look at the head->rc_arg.tail[0] iovec.
+> + * Currently NFSD does not look at the rqstp->rq_arg.tail[0] kvec.
+>    * Therefore, XDR round-up of the Read chunk and trailing
+>    * inline content must both be added at the end of the pagelist.
+>    *
+> @@ -891,7 +877,7 @@ static noinline int svc_rdma_read_multiple_chunks(struct svc_rdma_read_info *inf
+>   static int svc_rdma_read_data_item(struct svc_rdma_read_info *info)
+>   {
+>   	struct svc_rdma_recv_ctxt *head = info->ri_readctxt;
+> -	struct xdr_buf *buf = &head->rc_arg;
+> +	struct xdr_buf *buf = &info->ri_rqst->rq_arg;
+>   	struct svc_rdma_chunk *chunk;
+>   	unsigned int length;
+>   	int ret;
+> @@ -901,8 +887,6 @@ static int svc_rdma_read_data_item(struct svc_rdma_read_info *info)
+>   	if (ret < 0)
+>   		goto out;
+>   
+> -	head->rc_hdr_count = 0;
+> -
+>   	/* Split the Receive buffer between the head and tail
+>   	 * buffers at Read chunk's position. XDR roundup of the
+>   	 * chunk is not included in either the pagelist or in
+> @@ -921,7 +905,8 @@ static int svc_rdma_read_data_item(struct svc_rdma_read_info *info)
+>   	 * Currently these chunks always start at page offset 0,
+>   	 * thus the rounded-up length never crosses a page boundary.
+>   	 */
+> -	length = XDR_QUADLEN(info->ri_totalbytes) << 2;
+> +	buf->pages = &info->ri_rqst->rq_pages[0];
+> +	length = xdr_align_size(chunk->ch_length);
+>   	buf->page_len = length;
+>   	buf->len += length;
+>   	buf->buflen += length;
+> @@ -1033,8 +1018,7 @@ static int svc_rdma_read_call_chunk(struct svc_rdma_read_info *info)
+>    * @info: context for RDMA Reads
+>    *
+>    * The start of the data lands in the first page just after the
+> - * Transport header, and the rest lands in the page list of
+> - * head->rc_arg.pages.
+> + * Transport header, and the rest lands in rqstp->rq_arg.pages.
+>    *
+>    * Assumptions:
+>    *	- A PZRC is never sent in an RDMA_MSG message, though it's
+> @@ -1049,8 +1033,7 @@ static int svc_rdma_read_call_chunk(struct svc_rdma_read_info *info)
+>    */
+>   static noinline int svc_rdma_read_special(struct svc_rdma_read_info *info)
+>   {
+> -	struct svc_rdma_recv_ctxt *head = info->ri_readctxt;
+> -	struct xdr_buf *buf = &head->rc_arg;
+> +	struct xdr_buf *buf = &info->ri_rqst->rq_arg;
+>   	int ret;
+>   
+>   	ret = svc_rdma_read_call_chunk(info);
+> @@ -1060,35 +1043,15 @@ static noinline int svc_rdma_read_special(struct svc_rdma_read_info *info)
+>   	buf->len += info->ri_totalbytes;
+>   	buf->buflen += info->ri_totalbytes;
+>   
+> -	head->rc_hdr_count = 1;
+> -	buf->head[0].iov_base = page_address(head->rc_pages[0]);
+> +	buf->head[0].iov_base = page_address(info->ri_rqst->rq_pages[0]);
+>   	buf->head[0].iov_len = min_t(size_t, PAGE_SIZE, info->ri_totalbytes);
+> +	buf->pages = &info->ri_rqst->rq_pages[1];
+>   	buf->page_len = info->ri_totalbytes - buf->head[0].iov_len;
+>   
+>   out:
+>   	return ret;
+>   }
+>   
+> -/* Pages under I/O have been copied to head->rc_pages. Ensure they
+> - * are not released by svc_xprt_release() until the I/O is complete.
+> - *
+> - * This has to be done after all Read WRs are constructed to properly
+> - * handle a page that is part of I/O on behalf of two different RDMA
+> - * segments.
+> - *
+> - * Do this only if I/O has been posted. Otherwise, we do indeed want
+> - * svc_xprt_release() to clean things up properly.
+> - */
+> -static void svc_rdma_save_io_pages(struct svc_rqst *rqstp,
+> -				   const unsigned int start,
+> -				   const unsigned int num_pages)
+> -{
+> -	unsigned int i;
+> -
+> -	for (i = start; i < num_pages + start; i++)
+> -		rqstp->rq_pages[i] = NULL;
+> -}
+> -
+>   /**
+>    * svc_rdma_process_read_list - Pull list of Read chunks from the client
+>    * @rdma: controlling RDMA transport
+> @@ -1153,11 +1116,22 @@ int svc_rdma_process_read_list(struct svcxprt_rdma *rdma,
+>   		goto out_err;
+>   
+>   	trace_svcrdma_post_read_chunk(&cc->cc_cid, cc->cc_sqecount);
+> +	init_completion(&cc->cc_done);
+>   	ret = svc_rdma_post_chunk_ctxt(cc);
+>   	if (ret < 0)
+>   		goto out_err;
+> -	svc_rdma_save_io_pages(rqstp, 0, head->rc_page_count);
+> -	return 1;
+> +
+> +	ret = 1;
+> +	wait_for_completion(&cc->cc_done);
+> +	if (cc->cc_status != IB_WC_SUCCESS)
+> +		ret = -EIO;
+> +
+> +	/* rq_respages starts after the last arg page */
+> +	rqstp->rq_respages = &rqstp->rq_pages[head->rc_page_count];
+> +	rqstp->rq_next_page = rqstp->rq_respages + 1;
+> +
+> +	/* Ensure svc_rdma_recv_ctxt_put() does not try to release pages */
+> +	head->rc_page_count = 0;
+>   
+>   out_err:
+>   	svc_rdma_read_info_free(info);
+> 
+> 
+> 
