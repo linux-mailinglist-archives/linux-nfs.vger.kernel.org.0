@@ -2,369 +2,208 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BC15350669
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Mar 2021 20:35:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 370B0350670
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Mar 2021 20:36:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235113AbhCaSfQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 Mar 2021 14:35:16 -0400
-Received: from p3plsmtpa06-06.prod.phx3.secureserver.net ([173.201.192.107]:54377
-        "EHLO p3plsmtpa06-06.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235049AbhCaSex (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Mar 2021 14:34:53 -0400
-Received: from [192.168.0.116] ([71.184.94.153])
-        by :SMTPAUTH: with ESMTPSA
-        id Rfg3lTrp8EYmdRfg4lMBUB; Wed, 31 Mar 2021 11:34:53 -0700
-X-CMAE-Analysis: v=2.4 cv=adukITkt c=1 sm=1 tr=0 ts=6064c0cd
- a=vbvdVb1zh1xTTaY8rfQfKQ==:117 a=vbvdVb1zh1xTTaY8rfQfKQ==:17
- a=IkcTkHD0fZMA:10 a=yPCof4ZbAAAA:8 a=lL-2mxAqt3xvjKFoJToA:9
- a=BHe9X83ukKFsioB5:21 a=kY07DDXhWyfrgdHn:21 a=QEXdDO2ut3YA:10
-X-SECURESERVER-ACCT: tom@talpey.com
-Subject: Re: [PATCH v1 3/6] svcrdma: Single-stage RDMA Read
-To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-References: <161702808762.5937.3596341039481819410.stgit@klimt.1015granger.net>
- <161702880518.5937.11588469087361545361.stgit@klimt.1015granger.net>
-From:   Tom Talpey <tom@talpey.com>
-Message-ID: <42ab6f1b-8809-b20b-4a7c-aad9cfa7145e@talpey.com>
-Date:   Wed, 31 Mar 2021 14:34:52 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        id S235213AbhCaSft (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 Mar 2021 14:35:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43605 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235111AbhCaSfj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Mar 2021 14:35:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617215738;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jsEpiofig3keIoGL7kBc/i3kTYjSrdwGCpFwlwx/PQQ=;
+        b=YmVzubutGEDG9qwDh6CZyUVrfGys6yMOGYJV6S99fQ2tXAwHj8Hf0UFJlI4XoZT54yyOLt
+        50P9Q6O/OzhYLHdHJc0rD2e8aXKed1Y9EfLzi/KaCPUhNrSKpTl+1Kk1a0BKFz96kuUUMT
+        MmU7+bzo6hbEISAN0Mr/ISYfVtLjR2U=
+Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
+ [209.85.219.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-WGyTeElFP5aGIpPZZl3FKw-1; Wed, 31 Mar 2021 14:35:36 -0400
+X-MC-Unique: WGyTeElFP5aGIpPZZl3FKw-1
+Received: by mail-yb1-f199.google.com with SMTP id f75so3199964yba.8
+        for <linux-nfs@vger.kernel.org>; Wed, 31 Mar 2021 11:35:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jsEpiofig3keIoGL7kBc/i3kTYjSrdwGCpFwlwx/PQQ=;
+        b=hfT38V+MwwP8pYRxo0vpfFAagbr8xr2F8G7tiYezBuBRSdqXGO5zY84I4I7sBdmJWP
+         DeQGGO+myZam2rRcxvkgJXAUs5sCA0VN/grhpedF72sTsrBjOQ5rT9QMCOXT/dLsJjvg
+         oFIf0P98npnMYq7ZOk6WpTWjoGGIvGRyIACQyGq3hum99cmu1A4ZYkaxclZcZ9rrd85q
+         tP4VbrjB8yBf3r6V8AQ4RmEuoWxe+E8iq1bdQBokKi2j743stORAQSuORcF6WMfPa0ps
+         sQTF0YYIzq5QHhwctK5RaXTlArm0H2qrRoEnFMHTOe+1czGYHc0OurotAVu8QJe8FhKK
+         rpzw==
+X-Gm-Message-State: AOAM530X6Hf3fMKWtpe19Tq2lI6C6p+SXkW+D/VDYcstU0yNn2cUKtjh
+        bAvk8oL9R5tq7V3+hGBD+AKM9ZJPxqcqIZrTvaSx0F1FrjzQ3AU/Pd2HnsxbBb2h3H5W0jxcTen
+        U+4pLzSlUZfFA3FHt+JoIaZecLOQewB/Qjr9r
+X-Received: by 2002:a25:d40f:: with SMTP id m15mr6086676ybf.30.1617215736000;
+        Wed, 31 Mar 2021 11:35:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyVMMveZym/l12RLNQe/ze4TqFxz00E/qqZr/Us1iW/X7Qr7u9VWDy93aGdpXJbv+WdihC5guSpvb/BkuLimCY=
+X-Received: by 2002:a25:d40f:: with SMTP id m15mr6086655ybf.30.1617215735719;
+ Wed, 31 Mar 2021 11:35:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <161702880518.5937.11588469087361545361.stgit@klimt.1015granger.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfKaVwi08sQn5YEGZlEQ81gzXnqLuAzaCNxHAAv6XgLmJOc7HCQoaBbdkoVh6tL/kq/Eqg9vkHuFLUHk+2RERS9ZR+/KpzUEbJSC76GRD/cElZwlQkViD
- CAfuOH5bHF/0L2WegTqMNr615SdyFmx7o7sGUbqa4O/ASKDEMUgEh+nhN0LOSqM8owCISe8LUc7u25mn+5by3Ui19SnkwadXqolq5Z7RiixCrdrw5w5a7+jY
- LHUhO3Ojic9IYP43WFTGI1ifZLurp+yuAssmbefHFkA=
+References: <CALF+zOnCisFWTubWEHhTLpt6=CUb7n86YvrNX3nreCYS73_v_Q@mail.gmail.com>
+ <49e123c6702cb6b27f114dfa64157d9a73463fad.camel@hammerspace.com>
+In-Reply-To: <49e123c6702cb6b27f114dfa64157d9a73463fad.camel@hammerspace.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Wed, 31 Mar 2021 14:34:59 -0400
+Message-ID: <CALF+zO=KeU7O-sACUgX556_Mxdb1Xrvq5foJT1Py2DROBojxfQ@mail.gmail.com>
+Subject: Re: RFC: Approaches to resolve netfs API interface to NFS multiple
+ completions problem
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
+        "dhowells@redhat.com" <dhowells@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 3/29/2021 10:40 AM, Chuck Lever wrote:
-> Currently the generic RPC server layer calls svc_rdma_recvfrom()
-> twice to retrieve an RPC message that uses Read chunks. I'm not
-> exactly sure why this design was chosen originally.
+On Wed, Mar 31, 2021 at 2:04 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Wed, 2021-03-31 at 13:49 -0400, David Wysochanski wrote:
+> > Trond,
+> >
+> > I've been working on getting NFS converted to dhowells new fscache
+> > and
+> > netfs APIs and running into a problem with how NFS is designed and it
+> > involves the NFS pagelist.c / pgio API.  I'd appreciate it if you
+> > could review and give your thoughts on possible approaches.  I've
+> > tried to outline some of the possibilities below.  I tried coding
+> > option #3 and ran into some problems, and it has a serialization
+> > limitation.  At this point I'm leaning towards option 2, so I'll
+> > probably try that approach if you don't have time for review or have
+> > strong thoughts on it.
+> >
+>
+> I am not going through another redesign of the NFS code in order to
+> accommodate another cachefs design. If netfs needs a refactoring or
+> redesign of the I/O code then it will be immediately NACKed.
+>
+I don't think it will require a redesign.  I was thinking more about
+adding a flag to nfs_pageio_add_request() for example that
+would return a different value if coalesce of the page being
+added failed.  So we'd have:
+nfs_pageio_init(): called 1 time
+nfs_pageio_add_request(): called N times, one for each page, but stop if
+coalesce fails
+nfs_pageio_complete(): called 1 time
 
-I'm not either, but remember the design was written over a decade
-ago. I vaguely recall there was some bounce buffering for strange
-memreg corner cases. The RDMA stack has improved greatly.
+> Why does netfs need to know these details about the NFS code anyway?
+>
+We can probably get by without it but it will be awkward and probably not the
+best, but I'm not sure.
 
-> Instead, let's wait for the Read chunk completion inline in the
-> first call to svc_rdma_recvfrom().
-> 
-> The goal is to eliminate some page allocator churn.
-> rdma_read_complete() replaces pages in the second svc_rqst by
-> calling put_page() repeatedly while the upper layer waits for
-> the request to be constructed, which adds unnecessary round-
-> trip latency.
+I tried to explain below with a problem statement but maybe it was unclear.
+The basic design of netfs API as it pertains to this problem is:
+* issue_op(): calls into the specific netfs (NFS) to obtain the data from server
+(send one or more RPCs)
+* netfs_subreq_terminated(): when RPC(s) are completed, we need to call
+netfs API back to say the data is either there or there was an error
 
-Local API round-trip, right? Same wire traffic either way. In fact,
-I don't see any Verbs changes too.
+I would note that assuming we can come up with something acceptable to
+NFS, it should simplify both nfs_readpage() and nfs_readpages/nfs_readhead.
+I hope we can find some common ground so it's neither too invasive to
+NFS and also maybe there's some similar improvements in NFS that can
+be done along with this interface.
 
-Some comments/question below.
 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->   net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   10 +--
->   net/sunrpc/xprtrdma/svc_rdma_rw.c       |   96 +++++++++++--------------------
->   2 files changed, 39 insertions(+), 67 deletions(-)
-> 
-> diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-> index 9cb5a09c4a01..b857a6805e95 100644
-> --- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-> +++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-> @@ -853,6 +853,9 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
->   	spin_unlock(&rdma_xprt->sc_rq_dto_lock);
->   	percpu_counter_inc(&svcrdma_stat_recv);
->   
-> +	/* Start receiving the next incoming message */
+> > Thanks.
+> >
+> >
+> > Problem: The NFS pageio interface does not expose a max read length
+> > that
+> > we can easily use inside netfs clamp_length() function.  As a result,
+> > when
+> > issue_op() is called indicating a single netfs subrequest, this can
+> > be
+> > split into
+> > multiple NFS subrequests / RPCs inside guts of NFS pageio code.
+> > Multiple
+> > NFS subrequests requests leads to multiple completions, and the netfs
+> > API expects a 1:1 mapping between issue_op() and
+> > netfs_subreq_terminated() calls.
+> >
+> > Details of the NFS pageio API (see include/linux/nfs_page.h and
+> > fs/nfs/pagelist.c)
+> > Details of the netfs API (see include/linux/netfs.h and
+> > fs/netfs/read_helper.c)
+> >
+> > The NFS pageio API 3 main calls are as follows:
+> > 1. nfs_pageio_init(): initialize a pageio structure (R/W IO of N
+> > pages)
+> > 2. nfs_pageio_add_request(): called for each page to add to an IO
+> > * Calls nfs_pageio_add_request_mirror -> __nfs_pageio_add_request
+> >   * __nfs_pageio_add_request may call nfs_pageio_doio() which
+> > actually
+> >     sends an RPC over the wire if page cannot be added to the request
+> >     ("coalesced") due to various factors.  For more details, see
+> >     nfs_pageio_do_add_request() and all underlying code it calls such
+> >     as nfs_coalesce_size() and subsequent pgio->pg_ops->pg_test()
+> > calls
+> > 3. nfs_pageio_complete() - "complete" the pageio
+> > * calls nfs_pageio_complete_mirror -> nfs_pageio_doio()
+> >
+> > The NFS pageio API thus may generate multiple over the wire RPCs
+> > and thus multiple completions even though at the high level only
+> > one call to nfs_pageio_complete() is made.
+> >
+> > Option 1: Just use NFS pageio API as is, and deal with possible
+> > multiple
+> > completions.
+> > - Inconsistent with netfs design intent
+> > - Need to keep track of the RPC completion status, and for example,
+> > if one completes with success and one an error, probably call
+> > netfs_subreq_terminated() with the error.
+> > - There's no way for the caller of the NFS pageio API to know how
+> > many RPCs and thus completions may occur.  Thus, it's unclear how
+> > one would distinguish between a READ that resulted in a single RPC
+> > over the wire that completed as a short read, and a READ that
+> > resulted in multiple RPCs that would each complete separately,
+> > but would eventually complete
+> >
+> > Option 2: Create a more complex 'clamp_length()' function for NFS,
+> > taking into account all ways NFS / pNFS code can split a read.
+> > + Consistent with netfs design intent
+> > + Multiple "split" requests would be called in parallel (see loop
+> > inside netfs_readahead, which repeatedly calls
+> > netfs_rreq_submit_slice)
+> > - Looks impossible without refactoring of NFS pgio API.  We need
+> > to prevent nfs_pageio_add_request() from calling nfs_pagio_doio(),
+> > and return some indication coalesce failed.  In addition, it may
+> > run into problems with fallback from DS to MDS for example (see
+> > commit d9156f9f364897e93bdd98b4ad22138de18f7c24).
+> >
+> > Option 3: Utilize NETFS_SREQ_SHORT_READ flag as needed.
+> > + Consistent with netfs design intent
+> > - Multiple "split" requests would be serialized (see code
+> > paths inside netfs_subreq_terminated that check for this flag).
+> > - Looks impossible without some refactoring of NFS pgio API.
+> > * Notes: Terminate NFS pageio page based loop at the first call
+> > to nfs_pageio_doio().  When a READ completes, NFS calls
+> > netfs_subreq_terminated() with NETFS_SREQ_SHORT_READ
+> > and is prepared to have the rest of the subrequest be resubmitted.
+> > Need to somehow fail early or avoid entirely subsequent calls to
+> > nfs_pagio_doio() for the original request though, and handle
+> > error status only from the first RPC.
+> >
+> > Option 4: Add some final completion routine to be called near
+> > bottom of nfs_pageio_complete() and would pass in at least
+> > netfs_read_subrequest(), possibly nfs_pageio_descriptor.
+> > + Inconsistent with netfs design intent
+> > - Would be a new NFS API or call on top of everything
+> > - Need to handle the "multiple completion with different
+> > status" problem (see #1).
+> >
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
 
-This comment confused me. This call just unblocks the xprt to move
-to the next message, it does not necessarily "start". So IIUC, it
-might be clearer to state "transport processing complete" or similar.
-
-> +	svc_xprt_received(xprt);
-> +
->   	ib_dma_sync_single_for_cpu(rdma_xprt->sc_pd->device,
->   				   ctxt->rc_recv_sge.addr, ctxt->rc_byte_len,
->   				   DMA_FROM_DEVICE);
-> @@ -884,33 +887,28 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
->   	rqstp->rq_xprt_ctxt = ctxt;
->   	rqstp->rq_prot = IPPROTO_MAX;
->   	svc_xprt_copy_addrs(rqstp, xprt);
-> -	svc_xprt_received(xprt);
->   	return rqstp->rq_arg.len;
->   
->   out_readlist:
->   	ret = svc_rdma_process_read_list(rdma_xprt, rqstp, ctxt);
->   	if (ret < 0)
->   		goto out_readfail;
-> -	svc_xprt_received(xprt);
-> -	return 0;
-> +	goto complete;
->   
->   out_err:
->   	svc_rdma_send_error(rdma_xprt, ctxt, ret);
->   	svc_rdma_recv_ctxt_put(rdma_xprt, ctxt);
-> -	svc_xprt_received(xprt);
->   	return 0;
->   
->   out_readfail:
->   	if (ret == -EINVAL)
->   		svc_rdma_send_error(rdma_xprt, ctxt, ret);
->   	svc_rdma_recv_ctxt_put(rdma_xprt, ctxt);
-> -	svc_xprt_received(xprt);
->   	return ret;
->   
->   out_backchannel:
->   	svc_rdma_handle_bc_reply(rqstp, ctxt);
->   out_drop:
->   	svc_rdma_recv_ctxt_put(rdma_xprt, ctxt);
-> -	svc_xprt_received(xprt);
->   	return 0;
->   }
-> diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-> index d7054e3a8e33..9163ab690288 100644
-> --- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-> +++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-> @@ -150,6 +150,8 @@ struct svc_rdma_chunk_ctxt {
->   	struct svcxprt_rdma	*cc_rdma;
->   	struct list_head	cc_rwctxts;
->   	int			cc_sqecount;
-> +	enum ib_wc_status	cc_status;
-> +	struct completion	cc_done;
->   };
->   
->   static void svc_rdma_cc_cid_init(struct svcxprt_rdma *rdma,
-> @@ -299,29 +301,15 @@ static void svc_rdma_wc_read_done(struct ib_cq *cq, struct ib_wc *wc)
->   	struct svc_rdma_chunk_ctxt *cc =
->   			container_of(cqe, struct svc_rdma_chunk_ctxt, cc_cqe);
->   	struct svcxprt_rdma *rdma = cc->cc_rdma;
-> -	struct svc_rdma_read_info *info =
-> -			container_of(cc, struct svc_rdma_read_info, ri_cc);
->   
->   	trace_svcrdma_wc_read(wc, &cc->cc_cid);
->   
->   	atomic_add(cc->cc_sqecount, &rdma->sc_sq_avail);
->   	wake_up(&rdma->sc_send_wait);
->   
-> -	if (unlikely(wc->status != IB_WC_SUCCESS)) {
-> -		set_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags);
-> -		svc_rdma_recv_ctxt_put(rdma, info->ri_readctxt);
-> -	} else {
-> -		spin_lock(&rdma->sc_rq_dto_lock);
-> -		list_add_tail(&info->ri_readctxt->rc_list,
-> -			      &rdma->sc_read_complete_q);
-> -		/* Note the unlock pairs with the smp_rmb in svc_xprt_ready: */
-> -		set_bit(XPT_DATA, &rdma->sc_xprt.xpt_flags);
-> -		spin_unlock(&rdma->sc_rq_dto_lock);
-> -
-> -		svc_xprt_enqueue(&rdma->sc_xprt);
-> -	}
-> -
-> -	svc_rdma_read_info_free(info);
-> +	cc->cc_status = wc->status;
-> +	complete(&cc->cc_done);
-> +	return;
->   }
->   
->   /* This function sleeps when the transport's Send Queue is congested.
-> @@ -676,8 +664,8 @@ static int svc_rdma_build_read_segment(struct svc_rdma_read_info *info,
->   	struct svc_rdma_recv_ctxt *head = info->ri_readctxt;
->   	struct svc_rdma_chunk_ctxt *cc = &info->ri_cc;
->   	struct svc_rqst *rqstp = info->ri_rqst;
-> -	struct svc_rdma_rw_ctxt *ctxt;
->   	unsigned int sge_no, seg_len, len;
-> +	struct svc_rdma_rw_ctxt *ctxt;
->   	struct scatterlist *sg;
->   	int ret;
->   
-> @@ -693,8 +681,8 @@ static int svc_rdma_build_read_segment(struct svc_rdma_read_info *info,
->   		seg_len = min_t(unsigned int, len,
->   				PAGE_SIZE - info->ri_pageoff);
->   
-> -		head->rc_arg.pages[info->ri_pageno] =
-> -			rqstp->rq_pages[info->ri_pageno];
-> +		/* XXX: ri_pageno and rc_page_count might be exactly the same */
-> +
-
-What is this comment conveying? It looks like a note-to-self that
-resulted in deleting the prior line. If the "XXX" notation is
-still significant, it needs more detail on what needs to be
-fixed in future.
-
->   		if (!info->ri_pageoff)
->   			head->rc_page_count++;
->   
-> @@ -788,12 +776,10 @@ static int svc_rdma_copy_inline_range(struct svc_rdma_read_info *info,
->   		page_len = min_t(unsigned int, remaining,
->   				 PAGE_SIZE - info->ri_pageoff);
->   
-> -		head->rc_arg.pages[info->ri_pageno] =
-> -			rqstp->rq_pages[info->ri_pageno];
->   		if (!info->ri_pageoff)
->   			head->rc_page_count++;
->   
-> -		dst = page_address(head->rc_arg.pages[info->ri_pageno]);
-> +		dst = page_address(rqstp->rq_pages[info->ri_pageno]);
->   		memcpy(dst + info->ri_pageno, src + offset, page_len);
->   
->   		info->ri_totalbytes += page_len;
-> @@ -813,7 +799,7 @@ static int svc_rdma_copy_inline_range(struct svc_rdma_read_info *info,
->    * svc_rdma_read_multiple_chunks - Construct RDMA Reads to pull data item Read chunks
->    * @info: context for RDMA Reads
->    *
-> - * The chunk data lands in head->rc_arg as a series of contiguous pages,
-> + * The chunk data lands in rqstp->rq_arg as a series of contiguous pages,
->    * like an incoming TCP call.
->    *
->    * Return values:
-> @@ -827,8 +813,8 @@ static noinline int svc_rdma_read_multiple_chunks(struct svc_rdma_read_info *inf
->   {
->   	struct svc_rdma_recv_ctxt *head = info->ri_readctxt;
->   	const struct svc_rdma_pcl *pcl = &head->rc_read_pcl;
-> +	struct xdr_buf *buf = &info->ri_rqst->rq_arg;
->   	struct svc_rdma_chunk *chunk, *next;
-> -	struct xdr_buf *buf = &head->rc_arg;
->   	unsigned int start, length;
->   	int ret;
->   
-> @@ -864,9 +850,9 @@ static noinline int svc_rdma_read_multiple_chunks(struct svc_rdma_read_info *inf
->   	buf->len += info->ri_totalbytes;
->   	buf->buflen += info->ri_totalbytes;
->   
-> -	head->rc_hdr_count = 1;
-> -	buf->head[0].iov_base = page_address(head->rc_pages[0]);
-> +	buf->head[0].iov_base = page_address(info->ri_rqst->rq_pages[0]);
->   	buf->head[0].iov_len = min_t(size_t, PAGE_SIZE, info->ri_totalbytes);
-> +	buf->pages = &info->ri_rqst->rq_pages[1];
->   	buf->page_len = info->ri_totalbytes - buf->head[0].iov_len;
->   	return 0;
->   }
-> @@ -875,9 +861,9 @@ static noinline int svc_rdma_read_multiple_chunks(struct svc_rdma_read_info *inf
->    * svc_rdma_read_data_item - Construct RDMA Reads to pull data item Read chunks
->    * @info: context for RDMA Reads
->    *
-> - * The chunk data lands in the page list of head->rc_arg.pages.
-> + * The chunk data lands in the page list of rqstp->rq_arg.pages.
->    *
-> - * Currently NFSD does not look at the head->rc_arg.tail[0] iovec.
-> + * Currently NFSD does not look at the rqstp->rq_arg.tail[0] kvec.
->    * Therefore, XDR round-up of the Read chunk and trailing
->    * inline content must both be added at the end of the pagelist.
->    *
-> @@ -891,7 +877,7 @@ static noinline int svc_rdma_read_multiple_chunks(struct svc_rdma_read_info *inf
->   static int svc_rdma_read_data_item(struct svc_rdma_read_info *info)
->   {
->   	struct svc_rdma_recv_ctxt *head = info->ri_readctxt;
-> -	struct xdr_buf *buf = &head->rc_arg;
-> +	struct xdr_buf *buf = &info->ri_rqst->rq_arg;
->   	struct svc_rdma_chunk *chunk;
->   	unsigned int length;
->   	int ret;
-> @@ -901,8 +887,6 @@ static int svc_rdma_read_data_item(struct svc_rdma_read_info *info)
->   	if (ret < 0)
->   		goto out;
->   
-> -	head->rc_hdr_count = 0;
-> -
->   	/* Split the Receive buffer between the head and tail
->   	 * buffers at Read chunk's position. XDR roundup of the
->   	 * chunk is not included in either the pagelist or in
-> @@ -921,7 +905,8 @@ static int svc_rdma_read_data_item(struct svc_rdma_read_info *info)
->   	 * Currently these chunks always start at page offset 0,
->   	 * thus the rounded-up length never crosses a page boundary.
->   	 */
-> -	length = XDR_QUADLEN(info->ri_totalbytes) << 2;
-> +	buf->pages = &info->ri_rqst->rq_pages[0];
-> +	length = xdr_align_size(chunk->ch_length);
->   	buf->page_len = length;
->   	buf->len += length;
->   	buf->buflen += length;
-> @@ -1033,8 +1018,7 @@ static int svc_rdma_read_call_chunk(struct svc_rdma_read_info *info)
->    * @info: context for RDMA Reads
->    *
->    * The start of the data lands in the first page just after the
-> - * Transport header, and the rest lands in the page list of
-> - * head->rc_arg.pages.
-> + * Transport header, and the rest lands in rqstp->rq_arg.pages.
->    *
->    * Assumptions:
->    *	- A PZRC is never sent in an RDMA_MSG message, though it's
-> @@ -1049,8 +1033,7 @@ static int svc_rdma_read_call_chunk(struct svc_rdma_read_info *info)
->    */
->   static noinline int svc_rdma_read_special(struct svc_rdma_read_info *info)
->   {
-> -	struct svc_rdma_recv_ctxt *head = info->ri_readctxt;
-> -	struct xdr_buf *buf = &head->rc_arg;
-> +	struct xdr_buf *buf = &info->ri_rqst->rq_arg;
->   	int ret;
->   
->   	ret = svc_rdma_read_call_chunk(info);
-> @@ -1060,35 +1043,15 @@ static noinline int svc_rdma_read_special(struct svc_rdma_read_info *info)
->   	buf->len += info->ri_totalbytes;
->   	buf->buflen += info->ri_totalbytes;
->   
-> -	head->rc_hdr_count = 1;
-> -	buf->head[0].iov_base = page_address(head->rc_pages[0]);
-> +	buf->head[0].iov_base = page_address(info->ri_rqst->rq_pages[0]);
->   	buf->head[0].iov_len = min_t(size_t, PAGE_SIZE, info->ri_totalbytes);
-> +	buf->pages = &info->ri_rqst->rq_pages[1];
->   	buf->page_len = info->ri_totalbytes - buf->head[0].iov_len;
->   
->   out:
->   	return ret;
->   }
->   
-> -/* Pages under I/O have been copied to head->rc_pages. Ensure they
-> - * are not released by svc_xprt_release() until the I/O is complete.
-> - *
-> - * This has to be done after all Read WRs are constructed to properly
-> - * handle a page that is part of I/O on behalf of two different RDMA
-> - * segments.
-> - *
-> - * Do this only if I/O has been posted. Otherwise, we do indeed want
-> - * svc_xprt_release() to clean things up properly.
-> - */
-> -static void svc_rdma_save_io_pages(struct svc_rqst *rqstp,
-> -				   const unsigned int start,
-> -				   const unsigned int num_pages)
-> -{
-> -	unsigned int i;
-> -
-> -	for (i = start; i < num_pages + start; i++)
-> -		rqstp->rq_pages[i] = NULL;
-> -}
-> -
->   /**
->    * svc_rdma_process_read_list - Pull list of Read chunks from the client
->    * @rdma: controlling RDMA transport
-> @@ -1153,11 +1116,22 @@ int svc_rdma_process_read_list(struct svcxprt_rdma *rdma,
->   		goto out_err;
->   
->   	trace_svcrdma_post_read_chunk(&cc->cc_cid, cc->cc_sqecount);
-> +	init_completion(&cc->cc_done);
->   	ret = svc_rdma_post_chunk_ctxt(cc);
->   	if (ret < 0)
->   		goto out_err;
-> -	svc_rdma_save_io_pages(rqstp, 0, head->rc_page_count);
-> -	return 1;
-> +
-> +	ret = 1;
-> +	wait_for_completion(&cc->cc_done);
-> +	if (cc->cc_status != IB_WC_SUCCESS)
-> +		ret = -EIO;
-> +
-> +	/* rq_respages starts after the last arg page */
-> +	rqstp->rq_respages = &rqstp->rq_pages[head->rc_page_count];
-> +	rqstp->rq_next_page = rqstp->rq_respages + 1;
-> +
-> +	/* Ensure svc_rdma_recv_ctxt_put() does not try to release pages */
-> +	head->rc_page_count = 0;
->   
->   out_err:
->   	svc_rdma_read_info_free(info);
-> 
-> 
-> 
