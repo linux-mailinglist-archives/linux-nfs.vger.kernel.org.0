@@ -2,254 +2,266 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DFA53506CD
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Mar 2021 20:51:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D629F350724
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Mar 2021 21:09:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234832AbhCaSvY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 Mar 2021 14:51:24 -0400
-Received: from mail-dm6nam12on2095.outbound.protection.outlook.com ([40.107.243.95]:61664
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S235723AbhCaSvA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 31 Mar 2021 14:51:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KMaY7BQQm4B5sZrv5RegGLBAYvRXC2pU7gLeXFsXsD8YQaYr2voAcjScRZD2AXb6OJNm7ZhIE0BFBrDZhgj7V3/JeZmb/DnfKywfIr8Hk6qLMCibeR10Oo3KnG7RlbE9gwehLY6xjPoj33QsK56FfB7BbTGr7FCRgP618feq+o+TMa6f+/MBiRs9+lUAQltI239JxNe/zlpjmGnw2XeIUVMrcNevPLchX+vfUPxO0qi+tTYyXI4m82bv/z+SawiHUF87MM75UhmBHOQ9m8Ssktt+yrArzs6moJo5/mdnalpvp9GMRMOySrEo3YlbNOdtnRcfPHAF14ViBamjTOoMFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w5JY5WRtyiXSeCm4yvuCaG2kX9APd+CTR0enOrBkZzA=;
- b=LvWQIM9i3FVjJ4O+WOxl3UDNGgtHwFYs3PohcVOQmsE7tdv+9CDyCKaKMaL7d4i+EdIkKTeCteffSvocbR8zZBTEMylZotx/Xwl6yU7LUn3hVidOidiOFX9YKx5gczbayr9c9RhGIZX7N65roUqnH+FAV5XuMfxkFCk4MUaRYip92y1Olshr/swLTvFNPBfQkpKrzh7L6Gy9SRZX5GMqqTbCCbHrxlrQ/YbZy6d7ge08Gv3RNssC/489Qw3CWtjzC6o8IAakzwtPUYxNIPVRaitzZG+ERZu83/BKXRM1YQheV+KKc5X9MXB1sr4sw4PiJocpJ033vfa5c23uvYadUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w5JY5WRtyiXSeCm4yvuCaG2kX9APd+CTR0enOrBkZzA=;
- b=E2igV9Ty8qygdUhyRU59Omv2uaEaifM3QLTkLmVZkfQcUyP6ZSsFJhdOGa7mfX983KSoicPRfevaaO7VvnFEmjBqgal5bT09TT2kfZZ8sHK2D4MhLkw575fxxTLFutSMn5UwHdnnHWW0QjvhxovKabYC0ejpYiELRNF1/Ah+55A=
-Received: from CH2PR13MB3525.namprd13.prod.outlook.com (2603:10b6:610:21::29)
- by CH2PR13MB3320.namprd13.prod.outlook.com (2603:10b6:610:23::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.16; Wed, 31 Mar
- 2021 18:50:56 +0000
-Received: from CH2PR13MB3525.namprd13.prod.outlook.com
- ([fe80::69bf:b8e4:7fa0:ae74]) by CH2PR13MB3525.namprd13.prod.outlook.com
- ([fe80::69bf:b8e4:7fa0:ae74%7]) with mapi id 15.20.3999.027; Wed, 31 Mar 2021
- 18:50:56 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "dwysocha@redhat.com" <dwysocha@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
-        "dhowells@redhat.com" <dhowells@redhat.com>
+        id S234442AbhCaTJN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 Mar 2021 15:09:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30014 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234311AbhCaTIz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Mar 2021 15:08:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617217734;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=t5Q2P2nlKRZxni8QkKl4sxoIlDhD/32MoLxs12LITDQ=;
+        b=b7x3q2MiUtgIxV1Cb/WWmWdh802v083a4IVeWY4tM4BaCupL0bXKIJ7p9RlhR5bJxKOXHT
+        s/QKVYSdJbwGCkUptNXrMo4G+LZc0zqehCl1v9siQGawHTYtg2Km+sDwQ5LDYgg/tVRPa1
+        9TLuCI11VsXNTa6n5wjxkMhv+pgrcmk=
+Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com
+ [209.85.219.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-427-EDnJIN2tN-KnOYgJFVsjIw-1; Wed, 31 Mar 2021 15:08:50 -0400
+X-MC-Unique: EDnJIN2tN-KnOYgJFVsjIw-1
+Received: by mail-yb1-f200.google.com with SMTP id y13so3265916ybk.20
+        for <linux-nfs@vger.kernel.org>; Wed, 31 Mar 2021 12:08:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t5Q2P2nlKRZxni8QkKl4sxoIlDhD/32MoLxs12LITDQ=;
+        b=afKgV15PgesprMs49VjzeQL4Ynb/NzczPTJf9gxewz4mUdovRbFJaYf9kvc5t+GrCL
+         KRfjumahSGIe8Y7FjYf4+DCCS9gC18TLqx+0ZDHPBKjCd+HNJdBCn06y5Yn9soi5pMOY
+         kkALdEhYXVbap5r5Vk/pooE15OgoL/o+6QG/kcJqnrU80tSEtClz/JoPZGzfy3TTfjuN
+         Dzx/rtUzrHuMH+LV2KiZQJkfRhKa43//y8a4+BCuqugho/Utcpbz6fAfBaPZNR1Zefdj
+         V5NRlibuPWA6zXrrPbGtYPsCRTDoxW3sSCyTNS7nWqOe1xcYbnyy/2gXUkEFoHNPAH/Z
+         BTQg==
+X-Gm-Message-State: AOAM532OBXTK+uEAfxII21iNvXCbs5h5mk9NrklBd0aZd1lr5JwZHD6p
+        u3zysiLTvs1mBxIiEnqyxVohAGXNpTG3wJXPss2TMnK1VwYU8EL/wqgzI054TISDQmDiz5WtGi8
+        0S2DPJd7t8uTdNnpSS2Mbk79T0AiR7Z8RucGO
+X-Received: by 2002:a25:d40f:: with SMTP id m15mr6256644ybf.30.1617217729657;
+        Wed, 31 Mar 2021 12:08:49 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz+m/8zZ10bL67Hfg3ZlxhXZvcyVEEgZCEeOcaBlWLtTMIDncIYdVNUx9i1E1wYnAOwtSDBQGreTOGhorq9x6s=
+X-Received: by 2002:a25:d40f:: with SMTP id m15mr6256615ybf.30.1617217729389;
+ Wed, 31 Mar 2021 12:08:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <CALF+zOnCisFWTubWEHhTLpt6=CUb7n86YvrNX3nreCYS73_v_Q@mail.gmail.com>
+ <49e123c6702cb6b27f114dfa64157d9a73463fad.camel@hammerspace.com>
+ <CALF+zO=KeU7O-sACUgX556_Mxdb1Xrvq5foJT1Py2DROBojxfQ@mail.gmail.com> <9cfd5bc3cfc6abc2d3316b0387222e708d67f595.camel@hammerspace.com>
+In-Reply-To: <9cfd5bc3cfc6abc2d3316b0387222e708d67f595.camel@hammerspace.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Wed, 31 Mar 2021 15:08:13 -0400
+Message-ID: <CALF+zO=XcB=+sMSG1BXhUSQDxNX5oi2p8zH5PWWBbe7aYB0yMw@mail.gmail.com>
 Subject: Re: RFC: Approaches to resolve netfs API interface to NFS multiple
  completions problem
-Thread-Topic: RFC: Approaches to resolve netfs API interface to NFS multiple
- completions problem
-Thread-Index: AQHXJlZK3AOTzzfwiE65ZpH9xPMWkaqeY/CAgAAIf4CAAARzgA==
-Date:   Wed, 31 Mar 2021 18:50:56 +0000
-Message-ID: <9cfd5bc3cfc6abc2d3316b0387222e708d67f595.camel@hammerspace.com>
-References: <CALF+zOnCisFWTubWEHhTLpt6=CUb7n86YvrNX3nreCYS73_v_Q@mail.gmail.com>
-         <49e123c6702cb6b27f114dfa64157d9a73463fad.camel@hammerspace.com>
-         <CALF+zO=KeU7O-sACUgX556_Mxdb1Xrvq5foJT1Py2DROBojxfQ@mail.gmail.com>
-In-Reply-To: <CALF+zO=KeU7O-sACUgX556_Mxdb1Xrvq5foJT1Py2DROBojxfQ@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: debe29b3-6589-4128-b0c4-08d8f475eb16
-x-ms-traffictypediagnostic: CH2PR13MB3320:
-x-microsoft-antispam-prvs: <CH2PR13MB332079653F1AE2C5C37EF0E9B87C9@CH2PR13MB3320.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iPgo6NP6Y/W1qXzxjuaOzglCZ6CpX6WkUG4Z+/+xodhqS2ZkklZ9ZNF5ZEGrFlT4u99zhBGdTWMNBKPiUeTyZzZzC1iV9DvWXDxmgWXi0gk6J7sB5I8KE3xbLP/4NuK1pnqobl9z2IYPba97eteQLN1mrBO7JQX3XZBylItdZOfR7DCCW3ffxVB+qF0Cb7qMd9KowYNlVuIr0ts/flUvZEffLhPKuXH6hdnsgieS8hyofD2J22I7s5PNbLg3Kc4FYiCq6seVtA5po3KyvP++pTv/UOhqoUCzsk0zNB+YLE26w/ioVf3TzjkfNjNNt3XBdzFR4nEAy4n1YO7F35sZEZ9YSdfBWVD3rWil9pY0mpG0uyR1pF/BXl7xC3qRy/r44XXeh34Tl2M0GiDMe769vBvA9v61THuG5ZGdeMj4/21A6oRGwtXQIPVPL2UcUl+8ddki1ociQ66LEG336pZ3y8+EQteh8GGTgYMrSc5RZgO3tKTWirYmke6IDYoaFWDYrjuc2pJsqhx931OaZdA4AQhX1ohyllhydTlM9QXE+ELrLtQ+XzIfUStV74LXq19BacfPI1IaIw9+PSGY56GTxa24WgDIEY8QBNPVIpJ9TNaLxnChfSxJ/7Bi0R1AIF3+Ib27ccr7Tc/wlCrOnzE3DFRGEVuLsgyo9MpOz9RXPIlZz/hrKYVoUAzNwC3g7Se4jtuM21sPQf2G+n5QXVWqzMrN+BQq4Buivo7H2tHrYhhNFDQskFnBU2GtZku0Hdtb
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3525.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(39840400004)(366004)(346002)(376002)(136003)(396003)(186003)(26005)(83380400001)(2906002)(4326008)(6506007)(71200400001)(86362001)(478600001)(64756008)(76116006)(66946007)(66446008)(316002)(5660300002)(66556008)(2616005)(53546011)(54906003)(66476007)(6512007)(8936002)(6916009)(6486002)(15974865002)(36756003)(8676002)(38100700001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?eXROTHRkUkQ5ZzZBNTdsTzUzRXk4OVgzajUvYUdKb3V1aVlaTEYzc2sxRWFX?=
- =?utf-8?B?N0k5NnJsak9JaHo1dlV1dHk4TjgwaUNkWE15Vy9XRW5hU1I5ck9HTUJaZlJ2?=
- =?utf-8?B?OFJwVmxIcUVxQ25JeDFZZFo0VkJKbjAzN3loOHZ2eE5RUWUrR1BrdFlrTHVK?=
- =?utf-8?B?RzFidUNEOG1CY2lTNnlyMGlVZWpXcUhkZUNPK3B0cWNTRVR2T3kzdzBHTzFL?=
- =?utf-8?B?amZpYXRHR1BRV0lkUzNmamREQjhPaC9telRGU3kxUGxEL1RucGJtQ096YTdO?=
- =?utf-8?B?VDFzcWp3MWh2OFJUbktYWXF4V0llUExwNjlWQkxMS1YwQmprWG56WHpGQkRs?=
- =?utf-8?B?b3RVanBPUUJFQ0RVeXRMd2xrZ1lIMnpWc3VQQnUyZlJIY2ZTZVB2NnYvRStG?=
- =?utf-8?B?enM2ZUhmZzQxUDNGZithTzdnUmhkVVhUeVZsNFZHZW45M3FtU3BFdStiQldv?=
- =?utf-8?B?L3dqT0FvZG1zR3BmS2J1Y2U4YjQxc2ovalY3K3pJTHVUQWJ3VStOcGRiU05v?=
- =?utf-8?B?anlScDN5b0pPaFVBVzJabUx1MDhEYUdOSVYveFJEVWZkaGYweGNwUWVrcGtR?=
- =?utf-8?B?bklVUmVpYmhQTnFpdFA1L3NucjJwYlZUejdWUVAxUGw4YjlFZ2dzbHhOS29C?=
- =?utf-8?B?S2tNaHJmNk5DM2VhQUg3ZWRXcVBtT0llbng0c3lIZTZBd0U3cVh6aXh4Q25G?=
- =?utf-8?B?TTNWTzZQRkhyKzYzMUJFTHk4N05DUWhhbXdQcWFCR3VBMU8vVHhkWkRqbWZr?=
- =?utf-8?B?R2NqTFRSa2tvT2EybGVCcDJCeksrSlAyODJpVG9BOGdxSjBvMmxwNXBBSVU2?=
- =?utf-8?B?NCt3djI3NEM4azh3b25YS2pNYWYzUFhXZDBud2RhQWc0aTQyZW5EMnJneTdy?=
- =?utf-8?B?aDE4aWppd21OQjBkMGdvaHpqVlN3MHZVL1Z4M1lSRWJCalJncGxnTUl0bWI3?=
- =?utf-8?B?czdzUnlNN3RLaHVpU2ljcldpZ3Y1bjNHS1dSemwzRTl6Qkc3a1pqRzNwRm80?=
- =?utf-8?B?WGltM0F5b3RpUjlSVFBxdEtkUTRpb2VqSXBjRFNhLy9CZHNrazhQNTlUY1RN?=
- =?utf-8?B?Q3ZoSmJINVhya1VqQzl4dzRQTmF0T3JaUXhoUmorTW91Skk3K3dONml3Mzdm?=
- =?utf-8?B?c0MzS1FPZEJRTm56TTljZ3REUys2emZ5eCtaUm4rUlZHRWhtN2xXN3UzVkJW?=
- =?utf-8?B?ZFBHVVJ5ZHBSSmxBR1MwR1E4RmZaTmZ3VVJPaWZ2U1BHbnNleUN5TVpkdFU1?=
- =?utf-8?B?T0U1Tm1NWWtlWVF2QzhhSjV5VVc0aDJmUDVQdjY5TktjQkhQbmpiSWk1azVx?=
- =?utf-8?B?eGdURVZucGlwSUl0QmVpMlVVL2NXRmQ2TDVrdEdPL1llUXU2eElaOEpicjlT?=
- =?utf-8?B?MkVWdVpYSnhkSVRLZjAxR2UvZzFBeCttR3hxaU9OdmVRa2QrZWNMK0hJbnkr?=
- =?utf-8?B?SHlQQUJPakxtYkVxbVhaRlMxL0xHdjFobFRZZlQrOU1aYjIzT29kdFlDb2hD?=
- =?utf-8?B?THRaUzdleEl0M0FQWUhVc1lKeW50cFNOZ1lTaUJ1c3A5bUpGUXhpYWJCSEVw?=
- =?utf-8?B?QVczZDU3NlNuRG9HbGR0R2VGS2JJUi9sZ1BuSlFmMllpNHhtTnRoMXh1Y3FS?=
- =?utf-8?B?WEwxdHM1bU9td1BudlNwWXJueS9maHh0dzFDUmFJdUV2TVFBZGdaTzQ3VGh6?=
- =?utf-8?B?U2dJRWhmcTB5K2lDUXFEOVV6a2VKQzlIc0QwV1E4K2hTMTZkMFhRdi8xSmN0?=
- =?utf-8?Q?XhKRRLbrcNR8DctpasMkR9887TOqqlbE6WyIW//?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8268D3C1A2443045AFD0E7BC9CE1E6C0@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR13MB3525.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: debe29b3-6589-4128-b0c4-08d8f475eb16
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2021 18:50:56.3959
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: A9u3CBD/HfR0ld/MlyQvTLzVKtNC8bTG0qWJli7V2lk8NoxrxHgWLBhrfL5iGgPz1iChza10M2g3+DcM2elxrw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3320
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
+        "dhowells@redhat.com" <dhowells@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIxLTAzLTMxIGF0IDE0OjM0IC0wNDAwLCBEYXZpZCBXeXNvY2hhbnNraSB3cm90
-ZToNCj4gT24gV2VkLCBNYXIgMzEsIDIwMjEgYXQgMjowNCBQTSBUcm9uZCBNeWtsZWJ1c3QgPA0K
-PiB0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gT24gV2VkLCAyMDIx
-LTAzLTMxIGF0IDEzOjQ5IC0wNDAwLCBEYXZpZCBXeXNvY2hhbnNraSB3cm90ZToNCj4gPiA+IFRy
-b25kLA0KPiA+ID4gDQo+ID4gPiBJJ3ZlIGJlZW4gd29ya2luZyBvbiBnZXR0aW5nIE5GUyBjb252
-ZXJ0ZWQgdG8gZGhvd2VsbHMgbmV3DQo+ID4gPiBmc2NhY2hlDQo+ID4gPiBhbmQNCj4gPiA+IG5l
-dGZzIEFQSXMgYW5kIHJ1bm5pbmcgaW50byBhIHByb2JsZW0gd2l0aCBob3cgTkZTIGlzIGRlc2ln
-bmVkDQo+ID4gPiBhbmQgaXQNCj4gPiA+IGludm9sdmVzIHRoZSBORlMgcGFnZWxpc3QuYyAvIHBn
-aW8gQVBJLsKgIEknZCBhcHByZWNpYXRlIGl0IGlmIHlvdQ0KPiA+ID4gY291bGQgcmV2aWV3IGFu
-ZCBnaXZlIHlvdXIgdGhvdWdodHMgb24gcG9zc2libGUgYXBwcm9hY2hlcy7CoCBJJ3ZlDQo+ID4g
-PiB0cmllZCB0byBvdXRsaW5lIHNvbWUgb2YgdGhlIHBvc3NpYmlsaXRpZXMgYmVsb3cuwqAgSSB0
-cmllZCBjb2RpbmcNCj4gPiA+IG9wdGlvbiAjMyBhbmQgcmFuIGludG8gc29tZSBwcm9ibGVtcywg
-YW5kIGl0IGhhcyBhIHNlcmlhbGl6YXRpb24NCj4gPiA+IGxpbWl0YXRpb24uwqAgQXQgdGhpcyBw
-b2ludCBJJ20gbGVhbmluZyB0b3dhcmRzIG9wdGlvbiAyLCBzbyBJJ2xsDQo+ID4gPiBwcm9iYWJs
-eSB0cnkgdGhhdCBhcHByb2FjaCBpZiB5b3UgZG9uJ3QgaGF2ZSB0aW1lIGZvciByZXZpZXcgb3IN
-Cj4gPiA+IGhhdmUNCj4gPiA+IHN0cm9uZyB0aG91Z2h0cyBvbiBpdC4NCj4gPiA+IA0KPiA+IA0K
-PiA+IEkgYW0gbm90IGdvaW5nIHRocm91Z2ggYW5vdGhlciByZWRlc2lnbiBvZiB0aGUgTkZTIGNv
-ZGUgaW4gb3JkZXIgdG8NCj4gPiBhY2NvbW1vZGF0ZSBhbm90aGVyIGNhY2hlZnMgZGVzaWduLiBJ
-ZiBuZXRmcyBuZWVkcyBhIHJlZmFjdG9yaW5nIG9yDQo+ID4gcmVkZXNpZ24gb2YgdGhlIEkvTyBj
-b2RlIHRoZW4gaXQgd2lsbCBiZSBpbW1lZGlhdGVseSBOQUNLZWQuDQo+ID4gDQo+IEkgZG9uJ3Qg
-dGhpbmsgaXQgd2lsbCByZXF1aXJlIGEgcmVkZXNpZ24uwqAgSSB3YXMgdGhpbmtpbmcgbW9yZSBh
-Ym91dA0KPiBhZGRpbmcgYSBmbGFnIHRvIG5mc19wYWdlaW9fYWRkX3JlcXVlc3QoKSBmb3IgZXhh
-bXBsZSB0aGF0DQo+IHdvdWxkIHJldHVybiBhIGRpZmZlcmVudCB2YWx1ZSBpZiBjb2FsZXNjZSBv
-ZiB0aGUgcGFnZSBiZWluZw0KPiBhZGRlZCBmYWlsZWQuwqAgU28gd2UnZCBoYXZlOg0KPiBuZnNf
-cGFnZWlvX2luaXQoKTogY2FsbGVkIDEgdGltZQ0KPiBuZnNfcGFnZWlvX2FkZF9yZXF1ZXN0KCk6
-IGNhbGxlZCBOIHRpbWVzLCBvbmUgZm9yIGVhY2ggcGFnZSwgYnV0IHN0b3ANCj4gaWYNCj4gY29h
-bGVzY2UgZmFpbHMNCj4gbmZzX3BhZ2Vpb19jb21wbGV0ZSgpOiBjYWxsZWQgMSB0aW1lDQo+IA0K
-PiA+IFdoeSBkb2VzIG5ldGZzIG5lZWQgdG8ga25vdyB0aGVzZSBkZXRhaWxzIGFib3V0IHRoZSBO
-RlMgY29kZQ0KPiA+IGFueXdheT8NCj4gPiANCj4gV2UgY2FuIHByb2JhYmx5IGdldCBieSB3aXRo
-b3V0IGl0IGJ1dCBpdCB3aWxsIGJlIGF3a3dhcmQgYW5kIHByb2JhYmx5DQo+IG5vdCB0aGUNCj4g
-YmVzdCwgYnV0IEknbSBub3Qgc3VyZS4NCj4gDQo+IEkgdHJpZWQgdG8gZXhwbGFpbiBiZWxvdyB3
-aXRoIGEgcHJvYmxlbSBzdGF0ZW1lbnQgYnV0IG1heWJlIGl0IHdhcw0KPiB1bmNsZWFyLg0KPiBU
-aGUgYmFzaWMgZGVzaWduIG9mIG5ldGZzIEFQSSBhcyBpdCBwZXJ0YWlucyB0byB0aGlzIHByb2Js
-ZW0gaXM6DQo+ICogaXNzdWVfb3AoKTogY2FsbHMgaW50byB0aGUgc3BlY2lmaWMgbmV0ZnMgKE5G
-UykgdG8gb2J0YWluIHRoZSBkYXRhDQo+IGZyb20gc2VydmVyDQo+IChzZW5kIG9uZSBvciBtb3Jl
-IFJQQ3MpDQo+ICogbmV0ZnNfc3VicmVxX3Rlcm1pbmF0ZWQoKTogd2hlbiBSUEMocykgYXJlIGNv
-bXBsZXRlZCwgd2UgbmVlZCB0bw0KPiBjYWxsDQo+IG5ldGZzIEFQSSBiYWNrIHRvIHNheSB0aGUg
-ZGF0YSBpcyBlaXRoZXIgdGhlcmUgb3IgdGhlcmUgd2FzIGFuIGVycm9yDQo+IA0KDQpUaGF0J3Mg
-YSBwcm9ibGVtLiBUaGF0IG1lYW5zIE5GUyBhbmQgbmV0ZnMgbmVlZCBpbnRpbWF0ZSBrbm93bGVk
-Z2Ugb2YNCmVhY2ggb3RoZXIncyBkZXNpZ24sIGFuZCBJJ20gbm90IGdvaW5nIGFsbG93IHVzIHRv
-IGdvIHRoZXJlIGFnYWluLiBXZQ0KZGlkIHRoYXQgd2l0aCBjYWNoZWZzLCBhbmQgaGVyZSB3ZSBh
-cmUgMTAgeWVhcnMgbGF0ZXIgZG9pbmcgYSBmdWxsDQpyZWRlc2lnbi4gVGhhdCdzIHVuYWNjZXB0
-YWJsZS4NCg0KSWYgbmV0ZnMgcmVxdWlyZXMgdGhlc2UgZGV0YWlsZWQgY2hhbmdlcyB0byB0aGUg
-TkZTIGNvZGUsIHRoZW4gdGhhdCdzIGENCnJlZCBmbGFnIHRoYXQgdGhlIHdob2xlIGRlc2lnbiBp
-cyBicm9rZW4gYW5kIG5lZWRzIHRvIGJlIHJldmlzZWQuDQoNCj4gSSB3b3VsZCBub3RlIHRoYXQg
-YXNzdW1pbmcgd2UgY2FuIGNvbWUgdXAgd2l0aCBzb21ldGhpbmcgYWNjZXB0YWJsZQ0KPiB0bw0K
-PiBORlMsIGl0IHNob3VsZCBzaW1wbGlmeSBib3RoIG5mc19yZWFkcGFnZSgpIGFuZA0KPiBuZnNf
-cmVhZHBhZ2VzL25mc19yZWFkaGVhZC4NCj4gSSBob3BlIHdlIGNhbiBmaW5kIHNvbWUgY29tbW9u
-IGdyb3VuZCBzbyBpdCdzIG5laXRoZXIgdG9vIGludmFzaXZlIHRvDQo+IE5GUyBhbmQgYWxzbyBt
-YXliZSB0aGVyZSdzIHNvbWUgc2ltaWxhciBpbXByb3ZlbWVudHMgaW4gTkZTIHRoYXQgY2FuDQo+
-IGJlIGRvbmUgYWxvbmcgd2l0aCB0aGlzIGludGVyZmFjZS4NCj4gDQo+IA0KPiA+ID4gVGhhbmtz
-Lg0KPiA+ID4gDQo+ID4gPiANCj4gPiA+IFByb2JsZW06IFRoZSBORlMgcGFnZWlvIGludGVyZmFj
-ZSBkb2VzIG5vdCBleHBvc2UgYSBtYXggcmVhZA0KPiA+ID4gbGVuZ3RoDQo+ID4gPiB0aGF0DQo+
-ID4gPiB3ZSBjYW4gZWFzaWx5IHVzZSBpbnNpZGUgbmV0ZnMgY2xhbXBfbGVuZ3RoKCkgZnVuY3Rp
-b24uwqAgQXMgYQ0KPiA+ID4gcmVzdWx0LA0KPiA+ID4gd2hlbg0KPiA+ID4gaXNzdWVfb3AoKSBp
-cyBjYWxsZWQgaW5kaWNhdGluZyBhIHNpbmdsZSBuZXRmcyBzdWJyZXF1ZXN0LCB0aGlzDQo+ID4g
-PiBjYW4NCj4gPiA+IGJlDQo+ID4gPiBzcGxpdCBpbnRvDQo+ID4gPiBtdWx0aXBsZSBORlMgc3Vi
-cmVxdWVzdHMgLyBSUENzIGluc2lkZSBndXRzIG9mIE5GUyBwYWdlaW8gY29kZS4NCj4gPiA+IE11
-bHRpcGxlDQo+ID4gPiBORlMgc3VicmVxdWVzdHMgcmVxdWVzdHMgbGVhZHMgdG8gbXVsdGlwbGUg
-Y29tcGxldGlvbnMsIGFuZCB0aGUNCj4gPiA+IG5ldGZzDQo+ID4gPiBBUEkgZXhwZWN0cyBhIDE6
-MSBtYXBwaW5nIGJldHdlZW4gaXNzdWVfb3AoKSBhbmQNCj4gPiA+IG5ldGZzX3N1YnJlcV90ZXJt
-aW5hdGVkKCkgY2FsbHMuDQo+ID4gPiANCj4gPiA+IERldGFpbHMgb2YgdGhlIE5GUyBwYWdlaW8g
-QVBJIChzZWUgaW5jbHVkZS9saW51eC9uZnNfcGFnZS5oIGFuZA0KPiA+ID4gZnMvbmZzL3BhZ2Vs
-aXN0LmMpDQo+ID4gPiBEZXRhaWxzIG9mIHRoZSBuZXRmcyBBUEkgKHNlZSBpbmNsdWRlL2xpbnV4
-L25ldGZzLmggYW5kDQo+ID4gPiBmcy9uZXRmcy9yZWFkX2hlbHBlci5jKQ0KPiA+ID4gDQo+ID4g
-PiBUaGUgTkZTIHBhZ2VpbyBBUEkgMyBtYWluIGNhbGxzIGFyZSBhcyBmb2xsb3dzOg0KPiA+ID4g
-MS4gbmZzX3BhZ2Vpb19pbml0KCk6IGluaXRpYWxpemUgYSBwYWdlaW8gc3RydWN0dXJlIChSL1cg
-SU8gb2YgTg0KPiA+ID4gcGFnZXMpDQo+ID4gPiAyLiBuZnNfcGFnZWlvX2FkZF9yZXF1ZXN0KCk6
-IGNhbGxlZCBmb3IgZWFjaCBwYWdlIHRvIGFkZCB0byBhbiBJTw0KPiA+ID4gKiBDYWxscyBuZnNf
-cGFnZWlvX2FkZF9yZXF1ZXN0X21pcnJvciAtPiBfX25mc19wYWdlaW9fYWRkX3JlcXVlc3QNCj4g
-PiA+IMKgICogX19uZnNfcGFnZWlvX2FkZF9yZXF1ZXN0IG1heSBjYWxsIG5mc19wYWdlaW9fZG9p
-bygpIHdoaWNoDQo+ID4gPiBhY3R1YWxseQ0KPiA+ID4gwqDCoMKgIHNlbmRzIGFuIFJQQyBvdmVy
-IHRoZSB3aXJlIGlmIHBhZ2UgY2Fubm90IGJlIGFkZGVkIHRvIHRoZQ0KPiA+ID4gcmVxdWVzdA0K
-PiA+ID4gwqDCoMKgICgiY29hbGVzY2VkIikgZHVlIHRvIHZhcmlvdXMgZmFjdG9ycy7CoCBGb3Ig
-bW9yZSBkZXRhaWxzLCBzZWUNCj4gPiA+IMKgwqDCoCBuZnNfcGFnZWlvX2RvX2FkZF9yZXF1ZXN0
-KCkgYW5kIGFsbCB1bmRlcmx5aW5nIGNvZGUgaXQgY2FsbHMNCj4gPiA+IHN1Y2gNCj4gPiA+IMKg
-wqDCoCBhcyBuZnNfY29hbGVzY2Vfc2l6ZSgpIGFuZCBzdWJzZXF1ZW50IHBnaW8tPnBnX29wcy0+
-cGdfdGVzdCgpDQo+ID4gPiBjYWxscw0KPiA+ID4gMy4gbmZzX3BhZ2Vpb19jb21wbGV0ZSgpIC0g
-ImNvbXBsZXRlIiB0aGUgcGFnZWlvDQo+ID4gPiAqIGNhbGxzIG5mc19wYWdlaW9fY29tcGxldGVf
-bWlycm9yIC0+IG5mc19wYWdlaW9fZG9pbygpDQo+ID4gPiANCj4gPiA+IFRoZSBORlMgcGFnZWlv
-IEFQSSB0aHVzIG1heSBnZW5lcmF0ZSBtdWx0aXBsZSBvdmVyIHRoZSB3aXJlIFJQQ3MNCj4gPiA+
-IGFuZCB0aHVzIG11bHRpcGxlIGNvbXBsZXRpb25zIGV2ZW4gdGhvdWdoIGF0IHRoZSBoaWdoIGxl
-dmVsIG9ubHkNCj4gPiA+IG9uZSBjYWxsIHRvIG5mc19wYWdlaW9fY29tcGxldGUoKSBpcyBtYWRl
-Lg0KPiA+ID4gDQo+ID4gPiBPcHRpb24gMTogSnVzdCB1c2UgTkZTIHBhZ2VpbyBBUEkgYXMgaXMs
-IGFuZCBkZWFsIHdpdGggcG9zc2libGUNCj4gPiA+IG11bHRpcGxlDQo+ID4gPiBjb21wbGV0aW9u
-cy4NCj4gPiA+IC0gSW5jb25zaXN0ZW50IHdpdGggbmV0ZnMgZGVzaWduIGludGVudA0KPiA+ID4g
-LSBOZWVkIHRvIGtlZXAgdHJhY2sgb2YgdGhlIFJQQyBjb21wbGV0aW9uIHN0YXR1cywgYW5kIGZv
-cg0KPiA+ID4gZXhhbXBsZSwNCj4gPiA+IGlmIG9uZSBjb21wbGV0ZXMgd2l0aCBzdWNjZXNzIGFu
-ZCBvbmUgYW4gZXJyb3IsIHByb2JhYmx5IGNhbGwNCj4gPiA+IG5ldGZzX3N1YnJlcV90ZXJtaW5h
-dGVkKCkgd2l0aCB0aGUgZXJyb3IuDQo+ID4gPiAtIFRoZXJlJ3Mgbm8gd2F5IGZvciB0aGUgY2Fs
-bGVyIG9mIHRoZSBORlMgcGFnZWlvIEFQSSB0byBrbm93IGhvdw0KPiA+ID4gbWFueSBSUENzIGFu
-ZCB0aHVzIGNvbXBsZXRpb25zIG1heSBvY2N1ci7CoCBUaHVzLCBpdCdzIHVuY2xlYXIgaG93DQo+
-ID4gPiBvbmUgd291bGQgZGlzdGluZ3Vpc2ggYmV0d2VlbiBhIFJFQUQgdGhhdCByZXN1bHRlZCBp
-biBhIHNpbmdsZQ0KPiA+ID4gUlBDDQo+ID4gPiBvdmVyIHRoZSB3aXJlIHRoYXQgY29tcGxldGVk
-IGFzIGEgc2hvcnQgcmVhZCwgYW5kIGEgUkVBRCB0aGF0DQo+ID4gPiByZXN1bHRlZCBpbiBtdWx0
-aXBsZSBSUENzIHRoYXQgd291bGQgZWFjaCBjb21wbGV0ZSBzZXBhcmF0ZWx5LA0KPiA+ID4gYnV0
-IHdvdWxkIGV2ZW50dWFsbHkgY29tcGxldGUNCj4gPiA+IA0KPiA+ID4gT3B0aW9uIDI6IENyZWF0
-ZSBhIG1vcmUgY29tcGxleCAnY2xhbXBfbGVuZ3RoKCknIGZ1bmN0aW9uIGZvcg0KPiA+ID4gTkZT
-LA0KPiA+ID4gdGFraW5nIGludG8gYWNjb3VudCBhbGwgd2F5cyBORlMgLyBwTkZTIGNvZGUgY2Fu
-IHNwbGl0IGEgcmVhZC4NCj4gPiA+ICsgQ29uc2lzdGVudCB3aXRoIG5ldGZzIGRlc2lnbiBpbnRl
-bnQNCj4gPiA+ICsgTXVsdGlwbGUgInNwbGl0IiByZXF1ZXN0cyB3b3VsZCBiZSBjYWxsZWQgaW4g
-cGFyYWxsZWwgKHNlZSBsb29wDQo+ID4gPiBpbnNpZGUgbmV0ZnNfcmVhZGFoZWFkLCB3aGljaCBy
-ZXBlYXRlZGx5IGNhbGxzDQo+ID4gPiBuZXRmc19ycmVxX3N1Ym1pdF9zbGljZSkNCj4gPiA+IC0g
-TG9va3MgaW1wb3NzaWJsZSB3aXRob3V0IHJlZmFjdG9yaW5nIG9mIE5GUyBwZ2lvIEFQSS7CoCBX
-ZSBuZWVkDQo+ID4gPiB0byBwcmV2ZW50IG5mc19wYWdlaW9fYWRkX3JlcXVlc3QoKSBmcm9tIGNh
-bGxpbmcNCj4gPiA+IG5mc19wYWdpb19kb2lvKCksDQo+ID4gPiBhbmQgcmV0dXJuIHNvbWUgaW5k
-aWNhdGlvbiBjb2FsZXNjZSBmYWlsZWQuwqAgSW4gYWRkaXRpb24sIGl0IG1heQ0KPiA+ID4gcnVu
-IGludG8gcHJvYmxlbXMgd2l0aCBmYWxsYmFjayBmcm9tIERTIHRvIE1EUyBmb3IgZXhhbXBsZSAo
-c2VlDQo+ID4gPiBjb21taXQgZDkxNTZmOWYzNjQ4OTdlOTNiZGQ5OGI0YWQyMjEzOGRlMThmN2My
-NCkuDQo+ID4gPiANCj4gPiA+IE9wdGlvbiAzOiBVdGlsaXplIE5FVEZTX1NSRVFfU0hPUlRfUkVB
-RCBmbGFnIGFzIG5lZWRlZC4NCj4gPiA+ICsgQ29uc2lzdGVudCB3aXRoIG5ldGZzIGRlc2lnbiBp
-bnRlbnQNCj4gPiA+IC0gTXVsdGlwbGUgInNwbGl0IiByZXF1ZXN0cyB3b3VsZCBiZSBzZXJpYWxp
-emVkIChzZWUgY29kZQ0KPiA+ID4gcGF0aHMgaW5zaWRlIG5ldGZzX3N1YnJlcV90ZXJtaW5hdGVk
-IHRoYXQgY2hlY2sgZm9yIHRoaXMgZmxhZykuDQo+ID4gPiAtIExvb2tzIGltcG9zc2libGUgd2l0
-aG91dCBzb21lIHJlZmFjdG9yaW5nIG9mIE5GUyBwZ2lvIEFQSS4NCj4gPiA+ICogTm90ZXM6IFRl
-cm1pbmF0ZSBORlMgcGFnZWlvIHBhZ2UgYmFzZWQgbG9vcCBhdCB0aGUgZmlyc3QgY2FsbA0KPiA+
-ID4gdG8gbmZzX3BhZ2Vpb19kb2lvKCkuwqAgV2hlbiBhIFJFQUQgY29tcGxldGVzLCBORlMgY2Fs
-bHMNCj4gPiA+IG5ldGZzX3N1YnJlcV90ZXJtaW5hdGVkKCkgd2l0aCBORVRGU19TUkVRX1NIT1JU
-X1JFQUQNCj4gPiA+IGFuZCBpcyBwcmVwYXJlZCB0byBoYXZlIHRoZSByZXN0IG9mIHRoZSBzdWJy
-ZXF1ZXN0IGJlDQo+ID4gPiByZXN1Ym1pdHRlZC4NCj4gPiA+IE5lZWQgdG8gc29tZWhvdyBmYWls
-IGVhcmx5IG9yIGF2b2lkIGVudGlyZWx5IHN1YnNlcXVlbnQgY2FsbHMgdG8NCj4gPiA+IG5mc19w
-YWdpb19kb2lvKCkgZm9yIHRoZSBvcmlnaW5hbCByZXF1ZXN0IHRob3VnaCwgYW5kIGhhbmRsZQ0K
-PiA+ID4gZXJyb3Igc3RhdHVzIG9ubHkgZnJvbSB0aGUgZmlyc3QgUlBDLg0KPiA+ID4gDQo+ID4g
-PiBPcHRpb24gNDogQWRkIHNvbWUgZmluYWwgY29tcGxldGlvbiByb3V0aW5lIHRvIGJlIGNhbGxl
-ZCBuZWFyDQo+ID4gPiBib3R0b20gb2YgbmZzX3BhZ2Vpb19jb21wbGV0ZSgpIGFuZCB3b3VsZCBw
-YXNzIGluIGF0IGxlYXN0DQo+ID4gPiBuZXRmc19yZWFkX3N1YnJlcXVlc3QoKSwgcG9zc2libHkg
-bmZzX3BhZ2Vpb19kZXNjcmlwdG9yLg0KPiA+ID4gKyBJbmNvbnNpc3RlbnQgd2l0aCBuZXRmcyBk
-ZXNpZ24gaW50ZW50DQo+ID4gPiAtIFdvdWxkIGJlIGEgbmV3IE5GUyBBUEkgb3IgY2FsbCBvbiB0
-b3Agb2YgZXZlcnl0aGluZw0KPiA+ID4gLSBOZWVkIHRvIGhhbmRsZSB0aGUgIm11bHRpcGxlIGNv
-bXBsZXRpb24gd2l0aCBkaWZmZXJlbnQNCj4gPiA+IHN0YXR1cyIgcHJvYmxlbSAoc2VlICMxKS4N
-Cj4gPiA+IA0KPiA+IA0KPiA+IC0tDQo+ID4gVHJvbmQgTXlrbGVidXN0DQo+ID4gTGludXggTkZT
-IGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KPiA+IHRyb25kLm15a2xlYnVzdEBoYW1t
-ZXJzcGFjZS5jb20NCj4gPiANCj4gPiANCj4gDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpDVE8s
-IEhhbW1lcnNwYWNlIEluYw0KNDk4NCBFbCBDYW1pbm8gUmVhbCwgU3VpdGUgMjA4DQpMb3MgQWx0
-b3MsIENBIDk0MDIyDQrigIsNCnd3dy5oYW1tZXIuc3BhY2UNCg0K
+On Wed, Mar 31, 2021 at 2:51 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Wed, 2021-03-31 at 14:34 -0400, David Wysochanski wrote:
+> > On Wed, Mar 31, 2021 at 2:04 PM Trond Myklebust <
+> > trondmy@hammerspace.com> wrote:
+> > >
+> > > On Wed, 2021-03-31 at 13:49 -0400, David Wysochanski wrote:
+> > > > Trond,
+> > > >
+> > > > I've been working on getting NFS converted to dhowells new
+> > > > fscache
+> > > > and
+> > > > netfs APIs and running into a problem with how NFS is designed
+> > > > and it
+> > > > involves the NFS pagelist.c / pgio API.  I'd appreciate it if you
+> > > > could review and give your thoughts on possible approaches.  I've
+> > > > tried to outline some of the possibilities below.  I tried coding
+> > > > option #3 and ran into some problems, and it has a serialization
+> > > > limitation.  At this point I'm leaning towards option 2, so I'll
+> > > > probably try that approach if you don't have time for review or
+> > > > have
+> > > > strong thoughts on it.
+> > > >
+> > >
+> > > I am not going through another redesign of the NFS code in order to
+> > > accommodate another cachefs design. If netfs needs a refactoring or
+> > > redesign of the I/O code then it will be immediately NACKed.
+> > >
+> > I don't think it will require a redesign.  I was thinking more about
+> > adding a flag to nfs_pageio_add_request() for example that
+> > would return a different value if coalesce of the page being
+> > added failed.  So we'd have:
+> > nfs_pageio_init(): called 1 time
+> > nfs_pageio_add_request(): called N times, one for each page, but stop
+> > if
+> > coalesce fails
+> > nfs_pageio_complete(): called 1 time
+> >
+> > > Why does netfs need to know these details about the NFS code
+> > > anyway?
+> > >
+> > We can probably get by without it but it will be awkward and probably
+> > not the
+> > best, but I'm not sure.
+> >
+> > I tried to explain below with a problem statement but maybe it was
+> > unclear.
+> > The basic design of netfs API as it pertains to this problem is:
+> > * issue_op(): calls into the specific netfs (NFS) to obtain the data
+> > from server
+> > (send one or more RPCs)
+> > * netfs_subreq_terminated(): when RPC(s) are completed, we need to
+> > call
+> > netfs API back to say the data is either there or there was an error
+> >
+>
+> That's a problem. That means NFS and netfs need intimate knowledge of
+> each other's design, and I'm not going allow us to go there again. We
+> did that with cachefs, and here we are 10 years later doing a full
+> redesign. That's unacceptable.
+>
+
+I don't think it's a full redesign, and my goal all along has been minimally
+invasive to existing NFS.
+
+I forgot to mention this part of netfs:
+* clamp_length(): netfs calls into NFS here and we can clamp the length
+to a specific size (for example 'rsize' for reads); this is what I'm trying to
+see if I can implement fully or not but looks more complicated due to
+coalescing failing, etc.  If not then there's other possible approaches
+(NETFS_SREQ_SHORT_READ) but not sure they are ideal.
+
+
+> If netfs requires these detailed changes to the NFS code, then that's a
+> red flag that the whole design is broken and needs to be revised.
+>
+> > I would note that assuming we can come up with something acceptable
+> > to
+> > NFS, it should simplify both nfs_readpage() and
+> > nfs_readpages/nfs_readhead.
+> > I hope we can find some common ground so it's neither too invasive to
+> > NFS and also maybe there's some similar improvements in NFS that can
+> > be done along with this interface.
+> >
+> >
+> > > > Thanks.
+> > > >
+> > > >
+> > > > Problem: The NFS pageio interface does not expose a max read
+> > > > length
+> > > > that
+> > > > we can easily use inside netfs clamp_length() function.  As a
+> > > > result,
+> > > > when
+> > > > issue_op() is called indicating a single netfs subrequest, this
+> > > > can
+> > > > be
+> > > > split into
+> > > > multiple NFS subrequests / RPCs inside guts of NFS pageio code.
+> > > > Multiple
+> > > > NFS subrequests requests leads to multiple completions, and the
+> > > > netfs
+> > > > API expects a 1:1 mapping between issue_op() and
+> > > > netfs_subreq_terminated() calls.
+> > > >
+> > > > Details of the NFS pageio API (see include/linux/nfs_page.h and
+> > > > fs/nfs/pagelist.c)
+> > > > Details of the netfs API (see include/linux/netfs.h and
+> > > > fs/netfs/read_helper.c)
+> > > >
+> > > > The NFS pageio API 3 main calls are as follows:
+> > > > 1. nfs_pageio_init(): initialize a pageio structure (R/W IO of N
+> > > > pages)
+> > > > 2. nfs_pageio_add_request(): called for each page to add to an IO
+> > > > * Calls nfs_pageio_add_request_mirror -> __nfs_pageio_add_request
+> > > >   * __nfs_pageio_add_request may call nfs_pageio_doio() which
+> > > > actually
+> > > >     sends an RPC over the wire if page cannot be added to the
+> > > > request
+> > > >     ("coalesced") due to various factors.  For more details, see
+> > > >     nfs_pageio_do_add_request() and all underlying code it calls
+> > > > such
+> > > >     as nfs_coalesce_size() and subsequent pgio->pg_ops->pg_test()
+> > > > calls
+> > > > 3. nfs_pageio_complete() - "complete" the pageio
+> > > > * calls nfs_pageio_complete_mirror -> nfs_pageio_doio()
+> > > >
+> > > > The NFS pageio API thus may generate multiple over the wire RPCs
+> > > > and thus multiple completions even though at the high level only
+> > > > one call to nfs_pageio_complete() is made.
+> > > >
+> > > > Option 1: Just use NFS pageio API as is, and deal with possible
+> > > > multiple
+> > > > completions.
+> > > > - Inconsistent with netfs design intent
+> > > > - Need to keep track of the RPC completion status, and for
+> > > > example,
+> > > > if one completes with success and one an error, probably call
+> > > > netfs_subreq_terminated() with the error.
+> > > > - There's no way for the caller of the NFS pageio API to know how
+> > > > many RPCs and thus completions may occur.  Thus, it's unclear how
+> > > > one would distinguish between a READ that resulted in a single
+> > > > RPC
+> > > > over the wire that completed as a short read, and a READ that
+> > > > resulted in multiple RPCs that would each complete separately,
+> > > > but would eventually complete
+> > > >
+> > > > Option 2: Create a more complex 'clamp_length()' function for
+> > > > NFS,
+> > > > taking into account all ways NFS / pNFS code can split a read.
+> > > > + Consistent with netfs design intent
+> > > > + Multiple "split" requests would be called in parallel (see loop
+> > > > inside netfs_readahead, which repeatedly calls
+> > > > netfs_rreq_submit_slice)
+> > > > - Looks impossible without refactoring of NFS pgio API.  We need
+> > > > to prevent nfs_pageio_add_request() from calling
+> > > > nfs_pagio_doio(),
+> > > > and return some indication coalesce failed.  In addition, it may
+> > > > run into problems with fallback from DS to MDS for example (see
+> > > > commit d9156f9f364897e93bdd98b4ad22138de18f7c24).
+> > > >
+> > > > Option 3: Utilize NETFS_SREQ_SHORT_READ flag as needed.
+> > > > + Consistent with netfs design intent
+> > > > - Multiple "split" requests would be serialized (see code
+> > > > paths inside netfs_subreq_terminated that check for this flag).
+> > > > - Looks impossible without some refactoring of NFS pgio API.
+> > > > * Notes: Terminate NFS pageio page based loop at the first call
+> > > > to nfs_pageio_doio().  When a READ completes, NFS calls
+> > > > netfs_subreq_terminated() with NETFS_SREQ_SHORT_READ
+> > > > and is prepared to have the rest of the subrequest be
+> > > > resubmitted.
+> > > > Need to somehow fail early or avoid entirely subsequent calls to
+> > > > nfs_pagio_doio() for the original request though, and handle
+> > > > error status only from the first RPC.
+> > > >
+> > > > Option 4: Add some final completion routine to be called near
+> > > > bottom of nfs_pageio_complete() and would pass in at least
+> > > > netfs_read_subrequest(), possibly nfs_pageio_descriptor.
+> > > > + Inconsistent with netfs design intent
+> > > > - Would be a new NFS API or call on top of everything
+> > > > - Need to handle the "multiple completion with different
+> > > > status" problem (see #1).
+> > > >
+> > >
+> > > --
+> > > Trond Myklebust
+> > > Linux NFS client maintainer, Hammerspace
+> > > trond.myklebust@hammerspace.com
+> > >
+> > >
+> >
+>
+> --
+> Trond Myklebust
+> CTO, Hammerspace Inc
+> 4984 El Camino Real, Suite 208
+> Los Altos, CA 94022
+>
+> www.hammer.space
+>
+
