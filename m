@@ -2,150 +2,114 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82C1C35083E
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Mar 2021 22:32:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D3A7350844
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Mar 2021 22:35:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236392AbhCaUcG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 Mar 2021 16:32:06 -0400
-Received: from mail-lf1-f53.google.com ([209.85.167.53]:42629 "EHLO
-        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236546AbhCaUbt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Mar 2021 16:31:49 -0400
-Received: by mail-lf1-f53.google.com with SMTP id o10so30966687lfb.9;
-        Wed, 31 Mar 2021 13:31:48 -0700 (PDT)
+        id S236545AbhCaUfW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 Mar 2021 16:35:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236438AbhCaUfI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Mar 2021 16:35:08 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15A7FC061574
+        for <linux-nfs@vger.kernel.org>; Wed, 31 Mar 2021 13:35:08 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id kt15so31984786ejb.12
+        for <linux-nfs@vger.kernel.org>; Wed, 31 Mar 2021 13:35:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cLgVCN874/goqJzqDdFAh/n5hKJJpo3VZokiGocwErg=;
+        b=DczBFBwqK1iky7RwyX7ayw15T1sbvD16gHoMxkpgMP186brXijI7TLPiQVdvqmIojc
+         RCXMIEymYUHiulfEukyUZidJq+qq1zNclsbp++UWV1jusexkyf2QIBHo422yqZpMJJax
+         YqwU2yuLv1qPGHt01zYf6q3QFHHoyt7z4ekPPU9zmqxreUrsSRMfUVJV8KAJmGizo8i3
+         G1ouzGUu3rj0C15AUtgXzpKR9cBNlZmhDuf1JC/usrzGjLdHKROQc/m4iQo/PK3ZAIRe
+         LeN6IkLoS4BPNZwf0IY98+QnGVQ1eUTNUQblA7sa+xk6yhsOyjOy5bpYOYX/kwfKjtKk
+         aMVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=Svnh9cwyfYWHfl96l2PV0ag8wxa4S3QeHTKk24lJEiU=;
-        b=t8fH0uEjqE1flgmvqCdtrUwPHqxDpPt9NW09/824IHmSu8UeeWqUgMiv+H6cuqgkRx
-         aus0EDvkgq4p2QCWqzY44b335eKBTaE7tNlcbeXd0IG6Mbb1CQj1xSVpdutI1NsDMVWH
-         cIrU6U2C/n5f0sadf76p1+EmPhsiXwHNvcP7YyrTXfjMGBxr6kaiLwmczN69/XNaBunJ
-         +uZ8ytv0YXmekhdbp13FC8bN6UUfrxYnX0/SPlTtD1ocmELTday+IqbM8sTZNj6k3ipY
-         Z1fcHU1GgCMwO17qTggI48AMeCDaJ2allH4gL2yJM+P0K9rFuopguM+C5qTB+VIRNv80
-         JxyQ==
-X-Gm-Message-State: AOAM532TdCoM7ufrKqDwzZGDJV7oU3IkJSw1jwch0q5w8Lh142s8MLGh
-        ysWEvylivrBIIlBDJ/PBPewQLsj00KIng+MjW2Zh1f6EmLtkaA==
-X-Google-Smtp-Source: ABdhPJxC2BoPBwu0kvAEJKl6eAP8/T7EQ0WdmNF/9C5sKDgpL0hMpGHQL0Y9/UUI+9SGlL/1X/RB8/6d39h9Kx448aQ=
-X-Received: by 2002:ac2:482c:: with SMTP id 12mr3134310lft.4.1617222707865;
- Wed, 31 Mar 2021 13:31:47 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cLgVCN874/goqJzqDdFAh/n5hKJJpo3VZokiGocwErg=;
+        b=XZDkYsHS7zpStXTSXdLotH7xIDKk2QEY6RAPT7xbPfqWFMrVsHfxRHPYeKczUeClVz
+         ivZmuIrgQQ45EpksC23NNJQQnVes5O6tClw3GFHWuMC+kdMXLxCmRrc8mysFNL+VlGYE
+         DyjB4jyac5dIO8ceSXj4fpwztTMVgG1YDLWc9jnRufVNw2QYjyu2yYunIsx3+y1lJuzg
+         RTYfylS0cOO/+FOfnpt7e0PWeu2thJbcF9eZ9yT+G4ow6jAvAYKVV9M3cc0rKmQJP090
+         m0uXbFFDSGV4B4vo7nqP7TC9mzkefrNguz3jNMgSsrvMnNd8tE9FaHrAxZ9G/ANWPcH/
+         RZYg==
+X-Gm-Message-State: AOAM531yc/985/oPLOnsUUxtPLB1X2qOKXh2U8H7u5TfPaFczx83JMsk
+        XRTYQlV/OQRnfMoTRH2oY4bKqwrVhCKbxB3B9mY=
+X-Google-Smtp-Source: ABdhPJz9/6l01dx9na8N+dg2uxzLpPKGAM6PMSALsGmqPBobacOgyYgTnLrXgopzXpXNiUhsVhu5BlixGtu0lqnp0RU=
+X-Received: by 2002:a17:906:a0d4:: with SMTP id bh20mr5604306ejb.348.1617222906607;
+ Wed, 31 Mar 2021 13:35:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <161721926778.515226.9805598788670386587.stgit@manet.1015granger.net>
- <161721937122.515226.14731175629421422152.stgit@manet.1015granger.net> <4004f56f-3603-f56c-aea9-651230b3181e@talpey.com>
-In-Reply-To: <4004f56f-3603-f56c-aea9-651230b3181e@talpey.com>
-Reply-To: chucklever@gmail.com
-From:   Chuck Lever <chuck.lever@oracle.com>
-Date:   Wed, 31 Mar 2021 16:31:36 -0400
-Message-ID: <CAFMMQGvortADqgmAzskZKcnyHDzsTEW0FtR501wpP+deUM57FA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/8] xprtrdma: Do not post Receives after disconnect
-To:     Tom Talpey <tom@talpey.com>
-Cc:     linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <20210331193025.25724-1-olga.kornievskaia@gmail.com> <0ca40f087491acec8f26816b43b6d64bb624c35e.camel@hammerspace.com>
+In-Reply-To: <0ca40f087491acec8f26816b43b6d64bb624c35e.camel@hammerspace.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Wed, 31 Mar 2021 16:34:55 -0400
+Message-ID: <CAN-5tyHQyHO8K7UjwhKhN9Xoz1nSXMB2cv8De=w9Rx-qphaHgg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] NFSv4.2 fix handling of sr_eof in SEEK's reply
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Mar 31, 2021 at 4:01 PM Tom Talpey <tom@talpey.com> wrote:
+On Wed, Mar 31, 2021 at 3:42 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
 >
-> On 3/31/2021 3:36 PM, Chuck Lever wrote:
-> > Currently the Receive completion handler refreshes the Receive Queue
-> > whenever a successful Receive completion occurs.
+> On Wed, 2021-03-31 at 15:30 -0400, Olga Kornievskaia wrote:
+> > From: Olga Kornievskaia <kolga@netapp.com>
 > >
-> > On disconnect, xprtrdma drains the Receive Queue. The first few
-> > Receive completions after a disconnect are typically successful,
-> > until the first flushed Receive.
+> > Currently the client ignores the value of the sr_eof of the SEEK
+> > operation. According to the spec, if the server didn't find the
+> > requested extent and reached the end of the file, the server
+> > would return sr_eof=true. In case the request for DATA and no
+> > data was found (ie in the middle of the hole), then the lseek
+> > expects that ENXIO would be returned.
 > >
-> > This means the Receive completion handler continues to post more
-> > Receive WRs after the drain sentinel has been posted. The late-
-> > posted Receives flush after the drain sentinel has completed,
-> > leading to a crash later in rpcrdma_xprt_disconnect().
-> >
-> > To prevent this crash, xprtrdma has to ensure that the Receive
-> > handler stops posting Receives before ib_drain_rq() posts its
-> > drain sentinel.
-> >
-> > This patch is probably not sufficient to fully close that window,
->
-> "Probably" is not a word I'd like to use in a stable:cc...
-
-Well, I could be easily convinced to remove the Cc: stable
-for this one, since it's not a full fix. But this is a pretty pervasive
-problem with disconnect handling.
-
-
-> > but does significantly reduce the opportunity for a crash to
-> > occur without incurring undue performance overhead.
-> >
-> > Cc: stable@vger.kernel.org # v5.7
-> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > Fixes: 1c6dcbe5ceff8 ("NFS: Implement SEEK")
+> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 > > ---
-> >   net/sunrpc/xprtrdma/verbs.c |    7 +++++++
-> >   1 file changed, 7 insertions(+)
+> >  fs/nfs/nfs42proc.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-> > index ec912cf9c618..1d88685badbe 100644
-> > --- a/net/sunrpc/xprtrdma/verbs.c
-> > +++ b/net/sunrpc/xprtrdma/verbs.c
-> > @@ -1371,8 +1371,10 @@ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp)
-> >   {
-> >       struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
-> >       struct rpcrdma_ep *ep = r_xprt->rx_ep;
-> > +     struct ib_qp_init_attr init_attr;
-> >       struct ib_recv_wr *wr, *bad_wr;
-> >       struct rpcrdma_rep *rep;
-> > +     struct ib_qp_attr attr;
-> >       int needed, count, rc;
+> > diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+> > index 094024b0aca1..d359e712c11d 100644
+> > --- a/fs/nfs/nfs42proc.c
+> > +++ b/fs/nfs/nfs42proc.c
+> > @@ -659,7 +659,10 @@ static loff_t _nfs42_proc_llseek(struct file
+> > *filep,
+> >         if (status)
+> >                 return status;
 > >
-> >       rc = 0;
-> > @@ -1385,6 +1387,11 @@ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp)
-> >       if (!temp)
-> >               needed += RPCRDMA_MAX_RECV_BATCH;
+> > -       return vfs_setpos(filep, res.sr_offset, inode->i_sb-
+> > >s_maxbytes);
+> > +       if (whence == SEEK_DATA && res.sr_eof)
+> > +               return -NFS4ERR_NXIO;
+> > +       else
+> > +               return vfs_setpos(filep, res.sr_offset, inode->i_sb-
+> > >s_maxbytes);
+> >  }
 > >
-> > +     if (ib_query_qp(ep->re_id->qp, &attr, IB_QP_STATE, &init_attr))
-> > +             goto out;
+> >  loff_t nfs42_proc_llseek(struct file *filep, loff_t offset, int
+> > whence)
 >
-> This call isn't completely cheap.
+> Don't we also need to deal with SEEK_HOLE with the offset being greater
+> than the end-of-file in the same way?
 
-True, but it's done only once every 7 Receive completions.
+We do not because if there is no hole extent after the requested
+offset, then there is an implied hole which is at the end of the file.
+So if sr_eof is true we still need to pay attention to the returned
+offset (ie it should be end of the file) and it's not an error
+condition.
 
-The other option is to use re_connect_status, and add some memory
-barriers to ensure we get the latest value. That doesn't help us get the
-race window closed any further, though.
-
-> > +     if (attr.qp_state == IB_QPS_ERR)
-> > +             goto out;
 >
-> But the QP is free to disconnect or go to error right now. This approach
-> just reduces the timing hole.
-
-Agreed 100%. I just couldn't think of a better approach. I'm definitely open
-to better ideas.
-
-> Is it not possible to mark the WRs as
-> being part of a batch, and allowing them to flush? You could borrow a
-> bit in the completion cookie, and check it when the CQE pops out. Maybe.
-
-It's not an issue with batching, it's an issue with posting Receives from the
-Receive completion handler. I'd think that any of the ULPs that post Receives
-in their completion handler would have the same issue.
-
-The purpose of the QP drain in rpcrdma_xprt_disconnect() is to ensure there
-are no more WRs in flight so that the hardware resources can be safely
-destroyed. If the Receive completion handler continues to post Receive WRs
-after the drain sentinel has been posted, leaks and crashes become possible.
-
-
-> > +
-> >       /* fast path: all needed reps can be found on the free list */
-> >       wr = NULL;
-> >       while (needed) {
-> >
-> >
-> >
-
-
-
--- 
-When the world is being engulfed by a comet, go ahead and excrete
-where you want to.
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
