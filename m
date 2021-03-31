@@ -2,266 +2,271 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D629F350724
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Mar 2021 21:09:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 838EE350755
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Mar 2021 21:23:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234442AbhCaTJN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 Mar 2021 15:09:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30014 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234311AbhCaTIz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Mar 2021 15:08:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617217734;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=t5Q2P2nlKRZxni8QkKl4sxoIlDhD/32MoLxs12LITDQ=;
-        b=b7x3q2MiUtgIxV1Cb/WWmWdh802v083a4IVeWY4tM4BaCupL0bXKIJ7p9RlhR5bJxKOXHT
-        s/QKVYSdJbwGCkUptNXrMo4G+LZc0zqehCl1v9siQGawHTYtg2Km+sDwQ5LDYgg/tVRPa1
-        9TLuCI11VsXNTa6n5wjxkMhv+pgrcmk=
-Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com
- [209.85.219.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-427-EDnJIN2tN-KnOYgJFVsjIw-1; Wed, 31 Mar 2021 15:08:50 -0400
-X-MC-Unique: EDnJIN2tN-KnOYgJFVsjIw-1
-Received: by mail-yb1-f200.google.com with SMTP id y13so3265916ybk.20
-        for <linux-nfs@vger.kernel.org>; Wed, 31 Mar 2021 12:08:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t5Q2P2nlKRZxni8QkKl4sxoIlDhD/32MoLxs12LITDQ=;
-        b=afKgV15PgesprMs49VjzeQL4Ynb/NzczPTJf9gxewz4mUdovRbFJaYf9kvc5t+GrCL
-         KRfjumahSGIe8Y7FjYf4+DCCS9gC18TLqx+0ZDHPBKjCd+HNJdBCn06y5Yn9soi5pMOY
-         kkALdEhYXVbap5r5Vk/pooE15OgoL/o+6QG/kcJqnrU80tSEtClz/JoPZGzfy3TTfjuN
-         Dzx/rtUzrHuMH+LV2KiZQJkfRhKa43//y8a4+BCuqugho/Utcpbz6fAfBaPZNR1Zefdj
-         V5NRlibuPWA6zXrrPbGtYPsCRTDoxW3sSCyTNS7nWqOe1xcYbnyy/2gXUkEFoHNPAH/Z
-         BTQg==
-X-Gm-Message-State: AOAM532OBXTK+uEAfxII21iNvXCbs5h5mk9NrklBd0aZd1lr5JwZHD6p
-        u3zysiLTvs1mBxIiEnqyxVohAGXNpTG3wJXPss2TMnK1VwYU8EL/wqgzI054TISDQmDiz5WtGi8
-        0S2DPJd7t8uTdNnpSS2Mbk79T0AiR7Z8RucGO
-X-Received: by 2002:a25:d40f:: with SMTP id m15mr6256644ybf.30.1617217729657;
-        Wed, 31 Mar 2021 12:08:49 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz+m/8zZ10bL67Hfg3ZlxhXZvcyVEEgZCEeOcaBlWLtTMIDncIYdVNUx9i1E1wYnAOwtSDBQGreTOGhorq9x6s=
-X-Received: by 2002:a25:d40f:: with SMTP id m15mr6256615ybf.30.1617217729389;
- Wed, 31 Mar 2021 12:08:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <CALF+zOnCisFWTubWEHhTLpt6=CUb7n86YvrNX3nreCYS73_v_Q@mail.gmail.com>
- <49e123c6702cb6b27f114dfa64157d9a73463fad.camel@hammerspace.com>
- <CALF+zO=KeU7O-sACUgX556_Mxdb1Xrvq5foJT1Py2DROBojxfQ@mail.gmail.com> <9cfd5bc3cfc6abc2d3316b0387222e708d67f595.camel@hammerspace.com>
-In-Reply-To: <9cfd5bc3cfc6abc2d3316b0387222e708d67f595.camel@hammerspace.com>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Wed, 31 Mar 2021 15:08:13 -0400
-Message-ID: <CALF+zO=XcB=+sMSG1BXhUSQDxNX5oi2p8zH5PWWBbe7aYB0yMw@mail.gmail.com>
-Subject: Re: RFC: Approaches to resolve netfs API interface to NFS multiple
- completions problem
+        id S235919AbhCaTWp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 Mar 2021 15:22:45 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42372 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236243AbhCaTWQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Mar 2021 15:22:16 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12VJKMZ7065877;
+        Wed, 31 Mar 2021 19:22:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=udqhHThNT2uGpmxgH0XAlX781lflQYYSjhEF6ji89Dw=;
+ b=heh/iMfodSW6sIUba9a4rL7YUuajlGqbRbw/rAMOz180v/Eq5TXpgKVporQj4L57Af5T
+ 03ZRTDgYYy+vAdouL4qJq29Bh6aIsPq2bfQNfXOB71bujnXAcKM2ct6yFqPj9/0Z85Wj
+ EFRANESH3d6uWRRBQJBWml1Y40Wo5/1mNSzHkNK+YLQhIDG0pbTQITWkkymbAYs1MpXV
+ W/Lvb2T1ilzmLMDvwMuJV8CH6HICdIUiONag7/fIYL3g66Um4yxXUYlW94L2Vj8evTs/
+ zDCbPjF4/85derWAFJ0sy3yw3pkodQxva0AojjPwn/NqKiWogDxlGw3tHqtn9sC86s3O dA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 37mabqud3w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 Mar 2021 19:22:08 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12VJLewC033674;
+        Wed, 31 Mar 2021 19:22:08 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2174.outbound.protection.outlook.com [104.47.57.174])
+        by aserp3030.oracle.com with ESMTP id 37mabpsw0a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 Mar 2021 19:22:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W4XCOHntGsg6x1StoqR+d+duxrS0JS4w0jTS777VEVsdRLqt+lRelzZAmZ8wPOfLC/8tJEyjAb8tBrIoQRPTdFYsFWxSP1R7LQG/+/5wnapoBXFzsGE5hfTa/14ZCu5A4gbO2SSdKHlaP36WXLbxWkROAl6++FVkgUKorpZVNyKLIWZCVYEqj9A4gsxJS0ZNHHJNHe1iztWjFcNPAK4fR+UN9H/3SR/W/xWBFRqVK5QPkDeIjsOAhZtleJQN7UtG2eHg0/RimJRrck4yJbqwceYjX776uLDA9/aYrjo6/r4hQkQLH3qREpsC5JJ4CASioC5IHgUo8Z7rPfb/hjWqCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=udqhHThNT2uGpmxgH0XAlX781lflQYYSjhEF6ji89Dw=;
+ b=ZN1tIBd4xzjqWWDA1mLHDp4sVceix0aU/BYNbr4YUg4GMRN2DP3Th27/GGohFFaC2TNa4r3yPDwpj7BKjxn6xi2CpxQ/ZeWA2AOKSM2N06uTwnOIemh5nHEjdwvjZ8I69qfeRiTgarY9xAfkZB2l4GpvRCgtzE1uP2A2eWtO/V51oU8Wy8zEoHCZRip51sPJ7H0NkX2qQqdnsYUIh9a4GttdmPhs19jlCxejC2XC8NFOfo7nwgRQ2Q5AemIMgXuIpSxUfsQoraOK84pfSbOdYyeCNMybNwCI8LLrJTUWvdpEeX+9wNfoejc4MUiQ9d05W6sn9QidrEM8tJU9DC+GWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=udqhHThNT2uGpmxgH0XAlX781lflQYYSjhEF6ji89Dw=;
+ b=eSZxwNhTLrURActpDhCfwYSe8JwX7y/lcZeeErbGElBSWFGITh/Op+82Zgn+3eSbG9DiSSn2AdOFh5XQ0ZIIPvKuxKoAvymHrwvUXBT1isCN3vYnnGZIyk3gDQtC+BxO8Qhx10mGFK1UerB1BpgXTM/vdYAU53Z0znsyhxdeJ/I=
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
+ by SJ0PR10MB4637.namprd10.prod.outlook.com (2603:10b6:a03:2d6::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.25; Wed, 31 Mar
+ 2021 19:22:06 +0000
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::50bf:7319:321c:96c9]) by SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::50bf:7319:321c:96c9%4]) with mapi id 15.20.3977.033; Wed, 31 Mar 2021
+ 19:22:06 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
 To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
-        "dhowells@redhat.com" <dhowells@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+CC:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 2/3] SUNRPC: Fix trace_xprt_transmit_queued()
+Thread-Topic: [PATCH 2/3] SUNRPC: Fix trace_xprt_transmit_queued()
+Thread-Index: AQHXJlKTbuswqbxABU2Pk6VPhCi4j6qeYJoAgAAZBgA=
+Date:   Wed, 31 Mar 2021 19:22:06 +0000
+Message-ID: <DA345B72-D2B5-44E0-83A8-CD641274BE9B@oracle.com>
+References: <161721133412.515091.3634995666026759187.stgit@manet.1015granger.net>
+ <161721134086.515091.16531400209127881709.stgit@manet.1015granger.net>
+ <0901650f31a528a21eb6962bdc13698bfff7bd50.camel@hammerspace.com>
+In-Reply-To: <0901650f31a528a21eb6962bdc13698bfff7bd50.camel@hammerspace.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: hammerspace.com; dkim=none (message not signed)
+ header.d=none;hammerspace.com; dmarc=none action=none header.from=oracle.com;
+x-originating-ip: [68.61.232.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 96621241-b9ad-49b5-a63d-08d8f47a45e1
+x-ms-traffictypediagnostic: SJ0PR10MB4637:
+x-microsoft-antispam-prvs: <SJ0PR10MB4637BB8AF878DF64CA2FD6FD937C9@SJ0PR10MB4637.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:241;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lsw96j/PZHGKheu7mLLPpTUmpoVBa8meGYkLn+BBTwjGUQsMXvpUSlRt+LpRUKfc6LtbMxGFDYYwnCbQSifz06ZhrIUjwO56Y+I6L/zEZ9/qGepv7Q5bU1KGBXFjcJT0TkoBlrbYl+3Zfx28u7rSulo880CNcCTSYYxkOUl1ht5N0DF0d5V3Esq79iL6wiCKncEXLcw0qzTuAahlQW8VM5FqBiRmE6JhPCZJxWJ0pV9ukXkWpi6Dzw6WmM7yhnDxeDmjUxkB3/fQfFwDpC/ntdpraFZ28Z3uolzOufaHBeVsm0FhrL2st1BUEhgAv7dHAtqyG1jQCTTx9RKBpkswVMHTYZZfc6jhqmpBT/8Od1ZdNunyFfa6BMnM5pkKGt2NJT8pM6dU2P227MJ7CGC/wYdPshXcsjyWDS1T9GNQYC/HDK5at/L0PZJWK3wNWHjHQ+KcA5P0JmzpSS17kycgw1dnG82okxBYqrfoCSr2l7lAwtzOtmZq+Ued3qGe4V7QlqUj994o79Ompy0etbFx+YBELOyUiasibTAyTjy54tFfuiAQPIx0KJD9ZCCvOMhpfjwzT6TMGZkxzydLyvZUgEIGjKPJPWSieoQSIZQnvVqK1ePEWF5SY5A9awze17pKgeEWpnb2bvwtJh4ry5szUkv/lROMz2JEAmVVm6uVcdSs5o/TnbtDX46C10RaQ8Oy
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(346002)(376002)(39860400002)(366004)(396003)(36756003)(316002)(53546011)(6506007)(66446008)(6512007)(26005)(66476007)(66556008)(2616005)(6916009)(6486002)(8676002)(54906003)(2906002)(8936002)(33656002)(5660300002)(478600001)(76116006)(38100700001)(86362001)(66946007)(83380400001)(71200400001)(186003)(91956017)(64756008)(4326008)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?no6r1SrjcpiRXCNYof7VkWBtttSDaBvFiucAyxjghL+81ZzJNb325WbxoUVa?=
+ =?us-ascii?Q?OpcsnkE2Qjh5qsIKrNYOw0KpGY4bsksNeNCFzRZk/j1xtzKmGQmmy/uASAi7?=
+ =?us-ascii?Q?SropSz7SYQaWr2Jc5SrUEmk/4e6I9tDbbVa49hDKSBTI4tNqtc53qp39bNza?=
+ =?us-ascii?Q?LeN+K09DDcFDbS6uSFBGvCUG0X8TZ4bRohPmgQgrhQ2uqQJTGJbyKk7bgA7L?=
+ =?us-ascii?Q?axTed63DyRBa5IHXH8pEzGEwHblcI9Kc4wgqecm6FDIvi7SclrtiOHffDBUO?=
+ =?us-ascii?Q?HqnPngncwz6FoSPXH0SRV3JhHi2b3bpB6WbKlTFItSmqs2RP+cQvWgfPbnkW?=
+ =?us-ascii?Q?slUGnatmM9UkVFBzBxtXJJ3mqAYMW02VkcVmgNRpyNEmstfhmqU+U74acpOw?=
+ =?us-ascii?Q?YOQB6830NaE8BiCVSWZrpVhpC7rpGh9fKZ3E8m8jld11L0cLifXOkVNp9LXM?=
+ =?us-ascii?Q?TrFgH7uYCtF9BYcrCFfmDNKBLgjEoRijnghyHMHdqxaud1gSyIrMeVuGd+FF?=
+ =?us-ascii?Q?OkpMyEKfcALjZgN3y4AfaXiAYN52sjvInchpcjE/y0d8YGr54Bek1uVyQyN9?=
+ =?us-ascii?Q?EXj5wJ2Rkq+sxEJr1jy8ezAtl9f825Yzii7QcEbfy3w4MLpBenSOguCYN+yi?=
+ =?us-ascii?Q?ObFmiNv5IeBWMp4D+L+EDlcobTSWqrSQCOZzttKaysQce2alAxNj/LidbKeu?=
+ =?us-ascii?Q?Yh1j0uwUMkXezzXO2jYN70kjUPiEo1A0oN0TzU+lZiEDb47l1Q09pxVG/TR0?=
+ =?us-ascii?Q?4xnCyS+zU0rFvfczyr5nyxz1naFr1gBz4GxUmNTwTSWkg/PVoG45XD+C03/s?=
+ =?us-ascii?Q?zuAh0RfHVCnbtbpKxP4JkA8KEehYVKfYRaKrtP3QR3Jtif8NHnBZAbpoTlps?=
+ =?us-ascii?Q?PdB+TYBiCjJJ9WbL2eJT+LIHOwkZfQgX4Kdk6s2yHUIQ93sNXuCchIJp5/7G?=
+ =?us-ascii?Q?cjBpcwsY0K77w5cBwAVlRUq93s9Lnso7lD+NbjDXQKkFeTpsGV+mJze1wzYa?=
+ =?us-ascii?Q?USOATigEVFax8yv3G3lGshjw3aFkhFVQbFkv43Y0SawGbGQJiWrhCL3+vlbr?=
+ =?us-ascii?Q?7grMiA78FVrXp87gC1LNPQCOrz1vZ+xTVUNNFfDQ/8G/scSEItr9pVvKGcLo?=
+ =?us-ascii?Q?16BjEWGCw/X9esqrbWVEOU6vyXQ0DknB9Ys4kR+/mKAVecI3jq9tc/AYbpA+?=
+ =?us-ascii?Q?KB4Yamw6iCUnFR9KBtpfiErKaE4PEMvGgQL+upoetpDNwk5wpeB/QlGCSrpO?=
+ =?us-ascii?Q?Jyr0Siyv9mUelTJgaOlmbFLlwK7Va/Z/EeEIrFD+EkRTOzjH+4k+780K7yqh?=
+ =?us-ascii?Q?kSvc4lNZMn208tAjdSxY9fNk?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <62C7C016EE1B424690DF6E0541BD216B@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96621241-b9ad-49b5-a63d-08d8f47a45e1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2021 19:22:06.7214
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DIx30PBe/qIBSQovCyQbK8C+2E8RhHgU9s+oAZI5cwG85MZwSa1EsTDEuDoVzF+ld4rukgkVlM4rA6CExhoioQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4637
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9940 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0
+ malwarescore=0 mlxlogscore=999 adultscore=0 spamscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2103300000 definitions=main-2103310132
+X-Proofpoint-ORIG-GUID: ZZtVj1MMeuvI_HqcrYvEtiD2bXL8-dVH
+X-Proofpoint-GUID: ZZtVj1MMeuvI_HqcrYvEtiD2bXL8-dVH
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9940 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 adultscore=0 mlxscore=0
+ bulkscore=0 spamscore=0 clxscore=1015 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2103300000
+ definitions=main-2103310132
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Mar 31, 2021 at 2:51 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Wed, 2021-03-31 at 14:34 -0400, David Wysochanski wrote:
-> > On Wed, Mar 31, 2021 at 2:04 PM Trond Myklebust <
-> > trondmy@hammerspace.com> wrote:
-> > >
-> > > On Wed, 2021-03-31 at 13:49 -0400, David Wysochanski wrote:
-> > > > Trond,
-> > > >
-> > > > I've been working on getting NFS converted to dhowells new
-> > > > fscache
-> > > > and
-> > > > netfs APIs and running into a problem with how NFS is designed
-> > > > and it
-> > > > involves the NFS pagelist.c / pgio API.  I'd appreciate it if you
-> > > > could review and give your thoughts on possible approaches.  I've
-> > > > tried to outline some of the possibilities below.  I tried coding
-> > > > option #3 and ran into some problems, and it has a serialization
-> > > > limitation.  At this point I'm leaning towards option 2, so I'll
-> > > > probably try that approach if you don't have time for review or
-> > > > have
-> > > > strong thoughts on it.
-> > > >
-> > >
-> > > I am not going through another redesign of the NFS code in order to
-> > > accommodate another cachefs design. If netfs needs a refactoring or
-> > > redesign of the I/O code then it will be immediately NACKed.
-> > >
-> > I don't think it will require a redesign.  I was thinking more about
-> > adding a flag to nfs_pageio_add_request() for example that
-> > would return a different value if coalesce of the page being
-> > added failed.  So we'd have:
-> > nfs_pageio_init(): called 1 time
-> > nfs_pageio_add_request(): called N times, one for each page, but stop
-> > if
-> > coalesce fails
-> > nfs_pageio_complete(): called 1 time
-> >
-> > > Why does netfs need to know these details about the NFS code
-> > > anyway?
-> > >
-> > We can probably get by without it but it will be awkward and probably
-> > not the
-> > best, but I'm not sure.
-> >
-> > I tried to explain below with a problem statement but maybe it was
-> > unclear.
-> > The basic design of netfs API as it pertains to this problem is:
-> > * issue_op(): calls into the specific netfs (NFS) to obtain the data
-> > from server
-> > (send one or more RPCs)
-> > * netfs_subreq_terminated(): when RPC(s) are completed, we need to
-> > call
-> > netfs API back to say the data is either there or there was an error
-> >
->
-> That's a problem. That means NFS and netfs need intimate knowledge of
-> each other's design, and I'm not going allow us to go there again. We
-> did that with cachefs, and here we are 10 years later doing a full
-> redesign. That's unacceptable.
->
-
-I don't think it's a full redesign, and my goal all along has been minimally
-invasive to existing NFS.
-
-I forgot to mention this part of netfs:
-* clamp_length(): netfs calls into NFS here and we can clamp the length
-to a specific size (for example 'rsize' for reads); this is what I'm trying to
-see if I can implement fully or not but looks more complicated due to
-coalescing failing, etc.  If not then there's other possible approaches
-(NETFS_SREQ_SHORT_READ) but not sure they are ideal.
 
 
-> If netfs requires these detailed changes to the NFS code, then that's a
-> red flag that the whole design is broken and needs to be revised.
->
-> > I would note that assuming we can come up with something acceptable
-> > to
-> > NFS, it should simplify both nfs_readpage() and
-> > nfs_readpages/nfs_readhead.
-> > I hope we can find some common ground so it's neither too invasive to
-> > NFS and also maybe there's some similar improvements in NFS that can
-> > be done along with this interface.
-> >
-> >
-> > > > Thanks.
-> > > >
-> > > >
-> > > > Problem: The NFS pageio interface does not expose a max read
-> > > > length
-> > > > that
-> > > > we can easily use inside netfs clamp_length() function.  As a
-> > > > result,
-> > > > when
-> > > > issue_op() is called indicating a single netfs subrequest, this
-> > > > can
-> > > > be
-> > > > split into
-> > > > multiple NFS subrequests / RPCs inside guts of NFS pageio code.
-> > > > Multiple
-> > > > NFS subrequests requests leads to multiple completions, and the
-> > > > netfs
-> > > > API expects a 1:1 mapping between issue_op() and
-> > > > netfs_subreq_terminated() calls.
-> > > >
-> > > > Details of the NFS pageio API (see include/linux/nfs_page.h and
-> > > > fs/nfs/pagelist.c)
-> > > > Details of the netfs API (see include/linux/netfs.h and
-> > > > fs/netfs/read_helper.c)
-> > > >
-> > > > The NFS pageio API 3 main calls are as follows:
-> > > > 1. nfs_pageio_init(): initialize a pageio structure (R/W IO of N
-> > > > pages)
-> > > > 2. nfs_pageio_add_request(): called for each page to add to an IO
-> > > > * Calls nfs_pageio_add_request_mirror -> __nfs_pageio_add_request
-> > > >   * __nfs_pageio_add_request may call nfs_pageio_doio() which
-> > > > actually
-> > > >     sends an RPC over the wire if page cannot be added to the
-> > > > request
-> > > >     ("coalesced") due to various factors.  For more details, see
-> > > >     nfs_pageio_do_add_request() and all underlying code it calls
-> > > > such
-> > > >     as nfs_coalesce_size() and subsequent pgio->pg_ops->pg_test()
-> > > > calls
-> > > > 3. nfs_pageio_complete() - "complete" the pageio
-> > > > * calls nfs_pageio_complete_mirror -> nfs_pageio_doio()
-> > > >
-> > > > The NFS pageio API thus may generate multiple over the wire RPCs
-> > > > and thus multiple completions even though at the high level only
-> > > > one call to nfs_pageio_complete() is made.
-> > > >
-> > > > Option 1: Just use NFS pageio API as is, and deal with possible
-> > > > multiple
-> > > > completions.
-> > > > - Inconsistent with netfs design intent
-> > > > - Need to keep track of the RPC completion status, and for
-> > > > example,
-> > > > if one completes with success and one an error, probably call
-> > > > netfs_subreq_terminated() with the error.
-> > > > - There's no way for the caller of the NFS pageio API to know how
-> > > > many RPCs and thus completions may occur.  Thus, it's unclear how
-> > > > one would distinguish between a READ that resulted in a single
-> > > > RPC
-> > > > over the wire that completed as a short read, and a READ that
-> > > > resulted in multiple RPCs that would each complete separately,
-> > > > but would eventually complete
-> > > >
-> > > > Option 2: Create a more complex 'clamp_length()' function for
-> > > > NFS,
-> > > > taking into account all ways NFS / pNFS code can split a read.
-> > > > + Consistent with netfs design intent
-> > > > + Multiple "split" requests would be called in parallel (see loop
-> > > > inside netfs_readahead, which repeatedly calls
-> > > > netfs_rreq_submit_slice)
-> > > > - Looks impossible without refactoring of NFS pgio API.  We need
-> > > > to prevent nfs_pageio_add_request() from calling
-> > > > nfs_pagio_doio(),
-> > > > and return some indication coalesce failed.  In addition, it may
-> > > > run into problems with fallback from DS to MDS for example (see
-> > > > commit d9156f9f364897e93bdd98b4ad22138de18f7c24).
-> > > >
-> > > > Option 3: Utilize NETFS_SREQ_SHORT_READ flag as needed.
-> > > > + Consistent with netfs design intent
-> > > > - Multiple "split" requests would be serialized (see code
-> > > > paths inside netfs_subreq_terminated that check for this flag).
-> > > > - Looks impossible without some refactoring of NFS pgio API.
-> > > > * Notes: Terminate NFS pageio page based loop at the first call
-> > > > to nfs_pageio_doio().  When a READ completes, NFS calls
-> > > > netfs_subreq_terminated() with NETFS_SREQ_SHORT_READ
-> > > > and is prepared to have the rest of the subrequest be
-> > > > resubmitted.
-> > > > Need to somehow fail early or avoid entirely subsequent calls to
-> > > > nfs_pagio_doio() for the original request though, and handle
-> > > > error status only from the first RPC.
-> > > >
-> > > > Option 4: Add some final completion routine to be called near
-> > > > bottom of nfs_pageio_complete() and would pass in at least
-> > > > netfs_read_subrequest(), possibly nfs_pageio_descriptor.
-> > > > + Inconsistent with netfs design intent
-> > > > - Would be a new NFS API or call on top of everything
-> > > > - Need to handle the "multiple completion with different
-> > > > status" problem (see #1).
-> > > >
-> > >
-> > > --
-> > > Trond Myklebust
-> > > Linux NFS client maintainer, Hammerspace
-> > > trond.myklebust@hammerspace.com
-> > >
-> > >
-> >
->
-> --
+> On Mar 31, 2021, at 1:52 PM, Trond Myklebust <trondmy@hammerspace.com> wr=
+ote:
+>=20
+> On Wed, 2021-03-31 at 13:22 -0400, Chuck Lever wrote:
+>> This tracepoint can crash when dereferencing snd_task because
+>> when some transports connect, they put a cookie in that field
+>> instead of a pointer to an rpc_task.
+>>=20
+>> BUG: KASAN: use-after-free in
+>> trace_event_raw_event_xprt_writelock_event+0x141/0x18e [sunrpc]
+>> Read of size 2 at addr ffff8881a83bd3a0 by task git/331872
+>>=20
+>> CPU: 11 PID: 331872 Comm: git Tainted: G S                5.12.0-rc2-
+>> 00007-g3ab6e585a7f9 #1453
+>> Hardware name: Supermicro SYS-6028R-T/X10DRi, BIOS 1.1a 10/16/2015
+>> Call Trace:
+>>  dump_stack+0x9c/0xcf
+>>  print_address_description.constprop.0+0x18/0x239
+>>  kasan_report+0x174/0x1b0
+>>  trace_event_raw_event_xprt_writelock_event+0x141/0x18e [sunrpc]
+>>  xprt_prepare_transmit+0x8e/0xc1 [sunrpc]
+>>  call_transmit+0x4d/0xc6 [sunrpc]
+>>=20
+>> Fixes: 9ce07ae5eb1d ("SUNRPC: Replace dprintk() call site in
+>> xprt_prepare_transmit")
+>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>> ---
+>>  include/trace/events/sunrpc.h |   35
+>> ++++++++++++++++++++++++++++++++++-
+>>  net/sunrpc/xprt.c             |    2 +-
+>>  2 files changed, 35 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/include/trace/events/sunrpc.h
+>> b/include/trace/events/sunrpc.h
+>> index 036eb1f5c133..690988530d60 100644
+>> --- a/include/trace/events/sunrpc.h
+>> +++ b/include/trace/events/sunrpc.h
+>> @@ -1141,7 +1141,40 @@ DECLARE_EVENT_CLASS(xprt_writelock_event,
+>> =20
+>>  DEFINE_WRITELOCK_EVENT(reserve_xprt);
+>>  DEFINE_WRITELOCK_EVENT(release_xprt);
+>> -DEFINE_WRITELOCK_EVENT(transmit_queued);
+>> +
+>> +TRACE_EVENT(xprt_transmit_queued,
+>> +       TP_PROTO(
+>> +               const struct rpc_task *task
+>> +       ),
+>> +
+>> +       TP_ARGS(task),
+>> +
+>> +       TP_STRUCT__entry(
+>> +               __field(unsigned int, task_id)
+>> +               __field(unsigned int, client_id)
+>> +               __field(unsigned long, runstate)
+>> +               __field(u32, xid)
+>> +               __field(int, status)
+>> +               __field(unsigned short, flags)
+>> +       ),
+>> +
+>> +       TP_fast_assign(
+>> +               __entry->task_id =3D task->tk_pid;
+>> +               __entry->client_id =3D
+>> +                       task->tk_client ? task->tk_client->cl_clid :
+>> -1;
+>> +               __entry->runstate =3D task->tk_runstate;
+>> +               __entry->xid =3D be32_to_cpu(task->tk_rqstp->rq_xid);
+>> +               __entry->status =3D task->tk_status;
+>> +               __entry->flags =3D task->tk_flags;
+>> +       ),
+>> +
+>> +       TP_printk("task:%u@%u xid=3D0x%08x flags=3D%s runstate=3D%s
+>> status=3D%d",
+>> +               __entry->task_id, __entry->client_id, __entry->xid,
+>> +               rpc_show_task_flags(__entry->flags),
+>> +               rpc_show_runstate(__entry->runstate),
+>> +               __entry->status
+>> +       )
+>> +);
+>> =20
+>>  DECLARE_EVENT_CLASS(xprt_cong_event,
+>>         TP_PROTO(
+>> diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+>> index d616b93751d8..b694af4504c4 100644
+>> --- a/net/sunrpc/xprt.c
+>> +++ b/net/sunrpc/xprt.c
+>> @@ -1469,7 +1469,7 @@ bool xprt_prepare_transmit(struct rpc_task
+>> *task)
+>>         struct rpc_xprt *xprt =3D req->rq_xprt;
+>> =20
+>>         if (!xprt_lock_write(xprt, task)) {
+>> -               trace_xprt_transmit_queued(xprt, task);
+>> +               trace_xprt_transmit_queued(task);
+>=20
+> Why do we need this tracepoint? The event we're logging is just
+> "grabbing the transport write lock failed due to external
+> circumstances".
+
+This tracepoint records the decision to queue rather than send immediately.
+
+You can count the number of these to get an idea whether the transport
+is backed up.
+
+You can trigger on this event if you want to capture the events that
+lead up to queuing a request.
+
+You can see whether the client logic is making the right choice when
+congestion control is in play.
+
+
+>>                 /* Race breaker: someone may have transmitted us */
+>>                 if (!test_bit(RPC_TASK_NEED_XMIT, &task-
+>>> tk_runstate))
+>>=20
+>>=20
+>=20
+> --=20
 > Trond Myklebust
-> CTO, Hammerspace Inc
-> 4984 El Camino Real, Suite 208
-> Los Altos, CA 94022
->
-> www.hammer.space
->
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+
+--
+Chuck Lever
+
+
 
