@@ -2,120 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C1E8351ADD
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Apr 2021 20:07:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E593A351D4E
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Apr 2021 20:49:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237144AbhDASDZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Apr 2021 14:03:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60866 "EHLO
+        id S234337AbhDAS1x (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Apr 2021 14:27:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235597AbhDAR5b (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Apr 2021 13:57:31 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B819C00F7F2
-        for <linux-nfs@vger.kernel.org>; Thu,  1 Apr 2021 08:13:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=12WYSnn0W09slxpXb2C2FEV1qgEU3cY44OdksaN4OnU=; b=d8PQmNEsNTzawK2fK3tEH7lLxf
-        ts7iJ/t5euG6ac64QlBk4QLKCjmwmupI/4N/CYNVG4s0RQxjmys1ZRpkPt4md8Ty4DKudzCikcGSa
-        Hbqnw4cZToCbdYPwafq1icjvN/2V/1dSLwMW+/jV2Dp2esgK2D/8fKcF5R6ylMMDJX4QYOJGMJlqE
-        5NBC5qmwZcgoaSrRJ336IREJXeICK16dX8u13N4QW71J4Sg16Zi5xSYq0za9rmfhp3PtLdqrOV9pc
-        E6LSBt/IEq1zK0o+hurvivsh1S08jPs5nPNUnW4Ua4LF2X1XJJaKcSyWtj1B98rTFVLcn7QoTW7m5
-        jGxyC9Ew==;
-Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lRz0t-006HD0-4x; Thu, 01 Apr 2021 15:13:40 +0000
-Date:   Thu, 1 Apr 2021 16:13:39 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "dwysocha@redhat.com" <dwysocha@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
-        jlayton@kernel.org, Steve French <sfrench@samba.org>
-Subject: Re: RFC: Approaches to resolve netfs API interface to NFS multiple
- completions problem
-Message-ID: <20210401151339.GE351017@casper.infradead.org>
-References: <49e123c6702cb6b27f114dfa64157d9a73463fad.camel@hammerspace.com>
- <CALF+zOnCisFWTubWEHhTLpt6=CUb7n86YvrNX3nreCYS73_v_Q@mail.gmail.com>
- <3727198.1617285066@warthog.procyon.org.uk>
+        with ESMTP id S239188AbhDASPl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Apr 2021 14:15:41 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A6B7C08EA6C
+        for <linux-nfs@vger.kernel.org>; Thu,  1 Apr 2021 06:28:09 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id bx7so1936706edb.12
+        for <linux-nfs@vger.kernel.org>; Thu, 01 Apr 2021 06:28:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BFeQXUmBBzjvxm5Akvjllspdul7zhPU0c1iyWjZeU5g=;
+        b=Jf1geZ+ZPCXqzPQGRKrMSClGVn0la/LzhmQVtJ2P3PwSfIEwMjSu/aFvz/QX6Uj7cj
+         tCk7jAACgjZm/JUCqZ7Y5il3knx28z2Rat2MmGAWBgd/Ws/DY+rHq/vB+7ChIWVdIuw2
+         ij3JcD+MmBggwGGy410PjEqmGzwmeLHutwU8fP4/a5fBKVLW8kg62fHRiAp2QVxfk3mL
+         zuu0eH16qFN6izxEGy6HnQK8PaPVf/e94mvV86u6RA9yU/jGrRkwTLRvLRuhBbRFBa7Z
+         I1jVDtZoVvpTQ0ZlPUM/+Evt9ZCrfggsp101zAiZT00ppZl67QEdaWUG/bj15MNSJ2Xk
+         ZhCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BFeQXUmBBzjvxm5Akvjllspdul7zhPU0c1iyWjZeU5g=;
+        b=OZMwoeLgrOppMgPnPCorZa2YCt2ewmQhBzjyC2fbOkCeRQqyozmhJuH/cWJiflJXh9
+         C9SNQbXc4cj2Q/U8SuhJ8KjbkuXAfVGValI/PpflLSRPs09fqDSq9GuVpbX9xiIeqX23
+         MUItA+htz+HweBt9V+rz0keQpYy7t8A/HbNMxVz4wXX9FjkEtaENBWtdVk9jXiupX7ot
+         wGHATOw9z4qmoYZxYRHJrEuSW9mf/swHs6gXXhFOhqjzFEQ+aXWgzn4c90v75RB7O/Y5
+         hq5rmA6RJFqPIwcYCcNWnR0K3tYoqYe5PyTD1VHtI+eCIp2zr52UY3WAEEHWF5b/vWX6
+         KFFg==
+X-Gm-Message-State: AOAM5311x9jYbMQxu9rwtkSZTbsgf3M5NH6SVitiBJgXZwky7ZlAsDYV
+        02qLRAm3mQ9wRPMj9itma7iBkpnxLUx3EwOHN9C+I+m85wg=
+X-Google-Smtp-Source: ABdhPJwz6pZnkZ5X9WSAmLCGokdrjj4tC4ZDqr8e2YOLGfTzNhAnyhHxC+NAWyx9S7rIYz2K6IY/JlTFSnxerFRQYS4=
+X-Received: by 2002:a05:6402:9:: with SMTP id d9mr9761823edu.67.1617283687669;
+ Thu, 01 Apr 2021 06:28:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3727198.1617285066@warthog.procyon.org.uk>
+References: <20210331192819.25637-1-olga.kornievskaia@gmail.com> <YGUm7/HE3HqVJik2@pick.fieldses.org>
+In-Reply-To: <YGUm7/HE3HqVJik2@pick.fieldses.org>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Thu, 1 Apr 2021 09:27:56 -0400
+Message-ID: <CAN-5tyETvKvUq_X7+2E0o=9GjJ628DC=QJW5xKA2-X7UHc_DOw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] NFSD fix handling of NFSv4.2 SEEK for data within the
+ last hole
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Apr 01, 2021 at 02:51:06PM +0100, David Howells wrote:
->  (1) The way cachefiles reads data from the cache is very hacky (calling
->      readpage on the backing filesystem and then installing an interceptor on
->      the waitqueue for the PG_locked page flag on that page, then memcpying
->      the page in a worker thread) - but it was the only way to do it at the
->      time.  Unfortunately, it's fragile and it seems just occasionally the
->      wake event is missed.
-> 
->      Since then, kiocb has come along.  I really want to switch to using this
->      to read/write the cache.  It's a lot more robust and also allows async
->      DIO to be performed, also cutting out the memcpy.
-> 
->      Changing the fscache IO part of API would make this easier.
+On Wed, Mar 31, 2021 at 9:50 PM J. Bruce Fields <bfields@redhat.com> wrote:
+>
+> On Wed, Mar 31, 2021 at 03:28:19PM -0400, Olga Kornievskaia wrote:
+> > From: Olga Kornievskaia <kolga@netapp.com>
+> >
+> > According to the RFC 7862, "if the server cannot find a
+> > corresponding sa_what, then the status will still be NFS4_OK,
+> > but sr_eof would be TRUE". If there is a file that ends with
+> > a hole and a SEEK request made for sa_what=SEEK_DATA with
+> > an offset in the middle of the last hole, then the server
+> > has to return OK and set the eof. Currently the linux server
+> > returns ERR_NXIO.
+>
+> Makes sense, but I think you can use the return value from vfs_llseek
+> instead of checking the file size again.  E.g.:
+>
+>         seek->seek_pos = vfs_llseek(nfs->nf_file, seek->seek_offset, whence);
+>         if (seek->seek_pos == -ENXIO)
+>                 seek->seek_eof = true;
 
-I agree with this.  The current way that fscache works is grotesque.
-It knows far too much about the inner workings of, well, everything.
+I don't believe this is correct. (1) ENXIO doesn't imply eof. If the
+specified seek_offset was beyond the end of the file the server must
+return ERR_NXIO and not OK. and (2) for the same reason I need to
+check if the requested type was looking for data but didn't find it
+because the offset is in the middle of the hole but still within the
+file size (thus the need to check if the seek_offset is within the
+file size). But I'm happy to check specifically if the seek_pos was
+ENXIO (and not the generic negative error) and then also check if
+request was for data and request was within file size.
 
->  (3) VM changes are coming that affect the filesystem address space
->      operations.  THP is already here, though not rolled out into all
->      filesystems yet.  Folios are (probably) on their way.  These manage with
->      page aggregation.  There's a new readahead interface function too.
-> 
->      This means, however, that you might get an aggregate page that is
->      partially cached.  In addition, the current fscache IO API cannot deal
->      with these.  I think only 9p, afs, ceph, cifs, nfs plus orangefs don't
->      support THPs yet.  The first five Willy has held off on because fscache
->      is a complication and there's an opportunity to make a single solution
->      that fits all five.
+Also while I'm fixing this and have your attention, Can you tell if
+the "else if" condition in the original code makes sense to you. I
+didn't touch it but I don't think it's correct. "else if
+(seek->seek_pos >= i_size_read(file_inode(nf->nf_file)))" I don't
+believe this can ever happen. How can vfs_llseek() ever return a
+position that is greater than the size of the file (or actually even
+equal to it)?
 
-This isn't quite uptodate:
-
- - The new readahead interface went into Linux in June 2020.
-   All filesystems were converted from readpages to readahead except
-   for the five above that use fscache.  It would be nice to remove the
-   readpages operation, but I'm trying not to get in anyone's way here,
-   and the fscache->netfs transition was already underway.
- - THPs in Linux today are available to precisely one filesystem --
-   shmem/tmpfs.  There are problems all over the place with using THPs
-   for non-in-memory filesystems.
- - My THP work achieved POC status.  I got some of the prerequistite
-   bits in, but have now stopped working on it (see next point).  It works
-   pretty darned well on XFS only.  I did do some work towards enabling
-   it on NFS, but never tested it.  There's a per-filesystem enable bit,
-   so in theory NFS never needs to be converted.  In practice, you're
-   going to want to for the performance boost.
- - I'm taking the lessons learned as part of the THP work (it's confusing
-   when a struct page may refer to part of a large memory allocation or
-   all of a large memory allocation) and introducing a new data type
-   (the struct folio) to refer to chunks of memory in the page cache.
-   All filesystems are going to have to be converted to the new API,
-   so the fewer places that filesystems actually deal with struct page,
-   the easier this makes the transition.
- - I don't understand how a folio gets to be partially cached.  Cached
-   should be tracked on a per-folio basis (like dirty or uptodate), not
-   on a per-page basis.  The point of the folio work is that managing
-   memory in page-sized chunks is now too small for good performance.
-
-> So with the above, there is an opportunity to abstract handling of the VM I/O
-> ops for network filesystems - 9p, afs, ceph, cifs and nfs - into a common
-> library that handles VM I/O ops and translates them to RPC calls, cache reads
-> and cache writes.  The thought is that we should be able to push the
-> aggregation of pages into RPC calls there, handle rsize/wsize and allow
-> requests to be sliced up and so that they can be distributed to multiple
-> servers (works for ceph) so that all five filesystems can get the same
-> benefits in one go.
-
-If NFS wants to do its own handling of rsize/wsize, could it?  That is,
-if the VM passes it a 2MB page and says "read it", and the server has
-an rsize of 256kB, could NFS split it up and send its own stream of 8
-requests, or does it have to use fscache to do that?
-
+>         else if (seek->seek_pos < 0)
+>                 status = nfserrno(seek->seek_pos);
+>
+> --b.
+>
+> >
+> > Fixes: 24bab491220fa ("NFSD: Implement SEEK")
+> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > ---
+> >  fs/nfsd/nfs4proc.c | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> > index e13c4c81fb89..2e7ceb9f1d5d 100644
+> > --- a/fs/nfsd/nfs4proc.c
+> > +++ b/fs/nfsd/nfs4proc.c
+> > @@ -1737,9 +1737,13 @@ nfsd4_seek(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+> >        *        should ever file->f_pos.
+> >        */
+> >       seek->seek_pos = vfs_llseek(nf->nf_file, seek->seek_offset, whence);
+> > -     if (seek->seek_pos < 0)
+> > -             status = nfserrno(seek->seek_pos);
+> > -     else if (seek->seek_pos >= i_size_read(file_inode(nf->nf_file)))
+> > +     if (seek->seek_pos < 0) {
+> > +             if (whence == SEEK_DATA &&
+> > +                 seek->seek_offset < i_size_read(file_inode(nf->nf_file)))
+> > +                     seek->seek_eof = true;
+> > +             else
+> > +                     status = nfserrno(seek->seek_pos);
+> > +     } else if (seek->seek_pos >= i_size_read(file_inode(nf->nf_file)))
+> >               seek->seek_eof = true;
+> >
+> >  out:
+> > --
+> > 2.18.2
+> >
+>
