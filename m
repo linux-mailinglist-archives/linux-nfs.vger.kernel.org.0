@@ -2,125 +2,140 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ACA8351BCA
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Apr 2021 20:11:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 637453519EA
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Apr 2021 20:04:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235355AbhDASLE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Apr 2021 14:11:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238170AbhDASFi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Apr 2021 14:05:38 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD5F1C08EC3D
-        for <linux-nfs@vger.kernel.org>; Thu,  1 Apr 2021 06:44:43 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 7893E6D19; Thu,  1 Apr 2021 09:44:42 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 7893E6D19
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1617284682;
-        bh=o7/zNVLaslc33ZPtpR4CWCWsbUS2OhkHiVpqWm3INJs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EkBLvBrQTSTrmeXd6tW6iHIh1LT3sb58lWttmiYMe4tkIWw3cyr+sC0tKjpZ+RXrG
-         EimY3amhAqYrIP9BKFzkvrCSJCmFKAxrMOq7TdhK59/Ycea7Jxi64nEG1+guKeIMNP
-         GDjv0zSNk7cEGis01MHz4Pod40LXx7y80Iqv0qZE=
-Date:   Thu, 1 Apr 2021 09:44:42 -0400
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     Nix <nix@esperi.org.uk>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: steam-associated reproducible hard NFSv4.2 client hang (5.9,
- 5.10)
-Message-ID: <20210401134442.GB13277@fieldses.org>
-References: <877dourt7c.fsf@esperi.org.uk>
- <20210223225701.GD8042@fieldses.org>
- <fde7a43ac9b61a1aff53381d0ab7b48b78cb79db.camel@hammerspace.com>
- <20210224020140.GA26848@fieldses.org>
- <875z16m8oh.fsf@esperi.org.uk>
+        id S234381AbhDAR45 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Apr 2021 13:56:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51301 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234651AbhDARwT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Apr 2021 13:52:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617299538;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=67Er4MV/wJhUyvFI71H33Z16SnubDGfMvDZkluV+Vw0=;
+        b=hdDgzIM6mVKiZPvoUko4I9gfGwap8QbV2KI5ujAceS5Gp6s0PpDCZLy4RwmnBy1MZOnRfB
+        Es6ONQ1V7jQ+ADVgPvhM2s4U5m1hkBtmcN+3J+eD0zZrhGnOKqrlrLYKOmewBUGSmqOUo8
+        Jo5WipaHYk+eIOfavE3Ne2fvo+ooOY8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-594-v7_FZzn1OqWifiNC8_qtQg-1; Thu, 01 Apr 2021 09:51:10 -0400
+X-MC-Unique: v7_FZzn1OqWifiNC8_qtQg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74D46108BD06;
+        Thu,  1 Apr 2021 13:51:09 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-58.rdu2.redhat.com [10.10.112.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D814614FC;
+        Thu,  1 Apr 2021 13:51:07 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <49e123c6702cb6b27f114dfa64157d9a73463fad.camel@hammerspace.com>
+References: <49e123c6702cb6b27f114dfa64157d9a73463fad.camel@hammerspace.com> <CALF+zOnCisFWTubWEHhTLpt6=CUb7n86YvrNX3nreCYS73_v_Q@mail.gmail.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     dhowells@redhat.com, "dwysocha@redhat.com" <dwysocha@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
+        Matthew Wilcox <willy@infradead.org>, jlayton@kernel.org,
+        Steve French <sfrench@samba.org>
+Subject: Re: RFC: Approaches to resolve netfs API interface to NFS multiple completions problem
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <875z16m8oh.fsf@esperi.org.uk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3727197.1617285066.1@warthog.procyon.org.uk>
+Date:   Thu, 01 Apr 2021 14:51:06 +0100
+Message-ID: <3727198.1617285066@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Apr 01, 2021 at 02:33:02PM +0100, Nix wrote:
-> [Sorry about the huge delay: your replies got accidentally marked as
->  read in a MUA snafu. I'll be getting some more debugging dumps -- and
->  seeing if this still happens! -- when I reboot into 5.11 this weekend.]
-> 
-> On 24 Feb 2021, bfields@fieldses.org said:
-> 
-> > On Tue, Feb 23, 2021 at 11:58:51PM +0000, Trond Myklebust wrote:
-> >> On Tue, 2021-02-23 at 17:57 -0500, J. Bruce Fields wrote:
-> >> > On Sun, Jan 03, 2021 at 02:27:51PM +0000, Nick Alcock wrote:
-> >> > > Relevant exports, from /proc/fs/nfs/exports:
-> >> > > 
-> >> > > /       192.168.16.0/24,silk.wkstn.nix(ro,insecure,no_root_squash,s
-> >> > > ync,no_wdelay,no_subtree_check,v4root,fsid=0,uuid=0a4a4563:00764033
-> >> > > :8c827c0e:989cf534,sec=390003:390004:390005:1)
-> >> > > /home/.loom.srvr.nix    *.srvr.nix,fold.srvr.nix(rw,root_squash,syn
-> >> > > c,wdelay,no_subtree_check,uuid=0a4a4563:00764033:8c827c0e:989cf534,
-> >> > > sec=1)
-> >> 
-> >> Isn't that trying to export the same filesystem as '/' on the line
-> >> above using conflicting export options?
-> 
-> Hmm. I don't actually have a / mount in /etc/exports (and haven't had
-> one since I finished building this machine, last year), and looking at
-> /proc/fs/nfs/exports on the server now, it's not there.
+Trond Myklebust <trondmy@hammerspace.com> wrote:
 
-Right, but even though you're not exporting /, you're exporting
-/home/.loom.srvr.nix, and that's on the same filesystem as /, isn't it?
+> > I've been working on getting NFS converted to dhowells new fscache
+> > and
+> > netfs APIs and running into a problem with how NFS is designed and it
+> > involves the NFS pagelist.c / pgio API.  I'd appreciate it if you
+> > could review and give your thoughts on possible approaches.  I've
+> > tried to outline some of the possibilities below.  I tried coding
+> > option #3 and ran into some problems, and it has a serialization
+> > limitation.  At this point I'm leaning towards option 2, so I'll
+> > probably try that approach if you don't have time for review or have
+> > strong thoughts on it.
+>
+> I am not going through another redesign of the NFS code in order to
+> accommodate another cachefs design. If netfs needs a refactoring or
+> redesign of the I/O code then it will be immediately NACKed.
+>
+> Why does netfs need to know these details about the NFS code anyway?
 
---b.
+There are some issues we have to deal with in fscache - and some
+opportunities.
 
-> 
-> The 'v4root' makes me wonder if this was automatically synthesised?
-> 
-> Exports explicitly named in /etc/exports for that machine are:
-> 
-> /home/.loom.srvr.nix -rw,no_subtree_check,sync fold.srvr.nix(root_squash) mutilate(no_root_squash) silk(no_root_squash)
-> /.nfs/nix/Graphics/Private -no_root_squash,sync,no_subtree_check mutilate(rw) silk(rw)
-> /.nfs/nix/share/phones -root_squash,async,no_subtree_check fold.srvr.nix(rw) mutilate(rw) silk(rw)
-> /.nfs/nix/.cache -root_squash,async,no_subtree_check fold.srvr.nix(rw) mutilate(rw) silk(rw)
-> /.nfs/nix/Mail/nnmh -root_squash,async,no_subtree_check fold.srvr.nix(ro) mutilate(rw) silk(rw)
-> /.nfs/compiler/.ccache -root_squash,async,no_subtree_check mutilate(rw) silk(rw)
-> /.nfs/compiler/.cache -root_squash,async,no_subtree_check fold.srvr.nix(rw) mutilate(rw) silk(rw)
-> /usr/doc -root_squash,no_subtree_check,async mutilate(ro) silk(ro)
-> /usr/info -root_squash,no_subtree_check,async mutilate(ro) silk(ro)
-> /usr/share/texlive -no_root_squash,no_subtree_check,async mutilate(rw) silk(rw)
-> /usr/share/xemacs -no_root_squash,no_subtree_check,async mutilate(rw) silk(rw)
-> /usr/share/xplanet -root_squash,no_subtree_check,async mutilate(ro) silk(ro)
-> /usr/share/nethack -root_squash,no_subtree_check,async mutilate(rw) silk(rw)
-> /pkg/non-free -no_root_squash,no_subtree_check,async mutilate(rw) chronix.wkstn.nix(rw) silk(rw)
-> /usr/lib/X11/fonts -root_squash,no_subtree_check,async mutilate(ro) silk(ro)
-> /usr/share/wine -root_squash,no_subtree_check,async mutilate(rw) silk(rw)
-> /usr/share/clamav -root_squash,no_subtree_check,async mutilate(ro) silk(ro)
-> /usr/share/emacs/site-lisp -no_root_squash,no_subtree_check,async mutilate(rw) silk(rw)
-> /usr/archive -root_squash,async,subtree_check mutilate(rw,root_squash,insecure) cinema.srvr.nix(ro,root_squash,insecure) chronix.wkstn.nix(ro) silk(rw,root_squash,insecure)
-> /usr/archive/music/Pete -root_squash,async,subtree_check mutilate(rw,root_squash,insecure) cinema.srvr.nix(ro,root_squash,insecure) chronix.wkstn.nix(ro) silk(rw,root_squash,insecure)
-> /var/log.real -root_squash,no_subtree_check,async mutilate(ro) silk(ro)
-> /etc/shai-hulud -no_root_squash,no_subtree_check,async mutilate(rw) silk(rw)
-> /usr/src -no_root_squash,no_subtree_check,async mutilate(rw) oracle.vm.nix(rw) 192.168.20.0/24(ro) scratch.vm.nix(rw) ubuntu.vm.nix(rw) cinema.srvr.nix(rw,root_squash) chronix.wkstn.nix(rw,root_squash) silk(rw)
-> /var/cache/CPAN -no_root_squash,no_subtree_check,async mutilate(rw) silk(rw)
-> /usr/share/flightgear -root_squash,async,no_subtree_check mutilate(ro) silk(ro)
-> /usr/local/tmp/encoding/mkv -no_subtree_check,root_squash,ro mutilate.wkstn.nix silk.wkstn.nix
-> /pkg/non-free/steam -rw,subtree_check,root_squash mutilate.wkstn.nix loom.srvr.nix chronix.wkstn.nix silk.wkstn.nix(insecure)
-> /.transient/workstations/silk -no_root_squash,async,subtree_check silk(rw)
-> /trees/mirrors/mutilate silk.wkstn.nix(no_root_squash,async,no_subtree_check,rw)
-> /trees/mirrors/silk silk.wkstn.nix(no_root_squash,async,no_subtree_check,rw)
-> 
-> ... and, well, it's a bit of a mess and there are a lot of them, but
-> there are no nested mounts there, at least, not outside /usr/archive
-> which is probably not relevant for this. (The /.nfs stuff is
-> particularly ugly: if I try to export e.g. /home/nix/.cache rather than
-> /.nfs/nix/.cache the export simply never appears: /.nfs/$foo is just
-> built out of bind mounts for this purpose, but then /home/$name is also
-> a bind mount from /home/.loom.srvr.nix/$name on this network in any
-> case. /nfs/$foo is usually bind-mounted *back* under /home on the
-> client, too, but still from NFS's perspective I guess this means they
-> are distinct? I hope so...)
+ (1) The way cachefiles reads data from the cache is very hacky (calling
+     readpage on the backing filesystem and then installing an interceptor on
+     the waitqueue for the PG_locked page flag on that page, then memcpying
+     the page in a worker thread) - but it was the only way to do it at the
+     time.  Unfortunately, it's fragile and it seems just occasionally the
+     wake event is missed.
+
+     Since then, kiocb has come along.  I really want to switch to using this
+     to read/write the cache.  It's a lot more robust and also allows async
+     DIO to be performed, also cutting out the memcpy.
+
+     Changing the fscache IO part of API would make this easier.
+
+ (2) The way cachefiles finds out whether data is present (using bmap) is not
+     viable on ext4 or xfs and has to be changed.  This means I have to keep
+     track of the presence of data myself, separately from the backing
+     filesystem's own metadata.
+
+     To reduce the amount of metadata I need to keep track of and store, I
+     want to increase the cache granularity - that is I will only store, say,
+     blocks of 256K.  But that needs to feed back up to the filesystem so that
+     it can ask the VM to expand the readahead.
+
+ (3) VM changes are coming that affect the filesystem address space
+     operations.  THP is already here, though not rolled out into all
+     filesystems yet.  Folios are (probably) on their way.  These manage with
+     page aggregation.  There's a new readahead interface function too.
+
+     This means, however, that you might get an aggregate page that is
+     partially cached.  In addition, the current fscache IO API cannot deal
+     with these.  I think only 9p, afs, ceph, cifs, nfs plus orangefs don't
+     support THPs yet.  The first five Willy has held off on because fscache
+     is a complication and there's an opportunity to make a single solution
+     that fits all five.
+
+     Also to this end, I'm trying to make it so that fscache doesn't retain
+     any pointers back into the network filesystem structures, beyond the info
+     provided to perform a cache op - and that is only required on a transient
+     basis.
+
+ (4) I'd like to be able to encrypt the data stored in the local cache and
+     Jeff Layton is adding support for fscrypt to ceph.  It would be nice if
+     we could share the solution with all of the aforementioned bunch of five
+     filesystems by putting it into the common library.
+
+So with the above, there is an opportunity to abstract handling of the VM I/O
+ops for network filesystems - 9p, afs, ceph, cifs and nfs - into a common
+library that handles VM I/O ops and translates them to RPC calls, cache reads
+and cache writes.  The thought is that we should be able to push the
+aggregation of pages into RPC calls there, handle rsize/wsize and allow
+requests to be sliced up and so that they can be distributed to multiple
+servers (works for ceph) so that all five filesystems can get the same
+benefits in one go.
+
+Btw, I'm also looking at changing the way indexing works, though that should
+only very minorly alter the nfs code and doesn't require any restructuring.
+I've simplified things a lot and I'm hoping to remove a couple of thousand
+lines from fscache and cachefiles.
+
+David
+
