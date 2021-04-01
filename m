@@ -2,79 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 342263518C9
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Apr 2021 19:49:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89DEB351754
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Apr 2021 19:42:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234912AbhDARrj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Apr 2021 13:47:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51308 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234276AbhDARmQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Apr 2021 13:42:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617298936;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WvQa+OFrW5Va5fKOaEC+GHMYXi23ytEjTAR9F/0dm5w=;
-        b=dS5/st8LlnzfBjdUjhyQjDAxhP3/ADkgUncgvw2cral1oyyOKTv7+v46rGXun0mUaYbfnR
-        f/BYLE4Wpliti/PXLkd1brJvuBRSiL3d5Oe6VcenO6j98AadAhvkhRUCceDzkvVSAiZWUw
-        pxCR8i/7wl4KaG/qfDoc2/pPfLOl4Ro=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-561-1JSlI9TwOUazfMMSGAgqbA-1; Thu, 01 Apr 2021 11:41:45 -0400
-X-MC-Unique: 1JSlI9TwOUazfMMSGAgqbA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0188F108BD06;
-        Thu,  1 Apr 2021 15:41:44 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-58.rdu2.redhat.com [10.10.112.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6006D5C237;
-        Thu,  1 Apr 2021 15:41:42 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20210401151339.GE351017@casper.infradead.org>
-References: <20210401151339.GE351017@casper.infradead.org> <49e123c6702cb6b27f114dfa64157d9a73463fad.camel@hammerspace.com> <CALF+zOnCisFWTubWEHhTLpt6=CUb7n86YvrNX3nreCYS73_v_Q@mail.gmail.com> <3727198.1617285066@warthog.procyon.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
-        "dwysocha@redhat.com" <dwysocha@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
-        jlayton@kernel.org, Steve French <sfrench@samba.org>
-Subject: Re: RFC: Approaches to resolve netfs API interface to NFS multiple completions problem
+        id S235017AbhDARl5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Apr 2021 13:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234658AbhDARjB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Apr 2021 13:39:01 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C53EC031151
+        for <linux-nfs@vger.kernel.org>; Thu,  1 Apr 2021 09:45:35 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id m132so2453871ybf.2
+        for <linux-nfs@vger.kernel.org>; Thu, 01 Apr 2021 09:45:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=+T7qQ6F60CkSpOkEW78A9meJ6X+kLLgMmwts1AY4/0g=;
+        b=LdVa54WuBOzp889DPnpTquJQtLbZ5Ub02iSxTUrVr7WJETQVrYxvqT38UllLoX7yxH
+         kjv33PhB2Av36S5Fgw3coRMcmfaKJgVkaRPffhAr/Wrp8bje6UZWZlhXw7txoYWcjuSC
+         hzUIIULW2Dw5KvXCec3tMaY2LfZ4osL3lcxdIONe6UEz3OwZCgPrMeh98GzWFIjyxANk
+         9vl8W9Dcs05JeNZ9BinnOsanFyggl0DFkUMOxi4YbOE8Lefs7B/Q0EJ7BGNnBeTKkcqh
+         jMb3z2F4sh57uRtz6kaRSX2jTMkYGtj4UwkV9yPDmzdA4aJ5oYqtIk1jj2j8tKh5gKde
+         bnwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=+T7qQ6F60CkSpOkEW78A9meJ6X+kLLgMmwts1AY4/0g=;
+        b=anmzH0eKXXZUJirynhivHA8QtnWFu5P5K5fFUl+GHky2LBjctL0ki6Ottmeg4JeP2/
+         49Dp0rWFlYJFz6POAHVTy++aiBgO4uPgpUFBaaVrs+hsKlEQqZtN9ptM4Okqosbpss4n
+         qj8bAzCcCjIpwbR/JJwdO8iHoiO/9uo1+Xh6uDNy0htPHmtc6alliKM+BQ7h/lyDk++Y
+         t0zIb+4AsV1BZK3u68SaxqgA8sdbmgB06NggwIMI+XOu/i0uZhELClYQ0e9krxdFgMHQ
+         FSwMNyjAnp7zaQkLagKDyfpyenwU4ySJzjtLzuIU+l3DawSH0vz9X0GNQTkBLJnxbYGs
+         IkmQ==
+X-Gm-Message-State: AOAM5307MCuDlkgnE/5FckTGH5vbrU7AcJ2sk+2i66vM2xcbX9yRnxEc
+        05QOLVCRXYrMxfxcECslmCxZOD+mReKRpYvCDNs=
+X-Google-Smtp-Source: ABdhPJwSAWcOA9ZGKE4FdLU0sJbuALVzU8R9OGHHuwQpXmMyRIg3/AuUlLfJNReK/8qRnxIh2WXwIg5P6lFwMcAULCA=
+X-Received: by 2002:a25:9b07:: with SMTP id y7mr12528511ybn.505.1617295534853;
+ Thu, 01 Apr 2021 09:45:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3737151.1617291701.1@warthog.procyon.org.uk>
-Date:   Thu, 01 Apr 2021 16:41:41 +0100
-Message-ID: <3737152.1617291701@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Received: by 2002:a05:7108:1ca:0:0:0:0 with HTTP; Thu, 1 Apr 2021 09:45:34
+ -0700 (PDT)
+From:   "Mrs. Victoria Desmond" <mrsvictoriadesmond7@gmail.com>
+Date:   Thu, 1 Apr 2021 18:45:34 +0200
+Message-ID: <CAKURpSW72gRofn4WJEN8V7WKpoFtFVup_MMpP0UE+uzJiAJkng@mail.gmail.com>
+Subject: Urgent reply!
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
+Dear friend,
 
->  - I don't understand how a folio gets to be partially cached.  Cached
->    should be tracked on a per-folio basis (like dirty or uptodate), not
->    on a per-page basis.  The point of the folio work is that managing
->    memory in page-sized chunks is now too small for good performance.
+I know this means of communication may not be morally right to you as
+a person but I also have had a great thought about it and I have come
+to this conclusion which I am about to share with you.
 
-Consider the following scenario:
+INTRODUCTION: I am a banker and in one way or the other hoping you
+will cooperate with me as a partner in a project of transferring an
+abandoned fund of a late customer of the bank worth of $10,500,000
+(Ten Million Five Hundred Thousands Dollars US).
 
- (1) You read two 256K chunks from an nfs file.  These are downloaded from the
-     server and cached.
+This will be disbursed or shared between the both of us in these
+percentages, 50% for me and 50% for you. If that is alright then get
+back to me for more details.
 
- (2) The nfs inode is dropped from the cache.
+I wait for your response so that we can commence on this project as
+soon as possible.
 
- (3) You do a 1M read that includes both 256K chunks.
-
-The VM might create a 1M folio to handle (3) that covers the entire read, but
-only half of the data is in the cache; the other half has to be fetched from
-the server.
-
-David
-
+Regards,
+Mrs Victoria Desmond.
