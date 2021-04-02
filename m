@@ -2,77 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC803353094
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Apr 2021 23:01:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC282353183
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 Apr 2021 01:31:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234207AbhDBVB7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 2 Apr 2021 17:01:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231149AbhDBVB7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Apr 2021 17:01:59 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B71DC0613E6
-        for <linux-nfs@vger.kernel.org>; Fri,  2 Apr 2021 14:01:57 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 1F20A6D18; Fri,  2 Apr 2021 17:01:57 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 1F20A6D18
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1617397317;
-        bh=d/6+d8HxagUFpp9zzz8c7tCG2YWkT2ICiCAOlw+roG8=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=ptXNxZufnAErXUWRikXxUVKtmyYi1iiZLlpaPA4MKxNpE5QzYgJ2b1D7N/UvpMB2K
-         JNaqNOwcIxvihZSFFCzf1QYGpc8yjtTf9YxXgs9oQ6NqQOpr2KjfdCKa8nwBxs2+yg
-         H+m3o0SCe+B0pjjhZ6DQ4NmdpO7HPY3tLB4brNI4=
-Date:   Fri, 2 Apr 2021 17:01:57 -0400
-To:     Rick Macklem <rmacklem@uoguelph.ca>
-Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>, nfsv4@ietf.org
-Subject: Re: [PATCH 1/1] NFSD fix handling of NFSv4.2 SEEK for data within
- the last hole
-Message-ID: <20210402210157.GC16427@fieldses.org>
-References: <20210331192819.25637-1-olga.kornievskaia@gmail.com>
- <YGUm7/HE3HqVJik2@pick.fieldses.org>
- <CAN-5tyETvKvUq_X7+2E0o=9GjJ628DC=QJW5xKA2-X7UHc_DOw@mail.gmail.com>
- <YQXPR0101MB0968C9AB372DC12408F496D8DD7B9@YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM>
+        id S235649AbhDBXan (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 2 Apr 2021 19:30:43 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:32900 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235228AbhDBXan (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Apr 2021 19:30:43 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 132NUPBE080069;
+        Fri, 2 Apr 2021 23:30:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=arfIrr6AAAkr1dB4SR8g5udBHquqkAbQc1XW3+wusxA=;
+ b=OwV86ksJqd+ePMi6gNxsNBYd8aRKVx7VArKHCyho9PyAVKtVxkWdsUG73m36cgWnn8Ji
+ /qCm5LAd337+uu+BvdAyOHyXFOe/WQIk+ukgoertBQcExGxRfYrSmyste5f1wNu30z3v
+ VsXEfoXYDmO6ZKKIv9zRnBJ6sraxZvMMO8oUhdO5IX6Z92//y7CKjt3J8MkPDs379W7z
+ t3+VoXcqKIsvsDiBASjKZy0MuiIK973LaaVmLyk8/1uqvXqDg5XgL6nqGrFBekQRBoB6
+ 8d54zwho7cuBPMszVVqkG6jLWTXNdAeNdnrshIIUR8veQzCVl//LmTPyaqwj40vrQXkq mA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 37n33dwny2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 02 Apr 2021 23:30:35 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 132NP2bW033411;
+        Fri, 2 Apr 2021 23:30:34 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 37n2acxbst-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 02 Apr 2021 23:30:34 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 132NPvWI035088;
+        Fri, 2 Apr 2021 23:30:34 GMT
+Received: from aserp3030.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
+        by aserp3020.oracle.com with ESMTP id 37n2acxbsh-1;
+        Fri, 02 Apr 2021 23:30:34 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     olga.kornievskaia@gmail.com
+Cc:     linux-nfs@vger.kernel.org, trondmy@hammerspace.com,
+        bfields@fieldses.org, chuck.lever@oracle.com
+Subject: [PATCH v2 0/2] enhance NFSv4.2 SSC to delay unmount source's export. 
+Date:   Fri,  2 Apr 2021 19:30:29 -0400
+Message-Id: <20210402233031.36731-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YQXPR0101MB0968C9AB372DC12408F496D8DD7B9@YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: GssPPNOhxwhe8od3bXhe5kSHF0nVtXZh
+X-Proofpoint-ORIG-GUID: GssPPNOhxwhe8od3bXhe5kSHF0nVtXZh
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9942 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 phishscore=0
+ clxscore=1015 impostorscore=0 malwarescore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2103310000
+ definitions=main-2104020158
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Adding nfsv4@ietf.org:
+Hi,
 
-On Thu, Apr 01, 2021 at 09:32:05PM +0000, Rick Macklem wrote:
-> I discussed this on nfsv4@ietf.org some time ago.
-> The problem with "fixing" the server is that it breaks
-> the unpatched Linux client.
-> 
-> If the client is careful, it can work correctly for both a Linux
-> and RFC5661 conformant server. That's what the FreeBSD
-> client tries to do.
-> --> I'd suggest that be your main goal.
-> 
-> The FreeBSD server ships "Linux compatible", but there is
-> a switch to make it RFC5661 compatible.
-> --> I wouldn't make it default the RFC compatible for
->       quite a while after the client that handles RFC compatible
->       ships.
-> 
-> I tried to convince folks to "errata" the RFC to Linux
-> compatible (since Linux was the only shipping 4.2 at
-> the time, but they did not consider it an "errata").
+Currently the source's export is mounted and unmounted on every
+inter-server copy operation. This causes unnecessary overhead
+for each copy.
 
-Previous discussion here:
+This patch series is an enhancement to allow the export to remain
+mounted for a configurable period (default to 15 minutes). If the 
+export is not being used for the configured time it will be unmounted
+by a delayed task. If it's used again then its expiration time is
+extended for another period.
 
-	https://mailarchive.ietf.org/arch/msg/nfsv4/bPLFnywt1wZ4kolMkzeSYca0qIM/
+Since mount and unmount are no longer done on each copy request,
+this overhead is no longer used to decide whether the copy should
+be done with inter-server copy or generic copy. The threshold used
+to determine sync or async copy is now used for this decision.
 
-There's no rejection on that thread, was it elsewhere?
+-Dai
 
---b.
+v2: fix compiler warning of missing prototype.
+
+
