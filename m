@@ -2,23 +2,22 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C938F35454A
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 18:35:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9C3B35454D
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 18:35:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242402AbhDEQfZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Apr 2021 12:35:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40864 "EHLO mail.kernel.org"
+        id S242443AbhDEQfb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Apr 2021 12:35:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238877AbhDEQfZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 5 Apr 2021 12:35:25 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9A5FC60FDB;
-        Mon,  5 Apr 2021 16:35:18 +0000 (UTC)
-Subject: [PATCH v1 5/6] xprtrdma: Do not wake RPC consumer on a failed
- LocalInv
+        id S242432AbhDEQfb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 5 Apr 2021 12:35:31 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B392D61398;
+        Mon,  5 Apr 2021 16:35:24 +0000 (UTC)
+Subject: [PATCH v1 6/6] xprtrdma: Avoid Send Queue wrapping
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Mon, 05 Apr 2021 12:35:17 -0400
-Message-ID: <161764051785.29855.4833398750635827274.stgit@manet.1015granger.net>
+Date:   Mon, 05 Apr 2021 12:35:24 -0400
+Message-ID: <161764052395.29855.5602569735350576645.stgit@manet.1015granger.net>
 In-Reply-To: <161764034907.29855.614994107807503843.stgit@manet.1015granger.net>
 References: <161764034907.29855.614994107807503843.stgit@manet.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -29,113 +28,97 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Throw away any reply where the LocalInv flushes or could not be
-posted. The registered memory region is in an unknown state until
-the disconnect completes.
+Send WRs can be signalled or unsignalled. A signalled Send WR
+always has a matching Send completion, while a unsignalled Send
+has a completion only if the Send WR fails.
 
-rpcrdma_xprt_disconnect() will find and release the MR. No need to
-put it back on the MR free list in this case.
+xprtrdma has a Send account mechanism that is designed to reduce
+the number of signalled Send WRs. This in turn mitigates the
+interrupt rate of the underlying device.
 
-The client retransmits pending RPC requests once it reestablishes a
-fresh connection, so a replacement reply should be forthcoming on
-the next connection instance.
+RDMA consumers can't leave all Sends unsignaled, however, because
+providers rely on Send completions to maintain their Send Queue head
+and tail pointers. xprtrdma counts the number of unsignaled Send WRs
+that have been posted to ensure that Sends are signalled often
+enough to prevent the Send Queue from wrapping.
+
+This mechanism neglected to account for FastReg WRs, which are
+posted on the Send Queue but never signalled. As a result, the
+Send Queue wrapped on occasion, resulting in duplication completions
+of FastReg and LocalInv WRs.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/frwr_ops.c  |   17 +++++++++++------
- net/sunrpc/xprtrdma/rpc_rdma.c  |   32 +++++++++++++++++++++++++++++---
- net/sunrpc/xprtrdma/xprt_rdma.h |    1 +
- 3 files changed, 41 insertions(+), 9 deletions(-)
+ net/sunrpc/xprtrdma/frwr_ops.c |   17 +++++++++++++++--
+ net/sunrpc/xprtrdma/verbs.c    |   16 +---------------
+ 2 files changed, 16 insertions(+), 17 deletions(-)
 
 diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
-index 27087dc8ba3c..951ae20485f3 100644
+index 951ae20485f3..43a412ea337a 100644
 --- a/net/sunrpc/xprtrdma/frwr_ops.c
 +++ b/net/sunrpc/xprtrdma/frwr_ops.c
-@@ -576,10 +576,14 @@ static void frwr_wc_localinv_done(struct ib_cq *cq, struct ib_wc *wc)
- 	rep = mr->mr_req->rl_reply;
- 	smp_rmb();
- 
--	frwr_mr_done(wc, mr);
-+	if (wc->status != IB_WC_SUCCESS) {
-+		if (rep)
-+			rpcrdma_unpin_rqst(rep);
-+		rpcrdma_flush_disconnect(cq->cq_context, wc);
-+		return;
-+	}
-+	frwr_mr_put(mr);
- 	rpcrdma_complete_rqst(rep);
--
--	rpcrdma_flush_disconnect(cq->cq_context, wc);
- }
- 
- /**
-@@ -645,8 +649,9 @@ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- 	trace_xprtrdma_post_linv_err(req, rc);
- 
- 	/* The final LOCAL_INV WR in the chain is supposed to
--	 * do the wake. If it was never posted, the wake will
--	 * not happen, so wake here in that case.
-+	 * do the wake. If it was never posted, the wake does
-+	 * not happen. Unpin the rqst in preparation for its
-+	 * retransmission.
- 	 */
--	rpcrdma_complete_rqst(req->rl_reply);
-+	rpcrdma_unpin_rqst(req->rl_reply);
- }
-diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index be4e888e78a3..649f7d8b9733 100644
---- a/net/sunrpc/xprtrdma/rpc_rdma.c
-+++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -1326,9 +1326,35 @@ rpcrdma_decode_error(struct rpcrdma_xprt *r_xprt, struct rpcrdma_rep *rep,
- 	return -EIO;
- }
- 
--/* Perform XID lookup, reconstruction of the RPC reply, and
-- * RPC completion while holding the transport lock to ensure
-- * the rep, rqst, and rq_task pointers remain stable.
-+/**
-+ * rpcrdma_unpin_rqst - Release rqst without completing it
-+ * @rep: RPC/RDMA Receive context
-+ *
-+ * This is done when a connection is lost so that a Reply
-+ * can be dropped and its matching Call can be subsequently
-+ * retransmitted on a new connection.
-+ */
-+void rpcrdma_unpin_rqst(struct rpcrdma_rep *rep)
-+{
-+	struct rpc_xprt *xprt = &rep->rr_rxprt->rx_xprt;
-+	struct rpc_rqst *rqst = rep->rr_rqst;
-+	struct rpcrdma_req *req = rpcr_to_rdmar(rqst);
-+
-+	req->rl_reply = NULL;
-+	rep->rr_rqst = NULL;
-+
-+	spin_lock(&xprt->queue_lock);
-+	xprt_unpin_rqst(rqst);
-+	spin_unlock(&xprt->queue_lock);
-+}
-+
-+/**
-+ * rpcrdma_complete_rqst - Pass completed rqst back to RPC
-+ * @rep: RPC/RDMA Receive context
-+ *
-+ * Reconstruct the RPC reply and complete the transaction
-+ * while @rqst is still pinned to ensure the rep, rqst, and
-+ * rq_task pointers remain stable.
+@@ -390,11 +390,13 @@ static void frwr_cid_init(struct rpcrdma_ep *ep,
   */
- void rpcrdma_complete_rqst(struct rpcrdma_rep *rep)
+ int frwr_send(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
  {
-diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
-index 1b187d1dee8a..bb8aba390b88 100644
---- a/net/sunrpc/xprtrdma/xprt_rdma.h
-+++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-@@ -561,6 +561,7 @@ int rpcrdma_marshal_req(struct rpcrdma_xprt *r_xprt, struct rpc_rqst *rqst);
- void rpcrdma_set_max_header_sizes(struct rpcrdma_ep *ep);
- void rpcrdma_reset_cwnd(struct rpcrdma_xprt *r_xprt);
- void rpcrdma_complete_rqst(struct rpcrdma_rep *rep);
-+void rpcrdma_unpin_rqst(struct rpcrdma_rep *rep);
- void rpcrdma_reply_handler(struct rpcrdma_rep *rep);
++	struct ib_send_wr *post_wr, *send_wr = &req->rl_wr;
+ 	struct rpcrdma_ep *ep = r_xprt->rx_ep;
+-	struct ib_send_wr *post_wr;
+ 	struct rpcrdma_mr *mr;
++	unsigned int num_wrs;
  
- static inline void rpcrdma_set_xdrlen(struct xdr_buf *xdr, size_t len)
+-	post_wr = &req->rl_wr;
++	num_wrs = 1;
++	post_wr = send_wr;
+ 	list_for_each_entry(mr, &req->rl_registered, mr_list) {
+ 		struct rpcrdma_frwr *frwr;
+ 
+@@ -409,8 +411,19 @@ int frwr_send(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
+ 		frwr->fr_regwr.wr.send_flags = 0;
+ 
+ 		post_wr = &frwr->fr_regwr.wr;
++		++num_wrs;
+ 	}
+ 
++	if ((kref_read(&req->rl_kref) > 1) || num_wrs > ep->re_send_count) {
++		send_wr->send_flags |= IB_SEND_SIGNALED;
++		ep->re_send_count = min_t(unsigned int, ep->re_send_batch,
++					  num_wrs - ep->re_send_count);
++	} else {
++		send_wr->send_flags &= ~IB_SEND_SIGNALED;
++		ep->re_send_count -= num_wrs;
++	}
++
++	trace_xprtrdma_post_send(req);
+ 	return ib_post_send(ep->re_id->qp, post_wr, NULL);
+ }
+ 
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index d4e573eef416..55c45cad2c8a 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -1365,21 +1365,7 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb)
+  */
+ int rpcrdma_post_sends(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
+ {
+-	struct ib_send_wr *send_wr = &req->rl_wr;
+-	struct rpcrdma_ep *ep = r_xprt->rx_ep;
+-	int rc;
+-
+-	if (!ep->re_send_count || kref_read(&req->rl_kref) > 1) {
+-		send_wr->send_flags |= IB_SEND_SIGNALED;
+-		ep->re_send_count = ep->re_send_batch;
+-	} else {
+-		send_wr->send_flags &= ~IB_SEND_SIGNALED;
+-		--ep->re_send_count;
+-	}
+-
+-	trace_xprtrdma_post_send(req);
+-	rc = frwr_send(r_xprt, req);
+-	if (rc)
++	if (frwr_send(r_xprt, req))
+ 		return -ENOTCONN;
+ 	return 0;
+ }
 
 
