@@ -2,174 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DF8D3545E8
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 19:17:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96DCD35464F
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 19:54:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237334AbhDERRU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Apr 2021 13:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237161AbhDERRU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Apr 2021 13:17:20 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73882C061756
-        for <linux-nfs@vger.kernel.org>; Mon,  5 Apr 2021 10:17:14 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 2AE796A45; Mon,  5 Apr 2021 13:17:13 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 2AE796A45
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1617643033;
-        bh=MryaYVVO5/t6A/pO1w4sW8VJpqvjnHEkcaQnQhvHbXw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XkEHDOlyWZWtG8IryDrIVx0Ia3jErknUol+GGD6Q8Jh6hfg0LluchpU0BK7pT3aO6
-         9ktpx1RCyH3aA6KfTYmlAu9sqcarpy8Rn17ruWfFB/smE+VuwKtbqFcVlsAdCFMz1I
-         0/9O8MnskcHrckgiC4OZXXvSteyXPA14+O/dlvFQ=
-Date:   Mon, 5 Apr 2021 13:17:13 -0400
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: v5.12-rc4 slab-out-of-bounds in xdr_set_page_base
-Message-ID: <20210405171713.GA21130@fieldses.org>
-References: <20210405134442.GA17752@fieldses.org>
- <2fd6f65fbc4a729587cb67a454ff2edb41362889.camel@hammerspace.com>
+        id S234382AbhDERym (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Apr 2021 13:54:42 -0400
+Received: from p3plsmtpa06-03.prod.phx3.secureserver.net ([173.201.192.104]:42318
+        "EHLO p3plsmtpa06-03.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232076AbhDERyl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Apr 2021 13:54:41 -0400
+Received: from [192.168.0.116] ([71.184.94.153])
+        by :SMTPAUTH: with ESMTPSA
+        id TTQklDwIKlaXaTTQklPVrj; Mon, 05 Apr 2021 10:54:34 -0700
+X-CMAE-Analysis: v=2.4 cv=eKjWMFl1 c=1 sm=1 tr=0 ts=606b4eda
+ a=vbvdVb1zh1xTTaY8rfQfKQ==:117 a=vbvdVb1zh1xTTaY8rfQfKQ==:17
+ a=IkcTkHD0fZMA:10 a=Ikd4Dj_1AAAA:8 a=Yaz6U4fXJU-nSkCjVyEA:9 a=QEXdDO2ut3YA:10
+X-SECURESERVER-ACCT: tom@talpey.com
+Subject: Re: [PATCH rdma-next 00/10] Enable relaxed ordering for ULPs
+To:     Leon Romanovsky <leon@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Adit Ranadive <aditr@vmware.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Avihai Horon <avihaih@nvidia.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Devesh Sharma <devesh.sharma@broadcom.com>,
+        Faisal Latif <faisal.latif@intel.com>,
+        Jack Wang <jinpu.wang@ionos.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Jens Axboe <axboe@fb.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Keith Busch <kbusch@kernel.org>, Lijun Ou <oulijun@huawei.com>,
+        linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Max Gurtovoy <mgurtovoy@nvidia.com>,
+        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        Michael Guralnik <michaelgur@nvidia.com>,
+        Michal Kalderon <mkalderon@marvell.com>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
+        netdev@vger.kernel.org, Potnuri Bharat Teja <bharat@chelsio.com>,
+        rds-devel@oss.oracle.com, Sagi Grimberg <sagi@grimberg.me>,
+        samba-technical@lists.samba.org,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Somnath Kotur <somnath.kotur@broadcom.com>,
+        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
+        Steve French <sfrench@samba.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        VMware PV-Drivers <pv-drivers@vmware.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Zhu Yanjun <zyjzyj2000@gmail.com>
+References: <20210405052404.213889-1-leon@kernel.org>
+ <20210405134115.GA22346@lst.de> <YGsZ4Te1+DQODj34@unreal>
+From:   Tom Talpey <tom@talpey.com>
+Message-ID: <0aa2dfc1-58e4-ac54-4ac7-3229039d9c7d@talpey.com>
+Date:   Mon, 5 Apr 2021 13:54:30 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2fd6f65fbc4a729587cb67a454ff2edb41362889.camel@hammerspace.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <YGsZ4Te1+DQODj34@unreal>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfHeFvch9CXwEtdZ0IkSfSvDfJ61kGmHt9NGJgHNYQrySGqVVDuJ9ps49cslZGA73vKwNzEnCWV3k2oacgtBjOJFQVLAEGLod/GadB5w/PafttQ7Fq1jG
+ hE+lbXhi2AOywYITjKNx1X1H/Wi9V5phrjJT9rYrPKyn8tmtMiOsfCwXSRUf4ZiRBPXg2e3M1oDqs3m37DE92cVI9vaW/dpSZGTLmHJmfNtQb3+k4QF8RcLP
+ iyUJ6lm9LN8mw+S1HPCYMpzmfVhpHKz1RAqhhnvGjGOao7c185NfLdhZddyhpw0Eh2/u48pXLrcBZ7TwhhKOQ4HlaiAIwm+1RIQlNLh5QaOf/iB8Wa5XO/EG
+ YUNFhC1yWzA4E1pTzHAgP4iuZ2rd0o76G21I94f7pqpmU9OPz/B0z3oCnEXCFq5wBymHvp1KFz4IKsIN8I0IXxIdbI+l/6hvf6H6D8vqKv5QRJ2VvddsIFiL
+ xYi3HMgnqoZA2s5KLM2i5eyO7G6Lo8lKBmThRslCYvAhLmwo0ttovL/s7JgaGqVJDJmbxQRYu8ovMQvUwJIRFaBQjchUFP/+AL/LUwHaP1w9lc1l4eSqbHJb
+ sdN24cKKGV3bepJejz6tOqNzAsHeV1Ms2ouGAiHn7hMSrEjNI0i8Df6sm4TkDtHhBC+jKLq0G/foFQjVw9Sg0ugmGS6G18r0rq+1HPWN2WOYhNyIN4OiEkn8
+ GaxhrVXqVlcpfokuvTF+s4sxiRpY8tQPtd8F159lNAYJit7eUWkHOxb9/BzxTtwGAg2pLS0GoqhvEfZlwaNC2cFG4reJuFIT02yOVFUmexISspL7SPBEgCTl
+ gCryGfJ1n0ahmuuBXJGWP5AeNzInDj4hZ+NJciO6RPnJOWcxKkJHD4FbeWbzU5jUkwiKddcQNdy2ynGxHHL/zJvgugay00T3LuHv+Igao3F7oE1V9dyaEaBA
+ Fmpb+zhCA7ZvEyti5vfVkT6H11m8+mhMFTUZEFrDvnRE8MOs29gQZ+JHRR1kaDfgQmZhAvVddE4nEU913yHt12OpQygldpqzReP54Z75Z/M0iTsxhK4fiEnU
+ 9JT9HzLT9lorwe7hCR/2owzoYe8l+sGjAUPRnCCvMda1Co9y1jfFeInBZC4o4oJrshDEWrR4FASyJ8P9f67T2oDp6kYiMXZo752VeeZMUEIgG/ZCW/50rXUd
+ p1z6WWRt7HkdSHSIyR6854MYMQwWLCXTR/mXoV29uzHE1rKKB0ZV9hfBxM7OEq2ESAPIWzKflxfnkgi0hLHPX/pcs8qt1RabedqaElEMZG4tpUQT5x+1RYJy
+ QLSG/eUxiYtJwWzhSSGGnPxp6tpPXwhHRCR2fS3hPunOc/BB4XDYAoRNbRQ8S9geX74vBfjR+7Mo/kEO+Ff1j/N/Pw/dPaSqM+s75erYzNEXE4uNr2yPjuFe
+ RxZ54qOcm0eN4Kz/3MkrXc1qXWQIgqa8rMSPNIzcFXnHPXarf4r3mpzRtKaHqFVFd9+Ppmq8pTawFgx22hfqH6+2PrdpujOg9rLE1PSz4utM9m1qJ3ah/GrF
+ dS3+E8jo80U5VFYoGJkRiSV7nEssBN/EHCDhggTQ8ObvhQpVhar3n28oCi5V4opOGfwPWz7BSvpdt/3wO6pKkM+X3oG5V4UjNkVXQ71Hxa9Mvjd4Q+1Ss96U
+ yrrp3sVVys39o+RqZfQzme+urxFYVMYtau+xDORmNQy8ens2+eIIizgbX4qf8PnTbYwMX5GJWnF4VvFtqsrPU+co2qKDliR0AH4h73z5MIRf/29FBdxwZcnJ
+ 2RY7d4Chv6V4B8lPxXoM8mypwKNqsD98EHFTJFfHQz3IHKpl8Ot6wKjTnOV1YELuQXDFm9K3JLqPHY7ARmRiIponvY2zNyT40SrjkJ/UZEtgkuYSO6Wp/RjQ
+ JE39Fg==
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Apr 05, 2021 at 01:52:51PM +0000, Trond Myklebust wrote:
-> On Mon, 2021-04-05 at 09:44 -0400, J. Bruce Fields wrote:
-> > I'm getting the following on an NFS client under testing, is it
-> > anything
-> > known?
-> > 
-> > Not sure yet exactly which test is triggering it or when it started
-> > happening; I'll follow up when I figure that out.
-> > 
+On 4/5/2021 10:08 AM, Leon Romanovsky wrote:
+> On Mon, Apr 05, 2021 at 03:41:15PM +0200, Christoph Hellwig wrote:
+>> On Mon, Apr 05, 2021 at 08:23:54AM +0300, Leon Romanovsky wrote:
+>>> From: Leon Romanovsky <leonro@nvidia.com>
+>>>
+>>> >From Avihai,
+>>>
+>>> Relaxed Ordering is a PCIe mechanism that relaxes the strict ordering
+>>> imposed on PCI transactions, and thus, can improve performance.
+>>>
+>>> Until now, relaxed ordering could be set only by user space applications
+>>> for user MRs. The following patch series enables relaxed ordering for the
+>>> kernel ULPs as well. Relaxed ordering is an optional capability, and as
+>>> such, it is ignored by vendors that don't support it.
+>>>
+>>> The following test results show the performance improvement achieved
+>>> with relaxed ordering. The test was performed on a NVIDIA A100 in order
+>>> to check performance of storage infrastructure over xprtrdma:
+>>
+>> Isn't the Nvidia A100 a GPU not actually supported by Linux at all?
+>> What does that have to do with storage protocols?
 > 
-> I'd be unsurprised to find that there may still be a couple of residual
-> bugs in read plus (and I'm not willing to spend much more time
-> debugging it).
+> This system is in use by our storage oriented customer who performed the
+> test. He runs drivers/infiniband/* stack from the upstream, simply backported
+> to specific kernel version.
 > 
-> Are you seeing this when using ordinary reads too?
+> The performance boost is seen in other systems too.
 
-Experimenting some more....
+We need to see more information about this test, and platform.
 
-I see it reliably over 4.2, but not over 4.1.  So, yes, it's probably
-READ_PLUS.
+What correctness testing was done, and how was it verified? What
+PCI bus type(s) were tested, and with what adapters? What storage
+workload was generated, and were all possible RDMA exchanges by
+each ULP exercised?
 
-I can reproduce with just cthon basic tests.
+>> Also if you enable this for basically all kernel ULPs, why not have
+>> an opt-out into strict ordering for the cases that need it (if there are
+>> any).
+> 
+> The RO property is optional, it can only improve. In addition, all in-kernel ULPs
+> don't need strict ordering. I can be mistaken here and Jason will correct me, it
+> is because of two things: ULP doesn't touch data before CQE and DMA API prohibits it.
 
---b.
++1 on Christoph's comment.
 
-> 
-> > --b.
-> > 
-> > [ 1001.688041]
-> > ==================================================================
-> > [ 1001.689529] BUG: KASAN: slab-out-of-bounds in
-> > xdr_set_page_base+0x339/0x350 [sunrpc]
-> > [ 1001.691017] Read of size 8 at addr ffff88800dd8fe80 by task
-> > kworker/u4:1/25
-> > 
-> > [ 1001.692517] CPU: 0 PID: 25 Comm: kworker/u4:1 Not tainted 5.12.0-
-> > rc4-45853-g62007e38c8d6 #3177
-> > [ 1001.694121] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-> > BIOS 1.14.0-1.fc33 04/01/2014
-> > [ 1001.695676] Workqueue: rpciod rpc_async_schedule [sunrpc]
-> > [ 1001.696776] Call Trace:
-> > [ 1001.697176]  dump_stack+0x93/0xc2
-> > [ 1001.697762]  print_address_description.constprop.0+0x18/0x110
-> > [ 1001.698511]  ? xdr_set_page_base+0x339/0x350 [sunrpc]
-> > [ 1001.699216]  ? xdr_set_page_base+0x339/0x350 [sunrpc]
-> > [ 1001.700665]  kasan_report.cold+0x7c/0xd8
-> > [ 1001.701420]  ? xdr_set_page_base+0x339/0x350 [sunrpc]
-> > [ 1001.702379]  xdr_set_page_base+0x339/0x350 [sunrpc]
-> > [ 1001.703273]  xdr_align_data+0x6e9/0xe60 [sunrpc]
-> > [ 1001.703967]  ? __decode_op_hdr+0x24/0x4d0 [nfsv4]
-> > [ 1001.704665]  nfs4_xdr_dec_read_plus+0x40d/0x780 [nfsv4]
-> > [ 1001.705371]  ? nfs4_xdr_dec_offload_cancel+0x160/0x160 [nfsv4]
-> > [ 1001.706165]  ? lock_is_held_type+0xd5/0x130
-> > [ 1001.706702]  gss_unwrap_resp+0x145/0x220 [auth_rpcgss]
-> > [ 1001.707355]  call_decode+0x5d2/0x830 [sunrpc]
-> > [ 1001.707954]  ? rpc_decode_header+0x17c0/0x17c0 [sunrpc]
-> > [ 1001.708739]  ? lock_is_held_type+0xd5/0x130
-> > [ 1001.709268]  ? rpc_decode_header+0x17c0/0x17c0 [sunrpc]
-> > [ 1001.709974]  __rpc_execute+0x1b8/0xda0 [sunrpc]
-> > [ 1001.710581]  ? rpc_exit+0xb0/0xb0 [sunrpc]
-> > [ 1001.711146]  ? lock_downgrade+0x6a0/0x6a0
-> > [ 1001.711662]  rpc_async_schedule+0x9f/0x140 [sunrpc]
-> > [ 1001.712355]  process_one_work+0x7ac/0x12d0
-> > [ 1001.712903]  ? lock_release+0x6d0/0x6d0
-> > [ 1001.713386]  ? queue_delayed_work_on+0x80/0x80
-> > [ 1001.713986]  ? rwlock_bug.part.0+0x90/0x90
-> > [ 1001.714507]  worker_thread+0x590/0xf80
-> > [ 1001.714995]  ? rescuer_thread+0xb80/0xb80
-> > [ 1001.715504]  kthread+0x375/0x450
-> > [ 1001.715913]  ? _raw_spin_unlock_irq+0x24/0x50
-> > [ 1001.716518]  ? kthread_create_worker_on_cpu+0xb0/0xb0
-> > [ 1001.717161]  ret_from_fork+0x22/0x30
-> > 
-> > [ 1001.717855] Allocated by task 9075:
-> > [ 1001.718291]  kasan_save_stack+0x1b/0x40
-> > [ 1001.718778]  __kasan_kmalloc+0x78/0x90
-> > [ 1001.719250]  __kmalloc+0x112/0x210
-> > [ 1001.719679]  nfs_generic_pgio+0x99f/0xe80 [nfs]
-> > [ 1001.720319]  nfs_generic_pg_pgios+0xea/0x3f0 [nfs]
-> > [ 1001.720937]  nfs_pageio_doio+0x10b/0x2b0 [nfs]
-> > [ 1001.721540]  nfs_pageio_complete+0x19d/0x550 [nfs]
-> > [ 1001.722161]  nfs_pageio_complete_read+0x14/0x180 [nfs]
-> > [ 1001.722823]  nfs_readpages+0x313/0x440 [nfs]
-> > [ 1001.723372]  read_pages+0x4ab/0xa40
-> > [ 1001.723816]  page_cache_ra_unbounded+0x361/0x620
-> > [ 1001.724442]  filemap_get_pages+0x631/0xf60
-> > [ 1001.724959]  filemap_read+0x24d/0x840
-> > [ 1001.725425]  nfs_file_read+0x144/0x240 [nfs]
-> > [ 1001.726031]  new_sync_read+0x352/0x5d0
-> > [ 1001.726503]  vfs_read+0x202/0x3f0
-> > [ 1001.726926]  ksys_read+0xe9/0x1b0
-> > [ 1001.727341]  do_syscall_64+0x33/0x40
-> > [ 1001.727797]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> > 
-> > [ 1001.728671] The buggy address belongs to the object at
-> > ffff88800dd8fe00
-> >                 which belongs to the cache kmalloc-128 of size 128
-> > [ 1001.730853] The buggy address is located 0 bytes to the right of
-> >                 128-byte region [ffff88800dd8fe00, ffff88800dd8fe80)
-> > [ 1001.732830] The buggy address belongs to the page:
-> > [ 1001.733549] page:000000009a9ea03c refcount:1 mapcount:0
-> > mapping:0000000000000000 index:0x0 pfn:0xdd8f
-> > [ 1001.734754] flags: 0x4000000000000200(slab)
-> > [ 1001.735282] raw: 4000000000000200 ffffea00002c16a8
-> > ffffea00001b27e8 ffff888007040400
-> > [ 1001.736285] raw: 0000000000000000 ffff88800dd8f000
-> > 0000000100000010
-> > [ 1001.737064] page dumped because: kasan: bad access detected
-> > 
-> > [ 1001.737981] Memory state around the buggy address:
-> > [ 1001.738579]  ffff88800dd8fd80: fc fc fc fc fc fc fc fc fc fc fc fc
-> > fc fc fc fc
-> > [ 1001.739475]  ffff88800dd8fe00: 00 00 00 00 00 00 00 00 00 00 00 00
-> > 00 00 00 00
-> > [ 1001.740411] >ffff88800dd8fe80: fc fc fc fc fc fc fc fc fc fc fc fc
-> > fc fc fc fc
-> > [ 1001.741331]                    ^
-> > [ 1001.741795]  ffff88800dd8ff00: fa fb fb fb fb fb fb fb fb fb fb fb
-> > fb fb fb fb
-> > [ 1001.742693]  ffff88800dd8ff80: fc fc fc fc fc fc fc fc fc fc fc fc
-> > fc fc fc fc
-> > [ 1001.743589]
-> > ==================================================================
-> > 
-> 
-> -- 
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-> 
-> 
+I woud hope most well-architected ULPs will support relaxed ordering,
+but storage workloads, in my experience, can find ways to cause failure
+in adapters. I would not suggest making this the default behavior
+without extensive testing.
+
+Tom.
