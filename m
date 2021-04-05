@@ -2,146 +2,174 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CC913545B2
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 18:52:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DF8D3545E8
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 19:17:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232376AbhDEQwS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Apr 2021 12:52:18 -0400
-Received: from icebox.esperi.org.uk ([81.187.191.129]:35906 "EHLO
-        mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232147AbhDEQwS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Apr 2021 12:52:18 -0400
-Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
-        by mail.esperi.org.uk (8.16.1/8.16.1) with ESMTP id 135Gq9TW003690;
-        Mon, 5 Apr 2021 17:52:09 +0100
-From:   Nix <nix@esperi.org.uk>
-To:     "bfields\@fieldses.org" <bfields@fieldses.org>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs\@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        linux-net@vger.kernel.org
-Subject: Re: steam-associated reproducible hard NFSv4.2 client hang (5.9, 5.10)
-References: <877dourt7c.fsf@esperi.org.uk>
-        <20210223225701.GD8042@fieldses.org>
-        <fde7a43ac9b61a1aff53381d0ab7b48b78cb79db.camel@hammerspace.com>
-        <20210224020140.GA26848@fieldses.org>
-Emacs:  Our Lady of Perpetual Garbage Collection
-Date:   Mon, 05 Apr 2021 17:52:09 +0100
-In-Reply-To: <20210224020140.GA26848@fieldses.org> (bfields@fieldses.org's
-        message of "Tue, 23 Feb 2021 21:01:40 -0500")
-Message-ID: <87ft047jye.fsf@esperi.org.uk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3.50 (gnu/linux)
+        id S237334AbhDERRU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Apr 2021 13:17:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237161AbhDERRU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Apr 2021 13:17:20 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73882C061756
+        for <linux-nfs@vger.kernel.org>; Mon,  5 Apr 2021 10:17:14 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 2AE796A45; Mon,  5 Apr 2021 13:17:13 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 2AE796A45
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1617643033;
+        bh=MryaYVVO5/t6A/pO1w4sW8VJpqvjnHEkcaQnQhvHbXw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XkEHDOlyWZWtG8IryDrIVx0Ia3jErknUol+GGD6Q8Jh6hfg0LluchpU0BK7pT3aO6
+         9ktpx1RCyH3aA6KfTYmlAu9sqcarpy8Rn17ruWfFB/smE+VuwKtbqFcVlsAdCFMz1I
+         0/9O8MnskcHrckgiC4OZXXvSteyXPA14+O/dlvFQ=
+Date:   Mon, 5 Apr 2021 13:17:13 -0400
+From:   "bfields@fieldses.org" <bfields@fieldses.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: v5.12-rc4 slab-out-of-bounds in xdr_set_page_base
+Message-ID: <20210405171713.GA21130@fieldses.org>
+References: <20210405134442.GA17752@fieldses.org>
+ <2fd6f65fbc4a729587cb67a454ff2edb41362889.camel@hammerspace.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-DCC--Metrics: loom 1480; Body=4 Fuz1=4 Fuz2=4
+In-Reply-To: <2fd6f65fbc4a729587cb67a454ff2edb41362889.camel@hammerspace.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-[linux-net added: a stubborn NFS client hang doing uncompression of some
- Steam games over NFS now looks like it might be TCP-stack or even
- network-device-related rather than NFS-related]
+On Mon, Apr 05, 2021 at 01:52:51PM +0000, Trond Myklebust wrote:
+> On Mon, 2021-04-05 at 09:44 -0400, J. Bruce Fields wrote:
+> > I'm getting the following on an NFS client under testing, is it
+> > anything
+> > known?
+> > 
+> > Not sure yet exactly which test is triggering it or when it started
+> > happening; I'll follow up when I figure that out.
+> > 
+> 
+> I'd be unsurprised to find that there may still be a couple of residual
+> bugs in read plus (and I'm not willing to spend much more time
+> debugging it).
+> 
+> Are you seeing this when using ordinary reads too?
 
-On 24 Feb 2021, bfields@fieldses.org said:
+Experimenting some more....
 
-> On Tue, Feb 23, 2021 at 11:58:51PM +0000, Trond Myklebust wrote:
->> On Tue, 2021-02-23 at 17:57 -0500, J. Bruce Fields wrote:
->> > On Sun, Jan 03, 2021 at 02:27:51PM +0000, Nick Alcock wrote:
->> > > Relevant exports, from /proc/fs/nfs/exports:
->> > > 
->> > > /       192.168.16.0/24,silk.wkstn.nix(ro,insecure,no_root_squash,s
->> > > ync,no_wdelay,no_subtree_check,v4root,fsid=0,uuid=0a4a4563:00764033
->> > > :8c827c0e:989cf534,sec=390003:390004:390005:1)
->> > > /home/.loom.srvr.nix    *.srvr.nix,fold.srvr.nix(rw,root_squash,syn
->> > > c,wdelay,no_subtree_check,uuid=0a4a4563:00764033:8c827c0e:989cf534,
->> > > sec=1)
->> 
->> Isn't that trying to export the same filesystem as '/' on the line
->> above using conflicting export options?
->
-> Yes, and exporting something on the root filesystem is generally a bad
-> idea for the usual reasons.
->
-> I don't see any explanation for the write hang there, though.
->
-> Unless maybe if it leaves mountd unable to answer an upcall for some
-> reason, hm.
->
-> I think that would show up in /proc/net/rpc/nfsd.fh/content.  Try
-> cat'ing that file after 'rpcdebug -m rpc -s cache' and that should show
-> if there's an upcall that's not getting answered.
+I see it reliably over 4.2, but not over 4.1.  So, yes, it's probably
+READ_PLUS.
 
-OK, I got some debugging: this is still happening on 5.11, but it's
-starting to look more like a problem below NFS.
+I can reproduce with just cthon basic tests.
 
-There are no unanswered upcalls, and though I did eventually manage to
-get a multimegabyte pile of NFS debugging info (after fighting with the
-problem that the Steam client has internal timeouts that are silently
-exceeded and break things if you just leave debugging on)... I suspect I
-don't need to bother you with it, because the packet capture was more
-informative.
+--b.
 
-I have a complete capture of everything on the wire from the moment
-Steam started, but it's nearly 150MiB xz'ed and includes a lot of boring
-nonsense related to Steam's revalidation of everything because the last
-startup crashed: it probably also includes things like my Steam account
-password, getdents of my home directory etc so if you want that I can
-send you the details privately: but this capture of only the last few
-thousand NFS packets is interesting enough:
-<http://www.esperi.org.uk/~nix/temporary/nfs-trouble.cap>.
-
-Looking at this in Wireshark, everything goes fine (ignoring the usual
-offloading-associated checksum whining) until packet 1644, when we
-suddenly start seeing out-of-order packets and retransmissions (on an
-otherwise totally idle 10GbE subnet). They get more and more common, and
-at packet 1711 the client loses patience and hits the host with a RST.
-This is... not likely to do NFS any good at all, and with $HOME served
-over the same connection I'm not surprised the client goes fairly
-unresponsive after that and the hangcheck timer starts screaming about
-processes blocked on I/O to some of the odder filesystems I'm getting
-over NFS on that client, like /var/tmp and /var/account/acct (so, yes,
-all process termination likely blocks forever on this). So it looks like
-NFS is being betrayed by TCP and/or some lower layer. (Also, NFS doesn't
-seem to try too hard to recover -- or perhaps, when it does, the new
-session goes just as wrong).
-
-The socket statistics on the server report 22 rx drops since boot (out
-of 11903K) and no errors of any kind: possibly each of these drops
-corresponds to the test runs I've been doing, but there can't be more
-than one or two drops per test (I must have crashed the client over ten
-times trying to get dumps) which if true seems more fragile than I
-expect NFS to be :) so they might well just be coincidental.
-
-I simplified my network for this test run, so the link has literally no
-hosts on it right now other than the NFS server and client at issue and
-a 10GbE Netgear GS110EMX switch, which reports zero errors and no
-packets dropped since it was rebooted months ago. Both ends are the same
-Intel X540-AT2 driven by ixgbe. The network cabling has never given me
-the least cause for concern, and I've never seen things getting hit by
-RSTs when talking to this host before. I've certainly never seen *NFS*
-getting a RST. It happens consistently, anyway, which argues strongly
-against the cabling :)
-
-Neither client nor server are using any sort of iptables (it's not even
-compiled in), and while the server is doing a bit of policy-based
-routing and running a couple of bridges for VMs it's not doing anything
-that should cause this (and this was replicated when the bridges had
-nothing on them other than the host in any case). Syncookies are
-compiled out on both hosts (they're still on on the firewall, but that's
-not participating in this and isn't even on the same subnet).
-
-Just in case: complete network-related sysctls changed from default on
-the client:
-
-net.ipv6.conf.default.keep_addr_on_down = 1
-
-and on the server:
-
-net.ipv4.ip_forward = 1
-net.ipv6.conf.all.forwarding = 1
-net.ipv6.conf.default.keep_addr_on_down = 1
-net.ipv4.ping_group_range = 73 73
-net.core.bpf_jit_enable = 1
-
-None of these seem too likely to cause *this*. I wonder how I could
-track down where this mess is coming from...
+> 
+> > --b.
+> > 
+> > [ 1001.688041]
+> > ==================================================================
+> > [ 1001.689529] BUG: KASAN: slab-out-of-bounds in
+> > xdr_set_page_base+0x339/0x350 [sunrpc]
+> > [ 1001.691017] Read of size 8 at addr ffff88800dd8fe80 by task
+> > kworker/u4:1/25
+> > 
+> > [ 1001.692517] CPU: 0 PID: 25 Comm: kworker/u4:1 Not tainted 5.12.0-
+> > rc4-45853-g62007e38c8d6 #3177
+> > [ 1001.694121] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+> > BIOS 1.14.0-1.fc33 04/01/2014
+> > [ 1001.695676] Workqueue: rpciod rpc_async_schedule [sunrpc]
+> > [ 1001.696776] Call Trace:
+> > [ 1001.697176]  dump_stack+0x93/0xc2
+> > [ 1001.697762]  print_address_description.constprop.0+0x18/0x110
+> > [ 1001.698511]  ? xdr_set_page_base+0x339/0x350 [sunrpc]
+> > [ 1001.699216]  ? xdr_set_page_base+0x339/0x350 [sunrpc]
+> > [ 1001.700665]  kasan_report.cold+0x7c/0xd8
+> > [ 1001.701420]  ? xdr_set_page_base+0x339/0x350 [sunrpc]
+> > [ 1001.702379]  xdr_set_page_base+0x339/0x350 [sunrpc]
+> > [ 1001.703273]  xdr_align_data+0x6e9/0xe60 [sunrpc]
+> > [ 1001.703967]  ? __decode_op_hdr+0x24/0x4d0 [nfsv4]
+> > [ 1001.704665]  nfs4_xdr_dec_read_plus+0x40d/0x780 [nfsv4]
+> > [ 1001.705371]  ? nfs4_xdr_dec_offload_cancel+0x160/0x160 [nfsv4]
+> > [ 1001.706165]  ? lock_is_held_type+0xd5/0x130
+> > [ 1001.706702]  gss_unwrap_resp+0x145/0x220 [auth_rpcgss]
+> > [ 1001.707355]  call_decode+0x5d2/0x830 [sunrpc]
+> > [ 1001.707954]  ? rpc_decode_header+0x17c0/0x17c0 [sunrpc]
+> > [ 1001.708739]  ? lock_is_held_type+0xd5/0x130
+> > [ 1001.709268]  ? rpc_decode_header+0x17c0/0x17c0 [sunrpc]
+> > [ 1001.709974]  __rpc_execute+0x1b8/0xda0 [sunrpc]
+> > [ 1001.710581]  ? rpc_exit+0xb0/0xb0 [sunrpc]
+> > [ 1001.711146]  ? lock_downgrade+0x6a0/0x6a0
+> > [ 1001.711662]  rpc_async_schedule+0x9f/0x140 [sunrpc]
+> > [ 1001.712355]  process_one_work+0x7ac/0x12d0
+> > [ 1001.712903]  ? lock_release+0x6d0/0x6d0
+> > [ 1001.713386]  ? queue_delayed_work_on+0x80/0x80
+> > [ 1001.713986]  ? rwlock_bug.part.0+0x90/0x90
+> > [ 1001.714507]  worker_thread+0x590/0xf80
+> > [ 1001.714995]  ? rescuer_thread+0xb80/0xb80
+> > [ 1001.715504]  kthread+0x375/0x450
+> > [ 1001.715913]  ? _raw_spin_unlock_irq+0x24/0x50
+> > [ 1001.716518]  ? kthread_create_worker_on_cpu+0xb0/0xb0
+> > [ 1001.717161]  ret_from_fork+0x22/0x30
+> > 
+> > [ 1001.717855] Allocated by task 9075:
+> > [ 1001.718291]  kasan_save_stack+0x1b/0x40
+> > [ 1001.718778]  __kasan_kmalloc+0x78/0x90
+> > [ 1001.719250]  __kmalloc+0x112/0x210
+> > [ 1001.719679]  nfs_generic_pgio+0x99f/0xe80 [nfs]
+> > [ 1001.720319]  nfs_generic_pg_pgios+0xea/0x3f0 [nfs]
+> > [ 1001.720937]  nfs_pageio_doio+0x10b/0x2b0 [nfs]
+> > [ 1001.721540]  nfs_pageio_complete+0x19d/0x550 [nfs]
+> > [ 1001.722161]  nfs_pageio_complete_read+0x14/0x180 [nfs]
+> > [ 1001.722823]  nfs_readpages+0x313/0x440 [nfs]
+> > [ 1001.723372]  read_pages+0x4ab/0xa40
+> > [ 1001.723816]  page_cache_ra_unbounded+0x361/0x620
+> > [ 1001.724442]  filemap_get_pages+0x631/0xf60
+> > [ 1001.724959]  filemap_read+0x24d/0x840
+> > [ 1001.725425]  nfs_file_read+0x144/0x240 [nfs]
+> > [ 1001.726031]  new_sync_read+0x352/0x5d0
+> > [ 1001.726503]  vfs_read+0x202/0x3f0
+> > [ 1001.726926]  ksys_read+0xe9/0x1b0
+> > [ 1001.727341]  do_syscall_64+0x33/0x40
+> > [ 1001.727797]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> > 
+> > [ 1001.728671] The buggy address belongs to the object at
+> > ffff88800dd8fe00
+> >                 which belongs to the cache kmalloc-128 of size 128
+> > [ 1001.730853] The buggy address is located 0 bytes to the right of
+> >                 128-byte region [ffff88800dd8fe00, ffff88800dd8fe80)
+> > [ 1001.732830] The buggy address belongs to the page:
+> > [ 1001.733549] page:000000009a9ea03c refcount:1 mapcount:0
+> > mapping:0000000000000000 index:0x0 pfn:0xdd8f
+> > [ 1001.734754] flags: 0x4000000000000200(slab)
+> > [ 1001.735282] raw: 4000000000000200 ffffea00002c16a8
+> > ffffea00001b27e8 ffff888007040400
+> > [ 1001.736285] raw: 0000000000000000 ffff88800dd8f000
+> > 0000000100000010
+> > [ 1001.737064] page dumped because: kasan: bad access detected
+> > 
+> > [ 1001.737981] Memory state around the buggy address:
+> > [ 1001.738579]  ffff88800dd8fd80: fc fc fc fc fc fc fc fc fc fc fc fc
+> > fc fc fc fc
+> > [ 1001.739475]  ffff88800dd8fe00: 00 00 00 00 00 00 00 00 00 00 00 00
+> > 00 00 00 00
+> > [ 1001.740411] >ffff88800dd8fe80: fc fc fc fc fc fc fc fc fc fc fc fc
+> > fc fc fc fc
+> > [ 1001.741331]                    ^
+> > [ 1001.741795]  ffff88800dd8ff00: fa fb fb fb fb fb fb fb fb fb fb fb
+> > fb fb fb fb
+> > [ 1001.742693]  ffff88800dd8ff80: fc fc fc fc fc fc fc fc fc fc fc fc
+> > fc fc fc fc
+> > [ 1001.743589]
+> > ==================================================================
+> > 
+> 
+> -- 
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+> 
+> 
