@@ -2,23 +2,23 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B45FA354547
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 18:35:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C938F35454A
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 18:35:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242440AbhDEQfT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Apr 2021 12:35:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40834 "EHLO mail.kernel.org"
+        id S242402AbhDEQfZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Apr 2021 12:35:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238984AbhDEQfS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 5 Apr 2021 12:35:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 82A3661398;
-        Mon,  5 Apr 2021 16:35:12 +0000 (UTC)
-Subject: [PATCH v1 4/6] xprtrdma: Do not recycle MR after FastReg/LocalInv
- flushes
+        id S238877AbhDEQfZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 5 Apr 2021 12:35:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9A5FC60FDB;
+        Mon,  5 Apr 2021 16:35:18 +0000 (UTC)
+Subject: [PATCH v1 5/6] xprtrdma: Do not wake RPC consumer on a failed
+ LocalInv
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Mon, 05 Apr 2021 12:35:11 -0400
-Message-ID: <161764051175.29855.2686513473467699793.stgit@manet.1015granger.net>
+Date:   Mon, 05 Apr 2021 12:35:17 -0400
+Message-ID: <161764051785.29855.4833398750635827274.stgit@manet.1015granger.net>
 In-Reply-To: <161764034907.29855.614994107807503843.stgit@manet.1015granger.net>
 References: <161764034907.29855.614994107807503843.stgit@manet.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -29,175 +29,113 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Better not to touch MRs involved in a flush or post error until the
-Send and Receive Queues are drained and the transport is fully
-quiescent. Simply don't insert such MRs back onto the free list.
-They remain on mr_all and will be released when the connection is
-torn down.
+Throw away any reply where the LocalInv flushes or could not be
+posted. The registered memory region is in an unknown state until
+the disconnect completes.
 
-I had thought that recycling would prevent hardware resources from
-being tied up for a long time. However, since v5.7, a transport
-disconnect destroys the QP and other hardware-owned resources. The
-MRs get cleaned up nicely at that point.
+rpcrdma_xprt_disconnect() will find and release the MR. No need to
+put it back on the MR free list in this case.
+
+The client retransmits pending RPC requests once it reestablishes a
+fresh connection, so a replacement reply should be forthcoming on
+the next connection instance.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/rpcrdma.h |    1 -
- net/sunrpc/xprtrdma/frwr_ops.c |   69 ++++++++++------------------------------
- 2 files changed, 17 insertions(+), 53 deletions(-)
+ net/sunrpc/xprtrdma/frwr_ops.c  |   17 +++++++++++------
+ net/sunrpc/xprtrdma/rpc_rdma.c  |   32 +++++++++++++++++++++++++++++---
+ net/sunrpc/xprtrdma/xprt_rdma.h |    1 +
+ 3 files changed, 41 insertions(+), 9 deletions(-)
 
-diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index c838e7ac1c2d..e38e745d13b0 100644
---- a/include/trace/events/rpcrdma.h
-+++ b/include/trace/events/rpcrdma.h
-@@ -1014,7 +1014,6 @@ DEFINE_MR_EVENT(localinv);
- DEFINE_MR_EVENT(map);
- 
- DEFINE_ANON_MR_EVENT(unmap);
--DEFINE_ANON_MR_EVENT(recycle);
- 
- TRACE_EVENT(xprtrdma_dma_maperr,
- 	TP_PROTO(
 diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
-index af85cec0ce31..27087dc8ba3c 100644
+index 27087dc8ba3c..951ae20485f3 100644
 --- a/net/sunrpc/xprtrdma/frwr_ops.c
 +++ b/net/sunrpc/xprtrdma/frwr_ops.c
-@@ -49,6 +49,16 @@
- # define RPCDBG_FACILITY	RPCDBG_TRANS
- #endif
+@@ -576,10 +576,14 @@ static void frwr_wc_localinv_done(struct ib_cq *cq, struct ib_wc *wc)
+ 	rep = mr->mr_req->rl_reply;
+ 	smp_rmb();
  
-+static void frwr_mr_unmap(struct rpcrdma_xprt *r_xprt, struct rpcrdma_mr *mr)
-+{
-+	if (mr->mr_device) {
-+		trace_xprtrdma_mr_unmap(mr);
-+		ib_dma_unmap_sg(mr->mr_device, mr->mr_sg, mr->mr_nents,
-+				mr->mr_dir);
-+		mr->mr_device = NULL;
+-	frwr_mr_done(wc, mr);
++	if (wc->status != IB_WC_SUCCESS) {
++		if (rep)
++			rpcrdma_unpin_rqst(rep);
++		rpcrdma_flush_disconnect(cq->cq_context, wc);
++		return;
 +	}
-+}
-+
- /**
-  * frwr_mr_release - Destroy one MR
-  * @mr: MR allocated by frwr_mr_init
-@@ -58,6 +68,8 @@ void frwr_mr_release(struct rpcrdma_mr *mr)
- {
- 	int rc;
- 
-+	frwr_mr_unmap(mr->mr_xprt, mr);
-+
- 	rc = ib_dereg_mr(mr->frwr.fr_mr);
- 	if (rc)
- 		trace_xprtrdma_frwr_dereg(mr, rc);
-@@ -65,32 +77,6 @@ void frwr_mr_release(struct rpcrdma_mr *mr)
- 	kfree(mr);
- }
- 
--static void frwr_mr_unmap(struct rpcrdma_xprt *r_xprt, struct rpcrdma_mr *mr)
--{
--	if (mr->mr_device) {
--		trace_xprtrdma_mr_unmap(mr);
--		ib_dma_unmap_sg(mr->mr_device, mr->mr_sg, mr->mr_nents,
--				mr->mr_dir);
--		mr->mr_device = NULL;
--	}
--}
++	frwr_mr_put(mr);
+ 	rpcrdma_complete_rqst(rep);
 -
--static void frwr_mr_recycle(struct rpcrdma_mr *mr)
--{
--	struct rpcrdma_xprt *r_xprt = mr->mr_xprt;
--
--	trace_xprtrdma_mr_recycle(mr);
--
--	frwr_mr_unmap(r_xprt, mr);
--
--	spin_lock(&r_xprt->rx_buf.rb_lock);
--	list_del(&mr->mr_all);
--	r_xprt->rx_stats.mrs_recycled++;
--	spin_unlock(&r_xprt->rx_buf.rb_lock);
--
--	frwr_mr_release(mr);
--}
--
- static void frwr_mr_put(struct rpcrdma_mr *mr)
- {
- 	frwr_mr_unmap(mr->mr_xprt, mr);
-@@ -365,6 +351,7 @@ struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
-  * @cq: completion queue
-  * @wc: WCE for a completed FastReg WR
-  *
-+ * Each flushed MR gets destroyed after the QP has drained.
-  */
- static void frwr_wc_fastreg(struct ib_cq *cq, struct ib_wc *wc)
- {
-@@ -374,7 +361,6 @@ static void frwr_wc_fastreg(struct ib_cq *cq, struct ib_wc *wc)
- 
- 	/* WARNING: Only wr_cqe and status are reliable at this point */
- 	trace_xprtrdma_wc_fastreg(wc, &frwr->fr_cid);
--	/* The MR will get recycled when the associated req is retransmitted */
- 
- 	rpcrdma_flush_disconnect(cq->cq_context, wc);
- }
-@@ -448,9 +434,7 @@ void frwr_reminv(struct rpcrdma_rep *rep, struct list_head *mrs)
- 
- static void frwr_mr_done(struct ib_wc *wc, struct rpcrdma_mr *mr)
- {
--	if (wc->status != IB_WC_SUCCESS)
--		frwr_mr_recycle(mr);
--	else
-+	if (likely(wc->status == IB_WC_SUCCESS))
- 		frwr_mr_put(mr);
- }
- 
-@@ -567,17 +551,8 @@ void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- 	if (!rc)
- 		return;
- 
--	/* Recycle MRs in the LOCAL_INV chain that did not get posted.
--	 */
-+	/* On error, the MRs get destroyed once the QP has drained. */
- 	trace_xprtrdma_post_linv_err(req, rc);
--	while (bad_wr) {
--		frwr = container_of(bad_wr, struct rpcrdma_frwr,
--				    fr_invwr);
--		mr = container_of(frwr, struct rpcrdma_mr, frwr);
--		bad_wr = bad_wr->next;
--
--		frwr_mr_recycle(mr);
--	}
+-	rpcrdma_flush_disconnect(cq->cq_context, wc);
  }
  
  /**
-@@ -621,7 +596,6 @@ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- {
- 	struct ib_send_wr *first, *last, **prev;
- 	struct rpcrdma_ep *ep = r_xprt->rx_ep;
--	const struct ib_send_wr *bad_wr;
- 	struct rpcrdma_frwr *frwr;
- 	struct rpcrdma_mr *mr;
- 	int rc;
-@@ -663,21 +637,12 @@ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- 	 * replaces the QP. The RPC reply handler won't call us
- 	 * unless re_id->qp is a valid pointer.
- 	 */
--	bad_wr = NULL;
--	rc = ib_post_send(ep->re_id->qp, first, &bad_wr);
-+	rc = ib_post_send(ep->re_id->qp, first, NULL);
- 	if (!rc)
- 		return;
- 
--	/* Recycle MRs in the LOCAL_INV chain that did not get posted.
--	 */
-+	/* On error, the MRs get destroyed once the QP has drained. */
+@@ -645,8 +649,9 @@ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
  	trace_xprtrdma_post_linv_err(req, rc);
--	while (bad_wr) {
--		frwr = container_of(bad_wr, struct rpcrdma_frwr, fr_invwr);
--		mr = container_of(frwr, struct rpcrdma_mr, frwr);
--		bad_wr = bad_wr->next;
--
--		frwr_mr_recycle(mr);
--	}
  
  	/* The final LOCAL_INV WR in the chain is supposed to
- 	 * do the wake. If it was never posted, the wake will
+-	 * do the wake. If it was never posted, the wake will
+-	 * not happen, so wake here in that case.
++	 * do the wake. If it was never posted, the wake does
++	 * not happen. Unpin the rqst in preparation for its
++	 * retransmission.
+ 	 */
+-	rpcrdma_complete_rqst(req->rl_reply);
++	rpcrdma_unpin_rqst(req->rl_reply);
+ }
+diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
+index be4e888e78a3..649f7d8b9733 100644
+--- a/net/sunrpc/xprtrdma/rpc_rdma.c
++++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+@@ -1326,9 +1326,35 @@ rpcrdma_decode_error(struct rpcrdma_xprt *r_xprt, struct rpcrdma_rep *rep,
+ 	return -EIO;
+ }
+ 
+-/* Perform XID lookup, reconstruction of the RPC reply, and
+- * RPC completion while holding the transport lock to ensure
+- * the rep, rqst, and rq_task pointers remain stable.
++/**
++ * rpcrdma_unpin_rqst - Release rqst without completing it
++ * @rep: RPC/RDMA Receive context
++ *
++ * This is done when a connection is lost so that a Reply
++ * can be dropped and its matching Call can be subsequently
++ * retransmitted on a new connection.
++ */
++void rpcrdma_unpin_rqst(struct rpcrdma_rep *rep)
++{
++	struct rpc_xprt *xprt = &rep->rr_rxprt->rx_xprt;
++	struct rpc_rqst *rqst = rep->rr_rqst;
++	struct rpcrdma_req *req = rpcr_to_rdmar(rqst);
++
++	req->rl_reply = NULL;
++	rep->rr_rqst = NULL;
++
++	spin_lock(&xprt->queue_lock);
++	xprt_unpin_rqst(rqst);
++	spin_unlock(&xprt->queue_lock);
++}
++
++/**
++ * rpcrdma_complete_rqst - Pass completed rqst back to RPC
++ * @rep: RPC/RDMA Receive context
++ *
++ * Reconstruct the RPC reply and complete the transaction
++ * while @rqst is still pinned to ensure the rep, rqst, and
++ * rq_task pointers remain stable.
+  */
+ void rpcrdma_complete_rqst(struct rpcrdma_rep *rep)
+ {
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index 1b187d1dee8a..bb8aba390b88 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -561,6 +561,7 @@ int rpcrdma_marshal_req(struct rpcrdma_xprt *r_xprt, struct rpc_rqst *rqst);
+ void rpcrdma_set_max_header_sizes(struct rpcrdma_ep *ep);
+ void rpcrdma_reset_cwnd(struct rpcrdma_xprt *r_xprt);
+ void rpcrdma_complete_rqst(struct rpcrdma_rep *rep);
++void rpcrdma_unpin_rqst(struct rpcrdma_rep *rep);
+ void rpcrdma_reply_handler(struct rpcrdma_rep *rep);
+ 
+ static inline void rpcrdma_set_xdrlen(struct xdr_buf *xdr, size_t len)
 
 
