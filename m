@@ -2,72 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0B8235428D
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 16:06:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A4CA35429A
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 16:08:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236028AbhDEOGn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Apr 2021 10:06:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:43101 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235903AbhDEOGn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Apr 2021 10:06:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617631596;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=metaO8wH3DJ2s8hgG3w3KZr29M2C6KLasAK1DMNHw9I=;
-        b=akuY0HfcaQgxYPvi7YK+yPENGpgddIE8ffUpGbJmnwQtLm3ZAu12Q6nMY5Qm5mTQdrvAii
-        DnnEBhv9O9W6d7017oiY2owyfa+y4QDW0Qf0JfIO7YnpoXmaf1zQjnDg2gTQN8AORSaBZ7
-        hqpmDpaLXFRoZ4hQ7TwtqrvP4swo5Go=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-484-NCm2lOs3N3WoSzqGmho7qQ-1; Mon, 05 Apr 2021 10:06:35 -0400
-X-MC-Unique: NCm2lOs3N3WoSzqGmho7qQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA73A87504E;
-        Mon,  5 Apr 2021 14:06:33 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-117-172.rdu2.redhat.com [10.10.117.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AA2BA19630;
-        Mon,  5 Apr 2021 14:06:33 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id C68B41205B6; Mon,  5 Apr 2021 10:06:32 -0400 (EDT)
-Date:   Mon, 5 Apr 2021 10:06:32 -0400
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     David Noveck <davenoveck@gmail.com>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Rick Macklem <rmacklem@uoguelph.ca>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>, NFSv4 <nfsv4@ietf.org>
-Subject: Re: [nfsv4] [PATCH 1/1] NFSD fix handling of NFSv4.2 SEEK for data
- within the last hole
-Message-ID: <YGsZaBxEbkcuvPRH@pick.fieldses.org>
-References: <20210331192819.25637-1-olga.kornievskaia@gmail.com>
- <YGUm7/HE3HqVJik2@pick.fieldses.org>
- <CAN-5tyETvKvUq_X7+2E0o=9GjJ628DC=QJW5xKA2-X7UHc_DOw@mail.gmail.com>
- <YQXPR0101MB0968C9AB372DC12408F496D8DD7B9@YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM>
- <20210402210157.GC16427@fieldses.org>
- <CADaq8jeNrA3TexAM0dBxj7LSoooyRna6wU-VomDKovodYTdqKA@mail.gmail.com>
+        id S241265AbhDEOIn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Apr 2021 10:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237431AbhDEOIn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 5 Apr 2021 10:08:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8D99C613B1;
+        Mon,  5 Apr 2021 14:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617631717;
+        bh=LF0+zRsEi7jGYk/Bg8vQa1eqOiMQAgaqbYGUkXrouMw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I6k7K+GugdLkntOIS/XDUjVAG89FAmzBko1fER7cc3uE9NDtxEXpfu2Xnwtq/0NxL
+         ckDn8FJGtmNFigRJklJ7KJ88kfm6kTIfkzu3K1al8GZ7hrG/NbQzaebZPrLuRPMKeV
+         AptGe6e5kFiM39xIw5oZeLhyTwrYwxKuFNMZKvbh6T+PyVEguwKyGNPBgMTiuZrCtk
+         1J4xCIyRWGlQcLyexllVaPJpVxprEGXSRehfPLV3q2bRKrFBLmzp+wrTu00d0Soctr
+         YYj1Q6Vs4W+Ds4QlJ6sIRBcayMiU899q/lysRyhZ5ut6I4xryD2Pm4kvUfyk5iXnMH
+         E6a7i+TLCgJHQ==
+Date:   Mon, 5 Apr 2021 17:08:33 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Adit Ranadive <aditr@vmware.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Avihai Horon <avihaih@nvidia.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Devesh Sharma <devesh.sharma@broadcom.com>,
+        Faisal Latif <faisal.latif@intel.com>,
+        Jack Wang <jinpu.wang@ionos.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Jens Axboe <axboe@fb.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Keith Busch <kbusch@kernel.org>, Lijun Ou <oulijun@huawei.com>,
+        linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Max Gurtovoy <mgurtovoy@nvidia.com>,
+        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        Michael Guralnik <michaelgur@nvidia.com>,
+        Michal Kalderon <mkalderon@marvell.com>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
+        netdev@vger.kernel.org, Potnuri Bharat Teja <bharat@chelsio.com>,
+        rds-devel@oss.oracle.com, Sagi Grimberg <sagi@grimberg.me>,
+        samba-technical@lists.samba.org,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Somnath Kotur <somnath.kotur@broadcom.com>,
+        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
+        Steve French <sfrench@samba.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        VMware PV-Drivers <pv-drivers@vmware.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Zhu Yanjun <zyjzyj2000@gmail.com>
+Subject: Re: [PATCH rdma-next 00/10] Enable relaxed ordering for ULPs
+Message-ID: <YGsZ4Te1+DQODj34@unreal>
+References: <20210405052404.213889-1-leon@kernel.org>
+ <20210405134115.GA22346@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADaq8jeNrA3TexAM0dBxj7LSoooyRna6wU-VomDKovodYTdqKA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20210405134115.GA22346@lst.de>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Apr 02, 2021 at 10:58:15PM -0400, David Noveck wrote:
-> However, if one had been made, it would have been rejected.   It is not the
-> function of the errata mechanism to make substantive protocol changes like
-> this, even if the wg thinks the original consensus decision was wrong.  To
-> do that you need a standards-track document updating the original one and
-> addressimg compatibility issues. Nobody was up for that at the time or
-> seems to be now.
+On Mon, Apr 05, 2021 at 03:41:15PM +0200, Christoph Hellwig wrote:
+> On Mon, Apr 05, 2021 at 08:23:54AM +0300, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> > 
+> > >From Avihai,
+> > 
+> > Relaxed Ordering is a PCIe mechanism that relaxes the strict ordering
+> > imposed on PCI transactions, and thus, can improve performance.
+> > 
+> > Until now, relaxed ordering could be set only by user space applications
+> > for user MRs. The following patch series enables relaxed ordering for the
+> > kernel ULPs as well. Relaxed ordering is an optional capability, and as
+> > such, it is ignored by vendors that don't support it.
+> > 
+> > The following test results show the performance improvement achieved
+> > with relaxed ordering. The test was performed on a NVIDIA A100 in order
+> > to check performance of storage infrastructure over xprtrdma:
+> 
+> Isn't the Nvidia A100 a GPU not actually supported by Linux at all?
+> What does that have to do with storage protocols?
 
-Do we have any sort of informal todo list for a 7862bis?
+This system is in use by our storage oriented customer who performed the
+test. He runs drivers/infiniband/* stack from the upstream, simply backported
+to specific kernel version.
 
---b.
+The performance boost is seen in other systems too.
 
+> 
+> Also if you enable this for basically all kernel ULPs, why not have
+> an opt-out into strict ordering for the cases that need it (if there are
+> any).
+
+The RO property is optional, it can only improve. In addition, all in-kernel ULPs
+don't need strict ordering. I can be mistaken here and Jason will correct me, it
+is because of two things: ULP doesn't touch data before CQE and DMA API prohibits it.
+
+Thanks
