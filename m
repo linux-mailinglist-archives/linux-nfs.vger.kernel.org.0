@@ -2,38 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A4CA35429A
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 16:08:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 139DE354369
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 17:27:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241265AbhDEOIn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Apr 2021 10:08:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237431AbhDEOIn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 5 Apr 2021 10:08:43 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8D99C613B1;
-        Mon,  5 Apr 2021 14:08:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617631717;
-        bh=LF0+zRsEi7jGYk/Bg8vQa1eqOiMQAgaqbYGUkXrouMw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I6k7K+GugdLkntOIS/XDUjVAG89FAmzBko1fER7cc3uE9NDtxEXpfu2Xnwtq/0NxL
-         ckDn8FJGtmNFigRJklJ7KJ88kfm6kTIfkzu3K1al8GZ7hrG/NbQzaebZPrLuRPMKeV
-         AptGe6e5kFiM39xIw5oZeLhyTwrYwxKuFNMZKvbh6T+PyVEguwKyGNPBgMTiuZrCtk
-         1J4xCIyRWGlQcLyexllVaPJpVxprEGXSRehfPLV3q2bRKrFBLmzp+wrTu00d0Soctr
-         YYj1Q6Vs4W+Ds4QlJ6sIRBcayMiU899q/lysRyhZ5ut6I4xryD2Pm4kvUfyk5iXnMH
-         E6a7i+TLCgJHQ==
-Date:   Mon, 5 Apr 2021 17:08:33 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Doug Ledford <dledford@redhat.com>,
+        id S237992AbhDEP11 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Apr 2021 11:27:27 -0400
+Received: from mail-pj1-f49.google.com ([209.85.216.49]:52087 "EHLO
+        mail-pj1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232714AbhDEP10 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Apr 2021 11:27:26 -0400
+Received: by mail-pj1-f49.google.com with SMTP id s21so6260363pjq.1;
+        Mon, 05 Apr 2021 08:27:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=s6/xO6zDlOcf9rGpsVwdjh2veGTAn/Y535MvhVK0maI=;
+        b=h9EtD5dygBgSwlVuY9Jq6t+X2QFeSKBAkLNb8O5qKyvy3AGmgN7kScbfC7a9jLtSQi
+         Z1sS31l/OWdoApZgs07IyDTIt4Vt9unJzh2oUmBlZ1dcZbglfJyRHc343UVzS0J/gB69
+         Eia2NxXoItDcvXbhXr5JyUWefkOUynENpPCvCqLT9uJG+gOFHktluYVVAQujWgyZ1CXH
+         opKRO9ZSgM82jTPeMpxBKC0oaMvZJI5J2mbEq8lDlJOJniapJWlAacenFoG7FVAhIWso
+         riUNBcde/x8w0fA7n4Oc8Niicf6zMOAoLtUKfLTObExCAUybVvDZH1RCzngmYP1J1Z/E
+         BRNQ==
+X-Gm-Message-State: AOAM53271sAdFQyyNyFbp7r9nebheGfwuj34uN9tQFpPpqb7rY50RQiR
+        Js8Q6+WcdfOTSJSj21l2Ok0=
+X-Google-Smtp-Source: ABdhPJxlWm0Lzuy1NvlR6D9W30X3v6KfefWidA41cG0vntzFiFzAU4ozy7Gn2cAEzl4sPpga7IG/QA==
+X-Received: by 2002:a17:90b:33d0:: with SMTP id lk16mr14383989pjb.115.1617636440145;
+        Mon, 05 Apr 2021 08:27:20 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:20c0:5960:9793:8deb? ([2601:647:4000:d7:20c0:5960:9793:8deb])
+        by smtp.gmail.com with ESMTPSA id p11sm16137366pjo.48.2021.04.05.08.27.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 Apr 2021 08:27:19 -0700 (PDT)
+Subject: Re: [PATCH rdma-next 01/10] RDMA: Add access flags to ib_alloc_mr()
+ and ib_mr_pool_init()
+To:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
         Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Avihai Horon <avihaih@nvidia.com>,
         Adit Ranadive <aditr@vmware.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Ariel Elior <aelior@marvell.com>,
-        Avihai Horon <avihaih@nvidia.com>,
-        Bart Van Assche <bvanassche@acm.org>,
         Bernard Metzler <bmt@zurich.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
         Chuck Lever <chuck.lever@oracle.com>,
         "David S. Miller" <davem@davemloft.net>,
         Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
@@ -69,52 +81,75 @@ Cc:     Doug Ledford <dledford@redhat.com>,
         Weihang Li <liweihang@huawei.com>,
         Yishai Hadas <yishaih@nvidia.com>,
         Zhu Yanjun <zyjzyj2000@gmail.com>
-Subject: Re: [PATCH rdma-next 00/10] Enable relaxed ordering for ULPs
-Message-ID: <YGsZ4Te1+DQODj34@unreal>
 References: <20210405052404.213889-1-leon@kernel.org>
- <20210405134115.GA22346@lst.de>
+ <20210405052404.213889-2-leon@kernel.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <c21edd64-396c-4c7c-86f8-79045321a528@acm.org>
+Date:   Mon, 5 Apr 2021 08:27:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210405134115.GA22346@lst.de>
+In-Reply-To: <20210405052404.213889-2-leon@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Apr 05, 2021 at 03:41:15PM +0200, Christoph Hellwig wrote:
-> On Mon, Apr 05, 2021 at 08:23:54AM +0300, Leon Romanovsky wrote:
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> > 
-> > >From Avihai,
-> > 
-> > Relaxed Ordering is a PCIe mechanism that relaxes the strict ordering
-> > imposed on PCI transactions, and thus, can improve performance.
-> > 
-> > Until now, relaxed ordering could be set only by user space applications
-> > for user MRs. The following patch series enables relaxed ordering for the
-> > kernel ULPs as well. Relaxed ordering is an optional capability, and as
-> > such, it is ignored by vendors that don't support it.
-> > 
-> > The following test results show the performance improvement achieved
-> > with relaxed ordering. The test was performed on a NVIDIA A100 in order
-> > to check performance of storage infrastructure over xprtrdma:
-> 
-> Isn't the Nvidia A100 a GPU not actually supported by Linux at all?
-> What does that have to do with storage protocols?
+On 4/4/21 10:23 PM, Leon Romanovsky wrote:
+> diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+> index bed4cfe50554..59138174affa 100644
+> --- a/include/rdma/ib_verbs.h
+> +++ b/include/rdma/ib_verbs.h
+> @@ -2444,10 +2444,10 @@ struct ib_device_ops {
+>  				       struct ib_udata *udata);
+>  	int (*dereg_mr)(struct ib_mr *mr, struct ib_udata *udata);
+>  	struct ib_mr *(*alloc_mr)(struct ib_pd *pd, enum ib_mr_type mr_type,
+> -				  u32 max_num_sg);
+> +				  u32 max_num_sg, u32 access);
+>  	struct ib_mr *(*alloc_mr_integrity)(struct ib_pd *pd,
+>  					    u32 max_num_data_sg,
+> -					    u32 max_num_meta_sg);
+> +					    u32 max_num_meta_sg, u32 access);
+>  	int (*advise_mr)(struct ib_pd *pd,
+>  			 enum ib_uverbs_advise_mr_advice advice, u32 flags,
+>  			 struct ib_sge *sg_list, u32 num_sge,
+> @@ -4142,11 +4142,10 @@ static inline int ib_dereg_mr(struct ib_mr *mr)
+>  }
+>  
+>  struct ib_mr *ib_alloc_mr(struct ib_pd *pd, enum ib_mr_type mr_type,
+> -			  u32 max_num_sg);
+> +			  u32 max_num_sg, u32 access);
+>  
+> -struct ib_mr *ib_alloc_mr_integrity(struct ib_pd *pd,
+> -				    u32 max_num_data_sg,
+> -				    u32 max_num_meta_sg);
+> +struct ib_mr *ib_alloc_mr_integrity(struct ib_pd *pd, u32 max_num_data_sg,
+> +				    u32 max_num_meta_sg, u32 access);
+>  
+>  /**
+>   * ib_update_fast_reg_key - updates the key portion of the fast_reg MR
+> diff --git a/include/rdma/mr_pool.h b/include/rdma/mr_pool.h
+> index e77123bcb43b..2a0ee791037d 100644
+> --- a/include/rdma/mr_pool.h
+> +++ b/include/rdma/mr_pool.h
+> @@ -11,7 +11,8 @@ struct ib_mr *ib_mr_pool_get(struct ib_qp *qp, struct list_head *list);
+>  void ib_mr_pool_put(struct ib_qp *qp, struct list_head *list, struct ib_mr *mr);
+>  
+>  int ib_mr_pool_init(struct ib_qp *qp, struct list_head *list, int nr,
+> -		enum ib_mr_type type, u32 max_num_sg, u32 max_num_meta_sg);
+> +		    enum ib_mr_type type, u32 max_num_sg, u32 max_num_meta_sg,
+> +		    u32 access);
+>  void ib_mr_pool_destroy(struct ib_qp *qp, struct list_head *list);
+>  
+>  #endif /* _RDMA_MR_POOL_H */
 
-This system is in use by our storage oriented customer who performed the
-test. He runs drivers/infiniband/* stack from the upstream, simply backported
-to specific kernel version.
+Does the new 'access' argument only control whether or not PCIe relaxed
+ordering is enabled? It seems wrong to me to make enabling of PCIe
+relaxed ordering configurable. I think this mechanism should be enabled
+unconditionally if the HCA supports it.
 
-The performance boost is seen in other systems too.
+Thanks,
 
-> 
-> Also if you enable this for basically all kernel ULPs, why not have
-> an opt-out into strict ordering for the cases that need it (if there are
-> any).
-
-The RO property is optional, it can only improve. In addition, all in-kernel ULPs
-don't need strict ordering. I can be mistaken here and Jason will correct me, it
-is because of two things: ULP doesn't touch data before CQE and DMA API prohibits it.
-
-Thanks
+Bart.
