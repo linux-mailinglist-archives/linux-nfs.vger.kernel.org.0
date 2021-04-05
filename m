@@ -2,35 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CEF9354675
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 20:01:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CB75354753
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Apr 2021 22:07:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237926AbhDESB3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Apr 2021 14:01:29 -0400
-Received: from p3plsmtpa06-10.prod.phx3.secureserver.net ([173.201.192.111]:53184
-        "EHLO p3plsmtpa06-10.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232462AbhDESB1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Apr 2021 14:01:27 -0400
-Received: from [192.168.0.116] ([71.184.94.153])
-        by :SMTPAUTH: with ESMTPSA
-        id TTXIlWXASyIwVTTXIllPn5; Mon, 05 Apr 2021 11:01:20 -0700
-X-CMAE-Analysis: v=2.4 cv=NP4QR22g c=1 sm=1 tr=0 ts=606b5070
- a=vbvdVb1zh1xTTaY8rfQfKQ==:117 a=vbvdVb1zh1xTTaY8rfQfKQ==:17
- a=IkcTkHD0fZMA:10 a=Ikd4Dj_1AAAA:8 a=lVKP4JfJqfutk5idi9QA:9 a=QEXdDO2ut3YA:10
- a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
-X-SECURESERVER-ACCT: tom@talpey.com
-Subject: Re: [PATCH rdma-next 02/10] RDMA/core: Enable Relaxed Ordering in
- __ib_alloc_pd()
-To:     Leon Romanovsky <leon@kernel.org>,
+        id S240462AbhDEUHu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Apr 2021 16:07:50 -0400
+Received: from mail-co1nam11on2052.outbound.protection.outlook.com ([40.107.220.52]:53152
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232752AbhDEUHt (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 5 Apr 2021 16:07:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oP4v8xgXJh7wX0WF6KfcYt1BZKAqVCD3ecsTyA8r77UtpKlig/ZA7LpXrbQ2k3he50tFYkmVK2Z8ECLAZ6IKJAvrPAe2PW72v3BvJVz6Es9mPxKNwq85SCEpi/NrtxPJHQRUqmm4qx1uotaxsXPYRtB0eFhmCAdMBUisZRDbDLdqqsbfNnnizJUNkI9j41wgZlTFIZ9vp7wILzhYnk/nb31RKNRYvDH7vpffMoD/tL7YdoDGcMMbtkVmNSyBItfc7Ewmu7oeBfA+Ja61IfkWKWclpGm6/mupTud8Ff0/WhOSbtFAZj0ulFBwjknadkdCnZjcyyudfAWfaY/aI+eeLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j/nNy5d3ferFJ12C5JxIISPWWcb5xgmyHOvBmXJMgHY=;
+ b=ej4VDWwwaj8D40cs+H9I6hbshDm3OgFZXqYmnwlJgk+v3NL6uLxN/p1sVocbOrtr8DyiHCecfa5A1ZR65STjwBrGLru4Yw2gkXgCbEkwKwet+EACz4BxayPgch6tZ2dcObMufUBBFvevp39EZSJ/46z+Wq22VZymu+iK7bS5mqJ/uVk5AxNs5hyyqjYTOwV7sqPYpz6FforWVQbA4NNWF1hv0BduZNP/2X8sVr+JvXJlpp9I5rSnq/JajFqTCu7TDQjvpDuvlANI9ZeC6JwGqv+EcMDKIyiFYAan/ZkKzjKNRVFSDCLF2PQbNfFYiZXZt4Q5lllVeMZ9drM6Pl5Bgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j/nNy5d3ferFJ12C5JxIISPWWcb5xgmyHOvBmXJMgHY=;
+ b=YaCwjAAHJnqy1nuGttymzQLkRI4mnXYiHOzsKwMB7s1c1T+ITLe0PzbzO/lkRBgCRp/4rzrasWAwnio3yXE+CUdGs5qDLkB/V28k/7Z9UteLS594nlfZfU559afqNcstha6wj+tXxNkMCfzemDmQqS5HLCOHAXdE+YZQF6HotykZ7vLBd3uhOvSA63UIaACCLoifVfKGk0G61xJBWwdOtvk9W9w/s5KomJtj03q/BIJY/jKcMSc9DHfLDKpLAFVIYFDPw1eEiIQAADALpHtZw3YLEVMuHlpP3UMil8mhq4NH68ub2O0ILCUSstCorPAf4wVfOPmW9cd9iorRSLhYeQ==
+Authentication-Results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB2601.namprd12.prod.outlook.com (2603:10b6:5:45::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.32; Mon, 5 Apr
+ 2021 20:07:41 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1c62:7fa3:617b:ab87]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1c62:7fa3:617b:ab87%6]) with mapi id 15.20.3999.032; Mon, 5 Apr 2021
+ 20:07:41 +0000
+Date:   Mon, 5 Apr 2021 17:07:39 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Leon Romanovsky <leon@kernel.org>,
         Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Avihai Horon <avihaih@nvidia.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
         Adit Ranadive <aditr@vmware.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Ariel Elior <aelior@marvell.com>,
+        Avihai Horon <avihaih@nvidia.com>,
         Bart Van Assche <bvanassche@acm.org>,
         Bernard Metzler <bmt@zurich.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
         Chuck Lever <chuck.lever@oracle.com>,
         "David S. Miller" <davem@davemloft.net>,
         Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
@@ -66,85 +85,100 @@ Cc:     Avihai Horon <avihaih@nvidia.com>,
         Weihang Li <liweihang@huawei.com>,
         Yishai Hadas <yishaih@nvidia.com>,
         Zhu Yanjun <zyjzyj2000@gmail.com>
+Subject: Re: [PATCH rdma-next 00/10] Enable relaxed ordering for ULPs
+Message-ID: <20210405200739.GB7405@nvidia.com>
 References: <20210405052404.213889-1-leon@kernel.org>
- <20210405052404.213889-3-leon@kernel.org>
-From:   Tom Talpey <tom@talpey.com>
-Message-ID: <befc60f3-d28a-5420-b381-0f408bd7cca9@talpey.com>
-Date:   Mon, 5 Apr 2021 14:01:16 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+ <20210405134115.GA22346@lst.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210405134115.GA22346@lst.de>
+X-Originating-IP: [142.162.115.133]
+X-ClientProxiedBy: MN2PR06CA0027.namprd06.prod.outlook.com
+ (2603:10b6:208:23d::32) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-In-Reply-To: <20210405052404.213889-3-leon@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfKhBdA7dhIcoQbxQUsMb1TQGGZwNw2/OoguaxGUXtEIg67RPSNjPc/PUjX7344mkB7SL0PGdzrYucQPGJrfK8N90o1IdEouWWbMWsAwIRVjAIIjnchyI
- 7T+qJoluUtUv+Rj2ZMPAZKLlPYpLdqV+Fds1melUW+AW9kftaWp4oRQBbUgmajDuDo1S0p/ipgsJyOo1R7Acmoa6p48dwWeCSg3E1XzeEekjOhTGbCGG79lF
- 9lAiguxikhhrVWEq5ToTZdJ4VuJVFdsDOtfJvu/xTD9fEBKVLQGQsY97wH5C30UPMJ6uwY7g42dnwy0xAY1lOv6edk+2XU0xkgBIhZ4NEx4GwRlz+e6LeaJB
- zfMt8UBV/iuqNjnnIGfus8rOaF7xnBBrqexs74HClm1epAeOl+Dli6T/EVDlCswlMwauH2IuIhdusBpfWZnhiyp78jjmbQ20k0IFZedv41cF7hoBxD/qYJHw
- P0KP7K8Bl3OGE8Avdt9aMw6DYliDtB+LSvAhKnL/I8BpgkEQi793zFOYZjnzvnnabJouYEMlzX7XKKZrkEE0VhWNBlZyAHc5iJuUtbkz2feVlwUl50GXymIb
- LvEKpP0uzrKP65+zl5od7b/L7B6k6wJenr2F3Nwpe+tayRzduwrMg7aKqxAd3EH1C2PlOX3aj6Uw9ET40qudLV7WoixkyM4kZ56dKMfdiDR8awROKOc2mwa8
- TbifcwX3Vkn0vbejYfdtehxLwEMxGcYEu/ymMVzf9ksD7wO1osqATZtwh/QG59sXP2EPL+wcxM0ubGvyqWDUYGZ9bKPto8JLGpM7s0Qdcpx6VG52x9+D7+bf
- IFgyK/745XWOwlS1Awi8TJM2WHhfp0LkfitXJdq+ZUD26flT29tMQcfq49/+ptp5dcRfe5sXVj+Xh8hsv5j335umAuYJTIQ4+gwlfEltcso+++nS4q9kXOH5
- 0aSBGCE+MHas9jWX+Y3ef/738l8zyC4+ueYuqNPxtndUN3yubHF+9Y/hCmXCHsNuHScRkKxQ3TEyklcPppE9XMkkfLqr7GXGN2FmlzFfA91S+iKEtRe/NeBn
- 97Cix0xhpMTqk0FcgpW8M1NCzJ+730GONwuLbi8XLSSF6qhhrDrtU7O2CIsbO5NGH1AqQNhzen4m2+lZYYW06JHRGTCdZGVjg40kHDIpAtBHGLIBETS2/Bo2
- 0rBzc7pQLnyXzt1I3PfO5oj7QJ2bS672QElPdP/PdVs4/tZDu3XEUfoHlOMDjrJPghPg9PPxKPiogJAvpyU1ZxhsTAfJzuNWsQqc54JYIbgYE5vNJOb99LLt
- aIf5HEd8l9ZLzHXemqtSW3kB0lIlt3LOiXIlPdXwlXtuKX3eS8QNEV3UfwwZ11SMPlFNgHgJ2RXmkYIwDZvCtVq8panGgipyaOAymBCG0mHwBuxawC9ARGG8
- apbyddXLF3HLjbJM1UWpCFcT+0uXRCGjrCyWbpEoIQy37yoIXVpZ+3N3/gdaqI+Y92wXnCWYmIZNXDHuy/M/toGg62UH0qkjhZKUdvrbqz3hiWkOjkIQrkHW
- JdtoRknxSZrCIhSHqAcoCG5ip2z+CnptXW/o9C589hUdkzH2C5ngjR5VBb2T6eTrBmDxyB7oQB5UkrLoH/AYos2s567wW1DRKH+/SZLV1RZuQ30QguEAFrGX
- 8bAjEit0p3YcVvFiKaB+duXIiNeMVgHLtEaPFZaqCY7cxPBemONuCmzjoyTcu3Q61ehv3XYroDTro2DEKjgQ4LY11ZQF48W8FOKmN8/nJ5Rw5OI2/9JWFQx2
- vt7xZIDggu28ANohZnQhAVwjBVVzFTn2H/V/trxC0PyeS1otlNm05CHCfbmDTAvU4ZwpNX09+muGEPbPshNb3NCDfXezVkXEoE018AnSHS9zWAWJpghKZkql
- UqwtLg==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.162.115.133) by MN2PR06CA0027.namprd06.prod.outlook.com (2603:10b6:208:23d::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.28 via Frontend Transport; Mon, 5 Apr 2021 20:07:40 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1lTVVb-000tsE-LU; Mon, 05 Apr 2021 17:07:39 -0300
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 84471cb5-c7be-4f0b-30c2-08d8f86e7775
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2601:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB2601EEC348FC6E86E4227214C2779@DM6PR12MB2601.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NHNTkdOlA/aWZMLR91pcCzLgboahKPGPdx3XMscdxQijU3GVRO9QMGkq0P2RcaxWLRDiIMpFKQvkP0OuGkPn+ucOWa+QpijJNe1G9cD7futxjPQAlgC3S8SujpjP5TaNobfIp25T4dXR+vl9WymYWJ7d97hjhoMRWkzzSawtb8DL2YZOgvuivF0PQmYqVcjmBNRFwhLXITdIDzwa2uEOhHRASVirtBedul5Y5/A9YBWQKw1YI69mRAJqtl6Pivt6+SKy+9dZ/HJVLGfSFMJJVarFh9D+UVz5OaqyD18l8TlDseSIOqiDqKb3WCOgAmwNuBImz1eXOhzqzn+OzH1VqkTf0JpTgSpGgjSTLD5K83GXJ096BbFuKqDBB9Mpe+2uHgQaoHZX+Hebf0ipGtT72NJqH1hEUqZmAH1KW8jv+ud2EC6WAXDVZZ2iZL6e4MA018+OPO18uoZh7h/IdRSp01zrzpFbxUZSSZvPY2KLiQrWEOdgJMfoXMHWGSm5oZdh/CROKu7kP1pj22DIrZgjTnBfYSbGgkCPTXrIJwDU6156ShNRZqjg6lIwNLaqYDJfeqQH3BtXemcEmL0hqnYsZ+o1p65+w2p7UoKnLdqQMt866TCbBpFOmnWWvBGfW8eNagtBlFIiaLLjE8/xz2WjS/S2X4OlAwKde1AXM5uPfkg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(396003)(39860400002)(346002)(376002)(478600001)(1076003)(33656002)(26005)(6916009)(186003)(2906002)(54906003)(66476007)(8936002)(7416002)(4326008)(8676002)(7406005)(2616005)(38100700001)(5660300002)(426003)(66946007)(9746002)(9786002)(316002)(83380400001)(36756003)(66556008)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?dqguTN/Lil2raHacxDUb1fBWY5uYIBxJq0o5eoU8qvfW/+b+SWmzTaN+X7zH?=
+ =?us-ascii?Q?VuUo5o9IkAEBAz6i3ydb9EgU0PLpwj926RYwVrALCo94gzF98/rE390oTy0r?=
+ =?us-ascii?Q?r0t7rCr8r4cxGo9HadMvqE//X0JPRNvcZJvkmRfryHkFiC/BfKKIaa+r5qpa?=
+ =?us-ascii?Q?OojIGRjUtIJUnpSRtXSdWF0foxml9vDSoexPK1RwY+6DqXNc86Jc4Mocj+KJ?=
+ =?us-ascii?Q?5pcoOSHJ5J5iunwFIAz95bHfjX9RD+0aBybnrgMOazXAj/V7JA3abFR2NF0N?=
+ =?us-ascii?Q?oeHuoK0IOoan3aaYPvQiSb44OLhopO8XTcKUQy6maCJPpUP98q8EEq2XcR04?=
+ =?us-ascii?Q?ns3LXlX32mJhhq0kdrQWTTQHvLnIVoqq4W/0ZJ+6DJaIoHDT0iZyYwmdwjMv?=
+ =?us-ascii?Q?jA0G8itp1ubdrSu++hBG0bs1snt2DyeheOahpeLW1XkxyIVha2FoZHCr94Bi?=
+ =?us-ascii?Q?9bFQQr6PQrzpXNU9WGF5rzhh6OF9olTXNY/W6LL1Y2li9Dz/SV7TyVXQY+DW?=
+ =?us-ascii?Q?03OaL7X8kSx0TfzuPnmNwrBU/HAJA9Avhpwwny9yUQwmhdSFKIaJVqkocpd4?=
+ =?us-ascii?Q?QQHt66eQzencv5zcf3svyaE1vd0pRxB0yaM6WKzhGjyteZanANMYl0gAZME0?=
+ =?us-ascii?Q?7tz9l+omUQERvXqanfG9+vnOh+q4BIo0TD7HwGajfeZcVB/WHPwyL/vKqMGd?=
+ =?us-ascii?Q?scPNNA0r0hpFpJr6UBOHaZfH1ob/FyraeWqeH+UlZIG0Un+wns5yOuxI+kTW?=
+ =?us-ascii?Q?H9esesJ9VEcjuETZ1pdatTrl1DdhUl7/Zj3KiDUHvrEuC903w/wOzTdw6KmG?=
+ =?us-ascii?Q?KNCY3KQfs8VQO1UagzzID38DGNF+NmCndxAfDKa6FvT3eX5sUK1TMTnEVcgd?=
+ =?us-ascii?Q?gQcLyiZZfgZ4Lnm5ahBwfZyFkGoNhdUPHKlz87g308GR4IuDyL8Llkjvi5Fu?=
+ =?us-ascii?Q?ACVkvdX02cDylVi2hHltapeGqK3550CdCpX2ckvvOdzMzW0dhyW2O2eBUacH?=
+ =?us-ascii?Q?Prq6IYS3npduBM1hIJxdENAd2g3XZQRdsbjgonT35iYRf/dYhmZP6D6hmNdt?=
+ =?us-ascii?Q?vHf/o9kszJbIYhP5aA9XSqFBvhXYq2XYTuSL/QvSoskTitydxqraP7+X/lvz?=
+ =?us-ascii?Q?zvy7HUKfYIhwKFM8/zJiCruYnBuqnoxWtrc/AvMX+JhEnGaG/ZlLOu0WHe2I?=
+ =?us-ascii?Q?ZpQZCx39algQNxVAwJU5p6CGOhtVbf9S3ePbIDH4Z+morN+K+Q/LbIFJrBoh?=
+ =?us-ascii?Q?PCnpnckQT+Bhj7vUqR5rceDRaGWC1q+Kxeo/pDs593zhpkNhgFVoBw/H0t6W?=
+ =?us-ascii?Q?9cWjzeOtfZhCJrjOvsEWlfmT?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84471cb5-c7be-4f0b-30c2-08d8f86e7775
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Apr 2021 20:07:41.0693
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9KEx5Ujcc1t1goDc3HXmjwHd1eaMclkbpip1jnZjj+VLeDPeZaFMR0wTZ2OdJn8N
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2601
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 4/5/2021 1:23 AM, Leon Romanovsky wrote:
-> From: Avihai Horon <avihaih@nvidia.com>
+On Mon, Apr 05, 2021 at 03:41:15PM +0200, Christoph Hellwig wrote:
+> On Mon, Apr 05, 2021 at 08:23:54AM +0300, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> > 
+> > >From Avihai,
+> > 
+> > Relaxed Ordering is a PCIe mechanism that relaxes the strict ordering
+> > imposed on PCI transactions, and thus, can improve performance.
+> > 
+> > Until now, relaxed ordering could be set only by user space applications
+> > for user MRs. The following patch series enables relaxed ordering for the
+> > kernel ULPs as well. Relaxed ordering is an optional capability, and as
+> > such, it is ignored by vendors that don't support it.
+> > 
+> > The following test results show the performance improvement achieved
+> > with relaxed ordering. The test was performed on a NVIDIA A100 in order
+> > to check performance of storage infrastructure over xprtrdma:
 > 
-> Enable Relaxed Ordering in __ib_alloc_pd() allocation of the
-> local_dma_lkey.
-> 
-> This will take effect only for devices that don't pre-allocate the lkey
-> but allocate it per PD allocation.
-> 
-> Signed-off-by: Avihai Horon <avihaih@nvidia.com>
-> Reviewed-by: Michael Guralnik <michaelgur@nvidia.com>
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> ---
->   drivers/infiniband/core/verbs.c              | 3 ++-
->   drivers/infiniband/hw/vmw_pvrdma/pvrdma_mr.c | 1 +
->   2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/core/verbs.c b/drivers/infiniband/core/verbs.c
-> index a1782f8a6ca0..9b719f7d6fd5 100644
-> --- a/drivers/infiniband/core/verbs.c
-> +++ b/drivers/infiniband/core/verbs.c
-> @@ -287,7 +287,8 @@ struct ib_pd *__ib_alloc_pd(struct ib_device *device, unsigned int flags,
->   	if (device->attrs.device_cap_flags & IB_DEVICE_LOCAL_DMA_LKEY)
->   		pd->local_dma_lkey = device->local_dma_lkey;
->   	else
-> -		mr_access_flags |= IB_ACCESS_LOCAL_WRITE;
-> +		mr_access_flags |=
-> +			IB_ACCESS_LOCAL_WRITE | IB_ACCESS_RELAXED_ORDERING;
+> Isn't the Nvidia A100 a GPU not actually supported by Linux at all?
+> What does that have to do with storage protocols?
 
-So, do local_dma_lkey's get relaxed ordering unconditionally?
+I think it is a typo (or at least mit makes no sense to be talking
+about NFS with a GPU chip) Probably it should be a DGX A100 which is a
+dual socket AMD server with alot of PCIe, and xptrtrdma is a NFS-RDMA
+workload.
 
->   	if (flags & IB_PD_UNSAFE_GLOBAL_RKEY) {
->   		pr_warn("%s: enabling unsafe global rkey\n", caller);
-> diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_mr.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_mr.c
-> index b3fa783698a0..d74827694f92 100644
-> --- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_mr.c
-> +++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_mr.c
-> @@ -66,6 +66,7 @@ struct ib_mr *pvrdma_get_dma_mr(struct ib_pd *pd, int acc)
->   	int ret;
->   
->   	/* Support only LOCAL_WRITE flag for DMA MRs */
-> +	acc &= ~IB_ACCESS_RELAXED_ORDERING;
->   	if (acc & ~IB_ACCESS_LOCAL_WRITE) {
->   		dev_warn(&dev->pdev->dev,
->   			 "unsupported dma mr access flags %#x\n", acc);
+AMD dual socket systems are well known to benefit from relaxed
+ordering, people have been doing this in userspace for a while now
+with the opt in.
 
-Why does the pvrdma driver require relaxed ordering to be off?
+What surprises me is the performance difference, I hadn't heard it is
+4x!
 
-Tom.
+Jason
