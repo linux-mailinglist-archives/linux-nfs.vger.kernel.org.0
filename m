@@ -2,38 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5AD6354C6A
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Apr 2021 07:59:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDF43354CE8
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Apr 2021 08:28:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243870AbhDFF7G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 6 Apr 2021 01:59:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37814 "EHLO mail.kernel.org"
+        id S238367AbhDFG27 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 6 Apr 2021 02:28:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231751AbhDFF7F (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 6 Apr 2021 01:59:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9EE8A613BC;
-        Tue,  6 Apr 2021 05:58:57 +0000 (UTC)
+        id S237859AbhDFG26 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 6 Apr 2021 02:28:58 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BE35D61165;
+        Tue,  6 Apr 2021 06:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617688738;
-        bh=gDHLQ8AfAmXKJXm8MvEJ0vs3LvbGeO7xOe9E1Rkex9g=;
+        s=k20201202; t=1617690530;
+        bh=6qxictHF+/YqQWcR0awtfiLtRYlib8mn/Dx9axjfKg4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GcRWg96RIiQJrX8I9nkciSivelkTKbxp+pqIkIaoKRWjdWGmTf3K0QABDbAbeKwxv
-         gI8Rml224knAV+x5DjEsjb6+P86ZrrEXUrE0OkLcl60Mc5YImi+i1IMEZjIC+3qmsz
-         xNt+e86ZUOyEKbPPY9p1P9/5QcFZGX3wUVr2T6G3zIEno02bs81hbPKRiS/F4oqq5D
-         LnBRfVkx5i+qOTgQ73cIkLt+sgDeXTi0Trg5iMBYc469aNi8NvS6CBMXvknRsdpraS
-         AvWl6rTMssY+ubJPrDBq0cQeJRG1+ADIZQJMkrlrrGgkDRQy9CcjveQL1mZrw0rIvL
-         Hjf4EK7bTTvJg==
-Date:   Tue, 6 Apr 2021 08:58:54 +0300
+        b=i+8SC5R9QYYvQwgkzuDT4QnqR/LHddWxuZum0T0C3kxd6raLjcbfF1cvFl2Cec8Xm
+         KhScYX6h4r8XG5j8aUB+B2/jprzuuPXY9FqnyK2nKPB+vdLVfp9goj46Wy4uHK+0Ra
+         PZddOiDso6XZJeBYLq1uIw9rM48AGuy05sSGnzMZFNrnyCjZMGJCv51xn7hMBg++CF
+         +dca19jOJJKcipn2OWRYvnKC9ngkedpdr+ZBuojGR6Bu10dtubDRP/koLNLtLoA/lF
+         akfcfAruTov/1lG+Q+agKfPbZvwxlR1hCjO5x/uMyewyKscMUk4082lcCbzP0vJ/16
+         lfXW6Ibhc0a6A==
+Date:   Tue, 6 Apr 2021 09:28:46 +0300
 From:   Leon Romanovsky <leon@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Doug Ledford <dledford@redhat.com>,
+To:     Tom Talpey <tom@talpey.com>
+Cc:     Doug Ledford <dledford@redhat.com>,
         Jason Gunthorpe <jgg@nvidia.com>,
         Avihai Horon <avihaih@nvidia.com>,
         Adit Ranadive <aditr@vmware.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Ariel Elior <aelior@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
         Bernard Metzler <bmt@zurich.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
         Chuck Lever <chuck.lever@oracle.com>,
         "David S. Miller" <davem@davemloft.net>,
         Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
@@ -69,43 +70,52 @@ Cc:     Bart Van Assche <bvanassche@acm.org>,
         Weihang Li <liweihang@huawei.com>,
         Yishai Hadas <yishaih@nvidia.com>,
         Zhu Yanjun <zyjzyj2000@gmail.com>
-Subject: Re: [PATCH rdma-next 01/10] RDMA: Add access flags to ib_alloc_mr()
- and ib_mr_pool_init()
-Message-ID: <YGv4niuc31WnqpEJ@unreal>
+Subject: Re: [PATCH rdma-next 02/10] RDMA/core: Enable Relaxed Ordering in
+ __ib_alloc_pd()
+Message-ID: <YGv/nne+E5xXHsME@unreal>
 References: <20210405052404.213889-1-leon@kernel.org>
- <20210405052404.213889-2-leon@kernel.org>
- <c21edd64-396c-4c7c-86f8-79045321a528@acm.org>
- <YGvwUI022t/rJy5U@unreal>
- <20210406052717.GA4835@lst.de>
+ <20210405052404.213889-3-leon@kernel.org>
+ <befc60f3-d28a-5420-b381-0f408bd7cca9@talpey.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210406052717.GA4835@lst.de>
+In-Reply-To: <befc60f3-d28a-5420-b381-0f408bd7cca9@talpey.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Apr 06, 2021 at 07:27:17AM +0200, Christoph Hellwig wrote:
-> On Tue, Apr 06, 2021 at 08:23:28AM +0300, Leon Romanovsky wrote:
-> > The same proposal (enable unconditionally) was raised during
-> > submission preparations and we decided to follow same pattern
-> > as other verbs objects which receive flag parameter.
+On Mon, Apr 05, 2021 at 02:01:16PM -0400, Tom Talpey wrote:
+> On 4/5/2021 1:23 AM, Leon Romanovsky wrote:
+> > From: Avihai Horon <avihaih@nvidia.com>
+> > 
+> > Enable Relaxed Ordering in __ib_alloc_pd() allocation of the
+> > local_dma_lkey.
+> > 
+> > This will take effect only for devices that don't pre-allocate the lkey
+> > but allocate it per PD allocation.
+> > 
+> > Signed-off-by: Avihai Horon <avihaih@nvidia.com>
+> > Reviewed-by: Michael Guralnik <michaelgur@nvidia.com>
+> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > ---
+> >   drivers/infiniband/core/verbs.c              | 3 ++-
+> >   drivers/infiniband/hw/vmw_pvrdma/pvrdma_mr.c | 1 +
+> >   2 files changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/infiniband/core/verbs.c b/drivers/infiniband/core/verbs.c
+> > index a1782f8a6ca0..9b719f7d6fd5 100644
+> > --- a/drivers/infiniband/core/verbs.c
+> > +++ b/drivers/infiniband/core/verbs.c
+> > @@ -287,7 +287,8 @@ struct ib_pd *__ib_alloc_pd(struct ib_device *device, unsigned int flags,
+> >   	if (device->attrs.device_cap_flags & IB_DEVICE_LOCAL_DMA_LKEY)
+> >   		pd->local_dma_lkey = device->local_dma_lkey;
+> >   	else
+> > -		mr_access_flags |= IB_ACCESS_LOCAL_WRITE;
+> > +		mr_access_flags |=
+> > +			IB_ACCESS_LOCAL_WRITE | IB_ACCESS_RELAXED_ORDERING;
 > 
-> A flags argument can be added when it actually is needed.  Using it
-> to pass an argument enabled by all ULPs just gets us back to the bad
-> old days of complete crap APIs someone drew up on a whiteboard.
+> So, do local_dma_lkey's get relaxed ordering unconditionally?
 
-Let's wait till Jason wakes up, before jumping to conclusions.
-It was his request to update all ULPs.
+Yes, in mlx5, this lkey is created on the fly.
 
-> 
-> I think we need to:
-> 
->  a) document the semantics
->  b) sort out any technical concerns
->  c) just enable the damn thing
-
-Sure
-
-> 
-> instead of requiring some form of cargo culting.
+Thanks
