@@ -2,65 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B070C354B5E
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Apr 2021 05:47:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86AEC354C13
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Apr 2021 07:23:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242347AbhDFDr2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Apr 2021 23:47:28 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:53289 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233639AbhDFDr2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Apr 2021 23:47:28 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0UUea06T_1617680821;
-Received: from j63c13417.sqa.eu95.tbsite.net(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0UUea06T_1617680821)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 06 Apr 2021 11:47:19 +0800
-From:   Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To:     bfields@fieldses.org
-Cc:     chuck.lever@oracle.com, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, davem@davemloft.net, kuba@kernel.org,
-        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Subject: [PATCH] sunrpc: Remove unused function ip_map_lookup
-Date:   Tue,  6 Apr 2021 11:46:59 +0800
-Message-Id: <1617680819-9058-1-git-send-email-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S242625AbhDFFJy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 6 Apr 2021 01:09:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230073AbhDFFJy (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 6 Apr 2021 01:09:54 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E04D2613B8;
+        Tue,  6 Apr 2021 05:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617685786;
+        bh=X92KQg3tXG2x2dhtuX1igH+EpubBIGXwmzFmddKebSI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YAkOjjj0GL3XRB09Ij60URoGO7NdIuDIosagpxtfZ9iVq8xjzpRqmg0/f2VeAwevd
+         gCLGwz21lbIWMUVSXSoaqFi0Iru0BxK0GRYMSdNgIrMHK9Yg3XdHCPbe/mFLACsA/X
+         UFvAfStd4Pc48XpaL+1vVCP+pCq8UiEBkUw/DIxk2rU7bNPyvyjyKgmWx+rw14jJw/
+         p73HiTP8ZGkD/NT+l86ADeas4d0UOfVxF9OY/sGrq+KRIXmDN6hnoJfqvKvFi3f0Bw
+         dXBW8ogvsD7qEJhmTiZTbVWnJi+ud6+yxx8O41YQGlllSDdvvG13vLa6u7yKwxk3MU
+         mcvvXPEGKgaVQ==
+Date:   Tue, 6 Apr 2021 08:09:43 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Honggang LI <honli@redhat.com>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Adit Ranadive <aditr@vmware.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Avihai Horon <avihaih@nvidia.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Devesh Sharma <devesh.sharma@broadcom.com>,
+        Faisal Latif <faisal.latif@intel.com>,
+        Jack Wang <jinpu.wang@ionos.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Jens Axboe <axboe@fb.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Keith Busch <kbusch@kernel.org>, Lijun Ou <oulijun@huawei.com>,
+        linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Max Gurtovoy <mgurtovoy@nvidia.com>,
+        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        Michael Guralnik <michaelgur@nvidia.com>,
+        Michal Kalderon <mkalderon@marvell.com>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
+        netdev@vger.kernel.org, Potnuri Bharat Teja <bharat@chelsio.com>,
+        rds-devel@oss.oracle.com, Sagi Grimberg <sagi@grimberg.me>,
+        samba-technical@lists.samba.org,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Somnath Kotur <somnath.kotur@broadcom.com>,
+        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
+        Steve French <sfrench@samba.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        VMware PV-Drivers <pv-drivers@vmware.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Zhu Yanjun <zyjzyj2000@gmail.com>
+Subject: Re: [PATCH rdma-next 00/10] Enable relaxed ordering for ULPs
+Message-ID: <YGvtFxv1az754/Q5@unreal>
+References: <20210405052404.213889-1-leon@kernel.org>
+ <20210406023738.GB80908@dhcp-128-72.nay.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210406023738.GB80908@dhcp-128-72.nay.redhat.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Fix the following clang warnings:
+On Tue, Apr 06, 2021 at 10:37:38AM +0800, Honggang LI wrote:
+> On Mon, Apr 05, 2021 at 08:23:54AM +0300, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> > 
+> > From Avihai,
+> > 
+> > Relaxed Ordering is a PCIe mechanism that relaxes the strict ordering
+> > imposed on PCI transactions, and thus, can improve performance.
+> > 
+> > Until now, relaxed ordering could be set only by user space applications
+> > for user MRs. The following patch series enables relaxed ordering for the
+> > kernel ULPs as well. Relaxed ordering is an optional capability, and as
+> > such, it is ignored by vendors that don't support it.
+> > 
+> > The following test results show the performance improvement achieved
+> 
+> Did you test this patchset with CPU does not support relaxed ordering?
 
-net/sunrpc/svcauth_unix.c:306:30: warning: unused function
-'ip_map_lookup' [-Wunused-function].
+I don't think so, the CPUs that don't support RO are Intel's fourth/fifth-generation
+and they are not interesting from performance point of view.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- net/sunrpc/svcauth_unix.c | 9 ---------
- 1 file changed, 9 deletions(-)
+> 
+> We observed significantly performance degradation when run perftest with
+> relaxed ordering enabled over old CPU.
+> 
+> https://github.com/linux-rdma/perftest/issues/116
 
-diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
-index 97c0bdd..35b7966 100644
---- a/net/sunrpc/svcauth_unix.c
-+++ b/net/sunrpc/svcauth_unix.c
-@@ -303,15 +303,6 @@ static struct ip_map *__ip_map_lookup(struct cache_detail *cd, char *class,
- 		return NULL;
- }
- 
--static inline struct ip_map *ip_map_lookup(struct net *net, char *class,
--		struct in6_addr *addr)
--{
--	struct sunrpc_net *sn;
--
--	sn = net_generic(net, sunrpc_net_id);
--	return __ip_map_lookup(sn->ip_map_cache, class, addr);
--}
--
- static int __ip_map_update(struct cache_detail *cd, struct ip_map *ipm,
- 		struct unix_domain *udom, time64_t expiry)
- {
--- 
-1.8.3.1
+The perftest is slightly different, but you pointed to the valid point.
+We forgot to call pcie_relaxed_ordering_enabled() before setting RO bit
+and arguably this was needed to be done in perftest too.
 
+Thanks
+
+> 
+> thanks
+> 
