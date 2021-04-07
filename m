@@ -2,78 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BAF2356E45
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Apr 2021 16:16:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 001C0357065
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Apr 2021 17:35:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233556AbhDGOQO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Apr 2021 10:16:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47686 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232839AbhDGOQN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Apr 2021 10:16:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617804963;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=A4nUehrQQeQG3SHiV5bZynIabwm46q8oe+eV6IRO3+s=;
-        b=FvxwBTVNbld5xU00XKwb1Z6KaRiSp3VXEPXd+qMA4kbHTr28WoBOOkqOkR9X6Gniq4ffRb
-        kTjFTcJnxOsevzGUVJcMSPANcgwBENdCNc0Nqhe7cF2+owDsM/din7MM/AQoZIVLW5NZuk
-        4hTBRZbJKfGNNpIem+3W69yOhLwW7ms=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-261-UjD0uLdLPM-bu6IC-6d-eA-1; Wed, 07 Apr 2021 10:16:01 -0400
-X-MC-Unique: UjD0uLdLPM-bu6IC-6d-eA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78D851883525
-        for <linux-nfs@vger.kernel.org>; Wed,  7 Apr 2021 14:16:00 +0000 (UTC)
-Received: from madhat.home.dicksonnet.net (ovpn-112-148.phx2.redhat.com [10.3.112.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 371D419C78
-        for <linux-nfs@vger.kernel.org>; Wed,  7 Apr 2021 14:16:00 +0000 (UTC)
-From:   Steve Dickson <steved@redhat.com>
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH] NFS server should enable RDMA by default
-Date:   Wed,  7 Apr 2021 10:18:10 -0400
-Message-Id: <20210407141810.33710-1-steved@redhat.com>
+        id S232271AbhDGPfK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Apr 2021 11:35:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230248AbhDGPfJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Apr 2021 11:35:09 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 000AEC061756;
+        Wed,  7 Apr 2021 08:34:59 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id E5C6E6A45; Wed,  7 Apr 2021 11:34:58 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org E5C6E6A45
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1617809698;
+        bh=bLQwzZC+bbhqKQBwwlTZfOUN0mKSee0/NQ+qVibG9tA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BxDWI9NjGmn6HGVSDiAJrvOjV3elqwdY183AU2UszAVMZ8YhXiuxCvN4Y8iDUZoqG
+         dPnrzDbm+UF74K70EuqcAwDc3WO8Dl10+HR0kH2fJ9dDvJQWpjd0A5EnhF5YGkpQRU
+         xG8nwVkN+xrMHVh/Y8zm9kFnu5LHNpgL8PYADcx4=
+Date:   Wed, 7 Apr 2021 11:34:58 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
+Message-ID: <20210407153458.GA28924@fieldses.org>
+References: <20210407001658.2208535-1-pakki001@umn.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210407001658.2208535-1-pakki001@umn.edu>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Tue, Apr 06, 2021 at 07:16:56PM -0500, Aditya Pakki wrote:
+> In gss_pipe_destroy_msg(), in case of error in msg, gss_release_msg
+> deletes gss_msg. The patch adds a check to avoid a potential double
+> free.
 
-Product is shipped with NFS/RDMA disabled by default.
-An extra step is needed when setting up an NFS server
-to support NFS/RDMA clients.
+We're already dereferenced msg.  Nothing has set gss_msg to NULL.  It's
+the gss_msg->count reference count that's supposed to prevent double
+frees.
 
-Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=1931565
+Did you see an actual bug or warning from some tool, and if so, could
+you share the details?
 
-Signed-off-by: Steve Dickson <steved@redhat.com>
----
- nfs.conf | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+--b.
 
-diff --git a/nfs.conf b/nfs.conf
-index 9042d27d..31994f61 100644
---- a/nfs.conf
-+++ b/nfs.conf
-@@ -72,9 +72,9 @@
- # vers4.0=y
- # vers4.1=y
- # vers4.2=y
--# rdma=n
--# rdma-port=20049
--#
-+rdma=y
-+rdma-port=20049
-+
- [statd]
- # debug=0
- # port=0
--- 
-2.30.2
-
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+>  net/sunrpc/auth_gss/auth_gss.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
+> index 5f42aa5fc612..eb52eebb3923 100644
+> --- a/net/sunrpc/auth_gss/auth_gss.c
+> +++ b/net/sunrpc/auth_gss/auth_gss.c
+> @@ -848,7 +848,8 @@ gss_pipe_destroy_msg(struct rpc_pipe_msg *msg)
+>  			warn_gssd();
+>  		gss_release_msg(gss_msg);
+>  	}
+> -	gss_release_msg(gss_msg);
+> +	if (gss_msg)
+> +		gss_release_msg(gss_msg);
+>  }
+>  
+>  static void gss_pipe_dentry_destroy(struct dentry *dir,
+> -- 
+> 2.25.1
