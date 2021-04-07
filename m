@@ -2,84 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 001C0357065
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Apr 2021 17:35:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C989A3570C4
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Apr 2021 17:47:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232271AbhDGPfK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Apr 2021 11:35:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230248AbhDGPfJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Apr 2021 11:35:09 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 000AEC061756;
-        Wed,  7 Apr 2021 08:34:59 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id E5C6E6A45; Wed,  7 Apr 2021 11:34:58 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org E5C6E6A45
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1617809698;
-        bh=bLQwzZC+bbhqKQBwwlTZfOUN0mKSee0/NQ+qVibG9tA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BxDWI9NjGmn6HGVSDiAJrvOjV3elqwdY183AU2UszAVMZ8YhXiuxCvN4Y8iDUZoqG
-         dPnrzDbm+UF74K70EuqcAwDc3WO8Dl10+HR0kH2fJ9dDvJQWpjd0A5EnhF5YGkpQRU
-         xG8nwVkN+xrMHVh/Y8zm9kFnu5LHNpgL8PYADcx4=
-Date:   Wed, 7 Apr 2021 11:34:58 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
-Message-ID: <20210407153458.GA28924@fieldses.org>
-References: <20210407001658.2208535-1-pakki001@umn.edu>
+        id S1353764AbhDGPrS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Apr 2021 11:47:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47184 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1353754AbhDGPrM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Apr 2021 11:47:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617810421;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=vBa++ylKdM6FaV/AsB3jGOj59UUYHkh6Ww/V2KVEjbY=;
+        b=SMtHi42iIphRFpRMxO4Lgq4RNut5e03uQ6XPrUl1H2soDXHztkPwAX1hg6UFc03n+2Q2Fs
+        XiN1VerMBjSJHMq8W1seesHXHzjxXLJmZ2/Z28PcUIChXyJRedtU3Tv3LYqLnOuxhMpi5r
+        kWTArmcIF+hEODG/vzW+089sTRlpEVE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291-vJ-WsKDbMdGZLbaNmZzTBw-1; Wed, 07 Apr 2021 11:46:57 -0400
+X-MC-Unique: vJ-WsKDbMdGZLbaNmZzTBw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D7E51008076;
+        Wed,  7 Apr 2021 15:46:56 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-115-201.rdu2.redhat.com [10.10.115.201])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 43E9D1893C;
+        Wed,  7 Apr 2021 15:46:54 +0000 (UTC)
+Subject: [PATCH 0/5] netfs: Fixes for the netfs lib
+From:   David Howells <dhowells@redhat.com>
+To:     jlayton@kernel.org
+Cc:     dwysocha@redhat.com, linux-cachefs@redhat.com,
+        v9fs-developer@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 07 Apr 2021 16:46:53 +0100
+Message-ID: <161781041339.463527.18139104281901492882.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210407001658.2208535-1-pakki001@umn.edu>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Apr 06, 2021 at 07:16:56PM -0500, Aditya Pakki wrote:
-> In gss_pipe_destroy_msg(), in case of error in msg, gss_release_msg
-> deletes gss_msg. The patch adds a check to avoid a potential double
-> free.
 
-We're already dereferenced msg.  Nothing has set gss_msg to NULL.  It's
-the gss_msg->count reference count that's supposed to prevent double
-frees.
+Hi Jeff,
 
-Did you see an actual bug or warning from some tool, and if so, could
-you share the details?
+Here's a bunch of fixes plus a tracepoint for the netfs library.  I'm going
+to roll them into other patches, but I'm posting them here for separate
+review.
 
---b.
+David
+---
+David Howells (5):
+      netfs: Fix a missing rreq put in netfs_write_begin()
+      netfs: Call trace_netfs_read() after ->begin_cache_operation()
+      netfs: Don't record the copy termination error
+      netfs: Fix copy-to-cache amalgamation
+      netfs: Add a tracepoint to log failures that would be otherwise unseen
 
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
->  net/sunrpc/auth_gss/auth_gss.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-> index 5f42aa5fc612..eb52eebb3923 100644
-> --- a/net/sunrpc/auth_gss/auth_gss.c
-> +++ b/net/sunrpc/auth_gss/auth_gss.c
-> @@ -848,7 +848,8 @@ gss_pipe_destroy_msg(struct rpc_pipe_msg *msg)
->  			warn_gssd();
->  		gss_release_msg(gss_msg);
->  	}
-> -	gss_release_msg(gss_msg);
-> +	if (gss_msg)
-> +		gss_release_msg(gss_msg);
->  }
->  
->  static void gss_pipe_dentry_destroy(struct dentry *dir,
-> -- 
-> 2.25.1
+
+ fs/cachefiles/io.c           | 17 ++++++++++
+ fs/netfs/read_helper.c       | 58 +++++++++++++++++++---------------
+ include/linux/netfs.h        |  6 ++++
+ include/trace/events/netfs.h | 60 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 116 insertions(+), 25 deletions(-)
+
+
