@@ -2,123 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 737E1358842
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Apr 2021 17:25:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D740135884B
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Apr 2021 17:26:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231995AbhDHPZN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 8 Apr 2021 11:25:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232220AbhDHPZK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 8 Apr 2021 11:25:10 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97920C061763;
-        Thu,  8 Apr 2021 08:24:58 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id a7so3756051eju.1;
-        Thu, 08 Apr 2021 08:24:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2DctV2bRWf9bByNN4jO+KZZov1aPn00QO4Vdegx2Cow=;
-        b=WX/inlaeeRIbsG86uDWLNx7q9abVElPQlit8MiD/qADEh+BkApQz6ZTJFohiy78033
-         h2rm8PaFTYBZr60Er0hM6LkGcCOTobwmLaZaQp96KarlKd4mBvwomsSSLeRozAvzZwy6
-         INi/JbdycJcG3kjZ7cNA99vdxVe9z3Jfk4go68uQx5ujXaX81ZCmF0TqOANYvKip1kHp
-         a4L5MqMnRQIJLQweJVwEw3SPMIvjuYwlP626MmsqqSeaW3oSDVYDq05UEmWGz77BC1aZ
-         o/iBbvM8u89iteW2KMJAdo+Poa//SkEzFA3BaHmafDBE7PqVTY1gl8xdv/tPRWzi6S5Y
-         9Kjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2DctV2bRWf9bByNN4jO+KZZov1aPn00QO4Vdegx2Cow=;
-        b=tddlTZdgakqIv4wy7B+TQ5drUb59f65pdxbZjf+VuE4MLMExclvsAWAZxyHvzNJr7w
-         6zD3uHpyZnGcwvFdQsxCZgV2eOxjI7wAl0tW+PIANGz3JuPiE5C16zdY6OaAmpzvTvGf
-         kuSj42ellAY637Sc4LRxg/270RRPvlbu0nHOB8wm6SRpWlJEl/9EL6ziSh0zEjbbccgZ
-         B7PRRu+HCXF7n+dW75HYW85wNImWCxLHawW0R6zt7/kCBRLFzoM5n2vlEj/qTbPsVab+
-         ZPy8IutpibOk/HNBm83bRjBq82H2QbsrukUeI+Gac50VNNcM8NEVths1E/TOyL0ZvxFp
-         6DnQ==
-X-Gm-Message-State: AOAM532UJGN/cF0IUWoAKLkI4fEKKMw245qKduz68mh339gCN09ZZxQn
-        7icT7sUIyEH9YHzkSw2MQTPOlkKZUlO5+Ku1R9o=
-X-Google-Smtp-Source: ABdhPJxL8zi4DQYkjJuJ7486ivbwyswwR3YPdBXE8zctrhzn0c+SIv23BREveuykwcFjiMoPUBHx7HFc+kG/LvfLCO4=
-X-Received: by 2002:a17:906:7194:: with SMTP id h20mr10309618ejk.432.1617895497312;
- Thu, 08 Apr 2021 08:24:57 -0700 (PDT)
+        id S232245AbhDHP0A (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 8 Apr 2021 11:26:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35201 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232231AbhDHP0A (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 8 Apr 2021 11:26:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617895548;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CGwlC/hESn7y7qGIlb10fpokHrJdwvIGgWjnr/18nGE=;
+        b=I+zo/4BaGVwZakF8DwJcYla6797fbfBG7J9KutDUqo68VAdyrK1Rg5azBkL4uKh0hJdn5u
+        7TJgpfq97v8cw1FUjQylNSPSaxIAyOmoACKhCEZyqbUQ2pWeSFQDuRQ507yFwjVoSLJ8Zh
+        x0Qeg07Ah3OIt3PqA4GgaBOtqLF/Hc4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-61-fI44sw60N3C0hNH1bdmEJA-1; Thu, 08 Apr 2021 11:25:45 -0400
+X-MC-Unique: fI44sw60N3C0hNH1bdmEJA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D75CE8189C8;
+        Thu,  8 Apr 2021 15:25:41 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-119-35.rdu2.redhat.com [10.10.119.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7DD1710013C1;
+        Thu,  8 Apr 2021 15:25:35 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20210408145057.GN2531743@casper.infradead.org>
+References: <20210408145057.GN2531743@casper.infradead.org> <161789062190.6155.12711584466338493050.stgit@warthog.procyon.org.uk> <161789066013.6155.9816857201817288382.stgit@warthog.procyon.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 02/30] mm: Add set/end/wait functions for PG_private_2
 MIME-Version: 1.0
-References: <20210407001658.2208535-1-pakki001@umn.edu> <c0de0985c0bf09a96efc538da2146f86e6fa7037.camel@hammerspace.com>
-In-Reply-To: <c0de0985c0bf09a96efc538da2146f86e6fa7037.camel@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Thu, 8 Apr 2021 11:24:45 -0400
-Message-ID: <CAN-5tyETkDBVfYQrBOm1veAzMdo-9K37bfgL+QZTPW=d2OAP9A@mail.gmail.com>
-Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "pakki001@umn.edu" <pakki001@umn.edu>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "dwysocha@redhat.com" <dwysocha@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <14839.1617895534.1@warthog.procyon.org.uk>
+Date:   Thu, 08 Apr 2021 16:25:34 +0100
+Message-ID: <14840.1617895534@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Apr 8, 2021 at 11:01 AM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Tue, 2021-04-06 at 19:16 -0500, Aditya Pakki wrote:
-> > In gss_pipe_destroy_msg(), in case of error in msg, gss_release_msg
-> > deletes gss_msg. The patch adds a check to avoid a potential double
-> > free.
-> >
-> > Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> > ---
-> >  net/sunrpc/auth_gss/auth_gss.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/net/sunrpc/auth_gss/auth_gss.c
-> > b/net/sunrpc/auth_gss/auth_gss.c
-> > index 5f42aa5fc612..eb52eebb3923 100644
-> > --- a/net/sunrpc/auth_gss/auth_gss.c
-> > +++ b/net/sunrpc/auth_gss/auth_gss.c
-> > @@ -848,7 +848,8 @@ gss_pipe_destroy_msg(struct rpc_pipe_msg *msg)
-> >                         warn_gssd();
-> >                 gss_release_msg(gss_msg);
-> >         }
-> > -       gss_release_msg(gss_msg);
-> > +       if (gss_msg)
-> > +               gss_release_msg(gss_msg);
-> >  }
-> >
-> >  static void gss_pipe_dentry_destroy(struct dentry *dir,
->
->
-> NACK. There's no double free there.
+Matthew Wilcox <willy@infradead.org> wrote:
 
-I disagree that there is no double free, the wording of the commit
-describes the problem in the error case is that we call
-gss_release_msg() and then we call it again but the 1st one released
-the gss_msg. However, I think the fix should probably be instead:
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index 5f42aa5fc612..e8aae617e981 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -846,7 +846,7 @@ gss_pipe_destroy_msg(struct rpc_pipe_msg *msg)
-                gss_unhash_msg(gss_msg);
-                if (msg->errno == -ETIMEDOUT)
-                        warn_gssd();
--               gss_release_msg(gss_msg);
-+               return gss_release_msg(gss_msg);
-        }
-        gss_release_msg(gss_msg);
- }
+> > +void end_page_private_2(struct page *page)
+> > +{
+> > +	page = compound_head(page);
+> > +	VM_BUG_ON_PAGE(!PagePrivate2(page), page);
+> > +	clear_bit_unlock(PG_private_2, &page->flags);
+> > +	wake_up_page_bit(page, PG_private_2);
+> 
+> ... but when we try to end on a tail, we actually wake up the head ...
 
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+Question is, should I remove compound_head() here or add it into the other
+functions?
+
+David
+
