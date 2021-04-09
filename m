@@ -2,144 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3385359479
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Apr 2021 07:23:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C50D359765
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Apr 2021 10:14:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233121AbhDIFYA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 9 Apr 2021 01:24:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230219AbhDIFXt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Apr 2021 01:23:49 -0400
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEEBCC061762
-        for <linux-nfs@vger.kernel.org>; Thu,  8 Apr 2021 22:23:35 -0700 (PDT)
-Received: by mail-ua1-x934.google.com with SMTP id v23so1448433uaq.13
-        for <linux-nfs@vger.kernel.org>; Thu, 08 Apr 2021 22:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gTs7X0Kha8yyPPjoketYAk4TM4kCJYNv+QtbVLV11qw=;
-        b=JBxB536edN2icemaU8QdaNm6AYnLTCaemM3Ithzlz1Np8v6pO1wJVYu2ejP+rZfSsz
-         3qTVcd9dZRn1Feo6qXBUuDjeMAnnW2T0zl5u/1BBTcFJ+rKqnzY7gZyIabasGO0cSGPX
-         8205mExpo36r3SKCYZ/4AByGCO1VBW7dAvtH8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gTs7X0Kha8yyPPjoketYAk4TM4kCJYNv+QtbVLV11qw=;
-        b=ggiHA7wkb9cVbH+916hPntIBYnlLo2ss0x4+PUwOY2e2c0WqOKRT0cEytKWv9kB2QK
-         4alz8ZrnimqQ4ecpJqOy7hvmUri83nyDfX+JcDVG7Iez3hzuLIPW/rDErFwMU53ROQIv
-         J6KCBwyAlJ8o+X8sC7djU+QjI0H0ygBL1xQ6DWw7TXo6WLFkx9sPUPzfwElo9iwmpLVG
-         8ThBj+FTSOs0XvHYxI3AGPEJs00aCzhJ8NgX6w8PBRziMl/Y7TVKfu0BXiXuvMkXSnKG
-         U3Q16Y8lrHlk9j955At1Yf4OrvK6z3ohlJwd1a5Hkwwv2YQVL9+PHy5lk1qufOCF24al
-         8O5A==
-X-Gm-Message-State: AOAM530gB3FltPcuK5NMXtBPCwmo7/uVNsKUxYZk/FOTK0tYR/T3Ejgy
-        7SVkn6eez8rl8bcJjDAhHTyCHtR7t9uNDaiy4UpTmQ==
-X-Google-Smtp-Source: ABdhPJyiEqe2/5BdCT+RzysMIjR0yOEhjnFfYuWD4d3HBGwzC0gqP0VjxLNWerB7XM2SkAAm/TzcFU4LTi8Xfv/RYMA=
-X-Received: by 2002:ab0:7593:: with SMTP id q19mr9451736uap.74.1617945814814;
- Thu, 08 Apr 2021 22:23:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210221195833.23828-1-lhenriques@suse.de> <20210222102456.6692-1-lhenriques@suse.de>
- <CAN-5tyELMY7b7CKO-+an47ydq8r_4+SOyhuvdH0qE0-JmdZ44Q@mail.gmail.com>
- <YDYpHccgM7agpdTQ@suse.de> <CANMq1KBgwEXFh8AxpPW2t1SA0NVsyR45m0paLEU4D4w80dc_fA@mail.gmail.com>
-In-Reply-To: <CANMq1KBgwEXFh8AxpPW2t1SA0NVsyR45m0paLEU4D4w80dc_fA@mail.gmail.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 9 Apr 2021 13:23:23 +0800
-Message-ID: <CANMq1KDTgnGtNxWj2XxAT3mdsNjc551uUCg6EWnh=Hd0KcVQKQ@mail.gmail.com>
-Subject: Re: [PATCH v8] vfs: fix copy_file_range regression in cross-fs copies
-To:     Luis Henriques <lhenriques@suse.de>
-Cc:     Olga Kornievskaia <aglo@umich.edu>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <sfrench@samba.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
+        id S232327AbhDIIOu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 9 Apr 2021 04:14:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:55383 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232295AbhDIIOu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Apr 2021 04:14:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617956077;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6YraNPigCCa2QjWFUNdLS4ExsZNHhjTNhXM21Vxjs0s=;
+        b=QohY6qYwd0uA5XK6l966gmbPjTbovLlOjJUZwaAZLV8eVQGh7EBZqo54LtK8lD8q/KVpk7
+        9uWD9Y7VIAaMnupUDzgsWtLuJYCyQtDnK8XwRxqXjs6pK8cGi+3C0W4gRQEaQV7NP+JDh+
+        bF1GPcuj8J5AbeASqYEIlcD2C7aC/II=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-289-01GEC8DGP-Cp7uL9zOpe3g-1; Fri, 09 Apr 2021 04:14:33 -0400
+X-MC-Unique: 01GEC8DGP-Cp7uL9zOpe3g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B9A5510054F6;
+        Fri,  9 Apr 2021 08:14:31 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-119-35.rdu2.redhat.com [10.10.119.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C66C160BE5;
+        Fri,  9 Apr 2021 08:14:25 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wi_XrtTanTwoKs0jwnjhSvwpMYVDJ477VtjvvTXRjm5wQ@mail.gmail.com>
+References: <CAHk-=wi_XrtTanTwoKs0jwnjhSvwpMYVDJ477VtjvvTXRjm5wQ@mail.gmail.com> <20210408145057.GN2531743@casper.infradead.org> <161789062190.6155.12711584466338493050.stgit@warthog.procyon.org.uk> <161789066013.6155.9816857201817288382.stgit@warthog.procyon.org.uk> <46017.1617897451@warthog.procyon.org.uk> <136646.1617916529@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@redhat.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ian Lance Taylor <iant@google.com>,
-        Luis Lozano <llozano@chromium.org>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Linux-MM <linux-mm@kvack.org>,
         linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC][PATCH] mm: Split page_has_private() in two to better handle PG_private_2
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <184802.1617956064.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
+Date:   Fri, 09 Apr 2021 09:14:24 +0100
+Message-ID: <184803.1617956064@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 24, 2021 at 6:44 PM Nicolas Boichat <drinkcat@chromium.org> wro=
-te:
->
-> On Wed, Feb 24, 2021 at 6:22 PM Luis Henriques <lhenriques@suse.de> wrote=
-:
-> >
-> > On Tue, Feb 23, 2021 at 08:00:54PM -0500, Olga Kornievskaia wrote:
-> > > On Mon, Feb 22, 2021 at 5:25 AM Luis Henriques <lhenriques@suse.de> w=
-rote:
-> > > >
-> > > > A regression has been reported by Nicolas Boichat, found while usin=
-g the
-> > > > copy_file_range syscall to copy a tracefs file.  Before commit
-> > > > 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") =
-the
-> > > > kernel would return -EXDEV to userspace when trying to copy a file =
-across
-> > > > different filesystems.  After this commit, the syscall doesn't fail=
- anymore
-> > > > and instead returns zero (zero bytes copied), as this file's conten=
-t is
-> > > > generated on-the-fly and thus reports a size of zero.
-> > > >
-> > > > This patch restores some cross-filesystem copy restrictions that ex=
-isted
-> > > > prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy a=
-cross
-> > > > devices").  Filesystems are still allowed to fall-back to the VFS
-> > > > generic_copy_file_range() implementation, but that has now to be do=
-ne
-> > > > explicitly.
-> > > >
-> > > > nfsd is also modified to fall-back into generic_copy_file_range() i=
-n case
-> > > > vfs_copy_file_range() fails with -EOPNOTSUPP or -EXDEV.
-> > > >
-> > > > Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across dev=
-ices")
-> > > > Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-=
-1-drinkcat@chromium.org/
-> > > > Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0x=
-x+BnvW=3DZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
-> > > > Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7=
-cdc3ff707bc1efa17f5366057d60603c45f@changeid/
-> > > > Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-> > > > Signed-off-by: Luis Henriques <lhenriques@suse.de>
-> > >
-> > > I tested v8 and I believe it works for NFS.
-> >
-> > Thanks a lot for the testing.  And to everyone else for reviews,
-> > feedback,... and patience.
->
-> Thanks so much to you!!!
->
-> Works here, you can add my
-> Tested-by: Nicolas Boichat <drinkcat@chromium.org>
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-What happened to this patch? It does not seem to have been picked up
-yet? Any reason why?
+> >  #define PAGE_FLAGS_PRIVATE                             \
+> >         (1UL << PG_private | 1UL << PG_private_2)
+>
+> I think this should be re-named to be PAGE_FLAGS_CLEANUP, because I
+> don't think it makes any other sense to "combine" the two PG_private*
+> bits any more. No?
 
-> >
-> > I'll now go look into the manpage and see what needs to be changed.
-> >
-> > Cheers,
-> > --
-> > Lu=C3=ADs
+Sure.  Do we even want it still, or should I just fold it into
+page_needs_cleanup()?  It seems to be the only place it's used.
+
+> > +static inline int page_private_count(struct page *page)
+> > +{
+> > +       return test_bit(PG_private, &page->flags) ? 1 : 0;
+> > +}
+>
+> Why is this open-coding the bit test, rather than just doing
+>
+>         return PagePrivate(page) ? 1 : 0;
+>
+> instead? In fact, since test_bit() _should_ return a 'bool', I think eve=
+n just
+>
+>         return PagePrivate(page);
+
+Sorry, yes, it should be that.  I was looking at transforming the "1 <<
+PG_private" and completely overlooked that this should be PagePrivate().
+
+> should work and give the same result, but I could imagine that some
+> architecture version of "test_bit()" might return some other non-zero
+> value (although honestly, I think that should be fixed if so).
+
+Yeah.  I seem to recall that test_bit() on some arches used to return the
+datum just with the other bits masked off, but I may be misremembering.
+
+In asm-generic/bitops/non-atomic.h:
+
+static inline int test_bit(int nr, const volatile unsigned long *addr)
+{
+	return 1UL & (addr[BIT_WORD(nr)] >> (nr & (BITS_PER_LONG-1)));
+}
+
+should perhaps return bool?
+
+I wonder, should:
+
+	static __always_inline int PageTail(struct page *page)
+	static __always_inline int PageCompound(struct page *page)
+	static __always_inline int Page##uname(struct page *page)
+	static __always_inline int TestSetPage##uname(struct page *page)
+	static __always_inline int TestClearPage##uname(struct page *page)
+
+also all return bool?
+
+David
+
