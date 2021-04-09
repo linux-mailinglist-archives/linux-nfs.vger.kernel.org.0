@@ -2,123 +2,136 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C312B35A4D3
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Apr 2021 19:43:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E34D035A4DB
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Apr 2021 19:44:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234302AbhDIRoE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 9 Apr 2021 13:44:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21516 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233332AbhDIRoE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Apr 2021 13:44:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617990230;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qMoHusWRU3EEFKJLrdPdn6fw7g5fEbxgGHTh4Vd8ET0=;
-        b=I6kxOgE8Ko+rYXsYf5aOZ7yh2T5kfKHh+IXlNkAZyPIKYwTjG9yquk3uGTUdfsXzGGpp2X
-        gTyaw/WmfmFGgyyT77p3hrz0lagpAeikNJohCRgFV1hx6t2pJ/FU/8gp5mi0BDdxJs6x9n
-        T10oX9flDjYP9xwCNbrt3P3Dcky/fS0=
-Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
- [209.85.219.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-289-vEq-Y8xYNcaT9WvpwdHi7w-1; Fri, 09 Apr 2021 13:43:46 -0400
-X-MC-Unique: vEq-Y8xYNcaT9WvpwdHi7w-1
-Received: by mail-yb1-f199.google.com with SMTP id f18so6078444ybq.3
-        for <linux-nfs@vger.kernel.org>; Fri, 09 Apr 2021 10:43:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qMoHusWRU3EEFKJLrdPdn6fw7g5fEbxgGHTh4Vd8ET0=;
-        b=uLn/cMDPsXy6AGGNFVqBs60pJM4o8HqsHnlZY1FzBVACZTfI8ySBsV9MXulv2++P7s
-         edYRRJ352t0Eb71RGfLL7CR55iLIdDgL/V8qX+Ec4LSp+40icaFV3WqVBFPhxmifnKhP
-         Feefz9eLMcrRLqOOVg+vEr2MBbEuUINlhXt/bW9wSUeanj/+LEtgqa/tJsgWlpaMehmA
-         RwRmEjzQ2+q3P/wsmR9+83M/TjZKuUpD4YmJvVuWYoJohxtGlpuTR8+sqTYTaAhUb8A5
-         Hv6Z6DXIUyfzftF+cUN+pei50r6/BENwzfgNulj5cvh5ZcJKYesSihB7eSBsAW5MZP5J
-         UJRg==
-X-Gm-Message-State: AOAM531j/Z+gwkPrkfnsIFF31C1r3jPcpwwxL6P87o27yW1hgJ73v4O5
-        472waafd4n9dV0Gb+kNw7unzaeGacMuP6kax9lSlFODtmr6Qf/IUeQaEr0OrlRHB8PAiWBAtkYg
-        h6Df6rTCA1PsFByQxwn8HuY+JLdd8g1RVfP6e
-X-Received: by 2002:a25:c750:: with SMTP id w77mr18988185ybe.340.1617990226071;
-        Fri, 09 Apr 2021 10:43:46 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyePgBUXoxlCId5qbcbVtMHPFy79XeNQKfpB+vnhzetF47rq1MWoBwqoXUkxzWZFDH1Z8C7fd36q8TbvUNnQx4=
-X-Received: by 2002:a25:c750:: with SMTP id w77mr18988165ybe.340.1617990225907;
- Fri, 09 Apr 2021 10:43:45 -0700 (PDT)
+        id S234333AbhDIRor (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 9 Apr 2021 13:44:47 -0400
+Received: from p3plsmtpa06-09.prod.phx3.secureserver.net ([173.201.192.110]:40192
+        "EHLO p3plsmtpa06-09.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234174AbhDIRoq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Apr 2021 13:44:46 -0400
+Received: from [192.168.0.116] ([71.184.94.153])
+        by :SMTPAUTH: with ESMTPSA
+        id UvB9l8sywJpwyUvB9lb2JW; Fri, 09 Apr 2021 10:44:32 -0700
+X-CMAE-Analysis: v=2.4 cv=O+T8ADxW c=1 sm=1 tr=0 ts=60709280
+ a=vbvdVb1zh1xTTaY8rfQfKQ==:117 a=vbvdVb1zh1xTTaY8rfQfKQ==:17
+ a=IkcTkHD0fZMA:10 a=V14C-qhuNTb9CArrVYEA:9 a=QEXdDO2ut3YA:10
+X-SECURESERVER-ACCT: tom@talpey.com
+Subject: Re: [PATCH rdma-next 00/10] Enable relaxed ordering for ULPs
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Adit Ranadive <aditr@vmware.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Avihai Horon <avihaih@nvidia.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Devesh Sharma <devesh.sharma@broadcom.com>,
+        Faisal Latif <faisal.latif@intel.com>,
+        Jack Wang <jinpu.wang@ionos.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Bruce Fields <bfields@fieldses.org>, Jens Axboe <axboe@fb.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Keith Busch <kbusch@kernel.org>, Lijun Ou <oulijun@huawei.com>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Max Gurtovoy <mgurtovoy@nvidia.com>,
+        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        Michael Guralnik <michaelgur@nvidia.com>,
+        Michal Kalderon <mkalderon@marvell.com>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
+        Linux-Net <netdev@vger.kernel.org>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Somnath Kotur <somnath.kotur@broadcom.com>,
+        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
+        Steve French <sfrench@samba.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        VMware PV-Drivers <pv-drivers@vmware.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Zhu Yanjun <zyjzyj2000@gmail.com>
+References: <20210405052404.213889-1-leon@kernel.org>
+ <20210405134115.GA22346@lst.de> <20210405200739.GB7405@nvidia.com>
+ <C2924F03-11C5-4839-A4F3-36872194EEA8@oracle.com>
+ <20210406114952.GH7405@nvidia.com>
+ <aeb7334b-edc0-78c2-4adb-92d4a994210d@talpey.com>
+ <20210409164046.GY7405@nvidia.com>
+From:   Tom Talpey <tom@talpey.com>
+Message-ID: <70909c83-5e3a-6cb5-a8c0-6bd2a6688fb4@talpey.com>
+Date:   Fri, 9 Apr 2021 13:44:23 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-References: <20210409111254.271800-1-omosnace@redhat.com> <53c532c8-fecf-ff13-ac82-7755f11a087d@schaufler-ca.com>
-In-Reply-To: <53c532c8-fecf-ff13-ac82-7755f11a087d@schaufler-ca.com>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Fri, 9 Apr 2021 19:43:33 +0200
-Message-ID: <CAFqZXNtcMsTMDtT3pvRNp31UPGUgDzz6DPSC+uw=1LRvLrVspw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] vfs/security/NFS/btrfs: clean up and fix LSM option handling
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        linux-btrfs@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210409164046.GY7405@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: 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
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Apr 9, 2021 at 7:00 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> On 4/9/2021 4:12 AM, Ondrej Mosnacek wrote:
-> > This series attempts to clean up part of the mess that has grown around
-> > the LSM mount option handling across different subsystems.
-> >
-> > The original motivation was to fix a NFS+SELinux bug that I found while
-> > trying to get the NFS part of the selinux-testsuite [1] to work, which
-> > is fixed by patch 2.
-> >
-> > The first patch paves the way for the second one by eliminating the
-> > special case workaround in selinux_set_mnt_opts(), while also
-> > simplifying BTRFS's LSM mount option handling.
-> >
-> > I tested the patches by running the NFS part of the SELinux testsuite
-> > (which is now fully passing). I also added the pending patch for
-> > broken BTRFS LSM options support with fsconfig(2) [2] and ran the
-> > proposed BTRFS SELinux tests for selinux-testsuite [3] (still passing
-> > with all patches).
->
-> The Smack testsuite can be found at:
->         https://github.com/smack-team/smack-testsuite.git
->
-> It might provide another layer of confidence.
+On 4/9/2021 12:40 PM, Jason Gunthorpe wrote:
+> On Fri, Apr 09, 2021 at 10:26:21AM -0400, Tom Talpey wrote:
+> 
+>> My belief is that the biggest risk is from situations where completions
+>> are batched, and therefore polling is used to detect them without
+>> interrupts (which explicitly).
+> 
+> We don't do this in the kernel.
+> 
+> All kernel ULPs only read data after they observe the CQE. We do not
+> have "last data polling" and our interrupt model does not support some
+> hacky "interrupt means go and use the data" approach.
+> 
+> ULPs have to be designed this way to use the DMA API properly.
 
-Thanks, but that doesn't seem to exercise mounting/remounting btrfs
-nor nfs with security options. Anything else should be unaffected.
+Yep. Totally agree.
 
->
-> >
-> > [1] https://github.com/SELinuxProject/selinux-testsuite/
-> > [2] https://lore.kernel.org/selinux/20210401065403.GA1363493@infradead.org/T/
-> > [3] https://lore.kernel.org/selinux/20201103110121.53919-2-richard_c_haines@btinternet.com/
-> >     ^^ the original patch no longer applies - a rebased version is here:
-> >     https://github.com/WOnder93/selinux-testsuite/commit/212e76b5bd0775c7507c1996bd172de3bcbff139.patch
-> >
-> > Ondrej Mosnacek (2):
-> >   vfs,LSM: introduce the FS_HANDLES_LSM_OPTS flag
-> >   selinux: fix SECURITY_LSM_NATIVE_LABELS flag handling on double mount
-> >
-> >  fs/btrfs/super.c         | 35 ++++++-----------------------------
-> >  fs/nfs/fs_context.c      |  6 ++++--
-> >  fs/super.c               | 10 ++++++----
-> >  include/linux/fs.h       |  3 ++-
-> >  security/selinux/hooks.c | 32 +++++++++++++++++---------------
-> >  5 files changed, 35 insertions(+), 51 deletions(-)
-> >
->
+My concern was about the data being written as relaxed, and the CQE
+racing it. I'll reply in the other fork.
 
 
--- 
-Ondrej Mosnacek
-Software Engineer, Linux Security - SELinux kernel
-Red Hat, Inc.
-
+> Fencing a DMA before it is completed by the HW will cause IOMMU
+> errors.
+> 
+> Userspace is a different story, but that will remain as-is with
+> optional relaxed ordering.
+> 
+> Jason
+> 
