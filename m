@@ -2,209 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B7B335A20A
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Apr 2021 17:32:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0CE835A28C
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Apr 2021 18:03:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233687AbhDIPdG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 9 Apr 2021 11:33:06 -0400
-Received: from p3plsmtpa06-04.prod.phx3.secureserver.net ([173.201.192.105]:34803
-        "EHLO p3plsmtpa06-04.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233332AbhDIPdG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Apr 2021 11:33:06 -0400
-Received: from [192.168.0.116] ([71.184.94.153])
-        by :SMTPAUTH: with ESMTPSA
-        id Ut7hlRPfQe8QFUt7ilij9S; Fri, 09 Apr 2021 08:32:51 -0700
-X-CMAE-Analysis: v=2.4 cv=JLz+D+Gb c=1 sm=1 tr=0 ts=607073a3
- a=vbvdVb1zh1xTTaY8rfQfKQ==:117 a=vbvdVb1zh1xTTaY8rfQfKQ==:17
- a=IkcTkHD0fZMA:10 a=SEc3moZ4AAAA:8 a=oSsZz9J6dYZdRk27ncsA:9 a=QEXdDO2ut3YA:10
- a=5oRCH6oROnRZc2VpWJZ3:22
-X-SECURESERVER-ACCT: tom@talpey.com
-Subject: Re: [PATCH rdma-next 00/10] Enable relaxed ordering for ULPs
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>, Christoph Hellwig <hch@lst.de>,
-        Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Avihai Horon <avihaih@nvidia.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Devesh Sharma <devesh.sharma@broadcom.com>,
-        Faisal Latif <faisal.latif@intel.com>,
-        Jack Wang <jinpu.wang@ionos.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Bruce Fields <bfields@fieldses.org>, Jens Axboe <axboe@fb.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Keith Busch <kbusch@kernel.org>, Lijun Ou <oulijun@huawei.com>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
-        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
-        Michael Guralnik <michaelgur@nvidia.com>,
-        Michal Kalderon <mkalderon@marvell.com>,
-        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
-        Linux-Net <netdev@vger.kernel.org>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Selvin Xavier <selvin.xavier@broadcom.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Somnath Kotur <somnath.kotur@broadcom.com>,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
-        Steve French <sfrench@samba.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        VMware PV-Drivers <pv-drivers@vmware.com>,
-        Weihang Li <liweihang@huawei.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Zhu Yanjun <zyjzyj2000@gmail.com>
-References: <20210405052404.213889-1-leon@kernel.org>
- <20210405134115.GA22346@lst.de> <20210405200739.GB7405@nvidia.com>
- <C2924F03-11C5-4839-A4F3-36872194EEA8@oracle.com>
- <20210406114952.GH7405@nvidia.com>
- <aeb7334b-edc0-78c2-4adb-92d4a994210d@talpey.com>
- <8A5E83DF-5C08-49CE-8EE3-08DC63135735@oracle.com>
-From:   Tom Talpey <tom@talpey.com>
-Message-ID: <4b02d1b2-be0e-0d1d-7ac3-38d32e44e77e@talpey.com>
-Date:   Fri, 9 Apr 2021 11:32:41 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        id S233784AbhDIQEG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 9 Apr 2021 12:04:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24963 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232395AbhDIQEF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Apr 2021 12:04:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617984232;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=l/YtRHbaNxAvJJBbIoYtFy0sDOmcZWRbIs4MjOEQB/k=;
+        b=L4G4pIxfNQlPNeBFgWcHoI42MmFSQTObajncLiWnWS4FKwGVjnm3sLu4olfsiCIOZ6DTPg
+        2Gvm1yU75OXAjJAMGic+VskPQAQtBeENUs5qRB5FJPxqe7NBbAmK4dydyjcoqTfZlMs1ed
+        kHiUSN4RxYKnpAf/O/WJk+Jmv9UXZS4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-569-VKd9VOlPMEOH6PW381t7Pg-1; Fri, 09 Apr 2021 12:03:50 -0400
+X-MC-Unique: VKd9VOlPMEOH6PW381t7Pg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54C20801814;
+        Fri,  9 Apr 2021 16:03:48 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-119-35.rdu2.redhat.com [10.10.119.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E36435C1D5;
+        Fri,  9 Apr 2021 16:03:38 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <625171.1617971734@warthog.procyon.org.uk>
+References: <625171.1617971734@warthog.procyon.org.uk> <20210409111636.GR2531743@casper.infradead.org> <CAHk-=wi_XrtTanTwoKs0jwnjhSvwpMYVDJ477VtjvvTXRjm5wQ@mail.gmail.com> <161796595714.350846.1547688999823745763.stgit@warthog.procyon.org.uk>
+Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
+        torvalds@linux-foundation.org,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, jlayton@kernel.org, hch@lst.de,
+        linux-cachefs@redhat.com, v9fs-developer@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/3] mm: Return bool from pagebit test functions
 MIME-Version: 1.0
-In-Reply-To: <8A5E83DF-5C08-49CE-8EE3-08DC63135735@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: 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
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <838189.1617984218.1@warthog.procyon.org.uk>
+Date:   Fri, 09 Apr 2021 17:03:38 +0100
+Message-ID: <838190.1617984218@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 4/9/2021 10:45 AM, Chuck Lever III wrote:
-> 
-> 
->> On Apr 9, 2021, at 10:26 AM, Tom Talpey <tom@talpey.com> wrote:
->>
->> On 4/6/2021 7:49 AM, Jason Gunthorpe wrote:
->>> On Mon, Apr 05, 2021 at 11:42:31PM +0000, Chuck Lever III wrote:
->>>   
->>>> We need to get a better idea what correctness testing has been done,
->>>> and whether positive correctness testing results can be replicated
->>>> on a variety of platforms.
->>> RO has been rolling out slowly on mlx5 over a few years and storage
->>> ULPs are the last to change. eg the mlx5 ethernet driver has had RO
->>> turned on for a long time, userspace HPC applications have been using
->>> it for a while now too.
->>
->> I'd love to see RO be used more, it was always something the RDMA
->> specs supported and carefully architected for. My only concern is
->> that it's difficult to get right, especially when the platforms
->> have been running strictly-ordered for so long. The ULPs need
->> testing, and a lot of it.
->>
->>> We know there are platforms with broken RO implementations (like
->>> Haswell) but the kernel is supposed to globally turn off RO on all
->>> those cases. I'd be a bit surprised if we discover any more from this
->>> series.
->>> On the other hand there are platforms that get huge speed ups from
->>> turning this on, AMD is one example, there are a bunch in the ARM
->>> world too.
->>
->> My belief is that the biggest risk is from situations where completions
->> are batched, and therefore polling is used to detect them without
->> interrupts (which explicitly). The RO pipeline will completely reorder
->> DMA writes, and consumers which infer ordering from memory contents may
->> break. This can even apply within the provider code, which may attempt
->> to poll WR and CQ structures, and be tripped up.
-> 
-> You are referring specifically to RPC/RDMA depending on Receive
-> completions to guarantee that previous RDMA Writes have been
-> retired? Or is there a particular implementation practice in
-> the Linux RPC/RDMA code that worries you?
+David Howells <dhowells@redhat.com> wrote:
 
-Nothing in the RPC/RDMA code, which is IMO correct. The worry, which
-is hopefully unfounded, is that the RO pipeline might not have flushed
-when a completion is posted *after* posting an interrupt.
+> add/remove: 2/2 grow/shrink: 15/16 up/down: 408/-599 (-191)
+> Function                                     old     new   delta
+> iomap_write_end_inline                         -     128    +128
 
-Something like this...
+I can get rid of the iomap_write_end_inline() increase for my config by
+marking it __always_inline, thereby getting:
 
-RDMA Write arrives
-	PCIe RO Write for data
-	PCIe RO Write for data
-	...
-RDMA Write arrives
-	PCIe RO Write for data
-	...
-RDMA Send arrives
-	PCIe RO Write for receive data
-	PCIe RO Write for receive descriptor
-	PCIe interrupt (flushes RO pipeline for all three ops above)
+add/remove: 1/2 grow/shrink: 15/15 up/down: 280/-530 (-250)
 
-RPC/RDMA polls CQ
-	Reaps receive completion
+It seems that the decision whether or not to inline iomap_write_end_inline()
+is affected by the switch to bool.
 
-RDMA Send arrives
-	PCIe RO Write for receive data
-	PCIe RO write for receive descriptor
-	Does *not* interrupt, since CQ not armed
+David
 
-RPC/RDMA continues to poll CQ
-	Reaps receive completion
-	PCIe RO writes not yet flushed
-	Processes incomplete in-memory data
-	Bzzzt
-
-Hopefully, the adapter performs a PCIe flushing read, or something
-to avoid this when an interrupt is not generated. Alternatively, I'm
-overly paranoid.
-
-Tom.
-
->> The Mellanox adapter, itself, historically has strict in-order DMA
->> semantics, and while it's great to relax that, changing it by default
->> for all consumers is something to consider very cautiously.
->>
->>> Still, obviously people should test on the platforms they have.
->>
->> Yes, and "test" be taken seriously with focus on ULP data integrity.
->> Speedups will mean nothing if the data is ever damaged.
-> 
-> I agree that data integrity comes first.
-> 
-> Since I currently don't have facilities to test RO in my lab, the
-> community will have to agree on a set of tests and expected results
-> that specifically exercise the corner cases you are concerned about.
-> 
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
-> 
