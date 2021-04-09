@@ -2,104 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01EE4359EDC
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Apr 2021 14:35:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9DF435A002
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Apr 2021 15:39:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232395AbhDIMgB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 9 Apr 2021 08:36:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42149 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231127AbhDIMgA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Apr 2021 08:36:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617971747;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RQb7qzHISTbizitMiYm8wD/fZ+45DgKONa+egqhiCY0=;
-        b=U7OQrel0DTaGAJPLlRV3kCq1+Jwy7BykGjXltX3kBBviGmYauir8QpiAPv8dmrtsBA/AA9
-        sUjRLCdlryI+5YA6qzNQL4JQinyACFlKKzit8CK1MKN4OGrt/9aCrwRnq385SkhELttLKm
-        dV2va1WkUgf+WsOVUptPZfHabxk4TLo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-159-1VuZXlZMP_qGLOcyqDfQHg-1; Fri, 09 Apr 2021 08:35:43 -0400
-X-MC-Unique: 1VuZXlZMP_qGLOcyqDfQHg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC5B019251A1;
-        Fri,  9 Apr 2021 12:35:40 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-119-35.rdu2.redhat.com [10.10.119.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E65E55DAA5;
-        Fri,  9 Apr 2021 12:35:34 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20210409111636.GR2531743@casper.infradead.org>
-References: <20210409111636.GR2531743@casper.infradead.org> <CAHk-=wi_XrtTanTwoKs0jwnjhSvwpMYVDJ477VtjvvTXRjm5wQ@mail.gmail.com> <161796595714.350846.1547688999823745763.stgit@warthog.procyon.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, jlayton@kernel.org, hch@lst.de,
-        linux-cachefs@redhat.com, v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/3] mm: Return bool from pagebit test functions
+        id S233693AbhDINjk convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 9 Apr 2021 09:39:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36172 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231638AbhDINjk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 9 Apr 2021 09:39:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 9BEBBB0B7;
+        Fri,  9 Apr 2021 13:39:25 +0000 (UTC)
+Received: from localhost (orpheus.olymp [local])
+        by orpheus.olymp (OpenSMTPD) with ESMTPA id 56fed213;
+        Fri, 9 Apr 2021 14:39:21 +0100 (WEST)
+From:   Luis Henriques <lhenriques@suse.de>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Olga Kornievskaia <aglo@umich.edu>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Steve French <sfrench@samba.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Ian Lance Taylor <iant@google.com>,
+        Luis Lozano <llozano@chromium.org>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v8] vfs: fix copy_file_range regression in cross-fs copies
+References: <20210221195833.23828-1-lhenriques@suse.de>
+        <20210222102456.6692-1-lhenriques@suse.de>
+        <CAN-5tyELMY7b7CKO-+an47ydq8r_4+SOyhuvdH0qE0-JmdZ44Q@mail.gmail.com>
+        <YDYpHccgM7agpdTQ@suse.de>
+        <CANMq1KBgwEXFh8AxpPW2t1SA0NVsyR45m0paLEU4D4w80dc_fA@mail.gmail.com>
+        <CANMq1KDTgnGtNxWj2XxAT3mdsNjc551uUCg6EWnh=Hd0KcVQKQ@mail.gmail.com>
+Date:   Fri, 09 Apr 2021 14:39:20 +0100
+In-Reply-To: <CANMq1KDTgnGtNxWj2XxAT3mdsNjc551uUCg6EWnh=Hd0KcVQKQ@mail.gmail.com>
+        (Nicolas Boichat's message of "Fri, 9 Apr 2021 13:23:23 +0800")
+Message-ID: <8735vzfugn.fsf@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <625170.1617971734.1@warthog.procyon.org.uk>
-Date:   Fri, 09 Apr 2021 13:35:34 +0100
-Message-ID: <625171.1617971734@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
+Nicolas Boichat <drinkcat@chromium.org> writes:
 
-> iirc i looked at doing this as part of the folio work, and it ended up
-> increasing the size of the kernel.  Did you run bloat-o-meter on the
-> result of doing this?
+> On Wed, Feb 24, 2021 at 6:44 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>>
+>> On Wed, Feb 24, 2021 at 6:22 PM Luis Henriques <lhenriques@suse.de> wrote:
+>> >
+>> > On Tue, Feb 23, 2021 at 08:00:54PM -0500, Olga Kornievskaia wrote:
+>> > > On Mon, Feb 22, 2021 at 5:25 AM Luis Henriques <lhenriques@suse.de> wrote:
+>> > > >
+>> > > > A regression has been reported by Nicolas Boichat, found while using the
+>> > > > copy_file_range syscall to copy a tracefs file.  Before commit
+>> > > > 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
+>> > > > kernel would return -EXDEV to userspace when trying to copy a file across
+>> > > > different filesystems.  After this commit, the syscall doesn't fail anymore
+>> > > > and instead returns zero (zero bytes copied), as this file's content is
+>> > > > generated on-the-fly and thus reports a size of zero.
+>> > > >
+>> > > > This patch restores some cross-filesystem copy restrictions that existed
+>> > > > prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
+>> > > > devices").  Filesystems are still allowed to fall-back to the VFS
+>> > > > generic_copy_file_range() implementation, but that has now to be done
+>> > > > explicitly.
+>> > > >
+>> > > > nfsd is also modified to fall-back into generic_copy_file_range() in case
+>> > > > vfs_copy_file_range() fails with -EOPNOTSUPP or -EXDEV.
+>> > > >
+>> > > > Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
+>> > > > Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
+>> > > > Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
+>> > > > Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
+>> > > > Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+>> > > > Signed-off-by: Luis Henriques <lhenriques@suse.de>
+>> > >
+>> > > I tested v8 and I believe it works for NFS.
+>> >
+>> > Thanks a lot for the testing.  And to everyone else for reviews,
+>> > feedback,... and patience.
+>>
+>> Thanks so much to you!!!
+>>
+>> Works here, you can add my
+>> Tested-by: Nicolas Boichat <drinkcat@chromium.org>
+>
+> What happened to this patch? It does not seem to have been picked up
+> yet? Any reason why?
 
-add/remove: 2/2 grow/shrink: 15/16 up/down: 408/-599 (-191)
-Function                                     old     new   delta
-iomap_write_end_inline                         -     128    +128
-try_to_free_swap                              59     179    +120
-page_to_index.part                             -      36     +36
-page_size                                    432     456     +24
-PageTransCompound                            154     175     +21
-truncate_inode_pages_range                   791     807     +16
-invalidate_inode_pages2_range                504     518     +14
-ceph_uninline_data                           969     982     +13
-iomap_read_inline_data.isra                  129     139     +10
-page_cache_pipe_buf_confirm                   85      93      +8
-ceph_writepages_start                       3237    3243      +6
-hpage_pincount_available                      94      97      +3
-__collapse_huge_page_isolate                 768     771      +3
-page_vma_mapped_walk                        1070    1072      +2
-PageHuge                                      39      41      +2
-collapse_file                               2046    2047      +1
-__free_pages_ok                              449     450      +1
-wait_on_page_bit_common                      598     597      -1
-iomap_page_release                           104     103      -1
-change_pte_range                             818     817      -1
-pageblock_skip_persistent                     45      42      -3
-is_transparent_hugepage                       63      60      -3
-nfs_readpage                                 486     482      -4
-ext4_readpage_inline                         155     151      -4
-release_pages                                640     635      -5
-ext4_write_inline_data_end                   286     281      -5
-ext4_mb_load_buddy_gfp                       690     684      -6
-afs_dir_check                                536     529      -7
-page_trans_huge_map_swapcount                374     363     -11
-io_uring_mmap                                199     184     -15
-io_buffer_account_pin                        276     259     -17
-page_to_index                                 50       -     -50
-iomap_write_end                              375     306     -69
-try_to_free_swap.part                        137       -    -137
-PageUptodate                                 716     456    -260
-Total: Before=17207139, After=17206948, chg -0.00%
+Hmm... good question.  I'm not actually sure who would be picking it.  Al,
+maybe...?
+
+Cheers,
+-- 
+Luis
+
+>
+>> >
+>> > I'll now go look into the manpage and see what needs to be changed.
+>> >
+>> > Cheers,
+>> > --
+>> > Luís
 
