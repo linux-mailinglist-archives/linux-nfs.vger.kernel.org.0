@@ -2,92 +2,192 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0B4C35A8B4
-	for <lists+linux-nfs@lfdr.de>; Sat, 10 Apr 2021 00:26:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4B1535AD9F
+	for <lists+linux-nfs@lfdr.de>; Sat, 10 Apr 2021 15:30:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234880AbhDIW0R (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 9 Apr 2021 18:26:17 -0400
-Received: from elasmtp-curtail.atl.sa.earthlink.net ([209.86.89.64]:46436 "EHLO
-        elasmtp-curtail.atl.sa.earthlink.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234602AbhDIW0R (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Apr 2021 18:26:17 -0400
-X-Greylist: delayed 7264 seconds by postgrey-1.27 at vger.kernel.org; Fri, 09 Apr 2021 18:26:17 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mindspring.com;
-        s=dk12062016; t=1618007164; bh=ZoiMwY7LpzT/lCaRojlHniOtbNobkmLtNZhi
-        Ym8rjh4=; h=Received:From:To:Cc:References:In-Reply-To:Subject:Date:
-         Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:
-         X-Mailer:Thread-Index:Content-Language:X-ELNK-Trace:
-         X-Originating-IP; b=FpKYreDOxlRCM7ocsOyZVaUqvkJdvHidSUAIulgiSDRFX/
-        AZLeInORKWP2g8CEojfoGxfnNZpJ32A7WpLpY3QR9JXF+qNt3GGzkzPyi5nXlgBzPpa
-        RmPN7ooGXwNj+houlZ/KuExdMa2c7zjWnPWNAsxxBfb/L695S/7PDPsdPZ83PocMQHB
-        XukF2gCyjNREnsMWxrHqTpv7M1Q2aEZjIZQuvTiKEH4rB6ptNpAlp4yMaDex+uzJOII
-        y7nwh2HEyTDj2n7w8Kzm1kDp6rNPn/WdtWoHNpLs5cbzR7TBcOlw6ihfswR01TbGvQD
-        YdqBKG7tIrEFBdeh9GyRos4061kQ==
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws;
-  s=dk12062016; d=mindspring.com;
-  b=nOPhAPF7stZ+ZRma2N/ZgOEkpCJeZmj8zYIcp8LVbPCdxCLhofHJWMW0FftH9JaYgAyhW0tkHTyFClUJff/DN/L5/FuH4HrS7RHMSvIakfObYsLBZk1F0H3a1/okYaGIDQ0GdexjdxaanUO+1F4aU3cOpJVM/D7TQqvOKrhpnHNynoFl1plg0EO5ElICn+pkofgqvOVEERkK7aL34Q8jgr4Qan6z6GrSv9C8O3fgrD5mmqrb5tQKdRi4FHSOgqPvycWphDv83XUFIu3U2sSbY38YJB/X+awi3Ue+mufTjrYYmoNRlWitbNuNyafYGW0d1n3KVeK96rVS5vT5EKbF6A==;
-  h=Received:From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:X-Mailer:Thread-Index:Content-Language:X-ELNK-Trace:X-Originating-IP;
-Received: from [76.105.143.216] (helo=FRANKSTHINKPAD)
-        by elasmtp-curtail.atl.sa.earthlink.net with esmtpa (Exim 4)
-        (envelope-from <ffilzlnx@mindspring.com>)
-        id 1lUxgW-000DMO-3t; Fri, 09 Apr 2021 16:24:56 -0400
-From:   "Frank Filz" <ffilzlnx@mindspring.com>
-To:     "'J. Bruce Fields'" <bfields@fieldses.org>,
-        "'Rick Macklem'" <rmacklem@uoguelph.ca>
-Cc:     "'Olga Kornievskaia'" <olga.kornievskaia@gmail.com>,
-        "'J. Bruce Fields'" <bfields@redhat.com>,
-        "'Chuck Lever'" <chuck.lever@oracle.com>,
-        "'linux-nfs'" <linux-nfs@vger.kernel.org>, <nfsv4@ietf.org>
-References: <20210331192819.25637-1-olga.kornievskaia@gmail.com> <YGUm7/HE3HqVJik2@pick.fieldses.org> <CAN-5tyETvKvUq_X7+2E0o=9GjJ628DC=QJW5xKA2-X7UHc_DOw@mail.gmail.com> <YQXPR0101MB0968C9AB372DC12408F496D8DD7B9@YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM> <20210402210157.GC16427@fieldses.org>
-In-Reply-To: <20210402210157.GC16427@fieldses.org>
-Subject: RE: [PATCH 1/1] NFSD fix handling of NFSv4.2 SEEK for data within the last hole
-Date:   Fri, 9 Apr 2021 13:24:55 -0700
-Message-ID: <131001d72d7e$681efef0$385cfcd0$@mindspring.com>
+        id S234775AbhDJNav (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 10 Apr 2021 09:30:51 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151]:25283 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234262AbhDJNar (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 10 Apr 2021 09:30:47 -0400
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-210-bm-DHej2NTiib0mw0GQynw-1; Sat, 10 Apr 2021 14:30:28 +0100
+X-MC-Unique: bm-DHej2NTiib0mw0GQynw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.2; Sat, 10 Apr 2021 14:30:27 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.012; Sat, 10 Apr 2021 14:30:27 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Tom Talpey' <tom@talpey.com>,
+        Haakon Bugge <haakon.bugge@oracle.com>
+CC:     Chuck Lever III <chuck.lever@oracle.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Adit Ranadive <aditr@vmware.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Avihai Horon <avihaih@nvidia.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Dennis Dalessandro" <dennis.dalessandro@cornelisnetworks.com>,
+        Devesh Sharma <devesh.sharma@broadcom.com>,
+        Faisal Latif <faisal.latif@intel.com>,
+        "Jack Wang" <jinpu.wang@ionos.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Bruce Fields <bfields@fieldses.org>, Jens Axboe <axboe@fb.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Keith Busch <kbusch@kernel.org>, Lijun Ou <oulijun@huawei.com>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        OFED mailing list <linux-rdma@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Max Gurtovoy <mgurtovoy@nvidia.com>,
+        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        "Michael Guralnik" <michaelgur@nvidia.com>,
+        Michal Kalderon <mkalderon@marvell.com>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
+        Linux-Net <netdev@vger.kernel.org>,
+        "Potnuri Bharat Teja" <bharat@chelsio.com>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
+        "Santosh Shilimkar" <santosh.shilimkar@oracle.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Somnath Kotur <somnath.kotur@broadcom.com>,
+        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
+        Steve French <sfrench@samba.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        VMware PV-Drivers <pv-drivers@vmware.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Zhu Yanjun <zyjzyj2000@gmail.com>
+Subject: RE: [PATCH rdma-next 00/10] Enable relaxed ordering for ULPs
+Thread-Topic: [PATCH rdma-next 00/10] Enable relaxed ordering for ULPs
+Thread-Index: AQHXLWixzqpV3HG00U+6H5w8s2gjs6qtuZCg
+Date:   Sat, 10 Apr 2021 13:30:26 +0000
+Message-ID: <f71b24433f4540f0a13133111a59dab8@AcuMS.aculab.com>
+References: <20210405052404.213889-1-leon@kernel.org>
+ <20210405134115.GA22346@lst.de> <20210405200739.GB7405@nvidia.com>
+ <C2924F03-11C5-4839-A4F3-36872194EEA8@oracle.com>
+ <20210406114952.GH7405@nvidia.com>
+ <aeb7334b-edc0-78c2-4adb-92d4a994210d@talpey.com>
+ <8A5E83DF-5C08-49CE-8EE3-08DC63135735@oracle.com>
+ <4b02d1b2-be0e-0d1d-7ac3-38d32e44e77e@talpey.com>
+ <1FA38618-E245-4C53-BF49-6688CA93C660@oracle.com>
+ <7b9e7d9c-13d7-0d18-23b4-0d94409c7741@talpey.com>
+In-Reply-To: <7b9e7d9c-13d7-0d18-23b4-0d94409c7741@talpey.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQJ9eI9Po8dWwwI+8Q91Byov2S54uQDjlne3AeR/+ncBmd/oGAGa/dQ9qTAjWRA=
-Content-Language: en-us
-X-ELNK-Trace: 136157f01908a8929c7f779228e2f6aeda0071232e20db4d0eb70eec7d54903ebdd8540ed99a872c350badd9bab72f9c350badd9bab72f9c350badd9bab72f9c
-X-Originating-IP: 76.105.143.216
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> Adding nfsv4@ietf.org:
-> 
-> On Thu, Apr 01, 2021 at 09:32:05PM +0000, Rick Macklem wrote:
-> > I discussed this on nfsv4@ietf.org some time ago.
-> > The problem with "fixing" the server is that it breaks the unpatched
-> > Linux client.
-> >
-> > If the client is careful, it can work correctly for both a Linux and
-> > RFC5661 conformant server. That's what the FreeBSD client tries to do.
-> > --> I'd suggest that be your main goal.
-> >
-> > The FreeBSD server ships "Linux compatible", but there is a switch to
-> > make it RFC5661 compatible.
-> > --> I wouldn't make it default the RFC compatible for
-> >       quite a while after the client that handles RFC compatible
-> >       ships.
-> >
-> > I tried to convince folks to "errata" the RFC to Linux compatible
-> > (since Linux was the only shipping 4.2 at the time, but they did not
-> > consider it an "errata").
-> 
-> Previous discussion here:
-> 
-> 	https://mailarchive.ietf.org/arch/msg/nfsv4/bPLFnywt1wZ4kolMkzeSYc
-> a0qIM/
-> 
-> There's no rejection on that thread, was it elsewhere?
-
-Yea, it would be nice to resolve this. I remember having to tweak Ganesha's
-implementation to not break the Linux client.
-
-I'm still not sure I got it right...
-
-Frank
+RnJvbTogVG9tIFRhbHBleQ0KPiBTZW50OiAwOSBBcHJpbCAyMDIxIDE4OjQ5DQo+IE9uIDQvOS8y
+MDIxIDEyOjI3IFBNLCBIYWFrb24gQnVnZ2Ugd3JvdGU6DQo+ID4NCj4gPg0KPiA+PiBPbiA5IEFw
+ciAyMDIxLCBhdCAxNzozMiwgVG9tIFRhbHBleSA8dG9tQHRhbHBleS5jb20+IHdyb3RlOg0KPiA+
+Pg0KPiA+PiBPbiA0LzkvMjAyMSAxMDo0NSBBTSwgQ2h1Y2sgTGV2ZXIgSUlJIHdyb3RlOg0KPiA+
+Pj4+IE9uIEFwciA5LCAyMDIxLCBhdCAxMDoyNiBBTSwgVG9tIFRhbHBleSA8dG9tQHRhbHBleS5j
+b20+IHdyb3RlOg0KPiA+Pj4+DQo+ID4+Pj4gT24gNC82LzIwMjEgNzo0OSBBTSwgSmFzb24gR3Vu
+dGhvcnBlIHdyb3RlOg0KPiA+Pj4+PiBPbiBNb24sIEFwciAwNSwgMjAyMSBhdCAxMTo0MjozMVBN
+ICswMDAwLCBDaHVjayBMZXZlciBJSUkgd3JvdGU6DQo+ID4+Pj4+DQo+ID4+Pj4+PiBXZSBuZWVk
+IHRvIGdldCBhIGJldHRlciBpZGVhIHdoYXQgY29ycmVjdG5lc3MgdGVzdGluZyBoYXMgYmVlbiBk
+b25lLA0KPiA+Pj4+Pj4gYW5kIHdoZXRoZXIgcG9zaXRpdmUgY29ycmVjdG5lc3MgdGVzdGluZyBy
+ZXN1bHRzIGNhbiBiZSByZXBsaWNhdGVkDQo+ID4+Pj4+PiBvbiBhIHZhcmlldHkgb2YgcGxhdGZv
+cm1zLg0KPiA+Pj4+PiBSTyBoYXMgYmVlbiByb2xsaW5nIG91dCBzbG93bHkgb24gbWx4NSBvdmVy
+IGEgZmV3IHllYXJzIGFuZCBzdG9yYWdlDQo+ID4+Pj4+IFVMUHMgYXJlIHRoZSBsYXN0IHRvIGNo
+YW5nZS4gZWcgdGhlIG1seDUgZXRoZXJuZXQgZHJpdmVyIGhhcyBoYWQgUk8NCj4gPj4+Pj4gdHVy
+bmVkIG9uIGZvciBhIGxvbmcgdGltZSwgdXNlcnNwYWNlIEhQQyBhcHBsaWNhdGlvbnMgaGF2ZSBi
+ZWVuIHVzaW5nDQo+ID4+Pj4+IGl0IGZvciBhIHdoaWxlIG5vdyB0b28uDQo+ID4+Pj4NCj4gPj4+
+PiBJJ2QgbG92ZSB0byBzZWUgUk8gYmUgdXNlZCBtb3JlLCBpdCB3YXMgYWx3YXlzIHNvbWV0aGlu
+ZyB0aGUgUkRNQQ0KPiA+Pj4+IHNwZWNzIHN1cHBvcnRlZCBhbmQgY2FyZWZ1bGx5IGFyY2hpdGVj
+dGVkIGZvci4gTXkgb25seSBjb25jZXJuIGlzDQo+ID4+Pj4gdGhhdCBpdCdzIGRpZmZpY3VsdCB0
+byBnZXQgcmlnaHQsIGVzcGVjaWFsbHkgd2hlbiB0aGUgcGxhdGZvcm1zDQo+ID4+Pj4gaGF2ZSBi
+ZWVuIHJ1bm5pbmcgc3RyaWN0bHktb3JkZXJlZCBmb3Igc28gbG9uZy4gVGhlIFVMUHMgbmVlZA0K
+PiA+Pj4+IHRlc3RpbmcsIGFuZCBhIGxvdCBvZiBpdC4NCj4gPj4+Pg0KPiA+Pj4+PiBXZSBrbm93
+IHRoZXJlIGFyZSBwbGF0Zm9ybXMgd2l0aCBicm9rZW4gUk8gaW1wbGVtZW50YXRpb25zIChsaWtl
+DQo+ID4+Pj4+IEhhc3dlbGwpIGJ1dCB0aGUga2VybmVsIGlzIHN1cHBvc2VkIHRvIGdsb2JhbGx5
+IHR1cm4gb2ZmIFJPIG9uIGFsbA0KPiA+Pj4+PiB0aG9zZSBjYXNlcy4gSSdkIGJlIGEgYml0IHN1
+cnByaXNlZCBpZiB3ZSBkaXNjb3ZlciBhbnkgbW9yZSBmcm9tIHRoaXMNCj4gPj4+Pj4gc2VyaWVz
+Lg0KPiA+Pj4+PiBPbiB0aGUgb3RoZXIgaGFuZCB0aGVyZSBhcmUgcGxhdGZvcm1zIHRoYXQgZ2V0
+IGh1Z2Ugc3BlZWQgdXBzIGZyb20NCj4gPj4+Pj4gdHVybmluZyB0aGlzIG9uLCBBTUQgaXMgb25l
+IGV4YW1wbGUsIHRoZXJlIGFyZSBhIGJ1bmNoIGluIHRoZSBBUk0NCj4gPj4+Pj4gd29ybGQgdG9v
+Lg0KPiA+Pj4+DQo+ID4+Pj4gTXkgYmVsaWVmIGlzIHRoYXQgdGhlIGJpZ2dlc3QgcmlzayBpcyBm
+cm9tIHNpdHVhdGlvbnMgd2hlcmUgY29tcGxldGlvbnMNCj4gPj4+PiBhcmUgYmF0Y2hlZCwgYW5k
+IHRoZXJlZm9yZSBwb2xsaW5nIGlzIHVzZWQgdG8gZGV0ZWN0IHRoZW0gd2l0aG91dA0KPiA+Pj4+
+IGludGVycnVwdHMgKHdoaWNoIGV4cGxpY2l0bHkpLiBUaGUgUk8gcGlwZWxpbmUgd2lsbCBjb21w
+bGV0ZWx5IHJlb3JkZXINCj4gPj4+PiBETUEgd3JpdGVzLCBhbmQgY29uc3VtZXJzIHdoaWNoIGlu
+ZmVyIG9yZGVyaW5nIGZyb20gbWVtb3J5IGNvbnRlbnRzIG1heQ0KPiA+Pj4+IGJyZWFrLiBUaGlz
+IGNhbiBldmVuIGFwcGx5IHdpdGhpbiB0aGUgcHJvdmlkZXIgY29kZSwgd2hpY2ggbWF5IGF0dGVt
+cHQNCj4gPj4+PiB0byBwb2xsIFdSIGFuZCBDUSBzdHJ1Y3R1cmVzLCBhbmQgYmUgdHJpcHBlZCB1
+cC4NCj4gPj4+IFlvdSBhcmUgcmVmZXJyaW5nIHNwZWNpZmljYWxseSB0byBSUEMvUkRNQSBkZXBl
+bmRpbmcgb24gUmVjZWl2ZQ0KPiA+Pj4gY29tcGxldGlvbnMgdG8gZ3VhcmFudGVlIHRoYXQgcHJl
+dmlvdXMgUkRNQSBXcml0ZXMgaGF2ZSBiZWVuDQo+ID4+PiByZXRpcmVkPyBPciBpcyB0aGVyZSBh
+IHBhcnRpY3VsYXIgaW1wbGVtZW50YXRpb24gcHJhY3RpY2UgaW4NCj4gPj4+IHRoZSBMaW51eCBS
+UEMvUkRNQSBjb2RlIHRoYXQgd29ycmllcyB5b3U/DQo+ID4+DQo+ID4+IE5vdGhpbmcgaW4gdGhl
+IFJQQy9SRE1BIGNvZGUsIHdoaWNoIGlzIElNTyBjb3JyZWN0LiBUaGUgd29ycnksIHdoaWNoDQo+
+ID4+IGlzIGhvcGVmdWxseSB1bmZvdW5kZWQsIGlzIHRoYXQgdGhlIFJPIHBpcGVsaW5lIG1pZ2h0
+IG5vdCBoYXZlIGZsdXNoZWQNCj4gPj4gd2hlbiBhIGNvbXBsZXRpb24gaXMgcG9zdGVkICphZnRl
+ciogcG9zdGluZyBhbiBpbnRlcnJ1cHQuDQo+ID4+DQo+ID4+IFNvbWV0aGluZyBsaWtlIHRoaXMu
+Li4NCj4gPj4NCj4gPj4gUkRNQSBXcml0ZSBhcnJpdmVzDQo+ID4+IAlQQ0llIFJPIFdyaXRlIGZv
+ciBkYXRhDQo+ID4+IAlQQ0llIFJPIFdyaXRlIGZvciBkYXRhDQo+ID4+IAkuLi4NCj4gPj4gUkRN
+QSBXcml0ZSBhcnJpdmVzDQo+ID4+IAlQQ0llIFJPIFdyaXRlIGZvciBkYXRhDQo+ID4+IAkuLi4N
+Cj4gPj4gUkRNQSBTZW5kIGFycml2ZXMNCj4gPj4gCVBDSWUgUk8gV3JpdGUgZm9yIHJlY2VpdmUg
+ZGF0YQ0KPiA+PiAJUENJZSBSTyBXcml0ZSBmb3IgcmVjZWl2ZSBkZXNjcmlwdG9yDQo+ID4NCj4g
+PiBEbyB5b3UgbWVhbiB0aGUgV3JpdGUgb2YgdGhlIENRRT8gSXQgaGFzIHRvIGJlIFN0cm9uZ2x5
+IE9yZGVyZWQgZm9yIGEgY29ycmVjdCBpbXBsZW1lbnRhdGlvbi4gVGhlbg0KPiBpdCB3aWxsIHNo
+dXJlIHByaW9yIHdyaXR0ZW4gUk8gZGF0ZSBoYXMgZ2xvYmFsIHZpc2liaWxpdHkgd2hlbiB0aGUg
+Q1FFIGNhbiBiZSBvYnNlcnZlZC4NCj4gDQo+IEkgd2Fzbid0IGF3YXJlIHRoYXQgYSBzdHJvbmds
+eS1vcmRlcmVkIFBDSWUgV3JpdGUgd2lsbCBlbnN1cmUgdGhhdA0KPiBwcmlvciByZWxheGVkLW9y
+ZGVyZWQgd3JpdGVzIHdlbnQgZmlyc3QuIElmIHRoYXQncyB0aGUgY2FzZSwgSSdtDQo+IGZpbmUg
+d2l0aCBpdCAtIGFzIGxvbmcgYXMgdGhlIHByb3ZpZGVycyBhcmUgY29ycmVjdGx5IGNvZGVkISEN
+Cg0KSSByZW1lbWJlciB0cnlpbmcgdG8gcmVhZCB0aGUgcmVsZXZhbnQgc2VjdGlvbiBvZiB0aGUg
+UENJZSBzcGVjLg0KKFBvc3NpYmx5IGluIGEgYm9vayB0aGF0IHdhcyB0cnlpbmcgdG8gbWFrZSBp
+dCBlYXNpZXIgdG8gdW5kZXJzdGFuZCEpDQpJdCBpcyBhYm91dCBhcyBjbGVhciBhcyBtdWQuDQoN
+CkkgcHJlc3VtZSB0aGlzIGlzIGFsbCBhYm91dCBhbGxvd2luZyBQQ0llIHRhcmdldHMgKGVnIGV0
+aGVybmV0IGNhcmRzKQ0KdG8gdXNlIHJlbGF4ZWQgb3JkZXJpbmcgb24gd3JpdGUgcmVxdWVzdHMg
+dG8gaG9zdCBtZW1vcnkuDQpBbmQgdGhhdCBzdWNoIHdyaXRlcyBjYW4gYmUgY29tcGxldGVkIG91
+dCBvZiBvcmRlcj8NCg0KSXQgaXNuJ3QgZW50aXJlbHkgY2xlYXIgdGhhdCB5b3UgYXJlbid0IHRh
+bGtpbmcgb2YgbGV0dGluZyB0aGUNCmNwdSBkbyAncmVsYXhlZCBvcmRlcicgd3JpdGVzIHRvIFBD
+SWUgdGFyZ2V0cyENCg0KRm9yIGEgdHlwaWNhbCBldGhlcm5ldCBkcml2ZXIgdGhlIHJlY2VpdmUg
+aW50ZXJydXB0IGp1c3QgbWVhbnMNCidnbyBhbmQgbG9vayBhdCB0aGUgcmVjZWl2ZSBkZXNjcmlw
+dG9yIHJpbmcnLg0KU28gdGhlcmUgaXMgYW4gYWJzb2x1dGUgcmVxdWlyZW1lbnQgdGhhdCB0aGUg
+d3JpdGVzIGZvciBkYXRhDQpidWZmZXIgY29tcGxldGUgYmVmb3JlIHRoZSB3cml0ZSB0byB0aGUg
+cmVjZWl2ZSBkZXNjcmlwdG9yLg0KVGhlcmUgaXMgbm8gcmVxdWlyZW1lbnQgZm9yIHRoZSBpbnRl
+cnJ1cHQgKHJlcXVlc3RlZCBhZnRlciB0aGUNCmRlc2NyaXB0b3Igd3JpdGUpIHRvIGhhdmUgYmVl
+biBzZWVuIGJ5IHRoZSBjcHUuDQoNClF1aXRlIG9mdGVuIHRoZSBkcml2ZXIgd2lsbCBmaW5kIHRo
+ZSAncmVjZWl2ZSBjb21wbGV0ZScNCmRlc2NyaXB0b3Igd2hlbiBwcm9jZXNzaW5nIGZyYW1lcyBm
+cm9tIGFuIGVhcmxpZXIgaW50ZXJydXB0DQooYW5kIG5vdGhpbmcgdG8gZG8gaW4gcmVzcG9uc2Ug
+dG8gdGhlIGludGVycnVwdCBpdHNlbGYpLg0KDQpTbyB0aGUgd3JpdGUgdG8gdGhlIHJlY2VpdmUg
+ZGVzY3JpcHRvciB3b3VsZCBoYXZlIHRvIGhhdmUgUk8gY2xlYXINCnRvIGVuc3VyZSB0aGF0IGFs
+bCB0aGUgYnVmZmVyIHdyaXRlcyBjb21wbGV0ZSBmaXJzdC4NCg0KKFRoZSBmdXJ0aGVzdCBJJ3Zl
+IGdvdCBpbnRvIFBDSWUgaW50ZXJuYWxzIHdhcyBmaXhpbmcgdGhlIGJ1Zw0KaW4gc29tZSB2ZW5k
+b3Itc3VwcGxpZWQgRlBHQSBsb2dpYyB0aGF0IGZhaWxlZCB0byBjb3JyZWN0bHkNCmhhbmRsZSBt
+dWx0aXBsZSBkYXRhIFRMUCByZXNwb25zZXMgdG8gYSBzaW5nbGUgcmVhZCBUTFAuDQpGb3J0dW5h
+dGVseSBpdCB3YXNuJ3QgaW4gdGhlIGhhcmQtSVAgYml0LikNCg0KCURhdmlkDQoNCi0NClJlZ2lz
+dGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24g
+S2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
