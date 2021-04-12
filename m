@@ -2,20 +2,20 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 742DD35C34D
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Apr 2021 12:06:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 431FD35C3B2
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Apr 2021 12:22:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239284AbhDLKDn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Apr 2021 06:03:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58094 "EHLO mx2.suse.de"
+        id S238893AbhDLKWI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Apr 2021 06:22:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48486 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244976AbhDLKCN (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 12 Apr 2021 06:02:13 -0400
+        id S238727AbhDLKWB (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 12 Apr 2021 06:22:01 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 72338AF1A;
-        Mon, 12 Apr 2021 10:01:53 +0000 (UTC)
-Subject: Re: [PATCH 1/9] mm/page_alloc: Rename alloced to allocated
+        by mx2.suse.de (Postfix) with ESMTP id A9E95AFE2;
+        Mon, 12 Apr 2021 10:21:42 +0000 (UTC)
+Subject: Re: [PATCH 2/9] mm/page_alloc: Add a bulk page allocator
 To:     Mel Gorman <mgorman@techsingularity.net>,
         Andrew Morton <akpm@linux-foundation.org>
 Cc:     Chuck Lever <chuck.lever@oracle.com>,
@@ -29,14 +29,14 @@ Cc:     Chuck Lever <chuck.lever@oracle.com>,
         Linux-MM <linux-mm@kvack.org>,
         Linux-NFS <linux-nfs@vger.kernel.org>
 References: <20210325114228.27719-1-mgorman@techsingularity.net>
- <20210325114228.27719-2-mgorman@techsingularity.net>
+ <20210325114228.27719-3-mgorman@techsingularity.net>
 From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <e820c36f-dc05-08be-611e-f37123f14b1a@suse.cz>
-Date:   Mon, 12 Apr 2021 12:01:52 +0200
+Message-ID: <28729c76-4e09-f860-0db1-9c79c8220683@suse.cz>
+Date:   Mon, 12 Apr 2021 12:21:42 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <20210325114228.27719-2-mgorman@techsingularity.net>
+In-Reply-To: <20210325114228.27719-3-mgorman@techsingularity.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -45,58 +45,110 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 On 3/25/21 12:42 PM, Mel Gorman wrote:
-> Review feedback of the bulk allocator twice found problems with "alloced"
-> being a counter for pages allocated. The naming was based on the API name
-> "alloc" and was based on the idea that verbal communication about malloc
-> tends to use the fake word "malloced" instead of the fake word mallocated.
-> To be consistent, this preparation patch renames alloced to allocated
-> in rmqueue_bulk so the bulk allocator and per-cpu allocator use similar
-> names when the bulk allocator is introduced.
+> This patch adds a new page allocator interface via alloc_pages_bulk,
+> and __alloc_pages_bulk_nodemask. A caller requests a number of pages
+> to be allocated and added to a list.
+> 
+> The API is not guaranteed to return the requested number of pages and
+> may fail if the preferred allocation zone has limited free memory, the
+> cpuset changes during the allocation or page debugging decides to fail
+> an allocation. It's up to the caller to request more pages in batch
+> if necessary.
+> 
+> Note that this implementation is not very efficient and could be improved
+> but it would require refactoring. The intent is to make it available early
+> to determine what semantics are required by different callers. Once the
+> full semantics are nailed down, it can be refactored.
 > 
 > Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
 > ---
->  mm/page_alloc.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  include/linux/gfp.h |  11 +++++
+>  mm/page_alloc.c     | 118 ++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 129 insertions(+)
 > 
+> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+> index 0a88f84b08f4..4a304fd39916 100644
+> --- a/include/linux/gfp.h
+> +++ b/include/linux/gfp.h
+> @@ -518,6 +518,17 @@ static inline int arch_make_page_accessible(struct page *page)
+>  struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
+>  		nodemask_t *nodemask);
+>  
+> +int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+> +				nodemask_t *nodemask, int nr_pages,
+> +				struct list_head *list);
+> +
+> +/* Bulk allocate order-0 pages */
+> +static inline unsigned long
+> +alloc_pages_bulk(gfp_t gfp, unsigned long nr_pages, struct list_head *list)
+> +{
+> +	return __alloc_pages_bulk(gfp, numa_mem_id(), NULL, nr_pages, list);
+> +}
+> +
+>  /*
+>   * Allocate pages, preferring the node given as nid. The node must be valid and
+>   * online. For more general interface, see alloc_pages_node().
 > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index dfa9af064f74..8a3e13277e22 100644
+> index 8a3e13277e22..eb547470a7e4 100644
 > --- a/mm/page_alloc.c
 > +++ b/mm/page_alloc.c
-> @@ -2908,7 +2908,7 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
->  			unsigned long count, struct list_head *list,
->  			int migratetype, unsigned int alloc_flags)
->  {
-> -	int i, alloced = 0;
-> +	int i, allocated = 0;
->  
->  	spin_lock(&zone->lock);
->  	for (i = 0; i < count; ++i) {
-> @@ -2931,7 +2931,7 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
->  		 * pages are ordered properly.
->  		 */
->  		list_add_tail(&page->lru, list);
-> -		alloced++;
-> +		allocated++;
->  		if (is_migrate_cma(get_pcppage_migratetype(page)))
->  			__mod_zone_page_state(zone, NR_FREE_CMA_PAGES,
->  					      -(1 << order));
-> @@ -2940,12 +2940,12 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
->  	/*
->  	 * i pages were removed from the buddy list even if some leak due
->  	 * to check_pcp_refill failing so adjust NR_FREE_PAGES based
-> -	 * on i. Do not confuse with 'alloced' which is the number of
-> +	 * on i. Do not confuse with 'allocated' which is the number of
->  	 * pages added to the pcp list.
->  	 */
->  	__mod_zone_page_state(zone, NR_FREE_PAGES, -(i << order));
->  	spin_unlock(&zone->lock);
-> -	return alloced;
-> +	return allocated;
+> @@ -4965,6 +4965,124 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
+>  	return true;
 >  }
 >  
->  #ifdef CONFIG_NUMA
-> 
+> +/*
+> + * __alloc_pages_bulk - Allocate a number of order-0 pages to a list
+> + * @gfp: GFP flags for the allocation
+> + * @preferred_nid: The preferred NUMA node ID to allocate from
+> + * @nodemask: Set of nodes to allocate from, may be NULL
+> + * @nr_pages: The number of pages desired on the list
+> + * @page_list: List to store the allocated pages
+> + *
+> + * This is a batched version of the page allocator that attempts to
+> + * allocate nr_pages quickly and add them to a list.
+> + *
+> + * Returns the number of pages on the list.
+> + */
+> +int __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+> +			nodemask_t *nodemask, int nr_pages,
+> +			struct list_head *page_list)
+> +{
+> +	struct page *page;
+> +	unsigned long flags;
+> +	struct zone *zone;
+> +	struct zoneref *z;
+> +	struct per_cpu_pages *pcp;
+> +	struct list_head *pcp_list;
+> +	struct alloc_context ac;
+> +	gfp_t alloc_gfp;
+> +	unsigned int alloc_flags;
 
+Was going to complain that this is not set to ALLOC_WMARK_LOW. Must be faster
+next time...
+
+> +	int allocated = 0;
+> +
+> +	if (WARN_ON_ONCE(nr_pages <= 0))
+> +		return 0;
+> +
+> +	/* Use the single page allocator for one page. */
+> +	if (nr_pages == 1)
+> +		goto failed;
+> +
+> +	/* May set ALLOC_NOFRAGMENT, fragmentation will return 1 page. */
+
+I don't understand this comment. Only alloc_flags_nofragment() sets this flag
+and we don't use it here?
+
+> +	gfp &= gfp_allowed_mask;
+> +	alloc_gfp = gfp;
+> +	if (!prepare_alloc_pages(gfp, 0, preferred_nid, nodemask, &ac, &alloc_gfp, &alloc_flags))
+> +		return 0;
+> +	gfp = alloc_gfp;
+> +
+> +	/* Find an allowed local zone that meets the high watermark. */
+
+Should it say "low watermark"?
+
+Vlastimil
