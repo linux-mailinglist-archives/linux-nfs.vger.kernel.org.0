@@ -2,249 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CE3F35D1EC
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Apr 2021 22:22:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27ED035D243
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Apr 2021 22:57:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237595AbhDLUVL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Apr 2021 16:21:11 -0400
-Received: from p3plsmtpa06-10.prod.phx3.secureserver.net ([173.201.192.111]:60556
-        "EHLO p3plsmtpa06-10.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237640AbhDLUVK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Apr 2021 16:21:10 -0400
-Received: from [192.168.0.116] ([71.184.94.153])
-        by :SMTPAUTH: with ESMTPSA
-        id W339l3kjiyIwVW339ls9Ne; Mon, 12 Apr 2021 13:20:51 -0700
-X-CMAE-Analysis: v=2.4 cv=NP4QR22g c=1 sm=1 tr=0 ts=6074aba3
- a=vbvdVb1zh1xTTaY8rfQfKQ==:117 a=vbvdVb1zh1xTTaY8rfQfKQ==:17
- a=IkcTkHD0fZMA:10 a=hlpFoNB0AAAA:8 a=SEc3moZ4AAAA:8 a=EXjNRlMbRGv2XLaMZsQA:9
- a=QEXdDO2ut3YA:10 a=kMYpNb-kQgMLPvQdVK_m:22 a=5oRCH6oROnRZc2VpWJZ3:22
-X-SECURESERVER-ACCT: tom@talpey.com
-Subject: Re: [PATCH rdma-next 00/10] Enable relaxed ordering for ULPs
-To:     Haakon Bugge <haakon.bugge@oracle.com>,
-        David Laight <David.Laight@aculab.com>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Avihai Horon <avihaih@nvidia.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Devesh Sharma <devesh.sharma@broadcom.com>,
-        Faisal Latif <faisal.latif@intel.com>,
-        Jack Wang <jinpu.wang@ionos.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Bruce Fields <bfields@fieldses.org>, Jens Axboe <axboe@fb.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Keith Busch <kbusch@kernel.org>, Lijun Ou <oulijun@huawei.com>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        OFED mailing list <linux-rdma@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
-        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
-        Michael Guralnik <michaelgur@nvidia.com>,
-        Michal Kalderon <mkalderon@marvell.com>,
-        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
-        Linux-Net <netdev@vger.kernel.org>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Selvin Xavier <selvin.xavier@broadcom.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Somnath Kotur <somnath.kotur@broadcom.com>,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
-        Steve French <sfrench@samba.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        VMware PV-Drivers <pv-drivers@vmware.com>,
-        Weihang Li <liweihang@huawei.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Zhu Yanjun <zyjzyj2000@gmail.com>
-References: <20210405052404.213889-1-leon@kernel.org>
- <20210405134115.GA22346@lst.de> <20210405200739.GB7405@nvidia.com>
- <C2924F03-11C5-4839-A4F3-36872194EEA8@oracle.com>
- <20210406114952.GH7405@nvidia.com>
- <aeb7334b-edc0-78c2-4adb-92d4a994210d@talpey.com>
- <8A5E83DF-5C08-49CE-8EE3-08DC63135735@oracle.com>
- <4b02d1b2-be0e-0d1d-7ac3-38d32e44e77e@talpey.com>
- <1FA38618-E245-4C53-BF49-6688CA93C660@oracle.com>
- <7b9e7d9c-13d7-0d18-23b4-0d94409c7741@talpey.com>
- <f71b24433f4540f0a13133111a59dab8@AcuMS.aculab.com>
- <880A23A2-F078-42CF-BEE2-30666BCB9B5D@oracle.com>
-From:   Tom Talpey <tom@talpey.com>
-Message-ID: <7deadc67-650c-ea15-722b-a1d77d38faba@talpey.com>
-Date:   Mon, 12 Apr 2021 16:20:47 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
-MIME-Version: 1.0
-In-Reply-To: <880A23A2-F078-42CF-BEE2-30666BCB9B5D@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S229802AbhDLU5f (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Apr 2021 16:57:35 -0400
+Received: from mail-eopbgr670049.outbound.protection.outlook.com ([40.107.67.49]:3613
+        "EHLO CAN01-TO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S237497AbhDLU5f (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 12 Apr 2021 16:57:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DlKbvDTNaioQ+ijNjSS/NDWG/2sTIs4DZwIe38IXoLcTyLGmwEhhp2MwkeDc57XIQRS9/0cpP6SFNTIuBJnGYPHIN0a/uKn3MKaxzgieDUGAI2pMOcM4GmZXIGN9JvZsOofG9Be5kWSBpi2Zc6pKy62F5oB5mbdmcCPyU7ZHYXKgCHjX4Dfi6K7RdmbpbmglzoXXhOMFIym0Jnqn0anm/NOM8eH5emcpYeNy64DZYtUOZKAmwbVowz2XK1ptiBFGcf0B4QwSTj276Fed3RdsIxMQmH57xBiwog4FtApVyAFS16ztXLTPTDI38Pr2BWMSWFFCd1TtVdEypso+Aap2ZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PNsqf3E8B1QhYlKa4k+rJ4Oifhv/q0ZAGC8/rztKCA0=;
+ b=C+cN6xZlqwzpyLha9ma3zfN7Iv8VcXBS0z2rc+4DL7a5ghHKX0dCgCCX06z1CzUG+uL7H5ayPpufgBgzbWCK4Dne9kRfFba7pImFWKMsXJXHACQgH3Esy6Z8U0WLNfv/lJHNxXACDqeDrrTkhTMJRp6al2HUP3R5JpEW91HWz4NdsraVKQMdgoG5A+YrRA3N8jKr9eqPmGH5EFkpUxpm190mlJPPMREqZ+o4Z3ZxB4HogE5e6zHhxdamGMdRkLsJaG3PzTb0arjzikVlZ1KOxPm0YIkAUBwcqtZFF9pU38aptFgXCRvWAyzS73ZQ7nIbx57pZ3OGgYLhM4t6m4wcmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=uoguelph.ca; dmarc=pass action=none header.from=uoguelph.ca;
+ dkim=pass header.d=uoguelph.ca; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uoguelph.ca;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PNsqf3E8B1QhYlKa4k+rJ4Oifhv/q0ZAGC8/rztKCA0=;
+ b=d9OWJiMsq9jChkkoLO9vDvio03sh0QFy2/Pn064J2ur4rnmJz3VT/DOeKE9aQ2iIt2616SnFsV6w5DOKDCTTtEQrh69MZRd+m3IAhpzCINenmJkM5igBxMHXhIVVly/XdOJlsE4jnIQQh9G5UaWgFvCQOXbzSBXs3SJtbvs3vg6GHHGCkw3TTVPHIs3cVwrAzwgjOUuavA4V3+h10C83JYai6KSuNXwtFIwb7qQxuDf0k9JJdEI+7P0WTLltvlj/6OxHPRTB8cD4TCOqFJ9JR1BD+8nbAraLdyRG7GFWj+TX/P4FiYYoMMlp2Kk8SCJXkglsd3UP+tE5nAFkHuGCIw==
+Received: from YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:19::29) by YQXPR01MB3557.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:51::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.22; Mon, 12 Apr
+ 2021 20:57:15 +0000
+Received: from YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::1c05:585a:132a:f08e]) by YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::1c05:585a:132a:f08e%4]) with mapi id 15.20.3999.037; Mon, 12 Apr 2021
+ 20:57:15 +0000
+From:   Rick Macklem <rmacklem@uoguelph.ca>
+To:     Linux-NFS <linux-nfs@vger.kernel.org>
+Subject: Linux NFSv4.1 client session seqid sometimes advances by 2
+Thread-Topic: Linux NFSv4.1 client session seqid sometimes advances by 2
+Thread-Index: AQHXL9rIYn3uMMvy90evx7HGhIWLsA==
+Date:   Mon, 12 Apr 2021 20:57:15 +0000
+Message-ID: <YQXPR0101MB0968E44CE6FB05F22DE27716DD709@YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: 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
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=uoguelph.ca;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a79401fa-f313-4d87-517a-08d8fdf58d49
+x-ms-traffictypediagnostic: YQXPR01MB3557:
+x-microsoft-antispam-prvs: <YQXPR01MB35576EC851DA444D1FD05C44DD709@YQXPR01MB3557.CANPRD01.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hXsp7i3eWt3Q3BggyYpQYsysS1ogSWZp7Mzys94wC3t+x9bK6GKAWMYw+NMohAnNITc0pkl76Za4GwnM0M1CvX1/j7cUGKd2tTnsGOo47V/zfp0875QG8yeWtId445IhcwTfWmSeWSJgMd39eeDz/VzHcyNNf39zTgQoZpj9OSftIKaTjA2LP3Kix0XjjgRJojHgcRIy/3wFZ3O06d9Es3qKvQ/QuDa02cCK3re2DNThpGctZ+e1qxJNgTpp30HHw1Cv0BviMaspN/CdfLkqG9aDDY8y4KG84NDkWd4DhpiiAUDanp2qJ7Qmme7b5jGg+ZxYib1T2KyDiivbq2oUUkJaa/ZROUKdu3DDICuEVX+79asizSRHRt7Mm5G2kcU0+nf7L9Cp+JDUwiVKR9fGLFv0Y+YT1V2AQaDS7G08zx6y5nXGfBihcAAPAq2Is+5+RIfIt20UGr5e6+eP8nO9kgno8iZaQmHnKV70VPPkTB4lT59MrE9xrzx3VhGJpsYx2AptaeU7DSQ9JRDmdJqLxKGFbQG6guxnFYvasS71LNP8lgDGHCb13izpogiPalqB5VHQoEcECvX5RPjw8eJLw8tsTjJ8g4z1oRDgb4dImhasPBOEOTE62uIe7YdstazAXZCHnaghdLtcBLmSLIeNYjxg4Ytw7FVFi6k3siG6kdzFL3QNU+bgDEAntEvaMKU3
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(136003)(396003)(376002)(366004)(39860400002)(346002)(86362001)(5660300002)(55016002)(71200400001)(478600001)(33656002)(6916009)(83380400001)(38100700002)(966005)(6506007)(8676002)(76116006)(91956017)(7696005)(316002)(52536014)(786003)(2906002)(9686003)(186003)(66446008)(66476007)(66946007)(64756008)(8936002)(66556008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?iso-8859-1?Q?XFtaqI1tBQC+KQG2+nSjdonMtHGLifl2MwfPOVgomFCEOOn7tyfcNLU2XC?=
+ =?iso-8859-1?Q?JneBEUI09nIPDvk+0fXnX+AoAndjt/XvGgAYFIlx7A3EP66p0w1sadlJ1G?=
+ =?iso-8859-1?Q?6+sfDVOAHuo7APxGROdN2OOezVLu9r/T2tvCn+27MLD8rSfScNH/2ymDM/?=
+ =?iso-8859-1?Q?3jUyfVF8M+f3Q033pWH67nIs82cVhXh/qLtKLtwdXmESMgZvnJRISztNpy?=
+ =?iso-8859-1?Q?/LpphCMOVsx2sqY3u6V3EwTALANx6VDxO0DqGvUj1c/eaTc4ajYKtGgvCW?=
+ =?iso-8859-1?Q?mGAXPgFhp16VVbd8p2l8yC1WH9Am1QCxd9dLYNafDEGCajqMBketMkaqBw?=
+ =?iso-8859-1?Q?96DroBgTeB7B2XsltbPOdsA4QLHos2GqSowwpVpIDAVpRDwwraqh+lz4JE?=
+ =?iso-8859-1?Q?Oqzk+pbnN4QD3mTo/L5lSdYLnDfEMOSRWgQLEXTiNPpnGf2/nYJQaOwt+c?=
+ =?iso-8859-1?Q?0FH/2ymsiHPvmzBXZVroHJtWmQrMOmHQaC7X6hZGz5VzhsLcTHX2rN6CQp?=
+ =?iso-8859-1?Q?YeO/rxABNajspukkplCLCfdV02rYF6IqRcfTadot1xS9gMzv/n8cMbedcT?=
+ =?iso-8859-1?Q?63naNUrnfnHVJ5oMYU/h5YjkreMJEU1oBFSzyZ2FgWYGWxmZ9GCOuFXRRS?=
+ =?iso-8859-1?Q?1H4+0Q3v82YCFCKtBxCvpwZEFNNfrSFsA9l5YE/n0HV1NLiZEj3b6G6J1w?=
+ =?iso-8859-1?Q?sC36aPM4kFCa6sAc7KEU9e5Xfl0ZHuuAFwhpg0t69QvegJ3WXP1TnKLfRa?=
+ =?iso-8859-1?Q?wPo8zHhee1DMBTSnHKig+cxP9BkazHZAXFiXa1rxY1LVuMG1xzd2EFf3+q?=
+ =?iso-8859-1?Q?stWqfVqYs0s1vjyQI9ug615rQg5HWBFwBS9qEy3r80q4qjKx7qjhWq7+NL?=
+ =?iso-8859-1?Q?bo7Hdjf0EpwrEBIPlEHxbE7xiI0LXSqoDarptqPZ97sG3csJVsJKcm5kfS?=
+ =?iso-8859-1?Q?0ecKra41m6SdvhdAL+Aq0jJx3JX/b+RatBccOQd2JMaPDvXUNNRQhdPFc8?=
+ =?iso-8859-1?Q?CwOsXny+xWLoxxWqg1w7r0ede9R81cNFd9yaG/d57LdTE4hAR8TO43EDBa?=
+ =?iso-8859-1?Q?rFWUjq3vIefooM4R4ZLk5cCpy7PWyic7a77arKsF03jBo+qz3FA54FhCbe?=
+ =?iso-8859-1?Q?8byFkCNCmmXEwloTVaFrImixMCD318YZ7L9Pw7Bx00fW5OLuFTb24mGSro?=
+ =?iso-8859-1?Q?bAotAgGnSb1g1Lkjp6OvgOLqExuR+FMaV7L/tbiGvsVc6/MwEqu+qQqkks?=
+ =?iso-8859-1?Q?DhHGtluTqwaLZBqqZnymhC+5A2FFMdExDG9MbIPboPtFyCTfbbzp9802+x?=
+ =?iso-8859-1?Q?GE1nKLa2YJyNYiZGdp68Yq0dpHKliX46Ymulbu+QloHa6BszqrYlFafccN?=
+ =?iso-8859-1?Q?g4ZcKOoUdCN9snkhi19SyaJVMcZxIinFC9h1Z+OF8voooTuBFOktg=3D?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: uoguelph.ca
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: a79401fa-f313-4d87-517a-08d8fdf58d49
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2021 20:57:15.1422
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: be62a12b-2cad-49a1-a5fa-85f4f3156a7d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: t5QEVBBVOpOCE1zoPpWgPRJnaSzmRE6kybw9DC2hYUWJZCYsT7BS3xz3sIdjH3S5iY/Ylu/ZIrQt24NCN03ytA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQXPR01MB3557
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 4/12/2021 2:32 PM, Haakon Bugge wrote:
-> 
-> 
->> On 10 Apr 2021, at 15:30, David Laight <David.Laight@aculab.com> wrote:
->>
->> From: Tom Talpey
->>> Sent: 09 April 2021 18:49
->>> On 4/9/2021 12:27 PM, Haakon Bugge wrote:
->>>>
->>>>
->>>>> On 9 Apr 2021, at 17:32, Tom Talpey <tom@talpey.com> wrote:
->>>>>
->>>>> On 4/9/2021 10:45 AM, Chuck Lever III wrote:
->>>>>>> On Apr 9, 2021, at 10:26 AM, Tom Talpey <tom@talpey.com> wrote:
->>>>>>>
->>>>>>> On 4/6/2021 7:49 AM, Jason Gunthorpe wrote:
->>>>>>>> On Mon, Apr 05, 2021 at 11:42:31PM +0000, Chuck Lever III wrote:
->>>>>>>>
->>>>>>>>> We need to get a better idea what correctness testing has been done,
->>>>>>>>> and whether positive correctness testing results can be replicated
->>>>>>>>> on a variety of platforms.
->>>>>>>> RO has been rolling out slowly on mlx5 over a few years and storage
->>>>>>>> ULPs are the last to change. eg the mlx5 ethernet driver has had RO
->>>>>>>> turned on for a long time, userspace HPC applications have been using
->>>>>>>> it for a while now too.
->>>>>>>
->>>>>>> I'd love to see RO be used more, it was always something the RDMA
->>>>>>> specs supported and carefully architected for. My only concern is
->>>>>>> that it's difficult to get right, especially when the platforms
->>>>>>> have been running strictly-ordered for so long. The ULPs need
->>>>>>> testing, and a lot of it.
->>>>>>>
->>>>>>>> We know there are platforms with broken RO implementations (like
->>>>>>>> Haswell) but the kernel is supposed to globally turn off RO on all
->>>>>>>> those cases. I'd be a bit surprised if we discover any more from this
->>>>>>>> series.
->>>>>>>> On the other hand there are platforms that get huge speed ups from
->>>>>>>> turning this on, AMD is one example, there are a bunch in the ARM
->>>>>>>> world too.
->>>>>>>
->>>>>>> My belief is that the biggest risk is from situations where completions
->>>>>>> are batched, and therefore polling is used to detect them without
->>>>>>> interrupts (which explicitly). The RO pipeline will completely reorder
->>>>>>> DMA writes, and consumers which infer ordering from memory contents may
->>>>>>> break. This can even apply within the provider code, which may attempt
->>>>>>> to poll WR and CQ structures, and be tripped up.
->>>>>> You are referring specifically to RPC/RDMA depending on Receive
->>>>>> completions to guarantee that previous RDMA Writes have been
->>>>>> retired? Or is there a particular implementation practice in
->>>>>> the Linux RPC/RDMA code that worries you?
->>>>>
->>>>> Nothing in the RPC/RDMA code, which is IMO correct. The worry, which
->>>>> is hopefully unfounded, is that the RO pipeline might not have flushed
->>>>> when a completion is posted *after* posting an interrupt.
->>>>>
->>>>> Something like this...
->>>>>
->>>>> RDMA Write arrives
->>>>> 	PCIe RO Write for data
->>>>> 	PCIe RO Write for data
->>>>> 	...
->>>>> RDMA Write arrives
->>>>> 	PCIe RO Write for data
->>>>> 	...
->>>>> RDMA Send arrives
->>>>> 	PCIe RO Write for receive data
->>>>> 	PCIe RO Write for receive descriptor
->>>>
->>>> Do you mean the Write of the CQE? It has to be Strongly Ordered for a correct implementation. Then
->>> it will shure prior written RO date has global visibility when the CQE can be observed.
->>>
->>> I wasn't aware that a strongly-ordered PCIe Write will ensure that
->>> prior relaxed-ordered writes went first. If that's the case, I'm
->>> fine with it - as long as the providers are correctly coded!!
-> 
-> The PCIe spec (Table Ordering Rules Summary) is quite clear here (A Posted request is Memory Write Request in this context):
-> 
-> 	A Posted Request must not pass another Posted Request unless A2b applies.
-> 
-> 	A2b: A Posted Request with RO Set is permitted to pass another Posted Request.
-> 
-> 
-> Thxs, Håkon
-
-Ok, good - a non-RO write (for example, to a CQE), or an interrupt
-(which would be similarly non-RO), will "get behind" all prior writes.
-
-So the issue is only in testing all the providers and platforms,
-to be sure this new behavior isn't tickling anything that went
-unnoticed all along, because no RDMA provider ever issued RO.
-
-Honestly, the Haswell sounds like a great first candidate, because
-if it has a known-broken RO behavior, verifying that it works with
-this change is highly important. I'd have greater confidence in newer
-platforms, in other words. They *all* have to work, proveably.
-
-Tom.
-
->> I remember trying to read the relevant section of the PCIe spec.
->> (Possibly in a book that was trying to make it easier to understand!)
->> It is about as clear as mud.
->>
->> I presume this is all about allowing PCIe targets (eg ethernet cards)
->> to use relaxed ordering on write requests to host memory.
->> And that such writes can be completed out of order?
->>
->> It isn't entirely clear that you aren't talking of letting the
->> cpu do 'relaxed order' writes to PCIe targets!
->>
->> For a typical ethernet driver the receive interrupt just means
->> 'go and look at the receive descriptor ring'.
->> So there is an absolute requirement that the writes for data
->> buffer complete before the write to the receive descriptor.
->> There is no requirement for the interrupt (requested after the
->> descriptor write) to have been seen by the cpu.
->>
->> Quite often the driver will find the 'receive complete'
->> descriptor when processing frames from an earlier interrupt
->> (and nothing to do in response to the interrupt itself).
->>
->> So the write to the receive descriptor would have to have RO clear
->> to ensure that all the buffer writes complete first.
->>
->> (The furthest I've got into PCIe internals was fixing the bug
->> in some vendor-supplied FPGA logic that failed to correctly
->> handle multiple data TLP responses to a single read TLP.
->> Fortunately it wasn't in the hard-IP bit.)
->>
->> 	David
->>
->> -
->> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
->> Registration No: 1397386 (Wales)
-> 
+Hi,=0A=
+=0A=
+During testing of a Fedora Core 30 (5.2.10 kernel) against a FreeBSD=0A=
+server (4.1 mount), I have been simulating a network partitioning=0A=
+for a few minutes (until the TCP connection goes to SYN_SENT on=0A=
+the Linux client).=0A=
+=0A=
+Sometimes, after the network partition heals, the FreeBSD server=0A=
+replies NFS4ERR_SEQ_MISORDERED.=0A=
+Looking at the packet trace, the seqid for the slot has advanced by=0A=
+2 instead of 1. An RPC request for old-seqid + 1 never seems to get=0A=
+sent.=0A=
+--> Since sending an RPC with "seqid + 2" but never sending one=0A=
+       that is "seqid + 1" for a slot seems harmless, I have added an optio=
+nal=0A=
+       hack (can be turned off), to allow this case instead of replying=0A=
+       NFS4ERR_SEQ_MISORDERED for it. The code will still reply=0A=
+       NFS4ERR_SEQ_MISORDERED if an RPC for the slot with=0A=
+       "old seqid + 1" in it.=0A=
+       --> Yes, doing this hack is a violation of RFC5661, but I've=0A=
+             done it anyhow.=0A=
+=0A=
+If you are interested in a packet capture with this in it:=0A=
+fetch https://people.freebsd.org/~rmacklem/linuxtofreenfs.pcap=0A=
+- then look at packet #1945 and #2072=0A=
+  --> You'll see that slot #1 seqid goes from 4 to 6. There is no=0A=
+         slot#1 seqid 5 RPC sent on the wire.=0A=
+         (This packet capture was taken on the Linux client using=0A=
+          tcpdump.)=0A=
+--> Btw, the "RST battle" you'll see in the above trace between=0A=
+       #2005 and #2068 that goes on until the FreeBSD=0A=
+       krpc/NFS times out the connection after 6min. seems to be a recent=
+=0A=
+       FreeBSD TCP bug.=0A=
+       I have reproduced this seqid advances by 2 on an older system=0A=
+       that does not "RST battle" and allows the reconnect right away,=0A=
+       once the network partition is healed, so it does seem to be=0A=
+       relevant to this bug.=0A=
+=0A=
+Someday, I will get around to upgrading to a more recent Linux=0A=
+kernel and will test to see if I can still reproduce this bug.=0A=
+On 5.2.10, it is intermittent and does not occur every time I=0A=
+do the network partitioning test.=0A=
+=0A=
+Mostly just fyi, rick=0A=
