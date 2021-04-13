@@ -2,128 +2,185 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DECB835E1A8
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Apr 2021 16:36:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEA7F35E226
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Apr 2021 17:00:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344040AbhDMOex (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Apr 2021 10:34:53 -0400
-Received: from mail-co1nam11on2103.outbound.protection.outlook.com ([40.107.220.103]:10849
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1344555AbhDMOeL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 13 Apr 2021 10:34:11 -0400
+        id S231550AbhDMPAZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Apr 2021 11:00:25 -0400
+Received: from esa12.utexas.iphmx.com ([216.71.154.221]:34763 "EHLO
+        esa12.utexas.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231329AbhDMPAZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Apr 2021 11:00:25 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Tue, 13 Apr 2021 11:00:25 EDT
+IronPort-SDR: wcE4LPr8MzvTZAJIyXOI8Dr3qkEi/5+fzKShSJW/gCK9b/0Aupo/Tvi7L4BKoNugAT/GOA1qlK
+ xyDqSNZsvX6PjfGjszog+0k0tmmvbC0MQHd/g89VvnzuuZJUSkd+JBtxtIix+WZm6IZxXMnX7F
+ KgffchBzj+BSZgRVS1A7ynTW34f1bUcx57k/6OTz7XmEXUYs1I1ppolGzPF6pftDJadku4x176
+ KQ6gwpYuEXxXnPqtPFytXsDukGO7ljUB5w4p0YNnSWTgTXkotIVXF+MK94+6mVk/zN6w61wSJw
+ oTQ=
+X-Utexas-Sender-Group: RELAYLIST-O365
+X-IronPort-MID: 270523622
+X-IPAS-Result: =?us-ascii?q?A2EiBgA2r3Vgh6s5L2hSCA4OAQEBAQEBBwEBEgEBBAQBA?=
+ =?us-ascii?q?UCBUoFTUYI/C4Q4g0kBAYU5iDYtA5k8glMDGDwCCQEBAQEBAQEBAQcCMgIEA?=
+ =?us-ascii?q?QEDBIEPAYM5AjWBPyY4EwIDAQEBAwIDAQEBAQEGAQEBAQEBBQQCAhABAQEBb?=
+ =?us-ascii?q?IUXOQ2DVU07AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBB?=
+ =?us-ascii?q?QKBCD4BAQEDEhEPAQUIAQE4DwsYAgImAgIyJQcMBgIBAR6CT4JWAy8BniMBg?=
+ =?us-ascii?q?Sg+AiMBQAEBC4EIigWBMoEBggQBAQaCTIJMGEIJDYE7CQkBgQUqgneGZoN1Q?=
+ =?us-ascii?q?4FJQoE6D4JsPoQbDwKDLYJggkyBDn+BFUIcnlacLIMVnHcFBwQflC+QSZUVo?=
+ =?us-ascii?q?zACBAIEBQIOAQEGgWuBfTMaCB0TgyRQFwIOjh8MDQmDTooYX1U4AgYBCQEBA?=
+ =?us-ascii?q?wl8iU6BNQGBDgEB?=
+IronPort-PHdr: A9a23:vOSr9hOJ0xR0aSKr4Zwl6nfDWUAX047cNxMJ6pchl7NFe7ii+JKnJ
+ kHE+PFxlzfhQ4rW8bRHhvDQvqSmXnYPst6Ns3EHJZpLURJNycAbhBcpD8PND0rnZOXrYCo3E
+ IUnNhdl8ni3PFITFJP4YFvf8WO94CRUGRjlMwdxYOPvFd2ag8G+zevn/ZrVbk1Bjya8ZrUnK
+ hKwoGCz/skbiIdvMOA/0BzM935BZ+QQ2H9lNVuI2Rvw+5TYwQ==
+IronPort-HdrOrdr: A9a23:KFMpJaFLE+1NbRXNpLqFUJTXdLJzesId70hD6mlYcjYQWtCEls
+ yogfQQ3QL1jjFUY307hdWcIsC7LE/03aVepa0cJ62rUgWjgmunK4l+8ZDvqgeLJwTXzcQY76
+ tpdsFFY+HYJVJxgd/mpCyxFNg9yNeKmZrY/dv25XFrUA1sduVE5wB2Fg6UHiRNNXJ7LLA+E4
+ eR4dcCmiq4dR0sH46GL1Qmf8yGnd3Ek5r6fQULbiRK1CCihS6lgYSKdySw8QwZV1p0oIsK0W
+ +AqADh47XmjvfT8G6k60b2z7B73OTs0cFCAsvksLlZFhzJhhyzbIpsH52u1QpFx92H01ohnN
+ nSrxpIBa0ahB3sV1q4rhf31w7r3CxG0Q6F9XajnXDhrcblLQhKaPZpuINDfhPVr2omsd1suZ
+ g7ul6xiptNARvM2Bn6/tjDPisa9HacnHxKq44upk0adbFbRK5arIQZ8k8QOowHBjjG5IcuF/
+ QrJN3A5d5NGGnqIEzxjy1K+piBT34zFhCJTgwpocqOyQVbm3h/0g8x2NEfpHEd75gwIqM0qd
+ jsA+BNrvVjX8UWZaVyCKMqWs2sEFHARhrKLSa0LUn4EroEf1bAsYT+7rlwxOzCQu1I8LIC3L
+ D6FH9Iv287fEzjTeeU2odQzxzLSGKhGTv3zMVT4IV4p638SLLnPTbrciFsr+KQ59EkRuHLUf
+ e6P5xbR9X5K3H1JIpP1wriH5leQENuEvE9i5IeYRajs8jLIorluqjwa/DIPofgFj4iRyf6Cn
+ sHVz7jOdVY4imQKzrFqSmUf0moVl30/Jp2HqSf1fMU0pIxOopFtRVQj0+46MGNIThLqbc3Y0
+ N6PbPinsqA1CmL1FeNy18sFgtWD05T7rmleWhNvxU2P0T9dqtGp8+SYnlI3HyMJgZ2SsTfFA
+ I3nSUyxYuHa7irgQwyAdOuNWyXy0YJrHWRVpEGh+mo/sH+YK41CZ4gRY18HQjGDAZOhA5vsW
+ tPATV0AXP3J3fLs+GFhIZRLPzDf9N86T3bW/J8mDb6jwGggu0BAlEcRCWjVMaLhx1GfUsoun
+ RBt4kFgLSBnj6zL3AYm+pQCiwBVE2eHK9GAAOZZI9dh7Dsf0VqQX2XgCGB4itDBlbC5gEcgH
+ fsIjaTfuyOCl1BumpA2qKv619scH6BFngAI0xSoMl4FW7cvGx03vLObq2v03GJYl9q+JBrDB
+ jVJT8TKBhp3da5yVqcnyuDD2wvwtErMvbGBLouN7HV1XXFEvz/qYgWW/tV9o1iLtbgr6sCVv
+ +eYRacKHfgEPwysjbl1UoNKW1xsj0pgPno0Brq4Cyx22M+G+PbJBBjS6sAK9+R4mD4T5+zod
+ 1EpMNwufH1PnT6a9aAx62SdTJFJx/JqWO9Tu0jq/lvzNYPnao2G4OeXSrD1XlB0hl7Mdz9k1
+ kGRr9npL/GIY1icqUpCmlk10tskM7KKkQlsgb7WLBjOV4simLWJNOP7f7Dr6E1DkiIuQv3Ph
+ 2e/kRmjob4djrG0aRfDaQ6ZXlSYgw77n9p+euZbY3eCAmwbYh4jS+HG274dKUYUbSPHLUbsw
+ 1z7N6JlfKGbiaQ4nGvgRJrZqZVt3u9Scy8AAiQCfdF/tyzN1OLmLar6qeI/UfKYCr+bV8Zi4
+ 1DfVERacoGiiBKtvxJ7gGiDrDrrlMsiR9Q+jdi0lL93OGdkRXmIX0=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="5.82,219,1613455200"; 
+   d="scan'208";a="270523622"
+X-Utexas-Seen-Outbound: true
+Received: from mail-dm6nam11lp2171.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.171])
+  by esa12.utexas.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2021 09:52:58 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wcw8/5exDFC7XEZRZ84TpTPajGETDlrKUcnY8Q/b+0xANz4EaOl96WxSuu9uAPwm23/+8bdazklhKqFefXJ5ztCcdtkLIRceeL6HwbDPNiwl7uXPeh0q+/S5Du4eIWsIhIFTCCbGlJyy9uA4SOVvObkd42aC3R17zZasQue/I0m1IGrFDV1ScR8BsnPMk5SEYYJSUk3kMSlUxhAHKRdglTJ15ZthdGH5WBPmK6xUAoLd0aUi56FsSIamugaNbRC8spMKPYIJaK3jJ17zSJLwQ5AAbazWlp+Y0ID/l9+1saG/3g7cXNMxoEBmF9CFXl6SGewStC+n7e4Wuc1D9zgbuA==
+ b=h3cb5lL+6+yOpqpZyoksJrEs7aPCONpeufEB/Ukck7eUcFuis1x1lB2sm6yBk7wd5WpqVndbMcPTrxw7Bf0u/4IAlGy5qpxrWUHS1y4iAMFSh4h8ATlsIdomSdtVP28KmKuNVGFdQwM9cYw8MMVdWe+L+fPtq6eGRgXQUanPNl+Tjqu1EuBa/7d+vLSK+QzZT0L72DUp/zagM8SlnM3ziU+4rIxojn0NnZal3kPJXIqjNzzxbENF7jpR1GagTFvJOc+gbewt3fH4bhdOV/V75AFZRh2nWz/DP7/a7MfgHJ1af39zfH2cBSfDYFLhw3fJaogzrH3kl9CyHz4WSS9Hng==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HLBUJuxNsf/xF/oEjpNU7k7OLMtmPhAFAPV6jIK9CwE=;
- b=fDS7nEEQlj98HAViQzuIotI1Yr/j6U++J+IPbv9se2gjfS30Tuo/jaq6o7wX9syI4VsVBmwnakfOTWfP1Jx6yDx1v6cQMnFPPpNB3hYqE+5GA0zxfL5kO5jp+J8c89eIF3Mvw2LVfsjeSu6oKR5W3YFtKXjdhuC/qWtzcOgU8bUJwEDtequ0eZrfUYTHIKYMhe4rDuZJRxVpq9ozy4xhVH2mVdD71YB4JuOzLwuOAYvw2vUd+nFxhP8/ApaUJi4xJlpQUiHoUeWA4E0szXKs2+h78VZ833JPU196cru/RdGGtXOx0GzT8kxKlNiU6ptK/W5GU4xABiBx+LcaHLmKxg==
+ bh=wEEYGwRaSdZ8xig0dIkiGccyzxbg0yuxLukF08okJzU=;
+ b=klviB4YDahpkjmN2mA0fOHF2twya/TySkITPC5fjuHmuVvu+GFBVQoDkR8ZduAN2J56ey8hz/kpJxtKSn+/YdHGzllQr5t5BdoIODvbylAvGCwYkf09uUmvJkF7X/GTJLNC+a27FwNr5KEkTj7VzsK4uivZ6r7056w/IUtc7Lg8p9DeQNP9IM0y+akdYRPjcdFPJKkLvZappYauPiFnXsq1RLx52Ybs9u1D7Ec1JLhfR0IySV5IsRawTRD6iJZwdGXUhoxlol4l+SzpacMkNqbx3XQNfdhpUcKKIEKL/R9yWidTow5lRtrJ6W4N+HEgHOVzgvcpoWGJClhPMBkHZFg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=rutgers.edu; dmarc=pass action=none header.from=rutgers.edu;
- dkim=pass header.d=rutgers.edu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rutgers.edu;
- s=selector1;
+ smtp.mailfrom=math.utexas.edu; dmarc=pass action=none
+ header.from=math.utexas.edu; dkim=pass header.d=math.utexas.edu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=utexas.onmicrosoft.com; s=selector1-utexas-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HLBUJuxNsf/xF/oEjpNU7k7OLMtmPhAFAPV6jIK9CwE=;
- b=gRZRi4k6yyKR9xFahiexDnmuuRk4p9qtBwB8ex7OZDlMjx2yJHljro2TBadoGwnw7eJ3uK4/6wBYzN5KdYYgKz8gOyfsn9pqV2snX81QjSUZl4q7Kjhq8lethqXO4yHUTJ74I1QrXlWBxDaSx+mr/Cc9EeIg0+viqZtKdvYaw5Q=
+ bh=wEEYGwRaSdZ8xig0dIkiGccyzxbg0yuxLukF08okJzU=;
+ b=M+xvm5nfoVNztp56st78+oBt3JDV762IFGqSV7tGtO+u+O1EYYl/fWMPR6jF0soeymsZzpDWrBVZUGTF51pLjbvl0fap4vqLpbE7E/Pa52WKZI7XgUHGQE9WW3LQsFiIPSMq3W0awtpHolUO+DbgHySOSa5tykuiVYvvQh9PU3M=
 Authentication-Results: vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=rutgers.edu;
-Received: from BL0PR14MB3588.namprd14.prod.outlook.com (2603:10b6:208:1cb::7)
- by BL0PR14MB3588.namprd14.prod.outlook.com (2603:10b6:208:1cb::7) with
+ header.from=math.utexas.edu;
+Received: from BYAPR06MB3848.namprd06.prod.outlook.com (2603:10b6:a02:8c::15)
+ by BYAPR06MB4919.namprd06.prod.outlook.com (2603:10b6:a03:76::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.22; Tue, 13 Apr
- 2021 14:33:51 +0000
-Received: from BL0PR14MB3588.namprd14.prod.outlook.com
- ([fe80::2848:113d:4d17:51a0]) by BL0PR14MB3588.namprd14.prod.outlook.com
- ([fe80::2848:113d:4d17:51a0%6]) with mapi id 15.20.4020.022; Tue, 13 Apr 2021
- 14:33:50 +0000
-From:   hedrick@rutgers.edu
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: safe versions of NFS
-Message-Id: <D8F59140-83D4-49F8-A858-D163910F0CA1@rutgers.edu>
-Date:   Tue, 13 Apr 2021 10:33:49 -0400
-To:     linux-nfs@vger.kernel.org
-X-Mailer: Apple Mail (2.3654.40.0.2.32)
-X-Originating-IP: [2620:0:d60:ac1a::a]
-X-ClientProxiedBy: BL1PR13CA0151.namprd13.prod.outlook.com
- (2603:10b6:208:2bd::6) To BL0PR14MB3588.namprd14.prod.outlook.com
- (2603:10b6:208:1cb::7)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.21; Tue, 13 Apr
+ 2021 14:52:54 +0000
+Received: from BYAPR06MB3848.namprd06.prod.outlook.com
+ ([fe80::e871:d81d:56e1:5017]) by BYAPR06MB3848.namprd06.prod.outlook.com
+ ([fe80::e871:d81d:56e1:5017%3]) with mapi id 15.20.4020.022; Tue, 13 Apr 2021
+ 14:52:54 +0000
+Subject: Re: safe versions of NFS
+To:     hedrick@rutgers.edu, linux-nfs@vger.kernel.org
+References: <D8F59140-83D4-49F8-A858-D163910F0CA1@rutgers.edu>
+From:   Patrick Goetz <pgoetz@math.utexas.edu>
+Message-ID: <e6501675-7cb4-6f5b-78f7-abb1be332a34@math.utexas.edu>
+Date:   Tue, 13 Apr 2021 09:52:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
+In-Reply-To: <D8F59140-83D4-49F8-A858-D163910F0CA1@rutgers.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [67.198.113.142]
+X-ClientProxiedBy: SN6PR04CA0079.namprd04.prod.outlook.com
+ (2603:10b6:805:f2::20) To BYAPR06MB3848.namprd06.prod.outlook.com
+ (2603:10b6:a02:8c::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from heidelberg.cs.rutgers.edu (2620:0:d60:ac1a::a) by BL1PR13CA0151.namprd13.prod.outlook.com (2603:10b6:208:2bd::6) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.8 via Frontend Transport; Tue, 13 Apr 2021 14:33:50 +0000
+Received: from [192.168.1.7] (67.198.113.142) by SN6PR04CA0079.namprd04.prod.outlook.com (2603:10b6:805:f2::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.16 via Frontend Transport; Tue, 13 Apr 2021 14:52:54 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 568ed1c5-296f-4a7a-9076-08d8fe8927eb
-X-MS-TrafficTypeDiagnostic: BL0PR14MB3588:
-X-Microsoft-Antispam-PRVS: <BL0PR14MB3588C43F8218130FBB196781AA4F9@BL0PR14MB3588.namprd14.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Office365-Filtering-Correlation-Id: 78656130-9f09-42e3-c9c5-08d8fe8bd1a7
+X-MS-TrafficTypeDiagnostic: BYAPR06MB4919:
+X-Microsoft-Antispam-PRVS: <BYAPR06MB49193DE9F66436C7DEE63127834F9@BYAPR06MB4919.namprd06.prod.outlook.com>
+X-Utexas-From-ExO: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ePT4GDVMM0gHI5+x14l5c3kAvW3Be/rFlNur1waLgSvDXdir2RyRdbEF2ltRgYbh8mN/a0YETx/kaUeVIpNBSYNNadqSmCfYgHCk29LodWmi+8RvmpAI6IAh4sRSd8B9KiX1SAt+pjzileqWjb8n+J6sk0q1Icwi4nMoqUeJDPeW3QxvnbWodLJdPJsFZvLb/lWNVg69+d1p+Epz9hU3cUtBCKtgTeDqW2mhB+MwXvJENdkm77sbnIxF5t9tYCC7/67tME/ekob+quF3gRudBvjQ8wrOjXIQhxGF2vFfD7mDUt9LdDoodoGa6ajGc7CSq7pUFCRPUQcqLNCy6rRr0xtUuEoZK3HxIx9HT8am0V2bYfOj60Ypgb6YEojIH0v3SaC/BlJlsK0Plh8bYOFURCi7BIrvVB3NmUQR5wz0TkMMgqshdKbCrLg7zb5iQ663dOWAte2crdVe6aemriV426XmM33XlV1AeK4qmKa/6lJe5lvgah7OBifG1Y2oOrMwUrXBy69Jmu9YLN3T6+9yGilb2kNA5ByooyhENGoLfH8az6CMxr+p+QmMSixPkmAOQeUa2VEpfmotzww1FLt3a2baruUs5HQ4gsNRFjXLLWRcyZT/4W0jqIyqTAht8HYFHUaKzZQPI0KvcjWjzkKhiw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR14MB3588.namprd14.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(376002)(346002)(366004)(39840400004)(66946007)(9686003)(66556008)(7696005)(52116002)(66476007)(6486002)(6916009)(83380400001)(2616005)(36756003)(3480700007)(8936002)(186003)(16526019)(5660300002)(786003)(38100700002)(4744005)(316002)(8676002)(86362001)(2906002)(33656002)(478600001)(75432002)(2292003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?WjVhSHlZODZ3UHdlQWZELzZOa3REdWNldzVwWkxQR2FwdDZoRTd6a2Z0MHE2?=
- =?utf-8?B?M2ZQTnhSTk5qaWZDVXhVMmluZlZFOThXZlM0V1pRbVBiNjdLNi9IL1ladGpr?=
- =?utf-8?B?U2xVNWJiZ3JucnloRXExaDFwS2Z5a04wdFFNdm9zSXlSZXhBa2NES2RXZnlu?=
- =?utf-8?B?Zi8rRElTSXNma2U5M0NIMGhFR2JFYkRtRXNIZFdndDZ2VGREM0xPZDFja29J?=
- =?utf-8?B?eG1Ma3hGTm10N012SHE3MHpYeGQrdWNTTDZoU3lsdGJnUDZXemNMQjFvZ1FJ?=
- =?utf-8?B?czJCVm1IU2pBRFcxSjBkMXVpN25JN0w1ZlkzMzM2SzNmUWQ0bkt3YkVLcjR3?=
- =?utf-8?B?VGw4TWFlK0xLaFVlL2ZIQy9NV2ZtNTRnZVFMamtjZ1FwMThDSXYva2FhU0xh?=
- =?utf-8?B?WTJSb1dDdXBRTng4bWkyQVBSZGxPSmtFaHJ4cS9BZXQwRHhGdkwyRnFCTm45?=
- =?utf-8?B?Y244d2QzUXQ0WEhzS09SUXFmWXJuZ0lYYTRXemhxbDkrdnlMeFNiQXNwQ2w1?=
- =?utf-8?B?Tk9GN3FuaUprSldOclBYUFViSElrOGM3TFVkc3VMbWx4MnhhUHlwVExvVGR5?=
- =?utf-8?B?azdXUWpXV1lnenk2bVRQQmxYdmMyZDFxR1gvbmIzRnVQdVoxcGkyZGxMM3ZO?=
- =?utf-8?B?NUxST2FoK085NGJjQTNpRzMvTDRhSTQ0aXN5SXNLZlBWcmpGNFVoUXVFSzRZ?=
- =?utf-8?B?d2NkZnZBQmxkMmxKd3NHLzRYQmR1Q21aVzA5NXg5SnJZSWVrV2wrZ0E5WkEz?=
- =?utf-8?B?T1NnOFRib2lTRE82Q2QzckJpUmwyUU01N3Y4ck1pV2ZaRUhFcldnZmhlRW5x?=
- =?utf-8?B?MTJ3OGlJNDR3NEhRNm9WTEZIQ0VEdGQxY1AvVnh1L3BkWGkvSzdsL1RpNzdU?=
- =?utf-8?B?NzJqbmNlSlY1VVZib0xaTU14UHRKZm5HUTRmcjdjSjNtclEwc3VVbWVOUExO?=
- =?utf-8?B?MDQyRTYrMElCRlRibDd6MXdIY0wvUFY0QTRvWXRoSW91UGRFOUhBWnRFcHlh?=
- =?utf-8?B?Y1g1NW10NnlaaHc0SytmNkVKMmlidXI1ZDE1bXdGWnpFbjRMUGo5WC92cEIr?=
- =?utf-8?B?WndQaHoxS3l6VmZIOVNYUWpscEtCekRtSjE3bE1lRGhJUTZsY1VueFNWRStM?=
- =?utf-8?B?UWRuOVhaNllwTm1XQ2lyTFYvM1FVVzZkME5MdEN0QTBsREZHTjBOWFVWd0ZY?=
- =?utf-8?B?amNqR2xVTCt4em41b0lwTjFOVzNnazh5ZFNFaHRERzZvb2t0OHBsR1FaRUdY?=
- =?utf-8?B?L1NCMlptMExDUHNVOVU0UnkzY21EYVBYTUZONURHOVhQUVJ0aDB4NnA2cE95?=
- =?utf-8?B?TkxwQzI2NkNCTXZrN1I1MzlpOUcvd3Q1TzVoYVNZK2RmMy9VTmFmK1FrSVBq?=
- =?utf-8?B?ekhUSEcxbHlmUzNFM09NU2xOV1ZBU0lVVXkwL0Y4cXhWbTVXZmJFbWh5ZUxl?=
- =?utf-8?B?QkNDUjVuVVBFdWhvTlRZZXN3SkxSRXhFbVpIekRiNERRQ2dUN2lBTmxwcnp5?=
- =?utf-8?B?bVhxMDdTMW0zeC9Zc2pnaTN0eEJxMWNhMC9hY3BMVkl4dlhZRkNleWFhc25E?=
- =?utf-8?B?R3JWcjMwYkR5RGk4VmVsRTZObzRiV2I3M29iTkR3NGY2eHUyd0xmNW1vVnJS?=
- =?utf-8?B?K3o4WkxlSWJlTENJYkJBUWpSUU16OGNrQ3RpQmpEaXJiY3BYaW8ydzhkc3gr?=
- =?utf-8?B?Wm9ua2hmREdvKzZHQnBSNWhWOE9kb05Ra0Y1SElwR2tTN0hmN2pGS0hmZ2t3?=
- =?utf-8?B?K3ZOVTZXOSs2MDZ1dEU1RjhWbFltVVZLVVZHOGRaZEF3UGZQTzFWRjFtYk1B?=
- =?utf-8?B?eHh1a0RwMjc5SVp6OHZsQT09?=
-X-OriginatorOrg: rutgers.edu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 568ed1c5-296f-4a7a-9076-08d8fe8927eb
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR14MB3588.namprd14.prod.outlook.com
+X-Microsoft-Antispam-Message-Info: 09dmfJWx6Jk+2jajmJE+bzG2Cabkcvbu9HwFtI5R3hYIlDc0rFR3MlQyYNqT565ocrQY0HUEx4TKhzIhTQbaA46PmoojZCBuYNl4NsnF4/454sFwndWGOLKKrVgTk/E/TEc7WEnpPyy92xVH1PXmrHSE9iq99p6+G9xISF2U5t2UJnfERMeUZzxNHZeSHOGnwred8YG5HrLiS/5pg6/7IeFS0HIdyLjfc002buImsG1llg+6/UBX7eYn5ykyhfzCNfzux9DuXBMCM8qQwJL0NoOOkJ8OTUzJXaZdrhxDnMwgF+Ox2OhUstfw6+II4oZ951gAnm9WmS5pFuPLa/HHHzzS//9aLSDLjjJiLQ3WsLYFlZMWqXh3K9SwmKcjg1R8RPq9cLPnL+wA0uTjGm1aFL3XDLQRwp5+bhIRXNd1w3GGRbiGQbfsupgp0YMxG2Gv62yqt3ijOv6v+r1HwwJZpWDXZoblDMT45XVEFdmt9EsztURnh/TGcTFAg1udh/QCH+u61jThr78Y9j8/qIzBig5utchnlOxjZ+1fQ81vlB/aQ5qZJ74yE8VCVFc+HjuGZPsgIEXIGOYC9c9d6B9WaEFKxvitLSBNUwqS8HI9zRUePnH5NXtieH7FQ05o0xI+a8ppaPfjExDdc8X5JFQC+MW5C8MrWBo0pdLmi/oHRFK3qFjxXgiay61mjzN07Ckd9VGeiodyGT7zG1ugBTF9PQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR06MB3848.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(366004)(376002)(396003)(136003)(6486002)(38100700002)(66476007)(66556008)(38350700002)(16576012)(3480700007)(316002)(83380400001)(66946007)(86362001)(52116002)(31696002)(75432002)(16526019)(478600001)(8676002)(786003)(2616005)(26005)(956004)(31686004)(8936002)(2906002)(186003)(5660300002)(53546011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?QlJlQ3ZYWXlLS2JGWFoyTE1adExaNFdBM0duZFhEOVk2VHl2bVNWTnlEZmVG?=
+ =?utf-8?B?KzZiZlVseXhWZmxQdUljSVcxRlNDU0ljMEFxaktsNU9TQ1dLUnlHNUE0Qzda?=
+ =?utf-8?B?TGZ6Q1dJVnFDNUM1SkVmd1l6YlZMUzVOcVlqUjlGbVhLVDIyUGYxVmh4SFl3?=
+ =?utf-8?B?SFkzRjNTUkowTjllQlhScnNNRDdJbjdmTGVqT3lPM0hIYVNYMEhhUElOQ25X?=
+ =?utf-8?B?NG5BNFQxeEdtaGR5cDdMZ0pxV2s5V3RsOTFQbUY2QThwdWZhYjhuODFHbjFM?=
+ =?utf-8?B?V0pPeERoRS9zcGF2RnFScTFRVnJPSE9mczcwL2xWNFBWVHczS0F2cHpReGUw?=
+ =?utf-8?B?UFZrb1c4bHpYc0R2TXVCSXpVRWZBRUtvZk5TbWFldWNXaU8yZTFYdlYzWmt3?=
+ =?utf-8?B?ZWpGYXlOWjRDT3VBWHBwaGZqbXRseStlNlJJY0p4Y25OTGdSNUExWGovYnU0?=
+ =?utf-8?B?R0hXZFpacW9jY1AxZ2lnUzVybG5jWit5QXp1Z0N3ZGU2eXFhL1NNRjNKR2xW?=
+ =?utf-8?B?YlJPOGdVRmFOSlF6NVJ4dUtUMlNCSkJYSlEzTkZZTGRERnN6LzNJUWx6VGlk?=
+ =?utf-8?B?ZGhadlplYXZidHArbkdGUzNFUHh0YlNIK0t5MkRhUHNRK1RVa29VVStPRTB6?=
+ =?utf-8?B?cGNHSWc3aHZmQ0dQeTF4RXRUS1dySjhpL1N3c1lSL053WGtTU2E5MndIYXNa?=
+ =?utf-8?B?WmVFVEhKcy9FQ2FhZlVpRXBwWUU2YzBZclg0QWtsaUZReVZIK3EyUTZadTQz?=
+ =?utf-8?B?Q0syRCtQeXZnVkpMakxuRG1rYmVHaTdtcjRkVDZneW9PWkxoTWxENjZLRzdN?=
+ =?utf-8?B?TVJMUDRTTVlINHRhSUNXalF3YWtISnJCM2N0c0M2TEhOV1VGblE0dEcxQURo?=
+ =?utf-8?B?c1dPRk55T2Qxek9iUXJISERzYithbXkyWkcxZDBxVXh1MXlCWCtDQ0dUZmh3?=
+ =?utf-8?B?M3N2cHNjNEdOMURuckZBNVJicGVucFU5QllkaEF1MHFLUUk0NmZ1Y0NpNU5Z?=
+ =?utf-8?B?TnNvUUdrYzRzdHk0Yzg5VHRoenIxcGlTVE11Y00yOXU1Y0h3ZzQxekJwYWN5?=
+ =?utf-8?B?YlkyVktjdlZzVlZlNWdYNWx5b1RvVlN6SnBiWWdLU2llRFZtWXJySXZNYkJ6?=
+ =?utf-8?B?dWM5OEhlNjl5UlphVmN0OVI1bDMvQ2hrZTNGemV1eWdLYzBweENCUHNBVEJh?=
+ =?utf-8?B?Z3ZoaENJWGMwL0xFaFQvcllnejRmMy9uQS9Kb0dvTEdvOFBXa200QnI4Z24x?=
+ =?utf-8?B?bHdzRUd2SGk2cTFWVkllM1cvbWxQZTArY3RhdTFNT1hwTlpoemlGZTkzdnMz?=
+ =?utf-8?B?ejBWbkF1cVpKWFNUS1RHaXg5OXBRbnNMOEUxZXBUeTdFVmdsK0Jrc01wbERC?=
+ =?utf-8?B?ZzhBa3FWQ3lhS2pPeXJ1SCtxTU5nUDF5SWZXM2lRWGU3K0ZPbFJmczd6Mldo?=
+ =?utf-8?B?c0RSRDlFK1dZWFR3anVRemxKSE5Na1hYWlpkUWY2aXorRExBSDl5ekxyN0Zk?=
+ =?utf-8?B?Q1pWb0xCbWV0ZnpvVWh0Wmc2M3k3UWpHSnFYSE5YRmtnWGYveUNLeE9zUFRI?=
+ =?utf-8?B?STFNSnZySUFjdEhuM3k0K25lRU1ZUkwxUnQxdVU3ZHFZL3FNTkFiWEJPQ0Vw?=
+ =?utf-8?B?dEN2amYydmxINXluZHJldy9WZ2V6dGt5ODFiQ09KUFdXV3NMVmpaaDVKcVNp?=
+ =?utf-8?B?VzRhemhFRXdXODFJRHlNZDFWQnpCYkorSkxIWTdiVmJwN2ZLVUxoanhHU0hJ?=
+ =?utf-8?Q?ZXK1cAGxeQEcEOVbLi7Rrko3dyI5nHIWPkIAYgA?=
+X-OriginatorOrg: math.utexas.edu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78656130-9f09-42e3-c9c5-08d8fe8bd1a7
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR06MB3848.namprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2021 14:33:50.8426
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2021 14:52:54.5777
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b92d2b23-4d35-4470-93ff-69aca6632ffe
+X-MS-Exchange-CrossTenant-Id: 31d7e2a5-bdd8-414e-9e97-bea998ebdfe1
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zhW8z2tDML96QvUoCfGapfABlLec5+j/yK3xjKxnv4AAUmFP1sLbqhfQVwUhAJ/c2OqwCNJP6FEzGbyMLLwLtQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR14MB3588
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3+yqBnjCU5ROtcAAfwi5BgXHAvEXmTadF7h+E3Bz/H7ESX9+jtkAZnBcfID7nuJffxwqTzMCaDRtNswwe3WrAQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR06MB4919
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I am in charge of a large computer science dept computing infrastructure. W=
-e have a variety of student and develo9pment users. If there are problems w=
-e=E2=80=99ll see them.
+I use NFS 4.2 with Ubuntu 18/20 workstations and Ubuntu 18/20 servers 
+and haven't had any problems.
 
-We use an Ubuntu 20 server, with NVMe storage.
+Check your configuration files; the last time I experienced something 
+like this it's because I inadvertently used the same fsid on two 
+different exports. Also recommend exporting top level directories only. 
+  Bind mount everything you want to export into /srv/nfs and only export 
+those directories. According to Bruce F. this doesn't buy you any 
+security (I still don't understand why), but it makes for a cleaner 
+system configuration.
 
-I=E2=80=99ve just had to move Centos 7 and Ubuntu 18 to use NFS 4.0. We had=
- hangs with NFS 4.1 and 4.2. Files would appear to be locked, although even=
-tually the lock would time out. It=E2=80=99s too soon to be sure that movin=
-g back to NFS 4.0 will fix it. Next is either NFS 3 or disabling delegation=
-s on the server.
-
-Are there known versions of NFS that are safe to use in production for vari=
-ous kernel versions? The one we=E2=80=99re most interested in is Ubuntu 20,=
- which can be anything from 5.4 to 5.8.
-
-
+On 4/13/21 9:33 AM, hedrick@rutgers.edu wrote:
+> I am in charge of a large computer science dept computing infrastructure. We have a variety of student and develo9pment users. If there are problems we’ll see them.
+> 
+> We use an Ubuntu 20 server, with NVMe storage.
+> 
+> I’ve just had to move Centos 7 and Ubuntu 18 to use NFS 4.0. We had hangs with NFS 4.1 and 4.2. Files would appear to be locked, although eventually the lock would time out. It’s too soon to be sure that moving back to NFS 4.0 will fix it. Next is either NFS 3 or disabling delegations on the server.
+> 
+> Are there known versions of NFS that are safe to use in production for various kernel versions? The one we’re most interested in is Ubuntu 20, which can be anything from 5.4 to 5.8.
+> 
+> 
