@@ -2,33 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E76D35F528
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Apr 2021 15:47:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA2DF35F52C
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Apr 2021 15:47:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230477AbhDNNod (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Apr 2021 09:44:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52140 "EHLO mail.kernel.org"
+        id S243282AbhDNNog (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Apr 2021 09:44:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1351581AbhDNNoQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        id S1351583AbhDNNoQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
         Wed, 14 Apr 2021 09:44:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0482461139
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Apr 2021 13:43:54 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 743B3611AD
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Apr 2021 13:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1618407835;
-        bh=8u9ede9bFaEZRd5ODP+65yLjYeHMteIWLZ9blcdchOk=;
-        h=From:To:Subject:Date:From;
-        b=rJ9GaOKDJwNgEFt/1+3XcfNSuNsBXXsT24Rtn/IgHcJj5Wt04y1RIyGzBh8TZ5WcY
-         FPZ6RZGraEng2lppSb47WbC4bLTGR7dnJW0YWmuwfRyWCWEUzr4O9FKwCHjykVQw8r
-         j27tGJpNdF6ARZDPERWJy5u2o6sjs25DtEJUZtpsiRqKq1oY1/Lp1T0RY6FTOWIwyQ
-         2P1NT0TD/6vU4WHNmqMFHskFRaGW1KTdmzFRRn7q38+x2z7ncfb2npUwQX7LIvdquj
-         Uw7UZeUpQLShv6vDFJB89UNEknXLasmeErKM2RenAcYN5k3xIvmIc9mOXUqDWkMK77
-         Bs8A/qY+Xk95A==
+        bh=Av2mTAvTPBRR6n/iApvQ7Kz11QtjqJfgvAB+6CQmYVc=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=TjuBtKfF6UZmeYec22E+IRiwo+tLTZ4bHY1yZU81S/+aCdHSUb5GF3JfUPA4w9eri
+         ljX+72EAmyyZpUPfBSn68Vx9Milia8afMA9tRGzOeh77nqYNDNEFYgREu6JThvxnYj
+         WTV+3g+v5C3n6j1TbVVX6i+ATSfbM0gurQ6e6fwHcolrzRbS7vVKiNU+obtrL+uGvi
+         LD3TIuZ3IukTvrvfh7orRzf/HBet5pECzJdkn+VhjnLMQpv2U12NjcEHS0Sm+4Dyj1
+         D1OvtSRxywDeR/pl6C29zfROUj1KbP46QwhXChK8x/nrQVFlK+ByrNMfFC+ro+IHVg
+         bg6d9kZB3tYWA==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 00/26] Attribute revalidation updates
-Date:   Wed, 14 Apr 2021 09:43:27 -0400
-Message-Id: <20210414134353.11860-1-trondmy@kernel.org>
+Subject: [PATCH v2 01/26] NFS: Deal correctly with attribute generation counter overflow
+Date:   Wed, 14 Apr 2021 09:43:28 -0400
+Message-Id: <20210414134353.11860-2-trondmy@kernel.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210414134353.11860-1-trondmy@kernel.org>
+References: <20210414134353.11860-1-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -37,70 +39,42 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-The following updates try to simplify some of the attribute caching, and
-further split out the attribute cache tracking. In particular, we want
-to make use of the fact that NFSv4.x doesn't always need to retrieve all
-the attributes to optimise the way we use the GETATTR call.
+We need to use unsigned long subtraction and then convert to signed in
+order to deal correcly with C overflow rules.
 
-v2:
- - A number of changes to try to clean up the cache invalidation flags.
- - Fix a bug that was turning off revalidation for most attributes in
-   nfs_getattr().
- - Fixes to allow us to reduce the set of attributes we request from the
-   server when holding a delegation. In particular, try to reduce
-   requests for OWNER and GROUP_OWNER, since those may result in
-   expensive upcalls.
+Fixes: f5062003465c ("NFS: Set an attribute barrier on all updates")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/inode.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Trond Myklebust (26):
-  NFS: Deal correctly with attribute generation counter overflow
-  NFS: Fix up inode cache tracing
-  NFS: Mask out unsupported attributes in nfs_getattr()
-  NFS: NFS_INO_REVAL_PAGECACHE should mark the change attribute invalid
-  NFS: Fix up revalidation of space used
-  NFS: Don't revalidate attributes that are not being asked for
-  NFS: Fix up statx() results
-  NFS: nfs_setattr_update_inode() should clear the suid/sgid bits
-  NFS: Add a cache validity flag argument to nfs_revalidate_inode()
-  NFS: Replace use of NFS_INO_REVAL_PAGECACHE when checking cache
-    validity
-  NFS: Don't set NFS_INO_REVAL_PAGECACHE in the inode cache validity
-  NFSv4: Fix nfs4_bitmap_copy_adjust()
-  NFS: Separate tracking of file nlinks cache validity from the
-    mode/uid/gid
-  NFS: Separate tracking of file mode cache validity from the uid/gid
-  NFS: Fix up handling of outstanding layoutcommit in nfs_update_inode()
-  NFS: Remove a line of code that has no effect in nfs_update_inode()
-  NFS: Simplify cache consistency in nfs_check_inode_attributes()
-  NFSv4: Fix value of decode_fsinfo_maxsz
-  NFSv4: Don't modify the change attribute cached in the inode
-  NFSv4: Add support for the NFSv4.2 "change_attr_type" attribute
-  NFS: Use information about the change attribute to optimise updates
-  NFS: Another inode revalidation improvement
-  NFSv4: nfs4_inc/dec_nlink_locked should also invalidate ctime
-  NFSv4: link must update the inode nlink.
-  NFS: Don't store NFS_INO_REVAL_FORCED
-  NFS: Split attribute support out from the server capabilities
-
- fs/nfs/client.c           |  18 +-
- fs/nfs/delegation.c       |  21 +-
- fs/nfs/delegation.h       |   3 +-
- fs/nfs/dir.c              |   7 +-
- fs/nfs/export.c           |   6 +-
- fs/nfs/file.c             |   2 +-
- fs/nfs/inode.c            | 414 ++++++++++++++++++++++++--------------
- fs/nfs/nfs3acl.c          |   2 +-
- fs/nfs/nfs3xdr.c          |   1 +
- fs/nfs/nfs4proc.c         | 160 +++++++++------
- fs/nfs/nfs4xdr.c          |  43 +++-
- fs/nfs/nfstrace.h         |  11 +-
- fs/nfs/proc.c             |   1 +
- fs/nfs/write.c            |   7 +-
- include/linux/nfs4.h      |   9 +
- include/linux/nfs_fs.h    |   6 +-
- include/linux/nfs_fs_sb.h |  14 +-
- include/linux/nfs_xdr.h   |   2 +
- 18 files changed, 478 insertions(+), 249 deletions(-)
-
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index ff737be559dc..8de5b3b9da91 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -1662,10 +1662,10 @@ EXPORT_SYMBOL_GPL(_nfs_display_fhandle);
+  */
+ static int nfs_inode_attrs_need_update(const struct inode *inode, const struct nfs_fattr *fattr)
+ {
+-	const struct nfs_inode *nfsi = NFS_I(inode);
++	unsigned long attr_gencount = NFS_I(inode)->attr_gencount;
+ 
+-	return ((long)fattr->gencount - (long)nfsi->attr_gencount) > 0 ||
+-		((long)nfsi->attr_gencount - (long)nfs_read_attr_generation_counter() > 0);
++	return (long)(fattr->gencount - attr_gencount) > 0 ||
++	       (long)(attr_gencount - nfs_read_attr_generation_counter()) > 0;
+ }
+ 
+ static int nfs_refresh_inode_locked(struct inode *inode, struct nfs_fattr *fattr)
+@@ -2094,7 +2094,7 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 			nfsi->attrtimeo_timestamp = now;
+ 		}
+ 		/* Set the barrier to be more recent than this fattr */
+-		if ((long)fattr->gencount - (long)nfsi->attr_gencount > 0)
++		if ((long)(fattr->gencount - nfsi->attr_gencount) > 0)
+ 			nfsi->attr_gencount = fattr->gencount;
+ 	}
+ 
 -- 
 2.30.2
 
