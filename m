@@ -2,34 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1486135F538
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Apr 2021 15:47:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FC6835F53E
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Apr 2021 15:47:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351575AbhDNNoj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Apr 2021 09:44:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52152 "EHLO mail.kernel.org"
+        id S1351581AbhDNNok (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Apr 2021 09:44:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1351614AbhDNNoZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        id S1351615AbhDNNoZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
         Wed, 14 Apr 2021 09:44:25 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CC5EE611B0
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Apr 2021 13:44:03 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4591C6121E
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Apr 2021 13:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1618407844;
-        bh=dY1TAALyeP8SE0xKxibXz1C+F7HcSHRO0NJpJMGsXng=;
+        bh=GSfdlos9Mu+uhIQ1mM9RuTHhoy5S5oCf16GT30nKuxM=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=obmCAAv+sm2QmfYFPT+RDI7QDwtX/hOAXM3olhXESIx3OXq88kQVTErc17cYnVeDk
-         eoiJAA0AJy9/Sha54huNCPwXSyk15HcuGtY67TiVcFMHdAZnTradn0nT+QbskfoF8c
-         strNcpDE4gLs3UUQMlgw5OmmtMIw3BaxAEUKyi+w1nV0KI+BZOE1pTXTwPZbEVdZC6
-         mZv++Svhxt9AWAvuv8yKlQpVGIV3GHOeTyPqkijacm1nzlkmIdSujxqlxRopI+M7I8
-         Io/zPsrPkKVaTyE36vs3JIjsdWhjQiMiiSr2/Y57sWMQDluQ+TlSaCXCwqa4XPDlC/
-         cPJrlT6S2aPRw==
+        b=Pc5NGnNATUQguXtDjB5GD3QcbJwv6ZdiyUb9+692D8ypw8VGeAPxAsTTYSLpSzaUl
+         WvWjYOKXi4Sqtj36h2zD2zc4j3JWicaaOjixlPSGLeIkqNrMLzRizye+xCA1X3h9VJ
+         PV2g8fZUaGx2Rjz2Y86S7Nzf++gAwE1O4SGr1pEybZjMjoO9KjBR6+lx5Tt0+j8/sk
+         ZHr9CSgjG/J39cR/FFfx+BndqWJjJ5KPOqSKncxK+8cTp4AlRjCw+ng9uBbrtxmGbX
+         5QZ37/uoXMMfttbfh/tIJzu4PrOyRJC0UpuWYbQPORh127jpO6yrHxMCAk9pGaHW35
+         aDp7dzlE4sUhg==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 20/26] NFSv4: Add support for the NFSv4.2 "change_attr_type" attribute
-Date:   Wed, 14 Apr 2021 09:43:47 -0400
-Message-Id: <20210414134353.11860-21-trondmy@kernel.org>
+Subject: [PATCH v2 21/26] NFS: Use information about the change attribute to optimise updates
+Date:   Wed, 14 Apr 2021 09:43:48 -0400
+Message-Id: <20210414134353.11860-22-trondmy@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210414134353.11860-20-trondmy@kernel.org>
+In-Reply-To: <20210414134353.11860-21-trondmy@kernel.org>
 References: <20210414134353.11860-1-trondmy@kernel.org>
  <20210414134353.11860-2-trondmy@kernel.org>
  <20210414134353.11860-3-trondmy@kernel.org>
@@ -50,6 +50,7 @@ References: <20210414134353.11860-1-trondmy@kernel.org>
  <20210414134353.11860-18-trondmy@kernel.org>
  <20210414134353.11860-19-trondmy@kernel.org>
  <20210414134353.11860-20-trondmy@kernel.org>
+ <20210414134353.11860-21-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -58,190 +59,215 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-The change_attr_type allows the server to provide a description of how
-the change attribute will behave. This again will allow the client to
-optimise its behaviour w.r.t. attribute revalidation.
+If the NFSv4.2 server supports the 'change_attr_type' attribute, then
+allow the client to optimise its attribute cache update strategy.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/client.c           |  3 +++
- fs/nfs/nfs3xdr.c          |  1 +
- fs/nfs/nfs4proc.c         |  1 +
- fs/nfs/nfs4xdr.c          | 32 ++++++++++++++++++++++++++++++++
- fs/nfs/proc.c             |  1 +
- include/linux/nfs4.h      |  9 +++++++++
- include/linux/nfs_fs_sb.h |  3 +++
- include/linux/nfs_xdr.h   |  2 ++
- 8 files changed, 52 insertions(+)
+ fs/nfs/inode.c    | 111 ++++++++++++++++++++++++++++++++++++++--------
+ fs/nfs/nfs4proc.c |  20 +++++++--
+ 2 files changed, 110 insertions(+), 21 deletions(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 399a8eb15397..2aeb4e52a4f1 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -792,6 +792,7 @@ static void nfs_server_set_fsinfo(struct nfs_server *server,
- 	server->maxfilesize = fsinfo->maxfilesize;
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index fc8e92794636..d218d164414f 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -1657,25 +1657,20 @@ EXPORT_SYMBOL_GPL(_nfs_display_fhandle);
+ #endif
  
- 	server->time_delta = fsinfo->time_delta;
-+	server->change_attr_type = fsinfo->change_attr_type;
+ /**
+- * nfs_inode_attrs_need_update - check if the inode attributes need updating
+- * @inode: pointer to inode
++ * nfs_inode_attrs_cmp_generic - compare attributes
+  * @fattr: attributes
++ * @inode: pointer to inode
+  *
+  * Attempt to divine whether or not an RPC call reply carrying stale
+  * attributes got scheduled after another call carrying updated ones.
+- *
+- * To do so, the function first assumes that a more recent ctime means
+- * that the attributes in fattr are newer, however it also attempt to
+- * catch the case where ctime either didn't change, or went backwards
+- * (if someone reset the clock on the server) by looking at whether
+- * or not this RPC call was started after the inode was last updated.
+  * Note also the check for wraparound of 'attr_gencount'
+  *
+- * The function returns 'true' if it thinks the attributes in 'fattr' are
+- * more recent than the ones cached in the inode.
+- *
++ * The function returns '1' if it thinks the attributes in @fattr are
++ * more recent than the ones cached in @inode. Otherwise it returns
++ * the value '0'.
+  */
+-static int nfs_inode_attrs_need_update(const struct inode *inode, const struct nfs_fattr *fattr)
++static int nfs_inode_attrs_cmp_generic(const struct nfs_fattr *fattr,
++				       const struct inode *inode)
+ {
+ 	unsigned long attr_gencount = NFS_I(inode)->attr_gencount;
  
- 	server->clone_blksize = fsinfo->clone_blksize;
- 	/* We're airborne Set socket buffersize */
-@@ -933,6 +934,8 @@ struct nfs_server *nfs_alloc_server(void)
- 		return NULL;
- 	}
+@@ -1683,15 +1678,93 @@ static int nfs_inode_attrs_need_update(const struct inode *inode, const struct n
+ 	       (long)(attr_gencount - nfs_read_attr_generation_counter()) > 0;
+ }
  
-+	server->change_attr_type = NFS4_CHANGE_TYPE_IS_UNDEFINED;
+-static int nfs_refresh_inode_locked(struct inode *inode, struct nfs_fattr *fattr)
++/**
++ * nfs_inode_attrs_cmp_monotonic - compare attributes
++ * @fattr: attributes
++ * @inode: pointer to inode
++ *
++ * Attempt to divine whether or not an RPC call reply carrying stale
++ * attributes got scheduled after another call carrying updated ones.
++ *
++ * We assume that the server observes monotonic semantics for
++ * the change attribute, so a larger value means that the attributes in
++ * @fattr are more recent, in which case the function returns the
++ * value '1'.
++ * A return value of '0' indicates no measurable change
++ * A return value of '-1' means that the attributes in @inode are
++ * more recent.
++ */
++static int nfs_inode_attrs_cmp_monotonic(const struct nfs_fattr *fattr,
++					 const struct inode *inode)
+ {
+-	int ret;
++	s64 diff = fattr->change_attr - inode_peek_iversion_raw(inode);
++	if (diff > 0)
++		return 1;
++	return diff == 0 ? 0 : -1;
++}
 +
- 	ida_init(&server->openowner_id);
- 	ida_init(&server->lockowner_id);
- 	pnfs_init_server(server);
-diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
-index ed1c83738c30..83ad62c81fc7 100644
---- a/fs/nfs/nfs3xdr.c
-+++ b/fs/nfs/nfs3xdr.c
-@@ -2227,6 +2227,7 @@ static int decode_fsinfo3resok(struct xdr_stream *xdr,
- 
- 	/* ignore properties */
- 	result->lease_time = 0;
-+	result->change_attr_type = NFS4_CHANGE_TYPE_IS_TIME_METADATA;
- 	return 0;
- }
- 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index bc90f2a12d5d..6992c88a25e7 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -264,6 +264,7 @@ const u32 nfs4_fsinfo_bitmap[3] = { FATTR4_WORD0_MAXFILESIZE
- 			| FATTR4_WORD1_FS_LAYOUT_TYPES,
- 			FATTR4_WORD2_LAYOUT_BLKSIZE
- 			| FATTR4_WORD2_CLONE_BLKSIZE
-+			| FATTR4_WORD2_CHANGE_ATTR_TYPE
- 			| FATTR4_WORD2_XATTR_SUPPORT
- };
- 
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index d8a1911dd39e..edac4718dec1 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -153,6 +153,7 @@ static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst *req,
- 				 5 /* fs layout types */ + \
- 				 1 /* layout blksize */ + \
- 				 1 /* clone blksize */ + \
-+				 1 /* change attr type */ + \
- 				 1 /* xattr support */)
- #define encode_renew_maxsz	(op_encode_hdr_maxsz + 3)
- #define decode_renew_maxsz	(op_decode_hdr_maxsz)
-@@ -4846,6 +4847,32 @@ static int decode_attr_clone_blksize(struct xdr_stream *xdr, uint32_t *bitmap,
- 	return 0;
- }
- 
-+static int decode_attr_change_attr_type(struct xdr_stream *xdr,
-+					uint32_t *bitmap,
-+					enum nfs4_change_attr_type *res)
++/**
++ * nfs_inode_attrs_cmp_strict_monotonic - compare attributes
++ * @fattr: attributes
++ * @inode: pointer to inode
++ *
++ * Attempt to divine whether or not an RPC call reply carrying stale
++ * attributes got scheduled after another call carrying updated ones.
++ *
++ * We assume that the server observes strictly monotonic semantics for
++ * the change attribute, so a larger value means that the attributes in
++ * @fattr are more recent, in which case the function returns the
++ * value '1'.
++ * A return value of '-1' means that the attributes in @inode are
++ * more recent or unchanged.
++ */
++static int nfs_inode_attrs_cmp_strict_monotonic(const struct nfs_fattr *fattr,
++						const struct inode *inode)
 +{
-+	u32 tmp = NFS4_CHANGE_TYPE_IS_UNDEFINED;
++	return  nfs_inode_attrs_cmp_monotonic(fattr, inode) > 0 ? 1 : -1;
++}
 +
-+	dprintk("%s: bitmap is %x\n", __func__, bitmap[2]);
-+	if (bitmap[2] & FATTR4_WORD2_CHANGE_ATTR_TYPE) {
-+		if (xdr_stream_decode_u32(xdr, &tmp))
-+			return -EIO;
-+		bitmap[2] &= ~FATTR4_WORD2_CHANGE_ATTR_TYPE;
-+	}
-+
-+	switch(tmp) {
-+	case NFS4_CHANGE_TYPE_IS_MONOTONIC_INCR:
-+	case NFS4_CHANGE_TYPE_IS_VERSION_COUNTER:
-+	case NFS4_CHANGE_TYPE_IS_VERSION_COUNTER_NOPNFS:
-+	case NFS4_CHANGE_TYPE_IS_TIME_METADATA:
-+		*res = tmp;
++/**
++ * nfs_inode_attrs_cmp - compare attributes
++ * @fattr: attributes
++ * @inode: pointer to inode
++ *
++ * This function returns '1' if it thinks the attributes in @fattr are
++ * more recent than the ones cached in @inode. It returns '-1' if
++ * the attributes in @inode are more recent than the ones in @fattr,
++ * and it returns 0 if not sure.
++ */
++static int nfs_inode_attrs_cmp(const struct nfs_fattr *fattr,
++			       const struct inode *inode)
++{
++	if (nfs_inode_attrs_cmp_generic(fattr, inode) > 0)
++		return 1;
++	switch (NFS_SERVER(inode)->change_attr_type) {
++	case NFS4_CHANGE_TYPE_IS_UNDEFINED:
 +		break;
++	case NFS4_CHANGE_TYPE_IS_TIME_METADATA:
++		if (!(fattr->valid & NFS_ATTR_FATTR_CHANGE))
++			break;
++		return nfs_inode_attrs_cmp_monotonic(fattr, inode);
 +	default:
-+		*res = NFS4_CHANGE_TYPE_IS_UNDEFINED;
++		if (!(fattr->valid & NFS_ATTR_FATTR_CHANGE))
++			break;
++		return nfs_inode_attrs_cmp_strict_monotonic(fattr, inode);
 +	}
 +	return 0;
 +}
 +
- static int decode_fsinfo(struct xdr_stream *xdr, struct nfs_fsinfo *fsinfo)
- {
- 	unsigned int savep;
-@@ -4894,6 +4921,11 @@ static int decode_fsinfo(struct xdr_stream *xdr, struct nfs_fsinfo *fsinfo)
- 	if (status)
- 		goto xdr_error;
++static int nfs_refresh_inode_locked(struct inode *inode,
++				    struct nfs_fattr *fattr)
++{
++	int attr_cmp = nfs_inode_attrs_cmp(fattr, inode);
++	int ret = 0;
  
-+	status = decode_attr_change_attr_type(xdr, bitmap,
-+					      &fsinfo->change_attr_type);
-+	if (status)
-+		goto xdr_error;
+ 	trace_nfs_refresh_inode_enter(inode);
+ 
+-	if (nfs_inode_attrs_need_update(inode, fattr))
++	if (attr_cmp > 0)
+ 		ret = nfs_update_inode(inode, fattr);
+-	else
++	else if (attr_cmp == 0)
+ 		ret = nfs_check_inode_attributes(inode, fattr);
+ 
+ 	trace_nfs_refresh_inode_exit(inode, ret);
+@@ -1776,11 +1849,13 @@ EXPORT_SYMBOL_GPL(nfs_post_op_update_inode);
+  */
+ int nfs_post_op_update_inode_force_wcc_locked(struct inode *inode, struct nfs_fattr *fattr)
+ {
++	int attr_cmp = nfs_inode_attrs_cmp(fattr, inode);
+ 	int status;
+ 
+ 	/* Don't do a WCC update if these attributes are already stale */
+-	if ((fattr->valid & NFS_ATTR_FATTR) == 0 ||
+-			!nfs_inode_attrs_need_update(inode, fattr)) {
++	if (attr_cmp < 0)
++		return 0;
++	if ((fattr->valid & NFS_ATTR_FATTR) == 0 || !attr_cmp) {
+ 		fattr->valid &= ~(NFS_ATTR_FATTR_PRECHANGE
+ 				| NFS_ATTR_FATTR_PRESIZE
+ 				| NFS_ATTR_FATTR_PREMTIME
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 6992c88a25e7..0b0a48d78299 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1186,10 +1186,23 @@ nfs4_update_changeattr_locked(struct inode *inode,
+ 		unsigned long timestamp, unsigned long cache_validity)
+ {
+ 	struct nfs_inode *nfsi = NFS_I(inode);
++	u64 change_attr = inode_peek_iversion_raw(inode);
+ 
+ 	cache_validity |= NFS_INO_INVALID_CTIME | NFS_INO_INVALID_MTIME;
+ 
+-	if (cinfo->atomic && cinfo->before == inode_peek_iversion_raw(inode)) {
++	switch (NFS_SERVER(inode)->change_attr_type) {
++	case NFS4_CHANGE_TYPE_IS_UNDEFINED:
++		break;
++	case NFS4_CHANGE_TYPE_IS_TIME_METADATA:
++		if ((s64)(change_attr - cinfo->after) > 0)
++			goto out;
++		break;
++	default:
++		if ((s64)(change_attr - cinfo->after) >= 0)
++			goto out;
++	}
 +
- 	status = decode_attr_xattrsupport(xdr, bitmap,
- 					  &fsinfo->xattr_support);
- 	if (status)
-diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-index 73ab7c59d3a7..ea19dbf12301 100644
---- a/fs/nfs/proc.c
-+++ b/fs/nfs/proc.c
-@@ -91,6 +91,7 @@ nfs_proc_get_root(struct nfs_server *server, struct nfs_fh *fhandle,
- 	info->dtpref = fsinfo.tsize;
- 	info->maxfilesize = 0x7FFFFFFF;
- 	info->lease_time = 0;
-+	info->change_attr_type = NFS4_CHANGE_TYPE_IS_TIME_METADATA;
- 	return 0;
++	if (cinfo->atomic && cinfo->before == change_attr) {
+ 		nfsi->attrtimeo_timestamp = jiffies;
+ 	} else {
+ 		if (S_ISDIR(inode->i_mode)) {
+@@ -1201,7 +1214,7 @@ nfs4_update_changeattr_locked(struct inode *inode,
+ 				cache_validity |= NFS_INO_REVAL_PAGECACHE;
+ 		}
+ 
+-		if (cinfo->before != inode_peek_iversion_raw(inode))
++		if (cinfo->before != change_attr)
+ 			cache_validity |= NFS_INO_INVALID_ACCESS |
+ 					  NFS_INO_INVALID_ACL |
+ 					  NFS_INO_INVALID_XATTR;
+@@ -1209,8 +1222,9 @@ nfs4_update_changeattr_locked(struct inode *inode,
+ 	inode_set_iversion_raw(inode, cinfo->after);
+ 	nfsi->read_cache_jiffies = timestamp;
+ 	nfsi->attr_gencount = nfs_inc_attr_generation_counter();
+-	nfs_set_cache_invalid(inode, cache_validity);
+ 	nfsi->cache_validity &= ~NFS_INO_INVALID_CHANGE;
++out:
++	nfs_set_cache_invalid(inode, cache_validity);
  }
  
-diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-index 5b4c67c91f56..15004c469807 100644
---- a/include/linux/nfs4.h
-+++ b/include/linux/nfs4.h
-@@ -452,6 +452,7 @@ enum lock_type4 {
- #define FATTR4_WORD2_LAYOUT_BLKSIZE     (1UL << 1)
- #define FATTR4_WORD2_MDSTHRESHOLD       (1UL << 4)
- #define FATTR4_WORD2_CLONE_BLKSIZE	(1UL << 13)
-+#define FATTR4_WORD2_CHANGE_ATTR_TYPE	(1UL << 15)
- #define FATTR4_WORD2_SECURITY_LABEL     (1UL << 16)
- #define FATTR4_WORD2_MODE_UMASK		(1UL << 17)
- #define FATTR4_WORD2_XATTR_SUPPORT	(1UL << 18)
-@@ -709,6 +710,14 @@ struct nl4_server {
- 	} u;
- };
- 
-+enum nfs4_change_attr_type {
-+	NFS4_CHANGE_TYPE_IS_MONOTONIC_INCR = 0,
-+	NFS4_CHANGE_TYPE_IS_VERSION_COUNTER = 1,
-+	NFS4_CHANGE_TYPE_IS_VERSION_COUNTER_NOPNFS = 2,
-+	NFS4_CHANGE_TYPE_IS_TIME_METADATA = 3,
-+	NFS4_CHANGE_TYPE_IS_UNDEFINED = 4,
-+};
-+
- /*
-  * Options for setxattr. These match the flags for setxattr(2).
-  */
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index 6f76b32a0238..fbcdfd9f7a7f 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -180,6 +180,9 @@ struct nfs_server {
- #define NFS_OPTION_FSCACHE	0x00000001	/* - local caching enabled */
- #define NFS_OPTION_MIGRATION	0x00000002	/* - NFSv4 migration enabled */
- 
-+	enum nfs4_change_attr_type
-+				change_attr_type;/* Description of change attribute */
-+
- 	struct nfs_fsid		fsid;
- 	__u64			maxfilesize;	/* maximum file size */
- 	struct timespec64	time_delta;	/* smallest time granularity */
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index cc29dee508f7..717ecc87c9e7 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -152,6 +152,8 @@ struct nfs_fsinfo {
- 	__u32			layouttype[NFS_MAX_LAYOUT_TYPES]; /* supported pnfs layout driver */
- 	__u32			blksize; /* preferred pnfs io block size */
- 	__u32			clone_blksize; /* granularity of a CLONE operation */
-+	enum nfs4_change_attr_type
-+				change_attr_type; /* Info about change attr */
- 	__u32			xattr_support; /* User xattrs supported */
- };
- 
+ void
 -- 
 2.30.2
 
