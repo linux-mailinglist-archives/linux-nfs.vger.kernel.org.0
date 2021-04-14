@@ -2,34 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F12E35F534
+	by mail.lfdr.de (Postfix) with ESMTP id CB81F35F535
 	for <lists+linux-nfs@lfdr.de>; Wed, 14 Apr 2021 15:47:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351563AbhDNNoh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Apr 2021 09:44:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52152 "EHLO mail.kernel.org"
+        id S1351572AbhDNNoi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Apr 2021 09:44:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1351599AbhDNNoV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 14 Apr 2021 09:44:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4E7A7611B0
+        id S1351601AbhDNNoW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 14 Apr 2021 09:44:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BB25861139
         for <linux-nfs@vger.kernel.org>; Wed, 14 Apr 2021 13:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618407840;
-        bh=4ZfclsLNuZRrWn1g9V2Ry7g8wqo+pwCWaRNsFa+00vk=;
+        s=k20201202; t=1618407841;
+        bh=NXYi8V78A7/YKovtswQEPtV9IxSZkUuIYzFbABrofkE=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=KNc4vxJ1fT2j6PYg5AHxpm89swNSVzMLgFcKO4aF92SnEctcww7UQUaOuWQhHTVN2
-         AT+lNreVKupagpb0coUh47V6bqR+k2H+1CeCh5LXJI39rawymmLbncGHy2zxVJGIVF
-         uITkv8WeraT1kYMSanSCfxLcou2VYenrhW60Jh3mJ9OrpxvW3FsPE0EUMphiu/AZQU
-         wzlyJK/8CtOLlorJXrZaWk7tuPKfBeYM1uhy7zvJzV+RK/9JgJ7us00mF/ESK0qGW4
-         Q/XxE57qZAr6Vzzvatu3Lb7uezyDcxjFOfMONJL4BZpu2KTL236VUxTAmvp8iXzFF+
-         9DafdITDFxYlg==
+        b=Tw+a+5BUMVzmsC/p8DreX5jegZt1ymceZoVBmjZsfY9IymWQnkTv0u5WdrCXkWOfb
+         kfZbOE9yeE7fqikgw96L3X9/ZJ4P/x8UZ2K6pBh3Q1+Vwnd4k0Rc4r7tqvoanrK2gv
+         a1boSpO0rc62lXw6dpFKyaunKWzdZWmZZ6RolysMdyCLRCZXNL/LkW5+yXJZD7M6H5
+         OQNzcLYUdeVpuvFdcjVBixuR8QX3aZ9DmVyJdRkEOEuV4lYMnZBdxdM7mDOna6DZ1Y
+         rjkvRVxDX3ZU4HjHIfL1vgldVI6sNJXG5xFP8sPKY1UWWHKbPVM7nJlBF/SeG6EnYp
+         kIp9R6SI0GmZQ==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 12/26] NFSv4: Fix nfs4_bitmap_copy_adjust()
-Date:   Wed, 14 Apr 2021 09:43:39 -0400
-Message-Id: <20210414134353.11860-13-trondmy@kernel.org>
+Subject: [PATCH v2 13/26] NFS: Separate tracking of file nlinks cache validity from the mode/uid/gid
+Date:   Wed, 14 Apr 2021 09:43:40 -0400
+Message-Id: <20210414134353.11860-14-trondmy@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210414134353.11860-12-trondmy@kernel.org>
+In-Reply-To: <20210414134353.11860-13-trondmy@kernel.org>
 References: <20210414134353.11860-1-trondmy@kernel.org>
  <20210414134353.11860-2-trondmy@kernel.org>
  <20210414134353.11860-3-trondmy@kernel.org>
@@ -42,6 +42,7 @@ References: <20210414134353.11860-1-trondmy@kernel.org>
  <20210414134353.11860-10-trondmy@kernel.org>
  <20210414134353.11860-11-trondmy@kernel.org>
  <20210414134353.11860-12-trondmy@kernel.org>
+ <20210414134353.11860-13-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -50,97 +51,180 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Don't remove flags from the set retrieved from the cache_validity.
-We do want to retrieve all attributes that are listed as being
-invalid, whether or not there is a delegation set.
+Rename can cause us to revalidate the access cache, so lets track the
+nlinks separately from the mode/uid/gid.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/nfs4proc.c | 33 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+ fs/nfs/dir.c           |  2 +-
+ fs/nfs/inode.c         | 15 ++++++++++-----
+ fs/nfs/nfs4proc.c      | 13 +++++++------
+ fs/nfs/nfstrace.h      |  4 +++-
+ include/linux/nfs_fs.h |  2 ++
+ 5 files changed, 23 insertions(+), 13 deletions(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index a490f1373765..8dc595ce40ca 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -284,7 +284,7 @@ const u32 nfs4_fs_locations_bitmap[3] = {
- };
- 
- static void nfs4_bitmap_copy_adjust(__u32 *dst, const __u32 *src,
--		struct inode *inode)
-+				    struct inode *inode, unsigned long flags)
- {
- 	unsigned long cache_validity;
- 
-@@ -292,22 +292,19 @@ static void nfs4_bitmap_copy_adjust(__u32 *dst, const __u32 *src,
- 	if (!inode || !nfs4_have_delegation(inode, FMODE_READ))
- 		return;
- 
--	cache_validity = READ_ONCE(NFS_I(inode)->cache_validity);
--	if (!(cache_validity & NFS_INO_REVAL_FORCED))
--		cache_validity &= ~(NFS_INO_INVALID_CHANGE
--				| NFS_INO_INVALID_SIZE);
-+	cache_validity = READ_ONCE(NFS_I(inode)->cache_validity) | flags;
- 
-+	/* Remove the attributes over which we have full control */
-+	dst[1] &= ~FATTR4_WORD1_RAWDEV;
- 	if (!(cache_validity & NFS_INO_INVALID_SIZE))
- 		dst[0] &= ~FATTR4_WORD0_SIZE;
- 
- 	if (!(cache_validity & NFS_INO_INVALID_CHANGE))
- 		dst[0] &= ~FATTR4_WORD0_CHANGE;
--}
- 
--static void nfs4_bitmap_copy_adjust_setattr(__u32 *dst,
--		const __u32 *src, struct inode *inode)
--{
--	nfs4_bitmap_copy_adjust(dst, src, inode);
-+	if (!(cache_validity & NFS_INO_INVALID_OTHER))
-+		dst[1] &= ~(FATTR4_WORD1_MODE | FATTR4_WORD1_OWNER |
-+			    FATTR4_WORD1_OWNER_GROUP);
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index e924d65c125e..f748d2294261 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -1711,7 +1711,7 @@ static void nfs_drop_nlink(struct inode *inode)
+ 	NFS_I(inode)->attr_gencount = nfs_inc_attr_generation_counter();
+ 	nfs_set_cache_invalid(
+ 		inode, NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_CTIME |
+-			       NFS_INO_INVALID_OTHER | NFS_INO_REVAL_FORCED);
++			       NFS_INO_INVALID_NLINK | NFS_INO_REVAL_FORCED);
+ 	spin_unlock(&inode->i_lock);
  }
  
- static void nfs4_setup_readdir(u64 cookie, __be32 *verifier, struct dentry *dentry,
-@@ -3344,12 +3341,15 @@ static int nfs4_do_setattr(struct inode *inode, const struct cred *cred,
- 		.inode = inode,
- 		.stateid = &arg.stateid,
- 	};
-+	unsigned long adjust_flags = NFS_INO_INVALID_CHANGE;
- 	int err;
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 3d18e66a4b8f..7bf9138330f2 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -538,7 +538,7 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *fh, struct nfs_fattr *fattr, st
+ 		if (fattr->valid & NFS_ATTR_FATTR_NLINK)
+ 			set_nlink(inode, fattr->nlink);
+ 		else if (nfs_server_capable(inode, NFS_CAP_NLINK))
+-			nfs_set_cache_invalid(inode, NFS_INO_INVALID_OTHER);
++			nfs_set_cache_invalid(inode, NFS_INO_INVALID_NLINK);
+ 		if (fattr->valid & NFS_ATTR_FATTR_OWNER)
+ 			inode->i_uid = fattr->uid;
+ 		else if (nfs_server_capable(inode, NFS_CAP_OWNER))
+@@ -801,8 +801,10 @@ static u32 nfs_get_valid_attrmask(struct inode *inode)
+ 		reply_mask |= STATX_MTIME;
+ 	if (!(cache_validity & NFS_INO_INVALID_SIZE))
+ 		reply_mask |= STATX_SIZE;
++	if (!(cache_validity & NFS_INO_INVALID_NLINK))
++		reply_mask |= STATX_NLINK;
+ 	if (!(cache_validity & NFS_INO_INVALID_OTHER))
+-		reply_mask |= STATX_UID | STATX_GID | STATX_MODE | STATX_NLINK;
++		reply_mask |= STATX_UID | STATX_GID | STATX_MODE;
+ 	if (!(cache_validity & NFS_INO_INVALID_BLOCKS))
+ 		reply_mask |= STATX_BLOCKS;
+ 	return reply_mask;
+@@ -868,7 +870,9 @@ int nfs_getattr(struct user_namespace *mnt_userns, const struct path *path,
+ 		do_update |= cache_validity & NFS_INO_INVALID_MTIME;
+ 	if (request_mask & STATX_SIZE)
+ 		do_update |= cache_validity & NFS_INO_INVALID_SIZE;
+-	if (request_mask & (STATX_UID | STATX_GID | STATX_MODE | STATX_NLINK))
++	if (request_mask & STATX_NLINK)
++		do_update |= cache_validity & NFS_INO_INVALID_NLINK;
++	if (request_mask & (STATX_UID | STATX_GID | STATX_MODE))
+ 		do_update |= cache_validity & NFS_INO_INVALID_OTHER;
+ 	if (request_mask & STATX_BLOCKS)
+ 		do_update |= cache_validity & NFS_INO_INVALID_BLOCKS;
+@@ -1518,7 +1522,7 @@ static int nfs_check_inode_attributes(struct inode *inode, struct nfs_fattr *fat
  
-+	if (sattr->ia_valid & (ATTR_MODE|ATTR_UID|ATTR_GID))
-+		adjust_flags |= NFS_INO_INVALID_OTHER;
-+
- 	do {
--		nfs4_bitmap_copy_adjust_setattr(bitmask,
--				nfs4_bitmask(server, olabel),
--				inode);
-+		nfs4_bitmap_copy_adjust(bitmask, nfs4_bitmask(server, olabel),
-+					inode, adjust_flags);
+ 	/* Has the link count changed? */
+ 	if ((fattr->valid & NFS_ATTR_FATTR_NLINK) && inode->i_nlink != fattr->nlink)
+-		invalid |= NFS_INO_INVALID_OTHER;
++		invalid |= NFS_INO_INVALID_NLINK;
  
- 		err = _nfs4_do_setattr(inode, &arg, &res, cred, ctx);
- 		switch (err) {
-@@ -4157,8 +4157,7 @@ static int _nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
- 	if (inode && (server->flags & NFS_MOUNT_SOFTREVAL))
- 		task_flags |= RPC_TASK_TIMEOUT;
- 
--	nfs4_bitmap_copy_adjust(bitmask, nfs4_bitmask(server, label), inode);
--
-+	nfs4_bitmap_copy_adjust(bitmask, nfs4_bitmask(server, label), inode, 0);
- 	nfs_fattr_init(fattr);
- 	nfs4_init_sequence(&args.seq_args, &res.seq_res, 0, 0);
- 	return nfs4_do_call_sync(server->client, server, &msg,
-@@ -4764,8 +4763,8 @@ static int _nfs4_proc_link(struct inode *inode, struct inode *dir, const struct
+ 	ts = inode->i_atime;
+ 	if ((fattr->valid & NFS_ATTR_FATTR_ATIME) && !timespec64_equal(&ts, &fattr->atime))
+@@ -1942,6 +1946,7 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 					| NFS_INO_INVALID_MTIME
+ 					| NFS_INO_INVALID_SIZE
+ 					| NFS_INO_INVALID_BLOCKS
++					| NFS_INO_INVALID_NLINK
+ 					| NFS_INO_INVALID_OTHER;
+ 				if (S_ISDIR(inode->i_mode))
+ 					nfs_force_lookup_revalidate(inode);
+@@ -2074,7 +2079,7 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 		}
+ 	} else if (server->caps & NFS_CAP_NLINK) {
+ 		nfsi->cache_validity |= save_cache_validity &
+-				(NFS_INO_INVALID_OTHER
++				(NFS_INO_INVALID_NLINK
+ 				| NFS_INO_REVAL_FORCED);
+ 		cache_revalidated = false;
  	}
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 8dc595ce40ca..a74c1c3c4192 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1167,14 +1167,14 @@ int nfs4_call_sync(struct rpc_clnt *clnt,
+ static void
+ nfs4_inc_nlink_locked(struct inode *inode)
+ {
+-	nfs_set_cache_invalid(inode, NFS_INO_INVALID_OTHER);
++	nfs_set_cache_invalid(inode, NFS_INO_INVALID_NLINK);
+ 	inc_nlink(inode);
+ }
  
- 	nfs4_inode_make_writeable(inode);
--	nfs4_bitmap_copy_adjust_setattr(bitmask, nfs4_bitmask(server, res.label), inode);
--
-+	nfs4_bitmap_copy_adjust(bitmask, nfs4_bitmask(server, res.label), inode,
-+				NFS_INO_INVALID_CHANGE);
- 	status = nfs4_call_sync(server->client, server, &msg, &arg.seq_args, &res.seq_res, 1);
- 	if (!status) {
- 		nfs4_update_changeattr(dir, &res.cinfo, res.fattr->time_start,
+ static void
+ nfs4_dec_nlink_locked(struct inode *inode)
+ {
+-	nfs_set_cache_invalid(inode, NFS_INO_INVALID_OTHER);
++	nfs_set_cache_invalid(inode, NFS_INO_INVALID_NLINK);
+ 	drop_nlink(inode);
+ }
+ 
+@@ -4717,11 +4717,11 @@ static int nfs4_proc_rename_done(struct rpc_task *task, struct inode *old_dir,
+ 			/* Note: If we moved a directory, nlink will change */
+ 			nfs4_update_changeattr(old_dir, &res->old_cinfo,
+ 					res->old_fattr->time_start,
+-					NFS_INO_INVALID_OTHER |
++					NFS_INO_INVALID_NLINK |
+ 					    NFS_INO_INVALID_DATA);
+ 			nfs4_update_changeattr(new_dir, &res->new_cinfo,
+ 					res->new_fattr->time_start,
+-					NFS_INO_INVALID_OTHER |
++					NFS_INO_INVALID_NLINK |
+ 					    NFS_INO_INVALID_DATA);
+ 		} else
+ 			nfs4_update_changeattr(old_dir, &res->old_cinfo,
+@@ -5433,8 +5433,9 @@ static void nfs4_bitmask_set(__u32 bitmask[NFS4_BITMASK_SZ], const __u32 *src,
+ 		bitmask[1] |= FATTR4_WORD1_TIME_ACCESS;
+ 	if (cache_validity & NFS_INO_INVALID_OTHER)
+ 		bitmask[1] |= FATTR4_WORD1_MODE | FATTR4_WORD1_OWNER |
+-				FATTR4_WORD1_OWNER_GROUP |
+-				FATTR4_WORD1_NUMLINKS;
++				FATTR4_WORD1_OWNER_GROUP;
++	if (cache_validity & NFS_INO_INVALID_NLINK)
++		bitmask[1] |= FATTR4_WORD1_NUMLINKS;
+ 	if (label && label->len && cache_validity & NFS_INO_INVALID_LABEL)
+ 		bitmask[2] |= FATTR4_WORD2_SECURITY_LABEL;
+ 	if (cache_validity & NFS_INO_INVALID_CTIME)
+diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
+index cdba6eebe3cb..a0ebc53160dd 100644
+--- a/fs/nfs/nfstrace.h
++++ b/fs/nfs/nfstrace.h
+@@ -48,6 +48,7 @@ TRACE_DEFINE_ENUM(NFS_INO_INVALID_OTHER);
+ TRACE_DEFINE_ENUM(NFS_INO_DATA_INVAL_DEFER);
+ TRACE_DEFINE_ENUM(NFS_INO_INVALID_BLOCKS);
+ TRACE_DEFINE_ENUM(NFS_INO_INVALID_XATTR);
++TRACE_DEFINE_ENUM(NFS_INO_INVALID_NLINK);
+ 
+ #define nfs_show_cache_validity(v) \
+ 	__print_flags(v, "|", \
+@@ -65,7 +66,8 @@ TRACE_DEFINE_ENUM(NFS_INO_INVALID_XATTR);
+ 			{ NFS_INO_INVALID_OTHER, "INVALID_OTHER" }, \
+ 			{ NFS_INO_DATA_INVAL_DEFER, "DATA_INVAL_DEFER" }, \
+ 			{ NFS_INO_INVALID_BLOCKS, "INVALID_BLOCKS" }, \
+-			{ NFS_INO_INVALID_XATTR, "INVALID_XATTR" })
++			{ NFS_INO_INVALID_XATTR, "INVALID_XATTR" }, \
++			{ NFS_INO_INVALID_NLINK, "INVALID_NLINK" })
+ 
+ TRACE_DEFINE_ENUM(NFS_INO_ADVISE_RDPLUS);
+ TRACE_DEFINE_ENUM(NFS_INO_STALE);
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 624ffd47a9d4..41165b988dfb 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -246,11 +246,13 @@ struct nfs4_copy_state {
+ 				BIT(13)		/* Deferred cache invalidation */
+ #define NFS_INO_INVALID_BLOCKS	BIT(14)         /* cached blocks are invalid */
+ #define NFS_INO_INVALID_XATTR	BIT(15)		/* xattrs are invalid */
++#define NFS_INO_INVALID_NLINK	BIT(16)		/* cached nlinks is invalid */
+ 
+ #define NFS_INO_INVALID_ATTR	(NFS_INO_INVALID_CHANGE \
+ 		| NFS_INO_INVALID_CTIME \
+ 		| NFS_INO_INVALID_MTIME \
+ 		| NFS_INO_INVALID_SIZE \
++		| NFS_INO_INVALID_NLINK \
+ 		| NFS_INO_INVALID_OTHER)	/* inode metadata is invalid */
+ 
+ /*
 -- 
 2.30.2
 
