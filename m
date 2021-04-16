@@ -2,68 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61B1736203F
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Apr 2021 14:51:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E3A1362759
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Apr 2021 20:00:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234914AbhDPMvs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 16 Apr 2021 08:51:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235380AbhDPMvs (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 16 Apr 2021 08:51:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3CCD2611AF
-        for <linux-nfs@vger.kernel.org>; Fri, 16 Apr 2021 12:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618577483;
-        bh=cOdIbZKTeK6rt2Pws0vFZ/fMa+bF1QPSomfPQeBo/Kk=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=JUjMz9iwiEfrgBOCT45FTIb2yJE15DHmGw4PWUsYwOhKjx6XlmQtJXpOaT8VJmIyu
-         psvpK0x0xfTxYFxJpx2ENp1soQFr7Rua0G72XHfJuDCFP4mXJVWTKq3yJwUYX1rIst
-         U/h5iW/htcvhQNa4x1iFb0aUM7GggfTIp9SFsi2az1UDD1AI0MEZC9XRC3HtJvdzv1
-         /0uOYqbzWKgQy9nxcHZa+5SqcycWB2vPHjIqSi3xWiD9R6HU27KTO7AbZgvIdtjyMa
-         ie1LTncUlFLCqftS50hSMy+Yre9A4rOuegDPLOLXOC74AGPgRh7wwY5zNJLSd4eRDE
-         U6ZNi618FgugA==
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 3/3] NFSv4.1: Simplify layout return in pnfs_layout_process()
-Date:   Fri, 16 Apr 2021 08:51:21 -0400
-Message-Id: <20210416125121.5753-3-trondmy@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210416125121.5753-2-trondmy@kernel.org>
-References: <20210416125121.5753-1-trondmy@kernel.org>
- <20210416125121.5753-2-trondmy@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S236045AbhDPSAs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 16 Apr 2021 14:00:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235905AbhDPSAr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 16 Apr 2021 14:00:47 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 968C2C061574
+        for <linux-nfs@vger.kernel.org>; Fri, 16 Apr 2021 11:00:21 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id E05F16D1C; Fri, 16 Apr 2021 14:00:19 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org E05F16D1C
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 1/5] nfsd: ensure new clients break delegations
+Date:   Fri, 16 Apr 2021 14:00:14 -0400
+Message-Id: <1618596018-9899-1-git-send-email-bfields@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-If the server hands us a layout that does not match the one we currently
-hold, then have pnfs_mark_matching_lsegs_return() just ditch the old
-layout if NFS_LSEG_LAYOUTRETURN is not set.
+If nfsd already has an open file that it plans to use for IO from
+another, it may not need to do another vfs open, but it still may need
+to break any delegations in case the existing opens are for another
+client.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Symptoms are that we may incorrectly fail to break a delegation on a
+write open from a different client, when the delegation-holding client
+already has a write open.
+
+Fixes: 28df3d1539de ("nfsd: clients don't need to break their own delegations")
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 ---
- fs/nfs/pnfs.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/nfsd/nfs4state.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 33574f47601f..fa22b4be9212 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -2410,9 +2410,7 @@ pnfs_layout_process(struct nfs4_layoutget *lgp)
- 			.iomode = IOMODE_ANY,
- 			.length = NFS4_MAX_UINT64,
- 		};
--		pnfs_set_plh_return_info(lo, IOMODE_ANY, 0);
--		pnfs_mark_matching_lsegs_return(lo, &lo->plh_return_segs,
--						&range, 0);
-+		pnfs_mark_matching_lsegs_return(lo, &free_me, &range, 0);
- 		goto out_forget;
- 	} else {
- 		/* We have a completely new layout */
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 97447a64bad0..886e50ed07c2 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -4869,6 +4869,11 @@ static __be32 nfs4_get_vfs_file(struct svc_rqst *rqstp, struct nfs4_file *fp,
+ 	if (nf)
+ 		nfsd_file_put(nf);
+ 
++	status = nfserrno(nfsd_open_break_lease(cur_fh->fh_dentry->d_inode,
++								access));
++	if (status)
++		goto out_put_access;
++
+ 	status = nfsd4_truncate(rqstp, cur_fh, open);
+ 	if (status)
+ 		goto out_put_access;
+@@ -6849,11 +6854,20 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ static __be32 nfsd_test_lock(struct svc_rqst *rqstp, struct svc_fh *fhp, struct file_lock *lock)
+ {
+ 	struct nfsd_file *nf;
+-	__be32 err = nfsd_file_acquire(rqstp, fhp, NFSD_MAY_READ, &nf);
+-	if (!err) {
+-		err = nfserrno(vfs_test_lock(nf->nf_file, lock));
+-		nfsd_file_put(nf);
+-	}
++	__be32 err;
++
++	err = nfsd_file_acquire(rqstp, fhp, NFSD_MAY_READ, &nf);
++	if (err)
++		return err;
++	fh_lock(fhp); /* to block new leases till after test_lock: */
++	err = nfserrno(nfsd_open_break_lease(fhp->fh_dentry->d_inode,
++							NFSD_MAY_READ));
++	if (err)
++		goto out;
++	err = nfserrno(vfs_test_lock(nf->nf_file, lock));
++out:
++	fh_unlock(fhp);
++	nfsd_file_put(nf);
+ 	return err;
+ }
+ 
 -- 
 2.30.2
 
