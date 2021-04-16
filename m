@@ -2,149 +2,146 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5234361869
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Apr 2021 05:52:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F48F361CAB
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Apr 2021 11:01:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238330AbhDPDxJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 15 Apr 2021 23:53:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238305AbhDPDxI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 15 Apr 2021 23:53:08 -0400
-Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF912C061756
-        for <linux-nfs@vger.kernel.org>; Thu, 15 Apr 2021 20:52:44 -0700 (PDT)
-Received: by mail-qk1-x729.google.com with SMTP id f19so9905366qka.8
-        for <linux-nfs@vger.kernel.org>; Thu, 15 Apr 2021 20:52:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/e5NJBFFJg1ldGTdD9zc5Mr29MH3BLv/X8XsBP6gxuk=;
-        b=AU+if+ARKkZg0oCtGBC21/+AfuyU0XEj8Q3XCFQI5Vz5+ffhJI7Y7YqnSvyyFhvRGO
-         NfcSXDm+m77LyOyUry2Go2IdYHs9k3bP6gNUHtEnOtmgx6IXL8rMadPjQGlto5JXe3qC
-         qbfvkIjmdjYmlm0u4vGWo4kcGXzzXUvPPFKdrPJDA416QydiC8T7FUlANfcTjnZHL1tv
-         jifz73rUglLGTC5lqfdURKihU8Lr/KNFuIQvTWA9P1HWkX4DKKmNTPBNAthLhOTllw9a
-         /K5g7PNgASLri+ppf3rYrknUbT+E9rlqemueZCtIBp95dvswlMwfMOd3DkaKpI11NPE1
-         xAhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/e5NJBFFJg1ldGTdD9zc5Mr29MH3BLv/X8XsBP6gxuk=;
-        b=eeJvipkLKEqUmIyEHuTZiS3NUXMZdCs78umM+vTyY/1ywxu3o2YFddvGznVOVYhN+N
-         oN3nXgMseQqEeKwSVv8B0S8Vu40/6BpjiOemAHxky3dFFgpHSCu0sLsRMCulYX4vL/n8
-         BqrXN11YUUJyHzgJgWX+69DBUlYEJoJQn4B5/qHXWE7zRDxu3QvPB7W7/O8DRRYIGH7F
-         9o4Qq2l+hJryso/aPGh+6CdO6W0hW0HpPXSXSIqbvPsXFZ0zVZAud6LaWuUnmrSPPnON
-         HWj4q4SN1j3/TuRwb7HOLWdsNDEvAJV+Ite5vXXQMTTIj41EBU2VHJp2qGu8UMr/y7EX
-         vEPg==
-X-Gm-Message-State: AOAM532TMbmDv3yzsgl4hBB/2zqsVSPKY+cOELpA+bIEnNtvxmAGZ2rz
-        1XC3nRIiYkobJ2HxjOyKkohmUh/me9I=
-X-Google-Smtp-Source: ABdhPJzmTUcKq5CUzZj7pi5Nh7AHHd49hO2jQkPfqpPoXqgzHZODBBHl4adpD0k0gOAbyhee08HBZQ==
-X-Received: by 2002:a37:9bd1:: with SMTP id d200mr6519885qke.91.1618545163982;
-        Thu, 15 Apr 2021 20:52:43 -0700 (PDT)
-Received: from kolga-mac-1.vpn.netapp.com (nat-216-240-30-25.netapp.com. [216.240.30.25])
-        by smtp.gmail.com with ESMTPSA id x82sm3500913qkb.0.2021.04.15.20.52.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Apr 2021 20:52:43 -0700 (PDT)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 13/13] sunrpc: provide multipath info in the sysfs directory
-Date:   Thu, 15 Apr 2021 23:52:26 -0400
-Message-Id: <20210416035226.53588-14-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-In-Reply-To: <20210416035226.53588-1-olga.kornievskaia@gmail.com>
-References: <20210416035226.53588-1-olga.kornievskaia@gmail.com>
+        id S240811AbhDPJB2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 16 Apr 2021 05:01:28 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:47315 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240742AbhDPJB2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 16 Apr 2021 05:01:28 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 7EAF35C0091;
+        Fri, 16 Apr 2021 05:00:59 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Fri, 16 Apr 2021 05:00:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pks.im; h=date
+        :from:to:cc:subject:message-id:mime-version:content-type; s=fm3;
+         bh=4G80WgmZrbsLqASm8aHcQf2WuAVQOoavTsGWfKDN3yk=; b=jU6jt2ExiDvQ
+        nPE+WGQvl9IioVFiy3faviG50IBqiTC69YPcZBP6FSvLVhCy7NT1pCRNzCy5n09X
+        0QKma1nPsSLokgARrp8iEGLDrESPFGJICASgpY9GIEuiyvycvp1q0mhnqiba3lOn
+        zyIAF579zCBNgivB+/iP1MHGEQGB3Hnp0hVLBkpC4kGtLJ/VnRzg8uhniVpVDEJW
+        zaOeSn2NT5JJekhDXyqGdAQJziFzVTBYpgirwCjlYZntRKglNuJX0YGks6ja5NHX
+        ZPWfL9Pli+D5n8KNmT0i2fyNC3L2MIWUfcQRk/Kz2Gf/ZzpBKwuRyjyr1sV3ZkAj
+        B58LsDlI/Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:message-id
+        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
+        :x-me-sender:x-sasl-enc; s=fm2; bh=4G80WgmZrbsLqASm8aHcQf2WuAVQO
+        oavTsGWfKDN3yk=; b=tsKzSGoJrffLkr2/D3X8Wy/k8yNGMBiAS8q2AltvU30Ym
+        wU7UtjORbi7daZBsZOfWsZ63oWkn/f3sqkguYsQJQ4FoqlRnCcDi3w/TuA4eaD4U
+        ErmEPv/PibBY2GVR1KVYXFEY1oP3qJAcu4PWwOkhC5R1gsiNYID/koV5ghlUDjQS
+        sbfoFLeyrs1KAr878MKQu8VBMGFgv/S9WT7BTD6pIbuvbdsgBgyltmsr3X4NNM8b
+        ED7xYse0GcZYUt73IkS2HUqJ7k67GArzw9zQYsJOQatcIy1Nsed39ufXqYrd3YXX
+        IwCvlPRbmiwwjcQI8Yo5cNoIqirjnruDLK8XQwW6A==
+X-ME-Sender: <xms:S1J5YOPbTlioY2W-C5ebStspZjDUD0THKWISzEskqUdqBWRT4nYBSA>
+    <xme:S1J5YK7ZnlgGRE759jm6YAm1DTz1zsvog4zaCGPteACqiD1Fq7OrI0Zs5ckxUiYY1
+    wawYG6QguE043vb8g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrudelhedgudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfggtggusehgtderredttddvnecuhfhrohhmpefrrghtrhhitghk
+    ucfuthgvihhnhhgrrhguthcuoehpshesphhkshdrihhmqeenucggtffrrghtthgvrhhnpe
+    ejieefvdeuleffgfejudffvdeghfeigfejgfdvvdefudevffefveffhffgkeeiffenucfk
+    phepkeelrdduvddrfedtrddvfeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepphhssehpkhhsrdhimh
+X-ME-Proxy: <xmx:S1J5YHlEDvu1ROt80StRsHEZZvzGWFxikM4dFPgpKCqKCaccT4bbaw>
+    <xmx:S1J5YDQ45wxgDX1mG7Aw9BocOcClDp8LkUhXN-m4bEsF2T09JNGbWg>
+    <xmx:S1J5YOEVzwYfo18qSdYvghYrGVLZb1bW0-jNPczrMDPBWaMXTQtemA>
+    <xmx:S1J5YD86jA6s3xL0nZIt6Sw8dCFoREB4G6UXPVwOjidgUw-5Z1KObg>
+Received: from vm-mail.pks.im (dynamic-089-012-030-238.89.12.pool.telefonica.de [89.12.30.238])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9ECDA108005B;
+        Fri, 16 Apr 2021 05:00:58 -0400 (EDT)
+Received: from localhost (ncase [10.192.0.11])
+        by vm-mail.pks.im (OpenSMTPD) with ESMTPSA id cfb4c39e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Fri, 16 Apr 2021 09:00:50 +0000 (UTC)
+Date:   Fri, 16 Apr 2021 11:00:49 +0200
+From:   Patrick Steinhardt <ps@pks.im>
+To:     linux-nfs@vger.kernel.org
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH] Fix `statx()` emulation breaking exports
+Message-ID: <a5547a1af1dc90d65100c873204a5b0912ecb9a8.1618563564.git.ps@pks.im>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7cL/wszOrT/+3VUS"
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
 
-Allow to query xrpt_switch attributes. Currently showing the following
-fields of the rpc_xprt_switch structure: xps_nxprts, xps_nactive,
-xps_queuelen.
+--7cL/wszOrT/+3VUS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Ever since commit 76c21e3f (mountd: Check the stat() return values in
+match_fsid(), 2020-05-08), it wasn't possible to export filesystems
+on my musl based system anymore.
+
+The root cause of this is the innocuous-looking change to decide based
+on `errno` whether `is_mountpoint()` raised a real error or whether it
+simply didn't match. The issue is that `is_mountpoint()` transitively
+calls into our `xlstat()` wrapper, which either executes `statx()` if
+the system supports it or otherwise falls back to `fstatat()`. But if
+`statx()` is not supported, then we'll always first set `errno =3D ENOSYS`
+before calling `fstatat()`. So effectively, all systems which do not
+have `statx()` and whose `fstatat()` doesn't reset `errno` will cause us
+to end up with errno set to `ENOSYS`.
+
+Fix the issue by resetting `errno` before calling `fstatat()` in both
+`xlstat()` and `xstat()`.
+
+Fixes: 76c21e3f (mountd: Check the stat() return values in match_fsid(), 20=
+20-05-08)
+Signed-off-by: Patrick Steinhardt <ps@pks.im>
 ---
- net/sunrpc/sysfs.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ support/misc/xstat.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index e7a728da8e9c..b6a2484cf067 100644
---- a/net/sunrpc/sysfs.c
-+++ b/net/sunrpc/sysfs.c
-@@ -54,6 +54,19 @@ rpc_sysfs_xprt_kobj_get_xprt(struct kobject *kobj)
- 	return xprt_get(x->xprt);
+diff --git a/support/misc/xstat.c b/support/misc/xstat.c
+index a438fbcc..6f751f7f 100644
+--- a/support/misc/xstat.c
++++ b/support/misc/xstat.c
+@@ -85,6 +85,7 @@ int xlstat(const char *pathname, struct stat *statbuf)
+ 		return 0;
+ 	else if (errno !=3D ENOSYS)
+ 		return -1;
++	errno =3D 0;
+ 	return fstatat(AT_FDCWD, pathname, statbuf, AT_NO_AUTOMOUNT |
+ 			AT_SYMLINK_NOFOLLOW);
  }
- 
-+static inline struct rpc_xprt_switch *
-+rpc_sysfs_xprt_switch_kobj_get_xprt(struct kobject *kobj)
-+{
-+	struct rpc_sysfs_xprt_switch *x = container_of(kobj,
-+		struct rpc_sysfs_xprt_switch, kobject);
-+	struct rpc_xprt_switch *xprt_switch;
-+
-+	rcu_read_lock();
-+	xprt_switch = xprt_switch_get(rcu_dereference(x->xprt_switch));
-+	rcu_read_unlock();
-+	return xprt_switch;
-+}
-+
- static ssize_t rpc_sysfs_xprt_dstaddr_show(struct kobject *kobj,
- 					   struct kobj_attribute *attr,
- 					   char *buf)
-@@ -122,6 +135,24 @@ static ssize_t rpc_sysfs_xprt_info_show(struct kobject *kobj,
- 	return ret + 1;
+@@ -95,6 +96,7 @@ int xstat(const char *pathname, struct stat *statbuf)
+ 		return 0;
+ 	else if (errno !=3D ENOSYS)
+ 		return -1;
++	errno =3D 0;
+ 	return fstatat(AT_FDCWD, pathname, statbuf, AT_NO_AUTOMOUNT);
  }
- 
-+static ssize_t rpc_sysfs_xprt_switch_info_show(struct kobject *kobj,
-+					       struct kobj_attribute *attr,
-+					       char *buf)
-+{
-+	struct rpc_xprt_switch *xprt_switch =
-+		rpc_sysfs_xprt_switch_kobj_get_xprt(kobj);
-+	ssize_t ret;
-+
-+	if (!xprt_switch)
-+		return 0;
-+	ret = sprintf(buf, "num_xprts=%u\nnum_active=%u\nqueue_len=%ld",
-+		      xprt_switch->xps_nxprts, xprt_switch->xps_nactive,
-+		      atomic_long_read(&xprt_switch->xps_queuelen));
-+	buf[ret] = '\n';
-+	xprt_switch_put(xprt_switch);
-+	return ret + 1;
-+}
-+
- static ssize_t rpc_sysfs_xprt_dstaddr_store(struct kobject *kobj,
- 					    struct kobj_attribute *attr,
- 					    const char *buf, size_t count)
-@@ -230,6 +261,14 @@ static struct attribute *rpc_sysfs_xprt_attrs[] = {
- 	NULL,
- };
- 
-+static struct kobj_attribute rpc_sysfs_xprt_switch_info =
-+	__ATTR(xprt_switch_info, 0444, rpc_sysfs_xprt_switch_info_show, NULL);
-+
-+static struct attribute *rpc_sysfs_xprt_switch_attrs[] = {
-+	&rpc_sysfs_xprt_switch_info.attr,
-+	NULL,
-+};
-+
- static struct kobj_type rpc_sysfs_client_type = {
- 	.release = rpc_sysfs_client_release,
- 	.sysfs_ops = &kobj_sysfs_ops,
-@@ -238,6 +277,7 @@ static struct kobj_type rpc_sysfs_client_type = {
- 
- static struct kobj_type rpc_sysfs_xprt_switch_type = {
- 	.release = rpc_sysfs_xprt_switch_release,
-+	.default_attrs = rpc_sysfs_xprt_switch_attrs,
- 	.sysfs_ops = &kobj_sysfs_ops,
- 	.namespace = rpc_sysfs_xprt_switch_namespace,
- };
--- 
-2.27.0
+=20
+--=20
+2.31.1
 
+
+--7cL/wszOrT/+3VUS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEF9hrgiFbCdvenl/rVbJhu7ckPpQFAmB5UkAACgkQVbJhu7ck
+PpQMPA//Y2sf85kEDNzNNhFKT8NdE8SMSRQuPByhHTAQ3pXxfJVZ6D+A5AD6SCWj
+1yxru+xCtIZsdRQ5K7sJtNgiwF3bbAqzCv/uVVXBxz+l/wK5Dv8qN0/IvlYgIJ+N
+Dd0yfRXIMXRjXMZG1Zre2hGn5AtVLTzRsOC3AxwesdztOAVo+9bUlNa35kGEvKQy
+D/wfiwPKT0F6J6tYMx704j2eJ3LUiFv/G4H3sgfLVOjeftWTLh33PcCWfNvlDfGS
+QrNWX26QZ1bvSbQlZKj3m0boTwyzt0PI067H4bPd3n5pyAO0u9dnk4gOPTodMZ72
+2YnfqHhXsACXZ9tVj0d+u2dPetmRuIUWAVgfqVxSMVfQw3AB5zaJbWkYB4qCspXw
+b4WyURcjkQ1tO8AO1loxdZy426XmRrBE/6JdFFBHDcu1KfiSBALx9F/72NH07lJB
+gkpN8tIc0yhnnHE1eKtvwlc48zWmKhYEswPZzeiXvZd069FXunHz8wnjwG/GWP9F
++RuZHmLK4wnxxSoYntssdOGxsRCEb3yAOk6h35lwRql+H0f7LREuUPvIRo42pYYM
+fGyLzISCqMn30R2paKuhFWGJTuNlD8D4XLfhhhTFF/K8IhbnzqNwSiIoYMKrLVks
+G33Z8GBG0zm+KxyvSThF4PUC9NuF12s3fKIvp6luw3UBYHP4hpE=
+=zDdZ
+-----END PGP SIGNATURE-----
+
+--7cL/wszOrT/+3VUS--
