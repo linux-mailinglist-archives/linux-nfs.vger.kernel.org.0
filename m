@@ -2,301 +2,167 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3940936288A
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Apr 2021 21:21:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9B61363120
+	for <lists+linux-nfs@lfdr.de>; Sat, 17 Apr 2021 18:16:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242551AbhDPTVs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 16 Apr 2021 15:21:48 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54010 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242887AbhDPTVr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 16 Apr 2021 15:21:47 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13GJIvca053487;
-        Fri, 16 Apr 2021 19:21:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=lYlibSezri4HQ6l7XdmaVyzeKEehM7P0xBPS75K2diQ=;
- b=WwEahtdlyYL4kpJ/8b3lCOlfESxnKM6Oo3v5I0Z68oVCCq2UKsiMLfgDVyXGQ8MoFsh8
- JYw7oKu8Zc1LSkqGt9eUxhlL/IU5T58iCNWESE7prvHPyFlb7DV+LU1fMe1axHJlBYos
- Xn/IF/o8wQ3ZqzwEZFkIhKMo0LDZEBcaJF9JTs0mEsne/b4q/l00QBI3ZR1UC9s7/bSE
- OjjvBqsVGKi6sJemcCN7Bp6WFSInwH3O9gf/3uuhBMRLQMuTcjW7/7ZesNWsnuTteQ2e
- mGxlR0kFWqxKacw2xYhN93EilswJvdla1toAmCZvAF+2QYwH2KrI5luOdSVgncRn3if2 ww== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 37u3ymt41a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 16 Apr 2021 19:21:19 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13GJKYGd106863;
-        Fri, 16 Apr 2021 19:21:19 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2172.outbound.protection.outlook.com [104.47.55.172])
-        by userp3030.oracle.com with ESMTP id 37uny34033-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 16 Apr 2021 19:21:18 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QnhIEY3PXq3d5fqw90DkWC12uBKioS2nXFzuvj7/+Sw1HoKwkO49oREsQDQUBgCsbxV5kcojAlAVURxLAF7Wo/JXIJGxZTkmnp818/lhFW1eunNWlFCGcQv32+Mo0tKSz/zEaC7pffSajI3CjPlgEFDF3+oE0ZLVc2vIzDEjQCneBNH1LgrZ9JhojJkM87EvZrNSLOQn4WpDXaWTC0T0f1tXz6v2GBaRqa29ai4ZeXeExgcwTZaVbQu+Rxot2T634CHcPDpvbQThAHZUmrICPkRFYweekmUGOdjCc81zKir8p5McHAN6LWc2UaUhAqSLZldt76lMAcUOqd4UTLXlpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lYlibSezri4HQ6l7XdmaVyzeKEehM7P0xBPS75K2diQ=;
- b=EQ42mUIqEZV255vHpAwMCoDG3OBCSVjKb28buJKRVSnzFM08pyFUAXjC3Vdi0OBMQOU+H/cCVcphkiWGefBymgEOVeiejdAOU8hvMe48Bmcj4On1VN+awFCJU/RNfNbXQaWmgC8vP8t+qidzF31WvIJBGI9eE6OtpVZWJmzC3D4FqyHkKH2dGErBGJIT9RvnSI47HqN/+iQJuf2X/MyZMuj3nltPcdMJ1McmXseSzLlpwI3jVQkwfKISypf4cBAPwKIv5vp7xCpkKKKBm0phfFgbusn8KT/3uazDusBN6HEjxq6ddWaZengohvfT+Q4bxySveC+vwfbWt45u6t46Vw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lYlibSezri4HQ6l7XdmaVyzeKEehM7P0xBPS75K2diQ=;
- b=xKqYfMvs1/J8wYZpWa7rHMwMR4g6QKxILdviOj6bJB9SwTMix6bSNbYmW4R3TTpNomMZ+SaJC6y94zC1Ka5y9kPsM6c5/ZVuBqwZzVTEazl2gazkv8NWOq3g3TJyj1fZu5PwVTgfo9AudS3nHMtzoYjffqPFNgnOcX3Sanc6v14=
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by BYAPR10MB3112.namprd10.prod.outlook.com (2603:10b6:a03:157::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.18; Fri, 16 Apr
- 2021 19:21:16 +0000
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::50bf:7319:321c:96c9]) by SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::50bf:7319:321c:96c9%4]) with mapi id 15.20.4042.018; Fri, 16 Apr 2021
- 19:21:16 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Bruce Fields <bfields@redhat.com>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 2/5] nfsd: hash nfs4_files by inode number
-Thread-Topic: [PATCH 2/5] nfsd: hash nfs4_files by inode number
-Thread-Index: AQHXMupixIvrGePep02kzvU78UvPJ6q3hYIA
-Date:   Fri, 16 Apr 2021 19:21:16 +0000
-Message-ID: <7342A4CD-0B93-4C13-AD32-4DADC26CD8ED@oracle.com>
-References: <1618596018-9899-1-git-send-email-bfields@redhat.com>
- <1618596018-9899-2-git-send-email-bfields@redhat.com>
-In-Reply-To: <1618596018-9899-2-git-send-email-bfields@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=oracle.com;
-x-originating-ip: [68.61.232.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9775e60f-549e-42ed-a2ff-08d9010cce99
-x-ms-traffictypediagnostic: BYAPR10MB3112:
-x-microsoft-antispam-prvs: <BYAPR10MB31126312B4AD50DFCBD9AA27934C9@BYAPR10MB3112.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3UjjHUZks4qd2Y2spvLJUztOWRhJjiLn/dbKcwOYOVUcwClej30RiwMu9/8G0LPnSAbtIBjLAbH6aGUyRKWwCNCTmhDQnrz/W5oeNWbAfhpqF/ycecYpAZhTnAy5YZwxohnNR+W79snDJNtA+cH7yh29cC5Nvoyo0n7PelZZ1FiJ+CFCkOFEOk7KIt8NaDFWxYFbJl1BMTX7BJ2ilbsNo0+JmKzvwhvcdladW/Zd3cOA3ZC/dw/9x6UgIh1RTabxy4CQY8sdZajgTOxW+I6rsuhXGeKK+TeHfOcqNrita32qNhu17LAMDq4KXX2y2zvzQ8uNgzHAA3A9NH6TEqUOzqGtVhHgaTIk9eb1GB52SHDixDt5E0m0ykMAb50HmblFlUuQhbCzlFO0Fl/cBg+QY9EaSGEfUuzYfnearnl8uA4lO+nu20B5E50wzIFiIxqE1iMk5EuWmJTXWMyVSq0ReKH2XZ70wvFw0IdZmIxvo3KackI4OKdWYCB5LuxYhYnA3stGktKpxaaFEbujS1jbQinJXzCKvczB0g9cjtL35EmsZ4IrelYHhafp3zIRAwM7idUXLLxSOk4U5RLycV/+i0mhq/6ayo1Wo7bspTrYyaskZ/jk/oh8EUpgnVx8cFdZZrU7tB/ORe8R9pRJSqM8ePNXJzLc5US10JES6fuo0Rc2XOJ9TcZP+LBUruws9u0s
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(376002)(346002)(136003)(39860400002)(366004)(6486002)(6512007)(6506007)(508600001)(53546011)(8676002)(122000001)(6916009)(66556008)(64756008)(5660300002)(4326008)(38100700002)(186003)(26005)(8936002)(83380400001)(2616005)(316002)(2906002)(33656002)(86362001)(66446008)(71200400001)(66946007)(36756003)(76116006)(66476007)(91956017)(21314003)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?XfmTNHyyvlbV1sDbVfBusbJ8xIYCmj5hGkVNnG3C44UXZEyok9C8Dl6D4IVa?=
- =?us-ascii?Q?XWS2PrM4V7o6itgzyGN18wNSxhRu/08PIDTA50hHDoRf/e0k0RSfs+MJJIRD?=
- =?us-ascii?Q?9dWm4wi4ws/MpDZCVqVJdCJnfttTUWnlRRzIxghR00DoSqyGq24q0XtEcPy6?=
- =?us-ascii?Q?3uIi3QU/jEvuSKbwIkP/NKhTeNfjxHHrlax4xoNXg9fi4aJ1/07dDR9qfqNu?=
- =?us-ascii?Q?V26p0+9nlrssM1tVLq/+UQgp3Vd/2XQVX9mrWmeQrUUZ2hKtkOMizhvi+tOi?=
- =?us-ascii?Q?tbYlw83ejN3+6E5pwPp3yG8HIwZW9D5zrCd3jdwjiTydsgC+tdT/dbo/4+Xi?=
- =?us-ascii?Q?Kd2fa8Y3BUGaaCuy9MRAtACmBDrT5r3JS8B+9rOH3JwGeNDAwTEc+W2EC438?=
- =?us-ascii?Q?xisvDYxZG4dPqhB5pJFhBgWdMljTmJW4pOxe85a1/TioUtq9nvqPxvJbJyqv?=
- =?us-ascii?Q?OF/kZUjaVYBSp/uRny4EGgoPyGzZirppdAUv+yJcIx5gjau2jU/WHEI+9HrB?=
- =?us-ascii?Q?Oh87ETnvDN6fJ7/JuNhkYIMeGJJrc/zBA9x49NFJW60TqSnmR3J9ADymbp7s?=
- =?us-ascii?Q?ne+krYhBuT18dADXIvQmo3xtm9nM28NXuHOqxDNmcaGGewH8q//NfT1RYVBs?=
- =?us-ascii?Q?wuJPxUGUqQ9XvSe/0RPeDXkBvKBsg0pChpYfR6snGdKeUIZwIXdXNXkzMq5d?=
- =?us-ascii?Q?Kd3tIi7YbMlopzh/GhzPTGZRK6sZ7jiR/zhlIgG+qGwQkn98ffJ92iNab/cH?=
- =?us-ascii?Q?FTG7QLRTIalwx4X+lg2AtDUA4nG1lql2Ne+0Z0XigueSPaDfsxTuZnztTHKd?=
- =?us-ascii?Q?OE1Mww/U5NyW6VBRtKq8j5uSO0snmuQfVnxLnUvYBFp9TGQ82e5mI+TPtNlY?=
- =?us-ascii?Q?mRu1Q1XciVtuZieu8sOmmuFhWaeTVAT3j5exvEe4E4V6Id+brPDknJvSbXeP?=
- =?us-ascii?Q?IViB0miy6ReMYGRq648t2SrxDHVNCmhFmBZj2Ufvl5Qc/S6WvT818qwYQg2J?=
- =?us-ascii?Q?ofkN85fD2/3hrorsrBTtHjsAhwnaLh4u3GNyQBkWClI6dbhQyCji2XqSBHS4?=
- =?us-ascii?Q?k5Mop8Prnw1KfAaJAPYAZk4s8J/yEyC5OKIbhgCYkds1bQ+NY0rIro/6mlKM?=
- =?us-ascii?Q?Tt0kcmLlaeWJD0LVQOcnJP4YBbqWoV2sz5edTXb7vn3CgQWazXTrSxR2wTis?=
- =?us-ascii?Q?/02qmNFdqi1979gS507rNzdjj+pgsiwD9WsNE2mUAw2VoaVryQE2oLuVx6M8?=
- =?us-ascii?Q?osR+Z5255YM9o+vAQSokaYY+OecdeyJpyiSy1JtS2ET4KREDu4zA1UgKP44k?=
- =?us-ascii?Q?UH9woJJTY5BsiniZfHm9JpOE06p4GEph9GKGq0HRELysYw=3D=3D?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <CA844D0CC7416845B79EE8051BE45FD9@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S236541AbhDQQRH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 17 Apr 2021 12:17:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44223 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236537AbhDQQRH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 17 Apr 2021 12:17:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1618676200;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0N5LV1+/icsuL2WmQTlQ0ff7Zyc8+mgRM+txdNV6p+Y=;
+        b=OMAbL8ZJOlzEFu0WAw93BrLmCEjTcZxqsm2sK3ZI/vSAmyu4Ap8VzTxAHEaWRZVX3vsmyI
+        +Jc3RW+DlYx3cMemgogelWoXYBq7/JOI0LL7SJ6i7lWHJJJEV36TGCjes47Fa7EvS7wi4s
+        d7zxZhNVfpV0o8y2qx/pYJPdxN+gM+M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-302-0vwx6hAfOJ-fN1qBmS32Kw-1; Sat, 17 Apr 2021 12:16:38 -0400
+X-MC-Unique: 0vwx6hAfOJ-fN1qBmS32Kw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56FC61898296;
+        Sat, 17 Apr 2021 16:16:37 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-112-83.phx2.redhat.com [10.3.112.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DC7035D9CD;
+        Sat, 17 Apr 2021 16:16:36 +0000 (UTC)
+Subject: Re: [PATCH 0/3] Enable the setting of a kernel module parameter from
+ nfs.conf
+To:     Chuck Lever III <chuck.lever@oracle.com>,
+        Alice J Mitchell <ajmitchell@redhat.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <20210414181040.7108-1-steved@redhat.com>
+ <AA442C15-5ED3-4DF5-B23A-9C63429B64BE@oracle.com>
+ <5adff402-5636-3153-2d9f-d912d83038fc@RedHat.com>
+ <366FA143-AB3E-4320-8329-7EA247ADB22B@oracle.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <77a6e5a4-7f14-c920-0277-2284983e6814@RedHat.com>
+Date:   Sat, 17 Apr 2021 12:18:56 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9775e60f-549e-42ed-a2ff-08d9010cce99
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2021 19:21:16.5861
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iXnkZsaOGLCLl9h0X6tMAmmRAcQLQ/+w7tMG/oHFxewZXc9SxsR3FEykRo8G65KeKkWPSJgxbWi5WrVFs7NtNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3112
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9956 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 malwarescore=0
- spamscore=0 adultscore=0 phishscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104060000
- definitions=main-2104160136
-X-Proofpoint-GUID: CKyopCa-raYPuEEqQur5nd8zp2qOUTt3
-X-Proofpoint-ORIG-GUID: CKyopCa-raYPuEEqQur5nd8zp2qOUTt3
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9956 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 spamscore=0
- impostorscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0
- bulkscore=0 phishscore=0 suspectscore=0 malwarescore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104060000
- definitions=main-2104160136
+In-Reply-To: <366FA143-AB3E-4320-8329-7EA247ADB22B@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Apr 16, 2021, at 2:00 PM, J. Bruce Fields <bfields@redhat.com> wrote:
->=20
-> From: "J. Bruce Fields" <bfields@redhat.com>
->=20
-> The nfs4_file structure is per-filehandle, not per-inode, because the
-> spec requires open and other state to be per filehandle.
->=20
-> But it will turn out to be convenient for nfs4_files associated with the
-> same inode to be hashed to the same bucket, so let's hash on the inode
-> instead of the filehandle.
->=20
-> Filehandle aliasing is rare, so that shouldn't have much performance
-> impact.
->=20
-> (If you have a ton of exported filesystems, though, and all of them have
-> a root with inode number 2, could that get you an overlong has chain?
+On 4/15/21 12:37 PM, Chuck Lever III wrote:
+> 
+> 
+>> On Apr 15, 2021, at 11:33 AM, Steve Dickson <SteveD@RedHat.com> wrote:
+>>
+>> Hey Chuck! 
+>>
+>> On 4/14/21 7:26 PM, Chuck Lever III wrote:
+>>> Hi Steve-
+>>>
+>>>> On Apr 14, 2021, at 2:10 PM, Steve Dickson <SteveD@redhat.com> wrote:
+>>>>
+>>>> ﻿This is a tweak of the patch set Alice Mitchell posted last July [1].
+>>>
+>>> That approach was dropped last July because it is not container-aware.
+>>> It should be simple for someone to write a udev script that uses the
+>>> existing sysfs API that can update nfs4_client_id in a namespace. I
+>>> would prefer the sysfs/udev approach for setting nfs4_client_id,
+>>> since it is container-aware and makes this setting completely
+>>> automatic (zero touch).
+>> As I said in in my cover letter, I see this more as introduction of
+>> a mechanism more than a way to set the unique id.
+> 
+> Yep, I got that.
+> 
+> I'm not addressing the question of whether adding a
+> mechanism to set a module parameter in nfs.conf is good
+> or not. I'm saying nfs4_client_id is not an appropriate
+> parameter to add to nfs.conf. Can you pick another
+> module parameter as an example for your mechanism?
+The request was to set that parameter... 
 
-^has ^hash
+> 
+> 
+>> The mechanism being
+>> a way to set kernel module params from nfs.conf. The setting of
+>> the id is just a side effect... 
+>>
+>> Why spread out the NFS configuration?  Why not
+>> just keep it in one place... aka nfs.conf?
+> 
+> We need to understand whether a module parameter is not
+> going to work in nfs.conf because that setting needs to
+> be namespace-aware. In this case, this setting does indeed
+> need to be namespace-aware. nfs.conf is not aware of
+> network namespaces.
+You probably can say that for every /etc/*.conf file...  
+not being namespace aware... how can they be...
 
-Also, I'm getting this new warning:
+In the kernel document you say "Specifying a uniquifier string is 
+not support for NFS clients running in containers."
 
-/home/cel/src/linux/linux/include/linux/hash.h:81:38: warning: shift too bi=
-g (4294967104) for type unsigned long long
+Why isn't that enough? 
 
+> 
+> 
+>> Plus we could document all the kernel params in nfs.conf
+>> and the nfs.conf man page. The only documentation I know 
+>> of is in the kernel tree.
+> 
+> OK, but that's not relevant to whether nfs.conf is the
+> right place to set nfs4_client_id.
+Point.
 
-> Perhaps this (and the v4 open file cache) should be hashed on the inode
-> pointer instead.)
->=20
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> ---
-> fs/nfsd/nfs4state.c | 27 ++++++++++++---------------
-> fs/nfsd/state.h     |  1 -
-> 2 files changed, 12 insertions(+), 16 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 886e50ed07c2..b0c74dbde07b 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -542,14 +542,12 @@ static unsigned int ownerstr_hashval(struct xdr_net=
-obj *ownername)
-> #define FILE_HASH_BITS                   8
-> #define FILE_HASH_SIZE                  (1 << FILE_HASH_BITS)
->=20
-> -static unsigned int nfsd_fh_hashval(struct knfsd_fh *fh)
-> +static unsigned int file_hashval(struct svc_fh *fh)
-> {
-> -	return jhash2(fh->fh_base.fh_pad, XDR_QUADLEN(fh->fh_size), 0);
-> -}
-> +	struct inode *inode =3D d_inode(fh->fh_dentry);
->=20
-> -static unsigned int file_hashval(struct knfsd_fh *fh)
-> -{
-> -	return nfsd_fh_hashval(fh) & (FILE_HASH_SIZE - 1);
-> +	/* XXX: why not (here & in file cache) use inode? */
-> +	return (unsigned int)hash_long(inode->i_ino, FILE_HASH_SIZE);
-> }
->=20
-> static struct hlist_head file_hashtbl[FILE_HASH_SIZE];
-> @@ -4061,7 +4059,7 @@ static struct nfs4_file *nfsd4_alloc_file(void)
-> }
->=20
-> /* OPEN Share state helper functions */
-> -static void nfsd4_init_file(struct knfsd_fh *fh, unsigned int hashval,
-> +static void nfsd4_init_file(struct svc_fh *fh, unsigned int hashval,
-> 				struct nfs4_file *fp)
-> {
-> 	lockdep_assert_held(&state_lock);
-> @@ -4071,7 +4069,7 @@ static void nfsd4_init_file(struct knfsd_fh *fh, un=
-signed int hashval,
-> 	INIT_LIST_HEAD(&fp->fi_stateids);
-> 	INIT_LIST_HEAD(&fp->fi_delegations);
-> 	INIT_LIST_HEAD(&fp->fi_clnt_odstate);
-> -	fh_copy_shallow(&fp->fi_fhandle, fh);
-> +	fh_copy_shallow(&fp->fi_fhandle, &fh->fh_handle);
-> 	fp->fi_deleg_file =3D NULL;
-> 	fp->fi_had_conflict =3D false;
-> 	fp->fi_share_deny =3D 0;
-> @@ -4415,13 +4413,13 @@ move_to_close_lru(struct nfs4_ol_stateid *s, stru=
-ct net *net)
->=20
-> /* search file_hashtbl[] for file */
-> static struct nfs4_file *
-> -find_file_locked(struct knfsd_fh *fh, unsigned int hashval)
-> +find_file_locked(struct svc_fh *fh, unsigned int hashval)
-> {
-> 	struct nfs4_file *fp;
->=20
-> 	hlist_for_each_entry_rcu(fp, &file_hashtbl[hashval], fi_hash,
-> 				lockdep_is_held(&state_lock)) {
-> -		if (fh_match(&fp->fi_fhandle, fh)) {
-> +		if (fh_match(&fp->fi_fhandle, &fh->fh_handle)) {
-> 			if (refcount_inc_not_zero(&fp->fi_ref))
-> 				return fp;
-> 		}
-> @@ -4429,8 +4427,7 @@ find_file_locked(struct knfsd_fh *fh, unsigned int =
-hashval)
-> 	return NULL;
-> }
->=20
-> -struct nfs4_file *
-> -find_file(struct knfsd_fh *fh)
-> +static struct nfs4_file * find_file(struct svc_fh *fh)
-> {
-> 	struct nfs4_file *fp;
-> 	unsigned int hashval =3D file_hashval(fh);
-> @@ -4442,7 +4439,7 @@ find_file(struct knfsd_fh *fh)
-> }
->=20
-> static struct nfs4_file *
-> -find_or_add_file(struct nfs4_file *new, struct knfsd_fh *fh)
-> +find_or_add_file(struct nfs4_file *new, struct svc_fh *fh)
-> {
-> 	struct nfs4_file *fp;
-> 	unsigned int hashval =3D file_hashval(fh);
-> @@ -4474,7 +4471,7 @@ nfs4_share_conflict(struct svc_fh *current_fh, unsi=
-gned int deny_type)
-> 	struct nfs4_file *fp;
-> 	__be32 ret =3D nfs_ok;
->=20
-> -	fp =3D find_file(&current_fh->fh_handle);
-> +	fp =3D find_file(current_fh);
-> 	if (!fp)
-> 		return ret;
-> 	/* Check for conflicting share reservations */
-> @@ -5155,7 +5152,7 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct =
-svc_fh *current_fh, struct nf
-> 	 * and check for delegations in the process of being recalled.
-> 	 * If not found, create the nfs4_file struct
-> 	 */
-> -	fp =3D find_or_add_file(open->op_file, &current_fh->fh_handle);
-> +	fp =3D find_or_add_file(open->op_file, current_fh);
-> 	if (fp !=3D open->op_file) {
-> 		status =3D nfs4_check_deleg(cl, open, &dp);
-> 		if (status)
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index 73deea353169..af1d9f2e373e 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -665,7 +665,6 @@ extern struct nfs4_client_reclaim *nfs4_client_to_rec=
-laim(struct xdr_netobj name
-> 				struct xdr_netobj princhash, struct nfsd_net *nn);
-> extern bool nfs4_has_reclaimed_state(struct xdr_netobj name, struct nfsd_=
-net *nn);
->=20
-> -struct nfs4_file *find_file(struct knfsd_fh *fh);
-> void put_nfs4_file(struct nfs4_file *fi);
-> extern void nfs4_put_copy(struct nfsd4_copy *copy);
-> extern struct nfsd4_copy *
-> --=20
-> 2.30.2
->=20
+> 
+> 
+>> As far as not being container-aware... that might true
+>> but it does not mean its not useful to set the id from
+>> nfs.conf...
+> 
+> Yes, it does mean that in that case. It's completely
+> broken to use the same nfs4_client_id in every network
+> namespace.
+How does this break? If all the clients have unique ids
+what breaks?
 
---
-Chuck Lever
+Or are you saying setting the unique id like this:
 
+options nfs nfs4_unique_id="64fd26280451566d648ab0e0b7384421"
 
+in modprobe.d/nfs.conf is not namespace safe?
+
+> 
+>> Actual I have customers asking for this type
+>> of functionality
+> 
+> Ask yourself why they might want it. It's probably because
+> we don't set it correctly currently. If we have a way to
+> automatically get it right every time, there's really no
+> need for this setting to be exposed.
+If we shouldn't expose it... Lets get rid of it... 
+You added the param in the fall 2012... If it hasn't
+been used correctly or can't be used correctly for
+all theses years... why does it exist?
+
+> 
+> I do agree that it's long past time we should be setting
+> nfs4_client_id properly. I would rather see a udev script
+> developed (you, me, or Alice could do it in an afternoon)
+> first. If that doesn't meet the actual customer need, then
+> we can revisit.
+I'll address this in Trond's reply... 
+
+thanks!
+
+steved.
 
