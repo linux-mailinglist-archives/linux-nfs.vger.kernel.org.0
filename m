@@ -2,24 +2,24 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8715B36496F
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Apr 2021 20:02:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B183364972
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Apr 2021 20:02:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240481AbhDSSCl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 19 Apr 2021 14:02:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40892 "EHLO mail.kernel.org"
+        id S240487AbhDSSCs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 19 Apr 2021 14:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240433AbhDSSCl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 19 Apr 2021 14:02:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C49C861107;
-        Mon, 19 Apr 2021 18:02:10 +0000 (UTC)
-Subject: [PATCH v3 05/26] xprtrdma: Do not refresh Receive Queue while it is
- draining
+        id S240433AbhDSSCr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 19 Apr 2021 14:02:47 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1849061107;
+        Mon, 19 Apr 2021 18:02:17 +0000 (UTC)
+Subject: [PATCH v3 06/26] xprtrdma: Put flushed Receives on free list instead
+ of destroying them
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     trondmy@hammerspace.com
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Mon, 19 Apr 2021 14:02:09 -0400
-Message-ID: <161885532997.38598.5957438962258396970.stgit@manet.1015granger.net>
+Date:   Mon, 19 Apr 2021 14:02:16 -0400
+Message-ID: <161885533627.38598.12133596202333658270.stgit@manet.1015granger.net>
 In-Reply-To: <161885481568.38598.16682844600209775665.stgit@manet.1015granger.net>
 References: <161885481568.38598.16682844600209775665.stgit@manet.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -30,85 +30,36 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently the Receive completion handler refreshes the Receive Queue
-whenever a successful Receive completion occurs.
+Defer destruction of an rpcrdma_rep until transport tear-down to
+preserve the rb_all_reps list while Receives flush.
 
-On disconnect, xprtrdma drains the Receive Queue. The first few
-Receive completions after a disconnect are typically successful,
-until the first flushed Receive.
-
-This means the Receive completion handler continues to post more
-Receive WRs after the drain sentinel has been posted. The late-
-posted Receives flush after the drain sentinel has completed,
-leading to a crash later in rpcrdma_xprt_disconnect().
-
-To prevent this crash, xprtrdma has to ensure that the Receive
-handler stops posting Receives before ib_drain_rq() posts its
-drain sentinel.
-
-Suggested-by: Tom Talpey <tom@talpey.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Reviewed-by: Tom Talpey <tom@talpey.com>
 ---
- net/sunrpc/xprtrdma/verbs.c     |   13 +++++++++++++
- net/sunrpc/xprtrdma/xprt_rdma.h |    1 +
- 2 files changed, 14 insertions(+)
+ net/sunrpc/xprtrdma/verbs.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index ec912cf9c618..d8ed69442219 100644
+index d8ed69442219..1b599a623eea 100644
 --- a/net/sunrpc/xprtrdma/verbs.c
 +++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -101,6 +101,12 @@ static void rpcrdma_xprt_drain(struct rpcrdma_xprt *r_xprt)
- 	struct rpcrdma_ep *ep = r_xprt->rx_ep;
- 	struct rdma_cm_id *id = ep->re_id;
+@@ -80,6 +80,8 @@ static void rpcrdma_sendctx_put_locked(struct rpcrdma_xprt *r_xprt,
+ 				       struct rpcrdma_sendctx *sc);
+ static int rpcrdma_reqs_setup(struct rpcrdma_xprt *r_xprt);
+ static void rpcrdma_reqs_reset(struct rpcrdma_xprt *r_xprt);
++static void rpcrdma_rep_put(struct rpcrdma_buffer *buf,
++			    struct rpcrdma_rep *rep);
+ static void rpcrdma_rep_destroy(struct rpcrdma_rep *rep);
+ static void rpcrdma_reps_unmap(struct rpcrdma_xprt *r_xprt);
+ static void rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt);
+@@ -211,7 +213,7 @@ static void rpcrdma_wc_receive(struct ib_cq *cq, struct ib_wc *wc)
  
-+	/* Wait for rpcrdma_post_recvs() to leave its critical
-+	 * section.
-+	 */
-+	if (atomic_inc_return(&ep->re_receiving) > 1)
-+		wait_for_completion(&ep->re_done);
-+
- 	/* Flush Receives, then wait for deferred Reply work
- 	 * to complete.
- 	 */
-@@ -414,6 +420,7 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
- 	__module_get(THIS_MODULE);
- 	device = id->device;
- 	ep->re_id = id;
-+	reinit_completion(&ep->re_done);
+ out_flushed:
+ 	rpcrdma_flush_disconnect(r_xprt, wc);
+-	rpcrdma_rep_destroy(rep);
++	rpcrdma_rep_put(&r_xprt->rx_buf, rep);
+ }
  
- 	ep->re_max_requests = r_xprt->rx_xprt.max_reqs;
- 	ep->re_inline_send = xprt_rdma_max_inline_write;
-@@ -1385,6 +1392,9 @@ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp)
- 	if (!temp)
- 		needed += RPCRDMA_MAX_RECV_BATCH;
- 
-+	if (atomic_inc_return(&ep->re_receiving) > 1)
-+		goto out;
-+
- 	/* fast path: all needed reps can be found on the free list */
- 	wr = NULL;
- 	while (needed) {
-@@ -1410,6 +1420,9 @@ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp)
- 
- 	rc = ib_post_recv(ep->re_id->qp, wr,
- 			  (const struct ib_recv_wr **)&bad_wr);
-+	if (atomic_dec_return(&ep->re_receiving) > 0)
-+		complete(&ep->re_done);
-+
- out:
- 	trace_xprtrdma_post_recvs(r_xprt, count, rc);
- 	if (rc) {
-diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
-index fe3be985e239..31404326f29f 100644
---- a/net/sunrpc/xprtrdma/xprt_rdma.h
-+++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-@@ -83,6 +83,7 @@ struct rpcrdma_ep {
- 	unsigned int		re_max_inline_recv;
- 	int			re_async_rc;
- 	int			re_connect_status;
-+	atomic_t		re_receiving;
- 	atomic_t		re_force_disconnect;
- 	struct ib_qp_init_attr	re_attr;
- 	wait_queue_head_t       re_connect_wait;
+ static void rpcrdma_update_cm_private(struct rpcrdma_ep *ep,
 
 
