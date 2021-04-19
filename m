@@ -2,24 +2,24 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD308364973
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Apr 2021 20:02:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 088A7364975
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Apr 2021 20:02:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240494AbhDSSCy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 19 Apr 2021 14:02:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40938 "EHLO mail.kernel.org"
+        id S240506AbhDSSDB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 19 Apr 2021 14:03:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240433AbhDSSCx (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 19 Apr 2021 14:02:53 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5CDE061001;
-        Mon, 19 Apr 2021 18:02:23 +0000 (UTC)
-Subject: [PATCH v3 07/26] xprtrdma: Improve locking around rpcrdma_rep
- destruction
+        id S240433AbhDSSDA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 19 Apr 2021 14:03:00 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A2CF561001;
+        Mon, 19 Apr 2021 18:02:29 +0000 (UTC)
+Subject: [PATCH v3 08/26] xprtrdma: Improve commentary around
+ rpcrdma_reps_unmap()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     trondmy@hammerspace.com
 Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Mon, 19 Apr 2021 14:02:22 -0400
-Message-ID: <161885534259.38598.17355600080366820390.stgit@manet.1015granger.net>
+Date:   Mon, 19 Apr 2021 14:02:28 -0400
+Message-ID: <161885534885.38598.10229325712635490142.stgit@manet.1015granger.net>
 In-Reply-To: <161885481568.38598.16682844600209775665.stgit@manet.1015granger.net>
 References: <161885481568.38598.16682844600209775665.stgit@manet.1015granger.net>
 User-Agent: StGit/0.23-29-ga622f1
@@ -30,74 +30,34 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently rpcrdma_reps_destroy() assumes that, at transport
-tear-down, the content of the rb_free_reps list is the same as the
-content of the rb_all_reps list. Although that is usually true,
-using the rb_all_reps list should be more reliable because of
-the way it's managed. And, rpcrdma_reps_unmap() uses rb_all_reps;
-these two functions should both traverse the "all" list.
-
-Ensure that all rpcrdma_reps are always destroyed whether they are
-on the rep free list or not.
-
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/verbs.c |   31 ++++++++++++++++++++++++-------
- 1 file changed, 24 insertions(+), 7 deletions(-)
+ net/sunrpc/xprtrdma/verbs.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 1b599a623eea..482fdc9e25c2 100644
+index 482fdc9e25c2..f3482fd67ec2 100644
 --- a/net/sunrpc/xprtrdma/verbs.c
 +++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -1007,16 +1007,23 @@ struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
- 	return NULL;
+@@ -1041,6 +1041,10 @@ static void rpcrdma_rep_put(struct rpcrdma_buffer *buf,
+ 	llist_add(&rep->rr_node, &buf->rb_free_reps);
  }
  
--/* No locking needed here. This function is invoked only by the
-- * Receive completion handler, or during transport shutdown.
-- */
--static void rpcrdma_rep_destroy(struct rpcrdma_rep *rep)
-+static void rpcrdma_rep_destroy_locked(struct rpcrdma_rep *rep)
++/* Caller must ensure the QP is quiescent (RQ is drained) before
++ * invoking this function, to guarantee rb_all_reps is not
++ * changing.
++ */
+ static void rpcrdma_reps_unmap(struct rpcrdma_xprt *r_xprt)
  {
--	list_del(&rep->rr_all);
- 	rpcrdma_regbuf_free(rep->rr_rdmabuf);
- 	kfree(rep);
+ 	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
+@@ -1048,7 +1052,7 @@ static void rpcrdma_reps_unmap(struct rpcrdma_xprt *r_xprt)
+ 
+ 	list_for_each_entry(rep, &buf->rb_all_reps, rr_all) {
+ 		rpcrdma_regbuf_dma_unmap(rep->rr_rdmabuf);
+-		rep->rr_temp = true;
++		rep->rr_temp = true;	/* Mark this rep for destruction */
+ 	}
  }
  
-+static void rpcrdma_rep_destroy(struct rpcrdma_rep *rep)
-+{
-+	struct rpcrdma_buffer *buf = &rep->rr_rxprt->rx_buf;
-+
-+	spin_lock(&buf->rb_lock);
-+	list_del(&rep->rr_all);
-+	spin_unlock(&buf->rb_lock);
-+
-+	rpcrdma_rep_destroy_locked(rep);
-+}
-+
- static struct rpcrdma_rep *rpcrdma_rep_get_locked(struct rpcrdma_buffer *buf)
- {
- 	struct llist_node *node;
-@@ -1049,8 +1056,18 @@ static void rpcrdma_reps_destroy(struct rpcrdma_buffer *buf)
- {
- 	struct rpcrdma_rep *rep;
- 
--	while ((rep = rpcrdma_rep_get_locked(buf)) != NULL)
--		rpcrdma_rep_destroy(rep);
-+	spin_lock(&buf->rb_lock);
-+	while ((rep = list_first_entry_or_null(&buf->rb_all_reps,
-+					       struct rpcrdma_rep,
-+					       rr_all)) != NULL) {
-+		list_del(&rep->rr_all);
-+		spin_unlock(&buf->rb_lock);
-+
-+		rpcrdma_rep_destroy_locked(rep);
-+
-+		spin_lock(&buf->rb_lock);
-+	}
-+	spin_unlock(&buf->rb_lock);
- }
- 
- /**
 
 
