@@ -2,42 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2555A365984
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Apr 2021 15:09:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5658365AE7
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Apr 2021 16:10:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230479AbhDTNJd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 20 Apr 2021 09:09:33 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35918 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230408AbhDTNJd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 20 Apr 2021 09:09:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618924141;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NxVNW6sFezox+6Bs83zQ3f65fUmafm9+q3WEF4me7Og=;
-        b=h6YjQb/Yg7NS+0S+LHGRGvwSDdsjd5G58piyBpB0sSgeUSr6nZRFEy12BGUyCd46KnDrUZ
-        kEAdzyigm45CvgwhzOCDNN3LbZLwBBFemzRJ0HCVcnNUe00wlCbBxLlWw//Fd6G8qNO2my
-        Q1vFlJGLhJtRtHmazRvv0HR9cQspxNA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-167-_aq_HI4eN1-ypjauk_Ke8g-1; Tue, 20 Apr 2021 09:08:54 -0400
-X-MC-Unique: _aq_HI4eN1-ypjauk_Ke8g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5EC2B79EC0;
-        Tue, 20 Apr 2021 13:08:53 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-113-232.phx2.redhat.com [10.3.113.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E1281610F1;
-        Tue, 20 Apr 2021 13:08:52 +0000 (UTC)
+        id S232626AbhDTOKh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 20 Apr 2021 10:10:37 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33352 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232563AbhDTOKf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 20 Apr 2021 10:10:35 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13KE5W7L147142;
+        Tue, 20 Apr 2021 14:09:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=NdXO5S8JGVo1a2Tz5be+pudSeiG3a29sNP1gLDa3tT8=;
+ b=GasaYEsV2zfuKKyT/liRKnAovcQ8X13LFW3waqdDjJgZ+pN18+1YI9mGPvoe8ngVUxAo
+ UQNtFopT640ZuoL6X5pUUK3vszFzdLy0Nuw8L6eJOk8nZX8DJLs6z4s54bi8aOHUcHIY
+ WRme41SUUftWAsw5Md8IxCvnhzUzZj8rxs7/p5JFsc3x8Pang3JwWqk4U+qHTOley9Jj
+ JY7JttkEL1uAM2bStthuB6wd6jK+r7vCuCSiDsctwUkJWARPEG9KEVDgwqqqvOjC8OG9
+ ah/w8hGHclbsYzz9lNaApwMJhfn4TYLakEurEu88Anr+Clh9hqCAI+Vqb+WpcKwqEhFq Ww== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 38022xxpg3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Apr 2021 14:09:53 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13KE69Q8090548;
+        Tue, 20 Apr 2021 14:09:53 GMT
+Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2050.outbound.protection.outlook.com [104.47.38.50])
+        by aserp3020.oracle.com with ESMTP id 3809k0dg5q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Apr 2021 14:09:52 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hqpJi58BmfhoeLn5B8wSDiivmhUdXdJvU0yef5DpSvUuwwieTso30tQ0kjhmxOjfiIzQ6g3O+sHdvRoF+FhAVNOONjHXim5ga/INe27eRJXdcCot+5W0lvzryInD6OrQc4di0BZwgjp9JK5cVNdQNDhtEzAUIq6sEWKsVjgZ4H+9wZXgVM2sORp90eFaEyfS97hp5nAsF9aGowGlY4ZMGIqRFd2KHrVcJsMzmZCsEUOu3nRNbaqegPRxqZ2txphOg8O+u/nHnyQgaSGcaUG9hrgaUj1Is1AOFckTmBvu8gC5sYNFGY81hNLaIzXAFJLdTOb2cHc29Ceb1gaWB5BrpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NdXO5S8JGVo1a2Tz5be+pudSeiG3a29sNP1gLDa3tT8=;
+ b=PE0XJqJYkxzj0liiUnmZgmuUKubAd1w5Zv1Qcbf5nRwWtdYQ8uCv5TRzbTE2YSMDYLKyez3jxJxMiqyn6IUGjxJlb+Yp1CkUvBjysPZ8+1LEA3qSosh8zzLc+hW0fbTeoJdmYmbZwI4615rnQ9d70tFVqn0A+MA6ofQotveEMwSp6jxviQuSkaI//0kNfto6i/DENlQFkJ7OA3GncgdZO0do+LBigc6OAXxFEzstXSZ2nRhtVQ//86iTShDUvg2GV1kOPbObIc/ij1qUTgZBUD+71CN4z8ZaOSTz7QVtzEVkZlGnTLlsICSPUFOMyzfu0GWw626cT2Xbe4wubN8pfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NdXO5S8JGVo1a2Tz5be+pudSeiG3a29sNP1gLDa3tT8=;
+ b=NJCfarAjojRl0C+Rct6StExEwR3ciYxGd31VP/7xoDBGsrdodWoc59SKrL3ddWs8rOB5fKTTwYm1UjnPCaL4NsbOlD/5GHVGq/78B+Q+eAn+J2DxWDGSdSxJAaw0TD39X//JWoweZyB/MrdQl8dBDlgQTRHiIL1YS6yEHKefg9w=
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
+ by BYAPR10MB2870.namprd10.prod.outlook.com (2603:10b6:a03:8d::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.21; Tue, 20 Apr
+ 2021 14:09:51 +0000
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::50bf:7319:321c:96c9]) by SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::50bf:7319:321c:96c9%4]) with mapi id 15.20.4042.024; Tue, 20 Apr 2021
+ 14:09:51 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Steve Dickson <SteveD@RedHat.com>
+CC:     Alice J Mitchell <ajmitchell@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH 0/3] Enable the setting of a kernel module parameter from
  nfs.conf
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Alice J Mitchell <ajmitchell@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Thread-Topic: [PATCH 0/3] Enable the setting of a kernel module parameter from
+ nfs.conf
+Thread-Index: AQHXMVl21czF1oj/Wkexg55/eRtUL6q0qJzlgAEODgCAABHLgIADH5IAgAAEy4CAABTeAIABgakAgALnPYCAABBdgA==
+Date:   Tue, 20 Apr 2021 14:09:51 +0000
+Message-ID: <20A43DDA-C08E-4E39-A83C-24E326768ADE@oracle.com>
 References: <20210414181040.7108-1-steved@redhat.com>
  <AA442C15-5ED3-4DF5-B23A-9C63429B64BE@oracle.com>
  <5adff402-5636-3153-2d9f-d912d83038fc@RedHat.com>
@@ -46,200 +77,243 @@ References: <20210414181040.7108-1-steved@redhat.com>
  <2F7FBCA0-7C8D-41F0-AC39-0C3233772E31@oracle.com>
  <c13f792a-71e8-494f-3156-3ff2ac7a0281@RedHat.com>
  <DAFAF7B1-5C56-4DA7-B7F9-4F544CCDA031@oracle.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <f0525973-a32c-32d4-4ccc-827acaa3c125@RedHat.com>
-Date:   Tue, 20 Apr 2021 09:11:15 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-MIME-Version: 1.0
-In-Reply-To: <DAFAF7B1-5C56-4DA7-B7F9-4F544CCDA031@oracle.com>
-Content-Type: text/plain; charset=utf-8
+ <f0525973-a32c-32d4-4ccc-827acaa3c125@RedHat.com>
+In-Reply-To: <f0525973-a32c-32d4-4ccc-827acaa3c125@RedHat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: RedHat.com; dkim=none (message not signed)
+ header.d=none;RedHat.com; dmarc=none action=none header.from=oracle.com;
+x-originating-ip: [68.61.232.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: acb1b2a0-6a79-48ad-db32-08d90405f6bf
+x-ms-traffictypediagnostic: BYAPR10MB2870:
+x-microsoft-antispam-prvs: <BYAPR10MB287046CE265152865763D6D093489@BYAPR10MB2870.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BddkH3o5DHDrIEH1yo5en+82dxe2I6ywk6CumhRrXmxakZ9mgb7W8gMoPfCUGJG4aY5kjtMtM6oyfai+30qTcF1wz/8V0iImIJm+vWjsq7DTLjFEtib4TScgyIE9K98kDWItj9nQqx4Fa8Fj5KeCuWRrdoeXGqiE22Fhvk5mwitWtW7feIlf9tcNUAwH+0oMLC9ziloD6SqJTiCwsTdzX9RK44cJWynUTG1lhEv8bvfFwGjjIVpCru9Nr9rM4eVOyOIf1TLiDYVZsjJwpIv2ANI/IxRMuJOLWWuNkR1gM/u8xVKQwDBHfLP2FvC7dJtuSL9dDXRoFMNb2OWJ0do1RIOpxGtEb83MF9mUws2K6zXqulrzPbbFVKc1WTWw5v0Ss2RNQ/zMHWSONytPgObnFCqtl6AsMIegwrQberuRlXekF8UKRKCKx2B5EafokQXDRvdOmx9Hzq8cx2YrBIyl5DRfDUjigDDKEqEOJy+MQBxFzQgtyQS/xQ7DCIYgpOhvevRqHPg7jeI1qGK5/kBl53CNIj54SXYalncshgUTRmv6YaYFeOizyG9vZnNvFAIfgtlJ/tSz4qJIDyqPYCKK+7lV2V8MgsgbQmGHbZnrgESV/35c7lWvpmL0evn7lUSz49HrDkqx3Yhe3JSSLduTQayN7GVz2l2DVpKMNkS3WqQ2yJoO+marSexhBrFc3SbWqgGfFLey61i0LflJrm+eMRvuIj3nXbArQIclOhx9YYgtCL8jQkL0YyGo+F+RqR8/
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(136003)(396003)(346002)(366004)(376002)(36756003)(2906002)(478600001)(6916009)(53546011)(6486002)(122000001)(26005)(4326008)(33656002)(966005)(6506007)(8676002)(5660300002)(71200400001)(186003)(2616005)(8936002)(316002)(91956017)(54906003)(66946007)(66556008)(66446008)(66476007)(64756008)(38100700002)(76116006)(6512007)(86362001)(83380400001)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?UEt6M1VKMjRNT3dwZW00QUtDQnM2RDdMRE41TE5QVmdWenZaWEdyek02bnRw?=
+ =?utf-8?B?TWJWWkhybzVUTnFLN0NVMFZiS0V2SS9KeWd0MXdKcENUa09oZ0NIQTcvQTA2?=
+ =?utf-8?B?cFZkWEtzTGpqK2dKUkRJK2lHV2hhaEtqY1N5UmJFcUZIODZnbFVPbG9nOER4?=
+ =?utf-8?B?bHBaNXpnSS9DalcvM1BRNzk1M0RMUHh5WXR0UW1GREt6YVlhM2dMQ0Erc09J?=
+ =?utf-8?B?UG1scGY1SVcxdm9WR3dvMEF5SUJYS1Z1bWpzTDVIT2E0eDdlWmh0MVlZOFZp?=
+ =?utf-8?B?VXZMcEYyamcxRzFWV0laSkp1Z0Vkb1RzNCtzaGZvbHZRcEV5ZU9mK3F5VjZP?=
+ =?utf-8?B?bkVaOVh6Yk92L1BLeVJVbG81UzRYbFRxR3NsKzVNUDY0aDhidDk0ZUdjQ1pv?=
+ =?utf-8?B?Um0ycjZXdlBmYUxGS2VJWTg5Y29yanhqY0NCNHNaNHRCc2dXdlRzTDAxWWN4?=
+ =?utf-8?B?dU1hcklrZGJYY2ZiTFRCeTdEdTJRMFV2d1hvOHRqSm5xZUxJd0x4RnUxZnVK?=
+ =?utf-8?B?cEVCN3JtYjYycDJjdlRiZ1hSZkprZitXNDJFTkRSejF5SUh5aEZId1lReVJF?=
+ =?utf-8?B?dWMzNVFHK1NmQ00rNSt5WUplb1gzTFdIeHRRK3AxOEVRNnFLVGtOaXNidVpa?=
+ =?utf-8?B?blZ0aU9EYUFYWEJJZFpRWjlnNnZBNEI1Tk9CZXhLSXkrNVFGMzV4R012c3R4?=
+ =?utf-8?B?MUIzVnV4M3kxOEltOXVpVGJhVElnQVlvdkx5Qks5eFQ1Z0V1QnFIR1J3bG1i?=
+ =?utf-8?B?MTQ2UVpVVnMxQWRVYVBWSGtsZytaYlMwM0VIREpyWTYyQ3plVU1MekNmdXRu?=
+ =?utf-8?B?TjJjSi9DMVFrTjFYbW9KVy9lTlJOd25wOXRyRlAzT3lTNFpuUHNjRVZWZzRm?=
+ =?utf-8?B?YXhoOXluczBJRUJNVTFIU0ZKV0cyMUhOR2xOdUFaQ3RZdGF2VFRUdjJjV2lU?=
+ =?utf-8?B?WFZKSGZnMG1QeDFHTkFLZ2ZxcXQyUG5CU29lRi9qNUtwakdLQU5Gb2hCcE9M?=
+ =?utf-8?B?Yi9SL0kyV3VuYm5Teno1ZFF6WXcxV3dXdkZnQTRFbjRKN2dwYnRTbkI1RlhX?=
+ =?utf-8?B?RGN3OTJGZGVxRVhzZ3FkN1JCdmc1R3lrR1NnQ1NMU1JhQStmNktaeFR3TUI3?=
+ =?utf-8?B?c3lKMm5sdlA4K3lpMUxiV21aRFM0N3hQaFJWUnVWOGFreDRBOFN1Rm1nUkFo?=
+ =?utf-8?B?dndmRkJyZU01TlNjS2VaVTVvTU5DWVVISldCU2U3V0hCMlh0NnZ0ZkZ5MXZq?=
+ =?utf-8?B?c3NBSjBFSm4ybWFrRDlMUHJ3SERpa3dmOFY1bFloclVTbGx6aGtoMUJrU3RV?=
+ =?utf-8?B?UjcwZzBlY01lSjBOZVRoNkx5d1p5RVVqUmF5VzhLaDI3NVliR0ZtN1djK3hh?=
+ =?utf-8?B?dUpGRVFVanJ2WkxMS0s1aDhSbGJYRGpZWU1LZlR5cDJ0WDc3cGYvMFNzMXAw?=
+ =?utf-8?B?MFhvTFZEYmVkYk5GSDVqdWlFWGFPaWt4NkcvZEN1VkhreEpXWldGL08vUWFK?=
+ =?utf-8?B?UkFLTGQySzVyMEpGOFdoR0VlcWR1UEQ1OWFzOTh1V2EvTmNUNWF6VktmeUt6?=
+ =?utf-8?B?OXVXbkRnc0FwZDFEZXJiYjFlejFiK0I5NC9SNFhrWTNZRUpUajFvSU5HQnAz?=
+ =?utf-8?B?RVZFdUNacnNNbE1Gb3NyVVQxbldIR2kzM1ZGdTJXem43VS9uSUNQdU5WVkxo?=
+ =?utf-8?B?RlpPREdNaEQ4R3JSUXA1ZFBQT0VqQVdvcHFvZUJWZWRLaEVnZlJ4OUlPTURv?=
+ =?utf-8?B?R2g5VEh5MDN6ZXM1TlFtQ0JaSG9VZ05hVWV5ZThnUFBTbFFpVWhKbXpkbXI3?=
+ =?utf-8?B?OHdtZlRrUjM3TURPRmJxZz09?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DFAC4FDF83527049B878C9009BBEFF2A@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: acb1b2a0-6a79-48ad-db32-08d90405f6bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2021 14:09:51.0373
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: p//Gj8X4TPB88deFO/nRwiUvHNX1G/580B1KoXC4v4YdOiYkmeqbVYZejM5VH7Xl0JuMBc7zliVM/QAsnAzkow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2870
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9960 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104060000
+ definitions=main-2104200106
+X-Proofpoint-ORIG-GUID: 0ZlT2uyMgjkhjYnkH31YWisd3fM3ANUQ
+X-Proofpoint-GUID: 0ZlT2uyMgjkhjYnkH31YWisd3fM3ANUQ
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9960 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 bulkscore=0 phishscore=0 clxscore=1015 impostorscore=0
+ mlxlogscore=999 adultscore=0 malwarescore=0 mlxscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104060000
+ definitions=main-2104200106
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-On 4/18/21 12:51 PM, Chuck Lever III wrote:
-> 
-> 
->> On Apr 17, 2021, at 1:50 PM, Steve Dickson <SteveD@RedHat.com> wrote:
->>
->>
->>
->> On 4/17/21 12:36 PM, Chuck Lever III wrote:
->>>
->>>
->>>> On Apr 17, 2021, at 12:18 PM, Steve Dickson <SteveD@RedHat.com> wrote:
->>>>
->>>>
->>>>
->>>> On 4/15/21 12:37 PM, Chuck Lever III wrote:
->>>>>
->>>>>
->>>>>> On Apr 15, 2021, at 11:33 AM, Steve Dickson <SteveD@RedHat.com> wrote:
->>>>>>
->>>>>> Hey Chuck! 
->>>>>>
->>>>>> On 4/14/21 7:26 PM, Chuck Lever III wrote:
->>>>>>> Hi Steve-
->>>>>>>
->>>>>>>> On Apr 14, 2021, at 2:10 PM, Steve Dickson <SteveD@redhat.com> wrote:
->>>>>>>>
->>>>>>>> ﻿This is a tweak of the patch set Alice Mitchell posted last July [1].
->>>>>>>
->>>>>>> That approach was dropped last July because it is not container-aware.
->>>>>>> It should be simple for someone to write a udev script that uses the
->>>>>>> existing sysfs API that can update nfs4_client_id in a namespace. I
->>>>>>> would prefer the sysfs/udev approach for setting nfs4_client_id,
->>>>>>> since it is container-aware and makes this setting completely
->>>>>>> automatic (zero touch).
->>>>>> As I said in in my cover letter, I see this more as introduction of
->>>>>> a mechanism more than a way to set the unique id.
->>>>>
->>>>> Yep, I got that.
->>>>>
->>>>> I'm not addressing the question of whether adding a
->>>>> mechanism to set a module parameter in nfs.conf is good
->>>>> or not. I'm saying nfs4_client_id is not an appropriate
->>>>> parameter to add to nfs.conf. Can you pick another
->>>>> module parameter as an example for your mechanism?
->>>> The request was to set that parameter...
->>>
->>> The cover letter and the quoted e-mail above state that
->>> you are just demonstrating a mechanism to set module
->>> parameters via nfs.conf. I guess that statement was not
->>> entirely accurate, then. Thanks for clarifying.
->> I was trying to keep the conversation off of what
->> was being set to how it was being set... 
->>
->> I had no idea the entire "options nfs" API is compromised
->> when it comes to containers... Not sure why... but I will
->> believe you...
-> 
-> Module parameters take effect for all namespaces. It's
-> not just nfs.ko that has this issue.
-Right... 
-> 
-> 
->>> If there's a bug report somewhere that requests a
->>> feature, it's normal practice to include a URL pointing
->>> to that report in the patch description.
->> I just assumed, since it had a customer case, the bz was 
->> private... it turns out not to be the case
->> https://bugzilla.redhat.com/show_bug.cgi?id=1801326
-> 
->>>>>> Actual I have customers asking for this type
->>>>>> of functionality
-> 
-> Hrm. The reporter of 1801326 is dwyso, a Red Hat employee,
-> not a customer.
-> 
-> Also, I see nothing that requires it to be set in nfs.conf.
-> So what actual functionality is being requested, and why
-> can't it be addressed with a udev script, which has been
-> the design already in the works for many months?
-The bz was open by a request of a customer... There is a
-lot of info in bzs that are not public... 
-
-Having a one, centralized place to configure NFS
-I thought was a good idea... 
-
-> 
-> 
->>>>> Ask yourself why they might want it. It's probably because
->>>>> we don't set it correctly currently. If we have a way to
->>>>> automatically get it right every time, there's really no
->>>>> need for this setting to be exposed.
->>>> If we shouldn't expose it... Lets get rid of it...
->>>> You added the param in the fall 2012... If it hasn't
->>>> been used correctly or can't be used correctly for
->>>> all theses years... why does it exist?
->>>
->>> Because back then we didn't care about container awareness
->>> enough to make it an initial part of the feature. We were
->>> trying to address the problem of how to ensure that the
->>> nfs4_client_id is unique. But clearly it was only half a
->>> solution.
->> Right... I was just trying to build a mechanism to
->> set the value, and not worrying (yet) about what the
->> value is set to... 
->>
->> So at this point, all of the nfs kernel module parameter
->> can be set through the sysfs/udev interface?
-> 
-> The only module parameter that has been explicitly replaced
-> is the one that sets nfs4_client_id, as far as I am aware.
-> There might be some other settings available in /sys:
-> 
-> # ls /sys/module/nfsv4/parameters
-> delegation_watermark  layoutstats_timer
-> #
-> 
-> [cel@manet linux]$ git grep MODULE_PARM -- fs/nfs/
-> fs/nfs/cache_lib.c:MODULE_PARM_DESC(cache_getent, "Path to the client cache upcall program");
-> fs/nfs/cache_lib.c:MODULE_PARM_DESC(cache_getent_timeout, "Timeout (in seconds) after which "
-> fs/nfs/dir.c:MODULE_PARM_DESC(nfs_access_max_cachesize, "NFS access maximum total cache length");
-> fs/nfs/filelayout/filelayoutdev.c:MODULE_PARM_DESC(dataserver_retrans, "The  number of times the NFSv4.1 client "
-> fs/nfs/filelayout/filelayoutdev.c:MODULE_PARM_DESC(dataserver_timeo, "The time (in tenths of a second) the "
-> fs/nfs/flexfilelayout/flexfilelayout.c:MODULE_PARM_DESC(io_maxretrans, "The  number of times the NFSv4.1 client "
-> fs/nfs/flexfilelayout/flexfilelayoutdev.c:MODULE_PARM_DESC(dataserver_retrans, "The  number of times the NFSv4.1 client "
-> fs/nfs/flexfilelayout/flexfilelayoutdev.c:MODULE_PARM_DESC(dataserver_timeo, "The time (in tenths of a second) the "
-> fs/nfs/namespace.c:MODULE_PARM_DESC(nfs_mountpoint_expiry_timeout,
-> fs/nfs/super.c:MODULE_PARM_DESC(callback_nr_threads, "Number of threads that will be "
-> fs/nfs/super.c:MODULE_PARM_DESC(nfs4_disable_idmapping,
-> fs/nfs/super.c:MODULE_PARM_DESC(max_session_slots, "Maximum number of outstanding NFSv4.1 "
-> fs/nfs/super.c:MODULE_PARM_DESC(max_session_cb_slots, "Maximum number of parallel NFSv4.1 "
-> fs/nfs/super.c:MODULE_PARM_DESC(send_implementation_id,
-> fs/nfs/super.c:MODULE_PARM_DESC(nfs4_unique_id, "nfs_client_id4 uniquifier string");
-> fs/nfs/super.c:MODULE_PARM_DESC(recover_lost_locks,
-> [cel@manet linux]$ git grep MODULE_PARM -- fs/nfsd/
-> fs/nfsd/nfs4idmap.c:MODULE_PARM_DESC(nfs4_disable_idmapping,
-> fs/nfsd/nfs4proc.c:MODULE_PARM_DESC(inter_copy_offload_enable,
-> fs/nfsd/nfs4recover.c:MODULE_PARM_DESC(cltrack_prog, "Path to the nfsdcltrack upcall program");
-> fs/nfsd/nfs4recover.c:MODULE_PARM_DESC(cltrack_legacy_disable,
-> [cel@manet linux]$
-> 
-> Each of the above has to be considered on a case-by-case
-> basis, IMO.
-> 
-> 
->> If that is the cause... have the variables in 
->> nfs.conf create sysfs/udev file would work better?
-> 
-> Seems to me we have the same argument for a separate file
-> to store the nfs4_unique_id that we have for breaking
-> /etc/exports into a directory of individual files: no
-> parsing is necessary. Scripts and applications can simply
-> read the string right out of the file, or update it just
-> by writing the string into that file.
-I'm sure I'm following this analogy with the export...
-but being able to set things up from one configuration 
-file and command is key. 
-
-nfsconf does an excellent job parsing nfs.conf and I would
-like to build on that... 
-
-I understand we have to work well in containers which 
-is one of the reason I was trying to come up with a
-nfsv4 only nfs-utils... That went over like a lead balloon ;-) 
-
-What I don't understand is why we can't come up with a 
-solution that uniquely set a param that is set by 
-nfsconf using nfs.conf.
-
-steved.  
-> 
-> Conversely, there's no clear need for administrators to be
-> aware of the setting, once it is being set properly.
-> 
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
-
+DQoNCj4gT24gQXByIDIwLCAyMDIxLCBhdCA5OjExIEFNLCBTdGV2ZSBEaWNrc29uIDxTdGV2ZURA
+UmVkSGF0LmNvbT4gd3JvdGU6DQo+IA0KPiANCj4gDQo+IE9uIDQvMTgvMjEgMTI6NTEgUE0sIENo
+dWNrIExldmVyIElJSSB3cm90ZToNCj4+IA0KPj4gDQo+Pj4gT24gQXByIDE3LCAyMDIxLCBhdCAx
+OjUwIFBNLCBTdGV2ZSBEaWNrc29uIDxTdGV2ZURAUmVkSGF0LmNvbT4gd3JvdGU6DQo+Pj4gDQo+
+Pj4gDQo+Pj4gDQo+Pj4gT24gNC8xNy8yMSAxMjozNiBQTSwgQ2h1Y2sgTGV2ZXIgSUlJIHdyb3Rl
+Og0KPj4+PiANCj4+Pj4gDQo+Pj4+PiBPbiBBcHIgMTcsIDIwMjEsIGF0IDEyOjE4IFBNLCBTdGV2
+ZSBEaWNrc29uIDxTdGV2ZURAUmVkSGF0LmNvbT4gd3JvdGU6DQo+Pj4+PiANCj4+Pj4+IA0KPj4+
+Pj4gDQo+Pj4+PiBPbiA0LzE1LzIxIDEyOjM3IFBNLCBDaHVjayBMZXZlciBJSUkgd3JvdGU6DQo+
+Pj4+Pj4gDQo+Pj4+Pj4gDQo+Pj4+Pj4+IE9uIEFwciAxNSwgMjAyMSwgYXQgMTE6MzMgQU0sIFN0
+ZXZlIERpY2tzb24gPFN0ZXZlREBSZWRIYXQuY29tPiB3cm90ZToNCj4+Pj4+Pj4gDQo+Pj4+Pj4+
+IEhleSBDaHVjayEgDQo+Pj4+Pj4+IA0KPj4+Pj4+PiBPbiA0LzE0LzIxIDc6MjYgUE0sIENodWNr
+IExldmVyIElJSSB3cm90ZToNCj4+Pj4+Pj4+IEhpIFN0ZXZlLQ0KPj4+Pj4+Pj4gDQo+Pj4+Pj4+
+Pj4gT24gQXByIDE0LCAyMDIxLCBhdCAyOjEwIFBNLCBTdGV2ZSBEaWNrc29uIDxTdGV2ZURAcmVk
+aGF0LmNvbT4gd3JvdGU6DQo+Pj4+Pj4+Pj4gDQo+Pj4+Pj4+Pj4g77u/VGhpcyBpcyBhIHR3ZWFr
+IG9mIHRoZSBwYXRjaCBzZXQgQWxpY2UgTWl0Y2hlbGwgcG9zdGVkIGxhc3QgSnVseSBbMV0uDQo+
+Pj4+Pj4+PiANCj4+Pj4+Pj4+IFRoYXQgYXBwcm9hY2ggd2FzIGRyb3BwZWQgbGFzdCBKdWx5IGJl
+Y2F1c2UgaXQgaXMgbm90IGNvbnRhaW5lci1hd2FyZS4NCj4+Pj4+Pj4+IEl0IHNob3VsZCBiZSBz
+aW1wbGUgZm9yIHNvbWVvbmUgdG8gd3JpdGUgYSB1ZGV2IHNjcmlwdCB0aGF0IHVzZXMgdGhlDQo+
+Pj4+Pj4+PiBleGlzdGluZyBzeXNmcyBBUEkgdGhhdCBjYW4gdXBkYXRlIG5mczRfY2xpZW50X2lk
+IGluIGEgbmFtZXNwYWNlLiBJDQo+Pj4+Pj4+PiB3b3VsZCBwcmVmZXIgdGhlIHN5c2ZzL3VkZXYg
+YXBwcm9hY2ggZm9yIHNldHRpbmcgbmZzNF9jbGllbnRfaWQsDQo+Pj4+Pj4+PiBzaW5jZSBpdCBp
+cyBjb250YWluZXItYXdhcmUgYW5kIG1ha2VzIHRoaXMgc2V0dGluZyBjb21wbGV0ZWx5DQo+Pj4+
+Pj4+PiBhdXRvbWF0aWMgKHplcm8gdG91Y2gpLg0KPj4+Pj4+PiBBcyBJIHNhaWQgaW4gaW4gbXkg
+Y292ZXIgbGV0dGVyLCBJIHNlZSB0aGlzIG1vcmUgYXMgaW50cm9kdWN0aW9uIG9mDQo+Pj4+Pj4+
+IGEgbWVjaGFuaXNtIG1vcmUgdGhhbiBhIHdheSB0byBzZXQgdGhlIHVuaXF1ZSBpZC4NCj4+Pj4+
+PiANCj4+Pj4+PiBZZXAsIEkgZ290IHRoYXQuDQo+Pj4+Pj4gDQo+Pj4+Pj4gSSdtIG5vdCBhZGRy
+ZXNzaW5nIHRoZSBxdWVzdGlvbiBvZiB3aGV0aGVyIGFkZGluZyBhDQo+Pj4+Pj4gbWVjaGFuaXNt
+IHRvIHNldCBhIG1vZHVsZSBwYXJhbWV0ZXIgaW4gbmZzLmNvbmYgaXMgZ29vZA0KPj4+Pj4+IG9y
+IG5vdC4gSSdtIHNheWluZyBuZnM0X2NsaWVudF9pZCBpcyBub3QgYW4gYXBwcm9wcmlhdGUNCj4+
+Pj4+PiBwYXJhbWV0ZXIgdG8gYWRkIHRvIG5mcy5jb25mLiBDYW4geW91IHBpY2sgYW5vdGhlcg0K
+Pj4+Pj4+IG1vZHVsZSBwYXJhbWV0ZXIgYXMgYW4gZXhhbXBsZSBmb3IgeW91ciBtZWNoYW5pc20/
+DQo+Pj4+PiBUaGUgcmVxdWVzdCB3YXMgdG8gc2V0IHRoYXQgcGFyYW1ldGVyLi4uDQo+Pj4+IA0K
+Pj4+PiBUaGUgY292ZXIgbGV0dGVyIGFuZCB0aGUgcXVvdGVkIGUtbWFpbCBhYm92ZSBzdGF0ZSB0
+aGF0DQo+Pj4+IHlvdSBhcmUganVzdCBkZW1vbnN0cmF0aW5nIGEgbWVjaGFuaXNtIHRvIHNldCBt
+b2R1bGUNCj4+Pj4gcGFyYW1ldGVycyB2aWEgbmZzLmNvbmYuIEkgZ3Vlc3MgdGhhdCBzdGF0ZW1l
+bnQgd2FzIG5vdA0KPj4+PiBlbnRpcmVseSBhY2N1cmF0ZSwgdGhlbi4gVGhhbmtzIGZvciBjbGFy
+aWZ5aW5nLg0KPj4+IEkgd2FzIHRyeWluZyB0byBrZWVwIHRoZSBjb252ZXJzYXRpb24gb2ZmIG9m
+IHdoYXQNCj4+PiB3YXMgYmVpbmcgc2V0IHRvIGhvdyBpdCB3YXMgYmVpbmcgc2V0Li4uIA0KPj4+
+IA0KPj4+IEkgaGFkIG5vIGlkZWEgdGhlIGVudGlyZSAib3B0aW9ucyBuZnMiIEFQSSBpcyBjb21w
+cm9taXNlZA0KPj4+IHdoZW4gaXQgY29tZXMgdG8gY29udGFpbmVycy4uLiBOb3Qgc3VyZSB3aHku
+Li4gYnV0IEkgd2lsbA0KPj4+IGJlbGlldmUgeW91Li4uDQo+PiANCj4+IE1vZHVsZSBwYXJhbWV0
+ZXJzIHRha2UgZWZmZWN0IGZvciBhbGwgbmFtZXNwYWNlcy4gSXQncw0KPj4gbm90IGp1c3QgbmZz
+LmtvIHRoYXQgaGFzIHRoaXMgaXNzdWUuDQo+IFJpZ2h0Li4uIA0KPj4gDQo+PiANCj4+Pj4gSWYg
+dGhlcmUncyBhIGJ1ZyByZXBvcnQgc29tZXdoZXJlIHRoYXQgcmVxdWVzdHMgYQ0KPj4+PiBmZWF0
+dXJlLCBpdCdzIG5vcm1hbCBwcmFjdGljZSB0byBpbmNsdWRlIGEgVVJMIHBvaW50aW5nDQo+Pj4+
+IHRvIHRoYXQgcmVwb3J0IGluIHRoZSBwYXRjaCBkZXNjcmlwdGlvbi4NCj4+PiBJIGp1c3QgYXNz
+dW1lZCwgc2luY2UgaXQgaGFkIGEgY3VzdG9tZXIgY2FzZSwgdGhlIGJ6IHdhcyANCj4+PiBwcml2
+YXRlLi4uIGl0IHR1cm5zIG91dCBub3QgdG8gYmUgdGhlIGNhc2UNCj4+PiBodHRwczovL2J1Z3pp
+bGxhLnJlZGhhdC5jb20vc2hvd19idWcuY2dpP2lkPTE4MDEzMjYNCj4+IA0KPj4+Pj4+PiBBY3R1
+YWwgSSBoYXZlIGN1c3RvbWVycyBhc2tpbmcgZm9yIHRoaXMgdHlwZQ0KPj4+Pj4+PiBvZiBmdW5j
+dGlvbmFsaXR5DQo+PiANCj4+IEhybS4gVGhlIHJlcG9ydGVyIG9mIDE4MDEzMjYgaXMgZHd5c28s
+IGEgUmVkIEhhdCBlbXBsb3llZSwNCj4+IG5vdCBhIGN1c3RvbWVyLg0KPj4gDQo+PiBBbHNvLCBJ
+IHNlZSBub3RoaW5nIHRoYXQgcmVxdWlyZXMgaXQgdG8gYmUgc2V0IGluIG5mcy5jb25mLg0KPj4g
+U28gd2hhdCBhY3R1YWwgZnVuY3Rpb25hbGl0eSBpcyBiZWluZyByZXF1ZXN0ZWQsIGFuZCB3aHkN
+Cj4+IGNhbid0IGl0IGJlIGFkZHJlc3NlZCB3aXRoIGEgdWRldiBzY3JpcHQsIHdoaWNoIGhhcyBi
+ZWVuDQo+PiB0aGUgZGVzaWduIGFscmVhZHkgaW4gdGhlIHdvcmtzIGZvciBtYW55IG1vbnRocz8N
+Cj4gVGhlIGJ6IHdhcyBvcGVuIGJ5IGEgcmVxdWVzdCBvZiBhIGN1c3RvbWVyLi4uIFRoZXJlIGlz
+IGENCj4gbG90IG9mIGluZm8gaW4gYnpzIHRoYXQgYXJlIG5vdCBwdWJsaWMuLi4gDQo+IA0KPiBI
+YXZpbmcgYSBvbmUsIGNlbnRyYWxpemVkIHBsYWNlIHRvIGNvbmZpZ3VyZSBORlMNCj4gSSB0aG91
+Z2h0IHdhcyBhIGdvb2QgaWRlYS4uLiANCj4gDQo+PiANCj4+IA0KPj4+Pj4+IEFzayB5b3Vyc2Vs
+ZiB3aHkgdGhleSBtaWdodCB3YW50IGl0LiBJdCdzIHByb2JhYmx5IGJlY2F1c2UNCj4+Pj4+PiB3
+ZSBkb24ndCBzZXQgaXQgY29ycmVjdGx5IGN1cnJlbnRseS4gSWYgd2UgaGF2ZSBhIHdheSB0bw0K
+Pj4+Pj4+IGF1dG9tYXRpY2FsbHkgZ2V0IGl0IHJpZ2h0IGV2ZXJ5IHRpbWUsIHRoZXJlJ3MgcmVh
+bGx5IG5vDQo+Pj4+Pj4gbmVlZCBmb3IgdGhpcyBzZXR0aW5nIHRvIGJlIGV4cG9zZWQuDQo+Pj4+
+PiBJZiB3ZSBzaG91bGRuJ3QgZXhwb3NlIGl0Li4uIExldHMgZ2V0IHJpZCBvZiBpdC4uLg0KPj4+
+Pj4gWW91IGFkZGVkIHRoZSBwYXJhbSBpbiB0aGUgZmFsbCAyMDEyLi4uIElmIGl0IGhhc24ndA0K
+Pj4+Pj4gYmVlbiB1c2VkIGNvcnJlY3RseSBvciBjYW4ndCBiZSB1c2VkIGNvcnJlY3RseSBmb3IN
+Cj4+Pj4+IGFsbCB0aGVzZXMgeWVhcnMuLi4gd2h5IGRvZXMgaXQgZXhpc3Q/DQo+Pj4+IA0KPj4+
+PiBCZWNhdXNlIGJhY2sgdGhlbiB3ZSBkaWRuJ3QgY2FyZSBhYm91dCBjb250YWluZXIgYXdhcmVu
+ZXNzDQo+Pj4+IGVub3VnaCB0byBtYWtlIGl0IGFuIGluaXRpYWwgcGFydCBvZiB0aGUgZmVhdHVy
+ZS4gV2Ugd2VyZQ0KPj4+PiB0cnlpbmcgdG8gYWRkcmVzcyB0aGUgcHJvYmxlbSBvZiBob3cgdG8g
+ZW5zdXJlIHRoYXQgdGhlDQo+Pj4+IG5mczRfY2xpZW50X2lkIGlzIHVuaXF1ZS4gQnV0IGNsZWFy
+bHkgaXQgd2FzIG9ubHkgaGFsZiBhDQo+Pj4+IHNvbHV0aW9uLg0KPj4+IFJpZ2h0Li4uIEkgd2Fz
+IGp1c3QgdHJ5aW5nIHRvIGJ1aWxkIGEgbWVjaGFuaXNtIHRvDQo+Pj4gc2V0IHRoZSB2YWx1ZSwg
+YW5kIG5vdCB3b3JyeWluZyAoeWV0KSBhYm91dCB3aGF0IHRoZQ0KPj4+IHZhbHVlIGlzIHNldCB0
+by4uLiANCj4+PiANCj4+PiBTbyBhdCB0aGlzIHBvaW50LCBhbGwgb2YgdGhlIG5mcyBrZXJuZWwg
+bW9kdWxlIHBhcmFtZXRlcg0KPj4+IGNhbiBiZSBzZXQgdGhyb3VnaCB0aGUgc3lzZnMvdWRldiBp
+bnRlcmZhY2U/DQo+PiANCj4+IFRoZSBvbmx5IG1vZHVsZSBwYXJhbWV0ZXIgdGhhdCBoYXMgYmVl
+biBleHBsaWNpdGx5IHJlcGxhY2VkDQo+PiBpcyB0aGUgb25lIHRoYXQgc2V0cyBuZnM0X2NsaWVu
+dF9pZCwgYXMgZmFyIGFzIEkgYW0gYXdhcmUuDQo+PiBUaGVyZSBtaWdodCBiZSBzb21lIG90aGVy
+IHNldHRpbmdzIGF2YWlsYWJsZSBpbiAvc3lzOg0KPj4gDQo+PiAjIGxzIC9zeXMvbW9kdWxlL25m
+c3Y0L3BhcmFtZXRlcnMNCj4+IGRlbGVnYXRpb25fd2F0ZXJtYXJrICBsYXlvdXRzdGF0c190aW1l
+cg0KPj4gIw0KPj4gDQo+PiBbY2VsQG1hbmV0IGxpbnV4XSQgZ2l0IGdyZXAgTU9EVUxFX1BBUk0g
+LS0gZnMvbmZzLw0KPj4gZnMvbmZzL2NhY2hlX2xpYi5jOk1PRFVMRV9QQVJNX0RFU0MoY2FjaGVf
+Z2V0ZW50LCAiUGF0aCB0byB0aGUgY2xpZW50IGNhY2hlIHVwY2FsbCBwcm9ncmFtIik7DQo+PiBm
+cy9uZnMvY2FjaGVfbGliLmM6TU9EVUxFX1BBUk1fREVTQyhjYWNoZV9nZXRlbnRfdGltZW91dCwg
+IlRpbWVvdXQgKGluIHNlY29uZHMpIGFmdGVyIHdoaWNoICINCj4+IGZzL25mcy9kaXIuYzpNT0RV
+TEVfUEFSTV9ERVNDKG5mc19hY2Nlc3NfbWF4X2NhY2hlc2l6ZSwgIk5GUyBhY2Nlc3MgbWF4aW11
+bSB0b3RhbCBjYWNoZSBsZW5ndGgiKTsNCj4+IGZzL25mcy9maWxlbGF5b3V0L2ZpbGVsYXlvdXRk
+ZXYuYzpNT0RVTEVfUEFSTV9ERVNDKGRhdGFzZXJ2ZXJfcmV0cmFucywgIlRoZSAgbnVtYmVyIG9m
+IHRpbWVzIHRoZSBORlN2NC4xIGNsaWVudCAiDQo+PiBmcy9uZnMvZmlsZWxheW91dC9maWxlbGF5
+b3V0ZGV2LmM6TU9EVUxFX1BBUk1fREVTQyhkYXRhc2VydmVyX3RpbWVvLCAiVGhlIHRpbWUgKGlu
+IHRlbnRocyBvZiBhIHNlY29uZCkgdGhlICINCj4+IGZzL25mcy9mbGV4ZmlsZWxheW91dC9mbGV4
+ZmlsZWxheW91dC5jOk1PRFVMRV9QQVJNX0RFU0MoaW9fbWF4cmV0cmFucywgIlRoZSAgbnVtYmVy
+IG9mIHRpbWVzIHRoZSBORlN2NC4xIGNsaWVudCAiDQo+PiBmcy9uZnMvZmxleGZpbGVsYXlvdXQv
+ZmxleGZpbGVsYXlvdXRkZXYuYzpNT0RVTEVfUEFSTV9ERVNDKGRhdGFzZXJ2ZXJfcmV0cmFucywg
+IlRoZSAgbnVtYmVyIG9mIHRpbWVzIHRoZSBORlN2NC4xIGNsaWVudCAiDQo+PiBmcy9uZnMvZmxl
+eGZpbGVsYXlvdXQvZmxleGZpbGVsYXlvdXRkZXYuYzpNT0RVTEVfUEFSTV9ERVNDKGRhdGFzZXJ2
+ZXJfdGltZW8sICJUaGUgdGltZSAoaW4gdGVudGhzIG9mIGEgc2Vjb25kKSB0aGUgIg0KPj4gZnMv
+bmZzL25hbWVzcGFjZS5jOk1PRFVMRV9QQVJNX0RFU0MobmZzX21vdW50cG9pbnRfZXhwaXJ5X3Rp
+bWVvdXQsDQo+PiBmcy9uZnMvc3VwZXIuYzpNT0RVTEVfUEFSTV9ERVNDKGNhbGxiYWNrX25yX3Ro
+cmVhZHMsICJOdW1iZXIgb2YgdGhyZWFkcyB0aGF0IHdpbGwgYmUgIg0KPj4gZnMvbmZzL3N1cGVy
+LmM6TU9EVUxFX1BBUk1fREVTQyhuZnM0X2Rpc2FibGVfaWRtYXBwaW5nLA0KPj4gZnMvbmZzL3N1
+cGVyLmM6TU9EVUxFX1BBUk1fREVTQyhtYXhfc2Vzc2lvbl9zbG90cywgIk1heGltdW0gbnVtYmVy
+IG9mIG91dHN0YW5kaW5nIE5GU3Y0LjEgIg0KPj4gZnMvbmZzL3N1cGVyLmM6TU9EVUxFX1BBUk1f
+REVTQyhtYXhfc2Vzc2lvbl9jYl9zbG90cywgIk1heGltdW0gbnVtYmVyIG9mIHBhcmFsbGVsIE5G
+U3Y0LjEgIg0KPj4gZnMvbmZzL3N1cGVyLmM6TU9EVUxFX1BBUk1fREVTQyhzZW5kX2ltcGxlbWVu
+dGF0aW9uX2lkLA0KPj4gZnMvbmZzL3N1cGVyLmM6TU9EVUxFX1BBUk1fREVTQyhuZnM0X3VuaXF1
+ZV9pZCwgIm5mc19jbGllbnRfaWQ0IHVuaXF1aWZpZXIgc3RyaW5nIik7DQo+PiBmcy9uZnMvc3Vw
+ZXIuYzpNT0RVTEVfUEFSTV9ERVNDKHJlY292ZXJfbG9zdF9sb2NrcywNCj4+IFtjZWxAbWFuZXQg
+bGludXhdJCBnaXQgZ3JlcCBNT0RVTEVfUEFSTSAtLSBmcy9uZnNkLw0KPj4gZnMvbmZzZC9uZnM0
+aWRtYXAuYzpNT0RVTEVfUEFSTV9ERVNDKG5mczRfZGlzYWJsZV9pZG1hcHBpbmcsDQo+PiBmcy9u
+ZnNkL25mczRwcm9jLmM6TU9EVUxFX1BBUk1fREVTQyhpbnRlcl9jb3B5X29mZmxvYWRfZW5hYmxl
+LA0KPj4gZnMvbmZzZC9uZnM0cmVjb3Zlci5jOk1PRFVMRV9QQVJNX0RFU0MoY2x0cmFja19wcm9n
+LCAiUGF0aCB0byB0aGUgbmZzZGNsdHJhY2sgdXBjYWxsIHByb2dyYW0iKTsNCj4+IGZzL25mc2Qv
+bmZzNHJlY292ZXIuYzpNT0RVTEVfUEFSTV9ERVNDKGNsdHJhY2tfbGVnYWN5X2Rpc2FibGUsDQo+
+PiBbY2VsQG1hbmV0IGxpbnV4XSQNCj4+IA0KPj4gRWFjaCBvZiB0aGUgYWJvdmUgaGFzIHRvIGJl
+IGNvbnNpZGVyZWQgb24gYSBjYXNlLWJ5LWNhc2UNCj4+IGJhc2lzLCBJTU8uDQo+PiANCj4+IA0K
+Pj4+IElmIHRoYXQgaXMgdGhlIGNhdXNlLi4uIGhhdmUgdGhlIHZhcmlhYmxlcyBpbiANCj4+PiBu
+ZnMuY29uZiBjcmVhdGUgc3lzZnMvdWRldiBmaWxlIHdvdWxkIHdvcmsgYmV0dGVyPw0KPj4gDQo+
+PiBTZWVtcyB0byBtZSB3ZSBoYXZlIHRoZSBzYW1lIGFyZ3VtZW50IGZvciBhIHNlcGFyYXRlIGZp
+bGUNCj4+IHRvIHN0b3JlIHRoZSBuZnM0X3VuaXF1ZV9pZCB0aGF0IHdlIGhhdmUgZm9yIGJyZWFr
+aW5nDQo+PiAvZXRjL2V4cG9ydHMgaW50byBhIGRpcmVjdG9yeSBvZiBpbmRpdmlkdWFsIGZpbGVz
+OiBubw0KPj4gcGFyc2luZyBpcyBuZWNlc3NhcnkuIFNjcmlwdHMgYW5kIGFwcGxpY2F0aW9ucyBj
+YW4gc2ltcGx5DQo+PiByZWFkIHRoZSBzdHJpbmcgcmlnaHQgb3V0IG9mIHRoZSBmaWxlLCBvciB1
+cGRhdGUgaXQganVzdA0KPj4gYnkgd3JpdGluZyB0aGUgc3RyaW5nIGludG8gdGhhdCBmaWxlLg0K
+PiBJJ20gc3VyZSBJJ20gZm9sbG93aW5nIHRoaXMgYW5hbG9neSB3aXRoIHRoZSBleHBvcnQuLi4N
+Cj4gYnV0IGJlaW5nIGFibGUgdG8gc2V0IHRoaW5ncyB1cCBmcm9tIG9uZSBjb25maWd1cmF0aW9u
+IA0KPiBmaWxlIGFuZCBjb21tYW5kIGlzIGtleS4NCg0KSSBmaW5kIHRoYXQgdG8gYmUgYSByZWQg
+aGVycmluZy4gV2UncmUgbm90IGV2ZXIgZ29pbmcgdG8gYmUNCmF0IGEgcGxhY2Ugd2hlcmUgZXZl
+cnl0aGluZyBpcyBjb25maWd1cmVkIGluIG9uZSBmaWxlLiBBcmUNCnlvdSBnb2luZyB0byByZXBs
+YWNlIC9ldGMvZXhwb3J0cy5kIGFuZCBhdXRvbW91bnRlci5jb25mDQphbmQga3JiNS5jb25mIGFu
+ZCBhbGwgdGhlIG90aGVyIHRoaW5ncyB3aXRoIGp1c3QgL2V0Yy9uZnMuY29uZj8NClByb2JhYmx5
+IG5vdC4gU28gbGV0J3Mgc3RvcCB1c2luZyB0aGlzIHN0cmFuZ2UgbG9naWMgdG8NCmluc2lzdCB0
+aGF0IC9ldGMvbmZzLmNvbmYgaXMgdGhlIG9ubHkgcGxhY2UgZm9yIHRoZSBjbGllbnRpZA0KdW5p
+cWlmaWVyLg0KDQpQbGVhc2UsIGxldCdzIGp1c3QgZm9jdXMgb24gd2hhdCdzIHJpZ2h0IGZvciB0
+aGlzIG9uZSBzZXR0aW5nLg0KDQoNCj4gbmZzY29uZiBkb2VzIGFuIGV4Y2VsbGVudCBqb2IgcGFy
+c2luZyBuZnMuY29uZiBhbmQgSSB3b3VsZA0KPiBsaWtlIHRvIGJ1aWxkIG9uIHRoYXQuLi4gDQoN
+Ckp1c3QgYmVjYXVzZSBpdCBpcyB0ZWNobmljYWxseSBwb3NzaWJsZSB0byBzYXZlIHRoZSB1bmlx
+aWZpZXINCmluIC9ldGMvbmZzLmNvbmYgZG9lc24ndCBtZWFuIHRoYXQncyB3aGF0J3MgYmVzdCBm
+b3Igb3VyIHVzZXJzLg0KV2UncmUgaW4gYmV0dGVyIHNoYXBlIGlmIHdlIGNhbiBndWFyYW50ZWUg
+dGhhdCBzZXR0aW5nIGlzDQpjb3JyZWN0IGFuZCBhZG1pbmlzdHJhdG9ycyBjYW4ndCBicmVhayBp
+dC4NCg0KDQo+IEkgdW5kZXJzdGFuZCB3ZSBoYXZlIHRvIHdvcmsgd2VsbCBpbiBjb250YWluZXJz
+IHdoaWNoIA0KPiBpcyBvbmUgb2YgdGhlIHJlYXNvbiBJIHdhcyB0cnlpbmcgdG8gY29tZSB1cCB3
+aXRoIGENCj4gbmZzdjQgb25seSBuZnMtdXRpbHMuLi4gVGhhdCB3ZW50IG92ZXIgbGlrZSBhIGxl
+YWQgYmFsbG9vbiA7LSkNCg0KSSBkaWRuJ3QgaGF2ZSBhIHByb2JsZW0gd2l0aCBhbiBuZnN2NC1v
+bmx5IGNvbmZpZ3VyYXRpb24uDQpXaGF0IEkgZGlkbid0IGxpa2UgYWJvdXQgdGhhdCBpcyB0aGF0
+IHlvdSB3ZXJlIG1ha2luZyB0aGUNCmFkbWluaXN0cmF0aXZlIGludGVyZmFjZSBtb3JlIGNvbXBs
+ZXgsIGFuZCBpdCBkaWRuJ3QgbmVlZCB0bw0KYmUuDQoNCg0KPiBXaGF0IEkgZG9uJ3QgdW5kZXJz
+dGFuZCBpcyB3aHkgd2UgY2FuJ3QgY29tZSB1cCB3aXRoIGEgDQo+IHNvbHV0aW9uIHRoYXQgdW5p
+cXVlbHkgc2V0IGEgcGFyYW0gdGhhdCBpcyBzZXQgYnkgDQo+IG5mc2NvbmYgdXNpbmcgbmZzLmNv
+bmYuDQoNCk9uY2Ugd2UgaGF2ZSBhbiBhdXRvbWF0ZWQgbWVjaGFuaXNtIHRvIHNldCB0aGUgdW5p
+cWlmaWVyLA0KaXQgZG9lcyBub3QgbmVlZCB0byBiZSBzZXQgYnkgaHVtYW5zLiBMZXQncyBrZWVw
+IGl0IG91dCBvZg0KbmZzLmNvbmYuDQoNCkknbSBpbiBmYXZvciBvZiBtYWtpbmcgdGhpcyBhcyBh
+dXRvbWF0aWMgYXMgcG9zc2libGUuIE5vDQpzZXR0aW5nIGlzIGJldHRlciB0aGFuIGFuIGV4cG9z
+ZWQgc2V0dGluZyB0aGF0IGlzIG5ldmVyDQp0b3VjaGVkLg0KDQpJIHByZWZlciBubyBjaGFuZ2Ug
+dG8gbmZzLmNvbmYsIGFuZCBwdXQgdGhlIHVuaXFpZmllciBpbiBhDQpzZXBhcmF0ZSBmaWxlLg0K
+DQoNCi0tDQpDaHVjayBMZXZlcg0KDQoNCg0K
