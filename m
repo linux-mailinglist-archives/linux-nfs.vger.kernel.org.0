@@ -2,108 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D7EF367425
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 22:28:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE5F736755C
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Apr 2021 00:54:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244805AbhDUU2y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 21 Apr 2021 16:28:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53000 "EHLO
+        id S1343588AbhDUWxT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 21 Apr 2021 18:53:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235996AbhDUU2x (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Apr 2021 16:28:53 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3620C06138A
-        for <linux-nfs@vger.kernel.org>; Wed, 21 Apr 2021 13:28:17 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id h8so10690546edb.2
-        for <linux-nfs@vger.kernel.org>; Wed, 21 Apr 2021 13:28:17 -0700 (PDT)
+        with ESMTP id S235481AbhDUWxS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Apr 2021 18:53:18 -0400
+Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B57C06138A;
+        Wed, 21 Apr 2021 15:52:44 -0700 (PDT)
+Received: by mail-ot1-x32d.google.com with SMTP id 5-20020a9d09050000b029029432d8d8c5so14469683otp.11;
+        Wed, 21 Apr 2021 15:52:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=berkeley-edu.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=BTxeOvItUf/hQPVBleOY5zaWBy/5NEeiG69sqLNw6SY=;
-        b=QUhudc+dY9APEI3AjukEm29Vkwfr1+uMFpQkygQuzbzuEExw3Mzqx3Tl2om/LIMLai
-         e/HS28L4pkXhkSqAEiiOTRxppDsXU8BnothjmlPFUs87t3Ky6o3b8ihwLa69YN+CKLH1
-         llQTXExEG+4PXMyea3MC68ZmGDygYPpueTZDgDMDnvN1ABrcWZsUhW73Rb4MEaJhVF9U
-         vO3U6ZSyl7Bngc/vQmc8TFpa7gpM3SR/UFfnJNaOpqTbDDFCS1hqgXnTIa6nxAr1KM8E
-         8BTJOhpyR3b7ASdcRWL71ERupi93wSpq/zuQUi91kRuiTWH7AYgAo1LGeeETuIqlPDX4
-         IQJw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+Q3lYO1hTpL3JeJVnFbKHYgLVKq2KQUZWjQJJYj9jJM=;
+        b=U60eCJYI6LzX7UlSt8krSU6ggge2RW0Q4fVjfJuBK6S5Ik1hpq9BFAmYk7W6JNVtUm
+         iUd65hB/5tMXH+wNIfDyyBFqaRsmjOLLY+VpchG585B6IKObrYTa8+9rR1u1tD1jip2T
+         +rcunfytTqNtKPKCvOOwfNB40UGUr8E2PA88BjbavfU1b07G06x3wca9rRsA9gycR9WK
+         od0XtgycC2g1bzlAer5pE4DsiYa7pNrunhodWR8VBXC5tgxGs74uNPyreqBeZdTFvcSo
+         kt4KnyGvqY3N3Ml6WWFDZj8X/taYOgFc/STmk1HpE99fS7UQzNDW2oUjXdmmdwe+MAQU
+         B11w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=BTxeOvItUf/hQPVBleOY5zaWBy/5NEeiG69sqLNw6SY=;
-        b=DVoD8Ds79mHlL9NJM3ArZhUoLNC4WKG6KHGePoJJTsMnXuysUgVIK3C2gZwI8abLLe
-         azAO5wizBqeJRd+wJFVgvCeBhGgboEsGkXeW9XJP7Gi1PpcNvaV+2kGKUR2aFe2obfj+
-         +54e3hRFfecAgeUodw5kIiD4TZIFIBdJoaeyWV6tJXZGPhny6RTosYcXAu0r4VIdmA1t
-         oFZo6dEnkp+UqItoCie7xA2e2kQ24cWStwRYBQAlM+JwyZnoMTkSwf89V5lgyfCMzZKN
-         FRD8pCq85zBfP0UI9wCLIYiFpNDCc3xmoFOaBFqFN+f4+4q4s4LxTlEVL6uCExMIAIal
-         9/Dw==
-X-Gm-Message-State: AOAM5311DKYRIlS5K2+YpgqyC7Lhr9MqvUoa4WUIxWU53+mGMcotTrqc
-        LoI58X3aQpcmNlf0dA/R2TdBC+f1qmTlAk7Ov2iF0Q==
-X-Google-Smtp-Source: ABdhPJzsQJ7ViNL2kufuHFGKH/tMM4GjkaL36Yv5Pr1Wfer7c9HJJdpBWIPu4Z65zWBVeRiPSBN56etGEDkVg7HhE24=
-X-Received: by 2002:aa7:cb90:: with SMTP id r16mr41647616edt.139.1619036896139;
- Wed, 21 Apr 2021 13:28:16 -0700 (PDT)
-MIME-Version: 1.0
-From:   Weikeng Chen <w.k@berkeley.edu>
-Date:   Wed, 21 Apr 2021 13:27:40 -0700
-Message-ID: <CAHr+ZK8xp5QU8wQHzuNkJdsP20fC=nW4B33gwMUwHY82f_u5WA@mail.gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+Q3lYO1hTpL3JeJVnFbKHYgLVKq2KQUZWjQJJYj9jJM=;
+        b=PTZ77RRAOccVSOHAGqJmsqhbqcr/qPI1dwtnhUHmA9h3iEI/GGEcbpdjGXrs3JVwpe
+         CFoelUhWHtjPqMyFQUncbRjkoOTnTPUzSRPgMbIqsKmi24yOo5xJh9tqJY2uatxIfdnb
+         8+nAW0jrLRXnPMuyRvhJy3YX2Ga0nNK6FQUnULqfH9+DwOVDAMyvo2WGSm1epf4E6O9j
+         3bPitjTROS/IssCwtiFdVa+hFRnCLs0zam05+XItnjXXUY6D075pPFipawWOS0c95HMX
+         JJTZG3x14xgR6uLiA0vgEf3sg5k7OrE3+0L2eQVaFH+5hQi2mFRrm0W6KFRMZHCjpqqE
+         y0/w==
+X-Gm-Message-State: AOAM530YcwjKMbQ50uDFs4ZcLexgkhnN1sPYbfwUyaYYMPx65Cxbi2Xc
+        sw5JFBhyLE6OYwon3rM+vfw=
+X-Google-Smtp-Source: ABdhPJwozywGSqQF3xMLdEXGk1/u2t5WGdubCmaImSDPIJQ/cPLAZTkZQ25/VuvtQm4+NZul5sPALA==
+X-Received: by 2002:a05:6830:1584:: with SMTP id i4mr371717otr.129.1619045564152;
+        Wed, 21 Apr 2021 15:52:44 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k8sm179101oig.6.2021.04.21.15.52.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 21 Apr 2021 15:52:42 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Wed, 21 Apr 2021 15:52:40 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
-To:     tytso@mit.edu
-Cc:     anna.schumaker@netapp.com, bfields@fieldses.org,
-        chuck.lever@oracle.com, davem@davemloft.net, dwysocha@redhat.com,
-        gregkh@linuxfoundation.org, kuba@kernel.org, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, pakki001@umn.edu,
-        trond.myklebust@hammerspace.com, w.k@berkeley.edu
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20210421225240.GA117423@roeck-us.net>
+References: <20210407001658.2208535-1-pakki001@umn.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210407001658.2208535-1-pakki001@umn.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-[This is the email that Theodore Ts'o replied to, but it fails to
-reach the email server due to not using plain mode. Here I resent.]
+On Tue, Apr 06, 2021 at 07:16:56PM -0500, Aditya Pakki wrote:
+> In gss_pipe_destroy_msg(), in case of error in msg, gss_release_msg
+> deletes gss_msg. The patch adds a check to avoid a potential double
+> free.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+>  net/sunrpc/auth_gss/auth_gss.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
+> index 5f42aa5fc612..eb52eebb3923 100644
+> --- a/net/sunrpc/auth_gss/auth_gss.c
+> +++ b/net/sunrpc/auth_gss/auth_gss.c
+> @@ -848,7 +848,8 @@ gss_pipe_destroy_msg(struct rpc_pipe_msg *msg)
+>  			warn_gssd();
+>  		gss_release_msg(gss_msg);
+>  	}
+> -	gss_release_msg(gss_msg);
+> +	if (gss_msg)
+> +		gss_release_msg(gss_msg);
 
-(Note: this thread has become a hot Internet discussion on China's Twitter.)
+I know I am adding to the noise here, but it has to be said:
+gss_msg is assigned with
+	struct gss_upcall_msg *gss_msg = container_of(msg, struct gss_upcall_msg, msg);
+and thus never NULL.
 
-I am a graduate student working in applied crypto, and CoI: I know one
-of the authors of the S&P paper.
-Some thoughts.
+Guenter
 
-[1] I think the UMN IRB makes an incorrect assertion that the research
-is not human research,
-and that starts the entire problem and probably continues to be.
-
-It clearly affects humans. I think UMN IRB lacks experience regarding
-human experiments in CS research,
-and should be informed that their decisions that this is not human
-research are fundamentally wrong---
-it misled the reviewers as well as misled the researchers.
-
----
-
-[2] Banning UMN seems to be a temporary solution. I don't disagree.
-But it still might not prevent such proof-of-concept efforts: one
-could use a non-campus address.
-
-It might be helpful to inform the PC chairs of major security
-conferences, S&P, USENIX Security, CCS, and NDSS,
-regarding the need to discourage software security papers from making
-proofs-of-concept in the real world in wild
-that may be hurtful, as well as concerns on the sufficiency of IRB
-review---some IRB may lack experience for CS research.
-
-Some conferences have been being more careful about this recently. For
-example, NDSS accepts a paper on
-a browser bug but attaches a statement saying that the PC has ethical concerns.
-See: "Tales of Favicons and Caches: Persistent Tracking in Modern
-Browsers", NDSS '21
-
----
-
-[3] Let us not forget that the author is using their real campus
-address and is open to such pressure.
-Thus, I think the authors, as students and researchers, have no bad faith;
-but they are misled that this experimental procedure is acceptable,
-which is not.
-
-Sorry for jumping in...
-
-Weikeng
+>  }
+>  
+>  static void gss_pipe_dentry_destroy(struct dentry *dir,
+> -- 
+> 2.25.1
+> 
