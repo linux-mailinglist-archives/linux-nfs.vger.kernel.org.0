@@ -2,76 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFA5D366F8B
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 17:56:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CDE3367168
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 19:35:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235446AbhDUP4l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 21 Apr 2021 11:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43882 "EHLO mail.kernel.org"
+        id S239822AbhDURfo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 21 Apr 2021 13:35:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234894AbhDUP4k (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 21 Apr 2021 11:56:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F183B6144A;
-        Wed, 21 Apr 2021 15:56:06 +0000 (UTC)
+        id S242842AbhDURfn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 21 Apr 2021 13:35:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F35A461459;
+        Wed, 21 Apr 2021 17:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619020567;
-        bh=h4ycg7tPvAV4rChpkWI+ZqgNAiIdzxlW9glZog3vL3M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Zr4634N91XAYwOVh8VaF//ANZqFSi+c80iRWwmsPQOiA8O1Hsv40dpM8FssZQqqum
-         HYBO7kcl/W44bicj8zvAIg/lrTwviIm4rv9C5b0KseoKE+zYkOngsviPxMcqmBszb5
-         WHTIr4oKig9OPQNpNrWS7QMyyVxHIG2hip+QlxRdLsCHv0uv3OEscRcUEXbrgD/Lq5
-         Q+u3FT6P0xd54EnC0dFaiORH7Sx9LFl8ozHaZlazeLDZWiAnBaF5wlQubFPS6KrRZr
-         3dPx6L8UeLX04Cy0KbsFGSFr87JhmfIlXY+Sduh8KeaIQOe+8uO7NU4QGSjaKuMjlG
-         FfRO6iHziPtqA==
-From:   trondmy@kernel.org
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] NFS: The 'fattr_valid' field in struct nfs_server should be unsigned int
-Date:   Wed, 21 Apr 2021 11:56:05 -0400
-Message-Id: <20210421155605.225693-1-trondmy@kernel.org>
-X-Mailer: git-send-email 2.31.1
+        s=k20201202; t=1619026509;
+        bh=jsF90jMAoP9rK5ubz9IvKkVCBAZVLs25dg+tP0TLXVY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CI/LM0CuFrIxtemc7ItH2CTT5rer1JL8jQlmFFw0zQO98sG1dSJAHsiOCoi0fgmgP
+         lRH2hvNnMgiD9yohzQHoR+PQQRvICsZcNQ/GjE50SdDeyzpBqouFisnzs1e97adR9l
+         cRZFSIlL7+FCibqyAziu+I+IBU/btp5XJpAQPhL5v2IAw88co9nhh+CucTualNI1rL
+         j1aVfUqIP+FEy7kc1TZAR/4rw/GvCNUZ6X0Br6y3Znde9OZyK0Ljza2CBq4gCwYjLh
+         D4llnQ2T7kbGNqy9HYKO8+sEmU3tY3LNXrmy6OsfN3LRMRnkmSKBrS1aERhseka/oo
+         etulTyRUw7+Og==
+Date:   Wed, 21 Apr 2021 20:34:59 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Aditya Pakki <pakki001@umn.edu>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        netdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
+Message-ID: <YIBiQ3p9z7y6PeqT@kernel.org>
+References: <20210407001658.2208535-1-pakki001@umn.edu>
+ <YH5/i7OvsjSmqADv@kroah.com>
+ <20210420171008.GB4017@fieldses.org>
+ <YH+zwQgBBGUJdiVK@unreal>
+ <CAFX2JfnGCbanTaGurArBw-5F2MynPD=GpwkfU6wVoNKr9ffzRg@mail.gmail.com>
+ <YIAzfsMx6bn5Twu8@unreal>
+ <YIBJXjCbJ1ntH1RF@mit.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YIBJXjCbJ1ntH1RF@mit.edu>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Wed, Apr 21, 2021 at 11:48:46AM -0400, Theodore Ts'o wrote:
+> On Wed, Apr 21, 2021 at 05:15:26PM +0300, Leon Romanovsky wrote:
+> > > This thread is the first I'm hearing about this. I wonder if there is
+> > > a good way of alerting the entire kernel community (including those
+> > > only subscribed to subsystem mailing lists) about what's going on? It
+> > > seems like useful information to have to push back against these
+> > > patches.
 
-Fix up a static compiler warning:
-"fs/nfs/nfs4proc.c:3882 _nfs4_server_capabilities() warn: was expecting
-a 64 bit value instead of '(1 << 11)'"
-
-The fix is to convert the fattr_valid field to match the type of the
-'valid' field in struct nfs_fattr.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- include/linux/nfs_fs_sb.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index d28d7a62864f..70057b2e606e 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -156,6 +156,7 @@ struct nfs_server {
- #define NFS_MOUNT_WRITE_EAGER		0x01000000
- #define NFS_MOUNT_WRITE_WAIT		0x02000000
+Heh, I've got this information from google news feed on my phone :)
  
-+	unsigned int		fattr_valid;	/* Valid attributes */
- 	unsigned int		caps;		/* server capabilities */
- 	unsigned int		rsize;		/* read size */
- 	unsigned int		rpages;		/* read size (in pages) */
-@@ -191,8 +192,6 @@ struct nfs_server {
- 	dev_t			s_dev;		/* superblock dev numbers */
- 	struct nfs_auth_info	auth_info;	/* parsed auth flavors */
+> > IMHO, kernel users ML is good enough for that.
+> 
+> The problem is that LKML is too high traffic for a lot of people to
+> want to follow.
+
+I think Leon meant kernel.org users ML (users@linux.kernel.org). Along with
+ksummut-discuss it'll reach most maintainers, IMHO.
  
--	__u64			fattr_valid;	/* Valid attributes */
--
- #ifdef CONFIG_NFS_FSCACHE
- 	struct nfs_fscache_key	*fscache_key;	/* unique key for superblock */
- 	struct fscache_cookie	*fscache;	/* superblock cookie */
+> There are some people who have used the kernel summit discuss list
+> (previously ksummit-discuss@lists.linux-foundation.org, now
+> ksummit@lists.linux.dev) as a place where most maintainers tend to be
+> subscribed, although that's not really a guarantee, either.  (Speaking
+> of which, how to handle groups who submit patches in bad faith a good
+> Maintainer Summit topic for someone to propose...)
+
 -- 
-2.31.1
-
+Sincerely yours,
+Mike.
