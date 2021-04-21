@@ -2,85 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CDE3367168
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 19:35:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FD353672F6
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 20:57:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239822AbhDURfo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 21 Apr 2021 13:35:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242842AbhDURfn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 21 Apr 2021 13:35:43 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F35A461459;
-        Wed, 21 Apr 2021 17:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619026509;
-        bh=jsF90jMAoP9rK5ubz9IvKkVCBAZVLs25dg+tP0TLXVY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CI/LM0CuFrIxtemc7ItH2CTT5rer1JL8jQlmFFw0zQO98sG1dSJAHsiOCoi0fgmgP
-         lRH2hvNnMgiD9yohzQHoR+PQQRvICsZcNQ/GjE50SdDeyzpBqouFisnzs1e97adR9l
-         cRZFSIlL7+FCibqyAziu+I+IBU/btp5XJpAQPhL5v2IAw88co9nhh+CucTualNI1rL
-         j1aVfUqIP+FEy7kc1TZAR/4rw/GvCNUZ6X0Br6y3Znde9OZyK0Ljza2CBq4gCwYjLh
-         D4llnQ2T7kbGNqy9HYKO8+sEmU3tY3LNXrmy6OsfN3LRMRnkmSKBrS1aERhseka/oo
-         etulTyRUw7+Og==
-Date:   Wed, 21 Apr 2021 20:34:59 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Aditya Pakki <pakki001@umn.edu>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        netdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        id S241551AbhDUS6Q convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 21 Apr 2021 14:58:16 -0400
+Received: from mailout00.webspace-verkauf.com ([37.218.254.21]:60990 "EHLO
+        mailout00.webspace-verkauf.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234093AbhDUS6Q (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Apr 2021 14:58:16 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Wed, 21 Apr 2021 14:58:15 EDT
+Received: from c5.webspace-verkauf.de (c5.webspace-verkauf.de [37.218.254.105])
+        by mailout00.webspace-verkauf.com (Postfix) with ESMTPS id 2C9C14004FD;
+        Wed, 21 Apr 2021 20:50:33 +0200 (CEST)
+Received: from [192.168.178.20] (pd9fe9a79.dip0.t-ipconnect.de [217.254.154.121])
+        by c5.webspace-verkauf.de (Postfix) with ESMTPSA id 87A7A1B7B922;
+        Wed, 21 Apr 2021 20:50:32 +0200 (CEST)
+To:     gregkh@linuxfoundation.org
+Cc:     a.shelat@northeastern.edu, anna.schumaker@netapp.com,
+        bfields@fieldses.org, chuck.lever@oracle.com, davem@davemloft.net,
+        dwysocha@redhat.com, kuba@kernel.org, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, pakki001@umn.edu,
+        sudipm.mukherjee@gmail.com, trondmy@hammerspace.com
+References: <YIAtwtOpy/emQWr2@kroah.com>
+From:   Alexander Grund <alex@grundis.de>
 Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
-Message-ID: <YIBiQ3p9z7y6PeqT@kernel.org>
-References: <20210407001658.2208535-1-pakki001@umn.edu>
- <YH5/i7OvsjSmqADv@kroah.com>
- <20210420171008.GB4017@fieldses.org>
- <YH+zwQgBBGUJdiVK@unreal>
- <CAFX2JfnGCbanTaGurArBw-5F2MynPD=GpwkfU6wVoNKr9ffzRg@mail.gmail.com>
- <YIAzfsMx6bn5Twu8@unreal>
- <YIBJXjCbJ1ntH1RF@mit.edu>
+Message-ID: <821177ec-dba0-e411-3818-546225511a00@grundis.de>
+Date:   Wed, 21 Apr 2021 20:50:33 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YIBJXjCbJ1ntH1RF@mit.edu>
+In-Reply-To: <YIAtwtOpy/emQWr2@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+Content-Language: de-DE
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Apr 21, 2021 at 11:48:46AM -0400, Theodore Ts'o wrote:
-> On Wed, Apr 21, 2021 at 05:15:26PM +0300, Leon Romanovsky wrote:
-> > > This thread is the first I'm hearing about this. I wonder if there is
-> > > a good way of alerting the entire kernel community (including those
-> > > only subscribed to subsystem mailing lists) about what's going on? It
-> > > seems like useful information to have to push back against these
-> > > patches.
+ > Below is the list that didn't do a simple "revert" that I need to look
+ > at. I was going to have my interns look into this, there's no need to
+ > bother busy maintainers with it unless you really want to, as I can't
+ > tell anyone what to work on :)
 
-Heh, I've got this information from google news feed on my phone :)
- 
-> > IMHO, kernel users ML is good enough for that.
-> 
-> The problem is that LKML is too high traffic for a lot of people to
-> want to follow.
+I'm not involved or affliated with the group or the kernel, but I'd like to make a suggestion:
+Do not revert umn.edu patches unconditionally.
+See below:
 
-I think Leon meant kernel.org users ML (users@linux.kernel.org). Along with
-ksummut-discuss it'll reach most maintainers, IMHO.
- 
-> There are some people who have used the kernel summit discuss list
-> (previously ksummit-discuss@lists.linux-foundation.org, now
-> ksummit@lists.linux.dev) as a place where most maintainers tend to be
-> subscribed, although that's not really a guarantee, either.  (Speaking
-> of which, how to handle groups who submit patches in bad faith a good
-> Maintainer Summit topic for someone to propose...)
+According to the paper:
+ > We submit the three patches using a randomGmail account to the Linux community andseek their feedback
 
--- 
-Sincerely yours,
-Mike.
+So while their behaviour regarding this practice may have been bad, I'd give them the benefit of doubt that they didn't want to actually introduce 
+a bug.
+I.e. what they wrote:
+
+> we immediately notify themaintainers of the introduced UAF and request them to notgo ahead to apply the patch.
+ > At the same time, we point out the correct fixing of the bug and provide our correct patch.
+ > [...] All the UAF-introducing patches stayed only in the emailexchanges, without even becoming a Git commit in Linuxbranches
+
+TLDR:
+- The faulty patches were NOT from umn.edu accounts but from a gmail account
+- Only the corrected patches should have made it to the branches
+
+So while I would at least double-check that the last point is actually true, I believe reverting all umn.edu patches is wrong and actually (re-)introduces vulnerabilities or bugs which have been legitimately fixed (at least in good faith)
+And especially if the reverts do not apply cleanly on the current HEADs I 
+think you might be wasting a lot of work/time, too.
+
+And yes, this aftermath makes it even worse what they did and excluding them from future contributions may make sense.
+But maybe reverting EVERYTHING is a bit to much here, especially if that doesn't even include the faulty stuff (assuming they are not plain lying in their paper, which I really doubt they would)
+
+Alex
+
+
