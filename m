@@ -2,90 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F17303673BF
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 21:50:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D7EF367425
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 22:28:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245551AbhDUTus (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 21 Apr 2021 15:50:48 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:45265 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S235545AbhDUTus (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Apr 2021 15:50:48 -0400
-Received: from cwcc.thunk.org (pool-72-74-133-215.bstnma.fios.verizon.net [72.74.133.215])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 13LJnp00015873
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Apr 2021 15:49:52 -0400
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-        id 8A16C15C3B0D; Wed, 21 Apr 2021 15:49:51 -0400 (EDT)
-Date:   Wed, 21 Apr 2021 15:49:51 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Weikeng Chen <w.k@berkeley.edu>
+        id S244805AbhDUU2y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 21 Apr 2021 16:28:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235996AbhDUU2x (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Apr 2021 16:28:53 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3620C06138A
+        for <linux-nfs@vger.kernel.org>; Wed, 21 Apr 2021 13:28:17 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id h8so10690546edb.2
+        for <linux-nfs@vger.kernel.org>; Wed, 21 Apr 2021 13:28:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=berkeley-edu.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=BTxeOvItUf/hQPVBleOY5zaWBy/5NEeiG69sqLNw6SY=;
+        b=QUhudc+dY9APEI3AjukEm29Vkwfr1+uMFpQkygQuzbzuEExw3Mzqx3Tl2om/LIMLai
+         e/HS28L4pkXhkSqAEiiOTRxppDsXU8BnothjmlPFUs87t3Ky6o3b8ihwLa69YN+CKLH1
+         llQTXExEG+4PXMyea3MC68ZmGDygYPpueTZDgDMDnvN1ABrcWZsUhW73Rb4MEaJhVF9U
+         vO3U6ZSyl7Bngc/vQmc8TFpa7gpM3SR/UFfnJNaOpqTbDDFCS1hqgXnTIa6nxAr1KM8E
+         8BTJOhpyR3b7ASdcRWL71ERupi93wSpq/zuQUi91kRuiTWH7AYgAo1LGeeETuIqlPDX4
+         IQJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=BTxeOvItUf/hQPVBleOY5zaWBy/5NEeiG69sqLNw6SY=;
+        b=DVoD8Ds79mHlL9NJM3ArZhUoLNC4WKG6KHGePoJJTsMnXuysUgVIK3C2gZwI8abLLe
+         azAO5wizBqeJRd+wJFVgvCeBhGgboEsGkXeW9XJP7Gi1PpcNvaV+2kGKUR2aFe2obfj+
+         +54e3hRFfecAgeUodw5kIiD4TZIFIBdJoaeyWV6tJXZGPhny6RTosYcXAu0r4VIdmA1t
+         oFZo6dEnkp+UqItoCie7xA2e2kQ24cWStwRYBQAlM+JwyZnoMTkSwf89V5lgyfCMzZKN
+         FRD8pCq85zBfP0UI9wCLIYiFpNDCc3xmoFOaBFqFN+f4+4q4s4LxTlEVL6uCExMIAIal
+         9/Dw==
+X-Gm-Message-State: AOAM5311DKYRIlS5K2+YpgqyC7Lhr9MqvUoa4WUIxWU53+mGMcotTrqc
+        LoI58X3aQpcmNlf0dA/R2TdBC+f1qmTlAk7Ov2iF0Q==
+X-Google-Smtp-Source: ABdhPJzsQJ7ViNL2kufuHFGKH/tMM4GjkaL36Yv5Pr1Wfer7c9HJJdpBWIPu4Z65zWBVeRiPSBN56etGEDkVg7HhE24=
+X-Received: by 2002:aa7:cb90:: with SMTP id r16mr41647616edt.139.1619036896139;
+ Wed, 21 Apr 2021 13:28:16 -0700 (PDT)
+MIME-Version: 1.0
+From:   Weikeng Chen <w.k@berkeley.edu>
+Date:   Wed, 21 Apr 2021 13:27:40 -0700
+Message-ID: <CAHr+ZK8xp5QU8wQHzuNkJdsP20fC=nW4B33gwMUwHY82f_u5WA@mail.gmail.com>
+Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
+To:     tytso@mit.edu
 Cc:     anna.schumaker@netapp.com, bfields@fieldses.org,
         chuck.lever@oracle.com, davem@davemloft.net, dwysocha@redhat.com,
         gregkh@linuxfoundation.org, kuba@kernel.org, leon@kernel.org,
         linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
         netdev@vger.kernel.org, pakki001@umn.edu,
-        trond.myklebust@hammerspace.com
-Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
-Message-ID: <YICB3wiptvvtTeA5@mit.edu>
-References: <CAHr+ZK-ayy2vku9ovuSB4egtOxrPEKxCdVQN3nFqMK07+K5_8g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHr+ZK-ayy2vku9ovuSB4egtOxrPEKxCdVQN3nFqMK07+K5_8g@mail.gmail.com>
+        trond.myklebust@hammerspace.com, w.k@berkeley.edu
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Apr 21, 2021 at 11:35:00AM -0700, Weikeng Chen wrote:
-> 
-> [1] I think the UMN IRB makes an incorrect assertion that the
-> research is not human research, and that starts the entire problem
-> and probably continues to be.
+[This is the email that Theodore Ts'o replied to, but it fails to
+reach the email server due to not using plain mode. Here I resent.]
 
-I think what we need to somehow establish is some norms about how
-academic researchers engage with Open Source communities in general,
-and the Linux Kernel community in particular.
+(Note: this thread has become a hot Internet discussion on China's Twitter.)
 
-To be fair, I don't know if Aditya Pakki was deliberately trying to
-get nonsense patches in just to demonstrate that there is less review
-for trivial patches, or whether he was creating a completely
-incompetent, non-state-of-the-art static code analyzer, and was too
-incompetent to hand check the patch to realize the results were
-nonsense.
+I am a graduate student working in applied crypto, and CoI: I know one
+of the authors of the S&P paper.
+Some thoughts.
 
-The big problem here is the lack of disclosure that the patch was
-computer generated, using a new tool that might not be giving accurate
-results, and that instead of diclosing this fact, submitting it as a
-patch to be reviewed.  Again, I don't know whether or not this was
-submitted in bad faith --- but the point is, Aditya belongs to
-research group which has previously submitted patches in bad faith,
-without disclosure, and his supervising professor and UMN's IRB
-doesn't see any problem with it.  So it's a bit rich when Aditya seems
-to be whining that we're not giving him the benefit of the doubt and
-not assuming that his patches might have been submitted in good faith
---- when the only *responsible* thing to do is to assume that it is
-sent in bad faith, given the past behaviour of his research group, and
-the apparently lack of any kind of institutional controls at UMN
-regarding this sort of thing.
+[1] I think the UMN IRB makes an incorrect assertion that the research
+is not human research,
+and that starts the entire problem and probably continues to be.
 
-Of course, UMN researchers could just start using fake e-mail
-addresses, or start using personal gmail or yahoo or hotmail
-addresses.  (Hopefully at that point the ethics review boards at UMN
-will be clueful enough to realize that maybe, just maybe, UMN
-researchers have stepped over a line.)
+It clearly affects humans. I think UMN IRB lacks experience regarding
+human experiments in CS research,
+and should be informed that their decisions that this is not human
+research are fundamentally wrong---
+it misled the reviewers as well as misled the researchers.
 
-However, your larger point is a fair one.  We do need to do a better
-job of reviewing patches, even "trivial" ones, and if that means that
-we might need to be a bit more skeptical dealing with newbies who are
-trying to get started, that's a price we will need to pay.  Speaking
-for myself, I've always tried to be highly skeptical about patches and
-give them a thorough review.  And I don't need to assume malice from
-nation-state intelligence agencies; we're all human, and we all make
-mistakes.
+---
 
-Cheers,
+[2] Banning UMN seems to be a temporary solution. I don't disagree.
+But it still might not prevent such proof-of-concept efforts: one
+could use a non-campus address.
 
-					- Ted
+It might be helpful to inform the PC chairs of major security
+conferences, S&P, USENIX Security, CCS, and NDSS,
+regarding the need to discourage software security papers from making
+proofs-of-concept in the real world in wild
+that may be hurtful, as well as concerns on the sufficiency of IRB
+review---some IRB may lack experience for CS research.
+
+Some conferences have been being more careful about this recently. For
+example, NDSS accepts a paper on
+a browser bug but attaches a statement saying that the PC has ethical concerns.
+See: "Tales of Favicons and Caches: Persistent Tracking in Modern
+Browsers", NDSS '21
+
+---
+
+[3] Let us not forget that the author is using their real campus
+address and is open to such pressure.
+Thus, I think the authors, as students and researchers, have no bad faith;
+but they are misled that this experimental procedure is acceptable,
+which is not.
+
+Sorry for jumping in...
+
+Weikeng
