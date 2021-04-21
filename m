@@ -2,76 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FD353672F6
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 20:57:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F17303673BF
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 21:50:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241551AbhDUS6Q convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 21 Apr 2021 14:58:16 -0400
-Received: from mailout00.webspace-verkauf.com ([37.218.254.21]:60990 "EHLO
-        mailout00.webspace-verkauf.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234093AbhDUS6Q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Apr 2021 14:58:16 -0400
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Wed, 21 Apr 2021 14:58:15 EDT
-Received: from c5.webspace-verkauf.de (c5.webspace-verkauf.de [37.218.254.105])
-        by mailout00.webspace-verkauf.com (Postfix) with ESMTPS id 2C9C14004FD;
-        Wed, 21 Apr 2021 20:50:33 +0200 (CEST)
-Received: from [192.168.178.20] (pd9fe9a79.dip0.t-ipconnect.de [217.254.154.121])
-        by c5.webspace-verkauf.de (Postfix) with ESMTPSA id 87A7A1B7B922;
-        Wed, 21 Apr 2021 20:50:32 +0200 (CEST)
-To:     gregkh@linuxfoundation.org
-Cc:     a.shelat@northeastern.edu, anna.schumaker@netapp.com,
-        bfields@fieldses.org, chuck.lever@oracle.com, davem@davemloft.net,
-        dwysocha@redhat.com, kuba@kernel.org, leon@kernel.org,
+        id S245551AbhDUTus (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 21 Apr 2021 15:50:48 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:45265 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S235545AbhDUTus (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Apr 2021 15:50:48 -0400
+Received: from cwcc.thunk.org (pool-72-74-133-215.bstnma.fios.verizon.net [72.74.133.215])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 13LJnp00015873
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Apr 2021 15:49:52 -0400
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+        id 8A16C15C3B0D; Wed, 21 Apr 2021 15:49:51 -0400 (EDT)
+Date:   Wed, 21 Apr 2021 15:49:51 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Weikeng Chen <w.k@berkeley.edu>
+Cc:     anna.schumaker@netapp.com, bfields@fieldses.org,
+        chuck.lever@oracle.com, davem@davemloft.net, dwysocha@redhat.com,
+        gregkh@linuxfoundation.org, kuba@kernel.org, leon@kernel.org,
         linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
         netdev@vger.kernel.org, pakki001@umn.edu,
-        sudipm.mukherjee@gmail.com, trondmy@hammerspace.com
-References: <YIAtwtOpy/emQWr2@kroah.com>
-From:   Alexander Grund <alex@grundis.de>
+        trond.myklebust@hammerspace.com
 Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
-Message-ID: <821177ec-dba0-e411-3818-546225511a00@grundis.de>
-Date:   Wed, 21 Apr 2021 20:50:33 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.1
+Message-ID: <YICB3wiptvvtTeA5@mit.edu>
+References: <CAHr+ZK-ayy2vku9ovuSB4egtOxrPEKxCdVQN3nFqMK07+K5_8g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <YIAtwtOpy/emQWr2@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-Content-Language: de-DE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHr+ZK-ayy2vku9ovuSB4egtOxrPEKxCdVQN3nFqMK07+K5_8g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
- > Below is the list that didn't do a simple "revert" that I need to look
- > at. I was going to have my interns look into this, there's no need to
- > bother busy maintainers with it unless you really want to, as I can't
- > tell anyone what to work on :)
+On Wed, Apr 21, 2021 at 11:35:00AM -0700, Weikeng Chen wrote:
+> 
+> [1] I think the UMN IRB makes an incorrect assertion that the
+> research is not human research, and that starts the entire problem
+> and probably continues to be.
 
-I'm not involved or affliated with the group or the kernel, but I'd like to make a suggestion:
-Do not revert umn.edu patches unconditionally.
-See below:
+I think what we need to somehow establish is some norms about how
+academic researchers engage with Open Source communities in general,
+and the Linux Kernel community in particular.
 
-According to the paper:
- > We submit the three patches using a randomGmail account to the Linux community andseek their feedback
+To be fair, I don't know if Aditya Pakki was deliberately trying to
+get nonsense patches in just to demonstrate that there is less review
+for trivial patches, or whether he was creating a completely
+incompetent, non-state-of-the-art static code analyzer, and was too
+incompetent to hand check the patch to realize the results were
+nonsense.
 
-So while their behaviour regarding this practice may have been bad, I'd give them the benefit of doubt that they didn't want to actually introduce 
-a bug.
-I.e. what they wrote:
+The big problem here is the lack of disclosure that the patch was
+computer generated, using a new tool that might not be giving accurate
+results, and that instead of diclosing this fact, submitting it as a
+patch to be reviewed.  Again, I don't know whether or not this was
+submitted in bad faith --- but the point is, Aditya belongs to
+research group which has previously submitted patches in bad faith,
+without disclosure, and his supervising professor and UMN's IRB
+doesn't see any problem with it.  So it's a bit rich when Aditya seems
+to be whining that we're not giving him the benefit of the doubt and
+not assuming that his patches might have been submitted in good faith
+--- when the only *responsible* thing to do is to assume that it is
+sent in bad faith, given the past behaviour of his research group, and
+the apparently lack of any kind of institutional controls at UMN
+regarding this sort of thing.
 
-> we immediately notify themaintainers of the introduced UAF and request them to notgo ahead to apply the patch.
- > At the same time, we point out the correct fixing of the bug and provide our correct patch.
- > [...] All the UAF-introducing patches stayed only in the emailexchanges, without even becoming a Git commit in Linuxbranches
+Of course, UMN researchers could just start using fake e-mail
+addresses, or start using personal gmail or yahoo or hotmail
+addresses.  (Hopefully at that point the ethics review boards at UMN
+will be clueful enough to realize that maybe, just maybe, UMN
+researchers have stepped over a line.)
 
-TLDR:
-- The faulty patches were NOT from umn.edu accounts but from a gmail account
-- Only the corrected patches should have made it to the branches
+However, your larger point is a fair one.  We do need to do a better
+job of reviewing patches, even "trivial" ones, and if that means that
+we might need to be a bit more skeptical dealing with newbies who are
+trying to get started, that's a price we will need to pay.  Speaking
+for myself, I've always tried to be highly skeptical about patches and
+give them a thorough review.  And I don't need to assume malice from
+nation-state intelligence agencies; we're all human, and we all make
+mistakes.
 
-So while I would at least double-check that the last point is actually true, I believe reverting all umn.edu patches is wrong and actually (re-)introduces vulnerabilities or bugs which have been legitimately fixed (at least in good faith)
-And especially if the reverts do not apply cleanly on the current HEADs I 
-think you might be wasting a lot of work/time, too.
+Cheers,
 
-And yes, this aftermath makes it even worse what they did and excluding them from future contributions may make sense.
-But maybe reverting EVERYTHING is a bit to much here, especially if that doesn't even include the faulty stuff (assuming they are not plain lying in their paper, which I really doubt they would)
-
-Alex
-
-
+					- Ted
