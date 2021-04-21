@@ -2,31 +2,28 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5779366DE1
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 16:15:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3480E366F6C
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 17:49:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238530AbhDUOQE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 21 Apr 2021 10:16:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235339AbhDUOQD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 21 Apr 2021 10:16:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D5A06144D;
-        Wed, 21 Apr 2021 14:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619014530;
-        bh=GMG3YoNBTM4O0A7DlywWeHR/mJ0BmCq+hm5gz760GSY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k0OaXKxpVMrtZQW4e4wc5Cbgzi+0TOZhcmpT4yt/slkbhZOnl7X4EwRmIVeAOq6EM
-         32tmQsZAL/rLcp/T+WMDgRbCIFJRbCqxcYwDYt7q2+XcBVwYEJXOTm4kCCUGfSAw9c
-         rC+KOkN0JVnt9QabDnU84dvWuw52X7yL3Wx86GzEOklZZhEeD1ZINmQUS12DB2SvvY
-         c+bdbM7y4q02EuRXjunEVujq+FbCUvrmUPu6lfZ8oVRhZJPQFBPAEVBL88Xkro6ptC
-         Sos8IKG43KEwcpzjEYA9gfD92iAtIJltB8iT+PpmoTx7rD6rYr1/kAcfgJ5KcHjWrS
-         Iq5QYqeSoElUg==
-Date:   Wed, 21 Apr 2021 17:15:26 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        id S240602AbhDUPtk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 21 Apr 2021 11:49:40 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:49119 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S235162AbhDUPtk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Apr 2021 11:49:40 -0400
+Received: from cwcc.thunk.org (pool-72-74-133-215.bstnma.fios.verizon.net [72.74.133.215])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 13LFml82005907
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Apr 2021 11:48:47 -0400
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+        id 021AA15C3B0D; Wed, 21 Apr 2021 11:48:46 -0400 (EDT)
+Date:   Wed, 21 Apr 2021 11:48:46 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
         Greg KH <gregkh@linuxfoundation.org>,
         Aditya Pakki <pakki001@umn.edu>,
         Chuck Lever <chuck.lever@oracle.com>,
@@ -38,43 +35,53 @@ Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
         netdev@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
-Message-ID: <YIAzfsMx6bn5Twu8@unreal>
+Message-ID: <YIBJXjCbJ1ntH1RF@mit.edu>
 References: <20210407001658.2208535-1-pakki001@umn.edu>
  <YH5/i7OvsjSmqADv@kroah.com>
  <20210420171008.GB4017@fieldses.org>
  <YH+zwQgBBGUJdiVK@unreal>
  <CAFX2JfnGCbanTaGurArBw-5F2MynPD=GpwkfU6wVoNKr9ffzRg@mail.gmail.com>
+ <YIAzfsMx6bn5Twu8@unreal>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFX2JfnGCbanTaGurArBw-5F2MynPD=GpwkfU6wVoNKr9ffzRg@mail.gmail.com>
+In-Reply-To: <YIAzfsMx6bn5Twu8@unreal>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Apr 21, 2021 at 08:51:02AM -0400, Anna Schumaker wrote:
-> On Wed, Apr 21, 2021 at 2:07 AM Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > On Tue, Apr 20, 2021 at 01:10:08PM -0400, J. Bruce Fields wrote:
-> > > On Tue, Apr 20, 2021 at 09:15:23AM +0200, Greg KH wrote:
-> > > > If you look at the code, this is impossible to have happen.
-> > > >
-> > > > Please stop submitting known-invalid patches.  Your professor is playing
-> > > > around with the review process in order to achieve a paper in some
-> > > > strange and bizarre way.
-> > > >
-> > > > This is not ok, it is wasting our time, and we will have to report this,
-> > > > AGAIN, to your university...
-> > >
-> > > What's the story here?
-> >
-> > Those commits are part of the following research:
-> > https://github.com/QiushiWu/QiushiWu.github.io/blob/main/papers/OpenSourceInsecurity.pdf
+On Wed, Apr 21, 2021 at 05:15:26PM +0300, Leon Romanovsky wrote:
+> > This thread is the first I'm hearing about this. I wonder if there is
+> > a good way of alerting the entire kernel community (including those
+> > only subscribed to subsystem mailing lists) about what's going on? It
+> > seems like useful information to have to push back against these
+> > patches.
 > 
-> This thread is the first I'm hearing about this. I wonder if there is
-> a good way of alerting the entire kernel community (including those
-> only subscribed to subsystem mailing lists) about what's going on? It
-> seems like useful information to have to push back against these
-> patches.
+> IMHO, kernel users ML is good enough for that.
 
-IMHO, kernel users ML is good enough for that.
+The problem is that LKML is too high traffic for a lot of people to
+want to follow.
+
+There are some people who have used the kernel summit discuss list
+(previously ksummit-discuss@lists.linux-foundation.org, now
+ksummit@lists.linux.dev) as a place where most maintainers tend to be
+subscribed, although that's not really a guarantee, either.  (Speaking
+of which, how to handle groups who submit patches in bad faith a good
+Maintainer Summit topic for someone to propose...)
+
+To give the devil his due, Prof. Kangjie Lu has reported legitimate
+security issues in the past (CVE-2016-4482, an information leak from
+the kernel stack in the core USB layer, and CVE-2016-4485, an
+information leak in the 802.2 networking code), and if one looks at
+his CV, he has a quite a few papers in the security area to his name.
+
+The problem is that Prof. Lu and his team seem to be unrepentant, and
+has some very... skewed... ideas over what is considered ethical, and
+acceptable behavior vis-a-vis the Kernel development community.  The
+fact that the UMN IRB team believes that what Prof. Lu is doing isn't
+considered in scope for human experimentation means that there isn't
+any kind of institutional controls at UMN for this sort of behavior
+--- which is why a University-wide Ban may be the only right answer,
+unfortunately.
+
+					- Ted
