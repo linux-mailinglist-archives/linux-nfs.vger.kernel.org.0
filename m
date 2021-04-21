@@ -2,31 +2,28 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FC173664B1
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 07:11:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 472903664F4
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 07:43:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235083AbhDUFLC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 21 Apr 2021 01:11:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54504 "EHLO mail.kernel.org"
+        id S230516AbhDUFnn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 21 Apr 2021 01:43:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230440AbhDUFLC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 21 Apr 2021 01:11:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4049D6105A;
-        Wed, 21 Apr 2021 05:10:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618981830;
-        bh=gDTv6Ws3dmiAvi6sW15n2JiYhMOJzINkMNlGAdGchIE=;
+        id S230343AbhDUFnm (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 21 Apr 2021 01:43:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D749C613D5;
+        Wed, 21 Apr 2021 05:43:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1618983790;
+        bh=46DEw1GkA/TFpTbQoIDwrXdc0q4tL1Go9e21SMUFhiU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NMxNzSRnAAGnNumW9gSrxiCWk3sJBxRFXy+AOmTUBr4BNVY8gd+WVCqDapgGFwLmt
-         NwSm+rO0py+PkwjfQhaRZ4Gw2XAk2ombhiKsAXwiS06GLwP8kXpWPvPIHdT8U7CGVL
-         jbfNlAjMmaoWu6EETQ5Dat7jn1guk47kwOKRVGtwXPSJXYuM3dPmtPxHsycUf1544S
-         Jj+Q5MRKWqrx9vYj111SkvVE78KVv2llcQNbVVI51ZsLiFLPDsJy39KQmcK1fcC7AR
-         On4NjLtWK5qWryVFk9uIp9q2F9SL/4/Ux5FknOXDi317F1DSGyi2HP99puFc4GrRoi
-         OkVsDhQ1wmAMg==
-Date:   Wed, 21 Apr 2021 08:10:25 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        b=XtclWBtAW1D8f3YXTpHWvChErFPCOD0RMLHu+Nb/wyayOuAGQgkG/mn8t+5lKHgPj
+         OOG56/vsTA0sBAXi0+gx+gtZjtBYcB41VJDRTRF+WMss/cCaeWfLQFTDDllic+3Uo4
+         tAmWX1dt5Rcd3HrYij1H7A25oqpYCGLM1+HsE7Ms=
+Date:   Wed, 21 Apr 2021 07:43:03 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
         Aditya Pakki <pakki001@umn.edu>,
         Chuck Lever <chuck.lever@oracle.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
@@ -37,39 +34,43 @@ Cc:     Greg KH <gregkh@linuxfoundation.org>,
         linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
-Message-ID: <YH+zwQgBBGUJdiVK@unreal>
+Message-ID: <YH+7ZydHv4+Y1hlx@kroah.com>
 References: <20210407001658.2208535-1-pakki001@umn.edu>
  <YH5/i7OvsjSmqADv@kroah.com>
  <20210420171008.GB4017@fieldses.org>
+ <YH+zwQgBBGUJdiVK@unreal>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210420171008.GB4017@fieldses.org>
+In-Reply-To: <YH+zwQgBBGUJdiVK@unreal>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Apr 20, 2021 at 01:10:08PM -0400, J. Bruce Fields wrote:
-> On Tue, Apr 20, 2021 at 09:15:23AM +0200, Greg KH wrote:
-> > If you look at the code, this is impossible to have happen.
+On Wed, Apr 21, 2021 at 08:10:25AM +0300, Leon Romanovsky wrote:
+> On Tue, Apr 20, 2021 at 01:10:08PM -0400, J. Bruce Fields wrote:
+> > On Tue, Apr 20, 2021 at 09:15:23AM +0200, Greg KH wrote:
+> > > If you look at the code, this is impossible to have happen.
+> > > 
+> > > Please stop submitting known-invalid patches.  Your professor is playing
+> > > around with the review process in order to achieve a paper in some
+> > > strange and bizarre way.
+> > > 
+> > > This is not ok, it is wasting our time, and we will have to report this,
+> > > AGAIN, to your university...
 > > 
-> > Please stop submitting known-invalid patches.  Your professor is playing
-> > around with the review process in order to achieve a paper in some
-> > strange and bizarre way.
-> > 
-> > This is not ok, it is wasting our time, and we will have to report this,
-> > AGAIN, to your university...
+> > What's the story here?
 > 
-> What's the story here?
-
-Those commits are part of the following research:
-https://github.com/QiushiWu/QiushiWu.github.io/blob/main/papers/OpenSourceInsecurity.pdf
-
-They introduce kernel bugs on purpose. Yesterday, I took a look on 4
-accepted patches from Aditya and 3 of them added various severity security
-"holes".
-
-Thanks
-
+> Those commits are part of the following research:
+> https://github.com/QiushiWu/QiushiWu.github.io/blob/main/papers/OpenSourceInsecurity.pdf
 > 
-> --b.
+> They introduce kernel bugs on purpose. Yesterday, I took a look on 4
+> accepted patches from Aditya and 3 of them added various severity security
+> "holes".
+
+All contributions by this group of people need to be reverted, if they
+have not been done so already, as what they are doing is intentional
+malicious behavior and is not acceptable and totally unethical.  I'll
+look at it after lunch unless someone else wants to do it...
+
+greg k-h
