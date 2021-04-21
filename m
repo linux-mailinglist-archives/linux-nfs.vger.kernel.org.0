@@ -2,85 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CE7D366AA1
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 14:19:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71686366B2B
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Apr 2021 14:51:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238905AbhDUMUD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 21 Apr 2021 08:20:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234573AbhDUMUD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 21 Apr 2021 08:20:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7ECA9613E0;
-        Wed, 21 Apr 2021 12:19:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619007570;
-        bh=L95QaJMrMeYMNbDPr8pjvWkKHVjgxGCPFXrCUXX8dN4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qsHvtM20kcZIl8G+2ULfzskF5Cf0Apte4j2pFt/1qPmEdARxGwRQ0+xxQzisTztU6
-         vuOeewCx3DG6PpLlp26hDZhxxzqmssComUxw5JnUh1zlXi9y0AjJa+IYZfiDEuQdaS
-         z6FkCMyvw/809ZxAOFBlLn1yXbmWdOebvvd1jTtafnSb86qjSwqZQyHIIHXtlUFUYf
-         l9EKm9Y5yUNsgRERm0WA4ATtEFd1bQKheeGmjktFZ+ffiC/jaRlU+xfA7jm8EGHVus
-         T9aAZ2kZjVSDJ2mjgVVMpG1rZFuCSmQZfW+R7wgDpl5vaTlX17ItvdsZEZ05XZwUtO
-         F3fTOc7K2xlqA==
-Date:   Wed, 21 Apr 2021 15:19:26 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "Shelat, Abhi" <a.shelat@northeastern.edu>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
+        id S239906AbhDUMvw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 21 Apr 2021 08:51:52 -0400
+Received: from mail-ej1-f46.google.com ([209.85.218.46]:41774 "EHLO
+        mail-ej1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239900AbhDUMvw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Apr 2021 08:51:52 -0400
+Received: by mail-ej1-f46.google.com with SMTP id mh2so41786208ejb.8;
+        Wed, 21 Apr 2021 05:51:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ndLA2M+eu6ciNQZvp40gevyZgJ40JW6t1jKr4dHYt6E=;
+        b=GVdv/pJdcsjPikrL0rJn2eBqfJt+ttlaOoszt/i8xMxbLxWU1DwABVBEOvIC+7pp6l
+         8Xrh4z9/hd1wq19k8nV93STQgdWfBi+RywOdatZ8kXJYuiDQt0eT9nAwDo1iAX98jpKq
+         gzqqdH+JOqBdMJwzeISeR4YKTotK3GKUp9rYx4fs4I7IvXgj6qXdAJTgTh8BsBEOzRX7
+         E9xwIQqJzIofUOWIyYePnSBDR1sPRzIQ7P9hoOJHvJNY06DpUNTsN9RtADQDpmFCnNwA
+         w8ZZjmZTtY+hcRV2dcI7nuomNqNVaDonA83mzRXZxUvxSMvdrCV/gWmCK6B59aCD0VD4
+         qeaw==
+X-Gm-Message-State: AOAM532tvWOaWdGJrGnywK0G1QbjrNTRnCJ+yN1iwj3EZDjz8mQrSkp6
+        V1GiLA0dvG+csLcHPKfmBUrMA5U0ZYGtFb16k6mBHk56
+X-Google-Smtp-Source: ABdhPJyhc+VdqYvLWXX86cSr/y6wBO3PWkQALkB7GRQlIZpNdpHoZaohjcxYkO3CuXF0/U2VCBTxpqs72mkC/7/CnM4=
+X-Received: by 2002:a17:907:72cc:: with SMTP id du12mr20167788ejc.436.1619009478136;
+ Wed, 21 Apr 2021 05:51:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210407001658.2208535-1-pakki001@umn.edu> <YH5/i7OvsjSmqADv@kroah.com>
+ <20210420171008.GB4017@fieldses.org> <YH+zwQgBBGUJdiVK@unreal>
+In-Reply-To: <YH+zwQgBBGUJdiVK@unreal>
+From:   Anna Schumaker <anna.schumaker@netapp.com>
+Date:   Wed, 21 Apr 2021 08:51:02 -0400
+Message-ID: <CAFX2JfnGCbanTaGurArBw-5F2MynPD=GpwkfU6wVoNKr9ffzRg@mail.gmail.com>
+Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
         Aditya Pakki <pakki001@umn.edu>,
         Chuck Lever <chuck.lever@oracle.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         Dave Wysochanski <dwysocha@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
-Message-ID: <YIAYThdIoAPu2h7b@unreal>
-References: <20210407001658.2208535-1-pakki001@umn.edu>
- <YH5/i7OvsjSmqADv@kroah.com>
- <20210420171008.GB4017@fieldses.org>
- <YH+zwQgBBGUJdiVK@unreal>
- <YH+7ZydHv4+Y1hlx@kroah.com>
- <CADVatmNgU7t-Co84tSS6VW=3NcPu=17qyVyEEtVMVR_g51Ma6Q@mail.gmail.com>
- <YH/8jcoC1ffuksrf@kroah.com>
- <3B9A54F7-6A61-4A34-9EAC-95332709BAE7@northeastern.edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3B9A54F7-6A61-4A34-9EAC-95332709BAE7@northeastern.edu>
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        netdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Apr 21, 2021 at 11:58:08AM +0000, Shelat, Abhi wrote:
-> >> 
-> >>>> They introduce kernel bugs on purpose. Yesterday, I took a look on 4
-> >>>> accepted patches from Aditya and 3 of them added various severity security
-> >>>> "holes".
-> >>> 
-> >>> All contributions by this group of people need to be reverted, if they
-> >>> have not been done so already, as what they are doing is intentional
-> >>> malicious behavior and is not acceptable and totally unethical.  I'll
-> >>> look at it after lunch unless someone else wants to do it…
-> >> 
-> 
-> <snip>
-> 
-> Academic research should NOT waste the time of a community.
-> 
-> If you believe this behavior deserves an escalation, you can contact the Institutional Review Board (irb@umn.edu) at UMN to investigate whether this behavior was harmful; in particular, whether the research activity had an appropriate IRB review, and what safeguards prevent repeats in other communities.
+On Wed, Apr 21, 2021 at 2:07 AM Leon Romanovsky <leon@kernel.org> wrote:
+>
+> On Tue, Apr 20, 2021 at 01:10:08PM -0400, J. Bruce Fields wrote:
+> > On Tue, Apr 20, 2021 at 09:15:23AM +0200, Greg KH wrote:
+> > > If you look at the code, this is impossible to have happen.
+> > >
+> > > Please stop submitting known-invalid patches.  Your professor is playing
+> > > around with the review process in order to achieve a paper in some
+> > > strange and bizarre way.
+> > >
+> > > This is not ok, it is wasting our time, and we will have to report this,
+> > > AGAIN, to your university...
+> >
+> > What's the story here?
+>
+> Those commits are part of the following research:
+> https://github.com/QiushiWu/QiushiWu.github.io/blob/main/papers/OpenSourceInsecurity.pdf
 
-The huge advantage of being "community" is that we don't need to do all
-the above and waste our time to fill some bureaucratic forms with unclear
-timelines and results.
+This thread is the first I'm hearing about this. I wonder if there is
+a good way of alerting the entire kernel community (including those
+only subscribed to subsystem mailing lists) about what's going on? It
+seems like useful information to have to push back against these
+patches.
 
-Our solution to ignore all @umn.edu contributions is much more reliable
-to us who are suffering from these researchers.
+Anna
 
-Thanks
+>
+> They introduce kernel bugs on purpose. Yesterday, I took a look on 4
+> accepted patches from Aditya and 3 of them added various severity security
+> "holes".
+>
+> Thanks
+>
+> >
+> > --b.
