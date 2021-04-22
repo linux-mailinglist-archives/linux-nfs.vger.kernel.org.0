@@ -2,168 +2,145 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 628F53687D5
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Apr 2021 22:23:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2957C3687E3
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Apr 2021 22:29:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237010AbhDVUYL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 22 Apr 2021 16:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58834 "EHLO
+        id S236896AbhDVU3u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 22 Apr 2021 16:29:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236877AbhDVUYK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Apr 2021 16:24:10 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60D5EC06174A
-        for <linux-nfs@vger.kernel.org>; Thu, 22 Apr 2021 13:23:35 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 7C3D27274; Thu, 22 Apr 2021 16:23:34 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 7C3D27274
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1619123014;
-        bh=wju6rqfQraDvpNSdlSV17R9d7TZOJyxmYmwf/DxttSs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fLDkjKiUP6Pp+CldusibHHAC4SJW5+lm1cz49fI4MoxZTXsZ0cB5mQ1RplOaxR0+V
-         yVdKblYgREFDP7XMfJNnkv5qk/TITITdp35f+JWQm7d0kTOA7YKcDetKJkGZZBHTjn
-         Yr98BHVH9Sx3/LQnY5KFX7B3Uydw6sqkT8sNAte4=
-Date:   Thu, 22 Apr 2021 16:23:34 -0400
-From:   "J . Bruce Fields" <bfields@fieldses.org>
-To:     Petr Vorel <pvorel@suse.cz>
-Cc:     linux-nfs@vger.kernel.org, Steve Dickson <steved@redhat.com>,
-        NeilBrown <neilb@suse.com>, Chuck Lever <chuck.lever@oracle.com>,
-        Alexey Kodanev <alexey.kodanev@oracle.com>
-Subject: Re: [RFC PATCH 1/1] mount.nfs: Fix mounting on tmpfs
-Message-ID: <20210422202334.GB25415@fieldses.org>
-References: <20210422191803.31511-1-pvorel@suse.cz>
+        with ESMTP id S236058AbhDVU3t (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Apr 2021 16:29:49 -0400
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8642CC06174A
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Apr 2021 13:29:12 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id y12so34882764qtx.11
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Apr 2021 13:29:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h4ph0CrvDNqS1hFw0T3aMNFdYeBxnYVqT0A8wFhW+ok=;
+        b=bYTPCCGnz7VpQDuRn0DsQnaR5Ht7HKCEUYBWipPqmzVR4lz00TCTcFuTWVl3kNidjs
+         KnvlccmuIZwSpAjX6LTCrwcop/wQ7ni1lJ5eWNRp5ZJNadNq7Gi9esNH23lfoDFKyvnr
+         88J54SmFfEH4aGXqp2GxU3j/kNzBjF9OOGnLv1EWvmkhSF0IkSVqNk4eUlAeMl/HcrXo
+         +WINmHpdP6VJ5BP41kOkCAIEVhiwuIZwFFHOHhdXaRJ7cxnmUwtJjOTCsLpaGzggdQBp
+         O6XEy86t8jT3HUKGQeS+3zB8JZ7PGlcn2QKCdW2K/4NJYqyhOUU29J+N+bL5w0q0fcXi
+         96kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h4ph0CrvDNqS1hFw0T3aMNFdYeBxnYVqT0A8wFhW+ok=;
+        b=YR1Xa0iQqBj+ila3aeNAW5wVPRs61R8dGUUVo8tAAzcemtkPfYFkKN3b8mZ3SCpk9k
+         1OaGQvSawWru+hjINQz5jN1fgnSbcZrgeTfCJFbzLyFFTCH2QHzm5woreojEp5xPMozQ
+         vIrEU82K/zqmtZ+SzWbOEHofCU0lOi3LhSf5Wyi7oQQDJyWiNa5RzWMWejEAIMa5fNz8
+         Uvf3OHB2y957rKFH+jh5IEnqMY6OhalXwrom4WZ7+3h5sKNLWuxUFOyRGyEYJNO5As5d
+         CqwCfRTpAVb0CX+bl6sNhs+KDOp888fdoX0UkXg8cZVov94sHh/gzOMUfi0rxrFD3BhB
+         GByQ==
+X-Gm-Message-State: AOAM5327rWd8UTvnnA5k/0/X/hA/bHCxAFgJ9I+0ZJumCx+rlUoOSjvM
+        OxH0wfG8VIKLGk4Wy1o6snyr/LrAcOI=
+X-Google-Smtp-Source: ABdhPJyNd1KkCZ/dYZDzByc8RYOgyKRMjIHnkxIKqeiSYIiCMrIJvYPdOD2OaaV3Rcg8GADzpwtbPA==
+X-Received: by 2002:ac8:75ca:: with SMTP id z10mr281878qtq.137.1619123351590;
+        Thu, 22 Apr 2021 13:29:11 -0700 (PDT)
+Received: from kolga-mac-1.vpn.netapp.com (nat-216-240-30-23.netapp.com. [216.240.30.23])
+        by smtp.gmail.com with ESMTPSA id d204sm2986934qke.3.2021.04.22.13.29.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 22 Apr 2021 13:29:11 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     bfields@redhat.com, chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [RFC v2 1/1] NFSD add vfs_fsync after async copy is done
+Date:   Thu, 22 Apr 2021 16:29:08 -0400
+Message-Id: <20210422202908.60995-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210422191803.31511-1-pvorel@suse.cz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Apr 22, 2021 at 09:18:03PM +0200, Petr Vorel wrote:
-> LTP NFS tests (which use netns) fails on tmpfs since d4066486:
-> 
-> mount -t nfs -o proto=tcp,vers=4.2 10.0.0.2:/tmp/ltp.nfs01.nfs-4.2/LTP_nfs01.UF6gRZCy3O/4.2/tcp /tmp/ltp.nfs01.nfs-4.2/LTP_nfs01.UF6gRZCy3O/4.2/0
-> mount.nfs: mounting 10.0.0.2:/tmp/ltp.nfs01.nfs-4.2/LTP_nfs01.UF6gRZCy3O/4.2/tcp failed, reason given by server: No such file or directory
+From: Olga Kornievskaia <kolga@netapp.com>
 
-We should figure out the reason for the failure.  A network trace might
-help.
+Currently, the server does all copies as NFS_UNSTABLE. For synchronous
+copies linux client will append a COMMIT to the COPY compound but for
+async copies it does not (because COMMIT needs to be done after all
+bytes are copied and not as a reply to the COPY operation).
 
---b.
+However, in order to save the client doing a COMMIT as a separate
+rpc, the server can reply back with NFS_FILE_SYNC copy. This patch
+proposed to add vfs_fsync() call at the end of the async copy.
 
-> 
-> Fixes: d4066486 ("mount.nfs: improve version negotiation when vers=4 is specified.")
-> 
-> Signed-off-by: Petr Vorel <pvorel@suse.cz>
-> ---
-> Hi,
-> 
-> not sure, if this is a correct fix thus RFC (I'm not from @umn.edu :)).
-> I suppose tmpfs is still meant to be supported, but maybe I'm wrong.
-> 
-> I did testing with LTP [1]:
-> 
-> $ for i in 3 4 4.1 4.2; do echo "* version: $i"; PATH="/opt/ltp/testcases/bin:$PATH" nfs01 -v $i -t tcp; done
-> 
-> Core of the tests is nfs_lib.sh [2], which sets network namespace (with
-> help of tst_net.sh [3]) and setup nfs with exportfs (use fsid to be
-> working properly on tmpfs) and run various tests with these NFS
-> versions: 3, 4, 4.1, 4.2.
-> 
-> Kind regards,
-> Petr
-> 
-> [1] https://github.com/linux-test-project/ltp
-> [2] https://github.com/linux-test-project/ltp/blob/master/testcases/network/nfs/nfs_stress/nfs_lib.sh
-> [3] https://github.com/linux-test-project/ltp/blob/master/testcases/lib/tst_net.sh
-> 
->  utils/mount/Makefile.am |  3 ++-
->  utils/mount/stropts.c   | 29 ++++++++++++++++++++++++++---
->  2 files changed, 28 insertions(+), 4 deletions(-)
-> 
-> diff --git a/utils/mount/Makefile.am b/utils/mount/Makefile.am
-> index ad0be93b..d3905bec 100644
-> --- a/utils/mount/Makefile.am
-> +++ b/utils/mount/Makefile.am
-> @@ -28,7 +28,8 @@ endif
->  mount_nfs_LDADD = ../../support/nfs/libnfs.la \
->  		  ../../support/export/libexport.a \
->  		  ../../support/misc/libmisc.a \
-> -		  $(LIBTIRPC)
-> +		  $(LIBTIRPC) \
-> +		  $(LIBPTHREAD)
->  
->  mount_nfs_SOURCES = $(mount_common)
->  
-> diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
-> index 174a05f6..3961b8ce 100644
-> --- a/utils/mount/stropts.c
-> +++ b/utils/mount/stropts.c
-> @@ -31,6 +31,7 @@
->  #include <time.h>
->  
->  #include <sys/socket.h>
-> +#include <sys/statfs.h>
->  #include <sys/mount.h>
->  #include <netinet/in.h>
->  #include <arpa/inet.h>
-> @@ -50,6 +51,7 @@
->  #include "parse_dev.h"
->  #include "conffile.h"
->  #include "misc.h"
-> +#include "nfsd_path.h"
->  
->  #ifndef NFS_PROGRAM
->  #define NFS_PROGRAM	(100003)
-> @@ -104,6 +106,21 @@ struct nfsmount_info {
->  				child;		/* forked bg child? */
->  };
->  
-> +/*
-> + * Returns TRUE if mounting on tmpfs, otherwise FALSE.
-> + */
-> +static int is_tmpfs(struct nfsmount_info *mi)
-> +{
-> +	struct statfs64 st;
-> +
-> +	if (nfsd_path_statfs64(mi->node, &st)) {
-> +		nfs_error(_("%s: Failed to statfs64 on path %s: %s"),
-> +			  progname, mi->node, strerror(errno));
-> +		return 0;
-> +	}
-> +
-> +	return st.f_type == 0x01021994;
-> +}
->  
->  static void nfs_default_version(struct nfsmount_info *mi)
->  {
-> @@ -873,6 +890,9 @@ static int nfs_try_mount_v4(struct nfsmount_info *mi)
->  		case EACCES:
->  			continue;
->  		default:
-> +			if (is_tmpfs(mi))
-> +				return 1;
-> +
->  			goto out;
->  		}
->  	}
-> @@ -951,9 +971,12 @@ check_result:
->  	}
->  
->  fall_back:
-> -	if (mi->version.v_mode == V_GENERAL)
-> -		/* v2,3 fallback not allowed */
-> -		return result;
-> +	if (mi->version.v_mode == V_GENERAL) {
-> +
-> +		/* v2,3 fallback not allowed unless tmpfs */
-> +		if (!is_tmpfs(mi))
-> +			return result;
-> +	}
->  
->  	/*
->  	 * Save the original errno in case the v3 
-> -- 
-> 2.31.1
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ fs/nfsd/nfs4proc.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 66dea2f1eed8..f63a2cb14a5e 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1536,19 +1536,21 @@ static const struct nfsd4_callback_ops nfsd4_cb_offload_ops = {
+ 	.done = nfsd4_cb_offload_done
+ };
+ 
+-static void nfsd4_init_copy_res(struct nfsd4_copy *copy, bool sync)
++static void nfsd4_init_copy_res(struct nfsd4_copy *copy, bool sync,
++				bool committed)
+ {
+-	copy->cp_res.wr_stable_how = NFS_UNSTABLE;
++	copy->cp_res.wr_stable_how = committed ? NFS_FILE_SYNC : NFS_UNSTABLE;
+ 	copy->cp_synchronous = sync;
+ 	gen_boot_verifier(&copy->cp_res.wr_verifier, copy->cp_clp->net);
+ }
+ 
+-static ssize_t _nfsd_copy_file_range(struct nfsd4_copy *copy)
++static ssize_t _nfsd_copy_file_range(struct nfsd4_copy *copy, bool *committed)
+ {
+ 	ssize_t bytes_copied = 0;
+ 	size_t bytes_total = copy->cp_count;
+ 	u64 src_pos = copy->cp_src_pos;
+ 	u64 dst_pos = copy->cp_dst_pos;
++	__be32 status;
+ 
+ 	do {
+ 		if (kthread_should_stop())
+@@ -1563,6 +1565,16 @@ static ssize_t _nfsd_copy_file_range(struct nfsd4_copy *copy)
+ 		src_pos += bytes_copied;
+ 		dst_pos += bytes_copied;
+ 	} while (bytes_total > 0 && !copy->cp_synchronous);
++	/* for a non-zero asynchronous copy do a commit of data */
++	if (!copy->cp_synchronous && copy->cp_res.wr_bytes_written > 0) {
++		down_write(&copy->nf_dst->nf_rwsem);
++		status = vfs_fsync_range(copy->nf_dst->nf_file,
++					 copy->cp_dst_pos,
++					 copy->cp_res.wr_bytes_written, 0);
++		up_write(&copy->nf_dst->nf_rwsem);
++		if (!status)
++			*committed = true;
++	}
+ 	return bytes_copied;
+ }
+ 
+@@ -1570,15 +1582,16 @@ static __be32 nfsd4_do_copy(struct nfsd4_copy *copy, bool sync)
+ {
+ 	__be32 status;
+ 	ssize_t bytes;
++	bool committed = false;
+ 
+-	bytes = _nfsd_copy_file_range(copy);
++	bytes = _nfsd_copy_file_range(copy, &committed);
+ 	/* for async copy, we ignore the error, client can always retry
+ 	 * to get the error
+ 	 */
+ 	if (bytes < 0 && !copy->cp_res.wr_bytes_written)
+ 		status = nfserrno(bytes);
+ 	else {
+-		nfsd4_init_copy_res(copy, sync);
++		nfsd4_init_copy_res(copy, sync, committed);
+ 		status = nfs_ok;
+ 	}
+ 
+-- 
+2.27.0
+
