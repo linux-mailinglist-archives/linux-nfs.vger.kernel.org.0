@@ -2,99 +2,103 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75798367C78
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Apr 2021 10:27:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4562A367D80
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Apr 2021 11:15:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230270AbhDVI14 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 22 Apr 2021 04:27:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229655AbhDVI1z (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 22 Apr 2021 04:27:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D34DE613D1;
-        Thu, 22 Apr 2021 08:27:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1619080040;
-        bh=LS/NEzSKx2GRkFlEEFV0SXW4rgTOUa82+jGpdMVITaE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rKy5TDzRXqv52AOAOvC40y2CdPyHU6amaTWKJGwyhRZQBHNuZgGFbWfPWzPgyQAcq
-         OqojzsPUX6IQQXYHwwkCmWD4sna3vtqvDGJshCfmFn092RUWyL4qhuWslWBhJ3RppK
-         e67tD2+GNEuy9zmdU0lznaLePTVvUz3l2S22OWP4=
-Date:   Thu, 22 Apr 2021 10:27:17 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Aditya Pakki <pakki001@umn.edu>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        id S235591AbhDVJPd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 22 Apr 2021 05:15:33 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52506 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235553AbhDVJPc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Apr 2021 05:15:32 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13M9EuEM031163;
+        Thu, 22 Apr 2021 09:14:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=xntS/55EiFbzdDwmFm4R7C34nQeasl3GgUIT3Rw89U4=;
+ b=vKjMjChvNhTsOIel7KExaIwQHQNK6Cf5huUh26zm9at/S9+9EzyCFjS15jwcSJzxJ0bn
+ eLLpyKqQjsbv6vJmXipJjKndw6eznVU8z/m8B3yeMM5i2WObG8AGulbSLNehJfTM96Ml
+ yDzjJYdxQ1CcNo1e/7V9MsKfXDLWSfOl0NjfI9yOu24Rp9J27DWXjAyBqpbntmAbZcPu
+ eeceEXDJPqrXM3zT2xOVi6yY2ZWDv//+3s6dUmF5yk9TyXv+MvgXBd6+klzztok/scH1
+ 4iDBZpvlAK2au0hC5nDqbqRBBVd2bNI5OqoBD9l85UlNZpJKJqVNHf2+WSGXAKproRzM QA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 37yqmnmsje-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Apr 2021 09:14:55 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13M9A3qd001482;
+        Thu, 22 Apr 2021 09:14:50 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 3809evkb4g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Apr 2021 09:14:50 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 13M9D0qo013728;
+        Thu, 22 Apr 2021 09:14:50 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 3809evkb48-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Apr 2021 09:14:50 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 13M9EjKJ031593;
+        Thu, 22 Apr 2021 09:14:45 GMT
+Received: from mwanda (/102.36.221.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 22 Apr 2021 02:14:44 -0700
+Date:   Thu, 22 Apr 2021 12:14:37 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        linux-nfs@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
-Message-ID: <YIEzZQR0hTSxmpAz@kroah.com>
-References: <20210407001658.2208535-1-pakki001@umn.edu>
- <YH5/i7OvsjSmqADv@kroah.com>
- <20210420171008.GB4017@fieldses.org>
- <YH+zwQgBBGUJdiVK@unreal>
- <YH+7ZydHv4+Y1hlx@kroah.com>
- <CADVatmNgU7t-Co84tSS6VW=3NcPu=17qyVyEEtVMVR_g51Ma6Q@mail.gmail.com>
- <YH/8jcoC1ffuksrf@kroah.com>
- <CADVatmORofURmrLiV7GRW2ZchzL6zdQopwxAh2YSVT0y69KuHA@mail.gmail.com>
+        linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] SUNRPC: fix ternary sign expansion bug in tracing
+Message-ID: <YIE+fTOOnC9PLXbg@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADVatmORofURmrLiV7GRW2ZchzL6zdQopwxAh2YSVT0y69KuHA@mail.gmail.com>
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-ORIG-GUID: VnexRzdtOA0_n3_q8V25vGRfYbFlM_GC
+X-Proofpoint-GUID: VnexRzdtOA0_n3_q8V25vGRfYbFlM_GC
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9961 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 adultscore=0
+ impostorscore=0 spamscore=0 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104060000 definitions=main-2104220078
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Apr 22, 2021 at 09:10:53AM +0100, Sudip Mukherjee wrote:
-> Hi Greg,
-> 
-> On Wed, Apr 21, 2021 at 11:21 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Apr 21, 2021 at 11:07:11AM +0100, Sudip Mukherjee wrote:
-> > > Hi Greg,
-> > >
-> > > On Wed, Apr 21, 2021 at 6:44 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Wed, Apr 21, 2021 at 08:10:25AM +0300, Leon Romanovsky wrote:
-> > > > > On Tue, Apr 20, 2021 at 01:10:08PM -0400, J. Bruce Fields wrote:
-> > > > > > On Tue, Apr 20, 2021 at 09:15:23AM +0200, Greg KH wrote:
-> > > > > > > If you look at the code, this is impossible to have happen.
-> > > > > > >
-> > >
-> > > <snip>
-> > >
-> > > > > They introduce kernel bugs on purpose. Yesterday, I took a look on 4
-> > > > > accepted patches from Aditya and 3 of them added various severity security
-> > > > > "holes".
-> > > >
-> > > > All contributions by this group of people need to be reverted, if they
-> > > > have not been done so already, as what they are doing is intentional
-> > > > malicious behavior and is not acceptable and totally unethical.  I'll
-> > > > look at it after lunch unless someone else wants to do it...
-> > >
-> > > A lot of these have already reached the stable trees. I can send you
-> > > revert patches for stable by the end of today (if your scripts have
-> > > not already done it).
-> >
-> > Yes, if you have a list of these that are already in the stable trees,
-> > that would be great to have revert patches, it would save me the extra
-> > effort these mess is causing us to have to do...
-> 
-> The patch series for all the stable branches should be with you now.
-> 
-> But for others:
-> https://lore.kernel.org/stable/YIEVGXEoeizx6O1p@debian/  for v5.11.y
-> and other branches are sent as a reply to that mail.
+This code is supposed to pass negative "err" values for tracing but it
+passes positive values instead.  The problem is that the
+trace_svcsock_tcp_send() function takes a long but "err" is an int and
+"sent" is a u32.  The negative is first type promoted to u32 so it
+becomes a high positive then it is promoted to long and it stays
+positive.
 
-Thank you, I now have them.  I will be looking at them when I get the
-chance, and comparing them to what I end up getting merged into
-5.13-rc1.
+Fix this by casting "err" directly to long.
 
-greg k-h
+Fixes: 998024dee197 ("SUNRPC: Add more svcsock tracepoints")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ net/sunrpc/svcsock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+index 9eb5b6b89077..478f857cdaed 100644
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@ -1174,7 +1174,7 @@ static int svc_tcp_sendto(struct svc_rqst *rqstp)
+ 	tcp_sock_set_cork(svsk->sk_sk, true);
+ 	err = svc_tcp_sendmsg(svsk->sk_sock, xdr, marker, &sent);
+ 	xdr_free_bvec(xdr);
+-	trace_svcsock_tcp_send(xprt, err < 0 ? err : sent);
++	trace_svcsock_tcp_send(xprt, err < 0 ? (long)err : sent);
+ 	if (err < 0 || sent != (xdr->len + sizeof(marker)))
+ 		goto out_close;
+ 	if (atomic_dec_and_test(&svsk->sk_sendqlen))
+-- 
+2.30.2
+
