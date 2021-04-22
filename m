@@ -2,88 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B309D3677A0
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Apr 2021 04:58:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A1EE36781F
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Apr 2021 05:57:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229706AbhDVC7M (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 21 Apr 2021 22:59:12 -0400
-Received: from mail-m121142.qiye.163.com ([115.236.121.142]:49332 "EHLO
-        mail-m121142.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230319AbhDVC7L (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Apr 2021 22:59:11 -0400
-X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Wed, 21 Apr 2021 22:59:11 EDT
-Received: from ubuntu.localdomain (unknown [36.152.145.182])
-        by mail-m121142.qiye.163.com (Hmail) with ESMTPA id D805B80106;
-        Thu, 22 Apr 2021 10:51:54 +0800 (CST)
-From:   zhouchuangao <zhouchuangao@vivo.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        id S234258AbhDVD5s (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 21 Apr 2021 23:57:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41538 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229536AbhDVD5s (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 21 Apr 2021 23:57:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 68F9E613E0;
+        Thu, 22 Apr 2021 03:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1619063834;
+        bh=QlWwdprMt2Kc9yJ/6D6n6mMFBdEaVscgEP+0IDmaR/M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WJdgWqQWfv0ItM4Ef4GhFlh6L1uueZBCKq1vci709noRw1y8S/VEHAlxDJpR0a80g
+         LUX4NxExeLP8rKkzj7JoK+FG4M/S2/4wtaMHf2DUDbH+TeXmqHBmS0PGvdlhX5HSzt
+         bUq1C2hBxJhe4I09ngf78I6DgxLpYkuH7kKogZUc6hQqrKR/6Uc71+AM+tvK2F8UNv
+         pnRiKMdVdUzF2yslSDcWlu4NUXR2V/beF/ja7TYohDTUlfabEn4gNzTNjcKxH4Hkn9
+         Uf1gdFfM5rr7Cchbl8CDNZ993lItzgllORf5/R767XPISc21LDDuCuulFZxyWxQMa8
+         obnJrXEJEkIuA==
+Date:   Thu, 22 Apr 2021 06:57:10 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
         Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     zhouchuangao <zhouchuangao@vivo.com>
-Subject: [PATCH] fs/nfs: Use fatal_signal_pending instead of signal_pending.
-Date:   Wed, 21 Apr 2021 19:51:44 -0700
-Message-Id: <1619059904-56371-1-git-send-email-zhouchuangao@vivo.com>
-X-Mailer: git-send-email 2.7.4
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
-        oVCBIfWUFZQx9NHlZNHh8YQ0tPQ0hMQ09VEwETFhoSFyQUDg9ZV1kWGg8SFR0UWUFZT0tIVUpKS0
-        hKTFVLWQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PCo6ASo5GT8WDg8zME46FA4x
-        KEsKCg1VSlVKTUpCS05CQkpOSEtJVTMWGhIXVQETFA4YEw4aFRwaFDsNEg0UVRgUFkVZV1kSC1lB
-        WUhNVUpOSVVKT05VSkNJWVdZCAFZQUlPTk03Bg++
-X-HM-Tid: 0a78f77db8e3b037kuuud805b80106
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Aditya Pakki <pakki001@umn.edu>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        netdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
+Message-ID: <YID0Fg3f0PzckJI9@unreal>
+References: <20210407001658.2208535-1-pakki001@umn.edu>
+ <YH5/i7OvsjSmqADv@kroah.com>
+ <20210420171008.GB4017@fieldses.org>
+ <YH+zwQgBBGUJdiVK@unreal>
+ <CAFX2JfnGCbanTaGurArBw-5F2MynPD=GpwkfU6wVoNKr9ffzRg@mail.gmail.com>
+ <YIAzfsMx6bn5Twu8@unreal>
+ <YIBJXjCbJ1ntH1RF@mit.edu>
+ <YIBiQ3p9z7y6PeqT@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YIBiQ3p9z7y6PeqT@kernel.org>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-We set the state of the current process to TASK_KILLABLE via
-prepare_to_wait(). Should we use fatal_signal_pending() to detect
-the signal here?
+On Wed, Apr 21, 2021 at 08:34:59PM +0300, Mike Rapoport wrote:
+> On Wed, Apr 21, 2021 at 11:48:46AM -0400, Theodore Ts'o wrote:
+> > On Wed, Apr 21, 2021 at 05:15:26PM +0300, Leon Romanovsky wrote:
+> > > > This thread is the first I'm hearing about this. I wonder if there is
+> > > > a good way of alerting the entire kernel community (including those
+> > > > only subscribed to subsystem mailing lists) about what's going on? It
+> > > > seems like useful information to have to push back against these
+> > > > patches.
+> 
+> Heh, I've got this information from google news feed on my phone :)
+>  
+> > > IMHO, kernel users ML is good enough for that.
+> > 
+> > The problem is that LKML is too high traffic for a lot of people to
+> > want to follow.
+> 
+> I think Leon meant kernel.org users ML (users@linux.kernel.org). Along with
+> ksummut-discuss it'll reach most maintainers, IMHO.
 
-Signed-off-by: zhouchuangao <zhouchuangao@vivo.com>
----
- fs/nfs/nfs4proc.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Exactly.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index c65c4b4..127be294 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -1681,13 +1681,13 @@ static void nfs_set_open_stateid_locked(struct nfs4_state *state,
- 		rcu_read_unlock();
- 		trace_nfs4_open_stateid_update_wait(state->inode, stateid, 0);
- 
--		if (!signal_pending(current)) {
-+		if (!fatal_signal_pending(current)) {
- 			if (schedule_timeout(5*HZ) == 0)
- 				status = -EAGAIN;
- 			else
- 				status = 0;
- 		} else
--			status = -EINTR;
-+			status = -ERESTARTSYS;
- 		finish_wait(&state->waitq, &wait);
- 		rcu_read_lock();
- 		spin_lock(&state->owner->so_lock);
-@@ -3457,8 +3457,8 @@ static bool nfs4_refresh_open_old_stateid(nfs4_stateid *dst,
- 		write_sequnlock(&state->seqlock);
- 		trace_nfs4_close_stateid_update_wait(state->inode, dst, 0);
- 
--		if (signal_pending(current))
--			status = -EINTR;
-+		if (fatal_signal_pending(current))
-+			status = -ERESTARTSYS;
- 		else
- 			if (schedule_timeout(5*HZ) != 0)
- 				status = 0;
-@@ -3467,7 +3467,7 @@ static bool nfs4_refresh_open_old_stateid(nfs4_stateid *dst,
- 
- 		if (!status)
- 			continue;
--		if (status == -EINTR)
-+		if (status == -ERESTARTSYS)
- 			break;
- 
- 		/* we slept the whole 5 seconds, we must have lost a seqid */
--- 
-2.7.4
+Thanks
 
+>  
+> > There are some people who have used the kernel summit discuss list
+> > (previously ksummit-discuss@lists.linux-foundation.org, now
+> > ksummit@lists.linux.dev) as a place where most maintainers tend to be
+> > subscribed, although that's not really a guarantee, either.  (Speaking
+> > of which, how to handle groups who submit patches in bad faith a good
+> > Maintainer Summit topic for someone to propose...)
+> 
+> -- 
+> Sincerely yours,
+> Mike.
