@@ -2,109 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A73B3697EB
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Apr 2021 19:04:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3227369840
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Apr 2021 19:25:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243190AbhDWRFV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 23 Apr 2021 13:05:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34104 "EHLO mx2.suse.de"
+        id S232168AbhDWR0K (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 23 Apr 2021 13:26:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229957AbhDWRFU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 23 Apr 2021 13:05:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 0341CADAA;
-        Fri, 23 Apr 2021 17:04:43 +0000 (UTC)
-Date:   Fri, 23 Apr 2021 19:04:41 +0200
-From:   Petr Vorel <pvorel@suse.cz>
-To:     "J . Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs@vger.kernel.org, Steve Dickson <steved@redhat.com>,
-        NeilBrown <neilb@suse.com>, Chuck Lever <chuck.lever@oracle.com>,
-        Alexey Kodanev <alexey.kodanev@oracle.com>
-Subject: Re: [RFC PATCH 1/1] mount.nfs: Fix mounting on tmpfs
-Message-ID: <YIL+KWuPmgm8A82C@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20210422191803.31511-1-pvorel@suse.cz>
- <20210422202334.GB25415@fieldses.org>
- <YIIuUPrlbBlr1ooD@pevik>
- <20210423142329.GB10457@fieldses.org>
+        id S229691AbhDWR0J (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 23 Apr 2021 13:26:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4518E613DB;
+        Fri, 23 Apr 2021 17:25:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1619198732;
+        bh=LeAKX/LclhdGdHtcpyE/Md+aiOKHU5kb4bGOf042jz8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EOFnLe17l0EZrn7XhXD6jPMGlZTpthuz6avPiae9JZveQPygjRsgrLUK6gw1iHMAA
+         pfFLNpiONAEsw9aVERQC7c8Lv4kvNXc8hTdvzwQ6rWsvMLrIcQ3PsW1ypbhL6Tx35H
+         dwUGMkd4+iXINtoBBlhaWyjlWjU1apuMJArXO8t7qCpc1u9PoHhrgb+d5aKQ6uUSiR
+         abDWwsAWTNWqKNL7C+QOmp52BjDFnYeViKoB+MfFJpPd8St2vNNOTEvGJwB50FuZN5
+         bJSVcGr+utRaY6ps1RqgtNBYH+JhVmkwzCvlPT9vEjGivriG0RWRI6omeQOvWmBNDb
+         6mjngWOS7ID6A==
+Date:   Fri, 23 Apr 2021 20:25:28 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     "Shelat, Abhi" <a.shelat@northeastern.edu>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Aditya Pakki <pakki001@umn.edu>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
+Message-ID: <YIMDCNx4q6esHTYt@unreal>
+References: <20210420171008.GB4017@fieldses.org>
+ <YH+zwQgBBGUJdiVK@unreal>
+ <YH+7ZydHv4+Y1hlx@kroah.com>
+ <CADVatmNgU7t-Co84tSS6VW=3NcPu=17qyVyEEtVMVR_g51Ma6Q@mail.gmail.com>
+ <YH/8jcoC1ffuksrf@kroah.com>
+ <3B9A54F7-6A61-4A34-9EAC-95332709BAE7@northeastern.edu>
+ <20210421133727.GA27929@fieldses.org>
+ <YIAta3cRl8mk/RkH@unreal>
+ <20210421135637.GB27929@fieldses.org>
+ <20210422193950.GA25415@fieldses.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210423142329.GB10457@fieldses.org>
+In-Reply-To: <20210422193950.GA25415@fieldses.org>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce,
+On Thu, Apr 22, 2021 at 03:39:50PM -0400, J. Bruce Fields wrote:
+> On Wed, Apr 21, 2021 at 09:56:37AM -0400, J. Bruce Fields wrote:
+> > On Wed, Apr 21, 2021 at 04:49:31PM +0300, Leon Romanovsky wrote:
+> > > If you want to see another accepted patch that is already part of
+> > > stable@, you are invited to take a look on this patch that has "built-in bug":
+> > > 8e949363f017 ("net: mlx5: Add a missing check on idr_find, free buf")
+> > 
+> > Interesting, thanks.
+> 
+> Though looking at it now, I'm not actually seeing the bug--probably I'm
+> overlooking something obvious.
 
-> On Fri, Apr 23, 2021 at 04:17:52AM +0200, Petr Vorel wrote:
-> > Hi,
+It was fixed in commit 31634bf5dcc4 ("net/mlx5: FPGA, tls, hold rcu read lock a bit longer")
 
-> > > On Thu, Apr 22, 2021 at 09:18:03PM +0200, Petr Vorel wrote:
-> > > > LTP NFS tests (which use netns) fails on tmpfs since d4066486:
+Thanks
 
-> > > > mount -t nfs -o proto=tcp,vers=4.2 10.0.0.2:/tmp/ltp.nfs01.nfs-4.2/LTP_nfs01.UF6gRZCy3O/4.2/tcp /tmp/ltp.nfs01.nfs-4.2/LTP_nfs01.UF6gRZCy3O/4.2/0
-> > > > mount.nfs: mounting 10.0.0.2:/tmp/ltp.nfs01.nfs-4.2/LTP_nfs01.UF6gRZCy3O/4.2/tcp failed, reason given by server: No such file or directory
-
-> > > We should figure out the reason for the failure.  A network trace might
-> > > help.
-
-> > Anything specific you're looking for?
-
-> Actually I was thinking of capturing the network traffic, something
-> like:
-> 	tcpdump -s0 -wtmp.pcap -i<interface>
-
-> then try the mount, then kill tcpdump and look at tmp.pcap.
-
-I don't see anything suspicious, can you please have a look?
-https://gitlab.com/pevik/tmp/-/raw/master/nfs.v3.pcap
-https://gitlab.com/pevik/tmp/-/raw/master/nfs.v4.pcap
-https://gitlab.com/pevik/tmp/-/raw/master/nfs.v4.1.pcap
-https://gitlab.com/pevik/tmp/-/raw/master/nfs.v4.2.pcap
-
-tcpdump -s0 -iany host 10.0.0.1 and 10.0.0.2
-
-> First, though, what's the output of "exportfs -v" on the server?
-* v3 (the only working)
-mount -t nfs -o proto=tcp,vers=3 10.0.0.2:/tmp/LTP_nfs01.S5dolLhIlD/3/tcp /tmp/LTP_nfs01.S5dolLhIlD/3/0
-
-exportfs -v
-/tmp/LTP_nfs01.S5dolLhIlD/3/tcp
-		<world>(sync,wdelay,hide,no_subtree_check,fsid=6436,sec=sys,rw,secure,no_root_squash,no_all_squash)
-
-* v4
-mount -t nfs -o proto=tcp,vers=4 10.0.0.2:/tmp/LTP_nfs01.5yzuZYRSRl/4/tcp /tmp/LTP_nfs01.5yzuZYRSRl/4/0
-mount.nfs: mounting 10.0.0.2:/tmp/LTP_nfs01.5yzuZYRSRl/4/tcp failed, reason given by server: No such file or directory
-
-exportfs -v
-/tmp/LTP_nfs01.5yzuZYRSRl/4/tcp
-		<world>(sync,wdelay,hide,no_subtree_check,fsid=6695,sec=sys,rw,secure,no_root_squash,no_all_squash)
-
-* v4.1
-mount -t nfs -o proto=tcp,vers=4.1 10.0.0.2:/tmp/LTP_nfs01.xSWfcygtYM/4.1/tcp /tmp/LTP_nfs01.xSWfcygtYM/4.1/0
-mount.nfs: mounting 10.0.0.2:/tmp/LTP_nfs01.xSWfcygtYM/4.1/tcp failed, reason given by server: No such file or directory
-
-exportfs -v
-/tmp/LTP_nfs01.xSWfcygtYM/4.1/tcp
-		<world>(sync,wdelay,hide,no_subtree_check,fsid=6965,sec=sys,rw,secure,no_root_squash,no_all_squash)
-
-* v4.2
-mount -t nfs -o proto=tcp,vers=4.2 10.0.0.2:/tmp/LTP_nfs01.xkKpqpRikV/4.2/tcp /tmp/LTP_nfs01.xkKpqpRikV/4.2/0
-mount.nfs: mounting 10.0.0.2:/tmp/LTP_nfs01.xkKpqpRikV/4.2/tcp failed, reason given by server: No such file or directory
-
-exportfs -v
-/tmp/LTP_nfs01.xkKpqpRikV/4.2/tcp
-		<world>(sync,wdelay,hide,no_subtree_check,fsid=7239,sec=sys,rw,secure,no_root_squash,no_all_squash)
-
-
-> Note you need an "fsid=" option on tmpfs exports.
-Yes, the test uses PID based fsid: fsid=$$
-
+> 
 > --b.
-
-Thanks a lot for your time!
-
-Kind regards,
-Petr
