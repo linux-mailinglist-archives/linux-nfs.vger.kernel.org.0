@@ -2,102 +2,144 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BFCD368AFB
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Apr 2021 04:18:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7CC1368C41
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Apr 2021 06:41:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236601AbhDWCSb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 22 Apr 2021 22:18:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36320 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236498AbhDWCSb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 22 Apr 2021 22:18:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A2FDDAFF1;
-        Fri, 23 Apr 2021 02:17:54 +0000 (UTC)
-Date:   Fri, 23 Apr 2021 04:17:52 +0200
-From:   Petr Vorel <pvorel@suse.cz>
-To:     "J . Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs@vger.kernel.org, Steve Dickson <steved@redhat.com>,
-        NeilBrown <neilb@suse.com>, Chuck Lever <chuck.lever@oracle.com>,
-        Alexey Kodanev <alexey.kodanev@oracle.com>
-Subject: Re: [RFC PATCH 1/1] mount.nfs: Fix mounting on tmpfs
-Message-ID: <YIIuUPrlbBlr1ooD@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20210422191803.31511-1-pvorel@suse.cz>
- <20210422202334.GB25415@fieldses.org>
+        id S232966AbhDWEle (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 23 Apr 2021 00:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229643AbhDWEld (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Apr 2021 00:41:33 -0400
+Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 941CCC061756
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Apr 2021 21:40:56 -0700 (PDT)
+Received: by mail-ua1-x930.google.com with SMTP id v23so14866006uaq.13
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Apr 2021 21:40:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cYjZlbF3DXM7zGnEvoUEauj9qs95JDVKd+qkmT8E5Es=;
+        b=Sz162M5Od95RKrPl3X/Ac4xcDjeMsrrM/4Xt3pyER0eWJaPxr1EiE1YWPdfvaRqo8Z
+         9BuZXgXl61gDrjkAfvHLKWCwv0Hz3q0z5HGKJCQkDs0zZc1hd1SYYMVD4xhYjVO1eYBK
+         nUrplSbXYGSOOCNOwNBzogI6pG1sjmuXCgXbc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cYjZlbF3DXM7zGnEvoUEauj9qs95JDVKd+qkmT8E5Es=;
+        b=tOweDErGGqApA12vRcN2XUoAj9TzVGk2LcCmmMHnOOX6pw2mqhQw1ZbO0DXQWrxqwm
+         IEHm9yGL4qRBWG3v4eIK1rqY4cPXfBSCB9sqHWxhfZ668bXEY3+/uc55K9hJYwDKf6I/
+         Br4n0eNkJ8gDXsDAcWUKNqL8tNXPxXV20+EBGNi9CTXMTmjqBgLEndoI+MSEQirQ1S43
+         1roJt/ZP772dQ6+d5RipLrsOWnMF9adSndxEn/RCLzvK4xG7K3HCnSPuHrLoVt4X7JRv
+         HQXnosmyPrl1BDm5zgehzumUfDtHmJmYrvOOHaUh6QgrSzEZ2mDpYsnP0ivUyHqFT52m
+         l1QQ==
+X-Gm-Message-State: AOAM532q7UbsV1oqhpTJHjFsM4gO38lMzRgO/NlX+lnKPAgJQOelkv6y
+        wwsPAkPBDbFrrnd7hT589cifGnAvlxf/hyqysbecQg==
+X-Google-Smtp-Source: ABdhPJxN50JqYMGhnzwmNIzBqf5XELBKZ9iKqf346L2CEQrzbVJ1FDlyDZ16cLmlLwpKkRZI87JeC+iOPw+JE+Tq628=
+X-Received: by 2002:ab0:638e:: with SMTP id y14mr1572161uao.82.1619152855684;
+ Thu, 22 Apr 2021 21:40:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210422202334.GB25415@fieldses.org>
+References: <20210221195833.23828-1-lhenriques@suse.de> <20210222102456.6692-1-lhenriques@suse.de>
+ <CAN-5tyELMY7b7CKO-+an47ydq8r_4+SOyhuvdH0qE0-JmdZ44Q@mail.gmail.com>
+ <YDYpHccgM7agpdTQ@suse.de> <CANMq1KBgwEXFh8AxpPW2t1SA0NVsyR45m0paLEU4D4w80dc_fA@mail.gmail.com>
+ <CANMq1KDTgnGtNxWj2XxAT3mdsNjc551uUCg6EWnh=Hd0KcVQKQ@mail.gmail.com>
+ <8735vzfugn.fsf@suse.de> <CAOQ4uxjdVZywBi6=D1eRfBhRk+nobTz4N87jcejDtvzBMMMKXQ@mail.gmail.com>
+In-Reply-To: <CAOQ4uxjdVZywBi6=D1eRfBhRk+nobTz4N87jcejDtvzBMMMKXQ@mail.gmail.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Fri, 23 Apr 2021 12:40:44 +0800
+Message-ID: <CANMq1KAOwj9dJenwF2NadQ73ytfccuPuahBJE7ak6S7XP6nCjg@mail.gmail.com>
+Subject: Re: [PATCH v8] vfs: fix copy_file_range regression in cross-fs copies
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Luis Henriques <lhenriques@suse.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Olga Kornievskaia <aglo@umich.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Steve French <sfrench@samba.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <dchinner@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Ian Lance Taylor <iant@google.com>,
+        Luis Lozano <llozano@chromium.org>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+On Fri, Apr 9, 2021 at 9:50 PM Amir Goldstein <amir73il@gmail.com> wrote:
+>
+> On Fri, Apr 9, 2021 at 4:39 PM Luis Henriques <lhenriques@suse.de> wrote:
+> >
+> > Nicolas Boichat <drinkcat@chromium.org> writes:
+> >
+> > > On Wed, Feb 24, 2021 at 6:44 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > >>
+> > >> On Wed, Feb 24, 2021 at 6:22 PM Luis Henriques <lhenriques@suse.de> wrote:
+> > >> >
+> > >> > On Tue, Feb 23, 2021 at 08:00:54PM -0500, Olga Kornievskaia wrote:
+> > >> > > On Mon, Feb 22, 2021 at 5:25 AM Luis Henriques <lhenriques@suse.de> wrote:
+> > >> > > >
+> > >> > > > A regression has been reported by Nicolas Boichat, found while using the
+> > >> > > > copy_file_range syscall to copy a tracefs file.  Before commit
+> > >> > > > 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
+> > >> > > > kernel would return -EXDEV to userspace when trying to copy a file across
+> > >> > > > different filesystems.  After this commit, the syscall doesn't fail anymore
+> > >> > > > and instead returns zero (zero bytes copied), as this file's content is
+> > >> > > > generated on-the-fly and thus reports a size of zero.
+> > >> > > >
+> > >> > > > This patch restores some cross-filesystem copy restrictions that existed
+> > >> > > > prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
+> > >> > > > devices").  Filesystems are still allowed to fall-back to the VFS
+> > >> > > > generic_copy_file_range() implementation, but that has now to be done
+> > >> > > > explicitly.
+> > >> > > >
+> > >> > > > nfsd is also modified to fall-back into generic_copy_file_range() in case
+> > >> > > > vfs_copy_file_range() fails with -EOPNOTSUPP or -EXDEV.
+> > >> > > >
+> > >> > > > Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
+> > >> > > > Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
+> > >> > > > Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
+> > >> > > > Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
+> > >> > > > Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+> > >> > > > Signed-off-by: Luis Henriques <lhenriques@suse.de>
+> > >> > >
+> > >> > > I tested v8 and I believe it works for NFS.
+> > >> >
+> > >> > Thanks a lot for the testing.  And to everyone else for reviews,
+> > >> > feedback,... and patience.
+> > >>
+> > >> Thanks so much to you!!!
+> > >>
+> > >> Works here, you can add my
+> > >> Tested-by: Nicolas Boichat <drinkcat@chromium.org>
+> > >
+> > > What happened to this patch? It does not seem to have been picked up
+> > > yet? Any reason why?
+> >
+> > Hmm... good question.  I'm not actually sure who would be picking it.  Al,
+> > maybe...?
+> >
+>
+> Darrick,
+>
+> Would you mind taking this through your tree in case Al doesn't pick it up?
 
-> On Thu, Apr 22, 2021 at 09:18:03PM +0200, Petr Vorel wrote:
-> > LTP NFS tests (which use netns) fails on tmpfs since d4066486:
+Err, sorry for yet another ping... but it would be good to move
+forward with those patches ,-P
 
-> > mount -t nfs -o proto=tcp,vers=4.2 10.0.0.2:/tmp/ltp.nfs01.nfs-4.2/LTP_nfs01.UF6gRZCy3O/4.2/tcp /tmp/ltp.nfs01.nfs-4.2/LTP_nfs01.UF6gRZCy3O/4.2/0
-> > mount.nfs: mounting 10.0.0.2:/tmp/ltp.nfs01.nfs-4.2/LTP_nfs01.UF6gRZCy3O/4.2/tcp failed, reason given by server: No such file or directory
+Thanks!
 
-> We should figure out the reason for the failure.  A network trace might
-> help.
-
-Anything specific you're looking for?
-
-Doing full debug
-rpcdebug -m nfs -s all
-rpcdebug -m nfsd -s all
-rpcdebug -m rpc -s all
-
-I see
-[13890.993127] nfsd_inet6addr_event: removed fd00:0001:0001:0001:0000:0000:0000:0002
-[13890.995428] nfsd_inet6addr_event: removed fe80:0000:0000:0000:1463:9fff:fea6:01b1
-[13891.002920] nfsd_inetaddr_event: removed 10.0.0.2
-[13891.007501] IPv6: ADDRCONF(NETDEV_CHANGE): ltp_ns_veth2: link becomes ready
-[13891.223432] NFS:   parsing nfs mount option 'source'
-[13891.225347] NFS:   parsing nfs mount option 'proto'
-[13891.227216] NFS:   parsing nfs mount option 'vers'
-[13891.228684] NFS:   parsing nfs mount option 'addr'
-[13891.229994] NFS:   parsing nfs mount option 'clientaddr'
-[13891.231326] NFS: MNTPATH: '/tmp/LTP_nfs01.lQghifD6NF/4.1/tcp'
-[13891.232923] --> nfs4_try_get_tree()
-[13891.235025] NFS: get client cookie (0x0000000013cf211e/0x0000000014b6df5b)
-[13891.237466] RPC:       set up xprt to 10.0.0.2 (port 2049) via tcp
-[13891.239618] RPC:       Couldn't create auth handle (flavor 390004)
-[13891.241556] nfs_create_rpc_client: cannot create RPC client. Error = -22
-[13891.243306] RPC:        destroy backchannel transport
-[13891.244017] RPC:       set up xprt to 10.0.0.2 (port 2049) via tcp
-[13891.244610] RPC:        backchannel list empty= true
-[13891.246232] RPC:       xs_connect scheduled xprt 000000005ddf4c3d
-[13891.247547] RPC:       xs_destroy xprt 00000000aeaed403
-[13891.250574] RPC:       xs_bind 0.0.0.0:873: ok (0)
-[13891.252225] RPC:       worker connecting xprt 000000005ddf4c3d via tcp to 10.0.0.2 (port 2049)
-[13891.254253] RPC:       xs_tcp_state_change client 000000005ddf4c3d...
-[13891.255693] RPC:       state 1 conn 0 dead 0 zapped 1 sk_shutdown 0
-[13891.257195] svc: server 000000007f0b7417, pool 0, transport 00000000f97f22bc, inuse=2
-[13891.258946] RPC:       000000005ddf4c3d connect status 115 connected 1 sock state 1
-[13891.260685] RPC:       xs_close xprt 00000000aeaed403
-[13891.260794] RPC:       xs_tcp_send_request(40) = 0
-[13891.263161] svc: server 000000007f0b7417, pool 0, transport 00000000f97f22bc, inuse=2
-[13891.264876] svc: svc_authenticate (0)
-[13891.264981] svc: server 00000000b4f0c1f0, pool 0, transport 00000000f97f22bc, inuse=3
-[13891.267954] svc: calling dispatcher
-[13891.270971] RPC:       xs_data_ready...
-[13891.273229] RPC:       setup backchannel transport
-[13891.274481] RPC:       adding req= 000000002ea0e13e
-[13891.275823] RPC:       setup backchannel transport done
-[13891.278253] svc: initialising pool 0 for NFSv4 callback
-[13891.279811] nfs_callback_create_svc: service created
-[13891.281138] NFS: create per-net callback data; net=f0000304
-
-FYI tests are being done on network namespaces, thus there should be no real
-network issue. But I'll retest it on a real network. I admit that netns + tmpfs
-might be unrealistic scenario in practice.
-
-Kind regards,
-Petr
-
-> --b.
+> Thanks,
+> Amir.
