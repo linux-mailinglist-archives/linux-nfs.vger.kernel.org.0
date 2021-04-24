@@ -2,105 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BEC936A2BB
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Apr 2021 21:02:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DE1D36A336
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Apr 2021 23:35:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233563AbhDXTDN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 24 Apr 2021 15:03:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231814AbhDXTDM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 24 Apr 2021 15:03:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5D0EF610FA;
-        Sat, 24 Apr 2021 19:02:30 +0000 (UTC)
-Subject: [PATCH v4] xprtrdma: Improve locking around rpcrdma_rep destruction
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     trondmy@hammerspace.com
-Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Sat, 24 Apr 2021 15:02:28 -0400
-Message-ID: <161929084476.3664.10196536550424097179.stgit@manet.1015granger.net>
-User-Agent: StGit/0.23-29-ga622f1
+        id S234608AbhDXVfe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 24 Apr 2021 17:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233568AbhDXVfe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 24 Apr 2021 17:35:34 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1357C061574;
+        Sat, 24 Apr 2021 14:34:55 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 653C372A6; Sat, 24 Apr 2021 17:34:54 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 653C372A6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1619300094;
+        bh=Vr7MaCqYmKYqCBGZEDlXxdj0PiivX/JD0v8BQH6csTc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zW7DwFqDn3bEjPetg6lFRmCCOxUVQ3wRKkwbuZcH5Gp+cmSowrce9F+y32Ze+u2AL
+         C6XHzEKVWSVcuSW/lhwoqRmNCEX17Nhd3qvm02miP0sztAPIWrqTvrlFvcrYKvFkn7
+         QIBBOrnPZV2U77dJAIhKp/0fXcGngu1nZCIKH1QA=
+Date:   Sat, 24 Apr 2021 17:34:54 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        "Shelat, Abhi" <a.shelat@northeastern.edu>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Aditya Pakki <pakki001@umn.edu>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
+Message-ID: <20210424213454.GA4239@fieldses.org>
+References: <3B9A54F7-6A61-4A34-9EAC-95332709BAE7@northeastern.edu>
+ <20210421133727.GA27929@fieldses.org>
+ <YIAta3cRl8mk/RkH@unreal>
+ <20210421135637.GB27929@fieldses.org>
+ <20210422193950.GA25415@fieldses.org>
+ <YIMDCNx4q6esHTYt@unreal>
+ <20210423180727.GD10457@fieldses.org>
+ <YIMgMHwYkVBdrICs@unreal>
+ <20210423214850.GI10457@fieldses.org>
+ <YIRkxQCVr6lFM3r3@zeniv-ca.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YIRkxQCVr6lFM3r3@zeniv-ca.linux.org.uk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently rpcrdma_reps_destroy() assumes that, at transport
-tear-down, the content of the rb_free_reps list is the same as the
-content of the rb_all_reps list. Although that is usually true,
-using the rb_all_reps list should be more reliable because of
-the way it's managed. And, rpcrdma_reps_unmap() uses rb_all_reps;
-these two functions should both traverse the "all" list.
+On Sat, Apr 24, 2021 at 06:34:45PM +0000, Al Viro wrote:
+> On Fri, Apr 23, 2021 at 05:48:50PM -0400, J. Bruce Fields wrote:
+> > Have umn addresses been blocked from posting to kernel lists?
+> 
+> I don't see davem ever doing anything of that sort.  I've no information
+> about what has really happened, but "Uni lawyers and/or HR telling them
+> to stop making anything that might be considered public statements" sounds
+> much more plausible...
+> 
+> Again, it's only a speculation and it might very well have been something
+> else, but out of those two variants... I'd put high odds on the latter vs
+> the former.
 
-Ensure that all rpcrdma_reps are always destroyed whether they are
-on the rep free list or not.
+From private email: "Our UMN emails addresses are already banned from
+the mailing list."
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/verbs.c |   31 ++++++++++++++++++++++++-------
- 1 file changed, 24 insertions(+), 7 deletions(-)
+Also, I didn't get a copy of
 
-Changes since v3:
-- Rename rpcrdma_rep_destroy_locked() as rpcrdma_rep_free()
+	CA+EnHHSw4X+ubOUNYP2zXNpu70G74NN1Sct2Zin6pRgq--TqhA@mail.gmail.com
 
-As far as I can tell, none of the subsequent patches in v3 of the
-series need modification, manual or otherwise.
+through vger for some reason, and it didn't make it to lore.kernel.org either.
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 1b599a623eea..2bc4589c37ce 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -1007,16 +1007,23 @@ struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
- 	return NULL;
- }
- 
--/* No locking needed here. This function is invoked only by the
-- * Receive completion handler, or during transport shutdown.
-- */
--static void rpcrdma_rep_destroy(struct rpcrdma_rep *rep)
-+static void rpcrdma_rep_free(struct rpcrdma_rep *rep)
- {
--	list_del(&rep->rr_all);
- 	rpcrdma_regbuf_free(rep->rr_rdmabuf);
- 	kfree(rep);
- }
- 
-+static void rpcrdma_rep_destroy(struct rpcrdma_rep *rep)
-+{
-+	struct rpcrdma_buffer *buf = &rep->rr_rxprt->rx_buf;
-+
-+	spin_lock(&buf->rb_lock);
-+	list_del(&rep->rr_all);
-+	spin_unlock(&buf->rb_lock);
-+
-+	rpcrdma_rep_free(rep);
-+}
-+
- static struct rpcrdma_rep *rpcrdma_rep_get_locked(struct rpcrdma_buffer *buf)
- {
- 	struct llist_node *node;
-@@ -1049,8 +1056,18 @@ static void rpcrdma_reps_destroy(struct rpcrdma_buffer *buf)
- {
- 	struct rpcrdma_rep *rep;
- 
--	while ((rep = rpcrdma_rep_get_locked(buf)) != NULL)
--		rpcrdma_rep_destroy(rep);
-+	spin_lock(&buf->rb_lock);
-+	while ((rep = list_first_entry_or_null(&buf->rb_all_reps,
-+					       struct rpcrdma_rep,
-+					       rr_all)) != NULL) {
-+		list_del(&rep->rr_all);
-+		spin_unlock(&buf->rb_lock);
-+
-+		rpcrdma_rep_free(rep);
-+
-+		spin_lock(&buf->rb_lock);
-+	}
-+	spin_unlock(&buf->rb_lock);
- }
- 
- /**
+In Greg's revert thread, Kangjie Lu's messages are also missing from the
+archives:
 
+	https://lore.kernel.org/lkml/20210421130105.1226686-1-gregkh@linuxfoundation.org/
 
+??
+
+--b.
