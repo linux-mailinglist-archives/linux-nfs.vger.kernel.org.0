@@ -2,181 +2,152 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EC2E36A991
-	for <lists+linux-nfs@lfdr.de>; Sun, 25 Apr 2021 23:43:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BBA136A9D4
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Apr 2021 01:15:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231300AbhDYVoG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 25 Apr 2021 17:44:06 -0400
-Received: from mail-eopbgr670060.outbound.protection.outlook.com ([40.107.67.60]:48373
-        "EHLO CAN01-TO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230494AbhDYVoG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 25 Apr 2021 17:44:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UNVkLbbSasLulv8qwMu8OyAjQCwFDMxdJnIaPa50D0k+r+8d97JjXpHj4wpIeoJBvCAErvC2ItMKxRF13N74o3/kH6y6rYg8eIWzB480xcAUQ4YKbugzmvDb2/L/CUlMqHCCH1X/tiunGdOJG2zvT4iZ1Oc+9L6vdADAryuATKQqsjxi1aFIAqrGT+cV2Q/ZLYoIWCn0c0zYcWErHAuOandPiHHTKG73lG8imM+PImdoiOG+3sTGAktvtAflCaQ6IsQW1idUlSl5IMpmrobQx7jUyvaf8fR/0x83/SAVXzLCIQiOLBC3BEDZKOWgwa12DCR5qusj1yvkxQz1wyWpGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eFujQ36DT+E3Oy8mtC5FDbQ5PGQiZfiRWM0zap08lkI=;
- b=K5yaDlrJTNSfI0hX4b5VP0rq8anjPSG1m4UepSsiB07ZkOB7m/OW8EqvbC8L6HMp46VGViOkMKz6dYyFT0KcqFpTpCptE5XDGaXlH9DkdP41568Qgw5kBGqk/mZzHTf1hVOIKEx3jcIx1SC1ACj7uxvaLiH7bh9KlojpHKipciBtms8Qjo9fhhpr/BzKpPkIkPX6YX6uM0J0mVhxrYkh470tdk+vkJrkmTneY2xFBu9g8hn0VrEeSPzFUhGK12kBbiAnjeHx0+F69YSUTj7/NdiwJh2wR9FkzZ4y4a6kVqsRiHcN1kGmJscqs3wC3y2oq30Siqsb/9+ivyrYkdB/Tg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=uoguelph.ca; dmarc=pass action=none header.from=uoguelph.ca;
- dkim=pass header.d=uoguelph.ca; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uoguelph.ca;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eFujQ36DT+E3Oy8mtC5FDbQ5PGQiZfiRWM0zap08lkI=;
- b=wMzV+uTsql1pGBv3c5fyrmkLNktDpfroVNdYESUmWalrrcCrb3cDdIkERMAqiUnMzvYx4DzvfWQzyRAQaqGfObU9ejSM9XIQcnNd/IEL9eW2Olwtb+lrqKfyN2eFIdKxaDwLT7dGvdcqnkM0dCffHHPr7uiGCHq2zgVQ8zGJBeaB4WHM20WWdMg7UjZrRSy1XgTC874uHMcT/7LMSmy3uqXMXPbWUXPDthmSCTOCPlB8eaIzMNi7XJoDWXVmQzIcDvC9AaHhA+slSyV+4MoI9Dx++0ljQURGVIKjGGI3/F3eGwaeKJerG/+SqJ+KgM7XpmX/DRVCjByuJXJpcdIZAQ==
-Received: from YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:19::29) by YQXPR0101MB2248.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:17::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.26; Sun, 25 Apr
- 2021 21:43:24 +0000
-Received: from YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::1c05:585a:132a:f08e]) by YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::1c05:585a:132a:f08e%4]) with mapi id 15.20.4065.026; Sun, 25 Apr 2021
- 21:43:24 +0000
-From:   Rick Macklem <rmacklem@uoguelph.ca>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: weird Linux client behaviour when there are multiple concurrent
- CB_RECALLs
-Thread-Topic: weird Linux client behaviour when there are multiple concurrent
- CB_RECALLs
-Thread-Index: AQHXOXfnjixeaFEWH0C9YjMT3U0+MarFfYOAgABHYb8=
-Date:   Sun, 25 Apr 2021 21:43:24 +0000
-Message-ID: <YQXPR0101MB096801BCED45A39CB05CA884DD439@YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM>
-References: <YQXPR0101MB0968124A7F9024769EC90F23DD439@YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM>,<9dfaa112431882110d6795f93f52d7561b466b80.camel@hammerspace.com>
-In-Reply-To: <9dfaa112431882110d6795f93f52d7561b466b80.camel@hammerspace.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: hammerspace.com; dkim=none (message not signed)
- header.d=none;hammerspace.com; dmarc=none action=none
- header.from=uoguelph.ca;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a377d0af-4a9c-46c1-11c6-08d90833273f
-x-ms-traffictypediagnostic: YQXPR0101MB2248:
-x-microsoft-antispam-prvs: <YQXPR0101MB2248EDA64D432D358CFEDD2DDD439@YQXPR0101MB2248.CANPRD01.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:1923;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +Cd9JFiksJvdBOF68O6O9Zs+sgIPepMLQ6XBMgxXsmcmfzr15OVkdfNEsxaL1G8IwGBmOyx43gjunLtDm9vKCJQD35mG/BcIicG3RSmBWNVaOok1F9Q9AXRfbvHPXvRF64gAE0JEDJhAyF+JMKnZDvXlFFPiFCYlnodWEwYDS7nvih6iPIxQcwyYEgpe2vuI3lEkYeT4Lf8EA8u7mFDU+XbWf8CKS6UTO3BZiJiCWQs6dO9FmwnOSfCKJlXgOMGG2yr/wYAjQqsXaEaSPFu60z4xxI0TwoQ8ldgkNAzIYpiS90FBFN+laGYQDJMzVPSQqyMl4EaYzyfDVcifHcI34aT5RHwi9zf9R3bYRnZwyoJ95ZDGab2PtEYNjHzUxW5uqqKc6CS0fKPnt3hzvvFVoOQ55NxQ6zF8a+bpnJxM9UhxIHrWu9jpMHRqvah8xKnFGaymP6/mSNhvpX+fH4SqGg0OhsQaOFaL54lQkw4fCe5YqHUq8lpBA4L9M7ViWkLe/Mpl5fyFw/gyk0+FhvGNAVraKlFVE0YNmm0ObO5embmuZn89zdeiznS5bLhJJCJ2/3nnTOfvIlhWJ5lJZa99HjRkwSXj/0LzOtRyrg7xFe7j0Vfwt8g14XUc01pH4f0wpeDCDwn6nJ307UHKGkIEfRaeRThJ/acLS5VivBs+QhUVorFJL291D3p7NFRJ0fhp
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(39850400004)(136003)(396003)(346002)(366004)(376002)(66446008)(91956017)(66946007)(64756008)(76116006)(66476007)(122000001)(966005)(66556008)(7696005)(53546011)(8676002)(6506007)(478600001)(8936002)(86362001)(33656002)(83380400001)(38100700002)(9686003)(55016002)(186003)(52536014)(71200400001)(2906002)(786003)(5660300002)(316002)(110136005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?U16VUqLj4NZcXSo8f/AU11RyUzmCIo/LncLAyQgNnLxnIlUFnfKFG05ZPGXu?=
- =?us-ascii?Q?lVnqo4GzKCwljQd/0hl7kKuFEBVr+4+6a+Jz6jXopfWY0UYTLuVc/+/NdNoR?=
- =?us-ascii?Q?z9hWnmD+ULFfxH6nMgjfKxJ0isaBiMh6OQqjFwhQgbcCb8gQXaj3d/6MWG+u?=
- =?us-ascii?Q?s0flEO13wH4nOyVo1wk1Ep3vGkemlbRlWeS/ZmgJUtWr+11IAGc2SM5lMzI0?=
- =?us-ascii?Q?nmNjyCzdmomQF+5SnpV0OexsIyroZvJ5uGNgt4tYjtry5WZfQjnI8mg2rDKx?=
- =?us-ascii?Q?kyiq+MkCnOcX4bZShP8Up89nOc66dYDOuiBbMXM0+TGamaKBG499zifuqxeU?=
- =?us-ascii?Q?9aV0+NMhfGhnLwerDTL0CA22aTS6UOlkCFXFYEIya3UNfIFkb0iHl9PGcVG6?=
- =?us-ascii?Q?snV8oFOecAIqP4OKmk1AQyqQqlYP7Evfvj4tlntZLsIUvzi/9Fn4a34vyHdd?=
- =?us-ascii?Q?2zYIF8/FoC+I7N6Ijnjw3bztmUTEBfT08y/Y5gkMQOHmwE2LY3MXrODRlkb8?=
- =?us-ascii?Q?Bt27AGbgBxBkpKVchtMdnsAE9Wz7upTvccYYBT/eX/gnxWCiPoqivP7SsYEq?=
- =?us-ascii?Q?cH+wAXr5tCrhs3Hr6XIR4Yy6TAhCHcjpDQqXna/mp/KLpEFixgdK22acjIw8?=
- =?us-ascii?Q?msRcQ3pQFspm903h8fYJmrA9hwSo4ScjwPW0TE/cOxd4iUAveAf7ySQarQwr?=
- =?us-ascii?Q?N9CK1+OYkO2p39woKnRThYA7HqToV6sLdBCCU2N1ycd26MNDOiIhNbe/gm4f?=
- =?us-ascii?Q?19FVfBU1gCAl+ToHlo1AkQuOhigjQ5q1s9/r/Y+9KlF6CSdagvqpWNiPOi2A?=
- =?us-ascii?Q?8JbO9Qwrw0PBA9HaMmdta3ooLrrAkgRLwXW4QfbyEFUz+k4isIT6VXtJdIwh?=
- =?us-ascii?Q?76DZLfzAr2pPSsa0eu6FbpPmabCBCLfq0xUMqWkJLBYjLXPHB+06+5VM4Ecl?=
- =?us-ascii?Q?AMuYacLaPgID0rlZ6SJOf/0dvwOK1E25hk0P2NK4/R9nxsh5+5S528xjHjVr?=
- =?us-ascii?Q?b0mwhgR4y8rzmTaebsUwaPp4EYwYjNY6wMYPn2OFtKMm3GuqgDXEbbpRbig6?=
- =?us-ascii?Q?UnbuNJHHe36Svhg324pyYsPywwLXe8byXViE1P3qTArUk3MTjM8jA30HjZ5G?=
- =?us-ascii?Q?olNoJDxlnHk36Y18KXAdeB5A+yxR/qzePtFqVmb00RXGG0c/yoNO6KJbGbV5?=
- =?us-ascii?Q?QdcA3fo6Iyph4kyzWrM885JdpReGgDyobd9IvkGfoyLqYpht5tdjjppU9cqC?=
- =?us-ascii?Q?ixpPDcYyONbeaBkV+rkCssRHi1bK/omGIee/77IY1cMV6ioCelxoEbY5R5QL?=
- =?us-ascii?Q?CMgZmuYBmI9u+yXshpTfcUP19K9LsOfmd4CN54rMFwngvux3QURd1zeoXGtP?=
- =?us-ascii?Q?ntAZ3ME=3D?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S231435AbhDYXPp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 25 Apr 2021 19:15:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:22179 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231247AbhDYXPo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 25 Apr 2021 19:15:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1619392503;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=n+JuniTf6/0QJHyHH9jZCObdX5/aD9evlCt++gaJJ1U=;
+        b=HaPfit6tCzXwJczD3kpJvAV4E315OpFWx2DQGRjxjNxWgg3Yy/3QFdemjhTdu4Bewn+YN7
+        ynvZSNMLuDkiKne+P8M01zFapqo+Z38gltWbtKbb9Pm88rRKEB6HlfYWrpkdBjMRIRWhoJ
+        ghivv38PwkiG8CZ+P+NzR5g0IEZznv8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-26-BQSQMrQCPYm7CjiNMMlK1Q-1; Sun, 25 Apr 2021 19:15:01 -0400
+X-MC-Unique: BQSQMrQCPYm7CjiNMMlK1Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 009458030B5;
+        Sun, 25 Apr 2021 23:14:59 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-124.rdu2.redhat.com [10.10.112.124])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C7785D74F;
+        Sun, 25 Apr 2021 23:14:51 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <161918448151.3145707.11541538916600921083.stgit@warthog.procyon.org.uk>
+References: <161918448151.3145707.11541538916600921083.stgit@warthog.procyon.org.uk> <161918446704.3145707.14418606303992174310.stgit@warthog.procyon.org.uk>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] iov_iter: Four fixes for ITER_XARRAY
 MIME-Version: 1.0
-X-OriginatorOrg: uoguelph.ca
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: a377d0af-4a9c-46c1-11c6-08d90833273f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2021 21:43:24.3445
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: be62a12b-2cad-49a1-a5fa-85f4f3156a7d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: F/vzvzp7xQxu1Ps0tDglh0fLJoBIobZnX1CewallSkW5GzD+hQ4WUg8ydLHUwuzfwmNwRXfaTg6sw3DPC+lCtg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQXPR0101MB2248
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3545033.1619392490.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 26 Apr 2021 00:14:50 +0100
+Message-ID: <3545034.1619392490@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Thanks Trond. I upgrade my kernel one of these days
-and test it.
+Hi Al,
 
-rick
+I think this patch should include all the fixes necessary.  I could merge
+it in, but I think it might be better to tag it on the end as an additiona=
+l
+patch.
 
-________________________________________
-From: Trond Myklebust <trondmy@hammerspace.com>
-Sent: Sunday, April 25, 2021 1:27 PM
-To: linux-nfs@vger.kernel.org; Rick Macklem
-Subject: Re: weird Linux client behaviour when there are multiple concurren=
-t CB_RECALLs
+David
+---
+iov_iter: Four fixes for ITER_XARRAY
 
-CAUTION: This email originated from outside of the University of Guelph. Do=
- not click links or open attachments unless you recognize the sender and kn=
-ow the content is safe. If in doubt, forward suspicious emails to IThelp@uo=
-guelph.ca
+Fix four things[1] in the patch that adds ITER_XARRAY[2]:
 
+ (1) Remove the address_space struct predeclaration.  This is a holdover
+     from when it was ITER_MAPPING.
 
-On Sun, 2021-04-25 at 02:29 +0000, Rick Macklem wrote:
-> Hi,
->
-> I have been running a simple test using two clients (one FreeBSD
-> and the other Linux, Ferdora Core30, 5.2 kernel) with delegations
-> enabled in the server.
->
-> The test consists of running the connectathon general tests
-> alternately om each client, using the same directory on the
-> server.
-> --> As such, each one results in CB_RECALLs of delegations
->       from the other client.
-> Everything seems fine until the server does multiple concurrent
-> CB_RECALLs for different files/delegations using different
-> callback session slots.
-> --> Then the Linux client decides it must create a new connection,
->        which breaks the back channel.
->        After 0.1sec, the FreeBSD server notices the broken back
->        channel and starts setting SEQ4_STATUS_CB_PATH_DOWN.
->        --> 15sec after that, the Linux client does a
-> BindConnectionToSession
->               and things start working again.
->
-> The mystery to me is why the client decides to create a new TCP
-> connection, forcing this 15sec hickup each time it happens?
->
-> If you are interested in looking at a packet capture. you can
-> % fetch https://people.freebsd.org/~rmacklem/twoclientdeleg.pcap
-> There are multiple examples in it. One is at:
-> packet# 3518, 3520, 3521 CB_RECALL requests for 3 different
-> delegations
->                          time 137.5
-> --> This is followed by a close and open of a new TCP connection...
-> packet# 3582 - first one with SEQ4_STATUS_CB_PATH_DOWN at
->                          time 137.6
-> packet# 3604 - client does a bindconnectiontosession at
->                          time 152.7
-> Then things start to happen again...
-> 192.168.1.5 - FreeBSD server
-> 192.168.1.6 - Linux client
-> 192.168.1.13 - FreeBSD client
->
-> If this is a known issue that you think is fixed in a more recent
-> Linux kernel, then sorry about the noise.
->
+ (2) Fix _copy_mc_to_iter() so that the xarray segment updates count and
+     iov_offset in the iterator before returning.
 
-Should have been fixed in Linux 5.3 by commit 7402a4fedc2b ("SUNRPC:
-Fix up backchannel slot table accounting") AFAICT.
+ (3) Fix iov_iter_alignment() to not loop in the xarray case.  Because the
+     middle pages are all whole pages, only the end pages need be
+     considered - and this can be reduced to just looking at the start
+     position in the xarray and the iteration size.
 
---
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trond.myklebust@hammerspace.com
+ (4) Fix iov_iter_advance() to limit the size of the advance to no more
+     than the remaining iteration size.
 
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Link: https://lore.kernel.org/r/YIVrJT8GwLI0Wlgx@zeniv-ca.linux.org.uk [1]
+Link: https://lore.kernel.org/r/161918448151.3145707.11541538916600921083.=
+stgit@warthog.procyon.org.uk [2]
+---
+ include/linux/uio.h |    1 -
+ lib/iov_iter.c      |    5 +++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/uio.h b/include/linux/uio.h
+index 5f5ffc45d4aa..d3ec87706d75 100644
+--- a/include/linux/uio.h
++++ b/include/linux/uio.h
+@@ -10,7 +10,6 @@
+ #include <uapi/linux/uio.h>
+ =
+
+ struct page;
+-struct address_space;
+ struct pipe_inode_info;
+ =
+
+ struct kvec {
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index 44fa726a8323..61228a6c69f8 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -791,6 +791,8 @@ size_t _copy_mc_to_iter(const void *addr, size_t bytes=
+, struct iov_iter *i)
+ 			curr_addr =3D (unsigned long) from;
+ 			bytes =3D curr_addr - s_addr - rem;
+ 			rcu_read_unlock();
++			i->iov_offset +=3D bytes;
++			i->count -=3D bytes;
+ 			return bytes;
+ 		}
+ 		})
+@@ -1147,6 +1149,7 @@ void iov_iter_advance(struct iov_iter *i, size_t siz=
+e)
+ 		return;
+ 	}
+ 	if (unlikely(iov_iter_is_xarray(i))) {
++		size =3D min(size, i->count);
+ 		i->iov_offset +=3D size;
+ 		i->count -=3D size;
+ 		return;
+@@ -1346,6 +1349,8 @@ unsigned long iov_iter_alignment(const struct iov_it=
+er *i)
+ 			return size | i->iov_offset;
+ 		return size;
+ 	}
++	if (unlikely(iov_iter_is_xarray(i)))
++		return (i->xarray_start + i->iov_offset) | i->count;
+ 	iterate_all_kinds(i, size, v,
+ 		(res |=3D (unsigned long)v.iov_base | v.iov_len, 0),
+ 		res |=3D v.bv_offset | v.bv_len,
 
