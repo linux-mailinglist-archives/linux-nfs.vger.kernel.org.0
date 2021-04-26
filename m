@@ -2,152 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BBA136A9D4
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Apr 2021 01:15:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CB2236B43B
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Apr 2021 15:47:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231435AbhDYXPp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 25 Apr 2021 19:15:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:22179 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231247AbhDYXPo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 25 Apr 2021 19:15:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1619392503;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=n+JuniTf6/0QJHyHH9jZCObdX5/aD9evlCt++gaJJ1U=;
-        b=HaPfit6tCzXwJczD3kpJvAV4E315OpFWx2DQGRjxjNxWgg3Yy/3QFdemjhTdu4Bewn+YN7
-        ynvZSNMLuDkiKne+P8M01zFapqo+Z38gltWbtKbb9Pm88rRKEB6HlfYWrpkdBjMRIRWhoJ
-        ghivv38PwkiG8CZ+P+NzR5g0IEZznv8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-26-BQSQMrQCPYm7CjiNMMlK1Q-1; Sun, 25 Apr 2021 19:15:01 -0400
-X-MC-Unique: BQSQMrQCPYm7CjiNMMlK1Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 009458030B5;
-        Sun, 25 Apr 2021 23:14:59 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-124.rdu2.redhat.com [10.10.112.124])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C7785D74F;
-        Sun, 25 Apr 2021 23:14:51 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <161918448151.3145707.11541538916600921083.stgit@warthog.procyon.org.uk>
-References: <161918448151.3145707.11541538916600921083.stgit@warthog.procyon.org.uk> <161918446704.3145707.14418606303992174310.stgit@warthog.procyon.org.uk>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        id S233680AbhDZNry (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Apr 2021 09:47:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230250AbhDZNrx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Apr 2021 09:47:53 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FCDC061574;
+        Mon, 26 Apr 2021 06:47:12 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 966213723; Mon, 26 Apr 2021 09:47:11 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 966213723
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1619444831;
+        bh=o1uV8mMXke6YWci50VHqZhlaQRReuOaqTAAYtR+elE0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qTPyU0qm8YYRWeSjDPQeY0Bdm37EJnecOt71xY/pT/e03dK0uipO2rk+Xu/IAsYhk
+         CTtheiYvyfbzjjf7L6A+8KGZo5dbWd1GqkfBAkeN5GYAuyEJaIeQDsb1o359SmOPOY
+         M+CIqqYl5mV/6uL/wKRw+HM5O2GYRXkXvxqhfQe4=
+Date:   Mon, 26 Apr 2021 09:47:11 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Theodore Ts'o <tytso@mit.edu>, Al Viro <viro@zeniv.linux.org.uk>,
+        Leon Romanovsky <leon@kernel.org>,
+        "Shelat, Abhi" <a.shelat@northeastern.edu>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Aditya Pakki <pakki001@umn.edu>,
+        Chuck Lever <chuck.lever@oracle.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jeff Layton <jlayton@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] iov_iter: Four fixes for ITER_XARRAY
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] SUNRPC: Add a check for gss_release_msg
+Message-ID: <20210426134711.GE21222@fieldses.org>
+References: <20210422193950.GA25415@fieldses.org>
+ <YIMDCNx4q6esHTYt@unreal>
+ <20210423180727.GD10457@fieldses.org>
+ <YIMgMHwYkVBdrICs@unreal>
+ <20210423214850.GI10457@fieldses.org>
+ <YIRkxQCVr6lFM3r3@zeniv-ca.linux.org.uk>
+ <20210424213454.GA4239@fieldses.org>
+ <YIS6t+X1DOKlB+Z/@mit.edu>
+ <YIUMYYcf/VW4a28k@kroah.com>
+ <20210426133605.GD21222@fieldses.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3545033.1619392490.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 26 Apr 2021 00:14:50 +0100
-Message-ID: <3545034.1619392490@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210426133605.GD21222@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Al,
+On Mon, Apr 26, 2021 at 09:36:05AM -0400, J. Bruce Fields wrote:
+> On Sun, Apr 25, 2021 at 08:29:53AM +0200, Greg KH wrote:
+> > On Sat, Apr 24, 2021 at 08:41:27PM -0400, Theodore Ts'o wrote:
+> > > On Sat, Apr 24, 2021 at 05:34:54PM -0400, J. Bruce Fields wrote:
+> > > > In Greg's revert thread, Kangjie Lu's messages are also missing from the
+> > > > archives:
+> > > > 
+> > > > 	https://lore.kernel.org/lkml/20210421130105.1226686-1-gregkh@linuxfoundation.org/
+> > > >
+> > > 
+> > > I'm going to guess it's one of two things.  The first is that they are
+> > > sending mail messages with HTML which is getting bounced; the other
+> > > possibility is that some of the messages were sent only to Greg, and
+> > > he added the mailing list back to the cc.
+> > > 
+> > > So for exampple, message-id
+> > > CA+EnHHSw4X+ubOUNYP2zXNpu70G74NN1Sct2Zin6pRgq--TqhA@mail.gmail.com
+> > > isn't in lore, but Greg's reply:
+> > > 
+> > > https://lore.kernel.org/linux-nfs/YH%2FfM%2FTsbmcZzwnX@kroah.com/
+> > > 
+> > > can be found in lore.kernel.org was presumably because the message
+> > > where Aditya accused "wild accusations bordering on slander" and his
+> > > claim that his patches were the fault of a "new static code analyzer"
+> > > was sent only to Greg?  Either that, or it was bounced because he sent
+> > > it from gmail without suppressing HTML.
+> > 
+> > I did not "add back" the mailing list, it looks like they sent email in
+> > html format which prevented it from hitting the public lists.  I have
+> > the originals sent to me that shows the author intended it to be public.
+> 
+> Yes, the list cc's are all on there.
+> 
+> It's multipart/alternative with equivalent plain text and html parts,
+> which appears to be gmail's default behavior.  Is that really rejected
+> by default?
 
-I think this patch should include all the fixes necessary.  I could merge
-it in, but I think it might be better to tag it on the end as an additiona=
-l
-patch.
+Hah, when I sent that mail I quoted parts of the message including the
+Content-Type headers delineating the parts and got an immediate bounce
+saying "The message contains HTML subpart, therefore we consider it SPAM
+or Outlook Virus.  TEXT/PLAIN is accepted".
 
-David
----
-iov_iter: Four fixes for ITER_XARRAY
+Which seems perfectly clear.  OK, sorry for the noise!
 
-Fix four things[1] in the patch that adds ITER_XARRAY[2]:
-
- (1) Remove the address_space struct predeclaration.  This is a holdover
-     from when it was ITER_MAPPING.
-
- (2) Fix _copy_mc_to_iter() so that the xarray segment updates count and
-     iov_offset in the iterator before returning.
-
- (3) Fix iov_iter_alignment() to not loop in the xarray case.  Because the
-     middle pages are all whole pages, only the end pages need be
-     considered - and this can be reduced to just looking at the start
-     position in the xarray and the iteration size.
-
- (4) Fix iov_iter_advance() to limit the size of the advance to no more
-     than the remaining iteration size.
-
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Link: https://lore.kernel.org/r/YIVrJT8GwLI0Wlgx@zeniv-ca.linux.org.uk [1]
-Link: https://lore.kernel.org/r/161918448151.3145707.11541538916600921083.=
-stgit@warthog.procyon.org.uk [2]
----
- include/linux/uio.h |    1 -
- lib/iov_iter.c      |    5 +++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/uio.h b/include/linux/uio.h
-index 5f5ffc45d4aa..d3ec87706d75 100644
---- a/include/linux/uio.h
-+++ b/include/linux/uio.h
-@@ -10,7 +10,6 @@
- #include <uapi/linux/uio.h>
- =
-
- struct page;
--struct address_space;
- struct pipe_inode_info;
- =
-
- struct kvec {
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index 44fa726a8323..61228a6c69f8 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -791,6 +791,8 @@ size_t _copy_mc_to_iter(const void *addr, size_t bytes=
-, struct iov_iter *i)
- 			curr_addr =3D (unsigned long) from;
- 			bytes =3D curr_addr - s_addr - rem;
- 			rcu_read_unlock();
-+			i->iov_offset +=3D bytes;
-+			i->count -=3D bytes;
- 			return bytes;
- 		}
- 		})
-@@ -1147,6 +1149,7 @@ void iov_iter_advance(struct iov_iter *i, size_t siz=
-e)
- 		return;
- 	}
- 	if (unlikely(iov_iter_is_xarray(i))) {
-+		size =3D min(size, i->count);
- 		i->iov_offset +=3D size;
- 		i->count -=3D size;
- 		return;
-@@ -1346,6 +1349,8 @@ unsigned long iov_iter_alignment(const struct iov_it=
-er *i)
- 			return size | i->iov_offset;
- 		return size;
- 	}
-+	if (unlikely(iov_iter_is_xarray(i)))
-+		return (i->xarray_start + i->iov_offset) | i->count;
- 	iterate_all_kinds(i, size, v,
- 		(res |=3D (unsigned long)v.iov_base | v.iov_len, 0),
- 		res |=3D v.bv_offset | v.bv_len,
-
+--b.
