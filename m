@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD8AB36B7F7
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Apr 2021 19:20:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3504D36B7F8
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Apr 2021 19:20:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236715AbhDZRUq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Apr 2021 13:20:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57260 "EHLO
+        id S236845AbhDZRUs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Apr 2021 13:20:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236845AbhDZRUj (ORCPT
+        with ESMTP id S236131AbhDZRUj (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Apr 2021 13:20:39 -0400
-Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B38C06138F
-        for <linux-nfs@vger.kernel.org>; Mon, 26 Apr 2021 10:19:56 -0700 (PDT)
-Received: by mail-io1-xd2e.google.com with SMTP id t21so5943922iob.2
-        for <linux-nfs@vger.kernel.org>; Mon, 26 Apr 2021 10:19:56 -0700 (PDT)
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D150C061342
+        for <linux-nfs@vger.kernel.org>; Mon, 26 Apr 2021 10:19:57 -0700 (PDT)
+Received: by mail-io1-xd32.google.com with SMTP id t21so5943964iob.2
+        for <linux-nfs@vger.kernel.org>; Mon, 26 Apr 2021 10:19:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rHzBpwJvTvHqQjiOwfvuYiOBLOQx3SSYI4e3E1a/UCY=;
-        b=BvYHmZ4XMGYFfqiHp8K29N/cv1WmfJWo+35iEeP7Hp8lsCO26mxTx4lOW4MkgA0S6X
-         iE0Krv/3kGyu7dJXJxQEARMcUkv6zee8Lobf6D3XPtHIqe9pFCN0ByXF8JCv4kWCZ/GW
-         CwMnKHhxdPfYwi9imMBBFqXdVJKy3zB1oDhR1D7umvC4pTe8Lcceob3k+s1d6U6DNehh
-         5MXdFV0erAE+YSXEVrCyAsiSDGk6YeQs3zpDBoeECs0FlR1AC9GZnZKKihMUQbNoL0G7
-         j1vKp7+JdPT5sxaohuINAAbVFk2dOmJf4Wb3SuV0IKVRE3UluCMxyrm0uSLKQTSzNDQ9
-         /nBg==
+        bh=+Fg1CTEpqXVj95kKutPWoBVqcxEtRPxgNEonrsSkYnU=;
+        b=T+bZ1Pi+9f1+8SNltSJWUMZ3WPt8l+x0e+1Y+blH9uONSfWta8ZlZcYps5kc5QFR45
+         dFk6B9V4uIA5FQhnukDbi5vDXGacarIJfPbMgkIp3TcogKpZOvfVx8PuuFJe/wPoojEc
+         LUtkczjj+ef2QOZ/qpK4Cog2Qel8yv2atTIjrViemZElmKGTR8LtqEeaIRObaRnX55iW
+         TYSPNniIJL8dNyldrQ9d0QzT5TxtDAGloG6PkjiqKHFUo5e/2GZ1l3AbarRPI9uJFAOP
+         MzUllNfYPFOe6ki6vMulKIcPAATHsj5yocWnuO3oWghp9Wlw2lgVBgHfViiCK7X48b32
+         sG4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rHzBpwJvTvHqQjiOwfvuYiOBLOQx3SSYI4e3E1a/UCY=;
-        b=ServJwTe7INHFEpZr1eT3C3m6idKwIPixJofLVmsbBd8Mdjybfeyk2aBhsON1qavKq
-         7Q4WFYvN7WIo7JbytmIvVs/Dapgl883qh82U0wqzYbk1vg+JPDHR5SZLkrQ7ElfZXXee
-         i7R+1GKsJiB5Q2W0mW2tKls2L6zSaysCyRpdLmLHDZ8zHOhDiiDspjiPAqcProzaWeWl
-         e9FfMXY1yI93TcqVINYeW+gny42J4RXDu+GhE+RoZUhQ3kBXP/5rOpd0Cq8V0ZczieV7
-         nNH3zNyWjs34NmHec5gZwVw8BB2sypWxJ1NBfrrhxYufj5Z831Qa/Vml4blS7wQuxzHO
-         BXUg==
-X-Gm-Message-State: AOAM531kL4c8Xd4hKAJk5UjirPcICvxSDU5IwRglD5WqiUM68evPebPW
-        ofK8Bo3zA0DHbn6QERfGC8QAgw2Cxrgbtg==
-X-Google-Smtp-Source: ABdhPJysd5DihesdXMI5/3vRxfAp0KvNR7B78U3B5KG7DRHJntb4T5+w0HNHQ7DeOPUbTihsigZAzw==
-X-Received: by 2002:a6b:7314:: with SMTP id e20mr15321646ioh.74.1619457595680;
-        Mon, 26 Apr 2021 10:19:55 -0700 (PDT)
+        bh=+Fg1CTEpqXVj95kKutPWoBVqcxEtRPxgNEonrsSkYnU=;
+        b=I6Mmbt0EkaU31f21l6nVgTBoQ0uG8ppGbGwt+Wxfa/5ETJWZ8Xqs/iQO3krcjhCuWu
+         O2JSHF+VaSg+DxUfG8olxZKnO2XSzGyDUbQpu+NBtQF+SE8QT6cbMuRHH7ATa6Tp2dXQ
+         uUFYzHVjOIQRJULarZv+ZFyl1AcLpoGrwu+p6ckg3ws17ZLHMYD7ZoG4zD69SMXKZLXr
+         aIwf4FYYvhFp/3ycNNH05SrpzW6naVbl496nUneZRNmnMQXZtCqiVP6MCq6h8oodAYOa
+         yZmQLmOuDQvviMLjTmRzioCr+hwwhtOPfUgjIp3lLiTAMuXPne6vKfIXyZEIFrT7WowJ
+         y9RA==
+X-Gm-Message-State: AOAM533fqanAPM52BglLWqhRCwJQbojkrpc/rxqDDq/39/r/NSfYHmUi
+        iBx7aCyQ3S1ZchUnwiCugyY=
+X-Google-Smtp-Source: ABdhPJyFNC0H8XAj/meYUgoFh6LBMjCHXuw1+HLOiUbAZQevA3c7/1BwTgbtJn6sNyvT6UIuHHnRrQ==
+X-Received: by 2002:a05:6602:1641:: with SMTP id y1mr8853731iow.54.1619457596903;
+        Mon, 26 Apr 2021 10:19:56 -0700 (PDT)
 Received: from kolga-mac-1.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id x13sm207297ilq.85.2021.04.26.10.19.54
+        by smtp.gmail.com with ESMTPSA id x13sm207297ilq.85.2021.04.26.10.19.55
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Apr 2021 10:19:55 -0700 (PDT)
+        Mon, 26 Apr 2021 10:19:56 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 05/13] sunrpc: add xprt id
-Date:   Mon, 26 Apr 2021 13:19:39 -0400
-Message-Id: <20210426171947.99233-6-olga.kornievskaia@gmail.com>
+Subject: [PATCH v3 06/13] sunrpc: add IDs to multipath
+Date:   Mon, 26 Apr 2021 13:19:40 -0400
+Message-Id: <20210426171947.99233-7-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <20210426171947.99233-1-olga.kornievskaia@gmail.com>
 References: <20210426171947.99233-1-olga.kornievskaia@gmail.com>
@@ -62,102 +62,101 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Dan Aloni <dan@kernelim.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-This adds a unique identifier for a sunrpc transport in sysfs, which is
-similarly managed to the unique IDs of clients.
+This is used to uniquely identify sunrpc multipath objects in /sys.
 
 Signed-off-by: Dan Aloni <dan@kernelim.com>
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- include/linux/sunrpc/xprt.h |  2 ++
- net/sunrpc/sunrpc_syms.c    |  1 +
- net/sunrpc/xprt.c           | 26 ++++++++++++++++++++++++++
- 3 files changed, 29 insertions(+)
+ include/linux/sunrpc/xprtmultipath.h |  4 ++++
+ net/sunrpc/sunrpc_syms.c             |  1 +
+ net/sunrpc/xprtmultipath.c           | 26 ++++++++++++++++++++++++++
+ 3 files changed, 31 insertions(+)
 
-diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
-index d81fe8b364d0..82294d06075c 100644
---- a/include/linux/sunrpc/xprt.h
-+++ b/include/linux/sunrpc/xprt.h
-@@ -185,6 +185,7 @@ enum xprt_transports {
- struct rpc_xprt {
- 	struct kref		kref;		/* Reference count */
- 	const struct rpc_xprt_ops *ops;		/* transport methods */
-+	unsigned int		id;		/* transport id */
+diff --git a/include/linux/sunrpc/xprtmultipath.h b/include/linux/sunrpc/xprtmultipath.h
+index c6cce3fbf29d..ef95a6f18ccf 100644
+--- a/include/linux/sunrpc/xprtmultipath.h
++++ b/include/linux/sunrpc/xprtmultipath.h
+@@ -14,6 +14,7 @@ struct rpc_xprt_switch {
+ 	spinlock_t		xps_lock;
+ 	struct kref		xps_kref;
  
- 	const struct rpc_timeout *timeout;	/* timeout parms */
- 	struct sockaddr_storage	addr;		/* server address */
-@@ -368,6 +369,7 @@ struct rpc_xprt *	xprt_alloc(struct net *net, size_t size,
- 				unsigned int num_prealloc,
- 				unsigned int max_req);
- void			xprt_free(struct rpc_xprt *);
-+void			xprt_cleanup_ids(void);
++	unsigned int		xps_id;
+ 	unsigned int		xps_nxprts;
+ 	unsigned int		xps_nactive;
+ 	atomic_long_t		xps_queuelen;
+@@ -71,4 +72,7 @@ extern struct rpc_xprt *xprt_iter_get_next(struct rpc_xprt_iter *xpi);
  
- static inline int
- xprt_enable_swap(struct rpc_xprt *xprt)
+ extern bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
+ 		const struct sockaddr *sap);
++
++extern void xprt_multipath_cleanup_ids(void);
++
+ #endif
 diff --git a/net/sunrpc/sunrpc_syms.c b/net/sunrpc/sunrpc_syms.c
-index 3b57efc692ec..b61b74c00483 100644
+index b61b74c00483..691c0000e9ea 100644
 --- a/net/sunrpc/sunrpc_syms.c
 +++ b/net/sunrpc/sunrpc_syms.c
-@@ -133,6 +133,7 @@ cleanup_sunrpc(void)
- {
+@@ -134,6 +134,7 @@ cleanup_sunrpc(void)
  	rpc_sysfs_exit();
  	rpc_cleanup_clids();
-+	xprt_cleanup_ids();
+ 	xprt_cleanup_ids();
++	xprt_multipath_cleanup_ids();
  	rpcauth_remove_module();
  	cleanup_socket_xprt();
  	svc_cleanup_xprt_sock();
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index e5b5a960a69b..fd58a3a16add 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1722,6 +1722,30 @@ static void xprt_free_all_slots(struct rpc_xprt *xprt)
- 	}
+diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
+index 78c075a68c04..4969a4c216f7 100644
+--- a/net/sunrpc/xprtmultipath.c
++++ b/net/sunrpc/xprtmultipath.c
+@@ -86,6 +86,30 @@ void rpc_xprt_switch_remove_xprt(struct rpc_xprt_switch *xps,
+ 	xprt_put(xprt);
  }
  
-+static DEFINE_IDA(rpc_xprt_ids);
++static DEFINE_IDA(rpc_xprtswitch_ids);
 +
-+void xprt_cleanup_ids(void)
++void xprt_multipath_cleanup_ids(void)
 +{
-+	ida_destroy(&rpc_xprt_ids);
++	ida_destroy(&rpc_xprtswitch_ids);
 +}
 +
-+static int xprt_alloc_id(struct rpc_xprt *xprt)
++static int xprt_switch_alloc_id(struct rpc_xprt_switch *xps, gfp_t gfp_flags)
 +{
 +	int id;
 +
-+	id = ida_simple_get(&rpc_xprt_ids, 0, 0, GFP_KERNEL);
++	id = ida_simple_get(&rpc_xprtswitch_ids, 0, 0, gfp_flags);
 +	if (id < 0)
 +		return id;
 +
-+	xprt->id = id;
++	xps->xps_id = id;
 +	return 0;
 +}
 +
-+static void xprt_free_id(struct rpc_xprt *xprt)
++static void xprt_switch_free_id(struct rpc_xprt_switch *xps)
 +{
-+	ida_simple_remove(&rpc_xprt_ids, xprt->id);
++	ida_simple_remove(&rpc_xprtswitch_ids, xps->xps_id);
 +}
 +
- struct rpc_xprt *xprt_alloc(struct net *net, size_t size,
- 		unsigned int num_prealloc,
- 		unsigned int max_alloc)
-@@ -1734,6 +1758,7 @@ struct rpc_xprt *xprt_alloc(struct net *net, size_t size,
- 	if (xprt == NULL)
- 		goto out;
+ /**
+  * xprt_switch_alloc - Allocate a new struct rpc_xprt_switch
+  * @xprt: pointer to struct rpc_xprt
+@@ -103,6 +127,7 @@ struct rpc_xprt_switch *xprt_switch_alloc(struct rpc_xprt *xprt,
+ 	if (xps != NULL) {
+ 		spin_lock_init(&xps->xps_lock);
+ 		kref_init(&xps->xps_kref);
++		xprt_switch_alloc_id(xps, gfp_flags);
+ 		xps->xps_nxprts = xps->xps_nactive = 0;
+ 		atomic_long_set(&xps->xps_queuelen, 0);
+ 		xps->xps_net = NULL;
+@@ -136,6 +161,7 @@ static void xprt_switch_free(struct kref *kref)
+ 			struct rpc_xprt_switch, xps_kref);
  
-+	xprt_alloc_id(xprt);
- 	xprt_init(xprt, net);
- 
- 	for (i = 0; i < num_prealloc; i++) {
-@@ -1762,6 +1787,7 @@ void xprt_free(struct rpc_xprt *xprt)
- {
- 	put_net(xprt->xprt_net);
- 	xprt_free_all_slots(xprt);
-+	xprt_free_id(xprt);
- 	kfree_rcu(xprt, rcu);
+ 	xprt_switch_free_entries(xps);
++	xprt_switch_free_id(xps);
+ 	kfree_rcu(xps, xps_rcu);
  }
- EXPORT_SYMBOL_GPL(xprt_free);
+ 
 -- 
 2.27.0
 
