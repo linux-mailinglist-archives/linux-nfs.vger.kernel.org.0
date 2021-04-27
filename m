@@ -2,76 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EEBE36CC69
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Apr 2021 22:37:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8865C36CDBD
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Apr 2021 23:10:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238966AbhD0UiD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 27 Apr 2021 16:38:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235610AbhD0UiC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 27 Apr 2021 16:38:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3E6C1613BC;
-        Tue, 27 Apr 2021 20:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619555839;
-        bh=PvEYDkf7uAo28ftXRBj2pXOtz9uNQzYF1I8uwdixnt0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=GHcfP7kbs+Kz9nbvjJMvQk2ic9L5nhPtAucbDATH0s/Pa5LFtWSnMHygPJw3unIFP
-         HuCN0DUe3rO3d5/dCafGjXgioRxq/Jqo8gaOLurzRVcjbv6wi4qrWGscfbK6/mVd8/
-         n2kSK0zZWCEJAF5K1atT2+XU0e+w5Woy3+3bl2FLpKjkHSxSfaRjdtMBdyqJr5K1Sl
-         0if70CdW8moppFrgah1TJDXcYqIC+9NCYr5BBJ1Iwns0j7pFBRKuY8if431YOH6nfL
-         YwRijOKdpH83Xbrejq1HeYTpeTsXyaE2489xbF7topRpyVLvc+H9X6yskK45jjgtLx
-         ElyEtDXLQPanQ==
-Message-ID: <5035dded7d076718e2e3e6703c688f992e5f93de.camel@kernel.org>
-Subject: Re: [GIT PULL] Network fs helper library & fscache kiocb API
-From:   Jeff Layton <jlayton@kernel.org>
-To:     pr-tracker-bot@kernel.org, David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Christoph Hellwig <hch@lst.de>,
-        David Wysochanski <dwysocha@redhat.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Steve French <sfrench@samba.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        ceph-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cachefs@redhat.com, linux-cifs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net
-Date:   Tue, 27 Apr 2021 16:37:16 -0400
-In-Reply-To: <161955556055.29692.16460754787055823751.pr-tracker-bot@kernel.org>
-References: <3779937.1619478404@warthog.procyon.org.uk>
-         <161955556055.29692.16460754787055823751.pr-tracker-bot@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.40.0 (3.40.0-1.fc34) 
+        id S239055AbhD0VL3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 27 Apr 2021 17:11:29 -0400
+Received: from gaia.bitwizard.nl ([149.210.166.240]:34104 "EHLO
+        gaia.bitwizard.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236994AbhD0VL3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Apr 2021 17:11:29 -0400
+Received: from abra2.bitwizard.nl (unknown [10.8.0.6])
+        by gaia.bitwizard.nl (Postfix) with ESMTPS id 8FAAF5A0058;
+        Tue, 27 Apr 2021 23:10:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bitwizard.nl;
+        s=default; t=1619557844;
+        bh=/EukPnU+lB0aLMe1uASTF5COl8QSgbnoTFlZNoQ9DtU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O4hhPHK+tcbi6Twz2FWZc4T7j0wKqC2jGqXYHLDYzvYqZH1rQSE+e2uNqcIBU3H6z
+         k3VleB26kbwTzdWoAf7BM3sBjUhqXTwIknWRPO5U9Rrm25/ihpHv3WE7rFcIslOVmR
+         IK7PpQBaIUkgQzjWZYPKL87+hDJAp8QGVPZzW9npB3yUGyjvB+f2aehbLMMf6Ssxb4
+         sCatH8wsU4t44cGlcyGQ8v+G+HqPxvvAB6HaCXzm4GxiW/ru2c2O8hae6nH7VAVUqo
+         kFusAKIOJce8769h33pEaqygT8CVDnDSXOYtjjQOa3cBhBKUov+wc+jbCr35o3GRXA
+         3coIcstAGoUUA==
+Received: by abra2.bitwizard.nl (Postfix, from userid 1000)
+        id 6437CE42624; Tue, 27 Apr 2021 23:10:44 +0200 (CEST)
+Date:   Tue, 27 Apr 2021 23:10:44 +0200
+From:   Rogier Wolff <R.E.Wolff@BitWizard.nl>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
+Subject: Re: Lockd error message is unclear.
+Message-ID: <20210427211044.vxvgieqe4ud5lh7o@BitWizard.nl>
+Organization: BitWizard B.V.
+References: <20210427190311.cjjzeded7hl3fkew@BitWizard.nl>
+ <20210427193452.GA11361@fieldses.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210427193452.GA11361@fieldses.org>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2021-04-27 at 20:32 +0000, pr-tracker-bot@kernel.org wrote:
-> The pull request you sent on Tue, 27 Apr 2021 00:06:44 +0100:
+On Tue, Apr 27, 2021 at 03:34:52PM -0400, J. Bruce Fields wrote:
+> On Tue, Apr 27, 2021 at 09:03:11PM +0200, Rogier Wolff wrote:
+> > 
+> > Hi, 
+> > 
+> > Two things..... 
+> > 
+> > I got: 
+> > 
+> >    lockd: cannot monitor <client> 
+> > 
+> > in the logfile and the client was terrily slow/not working at all.
+> > 
+> > everything pointed to a lockd problem... 
+> > 
+> > In the end... it turns out that my rpc.statd stopped working.  I had
+> > to go and download the sources to figure this out... I would firstly
+> > suggest to improve the error message to give others running into this
+> > more hints as to where to look.
+> > 
+> > The erorr message on line 169 of lockd.c could read: 
+> > 
+> > 	lockd: Error in the rpc to rpc.statd to monitor %s\n
+> > 
+> > Would it be an idea to print the res.status error code? 
 > 
-> > git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/netfs-lib-20210426
-> 
-> has been merged into torvalds/linux.git:
-> https://git.kernel.org/torvalds/c/820c4bae40cb56466cfed6409e00d0f5165a990c
-> 
-> Thank you!
-> 
+> I'm not sure about the wording, but including the error code sounds like
+> a good idea.  (Would that have made a difference in your case?)
 
-Hi Ilya,
+Not sure. Of course I was just "looking for a solution". So once I
+figured out that rpc.statd was missing I went looking for how that
+came about. 
 
-With this, we should be clear to send a PR to Linus for what's in
-master. The patches that Viro was carrying are also in mainline now too.
+But as it was the prime culprit was "lockd is misbehaving". With a
+better error message you can shift the blame away from your part of
+the system. :-)
 
-Cheers,
+> > second?) timeout in nsm_mon_unmon and the big backlog of requests that
+> > result in the same call and timeout that frustrate the client... )
+> 
+> The -ECONNREFUSED case?
+> 
+> I'm not sure why it retries there.  Maybe just to allow stopping and
+> starting rpc.statd (e.g. for upgrades) without failing operations?
+
+Not sure IF it was retrying. Maybe not. But starting "google-chrome"
+with 40 open tabs didn't progress to any tabs loading inside the half
+hour that I was looking for why this was happening (unable to google
+for a solution).... So in the meantime it was constantly spewing the
+error message, rate limited to 10 per minute....
+
+	Roger.
+
 -- 
-Jeff Layton <jlayton@kernel.org>
-
+** R.E.Wolff@BitWizard.nl ** https://www.BitWizard.nl/ ** +31-15-2049110 **
+**    Delftechpark 11 2628 XJ  Delft, The Netherlands.  KVK: 27239233    **
+f equals m times a. When your f is steady, and your m is going down
+your a is going up.  -- Chris Hadfield about flying up the space shuttle.
