@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3468136E0FF
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Apr 2021 23:32:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD98D36E0FE
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Apr 2021 23:32:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230385AbhD1VdI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S231320AbhD1VdI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Wed, 28 Apr 2021 17:33:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43160 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230515AbhD1VdH (ORCPT
+        with ESMTP id S230385AbhD1VdH (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Apr 2021 17:33:07 -0400
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7F4EC06138C
-        for <linux-nfs@vger.kernel.org>; Wed, 28 Apr 2021 14:32:20 -0700 (PDT)
-Received: by mail-qk1-x730.google.com with SMTP id z2so28212133qkb.9
-        for <linux-nfs@vger.kernel.org>; Wed, 28 Apr 2021 14:32:20 -0700 (PDT)
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D61C06138B
+        for <linux-nfs@vger.kernel.org>; Wed, 28 Apr 2021 14:32:21 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id i12so33636744qke.3
+        for <linux-nfs@vger.kernel.org>; Wed, 28 Apr 2021 14:32:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zLekTvxobSQ6+oTt34AkXgwZSXUp+mWS4nVt6ovQ0yI=;
-        b=KQCZ+oGG4pOyXVB55zvlk9TIOWJvcHwdox1aCnhRLuPQqvVPI+L0GzORTGuzhPyqqX
-         YBF9+Yv5fgIj63ZBJidah9YLXwqD0P4jtY8lZ3Ch4qkwm2Df+y1FPdQdO946RBfqcMFi
-         srr1cPocMEDvbRVWCiEefxstm03Q5PXttJzM9XN3qvk6QNCXhtzOgHxw3ruc+lh+6Att
-         1mTJfftmrfo1sxymLVqQxusBJ1VExf4txmmdq9M6/JMysRfpbmLyhU1pUPQdZjioIj1e
-         AFNcv0GSqfI/uSCYduGlVa+JRIp/8vgh9d3pwSrpKvZ72xwE2GQu+OVjyKQwggQfFBe4
-         inog==
+        bh=w0SMbaDJ8a0kqyaBonauxqdv5qcnDIjixu1ZO1KpXNc=;
+        b=nXld/Sv2NpX4W4882PWk6sgk/tQy3dfGCKO36qTxXp2M4CRxJ4izWm08/ZmVMESNwy
+         idSTxRUmlFOdWbpb1Lq98hVOg3MCzNqSpB+Pk4+9RLcQNdTqjqpVBFJ/bxx29WGivaBa
+         Pa/5yg9i36xxUa1byEuR9fP2a8ioK6Y3Z2FPcJBQVDY2jphNsNJfrmTg0/nYI5T+RsaD
+         2hnFvd8jebGQeXa/PU7XDV4uiTKThvb7xVDjstfR6cVYmki2+1Rb127uKB8M6lGv8CUm
+         7df8//tXTgsXK2r8t+dnyjTRpSRwOQwvmAxN61lKND2lOg6vTTsVTuVH0E7vw7yDfe2k
+         DLvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zLekTvxobSQ6+oTt34AkXgwZSXUp+mWS4nVt6ovQ0yI=;
-        b=P0X8OqVdjy0ooK4LuuJRWsONNVMxrFUJTbRpeD06nM30sixDh00MuIFLN5rzTQKG+L
-         P479KPMc1t2bzh8LHjLja48FZ32KLsgR0ovZQdMBgpoOHnVWxtosn6nTlNvfqu3OFP8p
-         JMYY63nmpwPXlmRGtnTutGIMPjTudRn+lwncbYEgGRKgfngZ2Mdk7PtUDCv1FSxTbqTS
-         CW2LHUKrT2y1Zq50+yoEh/PNBLeQwTBPypGkzaDkOVH6VGYgVhgpis7YDWu2j2BW5EFf
-         Avfj6Uu0xx3ye5ao1RiwqNFQx6TirWjLjYGt0VelJ/kpcMdTaEXSLeH3Lkosf2a8hERA
-         h0QA==
-X-Gm-Message-State: AOAM53189LhRz4R7moYbBsXr2gtL52/t6wXP0i/pRMGiEiLdtpOfpt8N
-        /sewijF5tZKCuwkj7KZ901w=
-X-Google-Smtp-Source: ABdhPJwjG6Y5Bybo3hJXK2pZNfCTpFv5g/5nQloJy9KAetWeglTissy2Y+45Mxa8A93joMjVTrU4OA==
-X-Received: by 2002:a37:42c3:: with SMTP id p186mr31409504qka.352.1619645539937;
-        Wed, 28 Apr 2021 14:32:19 -0700 (PDT)
+        bh=w0SMbaDJ8a0kqyaBonauxqdv5qcnDIjixu1ZO1KpXNc=;
+        b=XGxAFb5avYGxlEaXlU5BQRfcEZ2XIHfwISYOjYl7Neud4dKFGgQ+boToDQEhMJ7Chn
+         MxWrOtkJ6twJnHk99/RE2DPBsaLuA8C0OBhBgQCDIJz+wE2sRYQFWiJOKOzL0ND03YhK
+         4rdaHSnBdvfnUGrlG7Tnbnfl+F30iFhU6iMYHToLzet2DUULW6Mqhr94UaY1nh5AO5NO
+         7tllOUcYXvfGJiS/ucU3tRh9ywQUxmvTqiy1WVuNHKtH4NET8vgPmfgu1efhlYkL5ehJ
+         QDCBXeW8um27PqjN0edZl5ReuYTuTNXrqIMPjpkacojImBRF2WLfR/wtcWQLzX6d1r9f
+         7lAQ==
+X-Gm-Message-State: AOAM531vgMSJlfijAnZqjOvASScysY1lLGgXzhCIQ5fMvUhCC4xYXGQ+
+        bZzblUfIZ+0VTr7U22dI9Eo=
+X-Google-Smtp-Source: ABdhPJyblJPPJDQZZaIiNHqZ7gL2teuKDhjPCjSiSWTE1uPY79dD8l8ZHBLzztT28cKj7AjDNABzLQ==
+X-Received: by 2002:a37:a597:: with SMTP id o145mr19537356qke.265.1619645541131;
+        Wed, 28 Apr 2021 14:32:21 -0700 (PDT)
 Received: from kolga-mac-1.vpn.netapp.com (nat-216-240-30-11.netapp.com. [216.240.30.11])
-        by smtp.gmail.com with ESMTPSA id v3sm710269qkb.124.2021.04.28.14.32.18
+        by smtp.gmail.com with ESMTPSA id v3sm710269qkb.124.2021.04.28.14.32.20
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Apr 2021 14:32:19 -0700 (PDT)
+        Wed, 28 Apr 2021 14:32:20 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v4 11/13] sunrpc: add dst_attr attributes to the sysfs xprt directory
-Date:   Wed, 28 Apr 2021 17:32:01 -0400
-Message-Id: <20210428213203.40059-12-olga.kornievskaia@gmail.com>
+Subject: [PATCH v4 12/13] sunrpc: provide transport info in the sysfs directory
+Date:   Wed, 28 Apr 2021 17:32:02 -0400
+Message-Id: <20210428213203.40059-13-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <20210428213203.40059-1-olga.kornievskaia@gmail.com>
 References: <20210428213203.40059-1-olga.kornievskaia@gmail.com>
@@ -64,137 +64,89 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-Allow to query and set the destination's address of a transport.
-Setting of the destination address is allowed only for TCP or RDMA
-based connections.
+Allow to query transport's attributes. Currently showing following
+fields of the rpc_xprt structure: state, last_used, cong, cwnd,
+max_reqs, min_reqs, num_reqs, sizes of queues binding, sending,
+pending, backlog.
 
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- net/sunrpc/sysfs.c | 88 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
+ net/sunrpc/sysfs.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
 diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index 78c0ff879424..234e545a7a40 100644
+index 234e545a7a40..4febc7008dc0 100644
 --- a/net/sunrpc/sysfs.c
 +++ b/net/sunrpc/sysfs.c
-@@ -4,8 +4,24 @@
-  */
- #include <linux/sunrpc/clnt.h>
- #include <linux/kobject.h>
-+#include <linux/sunrpc/addr.h>
-+#include <linux/sunrpc/xprtsock.h>
-+
- #include "sysfs.h"
- 
-+struct xprt_addr {
-+	const char *addr;
-+	struct rcu_head rcu;
-+};
-+
-+static void free_xprt_addr(struct rcu_head *head)
-+{
-+	struct xprt_addr *addr = container_of(head, struct xprt_addr, rcu);
-+
-+	kfree(addr->addr);
-+	kfree(addr);
-+}
-+
- static struct kset *rpc_sunrpc_kset;
- static struct kobject *rpc_sunrpc_client_kobj, *rpc_sunrpc_xprt_switch_kobj;
- 
-@@ -43,6 +59,69 @@ static struct kobject *rpc_sysfs_object_alloc(const char *name,
- 	return NULL;
+@@ -82,6 +82,55 @@ static ssize_t rpc_sysfs_xprt_dstaddr_show(struct kobject *kobj,
+ 	return ret + 1;
  }
  
-+static inline struct rpc_xprt *
-+rpc_sysfs_xprt_kobj_get_xprt(struct kobject *kobj)
-+{
-+	struct rpc_sysfs_xprt *x = container_of(kobj,
-+		struct rpc_sysfs_xprt, kobject);
-+
-+	return xprt_get(x->xprt);
-+}
-+
-+static ssize_t rpc_sysfs_xprt_dstaddr_show(struct kobject *kobj,
-+					   struct kobj_attribute *attr,
-+					   char *buf)
++static ssize_t rpc_sysfs_xprt_info_show(struct kobject *kobj,
++					struct kobj_attribute *attr,
++					char *buf)
 +{
 +	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
 +	ssize_t ret;
++	int locked, connected, connecting, close_wait, bound, binding,
++	    closing, congested, cwnd_wait, write_space;
 +
 +	if (!xprt)
 +		return 0;
-+	ret = sprintf(buf, "%s\n", xprt->address_strings[RPC_DISPLAY_ADDR]);
++
++	if (!xprt->state) {
++		ret = sprintf(buf, "state=CLOSED\n");
++	} else {
++		locked = test_bit(XPRT_LOCKED, &xprt->state);
++		connected = test_bit(XPRT_CONNECTED, &xprt->state);
++		connecting = test_bit(XPRT_CONNECTING, &xprt->state);
++		close_wait = test_bit(XPRT_CLOSE_WAIT, &xprt->state);
++		bound = test_bit(XPRT_BOUND, &xprt->state);
++		binding = test_bit(XPRT_BINDING, &xprt->state);
++		closing = test_bit(XPRT_CLOSING, &xprt->state);
++		congested = test_bit(XPRT_CONGESTED, &xprt->state);
++		cwnd_wait = test_bit(XPRT_CWND_WAIT, &xprt->state);
++		write_space = test_bit(XPRT_WRITE_SPACE, &xprt->state);
++
++		ret = sprintf(buf, "state=%s %s %s %s %s %s %s %s %s %s\n",
++			      locked ? "LOCKED" : "",
++			      connected ? "CONNECTED" : "",
++			      connecting ? "CONNECTING" : "",
++			      close_wait ? "CLOSE_WAIT" : "",
++			      bound ? "BOUND" : "",
++			      binding ? "BOUNDING" : "",
++			      closing ? "CLOSING" : "",
++			      congested ? "CONGESTED" : "",
++			      cwnd_wait ? "CWND_WAIT" : "",
++			      write_space ? "WRITE_SPACE" : "");
++	}
++	ret += sprintf(buf + ret, "last_used=%lu\ncur_cong=%lu\ncong_win=%lu\n"
++		       "max_num_slots=%u\nmin_num_slots=%u\nnum_reqs=%u\n"
++		       "binding_q_len=%u\nsending_q_len=%u\npending_q_len=%u\n"
++		       "backlog_q_len=%u\n", xprt->last_used, xprt->cong,
++		       xprt->cwnd, xprt->max_reqs, xprt->min_reqs,
++		       xprt->num_reqs, xprt->binding.qlen, xprt->sending.qlen,
++		       xprt->pending.qlen, xprt->backlog.qlen);
 +	xprt_put(xprt);
 +	return ret + 1;
 +}
 +
-+static ssize_t rpc_sysfs_xprt_dstaddr_store(struct kobject *kobj,
-+					    struct kobj_attribute *attr,
-+					    const char *buf, size_t count)
-+{
-+	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
-+	struct sockaddr *saddr;
-+	char *dst_addr;
-+	int port;
-+	struct xprt_addr *saved_addr;
-+
-+	if (!xprt)
-+		return 0;
-+	if (!(xprt->xprt_class->ident == XPRT_TRANSPORT_TCP ||
-+	      xprt->xprt_class->ident == XPRT_TRANSPORT_RDMA)) {
-+		xprt_put(xprt);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	wait_on_bit_lock(&xprt->state, XPRT_LOCKED, TASK_KILLABLE);
-+	saddr = (struct sockaddr *)&xprt->addr;
-+	port = rpc_get_port(saddr);
-+
-+	dst_addr = kstrndup(buf, count - 1, GFP_KERNEL);
-+	saved_addr = kzalloc(sizeof(*saved_addr), GFP_KERNEL);
-+	if (!saved_addr)
-+		goto out;
-+	saved_addr->addr = xprt->address_strings[RPC_DISPLAY_ADDR];
-+	rcu_assign_pointer(xprt->address_strings[RPC_DISPLAY_ADDR], dst_addr);
-+	call_rcu(&saved_addr->rcu, free_xprt_addr);
-+	xprt->addrlen = rpc_pton(xprt->xprt_net, buf, count - 1, saddr,
-+				 sizeof(*saddr));
-+	rpc_set_port(saddr, port);
-+
-+	xprt->ops->connect(xprt, NULL);
-+out:
-+	clear_bit(XPRT_LOCKED, &xprt->state);
-+	xprt_put(xprt);
-+	return count;
-+}
-+
- int rpc_sysfs_init(void)
- {
- 	rpc_sunrpc_kset = kset_create_and_add("sunrpc", NULL, kernel_kobj);
-@@ -106,6 +185,14 @@ static const void *rpc_sysfs_xprt_namespace(struct kobject *kobj)
- 			    kobject)->xprt->xprt_net;
- }
+ static ssize_t rpc_sysfs_xprt_dstaddr_store(struct kobject *kobj,
+ 					    struct kobj_attribute *attr,
+ 					    const char *buf, size_t count)
+@@ -188,8 +237,12 @@ static const void *rpc_sysfs_xprt_namespace(struct kobject *kobj)
+ static struct kobj_attribute rpc_sysfs_xprt_dstaddr = __ATTR(dstaddr,
+ 	0644, rpc_sysfs_xprt_dstaddr_show, rpc_sysfs_xprt_dstaddr_store);
  
-+static struct kobj_attribute rpc_sysfs_xprt_dstaddr = __ATTR(dstaddr,
-+	0644, rpc_sysfs_xprt_dstaddr_show, rpc_sysfs_xprt_dstaddr_store);
++static struct kobj_attribute rpc_sysfs_xprt_info = __ATTR(xprt_info,
++	0444, rpc_sysfs_xprt_info_show, NULL);
 +
-+static struct attribute *rpc_sysfs_xprt_attrs[] = {
-+	&rpc_sysfs_xprt_dstaddr.attr,
-+	NULL,
-+};
-+
- static struct kobj_type rpc_sysfs_client_type = {
- 	.release = rpc_sysfs_client_release,
- 	.sysfs_ops = &kobj_sysfs_ops,
-@@ -120,6 +207,7 @@ static struct kobj_type rpc_sysfs_xprt_switch_type = {
- 
- static struct kobj_type rpc_sysfs_xprt_type = {
- 	.release = rpc_sysfs_xprt_release,
-+	.default_attrs = rpc_sysfs_xprt_attrs,
- 	.sysfs_ops = &kobj_sysfs_ops,
- 	.namespace = rpc_sysfs_xprt_namespace,
+ static struct attribute *rpc_sysfs_xprt_attrs[] = {
+ 	&rpc_sysfs_xprt_dstaddr.attr,
++	&rpc_sysfs_xprt_info.attr,
+ 	NULL,
  };
+ 
 -- 
 2.27.0
 
