@@ -2,102 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8865C36CDBD
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Apr 2021 23:10:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF35E36D4F0
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Apr 2021 11:45:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239055AbhD0VL3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 27 Apr 2021 17:11:29 -0400
-Received: from gaia.bitwizard.nl ([149.210.166.240]:34104 "EHLO
-        gaia.bitwizard.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236994AbhD0VL3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Apr 2021 17:11:29 -0400
-Received: from abra2.bitwizard.nl (unknown [10.8.0.6])
-        by gaia.bitwizard.nl (Postfix) with ESMTPS id 8FAAF5A0058;
-        Tue, 27 Apr 2021 23:10:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bitwizard.nl;
-        s=default; t=1619557844;
-        bh=/EukPnU+lB0aLMe1uASTF5COl8QSgbnoTFlZNoQ9DtU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O4hhPHK+tcbi6Twz2FWZc4T7j0wKqC2jGqXYHLDYzvYqZH1rQSE+e2uNqcIBU3H6z
-         k3VleB26kbwTzdWoAf7BM3sBjUhqXTwIknWRPO5U9Rrm25/ihpHv3WE7rFcIslOVmR
-         IK7PpQBaIUkgQzjWZYPKL87+hDJAp8QGVPZzW9npB3yUGyjvB+f2aehbLMMf6Ssxb4
-         sCatH8wsU4t44cGlcyGQ8v+G+HqPxvvAB6HaCXzm4GxiW/ru2c2O8hae6nH7VAVUqo
-         kFusAKIOJce8769h33pEaqygT8CVDnDSXOYtjjQOa3cBhBKUov+wc+jbCr35o3GRXA
-         3coIcstAGoUUA==
-Received: by abra2.bitwizard.nl (Postfix, from userid 1000)
-        id 6437CE42624; Tue, 27 Apr 2021 23:10:44 +0200 (CEST)
-Date:   Tue, 27 Apr 2021 23:10:44 +0200
-From:   Rogier Wolff <R.E.Wolff@BitWizard.nl>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
-Subject: Re: Lockd error message is unclear.
-Message-ID: <20210427211044.vxvgieqe4ud5lh7o@BitWizard.nl>
-Organization: BitWizard B.V.
-References: <20210427190311.cjjzeded7hl3fkew@BitWizard.nl>
- <20210427193452.GA11361@fieldses.org>
+        id S230339AbhD1JqG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 28 Apr 2021 05:46:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230147AbhD1JqF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Apr 2021 05:46:05 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D9AFC061574
+        for <linux-nfs@vger.kernel.org>; Wed, 28 Apr 2021 02:45:19 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id k127so7278743qkc.6
+        for <linux-nfs@vger.kernel.org>; Wed, 28 Apr 2021 02:45:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=XV/Z/VtWAw63sNAfUASZzMpR+olqjoqWau6KcnflDe0=;
+        b=LEr3YyRSo5SVIVyxuZ8EVWTjWCMh5kJx+Odn5dHHpQkwNCAa5S/oXQ/euXK4Wp9jml
+         dII/tsjZrsh0adujIdDFm1ZRaw8lBfKInk5sJD/jMCINYxF/wZqucrHkuThWS+rI7uat
+         2bJBzriIrlJCIhefYpj5D+p1zxBOEQshVmw5eGrZeYP/JvLugGSATN7D+FSTskjbn9fk
+         6blBtnV9CncnD0yXnHdRRMy/PSWo0pmp4i66pMLyBm7Gq7HPzObtE9HReFJpxbEvF5m7
+         TNjBoExxoLCY1Ti8SR1bRuUx/WIR4QHH+y3u3UD4m3sBUq83kfHZiKhFVt+2U6sBpplZ
+         76uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=XV/Z/VtWAw63sNAfUASZzMpR+olqjoqWau6KcnflDe0=;
+        b=H1JDQvwCKs7m/lNdjExfj3SPXXn8iBWwZwNJm0ZFC91rY/wHM1Hkjtg/zFMTJ6vy07
+         7IoU3jcvSivwYDNa+QKkCogdeEgFFzx+85UdzKbiAxeSttODOBU0uG9cCxRaaXIKnvkN
+         vaWf+gl2jU9vWfU73wLWExmiaci/tJmRj526wvZv4SSNt95o4lO+cNp2s0mFdapeLSzK
+         qf8eTbJhJQsb78g4cwzO+UVx8ogdmOlXiOiNV+BxJKiqwI4eawOzJ698DA+OnbB2tvyI
+         f2nU3hlYnqxL2ucWLres5uNakOAaSeUgNCcnhCQwrsvJRa1BnWetT+vH8UpZOphizXHu
+         XCLw==
+X-Gm-Message-State: AOAM531BqkGHLtGLGF0xFW+Zmtj/CD7y51OAKalSo2x/5u6cnpU9l2QQ
+        hg7bbzR4nhb5w+yx40BVEOsIYbE8NdLINjFB+pk=
+X-Google-Smtp-Source: ABdhPJyAFgW36Vluw7Itd9WO7Jn9nIEls5dG/PrrYUGXQN3Knxa1FKSKYo0P+w92/Aduet0SmiyvH3HQRr6BzooZMsM=
+X-Received: by 2002:ae9:ed81:: with SMTP id c123mr11384524qkg.391.1619603118829;
+ Wed, 28 Apr 2021 02:45:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210427193452.GA11361@fieldses.org>
+Received: by 2002:ad4:434e:0:0:0:0:0 with HTTP; Wed, 28 Apr 2021 02:45:18
+ -0700 (PDT)
+Reply-To: gracemrsmorgan@gmail.com
+From:   Grace Morgan <gracemorgan5678@gmail.com>
+Date:   Wed, 28 Apr 2021 10:45:18 +0100
+Message-ID: <CAAGBgna3j8==5JsSNaGc=rYceeOs2VT4wT68OKjDTFPdM3fVzg@mail.gmail.com>
+Subject: TO HELP THE POOR AND LESS PRIVILEGED
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Apr 27, 2021 at 03:34:52PM -0400, J. Bruce Fields wrote:
-> On Tue, Apr 27, 2021 at 09:03:11PM +0200, Rogier Wolff wrote:
-> > 
-> > Hi, 
-> > 
-> > Two things..... 
-> > 
-> > I got: 
-> > 
-> >    lockd: cannot monitor <client> 
-> > 
-> > in the logfile and the client was terrily slow/not working at all.
-> > 
-> > everything pointed to a lockd problem... 
-> > 
-> > In the end... it turns out that my rpc.statd stopped working.  I had
-> > to go and download the sources to figure this out... I would firstly
-> > suggest to improve the error message to give others running into this
-> > more hints as to where to look.
-> > 
-> > The erorr message on line 169 of lockd.c could read: 
-> > 
-> > 	lockd: Error in the rpc to rpc.statd to monitor %s\n
-> > 
-> > Would it be an idea to print the res.status error code? 
-> 
-> I'm not sure about the wording, but including the error code sounds like
-> a good idea.  (Would that have made a difference in your case?)
+Dear Beloved Brother /Sister
 
-Not sure. Of course I was just "looking for a solution". So once I
-figured out that rpc.statd was missing I went looking for how that
-came about. 
+Good Day
 
-But as it was the prime culprit was "lockd is misbehaving". With a
-better error message you can shift the blame away from your part of
-the system. :-)
+I am Mrs. Grace Morgan very sick and admitted in the hospital as I
+need to go in for second surgical operation and I suffered  partial
+stroke that affected my tongue and my speech as well. Please can you
+help me to receive the sum of $4.5 Million Dollars [Four Million, Five
+Hundred Thousand United State Dollars Only] for investment in your
+country. Having viewed and study your statue on-line which motivated
+me that you can be trusted with this project. The money is in over sea
+bank .Kindly help me for this project before I die.
 
-> > second?) timeout in nsm_mon_unmon and the big backlog of requests that
-> > result in the same call and timeout that frustrate the client... )
-> 
-> The -ECONNREFUSED case?
-> 
-> I'm not sure why it retries there.  Maybe just to allow stopping and
-> starting rpc.statd (e.g. for upgrades) without failing operations?
+I want my part to go to charities through you for the good work of the
+Lord, and to help the motherless, less privileged Orphans and widows?
+Please can you invest part of the money for me in real estate in your
+Country too. I will give you all the details as soon as I hear from
+you.
 
-Not sure IF it was retrying. Maybe not. But starting "google-chrome"
-with 40 open tabs didn't progress to any tabs loading inside the half
-hour that I was looking for why this was happening (unable to google
-for a solution).... So in the meantime it was constantly spewing the
-error message, rate limited to 10 per minute....
+Please reply with out delay. God bless you and your family.
 
-	Roger.
+Yours faithfully.
 
--- 
-** R.E.Wolff@BitWizard.nl ** https://www.BitWizard.nl/ ** +31-15-2049110 **
-**    Delftechpark 11 2628 XJ  Delft, The Netherlands.  KVK: 27239233    **
-f equals m times a. When your f is steady, and your m is going down
-your a is going up.  -- Chris Hadfield about flying up the space shuttle.
+Mrs. Grace Morgan
