@@ -2,121 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68C3937053B
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 May 2021 06:11:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8960E3708D2
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 May 2021 21:39:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229924AbhEAEMB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 1 May 2021 00:12:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbhEAEMA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 1 May 2021 00:12:00 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81CDC06174A;
-        Fri, 30 Apr 2021 21:11:11 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id v191so471068pfc.8;
-        Fri, 30 Apr 2021 21:11:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=hVGtcaN7IxhSF58aBPwgD0NHN6yjMWXDQ72QVDTqI/k=;
-        b=QHNtUvWtzzcnGeXw15lvCryEF/SjMqI1wdcbsphejH2mQ0bjIRQGGRiGdDJHSJrmoP
-         czbGI3ej14ezc3f93p8VDYApXMP2M1YZR146m2Bi2x5J99y+/4zJWV+qqIiMxVR3CYnn
-         jhqHffYHfsEQvXtovXBPDY2oOjibtTb7v1A3lMwlkdkt2OYD5XlBZu1NOpbQc1qKu8Iq
-         Ig9iBgjWwHNbVjHmMuDXFqWEii6mHzJE7kxg/s6g5RgLiaasx4v0MijRZ78Xk5pIkFqP
-         PnVBYz8upOtC+FTNQvA6bsxEGIE6PeFnde9qay83MeHF/YYZpNqfgnIJRxZkuTjrgfAw
-         leyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hVGtcaN7IxhSF58aBPwgD0NHN6yjMWXDQ72QVDTqI/k=;
-        b=fjhDHonnoJFqx0IWfqahXK8E43AOOKnZbWybrbJg0dyzLmHM4SromaHSUg91moRsMj
-         B3kbiUIF4i3aNxrOqaaMzDnHN7P6qxTK29dkOmw+ma/EKGsBSoNNmCB9py/+MgT6E22F
-         HhQWoF5Cd9Glujij5+Bj6r59ykJiSkTBvWrkTr+Gf9Y5IR23MQVbv5JalNFLQ0Kv/++p
-         Uui3EIpDROTLifKs54vm63Z8y4kr8Ms86t3MY2ZB9fOnF68fwkMMSRfF0DTCnhcWYEV9
-         CUf1iIutlQseKh3cYMttIpUKKnHNoX0wjVDCGVRmth00PhVtTPwTXn2YlqnDdv3Qd/qF
-         zTTQ==
-X-Gm-Message-State: AOAM5313D79kjaefMx1SUharDIxcjJ/9N+mEPqBdaAmJr4QbYa4pqdWx
-        aJsip2fvjk/XmT9QoR7gZLQXMBdhEv1KYw==
-X-Google-Smtp-Source: ABdhPJxrlWNT/b7l1xZrUndeHP7fvV7R93rnZowYHTeBwkUdkmqsnp7ef384NvGLyrKvEl9ZAmw/aA==
-X-Received: by 2002:a65:52c3:: with SMTP id z3mr7782350pgp.338.1619842270283;
-        Fri, 30 Apr 2021 21:11:10 -0700 (PDT)
-Received: from localhost (natp-s01-129-78-56-229.gw.usyd.edu.au. [129.78.56.229])
-        by smtp.gmail.com with ESMTPSA id i62sm3520547pfc.162.2021.04.30.21.11.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Apr 2021 21:11:10 -0700 (PDT)
-From:   Baptiste Lepers <baptiste.lepers@gmail.com>
-Cc:     Baptiste Lepers <baptiste.lepers@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net] sunrpc: Fix misplaced barrier in call_decode
-Date:   Sat,  1 May 2021 14:10:51 +1000
-Message-Id: <20210501041051.8920-1-baptiste.lepers@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        id S231556AbhEATkI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 1 May 2021 15:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231629AbhEATkF (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 1 May 2021 15:40:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 64F72613CD;
+        Sat,  1 May 2021 19:38:03 +0000 (UTC)
+Subject: [PATCH] xprtrdma: Fix a NULL dereference in frwr_unmap_sync()
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     trondmy@hammerspace.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Sat, 01 May 2021 15:38:02 -0400
+Message-ID: <161989777022.1772.5943251585208443632.stgit@manet.1015granger.net>
+User-Agent: StGit/0.23-29-ga622f1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Fix a misplaced barrier in call_decode. The struct rpc_rqst is modified
-as follows by xprt_complete_rqst:
+The normal mechanism that invalidates and unmaps MRs is
+frwr_unmap_async(). frwr_unmap_sync() is used only when an RPC
+Reply bearing Write or Reply chunks has been lost (ie, almost
+never).
 
-req->rq_private_buf.len = copied;
-/* Ensure all writes are done before we update */
-/* req->rq_reply_bytes_recvd */
-smp_wmb();
-req->rq_reply_bytes_recvd = copied;
+Coverity found that after commit 9a301cafc861 ("xprtrdma: Move
+fr_linv_done field to struct rpcrdma_mr"), the while() loop in
+frwr_unmap_sync() exits only once @mr is NULL, unconditionally
+causing dereferences of @mr to Oops.
 
-And currently read as follows by call_decode:
+I've tested this fix by creating a client that skips invoking
+frwr_unmap_async() when RPC Replies complete. That forces all
+invalidation tasks to fall upon frwr_unmap_sync(). Simple workloads
+with this fix applied to the adulterated client work as designed.
 
-smp_rmb(); // misplaced
-if (!req->rq_reply_bytes_recvd)
-   goto out;
-req->rq_rcv_buf.len = req->rq_private_buf.len;
-
-This patch places the smp_rmb after the if to ensure that
-rq_reply_bytes_recvd and rq_private_buf.len are read in order.
-
-Fixes: 9ba828861c56a ("SUNRPC: Don't try to parse incomplete RPC messages")
-Signed-off-by: Baptiste Lepers <baptiste.lepers@gmail.com>
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 1504556 ("Null pointer dereferences")
+Fixes: 9a301cafc861 ("xprtrdma: Move fr_linv_done field to struct rpcrdma_mr")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/clnt.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ net/sunrpc/xprtrdma/frwr_ops.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 612f0a641f4c..77c4bb8816ed 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2457,12 +2457,6 @@ call_decode(struct rpc_task *task)
- 		task->tk_flags &= ~RPC_CALL_MAJORSEEN;
+Trond Note: you may need to update the commit ID for 9a301cafc861
+as needed to properly reference the final commit ID for ("xprtrdma:
+Move fr_linv_done field to struct rpcrdma_mr").
+
+diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
+index 285d73246fc2..229fcc9a9064 100644
+--- a/net/sunrpc/xprtrdma/frwr_ops.c
++++ b/net/sunrpc/xprtrdma/frwr_ops.c
+@@ -530,6 +530,7 @@ void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
+ 		*prev = last;
+ 		prev = &last->next;
  	}
++	mr = container_of(last, struct rpcrdma_mr, mr_invwr);
  
--	/*
--	 * Ensure that we see all writes made by xprt_complete_rqst()
--	 * before it changed req->rq_reply_bytes_recvd.
--	 */
--	smp_rmb();
--
- 	/*
- 	 * Did we ever call xprt_complete_rqst()? If not, we should assume
- 	 * the message is incomplete.
-@@ -2471,6 +2465,11 @@ call_decode(struct rpc_task *task)
- 	if (!req->rq_reply_bytes_recvd)
- 		goto out;
- 
-+	/* Ensure that we see all writes made by xprt_complete_rqst()
-+	 * before it changed req->rq_reply_bytes_recvd.
-+	 */
-+	smp_rmb();
-+
- 	req->rq_rcv_buf.len = req->rq_private_buf.len;
- 	trace_rpc_xdr_recvfrom(task, &req->rq_rcv_buf);
- 
--- 
-2.17.1
+ 	/* Strong send queue ordering guarantees that when the
+ 	 * last WR in the chain completes, all WRs in the chain
+
 
