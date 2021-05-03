@@ -2,96 +2,130 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 372CB371243
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 May 2021 10:10:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87C823712AF
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 May 2021 10:52:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230186AbhECILI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 May 2021 04:11:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54350 "EHLO mx2.suse.de"
+        id S232994AbhECIx1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 May 2021 04:53:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58732 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229817AbhECILH (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 3 May 2021 04:11:07 -0400
+        id S230490AbhECIx1 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 3 May 2021 04:53:27 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C6390B157;
-        Mon,  3 May 2021 08:10:13 +0000 (UTC)
-Date:   Mon, 3 May 2021 10:10:12 +0200
-From:   Petr Vorel <pvorel@suse.cz>
-To:     NeilBrown <neilb@suse.de>
-Cc:     "J . Bruce Fields" <bfields@fieldses.org>,
-        linux-nfs@vger.kernel.org, Steve Dickson <steved@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Alexey Kodanev <alexey.kodanev@oracle.com>
-Subject: Re: Re: [RFC PATCH 1/1] mount.nfs: Fix mounting on tmpfs
-Message-ID: <YI+v5N/K18gJTMQL@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20210422191803.31511-1-pvorel@suse.cz>
- <20210422202334.GB25415@fieldses.org>
- <YIIuUPrlbBlr1ooD@pevik>
- <20210423142329.GB10457@fieldses.org>
- <YIL+KWuPmgm8A82C@pevik>
- <20210423181345.GE10457@fieldses.org>
- <162000848714.10466.9299093696289919822@noble.neil.brown.name>
+        by mx2.suse.de (Postfix) with ESMTP id D898DB1B5;
+        Mon,  3 May 2021 08:52:32 +0000 (UTC)
+Received: from localhost (brahms [local])
+        by brahms (OpenSMTPD) with ESMTPA id 0af4dc88;
+        Mon, 3 May 2021 08:54:02 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.de>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Olga Kornievskaia <aglo@umich.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Steve French <sfrench@samba.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <dchinner@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Ian Lance Taylor <iant@google.com>,
+        Luis Lozano <llozano@chromium.org>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v8] vfs: fix copy_file_range regression in cross-fs copies
+References: <20210221195833.23828-1-lhenriques@suse.de>
+        <20210222102456.6692-1-lhenriques@suse.de>
+        <CAN-5tyELMY7b7CKO-+an47ydq8r_4+SOyhuvdH0qE0-JmdZ44Q@mail.gmail.com>
+        <YDYpHccgM7agpdTQ@suse.de>
+        <CANMq1KBgwEXFh8AxpPW2t1SA0NVsyR45m0paLEU4D4w80dc_fA@mail.gmail.com>
+        <CANMq1KDTgnGtNxWj2XxAT3mdsNjc551uUCg6EWnh=Hd0KcVQKQ@mail.gmail.com>
+        <8735vzfugn.fsf@suse.de>
+        <CAOQ4uxjdVZywBi6=D1eRfBhRk+nobTz4N87jcejDtvzBMMMKXQ@mail.gmail.com>
+        <CANMq1KAOwj9dJenwF2NadQ73ytfccuPuahBJE7ak6S7XP6nCjg@mail.gmail.com>
+Date:   Mon, 03 May 2021 09:54:01 +0100
+In-Reply-To: <CANMq1KAOwj9dJenwF2NadQ73ytfccuPuahBJE7ak6S7XP6nCjg@mail.gmail.com>
+        (Nicolas Boichat's message of "Fri, 23 Apr 2021 12:40:44 +0800")
+Message-ID: <8735v4tcye.fsf@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <162000848714.10466.9299093696289919822@noble.neil.brown.name>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> On Sat, 24 Apr 2021, J . Bruce Fields wrote:
-> > On Fri, Apr 23, 2021 at 07:04:41PM +0200, Petr Vorel wrote:
-> > > Hi Bruce,
+Nicolas Boichat <drinkcat@chromium.org> writes:
 
-> > > > On Fri, Apr 23, 2021 at 04:17:52AM +0200, Petr Vorel wrote:
-> > > > > Hi,
+> On Fri, Apr 9, 2021 at 9:50 PM Amir Goldstein <amir73il@gmail.com> wrote:
+>>
+>> On Fri, Apr 9, 2021 at 4:39 PM Luis Henriques <lhenriques@suse.de> wrote:
+>> >
+>> > Nicolas Boichat <drinkcat@chromium.org> writes:
+>> >
+>> > > On Wed, Feb 24, 2021 at 6:44 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>> > >>
+>> > >> On Wed, Feb 24, 2021 at 6:22 PM Luis Henriques <lhenriques@suse.de> wrote:
+>> > >> >
+>> > >> > On Tue, Feb 23, 2021 at 08:00:54PM -0500, Olga Kornievskaia wrote:
+>> > >> > > On Mon, Feb 22, 2021 at 5:25 AM Luis Henriques <lhenriques@suse.de> wrote:
+>> > >> > > >
+>> > >> > > > A regression has been reported by Nicolas Boichat, found while using the
+>> > >> > > > copy_file_range syscall to copy a tracefs file.  Before commit
+>> > >> > > > 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
+>> > >> > > > kernel would return -EXDEV to userspace when trying to copy a file across
+>> > >> > > > different filesystems.  After this commit, the syscall doesn't fail anymore
+>> > >> > > > and instead returns zero (zero bytes copied), as this file's content is
+>> > >> > > > generated on-the-fly and thus reports a size of zero.
+>> > >> > > >
+>> > >> > > > This patch restores some cross-filesystem copy restrictions that existed
+>> > >> > > > prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
+>> > >> > > > devices").  Filesystems are still allowed to fall-back to the VFS
+>> > >> > > > generic_copy_file_range() implementation, but that has now to be done
+>> > >> > > > explicitly.
+>> > >> > > >
+>> > >> > > > nfsd is also modified to fall-back into generic_copy_file_range() in case
+>> > >> > > > vfs_copy_file_range() fails with -EOPNOTSUPP or -EXDEV.
+>> > >> > > >
+>> > >> > > > Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
+>> > >> > > > Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
+>> > >> > > > Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
+>> > >> > > > Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
+>> > >> > > > Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+>> > >> > > > Signed-off-by: Luis Henriques <lhenriques@suse.de>
+>> > >> > >
+>> > >> > > I tested v8 and I believe it works for NFS.
+>> > >> >
+>> > >> > Thanks a lot for the testing.  And to everyone else for reviews,
+>> > >> > feedback,... and patience.
+>> > >>
+>> > >> Thanks so much to you!!!
+>> > >>
+>> > >> Works here, you can add my
+>> > >> Tested-by: Nicolas Boichat <drinkcat@chromium.org>
+>> > >
+>> > > What happened to this patch? It does not seem to have been picked up
+>> > > yet? Any reason why?
+>> >
+>> > Hmm... good question.  I'm not actually sure who would be picking it.  Al,
+>> > maybe...?
+>> >
+>>
+>> Darrick,
+>>
+>> Would you mind taking this through your tree in case Al doesn't pick it up?
+>
+> Err, sorry for yet another ping... but it would be good to move
+> forward with those patches ,-P
 
-> > > > > > On Thu, Apr 22, 2021 at 09:18:03PM +0200, Petr Vorel wrote:
-> > > > > > > LTP NFS tests (which use netns) fails on tmpfs since d4066486:
+Yeah, I'm not sure what else to do, or who else to bug regarding this :-/
 
-> > > > > > > mount -t nfs -o proto=tcp,vers=4.2 10.0.0.2:/tmp/ltp.nfs01.nfs-4.2/LTP_nfs01.UF6gRZCy3O/4.2/tcp /tmp/ltp.nfs01.nfs-4.2/LTP_nfs01.UF6gRZCy3O/4.2/0
-> > > > > > > mount.nfs: mounting 10.0.0.2:/tmp/ltp.nfs01.nfs-4.2/LTP_nfs01.UF6gRZCy3O/4.2/tcp failed, reason given by server: No such file or directory
-
-> > > > > > We should figure out the reason for the failure.  A network trace might
-> > > > > > help.
-
-> > > > > Anything specific you're looking for?
-
-> > > > Actually I was thinking of capturing the network traffic, something
-> > > > like:
-> > > > 	tcpdump -s0 -wtmp.pcap -i<interface>
-
-> > > > then try the mount, then kill tcpdump and look at tmp.pcap.
-
-> > > I don't see anything suspicious, can you please have a look?
-> > > https://gitlab.com/pevik/tmp/-/raw/master/nfs.v3.pcap
-> > > https://gitlab.com/pevik/tmp/-/raw/master/nfs.v4.pcap
-> > > https://gitlab.com/pevik/tmp/-/raw/master/nfs.v4.1.pcap
-> > > https://gitlab.com/pevik/tmp/-/raw/master/nfs.v4.2.pcap
-
-> > It might be the "hide" option, that's odd:
-
-> Nup. I think "hide" is ignored for NFSv4 anyway.
-
-> Problem is that a subdirectory of a tmpfs filesystem is being exported.
-> That requires (for NFSv4), the top of the tmpfs filesystem to be
-> exported with NFSEXP_V4ROOT so that an NFSv4 client can navigate down to
-> it.
-> But when mountd creates that V4ROOT export, it doesn't provide the fsid.
-> So the kernel rejects the export request.
-
-> We need to fix mountd to set the fsid on all exports within a filesystem
-> for which it was specified, particularly the NFSEXP_V4ROOT ancestors.
-
-> I might see if I how easy that is later.
-
-Hi Neil,
-
-Thanks a lot for analysis. Right, mount.nfs is not to blame, but the server part
-(nfs-kernel-server).
-
-Kind regards,
-Petr
-
-> NeilBrown
+Cheers,
+-- 
+Luis
