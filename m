@@ -2,23 +2,23 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3CB33717DB
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 May 2021 17:24:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80F413717DC
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 May 2021 17:24:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230333AbhECPZ1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 May 2021 11:25:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40760 "EHLO mail.kernel.org"
+        id S230283AbhECPZd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 May 2021 11:25:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230122AbhECPZ0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 3 May 2021 11:25:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4347261208
-        for <linux-nfs@vger.kernel.org>; Mon,  3 May 2021 15:24:33 +0000 (UTC)
-Subject: [PATCH v1 17/29] lockd: Update the NLMv4 void arguments decoder to
+        id S230122AbhECPZc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 3 May 2021 11:25:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 65900611CE
+        for <linux-nfs@vger.kernel.org>; Mon,  3 May 2021 15:24:39 +0000 (UTC)
+Subject: [PATCH v1 18/29] lockd: Update the NLMv4 TEST arguments decoder to
  use struct xdr_stream
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Mon, 03 May 2021 11:24:32 -0400
-Message-ID: <162005547238.23028.2510600771756442851.stgit@klimt.1015granger.net>
+Date:   Mon, 03 May 2021 11:24:38 -0400
+Message-ID: <162005547856.23028.17390833990771179627.stgit@klimt.1015granger.net>
 In-Reply-To: <162005520101.23028.15766816408658851498.stgit@klimt.1015granger.net>
 References: <162005520101.23028.15766816408658851498.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.1
@@ -31,51 +31,112 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/xdr4.c |   17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ fs/lockd/xdr4.c |   72 ++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 66 insertions(+), 6 deletions(-)
 
 diff --git a/fs/lockd/xdr4.c b/fs/lockd/xdr4.c
-index 5fa9f48a9dba..d0960a8551f8 100644
+index d0960a8551f8..cf64794fdc1f 100644
 --- a/fs/lockd/xdr4.c
 +++ b/fs/lockd/xdr4.c
-@@ -18,6 +18,8 @@
- #include <linux/sunrpc/stats.h>
- #include <linux/lockd/lockd.h>
+@@ -96,6 +96,32 @@ nlm4_decode_fh(__be32 *p, struct nfs_fh *f)
+ 	return p + XDR_QUADLEN(f->size);
+ }
  
-+#include "svcxdr.h"
-+
- #define NLMDBG_FACILITY		NLMDBG_XDR
- 
- static inline loff_t
-@@ -175,8 +177,15 @@ nlm4_encode_testres(__be32 *p, struct nlm_res *resp)
- 
- 
- /*
-- * First, the server side XDR functions
-+ * Decode Call arguments
-  */
-+
-+int
-+nlm4svc_decode_void(struct svc_rqst *rqstp, __be32 *p)
++/*
++ * NLM file handles are defined by specification to be a variable-length
++ * XDR opaque no longer than 1024 bytes. However, this implementation
++ * limits their length to the size of an NFSv3 file handle.
++ */
++static bool
++svcxdr_decode_fhandle(struct xdr_stream *xdr, struct nfs_fh *fh)
 +{
-+	return 1;
++	__be32 *p;
++	u32 len;
++
++	if (xdr_stream_decode_u32(xdr, &len) < 0)
++		return false;
++	if (len > NFS_MAXFHSIZE)
++		return false;
++
++	p = xdr_inline_decode(xdr, len);
++	if (!p)
++		return false;
++	fh->size = len;
++	memcpy(fh->data, p, len);
++	memset(fh->data + len, 0, sizeof(fh->data) - len);
++
++	return true;
 +}
 +
+ /*
+  * Encode and decode owner handle
+  */
+@@ -135,6 +161,39 @@ nlm4_decode_lock(__be32 *p, struct nlm_lock *lock)
+ 	return p;
+ }
+ 
++static bool
++svcxdr_decode_lock(struct xdr_stream *xdr, struct nlm_lock *lock)
++{
++	struct file_lock *fl = &lock->fl;
++	u64 len, start;
++	s64 end;
++
++	if (!svcxdr_decode_string(xdr, &lock->caller, &lock->len))
++		return false;
++	if (!svcxdr_decode_fhandle(xdr, &lock->fh))
++		return false;
++	if (!svcxdr_decode_owner(xdr, &lock->oh))
++		return false;
++	if (xdr_stream_decode_u32(xdr, &lock->svid) < 0)
++		return false;
++	if (xdr_stream_decode_u64(xdr, &start) < 0)
++		return false;
++	if (xdr_stream_decode_u64(xdr, &len) < 0)
++		return false;
++
++	locks_init_lock(fl);
++	fl->fl_flags = FL_POSIX;
++	fl->fl_type  = F_RDLCK;
++	end = start + len - 1;
++	fl->fl_start = s64_to_loff_t(start);
++	if (len == 0 || end < 0)
++		fl->fl_end = OFFSET_MAX;
++	else
++		fl->fl_end = s64_to_loff_t(end);
++
++	return true;
++}
++
+ /*
+  * Encode result of a TEST/TEST_MSG call
+  */
+@@ -189,19 +248,20 @@ nlm4svc_decode_void(struct svc_rqst *rqstp, __be32 *p)
  int
  nlm4svc_decode_testargs(struct svc_rqst *rqstp, __be32 *p)
  {
-@@ -336,12 +345,6 @@ nlm4svc_decode_res(struct svc_rqst *rqstp, __be32 *p)
- 	return xdr_argsize_check(rqstp, p);
++	struct xdr_stream *xdr = &rqstp->rq_arg_stream;
+ 	struct nlm_args *argp = rqstp->rq_argp;
+-	u32	exclusive;
++	u32 exclusive;
+ 
+-	if (!(p = nlm4_decode_cookie(p, &argp->cookie)))
++	if (!svcxdr_decode_cookie(xdr, &argp->cookie))
+ 		return 0;
+-
+-	exclusive = ntohl(*p++);
+-	if (!(p = nlm4_decode_lock(p, &argp->lock)))
++	if (xdr_stream_decode_bool(xdr, &exclusive) < 0)
++		return 0;
++	if (!svcxdr_decode_lock(xdr, &argp->lock))
+ 		return 0;
+ 	if (exclusive)
+ 		argp->lock.fl.fl_type = F_WRLCK;
+ 
+-	return xdr_argsize_check(rqstp, p);
++	return 1;
  }
  
--int
--nlm4svc_decode_void(struct svc_rqst *rqstp, __be32 *p)
--{
--	return xdr_argsize_check(rqstp, p);
--}
--
  int
- nlm4svc_encode_void(struct svc_rqst *rqstp, __be32 *p)
- {
 
 
