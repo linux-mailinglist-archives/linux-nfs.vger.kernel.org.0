@@ -2,93 +2,162 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5BB6372247
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 May 2021 23:14:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B57F372406
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 May 2021 02:57:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229590AbhECVPS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 May 2021 17:15:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbhECVPS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 May 2021 17:15:18 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A399C061573;
-        Mon,  3 May 2021 14:14:23 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id q10so4711302pgj.2;
-        Mon, 03 May 2021 14:14:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=It1zjPkEL+hRPlnEYkgjmUV8PVd1QmMXrrkuwW0r37g=;
-        b=lTG86IjcKyoIJ6uC/ScuvVwBHIzejmkRjw1SHeXEQ9C3D2CVfelvUoxXvunTmZ18Ku
-         3D9pk+TO0qajcURGY9ar2nLlIwOLL/24rK7QfgFOMRdlNk/DM3zHj5RjbBjSAQ/yicyV
-         QzMoNUSyxyvSzD/+tFFfYkIU0FBJpntworf6AnlN7zlqVLPXes0fpAlM9/4w40u4Zexh
-         EIIJmPSOwhSKI0xJCK12lRTfiZnYb/C6499kZoPR+Zr5e2CLLPWAAia6nI2BjM9n7psZ
-         qDvKCFn90tXePEDdYB+30QvjojZHH9pdS3kUuoEmvandFfblt7vqz85pOZEfKablNBrX
-         Cemw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=It1zjPkEL+hRPlnEYkgjmUV8PVd1QmMXrrkuwW0r37g=;
-        b=Ez727UL4T7g/d4SlnHDKlXP1r6SwnCR43pzx2t3ENB2sTktxap7TRRd3DmsWw9RJFb
-         wwXXRrbYmh2Lu7AmlG7CUA8WF2qy9tglkiGL72oHPGAj0INt0Plfo5ul2dApzCu9RyZC
-         tZHC/LS5ECYG7RmEPn51E8+JOYZjsdABjHcczDArGMeCG15RLhYG9dvVZdXq+QNjfdRX
-         l8MkWYZ3cDVl2ENTXiO3dQwuYc49/q28ouWc0TBZfe9PdqWeF3Mr2dI7aYSiHlPUSOZt
-         e/EmhJXInGGvZaWRm4RwAAh91DJgTNdLdoKA0yzClGus8uGEkEozhMYAQQeTSin5dawM
-         D+oA==
-X-Gm-Message-State: AOAM531ZkXtJh2bvYfcWZ3NAnaiVYbaWsSFld7QEZWLYH9tYzFQ4sCf2
-        b0KcnIbLZZNB03TmmLWXbjK4OWZspMU7Y4D0dnIndMPSSKw=
-X-Google-Smtp-Source: ABdhPJyRhL/uzKUtzrReo+/l3jvLDaJW1/oBGKS4XaEQaqH8bYH9B92wSyNqP0yfrBeUdXLFBo44AxR9PHFNEdDvvU8=
-X-Received: by 2002:a17:90a:246:: with SMTP id t6mr8414352pje.228.1620076462906;
- Mon, 03 May 2021 14:14:22 -0700 (PDT)
+        id S229499AbhEDA6G convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Mon, 3 May 2021 20:58:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36568 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229497AbhEDA6F (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 3 May 2021 20:58:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id F014CB034;
+        Tue,  4 May 2021 00:57:10 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20210503204907.34013-1-andriy.shevchenko@linux.intel.com>
- <20210503204907.34013-11-andriy.shevchenko@linux.intel.com>
- <YJBi5NU2WmZPYbBG@zeniv-ca.linux.org.uk> <CAHp75VfZKX_oYzoAA9Mbya1_+hP6+1mDKqyfy9d=hsokEAGQsQ@mail.gmail.com>
- <YJBmkNky4QfFhPD1@zeniv-ca.linux.org.uk> <CAHp75Vet8CN3Cx2Loi_7PiXyf_XX1FWF3uPB-jUS51UC5B8U_w@mail.gmail.com>
-In-Reply-To: <CAHp75Vet8CN3Cx2Loi_7PiXyf_XX1FWF3uPB-jUS51UC5B8U_w@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 4 May 2021 00:14:07 +0300
-Message-ID: <CAHp75VfogqstLpViF_+0YkAqFFTTHn0kt2j2n1Oe4CKVJUfPCQ@mail.gmail.com>
-Subject: Re: [PATCH v1 10/12] nfsd: Avoid non-flexible API in seq_quote_mem()
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nfs@vger.kernel.org,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+From:   "NeilBrown" <neilb@suse.de>
+To:     Steve Dickson <steved@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH nfs-utils] Replace all /var/run with /run
+Date:   Tue, 04 May 2021 10:57:06 +1000
+Message-id: <162008982689.6582.6678647463188747222@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, May 4, 2021 at 12:11 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, May 4, 2021 at 12:09 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > On Mon, May 03, 2021 at 11:56:41PM +0300, Andy Shevchenko wrote:
-> > > On Mon, May 3, 2021 at 11:54 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+FHS 3.0 deprecated /var/run in favour of /run.
+FHS 3.0 was released over 5 years ago.
+I think it is time for nfs-utils to catch up.
+Note that some places, particularly systemd unit files, already use just
+"/run".
 
-...
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ support/nfs/getport.c            |  2 +-
+ tests/test-lib.sh                |  2 +-
+ utils/blkmapd/device-discovery.c |  2 +-
+ utils/statd/sm-notify.c          |  4 ++--
+ utils/statd/start-statd          | 10 +++++-----
+ utils/statd/statd.c              |  2 +-
+ utils/statd/statd.man            |  2 +-
+ 7 files changed, 12 insertions(+), 12 deletions(-)
 
-> > > Any suggestions how to replace that API with a newer one?
-> >
-> > seq_escape_mem(), perhaps?
->
-> I think I have a better idea. What about adding seq_escape_with_flags()
-> and seq_escape() --> seq_escape_with_flags(..., ESCAPE_OCTAL, ...) ?
->
-> Would it work for you?
-
-Ah, it wouldn't work for the user, because it wants to pass the buffer size.
-Okay, I'll take your suggestion, thanks!
-
+diff --git a/support/nfs/getport.c b/support/nfs/getport.c
+index e458d8fe95f8..813f7bf9e3ff 100644
+--- a/support/nfs/getport.c
++++ b/support/nfs/getport.c
+@@ -904,7 +904,7 @@ int nfs_getport_ping(struct sockaddr *sap, const socklen_t salen,
+  * listen on AF_LOCAL.
+  *
+  * If that doesn't work (for example, if portmapper is running, or rpcbind
+- * isn't listening on /var/run/rpcbind.sock), send a query via UDP to localhost
++ * isn't listening on /run/rpcbind.sock), send a query via UDP to localhost
+  * (UDP doesn't leave a socket in TIME_WAIT, and the timeout is a relatively
+  * short 3 seconds).
+  */
+diff --git a/tests/test-lib.sh b/tests/test-lib.sh
+index 57af37b11126..e47ad13539ac 100644
+--- a/tests/test-lib.sh
++++ b/tests/test-lib.sh
+@@ -56,5 +56,5 @@ start_statd() {
+ 
+ # shut down statd
+ kill_statd() {
+-	kill `cat /var/run/rpc.statd.pid`
++	kill `cat /run/rpc.statd.pid`
+ }
+diff --git a/utils/blkmapd/device-discovery.c b/utils/blkmapd/device-discovery.c
+index f5f9b10b95f2..77ebe73670fa 100644
+--- a/utils/blkmapd/device-discovery.c
++++ b/utils/blkmapd/device-discovery.c
+@@ -64,7 +64,7 @@
+ #define EVENT_BUFSIZE (1024 * EVENT_SIZE)
+ 
+ #define RPCPIPE_DIR	"/var/lib/nfs/rpc_pipefs"
+-#define PID_FILE	"/var/run/blkmapd.pid"
++#define PID_FILE	"/run/blkmapd.pid"
+ 
+ #define CONF_SAVE(w, f) do {			\
+ 	char *p = f;				\
+diff --git a/utils/statd/sm-notify.c b/utils/statd/sm-notify.c
+index 606b912d3629..ed82b8f2533d 100644
+--- a/utils/statd/sm-notify.c
++++ b/utils/statd/sm-notify.c
+@@ -901,7 +901,7 @@ find_host(uint32_t xid)
+ }
+ 
+ /*
+- * Record pid in /var/run/sm-notify.pid
++ * Record pid in /run/sm-notify.pid
+  * This file should remain until a reboot, even if the
+  * program exits.
+  * If file already exists, fail.
+@@ -913,7 +913,7 @@ static int record_pid(void)
+ 	int fd;
+ 
+ 	(void)snprintf(pid, sizeof(pid), "%d\n", (int)getpid());
+-	fd = open("/var/run/sm-notify.pid", O_CREAT|O_EXCL|O_WRONLY, 0600);
++	fd = open("/run/sm-notify.pid", O_CREAT|O_EXCL|O_WRONLY, 0600);
+ 	if (fd < 0)
+ 		return 0;
+ 
+diff --git a/utils/statd/start-statd b/utils/statd/start-statd
+index 54ced822016a..2baf73c385cf 100755
+--- a/utils/statd/start-statd
++++ b/utils/statd/start-statd
+@@ -1,18 +1,18 @@
+ #!/bin/sh
+ # nfsmount calls this script when mounting a filesystem with locking
+ # enabled, but when statd does not seem to be running (based on
+-# /var/run/rpc.statd.pid).
++# /run/rpc.statd.pid).
+ # It should run statd with whatever flags are apropriate for this
+ # site.
+ PATH="/sbin:/usr/sbin:/bin:/usr/bin"
+ 
+ # Use flock to serialize the running of this script
+-exec 9> /var/run/rpc.statd.lock
++exec 9> /run/rpc.statd.lock
+ flock -e 9
+ 
+-if [ -s /var/run/rpc.statd.pid ] &&
+-       [ 1`cat /var/run/rpc.statd.pid` -gt 1 ] &&
+-       kill -0 `cat /var/run/rpc.statd.pid` > /dev/null 2>&1
++if [ -s /run/rpc.statd.pid ] &&
++       [ 1`cat /run/rpc.statd.pid` -gt 1 ] &&
++       kill -0 `cat /run/rpc.statd.pid` > /dev/null 2>&1
+ then
+     # statd already running - must have been slow to respond.
+     exit 0
+diff --git a/utils/statd/statd.c b/utils/statd/statd.c
+index 32169d47c66d..a469a67a91df 100644
+--- a/utils/statd/statd.c
++++ b/utils/statd/statd.c
+@@ -161,7 +161,7 @@ usage(void)
+ 	fprintf(stderr,"      -H                   Specify a high-availability callout program.\n");
+ }
+ 
+-static const char *pidfile = "/var/run/rpc.statd.pid";
++static const char *pidfile = "/run/rpc.statd.pid";
+ 
+ int pidfd = -1;
+ static void create_pidfile(void)
+diff --git a/utils/statd/statd.man b/utils/statd/statd.man
+index ecd3e889e831..7441ffde2687 100644
+--- a/utils/statd/statd.man
++++ b/utils/statd/statd.man
+@@ -440,7 +440,7 @@ directory containing notify list
+ .I /var/lib/nfs/state
+ NSM state number for this host
+ .TP 2.5i
+-.I /var/run/run.statd.pid
++.I /run/run.statd.pid
+ pid file
+ .TP 2.5i
+ .I /etc/netconfig
 -- 
-With Best Regards,
-Andy Shevchenko
+2.30.1
+
