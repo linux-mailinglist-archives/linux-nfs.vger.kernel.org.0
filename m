@@ -2,205 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FE9A372E43
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 May 2021 18:51:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EB22372F66
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 May 2021 20:08:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230286AbhEDQwT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 4 May 2021 12:52:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230133AbhEDQwS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 May 2021 12:52:18 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 322DDC061574
-        for <linux-nfs@vger.kernel.org>; Tue,  4 May 2021 09:51:21 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 5B57C5047; Tue,  4 May 2021 12:51:20 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 5B57C5047
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1620147080;
-        bh=G50LlsyiBAyw0EHBP8O4WNvAiz8M/h4lrOuvua2uqEs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GsQFxzHKIYNm5P7Mbrmv4ExtU584BA9RZhJ/kNwi2QhWvGeJQdSOwvuFGraqbZFMw
-         T3VhngTezIMcgXmDsJ+eGLPS5D2FzQDGuxEiRoWwfFCuLfOdV24B61FLvAreOE3uyq
-         4icZL7UWhep5dCNkHSZqfRUG9IUvl+TybRvwY0W8=
-Date:   Tue, 4 May 2021 12:51:20 -0400
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "neilb@suse.de" <neilb@suse.de>,
-        "fsorenso@redhat.com" <fsorenso@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "aglo@umich.edu" <aglo@umich.edu>,
-        "bcodding@redhat.com" <bcodding@redhat.com>,
-        "jshivers@redhat.com" <jshivers@redhat.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: Re: Re: unsharing tcp connections from different NFS mounts
-Message-ID: <20210504165120.GA18746@fieldses.org>
-References: <20201007140502.GC23452@fieldses.org>
- <85F496CD-9AAC-451C-A224-FCD138BDC591@oracle.com>
- <20201007160556.GE23452@fieldses.org>
- <e06c31e4211cefda52091c7710d871f44dc9160e.camel@hammerspace.com>
- <20210119222229.GA29488@fieldses.org>
- <2d77534fb8be557c6883c8c386ebf4175f64454a.camel@hammerspace.com>
- <20210120150737.GA17548@fieldses.org>
- <20210503200952.GB18779@fieldses.org>
- <162009412979.28954.17703105649506010394@noble.neil.brown.name>
- <4033e1e8b52c27503abe5855f81b7d12b2e46eec.camel@hammerspace.com>
+        id S230285AbhEDSJI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 4 May 2021 14:09:08 -0400
+Received: from mga17.intel.com ([192.55.52.151]:33853 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232231AbhEDSJE (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 4 May 2021 14:09:04 -0400
+IronPort-SDR: EtqPIFhkmxZpVOklW3qUZwqjaVZiiDYeo14YQZueU69EXiiTcSIH17MKZNZ5zrt6zu6mzaRtA0
+ GbEN18llBAdA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9974"; a="178258326"
+X-IronPort-AV: E=Sophos;i="5.82,272,1613462400"; 
+   d="scan'208";a="178258326"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 11:08:07 -0700
+IronPort-SDR: ZOs4ravY0piKUp1Ka0hKuPCSa0FsG4d+sIwdq8iHZsIv7Ywcdvic0fX9hSZV2YKNaTG3fhnDCx
+ LGiOBLNNpqoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,272,1613462400"; 
+   d="scan'208";a="390052739"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 04 May 2021 11:08:05 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 8CDC714B; Tue,  4 May 2021 21:08:23 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "J. Bruce Fields" <bfields@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andy Shevchenko <andy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v3 00/15] lib/string_helpers: get rid of ugly *_escape_mem_ascii()
+Date:   Tue,  4 May 2021 21:08:04 +0300
+Message-Id: <20210504180819.73127-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4033e1e8b52c27503abe5855f81b7d12b2e46eec.camel@hammerspace.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Thanks very much to all of you for the explanations and concrete
-suggestions for things to look at, I feel much less stuck!
+Get rid of ugly *_escape_mem_ascii() API since it's not flexible and
+has the only single user. Provide better approach based on usage of the
+string_escape_mem() with appropriate flags.
 
---b.
+Test cases has been expanded accordingly to cover new functionality.
 
-On Tue, May 04, 2021 at 02:27:04PM +0000, Trond Myklebust wrote:
-> On Tue, 2021-05-04 at 12:08 +1000, NeilBrown wrote:
-> > On Tue, 04 May 2021, bfields@fieldses.org wrote:
-> > > On Wed, Jan 20, 2021 at 10:07:37AM -0500, bfields@fieldses.org wrote:
-> > > > 
-> > > > So mainly:
-> > > > 
-> > > > > > > Why is there a performance regression being seen by these
-> > > > > > > setups
-> > > > > > > when they share the same connection? Is it really the
-> > > > > > > connection,
-> > > > > > > or is it the fact that they all share the same fixed-slot
-> > > > > > > session?
-> > > > 
-> > > > I don't know.  Any pointers how we might go about finding the
-> > > > answer?
-> > > 
-> > > I set this aside and then get bugged about it again.
-> > > 
-> > > I apologize, I don't understand what you're asking for here, but it
-> > > seemed obvious to you and Tom, so I'm sure the problem is me.  Are
-> > > you
-> > > free for a call sometime maybe?  Or do you have any suggestions for
-> > > how
-> > > you'd go about investigating this?
-> > 
-> > I think a useful first step would be to understand what is getting in
-> > the way of the small requests.
-> >  - are they in the client waiting for slots which are all consumed by
-> >    large writes?
-> >  - are they in TCP stream behind megabytes of writes that need to be
-> >    consumed before they can even be seen by the server?
-> >  - are they in a socket buffer on the server waiting to be served
-> >    while all the nfsd thread are busy handling writes?
-> > 
-> > I cannot see an easy way to measure which it is.
-> 
-> The nfs4_sequence_done tracepoint will give you a running count of the
-> highest slot id in use.
-> 
-> The mountstats 'execute time' will give you the time between the
-> request being created and the time a reply was received. That time
-> includes the time spent waiting for a NFSv4 session slot.
-> 
-> The mountstats 'backlog wait' will tell you the time spent waiting for
-> an RPC slot after obtaining the NFSv4 session slot.
-> 
-> The mountstats 'RTT' will give you the time spend waiting for the RPC
-> request to be received, processed and replied to by the server.
-> 
-> Finally, the mountstats also tell you average per-op bytes sent/bytes
-> received.
-> 
-> IOW: The mountstats really gives you almost all the information you
-> need here, particularly if you use it in the 'interval reporting' mode.
-> The only thing it does not tell you is whether or not the NFSv4 session
-> slot table is full (which is why you want the tracepoint).
-> 
-> > I guess monitoring how much of the time that the client has no free
-> > slots might give hints about the first.  If there are always free
-> > slots,
-> > the first case cannot be the problem.
-> > 
-> > With NFSv3, the slot management happened at the RPC layer and there
-> > were
-> > several queues (RPC_PRIORITY_LOW/NORMAL/HIGH/PRIVILEGED) where requests
-> > could wait for a free slot.  Since we gained dynamic slot allocation -
-> > up to 65536 by default - I wonder if that has much effect any more.
-> > 
-> > For NFSv4.1+ the slot management is at the NFS level.  The server sets
-> > a
-> > maximum which defaults to (maybe is limited to) 1024 by the Linux
-> > server.
-> > So there are always free rpc slots.
-> > The Linux client only has a single queue for each slot table, and I
-> > think there is one slot table for the forward channel of a session.
-> > So it seems we no longer get any priority management (sync writes used
-> > to get priority over async writes).
-> > 
-> > Increasing the number of slots advertised by the server might be
-> > interesting.  It is unlikely to fix anything, but it might move the
-> > bottle-neck.
-> > 
-> > Decreasing the maximum of number of tcp slots might also be interesting
-> > (below the number of NFS slots at least). 
-> > That would allow the RPC priority infrastructure to work, and if the
-> > large-file writes are async, they might gets slowed down.
-> > 
-> > If the problem is in the TCP stream (which is possible if the relevant
-> > network buffers are bloated), then you'd really need multiple TCP
-> > streams
-> > (which can certainly improve throughput in some cases).  That is what
-> > nconnect give you.  nconnect does minimal balancing.  It general it
-> > will
-> > round-robin, but if the number of requests (not bytes) queued on one
-> > socket is below average, that socket is likely to get the next request.
-> 
-> It's not round-robin. Transports are allocated to a new RPC request
-> based on a measure of their queue length in order to skip over those
-> that show signs of above average congestion.
-> 
-> > So just adding more connections with nconnect is unlikely to help. 
-> > You
-> > would need to add a policy engine (struct rpc_xpr_iter_ops) which
-> > reserves some connections for small requests.  That should be fairly
-> > easy to write a proof-of-concept for.
-> 
-> Ideally we would want to tie into cgroups as the control mechanism so
-> that NFS can be treated like any other I/O resource.
-> 
-> > 
-> > NeilBrown
-> > 
-> > 
-> > > 
-> > > Would it be worth experimenting with giving some sort of advantage
-> > > to
-> > > readers?  (E.g., reserving a few slots for reads and getattrs and
-> > > such?)
-> > > 
-> > > --b.
-> > > 
-> > > > It's easy to test the case of entirely seperate state & tcp
-> > > > connections.
-> > > > 
-> > > > If we want to test with a shared connection but separate slots I
-> > > > guess
-> > > > we'd need to create a separate session for each nfs4_server, and
-> > > > a lot
-> > > > of functions that currently take an nfs4_client would need to
-> > > > take an
-> > > > nfs4_server?
-> > > > 
-> > > > --b.
-> > > 
-> > > 
-> 
-> -- 
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-> 
-> 
+This is assumed to go either thru VFS or Andrew's tree. I don't expect
+too many changes in string_helpers.
+
+Changelog v3:
+- dropped moving seq_escape() to the header due to a lot of complaints from
+  the (very) old code
+- added seq_escape_str() inliner
+- converted seq_escape() to use seq_escape_str() instead of seq_escape_mem()
+
+Changelog v2:
+- introduced seq_escape_mem() instead of poking seq_get_buf() (Al)
+- to keep balance of seq_get_buf() usage, convert seq_escape() to use above
+- added missed ESCAPE_APPEND flag in NFSv4 patch
+- moved indentation patch closer to the beginning of the series
+- reshuffled series to be in two groups: generic library extension
+  followed by seq_file updates
+
+Andy Shevchenko (15):
+  lib/string_helpers: Switch to use BIT() macro
+  lib/string_helpers: Move ESCAPE_NP check inside 'else' branch in a
+    loop
+  lib/string_helpers: Drop indentation level in string_escape_mem()
+  lib/string_helpers: Introduce ESCAPE_NA for escaping non-ASCII
+  lib/string_helpers: Introduce ESCAPE_NAP to escape non-ASCII and
+    non-printable
+  lib/string_helpers: Allow to append additional characters to be
+    escaped
+  lib/test-string_helpers: Print flags in hexadecimal format
+  lib/test-string_helpers: Get rid of trailing comma in terminators
+  lib/test-string_helpers: Add test cases for new features
+  MAINTAINERS: Add myself as designated reviewer for generic string
+    library
+  seq_file: Introduce seq_escape_mem()
+  seq_file: Add seq_escape_str() as replica of string_escape_str()
+  seq_file: Convert seq_escape() to use seq_escape_str()
+  nfsd: Avoid non-flexible API in seq_quote_mem()
+  seq_file: Drop unused *_escape_mem_ascii()
+
+ MAINTAINERS                    |   8 ++
+ fs/nfsd/nfs4state.c            |   2 +-
+ fs/seq_file.c                  |  43 +++++----
+ include/linux/seq_file.h       |  10 ++-
+ include/linux/string_helpers.h |  31 ++++---
+ lib/string_helpers.c           | 102 ++++++++++++---------
+ lib/test-string_helpers.c      | 157 +++++++++++++++++++++++++++++----
+ 7 files changed, 264 insertions(+), 89 deletions(-)
+
+-- 
+2.30.2
+
