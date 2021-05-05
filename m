@@ -2,256 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BFD4374444
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 May 2021 19:47:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74C593749B3
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 May 2021 22:49:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236226AbhEEQ4B (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 5 May 2021 12:56:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44828 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236680AbhEEQu1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 May 2021 12:50:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620233370;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Nh7Hrv9peARsejcGbgKdkJm6PbW9xCKkeFJTSXziRW8=;
-        b=ahkfnu1Q+kMQf2pc/qORuKOdjZQ8rJpQFSil/fo6yt8P5FMGAkwWOzsPb4zVAfux7/hHyQ
-        YbL9ZOCnXVNcAgmofojD8k2PSHC6TTasVY/xBfdS6woBlMnaVnPxeUuBF6cM+FyBUSevJV
-        gYC4zUCteOhBflzs7EQqFuDLoEdiJVM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-206-S_XMW2wXP6q_APPMyGkzmw-1; Wed, 05 May 2021 12:49:28 -0400
-X-MC-Unique: S_XMW2wXP6q_APPMyGkzmw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B609310066E8;
-        Wed,  5 May 2021 16:49:27 +0000 (UTC)
-Received: from dobby.home.dicksonnet.net (ovpn-113-122.phx2.redhat.com [10.3.113.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 463565D9C0;
-        Wed,  5 May 2021 16:49:27 +0000 (UTC)
-From:   Steve Dickson <steved@redhat.com>
-To:     Libtirpc-devel Mailing List <libtirpc-devel@lists.sourceforge.net>
-Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>,
-        Tom 'spot' Callaway <spotrh@gmail.com>
-Subject: [PATCH] Replace the final SunRPC licenses with BSD licenses
-Date:   Wed,  5 May 2021 12:49:26 -0400
-Message-Id: <20210505164926.29968-1-steved@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        id S230161AbhEEUuj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 5 May 2021 16:50:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230094AbhEEUu3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 5 May 2021 16:50:29 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id BD7E2613EC;
+        Wed,  5 May 2021 20:49:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620247772;
+        bh=AP3irDjXHLvvnt6/4olMg5U7kVl0ZwI+NF3LxPr2kMM=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=RvYuF6UjC8IJwJTn3ItnngATVD0GjL5lqz9AjDImlYeFjIIUOdnQZXhiOfhkh2Xwu
+         sAUF3cG43o8S9ul/uQzkGWFA5f/6EtCgWULiTUDoDtf6WXy8AlWtyeeQufrMlCMCao
+         fo1uV9jYIL+13h/CHiYe7VsvudsH4tlO/HHl8QnpcOlODt+u7hkcFfHQwEM4/CVFB/
+         fuU+mSC7eBxY/gbbZq8ULuS549lNGqhFLXFf2YcxtB4c7w/ogfiTLu1QyXemmPofxV
+         QCBfFuuedDsYiFVPdzzRZdrkCd1IZk4tEyQ28WTTWHqWrqOkpN9/4CoiyDy/YXvItq
+         /9oo5kvQ0b7yw==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id B8340609E8;
+        Wed,  5 May 2021 20:49:32 +0000 (UTC)
+Subject: Re: [GIT PULL] more nfsd changes for 5.13
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <4FD9AA6A-3880-4C39-9A32-F22A42ADB508@oracle.com>
+References: <4FD9AA6A-3880-4C39-9A32-F22A42ADB508@oracle.com>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <4FD9AA6A-3880-4C39-9A32-F22A42ADB508@oracle.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-5.13-1
+X-PR-Tracked-Commit-Id: b9f83ffaa0c096b4c832a43964fe6bff3acffe10
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a79cdfba68a13b731004f0aafe1155a83830d472
+Message-Id: <162024777274.12235.16163291295420630973.pr-tracker-bot@kernel.org>
+Date:   Wed, 05 May 2021 20:49:32 +0000
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Bruce Fields <bfields@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Tom 'spot' Callaway <spotrh@gmail.com>
+The pull request you sent on Wed, 5 May 2021 16:20:52 +0000:
 
-It was noticed there was a couple SunRPC licenses
-were left from the work that was done in 2009-2010
-(ea26246^..ba3945e). This converts them to BSD licenses.
+> git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-5.13-1
 
-Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=1955239
-Signed-off-by: Steve Dickson <steved@redhat.com>
----
- tirpc/rpc/key_prot.h    | 49 ++++++++++++++--------------
- tirpc/rpcsvc/key_prot.x | 71 ++++++++++++++++++++---------------------
- 2 files changed, 60 insertions(+), 60 deletions(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a79cdfba68a13b731004f0aafe1155a83830d472
 
-diff --git a/tirpc/rpc/key_prot.h b/tirpc/rpc/key_prot.h
-index ff852dc..fd5a6c5 100644
---- a/tirpc/rpc/key_prot.h
-+++ b/tirpc/rpc/key_prot.h
-@@ -13,33 +13,34 @@
- extern "C" {
- #endif
- 
--/*
-- * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
-- * unrestricted use provided that this legend is included on all tape
-- * media and as a part of the software program in whole or part.  Users
-- * may copy or modify Sun RPC without charge, but are not authorized
-- * to license or distribute it to anyone else except as part of a product or
-- * program developed by the user.
-- *
-- * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
-- * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
-- *
-- * Sun RPC is provided with no support and without any obligation on the
-- * part of Sun Microsystems, Inc. to assist in its use, correction,
-- * modification or enhancement.
-+/* Copyright (c) 2010, Oracle America, Inc.
-  *
-- * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
-- * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
-- * OR ANY PART THEREOF.
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are
-+ * met:
-  *
-- * In no event will Sun Microsystems, Inc. be liable for any lost revenue
-- * or profits or other special, indirect and consequential damages, even if
-- * Sun has been advised of the possibility of such damages.
-+ *     * Redistributions of source code must retain the above copyright
-+ *       notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above
-+ *       copyright notice, this list of conditions and the following
-+ *       disclaimer in the documentation and/or other materials
-+ *       provided with the distribution.
-+ *     * Neither the name of the "Oracle America, Inc." nor the names of its
-+ *       contributors may be used to endorse or promote products derived
-+ *       from this software without specific prior written permission.
-  *
-- * Sun Microsystems, Inc.
-- * 2550 Garcia Avenue
-- * Mountain View, California  94043
-+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-+ *   FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-+ *   COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-+ *   INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-+ *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-+ *   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-+ *   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-+ *   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-+ *   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
- #if 0
- #pragma ident "@(#)key_prot.x	1.7	94/04/29 SMI"
-diff --git a/tirpc/rpcsvc/key_prot.x b/tirpc/rpcsvc/key_prot.x
-index 63c1bbc..9baf943 100644
---- a/tirpc/rpcsvc/key_prot.x
-+++ b/tirpc/rpcsvc/key_prot.x
-@@ -1,34 +1,33 @@
--%/*
--% * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
--% * unrestricted use provided that this legend is included on all tape
--% * media and as a part of the software program in whole or part.  Users
--% * may copy or modify Sun RPC without charge, but are not authorized
--% * to license or distribute it to anyone else except as part of a product or
--% * program developed by the user.
--% *
--% * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
--% * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
--% * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
--% *
--% * Sun RPC is provided with no support and without any obligation on the
--% * part of Sun Microsystems, Inc. to assist in its use, correction,
--% * modification or enhancement.
--% *
--% * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
--% * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
--% * OR ANY PART THEREOF.
--% *
--% * In no event will Sun Microsystems, Inc. be liable for any lost revenue
--% * or profits or other special, indirect and consequential damages, even if
--% * Sun has been advised of the possibility of such damages.
--% *
--% * Sun Microsystems, Inc.
--% * 2550 Garcia Avenue
--% * Mountain View, California  94043
--% */
- /*
-  * Key server protocol definition
-- * Copyright (C) 1990, 1991 Sun Microsystems, Inc.
-+ * Copyright (c) 2010, Oracle America, Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are
-+ * met:
-+ *
-+ *     * Redistributions of source code must retain the above copyright
-+ *       notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above
-+ *       copyright notice, this list of conditions and the following
-+ *       disclaimer in the documentation and/or other materials
-+ *       provided with the distribution.
-+ *     * Neither the name of the "Oracle America, Inc." nor the names of its
-+ *       contributors may be used to endorse or promote products derived
-+ *       from this software without specific prior written permission.
-+ *
-+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-+ *   FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-+ *   COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-+ *   INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-+ *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-+ *   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-+ *   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-+ *   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-+ *   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
-  * The keyserver is a public key storage/encryption/decryption service
-  * The encryption method used is based on the Diffie-Hellman exponential
-@@ -87,7 +86,7 @@ enum keystatus {
- 	KEY_SUCCESS,	/* no problems */
- 	KEY_NOSECRET,	/* no secret key stored */
- 	KEY_UNKNOWN,	/* unknown netname */
--	KEY_SYSTEMERR	/* system error (out of memory, encryption failure) */
-+	KEY_SYSTEMERR 	/* system error (out of memory, encryption failure) */
- };
- 
- typedef opaque keybuf[HEXKEYBYTES];	/* store key in hex */
-@@ -171,7 +170,7 @@ program KEY_PROG {
- 
- 		/*
- 		 * This is my secret key.
--		 * Store it for me.
-+	 	 * Store it for me.
- 		 */
- 		keystatus
- 		KEY_SET(keybuf) = 1;
-@@ -179,7 +178,7 @@ program KEY_PROG {
- 		/*
- 		 * I want to talk to X.
- 		 * Encrypt a conversation key for me.
--		 */
-+	 	 */
- 		cryptkeyres
- 		KEY_ENCRYPT(cryptkeyarg) = 2;
- 
-@@ -213,7 +212,7 @@ program KEY_PROG {
- 
- 		/*
- 		 * This is my secret key.
--		 * Store it for me.
-+	 	 * Store it for me.
- 		 */
- 		keystatus
- 		KEY_SET(keybuf) = 1;
-@@ -221,7 +220,7 @@ program KEY_PROG {
- 		/*
- 		 * I want to talk to X.
- 		 * Encrypt a conversation key for me.
--		 */
-+	 	 */
- 		cryptkeyres
- 		KEY_ENCRYPT(cryptkeyarg) = 2;
- 
-@@ -248,7 +247,7 @@ program KEY_PROG {
- 		/*
- 		 * I want to talk to X. and I know X's public key
- 		 * Encrypt a conversation key for me.
--		 */
-+	 	 */
- 		cryptkeyres
- 		KEY_ENCRYPT_PK(cryptkeyarg2) = 6;
- 
-@@ -268,7 +267,7 @@ program KEY_PROG {
- 		/*
- 		 * Retrieve my public key, netname and private key.
- 		 */
--		key_netstres
-+ 		key_netstres
- 		KEY_NET_GET(void) = 9;
- 
- 		/*
+Thank you!
+
 -- 
-2.30.2
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
