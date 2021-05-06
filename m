@@ -2,237 +2,191 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE10B375944
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 May 2021 19:27:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80BE137594A
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 May 2021 19:28:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236237AbhEFR22 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 6 May 2021 13:28:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42449 "EHLO
+        id S236230AbhEFR3u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 6 May 2021 13:29:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:59956 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236230AbhEFR21 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 May 2021 13:28:27 -0400
+        by vger.kernel.org with ESMTP id S236209AbhEFR3u (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 May 2021 13:29:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620322049;
+        s=mimecast20190719; t=1620322131;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=p9YEEwYTe8m8KwJqM0MUEXGD1hwsyQG5YMDrjAoYYJg=;
-        b=hm1NiVqxXFdL98JD3jCbE2Fjc9JScb+R1/7ZKdLv+Yze7Enl8umV9MTv0TscMPXA72oKZz
-        sLm+wGhJzzK53gQSdmpbUDvq21G8fY3ibkpI9GBQ+f/VjFpZuRSM6YxRqjMAy0XarN2ytK
-        vPYZUfBorHyqayzi8Pzcs8jZBnI9G0g=
+        bh=HPlsTvSFEt7sjnJ9ReP2hm7rF4Y16Z46RgQO9KxcCTI=;
+        b=dkm77Jvugr5jo38HlGYh1aeZ24j+yidCCs6aRobVus35/0d86oQrr0cEcOnh/UWoe5sOUU
+        bdHsEzhqjF/VLMdNj2a/5C7pMZxZJVo5UOwtjjPYGAS/FBPRkV+SjNLyr/613rmZ/E3c6d
+        POikfCiirJOel0JCgAJekSeJBKshIPA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-550-GDHD2g7QMEy-EJUD3Ap93A-1; Thu, 06 May 2021 13:27:24 -0400
-X-MC-Unique: GDHD2g7QMEy-EJUD3Ap93A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-412-r8tMOQq7NimBenSxRP29rw-1; Thu, 06 May 2021 13:28:49 -0400
+X-MC-Unique: r8tMOQq7NimBenSxRP29rw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6FA03107ACC7
-        for <linux-nfs@vger.kernel.org>; Thu,  6 May 2021 17:27:23 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45B9E801817;
+        Thu,  6 May 2021 17:28:48 +0000 (UTC)
 Received: from madhat.boston.devel.redhat.com (ovpn-112-61.phx2.redhat.com [10.3.112.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 29AF519C46
-        for <linux-nfs@vger.kernel.org>; Thu,  6 May 2021 17:27:23 +0000 (UTC)
-Subject: Re: [PATCH 1/3] nfs-utils: Enable the retrieval of raw config
- settings without expansion
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E1AAE5D9CA;
+        Thu,  6 May 2021 17:28:47 +0000 (UTC)
+Subject: Re: [PATCH nfs-utils] Replace all /var/run with /run
+To:     NeilBrown <neilb@suse.de>
+Cc:     linux-nfs@vger.kernel.org
+References: <162008982689.6582.6678647463188747222@noble.neil.brown.name>
 From:   Steve Dickson <SteveD@RedHat.com>
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20210414181040.7108-1-steved@redhat.com>
- <20210414181040.7108-2-steved@redhat.com>
-Message-ID: <dfe3a702-5fc0-4b7a-89b7-37147a351a0d@RedHat.com>
-Date:   Thu, 6 May 2021 13:29:50 -0400
+Message-ID: <3ca0a1c5-0812-ce62-84de-2534ad84305a@RedHat.com>
+Date:   Thu, 6 May 2021 13:31:15 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <20210414181040.7108-2-steved@redhat.com>
+In-Reply-To: <162008982689.6582.6678647463188747222@noble.neil.brown.name>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 4/14/21 2:10 PM, Steve Dickson wrote:
-> From: Alice Mitchell <ajmitchell@redhat.com>
+On 5/3/21 8:57 PM, NeilBrown wrote:
+> FHS 3.0 deprecated /var/run in favour of /run.
+> FHS 3.0 was released over 5 years ago.
+> I think it is time for nfs-utils to catch up.
+> Note that some places, particularly systemd unit files, already use just
+> "/run".
 > 
-> Config entries sometimes contain variable expansions, this adds options
-> to retrieve the config entry rather than its current expanded value.
-> 
-> Signed-off-by: Alice Mitchell <ajmitchell@redhat.com>
-> Signed-off-by: Steve Dickson <steved@redhat.com>
-> ---
->  support/include/conffile.h |  1 +
->  support/nfs/conffile.c     | 23 +++++++++++++++++++++++
->  tools/nfsconf/nfsconf.man  | 10 +++++++++-
->  tools/nfsconf/nfsconfcli.c | 22 ++++++++++++++++------
->  4 files changed, 49 insertions(+), 7 deletions(-)
+> Signed-off-by: NeilBrown <neilb@suse.de>
 Committed (tag: nfs-utils-2-5-4-rc3)
 
 steved.
+> ---
+>  support/nfs/getport.c            |  2 +-
+>  tests/test-lib.sh                |  2 +-
+>  utils/blkmapd/device-discovery.c |  2 +-
+>  utils/statd/sm-notify.c          |  4 ++--
+>  utils/statd/start-statd          | 10 +++++-----
+>  utils/statd/statd.c              |  2 +-
+>  utils/statd/statd.man            |  2 +-
+>  7 files changed, 12 insertions(+), 12 deletions(-)
 > 
-> diff --git a/support/include/conffile.h b/support/include/conffile.h
-> index 7d974fe9..c4a3ca62 100644
-> --- a/support/include/conffile.h
-> +++ b/support/include/conffile.h
-> @@ -61,6 +61,7 @@ extern _Bool    conf_get_bool(const char *, const char *, _Bool);
->  extern char    *conf_get_str(const char *, const char *);
->  extern char    *conf_get_str_with_def(const char *, const char *, char *);
->  extern char    *conf_get_section(const char *, const char *, const char *);
-> +extern char    *conf_get_entry(const char *, const char *, const char *);
->  extern int      conf_init_file(const char *);
->  extern void     conf_cleanup(void);
->  extern int      conf_match_num(const char *, const char *, int);
-> diff --git a/support/nfs/conffile.c b/support/nfs/conffile.c
-> index 1e15e7d5..fd4a17ad 100644
-> --- a/support/nfs/conffile.c
-> +++ b/support/nfs/conffile.c
-> @@ -891,6 +891,29 @@ conf_get_str_with_def(const char *section, const char *tag, char *def)
->  	return result;
+> diff --git a/support/nfs/getport.c b/support/nfs/getport.c
+> index e458d8fe95f8..813f7bf9e3ff 100644
+> --- a/support/nfs/getport.c
+> +++ b/support/nfs/getport.c
+> @@ -904,7 +904,7 @@ int nfs_getport_ping(struct sockaddr *sap, const socklen_t salen,
+>   * listen on AF_LOCAL.
+>   *
+>   * If that doesn't work (for example, if portmapper is running, or rpcbind
+> - * isn't listening on /var/run/rpcbind.sock), send a query via UDP to localhost
+> + * isn't listening on /run/rpcbind.sock), send a query via UDP to localhost
+>   * (UDP doesn't leave a socket in TIME_WAIT, and the timeout is a relatively
+>   * short 3 seconds).
+>   */
+> diff --git a/tests/test-lib.sh b/tests/test-lib.sh
+> index 57af37b11126..e47ad13539ac 100644
+> --- a/tests/test-lib.sh
+> +++ b/tests/test-lib.sh
+> @@ -56,5 +56,5 @@ start_statd() {
+>  
+>  # shut down statd
+>  kill_statd() {
+> -	kill `cat /var/run/rpc.statd.pid`
+> +	kill `cat /run/rpc.statd.pid`
+>  }
+> diff --git a/utils/blkmapd/device-discovery.c b/utils/blkmapd/device-discovery.c
+> index f5f9b10b95f2..77ebe73670fa 100644
+> --- a/utils/blkmapd/device-discovery.c
+> +++ b/utils/blkmapd/device-discovery.c
+> @@ -64,7 +64,7 @@
+>  #define EVENT_BUFSIZE (1024 * EVENT_SIZE)
+>  
+>  #define RPCPIPE_DIR	"/var/lib/nfs/rpc_pipefs"
+> -#define PID_FILE	"/var/run/blkmapd.pid"
+> +#define PID_FILE	"/run/blkmapd.pid"
+>  
+>  #define CONF_SAVE(w, f) do {			\
+>  	char *p = f;				\
+> diff --git a/utils/statd/sm-notify.c b/utils/statd/sm-notify.c
+> index 606b912d3629..ed82b8f2533d 100644
+> --- a/utils/statd/sm-notify.c
+> +++ b/utils/statd/sm-notify.c
+> @@ -901,7 +901,7 @@ find_host(uint32_t xid)
 >  }
 >  
-> +/*
-> + * Retrieve an entry without interpreting its contents
-> + */
-> +char *
-> +conf_get_entry(const char *section, const char *arg, const char *tag)
-> +{
-> +	struct conf_binding *cb;
-> +
-> +	cb = LIST_FIRST (&conf_bindings[conf_hash (section)]);
-> +	for (; cb; cb = LIST_NEXT (cb, link)) {
-> +		if (strcasecmp(section, cb->section) != 0)
-> +			continue;
-> +		if (arg && (cb->arg == NULL || strcasecmp(arg, cb->arg) != 0))
-> +			continue;
-> +		if (!arg && cb->arg)
-> +			continue;
-> +		if (strcasecmp(tag, cb->tag) != 0)
-> +			continue;
-> +		return cb->value;
-> +	}
-> +	return 0;
-> +}
-> +
 >  /*
->   * Find a section that may or may not have an argument
->   */
-> diff --git a/tools/nfsconf/nfsconf.man b/tools/nfsconf/nfsconf.man
-> index 30791988..d44e86fb 100644
-> --- a/tools/nfsconf/nfsconf.man
-> +++ b/tools/nfsconf/nfsconf.man
-> @@ -11,6 +11,12 @@ nfsconf \- Query various NFS configuration settings
->  .IR infile.conf ]
->  .RI [ outfile ]
->  .P
-> +.B nfsconf \-\-entry
-> +.RB [ \-\-arg  
-> +.IR subsection]
-> +.IR section
-> +.IR tag
-> +.P
->  .B nfsconf \-\-get
->  .RB [ \-v | \-\-verbose ]
->  .RB [ \-f | \-\-file
-> @@ -58,6 +64,8 @@ from a range of nfs-utils configuration files.
->  The following modes are available:
->  .IP "\fB\-d, \-\-dump\fP"
->  Output an alphabetically sorted dump of the current configuration in conf file format. Accepts an optional filename in which to write the output.
-> +.IP "\fB\-e, \-\-entry\fP"
-> +retrieve the config entry rather than its current expanded value
->  .IP "\fB\-i, \-\-isset\fP"
->  Test if a specific tag has a value set.
->  .IP "\fB\-g, \-\-get\fP"
-> @@ -75,7 +83,7 @@ Increase verbosity and print debugging information.
->  .B \-f, \-\-file \fIinfile\fR
->  Select a different config file to operate upon, default is
->  .I /etc/nfs.conf
-> -.SS Options only valid in \fB\-\-get\fR and \fB\-\-isset\fR modes.
-> +.SS Options only valid in \fB\-\-entry\fR and \fB\-\-get\fR and \fB\-\-isset\fR modes.
->  .TP
->  .B \-a, \-\-arg \fIsubsection\fR
->  Select a specific sub-section
-> diff --git a/tools/nfsconf/nfsconfcli.c b/tools/nfsconf/nfsconfcli.c
-> index 361d386e..b2ef96d1 100644
-> --- a/tools/nfsconf/nfsconfcli.c
-> +++ b/tools/nfsconf/nfsconfcli.c
-> @@ -11,6 +11,7 @@
->  typedef enum {
->  	MODE_NONE,
->  	MODE_GET,
-> +	MODE_ENTRY,
->  	MODE_ISSET,
->  	MODE_DUMP,
->  	MODE_SET,
-> @@ -30,6 +31,8 @@ static void usage(const char *name)
->  	fprintf(stderr, "      Outputs the configuration to the named file\n");
->  	fprintf(stderr, "  --get [--arg subsection] {section} {tag}\n");
->  	fprintf(stderr, "      Output one specific config value\n");
-> +	fprintf(stderr, "  --entry [--arg subsection] {section} {tag}\n");
-> +	fprintf(stderr, "      Output the uninterpreted config entry\n");
->  	fprintf(stderr, "  --isset [--arg subsection] {section} {tag}\n");
->  	fprintf(stderr, "      Return code indicates if config value is present\n");
->  	fprintf(stderr, "  --set [--arg subsection] {section} {tag} {value}\n");
-> @@ -55,6 +58,7 @@ int main(int argc, char **argv)
->  		int index = 0;
->  		struct option long_options[] = {
->  			{"get",		no_argument, 0, 'g' },
-> +			{"entry",	no_argument, 0, 'e' },
->  			{"set",		no_argument, 0, 's' },
->  			{"unset",	no_argument, 0, 'u' },
->  			{"arg",	  required_argument, 0, 'a' },
-> @@ -66,7 +70,7 @@ int main(int argc, char **argv)
->  			{NULL,			  0, 0, 0 }
->  		};
+> - * Record pid in /var/run/sm-notify.pid
+> + * Record pid in /run/sm-notify.pid
+>   * This file should remain until a reboot, even if the
+>   * program exits.
+>   * If file already exists, fail.
+> @@ -913,7 +913,7 @@ static int record_pid(void)
+>  	int fd;
 >  
-> -		c = getopt_long(argc, argv, "gsua:id::f:vm:", long_options, &index);
-> +		c = getopt_long(argc, argv, "gesua:id::f:vm:", long_options, &index);
->  		if (c == -1) break;
+>  	(void)snprintf(pid, sizeof(pid), "%d\n", (int)getpid());
+> -	fd = open("/var/run/sm-notify.pid", O_CREAT|O_EXCL|O_WRONLY, 0600);
+> +	fd = open("/run/sm-notify.pid", O_CREAT|O_EXCL|O_WRONLY, 0600);
+>  	if (fd < 0)
+>  		return 0;
 >  
->  		switch (c) {
-> @@ -86,6 +90,9 @@ int main(int argc, char **argv)
->  			case 'g':
->  				mode = MODE_GET;
->  				break;
-> +			case 'e':
-> +				mode = MODE_ENTRY;
-> +				break;
->  			case 's':
->  				mode = MODE_SET;
->  				break;
-> @@ -167,8 +174,8 @@ int main(int argc, char **argv)
->  		if (dumpfile)
->  			fclose(out);
->  	} else
-> -	/* --iset and --get share a lot of code */
-> -	if (mode == MODE_GET || mode == MODE_ISSET) {
-> +	/* --isset and --get share a lot of code */
-> +	if (mode == MODE_GET || mode == MODE_ISSET || mode == MODE_ENTRY) {
->  		char * section = NULL;
->  		char * tag = NULL;
->  		const char * val;
-> @@ -186,14 +193,17 @@ int main(int argc, char **argv)
->  		tag = argv[optind++];
+> diff --git a/utils/statd/start-statd b/utils/statd/start-statd
+> index 54ced822016a..2baf73c385cf 100755
+> --- a/utils/statd/start-statd
+> +++ b/utils/statd/start-statd
+> @@ -1,18 +1,18 @@
+>  #!/bin/sh
+>  # nfsmount calls this script when mounting a filesystem with locking
+>  # enabled, but when statd does not seem to be running (based on
+> -# /var/run/rpc.statd.pid).
+> +# /run/rpc.statd.pid).
+>  # It should run statd with whatever flags are apropriate for this
+>  # site.
+>  PATH="/sbin:/usr/sbin:/bin:/usr/bin"
 >  
->  		/* retrieve the specified tags value */
-> -		val = conf_get_section(section, arg, tag);
-> +		if (mode == MODE_ENTRY)
-> +			val = conf_get_entry(section, arg, tag);
-> +		else
-> +			val = conf_get_section(section, arg, tag);
->  		if (val != NULL) {
->  			/* ret=0, success, mode --get wants to output the value as well */
-> -			if (mode == MODE_GET)
-> +			if (mode != MODE_ISSET)
->  				printf("%s\n", val);
->  		} else {
->  			/* ret=1, no value found, tell the user if they asked */
-> -			if (mode == MODE_GET && verbose)
-> +			if (mode != MODE_ISSET && verbose)
->  				fprintf(stderr, "Tag '%s' not found\n", tag);
->  			ret = 1;
->  		}
+>  # Use flock to serialize the running of this script
+> -exec 9> /var/run/rpc.statd.lock
+> +exec 9> /run/rpc.statd.lock
+>  flock -e 9
+>  
+> -if [ -s /var/run/rpc.statd.pid ] &&
+> -       [ 1`cat /var/run/rpc.statd.pid` -gt 1 ] &&
+> -       kill -0 `cat /var/run/rpc.statd.pid` > /dev/null 2>&1
+> +if [ -s /run/rpc.statd.pid ] &&
+> +       [ 1`cat /run/rpc.statd.pid` -gt 1 ] &&
+> +       kill -0 `cat /run/rpc.statd.pid` > /dev/null 2>&1
+>  then
+>      # statd already running - must have been slow to respond.
+>      exit 0
+> diff --git a/utils/statd/statd.c b/utils/statd/statd.c
+> index 32169d47c66d..a469a67a91df 100644
+> --- a/utils/statd/statd.c
+> +++ b/utils/statd/statd.c
+> @@ -161,7 +161,7 @@ usage(void)
+>  	fprintf(stderr,"      -H                   Specify a high-availability callout program.\n");
+>  }
+>  
+> -static const char *pidfile = "/var/run/rpc.statd.pid";
+> +static const char *pidfile = "/run/rpc.statd.pid";
+>  
+>  int pidfd = -1;
+>  static void create_pidfile(void)
+> diff --git a/utils/statd/statd.man b/utils/statd/statd.man
+> index ecd3e889e831..7441ffde2687 100644
+> --- a/utils/statd/statd.man
+> +++ b/utils/statd/statd.man
+> @@ -440,7 +440,7 @@ directory containing notify list
+>  .I /var/lib/nfs/state
+>  NSM state number for this host
+>  .TP 2.5i
+> -.I /var/run/run.statd.pid
+> +.I /run/run.statd.pid
+>  pid file
+>  .TP 2.5i
+>  .I /etc/netconfig
 > 
 
