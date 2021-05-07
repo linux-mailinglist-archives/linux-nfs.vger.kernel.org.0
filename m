@@ -2,144 +2,167 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E6B1375CE8
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 May 2021 23:34:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78630375E8C
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 May 2021 03:48:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230283AbhEFVfv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 6 May 2021 17:35:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230300AbhEFVfv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 May 2021 17:35:51 -0400
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07705C061574
-        for <linux-nfs@vger.kernel.org>; Thu,  6 May 2021 14:34:52 -0700 (PDT)
-Received: by mail-il1-x12e.google.com with SMTP id c3so6017435ils.5
-        for <linux-nfs@vger.kernel.org>; Thu, 06 May 2021 14:34:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NdIF16hwxX1xLzz9f2x/koEJXUTRdl3IYu5Oe8Rfy7M=;
-        b=dbd0btb/XydcuBMmnCisjoT5ECLnFG38zSDHTgxUzulyI5P1UWXfRUUT2v+3NbHfTy
-         Xmz8fyRX1aDXSVQt9emSQcIJg45nHitemEM5Ux3j1+hMWmEMfpElbekgBb61sgl6stYa
-         SN8n7pQ5+5ZuDLy6q+ZsQluoyC5VQVSgyw8Q0bkU2dVioS/MKUBjjzVEmqLJBM8SgvwQ
-         mhAsxRPixJZ+wvbU7ps8kMJYwFxhwjsdoWuLJXoQIPusvH0PhvIP4FiK2D5bGP2mw/KE
-         MAjooS2OXQrM9KEICzZE2ECU491eCxqPxDa14UCRwC87fiKAjnkYA3EFAHXH9NkDqEJu
-         joIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NdIF16hwxX1xLzz9f2x/koEJXUTRdl3IYu5Oe8Rfy7M=;
-        b=M0kiHS9HBiPeT7gScMCj200A1AIVPZ1pRP31sc11e0js9mZ6lAhiO+Bw9WJcQSSK/P
-         rDKOPk689mxIFyfqF5+VXPwxk+3iiDvh8JyRdcsHN2DF5CxfkeuktCR1TNa2lRJBfxKO
-         SWxkLXbIy7EJipH+xOIN0WcEM3BP9vboa/AqH5QaX1OOnV9KQdmBxiuuEg5O29Rzu9P3
-         K1ujMtGvqdgGSTywZ9CJ0ZyLo3W7fTp/NdocTd0QAIJS4yUdutRmdQRX+O2iggYQ5NrO
-         SjPbBNyo6rU9EhdQ1ApTtqrL4UVyFE+yhMg/t2x0q4fBVdBS1iFO33V+CStSlsswR5dz
-         mEfw==
-X-Gm-Message-State: AOAM530ZwbowXJBMNBlA44mqPIdkab652O+Cvg2sQpKmQp5h8t9Bpnc5
-        nl0klamBvMG0YYmlZxALl/A=
-X-Google-Smtp-Source: ABdhPJwPd3R36HYfxojjn414kRf0JDVv5j4g2Dzrt2jpZYsF2Wud8g/7RRLL/rKpJmLsUTHR3Yfq0g==
-X-Received: by 2002:a92:cd52:: with SMTP id v18mr6323644ilq.308.1620336891483;
-        Thu, 06 May 2021 14:34:51 -0700 (PDT)
-Received: from kolga-mac-1.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id 6sm1486019iog.36.2021.05.06.14.34.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 May 2021 14:34:50 -0700 (PDT)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v5 12/12] sunrpc: provide multipath info in the sysfs directory
-Date:   Thu,  6 May 2021 17:34:35 -0400
-Message-Id: <20210506213435.42457-13-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
-In-Reply-To: <20210506213435.42457-1-olga.kornievskaia@gmail.com>
-References: <20210506213435.42457-1-olga.kornievskaia@gmail.com>
+        id S234080AbhEGBtt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 6 May 2021 21:49:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56540 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229801AbhEGBts (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 6 May 2021 21:49:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 827A8ADF1;
+        Fri,  7 May 2021 01:48:48 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Petr Vorel" <pvorel@suse.cz>
+Cc:     "J . Bruce Fields" <bfields@fieldses.org>,
+        linux-nfs@vger.kernel.org, "Steve Dickson" <steved@redhat.com>,
+        "Chuck Lever" <chuck.lever@oracle.com>,
+        "Alexey Kodanev" <alexey.kodanev@oracle.com>
+Subject: [PATCH/RFC nfs-utils] Fix NFSv4 export of tmpfs filesystems.
+In-reply-to: <YILQip3nAxhpXP9+@pevik>
+References: <20210422191803.31511-1-pvorel@suse.cz>,
+ <20210422202334.GB25415@fieldses.org>, <YILQip3nAxhpXP9+@pevik>
+Date:   Fri, 07 May 2021 11:48:43 +1000
+Message-id: <162035212343.24322.12361160756597283121@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
 
-Allow to query xrpt_switch attributes. Currently showing the following
-fields of the rpc_xprt_switch structure: xps_nxprts, xps_nactive,
-xps_queuelen.
+[[This is a proposed fix.  It seems to work.  I'd like
+  some review comments before it is committed.
+  Petr: it would be great if you could test it to confirm
+  it actually works in your case.
+]]
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Some filesystems cannot be exported without an fsid or uuid.
+tmpfs is the main example.
+
+When mountd creates nfsv4 pseudo-root exports for the path leading down
+to an export point it exports each directory without any fsid or uuid.
+If one of these directories is on tmp, that will fail.
+
+The net result is that exporting a subdirectory of a tmpfs filesystem
+will not work over NFSv4 as the parents within the filesystem cannot be
+exported.  It will either fail, or fall-back to NFSv3 (depending on the
+version of the mount.nfs program).
+
+To fix this we need to provide an fsid or uuid for these pseudo-root
+exports.  This patch does that by creating a UUID with the first 4 bytes
+0xFFFFFFFF and the remaining 12 bytes form from the path name, xoring
+bytes together if the path is longer than 12 characters.
+Hopefully no filesystem uses a UUID like this....
+
+The patch borrows some code from exportfs.  Maybe that code should be
+move to a library..
+
+Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- net/sunrpc/sysfs.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ support/export/v4root.c | 57 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
-diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index c771b9ed76a9..87b7617cee29 100644
---- a/net/sunrpc/sysfs.c
-+++ b/net/sunrpc/sysfs.c
-@@ -68,6 +68,15 @@ rpc_sysfs_xprt_kobj_get_xprt(struct kobject *kobj)
- 	return xprt_get(x->xprt);
+diff --git a/support/export/v4root.c b/support/export/v4root.c
+index 3654bd7c10c0..fd36eb704441 100644
+--- a/support/export/v4root.c
++++ b/support/export/v4root.c
+@@ -11,6 +11,7 @@
+ #include <config.h>
+ #endif
+ 
++#include <fcntl.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <sys/queue.h>
+@@ -21,6 +22,7 @@
+ #include <unistd.h>
+ #include <errno.h>
+ 
++#include "nfsd_path.h"
+ #include "xlog.h"
+ #include "exportfs.h"
+ #include "nfslib.h"
+@@ -73,6 +75,38 @@ set_pseudofs_security(struct exportent *pseudo)
+ 	}
  }
  
-+static inline struct rpc_xprt_switch *
-+rpc_sysfs_xprt_switch_kobj_get_xprt(struct kobject *kobj)
++static ssize_t exportfs_write(int fd, const char *buf, size_t len)
 +{
-+	struct rpc_sysfs_xprt_switch *x = container_of(kobj,
-+		struct rpc_sysfs_xprt_switch, kobject);
-+
-+	return xprt_switch_get(x->xprt_switch);
++	return nfsd_path_write(fd, buf, len);
 +}
 +
- static ssize_t rpc_sysfs_xprt_dstaddr_show(struct kobject *kobj,
- 					   struct kobj_attribute *attr,
- 					   char *buf)
-@@ -131,6 +140,23 @@ static ssize_t rpc_sysfs_xprt_info_show(struct kobject *kobj,
- 	return ret + 1;
- }
- 
-+static ssize_t rpc_sysfs_xprt_switch_info_show(struct kobject *kobj,
-+					       struct kobj_attribute *attr,
-+					       char *buf)
++static int test_export(struct exportent *eep, int with_fsid)
 +{
-+	struct rpc_xprt_switch *xprt_switch =
-+		rpc_sysfs_xprt_switch_kobj_get_xprt(kobj);
-+	ssize_t ret;
++	char *path = eep->e_path;
++	int flags = eep->e_flags | (with_fsid ? NFSEXP_FSID : 0);
++	/* beside max path, buf size should take protocol str into account */
++	char buf[NFS_MAXPATHLEN+1+64] = { 0 };
++	char *bp = buf;
++	int len = sizeof(buf);
++	int fd, n;
 +
-+	if (!xprt_switch)
++	n = snprintf(buf, len, "-test-client- ");
++	bp += n;
++	len -= n;
++	qword_add(&bp, &len, path);
++	if (len < 1)
 +		return 0;
-+	ret = sprintf(buf, "num_xprts=%u\nnum_active=%u\nqueue_len=%ld\n",
-+		      xprt_switch->xps_nxprts, xprt_switch->xps_nactive,
-+		      atomic_long_read(&xprt_switch->xps_queuelen));
-+	xprt_switch_put(xprt_switch);
-+	return ret + 1;
++	snprintf(bp, len, " 3 %d 65534 65534 0\n", flags);
++	fd = open("/proc/net/rpc/nfsd.export/channel", O_WRONLY);
++	if (fd < 0)
++		return 0;
++	n = exportfs_write(fd, buf, strlen(buf));
++	close(fd);
++	if (n < 0)
++		return 0;
++	return 1;
 +}
 +
- static ssize_t rpc_sysfs_xprt_dstaddr_store(struct kobject *kobj,
- 					    struct kobj_attribute *attr,
- 					    const char *buf, size_t count)
-@@ -262,6 +288,14 @@ static struct attribute *rpc_sysfs_xprt_attrs[] = {
- 	NULL,
- };
+ /*
+  * Create a pseudo export
+  */
+@@ -82,6 +116,7 @@ v4root_create(char *path, nfs_export *export)
+ 	nfs_export *exp;
+ 	struct exportent eep;
+ 	struct exportent *curexp = &export->m_export;
++	char uuid[33];
  
-+static struct kobj_attribute rpc_sysfs_xprt_switch_info =
-+	__ATTR(xprt_switch_info, 0444, rpc_sysfs_xprt_switch_info_show, NULL);
+ 	dupexportent(&eep, &pseudo_root.m_export);
+ 	eep.e_ttl = default_ttl;
+@@ -89,6 +124,28 @@ v4root_create(char *path, nfs_export *export)
+ 	strncpy(eep.e_path, path, sizeof(eep.e_path)-1);
+ 	if (strcmp(path, "/") != 0)
+ 		eep.e_flags &= ~NFSEXP_FSID;
++	if (strcmp(path, "/") != 0 &&
++	    !test_export(&eep, 0)) {
++		/* Need a uuid - base it on path */
++		char buf[12], *pp = path;
++		unsigned int i = 0;
 +
-+static struct attribute *rpc_sysfs_xprt_switch_attrs[] = {
-+	&rpc_sysfs_xprt_switch_info.attr,
-+	NULL,
-+};
-+
- static struct kobj_type rpc_sysfs_client_type = {
- 	.release = rpc_sysfs_client_release,
- 	.sysfs_ops = &kobj_sysfs_ops,
-@@ -270,6 +304,7 @@ static struct kobj_type rpc_sysfs_client_type = {
- 
- static struct kobj_type rpc_sysfs_xprt_switch_type = {
- 	.release = rpc_sysfs_xprt_switch_release,
-+	.default_attrs = rpc_sysfs_xprt_switch_attrs,
- 	.sysfs_ops = &kobj_sysfs_ops,
- 	.namespace = rpc_sysfs_xprt_switch_namespace,
- };
++		memset(buf, 0, sizeof(buf));
++		while (*pp) {
++			buf[i] ^= *pp++;
++			i += 1;
++			if (i >= sizeof(buf))
++				i = 0;
++		}
++		memset(uuid, 'F', 32);
++		uuid[32] = '\0';
++		pp = uuid + 32 - sizeof(buf) * 2;
++		for (i = 0; i < sizeof(buf); i++) {
++			snprintf(pp, 3, "%02X", buf[i]);
++			pp += 2;
++		}
++		eep.e_uuid = uuid;
++	}
+ 	set_pseudofs_security(&eep);
+ 	exp = export_create(&eep, 0);
+ 	if (exp == NULL)
 -- 
-2.27.0
+2.31.1
 
