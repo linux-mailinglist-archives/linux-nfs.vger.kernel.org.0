@@ -2,64 +2,191 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA591376F15
-	for <lists+linux-nfs@lfdr.de>; Sat,  8 May 2021 05:13:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9093C3778CD
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 May 2021 23:44:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230355AbhEHDOg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 7 May 2021 23:14:36 -0400
-Received: from server.atrad.com.au ([150.101.241.2]:47902 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229775AbhEHDOg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 May 2021 23:14:36 -0400
-X-Greylist: delayed 778 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 May 2021 23:14:36 EDT
-Received: from marvin.atrad.com.au (IDENT:1008@marvin.atrad.com.au [192.168.0.2])
-        by server.atrad.com.au (8.15.2/8.15.2) with ESMTPS id 14830ZW4009255
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO)
-        for <linux-nfs@vger.kernel.org>; Sat, 8 May 2021 12:30:36 +0930
-Date:   Sat, 8 May 2021 12:30:34 +0930
-From:   Jonathan Woithe <jwoithe@just42.net>
-To:     linux-nfs@vger.kernel.org
-Subject: Umount fails for NFS mounts with "users" or "user" options
-Message-ID: <20210508030034.GA30593@marvin.atrad.com.au>
+        id S230019AbhEIVpL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 9 May 2021 17:45:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229815AbhEIVpK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 May 2021 17:45:10 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 439D0C06175F;
+        Sun,  9 May 2021 14:44:06 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id h4so14536147wrt.12;
+        Sun, 09 May 2021 14:44:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DBusF/KbjHCWghHBMnMPpKehqCL6Xa7jSi7F9W8BPnw=;
+        b=NquJH4ELcrfZ2CwqHRFyicsGjSC/dPUMr2Ze4RjmfN9UV3IuIYC/wTeu3VUXiJc0k4
+         eRYV/Tia9lgtkPZar7Jchn2M8DbxiW4m8VU+lYi3bTm8yEJRXyGM26o+r7Qqq9v4KjIY
+         86hPtSo1qPmNBySrGzJtvpvw2iOYQMlSuB5nGbAYsCxaya+iLxPWR6lZP+GrBfqtGqXY
+         LIspv5q48vmDsY3biUOXnNteFTYsspNhIJisj5I4zmibBXpZqR+JDTtmlPuhyHGIK7jL
+         iH/E9TH7q1bl/WV94KzbN0pY10zRDDt3CBuqTCIH1Sk+lGlnype2XnSdwdehOT02hvtE
+         9bgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DBusF/KbjHCWghHBMnMPpKehqCL6Xa7jSi7F9W8BPnw=;
+        b=cdu2bnIB1euN/z2X0q9UbaURrHCAu7R6mBHdfd6V5YQrcU/5Enap7JDFST8HKcC2H0
+         5gVy/8V/Dy2XwK9WtbXAyH7wE/maDZrsToSPwzd7Cf9XUaeP8Tg18EkJZFIPUZmDuZAN
+         9DCu06cTEJcVgmdJKyvqU4ctpLx89NiIztU2s7uPjwLZ75YNTeU0tRznaXsBt3LLReQW
+         H45Z5ngPc24Ci1vcSyPc2e86lrubDbCA4movexpZeJHjxY+E9nvSoF6HeTo5/EYX+wGY
+         ZDxuPf2BgVIA1W3mG2aixhe4SoVjBKBdP0GoxIZAhtcLRA5X3NLpjVxMINmjs/cKnnpc
+         6tRQ==
+X-Gm-Message-State: AOAM531CJbH0o0fr6dN9GobxBFPeYt4cF/pragFn6FUa5OMV669pUobs
+        c6AfEHTbM8cHmOxaSaJirgUt7Mw9fu/rWA==
+X-Google-Smtp-Source: ABdhPJzvo/vbcHXbIH58HJbFF3QSN4voQDezYqeXyuqC8KbYNbm3j7DNhei/2xk3i0xTQLH+8Z/R6w==
+X-Received: by 2002:adf:a316:: with SMTP id c22mr26126159wrb.202.1620596645039;
+        Sun, 09 May 2021 14:44:05 -0700 (PDT)
+Received: from localhost.localdomain ([170.253.36.171])
+        by smtp.googlemail.com with ESMTPSA id u6sm16495530wml.6.2021.05.09.14.44.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 May 2021 14:44:04 -0700 (PDT)
+From:   Alejandro Colomar <alx.manpages@gmail.com>
+To:     mtk.manpages@gmail.com
+Cc:     Alejandro Colomar <alx.manpages@gmail.com>,
+        linux-man@vger.kernel.org, Luis Henriques <lhenriques@suse.de>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Steve French <sfrench@samba.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Ian Lance Taylor <iant@google.com>,
+        Luis Lozano <llozano@chromium.org>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Olga Kornievskaia <aglo@umich.edu>,
+        Christoph Hellwig <hch@infradead.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Walter Harms <wharms@bfs.de>
+Subject: [PATCH] copy_file_range.2: Update cross-filesystem support for 5.12
+Date:   Sun,  9 May 2021 23:39:06 +0200
+Message-Id: <20210509213930.94120-12-alx.manpages@gmail.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210509213930.94120-1-alx.manpages@gmail.com>
+References: <20210509213930.94120-1-alx.manpages@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-MIMEDefang-action: accept
-X-Scanned-By: MIMEDefang 2.79 on 192.168.0.1
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi all
+Linux 5.12 fixes a regression.
 
-When /etc/mtab is a symlink to /proc/mounts, users are still able to mount
-NFS volumes listed in /etc/fstab with the "user" or "users" option. 
-However, attempting to unmount the same volume fails:
+Cross-filesystem (introduced in 5.3) copies were buggy.
 
-  umount.nfs: You are not permitted to unmount <mount-point>
+Move the statements documenting cross-fs to BUGS.
+Kernels 5.3..5.11 should be patched soon.
 
-The /etc/fstab entry is
+State version information for some errors related to this.
 
-  nfssvr:/home/export  /home/export  nfs  users,noauto,hard,bg,intr
+Reported-by: Luis Henriques <lhenriques@suse.de>
+Reported-by: Amir Goldstein <amir73il@gmail.com>
+Related: <https://lwn.net/Articles/846403/>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+Cc: Anna Schumaker <anna.schumaker@netapp.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: Steve French <sfrench@samba.org>
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: Dave Chinner <dchinner@redhat.com>
+Cc: Nicolas Boichat <drinkcat@chromium.org>
+Cc: Ian Lance Taylor <iant@google.com>
+Cc: Luis Lozano <llozano@chromium.org>
+Cc: Andreas Dilger <adilger@dilger.ca>
+Cc: Olga Kornievskaia <aglo@umich.edu>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: ceph-devel <ceph-devel@vger.kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: CIFS <linux-cifs@vger.kernel.org>
+Cc: samba-technical <samba-technical@lists.samba.org>
+Cc: linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc: Walter Harms <wharms@bfs.de>
+Signed-off-by: Alejandro Colomar <alx.manpages@gmail.com>
+---
+ man2/copy_file_range.2 | 27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
-The kernel doesn't track the "user" or "users" options so they don't appear
-in /proc/mounts, and thus in /etc/mtab when the latter is a link to the
-former.  However, when /etc/mtab is an ordinary file nfs.mount adds the
-"user" or "users" option to the entry (fix_opts_string() in
-utils/mount/mount.c) so the flag is available when /etc/mtab is consulted at
-unmount time.
+diff --git a/man2/copy_file_range.2 b/man2/copy_file_range.2
+index 467a16300..843e02241 100644
+--- a/man2/copy_file_range.2
++++ b/man2/copy_file_range.2
+@@ -169,6 +169,9 @@ Out of memory.
+ .B ENOSPC
+ There is not enough space on the target filesystem to complete the copy.
+ .TP
++.BR EOPNOTSUPP " (since Linux 5.12)"
++The filesystem does not support this operation.
++.TP
+ .B EOVERFLOW
+ The requested source or destination range is too large to represent in the
+ specified data types.
+@@ -184,10 +187,17 @@ or
+ .I fd_out
+ refers to an active swap file.
+ .TP
+-.B EXDEV
++.BR EXDEV " (before Linux 5.3)"
++The files referred to by
++.IR fd_in " and " fd_out
++are not on the same filesystem.
++.TP
++.BR EXDEV " (since Linux 5.12)"
+ The files referred to by
+ .IR fd_in " and " fd_out
+-are not on the same mounted filesystem (pre Linux 5.3).
++are not on the same filesystem,
++and the source and target filesystems are not of the same type,
++or do not support cross-filesystem copy.
+ .SH VERSIONS
+ The
+ .BR copy_file_range ()
+@@ -200,8 +210,11 @@ Areas of the API that weren't clearly defined were clarified and the API bounds
+ are much more strictly checked than on earlier kernels.
+ Applications should target the behaviour and requirements of 5.3 kernels.
+ .PP
+-First support for cross-filesystem copies was introduced in Linux 5.3.
+-Older kernels will return -EXDEV when cross-filesystem copies are attempted.
++Since Linux 5.12,
++cross-filesystem copies can be achieved
++when both filesystems are of the same type,
++and that filesystem implements support for it.
++See BUGS for behavior prior to 5.12.
+ .SH CONFORMING TO
+ The
+ .BR copy_file_range ()
+@@ -226,6 +239,12 @@ gives filesystems an opportunity to implement "copy acceleration" techniques,
+ such as the use of reflinks (i.e., two or more inodes that share
+ pointers to the same copy-on-write disk blocks)
+ or server-side-copy (in the case of NFS).
++.SH BUGS
++In Linux kernels 5.3 to 5.11,
++cross-filesystem copies were implemented by the kernel,
++if the operation was not supported by individual filesystems.
++However, on some virtual filesystems,
++the call failed to copy, while still reporting success.
+ .SH EXAMPLES
+ .EX
+ #define _GNU_SOURCE
+-- 
+2.31.1
 
-The util-linux mount tools must track the "user" and "users" options in
-their own way since mounts which use those tools with these flags work fine.
-I haven't quite determined where it does this: I thought it might be
-/run/mount/utab, but that file isn't created on my system (Slackware64
-/current) and yet user mounts still generally work.
-
-What is the recommended way to unmount NFS volumes which are permitted to be
-mounted by users via the "user" and "users" options?  The only way I can
-think of is a very careful sudo entry.  It would be good though if nfs
-unmount could work with the "user" and "users" options just like mount does.
-
-Regards
-  jonathan
