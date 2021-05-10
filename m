@@ -2,24 +2,24 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C348A378885
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 May 2021 13:47:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97E3D378887
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 May 2021 13:47:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233955AbhEJLV5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 May 2021 07:21:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34304 "EHLO mail.kernel.org"
+        id S234120AbhEJLV7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 May 2021 07:21:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234204AbhEJLCa (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 10 May 2021 07:02:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3695F61C58;
-        Mon, 10 May 2021 10:54:03 +0000 (UTC)
+        id S232852AbhEJLLz (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 10 May 2021 07:11:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 10B216192A;
+        Mon, 10 May 2021 11:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1620644043;
-        bh=vilD/NhNhxVHwOqy0EVvW3IzXtsRYJyK1DbRLXetq2U=;
+        s=korg; t=1620644973;
+        bh=79VM/OOuYJbqaRc+zfcvIsTNDJKV6sK5o0e9mKn0K+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mekWRATYlRCc0WvWRARy/DFvCKf/g0CWlHPvbbh3FrGMP16djt8xyqUg1vaifrhU4
-         Kl3fsGZYf1zyT+SEwMT4M7lS5zOpYfA3emWPQHDvxCcijJC3qKPnunxo/vjz/a7SZ3
-         lMC3D/l+JJs1ICLGW9zSz4WOHnWdtUvVww5njhMY=
+        b=TnHvmkAgPFQWZyJfOpFlX+vFghCMu8O3qUfUPaTuTmi9twTt5pp3a9vo/h4Ta0Pkq
+         BZZtFzuJyj2vbcJQC1EuRwXm/SqgZTBE5bmNvsfd7+SDBBddns/psO7aMj9Y2yn261
+         8I6s1f1vyUDy7j51/wN4v7jkGXNi/bs7m74Di09M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -31,12 +31,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         linux-nfs@vger.kernel.org, David Howells <dhowells@redhat.com>,
         Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 5.11 265/342] NFS: fs_context: validate UDP retrans to prevent shift out-of-bounds
-Date:   Mon, 10 May 2021 12:20:55 +0200
-Message-Id: <20210510102018.854477314@linuxfoundation.org>
+Subject: [PATCH 5.12 298/384] NFS: fs_context: validate UDP retrans to prevent shift out-of-bounds
+Date:   Mon, 10 May 2021 12:21:27 +0200
+Message-Id: <20210510102024.630129669@linuxfoundation.org>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210510102010.096403571@linuxfoundation.org>
-References: <20210510102010.096403571@linuxfoundation.org>
+In-Reply-To: <20210510102014.849075526@linuxfoundation.org>
+References: <20210510102014.849075526@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,7 +75,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/fs/nfs/fs_context.c
 +++ b/fs/nfs/fs_context.c
-@@ -941,6 +941,15 @@ static int nfs23_parse_monolithic(struct
+@@ -974,6 +974,15 @@ static int nfs23_parse_monolithic(struct
  			       sizeof(mntfh->data) - mntfh->size);
  
  		/*
@@ -91,7 +91,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  		 * Translate to nfs_fs_context, which nfs_fill_super
  		 * can deal with.
  		 */
-@@ -1040,6 +1049,9 @@ out_no_address:
+@@ -1073,6 +1082,9 @@ out_no_address:
  
  out_invalid_fh:
  	return nfs_invalf(fc, "NFS: invalid root filehandle");
