@@ -2,101 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76BC8377EFB
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 May 2021 11:09:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C33FD37849D
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 May 2021 12:52:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230170AbhEJJKF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 May 2021 05:10:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36912 "EHLO mx2.suse.de"
+        id S232851AbhEJKyA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 May 2021 06:54:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229566AbhEJJKF (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 10 May 2021 05:10:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 04DFBB02E;
-        Mon, 10 May 2021 09:09:00 +0000 (UTC)
-Received: from localhost (brahms [local])
-        by brahms (OpenSMTPD) with ESMTPA id abe4f275;
-        Mon, 10 May 2021 09:10:32 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.de>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
+        id S233253AbhEJKwN (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 10 May 2021 06:52:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 71FDD61876;
+        Mon, 10 May 2021 10:40:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1620643254;
+        bh=SqM/N6JzNeVkkCEtOVfKCgRU/lkUPfSXPQSHx4t8blo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tl1wi8pcg2zcxMzIkIUxD7b5ml4BmEEJvZjQKXhkuPtJ1N0M6Aaw0wvyi2SUtM3t1
+         zsB+BDKWFoUf9RUab1eROh3/KXwGoRlw/PcFBwuK9OIQO/YZALKpTUjxr+qzaO4mrv
+         KvZPTBaN2jarxa0lANnHl8inAKJfqSDqOQeB9Me0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+ba2e91df8f74809417fa@syzkaller.appspotmail.com,
+        syzbot+f3a0fa110fd630ab56c8@syzkaller.appspotmail.com,
+        Randy Dunlap <rdunlap@infradead.org>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Steve French <sfrench@samba.org>,
-        Ian Lance Taylor <iant@golang.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>
-Subject: Re: [PATCH v8] vfs: fix copy_file_range regression in cross-fs copies
-References: <20210221195833.23828-1-lhenriques@suse.de>
-        <20210222102456.6692-1-lhenriques@suse.de>
-        <CAN-5tyELMY7b7CKO-+an47ydq8r_4+SOyhuvdH0qE0-JmdZ44Q@mail.gmail.com>
-        <YDYpHccgM7agpdTQ@suse.de>
-        <CANMq1KBgwEXFh8AxpPW2t1SA0NVsyR45m0paLEU4D4w80dc_fA@mail.gmail.com>
-        <CANMq1KDTgnGtNxWj2XxAT3mdsNjc551uUCg6EWnh=Hd0KcVQKQ@mail.gmail.com>
-        <8735vzfugn.fsf@suse.de>
-        <CAOQ4uxjdVZywBi6=D1eRfBhRk+nobTz4N87jcejDtvzBMMMKXQ@mail.gmail.com>
-        <CANMq1KAOwj9dJenwF2NadQ73ytfccuPuahBJE7ak6S7XP6nCjg@mail.gmail.com>
-        <8735v4tcye.fsf@suse.de>
-        <CAOQ4uxh6PegaOtMXQ9WmU=05bhQfYTeweGjFWR7T+XVAbuR09A@mail.gmail.com>
-Date:   Mon, 10 May 2021 10:10:32 +0100
-In-Reply-To: <CAOQ4uxh6PegaOtMXQ9WmU=05bhQfYTeweGjFWR7T+XVAbuR09A@mail.gmail.com>
-        (Amir Goldstein's message of "Mon, 10 May 2021 07:59:09 +0300")
-Message-ID: <87fsyv0x9z.fsf@suse.de>
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 5.10 233/299] NFS: fs_context: validate UDP retrans to prevent shift out-of-bounds
+Date:   Mon, 10 May 2021 12:20:30 +0200
+Message-Id: <20210510102012.656313062@linuxfoundation.org>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210510102004.821838356@linuxfoundation.org>
+References: <20210510102004.821838356@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Amir Goldstein <amir73il@gmail.com> writes:
+From: Randy Dunlap <rdunlap@infradead.org>
 
-> On Mon, May 3, 2021 at 11:52 AM Luis Henriques <lhenriques@suse.de> wrote:
-<...>
-> Luis,
->
-> I suggest that you post v9 with my Reviewed-by and Olga's Tested-by
-> and address your patch to the VFS maintainer and fsdevel list without
-> the entire world and LKML in CC.
+commit c09f11ef35955785f92369e25819bf0629df2e59 upstream.
 
-Ok, v9 sent out according to your proposal:
+Fix shift out-of-bounds in xprt_calc_majortimeo(). This is caused
+by a garbage timeout (retrans) mount option being passed to nfs mount,
+in this case from syzkaller.
 
-https://lore.kernel.org/linux-fsdevel/20210510090806.8988-1-lhenriques@suse.de/
+If the protocol is XPRT_TRANSPORT_UDP, then 'retrans' is a shift
+value for a 64-bit long integer, so 'retrans' cannot be >= 64.
+If it is >= 64, fail the mount and return an error.
 
-Thanks, Amir.
+Fixes: 9954bf92c0cd ("NFS: Move mount parameterisation bits into their own file")
+Reported-by: syzbot+ba2e91df8f74809417fa@syzkaller.appspotmail.com
+Reported-by: syzbot+f3a0fa110fd630ab56c8@syzkaller.appspotmail.com
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna.schumaker@netapp.com>
+Cc: linux-nfs@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: stable@vger.kernel.org
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ fs/nfs/fs_context.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Cheers,
--- 
-Luis
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -938,6 +938,15 @@ static int nfs23_parse_monolithic(struct
+ 			       sizeof(mntfh->data) - mntfh->size);
+ 
+ 		/*
++		 * for proto == XPRT_TRANSPORT_UDP, which is what uses
++		 * to_exponential, implying shift: limit the shift value
++		 * to BITS_PER_LONG (majortimeo is unsigned long)
++		 */
++		if (!(data->flags & NFS_MOUNT_TCP)) /* this will be UDP */
++			if (data->retrans >= 64) /* shift value is too large */
++				goto out_invalid_data;
++
++		/*
+ 		 * Translate to nfs_fs_context, which nfs_fill_super
+ 		 * can deal with.
+ 		 */
+@@ -1037,6 +1046,9 @@ out_no_address:
+ 
+ out_invalid_fh:
+ 	return nfs_invalf(fc, "NFS: invalid root filehandle");
++
++out_invalid_data:
++	return nfs_invalf(fc, "NFS: invalid binary mount data");
+ }
+ 
+ #if IS_ENABLED(CONFIG_NFS_V4)
 
->
-> Al,
->
-> Would you mind picking this patch?
->
-> Linus,
->
-> There have been some voices on the discussion saying maybe this is not
-> a kernel regression that needs to be fixed, but a UAPI that is not being used
-> correctly by userspace.
->
-> The proposed change reminds me a bit of recent changes to splice() from
-> special files. Since this specific UAPI discussion is a bit subtle and because
-> we got this UAPI wrong at least two times already, it would be great to get
-> your ACK on this proposed UAPI change.
->
-> Thanks,
-> Amir.
->
-> Latest v8 tested and reviewed by several developers on CC list:
-> https://lore.kernel.org/linux-fsdevel/20210222102456.6692-1-lhenriques@suse.de/
->
-> Proposed man page update:
-> https://lore.kernel.org/linux-fsdevel/20210509213930.94120-12-alx.manpages@gmail.com/
+
