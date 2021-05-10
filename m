@@ -2,104 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97E3D378887
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 May 2021 13:47:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A436837930D
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 May 2021 17:51:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234120AbhEJLV7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 May 2021 07:21:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54424 "EHLO mail.kernel.org"
+        id S231256AbhEJPwq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 May 2021 11:52:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232852AbhEJLLz (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 10 May 2021 07:11:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 10B216192A;
-        Mon, 10 May 2021 11:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1620644973;
-        bh=79VM/OOuYJbqaRc+zfcvIsTNDJKV6sK5o0e9mKn0K+A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TnHvmkAgPFQWZyJfOpFlX+vFghCMu8O3qUfUPaTuTmi9twTt5pp3a9vo/h4Ta0Pkq
-         BZZtFzuJyj2vbcJQC1EuRwXm/SqgZTBE5bmNvsfd7+SDBBddns/psO7aMj9Y2yn261
-         8I6s1f1vyUDy7j51/wN4v7jkGXNi/bs7m74Di09M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+ba2e91df8f74809417fa@syzkaller.appspotmail.com,
-        syzbot+f3a0fa110fd630ab56c8@syzkaller.appspotmail.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 5.12 298/384] NFS: fs_context: validate UDP retrans to prevent shift out-of-bounds
-Date:   Mon, 10 May 2021 12:21:27 +0200
-Message-Id: <20210510102024.630129669@linuxfoundation.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210510102014.849075526@linuxfoundation.org>
-References: <20210510102014.849075526@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S230512AbhEJPwn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 10 May 2021 11:52:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 21B7C6100A;
+        Mon, 10 May 2021 15:51:38 +0000 (UTC)
+Subject: [PATCH RFC 00/21] NFSD callback and lease management observability
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     dwysocha@redhat.com, bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org
+Date:   Mon, 10 May 2021 11:51:36 -0400
+Message-ID: <162066179690.94415.203187037032448300.stgit@klimt.1015granger.net>
+User-Agent: StGit/1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+Happy Monday.
 
-commit c09f11ef35955785f92369e25819bf0629df2e59 upstream.
+I've hacked together some improvements to the tracepoints that record
+server callback and lease management activity. I'm interested in
+review comments and testing. I'm sure I've missed your favorite edge
+case, so please let me know what it is!
 
-Fix shift out-of-bounds in xprt_calc_majortimeo(). This is caused
-by a garbage timeout (retrans) mount option being passed to nfs mount,
-in this case from syzkaller.
-
-If the protocol is XPRT_TRANSPORT_UDP, then 'retrans' is a shift
-value for a 64-bit long integer, so 'retrans' cannot be >= 64.
-If it is >= 64, fail the mount and return an error.
-
-Fixes: 9954bf92c0cd ("NFS: Move mount parameterisation bits into their own file")
-Reported-by: syzbot+ba2e91df8f74809417fa@syzkaller.appspotmail.com
-Reported-by: syzbot+f3a0fa110fd630ab56c8@syzkaller.appspotmail.com
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna.schumaker@netapp.com>
-Cc: linux-nfs@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: stable@vger.kernel.org
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/nfs/fs_context.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
 
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -974,6 +974,15 @@ static int nfs23_parse_monolithic(struct
- 			       sizeof(mntfh->data) - mntfh->size);
- 
- 		/*
-+		 * for proto == XPRT_TRANSPORT_UDP, which is what uses
-+		 * to_exponential, implying shift: limit the shift value
-+		 * to BITS_PER_LONG (majortimeo is unsigned long)
-+		 */
-+		if (!(data->flags & NFS_MOUNT_TCP)) /* this will be UDP */
-+			if (data->retrans >= 64) /* shift value is too large */
-+				goto out_invalid_data;
-+
-+		/*
- 		 * Translate to nfs_fs_context, which nfs_fill_super
- 		 * can deal with.
- 		 */
-@@ -1073,6 +1082,9 @@ out_no_address:
- 
- out_invalid_fh:
- 	return nfs_invalf(fc, "NFS: invalid root filehandle");
-+
-+out_invalid_data:
-+	return nfs_invalf(fc, "NFS: invalid binary mount data");
- }
- 
- #if IS_ENABLED(CONFIG_NFS_V4)
+Chuck Lever (21):
+      NFSD: Constify @fh argument of knfsd_fh_hash()
+      NFSD: Capture every CB state transition
+      NFSD: Drop TRACE_DEFINE_ENUM for NFSD4_CB_<state> macros
+      NFSD: Add cb_lost tracepoint
+      NFSD: Adjust cb_shutdown tracepoint
+      NFSD: Remove spurious cb_setup_err tracepoint
+      NFSD: Enhance the nfsd_cb_setup tracepoint
+      NFSD: Add an nfsd_cb_lm_notify tracepoint
+      NFSD: Add an nfsd_cb_offload tracepoint
+      NFSD: Replace the nfsd_deleg_break tracepoint
+      NFSD: Add an nfsd_cb_probe tracepoint
+      NFSD: Remove the nfsd_cb_work and nfsd_cb_done tracepoints
+      NFSD: Update nfsd_cb_args tracepoint
+      NFSD: Add nfsd_clid_cred_mismatch tracepoint
+      NFSD: Add nfsd_clid_verf_mismatch tracepoint
+      NFSD: Remove nfsd_clid_inuse_err
+      NFSD: Add nfsd_clid_confirmed tracepoint
+      NFSD: Add nfsd_clid_destroyed tracepoint
+      NFSD: Add a couple more nfsd_clid_expired call sites
+      NFSD: Rename nfsd_clid_class
+      NFSD: Add tracepoints to observe clientID activity
 
+
+ fs/nfsd/nfs4callback.c |  45 ++++----
+ fs/nfsd/nfs4proc.c     |   1 +
+ fs/nfsd/nfs4state.c    |  56 +++++++---
+ fs/nfsd/nfsfh.h        |   7 +-
+ fs/nfsd/trace.h        | 227 ++++++++++++++++++++++++++++++++++-------
+ 5 files changed, 254 insertions(+), 82 deletions(-)
+
+--
+Chuck Lever
 
