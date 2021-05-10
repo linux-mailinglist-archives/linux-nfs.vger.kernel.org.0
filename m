@@ -2,69 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE5C7377A31
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 May 2021 04:40:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18E59377B37
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 May 2021 06:26:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229987AbhEJCl2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 9 May 2021 22:41:28 -0400
-Received: from mail-m17670.qiye.163.com ([59.111.176.70]:23344 "EHLO
-        mail-m17670.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229932AbhEJCl1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 May 2021 22:41:27 -0400
-X-Greylist: delayed 338 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 May 2021 22:41:27 EDT
-Received: from ubuntu.localdomain (unknown [36.152.145.182])
-        by mail-m17670.qiye.163.com (Hmail) with ESMTPA id F0BC33C0137;
-        Mon, 10 May 2021 10:34:43 +0800 (CST)
-From:   zhouchuangao <zhouchuangao@vivo.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        zhouchuangao <zhouchuangao@vivo.com>
-Subject: [PATCH] fs/nfs: Use fatal_signal_pending instead of signal_pending
-Date:   Sun,  9 May 2021 19:34:37 -0700
-Message-Id: <1620614077-73633-1-git-send-email-zhouchuangao@vivo.com>
-X-Mailer: git-send-email 2.7.4
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
-        oVCBIfWUFZQk1CGVZDTUsdH0IeTE4aH0hVEwETFhoSFyQUDg9ZV1kWGg8SFR0UWUFZT0tIVUpKS0
-        hKQ1VLWQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PxQ6Vhw6MT8VTj8hIgsjTAs6
-        DjoKCSJVSlVKTUlLTUpPS0NPT0hDVTMWGhIXVQETFA4YEw4aFRwaFDsNEg0UVRgUFkVZV1kSC1lB
-        WUhNVUpOSVVKT05VSkNJWVdZCAFZQUpDQkk3Bg++
-X-HM-Tid: 0a79542075f8da5akuwsf0bc33c0137
+        id S229952AbhEJE1v (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 May 2021 00:27:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42310 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229569AbhEJE1u (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 May 2021 00:27:50 -0400
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FDB2C061573;
+        Sun,  9 May 2021 21:26:46 -0700 (PDT)
+Received: by mail-il1-x131.google.com with SMTP id w13so792706ilv.11;
+        Sun, 09 May 2021 21:26:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vrW6spNhSrHQfksBCubidylUZF4PsPIbB3rPZO64ujI=;
+        b=maMV82VdZ+6NVY1H1vUwxTqXy0nXFpllHSIJ/tyCXiwj9kE0LCybDNLh4PhzoP7aVE
+         YoOi2jEd7ZfhUFyLEa2yiFCg2G0lnQ52DEOXXYCtn+JOxlrmUytOXJxIbXydU8ixOHvl
+         q1XrwslzrWDiizvyPzeB4pwn9kb6bKR0zDi4/3ued811MlgT5DJwX8fqzElF7rEmEiIN
+         JC1UvngquTTbQYaZNe00U3qPgFxpW3hvPUDuPWo14ZnNrUuGRfh0RtTx+nHEP5F8Ehwz
+         cmCrTFy6AKYWTdpWHwxxlGQrBH6jXLvfNog9Itvgv9e4VJR0tF3D+Qr2sN4gbzL9V/MQ
+         DjIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vrW6spNhSrHQfksBCubidylUZF4PsPIbB3rPZO64ujI=;
+        b=MrOPpdZ5wANG5RnpxJLylN6Mm4toHi2jkJracIDxw1maW/t5STCrufNo1joPikN0ei
+         bbkohS8pe6eW/glliM635/VuUZ+Kf1TkPINZPqmM+1Gkv0BOWuC7D+6PvYdr3WHbrIyM
+         2geS80O9JfPcd9FyXTqOnhdU0GbckIl03D80sJ+LXHh8jjqidqSNYE3P+GuvOKCWYr1U
+         IlddQHaQKx2bO8bM0CwNYOGUcYB1415hzeDR16UqAm5c7zSL422fBWoslOTJisuK9TlT
+         zFVp8PEBipp/wlWGEv/TO/tXAxekMjlYfeEbfIBRGYddcNOmwEfTp4bBezD1B879K1t4
+         m+nA==
+X-Gm-Message-State: AOAM533kkS1afMP1RqTZRF+ekS6EK0axVodxt/GZRqbax3oJsXAspWv6
+        q57MBJyw5EKbPU/YjHap4qIc0KtlgRy+TRJ0KXc=
+X-Google-Smtp-Source: ABdhPJxrhdp8bUdHz5FwO47aZSX+yN3CdPcXDTAW/eIBd6hg2GtSC8JJuxS00T9WmDG2mjyZ7CDbKZl2xrtx3BZ15gU=
+X-Received: by 2002:a92:de0c:: with SMTP id x12mr20195626ilm.275.1620620806016;
+ Sun, 09 May 2021 21:26:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210509213930.94120-1-alx.manpages@gmail.com>
+ <20210509213930.94120-12-alx.manpages@gmail.com> <a95d7a31-2345-8e1e-78d7-a1a8f7161565@gmail.com>
+In-Reply-To: <a95d7a31-2345-8e1e-78d7-a1a8f7161565@gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Mon, 10 May 2021 07:26:35 +0300
+Message-ID: <CAOQ4uxgB+sZ08jB+mFXuPJfTSJUV+Re5XKQ=hN7A4xfYo0dj6A@mail.gmail.com>
+Subject: Re: [PATCH] copy_file_range.2: Update cross-filesystem support for 5.12
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     Alejandro Colomar <alx.manpages@gmail.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Luis Henriques <lhenriques@suse.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Steve French <sfrench@samba.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Ian Lance Taylor <iant@google.com>,
+        Luis Lozano <llozano@chromium.org>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Olga Kornievskaia <aglo@umich.edu>,
+        Christoph Hellwig <hch@infradead.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Walter Harms <wharms@bfs.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-We set the state of the current process to TASK_KILLABLE via
-prepare_to_wait(). Should we use fatal_signal_pending() to detect
-the signal here?
+On Mon, May 10, 2021 at 3:01 AM Michael Kerrisk (man-pages)
+<mtk.manpages@gmail.com> wrote:
+>
+> Hi Alex,
+>
+> On 5/10/21 9:39 AM, Alejandro Colomar wrote:
+> > Linux 5.12 fixes a regression.
 
-Signed-off-by: zhouchuangao <zhouchuangao@vivo.com>
----
- fs/nfs/nfs4proc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Nope.
+That never happened:
+https://lore.kernel.org/linux-fsdevel/8735v4tcye.fsf@suse.de/
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 87d04f2..0cd9658 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -1706,7 +1706,7 @@ static void nfs_set_open_stateid_locked(struct nfs4_state *state,
- 		rcu_read_unlock();
- 		trace_nfs4_open_stateid_update_wait(state->inode, stateid, 0);
- 
--		if (!signal_pending(current)) {
-+		if (!fatal_signal_pending(current)) {
- 			if (schedule_timeout(5*HZ) == 0)
- 				status = -EAGAIN;
- 			else
-@@ -3487,7 +3487,7 @@ static bool nfs4_refresh_open_old_stateid(nfs4_stateid *dst,
- 		write_sequnlock(&state->seqlock);
- 		trace_nfs4_close_stateid_update_wait(state->inode, dst, 0);
- 
--		if (signal_pending(current))
-+		if (fatal_signal_pending(current))
- 			status = -EINTR;
- 		else
- 			if (schedule_timeout(5*HZ) != 0)
--- 
-2.7.4
+> >
+> > Cross-filesystem (introduced in 5.3) copies were buggy.
+> >
+> > Move the statements documenting cross-fs to BUGS.
+> > Kernels 5.3..5.11 should be patched soon.
+> >
+> > State version information for some errors related to this.
+>
+> Thanks. Patch applied.
 
+I guess that would need to be reverted...
+
+Thanks,
+Amir.
