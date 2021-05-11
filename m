@@ -2,115 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCC7537AD49
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 May 2021 19:43:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCE6B37AD4C
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 May 2021 19:44:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231728AbhEKRou (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 May 2021 13:44:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36740 "EHLO
+        id S231462AbhEKRpg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 May 2021 13:45:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231589AbhEKRot (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 May 2021 13:44:49 -0400
+        with ESMTP id S231454AbhEKRpg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 May 2021 13:45:36 -0400
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E835C061574
-        for <linux-nfs@vger.kernel.org>; Tue, 11 May 2021 10:43:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E97E5C061574
+        for <linux-nfs@vger.kernel.org>; Tue, 11 May 2021 10:44:29 -0700 (PDT)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id C5A484F7D; Tue, 11 May 2021 13:43:42 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C5A484F7D
+        id 97976581C; Tue, 11 May 2021 13:44:29 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 97976581C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1620755022;
-        bh=7Jp1+3JatcX0FZneHcRD/YX+kYuvX3/uoIdxmsSzMik=;
+        s=default; t=1620755069;
+        bh=SPiOC5smQRRYJW9Hiy6TyX0DoVSUoum5BBKsk4X36j8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qdQNgu75NfpgL8Ji1+1HYVifTT5OkvSDhrrSPkFIwQTOS2YkLKKdNlZLgpLKStSXI
-         IPu+x68QzK1mPfzMkFwKSRDnvUlI+afNCKWSbbiAkvOdq57BySsi/teI7Y8qemuEFo
-         miqgqujlqeGkFNHJZ2ma1ZZfyBglujnFKptmpBHs=
-Date:   Tue, 11 May 2021 13:43:42 -0400
+        b=ctSiyyN7HR6xyh+bIl92S/jGzrO3HrbFZY4eF8QNiWFnz7NhKxhm73UOxOjQZN04s
+         C2q9/Lc/d14Em1q4G9QZpTJCUOA0dJq5OmXkLtUYh6e2JmUvXmY/bhegbGLz9m8MtP
+         +6yP6TiK2D3D7nGpg+yM7YoBqT1f8MD6KafP+48E=
+Date:   Tue, 11 May 2021 13:44:29 -0400
 From:   Bruce Fields <bfields@fieldses.org>
 To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        David Wysochanski <dwysocha@redhat.com>
-Subject: Re: [PATCH RFC 21/21] NFSD: Add tracepoints to observe clientID
- activity
-Message-ID: <20210511174342.GC5416@fieldses.org>
+Cc:     David Wysochanski <dwysocha@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH RFC 06/21] NFSD: Remove spurious cb_setup_err tracepoint
+Message-ID: <20210511174429.GD5416@fieldses.org>
 References: <162066179690.94415.203187037032448300.stgit@klimt.1015granger.net>
- <162066202717.94415.8666073108309704792.stgit@klimt.1015granger.net>
- <7922E4B6-BB7F-4D9E-B85D-D1A97835AF3F@oracle.com>
- <20210511173839.GB5416@fieldses.org>
- <87867BC3-EA29-4C94-B8DD-6B927BEC9522@oracle.com>
+ <162066193457.94415.10829735588517134118.stgit@klimt.1015granger.net>
+ <20210510202719.GB11188@fieldses.org>
+ <42BBD4E8-7254-4ADB-98C5-84DE7AE1C9DC@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87867BC3-EA29-4C94-B8DD-6B927BEC9522@oracle.com>
+In-Reply-To: <42BBD4E8-7254-4ADB-98C5-84DE7AE1C9DC@oracle.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, May 11, 2021 at 05:40:20PM +0000, Chuck Lever III wrote:
+On Mon, May 10, 2021 at 08:29:32PM +0000, Chuck Lever III wrote:
 > 
 > 
-> > On May 11, 2021, at 1:38 PM, Bruce Fields <bfields@fieldses.org> wrote:
+> > On May 10, 2021, at 4:27 PM, J. Bruce Fields <bfields@fieldses.org> wrote:
 > > 
-> > On Tue, May 11, 2021 at 03:59:00PM +0000, Chuck Lever III wrote:
-> >> As Dave reported yesterday, this patch is unfinished and is probably
-> >> junk. But any thoughts on how the tracepoints should be organized
-> >> in this code would help.
-> >> 
-> >> So I was thinking we probably want a tracepoint to fire for each
-> >> case that is handled in this code (and in nfsd4_exchangeid).
-> >> However, this comment in nfsd4_setclientid:
-> >> 
-> >>   /* Cases below refer to rfc 3530 section 14.2.33: */
-> >> 
-> >> Is confusing.
-> >> 
-> >> - RFC 3530 is superceded by RFC 7530, and the section numbers have changed.
-> >> 
-> >> - The cases in this section in both RFCs aren't numbered, they are
-> >> bullet points.
+> > On Mon, May 10, 2021 at 11:52:14AM -0400, Chuck Lever wrote:
+> >> This path is not really an error path,
 > > 
-> > Honestly I think those particular comments should just go.  The code
-> > doesn't even follow those bullet points very closely any more.
+> > What's the non-error case for this path?
 > 
-> OK, I'll squash this in, and include similar changes to
-> nfsd4_setclientid_confirm().
+> >From what I can tell, it appears to be the default exit for when
+> there is a session and backchannel. Feel free to straighten me
+> out, but it just seemed to always fire for NFSv4.1 mounts.
 
-The setclientid_confirm cases are a little more complicated and I think
-the code there may map more closely to the RFC bullet points.
-
-But I'm not particularly attached to them, feel free to use your
-judgement for those....
+I'd be curious to know why.  I'll see if I can find some time to
+experiment.
 
 --b.
 
-> 
-> 
+> > On a quick look it seems like that'd mean a 4.1 client doesn't have a
+> > connection available for the backchannel, which sounds bad.
+> > 
+> > But I'm probably overlooking something....
+> > 
 > > --b.
 > > 
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index f47f72bc871f..2aa5d15b08ed 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -3954,11 +3954,9 @@ nfsd4_setclientid(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
-> > 	new = create_client(clname, rqstp, &clverifier);
-> > 	if (new == NULL)
-> > 		return nfserr_jukebox;
-> > -	/* Cases below refer to rfc 3530 section 14.2.33: */
-> > 	spin_lock(&nn->client_lock);
-> > 	conf = find_confirmed_client_by_name(&clname, nn);
-> > 	if (conf && client_has_state(conf)) {
-> > -		/* case 0: */
-> > 		status = nfserr_clid_inuse;
-> > 		if (clp_used_exchangeid(conf))
-> > 			goto out;
-> > @@ -3970,7 +3968,6 @@ nfsd4_setclientid(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
-> > 	unconf = find_unconfirmed_client_by_name(&clname, nn);
-> > 	if (unconf)
-> > 		unhash_client_locked(unconf);
-> > -	/* We need to handle only case 1: probable callback update */
-> > 	if (conf && same_verf(&conf->cl_verifier, &clverifier)) {
-> > 		copy_clid(new, conf);
-> > 		gen_confirm(new, nn);
+> >> so the tracepoint I added
+> >> there is just noise.
+> >> 
+> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> >> ---
+> >> fs/nfsd/nfs4callback.c |    4 +---
+> >> 1 file changed, 1 insertion(+), 3 deletions(-)
+> >> 
+> >> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> >> index ab1836381e22..15ba16c54793 100644
+> >> --- a/fs/nfsd/nfs4callback.c
+> >> +++ b/fs/nfsd/nfs4callback.c
+> >> @@ -915,10 +915,8 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
+> >> 		args.authflavor = clp->cl_cred.cr_flavor;
+> >> 		clp->cl_cb_ident = conn->cb_ident;
+> >> 	} else {
+> >> -		if (!conn->cb_xprt) {
+> >> -			trace_nfsd_cb_setup_err(clp, -EINVAL);
+> >> +		if (!conn->cb_xprt)
+> >> 			return -EINVAL;
+> >> -		}
+> >> 		clp->cl_cb_conn.cb_xprt = conn->cb_xprt;
+> >> 		clp->cl_cb_session = ses;
+> >> 		args.bc_xprt = conn->cb_xprt;
+> >> 
 > 
 > --
 > Chuck Lever
