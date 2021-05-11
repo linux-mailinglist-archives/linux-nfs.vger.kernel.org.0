@@ -2,60 +2,128 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77E7337A9D4
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 May 2021 16:46:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 161C537AA67
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 May 2021 17:15:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231773AbhEKOsD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 May 2021 10:48:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26316 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231643AbhEKOsD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 May 2021 10:48:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620744416;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=6Lnvc0+a40OR30zqdZUM/znfFU40ZwYiFKsjTJls1DU=;
-        b=RecVwHfnNGnVk2skb1mMBVJkgLweF5J+ol1/lhQHmEL7d9dqHyZgSmqXheNQFSk928oyr0
-        ORxNpj0IfjUotmwiFCGJYIJDF1/EvEXevDwuqlvd2INVVtNdYiEE4OTPoF4bpRXJ1ZdNdk
-        6TelSvTFP4TolodX1c+VVCJ5lFk8o18=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-273-GtEQvuKVM3KdXq1GH3fAPQ-1; Tue, 11 May 2021 10:46:53 -0400
-X-MC-Unique: GtEQvuKVM3KdXq1GH3fAPQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F04FE106BB29;
-        Tue, 11 May 2021 14:46:51 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 19C875C1A3;
-        Tue, 11 May 2021 14:46:50 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-cc:     dhowells@redhat.com, linux-nfs@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Subject: Extracting out the gss/krb5 support in sunrpc
+        id S231779AbhEKPQH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 May 2021 11:16:07 -0400
+Received: from mail-bn7nam10on2100.outbound.protection.outlook.com ([40.107.92.100]:45536
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231461AbhEKPQG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 11 May 2021 11:16:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jTI256kWNPH4gFFowuJBq/FINwMLbqi5wlvC29nDj3h+rFSZR+os9FCqvSddSy70X4gL2UpRCB9TG7DnGITfMwOG4wo/Uke0ZEAH3lXxQH9oQsso6ZlgnlRMb/o7MinFh7dsL+2zDJGKqibOfMksU60o6y9zGFbhmYjoj8BiRRfR5lNJTEBpSxRa0E+PjhCmy5DT1vxk1xsZs59YLFQMaZvVBndJQ2X94q97vyy2qaoK27c3YqiSXtNIlOk1VEOI0nDEXCnXAKetTGTphzuPch9pyZUpfo085VMmLby4cXu01TqIuL0d5UEMa1qK4TQOnOkz47IfOXvLZBZfKzbD7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yl5vKn81GVsW4IjwPsZiLNwyjm4RVEXL0FV1O50bTII=;
+ b=kARba2lwMy/gfYJIYNignbIGjpCxdrJL80/Nkb31a28BU7MuNWuRsDJyR4CL51OOOk/eQg1OTAf8L17xKY1qukZRXBwruPTy6ly+0QohmHcIPHpfcMw5n495KtGekrKor3rEVO/ah5OV7B8QThfMK7iA8mRqPprOlZ11NzrlH9dfTSIssHbsbQp5AXXcrUfVq++9+t/tYZo6GUGz+wzQ1RNmuySPZyau7OrJ/RiSzTMpbg39OjV2qVXsowneW0hG92udb6tkWl+zGinwiMWRpaQGNkZtOArrZX7Dr8k4TpncDshi6uxTacsZAOYgcihQuoppMOPonPgGOXt1/AQyEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yl5vKn81GVsW4IjwPsZiLNwyjm4RVEXL0FV1O50bTII=;
+ b=XgvAtfSYjuow8qjzOtEZ7xgQ3r6PQLrf1/9Sc7RFfcbtJx5h3IHnRpCfaKpSRc9xJhHyWkEE3swOVFEZyaUZ6ozELKoz2BXssdaxPD/EdL0tNeYRZ1AtNzDeeKTRUEGeQvj1xKDOMZEiieExLcI3bgKA25OKFObxRJP1VAs0Yzg=
+Received: from DS7PR13MB4733.namprd13.prod.outlook.com (2603:10b6:5:3b1::24)
+ by DM6PR13MB2540.namprd13.prod.outlook.com (2603:10b6:5:ca::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.9; Tue, 11 May
+ 2021 15:14:57 +0000
+Received: from DS7PR13MB4733.namprd13.prod.outlook.com
+ ([fe80::4c65:55ca:a5a2:f18]) by DS7PR13MB4733.namprd13.prod.outlook.com
+ ([fe80::4c65:55ca:a5a2:f18%7]) with mapi id 15.20.4129.024; Tue, 11 May 2021
+ 15:14:57 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "dhowells@redhat.com" <dhowells@redhat.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Subject: Re: Extracting out the gss/krb5 support in sunrpc
+Thread-Topic: Extracting out the gss/krb5 support in sunrpc
+Thread-Index: AQHXRnR+g6lparLg30KMdaSuvml7F6reY+MA
+Date:   Tue, 11 May 2021 15:14:57 +0000
+Message-ID: <e7050fe7c8952be103cc65e27f63fdb148155672.camel@hammerspace.com>
+References: <2581831.1620744410@warthog.procyon.org.uk>
+In-Reply-To: <2581831.1620744410@warthog.procyon.org.uk>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a5d9d839-5c04-4a11-cbce-08d9148f89f3
+x-ms-traffictypediagnostic: DM6PR13MB2540:
+x-microsoft-antispam-prvs: <DM6PR13MB254066473BD83199DADC956BB8539@DM6PR13MB2540.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hbepw2qUAWAE0Gf+82gTWuqIhlVYMoYLaI5KrDkIVN2FdNMVdwOtEEPAlhNgguQJeEgb3jmaslT/JhWmEQlDHMwegRMgYkYXiTB8CT1WVjVb3rA2HfuNhstgzuwEntq12/s0wxkuXJxnI1EGUO5AcKNaaSUDNi6s4y/aCrb61OWzTXJBHFYxSkUmY0qgnowHoYbX/uLk4+uEJeqVptWce6bz52pNomjAq+Ket+kFNx0rvsAaYf392YmXKfmHI3Iem38AwYZLKdq+I0nv8Z83tXEQt9buwB5vUfm0qF7crWsqprXyMGLNXdgR1IO8WOPgM0BWA9UuTskbmK5Jd02bcl0R8IkkRj65nUakq7iOEecMQiYp/MfYfIHHIq9ZCFoqE4IugTspzELohZywQDoKNH1HPe9lAvtrPOd85lUxgAMwtPfb+ZZy/gEJiE4ml1+sRAjyaSXyCAejquFzg4h06SI2uJc1BdzRlrf8RJvi+rC4U2vKbyJmFkmPlL2A4SLxwCyNyvbbi9nyDLwwK0ob6dXzgPPAWUaqNL93PVMRY32LutgJKC5R3u0CQN73EZOQQVAr6PhYD5C5o2DO7jhGZlcdfMFefa99xSK8ofHDrtg=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR13MB4733.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(136003)(366004)(346002)(71200400001)(4326008)(91956017)(8936002)(66476007)(66946007)(54906003)(6916009)(66556008)(64756008)(86362001)(26005)(186003)(4744005)(2906002)(66446008)(76116006)(38100700002)(6506007)(36756003)(83380400001)(2616005)(6512007)(508600001)(5660300002)(8676002)(6486002)(122000001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?ZDJDSnNIcWR3WkRPcTZLdHRDejgwMndhamRDcWxOemsxNGJrVC84eEJJTlM4?=
+ =?utf-8?B?dkZoSEl4TUZRQzF5UVVFN0dSbWpmSmJwTXBDOElEK3R3ZTZBckZXV1hLS1NO?=
+ =?utf-8?B?c1hXb3B1ZTl0MFNDalU5SUxFWDc1VVJCQkl3V1pQQ0lDVzg2dFUxZk1KY1pH?=
+ =?utf-8?B?b285bkdDNFU3dHFJMS9zR0xNanRzdE14WGlleEhVbGMwb0oyRGU0WGZVQnhU?=
+ =?utf-8?B?bitlUTNXRlZDNXlwOWwzbXY3SGVEQzFUR1JkbnFQUStsNnphS21aTDVrL0hY?=
+ =?utf-8?B?L21tZVVFZXFiQTZSTXNPeElHMkxVTktBR2VOTHJmOEVyK01KWXNWRUpNeDVB?=
+ =?utf-8?B?R1dXbFJidlRKV21VRHpPdnllaDhWZC84YVFSd0ZvQk0yZGwwdU11M2J4SjZo?=
+ =?utf-8?B?UEdhSVFXa1VML0xrSWpGZ0wybnRqMXFCSi9rZmpMMDlzZWNJc0NQQTZJRHN0?=
+ =?utf-8?B?OTVZT2l5QnMySXl1aWNMbUR4b1ZjUFp4d0RyNmQxOUU4TUx1OUZYMExwZVBs?=
+ =?utf-8?B?UWRmNjBWc1hYeG53Vm9LRzBQc0JRellrd0ttdHJHZW5tcG5obWN1NGFXaDNX?=
+ =?utf-8?B?ZDFvelRpRTlXV2pndG5jalVGamF3emRqZmNVYXIvVGdkV3RIVzFDUExnVHdP?=
+ =?utf-8?B?dituSTcydndNeEcwR3NEM2xkVGdiaDExb2VVY1J0RGUvUzhiNnFqZVAyK1FK?=
+ =?utf-8?B?cmxldTdwL1FsT0NoMnhZZ21rUitTaHltM2NueERZejlyMzdFVWE5cEQwTE91?=
+ =?utf-8?B?U1g2R2FvbWlNdGhJZDJ2ZGxCL3kwd1lEVm05SkpwdVNHcis1NGs0T3AyZFlV?=
+ =?utf-8?B?M0o5WkRxQklHT2JKOWo4cXhTUHYydUlTV0FSbHljL2NFdGZUaEtScUI4UmlF?=
+ =?utf-8?B?OS9WTzZYeG9TN3l1ZDlkM2U3KzdhMFB1Wjl6OGdRUnpuNEVlSVZ0Ri9VWEdu?=
+ =?utf-8?B?NmNheHFsQXVuck5oUTh0UHRtVXN3UGdoakRGWGVYMVdJdy96cHBGOStCaUNk?=
+ =?utf-8?B?SU9DeUJGT2dKNUhvS1VrN3ZET3U2Y3kvZiswM0FqazZvUUp0R2NWWitwT3RR?=
+ =?utf-8?B?YnpDNGN3L0NQRTRrTW5IR0ZocmRCbnpkZWN3YXFDRFNTV3lPSUtuZnpPK0ZM?=
+ =?utf-8?B?Q3ZwWVhmNkRKUjlCeXB0UkgxektaT2tDL1dZUVp5M2FKVmYyUWY5VnR1S0t4?=
+ =?utf-8?B?eTVmanNMZHdjTWo3VjZNdUpKNmgxZHE2bzZzTERQbGxsTzh5U2FOcWtYV2ZE?=
+ =?utf-8?B?eHdKT0FkNExEaDZVS1dleEVPVmdiN05KNWRQd1pFWldJZVpMOEJYaTJ1cFBo?=
+ =?utf-8?B?UzZWa0d2S0lNVW1CZXpncnA1R3lROEl5R1VhUG5sT2FINzA2WHB1d1BCL1FF?=
+ =?utf-8?B?MXdpWTdjdHhDQ1FQMUFuajlsaHBCZFBKandGWFc2QUJQRlQ0dDFTOHExbkxN?=
+ =?utf-8?B?TkY1YXYvZ3RzMFp2R3NtWEJ3NnQzUjRrOFdGU1lOcDJ0eGpuaWJvMFIveDJ3?=
+ =?utf-8?B?YkdUTmZhb0xlcmFQT1lpdlIyU2N4amE4cDRPc3Jxa1VxMTdBTVVlTEo2MzVY?=
+ =?utf-8?B?L0NycjZ2TEQ1aWNsNC85MGRIeUNGZHE5RlMvdzVBNFpCdGFCTUt1WlZkVVcv?=
+ =?utf-8?B?SzRuZWN0YVhuTFd2aVlrV0JabytJMTJNRU55c1loYTRVZmo5eGVaVE1uUlB4?=
+ =?utf-8?B?R1QrbHVkQXZUejJNbytLOGRlc3R3RFRhY3JjVzBaR3laT1Npbk5vSmhvdXFt?=
+ =?utf-8?Q?lW/W6CzSkHhQAkuMRPEPevKdvT4RFHISARV9vSg?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C243763A7DCF5B4FA2A1790888DF81EC@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2581830.1620744410.1@warthog.procyon.org.uk>
-Date:   Tue, 11 May 2021 15:46:50 +0100
-Message-ID: <2581831.1620744410@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR13MB4733.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5d9d839-5c04-4a11-cbce-08d9148f89f3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2021 15:14:57.5910
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 64rqGahS7gKuukcLYRpFNwy9Ivl+4WoXYDdWnMyg7F69qx0kxbQMHhfUpUEXG4N+HEY0nNPH5IVPFai/fpkwtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR13MB2540
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Trond,
-
-I'm looking at extracting out the gssapi/krb5 support from the sunrpc package
-in the kernel into a common library under crypto/ so that afs (and anyone else
-- cifs, maybe) can use it too.  Are you willing to entertain that idea - or is
-that a definite no for you?
-
-David
-
+T24gVHVlLCAyMDIxLTA1LTExIGF0IDE1OjQ2ICswMTAwLCBEYXZpZCBIb3dlbGxzIHdyb3RlOg0K
+PiBIaSBUcm9uZCwNCj4gDQo+IEknbSBsb29raW5nIGF0IGV4dHJhY3Rpbmcgb3V0IHRoZSBnc3Nh
+cGkva3JiNSBzdXBwb3J0IGZyb20gdGhlIHN1bnJwYw0KPiBwYWNrYWdlDQo+IGluIHRoZSBrZXJu
+ZWwgaW50byBhIGNvbW1vbiBsaWJyYXJ5IHVuZGVyIGNyeXB0by8gc28gdGhhdCBhZnMgKGFuZA0K
+PiBhbnlvbmUgZWxzZQ0KPiAtIGNpZnMsIG1heWJlKSBjYW4gdXNlIGl0IHRvby7CoCBBcmUgeW91
+IHdpbGxpbmcgdG8gZW50ZXJ0YWluIHRoYXQNCj4gaWRlYSAtIG9yIGlzDQo+IHRoYXQgYSBkZWZp
+bml0ZSBubyBmb3IgeW91Pw0KPiANCj4gRGF2aWQNCj4gDQoNCk1vdmluZyB0aGUgY29kZSBvdXQg
+b2YgbmV0L3N1bnJwYyBpbnRvIGEgc2hhcmVkIGRpcmVjdG9yeSB3b3VsZCBiZSBmaW5lDQp3aXRo
+IG1lLg0KTm90ZSwgdGhvdWdoLCB0aGF0IHdoYXQncyB0aGVyZSBpcyBhIHJhdGhlciBvbGQgcG9y
+dCBvZiB0aGUgTUlUDQprZXJiZXJvcyBsaWJyYXJ5IHRoYXQgd2FzIGRvbmUgYnkgQ0lUSSBhcm91
+bmQgMjAwMS8yMDAyIChJSVJDKSwgc28gaXQNCm1pZ2h0IGJlIGR1ZSBmb3IgYW4gdXBkYXRlIGF0
+IHNvbWUgcG9pbnQuDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1h
+aW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoN
+Cg0K
