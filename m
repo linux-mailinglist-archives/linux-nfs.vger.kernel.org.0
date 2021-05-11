@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C7B137A51C
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 May 2021 12:52:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CE2C37A520
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 May 2021 12:52:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231558AbhEKKx5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 May 2021 06:53:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56100 "EHLO
+        id S231539AbhEKKyA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 May 2021 06:54:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231536AbhEKKxv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 May 2021 06:53:51 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92F33C061761
-        for <linux-nfs@vger.kernel.org>; Tue, 11 May 2021 03:52:45 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id h16so3018198pfk.0
-        for <linux-nfs@vger.kernel.org>; Tue, 11 May 2021 03:52:45 -0700 (PDT)
+        with ESMTP id S231563AbhEKKx6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 May 2021 06:53:58 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8643C061574
+        for <linux-nfs@vger.kernel.org>; Tue, 11 May 2021 03:52:52 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id v191so15757618pfc.8
+        for <linux-nfs@vger.kernel.org>; Tue, 11 May 2021 03:52:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dR6RIg5hyVJsVLc68ckt9CCgyf302MrLbCg8peXJRjo=;
-        b=VBuLofk9lyOSqLeeg7/jQTYCthw90DVKtc7rNVrh5jIKJ41W70kfvg9hW/j1w+K2VH
-         VkQ+BTcahJEEPdpJJqN9GSIazNNgZe68QFx/Zo7UdfiHnUMMCJVCcIlvV1Wor4G8MXSk
-         g08Sh6jlV/uvmsDv02zPD6mLYbH72bl3Cj7h/b9lghcfJMui+accLDzg2A8ERg8H+ew7
-         EX5J8LmOxSx0xWhhufvvNYx6l1G5vdb1QwBjJuDeNC9I4w6AP+OESOeqYOBgsr5sNS33
-         I67LpEGxIMcifEVH3yMgOPh/y9/Z6+rGe9FgFudQ99bSpKb66r1LPTXiCwRc3f3hn8Uq
-         IUfg==
+        bh=UC6OZyaIhxumzS7XDWC0Pam7E2Uxa7uVbRoAHU6H0rc=;
+        b=mvEtMpGAnQS8X8pRY7QVvYJqqFPUGuS6zE62rkByxR5oNroFVjCS/xKDGbYaocAf7z
+         hH2gWvCBgKxEHy1XHZd1y2KTeOizDfHXJrv50DMYgnnhFlp1AEWzArmF/Ku8n2QKSQrw
+         n0UxiRXkdGjhWXGofRNp7yl60YhBicMzxGfCQgcsFthk50VTyfFnVioBZCT6AnKa8Gel
+         cUU1AQbGq6zAZMkEMMfKyksQht4k9fxrkdQdtKIQhRzpWK35znHAgqk3t5Bx1RDVKacM
+         nKsk4K4cj9yoezeHv+dsCU7Is+7nMQ3Nk4ADCqY+FyBsQV/QqcmlmBAcD1ZLfyqdNc3V
+         UYrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dR6RIg5hyVJsVLc68ckt9CCgyf302MrLbCg8peXJRjo=;
-        b=M/y72gW8ZRV+boTjl0kVCWsQ0EYJ9JpMv+dlCeS5oIv80xkmHPGL9tiLYmvgWWYjPo
-         WoNHVCKdZzeS3L6IB8vny7VSTlpnsUye1HX4bE3TYsViiLxoSSvDQwUquZ+z6dW9nQ7W
-         Az04U/0jWCoTT0KtgfOJbRG6RTrlcNUXGwgO4898IssNWysSyxk7ZcJibHLTWkKsnjUO
-         nTT0sAwCEXzwQsbyNd3QCMo6hXUn0+eyrFbrtaXWOuzXG86Wnyj7I/xY1R/eoaviSRpZ
-         9OEd9FPAiMwwhYkvzu0Qui9f0txZAjnpCuL6eZLy+auoLb54pFDWZuTQ3b+Cdlw3a3bH
-         8anA==
-X-Gm-Message-State: AOAM531ddf0ryqRpdBlbucfi2ORDnOhbSmTKpzG5SlHPIPomzZHh6qpD
-        5AU3ySQID5PIYxcPrAkUuCXDcw==
-X-Google-Smtp-Source: ABdhPJzlX94Z8yeVkpxAS93di/OHph7eE4hW5452r85AqbzXMhnJLw8TMexcsIsRyI//CGbSIAWizA==
-X-Received: by 2002:aa7:9731:0:b029:28e:46dd:97c7 with SMTP id k17-20020aa797310000b029028e46dd97c7mr29476357pfg.27.1620730365136;
-        Tue, 11 May 2021 03:52:45 -0700 (PDT)
+        bh=UC6OZyaIhxumzS7XDWC0Pam7E2Uxa7uVbRoAHU6H0rc=;
+        b=WcB4xhcJj7NpdM4a3vVkwxAbkwAfpA2/k0Ka2h3Cz8bqEGrxlNNh2ARX44SdbK9z1f
+         iHDYWiJc7PFkJDcm6OA+We8aX77bSX5qieRUrFytDSD5Jsm0GgFPEiyU/KQogzUj5qW4
+         TQQ6jUAxdHsajBfntd1Zi2LPBxCLw7/2+Ch53u4U3rNZz9Yd3gPtRVLns0vyKUaPlK1d
+         lVrVlD2gVw3pdpl6leiaPRv+cX0q4N+bZA7I151WCbCBzwdkYwATp+T+bvMyTEf/k8Ry
+         wG1rTCdthqoz2AUHSz23IuYOCyAokI2LOniwei7J49f4x7K6QtuaK/5rYSPv6meNvHHE
+         SvoQ==
+X-Gm-Message-State: AOAM530oMeNhV0Z6VQKfr1tNPHLaUEely73p8HpHtFk4qb2348P7xJqF
+        GJGLKGPH0iwDox1dwBG5X8HJKA==
+X-Google-Smtp-Source: ABdhPJxTL3K0RlFgs0YRY1Okx+0Y055XXZQ5WoXKr6gJFjTzXss/+4eK36NqLpJQOuB3HmVlCM+m1Q==
+X-Received: by 2002:a63:aa48:: with SMTP id x8mr6373173pgo.359.1620730372289;
+        Tue, 11 May 2021 03:52:52 -0700 (PDT)
 Received: from localhost.localdomain ([139.177.225.240])
-        by smtp.gmail.com with ESMTPSA id n18sm13501952pgj.71.2021.05.11.03.52.36
+        by smtp.gmail.com with ESMTPSA id n18sm13501952pgj.71.2021.05.11.03.52.45
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 May 2021 03:52:44 -0700 (PDT)
+        Tue, 11 May 2021 03:52:52 -0700 (PDT)
 From:   Muchun Song <songmuchun@bytedance.com>
 To:     willy@infradead.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
         mhocko@kernel.org, vdavydov.dev@gmail.com, shakeelb@google.com,
@@ -57,9 +57,9 @@ Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, linux-nfs@vger.kernel.org,
         zhengqi.arch@bytedance.com, duanxiongchun@bytedance.com,
         fam.zheng@bytedance.com, Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH 12/17] xarray: replace kmem_cache_alloc with kmem_cache_alloc_lru
-Date:   Tue, 11 May 2021 18:46:42 +0800
-Message-Id: <20210511104647.604-13-songmuchun@bytedance.com>
+Subject: [PATCH 13/17] mm: workingset: allocate list_lru on xa_node allocation
+Date:   Tue, 11 May 2021 18:46:43 +0800
+Message-Id: <20210511104647.604-14-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 In-Reply-To: <20210511104647.604-1-songmuchun@bytedance.com>
 References: <20210511104647.604-1-songmuchun@bytedance.com>
@@ -69,94 +69,46 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The workingset will add the xa_node to the shadow_nodes list. So the
-allocation of xa_node should be done by kmem_cache_alloc_lru(). The
-user of the xarray can xas_set_lru() to pass the list_lru.
+The workingset will add the xa_node to its list_lru, we should use
+xas_set_lru() to pass which lru we want to insert.
 
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 ---
- include/linux/xarray.h |  9 ++++++++-
- lib/xarray.c           | 10 +++++-----
- 2 files changed, 13 insertions(+), 6 deletions(-)
+ include/linux/swap.h | 5 ++++-
+ mm/workingset.c      | 2 +-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/xarray.h b/include/linux/xarray.h
-index a91e3d90df8a..31f3e5ef3c7b 100644
---- a/include/linux/xarray.h
-+++ b/include/linux/xarray.h
-@@ -1317,6 +1317,7 @@ struct xa_state {
- 	struct xa_node *xa_node;
- 	struct xa_node *xa_alloc;
- 	xa_update_node_t xa_update;
-+	struct list_lru *xa_lru;
- };
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 144727041e78..a2418ebad13d 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -322,9 +322,12 @@ void workingset_activation(struct page *page);
  
- /*
-@@ -1336,7 +1337,8 @@ struct xa_state {
- 	.xa_pad = 0,					\
- 	.xa_node = XAS_RESTART,				\
- 	.xa_alloc = NULL,				\
--	.xa_update = NULL				\
-+	.xa_update = NULL,				\
-+	.xa_lru = NULL,					\
- }
+ /* Only track the nodes of mappings with shadow entries */
+ void workingset_update_node(struct xa_node *node);
++extern struct list_lru shadow_nodes;
+ #define mapping_set_update(xas, mapping) do {				\
+-	if (!dax_mapping(mapping) && !shmem_mapping(mapping))		\
++	if (!dax_mapping(mapping) && !shmem_mapping(mapping)) {		\
+ 		xas_set_update(xas, workingset_update_node);		\
++		xas_set_lru(xas, &shadow_nodes);			\
++	}								\
+ } while (0)
  
- /**
-@@ -1613,6 +1615,11 @@ static inline void xas_set_update(struct xa_state *xas, xa_update_node_t update)
- 	xas->xa_update = update;
- }
+ /* linux/mm/page_alloc.c */
+diff --git a/mm/workingset.c b/mm/workingset.c
+index b7cdeca5a76d..f6923865be47 100644
+--- a/mm/workingset.c
++++ b/mm/workingset.c
+@@ -426,7 +426,7 @@ void workingset_activation(struct page *page)
+  * point where they would still be useful.
+  */
  
-+static inline void xas_set_lru(struct xa_state *xas, struct list_lru *lru)
-+{
-+	xas->xa_lru = lru;
-+}
-+
- /**
-  * xas_next_entry() - Advance iterator to next present entry.
-  * @xas: XArray operation state.
-diff --git a/lib/xarray.c b/lib/xarray.c
-index f5d8f54907b4..e9b818abc823 100644
---- a/lib/xarray.c
-+++ b/lib/xarray.c
-@@ -302,7 +302,7 @@ bool xas_nomem(struct xa_state *xas, gfp_t gfp)
- 	}
- 	if (xas->xa->xa_flags & XA_FLAGS_ACCOUNT)
- 		gfp |= __GFP_ACCOUNT;
--	xas->xa_alloc = kmem_cache_alloc(radix_tree_node_cachep, gfp);
-+	xas->xa_alloc = kmem_cache_alloc_lru(radix_tree_node_cachep, xas->xa_lru, gfp);
- 	if (!xas->xa_alloc)
- 		return false;
- 	xas->xa_alloc->parent = NULL;
-@@ -334,10 +334,10 @@ static bool __xas_nomem(struct xa_state *xas, gfp_t gfp)
- 		gfp |= __GFP_ACCOUNT;
- 	if (gfpflags_allow_blocking(gfp)) {
- 		xas_unlock_type(xas, lock_type);
--		xas->xa_alloc = kmem_cache_alloc(radix_tree_node_cachep, gfp);
-+		xas->xa_alloc = kmem_cache_alloc_lru(radix_tree_node_cachep, xas->xa_lru, gfp);
- 		xas_lock_type(xas, lock_type);
- 	} else {
--		xas->xa_alloc = kmem_cache_alloc(radix_tree_node_cachep, gfp);
-+		xas->xa_alloc = kmem_cache_alloc_lru(radix_tree_node_cachep, xas->xa_lru, gfp);
- 	}
- 	if (!xas->xa_alloc)
- 		return false;
-@@ -371,7 +371,7 @@ static void *xas_alloc(struct xa_state *xas, unsigned int shift)
- 		if (xas->xa->xa_flags & XA_FLAGS_ACCOUNT)
- 			gfp |= __GFP_ACCOUNT;
+-static struct list_lru shadow_nodes;
++struct list_lru shadow_nodes;
  
--		node = kmem_cache_alloc(radix_tree_node_cachep, gfp);
-+		node = kmem_cache_alloc_lru(radix_tree_node_cachep, xas->xa_lru, gfp);
- 		if (!node) {
- 			xas_set_err(xas, -ENOMEM);
- 			return NULL;
-@@ -1014,7 +1014,7 @@ void xas_split_alloc(struct xa_state *xas, void *entry, unsigned int order,
- 		void *sibling = NULL;
- 		struct xa_node *node;
- 
--		node = kmem_cache_alloc(radix_tree_node_cachep, gfp);
-+		node = kmem_cache_alloc_lru(radix_tree_node_cachep, xas->xa_lru, gfp);
- 		if (!node)
- 			goto nomem;
- 		node->array = xas->xa;
+ void workingset_update_node(struct xa_node *node)
+ {
 -- 
 2.11.0
 
