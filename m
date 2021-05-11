@@ -2,101 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCE6B37AD4C
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 May 2021 19:44:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C46D37AEEE
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 May 2021 20:58:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231462AbhEKRpg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 May 2021 13:45:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36910 "EHLO
+        id S231824AbhEKS6X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 May 2021 14:58:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231454AbhEKRpg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 May 2021 13:45:36 -0400
+        with ESMTP id S231329AbhEKS6X (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 May 2021 14:58:23 -0400
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E97E5C061574
-        for <linux-nfs@vger.kernel.org>; Tue, 11 May 2021 10:44:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9CA5C061574;
+        Tue, 11 May 2021 11:57:16 -0700 (PDT)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 97976581C; Tue, 11 May 2021 13:44:29 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 97976581C
+        id ADA844F7D; Tue, 11 May 2021 14:57:15 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org ADA844F7D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1620755069;
-        bh=SPiOC5smQRRYJW9Hiy6TyX0DoVSUoum5BBKsk4X36j8=;
+        s=default; t=1620759435;
+        bh=tUqknlWsgROfdv3iv4KKpW4cm/9wKvzJqu96VZqELeQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ctSiyyN7HR6xyh+bIl92S/jGzrO3HrbFZY4eF8QNiWFnz7NhKxhm73UOxOjQZN04s
-         C2q9/Lc/d14Em1q4G9QZpTJCUOA0dJq5OmXkLtUYh6e2JmUvXmY/bhegbGLz9m8MtP
-         +6yP6TiK2D3D7nGpg+yM7YoBqT1f8MD6KafP+48E=
-Date:   Tue, 11 May 2021 13:44:29 -0400
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     David Wysochanski <dwysocha@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH RFC 06/21] NFSD: Remove spurious cb_setup_err tracepoint
-Message-ID: <20210511174429.GD5416@fieldses.org>
-References: <162066179690.94415.203187037032448300.stgit@klimt.1015granger.net>
- <162066193457.94415.10829735588517134118.stgit@klimt.1015granger.net>
- <20210510202719.GB11188@fieldses.org>
- <42BBD4E8-7254-4ADB-98C5-84DE7AE1C9DC@oracle.com>
+        b=aMPIF83OTCZrEEqZ62vTLcYusLCO7dTLhVprJIH3a1ZbEQlqs+nVOcfyCRRMhbF8h
+         7pgN68AWdh49HD6zRC5mDonW6Vo5KenX0nCLWivmIAqz4VFiju74IW5aOmB+gN4ZOm
+         btWcgXa23PuqLYKuNXRlWObyvtBKmpji4iKi6eoo=
+Date:   Tue, 11 May 2021 14:57:15 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andy Shevchenko <andy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 00/15] lib/string_helpers: get rid of ugly
+ *_escape_mem_ascii()
+Message-ID: <20210511185715.GE5416@fieldses.org>
+References: <20210504180819.73127-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <42BBD4E8-7254-4ADB-98C5-84DE7AE1C9DC@oracle.com>
+In-Reply-To: <20210504180819.73127-1-andriy.shevchenko@linux.intel.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, May 10, 2021 at 08:29:32PM +0000, Chuck Lever III wrote:
-> 
-> 
-> > On May 10, 2021, at 4:27 PM, J. Bruce Fields <bfields@fieldses.org> wrote:
-> > 
-> > On Mon, May 10, 2021 at 11:52:14AM -0400, Chuck Lever wrote:
-> >> This path is not really an error path,
-> > 
-> > What's the non-error case for this path?
-> 
-> >From what I can tell, it appears to be the default exit for when
-> there is a session and backchannel. Feel free to straighten me
-> out, but it just seemed to always fire for NFSv4.1 mounts.
-
-I'd be curious to know why.  I'll see if I can find some time to
-experiment.
+These look good to me, thanks for doing this!
 
 --b.
 
-> > On a quick look it seems like that'd mean a 4.1 client doesn't have a
-> > connection available for the backchannel, which sounds bad.
-> > 
-> > But I'm probably overlooking something....
-> > 
-> > --b.
-> > 
-> >> so the tracepoint I added
-> >> there is just noise.
-> >> 
-> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> >> ---
-> >> fs/nfsd/nfs4callback.c |    4 +---
-> >> 1 file changed, 1 insertion(+), 3 deletions(-)
-> >> 
-> >> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> >> index ab1836381e22..15ba16c54793 100644
-> >> --- a/fs/nfsd/nfs4callback.c
-> >> +++ b/fs/nfsd/nfs4callback.c
-> >> @@ -915,10 +915,8 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
-> >> 		args.authflavor = clp->cl_cred.cr_flavor;
-> >> 		clp->cl_cb_ident = conn->cb_ident;
-> >> 	} else {
-> >> -		if (!conn->cb_xprt) {
-> >> -			trace_nfsd_cb_setup_err(clp, -EINVAL);
-> >> +		if (!conn->cb_xprt)
-> >> 			return -EINVAL;
-> >> -		}
-> >> 		clp->cl_cb_conn.cb_xprt = conn->cb_xprt;
-> >> 		clp->cl_cb_session = ses;
-> >> 		args.bc_xprt = conn->cb_xprt;
-> >> 
+On Tue, May 04, 2021 at 09:08:04PM +0300, Andy Shevchenko wrote:
+> Get rid of ugly *_escape_mem_ascii() API since it's not flexible and
+> has the only single user. Provide better approach based on usage of the
+> string_escape_mem() with appropriate flags.
 > 
-> --
-> Chuck Lever
+> Test cases has been expanded accordingly to cover new functionality.
 > 
+> This is assumed to go either thru VFS or Andrew's tree. I don't expect
+> too many changes in string_helpers.
 > 
+> Changelog v3:
+> - dropped moving seq_escape() to the header due to a lot of complaints from
+>   the (very) old code
+> - added seq_escape_str() inliner
+> - converted seq_escape() to use seq_escape_str() instead of seq_escape_mem()
+> 
+> Changelog v2:
+> - introduced seq_escape_mem() instead of poking seq_get_buf() (Al)
+> - to keep balance of seq_get_buf() usage, convert seq_escape() to use above
+> - added missed ESCAPE_APPEND flag in NFSv4 patch
+> - moved indentation patch closer to the beginning of the series
+> - reshuffled series to be in two groups: generic library extension
+>   followed by seq_file updates
+> 
+> Andy Shevchenko (15):
+>   lib/string_helpers: Switch to use BIT() macro
+>   lib/string_helpers: Move ESCAPE_NP check inside 'else' branch in a
+>     loop
+>   lib/string_helpers: Drop indentation level in string_escape_mem()
+>   lib/string_helpers: Introduce ESCAPE_NA for escaping non-ASCII
+>   lib/string_helpers: Introduce ESCAPE_NAP to escape non-ASCII and
+>     non-printable
+>   lib/string_helpers: Allow to append additional characters to be
+>     escaped
+>   lib/test-string_helpers: Print flags in hexadecimal format
+>   lib/test-string_helpers: Get rid of trailing comma in terminators
+>   lib/test-string_helpers: Add test cases for new features
+>   MAINTAINERS: Add myself as designated reviewer for generic string
+>     library
+>   seq_file: Introduce seq_escape_mem()
+>   seq_file: Add seq_escape_str() as replica of string_escape_str()
+>   seq_file: Convert seq_escape() to use seq_escape_str()
+>   nfsd: Avoid non-flexible API in seq_quote_mem()
+>   seq_file: Drop unused *_escape_mem_ascii()
+> 
+>  MAINTAINERS                    |   8 ++
+>  fs/nfsd/nfs4state.c            |   2 +-
+>  fs/seq_file.c                  |  43 +++++----
+>  include/linux/seq_file.h       |  10 ++-
+>  include/linux/string_helpers.h |  31 ++++---
+>  lib/string_helpers.c           | 102 ++++++++++++---------
+>  lib/test-string_helpers.c      | 157 +++++++++++++++++++++++++++++----
+>  7 files changed, 264 insertions(+), 89 deletions(-)
+> 
+> -- 
+> 2.30.2
