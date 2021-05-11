@@ -2,108 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C46D37AEEE
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 May 2021 20:58:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F10D37B2E9
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 May 2021 02:13:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231824AbhEKS6X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 May 2021 14:58:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231329AbhEKS6X (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 May 2021 14:58:23 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9CA5C061574;
-        Tue, 11 May 2021 11:57:16 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id ADA844F7D; Tue, 11 May 2021 14:57:15 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org ADA844F7D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1620759435;
-        bh=tUqknlWsgROfdv3iv4KKpW4cm/9wKvzJqu96VZqELeQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aMPIF83OTCZrEEqZ62vTLcYusLCO7dTLhVprJIH3a1ZbEQlqs+nVOcfyCRRMhbF8h
-         7pgN68AWdh49HD6zRC5mDonW6Vo5KenX0nCLWivmIAqz4VFiju74IW5aOmB+gN4ZOm
-         btWcgXa23PuqLYKuNXRlWObyvtBKmpji4iKi6eoo=
-Date:   Tue, 11 May 2021 14:57:15 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andy Shevchenko <andy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 00/15] lib/string_helpers: get rid of ugly
- *_escape_mem_ascii()
-Message-ID: <20210511185715.GE5416@fieldses.org>
-References: <20210504180819.73127-1-andriy.shevchenko@linux.intel.com>
+        id S229736AbhELAOT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 May 2021 20:14:19 -0400
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:60850 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229637AbhELAOT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 May 2021 20:14:19 -0400
+X-Greylist: delayed 1943 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 May 2021 20:14:18 EDT
+Received: from dread.disaster.area (pa49-179-143-157.pa.nsw.optusnet.com.au [49.179.143.157])
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id ADB8A1082A9;
+        Wed, 12 May 2021 09:40:43 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1lgbzV-00EYIv-Js; Wed, 12 May 2021 09:40:41 +1000
+Date:   Wed, 12 May 2021 09:40:41 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     willy@infradead.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com, shakeelb@google.com,
+        guro@fb.com, shy828301@gmail.com, alexs@kernel.org,
+        richard.weiyang@gmail.com, trond.myklebust@hammerspace.com,
+        anna.schumaker@netapp.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, zhengqi.arch@bytedance.com,
+        duanxiongchun@bytedance.com, fam.zheng@bytedance.com
+Subject: Re: [PATCH 10/17] fs: introduce alloc_inode_sb() to allocate
+ filesystems specific inode
+Message-ID: <20210511234041.GP1872259@dread.disaster.area>
+References: <20210511104647.604-1-songmuchun@bytedance.com>
+ <20210511104647.604-11-songmuchun@bytedance.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210504180819.73127-1-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20210511104647.604-11-songmuchun@bytedance.com>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
+        a=I9rzhn+0hBG9LkCzAun3+g==:117 a=I9rzhn+0hBG9LkCzAun3+g==:17
+        a=kj9zAlcOel0A:10 a=5FLXtPjwQuUA:10 a=7-415B0cAAAA:8
+        a=eDM3njHHF8h-SXrJDeMA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-These look good to me, thanks for doing this!
+On Tue, May 11, 2021 at 06:46:40PM +0800, Muchun Song wrote:
+> The allocated inode cache will be added into its memcg lru list later,
+> but we do not allocate list_lru in the later patch. So the caller should
+> call kmem_cache_alloc_lru() to allocate inode and related list_lru.
+> Introduce alloc_inode_sb() to do that and convert all inodes allocation
+> to it.
 
---b.
+FWIW, this probably needs a documentation update to mention that
+inodes should always be allocated through alloc_inode_sb() rather
+than kmem_cache_alloc(). It's a "** mandatory **" requirement as per
+Documentation/filesytems/porting.rst.
 
-On Tue, May 04, 2021 at 09:08:04PM +0300, Andy Shevchenko wrote:
-> Get rid of ugly *_escape_mem_ascii() API since it's not flexible and
-> has the only single user. Provide better approach based on usage of the
-> string_escape_mem() with appropriate flags.
-> 
-> Test cases has been expanded accordingly to cover new functionality.
-> 
-> This is assumed to go either thru VFS or Andrew's tree. I don't expect
-> too many changes in string_helpers.
-> 
-> Changelog v3:
-> - dropped moving seq_escape() to the header due to a lot of complaints from
->   the (very) old code
-> - added seq_escape_str() inliner
-> - converted seq_escape() to use seq_escape_str() instead of seq_escape_mem()
-> 
-> Changelog v2:
-> - introduced seq_escape_mem() instead of poking seq_get_buf() (Al)
-> - to keep balance of seq_get_buf() usage, convert seq_escape() to use above
-> - added missed ESCAPE_APPEND flag in NFSv4 patch
-> - moved indentation patch closer to the beginning of the series
-> - reshuffled series to be in two groups: generic library extension
->   followed by seq_file updates
-> 
-> Andy Shevchenko (15):
->   lib/string_helpers: Switch to use BIT() macro
->   lib/string_helpers: Move ESCAPE_NP check inside 'else' branch in a
->     loop
->   lib/string_helpers: Drop indentation level in string_escape_mem()
->   lib/string_helpers: Introduce ESCAPE_NA for escaping non-ASCII
->   lib/string_helpers: Introduce ESCAPE_NAP to escape non-ASCII and
->     non-printable
->   lib/string_helpers: Allow to append additional characters to be
->     escaped
->   lib/test-string_helpers: Print flags in hexadecimal format
->   lib/test-string_helpers: Get rid of trailing comma in terminators
->   lib/test-string_helpers: Add test cases for new features
->   MAINTAINERS: Add myself as designated reviewer for generic string
->     library
->   seq_file: Introduce seq_escape_mem()
->   seq_file: Add seq_escape_str() as replica of string_escape_str()
->   seq_file: Convert seq_escape() to use seq_escape_str()
->   nfsd: Avoid non-flexible API in seq_quote_mem()
->   seq_file: Drop unused *_escape_mem_ascii()
-> 
->  MAINTAINERS                    |   8 ++
->  fs/nfsd/nfs4state.c            |   2 +-
->  fs/seq_file.c                  |  43 +++++----
->  include/linux/seq_file.h       |  10 ++-
->  include/linux/string_helpers.h |  31 ++++---
->  lib/string_helpers.c           | 102 ++++++++++++---------
->  lib/test-string_helpers.c      | 157 +++++++++++++++++++++++++++++----
->  7 files changed, 264 insertions(+), 89 deletions(-)
-> 
-> -- 
-> 2.30.2
+Also,
+
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index c3c88fdb9b2a..d8d5d4eb68d6 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -41,6 +41,7 @@
+>  #include <linux/stddef.h>
+>  #include <linux/mount.h>
+>  #include <linux/cred.h>
+> +#include <linux/slab.h>
+>  
+>  #include <asm/byteorder.h>
+>  #include <uapi/linux/fs.h>
+> @@ -3200,6 +3201,12 @@ extern void free_inode_nonrcu(struct inode *inode);
+>  extern int should_remove_suid(struct dentry *);
+>  extern int file_remove_privs(struct file *);
+>  
+> +static inline void *
+> +alloc_inode_sb(struct super_block *sb, struct kmem_cache *cache, gfp_t gfp)
+> +{
+> +	return kmem_cache_alloc_lru(cache, &sb->s_inode_lru, gfp);
+> +}
+> +
+
+This really needs a kerneldoc comment explaining that it must be
+used for allocating inodes to set up the inode reclaim context
+correctly....
+
+/me wonders if we should add a BUG_ON() check in inode_init_always()
+to capture filesystems that don't call through
+kmem_cache_alloc_lru() for inodes?
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
