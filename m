@@ -2,34 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A4ED37ECA9
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 00:36:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E682F37ECAB
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 00:36:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343789AbhELT6r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 May 2021 15:58:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50262 "EHLO mail.kernel.org"
+        id S237998AbhELT6v (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 May 2021 15:58:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1352073AbhELSC3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 12 May 2021 14:02:29 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 097F86142C;
-        Wed, 12 May 2021 18:01:19 +0000 (UTC)
+        id S1352111AbhELSCc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 12 May 2021 14:02:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C0ACF6142C;
+        Wed, 12 May 2021 18:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620842480;
-        bh=qwoYgyRCT7R8e2KUDxnrGQ3wOCWfQODJ49rpHCBVy6M=;
+        s=k20201202; t=1620842483;
+        bh=tUlpM3DQBjSnWR7vaADyD1QCt5Vsf2xpNC/talcvKrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oNejDGZsu3+GFH1CViWzer8B2kSWrj/DmWvCAcfqcVXrjLp8eIXhluNBJ3kqdqwjy
-         ofifcjY/ayHvd4U/Wynxch3D8ELKyEEyvgm7XXSBM8EYOhDSFLfoLG3ga0V3MnfdsL
-         lGBrHBzy/wz8GyT1LnyiKTNoiVgKjlqUjppKrw7mraczhKHGh+D1Q6zn5b2NGCtlq8
-         EOKvz+5kc1jMRGaVqdhVBHdphLIJTzMLnvvN0HFF/3MQGxb1uqxbfp5qIQkfs15Odl
-         RYbbs05AERT7M2yXelBI8XBrASGik9tWdv9h3FDMaRGGGEyixS8/pp1G6FAZH/CBtf
-         cEoNU8Fch7F2A==
+        b=WzPD2UsPwNAF9HosVo0fpFRfO09xJLSmsu4PcBhIBt2RPqRds3kHvWBGMh1+tGwmI
+         Bnr6yulq1cU3lXq6eJl4rbaVrGYDWbgl1X7vQ1cE+lVS8WcoPRbc203T6zZwyQn8kU
+         61imPXW2yw+fBgMLykETDQqwLrj43nAeo0K1fzoVQmn1JZ023JFa5d1PnFRdYLrnzL
+         LDe3cLZ6pU+mIjFzwqJjmwxba9exLfAoY7tQLxCcDP48tDWkUUybmRHx139rvHnUBo
+         WQ3af7xIjGjpOeUxxMNZXy9cjb09OrLiW25c5PO8DMKpHtNQI6oV3Q2hjdHVu9DiC0
+         CsVl5/gomhLhw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.12 11/37] NFS: NFS_INO_REVAL_PAGECACHE should mark the change attribute invalid
-Date:   Wed, 12 May 2021 14:00:38 -0400
-Message-Id: <20210512180104.664121-11-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.12 13/37] svcrdma: Don't leak send_ctxt on Send errors
+Date:   Wed, 12 May 2021 14:00:40 -0400
+Message-Id: <20210512180104.664121-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210512180104.664121-1-sashal@kernel.org>
 References: <20210512180104.664121-1-sashal@kernel.org>
@@ -41,33 +42,46 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 50c7a7994dd20af56e4d47e90af10bab71b71001 ]
+[ Upstream commit 351461f332db5670056a9c6bce6916027f91072f ]
 
-When we're looking to revalidate the page cache, we should just ensure
-that we mark the change attribute invalid.
+Address a rare send_ctxt leak in the svc_rdma_sendto() error paths.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/inode.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index ff737be559dc..97cce24f5085 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -219,7 +219,8 @@ void nfs_set_cache_invalid(struct inode *inode, unsigned long flags)
- 				| NFS_INO_INVALID_SIZE
- 				| NFS_INO_REVAL_PAGECACHE
- 				| NFS_INO_INVALID_XATTR);
--	}
-+	} else if (flags & NFS_INO_REVAL_PAGECACHE)
-+		flags |= NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_SIZE;
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+index 52c759a8543e..3669661457c1 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+@@ -958,7 +958,7 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
+ 	p = xdr_reserve_space(&sctxt->sc_stream,
+ 			      rpcrdma_fixed_maxsz * sizeof(*p));
+ 	if (!p)
+-		goto err0;
++		goto err1;
  
- 	if (!nfs_has_xattr_cache(nfsi))
- 		flags &= ~NFS_INO_INVALID_XATTR;
+ 	ret = svc_rdma_send_reply_chunk(rdma, rctxt, &rqstp->rq_res);
+ 	if (ret < 0)
+@@ -970,11 +970,11 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
+ 	*p = pcl_is_empty(&rctxt->rc_reply_pcl) ? rdma_msg : rdma_nomsg;
+ 
+ 	if (svc_rdma_encode_read_list(sctxt) < 0)
+-		goto err0;
++		goto err1;
+ 	if (svc_rdma_encode_write_list(rctxt, sctxt) < 0)
+-		goto err0;
++		goto err1;
+ 	if (svc_rdma_encode_reply_chunk(rctxt, sctxt, ret) < 0)
+-		goto err0;
++		goto err1;
+ 
+ 	ret = svc_rdma_send_reply_msg(rdma, sctxt, rctxt, rqstp);
+ 	if (ret < 0)
 -- 
 2.30.2
 
