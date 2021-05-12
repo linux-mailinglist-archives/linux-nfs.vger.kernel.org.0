@@ -2,34 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 242EE37EC5C
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 00:28:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A4ED37ECA9
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 00:36:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233379AbhELTyJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 May 2021 15:54:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50046 "EHLO mail.kernel.org"
+        id S1343789AbhELT6r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 May 2021 15:58:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1352032AbhELSCW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 12 May 2021 14:02:22 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 19FFE61428;
-        Wed, 12 May 2021 18:01:13 +0000 (UTC)
+        id S1352073AbhELSC3 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 12 May 2021 14:02:29 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 097F86142C;
+        Wed, 12 May 2021 18:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620842473;
-        bh=GVEiyiTtf48gz+ukeAM4SXTOHF2CEVuOVTqVQXbLxPQ=;
+        s=k20201202; t=1620842480;
+        bh=qwoYgyRCT7R8e2KUDxnrGQ3wOCWfQODJ49rpHCBVy6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WxnbHvriM/aTKjpL9aor8h8H687O50PcKO25n3Gb8zi1PBaou8MVgLUCYuSYeOjsk
-         hMsHT6Ep5rXQbePC6xHcDubokO7vJf15dU4jWl0P4ls8hTJwnNYtYcT32OzkjVXtQ7
-         uQThGVQ69Mj2+aU+LtFaA25ApaSmOMkCp+KWyV0z3hi/EhEiNb3n1YRhAf/+H76xo6
-         BFiXTBteuoJuaSmkR1kdm2xQjsiyGs7i7dNVFNs86Mr9u9QAzcpLORP83EWkcazWc9
-         KBr/0+uzi4moXWvv/CIEFeguiIHKEvtecfgiJS+2ehMM5Jp4BIn/IxuOakqhEITDzs
-         h9vhJVqLVwXpQ==
+        b=oNejDGZsu3+GFH1CViWzer8B2kSWrj/DmWvCAcfqcVXrjLp8eIXhluNBJ3kqdqwjy
+         ofifcjY/ayHvd4U/Wynxch3D8ELKyEEyvgm7XXSBM8EYOhDSFLfoLG3ga0V3MnfdsL
+         lGBrHBzy/wz8GyT1LnyiKTNoiVgKjlqUjppKrw7mraczhKHGh+D1Q6zn5b2NGCtlq8
+         EOKvz+5kc1jMRGaVqdhVBHdphLIJTzMLnvvN0HFF/3MQGxb1uqxbfp5qIQkfs15Odl
+         RYbbs05AERT7M2yXelBI8XBrASGik9tWdv9h3FDMaRGGGEyixS8/pp1G6FAZH/CBtf
+         cEoNU8Fch7F2A==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.12 06/37] NFS: Fix fscache invalidation in nfs_set_cache_invalid()
-Date:   Wed, 12 May 2021 14:00:33 -0400
-Message-Id: <20210512180104.664121-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.12 11/37] NFS: NFS_INO_REVAL_PAGECACHE should mark the change attribute invalid
+Date:   Wed, 12 May 2021 14:00:38 -0400
+Message-Id: <20210512180104.664121-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210512180104.664121-1-sashal@kernel.org>
 References: <20210512180104.664121-1-sashal@kernel.org>
@@ -43,35 +43,31 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit beab450d8ea93cdf4c6cb7714bdc31a9e0f34738 ]
+[ Upstream commit 50c7a7994dd20af56e4d47e90af10bab71b71001 ]
 
-Ensure that we invalidate the fscache before we strip the
-NFS_INO_INVALID_DATA flag.
+When we're looking to revalidate the page cache, we should just ensure
+that we mark the change attribute invalid.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/inode.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfs/inode.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index a7fb076a5f44..ff737be559dc 100644
+index ff737be559dc..97cce24f5085 100644
 --- a/fs/nfs/inode.c
 +++ b/fs/nfs/inode.c
-@@ -223,11 +223,11 @@ void nfs_set_cache_invalid(struct inode *inode, unsigned long flags)
+@@ -219,7 +219,8 @@ void nfs_set_cache_invalid(struct inode *inode, unsigned long flags)
+ 				| NFS_INO_INVALID_SIZE
+ 				| NFS_INO_REVAL_PAGECACHE
+ 				| NFS_INO_INVALID_XATTR);
+-	}
++	} else if (flags & NFS_INO_REVAL_PAGECACHE)
++		flags |= NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_SIZE;
  
  	if (!nfs_has_xattr_cache(nfsi))
  		flags &= ~NFS_INO_INVALID_XATTR;
-+	if (flags & NFS_INO_INVALID_DATA)
-+		nfs_fscache_invalidate(inode);
- 	if (inode->i_mapping->nrpages == 0)
- 		flags &= ~(NFS_INO_INVALID_DATA|NFS_INO_DATA_INVAL_DEFER);
- 	nfsi->cache_validity |= flags;
--	if (flags & NFS_INO_INVALID_DATA)
--		nfs_fscache_invalidate(inode);
- }
- EXPORT_SYMBOL_GPL(nfs_set_cache_invalid);
- 
 -- 
 2.30.2
 
