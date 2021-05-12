@@ -2,72 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4299637ECB1
+	by mail.lfdr.de (Postfix) with ESMTP id DAF5C37ECB3
 	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 00:36:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239034AbhELT6x (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 May 2021 15:58:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1352902AbhELSEd (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 12 May 2021 14:04:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4818C6143C;
-        Wed, 12 May 2021 18:03:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620842602;
-        bh=87QF4bpE+TrOiFnwHiGuEXOOECaIDbHO7Lw38C5X4X0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ihf/5f77IBUXpc7dDnmHSoEdxlxse5EXj31xW34osoSUdpP+0F2zMtDw3Uk5FeL6n
-         5XERSZhqFAMAE/kSnRW9ACEt79laiIgDOSESUCzSI0hZuOfeQ2Up52QQx/tAyVC+xN
-         z3XTjKQ3vX0cd3xB+Jyluf5HQTQnRvdNob9SDm0+TFJqKjOTKtanoMG3gZBQChqAi9
-         /gMnV9ytaNaTp4DCXHsT58q1ETdHlF0odcuB9C+cSFw5EMIFM8Me1hLZiaLHsukzuB
-         32ilA+Hsm3b1hlw2f/GY6cs5fkiXif8YqRRZokjQSwnBiP3muQQjO/ACsmGY4H8fkj
-         y+cg7FCeQUFhw==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 10/34] NFS: NFS_INO_REVAL_PAGECACHE should mark the change attribute invalid
-Date:   Wed, 12 May 2021 14:02:41 -0400
-Message-Id: <20210512180306.664925-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210512180306.664925-1-sashal@kernel.org>
-References: <20210512180306.664925-1-sashal@kernel.org>
+        id S239056AbhELT6y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 May 2021 15:58:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1381358AbhELTd6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 May 2021 15:33:58 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA230C061761;
+        Wed, 12 May 2021 12:28:53 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id b7so31049933ljr.4;
+        Wed, 12 May 2021 12:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JWP0l+BA0fGfCW3697UumhoAM6OZCftdKGj+XYdvmfw=;
+        b=jau0A7xhAKhNGGJJ6FHnLqlBanUYsG4/Xgrwbeb7LF93cOfKc6gIGxtrG8L93G9h3f
+         xdF/N+vTKym3eL4xJZqCUekg/qtC81Tq82Zcm246zcaw/353BgLe5X/qAD1uuA3b7IrD
+         IcLGS5RDD44EnpQsLv65nnaiiB1xaG6CQkmXTC6jJ8DQg1bfNnE2GjMLcvjkSUXU7Tkg
+         VlUIFCMH5svj1mEyjnxNd9qWES0Tnnq5+U/U/S+OEysNGMpsy8uJ6NIWTsIkPoqLPtBT
+         qql0mtiN6aCZ2BkloTkbsla9sXJUTaekCXW9MzOQpPjLTQyxx9BNIhPPy7Ohsa/OrMQh
+         GXcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JWP0l+BA0fGfCW3697UumhoAM6OZCftdKGj+XYdvmfw=;
+        b=JQJIfBNcMdlF0YsN79upGcfc/jdVqcCXBSfVgqj7yRX4uGE9yv+qHeNIKtnfrdbWPx
+         4wiL15v9t5Zj7BYNEATLzmsbcBUVDabeItMcopFXRO2CnYahtNAbhuhJbEhyGJ3WMNwU
+         eHgV7n0Y7QXfr3mjhPKVnJxM/CQ3LFsutbHvVtynnNVwwjP1BLCPJ6ADGETSr+pdLx49
+         +y+lHXCHdtkJKiSrYHCv9L4fl7dKqRXSyGPtsb/IRLRfds5cpCHopzOXWAzd2EDzD2o5
+         jkPXwnFm0P7Hd+QmY4YmngUdw0zRJ4J0m0ZjCpdMsfGcsI7NkINMDc4vap7a/s3VWIrF
+         uKGA==
+X-Gm-Message-State: AOAM532OOQ2qkPQ72gO3JSxzVf+XWhiQwGn1UhUTQOLNWxPYZAt/tUWd
+        xunkPDWwrYLOeaNRNYcUrF0gqqxUDojRsrtQGV4=
+X-Google-Smtp-Source: ABdhPJybjV1UrN30hcZfWkxdJZJglKnFZJNX4SuGmgPSoe/Xw3yeEITbPhCey3BqWWyluYg0SRnoz0qVGrEzJuI95zI=
+X-Received: by 2002:a2e:7819:: with SMTP id t25mr9229961ljc.406.1620847732192;
+ Wed, 12 May 2021 12:28:52 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <YJvwVq3Gl35RQrIe@casper.infradead.org>
+In-Reply-To: <YJvwVq3Gl35RQrIe@casper.infradead.org>
+From:   Steve French <smfrench@gmail.com>
+Date:   Wed, 12 May 2021 14:28:41 -0500
+Message-ID: <CAH2r5msOQsdeknBdTsfMXYzrb5=NuKEBPc4WD1CkYp10t19Guw@mail.gmail.com>
+Subject: Re: Removing readpages aop
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+I don't have any objections as long as:
+- we see at least mild performance benefit (or at least we are
+confident that no performance loss)
+- it passes regression tests (the usual xfstest bucket)
+- it doesn't complicate the code too much (sounds like it actually
+might simplify it, but needs a little more work)
+- make sure that the usual tuning parms still work (e.g. "rsize" and
+"rasize" mount options) or we can figure out a sane way to autotune
+readhead so those wouldn't be needed for any workload
 
-[ Upstream commit 50c7a7994dd20af56e4d47e90af10bab71b71001 ]
+But currently since we get the most benefit from multichannel (as that
+allows even better parallelization of i/o) ... I have been focused on
+various multichannel issues (low credit situations, reconnect, fall
+back to different channels when weird errors, adjusting channels
+dynamically when server adds or removes adapters on the fly) for the
+short term
 
-When we're looking to revalidate the page cache, we should just ensure
-that we mark the change attribute invalid.
+On Wed, May 12, 2021 at 10:31 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> In Linus' current tree, there are just three filesystems left using the
+> readpages address_space_operation:
+>
+> $ git grep '\.readpages'
+> fs/9p/vfs_addr.c:       .readpages = v9fs_vfs_readpages,
+> fs/cifs/file.c: .readpages = cifs_readpages,
+> fs/nfs/file.c:  .readpages = nfs_readpages,
+>
+> I'd love to finish getting rid of ->readpages as it would simplify
+> the VFS.  AFS and Ceph were both converted since 5.12 to use
+> netfs_readahead().  Is there any chance we might get the remaining three
+> filesystems converted in the next merge window?
+>
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/inode.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index 43af053f467a..fe3ecf72cc2a 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -207,7 +207,8 @@ static void nfs_set_cache_invalid(struct inode *inode, unsigned long flags)
- 				| NFS_INO_INVALID_SIZE
- 				| NFS_INO_REVAL_PAGECACHE
- 				| NFS_INO_INVALID_XATTR);
--	}
-+	} else if (flags & NFS_INO_REVAL_PAGECACHE)
-+		flags |= NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_SIZE;
- 
- 	if (inode->i_mapping->nrpages == 0)
- 		flags &= ~(NFS_INO_INVALID_DATA|NFS_INO_DATA_INVAL_DEFER);
 -- 
-2.30.2
+Thanks,
 
+Steve
