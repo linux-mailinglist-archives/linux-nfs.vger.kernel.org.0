@@ -2,85 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C86C537F05F
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 02:29:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FB4C37F1D6
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 06:07:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233434AbhEMAac (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 May 2021 20:30:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39320 "EHLO mx2.suse.de"
+        id S229525AbhEMEId convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 13 May 2021 00:08:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33524 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243198AbhEMAaP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 12 May 2021 20:30:15 -0400
+        id S229485AbhEMEId (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 13 May 2021 00:08:33 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 22D5EADFB;
-        Thu, 13 May 2021 00:29:06 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id EC80BAFCC;
+        Thu, 13 May 2021 04:07:22 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
-To:     "Steve Dickson" <SteveD@RedHat.com>
-Cc:     "Chuck Lever III" <chuck.lever@oracle.com>,
-        "Linux NFS Mailing list" <linux-nfs@vger.kernel.org>
-Subject: Re: Re: [PATCH 0/3] Enable the setting of a kernel module parameter
- from nfs.conf
-In-reply-to: <5adff402-5636-3153-2d9f-d912d83038fc@RedHat.com>
-References: <20210414181040.7108-1-steved@redhat.com>,
- <AA442C15-5ED3-4DF5-B23A-9C63429B64BE@oracle.com>,
- <5adff402-5636-3153-2d9f-d912d83038fc@RedHat.com>
-Date:   Thu, 13 May 2021 10:29:05 +1000
-Message-id: <162086574506.5576.4995500938909500647@noble.neil.brown.name>
+To:     "Petr Vorel" <pvorel@suse.cz>
+Cc:     "J . Bruce Fields" <bfields@fieldses.org>,
+        linux-nfs@vger.kernel.org, "Steve Dickson" <steved@redhat.com>,
+        "Chuck Lever" <chuck.lever@oracle.com>,
+        "Alexey Kodanev" <alexey.kodanev@oracle.com>
+Subject: Re: Re: [PATCH/RFC nfs-utils] Fix NFSv4 export of tmpfs filesystems.
+In-reply-to: <YJURMBWOxqGK7rh1@pevik>
+References: <20210422191803.31511-1-pvorel@suse.cz>,
+ <20210422202334.GB25415@fieldses.org>, <YILQip3nAxhpXP9+@pevik>,
+ <162035212343.24322.12361160756597283121@noble.neil.brown.name>,
+ <YJURMBWOxqGK7rh1@pevik>
+Date:   Thu, 13 May 2021 14:07:21 +1000
+Message-id: <162087884172.5576.348023037121213464@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gRnJpLCAxNiBBcHIgMjAyMSwgU3RldmUgRGlja3NvbiB3cm90ZToKPiBIZXkgQ2h1Y2shIAo+
-IAo+IE9uIDQvMTQvMjEgNzoyNiBQTSwgQ2h1Y2sgTGV2ZXIgSUlJIHdyb3RlOgo+ID4gSGkgU3Rl
-dmUtCj4gPiAKPiA+PiBPbiBBcHIgMTQsIDIwMjEsIGF0IDI6MTAgUE0sIFN0ZXZlIERpY2tzb24g
-PFN0ZXZlREByZWRoYXQuY29tPiB3cm90ZToKPiA+Pgo+ID4+IO+7v1RoaXMgaXMgYSB0d2VhayBv
-ZiB0aGUgcGF0Y2ggc2V0IEFsaWNlIE1pdGNoZWxsIHBvc3RlZCBsYXN0IEp1bHkgWzFdLgo+ID4g
-Cj4gPiBUaGF0IGFwcHJvYWNoIHdhcyBkcm9wcGVkIGxhc3QgSnVseSBiZWNhdXNlIGl0IGlzIG5v
-dCBjb250YWluZXItYXdhcmUuCj4gPiBJdCBzaG91bGQgYmUgc2ltcGxlIGZvciBzb21lb25lIHRv
-IHdyaXRlIGEgdWRldiBzY3JpcHQgdGhhdCB1c2VzIHRoZQo+ID4gZXhpc3Rpbmcgc3lzZnMgQVBJ
-IHRoYXQgY2FuIHVwZGF0ZSBuZnM0X2NsaWVudF9pZCBpbiBhIG5hbWVzcGFjZS4gSQo+ID4gd291
-bGQgcHJlZmVyIHRoZSBzeXNmcy91ZGV2IGFwcHJvYWNoIGZvciBzZXR0aW5nIG5mczRfY2xpZW50
-X2lkLAo+ID4gc2luY2UgaXQgaXMgY29udGFpbmVyLWF3YXJlIGFuZCBtYWtlcyB0aGlzIHNldHRp
-bmcgY29tcGxldGVseQo+ID4gYXV0b21hdGljICh6ZXJvIHRvdWNoKS4KPiBBcyBJIHNhaWQgaW4g
-aW4gbXkgY292ZXIgbGV0dGVyLCBJIHNlZSB0aGlzIG1vcmUgYXMgaW50cm9kdWN0aW9uIG9mCj4g
-YSBtZWNoYW5pc20gbW9yZSB0aGFuIGEgd2F5IHRvIHNldCB0aGUgdW5pcXVlIGlkLiBUaGUgbWVj
-aGFuaXNtIGJlaW5nCj4gYSB3YXkgdG8gc2V0IGtlcm5lbCBtb2R1bGUgcGFyYW1zIGZyb20gbmZz
-LmNvbmYuIFRoZSBzZXR0aW5nIG9mCj4gdGhlIGlkIGlzIGp1c3QgYSBzaWRlIGVmZmVjdC4uLiAK
-Ckkgd29uZGVyIGlmIHRoaXMgaXMgdGhlIGJlc3QgYXBwcm9hY2ggZm9yIHNldHRpbmcgbW9kdWxl
-IHBhcmFtZXRlcnMuCgpycGMubmZzZCBhbHJlYWR5IHNldHMgZ3JhY2UtdGltZSBhbmQgbGVhc2Ut
-dGltZSAtIHdoaWNoIGFyZW4ndApleGFjdGx5IG1vZHVsZSBwYXJhbWV0ZXJzLCBidXQgYXJlIHNp
-bWlsYXIgLSB1c2luZyB2YWx1ZXMgZnJvbSBuZnMuY29uZi4KU2ltaWxhcmx5IHN0YXRkIHNldHMg
-L3Byb2MvZnMvbmZzL25sbV90Y3BvcnQgYmFzZWQgb24gbmZzLmNvbmYuCgpJIGRvbid0IHRoaW5r
-IHRoZXNlIHRoaW5ncyBzaG91bGQgYXBwZWFyIGluIG5mcy5jb25mIGFzICJrZXJuZWwKcGFyYW1l
-dGVycyIsIGJ1dCBhcyBzZXJ2aWNlIHBhcmFtZXRlcnMgZm9yIHRoZSBwYXJ0aWN1bGFyIHNlcnZp
-Y2UuCkhvdyB0aGV5IGFyZSBjb21tdW5pY2F0ZSB0byB0aGUga2VybmVsIGlzIGFuIGludGVybmFs
-IGltcGxlbWVudGF0aW9uCmRldGFpbC4gIE1heWJlIGl0IHdpbGwgaW52b2x2ZSBzZXR0aW5nIG1v
-ZHVsZSBwYXJhbWV0ZXJzIChhdCBsZWFzdCBvbgpvbGRlciBrZXJuZWxzKS4KCkZvciB0aGUgImlk
-ZW50aXR5IiBzZXR0aW5nLCBJIHRoaW5rIGl0IHdvdWxkIGJlIGJlc3QgaWYgdGhpcyB3ZXJlCmNo
-ZWNrZWQgYW5kIHVwZGF0ZWQgYnkgbW91bnQubmZzIChzaW1pbGFyIHRvIHRoZSB3YXkgbW91bnQu
-bmZzIHdpbGwKY2hlY2sgaWYgc3RhdGQgaXMgcnVubmluZywgYW5kIHdpbGwgc3RhcnQgaXQgaWYg
-bmVjZXNzYXJ5KS4gIFNvIHNob3VsZAppdCBnbyBpbiBuZnNtb3VudC5jb25mIGluc3RlYWQgb2Yg
-bmZzLmNvbmY/PyBJJ20gbm90IHN1cmUuCgpJdCBpc24ndCBjbGVhciB0byBtZSB3aGVyZSB0aGUg
-aWRlbnRpdHkgc2hvdWxkIGNvbWUgZnJvbS4KSW4gc29tZSBjaXJjdW1zdGFuY2VzIGl0IG1pZ2h0
-IG1ha2Ugc2Vuc2UgdG8gdGFrZSBpdCBmcm9tIG5mcy5jb25mLgpJbiB0aGF0IGNhc2Ugd2Ugd291
-bGQgd2FudCB0byBzdXBwb3J0IHJlYWRpbmcgL2V0Yy9uZXRuZnMvTkFNRS9uZnMuY29uZgp3aGVy
-ZSBOQU1FIHdhcyBkZXRlcm1pbmVkIGluIG11Y2ggdGhlIHNhbWUgd2F5IHRoYXQgImlwIG5ldG5z
-IGlkZW50aWZ5IgpkZXRlcm1pbmVzIGEgbmFtZS4gIChDb21wYXJlIGludW0gb2YgL3Byb2Mvc2Vs
-Zi9ucy9uZXQgd2l0aCB0aGUgaW51bSBvZgplYWNoIG5hbWUgaW4gL3J1bi9uZXRucy8pLgpJZiB3
-ZSBkaWQgdGhhdCwgd2UgY291bGQgdGhlbiBzdXBwb3J0ICIkbmV0bnMiIGluIHRoZSBjb25mIGZp
-bGUsIGFuZAphbGxvdwoKIFtuZnNdCiAgaWRlbnRpdHkgPSAke2hvc3RuYW1lfS0ke25ldG5zfQoK
-aW4gL2V0Yy9uZnMuY29uZiwgYW5kIGl0IHdvdWxkIERvIFRoZSBSaWdodCBUaGluZyBmb3IgbWFu
-eSBjYXNlcy4KCldlIGhhdmUgYSBwYXJ0bmVyIHdobyB3YW50cyB0byBtYWtlIHVzZSBvZiAnbmNv
-bm5lY3QnIGJ1dCBpcwpwYXJ0aWN1bGFybHkgaW5jb252ZW5pZW5jZWQgYnkgdGhlIGZhY3QgdGhh
-dCBvbmNlIHRoZXJlIGlzIGFueSBtb3VudApmcm9tIGEgZ2l2ZW4gc2VydmVyIGl0IGlzIG5vIGxv
-bmdlciBwb3NzaWJsZSB0byBjaGFuZ2UgdGhlIG5jb25uZWN0CnNldHRpbmcuICBJIGhhdmUgc3Vn
-Z2VzdGVkIHRoZXkgZXhwbG9yZSBzZXR0aW5nIHVwIGEgc2VwYXJhdGUKbmV0LW5hbWVzcGFjZSBm
-b3IgInRoZWlyIiBtb3VudHMgd2hpY2ggY2FuIGJlIGluZGVwZW5kZW50IGZyb20gIm90aGVyIgpt
-b3VudHMgb24gdGhlIHNhbWUgbWFjaGluZS4gIElmIHdlIGNvdWxkIG1ha2UgdGhhdCB3b3JrIHdp
-dGggYSBkZWdyZWUgb2YKdHJhbnNwYXJlbmN5IC0gbWF5YmUgZXZlbiBhICItbyBuZXRmcz1mb29i
-YXIiIG1vdW50IG9wdGlvbiAtIHRoYXQgd291bGQKYmUgYSBiaWcgaGVscC4KClRoYW5rcywKTmVp
-bEJyb3duCg==
+On Fri, 07 May 2021, Petr Vorel wrote:
+> Hi Neil,
+> 
+> > [[This is a proposed fix.  It seems to work.  I'd like
+> >   some review comments before it is committed.
+> >   Petr: it would be great if you could test it to confirm
+> >   it actually works in your case.
+> > ]]
+> Thanks for a quick fix. It runs nicely in newer kernels (5.11.12-1-default
+> openSUSE and 5.10.0-6-amd64 Debian). But it somehow fails on older ones
+> (SLES 5.3.18-54-default heavily patched and 4.9.0-11-amd64).
+> 
+> I have some problem on Debian with 4.9.0-11-amd64 fails on both tmpfs and ext4,
+> others work fine (testing tmpfs, btrfs and ext4). But maybe I did something
+> wrong during testing. I did:
+> cp ./utils/mountd/mountd /usr/sbin/rpc.mountd
+> systemctl restart nfs-mountd.service
+
+That is the correct procedure.  It should work...
+
+> 
+> Failure is regardless I use new mount.nfs (master) or the original from
+> Debian (1.3.3).
+
+What error message do you get on failure? It might help to add "-v" to
+the mount command to see more messages.
+
+
+> 
+> strace looks nearly the same on tmpfs and ext4:
+
+This shows mount.nfs connecting to rpcbind, sending a request, getting a
+reply, and maybe looping around and trying again?
+
+There doesn't seem to be anything kernel related that would affect
+anything there so I cannot think why on older kernel would make a
+difference.  Or an older rpcbind...
+
+Maybe I'll experiment on a SLE12 kernel.
+
+NeilBrown
