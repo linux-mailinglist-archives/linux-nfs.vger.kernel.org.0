@@ -2,90 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 420EE37EF00
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 01:04:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C86C537F05F
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 02:29:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232137AbhELWlz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 May 2021 18:41:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1392620AbhELViE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 May 2021 17:38:04 -0400
-Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C2A7C061761;
-        Wed, 12 May 2021 14:24:32 -0700 (PDT)
-Received: by nautica.notk.org (Postfix, from userid 108)
-        id 70BC5C009; Wed, 12 May 2021 23:24:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1620854671; bh=iu3EAcBcCCyh2dvMo7i/UfETwu/cAjPrs9y/9IF/rzg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GqFP10EOCURuFkF2xT3PfYLIY2J/Vt5P+TKC+LR86EYnDVWOiW1p0DaJC80tMytf1
-         5gN1vjC8t9tFEqHpcBzo3MjbeWnOyCsh8VwxR5wFwId+U1nHFIRPH6eGU0XnRQ4jGI
-         /SsgIMi1W6qyOOjrlalZ0AkA2TawlTgrts/qqk1u1tjlJlAt9rRxfyrsKFQdSmvLLf
-         60gftBiNyOvw241iDw7Ixc/ONci3OhTq0SqB2Hha0ZnGEU8kohnF+cJ0zDC9kYAG5Q
-         lc4JRWj/hSOa3rKODk9l9X+dxBTJt4b/LxGbsKWpas3N+o/AEZ0xIdPNB8szmgh/1g
-         RaInV+L3PfTbA==
-X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on nautica.notk.org
-X-Spam-Level: 
-X-Spam-Status: No, score=0.0 required=5.0 tests=UNPARSEABLE_RELAY
-        autolearn=unavailable version=3.3.2
-Received: from odin.codewreck.org (localhost [127.0.0.1])
-        by nautica.notk.org (Postfix) with ESMTPS id 63EE0C009;
-        Wed, 12 May 2021 23:24:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1620854671; bh=iu3EAcBcCCyh2dvMo7i/UfETwu/cAjPrs9y/9IF/rzg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GqFP10EOCURuFkF2xT3PfYLIY2J/Vt5P+TKC+LR86EYnDVWOiW1p0DaJC80tMytf1
-         5gN1vjC8t9tFEqHpcBzo3MjbeWnOyCsh8VwxR5wFwId+U1nHFIRPH6eGU0XnRQ4jGI
-         /SsgIMi1W6qyOOjrlalZ0AkA2TawlTgrts/qqk1u1tjlJlAt9rRxfyrsKFQdSmvLLf
-         60gftBiNyOvw241iDw7Ixc/ONci3OhTq0SqB2Hha0ZnGEU8kohnF+cJ0zDC9kYAG5Q
-         lc4JRWj/hSOa3rKODk9l9X+dxBTJt4b/LxGbsKWpas3N+o/AEZ0xIdPNB8szmgh/1g
-         RaInV+L3PfTbA==
-Received: from localhost (odin.codewreck.org [local])
-        by odin.codewreck.org (OpenSMTPD) with ESMTPA id af7d1893;
-        Wed, 12 May 2021 21:24:26 +0000 (UTC)
-Date:   Thu, 13 May 2021 06:24:11 +0900
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net, linux-fsdevel@vger.kernel.org
-Subject: Re: [V9fs-developer] Removing readpages aop
-Message-ID: <YJxHe+8qn6yYLld3@codewreck.org>
-References: <YJvwVq3Gl35RQrIe@casper.infradead.org>
+        id S233434AbhEMAac (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 May 2021 20:30:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39320 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S243198AbhEMAaP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 12 May 2021 20:30:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 22D5EADFB;
+        Thu, 13 May 2021 00:29:06 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YJvwVq3Gl35RQrIe@casper.infradead.org>
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Steve Dickson" <SteveD@RedHat.com>
+Cc:     "Chuck Lever III" <chuck.lever@oracle.com>,
+        "Linux NFS Mailing list" <linux-nfs@vger.kernel.org>
+Subject: Re: Re: [PATCH 0/3] Enable the setting of a kernel module parameter
+ from nfs.conf
+In-reply-to: <5adff402-5636-3153-2d9f-d912d83038fc@RedHat.com>
+References: <20210414181040.7108-1-steved@redhat.com>,
+ <AA442C15-5ED3-4DF5-B23A-9C63429B64BE@oracle.com>,
+ <5adff402-5636-3153-2d9f-d912d83038fc@RedHat.com>
+Date:   Thu, 13 May 2021 10:29:05 +1000
+Message-id: <162086574506.5576.4995500938909500647@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Matthew Wilcox wrote on Wed, May 12, 2021 at 04:12:22PM +0100:
-> In Linus' current tree, there are just three filesystems left using the
-> readpages address_space_operation:
-> 
-> $ git grep '\.readpages'
-> fs/9p/vfs_addr.c:       .readpages = v9fs_vfs_readpages,
-> fs/cifs/file.c: .readpages = cifs_readpages,
-> fs/nfs/file.c:  .readpages = nfs_readpages,
-> 
-> I'd love to finish getting rid of ->readpages as it would simplify
-> the VFS.  AFS and Ceph were both converted since 5.12 to use
-> netfs_readahead().  Is there any chance we might get the remaining three
-> filesystems converted in the next merge window?
-
-David sent me a mostly-working implementation for netfs and it does get
-rid of readpages, so it's just a matter of finding time for thorough
-tests and cleanups...
-I'd also like to let it sit in -next for a while (let's say at least one
-month), so realistically I need to look at it within the next few weeks
-and I honestly probably won't have time with my current schedule... But
-it'll definitely be done for 5.15 (next's next merge window), and
-probably in -next in ~2ish months if that's good enough for you.
-
-
-If you can convince me both cifs and nfs will get it done before then I
-might reconsider priorities :-D
-
--- 
-Dominique
+T24gRnJpLCAxNiBBcHIgMjAyMSwgU3RldmUgRGlja3NvbiB3cm90ZToKPiBIZXkgQ2h1Y2shIAo+
+IAo+IE9uIDQvMTQvMjEgNzoyNiBQTSwgQ2h1Y2sgTGV2ZXIgSUlJIHdyb3RlOgo+ID4gSGkgU3Rl
+dmUtCj4gPiAKPiA+PiBPbiBBcHIgMTQsIDIwMjEsIGF0IDI6MTAgUE0sIFN0ZXZlIERpY2tzb24g
+PFN0ZXZlREByZWRoYXQuY29tPiB3cm90ZToKPiA+Pgo+ID4+IO+7v1RoaXMgaXMgYSB0d2VhayBv
+ZiB0aGUgcGF0Y2ggc2V0IEFsaWNlIE1pdGNoZWxsIHBvc3RlZCBsYXN0IEp1bHkgWzFdLgo+ID4g
+Cj4gPiBUaGF0IGFwcHJvYWNoIHdhcyBkcm9wcGVkIGxhc3QgSnVseSBiZWNhdXNlIGl0IGlzIG5v
+dCBjb250YWluZXItYXdhcmUuCj4gPiBJdCBzaG91bGQgYmUgc2ltcGxlIGZvciBzb21lb25lIHRv
+IHdyaXRlIGEgdWRldiBzY3JpcHQgdGhhdCB1c2VzIHRoZQo+ID4gZXhpc3Rpbmcgc3lzZnMgQVBJ
+IHRoYXQgY2FuIHVwZGF0ZSBuZnM0X2NsaWVudF9pZCBpbiBhIG5hbWVzcGFjZS4gSQo+ID4gd291
+bGQgcHJlZmVyIHRoZSBzeXNmcy91ZGV2IGFwcHJvYWNoIGZvciBzZXR0aW5nIG5mczRfY2xpZW50
+X2lkLAo+ID4gc2luY2UgaXQgaXMgY29udGFpbmVyLWF3YXJlIGFuZCBtYWtlcyB0aGlzIHNldHRp
+bmcgY29tcGxldGVseQo+ID4gYXV0b21hdGljICh6ZXJvIHRvdWNoKS4KPiBBcyBJIHNhaWQgaW4g
+aW4gbXkgY292ZXIgbGV0dGVyLCBJIHNlZSB0aGlzIG1vcmUgYXMgaW50cm9kdWN0aW9uIG9mCj4g
+YSBtZWNoYW5pc20gbW9yZSB0aGFuIGEgd2F5IHRvIHNldCB0aGUgdW5pcXVlIGlkLiBUaGUgbWVj
+aGFuaXNtIGJlaW5nCj4gYSB3YXkgdG8gc2V0IGtlcm5lbCBtb2R1bGUgcGFyYW1zIGZyb20gbmZz
+LmNvbmYuIFRoZSBzZXR0aW5nIG9mCj4gdGhlIGlkIGlzIGp1c3QgYSBzaWRlIGVmZmVjdC4uLiAK
+Ckkgd29uZGVyIGlmIHRoaXMgaXMgdGhlIGJlc3QgYXBwcm9hY2ggZm9yIHNldHRpbmcgbW9kdWxl
+IHBhcmFtZXRlcnMuCgpycGMubmZzZCBhbHJlYWR5IHNldHMgZ3JhY2UtdGltZSBhbmQgbGVhc2Ut
+dGltZSAtIHdoaWNoIGFyZW4ndApleGFjdGx5IG1vZHVsZSBwYXJhbWV0ZXJzLCBidXQgYXJlIHNp
+bWlsYXIgLSB1c2luZyB2YWx1ZXMgZnJvbSBuZnMuY29uZi4KU2ltaWxhcmx5IHN0YXRkIHNldHMg
+L3Byb2MvZnMvbmZzL25sbV90Y3BvcnQgYmFzZWQgb24gbmZzLmNvbmYuCgpJIGRvbid0IHRoaW5r
+IHRoZXNlIHRoaW5ncyBzaG91bGQgYXBwZWFyIGluIG5mcy5jb25mIGFzICJrZXJuZWwKcGFyYW1l
+dGVycyIsIGJ1dCBhcyBzZXJ2aWNlIHBhcmFtZXRlcnMgZm9yIHRoZSBwYXJ0aWN1bGFyIHNlcnZp
+Y2UuCkhvdyB0aGV5IGFyZSBjb21tdW5pY2F0ZSB0byB0aGUga2VybmVsIGlzIGFuIGludGVybmFs
+IGltcGxlbWVudGF0aW9uCmRldGFpbC4gIE1heWJlIGl0IHdpbGwgaW52b2x2ZSBzZXR0aW5nIG1v
+ZHVsZSBwYXJhbWV0ZXJzIChhdCBsZWFzdCBvbgpvbGRlciBrZXJuZWxzKS4KCkZvciB0aGUgImlk
+ZW50aXR5IiBzZXR0aW5nLCBJIHRoaW5rIGl0IHdvdWxkIGJlIGJlc3QgaWYgdGhpcyB3ZXJlCmNo
+ZWNrZWQgYW5kIHVwZGF0ZWQgYnkgbW91bnQubmZzIChzaW1pbGFyIHRvIHRoZSB3YXkgbW91bnQu
+bmZzIHdpbGwKY2hlY2sgaWYgc3RhdGQgaXMgcnVubmluZywgYW5kIHdpbGwgc3RhcnQgaXQgaWYg
+bmVjZXNzYXJ5KS4gIFNvIHNob3VsZAppdCBnbyBpbiBuZnNtb3VudC5jb25mIGluc3RlYWQgb2Yg
+bmZzLmNvbmY/PyBJJ20gbm90IHN1cmUuCgpJdCBpc24ndCBjbGVhciB0byBtZSB3aGVyZSB0aGUg
+aWRlbnRpdHkgc2hvdWxkIGNvbWUgZnJvbS4KSW4gc29tZSBjaXJjdW1zdGFuY2VzIGl0IG1pZ2h0
+IG1ha2Ugc2Vuc2UgdG8gdGFrZSBpdCBmcm9tIG5mcy5jb25mLgpJbiB0aGF0IGNhc2Ugd2Ugd291
+bGQgd2FudCB0byBzdXBwb3J0IHJlYWRpbmcgL2V0Yy9uZXRuZnMvTkFNRS9uZnMuY29uZgp3aGVy
+ZSBOQU1FIHdhcyBkZXRlcm1pbmVkIGluIG11Y2ggdGhlIHNhbWUgd2F5IHRoYXQgImlwIG5ldG5z
+IGlkZW50aWZ5IgpkZXRlcm1pbmVzIGEgbmFtZS4gIChDb21wYXJlIGludW0gb2YgL3Byb2Mvc2Vs
+Zi9ucy9uZXQgd2l0aCB0aGUgaW51bSBvZgplYWNoIG5hbWUgaW4gL3J1bi9uZXRucy8pLgpJZiB3
+ZSBkaWQgdGhhdCwgd2UgY291bGQgdGhlbiBzdXBwb3J0ICIkbmV0bnMiIGluIHRoZSBjb25mIGZp
+bGUsIGFuZAphbGxvdwoKIFtuZnNdCiAgaWRlbnRpdHkgPSAke2hvc3RuYW1lfS0ke25ldG5zfQoK
+aW4gL2V0Yy9uZnMuY29uZiwgYW5kIGl0IHdvdWxkIERvIFRoZSBSaWdodCBUaGluZyBmb3IgbWFu
+eSBjYXNlcy4KCldlIGhhdmUgYSBwYXJ0bmVyIHdobyB3YW50cyB0byBtYWtlIHVzZSBvZiAnbmNv
+bm5lY3QnIGJ1dCBpcwpwYXJ0aWN1bGFybHkgaW5jb252ZW5pZW5jZWQgYnkgdGhlIGZhY3QgdGhh
+dCBvbmNlIHRoZXJlIGlzIGFueSBtb3VudApmcm9tIGEgZ2l2ZW4gc2VydmVyIGl0IGlzIG5vIGxv
+bmdlciBwb3NzaWJsZSB0byBjaGFuZ2UgdGhlIG5jb25uZWN0CnNldHRpbmcuICBJIGhhdmUgc3Vn
+Z2VzdGVkIHRoZXkgZXhwbG9yZSBzZXR0aW5nIHVwIGEgc2VwYXJhdGUKbmV0LW5hbWVzcGFjZSBm
+b3IgInRoZWlyIiBtb3VudHMgd2hpY2ggY2FuIGJlIGluZGVwZW5kZW50IGZyb20gIm90aGVyIgpt
+b3VudHMgb24gdGhlIHNhbWUgbWFjaGluZS4gIElmIHdlIGNvdWxkIG1ha2UgdGhhdCB3b3JrIHdp
+dGggYSBkZWdyZWUgb2YKdHJhbnNwYXJlbmN5IC0gbWF5YmUgZXZlbiBhICItbyBuZXRmcz1mb29i
+YXIiIG1vdW50IG9wdGlvbiAtIHRoYXQgd291bGQKYmUgYSBiaWcgaGVscC4KClRoYW5rcywKTmVp
+bEJyb3duCg==
