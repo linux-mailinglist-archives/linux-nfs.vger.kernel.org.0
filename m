@@ -2,73 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07BB337FBCB
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 18:49:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37E6E37FBB8
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 18:43:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231189AbhEMQvH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 13 May 2021 12:51:07 -0400
-Received: from p3plsmtpa08-10.prod.phx3.secureserver.net ([173.201.193.111]:38315
-        "EHLO p3plsmtpa08-10.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230037AbhEMQvG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 May 2021 12:51:06 -0400
-X-Greylist: delayed 451 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 May 2021 12:51:06 EDT
-Received: from [192.168.0.100] ([96.237.161.203])
-        by :SMTPAUTH: with ESMTPSA
-        id hEPml9G4NlLmNhEPnlRWud; Thu, 13 May 2021 09:42:24 -0700
-X-CMAE-Analysis: v=2.4 cv=AN1HNu1Z c=1 sm=1 tr=0 ts=609d56f0
- a=Pd5wr8UCr3ug+LLuBLYm7w==:117 a=Pd5wr8UCr3ug+LLuBLYm7w==:17
- a=IkcTkHD0fZMA:10 a=KEpqd1ZkcCj9el2PBssA:9 a=QEXdDO2ut3YA:10
-X-SECURESERVER-ACCT: tom@talpey.com
-Subject: Re: [PATCH v3 09/13] sunrpc: add a symlink from rpc-client directory
- to the xprt_switch
-To:     Chuck Lever III <chuck.lever@oracle.com>,
-        Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "dan@kernelim.com" <dan@kernelim.com>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-References: <20210426171947.99233-1-olga.kornievskaia@gmail.com>
- <20210426171947.99233-10-olga.kornievskaia@gmail.com>
- <20210427044214.vlbmbfdh5dpq4vhl@gmail.com>
- <CAN-5tyHPHk891-NkHt=6o+OuxRB+0ZqQRKqJ=hFThE=oYM0V7Q@mail.gmail.com>
- <20210512104205.hblxgfiagbod6pis@gmail.com>
- <CAN-5tyEoaKseyjOLA+ni7rCXG7=MnDKPCC3YN68=SHm9NaC_4A@mail.gmail.com>
- <CAN-5tyHy8VR4apVCH0kFgmvceWynx5ZwngdT3_V6abDXZnmDgg@mail.gmail.com>
- <CAN-5tyG68pQwW_0+GqqF1w+CmCOUU8ncN6++jAA7i_wqibturw@mail.gmail.com>
- <20210512141623.qovczudkan5h6kjz@gmail.com>
- <c85066f64c19e751c1bdef9344a43037bb674712.camel@hammerspace.com>
- <6F49DAEE-F51F-40D5-866D-A7452126CF41@oracle.com>
-From:   Tom Talpey <tom@talpey.com>
-Message-ID: <9eb1b276-2970-77ec-0691-1e10e6490a83@talpey.com>
-Date:   Thu, 13 May 2021 12:42:22 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        id S234471AbhEMQoa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 13 May 2021 12:44:30 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23182 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234417AbhEMQo1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 May 2021 12:44:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1620924196;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=u4S1WWBl+Kegd6xLD9awLjI+y8LQ2txbSj6xIK9Y9Xg=;
+        b=BNJvttZaWtD8IGkyZ/rC8DEzA+TEa5nDeMiQs9BhA93NtVHsiSx7Kk71cYyAq8UvYxXssg
+        E/lhaabefnXKs8lIcQvGP4cHjhu8AoWDw0QMbE7fpv8pKo9t2LnCGzvM9a8KBNLy8Hqd5x
+        bKAjSP5esGVurEBym9Oib7Az7yzSJCA=
+Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com
+ [209.85.219.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-8-27IB3sCuO8SP40YXtz_XWg-1; Thu, 13 May 2021 12:43:14 -0400
+X-MC-Unique: 27IB3sCuO8SP40YXtz_XWg-1
+Received: by mail-yb1-f200.google.com with SMTP id c9-20020a2580c90000b02904f86395a96dso26939752ybm.19
+        for <linux-nfs@vger.kernel.org>; Thu, 13 May 2021 09:43:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u4S1WWBl+Kegd6xLD9awLjI+y8LQ2txbSj6xIK9Y9Xg=;
+        b=B7OgPHWXHJ1Biak8lz7XCJjP+4yukkVLQkJ+jJY3ccxA4I6IHkkOv/sVQ7qD7mLiuX
+         d6m+hGk2T+uwdRH9a/30P+Ze8gTZP6hIP5N9Kj4q5JaRuyfJc9DjPWFiJ3VtYoURzF6b
+         wSG0GZvik1o6dxGzwBr6pNXbIVjz1rBbx/zaHl7YR4phfQ40vufJNt3mejWjDLzdy6jo
+         XITLdDmCowpxnsCeDfQwjOCRtFW3UoM0EVG0sIV2Ig61YCT6w3SK75ssqgv6n1CXSmus
+         ndY360CztIrVquSsKRXkZo1Mq3x9xxXmHVsuG1O1uka7Z1yGItWZam7fG/yA3Rukfgz3
+         QLvw==
+X-Gm-Message-State: AOAM533TyVapJx285uPbtG8Vv6hx+gSCJ2rlw+9QlMUXut5CXtlMQlxw
+        Vpl3jdILiQA+CgeC8D3aFS7bAZPMnoGa/y8q8M+yJIMiS57wxpt4tdfedC91urZxfecn5HAZdvh
+        b5DHqdsgrqn0NS+JMd9lbsx32WpO6i68wN5Eo
+X-Received: by 2002:a25:6557:: with SMTP id z84mr39938013ybb.88.1620924194020;
+        Thu, 13 May 2021 09:43:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyXZ/SrUg0yiF0CoRZZ+OR/cTP3uNS4JFWXaiisuVksr+LqjF4uuu/beuZcm4aETmWeeJh9O/1FL9HB7kT4D9Q=
+X-Received: by 2002:a25:6557:: with SMTP id z84mr39937985ybb.88.1620924193769;
+ Thu, 13 May 2021 09:43:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6F49DAEE-F51F-40D5-866D-A7452126CF41@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfGUmjSFOLqPPn5M8xg7BePu++1TkM8IP+Oi/jlCU3Xw22MYkHPHjEgVSWpjIM/gFEWRhUtyznJYSXYvjjNfS1eCHSlrCa9gCfbV3ZRkHDtcodynURLg3
- mE0KBXGa+7c9MbuZAJ9GBoNgyFFusl+mVnoj46yf+9waMAOIAiKqsR4SD9jsGQsUqPkdK5jg0DyVZ4C/EvJtOU7KIhtvkZPZ47I39y38PKLXRKR/nwL0ypGd
- Nd38mqbDu5QHbEe3CPt8KF1nr7AyPy2XrVU8h/LS+ItnpeIKTfumhLqFruknKRC3Tf4JXuCckay+gSDvIHbMjZsSHhNRPIAPWFOR15pbdmwKPWRqufoP8q73
- HB82IIfE1UCi8Wka94QBCBgMOXnUmA==
+References: <162083366966.3108.12581818416105328952.stgit@klimt.1015granger.net>
+ <162083375498.3108.14242612463783055564.stgit@klimt.1015granger.net>
+In-Reply-To: <162083375498.3108.14242612463783055564.stgit@klimt.1015granger.net>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Thu, 13 May 2021 12:42:37 -0400
+Message-ID: <CALF+zOkZYg7RzayueKGwFaE-8sHKTB6g4q_Ej-+u=MkH35Dnqw@mail.gmail.com>
+Subject: Re: [PATCH v2 09/25] NFSD: Add a couple more nfsd_clid_expired call sites
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>, rostedt@goodmis.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 5/13/2021 11:18 AM, Chuck Lever III wrote:
-> I agree -- SMB multi-channel allows TCP+RDMA configurations, and its
-> tough to decide how to distribute work across connections and NICs
-> that have such vastly different performance characteristics.
+On Wed, May 12, 2021 at 11:36 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+> Improve observation of NFSv4 lease expiry.
+>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs4state.c |    3 +++
+>  1 file changed, 3 insertions(+)
+>
 
-Purely FYI on this point - SMB does not attempt to perform operations
-over links which differ in transport protocol nor link speed. It
-prefers RDMA over any TCP, and higher link speed over lower. When
-multiple tiers exist, it relegates lower-tier connections to standby
-status.
+How about adding a parameter to explain the location of the expiry to
+make it more slightly more readable?
+Below is an attempt at the two added here, I think there's one more
+not shown though in nfs4_laundromat, which you could just use
+"laundromat".
 
-Most implementations have various tweaks to prefer or to poison
-certain transports or connection associations, but the basics
-are always to use homogeneous links.
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 08ff643e96fb..7fa90a3177fa 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -2665,6 +2665,8 @@ static void force_expire_client(struct nfs4_client *clp)
+>         struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
+>         bool already_expired;
+>
+> +       trace_nfsd_clid_expired(&clp->cl_clientid);
+> +
 
-Tom.
+trace_nfsd_clid_expired(..., "admin forced");
+
+>         spin_lock(&clp->cl_lock);
+>         clp->cl_time = 0;
+>         spin_unlock(&clp->cl_lock);
+> @@ -4075,6 +4077,7 @@ nfsd4_setclientid_confirm(struct svc_rqst *rqstp,
+>                                 goto out;
+>                         status = mark_client_expired_locked(old);
+>                         if (status) {
+> +                               trace_nfsd_clid_expired(&old->cl_clientid);
+
+trace_nfsd_clid_expired(..., "setclientid_confirm existing"); /* found
+an existing confirmed clientid by name */
+
+>                                 old = NULL;
+>                                 goto out;
+>                         }
+>
+>
+
