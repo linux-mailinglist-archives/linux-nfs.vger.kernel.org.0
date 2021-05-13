@@ -2,92 +2,79 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4025D37F5E3
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 12:50:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8C8F37F8E5
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 15:38:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232361AbhEMKvL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 13 May 2021 06:51:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:25523 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232079AbhEMKvB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 May 2021 06:51:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620902990;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ZS4a0+Jk376Mr3TJs35RHyvhDzgETMPw7mZbIknYFVM=;
-        b=NJ4Psim979v8axo3qlq8ymBipXbGiXjkFGDuKKcj1omrSTNjCpASvRlotPQaWTiFcQ1UJg
-        074mP3/lWhTYvlyDsqDKqUVRkBu4x6RMlYUTxsZXleKLJeUbtMYjBiXeI3Jbiz4orhxOPa
-        PpQfZex/XPIDearrdBdwujtO43lnhGw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-582-vHRUTM0TNbSjfnRG3vysog-1; Thu, 13 May 2021 06:49:48 -0400
-X-MC-Unique: vHRUTM0TNbSjfnRG3vysog-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 66DD3100945F;
-        Thu, 13 May 2021 10:49:47 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2374B1B058;
-        Thu, 13 May 2021 10:49:41 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] netfs: Make CONFIG_NETFS_SUPPORT auto-selected rather than
- manual
-From:   David Howells <dhowells@redhat.com>
-To:     geert@linux-m68k.org
-Cc:     linux-mm@kvack.org, linux-cachefs@redhat.com,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        id S234141AbhEMNjm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 13 May 2021 09:39:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234106AbhEMNjY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 May 2021 09:39:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC79C061574;
+        Thu, 13 May 2021 06:38:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7qdcsekCpDC0XbH1OXVUDI58yFo8Z7At/i6/i0XMALI=; b=tfkCjdPhG2JWyiamQqLUcVIUaa
+        XIAK/k2n62tt+Wbf/46OEwAYMQmA+a7bxfjCQNJeofqSoJn1tx8g09UAvpof8TiISSa9sOFxVSN8w
+        nCvW92rZta0Ztby0RSYVTKYOkyXuxIu5khMZE9L+bS3UvMSj+aeeIUOr7y/BZ0s3moMIBGnmRaaSy
+        08Fy6gD4Ww+T7IVNTy+9uiKfwl9bw9+Ie3saiCuYJSsI+W//LBbl1U4U9o+0MyqTusGI62zeRBaCe
+        sAGJMylp/ZwrTaXz1ygWi77JLYrKiU3A1rF9dV6x19gN9MMMDWs8rVF6qFAXnGsUza3T3lvP2KglO
+        Sl13Etjw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lhBU3-009Sko-72; Thu, 13 May 2021 13:35:00 +0000
+Date:   Thu, 13 May 2021 14:34:35 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Steve French <smfrench@gmail.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
         v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, dhowells@redhat.com
-Date:   Thu, 13 May 2021 11:49:41 +0100
-Message-ID: <162090298141.3166007.2971118149366779916.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: Removing readpages aop
+Message-ID: <YJ0q6/Oe5yJ+H+Tn@casper.infradead.org>
+References: <YJvwVq3Gl35RQrIe@casper.infradead.org>
+ <CAH2r5msOQsdeknBdTsfMXYzrb5=NuKEBPc4WD1CkYp10t19Guw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH2r5msOQsdeknBdTsfMXYzrb5=NuKEBPc4WD1CkYp10t19Guw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Make the netfs helper library selected automatically by the things that use
-it rather than being manually configured, even though it's required.
+On Wed, May 12, 2021 at 02:28:41PM -0500, Steve French wrote:
+> I don't have any objections as long as:
+> - we see at least mild performance benefit (or at least we are
+> confident that no performance loss)
 
-Fixes: 3a5829fefd3b ("netfs: Make a netfs helper module")
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: linux-mm@kvack.org
-cc: linux-cachefs@redhat.com
-cc: linux-afs@lists.infradead.org
-cc: linux-nfs@vger.kernel.org
-cc: linux-cifs@vger.kernel.org
-cc: ceph-devel@vger.kernel.org
-cc: v9fs-developer@lists.sourceforge.net
-cc: linux-fsdevel@vger.kernel.org
-Link: https://lore.kernel.org/r/CAMuHMdXJZ7iNQE964CdBOU=vRKVMFzo=YF_eiwsGgqzuvZ+TuA@mail.gmail.com
----
+Nobody's complained of a performance loss in the other ~30 filesystems
+which have already been converted (some almost a year ago).  And CIFS
+has one of the more convoluted readpages implementation, so I'd expect
+a higher likelihood of a performance gain from CIFS.
 
- fs/netfs/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> - it passes regression tests (the usual xfstest bucket)
+> - it doesn't complicate the code too much (sounds like it actually
+> might simplify it, but needs a little more work)
+> - make sure that the usual tuning parms still work (e.g. "rsize" and
+> "rasize" mount options) or we can figure out a sane way to autotune
+> readhead so those wouldn't be needed for any workload
 
-diff --git a/fs/netfs/Kconfig b/fs/netfs/Kconfig
-index 578112713703..b4db21022cb4 100644
---- a/fs/netfs/Kconfig
-+++ b/fs/netfs/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
- config NETFS_SUPPORT
--	tristate "Support for network filesystem high-level I/O"
-+	tristate
- 	help
- 	  This option enables support for network filesystems, including
- 	  helpers for high-level buffered I/O, abstracting out read
+One of the enhancements added as part of the recent netfs merge
+was readahead_expand().  Take a look at it and see if it works for you.
 
+> But currently since we get the most benefit from multichannel (as that
+> allows even better parallelization of i/o) ... I have been focused on
+> various multichannel issues (low credit situations, reconnect, fall
+> back to different channels when weird errors, adjusting channels
+> dynamically when server adds or removes adapters on the fly) for the
+> short term
 
+Understood.  Only so many hours in the day.
+
+I think
+https://lore.kernel.org/linux-fsdevel/1794123.1605713481@warthog.procyon.org.uk/
+is the most recent version, but as Dave notes, it needs attention from
+somebody who knows the CIFS code better.
