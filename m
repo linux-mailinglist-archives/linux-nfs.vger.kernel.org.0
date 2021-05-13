@@ -2,78 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FB4C37F1D6
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 06:07:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 688C437F5DB
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 12:49:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229525AbhEMEId convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 13 May 2021 00:08:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33524 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229485AbhEMEId (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 13 May 2021 00:08:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id EC80BAFCC;
-        Thu, 13 May 2021 04:07:22 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+        id S232063AbhEMKui (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 13 May 2021 06:50:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21341 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232052AbhEMKuf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 May 2021 06:50:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1620902965;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=hLTy2FqhYn8UYNDDx5zbQVMO+wFz0eJkwnkoKVTwuLc=;
+        b=LDFJGl8ig44bfSqYsfrNVzW8l7+rRS/daKVBxp8jv0PTiiyPeOha+jKqbHLtdDNA1Cnv5e
+        eJGK/FfjApBx3Zw6Cn+eaDzB6pk+Z71GUu7SsV+s0RGSoBWf1nSvRRt2KSNiONW09ooAVt
+        TiamkzeBtA3lAiy5fNc+aNzQfyDHMwU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-451-_zrl2b_yMqSu5EjZ_hHK9w-1; Thu, 13 May 2021 06:49:21 -0400
+X-MC-Unique: _zrl2b_yMqSu5EjZ_hHK9w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0822B80DE1E;
+        Thu, 13 May 2021 10:49:20 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9756919D7C;
+        Thu, 13 May 2021 10:49:14 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] netfs: Pass flags through to grab_cache_page_write_begin()
+From:   David Howells <dhowells@redhat.com>
+To:     willy@infradead.org
+Cc:     linux-mm@kvack.org, linux-cachefs@redhat.com,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, dhowells@redhat.com
+Date:   Thu, 13 May 2021 11:49:13 +0100
+Message-ID: <162090295383.3165945.13595101698295243662.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Petr Vorel" <pvorel@suse.cz>
-Cc:     "J . Bruce Fields" <bfields@fieldses.org>,
-        linux-nfs@vger.kernel.org, "Steve Dickson" <steved@redhat.com>,
-        "Chuck Lever" <chuck.lever@oracle.com>,
-        "Alexey Kodanev" <alexey.kodanev@oracle.com>
-Subject: Re: Re: [PATCH/RFC nfs-utils] Fix NFSv4 export of tmpfs filesystems.
-In-reply-to: <YJURMBWOxqGK7rh1@pevik>
-References: <20210422191803.31511-1-pvorel@suse.cz>,
- <20210422202334.GB25415@fieldses.org>, <YILQip3nAxhpXP9+@pevik>,
- <162035212343.24322.12361160756597283121@noble.neil.brown.name>,
- <YJURMBWOxqGK7rh1@pevik>
-Date:   Thu, 13 May 2021 14:07:21 +1000
-Message-id: <162087884172.5576.348023037121213464@noble.neil.brown.name>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 07 May 2021, Petr Vorel wrote:
-> Hi Neil,
-> 
-> > [[This is a proposed fix.  It seems to work.  I'd like
-> >   some review comments before it is committed.
-> >   Petr: it would be great if you could test it to confirm
-> >   it actually works in your case.
-> > ]]
-> Thanks for a quick fix. It runs nicely in newer kernels (5.11.12-1-default
-> openSUSE and 5.10.0-6-amd64 Debian). But it somehow fails on older ones
-> (SLES 5.3.18-54-default heavily patched and 4.9.0-11-amd64).
-> 
-> I have some problem on Debian with 4.9.0-11-amd64 fails on both tmpfs and ext4,
-> others work fine (testing tmpfs, btrfs and ext4). But maybe I did something
-> wrong during testing. I did:
-> cp ./utils/mountd/mountd /usr/sbin/rpc.mountd
-> systemctl restart nfs-mountd.service
+In netfs_write_begin(), pass the AOP flags through to
+grab_cache_page_write_begin() so that a request to use GFP_NOFS is honoured.
 
-That is the correct procedure.  It should work...
+Fixes: e1b1240c1ff5 ("netfs: Add write_begin helper")
+Reported-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-mm@kvack.org
+cc: linux-cachefs@redhat.com
+cc: linux-afs@lists.infradead.org
+cc: linux-nfs@vger.kernel.org
+cc: linux-cifs@vger.kernel.org
+cc: ceph-devel@vger.kernel.org
+cc: v9fs-developer@lists.sourceforge.net
+cc: linux-fsdevel@vger.kernel.org
+---
 
-> 
-> Failure is regardless I use new mount.nfs (master) or the original from
-> Debian (1.3.3).
+ fs/netfs/read_helper.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-What error message do you get on failure? It might help to add "-v" to
-the mount command to see more messages.
+diff --git a/fs/netfs/read_helper.c b/fs/netfs/read_helper.c
+index 193841d03de0..725614625ed4 100644
+--- a/fs/netfs/read_helper.c
++++ b/fs/netfs/read_helper.c
+@@ -1068,7 +1068,7 @@ int netfs_write_begin(struct file *file, struct address_space *mapping,
+ 	DEFINE_READAHEAD(ractl, file, NULL, mapping, index);
+ 
+ retry:
+-	page = grab_cache_page_write_begin(mapping, index, 0);
++	page = grab_cache_page_write_begin(mapping, index, flags);
+ 	if (!page)
+ 		return -ENOMEM;
+ 
 
 
-> 
-> strace looks nearly the same on tmpfs and ext4:
-
-This shows mount.nfs connecting to rpcbind, sending a request, getting a
-reply, and maybe looping around and trying again?
-
-There doesn't seem to be anything kernel related that would affect
-anything there so I cannot think why on older kernel would make a
-difference.  Or an older rpcbind...
-
-Maybe I'll experiment on a SLE12 kernel.
-
-NeilBrown
