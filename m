@@ -2,79 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8C8F37F8E5
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 15:38:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E3D537FA08
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 May 2021 16:52:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234141AbhEMNjm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 13 May 2021 09:39:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234106AbhEMNjY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 May 2021 09:39:24 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC79C061574;
-        Thu, 13 May 2021 06:38:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=7qdcsekCpDC0XbH1OXVUDI58yFo8Z7At/i6/i0XMALI=; b=tfkCjdPhG2JWyiamQqLUcVIUaa
-        XIAK/k2n62tt+Wbf/46OEwAYMQmA+a7bxfjCQNJeofqSoJn1tx8g09UAvpof8TiISSa9sOFxVSN8w
-        nCvW92rZta0Ztby0RSYVTKYOkyXuxIu5khMZE9L+bS3UvMSj+aeeIUOr7y/BZ0s3moMIBGnmRaaSy
-        08Fy6gD4Ww+T7IVNTy+9uiKfwl9bw9+Ie3saiCuYJSsI+W//LBbl1U4U9o+0MyqTusGI62zeRBaCe
-        sAGJMylp/ZwrTaXz1ygWi77JLYrKiU3A1rF9dV6x19gN9MMMDWs8rVF6qFAXnGsUza3T3lvP2KglO
-        Sl13Etjw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lhBU3-009Sko-72; Thu, 13 May 2021 13:35:00 +0000
-Date:   Thu, 13 May 2021 14:34:35 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Steve French <smfrench@gmail.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: Removing readpages aop
-Message-ID: <YJ0q6/Oe5yJ+H+Tn@casper.infradead.org>
-References: <YJvwVq3Gl35RQrIe@casper.infradead.org>
- <CAH2r5msOQsdeknBdTsfMXYzrb5=NuKEBPc4WD1CkYp10t19Guw@mail.gmail.com>
+        id S234736AbhEMOxc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 13 May 2021 10:53:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234685AbhEMOvb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 13 May 2021 10:51:31 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4850061370;
+        Thu, 13 May 2021 14:50:20 +0000 (UTC)
+Date:   Thu, 13 May 2021 10:50:18 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        David Wysochanski <dwysocha@redhat.com>,
+        Bruce Fields <bfields@fieldses.org>
+Subject: Re: [PATCH v2 01/25] NFSD: Fix TP_printk() format specifier in
+ trace_nfsd_dirent()
+Message-ID: <20210513105018.7539996a@gandalf.local.home>
+In-Reply-To: <238C0E2D-C2A4-4578-ADD2-C565B3B99842@oracle.com>
+References: <162083366966.3108.12581818416105328952.stgit@klimt.1015granger.net>
+        <162083370248.3108.7424008399973918267.stgit@klimt.1015granger.net>
+        <20210512122623.79ee0dda@gandalf.local.home>
+        <238C0E2D-C2A4-4578-ADD2-C565B3B99842@oracle.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAH2r5msOQsdeknBdTsfMXYzrb5=NuKEBPc4WD1CkYp10t19Guw@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, May 12, 2021 at 02:28:41PM -0500, Steve French wrote:
-> I don't have any objections as long as:
-> - we see at least mild performance benefit (or at least we are
-> confident that no performance loss)
+On Wed, 12 May 2021 16:52:05 +0000
+Chuck Lever III <chuck.lever@oracle.com> wrote:
 
-Nobody's complained of a performance loss in the other ~30 filesystems
-which have already been converted (some almost a year ago).  And CIFS
-has one of the more convoluted readpages implementation, so I'd expect
-a higher likelihood of a performance gain from CIFS.
+> The underlying need is to support non-NUL-terminated C strings.
+> 
+> I assumed that since the commentary around 9a6944fee68e claims
+> the proper way to trace C strings is to use __string and friends,
+> and those do not support non-NUL-terminated strings, that such
+> strings are really not first-class citizens. Thus I concluded
+> that my use of '%.*s' was incorrect.
+> 
+> Having some __string-style helpers that can deal with such
+> strings would be valuable.
 
-> - it passes regression tests (the usual xfstest bucket)
-> - it doesn't complicate the code too much (sounds like it actually
-> might simplify it, but needs a little more work)
-> - make sure that the usual tuning parms still work (e.g. "rsize" and
-> "rasize" mount options) or we can figure out a sane way to autotune
-> readhead so those wouldn't be needed for any workload
+I guess the best I can do is a strncpy version, that will add the '\0' in
+the ring buffer. That way we don't need to save the length as well (length
+would need to be at least 4 bytes, where as '\0' is one).
 
-One of the enhancements added as part of the recent netfs merge
-was readahead_expand().  Take a look at it and see if it works for you.
+Something like this?
 
-> But currently since we get the most benefit from multichannel (as that
-> allows even better parallelization of i/o) ... I have been focused on
-> various multichannel issues (low credit situations, reconnect, fall
-> back to different channels when weird errors, adjusting channels
-> dynamically when server adds or removes adapters on the fly) for the
-> short term
+I added "__string_len()" and "__assign_str_len()". You use them just like
+__string() and __assign_str() but add a max length that you want to use
+(although, it will always allocate "len" regardless if the string is
+smaller). Then use __get_str() just like you use __string().
 
-Understood.  Only so many hours in the day.
+Would something like that work?
 
-I think
-https://lore.kernel.org/linux-fsdevel/1794123.1605713481@warthog.procyon.org.uk/
-is the most recent version, but as Dave notes, it needs attention from
-somebody who knows the CIFS code better.
+-- Steve
+
+diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
+index 8268bf747d6f..7ab23535a0c8 100644
+--- a/include/trace/trace_events.h
++++ b/include/trace/trace_events.h
+@@ -102,6 +102,9 @@ TRACE_MAKE_SYSTEM_STR();
+ #undef __string
+ #define __string(item, src) __dynamic_array(char, item, -1)
+ 
++#undef __string_len
++#define __string_len(item, src, len) __dynamic_array(char, item, -1)
++
+ #undef __bitmask
+ #define __bitmask(item, nr_bits) __dynamic_array(char, item, -1)
+ 
+@@ -197,6 +200,9 @@ TRACE_MAKE_SYSTEM_STR();
+ #undef __string
+ #define __string(item, src) __dynamic_array(char, item, -1)
+ 
++#undef __string_len
++#define __string_len(item, src, len) __dynamic_array(char, item, -1)
++
+ #undef __bitmask
+ #define __bitmask(item, nr_bits) __dynamic_array(unsigned long, item, -1)
+ 
+@@ -444,6 +450,9 @@ static struct trace_event_functions trace_event_type_funcs_##call = {	\
+ #undef __string
+ #define __string(item, src) __dynamic_array(char, item, -1)
+ 
++#undef __string_len
++#define __string_len(item, src, len) __dynamic_array(char, item, -1)
++
+ #undef __bitmask
+ #define __bitmask(item, nr_bits) __dynamic_array(unsigned long, item, -1)
+ 
+@@ -492,6 +501,9 @@ static struct trace_event_fields trace_event_fields_##call[] = {	\
+ #define __string(item, src) __dynamic_array(char, item,			\
+ 		    strlen((src) ? (const char *)(src) : "(null)") + 1)
+ 
++#undef __string_len
++#define __string_len(item, src, len) __dynamic_array(char, item, (len) + 1)
++
+ /*
+  * __bitmask_size_in_bytes_raw is the number of bytes needed to hold
+  * num_possible_cpus().
+@@ -655,10 +667,18 @@ static inline notrace int trace_event_get_offsets_##call(		\
+ #undef __string
+ #define __string(item, src) __dynamic_array(char, item, -1)
+ 
++#undef __string_len
++#define __string_len(item, src, len) __dynamic_array(char, item, -1)
++
+ #undef __assign_str
+ #define __assign_str(dst, src)						\
+ 	strcpy(__get_str(dst), (src) ? (const char *)(src) : "(null)");
+ 
++#undef __assign_str_len
++#define __assign_str_len(dst, src, len)						\
++	strncpy(__get_str(dst), (src) ? (const char *)(src) : "(null)", len);	\
++	__get_str(dst)[len] = '\0';
++
+ #undef __bitmask
+ #define __bitmask(item, nr_bits) __dynamic_array(unsigned long, item, -1)
+ 
+
+
