@@ -2,23 +2,23 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61F8A381146
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 May 2021 21:57:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9468381147
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 May 2021 21:57:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233013AbhENT6P (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 May 2021 15:58:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
+        id S233033AbhENT6V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 May 2021 15:58:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231206AbhENT6O (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 14 May 2021 15:58:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D6E4161353;
-        Fri, 14 May 2021 19:57:02 +0000 (UTC)
-Subject: [PATCH v3 18/24] NFSD: Enhance the nfsd_cb_setup tracepoint
+        id S231206AbhENT6U (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 14 May 2021 15:58:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 04D1A613DE;
+        Fri, 14 May 2021 19:57:08 +0000 (UTC)
+Subject: [PATCH v3 19/24] NFSD: Add an nfsd_cb_lm_notify tracepoint
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     dwysocha@redhat.com, bfields@fieldses.org
-Date:   Fri, 14 May 2021 15:57:02 -0400
-Message-ID: <162102222212.10915.11939476694458119659.stgit@klimt.1015granger.net>
+Date:   Fri, 14 May 2021 15:57:08 -0400
+Message-ID: <162102222827.10915.10698485648582592912.stgit@klimt.1015granger.net>
 In-Reply-To: <162102191240.10915.5003178983503027218.stgit@klimt.1015granger.net>
 References: <162102191240.10915.5003178983503027218.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.1
@@ -29,73 +29,71 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Display the transport protocol and authentication flavor so admins
-can see what they might be getting wrong.
+When the server kicks off a CB_LM_NOTIFY callback, record its
+arguments so we can better observe asynchronous locking behavior.
+For example:
+
+            nfsd-998   [002]  1471.705873: nfsd_cb_notify_lock:  addr=192.168.2.51:0 client 6092a47c:35a43fc1 fh_hash=0x8950b23a
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Cc: Jeff Layton <jlayton@redhat.com>
 ---
- fs/nfsd/nfs4callback.c |    3 ++-
- fs/nfsd/trace.h        |   27 ++++++++++++++++++++++++++-
- 2 files changed, 28 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4state.c |    4 +++-
+ fs/nfsd/trace.h     |   26 ++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 15ba16c54793..c2a2a58b3581 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -939,7 +939,8 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 377ec4a6a771..d4eee8a47ff3 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6451,8 +6451,10 @@ nfsd4_lm_notify(struct file_lock *fl)
  	}
- 	clp->cl_cb_client = client;
- 	clp->cl_cb_cred = cred;
--	trace_nfsd_cb_setup(clp);
-+	trace_nfsd_cb_setup(clp, rpc_peeraddr2str(client, RPC_DISPLAY_NETID),
-+			    args.authflavor);
- 	return 0;
+ 	spin_unlock(&nn->blocked_locks_lock);
+ 
+-	if (queue)
++	if (queue) {
++		trace_nfsd_cb_notify_lock(lo, nbl);
+ 		nfsd4_run_cb(&nbl->nbl_cb);
++	}
  }
  
+ static const struct lock_manager_operations nfsd_posix_mng_ops  = {
 diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 336dc4c45416..fc80879d6077 100644
+index fc80879d6077..921323f88322 100644
 --- a/fs/nfsd/trace.h
 +++ b/fs/nfsd/trace.h
-@@ -910,7 +910,6 @@ DEFINE_EVENT(nfsd_cb_class, nfsd_cb_##name,		\
- 	TP_PROTO(const struct nfs4_client *clp),	\
- 	TP_ARGS(clp))
+@@ -1027,6 +1027,32 @@ TRACE_EVENT(nfsd_cb_done,
+ 		__entry->status)
+ );
  
--DEFINE_NFSD_CB_EVENT(setup);
- DEFINE_NFSD_CB_EVENT(state);
- DEFINE_NFSD_CB_EVENT(lost);
- DEFINE_NFSD_CB_EVENT(shutdown);
-@@ -931,6 +930,32 @@ TRACE_DEFINE_ENUM(RPC_AUTH_GSS_KRB5P);
- 		{ RPC_AUTH_GSS_KRB5I,		"krb5i" },		\
- 		{ RPC_AUTH_GSS_KRB5P,		"krb5p" })
- 
-+TRACE_EVENT(nfsd_cb_setup,
-+	TP_PROTO(const struct nfs4_client *clp,
-+		 const char *netid,
-+		 rpc_authflavor_t authflavor
++TRACE_EVENT(nfsd_cb_notify_lock,
++	TP_PROTO(
++		const struct nfs4_lockowner *lo,
++		const struct nfsd4_blocked_lock *nbl
 +	),
-+	TP_ARGS(clp, netid, authflavor),
++	TP_ARGS(lo, nbl),
 +	TP_STRUCT__entry(
 +		__field(u32, cl_boot)
 +		__field(u32, cl_id)
-+		__field(unsigned long, authflavor)
++		__field(u32, fh_hash)
 +		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
-+		__array(unsigned char, netid, 8)
 +	),
 +	TP_fast_assign(
++		const struct nfs4_client *clp = lo->lo_owner.so_client;
++
 +		__entry->cl_boot = clp->cl_clientid.cl_boot;
 +		__entry->cl_id = clp->cl_clientid.cl_id;
-+		strlcpy(__entry->netid, netid, sizeof(__entry->netid));
-+		__entry->authflavor = authflavor;
++		__entry->fh_hash = knfsd_fh_hash(&nbl->nbl_fh);
 +		memcpy(__entry->addr, &clp->cl_cb_conn.cb_addr,
 +			sizeof(struct sockaddr_in6));
 +	),
-+	TP_printk("addr=%pISpc client %08x:%08x proto=%s flavor=%s",
++	TP_printk("addr=%pISpc client %08x:%08x fh_hash=0x%08x",
 +		__entry->addr, __entry->cl_boot, __entry->cl_id,
-+		__entry->netid, show_nfsd_authflavor(__entry->authflavor))
++		__entry->fh_hash)
 +);
 +
- TRACE_EVENT(nfsd_cb_setup_err,
- 	TP_PROTO(
- 		const struct nfs4_client *clp,
+ #endif /* _NFSD_TRACE_H */
+ 
+ #undef TRACE_INCLUDE_PATH
 
 
