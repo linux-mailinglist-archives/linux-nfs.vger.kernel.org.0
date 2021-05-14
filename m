@@ -2,85 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85F973810B2
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 May 2021 21:25:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8583381121
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 May 2021 21:55:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232982AbhENT0C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 May 2021 15:26:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233132AbhENTZw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 May 2021 15:25:52 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2EC8C06138A
-        for <linux-nfs@vger.kernel.org>; Fri, 14 May 2021 12:24:40 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id s20so16604907plr.13
-        for <linux-nfs@vger.kernel.org>; Fri, 14 May 2021 12:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7zYWopn37Ev0Ztgo7qbckFoeWWV5RAzUDbw0Dfbjdlw=;
-        b=CMZSonsnXKB5rfp654jW6UBkcZJpQvr4Hl3h/Sqp9c5xOeKlo+X+kqqWm3C/Otq38b
-         Gby1KIQVxuvRvD6LivosEWOYnU+tAsjc0470WhZAINAdTPN3hksm4E8lMmzXHsMnhdIr
-         dMg9q2OAFM5nEax3IUS56gN67MKdcrw2ETr6U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7zYWopn37Ev0Ztgo7qbckFoeWWV5RAzUDbw0Dfbjdlw=;
-        b=BtGFmk2MxcGqRkAVBMwQukIvVDP1nNvpmr1xwcv7vGD9Dhaxey6MfV0hhvvtSrut1A
-         TkUq3k61/TvJHq8Vyn8ZFnQh9zYxbiD30YyoRFV4E7xJAJ+neq5qj7av/dNeLrUQxSKC
-         xMzhcR76bDOMMZ4xrdP1v1NRD3L9uXj92XFxRgktIQBeSex5hatvPoftebSClXsWqbPs
-         Qzhoo6NDOVxElr9hdtzugAXJu2J3b0G050QwGt6OKYZDLmdrGeABXDPVQjlA65FOi+UT
-         xhIM6q+uaKtNBzihd4ik6wAAoynncX10QPI5X0nnQucGvDLK3fcqogUg5cnmmBsy40Qy
-         wLnw==
-X-Gm-Message-State: AOAM532mVJPCXtC8akv8Wv70NA6ONCmVkcrsfyia//AYMS+Kezaeid/c
-        JBsffnERHCGdhTniLKg2mLo/XU4b787U6A==
-X-Google-Smtp-Source: ABdhPJxHMA/6v53f/nn/W7fZz/vDZdmjMu55VCA8wxeCxUw6+Ip7YnJ5TAlxokdAusW4aKY8IvIw/Q==
-X-Received: by 2002:a17:90a:1c02:: with SMTP id s2mr20301156pjs.172.1621020280425;
-        Fri, 14 May 2021 12:24:40 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n11sm4983512pff.96.2021.05.14.12.24.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 May 2021 12:24:39 -0700 (PDT)
-Date:   Fri, 14 May 2021 12:24:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     casey.schaufler@intel.com, jmorris@namei.org,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-audit@redhat.com, john.johansen@canonical.com,
-        penguin-kernel@i-love.sakura.ne.jp, paul@paul-moore.com,
-        sds@tycho.nsa.gov, linux-kernel@vger.kernel.org,
-        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v26 17/25] LSM: Use lsmcontext in security_inode_getsecctx
-Message-ID: <202105141224.942DE93@keescook>
-References: <20210513200807.15910-1-casey@schaufler-ca.com>
- <20210513200807.15910-18-casey@schaufler-ca.com>
+        id S230268AbhENT4Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 May 2021 15:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232211AbhENT4Y (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 14 May 2021 15:56:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 14CA961444;
+        Fri, 14 May 2021 19:55:11 +0000 (UTC)
+Subject: [PATCH v3 00/24] NFSD callback and lease management observability
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     dwysocha@redhat.com, bfields@fieldses.org
+Date:   Fri, 14 May 2021 15:55:11 -0400
+Message-ID: <162102191240.10915.5003178983503027218.stgit@klimt.1015granger.net>
+User-Agent: StGit/1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210513200807.15910-18-casey@schaufler-ca.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, May 13, 2021 at 01:07:59PM -0700, Casey Schaufler wrote:
-> Change the security_inode_getsecctx() interface to fill
-> a lsmcontext structure instead of data and length pointers.
-> This provides the information about which LSM created the
-> context so that security_release_secctx() can use the
-> correct hook.
-> 
-> Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
-> Acked-by: Paul Moore <paul@paul-moore.com>
-> Acked-by: Chuck Lever <chuck.lever@oracle.com>
-> Reviewed-by: John Johansen <john.johansen@canonical.com>
-> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+I've hacked together some improvements to the tracepoints that record
+server callback and lease management activity. I'm interested in
+review comments and testing. I'm sure I've missed your favorite edge
+case, so please let me know what it is!
 
-Seem good to me.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Changes since v2:
+- Postponed '%.s' fix-ups so the series applies to v5.13-rc1 as-is
+- Split up the nfsd_clid_expired tracepoint
+- Add nfserr and cp_count to the nfsd_cb_offload tracepoint
 
--- 
-Kees Cook
+Changes since RFC:
+- Rebased firmly on v5.13-rc1
+- Re-organized the SETCLIENTID/EXCHANGE_ID tracepoints
+- Fixed/replaced the use of '%.*s'
+- Re-ordered the series so those fixes come first
+
+---
+
+Chuck Lever (24):
+      NFSD: Fix TP_printk() format specifier in nfsd_clid_class
+      NFSD: Add an RPC authflavor tracepoint display helper
+      NFSD: Add nfsd_clid_cred_mismatch tracepoint
+      NFSD: Add nfsd_clid_verf_mismatch tracepoint
+      NFSD: Remove trace_nfsd_clid_inuse_err
+      NFSD: Add nfsd_clid_confirmed tracepoint
+      NFSD: Add nfsd_clid_reclaim_complete tracepoint
+      NFSD: Add nfsd_clid_destroyed tracepoint
+      NFSD: Add a couple more nfsd_clid_expired call sites
+      NFSD: Add tracepoints for SETCLIENTID edge cases
+      NFSD: Add tracepoints for EXCHANGEID edge cases
+      NFSD: Constify @fh argument of knfsd_fh_hash()
+      NFSD: Capture every CB state transition
+      NFSD: Drop TRACE_DEFINE_ENUM for NFSD4_CB_<state> macros
+      NFSD: Add cb_lost tracepoint
+      NFSD: Adjust cb_shutdown tracepoint
+      NFSD: Remove spurious cb_setup_err tracepoint
+      NFSD: Enhance the nfsd_cb_setup tracepoint
+      NFSD: Add an nfsd_cb_lm_notify tracepoint
+      NFSD: Add an nfsd_cb_offload tracepoint
+      NFSD: Replace the nfsd_deleg_break tracepoint
+      NFSD: Add an nfsd_cb_probe tracepoint
+      NFSD: Remove the nfsd_cb_work and nfsd_cb_done tracepoints
+      NFSD: Update nfsd_cb_args tracepoint
+
+
+ fs/nfsd/nfs4callback.c |  45 ++++----
+ fs/nfsd/nfs4proc.c     |   2 +
+ fs/nfsd/nfs4state.c    |  88 +++++++++------
+ fs/nfsd/nfsfh.h        |   7 +-
+ fs/nfsd/trace.h        | 249 +++++++++++++++++++++++++++++++----------
+ 5 files changed, 270 insertions(+), 121 deletions(-)
+
+--
+Chuck Lever
+
