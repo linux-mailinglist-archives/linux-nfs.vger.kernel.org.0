@@ -2,92 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 945DA380A65
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 May 2021 15:30:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B075380B3C
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 May 2021 16:13:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbhENNcA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 May 2021 09:32:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:56776 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230285AbhENNb7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 May 2021 09:31:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620999048;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=YG0mHgnCp9B4knsEgNvJSp6BZu2jnEIblQkEXOrVEYI=;
-        b=JjI5Vr1jgONyW8Jchlh1faurQgj9IbrO1y6ECd7ivUl3CzJRDvDjBWY1/hSPf3xVJLOtgs
-        rmqL+IcN5PnKVJMVtMItjRY6xjETK3tcNqIEIlOaqXLw1UKHq69ThfDE5Fez1Nx3aOOjp9
-        v6JF/deFU2FV5fam+pTvcd/mEECPXWg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-403-7m9n8ZkKOMKCyvbm5T-w-w-1; Fri, 14 May 2021 09:30:46 -0400
-X-MC-Unique: 7m9n8ZkKOMKCyvbm5T-w-w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81BC091270;
-        Fri, 14 May 2021 13:30:44 +0000 (UTC)
-Received: from dwysocha.rdu.csb (unknown [10.22.8.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0575360CC6;
-        Fri, 14 May 2021 13:30:43 +0000 (UTC)
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     Bruce Fields <bfields@fieldses.org>,
-        Chuck Lever III <chuck.lever@oracle.com>
+        id S231767AbhENOOi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 May 2021 10:14:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232778AbhENOOi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 May 2021 10:14:38 -0400
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEB78C061574
+        for <linux-nfs@vger.kernel.org>; Fri, 14 May 2021 07:13:26 -0700 (PDT)
+Received: by mail-il1-x130.google.com with SMTP id w7so9201662ilg.13
+        for <linux-nfs@vger.kernel.org>; Fri, 14 May 2021 07:13:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y4e2RE2lfFmfom62gb+8MEqPHMaRxUsNpEXyK+1BEss=;
+        b=g6XYN4cvIytm4ySGVav4pAK7+Bd9yaIglDX5L0YiNhxC723nEpcmykas9NoC1jClwo
+         0zKmenhG7gPUi06hFOmTUdqD4ArkpiT2pQVwXdFfkHcD69cbo9XgDex0u1Mrp5s65JmJ
+         fpk9bcYb75kIFBKua0iyydqLUphcyxTPCqraw/xAXhKf9fkyBtu42kOBKP+aAX4nYVcV
+         QQGvrb89c0q5BKLchycmstCZGoSMDqFUoHbzmtbjoDWZF/pGtTN1eJdL5gkiRiZqw5R9
+         XSk0yRfIzGgfqMO3jR3Zq95/daF/9M5hsJWMyvBhCNeV4IIsQvHSBzGyrku+e7ow/YGh
+         RGCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y4e2RE2lfFmfom62gb+8MEqPHMaRxUsNpEXyK+1BEss=;
+        b=bpHcQzcEtYDk/fxEZq/9gpMwuSDGPEIqOkVA9ojPHEP9CsJUnFIgGlrkhO+GWU8isP
+         QHHlyFBDGkNW6TxO38khRcy6DCLiT8my8hYW9RZyHgIc/SSr5OntFslUb8eq912w2VjX
+         pbaNn/ZOP7+gJtSji+qnE2mS9WLmyCnkKiPpS1PDgBEPu1KtFUf3Y7iS/vcWCqNgONne
+         S82GROtML+V3pTR/OWjF1zuQ0zROIRBuj298U5NDh0s9SW5UblB24oRSfFpeZ4i+vKb/
+         SjaJ3dltCwqOtAetTsuUN7yPK8M583gRVDFqefRkDYKHklnxAkMeJiGFw0iQSoGKWS7V
+         bm4g==
+X-Gm-Message-State: AOAM533UdhDiiFjEXkh0WGIdgTn6wGYwB0vDtnneXpq7TtXjvgeEd5W+
+        87bZwl9hE8cU9KaniKTiX3ojT88J13Pbxw==
+X-Google-Smtp-Source: ABdhPJxxKymYbT9Z1lt6ten5MtABCJTKjK62mVLSp2w+xgadkMmMlmhPCO3gqbcm0eDeiRjXGvGRww==
+X-Received: by 2002:a05:6e02:13d3:: with SMTP id v19mr4225293ilj.168.1621001606210;
+        Fri, 14 May 2021 07:13:26 -0700 (PDT)
+Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:a4f7:32c8:9c05:11a7])
+        by smtp.gmail.com with ESMTPSA id b189sm2639263iof.48.2021.05.14.07.13.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 May 2021 07:13:25 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] nfsd4: Expose the callback address and state of each NFS4 client
-Date:   Fri, 14 May 2021 09:30:41 -0400
-Message-Id: <1620999041-9341-2-git-send-email-dwysocha@redhat.com>
-In-Reply-To: <1620999041-9341-1-git-send-email-dwysocha@redhat.com>
-References: <1620999041-9341-1-git-send-email-dwysocha@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Subject: [PATCH v7 00/12] create sysfs files for changing IP address
+Date:   Fri, 14 May 2021 10:13:11 -0400
+Message-Id: <20210514141323.67922-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In addition to the client's address, display the callback channel
-state and address in the 'info' file.
+From: Olga Kornievskaia <kolga@netapp.com>
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
----
- fs/nfsd/nfs4state.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+v7: change client's link to hardcoded "switch"
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 49c052243b5c..89a7cada334d 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2357,6 +2357,21 @@ static void seq_quote_mem(struct seq_file *m, char *data, int len)
- 	seq_printf(m, "\"");
- }
- 
-+static const char *cb_state_str(int state)
-+{
-+	switch (state) {
-+		case NFSD4_CB_UP:
-+			return "UP";
-+		case NFSD4_CB_UNKNOWN:
-+			return "UNKNOWN";
-+		case NFSD4_CB_DOWN:
-+			return "DOWN";
-+		case NFSD4_CB_FAULT:
-+			return "FAULT";
-+	}
-+	return "UNDEFINED";
-+}
-+
- static int client_info_show(struct seq_file *m, void *v)
- {
- 	struct inode *inode = m->private;
-@@ -2385,6 +2400,8 @@ static int client_info_show(struct seq_file *m, void *v)
- 		seq_printf(m, "\nImplementation time: [%lld, %ld]\n",
- 			clp->cl_nii_time.tv_sec, clp->cl_nii_time.tv_nsec);
- 	}
-+	seq_printf(m, "callback state: %s\n", cb_state_str(clp->cl_cb_state));
-+	seq_printf(m, "callback address: %pISpc\n", &clp->cl_cb_conn.cb_addr);
- 	drop_client(clp);
- 
- 	return 0;
+Anna Schumaker (3):
+  sunrpc: Create a sunrpc directory under /sys/kernel/
+  sunrpc: Create a client/ subdirectory in the sunrpc sysfs
+  sunrpc: Create per-rpc_clnt sysfs kobjects
+
+Dan Aloni (2):
+  sunrpc: add xprt id
+  sunrpc: add IDs to multipath
+
+Olga Kornievskaia (7):
+  sunrpc: keep track of the xprt_class in rpc_xprt structure
+  sunrpc: add xprt_switch direcotry to sunrpc's sysfs
+  sunrpc: add a symlink from rpc-client directory to the xprt_switch
+  sunrpc: add add sysfs directory per xprt under each xprt_switch
+  sunrpc: add dst_attr attributes to the sysfs xprt directory
+  sunrpc: provide transport info in the sysfs directory
+  sunrpc: provide multipath info in the sysfs directory
+
+ include/linux/sunrpc/clnt.h          |   2 +
+ include/linux/sunrpc/xprt.h          |   7 +
+ include/linux/sunrpc/xprtmultipath.h |   6 +
+ net/sunrpc/Makefile                  |   2 +-
+ net/sunrpc/clnt.c                    |   5 +
+ net/sunrpc/sunrpc_syms.c             |  10 +
+ net/sunrpc/sysfs.c                   | 482 +++++++++++++++++++++++++++
+ net/sunrpc/sysfs.h                   |  41 +++
+ net/sunrpc/xprt.c                    |  28 +-
+ net/sunrpc/xprtmultipath.c           |  34 ++
+ net/sunrpc/xprtrdma/transport.c      |   2 +
+ net/sunrpc/xprtsock.c                |   9 +
+ 12 files changed, 626 insertions(+), 2 deletions(-)
+ create mode 100644 net/sunrpc/sysfs.c
+ create mode 100644 net/sunrpc/sysfs.h
+
 -- 
-1.8.3.1
+2.27.0
 
