@@ -2,24 +2,24 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1237B381122
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 May 2021 21:55:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64460381123
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 May 2021 21:55:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232256AbhENT4a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 May 2021 15:56:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
+        id S232362AbhENT4h (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 May 2021 15:56:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232211AbhENT4a (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 14 May 2021 15:56:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 506386145B;
-        Fri, 14 May 2021 19:55:18 +0000 (UTC)
-Subject: [PATCH v3 01/24] NFSD: Fix TP_printk() format specifier in
- nfsd_clid_class
+        id S232211AbhENT4g (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 14 May 2021 15:56:36 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 72BB161461;
+        Fri, 14 May 2021 19:55:24 +0000 (UTC)
+Subject: [PATCH v3 02/24] NFSD: Add an RPC authflavor tracepoint display
+ helper
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     dwysocha@redhat.com, bfields@fieldses.org
-Date:   Fri, 14 May 2021 15:55:17 -0400
-Message-ID: <162102211750.10915.8066185025404328659.stgit@klimt.1015granger.net>
+Date:   Fri, 14 May 2021 15:55:23 -0400
+Message-ID: <162102212372.10915.16884773556406844003.stgit@klimt.1015granger.net>
 In-Reply-To: <162102191240.10915.5003178983503027218.stgit@klimt.1015granger.net>
 References: <162102191240.10915.5003178983503027218.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.1
@@ -30,81 +30,39 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Since commit 9a6944fee68e ("tracing: Add a verifier to check string
-pointers for trace events"), which was merged in v5.13-rc1,
-TP_printk() no longer tacitly supports the "%.*s" format specifier.
+To be used in subsequent patches.
 
-These are low value tracepoints, so just remove them.
-
-Reported-by: David Wysochanski <dwysocha@redhat.com>
-Fixes: dd5e3fbc1f47 ("NFSD: Add tracepoints to the NFSD state management code")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
 ---
- fs/nfsd/nfs4state.c |    3 ---
- fs/nfsd/trace.h     |   29 -----------------------------
- 2 files changed, 32 deletions(-)
+ fs/nfsd/trace.h |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index b517a8794400..6abe48dee6ed 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -7229,7 +7229,6 @@ nfs4_client_to_reclaim(struct xdr_netobj name, struct xdr_netobj princhash,
- 	unsigned int strhashval;
- 	struct nfs4_client_reclaim *crp;
- 
--	trace_nfsd_clid_reclaim(nn, name.len, name.data);
- 	crp = alloc_reclaim();
- 	if (crp) {
- 		strhashval = clientstr_hashval(name);
-@@ -7279,8 +7278,6 @@ nfsd4_find_reclaim_client(struct xdr_netobj name, struct nfsd_net *nn)
- 	unsigned int strhashval;
- 	struct nfs4_client_reclaim *crp = NULL;
- 
--	trace_nfsd_clid_find(nn, name.len, name.data);
--
- 	strhashval = clientstr_hashval(name);
- 	list_for_each_entry(crp, &nn->reclaim_str_hashtbl[strhashval], cr_strhash) {
- 		if (compare_blob(&crp->cr_name, &name) == 0) {
 diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 27a93ebd1d80..42ad2a02f953 100644
+index 42ad2a02f953..1b50640cdf96 100644
 --- a/fs/nfsd/trace.h
 +++ b/fs/nfsd/trace.h
-@@ -536,35 +536,6 @@ DEFINE_EVENT(nfsd_net_class, nfsd_##name, \
- DEFINE_NET_EVENT(grace_start);
- DEFINE_NET_EVENT(grace_complete);
+@@ -841,6 +841,22 @@ DEFINE_NFSD_CB_EVENT(setup);
+ DEFINE_NFSD_CB_EVENT(state);
+ DEFINE_NFSD_CB_EVENT(shutdown);
  
--DECLARE_EVENT_CLASS(nfsd_clid_class,
--	TP_PROTO(const struct nfsd_net *nn,
--		 unsigned int namelen,
--		 const unsigned char *namedata),
--	TP_ARGS(nn, namelen, namedata),
--	TP_STRUCT__entry(
--		__field(unsigned long long, boot_time)
--		__field(unsigned int, namelen)
--		__dynamic_array(unsigned char,  name, namelen)
--	),
--	TP_fast_assign(
--		__entry->boot_time = nn->boot_time;
--		__entry->namelen = namelen;
--		memcpy(__get_dynamic_array(name), namedata, namelen);
--	),
--	TP_printk("boot_time=%16llx nfs4_clientid=%.*s",
--		__entry->boot_time, __entry->namelen, __get_str(name))
--)
--
--#define DEFINE_CLID_EVENT(name) \
--DEFINE_EVENT(nfsd_clid_class, nfsd_clid_##name, \
--	TP_PROTO(const struct nfsd_net *nn, \
--		 unsigned int namelen, \
--		 const unsigned char *namedata), \
--	TP_ARGS(nn, namelen, namedata))
--
--DEFINE_CLID_EVENT(find);
--DEFINE_CLID_EVENT(reclaim);
--
- TRACE_EVENT(nfsd_clid_inuse_err,
- 	TP_PROTO(const struct nfs4_client *clp),
- 	TP_ARGS(clp),
++TRACE_DEFINE_ENUM(RPC_AUTH_NULL);
++TRACE_DEFINE_ENUM(RPC_AUTH_UNIX);
++TRACE_DEFINE_ENUM(RPC_AUTH_GSS);
++TRACE_DEFINE_ENUM(RPC_AUTH_GSS_KRB5);
++TRACE_DEFINE_ENUM(RPC_AUTH_GSS_KRB5I);
++TRACE_DEFINE_ENUM(RPC_AUTH_GSS_KRB5P);
++
++#define show_nfsd_authflavor(val)					\
++	__print_symbolic(val,						\
++		{ RPC_AUTH_NULL,		"none" },		\
++		{ RPC_AUTH_UNIX,		"sys" },		\
++		{ RPC_AUTH_GSS,			"gss" },		\
++		{ RPC_AUTH_GSS_KRB5,		"krb5" },		\
++		{ RPC_AUTH_GSS_KRB5I,		"krb5i" },		\
++		{ RPC_AUTH_GSS_KRB5P,		"krb5p" })
++
+ TRACE_EVENT(nfsd_cb_setup_err,
+ 	TP_PROTO(
+ 		const struct nfs4_client *clp,
 
 
