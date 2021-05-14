@@ -2,380 +2,243 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2C4E380FF8
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 May 2021 20:42:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5850381050
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 May 2021 21:11:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229888AbhENSnt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 May 2021 14:43:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229819AbhENSns (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 May 2021 14:43:48 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D3F6C061574
-        for <linux-nfs@vger.kernel.org>; Fri, 14 May 2021 11:42:37 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 09D4B4183; Fri, 14 May 2021 14:42:36 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 09D4B4183
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1621017756;
-        bh=+iyRSbGeFHEwINK8zEI2vJ6EuWSobbxU30kA4TbJFno=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U7+Nl6G6f8mrnRUXHubaUoOka3a79t1d0ttlQRdTK4WgIUQSPyshOAv/x6FLGbd8G
-         BtU7H7Oss/uXraRLSdY9rLKV1xOq8/eVi12tn2rBjvqj0D85NPO6NdFsNqH5uWDn9h
-         xvwmi56QOZRQ/IChKq3u5S/OhGusw0/qoJ//Sh1c=
-Date:   Fri, 14 May 2021 14:42:36 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     Dai Ngo <dai.ngo@oracle.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] NFSD: delay unmount source's export after
- inter-server copy completed.
-Message-ID: <20210514184235.GA16955@fieldses.org>
-References: <20210423205946.24407-1-dai.ngo@oracle.com>
- <20210423205946.24407-2-dai.ngo@oracle.com>
- <CAN-5tyGS9z1+So-MAiWEX-a6-qCGxzm_mW82dt4DTV2E-SBKtg@mail.gmail.com>
+        id S232353AbhENTMf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 May 2021 15:12:35 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:53958 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231302AbhENTMd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 May 2021 15:12:33 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 14EJA0C9129126;
+        Fri, 14 May 2021 19:11:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=AU+vCGiyR+JDYQ1uYUEnbrew8k7nziejoLwhazpSLmY=;
+ b=ZpikWUybLyuuxvE0qMNhiA1tr+qxhSHjmSomXxV/tI0LElDTcOvDW+90erbMVOCv4ZIy
+ wgey8+xZqT9dAiG/9lgbXLGgsZC5g29xQpIdXnIziUrnPUEJ3Y1sBHijnv9nsPOO/QF0
+ SE2mpdHrsIPXppc+Siak5GPsyAHTbIlavxWFyoAWSG6ImY/LxdU5XuctdBtscdvYZbFn
+ E1LA6nhU1I2fHgmtIu7L5jhyj7LuoLE35L8F1vWWOoxn/rEIumx0hIz9Zyb5L/dI0Nty
+ Pg0qJV0hmoAvS9dqp4tiTAil22op+2tqyyhPCsP6GyS3glqrs+HuSjqM/MEtpeNXLgqT 9A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 38gpnen5ku-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 May 2021 19:11:14 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 14EJACGt195107;
+        Fri, 14 May 2021 19:11:13 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2102.outbound.protection.outlook.com [104.47.58.102])
+        by userp3020.oracle.com with ESMTP id 38gpphff4f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 May 2021 19:11:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zrb+m50BgKHY5zc7ocd7VR78hwQdapwG+egHYMYhdROAFRfeCZzgjgucp6d6A12lStQdrDUX8emlH47HzZGGZreVNildGhYEqjKDg7eGy1kzBcwYfHdHFtOVXimKpjQVBBQ3aj4TR56z/deE31SmvfoTSxsgOGO3JHspGaELLztE2K9DIF6CAk9UuUMJfKrOqOj8EjltLaImRwGPwVvfSrmrNmkowLXxGDuW+C578TvG0+iAW35PSynTqdXqp3MmFJfCkzS8nP7z89Jwm+iirVmrbI4wbWM7m9uOSimM8U49W+0v2iXYar6xudr3jfoc1Tre9AFUaToQ5CHFISGNIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AU+vCGiyR+JDYQ1uYUEnbrew8k7nziejoLwhazpSLmY=;
+ b=KQRbATEtG8fjnjbjew2P8Ikc4rd1UEUUUa8r2l0by/1RWNCu1f7L3uVWjGGjS6OxMEjPexm5oFMYnnBMH689DIZaZKO78U2nI6WBZ2D4wejPhBu5RoACDoXPiuoggB2qoBQHbn+o5qsUQuLqGYpaIxyvpOryS2XZgDiwkoOFWJ54xqaiAM//HkiG8BYuNrczEOASc4o3zwNlFNBdyJ4wyfObYc6qiHBA7gTy5PYok37Y1mgILy2KfYwAJdx5lpxPZhug0kMyGDuXYT8KgEJ+bnwNvJPIRBqaOX+5D9JINZQRPeROl00gYt5Ovr+AxxsTQWqvMNkrf/qjHDYiXADFag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AU+vCGiyR+JDYQ1uYUEnbrew8k7nziejoLwhazpSLmY=;
+ b=PMIHmnCFaB8Ndqj8Yk/YOv77QvqYjQfsLfBQJtLFi2RJR09++8Kh/a47jzduu8aPUCmkAM+JeB6joLNnNRMtVkrlgaTJrp4GRPMMirGCtJyG4OpPJkljnB/9hibG9xznpTMtlgyY0btLEphBnVJjeCFVLFCRzylijWUerkJSPN8=
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
+ by BYAPR10MB3112.namprd10.prod.outlook.com (2603:10b6:a03:157::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.28; Fri, 14 May
+ 2021 19:11:11 +0000
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::2d8b:b7de:e1ce:dcb1]) by SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::2d8b:b7de:e1ce:dcb1%3]) with mapi id 15.20.4129.028; Fri, 14 May 2021
+ 19:11:11 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Olga Kornievskaia <aglo@umich.edu>
+CC:     Dave Wysochanski <dwysocha@redhat.com>,
+        Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH RFC 09/21] NFSD: Add an nfsd_cb_offload tracepoint
+Thread-Topic: [PATCH RFC 09/21] NFSD: Add an nfsd_cb_offload tracepoint
+Thread-Index: AQHXRbSEtnJyBTXRsky2ccds3u8tRqrjUNMAgAANkAA=
+Date:   Fri, 14 May 2021 19:11:11 +0000
+Message-ID: <95ACA2D4-6196-46AB-9620-3017B6B4BBE0@oracle.com>
+References: <162066179690.94415.203187037032448300.stgit@klimt.1015granger.net>
+ <162066195300.94415.3319200148715325125.stgit@klimt.1015granger.net>
+ <CAN-5tyEOW8bgsSsM2euG3JZ7oOd58Ee6hCGHu52SEUoSKRoFdw@mail.gmail.com>
+In-Reply-To: <CAN-5tyEOW8bgsSsM2euG3JZ7oOd58Ee6hCGHu52SEUoSKRoFdw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: umich.edu; dkim=none (message not signed)
+ header.d=none;umich.edu; dmarc=none action=none header.from=oracle.com;
+x-originating-ip: [68.61.232.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a4dd2c92-ff1f-462e-608d-08d9170c0940
+x-ms-traffictypediagnostic: BYAPR10MB3112:
+x-microsoft-antispam-prvs: <BYAPR10MB311227EE847575881747491893509@BYAPR10MB3112.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8YGcX364FIeUZxgmysZlqJFXr57vWpURwSgbP490pDTcjKglNBHbj8lNC6EIkJ3Wu1cxkPbhSLi/NgPetaku3hk+RutHZP1UjZ57rJxq9iayM3sHpryzsbgJgsWQZ2LIS0Bdyb/8R5xfrqHni5N1o3BOatU9sOH6ggwySsRTQ6d7NgC+AzqACKHnpMnRxXgB1Bi6QJcRbBUAvhriYHu/O6zLJiYy/lNS4OvkXeLOJMkVGdWawyQRulGumq2rF0WOybhSzTIoRjg0Tv+lfbadYXSaeqrS3869xEOEBYPhQJJ3HqlVhER3T4MXCU64znO4MVXn9qtD0TZtk655Dao7iaSzM1PrlsZq3n4VtGgO/DjbYRx+saXnT61OJ5487e0plsMOxwJ0IdZ6UY+XclRKR1p5npe4S5QjgJfZ2rC+nNiH40eyJYRogr23L1OOP+OKKnDxSPM05b/SwY5Kup7xbgkIp/k+Ve5Bi+leHyQ78E3YHQqKzqPrxql8zqIazhcxfF4JS08qagbcWubfhnA74CpwzX9ZZe0B6qlUIKna6qvxwolUxnMlB7fTSzbijTxbcFo/SZ5semcD5qU92nwwG5h92JdZk6Xc8JCTKMPnF97BfFjwwhzESiNEGusZUYPNzGy1igm/PN2s6+W/JiMFZ2tnyR/htGyj01HLOMM/79E=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(136003)(366004)(346002)(396003)(39860400002)(2616005)(6486002)(86362001)(186003)(122000001)(4326008)(6512007)(8936002)(8676002)(66476007)(54906003)(66556008)(71200400001)(316002)(38100700002)(76116006)(64756008)(66946007)(6916009)(5660300002)(66446008)(53546011)(478600001)(6506007)(83380400001)(2906002)(33656002)(36756003)(26005)(91956017)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?gYDEQwc9WYPDA6HoL4E6T4l1geJF49b/DOcY6BuIM3YdQ2fgnZNJwVtRiqj/?=
+ =?us-ascii?Q?/F8PivnysZqdqAxggI2426HnUxiKbN1aQKhqe9ZXuqIY/uPnrDJvYSpCJtbP?=
+ =?us-ascii?Q?aWNrRFNeFBqq24LSyXJmq0F8rSOiU59CThB6MFSVE/jD8A+RSnBbQazBSG1e?=
+ =?us-ascii?Q?uU+sgSrW5dMCqEPgNbo5+eK2yNFRUgtb4bR/o0fJicpAiq6QwANd3n6hChJL?=
+ =?us-ascii?Q?vSgjRw/F7oGwpqr0xW2buzvE16fRTyptfJZV1hQML6VHVP3rs2B+hh35ACZx?=
+ =?us-ascii?Q?+HevuU6OH70EVbHtjj2OCIsbvcRM1lZgm7H910MJ/Bmgsat5CGopVFNC9y/M?=
+ =?us-ascii?Q?Ess0JHLxDOErvO8vNHcRjyUg/pncbkgqtvAPVwNvZ4Fqhg5yrupkfedRjZ4H?=
+ =?us-ascii?Q?WOCJNA+MgOFZS2wHzTcA7riELLw/g+GtN1wI2/c5f5/nLzuguZBdYdWkI4M7?=
+ =?us-ascii?Q?rmnMk8oJm88G/bQknLcYFakBpKr+CQofNch4+kreJHlsiyzSdIRK5qDe1sXP?=
+ =?us-ascii?Q?vmtf02E03oSo5iL/B241d1h49LyTZ1+peU39IS1OrdUm6tlTB1QBIfDOgV1L?=
+ =?us-ascii?Q?hpdDn9O/gK7UDPSYNM8gXiL9ZPO3A7B9FUnB6a1/WeFBGZKt+w/hYbm3R8DW?=
+ =?us-ascii?Q?BcuxRBOnXtc67VqdvWeuhWPvyfiCrwfJ1IkbYqmuQ+y6FUB88Z7wE6PkaPwZ?=
+ =?us-ascii?Q?BIGOPPNtyBppZIHkGYU79m4SEzTa/1Pb7H7JdVqxZLqgt85fDbnk80teE+Pq?=
+ =?us-ascii?Q?vmzHLQlKFIIFLZH4+JtQsKBSG21NGSeli6AYQyeFkgIG+CG8EBnl1o0QssYA?=
+ =?us-ascii?Q?vmfhE+pw/tdhC/3Y+TIxGQiz34K5Z3J4j6VJ0yC7JZDBb1Uu8MOaYPMfzsq/?=
+ =?us-ascii?Q?S8zgDhuicgjt7eP0k+7AWE2wMgX6WWuTO68sxJztmc7BsGe7JWVxM2vZUjdw?=
+ =?us-ascii?Q?0eaWO3eJ5UgB+YOOeJ8VSdI0ZTdOU/SAFRP7d4Cw9drUEUjw2/iqg73/arHH?=
+ =?us-ascii?Q?V0AWe+fhfGkha4aNI/opmPUiR3HvkWgpdaxDoC9chwgOFpOX0DplgJqTn7rn?=
+ =?us-ascii?Q?qU7GK6p0+SqmpNYnB8wtc3eMJP+96kbk+qePgCMsHHTE5flwmIZCaUWZO0iL?=
+ =?us-ascii?Q?jppg+zY5nXpPZbtPjfqe++QjLV3yfykPGN5aXcQy5s7O1m9epfMy2ONonnat?=
+ =?us-ascii?Q?ys6zMd7H6fI5DD0fTeCBC3KmTdS440hS+gvf6HQg1spA7cg1neXqxbMKqoWV?=
+ =?us-ascii?Q?diKIoTdL4FeGoikKbx0vYwp182s7dKmItPPL0DzzpZJS1bTgwA+rVdOTEwFE?=
+ =?us-ascii?Q?7+RqIvy9TcV0ktBzA6kdNga2?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <07FBAACC54C41C49A10C0243B7F18A92@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAN-5tyGS9z1+So-MAiWEX-a6-qCGxzm_mW82dt4DTV2E-SBKtg@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4dd2c92-ff1f-462e-608d-08d9170c0940
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2021 19:11:11.1049
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: k2/lCIZ0hc5AgWtwYVXM9k4NxBh+kIJJnUJpGwrrxBqyj4JMPY2Tto/9BYjmJvyGUwu1JSPk+tUpdzDEiwAKRg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3112
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9984 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 spamscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2105140150
+X-Proofpoint-GUID: CFFtNz6J0z-by9ACQh5evb9m4RcUfnnG
+X-Proofpoint-ORIG-GUID: CFFtNz6J0z-by9ACQh5evb9m4RcUfnnG
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9984 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 phishscore=0
+ suspectscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 clxscore=1015 mlxscore=0 spamscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
+ definitions=main-2105140150
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, May 14, 2021 at 02:12:38PM -0400, Olga Kornievskaia wrote:
-> On Fri, Apr 23, 2021 at 4:59 PM Dai Ngo <dai.ngo@oracle.com> wrote:
-> >
-> > Currently the source's export is mounted and unmounted on every
-> > inter-server copy operation. This patch is an enhancement to delay
-> > the unmount of the source export for a certain period of time to
-> > eliminate the mount and unmount overhead on subsequent copy operations.
-> >
-> > After a copy operation completes, a delayed task is scheduled to
-> > unmount the export after a configurable idle time. Each time the
-> > export is being used again, its expire time is extended to allow
-> > the export to remain mounted.
-> >
-> > The unmount task and the mount operation of the copy request are
-> > synced to make sure the export is not unmounted while it's being
-> > used.
-> >
-> > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> > ---
-> >  fs/nfsd/nfs4proc.c      | 178 ++++++++++++++++++++++++++++++++++++++++++++++--
-> >  fs/nfsd/nfsd.h          |   4 ++
-> >  fs/nfsd/nfssvc.c        |   3 +
-> >  include/linux/nfs_ssc.h |  20 ++++++
-> >  4 files changed, 201 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > index dd9f38d072dd..a4b110cbcab5 100644
-> > --- a/fs/nfsd/nfs4proc.c
-> > +++ b/fs/nfsd/nfs4proc.c
-> > @@ -55,6 +55,81 @@ module_param(inter_copy_offload_enable, bool, 0644);
-> >  MODULE_PARM_DESC(inter_copy_offload_enable,
-> >                  "Enable inter server to server copy offload. Default: false");
-> >
-> > +#ifdef CONFIG_NFSD_V4_2_INTER_SSC
-> > +static int nfsd4_ssc_umount_timeout = 900000;          /* default to 15 mins */
-> > +module_param(nfsd4_ssc_umount_timeout, int, 0644);
-> > +MODULE_PARM_DESC(nfsd4_ssc_umount_timeout,
-> > +               "idle msecs before unmount export from source server");
-> > +
-> > +static void nfsd4_ssc_expire_umount(struct work_struct *work);
-> > +static struct nfsd4_ssc_umount nfsd4_ssc_umount;
-> > +
-> > +/* nfsd4_ssc_umount.nsu_lock must be held */
-> > +static void nfsd4_scc_update_umnt_timo(void)
-> > +{
-> > +       struct nfsd4_ssc_umount_item *ni = 0;
-> > +
-> > +       cancel_delayed_work(&nfsd4_ssc_umount.nsu_umount_work);
-> > +       if (!list_empty(&nfsd4_ssc_umount.nsu_list)) {
-> > +               ni = list_first_entry(&nfsd4_ssc_umount.nsu_list,
-> > +                       struct nfsd4_ssc_umount_item, nsui_list);
-> > +               nfsd4_ssc_umount.nsu_expire = ni->nsui_expire;
-> > +               schedule_delayed_work(&nfsd4_ssc_umount.nsu_umount_work,
-> > +                       ni->nsui_expire - jiffies);
-> > +       } else
-> > +               nfsd4_ssc_umount.nsu_expire = 0;
-> > +}
-> > +
-> > +static void nfsd4_ssc_expire_umount(struct work_struct *work)
-> > +{
-> > +       bool do_wakeup = false;
-> > +       struct nfsd4_ssc_umount_item *ni = 0;
-> > +       struct nfsd4_ssc_umount_item *tmp;
-> > +
-> > +       spin_lock(&nfsd4_ssc_umount.nsu_lock);
-> > +       list_for_each_entry_safe(ni, tmp, &nfsd4_ssc_umount.nsu_list, nsui_list) {
-> > +               if (time_after(jiffies, ni->nsui_expire)) {
-> > +                       if (refcount_read(&ni->nsui_refcnt) > 0)
-> > +                               continue;
-> > +
-> > +                       /* mark being unmount */
-> > +                       ni->nsui_busy = true;
-> > +                       spin_unlock(&nfsd4_ssc_umount.nsu_lock);
-> > +                       mntput(ni->nsui_vfsmount);
-> > +                       spin_lock(&nfsd4_ssc_umount.nsu_lock);
-> > +
-> > +                       /* waiters need to start from begin of list */
-> > +                       list_del(&ni->nsui_list);
-> > +                       kfree(ni);
-> > +
-> > +                       /* wakeup ssc_connect waiters */
-> > +                       do_wakeup = true;
-> > +                       continue;
-> > +               }
-> > +               break;
-> 
-> Wouldn't you be exiting your iteration loop as soon as you find a
-> delayed item that hasn't expired? What if other items on the list have
-> expired?
-> 
-> It looks like the general design is that work for doing umount is
-> triggered by doing some copy, right? And then it just keeps
-> rescheduling itself? Shouldn't we just be using the laundrymat instead
-> that wakes up and goes thru the list mounts that are put to be
-> unmounted and does so? Bruce previously had suggested using laundrymat
-> for cleaning up copynotify states on the source server. But if the
-> existing approach works for Bruce, I'm ok with it too.
 
-I guess I'd prefer to use the laundromat, unless there's some reason to
-do this one differently.
 
-Also: on a quick skim, I don't see where this is shut down?  (If the
-server is shut down, or the module unloaded?)
+> On May 14, 2021, at 2:22 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
+>=20
+> Hi Chuck,
+>=20
+> On Mon, May 10, 2021 at 12:05 PM Chuck Lever <chuck.lever@oracle.com> wro=
+te:
+>>=20
+>> Record the arguments of CB_OFFLOAD callbacks so we can better
+>> observe asynchronous copy-offload behavior. For example:
+>>=20
+>>            nfsd-995   [008]  7721.934222: nfsd_cb_offload:      addr=3D1=
+92.168.2.51:0 client 6092a47c:35a43fc1 fh_hash=3D0x8739113a
+>=20
+> I like the idea but can we include copy->nfserr if there is one and/or
+> if not then size copied?
 
---b.
+Yes. How about recording both copy->nfserr _and_ copy->cp_count ?
 
-> 
-> > +       }
-> > +       nfsd4_scc_update_umnt_timo();
-> > +       if (do_wakeup)
-> > +               wake_up_all(&nfsd4_ssc_umount.nsu_waitq);
-> > +       spin_unlock(&nfsd4_ssc_umount.nsu_lock);
-> > +}
-> > +
-> > +static DECLARE_DELAYED_WORK(nfsd4, nfsd4_ssc_expire_umount);
-> > +
-> > +void nfsd4_ssc_init_umount_work(void)
-> > +{
-> > +       if (nfsd4_ssc_umount.nsu_inited)
-> > +               return;
-> > +       INIT_DELAYED_WORK(&nfsd4_ssc_umount.nsu_umount_work,
-> > +               nfsd4_ssc_expire_umount);
-> > +       INIT_LIST_HEAD(&nfsd4_ssc_umount.nsu_list);
-> > +       spin_lock_init(&nfsd4_ssc_umount.nsu_lock);
-> > +       init_waitqueue_head(&nfsd4_ssc_umount.nsu_waitq);
-> > +       nfsd4_ssc_umount.nsu_inited = true;
-> > +}
-> > +EXPORT_SYMBOL_GPL(nfsd4_ssc_init_umount_work);
-> > +#endif
-> > +
-> >  #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
-> >  #include <linux/security.h>
-> >
-> > @@ -1181,6 +1256,9 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
-> >         char *ipaddr, *dev_name, *raw_data;
-> >         int len, raw_len;
-> >         __be32 status = nfserr_inval;
-> > +       struct nfsd4_ssc_umount_item *ni = 0;
-> > +       struct nfsd4_ssc_umount_item *work, *tmp;
-> > +       DEFINE_WAIT(wait);
-> >
-> >         naddr = &nss->u.nl4_addr;
-> >         tmp_addrlen = rpc_uaddr2sockaddr(SVC_NET(rqstp), naddr->addr,
-> > @@ -1229,12 +1307,68 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
-> >                 goto out_free_rawdata;
-> >         snprintf(dev_name, len + 5, "%s%s%s:/", startsep, ipaddr, endsep);
-> >
-> > +       work = kzalloc(sizeof(*work), GFP_KERNEL);
-> > +try_again:
-> > +       spin_lock(&nfsd4_ssc_umount.nsu_lock);
-> > +       list_for_each_entry_safe(ni, tmp, &nfsd4_ssc_umount.nsu_list, nsui_list) {
-> > +               if (strncmp(ni->nsui_ipaddr, ipaddr, sizeof(ni->nsui_ipaddr)))
-> > +                       continue;
-> > +               /* found a match */
-> > +               if (ni->nsui_busy) {
-> > +                       /*  wait - and try again */
-> > +                       prepare_to_wait(&nfsd4_ssc_umount.nsu_waitq, &wait,
-> > +                               TASK_INTERRUPTIBLE);
-> > +                       spin_unlock(&nfsd4_ssc_umount.nsu_lock);
-> > +
-> > +                       /* allow 20secs for mount/unmount for now - revisit */
-> > +                       if (signal_pending(current) ||
-> > +                                       (schedule_timeout(20*HZ) == 0)) {
-> > +                               status = nfserr_eagain;
-> > +                               kfree(work);
-> > +                               goto out_free_devname;
-> > +                       }
-> > +                       finish_wait(&nfsd4_ssc_umount.nsu_waitq, &wait);
-> > +                       goto try_again;
-> > +               }
-> > +               ss_mnt = ni->nsui_vfsmount;
-> > +               if (refcount_read(&ni->nsui_refcnt) == 0)
-> > +                       refcount_set(&ni->nsui_refcnt, 1);
-> > +               else
-> > +                       refcount_inc(&ni->nsui_refcnt);
-> > +               spin_unlock(&nfsd4_ssc_umount.nsu_lock);
-> > +               kfree(work);
-> > +               goto out_done;
-> > +       }
-> > +       /* create new entry, set busy, insert list, clear busy after mount */
-> > +       if (work) {
-> > +               strncpy(work->nsui_ipaddr, ipaddr, sizeof(work->nsui_ipaddr));
-> > +               refcount_set(&work->nsui_refcnt, 1);
-> > +               work->nsui_busy = true;
-> > +               list_add_tail(&work->nsui_list, &nfsd4_ssc_umount.nsu_list);
-> > +       }
-> > +       spin_unlock(&nfsd4_ssc_umount.nsu_lock);
-> > +
-> >         /* Use an 'internal' mount: SB_KERNMOUNT -> MNT_INTERNAL */
-> >         ss_mnt = vfs_kern_mount(type, SB_KERNMOUNT, dev_name, raw_data);
-> >         module_put(type->owner);
-> > -       if (IS_ERR(ss_mnt))
-> > +       if (IS_ERR(ss_mnt)) {
-> > +               if (work) {
-> > +                       spin_lock(&nfsd4_ssc_umount.nsu_lock);
-> > +                       list_del(&work->nsui_list);
-> > +                       wake_up_all(&nfsd4_ssc_umount.nsu_waitq);
-> > +                       spin_unlock(&nfsd4_ssc_umount.nsu_lock);
-> > +                       kfree(work);
-> > +               }
-> >                 goto out_free_devname;
-> > -
-> > +       }
-> > +       if (work) {
-> > +               spin_lock(&nfsd4_ssc_umount.nsu_lock);
-> > +               work->nsui_vfsmount = ss_mnt;
-> > +               work->nsui_busy = false;
-> > +               wake_up_all(&nfsd4_ssc_umount.nsu_waitq);
-> > +               spin_unlock(&nfsd4_ssc_umount.nsu_lock);
-> > +       }
-> > +out_done:
-> >         status = 0;
-> >         *mount = ss_mnt;
-> >
-> > @@ -1301,10 +1435,46 @@ static void
-> >  nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct nfsd_file *src,
-> >                         struct nfsd_file *dst)
-> >  {
-> > +       bool found = false;
-> > +       bool resched = false;
-> > +       long timeout;
-> > +       struct nfsd4_ssc_umount_item *tmp;
-> > +       struct nfsd4_ssc_umount_item *ni = 0;
-> > +
-> >         nfs42_ssc_close(src->nf_file);
-> > -       fput(src->nf_file);
-> >         nfsd_file_put(dst);
-> > -       mntput(ss_mnt);
-> > +       fput(src->nf_file);
-> > +
-> > +       timeout = msecs_to_jiffies(nfsd4_ssc_umount_timeout);
-> > +       spin_lock(&nfsd4_ssc_umount.nsu_lock);
-> > +       list_for_each_entry_safe(ni, tmp, &nfsd4_ssc_umount.nsu_list,
-> > +               nsui_list) {
-> > +               if (ni->nsui_vfsmount->mnt_sb == ss_mnt->mnt_sb) {
-> > +                       list_del(&ni->nsui_list);
-> > +                       /*
-> > +                        * vfsmount can be shared by multiple exports,
-> > +                        * decrement refcnt and schedule delayed task
-> > +                        * if it drops to 0.
-> > +                        */
-> > +                       if (refcount_dec_and_test(&ni->nsui_refcnt))
-> > +                               resched = true;
-> > +                       ni->nsui_expire = jiffies + timeout;
-> > +                       list_add_tail(&ni->nsui_list, &nfsd4_ssc_umount.nsu_list);
-> > +                       found = true;
-> > +                       break;
-> > +               }
-> > +       }
-> > +       if (!found) {
-> > +               spin_unlock(&nfsd4_ssc_umount.nsu_lock);
-> > +               mntput(ss_mnt);
-> > +               return;
-> > +       }
-> > +       if (resched && !nfsd4_ssc_umount.nsu_expire) {
-> > +               nfsd4_ssc_umount.nsu_expire = ni->nsui_expire;
-> > +               schedule_delayed_work(&nfsd4_ssc_umount.nsu_umount_work,
-> > +                               timeout);
-> > +       }
-> > +       spin_unlock(&nfsd4_ssc_umount.nsu_lock);
-> >  }
-> >
-> >  #else /* CONFIG_NFSD_V4_2_INTER_SSC */
-> > diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> > index 8bdc37aa2c2e..b3bf8a5f4472 100644
-> > --- a/fs/nfsd/nfsd.h
-> > +++ b/fs/nfsd/nfsd.h
-> > @@ -483,6 +483,10 @@ static inline bool nfsd_attrs_supported(u32 minorversion, const u32 *bmval)
-> >  extern int nfsd4_is_junction(struct dentry *dentry);
-> >  extern int register_cld_notifier(void);
-> >  extern void unregister_cld_notifier(void);
-> > +#ifdef CONFIG_NFSD_V4_2_INTER_SSC
-> > +extern void nfsd4_ssc_init_umount_work(void);
-> > +#endif
-> > +
-> >  #else /* CONFIG_NFSD_V4 */
-> >  static inline int nfsd4_is_junction(struct dentry *dentry)
-> >  {
-> > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> > index 6de406322106..2558db55b88b 100644
-> > --- a/fs/nfsd/nfssvc.c
-> > +++ b/fs/nfsd/nfssvc.c
-> > @@ -322,6 +322,9 @@ static int nfsd_startup_generic(int nrservs)
-> >         ret = nfs4_state_start();
-> >         if (ret)
-> >                 goto out_file_cache;
-> > +#ifdef CONFIG_NFSD_V4_2_INTER_SSC
-> > +       nfsd4_ssc_init_umount_work();
-> > +#endif
-> >         return 0;
-> >
-> >  out_file_cache:
-> > diff --git a/include/linux/nfs_ssc.h b/include/linux/nfs_ssc.h
-> > index f5ba0fbff72f..1e07be2a89fa 100644
-> > --- a/include/linux/nfs_ssc.h
-> > +++ b/include/linux/nfs_ssc.h
-> > @@ -8,6 +8,7 @@
-> >   */
-> >
-> >  #include <linux/nfs_fs.h>
-> > +#include <linux/sunrpc/svc.h>
-> >
-> >  extern struct nfs_ssc_client_ops_tbl nfs_ssc_client_tbl;
-> >
-> > @@ -52,6 +53,25 @@ static inline void nfs42_ssc_close(struct file *filep)
-> >         if (nfs_ssc_client_tbl.ssc_nfs4_ops)
-> >                 (*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_close)(filep);
-> >  }
-> > +
-> > +struct nfsd4_ssc_umount_item {
-> > +       struct list_head nsui_list;
-> > +       bool nsui_busy;
-> > +       refcount_t nsui_refcnt;
-> > +       unsigned long nsui_expire;
-> > +       struct vfsmount *nsui_vfsmount;
-> > +       char nsui_ipaddr[RPC_MAX_ADDRBUFLEN];
-> > +};
-> > +
-> > +struct nfsd4_ssc_umount {
-> > +       struct list_head nsu_list;
-> > +       struct delayed_work nsu_umount_work;
-> > +       spinlock_t nsu_lock;
-> > +       unsigned long nsu_expire;
-> > +       wait_queue_head_t nsu_waitq;
-> > +       bool nsu_inited;
-> > +};
-> > +
-> >  #endif
-> >
-> >  /*
-> > --
-> > 2.9.5
-> >
+Unfortunately struct nfsd4_copy is defined in a header that
+cannot be included everywhere, so I have to pass all of these
+in as separate arguments. Should be OK, this isn't a
+performance-critical path.
+
+
+>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>> Cc: Olga Kornievskaia <kolga@netapp.com>
+>> Cc: Dai Ngo <Dai.Ngo@oracle.com>
+>> ---
+>> fs/nfsd/nfs4proc.c |    1 +
+>> fs/nfsd/trace.h    |   30 ++++++++++++++++++++++++++++++
+>> 2 files changed, 31 insertions(+)
+>>=20
+>> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+>> index daf43b980d4b..7a13f6c848c6 100644
+>> --- a/fs/nfsd/nfs4proc.c
+>> +++ b/fs/nfsd/nfs4proc.c
+>> @@ -1497,6 +1497,7 @@ static int nfsd4_do_async_copy(void *data)
+>>        memcpy(&cb_copy->fh, &copy->fh, sizeof(copy->fh));
+>>        nfsd4_init_cb(&cb_copy->cp_cb, cb_copy->cp_clp,
+>>                        &nfsd4_cb_offload_ops, NFSPROC4_CLNT_CB_OFFLOAD);
+>> +       trace_nfsd_cb_offload(copy->cp_clp, &copy->cp_res.cb_stateid, &c=
+opy->fh);
+>>        nfsd4_run_cb(&cb_copy->cp_cb);
+>> out:
+>>        if (!copy->cp_intra)
+>> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+>> index 1dce41b3bd4d..15cacbdac411 100644
+>> --- a/fs/nfsd/trace.h
+>> +++ b/fs/nfsd/trace.h
+>> @@ -1004,6 +1004,36 @@ TRACE_EVENT(nfsd_cb_notify_lock,
+>>                __entry->fh_hash)
+>> );
+>>=20
+>> +TRACE_EVENT(nfsd_cb_offload,
+>> +       TP_PROTO(
+>> +               const struct nfs4_client *clp,
+>> +               const stateid_t *stp,
+>> +               const struct knfsd_fh *fh
+>> +       ),
+>> +       TP_ARGS(clp, stp, fh),
+>> +       TP_STRUCT__entry(
+>> +               __field(u32, cl_boot)
+>> +               __field(u32, cl_id)
+>> +               __field(u32, si_id)
+>> +               __field(u32, si_generation)
+>> +               __field(u32, fh_hash)
+>> +               __array(unsigned char, addr, sizeof(struct sockaddr_in6)=
+)
+>> +       ),
+>> +       TP_fast_assign(
+>> +               __entry->cl_boot =3D stp->si_opaque.so_clid.cl_boot;
+>> +               __entry->cl_id =3D stp->si_opaque.so_clid.cl_id;
+>> +               __entry->si_id =3D stp->si_opaque.so_id;
+>> +               __entry->si_generation =3D stp->si_generation;
+>> +               __entry->fh_hash =3D knfsd_fh_hash(fh);
+>> +               memcpy(__entry->addr, &clp->cl_cb_conn.cb_addr,
+>> +                       sizeof(struct sockaddr_in6));
+>> +       ),
+>> +       TP_printk("addr=3D%pISpc client %08x:%08x stateid %08x:%08x fh_h=
+ash=3D0x%08x",
+>> +               __entry->addr, __entry->cl_boot, __entry->cl_id,
+>> +               __entry->si_id, __entry->si_generation,
+>> +               __entry->fh_hash)
+>> +);
+>> +
+>> #endif /* _NFSD_TRACE_H */
+>>=20
+>> #undef TRACE_INCLUDE_PATH
+>>=20
+>>=20
+
+--
+Chuck Lever
+
+
+
