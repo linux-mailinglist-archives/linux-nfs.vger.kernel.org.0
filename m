@@ -2,23 +2,23 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92D69381142
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 May 2021 21:56:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92410381144
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 May 2021 21:56:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233130AbhENT54 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 May 2021 15:57:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57444 "EHLO mail.kernel.org"
+        id S233038AbhENT6C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 May 2021 15:58:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233033AbhENT54 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 14 May 2021 15:57:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7098C61285;
-        Fri, 14 May 2021 19:56:44 +0000 (UTC)
-Subject: [PATCH v3 15/24] NFSD: Add cb_lost tracepoint
+        id S233033AbhENT6C (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 14 May 2021 15:58:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 90C8E61285;
+        Fri, 14 May 2021 19:56:50 +0000 (UTC)
+Subject: [PATCH v3 16/24] NFSD: Adjust cb_shutdown tracepoint
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     dwysocha@redhat.com, bfields@fieldses.org
-Date:   Fri, 14 May 2021 15:56:43 -0400
-Message-ID: <162102220371.10915.4184457731193101246.stgit@klimt.1015granger.net>
+Date:   Fri, 14 May 2021 15:56:49 -0400
+Message-ID: <162102220985.10915.14015767336113364759.stgit@klimt.1015granger.net>
 In-Reply-To: <162102191240.10915.5003178983503027218.stgit@klimt.1015granger.net>
 References: <162102191240.10915.5003178983503027218.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.1
@@ -29,38 +29,35 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Provide more clarity about when the callback channel is in trouble.
+Show when the upper layer requested a shutdown. RPC tracepoints can
+already show when rpc_shutdown_client() is called.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4state.c |    2 ++
- fs/nfsd/trace.h     |    1 +
- 2 files changed, 3 insertions(+)
+ fs/nfsd/nfs4callback.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index aa645aeee7b6..377ec4a6a771 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1745,6 +1745,8 @@ static void nfsd4_conn_lost(struct svc_xpt_user *u)
- 	struct nfsd4_conn *c = container_of(u, struct nfsd4_conn, cn_xpt_user);
- 	struct nfs4_client *clp = c->cn_session->se_client;
- 
-+	trace_nfsd_cb_lost(clp);
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index b6cc51a9f37c..ab1836381e22 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1233,6 +1233,9 @@ void nfsd4_destroy_callback_queue(void)
+ /* must be called under the state lock */
+ void nfsd4_shutdown_callback(struct nfs4_client *clp)
+ {
++	if (clp->cl_cb_state != NFSD4_CB_UNKNOWN)
++		trace_nfsd_cb_shutdown(clp);
 +
- 	spin_lock(&clp->cl_lock);
- 	if (!list_empty(&c->cn_persession)) {
- 		list_del(&c->cn_persession);
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 1c43e6647d1e..336dc4c45416 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -912,6 +912,7 @@ DEFINE_EVENT(nfsd_cb_class, nfsd_cb_##name,		\
- 
- DEFINE_NFSD_CB_EVENT(setup);
- DEFINE_NFSD_CB_EVENT(state);
-+DEFINE_NFSD_CB_EVENT(lost);
- DEFINE_NFSD_CB_EVENT(shutdown);
- 
- TRACE_DEFINE_ENUM(RPC_AUTH_NULL);
+ 	set_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags);
+ 	/*
+ 	 * Note this won't actually result in a null callback;
+@@ -1278,7 +1281,6 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
+ 	 * kill the old client:
+ 	 */
+ 	if (clp->cl_cb_client) {
+-		trace_nfsd_cb_shutdown(clp);
+ 		rpc_shutdown_client(clp->cl_cb_client);
+ 		clp->cl_cb_client = NULL;
+ 		put_cred(clp->cl_cb_cred);
 
 
