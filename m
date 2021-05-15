@@ -2,57 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC8E838166F
-	for <lists+linux-nfs@lfdr.de>; Sat, 15 May 2021 09:03:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B18F3818DB
+	for <lists+linux-nfs@lfdr.de>; Sat, 15 May 2021 14:42:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232440AbhEOHES (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 15 May 2021 03:04:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45634 "EHLO
+        id S230024AbhEOMnw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 15 May 2021 08:43:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232435AbhEOHER (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 15 May 2021 03:04:17 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF7BC06174A
-        for <linux-nfs@vger.kernel.org>; Sat, 15 May 2021 00:03:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kT2mULHmwwRIPQ7oDESt9uU8rPoqxHm+nEUtlwqVQwo=; b=nkPUlEKuH4v+6IElgFcFVwqWXg
-        RXywjjp2ASBoTODKJOxpL94Zdpn2Q8GqUpcXuUp1o83l+XM7VJWxQ+FtG6w7Qy0htDET7sLDKXnnC
-        ts4nWrp8ysrQoln2G5lGc6mZBnNvGOrHezbPiGuwvMwnzKvseHAPl/Dr2sDnZXiOrjOOzBE6w0O0o
-        gO1F2GT7vKF8ktpUoP/e9HN0JK/lZHQHhCLbqNYSRo5hynzJX1uZA1RABHLPVoLYrRBgCOAqtAzkD
-        U3u6cYGzf0UqaBOi1WeJhyzyYOS68v7PQYoaI2IXjsPqazUevJ1vzenWDNzuMMIRDQHcMQtmW4Gme
-        6HWbQp8w==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lhoJr-00B2VI-EU; Sat, 15 May 2021 07:02:39 +0000
-Date:   Sat, 15 May 2021 08:02:39 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "bfields@fieldses.org" <bfields@fieldses.org>,
-        "nickhuang@synology.com" <nickhuang@synology.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "robbieko@synology.com" <robbieko@synology.com>,
-        "bingjingc@synology.com" <bingjingc@synology.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] nfsd: Prevent truncation of an unlinked inode from
- blocking access to its directory
-Message-ID: <YJ9yD1S6Yl2m0gOO@infradead.org>
-References: <20210514035829.5230-1-nickhuang@synology.com>
- <00195ec8bf1752306f549540eed74c3938c5e312.camel@hammerspace.com>
+        with ESMTP id S229939AbhEOMnv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 15 May 2021 08:43:51 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F233C061573
+        for <linux-nfs@vger.kernel.org>; Sat, 15 May 2021 05:42:37 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id s8so1742345wrw.10
+        for <linux-nfs@vger.kernel.org>; Sat, 15 May 2021 05:42:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelim-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=M5fLUQZ1IaFDhCt/TGY5hpwyIYtyDn0UVsJISN8WBoU=;
+        b=2M1HlHPKtyNlya80A8uZL3ibcXMwtP9FwVOAkYl2rFvfbRlDr4+QO/bwI5Lz0E6trh
+         TGPuJCiUWGlq5L7/WLsxo/Tb3eLfufH+MbXZd6/1HD9bLcY9QNyzacmHRVsCBVIfZfM8
+         xZazjBjbLHcPJrt7pTKzsGx3wS5OSIVwewS4EafD2MPbTME114IpSeUTtBNQHrDxztat
+         ORBta45GkUGC4h1ngx5O/FAbOQBF81FsNOUXjdAwj9mxO5uDOS+VHG2VQ4lz5uyiQlsz
+         FUzWij0G57XBXeBg2J8yknRS3DOrPrdbpgrXF/ifqpS6Om2MMxZdtPONZ2z9bjLEgamS
+         C3/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=M5fLUQZ1IaFDhCt/TGY5hpwyIYtyDn0UVsJISN8WBoU=;
+        b=F09H3KMIAZtzhjhLaNap0oN7fNNIOqw1u9KAqA9q5Z7uDAb8oSsh5/dC/mfrBpvRFd
+         CnHgcx12GoZI59EUGk5qpf83glmbMxVbJQyNRfWcXEPnEIGWEmTQWdYMAKhVGzr9ul6M
+         Mn71h/lMrlm06B1zPXPYQGUvLfU6CfFXpbkQwNTUJsjUK6fcKJTb0wh75u73Q5QvlnSU
+         MfQDsR8ly81am1YkNCTZjDmcLb6AnzZxPO0cOtEbbX0G+gu2zP4Hlw3MXSyY8wo6zHj8
+         PXAo6yHManQcFCtI1+1vzF08tiu/UgA20uWp1/t37aQOLeoh3faDbNL80XaT8q3wIrH0
+         snuQ==
+X-Gm-Message-State: AOAM532c1zZJ7s+aFhpXAIOMyezD6vbyXVBGWhBGAmUEpt9pVbHHfI9L
+        vUqjuMclO2zjw6HXi0/b3NGycQ==
+X-Google-Smtp-Source: ABdhPJxte41EwmUptBxsRg2iGC8DbfJRnrcg00o4pipSfWAA6Gk1opFt5SHTYC+YZjgPYaeZt9HsBA==
+X-Received: by 2002:a5d:4003:: with SMTP id n3mr13830944wrp.173.1621082556121;
+        Sat, 15 May 2021 05:42:36 -0700 (PDT)
+Received: from gmail.com ([77.124.118.36])
+        by smtp.gmail.com with ESMTPSA id c16sm9537056wrn.92.2021.05.15.05.42.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 May 2021 05:42:35 -0700 (PDT)
+Date:   Sat, 15 May 2021 15:42:32 +0300
+From:   Dan Aloni <dan@kernelim.com>
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v7 10/12] sunrpc: add dst_attr attributes to the sysfs
+ xprt directory
+Message-ID: <20210515124232.y7xmofawebp7l5w6@gmail.com>
+References: <20210514141323.67922-1-olga.kornievskaia@gmail.com>
+ <20210514141323.67922-11-olga.kornievskaia@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00195ec8bf1752306f549540eed74c3938c5e312.camel@hammerspace.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20210514141323.67922-11-olga.kornievskaia@gmail.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, May 14, 2021 at 03:46:57PM +0000, Trond Myklebust wrote:
-> Why leave the commit_metadata() call under the lock? If you're
-> concerned about latency, then it makes more sense to call fh_unlock()
-> before flushing those metadata updates to disk.
+On Fri, May 14, 2021 at 10:13:21AM -0400, Olga Kornievskaia wrote:
+> From: Olga Kornievskaia <kolga@netapp.com>
+> 
+> Allow to query and set the destination's address of a transport.
+> Setting of the destination address is allowed only for TCP or RDMA
+> based connections.
+> 
+> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+..
+> +	saddr = (struct sockaddr *)&xprt->addr;
+> +	port = rpc_get_port(saddr);
+> +
+> +	dst_addr = kstrndup(buf, count - 1, GFP_KERNEL);
+> +	if (!dst_addr)
+> +		goto out_err;
+> +	saved_addr = kzalloc(sizeof(*saved_addr), GFP_KERNEL);
+> +	if (!saved_addr)
+> +		goto out_err_free;
+> +	saved_addr->addr =
+> +		rcu_dereference_raw(xprt->address_strings[RPC_DISPLAY_ADDR]);
+> +	rcu_assign_pointer(xprt->address_strings[RPC_DISPLAY_ADDR], dst_addr);
+> +	call_rcu(&saved_addr->rcu, free_xprt_addr);
+> +	xprt->addrlen = rpc_pton(xprt->xprt_net, buf, count - 1, saddr,
+> +				 sizeof(*saddr));
 
-Also I'm not sure why the extra inode reference is needed.  What speaks
-against just moving the dput out of the locked section?
+Hi Olga,
+
+How does this behave if rpc_pton fails? Perhaps this conversion being
+also a validation check on input given from user-space should be done
+before the xprt is being modified?
+
+-- 
+Dan Aloni
