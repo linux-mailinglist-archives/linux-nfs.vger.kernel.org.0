@@ -2,124 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CAED386B60
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 May 2021 22:29:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65543386D1B
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 May 2021 00:43:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237554AbhEQUbJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 May 2021 16:31:09 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49824 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234249AbhEQUbH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 May 2021 16:31:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621283390;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=TMRLkyQIIL/jKTOWEBP4faEmTsG2NdYmd6F+Nt9noWo=;
-        b=aru0i8+IGJJKn8WE+Lyqk1do023yJWl6Dw+JmYt+mTjkLKyiOjnalImgZlagfFLUjDT5uN
-        EJbXZTlkVq2cbsVhP/Y2FrteEEH060zVLyQX+cV4XZliZM+43/JM4nOnXIoPagg1lgDj1D
-        EJGOZYIRVbnBB0k8P2Y1rBnNikw+BYU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-555-XkE700rzO-qCL6cuG5VS_A-1; Mon, 17 May 2021 16:29:49 -0400
-X-MC-Unique: XkE700rzO-qCL6cuG5VS_A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3799A803626;
-        Mon, 17 May 2021 20:29:48 +0000 (UTC)
-Received: from dwysocha.rdu.csb (ovpn-119-128.rdu2.redhat.com [10.10.119.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BCF9E5D6D7;
-        Mon, 17 May 2021 20:29:47 +0000 (UTC)
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     Bruce Fields <bfields@fieldses.org>,
-        Chuck Lever III <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 1/1] nfsd4: Expose the callback address and state of each NFS4 client
-Date:   Mon, 17 May 2021 16:29:45 -0400
-Message-Id: <1621283385-24390-2-git-send-email-dwysocha@redhat.com>
-In-Reply-To: <1621283385-24390-1-git-send-email-dwysocha@redhat.com>
-References: <1621283385-24390-1-git-send-email-dwysocha@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        id S1344018AbhEQWpB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 May 2021 18:45:01 -0400
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:59444 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236878AbhEQWpA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 May 2021 18:45:00 -0400
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14HMfrEt023092;
+        Mon, 17 May 2021 22:43:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=Z261lr6g+w9tGZ1+MpXSBR0T5+E8W3C9XBorlKxfuf4=;
+ b=s6zYDhnoFtKcNjTWwXwOvZgSuVeihbTMk+p9wlmlxx2ph/Nq/kRtM8ruLDfUpeaWmzig
+ wc/LiLhHiu8BdM38nPziD1zvz2MVgHU3UKyEhdSfpV/iauaLL9ViRCJrEWEf+TpGaKoW
+ tBkE/mV0FVNZU7mxfTPbaJekceOMm7CN3TOtRKn2YYcg/J2yd9iLXWwyg2I9hf9l5KWb
+ Q7LaeVMBlb9/YQUKqqQ64vw+I7Ugfj4PXicxK8jat4s6MGU94W/JtvEF5rKg9/P/5Qgr
+ HU7H8OSqJhosZbQUdeAaLDiPfvp83fhIspE3hty010kb8KilDza09UnhIzrfDD2iSrnK DA== 
+Received: from oracle.com (userp3020.oracle.com [156.151.31.79])
+        by mx0b-00069f02.pphosted.com with ESMTP id 38kffu0d6q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 May 2021 22:43:39 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.podrdrct (8.16.0.36/8.16.0.36) with SMTP id 14HMfAZl145354;
+        Mon, 17 May 2021 22:43:38 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 38kb37baw3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 May 2021 22:43:38 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 14HMhbq8153088;
+        Mon, 17 May 2021 22:43:37 GMT
+Received: from aserp3030.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
+        by userp3020.oracle.com with ESMTP id 38kb37bavx-1;
+        Mon, 17 May 2021 22:43:37 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     olga.kornievskaia@gmail.com, bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org, trondmy@hammerspace.com,
+        chuck.lever@oracle.com
+Subject: [PATCH v5 0/2] NFSD: delay unmount source's export after inter-server copy completed.
+Date:   Mon, 17 May 2021 18:43:28 -0400
+Message-Id: <20210517224330.9201-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: irlJzAWe-c8XmdWVzaiZCkryKnbC1yio
+X-Proofpoint-GUID: irlJzAWe-c8XmdWVzaiZCkryKnbC1yio
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In addition to the client's address, display the callback channel
-state and address in the 'info' file.  Define and use a common
-function for this information that can be used by both callback
-trace events and the NFS4 client 'info' file.
+Hi Olga, Bruce,
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
----
- fs/nfsd/nfs4state.c |  2 ++
- fs/nfsd/trace.c     | 15 +++++++++++++++
- fs/nfsd/trace.h     |  9 ++-------
- 3 files changed, 19 insertions(+), 7 deletions(-)
+Currently the source's export is mounted and unmounted on every
+inter-server copy operation. This causes unnecessary overhead
+for each copy.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index b2573d3ecd3c..f3b8221bb543 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2385,6 +2385,8 @@ static int client_info_show(struct seq_file *m, void *v)
- 		seq_printf(m, "\nImplementation time: [%lld, %ld]\n",
- 			clp->cl_nii_time.tv_sec, clp->cl_nii_time.tv_nsec);
- 	}
-+	seq_printf(m, "callback state: %s\n", cb_state2str(clp->cl_cb_state));
-+	seq_printf(m, "callback address: %pISpc\n", &clp->cl_cb_conn.cb_addr);
- 	drop_client(clp);
- 
- 	return 0;
-diff --git a/fs/nfsd/trace.c b/fs/nfsd/trace.c
-index f008b95ceec2..6291b5d10824 100644
---- a/fs/nfsd/trace.c
-+++ b/fs/nfsd/trace.c
-@@ -2,3 +2,18 @@
- 
- #define CREATE_TRACE_POINTS
- #include "trace.h"
-+
-+const char *cb_state2str(const int state)
-+{
-+	switch (state) {
-+	case NFSD4_CB_UP:
-+		return "UP";
-+	case NFSD4_CB_UNKNOWN:
-+		return "UNKNOWN";
-+	case NFSD4_CB_DOWN:
-+		return "DOWN";
-+	case NFSD4_CB_FAULT:
-+		return "FAULT";
-+	}
-+	return "UNDEFINED";
-+}
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 10cc3aaf1089..8908d48b2aa6 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -876,12 +876,7 @@
- 	TP_printk("client %08x:%08x", __entry->cl_boot, __entry->cl_id)
- )
- 
--#define show_cb_state(val)						\
--	__print_symbolic(val,						\
--		{ NFSD4_CB_UP,		"UP" },				\
--		{ NFSD4_CB_UNKNOWN,	"UNKNOWN" },			\
--		{ NFSD4_CB_DOWN,	"DOWN" },			\
--		{ NFSD4_CB_FAULT,	"FAULT"})
-+const char *cb_state2str(const int state);
- 
- DECLARE_EVENT_CLASS(nfsd_cb_class,
- 	TP_PROTO(const struct nfs4_client *clp),
-@@ -901,7 +896,7 @@
- 	),
- 	TP_printk("addr=%pISpc client %08x:%08x state=%s",
- 		__entry->addr, __entry->cl_boot, __entry->cl_id,
--		show_cb_state(__entry->state))
-+		cb_state2str(__entry->state))
- );
- 
- #define DEFINE_NFSD_CB_EVENT(name)			\
--- 
-1.8.3.1
+This patch series is an enhancement to allow the export to remain
+mounted for a configurable period (default to 15 minutes). If the 
+export is not being used for the configured time it will be unmounted
+by a delayed task. If it's used again then its expiration time is
+extended for another period.
+
+Since mount and unmount are no longer done on every copy request,
+the restriction of copy size (14*rsize), in __nfs4_copy_file_range,
+is removed.
+
+-Dai
+
+v2: fix compiler warning of missing prototype.
+v3: remove the used of semaphore.
+    eliminated all RPC calls for subsequence mount by allowing
+       all exports from one server to share one vfsmount.
+    make inter-server threshold a module configuration parameter.
+v4: convert nsui_refcnt to use refcount_t.
+    add note about 20secs wait in nfsd4_interssc_connect.
+    removed (14*rsize) restriction from __nfs4_copy_file_range.
+v5: make use of the laundomat thread to service delayed unmount list.
+    destroy delayed unmount list when nfsd is shutdown.
+    make delayed unmount list per nfsd_net to support container.
+
 
