@@ -2,114 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8831D382DCC
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 May 2021 15:46:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDF51382E03
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 May 2021 15:53:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237482AbhEQNrg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 May 2021 09:47:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33300 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235085AbhEQNrf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 May 2021 09:47:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621259179;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=O6gr94SKde4B9VQO2zKDR9PV8wUiJnB7z5q1aL8r6mE=;
-        b=g6tnM7mXjTreJhnuhfR+kd5FMMVZoBuDUyt0tCcQfrnIL40c8n6YxnYnSHx8JoCkVWnKHP
-        AAIUdkKsZnPyOM00f0bG+boBkRSpDGU4jUaANt43lB5/GUuEQuUHaX5ml7znnEv2jSLrrt
-        0v/tkL8NMmOs6aBD+JNH3EZmC3j0kls=
-Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com
- [209.85.219.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-559-bh_HXi5iNC20Arm8nR1vpQ-1; Mon, 17 May 2021 09:46:17 -0400
-X-MC-Unique: bh_HXi5iNC20Arm8nR1vpQ-1
-Received: by mail-yb1-f200.google.com with SMTP id b66-20020a25cb450000b02905076ea039f1so8473607ybg.1
-        for <linux-nfs@vger.kernel.org>; Mon, 17 May 2021 06:46:17 -0700 (PDT)
+        id S235482AbhEQNy7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 May 2021 09:54:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232924AbhEQNy7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 May 2021 09:54:59 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2650EC061756
+        for <linux-nfs@vger.kernel.org>; Mon, 17 May 2021 06:53:43 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id k14so5848571eji.2
+        for <linux-nfs@vger.kernel.org>; Mon, 17 May 2021 06:53:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s8Z+w1Y6Rf9gclo3jq11QDfu9zPhiWbiWM7O3Q/pH7g=;
+        b=WXUny7D9XwCLWhtEMS5dhHdu+m7ukLt7WrXtkbbsmZQHzA4XPDt/wotC8XHmebQhwY
+         HJqoDdnw37k5cWXc0+SBLu9FfKfEbHt05VAtRiTDzFUiMNrXpolJeHZJ7FDWRBac3Gjl
+         6q9qAnmS0z+crSU09CAY4ZAsPLR7YKRpgVLnrjJ3KlgWzTydplljo0Jp9g9i5vO+CtLS
+         wjhDHhSNqklvUK0Zt3jq3M7cHGBl5ibLL9dneMvhKwGGHFje9lVUQUyuc5DR8Oji5oMq
+         z0oB3Gsg/WcLSkjNAVHX2p4lpicKEj2SoLFHyafKPexm98wh4zbHiSIb6OdBUEdsF09n
+         HHiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=O6gr94SKde4B9VQO2zKDR9PV8wUiJnB7z5q1aL8r6mE=;
-        b=BGbNLA4UtoFCZFe2V6TIxJqKae3NQSD61veTYfooKushHnaFM0oln1v+mwRKToOnoo
-         SzbX6T2VSOawBqGjFVB8CmbnXrh4Ek82s/oclu1iSSTr5P6cFysLMXFGCXDYNwbKwtZl
-         my9Sruqv44sDIIfpHnaLIUTt+85jby+Zt7Pkid9o0PqacIZ33W11COq+CyvPqxy2/bOD
-         r5kcZXnv5L/exuBnfYGOBCa2yEqpNxD+Lib5JxNElPEV1AJhKUxzmMohb+9xae7oUfrP
-         d0RT3JYYhU81VBGwChkFEPCY7EuZtMI/269QCw9MS5AGDoMz1uhHGN3u5Rt7EoE637dZ
-         umWQ==
-X-Gm-Message-State: AOAM532QMFlJwvn8l37jwgSii358c/4FRSP2FE27nE6N+0IktShf1FYb
-        63I69Wve1SzAoH5RtiqkqytyrgpSm+FM/nmQbKbn/ksF6cUnmsWk3RVaA3v+MZXQhM133aTrsvW
-        SwGxdfsCWjTV5WxChmIlLheOPR+A31FphUGKd
-X-Received: by 2002:a25:ed12:: with SMTP id k18mr18195723ybh.340.1621259177100;
-        Mon, 17 May 2021 06:46:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzwK+KojIQGBbY/tivk0bWRjrdOpNQ4CP1gdoVKuvMZGWmwJCCUScXooFAbY7pwFCMtgUCp0ALpfKPY3u5ezt4=
-X-Received: by 2002:a25:ed12:: with SMTP id k18mr18195683ybh.340.1621259176769;
- Mon, 17 May 2021 06:46:16 -0700 (PDT)
+        bh=s8Z+w1Y6Rf9gclo3jq11QDfu9zPhiWbiWM7O3Q/pH7g=;
+        b=oDsoJ03MmVubIqMfTMQ7KlTty+fsLp1ZZwxmONeHIqFLZFW9hAEC2EHxqIvZSaPG9o
+         6heDgsF1H+UHBD1H/J6j9TwL5GPNza1+uYZSvLfpMWijztp7EAx5X10mn5Yw8JZVd8Az
+         UQbGj/AwHWcYhK2IzeoxQVS42MwwV1+m6i0LLt+Qi85wQSEPeTIvqHEERzbeGR4cNQO9
+         I55kylVTFOS8uckosu8zDgRgHyD/bd1rwJ8imGYxZaEMyy5tC6nPlL72ING1mx6v4iYS
+         cLA+BYuEUpHS2YB84oiJ6z1pw2JXxOOOddCAGyDmsw154c3S6oP2VpXS91ksnLAfcEQI
+         fAPQ==
+X-Gm-Message-State: AOAM531mcWZBbJiMBeFK63c6ddz3m6muQaGN1/qPR5PyCDKyzGzc5+u9
+        qCmmqP8vs338/kqxREMhOS98TjWsQrKV3mOSyiDz7jo8wzI=
+X-Google-Smtp-Source: ABdhPJwG9nlbEZgqxEbZYyt0GDq3J4fLYD/KM2lJb142e9SkkDLGWPK51UB7gHC9NkxKXFzDr5yuTJ2i1BcPLe7bMMA=
+X-Received: by 2002:a17:906:584e:: with SMTP id h14mr27618ejs.432.1621259621792;
+ Mon, 17 May 2021 06:53:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210409111254.271800-1-omosnace@redhat.com> <YHBITqlAfOk8IV5w@zeniv-ca.linux.org.uk>
- <CAFqZXNuhog5YfaG9CBVmZ+C3mSzAEgZkSC-mrQGOD4vyLEz4Xw@mail.gmail.com>
-In-Reply-To: <CAFqZXNuhog5YfaG9CBVmZ+C3mSzAEgZkSC-mrQGOD4vyLEz4Xw@mail.gmail.com>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Mon, 17 May 2021 15:46:04 +0200
-Message-ID: <CAFqZXNs6dVkAj4GYme1-COU-EvmTxRXAgS6oTUQpxxjNiamyzg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] vfs/security/NFS/btrfs: clean up and fix LSM option handling
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        linux-btrfs@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        David Howells <dhowells@redhat.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>
+References: <20210514141323.67922-1-olga.kornievskaia@gmail.com>
+ <20210514141323.67922-11-olga.kornievskaia@gmail.com> <20210515124232.y7xmofawebp7l5w6@gmail.com>
+In-Reply-To: <20210515124232.y7xmofawebp7l5w6@gmail.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Mon, 17 May 2021 09:53:30 -0400
+Message-ID: <CAN-5tyGGnrGPMq4kakCZhNdJj9i-Arc-FXn=uxWRW9nuAVpE7A@mail.gmail.com>
+Subject: Re: [PATCH v7 10/12] sunrpc: add dst_attr attributes to the sysfs
+ xprt directory
+To:     Dan Aloni <dan@kernelim.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Apr 9, 2021 at 7:39 PM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> On Fri, Apr 9, 2021 at 2:28 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > On Fri, Apr 09, 2021 at 01:12:52PM +0200, Ondrej Mosnacek wrote:
-> > > This series attempts to clean up part of the mess that has grown around
-> > > the LSM mount option handling across different subsystems.
+On Sat, May 15, 2021 at 8:42 AM Dan Aloni <dan@kernelim.com> wrote:
+>
+> On Fri, May 14, 2021 at 10:13:21AM -0400, Olga Kornievskaia wrote:
+> > From: Olga Kornievskaia <kolga@netapp.com>
 > >
-> > I would not describe growing another FS_... flag
+> > Allow to query and set the destination's address of a transport.
+> > Setting of the destination address is allowed only for TCP or RDMA
+> > based connections.
+> >
+> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> ..
+> > +     saddr = (struct sockaddr *)&xprt->addr;
+> > +     port = rpc_get_port(saddr);
+> > +
+> > +     dst_addr = kstrndup(buf, count - 1, GFP_KERNEL);
+> > +     if (!dst_addr)
+> > +             goto out_err;
+> > +     saved_addr = kzalloc(sizeof(*saved_addr), GFP_KERNEL);
+> > +     if (!saved_addr)
+> > +             goto out_err_free;
+> > +     saved_addr->addr =
+> > +             rcu_dereference_raw(xprt->address_strings[RPC_DISPLAY_ADDR]);
+> > +     rcu_assign_pointer(xprt->address_strings[RPC_DISPLAY_ADDR], dst_addr);
+> > +     call_rcu(&saved_addr->rcu, free_xprt_addr);
+> > +     xprt->addrlen = rpc_pton(xprt->xprt_net, buf, count - 1, saddr,
+> > +                              sizeof(*saddr));
 >
-> Why is that necessarily a bad thing?
+> Hi Olga,
 >
-> > *AND* spreading the
-> > FS_BINARY_MOUNTDATA further, with rather weird semantics at that,
-> > as a cleanup of any sort.
->
-> How is this spreading it further? The patches remove one (rather bad)
-> use of it in SELinux and somewhat reduce its use in btrfs.
->
-> Hold on... actually I just realized that with FS_HANDLES_LSM_OPTS it
-> is possible to do btrfs without FS_BINARY_MOUNTDATA and also eliminate
-> the need for the workaround in vfs_parse_fs_param() (i.e. [2]).
->
-> Basically instead of setting FS_BINARY_MOUNTDATA | FS_HANDLES_LSM_OPTS
-> in btrfs_fs_type and neither in btrfs_root_fs_type, it is enough to
-> set neither in btrfs_fs_type and only FS_HANDLES_LSM_OPTS in
-> btrfs_root_fs_type. The security opts are then applied in the outer
-> vfs_get_tree() call instead of the inner one, but the net effect is
-> the same.
->
-> That should pretty much do away with both the non-legit users of
-> FS_BINARY_MOUNTDATA (selinux_set_mnt_opts() and btrfs). All the rest
-> seem to be in line with the semantic.
->
-> Would [something like] the above stand any chance of getting your approval?
+> How does this behave if rpc_pton fails? Perhaps this conversion being
+> also a validation check on input given from user-space should be done
+> before the xprt is being modified?
 
-So I posted this variant as v2 now:
-https://lore.kernel.org/selinux/20210517134201.29271-1-omosnace@redhat.com/T/
+It's assumed that an administrator is providing a valid (and correct)
+address value. Transport would continue to be disconnected until a
+proper value is supplied. We can't validate for instance that the
+supplied value is a "correct" value for the v4.1 server (which would
+require sending an EXCHANGE_ID and checking that it's the same server
+as before).
+
+But yes perhaps a userland utility can do things like DNS resolution
+to get the IP, it can check format correctness and connectivity as
+well (but can't check the v4 requirement though).
 
 >
-> [2] https://lore.kernel.org/selinux/20210401065403.GA1363493@infradead.org/T/
-
--- 
-Ondrej Mosnacek
-Software Engineer, Linux Security - SELinux kernel
-Red Hat, Inc.
-
+> --
+> Dan Aloni
