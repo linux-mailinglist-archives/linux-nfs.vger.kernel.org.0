@@ -2,121 +2,156 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C8B33881D2
+	by mail.lfdr.de (Postfix) with ESMTP id BF57F3881D3
 	for <lists+linux-nfs@lfdr.de>; Tue, 18 May 2021 23:06:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352351AbhERVHa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 May 2021 17:07:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60646 "EHLO
+        id S1352349AbhERVHb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 May 2021 17:07:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352347AbhERVHa (ORCPT
+        with ESMTP id S1352350AbhERVHa (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 May 2021 17:07:30 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C5E8C061573
-        for <linux-nfs@vger.kernel.org>; Tue, 18 May 2021 14:06:11 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id n8so592388plf.7
-        for <linux-nfs@vger.kernel.org>; Tue, 18 May 2021 14:06:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WiExRtYr8Kdt4XqfC45ncFMA8TZhnd/7g66Z/hQ/oNA=;
-        b=zkq1/OqGMcIFT6IlJ1p8OhC87uJ+wacaCnUGOxnB8rzZHJDuYtnUhGnpuKy/+0LR3u
-         8CcPwmJJTspul5HuwLkEo8QpNZ0pN5RR+5FrfTLdk5/MGSjrGo5B1LdCT6t3qLoArk5l
-         +VxmufEWwRr1ccoCUs1Ask25Y9pHn+U7X3USaX39sLLGk+bz8x12LiQCzbEF8YKSOMul
-         W/gSreSJNYMZuW9xLWVn+JFDub0041vZ3RD8YlSSGHRUaEhHli+yrhoMHi+aGgl2eHbC
-         ML5o9+8EGbz4G5x5w20DKLbCuSWeSbocm5iobkfBwkUsqoDyUiP6/X4J9+Zu0dNnL3St
-         utfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WiExRtYr8Kdt4XqfC45ncFMA8TZhnd/7g66Z/hQ/oNA=;
-        b=KOzHKi2fILRBlrOyoDxiE3sywQ5EKBZd+KyC8zflV73EJ7VrJlLPxPo7BYul+v3GRG
-         kfIT6iaIArglRh5rFo5D6SzXvC5hkZscGlXXexhl+MjFvIGZWG9iswzOkvP2S8a0i6ly
-         oK9gzHybhU4Shz05EpyKM1v+t7IXepaD+Wk0jdzqtCNbNpzcNe9Bl2ezXdXx3NOQbD+n
-         VF1Ric0N4J6rpGx3HVcST7utnWlxuQuzwiogny2rHL6V+PLCyrBgedlVh82WJiaSCrro
-         iOBrRppc2gPR+K07xAFL+J/uXprN1Jsb8J2UQPfAz/FRUddeXxvUkT1PWsDPrB4VCtCg
-         Gn/A==
-X-Gm-Message-State: AOAM532qZf/6BujLcSCeaIwZoPR/yK1g/mEHqB5h17voz+NQLu+S3krt
-        pkHRLaD+u4xugF6Nne9bYij8gEry7ssSCw==
-X-Google-Smtp-Source: ABdhPJyE7J3jLKBf3RTXFG3bzIqA9+eZIIWjUp+lSwlzB/97x9ceHNlf3vK5cFPUT/jIYTFt15r3YA==
-X-Received: by 2002:a17:902:fe0b:b029:f0:c15b:d1b8 with SMTP id g11-20020a170902fe0bb02900f0c15bd1b8mr6666512plj.74.1621371970673;
-        Tue, 18 May 2021 14:06:10 -0700 (PDT)
-Received: from hermes.local (76-14-218-44.or.wavecable.com. [76.14.218.44])
-        by smtp.gmail.com with ESMTPSA id s65sm13855482pjd.15.2021.05.18.14.06.10
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 May 2021 14:06:10 -0700 (PDT)
-Date:   Tue, 18 May 2021 14:06:02 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     linux-nfs@vger.kernel.org
-Subject: Fw: [Bug 213135] New: NFS service not working with linux 5.4
-Message-ID: <20210518140602.018d3908@hermes.local>
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32484C06175F
+        for <linux-nfs@vger.kernel.org>; Tue, 18 May 2021 14:06:12 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C368D581C; Tue, 18 May 2021 17:06:10 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C368D581C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1621371970;
+        bh=A4UVSWaDbckWtqGK+z28WZxC3x6H5Ycv9rm4gOCF7bk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AMw3DNn3gUU2+pgLyZGXa4hi6NYgxGTYgqZjbbz1B3UEEoOrSDxcaNttUC8xmN5oI
+         2a6lkLTM5B+VE5ZdTuq/aM8zBOCK2oOIRe+y+syFysd2eSq5FJlhdFV2mvLcUAxOpb
+         kIPMNMRtBR8riS/hKrOPzo3hUWwTWw2Ab1+idQm8=
+Date:   Tue, 18 May 2021 17:06:10 -0400
+From:   "bfields@fieldses.org" <bfields@fieldses.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "nickhuang@synology.com" <nickhuang@synology.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "robbieko@synology.com" <robbieko@synology.com>,
+        "bingjingc@synology.com" <bingjingc@synology.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] nfsd: Prevent truncation of an unlinked inode from
+ blocking access to its directory
+Message-ID: <20210518210610.GD26957@fieldses.org>
+References: <20210514035829.5230-1-nickhuang@synology.com>
+ <00195ec8bf1752306f549540eed74c3938c5e312.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <00195ec8bf1752306f549540eed74c3938c5e312.camel@hammerspace.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Fri, May 14, 2021 at 03:46:57PM +0000, Trond Myklebust wrote:
+> On Fri, 2021-05-14 at 11:58 +0800, Nick Huang wrote:
+> > From: Yu Hsiang Huang <nickhuang@synology.com>
+> > 
+> > Truncation of an unlinked inode may take a long time for I/O waiting,
+> > and
+> > it doesn't have to prevent access to the directory. Thus, let
+> > truncation
+> > occur outside the directory's mutex, just like do_unlinkat() does.
+> > 
+> > Signed-off-by: Yu Hsiang Huang <nickhuang@synology.com>
+> > Signed-off-by: Bing Jing Chang <bingjingc@synology.com>
+> > Signed-off-by: Robbie Ko <robbieko@synology.com>
+> > ---
+> >  fs/nfsd/vfs.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> > index 15adf1f6ab21..39948f130712 100644
+> > --- a/fs/nfsd/vfs.c
+> > +++ b/fs/nfsd/vfs.c
+> > @@ -1859,6 +1859,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct
+> > svc_fh *fhp, int type,
+> >  {
+> >         struct dentry   *dentry, *rdentry;
+> >         struct inode    *dirp;
+> > +       struct inode    *rinode;
+> >         __be32          err;
+> >         int             host_err;
+> >  
+> > @@ -1887,6 +1888,8 @@ nfsd_unlink(struct svc_rqst *rqstp, struct
+> > svc_fh *fhp, int type,
+> >                 host_err = -ENOENT;
+> >                 goto out_drop_write;
+> >         }
+> > +       rinode = d_inode(rdentry);
+> > +       ihold(rinode);
+> >  
+> >         if (!type)
+> >                 type = d_inode(rdentry)->i_mode & S_IFMT;
+> > @@ -1902,6 +1905,8 @@ nfsd_unlink(struct svc_rqst *rqstp, struct
+> > svc_fh *fhp, int type,
+> >         if (!host_err)
+> >                 host_err = commit_metadata(fhp);
+> 
+> Why leave the commit_metadata() call under the lock? If you're
+> concerned about latency, then it makes more sense to call fh_unlock()
+> before flushing those metadata updates to disk.
+> 
+> This is, BTW, an optimisation that appears to be possible in several
+> other cases in fs/nfsd/vfs.c.
 
+I'm tentatively applying the original patch plus the following.
 
-Begin forwarded message:
+Create and rename code are two other places where we have
+commit_metadata() calls that could probably be moved out from under
+locks but they looked slightly more complicated.
 
-Date: Tue, 18 May 2021 19:30:28 +0000
-From: bugzilla-daemon@bugzilla.kernel.org
-To: stephen@networkplumber.org
-Subject: [Bug 213135] New: NFS service not working with linux 5.4
+--b.
 
+commit ec79990df716
+Author: J. Bruce Fields <bfields@redhat.com>
+Date:   Fri May 14 18:21:37 2021 -0400
 
-https://bugzilla.kernel.org/show_bug.cgi?id=213135
+    nfsd: move some commit_metadata()s outside the inode lock
+    
+    The commit may be time-consuming and there's no need to hold the lock
+    for it.
+    
+    More of these are possible, these were just some easy ones.
+    
+    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 
-            Bug ID: 213135
-           Summary: NFS service not working with linux 5.4
-           Product: Networking
-           Version: 2.5
-    Kernel Version: linux 5.4
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: Other
-          Assignee: stephen@networkplumber.org
-          Reporter: hbhuwania93@gmail.com
-        Regression: No
-
-I am running a linux 5.4 kernel image. 
-
-I am seeing an issue with NFS service crashing randomly. NFS version I am using
-is 2.3.4 
-
-Apparently the rpc.mountd crashes randomly and dont have a clear picture on
-what is happening. I tried manually launching this daemon and I see below error
-traceback:
-
-root@HostName-637562903921812352:/etc# /usr/sbin/rpc.mountd -p 9000 -F -d all
-
-rpc.mountd: Version 2.3.4 starting
-
-rpc.mountd: nfsd_fh: inbuf '* 6 \x8fd3a09e776c46d09e8b8ca1b0e895ec'
-
-rpc.mountd: v4root_create: path '/' flags 0x12407
-
-rpc.mountd: v4root_create: path '/usr' flags 0x10407
-
-rpc.mountd: v4root_create: path '/usr/srvroot' flags 0x10407
-
-*** stack smashing detected ***: <unknown> terminated
-
-Aborted
-
-Any suggestions why NFS is behaving this way?
-
--- 
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are the assignee for the bug.
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 39948f130712..d73d3c9126fc 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1613,9 +1613,9 @@ nfsd_symlink(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 
+ 	host_err = vfs_symlink(&init_user_ns, d_inode(dentry), dnew, path);
+ 	err = nfserrno(host_err);
++	fh_unlock(fhp);
+ 	if (!err)
+ 		err = nfserrno(commit_metadata(fhp));
+-	fh_unlock(fhp);
+ 
+ 	fh_drop_write(fhp);
+ 
+@@ -1680,6 +1680,7 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
+ 	if (d_really_is_negative(dold))
+ 		goto out_dput;
+ 	host_err = vfs_link(dold, &init_user_ns, dirp, dnew, NULL);
++	fh_unlock(ffhp);
+ 	if (!host_err) {
+ 		err = nfserrno(commit_metadata(ffhp));
+ 		if (!err)
+@@ -1902,10 +1903,10 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
+ 		host_err = vfs_rmdir(&init_user_ns, dirp, rdentry);
+ 	}
+ 
++	fh_unlock(fhp);
+ 	if (!host_err)
+ 		host_err = commit_metadata(fhp);
+ 	dput(rdentry);
+-	fh_unlock(fhp);
+ 	iput(rinode);    /* truncate the inode here */
+ 
+ out_drop_write:
