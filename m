@@ -2,95 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DCB22386D1C
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 May 2021 00:43:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5242387359
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 May 2021 09:34:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236878AbhEQWpC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 May 2021 18:45:02 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:60020 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1344019AbhEQWpA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 May 2021 18:45:00 -0400
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14HMfrEu023092;
-        Mon, 17 May 2021 22:43:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=0QUUv3Jc5Fkru4BnemQ1tEnKu3i/5A3e82msN0WDhi0=;
- b=oxIQ0I3AdfgEvAq+j0teWM3FS/ajaw32sWryywyCwM7EFlZrzoZNtgjnRGYJfU8uRQUH
- TWDn+e40+AlAzTfQBx+6ly+ZnKB6Z5lcgd3LZXLBCAlzarmh/ZxWxLMhxMatwVIAOAum
- Tfgccnka9QvP/Q4634CmcgS7F7mW3fuVLmWI70p0+inH59dxHtXCTEEgjmeQaWvR3poi
- tZEBNAJnpFB4kC6GJRWa4lbI8e5EcVlAGufASNQ/UQTI9lpSe3F8Q9Io1PYVPOG335Vv
- MN34xAvYLTuXXdaWDKLc+W1L02PT34wtm2MocxYSkKiPO88eS8IrVS3OBgmhnFTmmyJE 5g== 
-Received: from oracle.com (userp3020.oracle.com [156.151.31.79])
-        by mx0b-00069f02.pphosted.com with ESMTP id 38kffu0d6r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 May 2021 22:43:40 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.podrdrct (8.16.0.36/8.16.0.36) with SMTP id 14HMeMm0144227;
-        Mon, 17 May 2021 22:43:39 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 38kb37bawh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 May 2021 22:43:39 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 14HMhbqC153088;
-        Mon, 17 May 2021 22:43:39 GMT
-Received: from aserp3030.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
-        by userp3020.oracle.com with ESMTP id 38kb37bavx-3;
-        Mon, 17 May 2021 22:43:39 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     olga.kornievskaia@gmail.com, bfields@fieldses.org
-Cc:     linux-nfs@vger.kernel.org, trondmy@hammerspace.com,
-        chuck.lever@oracle.com
-Subject: [PATCH v5 2/2] NFSv4.2: remove restriction of copy size for inter-server copy.
-Date:   Mon, 17 May 2021 18:43:30 -0400
-Message-Id: <20210517224330.9201-3-dai.ngo@oracle.com>
-X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
-In-Reply-To: <20210517224330.9201-1-dai.ngo@oracle.com>
-References: <20210517224330.9201-1-dai.ngo@oracle.com>
+        id S242076AbhERHft (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 May 2021 03:35:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240235AbhERHfs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 May 2021 03:35:48 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2192DC061573
+        for <linux-nfs@vger.kernel.org>; Tue, 18 May 2021 00:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=37Kn3wU7h4fxXGH3w1mRKHTrlpASYF2B7OB9XxPtwso=; b=tO9Tp7MPLO9/8oYQ5RwlGhF/Sh
+        MjznWhtCZuDsMcP+umfPgHgHMRuDSBs/qgMLXks4Fg3bieqTd3EU7BXIx+keEwGE9mDqq2e6Ezs1g
+        RPXlNU6illE/co7HDmKYCo03vZMywnRSOhXuwT5O/mSRjd8QRyRYqfDZGAr+PHGUul6trG/qquH/s
+        2O4fb/04DgMyMhUdCaeoBCDXNQ2EPm7EN0wu5KfqriF75ZMetb+EB36O3w3QyExTZrQyfdv0QNTQM
+        nm634qqv2PPTruudTHBUvSKdjnOfa4qBQC6JtqbOKw0H3rLrmKNNGfVC4hva0wk+1f5dZjHVptfgv
+        lR1pxXpA==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1liuEX-00Dlgy-G5; Tue, 18 May 2021 07:33:46 +0000
+Date:   Tue, 18 May 2021 08:33:41 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "bfields@fieldses.org" <bfields@fieldses.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        "nickhuang@synology.com" <nickhuang@synology.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "robbieko@synology.com" <robbieko@synology.com>,
+        "bingjingc@synology.com" <bingjingc@synology.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        viro@zeniv.linux.org.uk
+Subject: Re: [PATCH] nfsd: Prevent truncation of an unlinked inode from
+ blocking access to its directory
+Message-ID: <YKNt1cJn/e0w/ftm@infradead.org>
+References: <20210514035829.5230-1-nickhuang@synology.com>
+ <00195ec8bf1752306f549540eed74c3938c5e312.camel@hammerspace.com>
+ <YJ9yD1S6Yl2m0gOO@infradead.org>
+ <20210517185659.GA4216@fieldses.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: iATXTowMBvge_5K_9DlMPU8a_t5dZlRK
-X-Proofpoint-GUID: iATXTowMBvge_5K_9DlMPU8a_t5dZlRK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210517185659.GA4216@fieldses.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently inter-server copy is allowed only if the copy size is larger
-than (rsize*14) which is the over-head of the mount operation of the
-source export. This patch, relying on the delayed unmount feature,
-removes this restriction since the mount and unmount overhead is now
-not applicable for every inter-server copy.
+On Mon, May 17, 2021 at 02:56:59PM -0400, bfields@fieldses.org wrote:
+> On Sat, May 15, 2021 at 08:02:39AM +0100, Christoph Hellwig wrote:
+> > On Fri, May 14, 2021 at 03:46:57PM +0000, Trond Myklebust wrote:
+> > > Why leave the commit_metadata() call under the lock? If you're
+> > > concerned about latency, then it makes more sense to call fh_unlock()
+> > > before flushing those metadata updates to disk.
+> > 
+> > Also I'm not sure why the extra inode reference is needed.  What speaks
+> > against just moving the dput out of the locked section?
+> 
+> I don't know.  Do you know why do_unlinkat() is doing the same thing?
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfs/nfs4file.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 441a2fa073c8..b5821ed46994 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -158,13 +158,11 @@ static ssize_t __nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
- 		sync = true;
- retry:
- 	if (!nfs42_files_from_same_server(file_in, file_out)) {
--		/* for inter copy, if copy size if smaller than 12 RPC
--		 * payloads, fallback to traditional copy. There are
--		 * 14 RPCs during an NFSv4.x mount between source/dest
--		 * servers.
-+		/*
-+		 * for inter copy, if copy size is too small
-+		 * then fallback to generic copy.
- 		 */
--		if (sync ||
--			count <= 14 * NFS_SERVER(file_inode(file_in))->rsize)
-+		if (sync)
- 			return -EOPNOTSUPP;
- 		cn_resp = kzalloc(sizeof(struct nfs42_copy_notify_res),
- 				GFP_NOFS);
--- 
-2.9.5
-
+No.  Al, any idea why unlink does the final dput under i_rwsem?
