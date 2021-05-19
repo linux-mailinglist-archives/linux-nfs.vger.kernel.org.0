@@ -2,82 +2,103 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8348E389271
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 May 2021 17:20:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 478FC38933D
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 May 2021 18:06:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354573AbhESPWN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 May 2021 11:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1354564AbhESPWG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 19 May 2021 11:22:06 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0F301610A8;
-        Wed, 19 May 2021 15:20:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621437645;
-        bh=3+9rvynNd8HYd4k51Z7zS9qoKyq5UZFHkH6xhY5p2JU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b3n4UsNjr7kl+Ql764EN2DQLeN07wKo7FkScraqkyEWQ6ZlYxvngaCKGHAxF9JjZu
-         0engIRSvx000O/e7TgXb6ZCcZF8fw4yZEzDidZpH4LL5lLVzEVQj2HVJ4bKtalwTet
-         0jPogiyi7RH7hPCeMNbfoJiEjOZrxYJWsNWyfTsO/SP1PVqoGkCU812ZxnL5nV7qSO
-         RWixH/aLGgz4dwt9h0Xql3pVactv6sySZHNMDQpXWo4ptvr9ft8z8GmfNEFWTL0yJc
-         7niLo0B7ZcCBUASPLLdloXBj6v7drlPM4tXK2FlB7pY1f0Gg0cRAvBv1rY4yq2PTie
-         9X3V9vhSboFyQ==
-Date:   Wed, 19 May 2021 18:20:40 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Timo Rothenpieler <timo@rothenpieler.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>
-Subject: Re: Spurious instability with NFSoRDMA under moderate load
-Message-ID: <YKUsyKUFdL9IfLRp@unreal>
-References: <4da3b074-a6be-d83f-ccd4-b151557066aa@rothenpieler.org>
- <72ECF9E1-1F6E-44AF-850C-536BED898DDD@oracle.com>
+        id S1354662AbhESQIB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 May 2021 12:08:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241402AbhESQIA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 May 2021 12:08:00 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64231C06175F
+        for <linux-nfs@vger.kernel.org>; Wed, 19 May 2021 09:06:38 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id i19so3981584qtw.9
+        for <linux-nfs@vger.kernel.org>; Wed, 19 May 2021 09:06:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ABQSCOiAx8sP7bI/fYWSDYSKdYlbSgdJ7avJl4yXd1k=;
+        b=RyegpgjhjKExhErX1ratoYdxjJaSLLgjzAPpyxRfRmkC6VGJ2lF10jezBGyd3InD6Z
+         QZD8rnZn8dZTSuL4uwRh0fS3ztK+EoosOcUozUu6zv83KjzFCfG8qa9GBh5LFbvCaxGJ
+         DpF5+EUUeKATtoh/RXv9ulqFFXuzyoiIDdcMOaAAVslpvRWK6T6VEO7Zy4aTabAmgV8Q
+         BZc6h581j9ZUzFHAN9ry/K0OFbMDQhYTwUfcpe9lT41DyHFMmzkGFFHTnsaboKWF2Of8
+         cpntyjhtNUhCBeo8zy8iLgYEuysvts7cCy9J3GSTaw6KOvmPHbMw+gx887SPgahRkIoh
+         Sm/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=ABQSCOiAx8sP7bI/fYWSDYSKdYlbSgdJ7avJl4yXd1k=;
+        b=g5cxustHQFePOlSHNN873Paso8tT3I4bUXHudfpYPVvG2EgU2AF+oeoqE6gYPDhP5b
+         +HrOBSdhoGq2NOA3kyS5furkmeKZxaaCWFfLD4kONv6nlUU8S1BIHD0D32VLQPvaE/T9
+         vk7phCDe/UI5nDrW5PyNadTRssQxUjO+8otcz7rkMUjpBwuAi5rkXEYdEFDBP54Iu46B
+         bZj2rJkZWUZmqm+ioo5Kz0cA04HU1+Y8Y+i1S6+O/gof4THV8/s1+cEOxQDPrcFTst3C
+         Ue6jPFSxTRz53e49cjP3YmiEv+CSzzhmmaxtq6qZ8xRPt3hw5URzvy7cA7AckHHWLjZY
+         W6MA==
+X-Gm-Message-State: AOAM531XtSMMeYs4RJGL/Ohn4erD5BK057kmOKIJplRcD3Mj8NeKBTPm
+        sxQRgNr0qFuXqTNTHwTw0Rw=
+X-Google-Smtp-Source: ABdhPJwYMAGcRMq0GLvwcPUFUzV0H3T1UIlkZi1E5MMKBFOPd9DLTE/JNwl5V65ohISo28ctxuENUA==
+X-Received: by 2002:a05:622a:11c3:: with SMTP id n3mr111359qtk.211.1621440397338;
+        Wed, 19 May 2021 09:06:37 -0700 (PDT)
+Received: from localhost.localdomain ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
+        by smtp.gmail.com with ESMTPSA id e128sm58287qkd.127.2021.05.19.09.06.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 May 2021 09:06:36 -0700 (PDT)
+Sender: Anna Schumaker <schumakeranna@gmail.com>
+From:   schumaker.anna@gmail.com
+X-Google-Original-From: Anna.Schumaker@Netapp.com
+To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
+Cc:     Anna.Schumaker@Netapp.com
+Subject: [PATCH] NFSv4: Fix a NULL pointer dereference in pnfs_mark_matching_lsegs_return()
+Date:   Wed, 19 May 2021 12:06:35 -0400
+Message-Id: <20210519160635.333057-1-Anna.Schumaker@Netapp.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <72ECF9E1-1F6E-44AF-850C-536BED898DDD@oracle.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, May 17, 2021 at 04:27:29PM +0000, Chuck Lever III wrote:
-> Hello Timo-
-> 
-> > On May 16, 2021, at 1:29 PM, Timo Rothenpieler <timo@rothenpieler.org> wrote:
-> > 
-> > This has happened 3 times so far over the last couple months, and I do not have a clear way to reproduce it.
-> > It happens under moderate load, when lots of nodes read and write from the server. Though not in any super intense way. Just normal program execution, writing of light logs, and other standard tasks.
-> > 
-> > The issues on the clients manifest in a multitude of ways. Most of the time, random IO operations just fail, rarely hang indefinitely and make the process unkillable.
-> > Another example would be: "Failed to remove '.../.nfs00000000007b03af00000001': Device or resource busy"
-> > 
-> > Once a client is in that state, the only way to get it back into order is a reboot.
-> > 
-> > On the server side, a single error cqe is dumped each time this problem happened. So far, I always rebooted the server as well, to make sure everything is back in order. Not sure if that is strictly necessary.
-> > 
-> >> [561889.198889] infiniband mlx5_0: dump_cqe:272:(pid 709): dump error cqe
-> >> [561889.198945] 00000000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >> [561889.198984] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >> [561889.199023] 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >> [561889.199061] 00000030: 00 00 00 00 00 00 88 13 08 00 01 13 07 47 67 d2
-> > 
-> >> [985074.602880] infiniband mlx5_0: dump_cqe:272:(pid 599): dump error cqe
-> >> [985074.602921] 00000000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >> [985074.602946] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >> [985074.602970] 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >> [985074.602994] 00000030: 00 00 00 00 00 00 88 13 08 00 01 46 f2 93 0b d3
-> > 
-> >> [1648894.168819] infiniband ibp1s0: dump_cqe:272:(pid 696): dump error cqe
-> >> [1648894.168853] 00000000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >> [1648894.168878] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >> [1648894.168903] 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >> [1648894.168928] 00000030: 00 00 00 00 00 00 88 13 08 00 01 08 6b d2 b9 d3
-> 
-> I'm hoping Leon can get out his magic decoder ring and tell us if
-> these CQE dumps contain a useful WC status code.
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-Unfortunately, no. I failed to parse it, if I read the dump correctly,
-it is not marked as error and opcode is 0.
+Commit de144ff4234f changes _pnfs_return_layout() to call
+pnfs_mark_matching_lsegs_return() passing NULL as the struct
+pnfs_layout_range argument. Unfortunately,
+pnfs_mark_matching_lsegs_return() doesn't check if we have a value here
+before dereferencing it, causing an oops.
 
-Thanks
+I'm able to hit this crash consistently when running connectathon basic
+tests on NFS v4.1/v4.2 against Ontap.
+
+Fixes: de144ff4234f ("NFSv4: Don't discard segments marked for return in _pnfs_return_layout()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+---
+ fs/nfs/pnfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index 03e0b34c4a64..6d720afb7b70 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -2484,12 +2484,12 @@ pnfs_mark_matching_lsegs_return(struct pnfs_layout_hdr *lo,
+ 			set_bit(NFS_LSEG_LAYOUTRETURN, &lseg->pls_flags);
+ 		}
+ 
+-	if (remaining) {
++	if (remaining && return_range) {
+ 		pnfs_set_plh_return_info(lo, return_range->iomode, seq);
+ 		return -EBUSY;
+ 	}
+ 
+-	if (!list_empty(&lo->plh_return_segs)) {
++	if (return_range && !list_empty(&lo->plh_return_segs)) {
+ 		pnfs_set_plh_return_info(lo, return_range->iomode, seq);
+ 		return 0;
+ 	}
+-- 
+2.29.2
+
