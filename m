@@ -2,156 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF57F3881D3
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 May 2021 23:06:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8348E389271
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 May 2021 17:20:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352349AbhERVHb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 May 2021 17:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352350AbhERVHa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 May 2021 17:07:30 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32484C06175F
-        for <linux-nfs@vger.kernel.org>; Tue, 18 May 2021 14:06:12 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id C368D581C; Tue, 18 May 2021 17:06:10 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C368D581C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1621371970;
-        bh=A4UVSWaDbckWtqGK+z28WZxC3x6H5Ycv9rm4gOCF7bk=;
+        id S1354573AbhESPWN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 May 2021 11:22:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54126 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1354564AbhESPWG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 19 May 2021 11:22:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0F301610A8;
+        Wed, 19 May 2021 15:20:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621437645;
+        bh=3+9rvynNd8HYd4k51Z7zS9qoKyq5UZFHkH6xhY5p2JU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AMw3DNn3gUU2+pgLyZGXa4hi6NYgxGTYgqZjbbz1B3UEEoOrSDxcaNttUC8xmN5oI
-         2a6lkLTM5B+VE5ZdTuq/aM8zBOCK2oOIRe+y+syFysd2eSq5FJlhdFV2mvLcUAxOpb
-         kIPMNMRtBR8riS/hKrOPzo3hUWwTWw2Ab1+idQm8=
-Date:   Tue, 18 May 2021 17:06:10 -0400
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "nickhuang@synology.com" <nickhuang@synology.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "robbieko@synology.com" <robbieko@synology.com>,
-        "bingjingc@synology.com" <bingjingc@synology.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] nfsd: Prevent truncation of an unlinked inode from
- blocking access to its directory
-Message-ID: <20210518210610.GD26957@fieldses.org>
-References: <20210514035829.5230-1-nickhuang@synology.com>
- <00195ec8bf1752306f549540eed74c3938c5e312.camel@hammerspace.com>
+        b=b3n4UsNjr7kl+Ql764EN2DQLeN07wKo7FkScraqkyEWQ6ZlYxvngaCKGHAxF9JjZu
+         0engIRSvx000O/e7TgXb6ZCcZF8fw4yZEzDidZpH4LL5lLVzEVQj2HVJ4bKtalwTet
+         0jPogiyi7RH7hPCeMNbfoJiEjOZrxYJWsNWyfTsO/SP1PVqoGkCU812ZxnL5nV7qSO
+         RWixH/aLGgz4dwt9h0Xql3pVactv6sySZHNMDQpXWo4ptvr9ft8z8GmfNEFWTL0yJc
+         7niLo0B7ZcCBUASPLLdloXBj6v7drlPM4tXK2FlB7pY1f0Gg0cRAvBv1rY4yq2PTie
+         9X3V9vhSboFyQ==
+Date:   Wed, 19 May 2021 18:20:40 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Timo Rothenpieler <timo@rothenpieler.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>
+Subject: Re: Spurious instability with NFSoRDMA under moderate load
+Message-ID: <YKUsyKUFdL9IfLRp@unreal>
+References: <4da3b074-a6be-d83f-ccd4-b151557066aa@rothenpieler.org>
+ <72ECF9E1-1F6E-44AF-850C-536BED898DDD@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <00195ec8bf1752306f549540eed74c3938c5e312.camel@hammerspace.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <72ECF9E1-1F6E-44AF-850C-536BED898DDD@oracle.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, May 14, 2021 at 03:46:57PM +0000, Trond Myklebust wrote:
-> On Fri, 2021-05-14 at 11:58 +0800, Nick Huang wrote:
-> > From: Yu Hsiang Huang <nickhuang@synology.com>
-> > 
-> > Truncation of an unlinked inode may take a long time for I/O waiting,
-> > and
-> > it doesn't have to prevent access to the directory. Thus, let
-> > truncation
-> > occur outside the directory's mutex, just like do_unlinkat() does.
-> > 
-> > Signed-off-by: Yu Hsiang Huang <nickhuang@synology.com>
-> > Signed-off-by: Bing Jing Chang <bingjingc@synology.com>
-> > Signed-off-by: Robbie Ko <robbieko@synology.com>
-> > ---
-> >  fs/nfsd/vfs.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> > index 15adf1f6ab21..39948f130712 100644
-> > --- a/fs/nfsd/vfs.c
-> > +++ b/fs/nfsd/vfs.c
-> > @@ -1859,6 +1859,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct
-> > svc_fh *fhp, int type,
-> >  {
-> >         struct dentry   *dentry, *rdentry;
-> >         struct inode    *dirp;
-> > +       struct inode    *rinode;
-> >         __be32          err;
-> >         int             host_err;
-> >  
-> > @@ -1887,6 +1888,8 @@ nfsd_unlink(struct svc_rqst *rqstp, struct
-> > svc_fh *fhp, int type,
-> >                 host_err = -ENOENT;
-> >                 goto out_drop_write;
-> >         }
-> > +       rinode = d_inode(rdentry);
-> > +       ihold(rinode);
-> >  
-> >         if (!type)
-> >                 type = d_inode(rdentry)->i_mode & S_IFMT;
-> > @@ -1902,6 +1905,8 @@ nfsd_unlink(struct svc_rqst *rqstp, struct
-> > svc_fh *fhp, int type,
-> >         if (!host_err)
-> >                 host_err = commit_metadata(fhp);
+On Mon, May 17, 2021 at 04:27:29PM +0000, Chuck Lever III wrote:
+> Hello Timo-
 > 
-> Why leave the commit_metadata() call under the lock? If you're
-> concerned about latency, then it makes more sense to call fh_unlock()
-> before flushing those metadata updates to disk.
+> > On May 16, 2021, at 1:29 PM, Timo Rothenpieler <timo@rothenpieler.org> wrote:
+> > 
+> > This has happened 3 times so far over the last couple months, and I do not have a clear way to reproduce it.
+> > It happens under moderate load, when lots of nodes read and write from the server. Though not in any super intense way. Just normal program execution, writing of light logs, and other standard tasks.
+> > 
+> > The issues on the clients manifest in a multitude of ways. Most of the time, random IO operations just fail, rarely hang indefinitely and make the process unkillable.
+> > Another example would be: "Failed to remove '.../.nfs00000000007b03af00000001': Device or resource busy"
+> > 
+> > Once a client is in that state, the only way to get it back into order is a reboot.
+> > 
+> > On the server side, a single error cqe is dumped each time this problem happened. So far, I always rebooted the server as well, to make sure everything is back in order. Not sure if that is strictly necessary.
+> > 
+> >> [561889.198889] infiniband mlx5_0: dump_cqe:272:(pid 709): dump error cqe
+> >> [561889.198945] 00000000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >> [561889.198984] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >> [561889.199023] 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >> [561889.199061] 00000030: 00 00 00 00 00 00 88 13 08 00 01 13 07 47 67 d2
+> > 
+> >> [985074.602880] infiniband mlx5_0: dump_cqe:272:(pid 599): dump error cqe
+> >> [985074.602921] 00000000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >> [985074.602946] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >> [985074.602970] 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >> [985074.602994] 00000030: 00 00 00 00 00 00 88 13 08 00 01 46 f2 93 0b d3
+> > 
+> >> [1648894.168819] infiniband ibp1s0: dump_cqe:272:(pid 696): dump error cqe
+> >> [1648894.168853] 00000000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >> [1648894.168878] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >> [1648894.168903] 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >> [1648894.168928] 00000030: 00 00 00 00 00 00 88 13 08 00 01 08 6b d2 b9 d3
 > 
-> This is, BTW, an optimisation that appears to be possible in several
-> other cases in fs/nfsd/vfs.c.
+> I'm hoping Leon can get out his magic decoder ring and tell us if
+> these CQE dumps contain a useful WC status code.
 
-I'm tentatively applying the original patch plus the following.
+Unfortunately, no. I failed to parse it, if I read the dump correctly,
+it is not marked as error and opcode is 0.
 
-Create and rename code are two other places where we have
-commit_metadata() calls that could probably be moved out from under
-locks but they looked slightly more complicated.
-
---b.
-
-commit ec79990df716
-Author: J. Bruce Fields <bfields@redhat.com>
-Date:   Fri May 14 18:21:37 2021 -0400
-
-    nfsd: move some commit_metadata()s outside the inode lock
-    
-    The commit may be time-consuming and there's no need to hold the lock
-    for it.
-    
-    More of these are possible, these were just some easy ones.
-    
-    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 39948f130712..d73d3c9126fc 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1613,9 +1613,9 @@ nfsd_symlink(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 
- 	host_err = vfs_symlink(&init_user_ns, d_inode(dentry), dnew, path);
- 	err = nfserrno(host_err);
-+	fh_unlock(fhp);
- 	if (!err)
- 		err = nfserrno(commit_metadata(fhp));
--	fh_unlock(fhp);
- 
- 	fh_drop_write(fhp);
- 
-@@ -1680,6 +1680,7 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
- 	if (d_really_is_negative(dold))
- 		goto out_dput;
- 	host_err = vfs_link(dold, &init_user_ns, dirp, dnew, NULL);
-+	fh_unlock(ffhp);
- 	if (!host_err) {
- 		err = nfserrno(commit_metadata(ffhp));
- 		if (!err)
-@@ -1902,10 +1903,10 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
- 		host_err = vfs_rmdir(&init_user_ns, dirp, rdentry);
- 	}
- 
-+	fh_unlock(fhp);
- 	if (!host_err)
- 		host_err = commit_metadata(fhp);
- 	dput(rdentry);
--	fh_unlock(fhp);
- 	iput(rinode);    /* truncate the inode here */
- 
- out_drop_write:
+Thanks
