@@ -2,129 +2,122 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5AC4389410
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 May 2021 18:47:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F7AA389430
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 May 2021 18:54:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234691AbhESQtB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 May 2021 12:49:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45250 "EHLO
+        id S242755AbhESQ4O (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 May 2021 12:56:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231124AbhESQtB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 May 2021 12:49:01 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56778C06175F
-        for <linux-nfs@vger.kernel.org>; Wed, 19 May 2021 09:47:41 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id l4so20916002ejc.10
-        for <linux-nfs@vger.kernel.org>; Wed, 19 May 2021 09:47:41 -0700 (PDT)
+        with ESMTP id S241623AbhESQ4N (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 May 2021 12:56:13 -0400
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201AFC06175F
+        for <linux-nfs@vger.kernel.org>; Wed, 19 May 2021 09:54:54 -0700 (PDT)
+Received: by mail-qv1-xf30.google.com with SMTP id 5so7162932qvk.0
+        for <linux-nfs@vger.kernel.org>; Wed, 19 May 2021 09:54:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8M7t3QboA7TD6nDaDClzGwWMmDkiWbmK0rJcgLYax60=;
-        b=kDJuQ8L64qwOuJKFBqwrypKUJ6LSCVLNuFylPAdCp49mxvG26EyM3yasPrTJq4jjR7
-         QGPvYmk+Ug6MRgeQ3imhivLXVLHiyDwTED9m/eYSdPVEFSL6dWHLDUnx2X+ebmd4/ZCr
-         zyVGAg3RYlFXwS2lX/Tuqx6vkJFOfn8UNGw3ryBovy08/7EkJRyctGPvihw1xHJr4Fr9
-         zt8oKcKCxzOWmXKLiYPoSTEiRY7ZIpNelZ5Opu/hxma4m4Uw99dfqWNA1En31YYRaTlr
-         holjBLHtuE49TyPUBBZxd1NQYUmncT5cXgfrtaYZbKJtAgtbJzt3FhDf3mfm6VLc15mZ
-         vsKQ==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iZdOXDMsblVBUcTXUYdFLUwMLPKxC/oYxMqi6NA8Wrw=;
+        b=cmOVKCJSuiHxp+eqspguDuCHd0OjxhGiZXbxwvay3aryrHcLZKKMqx5bNd1LsB3bDm
+         r1Y2q1pKS81WZpHpjKMMDKx4+KYcRfBOX8ZA7d9TGWm5Brbwo9nhOhIsP/sqn5soJj7O
+         Lx2ZM3cTPMvj+8EKOiZOZfXBvKrKTpDAVJEk950dY9XzyZVYRc3yoxX1CxLJAkOnjBll
+         zR/8I7vrR8VjvfHG4T77WPrUtj/VsH8EQFngD5gQi4Pyw/8YdgiWGq4H7ETD25E1xj5K
+         yqL38HzN5CtyaR++2QvRqDdSYbJTxjLPJh3QcrYXzyKvjXTp7xy8diPAIUduh6eB/l1l
+         cMuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8M7t3QboA7TD6nDaDClzGwWMmDkiWbmK0rJcgLYax60=;
-        b=DG2jP7LrSagq0cgCp2fR0cd2Mu3aKf6oZPm6lHcI+DD/490rK6KcD3+b6o18Jx0OMM
-         zqkWXsxqYM89KsLOfINpzepChA3MowyH6EVQ2aY5FAIK7DX3iYfB2/r+5KzxAGmoFeF0
-         hcSYUiSedRx75s0tmYfYut0YQVUbRvDINTL5uPFDGEnQYSJK2WYNOCAB27whiUoyJ8Uf
-         +cTP2fHisEHV2GTmSZXXa7MV/RLfrvQyPLFLWjIb9JFwVk6EHC8gt6N2RnuEuyq4FuDB
-         u8WSx9X4Hxu+Y3RuBx9ZSwkJqiESyT1KH4HZVJUsUJCOpZbU4ooW2sNEj2kRAZeF2lRx
-         HCzA==
-X-Gm-Message-State: AOAM533e2PX95nWlXyLGT04OFC9WI67+LY6gqKRXfNFYPeRA8Bq/gPtb
-        aWsYTRx01mLA1o5lBCMR+4tuJjSArjrrDwJZJZD3AK5W
-X-Google-Smtp-Source: ABdhPJwX927mkam1fwc5TnX7dIM6yGG06+S//E2cLfbXyeuTvGl5S89mKNpjwTA7/oDNGs7duwwoibXNxSe8cv4msxs=
-X-Received: by 2002:a17:906:a017:: with SMTP id p23mr94772ejy.460.1621442859875;
- Wed, 19 May 2021 09:47:39 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=iZdOXDMsblVBUcTXUYdFLUwMLPKxC/oYxMqi6NA8Wrw=;
+        b=DO5Y6k9iknDODfcKLsa+2X7dxvnMl0Uo7CmDkvCxSuRXQGL67NZR1/jOCNFvnxlMEh
+         sHQN83LEQ+qzhX/i6a+YOSYKQJ4mlnG6Czs9IyfovNeXdDpCxajBX8bavnuZyImS6NXL
+         dhhStwggsnsavBfpHZaUeUTBTiJltCOffU/6tyiKYPB2IvYiRAun2H88qIuD0iLqm1SO
+         p7zsq6Y7pt0FYTcZ1mXAas49DzF5XEjn7NHPwWrIrZiLrwHML7hkNvL2Rf53lQU568jJ
+         TsfNApqic+pe97dhXIbWQVsyDz6iHWTGGbHfD1b8mkA0vHhouakYTb7yGuz1VCm3Rtin
+         QaZQ==
+X-Gm-Message-State: AOAM533IjOUtYOMpFowrR6DgJ9VMdr77dR8+LIeKQshhIk3za9nqLpKB
+        aX22CNIdzwR5SMTMV6S883Q4u8kePVo=
+X-Google-Smtp-Source: ABdhPJwbaw6CRV9PEfWPYM19ecB9SwLikx0O/6dVs1WdIFzyFKewE3iCivR7l4C0t8GhIkTuXKLehQ==
+X-Received: by 2002:ad4:4184:: with SMTP id e4mr460610qvp.13.1621443293056;
+        Wed, 19 May 2021 09:54:53 -0700 (PDT)
+Received: from localhost.localdomain ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
+        by smtp.gmail.com with ESMTPSA id q6sm190129qkj.78.2021.05.19.09.54.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 May 2021 09:54:52 -0700 (PDT)
+Sender: Anna Schumaker <schumakeranna@gmail.com>
+From:   schumaker.anna@gmail.com
+X-Google-Original-From: Anna.Schumaker@Netapp.com
+To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
+Cc:     Anna.Schumaker@Netapp.com
+Subject: [PATCH v2] NFSv4: Fix a NULL pointer dereference in pnfs_mark_matching_lsegs_return()
+Date:   Wed, 19 May 2021 12:54:51 -0400
+Message-Id: <20210519165451.412566-1-Anna.Schumaker@Netapp.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-References: <20210519160635.333057-1-Anna.Schumaker@Netapp.com> <9b54027028a9a7322b6f06748c4499174a238866.camel@hammerspace.com>
-In-Reply-To: <9b54027028a9a7322b6f06748c4499174a238866.camel@hammerspace.com>
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Wed, 19 May 2021 12:47:23 -0400
-Message-ID: <CAFX2Jf=m6nFNs4tfHXp4dyLpSK3k9Fpn11YDx1qJE5U1d-7CNw@mail.gmail.com>
-Subject: Re: [PATCH] NFSv4: Fix a NULL pointer dereference in pnfs_mark_matching_lsegs_return()
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, May 19, 2021 at 12:43 PM Trond Myklebust
-<trondmy@hammerspace.com> wrote:
->
-> On Wed, 2021-05-19 at 12:06 -0400, schumaker.anna@gmail.com wrote:
-> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> >
-> > Commit de144ff4234f changes _pnfs_return_layout() to call
-> > pnfs_mark_matching_lsegs_return() passing NULL as the struct
-> > pnfs_layout_range argument. Unfortunately,
-> > pnfs_mark_matching_lsegs_return() doesn't check if we have a value
-> > here
-> > before dereferencing it, causing an oops.
-> >
-> > I'm able to hit this crash consistently when running connectathon
-> > basic
-> > tests on NFS v4.1/v4.2 against Ontap.
-> >
-> > Fixes: de144ff4234f ("NFSv4: Don't discard segments marked for return
-> > in _pnfs_return_layout()")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > ---
-> >  fs/nfs/pnfs.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-> > index 03e0b34c4a64..6d720afb7b70 100644
-> > --- a/fs/nfs/pnfs.c
-> > +++ b/fs/nfs/pnfs.c
-> > @@ -2484,12 +2484,12 @@ pnfs_mark_matching_lsegs_return(struct
-> > pnfs_layout_hdr *lo,
-> >                         set_bit(NFS_LSEG_LAYOUTRETURN, &lseg-
-> > >pls_flags);
-> >                 }
-> >
-> > -       if (remaining) {
-> > +       if (remaining && return_range) {
-> >                 pnfs_set_plh_return_info(lo, return_range->iomode,
-> > seq);
-> >                 return -EBUSY;
-> >         }
-> >
-> > -       if (!list_empty(&lo->plh_return_segs)) {
-> > +       if (return_range && !list_empty(&lo->plh_return_segs)) {
-> >                 pnfs_set_plh_return_info(lo, return_range->iomode,
-> > seq);
-> >                 return 0;
->
-> This patch would mean we fail to mark the layout for return in
-> situations where we clearly should be doing so. The lack of a
-> return_range doesn't indicate that we don't want to return any layouts,
-> but rather that we want to return all layouts.
->
-> I suggest rather changing the caller, _pnfs_return_layout() to move
-> that declaration of 'struct pnfs_layout_range range' out of the if
-> statement so that it can be passed as an argument instead of NULL.
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-Sure, I'll try that now.
+Commit de144ff4234f changes _pnfs_return_layout() to call
+pnfs_mark_matching_lsegs_return() passing NULL as the struct
+pnfs_layout_range argument. Unfortunately,
+pnfs_mark_matching_lsegs_return() doesn't check if we have a value here
+before dereferencing it, causing an oops.
 
-Thanks!
-Anna
+I'm able to hit this crash consistently when running connectathon basic
+tests on NFS v4.1/v4.2 against Ontap.
 
->
-> >         }
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+Fixes: de144ff4234f ("NFSv4: Don't discard segments marked for return in _pnfs_return_layout()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+---
+v2: Define a struct pnfs_layout_range to pass to
+    pnfs_mark_matching_lsegs_return()
+---
+ fs/nfs/pnfs.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index 03e0b34c4a64..40bba9b56e55 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -1317,6 +1317,11 @@ _pnfs_return_layout(struct inode *ino)
+ {
+ 	struct pnfs_layout_hdr *lo = NULL;
+ 	struct nfs_inode *nfsi = NFS_I(ino);
++	struct pnfs_layout_range range = {
++		.iomode		= IOMODE_ANY,
++		.offset		= 0,
++		.length		= NFS4_MAX_UINT64,
++	};
+ 	LIST_HEAD(tmp_list);
+ 	const struct cred *cred;
+ 	nfs4_stateid stateid;
+@@ -1344,16 +1349,10 @@ _pnfs_return_layout(struct inode *ino)
+ 	}
+ 	valid_layout = pnfs_layout_is_valid(lo);
+ 	pnfs_clear_layoutcommit(ino, &tmp_list);
+-	pnfs_mark_matching_lsegs_return(lo, &tmp_list, NULL, 0);
++	pnfs_mark_matching_lsegs_return(lo, &tmp_list, &range, 0);
+ 
+-	if (NFS_SERVER(ino)->pnfs_curr_ld->return_range) {
+-		struct pnfs_layout_range range = {
+-			.iomode		= IOMODE_ANY,
+-			.offset		= 0,
+-			.length		= NFS4_MAX_UINT64,
+-		};
++	if (NFS_SERVER(ino)->pnfs_curr_ld->return_range)
+ 		NFS_SERVER(ino)->pnfs_curr_ld->return_range(lo, &range);
+-	}
+ 
+ 	/* Don't send a LAYOUTRETURN if list was initially empty */
+ 	if (!test_bit(NFS_LAYOUT_RETURN_REQUESTED, &lo->plh_flags) ||
+-- 
+2.29.2
+
