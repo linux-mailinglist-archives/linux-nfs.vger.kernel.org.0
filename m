@@ -2,40 +2,40 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA2AF38A3B1
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 May 2021 11:56:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B8E938A82A
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 May 2021 12:46:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233907AbhETJ4F (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 20 May 2021 05:56:05 -0400
-Received: from mail-bn7nam10on2087.outbound.protection.outlook.com ([40.107.92.87]:17377
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        id S238269AbhETKrO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 20 May 2021 06:47:14 -0400
+Received: from mail-dm6nam10on2059.outbound.protection.outlook.com ([40.107.93.59]:38014
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234270AbhETJxU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 20 May 2021 05:53:20 -0400
+        id S236814AbhETKpO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 20 May 2021 06:45:14 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A7YOFEdr1KkwYSmXzyMPkYL/J794Cl9idWpjbrdVcmeU3vhYYFDhA3Q9216K1TuNZ6WnYXS33v07zXvPffYX+JibiL+sx4tFTKvGI8zO8MFpule7ySJ105zNXYKjkkrTTGJrSVHQf9nfMP2Vp6rX4fB4NnBax4Y/0YURIuZBYxP4MI+T0QEyAPmPqhTpCbxMqH1bdF8WKMprZ+Jk1hvuNT/wybAnl1Hc3ed8pTNI1aoh6bs2KZCyu+HdJlZQsrBmpChY+TZMUHN/jh3pFfnPRn6yt4KiVqGR5m+dJ63+zj5VSIgAqZ2L0nTpjQHmKx684VjHNgg1I4pq7Mb/8k0pqg==
+ b=X7dUpthOLPFNa8lclZBegmqyeCXtz2W19qs/t8eXTnfdSKtImJ4GM8+d52LzIp3E20m7kUCr5+WPmbHl7bMyT5NNSZZAc+vtDgqdgaBh/dm3z8+Fu1V7nL/8Dqcu0Sh5Yhmu9fYzjhHSdgGXMx2xpev502CWdcCz4lCedbC2ogRu3hNEdz0fIc5zhsn0sSKatzZKoLotZ/JvvXTfrGdbeaFGW2i94pok6hc/zKJqGX8hjdd0wlHGqkOxBD0tSdQHwf0yGwMd4eNVoCe9mFwoIGO0h1RiP2d1yUnIi9PqmGb538e6IVAqxal/4+i/Bq9P8WbelKP/CaZp728xhHRxWw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dtr7liYI/VomJui/6j+2jD+A9QW+TL1EHnYDPMSE2t8=;
- b=cb7VdAA0CV8pKI8jN9+44s4scqMXtOm6xveNg+T5y9XHlUdWi9CK0kShWbGnb1kavlpL4F7k4wvSNJTE66zgZ0+V21q0XX2J8vhGuRphtW9PXyzbpJ3jeNG6vMthcrIwxXB623cJ3KNRrPgLm6XA+wChklrtt2Tkca3DRXJfZtgN6N8sVdlpWhBFkpUeS68h4Kd0sBeUnmm291mAXmi3F9xMsb7c5/L5anDe8GpGf0KgeEQutaqv69aZV1a0c6TE4bnVziPQwJXOSW1j8cg8AzU+3dp2cUmNvth8mSj6D21lL1+mzvhEvd/HyWtYIFpxtuQC28NirkaVPwgo3L9Fmw==
+ bh=wcAjT6B9ofRxvrMquGaAtoJRmAAczeWf20YNNZWpZ78=;
+ b=Jal7V6rYWgnc3xfbt+NNZWqGD+Z/c0o8yNTx0KjWWkN6ySRX9X4Wi8tOfMiM5iE7tMtz1w/pQ3JDPjNxWl0f2Pg0uOB2MZ+TBlz0haHGaA0FsJQI+SkH/WsbBCH9H0kxbgp4e+aM6THAd5YiKaIzncs/7fspi7XFVZ+zHHJhrbiuh3gsw1/6gfqJuh6KRzbRy9uOdq14s/NmLfiFGt1jeoDbjmnXEChHP3LGKYFnDmEd9gKQHtlr9TsRtRvG1VXAeyvKcUbK0zAvbkOEOI1kf3Jkge/s+xAjlxN4eUP1xukFsdnfbxnlr5snFCV3vC0+6JI+7sJOoLJ+nI22kERLUw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
  dkim=pass header.d=vmware.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dtr7liYI/VomJui/6j+2jD+A9QW+TL1EHnYDPMSE2t8=;
- b=ZfXX3+tNe6JzUOrP2LA5RrpvBJQuZqOMxlhG183kiAmWuqwczQWnKkg+Nqzc2mdI+BKZlHyDV5qVE0/EfYVii4ZwD+4B2MTXOL50z0LXIMg7RdjNZoxJvCdy1XYopihEW66St2s3DZvHuBgJh2OjXFfubPreNIXGmD+658o7PX0=
+ bh=wcAjT6B9ofRxvrMquGaAtoJRmAAczeWf20YNNZWpZ78=;
+ b=dVLwDkHXxc5jFHRoZoj4nOGO+U/L2v54j2/ETo5RwMnGZ16KfvYKSA+C8KZ2lIC43JLqDNjVINzHDPrk84DPB3Rhc4ekgtic1ch6uEWF4Mo67hBfJSL2xilebMFGBJVT2wWdBOIpIjkGx+4002XZiuXYkEFWxpVcKDGrIiNtsro=
 Received: from CO1PR05MB8101.namprd05.prod.outlook.com (2603:10b6:303:fa::14)
- by MW4PR05MB8697.namprd05.prod.outlook.com (2603:10b6:303:128::13) with
+ by CO1PR05MB8072.namprd05.prod.outlook.com (2603:10b6:303:f5::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4150.12; Thu, 20 May
- 2021 09:51:54 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.12; Thu, 20 May
+ 2021 10:43:50 +0000
 Received: from CO1PR05MB8101.namprd05.prod.outlook.com
  ([fe80::6cbf:9cac:d7f7:d002]) by CO1PR05MB8101.namprd05.prod.outlook.com
  ([fe80::6cbf:9cac:d7f7:d002%7]) with mapi id 15.20.4173.012; Thu, 20 May 2021
- 09:51:54 +0000
+ 10:43:50 +0000
 From:   Michael Wakabayashi <mwakabayashi@vmware.com>
 To:     Olga Kornievskaia <aglo@umich.edu>
 CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
@@ -43,11 +43,11 @@ Subject: Re: NFSv4: Mounting NFS server which is down, blocks all other NFS
  mounts on same machine
 Thread-Topic: NFSv4: Mounting NFS server which is down, blocks all other NFS
  mounts on same machine
-Thread-Index: AQHXSrzxNwU+/2izAUaNQrMQbCMgXKrrMRoAgADowkM=
-Date:   Thu, 20 May 2021 09:51:54 +0000
-Message-ID: <CO1PR05MB810173C0D970DE22AA9535B8B72A9@CO1PR05MB8101.namprd05.prod.outlook.com>
-References: <CO1PR05MB810163D3FD8705AFF519F0B4B72D9@CO1PR05MB8101.namprd05.prod.outlook.com>,<CAN-5tyGgWx6F2s=t+0UAJJZEAEfNnv+Sq8eeBbnQYocKOOK8Jg@mail.gmail.com>
-In-Reply-To: <CAN-5tyGgWx6F2s=t+0UAJJZEAEfNnv+Sq8eeBbnQYocKOOK8Jg@mail.gmail.com>
+Thread-Index: AQHXSrzxNwU+/2izAUaNQrMQbCMgXKrrMRoAgADowkOAABnQAA==
+Date:   Thu, 20 May 2021 10:43:50 +0000
+Message-ID: <CO1PR05MB8101FEE18F82B0B3B251F1E5B72A9@CO1PR05MB8101.namprd05.prod.outlook.com>
+References: <CO1PR05MB810163D3FD8705AFF519F0B4B72D9@CO1PR05MB8101.namprd05.prod.outlook.com>,<CAN-5tyGgWx6F2s=t+0UAJJZEAEfNnv+Sq8eeBbnQYocKOOK8Jg@mail.gmail.com>,<CO1PR05MB810173C0D970DE22AA9535B8B72A9@CO1PR05MB8101.namprd05.prod.outlook.com>
+In-Reply-To: <CO1PR05MB810173C0D970DE22AA9535B8B72A9@CO1PR05MB8101.namprd05.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -56,57 +56,102 @@ authentication-results: umich.edu; dkim=none (message not signed)
  header.d=none;umich.edu; dmarc=none action=none header.from=vmware.com;
 x-originating-ip: [67.161.44.194]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d3b899fe-e398-41d1-8118-08d91b74e662
-x-ms-traffictypediagnostic: MW4PR05MB8697:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW4PR05MB86972303B6E496644E9936F5B72A9@MW4PR05MB8697.namprd05.prod.outlook.com>
+x-ms-office365-filtering-correlation-id: a1e4b832-e6e6-44f0-c4ff-08d91b7c27a0
+x-ms-traffictypediagnostic: CO1PR05MB8072:
+x-microsoft-antispam-prvs: <CO1PR05MB80722D4EBF6EC74FF8F3981DB72A9@CO1PR05MB8072.namprd05.prod.outlook.com>
 x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uwMimQYIUtJiPO7tMgODeeBkB7c5bU55PKxRUjT+AXvxF5Zixvbv3j4a9pleTUzSoUDgRXVGbCofunswRzBiS9NnQRWs5qqh8AoHILl/npipgkAP2YEeI4RDE4r9tH/GMMF8ytGz+x22bsqPxA3f9SuYEvB9m0h0YrNggQ+bF7v8VPpNdC0GriLtad8rIc8ufWxtR8yzNrn6H3FjoNEkhoDvV8qeLQPKaNofgGQfgzb0aRZgLTOhIl2hoNMwh2O3En5P0Xp9iDHr5OlbPjaIsIAq8UW7GXNHLrN205jbAusdvo4f8SodHmDILsggCZCmH+L/WtVWhw4kPrX1ktCcJgj8RWd9BYjef7meRTfN2oRDviLexnhaC8sObcp6HuiS8o++QI9YeOEPsO7kxbVy00PRnXHmB6V971vPsrzP7yoP4cnWFNfoCZ9532fIkfMduABdyfpvK0Vg57K22dhO0RIaZu/o64YcfjShpWhfXs8Uq+qJ/hQ89hpdPVRkE66SGyHr8QvCEtdrbIPNAq49TiQO2nZ5Ckrl7egce7Di17j2hMVEsNY3GMdK86YAeSLH54Wb3jB5rb4ZYMruOqR5bMaRuvIuqjkFZQP7xJeIqnHHAVSxjrIVU26VSTgX8GRLT5muKqFPL2gB+1wwgpu4yaeVOPvc6JGIC/rd1dhD+CGhsrmZZtEeMQ4qnbGVUKpAejZPI8/n8oQADgEvPJdFuE5eBpqEa8DwFtG9bCjG9FI=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR05MB8101.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(83380400001)(966005)(9686003)(86362001)(71200400001)(53546011)(45080400002)(4326008)(8936002)(26005)(6916009)(498600001)(8676002)(91956017)(55016002)(64756008)(66946007)(6506007)(7696005)(66556008)(66476007)(66446008)(5660300002)(186003)(76116006)(2906002)(33656002)(122000001)(38100700002)(52536014)(10126625002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?Windows-1252?Q?CdhXrmYr3N4zjvt9dVcmLyZcrbJ99xh4uEexkL9DQDEIVmZ/LAPquKMh?=
- =?Windows-1252?Q?22BED32iraRZY7k5PXXszEt1JsAIQn1fuaG7r8Pw+zGJ8dbC+nYtrSsR?=
- =?Windows-1252?Q?knX1WD98QP4zeZ9NTrzXoBtUaAkPlbEU7lVEg8flr03mHuSqBHbLfWoJ?=
- =?Windows-1252?Q?h1+MaV9xboKk7PZVPIH8pur3sJIFWor91wyA+KmHB//7e+y3Mikjpv6w?=
- =?Windows-1252?Q?IvpBPuVm1Zcf9JtCz5RBBxLzd3Y8XSz/NENUG2Au9HVDrKZLbTo8hmZt?=
- =?Windows-1252?Q?N+9Zr2/gO6uSdrwC3YzVJA0+Hoy2jzy99L/QqMhO7n5IzEVsprEu87Qm?=
- =?Windows-1252?Q?FnoOlPeGmQHTaIWaCpsoRuKFdGmjqrZoQ9c5FkZsH17IFOCtBSSU64zy?=
- =?Windows-1252?Q?KznThx0lY6AwZiy/p/k1htEl36jUf81bu8YlrH0R5ziz2zPNxaAy/VxR?=
- =?Windows-1252?Q?OajmZ5enxxpOCt7k4TD7VLpwk+k0x+cXuyXG7MelaC1dA6spIQGiIPWT?=
- =?Windows-1252?Q?iaXzFu97CTR/MyXj/IcNWmTnbZMmbXITh73d8iDRC68DzwDXdYHhAnpm?=
- =?Windows-1252?Q?axjrnf1o1paHJbe/dPwaLueI9iHMPPuWdD5zrjNPDbldvDane7TRFE/V?=
- =?Windows-1252?Q?00TYujNwDb5oZoQ6CYVAPwyS+DyKY70Wgt4bWaO2aFNMpSEB08XRTPdY?=
- =?Windows-1252?Q?xj/9tSeXT+7v63vHOR7ODgIoWtjM5woxLDcavl0t4DSp3X60lTykSbiR?=
- =?Windows-1252?Q?YT7ToLcHoZtyTXNevI8uemIfkUxVZ0plFYELexh4gCg0EXmlqAFqXUpp?=
- =?Windows-1252?Q?DjzNPTmnRCBnaXYaqqSKrsSlQFrEhjBJBF7YwNJr9cgfeYo2jepQh2N8?=
- =?Windows-1252?Q?DzigZwlGhopHhlNsl3fSkEnUB6X6AcE1YnuUcR2aMBJYQI1gdFn9YODd?=
- =?Windows-1252?Q?IaQa/x9SSTg9YBFg5V8gzSe9DrgkyvkgfmWNTFghkW/agKRaiUVobgbh?=
- =?Windows-1252?Q?fphzUydpr87dfAvSaF/d9VPf4FcRC1kxAHt76z152o87T9f2jd2roEJv?=
- =?Windows-1252?Q?RSlSORGm9Ce+z35gjA6hrQqM65fSVSDWYT+i3xqa4gV/vOussacirVOF?=
- =?Windows-1252?Q?NbEateV+Gn++4zcmuePe8j793vxB+84ThBxv6WCS7go2iZpJ6M3OztAr?=
- =?Windows-1252?Q?x+97vRmlUXWOrGd5uj8m3a2eJ+AiR1Qry03ddR8a3p9XS2chnTtHan4C?=
- =?Windows-1252?Q?WmuqwRnsqn7ziUzg2MxsCFt54hmb0xyFJSDI0lb3cycLYTUoA6whsoGo?=
- =?Windows-1252?Q?/GY3yNWg/Dr4z/0MRuQTqTUaXvc1Zr4c4kFV4f25ywe9ohAAuxjRJkpi?=
- =?Windows-1252?Q?nSOFsgqUM0eZmm46EgF9fz+bjimI9bA59Uw=3D?=
+x-microsoft-antispam-message-info: LvDmFp3872pRki9/wEdSVfw9FnIbrpz4X/1UPa9liwY/QRyAMKVyBwr94bVQyPzcB/kGNG7tyuSBM43yOC9zMvYkkixlWmjXhGrqc7xybdFq7fitdlZEUumtFpSmgcZHGJRZPHBQVOicwZEBlXDZZtSAo9GCURxWbWWZXKAIr93sAXSCiuxI/xpN500UERdjALTZN6IJG/8xIMkTJ0Q1UFAjTCgYjjqGyy/bnbBvJuJPd4C3Qy9gpCLOyuG2LdUsoRb6zO4CzxogEmY7WnWjpPrdVvy4uRmfdkCsQydqDlJ3SzG4C0pP/m7/cBUIUJaeDZ4CmPZknhcCZYbPHnIFdDn6R3Hc4SDas7s4xtgREwB2wcwtGTolabhwjlM8PQX3qzRvCGda4E0pFnr3vDFVjJXQ/eQDsS+Yj880DmFFjRqj8nuAqXenA4qcErYJ+AGjmeyj2IzMPlbI5N5R+8If8/2AahbP0SbppAm7fpdGadBy+Pp1BYwRCaKJ+M9rvjLI8jWLyyNQ6i6a7m6NMYUpSvqx1kdKmJBfRKjeL+OgzRJzWeKUryWTTvnlOViiTQCr3So55eXhRzOF7izW3ke4izUI21aYPXzqumMXlUJJYejwV8m5WScsylxneIOJNmkQqzp9kijDVWZxVavdBfzo/PzuAN5ySGsn77Zo3B8S4SyxPlbSM5nn+hUVanFj7PTu
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR05MB8101.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(39860400002)(376002)(366004)(396003)(966005)(316002)(6916009)(38100700002)(55016002)(9686003)(478600001)(122000001)(186003)(33656002)(45080400002)(76116006)(4326008)(8936002)(71200400001)(66476007)(66556008)(66446008)(64756008)(8676002)(66946007)(7696005)(86362001)(2906002)(53546011)(26005)(30864003)(5660300002)(6506007)(83380400001)(2940100002)(91956017)(52536014);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?Windows-1252?Q?QR7IPeE3s1QEX1VQQuP1OX/TL9ZmyPWgyYxu2ci8FvYfwmhYL5dw2FjN?=
+ =?Windows-1252?Q?H9qNZ8OxcVMd1VVCCOBVYekV0znnMOrlDSpnVLOt0gkylmQhLONdQTv4?=
+ =?Windows-1252?Q?WDxJeyrCKJExvsOob67fn8Zd3LLX4fCSB/XbgMvv2X5oVJ541M3V3ggs?=
+ =?Windows-1252?Q?kWnsXyUcoKvINqUX5pDZXdZoFltzupihVQcx0ut9M1tWoAg2VDwaYgpI?=
+ =?Windows-1252?Q?u4p9i58hWcgN9nBE/3SC0mP407AeH9lrTrgz18SGxFxfd3ZY6SO7T2A0?=
+ =?Windows-1252?Q?A8YDtCq2IZrCzFgJZEyVAL7FdUz3u1AhexVXRFHfDrfpYDXx7JGt4LZs?=
+ =?Windows-1252?Q?GxMHL9HJgKEI2X2XjZpVwWUaEhHuw2CbRwWSAxliVDGh3QjbkwaC5jTp?=
+ =?Windows-1252?Q?8RQxoSPr8B4VsctdBKMBrsXQ+npS9XbQS62SdWlKOv4hLanp2JMPlcwp?=
+ =?Windows-1252?Q?iQfenvS4tB+0o2nE28AwRm7RUYJAPZ0CJwE9rA24+zL/qxnyZ8TuMrve?=
+ =?Windows-1252?Q?7HLt+ZFIFHdfXtLPUzCLtAs8VWpt4d2wajx2VhRe2W8lJ8L8V8NfZVtC?=
+ =?Windows-1252?Q?0jOGZQUZv+0EM+wxKB+cN435v/scVBTqiTlWVcAGAKn4CUA2sHld875e?=
+ =?Windows-1252?Q?LKoo+sm/6Sf/j5miRHOGBcAgcyJsuL5lfYPQj6vSD3TyCnUs2dDRHY7J?=
+ =?Windows-1252?Q?6mhhECyCmgTZWjlRHSqD3PqOSY8GFTTeCptbbI54kLSp4Fvm1KJvb5Bn?=
+ =?Windows-1252?Q?Qgt1qUcon+di85IH98Sckh8ZOibTeBk9jmJCEPyPq1mw33w+p1ZVKfQc?=
+ =?Windows-1252?Q?BrETn7MfJIgjt5lnYh62yqvab8J5+u0JBO7kIaX27zTFFD+V46PsDd8c?=
+ =?Windows-1252?Q?rMPBtFGA/hbTHHfazN9KPbdYckxYZVPUvus0fWkUmk+HpCjaUqpdJNpg?=
+ =?Windows-1252?Q?6JbjVi+goMC3Cn9mn7u6q4A90CEk/TsJGFQmZTzs4DrVI3RWlu24tNoH?=
+ =?Windows-1252?Q?2WN3e0vawysGQDSbs4xmw1S4eE80H2fafs+vDYg8l8uTV+vcpB5bw4gu?=
+ =?Windows-1252?Q?rTbzKZ2YotZd91g0He6L+VQOQDR6BmEyDAezxuebpVsfm3RH5SXmmmgx?=
+ =?Windows-1252?Q?PHnbzv/3TOuyBlZUZ3SR9Bk4Wxas4N0lD03AQb9qG4i+cpP1zucelAM8?=
+ =?Windows-1252?Q?Npr2ECwmHNjweTlZllOrNYqHmcFLU+aI/70Q1QTdzWuGEn+ezN8grZCF?=
+ =?Windows-1252?Q?KOaveD1c3xzZxp71HRhbfby+bODWnztSALOxwnMcz2pt5KufOoMWr7F+?=
+ =?Windows-1252?Q?VaL6UbcafA2K6pFVE2jVreHbwL61BnMTmSkS7ECvo6KDFG620PWE/uSy?=
+ =?Windows-1252?Q?F68Np8xS5ixv4Dcti3OHU4l4nnJckQZAC4A=3D?=
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="Windows-1252"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: vmware.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: CO1PR05MB8101.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3b899fe-e398-41d1-8118-08d91b74e662
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2021 09:51:54.4210
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1e4b832-e6e6-44f0-c4ff-08d91b7c27a0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2021 10:43:50.2994
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YXSASwz/7KdrV+5aIvObcbYonlMkSPNok9ZcquDupdize26rMRML+z8248lJuPfKvvG3cQ/ZTRGcBKuZwEl19A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR05MB8697
+X-MS-Exchange-CrossTenant-userprincipalname: PmHOmdz9kWy727Z5aobqASq4p85WCopC2lzediPjodBzHeWUMacTop/nS4CrOmjrTZMJW4vZqYu/tjquHwAPGw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR05MB8072
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Olga,=0A=
+=0A=
+If you are able to run privileged Docker containers=0A=
+you might be able to reproduce the issue running=0A=
+the following docker commands.=0A=
+=0A=
+docker pull ubuntu:hirsute-20210514 # ubuntu hirsute is the latest version =
+of ubuntu=0A=
+=0A=
+# Run this to find the id of the ubuntu image =A0which is needed in the nex=
+t command=0A=
+docker image ls # image id looks like "274cadba4412"=0A=
+=0A=
+# Run the ubuntu container and start a bash shell.=0A=
+# Replace <ubuntu_hirsute_image_id> with your ubuntu image id from the prev=
+ious step.=0A=
+docker container run --rm -it --privileged <ubuntu_hirsute_image_id> /bin/b=
+ash=0A=
+=0A=
+=0A=
+# You should be inside the ubuntu container now and can run these Linux com=
+mands=0A=
+apt-get update # this is needed, otherwise the next command fails=0A=
+=0A=
+# This installs mount.nfs. Answer the two questions about geographic area a=
+nd city.=0A=
+# Ignore all the debconf error message (readline, dialog, frontend, etc)=0A=
+apt install -y nfs-common=0A=
+=0A=
+# execute mount commands=0A=
+mkdir /tmp/mnt1 /tmp/mnt2=0A=
+mount.nfs 1.1.1.1:/ /tmp/mnt1 &=0A=
+mount.nfs <accessible-nfs-host:path> /tmp/mnt2 &=0A=
+jobs =A0# shows both mounts are hung=0A=
+=0A=
+Thanks, Mike=0A=
+=0A=
+=0A=
+From: Michael Wakabayashi <mwakabayashi@vmware.com>=0A=
+Sent: Thursday, May 20, 2021 2:51 AM=0A=
+To: Olga Kornievskaia <aglo@umich.edu>=0A=
+Cc: linux-nfs@vger.kernel.org <linux-nfs@vger.kernel.org>=0A=
+Subject: Re: NFSv4: Mounting NFS server which is down, blocks all other NFS=
+ mounts on same machine =0A=
+=A0=0A=
 Hi Orna,=0A=
 =0A=
 Thank you for looking.=0A=
@@ -200,17 +245,32 @@ blocked by the first mount.nfs command above):=0A=
 [Thu May 20 08:53:35 2021] =A0do_syscall_64+0x38/0x90=0A=
 [Thu May 20 08:53:35 2021] =A0entry_SYSCALL_64_after_hwframe+0x44/0xa9=0A=
 =0A=
-I've pasted the entire dmesg output=A0here:=A0https://pastebin.com/90QJyAL9=
-=0A=
+I've pasted the entire dmesg output=A0here:=A0https://nam04.safelinks.prote=
+ction.outlook.com/?url=3Dhttps%3A%2F%2Fpastebin.com%2F90QJyAL9&amp;data=3D0=
+4%7C01%7Cmwakabayashi%40vmware.com%7C2759b06e70634987fce108d91b754e5f%7Cb39=
+138ca3cee4b4aa4d6cd83d9dd62f0%7C0%7C0%7C637571012932297691%7CUnknown%7CTWFp=
+bGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%=
+7C1000&amp;sdata=3DxpENxRqSdn4aDPwB890%2Bh1RpB4dD2DfpnVGQeM6n0Io%3D&amp;res=
+erved=3D0=0A=
 =0A=
 =0A=
 This is the command I ran to mount an unreachable NFS server:=0A=
 date; time strace mount.nfs 10.1.1.1:/nopath /tmp/mnt.dead; date=0A=
-The strace log:=A0https://pastebin.com/5yVhm77u=0A=
+The strace log:=A0https://nam04.safelinks.protection.outlook.com/?url=3Dhtt=
+ps%3A%2F%2Fpastebin.com%2F5yVhm77u&amp;data=3D04%7C01%7Cmwakabayashi%40vmwa=
+re.com%7C2759b06e70634987fce108d91b754e5f%7Cb39138ca3cee4b4aa4d6cd83d9dd62f=
+0%7C0%7C0%7C637571012932297691%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAi=
+LCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3D1uaPa3RDc=
+R32%2Buh6NQd2F7wq5%2BvYZ0dnWcGve0bSj%2FQ%3D&amp;reserved=3D0=0A=
 =0A=
 This is the command I ran to mount the available NFS server:=0A=
 date; time strace mount.nfs 10.188.76.67:/ /tmp/mnt.alive ; date=0A=
-The strace log:=A0https://pastebin.com/kTimQ6vH=0A=
+The strace log:=A0https://nam04.safelinks.protection.outlook.com/?url=3Dhtt=
+ps%3A%2F%2Fpastebin.com%2FkTimQ6vH&amp;data=3D04%7C01%7Cmwakabayashi%40vmwa=
+re.com%7C2759b06e70634987fce108d91b754e5f%7Cb39138ca3cee4b4aa4d6cd83d9dd62f=
+0%7C0%7C0%7C637571012932297691%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAi=
+LCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3D1YwGfM0u1=
+zQsWmOuZX6FJjYwlf3e01cMpJCDtK8JRI0%3D&amp;reserved=3D0=0A=
 =0A=
 The procedure:=0A=
 - run dmesg -C to clear dmesg logs=0A=
@@ -223,8 +283,8 @@ es=0A=
 - control-Z the mount.nfs command to 10.1.1.1=0A=
 - "kill -9 %1" in the terminal to kill the mount.nfs to 10.1.1.1=0A=
 - mount.nfs to 10.188.76.67 immediately mounts successfully=0A=
-  after the first mount is killed (we can see this by the timestamp in the =
-logs files)=0A=
+=A0 after the first mount is killed (we can see this by the timestamp in th=
+e logs files)=0A=
 =0A=
 =0A=
 Thanks, Mike=0A=
@@ -261,18 +321,18 @@ ecent nfs-utils 2.5.3 package installed on a recent version of Ubuntu Cloud=
  Image 21.04:=0A=
 > * https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fsou=
 rceforge.net%2Fprojects%2Fnfs%2Ffiles%2Fnfs-utils%2F2.5.3%2F&amp;data=3D04%=
-7C01%7Cmwakabayashi%40vmware.com%7Cfe9df245d11945bd70fd08d91afa7565%7Cb3913=
-8ca3cee4b4aa4d6cd83d9dd62f0%7C0%7C0%7C637570485288219912%7CUnknown%7CTWFpbG=
+7C01%7Cmwakabayashi%40vmware.com%7C2759b06e70634987fce108d91b754e5f%7Cb3913=
+8ca3cee4b4aa4d6cd83d9dd62f0%7C0%7C0%7C637571012932297691%7CUnknown%7CTWFpbG=
 Zsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C=
-1000&amp;sdata=3D90wWL%2FDqjJMsdlFDxF3hlmyhuS86VwNrtOD%2BLTGxY20%3D&amp;res=
-erved=3D0=0A=
+1000&amp;sdata=3DM6sP%2BH1XO2Ojhe0WOSCuFqDQDKJoOUdi2xR6dO5vkjQ%3D&amp;reser=
+ved=3D0=0A=
 > * https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fclo=
 ud-images.ubuntu.com%2Freleases%2Fhirsute%2Frelease-20210513%2Fubuntu-21.04=
 -server-cloudimg-amd64.ova&amp;data=3D04%7C01%7Cmwakabayashi%40vmware.com%7=
-Cfe9df245d11945bd70fd08d91afa7565%7Cb39138ca3cee4b4aa4d6cd83d9dd62f0%7C0%7C=
-0%7C637570485288219912%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoi=
-V2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3DiWIB0PuQ1HiOpFGmo=
-ViTmzreirD8EJRAkG%2BOw57QTKs%3D&amp;reserved=3D0=0A=
+C2759b06e70634987fce108d91b754e5f%7Cb39138ca3cee4b4aa4d6cd83d9dd62f0%7C0%7C=
+0%7C637571012932307646%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoi=
+V2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3D1iJYjPv5CHpQ6VJ0D=
+RPvHXvbiqQZgaE9pt7VeGNKq0U%3D&amp;reserved=3D0=0A=
 >=0A=
 >=0A=
 > The reason this looks like it is specific to NFSv4 is from the following =
@@ -291,10 +351,10 @@ NFSv3.=0A=
 > We reported this issue under util-linux here:=0A=
 > https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgithu=
 b.com%2Fkarelzak%2Futil-linux%2Fissues%2F1309&amp;data=3D04%7C01%7Cmwakabay=
-ashi%40vmware.com%7Cfe9df245d11945bd70fd08d91afa7565%7Cb39138ca3cee4b4aa4d6=
-cd83d9dd62f0%7C0%7C0%7C637570485288219912%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiM=
+ashi%40vmware.com%7C2759b06e70634987fce108d91b754e5f%7Cb39138ca3cee4b4aa4d6=
+cd83d9dd62f0%7C0%7C0%7C637571012932307646%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiM=
 C4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=
-=3DWLxFM2Ls5PodPjrvA%2FZninvvHF6LlrO9ywSEMwgcR50%3D&amp;reserved=3D0=0A=
+=3D9N5DFtCJykN%2F3YigbajvZrBt6T2jpfGPyY6QujZDS2o%3D&amp;reserved=3D0=0A=
 > [mounting nfs server which is down blocks all other nfs mounts on same ma=
 chine #1309]=0A=
 >=0A=
@@ -302,11 +362,11 @@ chine #1309]=0A=
 (but could not tell if it was the same problem or not):=0A=
 > https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch=
 work.kernel.org%2Fproject%2Flinux-nfs%2Fpatch%2F87vaori26c.fsf%40notabene.n=
-eil.brown.name%2F&amp;data=3D04%7C01%7Cmwakabayashi%40vmware.com%7Cfe9df245=
-d11945bd70fd08d91afa7565%7Cb39138ca3cee4b4aa4d6cd83d9dd62f0%7C0%7C0%7C63757=
-0485288219912%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiL=
-CJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3DY6A61VJQ6IDwsvUjjBc%2Fjrf8=
-0rvGSkaIjc0UhWRQ9kk%3D&amp;reserved=3D0=0A=
+eil.brown.name%2F&amp;data=3D04%7C01%7Cmwakabayashi%40vmware.com%7C2759b06e=
+70634987fce108d91b754e5f%7Cb39138ca3cee4b4aa4d6cd83d9dd62f0%7C0%7C0%7C63757=
+1012932307646%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiL=
+CJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3DZ8agzK7vCLHVnY8yzJ23D3aBrW=
+F0jsD7SYxwT3mtqjg%3D&amp;reserved=3D0=0A=
 > [[PATCH/RFC] NFSv4: don't let hanging mounts block other mounts]=0A=
 >=0A=
 > Thanks, Mike=0A=
