@@ -2,154 +2,276 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7554E38B63A
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 May 2021 20:40:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F89F38B6BE
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 May 2021 21:08:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235432AbhETSlX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 20 May 2021 14:41:23 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:21182 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232681AbhETSlX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 May 2021 14:41:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621536001;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pgOCpWIR9+1trApvA3xxZfQUVOmAo0vZiUl8LgDWsaQ=;
-        b=E2llSuaEtUUHrsKqi2/wL2NByWpu+x6CEmX36RcniCWL4j5gRENosbfIBNPZOspY+EyiZ3
-        8hlpbMODggR0ihtcTKDrZPEwIqRFoRXTLuq/jiAG2hGAnCQ3wmvtEp6a31NTq/ZFZr4Isb
-        dfewixuSKlUos36HVc9+adR1JlTI5Yo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-428-VvEO1oKtOkeepO5Ul57pJg-1; Thu, 20 May 2021 14:39:55 -0400
-X-MC-Unique: VvEO1oKtOkeepO5Ul57pJg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D74BF80EDA3;
-        Thu, 20 May 2021 18:39:54 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (ovpn-112-61.phx2.redhat.com [10.3.112.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 18D2F1B480;
-        Thu, 20 May 2021 18:39:54 +0000 (UTC)
-Subject: Re: NFSv4: Mounting NFS server which is down, blocks all other NFS
- mounts on same machine
-To:     Olga Kornievskaia <aglo@umich.edu>,
-        Michael Wakabayashi <mwakabayashi@vmware.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <CO1PR05MB810163D3FD8705AFF519F0B4B72D9@CO1PR05MB8101.namprd05.prod.outlook.com>
- <CAN-5tyGgWx6F2s=t+0UAJJZEAEfNnv+Sq8eeBbnQYocKOOK8Jg@mail.gmail.com>
-From:   Steve Dickson <SteveD@RedHat.com>
-Message-ID: <6ae47edc-2d47-df9a-515a-be327a20131d@RedHat.com>
-Date:   Thu, 20 May 2021 14:42:21 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-MIME-Version: 1.0
-In-Reply-To: <CAN-5tyGgWx6F2s=t+0UAJJZEAEfNnv+Sq8eeBbnQYocKOOK8Jg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        id S236556AbhETTJs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 20 May 2021 15:09:48 -0400
+Received: from mail-dm6nam12on2104.outbound.protection.outlook.com ([40.107.243.104]:18178
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S236587AbhETTJr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 20 May 2021 15:09:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XehpGPlB8RTurknFR/iSeInjJFaVUabdWfIw7z7Rxw4W383Wcvl0zgTunujKLC8FK5uD9KLvmywVoJWPblRh0pgagL2vmAGEoQRE13d3GTY2SOSomhP72GFVDHIyV+0hfiSGXh2NgiJj5Sp8oDaZl7hGvt6sPZpKr0beEtxYmyE0TJ+8V3XwaNI/aib3ICjawWCW848wPnipjMo2vA8chrxSAUShcUlXdDpmW2hnhtnhMejLQx8ZVjQEtpDsOguDXOhNllw4Uvgph+a5Aq/FKOskH21i6m6E9z7y48X55tDpjkOe+rk/QjROeyKgkWsGIxtC9NbK6eJjILpxv1GRZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8ex6JWGJmY3FwTuZcAjmOfaOKSzT92uETdSs9tpNC/o=;
+ b=aVU49dDgQnezW/85RNAy+UE/nHzs2YyJbbi73Bc/vTaX9D4uvgk0myY6y+Qv5XNBrnJYejaPn+q9LKAjTIEt1UU5AK0+w+GRSKuiU0c/IQ0DIRBHyXAkYoeChe6OzPKWgsbhcCDyGlseDowKV3qQFizD5x2gvIgJHU7L74DP8GGT4MOgQ70y+v72GSL6aAy4zG87b20mB9/5InQH9P8+o2oaKCFLvk8Icvw6thByd9hzmJO5sMR0zoTGGUvcMK7vz69INscI7U4HiZ6W27tLxHuO63nW+qiNlmXAJIQHiAVQUX4Vz95NF1rwl8oGfuRBl7fk0N4xAGDLz8czJZdo9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8ex6JWGJmY3FwTuZcAjmOfaOKSzT92uETdSs9tpNC/o=;
+ b=fF4zj0k2Vpo5kxuCzAr/MeGNo6JJo6HdqkRZZ/e6VhfdRb+AE3MaGKv5FHHxCciEHjJCPr55bPuX5u38lF9GACH0DAmgcVYOxaey9eqqDyCaIh8nnQYZS/WTgoLz7yYQcKd2r4F9uyI4FDbpPNNWSoRhaSzxc7iGItLlQavnFBE=
+Received: from DS7PR13MB4733.namprd13.prod.outlook.com (2603:10b6:5:3b1::24)
+ by DM6PR13MB4049.namprd13.prod.outlook.com (2603:10b6:5:2a3::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.12; Thu, 20 May
+ 2021 19:08:24 +0000
+Received: from DS7PR13MB4733.namprd13.prod.outlook.com
+ ([fe80::4c65:55ca:a5a2:f18]) by DS7PR13MB4733.namprd13.prod.outlook.com
+ ([fe80::4c65:55ca:a5a2:f18%7]) with mapi id 15.20.4150.011; Thu, 20 May 2021
+ 19:08:24 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "bfields@fieldses.org" <bfields@fieldses.org>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 1/4] NFSv4: Fix delegation return in cases where we have
+ to retry
+Thread-Topic: [PATCH 1/4] NFSv4: Fix delegation return in cases where we have
+ to retry
+Thread-Index: AQHXTZaoc7ZkKbxdUE2Nwir9I/WDlqrssNSAgAALAIA=
+Date:   Thu, 20 May 2021 19:08:24 +0000
+Message-ID: <2b24ca81205cca400910bbbdc29d54aafccefe00.camel@hammerspace.com>
+References: <20210520163902.215745-1-trondmy@kernel.org>
+         <20210520163902.215745-2-trondmy@kernel.org>
+         <20210520182901.GA8759@fieldses.org>
+In-Reply-To: <20210520182901.GA8759@fieldses.org>
+Accept-Language: en-US, en-GB
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: fieldses.org; dkim=none (message not signed)
+ header.d=none;fieldses.org; dmarc=none action=none
+ header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f3639529-317c-411c-6317-08d91bc2a42d
+x-ms-traffictypediagnostic: DM6PR13MB4049:
+x-microsoft-antispam-prvs: <DM6PR13MB4049607CE731FE071B50CD18B82A9@DM6PR13MB4049.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lMmJ4lGbclOXMkM7ODOcQekl9LvtmeWcTBbQl/4iJJccFwr+vTX1UGbAWRRmCviS5V1zNeifs2z1ZJn2xp/fTeWRRdvEnZxCEpGgHHaR4SVIeRmCkw0XX9YB8+QwCFA7QIG8iewyGA7qMhGhSr/R+xV5EfF8x+vCgUogHwhn82uLBHAPi0FBx0bcrK/fHaRJMDirXwSUI6ArmDDfF0VmdgPnmjfl89ke7ugILdjQxqnb1ahwCkql1W0jELN06zIIUIoO/BB47kxVStN41/Z6MAvv2U6rZ0ib3+pG/056G7+rg8SW0qyoLSaXWx2MPAMp3tw/PEnsFSuFcXo5FdyyTU4pxq8aQSuKonwScooNMQudDCrZHQnU16KoDQm2+jKjzehuUVKRINNX2KuaQRcOQ8/+m2C/XyyH9LYWDwTb7oMKKIKtZOPZkXVKDEKVSGVN2SQ/zHOoZrsk3Doas6OAc2xcCV/Auh5DWoXlXV5FgjcSt/unZgs/HvSER1/eTMXJtHqmvUKkSBwqeBRCFa0hDcstLfDJENhZTGWThcDRI8MBchnFKqJSyI9kFa7syX3E9FZ2WwNXw62p2liTQ9Ah/C+pxI726fsdzQxC2HO6OmA=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR13MB4733.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(38100700002)(6512007)(498600001)(83380400001)(8676002)(122000001)(71200400001)(5660300002)(2906002)(86362001)(4326008)(26005)(91956017)(66446008)(76116006)(66556008)(186003)(36756003)(64756008)(66476007)(2616005)(6506007)(66946007)(6486002)(6916009)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?NW9ScmNyVnpjd29zMnZ4Ty9rRTc2ZXpuMzBQWnlBd0pRc2NHdkhIYVZNbFg3?=
+ =?utf-8?B?QXNZVTVxUkthSTBTSnBkQXc1cmhpUWliSjZGQXR3ejI5ZEFpL0Y0UGZrVVhq?=
+ =?utf-8?B?dnBTQ2tBSTUyL01uREVIOHNpQU41eXBtLyt1QWkya0VjaWVkdGVJdjh6a1pz?=
+ =?utf-8?B?SCt2eGNmY2hlUGJIL3RPTEZuZDQzWmdTRTluamdoV29jbnR5S1h2cWp6b1lX?=
+ =?utf-8?B?ekY3NnRMZW1TRE9PbEh6dUtJdGFyQlRuTG8yeDBZNnNwdzVDcjJXMHBJSDM1?=
+ =?utf-8?B?cWdXN0RFS0wwOWtScmNKU0o2cjV2OEpoUGpSSnRXS21hcE5YQUdHcmFvRUw1?=
+ =?utf-8?B?bDhMZUh5aTJzeEUwSTJENmttRXlaOVA0WFpoRmFTdVE1U1ZVNm92VlVvNEE4?=
+ =?utf-8?B?b3czUWFEUzdvNUcrSUNuMTBWU3YzTlBMeGN1QVJ1RGEvUHVBTlgrVWJPeDdF?=
+ =?utf-8?B?MjVveU5MdSs4REt5VjVsUVR2SXVjSG1zSDdTaVVzeG01UHBwN2RaSUV6RkJK?=
+ =?utf-8?B?U2RweThrYTdpb1RZSDNxMU9UQ3NiTHRpWlE2MVJYVWEvV0haakZrSC9ER2Ja?=
+ =?utf-8?B?cXZNdkVieGhTSTRlcjd2R0xmRE9XYm8vYWUzMU1RTFl6a2J2LytsMzlmNHBI?=
+ =?utf-8?B?bkJSRzVCUjVBWkNTa2hjSndjaTBOOFUxazVJb0w3dm9NSHY4WTFoVFU3cVVI?=
+ =?utf-8?B?UFUydDZnY2VHc2pTTmx1RzhhbFp3R3lrWC9PenBzZ1BXNWd6bG9SMUVUWFdt?=
+ =?utf-8?B?QUZ4SW41STRQQ3Y1TTdudGlFeGxINXIyd2RIZWFQOU1XNU9WbnM5OGpLOS94?=
+ =?utf-8?B?cnJHblhNbE55QlRadklkR1hpN2JPK3U1V3FWZFh3eFBYUnVoY3lxQmVjM0sx?=
+ =?utf-8?B?YVlUaTF1RHN4SFNuVEVJVUdEbmtNOS8rdWNJa3M1Tk9VZWQ5cFJrc3RwNUsv?=
+ =?utf-8?B?d3hCU2JLRWI0R01Ic1g2c2xadWVvUW1VZHRSL3VQajNBUURkNGMvUENCcHFD?=
+ =?utf-8?B?RmJ4MjhtdGhvOGZucGxnS2l4TXMyY1h1OWR2dXplcHNqa0lCeUlEcGFKSGpq?=
+ =?utf-8?B?amRtUEtFdW1OdXhLcEhUbWU2UEt2b1NMem5CaWV3YjdrMDdRdlU1UXpBZ20z?=
+ =?utf-8?B?U2czRU1QUm5QdG9GOGc4S0taeHQ4b0ZNZE1Mc0ZzZlBSVk9WQzBKaDEzdFI0?=
+ =?utf-8?B?QWlUYVBkOGdRcUZzRVVmZDVjWDBaUjI0WC8ySVFNQWpINXFWRkxucW5vaWZR?=
+ =?utf-8?B?ZXRIeWRTak1CSk1veUxteFVPakZTbVVIbnk1eXo0S0ZSUXN4Qi9ya0RNTDRs?=
+ =?utf-8?B?TlBQdXVqbVEyVmFLZWYvWk5yTWlUWVJxdVV5cmgwdWtjaTdlMjFyVHR0ZGFO?=
+ =?utf-8?B?Z3ZpSTI5TmV5bEFtQ0hycjFkcWhIWmxCb1djWnZNdGNaVU9kck5LUUwyMjhw?=
+ =?utf-8?B?alNsRXkxWkE4aEN1QllyQUFmVm5GQVFBN21iK2tRd05wK0FhYzdBMVBqTUZ3?=
+ =?utf-8?B?b2hlSm9idHRKc1pOcEdaR2ZZUG00cXc5di94T2xMbEJwUVV6NTMwSDlhZWlw?=
+ =?utf-8?B?NW1vNmFrc3dLUlFkTnRRWGdqY1JjNXJEZFlLV0w3c2FwTDAwS1BoY2tLbGZL?=
+ =?utf-8?B?ZUQwY24wN1lud1ZzN0Z5ZTVBanBpNGtHWnRQMTRsZWFscEs1MUFIU3orUFNV?=
+ =?utf-8?B?MGkwR3cvcGJ4R21RZzVQRnRWT1RmdGJNdVNVMHlBdHNsc01jbXdEYTZlNEdQ?=
+ =?utf-8?Q?ANjsBgqjOBbu917vfpkChYm7YdDwCt/CxgOtwL8?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6E054F4A0D4F5D46BCD975379B963836@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR13MB4733.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3639529-317c-411c-6317-08d91bc2a42d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2021 19:08:24.0703
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RS07HmADTFdsBryxhHHailxAR5JKLTL9azDk8/5JIqpkPI16QUEBSKan9GcXDM2cGfE+U8ZhfIV4hEV5gOwVHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR13MB4049
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hey.
-
-On 5/19/21 3:15 PM, Olga Kornievskaia wrote:
-> On Sun, May 16, 2021 at 11:18 PM Michael Wakabayashi
-> <mwakabayashi@vmware.com> wrote:
->>
->> Hi,
->>
->> We're seeing what looks like an NFSv4 issue.
->>
->> Mounting an NFS server that is down (ping to this NFS server's IP address does not respond) will block _all_ other NFS mount attempts even if the NFS servers are available and working properly (these subsequent mounts hang).
->>
->> If I kill the NFS mount process that's trying to mount the dead NFS server, the NFS mounts that were blocked will immediately unblock and mount successfully, which suggests the first mount command is blocking the other mount commands.
->>
->>
->> I verified this behavior using a newly built mount.nfs command from the recent nfs-utils 2.5.3 package installed on a recent version of Ubuntu Cloud Image 21.04:
->> * https://sourceforge.net/projects/nfs/files/nfs-utils/2.5.3/
->> * https://cloud-images.ubuntu.com/releases/hirsute/release-20210513/ubuntu-21.04-server-cloudimg-amd64.ova
->>
->>
->> The reason this looks like it is specific to NFSv4 is from the following output showing "vers=4.2":
->>> $ strace /sbin/mount.nfs <unreachable-IP-address>:/path /tmp/mnt
->>> [ ... cut ... ]
->>> mount("<unreadhable-IP-address>:/path", "/tmp/mnt", "nfs", 0, "vers=4.2,addr=<unreachable-IP-address>,clien"...^C^Z
->>
->> Also, if I try the same mount.nfs commands but specifying NFSv3, the mount to the dead NFS server hangs, but the mounts to the operational NFS servers do not block and mount successfully; this bug doesn't happen when using NFSv3.
->>
->>
->> We reported this issue under util-linux here:
->> https://github.com/karelzak/util-linux/issues/1309
->> [mounting nfs server which is down blocks all other nfs mounts on same machine #1309]
->>
->> I also found an older bug on this mailing list that had similar symptoms (but could not tell if it was the same problem or not):
->> https://patchwork.kernel.org/project/linux-nfs/patch/87vaori26c.fsf@notabene.neil.brown.name/
->> [[PATCH/RFC] NFSv4: don't let hanging mounts block other mounts]
->>
->> Thanks, Mike
-> 
-> Hi Mike,
-> 
-> This is not a helpful reply but I was curious if I could reproduce
-> your issue but was not successful. I'm able to initiate a mount to an
-> unreachable-IP-address which hangs and then do another mount to an
-> existing server without issues. Ubuntu 21.04 seems to be 5.11 based so
-> I tried upstream 5.11 and I tried the latest upstream nfs-utils
-> (instead of what my distro has which was an older version).
-> 
-> To debug, perhaps get an output of the nfs4 and sunrpc tracepoints.
-> Or also get output from dmesg after doing “echo t >
-> /proc/sysrq-trigger” to see where the mounts are hanging.
-> 
-It looks like Mike is correct... The first process (mount 1.1.1.1:/mnt) is
-hung in trying the connection:
-
-PID: 3394   TASK: ffff9da8c42734c0  CPU: 0   COMMAND: "mount.nfs"
- #0 [ffffb44780f638c8] __schedule at ffffffff82d7959d
- #1 [ffffb44780f63950] schedule at ffffffff82d79f2b
- #2 [ffffb44780f63968] rpc_wait_bit_killable at ffffffffc05265ce [sunrpc]
- #3 [ffffb44780f63980] __wait_on_bit at ffffffff82d7a4ba
- #4 [ffffb44780f639b8] out_of_line_wait_on_bit at ffffffff82d7a5a6
- #5 [ffffb44780f63a00] __rpc_execute at ffffffffc052fc8a [sunrpc]
- #6 [ffffb44780f63a48] rpc_execute at ffffffffc05305a2 [sunrpc]
- #7 [ffffb44780f63a68] rpc_run_task at ffffffffc05164e4 [sunrpc]
- #8 [ffffb44780f63aa8] rpc_call_sync at ffffffffc0516573 [sunrpc]
- #9 [ffffb44780f63b00] rpc_create_xprt at ffffffffc051672e [sunrpc]
-#10 [ffffb44780f63b40] rpc_create at ffffffffc0516881 [sunrpc]
-#11 [ffffb44780f63be8] nfs_create_rpc_client at ffffffffc0972319 [nfs]
-#12 [ffffb44780f63c80] nfs4_init_client at ffffffffc0a17882 [nfsv4]
-#13 [ffffb44780f63d70] nfs4_set_client at ffffffffc0a16ef8 [nfsv4]
-#14 [ffffb44780f63de8] nfs4_create_server at ffffffffc0a188d8 [nfsv4]
-#15 [ffffb44780f63e60] nfs4_try_get_tree at ffffffffc0a0bf69 [nfsv4]
-#16 [ffffb44780f63e80] vfs_get_tree at ffffffff823b6068
-#17 [ffffb44780f63ea0] path_mount at ffffffff823e3d8f
-#18 [ffffb44780f63ef8] __x64_sys_mount at ffffffff823e45a3
-#19 [ffffb44780f63f38] do_syscall_64 at ffffffff82d6aa50
-#20 [ffffb44780f63f50] entry_SYSCALL_64_after_hwframe at ffffffff82e0007c
-
-The second mount is hung up in nfs_match_client()/nfs_wait_client_init_complete
-waiting for the first process to compile 
-nfs_match_client:
-
-       /* If a client is still initializing then we need to wait */
-        if (clp->cl_cons_state > NFS_CS_READY) {
-            refcount_inc(&clp->cl_count);
-            spin_unlock(&nn->nfs_client_lock);
-            error = nfs_wait_client_init_complete(clp);
-            nfs_put_client(clp);
-            spin_lock(&nn->nfs_client_lock);
-            if (error < 0)
-                return ERR_PTR(error);
-            goto again;
-        }
-
-This code came in with commit c156618e15101 which fixed
-a deadlock in nfs client initialization. 
-
-steved.
-
+T24gVGh1LCAyMDIxLTA1LTIwIGF0IDE0OjI5IC0wNDAwLCBKLiBCcnVjZSBGaWVsZHMgd3JvdGU6
+DQo+IE9uIFRodSwgTWF5IDIwLCAyMDIxIGF0IDEyOjM4OjU5UE0gLTA0MDAsIHRyb25kbXlAa2Vy
+bmVsLm9yZ8Kgd3JvdGU6DQo+ID4gRnJvbTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWtsZWJ1
+c3RAaGFtbWVyc3BhY2UuY29tPg0KPiA+IA0KPiA+IElmIHdlJ3JlIHVuYWJsZSB0byBpbW1lZGlh
+dGVseSByZWNvdmVyIGFsbCBsb2NrcyBiZWNhdXNlIHRoZSBzZXJ2ZXINCj4gPiBpcw0KPiA+IHVu
+YWJsZSB0byBpbW1lZGlhdGVseSBzZXJ2aWNlIG91ciByZWNsYWltIGNhbGxzLCB0aGVuIHdlIHdh
+bnQgdG8NCj4gPiByZXRyeQ0KPiA+IGFmdGVyIHdlJ3ZlIGZpbmlzaGVkIHNlcnZpY2luZyBhbGwg
+dGhlIG90aGVyIGFzeW5jaHJvbm91cw0KPiA+IGRlbGVnYXRpb24NCj4gPiByZXR1cm5zIG9uIG91
+ciBxdWV1ZS4NCj4gDQo+IFNvLCB0aGVyZSdzIGEgc2l0dWF0aW9uIHdoZXJlIHRoZSBzZXJ2ZXIg
+Y2FuJ3Qgc2VydmljZSBhIHJlY2xhaW0NCj4gdW50aWwNCj4gc29tZSBvdGhlciBkZWxlZ2F0aW9u
+IGlzIHJldHVybmVkP8KgIEknbSBub3Qgc2VlaW5nIGhvdyB0aGF0IGhhcHBlbnMuDQo+IA0KDQpJ
+IGNhbiBhbmQgSSBkby4uLiBwTkZTIGNhbiBiZSBjb21wbGljYXRlZC4uLg0KDQo+IC0tYi4NCj4g
+DQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWtsZWJ1
+c3RAaGFtbWVyc3BhY2UuY29tPg0KPiA+IC0tLQ0KPiA+IMKgZnMvbmZzL2RlbGVnYXRpb24uYyB8
+IDcxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tDQo+ID4gLS0tLQ0K
+PiA+IMKgZnMvbmZzL2RlbGVnYXRpb24uaCB8wqAgMSArDQo+ID4gwqBmcy9uZnMvbmZzNF9mcy5o
+wqDCoMKgIHzCoCAxICsNCj4gPiDCoDMgZmlsZXMgY2hhbmdlZCwgNTggaW5zZXJ0aW9ucygrKSwg
+MTUgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2ZzL25mcy9kZWxlZ2F0aW9u
+LmMgYi9mcy9uZnMvZGVsZWdhdGlvbi5jDQo+ID4gaW5kZXggZTZlYzZmMDlhYzZlLi43YzQ1YWMz
+YzNiMGIgMTAwNjQ0DQo+ID4gLS0tIGEvZnMvbmZzL2RlbGVnYXRpb24uYw0KPiA+ICsrKyBiL2Zz
+L25mcy9kZWxlZ2F0aW9uLmMNCj4gPiBAQCAtNzUsNiArNzUsMTMgQEAgdm9pZCBuZnNfbWFya19k
+ZWxlZ2F0aW9uX3JlZmVyZW5jZWQoc3RydWN0DQo+ID4gbmZzX2RlbGVnYXRpb24gKmRlbGVnYXRp
+b24pDQo+ID4gwqDCoMKgwqDCoMKgwqDCoHNldF9iaXQoTkZTX0RFTEVHQVRJT05fUkVGRVJFTkNF
+RCwgJmRlbGVnYXRpb24tPmZsYWdzKTsNCj4gPiDCoH0NCj4gPiDCoA0KPiA+ICtzdGF0aWMgdm9p
+ZCBuZnNfbWFya19yZXR1cm5fZGVsZWdhdGlvbihzdHJ1Y3QgbmZzX3NlcnZlciAqc2VydmVyLA0K
+PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3QgbmZzX2RlbGVnYXRpb24NCj4gPiAqZGVsZWdh
+dGlvbikNCj4gPiArew0KPiA+ICvCoMKgwqDCoMKgwqDCoHNldF9iaXQoTkZTX0RFTEVHQVRJT05f
+UkVUVVJOLCAmZGVsZWdhdGlvbi0+ZmxhZ3MpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoHNldF9iaXQo
+TkZTNENMTlRfREVMRUdSRVRVUk4sICZzZXJ2ZXItPm5mc19jbGllbnQtDQo+ID4gPmNsX3N0YXRl
+KTsNCj4gPiArfQ0KPiA+ICsNCj4gPiDCoHN0YXRpYyBib29sDQo+ID4gwqBuZnM0X2lzX3ZhbGlk
+X2RlbGVnYXRpb24oY29uc3Qgc3RydWN0IG5mc19kZWxlZ2F0aW9uICpkZWxlZ2F0aW9uLA0KPiA+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZm1vZGVfdCBmbGFncykNCj4gPiBAQCAt
+MjkzLDYgKzMwMCw3IEBAIG5mc19zdGFydF9kZWxlZ2F0aW9uX3JldHVybl9sb2NrZWQoc3RydWN0
+DQo+ID4gbmZzX2lub2RlICpuZnNpKQ0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgZ290byBvdXQ7DQo+ID4gwqDCoMKgwqDCoMKgwqDCoHNwaW5fbG9jaygmZGVsZWdhdGlvbi0+
+bG9jayk7DQo+ID4gwqDCoMKgwqDCoMKgwqDCoGlmICghdGVzdF9hbmRfc2V0X2JpdChORlNfREVM
+RUdBVElPTl9SRVRVUk5JTkcsDQo+ID4gJmRlbGVnYXRpb24tPmZsYWdzKSkgew0KPiA+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjbGVhcl9iaXQoTkZTX0RFTEVHQVRJT05fUkVUVVJO
+X0RFTEFZRUQsDQo+ID4gJmRlbGVnYXRpb24tPmZsYWdzKTsNCj4gPiDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoC8qIFJlZmNvdW50IG1hdGNoZWQgaW4gbmZzX2VuZF9kZWxlZ2F0aW9u
+X3JldHVybigpDQo+ID4gKi8NCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJl
+dCA9IG5mc19nZXRfZGVsZWdhdGlvbihkZWxlZ2F0aW9uKTsNCj4gPiDCoMKgwqDCoMKgwqDCoMKg
+fQ0KPiA+IEBAIC0zMTQsMTYgKzMyMiwxNyBAQCBuZnNfc3RhcnRfZGVsZWdhdGlvbl9yZXR1cm4o
+c3RydWN0IG5mc19pbm9kZQ0KPiA+ICpuZnNpKQ0KPiA+IMKgwqDCoMKgwqDCoMKgwqByZXR1cm4g
+ZGVsZWdhdGlvbjsNCj4gPiDCoH0NCj4gPiDCoA0KPiA+IC1zdGF0aWMgdm9pZA0KPiA+IC1uZnNf
+YWJvcnRfZGVsZWdhdGlvbl9yZXR1cm4oc3RydWN0IG5mc19kZWxlZ2F0aW9uICpkZWxlZ2F0aW9u
+LA0KPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgbmZzX2NsaWVudCAq
+Y2xwKQ0KPiA+ICtzdGF0aWMgdm9pZCBuZnNfYWJvcnRfZGVsZWdhdGlvbl9yZXR1cm4oc3RydWN0
+IG5mc19kZWxlZ2F0aW9uDQo+ID4gKmRlbGVnYXRpb24sDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoHN0cnVjdCBuZnNfY2xpZW50ICpjbHAsIGludA0KPiA+IGVycikNCj4gPiDCoHsNCj4gPiDC
+oA0KPiA+IMKgwqDCoMKgwqDCoMKgwqBzcGluX2xvY2soJmRlbGVnYXRpb24tPmxvY2spOw0KPiA+
+IMKgwqDCoMKgwqDCoMKgwqBjbGVhcl9iaXQoTkZTX0RFTEVHQVRJT05fUkVUVVJOSU5HLCAmZGVs
+ZWdhdGlvbi0+ZmxhZ3MpOw0KPiA+IC3CoMKgwqDCoMKgwqDCoHNldF9iaXQoTkZTX0RFTEVHQVRJ
+T05fUkVUVVJOLCAmZGVsZWdhdGlvbi0+ZmxhZ3MpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoGlmIChl
+cnIgPT0gLUVBR0FJTikgew0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBzZXRf
+Yml0KE5GU19ERUxFR0FUSU9OX1JFVFVSTl9ERUxBWUVELCAmZGVsZWdhdGlvbi0NCj4gPiA+Zmxh
+Z3MpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBzZXRfYml0KE5GUzRDTE5U
+X0RFTEVHUkVUVVJOX0RFTEFZRUQsICZjbHAtDQo+ID4gPmNsX3N0YXRlKTsNCj4gPiArwqDCoMKg
+wqDCoMKgwqB9DQo+ID4gwqDCoMKgwqDCoMKgwqDCoHNwaW5fdW5sb2NrKCZkZWxlZ2F0aW9uLT5s
+b2NrKTsNCj4gPiAtwqDCoMKgwqDCoMKgwqBzZXRfYml0KE5GUzRDTE5UX0RFTEVHUkVUVVJOLCAm
+Y2xwLT5jbF9zdGF0ZSk7DQo+ID4gwqB9DQo+ID4gwqANCj4gPiDCoHN0YXRpYyBzdHJ1Y3QgbmZz
+X2RlbGVnYXRpb24gKg0KPiA+IEBAIC01MzksNyArNTQ4LDcgQEAgc3RhdGljIGludCBuZnNfZW5k
+X2RlbGVnYXRpb25fcmV0dXJuKHN0cnVjdA0KPiA+IGlub2RlICppbm9kZSwgc3RydWN0IG5mc19k
+ZWxlZ2F0aW9uDQo+ID4gwqDCoMKgwqDCoMKgwqDCoH0gd2hpbGUgKGVyciA9PSAwKTsNCj4gPiDC
+oA0KPiA+IMKgwqDCoMKgwqDCoMKgwqBpZiAoZXJyKSB7DQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoG5mc19hYm9ydF9kZWxlZ2F0aW9uX3JldHVybihkZWxlZ2F0aW9uLCBjbHAp
+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBuZnNfYWJvcnRfZGVsZWdhdGlv
+bl9yZXR1cm4oZGVsZWdhdGlvbiwgY2xwLCBlcnIpOw0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgZ290byBvdXQ7DQo+ID4gwqDCoMKgwqDCoMKgwqDCoH0NCj4gPiDCoA0KPiA+
+IEBAIC01NjgsNiArNTc3LDcgQEAgc3RhdGljIGJvb2wgbmZzX2RlbGVnYXRpb25fbmVlZF9yZXR1
+cm4oc3RydWN0DQo+ID4gbmZzX2RlbGVnYXRpb24gKmRlbGVnYXRpb24pDQo+ID4gwqDCoMKgwqDC
+oMKgwqDCoGlmIChyZXQpDQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjbGVh
+cl9iaXQoTkZTX0RFTEVHQVRJT05fUkVUVVJOX0lGX0NMT1NFRCwNCj4gPiAmZGVsZWdhdGlvbi0+
+ZmxhZ3MpOw0KPiA+IMKgwqDCoMKgwqDCoMKgwqBpZiAodGVzdF9iaXQoTkZTX0RFTEVHQVRJT05f
+UkVUVVJOSU5HLCAmZGVsZWdhdGlvbi0+ZmxhZ3MpDQo+ID4gfHwNCj4gPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgdGVzdF9iaXQoTkZTX0RFTEVHQVRJT05fUkVUVVJOX0RFTEFZRUQsICZkZWxlZ2F0
+aW9uLQ0KPiA+ID5mbGFncykgfHwNCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHRlc3RfYml0
+KE5GU19ERUxFR0FUSU9OX1JFVk9LRUQsICZkZWxlZ2F0aW9uLT5mbGFncykpDQo+ID4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXQgPSBmYWxzZTsNCj4gPiDCoA0KPiA+IEBAIC02
+NDcsNiArNjU3LDM4IEBAIHN0YXRpYyBpbnQNCj4gPiBuZnNfc2VydmVyX3JldHVybl9tYXJrZWRf
+ZGVsZWdhdGlvbnMoc3RydWN0IG5mc19zZXJ2ZXIgKnNlcnZlciwNCj4gPiDCoMKgwqDCoMKgwqDC
+oMKgcmV0dXJuIGVycjsNCj4gPiDCoH0NCj4gPiDCoA0KPiA+ICtzdGF0aWMgYm9vbCBuZnNfc2Vy
+dmVyX2NsZWFyX2RlbGF5ZWRfZGVsZWdhdGlvbnMoc3RydWN0IG5mc19zZXJ2ZXINCj4gPiAqc2Vy
+dmVyKQ0KPiA+ICt7DQo+ID4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IG5mc19kZWxlZ2F0aW9uICpk
+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoGJvb2wgcmV0ID0gZmFsc2U7DQo+ID4gKw0KPiA+ICvCoMKg
+wqDCoMKgwqDCoGxpc3RfZm9yX2VhY2hfZW50cnlfcmN1IChkLCAmc2VydmVyLT5kZWxlZ2F0aW9u
+cywNCj4gPiBzdXBlcl9saXN0KSB7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oGlmICghdGVzdF9iaXQoTkZTX0RFTEVHQVRJT05fUkVUVVJOX0RFTEFZRUQsICZkLQ0KPiA+ID5m
+bGFncykpDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqBjb250aW51ZTsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbmZzX21hcmtf
+cmV0dXJuX2RlbGVnYXRpb24oc2VydmVyLCBkKTsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgY2xlYXJfYml0KE5GU19ERUxFR0FUSU9OX1JFVFVSTl9ERUxBWUVELCAmZC0NCj4g
+PiA+ZmxhZ3MpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXQgPSB0cnVl
+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoH0NCj4gPiArwqDCoMKgwqDCoMKgwqByZXR1cm4gcmV0Ow0K
+PiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgYm9vbCBuZnNfY2xpZW50X2NsZWFyX2RlbGF5ZWRf
+ZGVsZWdhdGlvbnMoc3RydWN0IG5mc19jbGllbnQNCj4gPiAqY2xwKQ0KPiA+ICt7DQo+ID4gK8Kg
+wqDCoMKgwqDCoMKgc3RydWN0IG5mc19zZXJ2ZXIgKnNlcnZlcjsNCj4gPiArwqDCoMKgwqDCoMKg
+wqBib29sIHJldCA9IGZhbHNlOw0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAoIXRlc3Rf
+YW5kX2NsZWFyX2JpdChORlM0Q0xOVF9ERUxFR1JFVFVSTl9ERUxBWUVELCAmY2xwLQ0KPiA+ID5j
+bF9zdGF0ZSkpDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGdvdG8gb3V0Ow0K
+PiA+ICvCoMKgwqDCoMKgwqDCoHJjdV9yZWFkX2xvY2soKTsNCj4gPiArwqDCoMKgwqDCoMKgwqBs
+aXN0X2Zvcl9lYWNoX2VudHJ5X3JjdSAoc2VydmVyLCAmY2xwLT5jbF9zdXBlcmJsb2NrcywNCj4g
+PiBjbGllbnRfbGluaykgew0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAo
+bmZzX3NlcnZlcl9jbGVhcl9kZWxheWVkX2RlbGVnYXRpb25zKHNlcnZlcikpDQo+ID4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXQgPSB0cnVlOw0KPiA+
+ICvCoMKgwqDCoMKgwqDCoH0NCj4gPiArwqDCoMKgwqDCoMKgwqByY3VfcmVhZF91bmxvY2soKTsN
+Cj4gPiArb3V0Og0KPiA+ICvCoMKgwqDCoMKgwqDCoHJldHVybiByZXQ7DQo+ID4gK30NCj4gPiAr
+DQo+ID4gwqAvKioNCj4gPiDCoCAqIG5mc19jbGllbnRfcmV0dXJuX21hcmtlZF9kZWxlZ2F0aW9u
+cyAtIHJldHVybiBwcmV2aW91c2x5IG1hcmtlZA0KPiA+IGRlbGVnYXRpb25zDQo+ID4gwqAgKiBA
+Y2xwOiBuZnNfY2xpZW50IHRvIHByb2Nlc3MNCj4gPiBAQCAtNjU5LDggKzcwMSwxNCBAQCBzdGF0
+aWMgaW50DQo+ID4gbmZzX3NlcnZlcl9yZXR1cm5fbWFya2VkX2RlbGVnYXRpb25zKHN0cnVjdCBu
+ZnNfc2VydmVyICpzZXJ2ZXIsDQo+ID4gwqAgKi8NCj4gPiDCoGludCBuZnNfY2xpZW50X3JldHVy
+bl9tYXJrZWRfZGVsZWdhdGlvbnMoc3RydWN0IG5mc19jbGllbnQgKmNscCkNCj4gPiDCoHsNCj4g
+PiAtwqDCoMKgwqDCoMKgwqByZXR1cm4gbmZzX2NsaWVudF9mb3JfZWFjaF9zZXJ2ZXIoY2xwLA0K
+PiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbmZzX3Nl
+cnZlcl9yZXR1cm5fbWFya2VkX2RlbGVnYXRpb25zLA0KPiA+IE5VTEwpOw0KPiA+ICvCoMKgwqDC
+oMKgwqDCoGludCBlcnIgPSBuZnNfY2xpZW50X2Zvcl9lYWNoX3NlcnZlcigNCj4gPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2xwLCBuZnNfc2VydmVyX3JldHVybl9tYXJrZWRfZGVs
+ZWdhdGlvbnMsIE5VTEwpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoGlmIChlcnIpDQo+ID4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiBlcnI7DQo+ID4gK8KgwqDCoMKgwqDCoMKg
+LyogSWYgYSByZXR1cm4gd2FzIGRlbGF5ZWQsIHNsZWVwIHRvIHByZXZlbnQgaGFyZCBsb29waW5n
+DQo+ID4gKi8NCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAobmZzX2NsaWVudF9jbGVhcl9kZWxheWVk
+X2RlbGVnYXRpb25zKGNscCkpDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHNz
+bGVlcCgxKTsNCj4gPiArwqDCoMKgwqDCoMKgwqByZXR1cm4gMDsNCj4gPiDCoH0NCj4gPiDCoA0K
+PiA+IMKgLyoqDQo+ID4gQEAgLTc3NSwxMyArODIzLDYgQEAgc3RhdGljIHZvaWQNCj4gPiBuZnNf
+bWFya19yZXR1cm5faWZfY2xvc2VkX2RlbGVnYXRpb24oc3RydWN0IG5mc19zZXJ2ZXIgKnNlcnZl
+ciwNCj4gPiDCoMKgwqDCoMKgwqDCoMKgc2V0X2JpdChORlM0Q0xOVF9ERUxFR1JFVFVSTiwgJnNl
+cnZlci0+bmZzX2NsaWVudC0NCj4gPiA+Y2xfc3RhdGUpOw0KPiA+IMKgfQ0KPiA+IMKgDQo+ID4g
+LXN0YXRpYyB2b2lkIG5mc19tYXJrX3JldHVybl9kZWxlZ2F0aW9uKHN0cnVjdCBuZnNfc2VydmVy
+ICpzZXJ2ZXIsDQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBuZnNf
+ZGVsZWdhdGlvbiAqZGVsZWdhdGlvbikNCj4gPiAtew0KPiA+IC3CoMKgwqDCoMKgwqDCoHNldF9i
+aXQoTkZTX0RFTEVHQVRJT05fUkVUVVJOLCAmZGVsZWdhdGlvbi0+ZmxhZ3MpOw0KPiA+IC3CoMKg
+wqDCoMKgwqDCoHNldF9iaXQoTkZTNENMTlRfREVMRUdSRVRVUk4sICZzZXJ2ZXItPm5mc19jbGll
+bnQtDQo+ID4gPmNsX3N0YXRlKTsNCj4gPiAtfQ0KPiA+IC0NCj4gPiDCoHN0YXRpYyBib29sIG5m
+c19zZXJ2ZXJfbWFya19yZXR1cm5fYWxsX2RlbGVnYXRpb25zKHN0cnVjdA0KPiA+IG5mc19zZXJ2
+ZXIgKnNlcnZlcikNCj4gPiDCoHsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IG5mc19kZWxl
+Z2F0aW9uICpkZWxlZ2F0aW9uOw0KPiA+IGRpZmYgLS1naXQgYS9mcy9uZnMvZGVsZWdhdGlvbi5o
+IGIvZnMvbmZzL2RlbGVnYXRpb24uaA0KPiA+IGluZGV4IGMxOWI0ZmQyMDc4MS4uMWMzNzg5OTJi
+N2MwIDEwMDY0NA0KPiA+IC0tLSBhL2ZzL25mcy9kZWxlZ2F0aW9uLmgNCj4gPiArKysgYi9mcy9u
+ZnMvZGVsZWdhdGlvbi5oDQo+ID4gQEAgLTM2LDYgKzM2LDcgQEAgZW51bSB7DQo+ID4gwqDCoMKg
+wqDCoMKgwqDCoE5GU19ERUxFR0FUSU9OX1JFVk9LRUQsDQo+ID4gwqDCoMKgwqDCoMKgwqDCoE5G
+U19ERUxFR0FUSU9OX1RFU1RfRVhQSVJFRCwNCj4gPiDCoMKgwqDCoMKgwqDCoMKgTkZTX0RFTEVH
+QVRJT05fSU5PREVfRlJFRUlORywNCj4gPiArwqDCoMKgwqDCoMKgwqBORlNfREVMRUdBVElPTl9S
+RVRVUk5fREVMQVlFRCwNCj4gPiDCoH07DQo+ID4gwqANCj4gPiDCoGludCBuZnNfaW5vZGVfc2V0
+X2RlbGVnYXRpb24oc3RydWN0IGlub2RlICppbm9kZSwgY29uc3Qgc3RydWN0DQo+ID4gY3JlZCAq
+Y3JlZCwNCj4gPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL25mczRfZnMuaCBiL2ZzL25mcy9uZnM0X2Zz
+LmgNCj4gPiBpbmRleCAwNjVjYjA0MjIyYTEuLjRjNDQzMjJjMjY0MyAxMDA2NDQNCj4gPiAtLS0g
+YS9mcy9uZnMvbmZzNF9mcy5oDQo+ID4gKysrIGIvZnMvbmZzL25mczRfZnMuaA0KPiA+IEBAIC00
+NSw2ICs0NSw3IEBAIGVudW0gbmZzNF9jbGllbnRfc3RhdGUgew0KPiA+IMKgwqDCoMKgwqDCoMKg
+wqBORlM0Q0xOVF9SRUNBTExfUlVOTklORywNCj4gPiDCoMKgwqDCoMKgwqDCoMKgTkZTNENMTlRf
+UkVDQUxMX0FOWV9MQVlPVVRfUkVBRCwNCj4gPiDCoMKgwqDCoMKgwqDCoMKgTkZTNENMTlRfUkVD
+QUxMX0FOWV9MQVlPVVRfUlcsDQo+ID4gK8KgwqDCoMKgwqDCoMKgTkZTNENMTlRfREVMRUdSRVRV
+Uk5fREVMQVlFRCwNCj4gPiDCoH07DQo+ID4gwqANCj4gPiDCoCNkZWZpbmUgTkZTNF9SRU5FV19U
+SU1FT1VUwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAweDAxDQo+ID4gLS0gDQo+ID4gMi4zMS4x
+DQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhh
+bW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
