@@ -2,110 +2,287 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E8E738B889
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 May 2021 22:39:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C54138B893
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 May 2021 22:47:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234541AbhETUkb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 20 May 2021 16:40:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40034 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237358AbhETUkb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 20 May 2021 16:40:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 446BEABB1;
-        Thu, 20 May 2021 20:39:07 +0000 (UTC)
-Date:   Thu, 20 May 2021 22:39:05 +0200
-From:   Petr Vorel <pvorel@suse.cz>
-To:     Steve Dickson <SteveD@redhat.com>
-Cc:     NeilBrown <neilb@suse.de>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Alexey Kodanev <alexey.kodanev@oracle.com>
-Subject: Re: [PATCH/RFC v2 nfs-utils] Fix NFSv4 export of tmpfs filesystems.
-Message-ID: <YKbI6Sj1QuMq3U4H@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20210422191803.31511-1-pvorel@suse.cz>
- <20210422202334.GB25415@fieldses.org>
- <YILQip3nAxhpXP9+@pevik>
- <162035212343.24322.12361160756597283121@noble.neil.brown.name>
- <162122673178.19062.96081788305923933@noble.neil.brown.name>
- <289c5819-917a-39a7-9aa4-2a27ae7248c0@RedHat.com>
+        id S229556AbhETUsn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 20 May 2021 16:48:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229519AbhETUsm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 May 2021 16:48:42 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B55EC061574
+        for <linux-nfs@vger.kernel.org>; Thu, 20 May 2021 13:47:20 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id DC28A64B9; Thu, 20 May 2021 16:47:19 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org DC28A64B9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1621543639;
+        bh=/b4c7sRN8d6Ihrd6N+FuW1cnNOjt1+j5HMW7YDhcQh4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e0B06wm0b2jdSsJP8BxZjAm8Wb5to7Hd5FmUhvcqkb1kFAMKTFwLjrZhqX2LWFO1z
+         gZ3Wzsb4EaD2LKSVZQLmYAeW1NbP0zsKnFQ8e0rngQNEYIpdIjv3oF8HCBYzGd1gCK
+         IUCT5xBrVu8Va+lAqCc3/dljtGLNlwGpmQV/2VN8=
+Date:   Thu, 20 May 2021 16:47:19 -0400
+From:   "bfields@fieldses.org" <bfields@fieldses.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 1/4] NFSv4: Fix delegation return in cases where we have
+ to retry
+Message-ID: <20210520204719.GB10415@fieldses.org>
+References: <20210520163902.215745-1-trondmy@kernel.org>
+ <20210520163902.215745-2-trondmy@kernel.org>
+ <20210520182901.GA8759@fieldses.org>
+ <2b24ca81205cca400910bbbdc29d54aafccefe00.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <289c5819-917a-39a7-9aa4-2a27ae7248c0@RedHat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2b24ca81205cca400910bbbdc29d54aafccefe00.camel@hammerspace.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Steve, all,
+On Thu, May 20, 2021 at 07:08:24PM +0000, Trond Myklebust wrote:
+> On Thu, 2021-05-20 at 14:29 -0400, J. Bruce Fields wrote:
+> > On Thu, May 20, 2021 at 12:38:59PM -0400, trondmy@kernel.org wrote:
+> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > 
+> > > If we're unable to immediately recover all locks because the server
+> > > is
+> > > unable to immediately service our reclaim calls, then we want to
+> > > retry
+> > > after we've finished servicing all the other asynchronous
+> > > delegation
+> > > returns on our queue.
+> > 
+> > So, there's a situation where the server can't service a reclaim
+> > until
+> > some other delegation is returned?  I'm not seeing how that happens.
+> > 
+> 
+> I can and I do... pNFS can be complicated...
 
-> Hey!
+I don't doubt you, but does everyone get this but me?
 
-> On 5/17/21 12:45 AM, NeilBrown wrote:
+Is it too complicated to explain?
 
-> > Some filesystems cannot be exported without an fsid or uuid.
-> > tmpfs is the main example.
+--b.
 
-> > When mountd (or exportd) creates nfsv4 pseudo-root exports for the path
-> > leading down to an export point it exports each directory without any
-> > fsid or uuid.  If one of these directories is on tmp, that will fail.
-
-> > The net result is that exporting a subdirectory of a tmpfs filesystem
-> > will not work over NFSv4 as the parents within the filesystem cannot be
-> > exported.  It will either fail, or fall-back to NFSv3 (depending on the
-> > version of the mount.nfs program).
-
-> > To fix this we need to provide an fsid or uuid for these pseudo-root
-> > exports.  This patch does that by creating an RFC-4122 V5 compatible
-> > UUID based on an arbitrary seed and the path to the export.
-
-> > To check if an export needs a uuid, text_export() is moved from exportfs
-> > to libexport.a, modified slightly and renamed to export_test().
-> Well.... it appears you guys did not compile with the --with-systemd
-> config flag... Because if you did you would have seeing this compile error
-> the in systemd code: 
-
-You're right, I didn't :(.
-
-> /usr/bin/ld: ../support/nfs/.libs/libnfs.a(cacheio.o): in function `stat':
-> /usr/include/sys/stat.h:455: undefined reference to `etab'
-> collect2: error: ld returned 1 exit status
-> make[1]: *** [Makefile:560: nfs-server-generator] Error 1
-> make[1]: Leaving directory '/home/src/up/nfs-utils/systemd'
-> make: *** [Makefile:479: all-recursive] Error 1
-
-> It turns out the moving of export_test() in to the libexport.a
-> is causing any binary linking with libexport.a to have a 
-> global definition of struct state_paths etab;
-
-> The reason is export_test() calls qword_add(). Now qword_add()
-> does not use an etab, but the file qword_add() lives in is
-> cacheio.c which does have a extern struct state_paths etab
-> which is the reason libnfs.a(cacheio.o) is mentioned in
-> the error. At least that is what I *think* is going on... 
-> The extern came from  commit a15bd94.
-
-> Now the work around is to simply define a  
-> struct state_paths etab; in nfs-server-generator.c
-> which will not be used at least by the systemd code.
-
-> Now is that something we want continue doing... make any
-> binaries linking with libexport.a define a global etab.
-
-> It seems a little messy but the interface is not documented
-> and the alternative, moving a bunch of code around see a lot
-> more messy that simple adding one definition.
-
-+1
-
-Kind regards,
-Petr
-
-> Other than not compiling... Things looks good! ;-) 
-
-> Thoughts?
-
-> steved.
-...
+> 
+> > --b.
+> > 
+> > > 
+> > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > ---
+> > >  fs/nfs/delegation.c | 71 +++++++++++++++++++++++++++++++++++------
+> > > ----
+> > >  fs/nfs/delegation.h |  1 +
+> > >  fs/nfs/nfs4_fs.h    |  1 +
+> > >  3 files changed, 58 insertions(+), 15 deletions(-)
+> > > 
+> > > diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+> > > index e6ec6f09ac6e..7c45ac3c3b0b 100644
+> > > --- a/fs/nfs/delegation.c
+> > > +++ b/fs/nfs/delegation.c
+> > > @@ -75,6 +75,13 @@ void nfs_mark_delegation_referenced(struct
+> > > nfs_delegation *delegation)
+> > >         set_bit(NFS_DELEGATION_REFERENCED, &delegation->flags);
+> > >  }
+> > >  
+> > > +static void nfs_mark_return_delegation(struct nfs_server *server,
+> > > +                                      struct nfs_delegation
+> > > *delegation)
+> > > +{
+> > > +       set_bit(NFS_DELEGATION_RETURN, &delegation->flags);
+> > > +       set_bit(NFS4CLNT_DELEGRETURN, &server->nfs_client-
+> > > >cl_state);
+> > > +}
+> > > +
+> > >  static bool
+> > >  nfs4_is_valid_delegation(const struct nfs_delegation *delegation,
+> > >                 fmode_t flags)
+> > > @@ -293,6 +300,7 @@ nfs_start_delegation_return_locked(struct
+> > > nfs_inode *nfsi)
+> > >                 goto out;
+> > >         spin_lock(&delegation->lock);
+> > >         if (!test_and_set_bit(NFS_DELEGATION_RETURNING,
+> > > &delegation->flags)) {
+> > > +               clear_bit(NFS_DELEGATION_RETURN_DELAYED,
+> > > &delegation->flags);
+> > >                 /* Refcount matched in nfs_end_delegation_return()
+> > > */
+> > >                 ret = nfs_get_delegation(delegation);
+> > >         }
+> > > @@ -314,16 +322,17 @@ nfs_start_delegation_return(struct nfs_inode
+> > > *nfsi)
+> > >         return delegation;
+> > >  }
+> > >  
+> > > -static void
+> > > -nfs_abort_delegation_return(struct nfs_delegation *delegation,
+> > > -               struct nfs_client *clp)
+> > > +static void nfs_abort_delegation_return(struct nfs_delegation
+> > > *delegation,
+> > > +                                       struct nfs_client *clp, int
+> > > err)
+> > >  {
+> > >  
+> > >         spin_lock(&delegation->lock);
+> > >         clear_bit(NFS_DELEGATION_RETURNING, &delegation->flags);
+> > > -       set_bit(NFS_DELEGATION_RETURN, &delegation->flags);
+> > > +       if (err == -EAGAIN) {
+> > > +               set_bit(NFS_DELEGATION_RETURN_DELAYED, &delegation-
+> > > >flags);
+> > > +               set_bit(NFS4CLNT_DELEGRETURN_DELAYED, &clp-
+> > > >cl_state);
+> > > +       }
+> > >         spin_unlock(&delegation->lock);
+> > > -       set_bit(NFS4CLNT_DELEGRETURN, &clp->cl_state);
+> > >  }
+> > >  
+> > >  static struct nfs_delegation *
+> > > @@ -539,7 +548,7 @@ static int nfs_end_delegation_return(struct
+> > > inode *inode, struct nfs_delegation
+> > >         } while (err == 0);
+> > >  
+> > >         if (err) {
+> > > -               nfs_abort_delegation_return(delegation, clp);
+> > > +               nfs_abort_delegation_return(delegation, clp, err);
+> > >                 goto out;
+> > >         }
+> > >  
+> > > @@ -568,6 +577,7 @@ static bool nfs_delegation_need_return(struct
+> > > nfs_delegation *delegation)
+> > >         if (ret)
+> > >                 clear_bit(NFS_DELEGATION_RETURN_IF_CLOSED,
+> > > &delegation->flags);
+> > >         if (test_bit(NFS_DELEGATION_RETURNING, &delegation->flags)
+> > > ||
+> > > +           test_bit(NFS_DELEGATION_RETURN_DELAYED, &delegation-
+> > > >flags) ||
+> > >             test_bit(NFS_DELEGATION_REVOKED, &delegation->flags))
+> > >                 ret = false;
+> > >  
+> > > @@ -647,6 +657,38 @@ static int
+> > > nfs_server_return_marked_delegations(struct nfs_server *server,
+> > >         return err;
+> > >  }
+> > >  
+> > > +static bool nfs_server_clear_delayed_delegations(struct nfs_server
+> > > *server)
+> > > +{
+> > > +       struct nfs_delegation *d;
+> > > +       bool ret = false;
+> > > +
+> > > +       list_for_each_entry_rcu (d, &server->delegations,
+> > > super_list) {
+> > > +               if (!test_bit(NFS_DELEGATION_RETURN_DELAYED, &d-
+> > > >flags))
+> > > +                       continue;
+> > > +               nfs_mark_return_delegation(server, d);
+> > > +               clear_bit(NFS_DELEGATION_RETURN_DELAYED, &d-
+> > > >flags);
+> > > +               ret = true;
+> > > +       }
+> > > +       return ret;
+> > > +}
+> > > +
+> > > +static bool nfs_client_clear_delayed_delegations(struct nfs_client
+> > > *clp)
+> > > +{
+> > > +       struct nfs_server *server;
+> > > +       bool ret = false;
+> > > +
+> > > +       if (!test_and_clear_bit(NFS4CLNT_DELEGRETURN_DELAYED, &clp-
+> > > >cl_state))
+> > > +               goto out;
+> > > +       rcu_read_lock();
+> > > +       list_for_each_entry_rcu (server, &clp->cl_superblocks,
+> > > client_link) {
+> > > +               if (nfs_server_clear_delayed_delegations(server))
+> > > +                       ret = true;
+> > > +       }
+> > > +       rcu_read_unlock();
+> > > +out:
+> > > +       return ret;
+> > > +}
+> > > +
+> > >  /**
+> > >   * nfs_client_return_marked_delegations - return previously marked
+> > > delegations
+> > >   * @clp: nfs_client to process
+> > > @@ -659,8 +701,14 @@ static int
+> > > nfs_server_return_marked_delegations(struct nfs_server *server,
+> > >   */
+> > >  int nfs_client_return_marked_delegations(struct nfs_client *clp)
+> > >  {
+> > > -       return nfs_client_for_each_server(clp,
+> > > -                       nfs_server_return_marked_delegations,
+> > > NULL);
+> > > +       int err = nfs_client_for_each_server(
+> > > +               clp, nfs_server_return_marked_delegations, NULL);
+> > > +       if (err)
+> > > +               return err;
+> > > +       /* If a return was delayed, sleep to prevent hard looping
+> > > */
+> > > +       if (nfs_client_clear_delayed_delegations(clp))
+> > > +               ssleep(1);
+> > > +       return 0;
+> > >  }
+> > >  
+> > >  /**
+> > > @@ -775,13 +823,6 @@ static void
+> > > nfs_mark_return_if_closed_delegation(struct nfs_server *server,
+> > >         set_bit(NFS4CLNT_DELEGRETURN, &server->nfs_client-
+> > > >cl_state);
+> > >  }
+> > >  
+> > > -static void nfs_mark_return_delegation(struct nfs_server *server,
+> > > -               struct nfs_delegation *delegation)
+> > > -{
+> > > -       set_bit(NFS_DELEGATION_RETURN, &delegation->flags);
+> > > -       set_bit(NFS4CLNT_DELEGRETURN, &server->nfs_client-
+> > > >cl_state);
+> > > -}
+> > > -
+> > >  static bool nfs_server_mark_return_all_delegations(struct
+> > > nfs_server *server)
+> > >  {
+> > >         struct nfs_delegation *delegation;
+> > > diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
+> > > index c19b4fd20781..1c378992b7c0 100644
+> > > --- a/fs/nfs/delegation.h
+> > > +++ b/fs/nfs/delegation.h
+> > > @@ -36,6 +36,7 @@ enum {
+> > >         NFS_DELEGATION_REVOKED,
+> > >         NFS_DELEGATION_TEST_EXPIRED,
+> > >         NFS_DELEGATION_INODE_FREEING,
+> > > +       NFS_DELEGATION_RETURN_DELAYED,
+> > >  };
+> > >  
+> > >  int nfs_inode_set_delegation(struct inode *inode, const struct
+> > > cred *cred,
+> > > diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+> > > index 065cb04222a1..4c44322c2643 100644
+> > > --- a/fs/nfs/nfs4_fs.h
+> > > +++ b/fs/nfs/nfs4_fs.h
+> > > @@ -45,6 +45,7 @@ enum nfs4_client_state {
+> > >         NFS4CLNT_RECALL_RUNNING,
+> > >         NFS4CLNT_RECALL_ANY_LAYOUT_READ,
+> > >         NFS4CLNT_RECALL_ANY_LAYOUT_RW,
+> > > +       NFS4CLNT_DELEGRETURN_DELAYED,
+> > >  };
+> > >  
+> > >  #define NFS4_RENEW_TIMEOUT             0x01
+> > > -- 
+> > > 2.31.1
+> 
+> -- 
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+> 
+> 
