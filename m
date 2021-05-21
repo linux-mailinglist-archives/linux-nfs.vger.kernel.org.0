@@ -2,110 +2,345 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FB5B38CEE3
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 May 2021 22:19:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 667FD38CF04
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 May 2021 22:23:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231151AbhEUUVN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 May 2021 16:21:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36372 "EHLO
+        id S229597AbhEUUYk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 21 May 2021 16:24:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230404AbhEUUVC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 May 2021 16:21:02 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15907C061344
-        for <linux-nfs@vger.kernel.org>; Fri, 21 May 2021 13:19:30 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id i7so14380849ejc.5
-        for <linux-nfs@vger.kernel.org>; Fri, 21 May 2021 13:19:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=thIe01+lHwzzxJedNGYnXkOMlihftpqGjXXbGI6UEFA=;
-        b=W+zX4pg+qPV5VVsGwBht13DCLZB6q2mUKw3vLfil5mUEswjFv1dWGsywFmS7Uhiwaf
-         OY8nWzuFL3COW2K+KDmJo+wmSfc7iD4GUN9bLWSMnJW5xM6SlVuCtVwUvwlKmlz5T0ty
-         YksRQKsjYR1UMz/AlMlZ/sz0jauzIecYTsL1pC0us/Ya4PNrNfgoGU8mx/Un9c873cIr
-         AeM0+0cQ2RDqrcouA+tHjxWocqUH62s3o0ySgAVLMu3OIS4NG1xsIfFUUhaHAkjIfuFP
-         3AMrK51OGTsWYM2SzU0A0u1IdUtNQRpeoC++i1qe+n77FVvd36So0CZHQHQn49Ck2gQ1
-         hUTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=thIe01+lHwzzxJedNGYnXkOMlihftpqGjXXbGI6UEFA=;
-        b=Es1b+fJZ8cbbIO23bshuLtaoKneE1rcPcMXOOb1kMCBF28MlcNxo/6VeT/p7Tap/aH
-         xBqLk+7P+MuMW77WIOW/rpUSMp1UBcKLl3kG4bs0LhwIcIdSkysy9NdRsznWij+8f9Sz
-         gAod0+y792WSEh7788zrNmXUP7u3MuX7PcPabIvd7Q8ZxOAB/51RIZiTofbiC1xSDHJq
-         08fKMCzuSPyu/vauTW3PoMyuk/WeFylnpxvfKizaDL12kX/2p28A2iRcTOPNItkdTAU6
-         thB5vDK1hB1Ur4fB+m1hOYTiuIi+OsKfOK+2QI1YTat/1eVQAwqzJMxrsJr+473iLxUI
-         XOUQ==
-X-Gm-Message-State: AOAM532ikPkX6HTdNw6hXNODrVjThix8Hgt1cDAvyeFdKHN+0aQQNJBQ
-        FEk3yfLni2DtwmrJpw8UZNr52SuphKs+3Fv8IrEE
-X-Google-Smtp-Source: ABdhPJw0PVE6pZTKuiQy3zYlqq+cxAQrxa/Xganf0agDkuOLzcXPOC4Z4cnZeLkkxqOOBbAnCmgf66QN4Q0jU9XPK1g=
-X-Received: by 2002:a17:906:840c:: with SMTP id n12mr11897181ejx.431.1621628368643;
- Fri, 21 May 2021 13:19:28 -0700 (PDT)
+        with ESMTP id S229565AbhEUUYj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 May 2021 16:24:39 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5B9AC061574
+        for <linux-nfs@vger.kernel.org>; Fri, 21 May 2021 13:23:15 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 096EA2839; Fri, 21 May 2021 16:23:15 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 096EA2839
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1621628595;
+        bh=JvmWDR8Irdd7uAqAuPaX8l56ahAKdMLRI13irkT4+9c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NO2YeKOvN+jHlAdonHQN96rJeF/oAS9z/oeZm8dGYPGDmEu4qCfLu/5Ykkx9k2lbl
+         9mTNF1Tu4oDHDq0h2iaBpxjeFqzu3A2vuAhLUOwfTpl6niwuS5L0HilbTDzW1VxBDQ
+         qLlRl2wPaSZBLkO6H1dRJLDIe9Vrgh12kyrc47nU=
+Date:   Fri, 21 May 2021 16:23:14 -0400
+From:   "bfields@fieldses.org" <bfields@fieldses.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 1/4] NFSv4: Fix delegation return in cases where we have
+ to retry
+Message-ID: <20210521202314.GD30314@fieldses.org>
+References: <20210520163902.215745-1-trondmy@kernel.org>
+ <20210520163902.215745-2-trondmy@kernel.org>
+ <20210520182901.GA8759@fieldses.org>
+ <2b24ca81205cca400910bbbdc29d54aafccefe00.camel@hammerspace.com>
+ <20210520204719.GB10415@fieldses.org>
+ <de87f0b97508acce0736cd3c4bfe2dac9cbb29b7.camel@hammerspace.com>
 MIME-Version: 1.0
-References: <20210513200807.15910-1-casey@schaufler-ca.com> <20210513200807.15910-16-casey@schaufler-ca.com>
-In-Reply-To: <20210513200807.15910-16-casey@schaufler-ca.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 21 May 2021 16:19:17 -0400
-Message-ID: <CAHC9VhRuUsRC4X6_zpfygUF+yWvevqbk-NYtbJbhocjiX0F6ig@mail.gmail.com>
-Subject: Re: [PATCH v26 15/25] LSM: Ensure the correct LSM context releaser
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     casey.schaufler@intel.com, James Morris <jmorris@namei.org>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-audit@redhat.com, keescook@chromium.org,
-        john.johansen@canonical.com, penguin-kernel@i-love.sakura.ne.jp,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-kernel@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <de87f0b97508acce0736cd3c4bfe2dac9cbb29b7.camel@hammerspace.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, May 13, 2021 at 4:24 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
->
-> Add a new lsmcontext data structure to hold all the information
-> about a "security context", including the string, its size and
-> which LSM allocated the string. The allocation information is
-> necessary because LSMs have different policies regarding the
-> lifecycle of these strings. SELinux allocates and destroys
-> them on each use, whereas Smack provides a pointer to an entry
-> in a list that never goes away.
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: John Johansen <john.johansen@canonical.com>
-> Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
-> Acked-by: Chuck Lever <chuck.lever@oracle.com>
-> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-> Cc: linux-integrity@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-audit@redhat.com
-> Cc: netfilter-devel@vger.kernel.org
-> To: Pablo Neira Ayuso <pablo@netfilter.org>
-> Cc: linux-nfs@vger.kernel.org
-> ---
->  drivers/android/binder.c                | 10 ++++---
->  fs/ceph/xattr.c                         |  6 ++++-
->  fs/nfs/nfs4proc.c                       |  8 ++++--
->  fs/nfsd/nfs4xdr.c                       |  7 +++--
->  include/linux/security.h                | 35 +++++++++++++++++++++++--
->  include/net/scm.h                       |  5 +++-
->  kernel/audit.c                          | 14 +++++++---
->  kernel/auditsc.c                        | 12 ++++++---
->  net/ipv4/ip_sockglue.c                  |  4 ++-
->  net/netfilter/nf_conntrack_netlink.c    |  4 ++-
->  net/netfilter/nf_conntrack_standalone.c |  4 ++-
->  net/netfilter/nfnetlink_queue.c         | 13 ++++++---
->  net/netlabel/netlabel_unlabeled.c       | 19 +++++++++++---
->  net/netlabel/netlabel_user.c            |  4 ++-
->  security/security.c                     | 11 ++++----
->  15 files changed, 121 insertions(+), 35 deletions(-)
+On Thu, May 20, 2021 at 09:14:09PM +0000, Trond Myklebust wrote:
+> On Thu, 2021-05-20 at 16:47 -0400, bfields@fieldses.org wrote:
+> > On Thu, May 20, 2021 at 07:08:24PM +0000, Trond Myklebust wrote:
+> > > On Thu, 2021-05-20 at 14:29 -0400, J. Bruce Fields wrote:
+> > > > On Thu, May 20, 2021 at 12:38:59PM -0400, trondmy@kernel.org wrote:
+> > > > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > > > 
+> > > > > If we're unable to immediately recover all locks because the
+> > > > > server
+> > > > > is
+> > > > > unable to immediately service our reclaim calls, then we want to
+> > > > > retry
+> > > > > after we've finished servicing all the other asynchronous
+> > > > > delegation
+> > > > > returns on our queue.
+> > > > 
+> > > > So, there's a situation where the server can't service a reclaim
+> > > > until
+> > > > some other delegation is returned?  I'm not seeing how that
+> > > > happens.
+> > > > 
+> > > 
+> > > I can and I do... pNFS can be complicated...
+> > 
+> > I don't doubt you, but does everyone get this but me?
+> > 
+> > Is it too complicated to explain?
+> > 
+> 
+> Not if you read the code, no.
 
-Acked-by: Paul Moore <paul@paul-moore.com>
+I tried, and couldn't follow it, at least not on a quick read.
 
+It's OK, I guess, it was mainly just curiosity.
 
---
-paul moore
-www.paul-moore.com
+--b.
+
+> 
+> In nfs_end_delegation_return():
+> 
+>         do {
+>                 if (test_bit(NFS_DELEGATION_REVOKED, &delegation->flags))
+>                         break;
+>                 err = nfs_delegation_claim_opens(inode, &delegation->stateid,
+>                                 delegation->type);
+>                 if (!issync || err != -EAGAIN)
+>                         break;
+>                 /*
+>                  * Guard against state recovery
+>                  */
+>                 err = nfs4_wait_clnt_recover(clp);
+>         } while (err == 0);
+> 
+> So if issync is false, then we abort the delegation return and try
+> again later.
+> 
+> ...and when we later add a break_lease() call in this patch series,
+> then there is another condition.
+> 
+> > --b.
+> > 
+> > > 
+> > > > --b.
+> > > > 
+> > > > > 
+> > > > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > > > ---
+> > > > >  fs/nfs/delegation.c | 71 +++++++++++++++++++++++++++++++++++----
+> > > > > --
+> > > > > ----
+> > > > >  fs/nfs/delegation.h |  1 +
+> > > > >  fs/nfs/nfs4_fs.h    |  1 +
+> > > > >  3 files changed, 58 insertions(+), 15 deletions(-)
+> > > > > 
+> > > > > diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+> > > > > index e6ec6f09ac6e..7c45ac3c3b0b 100644
+> > > > > --- a/fs/nfs/delegation.c
+> > > > > +++ b/fs/nfs/delegation.c
+> > > > > @@ -75,6 +75,13 @@ void nfs_mark_delegation_referenced(struct
+> > > > > nfs_delegation *delegation)
+> > > > >         set_bit(NFS_DELEGATION_REFERENCED, &delegation->flags);
+> > > > >  }
+> > > > >  
+> > > > > +static void nfs_mark_return_delegation(struct nfs_server
+> > > > > *server,
+> > > > > +                                      struct nfs_delegation
+> > > > > *delegation)
+> > > > > +{
+> > > > > +       set_bit(NFS_DELEGATION_RETURN, &delegation->flags);
+> > > > > +       set_bit(NFS4CLNT_DELEGRETURN, &server->nfs_client-
+> > > > > > cl_state);
+> > > > > +}
+> > > > > +
+> > > > >  static bool
+> > > > >  nfs4_is_valid_delegation(const struct nfs_delegation
+> > > > > *delegation,
+> > > > >                 fmode_t flags)
+> > > > > @@ -293,6 +300,7 @@ nfs_start_delegation_return_locked(struct
+> > > > > nfs_inode *nfsi)
+> > > > >                 goto out;
+> > > > >         spin_lock(&delegation->lock);
+> > > > >         if (!test_and_set_bit(NFS_DELEGATION_RETURNING,
+> > > > > &delegation->flags)) {
+> > > > > +               clear_bit(NFS_DELEGATION_RETURN_DELAYED,
+> > > > > &delegation->flags);
+> > > > >                 /* Refcount matched in
+> > > > > nfs_end_delegation_return()
+> > > > > */
+> > > > >                 ret = nfs_get_delegation(delegation);
+> > > > >         }
+> > > > > @@ -314,16 +322,17 @@ nfs_start_delegation_return(struct
+> > > > > nfs_inode
+> > > > > *nfsi)
+> > > > >         return delegation;
+> > > > >  }
+> > > > >  
+> > > > > -static void
+> > > > > -nfs_abort_delegation_return(struct nfs_delegation *delegation,
+> > > > > -               struct nfs_client *clp)
+> > > > > +static void nfs_abort_delegation_return(struct nfs_delegation
+> > > > > *delegation,
+> > > > > +                                       struct nfs_client *clp,
+> > > > > int
+> > > > > err)
+> > > > >  {
+> > > > >  
+> > > > >         spin_lock(&delegation->lock);
+> > > > >         clear_bit(NFS_DELEGATION_RETURNING, &delegation->flags);
+> > > > > -       set_bit(NFS_DELEGATION_RETURN, &delegation->flags);
+> > > > > +       if (err == -EAGAIN) {
+> > > > > +               set_bit(NFS_DELEGATION_RETURN_DELAYED,
+> > > > > &delegation-
+> > > > > > flags);
+> > > > > +               set_bit(NFS4CLNT_DELEGRETURN_DELAYED, &clp-
+> > > > > > cl_state);
+> > > > > +       }
+> > > > >         spin_unlock(&delegation->lock);
+> > > > > -       set_bit(NFS4CLNT_DELEGRETURN, &clp->cl_state);
+> > > > >  }
+> > > > >  
+> > > > >  static struct nfs_delegation *
+> > > > > @@ -539,7 +548,7 @@ static int nfs_end_delegation_return(struct
+> > > > > inode *inode, struct nfs_delegation
+> > > > >         } while (err == 0);
+> > > > >  
+> > > > >         if (err) {
+> > > > > -               nfs_abort_delegation_return(delegation, clp);
+> > > > > +               nfs_abort_delegation_return(delegation, clp,
+> > > > > err);
+> > > > >                 goto out;
+> > > > >         }
+> > > > >  
+> > > > > @@ -568,6 +577,7 @@ static bool nfs_delegation_need_return(struct
+> > > > > nfs_delegation *delegation)
+> > > > >         if (ret)
+> > > > >                 clear_bit(NFS_DELEGATION_RETURN_IF_CLOSED,
+> > > > > &delegation->flags);
+> > > > >         if (test_bit(NFS_DELEGATION_RETURNING, &delegation-
+> > > > > >flags)
+> > > > > > > 
+> > > > > +           test_bit(NFS_DELEGATION_RETURN_DELAYED, &delegation-
+> > > > > > flags) ||
+> > > > >             test_bit(NFS_DELEGATION_REVOKED, &delegation->flags))
+> > > > >                 ret = false;
+> > > > >  
+> > > > > @@ -647,6 +657,38 @@ static int
+> > > > > nfs_server_return_marked_delegations(struct nfs_server *server,
+> > > > >         return err;
+> > > > >  }
+> > > > >  
+> > > > > +static bool nfs_server_clear_delayed_delegations(struct
+> > > > > nfs_server
+> > > > > *server)
+> > > > > +{
+> > > > > +       struct nfs_delegation *d;
+> > > > > +       bool ret = false;
+> > > > > +
+> > > > > +       list_for_each_entry_rcu (d, &server->delegations,
+> > > > > super_list) {
+> > > > > +               if (!test_bit(NFS_DELEGATION_RETURN_DELAYED, &d-
+> > > > > > flags))
+> > > > > +                       continue;
+> > > > > +               nfs_mark_return_delegation(server, d);
+> > > > > +               clear_bit(NFS_DELEGATION_RETURN_DELAYED, &d-
+> > > > > > flags);
+> > > > > +               ret = true;
+> > > > > +       }
+> > > > > +       return ret;
+> > > > > +}
+> > > > > +
+> > > > > +static bool nfs_client_clear_delayed_delegations(struct
+> > > > > nfs_client
+> > > > > *clp)
+> > > > > +{
+> > > > > +       struct nfs_server *server;
+> > > > > +       bool ret = false;
+> > > > > +
+> > > > > +       if (!test_and_clear_bit(NFS4CLNT_DELEGRETURN_DELAYED,
+> > > > > &clp-
+> > > > > > cl_state))
+> > > > > +               goto out;
+> > > > > +       rcu_read_lock();
+> > > > > +       list_for_each_entry_rcu (server, &clp->cl_superblocks,
+> > > > > client_link) {
+> > > > > +               if (nfs_server_clear_delayed_delegations(server))
+> > > > > +                       ret = true;
+> > > > > +       }
+> > > > > +       rcu_read_unlock();
+> > > > > +out:
+> > > > > +       return ret;
+> > > > > +}
+> > > > > +
+> > > > >  /**
+> > > > >   * nfs_client_return_marked_delegations - return previously
+> > > > > marked
+> > > > > delegations
+> > > > >   * @clp: nfs_client to process
+> > > > > @@ -659,8 +701,14 @@ static int
+> > > > > nfs_server_return_marked_delegations(struct nfs_server *server,
+> > > > >   */
+> > > > >  int nfs_client_return_marked_delegations(struct nfs_client *clp)
+> > > > >  {
+> > > > > -       return nfs_client_for_each_server(clp,
+> > > > > -                       nfs_server_return_marked_delegations,
+> > > > > NULL);
+> > > > > +       int err = nfs_client_for_each_server(
+> > > > > +               clp, nfs_server_return_marked_delegations, NULL);
+> > > > > +       if (err)
+> > > > > +               return err;
+> > > > > +       /* If a return was delayed, sleep to prevent hard looping
+> > > > > */
+> > > > > +       if (nfs_client_clear_delayed_delegations(clp))
+> > > > > +               ssleep(1);
+> > > > > +       return 0;
+> > > > >  }
+> > > > >  
+> > > > >  /**
+> > > > > @@ -775,13 +823,6 @@ static void
+> > > > > nfs_mark_return_if_closed_delegation(struct nfs_server *server,
+> > > > >         set_bit(NFS4CLNT_DELEGRETURN, &server->nfs_client-
+> > > > > > cl_state);
+> > > > >  }
+> > > > >  
+> > > > > -static void nfs_mark_return_delegation(struct nfs_server
+> > > > > *server,
+> > > > > -               struct nfs_delegation *delegation)
+> > > > > -{
+> > > > > -       set_bit(NFS_DELEGATION_RETURN, &delegation->flags);
+> > > > > -       set_bit(NFS4CLNT_DELEGRETURN, &server->nfs_client-
+> > > > > > cl_state);
+> > > > > -}
+> > > > > -
+> > > > >  static bool nfs_server_mark_return_all_delegations(struct
+> > > > > nfs_server *server)
+> > > > >  {
+> > > > >         struct nfs_delegation *delegation;
+> > > > > diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
+> > > > > index c19b4fd20781..1c378992b7c0 100644
+> > > > > --- a/fs/nfs/delegation.h
+> > > > > +++ b/fs/nfs/delegation.h
+> > > > > @@ -36,6 +36,7 @@ enum {
+> > > > >         NFS_DELEGATION_REVOKED,
+> > > > >         NFS_DELEGATION_TEST_EXPIRED,
+> > > > >         NFS_DELEGATION_INODE_FREEING,
+> > > > > +       NFS_DELEGATION_RETURN_DELAYED,
+> > > > >  };
+> > > > >  
+> > > > >  int nfs_inode_set_delegation(struct inode *inode, const struct
+> > > > > cred *cred,
+> > > > > diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+> > > > > index 065cb04222a1..4c44322c2643 100644
+> > > > > --- a/fs/nfs/nfs4_fs.h
+> > > > > +++ b/fs/nfs/nfs4_fs.h
+> > > > > @@ -45,6 +45,7 @@ enum nfs4_client_state {
+> > > > >         NFS4CLNT_RECALL_RUNNING,
+> > > > >         NFS4CLNT_RECALL_ANY_LAYOUT_READ,
+> > > > >         NFS4CLNT_RECALL_ANY_LAYOUT_RW,
+> > > > > +       NFS4CLNT_DELEGRETURN_DELAYED,
+> > > > >  };
+> > > > >  
+> > > > >  #define NFS4_RENEW_TIMEOUT             0x01
+> > > > > -- 
+> > > > > 2.31.1
+> > > 
+> > > -- 
+> > > Trond Myklebust
+> > > Linux NFS client maintainer, Hammerspace
+> > > trond.myklebust@hammerspace.com
+> > > 
+> > > 
+> 
+> -- 
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+> 
+> 
