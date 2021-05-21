@@ -2,185 +2,164 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1455138BBC5
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 May 2021 03:41:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 822DB38BC79
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 May 2021 04:39:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237389AbhEUBmo convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 20 May 2021 21:42:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44052 "EHLO mx2.suse.de"
+        id S237271AbhEUClK convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 20 May 2021 22:41:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36096 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237319AbhEUBmn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 20 May 2021 21:42:43 -0400
+        id S231681AbhEUClJ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 20 May 2021 22:41:09 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id B6BAAAB6D;
-        Fri, 21 May 2021 01:41:20 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id A5E90AC6A;
+        Fri, 21 May 2021 02:39:46 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
 To:     "Steve Dickson" <SteveD@RedHat.com>
-Cc:     "Petr Vorel" <pvorel@suse.cz>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        linux-nfs@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>,
-        "Alexey Kodanev" <alexey.kodanev@oracle.com>
-Subject: [PATCH nfs-utils 2/2] Move declaration of etab and rmtab into libraries
-In-reply-to: <162156122215.19062.11710239266795260824@noble.neil.brown.name>
-References: <20210422191803.31511-1-pvorel@suse.cz>,
- <20210422202334.GB25415@fieldses.org>, <YILQip3nAxhpXP9+@pevik>,
- <162035212343.24322.12361160756597283121@noble.neil.brown.name>,
- <162122673178.19062.96081788305923933@noble.neil.brown.name>,
- <289c5819-917a-39a7-9aa4-2a27ae7248c0@RedHat.com>,
- <162156113063.19062.9406037279407040033@noble.neil.brown.name>,
- <162156122215.19062.11710239266795260824@noble.neil.brown.name>
-Date:   Fri, 21 May 2021 11:41:12 +1000
-Message-id: <162156127225.19062.3275458295434454950@noble.neil.brown.name>
+Cc:     "Chuck Lever III" <chuck.lever@oracle.com>,
+        "Linux NFS Mailing list" <linux-nfs@vger.kernel.org>
+Subject: Re: Re: [PATCH 0/3] Enable the setting of a kernel module parameter
+ from nfs.conf
+In-reply-to: <07b66f08-be94-9b3c-723f-cea880ab4b1d@RedHat.com>
+References: <20210414181040.7108-1-steved@redhat.com>,
+ <AA442C15-5ED3-4DF5-B23A-9C63429B64BE@oracle.com>,
+ <5adff402-5636-3153-2d9f-d912d83038fc@RedHat.com>,
+ <162086574506.5576.4995500938909500647@noble.neil.brown.name>,
+ <07b66f08-be94-9b3c-723f-cea880ab4b1d@RedHat.com>
+Date:   Fri, 21 May 2021 12:39:41 +1000
+Message-id: <162156478174.19062.9768597549209208880@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Tue, 18 May 2021, Steve Dickson wrote:
+> Sorry for the delay... I took some PTO... 
+> 
+> On 5/12/21 8:29 PM, NeilBrown wrote:
+> > On Fri, 16 Apr 2021, Steve Dickson wrote:
+> >> Hey Chuck! 
+> >>
+> >> On 4/14/21 7:26 PM, Chuck Lever III wrote:
+> >>> Hi Steve-
+> >>>
+> >>>> On Apr 14, 2021, at 2:10 PM, Steve Dickson <SteveD@redhat.com> wrote:
+> >>>>
+> >>>> ﻿This is a tweak of the patch set Alice Mitchell posted last July [1].
+> >>>
+> >>> That approach was dropped last July because it is not container-aware.
+> >>> It should be simple for someone to write a udev script that uses the
+> >>> existing sysfs API that can update nfs4_client_id in a namespace. I
+> >>> would prefer the sysfs/udev approach for setting nfs4_client_id,
+> >>> since it is container-aware and makes this setting completely
+> >>> automatic (zero touch).
+> >> As I said in in my cover letter, I see this more as introduction of
+> >> a mechanism more than a way to set the unique id. The mechanism being
+> >> a way to set kernel module params from nfs.conf. The setting of
+> >> the id is just a side effect... 
+> > 
+> > I wonder if this is the best approach for setting module parameters.
+> > 
+> > rpc.nfsd already sets grace-time and lease-time - which aren't
+> > exactly module parameters, but are similar - using values from nfs.conf.
+> > Similarly statd sets /proc/fs/nfs/nlm_tcport based on nfs.conf.
+> > 
+> > I don't think these things should appear in nfs.conf as "kernel
+> > parameters", but as service parameters for the particular service.
+> > How they are communicate to the kernel is an internal implementation
+> > detail.  Maybe it will involve setting module parameters (at least on
+> > older kernels).
+> I think I understand you idea of look at thing as "service parameters"
+> instead of "kernel parameters", but looking at the actual parameters
+> that might be a bit difficult. 
+> 
+> Some do map to a service like nfs4_disable_idmapping could be set 
+> from /etc/idmapd.conf, but things like send_implementation_id or 
+> delegation_watermark do not really map to a particular service
+> or am I missing something?
 
-There are two global "struct stat_paths" structures: etab and rmtab.
-They are currently needed by some library code so any program which is
-linked with that library code needs to declare the structures even if it
-doesn't use the functionality.  This is clumsy and error-prone.
+There are two "nfs4_disable_idmapping" parameters.  One for server, one
+for client.
+The server one should, I think, be set by rpc.nfsd based on a setting in
+the [nfsd] section of nfs.conf.
 
-Instead: have the library declare the structure and put the definition
-in a header file.  Now programs only need to know about these structures
-if they use the functionality.
+The client one should (I think) be set by mount.nfs using whatever
+config language we decide is appropriate.
 
-'rmtab' is now declared in libnfs.a (rmtab.c).  'etab' is declared in
-export.a (xtab.c).
+> 
+> > 
+> > For the "identity" setting, I think it would be best if this were
+> > checked and updated by mount.nfs (similar to the way mount.nfs will
+> > check if statd is running, and will start it if necessary).  So should
+> > it go in nfsmount.conf instead of nfs.conf?? I'm not sure.
+> Interesting idea...I would think nfsmount.conf would be the
+> right place.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- support/export/auth.c      | 2 --
- support/export/xtab.c      | 2 +-
- support/include/exportfs.h | 1 +
- support/include/nfslib.h   | 1 +
- support/nfs/rmtab.c        | 2 +-
- utils/exportd/exportd.c    | 2 --
- utils/exportfs/exportfs.c  | 2 --
- utils/mountd/mountd.c      | 3 ---
- utils/mountd/rmtab.c       | 2 --
- 9 files changed, 4 insertions(+), 13 deletions(-)
+Maybe...  nfsmount.conf is currently only for mount options.  These can
+all be per-server or per-mountpoint, or global.
+It might make sense to have other things in the global section ...
+though it is named "NFSMount_Global_Options" which seems to explicitly
+suggest that these are mount options.
 
-diff --git a/support/export/auth.c b/support/export/auth.c
-index 17bdfc83748e..03ce4b8a0e1e 100644
---- a/support/export/auth.c
-+++ b/support/export/auth.c
-@@ -41,8 +41,6 @@ static nfs_client my_client;
- 
- extern int use_ipaddr;
- 
--extern struct state_paths etab;
--
- /*
- void
- auth_init(void)
-diff --git a/support/export/xtab.c b/support/export/xtab.c
-index 00b25eaac07d..c888a80aa741 100644
---- a/support/export/xtab.c
-+++ b/support/export/xtab.c
-@@ -27,7 +27,7 @@
- #include "misc.h"
- 
- static char state_base_dirname[PATH_MAX] = NFS_STATEDIR;
--extern struct state_paths etab;
-+struct state_paths etab;
- 
- int v4root_needed;
- static void cond_rename(char *newfile, char *oldfile);
-diff --git a/support/include/exportfs.h b/support/include/exportfs.h
-index 7c1b74537186..9edf0d04732f 100644
---- a/support/include/exportfs.h
-+++ b/support/include/exportfs.h
-@@ -145,6 +145,7 @@ nfs_export *			export_create(struct exportent *, int canonical);
- void				exportent_release(struct exportent *);
- void				export_freeall(void);
- 
-+extern struct state_paths etab;
- int				xtab_export_read(void);
- int				xtab_export_write(void);
- 
-diff --git a/support/include/nfslib.h b/support/include/nfslib.h
-index 58eeb3382fcc..6faba71bf0cd 100644
---- a/support/include/nfslib.h
-+++ b/support/include/nfslib.h
-@@ -106,6 +106,7 @@ void			dupexportent(struct exportent *dst,
- 					struct exportent *src);
- int			updateexportent(struct exportent *eep, char *options);
- 
-+extern struct state_paths rmtab;
- int			setrmtabent(char *type);
- struct rmtabent *	getrmtabent(int log, long *pos);
- void			putrmtabent(struct rmtabent *xep, long *pos);
-diff --git a/support/nfs/rmtab.c b/support/nfs/rmtab.c
-index 9f03167ddbe1..154b26fa3402 100644
---- a/support/nfs/rmtab.c
-+++ b/support/nfs/rmtab.c
-@@ -33,7 +33,7 @@
- 
- static FILE	*rmfp = NULL;
- 
--extern struct state_paths rmtab;
-+struct state_paths rmtab;
- 
- int
- setrmtabent(char *type)
-diff --git a/utils/exportd/exportd.c b/utils/exportd/exportd.c
-index f36f51d215b5..2dd12cb6015b 100644
---- a/utils/exportd/exportd.c
-+++ b/utils/exportd/exportd.c
-@@ -25,8 +25,6 @@
- 
- extern void my_svc_run(void);
- 
--struct state_paths etab;
--
- /* Number of mountd threads to start.   Default is 1 and
-  * that's probably enough unless you need hundreds of
-  * clients to be able to mount at once.  */
-diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-index d586296796a9..6ba615d1443d 100644
---- a/utils/exportfs/exportfs.c
-+++ b/utils/exportfs/exportfs.c
-@@ -52,8 +52,6 @@ static void release_lockfile(void);
- static const char *lockfile = EXP_LOCKFILE;
- static int _lockfd = -1;
- 
--struct state_paths etab;
--
- /*
-  * If we aren't careful, changes made by exportfs can be lost
-  * when multiple exports process run at once:
-diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
-index 39e85fd53a87..bcf749fabbb3 100644
---- a/utils/mountd/mountd.c
-+++ b/utils/mountd/mountd.c
-@@ -43,9 +43,6 @@ int reverse_resolve = 0;
- int manage_gids;
- int use_ipaddr = -1;
- 
--struct state_paths etab;
--struct state_paths rmtab;
--
- /* PRC: a high-availability callout program can be specified with -H
-  * When this is done, the program will receive callouts whenever clients
-  * send mount or unmount requests -- the callout is not needed for 2.6 kernel */
-diff --git a/utils/mountd/rmtab.c b/utils/mountd/rmtab.c
-index c8962439ddd2..2da97615ca0f 100644
---- a/utils/mountd/rmtab.c
-+++ b/utils/mountd/rmtab.c
-@@ -28,8 +28,6 @@
- 
- extern int reverse_resolve;
- 
--extern struct state_paths rmtab;
--
- /* If new path is a link do not destroy it but place the
-  * file where the link points.
-  */
--- 
-2.31.1
+I think I lean towards an [nfs] or possibly [mount] section of nfs.conf.
 
+> 
+> > 
+> > It isn't clear to me where the identity should come from.
+> > In some circumstances it might make sense to take it from nfs.conf.
+> > In that case we would want to support reading /etc/netnfs/NAME/nfs.conf
+> > where NAME was determined in much the same way that "ip netns identify"
+> > determines a name.  (Compare inum of /proc/self/ns/net with the inum of
+> > each name in /run/netns/).
+> I think supporting configs per namespaces is a good idea. I don't
+> think it would be too difficult to do since we already support
+> the nfs.d directory. 
+
+Yes, reading multiple files should be easy enough once we know what we
+want to do.
+
+> 
+> 
+> > If we did that, we could then support "$netns" in the conf file, and
+> > allow
+> > 
+> >  [nfs]
+> >   identity = ${hostname}-${netns}
+> > 
+> > in /etc/nfs.conf, and it would Do The Right Thing for many cases.
+> I'm a bit namespace challenged... but as I see it using 
+> "ip netns identify" (w/out the [PID]) would return all of
+> the current network network namespaces. Then we would run through 
+> the /etc/nfs.conf.d/ directory looking for a matching directory
+> for any of the returned namespaces. If found that config
+> would be used. Something along those lines? 
+> 
+> With multiple namespaces, how would we know which one to use? 
+
+(I'm only just coming up to speed on network namespaces too....)
+
+A given process can only be in one network namespace.  If it is in the
+initial namespace (same as the 'init' process) then "ip netns identify"
+reports nothing.  If in some other namespace, then that namespace is
+reported.
+
+So if 'mount.nfs' is run in some other net-namespace, it should let
+settings in /etc/netfs/NAME/nfs.conf over-ride settings in /etc/nfs.conf
+
+I'm becoming less enamoured with the idea of using network namespaces to
+ensure separate transports are used.  Creating a new namespace means
+that either you need a new IP address for that namespace, or you need to
+set up NAT so processes in the namespace can access the network.  Both
+of these seem like a bit too much overhead just to get an independent
+TCP connection (or set of connections) to the server.
+I almost want an "NFS namespace" which shares the network but has
+separate transports.  I have something like that in our SLE12 kernels
+(-o sharetransport=NN) but I'd like a better solution.
+
+Being able to insisting on a separate transport is really useful for
+problem analysis, and has other administrative uses.
+
+NeilBrown
