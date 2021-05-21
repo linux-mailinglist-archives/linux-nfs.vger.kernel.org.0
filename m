@@ -2,164 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 822DB38BC79
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 May 2021 04:39:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25E8538BDA4
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 May 2021 06:54:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237271AbhEUClK convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 20 May 2021 22:41:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36096 "EHLO mx2.suse.de"
+        id S232447AbhEUEzb convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 21 May 2021 00:55:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55518 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231681AbhEUClJ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 20 May 2021 22:41:09 -0400
+        id S232099AbhEUEzb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 21 May 2021 00:55:31 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A5E90AC6A;
-        Fri, 21 May 2021 02:39:46 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 185CBAACA;
+        Fri, 21 May 2021 04:54:08 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
-To:     "Steve Dickson" <SteveD@RedHat.com>
-Cc:     "Chuck Lever III" <chuck.lever@oracle.com>,
-        "Linux NFS Mailing list" <linux-nfs@vger.kernel.org>
-Subject: Re: Re: [PATCH 0/3] Enable the setting of a kernel module parameter
- from nfs.conf
-In-reply-to: <07b66f08-be94-9b3c-723f-cea880ab4b1d@RedHat.com>
-References: <20210414181040.7108-1-steved@redhat.com>,
- <AA442C15-5ED3-4DF5-B23A-9C63429B64BE@oracle.com>,
- <5adff402-5636-3153-2d9f-d912d83038fc@RedHat.com>,
- <162086574506.5576.4995500938909500647@noble.neil.brown.name>,
- <07b66f08-be94-9b3c-723f-cea880ab4b1d@RedHat.com>
-Date:   Fri, 21 May 2021 12:39:41 +1000
-Message-id: <162156478174.19062.9768597549209208880@noble.neil.brown.name>
+To:     Steve Dickson <SteveD@RedHat.com>
+Subject: [PATCH nfs-utils] gssd: use mutex to protect decrement of refcount
+Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Date:   Fri, 21 May 2021 14:54:03 +1000
+Message-id: <162157284381.19062.14252943620142216829@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 18 May 2021, Steve Dickson wrote:
-> Sorry for the delay... I took some PTO... 
-> 
-> On 5/12/21 8:29 PM, NeilBrown wrote:
-> > On Fri, 16 Apr 2021, Steve Dickson wrote:
-> >> Hey Chuck! 
-> >>
-> >> On 4/14/21 7:26 PM, Chuck Lever III wrote:
-> >>> Hi Steve-
-> >>>
-> >>>> On Apr 14, 2021, at 2:10 PM, Steve Dickson <SteveD@redhat.com> wrote:
-> >>>>
-> >>>> ﻿This is a tweak of the patch set Alice Mitchell posted last July [1].
-> >>>
-> >>> That approach was dropped last July because it is not container-aware.
-> >>> It should be simple for someone to write a udev script that uses the
-> >>> existing sysfs API that can update nfs4_client_id in a namespace. I
-> >>> would prefer the sysfs/udev approach for setting nfs4_client_id,
-> >>> since it is container-aware and makes this setting completely
-> >>> automatic (zero touch).
-> >> As I said in in my cover letter, I see this more as introduction of
-> >> a mechanism more than a way to set the unique id. The mechanism being
-> >> a way to set kernel module params from nfs.conf. The setting of
-> >> the id is just a side effect... 
-> > 
-> > I wonder if this is the best approach for setting module parameters.
-> > 
-> > rpc.nfsd already sets grace-time and lease-time - which aren't
-> > exactly module parameters, but are similar - using values from nfs.conf.
-> > Similarly statd sets /proc/fs/nfs/nlm_tcport based on nfs.conf.
-> > 
-> > I don't think these things should appear in nfs.conf as "kernel
-> > parameters", but as service parameters for the particular service.
-> > How they are communicate to the kernel is an internal implementation
-> > detail.  Maybe it will involve setting module parameters (at least on
-> > older kernels).
-> I think I understand you idea of look at thing as "service parameters"
-> instead of "kernel parameters", but looking at the actual parameters
-> that might be a bit difficult. 
-> 
-> Some do map to a service like nfs4_disable_idmapping could be set 
-> from /etc/idmapd.conf, but things like send_implementation_id or 
-> delegation_watermark do not really map to a particular service
-> or am I missing something?
 
-There are two "nfs4_disable_idmapping" parameters.  One for server, one
-for client.
-The server one should, I think, be set by rpc.nfsd based on a setting in
-the [nfsd] section of nfs.conf.
+The decrement of the "ple" refcount is not protected so it can race with
+increments or decrements from other threads.  An increment could be lost
+and then the ple would be freed early, leading to memory corruption.
 
-The client one should (I think) be set by mount.nfs using whatever
-config language we decide is appropriate.
+So use the mutex to protect decrements (increments are already
+protected).
 
-> 
-> > 
-> > For the "identity" setting, I think it would be best if this were
-> > checked and updated by mount.nfs (similar to the way mount.nfs will
-> > check if statd is running, and will start it if necessary).  So should
-> > it go in nfsmount.conf instead of nfs.conf?? I'm not sure.
-> Interesting idea...I would think nfsmount.conf would be the
-> right place.
+As gssd_destroy_krb5_principals() calls release_ple() while holding the
+mutex, we need a "release_pte_locked()" which doesn't take the mutex.
 
-Maybe...  nfsmount.conf is currently only for mount options.  These can
-all be per-server or per-mountpoint, or global.
-It might make sense to have other things in the global section ...
-though it is named "NFSMount_Global_Options" which seems to explicitly
-suggest that these are mount options.
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ utils/gssd/krb5_util.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-I think I lean towards an [nfs] or possibly [mount] section of nfs.conf.
+diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
+index 28b60ba307d0..51e0c6a2484b 100644
+--- a/utils/gssd/krb5_util.c
++++ b/utils/gssd/krb5_util.c
+@@ -169,18 +169,28 @@ static int gssd_get_single_krb5_cred(krb5_context context,
+ static int query_krb5_ccache(const char* cred_cache, char **ret_princname,
+ 		char **ret_realm);
+ 
+-static void release_ple(krb5_context context, struct gssd_k5_kt_princ *ple)
++static void release_ple_locked(krb5_context context,
++			       struct gssd_k5_kt_princ *ple)
+ {
+ 	if (--ple->refcount)
+ 		return;
+ 
+-	printerr(3, "freeing cached principal (ccname=%s, realm=%s)\n", ple->ccname, ple->realm);
++	printerr(3, "freeing cached principal (ccname=%s, realm=%s)\n",
++		 ple->ccname, ple->realm);
+ 	krb5_free_principal(context, ple->princ);
+ 	free(ple->ccname);
+ 	free(ple->realm);
+ 	free(ple);
+ }
+ 
++static void release_ple(krb5_context context, struct gssd_k5_kt_princ *ple)
++{
++	pthread_mutex_lock(&ple_lock);
++	release_ple_locked(context, ple);
++	pthread_mutex_unlock(&ple_lock);
++}
++
++
+ /*
+  * Called from the scandir function to weed out potential krb5
+  * credentials cache files
+@@ -1420,7 +1430,7 @@ gssd_destroy_krb5_principals(int destroy_machine_creds)
+ 			}
+ 		}
+ 
+-		release_ple(context, ple);
++		release_ple_locked(context, ple);
+ 	}
+ 	pthread_mutex_unlock(&ple_lock);
+ 	krb5_free_context(context);
+-- 
+2.31.1
 
-> 
-> > 
-> > It isn't clear to me where the identity should come from.
-> > In some circumstances it might make sense to take it from nfs.conf.
-> > In that case we would want to support reading /etc/netnfs/NAME/nfs.conf
-> > where NAME was determined in much the same way that "ip netns identify"
-> > determines a name.  (Compare inum of /proc/self/ns/net with the inum of
-> > each name in /run/netns/).
-> I think supporting configs per namespaces is a good idea. I don't
-> think it would be too difficult to do since we already support
-> the nfs.d directory. 
-
-Yes, reading multiple files should be easy enough once we know what we
-want to do.
-
-> 
-> 
-> > If we did that, we could then support "$netns" in the conf file, and
-> > allow
-> > 
-> >  [nfs]
-> >   identity = ${hostname}-${netns}
-> > 
-> > in /etc/nfs.conf, and it would Do The Right Thing for many cases.
-> I'm a bit namespace challenged... but as I see it using 
-> "ip netns identify" (w/out the [PID]) would return all of
-> the current network network namespaces. Then we would run through 
-> the /etc/nfs.conf.d/ directory looking for a matching directory
-> for any of the returned namespaces. If found that config
-> would be used. Something along those lines? 
-> 
-> With multiple namespaces, how would we know which one to use? 
-
-(I'm only just coming up to speed on network namespaces too....)
-
-A given process can only be in one network namespace.  If it is in the
-initial namespace (same as the 'init' process) then "ip netns identify"
-reports nothing.  If in some other namespace, then that namespace is
-reported.
-
-So if 'mount.nfs' is run in some other net-namespace, it should let
-settings in /etc/netfs/NAME/nfs.conf over-ride settings in /etc/nfs.conf
-
-I'm becoming less enamoured with the idea of using network namespaces to
-ensure separate transports are used.  Creating a new namespace means
-that either you need a new IP address for that namespace, or you need to
-set up NAT so processes in the namespace can access the network.  Both
-of these seem like a bit too much overhead just to get an independent
-TCP connection (or set of connections) to the server.
-I almost want an "NFS namespace" which shares the network but has
-separate transports.  I have something like that in our SLE12 kernels
-(-o sharetransport=NN) but I'd like a better solution.
-
-Being able to insisting on a separate transport is really useful for
-problem analysis, and has other administrative uses.
-
-NeilBrown
