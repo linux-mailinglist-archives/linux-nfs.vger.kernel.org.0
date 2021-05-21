@@ -2,92 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25E8538BDA4
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 May 2021 06:54:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1186E38BDF0
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 May 2021 07:46:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232447AbhEUEzb convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 21 May 2021 00:55:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55518 "EHLO mx2.suse.de"
+        id S233634AbhEUFsD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 21 May 2021 01:48:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44220 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232099AbhEUEzb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 21 May 2021 00:55:31 -0400
+        id S233179AbhEUFsD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 21 May 2021 01:48:03 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 185CBAACA;
-        Fri, 21 May 2021 04:54:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+        by mx2.suse.de (Postfix) with ESMTP id C6F27AC87;
+        Fri, 21 May 2021 05:46:39 +0000 (UTC)
+From:   Petr Vorel <pvorel@suse.cz>
+To:     linux-nfs@vger.kernel.org
+Cc:     Petr Vorel <pvorel@suse.cz>,
+        "J . Bruce Fields" <bfields@redhat.com>,
+        Tom Haynes <loghyr@hammerspace.com>,
+        "Yong Sun (Sero)" <yosun@suse.com>
+Subject: [PATCH pynfs 1/2] st_flex: Fix comparison operator, compare int
+Date:   Fri, 21 May 2021 07:46:32 +0200
+Message-Id: <20210521054633.3170-1-pvorel@suse.cz>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     Steve Dickson <SteveD@RedHat.com>
-Subject: [PATCH nfs-utils] gssd: use mutex to protect decrement of refcount
-Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Date:   Fri, 21 May 2021 14:54:03 +1000
-Message-id: <162157284381.19062.14252943620142216829@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+It fixes Python 3 warning:
+    nfs4.1/server41tests/st_flex.py:618: SyntaxWarning: "is not" with a literal. Did you mean "!="?
+      if nfsstat4[res.status] is not 'NFS4_OK':
 
-The decrement of the "ple" refcount is not protected so it can race with
-increments or decrements from other threads.  An increment could be lost
-and then the ple would be freed early, leading to memory corruption.
+0bfa03c correctly changed NFS4_OK to string, as nfsstat4 dictionary
+values are strings, but comparator was not changed.
 
-So use the mutex to protect decrements (increments are already
-protected).
+But instead of just changing operator to '!=' also use res.status
+directly thus we can compare with NFS4_OK (int variable) instead of
+"NFS4_OK" (string literal => typos not detected).
 
-As gssd_destroy_krb5_principals() calls release_ple() while holding the
-mutex, we need a "release_pte_locked()" which doesn't take the mutex.
+Fixes: 0bfa03c ("st_flex: Fixup check for error in layoutget_return()")
 
-Signed-off-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Petr Vorel <pvorel@suse.cz>
 ---
- utils/gssd/krb5_util.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ nfs4.1/server41tests/st_flex.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
-index 28b60ba307d0..51e0c6a2484b 100644
---- a/utils/gssd/krb5_util.c
-+++ b/utils/gssd/krb5_util.c
-@@ -169,18 +169,28 @@ static int gssd_get_single_krb5_cred(krb5_context context,
- static int query_krb5_ccache(const char* cred_cache, char **ret_princname,
- 		char **ret_realm);
+diff --git a/nfs4.1/server41tests/st_flex.py b/nfs4.1/server41tests/st_flex.py
+index 169db69..766b213 100644
+--- a/nfs4.1/server41tests/st_flex.py
++++ b/nfs4.1/server41tests/st_flex.py
+@@ -615,7 +615,7 @@ def layoutget_return(sess, fh, open_stateid, allowed_errors=NFS4_OK,
+                         0, NFS4_MAXFILELEN, 4196, open_stateid, 0xffff)]
+     res = sess.compound(ops)
+     check(res, allowed_errors)
+-    if nfsstat4[res.status] is not 'NFS4_OK':
++    if res.status != NFS4_OK:
+         return [res] # We can't return the layout without a stateid!
+     layout_stateid = res.resarray[-1].logr_stateid
  
--static void release_ple(krb5_context context, struct gssd_k5_kt_princ *ple)
-+static void release_ple_locked(krb5_context context,
-+			       struct gssd_k5_kt_princ *ple)
- {
- 	if (--ple->refcount)
- 		return;
- 
--	printerr(3, "freeing cached principal (ccname=%s, realm=%s)\n", ple->ccname, ple->realm);
-+	printerr(3, "freeing cached principal (ccname=%s, realm=%s)\n",
-+		 ple->ccname, ple->realm);
- 	krb5_free_principal(context, ple->princ);
- 	free(ple->ccname);
- 	free(ple->realm);
- 	free(ple);
- }
- 
-+static void release_ple(krb5_context context, struct gssd_k5_kt_princ *ple)
-+{
-+	pthread_mutex_lock(&ple_lock);
-+	release_ple_locked(context, ple);
-+	pthread_mutex_unlock(&ple_lock);
-+}
-+
-+
- /*
-  * Called from the scandir function to weed out potential krb5
-  * credentials cache files
-@@ -1420,7 +1430,7 @@ gssd_destroy_krb5_principals(int destroy_machine_creds)
- 			}
- 		}
- 
--		release_ple(context, ple);
-+		release_ple_locked(context, ple);
- 	}
- 	pthread_mutex_unlock(&ple_lock);
- 	krb5_free_context(context);
 -- 
 2.31.1
 
