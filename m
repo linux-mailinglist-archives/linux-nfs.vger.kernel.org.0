@@ -2,162 +2,122 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B91A38D659
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 May 2021 17:24:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3512E38DC66
+	for <lists+linux-nfs@lfdr.de>; Sun, 23 May 2021 20:26:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231193AbhEVPZv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 22 May 2021 11:25:51 -0400
-Received: from bronze1.eecs.yorku.ca ([130.63.94.75]:54302 "EHLO
-        bronze1.eecs.yorku.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231191AbhEVPZt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 22 May 2021 11:25:49 -0400
-X-Greylist: delayed 2186 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 May 2021 11:25:49 EDT
-Received: from [170.133.224.154] (helo=[192.168.1.136])
-        by bronze1.eecs.yorku.ca with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2-31-503e55a2c)
-        (envelope-from <jas@eecs.yorku.ca>)
-        id 1lkSuy-000Jip-UT
-        for linux-nfs@vger.kernel.org; Sat, 22 May 2021 10:47:57 -0400
-From:   Jason Keltz <jas@eecs.yorku.ca>
-Subject: ksu problem with sec=krb5 and nfs
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Message-ID: <abbd93ac-4a68-a471-fbb4-a9baf05b89c9@eecs.yorku.ca>
-Date:   Sat, 22 May 2021 10:47:49 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+        id S231933AbhEWS11 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 23 May 2021 14:27:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52324 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231929AbhEWS11 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 23 May 2021 14:27:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621794360;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vOWSDlV6FTualYeo0g++aFI3U5MLIeHCtCdLS8KDy9E=;
+        b=e6zg1AVS2NGaewDW/3wbioah82G75lo5gTW4mnHy4zph5RqPKITMYg15oJvDVdvEDUpala
+        olSXzgBI9/GpVPuXEvWjqvVf7S5cQEjnmo98IrjO7krzAZqISeqqRr3cYMYaJolouklfso
+        QMRJEvgNFScJOm/+YGoCgTFEd+cqlIM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-466-CAVenLFbMpeMe1BxbDZ4aQ-1; Sun, 23 May 2021 14:25:58 -0400
+X-MC-Unique: CAVenLFbMpeMe1BxbDZ4aQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A4F408015C6;
+        Sun, 23 May 2021 18:25:57 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-112-73.phx2.redhat.com [10.3.112.73])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 627A750C0B;
+        Sun, 23 May 2021 18:25:57 +0000 (UTC)
+Subject: Re: [PATCH nfs-utils] gssd: use mutex to protect decrement of
+ refcount
+To:     NeilBrown <neilb@suse.de>
+Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <162157284381.19062.14252943620142216829@noble.neil.brown.name>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <19f91c57-8f48-fce2-672d-4b21a6e38a1b@RedHat.com>
+Date:   Sun, 23 May 2021 14:28:54 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <162157284381.19062.14252943620142216829@noble.neil.brown.name>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Spam-Score: -101.0
-X-Spam-Level: ---------------------------------------------------
-X-Spam-Report: Content analysis details:   (-101.0 points, 5.0 required)
-  pts rule name              description
- ---- ---------------------- --------------------------------------------------
- -100 SHORTCIRCUIT           Not all rules were run, due to a shortcircuited
-                             rule
- -1.0 ALL_TRUSTED            Passed through trusted hosts only via SMTP
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi.
 
-I'm unable to get ksu working wth krb5 NFSv4.  I think I can understand 
-why it doesn't work, but I'm looking for help finding a solution.
 
-I am logged into a RHEL7 system as a user "jas" (uid 1004) with working 
-Kerberos (using Samba AD).
+On 5/21/21 12:54 AM, NeilBrown wrote:
+> 
+> The decrement of the "ple" refcount is not protected so it can race with
+> increments or decrements from other threads.  An increment could be lost
+> and then the ple would be freed early, leading to memory corruption.
+> 
+> So use the mutex to protect decrements (increments are already
+> protected).
+> 
+> As gssd_destroy_krb5_principals() calls release_ple() while holding the
+> mutex, we need a "release_pte_locked()" which doesn't take the mutex.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
+Committed... (tag: nfs-utils-2-5-4-rc4)
 
-I want to switch to a user that is tdb (uid 1011) using ksu.
-
-I set up a .k5login file in tdb account containing jas@AD.EECS.YORKU.CA
-
-If tdb home directory is mounted with sec=sys, as jas I can "ksu tdb" 
-and it works every time.
-
-If tdb home directory is mounted with sec=krb5, I get permission denied 
-unless I enter a password.
-
-(Note that as jas I can still cat ~tdb/.k5login).
-
-KRB5CCNAME is FILE:/tmp/krb5cc_1004 (I can't use the keyring because the 
-Kerberos server in Samba doesn't support this on RHEL7).
-
-rpc.gssd -vvv returns:
-
-> handle_gssd_upcall: 'mech=krb5 uid=1011 enctypes=18,17,16,23,3,1,2 ' 
-> (nfs/clnt0)
-> krb5_not_machine_creds: uid 1011 tgtname (null)
-> ERROR: GSS-API: error in gss_acquire_cred(): GSS_S_FAILURE 
-> (Unspecified GSS failure.  Minor code may provide more information) - 
-> No Kerberos credentials available: Credentials cache permissions 
-> incorrect (filename: /tmp/krb5cc_1004)
-> looking for client creds with uid 1011 for server sea.eecs.yorku.ca in 
-> /tmp
-> CC '/tmp/krb5cc_1004' being considered, with preferred realm 
-> 'AD.EECS.YORKU.CA'
-> CC '/tmp/krb5cc_1004' owned by 1004, not 1011
-> CC '/tmp/krb5ccmachine_AD.EECS.YORKU.CA' being considered, with 
-> preferred realm 'AD.EECS.YORKU.CA'
-> CC '/tmp/krb5ccmachine_AD.EECS.YORKU.CA' owned by 0, not 1011
-> CC '/tmp/krb5cc_0' being considered, with preferred realm 
-> 'AD.EECS.YORKU.CA'
-> CC '/tmp/krb5cc_0' owned by 0, not 1011
-> looking for client creds with uid 1011 for server sea.eecs.yorku.ca in 
-> /run/user/%U
-> Error doing scandir on directory '/run/user/1011': No such file or 
-> directory
-> doing error downcall
->
-> handle_gssd_upcall: 'mech=krb5 uid=1011 enctypes=18,17,16,23,3,1,2 ' 
-> (nfs/clnt0)
-> krb5_not_machine_creds: uid 1011 tgtname (null)
-> ERROR: GSS-API: error in gss_acquire_cred(): GSS_S_FAILURE 
-> (Unspecified GSS failure.  Minor code may provide more information) - 
-> No Kerberos credentials available: Credentials cache permissions 
-> incorrect (filename: /tmp/krb5cc_1004)
-> looking for client creds with uid 1011 for server sea.eecs.yorku.ca in 
-> /tmp
-> CC '/tmp/krb5cc_1004' being considered, with preferred realm 
-> 'AD.EECS.YORKU.CA'
-> CC '/tmp/krb5cc_1004' owned by 1004, not 1011
-> CC '/tmp/krb5ccmachine_AD.EECS.YORKU.CA' being considered, with 
-> preferred realm 'AD.EECS.YORKU.CA'
-> CC '/tmp/krb5ccmachine_AD.EECS.YORKU.CA' owned by 0, not 1011
-> CC '/tmp/krb5cc_0' being considered, with preferred realm 
-> 'AD.EECS.YORKU.CA'
-> CC '/tmp/krb5cc_0' owned by 0, not 1011
-> looking for client creds with uid 1011 for server sea.eecs.yorku.ca in 
-> /run/user/%U
-> Error doing scandir on directory '/run/user/1011': No such file or 
-> directory
-> doing error downcall
-
-If I actually enter the password then /tmp/krb5cc_1011 shows up, and 
-everything works.
-
-> handle_gssd_upcall: 'mech=krb5 uid=1011 enctypes=18,17,16,23,3,1,2 ' 
-> (nfs/clnt0)
-> krb5_not_machine_creds: uid 1011 tgtname (null)
-> ERROR: GSS-API: error in gss_acquire_cred(): GSS_S_FAILURE 
-> (Unspecified GSS failure.  Minor code may provide more information) - 
-> No Kerberos credentials available: Credentials cache permissions 
-> incorrect (filename: /tmp/krb5cc_1004)
-> looking for client creds with uid 1011 for server sea.eecs.yorku.ca in 
-> /tmp
-> CC '/tmp/krb5cc_1004' being considered, with preferred realm 
-> 'AD.EECS.YORKU.CA'
-> CC '/tmp/krb5cc_1004' owned by 1004, not 1011
-> CC '/tmp/krb5cc_1011.9bpz551G' being considered, with preferred realm 
-> 'AD.EECS.YORKU.CA'
-> CC 'FILE:/tmp/krb5cc_1011.9bpz551G'(tdb@AD.EECS.YORKU.CA) passed all 
-> checks and has mtime of 1621645808
-> CC '/tmp/krb5ccmachine_AD.EECS.YORKU.CA' being considered, with 
-> preferred realm 'AD.EECS.YORKU.CA'
-> CC '/tmp/krb5ccmachine_AD.EECS.YORKU.CA' owned by 0, not 1011
-> CC '/tmp/krb5cc_0' being considered, with preferred realm 
-> 'AD.EECS.YORKU.CA'
-> CC '/tmp/krb5cc_0' owned by 0, not 1011
-> using FILE:/tmp/krb5cc_1011.9bpz551G as credentials cache for client 
-> with uid 1011 for server sea.eecs.yorku.ca
-> using gss_krb5_ccache_name to select krb5 ccache 
-> FILE:/tmp/krb5cc_1011.9bpz551G
-> creating tcp client for server sea.eecs.yorku.ca
-> DEBUG: port already set to 2049
-> creating context with server nfs@sea.eecs.yorku.ca
-> DEBUG: serialize_krb5_ctx: lucid version!
-> prepare_krb5_rfc4121_buffer: protocol 1
-> prepare_krb5_rfc4121_buffer: serializing key with enctype 18 and size 32
-> doing downcall: lifetime_rec=36000 acceptor=nfs@sea.eecs.yorku.ca
-
-Of course I can exit and the ksu session, and restart it, and it doesn't 
-ask for a password because the ticket is in the right place now.
-
-rpc.gssd wouldn't see KRB5CCNAME variable as its a running daemon, but 
-it seems to do the right thing looking for the right file in /tmp.
-
-Can someone help me understand the issue, and whether there is a solution?
-
-Jason.
+steved.
+> ---
+>  utils/gssd/krb5_util.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
+> index 28b60ba307d0..51e0c6a2484b 100644
+> --- a/utils/gssd/krb5_util.c
+> +++ b/utils/gssd/krb5_util.c
+> @@ -169,18 +169,28 @@ static int gssd_get_single_krb5_cred(krb5_context context,
+>  static int query_krb5_ccache(const char* cred_cache, char **ret_princname,
+>  		char **ret_realm);
+>  
+> -static void release_ple(krb5_context context, struct gssd_k5_kt_princ *ple)
+> +static void release_ple_locked(krb5_context context,
+> +			       struct gssd_k5_kt_princ *ple)
+>  {
+>  	if (--ple->refcount)
+>  		return;
+>  
+> -	printerr(3, "freeing cached principal (ccname=%s, realm=%s)\n", ple->ccname, ple->realm);
+> +	printerr(3, "freeing cached principal (ccname=%s, realm=%s)\n",
+> +		 ple->ccname, ple->realm);
+>  	krb5_free_principal(context, ple->princ);
+>  	free(ple->ccname);
+>  	free(ple->realm);
+>  	free(ple);
+>  }
+>  
+> +static void release_ple(krb5_context context, struct gssd_k5_kt_princ *ple)
+> +{
+> +	pthread_mutex_lock(&ple_lock);
+> +	release_ple_locked(context, ple);
+> +	pthread_mutex_unlock(&ple_lock);
+> +}
+> +
+> +
+>  /*
+>   * Called from the scandir function to weed out potential krb5
+>   * credentials cache files
+> @@ -1420,7 +1430,7 @@ gssd_destroy_krb5_principals(int destroy_machine_creds)
+>  			}
+>  		}
+>  
+> -		release_ple(context, ple);
+> +		release_ple_locked(context, ple);
+>  	}
+>  	pthread_mutex_unlock(&ple_lock);
+>  	krb5_free_context(context);
+> 
 
