@@ -2,80 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B95E139086A
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 May 2021 20:02:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17F34390871
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 May 2021 20:04:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232847AbhEYSER (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 May 2021 14:04:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232367AbhEYSEO (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 25 May 2021 14:04:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 17E19613D8
-        for <linux-nfs@vger.kernel.org>; Tue, 25 May 2021 18:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621965764;
-        bh=M2IbsbrlnkubofiaIql2tXG4AUGE+T+yiiZ3564q0cA=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=s3GQ7XS1odc3GWHT9L5ku9m4FFy1Ymeb0qpIY4fBRckWA3HHhaw3t7QPYqIlx5qHo
-         +ZLWgfYBuWbzNqTUBf1LTPbEzasgiuIVd7jPbi1kkWBEurB31Ln+1HWsg5mA/zfGNy
-         ZP1i9Uoe+dtI6rGozCHMZRpVdtPWz86u28zPmJrUKJW9rvOK/GEzQK52aQPgDiCyl1
-         Qfzdn8dAw/M8o5dhcSA8ut0g15a8TjxKWV2Su/6bxLOj5O2m5O5jeV6mglZ1CemACh
-         AQM6ypU9OS6TBMnK4lz+ZbKJuQ2g5cN2nC/8DPVu6CM9JBymG8kDqmKZT0wgWwin7Y
-         w6p2KdFi9mmMg==
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 3/3] NFS: Clean up reset of the mirror accounting variables
-Date:   Tue, 25 May 2021 14:02:41 -0400
-Message-Id: <20210525180241.261090-3-trondmy@kernel.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210525180241.261090-2-trondmy@kernel.org>
-References: <20210525180241.261090-1-trondmy@kernel.org>
- <20210525180241.261090-2-trondmy@kernel.org>
+        id S230420AbhEYSGQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 May 2021 14:06:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42367 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230145AbhEYSGP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 May 2021 14:06:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621965885;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IXa+If68+s28EwNOtxA1CBQhlqvz5sofqzf+80KoJro=;
+        b=buAnKkoSsXxw31acU0ClIGqvM65x81o1Cpg/PAJdAlbXYakElhzhkGbYpHui5nAZPMkXIt
+        TUHhfvnHBMLTe26TwXD1MygeZrHjJIbHjjuxbqHyhB0FLlRBqr47eWZUN9RrPh6wR14P2D
+        LlwJWeY/LBV2/0myMWMwPd/YJJ0X/Rs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-341-ukBIWPKfPp-l2nYAF4V8xg-1; Tue, 25 May 2021 14:04:42 -0400
+X-MC-Unique: ukBIWPKfPp-l2nYAF4V8xg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0ABE5188E3C1;
+        Tue, 25 May 2021 18:04:41 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-112-214.phx2.redhat.com [10.3.112.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 97855100EBB0;
+        Tue, 25 May 2021 18:04:40 +0000 (UTC)
+Subject: Re: [PATCH nfs-utils 1/2] README: update git repository URL
+To:     Roland Hieber <rhi@pengutronix.de>
+Cc:     linux-nfs@vger.kernel.org
+References: <20210525112729.29062-1-rhi@pengutronix.de>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <7655df6c-076c-c22e-0687-86b0c2e0b9e7@RedHat.com>
+Date:   Tue, 25 May 2021 14:07:37 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210525112729.29062-1-rhi@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Now that nfs_pageio_do_add_request() resets the pg_count, we don't need
-these other inlined resets.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/pagelist.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+On 5/25/21 7:27 AM, Roland Hieber wrote:
+> The old URL is no longer available. Update to the new URL that is
+> mentioned on https://linux-nfs.org.
+> 
+> Signed-off-by: Roland Hieber <rhi@pengutronix.de>
+> ---
+>  README | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+Committed (tag: nfs-utils-2-5-4-rc5)
 
-diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index daf6658517f4..cf9cc62ec48e 100644
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -1132,12 +1132,8 @@ static void nfs_pageio_doio(struct nfs_pageio_descriptor *desc)
- 		int error = desc->pg_ops->pg_doio(desc);
- 		if (error < 0)
- 			desc->pg_error = error;
--		if (list_empty(&mirror->pg_list)) {
-+		if (list_empty(&mirror->pg_list))
- 			mirror->pg_bytes_written += mirror->pg_count;
--			mirror->pg_count = 0;
--			mirror->pg_base = 0;
--			mirror->pg_recoalesce = 0;
--		}
- 	}
- }
- 
-@@ -1227,9 +1223,6 @@ static int nfs_do_recoalesce(struct nfs_pageio_descriptor *desc)
- 
- 	do {
- 		list_splice_init(&mirror->pg_list, &head);
--		mirror->pg_count = 0;
--		mirror->pg_base = 0;
--		mirror->pg_recoalesce = 0;
- 
- 		while (!list_empty(&head)) {
- 			struct nfs_page *req;
--- 
-2.31.1
+steved.
+
+> 
+> diff --git a/README b/README
+> index 7034c0091d49..663b667437dc 100644
+> --- a/README
+> +++ b/README
+> @@ -34,7 +34,7 @@ To install binaries and documenation, run this command:
+>  
+>  Getting nfs-utils for the first time:
+>  
+> -	git clone git://linux-nfs.org/nfs-utils
+> +	git clone git://git.linux-nfs.org/projects/steved/nfs-utils.git
+>  
+>  Updating to the latest head after you've already got it.
+>  
+> 
 
