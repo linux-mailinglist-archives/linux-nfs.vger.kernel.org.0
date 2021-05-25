@@ -2,71 +2,48 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE95938EA08
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 May 2021 16:50:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C4F738FBF9
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 May 2021 09:48:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233705AbhEXOwU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 May 2021 10:52:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:39266 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233824AbhEXOuT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 May 2021 10:50:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621867730;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FuwT3ctKk4xVdw6+dePmYKxpmod0OzT4Muotu5Xq2YQ=;
-        b=MGjcFIe6HQ+CE8ivbPUwD5SDTe1CHz48lNvgOMC45F6KCyfeLrTIgWomVhJq1NSO1l96Ti
-        C+Xm9xOc9thAHRAmcaDXSPmyIfVU5e+mI1HF6x33BPEHwlvr5VcMVcVmG5fmGxm1o9ip+3
-        +7/KXHvtubdG6WVuoSumU0RrdSmpxbU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-274-Jn65E5Z_NS-BiEj1r18Qqg-1; Mon, 24 May 2021 10:48:48 -0400
-X-MC-Unique: Jn65E5Z_NS-BiEj1r18Qqg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DF912180FD6C;
-        Mon, 24 May 2021 14:48:47 +0000 (UTC)
-Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 96CCC5C230;
-        Mon, 24 May 2021 14:48:47 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Jason Keltz" <jas@eecs.yorku.ca>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: ksu problem with sec=krb5 and nfs
-Date:   Mon, 24 May 2021 10:48:46 -0400
-Message-ID: <0D324C0D-A00C-4A44-9814-2D717F830DF9@redhat.com>
-In-Reply-To: <dd51738b-b2c2-2dcf-68b1-e78c66d08b28@eecs.yorku.ca>
-References: <abbd93ac-4a68-a471-fbb4-a9baf05b89c9@eecs.yorku.ca>
- <7714ABF4-E9CD-424B-BF7F-6F1B91F58C2B@redhat.com>
- <dd51738b-b2c2-2dcf-68b1-e78c66d08b28@eecs.yorku.ca>
+        id S231532AbhEYHuQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 May 2021 03:50:16 -0400
+Received: from mail2.directv.syn-alias.com ([69.168.106.50]:54433 "EHLO
+        mail.directv.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231263AbhEYHuQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 May 2021 03:50:16 -0400
+DKIM-Signature: v=1; a=rsa-sha1; d=wildblue.net; s=20170921; c=relaxed/simple;
+        q=dns/txt; i=@wildblue.net; t=1621928926;
+        h=From:Subject:Date:To:MIME-Version:Content-Type;
+        bh=uJQJNut0A7xrwgC3hvByq4Xy8us=;
+        b=fkRIodKL2eKzLbYJgTACNxgQY74Mn3FPNngN3KFWA6ix9wqLkhjDwVBUOr8lChKn
+        Pd+9z9GSxYm7rRTJ2BBE/wskKl7oD89hrxpvtIUUGH9SJKMz4HuC4NmRwIeB44hX
+        gsyiBcuKcTcMabntDrAUlPm8uubLtf5ZP5P56zgZ+6qr5xLrWAviawImp4iV8Prg
+        lSrEomWnnUhGnuGs/An9ThYP8w8oswquK/ldD4fEtyFnxmNmoDl602COpOZpJ21B
+        DOUVW3xFMlY3U4ZaMCYSsIXsDaqrpCH8J3QXVFDlMRMQ83Mjvbd4mAxfhIjB96Er
+        6qMdzhV1NMuulBTYRxMDIw==;
+X-Authed-Username: c3VlZGFobEB3aWxkYmx1ZS5uZXQ=
+Received: from [10.80.118.16] ([10.80.118.16:57798] helo=md02.jasper.bos.sync.lan)
+        by mail2.directv.syn-alias.com (envelope-from <suedahl@wildblue.net>)
+        (ecelerity 3.6.25.56547 r(Core:3.6.25.0)) with ESMTP
+        id 4E/29-26161-DDBACA06; Tue, 25 May 2021 03:48:45 -0400
+Date:   Tue, 25 May 2021 03:48:45 -0400 (EDT)
+From:   Rowell Hambrick <suedahl@wildblue.net>
+Reply-To: rowhm328@gmail.com
+To:     li0001@126.com
+Message-ID: <504652710.5526245.1621928925442.JavaMail.zimbra@wildblue.net>
+Subject: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [91.205.230.202]
+X-Mailer: Zimbra 8.7.6_GA_1776 (zclient/8.7.6_GA_1776)
+Thread-Index: djn1iaY5siP0rk/DK+4Q03qU5aGQYw==
+Thread-Topic: 
+X-Vade-Verditct: clean
+X-Vade-Analysis: gggruggvucftvghtrhhoucdtuddrgeduledrvdektddguddvudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfujgfpteevqfftpdggkfetufetvfdpqfgfvfenuceurghilhhouhhtmecufedtudenucfgmhhpthihuchsuhgsjhgvtghtucdluddtmdenucfjughrpeffhfhrvffkufggtgfgihfothesthejtgdtredtjeenucfhrhhomheptfhofigvlhhlucfjrghmsghrihgtkhcuoehsuhgvuggrhhhlseifihhluggslhhuvgdrnhgvtheqnecuggftrfgrthhtvghrnhepfffgfefhtdfhudduvddukeeihefgueelieevheelteehteevgeejgeejledvgedtnecukfhppedutddrkedtrdduudekrdduiedpledurddvtdehrddvfedtrddvtddvnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepuddtrdektddruddukedrudeipdhhvghlohepmhgutddvrdhjrghsphgvrhdrsghoshdrshihnhgtrdhlrghnpdhmrghilhhfrhhomhepshhuvggurghhlhesfihilhgusghluhgvrdhnvghtpdhrtghpthhtoheplhhinhiihhgrnhguihhnghesudeifedrtghomhdphhhoshhtpehsmhhtphdrjhgrshhpvghrrdgsohhsrdhshihntgdrlhgrnhdpshhpfhepshhofhhtfhgrihhlpdgukhhimhep
+X-Vade-Client: VIASAT
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 24 May 2021, at 10:44, Jason Keltz wrote:
-
-> Hi Benjamin,
->
-> That's exactly it - I definately want ksu to be writing that exact 
-> file.  Any idea why it isn't, and why it matters if the home 
-> directory is using sec=krb5 or not?
-
-Because if you're mounting with sec=krb5, then the kernel's going to 
-upcall to rpc.gssd, which is going to try to find the credential cache 
-to establish a context with the NFS server.  None of that has to happen 
-with sec=sys.
-
-As far as where ksu puts the target cred cache - I don't know the 
-details there.  Dig into the ksu source, or docs.. maybe you need to set 
-the krb5cc default cred cache.
-
-Ben
-
+Do you get my previous mail
