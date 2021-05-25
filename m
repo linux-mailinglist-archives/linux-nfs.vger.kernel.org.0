@@ -2,33 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCEF8390580
+	by mail.lfdr.de (Postfix) with ESMTP id 03A3039057E
 	for <lists+linux-nfs@lfdr.de>; Tue, 25 May 2021 17:32:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231442AbhEYPeG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S232917AbhEYPeG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Tue, 25 May 2021 11:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60750 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:60752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230433AbhEYPeC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 25 May 2021 11:34:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A93C860FDA
-        for <linux-nfs@vger.kernel.org>; Tue, 25 May 2021 15:32:32 +0000 (UTC)
+        id S231442AbhEYPeD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 25 May 2021 11:34:03 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2B281613A9
+        for <linux-nfs@vger.kernel.org>; Tue, 25 May 2021 15:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621956752;
-        bh=UhrHBKosMz1K30r/ZhYPKcQEvrPpBbiwevAFkmCXAgQ=;
-        h=From:To:Subject:Date:From;
-        b=sNhGEQmTrwA7NiZlP4p4w9qShX8zDyI/yC0cJZPTnfAcbxF/ROv2yqap3fv6zS4N4
-         y+DgpQqTT36ntl6cvXQFR4wu/zrHkK9U9WOPsqIJTfX5wBwjQB8pfUXfRUOeBXXDyf
-         bKZijW4rhT5kXyntkNnE5MxHitUnast6ORS70SOquNsUgIopJnv1KzL1d9uy7Vqljt
-         fXuN7aG2FdGNBc7RMjoc/07puCvlAjlzIuIXg8kuDa0zNl8bEm7WdtGCBzhFbybffb
-         UuO4PnYlmINAupABLy7NzUksxyWzIiD2xIuZOt04aPyoVURI5ogW7oVa50ABEEV4p1
-         6FBB8srlJt5vA==
+        s=k20201202; t=1621956753;
+        bh=kFSDor3o68xMSqIvc+AiRQRGf4YlJZMthZPY0fF6Wlg=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=h0CyhStl7LRbCHEtdOaa0YSm3N0z77IotmIwazj/YnWEqM8/zdUp9Z8+zVSKji/D8
+         xwlrNtr0PsQ82y1Ej/BGeR8m3RGoe9CDi4RF2V02uU6SEMI6pglIB6EOTAsd0pH+fO
+         o3yM2i38PmoDV7aHjuNo7hSea9sLhXG3tgxJRR+Pd29AeSzmvOJXhwvtLz0BGLj/aG
+         Jt+bgiV1AAQRxWPXOgo5oWm7mrbh+e/GLdm9miUQyy3zEqnTBTmtwIl4h5JKNvbu4u
+         XYu6zkqOtdW08CYfJnbJfqo8VTPy20Ixb+A1Oju394PKNsm+MgRUHLq9DdMNPoVf3S
+         erHQvaZ5quG4A==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/3] NFS: Fix an Oopsable condition in __nfs_pageio_add_request()
-Date:   Tue, 25 May 2021 11:32:29 -0400
-Message-Id: <20210525153231.240329-1-trondmy@kernel.org>
+Subject: [PATCH 2/3] NFS: Don't corrupt the value of pg_bytes_written in nfs_do_recoalesce()
+Date:   Tue, 25 May 2021 11:32:30 -0400
+Message-Id: <20210525153231.240329-2-trondmy@kernel.org>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210525153231.240329-1-trondmy@kernel.org>
+References: <20210525153231.240329-1-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -37,51 +39,47 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Ensure that nfs_pageio_error_cleanup() resets the mirror array contents,
-so that the structure reflects the fact that it is now empty.
-Also change the test in nfs_pageio_do_add_request() to be more robust by
-checking whether or not the list is empty rather than relying on the
-value of pg_count.
+The value of mirror->pg_bytes_written should only be updated after a
+successful attempt to flush out the requests on the list.
 
-Fixes: fdbd1a2e4a71 ("nfs: Fix a missed page unlock after pg_doio()")
+Fixes: a7d42ddb3099 ("nfs: add mirroring support to pgio layer")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/pagelist.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/nfs/pagelist.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index 6c20b28d9d7c..76869728c44e 100644
+index 76869728c44e..a5d3e2a12ae9 100644
 --- a/fs/nfs/pagelist.c
 +++ b/fs/nfs/pagelist.c
-@@ -1094,15 +1094,14 @@ nfs_pageio_do_add_request(struct nfs_pageio_descriptor *desc,
- 	struct nfs_page *prev = NULL;
- 	unsigned int size;
+@@ -1126,17 +1126,16 @@ static void nfs_pageio_doio(struct nfs_pageio_descriptor *desc)
+ {
+ 	struct nfs_pgio_mirror *mirror = nfs_pgio_current_mirror(desc);
  
--	if (mirror->pg_count != 0) {
--		prev = nfs_list_entry(mirror->pg_list.prev);
--	} else {
-+	if (list_empty(&mirror->pg_list)) {
- 		if (desc->pg_ops->pg_init)
- 			desc->pg_ops->pg_init(desc, req);
- 		if (desc->pg_error < 0)
- 			return 0;
- 		mirror->pg_base = req->wb_pgbase;
--	}
-+	} else
-+		prev = nfs_list_entry(mirror->pg_list.prev);
- 
- 	if (desc->pg_maxretrans && req->wb_nio > desc->pg_maxretrans) {
- 		if (NFS_SERVER(desc->pg_inode)->flags & NFS_MOUNT_SOFTERR)
-@@ -1278,6 +1277,9 @@ static void nfs_pageio_error_cleanup(struct nfs_pageio_descriptor *desc)
- 		mirror = nfs_pgio_get_mirror(desc, midx);
- 		desc->pg_completion_ops->error_cleanup(&mirror->pg_list,
- 				desc->pg_error);
-+		mirror->pg_count = 0;
-+		mirror->pg_base = 0;
+-
+ 	if (!list_empty(&mirror->pg_list)) {
+ 		int error = desc->pg_ops->pg_doio(desc);
+ 		if (error < 0)
+ 			desc->pg_error = error;
+-		else
+-			mirror->pg_bytes_written += mirror->pg_count;
+ 	}
+ 	if (list_empty(&mirror->pg_list)) {
++		mirror->pg_bytes_written += mirror->pg_count;
+ 		mirror->pg_count = 0;
+ 		mirror->pg_base = 0;
 +		mirror->pg_recoalesce = 0;
  	}
  }
  
+@@ -1226,7 +1225,6 @@ static int nfs_do_recoalesce(struct nfs_pageio_descriptor *desc)
+ 
+ 	do {
+ 		list_splice_init(&mirror->pg_list, &head);
+-		mirror->pg_bytes_written -= mirror->pg_count;
+ 		mirror->pg_count = 0;
+ 		mirror->pg_base = 0;
+ 		mirror->pg_recoalesce = 0;
 -- 
 2.31.1
 
