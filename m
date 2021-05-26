@@ -2,327 +2,658 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF154391CA3
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 May 2021 18:04:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B95CB391D83
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 May 2021 19:05:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235299AbhEZQGL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 26 May 2021 12:06:11 -0400
-Received: from mail-dm6nam10on2106.outbound.protection.outlook.com ([40.107.93.106]:2916
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234690AbhEZQGL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 26 May 2021 12:06:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BUo96S7zItLZOX679j8/LjabraCSiMRRukSaemBZqlEhvUVK78FmyZtjRbLYJBzeTAfJLgZbWsEzaqEBOj/YerS9CYNdrovn2vwAuCM31HjN1EIMz3eV3bXf9khCKAygfrrl0s1lFU5Ot6bfjXHOOHC5lNh4bxDSSDja3JwK/PT3/UQPpZydlQris7ZqyMClgEOPukxsVajQNUS3IVUN5UJf2yXvNi8e5EErd1YrCpQFDSp3ZVDhk57Tq0TSWW0nkLJysZzQNxGJc4vW/SfhkhJDIs9mQttuGK+3kbkvMITzMmZpEUfwoMdvQS555nLm8n6gA1lvSWxlSCpye6yPMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l1Va9hgnYN/pF4VOiNHVuktXG1AbRYQg434vQf7fEp4=;
- b=GDTw0oy+o693PKMrViriFu07Gc01NQmdI2QCrnySylZzroyfMQLgQWjyhK7ZeN2QUlp/5NjEXW2nYVh7xhxtTiza4TlVIM8J6kn9Sc+XVaihzq11E/9bYdT8+O23v77fYEWgoCIF0vqwXPe056+Xi4J9EtjUJgRdB9tVgqPOritGKyFW+KA/jSf83beN8m64ZsanHwdhSXIeXEZxZwbsgxZhDFEd96q1n6HYp7KIBxsVddzxci0Y70j3h0lz1jLWdIlRvIiEixnb80nfjyVoINRVFySqGElOfPfoj/aC6/iqX6R9EJ8Eob90/3d24WsF9CRAhzp2hkHQr9z7lQ0HkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l1Va9hgnYN/pF4VOiNHVuktXG1AbRYQg434vQf7fEp4=;
- b=bA8ACZsmtDzHff5RItN8dBkK4JbEky5WmUbqVl/lRbZAHKTrHfVc12DJA7DVgME+gf/iipU8s8psZVrrPjpVaL8/TImG7++9ZlpDE5JOvNIc0H03YvUbuOXvmaWIExIgU522qEII/sfGuc+qiEQxrIDHASc+3Vvdgj5JSsK0Y4I=
-Received: from DS7PR13MB4733.namprd13.prod.outlook.com (2603:10b6:5:3b1::24)
- by DM6PR13MB3274.namprd13.prod.outlook.com (2603:10b6:5:193::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.12; Wed, 26 May
- 2021 16:04:37 +0000
-Received: from DS7PR13MB4733.namprd13.prod.outlook.com
- ([fe80::4c65:55ca:a5a2:f18]) by DS7PR13MB4733.namprd13.prod.outlook.com
- ([fe80::4c65:55ca:a5a2:f18%7]) with mapi id 15.20.4195.009; Wed, 26 May 2021
- 16:04:37 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2] SUNRPC: More fixes for backlog congestion
-Thread-Topic: [PATCH v2] SUNRPC: More fixes for backlog congestion
-Thread-Index: AQHXUh6d+J3LkamgF0WKtxG3UoO5B6r1z4aAgAAd4gA=
-Date:   Wed, 26 May 2021 16:04:37 +0000
-Message-ID: <3ccfe411c0d2dd40c77de0e60ada0c868bcca48e.camel@hammerspace.com>
-References: <20210526110221.338870-1-trondmy@kernel.org>
-         <DCFAF511-B2F0-458F-9F3F-CE870F40EE9D@oracle.com>
-In-Reply-To: <DCFAF511-B2F0-458F-9F3F-CE870F40EE9D@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ffd78db8-4417-4b85-8212-08d9205ff67f
-x-ms-traffictypediagnostic: DM6PR13MB3274:
-x-microsoft-antispam-prvs: <DM6PR13MB327486F5769FF1346940EB64B8249@DM6PR13MB3274.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:247;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ahhYf3MjSEIP847IIPJF0xziKElElNLfzXtDIkU4aEavVMFJQxQuve5DR/zxvPT/i5jAV1VVQ7Io3E1QrqB5vCdhXVldLxLazxUUXgym0Tu3sd947DAJk6ejXaIcEYksE/BZHVzk3o7VaSd64KKVJZVvSxKSXtfJGUCnt2ZFJswnd4MT4R2ipy3157laCUO5Vlr3elWci1wodZyYvsUH7jstUZ/FCh+zo7nrNanFYtA29SlGOIJsitF9yqrcv+lxF481wtLrS6SL+MMYtX2scusRProgEX9VYOeAXvNNtQ+Kwq5qTkNxzR4Ipex1e6JCffS8Nmbj6zkyZKj79aflyGC9ZQs7QTGDy+W5+qNdOhsb275KRTKnIeuYU5qAJFJCtNEg5CJ7rjG1hbD2reEv0F+mohyg4AjwP+9M89iOFK/EEGoJ5bG6j5ljHCxbC2spr+6gLcnkkU3SrkqsaVH0wdadJvgsdQD/iwTlrDQ3GVSNBPM24KGsPYwodiXcmIJ+1AnDPtpfdgIjFYjKkkiUyik/A6b/Y4J+mMiBR9XPbRg+39TFGL1dlEpjb1g2+yXiwgLrd53EcqtpW80kIOxhlZhiw3KTxXU45CImrWIxeF4=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR13MB4733.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(186003)(83380400001)(2906002)(66946007)(6916009)(71200400001)(66476007)(498600001)(26005)(8676002)(8936002)(6512007)(53546011)(6506007)(38100700002)(122000001)(36756003)(5660300002)(76116006)(91956017)(64756008)(4326008)(66446008)(2616005)(86362001)(66556008)(6486002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?ZCtFTHM2d0ZOTTU0bWVpQk8yclYrdG0xaXY4V2V3VGg5WHM0UWtHTmRPZ1Ri?=
- =?utf-8?B?ekdoWk9rYnNMRkppV29zUnp6N0V5U29xT0F6eW5nQzJ2MzZMZXlVbnZkMFd3?=
- =?utf-8?B?ajJ6UkM3T0FGR1MxYnJFdGpQTWF1K2NSRk5PVzlIT3Z3L2EvLzUxbjdtKzJJ?=
- =?utf-8?B?ME9xNnU5SkxFY2pXT0YxUnAwSi9GQXJUZHpzblk0RHlvd2Z6Q0dEKzlBN1I5?=
- =?utf-8?B?WlplNlkvRTRBbWdVUUdLT0sycmUxOWdKcXc2cTFuY0prQ1FTZThYOXVGWkV2?=
- =?utf-8?B?RHRHcHphSHc3UEltbEV6K25iVUpOYjVKUldDdUNKR3IxTGdJckY0WnBaOE9p?=
- =?utf-8?B?Q3ZNSDFzUjhBQzIxNGFVelU0SWcwdS9QL29VYkV4bzBnaGVwaGxRMDBjVCs0?=
- =?utf-8?B?UmswZzJWbGd6RkpENzRYR3VwSjNMelh6V0ZiV3BFOERTT242YWx0WUQ1OEZh?=
- =?utf-8?B?KzVxMkZIN252a1B5VzNpd0c2QXl3MEFGYTk4OUZ0bzkrU0FDc0Q3dWZCNzBN?=
- =?utf-8?B?a0U2WHYwU2EvQnhwRWo0MCsyN2RNYkI3RnF2TUhiVmpjNllNOEZCMUNsQmJk?=
- =?utf-8?B?Yy9tSUp5Y3B6Qmo0eWVRejVORURQcERQdFNRVHJCV3B2TGE3YW9SVlRIMWV4?=
- =?utf-8?B?R05WVXJxeXgyRWcwd0V4bzg4dFA5Ry9QR0xNcVdKeWFCYkZmSzdodDFzYUsw?=
- =?utf-8?B?TDVBN1NWWjNIakJZRGVPUE0vQU9nYlk2QTBDWWtaUmNLNE5IOUdiNUNCdXV2?=
- =?utf-8?B?dzh1V2pwSmpUUFlxY1Vxd0lkME50dnlMYlFLS0RTcDYvdFdoNGNjaGVkdU1q?=
- =?utf-8?B?UE00K0JNaWNHZWlsQThyWUxJbUF2MW1qWHQzZE00Q3JxdFVMaHZaUExCYUN1?=
- =?utf-8?B?ZWlHV0MyZUQzenBPdkF3cDVIdFBzbmNXTjRRajM2WXY4d1ZvNDlLRTFvSUEv?=
- =?utf-8?B?RzVYaW4rQ2twUXZsZG9IVE5DdmVxa3FMTEJ5YlRqVjF2bTRSWitDbFZYYmc2?=
- =?utf-8?B?S0tURXRBY3ExdlNEdmxkdDF6dUlrMC8vQzI2Y0FWQWJXdzQ5c21qanpOanpy?=
- =?utf-8?B?a3JPRERYQ2ptemt6eUMxS2Y2Umt0SlhDWE10WTZFUWRBL1A2ZFFtV0o3Z3o4?=
- =?utf-8?B?Y3RIc0NCa2l2Z0N0cnV6a0RldlNJa1BEcldzSklmL0VtalN3ZGhwbW9weG9Y?=
- =?utf-8?B?MG5sWWhOajd1Nmh5VmR4R0RyYVdJVDdEZzluNEFBWDRIdTYvV1dmTVl2UC8y?=
- =?utf-8?B?R2x1bFBVOGdSM3c1ZGd0SW04VTdEYkZHOHVMRVZ1NGUzNWxxYmFBYVhNdTRq?=
- =?utf-8?B?U2xFZjN2OWRYdCtjVTQ2cWVlMWdUVkF5NnNJY3dzWDdobkxLUUQreDdlNjVs?=
- =?utf-8?B?TlpLYnp1NXpQQ2Y1aDNDbTBTTlFmb3MrQzFaYVZhTEloV2dNempMR0E1UFpD?=
- =?utf-8?B?QWFKY3BlL0tJMXVpMmsvTlROMEVCRE5nVldFREZEZzVDTEtNRzJQMnJLUUZR?=
- =?utf-8?B?NXIvUVYrd3lSUTJHTktvaTc5YzRxTXh2L0YvZDliVWV0WHIwUVpiM0Q0VHpP?=
- =?utf-8?B?bzMzZDR5ZFFIemxpVHM1TGNXMUd5ZmFJbGhaYmpIMHpld21FSFpUaDFSTmlq?=
- =?utf-8?B?Q1NzNHVOR2JlRFk4QWRDbmcxb1UwWDY1Ym9hcDVkRGc1QUhZVTlPSXBRQWZD?=
- =?utf-8?B?akljUkV2bkwxQ0ZCNldvd3ZueWpLajFRR2Fhb1lhUmxUTWxzaG82eWE1ZnNh?=
- =?utf-8?Q?BzEM28h4ngcOnax2LUu+U1bqgFu5JHZsGDpS8PJ?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <718F5A5E72BC9A48AA16D4F0E71E8DEC@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S233781AbhEZRHB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 26 May 2021 13:07:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23933 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233644AbhEZRHA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 May 2021 13:07:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1622048728;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=udfHxAiDSfDfln4LuzHcQ2H/PReIHKjDUSBaofJN6x4=;
+        b=Q1OmiuHliS91BQhnZHYFlaUCmScKCRSIq8F8j8E776Gm7lYo2dpPC5jZkTG6elb4p7ZkEC
+        YODPsBb2WdWGjJ4ED3IxwTCK5L8p/YAeW3f7PynfelZgQppCdIiJbSaxdq/P8v/9Q25Dbv
+        D7+U3B+Zvgevt+7vFXGLmJlLVOR0plg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-346-uMJNUvG3MSClL6KD9WXiyA-1; Wed, 26 May 2021 13:05:24 -0400
+X-MC-Unique: uMJNUvG3MSClL6KD9WXiyA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 23766801107
+        for <linux-nfs@vger.kernel.org>; Wed, 26 May 2021 17:05:24 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (ovpn-112-214.phx2.redhat.com [10.3.112.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A2FAA62693;
+        Wed, 26 May 2021 17:05:23 +0000 (UTC)
+Subject: Re: [nfs-utils RFC PATCH 2/2] gssd: add timeout for upcall threads
+To:     Scott Mayhew <smayhew@redhat.com>, linux-nfs@vger.kernel.org
+References: <20210525180033.200404-1-smayhew@redhat.com>
+ <20210525180033.200404-3-smayhew@redhat.com>
+From:   Steve Dickson <SteveD@RedHat.com>
+Message-ID: <490b45eb-0142-24de-e05f-79751891ddf9@RedHat.com>
+Date:   Wed, 26 May 2021 13:08:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR13MB4733.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ffd78db8-4417-4b85-8212-08d9205ff67f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2021 16:04:37.7894
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tyv8zC5ox7MfNpPDLofwML0s9/je3f/T6BW9I5VUvNtp15OxERYTXh7Q/3GVf5VI8mXUWA/HvE8/FUVqx4E1Dg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR13MB3274
+In-Reply-To: <20210525180033.200404-3-smayhew@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIxLTA1LTI2IGF0IDE0OjE3ICswMDAwLCBDaHVjayBMZXZlciBJSUkgd3JvdGU6
-DQo+IA0KPiANCj4gPiBPbiBNYXkgMjYsIDIwMjEsIGF0IDc6MDIgQU0sIHRyb25kbXlAa2VybmVs
-Lm9yZ8Kgd3JvdGU6DQo+ID4gDQo+ID4gRnJvbTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWts
-ZWJ1c3RAaGFtbWVyc3BhY2UuY29tPg0KPiA+IA0KPiA+IEVuc3VyZSB0aGF0IHdlIGZpeCB0aGUg
-WFBSVF9DT05HRVNURUQgc3RhcnZhdGlvbiBpc3N1ZSBmb3IgUkRNQSBhcw0KPiA+IHdlbGwNCj4g
-PiBhcyBzb2NrZXQgYmFzZWQgdHJhbnNwb3J0cy4NCj4gPiBFbnN1cmUgd2UgYWx3YXlzIGluaXRp
-YWxpc2UgdGhlIHJlcXVlc3QgYWZ0ZXIgd2FraW5nIHVwIGZyb20gdGhlDQo+ID4gYmFja2xvZw0K
-PiA+IGxpc3QuDQo+IA0KPiBPdXQgb2YgaW50ZXJlc3QsIHdoYXQgcHJvbXB0ZWQgdGhpcyBjb21t
-aXQ/IENvZGUgYXVkaXQsDQo+IG9yIG1pc2JlaGF2aW9yPw0KDQpBbm5hIHdhcyBzZWVpbmcgbWlz
-YmVoYXZpb3VyIHdoZW4gdGVzdGluZyBrcmI1IG1vdW50cyB3aXRoIHRoZSBvcmlnaW5hbA0KcGF0
-Y2ggZnJvbSBOZWlsLiBGdXJ0aGVybW9yZSwgd2hlbiBJIGxvb2tlZCBhdCBoaXMgZml4LCBJIG5v
-dGljZWQgdGhhdA0KUkRNQSB3YXMgZXhlbXB0LCBkZXNwaXRlIHRoZSBmYWN0IHRoYXQgaXQgaGFz
-IHRoZSBleGFjdCBzYW1lIHBvdGVudGlhbA0KZm9yIG1pc2JlaGF2aW91ciBhcyB0aGUgc29ja2V0
-IGNvZGUuDQoNCj4gDQo+IA0KPiA+IEZpeGVzOiBlODc3YTg4ZDFmMDYgKCJTVU5SUEMgaW4gY2Fz
-ZSBvZiBiYWNrbG9nLCBoYW5kIGZyZWUgc2xvdHMNCj4gPiBkaXJlY3RseSB0byB3YWl0aW5nIHRh
-c2siKQ0KPiA+IFNpZ25lZC1vZmYtYnk6IFRyb25kIE15a2xlYnVzdCA8dHJvbmQubXlrbGVidXN0
-QGhhbW1lcnNwYWNlLmNvbT4NCj4gPiAtLS0NCj4gPiB2MjogRW5zdXJlIHdlIHJlbGVhc2UgdGhl
-IFJETUEgcmVwbHkgYnVmZmVyDQo+ID4gDQo+ID4gaW5jbHVkZS9saW51eC9zdW5ycGMveHBydC5o
-wqDCoMKgwqAgfMKgIDIgKysNCj4gPiBuZXQvc3VucnBjL3hwcnQuY8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgfCA1OCArKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0NCj4gPiAtLS0N
-Cj4gPiBuZXQvc3VucnBjL3hwcnRyZG1hL3RyYW5zcG9ydC5jIHwgMTIgKysrLS0tLQ0KPiA+IG5l
-dC9zdW5ycGMveHBydHJkbWEvdmVyYnMuY8KgwqDCoMKgIHwgMTggKysrKysrKystLQ0KPiA+IG5l
-dC9zdW5ycGMveHBydHJkbWEveHBydF9yZG1hLmggfMKgIDEgKw0KPiA+IDUgZmlsZXMgY2hhbmdl
-ZCwgNTIgaW5zZXJ0aW9ucygrKSwgMzkgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdp
-dCBhL2luY2x1ZGUvbGludXgvc3VucnBjL3hwcnQuaA0KPiA+IGIvaW5jbHVkZS9saW51eC9zdW5y
-cGMveHBydC5oDQo+ID4gaW5kZXggZDgxZmU4YjM2NGQwLi42MWI2MjJlMzM0ZWUgMTAwNjQ0DQo+
-ID4gLS0tIGEvaW5jbHVkZS9saW51eC9zdW5ycGMveHBydC5oDQo+ID4gKysrIGIvaW5jbHVkZS9s
-aW51eC9zdW5ycGMveHBydC5oDQo+ID4gQEAgLTM2OCw2ICszNjgsOCBAQCBzdHJ1Y3QgcnBjX3hw
-cnQgKsKgwqDCoHhwcnRfYWxsb2Moc3RydWN0IG5ldCAqbmV0LA0KPiA+IHNpemVfdCBzaXplLA0K
-PiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqB1bnNpZ25lZCBpbnQgbnVtX3ByZWFsbG9jLA0KPiA+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB1bnNpZ25l
-ZCBpbnQgbWF4X3JlcSk7DQo+ID4gdm9pZMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqB4cHJ0X2ZyZWUoc3RydWN0IHJwY194cHJ0ICopOw0KPiA+ICt2b2lkwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB4cHJ0X2FkZF9iYWNrbG9nKHN0cnVjdCBycGNf
-eHBydCAqeHBydCwNCj4gPiBzdHJ1Y3QgcnBjX3Rhc2sgKnRhc2spOw0KPiA+ICtib29swqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB4cHJ0X3dha2VfdXBfYmFja2xvZyhzdHJ1
-Y3QgcnBjX3hwcnQgKnhwcnQsDQo+ID4gc3RydWN0IHJwY19ycXN0ICpyZXEpOw0KPiA+IA0KPiA+
-IHN0YXRpYyBpbmxpbmUgaW50DQo+ID4geHBydF9lbmFibGVfc3dhcChzdHJ1Y3QgcnBjX3hwcnQg
-KnhwcnQpDQo+ID4gZGlmZiAtLWdpdCBhL25ldC9zdW5ycGMveHBydC5jIGIvbmV0L3N1bnJwYy94
-cHJ0LmMNCj4gPiBpbmRleCA1YjM5ODFmZDM3ODMuLjM1MDlhN2YxMzliOSAxMDA2NDQNCj4gPiAt
-LS0gYS9uZXQvc3VucnBjL3hwcnQuYw0KPiA+ICsrKyBiL25ldC9zdW5ycGMveHBydC5jDQo+ID4g
-QEAgLTE2MDcsMTEgKzE2MDcsMTggQEAgeHBydF90cmFuc21pdChzdHJ1Y3QgcnBjX3Rhc2sgKnRh
-c2spDQo+ID4gwqDCoMKgwqDCoMKgwqDCoHNwaW5fdW5sb2NrKCZ4cHJ0LT5xdWV1ZV9sb2NrKTsN
-Cj4gPiB9DQo+ID4gDQo+ID4gLXN0YXRpYyB2b2lkIHhwcnRfYWRkX2JhY2tsb2coc3RydWN0IHJw
-Y194cHJ0ICp4cHJ0LCBzdHJ1Y3QNCj4gPiBycGNfdGFzayAqdGFzaykNCj4gPiArc3RhdGljIHZv
-aWQgeHBydF9jb21wbGV0ZV9yZXF1ZXN0X2luaXQoc3RydWN0IHJwY190YXNrICp0YXNrKQ0KPiA+
-ICt7DQo+ID4gK8KgwqDCoMKgwqDCoMKgaWYgKHRhc2stPnRrX3Jxc3RwKQ0KPiA+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB4cHJ0X3JlcXVlc3RfaW5pdCh0YXNrKTsNCj4gPiArfQ0K
-PiA+ICsNCj4gPiArdm9pZCB4cHJ0X2FkZF9iYWNrbG9nKHN0cnVjdCBycGNfeHBydCAqeHBydCwg
-c3RydWN0IHJwY190YXNrDQo+ID4gKnRhc2spDQo+ID4gew0KPiA+IMKgwqDCoMKgwqDCoMKgwqBz
-ZXRfYml0KFhQUlRfQ09OR0VTVEVELCAmeHBydC0+c3RhdGUpOw0KPiA+IC3CoMKgwqDCoMKgwqDC
-oHJwY19zbGVlcF9vbigmeHBydC0+YmFja2xvZywgdGFzaywgTlVMTCk7DQo+ID4gK8KgwqDCoMKg
-wqDCoMKgcnBjX3NsZWVwX29uKCZ4cHJ0LT5iYWNrbG9nLCB0YXNrLA0KPiA+IHhwcnRfY29tcGxl
-dGVfcmVxdWVzdF9pbml0KTsNCj4gPiB9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKHhwcnRfYWRk
-X2JhY2tsb2cpOw0KPiA+IA0KPiA+IHN0YXRpYyBib29sIF9feHBydF9zZXRfcnEoc3RydWN0IHJw
-Y190YXNrICp0YXNrLCB2b2lkICpkYXRhKQ0KPiA+IHsNCj4gPiBAQCAtMTYxOSwxNCArMTYyNiwx
-MyBAQCBzdGF0aWMgYm9vbCBfX3hwcnRfc2V0X3JxKHN0cnVjdCBycGNfdGFzaw0KPiA+ICp0YXNr
-LCB2b2lkICpkYXRhKQ0KPiA+IA0KPiA+IMKgwqDCoMKgwqDCoMKgwqBpZiAodGFzay0+dGtfcnFz
-dHAgPT0gTlVMTCkgew0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbWVtc2V0
-KHJlcSwgMCwgc2l6ZW9mKCpyZXEpKTvCoMKgwqAvKiBtYXJrIHVudXNlZCAqLw0KPiA+IC3CoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB0YXNrLT50a19zdGF0dXMgPSAtRUFHQUlOOw0KPiA+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgdGFzay0+dGtfcnFzdHAgPSByZXE7DQo+
-ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gdHJ1ZTsNCj4gPiDCoMKg
-wqDCoMKgwqDCoMKgfQ0KPiA+IMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gZmFsc2U7DQo+ID4gfQ0K
-PiA+IA0KPiA+IC1zdGF0aWMgYm9vbCB4cHJ0X3dha2VfdXBfYmFja2xvZyhzdHJ1Y3QgcnBjX3hw
-cnQgKnhwcnQsIHN0cnVjdA0KPiA+IHJwY19ycXN0ICpyZXEpDQo+ID4gK2Jvb2wgeHBydF93YWtl
-X3VwX2JhY2tsb2coc3RydWN0IHJwY194cHJ0ICp4cHJ0LCBzdHJ1Y3QgcnBjX3Jxc3QNCj4gPiAq
-cmVxKQ0KPiA+IHsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgaWYgKHJwY193YWtlX3VwX2ZpcnN0KCZ4
-cHJ0LT5iYWNrbG9nLCBfX3hwcnRfc2V0X3JxLCByZXEpDQo+ID4gPT0gTlVMTCkgew0KPiA+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2xlYXJfYml0KFhQUlRfQ09OR0VTVEVELCAm
-eHBydC0+c3RhdGUpOw0KPiA+IEBAIC0xNjM0LDYgKzE2NDAsNyBAQCBzdGF0aWMgYm9vbCB4cHJ0
-X3dha2VfdXBfYmFja2xvZyhzdHJ1Y3QNCj4gPiBycGNfeHBydCAqeHBydCwgc3RydWN0IHJwY19y
-cXN0ICpyZXEpDQo+ID4gwqDCoMKgwqDCoMKgwqDCoH0NCj4gPiDCoMKgwqDCoMKgwqDCoMKgcmV0
-dXJuIHRydWU7DQo+ID4gfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTCh4cHJ0X3dha2VfdXBfYmFj
-a2xvZyk7DQo+ID4gDQo+ID4gc3RhdGljIGJvb2wgeHBydF90aHJvdHRsZV9jb25nZXN0ZWQoc3Ry
-dWN0IHJwY194cHJ0ICp4cHJ0LCBzdHJ1Y3QNCj4gPiBycGNfdGFzayAqdGFzaykNCj4gPiB7DQo+
-ID4gQEAgLTE2NDMsNyArMTY1MCw3IEBAIHN0YXRpYyBib29sIHhwcnRfdGhyb3R0bGVfY29uZ2Vz
-dGVkKHN0cnVjdA0KPiA+IHJwY194cHJ0ICp4cHJ0LCBzdHJ1Y3QgcnBjX3Rhc2sgKnRhc2sNCj4g
-PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGdvdG8gb3V0Ow0KPiA+IMKgwqDCoMKg
-wqDCoMKgwqBzcGluX2xvY2soJnhwcnQtPnJlc2VydmVfbG9jayk7DQo+ID4gwqDCoMKgwqDCoMKg
-wqDCoGlmICh0ZXN0X2JpdChYUFJUX0NPTkdFU1RFRCwgJnhwcnQtPnN0YXRlKSkgew0KPiA+IC3C
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBycGNfc2xlZXBfb24oJnhwcnQtPmJhY2tsb2cs
-IHRhc2ssIE5VTEwpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB4cHJ0X2Fk
-ZF9iYWNrbG9nKHhwcnQsIHRhc2spOw0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgcmV0ID0gdHJ1ZTsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgfQ0KPiA+IMKgwqDCoMKgwqDCoMKg
-wqBzcGluX3VubG9jaygmeHBydC0+cmVzZXJ2ZV9sb2NrKTsNCj4gPiBAQCAtMTgxMiwxMCArMTgx
-OSw2IEBAIHhwcnRfcmVxdWVzdF9pbml0KHN0cnVjdCBycGNfdGFzayAqdGFzaykNCj4gPiDCoMKg
-wqDCoMKgwqDCoMKgc3RydWN0IHJwY194cHJ0ICp4cHJ0ID0gdGFzay0+dGtfeHBydDsNCj4gPiDC
-oMKgwqDCoMKgwqDCoMKgc3RydWN0IHJwY19ycXN0wqAqcmVxID0gdGFzay0+dGtfcnFzdHA7DQo+
-ID4gDQo+ID4gLcKgwqDCoMKgwqDCoMKgaWYgKHJlcS0+cnFfdGFzaykNCj4gPiAtwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgLyogQWxyZWFkeSBpbml0aWFsaXplZCAqLw0KPiA+IC3CoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm47DQo+ID4gLQ0KPiA+IMKgwqDCoMKgwqDC
-oMKgwqByZXEtPnJxX3Rhc2vCoMKgwqDCoD0gdGFzazsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgcmVx
-LT5ycV94cHJ0wqDCoMKgID0geHBydDsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgcmVxLT5ycV9idWZm
-ZXLCoCA9IE5VTEw7DQo+ID4gQEAgLTE4NzYsMTAgKzE4NzksOCBAQCB2b2lkIHhwcnRfcmV0cnlf
-cmVzZXJ2ZShzdHJ1Y3QgcnBjX3Rhc2sNCj4gPiAqdGFzaykNCj4gPiDCoMKgwqDCoMKgwqDCoMKg
-c3RydWN0IHJwY194cHJ0ICp4cHJ0ID0gdGFzay0+dGtfeHBydDsNCj4gPiANCj4gPiDCoMKgwqDC
-oMKgwqDCoMKgdGFzay0+dGtfc3RhdHVzID0gMDsNCj4gPiAtwqDCoMKgwqDCoMKgwqBpZiAodGFz
-ay0+dGtfcnFzdHAgIT0gTlVMTCkgew0KPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqB4cHJ0X3JlcXVlc3RfaW5pdCh0YXNrKTsNCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAodGFzay0+
-dGtfcnFzdHAgIT0gTlVMTCkNCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJl
-dHVybjsNCj4gPiAtwqDCoMKgwqDCoMKgwqB9DQo+ID4gDQo+ID4gwqDCoMKgwqDCoMKgwqDCoHRh
-c2stPnRrX3N0YXR1cyA9IC1FQUdBSU47DQo+ID4gwqDCoMKgwqDCoMKgwqDCoHhwcnRfZG9fcmVz
-ZXJ2ZSh4cHJ0LCB0YXNrKTsNCj4gPiBAQCAtMTkwNCwyNCArMTkwNSwyMSBAQCB2b2lkIHhwcnRf
-cmVsZWFzZShzdHJ1Y3QgcnBjX3Rhc2sgKnRhc2spDQo+ID4gwqDCoMKgwqDCoMKgwqDCoH0NCj4g
-PiANCj4gPiDCoMKgwqDCoMKgwqDCoMKgeHBydCA9IHJlcS0+cnFfeHBydDsNCj4gPiAtwqDCoMKg
-wqDCoMKgwqBpZiAoeHBydCkgew0KPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB4
-cHJ0X3JlcXVlc3RfZGVxdWV1ZV94cHJ0KHRhc2spOw0KPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqBzcGluX2xvY2soJnhwcnQtPnRyYW5zcG9ydF9sb2NrKTsNCj4gPiAtwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgeHBydC0+b3BzLT5yZWxlYXNlX3hwcnQoeHBydCwgdGFz
-ayk7DQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlmICh4cHJ0LT5vcHMtPnJl
-bGVhc2VfcmVxdWVzdCkNCj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoHhwcnQtPm9wcy0+cmVsZWFzZV9yZXF1ZXN0KHRhc2spOw0KPiA+IC3CoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB4cHJ0X3NjaGVkdWxlX2F1dG9kaXNjb25uZWN0KHhwcnQp
-Ow0KPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBzcGluX3VubG9jaygmeHBydC0+
-dHJhbnNwb3J0X2xvY2spOw0KPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAo
-cmVxLT5ycV9idWZmZXIpDQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqB4cHJ0LT5vcHMtPmJ1Zl9mcmVlKHRhc2spOw0KPiA+IC3CoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqB4ZHJfZnJlZV9idmVjKCZyZXEtPnJxX3Jjdl9idWYpOw0KPiA+IC3C
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB4ZHJfZnJlZV9idmVjKCZyZXEtPnJxX3NuZF9i
-dWYpOw0KPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAocmVxLT5ycV9jcmVk
-ICE9IE5VTEwpDQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqBwdXRfcnBjY3JlZChyZXEtPnJxX2NyZWQpOw0KPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqBpZiAocmVxLT5ycV9yZWxlYXNlX3NuZF9idWYpDQo+ID4gLcKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXEtPnJxX3JlbGVhc2Vfc25kX2J1
-ZihyZXEpOw0KPiA+IC3CoMKgwqDCoMKgwqDCoH0gZWxzZQ0KPiA+IC3CoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqB4cHJ0ID0gdGFzay0+dGtfeHBydDsNCj4gPiArwqDCoMKgwqDCoMKgwqB4
-cHJ0X3JlcXVlc3RfZGVxdWV1ZV94cHJ0KHRhc2spOw0KPiA+ICvCoMKgwqDCoMKgwqDCoHNwaW5f
-bG9jaygmeHBydC0+dHJhbnNwb3J0X2xvY2spOw0KPiA+ICvCoMKgwqDCoMKgwqDCoHhwcnQtPm9w
-cy0+cmVsZWFzZV94cHJ0KHhwcnQsIHRhc2spOw0KPiA+ICvCoMKgwqDCoMKgwqDCoGlmICh4cHJ0
-LT5vcHMtPnJlbGVhc2VfcmVxdWVzdCkNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgeHBydC0+b3BzLT5yZWxlYXNlX3JlcXVlc3QodGFzayk7DQo+ID4gK8KgwqDCoMKgwqDCoMKg
-eHBydF9zY2hlZHVsZV9hdXRvZGlzY29ubmVjdCh4cHJ0KTsNCj4gPiArwqDCoMKgwqDCoMKgwqBz
-cGluX3VubG9jaygmeHBydC0+dHJhbnNwb3J0X2xvY2spOw0KPiA+ICvCoMKgwqDCoMKgwqDCoGlm
-IChyZXEtPnJxX2J1ZmZlcikNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgeHBy
-dC0+b3BzLT5idWZfZnJlZSh0YXNrKTsNCj4gPiArwqDCoMKgwqDCoMKgwqB4ZHJfZnJlZV9idmVj
-KCZyZXEtPnJxX3Jjdl9idWYpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoHhkcl9mcmVlX2J2ZWMoJnJl
-cS0+cnFfc25kX2J1Zik7DQo+ID4gK8KgwqDCoMKgwqDCoMKgaWYgKHJlcS0+cnFfY3JlZCAhPSBO
-VUxMKQ0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwdXRfcnBjY3JlZChyZXEt
-PnJxX2NyZWQpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoGlmIChyZXEtPnJxX3JlbGVhc2Vfc25kX2J1
-ZikNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVxLT5ycV9yZWxlYXNlX3Nu
-ZF9idWYocmVxKTsNCj4gPiANCj4gPiDCoMKgwqDCoMKgwqDCoMKgdGFzay0+dGtfcnFzdHAgPSBO
-VUxMOw0KPiA+IMKgwqDCoMKgwqDCoMKgwqBpZiAobGlrZWx5KCFiY19wcmVhbGxvYyhyZXEpKSkN
-Cj4gPiBkaWZmIC0tZ2l0IGEvbmV0L3N1bnJwYy94cHJ0cmRtYS90cmFuc3BvcnQuYw0KPiA+IGIv
-bmV0L3N1bnJwYy94cHJ0cmRtYS90cmFuc3BvcnQuYw0KPiA+IGluZGV4IDA5OTUzNTk3ZDA1NS4u
-MTlhNDlkMjZiMWU0IDEwMDY0NA0KPiA+IC0tLSBhL25ldC9zdW5ycGMveHBydHJkbWEvdHJhbnNw
-b3J0LmMNCj4gPiArKysgYi9uZXQvc3VucnBjL3hwcnRyZG1hL3RyYW5zcG9ydC5jDQo+ID4gQEAg
-LTUyMCw5ICs1MjAsOCBAQCB4cHJ0X3JkbWFfYWxsb2Nfc2xvdChzdHJ1Y3QgcnBjX3hwcnQgKnhw
-cnQsDQo+ID4gc3RydWN0IHJwY190YXNrICp0YXNrKQ0KPiA+IMKgwqDCoMKgwqDCoMKgwqByZXR1
-cm47DQo+ID4gDQo+ID4gb3V0X3NsZWVwOg0KPiA+IC3CoMKgwqDCoMKgwqDCoHNldF9iaXQoWFBS
-VF9DT05HRVNURUQsICZ4cHJ0LT5zdGF0ZSk7DQo+ID4gLcKgwqDCoMKgwqDCoMKgcnBjX3NsZWVw
-X29uKCZ4cHJ0LT5iYWNrbG9nLCB0YXNrLCBOVUxMKTsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgdGFz
-ay0+dGtfc3RhdHVzID0gLUVBR0FJTjsNCj4gPiArwqDCoMKgwqDCoMKgwqB4cHJ0X2FkZF9iYWNr
-bG9nKHhwcnQsIHRhc2spOw0KPiA+IH0NCj4gPiANCj4gPiAvKioNCj4gPiBAQCAtNTM3LDEwICs1
-MzYsMTEgQEAgeHBydF9yZG1hX2ZyZWVfc2xvdChzdHJ1Y3QgcnBjX3hwcnQgKnhwcnQsDQo+ID4g
-c3RydWN0IHJwY19ycXN0ICpycXN0KQ0KPiA+IMKgwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgcnBjcmRt
-YV94cHJ0ICpyX3hwcnQgPQ0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29u
-dGFpbmVyX29mKHhwcnQsIHN0cnVjdCBycGNyZG1hX3hwcnQsIHJ4X3hwcnQpOw0KPiA+IA0KPiA+
-IC3CoMKgwqDCoMKgwqDCoG1lbXNldChycXN0LCAwLCBzaXplb2YoKnJxc3QpKTsNCj4gPiAtwqDC
-oMKgwqDCoMKgwqBycGNyZG1hX2J1ZmZlcl9wdXQoJnJfeHBydC0+cnhfYnVmLCBycGNyX3RvX3Jk
-bWFyKHJxc3QpKTsNCj4gPiAtwqDCoMKgwqDCoMKgwqBpZiAodW5saWtlbHkoIXJwY193YWtlX3Vw
-X25leHQoJnhwcnQtPmJhY2tsb2cpKSkNCj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgY2xlYXJfYml0KFhQUlRfQ09OR0VTVEVELCAmeHBydC0+c3RhdGUpOw0KPiA+ICvCoMKgwqDC
-oMKgwqDCoHJwY3JkbWFfcmVwbHlfcHV0KCZyX3hwcnQtPnJ4X2J1ZiwgcnBjcl90b19yZG1hcihy
-cXN0KSk7DQo+ID4gK8KgwqDCoMKgwqDCoMKgaWYgKCF4cHJ0X3dha2VfdXBfYmFja2xvZyh4cHJ0
-LCBycXN0KSkgew0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtZW1zZXQocnFz
-dCwgMCwgc2l6ZW9mKCpycXN0KSk7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oHJwY3JkbWFfYnVmZmVyX3B1dCgmcl94cHJ0LT5yeF9idWYsDQo+ID4gcnBjcl90b19yZG1hcihy
-cXN0KSk7DQo+ID4gK8KgwqDCoMKgwqDCoMKgfQ0KPiA+IH0NCj4gPiANCj4gPiBzdGF0aWMgYm9v
-bCBycGNyZG1hX2NoZWNrX3JlZ2J1ZihzdHJ1Y3QgcnBjcmRtYV94cHJ0ICpyX3hwcnQsDQo+ID4g
-ZGlmZiAtLWdpdCBhL25ldC9zdW5ycGMveHBydHJkbWEvdmVyYnMuYw0KPiA+IGIvbmV0L3N1bnJw
-Yy94cHJ0cmRtYS92ZXJicy5jDQo+ID4gaW5kZXggMWU5NjVhMzgwODk2Li42NDljMjM1MThlYzAg
-MTAwNjQ0DQo+ID4gLS0tIGEvbmV0L3N1bnJwYy94cHJ0cmRtYS92ZXJicy5jDQo+ID4gKysrIGIv
-bmV0L3N1bnJwYy94cHJ0cmRtYS92ZXJicy5jDQo+ID4gQEAgLTEyMDAsNiArMTIwMCwyMCBAQCBy
-cGNyZG1hX21yX2dldChzdHJ1Y3QgcnBjcmRtYV94cHJ0ICpyX3hwcnQpDQo+ID4gwqDCoMKgwqDC
-oMKgwqDCoHJldHVybiBtcjsNCj4gPiB9DQo+ID4gDQo+ID4gKy8qKg0KPiA+ICsgKiBycGNyZG1h
-X3JlcGx5X3B1dCAtIFB1dCByZXBseSBidWZmZXJzIGJhY2sgaW50byBwb29sDQo+ID4gKyAqIEBi
-dWZmZXJzOiBidWZmZXIgcG9vbA0KPiA+ICsgKiBAcmVxOiBvYmplY3QgdG8gcmV0dXJuDQo+ID4g
-KyAqDQo+ID4gKyAqLw0KPiA+ICt2b2lkIHJwY3JkbWFfcmVwbHlfcHV0KHN0cnVjdCBycGNyZG1h
-X2J1ZmZlciAqYnVmZmVycywgc3RydWN0DQo+ID4gcnBjcmRtYV9yZXEgKnJlcSkNCj4gPiArew0K
-PiA+ICvCoMKgwqDCoMKgwqDCoGlmIChyZXEtPnJsX3JlcGx5KSB7DQo+ID4gK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoHJwY3JkbWFfcmVwX3B1dChidWZmZXJzLCByZXEtPnJsX3JlcGx5
-KTsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVxLT5ybF9yZXBseSA9IE5V
-TEw7DQo+ID4gK8KgwqDCoMKgwqDCoMKgfQ0KPiA+ICt9DQo+ID4gKw0KPiA+IC8qKg0KPiA+IMKg
-KiBycGNyZG1hX2J1ZmZlcl9nZXQgLSBHZXQgYSByZXF1ZXN0IGJ1ZmZlcg0KPiA+IMKgKiBAYnVm
-ZmVyczogQnVmZmVyIHBvb2wgZnJvbSB3aGljaCB0byBvYnRhaW4gYSBidWZmZXINCj4gPiBAQCAt
-MTIyOCw5ICsxMjQyLDcgQEAgcnBjcmRtYV9idWZmZXJfZ2V0KHN0cnVjdCBycGNyZG1hX2J1ZmZl
-cg0KPiA+ICpidWZmZXJzKQ0KPiA+IMKgKi8NCj4gPiB2b2lkIHJwY3JkbWFfYnVmZmVyX3B1dChz
-dHJ1Y3QgcnBjcmRtYV9idWZmZXIgKmJ1ZmZlcnMsIHN0cnVjdA0KPiA+IHJwY3JkbWFfcmVxICpy
-ZXEpDQo+ID4gew0KPiA+IC3CoMKgwqDCoMKgwqDCoGlmIChyZXEtPnJsX3JlcGx5KQ0KPiA+IC3C
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBycGNyZG1hX3JlcF9wdXQoYnVmZmVycywgcmVx
-LT5ybF9yZXBseSk7DQo+ID4gLcKgwqDCoMKgwqDCoMKgcmVxLT5ybF9yZXBseSA9IE5VTEw7DQo+
-ID4gK8KgwqDCoMKgwqDCoMKgcnBjcmRtYV9yZXBseV9wdXQoYnVmZmVycywgcmVxKTsNCj4gPiAN
-Cj4gPiDCoMKgwqDCoMKgwqDCoMKgc3Bpbl9sb2NrKCZidWZmZXJzLT5yYl9sb2NrKTsNCj4gPiDC
-oMKgwqDCoMKgwqDCoMKgbGlzdF9hZGQoJnJlcS0+cmxfbGlzdCwgJmJ1ZmZlcnMtPnJiX3NlbmRf
-YnVmcyk7DQo+ID4gZGlmZiAtLWdpdCBhL25ldC9zdW5ycGMveHBydHJkbWEveHBydF9yZG1hLmgN
-Cj4gPiBiL25ldC9zdW5ycGMveHBydHJkbWEveHBydF9yZG1hLmgNCj4gPiBpbmRleCA0MzZhZDcz
-MTI2MTQuLjVkMjMxZDk0ZTk0NCAxMDA2NDQNCj4gPiAtLS0gYS9uZXQvc3VucnBjL3hwcnRyZG1h
-L3hwcnRfcmRtYS5oDQo+ID4gKysrIGIvbmV0L3N1bnJwYy94cHJ0cmRtYS94cHJ0X3JkbWEuaA0K
-PiA+IEBAIC00NzksNiArNDc5LDcgQEAgc3RydWN0IHJwY3JkbWFfcmVxICpycGNyZG1hX2J1ZmZl
-cl9nZXQoc3RydWN0DQo+ID4gcnBjcmRtYV9idWZmZXIgKik7DQo+ID4gdm9pZCBycGNyZG1hX2J1
-ZmZlcl9wdXQoc3RydWN0IHJwY3JkbWFfYnVmZmVyICpidWZmZXJzLA0KPiA+IMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBycGNyZG1hX3JlcSAq
-cmVxKTsNCj4gPiB2b2lkIHJwY3JkbWFfcmVwX3B1dChzdHJ1Y3QgcnBjcmRtYV9idWZmZXIgKmJ1
-Ziwgc3RydWN0IHJwY3JkbWFfcmVwDQo+ID4gKnJlcCk7DQo+ID4gK3ZvaWQgcnBjcmRtYV9yZXBs
-eV9wdXQoc3RydWN0IHJwY3JkbWFfYnVmZmVyICpidWZmZXJzLCBzdHJ1Y3QNCj4gPiBycGNyZG1h
-X3JlcSAqcmVxKTsNCj4gPiANCj4gPiBib29sIHJwY3JkbWFfcmVnYnVmX3JlYWxsb2Moc3RydWN0
-IHJwY3JkbWFfcmVnYnVmICpyYiwgc2l6ZV90IHNpemUsDQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGdmcF90IGZsYWdzKTsNCj4gPiAt
-LSANCj4gPiAyLjMxLjENCj4gPiANCj4gDQo+IC0tDQo+IENodWNrIExldmVyDQo+IA0KPiANCj4g
-DQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhh
-bW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+Hey!
+
+Again... a few very small teaks 
+
+On 5/25/21 2:00 PM, Scott Mayhew wrote:
+> Add a global list of active upcalls and a watchdog thread that walks the
+> list, looking for threads running longer than timeout seconds.  By
+> default, the watchdog thread will cancel these threads and report an
+> error of -ETIMEDOUT to the kernel.  Passing the -C option or setting
+> cancel-timed-out-upcalls=0 in nfs.conf disables this behavior and
+> causes the watchdog thread to simply log an error message instead.  The
+> upcall timeout can be specified by passing the -U option or by setting
+> the upcall-timeout parameter in nfs.conf.
+> 
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> ---
+>  nfs.conf               |   2 +
+>  utils/gssd/gssd.c      | 125 +++++++++++++++++++++++++++++++++++++++-
+>  utils/gssd/gssd.h      |  15 +++++
+>  utils/gssd/gssd.man    |  31 +++++++++-
+>  utils/gssd/gssd_proc.c | 127 ++++++++++++++++++++++++++++++++---------
+>  5 files changed, 270 insertions(+), 30 deletions(-)
+> 
+> diff --git a/nfs.conf b/nfs.conf
+> index 31994f61..7a987788 100644
+> --- a/nfs.conf
+> +++ b/nfs.conf
+> @@ -25,6 +25,8 @@
+>  # cred-cache-directory=
+>  # preferred-realm=
+>  # set-home=1
+> +# upcall-timeout=30
+> +# cancel-timed-out-upcalls=1
+>  #
+>  [lockd]
+>  # port=0
+> diff --git a/utils/gssd/gssd.c b/utils/gssd/gssd.c
+> index eb440470..54a1ea3f 100644
+> --- a/utils/gssd/gssd.c
+> +++ b/utils/gssd/gssd.c
+> @@ -95,9 +95,15 @@ static bool use_gssproxy = false;
+>  pthread_mutex_t clp_lock = PTHREAD_MUTEX_INITIALIZER;
+>  static bool signal_received = false;
+>  static struct event_base *evbase = NULL;
+> +pthread_mutex_t active_thread_list_lock = PTHREAD_MUTEX_INITIALIZER;
+> +
+> +int upcall_timeout = DEF_UPCALL_TIMEOUT;
+> +static bool cancel_timed_out_upcalls = true;
+>  
+>  TAILQ_HEAD(topdir_list_head, topdir) topdir_list;
+>  
+> +TAILQ_HEAD(active_thread_list_head, upcall_thread_info) active_thread_list;
+> +
+>  struct topdir {
+>  	TAILQ_ENTRY(topdir) list;
+>  	TAILQ_HEAD(clnt_list_head, clnt_info) clnt_list;
+> @@ -436,6 +442,100 @@ gssd_clnt_krb5_cb(int UNUSED(fd), short UNUSED(which), void *data)
+>  	handle_krb5_upcall(clp);
+>  }
+>  
+> +static int
+> +scan_active_thread_list(void)
+> +{
+> +	struct upcall_thread_info *info;
+> +	struct timespec now;
+> +	unsigned int sleeptime;
+> +	bool sleeptime_set = false;
+> +	int err;
+> +	void *tret, *saveprev;
+> +
+> +	sleeptime = upcall_timeout;
+> +	pthread_mutex_lock(&active_thread_list_lock);
+> +	clock_gettime(CLOCK_MONOTONIC, &now);
+> +	TAILQ_FOREACH(info, &active_thread_list, list) {
+> +		err = pthread_tryjoin_np(info->tid, &tret);
+> +		switch (err) {
+> +		case 0:
+> +			if (tret == PTHREAD_CANCELED)
+> +				printerr(3, "watchdog: thread id 0x%lx cancelled successfully\n",
+> +						info->tid);
+> +			saveprev = info->list.tqe_prev;
+> +			TAILQ_REMOVE(&active_thread_list, info, list);
+> +			free(info);
+> +			info = saveprev;
+> +			break;
+> +		case EBUSY:
+> +			if (now.tv_sec >= info->timeout.tv_sec) {
+> +				if (cancel_timed_out_upcalls && !info->cancelled) {
+> +					printerr(0, "watchdog: thread id 0x%lx timed out\n",
+> +							info->tid);
+> +					pthread_cancel(info->tid);
+> +					info->cancelled = true;
+> +					do_error_downcall(info->fd, info->uid, -ETIMEDOUT);
+> +				} else {
+> +					printerr(0, "watchdog: thread id 0x%lx running for %ld seconds\n",
+> +							info->tid,
+> +							now.tv_sec - info->timeout.tv_sec + upcall_timeout);
+If people are going to used the -C flag they are saying they want
+to ignore hung threads so I'm thinking with printerr(0) we would
+be filling up their logs about messages they don't care about.
+So I'm thinking we should change this to a printerr(1) 
+
+> +				}
+> +			} else if (!sleeptime_set) {
+> +				sleeptime = info->timeout.tv_sec - now.tv_sec;
+> +				sleeptime_set = true;
+> +			}
+> +			break;
+> +		default:
+> +			printerr(0, "watchdog: attempt to join thread id 0x%lx returned %d (%s)!\n",
+> +					info->tid, err, strerror(err));
+> +			break;
+> +		}
+> +	}
+> +	pthread_mutex_unlock(&active_thread_list_lock);
+> +
+> +	return sleeptime;
+> +}
+> +
+> +static void *
+> +watchdog_thread_fn(void *UNUSED(arg))
+> +{
+> +	unsigned int sleeptime;
+> +
+> +	for (;;) {
+> +		sleeptime = scan_active_thread_list();
+> +		printerr(4, "watchdog: sleeping %u secs\n", sleeptime);
+> +		sleep(sleeptime);
+> +	}
+> +	return (void *)0;
+> +}
+> +
+> +static int
+> +start_watchdog_thread(void)
+> +{
+> +	pthread_attr_t attr;
+> +	pthread_t th;
+> +	int ret;
+> +
+> +	ret = pthread_attr_init(&attr);
+> +	if (ret != 0) {
+> +		printerr(0, "ERROR: failed to init pthread attr: ret %d: %s\n",
+> +			 ret, strerror(errno));
+> +		return ret;
+> +	}
+> +	ret = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+> +	if (ret != 0) {
+> +		printerr(0, "ERROR: failed to create pthread attr: ret %d: %s\n",
+> +			 ret, strerror(errno));
+> +		return ret;
+> +	}
+> +	ret = pthread_create(&th, &attr, watchdog_thread_fn, NULL);
+> +	if (ret != 0) {
+> +		printerr(0, "ERROR: pthread_create failed: ret %d: %s\n",
+> +			 ret, strerror(errno));
+> +	}
+> +	return ret;
+> +}
+> +
+>  static struct clnt_info *
+>  gssd_get_clnt(struct topdir *tdi, const char *name)
+>  {
+> @@ -825,7 +925,7 @@ sig_die(int signal)
+>  static void
+>  usage(char *progname)
+>  {
+> -	fprintf(stderr, "usage: %s [-f] [-l] [-M] [-n] [-v] [-r] [-p pipefsdir] [-k keytab] [-d ccachedir] [-t timeout] [-R preferred realm] [-D] [-H]\n",
+> +	fprintf(stderr, "usage: %s [-f] [-l] [-M] [-n] [-v] [-r] [-p pipefsdir] [-k keytab] [-d ccachedir] [-t timeout] [-R preferred realm] [-D] [-H] [-U upcall timeout] [-C]\n",
+>  		progname);
+>  	exit(1);
+>  }
+> @@ -846,6 +946,9 @@ read_gss_conf(void)
+>  #endif
+>  	context_timeout = conf_get_num("gssd", "context-timeout", context_timeout);
+>  	rpc_timeout = conf_get_num("gssd", "rpc-timeout", rpc_timeout);
+> +	upcall_timeout = conf_get_num("gssd", "upcall-timeout", upcall_timeout);
+> +	cancel_timed_out_upcalls = conf_get_bool("gssd", "cancel-timed-out-upcalls",
+> +						cancel_timed_out_upcalls);
+>  	s = conf_get_str("gssd", "pipefs-directory");
+>  	if (!s)
+>  		s = conf_get_str("general", "pipefs-directory");
+> @@ -887,7 +990,7 @@ main(int argc, char *argv[])
+>  	verbosity = conf_get_num("gssd", "verbosity", verbosity);
+>  	rpc_verbosity = conf_get_num("gssd", "rpc-verbosity", rpc_verbosity);
+>  
+> -	while ((opt = getopt(argc, argv, "HDfvrlmnMp:k:d:t:T:R:")) != -1) {
+> +	while ((opt = getopt(argc, argv, "HDfvrlmnMp:k:d:t:T:R:U:C")) != -1) {
+>  		switch (opt) {
+>  			case 'f':
+>  				fg = 1;
+> @@ -938,6 +1041,11 @@ main(int argc, char *argv[])
+>  			case 'H':
+>  				set_home = false;
+>  				break;
+> +			case 'U':
+> +				upcall_timeout = atoi(optarg);
+> +				break;
+> +			case 'C':
+> +				cancel_timed_out_upcalls = false;
+>  			default:
+>  				usage(argv[0]);
+>  				break;
+> @@ -1010,6 +1118,11 @@ main(int argc, char *argv[])
+>  	else
+>  		progname = argv[0];
+>  
+> +	if (upcall_timeout > MAX_UPCALL_TIMEOUT)
+> +		upcall_timeout = MAX_UPCALL_TIMEOUT;
+> +	else if (upcall_timeout < MIN_UPCALL_TIMEOUT)
+> +		upcall_timeout = MIN_UPCALL_TIMEOUT;
+> +
+>  	initerr(progname, verbosity, fg);
+>  #ifdef HAVE_LIBTIRPC_SET_DEBUG
+>  	/*
+> @@ -1068,6 +1181,14 @@ main(int argc, char *argv[])
+>  	}
+>  	event_add(inotify_ev, NULL);
+>  
+> +	TAILQ_INIT(&active_thread_list);
+> +
+> +	rc = start_watchdog_thread();
+> +	if (rc != 0) {
+> +		printerr(0, "ERROR: failed to start watchdog thread: %d\n", rc);
+> +		exit(EXIT_FAILURE);
+> +	}
+> +
+>  	TAILQ_INIT(&topdir_list);
+>  	gssd_scan();
+>  	daemon_ready();
+> diff --git a/utils/gssd/gssd.h b/utils/gssd/gssd.h
+> index 6d53647e..ad0d1d93 100644
+> --- a/utils/gssd/gssd.h
+> +++ b/utils/gssd/gssd.h
+> @@ -50,6 +50,11 @@
+>  #define GSSD_DEFAULT_KEYTAB_FILE		"/etc/krb5.keytab"
+>  #define GSSD_SERVICE_NAME			"nfs"
+>  #define RPC_CHAN_BUF_SIZE			32768
+> +
+I think we should add a "/* seconds */" 
+so you don't have dig in the code 
+to see what interval is 
+> +#define MIN_UPCALL_TIMEOUT			5
+> +#define DEF_UPCALL_TIMEOUT			30
+> +#define MAX_UPCALL_TIMEOUT			600
+> +
+>  /*
+>   * The gss mechanisms that we can handle
+>   */
+> @@ -91,10 +96,20 @@ struct clnt_upcall_info {
+>  	char			*service;
+>  };
+>  
+> +struct upcall_thread_info {
+> +	TAILQ_ENTRY(upcall_thread_info) list;
+> +	pthread_t		tid;
+> +	struct timespec		timeout;
+> +	uid_t			uid;
+> +	int			fd;
+> +	bool			cancelled;
+> +};
+> +
+>  void handle_krb5_upcall(struct clnt_info *clp);
+>  void handle_gssd_upcall(struct clnt_info *clp);
+>  void free_upcall_info(struct clnt_upcall_info *info);
+>  void gssd_free_client(struct clnt_info *clp);
+> +int do_error_downcall(int k5_fd, uid_t uid, int err);
+>  
+>  
+>  #endif /* _RPC_GSSD_H_ */
+> diff --git a/utils/gssd/gssd.man b/utils/gssd/gssd.man
+> index 9ae6def9..20fea729 100644
+> --- a/utils/gssd/gssd.man
+> +++ b/utils/gssd/gssd.man
+> @@ -8,7 +8,7 @@
+>  rpc.gssd \- RPCSEC_GSS daemon
+>  .SH SYNOPSIS
+>  .B rpc.gssd
+> -.RB [ \-DfMnlvrH ]
+> +.RB [ \-DfMnlvrHC ]
+>  .RB [ \-k
+>  .IR keytab ]
+>  .RB [ \-p
+> @@ -17,6 +17,10 @@ rpc.gssd \- RPCSEC_GSS daemon
+>  .IR ccachedir ]
+>  .RB [ \-t
+>  .IR timeout ]
+> +.RB [ \-T
+> +.IR timeout ]
+> +.RB [ \-U
+> +.IR timeout ]
+>  .RB [ \-R
+>  .IR realm ]
+>  .SH INTRODUCTION
+> @@ -275,7 +279,7 @@ seconds, which allows changing Kerberos tickets and identities frequently.
+>  The default is no explicit timeout, which means the kernel context will live
+>  the lifetime of the Kerberos service ticket used in its creation.
+>  .TP
+> -.B -T timeout
+> +.BI "-T " timeout
+>  Timeout, in seconds, to create an RPC connection with a server while
+>  establishing an authenticated gss context for a user.
+>  The default timeout is set to 5 seconds.
+> @@ -283,6 +287,18 @@ If you get messages like "WARNING: can't create tcp rpc_clnt to server
+>  %servername% for user with uid %uid%: RPC: Remote system error -
+>  Connection timed out", you should consider an increase of this timeout.
+>  .TP
+> +.BI "-U " timeout
+> +Timeout, in seconds, for upcall threads.  Threads executing longer than
+> +.I timeout
+> +seconds will be cancelled and an error of -ETIMEDOUT will be reported
+> +to the kernel.  The default
+> +.I timeout
+> +is 30 seconds.  The minimum is 5 seconds.  The maximum is 600 seconds.
+> +.TP
+> +.B -C
+> +Instead of cancelling upcall threads that have timed out, cause an error
+> +message to be logged to the syslog (no error will be reported to the kernel).
+> +.TP
+>  .B -H
+>  Avoids setting $HOME to "/". This allows rpc.gssd to read per user k5identity
+>  files versus trying to read /.k5identity for each user.
+> @@ -350,6 +366,17 @@ Equivalent to
+>  Equivalent to
+>  .BR -R .
+>  .TP
+> +.B upcall-timeout
+> +Equivalent to
+> +.BR -U .
+> +.TP
+> +.B cancel-timed-out-upcalls
+> +Setting to
+> +.B false
+> +is equivalent to providing the
+> +.B -C
+> +flag.
+> +.TP
+>  .B set-home
+>  Setting to
+>  .B false
+> diff --git a/utils/gssd/gssd_proc.c b/utils/gssd/gssd_proc.c
+> index ba508b30..ac7b1d1c 100644
+> --- a/utils/gssd/gssd_proc.c
+> +++ b/utils/gssd/gssd_proc.c
+> @@ -81,11 +81,23 @@
+>  #include "gss_names.h"
+>  
+>  extern pthread_mutex_t clp_lock;
+> +extern pthread_mutex_t active_thread_list_lock;
+> +extern int upcall_timeout;
+> +extern TAILQ_HEAD(active_thread_list_head, upcall_thread_info) active_thread_list;
+>  
+>  /* Encryption types supported by the kernel rpcsec_gss code */
+>  int num_krb5_enctypes = 0;
+>  krb5_enctype *krb5_enctypes = NULL;
+>  
+> +struct cleanup_args  {
+> +	OM_uint32 	*min_stat;
+> +	gss_buffer_t	acceptor;
+> +	gss_buffer_t	token;
+> +	struct authgss_private_data *pd;
+> +	AUTH		**auth;
+> +	CLIENT		**rpc_clnt;
+> +};
+> +
+>  /*
+>   * Parse the supported encryption type information
+>   */
+> @@ -184,7 +196,7 @@ out_err:
+>  	return;
+>  }
+>  
+> -static int
+> +int
+>  do_error_downcall(int k5_fd, uid_t uid, int err)
+>  {
+>  	char	buf[1024];
+> @@ -607,14 +619,37 @@ out:
+>  	return auth;
+>  }
+>  
+> +static void
+> +cleanup_handler(void *arg)
+> +{
+> +	struct cleanup_args *args = (struct cleanup_args *)arg;
+> +
+> +	gss_release_buffer(args->min_stat, args->acceptor);
+> +	if (args->token->value)
+> +		free(args->token->value);
+> +#ifdef HAVE_AUTHGSS_FREE_PRIVATE_DATA
+> +	if (args->pd->pd_ctx_hndl.length != 0 || args->pd->pd_ctx != 0)
+> +		authgss_free_private_data(args->pd);
+> +#endif
+> +	if (*args->auth)
+> +		AUTH_DESTROY(*args->auth);
+> +	if (*args->rpc_clnt)
+> +		clnt_destroy(*args->rpc_clnt);
+> +}
+> +
+>  /*
+>   * this code uses the userland rpcsec gss library to create a krb5
+>   * context on behalf of the kernel
+>   */
+>  static void
+> -process_krb5_upcall(struct clnt_info *clp, uid_t uid, int fd, char *srchost,
+> -		    char *tgtname, char *service)
+> +process_krb5_upcall(struct clnt_upcall_info *info)
+>  {
+> +	struct clnt_info	*clp = info->clp;
+> +	uid_t			uid = info->uid;
+> +	int			fd = info->fd;
+> +	char			*srchost = info->srchost;
+> +	char			*tgtname = info->target;
+> +	char			*service = info->service;
+>  	CLIENT			*rpc_clnt = NULL;
+>  	AUTH			*auth = NULL;
+>  	struct authgss_private_data pd;
+> @@ -624,11 +659,13 @@ process_krb5_upcall(struct clnt_info *clp, uid_t uid, int fd, char *srchost,
+>  	gss_name_t		gacceptor = GSS_C_NO_NAME;
+>  	gss_OID			mech;
+>  	gss_buffer_desc		acceptor  = {0};
+> +	struct cleanup_args cleanup_args = {&min_stat, &acceptor, &token, &pd, &auth, &rpc_clnt};
+>  
+>  	token.length = 0;
+>  	token.value = NULL;
+>  	memset(&pd, 0, sizeof(struct authgss_private_data));
+>  
+> +	pthread_cleanup_push(cleanup_handler, &cleanup_args);
+>  	/*
+>  	 * If "service" is specified, then the kernel is indicating that
+>  	 * we must use machine credentials for this request.  (Regardless
+> @@ -650,6 +687,7 @@ process_krb5_upcall(struct clnt_info *clp, uid_t uid, int fd, char *srchost,
+>  	 * used for this case is not important.
+>  	 *
+>  	 */
+> +	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
+>  	if (uid != 0 || (uid == 0 && root_uses_machine_creds == 0 &&
+>  				service == NULL)) {
+>  
+> @@ -670,15 +708,21 @@ process_krb5_upcall(struct clnt_info *clp, uid_t uid, int fd, char *srchost,
+>  			goto out_return_error;
+>  		}
+>  	}
+> +	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+> +	pthread_testcancel();
+>  
+> +	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
+>  	if (!authgss_get_private_data(auth, &pd)) {
+>  		printerr(1, "WARNING: Failed to obtain authentication "
+>  			    "data for user with uid %d for server %s\n",
+>  			 uid, clp->servername);
+>  		goto out_return_error;
+>  	}
+> +	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+> +	pthread_testcancel();
+>  
+>  	/* Grab the context lifetime and acceptor name out of the ctx. */
+> +	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
+>  	maj_stat = gss_inquire_context(&min_stat, pd.pd_ctx, NULL, &gacceptor,
+>  				       &lifetime_rec, &mech, NULL, NULL, NULL);
+>  
+> @@ -690,37 +734,35 @@ process_krb5_upcall(struct clnt_info *clp, uid_t uid, int fd, char *srchost,
+>  		get_hostbased_client_buffer(gacceptor, mech, &acceptor);
+>  		gss_release_name(&min_stat, &gacceptor);
+>  	}
+> +	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+> +	pthread_testcancel();
+>  
+>  	/*
+>  	 * The serialization can mean turning pd.pd_ctx into a lucid context. If
+>  	 * that happens then the pd.pd_ctx will be unusable, so we must never
+>  	 * try to use it after this point.
+>  	 */
+> +	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
+>  	if (serialize_context_for_kernel(&pd.pd_ctx, &token, &krb5oid, NULL)) {
+>  		printerr(1, "WARNING: Failed to serialize krb5 context for "
+>  			    "user with uid %d for server %s\n",
+>  			 uid, clp->servername);
+>  		goto out_return_error;
+>  	}
+> +	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+> +	pthread_testcancel();
+>  
+>  	do_downcall(fd, uid, &pd, &token, lifetime_rec, &acceptor);
+>  
+>  out:
+> -	gss_release_buffer(&min_stat, &acceptor);
+> -	if (token.value)
+> -		free(token.value);
+> -#ifdef HAVE_AUTHGSS_FREE_PRIVATE_DATA
+> -	if (pd.pd_ctx_hndl.length != 0 || pd.pd_ctx != 0)
+> -		authgss_free_private_data(&pd);
+> -#endif
+> -	if (auth)
+> -		AUTH_DESTROY(auth);
+> -	if (rpc_clnt)
+> -		clnt_destroy(rpc_clnt);
+> +	pthread_cleanup_pop(1);
+>  
+>  	return;
+>  
+>  out_return_error:
+> +	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+> +	pthread_testcancel();
+> +
+>  	do_error_downcall(fd, uid, downcall_err);
+>  	goto out;
+>  }
+> @@ -786,38 +828,71 @@ void free_upcall_info(struct clnt_upcall_info *info)
+>  }
+>  
+>  static void
+> -gssd_work_thread_fn(struct clnt_upcall_info *info)
+> +cleanup_clnt_upcall_info(void *arg)
+>  {
+> -	process_krb5_upcall(info->clp, info->uid, info->fd, info->srchost, info->target, info->service);
+> +	struct clnt_upcall_info *info = (struct clnt_upcall_info *)arg;
+> +
+>  	free_upcall_info(info);
+>  }
+>  
+> +static void
+> +gssd_work_thread_fn(struct clnt_upcall_info *info)
+> +{
+> +	pthread_cleanup_push(cleanup_clnt_upcall_info, info);
+> +	process_krb5_upcall(info);
+> +	pthread_cleanup_pop(1);
+> +}
+> +
+> +static struct upcall_thread_info *
+> +alloc_upcall_thread_info(void)
+> +{
+> +	struct upcall_thread_info *info;
+> +
+> +	info = malloc(sizeof(struct upcall_thread_info));
+> +	if (info == NULL)
+> +		return NULL;
+> +	memset(info, 0, sizeof(*info));
+> +	return info;
+> +}
+> +
+>  static int
+> -start_upcall_thread(void (*func)(struct clnt_upcall_info *), void *info)
+> +start_upcall_thread(void (*func)(struct clnt_upcall_info *), struct clnt_upcall_info *info)
+>  {
+>  	pthread_attr_t attr;
+>  	pthread_t th;
+> +	struct upcall_thread_info *tinfo;
+>  	int ret;
+>  
+> +	tinfo = alloc_upcall_thread_info();
+> +	if (!tinfo)
+> +		return -ENOMEM;
+> +	tinfo->fd = info->fd;
+> +	tinfo->uid = info->uid;
+> +	tinfo->cancelled = false;
+> +
+>  	ret = pthread_attr_init(&attr);
+>  	if (ret != 0) {
+>  		printerr(0, "ERROR: failed to init pthread attr: ret %d: %s\n",
+>  			 ret, strerror(errno));
+> -		return ret;
+> -	}
+> -	ret = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+> -	if (ret != 0) {
+> -		printerr(0, "ERROR: failed to create pthread attr: ret %d: "
+> -			 "%s\n", ret, strerror(errno));
+> +		free(tinfo);
+>  		return ret;
+>  	}
+>  
+>  	ret = pthread_create(&th, &attr, (void *)func, (void *)info);
+> -	if (ret != 0)
+> +	if (ret != 0) {
+>  		printerr(0, "ERROR: pthread_create failed: ret %d: %s\n",
+>  			 ret, strerror(errno));
+> -	else
+> -		printerr(0, "created thread id 0x%lx\n", th);
+> +		free(tinfo);
+> +		return ret;
+> +	}
+> +	printerr(1, "created thread id 0x%lx\n", th);
+This will be removed... 
+> +	tinfo->tid = th;
+> +	pthread_mutex_lock(&active_thread_list_lock);
+> +	clock_gettime(CLOCK_MONOTONIC, &tinfo->timeout);
+> +	tinfo->timeout.tv_sec += upcall_timeout;
+> +	TAILQ_INSERT_TAIL(&active_thread_list, tinfo, list);
+> +	pthread_mutex_unlock(&active_thread_list_lock);
+> +
+>  	return ret;
+>  }
+>  
+> 
+
+Overall I think the code is very well written with
+one exception... The lack of comments. I think it
+would be very useful to let the reader know what
+you are doing and why.... But by no means is 
+that a show stopper. Nice work!
+
+I'm still doing more testing and nothing 
+is breaking... So it is looking pretty good!
+
+steved.
+
