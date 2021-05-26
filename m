@@ -2,213 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BD56390F7F
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 May 2021 06:28:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F11D839103B
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 May 2021 07:56:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229553AbhEZE33 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 26 May 2021 00:29:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34644 "EHLO mail.kernel.org"
+        id S232413AbhEZF60 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 26 May 2021 01:58:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32992 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229523AbhEZE33 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 26 May 2021 00:29:29 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 605A661402
-        for <linux-nfs@vger.kernel.org>; Wed, 26 May 2021 04:27:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622003278;
-        bh=Q9oUQP1vJGel5PqVddm5L3PF/MjzKGmTdbZekTT1Hok=;
-        h=From:To:Subject:Date:From;
-        b=h2rt9dRILn57ZaSLrE23pyzq3iOUKGX0D+xa0A57Lqoc4tLz/uCjJF/gdrBbj1Vm1
-         uVbze4Fzx2AVRkBbjRVUz64QTYr9fH9H1WGo628Pw5p/D3Nnx+9n34greF/sRV5wPt
-         cFzpqP/FYb75DQ8Se0VSNvgi+P+TQh4uSLAQCX/Dp3yOE755cpz1pAGTdb80SOoIUX
-         IuuSop+rJc5iEUG0OOUSY6xKOj1qBD0XSZBZ/pP74KMdrM9HFJIMqcA9vfv2AOdI2e
-         4o556t6oBvjLEiVm/NQTxmzx6YfC6ahs5IjU5XAw1wAC1/iUioCDoG/yQAn5pgxeVT
-         Lhj59oUB1QrfA==
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH] SUNRPC: More fixes for backlog congestion
-Date:   Wed, 26 May 2021 00:27:57 -0400
-Message-Id: <20210526042757.333605-1-trondmy@kernel.org>
-X-Mailer: git-send-email 2.31.1
+        id S232430AbhEZF6Z (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 26 May 2021 01:58:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1622008612; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dAzFFbJec2ShGzZjHO75IQKlhvpl4RmReDtGixaHjSE=;
+        b=AQjUsvtirBoP7qvV6dJOlUtx+rQ3SJpRZt6VzW8Ho+30FLBvmeQB06t5gkBm7W3vRfgrD2
+        d1khl6Xt2kLYGCiWcCWcHhSN4hEiJikq7N/FxAjgFfbXUhygQQ2dcMUr8fYPtLFCXOXTKi
+        ycrCd0e9t3DqcBxyFioGjBzJcCBzyF4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1622008612;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dAzFFbJec2ShGzZjHO75IQKlhvpl4RmReDtGixaHjSE=;
+        b=ysuR2cL9INGaS0xPprhz9VvAh7i2z9OuSwL3M9RMxK3/cKLxQwZ7ZGR2kokBF4/TLOWF2m
+        La0iK4G4ukc3CDAQ==
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 2D9E1B1B1;
+        Wed, 26 May 2021 05:56:52 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Scott Andrews" <scott.andrews@columbus.rr.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: mount.nfs: Stale file handle
+In-reply-to: <82edf12a-a9fa-49a7-bdd0-1689c70a3a5f@columbus.rr.com>
+References: <82edf12a-a9fa-49a7-bdd0-1689c70a3a5f@columbus.rr.com>
+Date:   Wed, 26 May 2021 15:56:47 +1000
+Message-id: <162200860728.22484.2002016024131091474@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Wed, 26 May 2021, Scott Andrews wrote:
+>=20
+> cat /proc/fs/nfs/exports
+> # Version 1.1
+> # Path Client(Flags) # IPs
+> /=20
+> *(ro,no_root_squash,sync,no_wdelay,no_subtree_check,v4root,fsid=3D0,uuid=3D=
+6b179096:b8b5495a:873908b5:a2b35faa,sec=3D390003:390004:390005:1)
+> /home=20
+> *(rw,no_root_squash,sync,wdelay,uuid=3D6b179096:b8b5495a:873908b5:a2b35faa,=
+sec=3D1)
+>=20
 
-Ensure that we fix the XPRT_CONGESTED starvation issue for RDMA as well
-as socket based transports.
-Ensure we always initialise the request after waking up from the backlog
-list.
+Apart from the error, this is the only place that anything looks odd.
+When / is exported a v4root, there doesn't need to be a uuid=3D.
+It is the same uuid as for /home.
+When I experiment I don't get a uuid=3D for /.
 
-Fixes: e877a88d1f06 ("SUNRPC in case of backlog, hand free slots directly to waiting task")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- include/linux/sunrpc/xprt.h     |  2 ++
- net/sunrpc/xprt.c               | 58 ++++++++++++++++-----------------
- net/sunrpc/xprtrdma/transport.c |  6 ++--
- 3 files changed, 32 insertions(+), 34 deletions(-)
+I don't know that this would cause a problem, but maybe it does.
 
-diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
-index d81fe8b364d0..61b622e334ee 100644
---- a/include/linux/sunrpc/xprt.h
-+++ b/include/linux/sunrpc/xprt.h
-@@ -368,6 +368,8 @@ struct rpc_xprt *	xprt_alloc(struct net *net, size_t size,
- 				unsigned int num_prealloc,
- 				unsigned int max_req);
- void			xprt_free(struct rpc_xprt *);
-+void			xprt_add_backlog(struct rpc_xprt *xprt, struct rpc_task *task);
-+bool			xprt_wake_up_backlog(struct rpc_xprt *xprt, struct rpc_rqst *req);
- 
- static inline int
- xprt_enable_swap(struct rpc_xprt *xprt)
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index 5b3981fd3783..3509a7f139b9 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1607,11 +1607,18 @@ xprt_transmit(struct rpc_task *task)
- 	spin_unlock(&xprt->queue_lock);
- }
- 
--static void xprt_add_backlog(struct rpc_xprt *xprt, struct rpc_task *task)
-+static void xprt_complete_request_init(struct rpc_task *task)
-+{
-+	if (task->tk_rqstp)
-+		xprt_request_init(task);
-+}
-+
-+void xprt_add_backlog(struct rpc_xprt *xprt, struct rpc_task *task)
- {
- 	set_bit(XPRT_CONGESTED, &xprt->state);
--	rpc_sleep_on(&xprt->backlog, task, NULL);
-+	rpc_sleep_on(&xprt->backlog, task, xprt_complete_request_init);
- }
-+EXPORT_SYMBOL_GPL(xprt_add_backlog);
- 
- static bool __xprt_set_rq(struct rpc_task *task, void *data)
- {
-@@ -1619,14 +1626,13 @@ static bool __xprt_set_rq(struct rpc_task *task, void *data)
- 
- 	if (task->tk_rqstp == NULL) {
- 		memset(req, 0, sizeof(*req));	/* mark unused */
--		task->tk_status = -EAGAIN;
- 		task->tk_rqstp = req;
- 		return true;
- 	}
- 	return false;
- }
- 
--static bool xprt_wake_up_backlog(struct rpc_xprt *xprt, struct rpc_rqst *req)
-+bool xprt_wake_up_backlog(struct rpc_xprt *xprt, struct rpc_rqst *req)
- {
- 	if (rpc_wake_up_first(&xprt->backlog, __xprt_set_rq, req) == NULL) {
- 		clear_bit(XPRT_CONGESTED, &xprt->state);
-@@ -1634,6 +1640,7 @@ static bool xprt_wake_up_backlog(struct rpc_xprt *xprt, struct rpc_rqst *req)
- 	}
- 	return true;
- }
-+EXPORT_SYMBOL_GPL(xprt_wake_up_backlog);
- 
- static bool xprt_throttle_congested(struct rpc_xprt *xprt, struct rpc_task *task)
- {
-@@ -1643,7 +1650,7 @@ static bool xprt_throttle_congested(struct rpc_xprt *xprt, struct rpc_task *task
- 		goto out;
- 	spin_lock(&xprt->reserve_lock);
- 	if (test_bit(XPRT_CONGESTED, &xprt->state)) {
--		rpc_sleep_on(&xprt->backlog, task, NULL);
-+		xprt_add_backlog(xprt, task);
- 		ret = true;
- 	}
- 	spin_unlock(&xprt->reserve_lock);
-@@ -1812,10 +1819,6 @@ xprt_request_init(struct rpc_task *task)
- 	struct rpc_xprt *xprt = task->tk_xprt;
- 	struct rpc_rqst	*req = task->tk_rqstp;
- 
--	if (req->rq_task)
--		/* Already initialized */
--		return;
--
- 	req->rq_task	= task;
- 	req->rq_xprt    = xprt;
- 	req->rq_buffer  = NULL;
-@@ -1876,10 +1879,8 @@ void xprt_retry_reserve(struct rpc_task *task)
- 	struct rpc_xprt *xprt = task->tk_xprt;
- 
- 	task->tk_status = 0;
--	if (task->tk_rqstp != NULL) {
--		xprt_request_init(task);
-+	if (task->tk_rqstp != NULL)
- 		return;
--	}
- 
- 	task->tk_status = -EAGAIN;
- 	xprt_do_reserve(xprt, task);
-@@ -1904,24 +1905,21 @@ void xprt_release(struct rpc_task *task)
- 	}
- 
- 	xprt = req->rq_xprt;
--	if (xprt) {
--		xprt_request_dequeue_xprt(task);
--		spin_lock(&xprt->transport_lock);
--		xprt->ops->release_xprt(xprt, task);
--		if (xprt->ops->release_request)
--			xprt->ops->release_request(task);
--		xprt_schedule_autodisconnect(xprt);
--		spin_unlock(&xprt->transport_lock);
--		if (req->rq_buffer)
--			xprt->ops->buf_free(task);
--		xdr_free_bvec(&req->rq_rcv_buf);
--		xdr_free_bvec(&req->rq_snd_buf);
--		if (req->rq_cred != NULL)
--			put_rpccred(req->rq_cred);
--		if (req->rq_release_snd_buf)
--			req->rq_release_snd_buf(req);
--	} else
--		xprt = task->tk_xprt;
-+	xprt_request_dequeue_xprt(task);
-+	spin_lock(&xprt->transport_lock);
-+	xprt->ops->release_xprt(xprt, task);
-+	if (xprt->ops->release_request)
-+		xprt->ops->release_request(task);
-+	xprt_schedule_autodisconnect(xprt);
-+	spin_unlock(&xprt->transport_lock);
-+	if (req->rq_buffer)
-+		xprt->ops->buf_free(task);
-+	xdr_free_bvec(&req->rq_rcv_buf);
-+	xdr_free_bvec(&req->rq_snd_buf);
-+	if (req->rq_cred != NULL)
-+		put_rpccred(req->rq_cred);
-+	if (req->rq_release_snd_buf)
-+		req->rq_release_snd_buf(req);
- 
- 	task->tk_rqstp = NULL;
- 	if (likely(!bc_prealloc(req)))
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 09953597d055..4a8f92ef99ae 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -520,9 +520,8 @@ xprt_rdma_alloc_slot(struct rpc_xprt *xprt, struct rpc_task *task)
- 	return;
- 
- out_sleep:
--	set_bit(XPRT_CONGESTED, &xprt->state);
--	rpc_sleep_on(&xprt->backlog, task, NULL);
- 	task->tk_status = -EAGAIN;
-+	xprt_add_backlog(xprt, task);
- }
- 
- /**
-@@ -539,8 +538,7 @@ xprt_rdma_free_slot(struct rpc_xprt *xprt, struct rpc_rqst *rqst)
- 
- 	memset(rqst, 0, sizeof(*rqst));
- 	rpcrdma_buffer_put(&r_xprt->rx_buf, rpcr_to_rdmar(rqst));
--	if (unlikely(!rpc_wake_up_next(&xprt->backlog)))
--		clear_bit(XPRT_CONGESTED, &xprt->state);
-+	xprt_wake_up_backlog(xprt, rqst);
- }
- 
- static bool rpcrdma_check_regbuf(struct rpcrdma_xprt *r_xprt,
--- 
-2.31.1
+Two extra pieces of debugging info that might be useful:
 
+1/ Get a network trace for port 2049 traffic between client and server
+ with tcpdump.
+ Be sure to use "-s 0" and provide the binary packet capture - compress
+ it and attach it to the email.
+
+2/ Before attempting the mount, and after restarting rpc.mountd on the
+server and running "exportfs -f", run "strace -s 1000 -o /tmp/somefile -p ...=
+" on the
+rpc.mountd process, then try the mount, then kill strace.
+Then provide /tmp/somefile.
+
+NeilBrown
+
+
+>=20
+> Can someone help with this issue?
+>=20
+> Thanks for any help/direction you may have
+>=20
+>=20
