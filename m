@@ -2,114 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F13A391E32
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 May 2021 19:34:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEC23391F22
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 May 2021 20:30:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234386AbhEZRfe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 26 May 2021 13:35:34 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:52924 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234009AbhEZRfe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 May 2021 13:35:34 -0400
-Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 09DE6218D6;
-        Wed, 26 May 2021 17:25:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1622049911; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SK1nOwApoB060hVZEHApU/oevSCROkupDp1uSU4WGFk=;
-        b=eol3yfsPu1+ki1WlO3dEloXfMopIP7VeNBzybI9iOwNRwjiZpGF8uJIrMEZ6IaChBSP65f
-        45Cz+88N1L9x6J/RacxdvF7iU4pfGnm6lJGSK5sS4jzAslHvGVGTFBRsxXrd5jbzEyML1R
-        146B+67PF2ixneNqtMxqSWB92SEOsAg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1622049911;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SK1nOwApoB060hVZEHApU/oevSCROkupDp1uSU4WGFk=;
-        b=Ge4MWO6Pw33JbeSTrAQ0K8vWWMZDoq67pkE5E+ZPS45V8M/Qw1ThPImUxwb1Fe7juZFAqS
-        v6yyCQEStlgYddBg==
-Received: from director2.suse.de (director2.suse-dmz.suse.de [192.168.254.72])
-        by imap.suse.de (Postfix) with ESMTPSA id C090811A98;
-        Wed, 26 May 2021 17:25:10 +0000 (UTC)
-From:   Petr Vorel <pvorel@suse.cz>
-To:     ltp@lists.linux.it
-Cc:     Petr Vorel <pvorel@suse.cz>,
-        Alexey Kodanev <aleksei.kodanev@bell-sw.com>,
-        linux-nfs@vger.kernel.org
-Subject: [LTP PATCH v2 3/3] nfs_lib.sh: Check running rpc.mountd, rpc.statd
-Date:   Wed, 26 May 2021 19:25:03 +0200
-Message-Id: <20210526172503.18621-3-pvorel@suse.cz>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210526172503.18621-1-pvorel@suse.cz>
-References: <20210526172503.18621-1-pvorel@suse.cz>
+        id S232577AbhEZSbr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 26 May 2021 14:31:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235533AbhEZSbq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 May 2021 14:31:46 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E91BC061574
+        for <linux-nfs@vger.kernel.org>; Wed, 26 May 2021 11:30:12 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 903F8201A; Wed, 26 May 2021 14:30:11 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 903F8201A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1622053811;
+        bh=qJbsuvcoetswSe41//9C5LpdNVam97sKOsVmVzddBXs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p5bc0rItNDjzK2SdUSFkwj++8x8HSjfsgr4Sf3KTYY/qlmhLfg0dZRSbGI/BI60lx
+         e8L7P2or4IsYQnXAn7IJ2UI6L/wTI65wqHg8ERgknlM6auuCTn5n3QPkwwBHEByA2r
+         Eq1DqOMkR2vq6ZxBPkm5nZYnbS3XiyqKW8+acxxs=
+Date:   Wed, 26 May 2021 14:30:11 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Dave Wysochanski <dwysocha@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] nfsd4: Expose the callback address and state of
+ each NFS4 client
+Message-ID: <20210526183011.GA7823@fieldses.org>
+References: <1621283385-24390-1-git-send-email-dwysocha@redhat.com>
+ <1621283385-24390-2-git-send-email-dwysocha@redhat.com>
+ <20210525205845.GB4162@fieldses.org>
+ <6C2F8C95-E29F-4BB3-9127-6ED5D825ACB7@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6C2F8C95-E29F-4BB3-9127-6ED5D825ACB7@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-NOTE: we're not checking rpcbind/portmap which is required for NFSv3,
-as it's rpc.mountd dependency.
+On Tue, May 25, 2021 at 09:48:38PM +0000, Chuck Lever III wrote:
+> 
+> 
+> > On May 25, 2021, at 4:58 PM, Bruce Fields <bfields@fieldses.org> wrote:
+> > 
+> > When I run trace-cmd report I get output like:
+> > 
+> >  [nfsd:nfsd_cb_state] function cb_state2str not defined
+> >  [nfsd:nfsd_cb_shutdown] function cb_state2str not defined
+> >  [nfsd:nfsd_cb_probe] function cb_state2str not defined
+> >  [nfsd:nfsd_cb_lost] function cb_state2str not defined
+> > 
+> > I don't know how this is supposed to work.  Is it OK for tracepoint definitions
+> > to reference kernel functions if they're defined in the right way somehow?  If
+> > not, I don't know what the solution would be for sharing this--define a macro
+> > that expands to the array literal and use that in both places?  Or maybe just
+> > live with the the redundancy.
+> 
+> Living with the redundancy is OK with me.
 
-Deliberately not add pgrep as required dependency.
+OK, I'll revert back to Dave's first version of this patch.
 
-Signed-off-by: Petr Vorel <pvorel@suse.cz>
----
-changes v1->v2:
-* check for rpc.mountd, rpc.statd
-(previsously checked for rpc.mountd, rpcbind/portmap)
+--b.
 
- testcases/network/nfs/nfs_stress/nfs_lib.sh | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/testcases/network/nfs/nfs_stress/nfs_lib.sh b/testcases/network/nfs/nfs_stress/nfs_lib.sh
-index 26b670c35..9bef1b86a 100644
---- a/testcases/network/nfs/nfs_stress/nfs_lib.sh
-+++ b/testcases/network/nfs/nfs_stress/nfs_lib.sh
-@@ -27,7 +27,7 @@ TST_PARSE_ARGS=nfs_parse_args
- TST_USAGE=nfs_usage
- TST_NEEDS_TMPDIR=1
- TST_NEEDS_ROOT=1
--TST_NEEDS_CMDS="$TST_NEEDS_CMDS mount exportfs"
-+TST_NEEDS_CMDS="$TST_NEEDS_CMDS exportfs mount"
- TST_SETUP="${TST_SETUP:-nfs_setup}"
- TST_CLEANUP="${TST_CLEANUP:-nfs_cleanup}"
- TST_NEEDS_DRIVERS="nfsd"
-@@ -110,11 +110,6 @@ nfs_mount()
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 49c052243b5c..89a7cada334d 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -2357,6 +2357,21 @@ static void seq_quote_mem(struct seq_file *m, char *data, int len)
+ 	seq_printf(m, "\"");
+ }
  
- nfs_setup()
++static const char *cb_state_str(int state)
++{
++	switch (state) {
++		case NFSD4_CB_UP:
++			return "UP";
++		case NFSD4_CB_UNKNOWN:
++			return "UNKNOWN";
++		case NFSD4_CB_DOWN:
++			return "DOWN";
++		case NFSD4_CB_FAULT:
++			return "FAULT";
++	}
++	return "UNDEFINED";
++}
++
+ static int client_info_show(struct seq_file *m, void *v)
  {
--	# Check if current filesystem is NFS
--	if [ "$(stat -f . | grep "Type: nfs")" ]; then
--		tst_brk TCONF "Cannot run nfs-stress test on mounted NFS"
--	fi
--
- 	local i
- 	local type
- 	local n=0
-@@ -123,6 +118,16 @@ nfs_setup()
- 	local remote_dir
- 	local mount_dir
+ 	struct inode *inode = m->private;
+@@ -2385,6 +2400,8 @@ static int client_info_show(struct seq_file *m, void *v)
+ 		seq_printf(m, "\nImplementation time: [%lld, %ld]\n",
+ 			clp->cl_nii_time.tv_sec, clp->cl_nii_time.tv_nsec);
+ 	}
++	seq_printf(m, "callback state: %s\n", cb_state_str(clp->cl_cb_state));
++	seq_printf(m, "callback address: %pISpc\n", &clp->cl_cb_conn.cb_addr);
+ 	drop_client(clp);
  
-+	if [ "$(stat -f . | grep "Type: nfs")" ]; then
-+		tst_brk TCONF "Cannot run nfs-stress test on mounted NFS"
-+	fi
-+
-+	if tst_cmd_available pgrep; then
-+		for i in rpc.mountd rpc.statd; do
-+			pgrep $i > /dev/null || tst_brk TCONF "$i not running"
-+		done
-+	fi
-+
- 	for i in $VERSION; do
- 		type=$(get_socket_type $n)
- 		tst_res TINFO "setup NFSv$i, socket type $type"
+ 	return 0;
 -- 
-2.31.1
+1.8.3.1
 
