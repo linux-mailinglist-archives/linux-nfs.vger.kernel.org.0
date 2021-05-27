@@ -2,87 +2,169 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 759C339344E
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 May 2021 18:49:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEF5C393577
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 May 2021 20:32:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233416AbhE0QvW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 May 2021 12:51:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23404 "EHLO
+        id S234155AbhE0SeR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 May 2021 14:34:17 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58598 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229829AbhE0QvW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 May 2021 12:51:22 -0400
+        by vger.kernel.org with ESMTP id S235787AbhE0SeQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 May 2021 14:34:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1622134188;
+        s=mimecast20190719; t=1622140362;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VzqDS9vthqMOOgivvdyqpJvIHIiwMK8Y2JKSfmxIgtI=;
-        b=Jcas8GRsRh+/UTBsJ8ypqgDZT3K3fszgJx/RjurnEPL9XgbzrVJu7reI+jigVYfI+OJAaP
-        MzMm1xahYz3kDdvILN6V+8pp2Lx6gp8/MZPB7idQkxW9nDNR7PpIayLXwbmMpgq0BXpgdW
-        Ir3zVU+BUWosVPIjWJOGnwgEfM9DPAw=
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=de/Y/qlIvfzMz0jKsKeUXwFze4xGleIcl6uqoXpcELc=;
+        b=OOBsgkd5B6bBBa8b6QwqfRY8aObnk566RZzerdIix84EeDT11t49JQ3TiT3M8PJMpCWuX2
+        KFZJLb4L+QzVRqOylFh2wYZ+dw67044lUdJ09eKEiYXZucYcAAip7geBdYX38w3jTiL2j5
+        21HlqvQFuCnOS/bcYV9pzHXxJ8l2+yk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-262-ZbuvtrzlO524mvJ1hMy8sQ-1; Thu, 27 May 2021 12:49:47 -0400
-X-MC-Unique: ZbuvtrzlO524mvJ1hMy8sQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-374-vstTTJXNPbqrN2GYu1i66g-1; Thu, 27 May 2021 14:32:40 -0400
+X-MC-Unique: vstTTJXNPbqrN2GYu1i66g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4DCEC107ACCD
-        for <linux-nfs@vger.kernel.org>; Thu, 27 May 2021 16:49:46 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C90091903100
+        for <linux-nfs@vger.kernel.org>; Thu, 27 May 2021 18:32:39 +0000 (UTC)
 Received: from aion.usersys.redhat.com (ovpn-114-18.rdu2.redhat.com [10.10.114.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2A08050F70;
-        Thu, 27 May 2021 16:49:46 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AF37F6061F
+        for <linux-nfs@vger.kernel.org>; Thu, 27 May 2021 18:32:39 +0000 (UTC)
 Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
-        id 4AA391A003D; Thu, 27 May 2021 12:49:45 -0400 (EDT)
-Date:   Thu, 27 May 2021 12:49:45 -0400
+        id F2C491A003D; Thu, 27 May 2021 14:32:38 -0400 (EDT)
 From:   Scott Mayhew <smayhew@redhat.com>
-To:     Steve Dickson <SteveD@redhat.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [nfs-utils RFC PATCH 2/2] gssd: add timeout for upcall threads
-Message-ID: <YK/NqXc7OR0qQCPd@aion.usersys.redhat.com>
-References: <20210525180033.200404-1-smayhew@redhat.com>
- <20210525180033.200404-3-smayhew@redhat.com>
- <490b45eb-0142-24de-e05f-79751891ddf9@RedHat.com>
- <64b6f93a-e81c-fd8a-8db5-44e69004294d@RedHat.com>
+To:     linux-nfs@vger.kernel.org
+Subject: [nfs-utils PATCH v2 0/2] Two rpc.gssd improvements
+Date:   Thu, 27 May 2021 14:32:36 -0400
+Message-Id: <20210527183238.584349-1-smayhew@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <64b6f93a-e81c-fd8a-8db5-44e69004294d@RedHat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 27 May 2021, Steve Dickson wrote:
+Changes since v1:
 
-> Hey!
-> 
-> Off-list... 
-> 
-> On 5/26/21 1:08 PM, Steve Dickson wrote:
-> >> +		free(tinfo);
-> >> +		return ret;
-> >> +	}
-> >> +	printerr(1, "created thread id 0x%lx\n", th);
-> > This will be removed... 
-> It turns out this tid is useful since the 
-> tid is used in the do_downcall() db statement. 
+- Replaced the upcall_thread_info.cancelled field with a flags field,
+  to facilitate having the watchdog thread print an error message only
+  once for each timed-out upcall thread.
+- Removed the "created thread id" log message.
+- Added missing break when parsing the "-C" option.
+- Added some comments.
 
-I already got rid of it!
+These patches provide the following improvements for rpc.gssd:
+1) deal with failed thread creation
+2) add a timeout for upcall threads
 
-> 
-> In general I've try to always used the function name
-> in the db statement so it is know where it is.
-> So maybe something like this:
-> 
-> pthread_t tid = pthread_self();
-> 
-> printerr(2, "start_upcall_thread(0x%lx): created thread id 0x%lx\n", tid, th);
-> 
-> steved.
-> 
-> P.S. After your final version, I'm going to follow up with a debug clean up
-> patch... So I can take care of it there... if you like.
+Both of these issues can leave kernel mount processes hanging
+indefinitely.  A timeout was originally proposed in the kernel
+(https://lore.kernel.org/linux-nfs/20180618172542.45519-1-steved@redhat.com/)
+but this approach was rejected by Trond:
 
-> 
+    I'm saying that we can do this entirely in userland without any kernel
+    changes. As long as that hasn't been attempted and proven to be flawed,
+    then there is no reason to accept any kernel patches.
+
+So this is my attempt at doing the timeout in userland.
+
+The first patch was tested using a program that intercepts clone() and
+changes the return code to -EAGAIN.
+
+For the second patch, I have two different tests I've been running:
+
+1) In an IPA domain in our lab, I have a server running 100 kerberized
+nfsd containers.  The client has mountpoints to all 100 of those servers
+defined in its /etc/fstab.  I run 'systemctl start remote-fs.target' to
+kick off all those mounts in parallel, while running the following
+systemtap script to periodically mess with the mount processes:
+
+---8<---
+global i
+
+probe begin { i=0 }
+
+probe process("/lib64/libgssapi_krb5.so.2").function("gss_acquire_cred")
+{
+        if (++i % 100 == 0) {
+                printf("delay (i=%d)\n", i)
+                mdelay(30000)
+        }
+}
+---8<---
+
+I actually run the test in a loop... the driver script looks like this:
+
+---8<---
+#!/bin/bash
+let i=1
+while :; do
+        echo "Round $i"
+        echo "Mounting"
+        systemctl start remote-fs.target
+        echo -n "Waiting on mount.nfs processes to complete "
+        while pgrep mount.nfs >/dev/null; do
+                echo -n "."
+                sleep 1
+        done
+        echo -e "\nNumber of nfs4 mounts: $(grep -c nfs4 /proc/mounts)"
+        echo -e "Unmounting"
+        umount -a -t nfs4
+        if ! pgrep gssd >/dev/null; then
+                echo "gssd is not running - check for crash"
+                break
+        fi
+        echo "Sleeping 5 seconds"
+        sleep 5
+        let i=$i+1
+done
+---8<---
+
+2) In an AD environment in our lab, I added 1000 test users.  On a
+client machine I have all those users run a script that writes to files
+on a NetApp SVM and while that script is running I trigger a LIF
+migration on the filer.  That forces all those users to establish new
+creds with the SVM.
+
+That test looks basically like this
+# for i in `seq 1 1000`; do su - testuser$i -c "echo 'PASSWORD'|kinit"; done
+# for i in `seq 1 1000`; do su - testuser$i -c "date >/mnt/t/tmp/testuser$i-testfile" & done
+# for i in `seq 1 1000`; do su - testuser$i -c test.sh & done
+
+where test.sh is a simple script that writes the date to a file in a
+loop:
+
+---8<---
+#!/bin/bash
+filename=/mnt/t/tmp/$(whoami)-testfile
+for i in $(seq 1 300)
+do
+	date >$filename
+	sleep 1
+done
+---8<---
+
+While the test users are running the script I run one of the following
+commands on the NetApp filer:
+
+network interface migrate -vserver VSERVER -lif LIF -destination-node NODE
+network interface revert -vserver VSERVER -lif LIF
+
+-Scott
+
+Scott Mayhew (2):
+  gssd: deal with failed thread creation
+  gssd: add timeout for upcall threads
+
+ nfs.conf               |   2 +
+ utils/gssd/gssd.c      | 256 +++++++++++++++++++++++-----------
+ utils/gssd/gssd.h      |  29 +++-
+ utils/gssd/gssd.man    |  31 ++++-
+ utils/gssd/gssd_proc.c | 306 ++++++++++++++++++++++++++++++++++-------
+ 5 files changed, 491 insertions(+), 133 deletions(-)
+
+-- 
+2.30.2
 
