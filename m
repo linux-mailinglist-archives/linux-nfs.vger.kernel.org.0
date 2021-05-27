@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACBAE39275F
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 May 2021 08:24:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31E08392763
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 May 2021 08:25:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234753AbhE0G0W (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 May 2021 02:26:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50096 "EHLO
+        id S234773AbhE0G0d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 May 2021 02:26:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234661AbhE0G0Q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 May 2021 02:26:16 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFB6CC061761
-        for <linux-nfs@vger.kernel.org>; Wed, 26 May 2021 23:24:43 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id v13-20020a17090abb8db029015f9f7d7290so4917677pjr.0
-        for <linux-nfs@vger.kernel.org>; Wed, 26 May 2021 23:24:43 -0700 (PDT)
+        with ESMTP id S234803AbhE0G00 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 May 2021 02:26:26 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F786C061761
+        for <linux-nfs@vger.kernel.org>; Wed, 26 May 2021 23:24:53 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id g18so2871851pfr.2
+        for <linux-nfs@vger.kernel.org>; Wed, 26 May 2021 23:24:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=69t5JvkMUpa4S3zHMzIPphToxILDMFyOxSV05k21NRo=;
-        b=HKrLitcBnnklOOWAEzdjePdIbJuUgcw2SjWSInye4lqApH/rU0YcYtdFyq/JhyyFoG
-         Su+eQeNmI0dL5rm6AjU4TNwh7Cg/2BG2fW/54JrJNPMdw0DSbUCF98FyR6DMchWC742O
-         YEbNH8cBvRolyAvZ7fPJm3xEFzSKD6S7nZZ4chf7nnrx5f7Oj4yoKFFVxp2noXxKTiQr
-         04fVYRoe8f/H88BRNeu84IxYynvj3YflDbnQIR7hks2nJU1fXSZCf7AuwIkfagDooa/9
-         7JXKTpGfB0m4oKQFs/dL4v6rMwUMkavZlMi5+jXC+PVmOxDWraZ5CiqdbxoSm2TH5bgw
-         YSyA==
+        bh=4Skb3PkDwb/3WBbW5QytVqXcn8HE8kv5ZTlpyL+++g4=;
+        b=0i7WfGFj/SwesZLMTohEbH+Evib1sQbS+c7e0TNLaQ9zFvhes7YR7vBubu1DEN7o65
+         U4kaKhsu0ps7yC0WmKlbpnH0Yp1uTp7xsDGZtgw9mvOCUbAxovpLxfdgb1Un1HEs1kD6
+         vPZkVvlpwqjulQqgd6Lx6rRF9WdZktw/surrmqDbPHFe0cmXZ97ypZ4oLDN8fzh2IxHc
+         48ovLGD59G7RK+b3/KI/CpYUUsU53ThIfbrik6hoygjAJR2Eib6bSSH51q+9wJb/G0ql
+         37NfnccShXUqf+ftAHTWbtj9kN/fR4pwwzGjRik/DodaikwAh5Ue66hT25q3+VkSQG3k
+         6asQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=69t5JvkMUpa4S3zHMzIPphToxILDMFyOxSV05k21NRo=;
-        b=gKa6vE7blvJvCcOP4EebTmdlbMfojSY+I1LKsSTBOK2wiv4oiaoWvsRJRgV51t28h9
-         v3FQZbVt88tzWR8GD4PHkEwbI2cV0BobzI1XX8mtfHyzFUQ8e+F/mDNgHqxNIfIrx9nE
-         8yPMbtFiIl4CO4ighAef4HeypF3UOB9ZYrMcdz0kvqepqQ2mhF/1upmikDgFib//wMiD
-         C8J8lSKZx908tVFJmtTNlUPq+lVrlYOMOFjwoGEq81AHw5qTFLJzghv7xQRJ6VFEvxXW
-         PD13QmRzf7Hzvrz019fVyOoDRp3494elmmdP8Jc+A9yFcva1OOb5OZILoXEkidVohq/+
-         Igcw==
-X-Gm-Message-State: AOAM530VqpScnKDSQFjwVFqUR8PTfa0SPf7LtP5IDneLefuVHeLWX7hM
-        1M/o1PCCNJkJSAQfbRBneEfO8Q==
-X-Google-Smtp-Source: ABdhPJxmvTKJ6I8q166ESGz1b/+UAvPTvctOrfMJF1LBcEehrkaOaWTcdudYGcw9acZPesyY84UDFw==
-X-Received: by 2002:a17:902:db0f:b029:f3:e5f4:87f1 with SMTP id m15-20020a170902db0fb02900f3e5f487f1mr1856086plx.26.1622096683363;
-        Wed, 26 May 2021 23:24:43 -0700 (PDT)
+        bh=4Skb3PkDwb/3WBbW5QytVqXcn8HE8kv5ZTlpyL+++g4=;
+        b=Ub6vqCqg1bU7YV2Vi4+xxEi7rzT0NCfJUF/M/1ypZnWYPz+uOe6CJJYzlRgK5iCH2j
+         JYhrWyRcch9EItVylm0iDQxuHbaLe1mxaBtSbjStCRTbLfJ5pZgrLFCIaBDFU6mUdt0S
+         s23dZIBMyn5KTNmXxCx1SX+9W4b5IzSN9vfN0kwgfuPq/K5MO6xl38mRClmmIN33tT1H
+         915s3QrY4sflRCLNzi/SWUNDcXkwMJAsUu6Axti1BY5ruaFQ4zvmtHLePCtQguFKFUBr
+         hzwK+MPUVEdqjsfgh16XRcHzCvAByOXywQRFnYiefIN7BnHXloRZw/6wc50ul6YrDvZ2
+         w1Cg==
+X-Gm-Message-State: AOAM5334xb5E8kIZ+t2qoRYyp1O84xtT5rKiP7FLcROVI2yitdJzlmZ1
+        MWyie8gwOWf+3/NcdRwK9O0dWg==
+X-Google-Smtp-Source: ABdhPJw32otAEAGQ7wbA7Yy6KLbhe+rjlxJYa8gEkHEt45un6/ZtOcrGlPaiuyYswbLoNoB4qg5JRg==
+X-Received: by 2002:a63:b243:: with SMTP id t3mr2257632pgo.253.1622096692910;
+        Wed, 26 May 2021 23:24:52 -0700 (PDT)
 Received: from localhost.localdomain ([139.177.225.254])
-        by smtp.gmail.com with ESMTPSA id m5sm882971pgl.75.2021.05.26.23.24.36
+        by smtp.gmail.com with ESMTPSA id m5sm882971pgl.75.2021.05.26.23.24.43
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 May 2021 23:24:43 -0700 (PDT)
+        Wed, 26 May 2021 23:24:52 -0700 (PDT)
 From:   Muchun Song <songmuchun@bytedance.com>
 To:     willy@infradead.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
         mhocko@kernel.org, vdavydov.dev@gmail.com, shakeelb@google.com,
@@ -57,9 +57,9 @@ Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, linux-nfs@vger.kernel.org,
         zhengqi.arch@bytedance.com, duanxiongchun@bytedance.com,
         fam.zheng@bytedance.com, Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v2 04/21] mm: memcontrol: do it in mem_cgroup_css_online to make the kmem online
-Date:   Thu, 27 May 2021 14:21:31 +0800
-Message-Id: <20210527062148.9361-5-songmuchun@bytedance.com>
+Subject: [PATCH v2 05/21] mm: list_lru: remove lru node locking from memcg_update_list_lru_node
+Date:   Thu, 27 May 2021 14:21:32 +0800
+Message-Id: <20210527062148.9361-6-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 In-Reply-To: <20210527062148.9361-1-songmuchun@bytedance.com>
 References: <20210527062148.9361-1-songmuchun@bytedance.com>
@@ -69,134 +69,38 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If we do it in the mem_cgroup_css_online() to make the kmem online,
-we do not need to set ->kmemcg_id when the kmem is offline. And we
-also can remove memcg_free_kmem(). So just do that to simplify the
-code.
+Since commit e5bc3af7734f ("rcu: Consolidate PREEMPT and !PREEMPT
+synchronize_rcu()"), the critical section of spinlock can serve
+as RCU read-side critical section. So we can remove the locking
+from memcg_update_list_lru_node().
 
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 ---
- mm/memcontrol.c | 42 +++++++++++++++---------------------------
- 1 file changed, 15 insertions(+), 27 deletions(-)
+ mm/list_lru.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 23a9fc8dc143..377ec9847179 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -3629,7 +3629,8 @@ static int memcg_online_kmem(struct mem_cgroup *memcg)
- 	if (cgroup_memory_nokmem)
- 		return 0;
+diff --git a/mm/list_lru.c b/mm/list_lru.c
+index 4962d48d4410..e86d4d055d3c 100644
+--- a/mm/list_lru.c
++++ b/mm/list_lru.c
+@@ -403,18 +403,9 @@ static int memcg_update_list_lru_node(struct list_lru_node *nlru,
  
--	BUG_ON(memcg->kmemcg_id >= 0);
-+	if (unlikely(mem_cgroup_is_root(memcg)))
-+		return 0;
+ 	memcpy(&new->lru, &old->lru, old_size * sizeof(void *));
  
- 	memcg_id = memcg_alloc_cache_id();
- 	if (memcg_id < 0)
-@@ -3658,6 +3659,9 @@ static void memcg_offline_kmem(struct mem_cgroup *memcg)
- 	if (cgroup_memory_nokmem)
- 		return;
- 
-+	if (unlikely(mem_cgroup_is_root(memcg)))
-+		return;
-+
- 	parent = parent_mem_cgroup(memcg);
- 	if (!parent)
- 		parent = root_mem_cgroup;
-@@ -3665,20 +3669,11 @@ static void memcg_offline_kmem(struct mem_cgroup *memcg)
- 	memcg_reparent_objcgs(memcg, parent);
- 
- 	kmemcg_id = memcg->kmemcg_id;
--	BUG_ON(kmemcg_id < 0);
- 
- 	/* memcg_reparent_objcgs() must be called before this. */
- 	memcg_drain_all_list_lrus(kmemcg_id, parent);
- 
- 	memcg_free_cache_id(kmemcg_id);
--	memcg->kmemcg_id = -1;
--}
+-	/*
+-	 * The locking below allows readers that hold nlru->lock avoid taking
+-	 * rcu_read_lock (see list_lru_from_memcg_idx).
+-	 *
+-	 * Since list_lru_{add,del} may be called under an IRQ-safe lock,
+-	 * we have to use IRQ-safe primitives here to avoid deadlock.
+-	 */
+-	spin_lock_irq(&nlru->lock);
+ 	rcu_assign_pointer(nlru->memcg_lrus, new);
+-	spin_unlock_irq(&nlru->lock);
 -
--static void memcg_free_kmem(struct mem_cgroup *memcg)
--{
--	/* css_alloc() failed, offlining didn't happen */
--	if (unlikely(memcg->kmemcg_id != -1))
--		memcg_offline_kmem(memcg);
- }
- #else
- static int memcg_online_kmem(struct mem_cgroup *memcg)
-@@ -3688,9 +3683,6 @@ static int memcg_online_kmem(struct mem_cgroup *memcg)
- static void memcg_offline_kmem(struct mem_cgroup *memcg)
- {
- }
--static void memcg_free_kmem(struct mem_cgroup *memcg)
--{
--}
- #endif /* CONFIG_MEMCG_KMEM */
- 
- static int memcg_update_kmem_max(struct mem_cgroup *memcg,
-@@ -5219,7 +5211,6 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
- {
- 	struct mem_cgroup *parent = mem_cgroup_from_css(parent_css);
- 	struct mem_cgroup *memcg, *old_memcg;
--	long error = -ENOMEM;
- 
- 	old_memcg = set_active_memcg(parent);
- 	memcg = mem_cgroup_alloc();
-@@ -5249,38 +5240,36 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
- 	}
- 
- 	/* The following stuff does not apply to the root */
--	error = memcg_online_kmem(memcg);
--	if (error)
--		goto fail;
--
- 	if (cgroup_subsys_on_dfl(memory_cgrp_subsys) && !cgroup_memory_nosocket)
- 		static_branch_inc(&memcg_sockets_enabled_key);
- 
- 	return &memcg->css;
--fail:
--	mem_cgroup_id_remove(memcg);
--	mem_cgroup_free(memcg);
--	return ERR_PTR(error);
- }
- 
- static int mem_cgroup_css_online(struct cgroup_subsys_state *css)
- {
- 	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
- 
-+	if (memcg_online_kmem(memcg))
-+		goto remove_id;
+ 	kvfree_rcu(old, rcu);
 +
- 	/*
- 	 * A memcg must be visible for expand_shrinker_info()
- 	 * by the time the maps are allocated. So, we allocate maps
- 	 * here, when for_each_mem_cgroup() can't skip it.
- 	 */
--	if (alloc_shrinker_info(memcg)) {
--		mem_cgroup_id_remove(memcg);
--		return -ENOMEM;
--	}
-+	if (alloc_shrinker_info(memcg))
-+		goto offline_kmem;
- 
- 	/* Online state pins memcg ID, memcg ID pins CSS */
- 	refcount_set(&memcg->id.ref, 1);
- 	css_get(css);
  	return 0;
-+offline_kmem:
-+	memcg_offline_kmem(memcg);
-+remove_id:
-+	mem_cgroup_id_remove(memcg);
-+	return -ENOMEM;
- }
- 
- static void mem_cgroup_css_offline(struct cgroup_subsys_state *css)
-@@ -5338,7 +5327,6 @@ static void mem_cgroup_css_free(struct cgroup_subsys_state *css)
- 	cancel_work_sync(&memcg->high_work);
- 	mem_cgroup_remove_from_trees(memcg);
- 	free_shrinker_info(memcg);
--	memcg_free_kmem(memcg);
- 	mem_cgroup_free(memcg);
  }
  
 -- 
