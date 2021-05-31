@@ -2,156 +2,247 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D4623952CA
-	for <lists+linux-nfs@lfdr.de>; Sun, 30 May 2021 21:51:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 446993954E1
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 May 2021 06:59:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229769AbhE3TxK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 30 May 2021 15:53:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23076 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229712AbhE3TxJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 30 May 2021 15:53:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1622404290;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZvVv0Nt9oUZd2n1LFljPV9luWpSfXCCcrskJ3554xfQ=;
-        b=Tu8f94sR3HnOk5QjOGDoxOFYvXFkJys399OlyZgKQe1AOM4lFdfsNu/FRZIxg+EhFKqGGN
-        ntpx3UrSsmWSG0gB9+boRhlExhwoWPJKjAiaboSRV+AYpatt+ciX6KSGWz8LUBRCAGCT4O
-        q2GAYTMNThHdSM8spjNA4gz7tItt5SM=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-203-iTx2cObAOR6NvyL8brCvPw-1; Sun, 30 May 2021 15:51:29 -0400
-X-MC-Unique: iTx2cObAOR6NvyL8brCvPw-1
-Received: by mail-qk1-f197.google.com with SMTP id y201-20020a3764d20000b02903a95207e6a4so1484417qkb.2
-        for <linux-nfs@vger.kernel.org>; Sun, 30 May 2021 12:51:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZvVv0Nt9oUZd2n1LFljPV9luWpSfXCCcrskJ3554xfQ=;
-        b=oiZolz2texfI2YClRAI3ivWFOmwrbWojP/wY93nmo0CT2UGEal9Nlme1Y3D1aJX+ZY
-         wgKTEe1/WWUIPIi1Dcksvzq0Di5uLpcVmk49zlSF8yF0YdQ5Qf2SzVmrY0uCxqQgXnYI
-         dbfiAaOS8x9w8B7NmBfKpbYXyJKyUfF0mKOfEPfoBpKV22RZjbJT8lkYCfBHa0zms/CY
-         cGYMDLLxqDh6poM+G7JmapigG/DTekF6OwS1HM2vqyqw2qRacPqN//K/PWBj55OJKsua
-         +aSbpK3R6fUuSQcnI9ErkFwxGGteV1ttKkfi89UjR1BJuhRvxToykQFNvlfeRcTHq/yX
-         WXXw==
-X-Gm-Message-State: AOAM533xEbefIQhSO6CKGQi08UIq+rZgVfQ5Pvt74GQQKRZK5xAloE9b
-        avpsvEOydFQAAQGXSnRf+pbShtbzS1Lr8eh/tI29bbUlK+TkcH1LNfYQOdZQAr0LjJNtZeeaWUM
-        sW/3eAQjkmffgL/KLjFjP1ZEtk/3XfQbTgE217czKC/FesXv1gZSzeWtQjG5eqW9hd2CQQA==
-X-Received: by 2002:ac8:1304:: with SMTP id e4mr5397873qtj.328.1622404288783;
-        Sun, 30 May 2021 12:51:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzhld3RndNoZ0Cq4BWXf/cxKMiH8eRapgwmvK32KoQvKlz0fvKopdpSwWVkn6hnJxFURFuaHw==
-X-Received: by 2002:ac8:1304:: with SMTP id e4mr5397860qtj.328.1622404288513;
-        Sun, 30 May 2021 12:51:28 -0700 (PDT)
-Received: from madhat.boston.devel.redhat.com ([71.161.93.112])
-        by smtp.gmail.com with ESMTPSA id e19sm7247812qtr.45.2021.05.30.12.51.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 May 2021 12:51:28 -0700 (PDT)
-Subject: Re: [nfs-utils RFC PATCH 2/2] gssd: add timeout for upcall threads
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     Scott Mayhew <smayhew@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-References: <20210525180033.200404-1-smayhew@redhat.com>
- <20210525180033.200404-3-smayhew@redhat.com>
- <490b45eb-0142-24de-e05f-79751891ddf9@RedHat.com>
- <YK+FH7T/ljFbuIsH@aion.usersys.redhat.com>
- <dbb64855-5ca5-0928-eda4-705a9f45c71b@RedHat.com>
- <CAN-5tyFG2douMOvKcERHa24hWp7VvgYB9XAN1c84JLsL+81pCA@mail.gmail.com>
-From:   Steve Dickson <steved@redhat.com>
-Message-ID: <7cd3b3b9-5e69-5067-841b-782b0c679883@redhat.com>
-Date:   Sun, 30 May 2021 15:54:31 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S230050AbhEaFBb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 May 2021 01:01:31 -0400
+Received: from out20-49.mail.aliyun.com ([115.124.20.49]:37088 "EHLO
+        out20-49.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229730AbhEaFBa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 May 2021 01:01:30 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.181439-0.000926598-0.817634;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047190;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=1;RT=1;SR=0;TI=SMTPD_---.KLBorA._1622437186;
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.KLBorA._1622437186)
+          by smtp.aliyun-inc.com(10.147.42.202);
+          Mon, 31 May 2021 12:59:49 +0800
+Date:   Mon, 31 May 2021 12:59:51 +0800
+From:   Wang Yugui <wangyugui@e16-tech.com>
+To:     linux-nfs@vger.kernel.org
+Subject: nfsd dead loop when xfstests generic/531
+Message-Id: <20210531125948.2D37.409509F4@e16-tech.com>
 MIME-Version: 1.0
-In-Reply-To: <CAN-5tyFG2douMOvKcERHa24hWp7VvgYB9XAN1c84JLsL+81pCA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.75.04 [en]
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hey!
+Hi,
 
-Sorry for the delay... Red Hat just rejiggered my
-entire email world... fun fun! ;-)
+nfsd dead loop when xfstests generic/531
 
-On 5/27/21 12:47 PM, Olga Kornievskaia wrote:
-> On Thu, May 27, 2021 at 8:52 AM Steve Dickson <SteveD@redhat.com> wrote:
->>
->>
->>
->> On 5/27/21 7:40 AM, Scott Mayhew wrote:
->>> On Wed, 26 May 2021, Steve Dickson wrote:
->>>> If people are going to used the -C flag they are saying they want
->>>> to ignore hung threads so I'm thinking with printerr(0) we would
->>>> be filling up their logs about messages they don't care about.
->>>> So I'm thinking we should change this to a printerr(1)
->>>
->>> Note that message could pop multiple times per thread even without the
->>> -C flag because cancellation isn't immediate (a thread needs to hit a
->>> cancellation point, which it won't actually do that until it comes back
->>> from wherever it's hanging).  My thinking was leaving it with
->>> printerr(0) would make it blatantly obvious when something was wrong and
->>> needed to be investigated.  I have no issue with changing it to
->>> printerr(1) though.
->> It would... but I've craft the debugging for a single -v
->> is errors only... Maybe I should mention that in the
->> man page... And looking at what you mention in the
->> man page for -C, it does say it will cause an error
->> to be logged... So I guess it makes sense to leave
->> it as is.
->>
->>>
->>> Alternatively we could add another flag to struct upcall_thread_info to
->>> ensure that message only gets logged once per thread.
->>>
->> I think it is good as is...
->>
->>>>
->>>> Overall I think the code is very well written with
->>>> one exception... The lack of comments. I think it
->>>> would be very useful to let the reader know what
->>>> you are doing and why.... But by no means is
->>>> that a show stopper. Nice work!
->>>
->>> I can go back and add some comments.
->> Well there aren't that many comments to
->> begin with.... So you are just following
->> the format... ;-)
->>
->> Don't worry about it... How I will finish my testing
->> today... and do the commit with what we got..
-> 
-> Hi Steve,
-> 
-> Can you please provide a bit more time for review to happen?
-Fair enough... Scott a V3 version on last Thur.
+linux kernel of nfs server: 5.10.41
+linux kernel of nfs client: 5.10.41
 
-> 
->> Again... Nice work!!
-> 
-> Yes, nice work. But, I object to the current code that sets canceling
-> threads as default. This way the code hides the problems that occur
-> instead of forcing people to fix them.
-Scott correct me if I'm wrong...
 
-If the upcall is canceled (which is the default) the
-upcall is failed causing the mount to fail and
-a message is logged.
+nfsd dead loop when xfstests generic/531
 
-If the upcall is not canceled (using the -C flag)
-the upcall continues to hang, but only on message
-is logged about the hang... and the mount will
-continue to hang.
+linux kernel of nfs server: 5.10.41
+linux kernel of nfs client: 5.10.41
 
-See 'scan_active_thread_list()' the 'case EBUSY:' case.
+1) nfs client: waiting at unlink () 
 
-So in both cases a the problem will be logged.
+# pstack 2962
+#0  0x00007fd6c7eec1d7 in unlink () from /lib64/libc.so.6
+#1  0x0000000000400c66 in leak_tmpfile () at t_open_tmpfiles.c:143
+#2  0x000000000040092d in main (argc=2, argv=<optimized out>) at t_open_tmpfiles.c:174
+# pstack 2964
+#0  0x00007effca5cf1d7 in unlink () from /lib64/libc.so.6
+#1  0x0000000000400c66 in leak_tmpfile () at t_open_tmpfiles.c:143
+#2  0x000000000040092d in main (argc=2, argv=<optimized out>) at t_open_tmpfiles.c:174
 
-steved.
+2) nfs server
+
+# top -b
+top - 12:40:07 up  1:45,  1 user,  load average: 9.09, 9.22, 8.41
+Tasks: 468 total,  11 running, 457 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us, 20.3 sy,  0.0 ni, 79.7 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem : 193368.3 total, 189105.4 free,   1403.8 used,   2859.1 buff/cache
+MiB Swap:      0.0 total,      0.0 free,      0.0 used. 188471.0 avail Mem
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+   5329 root      20   0       0      0      0 R 100.0   0.0  39:52.13 nfsd
+   5330 root      20   0       0      0      0 R 100.0   0.0  39:58.48 nfsd
+   5331 root      20   0       0      0      0 R 100.0   0.0  40:10.84 nfsd
+   5332 root      20   0       0      0      0 R 100.0   0.0  40:30.13 nfsd
+   5333 root      20   0       0      0      0 R 100.0   0.0  41:28.05 nfsd
+   5334 root      20   0       0      0      0 R 100.0   0.0  42:50.70 nfsd
+   5335 root      20   0       0      0      0 R 100.0   0.0  45:34.08 nfsd
+   5336 root      20   0       0      0      0 R 100.0   0.0  50:30.75 nfsd
+     15 root      20   0       0      0      0 I   6.2   0.0   0:08.95 rcu_sched
+   9868 root      20   0       0      0      0 I   6.2   0.0   0:00.04 kworker/33:0-mm_percpu_wq
+
+# echo 't' > /proc/sysrq-trigger
+
+[ 5690.431287] task:nfsd            state:R  running task     stack:    0 pid: 5329 ppid:     2 flags:0x00004008
+[ 5690.431291] Call Trace:
+[ 5690.431305]  ? nfsd_permission+0x90/0xe0 [nfsd]
+[ 5690.431317]  ? fh_verify+0x17a/0x6a0 [nfsd]
+[ 5690.431333]  ? nfsd4_open+0x64a/0x720 [nfsd]
+[ 5690.431348]  ? nfsd4_proc_compound+0x3d2/0x700 [nfsd]
+[ 5690.431360]  ? nfsd_dispatch+0xd4/0x180 [nfsd]
+[ 5690.431372]  ? svc_process_common+0x392/0x6c0 [sunrpc]
+[ 5690.431410]  ? svc_recv+0x3c4/0x8a0 [sunrpc]
+[ 5690.431422]  ? nfsd_svc+0x300/0x300 [nfsd]
+[ 5690.431434]  ? nfsd_destroy+0x60/0x60 [nfsd]
+[ 5690.431453]  ? svc_process+0xb7/0xf0 [sunrpc]
+[ 5690.431463]  ? nfsd+0xe8/0x140 [nfsd]
+[ 5690.431468]  ? kthread+0x116/0x130
+[ 5690.431470]  ? kthread_park+0x80/0x80
+[ 5690.431473]  ? ret_from_fork+0x1f/0x30
+[ 5690.431477] task:nfsd            state:R  running task     stack:    0 pid: 5330 ppid:     2 flags:0x00004008
+[ 5690.431481] Call Trace:
+[ 5690.431484]  ? list_lru_walk_node+0x35/0xc0
+[ 5690.431496]  ? nfsd_file_schedule_laundrette+0x40/0x40 [nfsd]
+[ 5690.431509]  ? nfsd_file_lru_walk_list+0x164/0x190 [nfsd]
+[ 5690.431522]  ? nfsd_file_acquire+0x66b/0x6e0 [nfsd]
+[ 5690.431537]  ? nfs4_get_vfs_file+0x2e0/0x330 [nfsd]
+[ 5690.431551]  ? find_file_locked+0x6c/0xa0 [nfsd]
+[ 5690.431565]  ? nfsd4_process_open2+0x5af/0x1360 [nfsd]
+[ 5690.431578]  ? nfsd_permission+0x90/0xe0 [nfsd]
+[ 5690.431588]  ? fh_verify+0x17a/0x6a0 [nfsd]
+[ 5690.431601]  ? nfsd4_open+0x64a/0x720 [nfsd]
+[ 5690.431614]  ? nfsd4_proc_compound+0x3d2/0x700 [nfsd]
+[ 5690.431625]  ? nfsd_dispatch+0xd4/0x180 [nfsd]
+[ 5690.431645]  ? svc_process_common+0x392/0x6c0 [sunrpc]
+[ 5690.431666]  ? svc_recv+0x3c4/0x8a0 [sunrpc]
+[ 5690.431678]  ? nfsd_svc+0x300/0x300 [nfsd]
+[ 5690.431688]  ? nfsd_destroy+0x60/0x60 [nfsd]
+[ 5690.431707]  ? svc_process+0xb7/0xf0 [sunrpc]
+[ 5690.431718]  ? nfsd+0xe8/0x140 [nfsd]
+[ 5690.431722]  ? kthread+0x116/0x130
+[ 5690.431724]  ? kthread_park+0x80/0x80
+[ 5690.431727]  ? ret_from_fork+0x1f/0x30
+[ 5690.431731] task:nfsd            state:R  running task     stack:    0 pid: 5331 ppid:     2 flags:0x00004000
+[ 5690.431734] Call Trace:
+[ 5690.431738]  ? security_prepare_creds+0x6f/0xa0
+[ 5690.431753]  ? nfsd4_process_open2+0x5af/0x1360 [nfsd]
+[ 5690.431765]  ? nfsd_permission+0x90/0xe0 [nfsd]
+[ 5690.431776]  ? fh_verify+0x17a/0x6a0 [nfsd]
+[ 5690.431789]  ? nfsd4_open+0x64a/0x720 [nfsd]
+[ 5690.431802]  ? nfsd4_proc_compound+0x3d2/0x700 [nfsd]
+[ 5690.431813]  ? nfsd_dispatch+0xd4/0x180 [nfsd]
+[ 5690.431833]  ? svc_process_common+0x392/0x6c0 [sunrpc]
+[ 5690.431854]  ? svc_recv+0x3c4/0x8a0 [sunrpc]
+[ 5690.431865]  ? nfsd_svc+0x300/0x300 [nfsd]
+[ 5690.431876]  ? nfsd_destroy+0x60/0x60 [nfsd]
+[ 5690.431895]  ? svc_process+0xb7/0xf0 [sunrpc]
+[ 5690.431906]  ? nfsd+0xe8/0x140 [nfsd]
+[ 5690.431910]  ? kthread+0x116/0x130
+[ 5690.431912]  ? kthread_park+0x80/0x80
+[ 5690.431915]  ? ret_from_fork+0x1f/0x30
+[ 5690.431919] task:nfsd            state:R  running task     stack:    0 pid: 5332 ppid:     2 flags:0x00004000
+[ 5690.431922] Call Trace:
+[ 5690.431925]  ? __schedule+0x29e/0x760
+[ 5690.431939]  ? nfsd4_process_open2+0x5af/0x1360 [nfsd]
+[ 5690.431952]  ? nfsd_permission+0x90/0xe0 [nfsd]
+[ 5690.431965]  ? fh_verify+0x17a/0x6a0 [nfsd]
+[ 5690.431979]  ? nfsd4_open+0x64a/0x720 [nfsd]
+[ 5690.431994]  ? nfsd4_proc_compound+0x3d2/0x700 [nfsd]
+[ 5690.432007]  ? nfsd_dispatch+0xd4/0x180 [nfsd]
+[ 5690.432028]  ? svc_process_common+0x392/0x6c0 [sunrpc]
+[ 5690.432051]  ? svc_recv+0x3c4/0x8a0 [sunrpc]
+[ 5690.432063]  ? nfsd_svc+0x300/0x300 [nfsd]
+[ 5690.432075]  ? nfsd_destroy+0x60/0x60 [nfsd]
+[ 5690.432095]  ? svc_process+0xb7/0xf0 [sunrpc]
+[ 5690.432107]  ? nfsd+0xe8/0x140 [nfsd]
+[ 5690.432112]  ? kthread+0x116/0x130
+[ 5690.432114]  ? kthread_park+0x80/0x80
+[ 5690.432117]  ? ret_from_fork+0x1f/0x30
+[ 5690.432121] task:nfsd            state:R  running task     stack:    0 pid: 5333 ppid:     2 flags:0x00004000
+[ 5690.432125] Call Trace:
+[ 5690.432128]  ? __schedule+0x29e/0x760
+[ 5690.432144]  ? nfsd4_process_open2+0x5af/0x1360 [nfsd]
+[ 5690.432158]  ? nfsd_permission+0x90/0xe0 [nfsd]
+[ 5690.432171]  ? fh_verify+0x17a/0x6a0 [nfsd]
+[ 5690.432185]  ? nfsd4_open+0x64a/0x720 [nfsd]
+[ 5690.432200]  ? nfsd4_proc_compound+0x3d2/0x700 [nfsd]
+[ 5690.432213]  ? nfsd_dispatch+0xd4/0x180 [nfsd]
+[ 5690.432234]  ? svc_process_common+0x392/0x6c0 [sunrpc]
+[ 5690.432257]  ? svc_recv+0x3c4/0x8a0 [sunrpc]
+[ 5690.432270]  ? nfsd_svc+0x300/0x300 [nfsd]
+[ 5690.432281]  ? nfsd_destroy+0x60/0x60 [nfsd]
+[ 5690.432302]  ? svc_process+0xb7/0xf0 [sunrpc]
+[ 5690.432314]  ? nfsd+0xe8/0x140 [nfsd]
+[ 5690.432318]  ? kthread+0x116/0x130
+[ 5690.432320]  ? kthread_park+0x80/0x80
+[ 5690.432323]  ? ret_from_fork+0x1f/0x30
+[ 5690.432327] task:nfsd            state:R  running task     stack:    0 pid: 5334 ppid:     2 flags:0x00004000
+[ 5690.432331] Call Trace:
+[ 5690.432361]  ? __btrfs_release_delayed_node+0x7a/0x340 [btrfs]
+[ 5690.432375]  ? nfsd_permission+0x90/0xe0 [nfsd]
+[ 5690.432384]  ? native_queued_spin_lock_slowpath+0x185/0x1b0
+[ 5690.432388]  ? _raw_spin_lock+0x1a/0x20
+[ 5690.432391]  ? list_lru_add+0x60/0x140
+[ 5690.432404]  ? nfsd_file_acquire+0x3e5/0x6e0 [nfsd]
+[ 5690.432419]  ? nfs4_get_vfs_file+0x2e0/0x330 [nfsd]
+[ 5690.432423]  ? security_prepare_creds+0x6f/0xa0
+[ 5690.432439]  ? nfsd4_process_open2+0x5af/0x1360 [nfsd]
+[ 5690.432450]  ? nfsd_permission+0x90/0xe0 [nfsd]
+[ 5690.432461]  ? fh_verify+0x17a/0x6a0 [nfsd]
+[ 5690.432474]  ? nfsd4_open+0x64a/0x720 [nfsd]
+[ 5690.432488]  ? nfsd4_proc_compound+0x3d2/0x700 [nfsd]
+[ 5690.432499]  ? nfsd_dispatch+0xd4/0x180 [nfsd]
+[ 5690.432518]  ? svc_process_common+0x392/0x6c0 [sunrpc]
+[ 5690.432539]  ? svc_recv+0x3c4/0x8a0 [sunrpc]
+[ 5690.432551]  ? nfsd_svc+0x300/0x300 [nfsd]
+[ 5690.432562]  ? nfsd_destroy+0x60/0x60 [nfsd]
+[ 5690.432581]  ? svc_process+0xb7/0xf0 [sunrpc]
+[ 5690.432591]  ? nfsd+0xe8/0x140 [nfsd]
+[ 5690.432596]  ? kthread+0x116/0x130
+[ 5690.432598]  ? kthread_park+0x80/0x80
+[ 5690.432601]  ? ret_from_fork+0x1f/0x30
+[ 5690.432605] task:nfsd            state:R  running task     stack:    0 pid: 5335 ppid:     2 flags:0x00004000
+[ 5690.432608] Call Trace:
+[ 5690.432611]  ? list_lru_walk_node+0x35/0xc0
+[ 5690.432623]  ? nfsd_file_schedule_laundrette+0x40/0x40 [nfsd]
+[ 5690.432635]  ? nfsd_file_lru_walk_list+0x164/0x190 [nfsd]
+[ 5690.432648]  ? nfsd_file_acquire+0x66b/0x6e0 [nfsd]
+[ 5690.432663]  ? nfs4_get_vfs_file+0x2e0/0x330 [nfsd]
+[ 5690.432666]  ? security_prepare_creds+0x6f/0xa0
+[ 5690.432680]  ? nfsd4_process_open2+0x5af/0x1360 [nfsd]
+[ 5690.432693]  ? nfsd_permission+0x90/0xe0 [nfsd]
+[ 5690.432703]  ? fh_verify+0x17a/0x6a0 [nfsd]
+[ 5690.432716]  ? nfsd4_open+0x64a/0x720 [nfsd]
+[ 5690.432729]  ? nfsd4_proc_compound+0x3d2/0x700 [nfsd]
+[ 5690.432740]  ? nfsd_dispatch+0xd4/0x180 [nfsd]
+[ 5690.432760]  ? svc_process_common+0x392/0x6c0 [sunrpc]
+[ 5690.432781]  ? svc_recv+0x3c4/0x8a0 [sunrpc]
+[ 5690.432792]  ? nfsd_svc+0x300/0x300 [nfsd]
+[ 5690.432803]  ? nfsd_destroy+0x60/0x60 [nfsd]
+[ 5690.432821]  ? svc_process+0xb7/0xf0 [sunrpc]
+[ 5690.432832]  ? nfsd+0xe8/0x140 [nfsd]
+[ 5690.432836]  ? kthread+0x116/0x130
+[ 5690.432839]  ? kthread_park+0x80/0x80
+[ 5690.432841]  ? ret_from_fork+0x1f/0x30
+[ 5690.432845] task:nfsd            state:R  running task     stack:    0 pid: 5336 ppid:     2 flags:0x00004008
+[ 5690.432848] Call Trace:
+[ 5690.432852]  ? list_lru_walk_node+0x35/0xc0
+[ 5690.432863]  ? nfsd_file_schedule_laundrette+0x40/0x40 [nfsd]
+[ 5690.432876]  ? nfsd_file_lru_walk_list+0x164/0x190 [nfsd]
+[ 5690.432889]  ? nfsd_file_acquire+0x66b/0x6e0 [nfsd]
+[ 5690.432903]  ? nfs4_get_vfs_file+0x2e0/0x330 [nfsd]
+[ 5690.432907]  ? security_prepare_creds+0x6f/0xa0
+[ 5690.432921]  ? nfsd4_process_open2+0x5af/0x1360 [nfsd]
+[ 5690.432933]  ? nfsd_permission+0x90/0xe0 [nfsd]
+[ 5690.432945]  ? fh_verify+0x17a/0x6a0 [nfsd]
+[ 5690.432957]  ? nfsd4_open+0x64a/0x720 [nfsd]
+[ 5690.432969]  ? nfsd4_proc_compound+0x3d2/0x700 [nfsd]
+[ 5690.432980]  ? nfsd_dispatch+0xd4/0x180 [nfsd]
+[ 5690.433000]  ? svc_process_common+0x392/0x6c0 [sunrpc]
+[ 5690.433021]  ? svc_recv+0x3c4/0x8a0 [sunrpc]
+[ 5690.433032]  ? nfsd_svc+0x300/0x300 [nfsd]
+[ 5690.433043]  ? nfsd_destroy+0x60/0x60 [nfsd]
+[ 5690.433062]  ? svc_process+0xb7/0xf0 [sunrpc]
+[ 5690.433072]  ? nfsd+0xe8/0x140 [nfsd]
+[ 5690.433077]  ? kthread+0x116/0x130
+[ 5690.433079]  ? kthread_park+0x80/0x80
+[ 5690.433082]  ? ret_from_fork+0x1f/0x30
+
+
+Best Regards
+Wang Yugui (wangyugui@e16-tech.com)
+2021/05/31
+
 
