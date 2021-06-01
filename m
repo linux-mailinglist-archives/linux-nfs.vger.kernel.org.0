@@ -2,72 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07B8A397552
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jun 2021 16:21:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF0253976BB
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jun 2021 17:31:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234077AbhFAOXD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Jun 2021 10:23:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233871AbhFAOXD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Jun 2021 10:23:03 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9FE2C061574;
-        Tue,  1 Jun 2021 07:21:21 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id ED88869D6; Tue,  1 Jun 2021 10:21:19 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org ED88869D6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1622557279;
-        bh=ssO0Zcnn172GNJ5+u5TEp/J0tp9/5SxUu5MeXRgdXzU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ACL+fvqu8Aa/m+oLPSU4G1c0r/+2rLSIi4IPDBY1PLs4khIx3Mn0McCa95iT99QA/
-         kh8ePh5RISeP6ynedosr7w4A9lPS2frUMAbTe84Wj/RnLqSXzswYR+Hk04HIVqZo3b
-         OT6NZgOUwOBgXZibXwQrApZwh2jL/G2IB8q8bx74=
-Date:   Tue, 1 Jun 2021 10:21:19 -0400
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     zhengyongjun <zhengyongjun3@huawei.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: Re: =?utf-8?B?562U5aSN?= =?utf-8?Q?=3A?= [PATCH net-next] xprtrdma:
- Fix spelling mistakes
-Message-ID: <20210601142119.GB5320@fieldses.org>
-References: <20210531063640.3018843-1-zhengyongjun3@huawei.com>
- <20210531222719.3e742ed6@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
- <6b737fb5440d4fe3a53a163624d9cbf8@huawei.com>
+        id S234404AbhFAPdV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Jun 2021 11:33:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:31492 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234359AbhFAPdT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Jun 2021 11:33:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1622561497;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=g+5Ostc+FOuzREh2yofS1vbXJs1fHxV3ObCjOQmXyfQ=;
+        b=Bv9eC8tlEcbt8atNptzHu6dHXAuTsoy6Yr7aHdLpRonn4W05vSN/QKidSyIe1F5EV8GEAl
+        aqumEbccDheb/qmbRcVSYiMgIV4Kw+tVAnIRkSNsreHIQhIjHHggPPM9JGWE/gpWzNeH/9
+        W9hh4bvCmKqBXkomdLu2tLmjSD1IIkk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-520-2bW9sdbuMA2BlvIAX-FMqQ-1; Tue, 01 Jun 2021 11:31:36 -0400
+X-MC-Unique: 2bW9sdbuMA2BlvIAX-FMqQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83D0C8015F8;
+        Tue,  1 Jun 2021 15:31:35 +0000 (UTC)
+Received: from pick.fieldses.org (ovpn-118-198.rdu2.redhat.com [10.10.118.198])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6345960C0F;
+        Tue,  1 Jun 2021 15:31:35 +0000 (UTC)
+Received: by pick.fieldses.org (Postfix, from userid 2815)
+        id 6934712070B; Tue,  1 Jun 2021 11:31:34 -0400 (EDT)
+Date:   Tue, 1 Jun 2021 11:31:34 -0400
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     Petr Vorel <pvorel@suse.cz>
+Cc:     linux-nfs@vger.kernel.org, Yong Sun <yosun@suse.com>
+Subject: Re: pynfs: [NFS 4.0] SEC7, LOCK24 test failures
+Message-ID: <YLZS1iMJR59n4hue@pick.fieldses.org>
+References: <YLY9pKu38lEWaXxE@pevik>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6b737fb5440d4fe3a53a163624d9cbf8@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <YLY9pKu38lEWaXxE@pevik>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jun 01, 2021 at 06:34:04AM +0000, zhengyongjun wrote:
-> Should I remove net-next tag and send patch v2? Waiting for your suggest :)
+On Tue, Jun 01, 2021 at 04:01:08PM +0200, Petr Vorel wrote:
+> I've also find different failures on NFS 4.0:
+> 
+> SEC7     st_secinfo.testRPCSEC_GSS                                : FAILURE
+>            SECINFO returned mechanism list without RPCSEC_GSS
 
-Applied for 5.14, no need to resend anything.--b.
+That shouldn't be run by default; see patch, appended.
 
+> LOCK24   st_lock.testOpenUpgradeLock                              : FAILURE
+>            OP_LOCK should return NFS4_OK, instead got
+>            NFS4ERR_BAD_SEQID
+
+I suspect the server's actually OK here, but I need to look more
+closely.
+
+> They're on stable kernel 5.12.3-1-default (openSUSE). I saw them also on older
+> kernel 4.19.0-16-amd64 (Debian).
 > 
-> -----邮件原件-----
-> 发件人: Jakub Kicinski [mailto:kuba@kernel.org] 
-> 发送时间: 2021年6月1日 13:27
-> 收件人: zhengyongjun <zhengyongjun3@huawei.com>
-> 抄送: trond.myklebust@hammerspace.com; anna.schumaker@netapp.com; davem@davemloft.net; linux-nfs@vger.kernel.org; netdev@vger.kernel.org; linux-kernel@vger.kernel.org; bfields@fieldses.org; chuck.lever@oracle.com
-> 主题: Re: [PATCH net-next] xprtrdma: Fix spelling mistakes
-> 
-> On Mon, 31 May 2021 14:36:40 +0800 Zheng Yongjun wrote:
-> > Fix some spelling mistakes in comments:
-> > succes  ==> success
-> > 
-> > Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
-> 
-> This should not have been tagged for net-next, leaving it to Trond.
+> Any idea how to find whether are these are wrong setup or test bugs or real
+> kernel bugs?
+
+For what it's worth, this is what I do as part of my regular regression
+tests, for 4.0:
+
+	http://git.linux-nfs.org/?p=bfields/testd.git;a=blob;f=bin/do-pynfs;h=4ed0f7942b9ff0907cbd3bb0ec1643dad02758f5;hb=HEAD
+
+and for 4.1:
+
+	http://git.linux-nfs.org/?p=bfields/testd.git;a=blob;f=bin/do-pynfs41;h=b3afc60dfab17aa5037d3f587d3d113bc772970e;hb=HEAD
+
+There are some known 4.0 failures that I skip:
+	http://git.linux-nfs.org/?p=bfields/testd.git;a=blob;f=data/pynfs-skip;h=44256bb26e3fae86572e7c7057b1889652fa014b;hb=HEAD
+
+(But LOCK24 isn't on that list because I keep saying I'm going to triage
+it....)
+
+And for 4.1:
+	http://git.linux-nfs.org/?p=bfields/testd.git;a=blob;f=data/pynfs41-skip;h=c682bed97742cf799b94364872c7575ac9fc188c;hb=HEAD
+
+--b.
+
+commit 98f4ce2e6418
+Author: J. Bruce Fields <bfields@redhat.com>
+Date:   Tue Jun 1 11:10:06 2021 -0400
+
+    nfs4.0 secinfo: auth_gss not required
+    
+    RPCSEC_GSS is mandatory to implement, but that doesn't mean every server
+    will have it be configured on.
+    
+    I try to only add the "all" tag to tests whose failure indicates the
+    server is really out of spec, or at least is very unusual and likely to
+    cause problems for clients.
+    
+    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+
+diff --git a/nfs4.0/servertests/st_secinfo.py b/nfs4.0/servertests/st_secinfo.py
+index d9363de36969..4c4a44b3c919 100644
+--- a/nfs4.0/servertests/st_secinfo.py
++++ b/nfs4.0/servertests/st_secinfo.py
+@@ -102,7 +102,7 @@ def testRPCSEC_GSS(t, env):
+ 
+     per section 3.2.1.1 of RFC
+ 
+-    FLAGS: secinfo all
++    FLAGS: secinfo gss
+     DEPEND: SEC1
+     CODE: SEC7
+     """
+
