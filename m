@@ -2,91 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11A20397885
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jun 2021 18:55:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72A0039792D
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jun 2021 19:36:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230288AbhFAQ5U (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Jun 2021 12:57:20 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:31859 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234009AbhFAQ5U (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Jun 2021 12:57:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1622566539; x=1654102539;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=DHCntmXNQlloxzepoZVyEjDxQR1bIWSej9YQK2bRYlg=;
-  b=Q9fmZob4c3XdtU4PN/2B8JTemL1dvirDrsIRMv+OiAVpOfHc+duwhu5o
-   d3IJMHN2Cekq59VOwIMeaQUdk3mREZkJjzYmPpddcmVVDzhOjYAqUm2lq
-   GjLzziCNZ4a2nv7enFPcfvy1qjEd/4ucd2AleCTaAFOfVCpnSvE0exrsW
-   I=;
-X-IronPort-AV: E=Sophos;i="5.83,240,1616457600"; 
-   d="scan'208";a="117312908"
-Subject: Re: nfsd dead loop when xfstests generic/531
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-e69428c4.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP; 01 Jun 2021 16:55:38 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-e69428c4.us-east-1.amazon.com (Postfix) with ESMTPS id 9C992CA578;
-        Tue,  1 Jun 2021 16:55:37 +0000 (UTC)
-Received: from EX13D02UWC004.ant.amazon.com (10.43.162.236) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.18; Tue, 1 Jun 2021 16:55:37 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D02UWC004.ant.amazon.com (10.43.162.236) with Microsoft SMTP Server (TLS)
- id 15.0.1497.18; Tue, 1 Jun 2021 16:55:36 +0000
-Received: from dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com
- (172.19.206.175) by mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP
- Server id 15.0.1497.18 via Frontend Transport; Tue, 1 Jun 2021 16:55:36 +0000
-Received: by dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id 782AD79; Tue,  1 Jun 2021 16:55:35 +0000 (UTC)
-Date:   Tue, 1 Jun 2021 16:55:35 +0000
-From:   Frank van der Linden <fllinden@amazon.com>
-To:     Wang Yugui <wangyugui@e16-tech.com>
-CC:     <linux-nfs@vger.kernel.org>
-Message-ID: <20210601165535.GA3102@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
-References: <20210531125948.2D37.409509F4@e16-tech.com>
+        id S230289AbhFARiU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Jun 2021 13:38:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233853AbhFARiU (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 1 Jun 2021 13:38:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9012D6008E;
+        Tue,  1 Jun 2021 17:36:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622568998;
+        bh=KmFkLQs6oz5M3cuuDAhzij1FpVGUEu5+v+X5VNhQ7/s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jDhlXF+fhnAxBZlheH4T7Sz3E/7FqyT1GXUocfS7d2LYNYhZyUJq6nW9nWJGPeJ5S
+         MdpDzsaN2+heo9UDjDZsuXXGc4B+kMs3fvqH2oCuq5FX82wyaYn8nVyYKm0jvgZSUR
+         +2TJaIKCFO9fVD00oK+QtNj5TS/0I44qJ1y+To8pYZk0Tf5aSJyZkuxOAc/2E3DUQF
+         ORH7NuOFefIW53w9pRiXQFW9xjLbHUDzGsc4bl+K9hsyoKdaPa3W6fL/hxMlqg6XT+
+         oreEONeGqC3ex5O+HMewjLTt/Gok2M0LeKPQnmiX5ko6OIJAwOtk8I+bq5jOdKa2ED
+         RJROwQlo56+dQ==
+From:   trondmy@kernel.org
+To:     zhangxiaoxu <zhangxiaoxu5@huawei.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/2] NFSv4: Fix deadlock between nfs4_evict_inode() and nfs4_opendata_get_inode()
+Date:   Tue,  1 Jun 2021 13:36:33 -0400
+Message-Id: <20210601173634.243152-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20210531125948.2D37.409509F4@e16-tech.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, May 31, 2021 at 12:59:51PM +0800, Wang Yugui wrote:
-> 
-> 
-> Hi,
-> 
-> nfsd dead loop when xfstests generic/531
-> 
-> linux kernel of nfs server: 5.10.41
-> linux kernel of nfs client: 5.10.41
-> 
-> 
-> nfsd dead loop when xfstests generic/531
-> 
-> linux kernel of nfs server: 5.10.41
-> linux kernel of nfs client: 5.10.41
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-This is a known issue. generic/531 opens a large number of files, causing
-the nfsd file cache code to walk a very long LRU list of open files. For
-v4, there will be a lot of long term opens (because of the OPEN call),
-and they all end up on that list.
+If the inode is being evicted, but has to return a delegation first,
+then it can cause a deadlock in the corner case where the server reboots
+before the delegreturn completes, but while the call to iget5_locked() in
+nfs4_opendata_get_inode() is waiting for the inode free to complete.
+Since the open call still holds a session slot, the reboot recovery
+cannot proceed.
 
-So, the basic issue is, that the nfsd file cache is a good match for
-v3 semantics, but less so for v4 semantics.
+In order to break the logjam, we can turn the delegation return into a
+privileged operation for the case where we're evicting the inode. We
+know that in that case, there can be no other state recovery operation
+that conflicts.
 
-I posted an experimental patch to work around the issue:
+Reported-by: zhangxiaoxu (A) <zhangxiaoxu5@huawei.com>
+Fixes: 5fcdfacc01f3 ("NFSv4: Return delegations synchronously in evict_inode")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/nfs4_fs.h  |  1 +
+ fs/nfs/nfs4proc.c | 12 +++++++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-https://lore.kernel.org/linux-nfs/20201020183718.14618-4-trondmy@kernel.org/T/#m869aa427f125afee2af9a89d569c6b98e12e516f
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 065cb04222a1..543d916f79ab 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -205,6 +205,7 @@ struct nfs4_exception {
+ 	struct inode *inode;
+ 	nfs4_stateid *stateid;
+ 	long timeout;
++	unsigned char task_is_privileged : 1;
+ 	unsigned char delay : 1,
+ 		      recovering : 1,
+ 		      retry : 1;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index d671b2884d5a..673809644981 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -589,6 +589,8 @@ int nfs4_handle_exception(struct nfs_server *server, int errorcode, struct nfs4_
+ 		goto out_retry;
+ 	}
+ 	if (exception->recovering) {
++		if (exception->task_is_privileged)
++			return -EDEADLOCK;
+ 		ret = nfs4_wait_clnt_recover(clp);
+ 		if (test_bit(NFS_MIG_FAILED, &server->mig_status))
+ 			return -EIO;
+@@ -614,6 +616,8 @@ nfs4_async_handle_exception(struct rpc_task *task, struct nfs_server *server,
+ 		goto out_retry;
+ 	}
+ 	if (exception->recovering) {
++		if (exception->task_is_privileged)
++			return -EDEADLOCK;
+ 		rpc_sleep_on(&clp->cl_rpcwaitq, task, NULL);
+ 		if (test_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state) == 0)
+ 			rpc_wake_up_queued_task(&clp->cl_rpcwaitq, task);
+@@ -6417,6 +6421,7 @@ static void nfs4_delegreturn_done(struct rpc_task *task, void *calldata)
+ 	struct nfs4_exception exception = {
+ 		.inode = data->inode,
+ 		.stateid = &data->stateid,
++		.task_is_privileged = data->args.seq_args.sa_privileged,
+ 	};
+ 
+ 	if (!nfs4_sequence_done(task, &data->res.seq_res))
+@@ -6540,7 +6545,6 @@ static int _nfs4_proc_delegreturn(struct inode *inode, const struct cred *cred,
+ 	data = kzalloc(sizeof(*data), GFP_NOFS);
+ 	if (data == NULL)
+ 		return -ENOMEM;
+-	nfs4_init_sequence(&data->args.seq_args, &data->res.seq_res, 1, 0);
+ 
+ 	nfs4_state_protect(server->nfs_client,
+ 			NFS_SP4_MACH_CRED_CLEANUP,
+@@ -6571,6 +6575,12 @@ static int _nfs4_proc_delegreturn(struct inode *inode, const struct cred *cred,
+ 		}
+ 	}
+ 
++	if (!data->inode)
++		nfs4_init_sequence(&data->args.seq_args, &data->res.seq_res, 1,
++				   1);
++	else
++		nfs4_init_sequence(&data->args.seq_args, &data->res.seq_res, 1,
++				   0);
+ 	task_setup_data.callback_data = data;
+ 	msg.rpc_argp = &data->args;
+ 	msg.rpc_resp = &data->res;
+-- 
+2.31.1
 
-The rhashtable patch has issues, so disregard that one, but the other one
-is a basic fix for this issue. It has one other issue that I noticed (refcount
-error), but that is easily fixed.
-
-I should update the patch and formally post it..
-
-- Frank
