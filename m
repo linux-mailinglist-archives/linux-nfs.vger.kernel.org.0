@@ -2,112 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A834F396F07
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jun 2021 10:35:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B13443974CF
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jun 2021 16:01:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232963AbhFAIh3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Jun 2021 04:37:29 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2819 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231139AbhFAIh2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Jun 2021 04:37:28 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4FvQNS5F1LzWmdD;
-        Tue,  1 Jun 2021 16:31:04 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (7.185.36.114) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 1 Jun 2021 16:35:46 +0800
-Received: from [10.174.176.83] (10.174.176.83) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 1 Jun 2021 16:35:45 +0800
-From:   "zhangxiaoxu (A)" <zhangxiaoxu5@huawei.com>
-To:     <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        <zhangxiaoxu@huawei.com>, "zhangyi (F)" <yi.zhang@huawei.com>
-Subject: nfsv4.1 deadlock between evict and nfs_fhget when drain session
-Message-ID: <ad39cacf-577f-a9f3-07d3-c5bd5acfc9df@huawei.com>
-Date:   Tue, 1 Jun 2021 16:35:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        id S233823AbhFAOCx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Jun 2021 10:02:53 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:58450 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234077AbhFAOCv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Jun 2021 10:02:51 -0400
+Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 825811FD2A;
+        Tue,  1 Jun 2021 14:01:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1622556069;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=E51+eO/Nxu3Oo26uq9T8NyKM7C+S36Epnqlh8wJmUw8=;
+        b=RgYs27RnCeDra2TvI7hgtWhLaqnMcLgLu6Y6cBMskHzbQEU8e1lew0HCrI++1+BkmOJRE1
+        EECcog/9/JVmPwvwk6WqOJ0yxjrGbtq4PQRu5Uzvw7qdMHNkePIhwTu8SLIPiyDHMcMDSs
+        T7gY5XTIMogTPUPPEvfvWlLL/dMIk/g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1622556069;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=E51+eO/Nxu3Oo26uq9T8NyKM7C+S36Epnqlh8wJmUw8=;
+        b=oxjqM9g1RHfMJmcvDn5mamQWMbrX4Cn6/YlEKyZC5O2H93oFOCmm4URrHFnE0yxYpbJu6+
+        hxxjQUB3T2oE8kAQ==
+Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        by imap.suse.de (Postfix) with ESMTP id 58D85118DD;
+        Tue,  1 Jun 2021 14:01:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1622556069;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=E51+eO/Nxu3Oo26uq9T8NyKM7C+S36Epnqlh8wJmUw8=;
+        b=RgYs27RnCeDra2TvI7hgtWhLaqnMcLgLu6Y6cBMskHzbQEU8e1lew0HCrI++1+BkmOJRE1
+        EECcog/9/JVmPwvwk6WqOJ0yxjrGbtq4PQRu5Uzvw7qdMHNkePIhwTu8SLIPiyDHMcMDSs
+        T7gY5XTIMogTPUPPEvfvWlLL/dMIk/g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1622556069;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=E51+eO/Nxu3Oo26uq9T8NyKM7C+S36Epnqlh8wJmUw8=;
+        b=oxjqM9g1RHfMJmcvDn5mamQWMbrX4Cn6/YlEKyZC5O2H93oFOCmm4URrHFnE0yxYpbJu6+
+        hxxjQUB3T2oE8kAQ==
+Received: from director2.suse.de ([192.168.254.72])
+        by imap3-int with ESMTPSA
+        id gG+XFKU9tmDgGgAALh3uQQ
+        (envelope-from <pvorel@suse.cz>); Tue, 01 Jun 2021 14:01:09 +0000
+Date:   Tue, 1 Jun 2021 16:01:08 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     linux-nfs@vger.kernel.org, Yong Sun <yosun@suse.com>
+Subject: pynfs: [NFS 4.0] SEC7, LOCK24 test failures
+Message-ID: <YLY9pKu38lEWaXxE@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.176.83]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpeml500023.china.huawei.com (7.185.36.114)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+Hi Bruce,
 
-We're seeing a deadlock on NFSv4.1.
+I've also find different failures on NFS 4.0:
 
-The process of the deadlock maybe as below:
-  - task 1: prune icache, and mark inode_A & inode_B on freeing, then evict inode_A first, but waiting for inode_A's delegation return to server
-  - task 2: open file, already got the fh from server, waiting for the inode_B which has the same file handle was freed complete
-  - task 3: state manager is on draining session, but there is a slot is hold by task2
-  - task 4: run the delegreturn rpc_task, but the session is on draining, so the delegreturn is sleeping on rpc. Then task 1 blocked.
-then deadlocked.
+SEC7     st_secinfo.testRPCSEC_GSS                                : FAILURE
+           SECINFO returned mechanism list without RPCSEC_GSS
 
-Commit 244fcd2f9a90 ("NFS: Ensure we time out if a delegreturn does not complete") already ensure the delegreturn
-task can timeout if get slot from session. But can't timeout if task sleep on rpc when session is on draining.
+LOCK24   st_lock.testOpenUpgradeLock                              : FAILURE
+           OP_LOCK should return NFS4_OK, instead got
+           NFS4ERR_BAD_SEQID
 
-I think commit 5fcdfacc01f3 ("NFSv4: Return delegations synchronously in evict_inode") introduce this problem.
-But if revert it, there maybe another deadlock because task 1 maybe waiting inode_A writeback complete.
-If make delegreturn privileged in rpc, as the same above.
+They're on stable kernel 5.12.3-1-default (openSUSE). I saw them also on older
+kernel 4.19.0-16-amd64 (Debian).
 
-I think the task 2 should free the slot as soon as possible when it's rpc task complete.
-But ae55e59da0e4 ("pnfs: Don't release the sequence slot until we've processed layoutget on open") made slot freed more late.
+Any idea how to find whether are these are wrong setup or test bugs or real
+kernel bugs?
 
-Any idea about this problem is welcome.
+Upstreaming your scripts or better documenting the setup would be great.
 
-Stacks of the problem:
-
-# task1:
-__wait_on_freeing_inode
-find_inode
-ilookup5_nowait
-ilookup5
-iget5_locked
-nfs_fhget
-_nfs4_opendata_to_nfs4_state
-nfs4_do_open
-nfs4_atomic_open
-nfs_atomic_open
-path_openat
-do_filp_open
-do_sys_open
-__x64_sys_open
-do_syscall_64
-entry_SYSCALL_64_after_hwframe
-
-# task2:
-rpc_wait_bit_killable
-__rpc_wait_for_completion_task
-_nfs4_proc_delegreturn
-nfs4_proc_delegreturn
-nfs_do_return_delegation
-nfs_inode_return_delegation_noreclaim
-nfs4_evict_inode
-evict
-dispose_list
-prune_icache_sb
-super_cache_scan
-do_shrink_slab
-shrink_slab
-shrink_node
-kswapd
-kthread
-ret_from_fork
-
-# task3:
-nfs4_drain_slot_tbl
-nfs4_begin_drain_session
-nfs4_run_state_manager
-kthread
-ret_from_fork
+Kind regards,
+Petr
