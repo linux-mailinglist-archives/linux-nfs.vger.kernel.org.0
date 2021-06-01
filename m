@@ -2,68 +2,112 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C65C396D62
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jun 2021 08:34:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A834F396F07
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jun 2021 10:35:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233001AbhFAGfs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Jun 2021 02:35:48 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2921 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233014AbhFAGfr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Jun 2021 02:35:47 -0400
-Received: from dggeme759-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4FvMk337J0z64ZS;
-        Tue,  1 Jun 2021 14:31:07 +0800 (CST)
-Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
- dggeme759-chm.china.huawei.com (10.3.19.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Tue, 1 Jun 2021 14:34:04 +0800
-Received: from dggeme760-chm.china.huawei.com ([10.6.80.70]) by
- dggeme760-chm.china.huawei.com ([10.6.80.70]) with mapi id 15.01.2176.012;
- Tue, 1 Jun 2021 14:34:04 +0800
-From:   zhengyongjun <zhengyongjun3@huawei.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIIG5ldC1uZXh0XSB4cHJ0cmRtYTogRml4IHNwZWxsaW5n?=
- =?gb2312?Q?_mistakes?=
-Thread-Topic: [PATCH net-next] xprtrdma: Fix spelling mistakes
-Thread-Index: AQHXVeVpMNGWR7lJskGFmjxjGRAR5Kr+G62AgACYXYA=
-Date:   Tue, 1 Jun 2021 06:34:04 +0000
-Message-ID: <6b737fb5440d4fe3a53a163624d9cbf8@huawei.com>
-References: <20210531063640.3018843-1-zhengyongjun3@huawei.com>
- <20210531222719.3e742ed6@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <20210531222719.3e742ed6@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.176.64]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S232963AbhFAIh3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Jun 2021 04:37:29 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2819 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231139AbhFAIh2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Jun 2021 04:37:28 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4FvQNS5F1LzWmdD;
+        Tue,  1 Jun 2021 16:31:04 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (7.185.36.114) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 1 Jun 2021 16:35:46 +0800
+Received: from [10.174.176.83] (10.174.176.83) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 1 Jun 2021 16:35:45 +0800
+From:   "zhangxiaoxu (A)" <zhangxiaoxu5@huawei.com>
+To:     <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        <zhangxiaoxu@huawei.com>, "zhangyi (F)" <yi.zhang@huawei.com>
+Subject: nfsv4.1 deadlock between evict and nfs_fhget when drain session
+Message-ID: <ad39cacf-577f-a9f3-07d3-c5bd5acfc9df@huawei.com>
+Date:   Tue, 1 Jun 2021 16:35:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.176.83]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-U2hvdWxkIEkgcmVtb3ZlIG5ldC1uZXh0IHRhZyBhbmQgc2VuZCBwYXRjaCB2Mj8gV2FpdGluZyBm
-b3IgeW91ciBzdWdnZXN0IDopDQoNCi0tLS0t08q8/tStvP4tLS0tLQ0Kt6K8/sjLOiBKYWt1YiBL
-aWNpbnNraSBbbWFpbHRvOmt1YmFAa2VybmVsLm9yZ10gDQq3osvNyrG85DogMjAyMcTqNtTCMcjV
-IDEzOjI3DQrK1bz+yMs6IHpoZW5neW9uZ2p1biA8emhlbmd5b25nanVuM0BodWF3ZWkuY29tPg0K
-s63LzTogdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbTsgYW5uYS5zY2h1bWFrZXJAbmV0
-YXBwLmNvbTsgZGF2ZW1AZGF2ZW1sb2Z0Lm5ldDsgbGludXgtbmZzQHZnZXIua2VybmVsLm9yZzsg
-bmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgYmZp
-ZWxkc0BmaWVsZHNlcy5vcmc7IGNodWNrLmxldmVyQG9yYWNsZS5jb20NCtb3zOI6IFJlOiBbUEFU
-Q0ggbmV0LW5leHRdIHhwcnRyZG1hOiBGaXggc3BlbGxpbmcgbWlzdGFrZXMNCg0KT24gTW9uLCAz
-MSBNYXkgMjAyMSAxNDozNjo0MCArMDgwMCBaaGVuZyBZb25nanVuIHdyb3RlOg0KPiBGaXggc29t
-ZSBzcGVsbGluZyBtaXN0YWtlcyBpbiBjb21tZW50czoNCj4gc3VjY2VzICA9PT4gc3VjY2Vzcw0K
-PiANCj4gU2lnbmVkLW9mZi1ieTogWmhlbmcgWW9uZ2p1biA8emhlbmd5b25nanVuM0BodWF3ZWku
-Y29tPg0KDQpUaGlzIHNob3VsZCBub3QgaGF2ZSBiZWVuIHRhZ2dlZCBmb3IgbmV0LW5leHQsIGxl
-YXZpbmcgaXQgdG8gVHJvbmQuDQo=
+Hello,
+
+We're seeing a deadlock on NFSv4.1.
+
+The process of the deadlock maybe as below:
+  - task 1: prune icache, and mark inode_A & inode_B on freeing, then evict inode_A first, but waiting for inode_A's delegation return to server
+  - task 2: open file, already got the fh from server, waiting for the inode_B which has the same file handle was freed complete
+  - task 3: state manager is on draining session, but there is a slot is hold by task2
+  - task 4: run the delegreturn rpc_task, but the session is on draining, so the delegreturn is sleeping on rpc. Then task 1 blocked.
+then deadlocked.
+
+Commit 244fcd2f9a90 ("NFS: Ensure we time out if a delegreturn does not complete") already ensure the delegreturn
+task can timeout if get slot from session. But can't timeout if task sleep on rpc when session is on draining.
+
+I think commit 5fcdfacc01f3 ("NFSv4: Return delegations synchronously in evict_inode") introduce this problem.
+But if revert it, there maybe another deadlock because task 1 maybe waiting inode_A writeback complete.
+If make delegreturn privileged in rpc, as the same above.
+
+I think the task 2 should free the slot as soon as possible when it's rpc task complete.
+But ae55e59da0e4 ("pnfs: Don't release the sequence slot until we've processed layoutget on open") made slot freed more late.
+
+Any idea about this problem is welcome.
+
+Stacks of the problem:
+
+# task1:
+__wait_on_freeing_inode
+find_inode
+ilookup5_nowait
+ilookup5
+iget5_locked
+nfs_fhget
+_nfs4_opendata_to_nfs4_state
+nfs4_do_open
+nfs4_atomic_open
+nfs_atomic_open
+path_openat
+do_filp_open
+do_sys_open
+__x64_sys_open
+do_syscall_64
+entry_SYSCALL_64_after_hwframe
+
+# task2:
+rpc_wait_bit_killable
+__rpc_wait_for_completion_task
+_nfs4_proc_delegreturn
+nfs4_proc_delegreturn
+nfs_do_return_delegation
+nfs_inode_return_delegation_noreclaim
+nfs4_evict_inode
+evict
+dispose_list
+prune_icache_sb
+super_cache_scan
+do_shrink_slab
+shrink_slab
+shrink_node
+kswapd
+kthread
+ret_from_fork
+
+# task3:
+nfs4_drain_slot_tbl
+nfs4_begin_drain_session
+nfs4_run_state_manager
+kthread
+ret_from_fork
