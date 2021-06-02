@@ -2,56 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AEA1399288
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Jun 2021 20:28:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1DED399297
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Jun 2021 20:32:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229489AbhFBSa3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 2 Jun 2021 14:30:29 -0400
-Received: from mail-qk1-f177.google.com ([209.85.222.177]:38812 "EHLO
-        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229467AbhFBSa3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Jun 2021 14:30:29 -0400
-Received: by mail-qk1-f177.google.com with SMTP id q10so3369596qkc.5
-        for <linux-nfs@vger.kernel.org>; Wed, 02 Jun 2021 11:28:45 -0700 (PDT)
+        id S229558AbhFBSeH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Jun 2021 14:34:07 -0400
+Received: from mail-qt1-f176.google.com ([209.85.160.176]:40659 "EHLO
+        mail-qt1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229491AbhFBSeG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Jun 2021 14:34:06 -0400
+Received: by mail-qt1-f176.google.com with SMTP id i12so2545040qtr.7
+        for <linux-nfs@vger.kernel.org>; Wed, 02 Jun 2021 11:32:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=i1/YAhXSiHnqFFYldu2ElK+ccazqY0NTe4Ixv5mzJSE=;
-        b=MRBWQW4qaChtJrg6s2CL7NpQ72969e93mU80TExfjO0PrBGTSkgK8KaT0w+riPSJCv
-         BcPLUVdw7T2d6EDcEyyhElHG4EaNi+d6J1+eNxPCoXQ67ct5fWYYMdNIRhkeZ/tJIb66
-         Y+i4cw+MV68q1mpppQIZPMMqRoVhFHe5lBdKVVYUIGT9eHVRL764zAUGWbBmV6efuvvQ
-         k8aqmMCKLGhaC8x6ByS3doT3NO3u64UL9uHSchV+JJuYGEBXvXOoxqxSPVjstcmiRzbB
-         hyX8rzd9tvGdooj12ncurOs3K6k/T6+XEDPsUAuqBd8966Ni4DXOzKcHTK6EifmVDiP5
-         mw+Q==
+        bh=PpZDnFgEJP5vuNO17ms63fpsb709lUpfB1sjHKIlcgU=;
+        b=EpfzFJOQJkQktwjE0cKdeo1pNdcEDISEVxdbhgCn7D0HRbdLpmI7z+ZdUCO7Nntbb1
+         z+tY8UTbSt4x4l9dp4MXDU4qUVmLtHmMBbLPLj2QvrdtMxTUGRYVjvD2W84zX1oXGdpn
+         4QC/GAnADnmb6W0X1MNaAcVAeGeKwkBEzE91frHA+BdVHEW4HU27aOqni14esHfOJuGB
+         VIfdYuiXMCAVIlW0HPryoaJ3ZdHGqJUkF2NpoPtAER+X04UbxBf1YE/wQnmQ3CRR/3Ky
+         ZYaIO8xnNy47+AHrUUch6P1IdeB+spoobf5CH857fSMqlImifTcZxtXx2YwRIwtLdwop
+         dd9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :mime-version:content-transfer-encoding;
-        bh=i1/YAhXSiHnqFFYldu2ElK+ccazqY0NTe4Ixv5mzJSE=;
-        b=Mz4Cj2Mk9kfElSItt15yOTjtBeHo4JjUjl8UxnnXEqhwVdJ606jCF5Zy3YhF6MNW6k
-         c/7rbZdbS2FWAulQ9WK64q3F4HGWO1uqxqo5l9kRzbA+K4pqqu4IACR6DUcsrKjxqGD9
-         AmhESS0d0NwA0jB1kBLfqQYDSU8yBoulrWfR39cNdXoE6rJi+s6xjto4t7Jl6+Vat+t1
-         vnQquNdXCFA5Kg82SF/lqUh+xQ4RGgKa5GJ+UF43/RZMQ6y/N3e67AJvTSheHujy17jR
-         Qk89vrVKZDvfRC40a543QH2wZj8PGYHeQDTnHx6u8lTptdUTFMuOL0sBpz9yiGyfr3i0
-         DoVA==
-X-Gm-Message-State: AOAM531/+OPrUpQK4eMmsi7OfyYmz/uBqaGM0SJ/WSjSsG/tgLqkq7Bi
-        2fIN02Bg+xOSNflaAbu6DUs=
-X-Google-Smtp-Source: ABdhPJyVmScCDH9c+1XhrxmXFEFIFuYz4ky8C/UVWXTBYeAOcHnM7i5Xc2Bc+TAAaAk2YyglYbueAw==
-X-Received: by 2002:a37:b082:: with SMTP id z124mr28886918qke.446.1622658465300;
-        Wed, 02 Jun 2021 11:27:45 -0700 (PDT)
+        bh=PpZDnFgEJP5vuNO17ms63fpsb709lUpfB1sjHKIlcgU=;
+        b=A3rDVrNsEsVguoyZ7GlNrNA7nf3FhDfixOI7Mileuq+TOi+5lX9/iDImbI+ffi8t//
+         s6T6JK3nt/xT4GsaKbei8xslZ/JUJBRfs0C7bbUDqMyCwtp+IQMPM46ONretA49eDwYW
+         X/tS7FTECTc/YwDUKkJZbwecSZ8ZplZdxCkI/+/eu2zBx7syovnDojo5wSGjZHnYfjji
+         XfmKZ+lvKg2/Qu4eH7NHbxjS8m0YHAEx6lJqEKFxfXGA8j9wLFB4+/1Z1Ow/Ig5pcpbZ
+         IfCGMBNepv9+1VUB3eZY2696z3zqjd+/nPXKu/KrefOzTiyY5n2rz9aMj24agCsezTlG
+         qmJg==
+X-Gm-Message-State: AOAM533ZGLOpWaXxT3o98hYIZedYOiomF6EBvSIzAvPkRNNzYQDRHbB5
+        n6nfD3klejkw5/Z2yxRDdSw=
+X-Google-Smtp-Source: ABdhPJz6U4XmSTwHo0Sdn34CfJdkuXZMGK6I6ydC0q+UjSZIuQoKzftCkalz014/sYhlnvQw8+W3HA==
+X-Received: by 2002:ac8:6911:: with SMTP id e17mr25599814qtr.135.1622658682569;
+        Wed, 02 Jun 2021 11:31:22 -0700 (PDT)
 Received: from localhost.localdomain ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id p2sm350439qkj.94.2021.06.02.11.27.44
+        by smtp.gmail.com with ESMTPSA id t11sm299219qta.8.2021.06.02.11.31.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jun 2021 11:27:44 -0700 (PDT)
+        Wed, 02 Jun 2021 11:31:22 -0700 (PDT)
 Sender: Anna Schumaker <schumakeranna@gmail.com>
 From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH] NFS: Fix use-after-free in nfs4_init_client()
-Date:   Wed,  2 Jun 2021 14:27:43 -0400
-Message-Id: <20210602182743.531623-1-Anna.Schumaker@Netapp.com>
+Subject: [PATCH v2] NFS: Fix use-after-free in nfs4_init_client()
+Date:   Wed,  2 Jun 2021 14:31:20 -0400
+Message-Id: <20210602183120.532206-1-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -69,7 +69,11 @@ and 5.10, but I traced the patch that introduced the clear_bit() call to
 4.13. So something must have changed in the refcounting of the clp
 pointer to make this call to nfs_put_client() the very last one.
 
+Fixes: 8dcbec6d20 ("NFSv41: Handle EXCHID4_FLAG_CONFIRMED_R during NFSv4.1 migration")
+Cc: stable@vger.kernel.org # 4.13+
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+---
+v2: No changes except adding the fixes tag that I initially forgot
 ---
  fs/nfs/nfs4client.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
