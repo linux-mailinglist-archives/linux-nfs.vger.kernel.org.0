@@ -2,144 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9320F397C46
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Jun 2021 00:09:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 529B6398369
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Jun 2021 09:44:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234949AbhFAWLf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Jun 2021 18:11:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45460 "EHLO
+        id S232049AbhFBHqZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Jun 2021 03:46:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234834AbhFAWLf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Jun 2021 18:11:35 -0400
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E437C061574
-        for <linux-nfs@vger.kernel.org>; Tue,  1 Jun 2021 15:09:52 -0700 (PDT)
-Received: by mail-qk1-x734.google.com with SMTP id j184so440012qkd.6
-        for <linux-nfs@vger.kernel.org>; Tue, 01 Jun 2021 15:09:52 -0700 (PDT)
+        with ESMTP id S232046AbhFBHqY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Jun 2021 03:46:24 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE230C061574
+        for <linux-nfs@vger.kernel.org>; Wed,  2 Jun 2021 00:44:40 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id x38so1883657lfa.10
+        for <linux-nfs@vger.kernel.org>; Wed, 02 Jun 2021 00:44:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bfOiM1XR9lNK6PSHgQIrMJNvgr1VyFeIIY2C6xQXnto=;
-        b=rjJkqMezdC2uxfeyGAlmF+F24GAs/vOAf8P+wWuvL+I8u3DsgBCZgBMgUcseVXebqe
-         oBI8KFPOsDByNGHsnddKI8FqFoYsn+gJaFLh3Y5YBCerfL2pAQRT/CAjvy4HuAuqYrJ1
-         JLvnadxrqZniWRX7l+Nj6BIblNQSSai/HPTr40od38BoeoRCM9TRBkjDZe+uFsAOhPd8
-         rpHX+DaxdmWTLu1lVRtu4AiL43LTGmj6TWDI/r0sa2SmwO5keRzvdMZXayhRD3inHNA7
-         RSupXV+4n+M0FE4pB/4Q1Avn64Ed00JaGYeT2FHrZrfHste5eEX0F734eB7APpZsV8tP
-         Sp5Q==
+        d=bell-sw-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eVCfryPK9c1lV695W8KvQyZ//tca/B4ruVeWI919rA4=;
+        b=NGTgQURsr0VhAXcCGY0XenNcIRciliarhNeKBdT9KX3Y45KOJ78oaj7pq+/Fvjm+Nj
+         xFvYICY5hZwdEZbIuiEatXhZ+jJOwLBIcWUdhpDZ/AOQJUwDc0i7q05tt5i7aiMAbnPC
+         LU1wuPXwiSHZYbOeAnZ/xKUJfm5sRGfBJiRC+hKE1IrgzBx+bbj6swphIZ7+Hpf7RWXs
+         zND0Q9uQ4Lul+RqX23nZkG9ghqhEho7dGDbIeNAvmMXXsf1NHoyFpyFbmpjlSgJMFCEp
+         2FaNRqIy+1x5sKP3t1Jr8GVPWiWsrAu6wT3N5xWmAuwWADMdjGVA4z6Eh8P6Yjkna4vF
+         QBYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bfOiM1XR9lNK6PSHgQIrMJNvgr1VyFeIIY2C6xQXnto=;
-        b=GkhfHJZz1rAc7Dvl/D0HcpsIjKakEx8zeEgy/QhEkskY9lzgYjqsuWJjU8LUnJcyun
-         dvhLpWvykbMPjdNcrFX9xhhGTDsAynxZyrejPoKYdEMBwy+xmPJXQ1seN4XucDKFAE7I
-         KSmeyMstQ7taVFGrcDuhlEPrQEnO+ZYY2Eo2axhKRJ/1pSE5/tgmqbQtDoOOPenXHfFE
-         PryWCvL2Zdot+rORwjrVfZ7KRtgL1ckDBWen/K5SEacJNnY2/0BKwbx4fTNn5pP70frQ
-         wviiAGwSS8fz1tMC93T/xc+enIHoW2+XB3bGEEjZIZTi8H0TV4mZIuyEj9P3TWrY3B+Z
-         LFhg==
-X-Gm-Message-State: AOAM5320mAYlmY4g7+cQunP27fviQpVf3+XtfnaOL79fj3iLnCGBgmfk
-        k7AjXzbytM6RHTwrbWuQNqZXo7dRLUw=
-X-Google-Smtp-Source: ABdhPJwqpPamXn3uO4nf/nuQ8qOleMJRyZvl3o9aA2ziTgr+SjM9E5NphTI7TqW/CZomq9bm0mF7hA==
-X-Received: by 2002:a37:aa84:: with SMTP id t126mr914885qke.95.1622585391687;
-        Tue, 01 Jun 2021 15:09:51 -0700 (PDT)
-Received: from kolga-mac-1.lan (50-124-240-218.alma.mi.frontiernet.net. [50.124.240.218])
-        by smtp.gmail.com with ESMTPSA id q13sm12419789qkn.10.2021.06.01.15.09.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Jun 2021 15:09:51 -0700 (PDT)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eVCfryPK9c1lV695W8KvQyZ//tca/B4ruVeWI919rA4=;
+        b=XLNgLqUhbpThauyQdslSQIJ6Wvf8QakeSfQ1VrR3AdAQWhZhitncBcAvxhYgve0FGM
+         WaYRdZe/MWjRjcsbSgsVfmlqb059U1WltOel/7GaCd5a2XzHnjWXkkQJwhePId7AzrB2
+         PFVN53ApvC/GLiSP087OiHzt+1RrJxnirdkFv3G0PEIjhJsdBswIE8RI9JZwOQCkLjiF
+         w3cimf7CiAjmwG+OP/LayC69iptFIcQAXnDVnjimllH7DLIKIP0h151If3d1Zw20IK4b
+         z+xiv+4tgUUBrune8Ix/wum8XQXzIdUOpCsTYPn6/S7XWddRQI2KLvgqnqJ02NxFsnV/
+         UbxA==
+X-Gm-Message-State: AOAM532NKoJJpqWzOB8EOaX7mtPGBXQl6//OuxXOTnSnizW16n9alLEE
+        xFlpDnPwppeC4iKNm4oxYfFsJ1OpuY7j0zs=
+X-Google-Smtp-Source: ABdhPJzaNvxWQ6NIpL3BdvU7VQHxjbApqn8A9/uNgl5E0nyb2pY/NUpmR+Ieu51klKiao3bd5vswjA==
+X-Received: by 2002:ac2:414f:: with SMTP id c15mr893963lfi.307.1622619878905;
+        Wed, 02 Jun 2021 00:44:38 -0700 (PDT)
+Received: from [192.168.1.52] ([95.161.221.177])
+        by smtp.gmail.com with ESMTPSA id r17sm1924502lfr.18.2021.06.02.00.44.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jun 2021 00:44:38 -0700 (PDT)
+Subject: Re: [LTP PATCH v2 1/3] nfs_lib.sh: Detect unsupported protocol
+To:     Petr Vorel <pvorel@suse.cz>, ltp@lists.linux.it
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v8 13/13] sunrpc: provide showing transport's state info in the sysfs directory
-Date:   Tue,  1 Jun 2021 18:09:15 -0400
-Message-Id: <20210601220915.18975-14-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
-In-Reply-To: <20210601220915.18975-1-olga.kornievskaia@gmail.com>
-References: <20210601220915.18975-1-olga.kornievskaia@gmail.com>
+References: <20210526172503.18621-1-pvorel@suse.cz>
+From:   Alexey Kodanev <aleksei.kodanev@bell-sw.com>
+Message-ID: <210e1e4f-23d8-6a8b-18cb-ea7a4e7f89c2@bell-sw.com>
+Date:   Wed, 2 Jun 2021 10:44:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210526172503.18621-1-pvorel@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+On 26.05.2021 20:25, Petr Vorel wrote:
+> Caused by disabled CONFIG_NFSD_V[34] in kernel config.
+> 
+> Signed-off-by: Petr Vorel <pvorel@suse.cz>
+> ---
+> new in v2
+> 
+>  testcases/network/nfs/nfs_stress/nfs_lib.sh | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/testcases/network/nfs/nfs_stress/nfs_lib.sh b/testcases/network/nfs/nfs_stress/nfs_lib.sh
+> index 3fad8778a..b80ee0e18 100644
+> --- a/testcases/network/nfs/nfs_stress/nfs_lib.sh
+> +++ b/testcases/network/nfs/nfs_stress/nfs_lib.sh
+> @@ -94,9 +94,15 @@ nfs_mount()
+>  
+>  	if [ $? -ne 0 ]; then
+>  		cat mount.log
+> +
+>  		if [ "$type" = "udp" -o "$type" = "udp6" ] && tst_kvcmp -ge 5.6; then
+>  			tst_brk TCONF "UDP support disabled with the kernel config NFS_DISABLE_UDP_SUPPORT?"
+>  		fi
+> +
+> +		if grep -i "Protocol not supported" mount.log; then
 
-In preparation of being able to change the xprt's state, add a way
-to show currect state of the transport.
+Hi Petr,
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
----
- net/sunrpc/sysfs.c | 47 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+It's better to add '-q' flag to grep.
 
-diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index db2ae28bd0c3..887123e0de1a 100644
---- a/net/sunrpc/sysfs.c
-+++ b/net/sunrpc/sysfs.c
-@@ -112,6 +112,49 @@ static ssize_t rpc_sysfs_xprt_info_show(struct kobject *kobj,
- 	return ret + 1;
- }
- 
-+static ssize_t rpc_sysfs_xprt_state_show(struct kobject *kobj,
-+					 struct kobj_attribute *attr,
-+					 char *buf)
-+{
-+	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
-+	ssize_t ret;
-+	int locked, connected, connecting, close_wait, bound, binding,
-+	    closing, congested, cwnd_wait, write_space;
-+
-+	if (!xprt)
-+		return 0;
-+
-+	if (!xprt->state) {
-+		ret = sprintf(buf, "state=CLOSED\n");
-+	} else {
-+		locked = test_bit(XPRT_LOCKED, &xprt->state);
-+		connected = test_bit(XPRT_CONNECTED, &xprt->state);
-+		connecting = test_bit(XPRT_CONNECTING, &xprt->state);
-+		close_wait = test_bit(XPRT_CLOSE_WAIT, &xprt->state);
-+		bound = test_bit(XPRT_BOUND, &xprt->state);
-+		binding = test_bit(XPRT_BINDING, &xprt->state);
-+		closing = test_bit(XPRT_CLOSING, &xprt->state);
-+		congested = test_bit(XPRT_CONGESTED, &xprt->state);
-+		cwnd_wait = test_bit(XPRT_CWND_WAIT, &xprt->state);
-+		write_space = test_bit(XPRT_WRITE_SPACE, &xprt->state);
-+
-+		ret = sprintf(buf, "state=%s %s %s %s %s %s %s %s %s %s\n",
-+			      locked ? "LOCKED" : "",
-+			      connected ? "CONNECTED" : "",
-+			      connecting ? "CONNECTING" : "",
-+			      close_wait ? "CLOSE_WAIT" : "",
-+			      bound ? "BOUND" : "",
-+			      binding ? "BOUNDING" : "",
-+			      closing ? "CLOSING" : "",
-+			      congested ? "CONGESTED" : "",
-+			      cwnd_wait ? "CWND_WAIT" : "",
-+			      write_space ? "WRITE_SPACE" : "");
-+	}
-+
-+	xprt_put(xprt);
-+	return ret + 1;
-+}
-+
- static ssize_t rpc_sysfs_xprt_switch_info_show(struct kobject *kobj,
- 					       struct kobj_attribute *attr,
- 					       char *buf)
-@@ -250,9 +293,13 @@ static struct kobj_attribute rpc_sysfs_xprt_dstaddr = __ATTR(dstaddr,
- static struct kobj_attribute rpc_sysfs_xprt_info = __ATTR(xprt_info,
- 	0444, rpc_sysfs_xprt_info_show, NULL);
- 
-+static struct kobj_attribute rpc_sysfs_xprt_change_state = __ATTR(xprt_state,
-+	0644, rpc_sysfs_xprt_state_show, NULL);
-+
- static struct attribute *rpc_sysfs_xprt_attrs[] = {
- 	&rpc_sysfs_xprt_dstaddr.attr,
- 	&rpc_sysfs_xprt_info.attr,
-+	&rpc_sysfs_xprt_change_state.attr,
- 	NULL,
- };
- 
--- 
-2.27.0
+> +			tst_brk TCONF "Protocol not supported"
+> +		fi
+> +
+>  		tst_brk TBROK "mount command failed"
+>  	fi
+>  }
+> 
 
