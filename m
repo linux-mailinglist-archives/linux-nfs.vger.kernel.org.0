@@ -2,64 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16A25399495
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Jun 2021 22:33:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6720F399497
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Jun 2021 22:34:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229656AbhFBUfO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 2 Jun 2021 16:35:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbhFBUfN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Jun 2021 16:35:13 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34171C06174A
-        for <linux-nfs@vger.kernel.org>; Wed,  2 Jun 2021 13:33:15 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id k25so282122eja.9
-        for <linux-nfs@vger.kernel.org>; Wed, 02 Jun 2021 13:33:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hcttRZv1UGIBWobv1C2wkQQzRVPYCm6HxBE086RySSU=;
-        b=XUiniq74v2S9isjLeKPaAH7PImaMTzHl44YzKNIKAMjgZ74b0E2MSHhsBbK7e13nld
-         SetW4QiBbDO92w5Qaubk7yqw3IQ5K5axeq9I+0aYPg3i/19i4cxvesKn+eIXN9FAAI6A
-         8VWvqF5vGN0xdaOuzT37YX8D3DZawXtPxrZRt608MHRM2qznDlaJw9Vv9CW/h6bCgPT2
-         H4azKUM3Zy7g7YByAo4aUzwV4QnB6tjg5+cjyl4szTB/cl/j7zyvnOBB6vFah8yse8yM
-         IM6j42fiCneyKMOM99KbRP8OYXbO84mqDh3Ai0LZuJpRMobVQMYVw0y+VCYG5YbB03JD
-         Tjdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hcttRZv1UGIBWobv1C2wkQQzRVPYCm6HxBE086RySSU=;
-        b=Y8Kf5dEN9B8fJckHFeJrijibJyCZFPZ2HlCdd/cwh4rD7rw/kSQvZsPNMS+3LNUwI/
-         6jUeNBq7A113Jpgyjhj/wZ9YyQesI458bvVG6WEda38dxkamxe8Fe+sDHg+kN8Et/vN+
-         DleaQrDuJuNMBENKqrzMoT7RAJbn0qTZhN++dPSDqbDfmY4ZbIGj/pku00wBXIPXW5u5
-         LvSyJ9nUgMFiwTvKa+VWisZmJcVLGKXBqYMS1px+waXppDjlI3KM6jkI4X+f6MT+3yJL
-         Byefm1Up5TC05aGY4ra7FRdu66fXwCiH0HeYX1WmvRRSdBUdi5vInylKJeJvV9uc0CYF
-         TTTA==
-X-Gm-Message-State: AOAM533E9bBazJgbjQodapzd1yeq8T9Yy/D0qNuXHXqc3A526l9qZI30
-        jNQHNZMgqqu1zJJcHGvl8pj/mTaB9gobtIp43FTOt9AB
-X-Google-Smtp-Source: ABdhPJzYsGhSAJmjGENgJGCyou0Iyizv6OJM/f9W0DIoc1CGGW3RgnXgiKCzGE8Z2Dy7/UxXecOQwha/8GJtRAgQgnE=
-X-Received: by 2002:a17:906:495:: with SMTP id f21mr17927110eja.510.1622665993436;
- Wed, 02 Jun 2021 13:33:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210527191102.590275-1-smayhew@redhat.com> <20210527191102.590275-3-smayhew@redhat.com>
- <CAN-5tyHsehgWwgnymRnTH=Bz5+HdOt6mWiTCtb2b9SkXQPfmTQ@mail.gmail.com>
-In-Reply-To: <CAN-5tyHsehgWwgnymRnTH=Bz5+HdOt6mWiTCtb2b9SkXQPfmTQ@mail.gmail.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Wed, 2 Jun 2021 16:33:02 -0400
-Message-ID: <CAN-5tyFRv0EKrr99r3_wG9BD7u4dXqFKYDR4-X=afOQ4FGf5fw@mail.gmail.com>
-Subject: Re: [nfs-utils PATCH v3 2/2] gssd: add timeout for upcall threads
-To:     Scott Mayhew <smayhew@redhat.com>
+        id S229583AbhFBUgf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Jun 2021 16:36:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34562 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229576AbhFBUgf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Jun 2021 16:36:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1622666091;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qDaLVuDhE4CT7NmFrrRpY+SPylTcRhi2ivU96fceKUk=;
+        b=cJamqtOCS4VHASYxAlDfaCqwbD6+WvvPEe+X2OFCs4Kug5bXG57S9ClbMRsrNzK8PR9azF
+        Nh0fGedUE0bfSRZ1291+DunTnHIWhkgryxW6Zxrmi8bOnVdVsGkIU2i9jW46FasYj9BRb5
+        nSPw2XG9qhskx2DS/qb301Fv61CGCtQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-13-pk_O1LEAMEaZRSgy46hcMg-1; Wed, 02 Jun 2021 16:34:47 -0400
+X-MC-Unique: pk_O1LEAMEaZRSgy46hcMg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4929107ACCA;
+        Wed,  2 Jun 2021 20:34:46 +0000 (UTC)
+Received: from aion.usersys.redhat.com (ovpn-114-18.rdu2.redhat.com [10.10.114.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A11D60C16;
+        Wed,  2 Jun 2021 20:34:46 +0000 (UTC)
+Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
+        id 8F48B1A003D; Wed,  2 Jun 2021 16:34:45 -0400 (EDT)
+Date:   Wed, 2 Jun 2021 16:34:45 -0400
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     Olga Kornievskaia <aglo@umich.edu>
 Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [nfs-utils PATCH v3 2/2] gssd: add timeout for upcall threads
+Message-ID: <YLfrZY9Io6zC7iZ/@aion.usersys.redhat.com>
+References: <20210527191102.590275-1-smayhew@redhat.com>
+ <20210527191102.590275-3-smayhew@redhat.com>
+ <CAN-5tyHsehgWwgnymRnTH=Bz5+HdOt6mWiTCtb2b9SkXQPfmTQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAN-5tyHsehgWwgnymRnTH=Bz5+HdOt6mWiTCtb2b9SkXQPfmTQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jun 2, 2021 at 4:01 PM Olga Kornievskaia <aglo@umich.edu> wrote:
->
+On Wed, 02 Jun 2021, Olga Kornievskaia wrote:
+
 > On Thu, May 27, 2021 at 3:15 PM Scott Mayhew <smayhew@redhat.com> wrote:
 > >
 > > Add a global list of active upcalls and a watchdog thread that walks the
@@ -190,15 +184,23 @@ On Wed, Jun 2, 2021 at 4:01 PM Olga Kornievskaia <aglo@umich.edu> wrote:
 > > +                                       printerr(0, "watchdog: thread id 0x%lx timed out\n",
 > > +                                                       info->tid);
 > > +                                       pthread_cancel(info->tid);
->
+> 
 > I believe if the thread were to be canceled it needs to have been
 > created with its cancelability state set to true.  I might have missed
 > it in the previous patch but I dont think I saw calls to
 > pthread_setcancelstate().
 
-Nevermind. You are doing this in this patch.
+The default cancelability state is already PTHREAD_CANCEL_ENABLE.  If
+you look at process_krb5_upcall(), that's where I'm disabling and
+enabling cancelability (as well as adding explicit cancellation points
+via pthread_testcancel()).  The reason I'm doing that is because that's
+where we're calling down into libtirpc, libgssapi_krb5, etc., and
+allowing a thread to be cancelled down there would typically lead to bad
+things happening (leaked resources, locked mutexes, etc).
 
->
+-Scott
+
+> 
 > > +                                       info->flags |= (UPCALL_THREAD_CANCELED|UPCALL_THREAD_WARNED);
 > > +                                       do_error_downcall(info->fd, info->uid, -ETIMEDOUT);
 > > +                               } else {
@@ -720,3 +722,5 @@ Nevermind. You are doing this in this patch.
 > > --
 > > 2.30.2
 > >
+> 
+
