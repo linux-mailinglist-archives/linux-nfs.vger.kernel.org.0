@@ -2,64 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3342639A2DA
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Jun 2021 16:12:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE22739A43C
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Jun 2021 17:16:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230044AbhFCOO3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Jun 2021 10:14:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229744AbhFCOO2 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 3 Jun 2021 10:14:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D16C66138C;
-        Thu,  3 Jun 2021 14:12:43 +0000 (UTC)
-Subject: [PATCH] NFS: FMODE_READ and friends are C macros, not enum types
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     trondmy@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Date:   Thu, 03 Jun 2021 10:12:43 -0400
-Message-ID: <162272956301.81247.4097672938438656918.stgit@oracle-100.nfsv4.dev>
-User-Agent: StGit/1.1
+        id S231558AbhFCPRr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 3 Jun 2021 11:17:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231803AbhFCPRr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Jun 2021 11:17:47 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F2E4C06174A;
+        Thu,  3 Jun 2021 08:16:02 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 852A41BE4; Thu,  3 Jun 2021 11:16:01 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 852A41BE4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1622733361;
+        bh=7maj1D43kbDLqRcM6Yl8tEaT4EYByuNrC/NaY65rlYc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OeMNzTcwEnfuaq63wR2xRXNfoZX3Ddg+vTEmfZyA8/6mdShFd5kl+d2onVUbyDGZf
+         BsgBA+HU6eVM6MVGb7h8xCI6DVTFfgFPVM06XtdByrLTsmSIxCK7dycNbxk2MhvVdr
+         c/yLSUWgiwn0S8CqVHytxlCLZ2YmO2HK1T8ZSyec=
+Date:   Thu, 3 Jun 2021 11:16:01 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Wei Yongjun <weiyongjun1@huawei.com>
+Cc:     Dai Ngo <dai.ngo@oracle.com>, Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH -next] NFSD: Fix error return code in
+ nfsd4_interssc_connect()
+Message-ID: <20210603151601.GA1815@fieldses.org>
+References: <20210603135145.972633-1-weiyongjun1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210603135145.972633-1-weiyongjun1@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Address a sparse warning:
+On Thu, Jun 03, 2021 at 01:51:45PM +0000, Wei Yongjun wrote:
+> 'status' has been overwritten to 0 after nfsd4_ssc_setup_dul(), this
+> cause 0 will be return in vfs_kern_mount() error case. Fix to return
+> nfserr_inval in this error case.
 
-  CHECK   fs/nfs/nfstrace.c
-fs/nfs/nfstrace.c: note: in included file (through /home/cel/src/linux/rpc-over-tls/include/trace/trace_events.h, /home/cel/src/linux/rpc-over-tls/include/trace/define_trace.h, ...):
-fs/nfs/./nfstrace.h:424:1: warning: incorrect type in initializer (different base types)
-fs/nfs/./nfstrace.h:424:1:    expected unsigned long eval_value
-fs/nfs/./nfstrace.h:424:1:    got restricted fmode_t [usertype]
-fs/nfs/./nfstrace.h:425:1: warning: incorrect type in initializer (different base types)
-fs/nfs/./nfstrace.h:425:1:    expected unsigned long eval_value
-fs/nfs/./nfstrace.h:425:1:    got restricted fmode_t [usertype]
-fs/nfs/./nfstrace.h:426:1: warning: incorrect type in initializer (different base types)
-fs/nfs/./nfstrace.h:426:1:    expected unsigned long eval_value
-fs/nfs/./nfstrace.h:426:1:    got restricted fmode_t [usertype]
+Is nfserr_inval the correct error?
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfs/nfstrace.h |    4 ----
- 1 file changed, 4 deletions(-)
+--b.
 
-diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index 5a59dcdce0b2..ff75df1c883a 100644
---- a/fs/nfs/nfstrace.h
-+++ b/fs/nfs/nfstrace.h
-@@ -421,10 +421,6 @@ TRACE_DEFINE_ENUM(O_CLOEXEC);
- 		{ O_NOATIME, "O_NOATIME" }, \
- 		{ O_CLOEXEC, "O_CLOEXEC" })
- 
--TRACE_DEFINE_ENUM(FMODE_READ);
--TRACE_DEFINE_ENUM(FMODE_WRITE);
--TRACE_DEFINE_ENUM(FMODE_EXEC);
--
- #define show_fmode_flags(mode) \
- 	__print_flags(mode, "|", \
- 		{ ((__force unsigned long)FMODE_READ), "READ" }, \
-
-
+> 
+> Fixes: f4e44b393389 ("NFSD: delay unmount source's export after inter-server copy completed.")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> ---
+>  fs/nfsd/nfs4proc.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index 0bd71c6da81d..2bfb6c408dc6 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -1323,6 +1323,7 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
+>  	ss_mnt = vfs_kern_mount(type, SB_KERNMOUNT, dev_name, raw_data);
+>  	module_put(type->owner);
+>  	if (IS_ERR(ss_mnt)) {
+> +		status = nfserr_inval;
+>  		if (work)
+>  			nfsd4_ssc_cancel_dul_work(nn, work);
+>  		goto out_free_devname;
