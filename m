@@ -2,185 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6706439AE78
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Jun 2021 01:00:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C15F39AEED
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Jun 2021 01:57:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229675AbhFCXB7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Jun 2021 19:01:59 -0400
-Received: from mail-qt1-f180.google.com ([209.85.160.180]:37491 "EHLO
-        mail-qt1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbhFCXB7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Jun 2021 19:01:59 -0400
-Received: by mail-qt1-f180.google.com with SMTP id z4so2609547qts.4
-        for <linux-nfs@vger.kernel.org>; Thu, 03 Jun 2021 16:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=f9/bK+BrZI+CvpPuTxzlZKcrMOYWFH6TlB5Awi0+0VI=;
-        b=VrwvoBxZtI1n5fYafcK2MWgadthXtzHCnbDMXsDog704vjWW4ydK9ec3cli7YsfQRo
-         esN3jUz/d5rt6JhQs09UYlooeRokGYYTO4uMVNMolB3VrxxKw5W2o6cv/XPwg6DHKpZz
-         3vzqPF73Ho8htMvgIC5CVxb2/WguhRaB9c67CkqpqB0tyQIQnUMixdvOjVSnumiijcZT
-         Nd1ov7M2sVgXj+F6eYO+RU0vKM4tPWDm3fajNNVcdo18V80XGaQ3TwdTFsRSH7Mwrp+Q
-         lq7tFTimbZCPW63hs7SVQus1n6iXH210Fk3JSHOfVwCUwjnKdKL5qLHR3jJfSTAvJdvi
-         mTqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=f9/bK+BrZI+CvpPuTxzlZKcrMOYWFH6TlB5Awi0+0VI=;
-        b=GfS5LefX0WtkahEMPSwI78T1QoUvQmJYWyEzt3HTunCrZ8M8D3DSVbpNQXRREGN+py
-         8WVxBnM8AG3mIQPpqx3f75ZfhDoJeqDKs2SVM5C+HVmKIrZl6Mh276aJztXj3gtXzZM7
-         Ldo5SbIds491KvqNgInYR3Z6ssLAlv1fNYIVYxdY2ffWGlGwgRToE3EnpKbPiQMUEWNW
-         ls+3QyNCGuhSjuaWC0O8VQ8xwI2zqumaXrwlTpcXaX9+wWz2YEOqLLx+ghRAa9Hi7jh7
-         Ilxc5t1U9VoLSGqMKEqOYA2OIQ2b3j/yEIn6ejLr1PHCQ/PeQ0lkjaSEfY+2/n3j4rEN
-         bsMA==
-X-Gm-Message-State: AOAM532kYTw5nAp7kguD+PKKddovSDvZXsKn+IbvMkq+oUoCUG7OC2eS
-        EKS07YG3X9V8rizhoyAKC3aepaojnv0=
-X-Google-Smtp-Source: ABdhPJxO+b7TeKGCbKTUIgxK+Se3ffVISCipesrFKl52FGXazWEeQGF90/GUq6LyAaALa4rDjgu0sQ==
-X-Received: by 2002:ac8:5c8e:: with SMTP id r14mr1896687qta.248.1622761153575;
-        Thu, 03 Jun 2021 15:59:13 -0700 (PDT)
-Received: from kolga-mac-1.vpn.netapp.com (nat-216-240-30-23.netapp.com. [216.240.30.23])
-        by smtp.gmail.com with ESMTPSA id h19sm1479497qtq.5.2021.06.03.15.59.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Jun 2021 15:59:13 -0700 (PDT)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v1 3/3] sunrpc: remove an offlined xprt using sysfs
-Date:   Thu,  3 Jun 2021 18:59:07 -0400
-Message-Id: <20210603225907.19981-4-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
-In-Reply-To: <20210603225907.19981-1-olga.kornievskaia@gmail.com>
-References: <20210603225907.19981-1-olga.kornievskaia@gmail.com>
+        id S229751AbhFCX6u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 3 Jun 2021 19:58:50 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:33192 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229576AbhFCX6u (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Jun 2021 19:58:50 -0400
+Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 160AB1FD30;
+        Thu,  3 Jun 2021 23:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1622764624; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=olSVEqIcIxV/kg3fj718S43P/CqxJJRCjI7PHU+yd7g=;
+        b=QKnIsdjwVU8JXJqoxmcI/ls3Zku3G7oqO6RicSsioQJxhzED8ZCX6cgVQBFI/SqOgh0xY/
+        UB1rKbqXRPd4utwRFULBjAihGXXvq5ZX5QKRPZI13tpCam4nwWMG8SDfA/KNShQnMZ8nMv
+        fUrzFB7BMFPlY6SeKvE5uXOmy4pKxRE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1622764624;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=olSVEqIcIxV/kg3fj718S43P/CqxJJRCjI7PHU+yd7g=;
+        b=hcpV1U7UQ9DYtxR8cltPzpbmYhfC0VErppEga5QQ5c1q/VP9Xi6qjNy85dTeoBeTj/Y1HK
+        B0bHRQCur2G5kyAg==
+Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        by imap.suse.de (Postfix) with ESMTP id 755D0118DD;
+        Thu,  3 Jun 2021 23:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1622764624; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=olSVEqIcIxV/kg3fj718S43P/CqxJJRCjI7PHU+yd7g=;
+        b=QKnIsdjwVU8JXJqoxmcI/ls3Zku3G7oqO6RicSsioQJxhzED8ZCX6cgVQBFI/SqOgh0xY/
+        UB1rKbqXRPd4utwRFULBjAihGXXvq5ZX5QKRPZI13tpCam4nwWMG8SDfA/KNShQnMZ8nMv
+        fUrzFB7BMFPlY6SeKvE5uXOmy4pKxRE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1622764624;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=olSVEqIcIxV/kg3fj718S43P/CqxJJRCjI7PHU+yd7g=;
+        b=hcpV1U7UQ9DYtxR8cltPzpbmYhfC0VErppEga5QQ5c1q/VP9Xi6qjNy85dTeoBeTj/Y1HK
+        B0bHRQCur2G5kyAg==
+Received: from director2.suse.de ([192.168.254.72])
+        by imap3-int with ESMTPSA
+        id cox4Ck5suWCgIwAALh3uQQ
+        (envelope-from <neilb@suse.de>); Thu, 03 Jun 2021 23:57:02 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Olga Kornievskaia" <olga.kornievskaia@gmail.com>
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v1 0/3] modify xprt state using sysfs
+In-reply-to: <20210603225907.19981-1-olga.kornievskaia@gmail.com>
+References: <20210603225907.19981-1-olga.kornievskaia@gmail.com>
+Date:   Fri, 04 Jun 2021 09:56:59 +1000
+Message-id: <162276461931.16225.7591153378472996760@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+On Fri, 04 Jun 2021, Olga Kornievskaia wrote:
+> From: Olga Kornievskaia <kolga@netapp.com>
+> 
+> When a transport gets stuck, it is desired to be able to move the tasks
+> that have been stuck/queued on that transport to another. 
 
-Once a transport has been put offline, this transport can be also
-removed from the list of transports. Any tasks that have been stuck
-on this transport would find the next available active transport
-and be re-tried. This transport would be removed from the xprt_switch
-list and freed.
+This is interesting.....
+A long-standing problem with NFS is that it is tricky to reliably
+unmount a filesystem if the network is not responding.  It is possible,
+but you need to identify all the processes blocked on the filesystem and
+SIGKILL them.
+My most recent exposure to this was when shutdown hung for someone
+because NetworkManager shutdown the wifi before NFS filesystems were
+unmounted.   This is arguably a config error, but the same problem could
+happen with a power-outage instead of networkmanage breaking the wifi.
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
----
- include/linux/sunrpc/xprt.h |  1 +
- net/sunrpc/clnt.c           | 20 ++++++++++++++++++++
- net/sunrpc/sysfs.c          | 18 ++++++++++++++----
- 3 files changed, 35 insertions(+), 4 deletions(-)
+It would be nice to be able to forcibly unmount filesystems.  e.g.  mark
+the transport as dead in such a way that all requests report EIO (or
+similar).
+This is obviously a big hammer, probably bigger than justified for use
+with "umount -f", but sometimes it is a necessary hammer.
 
-diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
-index 72a858f032c7..c2ecf5cc3802 100644
---- a/include/linux/sunrpc/xprt.h
-+++ b/include/linux/sunrpc/xprt.h
-@@ -428,6 +428,7 @@ void			xprt_release_write(struct rpc_xprt *, struct rpc_task *);
- #define XPRT_BINDING		(5)
- #define XPRT_CLOSING		(6)
- #define XPRT_OFFLINE		(7)
-+#define XPRT_REMOVE		(8)
- #define XPRT_CONGESTED		(9)
- #define XPRT_CWND_WAIT		(10)
- #define XPRT_WRITE_SPACE	(11)
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 408618765aa5..36040ec53404 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2106,6 +2106,26 @@ call_connect_status(struct rpc_task *task)
- 	case -ENOTCONN:
- 	case -EAGAIN:
- 	case -ETIMEDOUT:
-+		if (!(task->tk_flags & RPC_TASK_NO_ROUND_ROBIN) &&
-+		    (task->tk_flags & RPC_TASK_MOVEABLE) &&
-+		    test_bit(XPRT_REMOVE, &xprt->state)) {
-+			struct rpc_xprt *saved = task->tk_xprt;
-+			struct rpc_xprt_switch *xps;
-+
-+			rcu_read_lock();
-+			xps = xprt_switch_get(rcu_dereference(clnt->cl_xpi.xpi_xpswitch));
-+			rcu_read_unlock();
-+			if (xps->xps_nactive > 1) {
-+				xprt_release(task);
-+				xprt_put(saved);
-+				rpc_xprt_switch_remove_xprt(xps, saved);
-+				task->tk_xprt = NULL;
-+				task->tk_action = call_start;
-+			}
-+			xprt_switch_put(xps);
-+			if (!task->tk_xprt)
-+				return;
-+		}
- 		goto out_retry;
- 	case -ENOBUFS:
- 		rpc_delay(task, HZ >> 2);
-diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index 02c918c5061b..44a69638c55f 100644
---- a/net/sunrpc/sysfs.c
-+++ b/net/sunrpc/sysfs.c
-@@ -118,7 +118,7 @@ static ssize_t rpc_sysfs_xprt_state_show(struct kobject *kobj,
- 	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
- 	ssize_t ret;
- 	int locked, connected, connecting, close_wait, bound, binding,
--	    closing, congested, cwnd_wait, write_space, offline;
-+	    closing, congested, cwnd_wait, write_space, offline, remove;
- 
- 	if (!xprt)
- 		return 0;
-@@ -137,8 +137,9 @@ static ssize_t rpc_sysfs_xprt_state_show(struct kobject *kobj,
- 		cwnd_wait = test_bit(XPRT_CWND_WAIT, &xprt->state);
- 		write_space = test_bit(XPRT_WRITE_SPACE, &xprt->state);
- 		offline = test_bit(XPRT_OFFLINE, &xprt->state);
-+		remove = test_bit(XPRT_REMOVE, &xprt->state);
- 
--		ret = sprintf(buf, "state=%s %s %s %s %s %s %s %s %s %s %s\n",
-+		ret = sprintf(buf, "state=%s %s %s %s %s %s %s %s %s %s %s %s\n",
- 			      locked ? "LOCKED" : "",
- 			      connected ? "CONNECTED" : "",
- 			      connecting ? "CONNECTING" : "",
-@@ -149,7 +150,8 @@ static ssize_t rpc_sysfs_xprt_state_show(struct kobject *kobj,
- 			      congested ? "CONGESTED" : "",
- 			      cwnd_wait ? "CWND_WAIT" : "",
- 			      write_space ? "WRITE_SPACE" : "",
--			      offline ? "OFFLINE" : "");
-+			      offline ? "OFFLINE" : "",
-+			      remove ? "REMOVE" : "");
- 	}
- 
- 	xprt_put(xprt);
-@@ -230,13 +232,15 @@ static ssize_t rpc_sysfs_xprt_state_change(struct kobject *kobj,
- 					   const char *buf, size_t count)
- {
- 	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
--	int offline = 0;
-+	int offline = 0, remove = 0;
- 
- 	if (!xprt)
- 		return 0;
- 
- 	if (!strncmp(buf, "offline", 7))
- 		offline = 1;
-+	else if (!strncmp(buf, "remove", 6))
-+		remove = 1;
- 	else
- 		return -EINVAL;
- 
-@@ -249,6 +253,12 @@ static ssize_t rpc_sysfs_xprt_state_change(struct kobject *kobj,
- 			count = -EINVAL;
- 		else
- 			set_bit(XPRT_OFFLINE, &xprt->state);
-+	} else if (remove) {
-+		if (!test_bit(XPRT_CONNECTED, &xprt->state) &&
-+		    test_bit(XPRT_OFFLINE, &xprt->state))
-+			set_bit(XPRT_REMOVE, &xprt->state);
-+		else
-+			count = -EINVAL;
- 	}
- 
- 	xprt_release_write(xprt, NULL);
--- 
-2.27.0
+Could your work lead to being able to do this?  Could I write a shutdown
+script that runs when there is no more network and no expectation of any
+network ever again, and which marks all transports as dead - and then
+wakes up all pending rpc tasks?
 
+Thanks,
+NeilBrown
