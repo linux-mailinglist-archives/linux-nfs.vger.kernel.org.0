@@ -2,54 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53C6739ADF0
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Jun 2021 00:22:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28C8439ADED
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Jun 2021 00:22:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230454AbhFCWXz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Jun 2021 18:23:55 -0400
-Received: from mail-qt1-f179.google.com ([209.85.160.179]:34769 "EHLO
-        mail-qt1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230483AbhFCWXy (ORCPT
+        id S230523AbhFCWXy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 3 Jun 2021 18:23:54 -0400
+Received: from mail-qk1-f173.google.com ([209.85.222.173]:41759 "EHLO
+        mail-qk1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230255AbhFCWXy (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Jun 2021 18:23:54 -0400
-Received: by mail-qt1-f179.google.com with SMTP id v4so5613626qtp.1
-        for <linux-nfs@vger.kernel.org>; Thu, 03 Jun 2021 15:21:55 -0700 (PDT)
+Received: by mail-qk1-f173.google.com with SMTP id c124so7554500qkd.8
+        for <linux-nfs@vger.kernel.org>; Thu, 03 Jun 2021 15:21:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PhDyK3KDUDoYOICYsVAwK115keL37tYbWZgH4EftGJo=;
-        b=sdKTuG6415V8zjSWGeTCO0hdjYb+wbRKmDlIHCQ4tsBms/Zv1S1LXk3SLRl+qZEdBC
-         zjMh91YsIep3PhyCl9UYuyarFJ4iyrQ/Dcthxf8tbRGIqLKs8Ch8frleBK76giUtboKQ
-         17ihE8ulU3vm08f82Cayun4AxbhSZZHlLzNJ/+BcPGFjEzdWQ9q0MkzwuTaLtB/Z4Yss
-         5eiGsScaI10Ag3OfruzBlRs/ab+SGJJSYmCFw7NRHDrIfWa2zH4a6silkwH+BcTc9ibN
-         ZN6gpuVY6+JoX0u6TYqW+YUtfHf7uiB/X88Xn0VkEjH1RcY9Jla5M6QuGwskgmzqbfCH
-         AU8A==
+        bh=i2O1Rc0B4MaLiF4ddNBhSLPgkvvRZV1wupfBsBB9Mo8=;
+        b=MtDjiGnEPwZFldAaoYreFeThzRSn5N8nEbn0SRYpDQULALGoTBoBRz3UBu2u3G5c0E
+         1CVsbCySWiLhl8CUCTWLA1y7teAuoYdGK/ZV+Y3RAnLVZAtmX3tBQUsWhMltLzL+qNNQ
+         UOy3/N6ZGQWR3ACc6QYiG9UjOTJNBsO8FZowGHtoMxSK4ZoEQ/76GoyRK/VKr5nlQJ5J
+         rEdrBQKLIG/9//4e9NmkUm52gr58fa8kw62fp+RTGWMF5pdECW1uWUCryCAi6gdUdejb
+         /wzThGwVlte0+14b/atzc+FaMghh54pBFDEl770gP/x4FyiBZYMFss/9fIIZnQwsMkVZ
+         eoXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PhDyK3KDUDoYOICYsVAwK115keL37tYbWZgH4EftGJo=;
-        b=L7qRfa6/V2p57ZXStCK4ujxftnub0yqkHxrBg/xROkdKHdBEonRz8FEt14QVE8FSVz
-         j+cRLesufWjiGLG34YubZZ4bk/+ozO0h3BLQokzwpHIvYPpkftQB2vHFrt4j5crbJnhd
-         GvnxcC9fD/zFcP36p6fTPcoNU5KD/qI8svNnAT6q1V5DkHYfiHRTSYV75y1L+phb5jW1
-         MHwh2je3/qqJXZSwFeAO7fTD2YrL1SDQBF1+aIO9+pfW9MVVbvO8Q+RsEdoK/P4m1IQt
-         gB7CCaJkG7nT83Aw9MvlzSVQ32tjEu8hc1CQa/KNNuXYCIH8p5hFHHQmmc1SxbV9P1d3
-         5shQ==
-X-Gm-Message-State: AOAM533BoPskh7C5cBIeJ/weNwcOk3UA14H4ijhYCh/kccwjaOmsxgx0
-        ShlOoR4YSnSFlv2PMWy+HZU=
-X-Google-Smtp-Source: ABdhPJzo3hzR5isqDqCyt5Qj6m/nPT2rbWfyiYnemaWRLZlx2XLWdds2gn6unb6BCs6CgHjo0RTOFw==
-X-Received: by 2002:ac8:75c3:: with SMTP id z3mr1733574qtq.308.1622758854919;
-        Thu, 03 Jun 2021 15:20:54 -0700 (PDT)
+        bh=i2O1Rc0B4MaLiF4ddNBhSLPgkvvRZV1wupfBsBB9Mo8=;
+        b=cBrNMezpdopbOb65IZ92jJ+9sFKm+mxuKG8b3DjCaE1xG68dfuGjuOuzOzxWRdbDGV
+         aTaLIFPAjmyNm37ujjc4AlKDMSkNqyRnrOk2/OTkg89DTKgzsPJho4lu+DLc0VpQWi6L
+         POJiAqpM2xP8MBqML9D75wjG2MSvJp4wUghcVpewmepN1J6h1Wy8ttuTEYZfvGF14hm9
+         PaU7WqteyQLuhk01bNFv6LXbPFh0hQsq0dTunyrBVaUfDYdaQ1GvQMQqXKEdhBuEHTIx
+         CdQ1KwowteELp33SDwtpWw5Y0cTJc7p0tCH3xWWfN7ChtfY98XYKOFaRVl2SRfUxXMeB
+         qChA==
+X-Gm-Message-State: AOAM531k7G5194m9+j8VT28nIKnNH/qcz52fruOpLnQSBLcOBHMQBP2N
+        1rTaUS7P7o0luSSWrQwwDN0=
+X-Google-Smtp-Source: ABdhPJwo8uRGA2CR/OEG+iLGvcUR38JvXkwC5D0P5jXo8wZUljhewDjQOtF/Hfims3ydNz2MCjEadw==
+X-Received: by 2002:ae9:f310:: with SMTP id p16mr1467184qkg.267.1622758856045;
+        Thu, 03 Jun 2021 15:20:56 -0700 (PDT)
 Received: from kolga-mac-1.vpn.netapp.com (nat-216-240-30-23.netapp.com. [216.240.30.23])
-        by smtp.gmail.com with ESMTPSA id 187sm2870230qkn.43.2021.06.03.15.20.53
+        by smtp.gmail.com with ESMTPSA id 187sm2870230qkn.43.2021.06.03.15.20.55
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Jun 2021 15:20:54 -0700 (PDT)
+        Thu, 03 Jun 2021 15:20:55 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v9 11/13] sunrpc: provide transport info in the sysfs directory
-Date:   Thu,  3 Jun 2021 18:20:37 -0400
-Message-Id: <20210603222039.19182-12-olga.kornievskaia@gmail.com>
+Subject: [PATCH v9 12/13] sunrpc: provide multipath info in the sysfs directory
+Date:   Thu,  3 Jun 2021 18:20:38 -0400
+Message-Id: <20210603222039.19182-13-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 In-Reply-To: <20210603222039.19182-1-olga.kornievskaia@gmail.com>
 References: <20210603222039.19182-1-olga.kornievskaia@gmail.com>
@@ -61,61 +61,82 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-Allow to query transport's attributes. Currently showing following
-fields of the rpc_xprt structure: state, last_used, cong, cwnd,
-max_reqs, min_reqs, num_reqs, sizes of queues binding, sending,
-pending, backlog.
+Allow to query xrpt_switch attributes. Currently showing the following
+fields of the rpc_xprt_switch structure: xps_nxprts, xps_nactive,
+xps_queuelen.
 
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- net/sunrpc/sysfs.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ net/sunrpc/sysfs.c | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
 diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index 4a14342e4d4e..23a3eb08b5b1 100644
+index 23a3eb08b5b1..819134f28a4c 100644
 --- a/net/sunrpc/sysfs.c
 +++ b/net/sunrpc/sysfs.c
-@@ -81,6 +81,27 @@ static ssize_t rpc_sysfs_xprt_dstaddr_show(struct kobject *kobj,
+@@ -67,6 +67,15 @@ rpc_sysfs_xprt_kobj_get_xprt(struct kobject *kobj)
+ 	return xprt_get(x->xprt);
+ }
+ 
++static inline struct rpc_xprt_switch *
++rpc_sysfs_xprt_switch_kobj_get_xprt(struct kobject *kobj)
++{
++	struct rpc_sysfs_xprt_switch *x = container_of(kobj,
++		struct rpc_sysfs_xprt_switch, kobject);
++
++	return xprt_switch_get(x->xprt_switch);
++}
++
+ static ssize_t rpc_sysfs_xprt_dstaddr_show(struct kobject *kobj,
+ 					   struct kobj_attribute *attr,
+ 					   char *buf)
+@@ -102,6 +111,23 @@ static ssize_t rpc_sysfs_xprt_info_show(struct kobject *kobj,
  	return ret + 1;
  }
  
-+static ssize_t rpc_sysfs_xprt_info_show(struct kobject *kobj,
-+					struct kobj_attribute *attr,
-+					char *buf)
++static ssize_t rpc_sysfs_xprt_switch_info_show(struct kobject *kobj,
++					       struct kobj_attribute *attr,
++					       char *buf)
 +{
-+	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
++	struct rpc_xprt_switch *xprt_switch =
++		rpc_sysfs_xprt_switch_kobj_get_xprt(kobj);
 +	ssize_t ret;
 +
-+	if (!xprt)
++	if (!xprt_switch)
 +		return 0;
-+
-+	ret = sprintf(buf, "last_used=%lu\ncur_cong=%lu\ncong_win=%lu\n"
-+		       "max_num_slots=%u\nmin_num_slots=%u\nnum_reqs=%u\n"
-+		       "binding_q_len=%u\nsending_q_len=%u\npending_q_len=%u\n"
-+		       "backlog_q_len=%u\n", xprt->last_used, xprt->cong,
-+		       xprt->cwnd, xprt->max_reqs, xprt->min_reqs,
-+		       xprt->num_reqs, xprt->binding.qlen, xprt->sending.qlen,
-+		       xprt->pending.qlen, xprt->backlog.qlen);
-+	xprt_put(xprt);
++	ret = sprintf(buf, "num_xprts=%u\nnum_active=%u\nqueue_len=%ld\n",
++		      xprt_switch->xps_nxprts, xprt_switch->xps_nactive,
++		      atomic_long_read(&xprt_switch->xps_queuelen));
++	xprt_switch_put(xprt_switch);
 +	return ret + 1;
 +}
 +
  static ssize_t rpc_sysfs_xprt_dstaddr_store(struct kobject *kobj,
  					    struct kobj_attribute *attr,
  					    const char *buf, size_t count)
-@@ -199,8 +220,12 @@ static const void *rpc_sysfs_xprt_namespace(struct kobject *kobj)
- static struct kobj_attribute rpc_sysfs_xprt_dstaddr = __ATTR(dstaddr,
- 	0644, rpc_sysfs_xprt_dstaddr_show, rpc_sysfs_xprt_dstaddr_store);
- 
-+static struct kobj_attribute rpc_sysfs_xprt_info = __ATTR(xprt_info,
-+	0444, rpc_sysfs_xprt_info_show, NULL);
-+
- static struct attribute *rpc_sysfs_xprt_attrs[] = {
- 	&rpc_sysfs_xprt_dstaddr.attr,
-+	&rpc_sysfs_xprt_info.attr,
+@@ -229,6 +255,14 @@ static struct attribute *rpc_sysfs_xprt_attrs[] = {
  	NULL,
  };
  
++static struct kobj_attribute rpc_sysfs_xprt_switch_info =
++	__ATTR(xprt_switch_info, 0444, rpc_sysfs_xprt_switch_info_show, NULL);
++
++static struct attribute *rpc_sysfs_xprt_switch_attrs[] = {
++	&rpc_sysfs_xprt_switch_info.attr,
++	NULL,
++};
++
+ static struct kobj_type rpc_sysfs_client_type = {
+ 	.release = rpc_sysfs_client_release,
+ 	.sysfs_ops = &kobj_sysfs_ops,
+@@ -237,6 +271,7 @@ static struct kobj_type rpc_sysfs_client_type = {
+ 
+ static struct kobj_type rpc_sysfs_xprt_switch_type = {
+ 	.release = rpc_sysfs_xprt_switch_release,
++	.default_attrs = rpc_sysfs_xprt_switch_attrs,
+ 	.sysfs_ops = &kobj_sysfs_ops,
+ 	.namespace = rpc_sysfs_xprt_switch_namespace,
+ };
 -- 
 2.27.0
 
