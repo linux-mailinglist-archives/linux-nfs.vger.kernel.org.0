@@ -2,58 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21E9639C036
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Jun 2021 21:10:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 910DC39C07C
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Jun 2021 21:38:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbhFDTLy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 4 Jun 2021 15:11:54 -0400
-Received: from smtprelay0149.hostedemail.com ([216.40.44.149]:35088 "EHLO
+        id S230254AbhFDTj7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 4 Jun 2021 15:39:59 -0400
+Received: from smtprelay0081.hostedemail.com ([216.40.44.81]:42664 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S229854AbhFDTLy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Jun 2021 15:11:54 -0400
-Received: from omf09.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 158D4181A6F19;
-        Fri,  4 Jun 2021 19:10:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf09.hostedemail.com (Postfix) with ESMTPA id 80A7B1E04D9;
-        Fri,  4 Jun 2021 19:09:50 +0000 (UTC)
-Message-ID: <2b8fb4eb25724b6e72526a963ce5093d3cc5120d.camel@perches.com>
+        by vger.kernel.org with ESMTP id S229810AbhFDTj6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Jun 2021 15:39:58 -0400
+Received: from omf13.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 86FD4181B956E;
+        Fri,  4 Jun 2021 19:38:10 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf13.hostedemail.com (Postfix) with ESMTPA id 80AD71124FA;
+        Fri,  4 Jun 2021 19:38:08 +0000 (UTC)
+Message-ID: <144460ce4f34a51dabb76e422a718573db77cdc8.camel@perches.com>
 Subject: [PATCH] treewide: Add missing semicolons to __assign_str uses
 From:   Joe Perches <joe@perches.com>
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Qiang Yu <yuq825@gmail.com>,
-        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sunil Goutham <sgoutham@marvell.com>,
-        Linu Cherian <lcherian@marvell.com>,
-        Geetha sowjanya <gakula@marvell.com>,
-        Jerin Jacob <jerinj@marvell.com>,
-        hariprasad <hkelam@marvell.com>,
-        Subbaraya Sundeep <sbhatta@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Pawel Laszczak <pawell@cadence.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, lima@lists.freedesktop.org,
         linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
         linux-usb@vger.kernel.org, linux-nfs@vger.kernel.org,
         linux-wireless@vger.kernel.org, linux-media@vger.kernel.org,
         linaro-mm-sig@lists.linaro.org
-Date:   Fri, 04 Jun 2021 12:09:48 -0700
+Date:   Fri, 04 Jun 2021 12:38:07 -0700
 In-Reply-To: <20210604122128.0d348960@oasis.local.home>
 References: <cover.1621024265.git.bristot@redhat.com>
          <2c59beee3b36b15592bfbb9f26dee7f8b55fd814.1621024265.git.bristot@redhat.com>
@@ -64,13 +37,13 @@ Content-Type: text/plain; charset="ISO-8859-1"
 User-Agent: Evolution 3.38.1-1 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.40
-X-Stat-Signature: gq9kfcy66b6ukqw79kah4kgtd93zrsxc
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 80A7B1E04D9
+X-Spam-Status: No, score=-2.90
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 80AD71124FA
+X-Stat-Signature: phq1t84r7hdy78tyjsrpdrat168hrsik
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1+nN+iOwQL+6aJp7zfNv8g4h28sP2gU9NQ=
-X-HE-Tag: 1622833790-435690
+X-Session-ID: U2FsdGVkX1/PIeFEZ46D7snJ1nSJmE2kCP8dD8iXWeo=
+X-HE-Tag: 1622835488-93370
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -92,6 +65,9 @@ Link: https://lore.kernel.org/lkml/1e068d21106bb6db05b735b4916bb420e6c9842a.came
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
+
+Resending without all the direct cc's, only the mailing lists as
+it seems not to have gone through via vger.
 
 Compiled x84-64 allyesconfig
 
@@ -744,4 +720,5 @@ index 8fcc390564029..3fc1e4c5344c0 100644
  #define VIF_PR_FMT	" vif:%s(%d%s)"
  #define VIF_PR_ARG	__get_str(vif_name), __entry->vif_type, __entry->p2p ? "/p2p" : ""
  
+
 
