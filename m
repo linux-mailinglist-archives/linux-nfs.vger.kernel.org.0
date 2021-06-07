@@ -2,84 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C58E539CB08
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Jun 2021 22:52:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C4C939D46A
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Jun 2021 07:42:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230010AbhFEUyQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 5 Jun 2021 16:54:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229998AbhFEUyP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 5 Jun 2021 16:54:15 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74F8C061766
-        for <linux-nfs@vger.kernel.org>; Sat,  5 Jun 2021 13:52:12 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id f11so19387792lfq.4
-        for <linux-nfs@vger.kernel.org>; Sat, 05 Jun 2021 13:52:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:date:from:user-agent:mime-version:to:subject
-         :content-transfer-encoding;
-        bh=oxB8EFNz7ZGsV89abezcL0p5bFXw37OEV41A0+RMBDo=;
-        b=MZCPhOe1TzFgt6NFmfD9kkcWLTajpabwTWCx6hhZBw2V7i3RsyrNp+UBU7Qg+AFfvU
-         kR86mi/9cPOzzQjEgxY5FZOpjjJSCqTQ3cvrnAxPIwHKKUTXEdqFTH4cbY22qczANWCs
-         vRyfl0YySZN3bK8HoZ+2I6GYkvQcqKZtGIh/8ccJjwmsIBcSXgFhocGDI/Ds3hxu7M8B
-         8iAT0HV3Zh1vjdMHC9lJAL8lzRnPfImt9t72O/ap3K88Y+hqtxPTeWMI7AE/GGssrJsq
-         TII9Td4kxjiUK44er782gEepsYVFX59hII8/s5sjoOWFdW2cev/p/dL7ZTe5SKIthplf
-         wUQA==
+        id S229498AbhFGFoR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 7 Jun 2021 01:44:17 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:37477 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229436AbhFGFoR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 7 Jun 2021 01:44:17 -0400
+Received: by mail-il1-f199.google.com with SMTP id g12-20020a056e021a2cb02901dfc46878d8so11792208ile.4
+        for <linux-nfs@vger.kernel.org>; Sun, 06 Jun 2021 22:42:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
-         :subject:content-transfer-encoding;
-        bh=oxB8EFNz7ZGsV89abezcL0p5bFXw37OEV41A0+RMBDo=;
-        b=XgrrM1J6614q3dRiNuGyWxVDxy/1de36+Rc3pKP1AzlLqK/MxHRuh5H6IXKbVZbbdf
-         X450dA4emMFgXOz2vthKdwqgIQNtVZk2X+36+6EujUGS6TdkcFh/LBbizBESmmPWshFJ
-         bQ2rDkgpcwubDGvazzR2ZRXNLsu1ejvycYqYCArngWB7M+SAgbYOp1F/49EdqPzzBYQR
-         Hz9/Iy9JKP6HAfx2jFolFQi+oxgXjVmLBRKvUEJsF74MOzfcEgFZ2tQCKByhXaYNGWZX
-         JPETV8+YnRBXvTFQo6sldC1y4JC9W28Hxj62Qh3GoJqshZrgnfqUhFm/pt/Ek/v0KKEF
-         HALQ==
-X-Gm-Message-State: AOAM530KAGxJlsMl4PtFWl/J8EiU7zez32IoQslcHmPY4gZBxq4snbTy
-        IGHtCFrvSbMPkMxyMzr9MvPRYK85mceMJw==
-X-Google-Smtp-Source: ABdhPJwmXa3NtnWlPmYhdWuYld2teKfaEbW8iR8PAad4wk+WD5aOwmLkoHmjcnMFOK0uWmXX9Q8B4g==
-X-Received: by 2002:a19:7b15:: with SMTP id w21mr4335019lfc.162.1622926330789;
-        Sat, 05 Jun 2021 13:52:10 -0700 (PDT)
-Received: from [192.168.0.91] ([188.242.181.97])
-        by smtp.googlemail.com with ESMTPSA id s19sm1168011lji.79.2021.06.05.13.52.10
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Sat, 05 Jun 2021 13:52:10 -0700 (PDT)
-Message-ID: <60BBE66E.6080806@gmail.com>
-Date:   Sun, 06 Jun 2021 00:02:38 +0300
-From:   Nikolai Zhubr <zhubr.2@gmail.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.2.4) Gecko/20100608 Thunderbird/3.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=chDCS4Sw6hIOP5jVhuCgufB3GV+DZAnpj3zjAvH362g=;
+        b=lRGqxmlLFx7WZoTZwzNirZA+/l2hcksBWN9Hcc6N+Ty7r1AM953rTvQGOXXG6uExKL
+         cjI3bfRlt7SRUF5CEhiEZonZiY5agPSMiCJbFFURCm7lqMHSBWP2a0MWuum2A6XJOaUg
+         olPg4gpUBpBIgFVUdHBFTGBARBjT9wcGZxvZ356LQ/uqlvkWdfW+Ftr5lsrYd5fZshxt
+         D4R2lsUuX12024jVQKWkSZowTKIOBMxJoeiHj5vDpdWCFAPhm/mdgaDtGl9BNlJXw5w3
+         alOiZf97JcZSp3EvxqK7iJKy6zPyDPCvQ09pd22gKlrwYsFavdlNbWF6ngxWKfYBfMT2
+         OXGw==
+X-Gm-Message-State: AOAM531rQ8k2p8oMKeFYX1faPa15qLYhQC8CRM4dS0wq+J7uQ4bjQveo
+        K/0+7xp2J91TSLdU3Xuioeoducb4IqbRIinK90cGXSygeAfK
+X-Google-Smtp-Source: ABdhPJyPwqn6qaZM4S2rLPIghV3fGanVCqaU/MsNC7X/B4zODjd5OdOWsmUgMS9PI927BzDE1v7daxxxk0CB3IF4URjjgXhqXM7k
 MIME-Version: 1.0
-To:     linux-nfs@vger.kernel.org
-Subject: Continuation of failed RPC request after unmount
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a6b:e303:: with SMTP id u3mr14127750ioc.177.1623044546513;
+ Sun, 06 Jun 2021 22:42:26 -0700 (PDT)
+Date:   Sun, 06 Jun 2021 22:42:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a6561705c42681d8@google.com>
+Subject: [syzbot] general protection fault in nfsd_reply_cache_free_locked (2)
+From:   syzbot <syzbot+314d9a0380418b51606b@syzkaller.appspotmail.com>
+To:     bfields@fieldses.org, chuck.lever@oracle.com,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi all,
+Hello,
 
-I'm debugging some likely buggy network device driver. Let's say the 
-driver erroneously looses some packets (under certain conditions). One 
-of important tests is being able to mount and use NFS share (as a 
-client). I'm currently using kernel 4.14.221 and NFS v3 in UDP mode.
+syzbot found the following issue on:
 
-While testing, I've noticed some strange NFS behaviour. If some NFS 
-request (file read) obtains no response (let's suppose due to 
-connectivity issue), such request will be resent periodically (in hope 
-to eventually succeed). This is expected. Now I observe, that after I 
-unmount the NFS share (successfully), the failed requests still keep 
-being resent, apparently infinitely (Confirmed by e.g. Wireshark), 
-surviving also ifdown and ifup. So basically, I've found no way to get 
-rid of them other than reboot.
-Is this a known behaviour? Is it by design? Does it make any sense?
+HEAD commit:    231bc539 Merge branch 'for-linus' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=101f596bd00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8a9e9956ca52a5f6
+dashboard link: https://syzkaller.appspot.com/bug?extid=314d9a0380418b51606b
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+314d9a0380418b51606b@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+CPU: 0 PID: 25304 Comm: kworker/u4:12 Not tainted 5.13.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: netns cleanup_net
+RIP: 0010:nfsd_reply_cache_free_locked+0x31/0x3b0 fs/nfsd/nfscache.c:123
+Code: 54 49 89 fc 55 48 89 f5 53 48 89 d3 48 83 ec 08 e8 94 f5 1c ff 48 8d 7d 61 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 c3 02 00 00
+RSP: 0018:ffffc90017a07b68 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff888017997000 RCX: 0000000000000000
+RDX: 0000000000000002 RSI: ffffffff8257e6ec RDI: 0000000000000011
+RBP: ffffffffffffffb0 R08: 0000000000000800 R09: ffffffff902278af
+R10: ffffffff8257f56e R11: 0000000000084087 R12: ffff888000118680
+R13: 0000000000018680 R14: ffffed10000230d1 R15: ffff888000118680
+FS:  0000000000000000(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffe0630ed17 CR3: 0000000017232000 CR4: 00000000001526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ nfsd_reply_cache_shutdown+0x153/0x2d0 fs/nfsd/nfscache.c:222
+ nfsd_exit_net+0x15f/0x490 fs/nfsd/nfsctl.c:1503
+ ops_exit_list+0xb0/0x160 net/core/net_namespace.c:175
+ cleanup_net+0x4ea/0xb10 net/core/net_namespace.c:595
+ process_one_work+0x98d/0x1600 kernel/workqueue.c:2276
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2422
+ kthread+0x3b1/0x4a0 kernel/kthread.c:313
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Modules linked in:
+---[ end trace 0af87ae802e1324a ]---
+RIP: 0010:nfsd_reply_cache_free_locked+0x31/0x3b0 fs/nfsd/nfscache.c:123
+Code: 54 49 89 fc 55 48 89 f5 53 48 89 d3 48 83 ec 08 e8 94 f5 1c ff 48 8d 7d 61 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 c3 02 00 00
+RSP: 0018:ffffc90017a07b68 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff888017997000 RCX: 0000000000000000
+RDX: 0000000000000002 RSI: ffffffff8257e6ec RDI: 0000000000000011
+RBP: ffffffffffffffb0 R08: 0000000000000800 R09: ffffffff902278af
+R10: ffffffff8257f56e R11: 0000000000084087 R12: ffff888000118680
+R13: 0000000000018680 R14: ffffed10000230d1 R15: ffff888000118680
+FS:  0000000000000000(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005618fcbf1160 CR3: 000000001518e000 CR4: 00000000001526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-Thank you,
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Regards,
-Nikolai
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
