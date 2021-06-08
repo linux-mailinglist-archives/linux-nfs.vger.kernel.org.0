@@ -2,57 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 370B539FD42
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jun 2021 19:10:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EFBC39FD7B
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jun 2021 19:20:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231493AbhFHRMM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Jun 2021 13:12:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231261AbhFHRMM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 8 Jun 2021 13:12:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A1A8361351;
-        Tue,  8 Jun 2021 17:10:18 +0000 (UTC)
-Subject: [PATCH] nfs(5): Fix missing mentions of "rdma6" netid
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     SteveD@redhat.com
-Cc:     linux-nfs@vger.kernel.org
-Date:   Tue, 08 Jun 2021 13:10:17 -0400
-Message-ID: <162317221773.1999.16160807270651134948.stgit@oracle-100.nfsv4.dev>
-User-Agent: StGit/1.1
+        id S233158AbhFHRWL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Jun 2021 13:22:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233005AbhFHRWK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Jun 2021 13:22:10 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 162ABC061574
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Jun 2021 10:20:16 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 9C36D685B; Tue,  8 Jun 2021 13:20:15 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 9C36D685B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1623172815;
+        bh=2hQ+IhZOkW/0IERB/C1JhYCR/JFt50N0MUYyTTPmzUk=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=Sk830VBRLQT7h0r/ezL5Ysrt6IqvmmTjGHEcbYCQaelenfkxspK/qiqwCmAasaA5G
+         QDlwX+2vwCytqt3rzgdB65EPhRsA0U8wk+f9xWOOToW3cO75Aqdlh9VD0BmfSSCflH
+         G3Gj3RgkhOgAMK8sdpCRaWt1QQoLZB6tcIMONC3Q=
+Date:   Tue, 8 Jun 2021 13:20:15 -0400
+To:     Frank van der Linden <fllinden@amazon.com>
+Cc:     Wang Yugui <wangyugui@e16-tech.com>, linux-nfs@vger.kernel.org
+Subject: Re: nfsd dead loop when xfstests generic/531
+Message-ID: <20210608172015.GB22685@fieldses.org>
+References: <20210531125948.2D37.409509F4@e16-tech.com>
+ <20210601165535.GA3102@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210601165535.GA3102@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- utils/mount/nfs.man |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue, Jun 01, 2021 at 04:55:35PM +0000, Frank van der Linden wrote:
+> On Mon, May 31, 2021 at 12:59:51PM +0800, Wang Yugui wrote:
+> > 
+> > 
+> > Hi,
+> > 
+> > nfsd dead loop when xfstests generic/531
+> > 
+> > linux kernel of nfs server: 5.10.41
+> > linux kernel of nfs client: 5.10.41
+> > 
+> > 
+> > nfsd dead loop when xfstests generic/531
+> > 
+> > linux kernel of nfs server: 5.10.41
+> > linux kernel of nfs client: 5.10.41
+> 
+> This is a known issue. generic/531 opens a large number of files, causing
+> the nfsd file cache code to walk a very long LRU list of open files. For
+> v4, there will be a lot of long term opens (because of the OPEN call),
+> and they all end up on that list.
+> 
+> So, the basic issue is, that the nfsd file cache is a good match for
+> v3 semantics, but less so for v4 semantics.
+> 
+> I posted an experimental patch to work around the issue:
+> 
+> https://lore.kernel.org/linux-nfs/20201020183718.14618-4-trondmy@kernel.org/T/#m869aa427f125afee2af9a89d569c6b98e12e516f
+> 
+> The rhashtable patch has issues, so disregard that one, but the other one
+> is a basic fix for this issue. It has one other issue that I noticed (refcount
+> error), but that is easily fixed.
+> 
+> I should update the patch and formally post it..
 
-diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
-index 5682b5592a66..f98cb47dbf99 100644
---- a/utils/mount/nfs.man
-+++ b/utils/mount/nfs.man
-@@ -564,7 +564,7 @@ The
- .I netid
- determines the transport that is used to communicate with the NFS
- server.  Available options are
--.BR udp ", " udp6 ", "tcp ", " tcp6 ", and " rdma .
-+.BR udp ", " udp6 ", "tcp ", " tcp6 ", " rdma ", and " rdma6 .
- Those which end in
- .B 6
- use IPv6 addresses and are only available if support for TI-RPC is
-@@ -812,7 +812,7 @@ The
- .I netid
- determines the transport that is used to communicate with the NFS
- server.  Supported options are
--.BR tcp ", " tcp6 ", and " rdma .
-+.BR tcp ", " tcp6 ", " rdma ", and " rdma6 .
- .B tcp6
- use IPv6 addresses and is only available if support for TI-RPC is
- built in. Both others use IPv4 addresses.
+That would be great.
 
-
+--b.
