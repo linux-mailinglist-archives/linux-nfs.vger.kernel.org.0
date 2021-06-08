@@ -2,57 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D31C439FE1B
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jun 2021 19:48:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90B5E39FE1E
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jun 2021 19:48:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232728AbhFHRtx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Jun 2021 13:49:53 -0400
-Received: from mail-qk1-f182.google.com ([209.85.222.182]:34415 "EHLO
-        mail-qk1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233025AbhFHRtw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Jun 2021 13:49:52 -0400
-Received: by mail-qk1-f182.google.com with SMTP id k11so19400164qkk.1
-        for <linux-nfs@vger.kernel.org>; Tue, 08 Jun 2021 10:47:59 -0700 (PDT)
+        id S233025AbhFHRuA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Jun 2021 13:50:00 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]:46808 "EHLO
+        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233821AbhFHRt7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Jun 2021 13:49:59 -0400
+Received: by mail-qk1-f177.google.com with SMTP id f70so5820240qke.13
+        for <linux-nfs@vger.kernel.org>; Tue, 08 Jun 2021 10:48:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y5PH1kHYVukczRtGwzpchLXB+yyOyEkDWOUj/XoULME=;
-        b=BczJTHkD3+yZ6uQT/jkFGUNN8iua3TVu/R9WtoBTtDcylZHJ7D1OXPW/TUU+SQwDql
-         Z/lwuVpYoa/AKl96X9xeFsfUj1PB2sKNyzhwb7vwmNYXWh05S6jDkupRak0SXb60gqKb
-         ajO8gukr5xmA4aDApA/UyWvsnjLARvW3HY7Jl5+BDRblwHzvTJnYYd1e8bHkeJeZRz/0
-         AUFE6DR5iv2QP9h/fCVl3Wcadd+YE4KXDH2EVQPPy2SKVYS5bke135hIYLbnf3YN/BQD
-         GQ/1pmfqJ1cyAo2MBZbFs6LqLJjMpKY/3i5w4pGrTAey/cCYf9YL4nlw1SGGIZ4Bwuzn
-         1kNA==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4zJwskrhg2xmjIMfnlMJyQayKAwR6dqMI8RYPyrldHg=;
+        b=G2XVAkNfsE2H48ajOG59ysiXM8URgdDTSZEGZDTHRHTY/AyGrdfDPM1uOPhePQgq52
+         C4dpYl+jU6cakMd12wIZXxvQ8WrUG89msGPlOyX1v12LLZ8JxfEuCnKRJCytIsG8rinG
+         J55+zkixWbuZ9Obvy1khFvX/iC20QtMZJyHHzwfIZXTMXydRR8Z7I9XVDuCOlHuveWmG
+         VHmPh3QIRX61o9XC+dpYojyUWHjEX9DxOP9WXA95d3ahj9s8eW4LhzgVJz8kuVH8Izg4
+         r+OWGCMH9p1FXFLO7gtCZbMgF1BxwFInIpcte9RGRnR/NMlVvU2c+U6R5XkbkSrQ9WkG
+         lvQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=Y5PH1kHYVukczRtGwzpchLXB+yyOyEkDWOUj/XoULME=;
-        b=ZsU3waxHIX0m/N98+ArUyzRWfz209Su8ylIjzMS6K7k1cdnwrwnvHfE7d9J+dru2jj
-         qAym27WvbABForLMJ6Yj2l2EOet42W8wXnKABP4rgSs7Qs3yAgdKbfQGmsu0/R4YlPl4
-         pSmyP4KhkueKV0hA3je+jmz85mFoOjtuHV5B4wh9EmXZ2CzBE49+jhSfqYUd6Ft/JSEG
-         qJoz6VuhEHLzB0hFKbLEtuqNtb93vZEbXFw72JRKWkqczNLft07jDT8BehemwqIzbnS3
-         pW283UmCSbpGTuvZYOwAKefhz2xWCPQ0/K4TDiaZl24rSNU/pu/ipwIrwnOP+DRAroqI
-         5xtA==
-X-Gm-Message-State: AOAM532ymy8JI2h/zhb6qvl4kdV8vr+NSQzhg1x/xhgO3UhGWczqVuqQ
-        gGOIAElDdaF814vVj5es4xw/MJ0ne+k=
-X-Google-Smtp-Source: ABdhPJwQvFvXKm1fB3LQAApz6QQKi10ryqg9gZknFjDWUszKgBx/1Cr9tJLyy8/E8gsQEcenTSn5vA==
-X-Received: by 2002:a05:620a:219b:: with SMTP id g27mr8308029qka.399.1623174418992;
-        Tue, 08 Jun 2021 10:46:58 -0700 (PDT)
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=4zJwskrhg2xmjIMfnlMJyQayKAwR6dqMI8RYPyrldHg=;
+        b=CjuIqpNdnLSloOtJXYkCmPQwtUARFmkrDGwYqfHkWJxGEwLxVhjT+ld/s3I5BQHWpC
+         CQtSOD3WX19jWox9PGmRbtgWjgEKyQHLi7cyvXHltYNoJ6sqXY1LzsyfiN/A6XintB1K
+         jIHcQRVzLkmF+11wbPUDjuoEs7rMmjEbpStW6vNDSBYwoaA5LjDLt0i7aaOuVH3pGWba
+         2eTA1NCgVK8A5vT2Fjc6ifHUjbAozgjbHzxXwW5oqnWbPFLV5Xjk6QKrsHPfdYyuvkmr
+         HLPzgQ6SxMlZS6kYOmUselVJ+5Q185oeOhwj69dOnbS7KMyGH/Db+vMdjk2X7dSQ4/YD
+         Kk7w==
+X-Gm-Message-State: AOAM531x9hAF/cJwY/3ODmnxWopfzV0CZR99iPN01xuoT0V7XK2I6TJW
+        PGDKld3jhsY2PHs1cHyt5dxDmn3fYpU=
+X-Google-Smtp-Source: ABdhPJxVEyR8A3MJNykG2W3iaDshS9ezryCtYkv1foVUu5bjLH9CBesxOA6zS2WrZRgRIWGBjtFlgg==
+X-Received: by 2002:a37:a548:: with SMTP id o69mr16965902qke.376.1623174419888;
+        Tue, 08 Jun 2021 10:46:59 -0700 (PDT)
 Received: from localhost.localdomain ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id h2sm12963080qkf.106.2021.06.08.10.46.58
+        by smtp.gmail.com with ESMTPSA id h2sm12963080qkf.106.2021.06.08.10.46.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jun 2021 10:46:58 -0700 (PDT)
+        Tue, 08 Jun 2021 10:46:59 -0700 (PDT)
 Sender: Anna Schumaker <schumakeranna@gmail.com>
 From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [RFC PATCH 0/6] Add a tool for using the new sysfs files
-Date:   Tue,  8 Jun 2021 13:46:51 -0400
-Message-Id: <20210608174657.603256-1-Anna.Schumaker@Netapp.com>
+Subject: [RFC PATCH 1/6] nfs-sysfs: Add an nfs-sysfs.py tool
+Date:   Tue,  8 Jun 2021 13:46:52 -0400
+Message-Id: <20210608174657.603256-2-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20210608174657.603256-1-Anna.Schumaker@Netapp.com>
+References: <20210608174657.603256-1-Anna.Schumaker@Netapp.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -61,115 +63,61 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-These patches implement a tool that can be used to read and write the
-sysfs files, with subcommands! They need Olga's most recent patches to
-run.
+This will be used to print and manipulate the sunrpc sysfs directory
+files. Running without arguments prints both usage information and the
+location of the sunrpc sysfs directory.
 
-The following subcommands are implemented:
-  nfs-sysfs.py rpc-client
-  nfs-sysfs.py xprt
-  nfs-sysfs.py xprt set
-  nfs-sysfs.py xprt-switch
-  nfs-sysfs.py xprt-switch set
-
-So you can print out information about every xprt-switch with:
-	anna@client % ./nfs-sysfs.py xprt-switch
-	switch 0: num_xprts 1, num_active 1, queue_len 0
-		xprt 0: local, /var/run/gssproxy.sock
-	switch 1: num_xprts 1, num_active 1, queue_len 0
-		xprt 1: local, /var/run/rpcbind.sock
-	switch 2: num_xprts 4, num_active 4, queue_len 0
-		xprt 2: tcp, 192.168.111.188
-		xprt 3: tcp, 192.168.111.188
-		xprt 5: tcp, 192.168.111.188
-		xprt 6: tcp, 192.168.111.188
-	switch 3: num_xprts 1, num_active 1, queue_len 0
-		xprt 7: tcp, 192.168.111.1
-	switch 4: num_xprts 1, num_active 1, queue_len 0
-		xprt 4: tcp, 192.168.111.188
-
-And information about each xprt:
-	anna@client % ./nfs-sysfs.py xprt
-	xprt 0: local, /var/run/gssproxy.sock, state <CONNECTED,BOUND>, num_reqs 2
-		cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-		binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-	xprt 1: local, /var/run/rpcbind.sock, state <CONNECTED,BOUND>, num_reqs 2
-		cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-		binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-	xprt 2: tcp, 192.168.111.188, state <CONNECTED,BOUND>, num_reqs 2
-		cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-		binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-	xprt 3: tcp, 192.168.111.188, state <CONNECTED,BOUND>, num_reqs 2
-		cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-		binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-	xprt 4: tcp, 192.168.111.188, state <BOUND>, num_reqs 2
-		cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-		binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-	xprt 5: tcp, 192.168.111.188, state <CONNECTED,BOUND>, num_reqs 2
-		cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-		binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-	xprt 6: tcp, 192.168.111.188, state <CONNECTED,BOUND>, num_reqs 2
-		cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-		binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-	xprt 7: tcp, 192.168.111.1, state <CONNECTED,BOUND>, num_reqs 2
-		cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-		binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-
-You can use the `set` subcommand to change the dstaddr of individual xprts:
-	anna@client % ./nfs-sysfs.py xprt --id 2
-	xprt 2: tcp, 192.168.111.188, state <CONNECTED,BOUND>, num_reqs 2
-		cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-		binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-	anna@client % sudo ./nfs-sysfs.py xprt set --id 2 --dstaddr server2.nowheycreamery.vm
-	xprt 2: tcp, 192.168.111.186, state <CONNECTED,BOUND>, num_reqs 2
-		cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-		binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-
-Or for changing the dstaddr of all xprts attached to a switch:
-	anna@client % ./nfs-sysfs.py xprt-switch --id 2
-	switch 2: num_xprts 4, num_active 4, queue_len 0
-		xprt 2: tcp, 192.168.111.188
-		xprt 3: tcp, 192.168.111.188
-		xprt 5: tcp, 192.168.111.188
-		xprt 6: tcp, 192.168.111.188
-	anna@client % sudo ./nfs-sysfs.py xprt-switch set --id 2 --dstaddr server2.nowheycreamery.vm
-	switch 2: num_xprts 4, num_active 4, queue_len 0
-		xprt 2: tcp, 192.168.111.186
-		xprt 3: tcp, 192.168.111.186
-		xprt 5: tcp, 192.168.111.186
-		xprt 6: tcp, 192.168.111.186
-
-
-I'm sure this needs lots of polish before it's ready for inclusion,
-along with needing a Makefile so it can be installed (I've just been
-running it out of the nfs-utils/tools/nfs-sysfs/ directory). But it's
-still a start, and I wanted to post it before going on New Baby Leave
-Part 2 (June 12 - July 11).
-
-What does everybody think?
-Anna
-
-
-Anna Schumaker (6):
-  nfs-sysfs: Add an nfs-sysfs.py tool
-  nfs-sysfs.py: Add a command for printing xprt switch information
-  nfs-sysfs.py: Add a command for printing individual xprts
-  nfs-sysfs.py: Add a command for printing rpc-client information
-  nfs-sysfs.py: Add a command for changing xprt dstaddr
-  nfs-sysfs.py: Add a command for changing xprt-switch dstaddrs
-
- tools/nfs-sysfs/client.py    | 27 ++++++++++++++
- tools/nfs-sysfs/nfs-sysfs.py | 23 ++++++++++++
- tools/nfs-sysfs/switch.py    | 51 +++++++++++++++++++++++++++
- tools/nfs-sysfs/sysfs.py     | 28 +++++++++++++++
- tools/nfs-sysfs/xprt.py      | 68 ++++++++++++++++++++++++++++++++++++
- 5 files changed, 197 insertions(+)
- create mode 100644 tools/nfs-sysfs/client.py
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+---
+ tools/nfs-sysfs/nfs-sysfs.py | 13 +++++++++++++
+ tools/nfs-sysfs/sysfs.py     | 18 ++++++++++++++++++
+ 2 files changed, 31 insertions(+)
  create mode 100755 tools/nfs-sysfs/nfs-sysfs.py
- create mode 100644 tools/nfs-sysfs/switch.py
  create mode 100644 tools/nfs-sysfs/sysfs.py
- create mode 100644 tools/nfs-sysfs/xprt.py
 
+diff --git a/tools/nfs-sysfs/nfs-sysfs.py b/tools/nfs-sysfs/nfs-sysfs.py
+new file mode 100755
+index 000000000000..8ff59ea9e81b
+--- /dev/null
++++ b/tools/nfs-sysfs/nfs-sysfs.py
+@@ -0,0 +1,13 @@
++#!/usr/bin/python
++import argparse
++import sysfs
++
++parser = argparse.ArgumentParser()
++
++def show_small_help(args):
++    parser.print_usage()
++    print("sunrpc dir:", sysfs.SUNRPC)
++parser.set_defaults(func=show_small_help)
++
++args = parser.parse_args()
++args.func(args)
+diff --git a/tools/nfs-sysfs/sysfs.py b/tools/nfs-sysfs/sysfs.py
+new file mode 100644
+index 000000000000..0b358f57bb28
+--- /dev/null
++++ b/tools/nfs-sysfs/sysfs.py
+@@ -0,0 +1,18 @@
++import pathlib
++import sys
++
++MOUNT = None
++with open("/proc/mounts", 'r') as f:
++    for line in f:
++        if "sysfs" in line:
++            MOUNT = line.split()[1]
++            break
++
++if MOUNT == None:
++    print("ERROR: sysfs is not mounted")
++    sys.exit(1)
++
++SUNRPC = pathlib.Path(MOUNT) / "kernel" / "sunrpc"
++if not SUNRPC.is_dir():
++    print("ERROR: sysfs does not have sunrpc directory")
++    sys.exit(1)
 -- 
 2.32.0
 
