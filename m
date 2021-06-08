@@ -2,92 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B52539EE89
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jun 2021 08:09:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7948D39EFB2
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jun 2021 09:36:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230307AbhFHGLC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Jun 2021 02:11:02 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:4506 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230306AbhFHGLB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Jun 2021 02:11:01 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4FzfrB2PkdzZdwk;
-        Tue,  8 Jun 2021 14:06:18 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (7.185.36.114) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 8 Jun 2021 14:08:38 +0800
-Received: from [10.174.176.83] (10.174.176.83) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 8 Jun 2021 14:08:37 +0800
-Subject: Re: [PATCH 1/2] NFSv4: Fix deadlock between nfs4_evict_inode() and
- nfs4_opendata_get_inode()
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "trondmy@kernel.org" <trondmy@kernel.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <20210601173634.243152-1-trondmy@kernel.org>
- <49396167-ff9c-9363-ded7-732d14d60a8e@huawei.com>
- <be83f29458f219f3eaea831a3b8c1a32812820f5.camel@hammerspace.com>
-From:   "zhangxiaoxu (A)" <zhangxiaoxu5@huawei.com>
-Message-ID: <49605ca6-ef2c-4fa3-165e-d9a467e05433@huawei.com>
-Date:   Tue, 8 Jun 2021 14:08:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        id S230307AbhFHHiY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Jun 2021 03:38:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229678AbhFHHiY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Jun 2021 03:38:24 -0400
+Received: from hr2.samba.org (hr2.samba.org [IPv6:2a01:4f8:192:486::2:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23918C061574;
+        Tue,  8 Jun 2021 00:36:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+         s=42; h=Date:Message-ID:From:Cc:To;
+        bh=SbRCszcM+0Us1EZPMrPmKxX/D+gZYBJAD3AMc854kic=; b=dErj90Fa5bYOeuVyaADbtDZXEx
+        tLRqwllTrHcn62DFtOZiRigMuz5olTQhyCF3/krCH+Zq6p3ZyGp52Awxcd8VIzqa5KAJsAuYHCMI+
+        bJH7kLjykVAwKZZkFKrRldU9CWJrRQtPa8+Djc5mzPXL6g4AH4fKjB2cCUBE4kCrNIuwMtbo1c41Z
+        2IBGesUZkDILk77oumxBM/I0X+WpWsDEzlG4+W5VS5D7lodFygQU1UhaerEiGX0Q+kzcn2QbWq9W5
+        CqnDpAGLKGvnO1HcNTR1en/UaF1uctFZ2D5pWZ0Sho8bN2wDxwIAFVMPJVIZa7zkLDIOGG0n2YaGr
+        zK52Xx0lSr3PsX9dFqlY6lXCZUQJ/3dkMkZX0nlj2hNYfWwwWxkDmgctkL/ipdp32GQtCFGxOXmXu
+        541qlpn0PjDvcgrg7bgCGMVllqrYzz94EsEZdnDox5xuqxnWmJCUJ9+aBeYyDfOmNjy1YWRfICgpa
+        XZOlGON/7NfVJA5YvMe7inhV;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+        by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_RSA_CHACHA20_POLY1305:256)
+        (Exim)
+        id 1lqWHj-0000gt-Rt; Tue, 08 Jun 2021 07:36:27 +0000
+To:     Steve French <smfrench@gmail.com>,
+        =?UTF-8?Q?Aur=c3=a9lien_Aptel?= <aaptel@suse.com>
+Cc:     Alexander Ahring Oder Aring <aahringo@redhat.com>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        Leif Sahlberg <lsahlber@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>
+References: <CAK-6q+hS29yoTF4tKq+Xt3G=_PPDi9vmFVwGPmutbsQyD2i=CA@mail.gmail.com>
+ <87pmwxsjxm.fsf@suse.com>
+ <CAH2r5msMBZ5AYQcfK=-xrOASzVC0SgoHdPnyqEPRcfd-tzUstw@mail.gmail.com>
+From:   Stefan Metzmacher <metze@samba.org>
+Subject: Re: quic in-kernel implementation?
+Message-ID: <35352ef0-86ed-aaa5-4a49-b2b08dc3674d@samba.org>
+Date:   Tue, 8 Jun 2021 09:36:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <be83f29458f219f3eaea831a3b8c1a32812820f5.camel@hammerspace.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CAH2r5msMBZ5AYQcfK=-xrOASzVC0SgoHdPnyqEPRcfd-tzUstw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.83]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500023.china.huawei.com (7.185.36.114)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-在 2021/6/7 21:51, Trond Myklebust 写道:
->> 在 2021/6/2 1:36,trondmy@kernel.org  写道:
->>> From: Trond Myklebust<trond.myklebust@hammerspace.com>
->>>
->>> If the inode is being evicted, but has to return a delegation
->>> first,
->>> then it can cause a deadlock in the corner case where the server
->>> reboots
->>> before the delegreturn completes, but while the call to
->>> iget5_locked() in
->>> nfs4_opendata_get_inode() is waiting for the inode free to
->>> complete.
->>> Since the open call still holds a session slot, the reboot recovery
->>> cannot proceed.
->>>
->>> In order to break the logjam, we can turn the delegation return
->>> into a
->>> privileged operation for the case where we're evicting the inode.
->>> We
->>> know that in that case, there can be no other state recovery
->>> operation
->>> that conflicts.
->>>
->> it's looks good to me.
+Am 08.06.21 um 05:04 schrieb Steve French:
+> On Mon, Jun 7, 2021 at 11:45 AM Aurélien Aptel <aaptel@suse.com> wrote:
 >>
->> but i have another confuse, how to ensure no writeback when evict nfs
->> inode?
->> because flush writes to server when close?
->> but not all close will flush writes to server.
-> The struct nfs_open_context holds a reference to the dentry (which
-> holds a reference to the inode) and to the superblock. The struct
-> nfs_page that is tracking page dirtiness then holds a reference to the
-> nfs_open_context.
+>> Alexander Ahring Oder Aring <aahringo@redhat.com> writes:
+>>> as I notice there exists several quic user space implementations, is
+>>> there any interest or process of doing an in-kernel implementation? I
+>>> am asking because I would like to try out quic with an in-kernel
+>>> application protocol like DLM. Besides DLM I've heard that the SMB
+>>> community is also interested into such implementation.
+>>
+>> Yes SMB can work over QUIC. It would be nice if there was an in-kernel
+>> implementation that cifs.ko could use. Many firewall block port 445
+>> (SMB) despite the newer version of the protocol now having encryption,
+>> signing, etc. Using QUIC (UDP port 443) would allow for more reliable
+>> connectivity to cloud storage like azure.
+>>
+>> There are already multiple well-tested C QUIC implementation out there
+>> (Microsoft one for example, has a lot of extra code annotation to allow
+>> for deep static analysis) but I'm not sure how we would go about porting
+>> it to linux.
+>>
+>> https://github.com/microsoft/msquic
 > 
-> That mechanism ensures the inode cannot be evicted until all dirty
-> pages have been either flushed or cancelled. The only thing we need to
-> worry about is the delegation and the pNFS layout since neither one is
-> allowed to reference the inode in any way (because otherwise they would
-> prevent the memory reclaim mechanisms from working).
+> Since the Windows implementation of SMB3.1.1 over QUIC appears stable
+> (for quite a while now) and well tested, and even wireshark can now decode it, a
+> possible sequence of steps has been discussed similar to the below:
 > 
-Yes, it is.
-Thank you very much.
+> 1) using a userspace port of QUIC (e.g. msquic since is one of the more tested
+> ports, and apparently similar to what already works well for QUIC on Windows
+> with SMB3.1.1) finish up the SMB3.1.1 kernel pieces needed for running over
+> QUIC
+
+Instead of using userspace upcalls directly, it would be great if we could hide
+behind a fuse-like socket type, in order to keep the kernel changes in fs/cifs (and other parts)
+tiny and just replace the socket(AF_INET) call, but continue to use a
+stream socket (likely with a few QUIC specific getsockopt/setsockopt calls).
+
+It would also allow userspace applications like Samba's smbclient and smbd
+to use it that way too.
+
+> 2) then switch focus to porting a smaller C userspace implementation of
+> QUIC to Linux (probably not msquic since it is larger and doesn't
+> follow kernel style)
+> to kernel in fs/cifs  (since currently SMB3.1.1 is the only protocol
+> that uses QUIC,
+> and the Windows server target is quite stable and can be used to test against)> 3) use the userspace upcall example from step 1 for
+> comparison/testing/debugging etc.
+> since we know the userspace version is stable
+
+With having the fuse-like socket before it should be trivial to switch
+between the implementations.
+
+> 4) Once SMB3.1.1 over QUIC is no longer experimental, remove, and
+> we are convinced it (kernel QUIC port) works well with SMB3.1.1
+> to servers which support QUIC, then move the quic code from fs/cifs to the /net
+> tree
+
+The 4th step would then finally allocate a stable PF_QUIC which would be
+ABI stable.
+
+metze
