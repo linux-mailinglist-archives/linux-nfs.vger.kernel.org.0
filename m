@@ -2,105 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9306839FE1A
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jun 2021 19:47:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B1E73A016B
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jun 2021 21:17:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232246AbhFHRtO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Jun 2021 13:49:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47078 "EHLO
+        id S235966AbhFHSwH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Jun 2021 14:52:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232152AbhFHRtO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Jun 2021 13:49:14 -0400
-Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDCEDC061789
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Jun 2021 10:47:04 -0700 (PDT)
-Received: by mail-qk1-x733.google.com with SMTP id c124so21025423qkd.8
-        for <linux-nfs@vger.kernel.org>; Tue, 08 Jun 2021 10:47:04 -0700 (PDT)
+        with ESMTP id S236212AbhFHSuG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Jun 2021 14:50:06 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0745C06114C
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Jun 2021 11:45:30 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id k4so21285662qkd.0
+        for <linux-nfs@vger.kernel.org>; Tue, 08 Jun 2021 11:45:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=l3qsx1hJN4Ap0lnfTXiXGiNo7EkyOjgXvMFg3+Yut7o=;
-        b=F0ruDejcrs5RFshNAjQFktssQ80D+Sac0aTt88+eXaTQ08EL6jQirlNbcs4IXqkMSd
-         mP+KUidnpAqu/lXhnSX+ue74w4bK2ypF+v3WZEkXyUg3BekgHuOvitEthOd0shbUYaLi
-         +PgC289lZsB8UMZISo9oRR8lhoQqcNDk/+kpeXvSzQLm5KWqoEig+X5tmTAvsehEaBIh
-         LlABj/7w9+bTYhP4RzJCuHGwP9fqqMVNvN36kC7hyHJjf0ZsJPQCeUB7rehooHLESEz1
-         Li/QtGMmKbQRdEbdW+J7etE0Uan7/20jbtK/lSB0XilesPuE64MbrrGfCw8zTHjhCnd1
-         BMRw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YQfH20WiLnjQz8Qqiap58pTQSBe7q3eIJ9Ejp+u4pPs=;
+        b=k4S0lZBkr+qHOUYrseRP7qCwV3qsrLltHI8k4KuY/eKMcsU/kktr7ri4WBAkomb/So
+         zmsTxPangw4eaXX65S4rfyUr/RoJ76UNlUyoW/AeW+I29M6xCH2IcGalsLUV1U3G1Yy4
+         AwrgLCNhKM39g3Xk4SJ2APu0Lidlfq0YLf9WLVsi6N4sD7dl3SkILKWuk7UtaWL4EIWb
+         Imthorg0B4XAr677WjQ5joJlmpBXhjZIUtUSc08QqNJu/K7hKNscXC1k1kKSt0jNbGPX
+         8FXQ7jl9TBOp492YzgLC2HYOHlFQJwH9MV8lCnNFMqP8rrs2/G1vN0/AFA+4EcSSPbRu
+         2YRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=l3qsx1hJN4Ap0lnfTXiXGiNo7EkyOjgXvMFg3+Yut7o=;
-        b=OjVrPutDO4hu6Hc+v1cllPnHRsm4c3MYl+CvdOlEyqrypFdar08pGSo0kITH9HAQri
-         N4AordmV0h3hTypzdUs66PMOcLLAjRe5+WHUQiv9qJSiqrPSEWmw5k+/duL1ESB3cHwf
-         5YzCS9iPWr3E1m5IBobC3NWbXZBVu8eTUVrwznqHOLvXlgUQYoFN0lwC+q0gH4GZP0SE
-         cpf1vJft7Ssdf1OwRC5MLhGAUAaQLVRtPa0FvhvQWd2osAiBHDqmsRTo/M0Yr79IeOCK
-         rdQiQXy3CQNJ0KbeUW3agNj0xgNfrMWnFwCOg2YpUrsAzEp6XJCknD2nLEGryN9O+uQ/
-         sB+g==
-X-Gm-Message-State: AOAM531vqFIL1I2MRoiVRIU6O+uaE/F3s/NWuk5VDWOxZjL9mj98sMm8
-        YH6HbxDVdNLG7+dGuXTmlYCsftLRt40=
-X-Google-Smtp-Source: ABdhPJwCqUDdpg+7gUnL/ZS/eXl/FXcuYLnuibXEJAuVJPEjM/vEOFV6TIkrsGWk54tv1pbHA1Qg/Q==
-X-Received: by 2002:a05:620a:20d7:: with SMTP id f23mr22138037qka.484.1623174423786;
-        Tue, 08 Jun 2021 10:47:03 -0700 (PDT)
-Received: from localhost.localdomain ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id h2sm12963080qkf.106.2021.06.08.10.47.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jun 2021 10:47:03 -0700 (PDT)
-Sender: Anna Schumaker <schumakeranna@gmail.com>
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [RFC PATCH 6/6] nfs-sysfs.py: Add a command for changing xprt-switch dstaddrs
-Date:   Tue,  8 Jun 2021 13:46:57 -0400
-Message-Id: <20210608174657.603256-7-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210608174657.603256-1-Anna.Schumaker@Netapp.com>
-References: <20210608174657.603256-1-Anna.Schumaker@Netapp.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YQfH20WiLnjQz8Qqiap58pTQSBe7q3eIJ9Ejp+u4pPs=;
+        b=mXOcnm6YDHGamt8TekWl05ZLEQkE7DrRWOLpsxX6A+fqTFqCnzB5Y7uotAFg6tdGNV
+         HHUDMopWMYYyRxCFKe/TwxneHyYSTNEO6WrIjMH1rkAYbyTqYZbt6GDj5b7f4Q3dyHss
+         YldA26H1VZ675xKUHaLD3o597p+D+VGhzToFqyvEqpnVVG8AvedfXUCJj4a5VCjyks3B
+         CbpLyE7AG9gOzQw5eLuSmBMPyyiWr2N6qTGvLJZdMN2IlvNk6mtJjCuGi0YdFuQAmX34
+         0XsY7D+Nrd5njDHJY9Vrrj6bqoWzsekNpEyMp/IPUEvRtT/mKv3aYYs37yD1eS3V8DVF
+         9SDQ==
+X-Gm-Message-State: AOAM5310tyEaoysI1hpIz+c6f1DxFZ2rXNdfOClSxxaQqR11C0fduL0d
+        ko6i3d7DRJzU7a/DXljt7oQEj31+yH0=
+X-Google-Smtp-Source: ABdhPJwRBiy78m6r3sKK5d0+w4zIhXwWwOjiqzV/KIbH/OEtXyac/Hddd2aQZ7li73Mbp+uLJecmsw==
+X-Received: by 2002:a37:68c7:: with SMTP id d190mr22332799qkc.485.1623177930064;
+        Tue, 08 Jun 2021 11:45:30 -0700 (PDT)
+Received: from kolga-mac-1.vpn.netapp.com (nat-216-240-30-25.netapp.com. [216.240.30.25])
+        by smtp.gmail.com with ESMTPSA id f130sm12365620qke.37.2021.06.08.11.45.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Jun 2021 11:45:29 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] NFSv4.1+ add trunking when server trunking detected
+Date:   Tue,  8 Jun 2021 14:45:27 -0400
+Message-Id: <20210608184527.87018-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-This is basically the same as for xprts, but it iterates through all
-xprts attached to the switch to apply the new address.
+After trunking is discovered in nfs4_discover_server_trunking(),
+add the transport to the old client structure before destroying
+the new client structure (along with its transport).
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- tools/nfs-sysfs/switch.py | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ fs/nfs/nfs4client.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/tools/nfs-sysfs/switch.py b/tools/nfs-sysfs/switch.py
-index 5384f970235c..859b82e07895 100644
---- a/tools/nfs-sysfs/switch.py
-+++ b/tools/nfs-sysfs/switch.py
-@@ -30,7 +30,22 @@ def list_xprt_switches(args):
-         if args.id == None or xs.id == args.id[0]:
-             print(xs)
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index 42719384e25f..984c851844d8 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -361,6 +361,44 @@ static int nfs4_init_client_minor_version(struct nfs_client *clp)
+ 	return nfs4_init_callback(clp);
+ }
  
-+def set_xprt_switch_property(args):
-+    switch = XprtSwitch(sysfs.SUNRPC / "xprt-switches" / f"switch-{args.id[0]}")
-+    try:
-+        for xprt in switch.xprts:
-+            xprt.set_dstaddr(args.dstaddr[0])
-+        print(switch)
-+    except Exception as e:
-+        print(e)
++static void nfs4_add_trunk(struct nfs_client *clp, struct nfs_client *old)
++{
++	struct sockaddr_storage clp_addr, old_addr;
++	struct sockaddr *clp_sap = (struct sockaddr *)&clp_addr;
++	struct sockaddr *old_sap = (struct sockaddr *)&old_addr;
++	size_t clp_salen, old_salen;
++	struct xprt_create xprt_args = {
++		.ident = old->cl_proto,
++		.net = old->cl_net,
++		.servername = old->cl_hostname,
++	};
++	struct nfs4_add_xprt_data xprtdata = {
++		.clp = old,
++	};
++	struct rpc_add_xprt_test rpcdata = {
++		.add_xprt_test = old->cl_mvops->session_trunk,
++		.data = &xprtdata,
++	};
 +
- def add_command(subparser):
-     parser = subparser.add_parser("xprt-switch", help="Commands for xprt switches")
-     parser.add_argument("--id", metavar="ID", nargs=1, type=int, help="Id of a specific xprt-switch to show")
-     parser.set_defaults(func=list_xprt_switches)
++	if (clp->cl_proto != old->cl_proto)
++		return;
++	clp_salen = rpc_peeraddr(clp->cl_rpcclient, clp_sap, sizeof(clp_addr));
++	old_salen = rpc_peeraddr(old->cl_rpcclient, old_sap, sizeof(old_addr));
 +
-+    subparser = parser.add_subparsers()
-+    parser = subparser.add_parser("set", help="Set an xprt switch property")
-+    parser.add_argument("--id", metavar="ID", nargs=1, type=int, required=True, help="Id of an xprt-switch to modify")
-+    parser.add_argument("--dstaddr", metavar="dstaddr", nargs=1, type=str, help="New dstaddr to set")
-+    parser.set_defaults(func=set_xprt_switch_property)
++	if (clp_addr.ss_family != old_addr.ss_family)
++		return;
++
++	xprt_args.dstaddr = clp_sap;
++	xprt_args.addrlen = clp_salen;
++
++	xprtdata.cred = nfs4_get_clid_cred(old);
++	rpc_clnt_add_xprt(old->cl_rpcclient, &xprt_args,
++			  rpc_clnt_setup_test_and_add_xprt, &rpcdata);
++
++	if (xprtdata.cred)
++		put_cred(xprtdata.cred);
++}
++
+ /**
+  * nfs4_init_client - Initialise an NFS4 client record
+  *
+@@ -434,6 +472,8 @@ struct nfs_client *nfs4_init_client(struct nfs_client *clp,
+ 		 * won't try to use it.
+ 		 */
+ 		nfs_mark_client_ready(clp, -EPERM);
++		if (old->cl_mvops->session_trunk)
++			nfs4_add_trunk(clp, old);
+ 	}
+ 	clear_bit(NFS_CS_TSM_POSSIBLE, &clp->cl_flags);
+ 	nfs_put_client(clp);
 -- 
-2.32.0
+2.27.0
 
