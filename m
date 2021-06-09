@@ -2,52 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AA203A0BDF
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Jun 2021 07:31:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBF673A0CB1
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Jun 2021 08:46:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236220AbhFIFdE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Jun 2021 01:33:04 -0400
-Received: from mail-dm3nam07on2089.outbound.protection.outlook.com ([40.107.95.89]:31073
-        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
+        id S233328AbhFIGsr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Jun 2021 02:48:47 -0400
+Received: from mail-dm6nam10on2089.outbound.protection.outlook.com ([40.107.93.89]:36577
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231206AbhFIFdD (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 9 Jun 2021 01:33:03 -0400
+        id S233490AbhFIGsl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 9 Jun 2021 02:48:41 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ulj73uVqY05Y+htLrnvH4yEGEf4hzEs+HRnwMMtvTRO80pmOiRAV6I4MPTNE25+nysbhDCryDFEwmpI8sH55O4zA8NwwRgkK398lC3HcvFYEazr81mtO8Bk4ipPwZbNAweqE+PP/yQ0HvH1uzVtNU251F2SwHuCkK+JLv0kPPo6+w8vNymX3u2QnOLMpPlzmUKvVvNeFbxpgAySc/G5/HCUHAcVwgeqVddZSW94MdgwvvGZ+zfMIR2abKzGeyBgH5aKCBmg+3HzHqWN90VJTCDEJRAFHozt5EOb/BFujNWkZK3uuzgBYZEOPjcFwh9UAUTybJCLHwmW6YPBa3IyVbA==
+ b=IcRDEmrwaBXQhTSTYrK4UB5B2QAggAm9GoYCnYyMBFVSxu5qSPRhQ2NR9/D+aD9buoPRo98FtsQT48ukwoKH9IDdlmoECPq7ouiLnpzmzft7CKwPBerscqpjK1T/qDaQbiWOnLj+MgtTYVrGWL/67PSBgn6kCANIwOIbDpR3yO7e5WmHyGbCsJG5QbkqNe/WRUuFsjkDzJNnHRfDHkZfzTZbfufJUw/gY1gXkfY00Z/bQCeHLQ5tO2Du9Bi8dv6xEI9wLY7g+p33+3Uz2bEqEg8if+wmXcdOvn7Fg5RgSSOIk082L33SdQegRMwdoFxyO8/u0zql2ifbYMsCZDO6RQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rOjp97oLikMaKJ0OsQ/iC9EPh+RP6x8GueL2hyEaNiE=;
- b=KgykQxhbd9jYYfPpkbTs9UYR5Ogl+t/VIeHX3pH7Zi/UbzZoGj8iEbsodLnyjsL78aTH4rGHzaqBW14c29GRlmzWGgDgrViAkjMmafZR62WlSzSa6nB0QZ8cNBFGOy/D1XWw1LS1txAX44z5XI6IWZJCMnu+puoKfkrCwVBjGIwN6gt7hDRFA2X/7WpTsl4r/4ht80izcLygE5D4CzF+sPUkAQYyNVw7eNYAR+Vs7PwvuqNaxCI3zNXHD85vSby0JMu3O3jPWCS0EnzgCH5LEMOV9FDu7xd4eBSLaVEpsKu6kAuRq0g/XDgsFKaHP2vD81wlYfHMoKX/eNZ9cJurNw==
+ bh=FPXRGYbUQY4ovzuQqcEzjWLpMTL0+XgTRAM9qNwPJDI=;
+ b=F9eklbl63E8d6b9xUL42Hg7+XRbQrLR3LmF5/Bop/tH6TzBdq6IAhfKa5SE090cF5mEmA4RxehOqOEGYDrBn4A4awxRQvgiTOhhP3tMx0vtB+LHWT1w3PS13EAWRM/MCQMGSKqHcLiOZqvTmxSpkgMF32o5yA8KbAGNE/3YoCB7UKwO5va+ZM1jAZU8v9DDdHq/BCpJee9YQ8P07juS8v2deuNwa3h7n5aV/2ouCgalmDotA1ZQXQ4S+j5A33Z5r6Fit4aEPgzeV+yAGUF8/P0AOWkj3LABqKsqzyCEb0PDMwoYMDzWFGWa4BiNswN4wazgjDovh7IFcrxbv6aRNqw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
  dkim=pass header.d=vmware.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rOjp97oLikMaKJ0OsQ/iC9EPh+RP6x8GueL2hyEaNiE=;
- b=phI21RzCbh78EeWrht/WKlzEwaFxqFm9NLseV8uvsrOwuZn9grB+Y2QaJMeGoHPthGskl3wj3p0ueUcVhmbRvZHyZGvEuC+iwyZGwrwOC/sA2vpeqmZQJZ2GBXvw0XUkbdZwwBGvedmcom7WUCUbdMKcgSVsjjnLbnM8eTpp6M0=
-Received: from CO1PR05MB8101.namprd05.prod.outlook.com (2603:10b6:303:fa::14)
- by MWHPR05MB2895.namprd05.prod.outlook.com (2603:10b6:300:5f::13) with
+ bh=FPXRGYbUQY4ovzuQqcEzjWLpMTL0+XgTRAM9qNwPJDI=;
+ b=QM0a9kqNfQYqiPnvN2wt324xh+OSTVPnk08P/Ctlrv3G2fgr37ZdqkXK+CUHuGxgVmtSe0jQF/jyuEp7YDz/RDuLtjKmN3E/hGqktsCONVFDGhp677GGu8cdJ3i3GzCbNBlYCcYrCdBTIhCFnIU+/OVrOY3wuYP45bYArar5vfU=
+Received: from CO1PR05MB7925.namprd05.prod.outlook.com (2603:10b6:303:f1::22)
+ by CO6PR05MB7619.namprd05.prod.outlook.com (2603:10b6:5:34c::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.9; Wed, 9 Jun
- 2021 05:31:08 +0000
-Received: from CO1PR05MB8101.namprd05.prod.outlook.com
- ([fe80::6cbf:9cac:d7f7:d002]) by CO1PR05MB8101.namprd05.prod.outlook.com
- ([fe80::6cbf:9cac:d7f7:d002%7]) with mapi id 15.20.4219.021; Wed, 9 Jun 2021
- 05:31:08 +0000
-From:   Michael Wakabayashi <mwakabayashi@vmware.com>
-To:     Olga Kornievskaia <aglo@umich.edu>
+ 2021 06:46:46 +0000
+Received: from CO1PR05MB7925.namprd05.prod.outlook.com
+ ([fe80::5d82:70cd:f77c:d9a9]) by CO1PR05MB7925.namprd05.prod.outlook.com
+ ([fe80::5d82:70cd:f77c:d9a9%7]) with mapi id 15.20.4219.021; Wed, 9 Jun 2021
+ 06:46:45 +0000
+From:   Alex Romanenko <alex@vmware.com>
+To:     Olga Kornievskaia <aglo@umich.edu>,
+        Michael Wakabayashi <mwakabayashi@vmware.com>
 CC:     Trond Myklebust <trondmy@hammerspace.com>,
         "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
         "SteveD@redhat.com" <SteveD@redhat.com>
-Subject: Re: NFSv4: Mounting NFS server which is down, blocks all other NFS
+Subject: RE: NFSv4: Mounting NFS server which is down, blocks all other NFS
  mounts on same machine
 Thread-Topic: NFSv4: Mounting NFS server which is down, blocks all other NFS
  mounts on same machine
-Thread-Index: AQHXSrzxNwU+/2izAUaNQrMQbCMgXKrrMRoAgAGJKICAAZPoloAADT6AgAAH7wqAABF6AIAAETsAgAAJXACAG0yW/4AAkD6AgADZOSM=
-Date:   Wed, 9 Jun 2021 05:31:08 +0000
-Message-ID: <CO1PR05MB81011A1297BCA22C772AF836B7369@CO1PR05MB8101.namprd05.prod.outlook.com>
+Thread-Index: AQHXSrzxNwU+/2izAUaNQrMQbCMgXKrrMRoAgAGJKICAAZPoloAADT6AgAAH7wqAABF6AIAAETsAgAAJXACAG0yW/4AAkD6AgADyf0A=
+Date:   Wed, 9 Jun 2021 06:46:45 +0000
+Message-ID: <CO1PR05MB792588AF847096C601A215DCBF369@CO1PR05MB7925.namprd05.prod.outlook.com>
 References: <CO1PR05MB810163D3FD8705AFF519F0B4B72D9@CO1PR05MB8101.namprd05.prod.outlook.com>
  <CAN-5tyGgWx6F2s=t+0UAJJZEAEfNnv+Sq8eeBbnQYocKOOK8Jg@mail.gmail.com>
  <6ae47edc-2d47-df9a-515a-be327a20131d@RedHat.com>
@@ -57,7 +58,8 @@ References: <CO1PR05MB810163D3FD8705AFF519F0B4B72D9@CO1PR05MB8101.namprd05.prod.
  <CAN-5tyEp+4_tiaqxuF7LoLUPt+OFn-C_dmeVVf-2Lse2RXvhqA@mail.gmail.com>
  <43b719c36652cdaf110a50c84154fca54498e772.camel@hammerspace.com>
  <CAN-5tyFUsdHOs05DZw4teb3hGRQ5P+5MqUuE5wEwiP4Ki07cfQ@mail.gmail.com>
- <CO1PR05MB810120D887411CCDA786A849B7379@CO1PR05MB8101.namprd05.prod.outlook.com>,<CAN-5tyHh8zzy5Jokevp8DOqMHsiGDMuSQXX+PyG9s+PraQ8Y2w@mail.gmail.com>
+ <CO1PR05MB810120D887411CCDA786A849B7379@CO1PR05MB8101.namprd05.prod.outlook.com>
+ <CAN-5tyHh8zzy5Jokevp8DOqMHsiGDMuSQXX+PyG9s+PraQ8Y2w@mail.gmail.com>
 In-Reply-To: <CAN-5tyHh8zzy5Jokevp8DOqMHsiGDMuSQXX+PyG9s+PraQ8Y2w@mail.gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
@@ -65,87 +67,80 @@ X-MS-Has-Attach:
 X-MS-TNEF-Correlator: 
 authentication-results: umich.edu; dkim=none (message not signed)
  header.d=none;umich.edu; dmarc=none action=none header.from=vmware.com;
-x-originating-ip: [67.161.44.194]
+x-originating-ip: [66.170.99.1]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: faabf0fc-9e56-49f2-d51a-08d92b07c8aa
-x-ms-traffictypediagnostic: MWHPR05MB2895:
-x-microsoft-antispam-prvs: <MWHPR05MB28955E246487101278337FC9B7369@MWHPR05MB2895.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-office365-filtering-correlation-id: 6b6ae572-aef1-4f62-00ec-08d92b125973
+x-ms-traffictypediagnostic: CO6PR05MB7619:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CO6PR05MB7619C561503E4CBBC1D84B72BF369@CO6PR05MB7619.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: x+dZDfl3m916jo9MvW1W3VEMahSBAW5ZmvZW7MPEZ+ImrrunkZN1a4gYwrK8fsMZm0lzPIfIm5MoKiRJ3Cw9E+ahDOA+oVxNNp/pZWwJE43uEAMjMS+rgix+9McMyHUD7pjsXzgyy6PmYvkblBQkZcPtnkGXCoruuMr9CzSR2gbHL6WHjhIO2GugA05x61a7Q/ydzzdvyprtbvGrgBgaFebDm4cS0PbMII1l8wxsrxPwAqmu/NaYF2ZMMlgPGNnKasFg0DBt0VkLFGZ9QlR3yU2BhCyv/8fYhYEKtG9B/iokz7D6lH4PlpH2TAh3MXsfLGRyuaTdqtcwexL0zApMkCHnLc10uKBJKDYeP6h+RvhrW408SaYzxPsbUI3hUZdMguYc8UZpKSy2JApUstybZMx7azBJ6VmoGbm3aIvX+N1+9A07bV+zmoknIya2m0XJJtuKPQrmboYIfMUvWpZShiDw+S8fEttXefriH5Zrdpcc9pjh8fjgSM+ydmYtfJaa5hqBMg2pmeYPr6j88aj77wkGbMTOzpxFQItIQtqNfoVQK0BxMH4Wj1i/csYUWRslVfMbQcmVg0EfDvX0pK53O0xo/jCpubgVh9Fomb10jUQ=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR05MB8101.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(136003)(396003)(346002)(376002)(8676002)(86362001)(55016002)(316002)(9686003)(4326008)(33656002)(91956017)(66476007)(66946007)(76116006)(66556008)(64756008)(66446008)(71200400001)(54906003)(7696005)(6506007)(5660300002)(478600001)(2906002)(52536014)(8936002)(186003)(122000001)(6916009)(38100700002)(26005);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: +lEbpl51ls9WSY03OCOsmSbnxw7NJ0qh+fI0Y1pl6yrrX37nPKV/5c01K7388oKvf5H2tBG9QDaPp4FUIsPZ+rRTrvB6VEVTTiFuHtVVQKIEUlqSpMAzbmecVPTSuEmDIJ9swWrF1CvO7EGTnhtJv2u+vCRp+ymCSObEdMzSZM54n2PH9+RVjgFqeXu6g7LgPn6CJkAL6qpn6hhpRlZA0kEg/ck6XIqtG2MfoHtKIASqy2rgqbTbPrw4IXivaHbui1nP7cpBsEcLqhYB8ZgwoRtqd5uVGQgsAp/0IZGCss+UBkxH2wF+9xd+T9ywJhhvYg8Sm2TCnrsNjED6tDP9hFmQQRJY9hIqiwpS7o3JpNYcgVbbgZI2RZzZDISRXR3kho10dkC7VyYLMWL+heWrwp2+HPgLLpL+vnXdoY7avT14UuNNjq2oPWjP74NiHw/TG6OGi223y2IhmL1s4MYI578u+n/aHv7TbIdeWqb6faocE/WW/vh48qYvBLE+1TohQkmzIVVvCAtOIdzCIer7VO7C4xyMfp7ge1LnIXgcZyl7PEX2vRdeUY7X/u89diit/ATSxEHDNP1VEZbSC1l6w0oj4UHc2ULs5ZOPJ6Lt+SQ=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR05MB7925.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(396003)(376002)(39860400002)(366004)(136003)(122000001)(52536014)(71200400001)(478600001)(66556008)(76116006)(66946007)(8936002)(8676002)(66446008)(5660300002)(66476007)(38100700002)(83380400001)(64756008)(4744005)(4326008)(54906003)(2906002)(316002)(6506007)(9686003)(55016002)(110136005)(186003)(86362001)(26005)(33656002)(7696005)(6636002);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?UGO3PvmxrADkXPs9X6daNnpPJW8pPVCni3SYcH71olj8qvlOQvKu7tKoYp?=
- =?iso-8859-1?Q?mcyfhLHpXJtXHi5ZxAAndFqNqQbN/N+GriwW73ptC0zGot/gN+/hD5Kybs?=
- =?iso-8859-1?Q?taBVIb95Y0llD7PLT5BR+dp3sDdnvEUIhRkV5E7Ypk+QLNAlRV5tfkRImh?=
- =?iso-8859-1?Q?t5YjoXtlTaTyseNPV8rgNwmggy6R39/iLUU0jcCM1RmoyDvA0w4ADoMASM?=
- =?iso-8859-1?Q?6evl95pnX48eII1IwGRKutDN1kupG5Fi782uRyK3dkA3CQaKiqnZtFBn7P?=
- =?iso-8859-1?Q?WxJG/cy+pDKA2L/H/NfNWNtBf0qnRdB9upzk5xDhTZjKkOlSzQMWGxYLEq?=
- =?iso-8859-1?Q?pgm7FmYcQMzwSc8DswqJj/S6X5dOS0eew1fJwYT0ri6f6rQMbXRtnXt4LL?=
- =?iso-8859-1?Q?Z6l9Y8vFUkguZXPhKD+Xa4mB8xYj4joXVZ6fG/0VEiDARj+3D307WNCOr6?=
- =?iso-8859-1?Q?jy+YZtY7+3z8c54ZqW2aPpQYGeV85wPvbMAyGgjKgR0cn8m43+oKeehS8R?=
- =?iso-8859-1?Q?ZudZu8ekX6HGW/RGTBDCxkU5F10ck63u7XxjUBu3mG2u+tcn/oeF/vvJJ0?=
- =?iso-8859-1?Q?u1RuXCEYn/NaLD3/Qi9lpfjSZR4sB5GvBfH5wDCP02vh0YWKfeGmRogcEW?=
- =?iso-8859-1?Q?Pymy9uWNWLGWl8U7kgQBu1+lgd9vuvuzQVmxZ4PI7Wbkm7PSSTogOVO/GU?=
- =?iso-8859-1?Q?tBK+T4A2QKeZWtQYI2qj+RSZoat6epg8mjE6cPY9zNaCl0JqUxEDPmsyHG?=
- =?iso-8859-1?Q?aiPjgQv2TyKlLCopOBBzTdO5KUUBcHOdcm0heYd6qRvzD4KN0Y57JJL2ub?=
- =?iso-8859-1?Q?tfAc25IX0yfZCh8SWtrCHLSjIw+6tI8bUiGs9l9psSvLjBleJ/V6Hsqdki?=
- =?iso-8859-1?Q?cqnDEU/3/nbxNUklQj/SGiX2omwe/ljbxRBWY0Uj9c6tU2ennoEmsTelrJ?=
- =?iso-8859-1?Q?SyEMNzIMth6/WTRUyi8sjn4ZaRmfGhZVtRDePmSz7ET6qt+p7GaBgWkq70?=
- =?iso-8859-1?Q?MWVZhtmkjSyUSK6aQH50GEO4e3wLWT7/qdSTDOfonkwJNa90CfOZW8u4Up?=
- =?iso-8859-1?Q?YxTBSZQAr93Rwan9GaEyd+KjH4gRlmylBrg4+LeXWNQjtvw0iYA1Hy+CzZ?=
- =?iso-8859-1?Q?zHp/YkTCx3dXqDG3tdJ4AmUr3vCtdNfMnv60L3i52sahVLlrbi6ql4gwGz?=
- =?iso-8859-1?Q?r7iq1/WcuIPdib/Xj9EP479xf3+5F7qiCSKoJlpj5YZyGlmlIBqKz1162l?=
- =?iso-8859-1?Q?Yabetv8mWWRF1BbOyVT9gs6g8Saut5tJgSO3YAtYTg89+XFZj1+cMUfR++?=
- =?iso-8859-1?Q?GlmMHllqXFEvE7+Ea6eH56L/ICXZ/muu9rwa8QALtKDi+tQ=3D?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WWJublhVVFBYU3d0RWtEVlJyTUVmVG84SnlDLzh6a050N3U3eVAxSmRjY1o3?=
+ =?utf-8?B?MS9QUEdDOXV1aEJjZVdaZUdKSnlRS21nVGx2ZGRaV2xJUEpvYVIzWjZYZHdU?=
+ =?utf-8?B?OEN3Ynd4dlMzeG5mY2ViK1B5emdFZE1UMmRvYzBvOEIwSE9HcUpraGs3Q3VN?=
+ =?utf-8?B?K0Q5WTNTc3JKeC9lWWEyVnc1S0x4VTVRVVJKU3ZSaHBTSFVWSkxGZmp2K0hY?=
+ =?utf-8?B?UGc4REYyalFjWlFXNWNDdmpvblJ2Y1hDaFowQUd4M2tKZFpabnRlNzVWbVkx?=
+ =?utf-8?B?Qm50QThlSE43YnB0K0t3d09kbFlOU1Fjb2lMREpRTEFWN0lhcDMxdjF4WFUx?=
+ =?utf-8?B?MGFTWmdNZTBiNnpHQTF0S3V3OW0zcDVEN2hOTFQ1WFNiRkVwYmZPOHJnRHB6?=
+ =?utf-8?B?V0tRdUNPWklUM0o3bHRCYXV4WkRIN3psUTRkL3NrbzArWTE4UVQ1dXkyZ3h5?=
+ =?utf-8?B?WEpNc1VneUxHMVZseWxLMzYrdFh3RzVvK3dtUXNtVlZLU2xabk11dkJZekZ3?=
+ =?utf-8?B?Z0d6U1FqZWVKVTh2WHNyZVYxQ0liMDhiUkV1dE4ycmZRRGhzWE5kYm5iU1BT?=
+ =?utf-8?B?ZTFFb3FSd0xWY0ZHZEt4d1BlZzQxejVDSndmRWZxdVcrMkhSY0paR0F4UXV3?=
+ =?utf-8?B?Y3hrWG5mb1hMTG9HdFhPeURaQjJtZHgyQUgxSjFET2YvQzM1RjB3citLRHEz?=
+ =?utf-8?B?VGEvemN3Q2hMWVJBRTllVElxaTRlUmNuNGxJK2pRK3NualB0bDRFMFFSbm9D?=
+ =?utf-8?B?REJQQXVzc0tCVEVDM0xUeXU4eldESmdybnVuRUdERDhTazVxTmJuSFZQclNs?=
+ =?utf-8?B?RW43aDRiZG9QUno0V2RIS0lCZnI4QlVxRitYeG16UGJ6bXM1cjFhUVB3OCtr?=
+ =?utf-8?B?Mm5KWFZpMHl2Si9wVnpMWW1SR0I2UTJGZHJzd25PNXJQT2U1VEUvcElKdHg3?=
+ =?utf-8?B?MDRBeHBucjMvR2hDbmp4M01ZUnZZRDVwQWFmbnVyckJ0VmtGd3U0LzdBWkpV?=
+ =?utf-8?B?ZUwxbnNkK2s0eWxzbVhNZHczamY0Q2x2NmpvVmNwdzlzZjRrZ2RydlNpNHJ3?=
+ =?utf-8?B?SXhOR2J4QlhjNEVIaGdKclllci9nYzVIVDJTdzJvNjFHaWo4cFRKaVU1SEIy?=
+ =?utf-8?B?SHZORHZad3BTKy9rK2pvT1Z5Q3lmMkorWUUybE9mWVA2UTVkYllva0FKYy8v?=
+ =?utf-8?B?ZXpoaDlPUURxeDBkWHl1c3pwaERheUUwTXhiT2M3TzNkZ0hLKzVta2lhbDJN?=
+ =?utf-8?B?YmRXcjBFOUUybHpOL1lodXpzd05wY2F2YVQ4N2c1UUgxWmRiQnd3KzV6TWVJ?=
+ =?utf-8?B?TjkwVm80bGNFMk9EYmpDRHc4M3RVS0srM20weitlcFZsSEk1QW8xU2JDY1pj?=
+ =?utf-8?B?dTAxcDhpV3dCSnFjMXBWNFJCbjQwVEFuYmlwb2xhWGp5ZlRqbHIyZHJtb2ZX?=
+ =?utf-8?B?anJvVXpQc1FSMk1rRHpHT1A3KzBDc29yd1prZ1c5bTVqYnEyWWZmYVd5UktH?=
+ =?utf-8?B?U1FRODFDQWVOQlhMVVlZVXcxVHF1SUI4NGs5WnFHY3IzY1BZWnlqYnlvTWpa?=
+ =?utf-8?B?NE0vbEtpcE9Ed01LVUoyTjhTbnBDSTlCVWIyRHZ2eVFNdVBjVFdsMTAxQnN6?=
+ =?utf-8?B?K3hOQy9UWlY1M1IvSEhFNUNYWExLbmpONkV5dzl5SXFwWlQ5ZWRFVXptSkIw?=
+ =?utf-8?B?eklRRzNBQTJ2OVNibVBDRWRRb0gzZDA3elJsK1lqMXRtUE5GSHNUeHE3WjRU?=
+ =?utf-8?Q?IjHnvgJtcwUAlV3uao=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 X-OriginatorOrg: vmware.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR05MB8101.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: faabf0fc-9e56-49f2-d51a-08d92b07c8aa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2021 05:31:08.0781
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR05MB7925.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b6ae572-aef1-4f62-00ec-08d92b125973
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2021 06:46:45.8187
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tNLYT/p4Ly8OWe8xFoUFtMjRsAodPbNvq+nfR6qda1PtM77PzOPTnrxPJY/lVYK6fIbyYW6WFxWyY1nVxhtF0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR05MB2895
+X-MS-Exchange-CrossTenant-userprincipalname: oUsYNYQArNVEFPaGMeIfwRxzQ1xbjjXEszLzBP9zXBwPR/npdaL8+gJuKDEh1g/N
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR05MB7619
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Olga,=0A=
-=0A=
-There seems to be a discrepancy between what you're seeing and what we're s=
-eeing.=0A=
-=0A=
-So we were wondering if you can you please run these commands in your Linux=
- environment and paste the output of the mount command below?=0A=
-    $ sudo mkdir -p /tmp/mnt.dead=0A=
-    $ time sudo mount -o vers=3D4 -vvv 2.2.2.2:/fake_path /tmp/mnt.dead=0A=
-=0A=
-We'd like the mount command to specifically use "2.2.2.2:/fake_path" since =
-we know it is unreachable and outside your subnet.=0A=
-We're hoping by mounting "2.2.2.2:/fake_path" you'll be able to reproduce t=
-he same behavior that we're seeing.=0A=
-=0A=
-Also, if possible, a packet trace would be helpful:=0A=
-    $ sudo tcpdump -s 0 -w /tmp/nfsv4.pcap port 2049=0A=
-=0A=
-On my Ubuntu VirtualMachine, I see this output:=0A=
-    ubuntu@mikes-ubuntu-21-04:~$ time sudo mount -o vers=3D4 -vvv 2.2.2.2:/=
-fake_path /tmp/mnt.dead=0A=
-    mount.nfs: timeout set for Wed Jun  9 05:12:15 2021=0A=
-    mount.nfs: trying text-based options 'vers=3D4,addr=3D2.2.2.2,clientadd=
-r=3D10.162.132.231'=0A=
-    mount.nfs: mount(2): Connection timed out=0A=
-    mount.nfs: Connection timed out=0A=
-    real  3m1.257s=0A=
-    user  0m0.006s=0A=
-    sys 0m0.007s=0A=
-=0A=
-Thanks, Mike=
+PiBTZW5kaW5nIGEgU1lOIHdpbGwgb25seSBoYXBwZW4gZHVyaW5nIHRoZSB0aW1lIHRoYXQgY2xp
+ZW50IGhhZCBhIHZhbGlkDQo+IEFSUCBlbnRyeSBpbiBpdHMgY2FjaGUgZnJvbSBhIHByZXZpb3Vz
+IGNvbm5lY3Rpb24uIEFzIHNvb24gYXMgdGhlIEFSUA0KPiBjYWNoZSBpcyBpbnZhbGlkYXRlZC91
+cGRhdGVkIGFuZCB0aGVyZSBpcyBubyB2YWx1ZSBhZGRyZXNzIHRvIHJlc29sdmUNCj4gdGhlICdi
+YWQnIG1vdW50IHdvdWxkIGJlIHRpbWUgb3V0IGZhc3RlciAodGhhdCdzIHdoZW4gYWxsIHRoZSBv
+dGhlcg0KPiBtb3VudHMgd291bGQgYmUgdW5ibG9ja2VkIGJ1dCB0aGUgaGFuZ2luZyBtb3VudCB3
+b3VsZCB0YWtlIGxvbmdlciB0bw0KPiByZXRyeSBhIG51bWJlciBvZiB0aW1lcykuDQoNCkluIGFk
+ZGl0aW9uIHRvIHdoYXQgTWljaGFlbCBXYWthYmF5YXNoaSBhbHJlYWR5IHNhaWQsIEkgd291bGQg
+bGlrZSB0byBwb2ludCBvdXQNCnRoYXQgaWYgdGhlIE5GUyBjbGllbnQgaXMgbm90IGluIHRoZSBz
+YW1lIHN1Ym5ldCBhcyB0aGUgTkZTIHNlcnZlciwgdGhlbiB0aGUgY2xpZW50DQp3b3VsZCBuZXZl
+ciBoYXZlIGFuIEFSUCBlbnRyeSBmb3IgdGhlIE5GUyBzZXJ2ZXIuIEluc3RlYWQsIHRoZSBjbGll
+bnQgd291bGQgaGF2ZQ0KdGhlIEFSUCBlbnRyeSBmb3IgdGhlIGRlZmF1bHQgZ2F0ZXdheSBvZiBp
+dHMgc3VibmV0IHdoZXJlIGl0IHdvdWxkIGhhcHBpbHkgc2VuZCBhIFNZTi4NClRoaXMgaXMgZXhh
+Y3RseSB3aHkgd2UgYXJlIGFza2luZyB5b3UgdG8gcmUtY3JlYXRlIHRoZSBpc3N1ZSB3aXRoIHRo
+ZSBleGFjdCBjb21tYW5kDQp0aGF0IE1pY2hhZWwgV2FrYWJheWFzaGkgaGFzIHByb3ZpZGVkLCBh
+cyB3ZSBiZWxpZXZlIHRoYXQgZmFrZSBJUCBvZiAyLjIuMi4yIHdvdWxkIGJlDQpvdXRzaWRlIG9m
+IHlvdXIgTkZTIGNsaWVudCdzIHN1Ym5ldCByYW5nZS4NCg0KVGhhbmtzLg0KLUFsZXgNCg==
