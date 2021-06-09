@@ -2,147 +2,195 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 481E93A1E09
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Jun 2021 22:19:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF25B3A1E46
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Jun 2021 22:47:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbhFIUVu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Jun 2021 16:21:50 -0400
-Received: from mail-dm6nam08on2051.outbound.protection.outlook.com ([40.107.102.51]:60289
-        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229519AbhFIUVu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 9 Jun 2021 16:21:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EEwrINfQg7S2wq531gVrGfAbEi0HRd3fAdY4Hs/kUE7nNVHtG0tR9RoDDDopAnQFN5YGhP14yMdUvWek9vbo45aOaaqD2LdKDM8YkL5M6t6SNfepGFRgqY/Qx01w18cawbN+jeFdL9Jg9YolL0x/bJv9EwGaFgjJynkca9kxx8sskTF8dun9oEFuB6bmvmpIhBHxrKfJ4OrOxEYfroTCCVYSvWyju6GpgfGHZS99T4Gc0xZ8fE3nnXOeD4h9PY1lZ4bVZn66jsEJ2Lh5Zat9VpUsRMhaSR6Q44scIkC4wweKeZs4wopqIs5FIUXZeH0+izqBbRE47feRtD9ASw+4Tg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l2VKmi2T+3MSgWEOW8cDTZhuAfav7IqyIZokYXSroWU=;
- b=cmznhROFv88IeUNMp0FxkiUgYRR3YSKZOO8H91Hd8CoX3x6HqkiLMh5eEeE/Rjg99/3xplrvZ62asZm6Nj9PzP/saRoq5yBxF9GgJJ80tFVarTwEBBExtRrc/jWhe1A6GRajlgjb4XcgwgEtVgx95pa9fudSTFmW2xk5qqb94xtXj/JjwJ7/PYfaI3FrSxXx4DPCO4hr1BaQNN47QzKmZ2tgAJtskhX8ytylJcqMkwFyoE+2ubdIPyXsvGFPeiMCYvOn+UwaLoTzJmTBbtcjbpSRMM2K1If+hqiVaec1mNBfIjeZu77QLMnaplroamceGFgcfwA/C8y0j+lznZ6/Yg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l2VKmi2T+3MSgWEOW8cDTZhuAfav7IqyIZokYXSroWU=;
- b=Gxm+ZfEfQV3+J5d5xHveKY7dZpxEb6Dt7ADPj1hFW7e9oyz8+CiefEnNvuEB1hKcECLMneaP5wxC5twUoEkW250MC7GFXESSeXEmxDKcTlMZFrGzd8sUO57NfqaVRn+z8uy6dBT79qNjgKGEB5Pma3ZPZqiRtg2dwlIQnVjTPLI=
-Received: from CO1PR05MB7925.namprd05.prod.outlook.com (2603:10b6:303:f1::22)
- by MWHPR05MB3517.namprd05.prod.outlook.com (2603:10b6:301:41::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.19; Wed, 9 Jun
- 2021 20:19:53 +0000
-Received: from CO1PR05MB7925.namprd05.prod.outlook.com
- ([fe80::5d82:70cd:f77c:d9a9]) by CO1PR05MB7925.namprd05.prod.outlook.com
- ([fe80::5d82:70cd:f77c:d9a9%7]) with mapi id 15.20.4219.021; Wed, 9 Jun 2021
- 20:19:53 +0000
-From:   Alex Romanenko <alex@vmware.com>
-To:     Olga Kornievskaia <aglo@umich.edu>,
-        Michael Wakabayashi <mwakabayashi@vmware.com>
-CC:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "SteveD@redhat.com" <SteveD@redhat.com>
-Subject: RE: NFSv4: Mounting NFS server which is down, blocks all other NFS
- mounts on same machine
-Thread-Topic: NFSv4: Mounting NFS server which is down, blocks all other NFS
- mounts on same machine
-Thread-Index: AQHXSrzxNwU+/2izAUaNQrMQbCMgXKrrMRoAgAGJKICAAZPoloAADT6AgAAH7wqAABF6AIAAETsAgAAJXACAG0yW/4AAkD6AgADZOSOAAJIEAIAAVdBg
-Date:   Wed, 9 Jun 2021 20:19:52 +0000
-Message-ID: <CO1PR05MB7925DC61979C2611A3E23721BF369@CO1PR05MB7925.namprd05.prod.outlook.com>
-References: <CO1PR05MB810163D3FD8705AFF519F0B4B72D9@CO1PR05MB8101.namprd05.prod.outlook.com>
- <CAN-5tyGgWx6F2s=t+0UAJJZEAEfNnv+Sq8eeBbnQYocKOOK8Jg@mail.gmail.com>
- <6ae47edc-2d47-df9a-515a-be327a20131d@RedHat.com>
- <CO1PR05MB8101FD5E77B386A75786FF41B7299@CO1PR05MB8101.namprd05.prod.outlook.com>
- <CAN-5tyFVGexM_6RrkjJPfUPT5T4Z7OGk41gSKeQcoi9cLYb=eA@mail.gmail.com>
- <CO1PR05MB8101B1BB8D1CAA7EE642D8CEB7299@CO1PR05MB8101.namprd05.prod.outlook.com>
- <CAN-5tyEp+4_tiaqxuF7LoLUPt+OFn-C_dmeVVf-2Lse2RXvhqA@mail.gmail.com>
- <43b719c36652cdaf110a50c84154fca54498e772.camel@hammerspace.com>
- <CAN-5tyFUsdHOs05DZw4teb3hGRQ5P+5MqUuE5wEwiP4Ki07cfQ@mail.gmail.com>
- <CO1PR05MB810120D887411CCDA786A849B7379@CO1PR05MB8101.namprd05.prod.outlook.com>
- <CAN-5tyHh8zzy5Jokevp8DOqMHsiGDMuSQXX+PyG9s+PraQ8Y2w@mail.gmail.com>
- <CO1PR05MB81011A1297BCA22C772AF836B7369@CO1PR05MB8101.namprd05.prod.outlook.com>
- <CAN-5tyFZNzyr0FBUeuOc92xiaq+52G1uyfuP3mAZbGxR+v1Rfg@mail.gmail.com>
-In-Reply-To: <CAN-5tyFZNzyr0FBUeuOc92xiaq+52G1uyfuP3mAZbGxR+v1Rfg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: umich.edu; dkim=none (message not signed)
- header.d=none;umich.edu; dmarc=none action=none header.from=vmware.com;
-x-originating-ip: [66.170.99.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fec1802a-0f5d-4e33-2441-08d92b83f0df
-x-ms-traffictypediagnostic: MWHPR05MB3517:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR05MB351718596907F76A82D09F5ABF369@MWHPR05MB3517.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jKuDR7Sjcuix9HYd3wz9w3PwSUYnlehCUCo3zjRoWgoXUodwSHMN4qPucBZA3JUlwUVghEKvddxyX4rfi38zqk6o90x/bcqQftTRqXvtwEd/6tg8ovGLrIEdQZTCepCfwhx1OIBphjmIemA601qTEI+zpmXo9xjmhiyHL2GwgsfhzO2ZO6XXpXy2/01qx88hsIT1NoW5QL1qmFM2LsSYQYNegBs8ByTQe6KkCFi8pGsoYR0MwSlrv4NYJU1mbuOueU2h5MVId3d8C15TRfT+gFXNIVsFGwclRv0KHayX03R49Q9LYVHoeK2qOAVq88NOjc+wGz1AvzEuzFmSPm+7+m1n9iJJ8pSoE6n4Gkx+CSNygbqHG5d93L1cREFYnPmMtPNL9w/h1Ws7yG+K+jO+Z2GTTFRxVzA7SCQnebh/kfHTMwoWMv9YdoikPUpxx5d1lNQ4Yh5mB5Ri1cEy/hoSu/KB5eRpJHnSyT9okq64z7EF/NhKKl64FIO6Nir85rzHN777qLB8bBF5C8aTeeTEnOi66mEbRzWEfQC22jnDU9ZQHKneHEcgZh/gZbc79laErIeJCXTXPG7OTJpDXQFelVy6MF6ugx0izZjeMT6rBeCe0jqdcUcGKa2zyr6pV2S8AXjLsnSKYVhP1FYH+M0kNDk4sk+P2zsnlPeVlStQJ2y/ugi69gE1elfbTK/WmabqywWityNJf+eYpJSY0GlaNg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR05MB7925.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(366004)(136003)(346002)(376002)(39860400002)(71200400001)(186003)(6636002)(5660300002)(316002)(110136005)(86362001)(54906003)(7696005)(66446008)(64756008)(4326008)(66476007)(52536014)(66556008)(122000001)(66946007)(76116006)(38100700002)(33656002)(55016002)(8936002)(478600001)(83380400001)(66574015)(9686003)(2906002)(4744005)(6506007)(8676002)(966005)(26005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?K013MEg5VFpneGlRWHJBMU05UUdtV3ZwMkpPUUpSTnhMcld3RDNoN1VINGZj?=
- =?utf-8?B?T2ZtaGF4aUtTRkd5WUplRmxCeXlEY3V3RGdmTS9XNXpqanQrTkxOaXRGQWZt?=
- =?utf-8?B?L21FZkJNcmZ3ZU9FZHFyeVF3ODc4RjIxM1F6dGJCc1pRMkNVODRnOGIxdjNa?=
- =?utf-8?B?TFNaWjdicHh4blk0VjhaY0QrN0pGdWFwR0dhV3hlb0tCVGxVY2pib1l6T05K?=
- =?utf-8?B?YzJUK2tNV2gyWkRybjlvZ2VRbXFQRjBmTkl5UXdHc2VFbGszTS9MWmZuTzBt?=
- =?utf-8?B?VnpJTVlhZ3g2QzdlRHYxYThLU1VmenhFU2VCaVl3ZU5VVGFZTUF6SjJqNG5B?=
- =?utf-8?B?QnBBWHBUNUFoL21ha0dGZ1VzWXdXa2EyNDRvUlRMaTRNNm1kVmxWaGhMWHlu?=
- =?utf-8?B?VjNYY1FRUVZVUlRWbU1mdTVzd3VnNjVRaWxQZWRoVDJndEM1M0IrSlNjZG1x?=
- =?utf-8?B?NnlSUHdxSWZoNEN6dDYxcVZCbTdTMEIrNFVKWDZ5RHcrdWMzZzBJTXR6RlFj?=
- =?utf-8?B?SSt1ZUlRZ1dBc1FXK21Nblh6dHhkWXA4YTdFWkFLckN0UVV3ZlVWbHlQb1Bq?=
- =?utf-8?B?aE1Ga2l5RUd6WkJnek5WVUUrRFVxREJvcG95d2F3VlAybjR1S0o3SjErRERK?=
- =?utf-8?B?azh4bTFxVXVKcU93cXBKWEd3cStrS0ZCRFlRYURXemE2anJYcDZxd3J2bm1X?=
- =?utf-8?B?VGFCVFFwQnBBMWh1Y3NrWmdCQ1Z0SGNtSkNubVk5U2hWUUZzNGU2cGhiQUF2?=
- =?utf-8?B?dWFkR3BNZkFacGk0QXc0RXJOenRTWFlpRGdaS2p1b1ptcldhM3RXOC9nNjZF?=
- =?utf-8?B?eWpmNlNhdy9ObnpjQ1NRd2xodjBndkRCNTVISmNKZnE1NkZoWEdpeGZlUXdE?=
- =?utf-8?B?OUQrSkJ6RWRXcEhLMmdvZnRHUWxCUEx5RzNPbzFqbnpyN2ZjTHJZeWlmbVRz?=
- =?utf-8?B?dXRicUNEaGQybXMreVdYQmtmL29mQ1F1cFl1OS9GejJUTnJOUW9FVWZ4MGo0?=
- =?utf-8?B?emZUODJ0M1E4alpOUlV3QmpDNTJCVVZ5YkthYUlDbU9uZGJCSDVBM3B6aE5a?=
- =?utf-8?B?Y0NwUU52dksxRlhQTTBWeDJITjNULzFYeWhscjVudXI0MWZVeXpiVGNjQ01X?=
- =?utf-8?B?cmRGdHpDUm1LanZ6RDU3ZURIMHhCTDI2R0FrdStmN2Q1Q240dTZIWTQwSWpF?=
- =?utf-8?B?YXhuTll4QlRCaDRFQjlxekhPZDNlUE1pckE0MytCdUpJaCt1UEd0cW9ZcHVz?=
- =?utf-8?B?d2h1aks3d25Nd1p3OXlJYmIzZmsvNHFmN1J5d0JhQVByWmJGV0tzZUdZWVNS?=
- =?utf-8?B?VktSYjRLaElOVTUxWXd2bDJZNUpPZ2h2ZzR0b2ptMnJWcy9Lb1ZZd1ZxWTlW?=
- =?utf-8?B?TUlPQkpiWUJHR2pPSHZHNVV6bDVNNWZoY1BRaTVxM1FsamtaR1YvUUIvK2ZS?=
- =?utf-8?B?R2R4K0Q0bTUwTTBUVERSZTMvVmkzeWFQNElHbUl1NUhxR3ZWVmNpU1NCMzMw?=
- =?utf-8?B?dzhKQTVyOFpadzQ0V3duNmNhMjQzdXFaRVFqR0owTmxvRWtKM0pEYmN4NUZi?=
- =?utf-8?B?MnYxQnpMZXEzNm1mMEZEdTVzNVQ3UjFTMGYvTG5QUDViTzBNMEpub1MveU1y?=
- =?utf-8?B?NVU2OCs4M3paYmltY3lMQ2ozQ1B5MEJZM085NVFWbHVZZkNrd3FDaUlXQnZO?=
- =?utf-8?B?Z01PRGJJV2xqRGlzQUh4TXdYcTZaTUh6cExUU0hpN1ZjbTUvdHdTVURkN3Bq?=
- =?utf-8?Q?2EnniQNAvjEYsUmbLM=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S229638AbhFIUtw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Jun 2021 16:49:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229626AbhFIUtw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Jun 2021 16:49:52 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72885C061574
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Jun 2021 13:47:45 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id ce15so40410250ejb.4
+        for <linux-nfs@vger.kernel.org>; Wed, 09 Jun 2021 13:47:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bRxXSTuSLOdSMTX/fgrt1CLJi2fgjQJgT9Sn/TcTPHw=;
+        b=b0G2MgYg7aYUZj3hGtPQHUPJCcnlC7RuSR7WNge8A+JThfw4bLXmKuVTmz+8bHkKDi
+         J6xKhsbGcMvIymXfTynKqcqoDdHquaZM7P4QsxfEF3TUfMWFIMXyH0Izx1ML5Ccf+Jus
+         ZEhE2ip4B9euhwyHeBA2LV5LjlMTx10DTP+umJypQpwETI5TgTAxNH1wYggYydlTpYXJ
+         R5P7a5S5EywCumDrpzA19OXpLOgkMT9vBaE7VQNYoDSYXXCORfe1PJ+prPyUkqrUiCy8
+         SSGHAPvu+ar3I77S/vVI/iM+oKQlr8s8rK55oCv4H5nI81zDfbmQBjrzhHOCVbsqUFhm
+         ba/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bRxXSTuSLOdSMTX/fgrt1CLJi2fgjQJgT9Sn/TcTPHw=;
+        b=JkTOiRzDJt2Y8xI1U0CbsLKioI9LL2MuSTM6Jp6AMslGBdZFLC9kdoSP3vdl3pZd06
+         8SFJ4AuG+esQEFsiQ9TnAjkZQJdQSeQssICpZ0qdtIOMmiB7qoOWptbFG2jd7YYgP6eE
+         /+J25Lyw4GzXvJpqp/KABXbBwEjBG4B/kKLQbeNrdiyj0t54yziiq8XKQo+/3VGDBCRq
+         7qDo6I1vAwjeiYuvj0epdK23Nn62iwo8WT5K6r/Jazn5F7q0LSp54QzDVj/bGatfHeK0
+         EjipY325I6lEzrlGMVn0FULWgaDt8vWvRbEH3gUMn6E+YatEi3YrPPVkNQy2aU1siEhm
+         Zl9Q==
+X-Gm-Message-State: AOAM531abi5yXFgq6kOC6RKA+v4Y22ZwbX1NzQjJ/DVat0XtFtfYC4A1
+        kGrBT6EpGI8HuhNuIBHSyUXcmUPOXskmjAAVOBA=
+X-Google-Smtp-Source: ABdhPJxYTrlARkOPqCYgfB1DlVe+xBxaISh296ZlQWbrsBY0JOn8lzCBR01xfSqojj/nauEieIm46u41SYLRmXagItk=
+X-Received: by 2002:a17:906:998c:: with SMTP id af12mr1535253ejc.510.1623271663832;
+ Wed, 09 Jun 2021 13:47:43 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR05MB7925.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fec1802a-0f5d-4e33-2441-08d92b83f0df
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2021 20:19:53.0286
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: unsp7xx23aPkrAnkq8HALOriXaeJU2dA9kdpCq0GcZfGxag0HaPdDxLS2kB+oQM7
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR05MB3517
+References: <20210608184527.87018-1-olga.kornievskaia@gmail.com>
+ <C9C7FA2C-1913-4332-91EA-B51F8E104728@oracle.com> <CAN-5tyFYyxYr4joR6uPR7zoFToYMmntNdkUkNWV=g33OVXFuOw@mail.gmail.com>
+ <29835A59-A523-49FD-8D28-06CDC2F0E94C@oracle.com>
+In-Reply-To: <29835A59-A523-49FD-8D28-06CDC2F0E94C@oracle.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Wed, 9 Jun 2021 16:47:32 -0400
+Message-ID: <CAN-5tyF_YOGuDNG3mtm1Ua6HMwF1jXiZ7Q_Z7SjAhNzjdQ8dBg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] NFSv4.1+ add trunking when server trunking detected
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-PiBUaGVyZSBhcmUgbm8gU1lOcyB0byAyLjIuMi4yIGluIG15IHRyYWNlcy4gU28gc29tZXRoaW5n
-IGRpZmZlcmVudA0KPiBhYm91dCBuZXR3b3JrIGluZnJhc3RydWN0dXJlcyB3aGVyZSBpbiB5b3Vy
-IGNhc2UgZm9yIHNvbWUgcmVhc29uIHlvdQ0KPiBhcmUgc2VuZGluZyBzb21ldGhpbmcgdG8gMi4y
-LjIuMiBhbmQgdGhlIG9ubHkgcmVhc29uIEkgY2FuIHRoaW5rIG9mIGlzDQo+IHRoYXQgeW91IGhh
-dmUgc29tZXRoaW5nIGluIHRoZSBBUlAgY2FjaGUgYW5kIEkgZG9uJ3QuIEFuZCBBbGV4IHllcyBJ
-DQo+IGRvIGhhdmUgYW4gQVJQIGVudHJ5IGZvciBteSBkZWZhdWx0IGdhdGV3YXkgYnV0IG5vIHRo
-ZXJlIGlzIG5vIFNZTg0KPiBzZW50IHRvIHRoZSBzZXJ2ZXIgZnJvbSBhIGRpZmZlcmVudCBzdWJu
-ZXQuDQoNCg0KSGkgT2xnYSwNClRoYW5rcyBmb3Igd29ya2luZyB3aXRoIHVzIG9uIHRoaXMgaXNz
-dWUuDQpJIHRoaW5rIHdlIG1pZ2h0IGhhdmUgZmlndXJlZCBvdXQgdGhlIGRpZmZlcmVuY2UuIDIu
-Mi4yLjIgaXMgaW5hY2Nlc3NpYmxlDQpwdWJsaWMgaW50ZXJuZXQgYWRkcmVzcy4gRG9lcyB5b3Vy
-IG5ldHdvcmsgaGF2ZSBhIHJvdXRlIHRvIHRoZSBpbnRlcm5ldD8NClRoYXQgc2FpZCwgZm9yIHRo
-ZSBTWU4gdG8gYmUgc2VudCB0aGUgY2xpZW50J3MgbmV0d29yayBuZWVkcyB0byBoYXZlIGEgcm91
-dGUNCnRvIHRoZSBzZXJ2ZXIncyBuZXR3b3JrLiBTbywgcGVyaGFwcyB5b3UgY2FuIHRyeSBhIHRl
-c3Qgd2l0aCBhbiBJUCB0aGF0IHlvdQ0Ka25vdyB5b3VyIGNsaWVudCBuZXR3b3JrIGhhcyBhIHJv
-dXRlIGZvciwgYnV0IGlzIGRvd24vdW5yZWFjaGFibGUuDQoNClAuUy4gV2UgZG8gc2VlIHRoYXQg
-VHJvbmQgcHV0IG91dCBhIHBvc3NpYmxlIHBhdGNoIGZvciB0aGUgaXNzdWU6DQpodHRwczovL21h
-cmMuaW5mby8/bD1saW51eC1uZnMmbT0xNjIzMjYzNTk4MTg0Njcmdz0yDQo=
+On Tue, Jun 8, 2021 at 5:06 PM Chuck Lever III <chuck.lever@oracle.com> wrote:
+>
+>
+>
+> > On Jun 8, 2021, at 4:56 PM, Olga Kornievskaia <olga.kornievskaia@gmail.com> wrote:
+> >
+> > On Tue, Jun 8, 2021 at 4:41 PM Chuck Lever III <chuck.lever@oracle.com> wrote:
+> >>
+> >>
+> >>
+> >>> On Jun 8, 2021, at 2:45 PM, Olga Kornievskaia <olga.kornievskaia@gmail.com> wrote:
+> >>>
+> >>> From: Olga Kornievskaia <kolga@netapp.com>
+> >>>
+> >>> After trunking is discovered in nfs4_discover_server_trunking(),
+> >>> add the transport to the old client structure before destroying
+> >>> the new client structure (along with its transport).
+> >>>
+> >>> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> >>> ---
+> >>> fs/nfs/nfs4client.c | 40 ++++++++++++++++++++++++++++++++++++++++
+> >>> 1 file changed, 40 insertions(+)
+> >>>
+> >>> diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+> >>> index 42719384e25f..984c851844d8 100644
+> >>> --- a/fs/nfs/nfs4client.c
+> >>> +++ b/fs/nfs/nfs4client.c
+> >>> @@ -361,6 +361,44 @@ static int nfs4_init_client_minor_version(struct nfs_client *clp)
+> >>>      return nfs4_init_callback(clp);
+> >>> }
+> >>>
+> >>> +static void nfs4_add_trunk(struct nfs_client *clp, struct nfs_client *old)
+> >>> +{
+> >>> +     struct sockaddr_storage clp_addr, old_addr;
+> >>> +     struct sockaddr *clp_sap = (struct sockaddr *)&clp_addr;
+> >>> +     struct sockaddr *old_sap = (struct sockaddr *)&old_addr;
+> >>> +     size_t clp_salen, old_salen;
+> >>> +     struct xprt_create xprt_args = {
+> >>> +             .ident = old->cl_proto,
+> >>> +             .net = old->cl_net,
+> >>> +             .servername = old->cl_hostname,
+> >>> +     };
+> >>> +     struct nfs4_add_xprt_data xprtdata = {
+> >>> +             .clp = old,
+> >>> +     };
+> >>> +     struct rpc_add_xprt_test rpcdata = {
+> >>> +             .add_xprt_test = old->cl_mvops->session_trunk,
+> >>> +             .data = &xprtdata,
+> >>> +     };
+> >>> +
+> >>> +     if (clp->cl_proto != old->cl_proto)
+> >>> +             return;
+> >>> +     clp_salen = rpc_peeraddr(clp->cl_rpcclient, clp_sap, sizeof(clp_addr));
+> >>> +     old_salen = rpc_peeraddr(old->cl_rpcclient, old_sap, sizeof(old_addr));
+> >>> +
+> >>> +     if (clp_addr.ss_family != old_addr.ss_family)
+> >>> +             return;
+> >>> +
+> >>> +     xprt_args.dstaddr = clp_sap;
+> >>> +     xprt_args.addrlen = clp_salen;
+> >>> +
+> >>> +     xprtdata.cred = nfs4_get_clid_cred(old);
+> >>> +     rpc_clnt_add_xprt(old->cl_rpcclient, &xprt_args,
+> >>> +                       rpc_clnt_setup_test_and_add_xprt, &rpcdata);
+> >>
+> >> Is there an upper bound on the number of transports that
+> >> are added to the NFS client's switch?
+> >
+> > I don't believe any limits exist right now. Why should there be a
+> > limit? Are you saying that the client should limit trunking? While
+> > this is not what's happening here, but say FS_LOCATION returned 100
+> > ips for the server. Are you saying the client should be limiting how
+> > many trunkable connections it would be establishing and picking just a
+> > few addresses to try? What's happening with this patch is that say
+> > there are 100mounts to 100 ips (each representing the same server or
+> > trunkable server(s)), without this patch a single connection is kept,
+> > with this patch we'll have 100 connections.
+>
+> The patch description needs to make this behavior more clear. It
+> needs to explain "why" -- the body of the patch already explains
+> "what". Can you include your last sentence in the description as
+> a use case?
+>
+> As for the behavior... Seems to me that there are going to be only
+> infinitesimal gains after the first few connections, and after
+> that, it's going to be a lot for both sides to manage for no real
+> gain. I think you do want to cap the total number of connections
+> at a reasonable number, even in the FS_LOCATIONS case.
+
+To both Trond and Chuck,
+
+If we were to cap the max number transports how to manage nconnect
+transports and trunking transports. Are they the "same" transports? So
+for instance, if somebody specified nconnect=10,max_connect=2 which
+one matters more. Should nconnect be cut at 2? And that would mean all
+the allowable transports are used up by nconnect.
+
+But we've seen that there is benefit from creating multiple
+connections for a single NIC. But in a multi-NIC environment, it means
+multiple connections on each NIC, wouldn't it?So should we say allow
+nconnect * max_connect value of transports instead? Or does the admin
+need to calculate that value to make sure that max_connect reflects
+that?
+
+> >>> +
+> >>> +     if (xprtdata.cred)
+> >>> +             put_cred(xprtdata.cred);
+> >>> +}
+> >>> +
+> >>> /**
+> >>> * nfs4_init_client - Initialise an NFS4 client record
+> >>> *
+> >>> @@ -434,6 +472,8 @@ struct nfs_client *nfs4_init_client(struct nfs_client *clp,
+> >>>               * won't try to use it.
+> >>>               */
+> >>>              nfs_mark_client_ready(clp, -EPERM);
+> >>> +             if (old->cl_mvops->session_trunk)
+> >>> +                     nfs4_add_trunk(clp, old);
+> >>>      }
+> >>>      clear_bit(NFS_CS_TSM_POSSIBLE, &clp->cl_flags);
+> >>>      nfs_put_client(clp);
+> >>> --
+> >>> 2.27.0
+> >>>
+> >>
+> >> --
+> >> Chuck Lever
+>
+> --
+> Chuck Lever
+>
+>
+>
