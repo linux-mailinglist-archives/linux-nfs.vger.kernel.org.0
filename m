@@ -2,724 +2,228 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 052973A3044
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jun 2021 18:10:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4589F3A304F
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jun 2021 18:14:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230059AbhFJQMZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Jun 2021 12:12:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:56915 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229942AbhFJQMZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Jun 2021 12:12:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1623341428;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7YrD43zTQROxuO0gWS/mp3MbKAY2cwV/hRxhFHlFzDE=;
-        b=NpxqwNH2uxDkZKxmZKpoeCpBK4WQ7pAWMelN1HF7zrhbLELc6BXYvXjc9MXRN80E+bEwRu
-        Xqwt35mIYHNq30aEhOcKljXOsfBYCRT/QWmmysn4vZUIxXk1WFhXWfnnk83G4CdGYGcrkL
-        x+oa9NLQ6tmYSeymnrBVw+RqJV47aKQ=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-140-v8R2XOtCNlCdBTW4yd78ww-1; Thu, 10 Jun 2021 12:10:25 -0400
-X-MC-Unique: v8R2XOtCNlCdBTW4yd78ww-1
-Received: by mail-qv1-f72.google.com with SMTP id n4-20020ad44a240000b029021cbf9668daso20613041qvz.23
-        for <linux-nfs@vger.kernel.org>; Thu, 10 Jun 2021 09:10:25 -0700 (PDT)
+        id S229802AbhFJQQm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Jun 2021 12:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230134AbhFJQQm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Jun 2021 12:16:42 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ABC2C061574
+        for <linux-nfs@vger.kernel.org>; Thu, 10 Jun 2021 09:14:36 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id ce15so96098ejb.4
+        for <linux-nfs@vger.kernel.org>; Thu, 10 Jun 2021 09:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WiAmtG22QSgpfH+MBUOUlX4nB+pCVCd2TjW8Kj93Kuw=;
+        b=nnrGRYHTautUY0U8MbHLsxA87F577gtZvkpbaa2Nb3xEbgsS7O/yn9qMR28wTiZaWo
+         7frK4gmDjkZCMyMvgoU+wDvWwr3/JUs6xkn3LoL3EF/0NrOB6Uhx+2JtsLEdWDy1OG5l
+         DJ8BRqXhUtnVAznqmnvDWkRYwIDW4DctAkvQIj1odVZ8XcpAFB0gPSRVhISaC+2JV/h7
+         Qf+Mq2uZJYBovdDw8EgPr5u4olSQ014gtudV4GYnaeh82W7ObZ/kPUydk3sadKaVYcUI
+         i8zdVHAtzcLnGa1f63VaKuQNkZOBsn85BOvxLpAeOuy9AltIg/LPPr898nezI6LWfE3+
+         fJSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7YrD43zTQROxuO0gWS/mp3MbKAY2cwV/hRxhFHlFzDE=;
-        b=nhjsVkx8wjxGHfgfSKS9R+KruqLMdGVkV8kYS21QFsqOM269jJIJs5TapaUw1wmQ4j
-         4tCIp9Cjq+sTu1NR/nABi32sDH2VB2LVdKl8Ic+JnkKlxYtpzAlDCpC2ZYpnx9zG4eyh
-         dA8XAQtVIyxcTTYYQ/JprKSfRsv2NPfqPdrq0yaxlhyDi0Kit2dgvLBvU8HaokFcqv7x
-         CGrOZtVvx/MDKbttzNOiQuzeOXOvW7SJCfmtTh383m4cPWSdKDw5iTqLfudi2MDvc4je
-         odOlTLbHxqRUXGpVsWganu22gsj6PhA0ss1yw2yttLHcIITjZKKbTZON/J2D6kMaj93/
-         Titw==
-X-Gm-Message-State: AOAM5317IOHjmgp2TQt3r/N82swWtcsw+6LdiLFOoHzJ12w7FdFKS/jG
-        qvpwXdlQNo5fKjMh0zpS/aQ0CFZO337MZj7ButHjvOwRp0cOP+LMu3o0Rr2cF5k1uO+Y7Kgi7cD
-        yJ/dK/pZZ0x4Syz55pBYB9JQXi75yZ0i63cYVvykbMxeV4No9ak8A93jYwGUp+/b0iI5iWg==
-X-Received: by 2002:a37:b741:: with SMTP id h62mr301811qkf.78.1623341424995;
-        Thu, 10 Jun 2021 09:10:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzkW1FadNbbQo0be6SboPQWqNNx6vJCfVO8dlM0eQvSs7ORoKd9vUpBtGKbAMTOgEW4hO7nTQ==
-X-Received: by 2002:a37:b741:: with SMTP id h62mr301768qkf.78.1623341424517;
-        Thu, 10 Jun 2021 09:10:24 -0700 (PDT)
-Received: from madhat.boston.devel.redhat.com ([71.161.93.112])
-        by smtp.gmail.com with ESMTPSA id g2sm2475218qtb.63.2021.06.10.09.10.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Jun 2021 09:10:24 -0700 (PDT)
-Subject: Re: [nfs-utils PATCH v3 2/2] gssd: add timeout for upcall threads
-To:     Scott Mayhew <smayhew@redhat.com>, linux-nfs@vger.kernel.org
-References: <20210527191102.590275-1-smayhew@redhat.com>
- <20210527191102.590275-3-smayhew@redhat.com>
-From:   Steve Dickson <steved@redhat.com>
-Message-ID: <a8647af1-a958-c197-2525-aa6c00f700e9@redhat.com>
-Date:   Thu, 10 Jun 2021 12:13:32 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WiAmtG22QSgpfH+MBUOUlX4nB+pCVCd2TjW8Kj93Kuw=;
+        b=akY5yV3+FM3tnk842usCv6j5ONSevD10IwnrvUjU1cbL5FdMHZ2zwJrphAeXdreVh9
+         FvMCq50Scwc03wh68TMzl5eK0BmLVk3wbOyKklqgWL+e70O3RviCyaYCGWKiiWsshWxC
+         BrkKN6iR3AKr0W107sEdnFX1Tc6gZ1SsFvrDT3whhdSdDhwgH86A1p8tO5cO25q9nGQN
+         Kmj1mYJbI80G2sVcW0qNwpdB0t8f8c+CL7ucGjH1SODTGEkrRwY513uLtBrMhp0gdRPt
+         NUL/7fWTTx7Cq3Z17PHua2dp/K35+JhVB/KRJsTIL/4uhU+XcOjbqnCrtp+metZ2At22
+         +VZA==
+X-Gm-Message-State: AOAM5303HRu8/7ElZUjsaygwinTm44MW2R7CFyQ96PB0sg+eNf8YSj/J
+        qHzYhHdmeHy1S0x+F9XmtyKxne+rGr0AuGsk3FI=
+X-Google-Smtp-Source: ABdhPJwH5pP3BHQD5r9uCpuCgG5C1ML5HSlJ9e+LIekayYr4lM3OA+c3B1ZZvqdW9ebHZCsWewPWO3fup6WroedLZEg=
+X-Received: by 2002:a17:907:3e26:: with SMTP id hp38mr329326ejc.451.1623341674615;
+ Thu, 10 Jun 2021 09:14:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210527191102.590275-3-smayhew@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210609215319.5518-1-olga.kornievskaia@gmail.com>
+ <20210609215319.5518-3-olga.kornievskaia@gmail.com> <6C64456A-931F-4CAD-A559-412A12F0F741@oracle.com>
+ <6bca80de292b5aa36734e7d942d0e9f53430903b.camel@hammerspace.com>
+ <83D9342E-FDAF-4B2C-A518-20BF0A9AD073@oracle.com> <3658c226b43fb190de38c00e5199ccf35ccc4369.camel@hammerspace.com>
+ <CAN-5tyF3BSDvsegLWM6hAOY9QDMbG1LUg9YykXi8rwDcNVXqbA@mail.gmail.com> <c7a7a04adbe261d5ca104780c290a44ede1ed4c2.camel@hammerspace.com>
+In-Reply-To: <c7a7a04adbe261d5ca104780c290a44ede1ed4c2.camel@hammerspace.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Thu, 10 Jun 2021 12:14:23 -0400
+Message-ID: <CAN-5tyHdciZ+TmRZmwBNeypA4i15L8w5jomCVRNJnMyuVLSUOQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] NFSv4 introduce max_connect mount options
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Thu, Jun 10, 2021 at 10:56 AM Trond Myklebust
+<trondmy@hammerspace.com> wrote:
+>
+> On Thu, 2021-06-10 at 10:31 -0400, Olga Kornievskaia wrote:
+> > On Thu, Jun 10, 2021 at 10:13 AM Trond Myklebust
+> > <trondmy@hammerspace.com> wrote:
+> > >
+> > > On Thu, 2021-06-10 at 13:56 +0000, Chuck Lever III wrote:
+> > > >
+> > > >
+> > > > > On Jun 10, 2021, at 9:34 AM, Trond Myklebust <
+> > > > > trondmy@hammerspace.com> wrote:
+> > > > >
+> > > > > On Thu, 2021-06-10 at 13:30 +0000, Chuck Lever III wrote:
+> > > > > >
+> > > > > >
+> > > > > > > On Jun 9, 2021, at 5:53 PM, Olga Kornievskaia <
+> > > > > > > olga.kornievskaia@gmail.com> wrote:
+> > > > > > >
+> > > > > > > From: Olga Kornievskaia <kolga@netapp.com>
+> > > > > > >
+> > > > > > > This option will control up to how many xprts can the
+> > > > > > > client
+> > > > > > > establish to the server. This patch parses the value and
+> > > > > > > sets
+> > > > > > > up structures that keep track of max_connect.
+> > > > > > >
+> > > > > > > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > > > > > > ---
+> > > > > > > fs/nfs/client.c           |  1 +
+> > > > > > > fs/nfs/fs_context.c       |  8 ++++++++
+> > > > > > > fs/nfs/internal.h         |  2 ++
+> > > > > > > fs/nfs/nfs4client.c       | 12 ++++++++++--
+> > > > > > > fs/nfs/super.c            |  2 ++
+> > > > > > > include/linux/nfs_fs_sb.h |  1 +
+> > > > > > > 6 files changed, 24 insertions(+), 2 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+> > > > > > > index 330f65727c45..486dec59972b 100644
+> > > > > > > --- a/fs/nfs/client.c
+> > > > > > > +++ b/fs/nfs/client.c
+> > > > > > > @@ -179,6 +179,7 @@ struct nfs_client
+> > > > > > > *nfs_alloc_client(const
+> > > > > > > struct nfs_client_initdata *cl_init)
+> > > > > > >
+> > > > > > >         clp->cl_proto = cl_init->proto;
+> > > > > > >         clp->cl_nconnect = cl_init->nconnect;
+> > > > > > > +       clp->cl_max_connect = cl_init->max_connect ?
+> > > > > > > cl_init-
+> > > > > > > > max_connect : 1;
+> > > > > >
+> > > > > > So, 1 is the default setting, meaning the "add another
+> > > > > > transport"
+> > > > > > facility is disabled by default. Would it be less surprising
+> > > > > > for
+> > > > > > an admin to allow some extra connections by default?
+> > > > > >
+> > > > > >
+> > > > > > >         clp->cl_net = get_net(cl_init->net);
+> > > > > > >
+> > > > > > >         clp->cl_principal = "*";
+> > > > > > > diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> > > > > > > index d95c9a39bc70..cfbff7098f8e 100644
+> > > > > > > --- a/fs/nfs/fs_context.c
+> > > > > > > +++ b/fs/nfs/fs_context.c
+> > > > > > > @@ -29,6 +29,7 @@
+> > > > > > > #endif
+> > > > > > >
+> > > > > > > #define NFS_MAX_CONNECTIONS 16
+> > > > > > > +#define NFS_MAX_TRANSPORTS 128
+> > > > > >
+> > > > > > This maximum seems excessive... again, there are diminishing
+> > > > > > returns to adding more connections to the same server. what's
+> > > > > > wrong with re-using NFS_MAX_CONNECTIONS for the maximum?
+> > > > > >
+> > > > > > As always, I'm a little queasy about adding yet another mount
+> > > > > > option. Are there real use cases where a whole-client setting
+> > > > > > (like a sysfs attribute) would be inadequate? Is there a way
+> > > > > > the client could figure out a reasonable maximum without a
+> > > > > > human intervention, say, by counting the number of NICs on
+> > > > > > the system?
+> > > > >
+> > > > > Oh, hell no! We're not tying anything to the number of NICs...
+> > > >
+> > > > That's a bit of an over-reaction. :-) A little more explanation
+> > > > would be welcome. I mean, don't you expect someone to ask "How
+> > > > do I pick a good value?" and someone might reasonably answer
+> > > > "Well, start with the number of NICs on your client times 3" or
+> > > > something like that.
+> > > >
+> > > > IMO we're about to add another admin setting without
+> > > > understanding
+> > > > how it will be used, how to select a good maximum value, or even
+> > > > whether this maximum needs to be adjustable. In a previous e-mail
+> > > > Olga has already demonstrated that it will be difficult to
+> > > > explain
+> > > > how to use this setting with nconnect=.
+> > > >
+> > > > Thus I would favor a (moderate) soldered-in maximum to start
+> > > > with,
+> > > > and then as real world use cases arise, consider adding a tuning
+> > > > mechanism based on actual requirements.
+> > >
+> > > It's not an overreaction. It's insane to think that counting NICs
+> > > gives
+> > > you any notion whatsoever about the network topology and
+> > > connectivity
+> > > between the client and server. It doesn't even tell you how many of
+> > > those NICs might potentially be available to your application.
+> > >
+> > > We're not doing any automation based on that kind of layering
+> > > violation.
+> >
+> > I'm not suggesting to programmatically determine the number of NIC to
+> > determine the value of max_connect.
+> > >
+>
+> No, but that's what Chuck appeared to be suggesting in order to avoid
+> the need for the mount option.
+>
+> To me, the main reason for the mount option is to allow the user to
+> limit the number of new IP addresses being added so that if the DNS
+> server is configured to hand out lots of different addresses for the
+> same servername, the user can basically say 'no, I just want to use the
+> one IP address that I'm already connected to' (i.e. max_connect=1). I
+> can imagine that some clustered setups might need that ability in order
+> to work efficiently.
+>
+> I'm fine with the idea of nconnect setting the number of connections
+> per IP address, but that would need some plumbing in
+> rpc_clnt_test_and_add_xprt() to allow us to add up to 'nconnect' copies
+> of a given transport.
+> Presumably rpc_xprt_switch_has_addr() would need to return a count of
+> the number of copies of the transport that are already present so that
+> we can decide whether or not we should add a new one.
 
+I think the last paragraph is what I'm asking for. But I would like to
+again confirm if you still mean "max_connect" to be the total number
+of connections since you say we could/will allow for nconnect number
+of connections per IP address. Would max_connect need to be a multiple
+of nconnect (max_connect = X *nconnect)?
 
-On 5/27/21 3:11 PM, Scott Mayhew wrote:
-> Add a global list of active upcalls and a watchdog thread that walks the
-> list, looking for threads running longer than timeout seconds.  By
-> default, an error message will by logged to the syslog.
-> 
-> The upcall timeout can be specified by passing the -U option or by
-> setting the upcall-timeout parameter in nfs.conf.
-> 
-> Passing the -C option or setting cancel-timed-out-upcalls=1 in nfs.conf
-> causes the watchdog thread to also cancel timed-out upcall threads and
-> report an error of -ETIMEDOUT to the kernel.
-> 
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Committed... (tag: nfs-utils-2-5-4-rc6)
+Actually when I said supporting (or rather allowing for) nconnect *
+max_connect transport, is that correct? Given how the code works now
+this is going to be nconnect + max_connect (only if 1st mount had
+nconnect option). We can't "add" nconnect connections to the new
+mounts (but with my patch we can add a single trunk connection). By
+that I mean: say the first was "mount IP1:/vol1 /mnt1" (1 connection
+to IP2). Now the client is doing "mount IP2:/vol2 /mnt2". IP1 and IP2
+are trunkable addresses of the same server so we add a trunk. We
+currently don't allow for doing "mount -o nconnec=2 IP2:vol2 /mnt2"
+and then also add "nconnect" connections to IP2 along with a trunk. In
+the 2nd example, we'd have 1 connections to IP1, then 2 connections to
+IP2. Can we allow for that (with needed code change)?  If not, then we
+really need to commit to only support nconnect (16) connections + some
+number of trunkable connections.
 
-steved.
-> ---
->   nfs.conf               |   2 +
->   utils/gssd/gssd.c      | 179 ++++++++++++++++++++++++++++++++++++++++-
->   utils/gssd/gssd.h      |  18 +++++
->   utils/gssd/gssd.man    |  31 ++++++-
->   utils/gssd/gssd_proc.c | 138 +++++++++++++++++++++++++------
->   5 files changed, 340 insertions(+), 28 deletions(-)
-> 
-> diff --git a/nfs.conf b/nfs.conf
-> index 31994f61..8c714ff7 100644
-> --- a/nfs.conf
-> +++ b/nfs.conf
-> @@ -25,6 +25,8 @@
->   # cred-cache-directory=
->   # preferred-realm=
->   # set-home=1
-> +# upcall-timeout=30
-> +# cancel-timed-out-upcalls=0
->   #
->   [lockd]
->   # port=0
-> diff --git a/utils/gssd/gssd.c b/utils/gssd/gssd.c
-> index eb440470..4ca637f4 100644
-> --- a/utils/gssd/gssd.c
-> +++ b/utils/gssd/gssd.c
-> @@ -96,8 +96,29 @@ pthread_mutex_t clp_lock = PTHREAD_MUTEX_INITIALIZER;
->   static bool signal_received = false;
->   static struct event_base *evbase = NULL;
->   
-> +int upcall_timeout = DEF_UPCALL_TIMEOUT;
-> +static bool cancel_timed_out_upcalls = false;
-> +
->   TAILQ_HEAD(topdir_list_head, topdir) topdir_list;
->   
-> +/*
-> + * active_thread_list:
-> + *
-> + * 	used to track upcalls for timeout purposes.
-> + *
-> + * 	protected by the active_thread_list_lock mutex.
-> + *
-> + * 	upcall_thread_info structures are added to the tail of the list
-> + * 	by start_upcall_thread(), so entries closer to the head of the list
-> + * 	will be closer to hitting the upcall timeout.
-> + *
-> + * 	upcall_thread_info structures are removed from the list upon a
-> + * 	sucessful join of the upcall thread by the watchdog thread (via
-> + * 	scan_active_thread_list().
-> + */
-> +TAILQ_HEAD(active_thread_list_head, upcall_thread_info) active_thread_list;
-> +pthread_mutex_t active_thread_list_lock = PTHREAD_MUTEX_INITIALIZER;
-> +
->   struct topdir {
->   	TAILQ_ENTRY(topdir) list;
->   	TAILQ_HEAD(clnt_list_head, clnt_info) clnt_list;
-> @@ -436,6 +457,138 @@ gssd_clnt_krb5_cb(int UNUSED(fd), short UNUSED(which), void *data)
->   	handle_krb5_upcall(clp);
->   }
->   
-> +/*
-> + * scan_active_thread_list:
-> + *
-> + * Walks the active_thread_list, trying to join as many upcall threads as
-> + * possible.  For threads that have terminated, the corresponding
-> + * upcall_thread_info will be removed from the list and freed.  Threads that
-> + * are still busy and have exceeded the upcall_timeout will cause an error to
-> + * be logged and may be canceled (depending on the value of
-> + * cancel_timed_out_upcalls).
-> + *
-> + * Returns the number of seconds that the watchdog thread should wait before
-> + * calling scan_active_thread_list() again.
-> + */
-> +static int
-> +scan_active_thread_list(void)
-> +{
-> +	struct upcall_thread_info *info;
-> +	struct timespec now;
-> +	unsigned int sleeptime;
-> +	bool sleeptime_set = false;
-> +	int err;
-> +	void *tret, *saveprev;
-> +
-> +	sleeptime = upcall_timeout;
-> +	pthread_mutex_lock(&active_thread_list_lock);
-> +	clock_gettime(CLOCK_MONOTONIC, &now);
-> +	TAILQ_FOREACH(info, &active_thread_list, list) {
-> +		err = pthread_tryjoin_np(info->tid, &tret);
-> +		switch (err) {
-> +		case 0:
-> +			/*
-> +			 * The upcall thread has either completed successfully, or
-> +			 * has been canceled _and_ has acted on the cancellation request
-> +			 * (i.e. has hit a cancellation point).  We can now remove the
-> +			 * upcall_thread_info from the list and free it.
-> +			 */
-> +			if (tret == PTHREAD_CANCELED)
-> +				printerr(3, "watchdog: thread id 0x%lx cancelled successfully\n",
-> +						info->tid);
-> +			saveprev = info->list.tqe_prev;
-> +			TAILQ_REMOVE(&active_thread_list, info, list);
-> +			free(info);
-> +			info = saveprev;
-> +			break;
-> +		case EBUSY:
-> +			/*
-> +			 * The upcall thread is still running.  If the timeout has expired
-> +			 * then we either cancel the thread, log an error, and do an error
-> +			 * downcall to the kernel (cancel_timed_out_upcalls=true) or simply
-> +			 * log an error (cancel_timed_out_upcalls=false).  In either case,
-> +			 * the error is logged only once.
-> +			 */
-> +			if (now.tv_sec >= info->timeout.tv_sec) {
-> +				if (cancel_timed_out_upcalls && !(info->flags & UPCALL_THREAD_CANCELED)) {
-> +					printerr(0, "watchdog: thread id 0x%lx timed out\n",
-> +							info->tid);
-> +					pthread_cancel(info->tid);
-> +					info->flags |= (UPCALL_THREAD_CANCELED|UPCALL_THREAD_WARNED);
-> +					do_error_downcall(info->fd, info->uid, -ETIMEDOUT);
-> +				} else {
-> +					if (!(info->flags & UPCALL_THREAD_WARNED)) {
-> +						printerr(0, "watchdog: thread id 0x%lx running for %ld seconds\n",
-> +								info->tid,
-> +								now.tv_sec - info->timeout.tv_sec + upcall_timeout);
-> +						info->flags |= UPCALL_THREAD_WARNED;
-> +					}
-> +				}
-> +			} else if (!sleeptime_set) {
-> +			/*
-> +			 * The upcall thread is still running, but the timeout has not yet
-> +			 * expired.  Calculate the time remaining until the timeout will
-> +			 * expire.  This is the amount of time the watchdog thread will
-> +			 * wait before running again.  We only need to do this for the busy
-> +			 * thread closest to the head of the list - entries appearing later
-> +			 * in the list will time out later.
-> +			 */
-> +				sleeptime = info->timeout.tv_sec - now.tv_sec;
-> +				sleeptime_set = true;
-> +			}
-> +			break;
-> +		default:
-> +			/* EDEADLK, EINVAL, and ESRCH... none of which should happen! */
-> +			printerr(0, "watchdog: attempt to join thread id 0x%lx returned %d (%s)!\n",
-> +					info->tid, err, strerror(err));
-> +			break;
-> +		}
-> +	}
-> +	pthread_mutex_unlock(&active_thread_list_lock);
-> +
-> +	return sleeptime;
-> +}
-> +
-> +static void *
-> +watchdog_thread_fn(void *UNUSED(arg))
-> +{
-> +	unsigned int sleeptime;
-> +
-> +	for (;;) {
-> +		sleeptime = scan_active_thread_list();
-> +		printerr(4, "watchdog: sleeping %u secs\n", sleeptime);
-> +		sleep(sleeptime);
-> +	}
-> +	return (void *)0;
-> +}
-> +
-> +static int
-> +start_watchdog_thread(void)
-> +{
-> +	pthread_attr_t attr;
-> +	pthread_t th;
-> +	int ret;
-> +
-> +	ret = pthread_attr_init(&attr);
-> +	if (ret != 0) {
-> +		printerr(0, "ERROR: failed to init pthread attr: ret %d: %s\n",
-> +			 ret, strerror(errno));
-> +		return ret;
-> +	}
-> +	ret = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-> +	if (ret != 0) {
-> +		printerr(0, "ERROR: failed to create pthread attr: ret %d: %s\n",
-> +			 ret, strerror(errno));
-> +		return ret;
-> +	}
-> +	ret = pthread_create(&th, &attr, watchdog_thread_fn, NULL);
-> +	if (ret != 0) {
-> +		printerr(0, "ERROR: pthread_create failed: ret %d: %s\n",
-> +			 ret, strerror(errno));
-> +	}
-> +	return ret;
-> +}
-> +
->   static struct clnt_info *
->   gssd_get_clnt(struct topdir *tdi, const char *name)
->   {
-> @@ -825,7 +978,7 @@ sig_die(int signal)
->   static void
->   usage(char *progname)
->   {
-> -	fprintf(stderr, "usage: %s [-f] [-l] [-M] [-n] [-v] [-r] [-p pipefsdir] [-k keytab] [-d ccachedir] [-t timeout] [-R preferred realm] [-D] [-H]\n",
-> +	fprintf(stderr, "usage: %s [-f] [-l] [-M] [-n] [-v] [-r] [-p pipefsdir] [-k keytab] [-d ccachedir] [-t timeout] [-R preferred realm] [-D] [-H] [-U upcall timeout] [-C]\n",
->   		progname);
->   	exit(1);
->   }
-> @@ -846,6 +999,9 @@ read_gss_conf(void)
->   #endif
->   	context_timeout = conf_get_num("gssd", "context-timeout", context_timeout);
->   	rpc_timeout = conf_get_num("gssd", "rpc-timeout", rpc_timeout);
-> +	upcall_timeout = conf_get_num("gssd", "upcall-timeout", upcall_timeout);
-> +	cancel_timed_out_upcalls = conf_get_bool("gssd", "cancel-timed-out-upcalls",
-> +						cancel_timed_out_upcalls);
->   	s = conf_get_str("gssd", "pipefs-directory");
->   	if (!s)
->   		s = conf_get_str("general", "pipefs-directory");
-> @@ -887,7 +1043,7 @@ main(int argc, char *argv[])
->   	verbosity = conf_get_num("gssd", "verbosity", verbosity);
->   	rpc_verbosity = conf_get_num("gssd", "rpc-verbosity", rpc_verbosity);
->   
-> -	while ((opt = getopt(argc, argv, "HDfvrlmnMp:k:d:t:T:R:")) != -1) {
-> +	while ((opt = getopt(argc, argv, "HDfvrlmnMp:k:d:t:T:R:U:C")) != -1) {
->   		switch (opt) {
->   			case 'f':
->   				fg = 1;
-> @@ -938,6 +1094,12 @@ main(int argc, char *argv[])
->   			case 'H':
->   				set_home = false;
->   				break;
-> +			case 'U':
-> +				upcall_timeout = atoi(optarg);
-> +				break;
-> +			case 'C':
-> +				cancel_timed_out_upcalls = true;
-> +				break;
->   			default:
->   				usage(argv[0]);
->   				break;
-> @@ -1010,6 +1172,11 @@ main(int argc, char *argv[])
->   	else
->   		progname = argv[0];
->   
-> +	if (upcall_timeout > MAX_UPCALL_TIMEOUT)
-> +		upcall_timeout = MAX_UPCALL_TIMEOUT;
-> +	else if (upcall_timeout < MIN_UPCALL_TIMEOUT)
-> +		upcall_timeout = MIN_UPCALL_TIMEOUT;
-> +
->   	initerr(progname, verbosity, fg);
->   #ifdef HAVE_LIBTIRPC_SET_DEBUG
->   	/*
-> @@ -1068,6 +1235,14 @@ main(int argc, char *argv[])
->   	}
->   	event_add(inotify_ev, NULL);
->   
-> +	TAILQ_INIT(&active_thread_list);
-> +
-> +	rc = start_watchdog_thread();
-> +	if (rc != 0) {
-> +		printerr(0, "ERROR: failed to start watchdog thread: %d\n", rc);
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
->   	TAILQ_INIT(&topdir_list);
->   	gssd_scan();
->   	daemon_ready();
-> diff --git a/utils/gssd/gssd.h b/utils/gssd/gssd.h
-> index 6d53647e..c52c5b48 100644
-> --- a/utils/gssd/gssd.h
-> +++ b/utils/gssd/gssd.h
-> @@ -50,6 +50,12 @@
->   #define GSSD_DEFAULT_KEYTAB_FILE		"/etc/krb5.keytab"
->   #define GSSD_SERVICE_NAME			"nfs"
->   #define RPC_CHAN_BUF_SIZE			32768
-> +
-> +/* timeouts are in seconds */
-> +#define MIN_UPCALL_TIMEOUT			5
-> +#define DEF_UPCALL_TIMEOUT			30
-> +#define MAX_UPCALL_TIMEOUT			600
-> +
->   /*
->    * The gss mechanisms that we can handle
->    */
-> @@ -91,10 +97,22 @@ struct clnt_upcall_info {
->   	char			*service;
->   };
->   
-> +struct upcall_thread_info {
-> +	TAILQ_ENTRY(upcall_thread_info) list;
-> +	pthread_t		tid;
-> +	struct timespec		timeout;
-> +	uid_t			uid;
-> +	int			fd;
-> +	unsigned short		flags;
-> +#define UPCALL_THREAD_CANCELED	0x0001
-> +#define UPCALL_THREAD_WARNED	0x0002
-> +};
-> +
->   void handle_krb5_upcall(struct clnt_info *clp);
->   void handle_gssd_upcall(struct clnt_info *clp);
->   void free_upcall_info(struct clnt_upcall_info *info);
->   void gssd_free_client(struct clnt_info *clp);
-> +int do_error_downcall(int k5_fd, uid_t uid, int err);
->   
->   
->   #endif /* _RPC_GSSD_H_ */
-> diff --git a/utils/gssd/gssd.man b/utils/gssd/gssd.man
-> index 9ae6def9..2a5384d3 100644
-> --- a/utils/gssd/gssd.man
-> +++ b/utils/gssd/gssd.man
-> @@ -8,7 +8,7 @@
->   rpc.gssd \- RPCSEC_GSS daemon
->   .SH SYNOPSIS
->   .B rpc.gssd
-> -.RB [ \-DfMnlvrH ]
-> +.RB [ \-DfMnlvrHC ]
->   .RB [ \-k
->   .IR keytab ]
->   .RB [ \-p
-> @@ -17,6 +17,10 @@ rpc.gssd \- RPCSEC_GSS daemon
->   .IR ccachedir ]
->   .RB [ \-t
->   .IR timeout ]
-> +.RB [ \-T
-> +.IR timeout ]
-> +.RB [ \-U
-> +.IR timeout ]
->   .RB [ \-R
->   .IR realm ]
->   .SH INTRODUCTION
-> @@ -275,7 +279,7 @@ seconds, which allows changing Kerberos tickets and identities frequently.
->   The default is no explicit timeout, which means the kernel context will live
->   the lifetime of the Kerberos service ticket used in its creation.
->   .TP
-> -.B -T timeout
-> +.BI "-T " timeout
->   Timeout, in seconds, to create an RPC connection with a server while
->   establishing an authenticated gss context for a user.
->   The default timeout is set to 5 seconds.
-> @@ -283,6 +287,18 @@ If you get messages like "WARNING: can't create tcp rpc_clnt to server
->   %servername% for user with uid %uid%: RPC: Remote system error -
->   Connection timed out", you should consider an increase of this timeout.
->   .TP
-> +.BI "-U " timeout
-> +Timeout, in seconds, for upcall threads.  Threads executing longer than
-> +.I timeout
-> +seconds will cause an error message to be logged.  The default
-> +.I timeout
-> +is 30 seconds.  The minimum is 5 seconds.  The maximum is 600 seconds.
-> +.TP
-> +.B -C
-> +In addition to logging an error message for threads that have timed out,
-> +the thread will be canceled and an error of -ETIMEDOUT will be reported
-> +to the kernel.
-> +.TP
->   .B -H
->   Avoids setting $HOME to "/". This allows rpc.gssd to read per user k5identity
->   files versus trying to read /.k5identity for each user.
-> @@ -350,6 +366,17 @@ Equivalent to
->   Equivalent to
->   .BR -R .
->   .TP
-> +.B upcall-timeout
-> +Equivalent to
-> +.BR -U .
-> +.TP
-> +.B cancel-timed-out-upcalls
-> +Setting to
-> +.B true
-> +is equivalent to providing the
-> +.B -C
-> +flag.
-> +.TP
->   .B set-home
->   Setting to
->   .B false
-> diff --git a/utils/gssd/gssd_proc.c b/utils/gssd/gssd_proc.c
-> index ebec414e..60f61836 100644
-> --- a/utils/gssd/gssd_proc.c
-> +++ b/utils/gssd/gssd_proc.c
-> @@ -81,11 +81,24 @@
->   #include "gss_names.h"
->   
->   extern pthread_mutex_t clp_lock;
-> +extern pthread_mutex_t active_thread_list_lock;
-> +extern int upcall_timeout;
-> +extern TAILQ_HEAD(active_thread_list_head, upcall_thread_info) active_thread_list;
->   
->   /* Encryption types supported by the kernel rpcsec_gss code */
->   int num_krb5_enctypes = 0;
->   krb5_enctype *krb5_enctypes = NULL;
->   
-> +/* Args for the cleanup_handler() */
-> +struct cleanup_args  {
-> +	OM_uint32 	*min_stat;
-> +	gss_buffer_t	acceptor;
-> +	gss_buffer_t	token;
-> +	struct authgss_private_data *pd;
-> +	AUTH		**auth;
-> +	CLIENT		**rpc_clnt;
-> +};
-> +
->   /*
->    * Parse the supported encryption type information
->    */
-> @@ -184,7 +197,7 @@ out_err:
->   	return;
->   }
->   
-> -static int
-> +int
->   do_error_downcall(int k5_fd, uid_t uid, int err)
->   {
->   	char	buf[1024];
-> @@ -608,13 +621,50 @@ out:
->   }
->   
->   /*
-> + * cleanup_handler:
-> + *
-> + * Free any resources allocated by process_krb5_upcall().
-> + *
-> + * Runs upon normal termination of process_krb5_upcall as well as if the
-> + * thread is canceled.
-> + */
-> +static void
-> +cleanup_handler(void *arg)
-> +{
-> +	struct cleanup_args *args = (struct cleanup_args *)arg;
-> +
-> +	gss_release_buffer(args->min_stat, args->acceptor);
-> +	if (args->token->value)
-> +		free(args->token->value);
-> +#ifdef HAVE_AUTHGSS_FREE_PRIVATE_DATA
-> +	if (args->pd->pd_ctx_hndl.length != 0 || args->pd->pd_ctx != 0)
-> +		authgss_free_private_data(args->pd);
-> +#endif
-> +	if (*args->auth)
-> +		AUTH_DESTROY(*args->auth);
-> +	if (*args->rpc_clnt)
-> +		clnt_destroy(*args->rpc_clnt);
-> +}
-> +
-> +/*
-> + * process_krb5_upcall:
-> + *
->    * this code uses the userland rpcsec gss library to create a krb5
->    * context on behalf of the kernel
-> + *
-> + * This is the meat of the upcall thread.  Note that cancelability is disabled
-> + * and enabled at various points to ensure that any resources reserved by the
-> + * lower level libraries are released safely.
->    */
->   static void
-> -process_krb5_upcall(struct clnt_info *clp, uid_t uid, int fd, char *srchost,
-> -		    char *tgtname, char *service)
-> +process_krb5_upcall(struct clnt_upcall_info *info)
->   {
-> +	struct clnt_info	*clp = info->clp;
-> +	uid_t			uid = info->uid;
-> +	int			fd = info->fd;
-> +	char			*srchost = info->srchost;
-> +	char			*tgtname = info->target;
-> +	char			*service = info->service;
->   	CLIENT			*rpc_clnt = NULL;
->   	AUTH			*auth = NULL;
->   	struct authgss_private_data pd;
-> @@ -624,11 +674,13 @@ process_krb5_upcall(struct clnt_info *clp, uid_t uid, int fd, char *srchost,
->   	gss_name_t		gacceptor = GSS_C_NO_NAME;
->   	gss_OID			mech;
->   	gss_buffer_desc		acceptor  = {0};
-> +	struct cleanup_args cleanup_args = {&min_stat, &acceptor, &token, &pd, &auth, &rpc_clnt};
->   
->   	token.length = 0;
->   	token.value = NULL;
->   	memset(&pd, 0, sizeof(struct authgss_private_data));
->   
-> +	pthread_cleanup_push(cleanup_handler, &cleanup_args);
->   	/*
->   	 * If "service" is specified, then the kernel is indicating that
->   	 * we must use machine credentials for this request.  (Regardless
-> @@ -650,6 +702,7 @@ process_krb5_upcall(struct clnt_info *clp, uid_t uid, int fd, char *srchost,
->   	 * used for this case is not important.
->   	 *
->   	 */
-> +	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
->   	if (uid != 0 || (uid == 0 && root_uses_machine_creds == 0 &&
->   				service == NULL)) {
->   
-> @@ -670,15 +723,21 @@ process_krb5_upcall(struct clnt_info *clp, uid_t uid, int fd, char *srchost,
->   			goto out_return_error;
->   		}
->   	}
-> +	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-> +	pthread_testcancel();
->   
-> +	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
->   	if (!authgss_get_private_data(auth, &pd)) {
->   		printerr(1, "WARNING: Failed to obtain authentication "
->   			    "data for user with uid %d for server %s\n",
->   			 uid, clp->servername);
->   		goto out_return_error;
->   	}
-> +	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-> +	pthread_testcancel();
->   
->   	/* Grab the context lifetime and acceptor name out of the ctx. */
-> +	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
->   	maj_stat = gss_inquire_context(&min_stat, pd.pd_ctx, NULL, &gacceptor,
->   				       &lifetime_rec, &mech, NULL, NULL, NULL);
->   
-> @@ -690,37 +749,35 @@ process_krb5_upcall(struct clnt_info *clp, uid_t uid, int fd, char *srchost,
->   		get_hostbased_client_buffer(gacceptor, mech, &acceptor);
->   		gss_release_name(&min_stat, &gacceptor);
->   	}
-> +	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-> +	pthread_testcancel();
->   
->   	/*
->   	 * The serialization can mean turning pd.pd_ctx into a lucid context. If
->   	 * that happens then the pd.pd_ctx will be unusable, so we must never
->   	 * try to use it after this point.
->   	 */
-> +	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
->   	if (serialize_context_for_kernel(&pd.pd_ctx, &token, &krb5oid, NULL)) {
->   		printerr(1, "WARNING: Failed to serialize krb5 context for "
->   			    "user with uid %d for server %s\n",
->   			 uid, clp->servername);
->   		goto out_return_error;
->   	}
-> +	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-> +	pthread_testcancel();
->   
->   	do_downcall(fd, uid, &pd, &token, lifetime_rec, &acceptor);
->   
->   out:
-> -	gss_release_buffer(&min_stat, &acceptor);
-> -	if (token.value)
-> -		free(token.value);
-> -#ifdef HAVE_AUTHGSS_FREE_PRIVATE_DATA
-> -	if (pd.pd_ctx_hndl.length != 0 || pd.pd_ctx != 0)
-> -		authgss_free_private_data(&pd);
-> -#endif
-> -	if (auth)
-> -		AUTH_DESTROY(auth);
-> -	if (rpc_clnt)
-> -		clnt_destroy(rpc_clnt);
-> +	pthread_cleanup_pop(1);
->   
->   	return;
->   
->   out_return_error:
-> +	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-> +	pthread_testcancel();
-> +
->   	do_error_downcall(fd, uid, downcall_err);
->   	goto out;
->   }
-> @@ -786,36 +843,69 @@ void free_upcall_info(struct clnt_upcall_info *info)
->   }
->   
->   static void
-> -gssd_work_thread_fn(struct clnt_upcall_info *info)
-> +cleanup_clnt_upcall_info(void *arg)
->   {
-> -	process_krb5_upcall(info->clp, info->uid, info->fd, info->srchost, info->target, info->service);
-> +	struct clnt_upcall_info *info = (struct clnt_upcall_info *)arg;
-> +
->   	free_upcall_info(info);
->   }
->   
-> +static void
-> +gssd_work_thread_fn(struct clnt_upcall_info *info)
-> +{
-> +	pthread_cleanup_push(cleanup_clnt_upcall_info, info);
-> +	process_krb5_upcall(info);
-> +	pthread_cleanup_pop(1);
-> +}
-> +
-> +static struct upcall_thread_info *
-> +alloc_upcall_thread_info(void)
-> +{
-> +	struct upcall_thread_info *info;
-> +
-> +	info = malloc(sizeof(struct upcall_thread_info));
-> +	if (info == NULL)
-> +		return NULL;
-> +	memset(info, 0, sizeof(*info));
-> +	return info;
-> +}
-> +
->   static int
-> -start_upcall_thread(void (*func)(struct clnt_upcall_info *), void *info)
-> +start_upcall_thread(void (*func)(struct clnt_upcall_info *), struct clnt_upcall_info *info)
->   {
->   	pthread_attr_t attr;
->   	pthread_t th;
-> +	struct upcall_thread_info *tinfo;
->   	int ret;
->   
-> +	tinfo = alloc_upcall_thread_info();
-> +	if (!tinfo)
-> +		return -ENOMEM;
-> +	tinfo->fd = info->fd;
-> +	tinfo->uid = info->uid;
-> +
->   	ret = pthread_attr_init(&attr);
->   	if (ret != 0) {
->   		printerr(0, "ERROR: failed to init pthread attr: ret %d: %s\n",
->   			 ret, strerror(errno));
-> -		return ret;
-> -	}
-> -	ret = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-> -	if (ret != 0) {
-> -		printerr(0, "ERROR: failed to create pthread attr: ret %d: "
-> -			 "%s\n", ret, strerror(errno));
-> +		free(tinfo);
->   		return ret;
->   	}
->   
->   	ret = pthread_create(&th, &attr, (void *)func, (void *)info);
-> -	if (ret != 0)
-> +	if (ret != 0) {
->   		printerr(0, "ERROR: pthread_create failed: ret %d: %s\n",
->   			 ret, strerror(errno));
-> +		free(tinfo);
-> +		return ret;
-> +	}
-> +	tinfo->tid = th;
-> +	pthread_mutex_lock(&active_thread_list_lock);
-> +	clock_gettime(CLOCK_MONOTONIC, &tinfo->timeout);
-> +	tinfo->timeout.tv_sec += upcall_timeout;
-> +	TAILQ_INSERT_TAIL(&active_thread_list, tinfo, list);
-> +	pthread_mutex_unlock(&active_thread_list_lock);
-> +
->   	return ret;
->   }
->   
-> 
-
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
