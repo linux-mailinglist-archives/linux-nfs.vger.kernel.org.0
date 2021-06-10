@@ -2,405 +2,297 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 663E93A32AB
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jun 2021 20:03:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C06FD3A36F0
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Jun 2021 00:18:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229823AbhFJSFR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Jun 2021 14:05:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58752 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230305AbhFJSFR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Jun 2021 14:05:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1623348200;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RxcYUDuALKqolB2HkXuRRkYybvqaib82HQ8VmPusdjE=;
-        b=EF+ZxjAfWXVTljXtS11zhpIv/9m2Uo+tZmmdGxXPDUgHdAESpzw4uFlBMb7oIakhy+Kr1X
-        PDXZNt5pmq8k7kdVtLJ0Iu6mw0i/KpH76h9Hqeo0TDHtSrha5C3EOXSZLMhltCUmZW6+eW
-        uRj7U4igNcR4PDphkMvIfOdtHh7PCqM=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-VA2C3fnNOJuUo0RZpsnOsA-1; Thu, 10 Jun 2021 14:03:19 -0400
-X-MC-Unique: VA2C3fnNOJuUo0RZpsnOsA-1
-Received: by mail-qv1-f69.google.com with SMTP id n3-20020a0cee630000b029020e62abfcbdso16941569qvs.16
-        for <linux-nfs@vger.kernel.org>; Thu, 10 Jun 2021 11:03:19 -0700 (PDT)
+        id S230169AbhFJWUD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Jun 2021 18:20:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230059AbhFJWUD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Jun 2021 18:20:03 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40B93C061574
+        for <linux-nfs@vger.kernel.org>; Thu, 10 Jun 2021 15:17:51 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id ho18so1458493ejc.8
+        for <linux-nfs@vger.kernel.org>; Thu, 10 Jun 2021 15:17:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ruRxvvAnJ1awWvNogPFSy/2yyF6UDJPwb4FvSvnjlrY=;
+        b=vTT54WHC4cUdbHhMjO6wne2DVusSp/CE2g12rwlE/OShUoQ7omBAKJmk52J3COXsf4
+         xuWUpv1Hvx2Ue821eab6Uti5Dhs5sQiGK2QmKOmADTeoUBHKzHQh28JOqPYRdWXkrfLs
+         GqBr61qjkn4P/itN+CxtJtlb0b5qMeqFGJpstUUUbIgW4MdU8QIl4yS9Hsu5n3F1kR4R
+         jCKhcq+UwaRX7Gbn7q3nmfmtldA8VLN6H7su7mH0GbtH/6k5K8hLhXbWnVi5lagFa1m3
+         zpxNI0r3MSjiV22q1RmT54UVdW3pkf6spS5Xp+jctSM3cGEK6hRJbUq4UzyaEb7gVZpM
+         6VHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RxcYUDuALKqolB2HkXuRRkYybvqaib82HQ8VmPusdjE=;
-        b=ipGTNXtKAbHE+niyYy9oLhOWrWWcBNF083kV92vi/Lt8xZjTkVNmvNWXDTDnajKaEJ
-         CbKKiyMuvV7cp/LOVf9TsvDIisRZEfNaryM8bmfHIputvgXTnv8TQf6hMOGo/ZCC7TSl
-         IO/3SP7buTiXOsQLsFGH/jEOZ72kOW1ml1BSL7fhlXL+Plw+KEp54TfUvPHSq4HMv3d3
-         YGjKQtSp4JJdNBEtr/st+LhMcBVkYf48yCsCpR75myDAKHNlipHleClhavzetnIiirBz
-         XMhZNNaP5Q+mjhnm9b4oq4vl6T463Yz/zMdxnFpN8V3lbJWMalTIDX3gTTvh/gvukcHe
-         BBOQ==
-X-Gm-Message-State: AOAM5310oAhZBdQaSeDkq76PggT4pSrHzIKIiMuz/s1lbPw0WWfx/TwK
-        FFYGleCZMMJr0hN5iJrTFGV8JSkIY6eFe8KJUO+QVhNTO27GFf3e/AXgZZ+n7O0jwF5LZvJ/pfA
-        Z04JCKerzRfgdeoQ43Bk9IbOPdaxVM1Vdr8AMD8TotI4nmczUD8EkTK5xxWDXhZiPLKEqmA==
-X-Received: by 2002:a0c:eec2:: with SMTP id h2mr857544qvs.22.1623348198626;
-        Thu, 10 Jun 2021 11:03:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwOk+xblQWMMdiXanQJW1rGEjNbxor/MAZ+rF01AxZ+2avkQtAzxVz3xxYbQfvX5/cQ9qgIZg==
-X-Received: by 2002:a0c:eec2:: with SMTP id h2mr857507qvs.22.1623348198419;
-        Thu, 10 Jun 2021 11:03:18 -0700 (PDT)
-Received: from madhat.boston.devel.redhat.com ([71.161.93.112])
-        by smtp.gmail.com with ESMTPSA id t139sm2698302qka.85.2021.06.10.11.03.17
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Jun 2021 11:03:18 -0700 (PDT)
-Subject: Re: [PATCH] gssd: Cleaned up debug messages
-From:   Steve Dickson <steved@redhat.com>
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20210610150825.396565-1-steved@redhat.com>
-Message-ID: <627209c3-21dd-312e-c2dc-cc810108f7d1@redhat.com>
-Date:   Thu, 10 Jun 2021 14:06:26 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ruRxvvAnJ1awWvNogPFSy/2yyF6UDJPwb4FvSvnjlrY=;
+        b=r2aMJBPDKQEsiiwWlrox0qh0i1gzIGvzPnKCV30w8zeQ2M4Zwg5gvDas2j2QeVeePj
+         VguIFy/zxpw/ie48YFOrAn0TuNnj4QW+GHjN+MquCU7+OWMdGWOazVpGfRQCEJlBeaKc
+         GYSIZHa/X3cExR5gDWXUGPuyX45Gpb3AeoJWqFYn81pTnspM/KsKF8R9rrcsWEkLlAK3
+         iGwTqosqkgV+co66IDgCMFE4eeBWZZXTqKoyMKRy/MTjJVxzRfNvNyfsMrFTDGyHw0GD
+         kly0K3c/t/NsFTwUSZyKJW7Fzq1rUqthLKvOWOd2LzjXLz7ceQq4jtjxNGdd/XKN1HMD
+         yC9A==
+X-Gm-Message-State: AOAM532s3bi1+RVyv2jB1rkv/FACzy0HHfS9nq0iDLiUs0D3SR4ELfRq
+        DdtoT7/50JiSRAfUpWApMWD6lakoCVeiYRH9//w=
+X-Google-Smtp-Source: ABdhPJzEXMBEO2e0Prmq2njYBPkPJIKslg5s75KYK3+rNJANei4RdLeH1ep6Et/A6BGQJct+c1V4qNN0dAjvXDxyw2g=
+X-Received: by 2002:a17:907:1c9e:: with SMTP id nb30mr635270ejc.0.1623363469644;
+ Thu, 10 Jun 2021 15:17:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210610150825.396565-1-steved@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210609215319.5518-1-olga.kornievskaia@gmail.com>
+ <20210609215319.5518-3-olga.kornievskaia@gmail.com> <6C64456A-931F-4CAD-A559-412A12F0F741@oracle.com>
+ <6bca80de292b5aa36734e7d942d0e9f53430903b.camel@hammerspace.com>
+ <83D9342E-FDAF-4B2C-A518-20BF0A9AD073@oracle.com> <3658c226b43fb190de38c00e5199ccf35ccc4369.camel@hammerspace.com>
+ <CAN-5tyF3BSDvsegLWM6hAOY9QDMbG1LUg9YykXi8rwDcNVXqbA@mail.gmail.com>
+ <c7a7a04adbe261d5ca104780c290a44ede1ed4c2.camel@hammerspace.com>
+ <CAN-5tyHdciZ+TmRZmwBNeypA4i15L8w5jomCVRNJnMyuVLSUOQ@mail.gmail.com>
+ <b8967b4a092feaa7eabd8c09a9dbd1ffc1707495.camel@hammerspace.com> <CAN-5tyFb1nkjJ7ESyC7PQfJhb-Lr=VB2gexhVSFv063dHAnYOw@mail.gmail.com>
+In-Reply-To: <CAN-5tyFb1nkjJ7ESyC7PQfJhb-Lr=VB2gexhVSFv063dHAnYOw@mail.gmail.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Thu, 10 Jun 2021 18:17:38 -0400
+Message-ID: <CAN-5tyGCioFgnHUQZdOsmrj=YCSmbvg2Ahd3_eNX6G_1JM0FRA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] NFSv4 introduce max_connect mount options
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Thu, Jun 10, 2021 at 1:30 PM Olga Kornievskaia
+<olga.kornievskaia@gmail.com> wrote:
+>
+> On Thu, Jun 10, 2021 at 12:36 PM Trond Myklebust
+> <trondmy@hammerspace.com> wrote:
+> >
+> > On Thu, 2021-06-10 at 12:14 -0400, Olga Kornievskaia wrote:
+> > > On Thu, Jun 10, 2021 at 10:56 AM Trond Myklebust
+> > > <trondmy@hammerspace.com> wrote:
+> > > >
+> > > > On Thu, 2021-06-10 at 10:31 -0400, Olga Kornievskaia wrote:
+> > > > > On Thu, Jun 10, 2021 at 10:13 AM Trond Myklebust
+> > > > > <trondmy@hammerspace.com> wrote:
+> > > > > >
+> > > > > > On Thu, 2021-06-10 at 13:56 +0000, Chuck Lever III wrote:
+> > > > > > >
+> > > > > > >
+> > > > > > > > On Jun 10, 2021, at 9:34 AM, Trond Myklebust <
+> > > > > > > > trondmy@hammerspace.com> wrote:
+> > > > > > > >
+> > > > > > > > On Thu, 2021-06-10 at 13:30 +0000, Chuck Lever III wrote:
+> > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > > On Jun 9, 2021, at 5:53 PM, Olga Kornievskaia <
+> > > > > > > > > > olga.kornievskaia@gmail.com> wrote:
+> > > > > > > > > >
+> > > > > > > > > > From: Olga Kornievskaia <kolga@netapp.com>
+> > > > > > > > > >
+> > > > > > > > > > This option will control up to how many xprts can the
+> > > > > > > > > > client
+> > > > > > > > > > establish to the server. This patch parses the value
+> > > > > > > > > > and
+> > > > > > > > > > sets
+> > > > > > > > > > up structures that keep track of max_connect.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > > > > > > > > > ---
+> > > > > > > > > > fs/nfs/client.c           |  1 +
+> > > > > > > > > > fs/nfs/fs_context.c       |  8 ++++++++
+> > > > > > > > > > fs/nfs/internal.h         |  2 ++
+> > > > > > > > > > fs/nfs/nfs4client.c       | 12 ++++++++++--
+> > > > > > > > > > fs/nfs/super.c            |  2 ++
+> > > > > > > > > > include/linux/nfs_fs_sb.h |  1 +
+> > > > > > > > > > 6 files changed, 24 insertions(+), 2 deletions(-)
+> > > > > > > > > >
+> > > > > > > > > > diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+> > > > > > > > > > index 330f65727c45..486dec59972b 100644
+> > > > > > > > > > --- a/fs/nfs/client.c
+> > > > > > > > > > +++ b/fs/nfs/client.c
+> > > > > > > > > > @@ -179,6 +179,7 @@ struct nfs_client
+> > > > > > > > > > *nfs_alloc_client(const
+> > > > > > > > > > struct nfs_client_initdata *cl_init)
+> > > > > > > > > >
+> > > > > > > > > >         clp->cl_proto = cl_init->proto;
+> > > > > > > > > >         clp->cl_nconnect = cl_init->nconnect;
+> > > > > > > > > > +       clp->cl_max_connect = cl_init->max_connect ?
+> > > > > > > > > > cl_init-
+> > > > > > > > > > > max_connect : 1;
+> > > > > > > > >
+> > > > > > > > > So, 1 is the default setting, meaning the "add another
+> > > > > > > > > transport"
+> > > > > > > > > facility is disabled by default. Would it be less
+> > > > > > > > > surprising
+> > > > > > > > > for
+> > > > > > > > > an admin to allow some extra connections by default?
+> > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > >         clp->cl_net = get_net(cl_init->net);
+> > > > > > > > > >
+> > > > > > > > > >         clp->cl_principal = "*";
+> > > > > > > > > > diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> > > > > > > > > > index d95c9a39bc70..cfbff7098f8e 100644
+> > > > > > > > > > --- a/fs/nfs/fs_context.c
+> > > > > > > > > > +++ b/fs/nfs/fs_context.c
+> > > > > > > > > > @@ -29,6 +29,7 @@
+> > > > > > > > > > #endif
+> > > > > > > > > >
+> > > > > > > > > > #define NFS_MAX_CONNECTIONS 16
+> > > > > > > > > > +#define NFS_MAX_TRANSPORTS 128
+> > > > > > > > >
+> > > > > > > > > This maximum seems excessive... again, there are
+> > > > > > > > > diminishing
+> > > > > > > > > returns to adding more connections to the same server.
+> > > > > > > > > what's
+> > > > > > > > > wrong with re-using NFS_MAX_CONNECTIONS for the maximum?
+> > > > > > > > >
+> > > > > > > > > As always, I'm a little queasy about adding yet another
+> > > > > > > > > mount
+> > > > > > > > > option. Are there real use cases where a whole-client
+> > > > > > > > > setting
+> > > > > > > > > (like a sysfs attribute) would be inadequate? Is there a
+> > > > > > > > > way
+> > > > > > > > > the client could figure out a reasonable maximum without
+> > > > > > > > > a
+> > > > > > > > > human intervention, say, by counting the number of NICs
+> > > > > > > > > on
+> > > > > > > > > the system?
+> > > > > > > >
+> > > > > > > > Oh, hell no! We're not tying anything to the number of
+> > > > > > > > NICs...
+> > > > > > >
+> > > > > > > That's a bit of an over-reaction. :-) A little more
+> > > > > > > explanation
+> > > > > > > would be welcome. I mean, don't you expect someone to ask
+> > > > > > > "How
+> > > > > > > do I pick a good value?" and someone might reasonably answer
+> > > > > > > "Well, start with the number of NICs on your client times 3"
+> > > > > > > or
+> > > > > > > something like that.
+> > > > > > >
+> > > > > > > IMO we're about to add another admin setting without
+> > > > > > > understanding
+> > > > > > > how it will be used, how to select a good maximum value, or
+> > > > > > > even
+> > > > > > > whether this maximum needs to be adjustable. In a previous e-
+> > > > > > > mail
+> > > > > > > Olga has already demonstrated that it will be difficult to
+> > > > > > > explain
+> > > > > > > how to use this setting with nconnect=.
+> > > > > > >
+> > > > > > > Thus I would favor a (moderate) soldered-in maximum to start
+> > > > > > > with,
+> > > > > > > and then as real world use cases arise, consider adding a
+> > > > > > > tuning
+> > > > > > > mechanism based on actual requirements.
+> > > > > >
+> > > > > > It's not an overreaction. It's insane to think that counting
+> > > > > > NICs
+> > > > > > gives
+> > > > > > you any notion whatsoever about the network topology and
+> > > > > > connectivity
+> > > > > > between the client and server. It doesn't even tell you how
+> > > > > > many of
+> > > > > > those NICs might potentially be available to your application.
+> > > > > >
+> > > > > > We're not doing any automation based on that kind of layering
+> > > > > > violation.
+> > > > >
+> > > > > I'm not suggesting to programmatically determine the number of
+> > > > > NIC to
+> > > > > determine the value of max_connect.
+> > > > > >
+> > > >
+> > > > No, but that's what Chuck appeared to be suggesting in order to
+> > > > avoid
+> > > > the need for the mount option.
+> > > >
+> > > > To me, the main reason for the mount option is to allow the user to
+> > > > limit the number of new IP addresses being added so that if the DNS
+> > > > server is configured to hand out lots of different addresses for
+> > > > the
+> > > > same servername, the user can basically say 'no, I just want to use
+> > > > the
+> > > > one IP address that I'm already connected to' (i.e. max_connect=1).
+> > > > I
+> > > > can imagine that some clustered setups might need that ability in
+> > > > order
+> > > > to work efficiently.
+> > > >
+> > > > I'm fine with the idea of nconnect setting the number of
+> > > > connections
+> > > > per IP address, but that would need some plumbing in
+> > > > rpc_clnt_test_and_add_xprt() to allow us to add up to 'nconnect'
+> > > > copies
+> > > > of a given transport.
+> > > > Presumably rpc_xprt_switch_has_addr() would need to return a count
+> > > > of
+> > > > the number of copies of the transport that are already present so
+> > > > that
+> > > > we can decide whether or not we should add a new one.
+> > >
+> > > I think the last paragraph is what I'm asking for. But I would like
+> > > to
+> > > again confirm if you still mean "max_connect" to be the total number
+> > > of connections since you say we could/will allow for nconnect number
+> > > of connections per IP address. Would max_connect need to be a
+> > > multiple
+> > > of nconnect (max_connect = X *nconnect)?
+> >
+> > No. Your suggestion to make the two independent is growing on me,
+> > however in that case we do want to ensure that if nconnect=X, then we
+> > always add X transports when we add a new IP address.
+>
+> Ok. I'm glad to hear independ idea still has life. Are you still
+> thinking "max_connect" is the right name for it? I guess if we explain
+> the feature in the man pages the name doesn't matter so much. I would
+> have still liked it to be something like "max_session_xprts".
+>
+> > > Actually when I said supporting (or rather allowing for) nconnect *
+> > > max_connect transport, is that correct? Given how the code works now
+> > > this is going to be nconnect + max_connect (only if 1st mount had
+> > > nconnect option). We can't "add" nconnect connections to the new
+> > > mounts (but with my patch we can add a single trunk connection). By
+> > > that I mean: say the first was "mount IP1:/vol1 /mnt1" (1 connection
+> > > to IP2). Now the client is doing "mount IP2:/vol2 /mnt2". IP1 and IP2
+> > > are trunkable addresses of the same server so we add a trunk. We
+> > > currently don't allow for doing "mount -o nconnec=2 IP2:vol2 /mnt2"
+> > > and then also add "nconnect" connections to IP2 along with a trunk.
+> > > In
+> > > the 2nd example, we'd have 1 connections to IP1, then 2 connections
+> > > to
+> > > IP2. Can we allow for that (with needed code change)?  If not, then
+> > > we
+> > > really need to commit to only support nconnect (16) connections +
+> > > some
+> > > number of trunkable connections.
+> >
+> >
+> > I think we want to have nconnect be server-global. i.e. nconnect
+> > entries of each IP address.
 
+After doing more thinking, I'm not sure I like imposing nconnect
+connections on a mount that didn't ask for it when a mount is done to
+a trunkable address. It feels like we are going from where we were
+conserving resources to creating extra when it wasn't asked for. Note,
+I'm not arguing (yet) against "having nconnect be server-global". I
+don't have an alternative suggestion.
 
-On 6/10/21 11:08 AM, Steve Dickson wrote:
-> Added tids to a number of statements
-> Broke the lifetime_rec secs into a readable format
-> Printed tids out correctly
-> Trim down the output of both '-v' and '-vv'
-> 
-> Signed-off-by: Steve Dickson <steved@redhat.com>
-Committed (tag: nfs-utils-2-5-4-rc7)
-
-steved.
-> ---
->   utils/gssd/err_util.c  | 14 ++++++++++++++
->   utils/gssd/err_util.h  |  1 +
->   utils/gssd/gssd.c      | 12 ++++++------
->   utils/gssd/gssd_proc.c | 34 ++++++++++++++++++++++------------
->   utils/gssd/krb5_util.c | 29 +++++++++++++++++------------
->   5 files changed, 60 insertions(+), 30 deletions(-)
-> 
-> diff --git a/utils/gssd/err_util.c b/utils/gssd/err_util.c
-> index 2b1132ac..27abd236 100644
-> --- a/utils/gssd/err_util.c
-> +++ b/utils/gssd/err_util.c
-> @@ -70,3 +70,17 @@ int get_verbosity(void)
->   {
->   	return verbosity;
->   }
-> +
-> +char *
-> +sec2time(int value)
-> +{
-> +    static char buf[BUFSIZ];
-> +    int hr, min, sec;
-> +
-> +    hr = (value / 3600);
-> +    min = (value  - (3600*hr))/60;
-> +    sec = (value  - (3600*hr) - (min*60));
-> +    sprintf(buf, "%dh:%dm:%ds", hr, min, sec);
-> +    return(buf);
-> +}
-> +
-> diff --git a/utils/gssd/err_util.h b/utils/gssd/err_util.h
-> index c4df32da..6fa9d3d7 100644
-> --- a/utils/gssd/err_util.h
-> +++ b/utils/gssd/err_util.h
-> @@ -34,5 +34,6 @@
->   void initerr(char *progname, int verbosity, int fg);
->   void printerr(int priority, char *format, ...);
->   int get_verbosity(void);
-> +char * sec2time(int);
->   
->   #endif /* _ERR_UTIL_H_ */
-> diff --git a/utils/gssd/gssd.c b/utils/gssd/gssd.c
-> index 4ca637f4..4113cbab 100644
-> --- a/utils/gssd/gssd.c
-> +++ b/utils/gssd/gssd.c
-> @@ -396,7 +396,7 @@ gssd_free_client(struct clnt_info *clp)
->   	if (refcnt > 0)
->   		return;
->   
-> -	printerr(3, "freeing client %s\n", clp->relpath);
-> +	printerr(4, "freeing client %s\n", clp->relpath);
->   
->   	if (clp->krb5_fd >= 0)
->   		close(clp->krb5_fd);
-> @@ -417,7 +417,7 @@ gssd_free_client(struct clnt_info *clp)
->   static void
->   gssd_destroy_client(struct clnt_info *clp)
->   {
-> -	printerr(3, "destroying client %s\n", clp->relpath);
-> +	printerr(4, "destroying client %s\n", clp->relpath);
->   
->   	if (clp->krb5_ev) {
->   		event_del(clp->krb5_ev);
-> @@ -494,7 +494,7 @@ scan_active_thread_list(void)
->   			 * upcall_thread_info from the list and free it.
->   			 */
->   			if (tret == PTHREAD_CANCELED)
-> -				printerr(3, "watchdog: thread id 0x%lx cancelled successfully\n",
-> +				printerr(2, "watchdog: thread id 0x%lx cancelled successfully\n",
->   						info->tid);
->   			saveprev = info->list.tqe_prev;
->   			TAILQ_REMOVE(&active_thread_list, info, list);
-> @@ -598,7 +598,7 @@ gssd_get_clnt(struct topdir *tdi, const char *name)
->   		if (!strcmp(clp->name, name))
->   			return clp;
->   
-> -	printerr(3, "creating client %s/%s\n", tdi->name, name);
-> +	printerr(4, "creating client %s/%s\n", tdi->name, name);
->   
->   	clp = calloc(1, sizeof(struct clnt_info));
->   	if (!clp) {
-> @@ -639,7 +639,7 @@ gssd_scan_clnt(struct clnt_info *clp)
->   {
->   	int clntfd;
->   
-> -	printerr(3, "scanning client %s\n", clp->relpath);
-> +	printerr(4, "scanning client %s\n", clp->relpath);
->   
->   	clntfd = openat(pipefs_fd, clp->relpath, O_RDONLY);
->   	if (clntfd < 0) {
-> @@ -798,7 +798,7 @@ gssd_scan(void)
->   {
->   	struct dirent *d;
->   
-> -	printerr(3, "doing a full rescan\n");
-> +	printerr(4, "doing a full rescan\n");
->   	rewinddir(pipefs_dir);
->   
->   	while ((d = readdir(pipefs_dir))) {
-> diff --git a/utils/gssd/gssd_proc.c b/utils/gssd/gssd_proc.c
-> index e849d104..ae568f15 100644
-> --- a/utils/gssd/gssd_proc.c
-> +++ b/utils/gssd/gssd_proc.c
-> @@ -166,8 +166,9 @@ do_downcall(int k5_fd, uid_t uid, struct authgss_private_data *pd,
->   	unsigned int buf_size = 0;
->   	pthread_t tid = pthread_self();
->   
-> -	printerr(2, "do_downcall(0x%x): lifetime_rec=%u acceptor=%.*s\n",
-> -		tid, lifetime_rec, acceptor->length, acceptor->value);
-> +	if (get_verbosity() > 1)
-> +		printerr(2, "do_downcall(0x%lx): lifetime_rec=%s acceptor=%.*s\n",
-> +			tid, sec2time(lifetime_rec), acceptor->length, acceptor->value);
->   	buf_size = sizeof(uid) + sizeof(timeout) + sizeof(pd->pd_seq_win) +
->   		sizeof(pd->pd_ctx_hndl.length) + pd->pd_ctx_hndl.length +
->   		sizeof(context_token->length) + context_token->length +
-> @@ -193,7 +194,7 @@ do_downcall(int k5_fd, uid_t uid, struct authgss_private_data *pd,
->   	return;
->   out_err:
->   	free(buf);
-> -	printerr(1, "do_downcall(0x%x): Failed to write downcall!\n", tid);
-> +	printerr(1, "do_downcall(0x%lx): Failed to write downcall!\n", tid);
->   	return;
->   }
->   
-> @@ -204,8 +205,9 @@ do_error_downcall(int k5_fd, uid_t uid, int err)
->   	char	*p = buf, *end = buf + 1024;
->   	unsigned int timeout = 0;
->   	int	zero = 0;
-> +	pthread_t tid = pthread_self();
->   
-> -	printerr(2, "doing error downcall\n");
-> +	printerr(2, "do_error_downcall(0x%lx): uid %d err %d\n", tid, uid, err);
->   
->   	if (WRITE_BYTES(&p, end, uid)) goto out_err;
->   	if (WRITE_BYTES(&p, end, timeout)) goto out_err;
-> @@ -328,6 +330,7 @@ create_auth_rpc_client(struct clnt_info *clp,
->   	struct timeval	timeout;
->   	struct sockaddr		*addr = (struct sockaddr *) &clp->addr;
->   	socklen_t		salen;
-> +	pthread_t tid = pthread_self();
->   
->   	sec.qop = GSS_C_QOP_DEFAULT;
->   	sec.svc = RPCSEC_GSS_SVC_NONE;
-> @@ -361,8 +364,8 @@ create_auth_rpc_client(struct clnt_info *clp,
->   
->   	/* create an rpc connection to the nfs server */
->   
-> -	printerr(2, "creating %s client for server %s\n", clp->protocol,
-> -			clp->servername);
-> +	printerr(3, "create_auth_rpc_client(0x%lx): creating %s client for server %s\n",
-> +		tid, clp->protocol, clp->servername);
->   
->   	protocol = IPPROTO_TCP;
->   	if ((strcmp(clp->protocol, "udp")) == 0)
-> @@ -405,7 +408,8 @@ create_auth_rpc_client(struct clnt_info *clp,
->   	if (!tgtname)
->   		tgtname = clp->servicename;
->   
-> -	printerr(2, "creating context with server %s\n", tgtname);
-> +	printerr(3, "create_auth_rpc_client(0x%lx): creating context with server %s\n",
-> +		tid, tgtname);
->   	auth = authgss_create_default(rpc_clnt, tgtname, &sec);
->   	if (!auth) {
->   		/* Our caller should print appropriate message */
-> @@ -511,9 +515,10 @@ krb5_not_machine_creds(struct clnt_info *clp, uid_t uid, char *tgtname,
->   	gss_cred_id_t	gss_cred;
->   	char		**dname;
->   	int		err, resp = -1;
-> +	pthread_t tid = pthread_self();
->   
-> -	printerr(2, "krb5_not_machine_creds: uid %d tgtname %s\n",
-> -		uid, tgtname);
-> +	printerr(2, "krb5_not_machine_creds(0x%lx): uid %d tgtname %s\n",
-> +		tid, uid, tgtname);
->   
->   	*chg_err = change_identity(uid);
->   	if (*chg_err) {
-> @@ -559,9 +564,10 @@ krb5_use_machine_creds(struct clnt_info *clp, uid_t uid,
->   	char	**ccname;
->   	int	nocache = 0;
->   	int	success = 0;
-> +	pthread_t tid = pthread_self();
->   
-> -	printerr(2, "krb5_use_machine_creds: uid %d tgtname %s\n",
-> -		uid, tgtname);
-> +	printerr(2, "krb5_use_machine_creds(0x%lx): uid %d tgtname %s\n",
-> +		tid, uid, tgtname);
->   
->   	do {
->   		gssd_refresh_krb5_machine_credential(clp->servername,
-> @@ -878,6 +884,7 @@ start_upcall_thread(void (*func)(struct clnt_upcall_info *), struct clnt_upcall_
->   	pthread_t th;
->   	struct upcall_thread_info *tinfo;
->   	int ret;
-> +	pthread_t tid = pthread_self();
->   
->   	tinfo = alloc_upcall_thread_info();
->   	if (!tinfo)
-> @@ -900,6 +907,9 @@ start_upcall_thread(void (*func)(struct clnt_upcall_info *), struct clnt_upcall_
->   		free(tinfo);
->   		return ret;
->   	}
-> +	printerr(2, "start_upcall_thread(0x%lx): created thread id 0x%lx\n",
-> +		tid, th);
-> +
->   	tinfo->tid = th;
->   	pthread_mutex_lock(&active_thread_list_lock);
->   	clock_gettime(CLOCK_MONOTONIC, &tinfo->timeout);
-> @@ -962,7 +972,7 @@ handle_gssd_upcall(struct clnt_info *clp)
->   	}
->   	lbuf[lbuflen-1] = 0;
->   
-> -	printerr(2, "\n%s(0x%x): '%s' (%s)\n", __func__, tid,
-> +	printerr(2, "\n%s(0x%lx): '%s' (%s)\n", __func__, tid,
->   		 lbuf, clp->relpath);
->   
->   	for (p = strtok(lbuf, " "); p; p = strtok(NULL, " ")) {
-> diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
-> index 51e0c6a2..c5f1152e 100644
-> --- a/utils/gssd/krb5_util.c
-> +++ b/utils/gssd/krb5_util.c
-> @@ -409,6 +409,7 @@ gssd_get_single_krb5_cred(krb5_context context,
->   	char *pname = NULL;
->   	char *k5err = NULL;
->   	int nocache = 0;
-> +	pthread_t tid = pthread_self();
->   
->   	memset(&my_creds, 0, sizeof(my_creds));
->   
-> @@ -421,8 +422,8 @@ gssd_get_single_krb5_cred(krb5_context context,
->   	now += 300;
->   	pthread_mutex_lock(&ple_lock);
->   	if (ple->ccname && ple->endtime > now && !nocache) {
-> -		printerr(3, "INFO: Credentials in CC '%s' are good until %d\n",
-> -			 ple->ccname, ple->endtime);
-> +		printerr(3, "%s(0x%lx): Credentials in CC '%s' are good until %s",
-> +			 __func__, tid, ple->ccname, ctime((time_t *)&ple->endtime));
->   		code = 0;
->   		pthread_mutex_unlock(&ple_lock);
->   		goto out;
-> @@ -522,7 +523,8 @@ gssd_get_single_krb5_cred(krb5_context context,
->   	}
->   
->   	code = 0;
-> -	printerr(2, "%s: principal '%s' ccache:'%s'\n", __func__, pname, cc_name);
-> +	printerr(2, "%s(0x%lx): principal '%s' ccache:'%s'\n",
-> +		__func__, tid, pname, cc_name);
->     out:
->   #ifdef HAVE_KRB5_GET_INIT_CREDS_OPT_SET_ADDRESSLESS
->   	if (init_opts)
-> @@ -651,6 +653,7 @@ get_full_hostname(const char *inhost, char *outhost, int outhostlen)
->   	struct addrinfo hints;
->   	int retval;
->   	char *c;
-> +	pthread_t tid = pthread_self();
->   
->   	memset(&hints, 0, sizeof(hints));
->   	hints.ai_socktype = SOCK_STREAM;
-> @@ -660,8 +663,8 @@ get_full_hostname(const char *inhost, char *outhost, int outhostlen)
->   	/* Get full target hostname */
->   	retval = getaddrinfo(inhost, NULL, &hints, &addrs);
->   	if (retval) {
-> -		printerr(1, "%s while getting full hostname for '%s'\n",
-> -			 gai_strerror(retval), inhost);
-> +		printerr(1, "%s(0x%lx): getaddrinfo(%s) failed: %s\n",
-> +			 __func__, tid, inhost, gai_strerror(retval));
->   		goto out;
->   	}
->   	strncpy(outhost, addrs->ai_canonname, outhostlen);
-> @@ -669,7 +672,10 @@ get_full_hostname(const char *inhost, char *outhost, int outhostlen)
->   	for (c = outhost; *c != '\0'; c++)
->   	    *c = tolower(*c);
->   
-> -	printerr(3, "Full hostname for '%s' is '%s'\n", inhost, outhost);
-> +	if (get_verbosity() && strcmp(inhost, outhost))
-> +		printerr(1, "%s(0x%0lx): inhost '%s' different than outhost'%s'\n",
-> +			inhost, outhost);
-> +
->   	retval = 0;
->   out:
->   	return retval;
-> @@ -856,6 +862,7 @@ find_keytab_entry(krb5_context context, krb5_keytab kt,
->   	krb5_principal princ;
->   	const char *notsetstr = "not set";
->   	char *adhostoverride = NULL;
-> +	pthread_t tid = pthread_self();
->   
->   
->   	/* Get full target hostname */
-> @@ -1010,7 +1017,7 @@ find_keytab_entry(krb5_context context, krb5_keytab kt,
->   					tried_upper = 1;
->   				}
->   			} else {
-> -				printerr(2, "Success getting keytab entry for '%s'\n",spn);
-> +				printerr(2, "find_keytab_entry(0x%lx): Success getting keytab entry for '%s'\n",tid, spn);
->   				retval = 0;
->   				goto out;
->   			}
-> @@ -1151,9 +1158,6 @@ gssd_refresh_krb5_machine_credential_internal(char *hostname,
->   	char *k5err = NULL;
->   	const char *svcnames[] = { "$", "root", "nfs", "host", NULL };
->   
-> -	printerr(2, "%s: hostname=%s ple=%p service=%s srchost=%s\n",
-> -		__func__, hostname, ple, service, srchost);
-> -
->   	/*
->   	 * If a specific service name was specified, use it.
->   	 * Otherwise, use the default list.
-> @@ -1162,9 +1166,10 @@ gssd_refresh_krb5_machine_credential_internal(char *hostname,
->   		svcnames[0] = service;
->   		svcnames[1] = NULL;
->   	}
-> -	if (hostname == NULL && ple == NULL)
-> +	if (hostname == NULL && ple == NULL) {
-> +		printerr(0, "ERROR: %s: Invalid args\n", __func__);
->   		return EINVAL;
-> -
-> +	}
->   	code = krb5_init_context(&context);
->   	if (code) {
->   		k5err = gssd_k5_err_msg(NULL, code);
-> 
-
+> Thank you both, Trond and Chuck.
+>
+> I'll work on v3.
+>
+>
+> >
+> > --
+> > Trond Myklebust
+> > Linux NFS client maintainer, Hammerspace
+> > trond.myklebust@hammerspace.com
+> >
+> >
