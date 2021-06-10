@@ -2,228 +2,274 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4589F3A304F
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jun 2021 18:14:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5ACE3A30C6
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jun 2021 18:36:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229802AbhFJQQm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Jun 2021 12:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230134AbhFJQQm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Jun 2021 12:16:42 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ABC2C061574
-        for <linux-nfs@vger.kernel.org>; Thu, 10 Jun 2021 09:14:36 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id ce15so96098ejb.4
-        for <linux-nfs@vger.kernel.org>; Thu, 10 Jun 2021 09:14:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WiAmtG22QSgpfH+MBUOUlX4nB+pCVCd2TjW8Kj93Kuw=;
-        b=nnrGRYHTautUY0U8MbHLsxA87F577gtZvkpbaa2Nb3xEbgsS7O/yn9qMR28wTiZaWo
-         7frK4gmDjkZCMyMvgoU+wDvWwr3/JUs6xkn3LoL3EF/0NrOB6Uhx+2JtsLEdWDy1OG5l
-         DJ8BRqXhUtnVAznqmnvDWkRYwIDW4DctAkvQIj1odVZ8XcpAFB0gPSRVhISaC+2JV/h7
-         Qf+Mq2uZJYBovdDw8EgPr5u4olSQ014gtudV4GYnaeh82W7ObZ/kPUydk3sadKaVYcUI
-         i8zdVHAtzcLnGa1f63VaKuQNkZOBsn85BOvxLpAeOuy9AltIg/LPPr898nezI6LWfE3+
-         fJSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WiAmtG22QSgpfH+MBUOUlX4nB+pCVCd2TjW8Kj93Kuw=;
-        b=akY5yV3+FM3tnk842usCv6j5ONSevD10IwnrvUjU1cbL5FdMHZ2zwJrphAeXdreVh9
-         FvMCq50Scwc03wh68TMzl5eK0BmLVk3wbOyKklqgWL+e70O3RviCyaYCGWKiiWsshWxC
-         BrkKN6iR3AKr0W107sEdnFX1Tc6gZ1SsFvrDT3whhdSdDhwgH86A1p8tO5cO25q9nGQN
-         Kmj1mYJbI80G2sVcW0qNwpdB0t8f8c+CL7ucGjH1SODTGEkrRwY513uLtBrMhp0gdRPt
-         NUL/7fWTTx7Cq3Z17PHua2dp/K35+JhVB/KRJsTIL/4uhU+XcOjbqnCrtp+metZ2At22
-         +VZA==
-X-Gm-Message-State: AOAM5303HRu8/7ElZUjsaygwinTm44MW2R7CFyQ96PB0sg+eNf8YSj/J
-        qHzYhHdmeHy1S0x+F9XmtyKxne+rGr0AuGsk3FI=
-X-Google-Smtp-Source: ABdhPJwH5pP3BHQD5r9uCpuCgG5C1ML5HSlJ9e+LIekayYr4lM3OA+c3B1ZZvqdW9ebHZCsWewPWO3fup6WroedLZEg=
-X-Received: by 2002:a17:907:3e26:: with SMTP id hp38mr329326ejc.451.1623341674615;
- Thu, 10 Jun 2021 09:14:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210609215319.5518-1-olga.kornievskaia@gmail.com>
- <20210609215319.5518-3-olga.kornievskaia@gmail.com> <6C64456A-931F-4CAD-A559-412A12F0F741@oracle.com>
- <6bca80de292b5aa36734e7d942d0e9f53430903b.camel@hammerspace.com>
- <83D9342E-FDAF-4B2C-A518-20BF0A9AD073@oracle.com> <3658c226b43fb190de38c00e5199ccf35ccc4369.camel@hammerspace.com>
- <CAN-5tyF3BSDvsegLWM6hAOY9QDMbG1LUg9YykXi8rwDcNVXqbA@mail.gmail.com> <c7a7a04adbe261d5ca104780c290a44ede1ed4c2.camel@hammerspace.com>
-In-Reply-To: <c7a7a04adbe261d5ca104780c290a44ede1ed4c2.camel@hammerspace.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Thu, 10 Jun 2021 12:14:23 -0400
-Message-ID: <CAN-5tyHdciZ+TmRZmwBNeypA4i15L8w5jomCVRNJnMyuVLSUOQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] NFSv4 introduce max_connect mount options
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        id S231133AbhFJQiB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Jun 2021 12:38:01 -0400
+Received: from mail-dm6nam12on2132.outbound.protection.outlook.com ([40.107.243.132]:12897
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230494AbhFJQiA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 10 Jun 2021 12:38:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CTEimG8N1dIxlIKG43oLph/yhRHhABxPvQvBZ23Prazx9BC4NkoAEFBHZIXpHCvvt2vLiu8H1K6FqxbK4gWSy9G3vnOzSJ0eG6ZqOl3e2IWRyVhXFjaCpG9I/n1GvLltbYzy2N6SotDzEbsU62UmLPJEavWBd8oNwhS0Jhb/lY7Brb68cUbZtSBZt70VDlm68WdK/71/0XeZUYOtsBuRdvZB3EDJQhE5cOH8f1PVh7rKptfzOyyRzap45MLA6xOJNGuQDkdtRzf1bfupuYJqtPcGONuHD9I6ItATEByYxXdKWSk0xSYyPM6Cf0xVV+rNWMHD/8jDiBbyrF2XMo0tnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8vLQRw3sOts0+O18QS1P5pVMeUhhaw7Mb2oVlQTBu3I=;
+ b=JSAQkcBha2ZhXNLytEO4aISH8Zc56kkvgBytLW4MCJEVrgjQBbtlwNy4Vyrx/85N0aksesgSVejSYyrBvUT6ykVimcVJaTXVtL42FnARdjt01Z13lhPWaITRSVJEEMeOcZsjfTXR6FfZynat3lm8FwJbB4ThYuzuvpOflIRYC5MGSUZtjWBNq/4gkZaZZ8eA6c9jhOmBSFMe1KHZy6jJpCOam2nRmcVRXSE/UYl4QjD4No3VD4+HEXSwKAVLxdqW8Qt6WdQjFsWTxllhXTlNkqmp4xYAPkKMrHdDHUsxwKpL4TwjNs2UpS9PX9nl/gyt+/S8gmLfpB8+JkTRXOMWNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8vLQRw3sOts0+O18QS1P5pVMeUhhaw7Mb2oVlQTBu3I=;
+ b=QmZIxWNOvjRmwo7WtfKIcFIJoxaR6zao/1jUvZONU4rga/DhArpnMm55g3sid2+lrqIEjpm5Y4rycGR1gAqJnv9wlbvRHsVOiwcKyL2OvH0vFq9mTZxcVgWESedFNLStKEJihMjtMUXaCXrSY3WlFAY8++HttSrv9JRytkHvRCY=
+Received: from DS7PR13MB4733.namprd13.prod.outlook.com (2603:10b6:5:3b1::24)
+ by DM5PR13MB1307.namprd13.prod.outlook.com (2603:10b6:3:32::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.17; Thu, 10 Jun
+ 2021 16:36:02 +0000
+Received: from DS7PR13MB4733.namprd13.prod.outlook.com
+ ([fe80::4c65:55ca:a5a2:f18]) by DS7PR13MB4733.namprd13.prod.outlook.com
+ ([fe80::4c65:55ca:a5a2:f18%7]) with mapi id 15.20.4242.012; Thu, 10 Jun 2021
+ 16:36:02 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
         "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
         "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2 2/3] NFSv4 introduce max_connect mount options
+Thread-Topic: [PATCH v2 2/3] NFSv4 introduce max_connect mount options
+Thread-Index: AQHXXXnh3WIMdJRfJ0KF+q50bEsARasNPoYAgAABKgCAAAY7AIAABLOAgAAFEgCAAAbMgIAAFeqAgAAGCgA=
+Date:   Thu, 10 Jun 2021 16:36:01 +0000
+Message-ID: <b8967b4a092feaa7eabd8c09a9dbd1ffc1707495.camel@hammerspace.com>
+References: <20210609215319.5518-1-olga.kornievskaia@gmail.com>
+         <20210609215319.5518-3-olga.kornievskaia@gmail.com>
+         <6C64456A-931F-4CAD-A559-412A12F0F741@oracle.com>
+         <6bca80de292b5aa36734e7d942d0e9f53430903b.camel@hammerspace.com>
+         <83D9342E-FDAF-4B2C-A518-20BF0A9AD073@oracle.com>
+         <3658c226b43fb190de38c00e5199ccf35ccc4369.camel@hammerspace.com>
+         <CAN-5tyF3BSDvsegLWM6hAOY9QDMbG1LUg9YykXi8rwDcNVXqbA@mail.gmail.com>
+         <c7a7a04adbe261d5ca104780c290a44ede1ed4c2.camel@hammerspace.com>
+         <CAN-5tyHdciZ+TmRZmwBNeypA4i15L8w5jomCVRNJnMyuVLSUOQ@mail.gmail.com>
+In-Reply-To: <CAN-5tyHdciZ+TmRZmwBNeypA4i15L8w5jomCVRNJnMyuVLSUOQ@mail.gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1337b65e-6c20-4f3e-96f9-08d92c2dd5bd
+x-ms-traffictypediagnostic: DM5PR13MB1307:
+x-microsoft-antispam-prvs: <DM5PR13MB13070A59E0C1C1EAA1F10F57B8359@DM5PR13MB1307.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5cDnSVPCX3alT8sHFuWPj9fvhgut3OcamKLdMm3rww+XVeWo+7cs8nuhuMDy2f4ps8FBWddNkISu+UdYumHkQwa9NqaxXVvyLKAUtUErz/RC7xCsQP0ZVYNMPyRgai21DvnpVPeNsVepy44ky6jRQCETBAP2DdDQr4mnclDwxlFAe34qoXFGmCNN5TJ18MjhMY+U7Ns0tmGRpb3WAeRvQRLvTgmTX8Xg2Ws5Q/lB8R0U7ywfiASC/TFgGV+rHh7uCzj+3ppvrqBqihfMDSJEtodID0xiMfVv27I4x6/uM8kQtoFHphyZJtqrHVMaG/65nZVu5rMy9NFyEMTlsss0BHUnvcThPCI0ChaZZNsZIGbjy+qKjFPD8zULZKseUlVSE/dP/5gtVyEfU50DJfSgCzObaBOO6Q1JgflKTkXTQUEYvPOSKckwEyRm3rrgObNa55FHAUlP3uZxVEAWgFaFM9HwN/2AffTIkWVL/hEnyGIuWNNObQ3x62jDXYD2R5C+PhncVVm1FoIZbdL72LnBrPHWt+4ir+z5QrpYcWNJBAcBOj0jHr8bBtqoJQcyrpM526HiUk0b7rtD555TL/V84V7xYdZDH/6qFRexjqHKHDA=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR13MB4733.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(136003)(346002)(376002)(396003)(39830400003)(186003)(8936002)(6506007)(26005)(86362001)(53546011)(83380400001)(2616005)(316002)(2906002)(6916009)(36756003)(122000001)(54906003)(38100700002)(6486002)(66946007)(5660300002)(66556008)(66476007)(66446008)(71200400001)(64756008)(8676002)(6512007)(76116006)(91956017)(478600001)(4326008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bkVYSDFpT1lPQzF2b1FqK2pFQVo4a2lIeXBLTFVUakRtNFIvY0w1aGhoeWtT?=
+ =?utf-8?B?VFBvbFROSVpwVVJRRysrTnRuWVFIVzRPOWNWMnhLK1RERlFNWEF6QXNXOEsv?=
+ =?utf-8?B?a2JNeVh6TEl0dkVoMXczYk1xdFMvWHMrdHJOY1poaitZb2hNM0NyRkRNbTZZ?=
+ =?utf-8?B?Y0Z6TXdhZTdKMm50cHYvSlJCOG0yZ1lLTjdxREpBQnNTaEY3RTM4bkgvRmlR?=
+ =?utf-8?B?Q0FadDZXTzFkaFYwc0FDZ0RJdUU3SXd6cHkwZ1RSWlR5RHdkNmV6ZmdnL0Ry?=
+ =?utf-8?B?YlMxM0RlQWo2QklMbVkzSjFkVCt6VytzUGluT0luTFp4NEpZM3laa2RUMDdx?=
+ =?utf-8?B?S3RTOUdsWVBza2dwSGhqeWVnWks1WWNieW9jdkhoc2lJTUNJVlJvZkE0dzUz?=
+ =?utf-8?B?ZUFaT2pFcFVWaCtvdFhKenFlVXZyUGZYZHQzbFdpcmlkbEdYeUZ0amZ1MjUx?=
+ =?utf-8?B?UmlqY1N0a1FhVmNyNDl5dnNqLzd3UWZNT3l5MUVYWFQyTG1GSThGM0RVWkR0?=
+ =?utf-8?B?Q29RZmdEbWFvUGdYallTKzNBRFFVWmFMMGIzakE5Q3MyWENXWXV3Zk1LTkc2?=
+ =?utf-8?B?Z3VsMjA3b3B2ajNsOTB5bXdLNUUyS0grSEtUS1NKSXM2ZjhmT1cwcG1DTW5N?=
+ =?utf-8?B?R3RNZUY4cnFCbmNuU01ncXZaRlZWMlBJb2grQkRLdWJmU040aGRKcUpUT1Bv?=
+ =?utf-8?B?OG1mMjYvYWplc2JmbFF4SE5CMXNPZFFDcHlpQVBUOXAwb24vbE1FRDhMZUt1?=
+ =?utf-8?B?a0daOGJJamhDWWFXWE1MaE1SQXJwVkNoZUxoWU5jYXU4dUFYSHR5MFRLdlRT?=
+ =?utf-8?B?dFpqQSs5K3BrNEkyUlNlVGU2NG9QbnZSeXlFRWROUENmYmlodzVyUEozZ045?=
+ =?utf-8?B?dTlPU0lCaExZZVFUYmhtT05TU3hBQnN1MGVhOTZ1QW0rN1BTQStmSnJKOW9l?=
+ =?utf-8?B?OFV6QlZLRFljSVBPMU0ySjQ5dC8ySlAvZWdubzFmZkQzYTFTcTVmeXJQcEhs?=
+ =?utf-8?B?aFM3MDFBRWtlU2VJNGV2RUs2b2VkQmJBbzFSWmxFdXJLbFNJRFZwYStFcG4x?=
+ =?utf-8?B?NThJdW4yZk5ZQ01BMDhwYlhQbURheUlOVmFuV202Zy84a1R3c2lSL0d3VTdB?=
+ =?utf-8?B?dTdYNlVWdWkyQXBPUkt3dDN1OXptZGpxbTJMeWZ1VDI0aHpxVEo4VkpzbXRt?=
+ =?utf-8?B?UEZiVjZqWmVPRDczdnlROWlqNEtxb09ZQ2w4ZEFtTXowS0hoMkpoVGpZQ0dt?=
+ =?utf-8?B?R3lJWlhodlhUNnRZcjVOMGJnTU9zbEFnUWR3ZDR6MDJFRXRxNlRscmY1dzlY?=
+ =?utf-8?B?V0hpTEIxaFB4ZmJWZUxCQk43ZlVtZ3RpZG5SNFc4eWpjNm8zUGJJVmRKclFD?=
+ =?utf-8?B?NThvSkRPazJxclJHMGEva3lpVTQzN2FhUDlGNk5LdU51TmNrWE4zRTNTZ2tN?=
+ =?utf-8?B?MGpOakZ4Yi9va0dDdXVoNGYzYzNDQzhYOXpQeEJndWxOVEhZSU10MVhSN2tR?=
+ =?utf-8?B?WmNkMDNpUzNSZ0pRWVZJZ045OGczeWgrSVhYL0JERC9rUlZmMU16djlBclVR?=
+ =?utf-8?B?aG8xbUJUS25XRTgveU04TkFuWDlTZk45T2lJMWtldG8wMnBMeHNYNDBLYkt1?=
+ =?utf-8?B?OTdKcVFMVDVLZUx0R1NsVlppaFd6Ulg3MXEvOVdjcm9GRFlxdXhnK2VDOHYw?=
+ =?utf-8?B?bWYvRHN6VlFkYlpSVzhrTm4reUhuL2ljRk9zZDRLRlBHVjFJcjQvRHdTdUhH?=
+ =?utf-8?Q?PWNuhHi7ZFNlf5RDscLN+e/SOdiMrto1aFp9Mxg?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D8BD42865A270744811BD10084A6F3C6@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR13MB4733.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1337b65e-6c20-4f3e-96f9-08d92c2dd5bd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2021 16:36:01.9234
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TRwlKnSEdpbvHEmMbf5hEeg8TIkLxXMwzqKCo7D3MH9o42/nVWJ+IBRc0f7fUez5q/SdTI4Q9eLORGfvU2d2SA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1307
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jun 10, 2021 at 10:56 AM Trond Myklebust
-<trondmy@hammerspace.com> wrote:
->
-> On Thu, 2021-06-10 at 10:31 -0400, Olga Kornievskaia wrote:
-> > On Thu, Jun 10, 2021 at 10:13 AM Trond Myklebust
-> > <trondmy@hammerspace.com> wrote:
-> > >
-> > > On Thu, 2021-06-10 at 13:56 +0000, Chuck Lever III wrote:
-> > > >
-> > > >
-> > > > > On Jun 10, 2021, at 9:34 AM, Trond Myklebust <
-> > > > > trondmy@hammerspace.com> wrote:
-> > > > >
-> > > > > On Thu, 2021-06-10 at 13:30 +0000, Chuck Lever III wrote:
-> > > > > >
-> > > > > >
-> > > > > > > On Jun 9, 2021, at 5:53 PM, Olga Kornievskaia <
-> > > > > > > olga.kornievskaia@gmail.com> wrote:
-> > > > > > >
-> > > > > > > From: Olga Kornievskaia <kolga@netapp.com>
-> > > > > > >
-> > > > > > > This option will control up to how many xprts can the
-> > > > > > > client
-> > > > > > > establish to the server. This patch parses the value and
-> > > > > > > sets
-> > > > > > > up structures that keep track of max_connect.
-> > > > > > >
-> > > > > > > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> > > > > > > ---
-> > > > > > > fs/nfs/client.c           |  1 +
-> > > > > > > fs/nfs/fs_context.c       |  8 ++++++++
-> > > > > > > fs/nfs/internal.h         |  2 ++
-> > > > > > > fs/nfs/nfs4client.c       | 12 ++++++++++--
-> > > > > > > fs/nfs/super.c            |  2 ++
-> > > > > > > include/linux/nfs_fs_sb.h |  1 +
-> > > > > > > 6 files changed, 24 insertions(+), 2 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-> > > > > > > index 330f65727c45..486dec59972b 100644
-> > > > > > > --- a/fs/nfs/client.c
-> > > > > > > +++ b/fs/nfs/client.c
-> > > > > > > @@ -179,6 +179,7 @@ struct nfs_client
-> > > > > > > *nfs_alloc_client(const
-> > > > > > > struct nfs_client_initdata *cl_init)
-> > > > > > >
-> > > > > > >         clp->cl_proto = cl_init->proto;
-> > > > > > >         clp->cl_nconnect = cl_init->nconnect;
-> > > > > > > +       clp->cl_max_connect = cl_init->max_connect ?
-> > > > > > > cl_init-
-> > > > > > > > max_connect : 1;
-> > > > > >
-> > > > > > So, 1 is the default setting, meaning the "add another
-> > > > > > transport"
-> > > > > > facility is disabled by default. Would it be less surprising
-> > > > > > for
-> > > > > > an admin to allow some extra connections by default?
-> > > > > >
-> > > > > >
-> > > > > > >         clp->cl_net = get_net(cl_init->net);
-> > > > > > >
-> > > > > > >         clp->cl_principal = "*";
-> > > > > > > diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-> > > > > > > index d95c9a39bc70..cfbff7098f8e 100644
-> > > > > > > --- a/fs/nfs/fs_context.c
-> > > > > > > +++ b/fs/nfs/fs_context.c
-> > > > > > > @@ -29,6 +29,7 @@
-> > > > > > > #endif
-> > > > > > >
-> > > > > > > #define NFS_MAX_CONNECTIONS 16
-> > > > > > > +#define NFS_MAX_TRANSPORTS 128
-> > > > > >
-> > > > > > This maximum seems excessive... again, there are diminishing
-> > > > > > returns to adding more connections to the same server. what's
-> > > > > > wrong with re-using NFS_MAX_CONNECTIONS for the maximum?
-> > > > > >
-> > > > > > As always, I'm a little queasy about adding yet another mount
-> > > > > > option. Are there real use cases where a whole-client setting
-> > > > > > (like a sysfs attribute) would be inadequate? Is there a way
-> > > > > > the client could figure out a reasonable maximum without a
-> > > > > > human intervention, say, by counting the number of NICs on
-> > > > > > the system?
-> > > > >
-> > > > > Oh, hell no! We're not tying anything to the number of NICs...
-> > > >
-> > > > That's a bit of an over-reaction. :-) A little more explanation
-> > > > would be welcome. I mean, don't you expect someone to ask "How
-> > > > do I pick a good value?" and someone might reasonably answer
-> > > > "Well, start with the number of NICs on your client times 3" or
-> > > > something like that.
-> > > >
-> > > > IMO we're about to add another admin setting without
-> > > > understanding
-> > > > how it will be used, how to select a good maximum value, or even
-> > > > whether this maximum needs to be adjustable. In a previous e-mail
-> > > > Olga has already demonstrated that it will be difficult to
-> > > > explain
-> > > > how to use this setting with nconnect=.
-> > > >
-> > > > Thus I would favor a (moderate) soldered-in maximum to start
-> > > > with,
-> > > > and then as real world use cases arise, consider adding a tuning
-> > > > mechanism based on actual requirements.
-> > >
-> > > It's not an overreaction. It's insane to think that counting NICs
-> > > gives
-> > > you any notion whatsoever about the network topology and
-> > > connectivity
-> > > between the client and server. It doesn't even tell you how many of
-> > > those NICs might potentially be available to your application.
-> > >
-> > > We're not doing any automation based on that kind of layering
-> > > violation.
-> >
-> > I'm not suggesting to programmatically determine the number of NIC to
-> > determine the value of max_connect.
-> > >
->
-> No, but that's what Chuck appeared to be suggesting in order to avoid
-> the need for the mount option.
->
-> To me, the main reason for the mount option is to allow the user to
-> limit the number of new IP addresses being added so that if the DNS
-> server is configured to hand out lots of different addresses for the
-> same servername, the user can basically say 'no, I just want to use the
-> one IP address that I'm already connected to' (i.e. max_connect=1). I
-> can imagine that some clustered setups might need that ability in order
-> to work efficiently.
->
-> I'm fine with the idea of nconnect setting the number of connections
-> per IP address, but that would need some plumbing in
-> rpc_clnt_test_and_add_xprt() to allow us to add up to 'nconnect' copies
-> of a given transport.
-> Presumably rpc_xprt_switch_has_addr() would need to return a count of
-> the number of copies of the transport that are already present so that
-> we can decide whether or not we should add a new one.
-
-I think the last paragraph is what I'm asking for. But I would like to
-again confirm if you still mean "max_connect" to be the total number
-of connections since you say we could/will allow for nconnect number
-of connections per IP address. Would max_connect need to be a multiple
-of nconnect (max_connect = X *nconnect)?
-
-Actually when I said supporting (or rather allowing for) nconnect *
-max_connect transport, is that correct? Given how the code works now
-this is going to be nconnect + max_connect (only if 1st mount had
-nconnect option). We can't "add" nconnect connections to the new
-mounts (but with my patch we can add a single trunk connection). By
-that I mean: say the first was "mount IP1:/vol1 /mnt1" (1 connection
-to IP2). Now the client is doing "mount IP2:/vol2 /mnt2". IP1 and IP2
-are trunkable addresses of the same server so we add a trunk. We
-currently don't allow for doing "mount -o nconnec=2 IP2:vol2 /mnt2"
-and then also add "nconnect" connections to IP2 along with a trunk. In
-the 2nd example, we'd have 1 connections to IP1, then 2 connections to
-IP2. Can we allow for that (with needed code change)?  If not, then we
-really need to commit to only support nconnect (16) connections + some
-number of trunkable connections.
-
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+T24gVGh1LCAyMDIxLTA2LTEwIGF0IDEyOjE0IC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
+ZToNCj4gT24gVGh1LCBKdW4gMTAsIDIwMjEgYXQgMTA6NTYgQU0gVHJvbmQgTXlrbGVidXN0DQo+
+IDx0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gT24gVGh1LCAyMDIx
+LTA2LTEwIGF0IDEwOjMxIC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90ZToNCj4gPiA+IE9u
+IFRodSwgSnVuIDEwLCAyMDIxIGF0IDEwOjEzIEFNIFRyb25kIE15a2xlYnVzdA0KPiA+ID4gPHRy
+b25kbXlAaGFtbWVyc3BhY2UuY29tPiB3cm90ZToNCj4gPiA+ID4gDQo+ID4gPiA+IE9uIFRodSwg
+MjAyMS0wNi0xMCBhdCAxMzo1NiArMDAwMCwgQ2h1Y2sgTGV2ZXIgSUlJIHdyb3RlOg0KPiA+ID4g
+PiA+IA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gT24gSnVuIDEwLCAyMDIxLCBhdCA5OjM0IEFN
+LCBUcm9uZCBNeWtsZWJ1c3QgPA0KPiA+ID4gPiA+ID4gdHJvbmRteUBoYW1tZXJzcGFjZS5jb20+
+IHdyb3RlOg0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBPbiBUaHUsIDIwMjEtMDYtMTAgYXQg
+MTM6MzAgKzAwMDAsIENodWNrIExldmVyIElJSSB3cm90ZToNCj4gPiA+ID4gPiA+ID4gDQo+ID4g
+PiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IE9uIEp1biA5LCAyMDIxLCBhdCA1OjUzIFBNLCBP
+bGdhIEtvcm5pZXZza2FpYSA8DQo+ID4gPiA+ID4gPiA+ID4gb2xnYS5rb3JuaWV2c2thaWFAZ21h
+aWwuY29tPiB3cm90ZToNCj4gPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gPiBGcm9tOiBP
+bGdhIEtvcm5pZXZza2FpYSA8a29sZ2FAbmV0YXBwLmNvbT4NCj4gPiA+ID4gPiA+ID4gPiANCj4g
+PiA+ID4gPiA+ID4gPiBUaGlzIG9wdGlvbiB3aWxsIGNvbnRyb2wgdXAgdG8gaG93IG1hbnkgeHBy
+dHMgY2FuIHRoZQ0KPiA+ID4gPiA+ID4gPiA+IGNsaWVudA0KPiA+ID4gPiA+ID4gPiA+IGVzdGFi
+bGlzaCB0byB0aGUgc2VydmVyLiBUaGlzIHBhdGNoIHBhcnNlcyB0aGUgdmFsdWUNCj4gPiA+ID4g
+PiA+ID4gPiBhbmQNCj4gPiA+ID4gPiA+ID4gPiBzZXRzDQo+ID4gPiA+ID4gPiA+ID4gdXAgc3Ry
+dWN0dXJlcyB0aGF0IGtlZXAgdHJhY2sgb2YgbWF4X2Nvbm5lY3QuDQo+ID4gPiA+ID4gPiA+ID4g
+DQo+ID4gPiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogT2xnYSBLb3JuaWV2c2thaWEgPGtvbGdh
+QG5ldGFwcC5jb20+DQo+ID4gPiA+ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4gPiA+ID4gZnMvbmZz
+L2NsaWVudC5jwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDEgKw0KPiA+ID4gPiA+ID4gPiA+IGZz
+L25mcy9mc19jb250ZXh0LmPCoMKgwqDCoMKgwqAgfMKgIDggKysrKysrKysNCj4gPiA+ID4gPiA+
+ID4gPiBmcy9uZnMvaW50ZXJuYWwuaMKgwqDCoMKgwqDCoMKgwqAgfMKgIDIgKysNCj4gPiA+ID4g
+PiA+ID4gPiBmcy9uZnMvbmZzNGNsaWVudC5jwqDCoMKgwqDCoMKgIHwgMTIgKysrKysrKysrKy0t
+DQo+ID4gPiA+ID4gPiA+ID4gZnMvbmZzL3N1cGVyLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzC
+oCAyICsrDQo+ID4gPiA+ID4gPiA+ID4gaW5jbHVkZS9saW51eC9uZnNfZnNfc2IuaCB8wqAgMSAr
+DQo+ID4gPiA+ID4gPiA+ID4gNiBmaWxlcyBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspLCAyIGRl
+bGV0aW9ucygtKQ0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IGRpZmYgLS1naXQg
+YS9mcy9uZnMvY2xpZW50LmMgYi9mcy9uZnMvY2xpZW50LmMNCj4gPiA+ID4gPiA+ID4gPiBpbmRl
+eCAzMzBmNjU3MjdjNDUuLjQ4NmRlYzU5OTcyYiAxMDA2NDQNCj4gPiA+ID4gPiA+ID4gPiAtLS0g
+YS9mcy9uZnMvY2xpZW50LmMNCj4gPiA+ID4gPiA+ID4gPiArKysgYi9mcy9uZnMvY2xpZW50LmMN
+Cj4gPiA+ID4gPiA+ID4gPiBAQCAtMTc5LDYgKzE3OSw3IEBAIHN0cnVjdCBuZnNfY2xpZW50DQo+
+ID4gPiA+ID4gPiA+ID4gKm5mc19hbGxvY19jbGllbnQoY29uc3QNCj4gPiA+ID4gPiA+ID4gPiBz
+dHJ1Y3QgbmZzX2NsaWVudF9pbml0ZGF0YSAqY2xfaW5pdCkNCj4gPiA+ID4gPiA+ID4gPiANCj4g
+PiA+ID4gPiA+ID4gPiDCoMKgwqDCoMKgwqDCoCBjbHAtPmNsX3Byb3RvID0gY2xfaW5pdC0+cHJv
+dG87DQo+ID4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqAgY2xwLT5jbF9uY29ubmVjdCA9IGNs
+X2luaXQtPm5jb25uZWN0Ow0KPiA+ID4gPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqAgY2xwLT5jbF9t
+YXhfY29ubmVjdCA9IGNsX2luaXQtPm1heF9jb25uZWN0ID8NCj4gPiA+ID4gPiA+ID4gPiBjbF9p
+bml0LQ0KPiA+ID4gPiA+ID4gPiA+ID4gbWF4X2Nvbm5lY3QgOiAxOw0KPiA+ID4gPiA+ID4gPiAN
+Cj4gPiA+ID4gPiA+ID4gU28sIDEgaXMgdGhlIGRlZmF1bHQgc2V0dGluZywgbWVhbmluZyB0aGUg
+ImFkZCBhbm90aGVyDQo+ID4gPiA+ID4gPiA+IHRyYW5zcG9ydCINCj4gPiA+ID4gPiA+ID4gZmFj
+aWxpdHkgaXMgZGlzYWJsZWQgYnkgZGVmYXVsdC4gV291bGQgaXQgYmUgbGVzcw0KPiA+ID4gPiA+
+ID4gPiBzdXJwcmlzaW5nDQo+ID4gPiA+ID4gPiA+IGZvcg0KPiA+ID4gPiA+ID4gPiBhbiBhZG1p
+biB0byBhbGxvdyBzb21lIGV4dHJhIGNvbm5lY3Rpb25zIGJ5IGRlZmF1bHQ/DQo+ID4gPiA+ID4g
+PiA+IA0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gPiDCoMKgwqDCoMKgwqDCoCBjbHAt
+PmNsX25ldCA9IGdldF9uZXQoY2xfaW5pdC0+bmV0KTsNCj4gPiA+ID4gPiA+ID4gPiANCj4gPiA+
+ID4gPiA+ID4gPiDCoMKgwqDCoMKgwqDCoCBjbHAtPmNsX3ByaW5jaXBhbCA9ICIqIjsNCj4gPiA+
+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL2ZzX2NvbnRleHQuYyBiL2ZzL25mcy9mc19j
+b250ZXh0LmMNCj4gPiA+ID4gPiA+ID4gPiBpbmRleCBkOTVjOWEzOWJjNzAuLmNmYmZmNzA5OGY4
+ZSAxMDA2NDQNCj4gPiA+ID4gPiA+ID4gPiAtLS0gYS9mcy9uZnMvZnNfY29udGV4dC5jDQo+ID4g
+PiA+ID4gPiA+ID4gKysrIGIvZnMvbmZzL2ZzX2NvbnRleHQuYw0KPiA+ID4gPiA+ID4gPiA+IEBA
+IC0yOSw2ICsyOSw3IEBADQo+ID4gPiA+ID4gPiA+ID4gI2VuZGlmDQo+ID4gPiA+ID4gPiA+ID4g
+DQo+ID4gPiA+ID4gPiA+ID4gI2RlZmluZSBORlNfTUFYX0NPTk5FQ1RJT05TIDE2DQo+ID4gPiA+
+ID4gPiA+ID4gKyNkZWZpbmUgTkZTX01BWF9UUkFOU1BPUlRTIDEyOA0KPiA+ID4gPiA+ID4gPiAN
+Cj4gPiA+ID4gPiA+ID4gVGhpcyBtYXhpbXVtIHNlZW1zIGV4Y2Vzc2l2ZS4uLiBhZ2FpbiwgdGhl
+cmUgYXJlDQo+ID4gPiA+ID4gPiA+IGRpbWluaXNoaW5nDQo+ID4gPiA+ID4gPiA+IHJldHVybnMg
+dG8gYWRkaW5nIG1vcmUgY29ubmVjdGlvbnMgdG8gdGhlIHNhbWUgc2VydmVyLg0KPiA+ID4gPiA+
+ID4gPiB3aGF0J3MNCj4gPiA+ID4gPiA+ID4gd3Jvbmcgd2l0aCByZS11c2luZyBORlNfTUFYX0NP
+Tk5FQ1RJT05TIGZvciB0aGUgbWF4aW11bT8NCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+
+IEFzIGFsd2F5cywgSSdtIGEgbGl0dGxlIHF1ZWFzeSBhYm91dCBhZGRpbmcgeWV0IGFub3RoZXIN
+Cj4gPiA+ID4gPiA+ID4gbW91bnQNCj4gPiA+ID4gPiA+ID4gb3B0aW9uLiBBcmUgdGhlcmUgcmVh
+bCB1c2UgY2FzZXMgd2hlcmUgYSB3aG9sZS1jbGllbnQNCj4gPiA+ID4gPiA+ID4gc2V0dGluZw0K
+PiA+ID4gPiA+ID4gPiAobGlrZSBhIHN5c2ZzIGF0dHJpYnV0ZSkgd291bGQgYmUgaW5hZGVxdWF0
+ZT8gSXMgdGhlcmUgYQ0KPiA+ID4gPiA+ID4gPiB3YXkNCj4gPiA+ID4gPiA+ID4gdGhlIGNsaWVu
+dCBjb3VsZCBmaWd1cmUgb3V0IGEgcmVhc29uYWJsZSBtYXhpbXVtIHdpdGhvdXQNCj4gPiA+ID4g
+PiA+ID4gYQ0KPiA+ID4gPiA+ID4gPiBodW1hbiBpbnRlcnZlbnRpb24sIHNheSwgYnkgY291bnRp
+bmcgdGhlIG51bWJlciBvZiBOSUNzDQo+ID4gPiA+ID4gPiA+IG9uDQo+ID4gPiA+ID4gPiA+IHRo
+ZSBzeXN0ZW0/DQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IE9oLCBoZWxsIG5vISBXZSdyZSBu
+b3QgdHlpbmcgYW55dGhpbmcgdG8gdGhlIG51bWJlciBvZg0KPiA+ID4gPiA+ID4gTklDcy4uLg0K
+PiA+ID4gPiA+IA0KPiA+ID4gPiA+IFRoYXQncyBhIGJpdCBvZiBhbiBvdmVyLXJlYWN0aW9uLiA6
+LSkgQSBsaXR0bGUgbW9yZQ0KPiA+ID4gPiA+IGV4cGxhbmF0aW9uDQo+ID4gPiA+ID4gd291bGQg
+YmUgd2VsY29tZS4gSSBtZWFuLCBkb24ndCB5b3UgZXhwZWN0IHNvbWVvbmUgdG8gYXNrDQo+ID4g
+PiA+ID4gIkhvdw0KPiA+ID4gPiA+IGRvIEkgcGljayBhIGdvb2QgdmFsdWU/IiBhbmQgc29tZW9u
+ZSBtaWdodCByZWFzb25hYmx5IGFuc3dlcg0KPiA+ID4gPiA+ICJXZWxsLCBzdGFydCB3aXRoIHRo
+ZSBudW1iZXIgb2YgTklDcyBvbiB5b3VyIGNsaWVudCB0aW1lcyAzIg0KPiA+ID4gPiA+IG9yDQo+
+ID4gPiA+ID4gc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBJTU8g
+d2UncmUgYWJvdXQgdG8gYWRkIGFub3RoZXIgYWRtaW4gc2V0dGluZyB3aXRob3V0DQo+ID4gPiA+
+ID4gdW5kZXJzdGFuZGluZw0KPiA+ID4gPiA+IGhvdyBpdCB3aWxsIGJlIHVzZWQsIGhvdyB0byBz
+ZWxlY3QgYSBnb29kIG1heGltdW0gdmFsdWUsIG9yDQo+ID4gPiA+ID4gZXZlbg0KPiA+ID4gPiA+
+IHdoZXRoZXIgdGhpcyBtYXhpbXVtIG5lZWRzIHRvIGJlIGFkanVzdGFibGUuIEluIGEgcHJldmlv
+dXMgZS0NCj4gPiA+ID4gPiBtYWlsDQo+ID4gPiA+ID4gT2xnYSBoYXMgYWxyZWFkeSBkZW1vbnN0
+cmF0ZWQgdGhhdCBpdCB3aWxsIGJlIGRpZmZpY3VsdCB0bw0KPiA+ID4gPiA+IGV4cGxhaW4NCj4g
+PiA+ID4gPiBob3cgdG8gdXNlIHRoaXMgc2V0dGluZyB3aXRoIG5jb25uZWN0PS4NCj4gPiA+ID4g
+PiANCj4gPiA+ID4gPiBUaHVzIEkgd291bGQgZmF2b3IgYSAobW9kZXJhdGUpIHNvbGRlcmVkLWlu
+IG1heGltdW0gdG8gc3RhcnQNCj4gPiA+ID4gPiB3aXRoLA0KPiA+ID4gPiA+IGFuZCB0aGVuIGFz
+IHJlYWwgd29ybGQgdXNlIGNhc2VzIGFyaXNlLCBjb25zaWRlciBhZGRpbmcgYQ0KPiA+ID4gPiA+
+IHR1bmluZw0KPiA+ID4gPiA+IG1lY2hhbmlzbSBiYXNlZCBvbiBhY3R1YWwgcmVxdWlyZW1lbnRz
+Lg0KPiA+ID4gPiANCj4gPiA+ID4gSXQncyBub3QgYW4gb3ZlcnJlYWN0aW9uLiBJdCdzIGluc2Fu
+ZSB0byB0aGluayB0aGF0IGNvdW50aW5nDQo+ID4gPiA+IE5JQ3MNCj4gPiA+ID4gZ2l2ZXMNCj4g
+PiA+ID4geW91IGFueSBub3Rpb24gd2hhdHNvZXZlciBhYm91dCB0aGUgbmV0d29yayB0b3BvbG9n
+eSBhbmQNCj4gPiA+ID4gY29ubmVjdGl2aXR5DQo+ID4gPiA+IGJldHdlZW4gdGhlIGNsaWVudCBh
+bmQgc2VydmVyLiBJdCBkb2Vzbid0IGV2ZW4gdGVsbCB5b3UgaG93DQo+ID4gPiA+IG1hbnkgb2YN
+Cj4gPiA+ID4gdGhvc2UgTklDcyBtaWdodCBwb3RlbnRpYWxseSBiZSBhdmFpbGFibGUgdG8geW91
+ciBhcHBsaWNhdGlvbi4NCj4gPiA+ID4gDQo+ID4gPiA+IFdlJ3JlIG5vdCBkb2luZyBhbnkgYXV0
+b21hdGlvbiBiYXNlZCBvbiB0aGF0IGtpbmQgb2YgbGF5ZXJpbmcNCj4gPiA+ID4gdmlvbGF0aW9u
+Lg0KPiA+ID4gDQo+ID4gPiBJJ20gbm90IHN1Z2dlc3RpbmcgdG8gcHJvZ3JhbW1hdGljYWxseSBk
+ZXRlcm1pbmUgdGhlIG51bWJlciBvZg0KPiA+ID4gTklDIHRvDQo+ID4gPiBkZXRlcm1pbmUgdGhl
+IHZhbHVlIG9mIG1heF9jb25uZWN0Lg0KPiA+ID4gPiANCj4gPiANCj4gPiBObywgYnV0IHRoYXQn
+cyB3aGF0IENodWNrIGFwcGVhcmVkIHRvIGJlIHN1Z2dlc3RpbmcgaW4gb3JkZXIgdG8NCj4gPiBh
+dm9pZA0KPiA+IHRoZSBuZWVkIGZvciB0aGUgbW91bnQgb3B0aW9uLg0KPiA+IA0KPiA+IFRvIG1l
+LCB0aGUgbWFpbiByZWFzb24gZm9yIHRoZSBtb3VudCBvcHRpb24gaXMgdG8gYWxsb3cgdGhlIHVz
+ZXIgdG8NCj4gPiBsaW1pdCB0aGUgbnVtYmVyIG9mIG5ldyBJUCBhZGRyZXNzZXMgYmVpbmcgYWRk
+ZWQgc28gdGhhdCBpZiB0aGUgRE5TDQo+ID4gc2VydmVyIGlzIGNvbmZpZ3VyZWQgdG8gaGFuZCBv
+dXQgbG90cyBvZiBkaWZmZXJlbnQgYWRkcmVzc2VzIGZvcg0KPiA+IHRoZQ0KPiA+IHNhbWUgc2Vy
+dmVybmFtZSwgdGhlIHVzZXIgY2FuIGJhc2ljYWxseSBzYXkgJ25vLCBJIGp1c3Qgd2FudCB0byB1
+c2UNCj4gPiB0aGUNCj4gPiBvbmUgSVAgYWRkcmVzcyB0aGF0IEknbSBhbHJlYWR5IGNvbm5lY3Rl
+ZCB0bycgKGkuZS4gbWF4X2Nvbm5lY3Q9MSkuDQo+ID4gSQ0KPiA+IGNhbiBpbWFnaW5lIHRoYXQg
+c29tZSBjbHVzdGVyZWQgc2V0dXBzIG1pZ2h0IG5lZWQgdGhhdCBhYmlsaXR5IGluDQo+ID4gb3Jk
+ZXINCj4gPiB0byB3b3JrIGVmZmljaWVudGx5Lg0KPiA+IA0KPiA+IEknbSBmaW5lIHdpdGggdGhl
+IGlkZWEgb2YgbmNvbm5lY3Qgc2V0dGluZyB0aGUgbnVtYmVyIG9mDQo+ID4gY29ubmVjdGlvbnMN
+Cj4gPiBwZXIgSVAgYWRkcmVzcywgYnV0IHRoYXQgd291bGQgbmVlZCBzb21lIHBsdW1iaW5nIGlu
+DQo+ID4gcnBjX2NsbnRfdGVzdF9hbmRfYWRkX3hwcnQoKSB0byBhbGxvdyB1cyB0byBhZGQgdXAg
+dG8gJ25jb25uZWN0Jw0KPiA+IGNvcGllcw0KPiA+IG9mIGEgZ2l2ZW4gdHJhbnNwb3J0Lg0KPiA+
+IFByZXN1bWFibHkgcnBjX3hwcnRfc3dpdGNoX2hhc19hZGRyKCkgd291bGQgbmVlZCB0byByZXR1
+cm4gYSBjb3VudA0KPiA+IG9mDQo+ID4gdGhlIG51bWJlciBvZiBjb3BpZXMgb2YgdGhlIHRyYW5z
+cG9ydCB0aGF0IGFyZSBhbHJlYWR5IHByZXNlbnQgc28NCj4gPiB0aGF0DQo+ID4gd2UgY2FuIGRl
+Y2lkZSB3aGV0aGVyIG9yIG5vdCB3ZSBzaG91bGQgYWRkIGEgbmV3IG9uZS4NCj4gDQo+IEkgdGhp
+bmsgdGhlIGxhc3QgcGFyYWdyYXBoIGlzIHdoYXQgSSdtIGFza2luZyBmb3IuIEJ1dCBJIHdvdWxk
+IGxpa2UNCj4gdG8NCj4gYWdhaW4gY29uZmlybSBpZiB5b3Ugc3RpbGwgbWVhbiAibWF4X2Nvbm5l
+Y3QiIHRvIGJlIHRoZSB0b3RhbCBudW1iZXINCj4gb2YgY29ubmVjdGlvbnMgc2luY2UgeW91IHNh
+eSB3ZSBjb3VsZC93aWxsIGFsbG93IGZvciBuY29ubmVjdCBudW1iZXINCj4gb2YgY29ubmVjdGlv
+bnMgcGVyIElQIGFkZHJlc3MuIFdvdWxkIG1heF9jb25uZWN0IG5lZWQgdG8gYmUgYQ0KPiBtdWx0
+aXBsZQ0KPiBvZiBuY29ubmVjdCAobWF4X2Nvbm5lY3QgPSBYICpuY29ubmVjdCk/DQoNCk5vLiBZ
+b3VyIHN1Z2dlc3Rpb24gdG8gbWFrZSB0aGUgdHdvIGluZGVwZW5kZW50IGlzIGdyb3dpbmcgb24g
+bWUsDQpob3dldmVyIGluIHRoYXQgY2FzZSB3ZSBkbyB3YW50IHRvIGVuc3VyZSB0aGF0IGlmIG5j
+b25uZWN0PVgsIHRoZW4gd2UNCmFsd2F5cyBhZGQgWCB0cmFuc3BvcnRzIHdoZW4gd2UgYWRkIGEg
+bmV3IElQIGFkZHJlc3MuDQoNCj4gDQo+IEFjdHVhbGx5IHdoZW4gSSBzYWlkIHN1cHBvcnRpbmcg
+KG9yIHJhdGhlciBhbGxvd2luZyBmb3IpIG5jb25uZWN0ICoNCj4gbWF4X2Nvbm5lY3QgdHJhbnNw
+b3J0LCBpcyB0aGF0IGNvcnJlY3Q/IEdpdmVuIGhvdyB0aGUgY29kZSB3b3JrcyBub3cNCj4gdGhp
+cyBpcyBnb2luZyB0byBiZSBuY29ubmVjdCArIG1heF9jb25uZWN0IChvbmx5IGlmIDFzdCBtb3Vu
+dCBoYWQNCj4gbmNvbm5lY3Qgb3B0aW9uKS4gV2UgY2FuJ3QgImFkZCIgbmNvbm5lY3QgY29ubmVj
+dGlvbnMgdG8gdGhlIG5ldw0KPiBtb3VudHMgKGJ1dCB3aXRoIG15IHBhdGNoIHdlIGNhbiBhZGQg
+YSBzaW5nbGUgdHJ1bmsgY29ubmVjdGlvbikuIEJ5DQo+IHRoYXQgSSBtZWFuOiBzYXkgdGhlIGZp
+cnN0IHdhcyAibW91bnQgSVAxOi92b2wxIC9tbnQxIiAoMSBjb25uZWN0aW9uDQo+IHRvIElQMiku
+IE5vdyB0aGUgY2xpZW50IGlzIGRvaW5nICJtb3VudCBJUDI6L3ZvbDIgL21udDIiLiBJUDEgYW5k
+IElQMg0KPiBhcmUgdHJ1bmthYmxlIGFkZHJlc3NlcyBvZiB0aGUgc2FtZSBzZXJ2ZXIgc28gd2Ug
+YWRkIGEgdHJ1bmsuIFdlDQo+IGN1cnJlbnRseSBkb24ndCBhbGxvdyBmb3IgZG9pbmcgIm1vdW50
+IC1vIG5jb25uZWM9MiBJUDI6dm9sMiAvbW50MiINCj4gYW5kIHRoZW4gYWxzbyBhZGQgIm5jb25u
+ZWN0IiBjb25uZWN0aW9ucyB0byBJUDIgYWxvbmcgd2l0aCBhIHRydW5rLg0KPiBJbg0KPiB0aGUg
+Mm5kIGV4YW1wbGUsIHdlJ2QgaGF2ZSAxIGNvbm5lY3Rpb25zIHRvIElQMSwgdGhlbiAyIGNvbm5l
+Y3Rpb25zDQo+IHRvDQo+IElQMi4gQ2FuIHdlIGFsbG93IGZvciB0aGF0ICh3aXRoIG5lZWRlZCBj
+b2RlIGNoYW5nZSk/wqAgSWYgbm90LCB0aGVuDQo+IHdlDQo+IHJlYWxseSBuZWVkIHRvIGNvbW1p
+dCB0byBvbmx5IHN1cHBvcnQgbmNvbm5lY3QgKDE2KSBjb25uZWN0aW9ucyArDQo+IHNvbWUNCj4g
+bnVtYmVyIG9mIHRydW5rYWJsZSBjb25uZWN0aW9ucy4NCg0KDQpJIHRoaW5rIHdlIHdhbnQgdG8g
+aGF2ZSBuY29ubmVjdCBiZSBzZXJ2ZXItZ2xvYmFsLiBpLmUuIG5jb25uZWN0DQplbnRyaWVzIG9m
+IGVhY2ggSVAgYWRkcmVzcy4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGll
+bnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5j
+b20NCg0KDQo=
