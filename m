@@ -2,114 +2,106 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F1403A3253
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jun 2021 19:40:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA5F73A32A3
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jun 2021 20:01:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbhFJRmK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Jun 2021 13:42:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229937AbhFJRmH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Jun 2021 13:42:07 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3541C061574
-        for <linux-nfs@vger.kernel.org>; Thu, 10 Jun 2021 10:39:54 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id a11so488738ejf.3
-        for <linux-nfs@vger.kernel.org>; Thu, 10 Jun 2021 10:39:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DvvRfhsZzjiniGgbWxyGCYQREMiXFzh1htplZR9bBoo=;
-        b=RppxbcQ2ZPIsqRzq7bVBk/X9Obx0GzxwQ/U8SAWZ+vgO+hWou3o7gf52RVaTnVUxym
-         mCmJJZI/4zH0RjhQmgDp610Bgz53b/4nKvebFUICokEi5RNvGBFyWeoHI/roS1pQHoz5
-         d4tlloIFhPr5YawbvT2FTkJYmlxoDEanO2UZ7tITzCg5mMg9Ngq/qU+kqIf33Wi+EXP9
-         xN8A/ZVD2u7Iz7xnbXu16ObXWJ7U/sYqVCkLJdBP139btpZaSgm37cQpB5Ife48eZEbI
-         FZCa6rl5jePWXYn4Qr+ANwNeSk08FicvXC0HSRebEh/RUeklZjLbZ7CuSYorjTGYQB8Z
-         6jXg==
+        id S229963AbhFJSDO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Jun 2021 14:03:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33260 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229823AbhFJSDO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Jun 2021 14:03:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623348077;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Fc80/VrIIVFd9lCt77CmjeO9NlkkTPPzREilH7/fpv8=;
+        b=CsDA4ljFu3gj9LvaFhLXY0/+UCFMOAsk+vO3M683+cFkVlmWhLeXB3/rC2FZT7mu+oQbT7
+        b/VHHwDf+dsmDr9QMDvmfVXXAbI1+gtSg/O3t/JE3qocRb31mPjKioOu9FQoRW8ETtM5bP
+        uNQfJrR43LZQ4Y9YaHcLhA5sADy95v4=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-151-HDlRH-Y2NI6b2V7n8vDoZg-1; Thu, 10 Jun 2021 14:01:16 -0400
+X-MC-Unique: HDlRH-Y2NI6b2V7n8vDoZg-1
+Received: by mail-qk1-f200.google.com with SMTP id v1-20020a372f010000b02903aa9be319adso10066596qkh.11
+        for <linux-nfs@vger.kernel.org>; Thu, 10 Jun 2021 11:01:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DvvRfhsZzjiniGgbWxyGCYQREMiXFzh1htplZR9bBoo=;
-        b=V1MDbit6C2tQga+WJPlOVlnog6Rvt7WAoyOjsMoqfgvSYoRhX3npv7HZO/6WuLvI4B
-         S15wZUXnS/8H4SD9yucN/2Mf/BCzToKlgPJo8zXg4g+PtVG+yCmn5l4K2DRTcCmuTXXV
-         HRpSQ74Q142aH5yCWZW28UiFRR0Jnz1LJ99pO5uZEHmCl2boevSUC5ylzXqKqmyp4F5z
-         ITRAAQPKkXlFShij4nTZH0mz8lYrHTS0/oIydkQJMkN51dCq5hwyF3QIdC+Yyc5//krn
-         eTM9uH6DwxFx4HHGpRGreeWItyJsPUUmSUdm8cTYwsU8wKmXKXpnRJxBNll0C7jq7+vb
-         BsNA==
-X-Gm-Message-State: AOAM530Tc7mLWsTaPUVD2T18Hqzt0xnsCjeybRY8K3an9nz0x4py4Y2i
-        s4fcFdjVk9EKfk+DIJcsCUu8VDhxkSoq3W9wWgccwfC0Bbc=
-X-Google-Smtp-Source: ABdhPJxtXfcCHSc1ahDpfwOiSj0fxiRQpk1n5mJlCwvhNmaQMVPZpRHh/nHFTAKubc8p9B0Bu1jSdfGqFFvAODBkm1I=
-X-Received: by 2002:a17:907:1c9e:: with SMTP id nb30mr742694ejc.0.1623346793232;
- Thu, 10 Jun 2021 10:39:53 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Fc80/VrIIVFd9lCt77CmjeO9NlkkTPPzREilH7/fpv8=;
+        b=oAsdGJ/s/SPDxh3M98CH5dD9vM05w+LPy92KyHbfTpU5xZuveMo+/wOWbmOK0LPkXu
+         V9KJGB4fD9MO5N3zJH3mpKCVi2oaDGnwFaXX08QH3Rh9/6wkWpFeDNrlHdfqM7BFQ6cU
+         D9n2vjyxq2vaf1AVEbPDP8nGevyJYUXoymgXNOjBhYlx2Da1o36GSFBboq1ueEpJMCKC
+         nqpn5aoqQ6BsK8EfpaEeFd+ZMiKc4Ex3HGhk3eJ5/D90m6n5Ocmwl1FhHOfybZBZ3pmF
+         5VifU0bqug9+g640AvcrvYNdqfj0L/HLYOHcQYFxXdmkIdYOvsMMtXxXFuRVroPZRUDe
+         98cw==
+X-Gm-Message-State: AOAM531QNvDxgBcrsY1ET5CA2h4tQ+qn9QeQ9ZpoE/0l03nlHYgQQ4os
+        FM6LeIcsOKSZlAGXgPtl8JoOcDUrv+fwpyjlCFMJmXUkIi609f7NeD06JuivkKRnvPwwdxyaUcj
+        YygvZXI8NTJ7Fxt2EUu6/wLuYPBmyA4WFAY0CiYjs6MYrR93C3GF0cjfbw+MOCuKko9ed9w==
+X-Received: by 2002:ac8:7d0c:: with SMTP id g12mr18836qtb.248.1623348075751;
+        Thu, 10 Jun 2021 11:01:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzEUUBUWZNocUQdeUc9MHB5W3WdL6F2BIl4N+O3ajJBQ9jwegqYYVB1+y8Z7B3S2NZwInhqvg==
+X-Received: by 2002:ac8:7d0c:: with SMTP id g12mr18795qtb.248.1623348075477;
+        Thu, 10 Jun 2021 11:01:15 -0700 (PDT)
+Received: from madhat.boston.devel.redhat.com ([71.161.93.112])
+        by smtp.gmail.com with ESMTPSA id s133sm2715523qke.97.2021.06.10.11.01.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Jun 2021 11:01:15 -0700 (PDT)
+Subject: Re: [PATCH] nfs(5): Fix missing mentions of "rdma6" netid
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+References: <162317221773.1999.16160807270651134948.stgit@oracle-100.nfsv4.dev>
+From:   Steve Dickson <steved@redhat.com>
+Message-ID: <29051308-1932-cea1-3057-f84af2d59009@redhat.com>
+Date:   Thu, 10 Jun 2021 14:04:23 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-References: <20210609215319.5518-1-olga.kornievskaia@gmail.com>
- <9657859a-7e65-0b38-a4c5-3f74d0bdc5e8@redhat.com> <CAN-5tyG6Hs3yt4+GPBA6_x-vCC5aj-WPk6+HtLsQS-d+NY2a_A@mail.gmail.com>
-In-Reply-To: <CAN-5tyG6Hs3yt4+GPBA6_x-vCC5aj-WPk6+HtLsQS-d+NY2a_A@mail.gmail.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Thu, 10 Jun 2021 13:39:42 -0400
-Message-ID: <CAN-5tyE6R3oCZdiCbNfnqG8F+ppipw2Mj6dUB-zdun7Vj06Cqw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] don't collapse transports for the trunkable
-To:     Steve Dickson <steved@redhat.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <162317221773.1999.16160807270651134948.stgit@oracle-100.nfsv4.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jun 10, 2021 at 1:33 PM Olga Kornievskaia
-<olga.kornievskaia@gmail.com> wrote:
->
-> On Thu, Jun 10, 2021 at 9:29 AM Steve Dickson <steved@redhat.com> wrote:
-> >
-> > Hey!
-> >
-> > On 6/9/21 5:53 PM, Olga Kornievskaia wrote:
-> > > From: Olga Kornievskaia <kolga@netapp.com>
-> > >
-> > > This patch series attempts to allow for new mounts that are to the
-> > > same server (ie nfsv4.1+ session trunkable servers) but different
-> > > network addresses to use connections associated with those mounts
-> > > but still use the same client structure.
-> > >
-> > > A new mount options, "max_connect", controls how many extra transports
-> > > can be added to an existing client, with maximum of 128 transports in
-> > > total for either nconnect transports (which are multiple connections
-> > > but to the same IP) or transports that are going to different network
-> > > addresses.
-> > I'm trying to figure out why this new mount option is needed...
-> > What is it protecting? What am I missing?
->
-> Hopefully comments on patch3 of this series can help you answer that.
 
-I mean patch2. But to answer briefly. It protects not creating too
-many transports.
 
->
-> > Plus it needs to be documented....
->
-> Indeed a man page patch is needed but I was waiting to get a more
-> commonly accepted version of the code before adding the man page
-> patch.
->
-> > steved.
-> > >
-> > > Olga Kornievskaia (3):
-> > >    SUNRPC query xprt switch for number of active transports
-> > >    NFSv4 introduce max_connect mount options
-> > >    NFSv4.1+ add trunking when server trunking detected
-> > >
-> > >   fs/nfs/client.c             |  1 +
-> > >   fs/nfs/fs_context.c         |  8 +++++++
-> > >   fs/nfs/internal.h           |  2 ++
-> > >   fs/nfs/nfs4client.c         | 43 +++++++++++++++++++++++++++++++++++--
-> > >   fs/nfs/super.c              |  2 ++
-> > >   include/linux/nfs_fs_sb.h   |  1 +
-> > >   include/linux/sunrpc/clnt.h |  2 ++
-> > >   net/sunrpc/clnt.c           | 13 +++++++++++
-> > >   8 files changed, 70 insertions(+), 2 deletions(-)
-> > >
-> >
+On 6/8/21 1:10 PM, Chuck Lever wrote:
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>   utils/mount/nfs.man |    4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+Committed (tag: nfs-utils-2-5-4-rc7
+
+steved.
+> 
+> diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
+> index 5682b5592a66..f98cb47dbf99 100644
+> --- a/utils/mount/nfs.man
+> +++ b/utils/mount/nfs.man
+> @@ -564,7 +564,7 @@ The
+>   .I netid
+>   determines the transport that is used to communicate with the NFS
+>   server.  Available options are
+> -.BR udp ", " udp6 ", "tcp ", " tcp6 ", and " rdma .
+> +.BR udp ", " udp6 ", "tcp ", " tcp6 ", " rdma ", and " rdma6 .
+>   Those which end in
+>   .B 6
+>   use IPv6 addresses and are only available if support for TI-RPC is
+> @@ -812,7 +812,7 @@ The
+>   .I netid
+>   determines the transport that is used to communicate with the NFS
+>   server.  Supported options are
+> -.BR tcp ", " tcp6 ", and " rdma .
+> +.BR tcp ", " tcp6 ", " rdma ", and " rdma6 .
+>   .B tcp6
+>   use IPv6 addresses and is only available if support for TI-RPC is
+>   built in. Both others use IPv4 addresses.
+> 
+> 
+
