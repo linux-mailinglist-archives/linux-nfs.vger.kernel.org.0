@@ -2,200 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A8903A6842
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jun 2021 15:43:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDAAA3A68DB
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jun 2021 16:20:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233180AbhFNNpw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Jun 2021 09:45:52 -0400
-Received: from mail-ed1-f51.google.com ([209.85.208.51]:34484 "EHLO
-        mail-ed1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232966AbhFNNpw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Jun 2021 09:45:52 -0400
-Received: by mail-ed1-f51.google.com with SMTP id cb9so46622940edb.1
-        for <linux-nfs@vger.kernel.org>; Mon, 14 Jun 2021 06:43:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ete0CyVkIgi0Smi+1q6ULfZrJox4QqZt12nqqDMPOEw=;
-        b=jKY4jdekpvUxCUql7kYWmIyJnJm1AkKcRvUmXrCQonWZhC1Mqm4X4yWRwGeQ0pwuSj
-         +2mLPHNWzYKwR50IIzGJO7NFLNe+pzST+HHauCWLYbn1GRQp6ug8chGNMkGPoHOsBKAh
-         TaUgPY7GdqPVd7o6Sc40Dwn7lkNrVs9IKMuCIsZDBTXeuFJ1p/W2L8I3hnT2F6yFgh+/
-         IG7bEfEsVhUAcSIigCCA9bDT1ZOL0PmzNdfYypjapUOlPZI6/5ztA+yEllZWv6/RnJu1
-         uwQG+GRxdcGpyms7Av1trU79zfkYNZhrGjS/MudoI0pDt8LtTuQ0TtRbHVKGzIFkSzUx
-         lcDA==
+        id S233743AbhFNOWE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Jun 2021 10:22:04 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22782 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233383AbhFNOWE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Jun 2021 10:22:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623680401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=F4r6zXU9JovBkh6SsFD5G5K6EvAJNO/7FLVKe9QAg28=;
+        b=JbI4rXkEAIkTvnlDL9qSK13XolnQRuqnWOGjLzQT/S1KYaHcoLeiqypGoEYm9K9f6FhTDU
+        Wq1lVstRJuIXpkorcnypwvoLBig2rvLrUc/hWecGzSXYbbAzCbuVBoHqLr7gpEM5SyR/gs
+        5s4efNEn7S2HmMlDKp8GtnsAqcGQG20=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-517-EYiwhqU0NUaCmsDa25CccQ-1; Mon, 14 Jun 2021 10:19:59 -0400
+X-MC-Unique: EYiwhqU0NUaCmsDa25CccQ-1
+Received: by mail-qt1-f199.google.com with SMTP id d7-20020ac811870000b02901e65f85117bso7509881qtj.18
+        for <linux-nfs@vger.kernel.org>; Mon, 14 Jun 2021 07:19:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ete0CyVkIgi0Smi+1q6ULfZrJox4QqZt12nqqDMPOEw=;
-        b=BxorNRRiTqFMQq1BNrYGzYF9CHgOGI5rFuzM8xc6MmfuyavJgEc/vC/3uTALuAb6nN
-         5t/BOG7O3b6Qlaz6ht1exWiEDBdoE9Aue2Rklcx0RObmh4bHvjECtD1nwnSpQDrH4ucu
-         vMQIsRWgQWYnyr1z72JVm86y4KjHddWJ9u1vEOtzY2FWjo4ZywgNMGqVSfELYeJ/jv2M
-         yfQhw1q43SEBVw3ZhENoxlx3XDR4ss4KJCoxrypuB65jO7QygC4YWKewJCF5txKga5X+
-         xrnBJuzS+kXjHl9IZ3vjV6/RQosQx//nXCZMrveQYkaVOPJCy/fB9QWQON18TmnIeMB3
-         HQEw==
-X-Gm-Message-State: AOAM5329RZ6UtbYOPTzrvKn7Hzz0aloW3TybdWtocSvoXyzEqMTfFltW
-        z3ctxrCXN3s7uhW1wzRi/aVCPNeOq3xBPXCMXMx/YcX+
-X-Google-Smtp-Source: ABdhPJz4kCyD4ynxonoN0sVFXgz395JY9oppBtMqpi83KY6lkx5+C+wtuH/V0HiE+6xhG2IkwgzxI6wUef+TyFOlAIA=
-X-Received: by 2002:aa7:d344:: with SMTP id m4mr17401659edr.281.1623678169048;
- Mon, 14 Jun 2021 06:42:49 -0700 (PDT)
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=F4r6zXU9JovBkh6SsFD5G5K6EvAJNO/7FLVKe9QAg28=;
+        b=XaCh4kATErLc30SrA/w+3ms74daFwpbFr2dTGzm9Gurq9M70Z6A6EczsBAnHOOeGG1
+         AOsa0lJ7ibKK3l5Xu78dvYtt9o9CLZvB0K8sbOHQK+GZt3KIycUY/ztlWx9sqck6aued
+         pdtiQSFeykIOGhiA3lRMBH9k12gxb2lVxChJKb7HdUo6gjgE/DQjqsLcKC8+FHAfa08V
+         OOMtUxDrSaUXqJ/xIwUltNsOUnc3lOg/BT0m4IkxTriGb3eWb3iGc+FBXOmKNVzxu3H3
+         8itMvnLfEy8ypxAryh4hdOWzjOVKvHLLLOUJCaf0PCQau2JSoshfwWawm1kUUiiTVGiS
+         cu2A==
+X-Gm-Message-State: AOAM533/+HwCTO12rcltlyxN4FjAIyuPeflZg1q6jJaBoFfzyBWbPXJK
+        x6GHgoginpVCsEi1Elg1Q15rhkNzpfzD9S9t71nb9ce1rPXm/c9DSLX2ma2VgE5r2HCG1RklYbw
+        LW5WiPUuIFIgKqniaTnKG
+X-Received: by 2002:a37:9f51:: with SMTP id i78mr16654513qke.345.1623680399566;
+        Mon, 14 Jun 2021 07:19:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw/6IEZ+QfVUK02KN9O4bl5mcthGlZiOTp4RNVssZ1tim/l1UA5wkakFDU2Ls8uv4MXDweuxg==
+X-Received: by 2002:a37:9f51:: with SMTP id i78mr16654492qke.345.1623680399310;
+        Mon, 14 Jun 2021 07:19:59 -0700 (PDT)
+Received: from madhat.boston.devel.redhat.com ([71.161.93.112])
+        by smtp.gmail.com with ESMTPSA id w4sm9781676qtv.79.2021.06.14.07.19.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Jun 2021 07:19:59 -0700 (PDT)
+From:   Steve Dickson <steved@redhat.com>
+Subject: ANNOUNCE: nfs-utils-2.5.4 released.
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Message-ID: <c8795653-7728-18a4-93dc-58943ad0fe09@redhat.com>
+Date:   Mon, 14 Jun 2021 10:23:08 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-References: <20210608174657.603256-1-Anna.Schumaker@Netapp.com> <5814a22e-d8d5-a811-4424-48e3b5cb88c5@redhat.com>
-In-Reply-To: <5814a22e-d8d5-a811-4424-48e3b5cb88c5@redhat.com>
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Mon, 14 Jun 2021 09:42:33 -0400
-Message-ID: <CAFX2JfndwPdeHaGTNzAgEwOKKiFK+ky-Uwd=8ySfJb--AktYGQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/6] Add a tool for using the new sysfs files
-To:     Steve Dickson <steved@redhat.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Steve,
+Hello,
 
-On Mon, Jun 14, 2021 at 9:16 AM Steve Dickson <steved@redhat.com> wrote:
->
->
->
-> On 6/8/21 1:46 PM, schumaker.anna@gmail.com wrote:
-> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> >
-> > These patches implement a tool that can be used to read and write the
-> > sysfs files, with subcommands! They need Olga's most recent patches to
-> > run.
-> >
-> > The following subcommands are implemented:
-> >    nfs-sysfs.py rpc-client
-> >    nfs-sysfs.py xprt
-> >    nfs-sysfs.py xprt set
-> >    nfs-sysfs.py xprt-switch
-> >    nfs-sysfs.py xprt-switch set
-> >
-> > So you can print out information about every xprt-switch with:
-> >       anna@client % ./nfs-sysfs.py xprt-switch
-> >       switch 0: num_xprts 1, num_active 1, queue_len 0
-> >               xprt 0: local, /var/run/gssproxy.sock
-> >       switch 1: num_xprts 1, num_active 1, queue_len 0
-> >               xprt 1: local, /var/run/rpcbind.sock
-> >       switch 2: num_xprts 4, num_active 4, queue_len 0
-> >               xprt 2: tcp, 192.168.111.188
-> >               xprt 3: tcp, 192.168.111.188
-> >               xprt 5: tcp, 192.168.111.188
-> >               xprt 6: tcp, 192.168.111.188
-> >       switch 3: num_xprts 1, num_active 1, queue_len 0
-> >               xprt 7: tcp, 192.168.111.1
-> >       switch 4: num_xprts 1, num_active 1, queue_len 0
-> >               xprt 4: tcp, 192.168.111.188
-> >
-> > And information about each xprt:
-> >       anna@client % ./nfs-sysfs.py xprt
-> >       xprt 0: local, /var/run/gssproxy.sock, state <CONNECTED,BOUND>, num_reqs 2
-> >               cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-> >               binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-> >       xprt 1: local, /var/run/rpcbind.sock, state <CONNECTED,BOUND>, num_reqs 2
-> >               cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-> >               binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-> >       xprt 2: tcp, 192.168.111.188, state <CONNECTED,BOUND>, num_reqs 2
-> >               cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-> >               binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-> >       xprt 3: tcp, 192.168.111.188, state <CONNECTED,BOUND>, num_reqs 2
-> >               cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-> >               binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-> >       xprt 4: tcp, 192.168.111.188, state <BOUND>, num_reqs 2
-> >               cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-> >               binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-> >       xprt 5: tcp, 192.168.111.188, state <CONNECTED,BOUND>, num_reqs 2
-> >               cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-> >               binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-> >       xprt 6: tcp, 192.168.111.188, state <CONNECTED,BOUND>, num_reqs 2
-> >               cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-> >               binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-> >       xprt 7: tcp, 192.168.111.1, state <CONNECTED,BOUND>, num_reqs 2
-> >               cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-> >               binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-> >
-> > You can use the `set` subcommand to change the dstaddr of individual xprts:
-> >       anna@client % ./nfs-sysfs.py xprt --id 2
-> >       xprt 2: tcp, 192.168.111.188, state <CONNECTED,BOUND>, num_reqs 2
-> >               cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-> >               binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-> >       anna@client % sudo ./nfs-sysfs.py xprt set --id 2 --dstaddr server2.nowheycreamery.vm
-> >       xprt 2: tcp, 192.168.111.186, state <CONNECTED,BOUND>, num_reqs 2
-> >               cur_cong 0, cong_win 256, min_num_slots 2, max_num_slots 65536
-> >               binding_q_len 0, sending_q_len 0, pending_q_len 0, backlog_q_len 0
-> >
-> > Or for changing the dstaddr of all xprts attached to a switch:
-> >       anna@client % ./nfs-sysfs.py xprt-switch --id 2
-> >       switch 2: num_xprts 4, num_active 4, queue_len 0
-> >               xprt 2: tcp, 192.168.111.188
-> >               xprt 3: tcp, 192.168.111.188
-> >               xprt 5: tcp, 192.168.111.188
-> >               xprt 6: tcp, 192.168.111.188
-> >       anna@client % sudo ./nfs-sysfs.py xprt-switch set --id 2 --dstaddr server2.nowheycreamery.vm
-> >       switch 2: num_xprts 4, num_active 4, queue_len 0
-> >               xprt 2: tcp, 192.168.111.186
-> >               xprt 3: tcp, 192.168.111.186
-> >               xprt 5: tcp, 192.168.111.186
-> >               xprt 6: tcp, 192.168.111.186
-> >
-> >
-> > I'm sure this needs lots of polish before it's ready for inclusion,
-> > along with needing a Makefile so it can be installed (I've just been
-> > running it out of the nfs-utils/tools/nfs-sysfs/ directory). But it's
-> > still a start, and I wanted to post it before going on New Baby Leave
-> > Part 2 (June 12 - July 11).
-> >
-> > What does everybody think?
-> The first thing that popped in my was is where is the man page,
-> but this being a developers tool, maybe one is not needed?? (ala pynfs).
-> Although if its going to be installed from nfs-utils, it would
-> be nice to have a man page.
+This release contains a number of bug fixes, man page
+updates as well as updates to rpc.gssd that allows
+the deamon to recover from thread creation failures
+and threads hung in the Kerberos library.
 
-Yeah, I was expecting to write a man page at some point before a
-non-RFC submission, since commands and options might change after
-hearing feedback from everyone.
->
-> The second thing was I was thinking... it would be good if
-> we could run this command on a kernel dump... to see what was
-> going on when things crashed...
+Finally, a couple new flags were added to mountd
+that allows the setting of the TTL and tweaks how
+messages are logged.
 
-That would be useful, but I'm having trouble conceptualizing how that
-would work since the contents of each file are generated by the kernel
-when the files are read. If there is a way to do it, then the tool
-could definitely be expanded to add it in!
+The tarballs can be found in
+   https://www.kernel.org/pub/linux/utils/nfs-utils/2.5.4/
+or
+   http://sourceforge.net/projects/nfs/files/nfs-utils/2.5.4
 
->
-> Nice work!
+The change log is in
+    https://www.kernel.org/pub/linux/utils/nfs-utils/2.5.4/2.5.4-Changelog
+or
+    http://sourceforge.net/projects/nfs/files/nfs-utils/2.5.4/
 
-Thanks!
-Anna
->
-> steved.
->
-> > Anna
-> >
-> >
-> > Anna Schumaker (6):
-> >    nfs-sysfs: Add an nfs-sysfs.py tool
-> >    nfs-sysfs.py: Add a command for printing xprt switch information
-> >    nfs-sysfs.py: Add a command for printing individual xprts
-> >    nfs-sysfs.py: Add a command for printing rpc-client information
-> >    nfs-sysfs.py: Add a command for changing xprt dstaddr
-> >    nfs-sysfs.py: Add a command for changing xprt-switch dstaddrs
-> >
-> >   tools/nfs-sysfs/client.py    | 27 ++++++++++++++
-> >   tools/nfs-sysfs/nfs-sysfs.py | 23 ++++++++++++
-> >   tools/nfs-sysfs/switch.py    | 51 +++++++++++++++++++++++++++
-> >   tools/nfs-sysfs/sysfs.py     | 28 +++++++++++++++
-> >   tools/nfs-sysfs/xprt.py      | 68 ++++++++++++++++++++++++++++++++++++
-> >   5 files changed, 197 insertions(+)
-> >   create mode 100644 tools/nfs-sysfs/client.py
-> >   create mode 100755 tools/nfs-sysfs/nfs-sysfs.py
-> >   create mode 100644 tools/nfs-sysfs/switch.py
-> >   create mode 100644 tools/nfs-sysfs/sysfs.py
-> >   create mode 100644 tools/nfs-sysfs/xprt.py
-> >
->
+The git tree is at:
+    git://linux-nfs.org/~steved/nfs-utils
+
+Please send comments/bugs to linux-nfs@vger.kernel.org
+
+steved.
+
