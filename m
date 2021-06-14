@@ -2,110 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A460E3A7237
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 00:50:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B27D43A7264
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 01:14:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229760AbhFNWwq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Jun 2021 18:52:46 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:33764 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229696AbhFNWwp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Jun 2021 18:52:45 -0400
-Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 6933721995;
-        Mon, 14 Jun 2021 22:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1623711041; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=P4pTDeSF2y4uLXwHKaS8PMp4jCROv1FiN344ELVXeEk=;
-        b=cujRGvD9RQW+gvPxcHckqEMU2SzYReDRQ5bnpcbC4FJmptM8Ni3RCeqIF92IxLrlvNpT9r
-        wpplwaeZibHWg9BUx4fCSDQVaSTTV5sbct6MsnGyjcU9RVhrtUx6widgoGtAWzDo5y2Xjd
-        8TWBtYKPiGhUMjT7njvz3GyNMhiZdvw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1623711041;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=P4pTDeSF2y4uLXwHKaS8PMp4jCROv1FiN344ELVXeEk=;
-        b=kxIep/0dO0ojfGWdAeow9CuJTYda7GMWw9lvFQrkHyEckRFwv1hzE6gN35rxmTg3hn0VPW
-        v0ecqIlz1Wx4uHAg==
-Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        by imap.suse.de (Postfix) with ESMTP id 249C3118DD;
-        Mon, 14 Jun 2021 22:50:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1623711041; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=P4pTDeSF2y4uLXwHKaS8PMp4jCROv1FiN344ELVXeEk=;
-        b=cujRGvD9RQW+gvPxcHckqEMU2SzYReDRQ5bnpcbC4FJmptM8Ni3RCeqIF92IxLrlvNpT9r
-        wpplwaeZibHWg9BUx4fCSDQVaSTTV5sbct6MsnGyjcU9RVhrtUx6widgoGtAWzDo5y2Xjd
-        8TWBtYKPiGhUMjT7njvz3GyNMhiZdvw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1623711041;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=P4pTDeSF2y4uLXwHKaS8PMp4jCROv1FiN344ELVXeEk=;
-        b=kxIep/0dO0ojfGWdAeow9CuJTYda7GMWw9lvFQrkHyEckRFwv1hzE6gN35rxmTg3hn0VPW
-        v0ecqIlz1Wx4uHAg==
-Received: from director2.suse.de ([192.168.254.72])
-        by imap3-int with ESMTPSA
-        id OtxhMT7dx2DGbwAALh3uQQ
-        (envelope-from <neilb@suse.de>); Mon, 14 Jun 2021 22:50:38 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        id S229760AbhFNXQp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Jun 2021 19:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229734AbhFNXQp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Jun 2021 19:16:45 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED901C061574
+        for <linux-nfs@vger.kernel.org>; Mon, 14 Jun 2021 16:14:41 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 06FE86814; Mon, 14 Jun 2021 19:14:41 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 06FE86814
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1623712481;
+        bh=5mx/UpsjnshyzHxrnY65bNR7Yp+7xLz2y67iIKPjaaI=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=I6pWDKqltPMfoZFGTzg6My+N1b95Hmnwk71RA+DlaNoS5yAhWSCi8Jn8/+EjSdsFx
+         akCAvIUjFrpeDqkDojpQZ67+LSRj3BMkq2hW91Hps8N4QpIfQy3usJ156wBBOMXRSn
+         NvMRpQstVhhHq1cBGA5rXioNy7RIlMa7WwuMOHH4=
+Date:   Mon, 14 Jun 2021 19:14:40 -0400
+To:     schumaker.anna@gmail.com
+Cc:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org,
+        Anna.Schumaker@Netapp.com
+Subject: Re: [PATCH] sunrpc: Avoid a KASAN slab-out-of-bounds bug in
+ xdr_set_page_base()
+Message-ID: <20210614231440.GD16500@fieldses.org>
+References: <20210609210729.254578-1-Anna.Schumaker@Netapp.com>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Wang Yugui" <wangyugui@e16-tech.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: any idea about auto export multiple btrfs snapshots?
-In-reply-to: <20210613115313.BC59.409509F4@e16-tech.com>
-References: <20210613115313.BC59.409509F4@e16-tech.com>
-Date:   Tue, 15 Jun 2021 08:50:35 +1000
-Message-id: <162371103543.23575.13662722966178222587@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210609210729.254578-1-Anna.Schumaker@Netapp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, 13 Jun 2021, Wang Yugui wrote:
-> Hi,
->=20
-> Any idea about auto export multiple btrfs snapshots?
->=20
-> One related patch is yet not merged to nfs-utils 2.5.3.
-> From:   "NeilBrown" <neilb@suse.de>
-> Subject: [PATCH/RFC v2 nfs-utils] Fix NFSv4 export of tmpfs filesystems.
->=20
-> In this patch, an UUID is auto generated when a tmpfs have no UUID.
->=20
-> for btrfs, multiple subvolume snapshot have the same filesystem UUID.
-> Could we generate an UUID for btrfs subvol with 'filesystem UUID' + 'subvol=
- ID'?
+On Wed, Jun 09, 2021 at 05:07:29PM -0400, schumaker.anna@gmail.com wrote:
+> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> 
+> This seems to happen fairly easily during READ_PLUS testing on NFS v4.2.
 
-You really need to ask this question of btrfs developers.  'mountd'
-already has a special-case exception for btrfs, to prefer the uuid
-provided by statfs64() rather than the uuid extracted from the block
-device.  It would be quite easy to add another exception.
-But it would only be reasonable to do that if the btrfs team told us how
-that wanted us to generate a UUID for a given mount point, and promised
-that would always provide a unique stable result.
+Yep, I hit a KASAN warning here every time, and this fixes it,
+thanks.--b.
 
-This is completely separate from the tmpfs patch you identified.
-
-NeilBrown
-
-
->=20
-> Best Regards
-> Wang Yugui (wangyugui@e16-tech.com)
-> 2021/06/13
->=20
->=20
->=20
+> I found that we could end up accessing xdr->buf->pages[pgnr] with a pgnr
+> greater than the number of pages in the array. So let's just return
+> early if we're setting base to a point at the end of the page data and
+> let xdr_set_tail_base() handle setting up the buffer pointers instead.
+> 
+> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> ---
+>  net/sunrpc/xdr.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+> index 3964ff74ee51..ca10ba2626f2 100644
+> --- a/net/sunrpc/xdr.c
+> +++ b/net/sunrpc/xdr.c
+> @@ -1230,10 +1230,9 @@ static unsigned int xdr_set_page_base(struct xdr_stream *xdr,
+>  	void *kaddr;
+>  
+>  	maxlen = xdr->buf->page_len;
+> -	if (base >= maxlen) {
+> -		base = maxlen;
+> -		maxlen = 0;
+> -	} else
+> +	if (base >= maxlen)
+> +		return 0;
+> +	else
+>  		maxlen -= base;
+>  	if (len > maxlen)
+>  		len = maxlen;
+> -- 
+> 2.32.0
