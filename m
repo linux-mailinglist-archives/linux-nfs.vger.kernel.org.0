@@ -2,147 +2,249 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A1C03A8329
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 16:47:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E1683A83A0
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 17:06:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230316AbhFOOte (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Jun 2021 10:49:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44394 "EHLO
+        id S230462AbhFOPIa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Jun 2021 11:08:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230079AbhFOOtc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Jun 2021 10:49:32 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34324C061574
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Jun 2021 07:47:28 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 1C02E3F53; Tue, 15 Jun 2021 10:47:24 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 1C02E3F53
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1623768444;
-        bh=nQ7RGA1XBtP89r9+zMwi3iD+9K6mPYQ/hB7Ed+6qQJY=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=Otdcz7upV7L3Ywa/c/sCTrtfV17yNKOQzFLSqRLGWooMabpfqWVNnQaED70woTA8B
-         wQVjtTGCeWHV3Csv8bIL3hJT1aj3b9VAEpCCMXSfAN5StDUr5/qP43Svry8IsU5936
-         Umj+zWOOxiJIoyWoJiDgrdQmap9cywJy5WFOi8U4=
-Date:   Tue, 15 Jun 2021 10:47:24 -0400
-To:     Calum Mackay <calum.mackay@oracle.com>
-Cc:     "suy.fnst@fujitsu.com" <suy.fnst@fujitsu.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "bfields@redhat.com" <bfields@redhat.com>
-Subject: Re: [PATCH] pynfs: courtesy: send RECLAIM_COMPLETE before session2
- opening the file
-Message-ID: <20210615144724.GB11877@fieldses.org>
-References: <TY2PR01MB2124D8FDDDCA29F5691F3DD089359@TY2PR01MB2124.jpnprd01.prod.outlook.com>
- <91f1d7df-b63c-4aa3-cc03-a8e1cbb2ecb1@oracle.com>
+        with ESMTP id S230431AbhFOPIa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Jun 2021 11:08:30 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936F8C061574
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Jun 2021 08:06:25 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id t7so6393032edd.5
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Jun 2021 08:06:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PgdJh/ogUhw3/2IMkBmzgD4iSAeBUK27ihPkI3r+n+I=;
+        b=L2yhHEws03cUDim4rtXA61KcJFovIVnKHW8U7QElx4tqAej0/Uygx9/CUkhjkZtiep
+         dsynP54tj0aIgfGGEbjF9W8I42KGkMqFISVpuXE+yi2qYa75gmZrNRMyMTsEhq5GT9Kd
+         lLxe3/q4mAEo0sBbs1QvSAotLnv0+Qd6fmnmKbzvqdJR9Gd7bIZJcSZibIhViTODSSNa
+         59YF0lbQyuugZaazpgbwrdea4k2iYw7rgF04Sl9uzlgmRBr0wFz8TwLm4K0EQWEX3fPq
+         wTpq0B2fEkdAAe6Ko3VnZfPyq6wlSC5bq9N/e/lwwK4T5CvZJBFIeIR5sAYls9WkOw4b
+         QoIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PgdJh/ogUhw3/2IMkBmzgD4iSAeBUK27ihPkI3r+n+I=;
+        b=C4YXvzvjFcyL04oE4Xr2c9GcDBlUM+kntt/cMo3G8TzWD4+mUl8/GW2CHLTQm940KG
+         K6t3vmmPh/UiEA96dhO+5hMFD7pixocRZFiZcav2MUFs+dK3dVRroWqna6Y4UAobMWv5
+         m80Oel+nJ2ygGyB7ylL9nqXuG4dav5UpbnIJoPhT/rEZNcldORW7S6opLnTp7aTdKPAH
+         v2lVn4/de1tfPdVNEKnb6Xyg5emClFCkvVVZWez6ypL9outmVvfmFpFXBPfQKsfpFTST
+         UE/tNDqYqcLOqS47Yf6UvLu5BBob8Mp59eFyAKgkoSzz9btPyoiM1W3TSHJa34Y8sK7F
+         sLYQ==
+X-Gm-Message-State: AOAM5336/jzPuDnyK3GSkZPxgpaHpCsGOHC/+pDb67o7GB00ZxT4a+7f
+        sMXb3lFkGvSQFQqoiRfv/qh1rZBaLQJWOpY2dfaOT6PV36E=
+X-Google-Smtp-Source: ABdhPJy60z0kaOstocMRRR5L37wuR8oXk7X9UL7Feb2PjfHIcNyxbtOgdUQWycV11UxZsFWjN6abQbEDlDELKFI+dOg=
+X-Received: by 2002:a05:6402:158e:: with SMTP id c14mr23925814edv.128.1623769584044;
+ Tue, 15 Jun 2021 08:06:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <91f1d7df-b63c-4aa3-cc03-a8e1cbb2ecb1@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+References: <20210603225907.19981-1-olga.kornievskaia@gmail.com>
+ <20210603225907.19981-2-olga.kornievskaia@gmail.com> <183cb72f03c90ce04c52e3813697095322cdc1db.camel@hammerspace.com>
+In-Reply-To: <183cb72f03c90ce04c52e3813697095322cdc1db.camel@hammerspace.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Tue, 15 Jun 2021 11:06:12 -0400
+Message-ID: <CAN-5tyGkOQ9wpAXnvo21SWmq=AxT16Ze2WXn1WgUSSmzLCt4AA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] sunrpc: take a xprt offline using sysfs
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jun 14, 2021 at 09:50:34PM +0100, Calum Mackay wrote:
-> On 10/06/2021 2:01 am, suy.fnst@fujitsu.com wrote:
-> >The test fails on v5.13-rc5 and old kernels. Because the second session
-> >doesn't send RECLAIM_COMPLETE before attempting to do a non-reclaim
-> >open. So the server returns NFS4ERR_GRACE instead of NFS4_OK.
+On Sun, Jun 13, 2021 at 12:16 PM Trond Myklebust
+<trondmy@hammerspace.com> wrote:
+>
+> On Thu, 2021-06-03 at 18:59 -0400, Olga Kornievskaia wrote:
+> > From: Olga Kornievskaia <kolga@netapp.com>
 > >
-> >     # ./testserver.py ${server_IP}:/nfsroot --rundeps COUR2
-> >     INFO   :rpc.poll:got connection from ('127.0.0.1', 39206), assigned to
-> >     fd=5
-> >     INFO   :rpc.thread:Called connect(('193.168.140.239', 2049))
-> >     INFO   :rpc.poll:Adding 6 generated by another thread
-> >     INFO   :test.env:Created client to 193.168.140.239, 2049
-> >     INFO   :test.env:Called do_readdir()
-> >     INFO   :test.env:do_readdir() = [entry4(cookie=512,
-> >     name=b'COUR2_1623055313', attrs={})]
-> >     fileb'COUR2_1623119443'created by sess1
-> >     INFO   :test.env:Sleeping for 22 seconds: twice the lease period
-> >     INFO   :test.env:Woke up
-> >     session created
-> >     **************************************************
-> >     COUR2    st_courtesy.testLockSleepLock                            :
-> >     FAILURE
-> >            OP_OPEN should return NFS4_OK, instead got
-> >                      NFS4ERR_GRACE
-> >     **************************************************
-> >     Command line asked for 1 of 255 tests
-> >       Of those: 0 Skipped, 1 Failed, 0 Warned, 0 Passed
+> > Using sysfs's xprt_state attribute, mark a particular transport
+> > offline.
+> > It will not be picked during the round-robin selection. It's not
+> > allowed
+> > to take the main (1st created transport associated with the
+> > rpc_client)
+> > offline.
 > >
-> >RFC5661, page 567:
-> >"Whenever a client establishes a new client ID and before it does the
-> >first non-reclaim operation that obtains a lock, it MUST send a
-> >RECLAIM_COMPLETE with rca_one_fs set to FALSE, even if there are no
-> >locks to reclaim. If non-reclaim locking operations are done before
-> >the RECLAIM_COMPLETE, an NFS4ERR_GRACE error will be returned."
+> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > ---
+> >  include/linux/sunrpc/xprt.h |  2 ++
+> >  net/sunrpc/clnt.c           |  1 +
+> >  net/sunrpc/sysfs.c          | 42 +++++++++++++++++++++++++++++++++--
+> > --
+> >  net/sunrpc/xprtmultipath.c  |  3 ++-
+> >  4 files changed, 43 insertions(+), 5 deletions(-)
 > >
-> >Send RECLAIM_COMPLETE before the file open to let the test pass.
-> >Signed-off-by: Su Yue <suy.fnst@cn.fujitsu.com>
-> >---
-> >  nfs4.1/server41tests/st_courtesy.py | 3 +++
-> >  1 file changed, 3 insertions(+)
+> > diff --git a/include/linux/sunrpc/xprt.h
+> > b/include/linux/sunrpc/xprt.h
+> > index 13a4eaf385cf..72a858f032c7 100644
+> > --- a/include/linux/sunrpc/xprt.h
+> > +++ b/include/linux/sunrpc/xprt.h
+> > @@ -293,6 +293,7 @@ struct rpc_xprt {
+> >         struct rcu_head         rcu;
+> >         const struct xprt_class *xprt_class;
+> >         struct rpc_sysfs_xprt   *xprt_sysfs;
+> > +       bool                    main; /* marked if it's the 1st
+> > transport */
+> >  };
 > >
-> >diff --git a/nfs4.1/server41tests/st_courtesy.py b/nfs4.1/server41tests/st_courtesy.py
-> >index dd911a37772d..3478a9d93dbf 100644
-> >--- a/nfs4.1/server41tests/st_courtesy.py
-> >+++ b/nfs4.1/server41tests/st_courtesy.py
-> >@@ -74,6 +74,9 @@ def testLockSleepLock(t, env):
-> >      c2 = env.c1.new_client(b"%s_2" % env.testname(t))
-> >      sess2 = c2.create_session()
-> >+    res = sess2.compound([op.reclaim_complete(FALSE)])
-> >+    check(res)
-> >+
-> >      res = open_file(sess2, env.testname(t), access=OPEN4_SHARE_ACCESS_WRITE)
-> >      check(res)
+> >  #if defined(CONFIG_SUNRPC_BACKCHANNEL)
+> > @@ -426,6 +427,7 @@
+> > void                        xprt_release_write(struct rpc_xprt *,
+> > struct rpc_task *);
+> >  #define XPRT_BOUND             (4)
+> >  #define XPRT_BINDING           (5)
+> >  #define XPRT_CLOSING           (6)
+> > +#define XPRT_OFFLINE           (7)
+> >  #define XPRT_CONGESTED         (9)
+> >  #define XPRT_CWND_WAIT         (10)
+> >  #define XPRT_WRITE_SPACE       (11)
+> > diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> > index 9bf820bad84c..408618765aa5 100644
+> > --- a/net/sunrpc/clnt.c
+> > +++ b/net/sunrpc/clnt.c
+> > @@ -412,6 +412,7 @@ static struct rpc_clnt * rpc_new_client(const
+> > struct rpc_create_args *args,
+> >         }
 > >
-> 
-> I'd still like to check whether this is the right place to fix this.
-> 
-> Initially, I was confused as to why the first client "c1" doesn't
-> face the same issue. A network trace shows that a RECLAIM_COMPLETE
-> is indeed sent for c1, despite not appearing explicitly in
-> testLockSleepLock(). Whereas one isn't sent for c2, hence the
-> problem.
-> 
-> This is probably because c1 is initialised with:
-> 
->   61     sess1 = env.c1.new_client_session(env.testname(t))
-> 
-> 
-> and c2 with:
-> 
->   74     c2 = env.c1.new_client(b"%s_2" % env.testname(t))
->   75     sess2 = c2.create_session()
-> 
-> 
-> The c1 case results in a RECLAIM_COMPLETE, but the c2 case does not.
-> 
-> I'm not yet sure whether that ought to be done in
-> new_client()/create_session(). If so, then there would be no need to
-> add it explicitly here.
+> >         rpc_clnt_set_transport(clnt, xprt, timeout);
+> > +       xprt->main = true;
+> >         xprt_iter_init(&clnt->cl_xpi, xps);
+> >         xprt_switch_put(xps);
+> >
+> > diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
+> > index ec06c9257c07..02c918c5061b 100644
+> > --- a/net/sunrpc/sysfs.c
+> > +++ b/net/sunrpc/sysfs.c
+> > @@ -118,7 +118,7 @@ static ssize_t rpc_sysfs_xprt_state_show(struct
+> > kobject *kobj,
+> >         struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
+> >         ssize_t ret;
+> >         int locked, connected, connecting, close_wait, bound,
+> > binding,
+> > -           closing, congested, cwnd_wait, write_space;
+> > +           closing, congested, cwnd_wait, write_space, offline;
+> >
+> >         if (!xprt)
+> >                 return 0;
+> > @@ -136,8 +136,9 @@ static ssize_t rpc_sysfs_xprt_state_show(struct
+> > kobject *kobj,
+> >                 congested = test_bit(XPRT_CONGESTED, &xprt->state);
+> >                 cwnd_wait = test_bit(XPRT_CWND_WAIT, &xprt->state);
+> >                 write_space = test_bit(XPRT_WRITE_SPACE, &xprt-
+> > >state);
+> > +               offline = test_bit(XPRT_OFFLINE, &xprt->state);
+> >
+> > -               ret = sprintf(buf, "state=%s %s %s %s %s %s %s %s %s
+> > %s\n",
+> > +               ret = sprintf(buf, "state=%s %s %s %s %s %s %s %s %s
+> > %s %s\n",
+> >                               locked ? "LOCKED" : "",
+> >                               connected ? "CONNECTED" : "",
+> >                               connecting ? "CONNECTING" : "",
+> > @@ -147,7 +148,8 @@ static ssize_t rpc_sysfs_xprt_state_show(struct
+> > kobject *kobj,
+> >                               closing ? "CLOSING" : "",
+> >                               congested ? "CONGESTED" : "",
+> >                               cwnd_wait ? "CWND_WAIT" : "",
+> > -                             write_space ? "WRITE_SPACE" : "");
+> > +                             write_space ? "WRITE_SPACE" : "",
+> > +                             offline ? "OFFLINE" : "");
+> >         }
+> >
+> >         xprt_put(xprt);
+> > @@ -223,6 +225,38 @@ static ssize_t
+> > rpc_sysfs_xprt_dstaddr_store(struct kobject *kobj,
+> >         goto out;
+> >  }
+> >
+> > +static ssize_t rpc_sysfs_xprt_state_change(struct kobject *kobj,
+> > +                                          struct kobj_attribute
+> > *attr,
+> > +                                          const char *buf, size_t
+> > count)
+> > +{
+> > +       struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
+> > +       int offline = 0;
+> > +
+> > +       if (!xprt)
+> > +               return 0;
+> > +
+> > +       if (!strncmp(buf, "offline", 7))
+> > +               offline = 1;
+> > +       else
+> > +               return -EINVAL;
+> > +
+> > +       if (wait_on_bit_lock(&xprt->state, XPRT_LOCKED,
+> > TASK_KILLABLE)) {
+> > +               count = -EINTR;
+> > +               goto out_put;
+> > +       }
+> > +       if (offline) {
+> > +               if (xprt->main)
+> > +                       count = -EINVAL;
+> > +               else
+> > +                       set_bit(XPRT_OFFLINE, &xprt->state);
+> > +       }
+>
+> Is there any way to put the transport back online? What say the problem
+> with the downed IP address gets fixed?
 
-There's definitely cases where clients want to be able to create a new
-session without sending a new RECLAIM_COMPLETE.
+I will add this in v2. Originally the thought was that offlining a
+transport was just a middle step before removing it and not something
+in its own right. I would like to know if it's appropriate to also
+then decrement the xps_nactive counter when the xprt is offline?
 
-Any reason we can't replace those two lines by a single
-new_client_session()?  I'd do either that or just add the explicit
-RECLAIM_COMPLETE.
-
-> [I suspect this was missed in my testing, since the Solaris server I
-> used may be less strict about requiring the RECLAIM_COMPLETE]
-
-That's a server bug:
-
-	https://datatracker.ietf.org/doc/html/rfc5661#page-173
-
-	... NFS4ERR_GRACE must always be returned to clients attempting
-	a non-reclaim lock request before doing their own global
-	RECLAIM_COMPLETE.
-
-I've complained about it before.  I had some idea it'd been fixed, maybe
-not.
-
---b.
+>
+> > +
+> > +       xprt_release_write(xprt, NULL);
+> > +out_put:
+> > +       xprt_put(xprt);
+> > +       return count;
+> > +}
+> > +
+> >  int rpc_sysfs_init(void)
+> >  {
+> >         rpc_sunrpc_kset = kset_create_and_add("sunrpc", NULL,
+> > kernel_kobj);
+> > @@ -293,7 +327,7 @@ static struct kobj_attribute rpc_sysfs_xprt_info
+> > = __ATTR(xprt_info,
+> >         0444, rpc_sysfs_xprt_info_show, NULL);
+> >
+> >  static struct kobj_attribute rpc_sysfs_xprt_change_state =
+> > __ATTR(xprt_state,
+> > -       0644, rpc_sysfs_xprt_state_show, NULL);
+> > +       0644, rpc_sysfs_xprt_state_show,
+> > rpc_sysfs_xprt_state_change);
+> >
+> >  static struct attribute *rpc_sysfs_xprt_attrs[] = {
+> >         &rpc_sysfs_xprt_dstaddr.attr,
+> > diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
+> > index 07e76ae1028a..39551b794b80 100644
+> > --- a/net/sunrpc/xprtmultipath.c
+> > +++ b/net/sunrpc/xprtmultipath.c
+> > @@ -230,7 +230,8 @@ void xprt_iter_default_rewind(struct
+> > rpc_xprt_iter *xpi)
+> >  static
+> >  bool xprt_is_active(const struct rpc_xprt *xprt)
+> >  {
+> > -       return kref_read(&xprt->kref) != 0;
+> > +       return (kref_read(&xprt->kref) != 0 &&
+> > +               !test_bit(XPRT_OFFLINE, &xprt->state));
+> >  }
+> >
+> >  static
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
