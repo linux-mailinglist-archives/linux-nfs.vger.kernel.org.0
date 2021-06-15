@@ -2,38 +2,40 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37EAF3A84C3
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 17:50:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB7D23A84FD
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 17:51:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232012AbhFOPv5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Jun 2021 11:51:57 -0400
+        id S232384AbhFOPw5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Jun 2021 11:52:57 -0400
 Received: from mail.kernel.org ([198.145.29.99]:45724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232128AbhFOPvc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 15 Jun 2021 11:51:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CAE39616ED;
-        Tue, 15 Jun 2021 15:49:27 +0000 (UTC)
+        id S231944AbhFOPv5 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 15 Jun 2021 11:51:57 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C6B20616EC;
+        Tue, 15 Jun 2021 15:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623772168;
-        bh=RUHcFzP7JEmRgQ8Y5ojMdQlxqPAruhth2Tfc16/Sclc=;
+        s=k20201202; t=1623772192;
+        bh=vHPNv6A389n+oDKzMc8l52vvmheoUXMFud3IC41syIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DfoqwkQU/bulmt85XFrnP3CmiOff9Wl6Ix8cOVOTG7hw3iq7VtV9MxtfEsVNelmZ4
-         6KyBQuki13mCUawtAiiHnewU2NTU0Q6KX/69eP+pAsr1RYgp54bVbkClnluheBjTM9
-         3sYwNFruBV/rdoo/6fmAvAWCYFytSe/fUfsa1GD7M+AmmWoRWRT/gGN49NufbxLj4r
-         FHkRyd0JeTGBo/YVLXN31nxcEBTnL6saxZ392sVbB6rJuTPXVGquLOSqu/hiEmPwW0
-         2THGcW/OdkqvZnzAtF/IMpv7ez2QRByBLxyLlC4n187d4B+zirrcp+b14LEUlzO9RP
-         LPUhzfi3xpzUg==
+        b=shDxgWUieeBAvu5LBTN3OVZLsW3jXXz+hyHktrd9pDf7giWi/7xiciKf6LNfG4xqA
+         /0YwR7gWWWcAIPIWu2bYQrft9QgPni4wCETMYLEL77e3sVIJojIergbnkSYzVjiPah
+         aDG5tW1/pjx4ejQMitGejQ5XY7lQd73ZxS4EZna/EQgoiUdZbm7zOmTVArsdVGuuB/
+         y2ptYeNlrS4iftz4ndS5yiOVxZpOBGscmes4EO2QhVET0eN518TMefBhq+ayyWBVSZ
+         TX/3hWPUhdd4Zy32fjiS3F6zowPCXAhYC7M/A2G/AYpN/2lkhxpnsGml1TitSH91lN
+         uVNwWkcXX+PNg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+Cc:     Dai Ngo <dai.ngo@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 16/30] NFSv4: Fix second deadlock in nfs4_evict_inode()
-Date:   Tue, 15 Jun 2021 11:48:53 -0400
-Message-Id: <20210615154908.62388-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 03/15] NFSv4: nfs4_proc_set_acl needs to restore NFS_CAP_UIDGID_NOMAP on error.
+Date:   Tue, 15 Jun 2021 11:49:35 -0400
+Message-Id: <20210615154948.62711-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210615154908.62388-1-sashal@kernel.org>
-References: <20210615154908.62388-1-sashal@kernel.org>
+In-Reply-To: <20210615154948.62711-1-sashal@kernel.org>
+References: <20210615154948.62711-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -41,47 +43,62 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Dai Ngo <dai.ngo@oracle.com>
 
-[ Upstream commit c3aba897c6e67fa464ec02b1f17911577d619713 ]
+[ Upstream commit f8849e206ef52b584cd9227255f4724f0cc900bb ]
 
-If the inode is being evicted but has to return a layout first, then
-that too can cause a deadlock in the corner case where the server
-reboots.
+Currently if __nfs4_proc_set_acl fails with NFS4ERR_BADOWNER it
+re-enables the idmapper by clearing NFS_CAP_UIDGID_NOMAP before
+retrying again. The NFS_CAP_UIDGID_NOMAP remains cleared even if
+the retry fails. This causes problem for subsequent setattr
+requests for v4 server that does not have idmapping configured.
 
+This patch modifies nfs4_proc_set_acl to detect NFS4ERR_BADOWNER
+and NFS4ERR_BADNAME and skips the retry, since the kernel isn't
+involved in encoding the ACEs, and return -EINVAL.
+
+Steps to reproduce the problem:
+
+ # mount -o vers=4.1,sec=sys server:/export/test /tmp/mnt
+ # touch /tmp/mnt/file1
+ # chown 99 /tmp/mnt/file1
+ # nfs4_setfacl -a A::unknown.user@xyz.com:wrtncy /tmp/mnt/file1
+ Failed setxattr operation: Invalid argument
+ # chown 99 /tmp/mnt/file1
+ chown: changing ownership of ‘/tmp/mnt/file1’: Invalid argument
+ # umount /tmp/mnt
+ # mount -o vers=4.1,sec=sys server:/export/test /tmp/mnt
+ # chown 99 /tmp/mnt/file1
+ #
+
+v2: detect NFS4ERR_BADOWNER and NFS4ERR_BADNAME and skip retry
+       in nfs4_proc_set_acl.
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ fs/nfs/nfs4proc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 0a0b7680ea85..f387b34bc5e5 100644
+index ff54ba3c8247..0b842b0d07c1 100644
 --- a/fs/nfs/nfs4proc.c
 +++ b/fs/nfs/nfs4proc.c
-@@ -9627,15 +9627,20 @@ int nfs4_proc_layoutreturn(struct nfs4_layoutreturn *lrp, bool sync)
- 			&task_setup_data.rpc_client, &msg);
- 
- 	dprintk("--> %s\n", __func__);
-+	lrp->inode = nfs_igrab_and_active(lrp->args.inode);
- 	if (!sync) {
--		lrp->inode = nfs_igrab_and_active(lrp->args.inode);
- 		if (!lrp->inode) {
- 			nfs4_layoutreturn_release(lrp);
- 			return -EAGAIN;
- 		}
- 		task_setup_data.flags |= RPC_TASK_ASYNC;
- 	}
--	nfs4_init_sequence(&lrp->args.seq_args, &lrp->res.seq_res, 1, 0);
-+	if (!lrp->inode)
-+		nfs4_init_sequence(&lrp->args.seq_args, &lrp->res.seq_res, 1,
-+				   1);
-+	else
-+		nfs4_init_sequence(&lrp->args.seq_args, &lrp->res.seq_res, 1,
-+				   0);
- 	task = rpc_run_task(&task_setup_data);
- 	if (IS_ERR(task))
- 		return PTR_ERR(task);
+@@ -5795,6 +5795,14 @@ static int nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t buflen
+ 	do {
+ 		err = __nfs4_proc_set_acl(inode, buf, buflen);
+ 		trace_nfs4_set_acl(inode, err);
++		if (err == -NFS4ERR_BADOWNER || err == -NFS4ERR_BADNAME) {
++			/*
++			 * no need to retry since the kernel
++			 * isn't involved in encoding the ACEs.
++			 */
++			err = -EINVAL;
++			break;
++		}
+ 		err = nfs4_handle_exception(NFS_SERVER(inode), err,
+ 				&exception);
+ 	} while (exception.retry);
 -- 
 2.30.2
 
