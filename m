@@ -2,68 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64BF23A8561
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 17:53:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BD733A8559
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 17:53:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232566AbhFOPzK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Jun 2021 11:55:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232573AbhFOPxH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Jun 2021 11:53:07 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F03CEC061149
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Jun 2021 08:50:08 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 58ED56210; Tue, 15 Jun 2021 11:50:07 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 58ED56210
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1623772207;
-        bh=MUKQWqA9OMR8veuTiMlJeo1ol+afe5Ti0C22ouRUF+k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AhBM/OSQlJVMzF70bW7SETpOZTf9Wbj/4KExzT0o/bQmTpt0g7wh27/QcLJ1gG7n0
-         luvn9uE377LzhuCQQbuUDKKfeN0RyXLBe7dNDkxto2zn1ipDjz9rnM7fC+xPzWcWVS
-         KCtK6vtqdkPoopwlcIK85Bv56YQr9EjoM0Fk/Hik=
-Date:   Tue, 15 Jun 2021 11:50:07 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Calum Mackay <calum.mackay@oracle.com>
-Cc:     "suy.fnst@fujitsu.com" <suy.fnst@fujitsu.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "bfields@redhat.com" <bfields@redhat.com>
-Subject: Re: [PATCH] pynfs: courtesy: send RECLAIM_COMPLETE before session2
- opening the file
-Message-ID: <20210615155007.GD11877@fieldses.org>
-References: <TY2PR01MB2124D8FDDDCA29F5691F3DD089359@TY2PR01MB2124.jpnprd01.prod.outlook.com>
- <91f1d7df-b63c-4aa3-cc03-a8e1cbb2ecb1@oracle.com>
- <20210615144724.GB11877@fieldses.org>
- <3f7ee699-bbd6-9025-82b5-40c37cbb6d9c@oracle.com>
+        id S232502AbhFOPzA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Jun 2021 11:55:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44848 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232509AbhFOPxA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 15 Jun 2021 11:53:00 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9A8DD6162C;
+        Tue, 15 Jun 2021 15:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623772229;
+        bh=LUNdG5gGL32wnTQXMZa30zLxgkpN2XOHyAaL4hkkj9U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=h+3KUcIvfcXP2LRs1SbYK1THOrB3/jOSdwwTwtIAXN2zABll1OvS9WQ5RuHcArYtj
+         rZf4+zKoHolXB1MxhE3oiwrQqsspCb+MqIgmhPmVFMzpiIqxDPA1KzoGOk/rNFtIAw
+         pItO4NM3jkHSF5BbONjIajzEakfedtrN38SpI9bnO0VRuImSXDowGuRpU4hfE1PSS1
+         +qDbD8JvwikkFStFKuspKNHx/QznPw6dBzosSYwDeIdBr7fyak/EZkK/DGrzdjvmO6
+         0Y1E4xEg6+xgI9eSGhORakjRKDwN48HnAG+znvp8MUzDSEz1KjCIZ6Bpwe6B9TBY8S
+         wylJ5580U2l1w==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dai Ngo <dai.ngo@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 1/8] NFSv4: nfs4_proc_set_acl needs to restore NFS_CAP_UIDGID_NOMAP on error.
+Date:   Tue, 15 Jun 2021 11:50:20 -0400
+Message-Id: <20210615155027.63048-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3f7ee699-bbd6-9025-82b5-40c37cbb6d9c@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jun 15, 2021 at 04:38:15PM +0100, Calum Mackay wrote:
-> I wasn't quite sure on the semantics of those calls.
-> 
-> We want what appears to the server to be a new client c2, not a new
-> session from an existing client c1. I wasn't sure whether
-> new_client_session() would give us that?
+From: Dai Ngo <dai.ngo@oracle.com>
 
-Yes, it gets you both a new client and a new session for that client.
-It does all the stuff you need to get a new client that you can actually
-use for normal operations, so it should be the default unless you need
-finer control.
+[ Upstream commit f8849e206ef52b584cd9227255f4724f0cc900bb ]
 
-(Also, *eventually*, I want to port all the 4.0 tests to the 4.1 code
-and eliminate the separate 4.0/4.1 directories.  new_client_session will
-then do either exchange_id+create_session+reclaim_complete or
-setclientid+setclient_confirm depending on minor version.)
+Currently if __nfs4_proc_set_acl fails with NFS4ERR_BADOWNER it
+re-enables the idmapper by clearing NFS_CAP_UIDGID_NOMAP before
+retrying again. The NFS_CAP_UIDGID_NOMAP remains cleared even if
+the retry fails. This causes problem for subsequent setattr
+requests for v4 server that does not have idmapping configured.
 
-Anyway, so the names are totally unhelpful.  Maybe we should reanme
-new_client to exchange_id and new_client_session to just new_client.
+This patch modifies nfs4_proc_set_acl to detect NFS4ERR_BADOWNER
+and NFS4ERR_BADNAME and skips the retry, since the kernel isn't
+involved in encoding the ACEs, and return -EINVAL.
 
---b.
+Steps to reproduce the problem:
+
+ # mount -o vers=4.1,sec=sys server:/export/test /tmp/mnt
+ # touch /tmp/mnt/file1
+ # chown 99 /tmp/mnt/file1
+ # nfs4_setfacl -a A::unknown.user@xyz.com:wrtncy /tmp/mnt/file1
+ Failed setxattr operation: Invalid argument
+ # chown 99 /tmp/mnt/file1
+ chown: changing ownership of ‘/tmp/mnt/file1’: Invalid argument
+ # umount /tmp/mnt
+ # mount -o vers=4.1,sec=sys server:/export/test /tmp/mnt
+ # chown 99 /tmp/mnt/file1
+ #
+
+v2: detect NFS4ERR_BADOWNER and NFS4ERR_BADNAME and skip retry
+       in nfs4_proc_set_acl.
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfs/nfs4proc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index e053fd7f83d8..ae19ead908d5 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5294,6 +5294,14 @@ static int nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t buflen
+ 	do {
+ 		err = __nfs4_proc_set_acl(inode, buf, buflen);
+ 		trace_nfs4_set_acl(inode, err);
++		if (err == -NFS4ERR_BADOWNER || err == -NFS4ERR_BADNAME) {
++			/*
++			 * no need to retry since the kernel
++			 * isn't involved in encoding the ACEs.
++			 */
++			err = -EINVAL;
++			break;
++		}
+ 		err = nfs4_handle_exception(NFS_SERVER(inode), err,
+ 				&exception);
+ 	} while (exception.retry);
+-- 
+2.30.2
+
