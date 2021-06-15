@@ -2,35 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8939A3A857D
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 17:54:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D8D33A8589
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 17:54:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231869AbhFOPz4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Jun 2021 11:55:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46756 "EHLO mail.kernel.org"
+        id S232772AbhFOP4M (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Jun 2021 11:56:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232641AbhFOPxz (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 15 Jun 2021 11:53:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F075261927;
-        Tue, 15 Jun 2021 15:50:40 +0000 (UTC)
+        id S231992AbhFOPyM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 15 Jun 2021 11:54:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 490FB6188B;
+        Tue, 15 Jun 2021 15:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623772241;
-        bh=KDje6VNJe4O3re0C2o2dhdGZMnbb0V6OZrnNBHvMDoI=;
+        s=k20201202; t=1623772250;
+        bh=rqa7uLt5zbrbSm2o0hI3ygw37YDPgAXOjaBTCMyJEX8=;
         h=From:To:Cc:Subject:Date:From;
-        b=uFwS0Q10TCcOlUFc4yIgEEZqjM70nUM1GK5YBLX0UQ+IEHmoGC+N7fgMwzRWlMmrb
-         xO198UHEDcWrZoSGwJbVQjZjwxPO7nbFTUn9l6QD2tVd6BBwGF3RS8WRynfxsNBA51
-         JlXjF0UU0Od1vtxxg+AyQx0aWBoQlj4VXZcVaYWldGUEhA50oRWpJ0N5ScptYqi93P
-         RtUfRpm3Ye5lmH323B347KH6UeB1nDUMND8OXVPv/r90+erpQDb59Cmg0GHJbOoLi7
-         kex8EYwr3VYwZjb1/cKSFCBofjFSTzfSwdu6lfyL0HXfn3L97Q1bvMhJYI/zsj7bmK
-         kUBu8c/CH8eAg==
+        b=p/ySSkFpGtguBKGxJ5A7s/hsgItE4QdIsZYF65Zw3uasQ8IjamSt5LqISNDfboyMx
+         VVaz3BUYa9fc2pNzZsa1H7UEcPCYN93SleBpdFFvWo+GTfqmqQ4Tqzav/RzGRY3faK
+         1c9kG+5o2dJRA0mbedLDRvX7DUtWL2fwlf70vFAAOPIZKto8lyfcHw3aYRw5WGCjUz
+         suZJnteHuuTk6OdMIdM7c9Nk3By6P/AhkOj5zfvhD7eyPWbJ1CtXv6I2DKCRSa630M
+         +TFbebnuKFt0qOnOpnYofcNEcayUhyj1BnmC/fGW1GUKNCqmqaaQ9GiXA57lbSoR+T
+         Bv3pBw6CREp5g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dai Ngo <dai.ngo@oracle.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 1/5] NFSv4: nfs4_proc_set_acl needs to restore NFS_CAP_UIDGID_NOMAP on error.
-Date:   Tue, 15 Jun 2021 11:50:35 -0400
-Message-Id: <20210615155039.63348-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 1/3] NFSv4: nfs4_proc_set_acl needs to restore NFS_CAP_UIDGID_NOMAP on error.
+Date:   Tue, 15 Jun 2021 11:50:45 -0400
+Message-Id: <20210615155048.63448-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -79,10 +79,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 8 insertions(+)
 
 diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 94130588ebf5..2ea772f596e3 100644
+index 92ca753723b5..e10bada12361 100644
 --- a/fs/nfs/nfs4proc.c
 +++ b/fs/nfs/nfs4proc.c
-@@ -5183,6 +5183,14 @@ static int nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t buflen
+@@ -4887,6 +4887,14 @@ static int nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t buflen
  	do {
  		err = __nfs4_proc_set_acl(inode, buf, buflen);
  		trace_nfs4_set_acl(inode, err);
