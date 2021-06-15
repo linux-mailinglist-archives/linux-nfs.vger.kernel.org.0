@@ -2,189 +2,118 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 566963A872D
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 19:11:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A1F73A89C8
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 21:52:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229898AbhFORNI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Jun 2021 13:13:08 -0400
-Received: from esa10.utexas.iphmx.com ([216.71.150.156]:28549 "EHLO
-        esa10.utexas.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230012AbhFORNH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Jun 2021 13:13:07 -0400
-X-Greylist: delayed 425 seconds by postgrey-1.27 at vger.kernel.org; Tue, 15 Jun 2021 13:13:07 EDT
-IronPort-SDR: 38DNy/nDuRlomJuzXAc156VYYMc3Qd3/DcSvBC9+TuyHwjOFbT84fvaWn8Wg+4LCVngw7mb34p
- 1o+N9dnrJp5ZZMwINTi5UXAu3Z0cl4lBVYsNIfPpbRzlihc/YjG2VOK339kn1p29gTp8O53YD+
- 9vJ4aN4odnduXwWxvUQ9ctmssTL0dchc6juEMX2zx/WTveyDHPAmkysbSfl9F2Ii3J7dJv90UV
- k87stnPnMH7aOn6t+4sEwsg/trasyKKkQfVQV2VzlNrKlaYYdigvwlc4HkQhtIjYta12iQeDWU
- CdM=
-X-Utexas-Sender-Group: RELAYLIST-O365
-X-IronPort-MID: 279473825
-X-IPAS-Result: =?us-ascii?q?A2EJCgCI3Mhgh2U3L2haHgEBCxIMQIFMC4FTUX6BQguEP?=
- =?us-ascii?q?YMCRwEBhTmIUy2aG4FCgREDGDwCCQEBAQEBAQEBAQcCNQoCBAEBAwSESTeCN?=
- =?us-ascii?q?SY3Bg4CBAEBAQEDAgMBAQEBAQQBAQYBAQEBAQEFBAICEAEBAQFshS85AQyDV?=
- =?us-ascii?q?k07AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBBQINUilWE?=
- =?us-ascii?q?RUIAQE4NAIRFQI0Kw0IAQEXAwSCTwGCVQMvAQ6bYgGBEgEWPgIjAUABAQuBC?=
- =?us-ascii?q?IoGgTKBAYIHAQEGBASBNAGEAhhCCQ2BWQMGCQGBBiqCe4Z0hD6BSUSBFScPh?=
- =?us-ascii?q?ygvMSaCWIJkhBoTLIEvFT2RYyeNGVyBI5s+gyYEigyTVAYOBSaUfpBolVSMG?=
- =?us-ascii?q?JJ4hSQCBAIEBQIOAQEGgWqBfzMaCB0TgyRQFwIOjh8MDQkVgzmKfFU4AgYKA?=
- =?us-ascii?q?QEDCXyHTwGBEAEB?=
-IronPort-PHdr: A9a23:6uuoExLcFHJLAGSpNtmcuZcyDhhOgF28FhAa54BhiL9UdKmnuZP4M
- x+X6fZsiQrPWoPWo7JBhvHNuq/tEWoH/d6asX8EfZANMn1NicgfkwE6RsLQD0r9Ia30YCEgW
- sdPTllo+ze8K0cGUMr7bkfZ93u16zNaEx7jNA1zc+LyHIO37Yy32um+9oeVbR9PgW+4aK9ya
- giqoBXYrY8bjZYxQps=
-IronPort-HdrOrdr: A9a23:PWfLwKEKZZlrgJoRpLqE8ceALOsnbusQ8zAXPi9KJCC9Hvbo9P
- xG4s526facsl94MxsdcOy7Scu9qBjnlKKdj7N+AV+TNjOIhIN/RLsD0bff
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="5.83,275,1616475600"; 
-   d="scan'208";a="279473825"
-X-Utexas-Seen-Outbound: true
-Received: from mail-mw2nam10lp2101.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.101])
-  by esa10.utexas.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2021 12:03:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JaQKDShhucxlewvR1Of1oFzxRLm7jGO1tgR7nW4APqiprYufgZ7fCCrre05KtZmUuWNGUFC4QloZ3pKI4Wdw+8WixW1w/4QQrMTt0/iPE7MxV/Qg2Aj8XBThK9ubSgjLwYEYpEHAvDDQJ/wrndR4PDyKGcrhHyuDHlBS9fzCuCtAn310O44tTSPzCXe/LRo0KcKiLP5S3XufatQc40iCKadxLTD0UhbY1cFqTN6b9vfVAzGjjeKplhxgzn4uCIUN+TDWGWfNi2IVmbQfzznUg7i1Gcj8YPRmK8aK2+SSG5lSGcKR/INq8MIdKeTvdvHMSjvj1Y9Ra80yNJ3mdFoMMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mgoUPY1EXwChYiv+4V85DyFBtulf/totD16vjGTO25A=;
- b=hz5+uZWOyo9DQQiCmDsH1G6yCJo6cKQC4QyLiHAnotQmsvhQEk8mp2lb0b7AiHEUprLe5HyXXACPqI/C34RmuP7LUCyAtKkR0yJrFlMfJ3AQGQqT6Kjs+cCJbmFezl8x68sM9J4qIskupMokQksB05o4/eCK8KiXeXlavD3VFEKOw6NHEyr/eEHQJT535a2cpW1MUKU87fa8u8LuUe1r6DLhstNqpqAeGtkx0izvQ47qQXADw3cdYu9e2K4AxUE40KU3BtM86cRkL5Gu+goyoJMVRIFIe/0tcoIZJ8hjs//2tK9Va4cCxMc0+6zzQchwa1CZqp/rdzphoCx9mXQNTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=math.utexas.edu; dmarc=pass action=none
- header.from=math.utexas.edu; dkim=pass header.d=math.utexas.edu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=utexas.onmicrosoft.com; s=selector1-utexas-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mgoUPY1EXwChYiv+4V85DyFBtulf/totD16vjGTO25A=;
- b=V2MgeEcc+WzFrUo+2+Czfje6ZbYeScNByAzdic05tk3sNV7X/WgkYNpxh2zl3e5u6GP69TvsImGP1aIf5yh4cGGK/3c/tXfxeasvN2RERTJDzK7wIpsXItwVDjpjBsspYxbhLcyiV9V5bGN8eSwApJYmxpLRwDDJuYAxX6wo7l4=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=math.utexas.edu;
-Received: from BYAPR06MB3848.namprd06.prod.outlook.com (2603:10b6:a02:8c::15)
- by BY5PR06MB6644.namprd06.prod.outlook.com (2603:10b6:a03:239::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.22; Tue, 15 Jun
- 2021 17:03:53 +0000
-Received: from BYAPR06MB3848.namprd06.prod.outlook.com
- ([fe80::b5b8:98c7:3e33:3a22]) by BYAPR06MB3848.namprd06.prod.outlook.com
- ([fe80::b5b8:98c7:3e33:3a22%3]) with mapi id 15.20.4219.025; Tue, 15 Jun 2021
- 17:03:53 +0000
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-From:   Patrick Goetz <pgoetz@math.utexas.edu>
-Subject: Use of /etc/netgroup appears to be broken in the NFS server version
- which ships with Ubuntu 20.04
-Message-ID: <2539b705-b72a-d9de-965e-7836dfd2e362@math.utexas.edu>
-Date:   Tue, 15 Jun 2021 12:03:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [67.198.113.142]
-X-ClientProxiedBy: SN4PR0401CA0047.namprd04.prod.outlook.com
- (2603:10b6:803:2a::33) To BYAPR06MB3848.namprd06.prod.outlook.com
- (2603:10b6:a02:8c::15)
+        id S229898AbhFOTyI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Jun 2021 15:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229749AbhFOTyI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Jun 2021 15:54:08 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 839B1C061574;
+        Tue, 15 Jun 2021 12:52:03 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 60B1D620D; Tue, 15 Jun 2021 15:52:00 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 60B1D620D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1623786720;
+        bh=oM0LZltQSkc1niBCAeKehrloS9a/z0+/caFSXoWiLTc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DjpmFJ+vgnlPBEHHCIphRFx/JfeIpIj7sjCxXfBU42Eq91TwJ3ZTpHpn9ggq17qAj
+         wSgo5xANP5mGtWCzYfxJbqTO1FZPuwcR6O1ip15ZW83GZj0xn/L7CGhsQxVV6QGDT8
+         1+FPLXgjSJCMGYFu/8aIG3JKQ28FjG78Xbw2CVS0=
+Date:   Tue, 15 Jun 2021 15:52:00 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     syzbot <syzbot+314d9a0380418b51606b@syzkaller.appspotmail.com>
+Cc:     chuck.lever@oracle.com, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] general protection fault in
+ nfsd_reply_cache_free_locked (2)
+Message-ID: <20210615195200.GE11877@fieldses.org>
+References: <000000000000a6561705c42681d8@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.4] (67.198.113.142) by SN4PR0401CA0047.namprd04.prod.outlook.com (2603:10b6:803:2a::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.20 via Frontend Transport; Tue, 15 Jun 2021 17:03:53 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: db0458fc-30a4-4a57-8805-08d9301f8de7
-X-MS-TrafficTypeDiagnostic: BY5PR06MB6644:
-X-Microsoft-Antispam-PRVS: <BY5PR06MB66440A7F13D100D256C07A0C83309@BY5PR06MB6644.namprd06.prod.outlook.com>
-X-Utexas-From-ExO: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QQVfne6kcRQSDywE1YRPcokvTf8aXnKsA6UXcSlSBe7nQlf4wthDPAda9noClT2k2+5ZZdUwrx9fF5c4d10p5oJKEsdSO/5H8qYn2InKcdFbdz0Rc+xjj5RDG6wUsVuqg8yhZvKRCMjrtAZkpHzhz2iPVEQ2SEWuMi8RNARYvAK4ERcSG5YY6swYCVIhkEr5bCzsrrSYfOYTyp++OYQH/mAN9AeoCEUDCPlEusXKHFen6sWafNJZrjzU7V+SVBuldTZn242Ki43cEjVH45GWdmnl9Zejpne/ZwWjzAdoAUpVMFa+jIC2KUDOQagvX2L95ck+qYrVEBJ2ijOd6H1xcKofMjn1QM+aYDTZUQDTQLZMnGSq1FBIR/gywh7kpDfMdITswk1KuRY8qa3ujGUnFAJ2x5sgBmul2sqozzqjtPEq2R245hZYunkb8KHn2z7f0iKZtyNtSqhOevYYsG161VETwZjDRXhqF8T/KHC/NyOjtaQZmk/2lMD290vhPUdrzJ+q7Rku2+P4I+6XLALwwsHZQBsRaSXMuNuy/4L51nyYx9+7wnNX+XMR3Qw4qZBi1xMFJQtLm0kXC3mMZTUTr8JOA6t+4kAXJnYBjNg6ppa76g6XDWHb92SGgVRSkvpXGvz2g4tIGTXWJoG69ZTbmiFpoWCSqVW0oVEyM5GRtT61XR8HhBziJngKpwpR4Ln6+C/URKH0L7aed1frhxj2IKNKoX1wuIDrwLb4HpyxiX2nfe6CuM8U3g82QMLauBfcAUI2p1F9TT+Qd5gxvuuttarR3wRSYTqVi16qFgvtm5ST97vBSXKwPQZt8B5+nrcqBgJWHLzg++HGVyCJTczjBEZd7sPSodCA33nLN6AmrP0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR06MB3848.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(346002)(366004)(136003)(39850400004)(376002)(2906002)(52116002)(66946007)(83380400001)(66556008)(86362001)(966005)(38100700002)(31696002)(5660300002)(31686004)(38350700002)(66476007)(186003)(6916009)(8936002)(478600001)(75432002)(6486002)(8676002)(16576012)(26005)(2616005)(956004)(316002)(786003)(16526019)(21314003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NkU1MGFKNWNVVFRNUVpOR25NNXBNNEdGN3czNURQZlkycEEvZGk0M3U0ZXNp?=
- =?utf-8?B?cWloc2liT3dCeXAraUQ5dThaZWdDRFMrYTgxVHpKTmlwSFM3SXZkMDlyZWhI?=
- =?utf-8?B?VlhKVlRMQkVSbkFMR21HaHAxUC85V05wM1RBYVNUVXI5bWRHcDVOcDFSdE5m?=
- =?utf-8?B?M1l3MmlPdkNxdWJadEhiMDNka3F0a0o5azM0WFNYNExYa1RUbUZ4QUV2cGs4?=
- =?utf-8?B?WVp2L2ZuMjVqelozbFk0V2RZMWFsWXQxT1ZPVU92SDNXZHlNMUVnUldmaWxr?=
- =?utf-8?B?Nng2WTZGb1JUL0NlRm1uYlZLd2dqWFBVbUlzK1hIMmJwMUd1VndkV3lUckU1?=
- =?utf-8?B?OFFZVFlhRWdHdm8yNFZrNlp6cUR6U1pTNGFzRmR2dThEUm85enROODBMdU1a?=
- =?utf-8?B?ZmRFUHhPUFEvci9DR3pSQlVKZXl1WU5OK1VXN3NlQncrTGV6VTh1eFZjOEZl?=
- =?utf-8?B?azNwYk9tQ3M5WFdmdnVteE5XR2RJMWhQcVJnRnZaYTFXbUg3N0phZngyMHc3?=
- =?utf-8?B?NTg5YlFpbEVoR0pxNWpwSGp2WWI5Y1RrQ3h5Ti9SaHFKQUhoR1JBcXNKbTRK?=
- =?utf-8?B?UnM4dm13U0FIeERwL0EwSE50eThYZnpjcDhQcE9iOXprbXJLZXVlemR4N093?=
- =?utf-8?B?L0xtY0w0Wkw3dHdvZ1VQbjV0Q2pSRFY3UUVpSnhEMTBXb3Vvakpla2sreS9r?=
- =?utf-8?B?RG1vSmV2Qi9VT0EyTy80OHJraFFwMnQvQ0FJQVVTaXE1SEdFUTNTVmdtNnk1?=
- =?utf-8?B?eUlYTFBrdnhVWDF4dllEeC8wUnlzKzdrVUxKbVNIeUdxa0ZObW00eVByd0pz?=
- =?utf-8?B?Z0Y4M1o5ZkZ2SHJJLzM5L3RZdGMreTcyb0NycGNMeWNSSGRtSFRFNDkyTzVm?=
- =?utf-8?B?RU5Dc0RIdkJpeHBjNWlIbkR2SGJ5am1LT3QyQkwrdkxSeDFzNVppaTBmM01T?=
- =?utf-8?B?WEltUC9RZTl2N1VRSU04YlJZUXVSMHMvSnZiODkzTmJOb3pVS3M3SVZqam5x?=
- =?utf-8?B?L3JZK2JmV1FiR3dmQUhTSFY3Q0Fkb1VOSTRTaWZoQkU4SGtGMHpzcEo5QkhO?=
- =?utf-8?B?T2JZc24zQ3lMTEVXNjZYdGU3U0N4ZVJFcGlrWjVjQjZ4NzZSV291WW9SN2tw?=
- =?utf-8?B?MFNack9rME1iR05xcWNPZUxXeEs2VHNFaC8xMzgzQlRtU3FlTDFDTlExZEhZ?=
- =?utf-8?B?UklHZHVxQkFaYW1iY2k3N255akxyNnoxV21xMjd3MkZDekxwaEZuMzkxSjB0?=
- =?utf-8?B?VXFmb3c4dWFmWFc3YVUzT3dtV21WbCs2TWgrNVRRMVpwUGxaWE1QQVlxVS9x?=
- =?utf-8?B?Z2JScVc3dThxckNRTmxCOXo3UFpocE9LUm5VT091Wkd0cVp2Y0RtK1p4N0M5?=
- =?utf-8?B?TjVVMXVZSmxyQUFGZ3p2VzlTWFRtSUVyUThFMEFhV2lPem5aSGY1VDhMWndR?=
- =?utf-8?B?MEdwa1lIQ0VxaXBYYzFUSE1rQVBWeVhnNG52b0MxUWU3a0hPc3JoYWNEV0JQ?=
- =?utf-8?B?QzNNYzk1eTQxUEp4Vkk4TUhFbXZaTGpJckRLK1VMN1NibHR3RmYrZDJwNjhn?=
- =?utf-8?B?ZTFmR0h1N3E5V0xCN3ZMZ2ovcmpEeWZEWlFma05WQ0xpbXVJUkhSc0UweGls?=
- =?utf-8?B?VEpRRkU3elpiU2VCaU5Nd1lDZ1VzdGNzMEcvQmJPRDZiVXN3cE1hV0hEYk0w?=
- =?utf-8?B?cmUxWlFNak5HKzhzbEZ6SXh2eE1ScTEwRGxSajh4MnRXRlRyY2xvV0htM0NI?=
- =?utf-8?Q?/Bb55XtfwKsPzsS/9xXb9aGV0xUVc4jyUUwxO1z?=
-X-OriginatorOrg: math.utexas.edu
-X-MS-Exchange-CrossTenant-Network-Message-Id: db0458fc-30a4-4a57-8805-08d9301f8de7
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR06MB3848.namprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2021 17:03:53.5044
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 31d7e2a5-bdd8-414e-9e97-bea998ebdfe1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3idDdo7yd7BPKp1vAt+g/79cQV6Bqkuog3z0OKBjmFezoRfEVrb4u1DYCa4pnxs5nBY+pcLZRNyaopBtuDe0Pw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR06MB6644
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000a6561705c42681d8@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Sadly, it took me a couple of days to track this down. The /etc/netgroup 
-file I'm using works perfectly on another NFS server (Ubuntu 18.04) in 
-production, so this wasn't an immediate suspicion.  However, if I use 
-this /etc/exports:
+This isn't the first report:
 
-   /srv/nfs @cryo_em(rw,sync,fsid=0,crossmnt,no_subtree_check)
-   /srv/nfs/cryosparc @cryo_em(rw,sync,fsid=2,crossmnt,no_subtree_check)
+	https://syzkaller.appspot.com/bug?extid=a29df412692980277f9d
 
-Client mounts fail:
+but I'm not managing yet to see why it happens....
 
+--b.
 
-root@javelina:~# mount -vvvt nfs4 cerebro:/cryosparc /cryosparc
-mount.nfs4: timeout set for Tue Jun 15 11:53:22 2021
-mount.nfs4: trying text-based options 
-'vers=4.2,addr=128.xx.xx.xxx,clientaddr=129.xxx.xxx.xx'
-mount.nfs4: mount(2): Permission denied
-mount.nfs4: access denied by server while mounting cerebro:/cryosparc
-
-and if I switch to specifying the host explicitly:
-
-   /srv/nfs javelina.my.domain(rw,sync,fsid=0,crossmnt,no_subtree_check)
-
-   /srv/nfs/cryosparc 
-javelina.mydomain(rw,sync,fsid=2,crossmnt,no_subtree_check)
-
-the mount just works.  The tcpdump error message isn't terribly helpful 
-here:
-
-11:14:02.856094 IP cerebro.my.domain.nfs > javelina.my.domain.741: Flags 
-[.], ack 281, win 507, options [nop,nop,TS val 791638255 ecr 
-2576087678], length 0
-11:14:02.856178 IP cerebro.my.domain.nfs > javelina.my.domain.741: Flags 
-[P.], seq 1:25, ack 281, win 507, options [nop,nop,TS val 791638255 ecr 
-2576087678], length 24: NFS reply xid 2752089303 reply ERR 20: Auth 
-Bogus Credentials (seal broken)
-
-but after figuring out the cause of the problem, I did find a 
-corroborating RHEL error report (which you'll need a RHEL account to 
-access):
-
-   https://access.redhat.com/solutions/3563601
-
-I couldn't figure out how to determine the exact version of the NFS 
-server that ships with Ubuntu 20.04.  Maybe someone could explain how to 
-do this.  Running
-    /usr/sbin/rpc.nfsd --version
-doesn't do it.
+On Sun, Jun 06, 2021 at 10:42:26PM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    231bc539 Merge branch 'for-linus' of git://git.kernel.org/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=101f596bd00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8a9e9956ca52a5f6
+> dashboard link: https://syzkaller.appspot.com/bug?extid=314d9a0380418b51606b
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+314d9a0380418b51606b@syzkaller.appspotmail.com
+> 
+> general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN
+> KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+> CPU: 0 PID: 25304 Comm: kworker/u4:12 Not tainted 5.13.0-rc4-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Workqueue: netns cleanup_net
+> RIP: 0010:nfsd_reply_cache_free_locked+0x31/0x3b0 fs/nfsd/nfscache.c:123
+> Code: 54 49 89 fc 55 48 89 f5 53 48 89 d3 48 83 ec 08 e8 94 f5 1c ff 48 8d 7d 61 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 c3 02 00 00
+> RSP: 0018:ffffc90017a07b68 EFLAGS: 00010202
+> RAX: dffffc0000000000 RBX: ffff888017997000 RCX: 0000000000000000
+> RDX: 0000000000000002 RSI: ffffffff8257e6ec RDI: 0000000000000011
+> RBP: ffffffffffffffb0 R08: 0000000000000800 R09: ffffffff902278af
+> R10: ffffffff8257f56e R11: 0000000000084087 R12: ffff888000118680
+> R13: 0000000000018680 R14: ffffed10000230d1 R15: ffff888000118680
+> FS:  0000000000000000(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007ffe0630ed17 CR3: 0000000017232000 CR4: 00000000001526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  nfsd_reply_cache_shutdown+0x153/0x2d0 fs/nfsd/nfscache.c:222
+>  nfsd_exit_net+0x15f/0x490 fs/nfsd/nfsctl.c:1503
+>  ops_exit_list+0xb0/0x160 net/core/net_namespace.c:175
+>  cleanup_net+0x4ea/0xb10 net/core/net_namespace.c:595
+>  process_one_work+0x98d/0x1600 kernel/workqueue.c:2276
+>  worker_thread+0x64c/0x1120 kernel/workqueue.c:2422
+>  kthread+0x3b1/0x4a0 kernel/kthread.c:313
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+> Modules linked in:
+> ---[ end trace 0af87ae802e1324a ]---
+> RIP: 0010:nfsd_reply_cache_free_locked+0x31/0x3b0 fs/nfsd/nfscache.c:123
+> Code: 54 49 89 fc 55 48 89 f5 53 48 89 d3 48 83 ec 08 e8 94 f5 1c ff 48 8d 7d 61 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 c3 02 00 00
+> RSP: 0018:ffffc90017a07b68 EFLAGS: 00010202
+> RAX: dffffc0000000000 RBX: ffff888017997000 RCX: 0000000000000000
+> RDX: 0000000000000002 RSI: ffffffff8257e6ec RDI: 0000000000000011
+> RBP: ffffffffffffffb0 R08: 0000000000000800 R09: ffffffff902278af
+> R10: ffffffff8257f56e R11: 0000000000084087 R12: ffff888000118680
+> R13: 0000000000018680 R14: ffffed10000230d1 R15: ffff888000118680
+> FS:  0000000000000000(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00005618fcbf1160 CR3: 000000001518e000 CR4: 00000000001526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
