@@ -2,109 +2,147 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 313B83A7416
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 04:36:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A1C03A8329
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 16:47:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229919AbhFOCid (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Jun 2021 22:38:33 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:33872 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229649AbhFOCid (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Jun 2021 22:38:33 -0400
-Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 2B0AD1FD2A;
-        Tue, 15 Jun 2021 01:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1623719942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=F06ZyStN8f99M7irca5GaI5PmNrxFECMaTmP5VtAe+k=;
-        b=hEVwMeJ4E7VGal5sH8m4WRuDQvDgi3JClqZWDfAXNp49BfYAC+wdyZMMzc0HqPVICRn2NK
-        bQWNe8ndbH1O+bgXInQ9XJRFxn+qMHineWB+lo8WnjjuMI5pcS1Lb+l2KVL51XMcDckdWd
-        uVaCsIi2y+tf2IMl9uyChV4GCaQDB+A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1623719942;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=F06ZyStN8f99M7irca5GaI5PmNrxFECMaTmP5VtAe+k=;
-        b=HgsyNqHcvrsWrfMDPUIW6GRjuR9mFdyAogvo2Ji/floO0G9R5OJdwmvcGCw8VoUnOBwi/i
-        +4BtwQeTsdPjx0BA==
-Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        by imap.suse.de (Postfix) with ESMTP id C620D118DD;
-        Tue, 15 Jun 2021 01:19:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1623719942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=F06ZyStN8f99M7irca5GaI5PmNrxFECMaTmP5VtAe+k=;
-        b=hEVwMeJ4E7VGal5sH8m4WRuDQvDgi3JClqZWDfAXNp49BfYAC+wdyZMMzc0HqPVICRn2NK
-        bQWNe8ndbH1O+bgXInQ9XJRFxn+qMHineWB+lo8WnjjuMI5pcS1Lb+l2KVL51XMcDckdWd
-        uVaCsIi2y+tf2IMl9uyChV4GCaQDB+A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1623719942;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=F06ZyStN8f99M7irca5GaI5PmNrxFECMaTmP5VtAe+k=;
-        b=HgsyNqHcvrsWrfMDPUIW6GRjuR9mFdyAogvo2Ji/floO0G9R5OJdwmvcGCw8VoUnOBwi/i
-        +4BtwQeTsdPjx0BA==
-Received: from director2.suse.de ([192.168.254.72])
-        by imap3-int with ESMTPSA
-        id B15gHQQAyGB7JQAALh3uQQ
-        (envelope-from <neilb@suse.de>); Tue, 15 Jun 2021 01:19:00 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        id S230316AbhFOOte (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Jun 2021 10:49:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230079AbhFOOtc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Jun 2021 10:49:32 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34324C061574
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Jun 2021 07:47:28 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 1C02E3F53; Tue, 15 Jun 2021 10:47:24 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 1C02E3F53
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1623768444;
+        bh=nQ7RGA1XBtP89r9+zMwi3iD+9K6mPYQ/hB7Ed+6qQJY=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=Otdcz7upV7L3Ywa/c/sCTrtfV17yNKOQzFLSqRLGWooMabpfqWVNnQaED70woTA8B
+         wQVjtTGCeWHV3Csv8bIL3hJT1aj3b9VAEpCCMXSfAN5StDUr5/qP43Svry8IsU5936
+         Umj+zWOOxiJIoyWoJiDgrdQmap9cywJy5WFOi8U4=
+Date:   Tue, 15 Jun 2021 10:47:24 -0400
+To:     Calum Mackay <calum.mackay@oracle.com>
+Cc:     "suy.fnst@fujitsu.com" <suy.fnst@fujitsu.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "bfields@redhat.com" <bfields@redhat.com>
+Subject: Re: [PATCH] pynfs: courtesy: send RECLAIM_COMPLETE before session2
+ opening the file
+Message-ID: <20210615144724.GB11877@fieldses.org>
+References: <TY2PR01MB2124D8FDDDCA29F5691F3DD089359@TY2PR01MB2124.jpnprd01.prod.outlook.com>
+ <91f1d7df-b63c-4aa3-cc03-a8e1cbb2ecb1@oracle.com>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] SUNRPC: prevent port reuse on transports which don't request it.
-Date:   Tue, 15 Jun 2021 11:18:38 +1000
-Message-id: <162371991856.23575.16102887900102220450@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <91f1d7df-b63c-4aa3-cc03-a8e1cbb2ecb1@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Mon, Jun 14, 2021 at 09:50:34PM +0100, Calum Mackay wrote:
+> On 10/06/2021 2:01 am, suy.fnst@fujitsu.com wrote:
+> >The test fails on v5.13-rc5 and old kernels. Because the second session
+> >doesn't send RECLAIM_COMPLETE before attempting to do a non-reclaim
+> >open. So the server returns NFS4ERR_GRACE instead of NFS4_OK.
+> >
+> >     # ./testserver.py ${server_IP}:/nfsroot --rundeps COUR2
+> >     INFO   :rpc.poll:got connection from ('127.0.0.1', 39206), assigned to
+> >     fd=5
+> >     INFO   :rpc.thread:Called connect(('193.168.140.239', 2049))
+> >     INFO   :rpc.poll:Adding 6 generated by another thread
+> >     INFO   :test.env:Created client to 193.168.140.239, 2049
+> >     INFO   :test.env:Called do_readdir()
+> >     INFO   :test.env:do_readdir() = [entry4(cookie=512,
+> >     name=b'COUR2_1623055313', attrs={})]
+> >     fileb'COUR2_1623119443'created by sess1
+> >     INFO   :test.env:Sleeping for 22 seconds: twice the lease period
+> >     INFO   :test.env:Woke up
+> >     session created
+> >     **************************************************
+> >     COUR2    st_courtesy.testLockSleepLock                            :
+> >     FAILURE
+> >            OP_OPEN should return NFS4_OK, instead got
+> >                      NFS4ERR_GRACE
+> >     **************************************************
+> >     Command line asked for 1 of 255 tests
+> >       Of those: 0 Skipped, 1 Failed, 0 Warned, 0 Passed
+> >
+> >RFC5661, page 567:
+> >"Whenever a client establishes a new client ID and before it does the
+> >first non-reclaim operation that obtains a lock, it MUST send a
+> >RECLAIM_COMPLETE with rca_one_fs set to FALSE, even if there are no
+> >locks to reclaim. If non-reclaim locking operations are done before
+> >the RECLAIM_COMPLETE, an NFS4ERR_GRACE error will be returned."
+> >
+> >Send RECLAIM_COMPLETE before the file open to let the test pass.
+> >Signed-off-by: Su Yue <suy.fnst@cn.fujitsu.com>
+> >---
+> >  nfs4.1/server41tests/st_courtesy.py | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> >diff --git a/nfs4.1/server41tests/st_courtesy.py b/nfs4.1/server41tests/st_courtesy.py
+> >index dd911a37772d..3478a9d93dbf 100644
+> >--- a/nfs4.1/server41tests/st_courtesy.py
+> >+++ b/nfs4.1/server41tests/st_courtesy.py
+> >@@ -74,6 +74,9 @@ def testLockSleepLock(t, env):
+> >      c2 = env.c1.new_client(b"%s_2" % env.testname(t))
+> >      sess2 = c2.create_session()
+> >+    res = sess2.compound([op.reclaim_complete(FALSE)])
+> >+    check(res)
+> >+
+> >      res = open_file(sess2, env.testname(t), access=OPEN4_SHARE_ACCESS_WRITE)
+> >      check(res)
+> >
+> 
+> I'd still like to check whether this is the right place to fix this.
+> 
+> Initially, I was confused as to why the first client "c1" doesn't
+> face the same issue. A network trace shows that a RECLAIM_COMPLETE
+> is indeed sent for c1, despite not appearing explicitly in
+> testLockSleepLock(). Whereas one isn't sent for c2, hence the
+> problem.
+> 
+> This is probably because c1 is initialised with:
+> 
+>   61     sess1 = env.c1.new_client_session(env.testname(t))
+> 
+> 
+> and c2 with:
+> 
+>   74     c2 = env.c1.new_client(b"%s_2" % env.testname(t))
+>   75     sess2 = c2.create_session()
+> 
+> 
+> The c1 case results in a RECLAIM_COMPLETE, but the c2 case does not.
+> 
+> I'm not yet sure whether that ought to be done in
+> new_client()/create_session(). If so, then there would be no need to
+> add it explicitly here.
 
-If an RPC client is created without RPC_CLNT_CREATE_REUSEPORT, it should
-not reuse the source port when a TCP connection is re-established.
-This is currently implemented by preventing the source port being
-recorded after a successful connection (the call to xs_set_srcport()).
+There's definitely cases where clients want to be able to create a new
+session without sending a new RECLAIM_COMPLETE.
 
-However the source port is also recorded after a successful bind in xs_bind().
-This may not be needed at all and certainly is not wanted when
-RPC_CLNT_CREATE_REUSEPORT wasn't requested.
+Any reason we can't replace those two lines by a single
+new_client_session()?  I'd do either that or just add the explicit
+RECLAIM_COMPLETE.
 
-So avoid that assignment when xprt.reuseport is not set.
+> [I suspect this was missed in my testing, since the Solaris server I
+> used may be less strict about requiring the RECLAIM_COMPLETE]
 
-With this change, NFSv4.1 and later mounts use a different port number on
-each connection.  This is helpful with some firewalls which don't cope
-well with port reuse.
+That's a server bug:
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- net/sunrpc/xprtsock.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+	https://datatracker.ietf.org/doc/html/rfc5661#page-173
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 316d04945587..3228b7a1836a 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1689,7 +1689,8 @@ static int xs_bind(struct sock_xprt *transport, struct =
-socket *sock)
- 		err =3D kernel_bind(sock, (struct sockaddr *)&myaddr,
- 				transport->xprt.addrlen);
- 		if (err =3D=3D 0) {
--			transport->srcport =3D port;
-+			if (transport->xprt.reuseport)
-+				transport->srcport =3D port;
- 			break;
- 		}
- 		last =3D port;
---=20
-2.31.1
+	... NFS4ERR_GRACE must always be returned to clients attempting
+	a non-reclaim lock request before doing their own global
+	RECLAIM_COMPLETE.
 
+I've complained about it before.  I had some idea it'd been fixed, maybe
+not.
+
+--b.
