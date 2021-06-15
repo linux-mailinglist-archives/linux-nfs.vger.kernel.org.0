@@ -2,107 +2,103 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34E703A8435
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 17:41:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3D953A8467
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jun 2021 17:48:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231753AbhFOPnK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Jun 2021 11:43:10 -0400
-Received: from out20-74.mail.aliyun.com ([115.124.20.74]:48915 "EHLO
-        out20-74.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230352AbhFOPnK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Jun 2021 11:43:10 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04467168|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.732369-0.00460715-0.263024;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047204;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=2;RT=2;SR=0;TI=SMTPD_---.KSiwkGl_1623771663;
-Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.KSiwkGl_1623771663)
-          by smtp.aliyun-inc.com(10.147.42.135);
-          Tue, 15 Jun 2021 23:41:03 +0800
-Date:   Tue, 15 Jun 2021 23:41:04 +0800
-From:   Wang Yugui <wangyugui@e16-tech.com>
-To:     "NeilBrown" <neilb@suse.de>, linux-nfs@vger.kernel.org
-Subject: Re: any idea about auto export multiple btrfs snapshots?
-In-Reply-To: <20210615231318.F40F.409509F4@e16-tech.com>
-References: <162371103543.23575.13662722966178222587@noble.neil.brown.name> <20210615231318.F40F.409509F4@e16-tech.com>
-Message-Id: <20210615234103.F413.409509F4@e16-tech.com>
+        id S231897AbhFOPur (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Jun 2021 11:50:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231869AbhFOPul (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 15 Jun 2021 11:50:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 74515616E8;
+        Tue, 15 Jun 2021 15:48:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623772117;
+        bh=39Nb/3515QbI8+K29dmSC9QgFO551T1Y53B7L/N1k1M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZXtuLeVCIaJS4CV3IZGberDBDwfsORLNfASsbnkDL820T7bVTkf2F1fEEs6aNLk1V
+         RRhssMa2cDHApciBvmhuBx7mGQZyZxX60cW4Hyae9MDbhmjFgpKPdzN1Ix6KSjPjJM
+         KCBMaQZKg45/3T7kD1IAO+56puETRjwi2FajkJeS3fEXh7cIrchDHeQDPrhrInP1qo
+         kK+cri7HKabhZPGGvkbxuPffoQTNa0kmia1xh1ghNMqmXZrTqJEMybBiJNFVVLm9Mh
+         Ap5xcHpdGa7mCSga/7+TCOksn05tv4uyE+LdyBlhawnviBt4BfKQq4Q0p9y6nYxp7p
+         /iF5nWTJe97tQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dai Ngo <dai.ngo@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.12 10/33] NFSv4: nfs4_proc_set_acl needs to restore NFS_CAP_UIDGID_NOMAP on error.
+Date:   Tue, 15 Jun 2021 11:48:01 -0400
+Message-Id: <20210615154824.62044-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210615154824.62044-1-sashal@kernel.org>
+References: <20210615154824.62044-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.75.04 [en]
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi, NeilBrown
+From: Dai Ngo <dai.ngo@oracle.com>
 
-> > On Sun, 13 Jun 2021, Wang Yugui wrote:
-> > > Hi,
-> > > 
-> > > Any idea about auto export multiple btrfs snapshots?
-> > > 
-> > > One related patch is yet not merged to nfs-utils 2.5.3.
-> > > From:   "NeilBrown" <neilb@suse.de>
-> > > Subject: [PATCH/RFC v2 nfs-utils] Fix NFSv4 export of tmpfs filesystems.
-> > > 
-> > > In this patch, an UUID is auto generated when a tmpfs have no UUID.
-> > > 
-> > > for btrfs, multiple subvolume snapshot have the same filesystem UUID.
-> > > Could we generate an UUID for btrfs subvol with 'filesystem UUID' + 'subvol ID'?
-> > 
-> > You really need to ask this question of btrfs developers.  'mountd'
-> > already has a special-case exception for btrfs, to prefer the uuid
-> > provided by statfs64() rather than the uuid extracted from the block
-> > device.  It would be quite easy to add another exception.
-> > But it would only be reasonable to do that if the btrfs team told us how
-> > that wanted us to generate a UUID for a given mount point, and promised
-> > that would always provide a unique stable result.
-> > This is completely separate from the tmpfs patch you identified.
-> 
-> Thanks a lot for the replay.
-> 
-> Now btrfs statfs64() return 8 byte unique/stable result.
-> 
-> It is based on two parts.
-> 1) 16 byte blkid of file system. this is uniq/stable between btrfs filesystems.
-> 2) 8 byte of btrfs sub volume objectid. this is uniq/stable inside a
-> btrfs filesystem.
-> 
-> the code of linux/fs/btrfs
-> static int btrfs_statfs(struct dentry *dentry, struct kstatfs *buf)
-> 
->     /* We treat it as constant endianness (it doesn't matter _which_)
->        because we want the fsid to come out the same whether mounted
->        on a big-endian or little-endian host */
->     buf->f_fsid.val[0] = be32_to_cpu(fsid[0]) ^ be32_to_cpu(fsid[2]);
->     buf->f_fsid.val[1] = be32_to_cpu(fsid[1]) ^ be32_to_cpu(fsid[3]);
->     /* Mask in the root object ID too, to disambiguate subvols */
->     buf->f_fsid.val[0] ^=
->         BTRFS_I(d_inode(dentry))->root->root_key.objectid >> 32;
->     buf->f_fsid.val[1] ^=
->         BTRFS_I(d_inode(dentry))->root->root_key.objectid;
-> 
-> 
-> for nfs, we need a 16 byte UUID now.
-> 
-> The best way I though:
-> 16 byte blkid , math add 8 byte btrfs sub volume objectid.
-> but there is yet no a simple/easy way to get the raw value of 'btrfs sub
-> volume objectid'.
-> 
-> A simple but good enough way:
-> 1) first 8 byte copy from blkid
-> 2) second 8 byte copy from btrfs_statfs()
-> 	the uniq/stable of multiple subvolume inside a btrfs filesystem is kept.
+[ Upstream commit f8849e206ef52b584cd9227255f4724f0cc900bb ]
 
-By the way, the random 16 byte UUID still have very little chance to
-conflict.
+Currently if __nfs4_proc_set_acl fails with NFS4ERR_BADOWNER it
+re-enables the idmapper by clearing NFS_CAP_UIDGID_NOMAP before
+retrying again. The NFS_CAP_UIDGID_NOMAP remains cleared even if
+the retry fails. This causes problem for subsequent setattr
+requests for v4 server that does not have idmapping configured.
 
-Could we keep the first 4 byte of the UUID of nfs/tmpfs alwasy ZERO?  ,
-the first 4 byte zero will limit the conflict inside nfs/tmpfs, and it is
-easy to diag.
+This patch modifies nfs4_proc_set_acl to detect NFS4ERR_BADOWNER
+and NFS4ERR_BADNAME and skips the retry, since the kernel isn't
+involved in encoding the ACEs, and return -EINVAL.
 
-Here we use the first same 8 byte for UUID of btrfs and nfs/btrfs, 
-so it is easy to diag too.
+Steps to reproduce the problem:
 
-Best Regards
-Wang Yugui (wangyugui@e16-tech.com)
-2021/06/15
+ # mount -o vers=4.1,sec=sys server:/export/test /tmp/mnt
+ # touch /tmp/mnt/file1
+ # chown 99 /tmp/mnt/file1
+ # nfs4_setfacl -a A::unknown.user@xyz.com:wrtncy /tmp/mnt/file1
+ Failed setxattr operation: Invalid argument
+ # chown 99 /tmp/mnt/file1
+ chown: changing ownership of ‘/tmp/mnt/file1’: Invalid argument
+ # umount /tmp/mnt
+ # mount -o vers=4.1,sec=sys server:/export/test /tmp/mnt
+ # chown 99 /tmp/mnt/file1
+ #
 
+v2: detect NFS4ERR_BADOWNER and NFS4ERR_BADNAME and skip retry
+       in nfs4_proc_set_acl.
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfs/nfs4proc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 0b809cc6ad1d..056d98d1d1a7 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5940,6 +5940,14 @@ static int nfs4_proc_set_acl(struct inode *inode, const void *buf, size_t buflen
+ 	do {
+ 		err = __nfs4_proc_set_acl(inode, buf, buflen);
+ 		trace_nfs4_set_acl(inode, err);
++		if (err == -NFS4ERR_BADOWNER || err == -NFS4ERR_BADNAME) {
++			/*
++			 * no need to retry since the kernel
++			 * isn't involved in encoding the ACEs.
++			 */
++			err = -EINVAL;
++			break;
++		}
+ 		err = nfs4_handle_exception(NFS_SERVER(inode), err,
+ 				&exception);
+ 	} while (exception.retry);
+-- 
+2.30.2
 
