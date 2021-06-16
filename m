@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3FA43A8E1B
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jun 2021 03:10:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 333633A8E1C
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jun 2021 03:10:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231806AbhFPBM2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Jun 2021 21:12:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43222 "EHLO
+        id S231809AbhFPBMa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Jun 2021 21:12:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231805AbhFPBM1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Jun 2021 21:12:27 -0400
-Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9752C061574
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Jun 2021 18:10:22 -0700 (PDT)
-Received: by mail-qv1-xf31.google.com with SMTP id f5so732905qvu.8
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Jun 2021 18:10:22 -0700 (PDT)
+        with ESMTP id S231805AbhFPBM3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Jun 2021 21:12:29 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F14C061574
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Jun 2021 18:10:23 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id u30so935959qke.7
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Jun 2021 18:10:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vIOWLAR5baQ4wudUHjXS8yJqf6XzOgQ0+NlfjuEdhJQ=;
-        b=VRJrGLy3RirE6u1SyrUiEpJ3+QC2TTSsnVwvLIaKFDSlIVJfCPmzvKhpDZFh4/RbRs
-         nnnEq87U3Wq5A/utCYTnCj2ZvWXpvBklLf/5JuNvCi30G6EvV+sialAajM7QY/hbYQN/
-         ro2GiEN5CG2tuGm0fxB9VRjHSTHTVvVJS6HlWeoKocWAYQE63K/SAfB2dHbLuKik/2Q8
-         D3n1mhY5SW3jBFmLyAttCTOSkBXM32Capuy6yALks/Py/ajOzzVByOdlkkOPVAEJNkvv
-         8Ke1z5U5HKDz458pCHJbhDaByaaHf7INdq2gK+JFaAjIQRTXmURd4ekI3mW4p/VgsLQ2
-         6FhA==
+        bh=0vWcJCJxN2zJiTTQMTjQVGAA4Clv5uDSLIsXFO1UYJk=;
+        b=h8erflNbs0QlMaYgZlXUyLNxzFHfIa00p6BSd+c35c4BMGQaBSyiSzqpmC8tiLKm4E
+         prdArLc9WgYzlZnzrzdVs17ZIU7DG7NncfJNe323UHIrNtQXJqdyJBttpAB8R3EBxZAG
+         GzN/gEECf0X4DGi1hDPdho0+aMID/htv9DE4Tg1kmKh2Z9LvHgEQ+Pvj8PeEz8+MQXL3
+         cEugy1jOxeIfR76iOtAbj94Aup9knFtSnWTJJ9Un3VCDeIMLamg3cqjBXd+phOI+CyAc
+         qJ8jB5kutDy2E/2t5xUg4xRis4ZL+E6XsRCWI6kNft90PtUBkdccI2cC5zuw2UWLePhU
+         Z+qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vIOWLAR5baQ4wudUHjXS8yJqf6XzOgQ0+NlfjuEdhJQ=;
-        b=j+hL8ls+oXBbfx6+E7G9u6oYWAVPM3i/ipbR9W2AokIIDMfa+k3g2300aQuhfvuKtJ
-         Y4nxhqjfHJppiFzj0VFK1plEIJ52hJD3ARRyoN/WI5WcnUdBGpoTmZtfAR2qnc4Q8coK
-         MVXZBtOw/NdPZPGMWLz3wzEcbOamqSzTbTsTN/4ZAetsjvgcoivm98hUOMr0dcpnsJAT
-         JUlyrIzYeI8SvrQgbLM+0mRYFM4Jb2BjMO04jWTWHVOSSxQ7LflcTWd4lh82jcJyy+hW
-         XD09g1/1M3Xk5u+mBEkpa7fxl407yAOAfg9gMr+09dhuW1Pyc4xe1yRn8rnPM7Uh9SoV
-         TJZQ==
-X-Gm-Message-State: AOAM530nKp/yxSWwH9XLT9nehoGCI6OZS/D+4iAJzkdGajhHf526AqAi
-        gF53scNy1aXANwhkM/6HHwObdismDjdtUw==
-X-Google-Smtp-Source: ABdhPJyM5RPi1t2jR7Iqu3ls77YFVn/YjU+lioREyVitfZgSQJls6e/IZXrIKZMqagwSbK7lJJLb7Q==
-X-Received: by 2002:ad4:4241:: with SMTP id l1mr8307729qvq.2.1623805821896;
-        Tue, 15 Jun 2021 18:10:21 -0700 (PDT)
+        bh=0vWcJCJxN2zJiTTQMTjQVGAA4Clv5uDSLIsXFO1UYJk=;
+        b=a6svZd0v7z9Ca1i4kMXxITV5h0pFDXCyldvomI/wecZ9u2HKRp7EkzfxaFOrOHIYgy
+         eUBo2DlNNUeMQIT4n/4bWGLlQ2nSrxVcSRFV1lIBDW3LGcckFqFlHkkx00WdUJP7Qn6E
+         qphN2zK+kl2HGRzdAwtf1tHTTTidMEOByOHUat9f55dc/aCnz8jHx3/c7+Jy+SH9meZK
+         gKtwjk6burjwKFI4TiPWwSrOXQAyMNH0BfjE0u6p1sfFdKfYjUT4Wha2qeggevFf6kk4
+         ylu/tZBN6OfXuQS/TRgoR3/fKTq/ghkghAdp1dSOHSqX5x4hQgs3CLmZp/lcuNja3TjW
+         12vw==
+X-Gm-Message-State: AOAM533xflmA9AxQUcuFv4AiAGDjQy7QDbzlhYEOETqm4l+wrFlJ5Kst
+        /1IPXIMzMkVktLNpq+9N0XU=
+X-Google-Smtp-Source: ABdhPJwsdfNoxEPj8uELqu08EUbbpklvy0gArb4gOD/nGXqVcelhW6QeDvS8yBpqu/cZhvNGIfg19g==
+X-Received: by 2002:ae9:e415:: with SMTP id q21mr2552530qkc.121.1623805822975;
+        Tue, 15 Jun 2021 18:10:22 -0700 (PDT)
 Received: from kolga-mac-1.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id m189sm546007qkd.107.2021.06.15.18.10.20
+        by smtp.gmail.com with ESMTPSA id m189sm546007qkd.107.2021.06.15.18.10.22
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Jun 2021 18:10:21 -0700 (PDT)
+        Tue, 15 Jun 2021 18:10:22 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 5/6] NFSv4 add network transport when session trunking is detected
-Date:   Tue, 15 Jun 2021 21:10:12 -0400
-Message-Id: <20210616011013.50547-6-olga.kornievskaia@gmail.com>
+Subject: [PATCH v3 6/6] NFSv4 allow for nconnect value of trunkable transport
+Date:   Tue, 15 Jun 2021 21:10:13 -0400
+Message-Id: <20210616011013.50547-7-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 In-Reply-To: <20210616011013.50547-1-olga.kornievskaia@gmail.com>
 References: <20210616011013.50547-1-olga.kornievskaia@gmail.com>
@@ -64,71 +64,48 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-After trunking is discovered in nfs4_discover_server_trunking(),
-add the transport to the old client structure if the allowed limit
-of transports has not been reached.
-
-An example: there exists a multi-homed server and client mounts
-one server address and some volume and then doest another mount to
-a different address of the same server and perhaps a different
-volume. Previously, the client checks that this is a session
-trunkable servers (same server), and removes the newly created
-client structure along with its transport. Now, the client
-adds the connection from the 2nd mount into the xprt switch of
-the existing client (it leads to having 2 available connections).
+If the new mount asked for nconnect mount, then create old client
+number of connections to the destination address that has been
+established as the same server with trunkable address.
 
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+
+--- There might be a number of objection to this patch. One
+I can think of is that this patch creates the nconnects based on
+whether or not the new mount asked for nconnect instead of
+unconditionally creating nconnect number of connections. The patch
+still creates nconnect connections based on the original value
+instead of picking the value of clp->cl_nconnect. I would have
+preferred that would be done. I don't see what can be wrong with
+using the new value. But I feared to go against what was objected
+before. My preference would be to (1) create clp->cl_nconnect
+connections or (2) not use this patch at all or (3) use as is
+here (meaning at least not create extra connections unless asked
+for by the mount).
 ---
- fs/nfs/nfs4client.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ fs/nfs/nfs4client.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index 270caa1805a2..af57332503be 100644
+index af57332503be..50fa9d53b444 100644
 --- a/fs/nfs/nfs4client.c
 +++ b/fs/nfs/nfs4client.c
-@@ -402,6 +402,33 @@ static int nfs4_init_client_minor_version(struct nfs_client *clp)
- 	return nfs4_init_callback(clp);
+@@ -427,6 +427,15 @@ static void nfs4_add_trunk(struct nfs_client *clp, struct nfs_client *old)
+ 
+ 	rpc_clnt_add_xprt(old->cl_rpcclient, &xprt_args,
+ 			  rpc_clnt_test_and_add_xprt, NULL);
++
++	if (clp->cl_nconnect > 1) {
++		int i;
++
++		for (i = 0; i < old->cl_nconnect - 1; i++)
++			if (rpc_clnt_add_xprt(old->cl_rpcclient, &xprt_args,
++					      NULL, NULL) < 0)
++				break;
++	}
  }
  
-+static void nfs4_add_trunk(struct nfs_client *clp, struct nfs_client *old)
-+{
-+	struct sockaddr_storage clp_addr, old_addr;
-+	struct sockaddr *clp_sap = (struct sockaddr *)&clp_addr;
-+	struct sockaddr *old_sap = (struct sockaddr *)&old_addr;
-+	size_t clp_salen;
-+	struct xprt_create xprt_args = {
-+		.ident = old->cl_proto,
-+		.net = old->cl_net,
-+		.servername = old->cl_hostname,
-+	};
-+
-+	if (clp->cl_proto != old->cl_proto)
-+		return;
-+	clp_salen = rpc_peeraddr(clp->cl_rpcclient, clp_sap, sizeof(clp_addr));
-+	rpc_peeraddr(old->cl_rpcclient, old_sap, sizeof(old_addr));
-+
-+	if (clp_addr.ss_family != old_addr.ss_family)
-+		return;
-+
-+	xprt_args.dstaddr = clp_sap;
-+	xprt_args.addrlen = clp_salen;
-+
-+	rpc_clnt_add_xprt(old->cl_rpcclient, &xprt_args,
-+			  rpc_clnt_test_and_add_xprt, NULL);
-+}
-+
  /**
-  * nfs4_init_client - Initialise an NFS4 client record
-  *
-@@ -436,6 +463,8 @@ struct nfs_client *nfs4_init_client(struct nfs_client *clp,
- 		 * won't try to use it.
- 		 */
- 		nfs_mark_client_ready(clp, -EPERM);
-+		if (old->cl_mvops->session_trunk)
-+			nfs4_add_trunk(clp, old);
- 	}
- 	clear_bit(NFS_CS_TSM_POSSIBLE, &clp->cl_flags);
- 	nfs_put_client(clp);
 -- 
 2.27.0
 
