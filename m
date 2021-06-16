@@ -2,115 +2,274 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A7E73A9161
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jun 2021 07:47:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16FFF3A982A
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jun 2021 12:53:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229614AbhFPFtQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Jun 2021 01:49:16 -0400
-Received: from out20-97.mail.aliyun.com ([115.124.20.97]:35886 "EHLO
-        out20-97.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229681AbhFPFtO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Jun 2021 01:49:14 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04508309|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.433153-0.00164647-0.5652;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047213;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=2;RT=2;SR=0;TI=SMTPD_---.KT0hfmF_1623822422;
-Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.KT0hfmF_1623822422)
-          by smtp.aliyun-inc.com(10.147.41.187);
-          Wed, 16 Jun 2021 13:47:02 +0800
-Date:   Wed, 16 Jun 2021 13:47:02 +0800
-From:   Wang Yugui <wangyugui@e16-tech.com>
-To:     "NeilBrown" <neilb@suse.de>, linux-nfs@vger.kernel.org
-Subject: Re: any idea about auto export multiple btrfs snapshots?
-In-Reply-To: <20210615231318.F40F.409509F4@e16-tech.com>
-References: <162371103543.23575.13662722966178222587@noble.neil.brown.name> <20210615231318.F40F.409509F4@e16-tech.com>
-Message-Id: <20210616134702.A114.409509F4@e16-tech.com>
+        id S232241AbhFPKzy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Jun 2021 06:55:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232220AbhFPKzx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Jun 2021 06:55:53 -0400
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EADCC06175F
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Jun 2021 03:53:47 -0700 (PDT)
+Received: by mail-pg1-x536.google.com with SMTP id l184so1630581pgd.8
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Jun 2021 03:53:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F4wIVc8giBEj/L0sF2igfGJYRrfDn+2p/3gu13P4iGo=;
+        b=EGr3khoOq9ZikVKPXclpZ8YBX9VWKVDA7hoWh/jrdjCUbc56UdyDTdzY9wOnbku7bX
+         n1y4NybwxtyAzr6saEeTcWps48wuLbe7IxbfCFExfwqTdxYGgPeiD5Fbs/Gx8a5XwJ6E
+         XW1GtEXbfbf5v5CPXmMnZI/Y7c8EGzOiKk2/1+fj0QWrBKiC2Xv8ckfsRW7MAPCR69Md
+         xvir2sVm65gObQe607bJO4OZn4ZWNMZgGsIkF2lVzVdljOQ8bc4HaRDkFKTcQc2XTRQV
+         yfDoSPLgyFx6uqFHc9GHiJPSSRF3Oqg6qth7lM3GupgeJcXM0C1K9xVikdssTcYk7SK/
+         eAyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F4wIVc8giBEj/L0sF2igfGJYRrfDn+2p/3gu13P4iGo=;
+        b=GHmiUNtcizVTgj8/LnMUld4H4s07hvYwUz/iz8+T3u0TjIeq+C5BHGin2N5UklctEA
+         1RtF1u0t60Gvf3tXVq0CuaryJ7bJbfCyebFK2jGyoTsxd6QrGjgMPU7TXFWi3b31kvx+
+         a4fH7c/WoehjNsqCb3F1kcs62fsujw81D/qJfCdzexfm9XfjaIWd+nYQdk+18dd4HSwV
+         4BWQjH4gM6y+vqo21PaGXRQUkkXAvIkgY5c2Btmszdz7u4p7IRnkac4DiiDuDpfu/Eqq
+         TRG7PZdOPHol0WWXoMaI5gtZ5QA9QtcuFW2PogFmSR799Yk4r11UIySzjS90h6Z8Mj2j
+         ZyZw==
+X-Gm-Message-State: AOAM532vxloxKI2QBTFhjt43//Wba48Jdz9MadShO7cEjdU11e9Qo/YS
+        CwHcaN5+tbF+8z+AwBKRmGBuZ5sRbIOF+qp6YgEHuA==
+X-Google-Smtp-Source: ABdhPJz2SStD2vaD/Sam6WHfe7R84x09NcfgsDobs0AW5U13LfaWe0xGg3raWvhbnHD7Kc41mE1wPAp2ahOjS0QALzw=
+X-Received: by 2002:a63:6547:: with SMTP id z68mr4318448pgb.341.1623840826929;
+ Wed, 16 Jun 2021 03:53:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.75.04 [en]
+References: <20210527062148.9361-1-songmuchun@bytedance.com>
+In-Reply-To: <20210527062148.9361-1-songmuchun@bytedance.com>
+From:   Muchun Song <songmuchun@bytedance.com>
+Date:   Wed, 16 Jun 2021 18:53:09 +0800
+Message-ID: <CAMZfGtUREhSDqurY5E=e-otSvN3LvZSrFX8WvP6zt3kaNgpS8g@mail.gmail.com>
+Subject: Re: [PATCH v2 00/21] Optimize list lru memory consumption
+To:     Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>, Yang Shi <shy828301@gmail.com>,
+        Alex Shi <alexs@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Dave Chinner <david@fromorbit.com>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-nfs@vger.kernel.org, zhengqi.arch@bytedance.com,
+        Xiongchun duan <duanxiongchun@bytedance.com>,
+        fam.zheng@bytedance.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+I'm very sorry to bother everyone. Ping guys. Any comments on this series?
 
-> Hi, NeilBrown
-> 
-> > On Sun, 13 Jun 2021, Wang Yugui wrote:
-> > > Hi,
-> > > 
-> > > Any idea about auto export multiple btrfs snapshots?
-> > > 
-> > > One related patch is yet not merged to nfs-utils 2.5.3.
-> > > From:   "NeilBrown" <neilb@suse.de>
-> > > Subject: [PATCH/RFC v2 nfs-utils] Fix NFSv4 export of tmpfs filesystems.
-> > > 
-> > > In this patch, an UUID is auto generated when a tmpfs have no UUID.
-> > > 
-> > > for btrfs, multiple subvolume snapshot have the same filesystem UUID.
-> > > Could we generate an UUID for btrfs subvol with 'filesystem UUID' + 'subvol ID'?
-> > 
-> > You really need to ask this question of btrfs developers.  'mountd'
-> > already has a special-case exception for btrfs, to prefer the uuid
-> > provided by statfs64() rather than the uuid extracted from the block
-> > device.  It would be quite easy to add another exception.
-> > But it would only be reasonable to do that if the btrfs team told us how
-> > that wanted us to generate a UUID for a given mount point, and promised
-> > that would always provide a unique stable result.
-> > This is completely separate from the tmpfs patch you identified.
-> 
-> Thanks a lot for the replay.
-> 
-> Now btrfs statfs64() return 8 byte unique/stable result.
-> 
-> It is based on two parts.
-> 1) 16 byte blkid of file system. this is uniq/stable between btrfs filesystems.
-> 2) 8 byte of btrfs sub volume objectid. this is uniq/stable inside a
-> btrfs filesystem.
-> 
-> the code of linux/fs/btrfs
-> static int btrfs_statfs(struct dentry *dentry, struct kstatfs *buf)
-> 
->     /* We treat it as constant endianness (it doesn't matter _which_)
->        because we want the fsid to come out the same whether mounted
->        on a big-endian or little-endian host */
->     buf->f_fsid.val[0] = be32_to_cpu(fsid[0]) ^ be32_to_cpu(fsid[2]);
->     buf->f_fsid.val[1] = be32_to_cpu(fsid[1]) ^ be32_to_cpu(fsid[3]);
->     /* Mask in the root object ID too, to disambiguate subvols */
->     buf->f_fsid.val[0] ^=
->         BTRFS_I(d_inode(dentry))->root->root_key.objectid >> 32;
->     buf->f_fsid.val[1] ^=
->         BTRFS_I(d_inode(dentry))->root->root_key.objectid;
-> 
-> 
-> for nfs, we need a 16 byte UUID now.
-> 
-> The best way I though:
-> 16 byte blkid , math add 8 byte btrfs sub volume objectid.
-> but there is yet no a simple/easy way to get the raw value of 'btrfs sub
-> volume objectid'.
-
-The btrfs subvol objectid (8byte) can be extracted from the
-statfs.f_fsid(8 byte) with the help of blkid(16btye) of the btrfs file
-system just do a revert cacl in btrfs_statfs().
-
-if we need 8 byte id for btrfs subvol, just use statfs.f_fsid.
-
-if we need 16 byte id for btrfs subvol, use the blkid(16btye) of the
-btrfs filesystem, plus the btrfs subvol objectid (8byte) , and keep 
-the result in 16 byte.
-
-Best Regards
-Wang Yugui (wangyugui@e16-tech.com)
-2021/06/16
-
-
-
-> A simple but good enough way:
-> 1) first 8 byte copy from blkid
-> 2) second 8 byte copy from btrfs_statfs()
-> 	the uniq/stable of multiple subvolume inside a btrfs filesystem is kept.
-> 
-> Best Regards
-> Wang Yugui (wangyugui@e16-tech.com)
-> 2021/06/15
-
-
+On Thu, May 27, 2021 at 2:24 PM Muchun Song <songmuchun@bytedance.com> wrote:
+>
+> In our server, we found a suspected memory leak problem. The kmalloc-32
+> consumes more than 6GB of memory. Other kmem_caches consume less than 2GB
+> memory.
+>
+> After our in-depth analysis, the memory consumption of kmalloc-32 slab
+> cache is the cause of list_lru_one allocation.
+>
+>   crash> p memcg_nr_cache_ids
+>   memcg_nr_cache_ids = $2 = 24574
+>
+> memcg_nr_cache_ids is very large and memory consumption of each list_lru
+> can be calculated with the following formula.
+>
+>   num_numa_node * memcg_nr_cache_ids * 32 (kmalloc-32)
+>
+> There are 4 numa nodes in our system, so each list_lru consumes ~3MB.
+>
+>   crash> list super_blocks | wc -l
+>   952
+>
+> Every mount will register 2 list lrus, one is for inode, another is for
+> dentry. There are 952 super_blocks. So the total memory is 952 * 2 * 3
+> MB (~5.6GB). But now the number of memory cgroups is less than 500. So I
+> guess more than 12286 memory cgroups have been created on this machine (I
+> do not know why there are so many cgroups, it may be a user's bug or
+> the user really want to do that). Because memcg_nr_cache_ids has not been
+> reduced to a suitable value. This can waste a lot of memory. If we want
+> to reduce memcg_nr_cache_ids, we have to reboot the server. This is not
+> what we want.
+>
+> In order to reduce memcg_nr_cache_ids, I had posted a patchset [1] to do
+> this. But this did not fundamentally solve the problem.
+>
+> We currently allocate scope for every memcg to be able to tracked on every
+> superblock instantiated in the system, regardless of whether that superblock
+> is even accessible to that memcg.
+>
+> These huge memcg counts come from container hosts where memcgs are confined
+> to just a small subset of the total number of superblocks that instantiated
+> at any given point in time.
+>
+> For these systems with huge container counts, list_lru does not need the
+> capability of tracking every memcg on every superblock.
+>
+> What it comes down to is that the list_lru is only needed for a given memcg
+> if that memcg is instatiating and freeing objects on a given list_lru.
+>
+> As Dave said, "Which makes me think we should be moving more towards 'add the
+> memcg to the list_lru at the first insert' model rather than 'instantiate
+> all at memcg init time just in case'."
+>
+> This patchset aims to optimize the list lru memory consumption from different
+> aspects.
+>
+> Patch 1-6 are code simplification.
+> Patch 7 converts the array from per-memcg per-node to per-memcg
+> Patch 8 is code simplification.
+> Patch 9-15 let list_lru allocation dynamically.
+> Patch 16 is code cleanup.
+> Patch 17 use xarray to optimize per memcg pointer array size.
+> Patch 18-21 is code simplification.
+>
+> I had done a easy test to show the optimization. I create 10k memory cgroups
+> and mount 10k filesystems in the systems. We use free command to show how many
+> memory does the systems comsumes after this operation (There are 2 numa nodes
+> in the system).
+>
+>         +-----------------------+------------------------+
+>         |      condition        |   memory consumption   |
+>         +-----------------------+------------------------+
+>         | without this patchset |        24464 MB        |
+>         +-----------------------+------------------------+
+>         |     after patch 7     |        21957 MB        | <--------+
+>         +-----------------------+------------------------+          |
+>         |     after patch 15    |         6895 MB        |          |
+>         +-----------------------+------------------------+          |
+>         |     after patch 17    |         4367 MB        |          |
+>         +-----------------------+------------------------+          |
+>                                                                     |
+>         The more the number of nodes, the more obvious the effect---+
+>
+> BTW, there was a recent discussion [2] on the same issue.
+>
+> [1] https://lore.kernel.org/linux-fsdevel/20210428094949.43579-1-songmuchun@bytedance.com/
+> [2] https://lore.kernel.org/linux-fsdevel/20210405054848.GA1077931@in.ibm.com/
+>
+> Changelog in v2:
+>   1. Update Documentation/filesystems/porting.rst suggested by Dave.
+>   2. Add a comment above alloc_inode_sb() suggested by Dave.
+>   2. Rework some patch's commit log.
+>   3. Add patch 18-21.
+>
+>   Thanks Dave.
+>
+> Muchun Song (21):
+>   mm: list_lru: fix list_lru_count_one() return value
+>   mm: memcontrol: remove kmemcg_id reparenting
+>   mm: memcontrol: remove the kmem states
+>   mm: memcontrol: do it in mem_cgroup_css_online to make the kmem online
+>   mm: list_lru: remove lru node locking from memcg_update_list_lru_node
+>   mm: list_lru: only add the memcg aware lrus to the list_lrus
+>   mm: list_lru: optimize the array of per memcg lists memory consumption
+>   mm: list_lru: remove memcg_aware field from struct list_lru
+>   mm: introduce kmem_cache_alloc_lru
+>   fs: introduce alloc_inode_sb() to allocate filesystems specific inode
+>   mm: dcache: use kmem_cache_alloc_lru() to allocate dentry
+>   xarray: use kmem_cache_alloc_lru to allocate xa_node
+>   mm: workingset: use xas_set_lru() to pass shadow_nodes
+>   nfs42: use a specific kmem_cache to allocate nfs4_xattr_entry
+>   mm: list_lru: allocate list_lru_one only when needed
+>   mm: list_lru: rename memcg_drain_all_list_lrus to
+>     memcg_reparent_list_lrus
+>   mm: list_lru: replace linear array with xarray
+>   mm: memcontrol: reuse memory cgroup ID for kmem ID
+>   mm: memcontrol: fix cannot alloc the maximum memcg ID
+>   mm: list_lru: rename list_lru_per_memcg to list_lru_memcg
+>   mm: memcontrol: rename memcg_cache_id to memcg_kmem_id
+>
+>  Documentation/filesystems/porting.rst |   5 +
+>  drivers/dax/super.c                   |   2 +-
+>  fs/9p/vfs_inode.c                     |   2 +-
+>  fs/adfs/super.c                       |   2 +-
+>  fs/affs/super.c                       |   2 +-
+>  fs/afs/super.c                        |   2 +-
+>  fs/befs/linuxvfs.c                    |   2 +-
+>  fs/bfs/inode.c                        |   2 +-
+>  fs/block_dev.c                        |   2 +-
+>  fs/btrfs/inode.c                      |   2 +-
+>  fs/ceph/inode.c                       |   2 +-
+>  fs/cifs/cifsfs.c                      |   2 +-
+>  fs/coda/inode.c                       |   2 +-
+>  fs/dcache.c                           |   3 +-
+>  fs/ecryptfs/super.c                   |   2 +-
+>  fs/efs/super.c                        |   2 +-
+>  fs/erofs/super.c                      |   2 +-
+>  fs/exfat/super.c                      |   2 +-
+>  fs/ext2/super.c                       |   2 +-
+>  fs/ext4/super.c                       |   2 +-
+>  fs/f2fs/super.c                       |   2 +-
+>  fs/fat/inode.c                        |   2 +-
+>  fs/freevxfs/vxfs_super.c              |   2 +-
+>  fs/fuse/inode.c                       |   2 +-
+>  fs/gfs2/super.c                       |   2 +-
+>  fs/hfs/super.c                        |   2 +-
+>  fs/hfsplus/super.c                    |   2 +-
+>  fs/hostfs/hostfs_kern.c               |   2 +-
+>  fs/hpfs/super.c                       |   2 +-
+>  fs/hugetlbfs/inode.c                  |   2 +-
+>  fs/inode.c                            |   2 +-
+>  fs/isofs/inode.c                      |   2 +-
+>  fs/jffs2/super.c                      |   2 +-
+>  fs/jfs/super.c                        |   2 +-
+>  fs/minix/inode.c                      |   2 +-
+>  fs/nfs/inode.c                        |   2 +-
+>  fs/nfs/nfs42xattr.c                   |  95 ++++----
+>  fs/nilfs2/super.c                     |   2 +-
+>  fs/ntfs/inode.c                       |   2 +-
+>  fs/ocfs2/dlmfs/dlmfs.c                |   2 +-
+>  fs/ocfs2/super.c                      |   2 +-
+>  fs/openpromfs/inode.c                 |   2 +-
+>  fs/orangefs/super.c                   |   2 +-
+>  fs/overlayfs/super.c                  |   2 +-
+>  fs/proc/inode.c                       |   2 +-
+>  fs/qnx4/inode.c                       |   2 +-
+>  fs/qnx6/inode.c                       |   2 +-
+>  fs/reiserfs/super.c                   |   2 +-
+>  fs/romfs/super.c                      |   2 +-
+>  fs/squashfs/super.c                   |   2 +-
+>  fs/sysv/inode.c                       |   2 +-
+>  fs/ubifs/super.c                      |   2 +-
+>  fs/udf/super.c                        |   2 +-
+>  fs/ufs/super.c                        |   2 +-
+>  fs/vboxsf/super.c                     |   2 +-
+>  fs/xfs/xfs_icache.c                   |   3 +-
+>  fs/zonefs/super.c                     |   2 +-
+>  include/linux/fs.h                    |  11 +
+>  include/linux/list_lru.h              |  18 +-
+>  include/linux/memcontrol.h            |  48 ++--
+>  include/linux/slab.h                  |   4 +
+>  include/linux/swap.h                  |   5 +-
+>  include/linux/xarray.h                |   9 +-
+>  ipc/mqueue.c                          |   2 +-
+>  lib/xarray.c                          |  10 +-
+>  mm/list_lru.c                         | 447 +++++++++++++++++-----------------
+>  mm/memcontrol.c                       | 185 ++------------
+>  mm/shmem.c                            |   2 +-
+>  mm/slab.c                             |  39 ++-
+>  mm/slab.h                             |  17 +-
+>  mm/slub.c                             |  42 ++--
+>  mm/workingset.c                       |   2 +-
+>  net/socket.c                          |   2 +-
+>  net/sunrpc/rpc_pipe.c                 |   2 +-
+>  74 files changed, 480 insertions(+), 577 deletions(-)
+>
+> --
+> 2.11.0
+>
