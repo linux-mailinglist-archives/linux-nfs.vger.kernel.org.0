@@ -2,110 +2,115 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 333633A8E1C
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jun 2021 03:10:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A7E73A9161
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jun 2021 07:47:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231809AbhFPBMa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Jun 2021 21:12:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231805AbhFPBM3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Jun 2021 21:12:29 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F14C061574
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Jun 2021 18:10:23 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id u30so935959qke.7
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Jun 2021 18:10:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0vWcJCJxN2zJiTTQMTjQVGAA4Clv5uDSLIsXFO1UYJk=;
-        b=h8erflNbs0QlMaYgZlXUyLNxzFHfIa00p6BSd+c35c4BMGQaBSyiSzqpmC8tiLKm4E
-         prdArLc9WgYzlZnzrzdVs17ZIU7DG7NncfJNe323UHIrNtQXJqdyJBttpAB8R3EBxZAG
-         GzN/gEECf0X4DGi1hDPdho0+aMID/htv9DE4Tg1kmKh2Z9LvHgEQ+Pvj8PeEz8+MQXL3
-         cEugy1jOxeIfR76iOtAbj94Aup9knFtSnWTJJ9Un3VCDeIMLamg3cqjBXd+phOI+CyAc
-         qJ8jB5kutDy2E/2t5xUg4xRis4ZL+E6XsRCWI6kNft90PtUBkdccI2cC5zuw2UWLePhU
-         Z+qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0vWcJCJxN2zJiTTQMTjQVGAA4Clv5uDSLIsXFO1UYJk=;
-        b=a6svZd0v7z9Ca1i4kMXxITV5h0pFDXCyldvomI/wecZ9u2HKRp7EkzfxaFOrOHIYgy
-         eUBo2DlNNUeMQIT4n/4bWGLlQ2nSrxVcSRFV1lIBDW3LGcckFqFlHkkx00WdUJP7Qn6E
-         qphN2zK+kl2HGRzdAwtf1tHTTTidMEOByOHUat9f55dc/aCnz8jHx3/c7+Jy+SH9meZK
-         gKtwjk6burjwKFI4TiPWwSrOXQAyMNH0BfjE0u6p1sfFdKfYjUT4Wha2qeggevFf6kk4
-         ylu/tZBN6OfXuQS/TRgoR3/fKTq/ghkghAdp1dSOHSqX5x4hQgs3CLmZp/lcuNja3TjW
-         12vw==
-X-Gm-Message-State: AOAM533xflmA9AxQUcuFv4AiAGDjQy7QDbzlhYEOETqm4l+wrFlJ5Kst
-        /1IPXIMzMkVktLNpq+9N0XU=
-X-Google-Smtp-Source: ABdhPJwsdfNoxEPj8uELqu08EUbbpklvy0gArb4gOD/nGXqVcelhW6QeDvS8yBpqu/cZhvNGIfg19g==
-X-Received: by 2002:ae9:e415:: with SMTP id q21mr2552530qkc.121.1623805822975;
-        Tue, 15 Jun 2021 18:10:22 -0700 (PDT)
-Received: from kolga-mac-1.attlocal.net (172-10-226-31.lightspeed.livnmi.sbcglobal.net. [172.10.226.31])
-        by smtp.gmail.com with ESMTPSA id m189sm546007qkd.107.2021.06.15.18.10.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Jun 2021 18:10:22 -0700 (PDT)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 6/6] NFSv4 allow for nconnect value of trunkable transport
-Date:   Tue, 15 Jun 2021 21:10:13 -0400
-Message-Id: <20210616011013.50547-7-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
-In-Reply-To: <20210616011013.50547-1-olga.kornievskaia@gmail.com>
-References: <20210616011013.50547-1-olga.kornievskaia@gmail.com>
+        id S229614AbhFPFtQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Jun 2021 01:49:16 -0400
+Received: from out20-97.mail.aliyun.com ([115.124.20.97]:35886 "EHLO
+        out20-97.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229681AbhFPFtO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Jun 2021 01:49:14 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04508309|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.433153-0.00164647-0.5652;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047213;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=2;RT=2;SR=0;TI=SMTPD_---.KT0hfmF_1623822422;
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.KT0hfmF_1623822422)
+          by smtp.aliyun-inc.com(10.147.41.187);
+          Wed, 16 Jun 2021 13:47:02 +0800
+Date:   Wed, 16 Jun 2021 13:47:02 +0800
+From:   Wang Yugui <wangyugui@e16-tech.com>
+To:     "NeilBrown" <neilb@suse.de>, linux-nfs@vger.kernel.org
+Subject: Re: any idea about auto export multiple btrfs snapshots?
+In-Reply-To: <20210615231318.F40F.409509F4@e16-tech.com>
+References: <162371103543.23575.13662722966178222587@noble.neil.brown.name> <20210615231318.F40F.409509F4@e16-tech.com>
+Message-Id: <20210616134702.A114.409509F4@e16-tech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.75.04 [en]
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+Hi,
 
-If the new mount asked for nconnect mount, then create old client
-number of connections to the destination address that has been
-established as the same server with trunkable address.
+> Hi, NeilBrown
+> 
+> > On Sun, 13 Jun 2021, Wang Yugui wrote:
+> > > Hi,
+> > > 
+> > > Any idea about auto export multiple btrfs snapshots?
+> > > 
+> > > One related patch is yet not merged to nfs-utils 2.5.3.
+> > > From:   "NeilBrown" <neilb@suse.de>
+> > > Subject: [PATCH/RFC v2 nfs-utils] Fix NFSv4 export of tmpfs filesystems.
+> > > 
+> > > In this patch, an UUID is auto generated when a tmpfs have no UUID.
+> > > 
+> > > for btrfs, multiple subvolume snapshot have the same filesystem UUID.
+> > > Could we generate an UUID for btrfs subvol with 'filesystem UUID' + 'subvol ID'?
+> > 
+> > You really need to ask this question of btrfs developers.  'mountd'
+> > already has a special-case exception for btrfs, to prefer the uuid
+> > provided by statfs64() rather than the uuid extracted from the block
+> > device.  It would be quite easy to add another exception.
+> > But it would only be reasonable to do that if the btrfs team told us how
+> > that wanted us to generate a UUID for a given mount point, and promised
+> > that would always provide a unique stable result.
+> > This is completely separate from the tmpfs patch you identified.
+> 
+> Thanks a lot for the replay.
+> 
+> Now btrfs statfs64() return 8 byte unique/stable result.
+> 
+> It is based on two parts.
+> 1) 16 byte blkid of file system. this is uniq/stable between btrfs filesystems.
+> 2) 8 byte of btrfs sub volume objectid. this is uniq/stable inside a
+> btrfs filesystem.
+> 
+> the code of linux/fs/btrfs
+> static int btrfs_statfs(struct dentry *dentry, struct kstatfs *buf)
+> 
+>     /* We treat it as constant endianness (it doesn't matter _which_)
+>        because we want the fsid to come out the same whether mounted
+>        on a big-endian or little-endian host */
+>     buf->f_fsid.val[0] = be32_to_cpu(fsid[0]) ^ be32_to_cpu(fsid[2]);
+>     buf->f_fsid.val[1] = be32_to_cpu(fsid[1]) ^ be32_to_cpu(fsid[3]);
+>     /* Mask in the root object ID too, to disambiguate subvols */
+>     buf->f_fsid.val[0] ^=
+>         BTRFS_I(d_inode(dentry))->root->root_key.objectid >> 32;
+>     buf->f_fsid.val[1] ^=
+>         BTRFS_I(d_inode(dentry))->root->root_key.objectid;
+> 
+> 
+> for nfs, we need a 16 byte UUID now.
+> 
+> The best way I though:
+> 16 byte blkid , math add 8 byte btrfs sub volume objectid.
+> but there is yet no a simple/easy way to get the raw value of 'btrfs sub
+> volume objectid'.
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+The btrfs subvol objectid (8byte) can be extracted from the
+statfs.f_fsid(8 byte) with the help of blkid(16btye) of the btrfs file
+system just do a revert cacl in btrfs_statfs().
 
---- There might be a number of objection to this patch. One
-I can think of is that this patch creates the nconnects based on
-whether or not the new mount asked for nconnect instead of
-unconditionally creating nconnect number of connections. The patch
-still creates nconnect connections based on the original value
-instead of picking the value of clp->cl_nconnect. I would have
-preferred that would be done. I don't see what can be wrong with
-using the new value. But I feared to go against what was objected
-before. My preference would be to (1) create clp->cl_nconnect
-connections or (2) not use this patch at all or (3) use as is
-here (meaning at least not create extra connections unless asked
-for by the mount).
----
- fs/nfs/nfs4client.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+if we need 8 byte id for btrfs subvol, just use statfs.f_fsid.
 
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index af57332503be..50fa9d53b444 100644
---- a/fs/nfs/nfs4client.c
-+++ b/fs/nfs/nfs4client.c
-@@ -427,6 +427,15 @@ static void nfs4_add_trunk(struct nfs_client *clp, struct nfs_client *old)
- 
- 	rpc_clnt_add_xprt(old->cl_rpcclient, &xprt_args,
- 			  rpc_clnt_test_and_add_xprt, NULL);
-+
-+	if (clp->cl_nconnect > 1) {
-+		int i;
-+
-+		for (i = 0; i < old->cl_nconnect - 1; i++)
-+			if (rpc_clnt_add_xprt(old->cl_rpcclient, &xprt_args,
-+					      NULL, NULL) < 0)
-+				break;
-+	}
- }
- 
- /**
--- 
-2.27.0
+if we need 16 byte id for btrfs subvol, use the blkid(16btye) of the
+btrfs filesystem, plus the btrfs subvol objectid (8byte) , and keep 
+the result in 16 byte.
+
+Best Regards
+Wang Yugui (wangyugui@e16-tech.com)
+2021/06/16
+
+
+
+> A simple but good enough way:
+> 1) first 8 byte copy from blkid
+> 2) second 8 byte copy from btrfs_statfs()
+> 	the uniq/stable of multiple subvolume inside a btrfs filesystem is kept.
+> 
+> Best Regards
+> Wang Yugui (wangyugui@e16-tech.com)
+> 2021/06/15
+
 
