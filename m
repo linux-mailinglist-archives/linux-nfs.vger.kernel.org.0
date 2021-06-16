@@ -2,106 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB3B13AA555
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jun 2021 22:30:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 200773AA70D
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jun 2021 00:51:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233511AbhFPUcr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Jun 2021 16:32:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233470AbhFPUcq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Jun 2021 16:32:46 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 207E4C061574
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Jun 2021 13:30:40 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 6C28F5047; Wed, 16 Jun 2021 16:30:39 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6C28F5047
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1623875439;
-        bh=hUuk0t6G4dAjNlxn6vju3TxT1t8DFFIQbQngHtvMmHQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tCpBAQnoQDplkd07hf/6r8kGOzRdXTlI3EUopc6EEj4lzp9dIJOalPa7W4Icva7K3
-         Hy6jJ54pB7gEddHUMkdT0mhzSqpmRdcnRV3GGWgzcW7aKoyt56+1IBl0qUr2xgq+wB
-         1WIWEySTRXz/oalg1NilzWlAf+Es9NXEI7KgFrOE=
-Date:   Wed, 16 Jun 2021 16:30:39 -0400
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Dai Ngo <dai.ngo@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH RFC 1/1] nfsd: Initial implementation of NFSv4 Courteous
- Server
-Message-ID: <20210616203039.GA6049@fieldses.org>
-References: <20210603181438.109851-1-dai.ngo@oracle.com>
- <20210616160239.GC4943@fieldses.org>
- <8A44DFA1-683C-4D5F-BE71-0B94865AFA28@oracle.com>
- <5bd3e11c-8749-b9ec-b1ae-5398fff5df4e@oracle.com>
- <50752B0A-A56A-4A80-81AE-32E20754E31F@oracle.com>
+        id S229614AbhFPWx7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Jun 2021 18:53:59 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:56881 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229616AbhFPWx6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Jun 2021 18:53:58 -0400
+Received: from cwcc.thunk.org (pool-72-74-133-215.bstnma.fios.verizon.net [72.74.133.215])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 15GMpZDA020903
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Jun 2021 18:51:36 -0400
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+        id 4851215C3CB8; Wed, 16 Jun 2021 18:51:35 -0400 (EDT)
+Date:   Wed, 16 Jun 2021 18:51:35 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Frank van der Linden <fllinden@amazon.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "hsiangkao@linux.alibaba.com" <hsiangkao@linux.alibaba.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "joseph.qi@linux.alibaba.com" <joseph.qi@linux.alibaba.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
+Subject: Re: [PATCH] nfs: set block size according to pnfs_blksize first
+Message-ID: <YMqAd8u+DwKbatnj@mit.edu>
+References: <1623847469-150122-1-git-send-email-hsiangkao@linux.alibaba.com>
+ <4898aa11dc26396c13bbc3d8bf18c13efe4d513a.camel@hammerspace.com>
+ <YMoFcdhVwMXJQPJ+@B-P7TQMD6M-0146.local>
+ <2c14b63eacf1742bb0bcd2ae02f2d7005f7682d8.camel@hammerspace.com>
+ <YMoNnr1RYDOLXtKJ@B-P7TQMD6M-0146.local>
+ <80199ffaf89fc5ef2ad77245f9a5e75beed2dc37.camel@hammerspace.com>
+ <20210616171708.GA24636@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <50752B0A-A56A-4A80-81AE-32E20754E31F@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20210616171708.GA24636@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 07:29:37PM +0000, Chuck Lever III wrote:
+On Wed, Jun 16, 2021 at 05:17:08PM +0000, Frank van der Linden wrote:
 > 
-> 
-> > On Jun 16, 2021, at 3:25 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
-> > 
-> > On 6/16/21 9:32 AM, Chuck Lever III wrote:
-> >>> On Jun 16, 2021, at 12:02 PM, J. Bruce Fields <bfields@fieldses.org> wrote:
-> >>> 
-> >>> On Thu, Jun 03, 2021 at 02:14:38PM -0400, Dai Ngo wrote:
-> >>>> . instead of destroy the client anf all its state on conflict, only destroy
-> >>>> the state that is conflicted with the current request.
-> >>> The other todos I think have to be done before we merge, but this one I
-> >>> think can wait.
-> >> I agree on both points: this one can wait, but the others
-> >> should be done before merge.
-> > 
-> > yes, will do.
-> > 
-> >> 
-> >> 
-> >>>> . destroy the COURTESY_CLIENT either after a fixed period of time to release
-> >>>> resources or as reacting to memory pressure.
-> >>> I think we need something here, but it can be pretty simple.
-> >> We should work out a policy now.
-> >> 
-> >> A lower bound is good to have. Keep courtesy clients at least
-> >> this long. Average network partition length times two as a shot
-> >> in the dark. Or it could be N times the lease expiry time.
-> >> 
-> >> An upper bound is harder to guess at. Obviously these things
-> >> will go away when the server reboots. The laundromat could
-> >> handle this sooner. However using a shrinker might be nicer and
-> >> more Linux-y, keeping the clients as long as practical, without
-> >> the need for adding another administrative setting.
-> > 
-> > Can we start out with a simple 12 or 24 hours to accommodate long
-> > network outages for this phase?
-> 
-> Sure. Let's go with 24 hours.
-> 
-> Bill suggested adding a "clear_locks" like mechanism that could be
-> used to throw out all courteous clients at once. Maybe another
-> phase 2 project!
+> The problem here for xfstests is how to define the 'correct' behavior
+> across all filesystems so that there's a clean pass/fail, as long
+> as these inconsistencies exist.
 
-For what it's worth, you can forcibly expire a client by writing
-"expire" to /proc/fs/nfsd/client/xxx/ctl.  So it shouldn't be hard to
-script this, if we add some kind of "courtesy" flag to
-client_info_show() and/or a number of seconds since the most recent
-renew.
+Note that the original xfstest in question is to check what happens
+when you have a pre-existing xattr with a small (16 byte) value, and
+replacing (overwriting) the xattr with a large (but valid) value.
 
-Maybe adding a command like "expire_if_courtesy" would also simplify
-that and avoid a race where the renew comes in simultaneously with the
-expire command.
+The problem was that generic/486 was using the preferred size for
+efficient I/O size as the "block" size, and then using a percentage of
+this "block" size as the arbitrary "large xattr size".
 
-Or we could just add a single call to clear all courtesy clients.  But
-the per-client approach would allow more flexibility if you wanted (e.g.
-to throw out only clients over a certain age).
+It was not about the error codes being returned, which is a bit
+confusing, and for which different man pages (attr_set and setxattr)
+are differently incomplete.  That's really a different issue, and the
+fact that different file systems can use different error codes is not
+necessarily something that we need to rationalize, in particular for
+file systems like NFS where the error codes returned are not entirely
+under the control of the NFS client or server code.
 
---b.
+Cheers,
+
+					- Ted
