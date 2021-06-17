@@ -2,107 +2,159 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0843F3AA907
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jun 2021 04:39:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17E0C3AA956
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jun 2021 05:02:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229456AbhFQCl0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Jun 2021 22:41:26 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:44234 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230225AbhFQClZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Jun 2021 22:41:25 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R691e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UcfUaa1_1623897555;
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0UcfUaa1_1623897555)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 17 Jun 2021 10:39:17 +0800
-Date:   Thu, 17 Jun 2021 10:39:15 +0800
-From:   Gao Xiang <hsiangkao@linux.alibaba.com>
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "joseph.qi@linux.alibaba.com" <joseph.qi@linux.alibaba.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH] nfs: set block size according to pnfs_blksize first
-Message-ID: <YMq104Ps9nTnzE9R@B-P7TQMD6M-0146.local>
-References: <1623847469-150122-1-git-send-email-hsiangkao@linux.alibaba.com>
- <4898aa11dc26396c13bbc3d8bf18c13efe4d513a.camel@hammerspace.com>
- <YMoFcdhVwMXJQPJ+@B-P7TQMD6M-0146.local>
- <2c14b63eacf1742bb0bcd2ae02f2d7005f7682d8.camel@hammerspace.com>
- <YMoNnr1RYDOLXtKJ@B-P7TQMD6M-0146.local>
- <YMojdN145g9JqAC8@mit.edu>
- <YMo6CKAaNcZlqzNC@B-P7TQMD6M-0146.local>
- <YMqBY0hk/AmgGMeb@mit.edu>
+        id S229686AbhFQDEr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Jun 2021 23:04:47 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:58334 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229456AbhFQDEr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Jun 2021 23:04:47 -0400
+Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 670DD1FD47;
+        Thu, 17 Jun 2021 03:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1623898959; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6xUwyQqvQWRsR3cJZZvYaYfcD1G2BlV87Tl4RRiU7xo=;
+        b=X+K9wVl1BkG1jHJA1fzE2pdH4rVLI+fqUEx6Vg7K9USkuvGk8wYaLQ8zQkp7XwGzXOemjK
+        OdxBnwknd/oMG6vhhDlVTDuwHjn/aA7RbWZZk/wpELS7/KkP4GFjUJGET13bKyJQn0g/NT
+        4xURHmzSRX4llD7ZDiXKuhiIAAbGnIo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1623898959;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6xUwyQqvQWRsR3cJZZvYaYfcD1G2BlV87Tl4RRiU7xo=;
+        b=2rHgVetQtt7/yYxdHO/kXpuky0ONh/8jc21pzZ/s+Z2PvtWQBD3VrVqkAmZD10f4xstGru
+        l561Vof6X3X/KqBA==
+Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        by imap.suse.de (Postfix) with ESMTP id 648D0118DD;
+        Thu, 17 Jun 2021 03:02:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1623898959; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6xUwyQqvQWRsR3cJZZvYaYfcD1G2BlV87Tl4RRiU7xo=;
+        b=X+K9wVl1BkG1jHJA1fzE2pdH4rVLI+fqUEx6Vg7K9USkuvGk8wYaLQ8zQkp7XwGzXOemjK
+        OdxBnwknd/oMG6vhhDlVTDuwHjn/aA7RbWZZk/wpELS7/KkP4GFjUJGET13bKyJQn0g/NT
+        4xURHmzSRX4llD7ZDiXKuhiIAAbGnIo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1623898959;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6xUwyQqvQWRsR3cJZZvYaYfcD1G2BlV87Tl4RRiU7xo=;
+        b=2rHgVetQtt7/yYxdHO/kXpuky0ONh/8jc21pzZ/s+Z2PvtWQBD3VrVqkAmZD10f4xstGru
+        l561Vof6X3X/KqBA==
+Received: from director2.suse.de ([192.168.254.72])
+        by imap3-int with ESMTPSA
+        id fK1dBU67ymDoHQAALh3uQQ
+        (envelope-from <neilb@suse.de>); Thu, 17 Jun 2021 03:02:38 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YMqBY0hk/AmgGMeb@mit.edu>
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Wang Yugui" <wangyugui@e16-tech.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: any idea about auto export multiple btrfs snapshots?
+In-reply-to: <20210615231318.F40F.409509F4@e16-tech.com>
+References: <20210613115313.BC59.409509F4@e16-tech.com>,
+ <162371103543.23575.13662722966178222587@noble.neil.brown.name>,
+ <20210615231318.F40F.409509F4@e16-tech.com>
+Date:   Thu, 17 Jun 2021 13:02:35 +1000
+Message-id: <162389895501.29912.12470238090250719500@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 06:55:31PM -0400, Theodore Ts'o wrote:
-> On Thu, Jun 17, 2021 at 01:51:04AM +0800, Gao Xiang wrote:
-> > 
-> > Considering the original XFS regression report [1], I think
-> > underlayfs blksize may still be needed. And binary search to get the
-> > maximum attr value may be another new case for this as well. Or
-> > alternatively just add by block size to do a trip test.
-> > 
-> > Although I have no idea if we can just skip the case when testing with
-> > NFS. If getting underlayfs blksize is unfeasible, I think we might
-> > skip such case for now since nfs blksize is not useful for generic/486.
-> > 
-> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=199119
-> 
-> I've looked at the original XFS regression size, and I don't see why
-> using the underlaying blocksize matters at all.  This is especially
-> true if you look at the comment in the test, and the commit which
-> fixed the bug.  All that is needed for the xfs regression test is to
-> start with a small xattr, and replace it with a large xattr.  The
-> blocksize is really irrelevant.
+On Wed, 16 Jun 2021, Wang Yugui wrote:
+> Hi, NeilBrown
+>=20
+> > On Sun, 13 Jun 2021, Wang Yugui wrote:
+> > > Hi,
+> > >=20
+> > > Any idea about auto export multiple btrfs snapshots?
+> > >=20
+> > > One related patch is yet not merged to nfs-utils 2.5.3.
+> > > From:   "NeilBrown" <neilb@suse.de>
+> > > Subject: [PATCH/RFC v2 nfs-utils] Fix NFSv4 export of tmpfs filesystems.
+> > >=20
+> > > In this patch, an UUID is auto generated when a tmpfs have no UUID.
+> > >=20
+> > > for btrfs, multiple subvolume snapshot have the same filesystem UUID.
+> > > Could we generate an UUID for btrfs subvol with 'filesystem UUID' + 'su=
+bvol ID'?
+> >=20
+> > You really need to ask this question of btrfs developers.  'mountd'
+> > already has a special-case exception for btrfs, to prefer the uuid
+> > provided by statfs64() rather than the uuid extracted from the block
+> > device.  It would be quite easy to add another exception.
+> > But it would only be reasonable to do that if the btrfs team told us how
+> > that wanted us to generate a UUID for a given mount point, and promised
+> > that would always provide a unique stable result.
+> > This is completely separate from the tmpfs patch you identified.
+>=20
+> Thanks a lot for the replay.
+>=20
+> Now btrfs statfs64() return 8 byte unique/stable result.
+>=20
+> It is based on two parts.
+> 1) 16 byte blkid of file system. this is uniq/stable between btrfs filesyst=
+ems.
+> 2) 8 byte of btrfs sub volume objectid. this is uniq/stable inside a
+> btrfs filesystem.
+>=20
+> the code of linux/fs/btrfs
+> static int btrfs_statfs(struct dentry *dentry, struct kstatfs *buf)
+>=20
+>     /* We treat it as constant endianness (it doesn't matter _which_)
+>        because we want the fsid to come out the same whether mounted
+>        on a big-endian or little-endian host */
+>     buf->f_fsid.val[0] =3D be32_to_cpu(fsid[0]) ^ be32_to_cpu(fsid[2]);
+>     buf->f_fsid.val[1] =3D be32_to_cpu(fsid[1]) ^ be32_to_cpu(fsid[3]);
+>     /* Mask in the root object ID too, to disambiguate subvols */
+>     buf->f_fsid.val[0] ^=3D
+>         BTRFS_I(d_inode(dentry))->root->root_key.objectid >> 32;
+>     buf->f_fsid.val[1] ^=3D
+>         BTRFS_I(d_inode(dentry))->root->root_key.objectid;
+>=20
+>=20
+> for nfs, we need a 16 byte UUID now.
+>=20
+> The best way I though:
+> 16 byte blkid , math add 8 byte btrfs sub volume objectid.
+> but there is yet no a simple/easy way to get the raw value of 'btrfs sub
+> volume objectid'.
 
-What I said was the original testcase strictly addressing the original
-regression report, which converts from shortform to single-block
-leaf format, see:
+I'm a bit confused now.  You started out talking about snapshots, but
+now you are talking about sub volumes.  Are they the same thing?
 
-https://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git/tree/src/attr_replace_test.c#n40
+NFS export of btrfs sub volumes has worked for the past 10 years I
+believe.
 
->	/*
->	 * The value should be 3/4 the size of a fs block to ensure that we
->	 * get to extents format.
->	 */
->	ret = fstat(fd, &sbuf);
->	if (ret < 0) die();
->	size = sbuf.st_blksize * 3 / 4;
+Can we go back to the beginning.  What, exactly, is the problem you are
+trying to solve?  How can you demonstrate the problem?
 
-and
+NeilBrown
 
-https://lore.kernel.org/fstests/20180425054826.GB1661@magnolia/
 
-> > And I found another problem in the test, it fails on 1k/2k block size
-> > extN filesystems, because 2k xattr doesn't fit in single block.. e.g.
-> > 
-> >     -Attribute "world" has a 2048 byte value for SCRATCH_MNT/hello
-> >     +No space left on device
-> >     +error=22 at line 46
-> >     +Attribute "world" has a 1 byte value for
-> > 
-> > We probably need to check the block size of SCRATCH_DEV and _notrun if
-> > it's smaller than 4k.
-> >
-> > Or require ea_inode feature when block size < 4k? Note that this test
-> > does fail on ext4 with ea_inode feature enabled (so add ext4 list to
-> > cc). e.g.
-
-> I was about to say "Eh, this is a regression test for XFS so that's
-> probably fine, but then...
-
-Of course, the testcase itself may have room to improve, I'll look at
-it when I have extra time.
-
-Thanks,
-Gao Xiang
-
-> 
-> 						- Ted
+>=20
+> A simple but good enough way:
+> 1) first 8 byte copy from blkid
+> 2) second 8 byte copy from btrfs_statfs()
+> 	the uniq/stable of multiple subvolume inside a btrfs filesystem is kept.
+>=20
+> Best Regards
+> Wang Yugui (wangyugui@e16-tech.com)
+> 2021/06/15
+>=20
+>=20
