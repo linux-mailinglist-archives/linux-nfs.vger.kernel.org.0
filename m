@@ -2,73 +2,164 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E05163AC1EE
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Jun 2021 06:21:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 323A13AC4FA
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Jun 2021 09:26:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230419AbhFREXe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 18 Jun 2021 00:23:34 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:43364 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229522AbhFREXd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Jun 2021 00:23:33 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Ucn0dZ0_1623990056;
-Received: from e18g09479.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Ucn0dZ0_1623990056)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 18 Jun 2021 12:21:23 +0800
-From:   Gao Xiang <hsiangkao@linux.alibaba.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Gao Xiang <hsiangkao@linux.alibaba.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>
-Subject: [PATCH] nfs: fix acl memory leak of posix_acl_create()
-Date:   Fri, 18 Jun 2021 12:20:55 +0800
-Message-Id: <1623990055-222609-1-git-send-email-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S233059AbhFRH2m (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 18 Jun 2021 03:28:42 -0400
+Received: from out20-3.mail.aliyun.com ([115.124.20.3]:36283 "EHLO
+        out20-3.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231683AbhFRH2m (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Jun 2021 03:28:42 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04471925|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0428426-0.00415483-0.953003;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047199;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=2;RT=2;SR=0;TI=SMTPD_---.KUCDd5Q_1624001190;
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.KUCDd5Q_1624001190)
+          by smtp.aliyun-inc.com(10.147.44.129);
+          Fri, 18 Jun 2021 15:26:31 +0800
+Date:   Fri, 18 Jun 2021 15:26:33 +0800
+From:   Wang Yugui <wangyugui@e16-tech.com>
+To:     "NeilBrown" <neilb@suse.de>
+Subject: Re: any idea about auto export multiple btrfs snapshots?
+Cc:     linux-nfs@vger.kernel.org
+In-Reply-To: <162397637680.29912.2268876490205517592@noble.neil.brown.name>
+References: <20210617122852.BE6A.409509F4@e16-tech.com> <162397637680.29912.2268876490205517592@noble.neil.brown.name>
+Message-Id: <20210618152631.F3DE.409509F4@e16-tech.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.75.04 [en]
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When looking into another nfs xfstests report, I found acl and
-default_acl in nfs3_proc_create() and nfs3_proc_mknod() error
-paths are possibly leaked. Fix them in advance.
+Hi,
 
-Fixes: 013cdf1088d7 ("nfs: use generic posix ACL infrastructure for v3 Posix ACLs")
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna.schumaker@netapp.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-If I read correctly..
+> On Thu, 17 Jun 2021, Wang Yugui wrote:
+> > > Can we go back to the beginning.  What, exactly, is the problem you are
+> > > trying to solve?  How can you demonstrate the problem?
+> > > 
+> > > NeilBrown
+> > 
+> > I nfs/exported a btrfs with 2 subvols and 2 snapshot(subvol).
+> > 
+> > # btrfs subvolume list /mnt/test
+> > ID 256 gen 53 top level 5 path sub1
+> > ID 260 gen 56 top level 5 path sub2
+> > ID 261 gen 57 top level 5 path .snapshot/sub1-s1
+> > ID 262 gen 57 top level 5 path .snapshot/sub2-s1
+> > 
+> > and then mount.nfs4 it to /nfs/test.
+> > 
+> > # /bin/find /nfs/test/
+> > /nfs/test/
+> > find: File system loop detected; '/nfs/test/sub1' is part of the same file system loop as '/nfs/test/'.
+> > /nfs/test/.snapshot
+> > find: File system loop detected; '/nfs/test/.snapshot/sub1-s1' is part of the same file system loop as '/nfs/test/'.
+> > find: File system loop detected; '/nfs/test/.snapshot/sub2-s1' is part of the same file system loop as '/nfs/test/'.
+> > /nfs/test/dir1
+> > /nfs/test/dir1/a.txt
+> > find: File system loop detected; '/nfs/test/sub2' is part of the same file system loop as '/nfs/test/'
+> > 
+> > /bin/find report 'File system loop detected'. so I though there is
+> > something wrong.
+> 
+> Certainly something is wrong.  The error message implies that some
+> directory is reporting the same dev an ino as an ancestor directory.
+> Presumably /nfs/test and /nfs/test/sub1.
+> Can you confirm that please. e.g. run the command
+> 
+>    stat /nfs/test /nfs/test/sub1
+> and examine the output.
 
- fs/nfs/nfs3proc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+# stat /nfs/test /nfs/test/sub1
+  File: /nfs/test
+  Size: 42              Blocks: 32         IO Block: 32768  directory
+Device: 36h/54d Inode: 256         Links: 1
+Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2021-06-18 13:50:55.409457648 +0800
+Modify: 2021-06-13 10:05:10.830825901 +0800
+Change: 2021-06-13 10:05:10.830825901 +0800
+ Birth: -
+  File: /nfs/test/sub1
+  Size: 8               Blocks: 0          IO Block: 32768  directory
+Device: 36h/54d Inode: 256         Links: 1
+Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2021-06-18 13:51:14.463621411 +0800
+Modify: 2021-06-12 21:59:10.598089917 +0800
+Change: 2021-06-12 21:59:10.598089917 +0800
+ Birth: -
 
-diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
-index 5c4e23abc345..2299446b3b89 100644
---- a/fs/nfs/nfs3proc.c
-+++ b/fs/nfs/nfs3proc.c
-@@ -385,7 +385,7 @@ static void nfs3_free_createdata(struct nfs3_createdata *data)
- 				break;
- 
- 			case NFS3_CREATE_UNCHECKED:
--				goto out;
-+				goto out_release_acls;
- 		}
- 		nfs_fattr_init(data->res.dir_attr);
- 		nfs_fattr_init(data->res.fattr);
-@@ -751,7 +751,7 @@ static int nfs3_proc_readdir(struct nfs_readdir_arg *nr_arg,
- 		break;
- 	default:
- 		status = -EINVAL;
--		goto out;
-+		goto out_release_acls;
- 	}
- 
- 	d_alias = nfs3_do_create(dir, dentry, data);
--- 
-1.8.3.1
+same 'Device/Inode' are reported.
+
+
+but the local btrfs mount,
+# stat /mnt/test/ /mnt/test/sub1
+  File: /mnt/test/
+  Size: 42              Blocks: 32         IO Block: 4096   directory
+Device: 33h/51d Inode: 256         Links: 1
+Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2021-06-18 13:50:55.409457648 +0800
+Modify: 2021-06-13 10:05:10.830825901 +0800
+Change: 2021-06-13 10:05:10.830825901 +0800
+ Birth: -
+  File: /mnt/test/sub1
+  Size: 8               Blocks: 0          IO Block: 4096   directory
+Device: 34h/52d Inode: 256         Links: 1
+Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2021-06-18 13:51:14.463621411 +0800
+Modify: 2021-06-12 21:59:10.598089917 +0800
+Change: 2021-06-12 21:59:10.598089917 +0800
+ Birth: -
+
+'stat' command should cause nfs/crossmnt to happen auto, and then return
+the 'stat' result?
+
+
+> As sub1 is considered a different file system, it should have a
+> different dev number.  NFS will assign a different device number only
+> when the server reports a different fsid.  The Linux NFS server will
+> report a different fsid if d_mountpoint() is 'true' for the dentry, and
+> follow_down() results in no change the the vfsmnt,dentry in a 'struct
+> path'.
+> 
+> You have already said that d_mountpoint doesn't work for btrfs, so that
+> is part of the problem.  NFSD doesn't trust d_mountpoint completely as
+> it only reports that the dentry is a mountpoint in some namespace, not
+> necessarily in this namespace.  So you really need to fix
+> nfsd_mountpoint.
+> 
+> I suggest you try adding your "dirty fix" to nfsd_mountpoint() so that
+> it reports the root of a btrfs subvol as a mountpoint, and see if that
+> fixes the problem.  It should change the problem at least.  You would
+> need to get nfsd_mountpoint() to return '1' in this case, not '2'.
+> 
+> NeilBrown
+
+I changed the return value from 2 to 1.
+        if (nfsd4_is_junction(dentry))
+                return 1;
++       if (is_btrfs_subvol_d(dentry))
++               return 1;
+        if (d_mountpoint(dentry))
+
+but the crossmnt still does not happen auto.
+
+I tried to mount the subvol manual, 
+# mount.nfs4 T7610:/mnt/test/sub1 /nfs/test/sub1
+mount.nfs4: Stale file handle
+
+we add trace to is_btrfs_subvol_d(), it works as expected.
++static inline bool is_btrfs_subvol_d(const struct dentry *dentry)
++{
++    bool ret= dentry->d_inode && dentry->d_inode->i_ino == 256ULL &&
++		dentry->d_sb && dentry->d_sb->s_magic == 0x9123683E;
++	printk(KERN_INFO "is_btrfs_subvol_d(%s)=%d\n", dentry->d_name.name, ret);
++	return ret;
++}
+
+It seems more fixes are needed.
+
+Best Regards
+Wang Yugui (wangyugui@e16-tech.com)
+2021/06/18
+
 
