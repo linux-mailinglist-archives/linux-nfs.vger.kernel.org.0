@@ -2,164 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 323A13AC4FA
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Jun 2021 09:26:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 607803AC6D1
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Jun 2021 11:10:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233059AbhFRH2m (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 18 Jun 2021 03:28:42 -0400
-Received: from out20-3.mail.aliyun.com ([115.124.20.3]:36283 "EHLO
-        out20-3.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231683AbhFRH2m (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Jun 2021 03:28:42 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04471925|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0428426-0.00415483-0.953003;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047199;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=2;RT=2;SR=0;TI=SMTPD_---.KUCDd5Q_1624001190;
-Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.KUCDd5Q_1624001190)
-          by smtp.aliyun-inc.com(10.147.44.129);
-          Fri, 18 Jun 2021 15:26:31 +0800
-Date:   Fri, 18 Jun 2021 15:26:33 +0800
-From:   Wang Yugui <wangyugui@e16-tech.com>
-To:     "NeilBrown" <neilb@suse.de>
-Subject: Re: any idea about auto export multiple btrfs snapshots?
-Cc:     linux-nfs@vger.kernel.org
-In-Reply-To: <162397637680.29912.2268876490205517592@noble.neil.brown.name>
-References: <20210617122852.BE6A.409509F4@e16-tech.com> <162397637680.29912.2268876490205517592@noble.neil.brown.name>
-Message-Id: <20210618152631.F3DE.409509F4@e16-tech.com>
+        id S231666AbhFRJMX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 18 Jun 2021 05:12:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230429AbhFRJMW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Jun 2021 05:12:22 -0400
+Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2019CC061574
+        for <linux-nfs@vger.kernel.org>; Fri, 18 Jun 2021 02:10:13 -0700 (PDT)
+Received: by mail-qk1-x72c.google.com with SMTP id g4so8038068qkl.1
+        for <linux-nfs@vger.kernel.org>; Fri, 18 Jun 2021 02:10:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=x+Ns7nvErXP3oyXJ5vwGNcDGgmAtxDVxQ1cBAya/hBM=;
+        b=rGwYYeXlqo2pPqmunO93pk6ciIHA3FSDKxgPnC7IYkJQkkGOVF9EBnojddaUtRdwcp
+         dlrcRqguFNcyjDO87HtdLixNZvY38lApyZLzEL6SK9Pv9u2ZSW2DXdorVz/zvEFmLzyX
+         nXEHAlyzTsRcTw7bZ1/omolbRxty4f79ir0LTqzxIIms6ClE30wFY1hZrlZvPme/PDba
+         U1yiCnfTJ7L5gbBViA34BxjnjUfXTYo83EY8+00ViZx7bBgnCanBtbB2oWXomLm4xbVR
+         RqIv58SUzUpi00tw5dXqd8UZaF1VWQtsFYHTobYm/iOYCUzMbXj3ym/5lYQueuonHQl+
+         kTkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=x+Ns7nvErXP3oyXJ5vwGNcDGgmAtxDVxQ1cBAya/hBM=;
+        b=UoaDCnUPxQWfCq32ei6tkvUofnmWq2RWRzJ2OjdcA4lvwMOoR6+vaCtA6K6/5U4FQa
+         EmWk6nrUfkszY3qXMIB0TnGiKSBNGcLUQ7BLcceGpYve/uL75edPd4Nl/rmyCKqj7A2Q
+         QoYLakjNlpfiYcJJW+mFZEwdIKekJWCKHc5s/B4Ru2he+1YUF4pM4I9rGoEpTEcZsBGr
+         kxFBY3frA7EzFTkhp6Cw8toXkyEdqClKpo/L9bHKlVLknEDV9agJM/v5G/2bVxzU6aCq
+         Z30PWmhL5vo0tbG3sL79UiwadwKP8rnuMsZc4H+nDssmgVUswePvPn5Qy8uaSsy+1bFX
+         AHGw==
+X-Gm-Message-State: AOAM533QR7O2TolZ7SQmuL3u6CcqLK40BMQS7z1TJx7d+R0x5UsJxB8i
+        dhz4B7XHmDGCKepo/HN8+4l5N4ms6QsxPrh+1s8=
+X-Google-Smtp-Source: ABdhPJyLnMks/9fZnFWZOOAkoBglG+cIQRwBJHGBZeGgmj1MjyjXTfy/qmSlro3gYstaQ8dmPXh2gom5Fj1N+dCpwes=
+X-Received: by 2002:a37:394:: with SMTP id 142mr8280060qkd.72.1624007411982;
+ Fri, 18 Jun 2021 02:10:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.75.04 [en]
+Reply-To: mohammedssaaaad@gmail.com
+Sender: mrsanoutraore01@gmail.com
+Received: by 2002:a0c:cdce:0:0:0:0:0 with HTTP; Fri, 18 Jun 2021 02:10:11
+ -0700 (PDT)
+From:   Mohammed Saad <mohammedsaadht@gmail.com>
+Date:   Fri, 18 Jun 2021 02:10:11 -0700
+X-Google-Sender-Auth: 9li1-iLxjjrlqg29kaiU8KQh9w4
+Message-ID: <CAOwpAK8X+7+g9jWbzZ2WtYPzdTLbU2Bz+Gtc=inuSMs-2iOHFQ@mail.gmail.com>
+Subject: Business Proposal .........................................
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+Dear Friend.
 
-> On Thu, 17 Jun 2021, Wang Yugui wrote:
-> > > Can we go back to the beginning.  What, exactly, is the problem you are
-> > > trying to solve?  How can you demonstrate the problem?
-> > > 
-> > > NeilBrown
-> > 
-> > I nfs/exported a btrfs with 2 subvols and 2 snapshot(subvol).
-> > 
-> > # btrfs subvolume list /mnt/test
-> > ID 256 gen 53 top level 5 path sub1
-> > ID 260 gen 56 top level 5 path sub2
-> > ID 261 gen 57 top level 5 path .snapshot/sub1-s1
-> > ID 262 gen 57 top level 5 path .snapshot/sub2-s1
-> > 
-> > and then mount.nfs4 it to /nfs/test.
-> > 
-> > # /bin/find /nfs/test/
-> > /nfs/test/
-> > find: File system loop detected; '/nfs/test/sub1' is part of the same file system loop as '/nfs/test/'.
-> > /nfs/test/.snapshot
-> > find: File system loop detected; '/nfs/test/.snapshot/sub1-s1' is part of the same file system loop as '/nfs/test/'.
-> > find: File system loop detected; '/nfs/test/.snapshot/sub2-s1' is part of the same file system loop as '/nfs/test/'.
-> > /nfs/test/dir1
-> > /nfs/test/dir1/a.txt
-> > find: File system loop detected; '/nfs/test/sub2' is part of the same file system loop as '/nfs/test/'
-> > 
-> > /bin/find report 'File system loop detected'. so I though there is
-> > something wrong.
-> 
-> Certainly something is wrong.  The error message implies that some
-> directory is reporting the same dev an ino as an ancestor directory.
-> Presumably /nfs/test and /nfs/test/sub1.
-> Can you confirm that please. e.g. run the command
-> 
->    stat /nfs/test /nfs/test/sub1
-> and examine the output.
+  I am Mr. .Mohammed Saad .I am sending this brief letter to solicit
+your partnership to transfer the sum  =E2=82=AC 15 MILLION Euros into your
+account. I shall send you more information and procedures when I
+receive positive response from you. While the money will be shared
+between us in the ratio of 60/30 while 10% will set aside for any
+expenses that may be incurred on the process of transferring this
+fund. If you are interested, send to me the followings immediately
 
-# stat /nfs/test /nfs/test/sub1
-  File: /nfs/test
-  Size: 42              Blocks: 32         IO Block: 32768  directory
-Device: 36h/54d Inode: 256         Links: 1
-Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2021-06-18 13:50:55.409457648 +0800
-Modify: 2021-06-13 10:05:10.830825901 +0800
-Change: 2021-06-13 10:05:10.830825901 +0800
- Birth: -
-  File: /nfs/test/sub1
-  Size: 8               Blocks: 0          IO Block: 32768  directory
-Device: 36h/54d Inode: 256         Links: 1
-Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2021-06-18 13:51:14.463621411 +0800
-Modify: 2021-06-12 21:59:10.598089917 +0800
-Change: 2021-06-12 21:59:10.598089917 +0800
- Birth: -
+Full Names
+Age
+Nationality
+Occupation
+Direct Telephone Lines
 
-same 'Device/Inode' are reported.
-
-
-but the local btrfs mount,
-# stat /mnt/test/ /mnt/test/sub1
-  File: /mnt/test/
-  Size: 42              Blocks: 32         IO Block: 4096   directory
-Device: 33h/51d Inode: 256         Links: 1
-Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2021-06-18 13:50:55.409457648 +0800
-Modify: 2021-06-13 10:05:10.830825901 +0800
-Change: 2021-06-13 10:05:10.830825901 +0800
- Birth: -
-  File: /mnt/test/sub1
-  Size: 8               Blocks: 0          IO Block: 4096   directory
-Device: 34h/52d Inode: 256         Links: 1
-Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2021-06-18 13:51:14.463621411 +0800
-Modify: 2021-06-12 21:59:10.598089917 +0800
-Change: 2021-06-12 21:59:10.598089917 +0800
- Birth: -
-
-'stat' command should cause nfs/crossmnt to happen auto, and then return
-the 'stat' result?
-
-
-> As sub1 is considered a different file system, it should have a
-> different dev number.  NFS will assign a different device number only
-> when the server reports a different fsid.  The Linux NFS server will
-> report a different fsid if d_mountpoint() is 'true' for the dentry, and
-> follow_down() results in no change the the vfsmnt,dentry in a 'struct
-> path'.
-> 
-> You have already said that d_mountpoint doesn't work for btrfs, so that
-> is part of the problem.  NFSD doesn't trust d_mountpoint completely as
-> it only reports that the dentry is a mountpoint in some namespace, not
-> necessarily in this namespace.  So you really need to fix
-> nfsd_mountpoint.
-> 
-> I suggest you try adding your "dirty fix" to nfsd_mountpoint() so that
-> it reports the root of a btrfs subvol as a mountpoint, and see if that
-> fixes the problem.  It should change the problem at least.  You would
-> need to get nfsd_mountpoint() to return '1' in this case, not '2'.
-> 
-> NeilBrown
-
-I changed the return value from 2 to 1.
-        if (nfsd4_is_junction(dentry))
-                return 1;
-+       if (is_btrfs_subvol_d(dentry))
-+               return 1;
-        if (d_mountpoint(dentry))
-
-but the crossmnt still does not happen auto.
-
-I tried to mount the subvol manual, 
-# mount.nfs4 T7610:/mnt/test/sub1 /nfs/test/sub1
-mount.nfs4: Stale file handle
-
-we add trace to is_btrfs_subvol_d(), it works as expected.
-+static inline bool is_btrfs_subvol_d(const struct dentry *dentry)
-+{
-+    bool ret= dentry->d_inode && dentry->d_inode->i_ino == 256ULL &&
-+		dentry->d_sb && dentry->d_sb->s_magic == 0x9123683E;
-+	printk(KERN_INFO "is_btrfs_subvol_d(%s)=%d\n", dentry->d_name.name, ret);
-+	return ret;
-+}
-
-It seems more fixes are needed.
-
-Best Regards
-Wang Yugui (wangyugui@e16-tech.com)
-2021/06/18
-
-
+Mr Mohammed Saad
