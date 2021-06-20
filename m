@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E97B3ADD97
-	for <lists+linux-nfs@lfdr.de>; Sun, 20 Jun 2021 10:05:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C7ED3ADE49
+	for <lists+linux-nfs@lfdr.de>; Sun, 20 Jun 2021 14:27:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229687AbhFTIH6 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Sun, 20 Jun 2021 04:07:58 -0400
-Received: from 6-200-5-45.rpnnetprovedor.com.br ([45.5.200.6]:59352 "EHLO
-        srv01.rpnnetprovedor.com.br" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S229694AbhFTIHu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 20 Jun 2021 04:07:50 -0400
-Received: from [84.38.130.143] (helo=IP-130-143.dataclub.eu)
-        by srv01.rpnnetprovedor.com.br with esmtpa (Exim 4.92.2)
-        (envelope-from <robertnellsona@citromail.hu>)
-        id 1lusST-0005tw-Hd
-        for linux-nfs@vger.kernel.org; Sun, 20 Jun 2021 05:05:33 -0300
-Content-Type: text/plain; charset="iso-8859-1"
+        id S229593AbhFTM33 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 20 Jun 2021 08:29:29 -0400
+Received: from out20-50.mail.aliyun.com ([115.124.20.50]:60932 "EHLO
+        out20-50.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229591AbhFTM31 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 20 Jun 2021 08:29:27 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1967406|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.148466-0.00233928-0.849195;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047213;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=2;RT=2;SR=0;TI=SMTPD_---.KVAB6Id_1624192033;
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.KVAB6Id_1624192033)
+          by smtp.aliyun-inc.com(10.147.43.230);
+          Sun, 20 Jun 2021 20:27:13 +0800
+Date:   Sun, 20 Jun 2021 20:27:14 +0800
+From:   Wang Yugui <wangyugui@e16-tech.com>
+To:     "NeilBrown" <neilb@suse.de>, linux-nfs@vger.kernel.org
+Subject: Re: any idea about auto export multiple btrfs snapshots?
+In-Reply-To: <20210618152631.F3DE.409509F4@e16-tech.com>
+References: <162397637680.29912.2268876490205517592@noble.neil.brown.name> <20210618152631.F3DE.409509F4@e16-tech.com>
+Message-Id: <20210620202713.AE85.409509F4@e16-tech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: CAN YOU INVEST WITH ME?...6
-To:     linux-nfs@vger.kernel.org
-From:   "Mr.  Robert" <robertnellsona@citromail.hu>
-Date:   Sun, 20 Jun 2021 11:05:32 +0300
-Reply-To: robertnellsona@citromail.hu
-Message-Id: <E1lusST-0005tw-Hd@srv01.rpnnetprovedor.com.br>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.75.04 [en]
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi,
 
-ATTENTION; linux-nfs@vger.kernel.org,
+> It seems more fixes are needed.
 
-IMPORTANT INVESTMENT INFORMATION
+when compare btrfs subvol with xfs crossmnt, we found out
+a new feature difference.
 
-We have a good investment program going on now.
-We have $95m USD for Investment in your Country.
-We use this opportunity to invest you to join the investment program and you will never regret it.
-Please kindly invest with us and you will be receiving monthly income/return/profit every month.
-We can also give you Loan, 
+/mnt/test		xfs
+/mnt/text/xfs2	 another xfs(crossmnt)
+nfsd4_encode_dirent_fattr() report "/mnt/test/xfs2" + "/";
 
-We have: 
 
-1. Short Term Loan, 
+but 
+/mnt/test		btrfs
+/mnt/test/sub1	 btrfs subvol
+nfsd4_encode_dirent_fattr() report "/mnt/test/" + "sub1";
 
-2. Medium Term Loan 
+for '/mnt/test/sub1',  nfsd should treat the mountpoint as
+'/mn/test/sub1', rather than '/mnt/test'?
 
-3. and Long Term Loan, 
+I'm sorry that yet no patch is avaliable, kernel source is quite
+difficult for me.
 
-There is no need of collateral security. We will use our company to sign agreement and guarantee on your behalf and our Lawyer will sign on your behalf.
+Best Regards
+Wang Yugui (wangyugui@e16-tech.com)
+2021/06/20
 
-Reply for more detail.
-
-Thank you Sir.
-
-Robert Nellson.
-INVESTMENT MANAGER.
