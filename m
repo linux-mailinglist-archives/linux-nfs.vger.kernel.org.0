@@ -2,144 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71C0D3AE5CB
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Jun 2021 11:17:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0C913AEB90
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Jun 2021 16:40:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230161AbhFUJTj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Jun 2021 05:19:39 -0400
-Received: from ssh248.corpemail.net ([210.51.61.248]:23980 "EHLO
-        ssh248.corpemail.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230311AbhFUJTj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Jun 2021 05:19:39 -0400
-X-Greylist: delayed 362 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Jun 2021 05:19:39 EDT
-Received: from ([60.208.111.195])
-        by ssh248.corpemail.net ((LNX1044)) with ASMTP (SSL) id PHH00116;
-        Mon, 21 Jun 2021 17:11:16 +0800
-Received: from jtjnmail201620.home.langchao.com (10.100.2.20) by
- jtjnmail201622.home.langchao.com (10.100.2.22) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Mon, 21 Jun 2021 17:11:17 +0800
-Received: from jtjnmail201620.home.langchao.com ([fe80::24f6:b8e5:a824:6a6b])
- by jtjnmail201620.home.langchao.com ([fe80::24f6:b8e5:a824:6a6b%17]) with
- mapi id 15.01.2176.014; Mon, 21 Jun 2021 17:11:17 +0800
-From:   =?gb2312?B?SmFtZXMgRG9uZyAotq3KwL2tKQ==?= <dongshijiang@inspur.com>
-To:     Petr Vorel <pvorel@suse.cz>
-CC:     "ltp@lists.linux.it" <ltp@lists.linux.it>,
-        Alexey Kodanev <aleksei.kodanev@bell-sw.com>,
-        Steve Dickson <SteveD@redhat.com>,
-        "libtirpc-devel@lists.sourceforge.net" 
-        <libtirpc-devel@lists.sourceforge.net>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [LTP] [PATCH] fix rpc_suite/rpc:add check returned value
-Thread-Topic: [LTP] [PATCH] fix rpc_suite/rpc:add check returned value
-Thread-Index: AddmfTX54eueXHxIsE+jfZ2y41B5ZA==
-Date:   Mon, 21 Jun 2021 09:11:17 +0000
-Message-ID: <52e4b3cba7d74f17b64816acaf50be01@inspur.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.72.58.101]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S229807AbhFUOmv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Jun 2021 10:42:51 -0400
+Received: from mta-101a.oxsus-vadesecure.net ([51.81.61.60]:51429 "EHLO
+        oxsus1nmtao01p.internal.vadesecure.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229765AbhFUOmv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Jun 2021 10:42:51 -0400
+X-Greylist: delayed 314 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Jun 2021 10:42:51 EDT
+DKIM-Signature: v=1; a=rsa-sha256; bh=/65HdiEyg1ggpFdUR6NllUZtiOgzL7wsnWkVj/
+ Ja13E=; c=relaxed/relaxed; d=earthlink.net; h=from:reply-to:subject:
+ date:to:cc:resent-date:resent-from:resent-to:resent-cc:in-reply-to:
+ references:list-id:list-help:list-unsubscribe:list-subscribe:list-post:
+ list-owner:list-archive; q=dns/txt; s=dk12062016; t=1624286106;
+ x=1624890906; b=AQeH2LG2oJx6wf9UVK+u2kD4uNbUAxQOYppxX4WDExGNfGWlsLX9Skg
+ bcXsFF6shq/zgzGfNV2HcmDGc7mB3f0vQW8BjXIsRwXuwcw5eXi6SKNCJsd0YpvLXH71b/O
+ 5/bsC2VeoH5SCTnU9yTGdh7gmk8w2VbxAT5744E9Jwiu11wV7llk8o4/Gnruk9q10GooBXB
+ mKq0y4QvFqe6SQ9zRUH+yjS2Huu9uojH4xYWTV0+G3RebrHgoOaavSYZqO59fFXzKNxtZce
+ hhdfUmvmaSGoiYB3j1VnUV+EyxTxL46XszTXARdAwJtsryfA1E0zveMuop/mkw/aZ+fwOt0
+ r8g==
+Received: from FRANKSTHINKPAD ([76.105.143.216])
+ by oxsus1nmtao01p.internal.vadesecure.com with ngmta
+ id ea035de9-168a9f9b74b8bc05; Mon, 21 Jun 2021 14:35:05 +0000
+From:   "Frank Filz" <ffilzlnx@mindspring.com>
+To:     "'NeilBrown'" <neilb@suse.de>,
+        "'Wang Yugui'" <wangyugui@e16-tech.com>
+Cc:     <linux-nfs@vger.kernel.org>
+References: <20210617122852.BE6A.409509F4@e16-tech.com>, <162397637680.29912.2268876490205517592@noble.neil.brown.name>, <20210618152631.F3DE.409509F4@e16-tech.com> <162425113589.17441.4163890972298681569@noble.neil.brown.name>
+In-Reply-To: <162425113589.17441.4163890972298681569@noble.neil.brown.name>
+Subject: RE: any idea about auto export multiple btrfs snapshots?
+Date:   Mon, 21 Jun 2021 07:35:05 -0700
+Message-ID: <000001d766aa$a16b3470$e4419d50$@mindspring.com>
 MIME-Version: 1.0
-tUid:   2021621171116ecfb0b46d39f9720867f8c216393548c
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQGgjb0JmyjTlu+qHq6E792GRQrYXwDUVoz+AX4+uU8CMxYmZKtoCsXQ
+Content-Language: en-us
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SGkgUGV0cg0KSSB0aGluayB0aGlzIGlzIGp1c3QgYSBzaW1wbGUgdGVzdCBvZiBzb21lIEFQSXMs
-IGJ1dCBzb21lIHRlc3QgY2FzZXMgYXJlIG5vdCBzdGFuZGFyZGl6ZWQgYW5kIGNhdXNlIGVycm9y
-cyBsaWtlICJTZWdtZW50YXRpb24gZmF1bHQiIGR1cmluZyB0ZXN0aW5nLiBJIHRoaW5rIGl0IGlz
-IG5lY2Vzc2FyeSB0byBmaXggdGhlc2UgZXJyb3JzIG9yIGRlbGV0ZSB0aGVzZSB0ZXN0cy4NCg0K
-S2luZCByZWdhcmRzLA0KRG9uZw0KDQotLS0tLdPKvP7Urbz+LS0tLS0NCreivP7IyzogUGV0ciBW
-b3JlbCBbbWFpbHRvOnB2b3JlbEBzdXNlLmN6XSANCreiy83KsbzkOiAyMDIxxOo21MIyMcjVIDE1
-OjU5DQrK1bz+yMs6IEphbWVzIERvbmcgKLatysC9rSkgPGRvbmdzaGlqaWFuZ0BpbnNwdXIuY29t
-Pg0Ks63LzTogbHRwQGxpc3RzLmxpbnV4Lml0OyBBbGV4ZXkgS29kYW5ldiA8YWxla3NlaS5rb2Rh
-bmV2QGJlbGwtc3cuY29tPjsgU3RldmUgRGlja3NvbiA8U3RldmVEQHJlZGhhdC5jb20+OyBsaWJ0
-aXJwYy1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQ7IGxpbnV4LW5mc0B2Z2VyLmtlcm5lbC5v
-cmcNCtb3zOI6IFJlOiBbTFRQXSBbUEFUQ0hdIGZpeCBycGNfc3VpdGUvcnBjOmFkZCBjaGVjayBy
-ZXR1cm5lZCB2YWx1ZQ0KDQpIaSBhbGwsDQoNCltDYyBsaWJ0aXJwYyBNTCBhbmQgU3RldmVdDQoN
-Cj4gIlNlZ21lbnRhdGlvbiBmYXVsdCAoY29yZSBkdW1wZWQpIiBkdWUgdG8gdGhlIGZhaWx1cmUg
-b2Ygc3ZjZmRfY3JlYXRlIA0KPiBkdXJpbmcgdGhlIHJwYyB0ZXN0LCBzbyB5b3UgbmVlZCB0byBj
-aGVjayB0aGUgcmV0dXJuIHZhbHVlIG9mIHRoZSANCj4gInN2Y2ZkX2NyZWF0ZSIgZnVuY3Rpb24N
-Cg0KSSdtIG5vdCBzdXJlIHdoYXQgaXMgdGhlIHZhbHVlIG9mIFRJLVJQQyB0ZXN0cy4gSU1ITyBy
-ZWFsbHkgbWVzc3kgY29kZSBkb2VzIG5vdCBpbiB0aGUgZW5kIGNvdmVyIG11Y2ggb2YgbGlidGly
-cGMgZnVuY3Rpb25hbGl0eS4gVGhhdCdzIHdoeSBJJ20gdGhpbmtpbmcgdG8gcHJvcG9zZSBkZWxl
-dGluZyB3aG9sZSB0ZXN0Y2FzZXMvbmV0d29yay9ycGMvcnBjLXRpcnBjLy4gbGlidGlycGMgaXMg
-YmVpbmcgdXNlZCBpbiBuZnMtdXRpbHMsIHRodXMgaXQnZCBkZXNlcnZlIHRvIGhhdmUgc29tZSB0
-ZXN0aW5nLCBidXQgSU1ITyB0aGlzIHNob3VsZCBiZSBsaWJ0aXJwYy4NCg0KSSdtIG5vdCBwbGFu
-bmluZyB0byBkaXZlIGludG8gdGhlIHRlY2hub2xvZ3kgdG8gdW5kZXJzdGFuZCBpdCBlbm91Z2gg
-YmUgYWJsZSB0byB3cml0dGVuIHRoZSB0ZXN0cyBmcm9tIHNjcmF0Y2ggYW5kIEknbSBub3QgYXdh
-cmUgb2YgYW55Ym9keSBlbHNlIHBsYW5uaW5nIGl0Lg0KDQo+IFNpZ25lZC1vZmYtYnk6IGRvbmdz
-aGlqaWFuZyA8ZG9uZ3NoaWppYW5nQGluc3B1ci5jb20+DQo+IC0tLQ0KPiAgLi4uL3JwYy9ycGNf
-Y3JlYXRlZGVzdHJveV9zdmNfZGVzdHJveS9ycGNfc3ZjX2Rlc3Ryb3kuYyAgICAgIHwgNSArKysr
-Kw0KPiAgLi4uL3JwY19jcmVhdGVkZXN0cm95X3N2Y19kZXN0cm95L3JwY19zdmNfZGVzdHJveV9z
-dHJlc3MuYyAgIHwgNSArKysrKw0KPiAgLi4uL3JwYy9ycGNfcmVndW5yZWdfeHBydF9yZWdpc3Rl
-ci9ycGNfeHBydF9yZWdpc3Rlci5jICAgICAgIHwgNSArKysrKw0KPiAgLi4uL3JwYy9ycGNfcmVn
-dW5yZWdfeHBydF91bnJlZ2lzdGVyL3JwY194cHJ0X3VucmVnaXN0ZXIuYyAgIHwgNSArKysrKw0K
-PiAgNCBmaWxlcyBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspDQoNCj4gZGlmZiAtLWdpdCANCj4g
-YS90ZXN0Y2FzZXMvbmV0d29yay9ycGMvcnBjLXRpcnBjL3Rlc3RzX3BhY2svcnBjX3N1aXRlL3Jw
-Yy9ycGNfY3JlYXRlZA0KPiBlc3Ryb3lfc3ZjX2Rlc3Ryb3kvcnBjX3N2Y19kZXN0cm95LmMgDQo+
-IGIvdGVzdGNhc2VzL25ldHdvcmsvcnBjL3JwYy10aXJwYy90ZXN0c19wYWNrL3JwY19zdWl0ZS9y
-cGMvcnBjX2NyZWF0ZWQNCj4gZXN0cm95X3N2Y19kZXN0cm95L3JwY19zdmNfZGVzdHJveS5jDQo+
-IGluZGV4IDYwYjk2Y2VjMy4uMzU1N2MwMDY4IDEwMDY0NA0KPiAtLS0gDQo+IGEvdGVzdGNhc2Vz
-L25ldHdvcmsvcnBjL3JwYy10aXJwYy90ZXN0c19wYWNrL3JwY19zdWl0ZS9ycGMvcnBjX2NyZWF0
-ZWQNCj4gZXN0cm95X3N2Y19kZXN0cm95L3JwY19zdmNfZGVzdHJveS5jDQo+ICsrKyBiL3Rlc3Rj
-YXNlcy9uZXR3b3JrL3JwYy9ycGMtdGlycGMvdGVzdHNfcGFjay9ycGNfc3VpdGUvcnBjL3JwY19j
-cmUNCj4gKysrIGF0ZWRlc3Ryb3lfc3ZjX2Rlc3Ryb3kvcnBjX3N2Y19kZXN0cm95LmMNCj4gQEAg
-LTQ2LDYgKzQ2LDExIEBAIGludCBtYWluKHZvaWQpDQoNCj4gIAkvL0ZpcnN0IG9mIGFsbCwgY3Jl
-YXRlIGEgc2VydmVyDQo+ICAJc3ZjciA9IHN2Y2ZkX2NyZWF0ZShmZCwgMCwgMCk7DQo+ICsNCj4g
-KwkvL2NoZWNrIHJldHVybmVkIHZhbHVlDQo+ICsJaWYgKChTVkNYUFJUICopIHN2Y3IgPT0gTlVM
-TCkgew0KPiArCQlyZXR1cm4gdGVzdF9zdGF0dXM7DQo+ICsJfQ0KDQo+ICAJLy9UaGVuIGNhbGwg
-ZGVzdHJveSBtYWNybw0KPiAgCXN2Y19kZXN0cm95KHN2Y3IpOw0KPiBkaWZmIC0tZ2l0IA0KPiBh
-L3Rlc3RjYXNlcy9uZXR3b3JrL3JwYy9ycGMtdGlycGMvdGVzdHNfcGFjay9ycGNfc3VpdGUvcnBj
-L3JwY19jcmVhdGVkDQo+IGVzdHJveV9zdmNfZGVzdHJveS9ycGNfc3ZjX2Rlc3Ryb3lfc3RyZXNz
-LmMgDQo+IGIvdGVzdGNhc2VzL25ldHdvcmsvcnBjL3JwYy10aXJwYy90ZXN0c19wYWNrL3JwY19z
-dWl0ZS9ycGMvcnBjX2NyZWF0ZWQNCj4gZXN0cm95X3N2Y19kZXN0cm95L3JwY19zdmNfZGVzdHJv
-eV9zdHJlc3MuYw0KPiBpbmRleCBlY2QxNDUzOTMuLjVhNDMzMWY0ZCAxMDA2NDQNCj4gLS0tIA0K
-PiBhL3Rlc3RjYXNlcy9uZXR3b3JrL3JwYy9ycGMtdGlycGMvdGVzdHNfcGFjay9ycGNfc3VpdGUv
-cnBjL3JwY19jcmVhdGVkDQo+IGVzdHJveV9zdmNfZGVzdHJveS9ycGNfc3ZjX2Rlc3Ryb3lfc3Ry
-ZXNzLmMNCj4gKysrIGIvdGVzdGNhc2VzL25ldHdvcmsvcnBjL3JwYy10aXJwYy90ZXN0c19wYWNr
-L3JwY19zdWl0ZS9ycGMvcnBjX2NyZQ0KPiArKysgYXRlZGVzdHJveV9zdmNfZGVzdHJveS9ycGNf
-c3ZjX2Rlc3Ryb3lfc3RyZXNzLmMNCj4gQEAgLTU1LDYgKzU1LDExIEBAIGludCBtYWluKGludCBh
-cmduLCBjaGFyICphcmdjW10pDQo+ICAJLy9GaXJzdCBvZiBhbGwsIGNyZWF0ZSBhIHNlcnZlcg0K
-PiAgCWZvciAoaSA9IDA7IGkgPCBuYkNhbGw7IGkrKykgew0KPiAgCQlzdmNyID0gc3ZjZmRfY3Jl
-YXRlKGZkLCAwLCAwKTsNCj4gKw0KPiArCQkvL2NoZWNrIHJldHVybmVkIHZhbHVlDQo+ICsJCWlm
-ICgoU1ZDWFBSVCAqKSBzdmNyID09IE5VTEwpDQo+ICsJCQljb250aW51ZTsNCj4gKwkJc3ZjciA9
-IE5VTEw7DQptYW4gc3ZjX2Rlc3Ryb3koMykgc3RhdGVzIHRoYXQgaXQgZGVhbGxvY2F0ZXMgcHJp
-dmF0ZSBkYXRhIHN0cnVjdHVyZXMsIGluY2x1ZGluZyB4cHJ0IGl0c2VsZi4NCg0KS2luZCByZWdh
-cmRzLA0KUGV0cg0KDQo+ICAJCS8vVGhlbiBjYWxsIGRlc3Ryb3kgbWFjcm8NCj4gIAkJc3ZjX2Rl
-c3Ryb3koc3Zjcik7DQo+IGRpZmYgLS1naXQgDQo+IGEvdGVzdGNhc2VzL25ldHdvcmsvcnBjL3Jw
-Yy10aXJwYy90ZXN0c19wYWNrL3JwY19zdWl0ZS9ycGMvcnBjX3JlZ3VucmUNCj4gZ194cHJ0X3Jl
-Z2lzdGVyL3JwY194cHJ0X3JlZ2lzdGVyLmMgDQo+IGIvdGVzdGNhc2VzL25ldHdvcmsvcnBjL3Jw
-Yy10aXJwYy90ZXN0c19wYWNrL3JwY19zdWl0ZS9ycGMvcnBjX3JlZ3VucmUNCj4gZ194cHJ0X3Jl
-Z2lzdGVyL3JwY194cHJ0X3JlZ2lzdGVyLmMNCj4gaW5kZXggZGEzYjkzMDIyLi5kZTRkZjE1ZjEg
-MTAwNjQ0DQo+IC0tLSANCj4gYS90ZXN0Y2FzZXMvbmV0d29yay9ycGMvcnBjLXRpcnBjL3Rlc3Rz
-X3BhY2svcnBjX3N1aXRlL3JwYy9ycGNfcmVndW5yZQ0KPiBnX3hwcnRfcmVnaXN0ZXIvcnBjX3hw
-cnRfcmVnaXN0ZXIuYw0KPiArKysgYi90ZXN0Y2FzZXMvbmV0d29yay9ycGMvcnBjLXRpcnBjL3Rl
-c3RzX3BhY2svcnBjX3N1aXRlL3JwYy9ycGNfcmVnDQo+ICsrKyB1bnJlZ194cHJ0X3JlZ2lzdGVy
-L3JwY194cHJ0X3JlZ2lzdGVyLmMNCj4gQEAgLTQ4LDYgKzQ4LDExIEBAIGludCBtYWluKHZvaWQp
-DQoNCj4gIAkvL2NyZWF0ZSBhIHNlcnZlcg0KPiAgCXN2Y3IgPSBzdmNmZF9jcmVhdGUoZmQsIDEw
-MjQsIDEwMjQpOw0KPiArDQo+ICsJLy9jaGVjayByZXR1cm5lZCB2YWx1ZQ0KPiArCWlmICgoU1ZD
-WFBSVCAqKSBzdmNyID09IE5VTEwpIHsNCj4gKwkJcmV0dXJuIHRlc3Rfc3RhdHVzOw0KPiArCX0N
-Cg0KPiAgCS8vY2FsbCByb3V0aW5lDQo+ICAJeHBydF9yZWdpc3RlcihzdmNyKTsNCj4gZGlmZiAt
-LWdpdCANCj4gYS90ZXN0Y2FzZXMvbmV0d29yay9ycGMvcnBjLXRpcnBjL3Rlc3RzX3BhY2svcnBj
-X3N1aXRlL3JwYy9ycGNfcmVndW5yZQ0KPiBnX3hwcnRfdW5yZWdpc3Rlci9ycGNfeHBydF91bnJl
-Z2lzdGVyLmMgDQo+IGIvdGVzdGNhc2VzL25ldHdvcmsvcnBjL3JwYy10aXJwYy90ZXN0c19wYWNr
-L3JwY19zdWl0ZS9ycGMvcnBjX3JlZ3VucmUNCj4gZ194cHJ0X3VucmVnaXN0ZXIvcnBjX3hwcnRf
-dW5yZWdpc3Rlci5jDQo+IGluZGV4IGQwYjdhMjBkNC4uZmJhZWMyNWFkIDEwMDY0NA0KPiAtLS0g
-DQo+IGEvdGVzdGNhc2VzL25ldHdvcmsvcnBjL3JwYy10aXJwYy90ZXN0c19wYWNrL3JwY19zdWl0
-ZS9ycGMvcnBjX3JlZ3VucmUNCj4gZ194cHJ0X3VucmVnaXN0ZXIvcnBjX3hwcnRfdW5yZWdpc3Rl
-ci5jDQo+ICsrKyBiL3Rlc3RjYXNlcy9uZXR3b3JrL3JwYy9ycGMtdGlycGMvdGVzdHNfcGFjay9y
-cGNfc3VpdGUvcnBjL3JwY19yZWcNCj4gKysrIHVucmVnX3hwcnRfdW5yZWdpc3Rlci9ycGNfeHBy
-dF91bnJlZ2lzdGVyLmMNCj4gQEAgLTUyLDYgKzUyLDExIEBAIGludCBtYWluKGludCBhcmduLCBj
-aGFyICphcmdjW10pDQoNCj4gIAkvL2NyZWF0ZSBhIHNlcnZlcg0KPiAgCXN2Y3IgPSBzdmNmZF9j
-cmVhdGUoZmQsIDEwMjQsIDEwMjQpOw0KPiArDQo+ICsJLy9jaGVjayByZXR1cm5lZCB2YWx1ZQ0K
-PiArCWlmICgoU1ZDWFBSVCAqKSBzdmNyID09IE5VTEwpIHsNCj4gKwkJcmV0dXJuIHRlc3Rfc3Rh
-dHVzOw0KPiArCX0NCg0KPiAgCXhwcnRfcmVnaXN0ZXIoc3Zjcik7DQo+ICAJLy9jYWxsIHJvdXRp
-bmUNCg==
+> I think the problem is that the submount doesn't appear in =
+/proc/mounts.
+> "nfsd_fh()" in nfs-utils needs to be able to map from the uuid for a =
+filesystem to
+> the mount point.  To do this it walks through /proc/mounts checking =
+the uuid of
+> each filesystem.  If a filesystem isn't listed there, it obviously =
+fails.
+>=20
+> I guess you could add code to nfs-utils to do whatever "btrfs subvol =
+list" does to
+> make up for the fact that btrfs doesn't register in /proc/mounts.
+>=20
+> NeilBrown
+
+I've been watching this with interest for the nfs-ganesha project. We =
+recently were made aware that we weren't working with btrfs subvols, and =
+I added code so that in addition to using getmntent (essentially =
+/proc/mounts) to populate filesystems, we also scan for btrfs subvols =
+and with that we are able to export subvols. My question is does a =
+snapshot look any different than a subvol? If they show up in the subvol =
+list then we shouldn't need to do anything more for nfs-ganesha, but if =
+there's something else needed to discover them, then we may need =
+additional code in nfs-ganesha. I have not yet had a chance to check out =
+exporting a snapshot yet.
+
+Thanks
+
+Frank Filz
+
