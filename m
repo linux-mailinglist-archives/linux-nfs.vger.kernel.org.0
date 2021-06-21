@@ -2,169 +2,228 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 017863AE46A
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Jun 2021 09:59:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DD443AE4FE
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Jun 2021 10:34:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229641AbhFUIB1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Jun 2021 04:01:27 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:40352 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229618AbhFUIBZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Jun 2021 04:01:25 -0400
-Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id C901B1FD2A;
-        Mon, 21 Jun 2021 07:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1624262350;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UY792cC/d7d1DMgD9iBuiHu/NOwzgk7RurwH5JgZgcM=;
-        b=VTKTklKTSO/kHlZ3Ffq2YKEc9DJ982asc2Jim/iDgMZMnR1atVr8xhE9NbrlHA+pSek1p5
-        try5zvcDJbiNm23EmFzIcRfGE9ht0nHTbyzs2M0EnsSW8t/JEALdch7hqXTGNGEU2Bzpua
-        dY1OP4o8Y1JKqP7k2y+Yq1QjD0NtEMc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1624262350;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UY792cC/d7d1DMgD9iBuiHu/NOwzgk7RurwH5JgZgcM=;
-        b=jNnna9nKpEjZvP/qijcMn7mHCWm89sMb9iQkVNz/8fmh4B5qSY8s7qYJHb3Vo9F62Mkqg3
-        o6CF5j4dNcxrNYAw==
-Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        by imap.suse.de (Postfix) with ESMTP id 92708118DD;
-        Mon, 21 Jun 2021 07:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1624262350;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UY792cC/d7d1DMgD9iBuiHu/NOwzgk7RurwH5JgZgcM=;
-        b=VTKTklKTSO/kHlZ3Ffq2YKEc9DJ982asc2Jim/iDgMZMnR1atVr8xhE9NbrlHA+pSek1p5
-        try5zvcDJbiNm23EmFzIcRfGE9ht0nHTbyzs2M0EnsSW8t/JEALdch7hqXTGNGEU2Bzpua
-        dY1OP4o8Y1JKqP7k2y+Yq1QjD0NtEMc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1624262350;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UY792cC/d7d1DMgD9iBuiHu/NOwzgk7RurwH5JgZgcM=;
-        b=jNnna9nKpEjZvP/qijcMn7mHCWm89sMb9iQkVNz/8fmh4B5qSY8s7qYJHb3Vo9F62Mkqg3
-        o6CF5j4dNcxrNYAw==
-Received: from director2.suse.de ([192.168.254.72])
-        by imap3-int with ESMTPSA
-        id ykQHIs5G0GDfFgAALh3uQQ
-        (envelope-from <pvorel@suse.cz>); Mon, 21 Jun 2021 07:59:10 +0000
-Date:   Mon, 21 Jun 2021 09:59:09 +0200
-From:   Petr Vorel <pvorel@suse.cz>
-To:     dongshijiang <dongshijiang@inspur.com>
-Cc:     ltp@lists.linux.it, Alexey Kodanev <aleksei.kodanev@bell-sw.com>,
-        Steve Dickson <SteveD@redhat.com>,
-        libtirpc-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org
-Subject: Re: [LTP] [PATCH] fix rpc_suite/rpc:add check returned value
-Message-ID: <YNBGza7f7dOawiaF@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20210617070806.174220-1-dongshijiang@inspur.com>
+        id S230047AbhFUIg5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Jun 2021 04:36:57 -0400
+Received: from out20-73.mail.aliyun.com ([115.124.20.73]:56044 "EHLO
+        out20-73.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229789AbhFUIg5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Jun 2021 04:36:57 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07398717|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0072026-0.00152205-0.991275;FP=0|0|0|0|0|0|0|0;HT=ay29a033018047213;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=2;RT=2;SR=0;TI=SMTPD_---.KVbylC8_1624264480;
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.KVbylC8_1624264480)
+          by smtp.aliyun-inc.com(10.147.41.143);
+          Mon, 21 Jun 2021 16:34:41 +0800
+Date:   Mon, 21 Jun 2021 16:34:41 +0800
+From:   Wang Yugui <wangyugui@e16-tech.com>
+To:     "NeilBrown" <neilb@suse.de>
+Subject: Re: any idea about auto export multiple btrfs snapshots?
+Cc:     linux-nfs@vger.kernel.org
+In-Reply-To: <162425240757.17441.3695249639927377778@noble.neil.brown.name>
+References: <162425113589.17441.4163890972298681569@noble.neil.brown.name> <162425240757.17441.3695249639927377778@noble.neil.brown.name>
+Message-Id: <20210621163441.428C.409509F4@e16-tech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210617070806.174220-1-dongshijiang@inspur.com>
+Content-Type: multipart/mixed; boundary="------_60D04E0E000000004287_MULTIPART_MIXED_"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.75.04 [en]
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi all,
+--------_60D04E0E000000004287_MULTIPART_MIXED_
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 
-[Cc libtirpc ML and Steve]
+Hi,
 
-> "Segmentation fault (core dumped)" due to the failure of svcfd_create during the rpc test, so you need to check the return value of the "svcfd_create" function
+> > > It seems more fixes are needed.
+> > 
+> > I think the problem is that the submount doesn't appear in /proc/mounts.
+> > "nfsd_fh()" in nfs-utils needs to be able to map from the uuid for a
+> > filesystem to the mount point.  To do this it walks through /proc/mounts
+> > checking the uuid of each filesystem.  If a filesystem isn't listed
+> > there, it obviously fails.
+> > 
+> > I guess you could add code to nfs-utils to do whatever "btrfs subvol
+> > list" does to make up for the fact that btrfs doesn't register in
+> > /proc/mounts.
+> 
+> Another approach might be to just change svcxdr_encode_fattr3() and
+> nfsd4_encode_fattr() in the 'FSIDSOJURCE_UUID' case to check if
+> dentry->d_inode has a different btrfs volume id to
+> exp->ex_path.dentry->d_inode.
+> If it does, then mix the volume id into the fsid somehow.
+> 
+> With that, you wouldn't want the first change I suggested.
 
-I'm not sure what is the value of TI-RPC tests. IMHO really messy code does
-not in the end cover much of libtirpc functionality. That's why I'm thinking
-to propose deleting whole testcases/network/rpc/rpc-tirpc/. libtirpc is being
-used in nfs-utils, thus it'd deserve to have some testing, but IMHO this
-should be libtirpc.
+This is what I have done. and it is based on linux 5.10.44
 
-I'm not planning to dive into the technology to understand it enough be
-able to written the tests from scratch and I'm not aware of anybody else
-planning it.
+but it still not work, so still more jobs needed.
 
-> Signed-off-by: dongshijiang <dongshijiang@inspur.com>
-> ---
->  .../rpc/rpc_createdestroy_svc_destroy/rpc_svc_destroy.c      | 5 +++++
->  .../rpc_createdestroy_svc_destroy/rpc_svc_destroy_stress.c   | 5 +++++
->  .../rpc/rpc_regunreg_xprt_register/rpc_xprt_register.c       | 5 +++++
->  .../rpc/rpc_regunreg_xprt_unregister/rpc_xprt_unregister.c   | 5 +++++
->  4 files changed, 20 insertions(+)
+Best Regards
+Wang Yugui (wangyugui@e16-tech.com)
+2021/06/21
 
-> diff --git a/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_createdestroy_svc_destroy/rpc_svc_destroy.c b/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_createdestroy_svc_destroy/rpc_svc_destroy.c
-> index 60b96cec3..3557c0068 100644
-> --- a/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_createdestroy_svc_destroy/rpc_svc_destroy.c
-> +++ b/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_createdestroy_svc_destroy/rpc_svc_destroy.c
-> @@ -46,6 +46,11 @@ int main(void)
 
->  	//First of all, create a server
->  	svcr = svcfd_create(fd, 0, 0);
-> +
-> +	//check returned value
-> +	if ((SVCXPRT *) svcr == NULL) {
-> +		return test_status;
-> +	}
+--------_60D04E0E000000004287_MULTIPART_MIXED_
+Content-Type: application/octet-stream;
+ name="0001-nfsd-btrfs-subvol-support.patch"
+Content-Disposition: attachment;
+ filename="0001-nfsd-btrfs-subvol-support.patch"
+Content-Transfer-Encoding: base64
 
->  	//Then call destroy macro
->  	svc_destroy(svcr);
-> diff --git a/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_createdestroy_svc_destroy/rpc_svc_destroy_stress.c b/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_createdestroy_svc_destroy/rpc_svc_destroy_stress.c
-> index ecd145393..5a4331f4d 100644
-> --- a/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_createdestroy_svc_destroy/rpc_svc_destroy_stress.c
-> +++ b/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_createdestroy_svc_destroy/rpc_svc_destroy_stress.c
-> @@ -55,6 +55,11 @@ int main(int argn, char *argc[])
->  	//First of all, create a server
->  	for (i = 0; i < nbCall; i++) {
->  		svcr = svcfd_create(fd, 0, 0);
-> +
-> +		//check returned value
-> +		if ((SVCXPRT *) svcr == NULL)
-> +			continue;
-> +		svcr = NULL;
-man svc_destroy(3) states that it deallocates private data structures, including
-xprt itself.
+RnJvbSA1N2U2YjNjZWM5YjhhYzM5NmI2NjFjMTkwNTExYWY4MDgzOWRkYmU1IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiB3YW5neXVndWkgPHdhbmd5dWd1aUBlMTYtdGVjaC5jb20+CkRh
+dGU6IFRodSwgMTcgSnVuIDIwMjEgMDg6MzM6MDYgKzA4MDAKU3ViamVjdDogW1BBVENIXSBuZnNk
+OiBidHJmcyBzdWJ2b2wgc3VwcG9ydAoKKHN0cnVjdCBzdGF0ZnMpLmZfZnNpZDogCXVuaXEgYmV0
+d2VlbiBidHJmcyBzdWJ2b2xzCihzdHJ1Y3Qgc3RhdCkuc3RfZGV2OiAJCXVuaXEgYmV0d2VlbiBi
+dHJmcyBzdWJ2b2xzCihzdHJ1Y3Qgc3RhdHgpLnN0eF9tbnRfaWQ6CU5PVCB1bmlxIGJldHdlZW4g
+YnRyZnMgc3Vidm9scywgYnV0IHlldCBub3QgdXNlZCBpbiBuZnMvbmZzZAoJa2VybmVsIHNhbXBs
+ZXMvdmZzL3Rlc3Qtc3RhdHguYwoJCXN0eF9yZGV2X21ham9yL3N0eF9yZGV2X21pbm9yIHNlZW1z
+IGJlIHRydW5jYXRlZCBieSBzb21ldGhpbmcKCQlsaWtlIG9sZF9lbmNvZGVfZGV2KCkvb2xkX2Rl
+Y29kZV9kZXYoKT8KClRPRE86IChzdHJ1Y3QgbmZzX2ZhdHRyKS5mc2lkClRPRE86IEZTSURTT1VS
+Q0VfRlNJRCBpbiBuZnMzeGRyLmMvbmZzeGRyLmMKLS0tCiBmcy9uYW1laS5jICAgICAgICAgfCAg
+MiArKwogZnMvbmZzZC9uZnMzeGRyLmMgIHwgIDIgKy0KIGZzL25mc2QvbmZzNHhkci5jICB8IDEw
+ICsrKysrKysrLS0KIGZzL25mc2QvdmZzLmMgICAgICB8ICA2ICsrKysrKwogaW5jbHVkZS9saW51
+eC9mcy5oIHwgMTMgKysrKysrKysrKysrKwogNSBmaWxlcyBjaGFuZ2VkLCAzMCBpbnNlcnRpb25z
+KCspLCAzIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2ZzL25hbWVpLmMgYi9mcy9uYW1laS5j
+CmluZGV4IGZlMTMyZTMuLjY5NzRhOTUgMTAwNjQ0Ci0tLSBhL2ZzL25hbWVpLmMKKysrIGIvZnMv
+bmFtZWkuYwpAQCAtMTEwNSw2ICsxMTA1LDggQEAgaW50IGZvbGxvd191cChzdHJ1Y3QgcGF0aCAq
+cGF0aCkKIAlzdHJ1Y3QgbW91bnQgKnBhcmVudDsKIAlzdHJ1Y3QgZGVudHJ5ICptb3VudHBvaW50
+OwogCisJaWYodW5saWtlbHkoZF9pc19idHJmc19zdWJ2b2wocGF0aC0+ZGVudHJ5KSkpCisJCXJl
+dHVybiAwOwogCXJlYWRfc2VxbG9ja19leGNsKCZtb3VudF9sb2NrKTsKIAlwYXJlbnQgPSBtbnQt
+Pm1udF9wYXJlbnQ7CiAJaWYgKHBhcmVudCA9PSBtbnQpIHsKZGlmZiAtLWdpdCBhL2ZzL25mc2Qv
+bmZzM3hkci5jIGIvZnMvbmZzZC9uZnMzeGRyLmMKaW5kZXggNzE2NTY2ZC4uNDU2NjZiMyAxMDA2
+NDQKLS0tIGEvZnMvbmZzZC9uZnMzeGRyLmMKKysrIGIvZnMvbmZzZC9uZnMzeGRyLmMKQEAgLTg3
+Nyw3ICs4NzcsNyBAQCBjb21wb3NlX2VudHJ5X2ZoKHN0cnVjdCBuZnNkM19yZWFkZGlycmVzICpj
+ZCwgc3RydWN0IHN2Y19maCAqZmhwLAogCQlkY2hpbGQgPSBsb29rdXBfcG9zaXRpdmVfdW5sb2Nr
+ZWQobmFtZSwgZHBhcmVudCwgbmFtbGVuKTsKIAlpZiAoSVNfRVJSKGRjaGlsZCkpCiAJCXJldHVy
+biBydjsKLQlpZiAoZF9tb3VudHBvaW50KGRjaGlsZCkpCisJaWYgKGRfbW91bnRwb2ludChkY2hp
+bGQpIHx8IHVubGlrZWx5KGRfaXNfYnRyZnNfc3Vidm9sKGRjaGlsZCkpKQogCQlnb3RvIG91dDsK
+IAlpZiAoZGNoaWxkLT5kX2lub2RlLT5pX2lubyAhPSBpbm8pCiAJCWdvdG8gb3V0OwpkaWZmIC0t
+Z2l0IGEvZnMvbmZzZC9uZnM0eGRyLmMgYi9mcy9uZnNkL25mczR4ZHIuYwppbmRleCA1ZjUxNjli
+Li45MzlkMDk1IDEwMDY0NAotLS0gYS9mcy9uZnNkL25mczR4ZHIuYworKysgYi9mcy9uZnNkL25m
+czR4ZHIuYwpAQCAtMjcyOCw2ICsyNzI4LDcgQEAgbmZzZDRfZW5jb2RlX2ZhdHRyKHN0cnVjdCB4
+ZHJfc3RyZWFtICp4ZHIsIHN0cnVjdCBzdmNfZmggKmZocCwKIAkJLmRlbnRyeQk9IGRlbnRyeSwK
+IAl9OwogCXN0cnVjdCBuZnNkX25ldCAqbm4gPSBuZXRfZ2VuZXJpYyhTVkNfTkVUKHJxc3RwKSwg
+bmZzZF9uZXRfaWQpOworCWJvb2wgaXNfYnRyZnNfc3Vidm9sPSBkX2lzX2J0cmZzX3N1YnZvbChk
+ZW50cnkpOwogCiAJQlVHX09OKGJtdmFsMSAmIE5GU0RfV1JJVEVPTkxZX0FUVFJTX1dPUkQxKTsK
+IAlCVUdfT04oIW5mc2RfYXR0cnNfc3VwcG9ydGVkKG1pbm9ydmVyc2lvbiwgYm12YWwpKTsKQEAg
+LTI3NDQsNyArMjc0NSw4IEBAIG5mc2Q0X2VuY29kZV9mYXR0cihzdHJ1Y3QgeGRyX3N0cmVhbSAq
+eGRyLCBzdHJ1Y3Qgc3ZjX2ZoICpmaHAsCiAJaWYgKChibXZhbDAgJiAoRkFUVFI0X1dPUkQwX0ZJ
+TEVTX0FWQUlMIHwgRkFUVFI0X1dPUkQwX0ZJTEVTX0ZSRUUgfAogCQkJRkFUVFI0X1dPUkQwX0ZJ
+TEVTX1RPVEFMIHwgRkFUVFI0X1dPUkQwX01BWE5BTUUpKSB8fAogCSAgICAoYm12YWwxICYgKEZB
+VFRSNF9XT1JEMV9TUEFDRV9BVkFJTCB8IEZBVFRSNF9XT1JEMV9TUEFDRV9GUkVFIHwKLQkJICAg
+ICAgIEZBVFRSNF9XT1JEMV9TUEFDRV9UT1RBTCkpKSB7CisJCSAgICAgICBGQVRUUjRfV09SRDFf
+U1BBQ0VfVE9UQUwpKSB8fAorCQl1bmxpa2VseShpc19idHJmc19zdWJ2b2wpKSB7CiAJCWVyciA9
+IHZmc19zdGF0ZnMoJnBhdGgsICZzdGF0ZnMpOwogCQlpZiAoZXJyKQogCQkJZ290byBvdXRfbmZz
+ZXJyOwpAQCAtMjg4NSw3ICsyODg3LDExIEBAIG5mc2Q0X2VuY29kZV9mYXR0cihzdHJ1Y3QgeGRy
+X3N0cmVhbSAqeGRyLCBzdHJ1Y3Qgc3ZjX2ZoICpmaHAsCiAJCQlwID0geGRyX2VuY29kZV9oeXBl
+cihwLCBORlM0X1JFRkVSUkFMX0ZTSURfTUlOT1IpOwogCQl9IGVsc2Ugc3dpdGNoKGZzaWRfc291
+cmNlKGZocCkpIHsKIAkJY2FzZSBGU0lEU09VUkNFX0ZTSUQ6Ci0JCQlwID0geGRyX2VuY29kZV9o
+eXBlcihwLCAodTY0KWV4cC0+ZXhfZnNpZCk7CisJCQlpZiAodW5saWtlbHkoaXNfYnRyZnNfc3Vi
+dm9sKSl7CisJCQkJKnArKyA9IGNwdV90b19iZTMyKHN0YXRmcy5mX2ZzaWQudmFsWzBdKTsKKwkJ
+CQkqcCsrID0gY3B1X3RvX2JlMzIoc3RhdGZzLmZfZnNpZC52YWxbMV0pOworCQkJfSBlbHNlCisJ
+CQkJcCA9IHhkcl9lbmNvZGVfaHlwZXIocCwgKHU2NClleHAtPmV4X2ZzaWQpOwogCQkJcCA9IHhk
+cl9lbmNvZGVfaHlwZXIocCwgKHU2NCkwKTsKIAkJCWJyZWFrOwogCQljYXNlIEZTSURTT1VSQ0Vf
+REVWOgpkaWZmIC0tZ2l0IGEvZnMvbmZzZC92ZnMuYyBiL2ZzL25mc2QvdmZzLmMKaW5kZXggMWVj
+YWNlZS4uYWUzNGZmYyAxMDA2NDQKLS0tIGEvZnMvbmZzZC92ZnMuYworKysgYi9mcy9uZnNkL3Zm
+cy5jCkBAIC02OCw2ICs2OCwxMCBAQCBuZnNkX2Nyb3NzX21udChzdHJ1Y3Qgc3ZjX3Jxc3QgKnJx
+c3RwLCBzdHJ1Y3QgZGVudHJ5ICoqZHBwLAogCWVyciA9IGZvbGxvd19kb3duKCZwYXRoKTsKIAlp
+ZiAoZXJyIDwgMCkKIAkJZ290byBvdXQ7CisJaWYgKHVubGlrZWx5KGRfaXNfYnRyZnNfc3Vidm9s
+KGRlbnRyeSkpKXsKKwkJcGF0aF9wdXQoJnBhdGgpOworCQlnb3RvIG91dDsKKwl9IGVsc2UKIAlp
+ZiAocGF0aC5tbnQgPT0gZXhwLT5leF9wYXRoLm1udCAmJiBwYXRoLmRlbnRyeSA9PSBkZW50cnkg
+JiYKIAkgICAgbmZzZF9tb3VudHBvaW50KGRlbnRyeSwgZXhwKSA9PSAyKSB7CiAJCS8qIFRoaXMg
+aXMgb25seSBhIG1vdW50cG9pbnQgaW4gc29tZSBvdGhlciBuYW1lc3BhY2UgKi8KQEAgLTE2MCw2
+ICsxNjQsOCBAQCBpbnQgbmZzZF9tb3VudHBvaW50KHN0cnVjdCBkZW50cnkgKmRlbnRyeSwgc3Ry
+dWN0IHN2Y19leHBvcnQgKmV4cCkKIAkJcmV0dXJuIDE7CiAJaWYgKG5mc2Q0X2lzX2p1bmN0aW9u
+KGRlbnRyeSkpCiAJCXJldHVybiAxOworCWlmIChkX2lzX2J0cmZzX3N1YnZvbChkZW50cnkpKQor
+CQlyZXR1cm4gMTsKIAlpZiAoZF9tb3VudHBvaW50KGRlbnRyeSkpCiAJCS8qCiAJCSAqIE1pZ2h0
+IG9ubHkgYmUgYSBtb3VudHBvaW50IGluIGEgZGlmZmVyZW50IG5hbWVzcGFjZSwKZGlmZiAtLWdp
+dCBhL2luY2x1ZGUvbGludXgvZnMuaCBiL2luY2x1ZGUvbGludXgvZnMuaAppbmRleCA4YmRlMzJj
+Li5iMGQ1MmU5IDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L2ZzLmgKKysrIGIvaW5jbHVkZS9s
+aW51eC9mcy5oCkBAIC0zMzk5LDYgKzMzOTksMTkgQEAgc3RhdGljIGlubGluZSBib29sIGlzX3Jv
+b3RfaW5vZGUoc3RydWN0IGlub2RlICppbm9kZSkKIAlyZXR1cm4gaW5vZGUgPT0gaW5vZGUtPmlf
+c2ItPnNfcm9vdC0+ZF9pbm9kZTsKIH0KIAorLyoKKyAqIHNhbWUgbG9naWNhbCBhcyBmcy9idHJm
+cyBpc19zdWJ2b2x1bWVfaW5vZGUoc3RydWN0IGlub2RlICppbm9kZSkKKyAqICNkZWZpbmUgQlRS
+RlNfRklSU1RfRlJFRV9PQkpFQ1RJRCAyNTZVTEwKKyAqICNkZWZpbmUgQlRSRlNfU1VQRVJfTUFH
+SUMgICAgICAgMHg5MTIzNjgzRQorICovCitzdGF0aWMgaW5saW5lIGJvb2wgZF9pc19idHJmc19z
+dWJ2b2woY29uc3Qgc3RydWN0IGRlbnRyeSAqZGVudHJ5KQoreworICAgIGJvb2wgcmV0ID0gZGVu
+dHJ5LT5kX2lub2RlICYmIHVubGlrZWx5KGRlbnRyeS0+ZF9pbm9kZS0+aV9pbm8gPT0gMjU2VUxM
+KSAmJgorCQlkZW50cnktPmRfc2IgJiYgZGVudHJ5LT5kX3NiLT5zX21hZ2ljID09IDB4OTEyMzY4
+M0U7CisJLy9wcmludGsoS0VSTl9JTkZPICJkX2lzX2J0cmZzX3N1YnZvbCglcyk9JWRcbiIsIGRl
+bnRyeS0+ZF9uYW1lLm5hbWUsIHJldCk7CisJcmV0dXJuIHJldDsKK30KKwogc3RhdGljIGlubGlu
+ZSBib29sIGRpcl9lbWl0KHN0cnVjdCBkaXJfY29udGV4dCAqY3R4LAogCQkJICAgIGNvbnN0IGNo
+YXIgKm5hbWUsIGludCBuYW1lbGVuLAogCQkJICAgIHU2NCBpbm8sIHVuc2lnbmVkIHR5cGUpCi0t
+IAoyLjMwLjIKCg==
+--------_60D04E0E000000004287_MULTIPART_MIXED_
+Content-Type: application/octet-stream;
+ name="0002-trace-nfsd-btrfs-subvol-support.txt"
+Content-Disposition: attachment;
+ filename="0002-trace-nfsd-btrfs-subvol-support.txt"
+Content-Transfer-Encoding: base64
 
-Kind regards,
-Petr
+RnJvbSA2ZTcwOTU1NGU0YzdkNWVmZDNiMDMwZmMwOGI2ZTY0OTM4NzlhMDI1IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiB3YW5neXVndWkgPHdhbmd5dWd1aUBlMTYtdGVjaC5jb20+CkRh
+dGU6IFRodSwgMTcgSnVuIDIwMjEgMDg6MzM6MDYgKzA4MDAKU3ViamVjdDogW1BBVENIXSB0cmFj
+ZSBuZnNkOiBidHJmcyBzdWJ2b2wgc3VwcG9ydAoKWyAgMjY4Ljk5NDE2OV0gZm9sbG93X2Rvd24o
+eGZzMik9MApbICAyNjguOTk3NDA1XSBuZnNkX2Nyb3NzX21udCh4ZnMyKT0wCipbICAyNjkuMDAw
+ODQwXSBuZnNkNF9lbmNvZGVfZGlyZW50X2ZhdHRyKC8pIGlnbm9yZV9jcm9zc21udD0wCgl3aHkg
+LwoqWyAgMjY5LjAwNjQ3N10gbmZzX2RfYXV0b21vdW50KHhmczIpCgl3aHkgbm90IGhhcHBlbiB3
+aGVuIGJ0cmZzIHN1YnZvbApbICAyNjkuMDA5ODkyXSBmb2xsb3dfZG93bih4ZnMyKT0wClsgIDI2
+OS4wMTMwNTVdIG5mc2RfY3Jvc3NfbW50KHhmczIpPTAKClsgIDQ4My4wMzcyMjFdIGZvbGxvd19k
+b3duKHN1YjEpPTAKWyAgNDgzLjA0MDQyOF0gbmZzZF9jcm9zc19tbnQoc3ViMSk9MApbICA0ODMu
+MDQzODU1XSBuZnNkNF9lbmNvZGVfZGlyZW50X2ZhdHRyKHN1YjEpIGlnbm9yZV9jcm9zc21udD0w
+ClsgIDQ4My4wNDk2MzVdIG5mc2Q0X2VuY29kZV9kaXJlbnRfZmF0dHIoLnNuYXBzaG90KSBpZ25v
+cmVfY3Jvc3NtbnQ9MApbICA0ODMuMDU1ODQ3XSBuZnNkNF9lbmNvZGVfZGlyZW50X2ZhdHRyKGRp
+cjEpIGlnbm9yZV9jcm9zc21udD0wClsgIDQ4My4wNjI2NjldIGZvbGxvd19kb3duKHN1YjIpPTAK
+WyAgNDgzLjA2NjgwMF0gbmZzZF9jcm9zc19tbnQoc3ViMik9MAoKYnRyZnMgc3Vidm9scyA9PmZv
+cmNlIGNyb3NzbW50CglzdWJ2b2wgbmZzL3Vtb3VudDogb3Mgc2h1dGRvbncgb3IgbWFudWFsIG5m
+cy91bW91bnQ/CgkJc3BlY2lhbCBzdGF0dXMoQlRSRlNfTEFTVF9GUkVFX09CSkVDVElELG9ubHkg
+cmV0dXJuIHRvIG5mcyk/CgkJI2RlZmluZSBCVFJGU19MQVNUX0ZSRUVfT0JKRUNUSUQgLTI1NlVM
+TAoJCShzdHJ1Y3QgZmlsZSApLT4oc3RydWN0IGlub2RlICpmX2lub2RlKS0+KHN0cnVjdCBzdXBl
+cl9ibG9jayAqaV9zYjspLT4odW5zaWduZWQgbG9uZyBzX21hZ2ljKQpidHJmcy0+eGZzCT0+c3Rp
+bGwgbmVlZCBjcm9zc21udAp4ZnMtPmJ0cmZzCT0+c3RpbGwgbmVlZCBjcm9zc21udAoKTkZTRVhQ
+X0NST1NTTU9VTlQKTkZTRF9KVU5DVElPTl9YQVRUUl9OQU1FCkFUX05PX0FVVE9NT1VOVApORlNf
+QVRUUl9GQVRUUl9NT1VOVFBPSU5UClNfQVVUT01PVU5UCgotLS0KIGZzL25mcy9kaXIuYyAgICAg
+ICB8IDIgKysKIGZzL25mcy9uYW1lc3BhY2UuYyB8IDEgKwogZnMvbmZzZC9uZnM0eGRyLmMgIHwg
+MyArKysKIGZzL25mc2QvdmZzLmMgICAgICB8IDEgKwogNCBmaWxlcyBjaGFuZ2VkLCA3IGluc2Vy
+dGlvbnMoKykKCmRpZmYgLS1naXQgYS9mcy9uZnMvZGlyLmMgYi9mcy9uZnMvZGlyLmMKaW5kZXgg
+YzgzNzY3NS4uOTc1NDQwZCAxMDA2NDQKLS0tIGEvZnMvbmZzL2Rpci5jCisrKyBiL2ZzL25mcy9k
+aXIuYwpAQCAtMTc5OSw2ICsxNzk5LDggQEAgbmZzNF9kb19sb29rdXBfcmV2YWxpZGF0ZShzdHJ1
+Y3QgaW5vZGUgKmRpciwgc3RydWN0IGRlbnRyeSAqZGVudHJ5LAogCiAJaWYgKCEoZmxhZ3MgJiBM
+T09LVVBfT1BFTikgfHwgKGZsYWdzICYgTE9PS1VQX0RJUkVDVE9SWSkpCiAJCWdvdG8gZnVsbF9y
+ZXZhbDsKKwlpZiAoZGVudHJ5LT5kX2lub2RlICYmIGRlbnRyeS0+ZF9pbm9kZS0+aV9pbm8gPT0g
+MjU2VUxMICYmIGRlbnRyeS0+ZF9zYikKKwkJcHJpbnRrKEtFUk5fSU5GTyAibmZzNF9kb19sb29r
+dXBfcmV2YWxpZGF0ZSglcyk9JWx4XG4iLCBkZW50cnktPmRfbmFtZS5uYW1lLCBkZW50cnktPmRf
+c2ItPnNfbWFnaWMpOwogCWlmIChkX21vdW50cG9pbnQoZGVudHJ5KSkKIAkJZ290byBmdWxsX3Jl
+dmFsOwogCmRpZmYgLS1naXQgYS9mcy9uZnMvbmFtZXNwYWNlLmMgYi9mcy9uZnMvbmFtZXNwYWNl
+LmMKaW5kZXggMmJjYmUzOC4uZjY5NzE1YyAxMDA2NDQKLS0tIGEvZnMvbmZzL25hbWVzcGFjZS5j
+CisrKyBiL2ZzL25mcy9uYW1lc3BhY2UuYwpAQCAtMTUyLDYgKzE1Miw3IEBAIHN0cnVjdCB2ZnNt
+b3VudCAqbmZzX2RfYXV0b21vdW50KHN0cnVjdCBwYXRoICpwYXRoKQogCWludCB0aW1lb3V0ID0g
+UkVBRF9PTkNFKG5mc19tb3VudHBvaW50X2V4cGlyeV90aW1lb3V0KTsKIAlpbnQgcmV0OwogCisJ
+cHJpbnRrKEtFUk5fSU5GTyAibmZzX2RfYXV0b21vdW50KCVzKVxuIiwgcGF0aC0+ZGVudHJ5LT5k
+X25hbWUubmFtZSk7CiAJaWYgKElTX1JPT1QocGF0aC0+ZGVudHJ5KSkKIAkJcmV0dXJuIEVSUl9Q
+VFIoLUVTVEFMRSk7CiAKZGlmZiAtLWdpdCBhL2ZzL25mc2QvbmZzNHhkci5jIGIvZnMvbmZzZC9u
+ZnM0eGRyLmMKaW5kZXggOTM5ZDA5NS4uY2I1YjMyOCAxMDA2NDQKLS0tIGEvZnMvbmZzZC9uZnM0
+eGRyLmMKKysrIGIvZnMvbmZzZC9uZnM0eGRyLmMKQEAgLTMzMTYsNiArMzMxNiw4IEBAIG5mc2Q0
+X2VuY29kZV9kaXJlbnRfZmF0dHIoc3RydWN0IHhkcl9zdHJlYW0gKnhkciwgc3RydWN0IG5mc2Q0
+X3JlYWRkaXIgKmNkLAogCSAqLwogCWlmIChuZnNkX21vdW50cG9pbnQoZGVudHJ5LCBleHApKSB7
+CiAJCWludCBlcnI7CisJCS8vIGlmKGRfaXNfYnRyZnNfc3Vidm9sKGRlbnRyeSkpCisJCS8vCWNk
+LT5yZF9ibXZhbFsxXSB8PSBGQVRUUjRfV09SRDFfTU9VTlRFRF9PTl9GSUxFSUQ7CiAKIAkJaWYg
+KCEoZXhwLT5leF9mbGFncyAmIE5GU0VYUF9WNFJPT1QpCiAJCQkJJiYgIWF0dHJpYnV0ZXNfbmVl
+ZF9tb3VudChjZC0+cmRfYm12YWwpKSB7CkBAIC0zMzQzLDYgKzMzNDUsNyBAQCBuZnNkNF9lbmNv
+ZGVfZGlyZW50X2ZhdHRyKHN0cnVjdCB4ZHJfc3RyZWFtICp4ZHIsIHN0cnVjdCBuZnNkNF9yZWFk
+ZGlyICpjZCwKIG91dF9wdXQ6CiAJZHB1dChkZW50cnkpOwogCWV4cF9wdXQoZXhwKTsKKwlwcmlu
+dGsoS0VSTl9JTkZPICJuZnNkNF9lbmNvZGVfZGlyZW50X2ZhdHRyKCVzKSBpZ25vcmVfY3Jvc3Nt
+bnQ9JWRcbiIsIGRlbnRyeS0+ZF9uYW1lLm5hbWUsIGlnbm9yZV9jcm9zc21udCk7CiAJcmV0dXJu
+IG5mc2VycjsKIH0KIApkaWZmIC0tZ2l0IGEvZnMvbmZzZC92ZnMuYyBiL2ZzL25mc2QvdmZzLmMK
+aW5kZXggYWUzNGZmYy4uYzEyYTM5NCAxMDA2NDQKLS0tIGEvZnMvbmZzZC92ZnMuYworKysgYi9m
+cy9uZnNkL3Zmcy5jCkBAIC0xMTEsNiArMTExLDcgQEAgbmZzZF9jcm9zc19tbnQoc3RydWN0IHN2
+Y19ycXN0ICpycXN0cCwgc3RydWN0IGRlbnRyeSAqKmRwcCwKIAlwYXRoX3B1dCgmcGF0aCk7CiAJ
+ZXhwX3B1dChleHAyKTsKIG91dDoKKwlwcmludGsoS0VSTl9JTkZPICJuZnNkX2Nyb3NzX21udCgl
+cyk9JWRcbiIsIGRlbnRyeS0+ZF9uYW1lLm5hbWUsIGVycik7CiAJcmV0dXJuIGVycjsKIH0KIAot
+LSAKMi4zMC4yCgo=
+--------_60D04E0E000000004287_MULTIPART_MIXED_--
 
->  		//Then call destroy macro
->  		svc_destroy(svcr);
-> diff --git a/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_regunreg_xprt_register/rpc_xprt_register.c b/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_regunreg_xprt_register/rpc_xprt_register.c
-> index da3b93022..de4df15f1 100644
-> --- a/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_regunreg_xprt_register/rpc_xprt_register.c
-> +++ b/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_regunreg_xprt_register/rpc_xprt_register.c
-> @@ -48,6 +48,11 @@ int main(void)
-
->  	//create a server
->  	svcr = svcfd_create(fd, 1024, 1024);
-> +
-> +	//check returned value
-> +	if ((SVCXPRT *) svcr == NULL) {
-> +		return test_status;
-> +	}
-
->  	//call routine
->  	xprt_register(svcr);
-> diff --git a/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_regunreg_xprt_unregister/rpc_xprt_unregister.c b/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_regunreg_xprt_unregister/rpc_xprt_unregister.c
-> index d0b7a20d4..fbaec25ad 100644
-> --- a/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_regunreg_xprt_unregister/rpc_xprt_unregister.c
-> +++ b/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_regunreg_xprt_unregister/rpc_xprt_unregister.c
-> @@ -52,6 +52,11 @@ int main(int argn, char *argc[])
-
->  	//create a server
->  	svcr = svcfd_create(fd, 1024, 1024);
-> +
-> +	//check returned value
-> +	if ((SVCXPRT *) svcr == NULL) {
-> +		return test_status;
-> +	}
-
->  	xprt_register(svcr);
->  	//call routine
