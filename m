@@ -2,174 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 882583AFB5E
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jun 2021 05:22:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89DA53AFDAB
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jun 2021 09:14:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230039AbhFVDZL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Jun 2021 23:25:11 -0400
-Received: from out20-51.mail.aliyun.com ([115.124.20.51]:49344 "EHLO
-        out20-51.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230006AbhFVDZK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Jun 2021 23:25:10 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0405597|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.122169-0.0347878-0.843044;FP=0|0|0|0|0|0|0|0;HT=ay29a033018047190;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=2;RT=2;SR=0;TI=SMTPD_---.KW.vP4a_1624332173;
-Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.KW.vP4a_1624332173)
-          by smtp.aliyun-inc.com(10.147.41.231);
-          Tue, 22 Jun 2021 11:22:53 +0800
-Date:   Tue, 22 Jun 2021 11:22:53 +0800
+        id S229629AbhFVHQZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 22 Jun 2021 03:16:25 -0400
+Received: from out20-97.mail.aliyun.com ([115.124.20.97]:42084 "EHLO
+        out20-97.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229574AbhFVHQZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 22 Jun 2021 03:16:25 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.05879835|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.0722107-0.00268247-0.925107;FP=0|0|0|0|0|0|0|0;HT=ay29a033018047202;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=2;RT=2;SR=0;TI=SMTPD_---.KW6iOPj_1624346046;
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.KW6iOPj_1624346046)
+          by smtp.aliyun-inc.com(10.147.42.253);
+          Tue, 22 Jun 2021 15:14:07 +0800
+Date:   Tue, 22 Jun 2021 15:14:07 +0800
 From:   Wang Yugui <wangyugui@e16-tech.com>
-To:     "NeilBrown" <neilb@suse.de>
+To:     "NeilBrown" <neilb@suse.de>, linux-nfs@vger.kernel.org
 Subject: Re: any idea about auto export multiple btrfs snapshots?
-Cc:     linux-nfs@vger.kernel.org
-In-Reply-To: <162432531379.17441.15110145423567943074@noble.neil.brown.name>
-References: <20210621163441.428C.409509F4@e16-tech.com> <162432531379.17441.15110145423567943074@noble.neil.brown.name>
-Message-Id: <20210622112253.DAEE.409509F4@e16-tech.com>
+In-Reply-To: <20210622112253.DAEE.409509F4@e16-tech.com>
+References: <162432531379.17441.15110145423567943074@noble.neil.brown.name> <20210622112253.DAEE.409509F4@e16-tech.com>
+Message-Id: <20210622151407.C002.409509F4@e16-tech.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="------_60D155E100000000DAE9_MULTIPART_MIXED_"
+Content-Type: multipart/mixed; boundary="------_60D18AF200000000BFFD_MULTIPART_MIXED_"
 Content-Transfer-Encoding: 7bit
 X-Mailer: Becky! ver. 2.75.04 [en]
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---------_60D155E100000000DAE9_MULTIPART_MIXED_
+--------_60D18AF200000000BFFD_MULTIPART_MIXED_
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-
-> On Mon, 21 Jun 2021, Wang Yugui wrote:
-> > Hi,
-> > 
-> > > > > It seems more fixes are needed.
-> > > > 
-> > > > I think the problem is that the submount doesn't appear in /proc/mounts.
-> > > > "nfsd_fh()" in nfs-utils needs to be able to map from the uuid for a
-> > > > filesystem to the mount point.  To do this it walks through /proc/mounts
-> > > > checking the uuid of each filesystem.  If a filesystem isn't listed
-> > > > there, it obviously fails.
-> > > > 
-> > > > I guess you could add code to nfs-utils to do whatever "btrfs subvol
-> > > > list" does to make up for the fact that btrfs doesn't register in
-> > > > /proc/mounts.
 > > > 
-> > > Another approach might be to just change svcxdr_encode_fattr3() and
-> > > nfsd4_encode_fattr() in the 'FSIDSOJURCE_UUID' case to check if
-> > > dentry->d_inode has a different btrfs volume id to
-> > > exp->ex_path.dentry->d_inode.
-> > > If it does, then mix the volume id into the fsid somehow.
+> > > > > > It seems more fixes are needed.
+> > > > > 
+> > > > > I think the problem is that the submount doesn't appear in /proc/mounts.
+> > > > > "nfsd_fh()" in nfs-utils needs to be able to map from the uuid for a
+> > > > > filesystem to the mount point.  To do this it walks through /proc/mounts
+> > > > > checking the uuid of each filesystem.  If a filesystem isn't listed
+> > > > > there, it obviously fails.
+> > > > > 
+> > > > > I guess you could add code to nfs-utils to do whatever "btrfs subvol
+> > > > > list" does to make up for the fact that btrfs doesn't register in
+> > > > > /proc/mounts.
+> > > > 
+> > > > Another approach might be to just change svcxdr_encode_fattr3() and
+> > > > nfsd4_encode_fattr() in the 'FSIDSOJURCE_UUID' case to check if
+> > > > dentry->d_inode has a different btrfs volume id to
+> > > > exp->ex_path.dentry->d_inode.
+> > > > If it does, then mix the volume id into the fsid somehow.
+> > > > 
+> > > > With that, you wouldn't want the first change I suggested.
 > > > 
-> > > With that, you wouldn't want the first change I suggested.
+> > > This is what I have done. and it is based on linux 5.10.44
+> > > 
+> > > but it still not work, so still more jobs needed.
+> > > 
 > > 
-> > This is what I have done. and it is based on linux 5.10.44
+> > The following is more what I had in mind.  It doesn't quite work and I
+> > cannot work out why.
 > > 
-> > but it still not work, so still more jobs needed.
+> > If you 'stat' a file inside the subvol, then 'find' will not complete.
+> > If you don't, then it will.
 > > 
+> > Doing that 'stat' changes the st_dev number of the main filesystem,
+> > which seems really weird.
+> > I'm probably missing something obvious.  Maybe a more careful analysis
+> > of what is changing when will help.
 > 
-> The following is more what I had in mind.  It doesn't quite work and I
-> cannot work out why.
+> we compare the trace output between crossmnt and btrfs subvol with some
+> trace, we found out that we need to add the subvol support to
+> follow_down().
 > 
-> If you 'stat' a file inside the subvol, then 'find' will not complete.
-> If you don't, then it will.
-> 
-> Doing that 'stat' changes the st_dev number of the main filesystem,
-> which seems really weird.
-> I'm probably missing something obvious.  Maybe a more careful analysis
-> of what is changing when will help.
+> btrfs subvol should be treated as virtual 'mount point' for nfsd in follow_down().
 
-we compare the trace output between crossmnt and btrfs subvol with some
-trace, we found out that we need to add the subvol support to
-follow_down().
+btrfs subvol crossmnt begin to work, although buggy.
 
-btrfs subvol should be treated as virtual 'mount point' for nfsd in follow_down().
+some subvol is crossmnt-ed, some subvol is yet not, and some dir is
+wrongly crossmnt-ed
+
+'stat /nfs/test /nfs/test/sub1' will cause btrfs subvol crossmnt begin
+to happen.
+
+This is the current patch based on 5.10.44. 
+At least nfsd_follow_up() is buggy.
 
 Best Regards
 Wang Yugui (wangyugui@e16-tech.com)
 2021/06/22
 
 
-> NeilBrown
-> 
-> 
-> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-> index 9421dae22737..790a3357525d 100644
-> --- a/fs/nfsd/export.c
-> +++ b/fs/nfsd/export.c
-> @@ -15,6 +15,7 @@
->  #include <linux/slab.h>
->  #include <linux/namei.h>
->  #include <linux/module.h>
-> +#include <linux/statfs.h>
->  #include <linux/exportfs.h>
->  #include <linux/sunrpc/svc_xprt.h>
->  
-> @@ -575,6 +576,7 @@ static int svc_export_parse(struct cache_detail *cd, char *mesg, int mlen)
->  	int err;
->  	struct auth_domain *dom = NULL;
->  	struct svc_export exp = {}, *expp;
-> +	struct kstatfs statfs;
->  	int an_int;
->  
->  	if (mesg[mlen-1] != '\n')
-> @@ -604,6 +606,10 @@ static int svc_export_parse(struct cache_detail *cd, char *mesg, int mlen)
->  	err = kern_path(buf, 0, &exp.ex_path);
->  	if (err)
->  		goto out1;
-> +	err = vfs_statfs(&exp.ex_path, &statfs);
-> +	if (err)
-> +		goto out3;
-> +	exp.ex_fsid64 = statfs.f_fsid;
->  
->  	exp.ex_client = dom;
->  	exp.cd = cd;
-> @@ -809,6 +815,7 @@ static void export_update(struct cache_head *cnew, struct cache_head *citem)
->  	new->ex_anon_uid = item->ex_anon_uid;
->  	new->ex_anon_gid = item->ex_anon_gid;
->  	new->ex_fsid = item->ex_fsid;
-> +	new->ex_fsid64 = item->ex_fsid64;
->  	new->ex_devid_map = item->ex_devid_map;
->  	item->ex_devid_map = NULL;
->  	new->ex_uuid = item->ex_uuid;
-> diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-> index ee0e3aba4a6e..d3eb9a599918 100644
-> --- a/fs/nfsd/export.h
-> +++ b/fs/nfsd/export.h
-> @@ -68,6 +68,7 @@ struct svc_export {
->  	kuid_t			ex_anon_uid;
->  	kgid_t			ex_anon_gid;
->  	int			ex_fsid;
-> +	__kernel_fsid_t		ex_fsid64;
->  	unsigned char *		ex_uuid; /* 16 byte fsid */
->  	struct nfsd4_fs_locations ex_fslocs;
->  	uint32_t		ex_nflavors;
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 7abeccb975b2..8144e6037eae 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -2869,6 +2869,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
->  	if (err)
->  		goto out_nfserr;
->  	if ((bmval0 & (FATTR4_WORD0_FILES_AVAIL | FATTR4_WORD0_FILES_FREE |
-> +		       FATTR4_WORD0_FSID |
->  			FATTR4_WORD0_FILES_TOTAL | FATTR4_WORD0_MAXNAME)) ||
->  	    (bmval1 & (FATTR4_WORD1_SPACE_AVAIL | FATTR4_WORD1_SPACE_FREE |
->  		       FATTR4_WORD1_SPACE_TOTAL))) {
-> @@ -3024,6 +3025,12 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
->  		case FSIDSOURCE_UUID:
->  			p = xdr_encode_opaque_fixed(p, exp->ex_uuid,
->  								EX_UUID_LEN);
-> +			if (statfs.f_fsid.val[0] != exp->ex_fsid64.val[0] ||
-> +			    statfs.f_fsid.val[1] != exp->ex_fsid64.val[1]) {
-> +				/* looks like a btrfs subvol */
-> +				p[-2] ^= statfs.f_fsid.val[0];
-> +				p[-1] ^= statfs.f_fsid.val[1];
-> +			}
->  			break;
->  		}
->  	}
-
-
---------_60D155E100000000DAE9_MULTIPART_MIXED_
+--------_60D18AF200000000BFFD_MULTIPART_MIXED_
 Content-Type: application/octet-stream;
  name="0001-nfsd-btrfs-subvol-support.txt"
 Content-Disposition: attachment;
@@ -188,92 +114,102 @@ IGJlIHRydW5jYXRlZCBieSBzb21ldGhpbmcKCQlsaWtlIG9sZF9lbmNvZGVfZGV2KCkvb2xkX2Rl
 Y29kZV9kZXYoKT8KClRPRE86IChzdHJ1Y3QgbmZzX2ZhdHRyKS5mc2lkClRPRE86IEZTSURTT1VS
 Q0VfRlNJRCBpbiBuZnMzeGRyLmMvbmZzeGRyLmMKLS0tCiBmcy9uZnNkL25mczN4ZHIuYyB8ICAy
 ICstCiBmcy9uZnNkL25mczR4ZHIuYyB8IDE2ICsrKysrKysrKysrKy0tLS0KIGZzL25mc2QvbmZz
-ZC5oICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKysrKysrCiBmcy9uZnNkL3Zmcy5jICAg
-ICB8IDEwICsrKysrKysrLS0KIDQgZmlsZXMgY2hhbmdlZCwgNDggaW5zZXJ0aW9ucygrKSwgNyBk
-ZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9mcy9uZnNkL25mczN4ZHIuYyBiL2ZzL25mc2QvbmZz
-M3hkci5jCmluZGV4IDcxNjU2NmQuLjBkZTI5NTMgMTAwNjQ0Ci0tLSBhL2ZzL25mc2QvbmZzM3hk
-ci5jCisrKyBiL2ZzL25mc2QvbmZzM3hkci5jCkBAIC04NzcsNyArODc3LDcgQEAgY29tcG9zZV9l
-bnRyeV9maChzdHJ1Y3QgbmZzZDNfcmVhZGRpcnJlcyAqY2QsIHN0cnVjdCBzdmNfZmggKmZocCwK
-IAkJZGNoaWxkID0gbG9va3VwX3Bvc2l0aXZlX3VubG9ja2VkKG5hbWUsIGRwYXJlbnQsIG5hbWxl
-bik7CiAJaWYgKElTX0VSUihkY2hpbGQpKQogCQlyZXR1cm4gcnY7Ci0JaWYgKGRfbW91bnRwb2lu
-dChkY2hpbGQpKQorCWlmIChkX21vdW50cG9pbnQoZGNoaWxkKSB8fCB1bmxpa2VseShkX2lzX2J0
-cmZzX3N1YnZvbChkY2hpbGQpKSkKIAkJZ290byBvdXQ7CiAJaWYgKGRjaGlsZC0+ZF9pbm9kZS0+
-aV9pbm8gIT0gaW5vKQogCQlnb3RvIG91dDsKZGlmZiAtLWdpdCBhL2ZzL25mc2QvbmZzNHhkci5j
-IGIvZnMvbmZzZC9uZnM0eGRyLmMKaW5kZXggNWY1MTY5Yi4uZWUzMzVmYyAxMDA2NDQKLS0tIGEv
-ZnMvbmZzZC9uZnM0eGRyLmMKKysrIGIvZnMvbmZzZC9uZnM0eGRyLmMKQEAgLTI0NTcsNyArMjQ1
-Nyw3IEBAIHN0YXRpYyBfX2JlMzIgbmZzZDRfZW5jb2RlX3BhdGgoc3RydWN0IHhkcl9zdHJlYW0g
-KnhkciwKIAkJaWYgKHBhdGhfZXF1YWwoJmN1ciwgcm9vdCkpCiAJCQlicmVhazsKIAkJaWYgKGN1
-ci5kZW50cnkgPT0gY3VyLm1udC0+bW50X3Jvb3QpIHsKLQkJCWlmIChmb2xsb3dfdXAoJmN1cikp
-CisJCQlpZiAobmZzZF9mb2xsb3dfdXAoJmN1cikpCiAJCQkJY29udGludWU7CiAJCQlnb3RvIG91
-dF9mcmVlOwogCQl9CkBAIC0yNjQ4LDcgKzI2NDgsNyBAQCBzdGF0aWMgaW50IGdldF9wYXJlbnRf
-YXR0cmlidXRlcyhzdHJ1Y3Qgc3ZjX2V4cG9ydCAqZXhwLCBzdHJ1Y3Qga3N0YXQgKnN0YXQpCiAJ
-aW50IGVycjsKIAogCXBhdGhfZ2V0KCZwYXRoKTsKLQl3aGlsZSAoZm9sbG93X3VwKCZwYXRoKSkg
-eworCXdoaWxlIChuZnNkX2ZvbGxvd191cCgmcGF0aCkpIHsKIAkJaWYgKHBhdGguZGVudHJ5ICE9
-IHBhdGgubW50LT5tbnRfcm9vdCkKIAkJCWJyZWFrOwogCX0KQEAgLTI3MjgsNiArMjcyOCw3IEBA
-IG5mc2Q0X2VuY29kZV9mYXR0cihzdHJ1Y3QgeGRyX3N0cmVhbSAqeGRyLCBzdHJ1Y3Qgc3ZjX2Zo
-ICpmaHAsCiAJCS5kZW50cnkJPSBkZW50cnksCiAJfTsKIAlzdHJ1Y3QgbmZzZF9uZXQgKm5uID0g
-bmV0X2dlbmVyaWMoU1ZDX05FVChycXN0cCksIG5mc2RfbmV0X2lkKTsKKwlib29sIGlzX2J0cmZz
-X3N1YnZvbD0gZF9pc19idHJmc19zdWJ2b2woZGVudHJ5KTsKIAogCUJVR19PTihibXZhbDEgJiBO
-RlNEX1dSSVRFT05MWV9BVFRSU19XT1JEMSk7CiAJQlVHX09OKCFuZnNkX2F0dHJzX3N1cHBvcnRl
-ZChtaW5vcnZlcnNpb24sIGJtdmFsKSk7CkBAIC0yNzQ0LDcgKzI3NDUsOCBAQCBuZnNkNF9lbmNv
-ZGVfZmF0dHIoc3RydWN0IHhkcl9zdHJlYW0gKnhkciwgc3RydWN0IHN2Y19maCAqZmhwLAogCWlm
-ICgoYm12YWwwICYgKEZBVFRSNF9XT1JEMF9GSUxFU19BVkFJTCB8IEZBVFRSNF9XT1JEMF9GSUxF
-U19GUkVFIHwKIAkJCUZBVFRSNF9XT1JEMF9GSUxFU19UT1RBTCB8IEZBVFRSNF9XT1JEMF9NQVhO
-QU1FKSkgfHwKIAkgICAgKGJtdmFsMSAmIChGQVRUUjRfV09SRDFfU1BBQ0VfQVZBSUwgfCBGQVRU
-UjRfV09SRDFfU1BBQ0VfRlJFRSB8Ci0JCSAgICAgICBGQVRUUjRfV09SRDFfU1BBQ0VfVE9UQUwp
-KSkgeworCQkgICAgICAgRkFUVFI0X1dPUkQxX1NQQUNFX1RPVEFMKSkgfHwKKwkJdW5saWtlbHko
-aXNfYnRyZnNfc3Vidm9sKSkgewogCQllcnIgPSB2ZnNfc3RhdGZzKCZwYXRoLCAmc3RhdGZzKTsK
-IAkJaWYgKGVycikKIAkJCWdvdG8gb3V0X25mc2VycjsKQEAgLTI4OTUsNyArMjg5NywxMyBAQCBu
-ZnNkNF9lbmNvZGVfZmF0dHIoc3RydWN0IHhkcl9zdHJlYW0gKnhkciwgc3RydWN0IHN2Y19maCAq
-ZmhwLAogCQkJKnArKyA9IGNwdV90b19iZTMyKE1JTk9SKHN0YXQuZGV2KSk7CiAJCQlicmVhazsK
-IAkJY2FzZSBGU0lEU09VUkNFX1VVSUQ6Ci0JCQlwID0geGRyX2VuY29kZV9vcGFxdWVfZml4ZWQo
-cCwgZXhwLT5leF91dWlkLAorCQkJaWYgKHVubGlrZWx5KGlzX2J0cmZzX3N1YnZvbCkpeworCQkJ
-CSpwKysgPSBjcHVfdG9fYmUzMihzdGF0ZnMuZl9mc2lkLnZhbFswXSk7CisJCQkJKnArKyA9IGNw
-dV90b19iZTMyKHN0YXRmcy5mX2ZzaWQudmFsWzFdKTsKKwkJCQkqcCsrID0gY3B1X3RvX2JlMzIo
-MCk7CisJCQkJKnArKyA9IGNwdV90b19iZTMyKDApOworCQkJfSBlbHNlCisJCQkJcCA9IHhkcl9l
-bmNvZGVfb3BhcXVlX2ZpeGVkKHAsIGV4cC0+ZXhfdXVpZCwKIAkJCQkJCQkJRVhfVVVJRF9MRU4p
-OwogCQkJYnJlYWs7CiAJCX0KZGlmZiAtLWdpdCBhL2ZzL25mc2QvbmZzZC5oIGIvZnMvbmZzZC9u
-ZnNkLmgKaW5kZXggY2I3NDJlMS4uMjdiYWFiYiAxMDA2NDQKLS0tIGEvZnMvbmZzZC9uZnNkLmgK
-KysrIGIvZnMvbmZzZC9uZnNkLmgKQEAgLTQ4Nyw0ICs0ODcsMzEgQEAgc3RhdGljIGlubGluZSBp
-bnQgbmZzZDRfaXNfanVuY3Rpb24oc3RydWN0IGRlbnRyeSAqZGVudHJ5KQogCiAjZW5kaWYgLyog
-Q09ORklHX05GU0RfVjQgKi8KIAorLyogYnRyZnMgc3Vidm9sIHN1cHBvcnQgKi8KKy8qCisgKiBz
-YW1lIGxvZ2ljYWwgYXMgZnMvYnRyZnMgaXNfc3Vidm9sdW1lX2lub2RlKHN0cnVjdCBpbm9kZSAq
-aW5vZGUpCisgKiAjZGVmaW5lIEJUUkZTX0ZJUlNUX0ZSRUVfT0JKRUNUSUQgMjU2VUxMCisgKiAj
-ZGVmaW5lIEJUUkZTX1NVUEVSX01BR0lDICAgICAgIDB4OTEyMzY4M0UKKyAqLworc3RhdGljIGlu
-bGluZSBib29sIGRfaXNfYnRyZnNfc3Vidm9sKGNvbnN0IHN0cnVjdCBkZW50cnkgKmRlbnRyeSkK
-K3sKKyAgICBib29sIHJldCA9IGRlbnRyeS0+ZF9pbm9kZSAmJiB1bmxpa2VseShkZW50cnktPmRf
-aW5vZGUtPmlfaW5vID09IDI1NlVMTCkgJiYKKwkJZGVudHJ5LT5kX3NiICYmIGRlbnRyeS0+ZF9z
-Yi0+c19tYWdpYyA9PSBCVFJGU19TVVBFUl9NQUdJQzsKKwkvL3ByaW50ayhLRVJOX0lORk8gImRf
-aXNfYnRyZnNfc3Vidm9sKCVzKT0lZFxuIiwgZGVudHJ5LT5kX25hbWUubmFtZSwgcmV0KTsKKwly
-ZXR1cm4gcmV0OworfQorI2luY2x1ZGUgPGxpbnV4L25hbWVpLmg+CisvKiBhZGQgYnRyZnMgc3Vi
-dm9sIHN1cHBvcnQgdGhhdCBvbmx5IHVzZWQgaW4gbmZzZCAqLworc3RhdGljIGlubGluZSBpbnQg
-bmZzZF9mb2xsb3dfZG93bihzdHJ1Y3QgcGF0aCAqcGF0aCkKK3sKKwlyZXR1cm4gZm9sbG93X2Rv
-d24ocGF0aCk7Cit9CisvKiBhZGQgYnRyZnMgc3Vidm9sIHN1cHBvcnQgdGhhdCBvbmx5IHVzZWQg
-aW4gbmZzZCAqLworc3RhdGljIGlubGluZSBpbnQgbmZzZF9mb2xsb3dfdXAoc3RydWN0IHBhdGgg
-KnBhdGgpCit7CisJaWYodW5saWtlbHkoZF9pc19idHJmc19zdWJ2b2wocGF0aC0+ZGVudHJ5KSkp
-CisJCXJldHVybiAwOworCXJldHVybiBmb2xsb3dfdXAocGF0aCk7Cit9CisKICNlbmRpZiAvKiBM
-SU5VWF9ORlNEX05GU0RfSCAqLwpkaWZmIC0tZ2l0IGEvZnMvbmZzZC92ZnMuYyBiL2ZzL25mc2Qv
-dmZzLmMKaW5kZXggMWVjYWNlZS4uM2FiOWI3ZiAxMDA2NDQKLS0tIGEvZnMvbmZzZC92ZnMuYwor
-KysgYi9mcy9uZnNkL3Zmcy5jCkBAIC02NSw5ICs2NSwxMyBAQCBuZnNkX2Nyb3NzX21udChzdHJ1
-Y3Qgc3ZjX3Jxc3QgKnJxc3RwLCBzdHJ1Y3QgZGVudHJ5ICoqZHBwLAogCQkJICAgIC5kZW50cnkg
-PSBkZ2V0KGRlbnRyeSl9OwogCWludCBlcnIgPSAwOwogCi0JZXJyID0gZm9sbG93X2Rvd24oJnBh
-dGgpOworCWVyciA9IG5mc2RfZm9sbG93X2Rvd24oJnBhdGgpOwogCWlmIChlcnIgPCAwKQogCQln
-b3RvIG91dDsKKwlpZiAodW5saWtlbHkoZF9pc19idHJmc19zdWJ2b2woZGVudHJ5KSkpeworCQlw
-YXRoX3B1dCgmcGF0aCk7CisJCWdvdG8gb3V0OworCX0gZWxzZQogCWlmIChwYXRoLm1udCA9PSBl
-eHAtPmV4X3BhdGgubW50ICYmIHBhdGguZGVudHJ5ID09IGRlbnRyeSAmJgogCSAgICBuZnNkX21v
-dW50cG9pbnQoZGVudHJ5LCBleHApID09IDIpIHsKIAkJLyogVGhpcyBpcyBvbmx5IGEgbW91bnRw
-b2ludCBpbiBzb21lIG90aGVyIG5hbWVzcGFjZSAqLwpAQCAtMTE0LDcgKzExOCw3IEBAIHN0YXRp
-YyB2b2lkIGZvbGxvd190b19wYXJlbnQoc3RydWN0IHBhdGggKnBhdGgpCiB7CiAJc3RydWN0IGRl
-bnRyeSAqZHA7CiAKLQl3aGlsZSAocGF0aC0+ZGVudHJ5ID09IHBhdGgtPm1udC0+bW50X3Jvb3Qg
-JiYgZm9sbG93X3VwKHBhdGgpKQorCXdoaWxlIChwYXRoLT5kZW50cnkgPT0gcGF0aC0+bW50LT5t
-bnRfcm9vdCAmJiBuZnNkX2ZvbGxvd191cChwYXRoKSkKIAkJOwogCWRwID0gZGdldF9wYXJlbnQo
-cGF0aC0+ZGVudHJ5KTsKIAlkcHV0KHBhdGgtPmRlbnRyeSk7CkBAIC0xNjAsNiArMTY0LDggQEAg
-aW50IG5mc2RfbW91bnRwb2ludChzdHJ1Y3QgZGVudHJ5ICpkZW50cnksIHN0cnVjdCBzdmNfZXhw
-b3J0ICpleHApCiAJCXJldHVybiAxOwogCWlmIChuZnNkNF9pc19qdW5jdGlvbihkZW50cnkpKQog
-CQlyZXR1cm4gMTsKKwlpZiAoZF9pc19idHJmc19zdWJ2b2woZGVudHJ5KSkKKwkJcmV0dXJuIDE7
-CiAJaWYgKGRfbW91bnRwb2ludChkZW50cnkpKQogCQkvKgogCQkgKiBNaWdodCBvbmx5IGJlIGEg
-bW91bnRwb2ludCBpbiBhIGRpZmZlcmVudCBuYW1lc3BhY2UsCi0tIAoyLjMwLjIKCg==
---------_60D155E100000000DAE9_MULTIPART_MIXED_
+ZC5oICAgIHwgNDIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiBm
+cy9uZnNkL3Zmcy5jICAgICB8IDEwICsrKysrKysrLS0KIDQgZmlsZXMgY2hhbmdlZCwgNjMgaW5z
+ZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9mcy9uZnNkL25mczN4ZHIu
+YyBiL2ZzL25mc2QvbmZzM3hkci5jCmluZGV4IDcxNjU2NmQuLjBkZTI5NTMgMTAwNjQ0Ci0tLSBh
+L2ZzL25mc2QvbmZzM3hkci5jCisrKyBiL2ZzL25mc2QvbmZzM3hkci5jCkBAIC04NzcsNyArODc3
+LDcgQEAgY29tcG9zZV9lbnRyeV9maChzdHJ1Y3QgbmZzZDNfcmVhZGRpcnJlcyAqY2QsIHN0cnVj
+dCBzdmNfZmggKmZocCwKIAkJZGNoaWxkID0gbG9va3VwX3Bvc2l0aXZlX3VubG9ja2VkKG5hbWUs
+IGRwYXJlbnQsIG5hbWxlbik7CiAJaWYgKElTX0VSUihkY2hpbGQpKQogCQlyZXR1cm4gcnY7Ci0J
+aWYgKGRfbW91bnRwb2ludChkY2hpbGQpKQorCWlmIChkX21vdW50cG9pbnQoZGNoaWxkKSB8fCB1
+bmxpa2VseShkX2lzX2J0cmZzX3N1YnZvbChkY2hpbGQpKSkKIAkJZ290byBvdXQ7CiAJaWYgKGRj
+aGlsZC0+ZF9pbm9kZS0+aV9pbm8gIT0gaW5vKQogCQlnb3RvIG91dDsKZGlmZiAtLWdpdCBhL2Zz
+L25mc2QvbmZzNHhkci5jIGIvZnMvbmZzZC9uZnM0eGRyLmMKaW5kZXggNWY1MTY5Yi4uZWUzMzVm
+YyAxMDA2NDQKLS0tIGEvZnMvbmZzZC9uZnM0eGRyLmMKKysrIGIvZnMvbmZzZC9uZnM0eGRyLmMK
+QEAgLTI0NTcsNyArMjQ1Nyw3IEBAIHN0YXRpYyBfX2JlMzIgbmZzZDRfZW5jb2RlX3BhdGgoc3Ry
+dWN0IHhkcl9zdHJlYW0gKnhkciwKIAkJaWYgKHBhdGhfZXF1YWwoJmN1ciwgcm9vdCkpCiAJCQli
+cmVhazsKIAkJaWYgKGN1ci5kZW50cnkgPT0gY3VyLm1udC0+bW50X3Jvb3QpIHsKLQkJCWlmIChm
+b2xsb3dfdXAoJmN1cikpCisJCQlpZiAobmZzZF9mb2xsb3dfdXAoJmN1cikpCiAJCQkJY29udGlu
+dWU7CiAJCQlnb3RvIG91dF9mcmVlOwogCQl9CkBAIC0yNjQ4LDcgKzI2NDgsNyBAQCBzdGF0aWMg
+aW50IGdldF9wYXJlbnRfYXR0cmlidXRlcyhzdHJ1Y3Qgc3ZjX2V4cG9ydCAqZXhwLCBzdHJ1Y3Qg
+a3N0YXQgKnN0YXQpCiAJaW50IGVycjsKIAogCXBhdGhfZ2V0KCZwYXRoKTsKLQl3aGlsZSAoZm9s
+bG93X3VwKCZwYXRoKSkgeworCXdoaWxlIChuZnNkX2ZvbGxvd191cCgmcGF0aCkpIHsKIAkJaWYg
+KHBhdGguZGVudHJ5ICE9IHBhdGgubW50LT5tbnRfcm9vdCkKIAkJCWJyZWFrOwogCX0KQEAgLTI3
+MjgsNiArMjcyOCw3IEBAIG5mc2Q0X2VuY29kZV9mYXR0cihzdHJ1Y3QgeGRyX3N0cmVhbSAqeGRy
+LCBzdHJ1Y3Qgc3ZjX2ZoICpmaHAsCiAJCS5kZW50cnkJPSBkZW50cnksCiAJfTsKIAlzdHJ1Y3Qg
+bmZzZF9uZXQgKm5uID0gbmV0X2dlbmVyaWMoU1ZDX05FVChycXN0cCksIG5mc2RfbmV0X2lkKTsK
+Kwlib29sIGlzX2J0cmZzX3N1YnZvbD0gZF9pc19idHJmc19zdWJ2b2woZGVudHJ5KTsKIAogCUJV
+R19PTihibXZhbDEgJiBORlNEX1dSSVRFT05MWV9BVFRSU19XT1JEMSk7CiAJQlVHX09OKCFuZnNk
+X2F0dHJzX3N1cHBvcnRlZChtaW5vcnZlcnNpb24sIGJtdmFsKSk7CkBAIC0yNzQ0LDcgKzI3NDUs
+OCBAQCBuZnNkNF9lbmNvZGVfZmF0dHIoc3RydWN0IHhkcl9zdHJlYW0gKnhkciwgc3RydWN0IHN2
+Y19maCAqZmhwLAogCWlmICgoYm12YWwwICYgKEZBVFRSNF9XT1JEMF9GSUxFU19BVkFJTCB8IEZB
+VFRSNF9XT1JEMF9GSUxFU19GUkVFIHwKIAkJCUZBVFRSNF9XT1JEMF9GSUxFU19UT1RBTCB8IEZB
+VFRSNF9XT1JEMF9NQVhOQU1FKSkgfHwKIAkgICAgKGJtdmFsMSAmIChGQVRUUjRfV09SRDFfU1BB
+Q0VfQVZBSUwgfCBGQVRUUjRfV09SRDFfU1BBQ0VfRlJFRSB8Ci0JCSAgICAgICBGQVRUUjRfV09S
+RDFfU1BBQ0VfVE9UQUwpKSkgeworCQkgICAgICAgRkFUVFI0X1dPUkQxX1NQQUNFX1RPVEFMKSkg
+fHwKKwkJdW5saWtlbHkoaXNfYnRyZnNfc3Vidm9sKSkgewogCQllcnIgPSB2ZnNfc3RhdGZzKCZw
+YXRoLCAmc3RhdGZzKTsKIAkJaWYgKGVycikKIAkJCWdvdG8gb3V0X25mc2VycjsKQEAgLTI4OTUs
+NyArMjg5NywxMyBAQCBuZnNkNF9lbmNvZGVfZmF0dHIoc3RydWN0IHhkcl9zdHJlYW0gKnhkciwg
+c3RydWN0IHN2Y19maCAqZmhwLAogCQkJKnArKyA9IGNwdV90b19iZTMyKE1JTk9SKHN0YXQuZGV2
+KSk7CiAJCQlicmVhazsKIAkJY2FzZSBGU0lEU09VUkNFX1VVSUQ6Ci0JCQlwID0geGRyX2VuY29k
+ZV9vcGFxdWVfZml4ZWQocCwgZXhwLT5leF91dWlkLAorCQkJaWYgKHVubGlrZWx5KGlzX2J0cmZz
+X3N1YnZvbCkpeworCQkJCSpwKysgPSBjcHVfdG9fYmUzMihzdGF0ZnMuZl9mc2lkLnZhbFswXSk7
+CisJCQkJKnArKyA9IGNwdV90b19iZTMyKHN0YXRmcy5mX2ZzaWQudmFsWzFdKTsKKwkJCQkqcCsr
+ID0gY3B1X3RvX2JlMzIoMCk7CisJCQkJKnArKyA9IGNwdV90b19iZTMyKDApOworCQkJfSBlbHNl
+CisJCQkJcCA9IHhkcl9lbmNvZGVfb3BhcXVlX2ZpeGVkKHAsIGV4cC0+ZXhfdXVpZCwKIAkJCQkJ
+CQkJRVhfVVVJRF9MRU4pOwogCQkJYnJlYWs7CiAJCX0KZGlmZiAtLWdpdCBhL2ZzL25mc2QvbmZz
+ZC5oIGIvZnMvbmZzZC9uZnNkLmgKaW5kZXggY2I3NDJlMS4uNDJlMTRkNiAxMDA2NDQKLS0tIGEv
+ZnMvbmZzZC9uZnNkLmgKKysrIGIvZnMvbmZzZC9uZnNkLmgKQEAgLTQ4Nyw0ICs0ODcsNDcgQEAg
+c3RhdGljIGlubGluZSBpbnQgbmZzZDRfaXNfanVuY3Rpb24oc3RydWN0IGRlbnRyeSAqZGVudHJ5
+KQogCiAjZW5kaWYgLyogQ09ORklHX05GU0RfVjQgKi8KIAorLyogYnRyZnMgc3Vidm9sIHN1cHBv
+cnQgKi8KKy8qCisgKiBzYW1lIGxvZ2ljYWwgYXMgZnMvYnRyZnMgaXNfc3Vidm9sdW1lX2lub2Rl
+KHN0cnVjdCBpbm9kZSAqaW5vZGUpCisgKiAjZGVmaW5lIEJUUkZTX0ZJUlNUX0ZSRUVfT0JKRUNU
+SUQgMjU2VUxMCisgKiAjZGVmaW5lIEJUUkZTX1NVUEVSX01BR0lDICAgICAgIDB4OTEyMzY4M0UK
+KyAqLworc3RhdGljIGlubGluZSBib29sIGRfaXNfYnRyZnNfc3Vidm9sKGNvbnN0IHN0cnVjdCBk
+ZW50cnkgKmRlbnRyeSkKK3sKKyAgICBib29sIHJldCA9IGRlbnRyeS0+ZF9pbm9kZSAmJiB1bmxp
+a2VseShkZW50cnktPmRfaW5vZGUtPmlfaW5vID09IDI1NlVMTCkgJiYKKwkJZGVudHJ5LT5kX3Ni
+ICYmIGRlbnRyeS0+ZF9zYi0+c19tYWdpYyA9PSBCVFJGU19TVVBFUl9NQUdJQzsKKwkvL3ByaW50
+ayhLRVJOX0lORk8gImRfaXNfYnRyZnNfc3Vidm9sKCVzKT0lZFxuIiwgZGVudHJ5LT5kX25hbWUu
+bmFtZSwgcmV0KTsKKwlyZXR1cm4gcmV0OworfQorI2luY2x1ZGUgPGxpbnV4L25hbWVpLmg+Cisv
+KiBhZGQgYnRyZnMgc3Vidm9sIHN1cHBvcnQgdGhhdCBvbmx5IHVzZWQgaW4gbmZzZCAqLworLyog
+RklYTUU6IGZyZWUgY2xvbmVfcHJpdmF0ZV9tb3VudCgpPyAqLworc3RhdGljIGlubGluZSBpbnQg
+bmZzZF9mb2xsb3dfZG93bihzdHJ1Y3QgcGF0aCAqcGF0aCkKK3sKKwlpZih1bmxpa2VseShkX2lz
+X2J0cmZzX3N1YnZvbChwYXRoLT5kZW50cnkpKSl7CisJCS8vc3RydWN0IGRlbnRyeSAqbW50X3Jv
+b3Q9cGF0aC0+ZGVudHJ5OworCQlzdHJ1Y3QgdmZzbW91bnQgKm1vdW50ZWQgPSBjbG9uZV9wcml2
+YXRlX21vdW50KHBhdGgpOworCQlpZiAobW91bnRlZCkgeworCQkJLy9tb3VudGVkLT5tbnRfcm9v
+dD1tbnRfcm9vdDsKKwkJCS8vPyBkcHV0KHBhdGgtPmRlbnRyeSk7CisJCQkvLz8gbW50cHV0KHBh
+dGgtPm1udCk7CisJCQlwYXRoLT5tbnQgPSBtb3VudGVkOworCQkJcGF0aC0+ZGVudHJ5ID0gZGdl
+dChtb3VudGVkLT5tbnRfcm9vdCk7CisJCQlyZXR1cm4gMDsKKwkJfQorCX0KKwlyZXR1cm4gZm9s
+bG93X2Rvd24ocGF0aCk7Cit9CisvKiBhZGQgYnRyZnMgc3Vidm9sIHN1cHBvcnQgdGhhdCBvbmx5
+IHVzZWQgaW4gbmZzZCAqLworLyogRklYTUU6IGZyZWUgY2xvbmVfcHJpdmF0ZV9tb3VudCgpPyAq
+Lworc3RhdGljIGlubGluZSBpbnQgbmZzZF9mb2xsb3dfdXAoc3RydWN0IHBhdGggKnBhdGgpCit7
+CisJcHJpbnRrKEtFUk5fSU5GTyAibmZzZF9mb2xsb3dfdXAoJXMpXG4iLCBwYXRoLT5kZW50cnkt
+PmRfbmFtZS5uYW1lKTsKKwlpZih1bmxpa2VseShkX2lzX2J0cmZzX3N1YnZvbChwYXRoLT5kZW50
+cnkpKSl7CisJCXJldHVybiAwOworCX0KKwlyZXR1cm4gZm9sbG93X3VwKHBhdGgpOworfQorCiAj
+ZW5kaWYgLyogTElOVVhfTkZTRF9ORlNEX0ggKi8KZGlmZiAtLWdpdCBhL2ZzL25mc2QvdmZzLmMg
+Yi9mcy9uZnNkL3Zmcy5jCmluZGV4IDFlY2FjZWUuLjNhYjliN2YgMTAwNjQ0Ci0tLSBhL2ZzL25m
+c2QvdmZzLmMKKysrIGIvZnMvbmZzZC92ZnMuYwpAQCAtNjUsOSArNjUsMTMgQEAgbmZzZF9jcm9z
+c19tbnQoc3RydWN0IHN2Y19ycXN0ICpycXN0cCwgc3RydWN0IGRlbnRyeSAqKmRwcCwKIAkJCSAg
+ICAuZGVudHJ5ID0gZGdldChkZW50cnkpfTsKIAlpbnQgZXJyID0gMDsKIAotCWVyciA9IGZvbGxv
+d19kb3duKCZwYXRoKTsKKwllcnIgPSBuZnNkX2ZvbGxvd19kb3duKCZwYXRoKTsKIAlpZiAoZXJy
+IDwgMCkKIAkJZ290byBvdXQ7CisJaWYgKHVubGlrZWx5KGRfaXNfYnRyZnNfc3Vidm9sKGRlbnRy
+eSkpKXsKKwkJcGF0aF9wdXQoJnBhdGgpOworCQlnb3RvIG91dDsKKwl9IGVsc2UKIAlpZiAocGF0
+aC5tbnQgPT0gZXhwLT5leF9wYXRoLm1udCAmJiBwYXRoLmRlbnRyeSA9PSBkZW50cnkgJiYKIAkg
+ICAgbmZzZF9tb3VudHBvaW50KGRlbnRyeSwgZXhwKSA9PSAyKSB7CiAJCS8qIFRoaXMgaXMgb25s
+eSBhIG1vdW50cG9pbnQgaW4gc29tZSBvdGhlciBuYW1lc3BhY2UgKi8KQEAgLTExNCw3ICsxMTgs
+NyBAQCBzdGF0aWMgdm9pZCBmb2xsb3dfdG9fcGFyZW50KHN0cnVjdCBwYXRoICpwYXRoKQogewog
+CXN0cnVjdCBkZW50cnkgKmRwOwogCi0Jd2hpbGUgKHBhdGgtPmRlbnRyeSA9PSBwYXRoLT5tbnQt
+Pm1udF9yb290ICYmIGZvbGxvd191cChwYXRoKSkKKwl3aGlsZSAocGF0aC0+ZGVudHJ5ID09IHBh
+dGgtPm1udC0+bW50X3Jvb3QgJiYgbmZzZF9mb2xsb3dfdXAocGF0aCkpCiAJCTsKIAlkcCA9IGRn
+ZXRfcGFyZW50KHBhdGgtPmRlbnRyeSk7CiAJZHB1dChwYXRoLT5kZW50cnkpOwpAQCAtMTYwLDYg
+KzE2NCw4IEBAIGludCBuZnNkX21vdW50cG9pbnQoc3RydWN0IGRlbnRyeSAqZGVudHJ5LCBzdHJ1
+Y3Qgc3ZjX2V4cG9ydCAqZXhwKQogCQlyZXR1cm4gMTsKIAlpZiAobmZzZDRfaXNfanVuY3Rpb24o
+ZGVudHJ5KSkKIAkJcmV0dXJuIDE7CisJaWYgKGRfaXNfYnRyZnNfc3Vidm9sKGRlbnRyeSkpCisJ
+CXJldHVybiAxOwogCWlmIChkX21vdW50cG9pbnQoZGVudHJ5KSkKIAkJLyoKIAkJICogTWlnaHQg
+b25seSBiZSBhIG1vdW50cG9pbnQgaW4gYSBkaWZmZXJlbnQgbmFtZXNwYWNlLAotLSAKMi4zMC4y
+Cgo=
+--------_60D18AF200000000BFFD_MULTIPART_MIXED_
 Content-Type: application/octet-stream;
  name="0002-trace-nfsd-btrfs-subvol-support.txt"
 Content-Disposition: attachment;
@@ -384,5 +320,5 @@ cnktPmRfbmFtZS5uYW1lKTsKIAlyZXR1cm4gMDsKIAogb3V0X25mc2VycjoKKwkvLyBwcmludGso
 S0VSTl9JTkZPICJuZnNkOiBuZnNkX2xvb2t1cChmaCAlcywgJS4qcykgZXJyb3JcbiIsIFNWQ0ZI
 X2ZtdChmaHApLCBsZW4sIG5hbWUpOwogCWV4cF9wdXQoZXhwKTsKIAlyZXR1cm4gbmZzZXJybm8o
 aG9zdF9lcnIpOwogfQotLSAKMi4zMC4yCgo=
---------_60D155E100000000DAE9_MULTIPART_MIXED_--
+--------_60D18AF200000000BFFD_MULTIPART_MIXED_--
 
