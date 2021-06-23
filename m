@@ -2,66 +2,103 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F7443B1E08
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Jun 2021 17:54:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7AAA3B1E46
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Jun 2021 18:06:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231478AbhFWP4s convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 23 Jun 2021 11:56:48 -0400
-Received: from [183.90.58.236] ([183.90.58.236]:51700 "EHLO ns1.zackeruz.tk"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231483AbhFWP4r (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 23 Jun 2021 11:56:47 -0400
-Received: from johnlewis.com (unknown [192.168.20.1])
-        by ns1.zackeruz.tk (Postfix) with ESMTPSA id 4FAE184631D
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Jun 2021 23:54:28 +0800 (+08)
-Reply-To: robert_turner@johnlewis-trading.com,
-          pippawicks.sales@johnlewis-trading.com
-From:   John Lewis & Partnersip <robert.turner107@johnlewis.com>
-To:     linux-nfs@vger.kernel.org
-Subject: 6/23/2021 Product Inquiry 
-Date:   23 Jun 2021 15:54:27 +0000
-Message-ID: <20210623094114.D918B352307FD674@johnlewis.com>
+        id S231236AbhFWQJF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Jun 2021 12:09:05 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:46950 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229523AbhFWQJF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Jun 2021 12:09:05 -0400
+Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id C87AA2195D;
+        Wed, 23 Jun 2021 16:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1624464406;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1MdPPUN/EDcPjkplXBAIfTOP3fh5nqKB/znLE3+1lnI=;
+        b=D3zBY3KcBViepTJDnJZl4aiiw5iV1tcAZLJ8BePlB5ODa4Zh0d9UQ0HqC47hznVDdx4PQW
+        VTMbiQB871sCPQs9Z0lDhB2fWoP84Z9i5aaFW3dxgIPbj9O7HA3/pXz24ttfKjNW+ez0LL
+        +UTiaCAR0o5aiLh2VMfT3SqN89w1wJI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1624464406;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1MdPPUN/EDcPjkplXBAIfTOP3fh5nqKB/znLE3+1lnI=;
+        b=SjH31SRB76Z2lIVZ8TnVhUg5xcXzyENGJ+Y4+8gEml3g+mqrebJ3ryUiqIrG8eqb5BImXW
+        DSuL600zFY3PW/BA==
+Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        by imap.suse.de (Postfix) with ESMTP id 75ED911A97;
+        Wed, 23 Jun 2021 16:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1624464406;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1MdPPUN/EDcPjkplXBAIfTOP3fh5nqKB/znLE3+1lnI=;
+        b=D3zBY3KcBViepTJDnJZl4aiiw5iV1tcAZLJ8BePlB5ODa4Zh0d9UQ0HqC47hznVDdx4PQW
+        VTMbiQB871sCPQs9Z0lDhB2fWoP84Z9i5aaFW3dxgIPbj9O7HA3/pXz24ttfKjNW+ez0LL
+        +UTiaCAR0o5aiLh2VMfT3SqN89w1wJI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1624464406;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1MdPPUN/EDcPjkplXBAIfTOP3fh5nqKB/znLE3+1lnI=;
+        b=SjH31SRB76Z2lIVZ8TnVhUg5xcXzyENGJ+Y4+8gEml3g+mqrebJ3ryUiqIrG8eqb5BImXW
+        DSuL600zFY3PW/BA==
+Received: from director2.suse.de ([192.168.254.72])
+        by imap3-int with ESMTPSA
+        id vo2BGRZc02CsFwAALh3uQQ
+        (envelope-from <pvorel@suse.cz>); Wed, 23 Jun 2021 16:06:46 +0000
+Date:   Wed, 23 Jun 2021 18:06:44 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     James Dong =?utf-8?B?KOiRo+S4luaxnyk=?= <dongshijiang@inspur.com>
+Cc:     "ltp@lists.linux.it" <ltp@lists.linux.it>,
+        Alexey Kodanev <aleksei.kodanev@bell-sw.com>,
+        Steve Dickson <SteveD@redhat.com>,
+        "libtirpc-devel@lists.sourceforge.net" 
+        <libtirpc-devel@lists.sourceforge.net>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [LTP] [PATCH] fix rpc_suite/rpc:add check returned value
+Message-ID: <YNNcFHTRmBtviT+Y@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <52e4b3cba7d74f17b64816acaf50be01@inspur.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52e4b3cba7d74f17b64816acaf50be01@inspur.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dear linux-nfs
+Hi Dong,
 
-The famous brand John Lewis Partnership, is UK's largest multi-
-channel retailer with over 126 shops and multiple expansion in 
-Africa furnished by European/Asian/American products. We are 
-sourcing new products to attract new customers and also retain 
-our existing ones, create new partnerships with companies dealing 
-with different kinds of goods globally.
+> Hi Petr
+> I think this is just a simple test of some APIs, but some test cases are not standardized and cause errors like "Segmentation fault" during testing. I think it is necessary to fix these errors or delete these tests.
 
-Your company's products are of interest to our market as we have 
-an amazing market for your products.
+Sure this fix can get in. I saw issues with some tests on openSUSE, but that's a
+separate problem (I was not able to find the problem thus report it.
 
-Provide us your current catalog through email to review more. We 
-hope to be able to order with you and start a long-term friendly,
-respectable and solid business partnership. Please we would 
-appreciate it if you could send us your stock availability via 
-email if any.
+> Kind regards,
+> Dong
 
-Our payment terms are 15 days net in Europe, 30 days Net in UK 
-and 30 days net in Asia/USA as we operate with over 5297 
-suppliers around the globe for the past 50 years now. For 
-immediate response Send your reply to robert_turner@johnlewis-
-trading.com for us to be able to 
-treat with care and urgency.
+> > +++ b/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_createdestroy_svc_destroy/rpc_svc_destroy.c
+> > @@ -46,6 +46,11 @@ int main(void)
 
+> >  	//First of all, create a server
+> >  	svcr = svcfd_create(fd, 0, 0);
+> > +
+> > +	//check returned value
+> > +	if ((SVCXPRT *) svcr == NULL) {
+IMHO casting is not required, right? Just
+	if (svcr == NULL) {
 
-Best Regards
-
-Rob Turner
-Head Of Procurement Operations
-John Lewis & Partners.
-robert_turner@johnlewis-trading.com
-Tel: +44-7451-274090
-WhatsApp: +447497483925
-www.johnlewis.com
-REGISTERED OFFICE: 171 VICTORIA STREET, LONDON SW1E 5NN 
+Kind regards,
+Petr
