@@ -2,102 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4EE83B32D1
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jun 2021 17:48:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2581C3B3471
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jun 2021 19:09:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232410AbhFXPug (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Jun 2021 11:50:36 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:33033 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232313AbhFXPuf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Jun 2021 11:50:35 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=alimailimapcm10staff010182156082;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UdXlSez_1624549692;
-Received: from bogon(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0UdXlSez_1624549692)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 24 Jun 2021 23:48:14 +0800
-Date:   Thu, 24 Jun 2021 23:48:11 +0800
-From:   Gao Xiang <hsiangkao@linux.alibaba.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "joseph.qi@linux.alibaba.com" <joseph.qi@linux.alibaba.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "agruenba@redhat.com" <agruenba@redhat.com>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH v2 2/2] nfs: NFSv3: fix SGID bit dropped when inheriting
- ACLs
-Message-ID: <YNSpOw8I/y4p3lmT@bogon>
-References: <1624430335-10322-1-git-send-email-hsiangkao@linux.alibaba.com>
- <1624430335-10322-2-git-send-email-hsiangkao@linux.alibaba.com>
- <26c10bd670d4a4672470baf2c30db7af7b7aa593.camel@hammerspace.com>
+        id S232260AbhFXRL6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Jun 2021 13:11:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232417AbhFXRLz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Jun 2021 13:11:55 -0400
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2270C0613A2
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Jun 2021 10:09:32 -0700 (PDT)
+Received: by mail-il1-x135.google.com with SMTP id v5so7093625ilo.5
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Jun 2021 10:09:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:in-reply-to:references:from:date:message-id
+         :subject:to;
+        bh=ANhbTggsY3NFhRZExKMwUmb3VzJqye8XLvWVXSvNBkQ=;
+        b=p95plxgcKdT8+TUJCmcKdAyJL6L8C+j3muAeTI6tbvEOMwKUFZvBH22Z3GEGxdnUZH
+         d9XkDasjcz/bUj2n1PkWxPPQL/Sxtf1a7ckN43IkWwU4a9v6DYeOi9Tg8DPYHl700hH/
+         xlmv54Ir2NUVB8zwaX1UsxTzP5GUW3mdywmszCeflzWKbXzDgkMNhx+qVsi3FklHnD5x
+         fSDWvxz3POXOJ/0yZM+F2G99rPMTFJK+bPA5TWYu0VJpvpEjmQwRSgXLB6dx+kXpC0Uz
+         JX+JhI0lSB7VkwJTdkbApCrUx6TGzp99N5mAm/d0lil4hmexz93RFAPSpMzmwkjNchKB
+         rXTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:in-reply-to:references
+         :from:date:message-id:subject:to;
+        bh=ANhbTggsY3NFhRZExKMwUmb3VzJqye8XLvWVXSvNBkQ=;
+        b=n9E1Q5L2VkLA/gQj6dszATepg94/TCGIwJHvXAI+xReiL4MIsZlap+6nGxCBXC8Lq4
+         FJPyt+w04ZmKEIVk01mM36obZukcyE5xUoFNvRAXExybXnTCtHHywOi8fx5QP8th269c
+         vkZKF5/fbaZ1atf3xt4Sa1xe3otihA1R0p2/nKHytt4IkEs64GUvfSh8HO4qQvao5aTV
+         n+nMM6bgLlhLc4dEKRxeV85P9mHGs4X7449CJ30WSX9dohN6yUG1lI5E6itdWvI+AH9z
+         AUAQBtQoDQdxG9wh5hX7uAtKSbsxYM6LZOMsDjLYTv1IUhPOx0TMLLxlN0JubOQuLUIa
+         J3Ag==
+X-Gm-Message-State: AOAM5319+4PK6mcfMRdqtGXZmnZoZfE6t9mau4hFhF86WoQOpxPP4xQM
+        wINCNZPzf5aE8ba1mmGDGlN0z23U6cgXXj4oqXslKtIHs51+Ww==
+X-Google-Smtp-Source: ABdhPJzkYUuO368jts0QgMQyJe9SHzg0U698qd8KdfojEfYsXnHtwMfPGxVHmw7fwQ64+IhHRhAEJH5nusdeW4BWzcA=
+X-Received: by 2002:a05:6e02:524:: with SMTP id h4mr4098121ils.255.1624554560853;
+ Thu, 24 Jun 2021 10:09:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <26c10bd670d4a4672470baf2c30db7af7b7aa593.camel@hammerspace.com>
+Received: by 2002:a05:6638:3aa:0:0:0:0 with HTTP; Thu, 24 Jun 2021 10:09:20
+ -0700 (PDT)
+Reply-To: tutywoolgar021@gmail.com
+In-Reply-To: <CADB47+4Wa3T59Vq_==GTXEfHrX5x-2vQFxaTBO0dTdyAweCVpw@mail.gmail.com>
+References: <CADB47+4Wa3T59Vq_==GTXEfHrX5x-2vQFxaTBO0dTdyAweCVpw@mail.gmail.com>
+From:   tuty woolgar <faridaamadoubas@gmail.com>
+Date:   Thu, 24 Jun 2021 17:09:20 +0000
+Message-ID: <CADB47+607zNBfYFb4bj0nUhuuYgAdwT=G_wJ9-EeV0ESHe56Jg@mail.gmail.com>
+Subject: greetings,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Trond,
-
-On Thu, Jun 24, 2021 at 01:13:50PM +0000, Trond Myklebust wrote:
-> On Wed, 2021-06-23 at 14:38 +0800, Gao Xiang wrote:
-> > generic/444 fails with NFSv3 as shown above, "
-> >      QA output created by 444
-> >      drwxrwsr-x
-> >     -drwxrwsr-x
-> >     +drwxrwxr-x
-> > ", which tests "SGID inheritance with default ACLs" fs regression
-> > and looks after the following commits:
-> > 
-> > a3bb2d558752 ("ext4: Don't clear SGID when inheriting ACLs")
-> > 073931017b49 ("posix_acl: Clear SGID bit when setting file
-> > permissions")
-> > 
-> > commit 055ffbea0596 ("[PATCH] NFS: Fix handling of the umask when
-> > an NFSv3 default acl is present.") sets acls explicitly when
-> > when files are created in a directory that has a default ACL.
-> > However, after commit a3bb2d558752 and 073931017b49, SGID can be
-> > dropped if user is not member of the owning group with
-> > set_posix_acl() called.
-> > 
-> > Since underlayfs will handle ACL inheritance when creating
-> > files in a directory that has the default ACL and the umask is
-> > supposed to be ignored for such case. Therefore, I think no need
-> > to set acls explicitly (to avoid SGID bit cleared) but only apply
-> > client umask if the default ACL of the parent directory doesn't
-> > exist.
-> 
-> Hmm... Has this patch been tested with a Solaris server? Your assertion
-> above appears to be true for Linux servers, but this code needs to
-> interoperate with non-Linux draft posix acl compatible servers too.
-
-Sigh.. I'm not quite sure about the Solaris side since I don't have
-the environment. In principle, I just think ACL inheritance should
-be an underlayfs behavior rather than some nfs-specific behavior
-so I assume no risk with this patch applied.
-
-With my premature short-time glance about illumos nfs client
-implementation, I don't find such setacl call  (correct me if
-I'm missing...) 
-https://github.com/illumos/illumos-gate/blob/9ecd05bdc59e4a1091c51ce68cce2028d5ba6fd1/usr/src/uts/common/fs/nfs/nfs3_vnops.c#L2224
-
-(And if someone has such Solaris environment, it would be much
- helpful to check this...)
-
-> 
-> I've already taken the other patch in this series, since that one
-> appears correct, and doesn't have any interoperability consequences.
-
-Thanks all!
-
-Thanks,
-Gao Xiang
-
-> 
-> -- 
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-> 
-> 
+My greetings to you my friend i hope you are fine and good please respond
+back to me thanks,
