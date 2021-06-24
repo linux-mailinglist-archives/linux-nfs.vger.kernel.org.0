@@ -2,150 +2,351 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63E6F3B2FDA
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jun 2021 15:13:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A9653B30DA
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jun 2021 16:02:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231162AbhFXNQM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Jun 2021 09:16:12 -0400
-Received: from mail-dm3nam07on2128.outbound.protection.outlook.com ([40.107.95.128]:4321
-        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231157AbhFXNQM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 24 Jun 2021 09:16:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kCAf9u9SAw+1Id78TNBnH0U1hGxO7t5UXRVdrpWjRlbKIg1s9dV0gSz86OfKAb0Mv3oVaTANpjiyrhlXxjpJfHXea3k/WFVxJvZuoANESjyn20re/ra//3XyLZ4bnFsO7msMNjeYMj2uJUGFtBL5QxoJc+KHX0XjBWDiF57x1Cit8LEFMAzxPLsQYoGIHui+TL4mJ2S218ZvUiIaTeRonTHCSLQBXF3yZJUPB9sLrwL5WZ/BxTXUfMS5W5AfQNvsUrD6/UfzS8p3I9/d2tzN6JiFGAes6Jv8Fd8cOQRONY3m6t1ZUlS8lrcVLAqeVthoBcqk8Hcv0aaF7rFheg+XkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B9p9+jVkA1+uTYju0JHIvaNvV0Dl857Pel1F+Tt5bo0=;
- b=cu9eCe1g96jBu2vrvmHNZT+ei72Raf4lVD9sGmeNKDEwPYOAyYOCgl7ErPKpmZb/JxQJ7HIa3seOPoPYogHra8avISAGp7yNyKo7dCBwF2/t0f0gb+D/p+UuYSo1pyrEQ4jja3OnIChvcoCCeH3qtMh36tSZtF1mWq5zhHpv4a0O7HtPSg3cWbLn73fqZaSO+xFXFqWOQPuvQjQ52UdnawHXQTNIgccw0UTTg1RbWjijbyM6d6rVglAT4aR+SzlceQI/NiOk7WMj0N8w9r3D4HRRFmtIk+TMkgmhPka0IRDJ0GD39G3iiGKcbrGezUxw2SNhsoDKzS432scIT4UZgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B9p9+jVkA1+uTYju0JHIvaNvV0Dl857Pel1F+Tt5bo0=;
- b=DarBl9JfIUkrL+/tdnMWoNNekRa7hGW8aIHPFEpMc90otNZtNsDsnHlpjc2KWZFBh2cHlMiIKKiYOzXaOMIeYB8GxQC+5RbtzreEdJCXpctXrN1t+S3dhxQF+HLWDbdMtHND5HgOh4/WvuGQsN7iow2zz1OsKQFzZDnBzxw3XuM=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by CH2PR13MB4457.namprd13.prod.outlook.com (2603:10b6:610:6e::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.7; Thu, 24 Jun
- 2021 13:13:51 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::cc40:f406:86f9:3e05]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::cc40:f406:86f9:3e05%4]) with mapi id 15.20.4264.021; Thu, 24 Jun 2021
- 13:13:50 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "hsiangkao@linux.alibaba.com" <hsiangkao@linux.alibaba.com>
-CC:     "joseph.qi@linux.alibaba.com" <joseph.qi@linux.alibaba.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "agruenba@redhat.com" <agruenba@redhat.com>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH v2 2/2] nfs: NFSv3: fix SGID bit dropped when inheriting
- ACLs
-Thread-Topic: [PATCH v2 2/2] nfs: NFSv3: fix SGID bit dropped when inheriting
- ACLs
-Thread-Index: AQHXZ/p9JKsZgIWR+Emv3Y4NX21acasjJZWA
-Date:   Thu, 24 Jun 2021 13:13:50 +0000
-Message-ID: <26c10bd670d4a4672470baf2c30db7af7b7aa593.camel@hammerspace.com>
-References: <1624430335-10322-1-git-send-email-hsiangkao@linux.alibaba.com>
-         <1624430335-10322-2-git-send-email-hsiangkao@linux.alibaba.com>
-In-Reply-To: <1624430335-10322-2-git-send-email-hsiangkao@linux.alibaba.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dd4ac13f-c242-40ee-8693-08d93711e8ca
-x-ms-traffictypediagnostic: CH2PR13MB4457:
-x-microsoft-antispam-prvs: <CH2PR13MB44570071C67424F4E33CEC63B8079@CH2PR13MB4457.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lC+esyNA5wbmd/Pl09m4kPx5WKBXkjf1oXIeawJyZ2T8e/JA8AW/Fbp4iFPSt7cEahPStRdRYUJmRYEAXt3W557sU1UR4dEMdB2xep0i922qejAYDjkx6KbOzWqv7kjJwn0j42IEh6MXQaPWnCZvaf0em96mtfpKaDPOwuO3Js+K4BuskW02NNRNnnYrj2iJoq2qpQh070UFddnd73YEs4lDuLlXOv+xFnYFW1uwpaUd1As1iknX95QeqZouVt0qJ2gvqXX6Flm9+D8W005dOOHbCw9uiZy53fcYMpSxjFgRi4CrxSJGQ277nuBpIPaMa+JZMQk4GcZgQhIvAjNiSRpoR//Zh6cnFC8C+Ee/l8hr4nU9p+2n5VU9Lml8oPWgPJ5o1NhdqF6D6o0/khAgmwnO1LvDfiFX5qIa2LGrrSb1b5oiOLhnT0TKm4+gQjx31zwHrt3GljnkB+bGOzVrrtqFFHODfEm9ygxk3IRrPr8zs3FDviL5ld7sLudiLRM61ld4WubgbrQx788sy8fP1VB0mZDdeWLIoqll5sfecSecYIxtQzfJmym7HZu+NqkWHAfPwqt/fN6GyrBq+ZFZphIO5X7KimCUwyxO8Lq1yXA=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(136003)(346002)(376002)(2616005)(6506007)(5660300002)(26005)(2906002)(76116006)(64756008)(66556008)(66446008)(186003)(66946007)(66476007)(508600001)(122000001)(38100700002)(4326008)(86362001)(8676002)(36756003)(71200400001)(54906003)(6486002)(8936002)(110136005)(6512007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZTdjY0RSWWRaYi9VM0Q4ejl0VFA1UEpFQlhiNGJhaHpxaVFTaDNkZlE1aFdw?=
- =?utf-8?B?dUpvSXZuTVpVckRXalppK2RzbWNkcVpET0NFcWtPSnBkQXgwUWVVR3JhT0tn?=
- =?utf-8?B?aTZDY0NpZlR2TSsyeUIwdEdCYmxHRElYUTFnRUJFcU1lbDFLMU1zZEtqajNN?=
- =?utf-8?B?b1lLcE5lNk5vQUNPRUFBNysxY0tGRFM1UENaZ3ZBU1NUUW9DVGlVS2VoY1Jt?=
- =?utf-8?B?SFRPL1dXejU0NXpOL2o4eFpMSVZ4UFQzMnNvQ054YXY3MmhYV0VWUU4rRksv?=
- =?utf-8?B?Qjl5L2VjcVBxNm5FY1FwZG1nMEJhQ2FqNzN0QzVOcmVOME1qbVNkTFlOL2ZK?=
- =?utf-8?B?ZURSRW9jd2d6MC9nRzNpclBmR2Y2azJXVG9MS3A5Z2R5dFNwMWQzaXpQT3c5?=
- =?utf-8?B?Z2FBcXlEQ1UyWnFUWUNUaTltdVhuWGNZakExVi9oK015dmhTUXcyS0YzQ3d6?=
- =?utf-8?B?TWNpTGJvSGpVOHJtYzdNNk51WjlQZURkNldBbmRPK3BCY1crUFNKNE5LSDhU?=
- =?utf-8?B?cUY4WVhucER0bmtlcm4vZlpSc0FNK3F3eXlDV0FaUzNWMVd1VnlSdlZ1SGQ4?=
- =?utf-8?B?dElTMWhFK3RWdVdaR1l5cEVqbUEweXBjd1d2aG8xY0hEeTZYM3dsd1Iwbkhl?=
- =?utf-8?B?U3V6dkd1Vnl1RXhXamlxamRhalRvM1U1dVZkOWVxVDJ3aDNNOU5qVUk3WkZN?=
- =?utf-8?B?RVhhdC80Zy92cDlFdzVUaDlpMkdjUnNWL3pzSndnWmxOTjdGOEQxTjNTTnZI?=
- =?utf-8?B?QlNVZHFNMUM2VnlncmZacEkzSVdnaXByUmg1Wnk2TWc3eC9GM09GeTMyR3cw?=
- =?utf-8?B?RWZ1SldTT2tqK1ZIakJVVU1JVFpWT2FtYlF0RlhpZ2srWXVDWW8vOVVhTUpH?=
- =?utf-8?B?Zk54Y21kSXU4R2JidjFEVlBvekptcnd4TW4vbHlTdG9MeitaQnZZVHF2OTFj?=
- =?utf-8?B?bkUrVk9hU1BOTzk3T3BLTEhtY1p0WHdzS25COW42UzRtbUk0ZzVkUlhZUWhs?=
- =?utf-8?B?a0JlUjMvWkpkaFlJZFBobFZ6bEo1UDZ6YU9RNFdGeEx0eGRuMDdpTmduR3NI?=
- =?utf-8?B?cFZBUy9XTC9wSGI1WVlQRDY2Q2MyOXNkUTFPT3R3ZGNwcEpYM09pR3BjZGta?=
- =?utf-8?B?NDZyWk1mbHcxS2x2UklqelAvbHhidzl0S0ppa013NGIzREdUdE5BS1FKZks2?=
- =?utf-8?B?S3drVlpETkI3UEJneTVDNDhST05jMS9wS0FlRDRISEtFZEhMYVYrbFlYQ0lm?=
- =?utf-8?B?SkhqeGdBRGtwRmRnTDN3OExUR2s4RVFBbGZBOW1od3RYcGNMNDVlR2ZGVlk5?=
- =?utf-8?B?Q1hmMGpUYmIvWElqNFA5anJ5blpJNlp5OFUxNlY0L3RwRXBwNjl4WktvV1lq?=
- =?utf-8?B?aFBZdXd2a3hvQkU1TW9BVi8zYnZyTWhzb0lxOFUwYXZNdWdNRUNvZ2trUDFZ?=
- =?utf-8?B?VUx0OG5iZ2cxcTR3bytWQzRoODJKb0JLdk85cWhmUElPNmo1YnhzQkdUTUd2?=
- =?utf-8?B?MlVmUXdlNHZsMmt0aCtJUzBoN3dxRGoxWXpTcU5JbzhwQWd5QmZQRi9RSkdP?=
- =?utf-8?B?M2xpZzF6emNnV1lBOWwyOHFtWDMzNkhsWFI0c0diSmYyYWFSYldnM3Z3cHpa?=
- =?utf-8?B?NWRLWE1jYi9ETlBkUXlNb3d6QjgwQVlQdG9EdVh2UEttcmU3WGxUZUdQcWJs?=
- =?utf-8?B?K2xTSDZubHhPY1pJdXl0S1RBendMaHZ2dm9NWWZUdjVvcU9MbkFyN2JaZFk1?=
- =?utf-8?Q?RGeQtUcZw/BJMxswqt3qg4kla3pZ60nkjMrLgQr?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DDEE3B178C6C9D498B1565D8891EC16D@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S232363AbhFXOFA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Jun 2021 10:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232195AbhFXOEh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Jun 2021 10:04:37 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E450C061767
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Jun 2021 07:02:18 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id DAE6650EC; Thu, 24 Jun 2021 10:02:16 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org DAE6650EC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1624543336;
+        bh=tQWxpTBcRJVkMxtv4CMpKD+m+z77a8MPXfW8RQbn4LY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dPqJIYn7uYdNSc8a3tGKJrqN6OKjRmXeKpQVSgvbBhapPsz+K4+zw2gY6T/ZCUjSX
+         Xdne4CPDvcZvyMJeXCojQ/pmGNSj+PNTPtQD/gEOLFfNNSunDdkJAuqksL4O2s8teX
+         IhPrJus7khYZTVXxJ65fiLcRIuFChXLmPMW2KZ1M=
+Date:   Thu, 24 Jun 2021 10:02:16 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH RFC 1/1] nfsd: Initial implementation of NFSv4 Courteous
+ Server
+Message-ID: <20210624140216.GB30394@fieldses.org>
+References: <20210603181438.109851-1-dai.ngo@oracle.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd4ac13f-c242-40ee-8693-08d93711e8ca
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2021 13:13:50.8198
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RmrDc+fZQn5K2ZiCkr3dB2WOffR++GR7MtWFq94CCQq4IhEstY4KGyXFFL7gLuFHO3RqMfgfOdtgV6ZyYOrTEA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB4457
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210603181438.109851-1-dai.ngo@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIxLTA2LTIzIGF0IDE0OjM4ICswODAwLCBHYW8gWGlhbmcgd3JvdGU6DQo+IGdl
-bmVyaWMvNDQ0IGZhaWxzIHdpdGggTkZTdjMgYXMgc2hvd24gYWJvdmUsICINCj4gwqDCoMKgwqAg
-UUEgb3V0cHV0IGNyZWF0ZWQgYnkgNDQ0DQo+IMKgwqDCoMKgIGRyd3hyd3NyLXgNCj4gwqDCoMKg
-IC1kcnd4cndzci14DQo+IMKgwqDCoCArZHJ3eHJ3eHIteA0KPiAiLCB3aGljaCB0ZXN0cyAiU0dJ
-RCBpbmhlcml0YW5jZSB3aXRoIGRlZmF1bHQgQUNMcyIgZnMgcmVncmVzc2lvbg0KPiBhbmQgbG9v
-a3MgYWZ0ZXIgdGhlIGZvbGxvd2luZyBjb21taXRzOg0KPiANCj4gYTNiYjJkNTU4NzUyICgiZXh0
-NDogRG9uJ3QgY2xlYXIgU0dJRCB3aGVuIGluaGVyaXRpbmcgQUNMcyIpDQo+IDA3MzkzMTAxN2I0
-OSAoInBvc2l4X2FjbDogQ2xlYXIgU0dJRCBiaXQgd2hlbiBzZXR0aW5nIGZpbGUNCj4gcGVybWlz
-c2lvbnMiKQ0KPiANCj4gY29tbWl0IDA1NWZmYmVhMDU5NiAoIltQQVRDSF0gTkZTOiBGaXggaGFu
-ZGxpbmcgb2YgdGhlIHVtYXNrIHdoZW4NCj4gYW4gTkZTdjMgZGVmYXVsdCBhY2wgaXMgcHJlc2Vu
-dC4iKSBzZXRzIGFjbHMgZXhwbGljaXRseSB3aGVuDQo+IHdoZW4gZmlsZXMgYXJlIGNyZWF0ZWQg
-aW4gYSBkaXJlY3RvcnkgdGhhdCBoYXMgYSBkZWZhdWx0IEFDTC4NCj4gSG93ZXZlciwgYWZ0ZXIg
-Y29tbWl0IGEzYmIyZDU1ODc1MiBhbmQgMDczOTMxMDE3YjQ5LCBTR0lEIGNhbiBiZQ0KPiBkcm9w
-cGVkIGlmIHVzZXIgaXMgbm90IG1lbWJlciBvZiB0aGUgb3duaW5nIGdyb3VwIHdpdGgNCj4gc2V0
-X3Bvc2l4X2FjbCgpIGNhbGxlZC4NCj4gDQo+IFNpbmNlIHVuZGVybGF5ZnMgd2lsbCBoYW5kbGUg
-QUNMIGluaGVyaXRhbmNlIHdoZW4gY3JlYXRpbmcNCj4gZmlsZXMgaW4gYSBkaXJlY3RvcnkgdGhh
-dCBoYXMgdGhlIGRlZmF1bHQgQUNMIGFuZCB0aGUgdW1hc2sgaXMNCj4gc3VwcG9zZWQgdG8gYmUg
-aWdub3JlZCBmb3Igc3VjaCBjYXNlLiBUaGVyZWZvcmUsIEkgdGhpbmsgbm8gbmVlZA0KPiB0byBz
-ZXQgYWNscyBleHBsaWNpdGx5ICh0byBhdm9pZCBTR0lEIGJpdCBjbGVhcmVkKSBidXQgb25seSBh
-cHBseQ0KPiBjbGllbnQgdW1hc2sgaWYgdGhlIGRlZmF1bHQgQUNMIG9mIHRoZSBwYXJlbnQgZGly
-ZWN0b3J5IGRvZXNuJ3QNCj4gZXhpc3QuDQoNCkhtbS4uLiBIYXMgdGhpcyBwYXRjaCBiZWVuIHRl
-c3RlZCB3aXRoIGEgU29sYXJpcyBzZXJ2ZXI/IFlvdXIgYXNzZXJ0aW9uDQphYm92ZSBhcHBlYXJz
-IHRvIGJlIHRydWUgZm9yIExpbnV4IHNlcnZlcnMsIGJ1dCB0aGlzIGNvZGUgbmVlZHMgdG8NCmlu
-dGVyb3BlcmF0ZSB3aXRoIG5vbi1MaW51eCBkcmFmdCBwb3NpeCBhY2wgY29tcGF0aWJsZSBzZXJ2
-ZXJzIHRvby4NCg0KSSd2ZSBhbHJlYWR5IHRha2VuIHRoZSBvdGhlciBwYXRjaCBpbiB0aGlzIHNl
-cmllcywgc2luY2UgdGhhdCBvbmUNCmFwcGVhcnMgY29ycmVjdCwgYW5kIGRvZXNuJ3QgaGF2ZSBh
-bnkgaW50ZXJvcGVyYWJpbGl0eSBjb25zZXF1ZW5jZXMuDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0
-DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1
-c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+By the way, have we thought about the -ENOSPC case?
+
+An expired client could prevent a lot of disk space from being freed if
+it happens to be holding the last reference to a large file.
+
+I'm not sure how to deal with this.  I don't think there's an efficient
+way to determine which expired client is responsible for an ENOSPC.  So,
+maybe you'd check for ENOSPC and when you see it, remove all expired
+clients and retry if there were any?
+
+--b.
+
+On Thu, Jun 03, 2021 at 02:14:38PM -0400, Dai Ngo wrote:
+> Currently an NFSv4 client must maintain its lease by using the at least
+> one of the state tokens or if nothing else, by issuing a RENEW (4.0), or
+> a singleton SEQUENCE (4.1) at least once during each lease period. If the
+> client fails to renew the lease, for any reason, the Linux server expunges
+> the state tokens immediately upon detection of the "failure to renew the
+> lease" condition and begins returning NFS4ERR_EXPIRED if the client should
+> reconnect and attempt to use the (now) expired state.
+> 
+> The default lease period for the Linux server is 90 seconds.  The typical
+> client cuts that in half and will issue a lease renewing operation every
+> 45 seconds. The 90 second lease period is very short considering the
+> potential for moderately long term network partitions.  A network partition
+> refers to any loss of network connectivity between the NFS client and the
+> NFS server, regardless of its root cause.  This includes NIC failures, NIC
+> driver bugs, network misconfigurations & administrative errors, routers &
+> switches crashing and/or having software updates applied, even down to
+> cables being physically pulled.  In most cases, these network failures are
+> transient, although the duration is unknown.
+> 
+> A server which does not immediately expunge the state on lease expiration
+> is known as a Courteous Server.  A Courteous Server continues to recognize
+> previously generated state tokens as valid until conflict arises between
+> the expired state and the requests from another client, or the server reboots.
+> 
+> The initial implementation of the Courteous Server will do the following:
+> 
+> . when the laundromat thread detects an expired client and if that client
+> still has established states on the Linux server then marks the client as a
+> COURTESY_CLIENT and skips destroying the client and all its states,
+> otherwise destroy the client as usual.
+> 
+> . detects conflict of OPEN request with a COURTESY_CLIENT, destroys the
+> expired client and all its states, skips the delegation recall then allows
+> the conflicting request to succeed.
+> 
+> . detects conflict of LOCK/LOCKT request with a COURTESY_CLIENT, destroys
+> the expired client and all its states then allows the conflicting request
+> to succeed.
+> 
+> To be done:
+> 
+> . fix a problem with 4.1 where the Linux server keeps returning
+> SEQ4_STATUS_CB_PATH_DOWN in the successful SEQUENCE reply, after the expired
+> client re-connects, causing the client to keep sending BCTS requests to server.
+> 
+> . handle OPEN conflict with share reservations.
+> 
+> . instead of destroy the client anf all its state on conflict, only destroy
+> the state that is conflicted with the current request.
+> 
+> . destroy the COURTESY_CLIENT either after a fixed period of time to release
+> resources or as reacting to memory pressure.
+> 
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  fs/nfsd/nfs4state.c        | 94 +++++++++++++++++++++++++++++++++++++++++++---
+>  fs/nfsd/state.h            |  1 +
+>  include/linux/sunrpc/svc.h |  1 +
+>  3 files changed, 91 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index b517a8794400..969995872752 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -171,6 +171,7 @@ renew_client_locked(struct nfs4_client *clp)
+>  
+>  	list_move_tail(&clp->cl_lru, &nn->client_lru);
+>  	clp->cl_time = ktime_get_boottime_seconds();
+> +	clear_bit(NFSD4_CLIENT_COURTESY, &clp->cl_flags);
+>  }
+>  
+>  static void put_client_renew_locked(struct nfs4_client *clp)
+> @@ -4610,6 +4611,38 @@ static void nfsd_break_one_deleg(struct nfs4_delegation *dp)
+>  	nfsd4_run_cb(&dp->dl_recall);
+>  }
+>  
+> +/*
+> + * Set rq_conflict_client if the conflict client have expired
+> + * and return true, otherwise return false.
+> + */
+> +static bool
+> +nfsd_set_conflict_client(struct nfs4_delegation *dp)
+> +{
+> +	struct svc_rqst *rqst;
+> +	struct nfs4_client *clp;
+> +	struct nfsd_net *nn;
+> +	bool ret;
+> +
+> +	if (!i_am_nfsd())
+> +		return false;
+> +	rqst = kthread_data(current);
+> +	if (rqst->rq_prog != NFS_PROGRAM || rqst->rq_vers < 4)
+> +		return false;
+> +	rqst->rq_conflict_client = NULL;
+> +	clp = dp->dl_recall.cb_clp;
+> +	nn = net_generic(clp->net, nfsd_net_id);
+> +	spin_lock(&nn->client_lock);
+> +
+> +	if (test_bit(NFSD4_CLIENT_COURTESY, &clp->cl_flags) &&
+> +				!mark_client_expired_locked(clp)) {
+> +		rqst->rq_conflict_client = clp;
+> +		ret = true;
+> +	} else
+> +		ret = false;
+> +	spin_unlock(&nn->client_lock);
+> +	return ret;
+> +}
+> +
+>  /* Called from break_lease() with i_lock held. */
+>  static bool
+>  nfsd_break_deleg_cb(struct file_lock *fl)
+> @@ -4618,6 +4651,8 @@ nfsd_break_deleg_cb(struct file_lock *fl)
+>  	struct nfs4_delegation *dp = (struct nfs4_delegation *)fl->fl_owner;
+>  	struct nfs4_file *fp = dp->dl_stid.sc_file;
+>  
+> +	if (nfsd_set_conflict_client(dp))
+> +		return false;
+>  	trace_nfsd_deleg_break(&dp->dl_stid.sc_stateid);
+>  
+>  	/*
+> @@ -5237,6 +5272,22 @@ static void nfsd4_deleg_xgrade_none_ext(struct nfsd4_open *open,
+>  	 */
+>  }
+>  
+> +static bool
+> +nfs4_destroy_courtesy_client(struct nfs4_client *clp)
+> +{
+> +	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
+> +
+> +	spin_lock(&nn->client_lock);
+> +	if (!test_bit(NFSD4_CLIENT_COURTESY, &clp->cl_flags) ||
+> +			mark_client_expired_locked(clp)) {
+> +		spin_unlock(&nn->client_lock);
+> +		return false;
+> +	}
+> +	spin_unlock(&nn->client_lock);
+> +	expire_client(clp);
+> +	return true;
+> +}
+> +
+>  __be32
+>  nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nfsd4_open *open)
+>  {
+> @@ -5286,7 +5337,13 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
+>  			goto out;
+>  		}
+>  	} else {
+> +		rqstp->rq_conflict_client = NULL;
+>  		status = nfs4_get_vfs_file(rqstp, fp, current_fh, stp, open);
+> +		if (status == nfserr_jukebox && rqstp->rq_conflict_client) {
+> +			if (nfs4_destroy_courtesy_client(rqstp->rq_conflict_client))
+> +				status = nfs4_get_vfs_file(rqstp, fp, current_fh, stp, open);
+> +		}
+> +
+>  		if (status) {
+>  			stp->st_stid.sc_type = NFS4_CLOSED_STID;
+>  			release_open_stateid(stp);
+> @@ -5472,6 +5529,8 @@ nfs4_laundromat(struct nfsd_net *nn)
+>  	};
+>  	struct nfs4_cpntf_state *cps;
+>  	copy_stateid_t *cps_t;
+> +	struct nfs4_stid *stid;
+> +	int id = 0;
+>  	int i;
+>  
+>  	if (clients_still_reclaiming(nn)) {
+> @@ -5495,6 +5554,15 @@ nfs4_laundromat(struct nfsd_net *nn)
+>  		clp = list_entry(pos, struct nfs4_client, cl_lru);
+>  		if (!state_expired(&lt, clp->cl_time))
+>  			break;
+> +
+> +		spin_lock(&clp->cl_lock);
+> +		stid = idr_get_next(&clp->cl_stateids, &id);
+> +		spin_unlock(&clp->cl_lock);
+> +		if (stid) {
+> +			/* client still has states */
+> +			set_bit(NFSD4_CLIENT_COURTESY, &clp->cl_flags);
+> +			continue;
+> +		}
+>  		if (mark_client_expired_locked(clp)) {
+>  			trace_nfsd_clid_expired(&clp->cl_clientid);
+>  			continue;
+> @@ -6440,7 +6508,7 @@ static const struct lock_manager_operations nfsd_posix_mng_ops  = {
+>  	.lm_put_owner = nfsd4_fl_put_owner,
+>  };
+>  
+> -static inline void
+> +static inline int
+>  nfs4_set_lock_denied(struct file_lock *fl, struct nfsd4_lock_denied *deny)
+>  {
+>  	struct nfs4_lockowner *lo;
+> @@ -6453,6 +6521,8 @@ nfs4_set_lock_denied(struct file_lock *fl, struct nfsd4_lock_denied *deny)
+>  			/* We just don't care that much */
+>  			goto nevermind;
+>  		deny->ld_clientid = lo->lo_owner.so_client->cl_clientid;
+> +		if (nfs4_destroy_courtesy_client(lo->lo_owner.so_client))
+> +			return -EAGAIN;
+>  	} else {
+>  nevermind:
+>  		deny->ld_owner.len = 0;
+> @@ -6467,6 +6537,7 @@ nfs4_set_lock_denied(struct file_lock *fl, struct nfsd4_lock_denied *deny)
+>  	deny->ld_type = NFS4_READ_LT;
+>  	if (fl->fl_type != F_RDLCK)
+>  		deny->ld_type = NFS4_WRITE_LT;
+> +	return 0;
+>  }
+>  
+>  static struct nfs4_lockowner *
+> @@ -6734,6 +6805,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	unsigned int fl_flags = FL_POSIX;
+>  	struct net *net = SVC_NET(rqstp);
+>  	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> +	bool retried = false;
+>  
+>  	dprintk("NFSD: nfsd4_lock: start=%Ld length=%Ld\n",
+>  		(long long) lock->lk_offset,
+> @@ -6860,7 +6932,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
+>  		spin_unlock(&nn->blocked_locks_lock);
+>  	}
+> -
+> +again:
+>  	err = vfs_lock_file(nf->nf_file, F_SETLK, file_lock, conflock);
+>  	switch (err) {
+>  	case 0: /* success! */
+> @@ -6875,7 +6947,12 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	case -EAGAIN:		/* conflock holds conflicting lock */
+>  		status = nfserr_denied;
+>  		dprintk("NFSD: nfsd4_lock: conflicting lock found!\n");
+> -		nfs4_set_lock_denied(conflock, &lock->lk_denied);
+> +
+> +		/* try again if conflict with courtesy client  */
+> +		if (nfs4_set_lock_denied(conflock, &lock->lk_denied) == -EAGAIN && !retried) {
+> +			retried = true;
+> +			goto again;
+> +		}
+>  		break;
+>  	case -EDEADLK:
+>  		status = nfserr_deadlock;
+> @@ -6962,6 +7039,8 @@ nfsd4_lockt(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	struct nfs4_lockowner *lo = NULL;
+>  	__be32 status;
+>  	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
+> +	bool retried = false;
+> +	int ret;
+>  
+>  	if (locks_in_grace(SVC_NET(rqstp)))
+>  		return nfserr_grace;
+> @@ -7010,14 +7089,19 @@ nfsd4_lockt(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	file_lock->fl_end = last_byte_offset(lockt->lt_offset, lockt->lt_length);
+>  
+>  	nfs4_transform_lock_offset(file_lock);
+> -
+> +again:
+>  	status = nfsd_test_lock(rqstp, &cstate->current_fh, file_lock);
+>  	if (status)
+>  		goto out;
+>  
+>  	if (file_lock->fl_type != F_UNLCK) {
+>  		status = nfserr_denied;
+> -		nfs4_set_lock_denied(file_lock, &lockt->lt_denied);
+> +		ret = nfs4_set_lock_denied(file_lock, &lockt->lt_denied);
+> +		if (ret == -EAGAIN && !retried) {
+> +			retried = true;
+> +			fh_clear_wcc(&cstate->current_fh);
+> +			goto again;
+> +		}
+>  	}
+>  out:
+>  	if (lo)
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index e73bdbb1634a..bdc3605e3722 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -345,6 +345,7 @@ struct nfs4_client {
+>  #define NFSD4_CLIENT_UPCALL_LOCK	(5)	/* upcall serialization */
+>  #define NFSD4_CLIENT_CB_FLAG_MASK	(1 << NFSD4_CLIENT_CB_UPDATE | \
+>  					 1 << NFSD4_CLIENT_CB_KILL)
+> +#define NFSD4_CLIENT_COURTESY		(6)	/* be nice to expired client */
+>  	unsigned long		cl_flags;
+>  	const struct cred	*cl_cb_cred;
+>  	struct rpc_clnt		*cl_cb_client;
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index e91d51ea028b..2f0382f9d0ff 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -304,6 +304,7 @@ struct svc_rqst {
+>  						 * net namespace
+>  						 */
+>  	void **			rq_lease_breaker; /* The v4 client breaking a lease */
+> +	void			*rq_conflict_client;
+>  };
+>  
+>  #define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq_bc_net)
+> -- 
+> 2.9.5
