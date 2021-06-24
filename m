@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 488E53B257A
+	by mail.lfdr.de (Postfix) with ESMTP id 93AA83B257B
 	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jun 2021 05:29:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230010AbhFXDbU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Jun 2021 23:31:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36192 "EHLO
+        id S230014AbhFXDbW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Jun 2021 23:31:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230002AbhFXDbU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Jun 2021 23:31:20 -0400
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB6E1C061756
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Jun 2021 20:29:01 -0700 (PDT)
-Received: by mail-io1-xd33.google.com with SMTP id a6so6209460ioe.0
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Jun 2021 20:29:01 -0700 (PDT)
+        with ESMTP id S230002AbhFXDbV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Jun 2021 23:31:21 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02E75C061574
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Jun 2021 20:29:03 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id i12so4660547ila.13
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Jun 2021 20:29:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DaXOH9viw4AlOcNpHDVEcNVeb68SygmlHfuqV9aPO9I=;
-        b=cohvp/bUsdBeM4aNzTbLJ9lFg1z+RNEFgzMUx1BMm7+xmg9OAVqXbv5g66rdrVnBrG
-         1k4SusJN1Xq1Oish6Jj0vcoBnO0G9RyO0ofby3tqcOz/pnZFCjDhhrpY1TLDRHsdTY/X
-         bADJs17R+8v+K8fyOgGJ2m2hUl9/WN5iOd7WzFRqXFJsCaik0ovwzsWjGxW4ryzTRCHj
-         /4R3G90dQtT1VlVmq5QLT95UC1UENhyhZeUMZD8EAts+8XeQ2U/OU6ifLGGNjZQk7yXE
-         8xQDLtF1lIhyRV3uWUORwcxFOfA/CmvZmABOW+Y6+IXo/3fZV8o2ms5qu7qGDXdtLtWS
-         FOJA==
+        bh=Oy8L62XnZY4pyFFfTZKcTqYbSTRclV9kgxUhLZk7FgA=;
+        b=A8A86WoP1JXQ/BAhQHd0uj5spyPpRXXierjqo+wvauAD2/BlAPGrRhEHpUR15fwf07
+         e1PD1CxM/h4R4QfECvc2vgzyhsBBmh3b5kOEguplOzzKIQfgm7jvBoe1kAKwcCeCn0mi
+         woShwOK0Po9ZqKjaVp6wBEvglTiruvRxTYg/yKLi1KyVnr8tLWdOPoSS//iyu4DAWArW
+         2BTslOiD+xL3ifyRERcgUQYaffISSXA+IOssH9DcKVaMB02wgZu5LwjDO2Nn+5K00tsc
+         wG0T+ro/Gvo1yEjxVkvI+zw1KC0lf2/Xb0eF1IdKUuo6iP6NNkg8b9VnjIEF/qaHFerJ
+         kAfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DaXOH9viw4AlOcNpHDVEcNVeb68SygmlHfuqV9aPO9I=;
-        b=U36YwMLua+CRih1KNKh5rtwnLeTtj/YEjgYMHa9lTphn9De0RIgf2uCFFfzGh5oRTb
-         mLU3ditNyoYzftyNFAtTxXZ1BoqAEH8ycTCrzSiIuhdRmntqTLBMIAFnovsFAL1fkEtO
-         SRwsYTUL181Icrg9MyUqIfkPxLn19jkZeH2FewvNdqWtPrARf5MGkwcl0AjyZBB45bM/
-         CBTL4JYukMbiC1vx5w2ryOi/Y6+/CGZaDOpcHD8WLae1gg78uAesihEHhVvRqi9H04pa
-         8N1jhWDNcerysl+CPmmN+rNqckpj5Y+9MvZTRNv9UNDeU15oK/KI66R+fdlHTak5CwsT
-         87gA==
-X-Gm-Message-State: AOAM530p2g8lDqFS9OmgM5hZGSgEHzP3l5H2U+Q8t/uftsUM7aNufQN4
-        wM39LXMXU/5UT9X90G9AHwE=
-X-Google-Smtp-Source: ABdhPJyRQ2ozDl6FOB6dQXcEHRI4e89qvU4R3wUlJEz+M92byxE0eMXPB8GFruzy7ul3bCA642NOxA==
-X-Received: by 2002:a6b:fe0e:: with SMTP id x14mr2300373ioh.79.1624505341306;
-        Wed, 23 Jun 2021 20:29:01 -0700 (PDT)
+        bh=Oy8L62XnZY4pyFFfTZKcTqYbSTRclV9kgxUhLZk7FgA=;
+        b=nBj+vE1kFoJwQKXGuc20ski7cfwn+zPCXI+yRV7qHp3ITUivBZSS+1sUZ8bdmU1bPW
+         uCj/tAJuPXPiLnz4aDjGjGpKNr0uT9GduhRa/uws+fUSo/zaujJsgEFuM2vQ4bzIdG74
+         xkEoxFOepV2Mc6Y+2iDbpwKQi7zSGxahjy7lFK45LcHv9F1KJhLrABoY3PFpYl44jFCS
+         WT06U9t/aLQWOLh8kn8/m6OZlB5GFKWyMPoYprs/TIsiQggONkjkuiKZSqPxY9f7SPcY
+         aA1ZW3oitanldfZDu6nP8AdvmP78e4Iv4Imjj+ECNGPPOtkrol3IxsllxTwBCH4n26cc
+         Durg==
+X-Gm-Message-State: AOAM531syf0Jc0mxYCcndnyKRvhyDcyl6SPaP1rMphAVkTKNh/98i44t
+        8xl6VUyp9r+FVBWmhH/ZKUHUiD8TvZNJ6A==
+X-Google-Smtp-Source: ABdhPJwn34yVtSbCAGZRCvz0iVjF4T/hIO8Ogi8h86GxgLe+pqgPlOspGAHIvrIP0NzeUJM7e7wSIA==
+X-Received: by 2002:a92:cdab:: with SMTP id g11mr2059546ild.240.1624505342394;
+        Wed, 23 Jun 2021 20:29:02 -0700 (PDT)
 Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:fd18:15dc:e0e4:e39e])
-        by smtp.gmail.com with ESMTPSA id g4sm1026780ilk.37.2021.06.23.20.29.00
+        by smtp.gmail.com with ESMTPSA id g4sm1026780ilk.37.2021.06.23.20.29.01
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Jun 2021 20:29:00 -0700 (PDT)
+        Wed, 23 Jun 2021 20:29:01 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 5/8] SUNRPC: take a xprt offline using sysfs
-Date:   Wed, 23 Jun 2021 23:28:50 -0400
-Message-Id: <20210624032853.4776-6-olga.kornievskaia@gmail.com>
+Subject: [PATCH v2 6/8] NFSv4.1 identify and mark RPC tasks that can move between transports
+Date:   Wed, 23 Jun 2021 23:28:51 -0400
+Message-Id: <20210624032853.4776-7-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 In-Reply-To: <20210624032853.4776-1-olga.kornievskaia@gmail.com>
 References: <20210624032853.4776-1-olga.kornievskaia@gmail.com>
@@ -64,189 +64,228 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-Using sysfs's xprt_state attribute, mark a particular transport offline.
-It will not be picked during the round-robin selection. It's not allowed
-to take the main (1st created transport associated with the rpc_client)
-offline. Also bring a transport back online via sysfs by writing "online"
-and that would allow for this transport to be picked during the round-
-robin selection.
+In preparation for when we can re-try a task on a different transport,
+identify and mark such RPC tasks as moveable. Only 4.1+ operarations can
+be re-tried on a different transport.
 
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- include/linux/sunrpc/xprt.h |  1 +
- net/sunrpc/sysfs.c          | 66 ++++++++++++++++++++++++++++++++++---
- net/sunrpc/sysfs.h          |  1 +
- net/sunrpc/xprtmultipath.c  |  6 ++--
- 4 files changed, 68 insertions(+), 6 deletions(-)
+ fs/nfs/nfs4proc.c            | 38 +++++++++++++++++++++++++++++++-----
+ fs/nfs/pagelist.c            |  8 ++++++--
+ fs/nfs/write.c               |  6 +++++-
+ include/linux/sunrpc/sched.h |  2 ++
+ 4 files changed, 46 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
-index 692e5946c029..b8ed7fa1b4ca 100644
---- a/include/linux/sunrpc/xprt.h
-+++ b/include/linux/sunrpc/xprt.h
-@@ -427,6 +427,7 @@ void			xprt_release_write(struct rpc_xprt *, struct rpc_task *);
- #define XPRT_BOUND		(4)
- #define XPRT_BINDING		(5)
- #define XPRT_CLOSING		(6)
-+#define XPRT_OFFLINE		(7)
- #define XPRT_CONGESTED		(9)
- #define XPRT_CWND_WAIT		(10)
- #define XPRT_WRITE_SPACE	(11)
-diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index 816f543d4237..e66888cc4c14 100644
---- a/net/sunrpc/sysfs.c
-+++ b/net/sunrpc/sysfs.c
-@@ -68,6 +68,15 @@ rpc_sysfs_xprt_kobj_get_xprt(struct kobject *kobj)
- 	return xprt_get(x->xprt);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index e653654c10bc..d3ee3700c9dd 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1155,7 +1155,11 @@ static int nfs4_call_sync_sequence(struct rpc_clnt *clnt,
+ 				   struct nfs4_sequence_args *args,
+ 				   struct nfs4_sequence_res *res)
+ {
+-	return nfs4_do_call_sync(clnt, server, msg, args, res, 0);
++	unsigned short task_flags = 0;
++
++	if (server->nfs_client->cl_minorversion)
++		task_flags = RPC_TASK_MOVEABLE;
++	return nfs4_do_call_sync(clnt, server, msg, args, res, task_flags);
  }
  
-+static inline struct rpc_xprt_switch *
-+rpc_sysfs_xprt_kobj_get_xprt_switch(struct kobject *kobj)
-+{
-+	struct rpc_sysfs_xprt *x = container_of(kobj,
-+		struct rpc_sysfs_xprt, kobject);
+ 
+@@ -2569,6 +2573,9 @@ static int nfs4_run_open_task(struct nfs4_opendata *data,
+ 	};
+ 	int status;
+ 
++	if (server->nfs_client->cl_minorversion)
++		task_setup_data.flags |= RPC_TASK_MOVEABLE;
 +
-+	return xprt_switch_get(x->xprt_switch);
-+}
+ 	kref_get(&data->kref);
+ 	data->rpc_done = false;
+ 	data->rpc_status = 0;
+@@ -3749,6 +3756,9 @@ int nfs4_do_close(struct nfs4_state *state, gfp_t gfp_mask, int wait)
+ 	};
+ 	int status = -ENOMEM;
+ 
++	if (server->nfs_client->cl_minorversion)
++		task_setup_data.flags |= RPC_TASK_MOVEABLE;
 +
- static inline struct rpc_xprt_switch *
- rpc_sysfs_xprt_switch_kobj_get_xprt(struct kobject *kobj)
+ 	nfs4_state_protect(server->nfs_client, NFS_SP4_MACH_CRED_CLEANUP,
+ 		&task_setup_data.rpc_client, &msg);
+ 
+@@ -4188,6 +4198,9 @@ static int _nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
+ 	};
+ 	unsigned short task_flags = 0;
+ 
++	if (nfs4_has_session(server->nfs_client))
++		task_flags = RPC_TASK_MOVEABLE;
++
+ 	/* Is this is an attribute revalidation, subject to softreval? */
+ 	if (inode && (server->flags & NFS_MOUNT_SOFTREVAL))
+ 		task_flags |= RPC_TASK_TIMEOUT;
+@@ -4307,6 +4320,9 @@ static int _nfs4_proc_lookup(struct rpc_clnt *clnt, struct inode *dir,
+ 	};
+ 	unsigned short task_flags = 0;
+ 
++	if (server->nfs_client->cl_minorversion)
++		task_flags = RPC_TASK_MOVEABLE;
++
+ 	/* Is this is an attribute revalidation, subject to softreval? */
+ 	if (nfs_lookup_is_soft_revalidate(dentry))
+ 		task_flags |= RPC_TASK_TIMEOUT;
+@@ -6538,7 +6554,7 @@ static int _nfs4_proc_delegreturn(struct inode *inode, const struct cred *cred,
+ 		.rpc_client = server->client,
+ 		.rpc_message = &msg,
+ 		.callback_ops = &nfs4_delegreturn_ops,
+-		.flags = RPC_TASK_ASYNC | RPC_TASK_TIMEOUT,
++		.flags = RPC_TASK_ASYNC | RPC_TASK_TIMEOUT | RPC_TASK_MOVEABLE,
+ 	};
+ 	int status = 0;
+ 
+@@ -6856,6 +6872,11 @@ static struct rpc_task *nfs4_do_unlck(struct file_lock *fl,
+ 		.workqueue = nfsiod_workqueue,
+ 		.flags = RPC_TASK_ASYNC,
+ 	};
++	struct nfs_client *client =
++		NFS_SERVER(lsp->ls_state->inode)->nfs_client;
++
++	if (client->cl_minorversion)
++		task_setup_data.flags |= RPC_TASK_MOVEABLE;
+ 
+ 	nfs4_state_protect(NFS_SERVER(lsp->ls_state->inode)->nfs_client,
+ 		NFS_SP4_MACH_CRED_CLEANUP, &task_setup_data.rpc_client, &msg);
+@@ -7130,6 +7151,10 @@ static int _nfs4_do_setlk(struct nfs4_state *state, int cmd, struct file_lock *f
+ 		.flags = RPC_TASK_ASYNC | RPC_TASK_CRED_NOREF,
+ 	};
+ 	int ret;
++	struct nfs_client *client = NFS_SERVER(state->inode)->nfs_client;
++
++	if (client->cl_minorversion)
++		task_setup_data.flags |= RPC_TASK_MOVEABLE;
+ 
+ 	dprintk("%s: begin!\n", __func__);
+ 	data = nfs4_alloc_lockdata(fl, nfs_file_open_context(fl->fl_file),
+@@ -9186,7 +9211,7 @@ static struct rpc_task *_nfs41_proc_sequence(struct nfs_client *clp,
+ 		.rpc_client = clp->cl_rpcclient,
+ 		.rpc_message = &msg,
+ 		.callback_ops = &nfs41_sequence_ops,
+-		.flags = RPC_TASK_ASYNC | RPC_TASK_TIMEOUT,
++		.flags = RPC_TASK_ASYNC | RPC_TASK_TIMEOUT | RPC_TASK_MOVEABLE,
+ 	};
+ 	struct rpc_task *ret;
+ 
+@@ -9509,7 +9534,8 @@ nfs4_proc_layoutget(struct nfs4_layoutget *lgp, long *timeout)
+ 		.rpc_message = &msg,
+ 		.callback_ops = &nfs4_layoutget_call_ops,
+ 		.callback_data = lgp,
+-		.flags = RPC_TASK_ASYNC | RPC_TASK_CRED_NOREF,
++		.flags = RPC_TASK_ASYNC | RPC_TASK_CRED_NOREF |
++			 RPC_TASK_MOVEABLE,
+ 	};
+ 	struct pnfs_layout_segment *lseg = NULL;
+ 	struct nfs4_exception exception = {
+@@ -9650,6 +9676,7 @@ int nfs4_proc_layoutreturn(struct nfs4_layoutreturn *lrp, bool sync)
+ 		.rpc_message = &msg,
+ 		.callback_ops = &nfs4_layoutreturn_call_ops,
+ 		.callback_data = lrp,
++		.flags = RPC_TASK_MOVEABLE,
+ 	};
+ 	int status = 0;
+ 
+@@ -9804,6 +9831,7 @@ nfs4_proc_layoutcommit(struct nfs4_layoutcommit_data *data, bool sync)
+ 		.rpc_message = &msg,
+ 		.callback_ops = &nfs4_layoutcommit_ops,
+ 		.callback_data = data,
++		.flags = RPC_TASK_MOVEABLE,
+ 	};
+ 	struct rpc_task *task;
+ 	int status = 0;
+@@ -10131,7 +10159,7 @@ static int nfs41_free_stateid(struct nfs_server *server,
+ 		.rpc_client = server->client,
+ 		.rpc_message = &msg,
+ 		.callback_ops = &nfs41_free_stateid_ops,
+-		.flags = RPC_TASK_ASYNC,
++		.flags = RPC_TASK_ASYNC | RPC_TASK_MOVEABLE,
+ 	};
+ 	struct nfs_free_stateid_data *data;
+ 	struct rpc_task *task;
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index cf9cc62ec48e..cc232d1f16f2 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -954,6 +954,7 @@ static int nfs_generic_pg_pgios(struct nfs_pageio_descriptor *desc)
  {
-@@ -122,7 +131,7 @@ static ssize_t rpc_sysfs_xprt_state_show(struct kobject *kobj,
- 	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
- 	ssize_t ret;
- 	int locked, connected, connecting, close_wait, bound, binding,
--	    closing, congested, cwnd_wait, write_space;
-+	    closing, congested, cwnd_wait, write_space, offline;
+ 	struct nfs_pgio_header *hdr;
+ 	int ret;
++	unsigned short task_flags = 0;
  
- 	if (!xprt)
- 		return 0;
-@@ -140,8 +149,9 @@ static ssize_t rpc_sysfs_xprt_state_show(struct kobject *kobj,
- 		congested = test_bit(XPRT_CONGESTED, &xprt->state);
- 		cwnd_wait = test_bit(XPRT_CWND_WAIT, &xprt->state);
- 		write_space = test_bit(XPRT_WRITE_SPACE, &xprt->state);
-+		offline = test_bit(XPRT_OFFLINE, &xprt->state);
- 
--		ret = sprintf(buf, "state=%s %s %s %s %s %s %s %s %s %s\n",
-+		ret = sprintf(buf, "state=%s %s %s %s %s %s %s %s %s %s %s\n",
- 			      locked ? "LOCKED" : "",
- 			      connected ? "CONNECTED" : "",
- 			      connecting ? "CONNECTING" : "",
-@@ -151,7 +161,8 @@ static ssize_t rpc_sysfs_xprt_state_show(struct kobject *kobj,
- 			      closing ? "CLOSING" : "",
- 			      congested ? "CONGESTED" : "",
- 			      cwnd_wait ? "CWND_WAIT" : "",
--			      write_space ? "WRITE_SPACE" : "");
-+			      write_space ? "WRITE_SPACE" : "",
-+			      offline ? "OFFLINE" : "");
+ 	hdr = nfs_pgio_header_alloc(desc->pg_rw_ops);
+ 	if (!hdr) {
+@@ -962,14 +963,17 @@ static int nfs_generic_pg_pgios(struct nfs_pageio_descriptor *desc)
  	}
- 
- 	xprt_put(xprt);
-@@ -235,6 +246,52 @@ static ssize_t rpc_sysfs_xprt_dstaddr_store(struct kobject *kobj,
- 	goto out;
+ 	nfs_pgheader_init(desc, hdr, nfs_pgio_header_free);
+ 	ret = nfs_generic_pgio(desc, hdr);
+-	if (ret == 0)
++	if (ret == 0) {
++		if (NFS_SERVER(hdr->inode)->nfs_client->cl_minorversion)
++			task_flags = RPC_TASK_MOVEABLE;
+ 		ret = nfs_initiate_pgio(NFS_CLIENT(hdr->inode),
+ 					hdr,
+ 					hdr->cred,
+ 					NFS_PROTO(hdr->inode),
+ 					desc->pg_rpc_callops,
+ 					desc->pg_ioflags,
+-					RPC_TASK_CRED_NOREF);
++					RPC_TASK_CRED_NOREF | task_flags);
++	}
+ 	return ret;
  }
  
-+static ssize_t rpc_sysfs_xprt_state_change(struct kobject *kobj,
-+					   struct kobj_attribute *attr,
-+					   const char *buf, size_t count)
-+{
-+	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
-+	int offline = 0, online = 0;
-+	struct rpc_xprt_switch *xps = rpc_sysfs_xprt_kobj_get_xprt_switch(kobj);
-+
-+	if (!xprt)
-+		return 0;
-+
-+	if (!strncmp(buf, "offline", 7))
-+		offline = 1;
-+	else if (!strncmp(buf, "online", 6))
-+		online = 1;
-+	else
-+		return -EINVAL;
-+
-+	if (wait_on_bit_lock(&xprt->state, XPRT_LOCKED, TASK_KILLABLE)) {
-+		count = -EINTR;
-+		goto out_put;
-+	}
-+	if (xprt->main) {
-+		count = -EINVAL;
-+		goto release_tasks;
-+	}
-+	if (offline) {
-+		set_bit(XPRT_OFFLINE, &xprt->state);
-+		spin_lock(&xps->xps_lock);
-+		xps->xps_nactive--;
-+		spin_unlock(&xps->xps_lock);
-+	} else if (online) {
-+		clear_bit(XPRT_OFFLINE, &xprt->state);
-+		spin_lock(&xps->xps_lock);
-+		xps->xps_nactive++;
-+		spin_unlock(&xps->xps_lock);
-+	}
-+
-+release_tasks:
-+	xprt_release_write(xprt, NULL);
-+out_put:
-+	xprt_put(xprt);
-+	xprt_switch_put(xps);
-+	return count;
-+}
-+
- int rpc_sysfs_init(void)
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 3bf82178166a..eae9bf114041 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -1810,6 +1810,7 @@ nfs_commit_list(struct inode *inode, struct list_head *head, int how,
+ 		struct nfs_commit_info *cinfo)
  {
- 	rpc_sunrpc_kset = kset_create_and_add("sunrpc", NULL, kernel_kobj);
-@@ -305,7 +362,7 @@ static struct kobj_attribute rpc_sysfs_xprt_info = __ATTR(xprt_info,
- 	0444, rpc_sysfs_xprt_info_show, NULL);
+ 	struct nfs_commit_data	*data;
++	unsigned short task_flags = 0;
  
- static struct kobj_attribute rpc_sysfs_xprt_change_state = __ATTR(xprt_state,
--	0644, rpc_sysfs_xprt_state_show, NULL);
-+	0644, rpc_sysfs_xprt_state_show, rpc_sysfs_xprt_state_change);
- 
- static struct attribute *rpc_sysfs_xprt_attrs[] = {
- 	&rpc_sysfs_xprt_dstaddr.attr,
-@@ -468,6 +525,7 @@ void rpc_sysfs_xprt_setup(struct rpc_xprt_switch *xprt_switch,
- 	if (rpc_xprt) {
- 		xprt->xprt_sysfs = rpc_xprt;
- 		rpc_xprt->xprt = xprt;
-+		rpc_xprt->xprt_switch = xprt_switch;
- 		kobject_uevent(&rpc_xprt->kobject, KOBJ_ADD);
- 	}
- }
-diff --git a/net/sunrpc/sysfs.h b/net/sunrpc/sysfs.h
-index ff10451de6fa..6620cebd1037 100644
---- a/net/sunrpc/sysfs.h
-+++ b/net/sunrpc/sysfs.h
-@@ -22,6 +22,7 @@ struct rpc_sysfs_xprt_switch {
- struct rpc_sysfs_xprt {
- 	struct kobject kobject;
- 	struct rpc_xprt *xprt;
-+	struct rpc_xprt_switch *xprt_switch;
- };
- 
- int rpc_sysfs_init(void);
-diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
-index 584349c8cad4..7d40cdf81274 100644
---- a/net/sunrpc/xprtmultipath.c
-+++ b/net/sunrpc/xprtmultipath.c
-@@ -65,7 +65,8 @@ static void xprt_switch_remove_xprt_locked(struct rpc_xprt_switch *xps,
- {
- 	if (unlikely(xprt == NULL))
- 		return;
--	xps->xps_nactive--;
-+	if (!test_bit(XPRT_OFFLINE, &xprt->state))
-+		xps->xps_nactive--;
- 	xps->xps_nxprts--;
- 	if (xps->xps_nxprts == 0)
- 		xps->xps_net = NULL;
-@@ -231,7 +232,8 @@ void xprt_iter_default_rewind(struct rpc_xprt_iter *xpi)
- static
- bool xprt_is_active(const struct rpc_xprt *xprt)
- {
--	return kref_read(&xprt->kref) != 0;
-+	return (kref_read(&xprt->kref) != 0 &&
-+		!test_bit(XPRT_OFFLINE, &xprt->state));
+ 	/* another commit raced with us */
+ 	if (list_empty(head))
+@@ -1820,8 +1821,11 @@ nfs_commit_list(struct inode *inode, struct list_head *head, int how,
+ 	/* Set up the argument struct */
+ 	nfs_init_commit(data, head, NULL, cinfo);
+ 	atomic_inc(&cinfo->mds->rpcs_out);
++	if (NFS_SERVER(inode)->nfs_client->cl_minorversion)
++		task_flags = RPC_TASK_MOVEABLE;
+ 	return nfs_initiate_commit(NFS_CLIENT(inode), data, NFS_PROTO(inode),
+-				   data->mds_ops, how, RPC_TASK_CRED_NOREF);
++				   data->mds_ops, how,
++				   RPC_TASK_CRED_NOREF | task_flags);
  }
  
- static
+ /*
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index df696efdd675..a237b8dbf608 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -121,6 +121,7 @@ struct rpc_task_setup {
+  */
+ #define RPC_TASK_ASYNC		0x0001		/* is an async task */
+ #define RPC_TASK_SWAPPER	0x0002		/* is swapping in/out */
++#define RPC_TASK_MOVEABLE	0x0004		/* nfs4.1+ rpc tasks */
+ #define RPC_TASK_NULLCREDS	0x0010		/* Use AUTH_NULL credential */
+ #define RPC_CALL_MAJORSEEN	0x0020		/* major timeout seen */
+ #define RPC_TASK_ROOTCREDS	0x0040		/* force root creds */
+@@ -139,6 +140,7 @@ struct rpc_task_setup {
+ #define RPC_IS_SOFT(t)		((t)->tk_flags & (RPC_TASK_SOFT|RPC_TASK_TIMEOUT))
+ #define RPC_IS_SOFTCONN(t)	((t)->tk_flags & RPC_TASK_SOFTCONN)
+ #define RPC_WAS_SENT(t)		((t)->tk_flags & RPC_TASK_SENT)
++#define RPC_IS_MOVEABLE(t)	((t)->tk_flags & RPC_TASK_MOVEABLE)
+ 
+ #define RPC_TASK_RUNNING	0
+ #define RPC_TASK_QUEUED		1
 -- 
 2.27.0
 
