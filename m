@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F32E13B2579
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jun 2021 05:29:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 488E53B257A
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jun 2021 05:29:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230013AbhFXDbU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S230010AbhFXDbU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Wed, 23 Jun 2021 23:31:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36188 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230010AbhFXDbU (ORCPT
+        with ESMTP id S230002AbhFXDbU (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Jun 2021 23:31:20 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C380CC061574
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Jun 2021 20:29:00 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id k16so6100530ios.10
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Jun 2021 20:29:00 -0700 (PDT)
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB6E1C061756
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Jun 2021 20:29:01 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id a6so6209460ioe.0
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Jun 2021 20:29:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=X1fkEW2LhHY59nCgB5W4dhaAN6w2ef4pK1UTWYJd0tg=;
-        b=tltkt7fqSPU8930cZG2fSePLQK0/RxAzmLjFCqj/wIJu32lhwqkaoR34UqgsNxCDW7
-         Ph9ljVksi0dUUClTkqUhB0R0+dtS3E4YYxawKyfuPKBK5+hkXNDaEPfHWYhgEdki3Ewk
-         QfMUKCFAe7cue8K47pxB60JF9ywGf8FTsArZjTLECbT75v8GDguGr5vkoNs1vBM561dp
-         2NXZfDOAaYq6+u2LPNTvGEYcEk497Zip0juByUgPpt6x4fzu0oiPqnMTGF29kGIgLm8v
-         7WpzQxC5jSzFFFb01tW/z5F+i5JoBnOkmUSLRiaP2Ocjn26syBOuaJuM/4j0KaqXblpE
-         yIcw==
+        bh=DaXOH9viw4AlOcNpHDVEcNVeb68SygmlHfuqV9aPO9I=;
+        b=cohvp/bUsdBeM4aNzTbLJ9lFg1z+RNEFgzMUx1BMm7+xmg9OAVqXbv5g66rdrVnBrG
+         1k4SusJN1Xq1Oish6Jj0vcoBnO0G9RyO0ofby3tqcOz/pnZFCjDhhrpY1TLDRHsdTY/X
+         bADJs17R+8v+K8fyOgGJ2m2hUl9/WN5iOd7WzFRqXFJsCaik0ovwzsWjGxW4ryzTRCHj
+         /4R3G90dQtT1VlVmq5QLT95UC1UENhyhZeUMZD8EAts+8XeQ2U/OU6ifLGGNjZQk7yXE
+         8xQDLtF1lIhyRV3uWUORwcxFOfA/CmvZmABOW+Y6+IXo/3fZV8o2ms5qu7qGDXdtLtWS
+         FOJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=X1fkEW2LhHY59nCgB5W4dhaAN6w2ef4pK1UTWYJd0tg=;
-        b=lD4tqafrgm7XxmkJBty7EJSycJ7inGgIsx7moCAnxmTdB0QakoHC5ZGruc2tjGX+LW
-         3cbfSPEjlge7VnOL8TBajLjIQmeHtDJ7sZrU58yRS2LkKBbGNm1f6Hnw3H7hrYghG/+7
-         Pp2RN5k62sITxHOFXEm63N1N36so4Z9pY2bJqH1H2ZtQhg7XYv6AEmRJ2iNe0oIM2o9J
-         C4fVqTWmuLf+xr48fKsiUjyGQ18k3pCLZAa+HQyYyF+RaL7CXcld0S3xSfYDKQBzTWLd
-         ZxeSS/4R7t0H09gkpSIjel9GiY5IzhjU3RMFqrTzdKBiUQUpcmSVS2HTkzDJcHKvh8nD
-         /OwA==
-X-Gm-Message-State: AOAM530+VzoefWYa7z6qBx0bmk+5f0D6UJ0iqOZHqBkZJL00F2lrnlGs
-        ddgdCJaENruldLEoeVN9fl4=
-X-Google-Smtp-Source: ABdhPJw3LrfWpiWRIzeYIMBpJODcBnIb+aZLJXp3ruE1ywe44sJyTR6/hXJt80IGQX7c27Al1ujExg==
-X-Received: by 2002:a6b:292:: with SMTP id 140mr2319583ioc.11.1624505340254;
-        Wed, 23 Jun 2021 20:29:00 -0700 (PDT)
+        bh=DaXOH9viw4AlOcNpHDVEcNVeb68SygmlHfuqV9aPO9I=;
+        b=U36YwMLua+CRih1KNKh5rtwnLeTtj/YEjgYMHa9lTphn9De0RIgf2uCFFfzGh5oRTb
+         mLU3ditNyoYzftyNFAtTxXZ1BoqAEH8ycTCrzSiIuhdRmntqTLBMIAFnovsFAL1fkEtO
+         SRwsYTUL181Icrg9MyUqIfkPxLn19jkZeH2FewvNdqWtPrARf5MGkwcl0AjyZBB45bM/
+         CBTL4JYukMbiC1vx5w2ryOi/Y6+/CGZaDOpcHD8WLae1gg78uAesihEHhVvRqi9H04pa
+         8N1jhWDNcerysl+CPmmN+rNqckpj5Y+9MvZTRNv9UNDeU15oK/KI66R+fdlHTak5CwsT
+         87gA==
+X-Gm-Message-State: AOAM530p2g8lDqFS9OmgM5hZGSgEHzP3l5H2U+Q8t/uftsUM7aNufQN4
+        wM39LXMXU/5UT9X90G9AHwE=
+X-Google-Smtp-Source: ABdhPJyRQ2ozDl6FOB6dQXcEHRI4e89qvU4R3wUlJEz+M92byxE0eMXPB8GFruzy7ul3bCA642NOxA==
+X-Received: by 2002:a6b:fe0e:: with SMTP id x14mr2300373ioh.79.1624505341306;
+        Wed, 23 Jun 2021 20:29:01 -0700 (PDT)
 Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:fd18:15dc:e0e4:e39e])
-        by smtp.gmail.com with ESMTPSA id g4sm1026780ilk.37.2021.06.23.20.28.59
+        by smtp.gmail.com with ESMTPSA id g4sm1026780ilk.37.2021.06.23.20.29.00
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Jun 2021 20:28:59 -0700 (PDT)
+        Wed, 23 Jun 2021 20:29:00 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 4/8] SUNRPC for TCP display xprt's source port in sysfs xprt_info
-Date:   Wed, 23 Jun 2021 23:28:49 -0400
-Message-Id: <20210624032853.4776-5-olga.kornievskaia@gmail.com>
+Subject: [PATCH v2 5/8] SUNRPC: take a xprt offline using sysfs
+Date:   Wed, 23 Jun 2021 23:28:50 -0400
+Message-Id: <20210624032853.4776-6-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 In-Reply-To: <20210624032853.4776-1-olga.kornievskaia@gmail.com>
 References: <20210624032853.4776-1-olga.kornievskaia@gmail.com>
@@ -64,44 +64,189 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-Using TCP connection's source port it is useful to match connections
-seen on the network traces to the xprts used by the linux nfs client.
+Using sysfs's xprt_state attribute, mark a particular transport offline.
+It will not be picked during the round-robin selection. It's not allowed
+to take the main (1st created transport associated with the rpc_client)
+offline. Also bring a transport back online via sysfs by writing "online"
+and that would allow for this transport to be picked during the round-
+robin selection.
 
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- net/sunrpc/sysfs.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ include/linux/sunrpc/xprt.h |  1 +
+ net/sunrpc/sysfs.c          | 66 ++++++++++++++++++++++++++++++++++---
+ net/sunrpc/sysfs.h          |  1 +
+ net/sunrpc/xprtmultipath.c  |  6 ++--
+ 4 files changed, 68 insertions(+), 6 deletions(-)
 
+diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
+index 692e5946c029..b8ed7fa1b4ca 100644
+--- a/include/linux/sunrpc/xprt.h
++++ b/include/linux/sunrpc/xprt.h
+@@ -427,6 +427,7 @@ void			xprt_release_write(struct rpc_xprt *, struct rpc_task *);
+ #define XPRT_BOUND		(4)
+ #define XPRT_BINDING		(5)
+ #define XPRT_CLOSING		(6)
++#define XPRT_OFFLINE		(7)
+ #define XPRT_CONGESTED		(9)
+ #define XPRT_CWND_WAIT		(10)
+ #define XPRT_WRITE_SPACE	(11)
 diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index 6ef5469fe998..816f543d4237 100644
+index 816f543d4237..e66888cc4c14 100644
 --- a/net/sunrpc/sysfs.c
 +++ b/net/sunrpc/sysfs.c
-@@ -5,6 +5,7 @@
- #include <linux/sunrpc/clnt.h>
- #include <linux/kobject.h>
- #include <linux/sunrpc/addr.h>
-+#include <linux/sunrpc/xprtsock.h>
- 
- #include "sysfs.h"
- 
-@@ -103,10 +104,13 @@ static ssize_t rpc_sysfs_xprt_info_show(struct kobject *kobj,
- 	ret = sprintf(buf, "last_used=%lu\ncur_cong=%lu\ncong_win=%lu\n"
- 		       "max_num_slots=%u\nmin_num_slots=%u\nnum_reqs=%u\n"
- 		       "binding_q_len=%u\nsending_q_len=%u\npending_q_len=%u\n"
--		       "backlog_q_len=%u\nmain_xprt=%d\n", xprt->last_used,
--		       xprt->cong, xprt->cwnd, xprt->max_reqs, xprt->min_reqs,
--		       xprt->num_reqs, xprt->binding.qlen, xprt->sending.qlen,
--		       xprt->pending.qlen, xprt->backlog.qlen, xprt->main);
-+		       "backlog_q_len=%u\nmain_xprt=%d\nsrc_port=%u\n",
-+		       xprt->last_used, xprt->cong, xprt->cwnd, xprt->max_reqs,
-+		       xprt->min_reqs, xprt->num_reqs, xprt->binding.qlen,
-+		       xprt->sending.qlen, xprt->pending.qlen,
-+		       xprt->backlog.qlen, xprt->main,
-+		       (xprt->xprt_class->ident == XPRT_TRANSPORT_TCP) ?
-+		       get_srcport(xprt) : 0);
- 	xprt_put(xprt);
- 	return ret + 1;
+@@ -68,6 +68,15 @@ rpc_sysfs_xprt_kobj_get_xprt(struct kobject *kobj)
+ 	return xprt_get(x->xprt);
  }
+ 
++static inline struct rpc_xprt_switch *
++rpc_sysfs_xprt_kobj_get_xprt_switch(struct kobject *kobj)
++{
++	struct rpc_sysfs_xprt *x = container_of(kobj,
++		struct rpc_sysfs_xprt, kobject);
++
++	return xprt_switch_get(x->xprt_switch);
++}
++
+ static inline struct rpc_xprt_switch *
+ rpc_sysfs_xprt_switch_kobj_get_xprt(struct kobject *kobj)
+ {
+@@ -122,7 +131,7 @@ static ssize_t rpc_sysfs_xprt_state_show(struct kobject *kobj,
+ 	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
+ 	ssize_t ret;
+ 	int locked, connected, connecting, close_wait, bound, binding,
+-	    closing, congested, cwnd_wait, write_space;
++	    closing, congested, cwnd_wait, write_space, offline;
+ 
+ 	if (!xprt)
+ 		return 0;
+@@ -140,8 +149,9 @@ static ssize_t rpc_sysfs_xprt_state_show(struct kobject *kobj,
+ 		congested = test_bit(XPRT_CONGESTED, &xprt->state);
+ 		cwnd_wait = test_bit(XPRT_CWND_WAIT, &xprt->state);
+ 		write_space = test_bit(XPRT_WRITE_SPACE, &xprt->state);
++		offline = test_bit(XPRT_OFFLINE, &xprt->state);
+ 
+-		ret = sprintf(buf, "state=%s %s %s %s %s %s %s %s %s %s\n",
++		ret = sprintf(buf, "state=%s %s %s %s %s %s %s %s %s %s %s\n",
+ 			      locked ? "LOCKED" : "",
+ 			      connected ? "CONNECTED" : "",
+ 			      connecting ? "CONNECTING" : "",
+@@ -151,7 +161,8 @@ static ssize_t rpc_sysfs_xprt_state_show(struct kobject *kobj,
+ 			      closing ? "CLOSING" : "",
+ 			      congested ? "CONGESTED" : "",
+ 			      cwnd_wait ? "CWND_WAIT" : "",
+-			      write_space ? "WRITE_SPACE" : "");
++			      write_space ? "WRITE_SPACE" : "",
++			      offline ? "OFFLINE" : "");
+ 	}
+ 
+ 	xprt_put(xprt);
+@@ -235,6 +246,52 @@ static ssize_t rpc_sysfs_xprt_dstaddr_store(struct kobject *kobj,
+ 	goto out;
+ }
+ 
++static ssize_t rpc_sysfs_xprt_state_change(struct kobject *kobj,
++					   struct kobj_attribute *attr,
++					   const char *buf, size_t count)
++{
++	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
++	int offline = 0, online = 0;
++	struct rpc_xprt_switch *xps = rpc_sysfs_xprt_kobj_get_xprt_switch(kobj);
++
++	if (!xprt)
++		return 0;
++
++	if (!strncmp(buf, "offline", 7))
++		offline = 1;
++	else if (!strncmp(buf, "online", 6))
++		online = 1;
++	else
++		return -EINVAL;
++
++	if (wait_on_bit_lock(&xprt->state, XPRT_LOCKED, TASK_KILLABLE)) {
++		count = -EINTR;
++		goto out_put;
++	}
++	if (xprt->main) {
++		count = -EINVAL;
++		goto release_tasks;
++	}
++	if (offline) {
++		set_bit(XPRT_OFFLINE, &xprt->state);
++		spin_lock(&xps->xps_lock);
++		xps->xps_nactive--;
++		spin_unlock(&xps->xps_lock);
++	} else if (online) {
++		clear_bit(XPRT_OFFLINE, &xprt->state);
++		spin_lock(&xps->xps_lock);
++		xps->xps_nactive++;
++		spin_unlock(&xps->xps_lock);
++	}
++
++release_tasks:
++	xprt_release_write(xprt, NULL);
++out_put:
++	xprt_put(xprt);
++	xprt_switch_put(xps);
++	return count;
++}
++
+ int rpc_sysfs_init(void)
+ {
+ 	rpc_sunrpc_kset = kset_create_and_add("sunrpc", NULL, kernel_kobj);
+@@ -305,7 +362,7 @@ static struct kobj_attribute rpc_sysfs_xprt_info = __ATTR(xprt_info,
+ 	0444, rpc_sysfs_xprt_info_show, NULL);
+ 
+ static struct kobj_attribute rpc_sysfs_xprt_change_state = __ATTR(xprt_state,
+-	0644, rpc_sysfs_xprt_state_show, NULL);
++	0644, rpc_sysfs_xprt_state_show, rpc_sysfs_xprt_state_change);
+ 
+ static struct attribute *rpc_sysfs_xprt_attrs[] = {
+ 	&rpc_sysfs_xprt_dstaddr.attr,
+@@ -468,6 +525,7 @@ void rpc_sysfs_xprt_setup(struct rpc_xprt_switch *xprt_switch,
+ 	if (rpc_xprt) {
+ 		xprt->xprt_sysfs = rpc_xprt;
+ 		rpc_xprt->xprt = xprt;
++		rpc_xprt->xprt_switch = xprt_switch;
+ 		kobject_uevent(&rpc_xprt->kobject, KOBJ_ADD);
+ 	}
+ }
+diff --git a/net/sunrpc/sysfs.h b/net/sunrpc/sysfs.h
+index ff10451de6fa..6620cebd1037 100644
+--- a/net/sunrpc/sysfs.h
++++ b/net/sunrpc/sysfs.h
+@@ -22,6 +22,7 @@ struct rpc_sysfs_xprt_switch {
+ struct rpc_sysfs_xprt {
+ 	struct kobject kobject;
+ 	struct rpc_xprt *xprt;
++	struct rpc_xprt_switch *xprt_switch;
+ };
+ 
+ int rpc_sysfs_init(void);
+diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
+index 584349c8cad4..7d40cdf81274 100644
+--- a/net/sunrpc/xprtmultipath.c
++++ b/net/sunrpc/xprtmultipath.c
+@@ -65,7 +65,8 @@ static void xprt_switch_remove_xprt_locked(struct rpc_xprt_switch *xps,
+ {
+ 	if (unlikely(xprt == NULL))
+ 		return;
+-	xps->xps_nactive--;
++	if (!test_bit(XPRT_OFFLINE, &xprt->state))
++		xps->xps_nactive--;
+ 	xps->xps_nxprts--;
+ 	if (xps->xps_nxprts == 0)
+ 		xps->xps_net = NULL;
+@@ -231,7 +232,8 @@ void xprt_iter_default_rewind(struct rpc_xprt_iter *xpi)
+ static
+ bool xprt_is_active(const struct rpc_xprt *xprt)
+ {
+-	return kref_read(&xprt->kref) != 0;
++	return (kref_read(&xprt->kref) != 0 &&
++		!test_bit(XPRT_OFFLINE, &xprt->state));
+ }
+ 
+ static
 -- 
 2.27.0
 
