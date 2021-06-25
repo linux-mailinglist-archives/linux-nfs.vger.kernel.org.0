@@ -2,72 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D5503B462A
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Jun 2021 16:54:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 841F03B4669
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Jun 2021 17:12:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231749AbhFYO5H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Jun 2021 10:57:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229653AbhFYO5F (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Jun 2021 10:57:05 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60409C061574;
-        Fri, 25 Jun 2021 07:54:44 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 6EA616208; Fri, 25 Jun 2021 10:54:43 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6EA616208
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1624632883;
-        bh=p4xrL//6v4PCv9apCr092hPA5bf7dpEAKaU7i4sG2Os=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=muJG09KUGUXMfG2wKP4iy5zL6mAqtMz6dtE8C3u3Ct7S/tG1f6HtQ/Bue+blMwOqI
-         kuMjFV8qm+0A1zCxYj+vpYQMlbr0X8gf/vcse91kmfnD6aTDVFwzirIGkMtAXHJpf8
-         tefNZdNXoheoRYaICWMqiAOmaELBUBhWcsdpa0GQ=
-Date:   Fri, 25 Jun 2021 10:54:43 -0400
-From:   "J . Bruce Fields" <bfields@fieldses.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nfsd: remove redundant assignment to pointer 'this'
-Message-ID: <20210625145443.GA26192@fieldses.org>
-References: <20210513151639.73435-1-colin.king@canonical.com>
+        id S229445AbhFYPPL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Jun 2021 11:15:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229764AbhFYPPL (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 25 Jun 2021 11:15:11 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6D2F461428;
+        Fri, 25 Jun 2021 15:12:50 +0000 (UTC)
+Subject: [PATCH] NFSD: Prevent a possible oops in the nfs_dirent() tracepoint
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org
+Date:   Fri, 25 Jun 2021 11:12:49 -0400
+Message-ID: <162463396907.1820.8112792283525036426.stgit@klimt.1015granger.net>
+User-Agent: StGit/1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210513151639.73435-1-colin.king@canonical.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Sorry, overlooked this before somehow; applied for 5.14.--b.
+The double copy of the string is a mistake, plus __assign_str()
+uses strlen(), which is wrong to do on a string that isn't
+guaranteed to be NUL-terminated.
 
-On Thu, May 13, 2021 at 04:16:39PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The pointer 'this' is being initialized with a value that is never read
-> and it is being updated later with a new value. The initialization is
-> redundant and can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  fs/nfsd/nfs4proc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index f4ce93d7f26e..712df4b7dcb2 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -3232,7 +3232,7 @@ bool nfsd4_spo_must_allow(struct svc_rqst *rqstp)
->  {
->  	struct nfsd4_compoundres *resp = rqstp->rq_resp;
->  	struct nfsd4_compoundargs *argp = rqstp->rq_argp;
-> -	struct nfsd4_op *this = &argp->ops[resp->opcnt - 1];
-> +	struct nfsd4_op *this;
->  	struct nfsd4_compound_state *cstate = &resp->cstate;
->  	struct nfs4_op_map *allow = &cstate->clp->cl_spo_must_allow;
->  	u32 opiter;
-> -- 
-> 2.30.2
+Fixes: 6019ce0742ca ("NFSD: Add a tracepoint to record directory entry encoding")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfsd/trace.h |    1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index 27a93ebd1d80..89dccced526a 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -408,7 +408,6 @@ TRACE_EVENT(nfsd_dirent,
+ 		__entry->ino = ino;
+ 		__entry->len = namlen;
+ 		memcpy(__get_str(name), name, namlen);
+-		__assign_str(name, name);
+ 	),
+ 	TP_printk("fh_hash=0x%08x ino=%llu name=%.*s",
+ 		__entry->fh_hash, __entry->ino,
+
+
