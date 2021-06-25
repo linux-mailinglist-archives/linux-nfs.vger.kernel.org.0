@@ -2,134 +2,475 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 809293B39BC
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Jun 2021 01:27:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 153563B3A76
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Jun 2021 03:32:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbhFXXaF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Jun 2021 19:30:05 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:55510 "EHLO
+        id S229712AbhFYBfE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Jun 2021 21:35:04 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:60884 "EHLO
         smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbhFXXaF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Jun 2021 19:30:05 -0400
+        with ESMTP id S232873AbhFYBfD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Jun 2021 21:35:03 -0400
 Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
         (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 3D8871FDEB;
-        Thu, 24 Jun 2021 23:27:44 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id F115F1FE05;
+        Fri, 25 Jun 2021 01:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1624577264; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1624584761; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DTs7aLX9BvXZvapKtwM82PJl3bhsoouSmRv14kpnh1U=;
-        b=LDmysPi0SAq9UsO4Ks7TDkYoednJptUxAXnsYuJtXc/P8Qef9KCckzLrgBFAABB2hd7vEK
-        t7ng5lwY0QfXf6ePpB5GMDFAVtgD3A6XdjFoqe4B0rZt/XYhbwxmi635d3+JZsL4KFq5CX
-        hCB3ZC1PmlvW2Mf65RXZIRTkaIX+zFY=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=jUMZK+nLeRIVYx5ONGvKkTRK3kYjH9+6jWvX4I0eCUI=;
+        b=1ruzVeQFm+sBJF+gtxnlLFDlzhv2TPf25pP/dEDEmV0q5Hkyr/m3KDfEuVRn0y58fkkByD
+        laweRjjEXi/Qckx2XhL9xq2UF/kjbMrvHyI4d8O9ZroUyJL+wIT6uUHQ1vDB7HfqZNYWms
+        7VYwQbVlJKXWayktyHoBImx+VZTpBZI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1624577264;
+        s=susede2_ed25519; t=1624584761;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DTs7aLX9BvXZvapKtwM82PJl3bhsoouSmRv14kpnh1U=;
-        b=iT/kbsD/8aYdrNI/nTIRI21iOQq95wd9vcGOTjGEUJLKZr3v45ma9fauzZo2NCHny0xqJV
-        EFuGwKLXDmjGr6AQ==
+         content-transfer-encoding:content-transfer-encoding;
+        bh=jUMZK+nLeRIVYx5ONGvKkTRK3kYjH9+6jWvX4I0eCUI=;
+        b=mCvUf7EXFBtdcyJDPQO5DtLTGMkzLjbtLT+gROlMkGMCEoBzLhzGYIVe7dkv2jsSglXIJc
+        DMDatbsa4gHfwJCg==
 Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        by imap.suse.de (Postfix) with ESMTP id 9909A11A97;
-        Thu, 24 Jun 2021 23:27:42 +0000 (UTC)
+        by imap.suse.de (Postfix) with ESMTP id 5DA4B11A97;
+        Fri, 25 Jun 2021 01:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1624577264; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1624584761; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DTs7aLX9BvXZvapKtwM82PJl3bhsoouSmRv14kpnh1U=;
-        b=LDmysPi0SAq9UsO4Ks7TDkYoednJptUxAXnsYuJtXc/P8Qef9KCckzLrgBFAABB2hd7vEK
-        t7ng5lwY0QfXf6ePpB5GMDFAVtgD3A6XdjFoqe4B0rZt/XYhbwxmi635d3+JZsL4KFq5CX
-        hCB3ZC1PmlvW2Mf65RXZIRTkaIX+zFY=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=jUMZK+nLeRIVYx5ONGvKkTRK3kYjH9+6jWvX4I0eCUI=;
+        b=1ruzVeQFm+sBJF+gtxnlLFDlzhv2TPf25pP/dEDEmV0q5Hkyr/m3KDfEuVRn0y58fkkByD
+        laweRjjEXi/Qckx2XhL9xq2UF/kjbMrvHyI4d8O9ZroUyJL+wIT6uUHQ1vDB7HfqZNYWms
+        7VYwQbVlJKXWayktyHoBImx+VZTpBZI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1624577264;
+        s=susede2_ed25519; t=1624584761;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DTs7aLX9BvXZvapKtwM82PJl3bhsoouSmRv14kpnh1U=;
-        b=iT/kbsD/8aYdrNI/nTIRI21iOQq95wd9vcGOTjGEUJLKZr3v45ma9fauzZo2NCHny0xqJV
-        EFuGwKLXDmjGr6AQ==
+         content-transfer-encoding:content-transfer-encoding;
+        bh=jUMZK+nLeRIVYx5ONGvKkTRK3kYjH9+6jWvX4I0eCUI=;
+        b=mCvUf7EXFBtdcyJDPQO5DtLTGMkzLjbtLT+gROlMkGMCEoBzLhzGYIVe7dkv2jsSglXIJc
+        DMDatbsa4gHfwJCg==
 Received: from director2.suse.de ([192.168.254.72])
         by imap3-int with ESMTPSA
-        id dJ6HEu4U1WD6fAAALh3uQQ
-        (envelope-from <neilb@suse.de>); Thu, 24 Jun 2021 23:27:42 +0000
+        id bXBZBDgy1WCELgAALh3uQQ
+        (envelope-from <neilb@suse.de>); Fri, 25 Jun 2021 01:32:40 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
-To:     "Patrick Goetz" <pgoetz@math.utexas.edu>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        "Wang Yugui" <wangyugui@e16-tech.com>, linux-nfs@vger.kernel.org
-Subject: Re: any idea about auto export multiple btrfs snapshots?
-In-reply-to: <3ac9c4f3-6bc2-9753-6f0f-937aa4f13efa@math.utexas.edu>
-References: <162432531379.17441.15110145423567943074@noble.neil.brown.name>,
- <20210622112253.DAEE.409509F4@e16-tech.com>,
- <20210622151407.C002.409509F4@e16-tech.com>,
- <162440994038.28671.7338874000115610814@noble.neil.brown.name>,
- <20210623153548.GF20232@fieldses.org>,
- <162448589701.28671.8402117125966499268@noble.neil.brown.name>,
- <3ac9c4f3-6bc2-9753-6f0f-937aa4f13efa@math.utexas.edu>
-Date:   Fri, 25 Jun 2021 09:27:38 +1000
-Message-id: <162457725899.28671.14092003979067994699@noble.neil.brown.name>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH/rfc] NFS: introduce NFS namespaces.
+Date:   Fri, 25 Jun 2021 11:32:36 +1000
+Message-id: <162458475606.28671.1835069742861755259@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 25 Jun 2021, Patrick Goetz wrote:
-> 
-> On 6/23/21 5:04 PM, NeilBrown wrote:
-> > 
-> > Probably the best approach to fixing this completely on the btrfs side
-> > would be to copy the auto-mount approach used in NFS.  NFS sees multiple
-> > different volumes on the server and transparently creates new vfsmounts,
-> > using the automount infrastructure to mount and unmount them.
-> 
-> I'm very confused about what you're talking about.  Is this documented 
-> somewhere? I mean, I do use autofs, but see that as a separate software 
-> system working with NFS.
-> 
 
-autofs (together with the user-space automountd) is a special filesystem
-that provides automount functionality to the sysadmin.
-It makes use of some core automount functionality in the Linux VFS.
-This functionality is referred to as "managed" dentries.
-See "Revalidation and automounts" in https://lwn.net/Articles/649115/.
+When there are multiple NFS mounts from the same server using the same
+NFS version and the same security parameters, various other mount
+parameters are forcibly shared, causing the parameter requests on
+subsequent mounts to be ignored.  This includes nconnect, fsc, and
+others.
 
-autofs makes use of this functionality to provide automounts.  NFS makes
-use of this same functionality to provide the same mount-point structure
-on the client that it finds on the server.
+It is possible to avoid this sharing by creating a separate network
+namespace for the new connections, but this can often be overly
+burdensome.  This patch introduces the concept of "NFS namespaces" which
+allows one group of NFS mounts to be completely separate from others
+without the need for a completely separate network namespace.
 
-I don't think there is any documentation specifically about NFS using
-this infrastructure.  It should be largely transparent to users.
+Use cases for this include:
+ - major applications with different tuning recommendations.  Often the
+   support organisation for a particular application will require known
+   configuration options to be used before a support request can be
+   considered.  If two applications use (different mounts from) the same
+   NFS server but require different configuration, this is currently
+   awkward.
+ - data policy restrictions.  Use of fscache on one directory might be
+   forbidden by local policy, while use on another might be permitted
+   and beneficial.
+ - testing for problem diagnosis.  When an NFS mount is exhibiting
+   problems it can be useful information to see if a second mount will
+   suffer the same problems.  I've seen two separate cases recently with
+   TCP-level problems where the initial diagnosis couldn't make this test
+   as the TCP connection would be shared.  Allowing completely independent
+   mounts would make this easier.
 
-Suppose that on the server "/export/foo" is a mount of some
-filesystem, and you nfs4 mount "server:/export" to "/import" on the
-client.
-Then you will at first see only "/import" in /proc/mounts on client.
-If you "ls -ld /import/foo" you will still only see /import.
-But if you "ls -l /import/foo" so it lists the contents of that other
-filesytem, then check /proc/mounts, you will now see "/import" and
-"/import/foo".
+The NFS namespace concept addresses each of these needs.
 
-After a while (between 500 and 1000 seconds I think) of not accessing
-/import/foo, that entry will disappear from /proc/mounts.
+A new mount option "namespace=3D" is added.  Any two mounts with different
+namespace settings are treated as through there were to different
+servers.  If no "namespace=3D" is given, then the empty string is used as
+the namespace for comparisons.  Possible usages might be
+"namespace=3Dapplication_name" or "namespace=3Dmustnotcache" or
+"namespace=3Dtesting".
 
-I'm sure you will recognise this as very similar to autofs behaviour.
-It uses the same core functionality.  The timeout for inactive NFS
-sub-filesystems to be unmounted can be controlled via
-/proc/sys/fs/nfs/nfs_mountpoint_timeout and, since Linux 5.7, via the
-nfs_mountpoint_expiry_timeout module parameter.
-These aren't documented.
+The namespace - if given - is included in the client identity string so
+that the NFSv4 server will see two different mount groups as though from
+separate clients.
 
-Note that I'm no longer sure that btrfs using automount like this would
-actually make things easier for nfsd.  But in some ways I think it would
-be the "right" thing to do.
+A few white-space inconsistencies nearby changed code have been
+rectified.
 
-NeilBrown
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ fs/nfs/client.c           | 20 ++++++++++++++++++--
+ fs/nfs/fs_context.c       | 11 ++++++++++-
+ fs/nfs/internal.h         |  2 ++
+ fs/nfs/nfs3client.c       |  1 +
+ fs/nfs/nfs4client.c       | 15 ++++++++++++++-
+ fs/nfs/nfs4proc.c         | 28 ++++++++++++++++++++--------
+ fs/nfs/super.c            |  5 +++++
+ include/linux/nfs_fs_sb.h |  4 ++--
+ 8 files changed, 72 insertions(+), 14 deletions(-)
+
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 330f65727c45..f6f06ea649bc 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -173,6 +173,13 @@ struct nfs_client *nfs_alloc_client(const struct nfs_cli=
+ent_initdata *cl_init)
+ 		if (!clp->cl_hostname)
+ 			goto error_cleanup;
+ 	}
++	if (cl_init->namespace && *cl_init->namespace) {
++		err =3D -ENOMEM;
++		clp->cl_namespace =3D kstrdup(cl_init->namespace, GFP_KERNEL);
++		if (!clp->cl_namespace)
++			goto error_cleanup;
++	} else
++		clp->cl_namespace =3D "";
+=20
+ 	INIT_LIST_HEAD(&clp->cl_superblocks);
+ 	clp->cl_rpcclient =3D ERR_PTR(-EINVAL);
+@@ -187,6 +194,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_clie=
+nt_initdata *cl_init)
+ 	return clp;
+=20
+ error_cleanup:
++	kfree_const(clp->cl_hostname);
+ 	put_nfs_version(clp->cl_nfs_mod);
+ error_dealloc:
+ 	kfree(clp);
+@@ -247,6 +255,7 @@ void nfs_free_client(struct nfs_client *clp)
+ 	put_nfs_version(clp->cl_nfs_mod);
+ 	kfree(clp->cl_hostname);
+ 	kfree(clp->cl_acceptor);
++	kfree_const(clp->cl_namespace);
+ 	kfree(clp);
+ }
+ EXPORT_SYMBOL_GPL(nfs_free_client);
+@@ -288,7 +297,7 @@ static struct nfs_client *nfs_match_client(const struct n=
+fs_client_initdata *dat
+=20
+ again:
+ 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
+-	        const struct sockaddr *clap =3D (struct sockaddr *)&clp->cl_addr;
++		const struct sockaddr *clap =3D (struct sockaddr *)&clp->cl_addr;
+ 		/* Don't match clients that failed to initialise properly */
+ 		if (clp->cl_cons_state < 0)
+ 			continue;
+@@ -320,11 +329,17 @@ static struct nfs_client *nfs_match_client(const struct=
+ nfs_client_initdata *dat
+ 		    test_bit(NFS_CS_DS, &clp->cl_flags))
+ 			continue;
+=20
++		/* If admin has asked for different namespaces for these mounts,
++		 * don't share the client.
++		 */
++		if (strcmp(clp->cl_namespace, data->namespace ?: "") !=3D 0)
++			continue;
++
+ 		/* Match the full socket address */
+ 		if (!rpc_cmp_addr_port(sap, clap))
+ 			/* Match all xprt_switch full socket addresses */
+ 			if (IS_ERR(clp->cl_rpcclient) ||
+-                            !rpc_clnt_xprt_switch_has_addr(clp->cl_rpcclient,
++			    !rpc_clnt_xprt_switch_has_addr(clp->cl_rpcclient,
+ 							   sap))
+ 				continue;
+=20
+@@ -676,6 +691,7 @@ static int nfs_init_server(struct nfs_server *server,
+ 		.timeparms =3D &timeparms,
+ 		.cred =3D server->cred,
+ 		.nconnect =3D ctx->nfs_server.nconnect,
++		.namespace =3D ctx->namespace,
+ 		.init_flags =3D (1UL << NFS_CS_REUSEPORT),
+ 	};
+ 	struct nfs_client *clp;
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index d95c9a39bc70..7c644a31d304 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -59,6 +59,7 @@ enum nfs_param {
+ 	Opt_mountproto,
+ 	Opt_mountvers,
+ 	Opt_namelen,
++	Opt_namespace,
+ 	Opt_nconnect,
+ 	Opt_port,
+ 	Opt_posix,
+@@ -156,6 +157,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[]=
+ =3D {
+ 	fsparam_u32   ("mountport",	Opt_mountport),
+ 	fsparam_string("mountproto",	Opt_mountproto),
+ 	fsparam_u32   ("mountvers",	Opt_mountvers),
++	fsparam_string("namespace",	Opt_namespace),
+ 	fsparam_u32   ("namlen",	Opt_namelen),
+ 	fsparam_u32   ("nconnect",	Opt_nconnect),
+ 	fsparam_string("nfsvers",	Opt_vers),
+@@ -824,7 +826,13 @@ static int nfs_fs_context_parse_param(struct fs_context =
+*fc,
+ 			goto out_invalid_value;
+ 		}
+ 		break;
+-
++	case Opt_namespace:
++		if (strpbrk(param->string, " \n\t,"))
++			goto out_invalid_value;
++		kfree(ctx->namespace);
++		ctx->namespace =3D param->string;
++		param->string =3D NULL;
++		break;
+ 		/*
+ 		 * Special options
+ 		 */
+@@ -1462,6 +1470,7 @@ static void nfs_fs_context_free(struct fs_context *fc)
+ 		kfree(ctx->nfs_server.export_path);
+ 		kfree(ctx->nfs_server.hostname);
+ 		kfree(ctx->fscache_uniq);
++		kfree(ctx->namespace);
+ 		nfs_free_fhandle(ctx->mntfh);
+ 		nfs_free_fattr(ctx->clone_data.fattr);
+ 		kfree(ctx);
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index a36af04188c2..2010492b856a 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -62,6 +62,7 @@ struct nfs_client_initdata {
+ 	const struct sockaddr *addr;		/* Address of the server */
+ 	const char *nodename;			/* Hostname of the client */
+ 	const char *ip_addr;			/* IP address of the client */
++	const char *namespace;			/* NFS namespace */
+ 	size_t addrlen;
+ 	struct nfs_subversion *nfs_mod;
+ 	int proto;
+@@ -97,6 +98,7 @@ struct nfs_fs_context {
+ 	unsigned short		protofamily;
+ 	unsigned short		mountfamily;
+ 	bool			has_sec_mnt_opts;
++	const char		*namespace;
+=20
+ 	struct {
+ 		union {
+diff --git a/fs/nfs/nfs3client.c b/fs/nfs/nfs3client.c
+index 5601e47360c2..61ad13e1b041 100644
+--- a/fs/nfs/nfs3client.c
++++ b/fs/nfs/nfs3client.c
+@@ -93,6 +93,7 @@ struct nfs_client *nfs3_set_ds_client(struct nfs_server *md=
+s_srv,
+ 		.net =3D mds_clp->cl_net,
+ 		.timeparms =3D &ds_timeout,
+ 		.cred =3D mds_srv->cred,
++		.namespace =3D mds_clp->cl_namespace,
+ 	};
+ 	struct nfs_client *clp;
+ 	char buf[INET6_ADDRSTRLEN + 1];
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index 42719384e25f..7dbc521275ff 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -500,6 +500,12 @@ static int nfs4_match_client(struct nfs_client  *pos,  s=
+truct nfs_client *new,
+ 	if (pos->cl_minorversion !=3D new->cl_minorversion)
+ 		return 1;
+=20
++	/* If admin has asked for different namespaces for these mounts,
++	 * don't share the client.
++	 */
++	if (strcmp(pos->cl_namespace, new->cl_namespace) !=3D 0)
++		return 1;
++
+ 	/* If "pos" isn't marked ready, we can't trust the
+ 	 * remaining fields in "pos", especially the client
+ 	 * ID and serverowner fields.  Wait for CREATE_SESSION
+@@ -863,6 +869,7 @@ static int nfs4_set_client(struct nfs_server *server,
+ 		const char *ip_addr,
+ 		int proto, const struct rpc_timeout *timeparms,
+ 		u32 minorversion, unsigned int nconnect,
++		const char *namespace,
+ 		struct net *net)
+ {
+ 	struct nfs_client_initdata cl_init =3D {
+@@ -873,6 +880,7 @@ static int nfs4_set_client(struct nfs_server *server,
+ 		.nfs_mod =3D &nfs_v4,
+ 		.proto =3D proto,
+ 		.minorversion =3D minorversion,
++		.namespace =3D namespace,
+ 		.net =3D net,
+ 		.timeparms =3D timeparms,
+ 		.cred =3D server->cred,
+@@ -940,6 +948,7 @@ struct nfs_client *nfs4_set_ds_client(struct nfs_server *=
+mds_srv,
+ 		.nfs_mod =3D &nfs_v4,
+ 		.proto =3D ds_proto,
+ 		.minorversion =3D minor_version,
++		.namespace =3D mds_clp->cl_namespace,
+ 		.net =3D mds_clp->cl_net,
+ 		.timeparms =3D &ds_timeout,
+ 		.cred =3D mds_srv->cred,
+@@ -1120,6 +1129,7 @@ static int nfs4_init_server(struct nfs_server *server, =
+struct fs_context *fc)
+ 				&timeparms,
+ 				ctx->minorversion,
+ 				ctx->nfs_server.nconnect,
++				ctx->namespace,
+ 				fc->net_ns);
+ 	if (error < 0)
+ 		return error;
+@@ -1209,6 +1219,7 @@ struct nfs_server *nfs4_create_referral_server(struct f=
+s_context *fc)
+ 				parent_server->client->cl_timeout,
+ 				parent_client->cl_mvops->minor_version,
+ 				parent_client->cl_nconnect,
++				parent_client->cl_namespace,
+ 				parent_client->cl_net);
+ 	if (!error)
+ 		goto init_server;
+@@ -1224,6 +1235,7 @@ struct nfs_server *nfs4_create_referral_server(struct f=
+s_context *fc)
+ 				parent_server->client->cl_timeout,
+ 				parent_client->cl_mvops->minor_version,
+ 				parent_client->cl_nconnect,
++				parent_client->cl_namespace,
+ 				parent_client->cl_net);
+ 	if (error < 0)
+ 		goto error;
+@@ -1321,7 +1333,8 @@ int nfs4_update_server(struct nfs_server *server, const=
+ char *hostname,
+ 	error =3D nfs4_set_client(server, hostname, sap, salen, buf,
+ 				clp->cl_proto, clnt->cl_timeout,
+ 				clp->cl_minorversion,
+-				clp->cl_nconnect, net);
++				clp->cl_nconnect,
++				clp->cl_namespace, net);
+ 	clear_bit(NFS_MIG_TSM_POSSIBLE, &server->mig_status);
+ 	if (error !=3D 0) {
+ 		nfs_server_insert_lists(server);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index e653654c10bc..63ad0d7d0448 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -6191,6 +6191,8 @@ nfs4_init_nonuniform_client_string(struct nfs_client *c=
+lp)
+ 		strlen(rpc_peeraddr2str(clp->cl_rpcclient, RPC_DISPLAY_ADDR)) +
+ 		1;
+ 	rcu_read_unlock();
++	if (*clp->cl_namespace)
++		len +=3D strlen(clp->cl_namespace) + 1;
+=20
+ 	buflen =3D nfs4_get_uniquifier(clp, buf, sizeof(buf));
+ 	if (buflen)
+@@ -6210,15 +6212,19 @@ nfs4_init_nonuniform_client_string(struct nfs_client =
+*clp)
+=20
+ 	rcu_read_lock();
+ 	if (buflen)
+-		scnprintf(str, len, "Linux NFSv4.0 %s/%s/%s",
++		scnprintf(str, len, "Linux NFSv4.0 %s/%s/%s%s%s",
+ 			  clp->cl_rpcclient->cl_nodename, buf,
+ 			  rpc_peeraddr2str(clp->cl_rpcclient,
+-					   RPC_DISPLAY_ADDR));
++					   RPC_DISPLAY_ADDR),
++			  *clp->cl_namespace ? "/" : "",
++			  clp->cl_namespace);
+ 	else
+-		scnprintf(str, len, "Linux NFSv4.0 %s/%s",
++		scnprintf(str, len, "Linux NFSv4.0 %s/%s%s%s",
+ 			  clp->cl_rpcclient->cl_nodename,
+ 			  rpc_peeraddr2str(clp->cl_rpcclient,
+-					   RPC_DISPLAY_ADDR));
++					   RPC_DISPLAY_ADDR),
++			  *clp->cl_namespace ? "/" : "",
++			  clp->cl_namespace);
+ 	rcu_read_unlock();
+=20
+ 	clp->cl_owner_id =3D str;
+@@ -6238,6 +6244,8 @@ nfs4_init_uniform_client_string(struct nfs_client *clp)
+=20
+ 	len =3D 10 + 10 + 1 + 10 + 1 +
+ 		strlen(clp->cl_rpcclient->cl_nodename) + 1;
++	if (clp->cl_namespace)
++		len +=3D strlen(clp->cl_namespace) + 1;
+=20
+ 	buflen =3D nfs4_get_uniquifier(clp, buf, sizeof(buf));
+ 	if (buflen)
+@@ -6256,13 +6264,17 @@ nfs4_init_uniform_client_string(struct nfs_client *cl=
+p)
+ 		return -ENOMEM;
+=20
+ 	if (buflen)
+-		scnprintf(str, len, "Linux NFSv%u.%u %s/%s",
++		scnprintf(str, len, "Linux NFSv%u.%u %s/%s%s%s",
+ 			  clp->rpc_ops->version, clp->cl_minorversion,
+-			  buf, clp->cl_rpcclient->cl_nodename);
++			  buf, clp->cl_rpcclient->cl_nodename,
++			  *clp->cl_namespace ? "/" : "",
++			  clp->cl_namespace);
+ 	else
+-		scnprintf(str, len, "Linux NFSv%u.%u %s",
++		scnprintf(str, len, "Linux NFSv%u.%u %s%s%s",
+ 			  clp->rpc_ops->version, clp->cl_minorversion,
+-			  clp->cl_rpcclient->cl_nodename);
++			  clp->cl_rpcclient->cl_nodename,
++			  *clp->cl_namespace ? "/" : "",
++			  clp->cl_namespace);
+ 	clp->cl_owner_id =3D str;
+ 	return 0;
+ }
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index fe58525cfed4..ea59248b64d1 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -479,6 +479,8 @@ static void nfs_show_mount_options(struct seq_file *m, st=
+ruct nfs_server *nfss,
+ 	rcu_read_unlock();
+ 	if (clp->cl_nconnect > 0)
+ 		seq_printf(m, ",nconnect=3D%u", clp->cl_nconnect);
++	if (*clp->cl_namespace)
++		seq_printf(m, ",namespace=3D%s", clp->cl_namespace);
+ 	if (version =3D=3D 4) {
+ 		if (nfss->port !=3D NFS_PORT)
+ 			seq_printf(m, ",port=3D%u", nfss->port);
+@@ -1186,6 +1188,9 @@ static int nfs_compare_super(struct super_block *sb, st=
+ruct fs_context *fc)
+ 	/* Note: NFS_MOUNT_UNSHARED =3D=3D NFS4_MOUNT_UNSHARED */
+ 	if (old->flags & NFS_MOUNT_UNSHARED)
+ 		return 0;
++	if (strcmp(old->nfs_client->cl_namespace,
++		   server->nfs_client->cl_namespace) !=3D 0)
++		return 0;
+ 	if (memcmp(&old->fsid, &server->fsid, sizeof(old->fsid)) !=3D 0)
+ 		return 0;
+ 	if (!nfs_compare_userns(old, server))
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index d71a0e90faeb..c62db98f3c04 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -62,8 +62,8 @@ struct nfs_client {
+=20
+ 	u32			cl_minorversion;/* NFSv4 minorversion */
+ 	unsigned int		cl_nconnect;	/* Number of connections */
+-	const char *		cl_principal;  /* used for machine cred */
+-
++	const char *		cl_principal;	/* used for machine cred */
++	const char *		cl_namespace;	/* used for NFS namespaces */
+ #if IS_ENABLED(CONFIG_NFS_V4)
+ 	struct list_head	cl_ds_clients; /* auth flavor data servers */
+ 	u64			cl_clientid;	/* constant */
+--=20
+2.31.1
 
