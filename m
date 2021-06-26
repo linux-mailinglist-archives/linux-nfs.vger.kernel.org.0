@@ -2,63 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 154213B4F60
-	for <lists+linux-nfs@lfdr.de>; Sat, 26 Jun 2021 18:05:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F36F3B4F64
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Jun 2021 18:10:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229796AbhFZQH6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 26 Jun 2021 12:07:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54078 "EHLO
+        id S229712AbhFZQMX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 26 Jun 2021 12:12:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229916AbhFZQHz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 26 Jun 2021 12:07:55 -0400
-Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD715C061574
-        for <linux-nfs@vger.kernel.org>; Sat, 26 Jun 2021 09:05:31 -0700 (PDT)
-Received: by mail-qk1-x733.google.com with SMTP id bj15so22468979qkb.11
-        for <linux-nfs@vger.kernel.org>; Sat, 26 Jun 2021 09:05:31 -0700 (PDT)
+        with ESMTP id S229657AbhFZQMX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 26 Jun 2021 12:12:23 -0400
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B65C061574
+        for <linux-nfs@vger.kernel.org>; Sat, 26 Jun 2021 09:09:59 -0700 (PDT)
+Received: by mail-qv1-xf33.google.com with SMTP id bz9so281865qvb.2
+        for <linux-nfs@vger.kernel.org>; Sat, 26 Jun 2021 09:09:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=zIWT1S4kh6PPa3DRlxLlpt/vATak1O4EQDwysGUmM7w=;
-        b=D5EhZBcOJ58qy4GAok324sVwYXH6GlWUSJWm47D0L4xqwRaiKrZLiLHvnqAmfNP3tu
-         eXI3ghtlD0cAiPsC+23Ovaj7PEFTTDi53nrgfwYMvT927XpfdehFGIuzKmDhWSdwjKwL
-         5FbGhamwOHJC325ce3Os4G0HscUP8I1npVh+99pZK2Kki9dk6DkmurmIbC0xD6o1pgFW
-         s80zV7Dui26XAAtybwGCTkeXyAxIdAcgF2/e0VMy+pSNdXUrheO/UwheZ0ffognHR39n
-         EjvPCnvFEk4zCwAMhpOkoOb44L5HHG2lvi5zJGUh5WN4sGasRFTysGkcepmaTqB+YrF8
-         zJ8A==
+        bh=NUe01N2Z93LLqq1GblLTUqwFzed3kvFcYaRQKmyia/4=;
+        b=KCX0ctIIo8jkyEd+WVVDzj3+cWx8AqXGwsriGIS9Ilk47Abgh5EW8wp2l5dx0c2t/f
+         vJRTGIS9Ed1e3t6Rh9rASOv8DEqz2X/WXVLgVxrlltfOgXiq02qD6L+tiphg6ATXElyQ
+         0we8EpWf8ue9zXql0cPhoKoBDlW0Ftj9yGCCe0sSuI+GO+hLRgnkighrw+mMuMSGzfGi
+         egUM2rDHHMPCQDZ+ml9+/iZBzWay4aEPCqNGIcYI/0It4wviAb1mBS0SakyvyDvHKEUk
+         IGgj2LqmRORw2/1QYMPtackUhdJbtFgpGG3EoL+oHSL/4r4RYstZZ2BnlURl20SJZHCb
+         izxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zIWT1S4kh6PPa3DRlxLlpt/vATak1O4EQDwysGUmM7w=;
-        b=YKyyeq6f6BxmZJiM2xtzOBiVm2DX8mXj7WmcuYhvfNskSAJx8pUaBT/JUrMKxWLMhz
-         UMjSR0fuxI0Jv/W5d+avhd/eBY0FJbO0eNWu21wkHzByjPZ5mu5mdP8FZlBcyTzQmSXG
-         TLbGVuiSeM3DMpPcrGdhwJRfquu4RpQBWheuFS5UzSPYijIkBUOIgW//T2YD3I/QVmG5
-         a5Zce2v/pPZl8S2ZGYmu2R33vMlOFAQdegt2T276mOXRvRiPYX8fScEBFo/w3xI7sw4M
-         1duxNaiq9MqKNP2QMlbygRbnhIDR4WQ+S7yooD/52RlYikKU2TcGKJIX84pEQIL4zzRc
-         Vbmw==
-X-Gm-Message-State: AOAM533NTlVZAfYtwwmiHwCOtHSHTQ62it8EC02ZrTwhA0rPBZp38bja
-        yBHLIXf1fhr4l7sv+z9S6m6J9PdNuLBR
-X-Google-Smtp-Source: ABdhPJx1Sa6sdpfW/DZ+4GRVF/M0fl8NUlmZ62xZeoKUw/aKZBgwmn0DxC9qAmD7y9pTD/uRZAfgzA==
-X-Received: by 2002:a05:620a:136a:: with SMTP id d10mr16612493qkl.422.1624723530483;
-        Sat, 26 Jun 2021 09:05:30 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NUe01N2Z93LLqq1GblLTUqwFzed3kvFcYaRQKmyia/4=;
+        b=rbkGyw+e78wR8JP3MV5AYTLamtfjLytkzNoYBMy6iM1rf/+qoRjyrIhiFndedWDwv2
+         t8MIuBsGTEIVVB5o8pJtyAmTy5phLS7GLHpbvOiqfM/IskxogA56kscdAEEHLR5dqrKy
+         qrMky3c05c+Wq2tdgf/4eDYWKxE8q9ojb8uM9XGei6fvIP06D9fZI9I9ycawvmBh+Lw0
+         ycKso9OTjI425krsnOs1jXmMm0PgBMKvAkRFjryD7y/tcXLUEQskZutDgC07an69o1Y+
+         +u5r3yHvNa3o9dNHl2lNa9ulKBBrGThv5zT3tSzvopkd8peDtWOtYWL8U/Xs/jH7WtbB
+         w2rg==
+X-Gm-Message-State: AOAM532mZ2VY76mYoXlzbpiLQTaXv31Y+wTc5VG1OAsDC0qZuTbC7rQh
+        0EBRiZABTf/De10/7LHzeymP+SfGxuPB
+X-Google-Smtp-Source: ABdhPJz5nnzngVkGI9/a9FPMkfWfNYOuZXb/m29112iElp60MyYAFNm6r9QbO8nFrjjh0ocsmCSYWg==
+X-Received: by 2002:ad4:57d3:: with SMTP id y19mr17095455qvx.0.1624723798627;
+        Sat, 26 Jun 2021 09:09:58 -0700 (PDT)
 Received: from leira.hammer.space (c-68-36-133-222.hsd1.mi.comcast.net. [68.36.133.222])
-        by smtp.gmail.com with ESMTPSA id 202sm5797624qki.83.2021.06.26.09.05.29
+        by smtp.gmail.com with ESMTPSA id s8sm2995141qke.72.2021.06.26.09.09.57
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Jun 2021 09:05:29 -0700 (PDT)
+        Sat, 26 Jun 2021 09:09:57 -0700 (PDT)
 From:   trondmy@gmail.com
 X-Google-Original-From: trond.myklebust@hammerspace.com
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 3/3] NFS: Avoid duplicate resets of attribute cache timeouts
-Date:   Sat, 26 Jun 2021 12:05:26 -0400
-Message-Id: <20210626160526.323332-4-trond.myklebust@hammerspace.com>
+Subject: [PATCH 0/2] Embryonic support for case insensitive filesystems
+Date:   Sat, 26 Jun 2021 12:09:54 -0400
+Message-Id: <20210626160956.323472-1-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210626160526.323332-3-trond.myklebust@hammerspace.com>
-References: <20210626160526.323332-1-trond.myklebust@hammerspace.com>
- <20210626160526.323332-2-trond.myklebust@hammerspace.com>
- <20210626160526.323332-3-trond.myklebust@hammerspace.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -67,74 +63,25 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-We know that the attributes changed on the server if and only if the
-change attribute is different. Otherwise, we're just refreshing our
-cache with values that were already known to be stale.
+The following patchset adds limited support for case insensitive
+filesystems to NFSv4. It adds the ability to detect such filesystems,
+and then turns off negative dentry caching. The reason is that we don't
+know which filenames in the dentry cache are actually case folded
+synonyms, so we need to ensure that we revalidate those negative
+dentries even for the case where our client created the file or
+directory.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/inode.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Trond Myklebust (2):
+  NFSv4: Add some support for case insensitive filesystems
+  NFSv4: Just don't cache negative dentries on case insensitive servers
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index b05414d5f5c7..4ced82dfe52d 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -2059,13 +2059,13 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 					| NFS_INO_INVALID_OTHER;
- 				if (S_ISDIR(inode->i_mode))
- 					nfs_force_lookup_revalidate(inode);
-+				attr_changed = true;
- 				dprintk("NFS: change_attr change on server for file %s/%ld\n",
- 						inode->i_sb->s_id,
- 						inode->i_ino);
- 			} else if (!have_delegation)
- 				nfsi->cache_validity |= NFS_INO_DATA_INVAL_DEFER;
- 			inode_set_iversion_raw(inode, fattr->change_attr);
--			attr_changed = true;
- 		}
- 	} else {
- 		nfsi->cache_validity |=
-@@ -2098,7 +2098,6 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 				i_size_write(inode, new_isize);
- 				if (!have_writers)
- 					invalid |= NFS_INO_INVALID_DATA;
--				attr_changed = true;
- 			}
- 			dprintk("NFS: isize change on server for file %s/%ld "
- 					"(%Ld to %Ld)\n",
-@@ -2130,7 +2129,6 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 			inode->i_mode = newmode;
- 			invalid |= NFS_INO_INVALID_ACCESS
- 				| NFS_INO_INVALID_ACL;
--			attr_changed = true;
- 		}
- 	} else if (fattr_supported & NFS_ATTR_FATTR_MODE)
- 		nfsi->cache_validity |=
-@@ -2141,7 +2139,6 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 			invalid |= NFS_INO_INVALID_ACCESS
- 				| NFS_INO_INVALID_ACL;
- 			inode->i_uid = fattr->uid;
--			attr_changed = true;
- 		}
- 	} else if (fattr_supported & NFS_ATTR_FATTR_OWNER)
- 		nfsi->cache_validity |=
-@@ -2152,7 +2149,6 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 			invalid |= NFS_INO_INVALID_ACCESS
- 				| NFS_INO_INVALID_ACL;
- 			inode->i_gid = fattr->gid;
--			attr_changed = true;
- 		}
- 	} else if (fattr_supported & NFS_ATTR_FATTR_GROUP)
- 		nfsi->cache_validity |=
-@@ -2163,7 +2159,6 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 			if (S_ISDIR(inode->i_mode))
- 				invalid |= NFS_INO_INVALID_DATA;
- 			set_nlink(inode, fattr->nlink);
--			attr_changed = true;
- 		}
- 	} else if (fattr_supported & NFS_ATTR_FATTR_NLINK)
- 		nfsi->cache_validity |=
+ fs/nfs/dir.c              |  3 +++
+ fs/nfs/nfs4proc.c         |  8 +++++++-
+ fs/nfs/nfs4xdr.c          | 40 +++++++++++++++++++++++++++++++++++++++
+ include/linux/nfs_fs_sb.h |  2 ++
+ include/linux/nfs_xdr.h   |  2 ++
+ 5 files changed, 54 insertions(+), 1 deletion(-)
+
 -- 
 2.31.1
 
