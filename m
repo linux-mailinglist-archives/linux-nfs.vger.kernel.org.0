@@ -2,89 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3279B3B4D7B
-	for <lists+linux-nfs@lfdr.de>; Sat, 26 Jun 2021 09:44:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B81203B4F5D
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Jun 2021 18:00:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229573AbhFZHrI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 26 Jun 2021 03:47:08 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:5438 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229948AbhFZHrF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 26 Jun 2021 03:47:05 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GBm5b5ws8z71Rl;
-        Sat, 26 Jun 2021 15:41:23 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (7.185.36.114) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Sat, 26 Jun 2021 15:44:41 +0800
-Received: from localhost.localdomain (10.175.101.6) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Sat, 26 Jun 2021 15:44:41 +0800
-From:   Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-To:     <zhangxiaoxu5@huawei.com>, <trond.myklebust@hammerspace.com>,
-        <anna.schumaker@netapp.com>, <bfields@fieldses.org>,
-        <chuck.lever@oracle.com>, <linux-nfs@vger.kernel.org>
-Subject: [PATCH 2/2] SUNRPC: Should wake up the privileged task firstly.
-Date:   Sat, 26 Jun 2021 15:50:42 +0800
-Message-ID: <20210626075042.805548-3-zhangxiaoxu5@huawei.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20210626075042.805548-1-zhangxiaoxu5@huawei.com>
-References: <20210626075042.805548-1-zhangxiaoxu5@huawei.com>
+        id S230097AbhFZQC6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 26 Jun 2021 12:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229657AbhFZQC5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 26 Jun 2021 12:02:57 -0400
+Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44147C061574
+        for <linux-nfs@vger.kernel.org>; Sat, 26 Jun 2021 09:00:34 -0700 (PDT)
+Received: by mail-qk1-x72c.google.com with SMTP id j184so22533456qkd.6
+        for <linux-nfs@vger.kernel.org>; Sat, 26 Jun 2021 09:00:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HLUYZsZzrZ3h/Ru080tS2qgUNHhWDl5eUAcDVUG7NsE=;
+        b=VpDGFZGL7mLdMnJv+F2UhxYbKg0E2Li1Lhsh7l+XHWzmDZ3BlQZ9nln/Tflh8ohOah
+         QzsadGEC0LpesgxCb7yj97eZI7NJVm6xwDWHXKhd4RpMk6Bpoe7NGun7mNJupXya9+W8
+         pA6ggY+MA6jJcGMKCrlROIBBGm8sPlELz26OsOe+wqn+MDmst3rlA0nwbeh7i3N9BJbf
+         hRc7l0cs8hMCcZ4VABuASD5yQgKM1DTvwYFe3tw4JHtRTlCbGaXcQSGaOpK6Oiofirq+
+         dtwh3VtZonui+rUEMvDrKIIh2VETC9upRHLVZawjkmF/emdoRnPvoGqCY8EWCefqHX98
+         5J8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HLUYZsZzrZ3h/Ru080tS2qgUNHhWDl5eUAcDVUG7NsE=;
+        b=HH9eqa3FC+aJXt3M/cxkgzGDLT/20SldOdOuBp+hI1BJTexZ3MiYZSelM3DXxnuxLO
+         Z0ldUTXJDG4sxK+X0dP/o+dmScXgiSNB5ZYBLkK4Nkcj/MigBxuh+7JTcLWmqSXqq6ZL
+         SW4z1exECPjc0aX0p2HUT7apvF3m09EX4gGpncD33EWE0lM/CbnxcpdQPj74V7lenKcF
+         Er1Pe+E1iV6/yxkdePr4aAWu5cOhYe31ETFaAgkn08a6hfrK/MWAspG0s3Eprty/nEaT
+         AUan7thqeTh88u1PLUFXLfwoVyzu9beBRTREPFOqdOFqDw0XuW4LCQ6Xvru4/UbP6hy1
+         DQ8g==
+X-Gm-Message-State: AOAM533xwDB4Cake7hlZ9FFX9Cz0bdn2lhC5KbD6WCKu64x4sNHcmzPk
+        XGt86+QFXtEUH+NdH4NfmLiB9Pq8U5pE
+X-Google-Smtp-Source: ABdhPJxb3a81eW41WUMkoP1rwpubAYA/Hqchwkdbwy8hI9rJzy8hhDO8CChTEg5qW0VqYjQ8/tGvGw==
+X-Received: by 2002:a37:b6c1:: with SMTP id g184mr16760514qkf.270.1624723233001;
+        Sat, 26 Jun 2021 09:00:33 -0700 (PDT)
+Received: from leira.hammer.space (c-68-36-133-222.hsd1.mi.comcast.net. [68.36.133.222])
+        by smtp.gmail.com with ESMTPSA id 145sm379417qkf.65.2021.06.26.09.00.32
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Jun 2021 09:00:32 -0700 (PDT)
+From:   trondmy@gmail.com
+X-Google-Original-From: trond.myklebust@hammerspace.com
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSv4: setlease should return EAGAIN if locks are not available
+Date:   Sat, 26 Jun 2021 12:00:31 -0400
+Message-Id: <20210626160031.323153-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.101.6]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500023.china.huawei.com (7.185.36.114)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When find a task from wait queue to wake up, a non-privileged task may
-be found out, rather than the privileged. This maybe lead a deadlock
-same as commit dfe1fe75e00e ("NFSv4: Fix deadlock between nfs4_evict_inode()
-and nfs4_opendata_get_inode()"):
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Privileged delegreturn task is queued to privileged list because all
-the slots are assigned. If there has no enough slot to wake up the
-non-privileged batch tasks(session less than 8 slot), then the privileged
-delegreturn task maybe lost waked up because the found out task can't
-get slot since the session is on draining.
+Instead of returning ENOLCK when we can't hand out a lease, we should be
+returning EAGAIN.
 
-So we should treate the privileged task as the emergency task, and
-execute it as for as we can.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 5fcdfacc01f3 ("NFSv4: Return delegations synchronously in evict_inode")
-Cc: stable@vger.kernel.org
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- net/sunrpc/sched.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ fs/nfs/nfs4proc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index 37cd09574628..e08ce3b791fd 100644
---- a/net/sunrpc/sched.c
-+++ b/net/sunrpc/sched.c
-@@ -591,6 +591,15 @@ static struct rpc_task *__rpc_find_next_queued_priority(struct rpc_wait_queue *q
- 	struct list_head *q;
- 	struct rpc_task *task;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 35df44ef2c35..e4efb7bccd7e 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -7452,13 +7452,13 @@ static int nfs4_add_lease(struct file *file, long arg, struct file_lock **lease,
  
-+	/*
-+	 * Service the privileged queue.
-+	 */
-+	q = &queue->tasks[RPC_NR_PRIORITY - 1];
-+	if (queue->maxpriority > RPC_PRIORITY_PRIVILEGED && !list_empty(q)) {
-+		task = list_first_entry(q, struct rpc_task, u.tk_wait.list);
-+		goto out;
-+	}
-+
- 	/*
- 	 * Service a batch of tasks from a single owner.
- 	 */
+ 	/* No delegation, no lease */
+ 	if (!nfs4_have_delegation(inode, type))
+-		return -ENOLCK;
++		return -EAGAIN;
+ 	ret = generic_setlease(file, arg, lease, priv);
+ 	if (ret || nfs4_have_delegation(inode, type))
+ 		return ret;
+ 	/* We raced with a delegation return */
+ 	nfs4_delete_lease(file, priv);
+-	return -ENOLCK;
++	return -EAGAIN;
+ }
+ 
+ int nfs4_proc_setlease(struct file *file, long arg, struct file_lock **lease,
 -- 
-2.25.4
+2.31.1
 
