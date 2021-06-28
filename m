@@ -2,69 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 009DE3B5CBB
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Jun 2021 12:51:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 542F53B6772
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Jun 2021 19:15:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232743AbhF1KyO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 28 Jun 2021 06:54:14 -0400
-Received: from flippiebeckerswealthmgr.xyz ([62.173.147.16]:39098 "EHLO
-        host.flippiebeckerswealthmgr.xyz" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232617AbhF1KyO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Jun 2021 06:54:14 -0400
-Received: from flippiebeckerswealthmgr.xyz (ec2-54-157-176-210.compute-1.amazonaws.com [54.157.176.210])
-        by host.flippiebeckerswealthmgr.xyz (Postfix) with ESMTPA id 7F92F16F2B
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Jun 2021 13:13:37 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 host.flippiebeckerswealthmgr.xyz 7F92F16F2B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flippiebeckerswealthmgr.xyz; s=default; t=1624875218;
-        bh=G3PrS2ssLE6xKmHDCm5hvScMpvbJPlyTw8R1AuPMkGc=;
-        h=Reply-To:From:To:Subject:Date:From;
-        b=JmWlnRewK4Y4ndrceuiP45BvHTyA3NqRSbJpp3+4CYfhhDFh0NHorvfupII69K8GD
-         hVAnjB6iTIwDypsdidnLTi/FhtkemDfg6F42pLghJju8coVDOVFRMEB48K/PJcCwrE
-         RtuNjcQdIXLxOFMlCReyr1FrN533XKAoSFIVwaN4=
-DKIM-Filter: OpenDKIM Filter v2.11.0 host.flippiebeckerswealthmgr.xyz 7F92F16F2B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flippiebeckerswealthmgr.xyz; s=default; t=1624875217;
-        bh=G3PrS2ssLE6xKmHDCm5hvScMpvbJPlyTw8R1AuPMkGc=;
-        h=Reply-To:From:To:Subject:Date:From;
-        b=Yv4Og4qHtBaGLVN/hRwrbo6/vmKOxaV0CTODlP+8stEz10zA2+2XQmgzhinYEHPhI
-         zwwzuibMwfR5HXPUCAMmL+UVY3cNknl5u8BLUS9T6DsdHC1SR9AWStiZmj1KRwiEbj
-         dAy8zDJgsqKCbnC11pFOZUvkVWbJ+DsyvHql7i1A=
-Reply-To: jmasuku09@flippiebecker.com
-From:   Jotham Masuku <jmasuku09@flippiebeckerswealthmgr.xyz>
-To:     linux-nfs@vger.kernel.org
-Subject: Projects
-Date:   28 Jun 2021 10:13:37 +0000
-Message-ID: <20210628101337.28D967982C79AE19@flippiebeckerswealthmgr.xyz>
-Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        id S233865AbhF1RRo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 28 Jun 2021 13:17:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233709AbhF1RRl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 28 Jun 2021 13:17:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CD9AE61C49;
+        Mon, 28 Jun 2021 17:15:15 +0000 (UTC)
+Subject: [PATCH] mm/page_alloc: Return nr_populated when the array is full
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     mgorman@techsingularity.net
+Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org
+Date:   Mon, 28 Jun 2021 13:15:15 -0400
+Message-ID: <162490051493.1165.8122675403341013520.stgit@klimt.1015granger.net>
+User-Agent: StGit/1.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello there,
+The SUNRPC consumer of __alloc_bulk_pages() legitimately calls it
+with a full array sometimes. In that case, the correct return code,
+according to the API contract, is to return the number of requested
+pages.
 
-I hope this message finds you in good spirits especially during=20
-this challenging time of coronavirus pandemic. I hope you and=20
-your family are well and keeping safe. Anyway, I am Jotham=20
-Masuku, a broker working with Flippiebecker Wealth. I got your=20
-contact through an online business directory and I thought I=20
-should contact you to see if you are interested in this=20
-opportunity. I am contacting you because one of my high profile=20
-clients is interested in investing abroad and has asked me to=20
-look for individuals and companies in your country with=20
-interesting business ideas and projects that he can invest in. He=20
-wants to invest a substantial amount of asset abroad.
+Fixes: b3b64ebd3822 ("mm/page_alloc: do bulk array bounds check after checking populated elements")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ mm/page_alloc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I have decided to keep this brief for now but please kindly=20
-respond back to this email if you are interested in this=20
-opportunity. Once I receive your response, I will give you more=20
-details and we can plan a strategy that will be beneficial to all=20
-parties.
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index ef2265f86b91..79f88c4ae372 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5058,7 +5058,7 @@ unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 
+ 	/* Already populated array? */
+ 	if (unlikely(page_array && nr_pages - nr_populated == 0))
+-		return 0;
++		return nr_pages;
+ 
+ 	/* Use the single page allocator for one page. */
+ 	if (nr_pages - nr_populated == 1)
 
-Best regards
 
-J Masuku
-Flippiebecker Wealth
