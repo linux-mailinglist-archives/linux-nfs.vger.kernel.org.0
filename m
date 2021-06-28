@@ -2,93 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 162473B6823
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Jun 2021 20:13:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B99E03B6837
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Jun 2021 20:18:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233111AbhF1SP0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 28 Jun 2021 14:15:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232738AbhF1SP0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 28 Jun 2021 14:15:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3A0F061C6F;
-        Mon, 28 Jun 2021 18:13:00 +0000 (UTC)
-Subject: [PATCH v2] mm/page_alloc: Return nr_populated when the array is full
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     mgorman@techsingularity.net
-Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org
-Date:   Mon, 28 Jun 2021 14:12:59 -0400
-Message-ID: <162490397938.1485.7782934829743772831.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.1
+        id S235063AbhF1SVQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 28 Jun 2021 14:21:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236218AbhF1SVN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Jun 2021 14:21:13 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 699B2C061574
+        for <linux-nfs@vger.kernel.org>; Mon, 28 Jun 2021 11:18:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=JNNNgeDK9vrSkvO77tVgzXeNExzgN8gRgCBdSERbBU4=; b=sTrsocwSO1Mb71e3dDBdebKoDk
+        7WmCRYe3gNqKQohNm4bRDhzyjXhujYsu0ONzppYo9Do4JV6yfsMuX9arn+KsEm3UgF7tX0WOEMjp9
+        FBvbNfe7q+HdNd99KYqfLx00itJQ9kSKBfXsbBPKVnq8V9Owr41zIQxz02k3qjcqOv+AOCP8Fxqgg
+        Iw+SBnY5+dQls2WoNWPcdcrRJ1DXYr6v1u/uARdMlBuJrRAVXgcxpotVt974aMWgV3V1tVwTnNHfD
+        IOoLVlrF43uKngmbBog+e5jgG1OLI3lTS31j65rxUwTTylqEs6jR2jqGizbQ2ByA7DkGv5RgXDxG4
+        MpExFxUQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1lxvox-003KIY-Pb; Mon, 28 Jun 2021 18:17:43 +0000
+Date:   Mon, 28 Jun 2021 19:17:23 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     mgorman@techsingularity.net, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v2] mm/page_alloc: Return nr_populated when the array is
+ full
+Message-ID: <YNoSM1A/tS4SEMHE@casper.infradead.org>
+References: <162490397938.1485.7782934829743772831.stgit@klimt.1015granger.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <162490397938.1485.7782934829743772831.stgit@klimt.1015granger.net>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The SUNRPC consumer of __alloc_bulk_pages() legitimately calls it
-with a full array sometimes. In that case, the correct return code,
-according to the API contract, is to return the number of pages
-already in the array/list.
+On Mon, Jun 28, 2021 at 02:12:59PM -0400, Chuck Lever wrote:
+> The SUNRPC consumer of __alloc_bulk_pages() legitimately calls it
+> with a full array sometimes. In that case, the correct return code,
+> according to the API contract, is to return the number of pages
+> already in the array/list.
+> 
+> Let's clean up the return logic to make it clear that the returned
+> value is always the total number of pages in the array/list, not the
+> number of pages that were allocated during this call.
 
-Let's clean up the return logic to make it clear that the returned
-value is always the total number of pages in the array/list, not the
-number of pages that were allocated during this call.
-
-Fixes: b3b64ebd3822 ("mm/page_alloc: do bulk array bounds check after checking populated elements")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- mm/page_alloc.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index ef2265f86b91..270719898b47 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5047,7 +5047,7 @@ unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 	int nr_populated = 0;
- 
- 	if (unlikely(nr_pages <= 0))
--		return 0;
-+		goto out;
- 
- 	/*
- 	 * Skip populated array elements to determine if any pages need
-@@ -5058,7 +5058,7 @@ unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 
- 	/* Already populated array? */
- 	if (unlikely(page_array && nr_pages - nr_populated == 0))
--		return 0;
-+		goto out;
- 
- 	/* Use the single page allocator for one page. */
- 	if (nr_pages - nr_populated == 1)
-@@ -5068,7 +5068,7 @@ unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 	gfp &= gfp_allowed_mask;
- 	alloc_gfp = gfp;
- 	if (!prepare_alloc_pages(gfp, 0, preferred_nid, nodemask, &ac, &alloc_gfp, &alloc_flags))
--		return 0;
-+		goto out;
- 	gfp = alloc_gfp;
- 
- 	/* Find an allowed local zone that meets the low watermark. */
-@@ -5141,6 +5141,7 @@ unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 
- 	local_irq_restore(flags);
- 
-+out:
- 	return nr_populated;
- 
- failed_irq:
-@@ -5156,7 +5157,7 @@ unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 		nr_populated++;
- 	}
- 
--	return nr_populated;
-+	goto out;
- }
- EXPORT_SYMBOL_GPL(__alloc_pages_bulk);
- 
-
-
+This is more complicated than either v1 or the version that Mel sent
+earlier today.  Is it worth it?
