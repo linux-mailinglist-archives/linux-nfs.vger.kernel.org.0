@@ -2,70 +2,169 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A11E3B699E
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Jun 2021 22:24:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 576213B6A07
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Jun 2021 23:12:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230291AbhF1U0b (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 28 Jun 2021 16:26:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234182AbhF1U02 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Jun 2021 16:26:28 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB7DAC061574
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Jun 2021 13:24:00 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id o11so18929024ejd.4
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Jun 2021 13:24:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=1onvlAo6x1M3c84t9iiFsS/HRyy1SWrHlEXnVWCekPM=;
-        b=TtM0xt0V6jpJuRXz0xpzhwXkPqKXkEwkKTM+dbwgdNPljraw8zqJ98aTPQNWqGJ+2F
-         dESVXOekGksiHbFxbZpcw3gmFq7Sv2QNdtbcBsp4I5vXjIPZ/IIFYF3vA/L772kHpurj
-         brxLJZHrEbZNoB/c+uh6kblyLpuz7zqaQSv8UVIOv9R2z30Ogz/4CqQtLXhlD1B6WSaH
-         zR7qiRmAPPJg8tn3khafW/3d/5vd4N0U4IrSebb7T2ITv2UvSfGd8Iahj8Z42fFFB8fp
-         DFymbzS96VTwQzl8/wEClkYbimZcI0g7vE8Sn4CpF5jIcMxkzkqlMqVLuVZ2DaBK428N
-         6qCw==
+        id S234236AbhF1VPU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 28 Jun 2021 17:15:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:48399 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237634AbhF1VPT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Jun 2021 17:15:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1624914771;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Nx6K4Fan5/I+PMlmi1HcnjMHs0gytLj38/acWjz1O7U=;
+        b=CXsLM4u9OJavSiNGbaoPVRn5laVTe5V6DUvoMes4XEhu0mFLPHfv+y3PBKL43i/1HeQzGd
+        RIy0zLHdg30dYJ3e1KIHC74ibAosVmBpcMlYEokRbHMHETMSkQPtSJxqGPwr21yB9lf7dV
+        w2bYELdYrx/3/5V9fjZZrg4SiCkfg6M=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-470-dJZzS2M7MQ-YLB33YhAtnw-1; Mon, 28 Jun 2021 17:12:50 -0400
+X-MC-Unique: dJZzS2M7MQ-YLB33YhAtnw-1
+Received: by mail-ej1-f70.google.com with SMTP id g18-20020a1709063952b02904c6c7b11c45so295201eje.2
+        for <linux-nfs@vger.kernel.org>; Mon, 28 Jun 2021 14:12:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=1onvlAo6x1M3c84t9iiFsS/HRyy1SWrHlEXnVWCekPM=;
-        b=p04D9S06c49Cb/IbjXzlxfIa6CxQkPjH+GYwcHSL7M0iD72cW5Vwkgd7WcTSONT4hk
-         I7ntASTMocBiuyEzcszDLBmm1cvfJm77+j9CioLEhasvk+cyLOw5RQ+d8DmaYD+dPLyi
-         tylJFwp9M5YdcedLZ+NqCm+t9irTp5HVzzSpqxSkfVhbQhBaIcO3mdPrXn7N+/RbM2MK
-         1sCAgEVjkkXo63ATgNYjgXh8oYAijjKOmskXDcxtNfoW7NsodXihEteiRWMKXn8xXYrX
-         rodP06Z61UAsZ8xnEuW0kYmH3OIryfsH1xnKWmuJSVqkjiUwXKRqM9zco/fIS3G6Wx0H
-         6UFA==
-X-Gm-Message-State: AOAM532IvdNvqXt3Lju3Wfz9s8ftaotv5gEhG3cU2dUY0ZRKD7vKwiZX
-        AxM2gwx4Rl9DMQKjvzaPTgfUzh8otOGdHqVECK1CUynsiyI=
-X-Google-Smtp-Source: ABdhPJwMJway9ZwJ5gLEaLzFSklWalD7+65keEzvj1WyKSy5sckmm1uIDWN1QMVwmdqPFwin688c+K7Ji9U0KijiJ0U=
-X-Received: by 2002:a17:906:c006:: with SMTP id e6mr18782423ejz.510.1624911838243;
- Mon, 28 Jun 2021 13:23:58 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nx6K4Fan5/I+PMlmi1HcnjMHs0gytLj38/acWjz1O7U=;
+        b=Z2kN/DhC3YXTT8iWeL/GMXgLyeuuuejkqGX8qNRA0/wj+wzjaYd871vAXiY8yvUdTY
+         SW+pdU74NH5R1PFyW6ofjBvZDqfEjgL7DOmiZ4vYHRd2yL52NYRdjEDzt+Ybx+YKe1yx
+         +SJmTuawVxt18a6Z5DQXbZVCM1KiC8bckToxQEw4+Tcz5mpw2C2z69EPUrynzXK9joRZ
+         Lp4EFI+Hg9flXFgsekNkeK0r+va9BmDDBakrWYBdeh3lKiX98mPycxps5q+98wcRJIXu
+         xbNIrW8vceZb/XQodqxHw0cAy1mUBnGHOskZV//wuLOdWAzcefhiYQXyQIDsE//n1h4e
+         mdYA==
+X-Gm-Message-State: AOAM532IbpVfredl3CTuY8ns8VCM7ZtP7v2z25J0vqHEHY4Dzskblq21
+        AArrlDILKqQT9NseJbYH0EvQyK/yg0aOdkyRNYX8C163nVj9TBTr464C01bNRqguJ/YyA4Y3RdP
+        S9NtFiUzhJY6eWrj4gTFKlhyN+QMBU7XcpDbo
+X-Received: by 2002:a05:6402:b77:: with SMTP id cb23mr35184842edb.360.1624914768862;
+        Mon, 28 Jun 2021 14:12:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyX1db2v7CiNH65IugRMGCrvVzRK4tYZIO8KDzSPCLBx9jFEUBTUhjEM2s/Msb/Xde0dIbX02VQSzRyAh5EogI=
+X-Received: by 2002:a05:6402:b77:: with SMTP id cb23mr35184827edb.360.1624914768630;
+ Mon, 28 Jun 2021 14:12:48 -0700 (PDT)
 MIME-Version: 1.0
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Mon, 28 Jun 2021 16:23:47 -0400
-Message-ID: <CAN-5tyEuB5C9u+xZ5L47fSQ9cwZnsbhJuBs+gybU2A-jzAkfog@mail.gmail.com>
-Subject: client's caching of server-side capabilities
-To:     linux-nfs <linux-nfs@vger.kernel.org>
+References: <1624901943-20027-1-git-send-email-dwysocha@redhat.com>
+ <1624901943-20027-5-git-send-email-dwysocha@redhat.com> <efc373dd3f321f2f45e749a5edb383f2a11a7b78.camel@hammerspace.com>
+In-Reply-To: <efc373dd3f321f2f45e749a5edb383f2a11a7b78.camel@hammerspace.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Mon, 28 Jun 2021 17:12:11 -0400
+Message-ID: <CALF+zO=CFMYUGRG2m77XQy=LVVd-Zf_a+oQrJATymu-iqHRNtA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] NFS: Fix fscache read from NFS after cache error
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi folks,
+On Mon, Jun 28, 2021 at 3:09 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Mon, 2021-06-28 at 13:39 -0400, Dave Wysochanski wrote:
+> > Earlier commits refactored some NFS read code and removed
+> > nfs_readpage_async(), but neglected to properly fixup
+> > nfs_readpage_from_fscache_complete().  The code path is
+> > only hit when something unusual occurs with the cachefiles
+> > backing filesystem, such as an IO error or while a cookie
+> > is being invalidated.
+> >
+> > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> > ---
+> >  fs/nfs/fscache.c | 14 ++++++++++++--
+> >  1 file changed, 12 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+> > index c4c021c6ebbd..d308cb7e1dd4 100644
+> > --- a/fs/nfs/fscache.c
+> > +++ b/fs/nfs/fscache.c
+> > @@ -381,15 +381,25 @@ static void
+> > nfs_readpage_from_fscache_complete(struct page *page,
+> >                                                void *context,
+> >                                                int error)
+> >  {
+> > +       struct nfs_readdesc desc;
+> > +       struct inode *inode = page->mapping->host;
+> > +
+> >         dfprintk(FSCACHE,
+> >                  "NFS: readpage_from_fscache_complete
+> > (0x%p/0x%p/%d)\n",
+> >                  page, context, error);
+> >
+> > -       /* if the read completes with an error, we just unlock the
+> > page and let
+> > -        * the VM reissue the readpage */
+> >         if (!error) {
+> >                 SetPageUptodate(page);
+> >                 unlock_page(page);
+> > +       } else {
+> > +               desc.ctx = context;
+> > +               nfs_pageio_init_read(&desc.pgio, inode, false,
+> > +                                    &nfs_async_read_completion_ops);
+> > +               error = readpage_async_filler(&desc, page);
+> > +               if (error)
+> > +                       return;
+>
+> This code path can clearly fail too. Why can we not fix this code to
+> allow it to return that reported error so that we can handle the
+> failure case in nfs_readpage() instead of dead-ending here?
+>
 
-I have a general question of why the client doesn't throw away the
-cached server's capabilities on server reboot. Say a client mounted a
-server when the server didn't support security_labels, then the server
-was rebooted and support was enabled. Client re-establishes its
-clientid/session, recovers state, but assumes all the old capabilities
-apply. A remount is required to clear old/find new capabilities. The
-opposite is true that a capability could be removed (but I'm assuming
-that's a less practical example).
+Maybe the below patch is what you had in mind?  That way if fscache
+is enabled, nfs_readpage() should behave the same way as if it's not,
+for the case where an IO error occurs in the NFS read completion
+path.
 
-I'm curious what are the problems of clearing server capabilities and
-rediscovering them on reboot? Is it because a local filesystem could
-never have its attributes changed and thus a network file system can't
-either?
+If we call into fscache and we get back that the IO has been submitted,
+wait until it is completed, so we'll catch any IO errors in the read completion
+path.  This does not solve the "catch the internal errors", IOW, the
+ones that show up as pg_error, that will probably require copying
+pg_error into nfs_open_context.error field.
 
-Thank you.
+diff --git a/fs/nfs/read.c b/fs/nfs/read.c
+index 78b9181e94ba..28e3318080e0 100644
+--- a/fs/nfs/read.c
++++ b/fs/nfs/read.c
+@@ -357,13 +357,13 @@ int nfs_readpage(struct file *file, struct page *page)
+        } else
+                desc.ctx = get_nfs_open_context(nfs_file_open_context(file));
+
++       xchg(&desc.ctx->error, 0);
+        if (!IS_SYNC(inode)) {
+                ret = nfs_readpage_from_fscache(desc.ctx, inode, page);
+                if (ret == 0)
+-                       goto out;
++                       goto out_wait;
+        }
+
+-       xchg(&desc.ctx->error, 0);
+        nfs_pageio_init_read(&desc.pgio, inode, false,
+                             &nfs_async_read_completion_ops);
+
+@@ -373,6 +373,7 @@ int nfs_readpage(struct file *file, struct page *page)
+
+        nfs_pageio_complete_read(&desc.pgio);
+        ret = desc.pgio.pg_error < 0 ? desc.pgio.pg_error : 0;
++out_wait:
+        if (!ret) {
+                ret = wait_on_page_locked_killable(page);
+                if (!PageUptodate(page) && !ret)
+
+
+
+
+> > +
+> > +               nfs_pageio_complete_read(&desc.pgio);
+> >         }
+> >  }
+> >
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
+
