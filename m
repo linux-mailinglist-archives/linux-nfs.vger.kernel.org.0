@@ -2,202 +2,404 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FFA33B72DF
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Jun 2021 15:01:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85DFA3B731F
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Jun 2021 15:21:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233875AbhF2NDs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 29 Jun 2021 09:03:48 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:21936 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233729AbhF2NDr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Jun 2021 09:03:47 -0400
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15TCueXp016767;
-        Tue, 29 Jun 2021 13:01:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=XKkiZ5mAwIf1sX1IX7o2yeGLPzVI8op2dlDECNrYYDw=;
- b=Nl4xurgsYu0SFW8WWrkYDkzi6lgF281CFI7gDUB3rkcHvqX96pYxRV5/fGCWXtnm3kBm
- MjOR0ijMYhZ0POK5ipsLRhd7oAL08x/1rGypEoFwO3TFTnNIlHTwHQ3ZSdi4WBVs8YoI
- 5fqYX87mMMyV2WO+5vOl2zQqzbP6M48ASpEEMUMkxF3f/I+Jj1j+RblP7EORua2Mb3q1
- AoXEPXq9R4JZu3G2m+VreRCLBWZTSJt5whlVGX3eenhns8iQOB9BECvqz5k0yKJ+PV+c
- hhuPhVdaP9GOn/lgIXoGs26gRrltYZ+AnzSXUXkdZjshnEnXnHiNbVMkjDTg0R2Bj2TF Xg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by mx0b-00069f02.pphosted.com with ESMTP id 39f174kr18-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Jun 2021 13:01:16 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 15TCu3EI058052;
-        Tue, 29 Jun 2021 13:01:15 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam07lp2045.outbound.protection.outlook.com [104.47.51.45])
-        by aserp3030.oracle.com with ESMTP id 39dt9eqtey-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Jun 2021 13:01:15 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AZ0VfCeoHwIBmHOhSB1G8aCcs6nds3LBUn2oTjyweZmq5F9Op4rYn0zm4yAkKXuGaMWOwKK02QZdzhXNGjuRZ2yQCYo2HPDvpaXHyTCaZnwtshylD02XmzOBl8M9Xuc5zLJVUhvUPFXxQZhlxtR7P9qAjVeFeYzonaXiVy/zgn9qEbBdy3mwsBDULnmyVNWjWWB0LzlSMD4PTguH2+Q9XYABekprFtR+A4uidr1UAKwL6yXWmTaLU4nkRUglv8+1FjXwG+4K/c5vnCOUdbTNSBVkbUz7hrHOcaOhBVAmy5XdVUgUAnFCLQ1HumNm9rjh/SH5CB7/Uz7U5w/tPGGXkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XKkiZ5mAwIf1sX1IX7o2yeGLPzVI8op2dlDECNrYYDw=;
- b=LLU40XExu9iZH1dpTwfnR8YT2qKBGjSlwnLIa24C/Dzf8F7E5GennBuceHJy+fWo4jWqbBoMyUe9qKHpQWqo8MH7vtln2FVH29T6EXl+F1IpeF2tLYl807vB7aZx9tmwpAg8sYCbPz2hBoPoZmre9+LYAux4NOb1Qjw2h+bIOzEzguCCF6+m+v6fhNEwqlc9xpExPxmtD6d4fcNJwOGrbpXvYuqvmEWxF1N/UYL78Knqe3BHd9TOjrM2Wce17JlXy/NN0mM4aH3tHnJUdoG8YdSSQgUF8LzjDv1n+coKMFypcQKlu7QbJRW+fpz/tJURk4rTGtrFfpFDwF240Mz2nQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XKkiZ5mAwIf1sX1IX7o2yeGLPzVI8op2dlDECNrYYDw=;
- b=qgkunQNqd4W7TTYe5Mbg5Cp2crRue+1pYqZZraEPhRQut8Vi8xOEtjNPb9eJ29hJ+A2hebneZDOEXurn65z2tBjndvxjZZQMWLfh1Wbb/fT83uwSEXfjgy6qPhhg0em1NCXr1cv38xDdMijxHlFU7YbospfSYWynuUaXdzZ4tZ8=
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by BYAPR10MB3192.namprd10.prod.outlook.com (2603:10b6:a03:151::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.23; Tue, 29 Jun
- 2021 13:01:13 +0000
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::18fc:cb94:ca3:1f94]) by SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::18fc:cb94:ca3:1f94%9]) with mapi id 15.20.4264.026; Tue, 29 Jun 2021
- 13:01:13 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Justin Piszcz <jpiszcz@lucidpixels.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: linux 5.13 kernel regression for NFS server
-Thread-Topic: linux 5.13 kernel regression for NFS server
-Thread-Index: Adds0xh8TyPplr3rRaqlXbtYqWYwkgAE72MA
-Date:   Tue, 29 Jun 2021 13:01:13 +0000
-Message-ID: <CB1159AE-7C7F-402C-9F52-954FFAEAAEE8@oracle.com>
-References: <004d01d76cd3$18db1830$4a914890$@lucidpixels.com>
-In-Reply-To: <004d01d76cd3$18db1830$4a914890$@lucidpixels.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lucidpixels.com; dkim=none (message not signed)
- header.d=none;lucidpixels.com; dmarc=none action=none header.from=oracle.com;
-x-originating-ip: [68.61.232.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fb9b4191-2b74-4321-7f58-08d93afdf958
-x-ms-traffictypediagnostic: BYAPR10MB3192:
-x-microsoft-antispam-prvs: <BYAPR10MB3192354FEC373853DF0CC30493029@BYAPR10MB3192.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IqmpOG++RW25J1pj1ZVeKqhzyVBPmkAqz9E0JFvjyVpNwOekjYCm1ExJUNmSAPsejm74h/jXDe4xDiCoyWGbOjWpnTOjXNvEENSBkt1AImSiKyjID+RuM/lDmHgVqZEQGDQtqrL1L0V+pdlcKrv6xIlYbhkmWK5Pb/uTvzCKimHtgvWShLz1/a2+RuIFFpU8lwpLAi0qTZVS4ulKJPTR8U57UdQTo1Hi6msYjVykTQ7H2xqZRMXwZBJGksyeMx5yH4hLL0g5NclhT19RflQDvoMtB1+BBiJb98uDXiTZjEPL+vwt+rlPw/TRas5cjPP3TtpfOoKdYCSAfaOyiuT4wmpLqlvERj1w0RGDgdIsMimBWcqeNBbSirxP9yG6KjLDH6IKLxd1Eoc/w+bG7Qd40USapPiDYKl9gCU/PoN8DGa9WAGSIxVUu/foIREH9xbxL1/Gl+NDSpXoCgV8N/aJKj6sVczeAE9/BzxmONEvqxW+KB0Li7qlK2cxzoSV+lBVxK+SvVkteFsZ4pCGD3dzuuKvZA3wAgw8p83RV82w3x8BMdKa2uYVm5yZkQAu0Q9yB0ACkH6sjn/RRQKxOeIQmx/O/EHFQaeUnpLBvCjiX8xhNpCBK0jBXyAsNTcji3GS/lvuGRcd4HxlnJ+4NflwkD69NcGaiReIOZXt4LtY9uFic9zZH0P3b5ZJmK8kDcoCTFTq85cT5xKxZXQ3cejI1oFzoBwH0uNP5GVR379d0HTOwnGknU79CBcAYWMrHfCSfQ1Y2tOg+l2BzRco/3L4ZX4DWd9uybgcjA6MpWWGZtGpk6TrcwWAiwP55FShbJMedqDm32zliW3VSip706a/3A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(136003)(376002)(366004)(396003)(39860400002)(36756003)(53546011)(6486002)(6506007)(71200400001)(26005)(76116006)(8936002)(122000001)(91956017)(38100700002)(186003)(478600001)(966005)(86362001)(33656002)(5660300002)(64756008)(8676002)(66446008)(6916009)(66946007)(316002)(54906003)(66556008)(2906002)(2616005)(6512007)(4326008)(66476007)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?keX+lObvBsSxpDRHG2BmX5VLqWAKn4fDJh9aNZCJIpTCDmFL/jWDO5oSIhTi?=
- =?us-ascii?Q?wHRyp15+7LW09PLwT3+mqxO7+DVb2S2WaJbgna3EX/0kobD9qfaVtE43OEug?=
- =?us-ascii?Q?qrgr6fCltQUMuWAM5XZzGwbryrYjhd/Bo5v+70j+XRq8VSSKC6Zx+FHluXxc?=
- =?us-ascii?Q?SlXLcE2LTXPq15lqzVVT66uS5TVFFo1766NbSyqtdPXVd/hoasHLE+DlHHmn?=
- =?us-ascii?Q?SkyWovBBZ+tezTDieE9EVb8SyA5GaARbWFp1aReDGPw3+uB0gMqMfThUo5aw?=
- =?us-ascii?Q?orPV+qKpVkZLsoMVfU3N61I249D+1hC+b8XZXsNsqy36L2S4F9RGJMkN4R4K?=
- =?us-ascii?Q?tjKZUxDYyeZWPji8Qr4kCWno3ttSn5xWtMaMfHI5rFpd0wJz1oFsF37UqiJO?=
- =?us-ascii?Q?hSmxFbJ75ULYw93FY27QBHEOKM8W9QhT/wqQGShrMHCx987ztOZ2xMMOVl29?=
- =?us-ascii?Q?O1V8swwo2LoiFiCutY7JuwBCYQLc+vPsf0rK6/NJCrxcq4HFNTctlMTQ6CQL?=
- =?us-ascii?Q?LgiKqvunxxZxjwOZItyRhc9qYw+GsUA8soPo2itIzo+YcIe2+tDm9z4nkI6A?=
- =?us-ascii?Q?ladAe1ck/looaAJdwO5iiUNEplev1/JrCLiLzECXCrcrtnX+aXjLE3vcHQBs?=
- =?us-ascii?Q?1wflmsH6ms9gsrdPdDdGTcWLihdiQA9C7aL9dCJVtLR+j9wnQX/VGvWdK1y1?=
- =?us-ascii?Q?CxyFx9df5nRWohhja4GcS1ELpc1CEkZ6lgRt+xDLgBpe+CEFArW8efzS6hLn?=
- =?us-ascii?Q?Xg3xC8Lj7ppO8FWNnIxIx0p7SD1pPyF46mKYmTmovswCVpg+zeVWtqZqH3U7?=
- =?us-ascii?Q?0FpFZemuxbNDzUHT/Gqm5rDqG9whTpx59p3lhlCr7TH5c8gx73Tk7dP3tqIW?=
- =?us-ascii?Q?PhsAj/JodZ82CGT5fdMmcBJRelu8pOxpGx3qsUb3jEt2ec0C12l5WhISk1oN?=
- =?us-ascii?Q?YtHGMGTtW+QAoqRy8cCnkPNF6q4QOgzZ7tGLc/Z+HKBcAA+WPaQUTM1i4qjU?=
- =?us-ascii?Q?8GO2oSywAnAzY76wWBSI4fNbL6ebZnu71TppB2unXCc4e4JWCyyDyxW3rZpp?=
- =?us-ascii?Q?3V4iZQgwYi8mNAmn+7qCX0P6HUZ/aqR1mBNBqsUReWoMtbH9gbG3tPyI3Tc1?=
- =?us-ascii?Q?D/JJiLqaiDJiT1PryUQFTHLcOuRmKUo2oYQZIsMUg5PKEtNpkd5Th4wwHgUx?=
- =?us-ascii?Q?iYtQ/r9Qm6aWZlcOJbhx1v4wNgQXdnhr3+SntDG7toRz8/Y6+Cg0YkdR6svT?=
- =?us-ascii?Q?pO8hADodLBN5ct5Gyek1ijMTskYEabnGDv+L/X1WsYLVP2vdwoYEVDPoQTrJ?=
- =?us-ascii?Q?CoRElaw58W+rJaN6dXup5K3X?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8134D79E4149B84C80CE0CC662473C4C@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S233976AbhF2NXv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 29 Jun 2021 09:23:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:57911 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233956AbhF2NXu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Jun 2021 09:23:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1624972883;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=EkJFMLNudsTQN94ZMtiCYHy7SZgh33zSW1B8SrfpZwM=;
+        b=Js6caYFmDs0WWhlGrehHQdm/Fq1y2PMCQ3s8AwKnOcOZs+xIyg+0vkzaJWDB5O2jMTFaF6
+        KITOjdUkIM0CNX0ac0h3tWyeSsLsK/tA6qpRQJF/stptP2JMOwyDL9pDAHRm5Jf5pSkD9F
+        nV84HoLQeBaQRtQOBXgVCqlyRQslTOU=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-582-pdXHy4ZsNOG4L2pBZmF0CA-1; Tue, 29 Jun 2021 09:21:21 -0400
+X-MC-Unique: pdXHy4ZsNOG4L2pBZmF0CA-1
+Received: by mail-ej1-f70.google.com with SMTP id k1-20020a17090666c1b029041c273a883dso5721222ejp.3
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Jun 2021 06:21:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EkJFMLNudsTQN94ZMtiCYHy7SZgh33zSW1B8SrfpZwM=;
+        b=Rmp6uPI0RmHExgzeVGYGRIJpz+2kZUpMLsZLLyWFHCuqDV/jSni2VXHdiGWfhmX3jQ
+         4vcUzvN2ucm51SVcRosf9ip80+RjlTsmVRRW2p/PWvukX69nVBUyRAX/hqsMEHhoXYpM
+         S3PNkBtxEr4aenIJCFntnX6IuUQlfyRD37DRm7cHpJBnBp9mUvbeFYuBB17opIMOL8sX
+         jFL6J/IGypYtHVA9SPOAbYyZTvA4SuONyhYsybuPdKBm3NavHNz2A97+ske1mlRQ6KMX
+         ePXia55ojezk/EvusdOV4IWc47UzZKNIY3g5M02uvRDPlsko28Z3lGnbGMfcqYOD3OTV
+         BRWw==
+X-Gm-Message-State: AOAM5300eZrOjPyFQe+et6THfmilwBQ90c/V0eFH53yf1VwzNUCVIgus
+        aJxIOGti1QY5hx8bZdrRY8QezYqlM2OYn5rfgYsDZernuEsxSCEOzAji/Cm6rPgRe11r2+g8ihD
+        i1S3OO+qRBBQjQ4p1twehuAbqz7tcyUDD61hu
+X-Received: by 2002:a50:d64a:: with SMTP id c10mr41346523edj.199.1624972880463;
+        Tue, 29 Jun 2021 06:21:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzrQ4V2IVqMB57SO5ftS5xV5brb6C+f+GkOiRkEdQ/ybBGF2R0tFpsNTXy857e0duxk6fcjCz5LrmMKpnmPZAk=
+X-Received: by 2002:a50:d64a:: with SMTP id c10mr41346490edj.199.1624972880206;
+ Tue, 29 Jun 2021 06:21:20 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb9b4191-2b74-4321-7f58-08d93afdf958
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2021 13:01:13.3193
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ByaNpwHc2T9y9D+Q/pFTMQqU2IASuQ+Ed4UBlDBvo1YGIyJ80lF/8rJ6ylIKT2F0YJmeAG8+ygM561FYBWJP2A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3192
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10029 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0
- mlxlogscore=999 phishscore=0 spamscore=0 malwarescore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104190000 definitions=main-2106290087
-X-Proofpoint-GUID: FxvHikVdIfs2lfQOvDzEBNcM2_xwO6KI
-X-Proofpoint-ORIG-GUID: FxvHikVdIfs2lfQOvDzEBNcM2_xwO6KI
+References: <1624901943-20027-1-git-send-email-dwysocha@redhat.com>
+ <1624901943-20027-5-git-send-email-dwysocha@redhat.com> <efc373dd3f321f2f45e749a5edb383f2a11a7b78.camel@hammerspace.com>
+ <CALF+zO=CFMYUGRG2m77XQy=LVVd-Zf_a+oQrJATymu-iqHRNtA@mail.gmail.com>
+ <e9f38da48bfaf1b43546e273493afc907c52def5.camel@hammerspace.com>
+ <CALF+zOma0-M7Nhsz1=XZR0ihFGe4d4v7ofr4Emjg2VJWeUj9uw@mail.gmail.com>
+ <ac3deecf386901f688b0c682237326f468a625ef.camel@hammerspace.com>
+ <CALF+zOn=p6wuZ_pdifwWtLOUsiArkxBHHVDEnYcxsBdQy1LtVw@mail.gmail.com> <321b6e11718979668b5ab129a7048a511a9886a9.camel@hammerspace.com>
+In-Reply-To: <321b6e11718979668b5ab129a7048a511a9886a9.camel@hammerspace.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Tue, 29 Jun 2021 09:20:43 -0400
+Message-ID: <CALF+zOn5QiKTpngHB0Lv-pBNPa4R8t5+snbo49hKDAP3gcOx0w@mail.gmail.com>
+Subject: Re: [PATCH 4/4] NFS: Fix fscache read from NFS after cache error
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Justin-
+On Tue, Jun 29, 2021 at 8:46 AM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Tue, 2021-06-29 at 05:17 -0400, David Wysochanski wrote:
+> > On Mon, Jun 28, 2021 at 8:39 PM Trond Myklebust
+> > <trondmy@hammerspace.com> wrote:
+> > >
+> > > On Mon, 2021-06-28 at 19:46 -0400, David Wysochanski wrote:
+> > > > On Mon, Jun 28, 2021 at 5:59 PM Trond Myklebust
+> > > > <trondmy@hammerspace.com> wrote:
+> > > > >
+> > > > > On Mon, 2021-06-28 at 17:12 -0400, David Wysochanski wrote:
+> > > > > > On Mon, Jun 28, 2021 at 3:09 PM Trond Myklebust
+> > > > > > <trondmy@hammerspace.com> wrote:
+> > > > > > >
+> > > > > > > On Mon, 2021-06-28 at 13:39 -0400, Dave Wysochanski wrote:
+> > > > > > > > Earlier commits refactored some NFS read code and removed
+> > > > > > > > nfs_readpage_async(), but neglected to properly fixup
+> > > > > > > > nfs_readpage_from_fscache_complete().  The code path is
+> > > > > > > > only hit when something unusual occurs with the
+> > > > > > > > cachefiles
+> > > > > > > > backing filesystem, such as an IO error or while a cookie
+> > > > > > > > is being invalidated.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> > > > > > > > ---
+> > > > > > > >  fs/nfs/fscache.c | 14 ++++++++++++--
+> > > > > > > >  1 file changed, 12 insertions(+), 2 deletions(-)
+> > > > > > > >
+> > > > > > > > diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+> > > > > > > > index c4c021c6ebbd..d308cb7e1dd4 100644
+> > > > > > > > --- a/fs/nfs/fscache.c
+> > > > > > > > +++ b/fs/nfs/fscache.c
+> > > > > > > > @@ -381,15 +381,25 @@ static void
+> > > > > > > > nfs_readpage_from_fscache_complete(struct page *page,
+> > > > > > > >                                                void
+> > > > > > > > *context,
+> > > > > > > >                                                int error)
+> > > > > > > >  {
+> > > > > > > > +       struct nfs_readdesc desc;
+> > > > > > > > +       struct inode *inode = page->mapping->host;
+> > > > > > > > +
+> > > > > > > >         dfprintk(FSCACHE,
+> > > > > > > >                  "NFS: readpage_from_fscache_complete
+> > > > > > > > (0x%p/0x%p/%d)\n",
+> > > > > > > >                  page, context, error);
+> > > > > > > >
+> > > > > > > > -       /* if the read completes with an error, we just
+> > > > > > > > unlock
+> > > > > > > > the
+> > > > > > > > page and let
+> > > > > > > > -        * the VM reissue the readpage */
+> > > > > > > >         if (!error) {
+> > > > > > > >                 SetPageUptodate(page);
+> > > > > > > >                 unlock_page(page);
+> > > > > > > > +       } else {
+> > > > > > > > +               desc.ctx = context;
+> > > > > > > > +               nfs_pageio_init_read(&desc.pgio, inode,
+> > > > > > > > false,
+> > > > > > > > +
+> > > > > > > > &nfs_async_read_completion_ops);
+> > > > > > > > +               error = readpage_async_filler(&desc,
+> > > > > > > > page);
+> > > > > > > > +               if (error)
+> > > > > > > > +                       return;
+> > > > > > >
+> > > > > > > This code path can clearly fail too. Why can we not fix
+> > > > > > > this
+> > > > > > > code
+> > > > > > > to
+> > > > > > > allow it to return that reported error so that we can
+> > > > > > > handle
+> > > > > > > the
+> > > > > > > failure case in nfs_readpage() instead of dead-ending here?
+> > > > > > >
+> > > > > >
+> > > > > > Maybe the below patch is what you had in mind?  That way if
+> > > > > > fscache
+> > > > > > is enabled, nfs_readpage() should behave the same way as if
+> > > > > > it's
+> > > > > > not,
+> > > > > > for the case where an IO error occurs in the NFS read
+> > > > > > completion
+> > > > > > path.
+> > > > > >
+> > > > > > If we call into fscache and we get back that the IO has been
+> > > > > > submitted,
+> > > > > > wait until it is completed, so we'll catch any IO errors in
+> > > > > > the
+> > > > > > read
+> > > > > > completion
+> > > > > > path.  This does not solve the "catch the internal errors",
+> > > > > > IOW,
+> > > > > > the
+> > > > > > ones that show up as pg_error, that will probably require
+> > > > > > copying
+> > > > > > pg_error into nfs_open_context.error field.
+> > > > > >
+> > > > > > diff --git a/fs/nfs/read.c b/fs/nfs/read.c
+> > > > > > index 78b9181e94ba..28e3318080e0 100644
+> > > > > > --- a/fs/nfs/read.c
+> > > > > > +++ b/fs/nfs/read.c
+> > > > > > @@ -357,13 +357,13 @@ int nfs_readpage(struct file *file,
+> > > > > > struct
+> > > > > > page
+> > > > > > *page)
+> > > > > >         } else
+> > > > > >                 desc.ctx =
+> > > > > > get_nfs_open_context(nfs_file_open_context(file));
+> > > > > >
+> > > > > > +       xchg(&desc.ctx->error, 0);
+> > > > > >         if (!IS_SYNC(inode)) {
+> > > > > >                 ret = nfs_readpage_from_fscache(desc.ctx,
+> > > > > > inode,
+> > > > > > page);
+> > > > > >                 if (ret == 0)
+> > > > > > -                       goto out;
+> > > > > > +                       goto out_wait;
+> > > > > >         }
+> > > > > >
+> > > > > > -       xchg(&desc.ctx->error, 0);
+> > > > > >         nfs_pageio_init_read(&desc.pgio, inode, false,
+> > > > > >                              &nfs_async_read_completion_ops);
+> > > > > >
+> > > > > > @@ -373,6 +373,7 @@ int nfs_readpage(struct file *file,
+> > > > > > struct
+> > > > > > page
+> > > > > > *page)
+> > > > > >
+> > > > > >         nfs_pageio_complete_read(&desc.pgio);
+> > > > > >         ret = desc.pgio.pg_error < 0 ? desc.pgio.pg_error :
+> > > > > > 0;
+> > > > > > +out_wait:
+> > > > > >         if (!ret) {
+> > > > > >                 ret = wait_on_page_locked_killable(page);
+> > > > > >                 if (!PageUptodate(page) && !ret)
+> > > > > >
+> > > > > >
+> > > > > >
+> > > > > >
+> > > > > > > > +
+> > > > > > > > +               nfs_pageio_complete_read(&desc.pgio);
+> > > > > > > >         }
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > >
+> > > > > > > --
+> > > > > > > Trond Myklebust
+> > > > > > > Linux NFS client maintainer, Hammerspace
+> > > > > > > trond.myklebust@hammerspace.com
+> > > > > > >
+> > > > > > >
+> > > > > >
+> > > > >
+> > > > > Yes, please. This avoids that duplication of NFS read code in
+> > > > > the
+> > > > > fscache layer.
+> > > > >
+> > > >
+> > > > If you mean patch 4 we still need that - I don't see anyway to
+> > > > avoid it.  The above just will make the fscache enabled
+> > > > path waits for the IO to complete, same as the non-fscache case.
+> > > >
+> > >
+> > > With the above, you can simplify patch 4/4 to just make the page
+> > > unlock
+> > > unconditional on the error, no?
+> > >
+> > > i.e.
+> > >         if (!error)
+> > >                 SetPageUptodate(page);
+> > >         unlock_page(page);
+> > >
+> > > End result: the client just does the same check as before and let's
+> > > the
+> > > vfs/mm decide based on the status of the PG_uptodate flag what to
+> > > do
+> > > next. I'm assuming that a retry won't cause fscache to do another
+> > > bio
+> > > attempt?
+> > >
+> >
+> > Yes I think you're right and I'm following - let me test it and I'll
+> > send a v2.
+> > Then we can drop patch #3 right?
+> >
+> Sounds good. Thanks Dave!
+>
 
-> On Jun 29, 2021, at 6:39 AM, Justin Piszcz <jpiszcz@lucidpixels.com> wrot=
-e:
->=20
-> Hello,
->=20
-> ISSUE: Can no longer mount NFS server(5.13) share.
-> WORKAROUND: Reverting back to the 5.13-rc7 kernel for the NFS server, all
-> clients can then mount the share.
->=20
-> Kernel 5.13 vs. 5.13-rc7 for x86_64
->=20
-> With Kernel 5.13-rc7:
->=20
-> ## mount is successful (from multiple clients, phone, tv, other Linux
-> client)
-> # mount 192.168.1.2:/r1 /r1
-> #
->=20
-> With Kernel 5.13 (hangs from multiple clients, phone, tv, other Linux
-> client)
->=20
-> ## mount hangs:
-> # mount 192.168.1.2:/r1 /r1
->=20
-> (strace output where it is hanging)
-> ...
-> clone(child_stack=3DNULL,
-> flags=3DCLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD,
-> child_tidptr=3D0x7f2285e303d0) =3D 1741
-> wait4(1741, 0x7ffeaab6ce08, 0, NULL)    =3D ? ERESTARTSYS (To be restarte=
-d if
-> SA_RESTART is set)
-> --- SIGWINCH {si_signo=3DSIGWINCH, si_code=3DSI_KERNEL} ---
-> wait4(1741,
->=20
-> No user changes in the kernel .config other than the comment for the vers=
-ion
-> text:
->=20
-> --- config-20210628.1624867695  2021-06-28 04:08:15.152781940 -0400
-> +++ config-20210628.1624867962  2021-06-28 04:12:42.591981706 -0400
-> @@ -1,6 +1,6 @@
-> #
-> # Automatically generated file; DO NOT EDIT.
-> -# Linux/x86 5.13.0-rc7 Kernel Configuration
-> +# Linux/x86 5.13.0 Kernel Configuration
-> #
-> CONFIG_CC_VERSION_TEXT=3D"gcc (Debian 10.2.1-6) 10.2.1 20210110"
-> CONFIG_CC_IS_GCC=3Dy
+This approach works but it differs from the original when an fscache
+error occurs.
+The original (see below) would call back into NFS to read from the server, but
+now we just let the VM handle it.  The VM will re-issue the read, but
+will go back into
+fscache again (because it's enabled), which may fail again.
 
-It's likely this regression is due to a last minute change to
-alloc_pages_bulk_array() done just before v5.13. See:
+If you're ok with that limitation, I'll send the patch.  I tried an
+alternative patch on
+top to disable fscache on the inode if an error occurs - that way the
+reissue from
+the VM should go to the NFS server like the original.  But so far I
+got a deadlock
+in fscache when I try that so it didn't work.  If you want I can try
+to work on disable
+for another patch but it may take longer.
 
-https://lore.kernel.org/linux-nfs/20210629081432.GE3840@techsingularity.net=
-/T/#t
-
-for details.
-
---
-Chuck Lever
+Original (before commit 1e83b173b266)
+static void nfs_readpage_from_fscache_complete(struct page *page,
+...
+        if (!error) {
+                SetPageUptodate(page);
+                unlock_page(page);
+        } else {
+                error = nfs_readpage_async(context, page->mapping->host, page);
+                if (error)
+                        unlock_page(page);
+        }
 
 
+Patched with above idea
+
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index c4c021c6ebbd..dca7ce676b1d 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -385,12 +385,11 @@ static void
+nfs_readpage_from_fscache_complete(struct page *page,
+                 "NFS: readpage_from_fscache_complete (0x%p/0x%p/%d)\n",
+                 page, context, error);
+
+-       /* if the read completes with an error, we just unlock the page and let
++       /* if the read completes with an error, unlock the page and let
+         * the VM reissue the readpage */
+-       if (!error) {
++       if (!error)
+                SetPageUptodate(page);
+-               unlock_page(page);
+-       }
++       unlock_page(page);
+ }
+
+ /*
+diff --git a/fs/nfs/read.c b/fs/nfs/read.c
+index eb390eb618b3..9f39e0a1a38b 100644
+--- a/fs/nfs/read.c
++++ b/fs/nfs/read.c
+@@ -362,13 +362,13 @@ int nfs_readpage(struct file *file, struct page *page)
+        } else
+                desc.ctx = get_nfs_open_context(nfs_file_open_context(file));
+
++       xchg(&desc.ctx->error, 0);
+        if (!IS_SYNC(inode)) {
+                ret = nfs_readpage_from_fscache(desc.ctx, inode, page);
+                if (ret == 0)
+-                       goto out;
++                       goto out_wait;
+        }
+
+-       xchg(&desc.ctx->error, 0);
+        nfs_pageio_init_read(&desc.pgio, inode, false,
+                             &nfs_async_read_completion_ops);
+
+@@ -378,6 +378,7 @@ int nfs_readpage(struct file *file, struct page *page)
+
+        nfs_pageio_complete_read(&desc.pgio);
+        ret = desc.pgio.pg_error < 0 ? desc.pgio.pg_error : 0;
++out_wait:
+        if (!ret) {
+                ret = wait_on_page_locked_killable(page);
+                if (!PageUptodate(page) && !ret)
+
+
+
+Patched with above plus an attempt at disabling fscache on error
+(hangs in fscache disabling)
+
+commit cf88e94e941e718156e68e11dbff10ca0a90bbad
+Author: Dave Wysochanski <dwysocha@redhat.com>
+Date:   Tue Jun 29 08:39:44 2021 -0400
+
+    NFS: Disable fscache on an inode if we get an error when reading a
+page from fscache
+
+    If fscache is enabled, and a read from fscache completes with an error,
+    disable fscache and unlock the page.  The VM will then re-issue the
+    readpage and it should then be sent to the NFS server as a fallback.
+
+    Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index cfa6e8c1b5a4..ef02bdd2b775 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -415,10 +415,12 @@ static void
+nfs_readpage_from_fscache_complete(struct page *page,
+                 "NFS: readpage_from_fscache_complete (0x%p/0x%p/%d)\n",
+                 page, context, error);
+
+-       /* if the read completes with an error, unlock the page and let
+-        * the VM reissue the readpage */
++       /* if the read completes with an error, disable caching on the inode,
++        * unlock the page, and let the VM reissue the readpage to the server */
+        if (!error)
+                SetPageUptodate(page);
++       else
++               nfs_fscache_enable_inode(page->mapping->host, 0);
+        unlock_page(page);
+ }
+
+
+@@ -286,6 +286,29 @@ static bool nfs_fscache_can_enable(void *data)
+        return !inode_is_open_for_write(inode);
+ }
+
++
++void nfs_fscache_enable_inode(struct inode *inode, int enable)
++{
++       struct nfs_fscache_inode_auxdata auxdata;
++       struct nfs_inode *nfsi = NFS_I(inode);
++       struct fscache_cookie *cookie = nfs_i_fscache(inode);
++
++       dfprintk(FSCACHE, "NFS: nfsi 0x%p %s cache\n", nfsi,
++                enable ? "enabling" : "disabling");
++
++       nfs_fscache_update_auxdata(&auxdata, nfsi);
++       if (enable) {
++               fscache_enable_cookie(cookie, &auxdata, nfsi->vfs_inode.i_size,
++                                     nfs_fscache_can_enable, inode);
++               if (fscache_cookie_enabled(cookie))
++                       set_bit(NFS_INO_FSCACHE, &NFS_I(inode)->flags);
++       } else {
++               clear_bit(NFS_INO_FSCACHE, &nfsi->flags);
++               fscache_disable_cookie(cookie, &auxdata, true);
++               fscache_uncache_all_inode_pages(cookie, inode);
++       }
++}
++
 
