@@ -2,63 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A67D3B769E
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Jun 2021 18:47:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26BF13B76E3
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Jun 2021 19:05:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233843AbhF2Qtr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 29 Jun 2021 12:49:47 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:55363 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S232441AbhF2Qtq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Jun 2021 12:49:46 -0400
-Received: from cwcc.thunk.org (pool-72-74-133-215.bstnma.fios.verizon.net [72.74.133.215])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 15TGlBrx004287
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Jun 2021 12:47:12 -0400
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-        id B5CB515C3CD8; Tue, 29 Jun 2021 12:47:11 -0400 (EDT)
-Date:   Tue, 29 Jun 2021 12:47:11 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-fsdevel@vger.kernel.org, dai.ngo@oracle.com,
-        linux-nfs@vger.kernel.org
-Subject: Re: automatic freeing of space on ENOSPC
-Message-ID: <YNtOjxXo4XJivFdw@mit.edu>
-References: <20210628194908.GB6776@fieldses.org>
+        id S231856AbhF2RHj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 29 Jun 2021 13:07:39 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45003 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230097AbhF2RHj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Jun 2021 13:07:39 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <colin.king@canonical.com>)
+        id 1lyHAc-00022F-8e; Tue, 29 Jun 2021 17:05:10 +0000
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Colin Ian King <colin.king@canonical.com>
+Subject: re: NFS: nfs_find_open_context() may only select open files
+Message-ID: <81cc22c8-051d-6826-e7e2-bd9b7e03bede@canonical.com>
+Date:   Tue, 29 Jun 2021 18:05:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210628194908.GB6776@fieldses.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jun 28, 2021 at 03:49:08PM -0400, J. Bruce Fields wrote:
-> Is there anything analogous to a "shrinker", but for disk space?  So,
-> some hook that a filesystem could call to say "I'm running out of space,
-> could you please free something?", before giving up and returning
-> ENOSPC?
+Hi,
 
-In addition to the issues raised by Neil, Amir, Dave, and others, the
-other challenge with the file system calling a "please try to free
-something before I return ENOSPC" is that this would almost certainly
-require blocking a system call while some userspace daemon tried to
-free up some space --- or were you thinking that the nfsd kernel code
-would be tracking all of the silly-rename files so it could release
-space really quickly on demand?
+Static analysis on linux-next with Coverity has found a potential null
+pointer dereference in the following commit:
 
-Even if this is only a kernel callback, I'd be concerned about
-potential locking hierarchy problems if we are calling out from block
-allocation subsystem to nfsd, only to have nfsd call back in to
-request unlinking a silly-renamed file.
+commit 92735943dc6cf52aeaf2ce9aee397dee55e3ef05
+Author: Trond Myklebust <trond.myklebust@hammerspace.com>
+Date:   Tue May 11 23:41:10 2021 -0400
 
-So the suggestion that we not wait until we're down to 0 blocks free,
-but when we hit some threshold (say, free space dips below N minutes
-worth of worst or average case block allocations), trigger code which
-deletes silly-renamed files, is probably the best way to go.  In which
-case, a callback is not what is needed; and if N is large enough, this
-could done via a pure user-space-only solution.
+    NFS: nfs_find_open_context() may only select open files
 
-		      	     		     - Ted
+The analysis is as follows:
+
+1113 struct nfs_open_context *nfs_find_open_context(struct inode *inode,
+const struct cred *cred, fmode_t mode)
+1114 {
+1115        struct nfs_inode *nfsi = NFS_I(inode);
+
+    1. assign_zero: Assigning: ctx = NULL.
+
+1116        struct nfs_open_context *pos, *ctx = NULL;
+1117
+1118        rcu_read_lock();
+
+    2. Condition 1 /* !0 */, taking true branch.
+    3. Condition !rcu_read_lock_any_held(), taking true branch.
+    4. Condition debug_lockdep_rcu_enabled(), taking true branch.
+    5. Condition !__warned, taking true branch.
+    6. Condition 0 /* !((((sizeof (nfsi->open_files.next) == sizeof
+(char) || sizeof (nfsi->open_files.next) == sizeof (short)) || sizeof
+(nfsi->open_files.next) == sizeof (int)) || sizeof
+(nfsi->open_files.next) == sizeof (long)) || sizeof
+(nfsi->open_files.next) == sizeof (long long)) */, taking false branch.
+    7. Condition 0 /* !!(!__builtin_types_compatible_p() &&
+!__builtin_types_compatible_p()) */, taking false branch.
+    8. Condition &pos->list != &nfsi->open_files, taking true branch.
+    13. Condition 0 /* !((((sizeof (pos->list.next) == sizeof (char) ||
+sizeof (pos->list.next) == sizeof (short)) || sizeof (pos->list.next) ==
+sizeof (int)) || sizeof (pos->list.next) == sizeof (long)) || sizeof
+(pos->list.next) == sizeof (long long)) */, taking false branch.
+    14. Condition 0 /* !!(!__builtin_types_compatible_p() &&
+!__builtin_types_compatible_p()) */, taking false branch.
+    15. Condition &pos->list != &nfsi->open_files, taking true branch.
+    20. Condition 0 /* !((((sizeof (pos->list.next) == sizeof (char) ||
+sizeof (pos->list.next) == sizeof (short)) || sizeof (pos->list.next) ==
+sizeof (int)) || sizeof (pos->list.next) == sizeof (long)) || sizeof
+(pos->list.next) == sizeof (long long)) */, taking false branch.
+    21. Condition 0 /* !!(!__builtin_types_compatible_p() &&
+!__builtin_types_compatible_p()) */, taking false branch.
+    22. Condition &pos->list != &nfsi->open_files, taking true branch.
+1119        list_for_each_entry_rcu(pos, &nfsi->open_files, list) {
+    9. Condition cred != NULL, taking true branch.
+    10. Condition cred_fscmp(pos->cred, cred) != 0, taking false branch.
+    16. Condition cred != NULL, taking true branch.
+    17. Condition cred_fscmp(pos->cred, cred) != 0, taking false branch.
+    23. Condition cred != NULL, taking true branch.
+    24. Condition cred_fscmp(pos->cred, cred) != 0, taking false branch.
+
+1120                if (cred != NULL && cred_fscmp(pos->cred, cred) != 0)
+1121                        continue;
+
+    11. Condition (pos->mode & (3U /* (fmode_t)1 | (fmode_t)2 */)) !=
+mode, taking true branch.
+    18. Condition (pos->mode & (3U /* (fmode_t)1 | (fmode_t)2 */)) !=
+mode, taking true branch.
+    25. Condition (pos->mode & (3U /* (fmode_t)1 | (fmode_t)2 */)) !=
+mode, taking false branch.
+1122                if ((pos->mode & (FMODE_READ|FMODE_WRITE)) != mode)
+    12. Continuing loop.
+    19. Continuing loop.
+1123                        continue;
+
+    Explicit null dereferenced (FORWARD_NULL)
+    26. var_deref_model: Passing null pointer &ctx->flags to test_bit,
+which dereferences it.
+
+1124                if (!test_bit(NFS_CONTEXT_FILE_OPEN, &ctx->flags))
+1125                        continue;
+1126                ctx = get_nfs_open_context(pos);
+1127                if (ctx)
+1128                        break;
+1129        }
+1130        rcu_read_unlock();
+1131        return ctx;
+1132 }
+
+Coverity is indicating that the test_bit call on &ctx->flags can cause a
+null pointer dereference when ctx is NULL.  I'm not entirely convinced
+if this is a false positive, so I though I had better report this issue.
+
+Colin
+
