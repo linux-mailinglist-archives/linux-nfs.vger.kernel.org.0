@@ -2,170 +2,296 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E6703B8BB7
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Jul 2021 03:16:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E5CB3B8F74
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Jul 2021 11:06:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238377AbhGABTH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Jun 2021 21:19:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238345AbhGABTG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Jun 2021 21:19:06 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F01AEC061756
-        for <linux-nfs@vger.kernel.org>; Wed, 30 Jun 2021 18:16:36 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 06CF664B9; Wed, 30 Jun 2021 21:16:36 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 06CF664B9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1625102196;
-        bh=lyUDbKpbLFmhewN8r6SRIQ/4QCIfARc+Hng2U9QM4Uo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DL+UChtaLYRRVCY+5We3f8+UHLVQQPCTG3VUIDgPKwqD4l/hn0VDwyyNR9OfNe7qc
-         OhFyMOc/4E1PTy3Z8tZvhblsaoNW7n6IbUJ1FaXOzRWuicddRY168UsiaVcJ5hlMXR
-         aYk2+mXYjZFBjF+NsB5OWhO9M/Td5hAey7V0yAX8=
-Date:   Wed, 30 Jun 2021 21:16:36 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     dai.ngo@oracle.com
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH RFC 1/1] nfsd: Initial implementation of NFSv4 Courteous
- Server
-Message-ID: <20210701011636.GI20229@fieldses.org>
-References: <20210603181438.109851-1-dai.ngo@oracle.com>
- <20210628202331.GC6776@fieldses.org>
- <dc71d572-d108-bcfc-e264-d96ef0de1b36@oracle.com>
- <9628be9d-2bfd-d036-2308-847cb4f1a14d@oracle.com>
- <20210630180527.GE20229@fieldses.org>
- <08caefcd-5271-8d44-326d-395399ff465c@oracle.com>
- <20210630185519.GG20229@fieldses.org>
- <08884534-931b-d828-0340-33c396674dd5@oracle.com>
- <20210630192429.GH20229@fieldses.org>
- <a111226a-c6ac-0a39-190a-c2cc8b781213@oracle.com>
+        id S235510AbhGAJIs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Jul 2021 05:08:48 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:42172 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235088AbhGAJIs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Jul 2021 05:08:48 -0400
+Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id E22FA1FF91;
+        Thu,  1 Jul 2021 09:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1625130376; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+KQmZApQv5Hr6+qTNVzs9qsKk9dOPClm4EaF+nmBTl8=;
+        b=N50IdlD0pxjFg+QvBIQ+ufJBV9Yvz2OluVnehXRkqEXDG2QSbSyqZCIWJkbhaDzdt+1XKx
+        bBMhqRq1SgcadrVd/onHJMonPiNmxrAyGty67le8HzO1Jg7yDb4uc5ja2DXYqVopFuiYu3
+        9kxWDSkTU4Fk1HpxgAo9aPgmo5UaqFk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1625130376;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+KQmZApQv5Hr6+qTNVzs9qsKk9dOPClm4EaF+nmBTl8=;
+        b=aS0PTkrQ/y0fLLLk07UX/QiS9KWRBiZ6Ic2FpyfbMeR7b6GVSGHLx9fSEsxyEfZW7QkuHu
+        i9wyDzceH1WfTKBg==
+Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        by imap.suse.de (Postfix) with ESMTP id 38EA011CC0;
+        Thu,  1 Jul 2021 09:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1625130376; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+KQmZApQv5Hr6+qTNVzs9qsKk9dOPClm4EaF+nmBTl8=;
+        b=N50IdlD0pxjFg+QvBIQ+ufJBV9Yvz2OluVnehXRkqEXDG2QSbSyqZCIWJkbhaDzdt+1XKx
+        bBMhqRq1SgcadrVd/onHJMonPiNmxrAyGty67le8HzO1Jg7yDb4uc5ja2DXYqVopFuiYu3
+        9kxWDSkTU4Fk1HpxgAo9aPgmo5UaqFk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1625130376;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+KQmZApQv5Hr6+qTNVzs9qsKk9dOPClm4EaF+nmBTl8=;
+        b=aS0PTkrQ/y0fLLLk07UX/QiS9KWRBiZ6Ic2FpyfbMeR7b6GVSGHLx9fSEsxyEfZW7QkuHu
+        i9wyDzceH1WfTKBg==
+Received: from director2.suse.de ([192.168.254.72])
+        by imap3-int with ESMTPSA
+        id zUvhCoiF3WAaJwAALh3uQQ
+        (envelope-from <lhenriques@suse.de>); Thu, 01 Jul 2021 09:06:16 +0000
+Received: from localhost (brahms [local])
+        by brahms (OpenSMTPD) with ESMTPA id ca4cb278;
+        Thu, 1 Jul 2021 09:06:15 +0000 (UTC)
+Date:   Thu, 1 Jul 2021 10:06:15 +0100
+From:   Luis Henriques <lhenriques@suse.de>
+To:     Olga Kornievskaia <aglo@umich.edu>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Petr Vorel <pvorel@suse.cz>, Steve French <sfrench@samba.org>,
+        kernel test robot <oliver.sang@intel.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v11] vfs: fix copy_file_range regression in cross-fs
+ copies
+Message-ID: <YN2FhweR8MXABae5@suse.de>
+References: <20210630161320.29006-1-lhenriques@suse.de>
+ <CAN-5tyGXZWQgdaWG5GWJn1mZhA23PR-KEv1-EW=tGRJLL4PUWA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a111226a-c6ac-0a39-190a-c2cc8b781213@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAN-5tyGXZWQgdaWG5GWJn1mZhA23PR-KEv1-EW=tGRJLL4PUWA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jun 30, 2021 at 04:48:57PM -0700, dai.ngo@oracle.com wrote:
+On Wed, Jun 30, 2021 at 05:06:49PM -0400, Olga Kornievskaia wrote:
+> adding linux-nfs to the recipients as well (seems to have been dropped)
 > 
-> On 6/30/21 12:24 PM, J. Bruce Fields wrote:
-> >On Wed, Jun 30, 2021 at 12:13:35PM -0700, dai.ngo@oracle.com wrote:
-> >>On 6/30/21 11:55 AM, J. Bruce Fields wrote:
-> >>>On Wed, Jun 30, 2021 at 11:49:18AM -0700, dai.ngo@oracle.com wrote:
-> >>>>On 6/30/21 11:05 AM, J. Bruce Fields wrote:
-> >>>>>On Wed, Jun 30, 2021 at 10:51:27AM -0700, dai.ngo@oracle.com wrote:
-> >>>>>>>On 6/28/21 1:23 PM, J. Bruce Fields wrote:
-> >>>>>>>>where ->fl_expire_lock is a new lock callback with second
-> >>>>>>>>argument "check"
-> >>>>>>>>where:
-> >>>>>>>>
-> >>>>>>>>     check = 1 means: just check whether this lock could be freed
-> >>>>>>Why do we need this, is there a use case for it? can we just always try
-> >>>>>>to expire the lock and return success/fail?
-> >>>>>We can't expire the client while holding the flc_lock.  And once we drop
-> >>>>>that lock we need to restart the loop.  Clearly we can't do that every
-> >>>>>time.
-> >>>>>
-> >>>>>(So, my code was wrong, it should have been:
-> >>>>>
-> >>>>>
-> >>>>>	if (fl->fl_lops->fl_expire_lock(fl, 1)) {
-> >>>>>		spin_unlock(&ct->flc_lock);
-> >>>>>		fl->fl_lops->fl_expire_locks(fl, 0);
-> >>>>>		goto retry;
-> >>>>>	}
-> >>>>>
-> >>>>>)
-> >>>>This is what I currently have:
-> >>>>
-> >>>>retry:
-> >>>>                 list_for_each_entry(fl, &ctx->flc_posix, fl_list) {
-> >>>>                         if (!posix_locks_conflict(request, fl))
-> >>>>                                 continue;
-> >>>>
-> >>>>                         if (fl->fl_lmops && fl->fl_lmops->lm_expire_lock) {
-> >>>>                                 spin_unlock(&ctx->flc_lock);
-> >>>>                                 ret = fl->fl_lmops->lm_expire_lock(fl, 0);
-> >>>>                                 spin_lock(&ctx->flc_lock);
-> >>>>                                 if (ret)
-> >>>>                                         goto retry;
-> >>>We have to retry regardless of the return value.  Once we've dropped
-> >>>flc_lock, it's not safe to continue trying to iterate through the list.
-> >>Yes, thanks!
-> >>
-> >>>>                         }
-> >>>>
-> >>>>                         if (conflock)
-> >>>>                                 locks_copy_conflock(conflock, fl);
-> >>>>
-> >>>>>But the 1 and 0 cases are starting to look pretty different; maybe they
-> >>>>>should be two different callbacks.
-> >>>>why the case of 1 (test only) is needed,  who would use this call?
-> >>>We need to avoid dropping the spinlock in the case there are no clients
-> >>>to expire, otherwise we'll make no forward progress.
-> >>I think we can remember the last checked file_lock and skip it:
-> >I doubt that works in the case there are multiple locks with
-> >lm_expire_lock set.
+> On Wed, Jun 30, 2021 at 12:22 PM Luis Henriques <lhenriques@suse.de> wrote:
 > >
-> >If you really don't want another callback here, maybe you could set some
-> >kind of flag on the lock.
+> > A regression has been reported by Nicolas Boichat, found while using the
+> > copy_file_range syscall to copy a tracefs file.  Before commit
+> > 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
+> > kernel would return -EXDEV to userspace when trying to copy a file across
+> > different filesystems.  After this commit, the syscall doesn't fail anymore
+> > and instead returns zero (zero bytes copied), as this file's content is
+> > generated on-the-fly and thus reports a size of zero.
 > >
-> >At the time a client expires, you're going to have to walk all of its
-> >locks to see if anyone's waiting for them.  At the same time maybe you
-> >could set an FL_EXPIRABLE flag on all those locks, and test for that
-> >here.
+> > This patch restores some cross-filesystem copy restrictions that existed
+> > prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
+> > devices").  Filesystems are still allowed to fall-back to the VFS
+> > generic_copy_file_range() implementation, but that has now to be done
+> > explicitly.
 > >
-> >If the network partition heals and the client comes back, you'd have to
-> >remember to clear that flag again.
+> > nfsd is also modified to fall-back into generic_copy_file_range() in case
+> > vfs_copy_file_range() fails with -EOPNOTSUPP or -EXDEV.
+> >
+> > Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
+> > Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
+> > Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
+> > Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
+> > Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+> > Reported-by: kernel test robot <oliver.sang@intel.com>
+> > Signed-off-by: Luis Henriques <lhenriques@suse.de>
+> > ---
+> > Changes since v10
+> > - simply remove the "if (len == 0)" short-circuit instead of checking if
+> >   the filesystem implements the syscall.  This is because a filesystem may
+> >   implement it but a particular instance (hint: overlayfs!) may not.
+> > Changes since v9
+> > - the early return from the syscall when len is zero now checks if the
+> >   filesystem is implemented, returning -EOPNOTSUPP if it is not and 0
+> >   otherwise.  Issue reported by test robot.
+> >   (obviously, dropped Amir's Reviewed-by and Olga's Tested-by tags)
+> > Changes since v8
+> > - Simply added Amir's Reviewed-by and Olga's Tested-by
+> > Changes since v7
+> > - set 'ret' to '-EOPNOTSUPP' before the clone 'if' statement so that the
+> >   error returned is always related to the 'copy' operation
+> > Changes since v6
+> > - restored i_sb checks for the clone operation
+> > Changes since v5
+> > - check if ->copy_file_range is NULL before calling it
+> > Changes since v4
+> > - nfsd falls-back to generic_copy_file_range() only *if* it gets -EOPNOTSUPP
+> >   or -EXDEV.
+> > Changes since v3
+> > - dropped the COPY_FILE_SPLICE flag
+> > - kept the f_op's checks early in generic_copy_file_checks, implementing
+> >   Amir's suggestions
+> > - modified nfsd to use generic_copy_file_range()
+> > Changes since v2
+> > - do all the required checks earlier, in generic_copy_file_checks(),
+> >   adding new checks for ->remap_file_range
+> > - new COPY_FILE_SPLICE flag
+> > - don't remove filesystem's fallback to generic_copy_file_range()
+> > - updated commit changelog (and subject)
+> > Changes since v1 (after Amir review)
+> > - restored do_copy_file_range() helper
+> > - return -EOPNOTSUPP if fs doesn't implement CFR
+> > - updated commit description
+> >
+> >  fs/nfsd/vfs.c   |  8 +++++++-
+> >  fs/read_write.c | 52 +++++++++++++++++++++++--------------------------
+> >  2 files changed, 31 insertions(+), 29 deletions(-)
+> >
+> > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> > index 15adf1f6ab21..f54a88b3b4a2 100644
+> > --- a/fs/nfsd/vfs.c
+> > +++ b/fs/nfsd/vfs.c
+> > @@ -569,6 +569,7 @@ __be32 nfsd4_clone_file_range(struct nfsd_file *nf_src, u64 src_pos,
+> >  ssize_t nfsd_copy_file_range(struct file *src, u64 src_pos, struct file *dst,
+> >                              u64 dst_pos, u64 count)
+> >  {
+> > +       ssize_t ret;
+> >
+> >         /*
+> >          * Limit copy to 4MB to prevent indefinitely blocking an nfsd
+> > @@ -579,7 +580,12 @@ ssize_t nfsd_copy_file_range(struct file *src, u64 src_pos, struct file *dst,
+> >          * limit like this and pipeline multiple COPY requests.
+> >          */
+> >         count = min_t(u64, count, 1 << 22);
+> > -       return vfs_copy_file_range(src, src_pos, dst, dst_pos, count, 0);
+> > +       ret = vfs_copy_file_range(src, src_pos, dst, dst_pos, count, 0);
+> > +
+> > +       if (ret == -EOPNOTSUPP || ret == -EXDEV)
+> > +               ret = generic_copy_file_range(src, src_pos, dst, dst_pos,
+> > +                                             count, 0);
+> > +       return ret;
+> >  }
+> >
+> >  __be32 nfsd4_vfs_fallocate(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> > diff --git a/fs/read_write.c b/fs/read_write.c
+> > index 9db7adf160d2..049a2dda29f7 100644
+> > --- a/fs/read_write.c
+> > +++ b/fs/read_write.c
+> > @@ -1395,28 +1395,6 @@ ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
+> >  }
+> >  EXPORT_SYMBOL(generic_copy_file_range);
+> >
+> > -static ssize_t do_copy_file_range(struct file *file_in, loff_t pos_in,
+> > -                                 struct file *file_out, loff_t pos_out,
+> > -                                 size_t len, unsigned int flags)
+> > -{
+> > -       /*
+> > -        * Although we now allow filesystems to handle cross sb copy, passing
+> > -        * a file of the wrong filesystem type to filesystem driver can result
+> > -        * in an attempt to dereference the wrong type of ->private_data, so
+> > -        * avoid doing that until we really have a good reason.  NFS defines
+> > -        * several different file_system_type structures, but they all end up
+> > -        * using the same ->copy_file_range() function pointer.
+> > -        */
+> > -       if (file_out->f_op->copy_file_range &&
+> > -           file_out->f_op->copy_file_range == file_in->f_op->copy_file_range)
+> > -               return file_out->f_op->copy_file_range(file_in, pos_in,
+> > -                                                      file_out, pos_out,
+> > -                                                      len, flags);
+> > -
+> > -       return generic_copy_file_range(file_in, pos_in, file_out, pos_out, len,
+> > -                                      flags);
+> > -}
+> > -
+> >  /*
+> >   * Performs necessary checks before doing a file copy
+> >   *
+> > @@ -1434,6 +1412,25 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
+> >         loff_t size_in;
+> >         int ret;
+> >
+> > +       /*
+> > +        * Although we now allow filesystems to handle cross sb copy, passing
+> > +        * a file of the wrong filesystem type to filesystem driver can result
+> > +        * in an attempt to dereference the wrong type of ->private_data, so
+> > +        * avoid doing that until we really have a good reason.  NFS defines
+> > +        * several different file_system_type structures, but they all end up
+> > +        * using the same ->copy_file_range() function pointer.
+> > +        */
+> > +       if (file_out->f_op->copy_file_range) {
+> > +               if (file_in->f_op->copy_file_range !=
+> > +                   file_out->f_op->copy_file_range)
+> > +                       return -EXDEV;
+> > +       } else if (file_in->f_op->remap_file_range) {
+> > +               if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
+> > +                       return -EXDEV;
+> > +       } else {
+> > +                return -EOPNOTSUPP;
+> > +       }
+> > +
+> >         ret = generic_file_rw_checks(file_in, file_out);
+> >         if (ret)
+> >                 return ret;
+> > @@ -1497,11 +1494,9 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
+> >         if (unlikely(ret))
+> >                 return ret;
+> >
+> > -       if (len == 0)
+> > -               return 0;
 > 
-> It's too much unnecessary work.
-> 
-> Would this be suffice:
-> 
-> retry:
->                 list_for_each_entry(fl, &ctx->flc_posix, fl_list) {
->                         if (!posix_locks_conflict(request, fl))
->                                 continue;
->                         if (fl->fl_lmops && fl->fl_lmops->lm_expire_lock &&
->                                         fl->fl_lmops->lm_expire_lock(fl, 1)) {
->                                 spin_unlock(&ctx->flc_lock);
->                                 fl->fl_lmops->lm_expire_lock(fl, 0);
->                                 spin_lock(&ctx->flc_lock);
->                                 goto retry;
->                         }
->                         if (conflock)
->                                 locks_copy_conflock(conflock, fl);
+> Can somebody please explain this change to me? Is this an attempt to
+> support "whole" file copy?
 
-Looks OK to me.--b.
+No, this was a bug reported in this thread:
 
+https://lore.kernel.org/linux-fsdevel/877dk1zibo.fsf@suse.de/
+
+(I'm also adding back Steve to the Cc: list.)
+
+Cheers,
+--
+Lu�s
+
+> I believe previously file systems relied
+> on the fact that they don't need to handle 0 size copy_file_range size
+> call. If this is being changed why not individual implementors (nfs,
+> etc) were modified to keep the same behavior? I mean is CIFS ok with
+> getting count=0 copy_file_range request?
 > 
-> -Dai
-> 
+> In the NFS spec of COPY (copy_file_range), length of 0 means (or could
+> mean) "whole file" copy. While the linux NFS server did put in support
+> for doing "whole file" copy, it's not present before 5.13 in the linux
+> server. It makes it now confusing that a copy of length 0 previously
+> would return 0 and now it could copy whole file.
+> > -
+> >         file_start_write(file_out);
 > >
-> >--b.
+> > +       ret = -EOPNOTSUPP;
+> >         /*
+> >          * Try cloning first, this is supported by more file systems, and
+> >          * more efficient if both clone and copy are supported (e.g. NFS).
+> > @@ -1520,9 +1515,10 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
+> >                 }
+> >         }
 > >
-> >>retry:
-> >>                 list_for_each_entry(fl, &ctx->flc_posix, fl_list) {
-> >>                         if (!posix_locks_conflict(request, fl))
-> >>                                 continue;
-> >>
-> >>                         if (checked_fl != fl && fl->fl_lmops &&
-> >>                                         fl->fl_lmops->lm_expire_lock) {
-> >>                                 checked_fl = fl;
-> >>                                 spin_unlock(&ctx->flc_lock);
-> >>                                 fl->fl_lmops->lm_expire_lock(fl);
-> >>                                 spin_lock(&ctx->flc_lock);
-> >>                                 goto retry;
-> >>                         }
-> >>
-> >>                         if (conflock)
-> >>                                 locks_copy_conflock(conflock, fl);
-> >>
-> >>-Dai
-> >>
-> >>>--b.
+> > -       ret = do_copy_file_range(file_in, pos_in, file_out, pos_out, len,
+> > -                               flags);
+> > -       WARN_ON_ONCE(ret == -EOPNOTSUPP);
+> > +       if (file_out->f_op->copy_file_range)
+> > +               ret = file_out->f_op->copy_file_range(file_in, pos_in,
+> > +                                                     file_out, pos_out,
+> > +                                                     len, flags);
+> >  done:
+> >         if (ret > 0) {
+> >                 fsnotify_access(file_in);
