@@ -2,267 +2,484 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACDB63B8B03
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Jul 2021 01:49:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D12653B8B75
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Jul 2021 02:55:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237879AbhF3Xvd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Jun 2021 19:51:33 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:61584 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236647AbhF3Xvc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Jun 2021 19:51:32 -0400
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15UNgrHn026107;
-        Wed, 30 Jun 2021 23:49:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=xRWcxWXVYYK8NjzdM1pv9Ir0SO+/eVdgTtEIzRnO6ik=;
- b=nNX6fNA0CkRM0tF3r1sVrV7l8ECmWH46jsZDuGOPCc1zO+cfrXq8bgsUFfFGU48D21/e
- XDVzBlleWpHeB3MOsr+oTwXL942CctugAtQUXd+5A0WAmL2lUWDtb1W6qSMQms55NSgi
- /5nr6qbypUrWjjBDgfDh9fvr14VdmJCdIE2twDy5QguG+/wO3+cYjEheOhckuoqapDnu
- AZJTKolLhC93CZPdUF6hy/8jmcyikzAgbCx39P6T58bIQNE90cL45XPknthFB8FXf4JQ
- tdfj/jSxNIXltWxkfYu0wyYtV0Xud3h5+dtl//B8jbJvjqDIHnbPvDZn3Xs61ukmtHFI Qw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 39gguq24sq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Jun 2021 23:49:01 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 15UNjvQq123612;
-        Wed, 30 Jun 2021 23:49:00 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2106.outbound.protection.outlook.com [104.47.58.106])
-        by aserp3020.oracle.com with ESMTP id 39dv292w6e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Jun 2021 23:49:00 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZDuqt+0iCdEjFxT6kLQbkS+sPMlhMwfSIGxF0ufpEA7S5tmtJhuhuNBalVpypnrTahdvY2ThcZTo0naxzMZ0bl/PSYYtYvAa0M0k5fyu3wipljxxD166pl5vgQ+P5LQHATH0PgNbMrCZaCyIl8LKhLGLJbnsvG93ayYFJ/hDFKY/JNZfh+KvmBPX9/cVu6CnejvquWOw+tMDtg2SmNGwlxKRvNmvkIbomPPd8nv8j3cgqphHq00/KraKGkSVT2sAGiGgMpsYYTvF4pU3mC645O/U6dVFU5EF/nv9efvFqjaWyPo5IbZvN0A8Skb3ZbZrHXFoqoajWe2e1kJ3KM42lg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xRWcxWXVYYK8NjzdM1pv9Ir0SO+/eVdgTtEIzRnO6ik=;
- b=DRf0hxTuWewgWT8nps+YLIMzfdPT+f8iyyWBhEViTGV4yxu9yBxSw16KooapUxM8DMwh8qjvrxJGPQi59hab652dllNnr2pmwFVXHKwmR2JWLqadwrc2KvkPfOQLjYTueVU4CwZfnK2Fnk5REcju1gW/sq0a1VHF+C9rItEC4Xwa3Hj6q27bxPXf62UYv7ODnjl31zwP3WHxShv9OK7ftwtQhrQY648yET5LSyPX/VELJQ8zj9dKbBsfEERGWK4W1Ky5EAsnYnoVL6FhhYxFe16HCDIHa0rrTOkOLlUqglPEhNN1ppsWlzSgIftP4ngdt/s0KZ87txBqqR84NdZiWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xRWcxWXVYYK8NjzdM1pv9Ir0SO+/eVdgTtEIzRnO6ik=;
- b=CNdmwoO1FvDS/Fn8mgOqB4lXFqpympatFoS7uOQI5EhH9qy0boiHKz794FTUgJEBu9/qssBxQuHjTy+8iGYxLPvAvJNsinXc+WblNEEe4JkqmEFOokbpEJI+/x5SJ4C9Bks6bUBJ1VqBK8nTAyQrveU++w+ZeCDRhkoXtG4quCY=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=oracle.com;
-Received: from MN2PR10MB4270.namprd10.prod.outlook.com (2603:10b6:208:1d6::21)
- by BLAPR10MB5249.namprd10.prod.outlook.com (2603:10b6:208:327::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4287.22; Wed, 30 Jun
- 2021 23:48:59 +0000
-Received: from MN2PR10MB4270.namprd10.prod.outlook.com
- ([fe80::a8b2:35e6:5837:13e5]) by MN2PR10MB4270.namprd10.prod.outlook.com
- ([fe80::a8b2:35e6:5837:13e5%6]) with mapi id 15.20.4264.026; Wed, 30 Jun 2021
- 23:48:59 +0000
-Subject: Re: [PATCH RFC 1/1] nfsd: Initial implementation of NFSv4 Courteous
- Server
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
-References: <20210603181438.109851-1-dai.ngo@oracle.com>
- <20210628202331.GC6776@fieldses.org>
- <dc71d572-d108-bcfc-e264-d96ef0de1b36@oracle.com>
- <9628be9d-2bfd-d036-2308-847cb4f1a14d@oracle.com>
- <20210630180527.GE20229@fieldses.org>
- <08caefcd-5271-8d44-326d-395399ff465c@oracle.com>
- <20210630185519.GG20229@fieldses.org>
- <08884534-931b-d828-0340-33c396674dd5@oracle.com>
- <20210630192429.GH20229@fieldses.org>
-From:   dai.ngo@oracle.com
-Message-ID: <a111226a-c6ac-0a39-190a-c2cc8b781213@oracle.com>
-Date:   Wed, 30 Jun 2021 16:48:57 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.10.2
-In-Reply-To: <20210630192429.GH20229@fieldses.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [72.219.112.78]
-X-ClientProxiedBy: SA9PR03CA0017.namprd03.prod.outlook.com
- (2603:10b6:806:20::22) To MN2PR10MB4270.namprd10.prod.outlook.com
- (2603:10b6:208:1d6::21)
+        id S234794AbhGAA51 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Jun 2021 20:57:27 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:51200 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232066AbhGAA51 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Jun 2021 20:57:27 -0400
+Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id C024722748;
+        Thu,  1 Jul 2021 00:54:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1625100896; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=juMpLHf8TkG+FHjDxwtM27wCjHpbUVUwwxeW+chW084=;
+        b=CKJX8CW6cFZLpsyKvMpXX7+AtPOQevcdMN611P8bFCHcVDmI+iJ/5nHel20nwhhfCU6zKm
+        l/7UkDbJX+WR/TXptdO6kTvVe+IFrihXEZgN0OubaZ2I5F8VAzmjsGr7NjbZcxINejYtgK
+        cKZ3vdGYAw/ytdRkGv6V0fTJ3IlT0II=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1625100896;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=juMpLHf8TkG+FHjDxwtM27wCjHpbUVUwwxeW+chW084=;
+        b=7wDTwI5A+MTgKFTE1N4FvdKn84rHF1upBcSzJifFRxog6WS9pQ03uS61gnSIq6ZvW6m4iE
+        a735dYCexhe4FXDA==
+Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        by imap.suse.de (Postfix) with ESMTP id 24707118DD;
+        Thu,  1 Jul 2021 00:54:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1625100896; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=juMpLHf8TkG+FHjDxwtM27wCjHpbUVUwwxeW+chW084=;
+        b=CKJX8CW6cFZLpsyKvMpXX7+AtPOQevcdMN611P8bFCHcVDmI+iJ/5nHel20nwhhfCU6zKm
+        l/7UkDbJX+WR/TXptdO6kTvVe+IFrihXEZgN0OubaZ2I5F8VAzmjsGr7NjbZcxINejYtgK
+        cKZ3vdGYAw/ytdRkGv6V0fTJ3IlT0II=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1625100896;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=juMpLHf8TkG+FHjDxwtM27wCjHpbUVUwwxeW+chW084=;
+        b=7wDTwI5A+MTgKFTE1N4FvdKn84rHF1upBcSzJifFRxog6WS9pQ03uS61gnSIq6ZvW6m4iE
+        a735dYCexhe4FXDA==
+Received: from director2.suse.de ([192.168.254.72])
+        by imap3-int with ESMTPSA
+        id pjUiMV4S3WBpRQAALh3uQQ
+        (envelope-from <neilb@suse.de>); Thu, 01 Jul 2021 00:54:54 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from dhcp-10-159-232-63.vpn.oracle.com (72.219.112.78) by SA9PR03CA0017.namprd03.prod.outlook.com (2603:10b6:806:20::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4287.23 via Frontend Transport; Wed, 30 Jun 2021 23:48:58 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7199d1b6-f83e-4239-fe9d-08d93c21a157
-X-MS-TrafficTypeDiagnostic: BLAPR10MB5249:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BLAPR10MB5249636A4441EE944E46BF4C87019@BLAPR10MB5249.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PFKSd3hlPMUoVsOzfXUZq/TxhPSshpOdYDL01LuTiEX3A8ynD8m5tOJ/uihipHYOuPZyM3bGF1yKkIqKtOOm4Tt+QAGQl/iWAXl546Tl1ILMNRRCpIGnW0leodjPNlq9EEpf8mUzA1W/jY6nvDyDHVtHKTC0fY7Rhg+vQfH+1+TS0kvRJ1pu2F6HHwErAqnYcpxkNUqAzJOsyUzgZpnUam/awPE+Bwx4x9BhYPVPmJ+aPQBPB2iSu66Pa6llYam7LRHeAvqy7LRbdY5q+7U8VgrIG9rcpR63EfS87D8jDLwqzv2UmnhzKTWL6gj8SLKdibybXwnnXDHvWbAMq523zHfToPpwGgg6/DesE51n+VMSLZ8qhnFso6HE2HjluwQl87VYWjgHwLvH37IHY/erIsf7m4dq5qN3381WxgeTlF9j05KHw4tA7pvWhlwYX5eQIlgMGu4K4meJABX5FtRSN8fAMzOe1DkMHeJb6eF940gb4dmRYpvJTMnzIPjXoOAUb11NLWXKpuE3x8KwSymrYpizBhoNb2rqQ3EIs19cm8M4plooqYvzciTiHUGqkIeye0Zxt04TvMrwKAgeUGOvkTeEdJFtwrVF07xjs3N1ewBZz3WBovUC40oBvrMrfHERLncN1+qdFsg921WuQiTACBevv0AFXs0S7CMWZh2KXto8hK51FK3QvSZ011srsWK9VY4kWjIIt+/xA/QiKwpN+A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR10MB4270.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(136003)(366004)(376002)(396003)(346002)(31696002)(9686003)(36756003)(6486002)(2906002)(86362001)(38100700002)(53546011)(66946007)(2616005)(26005)(66476007)(66556008)(956004)(4326008)(8936002)(16526019)(83380400001)(7696005)(478600001)(316002)(5660300002)(186003)(6916009)(8676002)(31686004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SGd1Q3dZazE4S3NVTkY0L2xmWUlkZGV3QkhjcERPWDFMYVhyekxqeDlBVytj?=
- =?utf-8?B?djNYV0VuQUxva1o1dWlsaXNHUDlTcEpONjZ6YmFBVi9Da1NEUktOaGR3Q1Jm?=
- =?utf-8?B?TTZDYlNxVWoveXZUbHQ0VGNPY0NYRHIrbzRKNTRBcnRiM0lNSnVmM0piM0hI?=
- =?utf-8?B?QnRWSG5NQXlKNW5DVURybTA4Wlo2L0laWXluQlppcjVjSXJxcVdzMlJhUTQv?=
- =?utf-8?B?L3NiUWg3N2E0UlJ5ancwLzhoaHRwOTkzbmtaWUpQWEVlcUt4cTRudnZFb3ds?=
- =?utf-8?B?a0V6OGd4UUJBa2M1R1NIZXp4NFh2bmkyd0dxUEoxRXhoZmowYlk0YUVEL1lX?=
- =?utf-8?B?cVRpMVFudzVvM3J2TUNlMk11T1FSUytEY2E5NFRqSFpjZDZvYUZqUXlnMWN1?=
- =?utf-8?B?YU9VTUo2akdxY0xpVE4yUzBDZjRhejJZaUFYdDJqWFdQRnRuYWRqbUltTWhk?=
- =?utf-8?B?a29wME9KbG5tNG1KdTZJbHppbTBmNHFXRjRqTDUzSWE1SytRSnBUdHpQVTBP?=
- =?utf-8?B?c3l6ZzZYcEg3b2JZTTR2blhOdWVlUHcxK0xwTU00S1d5ZXFUcjFwTnNIN2FN?=
- =?utf-8?B?M2dma2hteENraFlVTWd4dWhMZjFWaVhvb1NFRnBhOWR0b090Qjg5Mk9sV29r?=
- =?utf-8?B?V2dDSS9uc0g4TnZJTnZjb2gvcVVJeWIzZnVqN0E0bDU2dFZTQmU3SkQ0c0xh?=
- =?utf-8?B?TkIyOUlWMm1kckFPTmpWeEw2d29UR3A5NER3aXdYbi9Gc2d4T1QrSDdlbllN?=
- =?utf-8?B?dWxaam9sVGNOZjI4eU0yZE9JVFRsc1psc2U2M3c5aFU3SGltTUt1YWZKTFBt?=
- =?utf-8?B?V2I0V29CTVVHM3k2MW95amRmZkxUUjIwMmZuQTh4SEI1dmpaWENpUFNuUmlu?=
- =?utf-8?B?bC92SkhIRUNtUUJWb2pDTXZoZnlTZEZaSy9pb0pCNVpJVStuNUpmM2MrUDlY?=
- =?utf-8?B?RzRuTkdpdWJnU3JUVzhvSjJWZnF5cUk0d1VjMXJTL012enpDbnVXNktzSFFE?=
- =?utf-8?B?TUozcXRpaXEydlZTYzZMV24xU082Nk1vYXNrUHNxUExnb29iaDU1T2ptMW9K?=
- =?utf-8?B?TXlPVFZodVBHOXVJRjNnSmcwdmpHdzZMaEtKckhVMDFybTZMcDlnRStkRUFG?=
- =?utf-8?B?Z2Y4NzBsTUdKTVNLemlQTU9kNW1WS3BPNWl0YUpkZ2F3WXB3M0ZST1hJbXNV?=
- =?utf-8?B?dDJOUDVGeXNyRmJHWi93aW5SWUZTSG42Z2l3SzV6WWI5VkhhQmt0akEvcHZJ?=
- =?utf-8?B?LzEyR2ZVWiswTUJmU3ZvNEZNNllmaFhVNytwUTdGclp4THJmTldsdnJhWEc3?=
- =?utf-8?B?N0Y5MjhWcmFweE9RbzZxbEFubmNEUGRvYlJ6Qzg4SlUxZ3RmMjRSV1NYUmFx?=
- =?utf-8?B?aFR6V1pxWEZEQWJqOXJHWDBHMjRzTlFMYTloWERzM2Ryd3N4a2JGOW1rQ3Mr?=
- =?utf-8?B?MVpsWWlPZ3VsTTh2eEZsQ2x4Y2RmbjV3QnQxWjUvT1NxaXRZQW9HZ2dkRThB?=
- =?utf-8?B?YTdrWjJQSlBsVnEzTHZpcStTaTNDTnpGTjhjMU5zMWJPeUdkLzFULzZ0NXJv?=
- =?utf-8?B?TTFNNVlVdmt6MFNFT0E3YXB6NzJ1TGJqeGJYQ1hyR2VQMFk3end0dHBhZk8w?=
- =?utf-8?B?U3pLOXZsejVuODlTV1lhRExhTnh3TkRYWnN3Mi94SnF4MGJYdXo0L2lZNGhI?=
- =?utf-8?B?OWhxRDdaZGp1c3ZTbGx1cy94dTdaOUFYQW9FYmF4L1hFMDM1azJLRW1iMmVG?=
- =?utf-8?Q?dlFqvCSDkNVuyWeLDkGezbLd+IeqJ+4iPoEcCO9?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7199d1b6-f83e-4239-fe9d-08d93c21a157
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR10MB4270.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2021 23:48:58.9674
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4uOBdZIwjrzfocW6IjmSg8YE9+6/VRTeIt7wbEVYHOkPo4SfdzfJl0oTKPTtp/70bYm5OFTisMfQtacS+s1AAg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB5249
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10031 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 adultscore=0
- malwarescore=0 mlxlogscore=999 suspectscore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
- definitions=main-2106300135
-X-Proofpoint-ORIG-GUID: JFw0simz0Rl5pV6I3pCPaRuu0TfSH_in
-X-Proofpoint-GUID: JFw0simz0Rl5pV6I3pCPaRuu0TfSH_in
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Trond Myklebust" <trond.myklebust@hammerspace.com>,
+        "Anna Schumaker" <Anna.Schumaker@Netapp.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH/rfc v2] NFS: introduce NFS namespaces.
+In-reply-to: <162458475606.28671.1835069742861755259@noble.neil.brown.name>
+References: <162458475606.28671.1835069742861755259@noble.neil.brown.name>
+Date:   Thu, 01 Jul 2021 10:54:51 +1000
+Message-id: <162510089174.7211.449831430943803791@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
-On 6/30/21 12:24 PM, J. Bruce Fields wrote:
-> On Wed, Jun 30, 2021 at 12:13:35PM -0700, dai.ngo@oracle.com wrote:
->> On 6/30/21 11:55 AM, J. Bruce Fields wrote:
->>> On Wed, Jun 30, 2021 at 11:49:18AM -0700, dai.ngo@oracle.com wrote:
->>>> On 6/30/21 11:05 AM, J. Bruce Fields wrote:
->>>>> On Wed, Jun 30, 2021 at 10:51:27AM -0700, dai.ngo@oracle.com wrote:
->>>>>>> On 6/28/21 1:23 PM, J. Bruce Fields wrote:
->>>>>>>> where ->fl_expire_lock is a new lock callback with second
->>>>>>>> argument "check"
->>>>>>>> where:
->>>>>>>>
->>>>>>>>      check = 1 means: just check whether this lock could be freed
->>>>>> Why do we need this, is there a use case for it? can we just always try
->>>>>> to expire the lock and return success/fail?
->>>>> We can't expire the client while holding the flc_lock.  And once we drop
->>>>> that lock we need to restart the loop.  Clearly we can't do that every
->>>>> time.
->>>>>
->>>>> (So, my code was wrong, it should have been:
->>>>>
->>>>>
->>>>> 	if (fl->fl_lops->fl_expire_lock(fl, 1)) {
->>>>> 		spin_unlock(&ct->flc_lock);
->>>>> 		fl->fl_lops->fl_expire_locks(fl, 0);
->>>>> 		goto retry;
->>>>> 	}
->>>>>
->>>>> )
->>>> This is what I currently have:
->>>>
->>>> retry:
->>>>                  list_for_each_entry(fl, &ctx->flc_posix, fl_list) {
->>>>                          if (!posix_locks_conflict(request, fl))
->>>>                                  continue;
->>>>
->>>>                          if (fl->fl_lmops && fl->fl_lmops->lm_expire_lock) {
->>>>                                  spin_unlock(&ctx->flc_lock);
->>>>                                  ret = fl->fl_lmops->lm_expire_lock(fl, 0);
->>>>                                  spin_lock(&ctx->flc_lock);
->>>>                                  if (ret)
->>>>                                          goto retry;
->>> We have to retry regardless of the return value.  Once we've dropped
->>> flc_lock, it's not safe to continue trying to iterate through the list.
->> Yes, thanks!
->>
->>>>                          }
->>>>
->>>>                          if (conflock)
->>>>                                  locks_copy_conflock(conflock, fl);
->>>>
->>>>> But the 1 and 0 cases are starting to look pretty different; maybe they
->>>>> should be two different callbacks.
->>>> why the case of 1 (test only) is needed,  who would use this call?
->>> We need to avoid dropping the spinlock in the case there are no clients
->>> to expire, otherwise we'll make no forward progress.
->> I think we can remember the last checked file_lock and skip it:
-> I doubt that works in the case there are multiple locks with
-> lm_expire_lock set.
->
-> If you really don't want another callback here, maybe you could set some
-> kind of flag on the lock.
->
-> At the time a client expires, you're going to have to walk all of its
-> locks to see if anyone's waiting for them.  At the same time maybe you
-> could set an FL_EXPIRABLE flag on all those locks, and test for that
-> here.
->
-> If the network partition heals and the client comes back, you'd have to
-> remember to clear that flag again.
+When there are multiple NFS mounts from the same server using the same
+NFS version and the same security parameters, various other mount
+parameters are forcibly shared, causing the parameter requests on
+subsequent mounts to be ignored.  This includes nconnect, fsc, and
+others.
 
-It's too much unnecessary work.
+It is possible to avoid this sharing by creating a separate network
+namespace for the new connections, but this can often be overly
+burdensome.  This patch introduces the concept of "NFS namespaces" which
+allows one group of NFS mounts to be completely separate from others
+without the need for a completely separate network namespace.
 
-Would this be suffice:
+Use cases for this include:
+ - major applications with different tuning recommendations.  Often the
+   support organisation for a particular application will require known
+   configuration options to be used before a support request can be
+   considered.  If two applications use (different mounts from) the same
+   NFS server but require different configuration, this is currently
+   awkward.
+ - data policy restrictions.  Use of fscache on one directory might be
+   forbidden by local policy, while use on another might be permitted
+   and beneficial.
+ - testing for problem diagnosis.  When an NFS mount is exhibiting
+   problems it can be useful information to see if a second mount will
+   suffer the same problems.  I've seen two separate cases recently with
+   TCP-level problems where the initial diagnosis couldn't make this test
+   as the TCP connection would be shared.  Allowing completely independent
+   mounts would make this easier.
 
-retry:
-                 list_for_each_entry(fl, &ctx->flc_posix, fl_list) {
-                         if (!posix_locks_conflict(request, fl))
-                                 continue;
-                         if (fl->fl_lmops && fl->fl_lmops->lm_expire_lock &&
-                                         fl->fl_lmops->lm_expire_lock(fl, 1)) {
-                                 spin_unlock(&ctx->flc_lock);
-                                 fl->fl_lmops->lm_expire_lock(fl, 0);
-                                 spin_lock(&ctx->flc_lock);
-                                 goto retry;
-                         }
-                         if (conflock)
-                                 locks_copy_conflock(conflock, fl);
+The NFS namespace concept addresses each of these needs.
 
--Dai
+A new mount option "namespace=3D" is added.  Any two mounts with different
+namespace settings are treated as through there were to different
+servers.  If no "namespace=3D" is given, then the empty string is used as
+the namespace for comparisons.  Possible usages might be
+"namespace=3Dapplication_name" or "namespace=3Dmustnotcache" or
+"namespace=3Dtesting".
 
->
-> --b.
->
->> retry:
->>                  list_for_each_entry(fl, &ctx->flc_posix, fl_list) {
->>                          if (!posix_locks_conflict(request, fl))
->>                                  continue;
->>
->>                          if (checked_fl != fl && fl->fl_lmops &&
->>                                          fl->fl_lmops->lm_expire_lock) {
->>                                  checked_fl = fl;
->>                                  spin_unlock(&ctx->flc_lock);
->>                                  fl->fl_lmops->lm_expire_lock(fl);
->>                                  spin_lock(&ctx->flc_lock);
->>                                  goto retry;
->>                          }
->>
->>                          if (conflock)
->>                                  locks_copy_conflock(conflock, fl);
->>
->> -Dai
->>
->>> --b.
+The namespace - if given - is included in the client identity string so
+that the NFSv4 server will see two different mount groups as though from
+separate clients.
+
+A few white-space inconsistencies nearby changed code have been
+rectified.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+
+Only change since V1 is a minor code fix from Dan Carpenter.
+
+ fs/nfs/client.c           | 20 ++++++++++++++++++--
+ fs/nfs/fs_context.c       | 11 ++++++++++-
+ fs/nfs/internal.h         |  2 ++
+ fs/nfs/nfs3client.c       |  1 +
+ fs/nfs/nfs4client.c       | 15 ++++++++++++++-
+ fs/nfs/nfs4proc.c         | 28 ++++++++++++++++++++--------
+ fs/nfs/super.c            |  5 +++++
+ include/linux/nfs_fs_sb.h |  4 ++--
+ 8 files changed, 72 insertions(+), 14 deletions(-)
+
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 330f65727c45..f6f06ea649bc 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -173,6 +173,13 @@ struct nfs_client *nfs_alloc_client(const struct nfs_cli=
+ent_initdata *cl_init)
+ 		if (!clp->cl_hostname)
+ 			goto error_cleanup;
+ 	}
++	if (cl_init->namespace && *cl_init->namespace) {
++		err =3D -ENOMEM;
++		clp->cl_namespace =3D kstrdup(cl_init->namespace, GFP_KERNEL);
++		if (!clp->cl_namespace)
++			goto error_cleanup;
++	} else
++		clp->cl_namespace =3D "";
+=20
+ 	INIT_LIST_HEAD(&clp->cl_superblocks);
+ 	clp->cl_rpcclient =3D ERR_PTR(-EINVAL);
+@@ -187,6 +194,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_clie=
+nt_initdata *cl_init)
+ 	return clp;
+=20
+ error_cleanup:
++	kfree_const(clp->cl_hostname);
+ 	put_nfs_version(clp->cl_nfs_mod);
+ error_dealloc:
+ 	kfree(clp);
+@@ -247,6 +255,7 @@ void nfs_free_client(struct nfs_client *clp)
+ 	put_nfs_version(clp->cl_nfs_mod);
+ 	kfree(clp->cl_hostname);
+ 	kfree(clp->cl_acceptor);
++	kfree_const(clp->cl_namespace);
+ 	kfree(clp);
+ }
+ EXPORT_SYMBOL_GPL(nfs_free_client);
+@@ -288,7 +297,7 @@ static struct nfs_client *nfs_match_client(const struct n=
+fs_client_initdata *dat
+=20
+ again:
+ 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
+-	        const struct sockaddr *clap =3D (struct sockaddr *)&clp->cl_addr;
++		const struct sockaddr *clap =3D (struct sockaddr *)&clp->cl_addr;
+ 		/* Don't match clients that failed to initialise properly */
+ 		if (clp->cl_cons_state < 0)
+ 			continue;
+@@ -320,11 +329,17 @@ static struct nfs_client *nfs_match_client(const struct=
+ nfs_client_initdata *dat
+ 		    test_bit(NFS_CS_DS, &clp->cl_flags))
+ 			continue;
+=20
++		/* If admin has asked for different namespaces for these mounts,
++		 * don't share the client.
++		 */
++		if (strcmp(clp->cl_namespace, data->namespace ?: "") !=3D 0)
++			continue;
++
+ 		/* Match the full socket address */
+ 		if (!rpc_cmp_addr_port(sap, clap))
+ 			/* Match all xprt_switch full socket addresses */
+ 			if (IS_ERR(clp->cl_rpcclient) ||
+-                            !rpc_clnt_xprt_switch_has_addr(clp->cl_rpcclient,
++			    !rpc_clnt_xprt_switch_has_addr(clp->cl_rpcclient,
+ 							   sap))
+ 				continue;
+=20
+@@ -676,6 +691,7 @@ static int nfs_init_server(struct nfs_server *server,
+ 		.timeparms =3D &timeparms,
+ 		.cred =3D server->cred,
+ 		.nconnect =3D ctx->nfs_server.nconnect,
++		.namespace =3D ctx->namespace,
+ 		.init_flags =3D (1UL << NFS_CS_REUSEPORT),
+ 	};
+ 	struct nfs_client *clp;
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index d95c9a39bc70..7c644a31d304 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -59,6 +59,7 @@ enum nfs_param {
+ 	Opt_mountproto,
+ 	Opt_mountvers,
+ 	Opt_namelen,
++	Opt_namespace,
+ 	Opt_nconnect,
+ 	Opt_port,
+ 	Opt_posix,
+@@ -156,6 +157,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[]=
+ =3D {
+ 	fsparam_u32   ("mountport",	Opt_mountport),
+ 	fsparam_string("mountproto",	Opt_mountproto),
+ 	fsparam_u32   ("mountvers",	Opt_mountvers),
++	fsparam_string("namespace",	Opt_namespace),
+ 	fsparam_u32   ("namlen",	Opt_namelen),
+ 	fsparam_u32   ("nconnect",	Opt_nconnect),
+ 	fsparam_string("nfsvers",	Opt_vers),
+@@ -824,7 +826,13 @@ static int nfs_fs_context_parse_param(struct fs_context =
+*fc,
+ 			goto out_invalid_value;
+ 		}
+ 		break;
+-
++	case Opt_namespace:
++		if (strpbrk(param->string, " \n\t,"))
++			goto out_invalid_value;
++		kfree(ctx->namespace);
++		ctx->namespace =3D param->string;
++		param->string =3D NULL;
++		break;
+ 		/*
+ 		 * Special options
+ 		 */
+@@ -1462,6 +1470,7 @@ static void nfs_fs_context_free(struct fs_context *fc)
+ 		kfree(ctx->nfs_server.export_path);
+ 		kfree(ctx->nfs_server.hostname);
+ 		kfree(ctx->fscache_uniq);
++		kfree(ctx->namespace);
+ 		nfs_free_fhandle(ctx->mntfh);
+ 		nfs_free_fattr(ctx->clone_data.fattr);
+ 		kfree(ctx);
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index a36af04188c2..2010492b856a 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -62,6 +62,7 @@ struct nfs_client_initdata {
+ 	const struct sockaddr *addr;		/* Address of the server */
+ 	const char *nodename;			/* Hostname of the client */
+ 	const char *ip_addr;			/* IP address of the client */
++	const char *namespace;			/* NFS namespace */
+ 	size_t addrlen;
+ 	struct nfs_subversion *nfs_mod;
+ 	int proto;
+@@ -97,6 +98,7 @@ struct nfs_fs_context {
+ 	unsigned short		protofamily;
+ 	unsigned short		mountfamily;
+ 	bool			has_sec_mnt_opts;
++	const char		*namespace;
+=20
+ 	struct {
+ 		union {
+diff --git a/fs/nfs/nfs3client.c b/fs/nfs/nfs3client.c
+index 5601e47360c2..61ad13e1b041 100644
+--- a/fs/nfs/nfs3client.c
++++ b/fs/nfs/nfs3client.c
+@@ -93,6 +93,7 @@ struct nfs_client *nfs3_set_ds_client(struct nfs_server *md=
+s_srv,
+ 		.net =3D mds_clp->cl_net,
+ 		.timeparms =3D &ds_timeout,
+ 		.cred =3D mds_srv->cred,
++		.namespace =3D mds_clp->cl_namespace,
+ 	};
+ 	struct nfs_client *clp;
+ 	char buf[INET6_ADDRSTRLEN + 1];
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index 42719384e25f..7dbc521275ff 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -500,6 +500,12 @@ static int nfs4_match_client(struct nfs_client  *pos,  s=
+truct nfs_client *new,
+ 	if (pos->cl_minorversion !=3D new->cl_minorversion)
+ 		return 1;
+=20
++	/* If admin has asked for different namespaces for these mounts,
++	 * don't share the client.
++	 */
++	if (strcmp(pos->cl_namespace, new->cl_namespace) !=3D 0)
++		return 1;
++
+ 	/* If "pos" isn't marked ready, we can't trust the
+ 	 * remaining fields in "pos", especially the client
+ 	 * ID and serverowner fields.  Wait for CREATE_SESSION
+@@ -863,6 +869,7 @@ static int nfs4_set_client(struct nfs_server *server,
+ 		const char *ip_addr,
+ 		int proto, const struct rpc_timeout *timeparms,
+ 		u32 minorversion, unsigned int nconnect,
++		const char *namespace,
+ 		struct net *net)
+ {
+ 	struct nfs_client_initdata cl_init =3D {
+@@ -873,6 +880,7 @@ static int nfs4_set_client(struct nfs_server *server,
+ 		.nfs_mod =3D &nfs_v4,
+ 		.proto =3D proto,
+ 		.minorversion =3D minorversion,
++		.namespace =3D namespace,
+ 		.net =3D net,
+ 		.timeparms =3D timeparms,
+ 		.cred =3D server->cred,
+@@ -940,6 +948,7 @@ struct nfs_client *nfs4_set_ds_client(struct nfs_server *=
+mds_srv,
+ 		.nfs_mod =3D &nfs_v4,
+ 		.proto =3D ds_proto,
+ 		.minorversion =3D minor_version,
++		.namespace =3D mds_clp->cl_namespace,
+ 		.net =3D mds_clp->cl_net,
+ 		.timeparms =3D &ds_timeout,
+ 		.cred =3D mds_srv->cred,
+@@ -1120,6 +1129,7 @@ static int nfs4_init_server(struct nfs_server *server, =
+struct fs_context *fc)
+ 				&timeparms,
+ 				ctx->minorversion,
+ 				ctx->nfs_server.nconnect,
++				ctx->namespace,
+ 				fc->net_ns);
+ 	if (error < 0)
+ 		return error;
+@@ -1209,6 +1219,7 @@ struct nfs_server *nfs4_create_referral_server(struct f=
+s_context *fc)
+ 				parent_server->client->cl_timeout,
+ 				parent_client->cl_mvops->minor_version,
+ 				parent_client->cl_nconnect,
++				parent_client->cl_namespace,
+ 				parent_client->cl_net);
+ 	if (!error)
+ 		goto init_server;
+@@ -1224,6 +1235,7 @@ struct nfs_server *nfs4_create_referral_server(struct f=
+s_context *fc)
+ 				parent_server->client->cl_timeout,
+ 				parent_client->cl_mvops->minor_version,
+ 				parent_client->cl_nconnect,
++				parent_client->cl_namespace,
+ 				parent_client->cl_net);
+ 	if (error < 0)
+ 		goto error;
+@@ -1321,7 +1333,8 @@ int nfs4_update_server(struct nfs_server *server, const=
+ char *hostname,
+ 	error =3D nfs4_set_client(server, hostname, sap, salen, buf,
+ 				clp->cl_proto, clnt->cl_timeout,
+ 				clp->cl_minorversion,
+-				clp->cl_nconnect, net);
++				clp->cl_nconnect,
++				clp->cl_namespace, net);
+ 	clear_bit(NFS_MIG_TSM_POSSIBLE, &server->mig_status);
+ 	if (error !=3D 0) {
+ 		nfs_server_insert_lists(server);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index e653654c10bc..5f5caf26397c 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -6191,6 +6191,8 @@ nfs4_init_nonuniform_client_string(struct nfs_client *c=
+lp)
+ 		strlen(rpc_peeraddr2str(clp->cl_rpcclient, RPC_DISPLAY_ADDR)) +
+ 		1;
+ 	rcu_read_unlock();
++	if (*clp->cl_namespace)
++		len +=3D strlen(clp->cl_namespace) + 1;
+=20
+ 	buflen =3D nfs4_get_uniquifier(clp, buf, sizeof(buf));
+ 	if (buflen)
+@@ -6210,15 +6212,19 @@ nfs4_init_nonuniform_client_string(struct nfs_client =
+*clp)
+=20
+ 	rcu_read_lock();
+ 	if (buflen)
+-		scnprintf(str, len, "Linux NFSv4.0 %s/%s/%s",
++		scnprintf(str, len, "Linux NFSv4.0 %s/%s/%s%s%s",
+ 			  clp->cl_rpcclient->cl_nodename, buf,
+ 			  rpc_peeraddr2str(clp->cl_rpcclient,
+-					   RPC_DISPLAY_ADDR));
++					   RPC_DISPLAY_ADDR),
++			  *clp->cl_namespace ? "/" : "",
++			  clp->cl_namespace);
+ 	else
+-		scnprintf(str, len, "Linux NFSv4.0 %s/%s",
++		scnprintf(str, len, "Linux NFSv4.0 %s/%s%s%s",
+ 			  clp->cl_rpcclient->cl_nodename,
+ 			  rpc_peeraddr2str(clp->cl_rpcclient,
+-					   RPC_DISPLAY_ADDR));
++					   RPC_DISPLAY_ADDR),
++			  *clp->cl_namespace ? "/" : "",
++			  clp->cl_namespace);
+ 	rcu_read_unlock();
+=20
+ 	clp->cl_owner_id =3D str;
+@@ -6238,6 +6244,8 @@ nfs4_init_uniform_client_string(struct nfs_client *clp)
+=20
+ 	len =3D 10 + 10 + 1 + 10 + 1 +
+ 		strlen(clp->cl_rpcclient->cl_nodename) + 1;
++	if (*clp->cl_namespace)
++		len +=3D strlen(clp->cl_namespace) + 1;
+=20
+ 	buflen =3D nfs4_get_uniquifier(clp, buf, sizeof(buf));
+ 	if (buflen)
+@@ -6256,13 +6264,17 @@ nfs4_init_uniform_client_string(struct nfs_client *cl=
+p)
+ 		return -ENOMEM;
+=20
+ 	if (buflen)
+-		scnprintf(str, len, "Linux NFSv%u.%u %s/%s",
++		scnprintf(str, len, "Linux NFSv%u.%u %s/%s%s%s",
+ 			  clp->rpc_ops->version, clp->cl_minorversion,
+-			  buf, clp->cl_rpcclient->cl_nodename);
++			  buf, clp->cl_rpcclient->cl_nodename,
++			  *clp->cl_namespace ? "/" : "",
++			  clp->cl_namespace);
+ 	else
+-		scnprintf(str, len, "Linux NFSv%u.%u %s",
++		scnprintf(str, len, "Linux NFSv%u.%u %s%s%s",
+ 			  clp->rpc_ops->version, clp->cl_minorversion,
+-			  clp->cl_rpcclient->cl_nodename);
++			  clp->cl_rpcclient->cl_nodename,
++			  *clp->cl_namespace ? "/" : "",
++			  clp->cl_namespace);
+ 	clp->cl_owner_id =3D str;
+ 	return 0;
+ }
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index fe58525cfed4..ea59248b64d1 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -479,6 +479,8 @@ static void nfs_show_mount_options(struct seq_file *m, st=
+ruct nfs_server *nfss,
+ 	rcu_read_unlock();
+ 	if (clp->cl_nconnect > 0)
+ 		seq_printf(m, ",nconnect=3D%u", clp->cl_nconnect);
++	if (*clp->cl_namespace)
++		seq_printf(m, ",namespace=3D%s", clp->cl_namespace);
+ 	if (version =3D=3D 4) {
+ 		if (nfss->port !=3D NFS_PORT)
+ 			seq_printf(m, ",port=3D%u", nfss->port);
+@@ -1186,6 +1188,9 @@ static int nfs_compare_super(struct super_block *sb, st=
+ruct fs_context *fc)
+ 	/* Note: NFS_MOUNT_UNSHARED =3D=3D NFS4_MOUNT_UNSHARED */
+ 	if (old->flags & NFS_MOUNT_UNSHARED)
+ 		return 0;
++	if (strcmp(old->nfs_client->cl_namespace,
++		   server->nfs_client->cl_namespace) !=3D 0)
++		return 0;
+ 	if (memcmp(&old->fsid, &server->fsid, sizeof(old->fsid)) !=3D 0)
+ 		return 0;
+ 	if (!nfs_compare_userns(old, server))
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index d71a0e90faeb..c62db98f3c04 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -62,8 +62,8 @@ struct nfs_client {
+=20
+ 	u32			cl_minorversion;/* NFSv4 minorversion */
+ 	unsigned int		cl_nconnect;	/* Number of connections */
+-	const char *		cl_principal;  /* used for machine cred */
+-
++	const char *		cl_principal;	/* used for machine cred */
++	const char *		cl_namespace;	/* used for NFS namespaces */
+ #if IS_ENABLED(CONFIG_NFS_V4)
+ 	struct list_head	cl_ds_clients; /* auth flavor data servers */
+ 	u64			cl_clientid;	/* constant */
+--=20
+2.32.0
+
