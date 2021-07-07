@@ -2,83 +2,170 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 760603BE983
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jul 2021 16:14:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FD3C3BEA4C
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jul 2021 17:04:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231928AbhGGOQn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Jul 2021 10:16:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37074 "EHLO
+        id S232292AbhGGPH1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Jul 2021 11:07:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231643AbhGGOQk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Jul 2021 10:16:40 -0400
+        with ESMTP id S232283AbhGGPH0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Jul 2021 11:07:26 -0400
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DADBC061574
-        for <linux-nfs@vger.kernel.org>; Wed,  7 Jul 2021 07:14:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35020C061574;
+        Wed,  7 Jul 2021 08:04:46 -0700 (PDT)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id BA37B6851; Wed,  7 Jul 2021 10:13:59 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BA37B6851
+        id 1F93E50A1; Wed,  7 Jul 2021 11:04:45 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 1F93E50A1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1625667239;
-        bh=lCH1sGASKeBLyLMdDljgO14aY9g7xQEgKx+FMCvpPhI=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=QBanJakVeLsVWvhFqHWmP25oFGoinubbnl1AJE0+j3/DS+7ncASgg+omEhArrpu+z
-         TAbbDQVWphoumTo4D9LulfzFWuXVXNZCzrVtoQrxvvg+38TmlJMxPYOQLXu3/IEi1c
-         MVylqboRKWzVFshSs2gnf8zDHgQ7m7pq7QCROpAo=
-Date:   Wed, 7 Jul 2021 10:13:59 -0400
-To:     "Becker, Jeffrey C. (ARC-TN)[InuTeq, LLC]" 
-        <jeffrey.c.becker@nasa.gov>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: FW: [EXTERNAL] Re: NFS server question
-Message-ID: <20210707141359.GB9446@fieldses.org>
-References: <0C9D9022-8E61-4B03-8225-D829E22B4137@ndc.nasa.gov>
- <E168219A-8120-4154-80E7-DC03F70D69D1@oracle.com>
- <C88E1CD2-4156-4E45-AC27-F19D4E4C9FC7@ndc.nasa.gov>
+        s=default; t=1625670285;
+        bh=QAOyrzJPOcE2SXamHMXvVsksmrY457V7ch3ClTSWyUY=;
+        h=Date:To:Cc:Subject:From:From;
+        b=lv0zPNdSNDQ4OLI9sV6ZeMd2gpJkhj9zkbUEH2CSfjeVfX0vKTiQlA2cb947bhqyX
+         S9jJ1XEvX9xYBPZnCDxWfFwNNMbkP6iEjL6tf3KKIC86p8gX8xQvyEUamxVamZboin
+         yWuilPwxT4fQQgwP9bw2zsFThr6BvOFlpCCVEgmE=
+Date:   Wed, 7 Jul 2021 11:04:45 -0400
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Subject: [GIT PULL] nfsd changes for 5.14
+Message-ID: <20210707150445.GA9911@fieldses.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <C88E1CD2-4156-4E45-AC27-F19D4E4C9FC7@ndc.nasa.gov>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jul 02, 2021 at 03:11:11PM +0000, Becker, Jeffrey C. (ARC-TN)[InuTeq, LLC] wrote:
-> Is there a limit on the number of exports for an NFS server? Thanks.
+Please pull:
 
-I don't have a better answer than Chuck's.
+  git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.14
 
-I can't think of any hard-coded limits, it's just a matter of resources.
+for 5.14 nfsd changes.
 
-You could try giving more specifics about your plan and see if anyone
-has experience with a similar setup.
+Some highlights:
+	- add tracepoints for callbacks and for client creation and
+	  destruction
+	- cache the mounts used for server-to-server copies
+	- expose callback information in /proc/fs/nfsd/clients/*/info
+	- don't hold locks unnecessarily while waiting for commits
+	- update NLM to use xdr_stream, as we have for NFSv2/v3/v4
 
 --b.
 
-> 
-> Jeff Becker
-> 
-> ﻿On 7/2/21, 7:21 AM, "Chuck Lever III" <chuck.lever@oracle.com> wrote:
-> 
->     Hi Jeff-
-> 
->     > On Jul 1, 2021, at 7:54 PM, Becker, Jeffrey C. (ARC-TN)[InuTeq, LLC] <jeffrey.c.becker@nasa.gov> wrote:
->     > 
->     > Hi Chuck,
->     >  
->     > I have an NFS server that currently has about 20 directories it’s exporting over NFSv4. I was wondering what the maximum number of exports is. Thanks.
-> 
->     I'm not aware of any intrinsic limit on the number of exports.
->     There is probably a per-export resource cost that acts as a
->     practical limit.
-> 
->     Might be a good idea to ask on linux-nfs@vger.kernel.org.
-> 
-> 
->     --
->     Chuck Lever
-> 
-> 
-> 
-> 
+ChenXiaoSong (1):
+      nfs_common: fix doc warning
+
+Chuck Lever (54):
+      NFSD: Fix TP_printk() format specifier in nfsd_clid_class
+      NFSD: Add an RPC authflavor tracepoint display helper
+      NFSD: Add nfsd_clid_cred_mismatch tracepoint
+      NFSD: Add nfsd_clid_verf_mismatch tracepoint
+      NFSD: Remove trace_nfsd_clid_inuse_err
+      NFSD: Add nfsd_clid_confirmed tracepoint
+      NFSD: Add nfsd_clid_reclaim_complete tracepoint
+      NFSD: Add nfsd_clid_destroyed tracepoint
+      NFSD: Add a couple more nfsd_clid_expired call sites
+      NFSD: Add tracepoints for SETCLIENTID edge cases
+      NFSD: Add tracepoints for EXCHANGEID edge cases
+      NFSD: Constify @fh argument of knfsd_fh_hash()
+      NFSD: Capture every CB state transition
+      NFSD: Drop TRACE_DEFINE_ENUM for NFSD4_CB_<state> macros
+      NFSD: Add cb_lost tracepoint
+      NFSD: Adjust cb_shutdown tracepoint
+      NFSD: Remove spurious cb_setup_err tracepoint
+      NFSD: Enhance the nfsd_cb_setup tracepoint
+      NFSD: Add an nfsd_cb_lm_notify tracepoint
+      NFSD: Add an nfsd_cb_offload tracepoint
+      NFSD: Replace the nfsd_deleg_break tracepoint
+      NFSD: Add an nfsd_cb_probe tracepoint
+      NFSD: Remove the nfsd_cb_work and nfsd_cb_done tracepoints
+      NFSD: Update nfsd_cb_args tracepoint
+      lockd: Remove stale comments
+      lockd: Create a simplified .vs_dispatch method for NLM requests
+      lockd: Common NLM XDR helpers
+      lockd: Update the NLMv1 void argument decoder to use struct xdr_stream
+      lockd: Update the NLMv1 TEST arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 LOCK arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 CANCEL arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 UNLOCK arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 nlm_res arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 SM_NOTIFY arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 SHARE arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 FREE_ALL arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 void results encoder to use struct xdr_stream
+      lockd: Update the NLMv1 TEST results encoder to use struct xdr_stream
+      lockd: Update the NLMv1 nlm_res results encoder to use struct xdr_stream
+      lockd: Update the NLMv1 SHARE results encoder to use struct xdr_stream
+      lockd: Update the NLMv4 void arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 TEST arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 LOCK arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 CANCEL arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 UNLOCK arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 nlm_res arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 SM_NOTIFY arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 SHARE arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 FREE_ALL arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 void results encoder to use struct xdr_stream
+      lockd: Update the NLMv4 TEST results encoder to use struct xdr_stream
+      lockd: Update the NLMv4 nlm_res results encoder to use struct xdr_stream
+      lockd: Update the NLMv4 SHARE results encoder to use struct xdr_stream
+      NFSD: Prevent a possible oops in the nfs_dirent() tracepoint
+
+Colin Ian King (2):
+      rpc: remove redundant initialization of variable status
+      nfsd: remove redundant assignment to pointer 'this'
+
+Dai Ngo (2):
+      NFSD: delay unmount source's export after inter-server copy completed.
+      nfsd: fix kernel test robot warning in SSC code
+
+Dave Wysochanski (1):
+      nfsd4: Expose the callback address and state of each NFS4 client
+
+J. Bruce Fields (4):
+      nfsd: move some commit_metadata()s outside the inode lock
+      nfsd: move fsnotify on client creation outside spinlock
+      nfsd: rpc_peeraddr2str needs rcu lock
+      nfsd: fix NULL dereference in nfs3svc_encode_getaclres
+
+Olga Kornievskaia (1):
+      NFSD add vfs_fsync after async copy is done
+
+Trond Myklebust (1):
+      nfsd: Reduce contention for the nfsd_file nf_rwsem
+
+Wei Yongjun (1):
+      NFSD: Fix error return code in nfsd4_interssc_connect()
+
+Yu Hsiang Huang (1):
+      nfsd: Prevent truncation of an unlinked inode from blocking access to its directory
+
+Zheng Yongjun (1):
+      xprtrdma: Fix spelling mistakes
+
+ fs/lockd/svc.c                    |  43 ++++
+ fs/lockd/svcxdr.h                 | 151 ++++++++++++++
+ fs/lockd/xdr.c                    | 402 +++++++++++++++++++------------------
+ fs/lockd/xdr4.c                   | 403 ++++++++++++++++++++------------------
+ fs/nfs_common/grace.c             |   1 +
+ fs/nfsd/netns.h                   |   6 +
+ fs/nfsd/nfs3acl.c                 |   3 +-
+ fs/nfsd/nfs4callback.c            |  47 ++---
+ fs/nfsd/nfs4proc.c                | 154 ++++++++++++++-
+ fs/nfsd/nfs4state.c               | 177 +++++++++++++----
+ fs/nfsd/nfsd.h                    |   4 +
+ fs/nfsd/nfsfh.h                   |   7 +-
+ fs/nfsd/nfssvc.c                  |   3 +
+ fs/nfsd/trace.h                   | 250 +++++++++++++++++------
+ fs/nfsd/vfs.c                     |  26 ++-
+ fs/nfsd/xdr4.h                    |   1 +
+ include/linux/lockd/xdr.h         |   6 -
+ include/linux/lockd/xdr4.h        |   7 +-
+ include/linux/nfs_ssc.h           |  14 ++
+ net/sunrpc/auth_gss/svcauth_gss.c |   2 +-
+ net/sunrpc/xprtrdma/svc_rdma_rw.c |   6 +-
+ 21 files changed, 1175 insertions(+), 538 deletions(-)
+ create mode 100644 fs/lockd/svcxdr.h
