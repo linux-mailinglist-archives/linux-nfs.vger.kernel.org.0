@@ -2,37 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D80D3C38A8
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 Jul 2021 01:53:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29FE73C38ED
+	for <lists+linux-nfs@lfdr.de>; Sun, 11 Jul 2021 01:54:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233208AbhGJXzn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 10 Jul 2021 19:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41376 "EHLO mail.kernel.org"
+        id S233398AbhGJX4q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 10 Jul 2021 19:56:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233534AbhGJXyx (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 10 Jul 2021 19:54:53 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0D710613E3;
-        Sat, 10 Jul 2021 23:51:29 +0000 (UTC)
+        id S233312AbhGJXzu (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 10 Jul 2021 19:55:50 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 75CFE61412;
+        Sat, 10 Jul 2021 23:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625961090;
-        bh=8EAEEwHzntHAjewmLlMUd5xDVbMCNag9jK8Gqcya/mw=;
+        s=k20201202; t=1625961122;
+        bh=6IYPfWE+5IeR/dEkm7wv/Js5ccM0uPOpf+6BdWqZWuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aOcEwAtqGb0FwEKFW89WJztK0VNroIhND4kFWfIe535uNoEDHlUYkVdznn9xB7j4W
-         gS92Kq4dOd6mxq4hu9Mrbukp61EGg6I/OIZ1oTQopxp3PLzBinlvMeMVWniQ1v3Y3T
-         2+J8uXoTD4N8ZAVw7roDSB7RS5gPtFkbknYxBjl6DW5xjfVQczg0rwaPwpYE5NsZTw
-         vmM3QJ0OFnfYIAApzuO9n+k9GU2MKHQ4uIyWW59JjOq/9S/TqhaQYWW8DjqFQc92sJ
-         Kzf0FjIRjuU2oRBgT+JFXLBMjhIm5RqfPbpmr1xe0Li64C/7rn1oGOgOy4auldVz/l
-         X2e0ubWWPyuDA==
+        b=Y9gzFWkg5CnYM42X/0FdRv7rCjf6/1gE1BPIbqQxfhh24BtECr68rLw0rQ6somRR5
+         PuGuuX+erC1hbGFri29DUylq3EisjIfOiX9ohWjGdJsuSSQowhTmFrVVqHRcgLq4It
+         4Kw3vW40J98QOf42n7ApDrfwe9iu+7h6r7WjHcRq9+9RHKTuZmRqeKmmPMTN5FevVZ
+         hUlO1SF6mWGv17ws6DgexwM9TjpuVC3ugdncA+FcZbdc3a0FmSAe6c5xdLKFsfviL7
+         CoMv5W1RI0P1YScmubb6gYGaLbjEM03QRAACn/yK8jNOUQsdYarutEGJBpsxtdCKLM
+         LqLHVCND1BveA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 18/28] NFS: nfs_find_open_context() may only select open files
-Date:   Sat, 10 Jul 2021 19:50:57 -0400
-Message-Id: <20210710235107.3221840-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 14/22] NFS: nfs_find_open_context() may only select open files
+Date:   Sat, 10 Jul 2021 19:51:35 -0400
+Message-Id: <20210710235143.3222129-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210710235107.3221840-1-sashal@kernel.org>
-References: <20210710235107.3221840-1-sashal@kernel.org>
+In-Reply-To: <20210710235143.3222129-1-sashal@kernel.org>
+References: <20210710235143.3222129-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,10 +57,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 5 insertions(+)
 
 diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index 8c0f916380c4..209263c0c537 100644
+index dc55ecc3bec4..2cdd8883b7c5 100644
 --- a/fs/nfs/inode.c
 +++ b/fs/nfs/inode.c
-@@ -1048,6 +1048,7 @@ EXPORT_SYMBOL_GPL(nfs_inode_attach_open_context);
+@@ -1038,6 +1038,7 @@ EXPORT_SYMBOL_GPL(nfs_inode_attach_open_context);
  void nfs_file_set_open_context(struct file *filp, struct nfs_open_context *ctx)
  {
  	filp->private_data = get_nfs_open_context(ctx);
@@ -68,16 +68,16 @@ index 8c0f916380c4..209263c0c537 100644
  	if (list_empty(&ctx->list))
  		nfs_inode_attach_open_context(ctx);
  }
-@@ -1067,6 +1068,8 @@ struct nfs_open_context *nfs_find_open_context(struct inode *inode, const struct
+@@ -1057,6 +1058,8 @@ struct nfs_open_context *nfs_find_open_context(struct inode *inode, struct rpc_c
  			continue;
  		if ((pos->mode & (FMODE_READ|FMODE_WRITE)) != mode)
  			continue;
 +		if (!test_bit(NFS_CONTEXT_FILE_OPEN, &pos->flags))
 +			continue;
  		ctx = get_nfs_open_context(pos);
- 		if (ctx)
- 			break;
-@@ -1082,6 +1085,7 @@ void nfs_file_clear_open_context(struct file *filp)
+ 		break;
+ 	}
+@@ -1071,6 +1074,7 @@ void nfs_file_clear_open_context(struct file *filp)
  	if (ctx) {
  		struct inode *inode = d_inode(ctx->dentry);
  
@@ -86,10 +86,10 @@ index 8c0f916380c4..209263c0c537 100644
  		 * We fatal error on write before. Try to writeback
  		 * every page again.
 diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index ad09c0cc5464..978ef674f038 100644
+index a0831e9d19c9..0ff7dd2bf8a4 100644
 --- a/include/linux/nfs_fs.h
 +++ b/include/linux/nfs_fs.h
-@@ -79,6 +79,7 @@ struct nfs_open_context {
+@@ -78,6 +78,7 @@ struct nfs_open_context {
  #define NFS_CONTEXT_RESEND_WRITES	(1)
  #define NFS_CONTEXT_BAD			(2)
  #define NFS_CONTEXT_UNLOCK	(3)
