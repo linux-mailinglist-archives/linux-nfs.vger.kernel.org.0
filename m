@@ -2,23 +2,25 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 898B33C6305
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jul 2021 20:57:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81C5B3C6307
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jul 2021 20:57:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233344AbhGLTAf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Jul 2021 15:00:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54244 "EHLO mail.kernel.org"
+        id S235009AbhGLTAm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Jul 2021 15:00:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230409AbhGLTAf (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 12 Jul 2021 15:00:35 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E2D656120A;
-        Mon, 12 Jul 2021 18:57:46 +0000 (UTC)
-Subject: [PATCH v4 0/3] Bulk-release pages during NFSD read splice
+        id S234296AbhGLTAl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 12 Jul 2021 15:00:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0C5E561221;
+        Mon, 12 Jul 2021 18:57:52 +0000 (UTC)
+Subject: [PATCH v4 1/3] NFSD: Clean up splice actor
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org, linux-mm@kvack.org
 Cc:     neilb@suse.de
-Date:   Mon, 12 Jul 2021 14:57:46 -0400
-Message-ID: <162611520339.1416.14646909890289253420.stgit@klimt.1015granger.net>
+Date:   Mon, 12 Jul 2021 14:57:52 -0400
+Message-ID: <162611627232.1416.3505133517679486921.stgit@klimt.1015granger.net>
+In-Reply-To: <162611520339.1416.14646909890289253420.stgit@klimt.1015granger.net>
+References: <162611520339.1416.14646909890289253420.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -27,33 +29,58 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-As with the page allocation side, I'm trying to reduce the average
-number of times NFSD invokes the page allocation and release APIs
-because they can be expensive, and because it is a resource that is
-shared amongst all nfsd threads and thus access to it is at least
-partially serialized. This small series tackles a code path that is
-frequently invoked when NFSD handles READ operations on local
-filesystems that support splice (i.e., most of the popular ones).
+A few useful observations:
 
-Changes since v3:
-- Mark patches 1 and 3 as Reviewed-by: Neil Brown
-- Convert bare release_pages() calls to pagevec_release()
-- Release accrued free pages after every RPC retires
+ - The value in @size is never modified.
 
+ - splice_desc.len is an unsigned int, and so is xdr_buf.page_len.
+   An implicit cast to size_t is unnecessary.
+
+ - The computation of .page_len is the same in all three arms
+   of the "if" statement, so hoist it out to make it clear that
+   the operation is an unconditional invariant.
+
+The resulting function is 18 bytes shorter on my system (-Os).
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Reviewed-by: NeilBrown <neilb@suse.de>
 ---
+ fs/nfsd/vfs.c |   11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-Chuck Lever (3):
-      NFSD: Clean up splice actor
-      SUNRPC: Add svc_rqst_replace_page() API
-      NFSD: Batch release pages during splice read
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index a224a5e23cc1..46a6d9fce3d2 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -847,26 +847,21 @@ nfsd_splice_actor(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
+ 	struct svc_rqst *rqstp = sd->u.data;
+ 	struct page **pp = rqstp->rq_next_page;
+ 	struct page *page = buf->page;
+-	size_t size;
+-
+-	size = sd->len;
+ 
+ 	if (rqstp->rq_res.page_len == 0) {
+ 		get_page(page);
+ 		put_page(*rqstp->rq_next_page);
+ 		*(rqstp->rq_next_page++) = page;
+ 		rqstp->rq_res.page_base = buf->offset;
+-		rqstp->rq_res.page_len = size;
+ 	} else if (page != pp[-1]) {
+ 		get_page(page);
+ 		if (*rqstp->rq_next_page)
+ 			put_page(*rqstp->rq_next_page);
+ 		*(rqstp->rq_next_page++) = page;
+-		rqstp->rq_res.page_len += size;
+-	} else
+-		rqstp->rq_res.page_len += size;
++	}
++	rqstp->rq_res.page_len += sd->len;
+ 
+-	return size;
++	return sd->len;
+ }
+ 
+ static int nfsd_direct_splice_actor(struct pipe_inode_info *pipe,
 
-
- fs/nfsd/vfs.c              | 20 +++++---------------
- include/linux/sunrpc/svc.h |  4 ++++
- net/sunrpc/svc.c           | 21 +++++++++++++++++++++
- net/sunrpc/svc_xprt.c      |  3 +++
- 4 files changed, 33 insertions(+), 15 deletions(-)
-
---
-Chuck Lever
 
