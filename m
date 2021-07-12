@@ -2,23 +2,22 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B0573C5E97
+	by mail.lfdr.de (Postfix) with ESMTP id A39FE3C5E98
 	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jul 2021 16:52:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235209AbhGLOzR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Jul 2021 10:55:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38638 "EHLO mail.kernel.org"
+        id S235251AbhGLOzX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Jul 2021 10:55:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234914AbhGLOzR (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 12 Jul 2021 10:55:17 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E598761288
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Jul 2021 14:52:28 +0000 (UTC)
-Subject: [PATCH RFC 2/7] SUNRPC: Set rq_auth_stat in the pg_authenticate()
- callout
+        id S234914AbhGLOzX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 12 Jul 2021 10:55:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DACC16120A
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Jul 2021 14:52:34 +0000 (UTC)
+Subject: [PATCH RFC 3/7] SUNRPC: Eliminate the RQ_AUTHERR flag
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Mon, 12 Jul 2021 10:52:28 -0400
-Message-ID: <162610154815.2466.16231315445604317363.stgit@klimt.1015granger.net>
+Date:   Mon, 12 Jul 2021 10:52:34 -0400
+Message-ID: <162610155419.2466.15761450713724899063.stgit@klimt.1015granger.net>
 In-Reply-To: <162610122257.2466.7452891285800059767.stgit@klimt.1015granger.net>
 References: <162610122257.2466.7452891285800059767.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.1
@@ -29,127 +28,119 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In a few moments, rq_auth_stat will need to be explicitly set to
-rpc_auth_ok before execution gets to the dispatcher.
-
-svc_authenticate() already sets it, but it often gets reset to
-rpc_autherr_badcred right after that call, even when authentication
-is successful. Let's ensure that the pg_authenticate callout and
-svc_set_client() set it properly in every case.
+Now that there is an alternate method for returning an auth_stat
+value, replace the RQ_AUTHERR flag with use of that new method.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/svc.c                    |    2 ++
- fs/nfs/callback.c                 |    4 ++++
- net/sunrpc/auth_gss/svcauth_gss.c |    4 ++++
- net/sunrpc/svc.c                  |    4 +---
- net/sunrpc/svcauth_unix.c         |    6 +++++-
- 5 files changed, 16 insertions(+), 4 deletions(-)
+ fs/nfs/callback_xdr.c         |    3 ++-
+ include/linux/sunrpc/svc.h    |    2 --
+ include/trace/events/sunrpc.h |    3 +--
+ net/sunrpc/svc.c              |   24 ++++--------------------
+ 4 files changed, 7 insertions(+), 25 deletions(-)
 
-diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
-index 2de048f80eb8..8e936999216c 100644
---- a/fs/lockd/svc.c
-+++ b/fs/lockd/svc.c
-@@ -649,6 +649,7 @@ static int lockd_authenticate(struct svc_rqst *rqstp)
- 	switch (rqstp->rq_authop->flavour) {
- 		case RPC_AUTH_NULL:
- 		case RPC_AUTH_UNIX:
-+			rqstp->rq_auth_stat = rpc_auth_ok;
- 			if (rqstp->rq_proc == 0)
- 				return SVC_OK;
- 			if (is_callback(rqstp->rq_proc)) {
-@@ -659,6 +660,7 @@ static int lockd_authenticate(struct svc_rqst *rqstp)
- 			}
- 			return svc_set_client(rqstp);
- 	}
+diff --git a/fs/nfs/callback_xdr.c b/fs/nfs/callback_xdr.c
+index c5348ba81129..7ff99155b023 100644
+--- a/fs/nfs/callback_xdr.c
++++ b/fs/nfs/callback_xdr.c
+@@ -988,7 +988,8 @@ static __be32 nfs4_callback_compound(struct svc_rqst *rqstp)
+ 
+ out_invalidcred:
+ 	pr_warn_ratelimited("NFS: NFSv4 callback contains invalid cred\n");
+-	return svc_return_autherr(rqstp, rpc_autherr_badcred);
 +	rqstp->rq_auth_stat = rpc_autherr_badcred;
- 	return SVC_DENIED;
++	return rpc_success;
  }
  
-diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
-index 7817ad94a6ba..86d856de1389 100644
---- a/fs/nfs/callback.c
-+++ b/fs/nfs/callback.c
-@@ -429,6 +429,8 @@ check_gss_callback_principal(struct nfs_client *clp, struct svc_rqst *rqstp)
-  */
- static int nfs_callback_authenticate(struct svc_rqst *rqstp)
- {
-+	rqstp->rq_auth_stat = rpc_autherr_badcred;
-+
- 	switch (rqstp->rq_authop->flavour) {
- 	case RPC_AUTH_NULL:
- 		if (rqstp->rq_proc != CB_NULL)
-@@ -439,6 +441,8 @@ static int nfs_callback_authenticate(struct svc_rqst *rqstp)
- 		 if (svc_is_backchannel(rqstp))
- 			return SVC_DENIED;
- 	}
-+
-+	rqstp->rq_auth_stat = rpc_auth_ok;
- 	return SVC_OK;
- }
+ /*
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index 35f12963e1ff..63c9210cae06 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -275,7 +275,6 @@ struct svc_rqst {
+ #define	RQ_VICTIM	(5)			/* about to be shut down */
+ #define	RQ_BUSY		(6)			/* request is busy */
+ #define	RQ_DATA		(7)			/* request has data */
+-#define RQ_AUTHERR	(8)			/* Request status is auth error */
+ 	unsigned long		rq_flags;	/* flags field */
+ 	ktime_t			rq_qtime;	/* enqueue time */
  
-diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-index 635449ed7af6..f89075070fb0 100644
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -1038,6 +1038,8 @@ svcauth_gss_set_client(struct svc_rqst *rqstp)
- 	struct rpc_gss_wire_cred *gc = &svcdata->clcred;
- 	int stat;
+@@ -533,7 +532,6 @@ unsigned int	   svc_fill_write_vector(struct svc_rqst *rqstp,
+ char		  *svc_fill_symlink_pathname(struct svc_rqst *rqstp,
+ 					     struct kvec *first, void *p,
+ 					     size_t total);
+-__be32		   svc_return_autherr(struct svc_rqst *rqstp, __be32 auth_err);
+ __be32		   svc_generic_init_request(struct svc_rqst *rqstp,
+ 					    const struct svc_program *progp,
+ 					    struct svc_process_info *procinfo);
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 9f09f5b4d0f8..174385da20ad 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -1568,8 +1568,7 @@ DEFINE_SVCXDRBUF_EVENT(sendto);
+ 	svc_rqst_flag(SPLICE_OK)					\
+ 	svc_rqst_flag(VICTIM)						\
+ 	svc_rqst_flag(BUSY)						\
+-	svc_rqst_flag(DATA)						\
+-	svc_rqst_flag_end(AUTHERR)
++	svc_rqst_flag_end(DATA)
  
-+	rqstp->rq_auth_stat = rpc_autherr_badcred;
-+
- 	/*
- 	 * A gss export can be specified either by:
- 	 * 	export	*(sec=krb5,rw)
-@@ -1053,6 +1055,8 @@ svcauth_gss_set_client(struct svc_rqst *rqstp)
- 	stat = svcauth_unix_set_client(rqstp);
- 	if (stat == SVC_DROP || stat == SVC_CLOSE)
- 		return stat;
-+
-+	rqstp->rq_auth_stat = rpc_auth_ok;
- 	return SVC_OK;
- }
- 
+ #undef svc_rqst_flag
+ #undef svc_rqst_flag_end
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 360dab62b6b4..2019d1203641 100644
+index 2019d1203641..95836bf514b5 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -1328,10 +1328,8 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
- 	 */
- 	auth_res = svc_authenticate(rqstp);
- 	/* Also give the program a chance to reject this call: */
--	if (auth_res == SVC_OK && progp) {
--		rqstp->rq_auth_stat = rpc_autherr_badcred;
-+	if (auth_res == SVC_OK && progp)
- 		auth_res = progp->pg_authenticate(rqstp);
--	}
- 	if (auth_res != SVC_OK)
- 		trace_svc_authenticate(rqstp, auth_res);
- 	switch (auth_res) {
-diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
-index eacfebf326dd..d7ed7d49115a 100644
---- a/net/sunrpc/svcauth_unix.c
-+++ b/net/sunrpc/svcauth_unix.c
-@@ -681,8 +681,9 @@ svcauth_unix_set_client(struct svc_rqst *rqstp)
+@@ -1163,22 +1163,6 @@ void svc_printk(struct svc_rqst *rqstp, const char *fmt, ...)
+ static __printf(2,3) void svc_printk(struct svc_rqst *rqstp, const char *fmt, ...) {}
+ #endif
  
- 	rqstp->rq_client = NULL;
- 	if (rqstp->rq_proc == 0)
--		return SVC_OK;
-+		goto out;
+-__be32
+-svc_return_autherr(struct svc_rqst *rqstp, __be32 auth_err)
+-{
+-	set_bit(RQ_AUTHERR, &rqstp->rq_flags);
+-	return auth_err;
+-}
+-EXPORT_SYMBOL_GPL(svc_return_autherr);
+-
+-static __be32
+-svc_get_autherr(struct svc_rqst *rqstp, __be32 *statp)
+-{
+-	if (test_and_clear_bit(RQ_AUTHERR, &rqstp->rq_flags))
+-		return *statp;
+-	return rpc_auth_ok;
+-}
+-
+ static int
+ svc_generic_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+ {
+@@ -1202,7 +1186,7 @@ svc_generic_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+ 	    test_bit(RQ_DROPME, &rqstp->rq_flags))
+ 		return 0;
  
-+	rqstp->rq_auth_stat = rpc_autherr_badcred;
- 	ipm = ip_map_cached_get(xprt);
- 	if (ipm == NULL)
- 		ipm = __ip_map_lookup(sn->ip_map_cache, rqstp->rq_server->sv_program->pg_class,
-@@ -719,6 +720,9 @@ svcauth_unix_set_client(struct svc_rqst *rqstp)
- 		put_group_info(cred->cr_group_info);
- 		cred->cr_group_info = gi;
+-	if (test_bit(RQ_AUTHERR, &rqstp->rq_flags))
++	if (rqstp->rq_auth_stat != rpc_auth_ok)
+ 		return 1;
+ 
+ 	if (*statp != rpc_success)
+@@ -1390,15 +1374,15 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
+ 			goto release_dropit;
+ 		if (*statp == rpc_garbage_args)
+ 			goto err_garbage;
+-		rqstp->rq_auth_stat = svc_get_autherr(rqstp, statp);
+-		if (rqstp->rq_auth_stat != rpc_auth_ok)
+-			goto err_release_bad_auth;
+ 	} else {
+ 		dprintk("svc: calling dispatcher\n");
+ 		if (!process.dispatch(rqstp, statp))
+ 			goto release_dropit; /* Release reply info */
  	}
-+
-+out:
-+	rqstp->rq_auth_stat = rpc_auth_ok;
- 	return SVC_OK;
- }
  
++	if (rqstp->rq_auth_stat != rpc_auth_ok)
++		goto err_release_bad_auth;
++
+ 	/* Check RPC status result */
+ 	if (*statp != rpc_success)
+ 		resv->iov_len = ((void*)statp)  - resv->iov_base + 4;
 
 
