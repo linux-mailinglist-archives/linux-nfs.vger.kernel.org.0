@@ -2,64 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14FE73C630B
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jul 2021 20:58:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 854513C69DC
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jul 2021 07:44:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235539AbhGLTAy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Jul 2021 15:00:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230409AbhGLTAy (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 12 Jul 2021 15:00:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 49844611AD;
-        Mon, 12 Jul 2021 18:58:05 +0000 (UTC)
-Subject: [PATCH v4 3/3] NFSD: Batch release pages during splice read
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org, linux-mm@kvack.org
-Cc:     neilb@suse.de
-Date:   Mon, 12 Jul 2021 14:58:04 -0400
-Message-ID: <162611628458.1416.5951210328076512466.stgit@klimt.1015granger.net>
-In-Reply-To: <162611520339.1416.14646909890289253420.stgit@klimt.1015granger.net>
-References: <162611520339.1416.14646909890289253420.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.1
+        id S230308AbhGMFra (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Jul 2021 01:47:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229581AbhGMFra (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Jul 2021 01:47:30 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16EC7C0613DD;
+        Mon, 12 Jul 2021 22:44:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kSOLV2yWdnXkqdxSe2pQiY3HJLae2PQc3A8NcVMaXyY=; b=eZSL/FG0R/mDuFBcwkcuVTD9uS
+        KBFriZ9twqFxIks5L9Qwy6K9vJVLFsJTlxIZfVS8xQOcw0HgcjObmW6xwKV7NuzZ3OrOUWZMow+0o
+        +6dguhppZ2oRT6GsukPupoL4M1SUGKqNNAV/qIsvdcjsNDuOfmpylP/+dolSKaa+bsugWw78u6x2x
+        g9WClhQJE4wwbAsnYbvDuEcOjKLXvBmenvm2tDcJ2Oyz0jf5o4IKFMyds9hrXMPTscy+2NSMr58bA
+        xkNWT9+yu/dIZngZY0qmL/RjyuyrY38EHPOM1s+iUwGDQpS2iCaBD0IWOuwBbiQ2KXcCRQLyMCErf
+        nhpvvNuA==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1m3BDC-000mGH-L7; Tue, 13 Jul 2021 05:44:09 +0000
+Date:   Tue, 13 Jul 2021 06:44:06 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org, Jeff Layton <jlayton@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-cachefs@redhat.com,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netfs: Add MAINTAINERS record
+Message-ID: <YO0oJvuIXlcmSd7F@infradead.org>
+References: <162609279295.3129635.5721010331369998019.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <162609279295.3129635.5721010331369998019.stgit@warthog.procyon.org.uk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Large splice reads call put_page() repeatedly. put_page() is
-relatively expensive to call, so replace it with the new
-svc_rqst_replace_page() helper to help amortize that cost.
+On Mon, Jul 12, 2021 at 01:26:32PM +0100, David Howells wrote:
+> Add a MAINTAINERS record for the new netfs helper library.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Reviewed-by: NeilBrown <neilb@suse.de>
----
- fs/nfsd/vfs.c |    9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 46a6d9fce3d2..7732a384f949 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -849,15 +849,10 @@ nfsd_splice_actor(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
- 	struct page *page = buf->page;
- 
- 	if (rqstp->rq_res.page_len == 0) {
--		get_page(page);
--		put_page(*rqstp->rq_next_page);
--		*(rqstp->rq_next_page++) = page;
-+		svc_rqst_replace_page(rqstp, page);
- 		rqstp->rq_res.page_base = buf->offset;
- 	} else if (page != pp[-1]) {
--		get_page(page);
--		if (*rqstp->rq_next_page)
--			put_page(*rqstp->rq_next_page);
--		*(rqstp->rq_next_page++) = page;
-+		svc_rqst_replace_page(rqstp, page);
- 	}
- 	rqstp->rq_res.page_len += sd->len;
- 
-
-
+Btw, any reason why this code is called netfs?  It is a library
+that seems to mostly be glue code for fscache as far as I can tell and
+has nothing to do with networking at all.
