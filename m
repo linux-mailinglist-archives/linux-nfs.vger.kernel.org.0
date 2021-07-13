@@ -2,73 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 350103C7001
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jul 2021 13:54:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3641D3C7047
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jul 2021 14:28:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235966AbhGML52 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Jul 2021 07:57:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235797AbhGML52 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 13 Jul 2021 07:57:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5879161073;
-        Tue, 13 Jul 2021 11:54:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626177278;
-        bh=EOF664GU/JirSb7RMAso8Dcg/Y3qoOHNWnB1kKbxHjg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=tmz32O2m6om0NPJsfboZXP6uqvtAQnEG7DYsbEjS3+k/Xe5etqlymRxdbECnGmh1C
-         z5j0RA6nJwMhBhsLG8pU4AcDr6W5/W9k31qSzMiAkOog/pCTqhDog/GUlhN1KqX8zD
-         gZY7QBWlB8fCJBHNdlztMY1WAwP+4G5nELTX+beQabqbFnQxXRapd9Ni5DvvCKrQBd
-         KE/NuQJ4oOR35RzxA/QH6uenAUXFKonUmppkjol8V7MxjytMXiX4KZfySngMEB7VGQ
-         QguKVYt+FQkfbsgeBnbUSJGZepWrIlGGLOyr2jNAOezKdIeulmTtMthlV+Tqj6MP0Y
-         PDzr8J/Jc774g==
-Message-ID: <f36adf661f37582b51b05c9d8d0a41ea60812b68.camel@kernel.org>
-Subject: Re: [PATCH] netfs: Add MAINTAINERS record
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>,
-        David Howells <dhowells@redhat.com>
-Cc:     torvalds@linux-foundation.org,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-cachefs@redhat.com,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 13 Jul 2021 07:54:36 -0400
-In-Reply-To: <YO0oJvuIXlcmSd7F@infradead.org>
-References: <162609279295.3129635.5721010331369998019.stgit@warthog.procyon.org.uk>
-         <YO0oJvuIXlcmSd7F@infradead.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
+        id S236068AbhGMMbB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Jul 2021 08:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236042AbhGMMbB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Jul 2021 08:31:01 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3193BC0613DD
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Jul 2021 05:28:11 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id c17so41048828ejk.13
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Jul 2021 05:28:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OacGeq25oX7gTagxZjVzlTDfmbhAnDqzHfJ1lJ0V89I=;
+        b=UpovnbupOtT9ct8oeISdpcypp4s+IA4uxUI3fxAKt05GTbORoKZAGvKyOq+frcwUtQ
+         oaf9V4S4XflW4anEyd38X7UL4V82ZwUnpaXhXmJyLATYKA87gdqnj52U3+ZtfC9NqKDc
+         2UQ+915DpaMtt/NQ8VV/WP3J8PCcEtiFIviCzdz+Vhf5phuXzKb0GULKRE+OTvoVtBm2
+         EX98AVHkFvRDdNynfZvUwOT294BHT6qxuDCNSYNSLv9PEJV/mxefmyxN0rmkc40njSLV
+         Ngvl86W8M75uuOob/d8YUNHEz6DjyYxRnkQ7E7CTIVbCsFhhD74CEz3LVmmFTPDhPdBS
+         YtaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OacGeq25oX7gTagxZjVzlTDfmbhAnDqzHfJ1lJ0V89I=;
+        b=ovYvNeYTUONLwFx//B2s2tSrFNstW2PRQ7zw7O6S9TNK1cGL5Pmx5sD3dO6i0zWyF2
+         nkgXgf96iUOQ+rG6vue7kgSc4iWYWqVoRRA4ZUplyqxfybHwmilK/eODfvDFzn2fwMYH
+         dmK0aooIKICj9a/sxThmzTOnkjf6bmUJb4WYd4xynHt1HOXsq/0iFfjfwDq1zcHmdKBZ
+         WsEJfp1qJvrbXYG0i6ky/wlGZRJYiM8siYOx+5YpH7gTKYii1v46+LGXmIBGNv3kEF5w
+         F7f2tUO9f9f+R0gm0xipSSBmEWcx7g3nmSxXYOtDl5KT+Fa/Fg4/l882gMzqt+GTEos2
+         MHwQ==
+X-Gm-Message-State: AOAM5324NrgksIB993fG8dshomQwj3yb9L2mAKxaZUwdekfX1DLzb0Dw
+        DZw8SpUYX1sCVBIDUT47T3QGUFu74O5fpNPFNCiqQg==
+X-Google-Smtp-Source: ABdhPJxBKXfH1csokWmzdzXpI+BTlIRoSOhkuB5eOu7CoYzaCOsbh8Mgfbegr8XV/OTFpHkclnjX//OPQ6d9C80Y8xo=
+X-Received: by 2002:a17:906:c49:: with SMTP id t9mr5211421ejf.405.1626179289792;
+ Tue, 13 Jul 2021 05:28:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <162458475606.28671.1835069742861755259@noble.neil.brown.name>
+ <162510089174.7211.449831430943803791@noble.neil.brown.name>
+ <CAPt2mGMgCHwvmy2MA4c2E316xVYPiRy4pRdcX4-1EAALfcxz+A@mail.gmail.com>
+ <162513954601.3001.5763461156445846045@noble.neil.brown.name>
+ <CAPt2mGNCV7Sh0uXA0ihpuSVcecXW=5cMUAfiS0tYr_cTQ0Du8w@mail.gmail.com>
+ <162535340922.16506.4184249866230493262@noble.neil.brown.name>
+ <CAPt2mGNOMh0uWozi=L5H6X7aKUuh_+-QxJ7OK9e6ELiKnSh1hg@mail.gmail.com>
+ <162562036711.12832.7541413783945987660@noble.neil.brown.name>
+ <CAPt2mGM6mcqM9orzHuyTVgX2pnG5Y7nLeM85tdZ5LoDO9XozBA@mail.gmail.com>
+ <162569314954.31036.11087071768390664533@noble.neil.brown.name>
+ <CAPt2mGPSeK6YHPQ8r6Z0UJv4mJnRAcEEc4VmLaENo91-K8P=fQ@mail.gmail.com> <162569993532.31036.942509527308749032@noble.neil.brown.name>
+In-Reply-To: <162569993532.31036.942509527308749032@noble.neil.brown.name>
+From:   Daire Byrne <daire@dneg.com>
+Date:   Tue, 13 Jul 2021 13:27:33 +0100
+Message-ID: <CAPt2mGMToMVpMEhMQ-xHuuyePwSMsXXz6yaG49CfJYPfzU5+KQ@mail.gmail.com>
+Subject: Re: [PATCH/rfc v2] NFS: introduce NFS namespaces.
+To:     NeilBrown <neilb@suse.de>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2021-07-13 at 06:44 +0100, Christoph Hellwig wrote:
-> On Mon, Jul 12, 2021 at 01:26:32PM +0100, David Howells wrote:
-> > Add a MAINTAINERS record for the new netfs helper library.
-> 
-> Btw, any reason why this code is called netfs?  It is a library
-> that seems to mostly be glue code for fscache as far as I can tell and
-> has nothing to do with networking at all.
+On Thu, 8 Jul 2021 at 00:19, NeilBrown <neilb@suse.de> wrote:
+> sorry - my bad..
+>
+> I think I've found it.  Rather than sending the whole patch, here is the
+> incremental fix.  But not clearing this pointer, I risk the value in it
+> being freed twice.  That might lead to what you saw.
+>
+> Thanks,
+> NeilBrown
+>
+>
+>
+> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> index 7c644a31d304..9e34af223ce6 100644
+> --- a/fs/nfs/fs_context.c
+> +++ b/fs/nfs/fs_context.c
+> @@ -1451,6 +1451,7 @@ static int nfs_fs_context_dup(struct fs_context *fc, struct fs_context *src_fc)
+>         ctx->nfs_server.export_path     = NULL;
+>         ctx->nfs_server.hostname        = NULL;
+>         ctx->fscache_uniq               = NULL;
+> +       ctx->namespace                  = NULL;
+>         ctx->clone_data.fattr           = NULL;
+>         fc->fs_private = ctx;
+>         return 0;
+>
 
-It's infrastructure for network filesystems.
+Yep, I think that has done the trick. I haven't crashed it with the
+same workload yet....
 
-The original impetus was hooking up fscache, though the helper code also
-works with fscache disabled. We also have some work in progress to plumb
-in fscrypt support, and David is also looking at adding
-writepage/writepages support too.
+I can do some more thorough testing now. Thanks!
 
-readpage/readpages/writepage/writepages operations in network
-filesystems are quite "fiddly", and they all do it in subtly different
-ways (and not always for good reasons).
-
-The new read helper infrastructure abstracts a lot of that away, and
-gives netfs's a simpler set of operations to deal with. We're hoping to
-do the same with writepage/writepages helpers soon.
--- 
-Jeff Layton <jlayton@kernel.org>
-
+Daire
