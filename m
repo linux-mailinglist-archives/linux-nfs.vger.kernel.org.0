@@ -2,90 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC07B3C7671
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jul 2021 20:27:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9EBD3C87F7
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jul 2021 17:50:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233634AbhGMSaH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Jul 2021 14:30:07 -0400
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:18520 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229944AbhGMSaH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Jul 2021 14:30:07 -0400
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 16DIHWlO031757;
-        Tue, 13 Jul 2021 18:27:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2020-01-29; bh=+HKwctuIsXoV72efMyg9CEDIWR/ZGYYZyR+Cp7+DL0I=;
- b=bRXqupw8JyvmXUMvkFmfvqybKJvKZ+2t4Mv81yMD7udTUn4z93Tv4AMQr34fDX3PtO4v
- f0x/LOTqtPOi/xwQDgO9tBOoE5lANqoghYRbdXXFfH4xWM21sNSOCU11yQwSS9oel5vP
- txvvME277UUUW4DtT2n6k0mGIsgJCjtU7xkQ1blfdj5IhxIWfEvhqNm4BIOipqRR/AY9
- whxyStpLmGmPNeZamCwUDIMZYhCXHDNuc2xaVcTYp3FsM4fN2M44Yg9FAvtjPSgjtnyg
- ZX2N8fsWdQDVcDLGo3Pe8SLsFfAd8R7YzoI3A+LMkYaA0mRlBR7YBNFifgGjOMKaLOFU 9g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 39sbtugpwp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Jul 2021 18:27:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 16DIEk4f005269;
-        Tue, 13 Jul 2021 18:27:14 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3020.oracle.com with ESMTP id 39q3cc8nhc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Jul 2021 18:27:14 +0000
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 16DIOqO8040273;
-        Tue, 13 Jul 2021 18:27:14 GMT
-Received: from userp3020.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
-        by aserp3020.oracle.com with ESMTP id 39q3cc8ngr-1;
-        Tue, 13 Jul 2021 18:27:13 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     trondmy@hammerspace.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] NFSv4.2: remove restriction of copy size for inter-server copy
-Date:   Tue, 13 Jul 2021 14:27:08 -0400
-Message-Id: <20210713182708.58378-1-dai.ngo@oracle.com>
-X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
+        id S239659AbhGNPxE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Jul 2021 11:53:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239625AbhGNPxE (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 14 Jul 2021 11:53:04 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 58AC66128D
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Jul 2021 15:50:12 +0000 (UTC)
+Subject: [PATCH RFC 0/4] Ensure RPC_TASK_NORTO is disabled for select
+ operations
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Date:   Wed, 14 Jul 2021 11:50:11 -0400
+Message-ID: <162627611661.1294.9189768423517916152.stgit@manet.1015granger.net>
+User-Agent: StGit/1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: CNnyYjY0zGrJ6h7v30F24lDXhDkJ5wpp
-X-Proofpoint-ORIG-GUID: CNnyYjY0zGrJ6h7v30F24lDXhDkJ5wpp
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently inter-server copy is allowed only if the copy size is larger
-than (rsize*14) which is the over-head of the mount operation of the
-source export. This patch removes this restriction since the client
-should not rely on how the server implements the inter-server copy.
+This is a set of patches I've been toying with to get better
+responsiveness from a client when a transport remains connected but
+the server is not returning RPC replies.
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+The approach I've taken is to disable RPC_TASK_NO_RETRANS_TIMEOUT
+for a few particular operations to enable them to time out even
+though the connection is still operational. It could be
+appropriate to take this approach for any idempotent operation
+that cannot be killed with a ^C.
+
+The test is simply to mount the addled server with NFSv4.1, sec=sys,
+and TCP. Both sides happen to have keytabs, so Kerberos is used to
+protect lease management operations.
+
+       mount.nfs-1181  [004]    65.367559: rpc_request:          task:1@1 nfsv4 NULL (sync)
+       mount.nfs-1181  [004]    65.369735: rpc_task_end:         task:1@1 flags=NULLCREDS|DYNAMIC|SOFT|SOFTCONN|SENT|CRED_NOREF runstate=RUNNING|ACTIVE status=0 action=rpc_exit_task
+       mount.nfs-1181  [004]    65.369830: rpc_request:          task:2@1 nfsv4 EXCHANGE_ID (sync)
+       mount.nfs-1181  [004]    65.616381: rpc_task_end:         task:2@1 flags=DYNAMIC|NO_ROUND_ROBIN|SOFT|SENT|TIMEOUT|NORTO|CRED_NOREF runstate=RUNNING|ACTIVE status=0 action=rpc_exit_task
+ 192.168.2.55-ma-1196  [009]    65.616467: rpc_request:          task:3@1 nfsv4 EXCHANGE_ID (sync)
+ 192.168.2.55-ma-1196  [009]    65.616706: rpc_task_end:         task:3@1 flags=DYNAMIC|NO_ROUND_ROBIN|SOFT|SENT|TIMEOUT|NORTO|CRED_NOREF runstate=RUNNING|ACTIVE status=0 action=rpc_exit_task
+ 192.168.2.55-ma-1196  [009]    65.616722: rpc_request:          task:4@1 nfsv4 CREATE_SESSION (sync)
+ 192.168.2.55-ma-1196  [009]    65.616963: rpc_task_end:         task:4@1 flags=DYNAMIC|NO_ROUND_ROBIN|SOFT|SENT|TIMEOUT|NORTO|CRED_NOREF runstate=RUNNING|ACTIVE status=0 action=rpc_exit_task
+ 192.168.2.55-ma-1196  [009]    65.616995: rpc_request:          task:5@1 nfsv4 RECLAIM_COMPLETE (sync)
+ 192.168.2.55-ma-1196  [009]    65.618621: rpc_task_end:         task:5@1 flags=DYNAMIC|NO_ROUND_ROBIN|SOFT|SENT|NORTO|CRED_NOREF runstate=RUNNING|ACTIVE status=0 action=rpc_exit_task
+       mount.nfs-1181  [004]    65.618642: rpc_request:          task:6@2 nfsv4 LOOKUP_ROOT (sync)
+       mount.nfs-1181  [004]    65.619940: rpc_task_end:         task:6@2 flags=MOVEABLE|DYNAMIC|SENT|NORTO|CRED_NOREF runstate=RUNNING|ACTIVE status=0 action=rpc_exit_task
+       mount.nfs-1181  [004]    65.619951: rpc_request:          task:7@2 nfsv4 SERVER_CAPS (sync)
+       mount.nfs-1181  [004]    65.620041: rpc_task_end:         task:7@2 flags=MOVEABLE|DYNAMIC|SENT|NORTO|CRED_NOREF runstate=RUNNING|ACTIVE status=0 action=rpc_exit_task
+       mount.nfs-1181  [004]    65.620049: rpc_request:          task:8@2 nfsv4 FSINFO (sync)
+
+Server stops replying.
+
+   kworker/u26:0-47    [009]    70.944662: rpc_request:          task:9@1 nfsv4 SEQUENCE (async)
+
+Client wonders what's up.
+
+       mount.nfs-1181  [004]    76.367642: rpc_task_end:         task:8@2 flags=MOVEABLE|DYNAMIC|SENT|NORTO|CRED_NOREF runstate=RUNNING|ACTIVE|NEED_RECV|SIGNALLED status=-512 action=rpc_exit_task
+
+User ^C's the mount.nfs command.
+
+  kworker/u25:10-213   [000]   251.165539: rpc_task_end:         task:9@1 flags=ASYNC|MOVEABLE|DYNAMIC|SOFT|SENT|TIMEOUT runstate=RUNNING|ACTIVE|NEED_RECV status=-110 action=rpc_exit_task
+  kworker/u25:10-213   [000]   251.165553: rpc_request:          task:10@1 nfsv4 DESTROY_SESSION (sync)
+
+Client attempts to tear down the nfs_client since there are no more
+mounts of that server and the lease renewal query has finally timed
+out.
+
+  kworker/u25:10-213   [001]   431.386315: rpc_task_end:         task:10@1 flags=DYNAMIC|NO_ROUND_ROBIN|SOFT|SENT|TIMEOUT|CRED_NOREF runstate=RUNNING|ACTIVE|NEED_RECV status=-110 action=rpc_exit_task
+  kworker/u25:10-213   [001]   431.386339: rpc_request:          task:11@1 nfsv4 DESTROY_CLIENTID (sync)
+  kworker/u25:10-213   [001]   611.607170: rpc_task_end:         task:11@1 flags=DYNAMIC|NO_ROUND_ROBIN|SOFT|SENT|TIMEOUT|CRED_NOREF runstate=RUNNING|ACTIVE|NEED_RECV status=-110 action=rpc_exit_task
+   kworker/u25:1-1205  [000]   611.607253: rpc_request:          task:12@1 nfsv4 NULL (async)
+
+Client sends GSS_DESTROY_CTX for the lease management GSS context.
+
+   kworker/u25:1-1205  [000]   791.827916: rpc_task_end:         task:12@1 flags=ASYNC|NULLCREDS|DYNAMIC|SOFT|SOFTCONN|SENT runstate=RUNNING|ACTIVE|NEED_RECV status=-5 action=rpc_exit_task
+     kworker/0:2-215   [000]   791.828351: xprt_destroy:         peer=[192.168.2.55]:2049 state=LOCKED|CONNECTED|BOUND
+
+It's not until task:12@1 exits that the client can finally complete
+the destruction of the RPC transport and the nfs_client. It takes
+about 12 minutes from the ^C before the client's state is finally
+completely cleaned up.
+
+NB: For NFS/RDMA mounts, during that time the client can't complete
+a system shutdown because the rpc_xprt holds hardware resources that
+block driver removal.
+
 ---
- fs/nfs/nfs4file.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index c820de58a661..c91565227ea2 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -158,13 +158,11 @@ static ssize_t __nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
- 		sync = true;
- retry:
- 	if (!nfs42_files_from_same_server(file_in, file_out)) {
--		/* for inter copy, if copy size if smaller than 12 RPC
--		 * payloads, fallback to traditional copy. There are
--		 * 14 RPCs during an NFSv4.x mount between source/dest
--		 * servers.
-+		/*
-+		 * for inter copy, if copy size is too small
-+		 * then fallback to generic copy.
- 		 */
--		if (sync ||
--			count <= 14 * NFS_SERVER(file_inode(file_in))->rsize)
-+		if (sync)
- 			return -EOPNOTSUPP;
- 		cn_resp = kzalloc(sizeof(struct nfs42_copy_notify_res),
- 				GFP_NOFS);
--- 
-2.9.5
+Chuck Lever (4):
+      NFS: Unset RPC_TASK_NO_RETRANS_TIMEOUT for async lease renewal
+      NFS: Unset RPC_TASK_NO_RETRANS_TIMEOUT for session/clientid destruction
+      SUNRPC: Refactor rpc_ping()
+      SUNRPC: Unset RPC_TASK_NO_RETRANS_TIMEOUT for NULL RPCs
+
+
+ fs/nfs/nfs4client.c |  1 +
+ fs/nfs/nfs4proc.c   |  9 +++++++++
+ net/sunrpc/clnt.c   | 33 ++++++++++++++++++++++++---------
+ 3 files changed, 34 insertions(+), 9 deletions(-)
+
+--
+Chuck Lever
 
