@@ -2,99 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E6B63CAD5B
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jul 2021 21:58:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9197C3CADE0
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jul 2021 22:25:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244242AbhGOT6T (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 15 Jul 2021 15:58:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344227AbhGOT4E (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 15 Jul 2021 15:56:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E2745613C0;
-        Thu, 15 Jul 2021 19:52:43 +0000 (UTC)
-Subject: [PATCH v2 7/7] NFS: Clean up the synopsis of callback process_op()
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     trondmy@hammerspace.com
-Cc:     linux-nfs@vger.kernel.org
-Date:   Thu, 15 Jul 2021 15:52:43 -0400
-Message-ID: <162637876320.728653.16177467182002924598.stgit@manet.1015granger.net>
-In-Reply-To: <162637843471.728653.5920517086867549998.stgit@manet.1015granger.net>
-References: <162637843471.728653.5920517086867549998.stgit@manet.1015granger.net>
-User-Agent: StGit/1.1
+        id S231761AbhGOU2Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 15 Jul 2021 16:28:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231371AbhGOU2Y (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 15 Jul 2021 16:28:24 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 649C2C06175F
+        for <linux-nfs@vger.kernel.org>; Thu, 15 Jul 2021 13:25:30 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id j34so4443592wms.5
+        for <linux-nfs@vger.kernel.org>; Thu, 15 Jul 2021 13:25:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vastdata.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=L9Fz/ldOmbGLHubYtODX86RwZpZXZLHbZGnrwCtk2Fo=;
+        b=Ws/Z+Mm1fW2VGYhDvNlf04CQJVMYA0sBvVoXMXhnZ8t+ktmZLFnOeua+EIJYRJ8X0H
+         hjHH3db2EaWZGUMOzhoPW2b4nkqkRJb5XfmX+SADtpT1vEs8d5e91Ea4iwde8ZlbSd8K
+         9NPHlrbQ3fygyvyWGzZi7n+/kIGLiEhJEASGAf9RmsKgUt91VQ7V+kiUAJU8Fp+uHrft
+         SostTB2NdIvfYvvdVz05b5xIYbv+Puw3j0EAfl8xR5NBIWYUGM14g/YFWlcRj0jIr4ee
+         vfClfq3M8ojhDk1sRFGKpDxjeWNCrVT701Asxbi7QByv/PfM30PxZfOYVsYI1i7kJiVt
+         CHgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=L9Fz/ldOmbGLHubYtODX86RwZpZXZLHbZGnrwCtk2Fo=;
+        b=pcUdsQUxkkWS1SGWmXo+rtyKRxJvEMpyMVEX7/Z+WyAXwVyM28SooEgvSjYQqpPp2x
+         rWoMyXl2W5WMOXqaS8w5uuKPxABIMrmNpjZC8vRqgvJ8u8sjKY98q/wNFYkOjl3OrELX
+         jEowtI55VKIorrtEU4nY2XXfJYYGvCSiqrTK75iiulyGI/gN9T1L+BHQ034bTwfzMk33
+         JNe4d0cnmiF8XOaZ2mlWJZjrmG/KbMk+I0rVHmFQ5eCa1gJlk07UUrykJ8AhTnwDGckA
+         z1UnarGlKk7R/PM7A0rfH46njcbH6Qt5yKKvNLKG+PMc0fwL9cGA9EVvzcB0D3pQlWo0
+         vN7w==
+X-Gm-Message-State: AOAM531EARoqos9Vz+ZHZRBB8vGrkWpVEpP5MwbJWvqZivqE7bG65ik5
+        eMdrPaibJLeRsMc2BlnHHtBwlnWX1s5qzyDf
+X-Google-Smtp-Source: ABdhPJzrQTSF5FwjSzds/F6DOpAF+LSKdL2YUwqmrghrmUxwfa8QCBizHpBEf2J+yMCZJxOgZr1Fuw==
+X-Received: by 2002:a1c:730d:: with SMTP id d13mr12999255wmb.129.1626380728771;
+        Thu, 15 Jul 2021 13:25:28 -0700 (PDT)
+Received: from [192.168.0.102] (line103-230.adsl.actcom.co.il. [192.117.103.230])
+        by smtp.gmail.com with ESMTPSA id n18sm7311763wrt.89.2021.07.15.13.25.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Jul 2021 13:25:28 -0700 (PDT)
+Subject: Re: nfs4.1 and nconnect - is this supported?
+To:     Rick Macklem <rmacklem@uoguelph.ca>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+References: <9d726e22-8c47-41ac-727b-3a27a9919fc6@vastdata.com>
+ <YQXPR0101MB09687CF25C779E1E6ECEFF5ADD129@YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM>
+From:   guy keren <guy@vastdata.com>
+Message-ID: <9e025239-bff4-3fbe-a167-342e58475b35@vastdata.com>
+Date:   Thu, 15 Jul 2021 23:25:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <YQXPR0101MB09687CF25C779E1E6ECEFF5ADD129@YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The xdr_stream and rq_arg and rq_res are already accessible via the
-@rqstp parameter.
+On 7/15/21 5:43 PM, Rick Macklem wrote:
+> guy keren <guy@vastdata.com> wrote:
+>> hi,
+>>
+>> i wonder if the linux client's nfs nconnect feature was designed to
+>> support NFS4.1 (or higher) versions? according to our experimentation,
+>> the linux client seems to just alternate messages between the multiple
+>> RPC/TCP connections, and does not seem to adhere to the NFS 4.1 protocol
+>> requirement, that when using multiple connections, the client needs to
+>> use BIND_CONN_TO_SESSION when trying to user a 2nd connection with the
+>> same NFS4.1 session.
+>>
+>> was this done on purpose? or is this configuration not supported by
+>> linux client's 'nconnect'? or am i missing something?
+> Yep, you're missing something.
+>
+> Snippet from RFC 5661 pg. 43:
+>     If the client specifies no state
+>     protection (Section 18.35) when the session is created, then when
+>     SEQUENCE is transmitted on a different connection, the connection is
+>     automatically associated with the fore channel of the session
+>     specified in the SEQUENCE operation.
+>
+> As such, BIND_CONN_TO_SESSION is only required to associate the
+> backchannel to the connection.
+>
+> rick
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfs/callback_xdr.c |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
-
-diff --git a/fs/nfs/callback_xdr.c b/fs/nfs/callback_xdr.c
-index bf0efec93da8..4c48d85f6517 100644
---- a/fs/nfs/callback_xdr.c
-+++ b/fs/nfs/callback_xdr.c
-@@ -863,17 +863,16 @@ preprocess_nfs4_op(unsigned int op_nr, struct callback_op **op)
- }
- 
- static __be32 process_op(int nop, struct svc_rqst *rqstp,
--		struct xdr_stream *xdr_in, void *argp,
--		struct xdr_stream *xdr_out, void *resp,
--		struct cb_process_state *cps)
-+			 struct cb_process_state *cps)
- {
-+	struct xdr_stream *xdr_out = &rqstp->rq_res_stream;
- 	struct callback_op *op = &callback_ops[0];
- 	unsigned int op_nr;
- 	__be32 status;
- 	long maxlen;
- 	__be32 res;
- 
--	status = decode_op_hdr(xdr_in, &op_nr);
-+	status = decode_op_hdr(&rqstp->rq_arg_stream, &op_nr);
- 	if (unlikely(status))
- 		return status;
- 
-@@ -903,9 +902,11 @@ static __be32 process_op(int nop, struct svc_rqst *rqstp,
- 
- 	maxlen = xdr_out->end - xdr_out->p;
- 	if (maxlen > 0 && maxlen < PAGE_SIZE) {
--		status = op->decode_args(rqstp, xdr_in, argp);
-+		status = op->decode_args(rqstp, &rqstp->rq_arg_stream,
-+					 rqstp->rq_argp);
- 		if (likely(status == 0))
--			status = op->process_op(argp, resp, cps);
-+			status = op->process_op(rqstp->rq_argp, rqstp->rq_resp,
-+						cps);
- 	} else
- 		status = htonl(NFS4ERR_RESOURCE);
- 
-@@ -914,7 +915,7 @@ static __be32 process_op(int nop, struct svc_rqst *rqstp,
- 	if (unlikely(res))
- 		return res;
- 	if (op->encode_res != NULL && status == 0)
--		status = op->encode_res(rqstp, xdr_out, resp);
-+		status = op->encode_res(rqstp, xdr_out, rqstp->rq_resp);
- 	return status;
- }
- 
-@@ -959,9 +960,7 @@ static __be32 nfs4_callback_compound(struct svc_rqst *rqstp)
- 		return rpc_system_err;
- 	}
- 	while (status == 0 && nops != hdr_arg.nops) {
--		status = process_op(nops, rqstp, &rqstp->rq_arg_stream,
--				    rqstp->rq_argp, &rqstp->rq_res_stream,
--				    rqstp->rq_resp, &cps);
-+		status = process_op(nops, rqstp, &cps);
- 		nops++;
- 	}
- 
+thanks for pointing this out, rick - i forgot about this feature.
 
 
+does it mean that 'nconnect' cannot work with MACHCRED or SSV client 
+authentication then?
+
+will it work with kerberos (which does authenticate the client machine 
+normally, as far as i know)?
+
+
+thanks,
+
+--guy
