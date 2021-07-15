@@ -2,212 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40A423CA050
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jul 2021 16:09:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F7343CA0E6
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jul 2021 16:43:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229604AbhGOOMe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 15 Jul 2021 10:12:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232280AbhGOOMd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 15 Jul 2021 10:12:33 -0400
-Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3328C06175F
-        for <linux-nfs@vger.kernel.org>; Thu, 15 Jul 2021 07:09:39 -0700 (PDT)
-Received: by mail-qv1-xf31.google.com with SMTP id p10so2874997qvk.7
-        for <linux-nfs@vger.kernel.org>; Thu, 15 Jul 2021 07:09:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OztbGn4jq9jEnauPPZWPubMVx5XAjWKw5amcRjbcnWY=;
-        b=1yDSnMZ26A/UwPz6Haqu8Bqfa53cFDvP9Hcgm/LBQMR8T6K2OPrZT4ZPWVNH+M26Vo
-         1CkkD1t5iGkkc4aJtn3aVgSYulfBoz0/FsL3Sbh8sUWE8ewXPpy0aQdcwiJh52cCx6tI
-         dqwRm0oZs98ESc8DvtvahE2E5P+UXItEdlYDv27rwBJLEz23xj5ypd2hu+9j9zZ/Bxj7
-         asO+z/uie5i8ZqP8hTQU/LOvJwP9whQcEKZQAzIbLTc2xs4jmyRxjWNlrwlUTK5W7Thu
-         AI8wEmKE70iyLSUm6C+28iKESmLq+ZUYMcs7bRT46M0xYHrcYkWfGNPoqPnWG32NVmwT
-         QTjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OztbGn4jq9jEnauPPZWPubMVx5XAjWKw5amcRjbcnWY=;
-        b=OBDishup1nFT0zoT7OgavyZZJ8mk367uwEQUQjLXQU4eZoMCFs+gPKpa09+FyTAIuG
-         wkzXnkXjfBJBo5w7HBUzAUqgCdYJAlmQxOsj6xmTOKDVP9vL7bE/DUD7HqMcFRQhkv4V
-         /g1e4d+T+6AHt6qjsOCnKltycxVIyS9kOBPx7WPaznOqWbU41vzMe8uTfe4Ae1xiscJi
-         WhRSXpowYUcDUJmpoxVw2d6aTHw1dnOpRkxvXlep9RUNE6EfHQP9JXta+iL6uDx3kL8P
-         qbB1U2AbI4Z7PDCASJAuWPkLa+2Sh6u5ReAQnDoaVvF9iIYx2s9lMtuSlWCVlWOkWfSz
-         qr0g==
-X-Gm-Message-State: AOAM5324gtYHErLgr/QGupaWq0OBuGzUvZN/jSZqQvHIu0fqzTImF7F5
-        y3ml4iPkJ9P56ysCLmEviAYvQg==
-X-Google-Smtp-Source: ABdhPJxvGHV22U+mfkgbII2ysKGyMcFXZ0ZHvb/Cb9zsSGXjrNNMv1SrZofqrjf38hNO4zrIFTpehg==
-X-Received: by 2002:a05:6214:5098:: with SMTP id kk24mr4670221qvb.26.1626358178693;
-        Thu, 15 Jul 2021 07:09:38 -0700 (PDT)
-Received: from [192.168.1.45] (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
-        by smtp.gmail.com with ESMTPSA id x125sm2550509qkd.8.2021.07.15.07.09.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Jul 2021 07:09:38 -0700 (PDT)
-Subject: Re: [PATCH/RFC] NFSD: handle BTRFS subvolumes better.
-To:     NeilBrown <neilb@suse.de>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>
-Cc:     linux-nfs@vger.kernel.org, Wang Yugui <wangyugui@e16-tech.com>,
-        Ulli Horlacher <framstag@rus.uni-stuttgart.de>,
-        linux-btrfs@vger.kernel.org
-References: <20210613115313.BC59.409509F4@e16-tech.com>
- <20210310074620.GA2158@tik.uni-stuttgart.de>
- <162632387205.13764.6196748476850020429@noble.neil.brown.name>
-From:   Josef Bacik <josef@toxicpanda.com>
-Message-ID: <edd94b15-90df-c540-b9aa-8eac89b6713b@toxicpanda.com>
-Date:   Thu, 15 Jul 2021 10:09:37 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.11.0
-MIME-Version: 1.0
-In-Reply-To: <162632387205.13764.6196748476850020429@noble.neil.brown.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S237397AbhGOOqk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 15 Jul 2021 10:46:40 -0400
+Received: from mail-eopbgr670081.outbound.protection.outlook.com ([40.107.67.81]:58472
+        "EHLO CAN01-TO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S235229AbhGOOqj (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 15 Jul 2021 10:46:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eGyw5KhbkdUmUgpPX+mqjmEjMugS8RK5F8mBElftpKQRf/eORqD5Ks4b1KKvSQZe74MmP/pbySnUQjrGmQ3b7ABxUsmz83JHkloaLuHhXeiJ/SwNj3ZlgBF5P9rMZ6wMQQviypsr9hykYG5pe5M/+bxgVXRsKxF0l5NDAAssluZWSQAtCUKoMhCvU5dTE24TeqfZVZ05lfLwxx/sd8oclcLqNwN/swA4C/PCLsWe3OqrJwuxmEP1ByxqhAAki0UMFT/+dOvUw4TFySFXvXYc0JZfrRNWDA94/ZMtnR4v+YRGTDjyqu9c17Ie2FTMCzN4ltCPE6M1O9dpgzsSazWIKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2a6C6o0m7ErjDVhdfqCfaWgTSUKddTmyZfo2qiDICmA=;
+ b=eIqNCxoXZpjwb2DHY3KkJZ6S2Mm0CrukfA/M2Rx+HV1gZCXVRGksOiiEykW2tGpvtOn7elGNQ+P69qy/8S3hnIzqVTNcFLDSn0UpbFuvYTnIGuGtQ0rq7BS3JXL54UKMvyi+mUeNjoNI6A1M83bucX2sOAVyOEoYwUtI9AguyGVIb0U7czsltPghVnWKt3+/EpcjDHMbGwRt2CIZ2z5OSLpqX36HmuhiCC9IL2aNO+N/48C3JjTQwGkzj5o4XnSEiQDxB+b56RZK0yJ1n1la6+eNO1KylKojqtzycRk7N0ujFLNe2F/MMCvDEVwl+LpggND+HVJZctzxNuEeRZqHYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=uoguelph.ca; dmarc=pass action=none header.from=uoguelph.ca;
+ dkim=pass header.d=uoguelph.ca; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uoguelph.ca;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2a6C6o0m7ErjDVhdfqCfaWgTSUKddTmyZfo2qiDICmA=;
+ b=YutEJzv3Qr0ZzPCAFNV0Or6qqBYNxeNl/nq4GJ2Y4U8UBzDKyEp+POemg43yi2wPf2wj1mZY/XJczCGExmk/RtDPbb8ZBmUk9lFIt6+0C7WeKVlez2g8BGqi2E320/+rv9I+lMqnrBSTyskq4ewvT/HW1J0fvBS27g9oHbRh45jWJTc5+LrrzlxAqamgEFWCwzGW4NVf6tI/oLVsfos7PDnjdWmQTsculBXB+MuSCOUn3fTCujQ2djpf0LsETNH3oY2F6xCUcAd2NOFP6NORPJJQsy64Y2okWkU7+s/OWvMB6LiQ84RjEM7WZEmitQakMGt01gXzM71TEwsclxCmPw==
+Received: from YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:19::29) by QB1PR01MB3122.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:33::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21; Thu, 15 Jul
+ 2021 14:43:45 +0000
+Received: from YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::583:528b:dbac:37bf]) by YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::583:528b:dbac:37bf%4]) with mapi id 15.20.4308.027; Thu, 15 Jul 2021
+ 14:43:45 +0000
+From:   Rick Macklem <rmacklem@uoguelph.ca>
+To:     guy keren <guy@vastdata.com>, linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: nfs4.1 and nconnect - is this supported?
+Thread-Topic: nfs4.1 and nconnect - is this supported?
+Thread-Index: AQHXeXufkrmYpSiYM0awZfEk2w5O0atEG6+l
+Date:   Thu, 15 Jul 2021 14:43:45 +0000
+Message-ID: <YQXPR0101MB09687CF25C779E1E6ECEFF5ADD129@YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM>
+References: <9d726e22-8c47-41ac-727b-3a27a9919fc6@vastdata.com>
+In-Reply-To: <9d726e22-8c47-41ac-727b-3a27a9919fc6@vastdata.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: vastdata.com; dkim=none (message not signed)
+ header.d=none;vastdata.com; dmarc=none action=none header.from=uoguelph.ca;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7149d44d-497d-41f1-ca47-08d9479ef2b3
+x-ms-traffictypediagnostic: QB1PR01MB3122:
+x-microsoft-antispam-prvs: <QB1PR01MB31222B6B015D4D3A39E8A86FDD129@QB1PR01MB3122.CANPRD01.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: aoP35NEY89lbl0+yvJ3/tzeR1i6To2I9/M4S4EEtJejDISn9G8arm9mlxYxpcmSgwNRgmErSTs7jQwzpyw2MCEKmDyJujpsGrxkJYGGOZJVjCYqh2g6BeVGg9DyIbtcWGt9l/Snkqp4ekykyUieRqZZQKqfS12KrMKCNZq9jyLRvZ2EaHL6tK9ZpNDs2jxJ6yjg4JgI/pk92XYOBxqhI1RHQFGvEW8pJjJsOpwCuhIaPACcPbQwEjrH9NgG6QpKghW76EedCYwl+2lEooxfX0Bk2dO7HTbBRme6Tur6ybrUocdVDo2y6Ck+djV+nCYR/k8f6irIq1VvtZQt3dL2NrAyzS3wEWvyxOX68VWvhbp5UGaFFm24FlPbQEBla5J627Q2OQ4l6+Ss/0XrSvhhnbHsGeAqVMiaX093KT36fvZHihoMB8A0EhQP6JrGyGvp4F0dSQ37cvFi64h3RnrhJnH25Vc8D4RHqRh/2pRK5fXI0Rw+LyqL98tZEnHowob+Qz5KFmozdZ5+7hBau3NKdQS5NM4ef2ZgmQOT7gHHCWp9+OQGU5GngWbcm9RYWv6vRhaPuD2GO4UIaKitDEPkfnp6dg1kPUeWeOpLRTPu8nm6C78YWtBEn69ULx5YYCiMfKhXynbEPiJXsBdrSS0YXdFjrgCCzUG057bps9Xa4vu/tuyNEHP8+3CuF3gXNPfq2elkNI5oPhnVUcYQ1CFVAsw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(346002)(39860400002)(136003)(366004)(376002)(396003)(52536014)(55016002)(786003)(66946007)(66446008)(7696005)(316002)(71200400001)(6506007)(8676002)(64756008)(66556008)(66476007)(9686003)(76116006)(8936002)(122000001)(5660300002)(83380400001)(38100700002)(33656002)(186003)(110136005)(478600001)(2906002)(86362001)(38070700004);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?NQaaiJ5bMW2lQCAFn+NVXvjyrRz+1pfHlUIWXRiL2iGBJBJlTwl8PQkxJh?=
+ =?iso-8859-1?Q?Hk6EGb1DtyrSKL43Igt3vRB4mS+tRG0CW/3Vx2EpRwQXAMyC0sVTfzD+UB?=
+ =?iso-8859-1?Q?xYkKKOkJTv2gLsjzBd0/ZxFL0+F/bRheTZRBg9EGRauYC1J25KohQNpDuo?=
+ =?iso-8859-1?Q?lUhA1c6kn0DjxbvXOOg/Fc8sLfmG3j+AGBzRfSREtGPa7x+O3iYtCpFXJ1?=
+ =?iso-8859-1?Q?r42I+Pg7on3m/DYvPdzz2ru/YkewXKbTVQFQq8VnwI2bBDNwm15uwqbouH?=
+ =?iso-8859-1?Q?JiIQW612zR3Kz3VIwnEuLtYHp7P9ycyCfvAynBHT6EQjm5mk06Sg13OMHX?=
+ =?iso-8859-1?Q?Q+pCNFuRogt3KBhY7Am8RtfjlsuSGZ+pa5eU6Fr4m614Pza6FrIy93ezef?=
+ =?iso-8859-1?Q?1/jYRCJpBqckU3Gm+68gOjXDs6EwlJSqjPSVz1LeRk/X/NW1VQkoNvWjWX?=
+ =?iso-8859-1?Q?8138AhDjVu8Qj6PpKSQWnfkCKetC/SPzcbmSSyOHsOJ1oODOGLVba8W/RD?=
+ =?iso-8859-1?Q?VSo7FmCJfrpkekzilLghmmWz0RZQhnW9Hpl5MpUQKgidOUS0Wfcyt+DqBm?=
+ =?iso-8859-1?Q?XVlW4lAKdspyOyNv6cUe0Q+NHwmGVMuG0zV3Ytsrj6xGProiZRbeZS7Fi4?=
+ =?iso-8859-1?Q?Yf3JzvsY7ZKJk2GIMdfEhUsvUo0un07w5SDTdvkoym0aD4pJISKCkuh6B/?=
+ =?iso-8859-1?Q?roI9josDDO6FVwhZWsUAtH880UA2bktOb4p+L3AuxFx9M+1O2CVcJAMIFO?=
+ =?iso-8859-1?Q?ZZAcUD/CZ8MZr63LeIHkxAiHhisITfpyqyrrGMgMoJ75i0+xV7cayDvCYq?=
+ =?iso-8859-1?Q?emWBmmO2gIgj6QopJ7pQz3HroLiaLkjVnWDvrp8PBWmUEi2gRHP1ROkCAo?=
+ =?iso-8859-1?Q?I2zikBccGYtCu2fcwuKHGyYopjugvYpaXwa6/pKGmwtC2qpBbS3+gWBLqN?=
+ =?iso-8859-1?Q?rjYQYM+ovZXgmkIHKFyIaf+lJK9RVZ4zqUuDBWyT/YNXnHyGNS0Tlmh18b?=
+ =?iso-8859-1?Q?kG4YoGzuzsH3sNGy6DmlKoZrAuUV9i8KPgJ98rBDdOtO6n3zpvLne/pAis?=
+ =?iso-8859-1?Q?iklmZXlHp6XaoyLmfteYIc3gwXnkSywFYEYeGoH1eME+zZJb27dXCk3cdg?=
+ =?iso-8859-1?Q?3EKSe9HmFT86WYurOcuwMiFklxSJMKCCYpMf27HXQb0obx35efbyfEcn7q?=
+ =?iso-8859-1?Q?WOVt28VrRFOv/1Wr/9vWLZRMY3P1FAJNj0PwirsQgyEz9m1oAmsGqudqrl?=
+ =?iso-8859-1?Q?2kAg1udwZ4fqhm2omE+pHJWN4KK62pgY5EsvB9Gf4N7CV+9I4tZoKJedbr?=
+ =?iso-8859-1?Q?1oH7cROL5Y6TQjdeQNtLwMXTfGorBqge0ofkCTKL/5wKm2I2SDhSEAJ+2U?=
+ =?iso-8859-1?Q?jlWrH2LmJJfDwjLkF/VrLlvSE1XAiXhgcdYWEzcradKeSfpFAQOrU=3D?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: uoguelph.ca
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7149d44d-497d-41f1-ca47-08d9479ef2b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2021 14:43:45.0950
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: be62a12b-2cad-49a1-a5fa-85f4f3156a7d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KQTYALEscI6Nr5E24+/KTjziOn6OAOBLoCnOfDzCg6s5YmESXSyCd5ZfeMelx/QSYFNFpFPzJHtzB17x4xPM0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: QB1PR01MB3122
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 7/15/21 12:37 AM, NeilBrown wrote:
-> 
-> Hi all,
->   the problem this patch address has been discuss on both the NFS list
->   and the BTRFS list, so I'm sending this to both.  I'd be very happy for
->   people experiencing the problem (NFS export of BTRFS subvols) who are
->   in a position to rebuild the kernel on their NFS server to test this
->   and report success (or otherwise).
-> 
->   While I've tried to write this patch so that it *could* land upstream
->   (and could definitely land in a distro franken-kernel if needed), I'm
->   not completely sure it *should* land upstream.  It includes some deep
->   knowledge of BTRFS into NFSD code.  This could be removed later once
->   proper APIs are designed and provided.  I can see arguments either way
->   and wonder what others think.
-> 
->   BTRFS developers:  please examine the various claims I have made about
->     BTRFS and correct any that are wrong.  The observation that
->     getdents can report the same inode number of unrelated files
->     (a file and a subvol in my case) is ... interesting.
-> 
->   NFSD developers: please comment on anything else.
-> 
->   Others: as I said: testing would be great! :-)
-> 
-> Subject: [PATCH] NFSD: handle BTRFS subvolumes better.
-> 
-> A single BTRFS mount can present as multiple "volumes".  i.e. multiple
-> sets of objects with potentially overlapping inode number spaces.
-> The st_dev presented to user-space via the stat(2) family of calls is
-> different for each internal volume, as is the f_fsid reported by
-> statfs().
-> 
-> However nfsd doesn't look at st_dev or the fsid (other than for the
-> export point - typically the mount point), so it doesn't notice the
-> different filesystems.  Importantly, it doesn't report a different fsid
-> to the NFS client.
-> 
-> This leads to the NFS client reusing inode numbers, and applications
-> like "find" and "du" complaining, particularly when they find a
-> directory with the same st_ino and st_dev as an ancestor.  This
-> typically happens with the root of a sub-volume as the root of every
-> volume in BTRFS has the same inode number (256).
-> 
-> To fix this, we need to report a different fsid for each subvolume, but
-> need to use the same fsid that we currently use for the top-level
-> volume.  Changing this (by rebooting a server to new code), might
-> confuse the client.  I don't think it would be a major problem (stale
-> filehandles shouldn't happen), but it is best avoided.
-> 
-> Determining the fsid to use is a bit awkward....
-> 
-> There is limited space in the protocol (32 bits for NFSv3, 64 for NFSv4)
-> so we cannot append the subvolume fsid.  The best option seems to be to
-> hash it in.  This patch uses a simple 'xor', but possible a Jenkins hash
-> would be better.
-> 
-> For BTRFS (and other) filesystems the current fsid is a hash (xor) of
-> the uuid provided from userspace by mounted.  This is derived from the
-> statfs fsid.  If we use the statfs fsid for subvolumes and xor this in,
-> we risk erasing useful unique information.  So I have chosen not to use
-> the statfs fsid.
-> 
-> Ideally we should have an API for the filesystem to report if it uses
-> multiple subvolumes, and to provide a unique identifier for each.  For
-> now, this patch calls exportfs_encode_fh().  If the returned fsid type
-> is NOT one of those used by BTRFS, then we assume the st_fsid cannot
-> change, and use the current behaviour.
-> 
-> If the type IS one that BTRFS uses, we use intimate knowledge of BTRFS
-> to extract the root_object_id from the filehandle and record that with
-> the export information.  Then when exporting an fsid, we check if
-> subvolumes are enabled and if the current dentry has a different
-> root_object_id to the exported volume.  If it does, the root_object_id
-> is hashed (xor) into the reported fsid.
-> 
-> When an NFSv4 client sees that the fsid has changed, it will ask for the
-> MOUNTED_ON_FILEID.  With the Linux NFS client, this is visible to
-> userspace as an automount point, until content within the directory is
-> accessed and the automount is triggered.  Currently the MOUNTED_ON_FILEID
-> for these subvolume roots is the same as of the root - 256.  This will
-> cause find et.al.  to complain until the automount actually gets mounted.
-> 
-> So this patch reports the MOUNTED_OF_FILEID in such cases to be a magic
-> number that appears to be appropriate for BTRFS:
->      BTRFS_FIRST_FREE_OBJECTID - 1
-> 
-> Again, we really want an API to get this from the filesystem.  Changing
-> it later has no cost, so we don't need any commitment from the btrfs team
-> that this is what they will provide if/when we do get such an API.
-> 
-> This same problem (of an automount point with a duplicate inode number)
-> also exists for NFSv3.  This problem cannot be resolved completely on
-> the server as NFSv3 doesn't have a well defined "MOUNTED_ON_FILEID"
-> concept, but we can come close.  The inode number returned by READDIR is
-> likely to be the mounted-on-fileid.  With READDIR_PLUS, two fileids are
-> returned, the one from the readdir, and (optionally) another from
-> 'stat'.  Linux-NFS checks these match and if not, it treats the first as
-> a mounted-on-fileid.
-> 
-> Interestingly BTRFS getdents() *DOES* report a different inode number
-> for subvol roots than is returned by stat().  These aren't actually
-> unique (!!!!) but in at least one case, they are different from
-> ancestors, so this is sufficient.
-> 
-> NFSD currently SUPPRESSES the stat information if the inode number is
-> different.  This is because there is room for a file to be renamed between
-> the readdir call and the lookup_one_len() prior to getattr, and the
-> results could be confusing.  However for the case of a BTRFS filesystem
-> with an inode number of 256, the value of reporting the difference seems
-> to exceed the cost of any confusion caused by a race (if that is even
-> possible in this case).
-> So this patch allows the two fileids to be different when 256 is found
-> on BTRFS.
-> 
-> With this patch a 'du' or 'find' in an NFS-mounted btrfs filesystem
-> which has snapshot subvols works correctly for both NFSv4 and NFSv3.
-> Fortunately the problematic programs tend to trigger READDIR_PLUS and so
-> benefit from the detection of the MOUNTED_ON_FILEID which is provides.
-> 
-> Signed-off-by: NeilBrown <neilb@suse.de>
-
-I'm going to restate what I think the problem is you're having just so I'm sure 
-we're on the same page.
-
-1. We export a btrfs volume via nfsd that has multiple subvolumes.
-2. We run find, and when we stat a file, nfsd doesn't send along our bogus 
-st_dev, it sends it's own thing (I assume?).  This confuses du/find because you 
-get the same inode number with different parents.
-
-Is this correct?  If that's the case then it' be relatively straightforward to 
-add another callback into export_operations to grab this fsid right?  Hell we 
-could simply return the objectid of the root since that's unique across the 
-entire file system.  We already do our magic FH encoding to make sure we keep 
-all this straight for NFS, another callback to give that info isn't going to 
-kill us.  Thanks,
-
-Josef
+guy keren <guy@vastdata.com> wrote:=0A=
+>hi,=0A=
+>=0A=
+>i wonder if the linux client's nfs nconnect feature was designed to=0A=
+>support NFS4.1 (or higher) versions? according to our experimentation,=0A=
+>the linux client seems to just alternate messages between the multiple=0A=
+>RPC/TCP connections, and does not seem to adhere to the NFS 4.1 protocol=
+=0A=
+>requirement, that when using multiple connections, the client needs to=0A=
+>use BIND_CONN_TO_SESSION when trying to user a 2nd connection with the=0A=
+>same NFS4.1 session.=0A=
+>=0A=
+>was this done on purpose? or is this configuration not supported by=0A=
+>linux client's 'nconnect'? or am i missing something?=0A=
+Yep, you're missing something.=0A=
+=0A=
+Snippet from RFC 5661 pg. 43:=0A=
+   If the client specifies no state=0A=
+   protection (Section 18.35) when the session is created, then when=0A=
+   SEQUENCE is transmitted on a different connection, the connection is=0A=
+   automatically associated with the fore channel of the session=0A=
+   specified in the SEQUENCE operation.=0A=
+=0A=
+As such, BIND_CONN_TO_SESSION is only required to associate the=0A=
+backchannel to the connection.=0A=
+=0A=
+rick=0A=
+=0A=
+thanks,=0A=
+--guy=0A=
