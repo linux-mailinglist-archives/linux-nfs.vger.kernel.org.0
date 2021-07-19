@@ -2,66 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E37E3CD07C
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jul 2021 11:19:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB4843CD443
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jul 2021 14:01:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235129AbhGSIjD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 19 Jul 2021 04:39:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234730AbhGSIjC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 19 Jul 2021 04:39:02 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A151C061574;
-        Mon, 19 Jul 2021 01:20:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=fV+v0WEDYq1e/99KIYLPM4pt2RQcHsAUsEfsMJoG2mk=; b=BcM7xFZbRqaTUQKPjlJgNNxrxl
-        LObLueIAeKKSN9c0+2VWf7ks6Zz27TzT9TNCGMY3NOE2nJZrQTVS9XFQheOPiJ4jd32qiC/GsBmBf
-        tRCZ49n+zh3URnbVy0zinXSf3GaBXsFBzE7pLNjsubLupGIULyEMPjwO0yqXA1qZUgAFa16ARNzV5
-        JFKbKgu3a5SbWfGByf0NQ4ex6OWTigsk1izpWkGe4u8qHSX0oBIm2+mMyRU1sN6Q58JD2tKE74s0g
-        wAFhfrM/ByJZGlIqQSGtcmxbT8eIrlXUSU+sWtu8ZJVTfr8PaEtD0ZsxDRMwrjh34H7QoThONt5IB
-        l7KIVupQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1m5POJ-006h2m-3V; Mon, 19 Jul 2021 09:17:26 +0000
-Date:   Mon, 19 Jul 2021 10:16:47 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, NeilBrown <neilb@suse.de>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, linux-nfs@vger.kernel.org,
-        Wang Yugui <wangyugui@e16-tech.com>,
-        Ulli Horlacher <framstag@rus.uni-stuttgart.de>,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH/RFC] NFSD: handle BTRFS subvolumes better.
-Message-ID: <YPVC/w4kw3y/14oF@infradead.org>
-References: <20210613115313.BC59.409509F4@e16-tech.com>
- <20210310074620.GA2158@tik.uni-stuttgart.de>
- <162632387205.13764.6196748476850020429@noble.neil.brown.name>
- <edd94b15-90df-c540-b9aa-8eac89b6713b@toxicpanda.com>
- <YPBmGknHpFb06fnD@infradead.org>
- <28bb883d-8d14-f11a-b37f-d8e71118f87f@toxicpanda.com>
- <YPBvUfCNmv0ElBpo@infradead.org>
- <e1d9caad-e4c7-09d4-b145-5397b24e1cc7@toxicpanda.com>
+        id S231161AbhGSLUx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 19 Jul 2021 07:20:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37084 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230493AbhGSLUx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 19 Jul 2021 07:20:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626696092;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PTWCi9YhzLnnmfJrR0EP+vfsFkGiDUxW+pcvIAIKvmM=;
+        b=fX82iIqriu1OQUYQ9Ay6y6stYhEs9s4g0Yv1ixdfjZ0Gnf57dIc8agQkzdea3S3z73nWym
+        XCL+ycwVQm9HFCdB8spEum9fUPmU/HAzQoSxbZK7YoehAhLApXBkfYPp4F/ban03kao0Ce
+        tp/0GfeN5rzG+JlcvdjW7tbvTSLR3/k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-99-4XYO02h3MW-hUYStaAwnXQ-1; Mon, 19 Jul 2021 08:01:28 -0400
+X-MC-Unique: 4XYO02h3MW-hUYStaAwnXQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7585C10B746C;
+        Mon, 19 Jul 2021 12:01:27 +0000 (UTC)
+Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 999E55D9F0;
+        Mon, 19 Jul 2021 12:01:26 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     trondmy@kernel.org
+Cc:     "Xiyu Yang" <xiyuyang19@fudan.edu.cn>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] SUNRPC: Convert rpc_client refcount to use refcount_t
+Date:   Mon, 19 Jul 2021 08:01:25 -0400
+Message-ID: <6AF75462-495E-4B63-9A3E-C9639C45C1F2@redhat.com>
+In-Reply-To: <20210717172052.232420-1-trondmy@kernel.org>
+References: <20210717172052.232420-1-trondmy@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e1d9caad-e4c7-09d4-b145-5397b24e1cc7@toxicpanda.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jul 15, 2021 at 02:01:11PM -0400, Josef Bacik wrote:
-> This is not a workable solution.  It's not a matter of simply tying into
-> existing infrastructure, we'd have to completely rework how the VFS deals
-> with this stuff in order to be reasonable.  And when I brought this up to Al
-> he told me I was insane and we absolutely had to have a different SB for
-> every vfsmount, which means we can't use vfsmount for this, which means we
-> don't have any other options.  Thanks,
+Hi Trond,
 
-Then fix the problem another way.  The problem is known, old and keeps
-breaking stuff.  Don't paper over it, fix it. 
+On 17 Jul 2021, at 13:20, trondmy@kernel.org wrote:
+
+> @@ -943,7 +941,7 @@ rpc_release_client(struct rpc_clnt *clnt)
+>  	do {
+>  		if (list_empty(&clnt->cl_tasks))
+>  			wake_up(&destroy_wait);
+> -		if (!atomic_dec_and_test(&clnt->cl_count))
+> +		if (refcount_dec_not_one(&clnt->cl_count))
+
+I guess we're not worried about extra calls racing into rpc_free_auth?
+
+.. hmm, it looks like current code can do that already since we're bumping the
+ref up again.  Seems like we could end up in rpcauth_release twice with
+an underflow on au_count.
+
+Ben
+
