@@ -2,123 +2,146 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 576843CE2CA
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jul 2021 18:15:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61ED83CE728
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jul 2021 19:04:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236639AbhGSPcG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 19 Jul 2021 11:32:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348273AbhGSPaN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 19 Jul 2021 11:30:13 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4633DC025476;
-        Mon, 19 Jul 2021 08:22:10 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 8978869C3; Mon, 19 Jul 2021 11:49:07 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 8978869C3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1626709747;
-        bh=ti8Lix6DTW58HSt/kKrKpzmA8A16cLxRx7tBsW4gCcI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q+7IBwT4bCVh4ZkXH6Pfu7BgB2qcElqNyADOVa5xC43rFJ4vsYfF0EWd8NkZG5Kir
-         PFmx/3LYVqkCXmYBT5pdxjKMxDA5uFyKsRrrzm6YkaPz01WWTYcoPOwRc9V/w4xYx4
-         pDg5hxPqnR+UYHhNZOPJO4xeCz88ha+peHkes0Iw=
-Date:   Mon, 19 Jul 2021 11:49:07 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, linux-nfs@vger.kernel.org,
-        Wang Yugui <wangyugui@e16-tech.com>,
-        Ulli Horlacher <framstag@rus.uni-stuttgart.de>,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH/RFC] NFSD: handle BTRFS subvolumes better.
-Message-ID: <20210719154907.GA28482@fieldses.org>
-References: <20210613115313.BC59.409509F4@e16-tech.com>
- <20210310074620.GA2158@tik.uni-stuttgart.de>
- <162632387205.13764.6196748476850020429@noble.neil.brown.name>
- <edd94b15-90df-c540-b9aa-8eac89b6713b@toxicpanda.com>
- <YPBmGknHpFb06fnD@infradead.org>
- <28bb883d-8d14-f11a-b37f-d8e71118f87f@toxicpanda.com>
- <YPBvUfCNmv0ElBpo@infradead.org>
- <e1d9caad-e4c7-09d4-b145-5397b24e1cc7@toxicpanda.com>
- <162638862766.13764.8566962032225976326@noble.neil.brown.name>
+        id S1345888AbhGSQXf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 19 Jul 2021 12:23:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36841 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1350732AbhGSQUp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 19 Jul 2021 12:20:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626714083;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CWbiNwfa1F4M71nSKUEZf49QjTSkIDZ9be9aaf79teg=;
+        b=GQfvgHCQ2fokpn6kyDjR327s2yKW+Yib1UTQkmLJXn4fHTLwWrF2rmXEc0/Y37miQR7gym
+        SqRXdd+LOOtDHCMimdLSxXzLjMMdNczPIoQ+Yd1eCB2uM2ujC3sQdcjlB6u8GGOIs6WPWn
+        cgwGcoKxLJjefvlh++u/LMR+yTK0v3Y=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-37-nOfvkCavMFuiFOMIAGYdKw-1; Mon, 19 Jul 2021 13:01:21 -0400
+X-MC-Unique: nOfvkCavMFuiFOMIAGYdKw-1
+Received: by mail-ej1-f69.google.com with SMTP id y3-20020a17090614c3b0290551ea218ea2so1185025ejc.5
+        for <linux-nfs@vger.kernel.org>; Mon, 19 Jul 2021 10:01:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CWbiNwfa1F4M71nSKUEZf49QjTSkIDZ9be9aaf79teg=;
+        b=L/z9q4QLXrVIB2iH0xgZyzbV9NpS1QQLix80LUvfjZ0cDC0m9Tl6t/2dg1/OeEd6h6
+         hrg8CrkHlXPFVtTU3SXBtGyYa8AC8u+/DoVhnSZJC2iXw09yZT9YzKs/k3r7HNMpbtJ3
+         O1H8b2FyhYdZjTqDCrMekwbhrFUGHfx7a8bGF0cOVjeBctQ+ZBV4NqRVi3X1MSit/cD3
+         U1Mue8ABMnUoYT9WXtvqq3WqQ/18TiSSRTrDraHrxgcj8VornOD1DGEKZI6uOZP4arT6
+         QPUUa1okz3YHM8ID4pUdigIoNcdOo2hU/e/lRvFJDhWZ4SSc7OQR0CgLs4jq9suRmlkJ
+         WynQ==
+X-Gm-Message-State: AOAM530WE7eejtOgCmg3F54T0TOQCJvGTf5WuvPmv9ogPxwsAYajuK3J
+        aaLDJaFC+mG4JpbvkDuN29vXduMuIdYLH2nxUdmB6Pl58tI/VQAcJcjwxtdRRKIyOPjdAfM0IIY
+        82DIYoZ2n4Xl1e2yQ/5C7BC5ezhkgpAPgVHon
+X-Received: by 2002:a17:906:2413:: with SMTP id z19mr27633090eja.215.1626714080625;
+        Mon, 19 Jul 2021 10:01:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyJ4qFd7qmcjGBdC/DTR2GfnxHlp+kQu35t2kFc/HlYOj7cdBfkHP4CuK8mP/B6dq6wjHnMoL67m0b6v+R4FWk=
+X-Received: by 2002:a17:906:2413:: with SMTP id z19mr27633061eja.215.1626714080342;
+ Mon, 19 Jul 2021 10:01:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <162638862766.13764.8566962032225976326@noble.neil.brown.name>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20210719100343.20545-1-jiyin@redhat.com>
+In-Reply-To: <20210719100343.20545-1-jiyin@redhat.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Mon, 19 Jul 2021 13:00:44 -0400
+Message-ID: <CALF+zOnyCpGSfQgOe35fcYqE872K1B-zC6-gn4PDoi5G3kDzpw@mail.gmail.com>
+Subject: Re: [PATCH] mount.nfs: move 'sloppy' option to beginning of the options
+To:     Jianhong Yin <jiyin@redhat.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
+        "Dickson, Steve" <steved@redhat.com>,
+        Jianhong Yin <yin-jianhong@163.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jul 16, 2021 at 08:37:07AM +1000, NeilBrown wrote:
-> On Fri, 16 Jul 2021, Josef Bacik wrote:
-> > On 7/15/21 1:24 PM, Christoph Hellwig wrote:
-> > > On Thu, Jul 15, 2021 at 01:11:29PM -0400, Josef Bacik wrote:
-> > >> Because there's no alternative.  We need a way to tell userspace they've
-> > >> wandered into a different inode namespace.  There's no argument that what
-> > >> we're doing is ugly, but there's never been a clear "do X instead".  Just a
-> > >> lot of whinging that btrfs is broken.  This makes userspace happy and is
-> > >> simple and straightforward.  I'm open to alternatives, but there have been 0
-> > >> workable alternatives proposed in the last decade of complaining about it.
-> > > 
-> > > Make sure we cross a vfsmount when crossing the "st_dev" domain so
-> > > that it is properly reported.   Suggested many times and ignored all
-> > > the time beause it requires a bit of work.
-> > > 
-> > 
-> > You keep telling me this but forgetting that I did all this work when you 
-> > originally suggested it.  The problem I ran into was the automount stuff 
-> > requires that we have a completely different superblock for every vfsmount. 
-> > This is fine for things like nfs or samba where the automount literally points 
-> > to a completely different mount, but doesn't work for btrfs where it's on the 
-> > same file system.  If you have 1000 subvolumes and run sync() you're going to 
-> > write the superblock 1000 times for the same file system.  You are going to 
-> > reclaim inodes on the same file system 1000 times.  You are going to reclaim 
-> > dcache on the same filesytem 1000 times.  You are also going to pin 1000 
-> > dentries/inodes into memory whenever you wander into these things because the 
-> > super is going to hold them open.
-> > 
-> > This is not a workable solution.  It's not a matter of simply tying into 
-> > existing infrastructure, we'd have to completely rework how the VFS deals with 
-> > this stuff in order to be reasonable.  And when I brought this up to Al he told 
-> > me I was insane and we absolutely had to have a different SB for every vfsmount, 
-> > which means we can't use vfsmount for this, which means we don't have any other 
-> > options.  Thanks,
-> 
-> When I was first looking at this, I thought that separate vfsmnts
-> and auto-mounting was the way to go "just like NFS".  NFS still shares a
-> lot between the multiple superblock - certainly it shares the same
-> connection to the server.
-> 
-> But I dropped the idea when Bruce pointed out that nfsd is not set up to
-> export auto-mounted filesystems.
+On Mon, Jul 19, 2021 at 6:03 AM Jianhong Yin <jiyin@redhat.com> wrote:
+>
+> mount.nfs -o quota,sloppy still get regression fail, fix it
+> and add sloppy item in nfs(5)
+>
+> Signed-off-by: Jianhong Yin <yin-jianhong@163.com>
+> ---
+> test log:
+> '''
+> [root@rhel-85-latest nfs-utils]# ./utils/mount/mount.nfs -oquota,sloppy localhost:/export /mnt/nfsmp  -v
+> mount.nfs: timeout set for Mon Jul 19 05:53:37 2021
+> mount.nfs: trying text-based options 'sloppy,vers=4.2,addr=::1,clientaddr=::1'
+> localhost:/export on /mnt/nfsmp type nfs (quota,sloppy)
+>
+> [root@rhel-85-latest nfs-utils]# umount /mnt/nfsmp/
+> [root@rhel-85-latest nfs-utils]# ./utils/mount/mount.nfs -oquota -s localhost:/export /mnt/nfsmp  -v
+> mount.nfs: timeout set for Mon Jul 19 05:54:05 2021
+> mount.nfs: trying text-based options 'sloppy,vers=4.2,addr=::1,clientaddr=::1'
+> localhost:/export on /mnt/nfsmp type nfs (quota)
+>
+> [root@rhel-85-latest nfs-utils]# ./utils/mount/mount.nfs -osloppy,quota,sloppy localhost:/export /mnt/nfsmp  -v  -s
+> mount.nfs: timeout set for Mon Jul 19 05:57:21 2021
+> mount.nfs: trying text-based options 'sloppy,vers=4.2,addr=::1,clientaddr=::1'
+> localhost:/export on /mnt/nfsmp type nfs (sloppy,quota,sloppy)
+> '''
+>
+>  utils/mount/mount.c | 4 ++++
+>  utils/mount/nfs.man | 7 +++++++
+>  2 files changed, 11 insertions(+)
+>
+> diff --git a/utils/mount/mount.c b/utils/mount/mount.c
+> index b98f9e00..dbe9edf6 100644
+> --- a/utils/mount/mount.c
+> +++ b/utils/mount/mount.c
+> @@ -344,6 +344,10 @@ static void parse_opts(const char *options, int *flags, char **extra_opts)
+>
+>                         /* end of option item or last item */
+>                         if (*p == '\0' || *(p + 1) == '\0') {
+> +                               if (strcmp(opt, "sloppy") == 0) {
+> +                                       ++sloppy;
+> +                                       continue;
+> +                               }
+>                                 parse_opt(opt, flags, *extra_opts, len);
+>                                 opt = NULL;
+>                         }
+> diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
+> index f98cb47d..f1b76936 100644
+> --- a/utils/mount/nfs.man
+> +++ b/utils/mount/nfs.man
+> @@ -555,6 +555,13 @@ using the FS-Cache facility. See cachefilesd(8)
+>  and <kernel_source>/Documentation/filesystems/caching
+>  for detail on how to configure the FS-Cache facility.
+>  Default value is nofsc.
+> +.TP 1.5i
+> +.B sloppy
+> +The
+> +.B sloppy
+> +option is an alternative to specifying
+> +.BR mount.nfs " -s " option.
+> +
+>  .SS "Options for NFS versions 2 and 3 only"
+>  Use these options, along with the options in the above subsection,
+>  for NFS versions 2 and 3 only.
+> --
+> 2.18.1
+>
 
-Yes.  I wish it was....  But we'd need some way to look a
-not-currently-mounted filesystem by filehandle:
+LGTM
 
-> It needs to be able to find a
-> filesystem given a UUID (extracted from a filehandle), and it does this
-> by walking through the mount table to find one that matches.  So unless
-> all btrfs subvols were mounted all the time (which I wouldn't propose),
-> it would need major work to fix.
-> 
-> NFSv4 describes the fsid as having a "major" and "minor" component.
-> We've never treated these as having an important meaning - just extra
-> bits to encode uniqueness in.  Maybe we should have used "major" for the
-> vfsmnt, and kept "minor" for the subvol.....
+Did this test to verify:
+# for o in blah,vers=4.1,sec=sys,sloppy blah,vers=4.1,sloppy,sec=sys
+sloppy,blah,vers=4.1,sec=sys vers=4.1,blah,sec=sys,sloppy
+vers=4.1,blah,sloppy,sec=sys vers=4.1,sloppy,blah,sec=sys
+sloppy,vers=4.1,blah,sec=sys sloppy,vers=4.1,sec=sys,blah; do
+./utils/mount/mount.nfs -o $o 127.0.0.1:/exports /mnt/test; if [ $?
+-ne 0 ]; then echo ERROR: on options $o; break; fi; umount /mnt/test;
+done; echo SUCCESS on kernel $(uname -r) nfs-utils at $(git log
+--oneline | head -1)
+SUCCESS on kernel 5.12.15-300.fc34.x86_64 nfs-utils at f840d4c878f0
+mount.nfs: move 'sloppy' option to beginning of the options
 
-So nfsd would use the "major" ID to find the parent export, and then
-btrfs would use the "minor" ID to identify the subvolume?
 
---b.
+Reviewed-and-tested-by: Dave Wysochanski <dwysocha@redhat.com>
 
-> The idea for a single vfsmnt exposing multiple inode-name-spaces does
-> appeal to me.  The "st_dev" is just part of the name, and already a
-> fairly blurry part.  Thanks to bind mounts, multiple mounts can have the
-> same st_dev.  I see no intrinsic reason that a single mount should not
-> have multiple fsids, provided that a coherent picture is provided to
-> userspace which doesn't contain too many surprises.
