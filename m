@@ -2,91 +2,167 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B3AC3D14E3
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jul 2021 19:13:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D0B03D14ED
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jul 2021 19:17:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229662AbhGUQcr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 21 Jul 2021 12:32:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbhGUQcr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Jul 2021 12:32:47 -0400
-Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8547EC061575
-        for <linux-nfs@vger.kernel.org>; Wed, 21 Jul 2021 10:13:23 -0700 (PDT)
-Received: by mail-qk1-x72c.google.com with SMTP id s193so2757414qke.4
-        for <linux-nfs@vger.kernel.org>; Wed, 21 Jul 2021 10:13:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zvcx2JjoLNdSPbM4lUY1qn/nh450vILfONJu9nENnn8=;
-        b=gLrM0/hwlqMF/fCXGD7otfxBrKVhoNRchlPpL9d7o3gWTVviHxF38U1Yw8qNuLG7+T
-         /L26AAE4dDu2MRkAMBnp8rgJsxUTVrK4vZlF8a5pJlexOuyREIRZTcBDFBOYXyjH2R6e
-         XW/jE9/Fq0AFX9AhgptICsIwLeNF0Am6o5Nlg06C8ZSOdJwHghvk7fOiqpvlEqXDJw95
-         gDj799X1zNCRP/dtmy8zQDX7IXRVGQsRmq5WfJXSmv5bErokcH4mFkALcy1FyAn6QsCF
-         0NaTfGUial1rM9QVFcFZ9Al9c05Rxuc8wC+HKvPjuyS1FZ6e2JJU82u+ORqXJ0d/0c4R
-         0NcQ==
+        id S234013AbhGUQgY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 21 Jul 2021 12:36:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52473 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233994AbhGUQgX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Jul 2021 12:36:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626887819;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=45Nv4CwiblR8FGtkBjhkDjeZeYsNgqMrzsXCoaXKlcs=;
+        b=gDWcy8NIxe9/V5FcdM8+kT/08r4yHl8432TqZdmla7z84fBUmQBH6cH8mN6DfIR1z9k8PE
+        XVev+sv0Ic3drn0kX9b6FwCkwrPz8q05dm7e/HNFAFgu3mVaLhCbY5h099tBUn7xofH6S0
+        G+gzCb8rtxIM4etdXIHnH3RSkpBJP8E=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-329-R97lPJtZOPeeRyzUHA9-lg-1; Wed, 21 Jul 2021 13:16:58 -0400
+X-MC-Unique: R97lPJtZOPeeRyzUHA9-lg-1
+Received: by mail-qv1-f69.google.com with SMTP id cw12-20020ad44dcc0000b02902f1474ce8b7so1974860qvb.20
+        for <linux-nfs@vger.kernel.org>; Wed, 21 Jul 2021 10:16:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=zvcx2JjoLNdSPbM4lUY1qn/nh450vILfONJu9nENnn8=;
-        b=LM3Y3svaAdPmcYQZ3kLo5SZKJDZ25H6btYgVaaUiUGuQFTC4SZSfMiCoFlzNkxtNTO
-         qw9BdoxdYLZt19hvFi43X+vTiirohJr8QHMf45UKzx3DYLYx8hRki/Kq5xmI6TjPrGZY
-         YnY58CxxpkufUxOS2Lly6vgr1f1VDc9a9mWsRUABxFu3MMFnWn868zuJSDn82JgV0l/P
-         vVWHka2XwnEOhj64t5ilXU3cEahzl3LO6swl51h1V7pidsAa60GV6v83oEZT1kAJMJAa
-         rJGgiidte/ASPukdwaLLbrXCnYXkaKGGX6IUuV/FgTe02mGu08h0fm3ND1bIMqbXd8vL
-         mnCw==
-X-Gm-Message-State: AOAM532vRH3xknGL4ikugiBCM19BP9iRdjBIrQ1tEK1PaaI/hx2rOSi1
-        dFDPqHb0mMAmjLoPngHu1+s=
-X-Google-Smtp-Source: ABdhPJzZ9Wo2Etwy3agGO4DPEWa+cWAXzLLnBWC0Ag3MDi386sKdoxI95bVDti6P/XIRj6flzXqNiQ==
-X-Received: by 2002:a05:620a:4089:: with SMTP id f9mr34998696qko.441.1626887602555;
-        Wed, 21 Jul 2021 10:13:22 -0700 (PDT)
-Received: from localhost.localdomain ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id o17sm3550617qko.100.2021.07.21.10.13.21
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=45Nv4CwiblR8FGtkBjhkDjeZeYsNgqMrzsXCoaXKlcs=;
+        b=itRuUE41bXpokWz1MwPdAT3WQeaCLtJJfL/gb3ttqW6jHrP6cBTP8KmzpcOQpHnL6M
+         dIwhgYsDaEcu17vn0x2q9ITT6ALth0HlQtlr3mgfZBJqIALJ+9EU/xyV217/Pt43JWlD
+         xl6WxYhLALkyj8jghA6yUaJZzQS0nVIQBio28nYVlniO2HducbdRl6EUSiYT7oHaiaJ8
+         r2Sc73SkZ/CZ6zaeGxJX3ih/KcwHWrD6A/EOahxQafCR84/VwbZrz6FQ656T6k+pq+LV
+         Bq89ZQOEdqg/pzXZS+fde72Z2qGd3xVwdME/iJKUFXnOCDjad6F7gqZ9GIxLKxGbegue
+         weuA==
+X-Gm-Message-State: AOAM530+Hh+fB2yspALP8cNzi0nDm5jlWTZ+c/TW5Syfr/tRxmYAXvJ0
+        I9/iQwC8cqARSbu/CRQhRGeKgcEIJXw60ZZ89Wph7x/mmUQip+t+JsUp6YAS8cq4BREFw5U1NDj
+        yGJhe1hz3iNhtsXW+s31L
+X-Received: by 2002:ad4:45a6:: with SMTP id y6mr36933554qvu.1.1626887817697;
+        Wed, 21 Jul 2021 10:16:57 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwroCy17a7YpgGcviCUSg3J+GVy+n4E5MAqofjS2RsLBi/0nF/2omAf2j+swlCqTU83eT+04Q==
+X-Received: by 2002:ad4:45a6:: with SMTP id y6mr36933536qvu.1.1626887817521;
+        Wed, 21 Jul 2021 10:16:57 -0700 (PDT)
+Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
+        by smtp.gmail.com with ESMTPSA id t6sm1744741qkg.75.2021.07.21.10.16.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jul 2021 10:13:22 -0700 (PDT)
-Sender: Anna Schumaker <schumakeranna@gmail.com>
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH] sunrpc: Fix return value of get_srcport()
-Date:   Wed, 21 Jul 2021 13:13:20 -0400
-Message-Id: <20210721171320.173876-1-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.32.0
+        Wed, 21 Jul 2021 10:16:57 -0700 (PDT)
+Message-ID: <0555748529d483fb9b69eceb56bf9ebc1efceaf1.camel@redhat.com>
+Subject: Re: [RFC PATCH 02/12] netfs: Add an iov_iter to the read subreq for
+ the network fs/cache to use
+From:   Jeff Layton <jlayton@redhat.com>
+To:     David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Mike Marshall <hubcap@omnibond.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        Shyam Prasad N <nspmangalore@gmail.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        devel@lists.orangefs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 21 Jul 2021 13:16:56 -0400
+In-Reply-To: <162687509306.276387.7579641363406546284.stgit@warthog.procyon.org.uk>
+References: <162687506932.276387.14456718890524355509.stgit@warthog.procyon.org.uk>
+         <162687509306.276387.7579641363406546284.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+On Wed, 2021-07-21 at 14:44 +0100, David Howells wrote:
+> Add an iov_iter to the read subrequest and set it up to define the
+> destination buffer to write into.  This will allow future patches to point
+> to a bounce buffer instead for purposes of handling oversize writes,
+> decryption (where we want to save the encrypted data to the cache) and
+> decompression.
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> ---
+> 
+>  fs/afs/file.c          |    6 +-----
+>  fs/netfs/read_helper.c |    5 ++++-
+>  include/linux/netfs.h  |    2 ++
+>  3 files changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/afs/file.c b/fs/afs/file.c
+> index c9c21ad0e7c9..ca529f23515a 100644
+> --- a/fs/afs/file.c
+> +++ b/fs/afs/file.c
+> @@ -319,11 +319,7 @@ static void afs_req_issue_op(struct netfs_read_subrequest *subreq)
+>  	fsreq->len	= subreq->len   - subreq->transferred;
+>  	fsreq->key	= subreq->rreq->netfs_priv;
+>  	fsreq->vnode	= vnode;
+> -	fsreq->iter	= &fsreq->def_iter;
+> -
+> -	iov_iter_xarray(&fsreq->def_iter, READ,
+> -			&fsreq->vnode->vfs_inode.i_mapping->i_pages,
+> -			fsreq->pos, fsreq->len);
+> +	fsreq->iter	= &subreq->iter;
+>  
+>  	afs_fetch_data(fsreq->vnode, fsreq);
+>  }
+> diff --git a/fs/netfs/read_helper.c b/fs/netfs/read_helper.c
+> index 0b6cd3b8734c..715f3e9c380d 100644
+> --- a/fs/netfs/read_helper.c
+> +++ b/fs/netfs/read_helper.c
+> @@ -150,7 +150,7 @@ static void netfs_clear_unread(struct netfs_read_subrequest *subreq)
+>  {
+>  	struct iov_iter iter;
+>  
+> -	iov_iter_xarray(&iter, WRITE, &subreq->rreq->mapping->i_pages,
+> +	iov_iter_xarray(&iter, READ, &subreq->rreq->mapping->i_pages,
 
-Since bc1c56e9bbe9 transport->srcport may by unset, causing
-get_srcport() to return 0 when called. Fix this by querying the port
-from the underlying socket instead of the transport.
+What's up with the WRITE -> READ change here? Was that a preexisting
+bug?
 
-Fixes: bc1c56e9bbe9 (SUNRPC: prevent port reuse on transports which don't request it)
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- net/sunrpc/xprtsock.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>  			subreq->start + subreq->transferred,
+>  			subreq->len   - subreq->transferred);
+>  	iov_iter_zero(iov_iter_count(&iter), &iter);
+> @@ -745,6 +745,9 @@ netfs_rreq_prepare_read(struct netfs_read_request *rreq,
+>  	if (WARN_ON(subreq->len == 0))
+>  		source = NETFS_INVALID_READ;
+>  
+> +	iov_iter_xarray(&subreq->iter, READ, &rreq->mapping->i_pages,
+> +			subreq->start, subreq->len);
+> +
+>  out:
+>  	subreq->source = source;
+>  	trace_netfs_sreq(subreq, netfs_sreq_trace_prepare);
+> diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+> index fe9887768292..5e4fafcc9480 100644
+> --- a/include/linux/netfs.h
+> +++ b/include/linux/netfs.h
+> @@ -17,6 +17,7 @@
+>  #include <linux/workqueue.h>
+>  #include <linux/fs.h>
+>  #include <linux/pagemap.h>
+> +#include <linux/uio.h>
+>  
+>  /*
+>   * Overload PG_private_2 to give us PG_fscache - this is used to indicate that
+> @@ -112,6 +113,7 @@ struct netfs_cache_resources {
+>  struct netfs_read_subrequest {
+>  	struct netfs_read_request *rreq;	/* Supervising read request */
+>  	struct list_head	rreq_link;	/* Link in rreq->subrequests */
+> +	struct iov_iter		iter;		/* Iterator for this subrequest */
+>  	loff_t			start;		/* Where to start the I/O */
+>  	size_t			len;		/* Size of the I/O */
+>  	size_t			transferred;	/* Amount of data transferred */
+> 
+> 
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index e573dcecdd66..02b071dbdd22 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1656,7 +1656,7 @@ static int xs_get_srcport(struct sock_xprt *transport)
- unsigned short get_srcport(struct rpc_xprt *xprt)
- {
- 	struct sock_xprt *sock = container_of(xprt, struct sock_xprt, xprt);
--	return sock->srcport;
-+	return xs_sock_getport(sock->sock);
- }
- EXPORT_SYMBOL(get_srcport);
- 
 -- 
-2.32.0
+Jeff Layton <jlayton@redhat.com>
 
