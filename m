@@ -2,60 +2,46 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D0B03D14ED
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jul 2021 19:17:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 252E63D1501
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jul 2021 19:20:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234013AbhGUQgY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 21 Jul 2021 12:36:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52473 "EHLO
+        id S235104AbhGUQjw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 21 Jul 2021 12:39:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:54385 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233994AbhGUQgX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Jul 2021 12:36:23 -0400
+        by vger.kernel.org with ESMTP id S229943AbhGUQjv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Jul 2021 12:39:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626887819;
+        s=mimecast20190719; t=1626888027;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=45Nv4CwiblR8FGtkBjhkDjeZeYsNgqMrzsXCoaXKlcs=;
-        b=gDWcy8NIxe9/V5FcdM8+kT/08r4yHl8432TqZdmla7z84fBUmQBH6cH8mN6DfIR1z9k8PE
-        XVev+sv0Ic3drn0kX9b6FwCkwrPz8q05dm7e/HNFAFgu3mVaLhCbY5h099tBUn7xofH6S0
-        G+gzCb8rtxIM4etdXIHnH3RSkpBJP8E=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-329-R97lPJtZOPeeRyzUHA9-lg-1; Wed, 21 Jul 2021 13:16:58 -0400
-X-MC-Unique: R97lPJtZOPeeRyzUHA9-lg-1
-Received: by mail-qv1-f69.google.com with SMTP id cw12-20020ad44dcc0000b02902f1474ce8b7so1974860qvb.20
-        for <linux-nfs@vger.kernel.org>; Wed, 21 Jul 2021 10:16:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=45Nv4CwiblR8FGtkBjhkDjeZeYsNgqMrzsXCoaXKlcs=;
-        b=itRuUE41bXpokWz1MwPdAT3WQeaCLtJJfL/gb3ttqW6jHrP6cBTP8KmzpcOQpHnL6M
-         dIwhgYsDaEcu17vn0x2q9ITT6ALth0HlQtlr3mgfZBJqIALJ+9EU/xyV217/Pt43JWlD
-         xl6WxYhLALkyj8jghA6yUaJZzQS0nVIQBio28nYVlniO2HducbdRl6EUSiYT7oHaiaJ8
-         r2Sc73SkZ/CZ6zaeGxJX3ih/KcwHWrD6A/EOahxQafCR84/VwbZrz6FQ656T6k+pq+LV
-         Bq89ZQOEdqg/pzXZS+fde72Z2qGd3xVwdME/iJKUFXnOCDjad6F7gqZ9GIxLKxGbegue
-         weuA==
-X-Gm-Message-State: AOAM530+Hh+fB2yspALP8cNzi0nDm5jlWTZ+c/TW5Syfr/tRxmYAXvJ0
-        I9/iQwC8cqARSbu/CRQhRGeKgcEIJXw60ZZ89Wph7x/mmUQip+t+JsUp6YAS8cq4BREFw5U1NDj
-        yGJhe1hz3iNhtsXW+s31L
-X-Received: by 2002:ad4:45a6:: with SMTP id y6mr36933554qvu.1.1626887817697;
-        Wed, 21 Jul 2021 10:16:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwroCy17a7YpgGcviCUSg3J+GVy+n4E5MAqofjS2RsLBi/0nF/2omAf2j+swlCqTU83eT+04Q==
-X-Received: by 2002:ad4:45a6:: with SMTP id y6mr36933536qvu.1.1626887817521;
-        Wed, 21 Jul 2021 10:16:57 -0700 (PDT)
-Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id t6sm1744741qkg.75.2021.07.21.10.16.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jul 2021 10:16:57 -0700 (PDT)
-Message-ID: <0555748529d483fb9b69eceb56bf9ebc1efceaf1.camel@redhat.com>
-Subject: Re: [RFC PATCH 02/12] netfs: Add an iov_iter to the read subreq for
- the network fs/cache to use
-From:   Jeff Layton <jlayton@redhat.com>
-To:     David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        bh=BIt0Yb9H5DHJEMvOYSUbKkxcwoKM/Ncp4O7tCakc/1Q=;
+        b=eXyLgZrSPve50INxI3GJEvydet7VfEqLZPm7S1AIsNpq2WLQ7lu0V25UdMMjQTmjNFH0VG
+        C/7cxK4HNxa4mM0JIQ326fMU4OPhrh+U/zKFBQ4Xar4i+cvhyS7oFBXbGeXgSkwWFtsiks
+        5lWvUmM5YOQ/bkonkZkUbgIYMvqVNPY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-386-GhHEOI8XMz2fV-_JkEc7ng-1; Wed, 21 Jul 2021 13:20:25 -0400
+X-MC-Unique: GhHEOI8XMz2fV-_JkEc7ng-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0FF0C192CC46;
+        Wed, 21 Jul 2021 17:20:23 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-62.rdu2.redhat.com [10.10.112.62])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A7BD35D9DD;
+        Wed, 21 Jul 2021 17:20:15 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <0555748529d483fb9b69eceb56bf9ebc1efceaf1.camel@redhat.com>
+References: <0555748529d483fb9b69eceb56bf9ebc1efceaf1.camel@redhat.com> <162687506932.276387.14456718890524355509.stgit@warthog.procyon.org.uk> <162687509306.276387.7579641363406546284.stgit@warthog.procyon.org.uk>
+To:     Jeff Layton <jlayton@redhat.com>
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>,
@@ -69,100 +55,26 @@ Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
         devel@lists.orangefs.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Date:   Wed, 21 Jul 2021 13:16:56 -0400
-In-Reply-To: <162687509306.276387.7579641363406546284.stgit@warthog.procyon.org.uk>
-References: <162687506932.276387.14456718890524355509.stgit@warthog.procyon.org.uk>
-         <162687509306.276387.7579641363406546284.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
+Subject: Re: [RFC PATCH 02/12] netfs: Add an iov_iter to the read subreq for the network fs/cache to use
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <289703.1626888014.1@warthog.procyon.org.uk>
+Date:   Wed, 21 Jul 2021 18:20:14 +0100
+Message-ID: <289704.1626888014@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2021-07-21 at 14:44 +0100, David Howells wrote:
-> Add an iov_iter to the read subrequest and set it up to define the
-> destination buffer to write into.  This will allow future patches to point
-> to a bounce buffer instead for purposes of handling oversize writes,
-> decryption (where we want to save the encrypted data to the cache) and
-> decompression.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> ---
-> 
->  fs/afs/file.c          |    6 +-----
->  fs/netfs/read_helper.c |    5 ++++-
->  include/linux/netfs.h  |    2 ++
->  3 files changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/afs/file.c b/fs/afs/file.c
-> index c9c21ad0e7c9..ca529f23515a 100644
-> --- a/fs/afs/file.c
-> +++ b/fs/afs/file.c
-> @@ -319,11 +319,7 @@ static void afs_req_issue_op(struct netfs_read_subrequest *subreq)
->  	fsreq->len	= subreq->len   - subreq->transferred;
->  	fsreq->key	= subreq->rreq->netfs_priv;
->  	fsreq->vnode	= vnode;
-> -	fsreq->iter	= &fsreq->def_iter;
-> -
-> -	iov_iter_xarray(&fsreq->def_iter, READ,
-> -			&fsreq->vnode->vfs_inode.i_mapping->i_pages,
-> -			fsreq->pos, fsreq->len);
-> +	fsreq->iter	= &subreq->iter;
->  
->  	afs_fetch_data(fsreq->vnode, fsreq);
->  }
-> diff --git a/fs/netfs/read_helper.c b/fs/netfs/read_helper.c
-> index 0b6cd3b8734c..715f3e9c380d 100644
-> --- a/fs/netfs/read_helper.c
-> +++ b/fs/netfs/read_helper.c
-> @@ -150,7 +150,7 @@ static void netfs_clear_unread(struct netfs_read_subrequest *subreq)
->  {
->  	struct iov_iter iter;
->  
-> -	iov_iter_xarray(&iter, WRITE, &subreq->rreq->mapping->i_pages,
-> +	iov_iter_xarray(&iter, READ, &subreq->rreq->mapping->i_pages,
+Jeff Layton <jlayton@redhat.com> wrote:
 
-What's up with the WRITE -> READ change here? Was that a preexisting
-bug?
-
->  			subreq->start + subreq->transferred,
->  			subreq->len   - subreq->transferred);
->  	iov_iter_zero(iov_iter_count(&iter), &iter);
-> @@ -745,6 +745,9 @@ netfs_rreq_prepare_read(struct netfs_read_request *rreq,
->  	if (WARN_ON(subreq->len == 0))
->  		source = NETFS_INVALID_READ;
->  
-> +	iov_iter_xarray(&subreq->iter, READ, &rreq->mapping->i_pages,
-> +			subreq->start, subreq->len);
-> +
->  out:
->  	subreq->source = source;
->  	trace_netfs_sreq(subreq, netfs_sreq_trace_prepare);
-> diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-> index fe9887768292..5e4fafcc9480 100644
-> --- a/include/linux/netfs.h
-> +++ b/include/linux/netfs.h
-> @@ -17,6 +17,7 @@
->  #include <linux/workqueue.h>
->  #include <linux/fs.h>
->  #include <linux/pagemap.h>
-> +#include <linux/uio.h>
->  
->  /*
->   * Overload PG_private_2 to give us PG_fscache - this is used to indicate that
-> @@ -112,6 +113,7 @@ struct netfs_cache_resources {
->  struct netfs_read_subrequest {
->  	struct netfs_read_request *rreq;	/* Supervising read request */
->  	struct list_head	rreq_link;	/* Link in rreq->subrequests */
-> +	struct iov_iter		iter;		/* Iterator for this subrequest */
->  	loff_t			start;		/* Where to start the I/O */
->  	size_t			len;		/* Size of the I/O */
->  	size_t			transferred;	/* Amount of data transferred */
+> > -	iov_iter_xarray(&iter, WRITE, &subreq->rreq->mapping->i_pages,
+> > +	iov_iter_xarray(&iter, READ, &subreq->rreq->mapping->i_pages,
 > 
-> 
+> What's up with the WRITE -> READ change here? Was that a preexisting
+> bug?
 
--- 
-Jeff Layton <jlayton@redhat.com>
+Actually, yes - I need to split that out and send it to Linus.
+
+David
 
