@@ -2,69 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E26C3D25D8
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jul 2021 16:34:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E98AE3D26AB
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jul 2021 17:31:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232257AbhGVNxu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 22 Jul 2021 09:53:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230306AbhGVNxu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Jul 2021 09:53:50 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D7CC061575
-        for <linux-nfs@vger.kernel.org>; Thu, 22 Jul 2021 07:34:25 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id BF66F6C06; Thu, 22 Jul 2021 10:34:23 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BF66F6C06
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1626964463;
-        bh=Q6b9s+hgK3cgMIPgu7+H5W75yCavUFn9vWMzxEBJV3o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O4tMF3TYVQBeYRnFDG0MVlTGcpneXZfkj0o0cr9QKXj2ft+1U2c8W8G+601XLNJRZ
-         qaiji/H43pKZzs4D5cH8Iki7NGx+ME/6HfsUJe0UsFxRxdTX56e8UvdUBIEqjdvmeC
-         /2SQP+WYvCmETJ6Yl4J719nv8F9jf73yqrBj0Y0Q=
-Date:   Thu, 22 Jul 2021 10:34:23 -0400
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "schumakeranna@gmail.com" <schumakeranna@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "bfields@redhat.com" <bfields@redhat.com>,
-        "daire@dneg.com" <daire@dneg.com>
-Subject: Re: [PATCH 3/3] nfs: don't allow reexport reclaims
-Message-ID: <20210722143423.GB4552@fieldses.org>
-References: <1623682098-13236-1-git-send-email-bfields@redhat.com>
- <1623682098-13236-4-git-send-email-bfields@redhat.com>
- <3189d061c1e862fe305e501226fcc9ebc1fe544d.camel@hammerspace.com>
- <20210614193409.GA16500@fieldses.org>
- <7b119b40fd29c424ce4e85fa4703b472bf0d379d.camel@hammerspace.com>
- <20210614200359.GC16500@fieldses.org>
- <2c776400a50afcd3e82f71f6ecb806fda1bce984.camel@hammerspace.com>
+        id S232138AbhGVOun (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 22 Jul 2021 10:50:43 -0400
+Received: from smtpcmd11117.aruba.it ([62.149.156.117]:34155 "EHLO
+        smtpcmd11117.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232596AbhGVOun (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Jul 2021 10:50:43 -0400
+X-Greylist: delayed 420 seconds by postgrey-1.27 at vger.kernel.org; Thu, 22 Jul 2021 10:50:42 EDT
+Received: from ubuntu.localdomain ([146.241.181.181])
+        by Aruba Outgoing Smtp  with ESMTPSA
+        id 6aYZmVjCCp6qU6aYZmmc4g; Thu, 22 Jul 2021 17:24:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+        t=1626967456; bh=cQgR0Ue7X6OMHPrRjtapiqpbyrhrI3c3NFZfPXBW1fI=;
+        h=From:To:Subject:Date:MIME-Version:Content-Type;
+        b=fkO5proAiPQhapm+AhuGk0cj52wHg9Zw6NdJ8+eDrTgDnPb/UIYhr3tlIbpgLwNuE
+         mx00HwkVU72MF9lbD5/fTmHYzyCYD8jPMVlhJwWm6DiyGEgcoJeHgOWfuQouKeRJd9
+         5A7NwQO17PIIPxd74tm5Fxc55P6Pew/vEk/Hbn5ZLb+zXuwDcb2Ua3F8zW+SgbLw3m
+         MtDcKsdU12Vx4qUNuFhjLxoe8NFtt++GqKgbLC/lHQjm0kPTWHMVGK2sVoISZw4GJ9
+         ZHjO6y71KHyUXRv8kV4KVoHHWVf2DNyOYTM15X57jeWZ8uF+Ra+2Zti2sQIWSADusB
+         6QNawBmyLQbEA==
+From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     Giulio Benetti <giulio.benetti@benettiengineering.com>
+Subject: [PATCH] nfs-utils: fix time_t build error on 64-bits platforms
+Date:   Thu, 22 Jul 2021 17:24:11 +0200
+Message-Id: <20210722152411.1156295-1-giulio.benetti@benettiengineering.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2c776400a50afcd3e82f71f6ecb806fda1bce984.camel@hammerspace.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfGhSrCaSr7q+f4ozdIK53XllQFjACL2sOS2EC/h1XtB/BWiPLXncZiFoMwSGRv+hkiWhSv1WcsKOt2xo5F+1HcktR3zDlFXZleG6XpauzfjvXz+zcNov
+ Ot/I2DdDemELjqqXaNnTPjFFTbICw1pYDyYOuKvpC1AaQ8Pjky7Rtxy3FIylTlAx5LTedGNuvdKEBpnEl0EPbEBrMcfeTtOEPyvxu2F0+XbwIkWh6YIjHBGk
+ UxWehoLXwMT4q/uAwwW0kzjhisH+J7Y4ZKO2KrLS8Kk=
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jun 14, 2021 at 09:03:35PM +0000, Trond Myklebust wrote:
-> I want to avoid the kind of issues we've be met with earlier when
-> mixing types just because they happened to be integer valued.
-> 
-> We introduced the mixing of POSIX/Linux and NFS errors in the NFS
-> client back in the 1990s, and that was a mistake that we're still
-> paying for. For instance, the value ERR_PTR(-NFSERR_NO_GRACE) will be
-> happily declared as a valid pointer by the IS_ERR() test, and every so
-> often we find an Oops around that issue because someone used the return
-> value from a function that they thought was POSIX/Linux error valued,
-> because it usually is returning POSIX errors.
+When passing time_t type to "%ld" on 64-bits platforms where time_t is a
+'long long' we encouter this build failure:
+error: format ‘%ld’ expects argument of type ‘long int’, but argument 4 has type ‘time_t’ {aka ‘long long int’} [-Werror=format=]
 
-I did this, by the way, but also ran across a couple more bugs in
-testing.
+So let's change "%ld" markers to "%lld" assuming it to be a 64-bits and
+cast variables to '(long long)' if the type is a time_t.
 
-At this point I've got connectathon locking tests passing on a
-re-export--I need to do a little more cleanup and then I'll repost.
+Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
+---
+ utils/nfsdcltrack/nfsdcltrack.c | 2 +-
+ utils/nfsdcltrack/sqlite.c      | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---b.
+diff --git a/utils/nfsdcltrack/nfsdcltrack.c b/utils/nfsdcltrack/nfsdcltrack.c
+index e926f1c0..437477bb 100644
+--- a/utils/nfsdcltrack/nfsdcltrack.c
++++ b/utils/nfsdcltrack/nfsdcltrack.c
+@@ -525,7 +525,7 @@ cltrack_gracedone(const char *timestr)
+ 	if (*tail)
+ 		return -EINVAL;
+ 
+-	xlog(D_GENERAL, "%s: grace done. gracetime=%ld", __func__, gracetime);
++	xlog(D_GENERAL, "%s: grace done. gracetime=%lld", __func__, (long long)gracetime);
+ 
+ 	ret = sqlite_remove_unreclaimed(gracetime);
+ 
+diff --git a/utils/nfsdcltrack/sqlite.c b/utils/nfsdcltrack/sqlite.c
+index f79aebb3..6e603087 100644
+--- a/utils/nfsdcltrack/sqlite.c
++++ b/utils/nfsdcltrack/sqlite.c
+@@ -544,8 +544,8 @@ sqlite_remove_unreclaimed(time_t grace_start)
+ 	int ret;
+ 	char *err = NULL;
+ 
+-	ret = snprintf(buf, sizeof(buf), "DELETE FROM clients WHERE time < %ld",
+-			grace_start);
++	ret = snprintf(buf, sizeof(buf), "DELETE FROM clients WHERE time < %lld",
++			(long long)grace_start);
+ 	if (ret < 0) {
+ 		return ret;
+ 	} else if ((size_t)ret >= sizeof(buf)) {
+-- 
+2.25.1
+
