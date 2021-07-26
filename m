@@ -2,92 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF53C3D56E9
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jul 2021 11:58:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB2023D58F6
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jul 2021 13:58:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232760AbhGZJSO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Jul 2021 05:18:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54789 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232617AbhGZJSO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Jul 2021 05:18:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1627293523;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=emyki0erESW+WqQBrbNucdtV0c/SeusEDE/79NVl018=;
-        b=KTR8krytzwn+YtlWDKbIlVCHx2r7X97+KPTNiIYlcc3FjWw72PJItJVczAvETDckzZFCrD
-        ySJX4t2xFoQn3o+SXUwZDa0F+nP7OXoLLqZHD8WjxVxFubw3tO+u0iXDi5ZsWXBd16wxc7
-        G71Jb/5sX1s0s6TmBUGm5M8yUPHsPMo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-337-Gc7iHYrsNBOOMq8W_WShOg-1; Mon, 26 Jul 2021 05:58:41 -0400
-X-MC-Unique: Gc7iHYrsNBOOMq8W_WShOg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BEC05C7440;
-        Mon, 26 Jul 2021 09:58:39 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.22.16.89])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 25662797C0;
-        Mon, 26 Jul 2021 09:58:33 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] netfs: Fix READ/WRITE confusion when calling
- iov_iter_xarray()
-From:   David Howells <dhowells@redhat.com>
-To:     linux-cachefs@redhat.com
-Cc:     Jeff Layton <jlayton@kernel.org>, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        dhowells@redhat.com, linux-kernel@vger.kernel.org
-Date:   Mon, 26 Jul 2021 10:58:33 +0100
-Message-ID: <162729351325.813557.9242842205308443901.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        id S233727AbhGZLSX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Jul 2021 07:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233606AbhGZLSX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 26 Jul 2021 07:18:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A5C2B60F22
+        for <linux-nfs@vger.kernel.org>; Mon, 26 Jul 2021 11:58:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627300731;
+        bh=MMfyyZxqw5O4APMcwE3iA/CIXTgyGAHHU/8qhpzkU54=;
+        h=From:To:Subject:Date:From;
+        b=ZMUdc0VFMWXpCjZO6v/PnjWcreilpC8a+hONc/6ldUaM98crYoYBlzNL9sGda9CEN
+         QuiuoIwys3wxPpT1yosZSc9pYsR+g5LaKWJ01cxNuQ+LTlAfH/ZwwbLqaGVMSM7oXr
+         IjxZalqgsCsAZGz9mUv5WcQMCnzm8egh+WlW/AigiME9lvcBBkr8VNRSnBnWZCaHJn
+         ySXG7/vC9Nst/ZFCZVfKkS0gTYL60y/sVPbfxfXpZffsWeRBAs1Qc/uyOfeedxusub
+         ffLEtJrC/TD2mOPC6jHp0O+WY49Cd6cS4YkXeUZE3En2RS6zTOGhv2gQ8Kw/LKe6Z6
+         aRFTBIXaUDSTw==
+From:   trondmy@kernel.org
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/2] NFSv4/pNFS: Fix a layoutget livelock loop
+Date:   Mon, 26 Jul 2021 07:58:49 -0400
+Message-Id: <20210726115850.8429-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Fix netfs_clear_unread() to pass READ to iov_iter_xarray() instead of WRITE
-(the flag is about the operation accessing the buffer, not what sort of
-access it is doing to the buffer).
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Fixes: 3d3c95046742 ("netfs: Provide readahead and readpage netfs helpers")
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-cachefs@redhat.com
-cc: linux-afs@lists.infradead.org
-cc: ceph-devel@vger.kernel.org
-cc: linux-cifs@vger.kernel.org
-cc: linux-nfs@vger.kernel.org
-cc: v9fs-developer@lists.sourceforge.net
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
+If NFS_LAYOUT_RETURN_REQUESTED is set, but there is no value set for
+the layout plh_return_seq, we can end up in a livelock loop in which
+every layout segment retrieved by a new call to layoutget is immediately
+invalidated by pnfs_layout_need_return().
+To get around this, we should just set plh_return_seq to the current
+value of the layout stateid's seqid.
+
+Fixes: d474f96104bd ("NFS: Don't return layout segments that are in use")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
+ fs/nfs/pnfs.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
- fs/netfs/read_helper.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/netfs/read_helper.c b/fs/netfs/read_helper.c
-index 0b6cd3b8734c..994ec22d4040 100644
---- a/fs/netfs/read_helper.c
-+++ b/fs/netfs/read_helper.c
-@@ -150,7 +150,7 @@ static void netfs_clear_unread(struct netfs_read_subrequest *subreq)
- {
- 	struct iov_iter iter;
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index 4ed4586bc1a2..51049499e98f 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -347,11 +347,15 @@ pnfs_set_plh_return_info(struct pnfs_layout_hdr *lo, enum pnfs_iomode iomode,
+ 		iomode = IOMODE_ANY;
+ 	lo->plh_return_iomode = iomode;
+ 	set_bit(NFS_LAYOUT_RETURN_REQUESTED, &lo->plh_flags);
+-	if (seq != 0) {
+-		WARN_ON_ONCE(lo->plh_return_seq != 0 && lo->plh_return_seq != seq);
++	/*
++	 * We must set lo->plh_return_seq to avoid livelocks with
++	 * pnfs_layout_need_return()
++	 */
++	if (seq == 0)
++		seq = be32_to_cpu(lo->plh_stateid.seqid);
++	if (!lo->plh_return_seq || pnfs_seqid_is_newer(seq, lo->plh_return_seq))
+ 		lo->plh_return_seq = seq;
+-		pnfs_barrier_update(lo, seq);
+-	}
++	pnfs_barrier_update(lo, seq);
+ }
  
--	iov_iter_xarray(&iter, WRITE, &subreq->rreq->mapping->i_pages,
-+	iov_iter_xarray(&iter, READ, &subreq->rreq->mapping->i_pages,
- 			subreq->start + subreq->transferred,
- 			subreq->len   - subreq->transferred);
- 	iov_iter_zero(iov_iter_count(&iter), &iter);
-
+ static void
+-- 
+2.31.1
 
