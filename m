@@ -2,184 +2,232 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB72D3D5C0F
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jul 2021 16:47:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFE733D63AE
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jul 2021 18:44:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234579AbhGZOGn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Jul 2021 10:06:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234032AbhGZOGm (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 26 Jul 2021 10:06:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 35F9860EB2;
-        Mon, 26 Jul 2021 14:47:11 +0000 (UTC)
-Subject: [PATCH v1 3/3] svcrdma: Convert rdma->sc_rw_ctxts to llist
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date:   Mon, 26 Jul 2021 10:47:10 -0400
-Message-ID: <162731083051.13580.14827164285152793745.stgit@klimt.1015granger.net>
-In-Reply-To: <162731055652.13580.8774661104190191089.stgit@klimt.1015granger.net>
-References: <162731055652.13580.8774661104190191089.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.1
+        id S239078AbhGZPub (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Jul 2021 11:50:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23408 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237909AbhGZPuP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Jul 2021 11:50:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1627317043;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/A1LupBXmdSXOW41a3SrqoRejiXwTb/03suhZ1TeZrc=;
+        b=LjeOdCo+tixqEVaTOGWMAGVYP4i6YR44oASWHqC7e0CcepgwqD2h4IVp8UxfLYgIJXF3Iy
+        Z4wAkKVso1zKy6w/TyhvaGPPx00k/E5qoV3Kp1HAXKaejtq7RsXHF/LH4gTSQwf4RZmh/l
+        dk9G/Xb7NZn2LR3TIQXrOmLCieUgofQ=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-390-pwFFFFOAOOqXJtoJNEz2Iw-1; Mon, 26 Jul 2021 12:30:42 -0400
+X-MC-Unique: pwFFFFOAOOqXJtoJNEz2Iw-1
+Received: by mail-qk1-f198.google.com with SMTP id bm25-20020a05620a1999b02903a9c3f8b89fso9445957qkb.2
+        for <linux-nfs@vger.kernel.org>; Mon, 26 Jul 2021 09:30:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/A1LupBXmdSXOW41a3SrqoRejiXwTb/03suhZ1TeZrc=;
+        b=bE0WKQr9SGYRcZyBklplENVGf3biF0oAoq5RX0CYDR2oN7DuEErd3mJWBytDQ3nxtT
+         ovofxingLvjbjHLMxvi4Qf22gxhzCx/KrTrm4aWYgo6+UYWBsG1mPE4IexhxwspJRio4
+         ioDUseqDIO2hF3PCRt/PwIP4jAJNzzkrb44yPUlIr3rLZeOIFMiUinmYO9Oa5mAH/KTR
+         Vwfyc93+WWe1DhKZS3NAwWqqUV7i7STih3KsrumZypOsk1OTVGPpY/j1yaVozypZJdHc
+         qvsjZGnVVlpUgSW4Uhi+2amw0+lNNs11QdA9gndfeHiN/UcZ6jSCyYwzorCByfO6tKFK
+         6xAg==
+X-Gm-Message-State: AOAM5328wEaWPFprG/vMrnKSOG6NfZ+NfoZDfTbl3flohHnKZOw0xUKf
+        Qdoto2P2tknNczUQ3hPg58DZfYzw2P156eQ9NTCUhBzdvKcltcYTm2deDKynEO4FVWuNONekko6
+        IvvOtebA7QsRlFlzD+KoZPVOeP7x1yILuTtLiyFDanFNBWxCFD+AZtScTQpZrlZR6mCFBCA==
+X-Received: by 2002:ac8:5546:: with SMTP id o6mr15918051qtr.69.1627317041628;
+        Mon, 26 Jul 2021 09:30:41 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzrjuRlOEvolrXp+kWjsewHmUybLbIpZEbBGwmjhXonmGXbqgM1MZKdmuok+ymVY/rzZ4uicA==
+X-Received: by 2002:ac8:5546:: with SMTP id o6mr15918031qtr.69.1627317041359;
+        Mon, 26 Jul 2021 09:30:41 -0700 (PDT)
+Received: from madhat.boston.devel.redhat.com ([70.109.164.82])
+        by smtp.gmail.com with ESMTPSA id v4sm230379qkf.52.2021.07.26.09.30.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Jul 2021 09:30:40 -0700 (PDT)
+Subject: Re: [PATCH 1/1] Fix non-default statedir paths.
+To:     James Hilliard <james.hilliard1@gmail.com>,
+        linux-nfs@vger.kernel.org
+References: <20210712140634.4151943-1-james.hilliard1@gmail.com>
+From:   Steve Dickson <steved@redhat.com>
+Message-ID: <acd44eb9-9b0d-1494-d438-4c3d114ac5ad@redhat.com>
+Date:   Mon, 26 Jul 2021 12:30:40 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20210712140634.4151943-1-james.hilliard1@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Relieve contention on sc_rw_ctxt_lock by converting rdma->sc_rw_ctxts
-to an llist.
 
-The goal is to reduce the average overhead of Send completions,
-because a transport's completion handlers are single-threaded on
-one CPU core. This change reduces CPU utilization of each Send
-completion by 2-3% on my server.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- include/linux/sunrpc/svc_rdma.h          |    2 +
- net/sunrpc/xprtrdma/svc_rdma_rw.c        |   49 +++++++++++++++++++++---------
- net/sunrpc/xprtrdma/svc_rdma_transport.c |    2 +
- 3 files changed, 37 insertions(+), 16 deletions(-)
+On 7/12/21 10:06 AM, James Hilliard wrote:
+> Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
+Committed... (tag: nfs-utils-2-5-5-rc1)
 
-diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index 5f8d5af6556c..24aa159d29a7 100644
---- a/include/linux/sunrpc/svc_rdma.h
-+++ b/include/linux/sunrpc/svc_rdma.h
-@@ -92,7 +92,7 @@ struct svcxprt_rdma {
- 	spinlock_t	     sc_send_lock;
- 	struct llist_head    sc_send_ctxts;
- 	spinlock_t	     sc_rw_ctxt_lock;
--	struct list_head     sc_rw_ctxts;
-+	struct llist_head    sc_rw_ctxts;
- 
- 	u32		     sc_pending_recvs;
- 	u32		     sc_recv_batch;
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index 3d1b119f6e3e..e27433f08ca7 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -35,6 +35,7 @@ static void svc_rdma_wc_read_done(struct ib_cq *cq, struct ib_wc *wc);
-  * controlling svcxprt_rdma is destroyed.
-  */
- struct svc_rdma_rw_ctxt {
-+	struct llist_node	rw_node;
- 	struct list_head	rw_list;
- 	struct rdma_rw_ctx	rw_ctx;
- 	unsigned int		rw_nents;
-@@ -53,19 +54,19 @@ static struct svc_rdma_rw_ctxt *
- svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
- {
- 	struct svc_rdma_rw_ctxt *ctxt;
-+	struct llist_node *node;
- 
- 	spin_lock(&rdma->sc_rw_ctxt_lock);
--
--	ctxt = svc_rdma_next_ctxt(&rdma->sc_rw_ctxts);
--	if (ctxt) {
--		list_del(&ctxt->rw_list);
--		spin_unlock(&rdma->sc_rw_ctxt_lock);
-+	node = llist_del_first(&rdma->sc_rw_ctxts);
-+	spin_unlock(&rdma->sc_rw_ctxt_lock);
-+	if (node) {
-+		ctxt = llist_entry(node, struct svc_rdma_rw_ctxt, rw_node);
- 	} else {
--		spin_unlock(&rdma->sc_rw_ctxt_lock);
- 		ctxt = kmalloc(struct_size(ctxt, rw_first_sgl, SG_CHUNK_SIZE),
- 			       GFP_KERNEL);
- 		if (!ctxt)
- 			goto out_noctx;
-+
- 		INIT_LIST_HEAD(&ctxt->rw_list);
- 	}
- 
-@@ -83,14 +84,18 @@ svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
- 	return NULL;
- }
- 
--static void svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
--				 struct svc_rdma_rw_ctxt *ctxt)
-+static void __svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
-+				   struct svc_rdma_rw_ctxt *ctxt,
-+				   struct llist_head *list)
- {
- 	sg_free_table_chained(&ctxt->rw_sg_table, SG_CHUNK_SIZE);
-+	llist_add(&ctxt->rw_node, list);
-+}
- 
--	spin_lock(&rdma->sc_rw_ctxt_lock);
--	list_add(&ctxt->rw_list, &rdma->sc_rw_ctxts);
--	spin_unlock(&rdma->sc_rw_ctxt_lock);
-+static void svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
-+				 struct svc_rdma_rw_ctxt *ctxt)
-+{
-+	__svc_rdma_put_rw_ctxt(rdma, ctxt, &rdma->sc_rw_ctxts);
- }
- 
- /**
-@@ -101,9 +106,10 @@ static void svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
- void svc_rdma_destroy_rw_ctxts(struct svcxprt_rdma *rdma)
- {
- 	struct svc_rdma_rw_ctxt *ctxt;
-+	struct llist_node *node;
- 
--	while ((ctxt = svc_rdma_next_ctxt(&rdma->sc_rw_ctxts)) != NULL) {
--		list_del(&ctxt->rw_list);
-+	while ((node = llist_del_first(&rdma->sc_rw_ctxts)) != NULL) {
-+		ctxt = llist_entry(node, struct svc_rdma_rw_ctxt, rw_node);
- 		kfree(ctxt);
- 	}
- }
-@@ -171,20 +177,35 @@ static void svc_rdma_cc_init(struct svcxprt_rdma *rdma,
- 	cc->cc_sqecount = 0;
- }
- 
-+/*
-+ * The consumed rw_ctx's are cleaned and placed on a local llist so
-+ * that only one atomic llist operation is needed to put them all
-+ * back on the free list.
-+ */
- static void svc_rdma_cc_release(struct svc_rdma_chunk_ctxt *cc,
- 				enum dma_data_direction dir)
- {
- 	struct svcxprt_rdma *rdma = cc->cc_rdma;
-+	struct llist_node *first, *last;
- 	struct svc_rdma_rw_ctxt *ctxt;
-+	LLIST_HEAD(free);
- 
-+	first = last = NULL;
- 	while ((ctxt = svc_rdma_next_ctxt(&cc->cc_rwctxts)) != NULL) {
- 		list_del(&ctxt->rw_list);
- 
- 		rdma_rw_ctx_destroy(&ctxt->rw_ctx, rdma->sc_qp,
- 				    rdma->sc_port_num, ctxt->rw_sg_table.sgl,
- 				    ctxt->rw_nents, dir);
--		svc_rdma_put_rw_ctxt(rdma, ctxt);
-+		__svc_rdma_put_rw_ctxt(rdma, ctxt, &free);
-+
-+		ctxt->rw_node.next = first;
-+		first = &ctxt->rw_node;
-+		if (!last)
-+			last = first;
- 	}
-+	if (first)
-+		llist_add_batch(first, last, &rdma->sc_rw_ctxts);
- }
- 
- /* State for sending a Write or Reply chunk.
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-index 99474078c304..d1faa522c3dd 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-@@ -138,7 +138,7 @@ static struct svcxprt_rdma *svc_rdma_create_xprt(struct svc_serv *serv,
- 	INIT_LIST_HEAD(&cma_xprt->sc_rq_dto_q);
- 	init_llist_head(&cma_xprt->sc_send_ctxts);
- 	init_llist_head(&cma_xprt->sc_recv_ctxts);
--	INIT_LIST_HEAD(&cma_xprt->sc_rw_ctxts);
-+	init_llist_head(&cma_xprt->sc_rw_ctxts);
- 	init_waitqueue_head(&cma_xprt->sc_send_wait);
- 
- 	spin_lock_init(&cma_xprt->sc_lock);
-
+steved
+> ---
+>   configure.ac                                  | 19 +++++++++++++++++++
+>   systemd/Makefile.am                           |  5 ++++-
+>   systemd/rpc-pipefs-generator.c                |  2 +-
+>   systemd/rpc_pipefs.target                     |  3 ---
+>   systemd/rpc_pipefs.target.in                  |  3 +++
+>   ....mount => var-lib-nfs-rpc_pipefs.mount.in} |  2 +-
+>   utils/blkmapd/device-discovery.c              |  2 +-
+>   utils/gssd/gssd.h                             |  2 +-
+>   utils/idmapd/idmapd.c                         |  2 +-
+>   9 files changed, 31 insertions(+), 9 deletions(-)
+>   delete mode 100644 systemd/rpc_pipefs.target
+>   create mode 100644 systemd/rpc_pipefs.target.in
+>   rename systemd/{var-lib-nfs-rpc_pipefs.mount => var-lib-nfs-rpc_pipefs.mount.in} (84%)
+> 
+> diff --git a/configure.ac b/configure.ac
+> index 93520a80..bc2d0f02 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -688,9 +688,28 @@ AC_SUBST([ACLOCAL_AMFLAGS], ["-I $ac_macro_dir \$(ACLOCAL_FLAGS)"])
+>   AC_SUBST([_sysconfdir])
+>   AC_CONFIG_COMMANDS_PRE([eval eval _sysconfdir=$sysconfdir])
+>   
+> +# make _statedir available for substituion in config files
+> +# 2 "evals" needed late to expand variable names.
+> +AC_SUBST([_statedir])
+> +AC_CONFIG_COMMANDS_PRE([eval eval _statedir=$statedir])
+> +
+> +if test "$statedir" = "/var/lib/nfs"; then
+> +	rpc_pipefsmount="var-lib-nfs-rpc_pipefs.mount"
+> +else
+> +	rpc_pipefsmount="$(systemd-escape -p "$statedir/rpc_pipefs").mount"
+> +fi
+> +AC_SUBST(rpc_pipefsmount)
+> +
+> +# make _rpc_pipefsmount available for substituion in config files
+> +# 2 "evals" needed late to expand variable names.
+> +AC_SUBST([_rpc_pipefsmount])
+> +AC_CONFIG_COMMANDS_PRE([eval eval _rpc_pipefsmount=$rpc_pipefsmount])
+> +
+>   AC_CONFIG_FILES([
+>   	Makefile
+>   	systemd/rpc-gssd.service
+> +	systemd/rpc_pipefs.target
+> +	systemd/var-lib-nfs-rpc_pipefs.mount
+>   	linux-nfs/Makefile
+>   	support/Makefile
+>   	support/export/Makefile
+> diff --git a/systemd/Makefile.am b/systemd/Makefile.am
+> index 650ad25c..8c7b676f 100644
+> --- a/systemd/Makefile.am
+> +++ b/systemd/Makefile.am
+> @@ -12,7 +12,9 @@ unit_files =  \
+>       rpc-statd-notify.service \
+>       rpc-statd.service \
+>       \
+> -    proc-fs-nfsd.mount \
+> +    proc-fs-nfsd.mount
+> +
+> +rpc_pipefs_mount_file = \
+>       var-lib-nfs-rpc_pipefs.mount
+>   
+>   if CONFIG_NFSV4
+> @@ -75,4 +77,5 @@ genexec_PROGRAMS = nfs-server-generator rpc-pipefs-generator
+>   install-data-hook: $(unit_files)
+>   	mkdir -p $(DESTDIR)/$(unitdir)
+>   	cp $(unit_files) $(DESTDIR)/$(unitdir)
+> +	cp $(rpc_pipefs_mount_file) $(DESTDIR)/$(unitdir)/$(rpc_pipefsmount)
+>   endif
+> diff --git a/systemd/rpc-pipefs-generator.c b/systemd/rpc-pipefs-generator.c
+> index 8e218aa7..c24db567 100644
+> --- a/systemd/rpc-pipefs-generator.c
+> +++ b/systemd/rpc-pipefs-generator.c
+> @@ -21,7 +21,7 @@
+>   #include "conffile.h"
+>   #include "systemd.h"
+>   
+> -#define RPC_PIPEFS_DEFAULT "/var/lib/nfs/rpc_pipefs"
+> +#define RPC_PIPEFS_DEFAULT NFS_STATEDIR "/rpc_pipefs"
+>   
+>   static int generate_mount_unit(const char *pipefs_path, const char *pipefs_unit,
+>   			       const char *dirname)
+> diff --git a/systemd/rpc_pipefs.target b/systemd/rpc_pipefs.target
+> deleted file mode 100644
+> index 01d4d278..00000000
+> --- a/systemd/rpc_pipefs.target
+> +++ /dev/null
+> @@ -1,3 +0,0 @@
+> -[Unit]
+> -Requires=var-lib-nfs-rpc_pipefs.mount
+> -After=var-lib-nfs-rpc_pipefs.mount
+> diff --git a/systemd/rpc_pipefs.target.in b/systemd/rpc_pipefs.target.in
+> new file mode 100644
+> index 00000000..332f62b6
+> --- /dev/null
+> +++ b/systemd/rpc_pipefs.target.in
+> @@ -0,0 +1,3 @@
+> +[Unit]
+> +Requires=@_rpc_pipefsmount@
+> +After=@_rpc_pipefsmount@
+> diff --git a/systemd/var-lib-nfs-rpc_pipefs.mount b/systemd/var-lib-nfs-rpc_pipefs.mount.in
+> similarity index 84%
+> rename from systemd/var-lib-nfs-rpc_pipefs.mount
+> rename to systemd/var-lib-nfs-rpc_pipefs.mount.in
+> index 26d1c763..4c5d6ce4 100644
+> --- a/systemd/var-lib-nfs-rpc_pipefs.mount
+> +++ b/systemd/var-lib-nfs-rpc_pipefs.mount.in
+> @@ -6,5 +6,5 @@ Conflicts=umount.target
+>   
+>   [Mount]
+>   What=sunrpc
+> -Where=/var/lib/nfs/rpc_pipefs
+> +Where=@_statedir@/rpc_pipefs
+>   Type=rpc_pipefs
+> diff --git a/utils/blkmapd/device-discovery.c b/utils/blkmapd/device-discovery.c
+> index 77ebe736..2736ac89 100644
+> --- a/utils/blkmapd/device-discovery.c
+> +++ b/utils/blkmapd/device-discovery.c
+> @@ -63,7 +63,7 @@
+>   #define EVENT_SIZE (sizeof(struct inotify_event))
+>   #define EVENT_BUFSIZE (1024 * EVENT_SIZE)
+>   
+> -#define RPCPIPE_DIR	"/var/lib/nfs/rpc_pipefs"
+> +#define RPCPIPE_DIR	NFS_STATEDIR "/rpc_pipefs"
+>   #define PID_FILE	"/run/blkmapd.pid"
+>   
+>   #define CONF_SAVE(w, f) do {			\
+> diff --git a/utils/gssd/gssd.h b/utils/gssd/gssd.h
+> index c52c5b48..519dc431 100644
+> --- a/utils/gssd/gssd.h
+> +++ b/utils/gssd/gssd.h
+> @@ -39,7 +39,7 @@
+>   #include <pthread.h>
+>   
+>   #ifndef GSSD_PIPEFS_DIR
+> -#define GSSD_PIPEFS_DIR		"/var/lib/nfs/rpc_pipefs"
+> +#define GSSD_PIPEFS_DIR		NFS_STATEDIR "/rpc_pipefs"
+>   #endif
+>   #define DNOTIFY_SIGNAL		(SIGRTMIN + 3)
+>   
+> diff --git a/utils/idmapd/idmapd.c b/utils/idmapd/idmapd.c
+> index 51c71fbb..e2c160e8 100644
+> --- a/utils/idmapd/idmapd.c
+> +++ b/utils/idmapd/idmapd.c
+> @@ -73,7 +73,7 @@
+>   #include "nfslib.h"
+>   
+>   #ifndef PIPEFS_DIR
+> -#define PIPEFS_DIR  "/var/lib/nfs/rpc_pipefs/"
+> +#define PIPEFS_DIR  NFS_STATEDIR "/rpc_pipefs/"
+>   #endif
+>   
+>   #ifndef NFSD_DIR
+> 
 
