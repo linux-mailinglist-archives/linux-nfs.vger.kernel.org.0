@@ -2,35 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 122513D5902
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jul 2021 13:59:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EC873D5911
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jul 2021 14:01:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233821AbhGZLS6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Jul 2021 07:18:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37522 "EHLO mail.kernel.org"
+        id S233883AbhGZLVB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Jul 2021 07:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233824AbhGZLS4 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 26 Jul 2021 07:18:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8B7BA60F4F
-        for <linux-nfs@vger.kernel.org>; Mon, 26 Jul 2021 11:59:25 +0000 (UTC)
+        id S233763AbhGZLVA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 26 Jul 2021 07:21:00 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BF0BF60F38;
+        Mon, 26 Jul 2021 12:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627300765;
-        bh=0poQSGhZAIj00Xj+7V3yRetui+9NrotTiv9dLx9yQEg=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=gnu9H6IHxUIs96xdPWmnW4kMYY0gQmXGWN2OuXlWSddePQQa64VPVvNP1dz7grXHC
-         RppT1EuLMfg2QuG/hL/xEkvZuM5p23F9NApdy859M5+CEsNZBGiyDYbxPnUj5DLije
-         XYW9wYPXwt3YKOU7iETwuHvRAkvIuG0hqqjqEZ4Vt3G4W04eyvyX797dOEenZlUBIv
-         pSo3c8jsHdqF04wo7NfTit8LO1JvynV3WwSl04pI7G1p+U4kw5fpCADhKN8PuasRYk
-         yFwgM801D32kgsHeZjT5gYYe2Kf8+T3Dt7QsLsyfk+t8y5ohZCA+4eIWu24hM3sTY3
-         nmVFNg4XJ+KyA==
+        s=k20201202; t=1627300889;
+        bh=N3G3NiVUjTCiY+tdpZHdz09FNW1fKXk7tFUNLmVTacI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=csCmgrPxs9djyG6Dzy1S4Lw1xNaGW0OU49jJiAxoCwOpz6kcF98QU9AwDH8FjCf7P
+         L75pR4IrQD4SGf4IdGw/LcGSR6K6GZtSL5uZscOC/0GlWFvdeZuG/hJ0arZiRknBGR
+         jzvjW3xr0qOMNXW1R73G4ymhoZ/uavu8OtZWNhoGZwcZ7pw6jEx+OXPzZqojsAJm4d
+         wmJTp5pranKtLofLC8mz79+oM4vNjbcOEMrnqzwUytb3+rWPSxTQVeZtSYCFpOKRLM
+         IWAQyJPW8pZuc54h6uxkh/fgvNl1ZDlh2+Nq06xtqDiadayPripAU7Xnrl5R2EhrWe
+         oTL2SRMlb2fRg==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] SUNRPC: Clean up scheduling of autoclose
-Date:   Mon, 26 Jul 2021 07:59:24 -0400
-Message-Id: <20210726115924.8576-2-trondmy@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH] SUNRPC: Convert rpc_client refcount to use refcount_t
+Date:   Mon, 26 Jul 2021 08:01:27 -0400
+Message-Id: <20210726120127.8700-1-trondmy@kernel.org>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210726115924.8576-1-trondmy@kernel.org>
-References: <20210726115924.8576-1-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -39,67 +38,152 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Consolidate duplicated code in xprt_force_disconnect() and
-xprt_conditional_disconnect().
+There are now tools in the refcount library that allow us to convert the
+client shutdown code.
 
+Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- net/sunrpc/xprt.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ include/linux/sunrpc/clnt.h          |  3 ++-
+ net/sunrpc/auth_gss/gss_rpc_upcall.c |  2 +-
+ net/sunrpc/clnt.c                    | 22 ++++++++++------------
+ net/sunrpc/debugfs.c                 |  2 +-
+ net/sunrpc/rpc_pipe.c                |  2 +-
+ 5 files changed, 15 insertions(+), 16 deletions(-)
 
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index bddd354a0076..aae5a328b15b 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -760,6 +760,20 @@ void xprt_disconnect_done(struct rpc_xprt *xprt)
- }
- EXPORT_SYMBOL_GPL(xprt_disconnect_done);
+diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
+index 8b5d5c97553e..b2edd5fc2f0c 100644
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -14,6 +14,7 @@
+ #include <linux/socket.h>
+ #include <linux/in.h>
+ #include <linux/in6.h>
++#include <linux/refcount.h>
  
-+/**
-+ * xprt_schedule_autoclose_locked - Try to schedule an autoclose RPC call
-+ * @xprt: transport to disconnect
-+ */
-+static void xprt_schedule_autoclose_locked(struct rpc_xprt *xprt)
-+{
-+	set_bit(XPRT_CLOSE_WAIT, &xprt->state);
-+	if (test_and_set_bit(XPRT_LOCKED, &xprt->state) == 0)
-+		queue_work(xprtiod_workqueue, &xprt->task_cleanup);
-+	else if (xprt->snd_task && !test_bit(XPRT_SND_IS_COOKIE, &xprt->state))
-+		rpc_wake_up_queued_task_set_status(&xprt->pending,
-+						   xprt->snd_task, -ENOTCONN);
-+}
-+
- /**
-  * xprt_force_disconnect - force a transport to disconnect
-  * @xprt: transport to disconnect
-@@ -771,13 +785,7 @@ void xprt_force_disconnect(struct rpc_xprt *xprt)
+ #include <linux/sunrpc/msg_prot.h>
+ #include <linux/sunrpc/sched.h>
+@@ -35,7 +36,7 @@ struct rpc_sysfs_client;
+  * The high-level client handle
+  */
+ struct rpc_clnt {
+-	atomic_t		cl_count;	/* Number of references */
++	refcount_t		cl_count;	/* Number of references */
+ 	unsigned int		cl_clid;	/* client id */
+ 	struct list_head	cl_clients;	/* Global list of clients */
+ 	struct list_head	cl_tasks;	/* List of tasks */
+diff --git a/net/sunrpc/auth_gss/gss_rpc_upcall.c b/net/sunrpc/auth_gss/gss_rpc_upcall.c
+index d1c003a25b0f..61c276bddaf2 100644
+--- a/net/sunrpc/auth_gss/gss_rpc_upcall.c
++++ b/net/sunrpc/auth_gss/gss_rpc_upcall.c
+@@ -160,7 +160,7 @@ static struct rpc_clnt *get_gssp_clnt(struct sunrpc_net *sn)
+ 	mutex_lock(&sn->gssp_lock);
+ 	clnt = sn->gssp_clnt;
+ 	if (clnt)
+-		atomic_inc(&clnt->cl_count);
++		refcount_inc(&clnt->cl_count);
+ 	mutex_unlock(&sn->gssp_lock);
+ 	return clnt;
+ }
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 8b4de70e8ead..9952fc0b1de6 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -167,7 +167,7 @@ static int rpc_clnt_skip_event(struct rpc_clnt *clnt, unsigned long event)
+ 	case RPC_PIPEFS_MOUNT:
+ 		if (clnt->cl_pipedir_objects.pdh_dentry != NULL)
+ 			return 1;
+-		if (atomic_read(&clnt->cl_count) == 0)
++		if (refcount_read(&clnt->cl_count) == 0)
+ 			return 1;
+ 		break;
+ 	case RPC_PIPEFS_UMOUNT:
+@@ -419,7 +419,7 @@ static struct rpc_clnt * rpc_new_client(const struct rpc_create_args *args,
+ 	clnt->cl_rtt = &clnt->cl_rtt_default;
+ 	rpc_init_rtt(&clnt->cl_rtt_default, clnt->cl_timeout->to_initval);
  
- 	/* Don't race with the test_bit() in xprt_clear_locked() */
- 	spin_lock(&xprt->transport_lock);
--	set_bit(XPRT_CLOSE_WAIT, &xprt->state);
--	/* Try to schedule an autoclose RPC call */
--	if (test_and_set_bit(XPRT_LOCKED, &xprt->state) == 0)
--		queue_work(xprtiod_workqueue, &xprt->task_cleanup);
--	else if (xprt->snd_task && !test_bit(XPRT_SND_IS_COOKIE, &xprt->state))
--		rpc_wake_up_queued_task_set_status(&xprt->pending,
--						   xprt->snd_task, -ENOTCONN);
-+	xprt_schedule_autoclose_locked(xprt);
- 	spin_unlock(&xprt->transport_lock);
+-	atomic_set(&clnt->cl_count, 1);
++	refcount_set(&clnt->cl_count, 1);
+ 
+ 	if (nodename == NULL)
+ 		nodename = utsname()->nodename;
+@@ -431,7 +431,7 @@ static struct rpc_clnt * rpc_new_client(const struct rpc_create_args *args,
+ 	if (err)
+ 		goto out_no_path;
+ 	if (parent)
+-		atomic_inc(&parent->cl_count);
++		refcount_inc(&parent->cl_count);
+ 
+ 	trace_rpc_clnt_new(clnt, xprt, program->name, args->servername);
+ 	return clnt;
+@@ -918,18 +918,16 @@ rpc_free_client(struct rpc_clnt *clnt)
+ static struct rpc_clnt *
+ rpc_free_auth(struct rpc_clnt *clnt)
+ {
+-	if (clnt->cl_auth == NULL)
+-		return rpc_free_client(clnt);
+-
+ 	/*
+ 	 * Note: RPCSEC_GSS may need to send NULL RPC calls in order to
+ 	 *       release remaining GSS contexts. This mechanism ensures
+ 	 *       that it can do so safely.
+ 	 */
+-	atomic_inc(&clnt->cl_count);
+-	rpcauth_release(clnt->cl_auth);
+-	clnt->cl_auth = NULL;
+-	if (atomic_dec_and_test(&clnt->cl_count))
++	if (clnt->cl_auth != NULL) {
++		rpcauth_release(clnt->cl_auth);
++		clnt->cl_auth = NULL;
++	}
++	if (refcount_dec_and_test(&clnt->cl_count))
+ 		return rpc_free_client(clnt);
+ 	return NULL;
  }
- EXPORT_SYMBOL_GPL(xprt_force_disconnect);
-@@ -817,11 +825,7 @@ void xprt_conditional_disconnect(struct rpc_xprt *xprt, unsigned int cookie)
- 		goto out;
- 	if (test_bit(XPRT_CLOSING, &xprt->state))
- 		goto out;
--	set_bit(XPRT_CLOSE_WAIT, &xprt->state);
--	/* Try to schedule an autoclose RPC call */
--	if (test_and_set_bit(XPRT_LOCKED, &xprt->state) == 0)
--		queue_work(xprtiod_workqueue, &xprt->task_cleanup);
--	xprt_wake_pending_tasks(xprt, -EAGAIN);
-+	xprt_schedule_autoclose_locked(xprt);
- out:
- 	spin_unlock(&xprt->transport_lock);
- }
+@@ -943,7 +941,7 @@ rpc_release_client(struct rpc_clnt *clnt)
+ 	do {
+ 		if (list_empty(&clnt->cl_tasks))
+ 			wake_up(&destroy_wait);
+-		if (!atomic_dec_and_test(&clnt->cl_count))
++		if (refcount_dec_not_one(&clnt->cl_count))
+ 			break;
+ 		clnt = rpc_free_auth(clnt);
+ 	} while (clnt != NULL);
+@@ -1082,7 +1080,7 @@ void rpc_task_set_client(struct rpc_task *task, struct rpc_clnt *clnt)
+ 	if (clnt != NULL) {
+ 		rpc_task_set_transport(task, clnt);
+ 		task->tk_client = clnt;
+-		atomic_inc(&clnt->cl_count);
++		refcount_inc(&clnt->cl_count);
+ 		if (clnt->cl_softrtry)
+ 			task->tk_flags |= RPC_TASK_SOFT;
+ 		if (clnt->cl_softerr)
+diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
+index 56029e3af6ff..79995eb95927 100644
+--- a/net/sunrpc/debugfs.c
++++ b/net/sunrpc/debugfs.c
+@@ -90,7 +90,7 @@ static int tasks_open(struct inode *inode, struct file *filp)
+ 		struct seq_file *seq = filp->private_data;
+ 		struct rpc_clnt *clnt = seq->private = inode->i_private;
+ 
+-		if (!atomic_inc_not_zero(&clnt->cl_count)) {
++		if (!refcount_inc_not_zero(&clnt->cl_count)) {
+ 			seq_release(inode, filp);
+ 			ret = -EINVAL;
+ 		}
+diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+index 09c000d490a1..ee5336d73fdd 100644
+--- a/net/sunrpc/rpc_pipe.c
++++ b/net/sunrpc/rpc_pipe.c
+@@ -423,7 +423,7 @@ rpc_info_open(struct inode *inode, struct file *file)
+ 		spin_lock(&file->f_path.dentry->d_lock);
+ 		if (!d_unhashed(file->f_path.dentry))
+ 			clnt = RPC_I(inode)->private;
+-		if (clnt != NULL && atomic_inc_not_zero(&clnt->cl_count)) {
++		if (clnt != NULL && refcount_inc_not_zero(&clnt->cl_count)) {
+ 			spin_unlock(&file->f_path.dentry->d_lock);
+ 			m->private = clnt;
+ 		} else {
 -- 
 2.31.1
 
