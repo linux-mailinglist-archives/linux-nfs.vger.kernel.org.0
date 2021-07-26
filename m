@@ -2,231 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 317853D4FE3
-	for <lists+linux-nfs@lfdr.de>; Sun, 25 Jul 2021 22:30:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD6F63D56C3
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jul 2021 11:44:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229831AbhGYTuN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 25 Jul 2021 15:50:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229661AbhGYTuN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 25 Jul 2021 15:50:13 -0400
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37208C061757
-        for <linux-nfs@vger.kernel.org>; Sun, 25 Jul 2021 13:30:43 -0700 (PDT)
-Received: by mail-ot1-x335.google.com with SMTP id i39-20020a9d17270000b02904cf73f54f4bso6104837ota.2
-        for <linux-nfs@vger.kernel.org>; Sun, 25 Jul 2021 13:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2J3NMXkYptRaw/YXqza4EYHpdBv9ptv6anPg8Kz5q+0=;
-        b=NJP2eMVa4NXutVST+Rn6rWWZZUmPvHxdZliNyEQvmUwU3aoat8fZD0zB/HypY+Fu8k
-         oICPp34x10JizXe9Fp4L2fJ2MxS0n3PKJjfDVss3MyICiALIQYHLdvCpOAagRG4+hejt
-         68ID1e53jy10A2PlPdy5MMh+5Ywd8rE5uUh6STQuelsWU2Lp3qP99IYcTasZTVNQ/TdP
-         i7jYOXlO93fRQJPbDZ0bdcDhSHtE737Ms9T1HPzGt/ee/XCPaxv4GUqMlj6j/JZpXy9F
-         PBOEQBX9uAJwei1mVvmih4PzmVCdknHGC+bIj9gq/FqQiK2+5hebZGa8m4DzE90pCYzR
-         NHTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2J3NMXkYptRaw/YXqza4EYHpdBv9ptv6anPg8Kz5q+0=;
-        b=fcnOCqUooR21EzTx2MrI5THc0bsgo/MrHFtgRpgih1MQ6mf6See71c96DWcYMQAy7X
-         gdacSZTiJADuo4qvi88wIhjPRfp//Ka4wjW7xpM9Gl6aa+86mGGOdSSQ5bZaM1HTG8JW
-         72nN5FrEPK5uY3wF8DLz1Qb2w8SvMVuafH2V3oQCwfCc+eLbCdYN/SgzgAhv2yoArAA0
-         n7ffXTUjFxJNZ52uKG8gjlYx4EFZYsVB+o1gq6E4/CvAR+lsUqBqd5cVrv/jV6WBTdS6
-         AQwYDjwn2cnctG0uxKqiPdVxz/161Ue1snzhgv/Bv3XNiqGrH93mVDcU40p/Wb81S410
-         WtHg==
-X-Gm-Message-State: AOAM531uc6BSiTueB87IUdfjIChtyzKiAVxfrV6j7MXBMsFC7ACjySnZ
-        35iY5lYTZ5cai9LrlED7KSmt/1yPOnqzFpgj84c=
-X-Google-Smtp-Source: ABdhPJxcJkPZehOsF9NvmAuCBtWAFzLwUeQaoCnrZFOLqza3Pk9BHmsE0uFBJ3eAU39Q/q6BkYt+JJ0DQknYTs6SjEo=
-X-Received: by 2002:a9d:5f87:: with SMTP id g7mr7884374oti.278.1627245041993;
- Sun, 25 Jul 2021 13:30:41 -0700 (PDT)
+        id S232628AbhGZJEU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Jul 2021 05:04:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:54170 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232524AbhGZJET (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Jul 2021 05:04:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1627292688;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kBC7/7n7ieIR+PQocFWGsdEhjsiqMRhY14cESzBGes0=;
+        b=Wbg1ZZ/nBVA5QPydlyjv+cODt5GnjnN6p4kgEeGgESCTM3tpidvwr/oROn5GPcccnY6Urm
+        W/bP/eyk0ilHQ2u27baIttOq/8jNCESFgc/lVSgzgcmq8eo+Mj3vqS0sZYAkNXqU2I3NEd
+        PmghVWglsw5HuK1qaCK0Jxg70ACE3iw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-454-brLp6B6MMoKsBE9RNfYfwA-1; Mon, 26 Jul 2021 05:44:47 -0400
+X-MC-Unique: brLp6B6MMoKsBE9RNfYfwA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A966F8799EF;
+        Mon, 26 Jul 2021 09:44:44 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.22.16.89])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 61BB85C1D1;
+        Mon, 26 Jul 2021 09:44:36 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <35ecb577315f486f1636b2316c2051ad004f6f7b.camel@redhat.com>
+References: <35ecb577315f486f1636b2316c2051ad004f6f7b.camel@redhat.com> <162687506932.276387.14456718890524355509.stgit@warthog.procyon.org.uk> <162687508008.276387.6418924257569297305.stgit@warthog.procyon.org.uk>
+To:     Jeff Layton <jlayton@redhat.com>
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Mike Marshall <hubcap@omnibond.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        Shyam Prasad N <nspmangalore@gmail.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        devel@lists.orangefs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 01/12] afs: Sort out symlink reading
 MIME-Version: 1.0
-References: <20210712140634.4151943-1-james.hilliard1@gmail.com> <d899537a-1970-c076-c9b6-b358d6aa2798@redhat.com>
-In-Reply-To: <d899537a-1970-c076-c9b6-b358d6aa2798@redhat.com>
-From:   James Hilliard <james.hilliard1@gmail.com>
-Date:   Sun, 25 Jul 2021 14:30:31 -0600
-Message-ID: <CADvTj4pKn-o20s1FE8-=5Bwg9uJcLjUA_jAp9Jgg5x460ULm8A@mail.gmail.com>
-Subject: Re: [PATCH 1/1] Fix non-default statedir paths.
-To:     Steve Dickson <steved@redhat.com>
-Cc:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <812199.1627292675.1@warthog.procyon.org.uk>
+Date:   Mon, 26 Jul 2021 10:44:35 +0100
+Message-ID: <812200.1627292675@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Jul 25, 2021 at 10:10 AM Steve Dickson <steved@redhat.com> wrote:
->
-> Hello,
->
-> My apologies for taking so long to look as this
-> patch...
->
-> What problem are you solving with this patch?
+Jeff Layton <jlayton@redhat.com> wrote:
 
-The statedir path not being set everywhere needed, see:
-https://github.com/clearlinux/distribution/issues/2249
-https://github.com/clearlinux-pkgs/nfs-utils/commit/6c97e55ef83c1420e7d791c857ad94f2e8c27528
+> > -static int afs_symlink_readpage(struct page *page)
+> > +static int afs_symlink_readpage(struct file *file, struct page *page)
+> >  {
+> >  	struct afs_vnode *vnode = AFS_FS_I(page->mapping->host);
+> >  	struct afs_read *fsreq;
+> 
+> 
+> I wonder...would you be better served here by not using page_readlink
+> for symlinks and instead use simple_get_link and roll your own readlink
+> operation. It seems a bit more direct, and AFS seems to be the only
+> caller of page_readlink.
 
-> Your patch description is a bit light. ;-)
->
-> steved.
-> On 7/12/21 10:06 AM, James Hilliard wrote:
-> > Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-> > ---
-> >   configure.ac                                  | 19 +++++++++++++++++++
-> >   systemd/Makefile.am                           |  5 ++++-
-> >   systemd/rpc-pipefs-generator.c                |  2 +-
-> >   systemd/rpc_pipefs.target                     |  3 ---
-> >   systemd/rpc_pipefs.target.in                  |  3 +++
-> >   ....mount => var-lib-nfs-rpc_pipefs.mount.in} |  2 +-
-> >   utils/blkmapd/device-discovery.c              |  2 +-
-> >   utils/gssd/gssd.h                             |  2 +-
-> >   utils/idmapd/idmapd.c                         |  2 +-
-> >   9 files changed, 31 insertions(+), 9 deletions(-)
-> >   delete mode 100644 systemd/rpc_pipefs.target
-> >   create mode 100644 systemd/rpc_pipefs.target.in
-> >   rename systemd/{var-lib-nfs-rpc_pipefs.mount => var-lib-nfs-rpc_pipefs.mount.in} (84%)
-> >
-> > diff --git a/configure.ac b/configure.ac
-> > index 93520a80..bc2d0f02 100644
-> > --- a/configure.ac
-> > +++ b/configure.ac
-> > @@ -688,9 +688,28 @@ AC_SUBST([ACLOCAL_AMFLAGS], ["-I $ac_macro_dir \$(ACLOCAL_FLAGS)"])
-> >   AC_SUBST([_sysconfdir])
-> >   AC_CONFIG_COMMANDS_PRE([eval eval _sysconfdir=$sysconfdir])
-> >
-> > +# make _statedir available for substituion in config files
-> > +# 2 "evals" needed late to expand variable names.
-> > +AC_SUBST([_statedir])
-> > +AC_CONFIG_COMMANDS_PRE([eval eval _statedir=$statedir])
-> > +
-> > +if test "$statedir" = "/var/lib/nfs"; then
-> > +     rpc_pipefsmount="var-lib-nfs-rpc_pipefs.mount"
-> > +else
-> > +     rpc_pipefsmount="$(systemd-escape -p "$statedir/rpc_pipefs").mount"
-> > +fi
-> > +AC_SUBST(rpc_pipefsmount)
-> > +
-> > +# make _rpc_pipefsmount available for substituion in config files
-> > +# 2 "evals" needed late to expand variable names.
-> > +AC_SUBST([_rpc_pipefsmount])
-> > +AC_CONFIG_COMMANDS_PRE([eval eval _rpc_pipefsmount=$rpc_pipefsmount])
-> > +
-> >   AC_CONFIG_FILES([
-> >       Makefile
-> >       systemd/rpc-gssd.service
-> > +     systemd/rpc_pipefs.target
-> > +     systemd/var-lib-nfs-rpc_pipefs.mount
-> >       linux-nfs/Makefile
-> >       support/Makefile
-> >       support/export/Makefile
-> > diff --git a/systemd/Makefile.am b/systemd/Makefile.am
-> > index 650ad25c..8c7b676f 100644
-> > --- a/systemd/Makefile.am
-> > +++ b/systemd/Makefile.am
-> > @@ -12,7 +12,9 @@ unit_files =  \
-> >       rpc-statd-notify.service \
-> >       rpc-statd.service \
-> >       \
-> > -    proc-fs-nfsd.mount \
-> > +    proc-fs-nfsd.mount
-> > +
-> > +rpc_pipefs_mount_file = \
-> >       var-lib-nfs-rpc_pipefs.mount
-> >
-> >   if CONFIG_NFSV4
-> > @@ -75,4 +77,5 @@ genexec_PROGRAMS = nfs-server-generator rpc-pipefs-generator
-> >   install-data-hook: $(unit_files)
-> >       mkdir -p $(DESTDIR)/$(unitdir)
-> >       cp $(unit_files) $(DESTDIR)/$(unitdir)
-> > +     cp $(rpc_pipefs_mount_file) $(DESTDIR)/$(unitdir)/$(rpc_pipefsmount)
-> >   endif
-> > diff --git a/systemd/rpc-pipefs-generator.c b/systemd/rpc-pipefs-generator.c
-> > index 8e218aa7..c24db567 100644
-> > --- a/systemd/rpc-pipefs-generator.c
-> > +++ b/systemd/rpc-pipefs-generator.c
-> > @@ -21,7 +21,7 @@
-> >   #include "conffile.h"
-> >   #include "systemd.h"
-> >
-> > -#define RPC_PIPEFS_DEFAULT "/var/lib/nfs/rpc_pipefs"
-> > +#define RPC_PIPEFS_DEFAULT NFS_STATEDIR "/rpc_pipefs"
-> >
-> >   static int generate_mount_unit(const char *pipefs_path, const char *pipefs_unit,
-> >                              const char *dirname)
-> > diff --git a/systemd/rpc_pipefs.target b/systemd/rpc_pipefs.target
-> > deleted file mode 100644
-> > index 01d4d278..00000000
-> > --- a/systemd/rpc_pipefs.target
-> > +++ /dev/null
-> > @@ -1,3 +0,0 @@
-> > -[Unit]
-> > -Requires=var-lib-nfs-rpc_pipefs.mount
-> > -After=var-lib-nfs-rpc_pipefs.mount
-> > diff --git a/systemd/rpc_pipefs.target.in b/systemd/rpc_pipefs.target.in
-> > new file mode 100644
-> > index 00000000..332f62b6
-> > --- /dev/null
-> > +++ b/systemd/rpc_pipefs.target.in
-> > @@ -0,0 +1,3 @@
-> > +[Unit]
-> > +Requires=@_rpc_pipefsmount@
-> > +After=@_rpc_pipefsmount@
-> > diff --git a/systemd/var-lib-nfs-rpc_pipefs.mount b/systemd/var-lib-nfs-rpc_pipefs.mount.in
-> > similarity index 84%
-> > rename from systemd/var-lib-nfs-rpc_pipefs.mount
-> > rename to systemd/var-lib-nfs-rpc_pipefs.mount.in
-> > index 26d1c763..4c5d6ce4 100644
-> > --- a/systemd/var-lib-nfs-rpc_pipefs.mount
-> > +++ b/systemd/var-lib-nfs-rpc_pipefs.mount.in
-> > @@ -6,5 +6,5 @@ Conflicts=umount.target
-> >
-> >   [Mount]
-> >   What=sunrpc
-> > -Where=/var/lib/nfs/rpc_pipefs
-> > +Where=@_statedir@/rpc_pipefs
-> >   Type=rpc_pipefs
-> > diff --git a/utils/blkmapd/device-discovery.c b/utils/blkmapd/device-discovery.c
-> > index 77ebe736..2736ac89 100644
-> > --- a/utils/blkmapd/device-discovery.c
-> > +++ b/utils/blkmapd/device-discovery.c
-> > @@ -63,7 +63,7 @@
-> >   #define EVENT_SIZE (sizeof(struct inotify_event))
-> >   #define EVENT_BUFSIZE (1024 * EVENT_SIZE)
-> >
-> > -#define RPCPIPE_DIR  "/var/lib/nfs/rpc_pipefs"
-> > +#define RPCPIPE_DIR  NFS_STATEDIR "/rpc_pipefs"
-> >   #define PID_FILE    "/run/blkmapd.pid"
-> >
-> >   #define CONF_SAVE(w, f) do {                        \
-> > diff --git a/utils/gssd/gssd.h b/utils/gssd/gssd.h
-> > index c52c5b48..519dc431 100644
-> > --- a/utils/gssd/gssd.h
-> > +++ b/utils/gssd/gssd.h
-> > @@ -39,7 +39,7 @@
-> >   #include <pthread.h>
-> >
-> >   #ifndef GSSD_PIPEFS_DIR
-> > -#define GSSD_PIPEFS_DIR              "/var/lib/nfs/rpc_pipefs"
-> > +#define GSSD_PIPEFS_DIR              NFS_STATEDIR "/rpc_pipefs"
-> >   #endif
-> >   #define DNOTIFY_SIGNAL              (SIGRTMIN + 3)
-> >
-> > diff --git a/utils/idmapd/idmapd.c b/utils/idmapd/idmapd.c
-> > index 51c71fbb..e2c160e8 100644
-> > --- a/utils/idmapd/idmapd.c
-> > +++ b/utils/idmapd/idmapd.c
-> > @@ -73,7 +73,7 @@
-> >   #include "nfslib.h"
-> >
-> >   #ifndef PIPEFS_DIR
-> > -#define PIPEFS_DIR  "/var/lib/nfs/rpc_pipefs/"
-> > +#define PIPEFS_DIR  NFS_STATEDIR "/rpc_pipefs/"
-> >   #endif
-> >
-> >   #ifndef NFSD_DIR
-> >
->
+Maybe.  At some point it will need to go through netfs_readpage() so that it
+will get cached and maybe encrypted.  Possibly there should be a
+netfs_readlink().  AFS directories too will at some point need to go through
+netfs_readahead() or similar.
+
+David
+
