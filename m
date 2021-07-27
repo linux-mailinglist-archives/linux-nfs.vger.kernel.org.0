@@ -2,50 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C710E3D8334
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jul 2021 00:42:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A1C73D833D
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jul 2021 00:43:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232908AbhG0Wmr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 27 Jul 2021 18:42:47 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:57098 "EHLO
+        id S233086AbhG0WnO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 27 Jul 2021 18:43:14 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:57146 "EHLO
         smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232272AbhG0Wmr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Jul 2021 18:42:47 -0400
+        with ESMTP id S231730AbhG0WnN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Jul 2021 18:43:13 -0400
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 7B63021E78;
-        Tue, 27 Jul 2021 22:42:45 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 2895B21E78;
+        Tue, 27 Jul 2021 22:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1627425765; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1627425792; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=jpgPD5RojPABcTMZULE6R7dcTBRiP3N2liSuqkAN1xY=;
-        b=LMyD+4WcK7zDEfC+MFkXkbm4u0MMKJhZGrx3wykC6W5yYa8VGzDLSZnYVjS+rqnbFutBxS
-        Ki/1B0Yv9VgP1fDcCv6AjsXN/IYBIUiat7mOfYOrEmHIDVditzSwcSBP1L7hYo0pQLFmxU
-        RJ7sbGkalpJtTVIbeczlQ6GRrwSm8Dk=
+        bh=xLs00Rrv/kTcj/5olsX73VJ3zYmRNlaU9tOovlvLkrY=;
+        b=CDYrsqvXmziG2cY28/a82LbbwXxEKRAV1gNZwQZZjcmIeTklR0CSSUHSCu/Y8kbUonbe78
+        wjytZURQAFUN9P7NL1uOozNd/XxH68LBZ2xuRkX6yleEp1GBawrGqI4r5Uq4RZmKoos8RD
+        3E2YzIB7cRdofn5hdWyD0PIc8fkzukw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1627425765;
+        s=susede2_ed25519; t=1627425792;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=jpgPD5RojPABcTMZULE6R7dcTBRiP3N2liSuqkAN1xY=;
-        b=gQl3LzlyrzrgRj1iFmV9PwaZk0LRCtv5DDnAgMdZXrYf/Oz4vtZfIj8oCo+gNm/pC1dgwc
-        Mg4KAEtZ5NLNALBA==
+        bh=xLs00Rrv/kTcj/5olsX73VJ3zYmRNlaU9tOovlvLkrY=;
+        b=WP2zRKJ88WSgYMmFFXlnfNH3h946jiyNr0bF/6uXF8WrxO9XhcMa7bNsJ2H42E5Iv6mzYx
+        6eNbxKV9SskOJzDw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 95D3013A5D;
-        Tue, 27 Jul 2021 22:42:42 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 22F9C13A5D;
+        Tue, 27 Jul 2021 22:43:08 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id hvjwFOKLAGGVVQAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 27 Jul 2021 22:42:42 +0000
-Subject: [PATCH 02/11] VFS: allow d_automount to create in-place bind-mount.
+        id rca3NPyLAGGzVQAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 27 Jul 2021 22:43:08 +0000
+Subject: [PATCH 05/11] VFS: new function: mount_is_internal()
 From:   NeilBrown <neilb@suse.de>
 To:     Christoph Hellwig <hch@infradead.org>,
         Josef Bacik <josef@toxicpanda.com>,
@@ -56,7 +56,7 @@ To:     Christoph Hellwig <hch@infradead.org>,
 Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
         linux-btrfs@vger.kernel.org
 Date:   Wed, 28 Jul 2021 08:37:45 +1000
-Message-ID: <162742546549.32498.76256513179684921.stgit@noble.brown>
+Message-ID: <162742546552.32498.14429836898036234922.stgit@noble.brown>
 In-Reply-To: <162742539595.32498.13687924366155737575.stgit@noble.brown>
 References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -67,37 +67,71 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-finish_automount() prevents a mount trap from mounting a dentry onto
-itself, as this could cause a loop - repeatedly automounting.  There is
-nothing intrinsically wrong with this arrangement, and the d_automount
-function can easily avoid the loop.  btrfs will use it to expose subvols
-in the mount table.
+This patch introduces the concept of an "internal" mount which is a
+mount where a filesystem has create the mount itself.
 
-It may well be a problem to mount a dentry onto itself when it is
-already the root of the vfsmount, so narrow the test to only check that
-case.
-
-The test on mnt_sb is redundant and has been removed.  path->mnt and
-path->dentry must have the same sb, so if m->mnt_root == dentry, then
-m->mnt_sb must be the same as path->mnt->mnt_sb.
+Both the mounted-on-dentry and the mount's root dentry must refer to the
+same superblock (they may be the same dentry), and the mounted-on dentry
+must be an automount.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/namespace.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/namespace.c        |   29 +++++++++++++++++++++++++++++
+ include/linux/mount.h |    2 ++
+ 2 files changed, 31 insertions(+)
 
 diff --git a/fs/namespace.c b/fs/namespace.c
-index ab4174a3c802..81b0f2b2e701 100644
+index 73bbdb921e24..a14efbccfb03 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -2928,7 +2928,7 @@ int finish_automount(struct vfsmount *m, struct path *path)
- 	 */
- 	BUG_ON(mnt_get_count(mnt) < 2);
+@@ -1273,6 +1273,35 @@ bool path_is_mountpoint(const struct path *path)
+ }
+ EXPORT_SYMBOL(path_is_mountpoint);
  
--	if (m->mnt_sb == path->mnt->mnt_sb &&
-+	if (m->mnt_root == path->mnt->mnt_root &&
- 	    m->mnt_root == dentry) {
- 		err = -ELOOP;
- 		goto discard;
++/**
++ * mount_is_internal() - Check if path is a mount internal to a single filesystem
++ * @mnt: vfsmount to check
++ *
++ * Some filesystems present multiple file-sets using a single
++ * superblock, such as btrfs with multiple subvolumes.  Names within a
++ * parent filesystem which lead to a subordinate filesystem are
++ * implemented as automounts so that the structure is visible in the
++ * mount table.  nfsd needs visibility into this arrangement so that it
++ * can determine if a mountpoint requires a new export, or is completely
++ * covered by an existing mount.
++ *
++ * An "internal" mount is one where the parent and child have the same
++ * superblock, and the mounted-on dentry is "managed" as an automount.  A
++ * filehandle found for an inode in the child can be looked-up using either
++ * vfsmount.
++ */
++bool mount_is_internal(struct vfsmount *mnt)
++{
++	struct mount *m = real_mount(mnt);
++
++	if (!mnt_has_parent(m))
++		return false;
++	if (m->mnt_parent->mnt.mnt_sb != m->mnt.mnt_sb)
++		return false;
++	return m->mnt_mountpoint->d_flags & DCACHE_NEED_AUTOMOUNT;
++}
++EXPORT_SYMBOL(mount_is_internal);
++
+ struct vfsmount *mnt_clone_internal(const struct path *path)
+ {
+ 	struct mount *p;
+diff --git a/include/linux/mount.h b/include/linux/mount.h
+index 1d3daed88f83..ab58087728ba 100644
+--- a/include/linux/mount.h
++++ b/include/linux/mount.h
+@@ -118,6 +118,8 @@ extern unsigned int sysctl_mount_max;
+ 
+ extern bool path_is_mountpoint(const struct path *path);
+ 
++extern bool mount_is_internal(struct vfsmount *mnt);
++
+ extern struct vfsmount *lookup_mnt(const struct path *);
+ 
+ extern void kern_unmount_array(struct vfsmount *mnt[], unsigned int num);
 
 
