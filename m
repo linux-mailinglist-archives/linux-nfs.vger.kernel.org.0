@@ -2,20 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F32B3D8EAD
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jul 2021 15:12:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEC663D8FA5
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jul 2021 15:53:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236263AbhG1NMV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 28 Jul 2021 09:12:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235204AbhG1NMV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 28 Jul 2021 09:12:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6AE4760FED;
-        Wed, 28 Jul 2021 13:12:16 +0000 (UTC)
-Date:   Wed, 28 Jul 2021 15:12:13 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     NeilBrown <neilb@suse.de>
+        id S237193AbhG1Nwx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 28 Jul 2021 09:52:53 -0400
+Received: from zaphod.cobb.me.uk ([213.138.97.131]:43140 "EHLO
+        zaphod.cobb.me.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236383AbhG1NtS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Jul 2021 09:49:18 -0400
+X-Greylist: delayed 311 seconds by postgrey-1.27 at vger.kernel.org; Wed, 28 Jul 2021 09:49:18 EDT
+Received: by zaphod.cobb.me.uk (Postfix, from userid 107)
+        id 353AF9BEE9; Wed, 28 Jul 2021 14:43:56 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cobb.uk.net;
+        s=201703; t=1627479836;
+        bh=AVprTXs7DyGHj0L7AmX18qLo2Z3rK1/x2Gl7dXunk0c=;
+        h=From:To:Cc:References:Subject:Date:In-Reply-To:From;
+        b=j/AOuRhcsm9Fh3e9IjFUxnYE+MZlKk3RcBRBNJJ3pNrlYgrR8DN4MFN2aLPxp8aSe
+         OA6An2ZqEuoP0Ck+aq9L7PNTeB57wCAE71hI3LNtMFKpuEfnmiHjM+lyELtvCi4Qzp
+         ZI1En+NZJ6umUjrlKrv0pNk8vFiYlQiPhhKUqryZeWCCKRWL1LMTMAR7Lh0Yk9ca4H
+         3NRaVL/+5O41psOKyHCvZbNpstxMt7f2bxr4nbhsLtZyCHASwjmSOGBTxFhvY9O12I
+         9OilWmVguUJkHI9RUBriJvjW8KWZPhgf5YalC1KGMHIikghy3sNeIXMTBvdHF+msaH
+         KNOVOYCQweWDA==
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on zaphod.cobb.me.uk
+X-Spam-Status: No, score=-3.3 required=12.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.2
+X-Spam-Level: 
+X-Spam-Bar: 
+Received: from black.home.cobb.me.uk (unknown [192.168.0.205])
+        by zaphod.cobb.me.uk (Postfix) with ESMTP id F3F339B846;
+        Wed, 28 Jul 2021 14:43:52 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cobb.uk.net;
+        s=201703; t=1627479833;
+        bh=AVprTXs7DyGHj0L7AmX18qLo2Z3rK1/x2Gl7dXunk0c=;
+        h=From:To:Cc:References:Subject:Date:In-Reply-To:From;
+        b=Z6Jkm+JubTCKlQzFQC7kdv34buXMMFdGTRl0xbnIQMBu2D9WNo/T0dKFwZBvSpVzb
+         CsXLqPq+mjMzbHKiqUUUasWfG5vRSLoEUQTZ2g5VYI8AH/CQAV4spRcLI+CmussRPT
+         Wy0S7XH2GWbrFldyF9CvDJRZ5BAyxN8rUmSogjUu4ZXu5zgr5U9GuPhsu8yE+GMgsa
+         c6INNSNPs7vrmGj7TyKDdD23JAr75chB8Xq/3wkaLa2OOAm6H78bETe/IJEbIikb3y
+         Vu0QtVHihqTk8gdAjHsyMJzV4SRkQuSaJh4M4uM+URDtzrsDWVKl2d2T6EHUjqwZK2
+         GefGpOz9uCYjA==
+Received: from [192.168.0.202] (ryzen.home.cobb.me.uk [192.168.0.202])
+        by black.home.cobb.me.uk (Postfix) with ESMTP id A5D6027556C;
+        Wed, 28 Jul 2021 14:43:52 +0100 (BST)
+From:   g.btrfs@cobb.uk.net
+To:     NeilBrown <neilb@suse.de>, Wang Yugui <wangyugui@e16-tech.com>
 Cc:     Christoph Hellwig <hch@infradead.org>,
         Josef Bacik <josef@toxicpanda.com>,
         "J. Bruce Fields" <bfields@fieldses.org>,
@@ -24,127 +56,63 @@ Cc:     Christoph Hellwig <hch@infradead.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
         linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 11/11] btrfs: use automount to bind-mount all subvol
- roots.
-Message-ID: <20210728131213.pgu3r4m4ulozrcav@wittgenstein>
 References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
- <162742546558.32498.1901201501617899416.stgit@noble.brown>
+ <20210728125819.6E52.409509F4@e16-tech.com>
+ <20210728140431.D704.409509F4@e16-tech.com>
+ <162745567084.21659.16797059962461187633@noble.neil.brown.name>
+Subject: Re: [PATCH/RFC 00/11] expose btrfs subvols in mount table correctly
+Message-ID: <2cb6455c-7b9f-9ac3-fd9d-9121eb1aa109@cobb.uk.net>
+Date:   Wed, 28 Jul 2021 14:43:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
+In-Reply-To: <162745567084.21659.16797059962461187633@noble.neil.brown.name>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <162742546558.32498.1901201501617899416.stgit@noble.brown>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jul 28, 2021 at 08:37:45AM +1000, NeilBrown wrote:
-> All subvol roots are now marked as automounts.  If the d_automount()
-> function determines that the dentry is not the root of the vfsmount, it
-> creates a simple loop-back mount of the dentry onto itself.  If it
-> determines that it IS the root of the vfsmount, it returns -EISDIR so
-> that no further automounting is attempted.
+On 28/07/2021 08:01, NeilBrown wrote:
+> On Wed, 28 Jul 2021, Wang Yugui wrote:
+>> Hi,
+>>
+>> This patchset works well in 5.14-rc3.
 > 
-> btrfs_getattr pays special attention to these automount dentries.
-> If it is NOT the root of the vfsmount:
->  - the ->dev is reported as that for the rest of the vfsmount
->  - the ->ino is reported as the subvol objectid, suitable transformed
->    to avoid collision.
+> Thanks for testing.
 > 
-> This way the same inode appear to be different depending on which mount
-> it is in.
+>>
+>> 1, fixed dummy inode(255, BTRFS_FIRST_FREE_OBJECTID - 1 )  is changed to
+>> dynamic dummy inode(18446744073709551358, or 18446744073709551359, ...)
 > 
-> automounted vfsmounts are kept on a list and timeout after 500 to 1000
-> seconds of last use.  This is configurable via a module parameter.
-> The tracking and timeout of automounts is copied from NFS.
+> The BTRFS_FIRST_FREE_OBJECTID-1 was a just a hack, I never wanted it to
+> be permanent.
+> The new number is ULONG_MAX - subvol_id (where subvol_id starts at 257 I
+> think).
+> This is a bit less of a hack.  It is an easily available number that is
+> fairly unique.
 > 
-> Link: https://lore.kernel.org/r/162742546558.32498.1901201501617899416.stgit@noble.brown
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/btrfs/btrfs_inode.h |    2 +
->  fs/btrfs/inode.c       |  108 ++++++++++++++++++++++++++++++++++++++++++++++++
->  fs/btrfs/super.c       |    1 
->  3 files changed, 111 insertions(+)
+>>
+>> 2, btrfs subvol mount info is shown in /proc/mounts, even if nfsd/nfs is
+>> not used.
+>> /dev/sdc                btrfs   94G  3.5M   93G   1% /mnt/test
+>> /dev/sdc                btrfs   94G  3.5M   93G   1% /mnt/test/sub1
+>> /dev/sdc                btrfs   94G  3.5M   93G   1% /mnt/test/sub2
+>>
+>> This is a visiual feature change for btrfs user.
 > 
-> diff --git a/fs/btrfs/btrfs_inode.h b/fs/btrfs/btrfs_inode.h
-> index a4b5f38196e6..f03056cacc4a 100644
-> --- a/fs/btrfs/btrfs_inode.h
-> +++ b/fs/btrfs/btrfs_inode.h
-> @@ -387,4 +387,6 @@ static inline void btrfs_print_data_csum_error(struct btrfs_inode *inode,
->  			mirror_num);
->  }
->  
-> +void btrfs_release_automount_timer(void);
-> +
->  #endif
-> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-> index 02537c1a9763..a5f46545fb38 100644
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@ -31,6 +31,7 @@
->  #include <linux/migrate.h>
->  #include <linux/sched/mm.h>
->  #include <linux/iomap.h>
-> +#include <linux/fs_context.h>
->  #include <asm/unaligned.h>
->  #include "misc.h"
->  #include "ctree.h"
-> @@ -5782,6 +5783,8 @@ static int btrfs_init_locked_inode(struct inode *inode, void *p)
->  	struct btrfs_iget_args *args = p;
->  
->  	inode->i_ino = args->ino;
-> +	if (args->ino == BTRFS_FIRST_FREE_OBJECTID)
-> +		inode->i_flags |= S_AUTOMOUNT;
->  	BTRFS_I(inode)->location.objectid = args->ino;
->  	BTRFS_I(inode)->location.type = BTRFS_INODE_ITEM_KEY;
->  	BTRFS_I(inode)->location.offset = 0;
-> @@ -5985,6 +5988,101 @@ static int btrfs_dentry_delete(const struct dentry *dentry)
->  	return 0;
->  }
->  
-> +static void btrfs_expire_automounts(struct work_struct *work);
-> +static LIST_HEAD(btrfs_automount_list);
-> +static DECLARE_DELAYED_WORK(btrfs_automount_task, btrfs_expire_automounts);
-> +int btrfs_mountpoint_expiry_timeout = 500 * HZ;
-> +static void btrfs_expire_automounts(struct work_struct *work)
-> +{
-> +	struct list_head *list = &btrfs_automount_list;
-> +	int timeout = READ_ONCE(btrfs_mountpoint_expiry_timeout);
-> +
-> +	mark_mounts_for_expiry(list);
-> +	if (!list_empty(list) && timeout > 0)
-> +		schedule_delayed_work(&btrfs_automount_task, timeout);
-> +}
-> +
-> +void btrfs_release_automount_timer(void)
-> +{
-> +	if (list_empty(&btrfs_automount_list))
-> +		cancel_delayed_work(&btrfs_automount_task);
-> +}
-> +
-> +static struct vfsmount *btrfs_automount(struct path *path)
-> +{
-> +	struct fs_context fc;
-> +	struct vfsmount *mnt;
-> +	int timeout = READ_ONCE(btrfs_mountpoint_expiry_timeout);
-> +
-> +	if (path->dentry == path->mnt->mnt_root)
-> +		/* dentry is root of the vfsmount,
-> +		 * so skip automount processing
-> +		 */
-> +		return ERR_PTR(-EISDIR);
-> +	/* Create a bind-mount to expose the subvol in the mount table */
-> +	fc.root = path->dentry;
-> +	fc.sb_flags = 0;
-> +	fc.source = "btrfs-automount";
-> +	mnt = vfs_create_mount(&fc);
-> +	if (IS_ERR(mnt))
-> +		return mnt;
+> Hopefully it is an improvement.  But it is certainly a change that needs
+> to be carefully considered.
 
-Hey Neil,
+Would this change the behaviour of findmnt? I have several scripts that
+depend on findmnt to select btrfs filesystems. Just to take a couple of
+examples (using the example shown above): my scripts would depend on
+'findmnt --target /mnt/test/sub1 -o target' providing /mnt/test, not the
+subvolume; and another script would depend on 'findmnt -t btrfs
+--mountpoint /mnt/test/sub1' providing no output as the directory is not
+an /etc/fstab mount point for a btrfs filesystem.
 
-Sorry if this is a stupid question but wouldn't you want to copy the
-mount properties from path->mnt here? Couldn't you otherwise use this to
-e.g. suddenly expose a dentry on a read-only mount as read-write?
-
-Christian
+Maybe findmnt isn't affected? Or maybe the change is worth making
+anyway? But it needs to be carefully considered if it breaks existing
+user interfaces.
