@@ -2,117 +2,152 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EEC663D8FA5
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jul 2021 15:53:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16C2A3D9389
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jul 2021 18:47:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237193AbhG1Nwx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 28 Jul 2021 09:52:53 -0400
-Received: from zaphod.cobb.me.uk ([213.138.97.131]:43140 "EHLO
-        zaphod.cobb.me.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236383AbhG1NtS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Jul 2021 09:49:18 -0400
-X-Greylist: delayed 311 seconds by postgrey-1.27 at vger.kernel.org; Wed, 28 Jul 2021 09:49:18 EDT
-Received: by zaphod.cobb.me.uk (Postfix, from userid 107)
-        id 353AF9BEE9; Wed, 28 Jul 2021 14:43:56 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cobb.uk.net;
-        s=201703; t=1627479836;
-        bh=AVprTXs7DyGHj0L7AmX18qLo2Z3rK1/x2Gl7dXunk0c=;
-        h=From:To:Cc:References:Subject:Date:In-Reply-To:From;
-        b=j/AOuRhcsm9Fh3e9IjFUxnYE+MZlKk3RcBRBNJJ3pNrlYgrR8DN4MFN2aLPxp8aSe
-         OA6An2ZqEuoP0Ck+aq9L7PNTeB57wCAE71hI3LNtMFKpuEfnmiHjM+lyELtvCi4Qzp
-         ZI1En+NZJ6umUjrlKrv0pNk8vFiYlQiPhhKUqryZeWCCKRWL1LMTMAR7Lh0Yk9ca4H
-         3NRaVL/+5O41psOKyHCvZbNpstxMt7f2bxr4nbhsLtZyCHASwjmSOGBTxFhvY9O12I
-         9OilWmVguUJkHI9RUBriJvjW8KWZPhgf5YalC1KGMHIikghy3sNeIXMTBvdHF+msaH
-         KNOVOYCQweWDA==
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on zaphod.cobb.me.uk
-X-Spam-Status: No, score=-3.3 required=12.0 tests=ALL_TRUSTED,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.2
-X-Spam-Level: 
-X-Spam-Bar: 
-Received: from black.home.cobb.me.uk (unknown [192.168.0.205])
-        by zaphod.cobb.me.uk (Postfix) with ESMTP id F3F339B846;
-        Wed, 28 Jul 2021 14:43:52 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cobb.uk.net;
-        s=201703; t=1627479833;
-        bh=AVprTXs7DyGHj0L7AmX18qLo2Z3rK1/x2Gl7dXunk0c=;
-        h=From:To:Cc:References:Subject:Date:In-Reply-To:From;
-        b=Z6Jkm+JubTCKlQzFQC7kdv34buXMMFdGTRl0xbnIQMBu2D9WNo/T0dKFwZBvSpVzb
-         CsXLqPq+mjMzbHKiqUUUasWfG5vRSLoEUQTZ2g5VYI8AH/CQAV4spRcLI+CmussRPT
-         Wy0S7XH2GWbrFldyF9CvDJRZ5BAyxN8rUmSogjUu4ZXu5zgr5U9GuPhsu8yE+GMgsa
-         c6INNSNPs7vrmGj7TyKDdD23JAr75chB8Xq/3wkaLa2OOAm6H78bETe/IJEbIikb3y
-         Vu0QtVHihqTk8gdAjHsyMJzV4SRkQuSaJh4M4uM+URDtzrsDWVKl2d2T6EHUjqwZK2
-         GefGpOz9uCYjA==
-Received: from [192.168.0.202] (ryzen.home.cobb.me.uk [192.168.0.202])
-        by black.home.cobb.me.uk (Postfix) with ESMTP id A5D6027556C;
-        Wed, 28 Jul 2021 14:43:52 +0100 (BST)
-From:   g.btrfs@cobb.uk.net
-To:     NeilBrown <neilb@suse.de>, Wang Yugui <wangyugui@e16-tech.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
- <20210728125819.6E52.409509F4@e16-tech.com>
- <20210728140431.D704.409509F4@e16-tech.com>
- <162745567084.21659.16797059962461187633@noble.neil.brown.name>
-Subject: Re: [PATCH/RFC 00/11] expose btrfs subvols in mount table correctly
-Message-ID: <2cb6455c-7b9f-9ac3-fd9d-9121eb1aa109@cobb.uk.net>
-Date:   Wed, 28 Jul 2021 14:43:52 +0100
+        id S230437AbhG1QrH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 28 Jul 2021 12:47:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53784 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231339AbhG1Qq7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Jul 2021 12:46:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1627490816;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hMy8tBo4f4IuaBNMDk/qaEoAAX9AoE9GwhmoiF6CaQo=;
+        b=ThbyGdkmap2ENOdAmvoyXTE/WcF94r1dg+paJfCG0cG4QbUVeW8lLdL9ybt95PheXfRadE
+        UeUTkEQJNlH53jBAWoPXTkZZ4gADwVALD9CehOg/l56xFflkUAkW/+Mlr9FJUNr0/DJ/ew
+        iixW9wFAFDP1MGxp9b7TTQtvFagb/2o=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-23-xBr6Kys2NoSC2Agn44aEvg-1; Wed, 28 Jul 2021 12:46:55 -0400
+X-MC-Unique: xBr6Kys2NoSC2Agn44aEvg-1
+Received: by mail-qv1-f70.google.com with SMTP id cb3-20020ad456230000b02903319321d1e3so2284777qvb.14
+        for <linux-nfs@vger.kernel.org>; Wed, 28 Jul 2021 09:46:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hMy8tBo4f4IuaBNMDk/qaEoAAX9AoE9GwhmoiF6CaQo=;
+        b=EWuM8iio0uJkp/JOXG4xzAVC5iCyBdDE4QuTvlX9PPedlNqlqbfMzuH4eY2aDWpzFZ
+         ZqlRQW5rnK0aAo8b7OJ029RuZCDmdspHwCeHWT4snBiosbnt42aRKJuV7IFK8WSECI+w
+         ACJreb9esazhrVlszf7Gcj71Gifoc7gwAwGD/rntz0dAPPc+hkBR9wTEUj0njkX3nBgz
+         HhJwBjsqMnAOEwl68HtpjR+zZPbS8FAp+PcbSWGpeXmBNi+uSY37Y4OcH8LcKMObrQYE
+         J306QKPYTN1fAUzKogEFVZ+z16wAN9QDrImxw5GWM8I/TV5SvOSI2ehQ2Op2YMOVuKSM
+         Z6Gg==
+X-Gm-Message-State: AOAM531RKwYIe1vCi1QdJZgVG3om9rA7Ga4zTNntatJMf5V1PlRs74i1
+        r2litxuM3ri/LslR2cjEF4O7xoVljrMfhndAoJ0vPZ8IdB7qEFTqwUM8TOGneweiOpyOfESK7xL
+        TsXunD5RJmEncX/JoQ1o/Is6lCOnq7eVgWzfapaTWuG6N88RC97eMUlT+nOvPTwWJYuFisQ==
+X-Received: by 2002:a05:622a:491:: with SMTP id p17mr403226qtx.107.1627490815074;
+        Wed, 28 Jul 2021 09:46:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyPgo7u/OEDPEdJzcoz8xNU5drLuwDEKv9JeuN0xb7NJLx5Ciy86F/jYSzlrPpn8IhswTmW4Q==
+X-Received: by 2002:a05:622a:491:: with SMTP id p17mr403206qtx.107.1627490814823;
+        Wed, 28 Jul 2021 09:46:54 -0700 (PDT)
+Received: from madhat.boston.devel.redhat.com ([70.109.164.82])
+        by smtp.gmail.com with ESMTPSA id g206sm287177qke.13.2021.07.28.09.46.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Jul 2021 09:46:54 -0700 (PDT)
+Subject: Re: [PATCH] nfsdcltrack: Use uint64_t instead of time_t
+To:     Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20210728013608.167759-1-steved@redhat.com>
+ <0ba5eaacd17a50b0ab0c6fd9605a7c330935eca8.camel@kernel.org>
+From:   Steve Dickson <steved@redhat.com>
+Message-ID: <eed93f64-3394-5166-8d51-3075e866c327@redhat.com>
+Date:   Wed, 28 Jul 2021 12:46:53 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <162745567084.21659.16797059962461187633@noble.neil.brown.name>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <0ba5eaacd17a50b0ab0c6fd9605a7c330935eca8.camel@kernel.org>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 28/07/2021 08:01, NeilBrown wrote:
-> On Wed, 28 Jul 2021, Wang Yugui wrote:
->> Hi,
->>
->> This patchset works well in 5.14-rc3.
-> 
-> Thanks for testing.
-> 
->>
->> 1, fixed dummy inode(255, BTRFS_FIRST_FREE_OBJECTID - 1 )  is changed to
->> dynamic dummy inode(18446744073709551358, or 18446744073709551359, ...)
-> 
-> The BTRFS_FIRST_FREE_OBJECTID-1 was a just a hack, I never wanted it to
-> be permanent.
-> The new number is ULONG_MAX - subvol_id (where subvol_id starts at 257 I
-> think).
-> This is a bit less of a hack.  It is an easily available number that is
-> fairly unique.
-> 
->>
->> 2, btrfs subvol mount info is shown in /proc/mounts, even if nfsd/nfs is
->> not used.
->> /dev/sdc                btrfs   94G  3.5M   93G   1% /mnt/test
->> /dev/sdc                btrfs   94G  3.5M   93G   1% /mnt/test/sub1
->> /dev/sdc                btrfs   94G  3.5M   93G   1% /mnt/test/sub2
->>
->> This is a visiual feature change for btrfs user.
-> 
-> Hopefully it is an improvement.  But it is certainly a change that needs
-> to be carefully considered.
 
-Would this change the behaviour of findmnt? I have several scripts that
-depend on findmnt to select btrfs filesystems. Just to take a couple of
-examples (using the example shown above): my scripts would depend on
-'findmnt --target /mnt/test/sub1 -o target' providing /mnt/test, not the
-subvolume; and another script would depend on 'findmnt -t btrfs
---mountpoint /mnt/test/sub1' providing no output as the directory is not
-an /etc/fstab mount point for a btrfs filesystem.
 
-Maybe findmnt isn't affected? Or maybe the change is worth making
-anyway? But it needs to be carefully considered if it breaks existing
-user interfaces.
+On 7/28/21 7:15 AM, Jeff Layton wrote:
+> On Tue, 2021-07-27 at 21:36 -0400, Steve Dickson wrote:
+>> With recent commits (4f2a5b64,5a53426c) that fixed
+>> compile errors on x86_64 machines, caused similar
+>> errors on i686 machines.
+>>
+>> The variable type that was being used was a time_t,
+>> which changes size between architects, which
+>> caused the compile error.
+>>
+>> Changing the variable to uint64_t fixed the issue.
+>>
+>> Signed-off-by: Steve Dickson <steved@redhat.com>
+>> ---
+>>   utils/nfsdcltrack/nfsdcltrack.c | 2 +-
+>>   utils/nfsdcltrack/sqlite.c      | 2 +-
+>>   utils/nfsdcltrack/sqlite.h      | 2 +-
+>>   3 files changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/utils/nfsdcltrack/nfsdcltrack.c b/utils/nfsdcltrack/nfsdcltrack.c
+>> index 0b37c094..7c1c4bcc 100644
+>> --- a/utils/nfsdcltrack/nfsdcltrack.c
+>> +++ b/utils/nfsdcltrack/nfsdcltrack.c
+>> @@ -508,7 +508,7 @@ cltrack_gracedone(const char *timestr)
+>>   {
+>>   	int ret;
+>>   	char *tail;
+>> -	time_t gracetime;
+>> +	uint64_t gracetime;
+>>   
+> 
+> Hmm.. time_t is a long:
+> 
+>      typedef __kernel_long_t __kernel_time_t;
+> 
+> ...but the kernel is converting this value from a time64_t which is s64.
+>   
+> Should the above be int64_t instead of being unsigned? The kernel should
+> never send down a negative value, but if you're trying to match up types
+> then that might be cleaner.
+The patch I took to fix the printfs on  64-bits platforms
+used the PRIu64 inttype interface so I was just keeping
+things constant by using a uint64_t.
+
+The answer to your question is yes... int64 is all that
+is needed... but I don't in really matters...
+
+steved.
+> 
+>>
+>>   	ret = sqlite_prepare_dbh(storagedir);
+>> diff --git a/utils/nfsdcltrack/sqlite.c b/utils/nfsdcltrack/sqlite.c
+>> index cea4a411..cf0c6a45 100644
+>> --- a/utils/nfsdcltrack/sqlite.c
+>> +++ b/utils/nfsdcltrack/sqlite.c
+>> @@ -540,7 +540,7 @@ out_err:
+>>    * remove any client records that were not reclaimed since grace_start.
+>>    */
+>>   int
+>> -sqlite_remove_unreclaimed(time_t grace_start)
+>> +sqlite_remove_unreclaimed(uint64_t grace_start)
+>>   {
+>>   	int ret;
+>>   	char *err = NULL;
+>> diff --git a/utils/nfsdcltrack/sqlite.h b/utils/nfsdcltrack/sqlite.h
+>> index 06e7c044..ba8cdfa8 100644
+>> --- a/utils/nfsdcltrack/sqlite.h
+>> +++ b/utils/nfsdcltrack/sqlite.h
+>> @@ -26,7 +26,7 @@ int sqlite_insert_client(const unsigned char *clname, const size_t namelen,
+>>   int sqlite_remove_client(const unsigned char *clname, const size_t namelen);
+>>   int sqlite_check_client(const unsigned char *clname, const size_t namelen,
+>>   				const bool has_session);
+>> -int sqlite_remove_unreclaimed(const time_t grace_start);
+>> +int sqlite_remove_unreclaimed(const uint64_t grace_start);
+>>   int sqlite_query_reclaiming(const time_t grace_start);
+>>   
+>>   #endif /* _SQLITE_H */
+> 
+
