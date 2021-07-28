@@ -2,29 +2,29 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DB8E3D95EB
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jul 2021 21:17:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25A293D9613
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jul 2021 21:35:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229690AbhG1TRO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 28 Jul 2021 15:17:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49668 "EHLO
+        id S229986AbhG1Tfk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 28 Jul 2021 15:35:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbhG1TRN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Jul 2021 15:17:13 -0400
+        with ESMTP id S229690AbhG1Tfk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Jul 2021 15:35:40 -0400
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAF06C061757;
-        Wed, 28 Jul 2021 12:17:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78CC6C061757;
+        Wed, 28 Jul 2021 12:35:37 -0700 (PDT)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 917827C77; Wed, 28 Jul 2021 15:17:11 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 917827C77
+        id BAC546C91; Wed, 28 Jul 2021 15:35:36 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BAC546C91
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1627499831;
-        bh=QGi8Y+wurSkVuDPmP5sipc7Hrk2IhPq1SmNuzD0+Gug=;
+        s=default; t=1627500936;
+        bh=+ubDzSENl39MUZIPXJcllRmY3lYjmwUKCDsj0PDkg4w=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IAQoriF0P6Iydqzyk12HgdxTxahcApXyETB1JRtcMNPnRj5trB/sHlPOizW5PvbHp
-         9U/fRNq4k+wL5N9A9EWNlOJaiV2ZJoEJ24ILc8XbxrMKseglRXJXV4656YkYPlInDH
-         RaqORoieJGDV5OZUySFUTrP+A/gBH57C4N03o3qI=
-Date:   Wed, 28 Jul 2021 15:17:11 -0400
+        b=q6pK9ojWCkrR98kzMLRySGHNXaOC8domFNiLKDe9C4R+73FjE8De5OBwjGe/7Js61
+         WVSJ9a/8YqpcB+C0AYk02CVYsyVuoIUKtMHb93Y/jbgUOO1anbGCpabk2k2brgyjCH
+         oxklpoC/f/SUUJUVPoYV1eB8DS1qKaeqJDcwdRIM=
+Date:   Wed, 28 Jul 2021 15:35:36 -0400
 From:   "J. Bruce Fields" <bfields@fieldses.org>
 To:     NeilBrown <neilb@suse.de>
 Cc:     Christoph Hellwig <hch@infradead.org>,
@@ -34,392 +34,124 @@ Cc:     Christoph Hellwig <hch@infradead.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
         linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 07/11] exportfs: Allow filehandle lookup to cross
- internal mount points.
-Message-ID: <20210728191711.GC3152@fieldses.org>
+Subject: Re: [PATCH/RFC 00/11] expose btrfs subvols in mount table correctly
+Message-ID: <20210728193536.GD3152@fieldses.org>
 References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
- <162742546554.32498.9309110546560807513.stgit@noble.brown>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <162742546554.32498.9309110546560807513.stgit@noble.brown>
+In-Reply-To: <162742539595.32498.13687924366155737575.stgit@noble.brown>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jul 28, 2021 at 08:37:45AM +1000, NeilBrown wrote:
-> When a filesystem has internal mounts, it controls the filehandles
-> across all those mounts (subvols) in the filesystem.  So it is useful to
-> be able to look up a filehandle again one mount, and get a result which
-> is in a different mount (part of the same overall file system).
-> 
-> This patch makes that possible by changing export_decode_fh() and
-> export_decode_fh_raw() to take a vfsmount pointer by reference, and
-> possibly change the vfsmount pointed to before returning.
-> 
-> The core of the change is in reconnect_path() which now not only checks
-> that the dentry is fully connected, but also that the vfsmnt reported
-> has the same 'dev' (reported by vfs_getattr) as the dentry.
-> If it doesn't, we walk up the dparent() chain to find the highest place
-> where the dev changes without there being a mount point, and trigger an
-> automount there.
-> 
-> As no filesystems yet provide local-mounts, this does not yet change any
-> behaviour.
-> 
-> In exportfs_decode_fh_raw() we previously tested for DCACHE_DISCONNECT
-> before calling reconnect_path().  That test is dropped.  It was only a
-> minor optimisation and is now inconvenient.
-> 
-> The change in overlayfs needs more careful thought than I have yet given
-> it.
-> 
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/exportfs/expfs.c      |  100 +++++++++++++++++++++++++++++++++++++++-------
->  fs/fhandle.c             |    2 -
->  fs/nfsd/nfsfh.c          |    9 +++-
->  fs/overlayfs/namei.c     |    5 ++
->  fs/xfs/xfs_ioctl.c       |   12 ++++--
->  include/linux/exportfs.h |    4 +-
->  6 files changed, 106 insertions(+), 26 deletions(-)
-> 
-> diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
-> index 0106eba46d5a..2d7c42137b49 100644
-> --- a/fs/exportfs/expfs.c
-> +++ b/fs/exportfs/expfs.c
-> @@ -207,11 +207,18 @@ static struct dentry *reconnect_one(struct vfsmount *mnt,
->   * that case reconnect_path may still succeed with target_dir fully
->   * connected, but further operations using the filehandle will fail when
->   * necessary (due to S_DEAD being set on the directory).
-> + *
-> + * If the filesystem supports multiple subvols, then *mntp may be updated
-> + * to a subordinate mount point on the same filesystem.
->   */
->  static int
-> -reconnect_path(struct vfsmount *mnt, struct dentry *target_dir, char *nbuf)
-> +reconnect_path(struct vfsmount **mntp, struct dentry *target_dir, char *nbuf)
->  {
-> +	struct vfsmount *mnt = *mntp;
-> +	struct path path;
->  	struct dentry *dentry, *parent;
-> +	struct kstat stat;
-> +	dev_t target_dev;
->  
->  	dentry = dget(target_dir);
->  
-> @@ -232,6 +239,68 @@ reconnect_path(struct vfsmount *mnt, struct dentry *target_dir, char *nbuf)
->  	}
->  	dput(dentry);
->  	clear_disconnected(target_dir);
+I'm still stuck trying to understand why subvolumes can't get their own
+superblocks:
 
-Minor nit--I'd prefer the following in a separate function.
+	- Why are the performance issues Josef raises unsurmountable?
+	  And why are they unique to btrfs?  (Surely there other cases
+	  where people need hundreds or thousands of superblocks?)
+
+	- If filehandle decoding can return a different vfs mount than
+	  it's passed, why can't it return a different superblock?
 
 --b.
 
-> +
-> +	/* Need to find appropriate vfsmount, which might not exist yet.
-> +	 * We may need to trigger automount points.
-> +	 */
-> +	path.mnt = mnt;
-> +	path.dentry = target_dir;
-> +	vfs_getattr_nosec(&path, &stat, 0, AT_STATX_DONT_SYNC);
-> +	target_dev = stat.dev;
-> +
-> +	path.dentry = mnt->mnt_root;
-> +	vfs_getattr_nosec(&path, &stat, 0, AT_STATX_DONT_SYNC);
-> +
-> +	while (stat.dev != target_dev) {
-> +		/* walk up the dcache tree from target_dir, recording the
-> +		 * location of the most recent change in dev number,
-> +		 * until we find a mountpoint.
-> +		 * If there was no change in show_dev result before the
-> +		 * mountpount, the vfsmount at the mountpoint is what we want.
-> +		 * If there was, we need to trigger an automount where the
-> +		 * show_dev() result changed.
-> +		 */
-> +		struct dentry *last_change = NULL;
-> +		dev_t last_dev = target_dev;
-> +
-> +		dentry = dget(target_dir);
-> +		while ((parent = dget_parent(dentry)) != dentry) {
-> +			path.dentry = parent;
-> +			vfs_getattr_nosec(&path, &stat, 0, AT_STATX_DONT_SYNC);
-> +			if (stat.dev != last_dev) {
-> +				path.dentry = dentry;
-> +				mnt = lookup_mnt(&path);
-> +				if (mnt) {
-> +					mntput(path.mnt);
-> +					path.mnt = mnt;
-> +					break;
-> +				}
-> +				dput(last_change);
-> +				last_change = dget(dentry);
-> +				last_dev = stat.dev;
-> +			}
-> +			dput(dentry);
-> +			dentry = parent;
-> +		}
-> +		dput(dentry); dput(parent);
-> +
-> +		if (!last_change)
-> +			break;
-> +
-> +		mnt = path.mnt;
-> +		path.dentry = last_change;
-> +		follow_down(&path, LOOKUP_AUTOMOUNT);
-> +		dput(path.dentry);
-> +		if (path.mnt == mnt)
-> +			/* There should have been a mount-trap there,
-> +			 * but there wasn't.  Just give up.
-> +			 */
-> +			break;
-> +
-> +		path.dentry = mnt->mnt_root;
-> +		vfs_getattr_nosec(&path, &stat, 0, AT_STATX_DONT_SYNC);
-> +	}
-> +	*mntp = path.mnt;
->  	return 0;
->  }
->  
-> @@ -418,12 +487,13 @@ int exportfs_encode_fh(struct dentry *dentry, struct fid *fid, int *max_len,
->  EXPORT_SYMBOL_GPL(exportfs_encode_fh);
->  
->  struct dentry *
-> -exportfs_decode_fh_raw(struct vfsmount *mnt, struct fid *fid, int fh_len,
-> +exportfs_decode_fh_raw(struct vfsmount **mntp, struct fid *fid, int fh_len,
->  		       int fileid_type,
->  		       int (*acceptable)(void *, struct dentry *),
->  		       void *context)
->  {
-> -	const struct export_operations *nop = mnt->mnt_sb->s_export_op;
-> +	struct super_block *sb = (*mntp)->mnt_sb;
-> +	const struct export_operations *nop = sb->s_export_op;
->  	struct dentry *result, *alias;
->  	char nbuf[NAME_MAX+1];
->  	int err;
-> @@ -433,7 +503,7 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct fid *fid, int fh_len,
->  	 */
->  	if (!nop || !nop->fh_to_dentry)
->  		return ERR_PTR(-ESTALE);
-> -	result = nop->fh_to_dentry(mnt->mnt_sb, fid, fh_len, fileid_type);
-> +	result = nop->fh_to_dentry(sb, fid, fh_len, fileid_type);
->  	if (IS_ERR_OR_NULL(result))
->  		return result;
->  
-> @@ -452,14 +522,12 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct fid *fid, int fh_len,
->  		 *
->  		 * On the positive side there is only one dentry for each
->  		 * directory inode.  On the negative side this implies that we
-> -		 * to ensure our dentry is connected all the way up to the
-> +		 * need to ensure our dentry is connected all the way up to the
->  		 * filesystem root.
->  		 */
-> -		if (result->d_flags & DCACHE_DISCONNECTED) {
-> -			err = reconnect_path(mnt, result, nbuf);
-> -			if (err)
-> -				goto err_result;
-> -		}
-> +		err = reconnect_path(mntp, result, nbuf);
-> +		if (err)
-> +			goto err_result;
->  
->  		if (!acceptable(context, result)) {
->  			err = -EACCES;
-> @@ -494,7 +562,7 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct fid *fid, int fh_len,
->  		if (!nop->fh_to_parent)
->  			goto err_result;
->  
-> -		target_dir = nop->fh_to_parent(mnt->mnt_sb, fid,
-> +		target_dir = nop->fh_to_parent(sb, fid,
->  				fh_len, fileid_type);
->  		if (!target_dir)
->  			goto err_result;
-> @@ -507,7 +575,7 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct fid *fid, int fh_len,
->  		 * connected to the filesystem root.  The VFS really doesn't
->  		 * like disconnected directories..
->  		 */
-> -		err = reconnect_path(mnt, target_dir, nbuf);
-> +		err = reconnect_path(mntp, target_dir, nbuf);
->  		if (err) {
->  			dput(target_dir);
->  			goto err_result;
-> @@ -518,7 +586,7 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct fid *fid, int fh_len,
->  		 * dentry for the inode we're after, make sure that our
->  		 * inode is actually connected to the parent.
->  		 */
-> -		err = exportfs_get_name(mnt, target_dir, nbuf, result);
-> +		err = exportfs_get_name(*mntp, target_dir, nbuf, result);
->  		if (err) {
->  			dput(target_dir);
->  			goto err_result;
-> @@ -556,7 +624,7 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct fid *fid, int fh_len,
->  			goto err_result;
->  		}
->  
-> -		return alias;
-> +		return result;
->  	}
->  
->   err_result:
-> @@ -565,14 +633,14 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct fid *fid, int fh_len,
->  }
->  EXPORT_SYMBOL_GPL(exportfs_decode_fh_raw);
->  
-> -struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
-> +struct dentry *exportfs_decode_fh(struct vfsmount **mntp, struct fid *fid,
->  				  int fh_len, int fileid_type,
->  				  int (*acceptable)(void *, struct dentry *),
->  				  void *context)
->  {
->  	struct dentry *ret;
->  
-> -	ret = exportfs_decode_fh_raw(mnt, fid, fh_len, fileid_type,
-> +	ret = exportfs_decode_fh_raw(mntp, fid, fh_len, fileid_type,
->  				     acceptable, context);
->  	if (IS_ERR_OR_NULL(ret)) {
->  		if (ret == ERR_PTR(-ENOMEM))
-> diff --git a/fs/fhandle.c b/fs/fhandle.c
-> index 6630c69c23a2..b47c7696469f 100644
-> --- a/fs/fhandle.c
-> +++ b/fs/fhandle.c
-> @@ -149,7 +149,7 @@ static int do_handle_to_path(int mountdirfd, struct file_handle *handle,
->  	}
->  	/* change the handle size to multiple of sizeof(u32) */
->  	handle_dwords = handle->handle_bytes >> 2;
-> -	path->dentry = exportfs_decode_fh(path->mnt,
-> +	path->dentry = exportfs_decode_fh(&path->mnt,
->  					  (struct fid *)handle->f_handle,
->  					  handle_dwords, handle->handle_type,
->  					  vfs_dentry_acceptable, NULL);
-> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> index 0bf7ac13ae50..4023046f63e2 100644
-> --- a/fs/nfsd/nfsfh.c
-> +++ b/fs/nfsd/nfsfh.c
-> @@ -157,6 +157,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
->  	struct fid *fid = NULL, sfid;
->  	struct svc_export *exp;
->  	struct dentry *dentry;
-> +	struct vfsmount *mnt = NULL;
->  	int fileid_type;
->  	int data_left = fh->fh_size/4;
->  	__be32 error;
-> @@ -253,6 +254,8 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
->  	if (rqstp->rq_vers > 2)
->  		error = nfserr_badhandle;
->  
-> +	mnt = mntget(exp->ex_path.mnt);
-> +
->  	if (fh->fh_version != 1) {
->  		sfid.i32.ino = fh->ofh_ino;
->  		sfid.i32.gen = fh->ofh_generation;
-> @@ -269,7 +272,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
->  	if (fileid_type == FILEID_ROOT)
->  		dentry = dget(exp->ex_path.dentry);
->  	else {
-> -		dentry = exportfs_decode_fh_raw(exp->ex_path.mnt, fid,
-> +		dentry = exportfs_decode_fh_raw(&mnt, fid,
->  						data_left, fileid_type,
->  						nfsd_acceptable, exp);
->  		if (IS_ERR_OR_NULL(dentry)) {
-> @@ -299,7 +302,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
->  	}
->  
->  	fhp->fh_dentry = dentry;
-> -	fhp->fh_mnt = mntget(exp->ex_path.mnt);
-> +	fhp->fh_mnt = mnt;
->  	fhp->fh_export = exp;
->  
->  	switch (rqstp->rq_vers) {
-> @@ -317,6 +320,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
->  
->  	return 0;
->  out:
-> +	mntput(mnt);
->  	exp_put(exp);
->  	return error;
->  }
-> @@ -428,7 +432,6 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
->  	return error;
->  }
->  
-> -
->  /*
->   * Compose a file handle for an NFS reply.
->   *
-> diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
-> index 210cd6f66e28..0bca19f6df54 100644
-> --- a/fs/overlayfs/namei.c
-> +++ b/fs/overlayfs/namei.c
-> @@ -155,6 +155,7 @@ struct dentry *ovl_decode_real_fh(struct ovl_fs *ofs, struct ovl_fh *fh,
->  {
->  	struct dentry *real;
->  	int bytes;
-> +	struct vfsmount *mnt2;
->  
->  	if (!capable(CAP_DAC_READ_SEARCH))
->  		return NULL;
-> @@ -169,9 +170,11 @@ struct dentry *ovl_decode_real_fh(struct ovl_fs *ofs, struct ovl_fh *fh,
->  		return NULL;
->  
->  	bytes = (fh->fb.len - offsetof(struct ovl_fb, fid));
-> -	real = exportfs_decode_fh(mnt, (struct fid *)fh->fb.fid,
-> +	mnt2 = mntget(mnt);
-> +	real = exportfs_decode_fh(&mnt2, (struct fid *)fh->fb.fid,
->  				  bytes >> 2, (int)fh->fb.type,
->  				  connected ? ovl_acceptable : NULL, mnt);
-> +	mntput(mnt2);
->  	if (IS_ERR(real)) {
->  		/*
->  		 * Treat stale file handle to lower file as "origin unknown".
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 16039ea10ac9..76eb7d540811 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -149,6 +149,8 @@ xfs_handle_to_dentry(
->  {
->  	xfs_handle_t		handle;
->  	struct xfs_fid64	fid;
-> +	struct dentry		*ret;
-> +	struct vfsmount		*mnt;
->  
->  	/*
->  	 * Only allow handle opens under a directory.
-> @@ -168,9 +170,13 @@ xfs_handle_to_dentry(
->  	fid.ino = handle.ha_fid.fid_ino;
->  	fid.gen = handle.ha_fid.fid_gen;
->  
-> -	return exportfs_decode_fh(parfilp->f_path.mnt, (struct fid *)&fid, 3,
-> -			FILEID_INO32_GEN | XFS_FILEID_TYPE_64FLAG,
-> -			xfs_handle_acceptable, NULL);
-> +	mnt = mntget(parfilp->f_path.mnt);
-> +	ret = exportfs_decode_fh(&mnt, (struct fid *)&fid, 3,
-> +				 FILEID_INO32_GEN | XFS_FILEID_TYPE_64FLAG,
-> +				 xfs_handle_acceptable, NULL);
-> +	WARN_ON(mnt != parfilp->f_path.mnt);
-> +	mntput(mnt);
-> +	return ret;
->  }
->  
->  STATIC struct dentry *
-> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-> index fe848901fcc3..9a8c5434a5cf 100644
-> --- a/include/linux/exportfs.h
-> +++ b/include/linux/exportfs.h
-> @@ -228,12 +228,12 @@ extern int exportfs_encode_inode_fh(struct inode *inode, struct fid *fid,
->  				    int *max_len, struct inode *parent);
->  extern int exportfs_encode_fh(struct dentry *dentry, struct fid *fid,
->  	int *max_len, int connectable);
-> -extern struct dentry *exportfs_decode_fh_raw(struct vfsmount *mnt,
-> +extern struct dentry *exportfs_decode_fh_raw(struct vfsmount **mntp,
->  					     struct fid *fid, int fh_len,
->  					     int fileid_type,
->  					     int (*acceptable)(void *, struct dentry *),
->  					     void *context);
-> -extern struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
-> +extern struct dentry *exportfs_decode_fh(struct vfsmount **mnt, struct fid *fid,
->  	int fh_len, int fileid_type, int (*acceptable)(void *, struct dentry *),
->  	void *context);
->  
+On Wed, Jul 28, 2021 at 08:37:45AM +1000, NeilBrown wrote:
+> There are long-standing problems with btrfs subvols, particularly in
+> relation to whether and how they are exposed in the mount table.
 > 
+>  - /proc/self/mountinfo reports the major:minor device number for each
+>     filesystem and when a btrfs subvol is explicitly mounted, the number
+>     reported is wrong - it does not match what stat() reports for the
+>     mountpoint.
+> 
+>  - when subvol are not explicitly mounted, they don't appear in
+>    mountinfo at all.
+> 
+> Consequences include that a tool which uses stat() to find the dev of the
+> filesystem, then searches mountinfo for that filesystem, will not find
+> it.
+> 
+> Some tools (e.g. findmnt) appear to have been enhanced to cope with this
+> strangeness, but it would be best to make btrfs behave more normally.
+> 
+>   - nfsd cannot currently see the transition to subvol, so reports the
+>     main volume and all subvols to the client as being in the same
+>     filesystem.  As inode numbers are not unique across all subvols,
+>     this can confuse clients.  In particular, 'find' is likely to report a
+>     loop.
+> 
+> subvols can be made to appear in mountinfo using automounts.  However
+> nfsd does not cope well with automounts.  It assumes all filesystems to
+> be exported are already mounted.  So adding automounts to btrfs would
+> break nfsd.
+> 
+> We can enhance nfsd to understand that some automounts can be managed.
+> "internal mounts" where a filesystem provides an automount point and
+> mounts its own directories, can be handled differently by nfsd.
+> 
+> This series addresses all these issues.  After a few enhancements to the
+> VFS to provide needed support, they enhance exportfs and nfsd to cope
+> with the concept of internal mounts, and then enhance btrfs to provide
+> them.
+> 
+> The NFSv3 support is incomplete.  I'm not sure we can make it work
+> "perfectly".  A normal nfsv3 mount seem to work well enough, but if
+> mounted with '-o noac', it loses track of the mounted-on inode number
+> and complains about inode numbers changing.
+> 
+> My basic test for these is to mount a btrfs filesystem which contains
+> subvols, nfs-export it and mount it with nfsv3 and nfsv4, then run
+> 'find' in each of the filesystem and check the contents of
+> /proc/self/mountinfo.
+> 
+> The first patch simply fixes the dev number in mountinfo and could
+> possibly be tagged for -stable.
+> 
+> NeilBrown
+> 
+> ---
+> 
+> NeilBrown (11):
+>       VFS: show correct dev num in mountinfo
+>       VFS: allow d_automount to create in-place bind-mount.
+>       VFS: pass lookup_flags into follow_down()
+>       VFS: export lookup_mnt()
+>       VFS: new function: mount_is_internal()
+>       nfsd: include a vfsmount in struct svc_fh
+>       exportfs: Allow filehandle lookup to cross internal mount points.
+>       nfsd: change get_parent_attributes() to nfsd_get_mounted_on()
+>       nfsd: Allow filehandle lookup to cross internal mount points.
+>       btrfs: introduce mapping function from location to inum
+>       btrfs: use automount to bind-mount all subvol roots.
+> 
+> 
+>  fs/btrfs/btrfs_inode.h   |  12 +++
+>  fs/btrfs/inode.c         | 111 ++++++++++++++++++++++++++-
+>  fs/btrfs/super.c         |   1 +
+>  fs/exportfs/expfs.c      | 100 ++++++++++++++++++++----
+>  fs/fhandle.c             |   2 +-
+>  fs/internal.h            |   1 -
+>  fs/namei.c               |   6 +-
+>  fs/namespace.c           |  32 +++++++-
+>  fs/nfsd/export.c         |   4 +-
+>  fs/nfsd/nfs3xdr.c        |  40 +++++++---
+>  fs/nfsd/nfs4proc.c       |   9 ++-
+>  fs/nfsd/nfs4xdr.c        | 106 ++++++++++++-------------
+>  fs/nfsd/nfsfh.c          |  44 +++++++----
+>  fs/nfsd/nfsfh.h          |   3 +-
+>  fs/nfsd/nfsproc.c        |   5 +-
+>  fs/nfsd/vfs.c            | 162 +++++++++++++++++++++++----------------
+>  fs/nfsd/vfs.h            |  12 +--
+>  fs/nfsd/xdr4.h           |   2 +-
+>  fs/overlayfs/namei.c     |   5 +-
+>  fs/xfs/xfs_ioctl.c       |  12 ++-
+>  include/linux/exportfs.h |   4 +-
+>  include/linux/mount.h    |   4 +
+>  include/linux/namei.h    |   2 +-
+>  23 files changed, 490 insertions(+), 189 deletions(-)
+> 
+> --
+> Signature
