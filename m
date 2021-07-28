@@ -2,107 +2,112 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B84F3D8B7D
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jul 2021 12:13:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B780F3D8C8B
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jul 2021 13:16:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232114AbhG1KNY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 28 Jul 2021 06:13:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231238AbhG1KNX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Jul 2021 06:13:23 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BA98C061757;
-        Wed, 28 Jul 2021 03:13:21 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id y9so2370494iox.2;
-        Wed, 28 Jul 2021 03:13:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7QmGiwadyrl2A+oRU9PREaFTgjxYnsl3jarNmUA0ccc=;
-        b=kadjRfSLGIehVOh2FYcHRdTnMQ4rBvIIaauQ6SxaBbZAZkksYFzd9Ky5hPfxCW+LUr
-         SkCWXABR9j/cqXd4tTUF/5vK+16xhzFBBo8gwG9Wu6bMJxe/R2a7QXtNp+L8QzJFtfNN
-         IEs5BR7c/PT+jfCm6tvyeh6Kqsc/zHD1COgzWz4WGk/cTCnt4ffV90WYlV0Ot0MU/LJO
-         Iz8GGSA/TqHDptPoTZ0SJcc6uU49FTIv7chd+HxCmRauHVCH/HvZy2Gp0kRmsHGEvoh/
-         4tBwSrqboedPUjwITSi7J1su3Ir692IrfYGX9A6rVK7Tu3U6nre7rHZiC4+zSMle/xnh
-         et2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7QmGiwadyrl2A+oRU9PREaFTgjxYnsl3jarNmUA0ccc=;
-        b=EJCPHfmfycqal2DmhCwQRkuJA+phYJkO/AjLmJUZEkFwdTQpwXf33Dfeu3FqlCHQFK
-         /0EUOooQhuiunHCPpHc/mf4I9eYHA5GUlYNE8xBGvyeAGiAlALLm6KCh6YuibQ/MyVwh
-         /ioQFh4ur8M/BXWGb5DfD5o7jx86TQXuFUFOZjf5xEJzKdttHwA8UuON0v239IGT7oG4
-         2v57dIrNeiBNl8s7+SSYc/iTjrTM84TF8swmRjGlQUiZCfSgqWE+ycRlSG5TJTTQZxO3
-         68eAMO8J/Cq5FiFCzudRxx6BaGEaBrzByDAFp0oRFLRgvws5ctfnz0Rk6zjRU0kcV6eK
-         r9lA==
-X-Gm-Message-State: AOAM533gFf3OiBtsLHVhr1suEKHM7tMp2xfScm+No+IsWSKvyHkcJ7aF
-        CoyMMghWPuCTiqzOBTWjCodc3nLNcAFNFqikch4=
-X-Google-Smtp-Source: ABdhPJyx8yGLAmnj+e5VNODQ+YpsxgcVgntTYM7sdQEtpN/zpo2PXyiYj8b+zHlkvjByjECZGxzk5U2VLr7h6nOk9Vs=
-X-Received: by 2002:a05:6638:1907:: with SMTP id p7mr25944211jal.93.1627467201116;
- Wed, 28 Jul 2021 03:13:21 -0700 (PDT)
+        id S231631AbhG1LQB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 28 Jul 2021 07:16:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229740AbhG1LQA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 28 Jul 2021 07:16:00 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 573966054E;
+        Wed, 28 Jul 2021 11:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627470959;
+        bh=0iAbzfcTbMKwEwjJ5/Jq/q6tiVMD/Ve5LOR80V4dH5Y=;
+        h=Subject:From:To:Date:In-Reply-To:References:From;
+        b=acPkQ7UflJ1Qo7jL2VLJq+lKViRbMwhj33Gi7G7S9j+S0ueXyx1ER9peFdkOeHIcS
+         cVii64vFfDvXwwJI88sd3BYrKaXGM+cBdL4xzwgrbjw/ZsuMeqn80depVAGyTgDCwG
+         m3W1Mjnr2GeHF+rV20G5KXE+xx7m9GVeew6ZXWbOf+t3Tze5vYDo7xS03jKkM/k0CJ
+         4MufMRha9oMcEgckXuWv2fXRB2FtV7MqTK/D+96EUc47enkxYp2D6cytpvtWUa/fB3
+         FpKRyvbFKpFfjMp0ReEyXEmD+teyiMl7tGPXwj10wuPeFQYjFiAWvm9HXyTzxKVhpq
+         iSpm3tbxq8+Tg==
+Message-ID: <0ba5eaacd17a50b0ab0c6fd9605a7c330935eca8.camel@kernel.org>
+Subject: Re: [PATCH] nfsdcltrack: Use uint64_t instead of time_t
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Steve Dickson <steved@redhat.com>,
+        Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Date:   Wed, 28 Jul 2021 07:15:58 -0400
+In-Reply-To: <20210728013608.167759-1-steved@redhat.com>
+References: <20210728013608.167759-1-steved@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
 MIME-Version: 1.0
-References: <162742539595.32498.13687924366155737575.stgit@noble.brown> <162742546554.32498.9309110546560807513.stgit@noble.brown>
-In-Reply-To: <162742546554.32498.9309110546560807513.stgit@noble.brown>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 28 Jul 2021 13:13:10 +0300
-Message-ID: <CAOQ4uxjXcVE=4K+3uSYXLsvGgi0o7Nav=DsV=0qG_DanjXB18Q@mail.gmail.com>
-Subject: Re: [PATCH 07/11] exportfs: Allow filehandle lookup to cross internal
- mount points.
-To:     NeilBrown <neilb@suse.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jul 28, 2021 at 1:44 AM NeilBrown <neilb@suse.de> wrote:
->
-> When a filesystem has internal mounts, it controls the filehandles
-> across all those mounts (subvols) in the filesystem.  So it is useful to
-> be able to look up a filehandle again one mount, and get a result which
-> is in a different mount (part of the same overall file system).
->
-> This patch makes that possible by changing export_decode_fh() and
-> export_decode_fh_raw() to take a vfsmount pointer by reference, and
-> possibly change the vfsmount pointed to before returning.
->
-> The core of the change is in reconnect_path() which now not only checks
-> that the dentry is fully connected, but also that the vfsmnt reported
-> has the same 'dev' (reported by vfs_getattr) as the dentry.
-> If it doesn't, we walk up the dparent() chain to find the highest place
-> where the dev changes without there being a mount point, and trigger an
-> automount there.
->
-> As no filesystems yet provide local-mounts, this does not yet change any
-> behaviour.
->
-> In exportfs_decode_fh_raw() we previously tested for DCACHE_DISCONNECT
-> before calling reconnect_path().  That test is dropped.  It was only a
-> minor optimisation and is now inconvenient.
->
-> The change in overlayfs needs more careful thought than I have yet given
-> it.
+On Tue, 2021-07-27 at 21:36 -0400, Steve Dickson wrote:
+> With recent commits (4f2a5b64,5a53426c) that fixed
+> compile errors on x86_64 machines, caused similar
+> errors on i686 machines.
+> 
+> The variable type that was being used was a time_t,
+> which changes size between architects, which
+> caused the compile error.
+> 
+> Changing the variable to uint64_t fixed the issue.
+> 
+> Signed-off-by: Steve Dickson <steved@redhat.com>
+> ---
+>  utils/nfsdcltrack/nfsdcltrack.c | 2 +-
+>  utils/nfsdcltrack/sqlite.c      | 2 +-
+>  utils/nfsdcltrack/sqlite.h      | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/utils/nfsdcltrack/nfsdcltrack.c b/utils/nfsdcltrack/nfsdcltrack.c
+> index 0b37c094..7c1c4bcc 100644
+> --- a/utils/nfsdcltrack/nfsdcltrack.c
+> +++ b/utils/nfsdcltrack/nfsdcltrack.c
+> @@ -508,7 +508,7 @@ cltrack_gracedone(const char *timestr)
+>  {
+>  	int ret;
+>  	char *tail;
+> -	time_t gracetime;
+> +	uint64_t gracetime;
+>  
 
-Just note that overlayfs does not support following auto mounts in layers.
-See ovl_dentry_weird(). ovl_lookup() fails if it finds such a dentry.
-So I think you need to make sure that the vfsmount was not crossed
-when decoding an overlayfs real fh.
+Hmm.. time_t is a long:
 
-Apart from that, I think that your new feature should be opt-in w.r.t
-the exportfs_decode_fh() vfs api and that overlayfs should not opt-in
-for the cross mount decode.
+    typedef __kernel_long_t __kernel_time_t;
 
-Thanks,
-Amir.
+...but the kernel is converting this value from a time64_t which is s64.
+ 
+Should the above be int64_t instead of being unsigned? The kernel should
+never send down a negative value, but if you're trying to match up types
+then that might be cleaner.
+
+> 
+>  	ret = sqlite_prepare_dbh(storagedir);
+> diff --git a/utils/nfsdcltrack/sqlite.c b/utils/nfsdcltrack/sqlite.c
+> index cea4a411..cf0c6a45 100644
+> --- a/utils/nfsdcltrack/sqlite.c
+> +++ b/utils/nfsdcltrack/sqlite.c
+> @@ -540,7 +540,7 @@ out_err:
+>   * remove any client records that were not reclaimed since grace_start.
+>   */
+>  int
+> -sqlite_remove_unreclaimed(time_t grace_start)
+> +sqlite_remove_unreclaimed(uint64_t grace_start)
+>  {
+>  	int ret;
+>  	char *err = NULL;
+> diff --git a/utils/nfsdcltrack/sqlite.h b/utils/nfsdcltrack/sqlite.h
+> index 06e7c044..ba8cdfa8 100644
+> --- a/utils/nfsdcltrack/sqlite.h
+> +++ b/utils/nfsdcltrack/sqlite.h
+> @@ -26,7 +26,7 @@ int sqlite_insert_client(const unsigned char *clname, const size_t namelen,
+>  int sqlite_remove_client(const unsigned char *clname, const size_t namelen);
+>  int sqlite_check_client(const unsigned char *clname, const size_t namelen,
+>  				const bool has_session);
+> -int sqlite_remove_unreclaimed(const time_t grace_start);
+> +int sqlite_remove_unreclaimed(const uint64_t grace_start);
+>  int sqlite_query_reclaiming(const time_t grace_start);
+>  
+>  #endif /* _SQLITE_H */
+
+-- 
+Jeff Layton <jlayton@kernel.org>
+
