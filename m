@@ -2,53 +2,21 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 426E43DA039
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jul 2021 11:29:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CEA93DA690
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jul 2021 16:38:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235492AbhG2J3G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 29 Jul 2021 05:29:06 -0400
-Received: from zaphod.cobb.me.uk ([213.138.97.131]:60872 "EHLO
-        zaphod.cobb.me.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235459AbhG2J3F (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jul 2021 05:29:05 -0400
-Received: by zaphod.cobb.me.uk (Postfix, from userid 107)
-        id 3125D9C366; Thu, 29 Jul 2021 10:29:02 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cobb.uk.net;
-        s=201703; t=1627550942;
-        bh=Iim5E1MebJGyexk5Ad4jyZr9JL9smuusi4CzEQP17Io=;
-        h=From:To:Cc:References:Subject:Date:In-Reply-To:From;
-        b=lusL9pd0qgyowNYgqEeFW7Ailf1D9cEwn79yJ9ZeEfupzv/9Sb4J1rSvwkDe2O1dY
-         AmRpUwr9T5Qrm1wm7aTCOUcFp8kKPxsry1wCW2z8X0yVy9WAVq3l1YgP4bH+r5PZNA
-         qW9jV1xnjqjK/+1UWm/7zMJOEVas5orDs04vX8DwdHRay6JpvjCYvhg8luwl3A09cF
-         9/IG9/jIBwKO4SIwy94Er5IAP42g85Zy5ENR9lI5UiKSBanZPAXYi001fRtACYfhp5
-         9ABfgitIO3zAhyJ0Kt54exSTI7VyucQt+e4bHIv6Z+qlr+/zsG0MX1HQkXyu4a4ATA
-         ZLuonCn1IqwWw==
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on zaphod.cobb.me.uk
-X-Spam-Status: No, score=-3.1 required=12.0 tests=ALL_TRUSTED,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.2
-X-Spam-Level: 
-X-Spam-Bar: 
-Received: from black.home.cobb.me.uk (unknown [192.168.0.205])
-        by zaphod.cobb.me.uk (Postfix) with ESMTP id 68BDC9BC8E;
-        Thu, 29 Jul 2021 10:28:56 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cobb.uk.net;
-        s=201703; t=1627550936;
-        bh=Iim5E1MebJGyexk5Ad4jyZr9JL9smuusi4CzEQP17Io=;
-        h=From:To:Cc:References:Subject:Date:In-Reply-To:From;
-        b=obpt+7/NgX/yoTjv+CSTPZXgsqanl2bIxZ3eppRGHUoUBft615lNQvL/jcPJ8OIBQ
-         GZzWNzSCPQhZ1qW4HRMkUTfSDNyrsN3881cxb00PcShRNx8zx37Fd0/KqwAuIva9fS
-         K7pzAclQAkFDOdFOqPq2GDKblx9zXEodliWbWy6ueJXgfXtICV81oHtfuC/ro/SENI
-         m2RFLCxpAi9BwmzrpLtIjl0PLmkAqjgenfkGU259FEI2njyr2PbUGMX0HB3Cw3Pq4s
-         DI/ie9WiSp+mC3lzI+v3jW76AQccDuKr+abrI8BpYVrTYb4RYrr3twwgI9UnX78qoj
-         UbHb09Murd+lQ==
-Received: from [192.168.0.202] (ryzen.home.cobb.me.uk [192.168.0.202])
-        by black.home.cobb.me.uk (Postfix) with ESMTP id E5D61275AD0;
-        Thu, 29 Jul 2021 10:28:55 +0100 (BST)
-From:   Graham Cobb <g.btrfs@cobb.uk.net>
+        id S236945AbhG2OiL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 29 Jul 2021 10:38:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237035AbhG2OiK (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 29 Jul 2021 10:38:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E8B6A60FD7;
+        Thu, 29 Jul 2021 14:38:03 +0000 (UTC)
+Date:   Thu, 29 Jul 2021 16:38:01 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     NeilBrown <neilb@suse.de>
-Cc:     Wang Yugui <wangyugui@e16-tech.com>,
-        Christoph Hellwig <hch@infradead.org>,
+Cc:     Christoph Hellwig <hch@infradead.org>,
         Josef Bacik <josef@toxicpanda.com>,
         "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
@@ -56,120 +24,64 @@ Cc:     Wang Yugui <wangyugui@e16-tech.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
         linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 11/11] btrfs: use automount to bind-mount all subvol
+ roots.
+Message-ID: <20210729143801.k2zq7qm3pm2h4wzx@wittgenstein>
 References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
- <20210728125819.6E52.409509F4@e16-tech.com>
- <20210728140431.D704.409509F4@e16-tech.com>
- <162745567084.21659.16797059962461187633@noble.neil.brown.name>
- <2cb6455c-7b9f-9ac3-fd9d-9121eb1aa109@cobb.uk.net>
- <162752278855.21659.8220794370174720381@noble.neil.brown.name>
-Subject: Re: [PATCH/RFC 00/11] expose btrfs subvols in mount table correctly
-Message-ID: <3830b42b-2b76-6953-111f-d21ec3f0528e@cobb.uk.net>
-Date:   Thu, 29 Jul 2021 10:28:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+ <162742546558.32498.1901201501617899416.stgit@noble.brown>
+ <20210728131213.pgu3r4m4ulozrcav@wittgenstein>
+ <162751940386.21659.17682627731630829061@noble.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <162752278855.21659.8220794370174720381@noble.neil.brown.name>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <162751940386.21659.17682627731630829061@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 29/07/2021 02:39, NeilBrown wrote:
-> On Wed, 28 Jul 2021, g.btrfs@cobb.uk.net wrote:
->> On 28/07/2021 08:01, NeilBrown wrote:
->>> On Wed, 28 Jul 2021, Wang Yugui wrote:
->>>> Hi,
->>>>
->>>> This patchset works well in 5.14-rc3.
->>>
->>> Thanks for testing.
->>>
->>>>
->>>> 1, fixed dummy inode(255, BTRFS_FIRST_FREE_OBJECTID - 1 )  is changed to
->>>> dynamic dummy inode(18446744073709551358, or 18446744073709551359, ...)
->>>
->>> The BTRFS_FIRST_FREE_OBJECTID-1 was a just a hack, I never wanted it to
->>> be permanent.
->>> The new number is ULONG_MAX - subvol_id (where subvol_id starts at 257 I
->>> think).
->>> This is a bit less of a hack.  It is an easily available number that is
->>> fairly unique.
->>>
->>>>
->>>> 2, btrfs subvol mount info is shown in /proc/mounts, even if nfsd/nfs is
->>>> not used.
->>>> /dev/sdc                btrfs   94G  3.5M   93G   1% /mnt/test
->>>> /dev/sdc                btrfs   94G  3.5M   93G   1% /mnt/test/sub1
->>>> /dev/sdc                btrfs   94G  3.5M   93G   1% /mnt/test/sub2
->>>>
->>>> This is a visiual feature change for btrfs user.
->>>
->>> Hopefully it is an improvement.  But it is certainly a change that needs
->>> to be carefully considered.
->>
->> Would this change the behaviour of findmnt? I have several scripts that
->> depend on findmnt to select btrfs filesystems. Just to take a couple of
->> examples (using the example shown above): my scripts would depend on
->> 'findmnt --target /mnt/test/sub1 -o target' providing /mnt/test, not the
->> subvolume; and another script would depend on 'findmnt -t btrfs
->> --mountpoint /mnt/test/sub1' providing no output as the directory is not
->> an /etc/fstab mount point for a btrfs filesystem.
+On Thu, Jul 29, 2021 at 10:43:23AM +1000, NeilBrown wrote:
+> On Wed, 28 Jul 2021, Christian Brauner wrote:
+> > 
+> > Hey Neil,
+> > 
+> > Sorry if this is a stupid question but wouldn't you want to copy the
+> > mount properties from path->mnt here? Couldn't you otherwise use this to
+> > e.g. suddenly expose a dentry on a read-only mount as read-write?
 > 
-> Yes, I think it does change the behaviour of findmnt.
-> If the sub1 automount has not been triggered,
->   findmnt --target /mnt/test/sub1 -o target
-> will report "/mnt/test".
-> After it has been triggered, it will report "/mnt/test/sub1"
+> There are no stupid questions, and this is a particularly non-stupid
+> one!
 > 
-> Similarly "findmnt -t btrfs --mountpoint /mnt/test/sub1" will report
-> nothing if the automount hasn't been triggered, and will report full
-> details of /mnt/test/sub1 if it has.
-> 
->>
->> Maybe findmnt isn't affected? Or maybe the change is worth making
->> anyway? But it needs to be carefully considered if it breaks existing
->> user interfaces.
->>
-> I hope the change is worth making anyway, but breaking findmnt would not
-> be a popular move.
+> I hadn't considered that, but having examined the code I see that it
+> is already handled.
+> The vfsmount that d_automount returns is passed to finish_automount(),
+> which hands it to do_add_mount() together with the mnt_flags for the
+> parent vfsmount (plus MNT_SHRINKABLE).
+> do_add_mount() sets up the mnt_flags of the new vfsmount.
+> In fact, the d_automount interface has no control of these flags at all.
+> Whatever it sets will be over-written by do_add_mount.
 
-I agree. I use findmnt, but I also use NFS mounted btrfs disks so I am
-keen to see this deployed. But people who don't maintain their own
-scripts and need a third party to change them might disagree!
+Ah, interesting thank you very much, Neil. I seemed to have overlooked
+this yesterday.
 
-> This is unfortunate....  btrfs is "broken" and people/code have adjusted
-> to that breakage so that "fixing" it will be traumatic.
-> 
-> The only way I can find to get findmnt to ignore the new entries in
-> /proc/self/mountinfo is to trigger a parse error such as by replacing the 
-> " - " with " -- "
-> but that causes a parse error message to be generated, and will likely
-> break other tools.
-> (...  or I could check if current->comm is "findmnt", and suppress the
-> extra entries, but that is even more horrible!!)
-> 
-> A possible option is to change findmnt to explicitly ignore the new
-> "internal" mounts (unless some option is given) and then delay the
-> kernel update until that can be rolled out.
+If btrfs makes use of automounts the way you envisioned to expose
+subvolumes and also will support idmapped mounts (see [1]) we need to
+teach do_add_mount() to also take the idmapped mount into account. So
+you'd need something like (entirely untested):
 
-That sounds good as a permanent fix for findmnt. Some sort of
-'--include-subvols' option. Particularly if it were possible to default
-it using an environment variable so a script can be written to work with
-both the old and the new versions of findmnt.
+diff --git a/fs/namespace.c b/fs/namespace.c
+index ab4174a3c802..921f6396c36d 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -2811,6 +2811,11 @@ static int do_add_mount(struct mount *newmnt, struct mountpoint *mp,
+                return -EINVAL;
 
-Unfortunately it won't help any other program which does similar
-searches through /proc/self/mountinfo.
+        newmnt->mnt.mnt_flags = mnt_flags;
++
++       newmnt->mnt.mnt_userns = path->mnt;
++       if (newmnt->mnt.mnt_userns != &init_user_ns)
++               newmnt->mnt.mnt_userns = get_user_ns(newmnt->mnt.mnt_userns);
++
+        return graft_tree(newmnt, parent, mp);
+ }
 
-How about creating two different files? Say, /proc/self/mountinfo and
-/proc/self/mountinfo.internal (better filenames may be available!). The
-.internal file could be just the additional internal mounts, or it could
-be the complete list. Or something like
-/proc/self/mountinfo.without-subvols and
-/proc/self/mountinfo.with-subvols and a sysctl setting to choose which
-is made visible as /proc/self/mountinfo.
-
-Graham
-
-
+[1]: https://lore.kernel.org/linux-btrfs/20210727104900.829215-1-brauner@kernel.org/T/#mca601363b435e81c89d8ca4f09134faa5c227e6d
