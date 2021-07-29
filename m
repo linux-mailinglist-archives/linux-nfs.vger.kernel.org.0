@@ -2,92 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1E6C3D9A2E
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jul 2021 02:43:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D856C3D9B1B
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jul 2021 03:37:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232904AbhG2Ang (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 28 Jul 2021 20:43:36 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:37822 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232837AbhG2Anf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Jul 2021 20:43:35 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id D57D9201C9;
-        Thu, 29 Jul 2021 00:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1627519409; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9FTxaVEoSr+Xax9oo8ainK5PQyM3hdeesRBkvIyazV4=;
-        b=W9wlJWXzPR+NSH1Nlf6q1itAzldXvOmGDkR5jNm/RGZTHOobLrplYXH3plCNOkhZYK8ueT
-        7IjlWyTvkjD3pg2Z5pdoE5ieVlsjQMA481XiRuDVRgwyMLtHoi/XqTrmYC/RmAgt9SAFj4
-        VVJKKVWHTjsuWDpNPjNABwCJttMofHc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1627519409;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9FTxaVEoSr+Xax9oo8ainK5PQyM3hdeesRBkvIyazV4=;
-        b=EVvHY4aO5lhaDw4izAyUO0sTU/eMKgNCQKhuaPDQoXb88K2Dn9kj/sUKLBFs8zziiHQErn
-        ooO4YByS5QcKWXDw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id ABEEA13ADC;
-        Thu, 29 Jul 2021 00:43:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id dBNrGq75AWHvfgAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 29 Jul 2021 00:43:26 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        id S233142AbhG2BhF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 28 Jul 2021 21:37:05 -0400
+Received: from james.kirk.hungrycats.org ([174.142.39.145]:44102 "EHLO
+        james.kirk.hungrycats.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233140AbhG2BhA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Jul 2021 21:37:00 -0400
+X-Greylist: delayed 442 seconds by postgrey-1.27 at vger.kernel.org; Wed, 28 Jul 2021 21:37:00 EDT
+Received: by james.kirk.hungrycats.org (Postfix, from userid 1002)
+        id 9EA3FB0898C; Wed, 28 Jul 2021 21:29:31 -0400 (EDT)
+Date:   Wed, 28 Jul 2021 21:29:31 -0400
+From:   Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Neal Gompa <ngompa13@gmail.com>, NeilBrown <neilb@suse.de>,
+        Wang Yugui <wangyugui@e16-tech.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-nfs@vger.kernel.org,
+        Btrfs BTRFS <linux-btrfs@vger.kernel.org>
+Subject: Re: [PATCH/RFC 00/11] expose btrfs subvols in mount table correctly
+Message-ID: <20210729012931.GK10170@hungrycats.org>
+References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
+ <20210728125819.6E52.409509F4@e16-tech.com>
+ <20210728140431.D704.409509F4@e16-tech.com>
+ <162745567084.21659.16797059962461187633@noble.neil.brown.name>
+ <CAEg-Je8Pqbw0tTw6NWkAcD=+zGStOJR0J-409mXuZ1vmb6dZsA@mail.gmail.com>
+ <20210728191431.GA3152@fieldses.org>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Christian Brauner" <christian.brauner@ubuntu.com>
-Cc:     "Christoph Hellwig" <hch@infradead.org>,
-        "Josef Bacik" <josef@toxicpanda.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        "Chuck Lever" <chuck.lever@oracle.com>, "Chris Mason" <clm@fb.com>,
-        "David Sterba" <dsterba@suse.com>,
-        "Alexander Viro" <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 11/11] btrfs: use automount to bind-mount all subvol roots.
-In-reply-to: <20210728131213.pgu3r4m4ulozrcav@wittgenstein>
-References: <162742539595.32498.13687924366155737575.stgit@noble.brown>,
- <162742546558.32498.1901201501617899416.stgit@noble.brown>,
- <20210728131213.pgu3r4m4ulozrcav@wittgenstein>
-Date:   Thu, 29 Jul 2021 10:43:23 +1000
-Message-id: <162751940386.21659.17682627731630829061@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210728191431.GA3152@fieldses.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 28 Jul 2021, Christian Brauner wrote:
+On Wed, Jul 28, 2021 at 03:14:31PM -0400, J. Bruce Fields wrote:
+> On Wed, Jul 28, 2021 at 08:26:12AM -0400, Neal Gompa wrote:
+> > I think this is behavior people generally expect, but I wonder what
+> > the consequences of this would be with huge numbers of subvolumes. If
+> > there are hundreds or thousands of them (which is quite possible on
+> > SUSE systems, for example, with its auto-snapshotting regime), this
+> > would be a mess, wouldn't it?
 > 
-> Hey Neil,
-> 
-> Sorry if this is a stupid question but wouldn't you want to copy the
-> mount properties from path->mnt here? Couldn't you otherwise use this to
-> e.g. suddenly expose a dentry on a read-only mount as read-write?
+> I'm surprised that btrfs is special here.  Doesn't anyone have thousands
+> of lvm snapshots?  Or is it that they do but they're not normally
+> mounted?
 
-There are no stupid questions, and this is a particularly non-stupid
-one!
+Unprivileged users can't create lvm snapshots as easily or quickly as
+using mkdir (well, ok, mkdir and fssync).  lvm doesn't scale very well
+past more than a few dozen snapshots of the same original volume, and
+performance degrades linearly in the number of snapshots if the original
+LV is modified.  btrfs is the opposite:  users can create and delete
+as many snapshots as they like, at a cost more expensive than mkdir but
+less expensive than 'cp -a', and users only pay IO costs for writes to
+the subvols they modify.  So some btrfs users use snapshots in places
+where more traditional tools like 'cp -a' or 'git checkout' are used on
+other filesystems.
 
-I hadn't considered that, but having examined the code I see that it
-is already handled.
-The vfsmount that d_automount returns is passed to finish_automount(),
-which hands it to do_add_mount() together with the mnt_flags for the
-parent vfsmount (plus MNT_SHRINKABLE).
-do_add_mount() sets up the mnt_flags of the new vfsmount.
-In fact, the d_automount interface has no control of these flags at all.
-Whatever it sets will be over-written by do_add_mount.
+e.g. a build system might make a snapshot of a git working tree containing
+a checked out and built baseline revision, and then it might do a loop
+where it makes a snapshot, applies one patch from an integration branch
+in the snapshot directory, and incrementally builds there.  The next
+revision makes a snapshot of its parent revision's subvol and builds
+the next patch.  If there are merges in the integration branch, then
+the builder can go back to parent revisions, create a new snapshot,
+apply the patch, and build in a snapshot on both sides of the merge.
+After testing picks a winner, the builder can simply delete all the
+snapshots except the one for the version that won testing (there is no
+requirement to commit the snapshot to the origin LV as in lvm, either
+can be destroyed without requiring action to preserve the other).
 
-Thanks,
-NeilBrown
+You can do a similar thing with overlayfs, but it runs into problems
+with all the mount points.  In btrfs, the mount points are persistent
+because they're built into the filesystem.  With overlayfs, you have
+to save and restore them so they persist across reboots (unless that
+feature has been added since I last looked).
+
+I'm looking at a few machines here, and if all the subvols are visible to
+'df', its output would be somewhere around 3-5 MB.  That's too much--we'd
+have to hack up df to not show the same btrfs twice...as well as every
+monitoring tool that reports free space...which sounds similar to the
+problems we're trying to avoid.
+
+Ideally there would be a way to turn this on or off.  It is creating a
+set of new problems that is the complement of the set we're trying to
+fix in this change.
+
+> --b.
