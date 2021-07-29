@@ -2,102 +2,210 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 928823DADF9
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jul 2021 22:59:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38D743DAFC6
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jul 2021 01:20:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233129AbhG2U74 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 29 Jul 2021 16:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229738AbhG2U74 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jul 2021 16:59:56 -0400
-Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B66C061765
-        for <linux-nfs@vger.kernel.org>; Thu, 29 Jul 2021 13:59:52 -0700 (PDT)
-Received: by mail-qk1-x72f.google.com with SMTP id 184so7383575qkh.1
-        for <linux-nfs@vger.kernel.org>; Thu, 29 Jul 2021 13:59:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cuhQ2h40XFn8maWZ+fhgOap2rvIGruMHRWRFAKpE1r4=;
-        b=hI73O2XyFw/dWa7eDCgBcjvx7yDB2u+Z2kU11WfbS9B7Yg1l3cxo/aAIWtvus20spS
-         bZE+NsJWVvwIUErvcMI38xK+CH+y9SeJJVSxm8vviEzkTm98qSI20XErNW3LPQFrhZlV
-         ox5r3tbZid+hDmR6vcRRNz3r/VL+Gayu8CqJe5dzyZiYnKxYqerYpTVK07ZlnFxBPEhl
-         dQ4edNxq/HD2Uusr93Rbe43r5EqlB/dDjDiCCFfInIyYM2uIJbe7rGnpqkRuHudDq0ys
-         Y/eil1YzDpqOLfcUuP0c+NlSm0esQEMuq1NMVuSRC9DfvWmjFf2UIZL7OA0t2UqaJgQR
-         SJ4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=cuhQ2h40XFn8maWZ+fhgOap2rvIGruMHRWRFAKpE1r4=;
-        b=AfMcgAbeXcWiTWyfjCsBoSL/6PYE/YvnHk/4iq/Gs8WY7mPbul+4wPEvCxiE6CQDhc
-         I3gGGGQE8++psXmDoWTdgs+LmdNC7Zjstjw+uD3J/KNyOTHs7OgO9j+p1NSUSp+evrX1
-         Omf/xXMdpT8g/lwI6LHaOWjqFMyiXTukRmHkt4QwUCKG8LBGErXXlrWDEBJ9b40kG3UD
-         2W8S56EJ83Q78RKfFXXRFsqqnDsOie//gzxwDYhQimfCbD8NiIMx8PKA4ikx16du661x
-         FljhgvcM0oEAxYx8Kyfb8FDpp4txdffraa8697PsMAs+/LQVdszS7OJryhm4keW/4j3n
-         JUiA==
-X-Gm-Message-State: AOAM532middkWsKO7n8Y8vfyy/BHUnXxn2banhrkeJg4DvZRgswfXRvR
-        a7pEY8FUi5hr9s1RlL80UBM=
-X-Google-Smtp-Source: ABdhPJzOWs4ZvCDYrK4G/PWNslYGoobvL6P46JoycYW0mfnHN8oCCQwVVfqTDYK+6ym/DkQ0bmLqFA==
-X-Received: by 2002:a37:618a:: with SMTP id v132mr7276887qkb.382.1627592391151;
-        Thu, 29 Jul 2021 13:59:51 -0700 (PDT)
-Received: from localhost.localdomain ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id j3sm2268529qka.96.2021.07.29.13.59.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jul 2021 13:59:50 -0700 (PDT)
-Sender: Anna Schumaker <schumakeranna@gmail.com>
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH 2/2] SUNRPC: Add dst_port to the sysfs xprt info file
-Date:   Thu, 29 Jul 2021 16:59:47 -0400
-Message-Id: <20210729205947.162599-3-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210729205947.162599-1-Anna.Schumaker@Netapp.com>
-References: <20210729205947.162599-1-Anna.Schumaker@Netapp.com>
+        id S234891AbhG2XUX convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 29 Jul 2021 19:20:23 -0400
+Received: from james.kirk.hungrycats.org ([174.142.39.145]:40860 "EHLO
+        james.kirk.hungrycats.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229975AbhG2XUX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jul 2021 19:20:23 -0400
+Received: by james.kirk.hungrycats.org (Postfix, from userid 1002)
+        id 502B8B0AA1C; Thu, 29 Jul 2021 19:20:18 -0400 (EDT)
+Date:   Thu, 29 Jul 2021 19:20:18 -0400
+From:   Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Neal Gompa <ngompa13@gmail.com>,
+        Wang Yugui <wangyugui@e16-tech.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-nfs@vger.kernel.org,
+        Btrfs BTRFS <linux-btrfs@vger.kernel.org>
+Subject: Re: [PATCH/RFC 00/11] expose btrfs subvols in mount table correctly
+Message-ID: <20210729232017.GE10106@hungrycats.org>
+References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
+ <20210728125819.6E52.409509F4@e16-tech.com>
+ <20210728140431.D704.409509F4@e16-tech.com>
+ <162745567084.21659.16797059962461187633@noble.neil.brown.name>
+ <CAEg-Je8Pqbw0tTw6NWkAcD=+zGStOJR0J-409mXuZ1vmb6dZsA@mail.gmail.com>
+ <162751265073.21659.11050133384025400064@noble.neil.brown.name>
+ <20210729023751.GL10170@hungrycats.org>
+ <162752976632.21659.9573422052804077340@noble.neil.brown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <162752976632.21659.9573422052804077340@noble.neil.brown.name>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+On Thu, Jul 29, 2021 at 01:36:06PM +1000, NeilBrown wrote:
+> On Thu, 29 Jul 2021, Zygo Blaxell wrote:
+> > On Thu, Jul 29, 2021 at 08:50:50AM +1000, NeilBrown wrote:
+> > > On Wed, 28 Jul 2021, Neal Gompa wrote:
+> > > > On Wed, Jul 28, 2021 at 3:02 AM NeilBrown <neilb@suse.de> wrote:
+> > > > >
+> > > > > On Wed, 28 Jul 2021, Wang Yugui wrote:
+> > > > > > Hi,
+> > > > > >
+> > > > > > This patchset works well in 5.14-rc3.
+> > > > >
+> > > > > Thanks for testing.
+> > > > >
+> > > > > >
+> > > > > > 1, fixed dummy inode(255, BTRFS_FIRST_FREE_OBJECTID - 1 )  is changed to
+> > > > > > dynamic dummy inode(18446744073709551358, or 18446744073709551359, ...)
+> > > > >
+> > > > > The BTRFS_FIRST_FREE_OBJECTID-1 was a just a hack, I never wanted it to
+> > > > > be permanent.
+> > > > > The new number is ULONG_MAX - subvol_id (where subvol_id starts at 257 I
+> > > > > think).
+> > > > > This is a bit less of a hack.  It is an easily available number that is
+> > > > > fairly unique.
+> > > > >
+> > > > > >
+> > > > > > 2, btrfs subvol mount info is shown in /proc/mounts, even if nfsd/nfs is
+> > > > > > not used.
+> > > > > > /dev/sdc                btrfs   94G  3.5M   93G   1% /mnt/test
+> > > > > > /dev/sdc                btrfs   94G  3.5M   93G   1% /mnt/test/sub1
+> > > > > > /dev/sdc                btrfs   94G  3.5M   93G   1% /mnt/test/sub2
+> > > > > >
+> > > > > > This is a visiual feature change for btrfs user.
+> > > > >
+> > > > > Hopefully it is an improvement.  But it is certainly a change that needs
+> > > > > to be carefully considered.
+> > > > 
+> > > > I think this is behavior people generally expect, but I wonder what
+> > > > the consequences of this would be with huge numbers of subvolumes. If
+> > > > there are hundreds or thousands of them (which is quite possible on
+> > > > SUSE systems, for example, with its auto-snapshotting regime), this
+> > > > would be a mess, wouldn't it?
+> > > 
+> > > Would there be hundreds or thousands of subvols concurrently being
+> > > accessed? The auto-mounted subvols only appear in the mount table while
+> > > that are being accessed, and for about 15 minutes after the last access.
+> > > I suspect that most subvols are "backup" snapshots which are not being
+> > > accessed and so would not appear.
+> > 
+> > bees dedupes across subvols and polls every few minutes for new data
+> > to dedupe.  bees doesn't particularly care where the "src" in the dedupe
+> > call comes from, so it will pick a subvol that has a reference to the
+> > data at random (whichever one comes up first in backref search) for each
+> > dedupe call.  There is a cache of open fds on each subvol root so that it
+> > can access files within that subvol using openat().  The cache quickly
+> > populates fully, i.e. it holds a fd to every subvol on the filesystem.
+> > The cache has a 15 minute timeout too, so bees would likely keep the
+> > mount table fully populated at all times.
+> 
+> OK ... that is very interesting and potentially helpful - thanks.
+> 
+> Localizing these daemons in a separate namespace would stop them from
+> polluting the public namespace, but I don't know how easy that would
+> be..
+> 
+> Do you know how bees opens these files?  Does it use path-names from the
+> root, or some special btrfs ioctl, or ???
 
-This is most likely going to be 2049 for NFS, but some servers might be
-configured to export on a non-standard port. Let's show this information
-just in case somebody needs it.
+There's a function in bees that opens a subvol root directory by subvol
+id.  It walks up the btrfs subvol tree with btrfs ioctls to construct a
+path to the root, then down the filesystem tree with other btrfs ioctls
+to get filenames for each subvol.  The filenames are fed to openat()
+with the parent subvol's fd to get a fd for each child subvol's root
+directory along the path.  This is recursive and expensive (the fd
+has to be checked to see if it matches the subvol, in case some other
+process renamed it) and called every time bees wants to open a file,
+so the fd goes into a cache for future open-subvol-by-id calls.
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- net/sunrpc/sysfs.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+For files, bees calls subvol root open to get a fd for the subvol's root,
+then calls the btrfs inode-to-path ioctl on that fd to get a list of
+names for the inode, then openat(subvol_fd, inode_to_path(inum), ...) on
+each name until a fd matching the target subvol and inode is obtained.
+File access is driven by data content, so bees cannot easily predict
+which files will need to be accessed again in the near future and which
+can be closed.  The fd cache is a brute-force way to reduce the number
+of inode-to-path and open calls.
 
-diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index 2e7a53504974..414c664a3199 100644
---- a/net/sunrpc/sysfs.c
-+++ b/net/sunrpc/sysfs.c
-@@ -136,14 +136,16 @@ static ssize_t rpc_sysfs_xprt_info_show(struct kobject *kobj,
- 		       "max_num_slots=%u\nmin_num_slots=%u\nnum_reqs=%u\n"
- 		       "binding_q_len=%u\nsending_q_len=%u\npending_q_len=%u\n"
- 		       "backlog_q_len=%u\nmain_xprt=%d\nsrc_port=%u\n"
--		       "tasks_queuelen=%ld\n",
-+		       "tasks_queuelen=%ld\ndst_port=%s\n",
- 		       xprt->last_used, xprt->cong, xprt->cwnd, xprt->max_reqs,
- 		       xprt->min_reqs, xprt->num_reqs, xprt->binding.qlen,
- 		       xprt->sending.qlen, xprt->pending.qlen,
- 		       xprt->backlog.qlen, xprt->main,
- 		       (xprt->xprt_class->ident == XPRT_TRANSPORT_TCP) ?
- 		       get_srcport(xprt) : 0,
--		       atomic_long_read(&xprt->queuelen));
-+		       atomic_long_read(&xprt->queuelen),
-+		       (xprt->xprt_class->ident == XPRT_TRANSPORT_TCP) ?
-+				xprt->address_strings[RPC_DISPLAY_PORT] : "0");
- 	xprt_put(xprt);
- 	return ret + 1;
- }
--- 
-2.32.0
+Upper layers of bees use (subvol, inode) pairs to identify files
+and request file descriptors.  The lower layers use filenames as an
+implementation detail for compatibility with kernel API.
 
+> If path-names are not used, it might be possible to suppress the
+> automount. 
+
+A userspace interface to read and dedupe that doesn't use pathnames or
+file descriptors (other than one fd to bind the interface to a filesystem)
+would be nice!  About half of the bees code is devoted to emulating
+that interface using the existing kernel API.
+
+Ideally a dedupe agent would be able to pass two physical offsets and
+a length of identical data to the filesystem without ever opening a file.
+
+While I'm in favor of making bees smaller, this seems like an expensive
+way to suppress automounts.
+
+> > plocate also uses openat() and it can also be active on many subvols
+> > simultaneously, though it only runs once a day, and it's reasonable to
+> > exclude all snapshots from plocate for performance reasons.
+> > 
+> > My bigger concern here is that users on btrfs can currently have private
+> > subvols with secret names.  e.g.
+> > 
+> > 	user$ mkdir -m 700 private
+> > 	user$ btrfs sub create private/secret
+> > 	user$ cd private/secret
+> > 	user$ ...do stuff...
+> > 
+> > Would "secret" now be visible in the very public /proc/mounts every time
+> > the user is doing stuff?
+> 
+> Yes, the secret would be publicly visible.  Unless we hid it.
+> 
+> It is conceivable that the content of /proc/mounts could be limited to
+> mountpoints where the process reading had 'x' access to the mountpoint. 
+> However to be really safe we would want to require 'x' access to all
+> ancestors too, and possibly some 'r' access.  That would get
+> prohibitively expensive.
+
+And inconsistent, since we don't do that with other mount points, i.e.
+outside of btrfs.  But we do hide parts of the path names when the
+process's filesystem root or namespace changes, so maybe this is more
+of that.
+
+> We could go with "owned by root, or owned by user" maybe.
+> 
+> Thanks,
+> NeilBrown
+> 
+> 
+> > 
+> > > > Or can we add a way to mark these things to not show up there or is
+> > > > there some kind of behavioral change we can make to snapper or other
+> > > > tools to make them not show up here?
+> > > 
+> > > Certainly it might make sense to flag these in some way so that tools
+> > > can choose the ignore them or handle them specially, just as nfsd needs
+> > > to handle them specially.  I was considering a "local" mount flag.
+> > 
+> > I would definitely want an 'off' switch for this thing until the impact
+> > is better understood.
+> > 
+> > > NeilBrown
+> > > 
+> > > > 
+> > > > 
+> > > > 
+> > > > -- 
+> > > > 真実はいつも一つ！/ Always, there's only one truth!
+> > > > 
+> > > > 
+> > 
+> > 
+> 
