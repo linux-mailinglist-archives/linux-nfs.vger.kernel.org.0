@@ -2,247 +2,261 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B96A13DB12F
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jul 2021 04:36:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4E6B3DB1DA
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jul 2021 05:15:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235515AbhG3Cgn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 29 Jul 2021 22:36:43 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:43036 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230200AbhG3Cgn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jul 2021 22:36:43 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 0F7501FD9A;
-        Fri, 30 Jul 2021 02:36:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1627612598; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uWUcvHlwusRZYuqr62Cexf1wHC01k6ATksIHt0UTG40=;
-        b=UhW+Hbjx8tuF8MjAQ9iMxsBOeOKr3PYAuzL4ld/oKJ4MHstFmCHTrngccPItHLfOyno9At
-        NrKtIX6JNIizMqL+I72Rm7PRtceMjU9jMPrsngFG0aE1ZBC3E6zR16XxcwKf1c1GIoRgqQ
-        uCjZ/JiIOBKbmIZdykI9Dgk0bSue8Iw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1627612598;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uWUcvHlwusRZYuqr62Cexf1wHC01k6ATksIHt0UTG40=;
-        b=5Y+gQU01MyCUiSEbZGelJ/ftp0KpZFMwwFnKFr2Wc97x86J2PFseXrU7DryK5pLhRPf28R
-        lUuDPz0thr9tyRBQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5DFC813BF9;
-        Fri, 30 Jul 2021 02:36:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id iXzyBrJlA2FFUwAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 30 Jul 2021 02:36:34 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        id S230196AbhG3DPq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 29 Jul 2021 23:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229971AbhG3DPp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jul 2021 23:15:45 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 972D1C061765
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Jul 2021 20:15:40 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id j2so10951663edp.11
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Jul 2021 20:15:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=BXLmVOsspHuUGI5eQSDVQgFg5AOQTINIhyo3H+MZZ9Q=;
+        b=JLXQkwwYC+JDr4zDcCeK5G6tEXTBUp+AOEmNqUk9qoVOM+d3fx1KWMo1GC5Ezzay3t
+         zp25IwZJaFOF3ZA+u70OR85HZYOJdjZu3fgryaz/AkkTPYEiRmfmPEBwk6Gee4xv1/TT
+         DRju8c0XayhuBO0fGBuYvqBn2RJq2gC5SXmt4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=BXLmVOsspHuUGI5eQSDVQgFg5AOQTINIhyo3H+MZZ9Q=;
+        b=iUO98/IiS50gaZdXTX+6YWt9OGDXKeN80A3JuXIHM0lFgAPFV7vLsfF0AJdBnuqu1P
+         Hy5RnhW8x+7tipr39NlfM07rkrdeQ8hyLj2LWpKyxknjJhYlEMFjMbKlf1XyPvfa0r9K
+         IwDJQeMG/2KXYhfoJlwBdNyMZaDnqP0QrhQDHBsAvBP88dusWEyMW27Cb55sOnV1BhLv
+         Dhc3Gcj85CQ+iDX8njRjQztGq5SZxjFVZBXwBrZV2jAmCk/F1PInxpyp808JU8szIC4g
+         cuXugCWUvSDY8Y/NWY0kXtmJuAzZ3tdInqmg+RLkjqnEC4thUutQsoGmu9QoPJBEB+Bw
+         80vw==
+X-Gm-Message-State: AOAM5317AAqXhsjhrf/CGOK22ZbP4MtYV14iRBX4phQP3haA8Nf2CG7U
+        mopqwoEKpdoYp9cvg5W/dIBcet9RVKQSQDQYPcLqqVmsEOb2Qw==
+X-Google-Smtp-Source: ABdhPJz9SiIy44au93i/wT99TSYu0/xe3zKhuTEuP0yPuIDT8exdKnrseJt0iUG7lIfKaYdmjFqJybDB2TkViGdUIsE=
+X-Received: by 2002:a05:6402:5212:: with SMTP id s18mr388872edd.370.1627614938950;
+ Thu, 29 Jul 2021 20:15:38 -0700 (PDT)
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Zygo Blaxell" <ce3g8jdj@umail.furryterror.org>
-Cc:     "Neal Gompa" <ngompa13@gmail.com>,
-        "Wang Yugui" <wangyugui@e16-tech.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        "Josef Bacik" <josef@toxicpanda.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        "Chuck Lever" <chuck.lever@oracle.com>, "Chris Mason" <clm@fb.com>,
-        "David Sterba" <dsterba@suse.com>,
-        "Alexander Viro" <viro@zeniv.linux.org.uk>,
-        "linux-fsdevel" <linux-fsdevel@vger.kernel.org>,
-        linux-nfs@vger.kernel.org,
-        "Btrfs BTRFS" <linux-btrfs@vger.kernel.org>
-Subject: Re: [PATCH/RFC 00/11] expose btrfs subvols in mount table correctly
-In-reply-to: <20210729232017.GE10106@hungrycats.org>
-References: <162742539595.32498.13687924366155737575.stgit@noble.brown>,
- <20210728125819.6E52.409509F4@e16-tech.com>,
- <20210728140431.D704.409509F4@e16-tech.com>,
- <162745567084.21659.16797059962461187633@noble.neil.brown.name>,
- <CAEg-Je8Pqbw0tTw6NWkAcD=+zGStOJR0J-409mXuZ1vmb6dZsA@mail.gmail.com>,
- <162751265073.21659.11050133384025400064@noble.neil.brown.name>,
- <20210729023751.GL10170@hungrycats.org>,
- <162752976632.21659.9573422052804077340@noble.neil.brown.name>,
- <20210729232017.GE10106@hungrycats.org>
-Date:   Fri, 30 Jul 2021 12:36:31 +1000
-Message-id: <162761259105.21659.4838403432058511846@noble.neil.brown.name>
+From:   Matthew Robertson <mrobertson@purestorage.com>
+Date:   Thu, 29 Jul 2021 22:15:27 -0500
+Message-ID: <CAKYZyzdfnVtwup-Cz1fX1OsNe-SdTQaLePoj05d3nGDVL6yfaw@mail.gmail.com>
+Subject: NFSv4.1 - 2x opens causes unknown 5s delay.
+To:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Doing a simple open of a file from 2 readers and there is a strange 5s
+delay on the second open.   We did NOT see the issue on kernel:
+CentOS 4.18.0-193.6.3.el8_2.x86_64
+but the issue is present in:
+CentOS 4.18.0-305.7.1.el8_4.x86_64
 
-I've been pondering all the excellent feedback, and what I have learnt
-from examining the code in btrfs, and I have developed a different
-perspective.
 
-Maybe "subvol" is a poor choice of name because it conjures up
-connections with the Volumes in LVM, and btrfs subvols are very different
-things.  Btrfs subvols are really just subtrees that can be treated as a
-unit for operations like "clone" or "destroy".
+#include <stdio.h>
 
-As such, they don't really deserve separate st_dev numbers.
+int main() {
 
-Maybe the different st_dev numbers were introduced as a "cheap" way to
-extend to size of the inode-number space.  Like many "cheap" things, it
-has hidden costs.
+        FILE * file_pointer;
 
-Maybe objects in different subvols should still be given different inode
-numbers.  This would be problematic on 32bit systems, but much less so on
-64bit systems.
+        char buffer[50], c;
 
-The patch below, which is just a proof-of-concept, changes btrfs to
-report a uniform st_dev, and different (64bit) st_ino in different subvols.
+file_pointer = fopen("/mnt/nfsv4/test/t.txt", "r");
 
-It has problems:
- - it will break any 32bit readdir and 32bit stat.  I don't know how big
-   a problem that is these days (ino_t in the kernel is "unsigned long",
-   not "unsigned long long). That surprised me).
- - It might break some user-space expectations.  One thing I have learnt
-   is not to make any assumption about what other people might expect.
+fgets(buffer, 50, file_pointer);
 
-However, it would be quite easy to make this opt-in (or opt-out) with a
-mount option, so that people who need the current inode numbers and will
-accept the current breakage can keep working.
+file_pointer = fopen("/mnt/nfsv4/test/t.txt", "r");
 
-I think this approach would be a net-win for NFS export, whether BTRFS
-supports it directly or not.  I might post a patch which modifies NFS to
-intuit improved inode numbers for btrfs exports....
+fgets(buffer, 50, file_pointer);
 
-So: how would this break your use-case??
+        fclose(file_pointer);
 
-Thanks,
-NeilBrown
+return 0;
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 0117d867ecf8..8dc58c848502 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -6020,6 +6020,37 @@ static int btrfs_opendir(struct inode *inode, struct f=
-ile *file)
- 	return 0;
- }
-=20
-+static u64 btrfs_make_inum(struct btrfs_key *root, struct btrfs_key *ino)
-+{
-+	u64 rootid =3D root->objectid;
-+	u64 inoid =3D ino->objectid;
-+	int shift =3D 64-8;
-+
-+	if (ino->type =3D=3D BTRFS_ROOT_ITEM_KEY) {
-+		/* This is a subvol root found during readdir. */
-+		rootid =3D inoid;
-+		inoid =3D BTRFS_FIRST_FREE_OBJECTID;
-+	}
-+	if (rootid =3D=3D BTRFS_FS_TREE_OBJECTID)
-+		/* this is main vol, not subvol (I think) */
-+		return inoid;
-+	/* store the rootid in the high bits of the inum.  This
-+	 * will break if 32bit inums are required - we cannot know
-+	 */
-+	while (rootid) {
-+		inoid ^=3D (rootid & 0xff) << shift;
-+		rootid >>=3D 8;
-+		shift -=3D 8;
-+	}
-+	return inoid;
-+}
-+
-+static inline u64 btrfs_ino_to_inum(struct inode *inode)
-+{
-+	return btrfs_make_inum(&BTRFS_I(inode)->root->root_key,
-+			       &BTRFS_I(inode)->location);
-+}
-+
- struct dir_entry {
- 	u64 ino;
- 	u64 offset;
-@@ -6045,6 +6076,49 @@ static int btrfs_filldir(void *addr, int entries, stru=
-ct dir_context *ctx)
- 	return 0;
- }
-=20
-+static inline bool btrfs_dir_emit_dot(struct file *file,
-+				      struct dir_context *ctx)
-+{
-+	return ctx->actor(ctx, ".", 1, ctx->pos,
-+			  btrfs_ino_to_inum(file->f_path.dentry->d_inode),
-+			  DT_DIR) =3D=3D 0;
-+}
-+
-+static inline ino_t btrfs_parent_ino(struct dentry *dentry)
-+{
-+	ino_t res;
-+
-+	/*
-+	 * Don't strictly need d_lock here? If the parent ino could change
-+	 * then surely we'd have a deeper race in the caller?
-+	 */
-+	spin_lock(&dentry->d_lock);
-+	res =3D btrfs_ino_to_inum(dentry->d_parent->d_inode);
-+	spin_unlock(&dentry->d_lock);
-+	return res;
-+}
-+
-+static inline bool btrfs_dir_emit_dotdot(struct file *file,
-+					 struct dir_context *ctx)
-+{
-+	return ctx->actor(ctx, "..", 2, ctx->pos,
-+			  btrfs_parent_ino(file->f_path.dentry), DT_DIR) =3D=3D 0;
-+}
-+static inline bool btrfs_dir_emit_dots(struct file *file,
-+				       struct dir_context *ctx)
-+{
-+	if (ctx->pos =3D=3D 0) {
-+		if (!btrfs_dir_emit_dot(file, ctx))
-+			return false;
-+		ctx->pos =3D 1;
-+	}
-+	if (ctx->pos =3D=3D 1) {
-+		if (!btrfs_dir_emit_dotdot(file, ctx))
-+			return false;
-+		ctx->pos =3D 2;
-+	}
-+	return true;
-+}
- static int btrfs_real_readdir(struct file *file, struct dir_context *ctx)
- {
- 	struct inode *inode =3D file_inode(file);
-@@ -6067,7 +6141,7 @@ static int btrfs_real_readdir(struct file *file, struct=
- dir_context *ctx)
- 	bool put =3D false;
- 	struct btrfs_key location;
-=20
--	if (!dir_emit_dots(file, ctx))
-+	if (!btrfs_dir_emit_dots(file, ctx))
- 		return 0;
-=20
- 	path =3D btrfs_alloc_path();
-@@ -6136,7 +6210,8 @@ static int btrfs_real_readdir(struct file *file, struct=
- dir_context *ctx)
- 		put_unaligned(fs_ftype_to_dtype(btrfs_dir_type(leaf, di)),
- 				&entry->type);
- 		btrfs_dir_item_key_to_cpu(leaf, di, &location);
--		put_unaligned(location.objectid, &entry->ino);
-+		put_unaligned(btrfs_make_inum(&root->root_key, &location),
-+			      &entry->ino);
- 		put_unaligned(found_key.offset, &entry->offset);
- 		entries++;
- 		addr +=3D sizeof(struct dir_entry) + name_len;
-@@ -9193,7 +9268,7 @@ static int btrfs_getattr(struct user_namespace *mnt_use=
-rns,
- 				  STATX_ATTR_NODUMP);
-=20
- 	generic_fillattr(&init_user_ns, inode, stat);
--	stat->dev =3D BTRFS_I(inode)->root->anon_dev;
-+	stat->ino =3D btrfs_ino_to_inum(inode);
-=20
- 	spin_lock(&BTRFS_I(inode)->lock);
- 	delalloc_bytes =3D BTRFS_I(inode)->new_delalloc_bytes;
+}
+
+
+
+Call Graph from ftrace
+
+_nfs4_opendata_to_nfs4_state()
+
+ nfs_refresh_inode() {
+
+  nfs_refresh_inode.part.28() {
+
+   nfs_refresh_inode_locked() {
+
+ update_open_stateid()
+
+  ** 5s wait **
+
+Then the open / read completes
+
+
+We do not see this issue on nfsv3 only nfsv4.
+
+
+Here is the wireshark of the request and response:
+
+The second request and response happens immediately in the wireshark.
+The delay is in the kernel.
+
+
+
+Frame 25: 378 bytes on wire (3024 bits), 378 bytes captured (3024 bits)
+Ethernet II, Src: fa:16:3e:88:e2:24 (fa:16:3e:88:e2:24), Dst:
+PureStor_5b:45:10 (24:a9:37:5b:45:10)
+Internet Protocol Version 4, Src: 10.15.132.250, Dst: 10.15.128.15
+Transmission Control Protocol, Src Port: 710, Dst Port: 2049, Seq:
+2125, Ack: 1193, Len: 312
+Remote Procedure Call, Type:Call XID:0xed175b8d
+Network File System, Ops(5): SEQUENCE, PUTFH, OPEN, ACCESS, GETATTR
+    [Program Version: 4]
+    [V4 Procedure: COMPOUND (1)]
+    Tag: <EMPTY>
+    minorversion: 1
+    Operations (count: 5): SEQUENCE, PUTFH, OPEN, ACCESS, GETATTR
+        Opcode: SEQUENCE (53)
+            sessionid: 00c800000000000c0000000000000000
+            seqid: 0x00000073
+            slot id: 0
+            high slot id: 0
+            cache this?: Yes
+        Opcode: PUTFH (22)
+            FileHandle
+        Opcode: OPEN (18)
+            seqid: 0x00000000
+            share_access: OPEN4_SHARE_ACCESS_READ (1)
+            share_deny: OPEN4_SHARE_DENY_NONE (0)
+            clientid: 0x00c8000000000017
+            owner: <DATA>
+            Open Type: OPEN4_NOCREATE (0)
+            Claim Type: CLAIM_FH (4)
+        Opcode: ACCESS (3), [Check: RD MD XT XE]
+            Check access: 0x2d
+                .... ...1 = 0x001 READ: allowed?
+                .... .1.. = 0x004 MODIFY: allowed?
+                .... 1... = 0x008 EXTEND: allowed?
+                ..1. .... = 0x020 EXECUTE: allowed?
+        Opcode: GETATTR (9)
+            Attr mask[0]: 0x0010011a (Type, Change, Size, FSID, FileId)
+                reqd_attr: Type (1)
+                reqd_attr: Change (3)
+                reqd_attr: Size (4)
+                reqd_attr: FSID (8)
+                reco_attr: FileId (20)
+            Attr mask[1]: 0x0030a23a (Mode, NumLinks, Owner,
+Owner_Group, RawDev, Space_Used, Time_Access, Time_Metadata,
+Time_Modify)
+                reco_attr: Mode (33)
+                reco_attr: NumLinks (35)
+                reco_attr: Owner (36)
+                reco_attr: Owner_Group (37)
+                reco_attr: RawDev (41)
+                reco_attr: Space_Used (45)
+                reco_attr: Time_Access (47)
+                reco_attr: Time_Metadata (52)
+                reco_attr: Time_Modify (53)
+    [Main Opcode: OPEN (18)]
+
+
+
+
+
+Frame 26: 374 bytes on wire (2992 bits), 374 bytes captured (2992 bits)
+Ethernet II, Src: PureStor_5b:45:10 (24:a9:37:5b:45:10), Dst:
+fa:16:3e:88:e2:24 (fa:16:3e:88:e2:24)
+Internet Protocol Version 4, Src: 10.15.128.15, Dst: 10.15.132.250
+Transmission Control Protocol, Src Port: 2049, Dst Port: 710, Seq:
+1193, Ack: 2437, Len: 308
+Remote Procedure Call, Type:Reply XID:0xed175b8d
+Network File System, Ops(5): SEQUENCE PUTFH OPEN ACCESS GETATTR
+    [Program Version: 4]
+    [V4 Procedure: COMPOUND (1)]
+    Status: NFS4_OK (0)
+    Tag: <EMPTY>
+    Operations (count: 5)
+        Opcode: SEQUENCE (53)
+            Status: NFS4_OK (0)
+            sessionid: 00c800000000000c0000000000000000
+            seqid: 0x00000073
+            slot id: 0
+            high slot id: 127
+            target high slot id: 127
+            status flags: 0x00000000
+        Opcode: PUTFH (22)
+            Status: NFS4_OK (0)
+        Opcode: OPEN (18)
+            Status: NFS4_OK (0)
+            StateID
+                [StateID Hash: 0xaa04]
+                StateID seqid: 1
+                StateID Other: 000000000000000000000000
+                [StateID Other hash: 0x60de]
+            change_info
+                Atomic: Yes
+                changeid (before): 1626267251187000000
+                changeid (after): 1626267251187000000
+            result flags: 0x00000004, locktype posix
+            Delegation Type: OPEN_DELEGATE_NONE (0)
+        Opcode: ACCESS (3), [NOT Supported: LU DL], [Access Denied: LU
+MD XT DL XE], [Allowed: RD]
+            Status: NFS4_OK (0)
+            Supported types (of requested): 0x3f
+            Access rights (of requested): 0x01
+                .... ...1 = 0x001 READ: allowed
+                .... ..0. = 0x002 LOOKUP: *Access Denied*
+                .... .0.. = 0x004 MODIFY: *Access Denied*
+                .... 0... = 0x008 EXTEND: *Access Denied*
+                ...0 .... = 0x010 DELETE: *Access Denied*
+                ..0. .... = 0x020 EXECUTE: *Access Denied*
+        Opcode: GETATTR (9)
+            Status: NFS4_OK (0)
+            Attr mask[0]: 0x0010011a (Type, Change, Size, FSID, FileId)
+                reqd_attr: Type (1)
+                    ftype4: NF4REG (1)
+                reqd_attr: Change (3)
+                    changeid: 1626267251187000000
+                reqd_attr: Size (4)
+                    size: 7
+                reqd_attr: FSID (8)
+                    fattr4_fsid
+                reco_attr: FileId (20)
+                    fileid: 20829148276664444
+            Attr mask[1]: 0x0030a23a (Mode, NumLinks, Owner,
+Owner_Group, RawDev, Space_Used, Time_Access, Time_Metadata,
+Time_Modify)
+                reco_attr: Mode (33)
+                    mode: 0644, Name: Unknown, Read permission for
+owner, Write permission for owner, Read permission for group, Read
+permission for others
+                reco_attr: NumLinks (35)
+                    numlinks: 1
+                reco_attr: Owner (36)
+                    fattr4_owner: 0
+                reco_attr: Owner_Group (37)
+                    fattr4_owner_group: 0
+                reco_attr: RawDev (41)
+                    specdata1: 0
+                    specdata2: 0
+                reco_attr: Space_Used (45)
+                    space_used: 7
+                reco_attr: Time_Access (47)
+                    seconds: 1626267228
+                    nseconds: 0
+                reco_attr: Time_Metadata (52)
+                    seconds: 1626267251
+                    nseconds: 187000000
+                reco_attr: Time_Modify (53)
+                    seconds: 1626267251
+                    nseconds: 186841000
+    [Main Opcode: OPEN (18)]
+
+
+-- 
+Matt Robertson // Data Architect | Pure Storage, Inc.
+913-915-1162  |  mrobertson@purestorage.com
