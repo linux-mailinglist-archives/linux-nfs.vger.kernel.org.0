@@ -2,172 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 038763DDA63
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Aug 2021 16:13:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 280423DDB9F
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Aug 2021 16:55:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236769AbhHBONq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Aug 2021 10:13:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239151AbhHBOL4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Aug 2021 10:11:56 -0400
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CACBCC028BFD
-        for <linux-nfs@vger.kernel.org>; Mon,  2 Aug 2021 06:53:43 -0700 (PDT)
-Received: by mail-qk1-x72e.google.com with SMTP id z24so16575591qkz.7
-        for <linux-nfs@vger.kernel.org>; Mon, 02 Aug 2021 06:53:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7YZ+YWuu0r8ls2F/ASXAfqcelR3faj3UC8eZqkF+Zko=;
-        b=pi2O34Gbu2DJiPT2DXuDG4QdH2iMvOdf7tSszje2qigN/T8dFHQH1pZvveTmPZn6j+
-         n+3K6aI91XYsSTxYK5jB8LHLswOYhOtyzb1/xWaQKFKzEy3YX52WVV2Dqhsu07r6IDBy
-         /Msf3u0R5zINNltrJUS4FpJrqYDP/afbpxcJpNpJXUIUeChB3cG/u39CTUTc6tYtV8MR
-         m9IixiU2rlsVICCdlryAlPFb6PkwD//xhAm4KiY3GiDBnyp1U/RkfoGK9NZkWcfIxAVy
-         CpJ7xSMq8XqGrE/t7mnlmMpciZNikmfd2pCBtxlfO7JcrlZYbk6z+N+tEp+CIhBteKHm
-         2tGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7YZ+YWuu0r8ls2F/ASXAfqcelR3faj3UC8eZqkF+Zko=;
-        b=l5W6LjXHP+PycNJp9Ci7ZwfCjbDt0LqM0AoC9ZjzkcOdteSLG3FGwfoHCI0jyrBmYp
-         bn2WfFLs0M/AW1wofb0UBvKnsFsaZhGmUfRtKHHcgved1I7W7he/BoPUn618087Bc7Wi
-         94lfHZ7z3zOIfz3K7X1mJguocj0zrEFSr2B1iEMA0+Vdhg0UBMD7uR8dmSFHroxH7rIl
-         5GXBGcLZkKqGrLDWyD7kpuvSKjegCnxamRRUYMQ0eolA2pMzQRyOpiI0ufyUK7g/4IYb
-         71RHYsfj489W6hFRZTe803ppK52P6G07bp8/rrzrk6Fnh8PxcQJs0SqP+UjAp1/zyvNK
-         8/+w==
-X-Gm-Message-State: AOAM531kt5tnO60zagcBlR8q7AKQzO5J5ElWk2btfHBue3P0QNyWqVEm
-        nSoBPUmcWcg8RidStCl2YsUpUA==
-X-Google-Smtp-Source: ABdhPJydpVHsw4eOuMz3Y7rq9l4GuTxSALmGUmQoE814YRrjc3UCGWfVQPb8BvvAzRQHbeEJTDf+tA==
-X-Received: by 2002:a05:620a:233:: with SMTP id u19mr15753757qkm.48.1627912422875;
-        Mon, 02 Aug 2021 06:53:42 -0700 (PDT)
-Received: from [192.168.1.110] (38-132-189-23.dynamic-broadband.skybest.com. [38.132.189.23])
-        by smtp.gmail.com with ESMTPSA id a127sm6015928qkc.121.2021.08.02.06.53.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Aug 2021 06:53:42 -0700 (PDT)
-Subject: Re: A Third perspective on BTRFS nfsd subvol dev/inode number issues.
-To:     Amir Goldstein <amir73il@gmail.com>, NeilBrown <neilb@suse.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Christoph Hellwig <hch@infradead.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Btrfs BTRFS <linux-btrfs@vger.kernel.org>
-References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
- <162742546548.32498.10889023150565429936.stgit@noble.brown>
- <YQNG+ivSssWNmY9O@zeniv-ca.linux.org.uk>
- <162762290067.21659.4783063641244045179@noble.neil.brown.name>
- <CAJfpegsR1qvWAKNmdjLfOewUeQy-b6YBK4pcHf7JBExAqqUvvg@mail.gmail.com>
- <162762562934.21659.18227858730706293633@noble.neil.brown.name>
- <CAJfpegtu3NKW9m2jepRrXe4UTuD6_3k0Y6TcCBLSQH7SSC90BA@mail.gmail.com>
- <162763043341.21659.15645923585962859662@noble.neil.brown.name>
- <CAJfpegub4oBZCBXFQqc8J-zUiSW+KaYZLjZaeVm_cGzNVpxj+A@mail.gmail.com>
- <162787790940.32159.14588617595952736785@noble.neil.brown.name>
- <YQeB3ASDyO0wSgL4@zeniv-ca.linux.org.uk>
- <162788285645.32159.12666247391785546590@noble.neil.brown.name>
- <CAOQ4uxgnGWMUvtyJ0MMxMzHFwiyR68FHorDNmLSva0CdpVNNcQ@mail.gmail.com>
-From:   Josef Bacik <josef@toxicpanda.com>
-Message-ID: <2337f1ba-ffed-2369-47a0-5ffda2d8b51c@toxicpanda.com>
-Date:   Mon, 2 Aug 2021 09:53:41 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-MIME-Version: 1.0
+        id S234417AbhHBOzO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Aug 2021 10:55:14 -0400
+Received: from mta-102a.oxsus-vadesecure.net ([51.81.61.66]:33925 "EHLO
+        mta-102a.oxsus-vadesecure.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233981AbhHBOzN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Aug 2021 10:55:13 -0400
+X-Greylist: delayed 447 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Aug 2021 10:55:13 EDT
+DKIM-Signature: v=1; a=rsa-sha256; bh=kOYgkgt1Eovr4+CuMMxXz1DZVQXHQDhi+reUiD
+ H50Qk=; c=relaxed/relaxed; d=earthlink.net; h=from:reply-to:subject:
+ date:to:cc:resent-date:resent-from:resent-to:resent-cc:in-reply-to:
+ references:list-id:list-help:list-unsubscribe:list-subscribe:list-post:
+ list-owner:list-archive; q=dns/txt; s=dk12062016; t=1627915653;
+ x=1628520453; b=k5hQVO/SHE5D98YVr+2IwaENw1BGVaPvd798Bvz8noqJFOrQHrwQvVd
+ acbkXb+GuUdFmtD7Im7xt5N3I3dDUjx2MMuH6wUFjkTcpQEi3tXU0YMZpM8MgNPjmEK6wXX
+ 7n66vUEYcA1iSZCaAltdccPBuqKqIoX8gGFuzWfhGRj97mc1UnsfIpcv75bNhoafaxxIPs1
+ 4VmdXE7SLVp2Lngptvwwwy1hsokE4TtY0QO2xHns8t07DsqzckT2tfcQPjY3pbdnA+vIcke
+ NKw7QwjOjrrsYbxqE8TXLjuLhi7L41SA+6xJHUGBtYowQI4hEuS9yH7rV3XVDCedWJwuSxH
+ 2pg==
+Received: from FRANKSTHINKPAD ([76.105.143.216])
+ by smtp.oxsus-vadesecure.net ESMTP oxsus1nmtao02p with ngmta
+ id af69139b-169784a9170c7b41; Mon, 02 Aug 2021 14:47:33 +0000
+From:   "Frank Filz" <ffilzlnx@mindspring.com>
+To:     "'Amir Goldstein'" <amir73il@gmail.com>,
+        "'NeilBrown'" <neilb@suse.de>
+Cc:     "'Al Viro'" <viro@zeniv.linux.org.uk>,
+        "'Miklos Szeredi'" <miklos@szeredi.hu>,
+        "'Christoph Hellwig'" <hch@infradead.org>,
+        "'Josef Bacik'" <josef@toxicpanda.com>,
+        "'J. Bruce Fields'" <bfields@fieldses.org>,
+        "'Chuck Lever'" <chuck.lever@oracle.com>,
+        "'Chris Mason'" <clm@fb.com>, "'David Sterba'" <dsterba@suse.com>,
+        "'linux-fsdevel'" <linux-fsdevel@vger.kernel.org>,
+        "'Linux NFS list'" <linux-nfs@vger.kernel.org>,
+        "'Btrfs BTRFS'" <linux-btrfs@vger.kernel.org>
+References: <162742539595.32498.13687924366155737575.stgit@noble.brown> <162742546548.32498.10889023150565429936.stgit@noble.brown> <YQNG+ivSssWNmY9O@zeniv-ca.linux.org.uk> <162762290067.21659.4783063641244045179@noble.neil.brown.name> <CAJfpegsR1qvWAKNmdjLfOewUeQy-b6YBK4pcHf7JBExAqqUvvg@mail.gmail.com> <162762562934.21659.18227858730706293633@noble.neil.brown.name> <CAJfpegtu3NKW9m2jepRrXe4UTuD6_3k0Y6TcCBLSQH7SSC90BA@mail.gmail.com> <162763043341.21659.15645923585962859662@noble.neil.brown.name> <CAJfpegub4oBZCBXFQqc8J-zUiSW+KaYZLjZaeVm_cGzNVpxj+A@mail.gmail.com> <162787790940.32159.14588617595952736785@noble.neil.brown.name> <YQeB3ASDyO0wSgL4@zeniv-ca.linux.org.uk> <162788285645.32159.12666247391785546590@noble.neil.brown.name> <CAOQ4uxgnGWMUvtyJ0MMxMzHFwiyR68FHorDNmLSva0CdpVNNcQ@mail.gmail.com>
 In-Reply-To: <CAOQ4uxgnGWMUvtyJ0MMxMzHFwiyR68FHorDNmLSva0CdpVNNcQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Subject: RE: A Third perspective on BTRFS nfsd subvol dev/inode number issues.
+Date:   Mon, 2 Aug 2021 07:47:31 -0700
+Message-ID: <02d201d787ad$53dfd930$fb9f8b90$@mindspring.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 15.0
+Content-Language: en-us
+Thread-Index: AQGsQ4rocC8JdciffDlk4WCbcNd5JAH9XzyyAdavEn8CATAmtQHAf3kAAq0/zdEChfj1cAJ+oSVgAZcNCFgCKp+e3AHI9mimAhJ4xdwCcfkHUqrsHG6A
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 8/2/21 3:54 AM, Amir Goldstein wrote:
-> On Mon, Aug 2, 2021 at 8:41 AM NeilBrown <neilb@suse.de> wrote:
->>
->> On Mon, 02 Aug 2021, Al Viro wrote:
->>> On Mon, Aug 02, 2021 at 02:18:29PM +1000, NeilBrown wrote:
->>>
->>>> It think we need to bite-the-bullet and decide that 64bits is not
->>>> enough, and in fact no number of bits will ever be enough.  overlayfs
->>>> makes this clear.
->>>
->>> Sure - let's go for broke and use XML.  Oh, wait - it's 8 months too
->>> early...
->>>
->>>> So I think we need to strongly encourage user-space to start using
->>>> name_to_handle_at() whenever there is a need to test if two things are
->>>> the same.
->>>
->>> ... and forgetting the inconvenient facts, such as that two different
->>> fhandles may correspond to the same object.
->>
->> Can they?  They certainly can if the "connectable" flag is passed.
->> name_to_handle_at() cannot set that flag.
->> nfsd can, so using name_to_handle_at() on an NFS filesystem isn't quite
->> perfect.  However it is the best that can be done over NFS.
->>
->> Or is there some other situation where two different filehandles can be
->> reported for the same inode?
->>
->> Do you have a better suggestion?
->>
-> 
-> Neil,
-> 
-> I think the plan of "changing the world" is not very realistic.
-> Sure, *some* tools can be changed, but all of them?
-> 
-> I went back to read your initial cover letter to understand the
-> problem and what I mostly found there was that the view of
-> /proc/x/mountinfo was hiding information that is important for
-> some tools to understand what is going on with btrfs subvols.
-> 
-> Well I am not a UNIX history expert, but I suppose that
-> /proc/PID/mountinfo was created because /proc/mounts and
-> /proc/PID/mounts no longer provided tool with all the information
-> about Linux mounts.
-> 
-> Maybe it's time for a new interface to query the more advanced
-> sb/mount topology? fsinfo() maybe? With mount2 compatible API for
-> traversing mounts that is not limited to reporting all entries inside
-> a single page. I suppose we could go for some hierarchical view
-> under /proc/PID/mounttree. I don't know - new API is hard.
-> 
-> In any case, instead of changing st_dev and st_ino or changing the
-> world to work with file handles, why not add inode generation (and
-> maybe subvol id) to statx().
-> filesystem that care enough will provide this information and tools that
-> care enough will use it.
-> 
+> In any case, instead of changing st_dev and st_ino or changing the =
+world to
+> work with file handles, why not add inode generation (and maybe subvol =
+id) to
+> statx().
+> filesystem that care enough will provide this information and tools =
+that care
+> enough will use it.
 
-Can y'all wait till I'm back from vacation, goddamn ;)
+And how is NFS (especially V2 and V3 - V4.2 at least can add attributes) =
+going to provide these values for statx if applications are going to =
+start depending on them, and especially, will this work for those =
+applications that need to distinguish inodes that are working on an NFS =
+exported btrfs filesystem?
 
-This is what I'm aiming for, I spent some time looking at how many 
-places we string parse /proc/<whatever>/mounts and my head hurts.
+Frank
 
-Btrfs already has a reasonable solution for this, we have UUID's for 
-everything.  UUID's aren't a strictly btrfs thing either, all the file 
-systems have some sort of UUID identifier, hell its built into blkid.  I 
-would love if we could do a better job about letting applications query 
-information about where they are.  And we could expose this with the 
-relatively common UUID format.  You ask what fs you're in, you get the 
-FS UUID, and then if you're on Btrfs you get the specific subvolume UUID 
-you're in.  That way you could do more fancy things like know if you've 
-wandered into a new file system completely or just a different subvolume.
-
-We have to keep the st_ino/st_dev thing for backwards compatibility, but 
-make it easier to get more info out of the file system.
-
-We could in theory expose just the subvolid also, since that's a nice 
-simple u64, but it limits our ability to do new fancy shit in the 
-future.  It's not a bad solution, but like I said I think we need to 
-take a step back and figure out what problem we're specifically trying 
-to solve, and work from there.  Starting from automounts and working our 
-way back is not going very well.  Thanks,
-
-Josef
