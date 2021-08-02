@@ -2,23 +2,23 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 521693DDF84
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Aug 2021 20:44:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CE863DDF85
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Aug 2021 20:44:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231448AbhHBSor (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Aug 2021 14:44:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58632 "EHLO mail.kernel.org"
+        id S229880AbhHBSox (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Aug 2021 14:44:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231357AbhHBSor (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 2 Aug 2021 14:44:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3A7B660F6E;
-        Mon,  2 Aug 2021 18:44:37 +0000 (UTC)
-Subject: [PATCH v1 4/5] xprtrdma: Add an xprtrdma_post_send_err tracepoint
+        id S229847AbhHBSox (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 2 Aug 2021 14:44:53 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 649FB60F6E;
+        Mon,  2 Aug 2021 18:44:43 +0000 (UTC)
+Subject: [PATCH v1 5/5] xprtrdma: Eliminate rpcrdma_post_sends()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     trondmy@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Mon, 02 Aug 2021 14:44:36 -0400
-Message-ID: <162792987652.3902.10509303607593172210.stgit@manet.1015granger.net>
+Date:   Mon, 02 Aug 2021 14:44:42 -0400
+Message-ID: <162792988270.3902.15378426204950453026.stgit@manet.1015granger.net>
 In-Reply-To: <162792979429.3902.11831790821518477892.stgit@manet.1015granger.net>
 References: <162792979429.3902.11831790821518477892.stgit@manet.1015granger.net>
 User-Agent: StGit/1.1
@@ -29,85 +29,86 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Unlike xprtrdma_post_send(), this one can be left enabled all the
-time, and should almost never fire. But we do want to know about
-immediate errors when they happen.
+Clean up.
 
-Note that there is already a similar post_linv_err tracepoint.
+Now that there is only one registration mode, there is only one
+target "post_send" method: frwr_send(). rpcrdma_post_sends() no
+longer adds much value, especially since all of its call sites
+ignore the return code value except to check if it's non-zero.
+
+Just have them call frwr_send() directly instead.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/rpcrdma.h |   33 +++++++++++++++++++++++++++++++++
- net/sunrpc/xprtrdma/frwr_ops.c |    6 +++++-
- 2 files changed, 38 insertions(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/backchannel.c |    2 +-
+ net/sunrpc/xprtrdma/transport.c   |    2 +-
+ net/sunrpc/xprtrdma/verbs.c       |   15 ---------------
+ net/sunrpc/xprtrdma/xprt_rdma.h   |    1 -
+ 4 files changed, 2 insertions(+), 18 deletions(-)
 
-diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index d65a84bd040c..de4195499592 100644
---- a/include/trace/events/rpcrdma.h
-+++ b/include/trace/events/rpcrdma.h
-@@ -793,6 +793,39 @@ TRACE_EVENT(xprtrdma_post_send,
- 	)
- );
+diff --git a/net/sunrpc/xprtrdma/backchannel.c b/net/sunrpc/xprtrdma/backchannel.c
+index 1151efd09b27..17f174d6ea3b 100644
+--- a/net/sunrpc/xprtrdma/backchannel.c
++++ b/net/sunrpc/xprtrdma/backchannel.c
+@@ -115,7 +115,7 @@ int xprt_rdma_bc_send_reply(struct rpc_rqst *rqst)
+ 	if (rc < 0)
+ 		goto failed_marshal;
  
-+TRACE_EVENT(xprtrdma_post_send_err,
-+	TP_PROTO(
-+		const struct rpcrdma_xprt *r_xprt,
-+		const struct rpcrdma_req *req,
-+		int rc
-+	),
-+
-+	TP_ARGS(r_xprt, req, rc),
-+
-+	TP_STRUCT__entry(
-+		__field(u32, cq_id)
-+		__field(unsigned int, task_id)
-+		__field(unsigned int, client_id)
-+		__field(int, rc)
-+	),
-+
-+	TP_fast_assign(
-+		const struct rpc_rqst *rqst = &req->rl_slot;
-+		const struct rpcrdma_ep *ep = r_xprt->rx_ep;
-+
-+		__entry->cq_id = ep ? ep->re_attr.recv_cq->res.id : 0;
-+		__entry->task_id = rqst->rq_task->tk_pid;
-+		__entry->client_id = rqst->rq_task->tk_client ?
-+				     rqst->rq_task->tk_client->cl_clid : -1;
-+		__entry->rc = rc;
-+	),
-+
-+	TP_printk("task:%u@%u cq.id=%u rc=%d",
-+		__entry->task_id, __entry->client_id,
-+		__entry->cq_id, __entry->rc
-+	)
-+);
-+
- TRACE_EVENT(xprtrdma_post_recv,
- 	TP_PROTO(
- 		const struct rpcrdma_rep *rep
-diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
-index 754c5dffe127..f700b34a5bfd 100644
---- a/net/sunrpc/xprtrdma/frwr_ops.c
-+++ b/net/sunrpc/xprtrdma/frwr_ops.c
-@@ -394,6 +394,7 @@ int frwr_send(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- 	struct rpcrdma_ep *ep = r_xprt->rx_ep;
- 	struct rpcrdma_mr *mr;
- 	unsigned int num_wrs;
-+	int ret;
+-	if (rpcrdma_post_sends(r_xprt, req))
++	if (frwr_send(r_xprt, req))
+ 		goto drop_connection;
+ 	return 0;
  
- 	num_wrs = 1;
- 	post_wr = send_wr;
-@@ -420,7 +421,10 @@ int frwr_send(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- 	}
+diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+index 9c2ffc67c0fd..a463400ed5a3 100644
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -661,7 +661,7 @@ xprt_rdma_send_request(struct rpc_rqst *rqst)
+ 		goto drop_connection;
+ 	rqst->rq_xtime = ktime_get();
  
- 	trace_xprtrdma_post_send(req);
--	return ib_post_send(ep->re_id->qp, post_wr, NULL);
-+	ret = ib_post_send(ep->re_id->qp, post_wr, NULL);
-+	if (ret)
-+		trace_xprtrdma_post_send_err(r_xprt, req, ret);
-+	return ret;
+-	if (rpcrdma_post_sends(r_xprt, req))
++	if (frwr_send(r_xprt, req))
+ 		goto drop_connection;
+ 
+ 	rqst->rq_xmit_bytes_sent += rqst->rq_snd_buf.len;
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 1e9041c022b6..aaec3c9be8db 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -1349,21 +1349,6 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb)
+ 	kfree(rb);
  }
  
+-/**
+- * rpcrdma_post_sends - Post WRs to a transport's Send Queue
+- * @r_xprt: controlling transport instance
+- * @req: rpcrdma_req containing the Send WR to post
+- *
+- * Returns 0 if the post was successful, otherwise -ENOTCONN
+- * is returned.
+- */
+-int rpcrdma_post_sends(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
+-{
+-	if (frwr_send(r_xprt, req))
+-		return -ENOTCONN;
+-	return 0;
+-}
+-
  /**
+  * rpcrdma_post_recvs - Refill the Receive Queue
+  * @r_xprt: controlling transport instance
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index 927e20a2c04e..d91f54eae00b 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -459,7 +459,6 @@ void rpcrdma_flush_disconnect(struct rpcrdma_xprt *r_xprt, struct ib_wc *wc);
+ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt);
+ void rpcrdma_xprt_disconnect(struct rpcrdma_xprt *r_xprt);
+ 
+-int rpcrdma_post_sends(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
+ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, int needed, bool temp);
+ 
+ /*
 
 
