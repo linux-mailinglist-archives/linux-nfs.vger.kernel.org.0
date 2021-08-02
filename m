@@ -2,118 +2,152 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FF983DDBCA
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Aug 2021 17:03:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 616AE3DDCD8
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Aug 2021 17:55:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234750AbhHBPDW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Aug 2021 11:03:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234701AbhHBPDV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Aug 2021 11:03:21 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF38C06175F;
-        Mon,  2 Aug 2021 08:03:11 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id nd39so31397798ejc.5;
-        Mon, 02 Aug 2021 08:03:11 -0700 (PDT)
+        id S235341AbhHBPzW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Aug 2021 11:55:22 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:56030 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235338AbhHBPzV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Aug 2021 11:55:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h4DHQv7pzjJWl9xFWDVMxvTq6zafn6EuHboXBTbyhH4=;
-        b=ovlFZkDo+nnUX/oiH115DeSThUdK0QW9V4he8r5XUV4LsGTePJ9X02B6wBTC2cLas5
-         LJeL4dh0t9q7imBkaQHZswTc6kyia1gOvW7sldh7Tn/5vSyque/70GtY0BJePVqwOarh
-         D0+AceHSQr7sijRxLqy2ou9Sxyt1I1rPo7RjS/F2otw2xpd89DykMWAh1nj3jGS+9wZT
-         Aluph98PE6CqN2d9CICRj+WSrYhzg752ndg3UG1tkIRwZaDs9l5CMJvVX3mig1R1Jw54
-         ubCNVC41Guntoi1z/YfWJwW1N2q/nULQMRKDKldjQoZG8rsMRHrvjFdHXhWWSAvgHk1n
-         on/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h4DHQv7pzjJWl9xFWDVMxvTq6zafn6EuHboXBTbyhH4=;
-        b=PwgOddFav6O9zCUArZ6cd4UD+k9ALCjtZC36eaQ54gv9F9/z9sbh7M7e1XfOkT2J+F
-         l28jXx9eXccuihbBtiRSn5YlzAwIU54cHC+6lvYWq53b1lQXqFlC+S8jeCxfSXIEElpZ
-         H3MPzcFcC9sNd/pYvPTlvUyPqNVfkJBL6SwN0M6lQkmATBhCqBt4Idm6ufEnV+inYo0t
-         d+Xk4QDCa+V2BDH/zyuWnWIrwrqGO/c8e7mCfg8RTv8NNqzl0WoekTY+XoVd/viuNG6h
-         Jx2odl2v6KGOrYyYF1cNwoLEO6TOiplZCWmTWLuwUcAPPuMLLHzGW22ZmT1POxHXP1p5
-         jvGA==
-X-Gm-Message-State: AOAM533L/5wZv2dW3HqysUYly47tK4DT/nvi0SK/JKS+7cnUu/bERuit
-        uF2GJjhfQJ4oRspjrlzc3LpCoI2Uly/QqYMG7Fw=
-X-Google-Smtp-Source: ABdhPJwVlWeOt3pNa/h6Iz3yRjpSN+AqwZhVaut4jXE2ugSVmTIuRm6YaUekYIQ/DIWb1/c9AyZJqxRXw/C/JpNe58E=
-X-Received: by 2002:a17:907:b04:: with SMTP id h4mr15867079ejl.460.1627916590330;
- Mon, 02 Aug 2021 08:03:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210729044758.63219-1-jefflexu@linux.alibaba.com> <YQZ6g6ZszcMzVlt4@desktop>
-In-Reply-To: <YQZ6g6ZszcMzVlt4@desktop>
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Mon, 2 Aug 2021 11:02:54 -0400
-Message-ID: <CAFX2JfkOcdGMbtT2BddJnGQ33cpzX+9Dunz35N5Lmb5Pmv1AXA@mail.gmail.com>
-Subject: Re: [PATCH] common/rc: only force nfs4.2 non-default SEEK_HOLE behaviour
-To:     Eryu Guan <guan@eryu.me>
-Cc:     Jeffle Xu <jefflexu@linux.alibaba.com>, fstests@vger.kernel.org,
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1627919713; x=1659455713;
+  h=date:from:to:cc:message-id:references:mime-version:
+   content-transfer-encoding:in-reply-to:subject;
+  bh=y5/tsy3bpVGh2h4bHJbcXXKuZiOYXi5X3UeL9AmVA88=;
+  b=Woy1d0BestiQIdmxedFN/Z2AZCJrdGG0/tkupBufDwuWq/6p1tVarlDP
+   J9sh8vTIjJpTyOvs9hU+UlUY4g2FbcuccmFtQZZ63foWggrLyKexiLXI7
+   PaAPArCMexbYHuOZteDV0Dg8kJO09ZotwlwhkQWsxSe01dCA3G/XdKjtK
+   k=;
+X-IronPort-AV: E=Sophos;i="5.84,289,1620691200"; 
+   d="scan'208";a="126573418"
+Subject: Re: [PATCH] common/attr: fix the MAX_ATTRS and MAX_ATTRVAL_SIZE for nfs
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-c5104f52.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP; 02 Aug 2021 15:55:11 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2a-c5104f52.us-west-2.amazon.com (Postfix) with ESMTPS id 71843A1F64;
+        Mon,  2 Aug 2021 15:55:10 +0000 (UTC)
+Received: from EX13D30UEE003.ant.amazon.com (10.43.62.109) by
+ EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.23; Mon, 2 Aug 2021 15:55:09 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
+ EX13D30UEE003.ant.amazon.com (10.43.62.109) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.23; Mon, 2 Aug 2021 15:55:09 +0000
+Received: from dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com
+ (172.19.206.175) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
+ Server id 15.0.1497.23 via Frontend Transport; Mon, 2 Aug 2021 15:55:09 +0000
+Received: by dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id 032F69D; Mon,  2 Aug 2021 15:55:08 +0000 (UTC)
+Date:   Mon, 2 Aug 2021 15:55:08 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+CC:     Eryu Guan <eguan@linux.alibaba.com>,
+        Hao Xu <haoxu@linux.alibaba.com>,
+        "fstests@vger.kernel.org" <fstests@vger.kernel.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20210802155508.GA28568@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
+References: <20210730124252.113071-1-haoxu@linux.alibaba.com>
+ <20210730140134.GM60846@e18g06458.et15sqa>
+ <B6E429FE-2D78-41D0-A55D-C7AA83D62877@hammerspace.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <B6E429FE-2D78-41D0-A55D-C7AA83D62877@hammerspace.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Eryu,
-
-On Sun, Aug 1, 2021 at 6:43 AM Eryu Guan <guan@eryu.me> wrote:
->
-> [cc nfs list]
->
-> On Thu, Jul 29, 2021 at 12:47:58PM +0800, Jeffle Xu wrote:
-> > Only NFSv4.2 supports non-defautl SEEK_HOLE behaviour. Thus default
-> > SEEK_HOLE behaviour shall be allowed for NFSv4.0/4.1, or it will fail
-> > generic/285, generic/448, generic/490 on NFSv4.0/4.1, complaining they
-> > should support non-default SEEK_HOLE behaviour.
+On Sat, Jul 31, 2021 at 10:07:13PM +0000, Trond Myklebust wrote:
+> 
+> 
+> > On Jul 30, 2021, at 10:01, Eryu Guan <eguan@linux.alibaba.com> wrote:
 > >
-> > The *.full log is like:
-> >       File system supports the default behavior.
-> >       Default behavior is not allowed. Aborting.
+> > [cc linux-nfs for review]
 > >
-> > Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
->
-> Looks correct to me, but I'd like nfs folks to take a look as well, to
-> conform if only nfsv4.2 supports SEEK_DATA/SEEK_HOLE non-default
-> behavior.
-
-This is correct, non-default SEEK_DATA/SEEK_HOLE is only supported by NFS v4.2.
-
-Thanks for checking!
-Anna
->
-> Thanks,
-> Eryu
->
-> P.S.
-> Please cc the corresponding filesystem list next time if patch affects
-> the specific fs.
->
-> > ---
-> >  common/rc | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > On Fri, Jul 30, 2021 at 08:42:52PM +0800, Hao Xu wrote:
+> >> The block size of localfs for nfs may be much smaller than nfs itself.
+> >> So we'd better set MAX_ATTRS and MAX_ATTRVAL_SIZE to 4096 to avoid
+> >> 'no space' error when we test adding a bunch of xattrs to nfs.
+> >>
+> >> Signed-off-by: Hao Xu <haoxu@linux.alibaba.com>
 > >
-> > diff --git a/common/rc b/common/rc
-> > index 25a838a3..9be6f89d 100644
-> > --- a/common/rc
-> > +++ b/common/rc
-> > @@ -2495,10 +2495,10 @@ _fstyp_has_non_default_seek_data_hole()
-> >               return 0
-> >               ;;
-> >       nfs*)
-> > -             # NFSv2 and NFSv3 only support default behavior of SEEK_HOLE,
-> > -             # while NFSv4 supports non-default behavior
-> > -             local nfsvers=`_df_device $TEST_DEV | $AWK_PROG '{ print $2 }'`
-> > -             [ "$nfsvers" = "nfs4" ]
-> > +             # NFSv2, NFSv3, and NFSv4.0/4.1 only support default behavior of SEEK_HOLE,
-> > +             # while NFSv4.2 supports non-default behavior
-> > +             local nfsvers=`_mount() | grep $TEST_DEV | sed -n 's/^.*vers=\([0-9.]*\).*$/\1/p'`
-> > +             [ "$nfsvers" = "4.2" ]
-> >               return $?
-> >               ;;
-> >       overlay)
-> > --
-> > 2.27.0
+> > Since the xattr support is relatively new (merged a year ago for
+> > NFSv4.2), I'd like nfs folks to take a look as well.
+> >
+> >> ---
+> >>
+> >> It's better to set BLOCK_SIZE to `_get_block_size $variable`
+> >> here $variable is the localfs for nfs, since I'm not familiar with
+> >> xfstests, anyone tell what's the name of it.
+> >
+> > fstests doesn't know the exported filesystem under NFS, so I don't think
+> > we could the block size of it.
+> >
+> >>
+> >> common/attr | 11 +++++++++--
+> >> 1 file changed, 9 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/common/attr b/common/attr
+> >> index 42ceab92335a..a833f00e0884 100644
+> >> --- a/common/attr
+> >> +++ b/common/attr
+> >> @@ -253,9 +253,13 @@ _getfattr()
+> >>
+> >> # set maximum total attr space based on fs type
+> >> case "$FSTYP" in
+> >> -xfs|udf|pvfs2|9p|ceph|nfs)
+> >> +xfs|udf|pvfs2|9p|ceph)
+> >>      MAX_ATTRS=1000
+> >>      ;;
+> >> +nfs)
+> >> +    BLOCK_SIZE=4096
+> >> +    let MAX_ATTRS=$BLOCK_SIZE/40
+> >> +    ;;
+> >> *)
+> >>      # Assume max ~1 block of attrs
+> >>      BLOCK_SIZE=`_get_block_size $TEST_DIR`
+> >> @@ -273,12 +277,15 @@ xfs|udf|btrfs)
+> >> pvfs2)
+> >>      MAX_ATTRVAL_SIZE=8192
+> >>      ;;
+> >> -9p|ceph|nfs)
+> >> +9p|ceph)
+> >>      MAX_ATTRVAL_SIZE=65536
+> >>      ;;
+> >> bcachefs)
+> >>      MAX_ATTRVAL_SIZE=1024
+> >>      ;;
+> >> +nfs)
+> >> +    MAX_ATTRVAL_SIZE=3840
+> >> +    ;;
+> >
+> > Where does this value come from?
+> >
+> > Thanks,
+> > Eryu
+> >
+> >> *)
+> >>      # Assume max ~1 block of attrs
+> >>      BLOCK_SIZE=`_get_block_size $TEST_DIR`
+> >> --
+> >> 2.24.4
+> 
+> The above hackery proves beyond a shadow of a doubt that this test is utterly broken. Filesystem block sizes have nothing at all to do with xattrs.
+> 
+> Please move this test into the filesystem-specific categories or else remove it altogether. It definitely does not belong in ‘generic’.
+
+I ran in to this basic problem when trying to add support for NFS xattr tests in fstests.
+
+fstests wants to see if the xattr implementation of filesystems acts as expected when you hit the xattr size limits. But there is no interface to query those limits. So fstests resorts to special knowledge about the filesystem implementation to deduce these limits.
+
+That, however, falls apart for NFS, which has no builtin limits (aside from the max RPC xfer size). The limit for NFS is just whatever the filesystem on the server side has, so there is no one-size-fits-all limit you can set here. What works against a server exporting XFS will not work against a server exporting ext4, etc. And then you might have a server running on a system that implements xattrs as a 'resource fork', so the size could be equal to the maximum filesystem size. You just don't know.
+
+If you're on Linux, you  could try to deduce the limit by just trying to set an xattr with increasing size until you hit the limit. That's sort of doable because Linux has an upper limit (64k) enforced by the fs-independent code, so you don't have to go beyond that. But, you're trying to see if things behave correctly in the first place when hitting the limit, so that's kind of a chicken-and-egg problem.
+
+It's messy, there is no clean solution here.
+
+- Frank
