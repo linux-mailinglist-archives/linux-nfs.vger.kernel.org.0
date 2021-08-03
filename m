@@ -2,207 +2,151 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60E1E3DF7CE
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Aug 2021 00:30:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 132BA3DF89F
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Aug 2021 01:47:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229986AbhHCWan (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Aug 2021 18:30:43 -0400
-Received: from mout.gmx.net ([212.227.15.15]:36707 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229611AbhHCWan (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 3 Aug 2021 18:30:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1628029793;
-        bh=VveEwFhEVJvR/f/tkOmF9Se0fAJfnMxJr2QcJgUnUxs=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=M1qfLh2SJbmIagyvcq+cnaGlKJz64Cke+Qh7c+9cVNXa574IpTdbBUKxceokYemJz
-         kpb2X4YfppO9a0uemi0w5lFdu7TK9zPSoPJrbdMS0nArf7sbIobf9Cs5xL2zP0VbtA
-         NEpCPv4KRN4g1oZd124PErfItsvcaw5p+HdMAIF4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [0.0.0.0] ([149.28.201.231]) by mail.gmx.net (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MKsnP-1mRDGH1W3R-00LIhr; Wed, 04
- Aug 2021 00:29:53 +0200
-Subject: Re: A Third perspective on BTRFS nfsd subvol dev/inode number issues.
-To:     Josef Bacik <josef@toxicpanda.com>,
-        Amir Goldstein <amir73il@gmail.com>, NeilBrown <neilb@suse.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Christoph Hellwig <hch@infradead.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Btrfs BTRFS <linux-btrfs@vger.kernel.org>
-References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
- <162742546548.32498.10889023150565429936.stgit@noble.brown>
- <YQNG+ivSssWNmY9O@zeniv-ca.linux.org.uk>
- <162762290067.21659.4783063641244045179@noble.neil.brown.name>
- <CAJfpegsR1qvWAKNmdjLfOewUeQy-b6YBK4pcHf7JBExAqqUvvg@mail.gmail.com>
- <162762562934.21659.18227858730706293633@noble.neil.brown.name>
- <CAJfpegtu3NKW9m2jepRrXe4UTuD6_3k0Y6TcCBLSQH7SSC90BA@mail.gmail.com>
- <162763043341.21659.15645923585962859662@noble.neil.brown.name>
- <CAJfpegub4oBZCBXFQqc8J-zUiSW+KaYZLjZaeVm_cGzNVpxj+A@mail.gmail.com>
- <162787790940.32159.14588617595952736785@noble.neil.brown.name>
- <YQeB3ASDyO0wSgL4@zeniv-ca.linux.org.uk>
- <162788285645.32159.12666247391785546590@noble.neil.brown.name>
- <CAOQ4uxgnGWMUvtyJ0MMxMzHFwiyR68FHorDNmLSva0CdpVNNcQ@mail.gmail.com>
- <2337f1ba-ffed-2369-47a0-5ffda2d8b51c@toxicpanda.com>
-From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
-Message-ID: <beb00e40-1058-d88e-6d06-b0ffddacbb39@gmx.com>
-Date:   Wed, 4 Aug 2021 06:29:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        id S234533AbhHCXrd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Aug 2021 19:47:33 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:57998 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229684AbhHCXrc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Aug 2021 19:47:32 -0400
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 2AB34220DA;
+        Tue,  3 Aug 2021 23:47:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1628034440; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qwJ7Oiyak7bVkLL9diT5VyvP/qSMlmC/Vxy/DDOKGWo=;
+        b=AGJ31JoHh0St5WYIImolTYSjbhYrU6CSePxhc9QaTYj+jtJ9DyTTY0zhrRPHT6E/8YDim+
+        IGnJx54HstQuBk4Xe4+gObpC+fFFVAOz9IN2FVgHpwncQrNZTS7/XEhI25o6tqYdlZQFz7
+        D3FjY3WdRZyXIGhkxO4YUprTojJ3XZo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1628034440;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qwJ7Oiyak7bVkLL9diT5VyvP/qSMlmC/Vxy/DDOKGWo=;
+        b=329MHlxiVzs4AIdUrvye5Bh9iVuyidlu7KE7ju4G2tnIPyT6/i9QVtrIo8NQnGSh0wVzot
+        ByWCN+dFXkkz36Aw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7DE4113AEA;
+        Tue,  3 Aug 2021 23:47:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id f3eoDobVCWFuEAAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 03 Aug 2021 23:47:18 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <2337f1ba-ffed-2369-47a0-5ffda2d8b51c@toxicpanda.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:2TuxT3PyCrTEnO/hkRUoOTuzj2XgLWwrnVTW5B6pRr40jcn0WXr
- mQqMkccd72wUN0TWhncxG+kH6P3+A6b91xUcNaK7gVCaa4SJSLbHhqY8Q8+yx778AdNfhqa
- tNbOmWi6ZlfAdyUwKqIYjjaO4ycvBelcSjBwkWrwkbZyNE5s9onDNdhUMkP9YwDGKVfFZ06
- tylcnRrAgbfFvuJNGRWTA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gDT4QhjdgvU=:y6faMYwKxIYgcmY7jehv0O
- mbko+1dYIyxsCrFx67MSaNHG3qGWH2n1RXXlFf3Afa4yD+0vtpQLbKeu+Am3TSJNiqhKOxW/Z
- /7q11mQRLQowCSTNgOLW4Chor8K1XBA0W6iwc2vPSCUZR0a9A2plBkQNbgJ2NZ5udWAOhnAur
- Lmxou383SZ0sVGQ3C2ODI2pR7HMYbJAeMKgKKvc71cPAlb/JLQ8df3MQi97jM13R+kbwYI85J
- o+XUbWWZBuna0yEDq1MmdaxjtbAukWpKCEWx7erxqEyQQstniR0nWZC7Kw9BxdpVGcqU2COAN
- O06IGkpz7Z1bmQIZ0+zCUhhHhDSKNR6weHNdE48Nc5GSMP+aWGndxUxILoDx5eeRIZtFVQ+HB
- ipZHOx3rQcnhY6xrGVO8AYG1MPcUnwALaZ7Y1JcRK7y8XH1X8kIWzbnLbMT0hwB2W+e2QwQie
- H4D9vgWZgfxQfNCWFQS0qQ9avnWEoj//PvuCTjjFAZgGdrMfo/RVE/qqKTcXoQYDp5WVKVJjW
- 9WpVEaKtWP5rr56mzhcteFpE9zkWewUbFN7SnJ1TancEjj9Tybry5ZyK1L15zKG08lE3NhgIh
- RfKDhXQu+G9S5q7uqySwVsTEKpp/dGc7nray4PzRtJi0lo3xA5G2NxPZNY75tCATGuBoGNuMl
- THGkfNWmqbY1PIGnJHfPA9LWgSKc2lwgGNfdIPNWMkP+32R0NVr+g8v9v/zlzmLTq+H6Qb2kl
- 07DISMVm6yW2+9VvA15/RCaN/OApWDYRjff/Ty8Eoms5maikg/LBqyG3btxkC0aRRFRglufC9
- 6IBUqUwnCCZ8vtuHxZFHrUQPonAHCL+T1LMKhP1jWt+nn57gwbZAt++QR2KscP0IbB2K3RaJK
- YDIbc3BAD9u7VaypwgNI+IJZ8encNEiCuxGkl+Dk93qkWfRXNsjRlGv8YsUwexHR5WPAYP2R/
- /6uRjZ6a6EVbo2FZjA7YhPdgo17dly2iYoY4hgMMbdUeMGktvd8gb4uux2O+VfJ8dY0z9AXNI
- PiVna2i+KECUmOed/sp6Wr/NUjA8aFNPYocGhdqQA+0BrJsCev/fwdsvdisHvnTbBJXh8UyHC
- CxrAvpslK1kC33nFBRXmcyKFkDRj9CRlKyBz245/7dogGy0NFza/kqdXg==
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     "bfields@fieldses.org" <bfields@fieldses.org>,
+        "plambri@redhat.com" <plambri@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "bcodding@redhat.com" <bcodding@redhat.com>
+Subject: Re: cto changes for v4 atomic open
+In-reply-to: <a1934e03e68ada8b7d1abf1744ad1b8f9d784aa4.camel@hammerspace.com>
+References: <DF3F94B7-F322-4054-952F-90CE02B442FE@redhat.com>,
+ <ef395e52f3bb8d07dd7a39bb0a6dd6fb64a87a1c.camel@hammerspace.com>,
+ <20210803203051.GA3043@fieldses.org>,
+ <3feb71ab232b26df6d63111ee8226f6bb7e8dc36.camel@hammerspace.com>,
+ <20210803213642.GA4042@fieldses.org>,
+ <a1934e03e68ada8b7d1abf1744ad1b8f9d784aa4.camel@hammerspace.com>
+Date:   Wed, 04 Aug 2021 09:47:14 +1000
+Message-id: <162803443497.32159.4120609262211305187@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-On 2021/8/2 =E4=B8=8B=E5=8D=889:53, Josef Bacik wrote:
-> On 8/2/21 3:54 AM, Amir Goldstein wrote:
->> On Mon, Aug 2, 2021 at 8:41 AM NeilBrown <neilb@suse.de> wrote:
->>>
->>> On Mon, 02 Aug 2021, Al Viro wrote:
->>>> On Mon, Aug 02, 2021 at 02:18:29PM +1000, NeilBrown wrote:
->>>>
->>>>> It think we need to bite-the-bullet and decide that 64bits is not
->>>>> enough, and in fact no number of bits will ever be enough.=C2=A0 ove=
-rlayfs
->>>>> makes this clear.
->>>>
->>>> Sure - let's go for broke and use XML.=C2=A0 Oh, wait - it's 8 months=
- too
->>>> early...
->>>>
->>>>> So I think we need to strongly encourage user-space to start using
->>>>> name_to_handle_at() whenever there is a need to test if two things a=
-re
->>>>> the same.
->>>>
->>>> ... and forgetting the inconvenient facts, such as that two different
->>>> fhandles may correspond to the same object.
->>>
->>> Can they?=C2=A0 They certainly can if the "connectable" flag is passed=
-.
->>> name_to_handle_at() cannot set that flag.
->>> nfsd can, so using name_to_handle_at() on an NFS filesystem isn't quit=
-e
->>> perfect.=C2=A0 However it is the best that can be done over NFS.
->>>
->>> Or is there some other situation where two different filehandles can b=
-e
->>> reported for the same inode?
->>>
->>> Do you have a better suggestion?
->>>
->>
->> Neil,
->>
->> I think the plan of "changing the world" is not very realistic.
->> Sure, *some* tools can be changed, but all of them?
->>
->> I went back to read your initial cover letter to understand the
->> problem and what I mostly found there was that the view of
->> /proc/x/mountinfo was hiding information that is important for
->> some tools to understand what is going on with btrfs subvols.
->>
->> Well I am not a UNIX history expert, but I suppose that
->> /proc/PID/mountinfo was created because /proc/mounts and
->> /proc/PID/mounts no longer provided tool with all the information
->> about Linux mounts.
->>
->> Maybe it's time for a new interface to query the more advanced
->> sb/mount topology? fsinfo() maybe? With mount2 compatible API for
->> traversing mounts that is not limited to reporting all entries inside
->> a single page. I suppose we could go for some hierarchical view
->> under /proc/PID/mounttree. I don't know - new API is hard.
->>
->> In any case, instead of changing st_dev and st_ino or changing the
->> world to work with file handles, why not add inode generation (and
->> maybe subvol id) to statx().
->> filesystem that care enough will provide this information and tools tha=
-t
->> care enough will use it.
->>
->
-> Can y'all wait till I'm back from vacation, goddamn ;)
->
-> This is what I'm aiming for, I spent some time looking at how many
-> places we string parse /proc/<whatever>/mounts and my head hurts.
->
-> Btrfs already has a reasonable solution for this, we have UUID's for
-> everything.=C2=A0 UUID's aren't a strictly btrfs thing either, all the f=
-ile
-> systems have some sort of UUID identifier, hell its built into blkid.=C2=
-=A0 I
-> would love if we could do a better job about letting applications query
-> information about where they are.=C2=A0 And we could expose this with th=
-e
-> relatively common UUID format.=C2=A0 You ask what fs you're in, you get =
-the
-> FS UUID, and then if you're on Btrfs you get the specific subvolume UUID
-> you're in.=C2=A0 That way you could do more fancy things like know if yo=
-u've
-> wandered into a new file system completely or just a different subvolume=
-.
-
-I'm completely on the side of using proper UUID.
-
-But suddenly I find a problem for this, at least we still need something
-like st_dev for real volume based snapshot.
-
-One of the problem for real volume based snapshot is, the snapshoted
-volume is completely the same filesystem, every binary is the same,
-including UUID.
-
-That means, the only way to distinguish such volumes is by st_dev.
-
-For such pure UUID base solution, it's in fact unable to distinguish
-them using just UUID.
-Unless we have some device UUID to replace the old st_dev.
-
-Thanks,
-Qu
-
->
-> We have to keep the st_ino/st_dev thing for backwards compatibility, but
-> make it easier to get more info out of the file system.
->
-> We could in theory expose just the subvolid also, since that's a nice
-> simple u64, but it limits our ability to do new fancy shit in the
-> future.=C2=A0 It's not a bad solution, but like I said I think we need t=
-o
-> take a step back and figure out what problem we're specifically trying
-> to solve, and work from there.=C2=A0 Starting from automounts and workin=
-g our
-> way back is not going very well.=C2=A0 Thanks,
->
-> Josef
+T24gV2VkLCAwNCBBdWcgMjAyMSwgVHJvbmQgTXlrbGVidXN0IHdyb3RlOgo+IE9uIFR1ZSwgMjAy
+MS0wOC0wMyBhdCAxNzozNiAtMDQwMCwgYmZpZWxkc0BmaWVsZHNlcy5vcmcgd3JvdGU6Cj4gPiBP
+biBUdWUsIEF1ZyAwMywgMjAyMSBhdCAwOTowNzoxMVBNICswMDAwLCBUcm9uZCBNeWtsZWJ1c3Qg
+d3JvdGU6Cj4gPiA+IE9uIFR1ZSwgMjAyMS0wOC0wMyBhdCAxNjozMCAtMDQwMCwgSi4gQnJ1Y2Ug
+RmllbGRzIHdyb3RlOgo+ID4gPiA+IE9uIEZyaSwgSnVsIDMwLCAyMDIxIGF0IDAyOjQ4OjQxUE0g
+KzAwMDAsIFRyb25kIE15a2xlYnVzdCB3cm90ZToKPiA+ID4gPiA+IE9uIEZyaSwgMjAyMS0wNy0z
+MCBhdCAwOToyNSAtMDQwMCwgQmVuamFtaW4gQ29kZGluZ3RvbiB3cm90ZToKPiA+ID4gPiA+ID4g
+SSBoYXZlIHNvbWUgZm9sa3MgdW5oYXBweSBhYm91dCBiZWhhdmlvciBjaGFuZ2VzIGFmdGVyOgo+
+ID4gPiA+ID4gPiA0NzkyMTkyMThmYmUKPiA+ID4gPiA+ID4gTkZTOgo+ID4gPiA+ID4gPiBPcHRp
+bWlzZSBhd2F5IHRoZSBjbG9zZS10by1vcGVuIEdFVEFUVFIgd2hlbiB3ZSBoYXZlIE5GU3Y0Cj4g
+PiA+ID4gPiA+IE9QRU4KPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+IEJlZm9yZSB0aGlzIGNoYW5n
+ZSwgYSBjbGllbnQgaG9sZGluZyBhIFJPIG9wZW4gd291bGQKPiA+ID4gPiA+ID4gaW52YWxpZGF0
+ZQo+ID4gPiA+ID4gPiB0aGUKPiA+ID4gPiA+ID4gcGFnZWNhY2hlIHdoZW4gZG9pbmcgYSBzZWNv
+bmQgUlcgb3Blbi4KPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+IE5vdyB0aGUgY2xpZW50IGRvZXNu
+J3QgaW52YWxpZGF0ZSB0aGUgcGFnZWNhY2hlLCB0aG91Z2gKPiA+ID4gPiA+ID4gdGVjaG5pY2Fs
+bHkKPiA+ID4gPiA+ID4gaXQgY291bGQKPiA+ID4gPiA+ID4gYmVjYXVzZSB3ZSBzZWUgYSBjaGFu
+Z2VhdHRyIHVwZGF0ZSBvbiB0aGUgUlcgT1BFTiByZXNwb25zZS4KPiA+ID4gPiA+ID4gCj4gPiA+
+ID4gPiA+IEkgZmVlbCB0aGlzIGlzIGEgZ3JleSBhcmVhIGluIENUTyBpZiB3ZSdyZSBhbHJlYWR5
+IGhvbGRpbmcgYW4KPiA+ID4gPiA+ID4gb3Blbi7CoAo+ID4gPiA+ID4gPiBEbyB3ZQo+ID4gPiA+
+ID4gPiBrbm93IGhvdyB0aGUgY2xpZW50IG91Z2h0IHRvIGJlaGF2ZSBpbiB0aGlzIGNhc2U/wqAg
+U2hvdWxkIHRoZQo+ID4gPiA+ID4gPiBjbGllbnQncyBvcGVuCj4gPiA+ID4gPiA+IHVwZ3JhZGUg
+dG8gUlcgaW52YWxpZGF0ZSB0aGUgcGFnZWNhY2hlPwo+ID4gPiA+ID4gPiAKPiA+ID4gPiA+IAo+
+ID4gPiA+ID4gSXQncyBub3QgYSAiZ3JleSBhcmVhIGluIGNsb3NlLXRvLW9wZW4iIGF0IGFsbC4g
+SXQgaXMgdmVyeSBjdXQKPiA+ID4gPiA+IGFuZAo+ID4gPiA+ID4gZHJpZWQuCj4gPiA+ID4gPiAK
+PiA+ID4gPiA+IElmIHlvdSBuZWVkIHRvIGludmFsaWRhdGUgeW91ciBwYWdlIGNhY2hlIHdoaWxl
+IHRoZSBmaWxlIGlzCj4gPiA+ID4gPiBvcGVuLAo+ID4gPiA+ID4gdGhlbgo+ID4gPiA+ID4gYnkg
+ZGVmaW5pdGlvbiB5b3UgYXJlIGluIGEgc2l0dWF0aW9uIHdoZXJlIHRoZXJlIGlzIGEgd3JpdGUg
+YnkKPiA+ID4gPiA+IGFub3RoZXIKPiA+ID4gPiA+IGNsaWVudCBnb2luZyBvbiB3aGlsZSB5b3Ug
+YXJlIHJlYWRpbmcuIFlvdSdyZSBjbGVhcmx5IG5vdCBkb2luZwo+ID4gPiA+ID4gY2xvc2UtCj4g
+PiA+ID4gPiB0by1vcGVuLgo+ID4gPiA+IAo+ID4gPiA+IERvY3VtZW50YXRpb24gaXMgcmVhbGx5
+IHVuY2xlYXIgYWJvdXQgdGhpcyBjYXNlLsKgIEV2ZXJ5Cj4gPiA+ID4gZGVmaW5pdGlvbiBvZgo+
+ID4gPiA+IGNsb3NlLXRvLW9wZW4gdGhhdCBJJ3ZlIHNlZW4gc2F5cyB0aGF0IGl0IHJlcXVpcmVz
+IGEgY2FjaGUKPiA+ID4gPiBjb25zaXN0ZW5jeQo+ID4gPiA+IGNoZWNrIG9uIGV2ZXJ5IGFwcGxp
+Y2F0aW9uIG9wZW4uwqAgSSd2ZSBuZXZlciBzZWVuIG9uZSB0aGF0IHNheXMKPiA+ID4gPiAib24K
+PiA+ID4gPiBldmVyeSBvcGVuIHRoYXQgZG9lc24ndCBvdmVybGFwIHdpdGggYW4gYWxyZWFkeS1l
+eGlzdGluZyBvcGVuIG9uCj4gPiA+ID4gdGhhdAo+ID4gPiA+IGNsaWVudCIuCj4gPiA+ID4gCj4g
+PiA+ID4gVGhleSAqdXN1YWxseSogYWxzbyBwcmVmYWNlIHRoYXQgYnkgc2F5aW5nIHRoYXQgdGhp
+cyBpcyBtb3RpdmF0ZWQKPiA+ID4gPiBieQo+ID4gPiA+IHRoZQo+ID4gPiA+IHVzZSBjYXNlIHdo
+ZXJlIG9wZW5zIGRvbid0IG92ZXJsYXAuwqAgQnV0IGl0J3MgbmV2ZXIgbWFkZSBjbGVhcgo+ID4g
+PiA+IHRoYXQKPiA+ID4gPiB0aGF0J3MgcGFydCBvZiB0aGUgZGVmaW5pdGlvbi4KPiA+ID4gPiAK
+PiA+ID4gCj4gPiA+IEknbSBub3QgZm9sbG93aW5nIHlvdXIgbG9naWMuCj4gPiAKPiA+IEl0J3Mg
+anVzdCBhIHF1ZXN0aW9uIG9mIHdoYXQgZXZlcnkgc291cmNlIEkgY2FuIGZpbmQgc2F5cyBjbG9z
+ZS10by0KPiA+IG9wZW4KPiA+IG1lYW5zLsKgIEUuZy4sIE5GUyBJbGx1c3RyYXRlZCwgcC4gMjQ4
+LCAiQ2xvc2UtdG8tb3BlbiBjb25zaXN0ZW5jeQo+ID4gcHJvdmlkZXMgYSBndWFyYW50ZWUgb2Yg
+Y2FjaGUgY29uc2lzdGVuY3kgYXQgdGhlIGxldmVsIG9mIGZpbGUgb3BlbnMKPiA+IGFuZAo+ID4g
+Y2xvc2VzLsKgIFdoZW4gYSBmaWxlIGlzIGNsb3NlZCBieSBhbiBhcHBsaWNhdGlvbiwgdGhlIGNs
+aWVudCBmbHVzaGVzCj4gPiBhbnkKPiA+IGNhY2hlZCBjaGFuZ3MgdG8gdGhlIHNlcnZlci7CoCBX
+aGVuIGEgZmlsZSBpcyBvcGVuZWQsIHRoZSBjbGllbnQKPiA+IGlnbm9yZXMKPiA+IGFueSBjYWNo
+ZSB0aW1lIHJlbWFpbmluZyAoaWYgdGhlIGZpbGUgZGF0YSBhcmUgY2FjaGVkKSBhbmQgbWFrZXMg
+YW4KPiA+IGV4cGxpY2l0IEdFVEFUVFIgY2FsbCB0byB0aGUgc2VydmVyIHRvIGNoZWNrIHRoZSBm
+aWxlIG1vZGlmaWNhdGlvbgo+ID4gdGltZS4iCj4gPiAKPiA+ID4gVGhlIGNsb3NlLXRvLW9wZW4g
+bW9kZWwgYXNzdW1lcyB0aGF0IHRoZSBmaWxlIGlzIG9ubHkgYmVpbmcKPiA+ID4gbW9kaWZpZWQg
+YnkKPiA+ID4gb25lIGNsaWVudCBhdCBhIHRpbWUgYW5kIGl0IGFzc3VtZXMgdGhhdCBmaWxlIGNv
+bnRlbnRzIG1heSBiZQo+ID4gPiBjYWNoZWQKPiA+ID4gd2hpbGUgYW4gYXBwbGljYXRpb24gaXMg
+aG9sZGluZyBpdCBvcGVuLgo+ID4gPiBUaGUgcG9pbnQgY2hlY2tzIGV4aXN0IGluIG9yZGVyIHRv
+IGRldGVjdCBpZiB0aGUgZmlsZSBpcyBiZWluZwo+ID4gPiBjaGFuZ2VkCj4gPiA+IHdoZW4gdGhl
+IGZpbGUgaXMgbm90IG9wZW4uCj4gPiA+IAo+ID4gPiBMaW51eCBkb2VzIG5vdCBoYXZlIGEgcGVy
+LWFwcGxpY2F0aW9uIGNhY2hlLiBJdCBoYXMgYSBwYWdlIGNhY2hlCj4gPiA+IHRoYXQKPiA+ID4g
+aXMgc2hhcmVkIGFtb25nIGFsbCBhcHBsaWNhdGlvbnMuIEl0IGlzIGltcG9zc2libGUgZm9yIHR3
+bwo+ID4gPiBhcHBsaWNhdGlvbnMKPiA+ID4gdG8gb3BlbiB0aGUgc2FtZSBmaWxlIHVzaW5nIGJ1
+ZmZlcmVkIEkvTywgYW5kIHlldCBzZWUgZGlmZmVyZW50Cj4gPiA+IGNvbnRlbnRzLgo+ID4gCj4g
+PiBSaWdodCwgc28gYmFzZWQgb24gdGhlIGRlc2NyaXB0aW9ucyBsaWtlIHRoZSBvbmUgYWJvdmUs
+IEkgd291bGQgaGF2ZQo+ID4gZXhwZWN0ZWQgYm90aCBhcHBsaWNhdGlvbnMgdG8gc2VlIG5ldyBk
+YXRhIGF0IHRoYXQgcG9pbnQuCj4gCj4gV2h5PyBUaGF0IHdvdWxkIGJlIGEgY2xlYXIgdmlvbGF0
+aW9uIG9mIHRoZSBjbG9zZS10by1vcGVuIHJ1bGUgdGhhdAo+IG5vYm9keSBlbHNlIGNhbiB3cml0
+ZSB0byB0aGUgZmlsZSB3aGlsZSBpdCBpcyBvcGVuLgo+IAoKSXMgdGhlIHJ1bGUKQSAtICAiaXQg
+aXMgbm90IHBlcm1pdHRlZCBmb3IgYW55IG90aGVyIGFwcGxpY2F0aW9uL2NsaWVudCB0byB3cml0
+ZSB0bwogICAgICB0aGUgZmlsZSB3aGlsZSBhbm90aGVyIGhhcyBpdCBvcGVuIgogb3IKQiAtICAi
+aXQgaXMgbm90IGV4cGVjdGVkIGZvciBhbnkgb3RoZXIgYXBwbGljYXRpb24vY2xpZW50IHRvIHdy
+aXRlIHRvCiAgICAgIHRoZSBmaWxlIHdoaWxlIGFub3RoZXIgaGFzIGl0IG9wZW4iCgpJIHRoaW5r
+IEIsIGJlY2F1c2UgQSBpcyBjbGVhcmx5IG5vdCBlbmZvcmNlZC4gIFRoYXQgc3VnZ2VzdHMgdGhh
+dCB0aGVyZQppcyBubyAqbmVlZCogdG8gY2hlY2sgZm9yIGNoYW5nZXMsIGJ1dCBlcXVhbGx5IHRo
+ZXJlIGlzIG5vIGJhcnJpZXIgdG8KY2hlY2tpbmcgZm9yIGNoYW5nZXMuICBTbyB0aGF0IGZhY3Qg
+dGhhdCBvbmUgYXBwbGljYXRpb24gaGFzIHRoZSBmaWxlCm9wZW4gc2hvdWxkIG5vdCBwcmV2ZW50
+IGEgY2hlY2sgd2hlbiBhbm90aGVyIGFwcGxpY2F0aW9uIG9wZW5zIHRoZSBmaWxlLgpFcXVhbGx5
+IGl0IHNob3VsZCBub3QgcHJldmVudCBhIGZsdXNoIHdoZW4gc29tZSBvdGhlciBhcHBsaWNhdGlv
+biBjbG9zZXMKdGhlIGZpbGUuCgpJdCBpcyBzb21ld2hhdCB3ZWlyZCB0aGF0IGlmIGFuIGFwcGxp
+Y2F0aW9uIG9uIG9uZSBjbGllbnQgbWlzYmVoYXZlcyBieQprZWVwaW5nIGEgZmlsZSBvcGVuLCB0
+aGF0IHdpbGwgcHJldmVudCBvdGhlciBhcHBsaWNhdGlvbnMgb24gdGhlIHNhbWUKY2xpZW50IGZy
+b20gc2VlaW5nIG5vbi1sb2NhbCBjaGFuZ2VzLCBidXQgd2lsbCBub3QgcHJldmVudCBhcHBsaWNh
+dGlvbnMKb24gb3RoZXIgY2xpZW50cyBmcm9tIHNlZWluZyBhbnkgY2hhbmdlcy4KCk5laWxCcm93
+bgo=
