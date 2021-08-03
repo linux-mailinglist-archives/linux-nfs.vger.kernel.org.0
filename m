@@ -2,109 +2,137 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 227063DE36E
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Aug 2021 02:15:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0588A3DE480
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Aug 2021 04:44:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232634AbhHCAP6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Aug 2021 20:15:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232208AbhHCAP6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Aug 2021 20:15:58 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C609C06175F;
-        Mon,  2 Aug 2021 17:15:48 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id BE3DC6C0C; Mon,  2 Aug 2021 20:15:46 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BE3DC6C0C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1627949746;
-        bh=OCGZP64OD91fAUXxmT0Uz7TLHSVGqZUGpiy+xnWtjj0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xJ0zRQTIUDvRLFx+sJlBSxUhve7zCbgjnCUEEULjslGdiKIzQQlRZGu4Xwp1wBE0j
-         rm1/1Ly2Art3ofeGQcfvJhTcDCOl0WzlYcUQPXvKBBjnq345sPO6TTD6y7qhGS2E9d
-         pBG6DslqL80STAF0A7v4/udDaPNzsDYPKHpj9OgQ=
-Date:   Mon, 2 Aug 2021 20:15:46 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, linux-fsdevel@vger.kernel.org,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Btrfs BTRFS <linux-btrfs@vger.kernel.org>
-Subject: Re: A Third perspective on BTRFS nfsd subvol dev/inode number issues.
-Message-ID: <20210803001546.GI6890@fieldses.org>
-References: <CAJfpegtu3NKW9m2jepRrXe4UTuD6_3k0Y6TcCBLSQH7SSC90BA@mail.gmail.com>
- <162763043341.21659.15645923585962859662@noble.neil.brown.name>
- <CAJfpegub4oBZCBXFQqc8J-zUiSW+KaYZLjZaeVm_cGzNVpxj+A@mail.gmail.com>
- <162787790940.32159.14588617595952736785@noble.neil.brown.name>
- <20210802123930.GA6890@fieldses.org>
- <162793864421.32159.6348977485257143426@noble.neil.brown.name>
- <20210802215059.GF6890@fieldses.org>
- <162794157037.32159.9608382458264702109@noble.neil.brown.name>
- <20210802221434.GG6890@fieldses.org>
- <162794380480.32159.709590144894407738@noble.neil.brown.name>
+        id S233430AbhHCCo2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Aug 2021 22:44:28 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:38306 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233197AbhHCCo2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Aug 2021 22:44:28 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R491e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=alimailimapcm10staff010182156082;MF=haoxu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UhpoVy7_1627958655;
+Received: from B-25KNML85-0107.local(mailfrom:haoxu@linux.alibaba.com fp:SMTPD_---0UhpoVy7_1627958655)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 03 Aug 2021 10:44:16 +0800
+Subject: Re: [PATCH] common/attr: fix the MAX_ATTRS and MAX_ATTRVAL_SIZE for
+ nfs
+To:     Frank van der Linden <fllinden@amazon.com>,
+        Trond Myklebust <trondmy@hammerspace.com>
+Cc:     Eryu Guan <eguan@linux.alibaba.com>,
+        "fstests@vger.kernel.org" <fstests@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>
+References: <20210730124252.113071-1-haoxu@linux.alibaba.com>
+ <20210730140134.GM60846@e18g06458.et15sqa>
+ <B6E429FE-2D78-41D0-A55D-C7AA83D62877@hammerspace.com>
+ <20210802155508.GA28568@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
+From:   Hao Xu <haoxu@linux.alibaba.com>
+Message-ID: <2eea57f3-4eda-d3de-1b45-8469c775b044@linux.alibaba.com>
+Date:   Tue, 3 Aug 2021 10:44:15 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.10.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <162794380480.32159.709590144894407738@noble.neil.brown.name>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20210802155508.GA28568@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Aug 03, 2021 at 08:36:44AM +1000, NeilBrown wrote:
-> On Tue, 03 Aug 2021, J. Bruce Fields wrote:
-> > On Tue, Aug 03, 2021 at 07:59:30AM +1000, NeilBrown wrote:
-> > > On Tue, 03 Aug 2021, J. Bruce Fields wrote:
-> > > > On Tue, Aug 03, 2021 at 07:10:44AM +1000, NeilBrown wrote:
-> > > > > On Mon, 02 Aug 2021, J. Bruce Fields wrote:
-> > > > > > On Mon, Aug 02, 2021 at 02:18:29PM +1000, NeilBrown wrote:
-> > > > > > > For btrfs, the "location" is root.objectid ++ file.objectid.  I think
-> > > > > > > the inode should become (file.objectid ^ swab64(root.objectid)).  This
-> > > > > > > will provide numbers that are unique until you get very large subvols,
-> > > > > > > and very many subvols.
-> > > > > > 
-> > > > > > If you snapshot a filesystem, I'd expect, at least by default, that
-> > > > > > inodes in the snapshot to stay the same as in the snapshotted
-> > > > > > filesystem.
-> > > > > 
-> > > > > As I said: we need to challenge and revise user-space (and meat-space)
-> > > > > expectations. 
-> > > > 
-> > > > The example that came to mind is people that export a snapshot, then
-> > > > replace it with an updated snapshot, and expect that to be transparent
-> > > > to clients.
-> > > > 
-> > > > Our client will error out with ESTALE if it notices an inode number
-> > > > changed out from under it.
-> > > 
-> > > Will it?
-> > 
-> > See fs/nfs/inode.c:nfs_check_inode_attributes():
-> > 
-> > 	if (nfsi->fileid != fattr->fileid) {
-> >                 /* Is this perhaps the mounted-on fileid? */
-> >                 if ((fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID) &&
-> >                     nfsi->fileid == fattr->mounted_on_fileid)
-> >                         return 0;
-> >                 return -ESTALE;
-> >         }
+在 2021/8/2 下午11:55, Frank van der Linden 写道:
+> On Sat, Jul 31, 2021 at 10:07:13PM +0000, Trond Myklebust wrote:
+>>
+>>
+>>> On Jul 30, 2021, at 10:01, Eryu Guan <eguan@linux.alibaba.com> wrote:
+>>>
+>>> [cc linux-nfs for review]
+>>>
+>>> On Fri, Jul 30, 2021 at 08:42:52PM +0800, Hao Xu wrote:
+>>>> The block size of localfs for nfs may be much smaller than nfs itself.
+>>>> So we'd better set MAX_ATTRS and MAX_ATTRVAL_SIZE to 4096 to avoid
+>>>> 'no space' error when we test adding a bunch of xattrs to nfs.
+>>>>
+>>>> Signed-off-by: Hao Xu <haoxu@linux.alibaba.com>
+>>>
+>>> Since the xattr support is relatively new (merged a year ago for
+>>> NFSv4.2), I'd like nfs folks to take a look as well.
+>>>
+>>>> ---
+>>>>
+>>>> It's better to set BLOCK_SIZE to `_get_block_size $variable`
+>>>> here $variable is the localfs for nfs, since I'm not familiar with
+>>>> xfstests, anyone tell what's the name of it.
+>>>
+>>> fstests doesn't know the exported filesystem under NFS, so I don't think
+>>> we could the block size of it.
+>>>
+>>>>
+>>>> common/attr | 11 +++++++++--
+>>>> 1 file changed, 9 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/common/attr b/common/attr
+>>>> index 42ceab92335a..a833f00e0884 100644
+>>>> --- a/common/attr
+>>>> +++ b/common/attr
+>>>> @@ -253,9 +253,13 @@ _getfattr()
+>>>>
+>>>> # set maximum total attr space based on fs type
+>>>> case "$FSTYP" in
+>>>> -xfs|udf|pvfs2|9p|ceph|nfs)
+>>>> +xfs|udf|pvfs2|9p|ceph)
+>>>>       MAX_ATTRS=1000
+>>>>       ;;
+>>>> +nfs)
+>>>> +    BLOCK_SIZE=4096
+>>>> +    let MAX_ATTRS=$BLOCK_SIZE/40
+>>>> +    ;;
+>>>> *)
+>>>>       # Assume max ~1 block of attrs
+>>>>       BLOCK_SIZE=`_get_block_size $TEST_DIR`
+>>>> @@ -273,12 +277,15 @@ xfs|udf|btrfs)
+>>>> pvfs2)
+>>>>       MAX_ATTRVAL_SIZE=8192
+>>>>       ;;
+>>>> -9p|ceph|nfs)
+>>>> +9p|ceph)
+>>>>       MAX_ATTRVAL_SIZE=65536
+>>>>       ;;
+>>>> bcachefs)
+>>>>       MAX_ATTRVAL_SIZE=1024
+>>>>       ;;
+>>>> +nfs)
+>>>> +    MAX_ATTRVAL_SIZE=3840
+>>>> +    ;;
+>>>
+>>> Where does this value come from?
+>>>
+>>> Thanks,
+>>> Eryu
+>>>
+>>>> *)
+>>>>       # Assume max ~1 block of attrs
+>>>>       BLOCK_SIZE=`_get_block_size $TEST_DIR`
+>>>> --
+>>>> 2.24.4
+>>
+>> The above hackery proves beyond a shadow of a doubt that this test is utterly broken. Filesystem block sizes have nothing at all to do with xattrs.
+>>
+>> Please move this test into the filesystem-specific categories or else remove it altogether. It definitely does not belong in ‘generic’.
 > 
-> That code fires if the fileid (inode number) reported for a particular
-> filehandle changes.  I'm saying that won't happen.
+> I ran in to this basic problem when trying to add support for NFS xattr tests in fstests.
 > 
-> If you reflink (aka snaphot) a btrfs subtree (aka "subvol"), then the
-> new sub-tree will ALREADY have different filehandles than the original
-> subvol.
-
-Whoops, you're right, sorry for the noise....
-
---b.
-
-> Whether it has the same inode numbers or different ones is
-> irrelevant to NFS.
+> fstests wants to see if the xattr implementation of filesystems acts as expected when you hit the xattr size limits. But there is no interface to query those limits. So fstests resorts to special knowledge about the filesystem implementation to deduce these limits.
+> 
+> That, however, falls apart for NFS, which has no builtin limits (aside from the max RPC xfer size). The limit for NFS is just whatever the filesystem on the server side has, so there is no one-size-fits-all limit you can set here. What works against a server exporting XFS will not work against a server exporting ext4, etc. And then you might have a server running on a system that implements xattrs as a 'resource fork', so the size could be equal to the maximum filesystem size. You just don't know.
+So I now believe that doing this test for NFS is kind of pointless. If a 
+user want to test xattrs for NFS, the right way is to test the fs on the 
+server side directly.
+> 
+> If you're on Linux, you  could try to deduce the limit by just trying to set an xattr with increasing size until you hit the limit. That's sort of doable because Linux has an upper limit (64k) enforced by the fs-independent code, so you don't have to go beyond that. But, you're trying to see if things behave correctly in the first place when hitting the limit, so that's kind of a chicken-and-egg problem.
+> 
+> It's messy, there is no clean solution here.
+> 
+> - Frank
+> 
 
