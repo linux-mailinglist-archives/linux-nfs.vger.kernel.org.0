@@ -2,104 +2,189 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDC423DF993
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Aug 2021 04:13:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEE9D3DF9FF
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Aug 2021 05:29:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234207AbhHDCNT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Aug 2021 22:13:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229892AbhHDCNL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Aug 2021 22:13:11 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6042DC06175F;
-        Tue,  3 Aug 2021 19:12:59 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id d17so1278262plr.12;
-        Tue, 03 Aug 2021 19:12:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=i7/21JOa6ndS+LDgm4xtjgQFIyuj0hUBVl5kgE/wV9o=;
-        b=J5N9T0CVUgyGSnCCn1nrxNA6iQCubLwXaXXYP/kFcfDfP9MNz0vB4yWPSbsPKSD00C
-         JphfVS3W5Hv8SN+1q4hy/pf1e6/LlifGOUyKryHf0P3hP6jPYxEm4Mb1XkqIITaPQr4N
-         EtLsfsrJLz6jZ3C/YV2t08nMAg+55QW2rfDapuCNhcNT4HxtmVQOk7KksZGaqPOTcrXf
-         KNWfwYcG7mxcUyskY1e7XvooCaiNammKawCHQqJOE5x2FyyHFhHI4C70e+PI+g73pZcp
-         2Yhi0jupry2LGkpVSJ21RCgLX7uAX9Dec8Rr39bBaDBQXCT77Ns9SpWFtEUzL7kYD6FX
-         kLFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=i7/21JOa6ndS+LDgm4xtjgQFIyuj0hUBVl5kgE/wV9o=;
-        b=pl8l2uWrY4ZZB51FgYhH2IpP5lYJPFMSWtiM74sv9paWAR/B6hVSLziv9E0SGhMRgR
-         tnpauLVncAI8zPT0EZQvQ9haGlvmBqV/WzKFnBNfArbGfVy/re+/giTVhVCADAw/1is0
-         IzNahLsP33AyiCT1T/3yKQn1Fcsr7YdDoccpYzkOmpPvMuqE7owecYYLhjYBmGC5+YcS
-         PnDH6vyJ09SrYICX2TrRxfStgJGJIGGbsu2Mdxs88oBDrK0ikzjiWo7nFrqB4lkzwlJO
-         43OY0AOMqJzc4trLj5aZuo48dZDdfsX95Cx+jZNB5u9g/1/ma1+oDG/AcvmpJ79iu4Bg
-         udEw==
-X-Gm-Message-State: AOAM533pRbIeuRuBuIjreARkS9rO5jqHk/4WBALm8qeoAdieyJvkJTGZ
-        6lJcYw1kRuzWasmbrUPsMJg=
-X-Google-Smtp-Source: ABdhPJw4hmMBznYzIQFFHfUx42p3lkWi+wBFXCTWgYkjWuaMuwujk9mhh3Cl3UNrSTVWmVaZ9WbGAA==
-X-Received: by 2002:a17:902:8bc4:b029:12b:8470:e29e with SMTP id r4-20020a1709028bc4b029012b8470e29emr4334561plo.2.1628043178927;
-        Tue, 03 Aug 2021 19:12:58 -0700 (PDT)
-Received: from [0.0.0.0] ([45.76.223.48])
-        by smtp.gmail.com with ESMTPSA id d17sm510457pfn.110.2021.08.03.19.12.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Aug 2021 19:12:58 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Fix /proc/sys/fs/nfs/nsm_use_hostnames on big endian
- machines
-To:     Thomas Huth <thuth@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>, linux-s390@vger.kernel.org,
-        Pan Xinhui <xinhui.pan@linux.vnet.ibm.com>
-References: <20210803105937.52052-1-thuth@redhat.com>
-From:   Jia He <hejianet@gmail.com>
-Message-ID: <98549025-d163-0ce4-0a9d-9da3ee945f44@gmail.com>
-Date:   Wed, 4 Aug 2021 10:12:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        id S234904AbhHDD3e (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Aug 2021 23:29:34 -0400
+Received: from out0.migadu.com ([94.23.1.103]:50271 "EHLO out0.migadu.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234861AbhHDD3b (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 3 Aug 2021 23:29:31 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1628047754;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=zvfYYuqF2FHspYtQC1WvXSu+rBBu+KjB/5LBDoNtRT4=;
+        b=FzQTSyOQ2rGO9qwy0o7IpAgbTz+5sSPMs3uY0QXt4erSXgQRqyoNWlVuyN4C/rXYVw9tVg
+        0NE/iaz4WcOIznqjpX8v083yMFlbwDD88OWzGNBvs6FNIlazK3Vu7yA3oCN0Y4eJ6Hiih0
+        fjABO4ni6e7dK5W1t8uuLLDApcsdv4M=
+From:   Yajun Deng <yajun.deng@linux.dev>
+To:     davem@davemloft.net, kuba@kernel.org,
+        mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, mptcp@lists.linux.dev,
+        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-s390@vger.kernel.org, linux-nfs@vger.kernel.org,
+        Yajun Deng <yajun.deng@linux.dev>
+Subject: [PATCH net-next v2] net: Modify sock_set_keepalive() for more scenarios
+Date:   Wed,  4 Aug 2021 11:28:56 +0800
+Message-Id: <20210804032856.4005-1-yajun.deng@linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20210803105937.52052-1-thuth@redhat.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: yajun.deng@linux.dev
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Add 2nd parameter in sock_set_keepalive(), let the caller decide
+whether to set. This can be applied to more scenarios.
 
-On 2021/8/3 18:59, Thomas Huth wrote:
-> There is an endianess problem with /proc/sys/fs/nfs/nsm_use_hostnames
-> (which can e.g. be seen on an s390x host) :
->
->   # modprobe lockd nsm_use_hostnames=1
->   # cat /proc/sys/fs/nfs/nsm_use_hostnames
->   16777216
->
-> The nsm_use_hostnames variable is declared as "bool" which is required
-> for the correct type for the module parameter. However, this does not
-> work correctly with the entry in the /proc filesystem since this
-> currently requires "int".
->
-> Jia He already provided patches for this problem a couple of years ago,
-> but apparently they felt through the cracks and never got merged. So
-> here's a rebased version to finally fix this issue.
->
-> Buglink: https://bugzilla.redhat.com/show_bug.cgi?id=1764075
->
-> Jia He (2):
->    sysctl: introduce new proc handler proc_dobool
->    lockd: change the proc_handler for nsm_use_hostnames
+v2:
+ - add the change in fs/dlm.
 
-Thanks for picking them up ;-)
-
+Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
 ---
-Cheers,
-Justin (Jia He)
+ fs/dlm/lowcomms.c     |  2 +-
+ include/net/sock.h    |  2 +-
+ net/core/filter.c     |  4 +---
+ net/core/sock.c       | 10 ++++------
+ net/mptcp/sockopt.c   |  4 +---
+ net/rds/tcp_listen.c  |  2 +-
+ net/smc/af_smc.c      |  2 +-
+ net/sunrpc/xprtsock.c |  2 +-
+ 8 files changed, 11 insertions(+), 17 deletions(-)
+
+diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
+index 0ea9ae35da0b..5d748ce4d876 100644
+--- a/fs/dlm/lowcomms.c
++++ b/fs/dlm/lowcomms.c
+@@ -1356,7 +1356,7 @@ static int tcp_create_listen_sock(struct listen_connection *con,
+ 		log_print("Can't bind to port %d", dlm_config.ci_tcp_port);
+ 		goto create_out;
+ 	}
+-	sock_set_keepalive(sock->sk);
++	sock_set_keepalive(sock->sk, true);
+ 
+ 	result = sock->ops->listen(sock, 5);
+ 	if (result < 0) {
+diff --git a/include/net/sock.h b/include/net/sock.h
+index ff1be7e7e90b..0aae26159549 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -2772,7 +2772,7 @@ int sock_set_timestamping(struct sock *sk, int optname,
+ 
+ void sock_enable_timestamps(struct sock *sk);
+ void sock_no_linger(struct sock *sk);
+-void sock_set_keepalive(struct sock *sk);
++void sock_set_keepalive(struct sock *sk, bool valbool);
+ void sock_set_priority(struct sock *sk, u32 priority);
+ void sock_set_rcvbuf(struct sock *sk, int val);
+ void sock_set_mark(struct sock *sk, u32 val);
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 6f493ef5bb14..c73caa53992e 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -4752,9 +4752,7 @@ static int _bpf_setsockopt(struct sock *sk, int level, int optname,
+ 			ret = sock_bindtoindex(sk, ifindex, false);
+ 			break;
+ 		case SO_KEEPALIVE:
+-			if (sk->sk_prot->keepalive)
+-				sk->sk_prot->keepalive(sk, valbool);
+-			sock_valbool_flag(sk, SOCK_KEEPOPEN, valbool);
++			sock_set_keepalive(sk, !!valbool);
+ 			break;
+ 		case SO_REUSEPORT:
+ 			sk->sk_reuseport = valbool;
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 9671c32e6ef5..7041e6355ae1 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -892,12 +892,12 @@ int sock_set_timestamping(struct sock *sk, int optname,
+ 	return 0;
+ }
+ 
+-void sock_set_keepalive(struct sock *sk)
++void sock_set_keepalive(struct sock *sk, bool valbool)
+ {
+ 	lock_sock(sk);
+ 	if (sk->sk_prot->keepalive)
+-		sk->sk_prot->keepalive(sk, true);
+-	sock_valbool_flag(sk, SOCK_KEEPOPEN, true);
++		sk->sk_prot->keepalive(sk, valbool);
++	sock_valbool_flag(sk, SOCK_KEEPOPEN, valbool);
+ 	release_sock(sk);
+ }
+ EXPORT_SYMBOL(sock_set_keepalive);
+@@ -1060,9 +1060,7 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
+ 		break;
+ 
+ 	case SO_KEEPALIVE:
+-		if (sk->sk_prot->keepalive)
+-			sk->sk_prot->keepalive(sk, valbool);
+-		sock_valbool_flag(sk, SOCK_KEEPOPEN, valbool);
++		sock_set_keepalive(sk, !!valbool);
+ 		break;
+ 
+ 	case SO_OOBINLINE:
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 8c03afac5ca0..879b8381055c 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -81,9 +81,7 @@ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, in
+ 			sock_valbool_flag(ssk, SOCK_DBG, !!val);
+ 			break;
+ 		case SO_KEEPALIVE:
+-			if (ssk->sk_prot->keepalive)
+-				ssk->sk_prot->keepalive(ssk, !!val);
+-			sock_valbool_flag(ssk, SOCK_KEEPOPEN, !!val);
++			sock_set_keepalive(ssk, !!val);
+ 			break;
+ 		case SO_PRIORITY:
+ 			ssk->sk_priority = val;
+diff --git a/net/rds/tcp_listen.c b/net/rds/tcp_listen.c
+index 09cadd556d1e..b69ebb3f424a 100644
+--- a/net/rds/tcp_listen.c
++++ b/net/rds/tcp_listen.c
+@@ -44,7 +44,7 @@ void rds_tcp_keepalive(struct socket *sock)
+ 	int keepidle = 5; /* send a probe 'keepidle' secs after last data */
+ 	int keepcnt = 5; /* number of unack'ed probes before declaring dead */
+ 
+-	sock_set_keepalive(sock->sk);
++	sock_set_keepalive(sock->sk, true);
+ 	tcp_sock_set_keepcnt(sock->sk, keepcnt);
+ 	tcp_sock_set_keepidle(sock->sk, keepidle);
+ 	/* KEEPINTVL is the interval between successive probes. We follow
+diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+index 898389611ae8..ad8f4302037f 100644
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -68,7 +68,7 @@ static void smc_set_keepalive(struct sock *sk, int val)
+ {
+ 	struct smc_sock *smc = smc_sk(sk);
+ 
+-	smc->clcsock->sk->sk_prot->keepalive(smc->clcsock->sk, val);
++	sock_set_keepalive(smc->clcsock->sk, !!val);
+ }
+ 
+ static struct smc_hashinfo smc_v4_hashinfo = {
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index e573dcecdd66..306a332f8d28 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -2127,7 +2127,7 @@ static void xs_tcp_set_socket_timeouts(struct rpc_xprt *xprt,
+ 	spin_unlock(&xprt->transport_lock);
+ 
+ 	/* TCP Keepalive options */
+-	sock_set_keepalive(sock->sk);
++	sock_set_keepalive(sock->sk, true);
+ 	tcp_sock_set_keepidle(sock->sk, keepidle);
+ 	tcp_sock_set_keepintvl(sock->sk, keepidle);
+ 	tcp_sock_set_keepcnt(sock->sk, keepcnt);
+-- 
+2.32.0
 
