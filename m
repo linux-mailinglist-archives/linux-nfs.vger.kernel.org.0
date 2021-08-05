@@ -2,119 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A2D63E1DFA
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Aug 2021 23:26:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1E273E1E78
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 00:11:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230438AbhHEV0y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Aug 2021 17:26:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229682AbhHEV0w (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 5 Aug 2021 17:26:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BABED60F01
-        for <linux-nfs@vger.kernel.org>; Thu,  5 Aug 2021 21:26:37 +0000 (UTC)
-Subject: [PATCH v1] SUNRPC: Fix a NULL pointer deref in
- trace_svc_stats_latency()
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Thu, 05 Aug 2021 17:26:36 -0400
-Message-ID: <162819879677.1725.12026140219173067490.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.1
+        id S231903AbhHEWMH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 5 Aug 2021 18:12:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231337AbhHEWMH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Aug 2021 18:12:07 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63D02C0613D5;
+        Thu,  5 Aug 2021 15:11:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=RvO+6JeVpLxlPcNmPsjLLYdjB15f9d7yagNnMlUscyM=; b=JmZQe8YwHGdxpbt0TwH//rA7bp
+        HfAA5mzWQ300vIpQYo2arTXyklr5l76dKVELRLgAZnUKxXoRc+QEJSbaJuD0GoNpSfCd/Tm0UBMuE
+        8SlOk735EbFz/87qkcy75AdIYWBzf/6Pu9MY7CX3ueVVY4JMora1+0oRcuu8osroUGfT0mXjfvMK6
+        YRKger+O0AuVg9xmmLmzYUXKEtKW1DDQMgyAYZHjWr1kcBaMhMeG32BSAx4/3o6o/iRQtgZutc3wC
+        Ppbf+HBE58BXsebQaFSh/F53V7A49MoL26n7Xo3oyaKsNZoU5Zwaw2sdDXexB/tn2REY4APSX99IZ
+        UDs7r7iQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mBla0-007ZDJ-Ph; Thu, 05 Aug 2021 22:11:12 +0000
+Date:   Thu, 5 Aug 2021 23:11:08 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Shyam Prasad N <nspmangalore@gmail.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net, devel@lists.orangefs.org,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Canvassing for network filesystem write size vs page size
+Message-ID: <YQxh/G0xGl3GtC8y@casper.infradead.org>
+References: <YQv+iwmhhZJ+/ndc@casper.infradead.org>
+ <YQvpDP/tdkG4MMGs@casper.infradead.org>
+ <YQvbiCubotHz6cN7@casper.infradead.org>
+ <1017390.1628158757@warthog.procyon.org.uk>
+ <1170464.1628168823@warthog.procyon.org.uk>
+ <1186271.1628174281@warthog.procyon.org.uk>
+ <1219713.1628181333@warthog.procyon.org.uk>
+ <CAHk-=wjyEk9EuYgE3nBnRCRd_AmRYVOGACEjt0X33QnORd5-ig@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjyEk9EuYgE3nBnRCRd_AmRYVOGACEjt0X33QnORd5-ig@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Some paths through svc_process() leave rqst->rq_procinfo set to
-NULL, which triggers a crash if tracing happens to be enabled.
+On Thu, Aug 05, 2021 at 10:27:05AM -0700, Linus Torvalds wrote:
+> On Thu, Aug 5, 2021 at 9:36 AM David Howells <dhowells@redhat.com> wrote:
+> > Some network filesystems, however, currently keep track of which byte ranges
+> > are modified within a dirty page (AFS does; NFS seems to also) and only write
+> > out the modified data.
+> 
+> NFS definitely does. I haven't used NFS in two decades, but I worked
+> on some of the code (read: I made nfs use the page cache both for
+> reading and writing) back in my Transmeta days, because NFSv2 was the
+> default filesystem setup back then.
+> 
+> See fs/nfs/write.c, although I have to admit that I don't recognize
+> that code any more.
+> 
+> It's fairly important to be able to do streaming writes without having
+> to read the old contents for some loads. And read-modify-write cycles
+> are death for performance, so you really want to coalesce writes until
+> you have the whole page.
 
-Fixes: 89ff87494c6e ("SUNRPC: Display RPC procedure names instead of proc numbers")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- include/linux/sunrpc/svc.h    |    1 +
- include/trace/events/sunrpc.h |    8 ++++----
- net/sunrpc/svc.c              |   15 +++++++++++++++
- 3 files changed, 20 insertions(+), 4 deletions(-)
+I completely agree with you.  The context you're missing is that Dave
+wants to do RMW twice.  He doesn't do the delaying SetPageUptodate dance.
+If the write is less than the whole page, AFS, Ceph and anybody else
+using netfs_write_begin() will first read the entire page in and mark
+it Uptodate.
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index dd3daadbc0e5..064c96157d1f 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -527,6 +527,7 @@ void		   svc_wake_up(struct svc_serv *);
- void		   svc_reserve(struct svc_rqst *rqstp, int space);
- struct svc_pool *  svc_pool_for_cpu(struct svc_serv *serv, int cpu);
- char *		   svc_print_addr(struct svc_rqst *, char *, size_t);
-+const char *	   svc_proc_name(const struct svc_rqst *rqstp);
- int		   svc_encode_result_payload(struct svc_rqst *rqstp,
- 					     unsigned int offset,
- 					     unsigned int length);
-diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index 174385da20ad..b10de4896147 100644
---- a/include/trace/events/sunrpc.h
-+++ b/include/trace/events/sunrpc.h
-@@ -1641,7 +1641,7 @@ TRACE_EVENT(svc_process,
- 		__field(u32, vers)
- 		__field(u32, proc)
- 		__string(service, name)
--		__string(procedure, rqst->rq_procinfo->pc_name)
-+		__string(procedure, svc_proc_name(rqst))
- 		__string(addr, rqst->rq_xprt ?
- 			 rqst->rq_xprt->xpt_remotebuf : "(null)")
- 	),
-@@ -1651,7 +1651,7 @@ TRACE_EVENT(svc_process,
- 		__entry->vers = rqst->rq_vers;
- 		__entry->proc = rqst->rq_proc;
- 		__assign_str(service, name);
--		__assign_str(procedure, rqst->rq_procinfo->pc_name);
-+		__assign_str(procedure, svc_proc_name(rqst));
- 		__assign_str(addr, rqst->rq_xprt ?
- 			     rqst->rq_xprt->xpt_remotebuf : "(null)");
- 	),
-@@ -1917,7 +1917,7 @@ TRACE_EVENT(svc_stats_latency,
- 	TP_STRUCT__entry(
- 		__field(u32, xid)
- 		__field(unsigned long, execute)
--		__string(procedure, rqst->rq_procinfo->pc_name)
-+		__string(procedure, svc_proc_name(rqst))
- 		__string(addr, rqst->rq_xprt->xpt_remotebuf)
- 	),
- 
-@@ -1925,7 +1925,7 @@ TRACE_EVENT(svc_stats_latency,
- 		__entry->xid = be32_to_cpu(rqst->rq_xid);
- 		__entry->execute = ktime_to_us(ktime_sub(ktime_get(),
- 							 rqst->rq_stime));
--		__assign_str(procedure, rqst->rq_procinfo->pc_name);
-+		__assign_str(procedure, svc_proc_name(rqst));
- 		__assign_str(addr, rqst->rq_xprt->xpt_remotebuf);
- 	),
- 
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 1f3552c62e71..35b549c147a2 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -1633,6 +1633,21 @@ u32 svc_max_payload(const struct svc_rqst *rqstp)
- }
- EXPORT_SYMBOL_GPL(svc_max_payload);
- 
-+/**
-+ * svc_proc_name - Return RPC procedure name in string form
-+ * @rqstp: svc_rqst to operate on
-+ *
-+ * Return value:
-+ *   Pointer to a NUL-terminated string
-+ */
-+const char *svc_proc_name(const struct svc_rqst *rqstp)
-+{
-+	if (rqstp && rqstp->rq_procinfo)
-+		return rqstp->rq_procinfo->pc_name;
-+	return "unknown";
-+}
-+
-+
- /**
-  * svc_encode_result_payload - mark a range of bytes as a result payload
-  * @rqstp: svc_rqst to operate on
+Then he wants to track which parts of the page are dirty (at byte
+granularity) and send only those bytes to the server in a write request.
+So it's worst of both worlds; first the client does an RMW, then the
+server does an RMW (assuming the client's data is no longer in the
+server's cache.
 
+The NFS code moves the RMW from the client to the server, and that makes
+a load of sense.
 
+> That said, I suspect it's also *very* filesystem-specific, to the
+> point where it might not be worth trying to do in some generic manner.
+
+It certainly doesn't make sense for block filesystems.  Since they
+can only do I/O on block boundaries, a sub-block write has to read in
+the surrounding block, and once you're doing that, you might as well
+read in the whole page.
+
+Tracking sub-page dirty bits still makes sense.  It's on my to-do
+list for iomap.
+
+> [ goes off and looks. See "nfs_write_begin()" and friends in
+> fs/nfs/file.c for some of the examples of these things, althjough it
+> looks like the code is less aggressive about avoding the
+> read-modify-write case than I thought I remembered, and only does it
+> for write-only opens ]
+
+NFS is missing one trick; it could implement aops->is_partially_uptodate
+and then it would be able to read back bytes that have already been
+written by this client without writing back the dirty ranges and fetching
+the page from the server.
+
+Maybe this isn't an important optimisation.
