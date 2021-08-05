@@ -2,144 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9619E3E19A3
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Aug 2021 18:36:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C2773E1A59
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Aug 2021 19:27:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231815AbhHEQgM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Aug 2021 12:36:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:55517 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232361AbhHEQgL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Aug 2021 12:36:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628181353;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=cqiBhFIK0kAqQNHfo/GucN8GfiLKs6hRFMJo5oTIZHg=;
-        b=Zo7rgPPA6Kp1XzQG+zcuXeVE4nQug89E3TmBGYlB0WESl1BWOjOKU822qkzJAvfed8oXz7
-        j/LujaOun+dzqENHx3NXupAHxhgs63JgtPAGdhyqTGCLWjzOyU6+RN1Rr6a6bVxUGS2kTK
-        xG2sl4PaDB3QYCM3IbXeWTJ5E0CoAxc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-420-OwRpS98qMZeNyIhOZrpXfg-1; Thu, 05 Aug 2021 12:35:47 -0400
-X-MC-Unique: OwRpS98qMZeNyIhOZrpXfg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C19FFCC623;
-        Thu,  5 Aug 2021 16:35:38 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.22.32.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1A1BA5C1A1;
-        Thu,  5 Aug 2021 16:35:33 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     Anna Schumaker <anna.schumaker@netapp.com>,
+        id S239940AbhHER1n (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 5 Aug 2021 13:27:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239708AbhHER1l (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Aug 2021 13:27:41 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63666C0613D5
+        for <linux-nfs@vger.kernel.org>; Thu,  5 Aug 2021 10:27:26 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id n17so9897065lft.13
+        for <linux-nfs@vger.kernel.org>; Thu, 05 Aug 2021 10:27:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kSMSzayyNT2YehjLQ2Cwc0r8HqyEvjniy8Pw7lCSffg=;
+        b=CjeV+4n++fBbfbgUnSajYHMZzSgIGQ/AzXROF+Y4CaB/aORGEHsRe4pUpEJVdYpwfB
+         NmAZXoNyQn6JPxdWXpyZnM00VCUOuYnkUNerNg1Ng90I+xulwoWK81gZiomswCGM8sp6
+         nIAp7+gezxOviLaRF+m3bsJwsaKOi0OIDRvRA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kSMSzayyNT2YehjLQ2Cwc0r8HqyEvjniy8Pw7lCSffg=;
+        b=HKvsgr6ALOPY1xSRVm3bf7M47g0YrPJUynAGSL1SmaAbyf5twLxSt4/FwcD/uMJoY+
+         hWQufm8WhMe/26ZWxsuaUO/utV532NVppVhJKKJJBWpB8LV5FmiTus0MjD7wLaVsVDYD
+         Nypd1lbgYCXbEKv3+nhR/1QHeubik1EzpmWAXIUDSgimjgY4v0saoBf1TAwkiXpHVk/T
+         ckEcyI6cAsPKRt6CtyVrXPmP9suOy+d2K2pE+3ubaSi6OA4fUhlE4qsGyTHKw7/jw67y
+         8FsYHBkPtFb41WBMclrGAG0W4pJBHxYWd91l5AXoCEzjBRKWRYMSCONgy4KqNyufEPyb
+         PVhw==
+X-Gm-Message-State: AOAM533NeVpS9H9AZkC7GrMaR5/qqvPM/QW20HU2Z/lwWX6gwAb+LwCb
+        grRJCQGdKHgH7lqxCGBKJAstHwQj/rWSN2idCEY=
+X-Google-Smtp-Source: ABdhPJxCLTGX15SAu47r4UJhU3ngXUqJFLAM1f4I3zNqkV1lxy/Ge55QvmY/GPUBYYh3QQBURKqPBQ==
+X-Received: by 2002:a05:6512:1103:: with SMTP id l3mr4599756lfg.14.1628184442894;
+        Thu, 05 Aug 2021 10:27:22 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id j10sm447157lfm.299.2021.08.05.10.27.21
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Aug 2021 10:27:22 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id t9so12577847lfc.6
+        for <linux-nfs@vger.kernel.org>; Thu, 05 Aug 2021 10:27:21 -0700 (PDT)
+X-Received: by 2002:a05:6512:2388:: with SMTP id c8mr4369071lfv.201.1628184441363;
+ Thu, 05 Aug 2021 10:27:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <YQv+iwmhhZJ+/ndc@casper.infradead.org> <YQvpDP/tdkG4MMGs@casper.infradead.org>
+ <YQvbiCubotHz6cN7@casper.infradead.org> <1017390.1628158757@warthog.procyon.org.uk>
+ <1170464.1628168823@warthog.procyon.org.uk> <1186271.1628174281@warthog.procyon.org.uk>
+ <1219713.1628181333@warthog.procyon.org.uk>
+In-Reply-To: <1219713.1628181333@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 5 Aug 2021 10:27:05 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjyEk9EuYgE3nBnRCRd_AmRYVOGACEjt0X33QnORd5-ig@mail.gmail.com>
+Message-ID: <CAHk-=wjyEk9EuYgE3nBnRCRd_AmRYVOGACEjt0X33QnORd5-ig@mail.gmail.com>
+Subject: Re: Canvassing for network filesystem write size vs page size
+To:     David Howells <dhowells@redhat.com>
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Jeff Layton <jlayton@redhat.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>,
         Mike Marshall <hubcap@omnibond.com>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Cc:     dhowells@redhat.com,
+        Miklos Szeredi <miklos@szeredi.hu>,
         "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         Shyam Prasad N <nspmangalore@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
         linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        devel@lists.orangefs.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Canvassing for network filesystem write size vs page size
-References: <YQv+iwmhhZJ+/ndc@casper.infradead.org>
- <YQvpDP/tdkG4MMGs@casper.infradead.org>
- <YQvbiCubotHz6cN7@casper.infradead.org>
- <1017390.1628158757@warthog.procyon.org.uk>
- <1170464.1628168823@warthog.procyon.org.uk>
- <1186271.1628174281@warthog.procyon.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1219712.1628181333.1@warthog.procyon.org.uk>
-Date:   Thu, 05 Aug 2021 17:35:33 +0100
-Message-ID: <1219713.1628181333@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net, devel@lists.orangefs.org,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-With Willy's upcoming folio changes, from a filesystem point of view, we're
-going to be looking at folios instead of pages, where:
+On Thu, Aug 5, 2021 at 9:36 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Some network filesystems, however, currently keep track of which byte ranges
+> are modified within a dirty page (AFS does; NFS seems to also) and only write
+> out the modified data.
 
- - a folio is a contiguous collection of pages;
+NFS definitely does. I haven't used NFS in two decades, but I worked
+on some of the code (read: I made nfs use the page cache both for
+reading and writing) back in my Transmeta days, because NFSv2 was the
+default filesystem setup back then.
 
- - each page in the folio might be standard PAGE_SIZE page (4K or 64K, say) or
-   a huge pages (say 2M each);
+See fs/nfs/write.c, although I have to admit that I don't recognize
+that code any more.
 
- - a folio has one dirty flag and one writeback flag that applies to all
-   constituent pages;
+It's fairly important to be able to do streaming writes without having
+to read the old contents for some loads. And read-modify-write cycles
+are death for performance, so you really want to coalesce writes until
+you have the whole page.
 
- - a complete folio currently is limited to PMD_SIZE or order 8, but could
-   theoretically go up to about 2GiB before various integer fields have to be
-   modified (not to mention the memory allocator).
+That said, I suspect it's also *very* filesystem-specific, to the
+point where it might not be worth trying to do in some generic manner.
 
-Willy is arguing that network filesystems should, except in certain very
-special situations (eg. O_SYNC), only write whole folios (limited to EOF).
+In particular, NFS had things like interesting credential issues, so
+if you have multiple concurrent writers that used different 'struct
+file *' to write to the file, you can't just mix the writes. You have
+to sync the writes from one writer before you start the writes for the
+next one, because one might succeed and the other not.
 
-Some network filesystems, however, currently keep track of which byte ranges
-are modified within a dirty page (AFS does; NFS seems to also) and only write
-out the modified data.
+So you can't just treat it as some random "page cache with dirty byte
+extents". You really have to be careful about credentials, timeouts,
+etc, and the pending writes have to keep a fair amount of state
+around.
 
-Also, there are limits to the maximum RPC payload sizes, so writing back large
-pages may necessitate multiple writes, possibly to multiple servers.
+At least that was the case two decades ago.
 
-What I'm trying to do is collate each network filesystem's properties (I'm
-including FUSE in that).
+[ goes off and looks. See "nfs_write_begin()" and friends in
+fs/nfs/file.c for some of the examples of these things, althjough it
+looks like the code is less aggressive about avoding the
+read-modify-write case than I thought I remembered, and only does it
+for write-only opens ]
 
-So we have the following filesystems:
+               Linus
 
- Plan9
- - Doesn't track bytes
- - Only writes single pages
-
- AFS
- - Max RPC payload theoretically ~5.5 TiB (OpenAFS), ~16EiB (Auristor/kAFS)
- - kAFS (Linux kernel)
-   - Tracks bytes, only writes back what changed
-   - Writes from up to 65535 contiguous pages.
- - OpenAFS/Auristor (UNIX/Linux)
-   - Deal with cache-sized blocks (configurable, but something from 8K to 2M),
-     reads and writes in these blocks
- - OpenAFS/Auristor (Windows)
-   - Track bytes, write back only what changed
-
- Ceph
- - File divided into objects (typically 2MiB in size), which may be scattered
-   over multiple servers.
- - Max RPC size is therefore object size.
- - Doesn't track bytes.
-
- CIFS/SMB
- - Writes back just changed bytes immediately under some circumstances
- - Doesn't track bytes and writes back whole pages otherwise.
- - SMB3 has a max RPC size of 16MiB, with a default of 4MiB
-
- FUSE
- - Doesn't track bytes.
- - Max 'RPC' size of 256 pages (I think).
-
- NFS
- - Tracks modified bytes within a page.
- - Max RPC size of 1MiB.
- - Files may be constructed of objects scattered over different servers.
-
- OrangeFS
- - Doesn't track bytes.
- - Multipage writes possible.
-
-If you could help me fill in the gaps, that would be great.
-
-Thanks,
-David
-
+            Linus
