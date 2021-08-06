@@ -2,144 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4842B3E3042
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 22:18:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3A873E3066
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 22:37:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244847AbhHFUSI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Aug 2021 16:18:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244883AbhHFUSH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 16:18:07 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CF0C0613CF
-        for <linux-nfs@vger.kernel.org>; Fri,  6 Aug 2021 13:17:50 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id t68so11232458qkf.8
-        for <linux-nfs@vger.kernel.org>; Fri, 06 Aug 2021 13:17:50 -0700 (PDT)
+        id S231728AbhHFUhl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Aug 2021 16:37:41 -0400
+Received: from mail.rptsys.com ([23.155.224.45]:54296 "EHLO mail.rptsys.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231132AbhHFUhl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 6 Aug 2021 16:37:41 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.rptsys.com (Postfix) with ESMTP id C1C7037B2C9861;
+        Fri,  6 Aug 2021 15:37:24 -0500 (CDT)
+Received: from mail.rptsys.com ([127.0.0.1])
+        by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id SXYxxgknChUk; Fri,  6 Aug 2021 15:37:24 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.rptsys.com (Postfix) with ESMTP id DEF7737B2C985E;
+        Fri,  6 Aug 2021 15:37:23 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com DEF7737B2C985E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zFBJIiIFqOp4+YJS9R9V1hb6TIWJoltGU8MdMLrg43k=;
-        b=W/hani07GpkVw6+trp2AE4F9DbYfxlnh9rldwvBjNLUPTGt2qz39CibiYf5AtGuRuP
-         As5FkZB/fNzdr0ncyfIV2OpZW8xuThauIz7Bny7RFCYtkhk1HEyWVlISluTn1M7QbxQ2
-         exI02o4vmW0ULkdpQhmHL/EgksMju/Ed66BwHjrcwrpu5gxM04glTFGuqWW84g4rdsxa
-         sKDqFjDv/MttCF2ahPWB9WxjmTUcpNb8InTJO2uZD1ncDlrHXWEem3+dEB3pdcPyT4X1
-         0nAPOvwlsv/f2vNsaCrEIqC4M902ay1/QKEr4GLSv6xZeFx/oQoQeIGtr55S9l+fUtWt
-         gfNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=zFBJIiIFqOp4+YJS9R9V1hb6TIWJoltGU8MdMLrg43k=;
-        b=TRGg+kmgiPAOhPfk3cv1XCPaXVg/2gbVs4krmbN6AnjYevZ28aRrvOzoYs0ileLkdl
-         CfXa/hrErMWNp/nsNyGQ0Nu4ltS8fK7aXGF8hDlQyIxVGy5QDI8dZU1WyUud1Ef3pyrq
-         UX/3ojO1t8067dDQdotrGss0S7GO9yFyiIsjKDlhIKeR153QhiHrQ4yFEak8CG6XaS1T
-         kA4dcB25FEwZz4HZCDRirXb+L21rSeU206DSuOzaWeD67DVJoID+kEWPwqj/sFHewUV3
-         Ier7gu8VuuP9WV0YYVlzPAnK2JtWK3dOeyp+HV188Z4yzMR7OmmUryrkKnq0xtLAImO+
-         pA0A==
-X-Gm-Message-State: AOAM531m3FonsT14l9TIis4PL9LSnaa0s3d4jI2YXntXKz3coVjag2/N
-        1pcx2rgmh552X0QqdczOkTE=
-X-Google-Smtp-Source: ABdhPJwrJUb1Rj6B8LBdbeVrf+ft+c+TMfOfjj6QAlejERaqCJkUObYcZsNhZKtX0IMgKLklKKNgjw==
-X-Received: by 2002:a05:620a:127b:: with SMTP id b27mr11977279qkl.122.1628281070085;
-        Fri, 06 Aug 2021 13:17:50 -0700 (PDT)
-Received: from localhost.localdomain ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id g11sm3705720qtk.91.2021.08.06.13.17.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Aug 2021 13:17:49 -0700 (PDT)
-Sender: Anna Schumaker <schumakeranna@gmail.com>
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     steved@redhat.com, linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v2 9/9] nfs-sysfs: Add installation to the Makefile
-Date:   Fri,  6 Aug 2021 16:17:39 -0400
-Message-Id: <20210806201739.472806-10-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210806201739.472806-1-Anna.Schumaker@Netapp.com>
-References: <20210806201739.472806-1-Anna.Schumaker@Netapp.com>
+        d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+        t=1628282243; bh=pQFxXslybWGkCTzAO35JaXt4z4WeC12z4LlGwRRjVds=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=XusPhugk7Yy6KbP6LcJ9yvFeweBX2cEJdofNeur6Z3+GeitaE6+SZo5WRXtH+kXg0
+         2XcKJm6eTP46XBG5OLOS5K2HQIGJFvRrfP09juVwdJtA00iyrE0u+sqNCkPWLS82X0
+         1s7I9o7yyLSyXRNS2ol5gDs0HsluzDDnUjEgvOlc=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+        by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 4AIci4eC-mfG; Fri,  6 Aug 2021 15:37:23 -0500 (CDT)
+Received: from vali.starlink.edu (unknown [192.168.3.2])
+        by mail.rptsys.com (Postfix) with ESMTP id B89CD37B2C985B;
+        Fri,  6 Aug 2021 15:37:23 -0500 (CDT)
+Date:   Fri, 6 Aug 2021 15:37:22 -0500 (CDT)
+From:   Timothy Pearson <tpearson@raptorengineering.com>
+To:     Olga Kornievskaia <aglo@umich.edu>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <620055521.439700.1628282242689.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <CAN-5tyHmiEE-vw=s6t_7UmWgHo2_U7zJOSwTPESY_NQA27ZsPQ@mail.gmail.com>
+References: <985631970.48634.1628121620017.JavaMail.zimbra@raptorengineeringinc.com> <1851673341.49012.1628121856011.JavaMail.zimbra@raptorengineeringinc.com> <361337129.54635.1628123839436.JavaMail.zimbra@raptorengineeringinc.com> <CAN-5tyHmiEE-vw=s6t_7UmWgHo2_U7zJOSwTPESY_NQA27ZsPQ@mail.gmail.com>
+Subject: Re: Callback slot table overflowed
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC83 (Linux)/8.5.0_GA_3042)
+Thread-Topic: Callback slot table overflowed
+Thread-Index: diZ7YAPSPH6ZJArLYa5dBpRSeeCQSw==
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-And create a shell script that launches the python program from the
-$(libdir)
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- configure.ac                |  1 +
- tools/Makefile.am           |  2 +-
- tools/nfs-sysfs/Makefile.am | 20 ++++++++++++++++++++
- tools/nfs-sysfs/nfs-sysfs   |  5 +++++
- 4 files changed, 27 insertions(+), 1 deletion(-)
- create mode 100644 tools/nfs-sysfs/Makefile.am
- create mode 100644 tools/nfs-sysfs/nfs-sysfs
+----- Original Message -----
+> From: "Olga Kornievskaia" <aglo@umich.edu>
+> To: "Timothy Pearson" <tpearson@raptorengineering.com>
+> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
+> Sent: Friday, August 6, 2021 2:53:19 PM
+> Subject: Re: Callback slot table overflowed
 
-diff --git a/configure.ac b/configure.ac
-index bc2d0f02979c..092e230551f2 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -731,6 +731,7 @@ AC_CONFIG_FILES([
- 	tools/rpcgen/Makefile
- 	tools/mountstats/Makefile
- 	tools/nfs-iostat/Makefile
-+	tools/nfs-sysfs/Makefile
- 	tools/nfsdclnts/Makefile
- 	tools/nfsconf/Makefile
- 	tools/nfsdclddb/Makefile
-diff --git a/tools/Makefile.am b/tools/Makefile.am
-index 9b4b0803db39..1c89d66be744 100644
---- a/tools/Makefile.am
-+++ b/tools/Makefile.am
-@@ -12,6 +12,6 @@ if CONFIG_NFSDCLD
- OPTDIRS += nfsdclddb
- endif
- 
--SUBDIRS = locktest rpcdebug nlmtest mountstats nfs-iostat nfsdclnts $(OPTDIRS)
-+SUBDIRS = locktest rpcdebug nlmtest mountstats nfs-iostat nfs-sysfs nfsdclnts $(OPTDIRS)
- 
- MAINTAINERCLEANFILES = Makefile.in
-diff --git a/tools/nfs-sysfs/Makefile.am b/tools/nfs-sysfs/Makefile.am
-new file mode 100644
-index 000000000000..bdfc7454a7a1
---- /dev/null
-+++ b/tools/nfs-sysfs/Makefile.am
-@@ -0,0 +1,20 @@
-+## Process this file with automake to produce Makefile.in
-+PYTHON_FILES =  nfs-sysfs.py client.py switch.py sysfs.py xprt.py
-+tooldir = $(DESTDIR)$(libdir)/nfs-sysfs
-+
-+man8_MANS = nfs-sysfs.man
-+
-+all-local: $(PYTHON_FILES)
-+
-+install-data-hook:
-+	mkdir -p $(tooldir)
-+	for f in $(PYTHON_FILES) ; do \
-+		$(INSTALL) -m 644 $$f $(tooldir)/$$f ; \
-+	done
-+	chmod +x $(tooldir)/nfs-sysfs.py
-+	$(INSTALL) -m 755 nfs-sysfs $(DESTDIR)$(sbindir)/nfs-sysfs
-+	sed -i "s|LIBDIR=.|LIBDIR=$(tooldir)|" $(DESTDIR)$(sbindir)/nfs-sysfs
-+
-+
-+
-+MAINTAINERCLEANFILES=Makefile.in
-diff --git a/tools/nfs-sysfs/nfs-sysfs b/tools/nfs-sysfs/nfs-sysfs
-new file mode 100644
-index 000000000000..f7ce621eff57
---- /dev/null
-+++ b/tools/nfs-sysfs/nfs-sysfs
-@@ -0,0 +1,5 @@
-+#!/bin/bash
-+LIBDIR=.
-+PYTHON3=/usr/bin/python
-+
-+exec $PYTHON3 $LIBDIR/nfs-sysfs.py $*
--- 
-2.32.0
+> On Thu, Aug 5, 2021 at 12:15 AM Timothy Pearson
+> <tpearson@raptorengineering.com> wrote:
+>>
+>> On further investigation, the working server had already been rolled back to
+>> 4.19.0.  Apparently the issue was insurmountable in 5.x.
+>>
+>> It should be simple enough to set up a test environment out of production for
+>> 5.x, if you have any debug tips / would like to see any debug options compiled
+>> in.
+>>
+>> Thanks!
+>>
+>> ----- Original Message -----
+>> > From: "Timothy Pearson" <tpearson@raptorengineering.com>
+>> > To: "linux-nfs" <linux-nfs@vger.kernel.org>
+>> > Sent: Wednesday, August 4, 2021 7:04:16 PM
+>> > Subject: Re: Callback slot table overflowed
+>>
+>> > Other information that may be helpful:
+>> >
+>> > All clients are using TCP
+>> > arm64 clients are unaffected by the bug
+>> > The armel clients use very small (4k) rsize/wsize buffers
+>> > Prior to the upgrade from Debian Stretch, everything was working perfectly
+>> >
+>> > ----- Original Message -----
+>> >> From: "Timothy Pearson" <tpearson@raptorengineering.com>
+>> >> To: "linux-nfs" <linux-nfs@vger.kernel.org>
+>> >> Sent: Wednesday, August 4, 2021 7:00:20 PM
+>> >> Subject: Callback slot table overflowed
+>> >
+>> >> All,
+>> >>
+>> >> We've hit an odd issue after upgrading a main NFS server from Debian Stretch to
+>> >> Debian Buster.  In both cases the 5.13.4 kernel was used, however after the
+>> >> upgrade none of our ARM thin clients can mount their root filesystems -- early
+>> >> in the boot process I/O errors are returned immediately following "Callback
+>> >> slot table overflowed" in the client dmesg.
+>> >>
+>> >> I am unable to find any useful information on this "Callback slot table
+>> >> overflowed" message, and have no idea why it is only impacting our ARM (armel)
+>> >> clients.  Both 4.14 and 5.3 on the client side show the issue, other client
+>> >> kernel versions were not tested.
+>> >>
+>> >> Curiously, increasing the rsize/wsize values to 65536 or higher reduces (but
+>> >> does not eliminate) the number of callback overflow messages.
+>> >>
+>> >> The server is a ppc64el 64k page host, and none of our pcc64el or amd64 thin
+>> >> clients are experiencing any problems.  Nothing of interest appears in the
+>> >> server message log.
+>> >>
+>> >> Any troubleshooting hints would be most welcome.
+> 
+> A network trace would be useful.
+> 
+> 5.3 should have this patch "SUNRPC: Fix up backchannel slot table
+> accounting". I believe "callback slot table overflowed" is hit when
+> the server sent more reqs than client can handle (ie doesn't have a
+> free slot to handle the request). A network trace would show that.
+> However you said this happens when the client is trying to mount and
+> besides cb_null requests I'm not sure what could be happening.
 
+I'll work to get a network trace out of the test environment once it's set up.  I should however clarify that this is immediately *after* mount, when the diskless ARM device is attempting to run early startup (i.e. reading /etc/init.d and such).
+
+>> >>
+> > > > Thank you!
