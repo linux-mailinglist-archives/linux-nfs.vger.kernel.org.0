@@ -2,59 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 966093E303D
+	by mail.lfdr.de (Postfix) with ESMTP id E02C93E303E
 	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 22:17:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244843AbhHFUSF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Aug 2021 16:18:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52152 "EHLO
+        id S244867AbhHFUSG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Aug 2021 16:18:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244840AbhHFUSE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 16:18:04 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B28EC0613CF
-        for <linux-nfs@vger.kernel.org>; Fri,  6 Aug 2021 13:17:48 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id t66so11290806qkb.0
-        for <linux-nfs@vger.kernel.org>; Fri, 06 Aug 2021 13:17:48 -0700 (PDT)
+        with ESMTP id S244855AbhHFUSF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 16:18:05 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B9F7C0613CF
+        for <linux-nfs@vger.kernel.org>; Fri,  6 Aug 2021 13:17:49 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id t66so11290858qkb.0
+        for <linux-nfs@vger.kernel.org>; Fri, 06 Aug 2021 13:17:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=l3qsx1hJN4Ap0lnfTXiXGiNo7EkyOjgXvMFg3+Yut7o=;
-        b=cvN0fR4RfgqFi2oYUah1IS0LBYBbiwxNVj9g4OfVsrsEQPnCrJxUpvbhwA04a7gL74
-         RasgSIbCu8Vhq6ZK9bCCcsDPUkFYEQ+kRfLEr9JfOoOdAzIWMH3E20nOX0+s0TebP4O6
-         wcDMarYsXT0NT21EMQGAI1KdNy8eZ/hVGP0yEXGXsOTBaA0xY8XFUwu+w40nU36lXo6a
-         7i9jPaQ4OTH0OezsT4zNaiqgGUS2Kfw9EuqDsfcX62rwTgTLWUHe02b/hpWzGNzmZbij
-         0UalrZTE3itJXe8X3o7wEk9U1yc03mDPON+rjRpcsfVBEf44+k67qMIAv5d3DwDuABon
-         tJpw==
+        bh=Qm5U6m2KjT7/L5AwY34w+AvyfUCTptq1jUMCaApc9+M=;
+        b=IK/8BcSxgOz0YL3MMB2ZXAR5CMOMoQrZhqrl7svKlZJQyfsh05b1a8qbJgU8ZmhOV/
+         odjUOx9Ct792uuJ9sBaGEm7+YSDxLB+6I32PkQyropJNZwt6BtfXRci87R9HusQQeeiJ
+         bNdJ/RzRA4ZgU5W6L/gSdjHjn81LAjTNmp6aCTSwoxOUO5uzPptVNfy1F9hhT4m4mEnI
+         5Ksi7hYZj6nUwPEp8KkVLPdtydVoU020aVNz29oCwVdJ9RslAEpwbhsxmZfMo7FMGifn
+         oSAf849IsbYyjWGaxDMppM9amYTttuy3blFQXXKEHEhRKGwgOdKETKgt9PAXj7VMiFz0
+         faUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=l3qsx1hJN4Ap0lnfTXiXGiNo7EkyOjgXvMFg3+Yut7o=;
-        b=WXehw+k+S0a4ivM43wdaP6Ig5DCAjFPvigyfEgRipRZDM5MDR0dZi12a87NJ1bIf9P
-         t2WS/xLsm5kVrs9sJnu6TdaJF/cPVB95nv/3Zhz66VkC53uIj39We2atHwspBs1nRTbn
-         itxn+8OsArOtLzPF/+ZD57pOtVwCyaGe+WI5xIuUH/E17Jn2FdYRuFaaUHX4LDsa4moY
-         8s7/vUThJDHQ/Qptq+/ZXdpawHYneLdw2d64VLiZfqgcGL3/4v7hEBz6hRTL4eorAOwG
-         c9whR5umQYTtRiS1TLMXLGkSE0U34So3C1URJ3qWzhj5fAdSVk3HRFC6MHtagX6tQMGb
-         RHeA==
-X-Gm-Message-State: AOAM530XllqMnfRibqMZucF+keCMBQHtEFfGF+FhoWVHBKo3m3oj7WWp
-        6c30xuPwOQcpR0xLCIdNVZA=
-X-Google-Smtp-Source: ABdhPJwltkz55iS8UgPc43CLqY6vdyRJfSzdtkEaMJXLEYAiKj0KSccP6K8/jSJGwSTm/ofjhX2qsQ==
-X-Received: by 2002:a05:620a:b1b:: with SMTP id t27mr11768441qkg.460.1628281067225;
-        Fri, 06 Aug 2021 13:17:47 -0700 (PDT)
+        bh=Qm5U6m2KjT7/L5AwY34w+AvyfUCTptq1jUMCaApc9+M=;
+        b=BHFIVPAgsN/J6sHoYX3d/3/N6J/XSrGJAarnVhDlaZGTtTfJLgucTbjsj57nWYpELD
+         bhR/Q/1OeW4sS+q8p52uvDCUuckj07zc3/T3X3/6F07AezPu7w/azUtLcHI2tym12fll
+         dL9/vesr3WJbXhXE7+XZ2l5iAmLY/JaZ4AS0Z3n354qTu/ihdmUsXO7vV2/Y0yDaaJuI
+         U744cQo6hLJaxGB/Ed3Ib1gYpzvCqvFZWaKCuChzePC5n2vBeCI9/kyRaq5hsytd7Hmx
+         iO+96Cq8p/zbgojNIa8QLFbhqLPtIPfKRMcd4vMuga8x7g+euQZg7mO0nyavu17787dF
+         QXHg==
+X-Gm-Message-State: AOAM530csf9EOZpu4pu7jmrVgo4Zl0MCC+SoTSvff//fMJ6nEBCEYnV/
+        bzSk9FA71ZYRaWATnCHVvQYJRrwd+jX19w==
+X-Google-Smtp-Source: ABdhPJwQj8WIskgAeho3fuG/l8xKb991rt1qgny22a2gI5xuVaff2fkABxztUkHe3pnhAfnV3nN1TQ==
+X-Received: by 2002:a37:cc1:: with SMTP id 184mr62960qkm.323.1628281068305;
+        Fri, 06 Aug 2021 13:17:48 -0700 (PDT)
 Received: from localhost.localdomain ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id g11sm3705720qtk.91.2021.08.06.13.17.46
+        by smtp.gmail.com with ESMTPSA id g11sm3705720qtk.91.2021.08.06.13.17.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Aug 2021 13:17:46 -0700 (PDT)
+        Fri, 06 Aug 2021 13:17:47 -0700 (PDT)
 Sender: Anna Schumaker <schumakeranna@gmail.com>
 From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     steved@redhat.com, linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v2 6/9] nfs-sysfs.py: Add a command for changing xprt-switch dstaddrs
-Date:   Fri,  6 Aug 2021 16:17:36 -0400
-Message-Id: <20210806201739.472806-7-Anna.Schumaker@Netapp.com>
+Subject: [PATCH v2 7/9] nfs-sysfs.py: Add a command for changing xprt state
+Date:   Fri,  6 Aug 2021 16:17:37 -0400
+Message-Id: <20210806201739.472806-8-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210806201739.472806-1-Anna.Schumaker@Netapp.com>
 References: <20210806201739.472806-1-Anna.Schumaker@Netapp.com>
@@ -66,41 +66,88 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-This is basically the same as for xprts, but it iterates through all
-xprts attached to the switch to apply the new address.
+We can set it offline or online, or we can remove an xprt. The kernel
+only supports removing offlined transports, so we make sure to set the
+state to "offline" before sending the remove command.
 
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- tools/nfs-sysfs/switch.py | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ tools/nfs-sysfs/xprt.py | 29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/tools/nfs-sysfs/switch.py b/tools/nfs-sysfs/switch.py
-index 5384f970235c..859b82e07895 100644
---- a/tools/nfs-sysfs/switch.py
-+++ b/tools/nfs-sysfs/switch.py
-@@ -30,7 +30,22 @@ def list_xprt_switches(args):
-         if args.id == None or xs.id == args.id[0]:
-             print(xs)
+diff --git a/tools/nfs-sysfs/xprt.py b/tools/nfs-sysfs/xprt.py
+index 2160cb0a9575..92b83ebc4cd1 100644
+--- a/tools/nfs-sysfs/xprt.py
++++ b/tools/nfs-sysfs/xprt.py
+@@ -8,15 +8,18 @@ class Xprt:
+         self.type = str(path).rsplit("-", 2)[2]
+         self.dstaddr = open(path / "dstaddr", 'r').readline().strip()
+         self.srcaddr = open(path / "srcaddr", 'r').readline().strip()
++        self.exists = True
  
-+def set_xprt_switch_property(args):
-+    switch = XprtSwitch(sysfs.SUNRPC / "xprt-switches" / f"switch-{args.id[0]}")
-+    try:
-+        for xprt in switch.xprts:
-+            xprt.set_dstaddr(args.dstaddr[0])
-+        print(switch)
-+    except Exception as e:
-+        print(e)
+-        with open(path / "xprt_state") as f:
+-            self.state = ','.join(f.readline().split()[1:])
++        self.read_state()
+         self.__dict__.update(sysfs.read_info_file(path / "xprt_info"))
+ 
+     def __lt__(self, rhs):
+         return self.id < rhs.id
+ 
+     def __str__(self):
++        if self.exists == False:
++            return "xprt %s: has been removed" % self.id
 +
- def add_command(subparser):
-     parser = subparser.add_parser("xprt-switch", help="Commands for xprt switches")
-     parser.add_argument("--id", metavar="ID", nargs=1, type=int, help="Id of a specific xprt-switch to show")
-     parser.set_defaults(func=list_xprt_switches)
+         state = self.state
+         if self.main_xprt:
+             state = "MAIN," + self.state
+@@ -31,6 +34,13 @@ class Xprt:
+                 (self.binding_q_len, self.sending_q_len, self.pending_q_len, self.backlog_q_len, self.tasks_queuelen)
+         return line
+ 
++    def read_state(self):
++        if not self.path.exists():
++            self.exists = False
++            return
++        with open(self.path / "xprt_state") as f:
++            self.state = ','.join(f.readline().split()[1:])
 +
-+    subparser = parser.add_subparsers()
-+    parser = subparser.add_parser("set", help="Set an xprt switch property")
-+    parser.add_argument("--id", metavar="ID", nargs=1, type=int, required=True, help="Id of an xprt-switch to modify")
-+    parser.add_argument("--dstaddr", metavar="dstaddr", nargs=1, type=str, help="New dstaddr to set")
-+    parser.set_defaults(func=set_xprt_switch_property)
+     def small_str(self):
+         return "xprt %s: %s, %s%s" % (self.id, self.type, self.dstaddr,
+                                      f" [main]" if self.main_xprt else "" )
+@@ -41,6 +51,11 @@ class Xprt:
+             f.write(resolved)
+         self.dstaddr = open(self.path / "dstaddr", 'r').readline().strip()
+ 
++    def set_state(self, state):
++        with open(self.path / "xprt_state", 'w') as f:
++            f.write(state)
++        self.read_state()
++
+ 
+ def list_xprts(args):
+     xprts = [ Xprt(f) for f in (sysfs.SUNRPC / "xprt-switches").glob("**/xprt-*") ]
+@@ -60,6 +75,13 @@ def set_xprt_property(args):
+     try:
+         if args.dstaddr != None:
+             xprt.set_dstaddr(args.dstaddr[0])
++        if args.offline == True:
++            xprt.set_state("offline")
++        elif args.online == True:
++            xprt.set_state("online")
++        elif args.remove == True:
++            xprt.set_state("offline")
++            xprt.set_state("remove")
+         print(xprt)
+     except Exception as e:
+         print(e)
+@@ -73,4 +95,7 @@ def add_command(subparser):
+     parser = subparser.add_parser("set", help="Set an xprt property")
+     parser.add_argument("--id", metavar="ID", nargs=1, type=int, required=True, help="Id of a specific xprt to modify")
+     parser.add_argument("--dstaddr", metavar="dstaddr", nargs=1, type=str, help="New dstaddr to set")
++    parser.add_argument("--offline", action="store_true", help="Set an xprt offline")
++    parser.add_argument("--online", action="store_true", help="Set an offline xprt back online")
++    parser.add_argument("--remove", action="store_true", help="Remove an xprt")
+     parser.set_defaults(func=set_xprt_property)
 -- 
 2.32.0
 
