@@ -2,131 +2,192 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 287573E302E
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 22:12:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 491353E3037
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 22:17:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244636AbhHFUMw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Aug 2021 16:12:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51002 "EHLO
+        id S244760AbhHFUR6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Aug 2021 16:17:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244426AbhHFUMw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 16:12:52 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C59BEC0613CF
-        for <linux-nfs@vger.kernel.org>; Fri,  6 Aug 2021 13:12:34 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id i6so14730714edu.1
-        for <linux-nfs@vger.kernel.org>; Fri, 06 Aug 2021 13:12:34 -0700 (PDT)
+        with ESMTP id S232908AbhHFUR5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 16:17:57 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBFEAC0613CF
+        for <linux-nfs@vger.kernel.org>; Fri,  6 Aug 2021 13:17:41 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id a19so11238270qkg.2
+        for <linux-nfs@vger.kernel.org>; Fri, 06 Aug 2021 13:17:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AmpSKDdHkrsEDDHUGuoqCuytr0WqvHAJwTc46DXpH/c=;
-        b=GPXbTQl2VB4+epJgG2oiAfT88YWlHVAsrtH/MxYdw/B1eIJOz0125/RxUHvVApqaz8
-         VtuYK8ZDwkskcmnokr+yTcuvAbVfokFigy3cA/Mp/1m94uzD/nf82jc8HQryNI68LE2l
-         EUvrwdCms5UcDD1VWJrAq/F7q4zMS2UTU+SPBTSRKl2grdg0WkwTixUxmjaKx1GI9FC3
-         ZPHOIEOdtvuC6uL9WUzyyKIr50i3lM6wljyf5uODbNrL7oZXy3sAKxIQaloBt2fIxYDF
-         xzIbRo+otpzbmTDtfDGz4Io+XglrmPr5Ed3C122HnxQbru03gHbpGFYONpSjKzpWM8b8
-         txPA==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z3BnxvkkG90O7gZdRdAtc3HyRdlMscKwtpq+2Yj+S1g=;
+        b=YNBdeAF9Ahc5954jmn3hg+LsQs+q+IZJVZOUqpg6Jc+CaltKTmuAFcBfnd5qK1VjFI
+         gjV36MQseV8APGmwgG8wM0D4+q3102CkxgGctASVlal/idMszOmT5h5uIvom1/W6vVwI
+         TImSFEnLvtJ7ayP7PFuxwUi/R+plyiLlEq1wxVnFvU82Pf8i2TgWqhu/Azr0URlVKEtq
+         CFSGvI0/TMPSTRbW8o+74YJJAtQssYS+4vZK6HUOxCS8pwdyktkOyaVt7rviQvYpyK1o
+         V9qlZ683DU0nRmf0N24OP0V2/KNBRFEUwAwsThOFhVxkCTXYln8MNd9gshiJtEjVhf56
+         1bew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AmpSKDdHkrsEDDHUGuoqCuytr0WqvHAJwTc46DXpH/c=;
-        b=PBnZYObvufbr6kAVeamCAqw9WHkjNWfeffi8KPCPBRl6HTzG5scmrzrtyX5geKvxHg
-         4NGqVxK2/mJrZJWzWigyK2dasdi7GANNmUyfmwBsyKTx4FmjlXrdqXFp2CWhbs0h9bD1
-         vhPzVxkgsvvkjiFAWeoDiDP6Zh/8vHqXZFBtfrz2SYCckpCn7Dwurb/tDWlROtYSKjtV
-         KAi2URW/pfWXhvDuVm0iTgkqiyT1toqk1t77GOBGEsegkdv3Vbxc6JoIFlVeGjqvLHd/
-         kpi1TxopUuHIS04WQIXUCjG8NT0Mz0tWeS76UlA+JoM1VVClHsJAOMhMAtIxvG/PA94w
-         RO9w==
-X-Gm-Message-State: AOAM5332a5alIlaJxPBL0I1aXTZquzIn+TFTdjEYYXRVD+aHIF42S3CP
-        d4D1Rgkx+LW270Xg3YqPM2AUuNGVpF02x3391c4=
-X-Google-Smtp-Source: ABdhPJyrVDxg+TIC59kTSrdYyMXUx7GH5kOKYv4ton2PbdGX6FEMkV41vp2vu4D2PR6090yf1AqCf9rgNHoHw2h0DH4=
-X-Received: by 2002:a05:6402:34c4:: with SMTP id w4mr4768117edc.67.1628280753331;
- Fri, 06 Aug 2021 13:12:33 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=Z3BnxvkkG90O7gZdRdAtc3HyRdlMscKwtpq+2Yj+S1g=;
+        b=gUGA3rrUayLGsauAXCIK4ZZ2ADiEnlGRckhEzfaBRBEEKGa6x8nR9qkF2uW6r1W3mO
+         tqgcHWRmCZfOPVphvqaV799y3ADrKjqwWQfNwQv3kyWbWF6/BHR3AlJ9lJIrGK7oKGCq
+         zzElLL8rrMRVA+8ne3F2e40WxIl8bA0Aiq7l1qUuIaqESx6wxbDaYmZrZVmlYXjubyhf
+         s8wZ4C52zzJHBKRk4+m+ASBW0rk+Cd5Dp5yqGA/c6csQt1643Fv4eBzyud15J0CfHBii
+         0XePVy08f32V0qGCptbz3pqHfR05yQYa8/9/KFDIT9lWz+F907t/dW0CSGoe0NRzcasR
+         ob0g==
+X-Gm-Message-State: AOAM5320qSMbkdoegx9g8uxWykR61RoYq90zQX4sBRmt11YPn8jX86qF
+        TMccJ8NFKgSQnhBEeINN9pymbAGahywnUA==
+X-Google-Smtp-Source: ABdhPJyi2UsHWgNni4NZgki50ydZacPbfaWSiSuNZAHXC1KelbsfsKH/KVdz8nmUdYFlEN4EvqYapQ==
+X-Received: by 2002:a37:46d0:: with SMTP id t199mr11718534qka.416.1628281060694;
+        Fri, 06 Aug 2021 13:17:40 -0700 (PDT)
+Received: from localhost.localdomain ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
+        by smtp.gmail.com with ESMTPSA id g11sm3705720qtk.91.2021.08.06.13.17.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Aug 2021 13:17:40 -0700 (PDT)
+Sender: Anna Schumaker <schumakeranna@gmail.com>
+From:   schumaker.anna@gmail.com
+X-Google-Original-From: Anna.Schumaker@Netapp.com
+To:     steved@redhat.com, linux-nfs@vger.kernel.org
+Cc:     Anna.Schumaker@Netapp.com
+Subject: [PATCH v2 0/9] Add a tool for using the new sysfs files
+Date:   Fri,  6 Aug 2021 16:17:30 -0400
+Message-Id: <20210806201739.472806-1-Anna.Schumaker@Netapp.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-References: <20210616011013.50547-1-olga.kornievskaia@gmail.com> <20210616011013.50547-7-olga.kornievskaia@gmail.com>
-In-Reply-To: <20210616011013.50547-7-olga.kornievskaia@gmail.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Fri, 6 Aug 2021 16:12:22 -0400
-Message-ID: <CAN-5tyGque598rzk2GQK3u=sWP35DHndJw50mWM-zfzF46L6oQ@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] NFSv4 allow for nconnect value of trunkable transport
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello folks (Chuck, Trond have graciously participated previously and
-I look forward to hearing back from you),
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-I would like to restart the conversation about the client's behaviour
-with regards to discovered truncable transports.
+These patches implement a tool that can be used to read and write the
+sysfs files, with subcommands! They do need my extra patches to add in
+srcaddr and dst_port to the xprt_info file. Let me know if I need to
+resend adding support for kernels both with and without these patches.
 
-I have put forth a version and patch 6 is the one that deals with the
-combination of trunkable transport and nconnect and I look for
-feedback from the community. I have written my views in the comments
-in the patch.
+The following subcommands are implemented:
+	nfs-sysfs.py rpc-client
+ 	nfs-sysfs.py xprt
+ 	nfs-sysfs.py xprt set
+ 	nfs-sysfs.py xprt-switch
+ 	nfs-sysfs.py xprt-switch set
 
-My current position is: given that it's unclear how to reconcile
-managing connections to the same IP together with connections to other
-IPs. I propose we don't bring in nconnect  in play when truncable
-transport is discovered (basically option #2 in my comments below). I
-believe that's the simplest thing to do now and we can add nconnect
-behaviour later.
+So you can print out information about every xprt-switch with:
+	anna@client ~ % nfs-sysfs xprt-switch
+	switch 0: num_xprts 1, num_active 1, queue_len 0
+		xprt 0: local, /var/run/gssproxy.sock [main]
+	switch 1: num_xprts 1, num_active 1, queue_len 0
+		xprt 1: local, /var/run/rpcbind.sock [main]
+	switch 2: num_xprts 1, num_active 1, queue_len 0
+		xprt 2: tcp, 192.168.111.1 [main]
+	switch 3: num_xprts 4, num_active 4, queue_len 0
+		xprt 3: tcp, 192.168.111.188 [main]
+		xprt 4: tcp, 192.168.111.188
+		xprt 5: tcp, 192.168.111.188
+		xprt 6: tcp, 192.168.111.188
 
-Thank you.
+And information about each xprt:
+	anna@client ~ % nfs-sysfs xprt       
+	xprt 0: local, /var/run/gssproxy.sock, port 0, state <MAIN,CONNECTED,BOUND>
+		Source: (einval), port 0, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	xprt 1: local, /var/run/rpcbind.sock, port 0, state <MAIN,CONNECTED,BOUND>
+		Source: (einval), port 0, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	xprt 2: tcp, 192.168.111.1, port 2049, state <MAIN,CONNECTED,BOUND>
+		Source: 192.168.111.222, port 959, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	xprt 3: tcp, 192.168.111.188, port 2049, state <MAIN,CONNECTED,BOUND>
+		Source: 192.168.111.222, port 921, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	xprt 4: tcp, 192.168.111.188, port 2049, state <CONNECTED,BOUND>
+		Source: 192.168.111.222, port 726, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	xprt 5: tcp, 192.168.111.188, port 2049, state <CONNECTED,BOUND>
+		Source: 192.168.111.222, port 671, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	xprt 6: tcp, 192.168.111.188, port 2049, state <CONNECTED,BOUND>
+		Source: 192.168.111.222, port 934, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+
+You can use the `set` subcommand to change the dstaddr of individual xprts:
+	anna@client ~ % sudo nfs-sysfs xprt --id 4 
+	xprt 4: tcp, 192.168.111.188, port 2049, state <CONNECTED,BOUND>
+		Source: 192.168.111.222, port 726, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	anna@client ~ % sudo nfs-sysfs xprt set --id 4 --dstaddr server2.nowheycreamery.com
+	xprt 4: tcp, 192.168.111.186, port 2049, state <CONNECTED,BOUND>
+		Source: 192.168.111.222, port 726, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+
+Or for changing the dstaddr of all xprts attached to a switch:
+	anna@client % ./nfs-sysfs.py xprt-switch --id 3
+	switch 3: num_xprts 4, num_active 4, queue_len 0
+		xprt 3: tcp, 192.168.111.188 [main]
+		xprt 4: tcp, 192.168.111.188
+		xprt 5: tcp, 192.168.111.188
+		xprt 6: tcp, 192.168.111.188
+	anna@client % sudo ./nfs-sysfs.py xprt-switch set --id 4 --dstaddr server2.nowheycreamery.vm
+	switch 3: num_xprts 4, num_active 4, queue_len 0
+		xprt 2: tcp, 192.168.111.186 [main]
+		xprt 3: tcp, 192.168.111.186
+		xprt 5: tcp, 192.168.111.186
+		xprt 6: tcp, 192.168.111.186
 
 
-On Tue, Jun 15, 2021 at 9:10 PM Olga Kornievskaia
-<olga.kornievskaia@gmail.com> wrote:
->
-> From: Olga Kornievskaia <kolga@netapp.com>
->
-> If the new mount asked for nconnect mount, then create old client
-> number of connections to the destination address that has been
-> established as the same server with trunkable address.
->
-> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
->
-> --- There might be a number of objection to this patch. One
-> I can think of is that this patch creates the nconnects based on
-> whether or not the new mount asked for nconnect instead of
-> unconditionally creating nconnect number of connections. The patch
-> still creates nconnect connections based on the original value
-> instead of picking the value of clp->cl_nconnect. I would have
-> preferred that would be done. I don't see what can be wrong with
-> using the new value. But I feared to go against what was objected
-> before. My preference would be to (1) create clp->cl_nconnect
-> connections or (2) not use this patch at all or (3) use as is
-> here (meaning at least not create extra connections unless asked
-> for by the mount).
-> ---
->  fs/nfs/nfs4client.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-> index af57332503be..50fa9d53b444 100644
-> --- a/fs/nfs/nfs4client.c
-> +++ b/fs/nfs/nfs4client.c
-> @@ -427,6 +427,15 @@ static void nfs4_add_trunk(struct nfs_client *clp, struct nfs_client *old)
->
->         rpc_clnt_add_xprt(old->cl_rpcclient, &xprt_args,
->                           rpc_clnt_test_and_add_xprt, NULL);
-> +
-> +       if (clp->cl_nconnect > 1) {
-> +               int i;
-> +
-> +               for (i = 0; i < old->cl_nconnect - 1; i++)
-> +                       if (rpc_clnt_add_xprt(old->cl_rpcclient, &xprt_args,
-> +                                             NULL, NULL) < 0)
-> +                               break;
-> +       }
->  }
->
->  /**
-> --
-> 2.27.0
->
+What does everybody think? Is there any thing I should change about the
+user input or output lines? How about other subcommands that should be
+added with the initial submission?
+
+Thanks,
+Anna
+
+
+Anna Schumaker (9):
+  nfs-sysfs: Add an nfs-sysfs.py tool
+  nfs-sysfs.py: Add a command for printing xprt switch information
+  nfs-sysfs.py: Add a command for printing individual xprts
+  nfs-sysfs.py: Add a command for printing rpc-client information
+  nfs-sysfs.py: Add a command for changing xprt dstaddr
+  nfs-sysfs.py: Add a command for changing xprt-switch dstaddrs
+  nfs-sysfs.py: Add a command for changing xprt state
+  nfs-sysfs: Add a man page
+  nfs-sysfs: Add installation to the Makefile
+
+ .gitignore                    |   2 +
+ configure.ac                  |   1 +
+ tools/Makefile.am             |   2 +-
+ tools/nfs-sysfs/Makefile.am   |  20 +++++++
+ tools/nfs-sysfs/client.py     |  27 +++++++++
+ tools/nfs-sysfs/nfs-sysfs     |   5 ++
+ tools/nfs-sysfs/nfs-sysfs.man |  88 +++++++++++++++++++++++++++++
+ tools/nfs-sysfs/nfs-sysfs.py  |  23 ++++++++
+ tools/nfs-sysfs/switch.py     |  51 +++++++++++++++++
+ tools/nfs-sysfs/sysfs.py      |  28 ++++++++++
+ tools/nfs-sysfs/xprt.py       | 101 ++++++++++++++++++++++++++++++++++
+ 11 files changed, 347 insertions(+), 1 deletion(-)
+ create mode 100644 tools/nfs-sysfs/Makefile.am
+ create mode 100644 tools/nfs-sysfs/client.py
+ create mode 100644 tools/nfs-sysfs/nfs-sysfs
+ create mode 100644 tools/nfs-sysfs/nfs-sysfs.man
+ create mode 100755 tools/nfs-sysfs/nfs-sysfs.py
+ create mode 100644 tools/nfs-sysfs/switch.py
+ create mode 100644 tools/nfs-sysfs/sysfs.py
+ create mode 100644 tools/nfs-sysfs/xprt.py
+
+-- 
+2.32.0
+
