@@ -2,109 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE10E3E2FBD
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 21:15:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F18A3E2FEF
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 21:53:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243819AbhHFTP3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Aug 2021 15:15:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38340 "EHLO
+        id S244135AbhHFTxs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Aug 2021 15:53:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243805AbhHFTP3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 15:15:29 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED9D1C0613CF
-        for <linux-nfs@vger.kernel.org>; Fri,  6 Aug 2021 12:15:11 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id g21so14514421edb.4
-        for <linux-nfs@vger.kernel.org>; Fri, 06 Aug 2021 12:15:11 -0700 (PDT)
+        with ESMTP id S232086AbhHFTxr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 15:53:47 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CF85C0613CF
+        for <linux-nfs@vger.kernel.org>; Fri,  6 Aug 2021 12:53:31 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id hs10so16952821ejc.0
+        for <linux-nfs@vger.kernel.org>; Fri, 06 Aug 2021 12:53:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umich.edu; s=google-2016-06-03;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=M8TPBrLeahG3PU+HlKP+EzZ3APv60mD018i2Qe5LF3A=;
-        b=UfndfxCSDP/pKTtT4FSlU9HhUsx8rj6Iv0RpBpifOJhKLpABhyrSNMFwiSp3OcQtxD
-         1v/SN6zf+u4cp0LH8HUcj7hd1AAh9z8QudEmHVcYRuX1pbI58uTatpLaQO4XYgRgBYB/
-         Nzy84TYnmX9WhoW+VglVMjMg0PL1BrksYHNAqEq6zzoH71FpM5dT72EK4Rm/0pgk+kLw
-         smZY2E6KI5gRRwp+zZOa789dQsifboNzTap2+u1wsC8eW53joeWYKK75a+GyvKN1S2QD
-         rkSTEkFUrtSPRTaRLtaNmNJcVxpps57ghqx6PNUsufS6U8TrPaqYfnMkD1riyjFAuH3Z
-         GlYw==
+        bh=IJDq2ID9kCT3+YUR399sOMxSIhNNDGZE4HwI3Oa4c7U=;
+        b=VyuVkm1JxRxFBjbte2PamVHal/Y31Ntl1DUTFZ7WFYD8/XVjSjL3TRreFxe9T732hM
+         9FBppZWISSHlrQppVlWSg6jgDP/tT5Rodd1IqDknzwiZxm2GreVtUiQ9vEFGDvTTgwxw
+         CH2zb+FV6kdOI9kP/hI50rzx7s61WOUyb1e6R97BKRQ62xp2FqTbSRtcmfeqyjue8M0Z
+         Lmsv1ffigQwzaqArpZAL1xjQRNkCarceOARpWJXwOC+R1Z76tNhdYUPsloHSYma5SmmI
+         s/aZvPJmP9MimX+8CXJUzA4pndlA+vX7Mho11uQ3uNay//6J9VAo6xR0+ZyPIVPHf5yx
+         z1cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=M8TPBrLeahG3PU+HlKP+EzZ3APv60mD018i2Qe5LF3A=;
-        b=NzwJexRPucElCnp8S9zLVhgwNBDW2ihQJCuoUMg0Kz58r10DIJRtWRrzh7evJUuYRx
-         CI4CENHJJdQTFzxpvd/KICM6Sz1ixKgCg6As0eKyZkz/NbD84xuX4xZqrpPwYAFcfwKr
-         bisFYC2cN/9VHtLCswP/rVpfw5HBZNSI0/uitgT+wxyI44LYCCNB2NuhZtQRvOpmU7AH
-         RguTUsWaXzX0kZOIO7KxgJ8IkxZOxuFXEbAHDrW0/hQopDzWfgsUZHIPxXuHu8YOTXCG
-         BI1PrLmLEgpb8e3N4pUKSaZNVeiHIL0eoGBB4zFTiIe1grBQo7YQthN/n1ePyAzhLuJE
-         cWdQ==
-X-Gm-Message-State: AOAM532O36vqFNgCd2FQLSxiyn9wcPM2qbWC9n51L0GgLizxfKyx4M+g
-        OND8+gcI0QKebP6ABGxCZtJF9dvAmwR49Kde5N0=
-X-Google-Smtp-Source: ABdhPJxE16tXhsH/EMeG/5iVRtY85u3S2vwrnFj/QR0oM52Qv+E89lXIQiFg6EgURDwfliZyzpQ1oQ96f1TlYw+Ea/Q=
-X-Received: by 2002:a05:6402:3128:: with SMTP id dd8mr15405265edb.367.1628277310533;
- Fri, 06 Aug 2021 12:15:10 -0700 (PDT)
+        bh=IJDq2ID9kCT3+YUR399sOMxSIhNNDGZE4HwI3Oa4c7U=;
+        b=pJEUO1JPLZXbu8vuidD+tWU6EQVcO7VdouZWnffEy9hkI+X4EU5PvKvVhBLXXPb10G
+         X++VfHtlsb05aWWNtbmdxKOvk2E6XOtJzlICoYXmXYsWY/fT9Ic7qRnYeDAGuxpHi/SD
+         rBvhS9jeiWQ/1bFmstWNXyv6xC0DWC0CPkFWW1xOiWoajCkabN2qgU7XeJI3O6SzJqcK
+         mTbO8Uyl+Kp5SE8lK2tk4bfe09kf/8xqJLrhK/qz4VGadl2P4Te83n4s43vAQ7YHcGFU
+         XsNKuAAhNvoKiEyhlJ/EGCfCRWUtzX4ZfZ7HQX1+X9EaO3H4gawg8ZDlWvVJ+v8GzuBd
+         x79A==
+X-Gm-Message-State: AOAM532cqxGivOmiVrIwFPulrja9+4+Cg2vVIRVRjgOwTjpi9sn52kIM
+        0ED2JntGdVUkPpDuJ8+bFyOmByPCBEd5sQvUbWETUAVZLVk=
+X-Google-Smtp-Source: ABdhPJzdt/60STI36XlFdqMFP5XT6cs2K4AucO7voRSndnyfcVMYHURc2wC3lawZr9j3dIESQIjcXWuqS8WvPBOVMCo=
+X-Received: by 2002:a17:906:b7d2:: with SMTP id fy18mr11622508ejb.0.1628279610098;
+ Fri, 06 Aug 2021 12:53:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <ee45aa412acaf7a2c035ad98e966394a7293dd9f.camel@redhat.com> <e0e036cb4e438fdeb5ed1b8a988dcb170907f012.camel@redhat.com>
-In-Reply-To: <e0e036cb4e438fdeb5ed1b8a988dcb170907f012.camel@redhat.com>
+References: <985631970.48634.1628121620017.JavaMail.zimbra@raptorengineeringinc.com>
+ <1851673341.49012.1628121856011.JavaMail.zimbra@raptorengineeringinc.com> <361337129.54635.1628123839436.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <361337129.54635.1628123839436.JavaMail.zimbra@raptorengineeringinc.com>
 From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 6 Aug 2021 15:14:59 -0400
-Message-ID: <CAN-5tyFv58duZSrFW9-DtCnA5DQ8j6FayFKvWqM9LvqL0Njj7Q@mail.gmail.com>
-Subject: Re: [PATCH 1/4] nfs-utils: Fix potential memory leaks in idmap
-To:     Alice Mitchell <ajmitchell@redhat.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
-        Steve Dickson <steved@redhat.com>
+Date:   Fri, 6 Aug 2021 15:53:19 -0400
+Message-ID: <CAN-5tyHmiEE-vw=s6t_7UmWgHo2_U7zJOSwTPESY_NQA27ZsPQ@mail.gmail.com>
+Subject: Re: Callback slot table overflowed
+To:     Timothy Pearson <tpearson@raptorengineering.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Aug 6, 2021 at 12:21 PM Alice Mitchell <ajmitchell@redhat.com> wrote:
+On Thu, Aug 5, 2021 at 12:15 AM Timothy Pearson
+<tpearson@raptorengineering.com> wrote:
 >
+> On further investigation, the working server had already been rolled back to 4.19.0.  Apparently the issue was insurmountable in 5.x.
 >
-> Signed-off-by: Alice Mitchell <ajmitchell@redhat.com>
-> ---
->  support/nfsidmap/nss.c   | 4 ++--
->  support/nfsidmap/regex.c | 1 +
->  2 files changed, 3 insertions(+), 2 deletions(-)
+> It should be simple enough to set up a test environment out of production for 5.x, if you have any debug tips / would like to see any debug options compiled in.
 >
-> diff --git a/support/nfsidmap/nss.c b/support/nfsidmap/nss.c
-> index 669760b..f00bd9b 100644
-> --- a/support/nfsidmap/nss.c
-> +++ b/support/nfsidmap/nss.c
-> @@ -365,9 +365,9 @@ static int _nss_name_to_gid(char *name, gid_t *gid,
-> int dostrip)
->  out_buf:
->         free(buf);
->  out_name:
-> -       if (dostrip)
-> +       if (localname)
->                 free(localname);
-> -       if (get_reformat_group())
-> +       if (ref_name)
->                 free(ref_name);
+> Thanks!
+>
+> ----- Original Message -----
+> > From: "Timothy Pearson" <tpearson@raptorengineering.com>
+> > To: "linux-nfs" <linux-nfs@vger.kernel.org>
+> > Sent: Wednesday, August 4, 2021 7:04:16 PM
+> > Subject: Re: Callback slot table overflowed
+>
+> > Other information that may be helpful:
+> >
+> > All clients are using TCP
+> > arm64 clients are unaffected by the bug
+> > The armel clients use very small (4k) rsize/wsize buffers
+> > Prior to the upgrade from Debian Stretch, everything was working perfectly
+> >
+> > ----- Original Message -----
+> >> From: "Timothy Pearson" <tpearson@raptorengineering.com>
+> >> To: "linux-nfs" <linux-nfs@vger.kernel.org>
+> >> Sent: Wednesday, August 4, 2021 7:00:20 PM
+> >> Subject: Callback slot table overflowed
+> >
+> >> All,
+> >>
+> >> We've hit an odd issue after upgrading a main NFS server from Debian Stretch to
+> >> Debian Buster.  In both cases the 5.13.4 kernel was used, however after the
+> >> upgrade none of our ARM thin clients can mount their root filesystems -- early
+> >> in the boot process I/O errors are returned immediately following "Callback
+> >> slot table overflowed" in the client dmesg.
+> >>
+> >> I am unable to find any useful information on this "Callback slot table
+> >> overflowed" message, and have no idea why it is only impacting our ARM (armel)
+> >> clients.  Both 4.14 and 5.3 on the client side show the issue, other client
+> >> kernel versions were not tested.
+> >>
+> >> Curiously, increasing the rsize/wsize values to 65536 or higher reduces (but
+> >> does not eliminate) the number of callback overflow messages.
+> >>
+> >> The server is a ppc64el 64k page host, and none of our pcc64el or amd64 thin
+> >> clients are experiencing any problems.  Nothing of interest appears in the
+> >> server message log.
+> >>
+> >> Any troubleshooting hints would be most welcome.
 
-Do we even need to check for null before freeing these days? man page
-says if null is passed then it's a no-op.
+A network trace would be useful.
 
-If we are not allowed to free a null then there is another patch in
-the series in the mountd code that does intentionally do a free of
-null pointers.
+5.3 should have this patch "SUNRPC: Fix up backchannel slot table
+accounting". I believe "callback slot table overflowed" is hit when
+the server sent more reqs than client can handle (ie doesn't have a
+free slot to handle the request). A network trace would show that.
+However you said this happens when the client is trying to mount and
+besides cb_null requests I'm not sure what could be happening.
 
->  out:
->         return err;
-> diff --git a/support/nfsidmap/regex.c b/support/nfsidmap/regex.c
-> index fdbb2e2..958b4ac 100644
-> --- a/support/nfsidmap/regex.c
-> +++ b/support/nfsidmap/regex.c
-> @@ -157,6 +157,7 @@ again:
->         IDMAP_LOG(4, ("regexp_getpwnam: name '%s' mapped to '%s'",
->                   name, localname));
->
-> +       free(localname);
->         *err_p = 0;
->         return pw;
->
-> --
-> 2.27.0
->
->
+> >>
+> > > Thank you!
