@@ -2,71 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C172D3E2AA2
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 14:33:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A5093E2AA3
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 14:33:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343685AbhHFMdY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Aug 2021 08:33:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26858 "EHLO
+        id S240311AbhHFMeC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Aug 2021 08:34:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:57681 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1343684AbhHFMdX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 08:33:23 -0400
+        by vger.kernel.org with ESMTP id S238794AbhHFMeC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 08:34:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628253187;
+        s=mimecast20190719; t=1628253226;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=iyKrp7I82f3wYzsbQR/1Jeu1cFgJoa6hSbBVeuarAhw=;
-        b=aBKKqab/FHf+b/WXRp92MTLHUic1RlV8xvM9u7Jg0hgGJ9qJw+kzG6+T3MrzILcOyoBHl9
-        0olwyvvNqX3XG7utH7oJyFFoFkSfKpbt+uBbnKcPmw7nmrpk1xtZ8HZ/jNhuch502hiHsO
-        zdSn2NDPuD4IUI0WEtVSlOcQpE8yj40=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-kn_afhZmN3SYpT9HDqOCXw-1; Fri, 06 Aug 2021 08:33:06 -0400
-X-MC-Unique: kn_afhZmN3SYpT9HDqOCXw-1
-Received: by mail-wr1-f72.google.com with SMTP id z10-20020adfdf8a0000b02901536d17cd63so3107340wrl.21
-        for <linux-nfs@vger.kernel.org>; Fri, 06 Aug 2021 05:33:06 -0700 (PDT)
+        bh=aESQJrjRjEGA2KBzRJNS+CI346f4W84tNzuVuGynsGk=;
+        b=ffefhdAN3yD1EfZFZ63hTdH7qzl3nwYwiq+zfXO4aomh7iLOtDiwglKI6PH1DHBnULXJte
+        rPvxNoD4RjoFtD3ysdk80K/fa1DkIsrP7U/5G7Wvr0xyTzwE5cMkvulrUYVaeRIxKDsMuw
+        nWHvq/ipkpqbhrY7FFynqJkTAdri7wY=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-428-26wt8Yr7MrOYfzg-49YItw-1; Fri, 06 Aug 2021 08:33:44 -0400
+X-MC-Unique: 26wt8Yr7MrOYfzg-49YItw-1
+Received: by mail-wr1-f71.google.com with SMTP id f6-20020adfe9060000b0290153abe88c2dso3103058wrm.20
+        for <linux-nfs@vger.kernel.org>; Fri, 06 Aug 2021 05:33:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iyKrp7I82f3wYzsbQR/1Jeu1cFgJoa6hSbBVeuarAhw=;
-        b=KPj8pTLuEhcEygcNV9lr9JsYC5KPmxcrQo7KiSqjwGaysXI6aCsRRtDdMiq6GybfOj
-         bifQrCChJSTi3caOGaSEn1NDoW2vzritt3g+XlxksjXMwKuqe7VrUoD4ocF2zHS1p1lb
-         A07PTohkQ1q3cN23q1ozCl2FnfIZzWMbit2eHiwxSJopIaFNpDehXL7YfbwO6W9ZTZEN
-         c0S+uH+lfq8J8Tf4LHO6kDuXv0WGc+eBXGekLEcPRCwYqeRz/Z6XbuPLYFpF42fmQhD/
-         DZfMlIyIU3zm5pCBekgoAPsm3Kh/Y0bGviZ8CQ70v2HEnkZCn9pvnXVxjVflJRYrFSap
-         wUug==
-X-Gm-Message-State: AOAM532NR4j4Pz/aAVyWBwDRfNHoqbF50jKsGC3DnWyKx6wgOT8GlNou
-        nILRzFFcvzZqRFA2aTQbywyNlNFcMdBsuqGUuDPL+CVWoAMIY6GePGaucM8mQG0ohhd6OtzR0xj
-        WHGB6CYWWssHvjRD8rra0ZVImlayYJ+kDKTLaGhZFB8Ws1UlUhpF7igf9B5YQStUy04CtQzyQQX
+        bh=aESQJrjRjEGA2KBzRJNS+CI346f4W84tNzuVuGynsGk=;
+        b=abF3nJBdaPn76FM+krBoOTPyOwZR7cdsmHBp/7xPrgPevPx3r5BzcAeXaWbEvDDnPe
+         lavT9QpMhu+bWmPpEO/rYUI3ZTL4T8Gvqo8ecIEbGN02+2EwYr5rAQZvkxYhnQmq7Wuq
+         8L5Q7wAJ3sBkl3IKAgi1s9dYGnSoBbmfGQ3wUNXdkGsMNnEE2FGPTM4OKQsBTnA0s4sA
+         oo5RLl2i8Xt0XMMCOenoNcwCAWMml7RUQSlS8g/kUzvujHVsGL6PES6HJr+v+oNbmqSU
+         wbaF0CPiqjDLgpILV2wiHk5e2MboVu1t1CbyCTw+F5+LhgyohBRQfNNoRX+ElsqROZp4
+         4hUQ==
+X-Gm-Message-State: AOAM530n2FBjPi+S3NKL8aWURdBCsrbDkS5oaZYeu/nY7ws4OIy0Rlqh
+        Lukkpm90c6Lzrria/WP61x6a473LuiNwAp0BSsN9ejsJ8yPnIBOroioc/Cwqwu/XOy9Zg3SBS39
+        JQE125bqLTM/i2ygQdDoRN4wpi7GR/7LvTiGn0+E0fsto/tjkhoezDgHB8ZaAEbMNMjlE5sJoI0
         Y=
-X-Received: by 2002:a1c:9814:: with SMTP id a20mr3027509wme.158.1628253185465;
-        Fri, 06 Aug 2021 05:33:05 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzmMg9VqmJ2JHoSFT9sB6HwJMTD0NkQF9vURb8zxMUJzxL/IY22NKxh1atSYpC7rctiUr3N6g==
-X-Received: by 2002:a1c:9814:: with SMTP id a20mr3027488wme.158.1628253185241;
-        Fri, 06 Aug 2021 05:33:05 -0700 (PDT)
+X-Received: by 2002:adf:ec50:: with SMTP id w16mr10704074wrn.56.1628253223618;
+        Fri, 06 Aug 2021 05:33:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz0Y49ueJ/Wz2xCnuuQ6uLrfCI8s48uMCVD+9PCB0uxsKKhUe21xHZeAm+f1HGkzdBUtHmjRg==
+X-Received: by 2002:adf:ec50:: with SMTP id w16mr10704063wrn.56.1628253223492;
+        Fri, 06 Aug 2021 05:33:43 -0700 (PDT)
 Received: from ajmitchell.remote.csb ([95.145.245.173])
-        by smtp.gmail.com with ESMTPSA id b14sm9881355wrm.43.2021.08.06.05.33.04
+        by smtp.gmail.com with ESMTPSA id y4sm8412147wmi.22.2021.08.06.05.33.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Aug 2021 05:33:05 -0700 (PDT)
-Message-ID: <3209bf6bdf0a167a19cd56be5c57abfcc761850b.camel@redhat.com>
-Subject: [PATCH 3/4] nfs-utils: Fix mem leaks in krb5_util
+        Fri, 06 Aug 2021 05:33:43 -0700 (PDT)
+Message-ID: <ff86aef24ddf77e413ec410eedd4312991e91be7.camel@redhat.com>
+Subject: [PATCH 4/4] nfs-utils: Fix mem leak in mountd
 From:   Alice Mitchell <ajmitchell@redhat.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     Steve Dickson <steved@redhat.com>
-Date:   Fri, 06 Aug 2021 13:33:04 +0100
+Date:   Fri, 06 Aug 2021 13:33:42 +0100
 In-Reply-To: <ee45aa412acaf7a2c035ad98e966394a7293dd9f.camel@redhat.com>
 References: <ee45aa412acaf7a2c035ad98e966394a7293dd9f.camel@redhat.com>
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 X-Mailer: Evolution 3.28.5 (3.28.5-16.el8) 
 Mime-Version: 1.0
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-DQo=
+
+Signed-off-by: Alice Mitchell <ajmitchell@redhat.com>
+---
+ utils/mountd/rmtab.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/utils/mountd/rmtab.c b/utils/mountd/rmtab.c
+index 2da9761..752fdb6 100644
+--- a/utils/mountd/rmtab.c
++++ b/utils/mountd/rmtab.c
+@@ -233,6 +233,9 @@ mountlist_list(void)
+ 			m->ml_directory = strdup(rep->r_path);
+ 
+ 			if (m->ml_hostname == NULL || m->ml_directory == NULL) {
++				free(m->ml_hostname);
++				free(m->ml_directory);
++				free(m);
+ 				mountlist_freeall(mlist);
+ 				mlist = NULL;
+ 				xlog(L_ERROR, "%s: memory allocation failed",
+-- 
+2.27.0
 
 
