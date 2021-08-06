@@ -2,78 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55E153E2BCF
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 15:45:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C50F3E2BE1
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 15:47:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344083AbhHFNpU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Aug 2021 09:45:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:41923 "EHLO
+        id S229869AbhHFNsK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Aug 2021 09:48:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41697 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1344414AbhHFNpU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 09:45:20 -0400
+        by vger.kernel.org with ESMTP id S229862AbhHFNsJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 09:48:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628257504;
+        s=mimecast20190719; t=1628257672;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0VbV96j7hcbKHoJWYg0a5r9V2HBRp69cIOXkwt8uqKA=;
-        b=N6El3VVjFmnT95+GPNfWAz/C1CEfof63ytJq96royJbO3lZ+T0TcilvNH4t2ALq3Gy7qZo
-        14Zjlq27rlBcrudWUFbBG+9KCzK6u9QQVCpxi0G9cWkE/iqN54r80DISVB68OBSbR0aGT7
-        fcabZ6LeAj6oz+544RkXNehbaj0V+oA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-208-o9kCuQ05PaaOrCW-qhce1A-1; Fri, 06 Aug 2021 09:45:03 -0400
-X-MC-Unique: o9kCuQ05PaaOrCW-qhce1A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA11296DCFF;
-        Fri,  6 Aug 2021 13:45:00 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.22.32.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E6BD75D9D5;
-        Fri,  6 Aug 2021 13:44:49 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <YQx4lx7vEbvmfBnE@casper.infradead.org>
-References: <YQx4lx7vEbvmfBnE@casper.infradead.org> <YQv+iwmhhZJ+/ndc@casper.infradead.org> <YQvpDP/tdkG4MMGs@casper.infradead.org> <YQvbiCubotHz6cN7@casper.infradead.org> <1017390.1628158757@warthog.procyon.org.uk> <1170464.1628168823@warthog.procyon.org.uk> <1186271.1628174281@warthog.procyon.org.uk> <1219713.1628181333@warthog.procyon.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com, Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        devel@lists.orangefs.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Canvassing for network filesystem write size vs page size
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1302764.1628257488.1@warthog.procyon.org.uk>
-Date:   Fri, 06 Aug 2021 14:44:48 +0100
-Message-ID: <1302765.1628257488@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        bh=iyKrp7I82f3wYzsbQR/1Jeu1cFgJoa6hSbBVeuarAhw=;
+        b=b2Jci/h4hbAM6zFebrv5yJunQ/2bK+vh9PuUabQ3RwlUZQjqsVfZ2lrqAlACl1WwdTIz1K
+        D37ZFSp78hlj/RCcGNF69g6suMuhYfq6AurjXSoMIQb/8xrudp+cASM23+nrdXSsiXxdzc
+        k0hqDauBeaq5Bea1JkEv5tGf89c2POc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-565-xwATVGxAORKS_qL9QW3a3A-1; Fri, 06 Aug 2021 09:47:51 -0400
+X-MC-Unique: xwATVGxAORKS_qL9QW3a3A-1
+Received: by mail-wr1-f72.google.com with SMTP id p2-20020a5d48c20000b0290150e4a5e7e0so3137271wrs.13
+        for <linux-nfs@vger.kernel.org>; Fri, 06 Aug 2021 06:47:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iyKrp7I82f3wYzsbQR/1Jeu1cFgJoa6hSbBVeuarAhw=;
+        b=Ypz69MSTIFbO4EvrlrIGf6g5jbYIPj3bF5s7ZnMm6cZcYx+Evxbys4Wm5sa1VwntJx
+         y6pPlwBRuii2IT25KtREDyY0Do/yYrYEXGBmEX37LBapzC4/WW/XMysGqzNE8SD1ZduF
+         /FwmlY0hiDrrsVAygBNqUhjjvYceAxShG0FBtsHBPl0RFF/1JXJwOdo+SpTIHJt+6yoV
+         /hpYa1YnlhbsycZQ0qVLHrLgdffR9nPMIgwj4rRyexDHtI2BUSjSiDm2GmdJnLDQ645y
+         YZca6GS2qtNVD8o48y71MUjkNjYGAoLQi83ItYX7mabZ/2vpFI69vmyJdFuqiZQAgmRQ
+         sx3Q==
+X-Gm-Message-State: AOAM530bTNt0YFMFEYMOsY0MrxyYw8VjuAvsmcAL22jTXPrHXxZF5/d0
+        GWvjR5p64lYm95ZInN+dku75o0NQmdmY22cUqrNvHlwohdE9pv3lWRNwxtTg9Ya4Poe42nja/Nv
+        MnRCFtxmaCZ/gywjMjuHQrEMCRbfvK9VPY5yMpDUe2V9UCn+2nqljSiquTk+XEmx+jmHtGls/7V
+        8=
+X-Received: by 2002:a1c:7419:: with SMTP id p25mr20026656wmc.160.1628257670744;
+        Fri, 06 Aug 2021 06:47:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwSKBpoKbeevC2m8QlqjM9kdLjf5rpRqEoJu5fcWQPGYWa7T0DJ+XEub0K0VotW0Tt8qBjE6Q==
+X-Received: by 2002:a1c:7419:: with SMTP id p25mr20026639wmc.160.1628257670529;
+        Fri, 06 Aug 2021 06:47:50 -0700 (PDT)
+Received: from ajmitchell.remote.csb ([95.145.245.173])
+        by smtp.gmail.com with ESMTPSA id i29sm8847731wmb.20.2021.08.06.06.47.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Aug 2021 06:47:50 -0700 (PDT)
+Message-ID: <d812b290c1cdee5320b811f0329e5c1d4b1c1931.camel@redhat.com>
+Subject: [PATCH 3/4] nfs-utils: Fix mem leaks in krb5_util
+From:   Alice Mitchell <ajmitchell@redhat.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     Steve Dickson <steved@redhat.com>
+Date:   Fri, 06 Aug 2021 14:47:48 +0100
+In-Reply-To: <ee45aa412acaf7a2c035ad98e966394a7293dd9f.camel@redhat.com>
+References: <ee45aa412acaf7a2c035ad98e966394a7293dd9f.camel@redhat.com>
+Content-Type: text/plain
+X-Mailer: Evolution 3.28.5 (3.28.5-16.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
+DQo=
 
-> Filesystems should not make an assumption about this ... I suspect
-> the optimum page size scales with I/O bandwidth; taking PCI bandwidth
-> as a reasonable proxy, it's doubled five times in twenty years.
-
-There are a lot more factors than you make out.  Local caching, content
-crypto, transport crypto, cost of setting up RPC calls, compounding calls to
-multiple servers.
-
-David
 
