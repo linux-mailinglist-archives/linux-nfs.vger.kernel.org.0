@@ -2,53 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBFDE3E2F7B
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 20:49:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05EFF3E2F7C
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 20:54:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232229AbhHFSt6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Aug 2021 14:49:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60786 "EHLO
+        id S229634AbhHFSyk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Aug 2021 14:54:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229614AbhHFSt6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 14:49:58 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 782DFC0613CF
-        for <linux-nfs@vger.kernel.org>; Fri,  6 Aug 2021 11:49:41 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id c25so2706129ejb.3
-        for <linux-nfs@vger.kernel.org>; Fri, 06 Aug 2021 11:49:41 -0700 (PDT)
+        with ESMTP id S231694AbhHFSyY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 14:54:24 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E38B0C0613CF
+        for <linux-nfs@vger.kernel.org>; Fri,  6 Aug 2021 11:54:06 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id d6so14385328edt.7
+        for <linux-nfs@vger.kernel.org>; Fri, 06 Aug 2021 11:54:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umich.edu; s=google-2016-06-03;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=caUrqYILbllVz1ZX4/RjO+s5nVonpX9reu3vUgrD+5M=;
-        b=at2tqi7mQBHUg6N3zotQtPUG3EVlhfutPI0TQ2Wswl2F7fbg93Eva1OyCYFpMOUqXs
-         t+oPBeSs1nfh97+ywvmsrJb+h1TUjGm5VeHWb3qB/Xh9Sk0g5gjRIFG+sYJT9mCdwCYa
-         U9RUtCHwLeoZwx4jHO3GxaKvFlgKaO1BIgk6hB8+PpLUEkk33o6+/fBJbOofhb0bZF1x
-         xOlUXdF6bF1I7S3PPzkKdjzR/2H5NA5z/wTtYcx4KzN9obqHyTMHj5rRIyT1IUXq3B1h
-         H1EBOde09IRWujaT7H+blcgIIoZ+Gn6NG7sHGOPT5uyr/EJAabNK7bDJF6Cjr7GRFp6I
-         Ys7g==
+        bh=+jdz6H71DZeYXrVrYxh8PKZ8SWYi1wxXy7SxX/rrcv0=;
+        b=KNlzYbkrAIB1MFmH/UbYBfhqhm9VO7fMdapkrF/tIsDTH561s2Vki+BeGOry4wSlKi
+         5OqsC1XQkEAROwI8DbIELZYHINvVQHvSgniNqFL7gdTxJpALv7dM9JbMvaaXgJ7nBpcS
+         p5/l5KOAo3viEA6lP8NFPbEFk5fGy74tv9SDZU7YTy3vXwl+JBmoTA7HV3EguqXXQP71
+         vKGqAOF90TKo3dxA/6fGJbXuFr3NaJCQ5AFjzwERYNcrmHD1/uhC/CDLIG89Qjkk/FvY
+         nB2c7i8hkfhTY70Y3cJwyQUJoVL6S3QvuhBNQXMo9eCxciIlXqzXIJ+WNPs9yyP+XKGl
+         wtCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=caUrqYILbllVz1ZX4/RjO+s5nVonpX9reu3vUgrD+5M=;
-        b=FBUUX+q40wqg3jDNCnN6CxnK7y6t0jtAIpdS/AyGm8iXmyhU8QyCj4+cBAG+FmqtVX
-         1f8qD2kZ1aX3Z2u/FC5/7JyQP9AQZEXbgkznErCYvJ95lMPHTpwewalL/SZcv4yLf42w
-         JuMXhzqN7yXf1S4Tlh9BWqr8HJgac/CaFAmO7EHnSMYUYxgXwbkfLEhfwCTFB1XlYMC6
-         w095COI/Nrc0Umvi6cL6B9NZ3bFJ+evgSE5vaRkW/5+P8HBTLloml5z8gWihUS26UEu9
-         YW9soBYC8SSnU/4cgfcon2/xHc7YXTx4VDRZ+W2RpS7TwCgdXwDrxzn41mEss9CB4nVm
-         AiPw==
-X-Gm-Message-State: AOAM5310Y4o4lVnfVCiSbDUqauWwLGNXsBbtEYAWD6lM0SexEmbGRWUY
-        8HFehZJJ4AHtFKE50AeclFyooTo9UNF/hi458UA=
-X-Google-Smtp-Source: ABdhPJzMSEjh3TjNjkrlabqJ+eCfwWgMGSQnyC+hDclP/h3g3l682QTBDkGLtKDvJ18VCwGhExeIJiiAqPF53HNSXPo=
-X-Received: by 2002:a17:906:270f:: with SMTP id z15mr4438453ejc.348.1628275780106;
- Fri, 06 Aug 2021 11:49:40 -0700 (PDT)
+        bh=+jdz6H71DZeYXrVrYxh8PKZ8SWYi1wxXy7SxX/rrcv0=;
+        b=g9zLrRVgEup4abGsHm3QhXVXNfmNR9Ebr0aE30I1pEz62zB89nWxtDwVGye7aCddwA
+         nZqyHURR+h4nTa5z+e9kw2+6AimR6UO5s5HwMPHwN/hF9ih0ECLdLSE7tYbJ/GOq+efJ
+         xgs8Q7xkIDZfYP72t7W1JzMB2Peh+2A1WAgprLU1akWt8g5HH8m9BIMSAk9oJmoBLHeB
+         7T03PmfwDFKUOhpLl04VZ8vxtdwoVLA7k+Y6qRqlV9Np8E/BwFHPETTxC04RPF3inZO4
+         iQZbpJEYdh8kP0YahfnJ/e9rnf3im9WMZb/8BK4iNZJLBq+xEpbZKQEpNJSwy5weMowY
+         +Fiw==
+X-Gm-Message-State: AOAM533dDJxtS+Sw1zP8I72JQW54QwvgE5Dw95gU3iJ3v/SS8N09bDQn
+        XSiWS/wt9flW26OFxPlpIV/dHxVaY5xg0Prfflw=
+X-Google-Smtp-Source: ABdhPJwyOcJIIuYHF/GY5NP77JvrGbxpBpUZRvTTQrH+A5QnzLPnPsWlbzQYWCtYwKblxg8Jbxnq5MnZpC8CaJMVkdc=
+X-Received: by 2002:a05:6402:28a4:: with SMTP id eg36mr15121177edb.84.1628276045393;
+ Fri, 06 Aug 2021 11:54:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <ee45aa412acaf7a2c035ad98e966394a7293dd9f.camel@redhat.com> <3209bf6bdf0a167a19cd56be5c57abfcc761850b.camel@redhat.com>
-In-Reply-To: <3209bf6bdf0a167a19cd56be5c57abfcc761850b.camel@redhat.com>
+References: <ee45aa412acaf7a2c035ad98e966394a7293dd9f.camel@redhat.com> <d812b290c1cdee5320b811f0329e5c1d4b1c1931.camel@redhat.com>
+In-Reply-To: <d812b290c1cdee5320b811f0329e5c1d4b1c1931.camel@redhat.com>
 From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 6 Aug 2021 14:49:29 -0400
-Message-ID: <CAN-5tyH0SRCvkB95wifjzzTGsVqHbEggNZueH98NKjrU2ftMVA@mail.gmail.com>
+Date:   Fri, 6 Aug 2021 14:53:54 -0400
+Message-ID: <CAN-5tyEOKkABBHH-Xb5U=S1FqeTLuq1tD_PP_ch6sPsimgdWtQ@mail.gmail.com>
 Subject: Re: [PATCH 3/4] nfs-utils: Fix mem leaks in krb5_util
 To:     Alice Mitchell <ajmitchell@redhat.com>
 Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
@@ -58,8 +58,8 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Empty patch?
+Still empty for me... :-/
 
-On Fri, Aug 6, 2021 at 12:25 PM Alice Mitchell <ajmitchell@redhat.com> wrote:
+On Fri, Aug 6, 2021 at 2:50 PM Alice Mitchell <ajmitchell@redhat.com> wrote:
 >
 >
