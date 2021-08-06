@@ -2,70 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 853523E2CAF
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 16:34:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0030C3E2D27
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Aug 2021 17:05:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240408AbhHFOe7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Aug 2021 10:34:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60388 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240141AbhHFOe7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 10:34:59 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FDFFC06179B
-        for <linux-nfs@vger.kernel.org>; Fri,  6 Aug 2021 07:34:43 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id l10so3239735ilf.7
-        for <linux-nfs@vger.kernel.org>; Fri, 06 Aug 2021 07:34:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/oMubRmlLM5EZ/UdY6Fj3wsfS2kyoMzN9ASXgZ3xneY=;
-        b=WwtirH+AN5QEGc+PsYDg7GPmicCeAO3NPEqhZC74A3+cGIN9TIFUSUQWVdp/dEeJ0X
-         ++0akNbjsW/3xJMMbrUcWsaDb/Yt8FhArvnBGhYYupKONjpXh07T85TTJ6z/R14UeK25
-         VfrKT4PbBRG9FpAA5mPltqAa33Oy6oNBbUHIMXxZ8Pb8DDymDVISOJ0z/+FU283l+PC4
-         CL/S0Mt/1jGAvk934eTBfkPJMYFqxNe9DmuvxRe6nTQgDgkYbQOxTC8k7gZ9Je0QkKHX
-         pj04+ieraICgLCEIDsM+PSxXHeP7MukFzwmFuXJEWjT/gtCn4i9C831/d3PQ2UrLasbD
-         Q6dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/oMubRmlLM5EZ/UdY6Fj3wsfS2kyoMzN9ASXgZ3xneY=;
-        b=iCra+CVvaL/YZnv0DgG/pmo2cG5dxN8+5JWKDLk2m5jl7wEnnzuwsRi8dFAAHwmUkO
-         ZFStNfGeXIpQAFrpbSuSpmvigTyzg4vEpqnbb2AgzLNdCxF45LdE4Q9d3Cq59cK3AZaQ
-         Yddkd9+CvgPKNImztfyoc0b4QBmd6UbXMybwoyySjgILdPLs3c7fXDggVF+ptpqTSRg8
-         3Lh4WfOFCRhEKgRxWjXj+uo5CThhT2sptkhzFSi3eXZHMCbnqrgCznHfIhYNRICcZQro
-         Y+C7ZzXk6Nm5TH7KgDZXM14gZR63OThxdIQeQGxlPWBpih66zgnfVwSu/Gtj0I9zaE09
-         OLQg==
-X-Gm-Message-State: AOAM530pznCVCZk72Ir2wV7Qdv/B7ZyPh0wJWhNh/Ansqp7dbGQQvMYc
-        M7WrCgKqxTyQzA8Mj/4Dsx/XHvlmShPMUlkPmeM=
-X-Google-Smtp-Source: ABdhPJxp5ET5L2YTA3wanMtEqCHLczOyx36yHFnFg6UZI0mLKFWZaADmnk+VVmvj6+SDnpgqRgA+ZQp8fhbmG7dX2Io=
-X-Received: by 2002:a92:d088:: with SMTP id h8mr67865ilh.165.1628260482824;
- Fri, 06 Aug 2021 07:34:42 -0700 (PDT)
+        id S243463AbhHFPFd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Aug 2021 11:05:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40872 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S243553AbhHFPF1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Aug 2021 11:05:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1628262311;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5B073nk1DS+XhzOJ9EAEUKaNTVzIvIbT8CxRSjSpPZU=;
+        b=WbQk/Y3XZCoG2+qhBe/tlrupojF1gle5w0fu2xR0a+jCRlu+8gUV3HEm5wBe486Q3RgmJn
+        843j0TdzoGNcmNF/kqDI8IxPjwvueBTDuKDOGs5OjGLsKcZ5qNHAzZL9f5oa2oMgBhwupX
+        f855jDAyRkJv6WBOWrofQDprgT2KWCE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-306-ky3v8YG6NV-FlJD_H1kZwQ-1; Fri, 06 Aug 2021 11:05:08 -0400
+X-MC-Unique: ky3v8YG6NV-FlJD_H1kZwQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 72BB9107ACF5;
+        Fri,  6 Aug 2021 15:05:05 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.22.32.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CBEEA10640E8;
+        Fri,  6 Aug 2021 15:04:54 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <YQ1Ei9lv9ov2AheS@casper.infradead.org>
+References: <YQ1Ei9lv9ov2AheS@casper.infradead.org> <YQxh/G0xGl3GtC8y@casper.infradead.org> <YQv+iwmhhZJ+/ndc@casper.infradead.org> <YQvpDP/tdkG4MMGs@casper.infradead.org> <YQvbiCubotHz6cN7@casper.infradead.org> <1017390.1628158757@warthog.procyon.org.uk> <1170464.1628168823@warthog.procyon.org.uk> <1186271.1628174281@warthog.procyon.org.uk> <1219713.1628181333@warthog.procyon.org.uk> <CAHk-=wjyEk9EuYgE3nBnRCRd_AmRYVOGACEjt0X33QnORd5-ig@mail.gmail.com> <1302671.1628257357@warthog.procyon.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     dhowells@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Shyam Prasad N <nspmangalore@gmail.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net, devel@lists.orangefs.org,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Canvassing for network filesystem write size vs page size
 MIME-Version: 1.0
-Received: by 2002:a02:6384:0:0:0:0:0 with HTTP; Fri, 6 Aug 2021 07:34:42 -0700 (PDT)
-Reply-To: mrmaxwellwatford@gmail.com
-From:   "Mr.Maxwell Watford" <matinmiller89@gmail.com>
-Date:   Fri, 6 Aug 2021 14:34:42 +0000
-Message-ID: <CABQ=EucNt8T50SyY_xMhf4eA-+FY+vTpH5-ztzQHBLq2ww-40w@mail.gmail.com>
-Subject: i need your reply
-To:     matinmiller89@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1306893.1628262293.1@warthog.procyon.org.uk>
+Date:   Fri, 06 Aug 2021 16:04:53 +0100
+Message-ID: <1306894.1628262293@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Greetings,
+Matthew Wilcox <willy@infradead.org> wrote:
 
-We are writing to you from Ecowas Finance Controller Office Lome Togo,
-because we have received a file from the Ministry of Finance Lome-
-Togo, concerning an Inherited Fund bearing your name on it, And after
-our verifications, we found out that the funds belong to you.
+> No, that is very much not the same thing.  Look at what NFS does, like
+> Linus said.  Consider this test program:
+> 
+> 	fd = open();
+> 	lseek(fd, 5, SEEK_SET);
+> 	write(fd, buf, 3);
+> 	write(fd, buf2, 10);
+> 	write(fd, buf3, 2);
+> 	close(fd);
 
-It has been awarded and I will like to guide you to claim the funds.
-Please contact me at my private email address
-(mrmaxwellwatford@gmail.com) for more information and directive
+Yes, I get that.  I can do that when there isn't a local cache or content
+encryption.
 
-I am looking forward to your urgent reply,
-Best regards
-Mr Maxwell Watford
+Note that, currently, if the pages (or cache blocks) being read/modified are
+beyond the EOF at the point when the file is opened, truncated down or last
+subject to 3rd-party invalidation, I don't go to the server at all.
+
+> > But that kind of screws with local caching.  The local cache might need to
+> > track the missing bits, and we are likely to be using blocks larger than a
+> > page.
+> 
+> There's nothing to cache.  Pages which are !Uptodate aren't going to get
+> locally cached.
+
+Eh?  Of course there is.  You've just written some data.  That need to get
+copied to the cache as well as the server if that file is supposed to be being
+cached (for filesystems that support local caching of files open for writing,
+which AFS does).
+
+> > Basically, there are a lot of scenarios where not having fully populated
+> > pages sucks.  And for streaming writes, wouldn't it be better if you used
+> > DIO writes?
+> 
+> DIO can't do sub-512-byte writes.
+
+Yes it can - and it works for my AFS client at least with the patches in my
+fscache-iter-2 branch.  This is mainly a restriction for block storage devices
+we're doing DMA to - but we're not doing direct DMA to block storage devices
+typically when talking to a network filesystem.
+
+For AFS, at least, I can just make one big FetchData/StoreData RPC that
+reads/writes the entire DIO request in a single op; for other filesystems
+(NFS, ceph for example), it needs breaking up into a sequence of RPCs, but
+there's no particular reason that I know of that requires it to be 512-byte
+aligned on any of these.
+
+Things get more interesting if you're doing DIO to a content-encrypted file
+because the block size may be 4096 or even a lot larger - in which case we
+would have to do local RMW to handle misaligned writes, but it presents no
+particular difficulty.
+
+> You might not be trying to do anything for block filesystems, but we
+> should think about what makes sense for block filesystems as well as
+> network filesystems.
+
+Whilst that's a good principle, they have very different characteristics that
+might make that difficult.
+
+David
+
