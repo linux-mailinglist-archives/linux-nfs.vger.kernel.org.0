@@ -2,241 +2,245 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56D563E327D
-	for <lists+linux-nfs@lfdr.de>; Sat,  7 Aug 2021 03:03:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1EBE3E3668
+	for <lists+linux-nfs@lfdr.de>; Sat,  7 Aug 2021 19:01:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229938AbhHGBDs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 Aug 2021 21:03:48 -0400
-Received: from mail-eopbgr660047.outbound.protection.outlook.com ([40.107.66.47]:21848
-        "EHLO CAN01-QB1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229943AbhHGBDq (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 6 Aug 2021 21:03:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fyLpmNaEorNqSNqAZq38nJrQci5msj6hpdAQia4RUn8rXaMgBMeIGcd2xOi+2g9ksLIqR3MiBVW1Y0GwXTlPKw7ri3QiNU+OI7pmPYvijlUTjsLvRtKw7I8YEZs+4go9OXKG+HzsWfZC32+eL5svFXFgK7I67YBLz9+IQbnlPv3cBjfV2FijYX2OidNk1If4a2TQzEQMQ/NUkcgtfwDku1FHtjNA97OOyb5ghuyulLrL4NmFYtXnqvzutgg1fwvg407p6Sp/sLO5mUxaBqTAdSmhJv1Gk86qTK7D1C1CXVavCNUauwZAHeFOaMnk5Q2C2htPmNKm8rfuWa5CcZu0+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ej4k4AXEQxbfoOPXgCXB9RJuq7ero7VoW4jZkFamLzk=;
- b=K2A2MCiz80JETLXQAplsS2wLMW0jXik+bQnm2362wcGxige6Ekhhy7AoIkaEi+230bwI5UwaMQzUqannhfdIliGRiInDtzBOdeXPn0C1SEMFyPZpFL+THhMSsBsCGf5pAP8ffO1+Wc5SMcu2BoYEkoLL1L62G9rOBIgLpUOacrMDVi6S/nIK0dBZRg1HxAMtYr9/F3lXxjzZeR8Ejq5i8AqBZO2472ZqGV9MHG9j15MJov3eEufi7WmdvjmgD5w/qtALnU6o/sVM38f81pvJGGosCSxBco0w7QYh97jeSxhJYMabt1/YYC+g7IRAuNEo0HGDWbxrJKk6VMzup2yi2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=uoguelph.ca; dmarc=pass action=none header.from=uoguelph.ca;
- dkim=pass header.d=uoguelph.ca; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uoguelph.ca;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ej4k4AXEQxbfoOPXgCXB9RJuq7ero7VoW4jZkFamLzk=;
- b=qGRdDwpEPJx70POyEaac08KwChtKqrTlOsSdz5zZXwce7AWyM8lPkUWUVDzLGW0GiorIfOuUOJIrzI4Gc/RIHlBzjXTWVlEESziakNgXmyLfejLoBPQJn+3+SQ7dkCdMuFLlKou1TxHMjiCoofepVVf/5MAvwhqTkH7QZdZkaE61gbkYiZEmwty8yvEagbG4Lj30tzDFSYPQPd//gwMRJ5N9yt5H3/huty9jVNjcrVhz3qJaWOc2T0ec7Mvgvyz/2uNO2vS94+cOk8swrEGqJK/NObp16oAhn8B2eSsMD/PnJpQy38MQf+B5iM9ovmHrvbaX4dBm0nIYkwf/A32XbQ==
-Received: from YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM (52.132.76.157) by
- YQBPR0101MB0899.CANPRD01.PROD.OUTLOOK.COM (52.132.66.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4373.26; Sat, 7 Aug 2021 01:03:27 +0000
-Received: from YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::1174:bfb8:7a34:f67c]) by YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::1174:bfb8:7a34:f67c%7]) with mapi id 15.20.4394.021; Sat, 7 Aug 2021
- 01:03:27 +0000
-From:   Rick Macklem <rmacklem@uoguelph.ca>
-To:     Patrick Goetz <pgoetz@math.utexas.edu>,
-        Anna Schumaker <schumaker.anna@gmail.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: cto changes for v4 atomic open
-Thread-Topic: cto changes for v4 atomic open
-Thread-Index: AQHXiKZ3y2/2jpGT7EqDbEmGcjYp3qtiRcCAgAAIPwCAAETlgIAAAlaAgAAFXoCAANQRAIAAO/UAgAMuJQCAAF3HdQ==
-Date:   Sat, 7 Aug 2021 01:03:27 +0000
-Message-ID: <YQXPR0101MB0968BDAC6E52F178106A9823DDF49@YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM>
-References: <DF3F94B7-F322-4054-952F-90CE02B442FE@redhat.com>
- <ef395e52f3bb8d07dd7a39bb0a6dd6fb64a87a1c.camel@hammerspace.com>
- <20210803203051.GA3043@fieldses.org>
- <3feb71ab232b26df6d63111ee8226f6bb7e8dc36.camel@hammerspace.com>
- <20210803213642.GA4042@fieldses.org>
- <CAKOnarkuUpd6waieqvWxJDRpLojwXqbNtAFz_bz6Q2k9Xrskgw@mail.gmail.com>
- <CAKOnarmdHgEBTUc87abMqBM_+3QP4JfdT8M9536WDZg-MGEKzA@mail.gmail.com>
- <61dc5d9363a42ed1a875f68a57c912c1745424d3.camel@hammerspace.com>
- <423b3a31-c41f-09dd-835d-9e66c4a88d7e@math.utexas.edu>
- <CAFX2JfkhqJK6MRFDCzE4VryBJvk1ttYQvrASugncY-_wcEb=+Q@mail.gmail.com>,<5882ecc4-c582-e7a4-4638-3c8bbb21c597@math.utexas.edu>
-In-Reply-To: <5882ecc4-c582-e7a4-4638-3c8bbb21c597@math.utexas.edu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: math.utexas.edu; dkim=none (message not signed)
- header.d=none;math.utexas.edu; dmarc=none action=none
- header.from=uoguelph.ca;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 359fbc1f-f260-467f-42ee-08d9593f2a4c
-x-ms-traffictypediagnostic: YQBPR0101MB0899:
-x-microsoft-antispam-prvs: <YQBPR0101MB08998AD461D008B98308736BDDF49@YQBPR0101MB0899.CANPRD01.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EHf2qxTEhcAbxd+WZlbSO5Xl9OBaoRM3JH7tRw4AAcW+AZyD5IBMLBzp0HoRuq2FaZx2P4jxyl2YCRIDLCSrsfw8njFFi0sdFvJ7Or25JUQoWuMUiL/x4a2c/HRnvSelnQ/uXNTHtoQ6ktwFds5Xz6MAl6u6UC85y9W9N+OETiMPjMspagnSbf4p6fKN4MHGZMdJvHlnXCPkOgfILBWz6/k0rbwR9ue7dK0MPilFhOCVrh3Jvk8UldACa/phTIJYruP357J+qgA6uV/dpRLbvQ2M3b08O4KlR2OTb9O/kl5rqHU8pJBhkTnFhWApNFuXLEwH81JK2WORquRrFt18c8cSELu8SP+FZq+MestUgemNgWVJl0haI2EJJQxFI9vAC+f4sSOYCHQgH3bV8Xy50ZKln1wKA5nnDkAbK61WVZIjlpYXvKfcea3oCHuCdQRcPu9FBs/dRw4KrXXIx5n728qpBdhkwNTPjS+eiujKziIuewg1Sq0RswGuQWKmchLwiba4/9+zYsb/IrP4opeCJCIBwod1Gdhz+NIEkIuCMnFsBWNoiAf77p4woESyjfFeH8+p4mo4UfrpXCxNvUutZ+Eo84a3B4m2fA8hjhRFpiz6Wfzw60/0V9ga89rlIwviRFnAW1nKsv9Xe896WJb5r7FGzAImJeafbEfCwYnlDTRt0LaB3WYS11aB+CiSTCDTmtIAYVI3ppzB4HzFxlfMog==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(376002)(136003)(396003)(366004)(346002)(39860400002)(8676002)(66446008)(91956017)(64756008)(76116006)(66946007)(66476007)(66556008)(9686003)(6506007)(4326008)(186003)(5660300002)(122000001)(38100700002)(86362001)(55016002)(83380400001)(33656002)(786003)(7696005)(52536014)(316002)(110136005)(71200400001)(38070700005)(8936002)(478600001)(2906002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?PwiSoBQMYk8eh6k7VmjAS08a+ETThv7fRsMiGXZbfSRjG2+MRpSkSN2r8o?=
- =?iso-8859-1?Q?BcgFWKA1DR1t5eY2Gjt/SWOSqPqC9uRFHgFY4YIF0RlxZS0SYUsQJ+Ejk0?=
- =?iso-8859-1?Q?3Mzmq4/YIgv+KxwOAcHz5EJ9hLoTMpuwahl8+Fs1bG/qMX+uSUK2A4doG9?=
- =?iso-8859-1?Q?2YO6dAXNQTvUYvgzxvxsX4J4LX5Fz3HkHyLI3lUqjfY0yzBuRE1ytk9oDu?=
- =?iso-8859-1?Q?830mKJxoXaesdDeCnwqFL9k3La5b2wOHvGMzxG8zg88yEIMgr+Ny7bLbyY?=
- =?iso-8859-1?Q?yHrzzR3uQ2iTWAL/LKjLxeqQz4/vKNCYNVd2C3hCN+woEPO+4D+st9xq7L?=
- =?iso-8859-1?Q?bCVCFpzhZZ6ghQwDsHoWSU2OBG45D5EiJj4l4G1kbl9dKJyKYL/YW/k+MP?=
- =?iso-8859-1?Q?C94JKIvLS79k4wpB+vT0SHvndJt0cF5i4dooHHidjTkF/X88RlGDN0oJ04?=
- =?iso-8859-1?Q?swXdexZiW/wHJNPLhYYQtNUNLHaSHsWIMC3Rchq9zZvlRasEQ+EAnrRPQO?=
- =?iso-8859-1?Q?HvUHDEV6Z3t/uxEGhtyahOF5yzX6MYpsZKMA2yyyFPfMIBu4nlcvzt8G6s?=
- =?iso-8859-1?Q?4lvIpjhMpeQl2T7RNGh/1ikhvfxAlSEleofr/nblWQYTCDYiZVdHw9ccrm?=
- =?iso-8859-1?Q?atmizkjLZWhWI5FR9xyuoPectSu3fmAZYJB8QzP/e9aiAkfEUKPuIGBWLz?=
- =?iso-8859-1?Q?suxPNILvLVkREXdMB25GylVdTpBm48fcQLqifPZYapjBzSvCtUprBnUqXT?=
- =?iso-8859-1?Q?P/w1UXWuRj87UkqNP5Zx0qx8HGjPEgyaQGfw+j383UjRO1GwpZQI8e3qXO?=
- =?iso-8859-1?Q?gvcOcfusMNitGsotspfVZGpUr3hwW9ImKloXcEs+Wwip24w/QZgS9Vkz0T?=
- =?iso-8859-1?Q?F79HsGDvLK9MSI7xzjSXpLk+rilro3iyEkb/8Oyt/Uhxg3erISqyNeYpHt?=
- =?iso-8859-1?Q?TwBa5aGCM245dVV9NXuz6XBUSiJVp4Q2SG2EEkHFjKRF3bguhgoXTVM4Vx?=
- =?iso-8859-1?Q?w/c+/nUNl43W+oReEsfvV7kRkcgXzO2X0suIHjN19Wuh4UdjC59NZFuy/M?=
- =?iso-8859-1?Q?BBTpTagpRmshdJMpgDPPjVGXYiIJkmp2E7sRRKJdH/PeaKOwdSRO6w9R1P?=
- =?iso-8859-1?Q?no1O7x3ddHNWyeWqr6kNzq4OWPo7qBUZfBm+1LHbqsQchdpqSwuc2NPGk8?=
- =?iso-8859-1?Q?GKbu2trJxfJ0k7BW1rbgIzAgsE+ciGVoH9NfWPkqNDK73CbDZUOddn+e5D?=
- =?iso-8859-1?Q?NAjnNphl8Y14HkaiVF8lGQL9Czlgtzjn57q2umFsfqhEAyY4kUrdmWTrbI?=
- =?iso-8859-1?Q?eh7RP4MqXMtkQHTTRgIfnTLDFoUSYkYQMULVQ+ioY19uRsxihYwppPooIk?=
- =?iso-8859-1?Q?YT+qXZBkNycc2mcyLxyomvF4LtbdvoyQdd4aX71GnCMH2/Hho6Nvk=3D?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S230125AbhHGRCG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 7 Aug 2021 13:02:06 -0400
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:58504 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230096AbhHGRBy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 7 Aug 2021 13:01:54 -0400
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 177GtwwF022786;
+        Sat, 7 Aug 2021 17:00:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2021-07-09; bh=y5zFWVf+TNTh7gPNnhz2Esh0uP9/orOfFEtNw5tk6sg=;
+ b=Rsfz4ztR51C5wuWj1g4n8bvn91PBG3i/GlbKSDmp4PKPjGt38qhOU796EmFjVBzpdzRS
+ 59F7YYJKkTkJthFgB9H1LqLyB+ZdDZCAastgqjGinIAyN2IkwURUMvtFq7gjzxqTacLD
+ oGJYWRu0zXkZvTkIhlvDf22EN7okLMcoEurmHOFXYMBlrOGV0Z+sAiylBE42tzFV1EWU
+ 1PhWh1v+uTP31Ky5MQiWFc8YP+EsOhMgVflKqdQ58iPCv1lMeDL7I3vCOuiX/8aGhPQs
+ sLxGpjJuzPP6tW0aws3oSmm6hzra2iXbS056LO5FcxvWYbDIhJlLExddV9ACjKmp1Dzr Cw== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=y5zFWVf+TNTh7gPNnhz2Esh0uP9/orOfFEtNw5tk6sg=;
+ b=MN1+OD/mv0V3cCiVgMstSVOxxJCK0lWU/hHQ++heE+hfMozejqg8rtauzr88U7OwmADa
+ SyUgZLTrJZ+u40z2DmDJl6zQ1K2PvzmFIyFVm0ABL8fuT7ZIo7BcwRxIWFJN8aIfcP0r
+ yxbl95jLYKWHFsE09Jy6TiXO6a+93rKeYrVeLqO9DB6LO/qeNZfi194XlRuZcM+FBLB+
+ 5MW+rYbHREGd15EqGBMo93Z9pRgZbBkmZrZxsJSmBtnI+NM2xUTcxKvxVXlv2GMRDSR0
+ Kesp9/AK8Vf1KsQ78fmhKylYvsHz9ZdYuiPxf9DyNVxJ5oBrv97E50mrIHpogZiilzvF pg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3a9hssgp7n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 07 Aug 2021 17:00:55 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 177Gts9j164605;
+        Sat, 7 Aug 2021 17:00:54 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 3a9f9snsp7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 07 Aug 2021 17:00:54 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 177H0sfA172148;
+        Sat, 7 Aug 2021 17:00:54 GMT
+Received: from aserp3020.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
+        by userp3030.oracle.com with ESMTP id 3a9f9snsny-1;
+        Sat, 07 Aug 2021 17:00:53 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     libtirpc-devel@lists.sourceforge.net
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] Fix DoS vulnerability  in libtirpc
+Date:   Sat,  7 Aug 2021 13:00:47 -0400
+Message-Id: <20210807170047.68720-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
 MIME-Version: 1.0
-X-OriginatorOrg: uoguelph.ca
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: YQXPR0101MB0968.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 359fbc1f-f260-467f-42ee-08d9593f2a4c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2021 01:03:27.6089
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: be62a12b-2cad-49a1-a5fa-85f4f3156a7d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PzzhNhroIVZizhc3yFeJ9rDaJc7CjvTitcUHoNu7KrtMXFErf6FY2B4+TblFMAIqbIDFPZFr8s9mAVwn6F1fSw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQBPR0101MB0899
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: Sk6ALlSdpKXLjz01EMvoxa_ZBRhNI5_i
+X-Proofpoint-ORIG-GUID: Sk6ALlSdpKXLjz01EMvoxa_ZBRhNI5_i
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Patrick Goetz wrote:=0A=
->Hi -=0A=
->=0A=
->I'm having trouble reconciling this comment:=0A=
->=0A=
->On 8/4/21 1:24 PM, Anna Schumaker wrote:=0A=
->>>=0A=
->>> So, I have a naive question. When a client is writing to cache, why=0A=
->>> wouldn't it be possible to send an alert to the server indicating that=
-=0A=
->>> the file is being changed. The server would keep track of such files=0A=
->>> (client cached, updated) and act accordingly; i.e. sending a request to=
-=0A=
->>> the client to flush the cache for that file if another client is asking=
-=0A=
->>> to open the file? The process could be bookended by the client alerting=
-=0A=
->>> the server when the cached version has been fully synchronized with the=
-=0A=
->>> copy on the server so that the server wouldn't serve that file until th=
-e=0A=
->>> synchronization is complete. The only problem I can see with this is th=
-e=0A=
->>> client crashing or disconnecting before the file is fully written to th=
-e=0A=
->>> server, but then some timeout condition could be set.=0A=
->>=0A=
->> We already have this! What you're describing is almost exactly how=0A=
->> delegations work :)=0A=
->>=0A=
->=0A=
->=0A=
->with this one:=0A=
->=0A=
->On 8/4/21 10:42 AM, Rick Macklem wrote:=0A=
-> >=0A=
-> > There is no notification mechanism defined for any version of NFS.=0A=
->=0A=
->=0A=
->How can you do delegations if there's no notification system?=0A=
-When you asked the question, there was no mention of delegations=0A=
-and only a discussion of caching. Delegations deal with Opens and,=0A=
-yes, can be used to maintain consistent data caches when they happen=0A=
-to be issued to client(s).=0A=
-=0A=
-For write delegations, it works like this:=0A=
-- When a client does an Open for writing, the server might choose to=0A=
-   issue a write delegation to the client. (It is not required to do so and=
-=0A=
-   there is nothing a client can do to ensure that the server chooses to=0A=
-   do so. The only rule is "no callback path-->no delegation can be issued"=
-.=0A=
-   - If the client happens to get a write delegation, then it can assume no=
-=0A=
-     other client is reading or writing the file (unless the client fails t=
-o maintain=0A=
-     its lease, due to network partitioning or ???).=0A=
-     --> Therefore it can safely cache the file's data, unless the server a=
-llow=0A=
-            I/O to be done using special stateids. More on this later.=0A=
-   - If the server received an Open request from another client for the fil=
-e,=0A=
-      then it does a CB_RECALL callback to tell the client that it must ret=
-urn=0A=
-      the delegation.=0A=
-      --> The client can no longer safely cache file data once the delegati=
-on=0A=
-             is returned, since the server will then allow the other client=
- to Open=0A=
-             the file.=0A=
-      --> If the client fails to return the delegation for a lease duration=
-, then the=0A=
-             server can throw the delegation away.=0A=
-             --> If the client does not maintain its lease and maintain its=
- callback=0A=
-                   path, the client cannot safely cache data based on the d=
-elegation,=0A=
-                   since it might have been discarded by the server.=0A=
-In general, a delegation allows the client to do additional Opens on a file=
-=0A=
-without doing an Open on the server (called level 2 OpLocks in Windows worl=
-d,=0A=
-I think?).=0A=
-=0A=
-The effect of consistent data caches depends upon two things, which a serve=
-r=0A=
-might or might not do:=0A=
-1 - Issue delegations.=0A=
-2 - Not allow I/O using special stateids. If any client can do I/O using sp=
-ecial=0A=
-     stateids, then the I/O can be done without having an Open or delegatio=
-n for=0A=
-     the file on the server.=0A=
-In general, a client cannot easily tell if these are the case. I suppose it=
- could try=0A=
-an I/O with a special stateid, but that really only confirms that this part=
-icular client=0A=
-cannot do I/O with special stateids, not that no client can do so.=0A=
-A client can see that it acquired a delegation, but can do nothing if it di=
-d not get one.=0A=
---> Is a client going to not cache data for every file, where the server ch=
-ooses not to=0A=
-       issue a delegation.=0A=
-=0A=
-Back to your question. You can consider the CB_RECALL callback a notificati=
-on, but it=0A=
-is in a sense a notification to the client that the delegation must be retu=
-rned, not that file data=0A=
-has changed on the server. In other words, a CB_RECALL is done when another=
- client=0A=
-requests a conflicting Open, not when data on the server has been changed.=
-=0A=
---> This has a similar effect to a notification that the data will/has chan=
-ged, only if=0A=
-       the server requires all I/O present an Open/Lock/Delegation stateid.=
-=0A=
-       --> No special stateids allowed and no NFSv3 I/O allowed by the serv=
-er.=0A=
-(The term notification is used in the NFSv4 RFCs for other things, but no C=
-B_RECALL callbacks.)=0A=
-=0A=
-rick=0A=
-=0A=
-=0A=
+Currently svc_run does not handle poll time and rendezvous_request
+does not handle EMFILE error returned from accept(2 as it used to.
+These two missing functionality were removed by commit b2c9430f46c4.
+
+The effect of not handling poll timeout allows idle TCP conections
+to remain ESTABLISHED indefinitely. When the number of connections
+reaches the limit of the open file descriptors (ulimit -n) then
+accept(2) fails with EMFILE. Since there is no handling of EMFILE
+error this causes svc_run() to get in a tight loop calling accept(2).
+This resulting in the RPC service of svc_run is being down, it's
+no longer able to service any requests.
+
+The below script, td.sh, with nc (nmap-ncat-7.80-3) can be used
+to take down the RPC service:
+
+if [ $# -ne 3 ]; then
+        echo "$0: server dst_port conn_cnt"
+        exit
+fi
+server=$1
+dport=$2
+conn_cnt=$3
+echo "dport[$dport] server[$server] conn_cnt[$conn_cnt]"
+
+pcnt=0
+while [ $pcnt -lt $conn_cnt ]
+do
+        nc -v --recv-only $server $dport &
+        pcnt=`expr $pcnt + 1`
+done
+
+Fix by restoring code in svc_run to cleanup idle conncetions when
+poll(2) returns 0 (timeout) and in rendezvous_request to handle
+EMFILE error returned from accept(2).
+
+Fixes: b2c9430f46c4 Use poll() instead of select() in svc_run()
+Signed-off-by: dai.ngo@oracle.com
+---
+ src/libtirpc.map |  2 +-
+ src/rpc_com.h    |  2 ++
+ src/svc.c        |  2 +-
+ src/svc_run.c    |  2 ++
+ src/svc_vc.c     | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 54 insertions(+), 2 deletions(-)
+
+diff --git a/src/libtirpc.map b/src/libtirpc.map
+index 21d60651ff57..b754110faadb 100644
+--- a/src/libtirpc.map
++++ b/src/libtirpc.map
+@@ -331,5 +331,5 @@ TIRPC_PRIVATE {
+   global:
+     __libc_clntudp_bufcreate;
+   # private, but used by rpcbind:
+-    __svc_clean_idle; svc_auth_none; libtirpc_set_debug;
++    __svc_destroy_idle; __svc_clean_idle; svc_auth_none; libtirpc_set_debug;
+ };
+diff --git a/src/rpc_com.h b/src/rpc_com.h
+index 76badefcfe90..ede6ec8b1d4e 100644
+--- a/src/rpc_com.h
++++ b/src/rpc_com.h
+@@ -55,6 +55,7 @@ struct netbuf *__rpcb_findaddr_timed(rpcprog_t, rpcvers_t,
+ bool_t __rpc_control(int,void *);
+ 
+ bool_t __svc_clean_idle(fd_set *, int, bool_t);
++void __svc_destroy_idle(int, bool_t);
+ bool_t __xdrrec_setnonblock(XDR *, int);
+ bool_t __xdrrec_getrec(XDR *, enum xprt_stat *, bool_t);
+ void __xprt_unregister_unlocked(SVCXPRT *);
+@@ -62,6 +63,7 @@ void __xprt_set_raddr(SVCXPRT *, const struct sockaddr_storage *);
+ 
+ 
+ extern int __svc_maxrec;
++extern SVCXPRT **__svc_xports;
+ 
+ #ifdef __cplusplus
+ }
+diff --git a/src/svc.c b/src/svc.c
+index 6db164bbd76b..aa0c92591914 100644
+--- a/src/svc.c
++++ b/src/svc.c
+@@ -57,7 +57,7 @@
+ 
+ #define max(a, b) (a > b ? a : b)
+ 
+-static SVCXPRT **__svc_xports;
++SVCXPRT **__svc_xports;
+ int __svc_maxrec;
+ 
+ /*
+diff --git a/src/svc_run.c b/src/svc_run.c
+index f40314b9948e..4eba36174524 100644
+--- a/src/svc_run.c
++++ b/src/svc_run.c
+@@ -44,6 +44,7 @@
+ #include "rpc_com.h"
+ #include <sys/select.h>
+ 
++
+ void
+ svc_run()
+ {
+@@ -86,6 +87,7 @@ svc_run()
+           warn ("svc_run: - poll failed");
+           break;
+         case 0:
++          __svc_destroy_idle(30, FALSE);
+           continue;
+         default:
+           svc_getreq_poll (my_pollfd, i);
+diff --git a/src/svc_vc.c b/src/svc_vc.c
+index f1d9f001fcdc..4880ab5dbc26 100644
+--- a/src/svc_vc.c
++++ b/src/svc_vc.c
+@@ -58,6 +58,7 @@
+ 
+ #include <rpc/rpc.h>
+ 
++#include "debug.h"
+ #include "rpc_com.h"
+ 
+ #include <getpeereid.h>
+@@ -337,6 +338,10 @@ again:
+ 	if (sock < 0) {
+ 		if (errno == EINTR)
+ 			goto again;
++		if (errno == EMFILE || errno == ENFILE) {
++			/* remove least active fd */
++			__svc_destroy_idle(0, FALSE);
++		}
+ 		return (FALSE);
+ 	}
+ 	/*
+@@ -820,3 +825,46 @@ __svc_clean_idle(fd_set *fds, int timeout, bool_t cleanblock)
+ {
+ 	return FALSE;
+ }
++
++void
++__svc_destroy_idle(int timeout, bool_t cleanblock)
++{
++	int i;
++	SVCXPRT *xprt, *least_active;
++	struct timeval tv, tdiff, tmax;
++	struct cf_conn *cd;
++
++	gettimeofday(&tv, NULL);
++	tmax.tv_sec = tmax.tv_usec = 0;
++	least_active = NULL;
++	rwlock_wrlock(&svc_fd_lock);
++
++	for (i = 0; i <= svc_max_pollfd; i++) {
++		if (svc_pollfd[i].fd == -1)
++			continue;
++		xprt = __svc_xports[i];
++		if (xprt == NULL || xprt->xp_ops == NULL ||
++			xprt->xp_ops->xp_recv != svc_vc_recv)
++			continue;
++		cd = (struct cf_conn *)xprt->xp_p1;
++		if (!cleanblock && !cd->nonblock)
++			continue;
++		if (timeout == 0) {
++			timersub(&tv, &cd->last_recv_time, &tdiff);
++			if (timercmp(&tdiff, &tmax, >)) {
++				tmax = tdiff;
++				least_active = xprt;
++			}
++			continue;
++		}
++		if (tv.tv_sec - cd->last_recv_time.tv_sec > timeout) {
++			__xprt_unregister_unlocked(xprt);
++			__svc_vc_dodestroy(xprt);
++		}
++	}
++	if (timeout == 0 && least_active != NULL) {
++		__xprt_unregister_unlocked(least_active);
++		__svc_vc_dodestroy(least_active);
++	}
++	rwlock_unlock(&svc_fd_lock);
++}
+-- 
+2.26.2
+
