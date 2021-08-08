@@ -2,279 +2,194 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 139E23E3D0B
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Aug 2021 00:38:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D4433E3D12
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Aug 2021 00:47:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231268AbhHHWjK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 8 Aug 2021 18:39:10 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:58094 "EHLO
+        id S232528AbhHHWro (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 8 Aug 2021 18:47:44 -0400
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:61712 "EHLO
         mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230175AbhHHWjJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Aug 2021 18:39:09 -0400
+        by vger.kernel.org with ESMTP id S230024AbhHHWrn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Aug 2021 18:47:43 -0400
 Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 178MQTAk015612;
-        Sun, 8 Aug 2021 22:38:34 GMT
+        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 178Ml2xB018993;
+        Sun, 8 Aug 2021 22:47:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=5KdlIu2zYJzS4WcZNxBF/du77xRgNZoEkKXZMrGreo8=;
- b=bGNfoajSKjxwueRebNpFJp5ZlaKWqU7qmzVcf9VyzQg4jrRls3fAefC/JTehUPXScKsj
- Ge4hwDN9i+HJikaR3ZxtvrUcIG6b+7fYgSvPLfV06I+jkUY/E9kq5Oz/I7fLagk4pfSf
- YWdhJLsS66JxFDEAV5qxr5v6kIJOt3n2RzOUVVabYwBaxUAjyDlkBziRxz0ZOgNeop8T
- Hk+ndbW+/ZHHwvzuZo9zC9GbE+pmJ9sK2aJn83RmAFP1d5GqpTVLD15TiDfbiIDnb51F
- uxJd7AxJcQap4acWQyl/yIAmdTgPMhLL7jlHZVBr8xenb6t6GSzqYPuN9GZ++VIMvf3H tA== 
+ bh=1XDXbUiTtU0HLzOqKGU2xtfN1MMZISXNKYTgPufjesc=;
+ b=ftgS+gX09IYTycUnmfUVYQuAoDzf3W3MShrFkOYveplwXmL8YiVH+IT+H/jUz2Lm96Mx
+ rCIzOt/JjfZyzZBb20AhelQK1WbW+QpVVgE4QhYqfhsG5qDPwO8NRHm0OTjM9A2BWL5B
+ GRj3JZWeU+RgfxcxOged9FFq+6A2VUgEIQ/A+7cGuEtnpPCBiDs54YfDb6czCbSDJGuo
+ DrByJXL+oDkdq4eCGKDmC7efK4rV5ekZ+D14YORc2wuLCMamLPWhIm/8DK6u/zXFp2wT
+ 7hT1OL59YQwsygQGikn9ZjmhgXpN/iRIFltH6oUSU+BsZ+SeIyvgwq14+0NQVr7bBsnE ow== 
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=5KdlIu2zYJzS4WcZNxBF/du77xRgNZoEkKXZMrGreo8=;
- b=Fnvbcq17gDdbnLN4S+do4/ieUy0UeCgANtLFStypCS55i6Ojxb1hECDHvW6sS91NfiQf
- KD72RfSds6+OhgQZ3DUEPP4xfLm1xIKEh2dYhLquX2iLkmia0j95o80pkoy7/LGbRnZR
- uWZMqEQ1a3WPdnqYdn+qXLXi02SimaDBpl7mFrzrvUoPJUTS9s3HT1NFH9Csvd0qasq1
- HeDd6nkubsaB/IkHdA3PJPIDVbKOOuq8SGNg4bN5VQlAHe1k9C4fP8Vd89Qrya9CoSXg
- UlaC+rRTH6A+Oue7aKwms1fUPMpGJGu8Orl9Dejn1lWTCEpaY9nNZi2Aw0wpXy7Gm9zH sQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3a9hsshwup-1
+ bh=1XDXbUiTtU0HLzOqKGU2xtfN1MMZISXNKYTgPufjesc=;
+ b=QOacpAnS5qk1LX2DZxDIgmxkQ5ub+2/6Z0BHvWIRouO7CkBE8J8Ium5r5Cw5XJhazXjr
+ vr2auTAH0muepin63VF1ETSEkt+oJLM4KyVqyDbewmepV1Gak8OjycTfaTAD06xg4AZH
+ BDHYZZtSuPs1Kw8ZmvjnDJjFqZ4mi7UH++cOui9K6aw7n+9G/+TwEJMEf2mq7lll5jPg
+ B5ICBUYaD79EB4bnJiRHqnnzUujTLFwjixvVGyPEEnbikzGwXo7G22jycxH8Yl77Sl0S
+ HfciTzNhgxe9hZTPprRWRdNNrkhHLxzmYLGd+AL2bSixRmUFxIVl36qyA5oRnLZGAabO uA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3a9hsshx0h-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 08 Aug 2021 22:38:34 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 178MZuPs076157;
-        Sun, 8 Aug 2021 22:38:33 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2177.outbound.protection.outlook.com [104.47.56.177])
-        by userp3020.oracle.com with ESMTP id 3aa3xqbfmj-1
+        Sun, 08 Aug 2021 22:47:23 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 178Mev26063781;
+        Sun, 8 Aug 2021 22:47:22 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2105.outbound.protection.outlook.com [104.47.58.105])
+        by aserp3020.oracle.com with ESMTP id 3a9vv24ta2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 08 Aug 2021 22:38:32 +0000
+        Sun, 08 Aug 2021 22:47:22 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ggsjSTEC52w/FodS0Asf+QCeGLwyig1Pm7znabQQJ4Nx+Oa4W9kijdCmUfZIE944Q+1wZ6KQPcYEoRCdKeK0LR4a1ga3Bewo19YjDO9UgWYGFg2YnBUUUfIx2R3YixtAvIHBl0Ps4350/QXesvJXMcgf4g3RlHvQJTbpUxWDYJfG+5Q/4qyUKfSNF7ahnWMWTVTo7zfYcKXu0NaGIX/JxrvSPefpIoJwcs+jGXy8Y36dcvZ1VL5aZGP0vwbguZm81tdyfzxvkYpYcckWGZrNnLcTcZtQOOc/Mt3RYZ673nzACP178rpN8qJC7qVifJ+HXiDaTtA0llXBu+8KyCfIMw==
+ b=K11pnzAkjMb582NfUT49ZdI5HMSGGksocbJYSuwTNa7TNytFKvpSc65Ki4+dQSsndaFmA8Udbx7ciBwT3GxBTf0TtqWI4hry3LzM+KFFbPpR6H1W2rJ2Qb0TedTFndCJGPhBYs1qktfSwhXPfDrWIxht5Onc0x+sWFiD2yLhrrlM+G8KeCB7JJ40UtI+H6EQAugleeu9agN3aYLXKNCRLJB7tmZVG+eEKXdQ3oL7tTRH/Te0qtiLAtwd0m5Aov3Ry5lpCxwc7xxaiYJ7IXOttJzvnN/H2gxVbAxqIA+uO/kv2ZpnhIQwpDxGvhVvYpRdiMsZYmk0YPcLf52BGuA+Hw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5KdlIu2zYJzS4WcZNxBF/du77xRgNZoEkKXZMrGreo8=;
- b=S8q76hMJUprNeFz16pQal7ZiWgUv8HI0nnrbDsD3oGnnBXfHtKFtV8nVrqGV/6rVD1Er4wKMoqUYhNw4qGs4A8DktJoxzPa+ZHXOz5djHdwj9ezqnAmYW0DiKn5z0MLwXWUaUdlss9dsL75b4OuwbThXwwx/5zU7N6h+UKrrn1HFIGeo/8YUFGf0TL4f8QNiGrETqrGPXD5glbVqQ3bDFm2nQJDmmBokU/EaiS04vJd1K8/lfrib9r+xT4jXod10z8nfxEYBWaUBfQc/o9QRDhNhkEIkupTdZFD4QkrmJ0uB2/CJPy3bn5sf4uQ7vcdEmCsyrhWz0xFzWW+FAlL6PA==
+ bh=1XDXbUiTtU0HLzOqKGU2xtfN1MMZISXNKYTgPufjesc=;
+ b=kz1HuBfCMmFy08N3FMu1YeEWAse3Xt/7gYHE7kgk8fQUdC7pCMurIIMse3VJ3UoKxythQS3d2qD6qGIdQ6NMljUSTaMAoh0l/pnET3uZZJPmJHPJ3IrzmhfGnQqQjFW+UNbRV0DR1JSYXDYh/sRko4e05oIauzd9QwADpFqy6ZnoBRU9uh4XuIlOUplCq0nFzLFycMtx/u59WugXj1lACpk/3Zg7PzeLnpWlZKHEt6RwiXMYXSLM+Ps7xvG7b7Kh7zQJP466hnOFqdQDhbORb6nHqYh2g7Yp92knNYCVMtSnyIga1OMlygWH7Pp7nKbCBcRw0Sn+nMbZbntaNsS63w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5KdlIu2zYJzS4WcZNxBF/du77xRgNZoEkKXZMrGreo8=;
- b=dw2W5bCLzK3R9ypyl0Z+kG5WAKV8HR4EZ4zFKU0+rH40oTFoUx2OjfU1xcRSSw99HdlkS2dofHxX7V09R801XCdwrUwZJ4pHaCc+HVuNlz7mPjdWo2mp1GrVnSMl9TxfynLtHm5xsOtwtRzhiHP7UWhkwme/HIrpsNyBnx+CxiU=
+ bh=1XDXbUiTtU0HLzOqKGU2xtfN1MMZISXNKYTgPufjesc=;
+ b=rGTR0q4U2xymijNRsAU4cUT0K/CCwPUeQLUh6GSnEVZJQLAhIjwlRH4rMPrKi6NZOeR5qTkx1ZEusqTNLtruZNn1y3hfTAnAMZevRv+GRDGxYYstNGkp97GZGFvjj0BQLXFVGkjWO5LToKp4Zk8oYnSesRQSixWkiAv/TqRf+a8=
 Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by SJ0PR10MB4544.namprd10.prod.outlook.com (2603:10b6:a03:2ad::20) with
+ by BY5PR10MB4387.namprd10.prod.outlook.com (2603:10b6:a03:211::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.16; Sun, 8 Aug
- 2021 22:38:30 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.17; Sun, 8 Aug
+ 2021 22:47:19 +0000
 Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
  ([fe80::a8db:4fc8:ded5:e64]) by SJ0PR10MB4688.namprd10.prod.outlook.com
  ([fe80::a8db:4fc8:ded5:e64%5]) with mapi id 15.20.4394.022; Sun, 8 Aug 2021
- 22:38:30 +0000
+ 22:47:18 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Dai Ngo <dai.ngo@oracle.com>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        libtirpc List <libtirpc-devel@lists.sourceforge.net>,
-        "kukuk@thkukuk.de" <kukuk@thkukuk.de>
-Subject: Re: [PATCH 1/1] rpcbind: Fix DoS vulnerability in rpcbind.
-Thread-Topic: [PATCH 1/1] rpcbind: Fix DoS vulnerability in rpcbind.
-Thread-Index: AQHXi64Cdqj7NA+DcUC7//SLnyqazKtqAfOAgAAclACAABZUgA==
-Date:   Sun, 8 Aug 2021 22:38:30 +0000
-Message-ID: <3DFFC57D-0E92-4F16-8B80-261574AC168C@oracle.com>
-References: <20210807170206.68768-1-dai.ngo@oracle.com>
- <72C62482-3E44-4D76-BFB0-18402D19FE2E@oracle.com>
- <88b2db88-bb76-0466-4ae4-a27240c7f8cd@oracle.com>
-In-Reply-To: <88b2db88-bb76-0466-4ae4-a27240c7f8cd@oracle.com>
+To:     Mike Javorski <mike.javorski@gmail.com>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: NFS server regression in kernel 5.13 (tested w/ 5.13.9)
+Thread-Topic: NFS server regression in kernel 5.13 (tested w/ 5.13.9)
+Thread-Index: AQHXjKYRxKTFwD0+C02+ZMVduTdsB6tqNWCA
+Date:   Sun, 8 Aug 2021 22:47:18 +0000
+Message-ID: <3349D119-2F35-4A58-8061-A2659E8C6BB9@oracle.com>
+References: <CAOv1SKCmdtchm5Z2NU80o49tkrHpAkPFaHKj4-vLDN5bZNCz-Q@mail.gmail.com>
+In-Reply-To: <CAOv1SKCmdtchm5Z2NU80o49tkrHpAkPFaHKj4-vLDN5bZNCz-Q@mail.gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=none action=none header.from=oracle.com;
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=oracle.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c22ef1d3-20aa-4d72-9485-08d95abd3f19
-x-ms-traffictypediagnostic: SJ0PR10MB4544:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SJ0PR10MB4544BE6820BFA992F5CEF7E793F59@SJ0PR10MB4544.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-office365-filtering-correlation-id: 9e48a468-ebe6-4a4b-cc26-08d95abe7a27
+x-ms-traffictypediagnostic: BY5PR10MB4387:
+x-microsoft-antispam-prvs: <BY5PR10MB4387A8025ACED2A25142327893F59@BY5PR10MB4387.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gPN/CDpa82MMB6YK8ByRVPteP3DJadrR8NJYtWLq5AciKrxwJ1MGfnSPsYyxHJWeW/lLv3n4bSik+SFRlw/DB63VlbxFvIgWFCkMg7kX1eGUiM0OVazJ7AaB5Qn9jB4hmBJW9qqoXJsFGtLVruWMmExdUztdPsbRTreJzOhuli+Trl+PsNOAcGZphpjE7rjwTJI1aeWYzdPVN/6LISv9QgOMOevxfcDMIhXart7x7G2P4kARrHB50hHg3Gvyfr3OVDlMJX4rgoWdNVZtCR3pztT9rAjzFYiYVdvrooxjlyZ1KHvXT3rbVGqirWDgu6kLeBYMyzD9jw2JGY7RVvYPAfSZKcSRJa20OOW/9+5+g5vJmsgzRJEOUYQsjqbPrguCrilNZEKh4rhNLDTaasyiOEPPc6xgxsd4o2raElJfR+wHpKRUYwwze9pNCFgwLYemyIEprxpTHO9lFBxbsMjlgeQPYX62oim74f8hOFPnT95HlxOuf9ykvIhAF55qjvJLeswS8XNYR8OIDHtvnUSdpbaE/VcAOnYTVJED47Qes6HctmGVhceF5Hx222bc9vEMR4YBXDu3zzZrPn+Ag9qfvSBmeqggtns8FhgfCZ7vcyucioVgu3I+OM8GK+jIU7VcXn9wOiZ2ZztwV8Cw5CvAN6X2ON56eBQRdmxl2bWpG2C5l87b0KwWc81KQ9YroCZpaiWzbsP0+58mLhSIHf19ZStbsEC2Te11hefiJqh5fXF3rjZ9uMmdfewCcI/kmEYy
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(376002)(366004)(346002)(136003)(396003)(66946007)(6512007)(6636002)(66476007)(66556008)(64756008)(66446008)(83380400001)(33656002)(122000001)(38070700005)(26005)(2616005)(478600001)(4326008)(6506007)(53546011)(186003)(37006003)(316002)(71200400001)(54906003)(5660300002)(36756003)(38100700002)(6862004)(6486002)(8936002)(86362001)(76116006)(8676002)(91956017)(2906002)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: Jab0mqm8bhZGh+DFC8TtbdQSBr/NgyGMFJ3SkXNrS9wxVkSilRRiIC/9bedDN5y/Za6OHEOT4RFf+Am1e+eUCOVQBFaRWb+9Q+R84UT2GTXrm1bWWpH68uS3B+u3rI5lJhzTyP6Pjbbykza3dtli0f+pBcgnFqNKUBDnKlfk2BZtG4vFPezcPg6Ed6ux8Yrj0Mg9SdbZ/ciSlPfZdHIThvvKvhvmgyKv+yL5r2GQXT0LdgPl5TAkahMqk4bLJf+RSKGaQ14+AnRlpevt3g5FMbb0YYWnNbJJgt3U/mcnuWkHKibump21kQJOcgW5hcaKiV9FAm7jXC0jpl8AgxFbjqv98H3CjW4TL8YBDY3iG9Go4UA2QawJL9kmreDGKWy3zhToXp+ODp1+AVRDpudOnzH6W/F44uVatr1iozF1o/SKj/pOE7u8ylo3pc/U74WB/SbFThHJWtEMw484FjVc1MFTPueTFDN2CWr37MNCrgdLtiSyZ8ao6HySDz1jQ9PzRyDZdwz59xPCmTIBJuFrDiXlmMOQDK94aV1liuaKDTM7eMjn+iuqfwEU4Re/JCBUF9/HjuZzJPe6qjJQa1Zb+nI3SgT+h3pHSZekAU44sgePaPWgPEwvvrIjUQUARoiHRelzTY0OQG8DPbVhcGbxow/r7Z/LjxF2+8wQ7daRIrh7WisSjwuvPB57WXijpslBCIvTyYvC/DPy1FQYLSSDRFyzPSRHGB4d3pUTX4imjw4LtUFbIsTMU579rbGLtbkF
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(366004)(136003)(396003)(376002)(346002)(6512007)(2616005)(2906002)(6486002)(8676002)(71200400001)(53546011)(86362001)(316002)(6506007)(6916009)(122000001)(36756003)(8936002)(38100700002)(478600001)(66946007)(66446008)(64756008)(66556008)(66476007)(91956017)(26005)(76116006)(5660300002)(186003)(33656002)(4326008)(38070700005)(83380400001)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?CHf4Z5skH5kHMBRP7yh3seZ693cArwm0IzU5f8pprilPQ11PjnO3LgpOs47W?=
- =?us-ascii?Q?Fu3TU4vUfz+7PxbZtnDzUypQZrbuKGJKD+i4y2jY4BYPA5ec68YTGevwzq5I?=
- =?us-ascii?Q?o7CJEFEavHC/RAagpUeyK/K5/mSKj/bZzkxtG+qHRz5kff2FFXmqC7yKkoQI?=
- =?us-ascii?Q?/jmDptiTy3YEy9K9hWRNPuDq89VJlRk3tG7vl/gvQsmKgjbJqhDa+nVSQeqK?=
- =?us-ascii?Q?nBS1ms1GhSaIwHxEENYQu8X4c0AkRJS05YJ/9oSmajFruQaQc3HWhYeeplcd?=
- =?us-ascii?Q?Vgy3QdhUziMwt4Zwy1MBU4mTkde9Yf9PSY+wnQ0xe0jMCCCfr+WNb1lcdXSn?=
- =?us-ascii?Q?0mp6CbGYLl5YwQmLaui9VP9wa3TSrx1e9qTHDqenwQoDEEUBsdxAHvgtcms/?=
- =?us-ascii?Q?pItnjQTxXRk7HvL7Kh1tDQUsej2JpvmxDn/iEOI7U+HNyGtBV/mS1n0w9PUi?=
- =?us-ascii?Q?UwWNOFR3fWbyLw+pFPBlBdaNX8TqrBsLn3bdX0p8pgbP0P983RqDpcm0s+Mf?=
- =?us-ascii?Q?4XV45bT+6OtsjQsd4HkZocxbR19xkkFJZhH431oC4/XC4VAaYTSd+9JYYq9Z?=
- =?us-ascii?Q?NazUhLo/cNrl59b+I2KpbbSdNpRIdo8/tpYSvQuO7qmZ1poSd4rHk4uXy+fg?=
- =?us-ascii?Q?qnSKr+PXa6wUNSRgDYXWh1jb2L7iiVjyprrLIOxv33kK1rEPg5z+pgDGibVP?=
- =?us-ascii?Q?ZGog8a343rPZnNzjQAPL5pwl/s8MGok3UPe1+AGODeUa3Ga4uqJgo8Po6G1M?=
- =?us-ascii?Q?+PkVQOuGCV0smKMOfL7akFbS0ruma//Hrnsj4ep5UNFa/LQ0tCLNMl9SHmFm?=
- =?us-ascii?Q?2v0+hLBAkLz1UKI/7Ss25hU++Rv2aLIW0+p+iaNNcWenoQPcE8BH5iw2sAvp?=
- =?us-ascii?Q?2128/BhCAfG1IUOMl+13CcqqCnB1TtGBvIBoFbLMmAY33TZpepIMtr5klapl?=
- =?us-ascii?Q?CKSeHj/BMqGSoLkBkxC88+IFqebtsB8UDMdXyP99nuXSACChr/MvXLiyxo8C?=
- =?us-ascii?Q?iNMgP4w1QzoCmWzm4l1abV/igtxT0CHn5v+X5f9wbPLXhOoRaK40UB3su22z?=
- =?us-ascii?Q?9UFPZdGmHeVpSbFeefq1hDMSGZjmB6lRG0/3G7MYuPUGawbZ1eRs9EqhCOCb?=
- =?us-ascii?Q?Xhws6C9RgxfHBVRTCp6uCQU+covvHjlbR2g48jtw/lcbLDBZMYNgSwP23yAL?=
- =?us-ascii?Q?dBKtIlaIh1i02J6AWqZe+JgqCNXDrQtIiYFIflU3VMDmvc8ocdXQcG6PRzAZ?=
- =?us-ascii?Q?1qEr+2pRu4wLG8TQMmhionrn5hZcP/gNdbiRH8J0dNah4laQRnVQ7tgjBcBe?=
- =?us-ascii?Q?Mw+Pivj1rBsgqhFbk7xPqqsGBtF4onwCCu9HHoIv6S3pWQ=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?6oglu2mXjMp/esOThB0gJvNxLcmpgx+k0W640W/4IwT0Mw0WTQivPt+Z3GpC?=
+ =?us-ascii?Q?Dm9CHRHSSkugceikKmdJnZ3Jv7MwBdUjcRy77Nq6yZmC5CjcUtgmzFUYp+MT?=
+ =?us-ascii?Q?c1KWJSnf3BhDSyfumPjLEz4yhSmHWgzd88o901l1Yrit+z5zW0yHmCCZRebc?=
+ =?us-ascii?Q?ghgM408TgJLC+uVuHNlBgELApsKmvB3DZwFeY7E7n05fnqkIANQueLEUFAiw?=
+ =?us-ascii?Q?SoNg1kKyBLpRZjSnTHEY/5tRoyayRICkQTS1S5uXJVB2kkUMPG+9DEevqezi?=
+ =?us-ascii?Q?mjVMh+fNXYwL9ebc8Pk+8QxmSomvbZ2e3m+jHAcKUParZtUXIaTv2rT6tXMm?=
+ =?us-ascii?Q?CWltklmcOzbQtrxCGkUY/+xC2W4tu08YfdSW8P7soHVgVRn9nmFDuqUqF9yo?=
+ =?us-ascii?Q?9pgUliBUZiyrIXUy0cIUzkgWK4f4YLfPeR5Y+POgewsTvWntFHyt7nwXrhQW?=
+ =?us-ascii?Q?ycQdDtFywj/VpCw9VpPwbu4fk3jxQQvUlWJ1v3Nx0qPA7lQtpEsgWmVVLtDp?=
+ =?us-ascii?Q?wXARuHmm4vkOJeNofa+DEWC/6ULP2dNldCf3JUaCzOdt7Gqwc0SSKbbqmwag?=
+ =?us-ascii?Q?hOVaTfYjOkigIUUgtgg6VfzcLjJ/8kCXOr24a4YJTik5gWDgLKoP6+PhRegC?=
+ =?us-ascii?Q?CIUKjfrMVCbnqcmDFtBwSWm4YqfXIYpFqXLsZhDCeMVzcjFSxPtz4H1txoxi?=
+ =?us-ascii?Q?pzPfIBkTHS7ULWz/4N3Q+IVNm0mq/lfGBrWL6stQKkiyWS7VCGrPXKcfXEMA?=
+ =?us-ascii?Q?L9Vg9kgb2x/RdqsqUG5umx5j5XlwnjME6OcxFSl1UzJAOGABie4bKKbnDgVP?=
+ =?us-ascii?Q?WOO4642agUMDGgx6+T+lQR8WLIMPc9t/pBBJQ8MGPH2WUxA4HicVyFPoidA1?=
+ =?us-ascii?Q?G4VYjdvy56rK0KOo2N7LpUzbdmuERa8tNwRZPAqt87o/4j5WknIE+Om/GPXo?=
+ =?us-ascii?Q?1gcSLzqIjqz62i/tJKhkh6jsYHxCtqakD1hBn30WiHLXOQnHZA+8U9RlGfmw?=
+ =?us-ascii?Q?qtHxXG5zYsdTykZ/ghK/t6sCbJPX3JBSS1qwH8hhnRlB8L1aVFNkDPiVH10B?=
+ =?us-ascii?Q?RGwJZGf98Qt5cvutKmmTiX2qfRZ41waaXY+PYe3LNFcXKaA3Y9QjQFxTUCNr?=
+ =?us-ascii?Q?Y5WaFHXltXqQO8CDKBsZUxLUL/mO9h05w748220icr7GD8FZrLiq0RMo3MUh?=
+ =?us-ascii?Q?N9m2qJyF9S0nCRwwFEXzfCB7U3cEqfXQiAwKD41UZkyl5SrbE1yv2YzT2n+Q?=
+ =?us-ascii?Q?P9abDqrHpB7pU0vx2Gc7sHVAwE8+/y2+DzRroUvZtLA9AHp9K11u+iJt7DVp?=
+ =?us-ascii?Q?JYwzGxGQ5b3kiWtebFhRxS6HzCyJWRrbZaFaeaoQ1BxKWw=3D=3D?=
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F9EFF914E29F4F419F88A66164ABBAF6@namprd10.prod.outlook.com>
+Content-ID: <A82F161E405D754991F9A117E39FA440@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c22ef1d3-20aa-4d72-9485-08d95abd3f19
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2021 22:38:30.2440
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e48a468-ebe6-4a4b-cc26-08d95abe7a27
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2021 22:47:18.8305
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SJ7fehhNr6Cf1CRmICvNZM1/zHRJcQLGfAl/DJgn65F7BqLoz708rSNT36uZFXXfaC0Q+g6ePanW1ZS6fNGsRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4544
+X-MS-Exchange-CrossTenant-userprincipalname: nA5ODeW2hh6zi8xY+H4fPmTSXjrX6oY2M4zu9C0vS/FAAR+gDC4mFLez6RFtt3wufzqgjtHZIgV5jriaWXD31g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4387
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10070 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
- suspectscore=0 malwarescore=0 phishscore=0 adultscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2107140000 definitions=main-2108080143
-X-Proofpoint-GUID: Co2YZXb_fZ4Jt1zlrvS5oa7_8ChsDDIf
-X-Proofpoint-ORIG-GUID: Co2YZXb_fZ4Jt1zlrvS5oa7_8ChsDDIf
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 mlxscore=0
+ phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2107140000
+ definitions=main-2108080144
+X-Proofpoint-GUID: hNz17CSvgLH1jhPObkMTuWYn8PLbQ6RV
+X-Proofpoint-ORIG-GUID: hNz17CSvgLH1jhPObkMTuWYn8PLbQ6RV
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
-> On Aug 8, 2021, at 5:18 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
+
+> On Aug 8, 2021, at 6:37 PM, Mike Javorski <mike.javorski@gmail.com> wrote=
+:
 >=20
-> On 8/8/21 12:36 PM, Chuck Lever III wrote:
->>=20
->>> Signed-off-by: dai.ngo@oracle.com
->>> ---
->>> src/rpcb_svc_com.c | 3 +++
->>> 1 file changed, 3 insertions(+)
->>>=20
->>> diff --git a/src/rpcb_svc_com.c b/src/rpcb_svc_com.c
->>> index 1743dadf5db7..cb33519010d3 100644
->>> --- a/src/rpcb_svc_com.c
->>> +++ b/src/rpcb_svc_com.c
->>> @@ -1048,6 +1048,8 @@ netbuffree(struct netbuf *ap)
->>> }
->>>=20
->>>=20
->>> +extern void __svc_destroy_idle(int, bool_t);
->> Your libtirpc patch does not add __svc_destroy_idle()
->> as part of the official libtirpc API. We really must
->> avoid adding "secret" library entry points (not to
->> mention, as SteveD pointed out, a SONAME change
->> would be required).
->>=20
->> rpcbind used to call __svc_clean_idle(), which is
->> undocumented (as far as I can tell).
+> I have been experiencing nfs file access hangs with multiple release
+> versions of the 5.13.x linux kernel. In each case, all file transfers
+> freeze for 5-10 seconds and then resume. This seems worse when reading
+> through many files sequentially.
 >=20
-> I try to use the same mechanism as __svc_clean_idle, assuming
-> it was an acceptable approach.
-
-Understood. I'm not quibbling with that mechanism, but
-with the addition of another private API. Private APIs
-are very difficult to maintain in the long run.
-
-
->> 44bf15b86861 removed that call.
+> My server:
+> - Archlinux w/ a distribution provided kernel package
+> - filesystems exported with "rw,sync,no_subtree_check,insecure" options
 >=20
-> which is one of the bugs that causes this problem.
+> Client:
+> - Archlinux w/ latest distribution provided kernel (5.13.9-arch1-1 at wri=
+ting)
+> - nfs mounted via /net autofs with "soft,nodev,nosuid" options
+> (ver=3D4.2 is indicated in mount)
 >=20
->> I think a better approach would be to duplicate your
->> proposed __svc_destroy_idle() code in rpcbind, since
->> rpcbind is not actually using the library's RPC
->> dispatcher.
+> I have tried the 5.13.x kernel several times since the first arch
+> release (most recently with 5.13.9-arch1-1), all with similar results.
+> Each time, I am forced to downgrade the linux package to a 5.12.x
+> kernel (5.12.15-arch1 as of writing) to clear up the transfer issues
+> and stabilize performance. No other changes are made between tests. I
+> have confirmed the freezing behavior using both ext4 and btrfs
+> filesystems exported from this server.
 >=20
-> then we have to do the same for nfs-utils.
+> At this point I would appreciate some guidance in what to provide in
+> order to diagnose and resolve this issue. I don't have a lot of kernel
+> debugging experience, so instruction would be helpful.
 
-Exactly.
+Hi Mike-
 
+Thanks for the report.
 
-> That means the
-> same code exits in 3 places: libtirpc, rpcbind and nfs-utils.
-> And any new consumer that uses it own my_svc_run will
-> need its own __svc_destroy_idle. It does not sound very
-> efficient.
+Since you are using a distribution kernel and don't have much
+kernel debugging experience, we typically ask you to work with
+your distributor first. linux-nfs@ is a developer's mailing
+list, we're not really prepared to provide user support.
 
-You mean you don't particularly care for the duplication
-of the code. Fair enough.
-
-I don't have any problem copying this small piece of
-code into callers that long ago went to the effort
-of implementing their own polling loops. The code
-duplication here isn't bothering me much.
-
-If you see a way to convert these external callers to
-use enough of the library svc APIs that they get to
-use __svc_destroy_idle() automatically, that would to
-me be an acceptable alternative.
-
-
->> That would get rid of the technical debt of calling
->> an undocumented library API.
->>=20
->> The helper would need to call svc_vc_destroy()
->> rather than __xprt_unregister_unlocked() and
->> __svc_vc_dodestroy(). Also not clear to me that
->> rpcbind's my_svc_run() needs the protection of
->> holding svc_fd_lock, if rpcbind itself is not
->> multi-threaded?
->=20
-> The lock is held by __svc_destroy_idle, or __svc_clean_idle
-> before it was removed, in libtirpc. I think libtirpc is
-> multi-threaded.
-
-libtirpc is multi-threaded, so __svc_destroy_idle()
-is correct to take that lock. I'm suggesting that
-the copies of destroy_idle() in the external callers
-would likely not need to take this lock. I don't see
-any references to it in the rpcbind source code, so
-it's probably not necessary for the rpcbind version
-of the destroy_idle helper to take the lock.
-
-Note that svc_fd_lock is not part of the public
-library API either.
-
-
->> The alternative would be to construct a fully
->> documented public API with man pages and header
->> declarations. I'm not terribly comfortable with
->> diverging from the historical Sun TI-RPC programming
->> interface, however.
->=20
-> What I'm trying to do is to follow what __svc_clean_idle
-> used to do before it was removed.
-
-Sure, I get that. That seems like a prudent approach.
-
-
-> I can't totally re-use
-> __svc_clean_idle because it was written to work with
-> svc_fdset and select.  The current svc_run uses poll so
-> the handling of idle connections is a little difference.
-
-Introducing yet another private API should be off the
-table. An alternative fix would be to add a public API
-that is documented and appears in the headers. Again,
-I would rather not diverge from the historical Sun
-TI-RPC library API, and SteveD would rather not have
-to change the library's SONAME, so I'm hesitant to
-add a public API too.
-
-The bottom line is that adding a library API to handle
-idle connections is the right architectural approach,
-all things being equal. But the goal for this library
-is compatibility with a historical API that is also
-available in other operating systems. We have to stick
-with that API if we can.
+When you report the problem to Arch, you might want to have
+a description of your workload (especially if you can
+reproduce the problem often with a particular application
+or user activity), and maybe be prepared to capture a network
+trace of the failure using tcpdump.
 
 
 --
