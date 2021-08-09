@@ -2,221 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B5643E3E93
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Aug 2021 05:58:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18A0B3E3ECC
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Aug 2021 06:20:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232973AbhHID6z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 8 Aug 2021 23:58:55 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:58014 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232975AbhHID6y (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Aug 2021 23:58:54 -0400
+        id S231157AbhHIEU4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 9 Aug 2021 00:20:56 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:57922 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230394AbhHIEUz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Aug 2021 00:20:55 -0400
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id EF38E1FD81;
-        Mon,  9 Aug 2021 03:58:33 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 6AB3C21EF4;
+        Mon,  9 Aug 2021 04:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1628481513; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1628482834; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=G0ibLBgniy8dCGHqoQUyeVYBRb/qOQupZTOIJDvgt2g=;
-        b=wk060BaOhIZOXaR0QlITcFG7NDUq3rpdEZmceRtUc2s0dQyTHZsNc/2/knOfoV02wFTHxq
-        810lLyD7rnBbSoTrs7UnIJTXy/1W3DmHweCz0r8/v8mHHYUjmkjtKlQbije9IFgQ9X6Fc1
-        mSGOI1ul62Vo/e/HyywTWmgrM7nBQjc=
+        bh=tdKSDNL+pofpSnFf046QHB3TogSAInmiCBDTxi7b0R4=;
+        b=WQKDVF22d58/+3BMKqmcrLG54rrXRkkAPNv4PpG3nZ1aSzSZUzgmgvuTRXQMb73ITNvbKy
+        su3yPF/XMfPV6T4MaJ9wrg74/2uNHG7cACfQem1lJxbCdVmBIjryKLOTBV4wEIi/HGSx92
+        ADL7afVJGjRYzBzqhncI9c6p6b4TGqY=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1628481513;
+        s=susede2_ed25519; t=1628482834;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=G0ibLBgniy8dCGHqoQUyeVYBRb/qOQupZTOIJDvgt2g=;
-        b=YzxzSz0ZacRppfs06O0PP5e2MS9+UCD9f4binoggxaCxVjU7n5Uiq+U0aMnOTCHM8mSRnO
-        b8OGCnPzWnPEaBBg==
+        bh=tdKSDNL+pofpSnFf046QHB3TogSAInmiCBDTxi7b0R4=;
+        b=5jrpDZb4X1vR3tkpCnQ45dMCT7L6jcwbf3P3Oom/D/YWMc3pNogANsQK5CrQRXI2LhCHX4
+        yik4ZEb8e8fVuPAA==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 320BE13A9F;
-        Mon,  9 Aug 2021 03:58:30 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C1D0313398;
+        Mon,  9 Aug 2021 04:20:32 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id wB06OOanEGHZBgAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 09 Aug 2021 03:58:30 +0000
-Subject: [PATCH 3/4] VFS/btrfs: add STATX_TREE_ID
-From:   NeilBrown <neilb@suse.de>
-To:     Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>
-Cc:     linux-fsdevel@vger.kernel.org,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Btrfs BTRFS <linux-btrfs@vger.kernel.org>
-Date:   Mon, 09 Aug 2021 13:55:27 +1000
-Message-ID: <162848132775.25823.2813836616908535300.stgit@noble.brown>
-In-Reply-To: <162848123483.25823.15844774651164477866.stgit@noble.brown>
-References: <162848123483.25823.15844774651164477866.stgit@noble.brown>
-User-Agent: StGit/0.23
-MIME-Version: 1.0
+        id Dg1THxCtEGHmCgAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 09 Aug 2021 04:20:32 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     "bfields@fieldses.org" <bfields@fieldses.org>,
+        "plambri@redhat.com" <plambri@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "bcodding@redhat.com" <bcodding@redhat.com>
+Subject: Re: cto changes for v4 atomic open
+In-reply-to: <dfe4f6ad0420a67b9ae0f500324ba976d700642c.camel@hammerspace.com>
+References: <DF3F94B7-F322-4054-952F-90CE02B442FE@redhat.com>,
+ <ef395e52f3bb8d07dd7a39bb0a6dd6fb64a87a1c.camel@hammerspace.com>,
+ <20210803203051.GA3043@fieldses.org>,
+ <3feb71ab232b26df6d63111ee8226f6bb7e8dc36.camel@hammerspace.com>,
+ <20210803213642.GA4042@fieldses.org>,
+ <a1934e03e68ada8b7d1abf1744ad1b8f9d784aa4.camel@hammerspace.com>,
+ <162803443497.32159.4120609262211305187@noble.neil.brown.name>,
+ <08db3d70a6a4799a7f3a6f5227335403f5a148dd.camel@hammerspace.com>,
+ <162803867150.32159.9013174090922030713@noble.neil.brown.name>,
+ <ea79c8676bea627bb78c57e33199229e3cf27a9c.camel@hammerspace.com>,
+ <162804062307.32159.5606967736886802956@noble.neil.brown.name>,
+ <dfe4f6ad0420a67b9ae0f500324ba976d700642c.camel@hammerspace.com>
+Date:   Mon, 09 Aug 2021 14:20:26 +1000
+Message-id: <162848282650.22632.1924568027690604292@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-A new 64bit field is added to the data that can be returned by statx() -
-the "tree id".
-The tree id serves two needs.
-1/ it extends the available inode number space.  While a filesystem
-   SHOULD ensure the inode number is unique across the filesystem,
-   this is sometimes impractical.  In such situations, 'tree id'
-   may be used to guarantee uniqueness.  It can identify a separate
-   allocation domain.
-   A particular case when separate allocation domains is useful
-   is when a directory tree can be effectively "reflink"ed.
-   Updating all inode numbers in such a tree is prohibitively expensive.
-2/ it can identify a collection of objects that provide a coherent
-   "tree" in some locally-defined sense.
+On Wed, 04 Aug 2021, Trond Myklebust wrote:
+> On Wed, 2021-08-04 at 11:30 +1000, NeilBrown wrote:
+> 
+> Caching not a "best effort" attempt. The client is expected to provide
+> a perfect reproduction of the data stored on the server in the case
+> where there is no close-to-open violation.
+> In the case where there are close-to-open violations then there are two
+> cases:
+> 
+>    1. The user cares, and is using uncached I/O together with a
+>       synchronisation protocol in order to mitigate any data+metadata
+>       discrepancies between the client and server.
+>    2. The user doesn't care, and we're in the standard buffered I/O
+>       case.
+> 
+> 
+> Why are you and Bruce insisting that case (2) needs to be treated as
+> special?
 
-This patch uses STATX_TREE_ID to export the subvol id for btrfs.
+I don't see these as the relevant cases.  They seem to assume that "the
+user" is a single entity with a coherent opinion.  I don't think that is
+necessarily the case.
 
-samples/vfs/test_statx.c is extended to report the treeid.
+I think it best to focus on the behaviours, and intentions behind,
+individual applications.  You said previously that NFS doesn't provide
+caches for applications, only for whole clients.  This is obviously true
+but I think it misses an important point.  While the cache belongs to
+the whole client, the "open" and "close" are performed by individual
+applications.  close-to-open addresses what happens between a CLOSE and
+an OPEN.
 
-Also: a new superblock field is added: s_tree_id_bits.  This can store
-  the number of significant bits in the reported treeid.  It is
-  currently unused, but could be used by overlayfs to determine how
-  to add a filesystem number to the treeid to differentiate files in
-  different underlying filesystems.
+While it may be reasonable to accept that any application must depend on
+correctness of any other application with write access to the file, it
+doesn't necessary follow that any application can only be correct when
+all applications with read access are well behaved.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/btrfs/inode.c          |    4 ++++
- fs/btrfs/super.c          |    1 +
- fs/stat.c                 |    1 +
- include/linux/fs.h        |    2 +-
- include/linux/stat.h      |   13 +++++++++++++
- include/uapi/linux/stat.h |    3 ++-
- samples/vfs/test-statx.c  |    4 +++-
- 7 files changed, 25 insertions(+), 3 deletions(-)
+If an application arranges, through some external means, to only open a
+file after all possible writing application have closed it, then the NFS
+caching should not get in the way for the application being able to read
+anything that the other application(s) wrote.  This, it me, is the core
+of close-to-open consistency.
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 30fa64cbe6dc..c878726d090c 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -9215,6 +9215,10 @@ static int btrfs_getattr(struct user_namespace *mnt_userns,
- 	case BTRFS_MANY_DEVS:
- 		stat->dev = BTRFS_I(inode)->root->anon_dev;
- 	}
-+	if (request_mask & STATX_TREE_ID) {
-+		stat->tree_id = BTRFS_I(inode)->root->root_key.objectid;
-+		stat->result_mask |= STATX_TREE_ID;
-+	}
- 
- 	spin_lock(&BTRFS_I(inode)->lock);
- 	delalloc_bytes = BTRFS_I(inode)->new_delalloc_bytes;
-diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-index b1aecb834234..e6d166150660 100644
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -1410,6 +1410,7 @@ static int btrfs_fill_super(struct super_block *sb,
- #endif
- 	sb->s_flags |= SB_I_VERSION;
- 	sb->s_iflags |= SB_I_CGROUPWB;
-+	sb->s_tree_id_bits = 48;
- 
- 	err = super_setup_bdi(sb);
- 	if (err) {
-diff --git a/fs/stat.c b/fs/stat.c
-index 1fa38bdec1a6..2dd5d3d67793 100644
---- a/fs/stat.c
-+++ b/fs/stat.c
-@@ -580,6 +580,7 @@ cp_statx(const struct kstat *stat, struct statx __user *buffer)
- 	tmp.stx_dev_major = MAJOR(stat->dev);
- 	tmp.stx_dev_minor = MINOR(stat->dev);
- 	tmp.stx_mnt_id = stat->mnt_id;
-+	tmp.stx_tree_id = stat->tree_id;
- 
- 	return copy_to_user(buffer, &tmp, sizeof(tmp)) ? -EFAULT : 0;
- }
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 640574294216..a777c1b1706a 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1482,7 +1482,7 @@ struct super_block {
- 
- 	unsigned int		s_max_links;
- 	fmode_t			s_mode;
--
-+	short			s_tree_id_bits;
- 	/*
- 	 * The next field is for VFS *only*. No filesystems have any business
- 	 * even looking at it. You had been warned.
-diff --git a/include/linux/stat.h b/include/linux/stat.h
-index fff27e603814..08ee409786b3 100644
---- a/include/linux/stat.h
-+++ b/include/linux/stat.h
-@@ -46,6 +46,19 @@ struct kstat {
- 	struct timespec64 btime;			/* File creation time */
- 	u64		blocks;
- 	u64		mnt_id;
-+	/* Treeid can be used to extend the inode number space.  Two inodes
-+	 * with different 'tree_id' are different, even if 'ino' is the same
-+	 * (though fs should make ino different as often as possible).
-+	 * When tree_id is requested and STATX_TREE_ID is set in result_mask,
-+	 * 'ino' MUST be unique across the filesystem.  Specifically, two
-+	 * open files that report the same dev, ino, and tree_id MUST be
-+	 * the same.
-+	 * If a directory and an object in that directory have the same dev
-+	 * and tree_id, they can be assumed to be in a meaningful tree, though
-+	 * the meaning is subject to local interpretation.  The set of inodes
-+	 * with a common tree_id is not required to be contiguous.
-+	 */
-+	u64		tree_id;
- };
- 
- #endif
-diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-index 1500a0f58041..725cf3f8e873 100644
---- a/include/uapi/linux/stat.h
-+++ b/include/uapi/linux/stat.h
-@@ -124,7 +124,7 @@ struct statx {
- 	__u32	stx_dev_minor;
- 	/* 0x90 */
- 	__u64	stx_mnt_id;
--	__u64	__spare2;
-+	__u64	stx_tree_id;
- 	/* 0xa0 */
- 	__u64	__spare3[12];	/* Spare space for future expansion */
- 	/* 0x100 */
-@@ -152,6 +152,7 @@ struct statx {
- #define STATX_BASIC_STATS	0x000007ffU	/* The stuff in the normal stat struct */
- #define STATX_BTIME		0x00000800U	/* Want/got stx_btime */
- #define STATX_MNT_ID		0x00001000U	/* Got stx_mnt_id */
-+#define STATX_TREE_ID		0x00002000U	/* Want/got stx_treeid and clean stX_ino */
- 
- #define STATX__RESERVED		0x80000000U	/* Reserved for future struct statx expansion */
- 
-diff --git a/samples/vfs/test-statx.c b/samples/vfs/test-statx.c
-index 49c7a46cee07..c1141764fa2e 100644
---- a/samples/vfs/test-statx.c
-+++ b/samples/vfs/test-statx.c
-@@ -118,6 +118,8 @@ static void dump_statx(struct statx *stx)
- 			break;
- 		}
- 	}
-+	if (stx->stx_mask & STATX_TREE_ID)
-+		printf(" Tree: %-12llu", (unsigned long long) stx->stx_tree_id);
- 	printf("\n");
- 
- 	if (stx->stx_mask & STATX_MODE)
-@@ -218,7 +220,7 @@ int main(int argc, char **argv)
- 	struct statx stx;
- 	int ret, raw = 0, atflag = AT_SYMLINK_NOFOLLOW;
- 
--	unsigned int mask = STATX_BASIC_STATS | STATX_BTIME;
-+	unsigned int mask = STATX_BASIC_STATS | STATX_BTIME | STATX_TREE_ID;
- 
- 	for (argv++; *argv; argv++) {
- 		if (strcmp(*argv, "-F") == 0) {
+Another application writing concurrently may, of course, affect the read
+results in an unpredictable way.  However another application READING
+concurrently should not affect an application which is carefully
+serialised with any writers.
 
-
+Thanks,
+NeilBrown
