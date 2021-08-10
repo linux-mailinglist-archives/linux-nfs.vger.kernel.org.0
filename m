@@ -2,127 +2,147 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44FF93E82D8
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Aug 2021 20:21:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C34B63E849C
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Aug 2021 22:51:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236170AbhHJSVZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Aug 2021 14:21:25 -0400
-Received: from mail-ej1-f45.google.com ([209.85.218.45]:41908 "EHLO
-        mail-ej1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232539AbhHJSVS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Aug 2021 14:21:18 -0400
-Received: by mail-ej1-f45.google.com with SMTP id d11so12710844eja.8
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Aug 2021 11:20:55 -0700 (PDT)
+        id S233424AbhHJUvh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Aug 2021 16:51:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233412AbhHJUvg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Aug 2021 16:51:36 -0400
+Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB6BC0613C1
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Aug 2021 13:51:14 -0700 (PDT)
+Received: by mail-qk1-x72f.google.com with SMTP id n123so3145617qkn.12
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Aug 2021 13:51:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ho1c4ybrIcKzeGnDZgrxScKRAzWLoVC8JJLL8evuc10=;
+        b=f9qqvba+vb4gKwoCe07TXYMmUbaDXkZASg1FIRrHiPUcT5xNflmTPouhEjP+OKukFA
+         JrBHXe6q0qqN+p8I85JakAdvaW7qkmCwVulGcmwvtS8XfvfUstRLmzily7+p2qiRG/Rd
+         ce8sAGw3nurfeSFUfO2zWYO6Vk7Y97fPeE0gqluQpETHMGhK4jaqHA3o5QzzNdc3Os1o
+         yqD2euebrIm5Dk2N3HvSbv4TfMqsN/UAXw++5xQJfVaDk0DLxs/e38xHd8ZgaCS5CJue
+         KmtS67AmwsMADk5+iBxDaxLwsnAZmF1xU0eOzZ3o3pwNRIfnp2NmSALJYoawiypqyaiR
+         UcPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kV+BKQ7s1QB9rECJZC8kyWUI8YmnP5wFWe+WpemR0yE=;
-        b=a/1UIkfOafHsRxkFyyHLJ8LLO9I3zJHWMNkF7FkUi9g/jzKPwxjWXjXZCoIir+lvTX
-         UU4rtrtcRCSw1Cgl/mieKTxVlRP6IY51HelPndC9gh1VIQ2XVy0fuwfS/xOj7SprQJFc
-         3WX7ZgPjkMGLcajJ8Pb2NCIcFmFyJz8q66ueKbKlvLeF9ZDwHZyf8sOhR569Lf00MVHP
-         tLOonONbn3NR1ebQnv0VuW3awN2TLgo4E/77axrVE38LpmKzdHqwcO62eL8hsFnflPro
-         MCW6gnSE2FS9nBbcbYLEPIVVW0x3IMEnRXoa+mFhNBPCpzP1AuQxk/WKKhdkhOG2pIzR
-         BtHw==
-X-Gm-Message-State: AOAM532oYREJopW0XZXqg28HsBtCxoUjnNLvBVpUWxoy/cIHairi3H79
-        6jNN6jiSdF/Gm3cM6l7icN2PRz8yP9sBFidKgYE=
-X-Google-Smtp-Source: ABdhPJxTuzcU8ceMYkxdFXpxPYXlBeo125L5u7SSS3tVemUmzs1w5INxacUCP9ziZlcspQV3DycfMvheqI7EJjczFss=
-X-Received: by 2002:a17:906:4d94:: with SMTP id s20mr27999138eju.152.1628619652931;
- Tue, 10 Aug 2021 11:20:52 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ho1c4ybrIcKzeGnDZgrxScKRAzWLoVC8JJLL8evuc10=;
+        b=aGNd5j0ZpS4fdWCH7i/PYgoI6uuGYn7UN5JehhcQYXFEwdtcRw0Hk8KMOkLkaPnUGP
+         BYQN1B9NGqQ2Sr46GHQ2+0GLvfL4U5ZOS7PVThg+1fF8sg8UQPD3zyfMxtvQmNLJxvM/
+         sTFmrdZttfmgYVyX1Sq8zCewSLengt4rmN1rQTjge+x/wjnmHeN9wj9iM4LK7D+fgfYe
+         ycqQ3Axcps0fi2TJxt8zEQvt6JhQLbYLWXBkIapDM3j3YU4lpIH7hydB+8JXlXNB+BfS
+         oaxpx8ftX2nJz6qkDMCzBDaWKrKKDtM5nxpyNGvcaZmAZCv9OZdpby5HQShZGb4K2yrc
+         WuDg==
+X-Gm-Message-State: AOAM531PfY20/Pv4uFjm022wz9qPAmU22TTIptFLKhDNm+sWubCVZlfE
+        oPNNUwyrgDdZjXQMzBOXMdlfDQ==
+X-Google-Smtp-Source: ABdhPJx3pKon7AS8dHaL6WVED3noFCHCxvgT4RFGk6L33KlHcBR2uE+f1VmyEqQG0ckWgQJUo/o91Q==
+X-Received: by 2002:ae9:e213:: with SMTP id c19mr30144120qkc.451.1628628673318;
+        Tue, 10 Aug 2021 13:51:13 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11d9::10ba? ([2620:10d:c091:480::1:6dda])
+        by smtp.gmail.com with ESMTPSA id v9sm7871780qtq.77.2021.08.10.13.51.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Aug 2021 13:51:12 -0700 (PDT)
+Subject: Re: [PATCH/RFC 0/4] Attempt to make progress with btrfs dev number
+ strangeness.
+To:     NeilBrown <neilb@suse.de>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Btrfs BTRFS <linux-btrfs@vger.kernel.org>
+References: <162848123483.25823.15844774651164477866.stgit@noble.brown>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <e6496956-0df3-6232-eecb-5209b28ca790@toxicpanda.com>
+Date:   Tue, 10 Aug 2021 16:51:11 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.12.0
 MIME-Version: 1.0
-References: <20210521190938.24820-1-dai.ngo@oracle.com> <20210521190938.24820-3-dai.ngo@oracle.com>
- <20210707001056.GA26847@fieldses.org> <CAN-5tyERihHa9QVsRKy6FQ=t2VC-8_XRcpAsaXrgdUFoyzeuxw@mail.gmail.com>
-In-Reply-To: <CAN-5tyERihHa9QVsRKy6FQ=t2VC-8_XRcpAsaXrgdUFoyzeuxw@mail.gmail.com>
-From:   Anna Schumaker <anna.schumaker@netapp.com>
-Date:   Tue, 10 Aug 2021 14:20:36 -0400
-Message-ID: <CAFX2JfmSK_e4NBr-ESh0Vv9qGVEMuN64RMRHFrsdXMxh9K-d1A@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] NFSv4.2: remove restriction of copy size for
- inter-server copy.
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Dai Ngo <dai.ngo@oracle.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <162848123483.25823.15844774651164477866.stgit@noble.brown>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jul 12, 2021 at 1:41 PM Olga Kornievskaia
-<olga.kornievskaia@gmail.com> wrote:
->
-> On Tue, Jul 6, 2021 at 8:10 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> >
-> > Whoops, I overlooked that this is client side, so it needs to go through
-> > Trond or Anna, not me.
-> >
-> > Also note:
-> >
-> > On Fri, May 21, 2021 at 03:09:38PM -0400, Dai Ngo wrote:
-> > > This patch, relying on the delayed unmount feature, removes this
-> > > restriction since the mount and unmount overhead is now not applicable
-> > > for every inter-server copy.
-> >
-> > There's no guarantee that the same kernel version is running on client
-> > and server, or even that the server is a Linux server.
-> >
-> > If there's reason to expect that the lower overhead should be more
-> > typical of servers in general, then say that....
->
-> I'm in support of this patch not because I expect lower overhead is
-> more typical but because the initial logic was there to match the
-> limitations of the only existing implementation (ie Linux server) that
-> was doing a mount for every copy that's out there. Now that we are
-> adding support for delayed unmount to the linux server, it is not
-> important to restrict the size of the copy. Linux server is the ONLY
-> known implementation of the inter-SSC feature thus it's hard to say
-> what's typical. Given the improved linux server implementation shows
-> that it's possible to do short copies as well, I think it's fair to
-> remove that restriction on the client and expect that other
-> implementations would be as good or better.
->
-> Yes I think client side maintainers need to chime in if they have
-> objections to the patch.
+On 8/8/21 11:55 PM, NeilBrown wrote:
+> I continue to search for a way forward for btrfs so that its behaviour
+> with respect to device numbers and subvols is somewhat coherent.
+> 
+> This series implements some of the ideas in my "A Third perspective"[1],
+> though with changes is various details.
+> 
+> I introduce two new mount options, which default to
+> no-change-in-behaviour.
+> 
+>   -o inumbits=  causes inode numbers to be more unique across a whole btrfs
+>                 filesystem, and is many cases completely unique.  Mounting
+>                 with "-i inumbits=56" will resolve the NFS issues that
+>                 started me tilting at this particular windmill.
+> 
+>   -o numdevs=  can reduce the number of distinct devices reported by
+>                stat(), either to 2 or to 1.
+>                Both ease problems for sites that exhaust their supply of
+>                device numbers.
+>                '2' allows "du -x" to continue to work, but is otherwise
+>                rather strange.
+>                '1' breaks the use of "du -x" and similar to examine a
+>                single subvol which might have subvol descendants, but
+>                provides generally sane behaviour
+>                "-o numdevs=1" also forces inumbits to have a useful value.
+> 
+> I introduce a "tree id" which can be discovered using statx().  Two
+> files with the same dev and ino might still be different if the tree-ids
+> are different.  Connected files with the same tree-id may be usefully
+> considered to be related.
+> 
+> I also change various /proc files (only when numdevs=1 is used) to
+> provide extra information so they are useful with btrfs despite subvols.
+> /proc/maps /proc/smaps /proc/locks /proc/X/fdinfo/Y are affected.
+> The inode number becomes "XX:YY" where XX is the subvol number (tree id)
+> and YY is the inode number.
+> 
+> An alternate might be to report a number which might use up to 128 bits.
+> Which is less likely to seriously break code?
+> 
+> Note that code which ignores badly formatted lines is safe, because it
+> will never currently find a match for a btrfs file in these files
+> anyway.  The device number they report is never returned in st_dev for
+> stat() on any file.
+> 
+> The audit subsystem and one or two other places report dev/ino and so
+> need enhanced, but I haven't tried to address those.
+> 
+> Various trace points also report dev/ino.  I haven't tried thinking
+> about those either.
 
-So I don't see anything wrong with this patch, and I'm assuming it
-just got missed due to Bruce initially "claiming" it before realizing
-it's for the wrong subsystem. Anyway, I just put it into my tree for
-the next merge.
+I think this is a step in the right direction, but I want to figure out a way to 
+accomplish this without magical mount points that users must be aware of.
 
-Anna
+I think the stat() st_dev ship as sailed, we're stuck with that.  However 
+Christoph does have a valid point where it breaks the various info spit out by 
+/proc.  You've done a good job with the treeid here, but it still makes it 
+impossible for somebody to map the st_dev back to the correct mount.
 
->
-> >
-> > --b.
-> >
-> > >
-> > > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> > > ---
-> > >  fs/nfs/nfs4file.c | 10 ++++------
-> > >  1 file changed, 4 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-> > > index 441a2fa073c8..b5821ed46994 100644
-> > > --- a/fs/nfs/nfs4file.c
-> > > +++ b/fs/nfs/nfs4file.c
-> > > @@ -158,13 +158,11 @@ static ssize_t __nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
-> > >               sync = true;
-> > >  retry:
-> > >       if (!nfs42_files_from_same_server(file_in, file_out)) {
-> > > -             /* for inter copy, if copy size if smaller than 12 RPC
-> > > -              * payloads, fallback to traditional copy. There are
-> > > -              * 14 RPCs during an NFSv4.x mount between source/dest
-> > > -              * servers.
-> > > +             /*
-> > > +              * for inter copy, if copy size is too small
-> > > +              * then fallback to generic copy.
-> > >                */
-> > > -             if (sync ||
-> > > -                     count <= 14 * NFS_SERVER(file_inode(file_in))->rsize)
-> > > +             if (sync)
-> > >                       return -EOPNOTSUPP;
-> > >               cn_resp = kzalloc(sizeof(struct nfs42_copy_notify_res),
-> > >                               GFP_NOFS);
-> > > --
-> > > 2.9.5
+I think we aren't going to solve that problem, at least not with stat().  I 
+think with statx() spitting out treeid we have given userspace a way to 
+differentiate subvolumes, and so we should fix statx() to spit out the the super 
+block device, that way new userspace things can do their appropriate lookup if 
+they so choose.
+
+This leaves the problem of nfsd.  Can you just integrate this new treeid into 
+nfsd, and use that to either change the ino within nfsd itself, or do something 
+similar to what your first patchset did and generate a fsid based on the treeid?
+
+Mount options are messy, and are just going to lead to distro's turning them on 
+without understanding what's going on and then we have to support them forever. 
+  I want to get this fixed in a way that we all hate the least with as little 
+opportunity for confused users to make bad decisions.  Thanks,
+
+Josef
+
