@@ -2,107 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC52D3E5C6D
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Aug 2021 16:00:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E2373E5E80
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Aug 2021 16:59:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240069AbhHJOAi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Aug 2021 10:00:38 -0400
-Received: from mail-ej1-f41.google.com ([209.85.218.41]:38703 "EHLO
-        mail-ej1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233274AbhHJOAh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Aug 2021 10:00:37 -0400
-Received: by mail-ej1-f41.google.com with SMTP id z20so12891264ejf.5
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Aug 2021 07:00:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4Likup35+S6vxtysMd6++ZEJglljLUpwZsRmcNbAA88=;
-        b=s7Sdn8yL7IRuPtVYS6sTFTcfGmBU0FlkeAXZFVOQwnngQmzy7ysu54qkwAieqi8Jv5
-         6WVR/bYTjAJ0d6clfZa5zLtuq3QxCFMirNHuanNwLF4pftKC62OT7yHqoQB0FCwhoZmK
-         FVUPHuaVRGs1AHNfKE3cKZjsBuYa3QUQ3mzxd0hwZfLa9hqcf9EenD/lLWLQpvMcSDS2
-         6JQdypMC07cgk0WgQd4RhIY9sMlxaCszkx8Ph40JOVdNxnGvSL4XgIJFChba51U3Mx61
-         8vblLksFznb/moWrkW26+2QNb5rfhByFmH+hNVSVECDXDsgzxk43Gc4KOWj0iuitlTEU
-         JPGA==
-X-Gm-Message-State: AOAM533gj3OSAzPipI0dBS1WFUxLHJSok5iA+VxTZks0w6ouVMZQWlyT
-        3kTHR8UniLq+Y+M3scdTj6nBPnOJ+5xpOer52Fg=
-X-Google-Smtp-Source: ABdhPJwZjNYGuJKq7sLEulyemx6vqQM7CmOz9ZSmg+UmN9B+9fpySGWRClQdVuuRRG/UWBFZMvqzNQbmPNFzRQe75eA=
-X-Received: by 2002:a17:907:2d0f:: with SMTP id gs15mr1451374ejc.23.1628604014378;
- Tue, 10 Aug 2021 07:00:14 -0700 (PDT)
+        id S239178AbhHJO7X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Aug 2021 10:59:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242163AbhHJO7W (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Aug 2021 10:59:22 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A56C0613C1
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Aug 2021 07:59:00 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C28747C63; Tue, 10 Aug 2021 10:58:59 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C28747C63
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1628607539;
+        bh=+pS25G21UB7Ww7npuAdbqszL6fR8eOJKWjAdrR+Xt44=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Bltrgq3qOkPR5/+bxdYQA4TkypDQY0mwgWgHMgHhv+jv28VrpynTSr162QaWtwCvW
+         WKk/beNqQphG70tsRbMaUQbuez0hb7kAFaLkdFMa+FprooCiru72BU0hsRwCA/0fLI
+         9Y6m5t3cFbz5zLVwCO31PHaNUpEpBiggXI1CqQ4Q=
+Date:   Tue, 10 Aug 2021 10:58:59 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     hedrick@rutgers.edu
+Cc:     Timothy Pearson <tpearson@raptorengineering.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: CPU stall, eventual host hang with BTRFS + NFS under heavy load
+Message-ID: <20210810145859.GB31222@fieldses.org>
+References: <281642234.3818.1625478269194.JavaMail.zimbra@raptorengineeringinc.com>
+ <1288667080.5652.1625478421955.JavaMail.zimbra@raptorengineeringinc.com>
+ <B4D8C4B7-EE8C-456C-A6C5-D25FF1F3608E@rutgers.edu>
+ <3A4DF3BB-955C-4301-BBED-4D5F02959F71@rutgers.edu>
+ <359473237.1035413.1628528802863.JavaMail.zimbra@raptorengineeringinc.com>
+ <2FEAFB26-C723-450D-A115-1D82841BBF73@rutgers.edu>
+ <20210809183029.GC8394@fieldses.org>
+ <413163A6-8484-4170-9877-C0C2D50B13C0@rutgers.edu>
 MIME-Version: 1.0
-References: <162670594361.468132.16222376053830760696.stgit@manet.1015granger.net>
- <CAFX2Jf=PvvsU8p+3i3OdLOwRCWDedBKhbhnNOe-RyaXx5LWUow@mail.gmail.com> <82A33007-6AE7-49BF-84CF-F960DA1548E3@oracle.com>
-In-Reply-To: <82A33007-6AE7-49BF-84CF-F960DA1548E3@oracle.com>
-From:   Anna Schumaker <anna.schumaker@netapp.com>
-Date:   Tue, 10 Aug 2021 09:59:58 -0400
-Message-ID: <CAFX2JfkT6VE+ghBzFTWf8XxkpTzd4s9WXGtxud3jajGT_7cCOQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] Ensure RPC_TASK_NORTO is disabled for select operations
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <413163A6-8484-4170-9877-C0C2D50B13C0@rutgers.edu>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Aug 9, 2021 at 7:00 PM Chuck Lever III <chuck.lever@oracle.com> wrote:
->
->
->
-> > On Aug 9, 2021, at 4:37 PM, Anna Schumaker <anna.schumaker@netapp.com> wrote:
-> >
-> > Hi Chuck,
-> >
-> > On Mon, Jul 19, 2021 at 10:55 AM Chuck Lever <chuck.lever@oracle.com> wrote:
-> >>
-> >> This is a set of patches I've been toying with to get better
-> >> responsiveness from a client when a transport remains connected but
-> >> the server is not returning RPC replies.
-> >>
-> >> The approach I've taken is to disable RPC_TASK_NO_RETRANS_TIMEOUT
-> >> for a few particular operations to enable them to time out even
-> >> though the connection is still operational. It could be
-> >> appropriate to take this approach for any idempotent operation
-> >> that cannot be killed with a ^C.
-> >>
-> >> Changes since RFC:
-> >> - Dropped changes to async lease renewal and DESTROY_SESSION|CLIENTID
-> >> - Cleaned up some tracepoint issues I found along the way
-> >
-> > Is this the latest version of these patches? If so I can include them
-> > in my linux-next branch for 5.14.
->
-> AFAIR v2 is the latest, yes. Thanks!
+On Tue, Aug 10, 2021 at 10:57:10AM -0400, hedrick@rutgers.edu wrote:
+> No. NFS 4.2 has a new feature that sends the umask. That means that
+> ACLs specifying default permissions actually work. They don’t work in
+> 4.0. Since that’s what I want to use ACLs for, effectively they don’t
+> work in 4.0 Nothing you can do about that: it’s in the protocol
+> definition. But it’s a reason we really want to use 4.2.
 
-Great, I have them applied!
+D'oh, I forgot the umask change.  Got it, makes sense.
 
-Anna
->
->
-> > Thanks,
-> > Anna
-> >
-> >>
-> >> ---
-> >>
-> >> Chuck Lever (6):
-> >>      SUNRPC: Refactor rpc_ping()
-> >>      SUNRPC: Unset RPC_TASK_NO_RETRANS_TIMEOUT for NULL RPCs
-> >>      SUNRPC: Remove unneeded TRACE_DEFINE_ENUMs
-> >>      SUNRPC: Update trace flags
-> >>      SUNRPC: xprt_retransmit() displays the the NULL procedure incorrectly
-> >>      SUNRPC: Record timeout value in xprt_retransmit tracepoint
-> >>
-> >>
-> >> include/trace/events/sunrpc.h | 51 ++++++++---------------------------
-> >> net/sunrpc/clnt.c             | 33 ++++++++++++++++-------
-> >> 2 files changed, 35 insertions(+), 49 deletions(-)
-> >>
-> >> --
-> >> Chuck Lever
->
-> --
-> Chuck Lever
->
->
->
+--b.
