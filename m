@@ -2,103 +2,118 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78EBB3EAC60
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 23:25:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4899E3EAC6F
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 23:36:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236888AbhHLV0X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Aug 2021 17:26:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235157AbhHLV0X (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 17:26:23 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DEE6C061756;
-        Thu, 12 Aug 2021 14:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IaxypzM/Vd450pfEGpkrf9PDYM68Z4Ke2vXmaf+5usc=; b=bBdMGgY0e395Pv6868WWSWwx1w
-        UhvtZIeN6lIkZJlSfHuaOVvuJtwbmiqCG2gdHG+A64njOfxRkQijGLcH28jQ4Oqxar3V8wGtcoPdD
-        OUHoh1P0NfrvIUp/OilxQEWgtRabRDfM1gHd3G8xpygLnkxr9jyOmgS91wnFsMPV0i9D38g2IWQok
-        a8bF0Ug0uMnucRBqfkQ0BoYG8MwgRahuFc2nZ4rmWoauoB/pRxCr6CJAJ6uihg1xBhMtkyyw5yT38
-        L8cKGJp3+zTy4wXZoKULOwgopWVqyRRED0w5R5GliyWgzKw/NdlE0PX2Q2XjLIr/xybT2vawr4NBP
-        I9P/w5pw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mEIB0-00F0Hk-1z; Thu, 12 Aug 2021 21:23:54 +0000
-Date:   Thu, 12 Aug 2021 22:23:46 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     trond.myklebust@primarydata.com, darrick.wong@oracle.com,
-        hch@lst.de, viro@zeniv.linux.org.uk, jlayton@kernel.org,
-        sfrench@samba.org, torvalds@linux-foundation.org,
-        linux-nfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 3/5] mm: Make swap_readpage() for SWP_FS_OPS use
- ->direct_IO() not ->readpage()
-Message-ID: <YRWRYnmoS+zVYqHV@casper.infradead.org>
-References: <162879971699.3306668.8977537647318498651.stgit@warthog.procyon.org.uk>
- <162879974434.3306668.4798886633463058599.stgit@warthog.procyon.org.uk>
+        id S233760AbhHLVg4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Aug 2021 17:36:56 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:55270 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233283AbhHLVg4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 17:36:56 -0400
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id BD0021FF79;
+        Thu, 12 Aug 2021 21:36:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1628804189; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8NG/Nl+xLaaGV0VrGXl3aCbcv/ay2zFvI+KmIPBXXSI=;
+        b=f1sK5EyhqgOmZ23WmAjo4UVpV3gbARWACUUl/U6LIWKzUImnnUpYAL2dwKhWpHd3NFPj9j
+        sh24U6QHt9Lvi1ie9yRQazXx5oSEbi5QE93cntO1xxhEEFUZL+3exjovYzdOLjg2C8fv4r
+        2PyaoA/7MJQTv8gpv+V7S8zJaAHG1mM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1628804189;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8NG/Nl+xLaaGV0VrGXl3aCbcv/ay2zFvI+KmIPBXXSI=;
+        b=kLOeHgV6doTp3hTdnOMbYlsbcaEU+6PZZ2P2dHbZIcJ4LAiooFptoNFuo8bZmlSVRFAfAJ
+        QPw3oiQeJoVKP7CQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 25C2313C80;
+        Thu, 12 Aug 2021 21:36:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id xVrfNFuUFWGybAAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 12 Aug 2021 21:36:27 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <162879974434.3306668.4798886633463058599.stgit@warthog.procyon.org.uk>
+From:   "NeilBrown" <neilb@suse.de>
+To:     "J.  Bruce Fields" <bfields@fieldses.org>
+Cc:     "Timothy Pearson" <tpearson@raptorengineering.com>,
+        "Chuck Lever" <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
+        "Trond Myklebust" <trondmy@gmail.com>
+Subject: Re: CPU stall, eventual host hang with BTRFS + NFS under heavy load
+In-reply-to: <20210812144428.GA9536@fieldses.org>
+References: <281642234.3818.1625478269194.JavaMail.zimbra@raptorengineeringinc.com>,
+ <162855621114.22632.14151019687856585770@noble.neil.brown.name>,
+ <20210812144428.GA9536@fieldses.org>
+Date:   Fri, 13 Aug 2021 07:36:25 +1000
+Message-id: <162880418532.15074.7140645794203395299@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 12, 2021 at 09:22:24PM +0100, David Howells wrote:
-> +++ b/include/linux/fs.h
-> @@ -336,6 +336,7 @@ struct kiocb {
->  	union {
->  		unsigned int		ki_cookie; /* for ->iopoll */
->  		struct wait_page_queue	*ki_waitq; /* for async buffered IO */
-> +		struct page	*ki_swap_page;	/* For swapfile_read/write */
+On Fri, 13 Aug 2021, J.  Bruce Fields wrote:
+> On Tue, Aug 10, 2021 at 10:43:31AM +1000, NeilBrown wrote:
+> > 
+> > The problem here appears to be that a signalled task is being retried
+> > without clearing the SIGNALLED flag.  That is causing the infinite loop
+> > and the soft lockup.
+> > 
+> > This bug appears to have been introduced in Linux 5.2 by
+> > Commit: ae67bd3821bb ("SUNRPC: Fix up task signalling")
+> 
+> I wonder how we arrived here.  Does it require that an rpc task returns
+> from one of those rpc_delay() calls just as rpc_shutdown_client() is
+> signalling it?  That's the only way async tasks get signalled, I think.
 
-Nice idea.
+I don't think "just as" is needed.
+I think it could only happen if rpc_shutdown_client() were called when
+there were active tasks - presumably from nfsd4_process_cb_update(), but
+I don't know the callback code well.
+If any of those active tasks has a ->done handler which might try to
+reschedule the task when tk_status == -ERESTARTSYS, then you get into
+the infinite loop.
 
-> +static void __swapfile_read_complete(struct kiocb *iocb, long ret, long ret2)
+> 
+> > Prior to this commit a flag RPC_TASK_KILLED was used, and it gets
+> > cleared by rpc_reset_task_statistics() (called from rpc_exit_task()).
+> > After this commit a new flag RPC_TASK_SIGNALLED is used, and it is never
+> > cleared.
+> > 
+> > A fix might be to clear RPC_TASK_SIGNALLED in
+> > rpc_reset_task_statistics(), but I'll leave that decision to someone
+> > else.
+> 
+> Might be worth testing with that change just to verify that this is
+> what's happening.
+> 
+> diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+> index c045f63d11fa..caa931888747 100644
+> --- a/net/sunrpc/sched.c
+> +++ b/net/sunrpc/sched.c
+> @@ -813,7 +813,8 @@ static void
+>  rpc_reset_task_statistics(struct rpc_task *task)
+>  {
+>  	task->tk_timeouts = 0;
+> -	task->tk_flags &= ~(RPC_CALL_MAJORSEEN|RPC_TASK_SENT);
+> +	task->tk_flags &= ~(RPC_CALL_MAJORSEEN|RPC_TASK_SIGNALLED|
+> +							RPC_TASK_SENT);
 
-I would make this take a struct page * and just one 'ret'.
+NONONONONO.
+RPC_TASK_SIGNALLED is a flag in tk_runstate.
+So you need
+	clear_bit(RPC_TASK_SIGNALLED, &task->tk_runstate);
 
-> +{
-> +	struct page *page = iocb->ki_swap_page;
-> +
-> +	if (ret == PAGE_SIZE) {
-
-page_size(page)?
-
-> +	kiocb.ki_pos		= page_file_offset(page);
-
-We talked about swap_file_pos(), right?
-
-> +	ret = swap_file->f_mapping->a_ops->direct_IO(&kiocb, &to);
-> +
-> +	__swapfile_read_complete(&kiocb, ret, 0);
-> +	return (ret > 0) ? 0 : ret;
-
-What if it returns a short read?
-
-> +static int swapfile_read(struct swap_info_struct *sis, struct page *page,
-> +			 bool synchronous)
-> +{
-> +	struct swapfile_kiocb *ki;
-> +	struct file *swap_file = sis->swap_file;
-> +	struct bio_vec bv = {
-> +		.bv_page = page,
-> +		.bv_len  = thp_size(page),
-> +		.bv_offset = 0
-> +	};
-> +	struct iov_iter to;
-> +	int ret;
-> +
-> +	if (synchronous)
-> +		return swapfile_read_sync(sis, page);
-
-Seems a shame to set up the bio_vec and iov_iter twice.  Maybe call:
-
-	iov_iter_bvec(&to, READ, &bv, 1, thp_size(page));
-
-before swapfile_read_sync() and pass a pointer to 'to' to
-swapfile_read_sync?
-
+NeilBrown
