@@ -2,90 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8FA83EA7B2
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 17:40:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A6B73EA90B
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 19:02:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237922AbhHLPk2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Aug 2021 11:40:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232854AbhHLPk1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 11:40:27 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7862C061756
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Aug 2021 08:40:02 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 7DA6C7C76; Thu, 12 Aug 2021 11:40:01 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 7DA6C7C76
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1628782801;
-        bh=FIzx6+0WQLG4+uWXMyGLp76L9xEc6wRLsTXvyCKdfuA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BgoGYvkMaiEu0qLuQFTNNql0bmyWlhw5Nf3i3YjvK9fILrdHX5PbMq/XRc083q7qn
-         bjom1z+3o+5X4bFrLkG0fIMIJtivaG6OpSMARzpgBU8+VyjVnjHZyZHOTmaN3kAsut
-         u70kdNk0+iUHzVPektLBJ2ceFhdpi+tiAmGzPCLk=
-Date:   Thu, 12 Aug 2021 11:40:01 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Bruce Fields <bfields@redhat.com>,
-        Timo Rothenpieler <timo@rothenpieler.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Dai Ngo <dai.ngo@oracle.com>
-Subject: Re: Spurious instability with NFSoRDMA under moderate load
-Message-ID: <20210812154001.GB9536@fieldses.org>
-References: <5DD80ADC-0A4B-4D95-8CF7-29096439DE9D@oracle.com>
- <0444ca5c-e8b6-1d80-d8a5-8469daa74970@rothenpieler.org>
- <cc2f55cd-57d4-d7c3-ed83-8b81ea60d821@rothenpieler.org>
- <3AF4F6CA-8B17-4AE9-82E2-21A2B9AA0774@oracle.com>
- <CAN-5tyHNvYWd1M7sfZNV5q3Y_GZA2-DoTd=CxYvniZ1zkB5hyw@mail.gmail.com>
- <95DB2B47-F370-4787-96D9-07CE2F551AFD@oracle.com>
- <CAN-5tyGXycM1MKa=Sydoo4pP85PGLuh8yjJYsoAM3U+M1NVyCw@mail.gmail.com>
- <D417C606-9E27-431E-B80E-EE927E62A316@oracle.com>
- <20210811201435.GA31574@fieldses.org>
- <CAN-5tyGq=EE4PjSbKVyKLtmhhFF_o6D9uG1QNQ-ByVMp9q8LOw@mail.gmail.com>
+        id S234252AbhHLRDD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Aug 2021 13:03:03 -0400
+Received: from verein.lst.de ([213.95.11.211]:44952 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234238AbhHLRDC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 12 Aug 2021 13:03:02 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id F3FCE67373; Thu, 12 Aug 2021 19:02:33 +0200 (CEST)
+Date:   Thu, 12 Aug 2021 19:02:33 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        trond.myklebust@primarydata.com, darrick.wong@oracle.com,
+        jlayton@kernel.org, sfrench@samba.org,
+        torvalds@linux-foundation.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm: Make swap_readpage() for SWP_FS_OPS use
+ ->direct_IO() not ->readpage()
+Message-ID: <20210812170233.GA4987@lst.de>
+References: <20210812122104.GB18532@lst.de> <162876946134.3068428.15475611190876694695.stgit@warthog.procyon.org.uk> <162876947840.3068428.12591293664586646085.stgit@warthog.procyon.org.uk> <3085432.1628773025@warthog.procyon.org.uk> <YRVAvKPn8SjczqrD@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAN-5tyGq=EE4PjSbKVyKLtmhhFF_o6D9uG1QNQ-ByVMp9q8LOw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <YRVAvKPn8SjczqrD@casper.infradead.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Aug 11, 2021 at 04:40:04PM -0400, Olga Kornievskaia wrote:
-> On Wed, Aug 11, 2021 at 4:14 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> >
-> > On Wed, Aug 11, 2021 at 08:01:30PM +0000, Chuck Lever III wrote:
-> > > Probably not just CB_RECALL, but agreed, there doesn't seem to
-> > > be any mechanism that can re-drive callback operations when the
-> > > backchannel is replaced.
-> >
-> > The nfsd4_queue_cb() in nfsd4_cb_release() should queue a work item
-> > to run nfsd4_run_cb_work, which should set up another callback client if
-> > necessary.
-
-But I think the result is it'll look to see if there's another
-connection available for callbacks, and give up immediately if not.
-
-There's no logic to wait for the client to fix the problem.
-
-> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index 7325592b456e..ed0e76f7185c 100644
-> --- a/fs/nfsd/nfs4callback.c
-> +++ b/fs/nfsd/nfs4callback.c
-> @@ -1191,6 +1191,7 @@ static void nfsd4_cb_done(struct rpc_task *task,
-> void *calldata)
->                 case -ETIMEDOUT:
->                 case -EACCES:
->                         nfsd4_mark_cb_down(clp, task->tk_status);
-> +                       cb->cb_need_restart = true;
->                 }
->                 break;
->         default:
+On Thu, Aug 12, 2021 at 04:39:40PM +0100, Matthew Wilcox wrote:
+> I agree with David; we want something lower-level for swap to call into.
+> I'd suggest aops->swap_rw and an implementation might well look
+> something like:
 > 
-> Something like this should requeue and retry the callback?
+> static ssize_t ext4_swap_rw(struct kiocb *iocb, struct iov_iter *iter)
+> {
+> 	return iomap_dio_rw(iocb, iter, &ext4_iomap_ops, NULL, 0);
+> }
 
-I think we'd need more than just that.
+Yes, that might make sense and would also replace the awkward IOCB_SWAP
+flag for the write side.
 
---b.
+For file systems like ext4 and xfs that have an in-memory block mapping
+tree this would be way better than the current version and also support
+swap on say multi-device file systems properly.  We'd just need to be
+careful to read the extent information in at extent_activate time,
+by doing xfs_iread_extents for XFS or the equivalents in other file
+systems.
