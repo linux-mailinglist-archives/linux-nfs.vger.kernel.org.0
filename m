@@ -2,34 +2,28 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 405233EAA10
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 20:17:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 604C33EAB85
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 22:13:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230040AbhHLSRw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Aug 2021 14:17:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237738AbhHLSRv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 14:17:51 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FEAAC061756;
-        Thu, 12 Aug 2021 11:17:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5naNxWdA4pUEsoIepEdmgfKgNVWUTTPIGgMAR+lKKNg=; b=kolKpAxAcGMvgpVrawdSEEL49q
-        JwEPW4xC+wT3yIFiGaBpScKIBdDvYGsBhMai8C07lBouE306orWGVk7tHNTNrS5IlPcJW/jyBQYpR
-        vt0+Sw7d+hFN47KpQseJFjCTVeHbNWzzaRWQ7P3COJ8NecKhaufewkI5+YlpXKygXjEObJP1CtdAc
-        iw++yeMl9tZBc4YCOqbmw5/dWdoaPK1eiZ0eKPT4F0oGDa6BY1SYC3l3upvPzQJQnNmrVwf1O0lXe
-        ydSBBvZ8YoElPo2PwBJHoVqOmXAvdk6+nNcUP1Z9U44fGfGMcT3wvu0ePNesSzjdktmfP52+2eE6p
-        WrSq1Nlw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mEFDx-00EqyA-Vl; Thu, 12 Aug 2021 18:15:12 +0000
-Date:   Thu, 12 Aug 2021 19:14:37 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
+        id S237002AbhHLUOR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Aug 2021 16:14:17 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:59516 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S236799AbhHLUOP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 16:14:15 -0400
+Received: from cwcc.thunk.org (pool-72-74-133-215.bstnma.fios.verizon.net [72.74.133.215])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 17CKD6OY003112
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Aug 2021 16:13:07 -0400
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+        id C8CEF15C37C1; Thu, 12 Aug 2021 16:13:06 -0400 (EDT)
+Date:   Thu, 12 Aug 2021 16:13:06 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
         David Howells <dhowells@redhat.com>,
         trond.myklebust@primarydata.com, darrick.wong@oracle.com,
         jlayton@kernel.org, sfrench@samba.org,
@@ -38,7 +32,7 @@ Cc:     Christoph Hellwig <hch@lst.de>,
         linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 2/2] mm: Make swap_readpage() for SWP_FS_OPS use
  ->direct_IO() not ->readpage()
-Message-ID: <YRVlDZRIm8zTjDIh@casper.infradead.org>
+Message-ID: <YRWA0tJy457V4/HO@mit.edu>
 References: <20210812122104.GB18532@lst.de>
  <162876946134.3068428.15475611190876694695.stgit@warthog.procyon.org.uk>
  <162876947840.3068428.12591293664586646085.stgit@warthog.procyon.org.uk>
@@ -46,39 +40,26 @@ References: <20210812122104.GB18532@lst.de>
  <YRVAvKPn8SjczqrD@casper.infradead.org>
  <20210812170233.GA4987@lst.de>
  <20210812174818.GK3601405@magnolia>
+ <YRVlDZRIm8zTjDIh@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210812174818.GK3601405@magnolia>
+In-Reply-To: <YRVlDZRIm8zTjDIh@casper.infradead.org>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 12, 2021 at 10:48:18AM -0700, Darrick J. Wong wrote:
-> On Thu, Aug 12, 2021 at 07:02:33PM +0200, Christoph Hellwig wrote:
-> > On Thu, Aug 12, 2021 at 04:39:40PM +0100, Matthew Wilcox wrote:
-> > > I agree with David; we want something lower-level for swap to call into.
-> > > I'd suggest aops->swap_rw and an implementation might well look
-> > > something like:
-> > > 
-> > > static ssize_t ext4_swap_rw(struct kiocb *iocb, struct iov_iter *iter)
-> > > {
-> > > 	return iomap_dio_rw(iocb, iter, &ext4_iomap_ops, NULL, 0);
-> > > }
-> > 
-> > Yes, that might make sense and would also replace the awkward IOCB_SWAP
-> > flag for the write side.
-> > 
-> > For file systems like ext4 and xfs that have an in-memory block mapping
-> > tree this would be way better than the current version and also support
-> > swap on say multi-device file systems properly.  We'd just need to be
-> > careful to read the extent information in at extent_activate time,
-> > by doing xfs_iread_extents for XFS or the equivalents in other file
-> > systems.
+On Thu, Aug 12, 2021 at 07:14:37PM +0100, Matthew Wilcox wrote:
 > 
-> You'd still want to walk the extent map at activation time to reject
-> swapfiles with holes, shared extents, etc., right?
+> Well ... this would actually allow the filesystem to break COWs and
+> allocate new blocks for holes.  Maybe you don't want to be doing that
+> in a low-memory situation though ;-)
 
-Well ... this would actually allow the filesystem to break COWs and
-allocate new blocks for holes.  Maybe you don't want to be doing that
-in a low-memory situation though ;-)
+I'm not sure the benefits are worth the costs.  You'd have to handle
+ENOSPC errors, and it would require some kind of metadata journal
+transaction, which could potentially block for any number of reasons
+(not just due to memory allocations, but because you're waiting for a
+journal commit to complete).  As you say, doing that in a low-memory
+situation seems to be unneeded complexity.
+
+					- Ted
