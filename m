@@ -2,80 +2,193 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E64F3EA603
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 15:53:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 681F73EA60B
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 15:55:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236639AbhHLNw6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Aug 2021 09:52:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39850 "EHLO
+        id S237653AbhHLNzZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Aug 2021 09:55:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232772AbhHLNw5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 09:52:57 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA962C061756;
-        Thu, 12 Aug 2021 06:52:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FSEsyOd/4VgGNCa1AqMwPM0EjAO09/FKI4Y/RKgJ9oc=; b=PB5TN4rKLBFyrXRJ8+IpPQ6GFx
-        2HZerN1HTd63PeshnKhem+nljRBmLxaui/i1om21F1sWmP+hMjDDJS55xmhS4oxKnXpp00KnpzlE2
-        6tQVDF8Pd76VOg9hA0cSJAVGBbnv7LS9wdSGk8uZBVHe2WoYmsCL9EPrsjzBwNlB7m9OA+qWOBH1G
-        DTyJpos7StYMPNb6UNL6IuKFA0DUtnHaaEuEKWdoAYnmFSKoMzx36cch7maZBd4MaeMtpzgCwzvbB
-        9o5RCPCZF/Z5mBKHgCxOE1L3ECk8GErwIJcu9ZXSzHn3MSgCYAsxdlO5JdfXXv/TKXFzWMqGvGsxv
-        lm77IDCQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mEB6d-00Ed87-Bu; Thu, 12 Aug 2021 13:50:55 +0000
-Date:   Thu, 12 Aug 2021 14:50:47 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     trond.myklebust@primarydata.com, darrick.wong@oracle.com,
-        hch@lst.de, jlayton@kernel.org, sfrench@samba.org,
-        torvalds@linux-foundation.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm: Make swap_readpage() for SWP_FS_OPS use
- ->direct_IO() not ->readpage()
-Message-ID: <YRUnN+Y2CQ0qcjO6@casper.infradead.org>
-References: <3088327.1628774588@warthog.procyon.org.uk>
- <YRUbXoMzWVX9X/Vf@casper.infradead.org>
- <162876946134.3068428.15475611190876694695.stgit@warthog.procyon.org.uk>
- <162876947840.3068428.12591293664586646085.stgit@warthog.procyon.org.uk>
- <3088958.1628775479@warthog.procyon.org.uk>
+        with ESMTP id S237682AbhHLNzY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 09:55:24 -0400
+Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E38BDC061756
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Aug 2021 06:54:57 -0700 (PDT)
+Received: by mail-qv1-xf31.google.com with SMTP id db14so3133704qvb.10
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Aug 2021 06:54:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ll3gJ2kWTJ1Ddm5xPCWd0fQRm1CZSo4h409/G1+k1XQ=;
+        b=G9AudWhNticUyEE9OKaig1qZDgxUdA6TrvuNS7xs+5+AQeYm/JbQW1Ao7qjJ7Ameve
+         qgU9tiTbZRdTTAsTu79ZSiztZOpLCuYzinoWn4GUKcaMwbWr3v50V0BKfypAH4KHUQ4Q
+         yHAAgBkaFGVMkx3I33q5cihVmSomx2oFde6OyO289Svuj0DaqLU+tmHgDrTrAciuhXKg
+         80VpoF/x7IkUNklk/WZTHWhyiDdTdbZfpIwbX5sEwwbOY8xs5+1yBa7ZpHt9vhB76n81
+         vgB8NTNdeXnZqXAVgprUSJ0XzJMdOy2MYznfLAeiuodzOU716rl+K2VvxH9XdMW6LBIj
+         Bh5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ll3gJ2kWTJ1Ddm5xPCWd0fQRm1CZSo4h409/G1+k1XQ=;
+        b=SWS4+F+XyisLu1kqAxwPDJNS7oXq+WM/DULGVhUZ0NmOPyGn6eZh4nKYsDF6kCvRS0
+         zXB94C++BapSBNwg0x/Va6WFKOTN1z2uOknGv0uZvGOXc3JiFj9shXV0yPeahtDy9gUh
+         XgsCr6pPnxdDlzOa6L/mPz4AeEBZUNoOQw1Fouozbzo0tgnObkBPsyLx1d3GXBlJ5W1n
+         Uvms/xd1s+lt0D2/u5UH+n2/s0XBfY8j2hGZ/O3yJVKi1E/9PY5V9TNK+efd1sX5nXaN
+         zHyIIaIhyxOOIL7G4xRWLpQs11jwaKfqbK+o61CA4S3OUXDRJOooSkzpy1e2pZTVYBWO
+         4M+Q==
+X-Gm-Message-State: AOAM5338BM0I6QBS/zL7S0wUMeHe5k7IhVcL1w8fS+rlHIkZIs4XsqDW
+        6V1UfZj5llSSiDgljLCRWNXDcw==
+X-Google-Smtp-Source: ABdhPJyHTHpSJyITjiOPCkH+9qLxvHn7fErOIMq6FjPyWkOIoMB/2n9TOv/bIlPVFumWYV5hVYA5ZQ==
+X-Received: by 2002:a0c:8525:: with SMTP id n34mr3997200qva.19.1628776496865;
+        Thu, 12 Aug 2021 06:54:56 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11c1::110c? ([2620:10d:c091:480::1:4885])
+        by smtp.gmail.com with ESMTPSA id bl26sm1317894qkb.34.2021.08.12.06.54.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Aug 2021 06:54:56 -0700 (PDT)
+Subject: Re: [PATCH/RFC 0/4] Attempt to make progress with btrfs dev number
+ strangeness.
+To:     NeilBrown <neilb@suse.de>
+Cc:     Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        linux-fsdevel@vger.kernel.org,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Btrfs BTRFS <linux-btrfs@vger.kernel.org>
+References: <162848123483.25823.15844774651164477866.stgit@noble.brown>
+ <e6496956-0df3-6232-eecb-5209b28ca790@toxicpanda.com>
+ <162872000356.22261.854151210687377005@noble.neil.brown.name>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <6571d3fb-34ea-0f22-4fbe-995e5568e044@toxicpanda.com>
+Date:   Thu, 12 Aug 2021 09:54:54 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3088958.1628775479@warthog.procyon.org.uk>
+In-Reply-To: <162872000356.22261.854151210687377005@noble.neil.brown.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 12, 2021 at 02:37:59PM +0100, David Howells wrote:
-> David Howells <dhowells@redhat.com> wrote:
+On 8/11/21 6:13 PM, NeilBrown wrote:
+> On Wed, 11 Aug 2021, Josef Bacik wrote:
+>>
+>> I think this is a step in the right direction, but I want to figure out a way to
+>> accomplish this without magical mount points that users must be aware of.
 > 
-> > Matthew Wilcox <willy@infradead.org> wrote:
-> > 
-> > > After submitting the IO here ...
-> > > 
-> > > > +	if (ret != -EIOCBQUEUED)
-> > > > +		swapfile_read_complete(&ki->iocb, ret, 0);
-> > > 
-> > > We only touch the 'ki' here ... if the caller didn't call read_complete
-> > > 
-> > > > +	swapfile_put_kiocb(ki);
-> > > 
-> > > Except for here, which is only touched in order to put the refcount.
-> > > 
-> > > So why can't swapfile_read_complete() do the work of freeing the ki?
-> > 
-> > When I was doing something similar for cachefiles, I couldn't get it to work
-> > like that.  I'll have another look at that.
+> magic mount *options* ???
 > 
-> Ah, yes.  generic_file_direct_write() accesses in the kiocb *after* calling
-> ->direct_IO(), so the kiocb *must not* go away until after
-> generic_file_direct_write() has returned.
+>>
+>> I think the stat() st_dev ship as sailed, we're stuck with that.  However
+>> Christoph does have a valid point where it breaks the various info spit out by
+>> /proc.  You've done a good job with the treeid here, but it still makes it
+>> impossible for somebody to map the st_dev back to the correct mount.
+> 
+> The ship might have sailed, but it is not water tight.  And as the world
+> it round, it can still come back to bite us from behind.
+> Anything can be transitioned away from, whether it is devfs or 32-bit
+> time or giving different device numbers to different file-trees.
+> 
+> The linkage between device number and and filesystem is quite strong.
+> We could modified all of /proc and /sys/ and audit and whatever else to
+> report the fake device number, but we cannot get the fake device number
+> into the mount table (without making the mount table unmanageablely
+> large).
+> And if subtrees aren't in the mount-table for the NFS server, I don't
+> think they should be in the mount-table of the NFS client.  So we cannot
+> export them to NFS.
+> 
+> I understand your dislike for mount options.  An alternative with
+> different costs and benefits would be to introduce a new filesystem type
+> - btrfs2 or maybe betrfs.  This would provide numdevs=1 semantics and do
+> whatever we decided was best with inode numbers.  How much would you
+> hate that?
+> 
 
-This is a read, not a write ... but we don't care about ki_pos being
-updated, so that store can be conditioned on IOCB_SWAP being clear.
-Or instead of storing directly to ki_pos, we take a pointer to ki_pos
-and then redirect that pointer somewhere harmless.
+A lot more ;).
+
+>>
+>> I think we aren't going to solve that problem, at least not with stat().  I
+>> think with statx() spitting out treeid we have given userspace a way to
+>> differentiate subvolumes, and so we should fix statx() to spit out the the super
+>> block device, that way new userspace things can do their appropriate lookup if
+>> they so choose.
+> 
+> I don't think we should normalize having multiple devnums per filesystem
+> by encoding it in statx().  It *would* make sense to add a btrfs ioctl
+> which reports the real device number of a file.  Tools that really need
+> to work with btrfs could use that, but it would always be obvious that
+> it was an exception.
+
+That's not what I'm saying.  I'm saying that stat() continues to behave the way 
+it currently does, for legacy users.
+
+And then for statx() it returns the correct devnum like any other file system, 
+with the augmentation of the treeid so that future userspace programs can use 
+the treeid to decide if they want to wander into a subvolume.
+
+This way moving forward we have a way to map back to a mount point because 
+statx() will return the actual devnum for the mountpoint, and then we can use 
+the treeid to be smart about when we wander into a subvolume.
+
+And if we're going to add a treeid, I would actually like to add a parent_treeid 
+as well so we could tell if we're a snapshot or just a normal subvolume.
+
+> 
+>>
+>> This leaves the problem of nfsd.  Can you just integrate this new treeid into
+>> nfsd, and use that to either change the ino within nfsd itself, or do something
+>> similar to what your first patchset did and generate a fsid based on the treeid?
+> 
+> I would only want nfsd to change the inode number.  I no longer think it
+> is acceptable for nfsd to report different device number (as I mention
+> above).
+> I would want the new inode number to be explicitly provided by the
+> filesystem.  Whether that is a new export_operation or a new field in
+> 'struct kstat' doesn't really bother me.  I'd *prefer* it to be st_ino,
+> but I can live without that.
+>
+
+Right, I'm not saying nfsd has to propagate our dev_t thing, I'm saying that you 
+could accomplish the same behavior without the mount options.  We add either a 
+new SB_I_HAS_TREEID or FS_HAS_TREEID, depending on if you prefer to tag the sb 
+or the fs_type, and then NFS does the inode number magic transformation 
+automatically and we are good to go.
+
+> On the topic of inode numbers....  I've recently learned that btrfs
+> never reuses inode (objectid) numbers (except possibly after an
+> unmount).  Equally it doesn't re-use subvol numbers.  How much does this
+> contribute to the 64 bits not being enough for subtree+inode?
+> 
+> It would be nice if we could be comfortable limiting the objectid number
+> to 40 bits and the root.objectid (filetree) number to 24 bits, and
+> combine them into a 64bit inode number.
+> 
+> If we added a inode number reuse scheme that was suitably performant,
+> would that make this possible?  That would remove the need for a treeid,
+> and allow us to use project-id to identify subtrees.
+> 
+
+We had a resuse scheme, we deprecated and deleted it.  I don't want to 
+arbitrarily limit objectid's to work around this issue.
+
+>>
+>> Mount options are messy, and are just going to lead to distro's turning them on
+>> without understanding what's going on and then we have to support them forever.
+>>    I want to get this fixed in a way that we all hate the least with as little
+>> opportunity for confused users to make bad decisions.  Thanks,
+> 
+> Hence my question: how much do you hate creating a new filesystem type
+> to fix the problems?
+> 
+
+I'm still not convinced we can't solve this without adding new options or 
+fstypes.  I think flags to indicate that we're special and to use a treeid that 
+we stuff into the inode would be a reasonable solution.  That being said I'm a 
+little sleep deprived so I could be missing why my plan is a bad one, so I'm 
+willing to be convinced that mount options are the solution to this, but I want 
+to make sure we're damned certain that's the best way forward.  Thanks,
+
+Josef
