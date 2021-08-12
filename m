@@ -2,137 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 361C33EA6C4
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 16:47:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46AC13EA653
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 16:16:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237387AbhHLOrq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Aug 2021 10:47:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235298AbhHLOrp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 10:47:45 -0400
-X-Greylist: delayed 2424 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 12 Aug 2021 07:47:20 PDT
-Received: from savella.carfax.org.uk (2001-ba8-1f1-f0e6-0-0-0-2.autov6rev.bitfolk.space [IPv6:2001:ba8:1f1:f0e6::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F778C061756;
-        Thu, 12 Aug 2021 07:47:19 -0700 (PDT)
-Received: from hrm by savella.carfax.org.uk with local (Exim 4.92)
-        (envelope-from <hrm@savella.carfax.org.uk>)
-        id 1mEBLM-0000bf-Sl; Thu, 12 Aug 2021 15:06:00 +0100
-Date:   Thu, 12 Aug 2021 15:06:00 +0100
-From:   Hugo Mills <hugo@carfax.org.uk>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     NeilBrown <neilb@suse.de>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, linux-fsdevel@vger.kernel.org,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Btrfs BTRFS <linux-btrfs@vger.kernel.org>
-Subject: Re: [PATCH/RFC 0/4] Attempt to make progress with btrfs dev number
- strangeness.
-Message-ID: <20210812140600.GA15870@savella.carfax.org.uk>
-Mail-Followup-To: Hugo Mills <hugo@carfax.org.uk>,
-        Josef Bacik <josef@toxicpanda.com>, NeilBrown <neilb@suse.de>,
-        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
-        linux-fsdevel@vger.kernel.org,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Btrfs BTRFS <linux-btrfs@vger.kernel.org>
-References: <162848123483.25823.15844774651164477866.stgit@noble.brown>
- <e6496956-0df3-6232-eecb-5209b28ca790@toxicpanda.com>
- <162872000356.22261.854151210687377005@noble.neil.brown.name>
- <6571d3fb-34ea-0f22-4fbe-995e5568e044@toxicpanda.com>
+        id S230230AbhHLORG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Aug 2021 10:17:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:28013 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231960AbhHLORF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 10:17:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1628777800;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2bMfhHAv15CDN98DVHmVRNFcfhw0V+S5BAUtt4n1y8U=;
+        b=F3N1YtOoqwEOayblKksrfEqROptIvuYt35AuT32x0mTShJlElVrDkgT5eTDL3u6IJkAUN7
+        kG7E/nHA8MSl1uWqWUgEEbUJAThXIRSiDLp5liCas0P36dZn9UMurANs2ltuGtfHtnUm3d
+        gtkdm783Qzd1z/Trng3qEbUKuzicZz4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-tJAOs35jM9iYqWetyHiFnA-1; Thu, 12 Aug 2021 10:16:36 -0400
+X-MC-Unique: tJAOs35jM9iYqWetyHiFnA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 86E5418C89C4;
+        Thu, 12 Aug 2021 14:16:34 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.22.32.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6708218AD4;
+        Thu, 12 Aug 2021 14:16:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <YRUnN+Y2CQ0qcjO6@casper.infradead.org>
+References: <YRUnN+Y2CQ0qcjO6@casper.infradead.org> <3088327.1628774588@warthog.procyon.org.uk> <YRUbXoMzWVX9X/Vf@casper.infradead.org> <162876946134.3068428.15475611190876694695.stgit@warthog.procyon.org.uk> <162876947840.3068428.12591293664586646085.stgit@warthog.procyon.org.uk> <3088958.1628775479@warthog.procyon.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     dhowells@redhat.com, trond.myklebust@primarydata.com,
+        darrick.wong@oracle.com, hch@lst.de, jlayton@kernel.org,
+        sfrench@samba.org, torvalds@linux-foundation.org,
+        linux-nfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm: Make swap_readpage() for SWP_FS_OPS use ->direct_IO() not ->readpage()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6571d3fb-34ea-0f22-4fbe-995e5568e044@toxicpanda.com>
-X-GPG-Fingerprint: DD84 D558 9D81 DDEE 930D  2054 585E 1475 E2AB 1DE4
-X-GPG-Key: E2AB1DE4
-X-Parrot: It is no more. It has joined the choir invisible.
-X-IRC-Nicks: darksatanic darkersatanic darkling darkthing
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3122383.1628777791.1@warthog.procyon.org.uk>
+Date:   Thu, 12 Aug 2021 15:16:31 +0100
+Message-ID: <3122384.1628777791@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 12, 2021 at 09:54:54AM -0400, Josef Bacik wrote:
-> On 8/11/21 6:13 PM, NeilBrown wrote:
-> > On Wed, 11 Aug 2021, Josef Bacik wrote:
-> > > 
-> > > I think this is a step in the right direction, but I want to figure out a way to
-> > > accomplish this without magical mount points that users must be aware of.
-> > 
-> > magic mount *options* ???
-> > 
-> > > 
-> > > I think the stat() st_dev ship as sailed, we're stuck with that.  However
-> > > Christoph does have a valid point where it breaks the various info spit out by
-> > > /proc.  You've done a good job with the treeid here, but it still makes it
-> > > impossible for somebody to map the st_dev back to the correct mount.
-> > 
-> > The ship might have sailed, but it is not water tight.  And as the world
-> > it round, it can still come back to bite us from behind.
-> > Anything can be transitioned away from, whether it is devfs or 32-bit
-> > time or giving different device numbers to different file-trees.
-> > 
-> > The linkage between device number and and filesystem is quite strong.
-> > We could modified all of /proc and /sys/ and audit and whatever else to
-> > report the fake device number, but we cannot get the fake device number
-> > into the mount table (without making the mount table unmanageablely
-> > large).
-> > And if subtrees aren't in the mount-table for the NFS server, I don't
-> > think they should be in the mount-table of the NFS client.  So we cannot
-> > export them to NFS.
-> > 
-> > I understand your dislike for mount options.  An alternative with
-> > different costs and benefits would be to introduce a new filesystem type
-> > - btrfs2 or maybe betrfs.  This would provide numdevs=1 semantics and do
-> > whatever we decided was best with inode numbers.  How much would you
-> > hate that?
-> > 
-> 
-> A lot more ;).
-> 
-> > > 
-> > > I think we aren't going to solve that problem, at least not with stat().  I
-> > > think with statx() spitting out treeid we have given userspace a way to
-> > > differentiate subvolumes, and so we should fix statx() to spit out the the super
-> > > block device, that way new userspace things can do their appropriate lookup if
-> > > they so choose.
-> > 
-> > I don't think we should normalize having multiple devnums per filesystem
-> > by encoding it in statx().  It *would* make sense to add a btrfs ioctl
-> > which reports the real device number of a file.  Tools that really need
-> > to work with btrfs could use that, but it would always be obvious that
-> > it was an exception.
-> 
-> That's not what I'm saying.  I'm saying that stat() continues to behave the
-> way it currently does, for legacy users.
-> 
-> And then for statx() it returns the correct devnum like any other file
-> system, with the augmentation of the treeid so that future userspace
-> programs can use the treeid to decide if they want to wander into a
-> subvolume.
-> 
-> This way moving forward we have a way to map back to a mount point because
-> statx() will return the actual devnum for the mountpoint, and then we can
-> use the treeid to be smart about when we wander into a subvolume.
-> 
-> And if we're going to add a treeid, I would actually like to add a
-> parent_treeid as well so we could tell if we're a snapshot or just a normal
-> subvolume.
+Matthew Wilcox <willy@infradead.org> wrote:
 
-   Can I make a request to call it something other than a
-"parent". There's at least three different usages of "parent" for
-three different concepts related to subvolumes in btrfs(*), and it'd
-be nice to avoid the inevitable confusion.
+> This is a read, not a write ... but we don't care about ki_pos being
+> updated, so that store can be conditioned on IOCB_SWAP being clear.
+> Or instead of storing directly to ki_pos, we take a pointer to ki_pos
+> and then redirect that pointer somewhere harmless.
 
-(*) 1. "subvolume containing this one",
-    2. "subvolume that was snapshotted to make this one", and,
-    3. at least informally, "subvolume that was sent/received to make this one"
+But see also ext4_dio_read_iter(), for example.  That touches ki_filp after
+starting the op.
 
-   Hugo.
+David
 
-[snip to end]
-
--- 
-Hugo Mills             | Reading Mein Kampf won't make you a Nazi. Reading
-hugo@... carfax.org.uk | Das Kapital won't make you a communist. But most
-http://carfax.org.uk/  | trolls started out with a copy of Lord of the Rings.
-PGP: E2AB1DE4          |
