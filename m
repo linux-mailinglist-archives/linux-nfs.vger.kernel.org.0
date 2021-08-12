@@ -2,18 +2,18 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C72E3EA464
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 14:19:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9454A3EA488
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 14:21:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235982AbhHLMTC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Aug 2021 08:19:02 -0400
-Received: from verein.lst.de ([213.95.11.211]:44062 "EHLO verein.lst.de"
+        id S236069AbhHLMVf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Aug 2021 08:21:35 -0400
+Received: from verein.lst.de ([213.95.11.211]:44085 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234942AbhHLMTC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 12 Aug 2021 08:19:02 -0400
+        id S237369AbhHLMVf (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 12 Aug 2021 08:21:35 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3603667373; Thu, 12 Aug 2021 14:18:34 +0200 (CEST)
-Date:   Thu, 12 Aug 2021 14:18:34 +0200
+        id D840468AFE; Thu, 12 Aug 2021 14:21:04 +0200 (CEST)
+Date:   Thu, 12 Aug 2021 14:21:04 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     David Howells <dhowells@redhat.com>
 Cc:     willy@infradead.org, trond.myklebust@primarydata.com,
@@ -21,32 +21,31 @@ Cc:     willy@infradead.org, trond.myklebust@primarydata.com,
         sfrench@samba.org, torvalds@linux-foundation.org,
         linux-nfs@vger.kernel.org, linux-mm@kvack.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] mm: Fix NFS swapfiles and use DIO read for
- swapfiles
-Message-ID: <20210812121834.GA18532@lst.de>
-References: <162876946134.3068428.15475611190876694695.stgit@warthog.procyon.org.uk>
+Subject: Re: [PATCH 2/2] mm: Make swap_readpage() for SWP_FS_OPS use
+ ->direct_IO() not ->readpage()
+Message-ID: <20210812122104.GB18532@lst.de>
+References: <162876946134.3068428.15475611190876694695.stgit@warthog.procyon.org.uk> <162876947840.3068428.12591293664586646085.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <162876946134.3068428.15475611190876694695.stgit@warthog.procyon.org.uk>
+In-Reply-To: <162876947840.3068428.12591293664586646085.stgit@warthog.procyon.org.uk>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 12, 2021 at 12:57:41PM +0100, David Howells wrote:
-> 
-> Hi Willy, Trond,
-> 
-> Here's a change to make reads from the swapfile use async DIO rather than
-> readpage(), as requested by Willy.
-> 
-> Whilst trying to make this work, I found that NFS's support for swapfiles
-> seems to have been non-functional since Aug 2019 (I think), so the first
-> patch fixes that.  Question is: do we actually *want* to keep this
-> functionality, given that it seems that no one's tested it with an upstream
-> kernel in the last couple of years?
+On Thu, Aug 12, 2021 at 12:57:58PM +0100, David Howells wrote:
+> Make swap_readpage(), when accessing a swap file (SWP_FS_OPS) use
+> the ->direct_IO() method on the filesystem rather then ->readpage().
 
-Independ of the NFS use using the direct I/O code for swap seems like
-the right thing to do in generlal.  e.g. for XFS a lookup in the extent
-btree will be more efficient than the weird swap extent map.
+->direct_IO is just a helper for ->read_iter and ->write_iter, so please
+don't call it directly.  It actually is slowly on its way out, with at
+at least all of the iomap implementations not using it, as well as various
+other file systems.
+
+> +	ki = kzalloc(sizeof(*ki), GFP_KERNEL);
+> +	if (!ki)
+> +		return -ENOMEM;
+
+for the synchronous case we could avoid this allocation and just use
+arguments on stack.
