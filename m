@@ -2,43 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 855253EA595
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 15:24:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 604253EA5C9
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 15:38:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237714AbhHLNXx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Aug 2021 09:23:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21833 "EHLO
+        id S231172AbhHLNic (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Aug 2021 09:38:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:30481 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237542AbhHLNXn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 09:23:43 -0400
+        by vger.kernel.org with ESMTP id S230033AbhHLNib (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 09:38:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628774597;
+        s=mimecast20190719; t=1628775485;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=mtlBBB1F9pk9Pfv1s5MAjMAoMZ3oz0r19HRN+gKvS5Q=;
-        b=iEH//1hX83qzbm0goBpJXki+6haa3LJBLg0N+GriUIiBJpOQv52OouG5rdduicTfYJLibj
-        gD6XKobA37V9PRQvtd8sETKzj9CHZvd89c21OVohq5QMumMhY3feFbsxtHnLjQW/b53Jvp
-        6dk2H92SQBcwRtMl7ESwB731XByRtUw=
+        bh=oiGXmDTLhiS3oN2r9OJ7cRVpEzCCbBrauFWnA55fp7U=;
+        b=MIJVBZ0jKfYyJ4j2GQPf05diYRdHNBgbu/Akj1HHtxb8jrvizsp+GNw/vt4ZVIaEC1pjvU
+        5ttLB2tfUaVRbiW6O0Z4Xc0xGkijQtIkPDdfKBp/h52kMSO+ISAy7xJrYMf/68yND4IhW3
+        luQqvOtjQ3Wjk/iQwGoj7zhRIc/+T3Y=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-227-uEiIYdvjOea4lIMjdeej8w-1; Thu, 12 Aug 2021 09:23:13 -0400
-X-MC-Unique: uEiIYdvjOea4lIMjdeej8w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-490-TZtzByDUPuGJ6gxXgq_XZA-1; Thu, 12 Aug 2021 09:38:04 -0400
+X-MC-Unique: TZtzByDUPuGJ6gxXgq_XZA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65AA3190B2AF;
-        Thu, 12 Aug 2021 13:23:11 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C80358015C7;
+        Thu, 12 Aug 2021 13:38:02 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.22.32.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2495A81F73;
-        Thu, 12 Aug 2021 13:23:08 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B0F335D9C6;
+        Thu, 12 Aug 2021 13:38:00 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
 From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <YRUbXoMzWVX9X/Vf@casper.infradead.org>
-References: <YRUbXoMzWVX9X/Vf@casper.infradead.org> <162876946134.3068428.15475611190876694695.stgit@warthog.procyon.org.uk> <162876947840.3068428.12591293664586646085.stgit@warthog.procyon.org.uk>
+In-Reply-To: <3088327.1628774588@warthog.procyon.org.uk>
+References: <3088327.1628774588@warthog.procyon.org.uk> <YRUbXoMzWVX9X/Vf@casper.infradead.org> <162876946134.3068428.15475611190876694695.stgit@warthog.procyon.org.uk> <162876947840.3068428.12591293664586646085.stgit@warthog.procyon.org.uk>
 To:     Matthew Wilcox <willy@infradead.org>
 Cc:     dhowells@redhat.com, trond.myklebust@primarydata.com,
         darrick.wong@oracle.com, hch@lst.de, jlayton@kernel.org,
@@ -48,31 +48,37 @@ Cc:     dhowells@redhat.com, trond.myklebust@primarydata.com,
 Subject: Re: [PATCH 2/2] mm: Make swap_readpage() for SWP_FS_OPS use ->direct_IO() not ->readpage()
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3088326.1628774588.1@warthog.procyon.org.uk>
-Date:   Thu, 12 Aug 2021 14:23:08 +0100
-Message-ID: <3088327.1628774588@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-ID: <3088957.1628775479.1@warthog.procyon.org.uk>
+Date:   Thu, 12 Aug 2021 14:37:59 +0100
+Message-ID: <3088958.1628775479@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
+David Howells <dhowells@redhat.com> wrote:
 
-> After submitting the IO here ...
+> Matthew Wilcox <willy@infradead.org> wrote:
 > 
-> > +	if (ret != -EIOCBQUEUED)
-> > +		swapfile_read_complete(&ki->iocb, ret, 0);
+> > After submitting the IO here ...
+> > 
+> > > +	if (ret != -EIOCBQUEUED)
+> > > +		swapfile_read_complete(&ki->iocb, ret, 0);
+> > 
+> > We only touch the 'ki' here ... if the caller didn't call read_complete
+> > 
+> > > +	swapfile_put_kiocb(ki);
+> > 
+> > Except for here, which is only touched in order to put the refcount.
+> > 
+> > So why can't swapfile_read_complete() do the work of freeing the ki?
 > 
-> We only touch the 'ki' here ... if the caller didn't call read_complete
-> 
-> > +	swapfile_put_kiocb(ki);
-> 
-> Except for here, which is only touched in order to put the refcount.
-> 
-> So why can't swapfile_read_complete() do the work of freeing the ki?
+> When I was doing something similar for cachefiles, I couldn't get it to work
+> like that.  I'll have another look at that.
 
-When I was doing something similar for cachefiles, I couldn't get it to work
-like that.  I'll have another look at that.
+Ah, yes.  generic_file_direct_write() accesses in the kiocb *after* calling
+->direct_IO(), so the kiocb *must not* go away until after
+generic_file_direct_write() has returned.
 
 David
 
