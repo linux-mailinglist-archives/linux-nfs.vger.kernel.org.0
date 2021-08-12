@@ -2,161 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA0073E9AC5
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 00:13:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFB603EA425
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 13:57:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232353AbhHKWNy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Aug 2021 18:13:54 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:55910 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232226AbhHKWNy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Aug 2021 18:13:54 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        id S235554AbhHLL6P (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Aug 2021 07:58:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40543 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235523AbhHLL6P (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 07:58:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1628769469;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+MUILZud/IAozexZw2Rp3LH70sCYOJsL7dafaXwyS/4=;
+        b=Kw/gyE/5O/7GYDiZjpUXT4wsTw24mwFXKbfj9/fNxq7ZuCdWm+N5AFsKzG+PyA1ceuupz6
+        s+Zd/jXmSm33c/oD6UmNLIzaFFw+LZ+WaKiLe0c00zRbNlMpiNBi2ZAznEpRELdG8+pLQU
+        dWitylQyJ59vE60LqIODmXMDTpoKhi4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-424-05cOM7r1PKGLzk-WXnMcXA-1; Thu, 12 Aug 2021 07:57:46 -0400
+X-MC-Unique: 05cOM7r1PKGLzk-WXnMcXA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id C89C71FEF2;
-        Wed, 11 Aug 2021 22:13:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1628720008; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FeGzUTvoCN8Wlt5hyL5qJ6Nm2upHl5bZr9FlYzW5TQ0=;
-        b=yIgC1og83IS8ikDuUa+qhuKWoRiaFZpJQmCJxxkDPM8DsMrrvq5GROc6puqtu3oDd3jOTq
-        DwVI/+GcUIDgt2Jfxdv8k904Utq59utZDQWjNG+amg5vxH2zsmMUVfk35LCfJyJFB8PEbU
-        eIDLG5MRhGprNTj4px4r0NpIl3c+TQ4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1628720008;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FeGzUTvoCN8Wlt5hyL5qJ6Nm2upHl5bZr9FlYzW5TQ0=;
-        b=8W2baWzFIFgDvTP8YHv8VfmQD59nHIEjVMGlpp67VhTsoI5tbZnt9ZATQRtUnjXKW4mSse
-        tDnOxeGJjByd16DA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EBC4A13AE6;
-        Wed, 11 Aug 2021 22:13:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id C9QcKoZLFGHxKwAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 11 Aug 2021 22:13:26 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ADACF1008064;
+        Thu, 12 Aug 2021 11:57:44 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.22.32.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4897C60657;
+        Thu, 12 Aug 2021 11:57:42 +0000 (UTC)
+Subject: [PATCH 0/2] mm: Fix NFS swapfiles and use DIO read for swapfiles
+From:   David Howells <dhowells@redhat.com>
+To:     willy@infradead.org
+Cc:     dhowells@redhat.com, trond.myklebust@primarydata.com,
+        darrick.wong@oracle.com, hch@lst.de, jlayton@kernel.org,
+        sfrench@samba.org, torvalds@linux-foundation.org,
+        linux-nfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 12 Aug 2021 12:57:41 +0100
+Message-ID: <162876946134.3068428.15475611190876694695.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Josef Bacik" <josef@toxicpanda.com>
-Cc:     "Chris Mason" <clm@fb.com>, "David Sterba" <dsterba@suse.com>,
-        linux-fsdevel@vger.kernel.org,
-        "Linux NFS list" <linux-nfs@vger.kernel.org>,
-        "Btrfs BTRFS" <linux-btrfs@vger.kernel.org>
-Subject: Re: [PATCH/RFC 0/4] Attempt to make progress with btrfs dev number
- strangeness.
-In-reply-to: <e6496956-0df3-6232-eecb-5209b28ca790@toxicpanda.com>
-References: <162848123483.25823.15844774651164477866.stgit@noble.brown>,
- <e6496956-0df3-6232-eecb-5209b28ca790@toxicpanda.com>
-Date:   Thu, 12 Aug 2021 08:13:23 +1000
-Message-id: <162872000356.22261.854151210687377005@noble.neil.brown.name>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 11 Aug 2021, Josef Bacik wrote:
->=20
-> I think this is a step in the right direction, but I want to figure out a w=
-ay to=20
-> accomplish this without magical mount points that users must be aware of.
 
-magic mount *options* ???
+Hi Willy, Trond,
 
->=20
-> I think the stat() st_dev ship as sailed, we're stuck with that.  However=20
-> Christoph does have a valid point where it breaks the various info spit out=
- by=20
-> /proc.  You've done a good job with the treeid here, but it still makes it =
+Here's a change to make reads from the swapfile use async DIO rather than
+readpage(), as requested by Willy.
 
-> impossible for somebody to map the st_dev back to the correct mount.
+Whilst trying to make this work, I found that NFS's support for swapfiles
+seems to have been non-functional since Aug 2019 (I think), so the first
+patch fixes that.  Question is: do we actually *want* to keep this
+functionality, given that it seems that no one's tested it with an upstream
+kernel in the last couple of years?
 
-The ship might have sailed, but it is not water tight.  And as the world
-it round, it can still come back to bite us from behind.
-Anything can be transitioned away from, whether it is devfs or 32-bit
-time or giving different device numbers to different file-trees.
+I tested this using the procedure and program outlined in the first patch.
 
-The linkage between device number and and filesystem is quite strong.
-We could modified all of /proc and /sys/ and audit and whatever else to
-report the fake device number, but we cannot get the fake device number
-into the mount table (without making the mount table unmanageablely
-large). =20
-And if subtrees aren't in the mount-table for the NFS server, I don't
-think they should be in the mount-table of the NFS client.  So we cannot
-export them to NFS.
+I also encountered occasional instances of the following warning, so I'm
+wondering if there's a scheduling problem somewhere:
 
-I understand your dislike for mount options.  An alternative with
-different costs and benefits would be to introduce a new filesystem type
-- btrfs2 or maybe betrfs.  This would provide numdevs=3D1 semantics and do
-whatever we decided was best with inode numbers.  How much would you
-hate that?
+BUG: workqueue lockup - pool cpus=0-3 flags=0x5 nice=0 stuck for 34s!
+Showing busy workqueues and worker pools:
+workqueue events: flags=0x0
+  pwq 6: cpus=3 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+    in-flight: 1565:fill_page_cache_func
+workqueue events_highpri: flags=0x10
+  pwq 3: cpus=1 node=0 flags=0x1 nice=-20 active=1/256 refcnt=2
+    in-flight: 1547:fill_page_cache_func
+  pwq 1: cpus=0 node=0 flags=0x0 nice=-20 active=1/256 refcnt=2
+    in-flight: 1811:fill_page_cache_func
+workqueue events_unbound: flags=0x2
+  pwq 8: cpus=0-3 flags=0x5 nice=0 active=3/512 refcnt=5
+    pending: fsnotify_connector_destroy_workfn, fsnotify_mark_destroy_workfn, cleanup_offline_cgwbs_workfn
+workqueue events_power_efficient: flags=0x82
+  pwq 8: cpus=0-3 flags=0x5 nice=0 active=4/256 refcnt=6
+    pending: neigh_periodic_work, neigh_periodic_work, check_lifetime, do_cache_clean
+workqueue writeback: flags=0x4a
+  pwq 8: cpus=0-3 flags=0x5 nice=0 active=1/256 refcnt=4
+    in-flight: 433(RESCUER):wb_workfn
+workqueue rpciod: flags=0xa
+  pwq 8: cpus=0-3 flags=0x5 nice=0 active=38/256 refcnt=40
+    in-flight: 7:rpc_async_schedule, 1609:rpc_async_schedule, 1610:rpc_async_schedule, 912:rpc_async_schedule, 1613:rpc_async_schedule, 1631:rpc_async_schedule, 34:rpc_async_schedule, 44:rpc_async_schedule
+    pending: rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule
+workqueue ext4-rsv-conversion: flags=0x2000a
+pool 1: cpus=0 node=0 flags=0x0 nice=-20 hung=59s workers=2 idle: 6
+pool 3: cpus=1 node=0 flags=0x1 nice=-20 hung=43s workers=2 manager: 20
+pool 6: cpus=3 node=0 flags=0x0 nice=0 hung=0s workers=3 idle: 498 29
+pool 8: cpus=0-3 flags=0x5 nice=0 hung=34s workers=9 manager: 1623
+pool 9: cpus=0-3 flags=0x5 nice=-20 hung=0s workers=2 manager: 5224 idle: 859
 
->=20
-> I think we aren't going to solve that problem, at least not with stat().  I=
-=20
-> think with statx() spitting out treeid we have given userspace a way to=20
-> differentiate subvolumes, and so we should fix statx() to spit out the the =
-super=20
-> block device, that way new userspace things can do their appropriate lookup=
- if=20
-> they so choose.
+Note that this is due to DIO writes to NFS only, as far as I can tell, and
+that no reads had happened yet.
 
-I don't think we should normalize having multiple devnums per filesystem
-by encoding it in statx().  It *would* make sense to add a btrfs ioctl
-which reports the real device number of a file.  Tools that really need
-to work with btrfs could use that, but it would always be obvious that
-it was an exception.
+David
+---
+David Howells (2):
+      nfs: Fix write to swapfile failure due to generic_write_checks()
+      mm: Make swap_readpage() for SWP_FS_OPS use ->direct_IO() not ->readpage()
 
->=20
-> This leaves the problem of nfsd.  Can you just integrate this new treeid in=
-to=20
-> nfsd, and use that to either change the ino within nfsd itself, or do somet=
-hing=20
-> similar to what your first patchset did and generate a fsid based on the tr=
-eeid?
 
-I would only want nfsd to change the inode number.  I no longer think it
-is acceptable for nfsd to report different device number (as I mention
-above).
-I would want the new inode number to be explicitly provided by the
-filesystem.  Whether that is a new export_operation or a new field in
-'struct kstat' doesn't really bother me.  I'd *prefer* it to be st_ino,
-but I can live without that.
+ mm/page_io.c | 73 +++++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 67 insertions(+), 6 deletions(-)
 
-On the topic of inode numbers....  I've recently learned that btrfs
-never reuses inode (objectid) numbers (except possibly after an
-unmount).  Equally it doesn't re-use subvol numbers.  How much does this
-contribute to the 64 bits not being enough for subtree+inode?
 
-It would be nice if we could be comfortable limiting the objectid number
-to 40 bits and the root.objectid (filetree) number to 24 bits, and
-combine them into a 64bit inode number.
-
-If we added a inode number reuse scheme that was suitably performant,
-would that make this possible?  That would remove the need for a treeid,
-and allow us to use project-id to identify subtrees.
-
->=20
-> Mount options are messy, and are just going to lead to distro's turning the=
-m on=20
-> without understanding what's going on and then we have to support them fore=
-ver.=20
->   I want to get this fixed in a way that we all hate the least with as litt=
-le=20
-> opportunity for confused users to make bad decisions.  Thanks,
-
-Hence my question: how much do you hate creating a new filesystem type
-to fix the problems?
-
-Thanks,
-NeilBrown
