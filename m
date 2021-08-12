@@ -2,186 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A2E83EA6B7
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 16:44:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F2F13EA7C4
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 17:41:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236692AbhHLOoy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Aug 2021 10:44:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51840 "EHLO
+        id S238149AbhHLPmH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Aug 2021 11:42:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233079AbhHLOoy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 10:44:54 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41E6EC061756
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Aug 2021 07:44:29 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 6762F7C62; Thu, 12 Aug 2021 10:44:28 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6762F7C62
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1628779468;
-        bh=eExvMh+U/FvzAvVBasn/2NcpKyNUEbjYu2kU/6smPE4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bc8ftnIyWnMCUE23mu1iKvs4QCxnwQxwfTUmGM5zX3RmDFwKlkxWLZ9HWsn+Zx/hX
-         GegGR0d3iG218G1C6m0INyGW4WvUHkElbRWZjTN2+6LU8Q9YtIGt4YzxY0pEaQQaxx
-         VGC4RrIZKjIKRBmkAGCaFzc298XKvaqXiYjEwbxc=
-Date:   Thu, 12 Aug 2021 10:44:28 -0400
-From:   "J.  Bruce Fields" <bfields@fieldses.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Timothy Pearson <tpearson@raptorengineering.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org, Trond Myklebust <trondmy@gmail.com>
-Subject: Re: CPU stall, eventual host hang with BTRFS + NFS under heavy load
-Message-ID: <20210812144428.GA9536@fieldses.org>
-References: <281642234.3818.1625478269194.JavaMail.zimbra@raptorengineeringinc.com>
- <162855621114.22632.14151019687856585770@noble.neil.brown.name>
+        with ESMTP id S238175AbhHLPmH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 11:42:07 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD31FC0617A8;
+        Thu, 12 Aug 2021 08:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=rRRInWTXt88iInQrUMslw6/dDmJVHBRbB2u0EULf5Hg=; b=Yw+Dh/oM1oO5pq6qyI7FNo3t6Q
+        gx5MdI+3AKoBLfLsXvV7hSsdpymjB+4rVyaoCBxbggUtS1dXiiIkxKYLtAzpxHz8ozQU6o15snaU3
+        g/YPrBRrNCj6lMSLi+nqago1irdlmXakhi+FcbIoG42INTBaWENjp2LHhYlaIr7Egfk91IAfElT/m
+        5KgDUhy2mv3CYLXkudaTbyYYA0sCBDGG6jWyRU3proN98MFmItee6ftH3yAeDixXfgHs7lNhanbBc
+        7KCjjcQwDIXgN+JXH8G+s0MayKXCVykM0HIw3mPAtULVEOvTqJaOSTNd4ke1enrddQTaShxQ/SagD
+        EvIXleCQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mECo0-00EikE-Vo; Thu, 12 Aug 2021 15:39:47 +0000
+Date:   Thu, 12 Aug 2021 16:39:40 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, trond.myklebust@primarydata.com,
+        darrick.wong@oracle.com, jlayton@kernel.org, sfrench@samba.org,
+        torvalds@linux-foundation.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm: Make swap_readpage() for SWP_FS_OPS use
+ ->direct_IO() not ->readpage()
+Message-ID: <YRVAvKPn8SjczqrD@casper.infradead.org>
+References: <20210812122104.GB18532@lst.de>
+ <162876946134.3068428.15475611190876694695.stgit@warthog.procyon.org.uk>
+ <162876947840.3068428.12591293664586646085.stgit@warthog.procyon.org.uk>
+ <3085432.1628773025@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <162855621114.22632.14151019687856585770@noble.neil.brown.name>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <3085432.1628773025@warthog.procyon.org.uk>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Aug 10, 2021 at 10:43:31AM +1000, NeilBrown wrote:
-> On Mon, 05 Jul 2021, Timothy Pearson wrote:
+On Thu, Aug 12, 2021 at 01:57:05PM +0100, David Howells wrote:
+> Christoph Hellwig <hch@lst.de> wrote:
+> 
+> > On Thu, Aug 12, 2021 at 12:57:58PM +0100, David Howells wrote:
+> > > Make swap_readpage(), when accessing a swap file (SWP_FS_OPS) use
+> > > the ->direct_IO() method on the filesystem rather then ->readpage().
 > > 
-> > Sample backtrace below:
-> > 
-> > [16846.426141] rcu: INFO: rcu_sched self-detected stall on CPU
-> > [16846.426202] rcu:     32-....: (5249 ticks this GP) idle=78a/1/0x4000000000000002 softirq=1663878/1663878 fqs=1986
-> > [16846.426241]  (t=5251 jiffies g=2720809 q=756724)
-> > [16846.426273] NMI backtrace for cpu 32
-> > [16846.426298] CPU: 32 PID: 10624 Comm: kworker/u130:25 Not tainted 5.12.14 #1
-> > [16846.426342] Workqueue: rpciod rpc_async_schedule [sunrpc]
-> > [16846.426406] Call Trace:
-> > [16846.426429] [c000200010823250] [c00000000074e630] dump_stack+0xc4/0x114 (unreliable)
-> > [16846.426483] [c000200010823290] [c00000000075aebc] nmi_cpu_backtrace+0xfc/0x150
-> > [16846.426506] [c000200010823310] [c00000000075b0a8] nmi_trigger_cpumask_backtrace+0x198/0x1f0
-> > [16846.426577] [c0002000108233b0] [c000000000072818] arch_trigger_cpumask_backtrace+0x28/0x40
-> > [16846.426621] [c0002000108233d0] [c000000000202db8] rcu_dump_cpu_stacks+0x158/0x1b8
-> > [16846.426667] [c000200010823470] [c000000000201828] rcu_sched_clock_irq+0x908/0xb10
-> > [16846.426708] [c000200010823560] [c0000000002141d0] update_process_times+0xc0/0x140
-> > [16846.426768] [c0002000108235a0] [c00000000022dd34] tick_sched_handle.isra.18+0x34/0xd0
-> > [16846.426808] [c0002000108235d0] [c00000000022e1e8] tick_sched_timer+0x68/0xe0
-> > [16846.426856] [c000200010823610] [c00000000021577c] __hrtimer_run_queues+0x16c/0x370
-> > [16846.426903] [c000200010823690] [c000000000216378] hrtimer_interrupt+0x128/0x2f0
-> > [16846.426947] [c000200010823740] [c000000000029494] timer_interrupt+0x134/0x310
-> > [16846.426989] [c0002000108237a0] [c000000000016c54] replay_soft_interrupts+0x124/0x2e0
-> > [16846.427045] [c000200010823990] [c000000000016f14] arch_local_irq_restore+0x104/0x170
-> > [16846.427103] [c0002000108239c0] [c00000000017247c] mod_delayed_work_on+0x8c/0xe0
-> > [16846.427149] [c000200010823a20] [c00800000819fe04] rpc_set_queue_timer+0x5c/0x80 [sunrpc]
-> > [16846.427234] [c000200010823a40] [c0080000081a096c] __rpc_sleep_on_priority_timeout+0x194/0x1b0 [sunrpc]
-> > [16846.427324] [c000200010823a90] [c0080000081a3080] rpc_sleep_on_timeout+0x88/0x110 [sunrpc]
-> > [16846.427388] [c000200010823ad0] [c0080000071f7220] nfsd4_cb_done+0x468/0x530 [nfsd]
-> > [16846.427457] [c000200010823b60] [c0080000081a0a0c] rpc_exit_task+0x84/0x1d0 [sunrpc]
-> > [16846.427520] [c000200010823ba0] [c0080000081a2448] __rpc_execute+0xd0/0x760 [sunrpc]
-> > [16846.427598] [c000200010823c30] [c0080000081a2b18] rpc_async_schedule+0x40/0x70 [sunrpc]
+> > ->direct_IO is just a helper for ->read_iter and ->write_iter, so please
+> > don't call it directly.  It actually is slowly on its way out, with at
+> > at least all of the iomap implementations not using it, as well as various
+> > other file systems.
 > 
-> Time to play the sleuth .....
-> "rpc_async_schedule" - so this is clearly an async task.
-> It is running in __rpc_execute(), and calls rpc_exit_task().
+> [Note that __swap_writepage() uses ->direct_IO().]
 > 
-> rpc_exit_task() is a possible value for ->tk_action, which is set in
-> several places.
-> 1/ in call_bc_transmit_status(), but only after generating a kernel
->   message
->      RPC: Could not send backchannel reply......
->  You didn't report that message, so I'll assume it didn't happen.
+> Calling ->write_iter is probably a bad idea here.  Imagine that it goes
+> through, say, generic_file_write_iter(), then __generic_file_write_iter() and
+> then generic_file_direct_write().  It adds a number of delays into the system,
+> including:
 > 
-> 2/ In call_decode() if ->p_decode is NULL.  This implies a message
->    which didn't expect a reply.  All nfs4 callback procedures
->    (nfs4_cb_procedures[]) do set p_decode, so it cannot be here.
+> 	- Taking the inode lock
+> 	- Removing file privs
+> 	- Cranking mtime, ctime, file version
+> 	  - Doing mnt_want_write
+> 	  - Setting the inode dirty
+> 	- Waiting on pages in the range that are being written 
+> 	- Walking over the pagecache to invalidate the range
+> 	- Redoing the invalidation (can't be skipped since page 0 is pinned)
 > 
-> 3/ In call_decode() if the reply was successfully decoded.
->    I cannot rule this out quite so easily, but it seems unlikely as this
->    is a normal pattern and I wouldn't expect it to cause a soft-lockup.
-> 
-> 4/ In rpc_exit().  This is my guess.  All the places that rpc_exit() can
->    be called by nfsd (and nfsd appears in the call stack) are for handling 
->    errors.
-> 
-> So GUESS: rpc_exit() is getting called.
-> Not only that, but it is getting called *often*.  The call to
-> rpc_exit_task() (which is not the same as rpc_exit() - be careful) sets
-> tk_action to NULL.  So rpc_exit() must get called again and again and
-> again to keept setting tk_action back to rpc_exit_task, resulting in the
-> soft lockup.
-> 
-> After setting ->tk_action to NULL, rpc_exit_task() calls
-> ->rpc_call_done, which we see in the stack trace is nfsd4_cb_done().
-> 
-> nfsd4_cb_done() in turn calls ->done which is one of
->   nfsd4_cb_probe_done()
->   nfsd4_cb_sequence_done()
->   nfsd4_cb_layout_done()
-> or
->   nfsd4_cb_notify_lock_done()
-> 
-> Some of these call rpc_delay(task,...) and return 0, causing
-> nfsd4_cb_done() to call rpc_restart_call_prepare() This means the task
-> can be requeued, but only after a delay.
-> 
-> This doesn't yet explain the spin, but now let's look back at
->  __rpc_execute().
-> After calling do_action()  (which is rpc_exit_task() in the call trace)
-> it checks if the task is queued.  If rpc_delay_task() wasn't call, it
-> won't be queued and tk_action will be NULL, so it will loop around,
-> do_action will be NULL, and the task aborts.
-> 
-> But if rpc_delay_task() was called, then the task will be queued (on the
-> delay queue), and we continue in __rpc_execute().
-> 
-> The next test if is RPC_SIGNALLED().  If so, then rpc_exit() is called.
-> Aha! We though that must have been getting called repeatedly.  It
-> *might* not be here, but I think it is.  Let's assume so.
-> rpc_exit() will set ->tk_action to rpc_exit_task, dequeue the task and
-> (as it is async) schedule it for handling by rpc_async_schedule (that is
-> in rpc_make_runnable()).
-> 
-> __rpc_execute_task continues down to
-> 		if (task_is_async)
-> 			return;
-> and 
-> rpc_async_schedule() returns.  But the task has already been queued to
-> be handled again, so the whole process loops.
-> 
-> The problem here appears to be that a signalled task is being retried
-> without clearing the SIGNALLED flag.  That is causing the infinite loop
-> and the soft lockup.
-> 
-> This bug appears to have been introduced in Linux 5.2 by
-> Commit: ae67bd3821bb ("SUNRPC: Fix up task signalling")
+> that we might want to skip as they'll end up being done for every page swapped
+> out.
 
-I wonder how we arrived here.  Does it require that an rpc task returns
-from one of those rpc_delay() calls just as rpc_shutdown_client() is
-signalling it?  That's the only way async tasks get signalled, I think.
+I agree with David; we want something lower-level for swap to call into.
+I'd suggest aops->swap_rw and an implementation might well look
+something like:
 
-> Prior to this commit a flag RPC_TASK_KILLED was used, and it gets
-> cleared by rpc_reset_task_statistics() (called from rpc_exit_task()).
-> After this commit a new flag RPC_TASK_SIGNALLED is used, and it is never
-> cleared.
-> 
-> A fix might be to clear RPC_TASK_SIGNALLED in
-> rpc_reset_task_statistics(), but I'll leave that decision to someone
-> else.
-
-Might be worth testing with that change just to verify that this is
-what's happening.
-
-diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index c045f63d11fa..caa931888747 100644
---- a/net/sunrpc/sched.c
-+++ b/net/sunrpc/sched.c
-@@ -813,7 +813,8 @@ static void
- rpc_reset_task_statistics(struct rpc_task *task)
- {
- 	task->tk_timeouts = 0;
--	task->tk_flags &= ~(RPC_CALL_MAJORSEEN|RPC_TASK_SENT);
-+	task->tk_flags &= ~(RPC_CALL_MAJORSEEN|RPC_TASK_SIGNALLED|
-+							RPC_TASK_SENT);
- 	rpc_init_task_statistics(task);
- }
- 
-
---b.
+static ssize_t ext4_swap_rw(struct kiocb *iocb, struct iov_iter *iter)
+{
+	return iomap_dio_rw(iocb, iter, &ext4_iomap_ops, NULL, 0);
+}
