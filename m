@@ -2,77 +2,158 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31DBF3EA513
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 15:03:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0150F3EA57C
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Aug 2021 15:22:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237605AbhHLNCt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Aug 2021 09:02:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235971AbhHLNCt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 09:02:49 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C797C061765;
-        Thu, 12 Aug 2021 06:02:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=KapCwCgb5M/iDHR5WR0+lkw3WeXDUWMNBxTJHFQJfdk=; b=mUxh/OAAFJWkKC9+tghFkWl6hg
-        SZiBaIayBiLszQP6Y6dHB8UvkrxEK3sQ9wab2rBSWRK2bhYHSwZa129SIRI2avRPZfWPJeGzG060b
-        T3zCuCccJk3aevzfE5d6a/3Hb7gnv/gNqQweiqHELVODBTwRc4Rwr1y2FVZswU170C5YfHboMqiXS
-        5dR3EmfcarVaOGLY+8q5RBjYsga667g5MwbuNeieBs98bD8acNKTJhoW8UyYEG5U92f4IWX+uNy3u
-        X9Psw1hLChFTCFrgqcNzV0/rKUbyOKhVzTYsko3pZGzje14uic6S4HZdHO29oLJxYBi0xWoIrfK1t
-        fUfKRYvw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mEAJi-00EaEh-DM; Thu, 12 Aug 2021 13:00:28 +0000
-Date:   Thu, 12 Aug 2021 14:00:14 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     trond.myklebust@primarydata.com, darrick.wong@oracle.com,
-        hch@lst.de, jlayton@kernel.org, sfrench@samba.org,
-        torvalds@linux-foundation.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm: Make swap_readpage() for SWP_FS_OPS use
- ->direct_IO() not ->readpage()
-Message-ID: <YRUbXoMzWVX9X/Vf@casper.infradead.org>
-References: <162876946134.3068428.15475611190876694695.stgit@warthog.procyon.org.uk>
- <162876947840.3068428.12591293664586646085.stgit@warthog.procyon.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <162876947840.3068428.12591293664586646085.stgit@warthog.procyon.org.uk>
+        id S235971AbhHLNWn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Aug 2021 09:22:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44389 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237556AbhHLNTw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 09:19:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1628774366;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SaV466qKmDbX32CqXDpoabTK+1tGIC5BVkeekLUlF5I=;
+        b=KeUztBo+6+MKv4PEHYzMy1j96+/BuNpiAGoQOdj+Liv10qZ3Q8gpHpjFpjA+OmkUu6taES
+        dfgXpPpz/aaEGYQVPgN0LzQLv/SYUo/LWhdc2N1ZVmFbSxrOXsvvZOCDc1TqYTDOes2RyW
+        d17xjJDGik0bi2GR6vXpdmAyDWzSa6s=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-576-bhgs66-VNO6jmJB53BmjUg-1; Thu, 12 Aug 2021 09:19:24 -0400
+X-MC-Unique: bhgs66-VNO6jmJB53BmjUg-1
+Received: by mail-wm1-f72.google.com with SMTP id t12-20020a05600c198c00b002e6bf2ee83dso149011wmq.1
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Aug 2021 06:19:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SaV466qKmDbX32CqXDpoabTK+1tGIC5BVkeekLUlF5I=;
+        b=IVXMlOXGRVitxHooDZhlgGzuqFsSgz3+2lOXHKVC61cVJtOGEWsDg7MpcPLibFE/kP
+         Vm0A1UGqiw/lGaNkbXXABNcp89o60v/meL+TR9Sg/wwIt3+edlO4DTe3lRhKo+IfI+R3
+         FbZAcfz/KnVEEZN9Pk0qZaWJalG24oUOJr1sdOygJVKUNJ62vBlWaKCojSg7OCh04ww0
+         DFnVSvjGNrpxiqOFpJVR4hqgTXNbuhScpbxyYnP5/x60zLM2bYwyTa6vOOl+Uz6voXYc
+         DWwZrMqQxfH4IoBnvxXqlQ1jfPwckC7cUCf1kBrhqgAxGcBk2J5MpoIHYZm04JPluey+
+         cVdQ==
+X-Gm-Message-State: AOAM532G3XsJZI2eSMlsWAbEOywQuY15xMtN8XwlnJGgrIh7ryP7lcir
+        wiYIPKLIu6pH/Vd6b2LKbrV/zr3CwZDcacbbu1V6ZVUMLGk0aEKHLJ4hexivQQutNxNzF3RsMdT
+        QagWrn1jws3vLTKzESCLg
+X-Received: by 2002:a7b:c1cf:: with SMTP id a15mr3991461wmj.72.1628774363399;
+        Thu, 12 Aug 2021 06:19:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx+Ot3d6cN9/6Bqx2BnVuZEH2FzpeR6Pi1KUal1sz01qSt3jbElf/EOkJduuATZjeNrEOyKow==
+X-Received: by 2002:a7b:c1cf:: with SMTP id a15mr3991439wmj.72.1628774363210;
+        Thu, 12 Aug 2021 06:19:23 -0700 (PDT)
+Received: from ajmitchell.remote.csb ([95.145.245.173])
+        by smtp.gmail.com with ESMTPSA id u23sm9546627wmc.24.2021.08.12.06.19.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Aug 2021 06:19:22 -0700 (PDT)
+Message-ID: <76b96fa95dfb6c53f28cae6b622f71559d8bfe6c.camel@redhat.com>
+Subject: Re: [PATCH 2/4] nfs-utils: Fix mem leaks in gssd
+From:   Alice Mitchell <ajmitchell@redhat.com>
+To:     Olga Kornievskaia <aglo@umich.edu>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
+        Steve Dickson <steved@redhat.com>
+Date:   Thu, 12 Aug 2021 14:19:21 +0100
+In-Reply-To: <CAN-5tyEbTKQg7dNgNQGi0ysiWZnZmOKQgU5u2hy7ejfHoNZxuQ@mail.gmail.com>
+References: <ee45aa412acaf7a2c035ad98e966394a7293dd9f.camel@redhat.com>
+         <b8b806a99bd53ef9a1e8892f167ea919c52af730.camel@redhat.com>
+         <CAN-5tyEbTKQg7dNgNQGi0ysiWZnZmOKQgU5u2hy7ejfHoNZxuQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-16.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 12, 2021 at 12:57:58PM +0100, David Howells wrote:
+On Fri, 2021-08-06 at 15:12 -0400, Olga Kornievskaia wrote:
+> On Fri, Aug 6, 2021 at 12:23 PM Alice Mitchell <ajmitchell@redhat.com
+> > wrote:
+> > Also fix the modification of a returned config value which
+> > should be treated as const.
+> > 
+> > Signed-off-by: Alice Mitchell <ajmitchell@redhat.com>
+> > ---
+> >  utils/gssd/gssd.c | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/utils/gssd/gssd.c b/utils/gssd/gssd.c
+> > index 4113cba..0815665 100644
+> > --- a/utils/gssd/gssd.c
+> > +++ b/utils/gssd/gssd.c
+> > @@ -1016,7 +1016,7 @@ read_gss_conf(void)
+> >                 keytabfile = s;
+> >         s = conf_get_str("gssd", "cred-cache-directory");
+> >         if (s)
+> > -               ccachedir = s;
+> > +               ccachedir = strdup(s);
+> >         s = conf_get_str("gssd", "preferred-realm");
+> >         if (s)
+> >                 preferred_realm = s;
+> > @@ -1070,7 +1070,7 @@ main(int argc, char *argv[])
+> >                                 keytabfile = optarg;
+> >                                 break;
+> >                         case 'd':
+> > -                               ccachedir = optarg;
+> > +                               ccachedir = strdup(optarg);
+> 
+> Is it possible that there will be a value in both config file and
+> command line args. If we are strdup-ing in both we'll be over-
+> writting
+> and leaking memory?
+> 
+> Why do we need to malloc it at all? Is it ever malloc-ed now (and
+> considered a leak)? I think in both cases it uses static memory and
+> doesnt require freeing.
 
-I'm not quite sure why we need the refcount.
+in both cases the string pointed to gets modified by a later strtok()
+and so will be modifying the original of argv or a conf parameter,
+which i presume is why there was ccacherdir_copy to avoid doing that,
+but it was never properly utilised.
 
-> +	refcount_set(&ki->ki_refcnt, 2);
-> +	init_sync_kiocb(&ki->iocb, swap_file);
-> +	ki->page = page;
-> +	ki->iocb.ki_flags = IOCB_DIRECT | IOCB_SWAP;
-> +	ki->iocb.ki_pos	= page_file_offset(page);
-> +	ki->iocb.ki_filp = get_file(swap_file);
-> +	if (!synchronous)
-> +		ki->iocb.ki_complete = swapfile_read_complete;
-> +
-> +	iov_iter_bvec(&to, READ, &bv, 1, PAGE_SIZE);
-> +	ret = swap_file->f_mapping->a_ops->direct_IO(&ki->iocb, &to);
+i guess strtok truncating those strings doesnt actually *hurt* anything
+right now, its just a case of unexpected side-effects should anyone
+later try to reuse them.
 
-After submitting the IO here ...
-
-> +	if (ret != -EIOCBQUEUED)
-> +		swapfile_read_complete(&ki->iocb, ret, 0);
-
-We only touch the 'ki' here ... if the caller didn't call read_complete
-
-> +	swapfile_put_kiocb(ki);
-
-Except for here, which is only touched in order to put the refcount.
-
-So why can't swapfile_read_complete() do the work of freeing the ki?
+> 
+> >                                 break;
+> >                         case 't':
+> >                                 context_timeout = atoi(optarg);
+> > @@ -1133,7 +1133,6 @@ main(int argc, char *argv[])
+> >         }
+> > 
+> >         if (ccachedir) {
+> > -               char *ccachedir_copy;
+> >                 char *ptr;
+> > 
+> >                 for (ptr = ccachedir, i = 2; *ptr; ptr++)
+> > @@ -1141,8 +1140,7 @@ main(int argc, char *argv[])
+> >                                 i++;
+> > 
+> >                 ccachesearch = malloc(i * sizeof(char *));
+> > -               ccachedir_copy = strdup(ccachedir);
+> > -               if (!ccachedir_copy || !ccachesearch) {
+> > +               if (!ccachesearch) {
+> 
+> ccachedir_copy is the only leak here.
+> 
+> >                         printerr(0, "malloc failure\n");
+> >                         exit(EXIT_FAILURE);
+> >                 }
+> > @@ -1274,6 +1272,8 @@ main(int argc, char *argv[])
+> > 
+> >         free(preferred_realm);
+> >         free(ccachesearch);
+> > +       if (ccachedir)
+> > +               free(ccachedir);
+> > 
+> >         return rc < 0 ? EXIT_FAILURE : EXIT_SUCCESS;
+> >  }
+> > --
+> > 2.27.0
+> > 
+> > 
 
