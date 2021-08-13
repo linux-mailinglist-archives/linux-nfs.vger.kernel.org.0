@@ -2,146 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0B9B3EAEB9
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Aug 2021 04:53:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD43C3EAECA
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Aug 2021 05:10:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238493AbhHMCxi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Aug 2021 22:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48120 "EHLO
+        id S233901AbhHMDLH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Aug 2021 23:11:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235727AbhHMCxi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 22:53:38 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B4FBC061756
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Aug 2021 19:53:12 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id l11so10029895plk.6
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Aug 2021 19:53:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KzLiSlIsVSup/4qeCvh7Ri+f3EZxwQPJOIuD6v+NfLY=;
-        b=Zu9VB643K8+wLNdjTuXaVdyXQoGZPdwuwzqhT8iCdwYiZ1Xk1KGZQUVLOEyjebi6Ol
-         u9RfuTNIAkAwp5NKI9Z0Z+m+/sM0OsBBwvt3d+VM7jDPmDUGHNpbuga7tGpmraiziJyt
-         BdwjLr+r0JdmBAGyfSPcP75tdscDsLaZiUTevodHUvTKfuRsWzTC57bllEsChdRHYNzV
-         0I7gcai2RQfuIybSxkoZwrsXaU764kyQWi5vGdHqXUeHt9Y2CN91Cr8U0Xb/QN63sa3+
-         MGlZl/oXM275TdpQ0kLMl+fMLt5TngDKnNTOH1cVTjHTUpjeB5pmcYufOSeB9juhDkJb
-         JqnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KzLiSlIsVSup/4qeCvh7Ri+f3EZxwQPJOIuD6v+NfLY=;
-        b=AqvMV0N+9hbpJ9JXUw0z8V4FJEPVMVVaxup2VvYm8NfOUUyY+XP5735Rzn3PrQn8ZC
-         7sfPx9UOd/SIkFiLE82l3XerhEWoDkLZa6JgGXQtZMcYX8k193V9wyJ7T8tTMW2Xmm41
-         Dhsxpu6ov/V07Nd5ABrV+3NrW5Tr5RQgt1DgTvpzDHTKnnm4gG0ElYCdHF2uRNktg07w
-         AfjbMftqctu5NDZ/wDenE/WedCp1o8v+ZOCoPPpW9hZLNLmG49tF8GhhVTy51qzT9k5y
-         dQVP6xYxxadsiU+5wXbMRRHsYkJ7KthpuEZhSTlEcyR9OuRR4Bq0eR7lrt012jaBMSgO
-         5BMw==
-X-Gm-Message-State: AOAM530fp/SeMoNbPyvFt4KnIYGzkD+Q+HQhAMZqktodBaA+IIkl0GM3
-        R8wj+yTLFlA5+QFtfmD9m60JQGuYuBp2pj0Mw1A=
-X-Google-Smtp-Source: ABdhPJxguQ28+DrEzDJvQqKvBKLMnGEHxoozcfVTuuOB9AFsAiNfGrbeI4X5b0BWvpgA3AsN2wZ1HabLlZzpyzWuOoQ=
-X-Received: by 2002:a05:6a00:1386:b029:3cb:d3d4:f0b0 with SMTP id
- t6-20020a056a001386b02903cbd3d4f0b0mr309445pfg.24.1628823191574; Thu, 12 Aug
- 2021 19:53:11 -0700 (PDT)
+        with ESMTP id S233065AbhHMDLG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 23:11:06 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08536C061756;
+        Thu, 12 Aug 2021 20:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=gZcz0sPokS3rjSwIc/zbOFKv7/ggHbMI5Tcke621bHQ=; b=sIsJf+EBhnIakLEGIBAOM6pre9
+        ljVp9tIHnCmKf/jmtoM2VFszcC9hOrgR0zproHC7teEkzt/ew4geDzo3odzyOe9gIKcsI7uHXYalt
+        KNvBaef0y9twR1FFUfYkBWWjgAx0645SJx82dTj+1Odrx3AeFk7YSCQyNaJIyg4kaBBfJFGikS/lP
+        n1DXpPU/1TaQgQpjFdCWAxw91Ny6FjTbYP8oFDMNreOCjU0o0pZqNAhWu8sBAndXKNEnwI85wofRQ
+        7fWSOWIQv7kDKvMz31aKVxt4QIVmtwkugkruKAxcMHfg7YCZOyR75AXcZRN42ooKeQQSVmHshpc7M
+        I3jieDhQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mENZj-00FG6Z-Rk; Fri, 13 Aug 2021 03:09:53 +0000
+Date:   Fri, 13 Aug 2021 04:09:39 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Trond Myklebust <trond.myklebust@primarydata.com>,
+        linux-nfs@vger.kernel.org, viro@zeniv.linux.org.uk,
+        jlayton@kernel.org, sfrench@samba.org,
+        torvalds@linux-foundation.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/5] nfs: Fix write to swapfile failure due to
+ generic_write_checks()
+Message-ID: <YRXicziD5Jy74PZj@casper.infradead.org>
+References: <162879971699.3306668.8977537647318498651.stgit@warthog.procyon.org.uk>
+ <162879972678.3306668.10709543333474121000.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-References: <CAOv1SKCmdtchm5Z2NU80o49tkrHpAkPFaHKj4-vLDN5bZNCz-Q@mail.gmail.com>
- <162846730406.22632.14734595494457390936@noble.neil.brown.name>
- <CAOv1SKBZ7sGBnvG9-M+De+s=CfU=H_GBs4hJah1E4ks+NSMyPw@mail.gmail.com>
- <CAOv1SKCUM5cGuXWAc7dsXtbmPMATqd245juC+S9gVXHWiZsvmQ@mail.gmail.com>
- <162855893202.12431.3423894387218130632@noble.neil.brown.name>
- <CAOv1SKAaSbfw53LWCCrvGCHESgdtCf5h275Zkzi9_uHkqnCrdg@mail.gmail.com> <162882238416.1695.4958036322575947783@noble.neil.brown.name>
-In-Reply-To: <162882238416.1695.4958036322575947783@noble.neil.brown.name>
-From:   Mike Javorski <mike.javorski@gmail.com>
-Date:   Thu, 12 Aug 2021 19:53:00 -0700
-Message-ID: <CAOv1SKB_dsam7P9pzzh_SKCtA8uE9cyFdJ=qquEfhLT42-szPA@mail.gmail.com>
-Subject: Re: NFS server regression in kernel 5.13 (tested w/ 5.13.9)
-To:     NeilBrown <neilb@suse.de>
-Cc:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <162879972678.3306668.10709543333474121000.stgit@warthog.procyon.org.uk>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The "semi-known-good" has been the client. I tried updating the server
-multiple times to a 5.13 kernel and each time had to downgrade to the
-last 5.12 kernel that ArchLinux released (5.12.15) to stabilize
-performance. At each attempt, the client was running the same 5.13
-kernel that was being deployed to the server. I never downgraded the
-client.
+On Thu, Aug 12, 2021 at 09:22:06PM +0100, David Howells wrote:
+> Trying to use a swapfile on NFS results in every DIO write failing with
+> ETXTBSY because generic_write_checks(), as called by nfs_direct_write()
+> from nfs_direct_IO(), forbids writes to swapfiles.
 
-Thank you for the scripts and all the details, I will test things out
-this weekend when I can dedicate time to it.
+Why does nfs_direct_write() call generic_write_checks()?
 
-- mike
+ie call generic_write_checks() earlier, and only swap would bypass them.
 
-On Thu, Aug 12, 2021 at 7:39 PM NeilBrown <neilb@suse.de> wrote:
->
-> On Fri, 13 Aug 2021, Mike Javorski wrote:
-> > Neil:
-> >
-> > Apologies for the delay, your message didn't get properly flagged in my email.
->
-> :-)
->
-> >
-> > To answer your questions, both client (my Desktop PC) and server (my
-> > NAS) are running ArchLinux; client w/ current kernel (5.13.9), server
-> > w/ current or alternate testing kernels (see below).
->
-> So the bug could be in the server or the client.  I assume you are
-> careful to test a client against a know-good server, or a server against
-> a known-good client.
->
-> >                                                                 I
-> > intend to spend some time this weekend attempting to get the tcpdump.
-> > My initial attempts wound up with 400+Mb files which would be
-> > difficult to ship and use for diagnostics.
->
-> Rather than you sending me the dump, I'll send you the code.
->
-> Run
->   tshark -r filename -d tcp.port==2049,rpc -Y 'tcp.port==2049 && rpc.time > 1'
->
-> This will ensure the NFS traffic is actually decoded as NFS and then
-> report only NFS(rpc) replies that arrive more than 1 second after the
-> request.
-> You can add
->
->     -T fields -e frame.number -e rpc.time
->
-> to find out what the actual delay was.
->
-> If it reports any, that will be interesting.  Try with a larger time if
-> necessary to get a modest number of hits.  Using editcap and the given
-> frame number you can select out 1000 packets either side of the problem
-> and that should compress to be small enough to transport.
->
-> However it might not find anything.  If the reply never arrives, you'll
-> never get a reply with a long timeout.  So we need to check that
-> everything got a reply...
->
->  tshark -r filename -t tcp.port==2049,rpc  \
->    -Y 'tcp.port==2049 && rpc.msg == 0' -T fields \
->    -e rpc.xid -e frame.number | sort > /tmp/requests
->
->  tshark -r filename -t tcp.port==2049,rpc  \
->    -Y 'tcp.port==2049 && rpc.msg == 1' -T fields \
->    -e rpc.xid -e frame.number | sort > /tmp/replies
->
->  join -a1 /tmp/requests /tmp/replies | awk 'NF==2'
->
-> This should list the xid and frame number of all requests that didn't
-> get a reply.  Again, editcap can extract a range of frames into a file of
-> manageable size.
->
-> Another possibility is that requests are getting replies, but the reply
-> says "NFS4ERR_DELAY"
->
->  tshark -r filename -t tcp.port==2049,rpc -Y nfs.nfsstat4==10008
->
-> should report any reply with that error code.
->
-> Hopefully something there will be interesting.
->
-> NeilBrown
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 2e894fec036b..7e2ca6b5fc5f 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -905,9 +905,6 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
+ 	dfprintk(FILE, "NFS: direct write(%pD2, %zd@%Ld)\n",
+ 		file, iov_iter_count(iter), (long long) iocb->ki_pos);
+ 
+-	result = generic_write_checks(iocb, iter);
+-	if (result <= 0)
+-		return result;
+ 	count = result;
+ 	nfs_add_stats(mapping->host, NFSIOS_DIRECTWRITTENBYTES, count);
+ 
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 1fef107961bc..91b2e3214836 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -611,6 +611,10 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
+ 	errseq_t since;
+ 	int error;
+ 
++	result = generic_write_checks(iocb, from);
++	if (result < 0)
++		return result;
++
+ 	result = nfs_key_timeout_notify(file, inode);
+ 	if (result)
+ 		return result;
+@@ -621,8 +625,6 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
+ 	dprintk("NFS: write(%pD2, %zu@%Ld)\n",
+ 		file, iov_iter_count(from), (long long) iocb->ki_pos);
+ 
+-	if (IS_SWAPFILE(inode))
+-		goto out_swapfile;
+ 	/*
+ 	 * O_APPEND implies that we must revalidate the file length.
+ 	 */
+@@ -636,7 +638,6 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
+ 
+ 	since = filemap_sample_wb_err(file->f_mapping);
+ 	nfs_start_io_write(inode);
+-	result = generic_write_checks(iocb, from);
+ 	if (result > 0) {
+ 		current->backing_dev_info = inode_to_bdi(inode);
+ 		result = generic_perform_write(file, from, iocb->ki_pos);
+@@ -677,10 +678,6 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
+ 	nfs_add_stats(inode, NFSIOS_NORMALWRITTENBYTES, written);
+ out:
+ 	return result;
+-
+-out_swapfile:
+-	printk(KERN_INFO "NFS: attempt to write to active swap file!\n");
+-	return -ETXTBSY;
+ }
+ EXPORT_SYMBOL_GPL(nfs_file_write);
+ 
