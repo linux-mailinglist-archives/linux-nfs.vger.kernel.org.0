@@ -2,307 +2,248 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C93F3EAD36
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Aug 2021 00:36:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 394683EAE3C
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Aug 2021 03:45:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237965AbhHLWgX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Aug 2021 18:36:23 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:50660 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237804AbhHLWgX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 18:36:23 -0400
+        id S238269AbhHMBqK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Aug 2021 21:46:10 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:47116 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238266AbhHMBqJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Aug 2021 21:46:09 -0400
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 8FDAC222D6;
-        Thu, 12 Aug 2021 22:35:56 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id CB45F1FF80;
+        Fri, 13 Aug 2021 01:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1628807756; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1628819142; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XFuJEJtU0FEz+asdLNDOk+fpi385WJHPm9mYuKCMiak=;
-        b=YaGQw2nwcR8eQOiZl3QUgud7iFMDYaymXoVf2HnPx/mu+Q/zS69jJiL/d2n7LsF4t6fIuH
-        Vjy2j0K3nbGm7dJ+EyNHhQGnNYQksl6z58r2jmgYWq+LxWQUWtyaDvy+5wB3hMQ1nSIMOR
-        SMwCT2l7BHrlbeGJLQwzU99bpnwvEhY=
+        bh=LamDGYFppAFdL7WCvYoQSTIDfJ7v5NOZ+rmKtnq+i8o=;
+        b=ApNf9lb0Q7HdntXHacOQkOGQ6oxP2VJSVLUgv8JqWyY124KVBpb/BNVeIFlY934SZ5w9mO
+        VYHg2stE4hINYwm9bH3C0TPkq2apKhKCUAo9ld4owkRzFcSHdH5xfL/pr4fU7tNsnSHhxi
+        davfFx52nHTYCzSm3sfjlUJI+QA+tZI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1628807756;
+        s=susede2_ed25519; t=1628819142;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XFuJEJtU0FEz+asdLNDOk+fpi385WJHPm9mYuKCMiak=;
-        b=OvtpAplaXYELCa86c4H/vteQQ+LtsaTnFrp6uK2Tjoc95KOGTdj24T/JmrJULPJ7shSAo5
-        aOYQWFz9OJXEm0BQ==
+        bh=LamDGYFppAFdL7WCvYoQSTIDfJ7v5NOZ+rmKtnq+i8o=;
+        b=auLJcE/GO4pW3gWrYHGNqNuOeSqcgRU5a5HQnGqpFj2lGLJhXsvARY6SDS/oQmRHrej/On
+        mZRsHneH0bhQufDw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6B46213C82;
-        Thu, 12 Aug 2021 22:35:54 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E2F9113BB4;
+        Fri, 13 Aug 2021 01:45:39 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id CAQVCkqiFWFueAAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 12 Aug 2021 22:35:54 +0000
+        id POzTJ8POFWEWIAAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 13 Aug 2021 01:45:39 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
-To:     "Josef Bacik" <josef@toxicpanda.com>
-Cc:     "Chris Mason" <clm@fb.com>, "David Sterba" <dsterba@suse.com>,
-        linux-fsdevel@vger.kernel.org,
-        "Linux NFS list" <linux-nfs@vger.kernel.org>,
-        "Btrfs BTRFS" <linux-btrfs@vger.kernel.org>
-Subject: Re: [PATCH/RFC 0/4] Attempt to make progress with btrfs dev number
- strangeness.
-In-reply-to: <6571d3fb-34ea-0f22-4fbe-995e5568e044@toxicpanda.com>
-References: <162848123483.25823.15844774651164477866.stgit@noble.brown>,
- <e6496956-0df3-6232-eecb-5209b28ca790@toxicpanda.com>,
- <162872000356.22261.854151210687377005@noble.neil.brown.name>,
- <6571d3fb-34ea-0f22-4fbe-995e5568e044@toxicpanda.com>
-Date:   Fri, 13 Aug 2021 08:35:51 +1000
-Message-id: <162880775121.15074.3288255136681201159@noble.neil.brown.name>
+To:     "Christoph Hellwig" <hch@infradead.org>,
+        "Josef Bacik" <josef@toxicpanda.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        "Chuck Lever" <chuck.lever@oracle.com>, "Chris Mason" <clm@fb.com>,
+        "David Sterba" <dsterba@suse.com>,
+        "Alexander Viro" <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Subject: [PATCH] VFS/BTRFS/NFSD: provide more unique inode number for btrfs export
+In-reply-to: <162742539595.32498.13687924366155737575.stgit@noble.brown>
+References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
+Date:   Fri, 13 Aug 2021 11:45:36 +1000
+Message-id: <162881913686.1695.12479588032010502384@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 12 Aug 2021, Josef Bacik wrote:
-> On 8/11/21 6:13 PM, NeilBrown wrote:
-> > On Wed, 11 Aug 2021, Josef Bacik wrote:
-> >>
-> >> I think this is a step in the right direction, but I want to figure out =
-a way to
-> >> accomplish this without magical mount points that users must be aware of.
-> >=20
-> > magic mount *options* ???
-> >=20
-> >>
-> >> I think the stat() st_dev ship as sailed, we're stuck with that.  However
-> >> Christoph does have a valid point where it breaks the various info spit =
-out by
-> >> /proc.  You've done a good job with the treeid here, but it still makes =
-it
-> >> impossible for somebody to map the st_dev back to the correct mount.
-> >=20
-> > The ship might have sailed, but it is not water tight.  And as the world
-> > it round, it can still come back to bite us from behind.
-> > Anything can be transitioned away from, whether it is devfs or 32-bit
-> > time or giving different device numbers to different file-trees.
-> >=20
-> > The linkage between device number and and filesystem is quite strong.
-> > We could modified all of /proc and /sys/ and audit and whatever else to
-> > report the fake device number, but we cannot get the fake device number
-> > into the mount table (without making the mount table unmanageablely
-> > large).
-> > And if subtrees aren't in the mount-table for the NFS server, I don't
-> > think they should be in the mount-table of the NFS client.  So we cannot
-> > export them to NFS.
-> >=20
-> > I understand your dislike for mount options.  An alternative with
-> > different costs and benefits would be to introduce a new filesystem type
-> > - btrfs2 or maybe betrfs.  This would provide numdevs=3D1 semantics and do
-> > whatever we decided was best with inode numbers.  How much would you
-> > hate that?
-> >=20
->=20
-> A lot more ;).
->=20
-> >>
-> >> I think we aren't going to solve that problem, at least not with stat().=
-  I
-> >> think with statx() spitting out treeid we have given userspace a way to
-> >> differentiate subvolumes, and so we should fix statx() to spit out the t=
-he super
-> >> block device, that way new userspace things can do their appropriate loo=
-kup if
-> >> they so choose.
-> >=20
-> > I don't think we should normalize having multiple devnums per filesystem
-> > by encoding it in statx().  It *would* make sense to add a btrfs ioctl
-> > which reports the real device number of a file.  Tools that really need
-> > to work with btrfs could use that, but it would always be obvious that
-> > it was an exception.
->=20
-> That's not what I'm saying.  I'm saying that stat() continues to behave the=
- way=20
-> it currently does, for legacy users.
->=20
-> And then for statx() it returns the correct devnum like any other file syst=
-em,=20
-> with the augmentation of the treeid so that future userspace programs can u=
-se=20
-> the treeid to decide if they want to wander into a subvolume.
 
-Yes, that is what I thought you were saying.  It implies that the
-possibility of a file having two different device numbers becomes
-normalised in the API - one returned by stat(), the other by statx()
-(presumably in a new field - the FS cannot tell what libc call the
-application made).  I don't like that.
+[[This patch is a minimal patch which addresses the current problems
+  with nfsd and btrfs, in a way which I think is most supportable, least
+  surprising, and least likely to impact any future attempts to more
+  completely fix the btrfs file-identify problem]]
 
->=20
-> This way moving forward we have a way to map back to a mount point because =
+BTRFS does not provide unique inode numbers across a filesystem.
+It *does* provide unique inode numbers with a subvolume and
+uses synthetic device numbers for different subvolumes to ensure
+uniqueness for device+inode.
 
-> statx() will return the actual devnum for the mountpoint, and then we can u=
-se=20
-> the treeid to be smart about when we wander into a subvolume.
+nfsd cannot use these varying device numbers.  If nfsd were to
+synthesise different stable filesystem ids to give to the client, that
+would cause subvolumes to appear in the mount table on the client, even
+though they don't appear in the mount table on the server.  Also, NFSv3
+doesn't support changing the filesystem id without a new explicit
+mount on the client (this is partially supported in practice, but
+violates the protocol specification).
 
-We already have a way to map back to a mountpoint.  statx reports a
-mnt_id with result flag STATX_MNT_ID.  This is the number at the start
-of the line in mountinfo.  Hmmm, this isn't in the manpage.  It has been
-in the kernel since Linux 5.8.  I'll send a patch for the manpage.
+So currently, the roots of all subvolumes report the same inode number
+in the same filesystem to NFS clients and tools like 'find' notice that
+a directory has the same identity as an ancestor, and so refuse to
+enter that directory.
 
-So we could pursue a path where the device-id no longer defines the
-filesystem (or mount), but instead it defines some arbitrary grouping of
-objects within a filesystem.  So instead of my proposed
-   dev-id  /  subtree-id / inode-number
-we would have
-   dev-id-in-mountinfo / mnt_id / dev-id-in-stat / inode-number
+This patch allows btrfs (or any filesystem) to provide a 64bit number
+that can be xored with the inode number to make the number more unique.
+Rather than the client being certain to see duplicates, with this patch
+it is possible but extremely rare.
 
-In some ways this would be a smoother path forward - no change to statx,
-no new concepts, just formalizing some de-facto concepts.
-In other ways it might be rougher - we would need to convince the
-community to use the stat() dev-id in all those proc files etc.
+The number than btrfs provides is a swab64() version of the subvolume
+identifier.  This has most entropy in the high bits (the low bits of the
+subvolume identifer), while the inoe has most entropy in the low bits.
+The result will always be unique within a subvolume, and will almost
+always be unique across the filesystem.
 
-I think having the two meanings for a device-id would cause confusion for
-quite some years..... but then any change will probably cause confusion.
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ fs/btrfs/inode.c     |  4 ++++
+ fs/nfsd/nfs3xdr.c    | 17 ++++++++++++++++-
+ fs/nfsd/nfs4xdr.c    |  9 ++++++++-
+ fs/nfsd/xdr3.h       |  2 ++
+ include/linux/stat.h | 17 +++++++++++++++++
+ 5 files changed, 47 insertions(+), 2 deletions(-)
 
->=20
-> And if we're going to add a treeid, I would actually like to add a parent_t=
-reeid=20
-> as well so we could tell if we're a snapshot or just a normal subvolume.
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 0117d867ecf8..989fdf2032d5 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -9195,6 +9195,10 @@ static int btrfs_getattr(struct user_namespace *mnt_us=
+erns,
+ 	generic_fillattr(&init_user_ns, inode, stat);
+ 	stat->dev =3D BTRFS_I(inode)->root->anon_dev;
+=20
++	if (BTRFS_I(inode)->root->root_key.objectid !=3D BTRFS_FS_TREE_OBJECTID)
++		stat->ino_uniquifier =3D
++			swab64(BTRFS_I(inode)->root->root_key.objectid);
++
+ 	spin_lock(&BTRFS_I(inode)->lock);
+ 	delalloc_bytes =3D BTRFS_I(inode)->new_delalloc_bytes;
+ 	inode_bytes =3D inode_get_bytes(inode);
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index 0a5ebc52e6a9..669e2437362a 100644
+--- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -340,6 +340,7 @@ svcxdr_encode_fattr3(struct svc_rqst *rqstp, struct xdr_s=
+tream *xdr,
+ {
+ 	struct user_namespace *userns =3D nfsd_user_namespace(rqstp);
+ 	__be32 *p;
++	u64 ino;
+ 	u64 fsid;
+=20
+ 	p =3D xdr_reserve_space(xdr, XDR_UNIT * 21);
+@@ -377,7 +378,10 @@ svcxdr_encode_fattr3(struct svc_rqst *rqstp, struct xdr_=
+stream *xdr,
+ 	p =3D xdr_encode_hyper(p, fsid);
+=20
+ 	/* fileid */
+-	p =3D xdr_encode_hyper(p, stat->ino);
++	ino =3D stat->ino;
++	if (stat->ino_uniquifier && stat->ino_uniquifier !=3D ino)
++		ino ^=3D stat->ino_uniquifier;
++	p =3D xdr_encode_hyper(p, ino);
+=20
+ 	p =3D encode_nfstime3(p, &stat->atime);
+ 	p =3D encode_nfstime3(p, &stat->mtime);
+@@ -1151,6 +1155,17 @@ svcxdr_encode_entry3_common(struct nfsd3_readdirres *r=
+esp, const char *name,
+ 	if (xdr_stream_encode_item_present(xdr) < 0)
+ 		return false;
+ 	/* fileid */
++	if (!resp->dir_have_uniquifier) {
++		struct kstat stat;
++		if (fh_getattr(&resp->fh, &stat) =3D=3D nfs_ok)
++			resp->dir_ino_uniquifier =3D stat.ino_uniquifier;
++		else
++			resp->dir_ino_uniquifier =3D 0;
++		resp->dir_have_uniquifier =3D 1;
++	}
++	if (resp->dir_ino_uniquifier &&
++	    resp->dir_ino_uniquifier !=3D ino)
++		ino ^=3D resp->dir_ino_uniquifier;
+ 	if (xdr_stream_encode_u64(xdr, ino) < 0)
+ 		return false;
+ 	/* name */
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 7abeccb975b2..ddccf849c29c 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -3114,10 +3114,14 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc=
+_fh *fhp,
+ 					fhp->fh_handle.fh_size);
+ 	}
+ 	if (bmval0 & FATTR4_WORD0_FILEID) {
++		u64 ino =3D stat.ino;
++		if (stat.ino_uniquifier &&
++		    stat.ino_uniquifier !=3D stat.ino)
++			ino ^=3D stat.ino_uniquifier;
+ 		p =3D xdr_reserve_space(xdr, 8);
+ 		if (!p)
+ 			goto out_resource;
+-		p =3D xdr_encode_hyper(p, stat.ino);
++		p =3D xdr_encode_hyper(p, ino);
+ 	}
+ 	if (bmval0 & FATTR4_WORD0_FILES_AVAIL) {
+ 		p =3D xdr_reserve_space(xdr, 8);
+@@ -3285,6 +3289,9 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_f=
+h *fhp,
+ 			if (err)
+ 				goto out_nfserr;
+ 			ino =3D parent_stat.ino;
++			if (parent_stat.ino_uniquifier &&
++			    parent_stat.ino_uniquifier !=3D ino)
++				ino ^=3D parent_stat.ino_uniquifier;
+ 		}
+ 		p =3D xdr_encode_hyper(p, ino);
+ 	}
+diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
+index 933008382bbe..b4f9f3c71f72 100644
+--- a/fs/nfsd/xdr3.h
++++ b/fs/nfsd/xdr3.h
+@@ -179,6 +179,8 @@ struct nfsd3_readdirres {
+ 	struct xdr_buf		dirlist;
+ 	struct svc_fh		scratch;
+ 	struct readdir_cd	common;
++	u64			dir_ino_uniquifier;
++	int			dir_have_uniquifier;
+ 	unsigned int		cookie_offset;
+ 	struct svc_rqst *	rqstp;
+=20
+diff --git a/include/linux/stat.h b/include/linux/stat.h
+index fff27e603814..a5188f42ed81 100644
+--- a/include/linux/stat.h
++++ b/include/linux/stat.h
+@@ -46,6 +46,23 @@ struct kstat {
+ 	struct timespec64 btime;			/* File creation time */
+ 	u64		blocks;
+ 	u64		mnt_id;
++	/*
++	 * BTRFS does not provide unique inode numbers within a filesystem,
++	 * depending on a synthetic 'dev' to provide uniqueness.
++	 * NFSd cannot make use of this 'dev' number so clients often see
++	 * duplicate inode numbers.
++	 * For BTRFS, 'ino' is unlikely to use the high bits.  It puts
++	 * another number in ino_uniquifier which:
++	 * - has most entropy in the high bits
++	 * - is different precisely when 'dev' is different
++	 * - is stable across unmount/remount
++	 * NFSd can xor this with 'ino' to get a substantially more unique
++	 * number for reporting to the client.
++	 * The ino_uniquifier for a directory can reasonably be applied
++	 * to inode numbers reported by the readdir filldir callback.
++	 * It is NOT currently exported to user-space.
++	 */
++	u64		ino_uniquifier;
+ };
+=20
+ #endif
+--=20
+2.32.0
 
-Is this a well-defined concept? Isn't "snapshot" just one possible
-use-case for the btrfs functionality of creating a reflink to a subtree?
-What happens to the "parent_treeid" reference when that "parent" gets
-deleted?
-
-I understand the desire to track this sort of connection, but I wonder
-if the filesystem is really the right place to track it.  Maybe having
-the tools track it would be better.
-
->=20
-> >=20
-> >>
-> >> This leaves the problem of nfsd.  Can you just integrate this new treeid=
- into
-> >> nfsd, and use that to either change the ino within nfsd itself, or do so=
-mething
-> >> similar to what your first patchset did and generate a fsid based on the=
- treeid?
-> >=20
-> > I would only want nfsd to change the inode number.  I no longer think it
-> > is acceptable for nfsd to report different device number (as I mention
-> > above).
-> > I would want the new inode number to be explicitly provided by the
-> > filesystem.  Whether that is a new export_operation or a new field in
-> > 'struct kstat' doesn't really bother me.  I'd *prefer* it to be st_ino,
-> > but I can live without that.
-> >
->=20
-> Right, I'm not saying nfsd has to propagate our dev_t thing, I'm saying tha=
-t you=20
-> could accomplish the same behavior without the mount options.  We add eithe=
-r a=20
-> new SB_I_HAS_TREEID or FS_HAS_TREEID, depending on if you prefer to tag the=
- sb=20
-> or the fs_type, and then NFS does the inode number magic transformation=20
-> automatically and we are good to go.
-
-I really don't want nfsd to do the magic transformations.  I want the
-filesystem to do those if they need to be done.  I could cope with nfsd
-xor-ing some provided number with i_ino, but I wouldn't like nfsd to
-have the responsibility of doing the swab64().
-
->=20
-> > On the topic of inode numbers....  I've recently learned that btrfs
-> > never reuses inode (objectid) numbers (except possibly after an
-> > unmount).  Equally it doesn't re-use subvol numbers.  How much does this
-> > contribute to the 64 bits not being enough for subtree+inode?
-> >=20
-> > It would be nice if we could be comfortable limiting the objectid number
-> > to 40 bits and the root.objectid (filetree) number to 24 bits, and
-> > combine them into a 64bit inode number.
-> >=20
-> > If we added a inode number reuse scheme that was suitably performant,
-> > would that make this possible?  That would remove the need for a treeid,
-> > and allow us to use project-id to identify subtrees.
-> >=20
->=20
-> We had a resuse scheme, we deprecated and deleted it.  I don't want to=20
-> arbitrarily limit objectid's to work around this issue.
-
-These are computers we are working with.  There are always arbitrary
-limits.
-The syscall interface places an arbitrary limit of 64bits on the
-identity of any object in a filesystem.  btrfs clearly doesn't like that
-arbitrary limit, and plays games with device number to increase it to a
-new arbitrary limit of 84 bits (sort-of).
-
-I'm fully open to the possibility that last year's arbitrary limits are
-no longer comfortable and that we might need to push the boundaries.
-But I'd rather the justification was a bit stronger than "we cannot be
-bothered reusing old inode numbers".
-
-Are you at all aware of any site coming anywhere vaguely close to one trillion
-concurrent inodes - maybe even 16 billion?
-Or anything close to 16 million concurrent subvolumes?
-
->=20
-> >>
-> >> Mount options are messy, and are just going to lead to distro's turning =
-them on
-> >> without understanding what's going on and then we have to support them f=
-orever.
-> >>    I want to get this fixed in a way that we all hate the least with as =
-little
-> >> opportunity for confused users to make bad decisions.  Thanks,
-> >=20
-> > Hence my question: how much do you hate creating a new filesystem type
-> > to fix the problems?
-> >=20
->=20
-> I'm still not convinced we can't solve this without adding new options or=20
-> fstypes.  I think flags to indicate that we're special and to use a treeid =
-that=20
-> we stuff into the inode would be a reasonable solution.  That being said I'=
-m a=20
-> little sleep deprived so I could be missing why my plan is a bad one, so I'=
-m=20
-> willing to be convinced that mount options are the solution to this, but I =
-want=20
-> to make sure we're damned certain that's the best way forward.  Thanks,
-
-I don't think "best way forward" is the appropriate goal - impossible to
-assess.
-
-What we need is a chosen way forward.  Someone - and ultimately that
-someone needs to be the BTRFS maintainer team - needs to decide what
-breakage they are willing to bear the cost of, and what breakage is
-unacceptable to them, and to choose a way to move forward.  I cannot
-make that decision for you because I'm just an interested bystander.  Al
-Viro and Linus cannot either, though they are in a position to veto some
-decisions.
-
-The current choice appears to be "ignore the problem and hope it goes
-away", though I appreciate that appearances can be deceiving.
-
-You appear very keen to preserve as much of the status quo as possible.
-Given that, I think you really need to push to get all the procfs files
-changed to use the same device number as stat - so push the patch which
-SUSE has that add inode_get_dev().
-
-https://github.com/SUSE/kernel-source/blob/master/patches.suse/vfs-add-super_=
-operations-get_inode_dev
-
-(though the change to show_mountinfo() in that patch would need careful consi=
-deration).
-
-If that lands, you have a clear way forward, and we can find some
-solution for NFSd (and other network filesystems), and for user-space to
-use mnt_id.
-If you cannot overcome the pushback, then you know you will have to
-find another path - make a 64bit inode number unique, or add more bits
-to the effective inode number.  Or something.
-
-NeilBrown
