@@ -2,164 +2,256 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CCBC3EC6A1
-	for <lists+linux-nfs@lfdr.de>; Sun, 15 Aug 2021 03:24:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED6AE3EC806
+	for <lists+linux-nfs@lfdr.de>; Sun, 15 Aug 2021 09:47:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233237AbhHOBY2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 14 Aug 2021 21:24:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbhHOBY1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 Aug 2021 21:24:27 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AEA2C061764
-        for <linux-nfs@vger.kernel.org>; Sat, 14 Aug 2021 18:23:58 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id d1so16713164pll.1
-        for <linux-nfs@vger.kernel.org>; Sat, 14 Aug 2021 18:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=71/rYXFFR+lYpJLFLwn15vWcietufe8jW+ZEomEFgs4=;
-        b=pq98J5hd8qObSM7B1+++fJRnfwAazRvxXMx381VfR0q3cvYcDiLiIakbgA489cqFrP
-         JSBGVfrXtK0y99QCgOuuJG0YgqISI9yLXD/3gNIeqto/qKL+s4ahe3hptnhd34EUffkb
-         Zdr80q+YB17PzU1BNuYOzBjaXS8a06kU7tqxnevwP13zqJSI9WES9ZMDQ/GEYVxFjvFZ
-         OgzQe89yVNaHfOA6qQ+hEnjkXxKnGK5PerVLz3BD8RwdS5VPOOChVnSGbY+JvCT0sAnX
-         EJvpgDZ3dqgaegpXEZOdc0h1GPN3tZyHdMn//33yDAvOKWQcrSZ5OmqytW4W2wwr3KGS
-         XPKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=71/rYXFFR+lYpJLFLwn15vWcietufe8jW+ZEomEFgs4=;
-        b=pe3zISFveNYCqLJIfHg8GJDweKSxQXAagp9mNTPy7evJkNAb3X87mrztaybhmAz35s
-         N+l05I/ZaYOIlbAUwJ3dHWxplGCtgn9uKgZcACAOH44OzJagb4Ny6SrOcivTV8OPFI8b
-         Uz209RKCj1zvQ1PSGCC8FMzi6VvXxoDZvYK1zgauE/9JMcn7jqiP0Y4lKMph8Mm1KHz3
-         CypYFS3Wcr1G8Z6CxioaqVkR3J4zqB+iUa05iUbJ5GtTIfwoVEuXvWVKlavPkksDgMrv
-         LwnJyF3yoWj+DQ2FnJFb0tmx82HOeqaOlssMnRkz/Ks10SCV5Zuadrf6d6pHym1Xnl95
-         9uhw==
-X-Gm-Message-State: AOAM531kDZeahUklqKBGocvVqPodc7UOzEdUBdN6QqraaOHoDV83JjZK
-        YwW8LWvPXkbIsu/YhaYn7sMtY2g464s3rEdLwWU=
-X-Google-Smtp-Source: ABdhPJwfD3FNhEpvyWCDdcXSz3qoqoQWvbeWu/0vRDMz3qhdWaWvkULe6l9XQ8awLKTJ9bEFkdr3Gfa2gJhJXIt/Nk4=
-X-Received: by 2002:a65:4486:: with SMTP id l6mr8894837pgq.145.1628990637772;
- Sat, 14 Aug 2021 18:23:57 -0700 (PDT)
+        id S232774AbhHOHrz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 15 Aug 2021 03:47:55 -0400
+Received: from smtp-31.italiaonline.it ([213.209.10.31]:34182 "EHLO libero.it"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S236098AbhHOHrv (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 15 Aug 2021 03:47:51 -0400
+X-Greylist: delayed 489 seconds by postgrey-1.27 at vger.kernel.org; Sun, 15 Aug 2021 03:47:51 EDT
+Received: from venice.bhome ([78.12.137.210])
+        by smtp-31.iol.local with ESMTPA
+        id FAjcmVP3mzHnRFAjcmGhoC; Sun, 15 Aug 2021 09:39:10 +0200
+x-libjamoibt: 1601
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=libero.it; s=s2021;
+        t=1629013150; bh=+7Gxj7b1TSy535vs0VCmPjSvbElXiMQ7PMMmW+6jlvM=;
+        h=From;
+        b=l0t5WPtaa/PUy7ooU0A9wUG8GKn5uIwR22xeCjBSjM8coMjJ9kq66vSsHm+T6SBtY
+         yW4yndSMJYEe78oSxmBQ77PK430/TaPkFaBRVK+fmxB3M4cZfCVBMM1NUIqVcKei/9
+         bHrdwMKBBgiu807RdIpcuBUsR16f66gfO9WOhECgIfe21J0QRiUNcsPrr5d0KkHOcy
+         dwoOTZ4Y1yoS1iCPLH+G5+I9DDBFwmKJN28YL4nOADy5vNzGC1Sf0CzwCr72w/CJt5
+         mBHQcIiVPIbKtfDIXnSeGxtx6+T62OUopETTQHepSwo0qPueM4vRnWHQi7WlICDFQh
+         R0F5H2Oxk3Kcg==
+X-CNFS-Analysis: v=2.4 cv=L6DY/8f8 c=1 sm=1 tr=0 ts=6118c49e cx=a_exe
+ a=VHyfYjYfg3XpWvNRQl5wtg==:117 a=VHyfYjYfg3XpWvNRQl5wtg==:17
+ a=IkcTkHD0fZMA:10 a=3jRIoorFTcgkMpjqpWoA:9 a=hC5zjGdhJ67ffH3v:21
+ a=2_0S_fzlarmj8puM:21 a=QEXdDO2ut3YA:10
+Reply-To: kreijack@inwind.it
+Subject: Re: [PATCH] VFS/BTRFS/NFSD: provide more unique inode number for
+ btrfs export
+To:     NeilBrown <neilb@suse.de>, Christoph Hellwig <hch@infradead.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
+ <162881913686.1695.12479588032010502384@noble.neil.brown.name>
+From:   Goffredo Baroncelli <kreijack@libero.it>
+Message-ID: <bf49ef31-0c86-62c8-7862-719935764036@libero.it>
+Date:   Sun, 15 Aug 2021 09:39:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-References: <CAOv1SKCmdtchm5Z2NU80o49tkrHpAkPFaHKj4-vLDN5bZNCz-Q@mail.gmail.com>
- <162846730406.22632.14734595494457390936@noble.neil.brown.name>
- <CAOv1SKBZ7sGBnvG9-M+De+s=CfU=H_GBs4hJah1E4ks+NSMyPw@mail.gmail.com>
- <CAOv1SKCUM5cGuXWAc7dsXtbmPMATqd245juC+S9gVXHWiZsvmQ@mail.gmail.com>
- <162855893202.12431.3423894387218130632@noble.neil.brown.name>
- <CAOv1SKAaSbfw53LWCCrvGCHESgdtCf5h275Zkzi9_uHkqnCrdg@mail.gmail.com>
- <162882238416.1695.4958036322575947783@noble.neil.brown.name> <CAOv1SKB_dsam7P9pzzh_SKCtA8uE9cyFdJ=qquEfhLT42-szPA@mail.gmail.com>
-In-Reply-To: <CAOv1SKB_dsam7P9pzzh_SKCtA8uE9cyFdJ=qquEfhLT42-szPA@mail.gmail.com>
-From:   Mike Javorski <mike.javorski@gmail.com>
-Date:   Sat, 14 Aug 2021 18:23:46 -0700
-Message-ID: <CAOv1SKDDOj5UeUwztrMSNJnLgSoEgD8OU55hqtLHffHvaCQzzA@mail.gmail.com>
-Subject: Re: NFS server regression in kernel 5.13 (tested w/ 5.13.9)
-To:     NeilBrown <neilb@suse.de>
-Cc:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <162881913686.1695.12479588032010502384@noble.neil.brown.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfKBECCtUm+/m3ngWAQ5bzWkgSKfnLPPiNVXPPAK6cWyr8XizGdFiCEHrYT7+XpDKvCu3nSK0/Hucd9ca3REjr5I55HnWnYLVDCT8on5XyHTqpPb7rBOm
+ Vlqb1bydOfZ9bzGK9g8lK7bdM/Ev/RfklFrZf22N4tqr20ZKkBniU9qnseZiYmLlr+/+Qp1RAj2xurXUrHPmsqJbq5bzhMgQou/DnzkcPNW8PAko98z2Uqqh
+ EwLV9Btepy8JYow+X5fQoZP+NJSmKpzdlGUZ/iqBJJYdvqtp/+CZbD4PQUBPWPRrLt47T4QutjC+M/3RCLtZgnEPQ/WJxL2BoitPTu+d6eJV3fpCfRydse3j
+ 2ri+U/7PV2R96ixRkiaCINSQiayQD9NbEEvwvxxuHQQL4sZDL41KysvT/Te8SEd7BnFETytGG8teF2T5PLYD3xMxFOL+7+Np0ZbifOmksZFXhRhyjQjYa/eV
+ Kiac7m1xYsqddyBAwJcsRWKUyRK9D2BFMwbV0w==
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I managed to get a cap with several discreet freezes in it, and I
-included a chunk with 5 of them in the span of ~3000 frames. I added
-packet comments at each frame that the tshark command reported as > 1
-sec RPC wait. Just search for "Freeze" in (wire|t)shark in packet
-details. This is with kernel 5.13.10 provided by Arch (See
-https://github.com/archlinux/linux/compare/a37da2be8e6c85...v5.13.10-arch1
-for diff vs mainline, nothing NFS/RPC related I can identify).
+Hi All,
 
-I tried unsuccessfully to get any failures with the 5.12.15 kernel.
+On 8/13/21 3:45 AM, NeilBrown wrote:
+> 
+> [[This patch is a minimal patch which addresses the current problems
+>    with nfsd and btrfs, in a way which I think is most supportable, least
+>    surprising, and least likely to impact any future attempts to more
+>    completely fix the btrfs file-identify problem]]
+> 
+> BTRFS does not provide unique inode numbers across a filesystem.
+> It *does* provide unique inode numbers with a subvolume and
+> uses synthetic device numbers for different subvolumes to ensure
+> uniqueness for device+inode.
+> 
+> nfsd cannot use these varying device numbers.  If nfsd were to
+> synthesise different stable filesystem ids to give to the client, that
+> would cause subvolumes to appear in the mount table on the client, even
+> though they don't appear in the mount table on the server.  Also, NFSv3
+> doesn't support changing the filesystem id without a new explicit
+> mount on the client (this is partially supported in practice, but
+> violates the protocol specification).
 
-https://drive.google.com/file/d/1T42iX9xCdF9Oe4f7JXsnWqD8oJPrpMqV/view?usp=sharing
+I am sure that it was discussed already but I was unable to find any track of this discussion.
+But if the problem is the collision between the inode number of different subvolume in the nfd export, is it simpler if the export is truncated to the subvolume boundary ? It would be more coherent with the current behavior of vfs+nfsd.
 
-File should be downloadable anonymously.
+In fact in btrfs a subvolume is a complete filesystem, with an "own synthetic" device. We could like or not this solution, but this solution is the more aligned to the unix standard, where for each filesystem there is a pair (device, inode-set). NFS (by default) avoids to cross the boundary between the filesystems. So why in BTRFS this
+should be different ?
 
-- mike
+May be an opt-in option would solve the backward compatibility (i.e. to avoid problem with setup which relies on this behaviour).
 
-On Thu, Aug 12, 2021 at 7:53 PM Mike Javorski <mike.javorski@gmail.com> wrote:
->
-> The "semi-known-good" has been the client. I tried updating the server
-> multiple times to a 5.13 kernel and each time had to downgrade to the
-> last 5.12 kernel that ArchLinux released (5.12.15) to stabilize
-> performance. At each attempt, the client was running the same 5.13
-> kernel that was being deployed to the server. I never downgraded the
-> client.
->
-> Thank you for the scripts and all the details, I will test things out
-> this weekend when I can dedicate time to it.
->
-> - mike
->
-> On Thu, Aug 12, 2021 at 7:39 PM NeilBrown <neilb@suse.de> wrote:
-> >
-> > On Fri, 13 Aug 2021, Mike Javorski wrote:
-> > > Neil:
-> > >
-> > > Apologies for the delay, your message didn't get properly flagged in my email.
-> >
-> > :-)
-> >
-> > >
-> > > To answer your questions, both client (my Desktop PC) and server (my
-> > > NAS) are running ArchLinux; client w/ current kernel (5.13.9), server
-> > > w/ current or alternate testing kernels (see below).
-> >
-> > So the bug could be in the server or the client.  I assume you are
-> > careful to test a client against a know-good server, or a server against
-> > a known-good client.
-> >
-> > >                                                                 I
-> > > intend to spend some time this weekend attempting to get the tcpdump.
-> > > My initial attempts wound up with 400+Mb files which would be
-> > > difficult to ship and use for diagnostics.
-> >
-> > Rather than you sending me the dump, I'll send you the code.
-> >
-> > Run
-> >   tshark -r filename -d tcp.port==2049,rpc -Y 'tcp.port==2049 && rpc.time > 1'
-> >
-> > This will ensure the NFS traffic is actually decoded as NFS and then
-> > report only NFS(rpc) replies that arrive more than 1 second after the
-> > request.
-> > You can add
-> >
-> >     -T fields -e frame.number -e rpc.time
-> >
-> > to find out what the actual delay was.
-> >
-> > If it reports any, that will be interesting.  Try with a larger time if
-> > necessary to get a modest number of hits.  Using editcap and the given
-> > frame number you can select out 1000 packets either side of the problem
-> > and that should compress to be small enough to transport.
-> >
-> > However it might not find anything.  If the reply never arrives, you'll
-> > never get a reply with a long timeout.  So we need to check that
-> > everything got a reply...
-> >
-> >  tshark -r filename -t tcp.port==2049,rpc  \
-> >    -Y 'tcp.port==2049 && rpc.msg == 0' -T fields \
-> >    -e rpc.xid -e frame.number | sort > /tmp/requests
-> >
-> >  tshark -r filename -t tcp.port==2049,rpc  \
-> >    -Y 'tcp.port==2049 && rpc.msg == 1' -T fields \
-> >    -e rpc.xid -e frame.number | sort > /tmp/replies
-> >
-> >  join -a1 /tmp/requests /tmp/replies | awk 'NF==2'
-> >
-> > This should list the xid and frame number of all requests that didn't
-> > get a reply.  Again, editcap can extract a range of frames into a file of
-> > manageable size.
-> >
-> > Another possibility is that requests are getting replies, but the reply
-> > says "NFS4ERR_DELAY"
-> >
-> >  tshark -r filename -t tcp.port==2049,rpc -Y nfs.nfsstat4==10008
-> >
-> > should report any reply with that error code.
-> >
-> > Hopefully something there will be interesting.
-> >
-> > NeilBrown
+> So currently, the roots of all subvolumes report the same inode number
+> in the same filesystem to NFS clients and tools like 'find' notice that
+> a directory has the same identity as an ancestor, and so refuse to
+> enter that directory.
+> 
+> This patch allows btrfs (or any filesystem) to provide a 64bit number
+> that can be xored with the inode number to make the number more unique.
+> Rather than the client being certain to see duplicates, with this patch
+> it is possible but extremely rare.
+> 
+> The number than btrfs provides is a swab64() version of the subvolume
+> identifier.  This has most entropy in the high bits (the low bits of the
+> subvolume identifer), while the inoe has most entropy in the low bits.
+> The result will always be unique within a subvolume, and will almost
+> always be unique across the filesystem.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>   fs/btrfs/inode.c     |  4 ++++
+>   fs/nfsd/nfs3xdr.c    | 17 ++++++++++++++++-
+>   fs/nfsd/nfs4xdr.c    |  9 ++++++++-
+>   fs/nfsd/xdr3.h       |  2 ++
+>   include/linux/stat.h | 17 +++++++++++++++++
+>   5 files changed, 47 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+> index 0117d867ecf8..989fdf2032d5 100644
+> --- a/fs/btrfs/inode.c
+> +++ b/fs/btrfs/inode.c
+> @@ -9195,6 +9195,10 @@ static int btrfs_getattr(struct user_namespace *mnt_userns,
+>   	generic_fillattr(&init_user_ns, inode, stat);
+>   	stat->dev = BTRFS_I(inode)->root->anon_dev;
+>   
+> +	if (BTRFS_I(inode)->root->root_key.objectid != BTRFS_FS_TREE_OBJECTID)
+> +		stat->ino_uniquifier =
+> +			swab64(BTRFS_I(inode)->root->root_key.objectid);
+> +
+>   	spin_lock(&BTRFS_I(inode)->lock);
+>   	delalloc_bytes = BTRFS_I(inode)->new_delalloc_bytes;
+>   	inode_bytes = inode_get_bytes(inode);
+> diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+> index 0a5ebc52e6a9..669e2437362a 100644
+> --- a/fs/nfsd/nfs3xdr.c
+> +++ b/fs/nfsd/nfs3xdr.c
+> @@ -340,6 +340,7 @@ svcxdr_encode_fattr3(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+>   {
+>   	struct user_namespace *userns = nfsd_user_namespace(rqstp);
+>   	__be32 *p;
+> +	u64 ino;
+>   	u64 fsid;
+>   
+>   	p = xdr_reserve_space(xdr, XDR_UNIT * 21);
+> @@ -377,7 +378,10 @@ svcxdr_encode_fattr3(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+>   	p = xdr_encode_hyper(p, fsid);
+>   
+>   	/* fileid */
+> -	p = xdr_encode_hyper(p, stat->ino);
+> +	ino = stat->ino;
+> +	if (stat->ino_uniquifier && stat->ino_uniquifier != ino)
+> +		ino ^= stat->ino_uniquifier;
+> +	p = xdr_encode_hyper(p, ino);
+>   
+>   	p = encode_nfstime3(p, &stat->atime);
+>   	p = encode_nfstime3(p, &stat->mtime);
+> @@ -1151,6 +1155,17 @@ svcxdr_encode_entry3_common(struct nfsd3_readdirres *resp, const char *name,
+>   	if (xdr_stream_encode_item_present(xdr) < 0)
+>   		return false;
+>   	/* fileid */
+> +	if (!resp->dir_have_uniquifier) {
+> +		struct kstat stat;
+> +		if (fh_getattr(&resp->fh, &stat) == nfs_ok)
+> +			resp->dir_ino_uniquifier = stat.ino_uniquifier;
+> +		else
+> +			resp->dir_ino_uniquifier = 0;
+> +		resp->dir_have_uniquifier = 1;
+> +	}
+> +	if (resp->dir_ino_uniquifier &&
+> +	    resp->dir_ino_uniquifier != ino)
+> +		ino ^= resp->dir_ino_uniquifier;
+>   	if (xdr_stream_encode_u64(xdr, ino) < 0)
+>   		return false;
+>   	/* name */
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 7abeccb975b2..ddccf849c29c 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -3114,10 +3114,14 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+>   					fhp->fh_handle.fh_size);
+>   	}
+>   	if (bmval0 & FATTR4_WORD0_FILEID) {
+> +		u64 ino = stat.ino;
+> +		if (stat.ino_uniquifier &&
+> +		    stat.ino_uniquifier != stat.ino)
+> +			ino ^= stat.ino_uniquifier;
+>   		p = xdr_reserve_space(xdr, 8);
+>   		if (!p)
+>   			goto out_resource;
+> -		p = xdr_encode_hyper(p, stat.ino);
+> +		p = xdr_encode_hyper(p, ino);
+>   	}
+>   	if (bmval0 & FATTR4_WORD0_FILES_AVAIL) {
+>   		p = xdr_reserve_space(xdr, 8);
+> @@ -3285,6 +3289,9 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+>   			if (err)
+>   				goto out_nfserr;
+>   			ino = parent_stat.ino;
+> +			if (parent_stat.ino_uniquifier &&
+> +			    parent_stat.ino_uniquifier != ino)
+> +				ino ^= parent_stat.ino_uniquifier;
+>   		}
+>   		p = xdr_encode_hyper(p, ino);
+>   	}
+> diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
+> index 933008382bbe..b4f9f3c71f72 100644
+> --- a/fs/nfsd/xdr3.h
+> +++ b/fs/nfsd/xdr3.h
+> @@ -179,6 +179,8 @@ struct nfsd3_readdirres {
+>   	struct xdr_buf		dirlist;
+>   	struct svc_fh		scratch;
+>   	struct readdir_cd	common;
+> +	u64			dir_ino_uniquifier;
+> +	int			dir_have_uniquifier;
+>   	unsigned int		cookie_offset;
+>   	struct svc_rqst *	rqstp;
+>   
+> diff --git a/include/linux/stat.h b/include/linux/stat.h
+> index fff27e603814..a5188f42ed81 100644
+> --- a/include/linux/stat.h
+> +++ b/include/linux/stat.h
+> @@ -46,6 +46,23 @@ struct kstat {
+>   	struct timespec64 btime;			/* File creation time */
+>   	u64		blocks;
+>   	u64		mnt_id;
+> +	/*
+> +	 * BTRFS does not provide unique inode numbers within a filesystem,
+> +	 * depending on a synthetic 'dev' to provide uniqueness.
+> +	 * NFSd cannot make use of this 'dev' number so clients often see
+> +	 * duplicate inode numbers.
+> +	 * For BTRFS, 'ino' is unlikely to use the high bits.  It puts
+> +	 * another number in ino_uniquifier which:
+> +	 * - has most entropy in the high bits
+> +	 * - is different precisely when 'dev' is different
+> +	 * - is stable across unmount/remount
+> +	 * NFSd can xor this with 'ino' to get a substantially more unique
+> +	 * number for reporting to the client.
+> +	 * The ino_uniquifier for a directory can reasonably be applied
+> +	 * to inode numbers reported by the readdir filldir callback.
+> +	 * It is NOT currently exported to user-space.
+> +	 */
+> +	u64		ino_uniquifier;
+>   };
+
+Why don't rename "ino_uniquifier" as "ino_and_subvolume" and leave to the filesystem the work to combine the inode and the subvolume-id ?
+
+I am worried that the logic is split between the filesystem, which synthesizes the ino_uniquifier, and to NFS which combine to the inode. I am thinking that this combination is filesystem specific; for BTRFS is a simple xor but for other filesystem may be a more complex operation, so leaving an half in the filesystem and another half to the NFS seems to not optimal if other filesystem needs to use ino_uniquifier.
+
+
+>   #endif
+> 
+
+
+-- 
+gpg @keyserver.linux.it: Goffredo Baroncelli <kreijackATinwind.it>
+Key fingerprint BBF5 1610 0B64 DAC6 5F7D  17B2 0EDA 9B37 8B82 E0B5
