@@ -2,34 +2,79 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B75E83EF52C
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Aug 2021 23:52:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CCD83EF5EE
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Aug 2021 00:56:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232589AbhHQVwd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 17 Aug 2021 17:52:33 -0400
-Received: from btbn.de ([136.243.74.85]:38230 "EHLO btbn.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232564AbhHQVwd (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 17 Aug 2021 17:52:33 -0400
-Received: from [authenticated] by btbn.de (Postfix) with ESMTPSA id C9DEF343955;
-        Tue, 17 Aug 2021 23:51:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rothenpieler.org;
-        s=mail; t=1629237118;
-        bh=wLW7blM5n2kW36fyMTYaD5wvUUW3O2T7OO/lcOi9dJg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=MwJQDmGNPX6rBXLrjrlbq+dZs1HvMfrOpuIqX367MyabiAGBag8JkrUS8agALG1ta
-         /xv8/KS2ZYqqAnEYoef2tGWxqgX9LO3EuKBznHimoIpAqKK4ZkqW8klTSzx1EE56Dt
-         Uu87nsFpCRXry8KEZeLO3CBhMpvok1X11tKO1b8k/1L704cs+xhR9Js/UrEoRevByv
-         QoUR7YC7SUNR4SmuJITE/nZBPd61OInYtKO9hhHdJMrMMJd22lmywePEhGqV0vEHT0
-         Tf30p1Gzgljm+63xQlRkuGaxVnsjXcIDXcn6SG2aZjoud8/I6SF0Q0c65nBQwXpKLf
-         xNOzp8YV7lLmw==
+        id S229969AbhHQW4q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 17 Aug 2021 18:56:46 -0400
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:49314 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229466AbhHQW4p (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 17 Aug 2021 18:56:45 -0400
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 17HMjj0P031941;
+        Tue, 17 Aug 2021 22:56:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=U3FQxM6freVq85Fz0VBDv7Mkm2CDgmRtMFYpTXhIZs0=;
+ b=nGWVr2uyAJXK0EvAIUhIIprvXSzmj7mlZsDq3tWbL+MfLYs2uqAkJ6udz/vKX2dVBb3s
+ PskyODcHnItGw53RRTQjvoMaOPfUTQ79FBNhYjWQnCZMDAF7cBEFyLWIVdY+gtmb8gef
+ NBLmX5KrqrFKHWZ8bEj440RbpvN5ybR6+hGQgekofLVHXTLzhpwWnawTOh6eGgKGlEzv
+ rNDY4Ijs/Lgiakq/XHcB/iFPmH2Upe4pHJUjTvwXIAfybapS+oRG/VOn5CM02AH19HsD
+ lsAughAAggDA/bC36ykvP0GnSBXFKsTdAzgzmaQpNeyXKA5dwdMrEmVY+brUsg/a8TWT Ig== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=U3FQxM6freVq85Fz0VBDv7Mkm2CDgmRtMFYpTXhIZs0=;
+ b=tzEmwgEvf/Z4ALf6Hf5PJqXuv5kJWZwt/0CPJLZ6dRBVdk/L3K3ZJQUgqp3R+PXjbKWv
+ +cqNwp8YCAmDwGsHJXZQE7w9OVW+704x+qGy1In5UhSogEXRnN0PbvptRrGai4fTmtW7
+ s2E4WnDHJHFPBQ9wRUzbT7hjvJmiuai0HV7GpUyhKj/ApxRoCLenL5QIBL0CHDY8TJ41
+ U+nGv6uLD4UIC0otXs9QPeQ4TZk+MP/0mHqrp8HA0+4rWNmnG2adHZS1pXMgE8jdeSKj
+ unL7s8FLPgdaU3Ax20yH2xLjzDYd9CIJRtpWV73Gm6n3i6n4QJiw03i3iq1UwEsTha+Y Kg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3age7d98nx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Aug 2021 22:56:03 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 17HMsuwj065319;
+        Tue, 17 Aug 2021 22:56:02 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2176.outbound.protection.outlook.com [104.47.59.176])
+        by aserp3030.oracle.com with ESMTP id 3ae3vgd7d1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Aug 2021 22:56:01 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HH+aIrF8Cu3dmL6P3aXCLRja+lIDwv8gNET8RV1abJFuO3ik7+NVqu3YPfpHK40O8CrHmaF849u2uh8isrYmQETm4VkSR7KO/JjdnVel2kP8nX2G+0ima/h1cDmBvzRpfyzscH4qDhdDQzqMtPsmduGtZocqqTNfvP26lUTSY3gavLpaSbjIGZ25EOx6yJQSR8J273jjVX/rfJPleSPShvcsnuC4l1ODkXsmQheFnJn2LZHrXpxTwYjf7oWBx3eI1lr0FY/xqzFGpJ9tIoAv3dZ2zVP3g/oK7z44O5vFw6OIDDKcWNVmY2JvKWCmODmfMppv0qY35F7DlQHTQ7fuIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U3FQxM6freVq85Fz0VBDv7Mkm2CDgmRtMFYpTXhIZs0=;
+ b=g1q2CHWO9UEnBNUI+qiuawii8V7fKtU2hVgMfI8+m3ntTUJnuG++qMACN0KsVVnz5dB3+pOtsGhoPDnXC6p6ED+U600H6fcZe3kOZJxnGuZjteo7wqllfRPailNXnzkTTDlrZYiJS8y1Rr+d0I8zAzxxs6q9GWkejiSs7G4uHPjgeUaw6aEVIJWtEg1t/SFJvQlFbMSw2GN8NPL+2wRE+FEsYhxZJFSenOOBUkW08Cy7LES8zJBq88UaI4b2jkc8fnAW2trenxJ41CRKSmh3nimy4EB7T9g6ZY+TkaR9pW+JpR9+NiFYHCwuer6dUpYwHoLx3GYyRFmQuIbtvDGJXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U3FQxM6freVq85Fz0VBDv7Mkm2CDgmRtMFYpTXhIZs0=;
+ b=Njg5RDVnwHFOIZ1C0vvjBp1xm877NQg9JSffitX+ScVbgmbifFVN/H2YMQYuDEW+oPK3fCRADo0493/N7l5ZIw3K1lMBDexLv7itS6SJR+e093qP8hXKNn5NfDYOcsgZZFuTLGmG1vjMrc+6MwA7UvZtZiKl/T9P7uH73IFktZ0=
+Authentication-Results: umich.edu; dkim=none (message not signed)
+ header.d=none;umich.edu; dmarc=none action=none header.from=oracle.com;
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
+ by BYAPR10MB2487.namprd10.prod.outlook.com (2603:10b6:a02:b0::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.19; Tue, 17 Aug
+ 2021 22:55:59 +0000
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::e4ce:bb43:6e72:1e10]) by BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::e4ce:bb43:6e72:1e10%7]) with mapi id 15.20.4415.024; Tue, 17 Aug 2021
+ 22:55:59 +0000
 Subject: Re: Spurious instability with NFSoRDMA under moderate load
-To:     Chuck Lever III <chuck.lever@oracle.com>
+To:     Timo Rothenpieler <timo@rothenpieler.org>,
+        Chuck Lever III <chuck.lever@oracle.com>
 Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Dai Ngo <dai.ngo@oracle.com>
+        Olga Kornievskaia <aglo@umich.edu>
 References: <4da3b074-a6be-d83f-ccd4-b151557066aa@rothenpieler.org>
- <72ECF9E1-1F6E-44AF-850C-536BED898DDD@oracle.com>
  <e12c24fd-beaf-31ce-cb49-36ad32bd22b3@rothenpieler.org>
  <daae674a-84d4-de36-336d-693dc582e3ef@rothenpieler.org>
  <9355de20-921c-69e0-e5a4-733b64e125e1@rothenpieler.org>
@@ -46,149 +91,125 @@ References: <4da3b074-a6be-d83f-ccd4-b151557066aa@rothenpieler.org>
  <3AF4F6CA-8B17-4AE9-82E2-21A2B9AA0774@oracle.com>
  <4caff277-8e53-3c75-70c1-8938b2a26933@rothenpieler.org>
  <7B44D7FD-9D0F-4A0D-ABE9-E295072D953F@oracle.com>
-From:   Timo Rothenpieler <timo@rothenpieler.org>
-Message-ID: <97fe445e-6c4f-b7cf-fa39-fd0c4222a89e@rothenpieler.org>
-Date:   Tue, 17 Aug 2021 23:51:57 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+ <97fe445e-6c4f-b7cf-fa39-fd0c4222a89e@rothenpieler.org>
+From:   dai.ngo@oracle.com
+Message-ID: <baf4f3b0-6717-8e3d-efd5-fa471ae8e7e3@oracle.com>
+Date:   Tue, 17 Aug 2021 15:55:57 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.13.0
+In-Reply-To: <97fe445e-6c4f-b7cf-fa39-fd0c4222a89e@rothenpieler.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: PH0P220CA0027.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:d3::10) To BY5PR10MB4257.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::21)
 MIME-Version: 1.0
-In-Reply-To: <7B44D7FD-9D0F-4A0D-ABE9-E295072D953F@oracle.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms040601040403010605080000"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from MacBook-Pro.local (72.219.112.78) by PH0P220CA0027.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:d3::10) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19 via Frontend Transport; Tue, 17 Aug 2021 22:55:59 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b7c7b09c-66fc-407c-f6ea-08d961d22e2d
+X-MS-TrafficTypeDiagnostic: BYAPR10MB2487:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR10MB2487E452516BC98EEC594FB087FE9@BYAPR10MB2487.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vxXng9/1SoHxrFiYbnNv4/U+MTiQKsLoUxJmATVCWTTss/TeRmsQbixloapVVtskeXGw2vz45GSBaxx/lcEgWWqfiCaspelmEblrPg8TNrzHVNmeOut/209jcRUmu28Oda0A/X8zk3MhqRbu9a7wEu6PRDczx5At4tpMoui1t5EbpZIAmN+pVEMnHM40JOlNAyJYu+SLfBQiGkKOT0Fq9SpbHFm8oLHEMtMqmAgeTB8siB2I6Gn0rBIphTeesrV9oGyEea92EXMxQK8916QdVbgU/0peeqwda0BoZcx2KZcOMC1YRuaYyqCIj8dN7J53SfeUWUfgzcr1j4nq3Xc6MSLWR68vOhGzq4yFT1qUOWrRURnEb00H1pf90+jOXKz/dgqbAMQnsF9ZEcXBjHWPt/frgKgwfffrvw4r/p4Ap+jqvJWAH9MkiV/jG2E4AkHra88i+/zCjDIOBHnjmer/xZOG4i6OOfuNs/jm9vAjwSe0MF7sdLnFZnr3zurSpHcoVRIqZ4jWuA91wRPFZdQyNPgiolEe3BLCG1roYp+nQNZ49iWAI/4d7MrRAWAFD6TDTbSpp1b5FboX6btUjuxUv9aQfmUyDdRHdif8Lt9BEb38jYw6KyW340rJDx60iU1RgL2FS6UqUBzbzvNiyTvkrrBiGLVWXf1LOG/pSDBrvsr9ZfGNh13U7FgcrrqjzFKB1OCFkjglPbWfOt4u1YnjkQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(39860400002)(346002)(396003)(366004)(376002)(6512007)(5660300002)(8676002)(478600001)(956004)(9686003)(54906003)(110136005)(2616005)(26005)(316002)(31696002)(4326008)(66556008)(2906002)(8936002)(6506007)(66476007)(31686004)(66946007)(36756003)(86362001)(186003)(38100700002)(53546011)(6486002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZmZZcE5XdUxLRVR1YUlyYThzNkdwcDVvVG0vSlBzbHB5UFFlNUg5NDhxeU9O?=
+ =?utf-8?B?bzdGY0tCUUhvMWl6TEs4UHM1cEx3SEdnK0Q4MXN6bTgrSXh3TDlmYWZJTkhp?=
+ =?utf-8?B?eHhveC9panl4c2tSYTNnZWtxV2l5TFQvd05zVDhmaHNwT0VSU1dyYWxyUUE2?=
+ =?utf-8?B?UGxIMTZ3aW1kYzBWdE9yZGg0UlhSTUNYQzJ1d0VaOTZDRjk5U1VaRUZGWGZZ?=
+ =?utf-8?B?bERxY2FoZzlnZmdoT0Fxc29qU1RqMUp5VWE3MkpJTDBsSG5jZVduYU5kenBx?=
+ =?utf-8?B?ZzBWZVlqY0Voc1pPVE8vRWw4RUQwU252czFQOG1VQTJpV1pyRXNYOUF5WDlP?=
+ =?utf-8?B?a2VsRFYwK3RqNHB5ZEVVK0ZNRTB6NDl3V1lPWEVSaXgyaFZNZmo4N2tFN2dG?=
+ =?utf-8?B?czVSdVJ4bnE0eGo0dDc2ZkVnY3E2Z0ZnRk8wMkRQM1ZUZ0FiMnozZVRYSUhP?=
+ =?utf-8?B?bWpjbmNUUUJRMVFSc0dwNlJmcTN2djhidE8yVHMwK0dlb1cvRXdpZFY5TVNK?=
+ =?utf-8?B?Zmg3L2xKdFR3VytDNVVoL3NoYkp4MnpNNG9oaXJCNUcwYmRXU2h2Slp1ejUr?=
+ =?utf-8?B?VnB4TzZETnBpaktEOWtra1ZaR0NLRFRYdjNNRG1RVFhnakhzZ2NuNkIrR29N?=
+ =?utf-8?B?Wng4eHJ6clBIZUVWSitSN0tHRDBhOUJTaXUvYXcyeFIzY0lxK2R4citaQmFJ?=
+ =?utf-8?B?MkJDTjFRU2RjSGp1ZnJTZFZwZHJvemhJMDlCTDVDUmFncTI5WkdZbngrdWM2?=
+ =?utf-8?B?azNBNmszbTBHd2d6eUU3SXI2RG9JdDh2MTNPK0lOOEN3YUNyanVGT1BGaEt1?=
+ =?utf-8?B?ZDZUb3hJWWpkK3pJZ1c4dzdnbmY1UERSSU04TWs1TmZOcHJISkR2ZmxsVjhT?=
+ =?utf-8?B?dWFuZU8rVWNWdWNtWU42QkJhQy83RndhQUtCQ05ydS8wU0dmdnFnTDBFSmxm?=
+ =?utf-8?B?eHVibGdYdFkwMzR2SkJDcEdFanFqeFJFYlA4WGxjU0dGWUlvMzlpQXVOSVds?=
+ =?utf-8?B?QkdkWmIzK1hkd0ZZVHRQbW5NWUlDVElnOGtaQ1lIcHBJZEwvWUt4bFFBYnF5?=
+ =?utf-8?B?NWlIY1FXbDVmUFVia2hTNHlmMFM1OVFmRWYzdHdVNmkxY1NLQXZ5R2ZTck9r?=
+ =?utf-8?B?WktCOTNIT05RbFhFc3BDY3VqSVVNZzJkZldRU1ljWkxJTVJPaUFXRDhWK3Z1?=
+ =?utf-8?B?WUNmSHk0TldZeVY2RTdJT1djMnZadzVTU0hzOFJwRXgvVFpValNCdzk4aFJz?=
+ =?utf-8?B?clhtSlNFRXZyTGhWNEVOM2VibENSdThrcXQrZ01LbDRGaTNCSVowNUlhVERy?=
+ =?utf-8?B?SDFLSTRCL2svWWtocERGQkZldU5jOGhxUkFId0ZsMWtLaHFLTWNLOU0vOWZF?=
+ =?utf-8?B?VE1GOGt4UC9ZYkRQNGVrN1NyWFFOUFhHR0k4QUhXdGNYMnNRRlQ4aHZiaFg2?=
+ =?utf-8?B?TlRkdkpCdG9UaXZQb00yckN5TENGWUY2TmRKY09NZWlNSi84VlY5d2dhcFpH?=
+ =?utf-8?B?YTgrZ0R3RTF6OTNWcm1Xa00zVGpJcC9Pd3pKMTZCNkFZN3lEVjNIN3ZFbkJx?=
+ =?utf-8?B?UGxRYmcxclc1S0RYRllaaXlzZkZOekJQTnVVMktaMkp5ZmhOQkVQOEVYTUYw?=
+ =?utf-8?B?RUI0WDRJcTRwbHhadTdmVld0SkpROUJxWTZSd2pReEF2K3U1Njh6SWszbHZp?=
+ =?utf-8?B?T3lVc2tXWFM0K3BvK0dscWRzZndHOHNVNktxTXBHSGJUM3NaSWxEZ293cEVp?=
+ =?utf-8?Q?H/n/EwE3IFUv8h5hfGhOh1LQHw5eHMSgrguI0xd?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7c7b09c-66fc-407c-f6ea-08d961d22e2d
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2021 22:55:59.6272
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JzRTHOUQx/5yaaqSKrOe8nNtaiWfAJpdSRZ3QTHUe0kwrnW9PS6uhT0ZucCXoxai2K0GAvIuIOCpQQvINlzF+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2487
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10079 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 mlxlogscore=999 spamscore=0 bulkscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2107140000
+ definitions=main-2108170144
+X-Proofpoint-GUID: OXihLRVIbzs0Z3AXX29zN1zh1VHx-Wm5
+X-Proofpoint-ORIG-GUID: OXihLRVIbzs0Z3AXX29zN1zh1VHx-Wm5
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This is a cryptographically signed message in MIME format.
 
---------------ms040601040403010605080000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+On 8/17/21 2:51 PM, Timo Rothenpieler wrote:
+> On 17.08.2021 23:08, Chuck Lever III wrote:
+>> I tried reproducing this using your 'xfs_io -fc "copy_range
+>> testfile" testfile.copy' reproducer, but couldn't.
+>>
+>> A network capture shows that the client tries CLONE first. The
+>> server reports that's not supported, so the client tries COPY.
+>> The COPY works, and the reply shows that the COPY was synchro-
+>> nous. Thus there's no need for a callback, and I'm not tripping
+>> over backchannel misbehavior.
+>
+> Make sure the testfile is of sufficient size. I'm not sure what the 
+> threshold is, but if it's too small, it'll just do a synchronous copy 
+> for me as well.
+> I'm using a 50MB file in my tests.
 
-On 17.08.2021 23:08, Chuck Lever III wrote:
-> I tried reproducing this using your 'xfs_io -fc "copy_range
-> testfile" testfile.copy' reproducer, but couldn't.
->=20
-> A network capture shows that the client tries CLONE first. The
-> server reports that's not supported, so the client tries COPY.
-> The COPY works, and the reply shows that the COPY was synchro-
-> nous. Thus there's no need for a callback, and I'm not tripping
-> over backchannel misbehavior.
+The threshold for intra-server copy is (2*rsize) of the source server.
+Any copy smaller than this is done synchronously.
 
-Make sure the testfile is of sufficient size. I'm not sure what the=20
-threshold is, but if it's too small, it'll just do a synchronous copy=20
-for me as well.
-I'm using a 50MB file in my tests.
+-Dai
 
-> The export I'm using is an xfs filesystem. Did you already
-> report the filesystem type you're testing against? I can't
-> find it in the thread.
->=20
-> If there's a way to force an offload-style COPY, let me know.
->=20
-> Oh. Also I looked at what might have been pulled into the
-> linux-5.12.y kernel between .12 and .19, and I don't see
-> anything that's especially relevant to either COPY_OFFLOAD
-> or backchannel.
-
-I'm observing this with both an ext4 and zfs filesystem.
-Can easily test xfs as well if desired.
-
-Are you testing this on a normal network, or with RDMA? With normal tcp, =
-
-I also can't observe this issue(it doesn't time out the backchannel in=20
-the first place), it only happens in RDMA mode.
-I'm using Mellanox ConnectX-4 cards in IB mode for my tests.
-
-
---------------ms040601040403010605080000
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-LnAuQS4xLDAqBgNVBAMMI0FjdGFsaXMgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIENBIEczMIIC
-IjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA7eaHlqHBpLbtwkJV9z8PDyJgXxPgpkOI
-hkmReRwbLxpQD9xGAe72ujqGzFFh78QPgAhxKVqtGHzYeq0VJVCzhnCKRBbVX+JwIhL3ULYh
-UAZrViUp952qDB6qTL5sGeJS9F69VPSR5k6pFNw7mHDTTt0voWFg2aVkG3khomzVXoieJGOi
-Q4dH76paCtQbLkt59joAKz2BnwGLQ4wr09nfumJt5AKx2YxHK2XgSPslVZ4z8G00gimsfA7U
-tjT/wiekY6Z0b7ksLrEcvODncHQe9VSrNRA149SE3AlkWaZM/joVei/GYfj9K5jkiReinR4m
-qM353FEceLOeBhSTURpMdQ5wsXLi9DSTGBuNv4aw2Dozb/qBlkhGTvwk92mi0jAecE22Sn3A
-9UfrU2p1w/uRs+TIteQ0xO0B/J2mY2caqocsS9SsriIGlQ8b0LT0o6Ob07KGtPa5/lIvMmx5
-72Dv2v+vDiECByxm1Hdgjp8JtE4mdyYP6GBscJyT71NZw1zXHnFkyCbxReag9qaSR9x4CVVX
-j1BDmNROCqd5NAfIXUXYTFeZ/jukQigkxXGWhEhfLBC4Ha6pwizz9fq1+wwPKcWaF9P/SZOu
-BDrG30MiyCZa66G9mEtF5ZLuh4rGfKqxy4Z5Mxecuzt+MZmrSKfKGeXOeED/iuX5Z02M1o7i
-MS8CAwEAAaOCAfQwggHwMA8GA1UdEwEB/wQFMAMBAf8wHwYDVR0jBBgwFoAUUtiIOsifeGbt
-ifN7OHCUyQICNtAwQQYIKwYBBQUHAQEENTAzMDEGCCsGAQUFBzABhiVodHRwOi8vb2NzcDA1
-LmFjdGFsaXMuaXQvVkEvQVVUSC1ST09UMEUGA1UdIAQ+MDwwOgYEVR0gADAyMDAGCCsGAQUF
-BwIBFiRodHRwczovL3d3dy5hY3RhbGlzLml0L2FyZWEtZG93bmxvYWQwHQYDVR0lBBYwFAYI
-KwYBBQUHAwIGCCsGAQUFBwMEMIHjBgNVHR8EgdswgdgwgZaggZOggZCGgY1sZGFwOi8vbGRh
-cDA1LmFjdGFsaXMuaXQvY24lM2RBY3RhbGlzJTIwQXV0aGVudGljYXRpb24lMjBSb290JTIw
-Q0EsbyUzZEFjdGFsaXMlMjBTLnAuQS4lMmYwMzM1ODUyMDk2NyxjJTNkSVQ/Y2VydGlmaWNh
-dGVSZXZvY2F0aW9uTGlzdDtiaW5hcnkwPaA7oDmGN2h0dHA6Ly9jcmwwNS5hY3RhbGlzLml0
-L1JlcG9zaXRvcnkvQVVUSC1ST09UL2dldExhc3RDUkwwHQYDVR0OBBYEFL6XqaqEv4C/EFN9
-CTL54S4yG893MA4GA1UdDwEB/wQEAwIBBjANBgkqhkiG9w0BAQsFAAOCAgEAJpvnG1kNdLMS
-A+nnVfeEgIXNQsM7YRxXx6bmEt9IIrFlH1qYKeNw4NV8xtop91Rle168wghmYeCTP10FqfuK
-MZsleNkI8/b3PBkZLIKOl9p2Dmz2Gc0I3WvcMbAgd/IuBtx998PJX/bBb5dMZuGV2drNmxfz
-3ar6ytGYLxedfjKCD55Yv8CQcN6e9sW5OUm9TJ3kjt7Wdvd1hcw5s+7bhlND38rWFJBuzump
-5xqm1NSOggOkFSlKnhSz6HUjgwBaid6Ypig9L1/TLrkmtEIpx+wpIj7WTA9JqcMMyLJ0rN6j
-jpetLSGUDk3NCOpQntSy4a8+0O+SepzS/Tec1cGdSN6Ni2/A7ewQNd1Rbmb2SM2qVBlfN0e6
-ZklWo9QYpNZyf0d/d3upsKabE9eNCg1S4eDnp8sJqdlaQQ7hI/UYCAgDtLIm7/J9+/S2zuwE
-WtJMPcvaYIBczdjwF9uW+8NJ/Zu/JKb98971uua7OsJexPFRBzX7/PnJ2/NXcTdwudShJc/p
-d9c3IRU7qw+RxRKchIczv3zEuQJMHkSSM8KM8TbOzi/0v0lU6SSyS9bpGdZZxx19Hd8Qs0cv
-+R6nyt7ohttizwefkYzQ6GzwIwM9gSjH5Bf/r9Kc5/JqqpKKUGicxAGy2zKYEGB0Qo761Mcc
-IyclBW9mfuNFDbTBeDEyu80xggPzMIID7wIBATCBljCBgTELMAkGA1UEBhMCSVQxEDAOBgNV
-BAgMB0JlcmdhbW8xGTAXBgNVBAcMEFBvbnRlIFNhbiBQaWV0cm8xFzAVBgNVBAoMDkFjdGFs
-aXMgUy5wLkEuMSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBH
-MwIQCP8se1eXTyBvFrjHrZ83LDANBglghkgBZQMEAgEFAKCCAi0wGAYJKoZIhvcNAQkDMQsG
-CSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjEwODE3MjE1MTU4WjAvBgkqhkiG9w0BCQQx
-IgQgelsr5LzeBSoLeBiqK//7ONjKP+kJvbyws1oL8Ubg++YwbAYJKoZIhvcNAQkPMV8wXTAL
-BglghkgBZQMEASowCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDAN
-BggqhkiG9w0DAgIBQDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBpwYJKwYBBAGCNxAEMYGZ
-MIGWMIGBMQswCQYDVQQGEwJJVDEQMA4GA1UECAwHQmVyZ2FtbzEZMBcGA1UEBwwQUG9udGUg
-U2FuIFBpZXRybzEXMBUGA1UECgwOQWN0YWxpcyBTLnAuQS4xLDAqBgNVBAMMI0FjdGFsaXMg
-Q2xpZW50IEF1dGhlbnRpY2F0aW9uIENBIEczAhAI/yx7V5dPIG8WuMetnzcsMIGpBgsqhkiG
-9w0BCRACCzGBmaCBljCBgTELMAkGA1UEBhMCSVQxEDAOBgNVBAgMB0JlcmdhbW8xGTAXBgNV
-BAcMEFBvbnRlIFNhbiBQaWV0cm8xFzAVBgNVBAoMDkFjdGFsaXMgUy5wLkEuMSwwKgYDVQQD
-DCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBHMwIQCP8se1eXTyBvFrjHrZ83
-LDANBgkqhkiG9w0BAQEFAASCAQCfmE9GOqtG0oLTcnA05Qv1yh1FrwCUJa/c1exvp1UAKGVC
-mX0PIbkF9XDd6kvLDO8+QCSQyTX0WL/5vOvt/56KQ3Umv41ZwlfQz2pcK476z5vag0JC5K+H
-VIB4Z2ConE6Yuk5WIzVnzQpuEtbyAnLVScEaRLjdaqbPAVM6hTai0TtzS9u180nGRZDNRHj6
-Cdt68eu9OTBn8wDeS9sBWnZQZkS0Yv8FrzGG2DHQpAgyDqbGKU6SWhYIj8PxJIFrxx1uBFXH
-HljTVromLU+OQwqnFDeQEH9oQpD9nBcbFTk+hdlyXD5/66bup7daGQ4PnTOjpZ7SG2acYGxY
-ddWCcSJGAAAAAAAA
---------------ms040601040403010605080000--
+>
+>> The export I'm using is an xfs filesystem. Did you already
+>> report the filesystem type you're testing against? I can't
+>> find it in the thread.
+>>
+>> If there's a way to force an offload-style COPY, let me know.
+>>
+>> Oh. Also I looked at what might have been pulled into the
+>> linux-5.12.y kernel between .12 and .19, and I don't see
+>> anything that's especially relevant to either COPY_OFFLOAD
+>> or backchannel.
+>
+> I'm observing this with both an ext4 and zfs filesystem.
+> Can easily test xfs as well if desired.
+>
+> Are you testing this on a normal network, or with RDMA? With normal 
+> tcp, I also can't observe this issue(it doesn't time out the 
+> backchannel in the first place), it only happens in RDMA mode.
+> I'm using Mellanox ConnectX-4 cards in IB mode for my tests.
+>
