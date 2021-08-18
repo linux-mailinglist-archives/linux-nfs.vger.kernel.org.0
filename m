@@ -2,154 +2,134 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36BF83F0A39
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Aug 2021 19:24:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C72DD3F0DA8
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Aug 2021 23:46:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231143AbhHRRZY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Aug 2021 13:25:24 -0400
-Received: from smtp-31.italiaonline.it ([213.209.10.31]:43287 "EHLO libero.it"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229953AbhHRRZY (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 18 Aug 2021 13:25:24 -0400
-Received: from venice.bhome ([78.12.137.210])
-        by smtp-31.iol.local with ESMTPA
-        id GPJ0mO7iazHnRGPJ0mwspf; Wed, 18 Aug 2021 19:24:47 +0200
-x-libjamoibt: 1601
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inwind.it; s=s2014;
-        t=1629307487; bh=GS9nRlQPrwPW5RmZBrGAuNY0KO6xdcgHq2IdmWkZkM0=;
-        h=From;
-        b=K18tIs04pet4ULW4ZVjRomSsC/aGo6zxsQFjZAed84drfLTtbsuiknoQtzK11gHcD
-         Q9UQw971yo00B9/oN6j7susEZNOFT8gQ8rfhXRDH0j+25rOw6RgoJOAtY3r0ZtXD9/
-         KpMq/w1wUltQ5VBjKyFVVKRRCTmHJxOZSVDLn7PUhDiUaKsRIxgfnUTbhvzqnPn3py
-         vtZ1ZIRPwLNDG4iUMNmFufDd0uRYgJEpts9bELVA50ExEMfGVZk/fyA4w4uxylnrUd
-         MXaEoOiY/3S3QH/RqFtYFWSwJKik5YRsM3SHeq59xveUnbDn0KMreAK5nL03UKlSwk
-         /dw1rGcJoWVmA==
-X-CNFS-Analysis: v=2.4 cv=L6DY/8f8 c=1 sm=1 tr=0 ts=611d425f cx=a_exe
- a=VHyfYjYfg3XpWvNRQl5wtg==:117 a=VHyfYjYfg3XpWvNRQl5wtg==:17
- a=IkcTkHD0fZMA:10 a=VwQbUJbxAAAA:8 a=Uq0mbvy6AAAA:8 a=zmC5LoGOwyVqHsGVwkYA:9
- a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=9nAYT2xhiIK_ZOnRzmc7:22
-Reply-To: kreijack@inwind.it
-Subject: Re: [PATCH] VFS/BTRFS/NFSD: provide more unique inode number for
- btrfs export
-To:     NeilBrown <neilb@suse.de>
-Cc:     Roman Mamedov <rm@romanrm.net>,
-        Christoph Hellwig <hch@infradead.org>,
-        Josef Bacik <josef@toxicpanda.com>,
+        id S234116AbhHRVrF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Aug 2021 17:47:05 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:51944 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234083AbhHRVrF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Aug 2021 17:47:05 -0400
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id BEC421FD35;
+        Wed, 18 Aug 2021 21:46:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1629323188; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EgHjDINeg2XxswsLMKYY8ZYuGYfWFxsr/oizjLTGkDI=;
+        b=m+0f9bZAyBHdJsXm1OkOfyvu516lqC/mc9IjlxxzKON9hVJFV/XJNw3erhe4jsSQTai0jF
+        Yzl4FYW5INAZ8AjDOs56/rv+GI+g8RlfugzB9XQvWIoNzOFkfoTn43BXLnVQbCXdKRQ35n
+        AMq6MDvlK9nO/2z06ZJvzXrvmgr0E9E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1629323188;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EgHjDINeg2XxswsLMKYY8ZYuGYfWFxsr/oizjLTGkDI=;
+        b=LrX1ws6muGBnWTia7XCdv35pvSAvSnCNEnEn0qFFMYpgvOoW/F1f2SFXi3tgQGDlzr5oUv
+        GDPZCQVkvJYWFQCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 91E3213DD5;
+        Wed, 18 Aug 2021 21:46:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id suahE7F/HWFwXwAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 18 Aug 2021 21:46:25 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Wang Yugui" <wangyugui@e16-tech.com>
+Cc:     "Christoph Hellwig" <hch@infradead.org>,
+        "Josef Bacik" <josef@toxicpanda.com>,
         "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Chuck Lever" <chuck.lever@oracle.com>, "Chris Mason" <clm@fb.com>,
+        "David Sterba" <dsterba@suse.com>,
+        "Alexander Viro" <viro@zeniv.linux.org.uk>,
         linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
         linux-btrfs@vger.kernel.org
-References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
- <162881913686.1695.12479588032010502384@noble.neil.brown.name>
- <bf49ef31-0c86-62c8-7862-719935764036@libero.it>
- <20210816003505.7b3e9861@natsu>
- <ee167ffe-ad11-ea95-1bd5-c43f273b345a@libero.it>
- <162906443866.1695.6446438554332029261@noble.neil.brown.name>
- <d8d67284-8d53-ed97-f387-81b27d17fdde@inwind.it>
- <162923637125.9892.2416104366790758503@noble.neil.brown.name>
-From:   Goffredo Baroncelli <kreijack@inwind.it>
-Message-ID: <ba85200b-feb9-14ba-aa5a-993a598deba6@inwind.it>
-Date:   Wed, 18 Aug 2021 19:24:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <162923637125.9892.2416104366790758503@noble.neil.brown.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfAuTy7JQ4T3/6Jol4BdjMEfQ5nej97/lfxbjHPjdhKSDj5/9VTqbDuag/uk8TDxtlzDJJZ6BdB5xggeWuoD/VzeSZYOUbV8WjfWno+rpIlH3i/MLbWRP
- KYpseUTykNZ+jJgNHXy/NVYsHpEZ06WL1i8/4siRO9LGVNx9RsNcdeLOCsNLhZ7RLjkXfFkVP8cyxYHoiUGyx9Nx6UVCZ8+2tVtFrLL08QmcougXGLGqCMye
- 8/3ZWeGexMZSfs+vRT2L56vZ4PYl603v27fhPdXR22t+ZwhQrgKQlsi41in7mq1p7qUzaQ81bFeTJyeWEJYfUKu3u78UWE0Jf2sB30E5zDN58db7NDPFjuEZ
- bnPTLGCIMWRWEowNPwJ5bX0WdMFAvNnewXHzHcQaFYM2LLhzsffmegmxC66uaE/EJBAtJ9pA9wg04K+QC3gwj+SGlNzuKzaUAfsFe8N6+21Ci1ysozZCHtEo
- GT6X1+zjJtOplT3p2OWT2oCdQx4ua8fXdxneyGpbsuQO5vvZCoOSrRs+FNQ=
+Subject: Re: [PATCH] VFS/BTRFS/NFSD: provide more unique inode number for btrfs export
+In-reply-to: <20210818225454.9558.409509F4@e16-tech.com>
+References: <162742539595.32498.13687924366155737575.stgit@noble.brown>,
+ <162881913686.1695.12479588032010502384@noble.neil.brown.name>,
+ <20210818225454.9558.409509F4@e16-tech.com>
+Date:   Thu, 19 Aug 2021 07:46:22 +1000
+Message-id: <162932318266.9892.13600254282844823374@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 8/17/21 11:39 PM, NeilBrown wrote:
-> On Wed, 18 Aug 2021, kreijack@inwind.it wrote:
->> On 8/15/21 11:53 PM, NeilBrown wrote:
->>> On Mon, 16 Aug 2021, kreijack@inwind.it wrote:
->>>> On 8/15/21 9:35 PM, Roman Mamedov wrote:
+On Thu, 19 Aug 2021, Wang Yugui wrote:
+> Hi,
 > 
->>>>
->>>> However looking at the 'exports' man page, it seems that NFS has already an
->>>> option to cover these cases: 'crossmnt'.
->>>>
->>>> If NFSd detects a "child" filesystem (i.e. a filesystem mounted inside an already
->>>> exported one) and the "parent" filesystem is marked as 'crossmnt',  the client mount
->>>> the parent AND the child filesystem with two separate mounts, so there is not problem of inode collision.
->>>
->>> As you acknowledged, you haven't read the whole back-story.  Maybe you
->>> should.
->>>
->>> https://lore.kernel.org/linux-nfs/20210613115313.BC59.409509F4@e16-tech.com/
->>> https://lore.kernel.org/linux-nfs/162848123483.25823.15844774651164477866.stgit@noble.brown/
->>> https://lore.kernel.org/linux-btrfs/162742539595.32498.13687924366155737575.stgit@noble.brown/
->>>
->>> The flow of conversation does sometimes jump between threads.
->>>
->>> I'm very happy to respond you questions after you've absorbed all that.
->>
->> Hi Neil,
->>
->> I read the other threads.  And I still have the opinion that the nfsd
->> crossmnt behavior should be a good solution for the btrfs subvolumes.
+> We use  'swab64' to combinate 'subvol id' and 'inode' into 64bit in this
+> patch.
 > 
-> Thanks for reading it all.  Let me join the dots for you.
+> case1:
+> 'subvol id': 16bit => 64K, a little small because the subvol id is
+> always increase?
+> 'inode':	48bit * 4K per node, this is big enough.
 > 
-[...]
-> 
-> Alternately we could change the "crossmnt" functionality to treat a
-> change of st_dev as though it were a mount point.  I posted patches to
-> do this too.  This hits the same sort of problems in a different way.
-> If NFSD reports that is has crossed a "mount" by providing a different
-> filesystem-id to the client, then the client will create a new mount
-> point which will appear in /proc/mounts.  
+> case2:
+> 'subvol id': 24bit => 16M,  this is big enough.
+> 'inode':	40bit * 4K per node => 4 PB.  this is a little small?
 
-Yes, this is my proposal.
-
-> It might be less likely that
-> many thousands of subvolumes are accessed over NFS than locally, but it
-> is still entirely possible.  
-
-I don't think that it would be so unlikely. Think about a file indexer
-and/or a 'find' command runned in the folder that contains the snapshots...
-
-> I don't want the NFS client to suffer a
-> problem that btrfs doesn't impose locally.  
-
-The solution is not easy. In fact we are trying to map a u64 x u64 space to a u64 space. The true is that we
-cannot guarantee that a collision will not happen. We can only say that for a fresh filesystem is near
-impossible, but for an aged filesystem it is unlikely but possible.
-
-We already faced real case where we exhausted the inode space in the 32 bit arch.What is the chances that the subvolumes ever created count is greater  2^24 and the inode number is greater  2^40 ? The likelihood is low but not 0...
-
-Some random toughs:
-- the new inode number are created merging the original inode-number (in the lower bit) and the object-id of the subvolume (in higher bit). We could add a warning when these bits overlap:
-
-	if (fls(stat->ino) >= ffs(stat->ino_uniquifer))
-		printk("NFSD: Warning possible inode collision...")
-
-More smarter heuristic can be developed, like doing the check against the maximum value if inode and the maximum value of the subvolume once at mount time....
-
-- for the inode number it is an expensive operation (even tough it exists/existed for the 32bit processor), but we could reuse the object-id after it is freed
-
-- I think that we could add an option to nfsd or btrfs (not a default behavior) to avoid to cross the subvolume boundary
-
-> And 'private' subvolumes
-> could again appear on a public list if they were accessed via NFS.
-
-(wrongly) I never considered  a similar scenario. However I think that these could be anonymized using a alias (the name of the path to mount is passed by nfsd, so it could create an alias that will be recognized by nfsd when the clienet requires it... complex but doable...)
+I don't know what point you are trying to make with the above.
 
 > 
-> Thanks,
-> NeilBrown
+> Is there a way to 'bit-swap' the subvol id, rather the current byte-swap?
+
+Sure:
+   for (i=0; i<64; i++) {
+        new = (new << 1) | (old & 1)
+        old >>= 1;
+   }
+
+but would it gain anything significant?
+
+Remember what the goal is.  Most apps don't care at all about duplicate
+inode numbers - only a few do, and they only care about a few inodes.
+The only bug I actually have a report of is caused by a directory having
+the same inode as an ancestor.  i.e.  in lots of cases, duplicate inode
+numbers won't be noticed.
+
+The behaviour of btrfs over NFS RELIABLY causes exactly this behaviour
+of a directory having the same inode number as an ancestor.  The root of
+a subtree will *always* do this.  If we JUST changed the inode numbers
+of the roots of subtrees, then most observed problems would go away.  It
+would change from "trivial to reproduce" to "rarely happens".  The patch
+I actually propose makes it much more unlikely than that.  Even if
+duplicate inode numbers do happen, the chance of them being noticed is
+infinitesimal.  Given that, there is no point in minor tweaks unless
+they can make duplicate inode numbers IMPOSSIBLE.
+
 > 
+> If not, maybe it is a better balance if we combinate 22bit subvol id and
+> 42 bit inode?
 
+This would be better except when it is worse.  We cannot know which will
+happen more often.
 
--- 
-gpg @keyserver.linux.it: Goffredo Baroncelli <kreijackATinwind.it>
-Key fingerprint BBF5 1610 0B64 DAC6 5F7D  17B2 0EDA 9B37 8B82 E0B5
+As long as BTRFS allows object-ids and root-ids combined to use more
+than 64 bits there can be no perfect solution.  There are many possible
+solutions that will be close to perfect in practice.  swab64() is the
+simplest that I could think of.  Picking any arbitrary cut-off (22/42,
+24/40, ...) is unlikely to be better, and could is some circumstances be
+worse.
+
+My preference would be for btrfs to start re-using old object-ids and
+root-ids, and to enforce a limit (set at mkfs or tunefs) so that the
+total number of bits does not exceed 64.  Unfortunately the maintainers
+seem reluctant to even consider this.
+
+NeilBrown
