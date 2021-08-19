@@ -2,148 +2,190 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D1893F1045
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Aug 2021 04:19:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B46443F14C9
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Aug 2021 10:05:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235579AbhHSCTs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Aug 2021 22:19:48 -0400
-Received: from james.kirk.hungrycats.org ([174.142.39.145]:40412 "EHLO
-        james.kirk.hungrycats.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235558AbhHSCTs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Aug 2021 22:19:48 -0400
-Received: by james.kirk.hungrycats.org (Postfix, from userid 1002)
-        id 0FBA7B3967D; Wed, 18 Aug 2021 22:19:10 -0400 (EDT)
-Date:   Wed, 18 Aug 2021 22:19:10 -0400
-From:   Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
+        id S236994AbhHSIF4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Aug 2021 04:05:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237124AbhHSIEn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Aug 2021 04:04:43 -0400
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C41C061756;
+        Thu, 19 Aug 2021 01:01:48 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id h29so5088395ila.2;
+        Thu, 19 Aug 2021 01:01:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IN0x5iXYABQqCMHt+Nn8KkV49otQhc88Nzl1ZF5H8xg=;
+        b=mLswoyqw9ob+OuFlNXU8eZvLATUYoM7nI44L1MJqQp+ZaSLxO0oA+XxvV1njKbMdWW
+         TA6rRrg5lNpiz9ZIaT75O6ci/kAHkGmyiMkvOoav2l2P/lU6BC9e39NdjVq1cRXODNTp
+         mjufyJ3vGIXgB0LPC7nrY49BvbK0C7nGkh4qOq1mPbH5FVKVfIeYdhvuVUi6CnSfq5Ni
+         1r/FumdhHq0BEeF9QDcylrq3gH1hjSxuEekI0huscOBJHqQ8XZfpI403JrMHvNJyPFc4
+         0/TVrfJTCDJItApseS9gqDOcc49xiCzdKR5krGAgqi/47LxPmW4jfPPgNNmJvzfqO5yH
+         2smw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IN0x5iXYABQqCMHt+Nn8KkV49otQhc88Nzl1ZF5H8xg=;
+        b=d7kwh8QpRieUMnUtb7GpY5Lv7xq7atsN2qZrWDo8bNPJc3OtBnrs95HSf7Drndpetc
+         IOZbXD6ssImVWqH5au1QsEZtXFrafFo73DARw5TBbBMrRC4PFRrhnC2WPLg8WgMfYU3p
+         +lPeDkmI/AYgJpJVehDDu7cIqWFmMcF35EwmQb6P2+nT9gGHY02AXxl3WwtlXQLQk+4L
+         6w4adn8A8UaHfDr74CfQbQk19tFL59of/eC5nZp5KPrAi1FDv+bBpamiUhb3P/gL6CSP
+         L71WvxS4NcHC8HFJFw5uNGbEK6bio0Kh2MMsP71zrBM68YBJnRS4MdI0DUM6xJzUc1rF
+         ac1w==
+X-Gm-Message-State: AOAM533fs0kfp0uNSrZovrEf17ZkDfmGeSzZT1Po1+7RUU91Of7F8V4p
+        V1gfztWCuvp3LIpeiBgKEXiC1B03VCq5bsMUewU=
+X-Google-Smtp-Source: ABdhPJzFzm9SyC4CH5KGlm52Jk3sfaAfKHKIOm8vAD69W4xJpldNwNhi9JeeohtotpJs4dtHomw/pJj60XSdolwvDbg=
+X-Received: by 2002:a92:8702:: with SMTP id m2mr9393019ild.250.1629360107809;
+ Thu, 19 Aug 2021 01:01:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
+ <162881913686.1695.12479588032010502384@noble.neil.brown.name>
+ <bf49ef31-0c86-62c8-7862-719935764036@libero.it> <20210816003505.7b3e9861@natsu>
+ <162906585094.1695.15815972140753474778@noble.neil.brown.name>
+In-Reply-To: <162906585094.1695.15815972140753474778@noble.neil.brown.name>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 19 Aug 2021 11:01:36 +0300
+Message-ID: <CAOQ4uxiry7HcRtqY3DehNi4_PTLjxN0uMrw-oYcX9TgehC6m6w@mail.gmail.com>
+Subject: Re: [PATCH] VFS/BTRFS/NFSD: provide more unique inode number for
+ btrfs export
 To:     NeilBrown <neilb@suse.de>
-Cc:     Wang Yugui <wangyugui@e16-tech.com>,
+Cc:     Roman Mamedov <rm@romanrm.net>,
+        Goffredo Baroncelli <kreijack@libero.it>,
         Christoph Hellwig <hch@infradead.org>,
         Josef Bacik <josef@toxicpanda.com>,
         "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
         David Sterba <dsterba@suse.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH] VFS/BTRFS/NFSD: provide more unique inode number for
- btrfs export
-Message-ID: <20210819021910.GB29026@hungrycats.org>
-References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
- <162881913686.1695.12479588032010502384@noble.neil.brown.name>
- <20210818225454.9558.409509F4@e16-tech.com>
- <162932318266.9892.13600254282844823374@noble.neil.brown.name>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <162932318266.9892.13600254282844823374@noble.neil.brown.name>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Linux Btrfs <linux-btrfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 19, 2021 at 07:46:22AM +1000, NeilBrown wrote:
-> On Thu, 19 Aug 2021, Wang Yugui wrote:
-> > Hi,
-> > 
-> > We use  'swab64' to combinate 'subvol id' and 'inode' into 64bit in this
-> > patch.
-> > 
-> > case1:
-> > 'subvol id': 16bit => 64K, a little small because the subvol id is
-> > always increase?
-> > 'inode':	48bit * 4K per node, this is big enough.
-> > 
-> > case2:
-> > 'subvol id': 24bit => 16M,  this is big enough.
-> > 'inode':	40bit * 4K per node => 4 PB.  this is a little small?
-> 
-> I don't know what point you are trying to make with the above.
-> 
-> > 
-> > Is there a way to 'bit-swap' the subvol id, rather the current byte-swap?
-> 
-> Sure:
->    for (i=0; i<64; i++) {
->         new = (new << 1) | (old & 1)
->         old >>= 1;
->    }
-> 
-> but would it gain anything significant?
-> 
-> Remember what the goal is.  Most apps don't care at all about duplicate
-> inode numbers - only a few do, and they only care about a few inodes.
-> The only bug I actually have a report of is caused by a directory having
-> the same inode as an ancestor.  i.e.  in lots of cases, duplicate inode
-> numbers won't be noticed.
+On Mon, Aug 16, 2021 at 1:21 AM NeilBrown <neilb@suse.de> wrote:
+>
+> On Mon, 16 Aug 2021, Roman Mamedov wrote:
+> >
+> > I wondered a bit myself, what are the downsides of just doing the
+> > uniquefication inside Btrfs, not leaving that to NFSD?
+> >
+> > I mean not even adding the extra stat field, just return the inode itself with
+> > that already applied. Surely cannot be any worse collision-wise, than
+> > different subvolumes straight up having the same inode numbers as right now?
+> >
+> > Or is it a performance concern, always doing more work, for something which
+> > only NFSD has needed so far.
+>
+> Any change in behaviour will have unexpected consequences.  I think the
+> btrfs maintainers perspective is they they don't want to change
+> behaviour if they don't have to (which is reasonable) and that currently
+> they don't have to (which probably means that users aren't complaining
+> loudly enough).
+>
+> NFS export of BTRFS is already demonstrably broken and users are
+> complaining loudly enough that I can hear them ....  though I think it
+> has been broken like this for 10 years, do I wonder that I didn't hear
+> them before.
+>
+> If something is perceived as broken, then a behaviour change that
+> appears to fix it is more easily accepted.
+>
+> However, having said that I now see that my latest patch is not ideal.
+> It changes the inode numbers associated with filehandles of objects in
+> the non-root subvolume.  This will cause the Linux NFS client to treat
+> the object as 'stale' For most objects this is a transient annoyance.
+> Reopen the file or restart the process and all should be well again.
+> However if the inode number of the mount point changes, you will need to
+> unmount and remount.  That is more somewhat more of an annoyance.
+>
+> There are a few ways to handle this more gracefully.
+>
+> 1/ We could get btrfs to hand out new filehandles as well as new inode
+> numbers, but still accept the old filehandles.  Then we could make the
+> inode number reported be based on the filehandle.  This would be nearly
+> seamless but rather clumsy to code.  I'm not *very* keen on this idea,
+> but it is worth keeping in mind.
+>
 
-rsync -H and cpio's hardlink detection can be badly confused.  They will
-think distinct files with the same inode number are hardlinks.  This could
-be bad if you were making backups (though if you're making backups over
-NFS, you are probably doing something that could be done better in a
-different way).
+So objects would change their inode number after nfs inode cache is
+evicted and while nfs filesystem is mounted. That does not sound ideal.
 
-> The behaviour of btrfs over NFS RELIABLY causes exactly this behaviour
-> of a directory having the same inode number as an ancestor.  The root of
-> a subtree will *always* do this.  If we JUST changed the inode numbers
-> of the roots of subtrees, then most observed problems would go away.  It
-> would change from "trivial to reproduce" to "rarely happens".  The patch
-> I actually propose makes it much more unlikely than that.  Even if
-> duplicate inode numbers do happen, the chance of them being noticed is
-> infinitesimal.  Given that, there is no point in minor tweaks unless
-> they can make duplicate inode numbers IMPOSSIBLE.
+But I am a bit confused about the problem.
+If the export is of the btrfs root, then nfs client cannot access any
+subvolumes (right?) - that was the bug report, so the value of inode
+numbers in non-root subvolumes is not an issue.
+If export is of non-root subvolume, then why bother changing anything
+at all? Is there a need to traverse into sub-sub-volumes?
 
-That's a good argument.  I have a different one with the same conclusion.
+> 2/ We could add a btrfs mount option to control whether the uniquifier
+> was set or not.  This would allow the sysadmin to choose when to manage
+> any breakage.  I think this is my preference, but Josef has declared an
+> aversion to mount options.
+>
+> 3/ We could add a module parameter to nfsd to control whether the
+> uniquifier is merged in.  This again gives the sysadmin control, and it
+> can be done despite any aversion from btrfs maintainers.  But I'd need
+> to overcome any aversion from the nfsd maintainers, and I don't know how
+> strong that would be yet. (A new export option isn't really appropriate.
+> It is much more work to add an export option than the add a mount option).
+>
 
-40 bit inodes would take about 20 years to collide with 24-bit subvols--if
-you are creating an average of 1742 inodes every second.  Also at the
-same time you have to be creating a subvol every 37 seconds to occupy
-the colliding 25th bit of the subvol ID.  Only the highest inode number
-in any subvol counts--if your inode creation is spread out over several
-different subvols, you'll need to make inodes even faster.
+That is too bad, because IMO from users POV, "fsid=btrfsroot" or "cross-subvol"
+export option would have been a nice way to describe and opt-in to this new
+functionality.
 
-For reference, my high scores are 17 inodes per second and a subvol
-every 595 seconds (averaged over 1 year).  Burst numbers are much higher,
-but one has to spend some time _reading_ the files now and then.
+But let's consider for a moment the consequences of enabling this functionality
+automatically whenever exporting a btrfs root volume without "crossmnt":
 
-I've encountered other btrfs users with two orders of magnitude higher
-inode creation rates than mine.  They are barely squeaking under the
-20-year line--or they would be, if they were creating snapshots 50 times
-faster than they do today.
+1. Objects inside a subvol that are inaccessible(?) with current
+nfs/nfsd without
+    "crossmnt" will become accessible after enabling the feature -
+this will match
+    the user experience of accessing btrfs on the host
+2. The inode numbers of the newly accessible objects would not match the inode
+    numbers on the host fs (no big deal?)
+3. The inode numbers of objects in a snapshot would not match the inode
+    numbers of the original (pre-snapshot) objects (acceptable tradeoff for
+    being able to access the snapshot objects without bloating /proc/mounts?)
+4. The inode numbers of objects in a subvol observed via this "cross-subvol"
+    export would not match the inode numbers of the same objects observed
+    via an individual subvol export
+5. st_ino conflicts are possible when multiplexing subvol id and inode number.
+    overlayfs resolved those conflicts by allocating an inode number from a
+    reserved non-persistent inode range, which may cause objects to change
+    their inode number during the lifetime on the filesystem (sensible
+tradeoff?)
 
-Use cases that have the highest inode creation rates (like /tmp) tend
-to get more specialized storage solutions (like tmpfs).
+I think that #4 is a bit hard to swallow and #3 is borderline acceptable...
+Both and quite hard to document and to set expectations as a non-opt-in
+change of behavior when exporting btrfs root.
 
-Cloud fleets do have higher average inode creation rates, but their
-filesystems have much shorter lifespans than 20 years, so the delta on
-both sides of the ratio cancels out.
+IMO, an nfsd module parameter will give some control and therefore is
+a must, but it won't make life easier to document and set user expectations
+when the semantics are not clearly stated in the exports table.
 
-If this hack is only used for NFS, it gives us some time to come up
-with a better solution.  (On the other hand, we had 14 years already,
-and here we are...)
+You claim that "A new export option isn't really appropriate."
+but your only argument is that "It is much more work to add
+an export option than the add a mount option".
 
-> > If not, maybe it is a better balance if we combinate 22bit subvol id and
-> > 42 bit inode?
-> 
-> This would be better except when it is worse.  We cannot know which will
-> happen more often.
-> 
-> As long as BTRFS allows object-ids and root-ids combined to use more
-> than 64 bits there can be no perfect solution.  There are many possible
-> solutions that will be close to perfect in practice.  swab64() is the
-> simplest that I could think of.  Picking any arbitrary cut-off (22/42,
-> 24/40, ...) is unlikely to be better, and could is some circumstances be
-> worse.
-> 
-> My preference would be for btrfs to start re-using old object-ids and
-> root-ids, and to enforce a limit (set at mkfs or tunefs) so that the
-> total number of bits does not exceed 64.  Unfortunately the maintainers
-> seem reluctant to even consider this.
+With all due respect, for this particular challenge with all the
+constraints involved, this sounds like a pretty weak argument.
 
-It was considered, implemented in 2011, and removed in 2020.  Rationale
-is in commit b547a88ea5776a8092f7f122ddc20d6720528782 "btrfs: start
-deprecation of mount option inode_cache".  It made file creation slower,
-and consumed disk space, iops, and memory to run.  Nobody used it.
-Newer on-disk data structure versions (free space tree, 2015) didn't
-bother implementing inode_cache's storage requirement.
+Surely, adding an export option is easier than slowly changing all
+userspace tools to understand subvolumes? a solution that you had
+previously brought up.
 
-> NeilBrown
+Can you elaborate some more about your aversion to a new
+export option.
+
+Thanks,
+Amir.
