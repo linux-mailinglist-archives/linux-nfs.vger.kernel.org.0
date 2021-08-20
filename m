@@ -2,94 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5296A3F32E5
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Aug 2021 20:15:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A2C43F34C0
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Aug 2021 21:45:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235994AbhHTSQ1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Aug 2021 14:16:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235950AbhHTSQZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 20 Aug 2021 14:16:25 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E56A461056;
-        Fri, 20 Aug 2021 18:15:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629483347;
-        bh=lEauG8US0wWV105yX+m78yPpsHVn1SxEBoQkVuK3wLQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=iZ8eL9VRJ2N0qnU/+VFbVX5aGbw4kSBmXpVBDdGtuWN2mZZshQv3Sb6XkSinqPdSC
-         R5RyHVBJpS81J3HejjC36ETWbCFSCGZ0D5WUK6YDB8XgpgWPo63s8BlbXeGRbCRKnt
-         GV70SMKuQrvX1zNhZMdl9qhyq1Q+3jFAVMH49sDZrL3YMWU1Q1IxIWMrV1YzPOmaMu
-         JB6HA0VU2hf0RC2+nKj9N4D7MveLwtqVI1BcAPje48v763gchaevYK9wjV2GBFR1+G
-         gZtxMTvv1RC6qzlHrVFmgvJGAekzzmMg1Kz3BfKshjEKmIWIV9wrDLBOwoXfdzT/Sg
-         6GTkKruOhJ+QQ==
-Message-ID: <30fdfda30b42b8b836a199b3cbe65d1673f5100f.camel@kernel.org>
-Subject: Re: [PATCH v3 0/2] fs: remove support for mandatory locking
-From:   Jeff Layton <jlayton@kernel.org>
-To:     torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ebiederm@xmission.com, david@redhat.com, willy@infradead.org,
-        linux-nfs@vger.kernel.org, viro@zeniv.linux.org.uk,
+        id S238597AbhHTTqS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Aug 2021 15:46:18 -0400
+Received: from zeniv-ca.linux.org.uk ([142.44.231.140]:57662 "EHLO
+        zeniv-ca.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238332AbhHTTqS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Aug 2021 15:46:18 -0400
+Received: from viro by zeniv-ca.linux.org.uk with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mHASE-00ESrA-C0; Fri, 20 Aug 2021 19:45:26 +0000
+Date:   Fri, 20 Aug 2021 19:45:26 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ebiederm@xmission.com,
+        david@redhat.com, willy@infradead.org, linux-nfs@vger.kernel.org,
         linux-doc@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
         linux-afs@lists.infradead.org, cluster-devel@redhat.com,
         ocfs2-devel@oss.oracle.com, linux-mm@kvack.org,
         akpm@linux-foundation.org, luto@kernel.org, bfields@fieldses.org,
         rostedt@goodmis.org
-Date:   Fri, 20 Aug 2021 14:15:44 -0400
-In-Reply-To: <20210820163919.435135-1-jlayton@kernel.org>
+Subject: Re: [PATCH v3 2/2] fs: remove mandatory file locking support
+Message-ID: <YSAGVsTOc/Fw0x8l@zeniv-ca.linux.org.uk>
 References: <20210820163919.435135-1-jlayton@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+ <20210820163919.435135-3-jlayton@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210820163919.435135-3-jlayton@kernel.org>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2021-08-20 at 12:39 -0400, Jeff Layton wrote:
-> v3: slight revision to verbiage, and use pr_warn_once
-> 
-> The first patch in this series adds a new warning that should pop on
-> kernels that have mandatory locking enabled when someone mounts a
-> filesystem with -o mand. The second patch removes support for mandatory
-> locking altogether.
-> 
-> What I think we probably want to do is apply the first to v5.14 before
-> it ships and allow the new warning to trickle out into stable kernels.
-> Then we can merge the second patch in v5.15 to go ahead and remove it.
-> 
-> Sound like a plan?
-> 
-> Jeff Layton (2):
->   fs: warn about impending deprecation of mandatory locks
->   fs: remove mandatory file locking support
-> 
->  .../filesystems/mandatory-locking.rst         | 188 ------------------
->  fs/9p/vfs_file.c                              |  12 --
->  fs/Kconfig                                    |  10 -
->  fs/afs/flock.c                                |   4 -
->  fs/ceph/locks.c                               |   3 -
->  fs/gfs2/file.c                                |   3 -
->  fs/locks.c                                    | 116 +----------
->  fs/namei.c                                    |   4 +-
->  fs/namespace.c                                |  25 +--
->  fs/nfs/file.c                                 |   4 -
->  fs/nfsd/nfs4state.c                           |  13 --
->  fs/nfsd/vfs.c                                 |  15 --
->  fs/ocfs2/locks.c                              |   4 -
->  fs/open.c                                     |   8 +-
->  fs/read_write.c                               |   7 -
->  fs/remap_range.c                              |  10 -
->  include/linux/fs.h                            |  84 --------
->  mm/mmap.c                                     |   6 -
->  mm/nommu.c                                    |   3 -
->  19 files changed, 14 insertions(+), 505 deletions(-)
->  delete mode 100644 Documentation/filesystems/mandatory-locking.rst
-> 
+On Fri, Aug 20, 2021 at 12:39:19PM -0400, Jeff Layton wrote:
 
-I went ahead and pushed this version into the locks-next branch, so we
-can give it some soak time before merging.
+> diff --git a/fs/locks.c b/fs/locks.c
 
--- 
-Jeff Layton <jlayton@kernel.org>
+> @@ -2857,8 +2744,7 @@ static void lock_get_status(struct seq_file *f, struct file_lock *fl,
+>  			seq_puts(f, "POSIX ");
+>  
+>  		seq_printf(f, " %s ",
+> -			     (inode == NULL) ? "*NOINODE*" :
+> -			     mandatory_lock(inode) ? "MANDATORY" : "ADVISORY ");
+> +			     (inode == NULL) ? "*NOINODE*" : "ADVISORY ");
 
+Huh?
+
+<looks>
+        if (fl->fl_file != NULL)
+		inode = locks_inode(fl->fl_file);
+
+So basically that's fl->fl_file ? "ADVISORY" : "*NOINODE*"?
+
+How could that trigger, though?  With locks_mandatory_area() gone, I don't
+see how FL_POSIX file_lock with NULL ->fl_file could be ever found...
+Confused...
+
+Why is locks_copy_conflock() exported (hell, non-static), BTW?
+
+> diff --git a/fs/namespace.c b/fs/namespace.c
+
+
+> -#ifdef	CONFIG_MANDATORY_FILE_LOCKING
+> -static bool may_mandlock(void)
+> +static void warn_mandlock(void)
+>  {
+> -	pr_warn_once("======================================================\n"
+> -		     "WARNING: the mand mount option is being deprecated and\n"
+> -		     "         will be removed in v5.15!\n"
+> -		     "======================================================\n");
+> -	return capable(CAP_SYS_ADMIN);
+> +	pr_warn_once("=======================================================\n"
+> +		     "WARNING: The mand mount option has been deprecated and\n"
+> +		     "         and is ignored by this kernel. Remove the mand\n"
+> +		     "         option from the mount to silence this warning.\n"
+> +		     "=======================================================\n");
+>  }
+> -#else
+> -static inline bool may_mandlock(void)
+> -{
+> -	pr_warn("VFS: \"mand\" mount option not supported");
+> -	return false;
+> -}
+> -#endif
+
+Is there any point in having the previous patch not folded into this one?
