@@ -2,114 +2,118 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEDD63F3027
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Aug 2021 17:50:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 868703F302D
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Aug 2021 17:52:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241256AbhHTPvc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Aug 2021 11:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241195AbhHTPvb (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 20 Aug 2021 11:51:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 22846610FF;
-        Fri, 20 Aug 2021 15:50:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629474653;
-        bh=sIZQJdeQo+NqJE2KGZmLQeNMkwh4uu//4yYwZFjD3y0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=s09SvCLj1uqQUR0Q5tbmN47Tw8m3PlRFK5qq3kSZrfBVGIMEr+BE0NMWEMv8T3zw3
-         QOCUJjIVPNRSYvWeS3+W5A9lnkBBBze0wcOYnRayZEfK5L+fAd5NPiE34iT76qjhWD
-         rVXPOHQdVKvj7Kfqw9qu4uSNMjkY+6TzWBXg2a5dgz+G6q3DDrbm6X0HWqL8pi6hT0
-         Vo5nAgWfNzZrRK9otPZV0FaLalhhxjWyHJ/M6jA0R9FbctN7cEX3XjfwpD7iq71ZJN
-         wg0nYiJw3K8hy/0P5lcC/ZMjeepEHoWOnV6RboA3vgkwhqo7e1uogwGwI8RDzLlshM
-         21E/WCrTBZhDA==
-Message-ID: <7efb04fe6e0c867e7c87d75cf3349221b08b4210.camel@kernel.org>
-Subject: Re: [PATCH v2 1/2] fs: warn about impending deprecation of
- mandatory locks
-From:   Jeff Layton <jlayton@kernel.org>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "david@redhat.com" <david@redhat.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "v9fs-developer@lists.sourceforge.net" 
-        <v9fs-developer@lists.sourceforge.net>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "w@1wt.eu" <w@1wt.eu>, "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Date:   Fri, 20 Aug 2021 11:50:51 -0400
-In-Reply-To: <c1318459eaab436aacb225982c49c4b4@AcuMS.aculab.com>
+        id S241120AbhHTPxC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Aug 2021 11:53:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:57481 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238278AbhHTPxB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Aug 2021 11:53:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1629474743;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JlZGKQdLiYduLYkrU1ycwzHzZ/QPrtvBjhejt7xEWxE=;
+        b=FD3IUmW5wOeh1WiNCZUeNRs/ar0AKJk4PisJqED4PayKk2+NPomEd3baDFrDyrpWBz7MDq
+        w35zrGxiHyvFihX5eh4RSrxkRkxPf9uKEwSFJDIxyabbXUM98f2uMQOu/obIVHcdE2fpM5
+        qls5iIoTf+4jrzoonAVjSLjfKOUKkoc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-132-_NWq6JctMRe4oFqtvaHFeA-1; Fri, 20 Aug 2021 11:52:22 -0400
+X-MC-Unique: _NWq6JctMRe4oFqtvaHFeA-1
+Received: by mail-wm1-f69.google.com with SMTP id r4-20020a1c4404000000b002e728beb9fbso758314wma.9
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Aug 2021 08:52:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=JlZGKQdLiYduLYkrU1ycwzHzZ/QPrtvBjhejt7xEWxE=;
+        b=mDkXtyFnnSc2XFty7zXtzRnybVnwALyHEEhnf3d0cVBZ1DAf2qnTL9rz+UPe9nzteF
+         ceZeh69lqvZpqxOdM4Vkovj5WN5ZV1V6Umi+XBR1I3PqI/3sv/i8vgV5RWJT5Rm1UCt8
+         0eIszRacLTeodXsTMN5JLkoP4It8g62h7txH/+3LB1a1D7/ga50Khp4pUXTzxDUydiBB
+         NRV9/yhT8/FOr8roKPimN2IUO4HeNgo9w7Rx8wbnd/i/gs3P6O3UrVar7i70PLCdWBHv
+         ZE+C7qpjTPgbUKWjdMlFl5MX11XGAI7Z0jXffWiQFBjRNj+fi8+Jya8U2IaUNY5MLnhJ
+         nTWA==
+X-Gm-Message-State: AOAM530AoDT9QVZVU3GL4ncPEwbmMFSvM3ozaghaE/UP40Sy7vUtBDp2
+        akO7mG+pmKYrgJYzbMpcvavxi1gLYBzuE5R4oV+nIZPB5+TY8dJTW15g71UBozUzWyx/E7iJ/pQ
+        T5ZUXoiqt24QubyxWWY81
+X-Received: by 2002:a7b:c112:: with SMTP id w18mr4714035wmi.60.1629474741074;
+        Fri, 20 Aug 2021 08:52:21 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyaJBeCrGw4MnIfr+I5SADEkPPbDd6DJwmXEz/DXBgKbV1Dt/yBLdB7ItdMspgW4ZXDhi9QGA==
+X-Received: by 2002:a7b:c112:: with SMTP id w18mr4714020wmi.60.1629474740919;
+        Fri, 20 Aug 2021 08:52:20 -0700 (PDT)
+Received: from ?IPv6:2003:d8:2f0a:7f00:fad7:3bc9:69d:31f? (p200300d82f0a7f00fad73bc9069d031f.dip0.t-ipconnect.de. [2003:d8:2f0a:7f00:fad7:3bc9:69d:31f])
+        by smtp.gmail.com with ESMTPSA id a18sm10107804wmg.43.2021.08.20.08.52.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Aug 2021 08:52:20 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] fs: warn about impending deprecation of mandatory
+ locks
+To:     Jeff Layton <jlayton@kernel.org>, torvalds@linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     ebiederm@xmission.com, willy@infradead.org,
+        linux-nfs@vger.kernel.org, viro@zeniv.linux.org.uk,
+        linux-doc@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-mm@kvack.org,
+        akpm@linux-foundation.org, luto@kernel.org, bfields@fieldses.org,
+        w@1wt.eu, rostedt@goodmis.org, stable@vger.kernel.org
 References: <20210820135707.171001-1-jlayton@kernel.org>
-         <20210820135707.171001-2-jlayton@kernel.org>
-         <c1318459eaab436aacb225982c49c4b4@AcuMS.aculab.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+ <20210820135707.171001-2-jlayton@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Message-ID: <0f4f3e65-1d2d-e512-2a6f-d7d63effc479@redhat.com>
+Date:   Fri, 20 Aug 2021 17:52:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
+In-Reply-To: <20210820135707.171001-2-jlayton@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2021-08-20 at 15:49 +0000, David Laight wrote:
-> From: Jeff Layton
-> > Sent: 20 August 2021 14:57
-> > 
-> > We've had CONFIG_MANDATORY_FILE_LOCKING since 2015 and a lot of distros
-> > have disabled it. Warn the stragglers that still use "-o mand" that
-> > we'll be dropping support for that mount option.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/namespace.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/fs/namespace.c b/fs/namespace.c
-> > index ab4174a3c802..ffab0bb1e649 100644
-> > --- a/fs/namespace.c
-> > +++ b/fs/namespace.c
-> > @@ -1716,8 +1716,16 @@ static inline bool may_mount(void)
-> >  }
-> > 
-> >  #ifdef	CONFIG_MANDATORY_FILE_LOCKING
-> > +static bool warned_mand;
-> >  static inline bool may_mandlock(void)
-> >  {
-> > +	if (!warned_mand) {
-> > +		warned_mand = true;
-> > +		pr_warn("======================================================\n");
-> > +		pr_warn("WARNING: the mand mount option is being deprecated and\n");
-> > +		pr_warn("         will be removed in v5.15!\n");
-> > +		pr_warn("======================================================\n");
-> > +	}
-> >  	return capable(CAP_SYS_ADMIN);
-> >  }
+On 20.08.21 15:57, Jeff Layton wrote:
+> We've had CONFIG_MANDATORY_FILE_LOCKING since 2015 and a lot of distros
+> have disabled it. Warn the stragglers that still use "-o mand" that
+> we'll be dropping support for that mount option.
 > 
-> If that is called more than once you don't want the 'inline'.
-> I doubt it matters is not inlined - hardly a hot path.
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>   fs/namespace.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
 > 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index ab4174a3c802..ffab0bb1e649 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -1716,8 +1716,16 @@ static inline bool may_mount(void)
+>   }
+>   
+>   #ifdef	CONFIG_MANDATORY_FILE_LOCKING
+> +static bool warned_mand;
+>   static inline bool may_mandlock(void)
+>   {
+> +	if (!warned_mand) {
+> +		warned_mand = true;
+> +		pr_warn("======================================================\n");
+> +		pr_warn("WARNING: the mand mount option is being deprecated and\n");
+> +		pr_warn("         will be removed in v5.15!\n");
+> +		pr_warn("======================================================\n");
+> +	}
 
-ACK. Of course. That really needs to not be inline. I'll fix that up in
-my tree.
+Is there a reason not to use pr_warn_once() ?
 
-Thanks!
+
 -- 
-Jeff Layton <jlayton@kernel.org>
+Thanks,
+
+David / dhildenb
 
