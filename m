@@ -2,165 +2,159 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEF3D3F3D67
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Aug 2021 06:06:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AC4E3F4131
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Aug 2021 21:29:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229807AbhHVEGm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 22 Aug 2021 00:06:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbhHVEGl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Aug 2021 00:06:41 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5725FC061575
-        for <linux-nfs@vger.kernel.org>; Sat, 21 Aug 2021 21:06:01 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id 18so12315084pfh.9
-        for <linux-nfs@vger.kernel.org>; Sat, 21 Aug 2021 21:06:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ynnUJVnDOgOUYxbX2QuOPzSIuIDB0BPSV5utZU4Rqmc=;
-        b=KtbeapSzzpuyhQWfVtEkIqQgY1UEOc9uHXo/YrWVHL1vxWP3EEDNL6oKFTzRdQOxem
-         NOEumaoSf8rGKNg3IQu0QKVvonDwGe6uSSmfQVPjTNpl6SdN2OB99Ju717PrYweETi5W
-         pBJduNRjV6IQXWVB+DFUlxlpsCaDGHgzDF0eUfuNubJqVPE6H3oOLMhv/ksTffw7I+/5
-         l6k9CU0eh0av1oAwune0ZhVVvEwJyj4EKeXw86b1BB3Pw4KfbWMDgu3bk9qF1i9s+Jps
-         B4xnGxjKUrv6Hz+mWmD+kpqtuTwvxHM9lcrjmfY1SgcPXbhlR+4JAYwhh8w3PzJKfpli
-         uCrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ynnUJVnDOgOUYxbX2QuOPzSIuIDB0BPSV5utZU4Rqmc=;
-        b=fjNlDCS/mlG/hOpURtpzBFBQBLc3AoXMP4l7FGduK6tBin+3kswBHn6x6LfG/yt6tC
-         7Swjm9Lf4Im3W5hDGhjW1lAn+keO+0+Gy7vbVYT7TFIjhune5wLtVP/SFbMWGUMCLIsb
-         vbNReVE20GRSRAkUNGPYhKEUL72u0ECy0FntEq6qZwCpglE1u+QxQrDI0gPzJhc1qdur
-         XYU5w07ZDUnBEDyNur6VoBcDbNsY8WC9j/rZnHaT3qcnnzgkRWtNdmmOmWiz7rU/yeQ+
-         G6lIg2uAxNVTTd9DntV9g7xJBNwD0UPotMWBhVUVqksi/fv6MyMiD960uJrxejcX8+d7
-         amOg==
-X-Gm-Message-State: AOAM533O71cpYxTkMberV8rq+DV6DEOpJWd8pU/zyV1LixYfK4DwBYbn
-        MAATJtdB+HRak/b2cle6r/r5jAxNBPqItqyKQRY=
-X-Google-Smtp-Source: ABdhPJwawrw9Ypuql9CJmG+catoXApUPDzKo5bVXW4ZyCB9+QiaWFQBel/fCkgdvhP/L3eWGZuQzjVYe8lWdeNXCKWc=
-X-Received: by 2002:a65:4486:: with SMTP id l6mr25719213pgq.145.1629605160674;
- Sat, 21 Aug 2021 21:06:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAOv1SKCmdtchm5Z2NU80o49tkrHpAkPFaHKj4-vLDN5bZNCz-Q@mail.gmail.com>
- <162846730406.22632.14734595494457390936@noble.neil.brown.name>
- <CAOv1SKBZ7sGBnvG9-M+De+s=CfU=H_GBs4hJah1E4ks+NSMyPw@mail.gmail.com>
- <CAOv1SKCUM5cGuXWAc7dsXtbmPMATqd245juC+S9gVXHWiZsvmQ@mail.gmail.com>
- <162855893202.12431.3423894387218130632@noble.neil.brown.name>
- <CAOv1SKAaSbfw53LWCCrvGCHESgdtCf5h275Zkzi9_uHkqnCrdg@mail.gmail.com>
- <162882238416.1695.4958036322575947783@noble.neil.brown.name>
- <CAOv1SKB_dsam7P9pzzh_SKCtA8uE9cyFdJ=qquEfhLT42-szPA@mail.gmail.com>
- <CAOv1SKDDOj5UeUwztrMSNJnLgSoEgD8OU55hqtLHffHvaCQzzA@mail.gmail.com>
- <162907681945.1695.10796003189432247877@noble.neil.brown.name>
- <87777C39-BDDA-4E1E-83FA-5B46918A66D3@oracle.com> <CAOv1SKA5ByO7PYQwvd6iBcPieWxEp=BfUZuigJ=7Hm4HAmTuMA@mail.gmail.com>
- <162915491276.9892.7049267765583701172@noble.neil.brown.name>
- <162941948235.9892.6790956894845282568@noble.neil.brown.name>
- <CAOv1SKAyr0Cixc8eQf8-Fdnf=9Db_xZGsweq9K2E5AkALFqavQ@mail.gmail.com>
- <CAOv1SKDDUFpgexZ_xYCe6c2-UCBK0+vicoG+LAtG2Zhispd_jg@mail.gmail.com> <162960371884.9892.13803244995043191094@noble.neil.brown.name>
-In-Reply-To: <162960371884.9892.13803244995043191094@noble.neil.brown.name>
-From:   Mike Javorski <mike.javorski@gmail.com>
-Date:   Sat, 21 Aug 2021 21:05:49 -0700
-Message-ID: <CAOv1SKBePD6N-R0uETgcSPA-LZZ4895ZJDKTY7mYvhfu184OQQ@mail.gmail.com>
-Subject: Re: NFS server regression in kernel 5.13 (tested w/ 5.13.9)
+        id S232558AbhHVTab (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 22 Aug 2021 15:30:31 -0400
+Received: from james.kirk.hungrycats.org ([174.142.39.145]:47960 "EHLO
+        james.kirk.hungrycats.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229549AbhHVTab (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Aug 2021 15:30:31 -0400
+Received: by james.kirk.hungrycats.org (Postfix, from userid 1002)
+        id 75782B425BA; Sun, 22 Aug 2021 15:29:23 -0400 (EDT)
+Date:   Sun, 22 Aug 2021 15:29:23 -0400
+From:   Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
 To:     NeilBrown <neilb@suse.de>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Wang Yugui <wangyugui@e16-tech.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH] VFS/BTRFS/NFSD: provide more unique inode number for
+ btrfs export
+Message-ID: <20210822192917.GF29026@hungrycats.org>
+References: <162742539595.32498.13687924366155737575.stgit@noble.brown>
+ <162881913686.1695.12479588032010502384@noble.neil.brown.name>
+ <20210818225454.9558.409509F4@e16-tech.com>
+ <162932318266.9892.13600254282844823374@noble.neil.brown.name>
+ <20210819021910.GB29026@hungrycats.org>
+ <162942805745.9892.7512463857897170009@noble.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <162942805745.9892.7512463857897170009@noble.neil.brown.name>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-5.12.15-arch1:
-===============
-14723 137 0.00921938
+On Fri, Aug 20, 2021 at 12:54:17PM +1000, NeilBrown wrote:
+> On Thu, 19 Aug 2021, Zygo Blaxell wrote:
+> > 40 bit inodes would take about 20 years to collide with 24-bit subvols--if
+> > you are creating an average of 1742 inodes every second.  Also at the
+> > same time you have to be creating a subvol every 37 seconds to occupy
+> > the colliding 25th bit of the subvol ID.  Only the highest inode number
+> > in any subvol counts--if your inode creation is spread out over several
+> > different subvols, you'll need to make inodes even faster.
+> > 
+> > For reference, my high scores are 17 inodes per second and a subvol
+> > every 595 seconds (averaged over 1 year).  Burst numbers are much higher,
+> > but one has to spend some time _reading_ the files now and then.
+> > 
+> > I've encountered other btrfs users with two orders of magnitude higher
+> > inode creation rates than mine.  They are barely squeaking under the
+> > 20-year line--or they would be, if they were creating snapshots 50 times
+> > faster than they do today.
+> 
+> I do like seeing concrete numbers, thanks.  How many of these inodes and
+> subvols remain undeleted?  Supposing inode numbers were reused, how many
+> bits might you need?
 
-5.13.12-arch1: (no freezes)
-===============
-15333 206 0.013257
+Number of existing inodes is filesystem size divided by average inode
+size, about 30 million inodes per terabyte for build servers, give or
+take an order of magnitude per project.  That does put 1 << 32 inodes in
+the range of current disk sizes, which motivated the inode_cache feature.
 
-5.13.12-arch1: (with freezes)
-===============
-9230 299 0.0313779
+Number of existing subvols stays below 1 << 14.  It's usually some
+near-constant multiple of the filesystem age (if it is not limited more
+by capacity) because it's not trivial to move a subvol structure from
+one filesystem to another.
 
-So a decent bump w/ 5.13, and even more with the freezes.
-This machine is an older Opteron server w/ nforce networking. Not sure
-how much offloading it actually does.
+The main constraint on the product of both numbers is filesystem size.
+If that limit is reached, we often see that lower subvol numbers correlate
+with higher inode numbers and vice versa; otherwise both keep growing until
+they hit the size limit or some user-chosen limit (e.g. "we just don't
+need more than the last 300 builds online at any time").
 
-- mike
+For build and backup use cases (which both heavily use snapshots) there is
+no incentive to delete snapshots other than to avoid eventually running
+out of space.  There is also no incentive to increase filesystem size
+to accommodate extra snapshots, as long as there is room for some minimal
+useful number of snapshots, the original subvols, and some free space.
 
-On Sat, Aug 21, 2021 at 8:42 PM NeilBrown <neilb@suse.de> wrote:
->
-> On Sun, 22 Aug 2021, Mike Javorski wrote:
-> > OK, so new/fresh captures, reading the same set of files via NFS in
-> > roughly the same timing/sequence (client unchanged between runs)
-> >
-> > 5.12.15-arch1:
-> > ===============
-> > 0.042320 124082
-> > 0.042594 45837
-> > 0.043176 19598
-> > 0.044092 63667
-> > 0.044613 28192
-> > 0.045045 131268
-> > 0.045982 116572
-> > 0.058507 162444
-> > 0.369620 153520
-> > 0.825167 164682
-> >
-> > 5.13.12-arch1: (no freezes)
-> > ===============
-> > 0.040766 12679
-> > 0.041565 64532
-> > 0.041799 55440
-> > 0.042091 159640
-> > 0.042105 75075
-> > 0.042134 177776
-> > 0.042706 40
-> > 0.043334 35322
-> > 0.045480 183618
-> > 0.204246 83997
-> >
-> > Since I didn't get any freezes, I waited a bit, tried again and got a
-> > capture with several freezes...
-> >
-> > 5.13.12-arch1: (with freezes)
-> > ===============
-> > 0.042143 55425
-> > 0.042252 64787
-> > 0.042411 57362
-> > 0.042441 34461
-> > 0.042503 67041
-> > 0.042553 64812
-> > 0.042592 55179
-> > 0.042715 67002
-> > 0.042835 66977
-> > 0.043308 64849
-> >
-> > Not sure what to make of this, but to my (admittedly untrainted) eye,
-> > the two 5.13.12 sets are very similar to each other as well as to the
-> > 5.12.15 sample, I am not sure if this is giving any indication to what
-> > is causing the freezes.
->
-> In the trace that I have, most times (242 of 245) were 0.000360 or less.
-> Only 3 were greater.
-> As your traces are much bigger you naturally have more that are great -
-> all of the last 10 and probably more.
->
-> I has hoping that 5.12 wouldn't show any large delays, but clearly it
-> does.  However it is still possible that there are substantially fewer.
->
-> Rather than using tail, please pipe the list of times into
->
->  awk '$1 < 0.001 { fast +=1 } $1 >= 0.001 {slow += 1} END { print fast, slow, slow / (fast + slow) }'
->
-> and report the results.  If the final number (the fraction) is reliably
-> significantly smaller for 5.12 than for 5.13 (whether it freezes or
-> not), then this metric may still be useful.
->
-> By the way, disabling the various offload options didn't appear to make
-> a different for the other person who has reported this problem.
->
-> Thanks,
+So we get snapshots in numbers that are rougly:
+
+	min(age_of_filesystem * snapshot_creation_rate, filesystem_capacity / average_subvol_unique_data_size)
+
+Subvol IDs are not reusable.  They are embedded in shared object ownership
+metadata, and persist for some time after subvols are deleted.
+
+> > > My preference would be for btrfs to start re-using old object-ids and
+> > > root-ids, and to enforce a limit (set at mkfs or tunefs) so that the
+> > > total number of bits does not exceed 64.  Unfortunately the maintainers
+> > > seem reluctant to even consider this.
+> > 
+> > It was considered, implemented in 2011, and removed in 2020.  Rationale
+> > is in commit b547a88ea5776a8092f7f122ddc20d6720528782 "btrfs: start
+> > deprecation of mount option inode_cache".  It made file creation slower,
+> > and consumed disk space, iops, and memory to run.  Nobody used it.
+> > Newer on-disk data structure versions (free space tree, 2015) didn't
+> > bother implementing inode_cache's storage requirement.
+> 
+> Yes, I saw that.  Providing reliable functional certainly can impact
+> performance and consume disk-space.  That isn't an excuse for not doing
+> it. 
+> I suspect that carefully tuned code could result in typical creation
+> times being unchanged, and mean creation times suffering only a tiny
+> cost.  Using "max+1" when the creation rate is particularly high might
+> be a reasonable part of managing costs.
+> Storage cost need not be worse than the cost of tracking free blocks
+> on the device.
+
+The cost of _tracking_ free object IDs is trivial compared to the cost
+of _reusing_ an object ID on btrfs.
+
+If btrfs doesn't reuse object numbers, btrfs can append new objects
+to the last partially filled leaf.  If there are shared metadata pages
+(i.e. snapshots), btrfs unshares a handful of pages once, and then future
+writes use densely packed new pages and delayed allocation without having
+to read anything.
+
+If btrfs reuses object numbers, the filesystem has to pack new objects
+into random previously filled metadata leaf nodes, so there are a lot
+of read-modify-writes scattered over old metadata pages, which spreads
+the working set around and reduces cache usage efficiency (i.e. uses
+more RAM).  If there are snapshots, each shared page that is modified
+for the first time after the snapshot comes with two-orders-of-magnitude
+worst-case write multipliers.
+
+The two-algorithm scheme (switching from "reuse freed inode" to "max+1"
+under load) would be forced into the "max+1" mode half the time by a
+daily workload of alternating git checkouts and builds.  It would save
+only one bit of inode namespace over the lifetime of the filesystem.
+
+> "Nobody used it" is odd.  It implies it would have to be explicitly
+> enabled, and all it would provide anyone is sane behaviour.  Who would
+> imagine that to be an optional extra.
+
+It always had to be explicitly enabled.  It was initially a workaround
+for 32-bit ino_t that was limiting a few users, but ino_t got better
+and the need for inode_cache went away.
+
+NFS (particularly NFSv2) might be the use case inode_cache has been
+waiting for.  btrfs has an i_version field for NFSv4, so it's not like
+there's no precedent for adding features in btrfs to support NFS.
+
+On the other hand, the cost of ino_cache gets worse with snapshots,
+and the benefit in practice takes years to decades to become relevant.
+Users who are exporting snapshots over NFS are likely to be especially
+averse to using inode_cache.
+
 > NeilBrown
+> 
+> 
