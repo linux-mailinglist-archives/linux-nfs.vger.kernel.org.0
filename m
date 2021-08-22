@@ -2,262 +2,241 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D5653F3BA7
-	for <lists+linux-nfs@lfdr.de>; Sat, 21 Aug 2021 19:21:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 898D13F3CD7
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Aug 2021 02:18:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230145AbhHURWi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 21 Aug 2021 13:22:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46347 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229836AbhHURWh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 21 Aug 2021 13:22:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629566517;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+BnNXf1ko3bc5HF1intlLZUQDkdw0Ps+Gqq7aocL/BE=;
-        b=FbI/grLrp0kLUpv2qH/DZJ22AGpEDcRJtm0Ixr9Qy4fScFMcyNeNAz7d6wiga5T8dPQsje
-        I2h6ODCTGS44KmnwZPv8+NNUJRk/oVTlbxaqtXq0FTXEZ9sMricJHRPO9SrZgNpEV/caJX
-        QootEqzqYbURhERx6RqYRiva3soh+4Y=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-581-TOGuMWUmMqeHszKltKRIvA-1; Sat, 21 Aug 2021 13:21:56 -0400
-X-MC-Unique: TOGuMWUmMqeHszKltKRIvA-1
-Received: by mail-qv1-f69.google.com with SMTP id u6-20020ad448660000b02903500bf28866so9104433qvy.23
-        for <linux-nfs@vger.kernel.org>; Sat, 21 Aug 2021 10:21:56 -0700 (PDT)
+        id S230333AbhHVASw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 21 Aug 2021 20:18:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229519AbhHVASv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 21 Aug 2021 20:18:51 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8499DC061575
+        for <linux-nfs@vger.kernel.org>; Sat, 21 Aug 2021 17:18:11 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id n18so13051297pgm.12
+        for <linux-nfs@vger.kernel.org>; Sat, 21 Aug 2021 17:18:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1Zhv9/yujeM0OHGEc5tActRw2ng9ZBtg3h79PoKRmMg=;
+        b=LRlKufOenOSEXpvdOBQA7rlIr1Jd2Cz6sMHETj5vT91u0CSCQKCyyTWXK2AEmdQCF+
+         6Egx64Zb0MUYgk3Q4+ticTHW7ZzkN7zWHoSDO9El/Az1lMCCooyySIa8/4ghwhLZKs2z
+         WmxE+UjlJAMjWv3z7iSEbpzlCyI5gnppxh92NBQbAeECE/drGWzYgYdjzh+iaLtlme1j
+         tAth+xV9Kq6tPEzxODbfDZgZ3WUVrFKOzS3JuC2CmpM9zl802BHuO+rbtN6GGkVtiK/E
+         5g5jvloL1BsAknTp+n//NgrziLPt1Xf1DZ8b/lIfmOKHlaKqfH+jbGSh27TUIlIuz+ds
+         yTTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+BnNXf1ko3bc5HF1intlLZUQDkdw0Ps+Gqq7aocL/BE=;
-        b=HEmcG2J1pkIpF5/hkLxXkXHPeZBcVZXkKPdhaSIaCljl8hkLls2EvOTNzopqG0/R+i
-         aOYPlxgESfNE9cqWDGqxIwyePbdRxZoZm2JgySKpvy0OY2auOgIgluJKc/w3FmzaQExY
-         vqIYuWX94NK40PmhQ3NYXEGtJ+ASCZCjYa3OnN9pSXCaeTleB5JY1gqnCCg3F4CNw8Xj
-         zxzwnsg5jc8xSkqi6R9FIJGBb06EPkIBehYdm5yaBeUyiScTQTliKRMWh4kfnVTTKF/e
-         0EAHcm7PxkDiyAsn4237jWcZB0yvoMlxH6T46iyoh0shDBvIVfJwSbjtP8AZW85QfajH
-         xvcA==
-X-Gm-Message-State: AOAM530onK7B4K6wFGFOPs7QEOw91KtReEVvByMAoI0sy+7/HZq0ReIp
-        1gLYiSs0Hd5AY4asbEELYQSEjCMud9Mxq4OXgrHLqiWA+VeUpy6h5QqrE5Z6kh/2FOZLgiNtO6H
-        PUiH6PP0voFgCT2HU/o+F
-X-Received: by 2002:ac8:e02:: with SMTP id a2mr23226435qti.318.1629566515631;
-        Sat, 21 Aug 2021 10:21:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyGaJJ5w2/GSPlms76o4FeRl+ND1B+yoFLcDIsK+T4n5vpEglipBRzcvHSHf1MkR4wpk/5nsQ==
-X-Received: by 2002:ac8:e02:: with SMTP id a2mr23226390qti.318.1629566514943;
-        Sat, 21 Aug 2021 10:21:54 -0700 (PDT)
-Received: from madhat.boston.devel.redhat.com ([71.161.89.127])
-        by smtp.gmail.com with ESMTPSA id p1sm3468266qkh.115.2021.08.21.10.21.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Aug 2021 10:21:54 -0700 (PDT)
-Subject: Re: [PATCH v2 1/1] Fix DoS vulnerability in libtirpc
-To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com,
-        libtirpc-devel@lists.sourceforge.net
-Cc:     linux-nfs@vger.kernel.org, kukuk@thkukuk.de
-References: <20210811000818.95985-1-dai.ngo@oracle.com>
-From:   Steve Dickson <steved@redhat.com>
-Message-ID: <60a85905-8ecd-a467-97ea-f7dd58241aee@redhat.com>
-Date:   Sat, 21 Aug 2021 13:21:53 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1Zhv9/yujeM0OHGEc5tActRw2ng9ZBtg3h79PoKRmMg=;
+        b=kqwMp8LpSAnvjX8P62Y0RllWRyuZVjooTRNvDtWQ2VanublPXxNXTqhztkYDSoqse+
+         7XQxFlA05zxRQg53TiERL9JSOY8MPGTkKGcC79dXU/FE4V0YXT2ukA5vJDvOHQx8N3f0
+         xhO88NXAb+SvbxM9PjF12uGmDaYFK/tVbKioR3sgRgWHU/BVLnjowXGsuS+IWHVkixrb
+         +Jz9IvrRrGg7WytqrGfFDHVoai3OZOOSuRq1qQn/amiHv7O+pcxQ/re54DO5hMUSgcoM
+         SHaslYhO/4Nf7I4IDv7EAu8EUWqEi8/bzzf44exD5qHYh9O2WA1jQ3R3iKIabtxwdhAS
+         TfNQ==
+X-Gm-Message-State: AOAM530f5U9faH+KXm17ngPC4i0HiIdI8q/6Mo5Mp9WAITHXOzoP3VJN
+        LEscIHynIKnwOa/DHOIm1KbbLNe3lU/HSAbmJdo=
+X-Google-Smtp-Source: ABdhPJzvZvdk3IXfj8xHxQoHTXtHxYJP3TUVUuLqu8z18EI1w3YCNSjXZsLVk0GdLytREH9TUugxoMk7eNg/eywVlPY=
+X-Received: by 2002:a62:5ec6:0:b0:3e1:d20:957b with SMTP id
+ s189-20020a625ec6000000b003e10d20957bmr26321833pfb.24.1629591490780; Sat, 21
+ Aug 2021 17:18:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210811000818.95985-1-dai.ngo@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAOv1SKCmdtchm5Z2NU80o49tkrHpAkPFaHKj4-vLDN5bZNCz-Q@mail.gmail.com>
+ <162846730406.22632.14734595494457390936@noble.neil.brown.name>
+ <CAOv1SKBZ7sGBnvG9-M+De+s=CfU=H_GBs4hJah1E4ks+NSMyPw@mail.gmail.com>
+ <CAOv1SKCUM5cGuXWAc7dsXtbmPMATqd245juC+S9gVXHWiZsvmQ@mail.gmail.com>
+ <162855893202.12431.3423894387218130632@noble.neil.brown.name>
+ <CAOv1SKAaSbfw53LWCCrvGCHESgdtCf5h275Zkzi9_uHkqnCrdg@mail.gmail.com>
+ <162882238416.1695.4958036322575947783@noble.neil.brown.name>
+ <CAOv1SKB_dsam7P9pzzh_SKCtA8uE9cyFdJ=qquEfhLT42-szPA@mail.gmail.com>
+ <CAOv1SKDDOj5UeUwztrMSNJnLgSoEgD8OU55hqtLHffHvaCQzzA@mail.gmail.com>
+ <162907681945.1695.10796003189432247877@noble.neil.brown.name>
+ <87777C39-BDDA-4E1E-83FA-5B46918A66D3@oracle.com> <CAOv1SKA5ByO7PYQwvd6iBcPieWxEp=BfUZuigJ=7Hm4HAmTuMA@mail.gmail.com>
+ <162915491276.9892.7049267765583701172@noble.neil.brown.name>
+ <162941948235.9892.6790956894845282568@noble.neil.brown.name> <CAOv1SKAyr0Cixc8eQf8-Fdnf=9Db_xZGsweq9K2E5AkALFqavQ@mail.gmail.com>
+In-Reply-To: <CAOv1SKAyr0Cixc8eQf8-Fdnf=9Db_xZGsweq9K2E5AkALFqavQ@mail.gmail.com>
+From:   Mike Javorski <mike.javorski@gmail.com>
+Date:   Sat, 21 Aug 2021 17:17:59 -0700
+Message-ID: <CAOv1SKDDUFpgexZ_xYCe6c2-UCBK0+vicoG+LAtG2Zhispd_jg@mail.gmail.com>
+Subject: Re: NFS server regression in kernel 5.13 (tested w/ 5.13.9)
+To:     NeilBrown <neilb@suse.de>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+OK, so new/fresh captures, reading the same set of files via NFS in
+roughly the same timing/sequence (client unchanged between runs)
+
+5.12.15-arch1:
+===============
+0.042320 124082
+0.042594 45837
+0.043176 19598
+0.044092 63667
+0.044613 28192
+0.045045 131268
+0.045982 116572
+0.058507 162444
+0.369620 153520
+0.825167 164682
+
+5.13.12-arch1: (no freezes)
+===============
+0.040766 12679
+0.041565 64532
+0.041799 55440
+0.042091 159640
+0.042105 75075
+0.042134 177776
+0.042706 40
+0.043334 35322
+0.045480 183618
+0.204246 83997
+
+Since I didn't get any freezes, I waited a bit, tried again and got a
+capture with several freezes...
+
+5.13.12-arch1: (with freezes)
+===============
+0.042143 55425
+0.042252 64787
+0.042411 57362
+0.042441 34461
+0.042503 67041
+0.042553 64812
+0.042592 55179
+0.042715 67002
+0.042835 66977
+0.043308 64849
+
+Not sure what to make of this, but to my (admittedly untrainted) eye,
+the two 5.13.12 sets are very similar to each other as well as to the
+5.12.15 sample, I am not sure if this is giving any indication to what
+is causing the freezes.
+
+- mike
 
 
-On 8/10/21 8:08 PM, Dai Ngo wrote:
-> Currently svc_run does not handle poll timeout and rendezvous_request
-> does not handle EMFILE error returned from accept(2 as it used to.
-> These two missing functionality were removed by commit b2c9430f46c4.
-> 
-> The effect of not handling poll timeout allows idle TCP conections
-> to remain ESTABLISHED indefinitely. When the number of connections
-> reaches the limit of the open file descriptors (ulimit -n) then
-> accept(2) fails with EMFILE. Since there is no handling of EMFILE
-> error this causes svc_run() to get in a tight loop calling accept(2).
-> This resulting in the RPC service of svc_run is being down, it's
-> no longer able to service any requests.
-> 
-> if [ $# -ne 3 ]; then
->          echo "$0: server dst_port conn_cnt"
->          exit
-> fi
-> server=$1
-> dport=$2
-> conn_cnt=$3
-> echo "dport[$dport] server[$server] conn_cnt[$conn_cnt]"
-> 
-> pcnt=0
-> while [ $pcnt -lt $conn_cnt ]
-> do
->          nc -v --recv-only $server $dport &
->          pcnt=`expr $pcnt + 1`
-> done
-> 
-> RPC service rpcbind, statd and mountd are effected by this
-> problem.
-> 
-> Fix by enhancing rendezvous_request to keep the number of
-> SVCXPRT conections to 4/5 of the size of the file descriptor
-> table. When this thresold is reached, it destroys the idle
-> TCP connections or destroys the least active connection if
-> no idle connnction was found.
-> 
-> Fixes: 44bf15b8 rpcbind: don't use obsolete svc_fdset interface of libtirpc
-> Signed-off-by: dai.ngo@oracle.com
-Committed... (tag: libtirpc-1-3-3-rc1)
 
-steved.
-> ---
->   src/svc.c    | 17 +++++++++++++-
->   src/svc_vc.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++-
->   2 files changed, 77 insertions(+), 2 deletions(-)
-> 
-> diff --git a/src/svc.c b/src/svc.c
-> index 6db164bbd76b..3a8709fe375c 100644
-> --- a/src/svc.c
-> +++ b/src/svc.c
-> @@ -57,7 +57,7 @@
->   
->   #define max(a, b) (a > b ? a : b)
->   
-> -static SVCXPRT **__svc_xports;
-> +SVCXPRT **__svc_xports;
->   int __svc_maxrec;
->   
->   /*
-> @@ -194,6 +194,21 @@ __xprt_do_unregister (xprt, dolock)
->       rwlock_unlock (&svc_fd_lock);
->   }
->   
-> +int
-> +svc_open_fds()
-> +{
-> +	int ix;
-> +	int nfds = 0;
-> +
-> +	rwlock_rdlock (&svc_fd_lock);
-> +	for (ix = 0; ix < svc_max_pollfd; ++ix) {
-> +		if (svc_pollfd[ix].fd != -1)
-> +			nfds++;
-> +	}
-> +	rwlock_unlock (&svc_fd_lock);
-> +	return (nfds);
-> +}
-> +
->   /*
->    * Add a service program to the callout list.
->    * The dispatch routine will be called when a rpc request for this
-> diff --git a/src/svc_vc.c b/src/svc_vc.c
-> index f1d9f001fcdc..3dc8a75787e1 100644
-> --- a/src/svc_vc.c
-> +++ b/src/svc_vc.c
-> @@ -64,6 +64,8 @@
->   
->   
->   extern rwlock_t svc_fd_lock;
-> +extern SVCXPRT **__svc_xports;
-> +extern int svc_open_fds();
->   
->   static SVCXPRT *makefd_xprt(int, u_int, u_int);
->   static bool_t rendezvous_request(SVCXPRT *, struct rpc_msg *);
-> @@ -82,6 +84,7 @@ static void svc_vc_ops(SVCXPRT *);
->   static bool_t svc_vc_control(SVCXPRT *xprt, const u_int rq, void *in);
->   static bool_t svc_vc_rendezvous_control (SVCXPRT *xprt, const u_int rq,
->   				   	     void *in);
-> +static int __svc_destroy_idle(int timeout);
->   
->   struct cf_rendezvous { /* kept in xprt->xp_p1 for rendezvouser */
->   	u_int sendsize;
-> @@ -313,13 +316,14 @@ done:
->   	return (xprt);
->   }
->   
-> +
->   /*ARGSUSED*/
->   static bool_t
->   rendezvous_request(xprt, msg)
->   	SVCXPRT *xprt;
->   	struct rpc_msg *msg;
->   {
-> -	int sock, flags;
-> +	int sock, flags, nfds, cnt;
->   	struct cf_rendezvous *r;
->   	struct cf_conn *cd;
->   	struct sockaddr_storage addr;
-> @@ -379,6 +383,16 @@ again:
->   
->   	gettimeofday(&cd->last_recv_time, NULL);
->   
-> +	nfds = svc_open_fds();
-> +	if (nfds >= (_rpc_dtablesize() / 5) * 4) {
-> +		/* destroy idle connections */
-> +		cnt = __svc_destroy_idle(15);
-> +		if (cnt == 0) {
-> +			/* destroy least active */
-> +			__svc_destroy_idle(0);
-> +		}
-> +	}
-> +
->   	return (FALSE); /* there is never an rpc msg to be processed */
->   }
->   
-> @@ -820,3 +834,49 @@ __svc_clean_idle(fd_set *fds, int timeout, bool_t cleanblock)
->   {
->   	return FALSE;
->   }
-> +
-> +static int
-> +__svc_destroy_idle(int timeout)
-> +{
-> +	int i, ncleaned = 0;
-> +	SVCXPRT *xprt, *least_active;
-> +	struct timeval tv, tdiff, tmax;
-> +	struct cf_conn *cd;
-> +
-> +	gettimeofday(&tv, NULL);
-> +	tmax.tv_sec = tmax.tv_usec = 0;
-> +	least_active = NULL;
-> +	rwlock_wrlock(&svc_fd_lock);
-> +
-> +	for (i = 0; i <= svc_max_pollfd; i++) {
-> +		if (svc_pollfd[i].fd == -1)
-> +			continue;
-> +		xprt = __svc_xports[i];
-> +		if (xprt == NULL || xprt->xp_ops == NULL ||
-> +			xprt->xp_ops->xp_recv != svc_vc_recv)
-> +			continue;
-> +		cd = (struct cf_conn *)xprt->xp_p1;
-> +		if (!cd->nonblock)
-> +			continue;
-> +		if (timeout == 0) {
-> +			timersub(&tv, &cd->last_recv_time, &tdiff);
-> +			if (timercmp(&tdiff, &tmax, >)) {
-> +				tmax = tdiff;
-> +				least_active = xprt;
-> +			}
-> +			continue;
-> +		}
-> +		if (tv.tv_sec - cd->last_recv_time.tv_sec > timeout) {
-> +			__xprt_unregister_unlocked(xprt);
-> +			__svc_vc_dodestroy(xprt);
-> +			ncleaned++;
-> +		}
-> +	}
-> +	if (timeout == 0 && least_active != NULL) {
-> +		__xprt_unregister_unlocked(least_active);
-> +		__svc_vc_dodestroy(least_active);
-> +		ncleaned++;
-> +	}
-> +	rwlock_unlock(&svc_fd_lock);
-> +	return (ncleaned);
-> +}
-> 
 
+On Thu, Aug 19, 2021 at 5:52 PM Mike Javorski <mike.javorski@gmail.com> wrote:
+>
+> Neil:
+>
+> I did still have the original/source cap for that 5.13 file. I ran the
+> command you gave and got the 10 last entries:
+> 0.013086 31352
+> 0.013318 28399
+> 0.013339 3521
+> 0.013783 32423
+> 0.014519 32481
+> 0.014773 6145
+> 0.015063 19034
+> 0.015829 25892
+> 0.042356 29089
+> 0.042581 5779
+>
+> I did have another test cap which was from an early 5.13 dev compile
+> prior to the nfs patches (what the Archlinux devs asked me to try). In
+> that file (which is 1.8G vs the 400M of the above file), the 10 last
+> entries are:
+> 0.042038 575
+> 0.042190 87093
+> 0.042313 30183
+> 0.042377 34941
+> 0.042521 53593
+> 0.042801 113067
+> 0.042930 1174
+> 0.043285 87326
+> 0.043851 61066
+> 0.107649 115114
+>
+> As that seems even worse than the above, I think I need to get a clean
+> 5.12 capture to see if it actually was "better" beforehand.
+> Unfortunately I am stuck on a work issue tonight, but I will test it
+> either tomorrow or at the latest, this weekend.
+>
+> Thanks for following up on this.
+>
+> - mike
+>
+> On Thu, Aug 19, 2021 at 5:31 PM NeilBrown <neilb@suse.de> wrote:
+> >
+> > On Tue, 17 Aug 2021, NeilBrown wrote:
+> > > On Tue, 17 Aug 2021, Mike Javorski wrote:
+> > > > Thanks for the pointer Chuck
+> > > >
+> > > > I ran the trace capture and was able to trigger two freezes in
+> > > > relatively short order. Here is that trace file:
+> > > > https://drive.google.com/file/d/1qk_VIMkj8aTeQIg5O0W3AvWyeDSWL3vW/view?usp=sharing
+> > > >
+> > >
+> > > There are gaps of 5.3sec, 4sec, 1sec and 1sec between adjacent trace
+> > > points.
+> > > The longest gap between 'start' and 'done' for any given xid is 354msec.
+> > > So it doesn't look like the filesystem read causing the problem.
+> > >
+> > > The long gaps between adjacent records are:
+> > > 0.354581 xid=0x4c6ac2b6
+> > > 0.418340 xid=0x6a71c2b6
+> > > 1.013260 xid=0x6f71c2b6
+> > > 1.020742 xid=0x0f71c2b6
+> > > 4.064527 xid=0x6171c2b6
+> > > 5.396559 xid=0xd66dc2b6
+> > >
+> > > The fact 1, 1, and 4 are so close to a precise number of seconds seems
+> > > unlikely to be a co-incidence.  It isn't clear what it might mean
+> > > though.
+> > >
+> > > I don't have any immediae ideas where to look next.  I'll let you know
+> > > if I come up with something.
+> >
+> > I had separate bug report
+> >   https://bugzilla.suse.com/show_bug.cgi?id=1189508
+> > with broadly similar symptoms which strongly points to network-layer
+> > problem.  So I'm digging back into that tcpdump.
+> >
+> > The TCP ACK for READ requests usually goes out in 100 or 200
+> > microseconds.  Sometimes longer - by a factor of about 100.
+> >
+> > % tshark -r /tmp/javmorin-nfsfreeze-5.13.10-cap1\ .test.pcap  -d tcp.port==2049,rpc -Y 'tcp.port==2049 && rpc.msgtyp==0 && nfs.opcode==25' -T fields -e tcp.seq -e frame.time_epoch -e frame.number | sed 's/$/ READ/' > /tmp/read-times
+> > % tshark -r /tmp/javmorin-nfsfreeze-5.13.10-cap1\ .test.pcap  -d tcp.port==2049,rpc -Y 'tcp.srcport==2049' -T fields -e tcp.ack -e frame.time_epoch -e frame.number | sed 's/$/ ACK/' > /tmp/ack-times
+> > % sort -n /tmp/read-times /tmp/ack-times  | awk '$4 == "ACK" && readtime {printf "%f %d\n", ($2 - readtime), $3; readtime=0} $4 == "READ" {readtime=$2}' | sort -n | tail -4
+> > 0.000360 441
+> > 0.012777 982
+> > 0.013318 1086
+> > 0.042356 1776
+> >
+> > Three times (out of 245) the TCP ACK was 12 milliseconds or longer.  The
+> > first and last were times when the reply was delayed by a couple of
+> > seconds at least.  The other (1086) was the reply to 1085 - no obvious
+> > delay to the READ reply.
+> >
+> > These unusual delays (short though they are) suggest something odd in
+> > the network layer - particularly as they are sometimes followed by a
+> > much larger delay in a READ reply.
+> >
+> > It might be as simple as a memory allocation delay.  It might be
+> > something deep in the networking layer.
+> >
+> > If you still have (or could generate) some larger tcp dumps, you could
+> > try that code and see if 5.12 shows any ACK delays, and if 5.13 shows
+> > more delays than turn into READ delays.  IF 5.13 easily shows a few ACK
+> > delays thats 5.12 doesn't, then they might make a git-bisect more
+> > reliable.  Having thousands of READs in the trace rather than just 245
+> > should produce more reliable data.
+> >
+> >
+> > As I suggested in the bug report I linked above, I am suspicious of TCP
+> > offload when I see symptoms like this.  You can use "ethtool" to turn
+> > off that various offload features.  Doing that and trying to reproduce
+> > without offload might also provide useful information.
+> >
+> > NeilBrown
