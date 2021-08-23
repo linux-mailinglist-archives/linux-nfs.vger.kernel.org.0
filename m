@@ -2,163 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B9CB3F44BA
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Aug 2021 07:52:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0772F3F47B9
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Aug 2021 11:37:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233088AbhHWFwp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Aug 2021 01:52:45 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:57574 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231267AbhHWFwp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Aug 2021 01:52:45 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id D692521F2A;
-        Mon, 23 Aug 2021 05:52:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1629697921; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+        id S230324AbhHWJiA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Aug 2021 05:38:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:20966 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230265AbhHWJhy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Aug 2021 05:37:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1629711432;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=p4iErQiaXqFxK5RhLttHlBJp3hFnIIgCgpe0bRYAxeA=;
-        b=0P+yRzaAjLZzOwjLwnO+ST7oqJZRVUIBYH/8reyeVumiChNsSSEwDYJmVXtoGCaPktoOaj
-        KR6TOU2OzmpXXTrji3GDTILJo8lUyCIw1FZKD0eqPD/6Ea8JmTtkGmv6uYibxpUsHSotC/
-        RXFz3BXqrKpKgwqDSHM93WXr1JRuIEs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1629697921;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=p4iErQiaXqFxK5RhLttHlBJp3hFnIIgCgpe0bRYAxeA=;
-        b=paBDsK2beDKmwINS44QOydx0LeA/J4VNMRURJOwOZ5bodeFivZgTi0BwkgLcBbvKcHkYgH
-        jQPaLx9/iCTkCRDg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        bh=C6rXSu5QQJzFllb66Yw/O0ltWTPA7APno8iU/0zPONY=;
+        b=YYvaC/g3DaM4baPNg707zlqmmrJrH+lZ7OIPLwZzTfsHzsHihOrgM1ZjoUvqVb6hSUJJrp
+        u6qV60+MxT70d8YFqF6DvIRgrspSCcF+KMRtIiaggx9ERIXhbkZGo77NbEXkDg6qaMVXRl
+        BlwidT9mARIuvYsELiPc533Sj+IzkMc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-xvLsUcdcNQmUD7fHTq13dw-1; Mon, 23 Aug 2021 05:37:10 -0400
+X-MC-Unique: xvLsUcdcNQmUD7fHTq13dw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6B8E013A23;
-        Mon, 23 Aug 2021 05:51:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id yaacCn43I2HPOgAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 23 Aug 2021 05:51:58 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7E50187D541;
+        Mon, 23 Aug 2021 09:37:09 +0000 (UTC)
+Received: from oldenburg.str.redhat.com (unknown [10.39.194.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F49860861;
+        Mon, 23 Aug 2021 09:37:05 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Steve Dickson <steved@redhat.com>
+Cc:     Dai Ngo <dai.ngo@oracle.com>, linux-nfs@vger.kernel.org,
+        libtirpc-devel@lists.sourceforge.net
+Subject: Re: [Libtirpc-devel] [PATCH 1/1] Fix DoS vulnerability in statd and
+ mountd
+References: <20210807170248.68817-1-dai.ngo@oracle.com>
+        <5d67875a-05bc-df80-3971-e8bde9b588b8@redhat.com>
+Date:   Mon, 23 Aug 2021 11:37:04 +0200
+In-Reply-To: <5d67875a-05bc-df80-3971-e8bde9b588b8@redhat.com> (Steve
+        Dickson's message of "Sun, 8 Aug 2021 12:56:48 -0400")
+Message-ID: <8735r0sdrz.fsf@oldenburg.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Zygo Blaxell" <ce3g8jdj@umail.furryterror.org>
-Cc:     "Wang Yugui" <wangyugui@e16-tech.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        "Josef Bacik" <josef@toxicpanda.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        "Chuck Lever" <chuck.lever@oracle.com>, "Chris Mason" <clm@fb.com>,
-        "David Sterba" <dsterba@suse.com>,
-        "Alexander Viro" <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH] VFS/BTRFS/NFSD: provide more unique inode number for btrfs export
-In-reply-to: <20210822192917.GF29026@hungrycats.org>
-References: <162742539595.32498.13687924366155737575.stgit@noble.brown>,
- <162881913686.1695.12479588032010502384@noble.neil.brown.name>,
- <20210818225454.9558.409509F4@e16-tech.com>,
- <162932318266.9892.13600254282844823374@noble.neil.brown.name>,
- <20210819021910.GB29026@hungrycats.org>,
- <162942805745.9892.7512463857897170009@noble.neil.brown.name>,
- <20210822192917.GF29026@hungrycats.org>
-Date:   Mon, 23 Aug 2021 15:51:54 +1000
-Message-id: <162969791499.9892.11536866623369257320@noble.neil.brown.name>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 23 Aug 2021, Zygo Blaxell wrote:
->=20
-> Subvol IDs are not reusable.  They are embedded in shared object ownership
-> metadata, and persist for some time after subvols are deleted.
+* Steve Dickson:
 
-Hmmm...  that's interesting.  Makes some sense too.  I did wonder how
-ownership across multiple snapshots was tracked.
+> Hello,
+>
+> On 8/7/21 1:02 PM, Dai Ngo wrote:
+>> Currently my_svc_run does not handle poll time allowing idle TCP
+>> connections to remain ESTABLISHED indefinitely. When the number
+>> of connections reaches the limit the open file descriptors
+>> (ulimit -n) then accept(2) fails with EMFILE. Since libtirpc does
+>> not handle EMFILE returned from accept(2) this get my_svc_run into
+>> a tight loop calling accept(2) resulting in the RPC service being
+>> down, it's no longer able to service any requests.
+>> Fix by removing idle connections when select(2) times out in
+>> my_svc_run
+>> and when open(2) returns EMFILE/ENFILE in auth_reload.
+>> Signed-off-by: dai.ngo@oracle.com
+>> ---
+>>   support/export/auth.c  | 12 ++++++++++--
+>>   utils/mountd/svc_run.c | 10 ++++++++--
+>>   utils/statd/svc_run.c  | 11 ++++++++---
+>>   3 files changed, 26 insertions(+), 7 deletions(-)
+>> diff --git a/support/export/auth.c b/support/export/auth.c
+>> index 03ce4b8a0e1e..0bb189fb4037 100644
+>> --- a/support/export/auth.c
+>> +++ b/support/export/auth.c
+>> @@ -81,6 +81,8 @@ check_useipaddr(void)
+>>   		cache_flush();
+>>   }
+>>   +extern void __svc_destroy_idle(int, bool_t);
 
->=20
-> > > > My preference would be for btrfs to start re-using old object-ids and
-> > > > root-ids, and to enforce a limit (set at mkfs or tunefs) so that the
-> > > > total number of bits does not exceed 64.  Unfortunately the maintaine=
-rs
-> > > > seem reluctant to even consider this.
-> > >=20
-> > > It was considered, implemented in 2011, and removed in 2020.  Rationale
-> > > is in commit b547a88ea5776a8092f7f122ddc20d6720528782 "btrfs: start
-> > > deprecation of mount option inode_cache".  It made file creation slower,
-> > > and consumed disk space, iops, and memory to run.  Nobody used it.
-> > > Newer on-disk data structure versions (free space tree, 2015) didn't
-> > > bother implementing inode_cache's storage requirement.
-> >=20
-> > Yes, I saw that.  Providing reliable functional certainly can impact
-> > performance and consume disk-space.  That isn't an excuse for not doing
-> > it.=20
-> > I suspect that carefully tuned code could result in typical creation
-> > times being unchanged, and mean creation times suffering only a tiny
-> > cost.  Using "max+1" when the creation rate is particularly high might
-> > be a reasonable part of managing costs.
-> > Storage cost need not be worse than the cost of tracking free blocks
-> > on the device.
->=20
-> The cost of _tracking_ free object IDs is trivial compared to the cost
-> of _reusing_ an object ID on btrfs.
+> This is adding to the API... Which means mountd
+> and statd (the next patch) will not compile without
+> this new API...
+>
+> Does this mean an SONAME change? That is such a pain!
 
-I hadn't thought of that.
+Do you symbol versioning?  For RPM-based distributions, adding the new
+symbol under a new symbol version would avoid the need for a SONAME
+change.
 
->=20
-> If btrfs doesn't reuse object numbers, btrfs can append new objects
-> to the last partially filled leaf.  If there are shared metadata pages
-> (i.e. snapshots), btrfs unshares a handful of pages once, and then future
-> writes use densely packed new pages and delayed allocation without having
-> to read anything.
->=20
-> If btrfs reuses object numbers, the filesystem has to pack new objects
-> into random previously filled metadata leaf nodes, so there are a lot
-> of read-modify-writes scattered over old metadata pages, which spreads
-> the working set around and reduces cache usage efficiency (i.e. uses
-> more RAM).  If there are snapshots, each shared page that is modified
-> for the first time after the snapshot comes with two-orders-of-magnitude
-> worst-case write multipliers.
-
-I don't really follow that .... but I'll take your word for it for now.
-
->=20
-> The two-algorithm scheme (switching from "reuse freed inode" to "max+1"
-> under load) would be forced into the "max+1" mode half the time by a
-> daily workload of alternating git checkouts and builds.  It would save
-> only one bit of inode namespace over the lifetime of the filesystem.
->=20
-> > "Nobody used it" is odd.  It implies it would have to be explicitly
-> > enabled, and all it would provide anyone is sane behaviour.  Who would
-> > imagine that to be an optional extra.
->=20
-> It always had to be explicitly enabled.  It was initially a workaround
-> for 32-bit ino_t that was limiting a few users, but ino_t got better
-> and the need for inode_cache went away.
->=20
-> NFS (particularly NFSv2) might be the use case inode_cache has been
-> waiting for.  btrfs has an i_version field for NFSv4, so it's not like
-> there's no precedent for adding features in btrfs to support NFS.
-
-NFSv2 is not worth any effort.  NFSv4 is.  NFSv3 ... some, but not a lot.
-
->=20
-> On the other hand, the cost of ino_cache gets worse with snapshots,
-> and the benefit in practice takes years to decades to become relevant.
-> Users who are exporting snapshots over NFS are likely to be especially
-> averse to using inode_cache.
-
-That's the real killer.  Everything will work fine for years until it
-doesn't.  And once it doesn't ....  what do you do?
-
-Thanks for lot for all this background info.  I've found it to be very
-helpful for my general understanding.
+Debian-based distributions use explicit symbol list files and are more
+flexible.
 
 Thanks,
-NeilBrown
+Florian
+
