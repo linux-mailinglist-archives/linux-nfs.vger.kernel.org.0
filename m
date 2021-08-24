@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 123F83F68A0
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Aug 2021 20:02:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 745203F689E
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Aug 2021 20:02:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238959AbhHXSCt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Aug 2021 14:02:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41922 "EHLO
+        id S240072AbhHXSCs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Aug 2021 14:02:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237105AbhHXSCn (ORCPT
+        with ESMTP id S238759AbhHXSCn (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Aug 2021 14:02:43 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97C24C05340A
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Aug 2021 10:51:18 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id a66so5340671qkc.1
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Aug 2021 10:51:18 -0700 (PDT)
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8675C05340B
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Aug 2021 10:51:19 -0700 (PDT)
+Received: by mail-qk1-x733.google.com with SMTP id ay33so12604643qkb.10
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Aug 2021 10:51:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=koi2dAiEUZGWQ61rcZsKU0jg5BRUtQ/tg2nRQ2aR2zE=;
-        b=enVfT31jqUAud7b3MgK343g4uXuPgFNj2FDfP8ZadH6GmGvaEZQ4rqZsCQkOWtEEgk
-         1UOwotC2W3jEfeWH3RbmONsKdoRQayGeYhPPI6k53SsO8skWatAwP7fHRGpaxvX5NSBe
-         /RM1IrGekDX06JGkwBh48pEGuJb0R4KHG7Iexq+n63IBisRcyO7o2voJCwGdzcTPpH4l
-         S9xg1s7EPv9dHZ4wfIYt4GznGTsgaSixN+JARReIFZOspK/qTaeKwnsfGz3osRrCc0PI
-         8Ms7eBYCPn+MqeD3tvuMvJygh3n/Adlitr8C0PKSEqyPC31SRhCvXvqzJNxB1Z3brXxh
-         utIg==
+        bh=8KwAKcBqY1TTWZry4fngp7gp1LU/zMCzkYKAzNot33s=;
+        b=gcXvRmjF2rcd03VroQvZmTx18uunvwsDyuumN6Xewc9ub5eCsFt0rq6WeUdhIHK8h1
+         EKR7WZg2j3kF5ozpx9zDR0cqlHdT5E77RYHI8wWL2SveEAwLwTbKjFN3sevKUZSuynl0
+         Ztoncz4Jfw7+cpHP5XPTug2lnZLKF8pXl5lhZp8iFIK8fmlWRNL9QqOsAj7C3S5E4Axx
+         GO9zRYgCAs7XtIS8UklvRtv7cCh8LicHLzeQFFjgqbrU26ukP0qJpo/ypb5Opr1HsJ3n
+         0dAhQGpvjAS5fLFk/2mfLqvfCbBf0smel/E5T24Pu5udMxVEQCawz56DuTIhFm1GbAh2
+         ibug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=koi2dAiEUZGWQ61rcZsKU0jg5BRUtQ/tg2nRQ2aR2zE=;
-        b=ibRIiSSifTbWzHqyHn2d+brfFKl+aEt6eYZ8xomM+fe99jg5Jca2EO65w71pwQjab9
-         ZAfaNBFrq79YQ72alL6rxEoS4q3qW163/5HSXGuToyhogzqssqZqwWl8jZyYg7VNrw+7
-         uvSE9nyC08q7bV+29G9N4RVbzu7LqBgvPflve3IG7xccP5miz1oGAQWL0FLQTK+dloP4
-         tie3ZiVtJ6OQPwLxsR93S2L8oCdBPJds//jYAJZsyExXAV7lAJpmLpoAMcz0YRkhIm/2
-         ZuwqpZeBQZpcOp/o+P5qO6aQ7EaWYjXV5JwbYgTlKMTfzvDoVNDwyMGux8BWIqVa5MUM
-         gqvw==
-X-Gm-Message-State: AOAM530JjxjB5CvYmw0gXzjINKhxlSNBg5o+94n80w8w8b7pmTvQU80g
-        eZT7M3erPfhuF+gKSz2iDp3e2cJmnCenqA==
-X-Google-Smtp-Source: ABdhPJzj5CErqI+/v//a39GMx4tBeiTWQVsS9JqTifbV5FsdeMDB/IdvuCcIvTRu4C6pSu8ERU/NKA==
-X-Received: by 2002:a37:6697:: with SMTP id a145mr28269099qkc.5.1629827477761;
-        Tue, 24 Aug 2021 10:51:17 -0700 (PDT)
+        bh=8KwAKcBqY1TTWZry4fngp7gp1LU/zMCzkYKAzNot33s=;
+        b=XHKtuRh2iAPMOjWhDhnCO3r4Dv8aMoW1bTV7YGuCMJRwbIsOJN6GP1jg/YuhNLx520
+         UxM6m9UKlbcObLslJ+awyREbuvnQRvTsqfb6CnKXp6FHxbjN2+byeLbxLPNs/CQkOUHg
+         FyCGddnhvgyPXh4airlQYzSQaH0hHzipfMDs+ixZBrtYVSSpBeO3ow6+omLW4jpcL2xr
+         Moqs9joBfQjw5flQTIRyyekXTzfGcfnqCzWz2b3R/yGy7c8MzIUpuKH67v412FUb/QFT
+         9tBr9zONR9uVreeBmfE0eOy5FxKpQ80E7h6AU11pFFJ3U980MWgQ1+BFHYpiUrZF9hl0
+         bOlA==
+X-Gm-Message-State: AOAM533go5j+LZdMVc3GNSuoFNCGC3q2YAcMCGlx9Z78UDb5stOG6dc8
+        GmA+avdefP039z+G9vdola8=
+X-Google-Smtp-Source: ABdhPJxpz7Gw7P/dpDUDXn9LvpeVIFYvWufj/ypB5YRKzWIjHev3riQ/VUOKuWuMLXU/8SBa9I/daQ==
+X-Received: by 2002:a05:620a:d4d:: with SMTP id o13mr27579080qkl.466.1629827478835;
+        Tue, 24 Aug 2021 10:51:18 -0700 (PDT)
 Received: from kolga-mac-1.vpn.netapp.com ([2600:1700:6a10:2e90:549b:da99:adb5:676c])
-        by smtp.gmail.com with ESMTPSA id n18sm11519658qkn.63.2021.08.24.10.51.16
+        by smtp.gmail.com with ESMTPSA id n18sm11519658qkn.63.2021.08.24.10.51.17
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Aug 2021 10:51:17 -0700 (PDT)
+        Tue, 24 Aug 2021 10:51:18 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
         steved@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v4 1/5] SUNRPC keep track of number of transports to unique addresses
-Date:   Tue, 24 Aug 2021 13:51:03 -0400
-Message-Id: <20210824175108.19746-2-olga.kornievskaia@gmail.com>
+Subject: [PATCH] [man]: adding new mount option max_connect
+Date:   Tue, 24 Aug 2021 13:51:04 -0400
+Message-Id: <20210824175108.19746-3-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 In-Reply-To: <20210824175108.19746-1-olga.kornievskaia@gmail.com>
 References: <20210824175108.19746-1-olga.kornievskaia@gmail.com>
@@ -65,56 +65,39 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-Currently, xprt_switch keeps a number of all xprts (xps_nxprts)
-that were added to the switch regardless of whethere it's an
-nconnect transport or a transport to a trunkable address.
-Introduce a new counter to keep track of transports to unique
-destination addresses per xprt_switch.
+When client discovers trunkable servers, instead of dropping newly
+created trunkable connections, add this connection to the existing
+RPC client.
 
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- include/linux/sunrpc/xprtmultipath.h | 1 +
- net/sunrpc/clnt.c                    | 2 +-
- net/sunrpc/xprtmultipath.c           | 1 +
- 3 files changed, 3 insertions(+), 1 deletion(-)
+ utils/mount/nfs.man | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/include/linux/sunrpc/xprtmultipath.h b/include/linux/sunrpc/xprtmultipath.h
-index b19addc8b715..bbb8a5fa0816 100644
---- a/include/linux/sunrpc/xprtmultipath.h
-+++ b/include/linux/sunrpc/xprtmultipath.h
-@@ -18,6 +18,7 @@ struct rpc_xprt_switch {
- 	unsigned int		xps_id;
- 	unsigned int		xps_nxprts;
- 	unsigned int		xps_nactive;
-+	unsigned int		xps_nunique_destaddr_xprts;
- 	atomic_long_t		xps_queuelen;
- 	struct list_head	xps_xprt_list;
- 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index a5b7f6e34d15..451ac7d031db 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2799,7 +2799,7 @@ int rpc_clnt_test_and_add_xprt(struct rpc_clnt *clnt,
- 
- 	task = rpc_call_null_helper(clnt, xprt, NULL, RPC_TASK_ASYNC,
- 			&rpc_cb_add_xprt_call_ops, data);
--
-+	data->xps->xps_nunique_destaddr_xprts++;
- 	rpc_put_task(task);
- success:
- 	return 1;
-diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
-index c60820e45082..1693f81aae37 100644
---- a/net/sunrpc/xprtmultipath.c
-+++ b/net/sunrpc/xprtmultipath.c
-@@ -139,6 +139,7 @@ struct rpc_xprt_switch *xprt_switch_alloc(struct rpc_xprt *xprt,
- 		xps->xps_iter_ops = &rpc_xprt_iter_singular;
- 		rpc_sysfs_xprt_switch_setup(xps, xprt, gfp_flags);
- 		xprt_switch_add_xprt_locked(xps, xprt);
-+		xps->xps_nunique_destaddr_xprts = 1;
- 		rpc_sysfs_xprt_setup(xps, xprt, gfp_flags);
- 	}
- 
+diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
+index f1b76936..57a693fd 100644
+--- a/utils/mount/nfs.man
++++ b/utils/mount/nfs.man
+@@ -416,6 +416,19 @@ Note that the
+ option may also be used by some pNFS drivers to decide how many
+ connections to set up to the data servers.
+ .TP 1.5i
++.BR max_connect= n
++While
++.BR nconnect
++option sets a limit on the number of connections that can be established
++to a given server IP,
++.BR max_connect
++option allows the user to specify maximum number of connections to different
++server IPs that belong to the same NFSv4.1+ server (session trunkable
++connections) up to a limit of 16. When client discovers that it established
++a client ID to an already existing server, instead of dropping the newly
++created network transport, the client will add this new connection to the
++list of available transports for that RPC client.
++.TP 1.5i
+ .BR rdirplus " / " nordirplus
+ Selects whether to use NFS v3 or v4 READDIRPLUS requests.
+ If this option is not specified, the NFS client uses READDIRPLUS requests
 -- 
 2.27.0
 
