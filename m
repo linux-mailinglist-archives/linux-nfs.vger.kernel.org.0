@@ -2,206 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 266923F6270
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Aug 2021 18:11:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 930E93F689D
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Aug 2021 20:02:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231422AbhHXQMR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Aug 2021 12:12:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:38803 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229800AbhHXQMP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Aug 2021 12:12:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629821491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zztC89NUsnI49tBFDzJHfqMcg0PYYsKWW693C6SIn40=;
-        b=ROP2AlunAim0vB18DNyFNZufoU3UtiTE8Q6zHhDVrQpv4lZjPoJT9qhGjgWaCIdhr1xaS7
-        26uVvrc7J07XNPuAzBlX0bnu89b1PDQeGiV5sL2F09lfntDnguq/gqEnnHMRRm92E8UGka
-        19ZySxyawzvV0Np7bxU8ZooiBLhzOZI=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-62-mfJh5KbpNy-_tWEYr3Gf0w-1; Tue, 24 Aug 2021 12:11:29 -0400
-X-MC-Unique: mfJh5KbpNy-_tWEYr3Gf0w-1
-Received: by mail-qt1-f198.google.com with SMTP id o22-20020ac872d60000b029029817302575so10831922qtp.10
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Aug 2021 09:11:29 -0700 (PDT)
+        id S240009AbhHXSCr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Aug 2021 14:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239992AbhHXSCn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Aug 2021 14:02:43 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0ABC053406
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Aug 2021 10:51:17 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id f22so14421068qkm.5
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Aug 2021 10:51:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KgI+NCEk+cNEP4JtR9haBBuHu5BH950392qugvvN3Ec=;
+        b=DI53zw9XrlfaHHW1BFCsW/5KkTJ0xXseXjASeu9cxqoRr+A70TyZj2hQYeJyv1Q+Wg
+         1C5Mlw7VPqXTKUxee7iU/6ZFjBR5IiUGc0gRYzcDhdDO764QQBKIxb+H684aiu/yHA5F
+         pXUXhA2eHt1nhVp6Di6paSBUXfcF6bKG3ZKENNpOT1+hCqlJQ/z33zHPLvla3CAJHj5F
+         Fqwx+Uj9ZiC2t2vtWL/awMCDCinGVjMoAE642xHEakX5bZMeIUARlNvbk4lBeJg6aJlp
+         9A4yHddXFdNysTF5RFbURXtiAg97nTkpmHUoHCvExrQossBP0p/JTvPS+mNtKWycjE08
+         FNnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=zztC89NUsnI49tBFDzJHfqMcg0PYYsKWW693C6SIn40=;
-        b=p6jXpUvWLEFoMZAGwIMvdqPoqWZdpbThReVU9QXxz6Ia5JvCW2Bszp/cjQIh1uLFFf
-         1meEKRk4Lzz9yYVOfzdt7MYhCBnVEu7GGnBViIB7fJKnP0Gif8Eb+T6IuJNtP8pc77jN
-         HaYRlr4ATfzmpnvJNrGmVRIB+oD/K0ta4jx0t44zPuWO5HPX8MYOr2OFGRpbrHZKJE3i
-         IX1hKLYrmnPu6iEbDpGU+6GDca8s+87day/HmR0hvcndSjtWvmVjSUJLJ/NOPim/A2mh
-         Jyrb+0NlcWJMSsJfiFXbxT4Vgr7183o8U/PscW+NEIfXn/S6p1uPqgg8cwdSCcA4a/Bm
-         1crA==
-X-Gm-Message-State: AOAM531Q/rQRppQzf1gYzjd4IgI08aEjnhS78eW+QIYBh0rtWgSXe5ZL
-        nTFEKHHzzRkIN5aA79cD2md/hnTbNnNG4bdfXbRnv5zGOMX3i6TYAOnXQfZ/QP+FJS/vxF2uuMk
-        eFrS+evP/6tEJjZfAjeX7
-X-Received: by 2002:ac8:58ce:: with SMTP id u14mr1640608qta.99.1629821489397;
-        Tue, 24 Aug 2021 09:11:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyCKqllfX/tvqrWatVeQf20ul8F8guKIBuisU0F+aEkBMrzdmA5+I16yDHMCyu87N39B0rdPQ==
-X-Received: by 2002:ac8:58ce:: with SMTP id u14mr1640586qta.99.1629821489175;
-        Tue, 24 Aug 2021 09:11:29 -0700 (PDT)
-Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id l13sm11361132qkp.97.2021.08.24.09.11.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Aug 2021 09:11:28 -0700 (PDT)
-Message-ID: <3d98729b59c2afcad1299a7742211bcdf1598623.camel@redhat.com>
-Subject: Re: [PATCH 10/12] fscache: Fix cookie key hashing
-From:   Jeff Layton <jlayton@redhat.com>
-To:     David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com
-Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        David Wysochanski <dwysocha@redhat.com>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 24 Aug 2021 12:11:27 -0400
-In-Reply-To: <162431201844.2908479.8293647220901514696.stgit@warthog.procyon.org.uk>
-References: <162431188431.2908479.14031376932042135080.stgit@warthog.procyon.org.uk>
-         <162431201844.2908479.8293647220901514696.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KgI+NCEk+cNEP4JtR9haBBuHu5BH950392qugvvN3Ec=;
+        b=GRKRpX5VWTnkIB/eIHjwXqu0A+fMXtWM2kn5Fn37LW1B+Cihz9GZykZEDZP4qun90T
+         hgIDivjMeHnsjJ/zFmQlY0ETIJlzFbQ8aMoI1E8v+TQEjCTIbzQ2ZG6tEWmb3WbfeRRe
+         sKJBaS1MzbARUz4qrjWWeetEkxx7nARVTzlwyYOQaX5v3cNcPPSiAsHu5MK1JN3GR2Ra
+         VrKEkNRMflsF4MZdhBix76RZhucpP/JPHLq3Q5+XxUM1aecMhEat0xedgvhFAj567tqB
+         PfVeLlfa/IcAfDz0FLLVhSl7hxt/tae8KaK8O4g7PWnly3WNUpAwZc9QL0ofIiyNJdy4
+         PkWw==
+X-Gm-Message-State: AOAM530sYuRcDhwlkfw0NNEiuIsx6/wGfrI9SW8A2f96CK514fawyJzT
+        Rjlus0ZQxZGLISNhuMsl7Dg=
+X-Google-Smtp-Source: ABdhPJxL2k6kDlgny3qbeK/cQpVBp3ifQz98yW8JyBv40gAPe8GEdfJvzqLQyGaoeTfmSMMrCrqaSQ==
+X-Received: by 2002:a05:620a:20c5:: with SMTP id f5mr27288249qka.204.1629827476698;
+        Tue, 24 Aug 2021 10:51:16 -0700 (PDT)
+Received: from kolga-mac-1.vpn.netapp.com ([2600:1700:6a10:2e90:549b:da99:adb5:676c])
+        by smtp.gmail.com with ESMTPSA id n18sm11519658qkn.63.2021.08.24.10.51.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Aug 2021 10:51:16 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        steved@redhat.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v4 0/5] do not collapse trunkable transports
+Date:   Tue, 24 Aug 2021 13:51:02 -0400
+Message-Id: <20210824175108.19746-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2021-06-21 at 22:46 +0100, David Howells wrote:
-> The current hash algorithm used for hashing cookie keys is really bad,
-> producing almost no dispersion (after a test kernel build, ~30000 files
-> were split over just 18 out of the 32768 hash buckets).
-> 
-> Borrow the full_name_hash() hash function into fscache to do the hashing
-> for cookie keys and, in the future, volume keys.
-> 
-> I don't want to use full_name_hash() as-is because I want the hash value to
-> be consistent across arches and over time as the hash value produced may
-> get used on disk.
-> 
-> I can also optimise parts of it away as the key will always be a padded
-> array of aligned 32-bit words.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> ---
-> 
+From: Olga Kornievskaia <kolga@netapp.com>
 
-What happens when this patch encounters a cache that was built before
-it? Do you need to couple this with some sort of global cache
-invalidation or rehashing event?
+This patch series attempts to allow for new mounts that are to the
+same server (ie nfsv4.1+ session trunkable servers) but different
+network addresses to use connections associated with those mounts
+but still use the same client structure.
 
->  fs/fscache/cookie.c   |   14 +-------------
->  fs/fscache/internal.h |    2 ++
->  fs/fscache/main.c     |   39 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 42 insertions(+), 13 deletions(-)
-> 
-> diff --git a/fs/fscache/cookie.c b/fs/fscache/cookie.c
-> index ec9bce33085f..2558814193e9 100644
-> --- a/fs/fscache/cookie.c
-> +++ b/fs/fscache/cookie.c
-> @@ -87,10 +87,8 @@ void fscache_free_cookie(struct fscache_cookie *cookie)
->  static int fscache_set_key(struct fscache_cookie *cookie,
->  			   const void *index_key, size_t index_key_len)
->  {
-> -	unsigned long long h;
->  	u32 *buf;
->  	int bufs;
-> -	int i;
->  
->  	bufs = DIV_ROUND_UP(index_key_len, sizeof(*buf));
->  
-> @@ -104,17 +102,7 @@ static int fscache_set_key(struct fscache_cookie *cookie,
->  	}
->  
->  	memcpy(buf, index_key, index_key_len);
-> -
-> -	/* Calculate a hash and combine this with the length in the first word
-> -	 * or first half word
-> -	 */
-> -	h = (unsigned long)cookie->parent;
-> -	h += index_key_len + cookie->type;
-> -
-> -	for (i = 0; i < bufs; i++)
-> -		h += buf[i];
-> -
-> -	cookie->key_hash = h ^ (h >> 32);
-> +	cookie->key_hash = fscache_hash(0, buf, bufs);
->  	return 0;
->  }
->  
-> diff --git a/fs/fscache/internal.h b/fs/fscache/internal.h
-> index 200082cafdda..a49136c63e4b 100644
-> --- a/fs/fscache/internal.h
-> +++ b/fs/fscache/internal.h
-> @@ -74,6 +74,8 @@ extern struct workqueue_struct *fscache_object_wq;
->  extern struct workqueue_struct *fscache_op_wq;
->  DECLARE_PER_CPU(wait_queue_head_t, fscache_object_cong_wait);
->  
-> +extern unsigned int fscache_hash(unsigned int salt, unsigned int *data, unsigned int n);
-> +
->  static inline bool fscache_object_congested(void)
->  {
->  	return workqueue_congested(WORK_CPU_UNBOUND, fscache_object_wq);
-> diff --git a/fs/fscache/main.c b/fs/fscache/main.c
-> index c1e6cc9091aa..4207f98e405f 100644
-> --- a/fs/fscache/main.c
-> +++ b/fs/fscache/main.c
-> @@ -93,6 +93,45 @@ static struct ctl_table fscache_sysctls_root[] = {
->  };
->  #endif
->  
-> +/*
-> + * Mixing scores (in bits) for (7,20):
-> + * Input delta: 1-bit      2-bit
-> + * 1 round:     330.3     9201.6
-> + * 2 rounds:   1246.4    25475.4
-> + * 3 rounds:   1907.1    31295.1
-> + * 4 rounds:   2042.3    31718.6
-> + * Perfect:    2048      31744
-> + *            (32*64)   (32*31/2 * 64)
-> + */
-> +#define HASH_MIX(x, y, a)	\
-> +	(	x ^= (a),	\
-> +	y ^= x,	x = rol32(x, 7),\
-> +	x += y,	y = rol32(y,20),\
-> +	y *= 9			)
-> +
-> +static inline unsigned int fold_hash(unsigned long x, unsigned long y)
-> +{
-> +	/* Use arch-optimized multiply if one exists */
-> +	return __hash_32(y ^ __hash_32(x));
-> +}
-> +
-> +/*
-> + * Generate a hash.  This is derived from full_name_hash(), but we want to be
-> + * sure it is arch independent and that it doesn't change as bits of the
-> + * computed hash value might appear on disk.  The caller also guarantees that
-> + * the hashed data will be a series of aligned 32-bit words.
-> + */
-> +unsigned int fscache_hash(unsigned int salt, unsigned int *data, unsigned int n)
-> +{
-> +	unsigned int a, x = 0, y = salt;
-> +
-> +	for (; n; n--) {
-> +		a = *data++;
-> +		HASH_MIX(x, y, a);
-> +	}
-> +	return fold_hash(x, y);
-> +}
-> +
->  /*
->   * initialise the fs caching module
->   */
-> 
-> 
+A new mount options, "max_connect", controls how many extra transports
+can be added to an existing client, with maximum of 16 such transports.
+
+v4: 
+no change to 5 patches were made. 
+patch 6 dropped. 
+man page patch added
+
+Olga Kornievskaia (5):
+  SUNRPC keep track of number of transports to unique addresses
+  SUNRPC add xps_nunique_destaddr_xprts to xprt_switch_info in sysfs
+  NFSv4 introduce max_connect mount options
+  SUNRPC enforce creation of no more than max_connect xprts
+  NFSv4.1 add network transport when session trunking is detected
+
+ fs/nfs/client.c                      |  2 ++
+ fs/nfs/fs_context.c                  |  7 +++++
+ fs/nfs/internal.h                    |  2 ++
+ fs/nfs/nfs4client.c                  | 41 ++++++++++++++++++++++++++--
+ fs/nfs/super.c                       |  2 ++
+ include/linux/nfs_fs.h               |  5 ++++
+ include/linux/nfs_fs_sb.h            |  1 +
+ include/linux/sunrpc/clnt.h          |  2 ++
+ include/linux/sunrpc/xprtmultipath.h |  1 +
+ net/sunrpc/clnt.c                    | 11 +++++++-
+ net/sunrpc/sysfs.c                   |  4 ++-
+ net/sunrpc/xprtmultipath.c           |  1 +
+ 12 files changed, 75 insertions(+), 4 deletions(-)
 
 -- 
-Jeff Layton <jlayton@redhat.com>
+2.27.0
 
