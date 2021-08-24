@@ -2,103 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B72423F539C
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Aug 2021 01:22:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DD893F5EE8
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Aug 2021 15:24:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233271AbhHWXW4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Aug 2021 19:22:56 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:49252 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233232AbhHWXW4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Aug 2021 19:22:56 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        id S237498AbhHXNZc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Aug 2021 09:25:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:34511 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236443AbhHXNZc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Aug 2021 09:25:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1629811487;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=UJrfd86tR0Yk7ZIVAdwqtRJBEFVA/ho7C/JF2A2SL3I=;
+        b=IMddWUQJv+GHo0K+1WGugOwVjxGHbpn6AvZ4hPEAXJcxk47G/BMyzZ1RXGYRouuI840K6m
+        dejIPLkEKu7oZvLA4z28SAMDLC1i9uL+1pI5ndLaOwpQFaSmTzOYPGhkOvi8dN93AXa/Lk
+        94+MUdO+O5TaZVa3CqN4q0N8LmQWF/A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-316-6xbBUESKNQCq4Y_eoBj7LA-1; Tue, 24 Aug 2021 09:24:44 -0400
+X-MC-Unique: 6xbBUESKNQCq4Y_eoBj7LA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id D3A9420019;
-        Mon, 23 Aug 2021 23:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1629760931; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=C7BBVvHaQw/s+KITQeP577sqWBVDyFdUma/can/bxpE=;
-        b=edSs3Cs2bRbe3wwxDwxWAQ9KkrRQSbqpE8pyiBzj8LmIDreY1QLcC0kCnQUDtYPncYpsZi
-        c78F4UyB1UADRlWMV870uphXPLDA3/YCYvUrHNmdX7qvx5ij98ZEU2w7DjsxRCbpI0bfLh
-        jCs2KlnzqcQnVUOMmmJLiHaFMOyNs1I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1629760931;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=C7BBVvHaQw/s+KITQeP577sqWBVDyFdUma/can/bxpE=;
-        b=OycGFkFf79VlirrFV/hlYK8bqfQ/Ha/b+aLB997bk3Us0/M//inY93I1sWozTg5KYHPmic
-        +YWzXHXK3yD1jGAw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6559113BB4;
-        Mon, 23 Aug 2021 23:22:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 5EnCCKAtJGFDLQAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 23 Aug 2021 23:22:08 +0000
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A0DD801A92;
+        Tue, 24 Aug 2021 13:24:42 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.86])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C0C583AA2;
+        Tue, 24 Aug 2021 13:24:35 +0000 (UTC)
+Subject: [PATCH 0/6] netfs, afs, ceph: Support folios, at least partially
+From:   David Howells <dhowells@redhat.com>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     Marc Dionne <marc.dionne@auristor.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        linux-afs@lists.infradead.org, Ilya Dryomov <idryomov@gmail.com>,
+        Jeffrey Altman <jaltman@auristor.com>,
+        linux-cachefs@redhat.com, ceph-devel@vger.kernel.org,
+        Jeff Layton <jlayton@redhat.com>, dhowells@redhat.com,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net, devel@lists.orangefs.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Tue, 24 Aug 2021 14:24:34 +0100
+Message-ID: <162981147473.1901565.1455657509200944265.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Zygo Blaxell" <ce3g8jdj@umail.furryterror.org>
-Cc:     "Wang Yugui" <wangyugui@e16-tech.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        "Josef Bacik" <josef@toxicpanda.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        "Chuck Lever" <chuck.lever@oracle.com>, "Chris Mason" <clm@fb.com>,
-        "David Sterba" <dsterba@suse.com>,
-        "Alexander Viro" <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH] VFS/BTRFS/NFSD: provide more unique inode number for btrfs export
-In-reply-to: <20210822192917.GF29026@hungrycats.org>
-References: <162742539595.32498.13687924366155737575.stgit@noble.brown>,
- <162881913686.1695.12479588032010502384@noble.neil.brown.name>,
- <20210818225454.9558.409509F4@e16-tech.com>,
- <162932318266.9892.13600254282844823374@noble.neil.brown.name>,
- <20210819021910.GB29026@hungrycats.org>,
- <162942805745.9892.7512463857897170009@noble.neil.brown.name>,
- <20210822192917.GF29026@hungrycats.org>
-Date:   Tue, 24 Aug 2021 09:22:05 +1000
-Message-id: <162976092544.9892.3996716616493030747@noble.neil.brown.name>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 23 Aug 2021, Zygo Blaxell wrote:
-...
-> 
-> Subvol IDs are not reusable.  They are embedded in shared object ownership
-> metadata, and persist for some time after subvols are deleted.
-...
-> 
-> The cost of _tracking_ free object IDs is trivial compared to the cost
-> of _reusing_ an object ID on btrfs.
 
-One possible approach to these two objections is to decouple inode
-numbers from object ids.
-The inode number becomes just another piece of metadata stored in the
-inode.
-struct btrfs_inode_item has four spare u64s, so we could use one of
-those.
-struct btrfs_dir_item would need to store the inode number too.  What
-is location.offset used for?  Would a diritem ever point to a non-zero
-offset?  Could the 'offset' be used to store the inode number?
+Here's a set of patches to convert netfs and afs to use folios and to
+provide sufficient conversion for ceph that it can continue to use the
+netfs library.  Jeff Layton is working on fully converting ceph.
 
-This could even be added to existing filesystems I think.  It might not
-be easy to re-use inode numbers smaller than the largest at the time the
-extension was added, but newly added inode numbers could be reused after
-they were deleted.
+This based on top of part of Matthew Wilcox's folio changes[1]
 
-Just a thought...
+David
 
-NeilBrown
+Link: https://git.infradead.org/users/willy/pagecache.git/shortlog/refs/heads/for-next [1]
+Link: https://lore.kernel.org/r/2408234.1628687271@warthog.procyon.org.uk/ # v0
+---
+David Howells (6):
+      afs: Fix afs_launder_page() to set correct start file position
+      folio: Add a function to change the private data attached to a folio
+      folio: Add a function to get the host inode for a folio
+      afs: Sort out symlink reading
+      netfs, afs, ceph: Use folios
+      afs: Use folios in directory handling
+
+
+ fs/afs/dir.c               | 229 +++++++++++--------------
+ fs/afs/dir_edit.c          | 154 ++++++++---------
+ fs/afs/file.c              |  82 +++++----
+ fs/afs/inode.c             |   6 +-
+ fs/afs/internal.h          |  49 +++---
+ fs/afs/write.c             | 333 ++++++++++++++++++-------------------
+ fs/ceph/addr.c             |  80 ++++-----
+ fs/netfs/read_helper.c     | 165 +++++++++---------
+ include/linux/netfs.h      |  12 +-
+ include/linux/pagemap.h    |  33 ++++
+ include/trace/events/afs.h |  21 +--
+ mm/page-writeback.c        |   2 +-
+ 12 files changed, 584 insertions(+), 582 deletions(-)
+
+
