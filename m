@@ -2,90 +2,146 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A8933F8A71
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Aug 2021 16:51:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDE5F3F8E71
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Aug 2021 21:05:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234773AbhHZOwS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Aug 2021 10:52:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37012 "EHLO
+        id S243346AbhHZTGg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Aug 2021 15:06:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231458AbhHZOwS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Aug 2021 10:52:18 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 081FEC061757
-        for <linux-nfs@vger.kernel.org>; Thu, 26 Aug 2021 07:51:31 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 7EA236855; Thu, 26 Aug 2021 10:51:29 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 7EA236855
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1629989489;
-        bh=lQ2zrkHOl8VS9TBcA1g6LrDnAbacfXDRMDa4fMX7Hho=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WRZzfx3/NJgstdiLNFPVstztxmMSHmyd5m5SQrsDyCHDs6P1K+02Na4a5al8Vvnk1
-         tQEOdSx5QpXkAb+59RnX5OdMBqbIQEzAsc55v93LqjERz9UYuSzR6PqsrWC15HgrZO
-         EHmad6ANCd7OtCd1eGvo9EhtGMD4ETlfnGa7V+4M=
-Date:   Thu, 26 Aug 2021 10:51:29 -0400
-From:   "J.  Bruce Fields" <bfields@fieldses.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] NFSD: drop support for ancient file-handles
-Message-ID: <20210826145129.GA3616@fieldses.org>
-References: <162995209561.7591.4202079352301963089@noble.neil.brown.name>
+        with ESMTP id S230442AbhHZTGf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Aug 2021 15:06:35 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E221BC061757
+        for <linux-nfs@vger.kernel.org>; Thu, 26 Aug 2021 12:05:46 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id me10so8462070ejb.11
+        for <linux-nfs@vger.kernel.org>; Thu, 26 Aug 2021 12:05:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UqKbgtXNT9mPX5OQ/yRv5Rr6ZTQMQQVwysMsOInuc9U=;
+        b=uRbjCXz8nur8WLYso40yzDJFOuCMtArYBsgnq084VTMyffLfyKJ0eZqYdzLxGbtjU4
+         Zcke43f1Rir0aqvBwqJVNUewDOeXcm/6SOltuxGyreUOyYVw8VKHIv48GPcfIq/gnX3F
+         VlSSfm0cf16OEvhbW5+BNhYj+a458xmZyg2m4ygXn+WF7PKvzV4LgxEPWDZ/lLYrWzBY
+         SV4zyL+NcEAY08cT63FRZuxg+6RQWZZaGVmZkkapHB/ZxvfisPeBcRjnBgCMdmqXBFWC
+         rG/sNdOINTuOCpRo09/SmFB/zq5jCNIPUKI2eU/wq+j1eCDTkDrXSZlurwEb4VRI5hGb
+         Xv5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UqKbgtXNT9mPX5OQ/yRv5Rr6ZTQMQQVwysMsOInuc9U=;
+        b=UHgmRxZFZJGX8BP3N8UdA/lXSMf37rOZjwb8XBzkl/dDnrcmxbk8l7hDyetF+xXlUr
+         niILo8GlxVGTkvpudeczQTO4t6ALnwwOPsibNWR69Ligvhj7qLPt0Bj5GU9InD8dkxIV
+         t11gnx0YDaRLIc5nMtVDy2Vl4bDxDR8f5gI9m8GGuCJWOs4ij9CV/Glp+nz9I88KpvYF
+         zOl5c1YwJJXOfZBj1HokB3nfAFfhLtHWiWAQ2CWvvXmpSJ9RDr/UwJNguZiu21a26KmR
+         UbrGSUj8gs7mkc0CjYYG1d72UYClBkdmhpctB2MJBoz73I06WYzfK8SVAVaNdgmV16gw
+         +5kQ==
+X-Gm-Message-State: AOAM5329lFOS0CoyX483OlAsm88dZJaqtgcB3hvphflVB05C8MK6RETb
+        cef6ofwN+l3AhdzbR3Gje6hOVIGMVvqRsueCA9M=
+X-Google-Smtp-Source: ABdhPJz+oCwkFMk7FuXpZNeadPraQeGyRVwDbPROFRxABnBPOYDzdrpvX2yc55sOX+X6DCvtt85D1/2ChPOEwghI8Y4=
+X-Received: by 2002:a17:906:13c4:: with SMTP id g4mr5712090ejc.152.1630004745256;
+ Thu, 26 Aug 2021 12:05:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <162995209561.7591.4202079352301963089@noble.neil.brown.name>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <1629493326-28336-1-git-send-email-bfields@redhat.com>
+In-Reply-To: <1629493326-28336-1-git-send-email-bfields@redhat.com>
+From:   Anna Schumaker <schumakeranna@gmail.com>
+Date:   Thu, 26 Aug 2021 15:05:28 -0400
+Message-ID: <CAFX2JfmB36zQ8dWXCwGmCBWxShXsCyPhR86XT+CRL8ZCZPS0nQ@mail.gmail.com>
+Subject: Re: [PATCH 0/8] reexport lock fixes v3
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trondmy@hammerspace.com>, daire@dneg.com,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 26, 2021 at 02:28:15PM +1000, NeilBrown wrote:
-> 
-> File-handles not in the "new" or "version 1" format have not been handed
-> out for new mounts since Linux 2.4 which was released 20 years ago.
-> I think it is safe to say that no such file handles are still in use,
-> and that we can drop support for them.
-> 
-> This patch also moves the nfsfh.h from the include/uapi directory into
-> fs/nfsd.  I can find no evidence of it being used anywhere outside the
-> kernel.  Certainly nfs-utils and wireshark do not use it.
-> 
-> fh_base and fh_pad are occasionally used to refer to the whole
-> filehandle.  These are replaced with "fh_raw" which is hopefully more
-> meaningful.
+On Fri, Aug 20, 2021 at 5:02 PM J. Bruce Fields <bfields@redhat.com> wrote:
+>
+> From: "J. Bruce Fields" <bfields@redhat.com>
+>
+> The following fix up some problems that can cause crashes or silently
+> broken lock guarantees in the reexport case.
+>
+> Note:
+>         - patches 1-5 are server side
+>         - patches 6-7 are client side
+>         - patch 8 affects both
+>
+> Simplest might be for Trond or Anna to ACK 6-8, if they look OK, and
 
-Oh boy, I will not miss those (fh_version == 1) cases in nfsfh.c.
-Excellent.
+They look okay to me. You can add:
+        Acked-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+to all three.
 
-Looks like it just needs the following folded in.
+Anna
 
---b.
-
-diff --git a/fs/nfsd/flexfilelayout.c b/fs/nfsd/flexfilelayout.c
-index db7ef07ae50c..2e2f1d5e9f62 100644
---- a/fs/nfsd/flexfilelayout.c
-+++ b/fs/nfsd/flexfilelayout.c
-@@ -61,7 +61,7 @@ nfsd4_ff_proc_layoutget(struct inode *inode, const struct svc_fh *fhp,
- 		goto out_error;
- 
- 	fl->fh.size = fhp->fh_handle.fh_size;
--	memcpy(fl->fh.data, &fhp->fh_handle.fh_base, fl->fh.size);
-+	memcpy(fl->fh.data, &fhp->fh_handle.fh_raw, fl->fh.size);
- 
- 	/* Give whole file layout segments */
- 	seg->offset = 0;
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 4872b9519a72..3f7e59ec4e32 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1383,7 +1383,7 @@ nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
- 	s_fh = &cstate->save_fh;
- 
- 	copy->c_fh.size = s_fh->fh_handle.fh_size;
--	memcpy(copy->c_fh.data, &s_fh->fh_handle.fh_base, copy->c_fh.size);
-+	memcpy(copy->c_fh.data, &s_fh->fh_handle.fh_raw, copy->c_fh.size);
- 	copy->stateid.seqid = cpu_to_be32(s_stid->si_generation);
- 	memcpy(copy->stateid.other, (void *)&s_stid->si_opaque,
- 	       sizeof(stateid_opaque_t));
+> then submit them all through the server.  But those three sets of
+> patches are all independent if you'd rather split them up.
+>
+> Not fixed:
+>         - Attempts to reclaim locks after a reboot of the reexport
+>           server will fail.  This at least seems like an improvement
+>           over the current situation, which is that they'll succeed even
+>           in cases where they shouldn't.  Complete support for reboot
+>           recovery is a bigger job.
+>
+>         - NFSv4.1+ lock nofications don't work.  So, clients have to
+>           poll as they do with NFSv4.0, which is suboptimal, but correct
+>           (and an improvement over the current situation, which is a
+>           kernel oops).
+>
+> So what we have at this point is a suboptimal lock implementation that
+> doesn't support lock recovery.
+>
+> Another alternative might be to turn off file locking entirely in the
+> re-export case.  I'd rather take the incremental improvement and fix the
+> oopses.
+>
+> Change since v2:
+>         - keep nlmsvc_file_inode a static inline to address build
+>           failure identified by the kernel test robot
+> Changes since v1:
+>         - Use ENOGRACE instead of returning NFS-specific error from vfs lock
+>           method.
+>         - Take write opens for write locks in the NLM case (as we always
+>           have in the NFSv4 case).
+>         - Don't block NLM threads waiting for blocking locks.
+>
+> With those changes I'm passing connecthon tests for NFSv3-4.2 reexports
+> of an NFSv4.0 filesystem.
+>
+> --b.
+>
+> J. Bruce Fields (8):
+>   lockd: lockd server-side shouldn't set fl_ops
+>   nlm: minor nlm_lookup_file argument change
+>   nlm: minor refactoring
+>   lockd: update nlm_lookup_file reexport comment
+>   Keep read and write fds with each nlm_file
+>   nfs: don't atempt blocking locks on nfs reexports
+>   lockd: don't attempt blocking locks on nfs reexports
+>   nfs: don't allow reexport reclaims
+>
+>  fs/lockd/svc4proc.c         |   6 +-
+>  fs/lockd/svclock.c          |  80 ++++++++++++++----------
+>  fs/lockd/svcproc.c          |   6 +-
+>  fs/lockd/svcsubs.c          | 117 +++++++++++++++++++++++++-----------
+>  fs/nfs/export.c             |   2 +-
+>  fs/nfs/file.c               |   3 +
+>  fs/nfsd/lockd.c             |   8 ++-
+>  fs/nfsd/nfs4state.c         |  11 +++-
+>  fs/nfsd/nfsproc.c           |   1 +
+>  include/linux/errno.h       |   1 +
+>  include/linux/exportfs.h    |   2 +
+>  include/linux/fs.h          |   1 +
+>  include/linux/lockd/bind.h  |   3 +-
+>  include/linux/lockd/lockd.h |  11 +++-
+>  14 files changed, 170 insertions(+), 82 deletions(-)
+>
+> --
+> 2.31.1
+>
