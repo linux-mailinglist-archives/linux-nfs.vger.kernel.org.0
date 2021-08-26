@@ -2,65 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 221163F8EA6
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Aug 2021 21:21:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CA593F8EAF
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Aug 2021 21:22:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239007AbhHZTWf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Aug 2021 15:22:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:21812 "EHLO
+        id S230024AbhHZTXe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Aug 2021 15:23:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:20471 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230024AbhHZTWe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Aug 2021 15:22:34 -0400
+        by vger.kernel.org with ESMTP id S243360AbhHZTXd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Aug 2021 15:23:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630005706;
+        s=mimecast20190719; t=1630005765;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RyqGILg6zU44gvAz9NHSpPgMJp2Z5KZlzM2IKU4cpkc=;
-        b=JV8e3xlTsYRO1L2uvPA55AsCwn6Ub+GsWO3C0j+T5VGTSpfLdrhgRH7jNVeY3QAqvI1YlP
-        naakydh4ysTkrSuatwZgqtysY0KEpnjSPTyTf8TpIdBbo2BYzpIa4SF0Yi4Gl0pIQONqu6
-        VLHljl6nKNd356n93T4pdMj5E8UeYTU=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-224-239-xduPPnOCAWu2BiQljg-1; Thu, 26 Aug 2021 15:21:44 -0400
-X-MC-Unique: 239-xduPPnOCAWu2BiQljg-1
-Received: by mail-qt1-f197.google.com with SMTP id t35-20020a05622a1823b02902647b518455so1861810qtc.3
-        for <linux-nfs@vger.kernel.org>; Thu, 26 Aug 2021 12:21:44 -0700 (PDT)
+        bh=MTUR4I3iB8yveYTKjJl9VsX2uCUj8pbnpMzVbQQbcYs=;
+        b=iWt4q4umXNn4+qCw9YtadINMFBjgzRivpsl4SstDgIVsj30Esq6oJQmDmpxc2z4iGL9OY5
+        L0rO9IbYSMS8IuJ5jlWT1gBKBJAO6WkKnlO2kGvTtC2yhgwO9o/fPKK5+nwmMTo+iBgsD0
+        aC5oYu/P/w5t7oowkLidjbJUcEfLXTY=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-320-dlpGx-Z6NeG8rR6Ne2Thgw-1; Thu, 26 Aug 2021 15:22:44 -0400
+X-MC-Unique: dlpGx-Z6NeG8rR6Ne2Thgw-1
+Received: by mail-qk1-f200.google.com with SMTP id 70-20020a370b49000000b003d2f5f0dcc6so838652qkl.9
+        for <linux-nfs@vger.kernel.org>; Thu, 26 Aug 2021 12:22:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=RyqGILg6zU44gvAz9NHSpPgMJp2Z5KZlzM2IKU4cpkc=;
-        b=roO1ltcweBSTBhDmSQKvUkflPSJcPFs/eATP7KYD3igAGrTwHrDqx09FGahMtAc3HV
-         2yMH3pJoNKSQ978EgnMNu9d+xVhJnn2OknwaUo9k8m8tc6v/I30vs231WVcz40aUHeI/
-         wrDnDnUIU+rt3ZJcSklokkULv2SlXeXLAZRA7r3wy94g2fuaKJWqaPmROMdWDF7odTWP
-         EpLKEUn85gpi8XwbCYR0INxxbmmSyEgd7d+j5mk4t1bntH6s5m4R9bDkdGN9cbbpHXwG
-         53fvJ83CKiRwAz+flnCADdgRjIDTD01cb97hFgxpT6jkKPAPX70g//jxyrVjZiwA8IK2
-         inkg==
-X-Gm-Message-State: AOAM532izo8PczqFw4npme9nOQtsipPisATQJTdAj38wqNveABZJIlds
-        gvgCCcOXPUJiRpneGkh3GfbbZb2vAxenABEuVihCAqwRYQW/t1hzeSYZxbP2Zd00oqoVFf576Ib
-        1Zgm6keVm50tzWNXfBMI4+81uBkEH9DBSCm/0K7dDjaApZwLFZK953L/YlvMlMj+fQSZPNw==
-X-Received: by 2002:a05:622a:64b:: with SMTP id a11mr4880632qtb.107.1630005703856;
-        Thu, 26 Aug 2021 12:21:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzi5u+nlby3938822HFj8dpFg8KpSJ6Mms0qWMfbYzXhiYeuDOY4m4gASqlcPdlwI1aQkFdBw==
-X-Received: by 2002:a05:622a:64b:: with SMTP id a11mr4880548qtb.107.1630005702624;
-        Thu, 26 Aug 2021 12:21:42 -0700 (PDT)
+        bh=MTUR4I3iB8yveYTKjJl9VsX2uCUj8pbnpMzVbQQbcYs=;
+        b=fTPMbYxieJZV5p0tXTwMEQ4hHe3rJif1RVqwtcsj3e2A+oRVwd9Z3LJvhhi8yenUkt
+         VtU4VsI+T51aUdSBYHdE2Y23Kg+DvUYuYtysG/jQvBAXyt9WnnyrkLQyoB0VpymySQSX
+         aVyEmZMolwwhY8fEdcn9virKyBIVILAonZIUelDnBL0ct5dc4nbhvdvAGQoYHbwHHwWY
+         ToRsPvc3Zi/F/0bKTo49KGtFweVVgn1ilRUb1InpqfUuVgCxaIWLOTVWde1d5S1HdnSR
+         aQL3RWX0MbhPyxTE7YZIQM4k3wXys+noxCM/hVT+STZcTrlRFFFfH+DEWHGfLA3QaXex
+         UXXw==
+X-Gm-Message-State: AOAM533UDVkMN1dOFOXEzvw7gFrj87a+k2SPpB+WxbJZHzxoltoveYoO
+        2FZYLXxRfC/mChObXRZOW7s5N0JKp6pnCHWWFFrJ6LyUxJDrKCuTiHq5Kc8QP+iiEgqW5RBZVQW
+        hhJNw8+RkaTaGbSdmkP2J
+X-Received: by 2002:a05:620a:4147:: with SMTP id k7mr5570666qko.140.1630005763923;
+        Thu, 26 Aug 2021 12:22:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwM6ht6YmpDRIrk2r9CGPSvhuqDb7lA4nZMPpPLAUE3Z7W9YO13oq8psVl0sokNgbgvWUziVw==
+X-Received: by 2002:a05:620a:4147:: with SMTP id k7mr5570653qko.140.1630005763745;
+        Thu, 26 Aug 2021 12:22:43 -0700 (PDT)
 Received: from madhat.boston.devel.redhat.com ([71.161.89.127])
-        by smtp.gmail.com with ESMTPSA id 37sm2363464qtf.33.2021.08.26.12.21.42
+        by smtp.gmail.com with ESMTPSA id c10sm2310466qtb.20.2021.08.26.12.22.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Aug 2021 12:21:42 -0700 (PDT)
-Subject: Re: [PATCH 0/4 v2] nfs-utils: A series of memory fixes
-To:     Alice Mitchell <ajmitchell@redhat.com>, linux-nfs@vger.kernel.org
-References: <20210812181319.3885781-1-ajmitchell@redhat.com>
+        Thu, 26 Aug 2021 12:22:43 -0700 (PDT)
+Subject: Re: [PATCH] nfs-utils: add install-dep for installing all
+ dependencies
+To:     Jianhong Yin <jiyin@redhat.com>, linux-nfs@vger.kernel.org
+Cc:     Jianhong Yin <yin-jianhong@163.com>
+References: <20210819100829.28647-1-jiyin@redhat.com>
 From:   Steve Dickson <steved@redhat.com>
-Message-ID: <79b26117-3915-2e44-ab5a-602ec335c936@redhat.com>
-Date:   Thu, 26 Aug 2021 15:21:41 -0400
+Message-ID: <a8816e8c-12e5-6cac-b8be-c10c51e09e7e@redhat.com>
+Date:   Thu, 26 Aug 2021 15:22:42 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210812181319.3885781-1-ajmitchell@redhat.com>
+In-Reply-To: <20210819100829.28647-1-jiyin@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -70,32 +72,48 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 8/12/21 2:13 PM, Alice Mitchell wrote:
-> v2
-> Taking into consideration the comments and suggstions made
-> corrected patch files.
+On 8/19/21 6:08 AM, Jianhong Yin wrote:
+> whenever user want to compile and install from source code, they
+> have to constantly install dependencies based on error message.
+> I'm fed up
 > 
-> v1
-> This series of patches fix a number of potential memory leaks
-> and memory errors within nfs-utils that mostly happen under
-> various error conditions.
+> verified on RHEL-8/Fedora-34/debian-10/openSUSE-15.3
 > 
-> Signed-off-by: Alice Mitchell <ajmitchell@redhat.com>
-Committed (Tag: nfs-utils-2-5-5-rc2)
+> Signed-off-by: Jianhong Yin <yin-jianhong@163.com>
+Committed... (Tag: nfs-utils-2-5-5-rc2)
 
 steved.
+> ---
+>   install-dep | 21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
+>   create mode 100755 install-dep
 > 
-> Alice Mitchell (4):
->    nfs-utils: Fix potential memory leaks in idmap
->    nfs-utils: Fix mem leaks in gssd
->    nfs-utils: Fix mem leaks in krb5_util
->    nfs-utils: Fix mem leak in mountd
-> 
->   support/nfsidmap/nss.c   |  6 ++----
->   support/nfsidmap/regex.c |  1 +
->   utils/gssd/gssd.c        | 10 +++++-----
->   utils/gssd/krb5_util.c   | 14 ++++++++++++--
->   utils/mountd/rmtab.c     |  3 +++
->   5 files changed, 23 insertions(+), 11 deletions(-)
+> diff --git a/install-dep b/install-dep
+> new file mode 100755
+> index 00000000..621618fe
+> --- /dev/null
+> +++ b/install-dep
+> @@ -0,0 +1,21 @@
+> +#!/bin/bash
+> +#install dependencies for compiling from source code
+> +
+> +#RHEL/Fedora/CentOS-Stream/Rocky
+> +which dnf &>/dev/null || which yum &>/dev/null && {
+> +	yum install -y automake libtool make gcc rpcgen libtirpc-devel libevent-devel sqlite-devel device-mapper-devel \
+> +		libblkid-devel krb5-devel libuuid-devel
+> +}
+> +
+> +#Debian/ubuntu
+> +which apt &>/dev/null && {
+> +	apt install -o APT::Install-Suggests=0 -o APT::Install-Recommends=0 --ignore-missing -y \
+> +		autotools-dev automake make libtool pkg-config libtirpc-dev libevent-dev libsqlite3-dev \
+> +		libdevmapper-dev libblkid-dev libkrb5-dev libkeyutils-dev uuid-dev
+> +}
+> +
+> +#openSUSE Leap
+> +which zypper &>/dev/null && {
+> +	zypper in --no-recommends -y automake libtool make gcc rpcgen libtirpc-devel libevent-devel sqlite-devel \
+> +		device-mapper-devel libblkid-devel krb5-devel libuuid-devel
+> +}
 > 
 
