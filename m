@@ -2,722 +2,408 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E5ED3F81C0
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Aug 2021 06:28:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 095A63F8235
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Aug 2021 08:03:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229789AbhHZE3J (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Aug 2021 00:29:09 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:46072 "EHLO
+        id S231134AbhHZGD4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Aug 2021 02:03:56 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:54810 "EHLO
         smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbhHZE3I (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Aug 2021 00:29:08 -0400
+        with ESMTP id S230313AbhHZGD4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Aug 2021 02:03:56 -0400
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id B750422269;
-        Thu, 26 Aug 2021 04:28:20 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id C18852220F;
+        Thu, 26 Aug 2021 06:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1629952100; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1629957788; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Ex3qLV3/Tz0E/wuHyZ4gWQEhe3V0p8ws3unSwMwWRrA=;
-        b=kmw5veeoFzoanAGsxSitRw11EnEIem7/A9/83wXRcjbnsg+Ng7XYunSHBZEw17fI3ZTuEX
-        69S49xC8RlL4D8T57T7eulHwX2mHuhXNRU15HWZpRyvzve0zStY4x8hSH2UQolQkCy7S7y
-        DzcyRTMnV8Tu3lGFQeRsFCwPpz8DnOM=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MdL08DvbLkMTzgBfcDRGN+6VaQUe08pmIKJ7fVll1Tg=;
+        b=Wte8hdwhCGrisEd9oN0H8uSRamcOU1rwh7ZXhg+Q+lssD+ilf9qFM91DEw5t9sTFTXr2t8
+        SLkhCmY0YYescqf6wDJvvtEn6Mx5I2Rw9wiIi1ihlOUadwMIEOkJfFG+ka7LxrvIcjCbqd
+        yVf/oQ+qzm+81xgRv72jLRMXlSRx1/M=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1629952100;
+        s=susede2_ed25519; t=1629957788;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Ex3qLV3/Tz0E/wuHyZ4gWQEhe3V0p8ws3unSwMwWRrA=;
-        b=AK+RcL4oIjzmJwJSfW6NdAnuQReUPIBG0pLBwtlIvjKuYHJnNJCkinq/Dvth644ZDe7m7w
-        aZNWOAmQDp/r2MDA==
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MdL08DvbLkMTzgBfcDRGN+6VaQUe08pmIKJ7fVll1Tg=;
+        b=TBi8SE12tefxmcJLuG8ROCcjQv8vLXEMhpVdEBSxQW5iIWoD4onDzJht4RJJQl+WwyRMBv
+        u/55PXjKcVdp4VDQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 25A3F13B75;
-        Thu, 26 Aug 2021 04:28:18 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2F34F12FC5;
+        Thu, 26 Aug 2021 06:03:06 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id Fdc+NWIYJ2F+MgAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 26 Aug 2021 04:28:18 +0000
+        id R1xAN5ouJ2GhRwAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 26 Aug 2021 06:03:06 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
 To:     "J.  Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] NFSD: drop support for ancient file-handles
-Date:   Thu, 26 Aug 2021 14:28:15 +1000
-Message-id: <162995209561.7591.4202079352301963089@noble.neil.brown.name>
+        "Chuck Lever" <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>
+Subject: [PATCH v2] BTRFS/NFSD: provide more unique inode number for btrfs export
+In-reply-to: <162995209561.7591.4202079352301963089@noble.neil.brown.name>
+References: <162995209561.7591.4202079352301963089@noble.neil.brown.name>
+Date:   Thu, 26 Aug 2021 16:03:04 +1000
+Message-id: <162995778427.7591.11743795294299207756@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
-File-handles not in the "new" or "version 1" format have not been handed
-out for new mounts since Linux 2.4 which was released 20 years ago.
-I think it is safe to say that no such file handles are still in use,
-and that we can drop support for them.
+[[ Hi Bruce and Chuck,
+   I've rebased this patch on the earlier patch I sent which allows
+   me to use the name "fh_flags".  I've also added a missing #include.
+   I've added the 'Acked-by' which Joesf provided earlier for the
+   btrfs-part.  I don't have an 'ack' for the  stat.h part, but no-one
+   has complained wither.
+   I think it is as ready as it can be, and am keen to know what you
+   think.
+   I'm not *very* keen on testing s_magic in nfsd code (though we
+   already have a couple of such tests in nfs3proc.c), but it does have
+   the advantage of ensuring that no other filesystem can use this
+   functionality without landing a patch in fs/nfsd/.
+=20
+   Thanks for any review that you can provide,
+   NeilBrown
+]]
 
-This patch also moves the nfsfh.h from the include/uapi directory into
-fs/nfsd.  I can find no evidence of it being used anywhere outside the
-kernel.  Certainly nfs-utils and wireshark do not use it.
+BTRFS does not provide unique inode numbers across a filesystem.
+It only provides unique inode numbers within a subvolume and
+uses synthetic device numbers for different subvolumes to ensure
+uniqueness for device+inode.
 
-fh_base and fh_pad are occasionally used to refer to the whole
-filehandle.  These are replaced with "fh_raw" which is hopefully more
-meaningful.
+nfsd cannot use these varying synthetic device numbers.  If nfsd were to
+synthesise different stable filesystem ids to give to the client, that
+would cause subvolumes to appear in the mount table on the client, even
+though they don't appear in the mount table on the server.  Also, NFSv3
+doesn't support changing the filesystem id without a new explicit mount
+on the client (this is partially supported in practice, but violates the
+protocol specification and has problems in some edge cases).
 
+So currently, the roots of all subvolumes report the same inode number
+in the same filesystem to NFS clients and tools like 'find' notice that
+a directory has the same identity as an ancestor, and so refuse to
+enter that directory.
+
+This patch allows btrfs (or any filesystem) to provide a 64bit number
+that can be xored with the inode number to make the number more unique.
+Rather than the client being certain to see duplicates, with this patch
+it is possible but extremely rare.
+
+The number that btrfs provides is a swab64() version of the subvolume
+identifier.  This has most entropy in the high bits (the low bits of the
+subvolume identifer), while the inode has most entropy in the low bits.
+The result will always be unique within a subvolume, and will almost
+always be unique across the filesystem.
+
+If an upgrade of the NFS server caused all inode numbers in an exportfs
+BTRFS filesystem to appear to the client to change, the client may not
+handle this well.  The Linux client will cause any open files to become
+'stale'.  If the mount point changed inode number, the whole mount would
+become inaccessible.
+
+To avoid this, an unused byte in the filehandle (fh_auth) has been
+repurposed as "fh_flags".  The new behaviour of uniquifying inode number
+is only activated when a new flag is set.
+
+NFSD will only set this flag in filehandles it reports if the filehandle
+of the parent (provided by the client) contains the bit, or if
+ - the filehandle for the parent is not provided or is for a different
+   export and
+ - the filehandle refers to a BTRFS filesystem.
+
+Thus if you have a BTRFS filesystem originally mounted from a server
+without this patch, the flag will never be set and the current behaviour
+will continue.  Only once you re-mount the filesystem (or the filesystem
+is re-auto-mounted) will the inode numbers change.  When that happens,
+it is likely that the filesystem st_dev number seen on the client will
+change anyway.
+
+Acked-by: Josef Bacik <josef@toxicpanda.com> (for BTFS change)
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
+ fs/btrfs/inode.c     |  4 ++++
+ fs/nfsd/nfs3xdr.c    | 15 ++++++++++++++-
+ fs/nfsd/nfs4xdr.c    |  7 ++++---
+ fs/nfsd/nfsfh.c      | 14 ++++++++++++--
+ fs/nfsd/nfsfh.h      | 34 +++++++++++++++++++++++++++++++---
+ fs/nfsd/xdr3.h       |  2 ++
+ include/linux/stat.h | 18 ++++++++++++++++++
+ 7 files changed, 85 insertions(+), 9 deletions(-)
 
-I found
- https://www.spinics.net/lists/linux-nfs/msg43280.html
- "Re: [PATCH] nfsd: clean up fh_auth usage"
-from 2014 where moving nfsfh.h out of uapi was considered but not
-actioned. Christoph said he would "do some research if the
-uapi <linux/nfsd/*.h> headers are used anywhere at all".  I can find no
-report on the result of that research.  My own research turned up
-nothing.
-
-Thanks,
-NeilBrown
-
-
- fs/nfsd/lockd.c                 |   2 +-
- fs/nfsd/nfs3xdr.c               |   4 +-
- fs/nfsd/nfs4callback.c          |   2 +-
- fs/nfsd/nfs4proc.c              |   2 +-
- fs/nfsd/nfs4state.c             |   4 +-
- fs/nfsd/nfs4xdr.c               |   4 +-
- fs/nfsd/nfsctl.c                |   6 +-
- fs/nfsd/nfsfh.c                 | 177 +++++++++++---------------------
- fs/nfsd/nfsfh.h                 |  55 +++++++++-
- fs/nfsd/nfsxdr.c                |   4 +-
- include/uapi/linux/nfsd/nfsfh.h | 116 ---------------------
- 11 files changed, 126 insertions(+), 250 deletions(-)
- delete mode 100644 include/uapi/linux/nfsd/nfsfh.h
-
-diff --git a/fs/nfsd/lockd.c b/fs/nfsd/lockd.c
-index 3f5b3d7b62b7..74d1630e7994 100644
---- a/fs/nfsd/lockd.c
-+++ b/fs/nfsd/lockd.c
-@@ -33,7 +33,7 @@ nlm_fopen(struct svc_rqst *rqstp, struct nfs_fh *f, struct =
-file **filp)
- 	/* must initialize before using! but maxsize doesn't matter */
- 	fh_init(&fh,0);
- 	fh.fh_handle.fh_size =3D f->size;
--	memcpy((char*)&fh.fh_handle.fh_base, f->data, f->size);
-+	memcpy((char*)&fh.fh_handle.fh_raw, f->data, f->size);
- 	fh.fh_export =3D NULL;
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 06f9f167222b..d35e2a30f25f 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -9195,6 +9195,10 @@ static int btrfs_getattr(struct user_namespace *mnt_us=
+erns,
+ 	generic_fillattr(&init_user_ns, inode, stat);
+ 	stat->dev =3D BTRFS_I(inode)->root->anon_dev;
 =20
- 	nfserr =3D nfsd_open(rqstp, &fh, S_IFREG, NFSD_MAY_LOCK, filp);
++	if (BTRFS_I(inode)->root->root_key.objectid !=3D BTRFS_FS_TREE_OBJECTID)
++		stat->ino_uniquifier =3D
++			swab64(BTRFS_I(inode)->root->root_key.objectid);
++
+ 	spin_lock(&BTRFS_I(inode)->lock);
+ 	delalloc_bytes =3D BTRFS_I(inode)->new_delalloc_bytes;
+ 	inode_bytes =3D inode_get_bytes(inode);
 diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-index 0a5ebc52e6a9..3d37923afb06 100644
+index 3d37923afb06..5e2d5c352ecd 100644
 --- a/fs/nfsd/nfs3xdr.c
 +++ b/fs/nfsd/nfs3xdr.c
-@@ -92,7 +92,7 @@ svcxdr_decode_nfs_fh3(struct xdr_stream *xdr, struct svc_fh=
- *fhp)
+@@ -340,6 +340,7 @@ svcxdr_encode_fattr3(struct svc_rqst *rqstp, struct xdr_s=
+tream *xdr,
+ {
+ 	struct user_namespace *userns =3D nfsd_user_namespace(rqstp);
+ 	__be32 *p;
++	u64 ino;
+ 	u64 fsid;
+=20
+ 	p =3D xdr_reserve_space(xdr, XDR_UNIT * 21);
+@@ -377,7 +378,8 @@ svcxdr_encode_fattr3(struct svc_rqst *rqstp, struct xdr_s=
+tream *xdr,
+ 	p =3D xdr_encode_hyper(p, fsid);
+=20
+ 	/* fileid */
+-	p =3D xdr_encode_hyper(p, stat->ino);
++	ino =3D nfsd_uniquify_ino(fhp, stat);
++	p =3D xdr_encode_hyper(p, ino);
+=20
+ 	p =3D encode_nfstime3(p, &stat->atime);
+ 	p =3D encode_nfstime3(p, &stat->mtime);
+@@ -1151,6 +1153,17 @@ svcxdr_encode_entry3_common(struct nfsd3_readdirres *r=
+esp, const char *name,
+ 	if (xdr_stream_encode_item_present(xdr) < 0)
  		return false;
- 	fh_init(fhp, NFS3_FHSIZE);
- 	fhp->fh_handle.fh_size =3D size;
--	memcpy(&fhp->fh_handle.fh_base, p, size);
-+	memcpy(&fhp->fh_handle.fh_raw, p, size);
-=20
- 	return true;
- }
-@@ -131,7 +131,7 @@ svcxdr_encode_nfs_fh3(struct xdr_stream *xdr, const struc=
-t svc_fh *fhp)
- 	*p++ =3D cpu_to_be32(size);
- 	if (size)
- 		p[XDR_QUADLEN(size) - 1] =3D 0;
--	memcpy(p, &fhp->fh_handle.fh_base, size);
-+	memcpy(p, &fhp->fh_handle.fh_raw, size);
-=20
- 	return true;
- }
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 0f8b10f363e7..11f8715d92d6 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -121,7 +121,7 @@ static void encode_nfs_fh4(struct xdr_stream *xdr, const =
-struct knfsd_fh *fh)
-=20
- 	BUG_ON(length > NFS4_FHSIZE);
- 	p =3D xdr_reserve_space(xdr, 4 + length);
--	xdr_encode_opaque(p, &fh->fh_base, length);
-+	xdr_encode_opaque(p, &fh->fh_raw, length);
- }
-=20
- /*
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 486c5dba4b65..4872b9519a72 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -519,7 +519,7 @@ nfsd4_putfh(struct svc_rqst *rqstp, struct nfsd4_compound=
-_state *cstate,
-=20
- 	fh_put(&cstate->current_fh);
- 	cstate->current_fh.fh_handle.fh_size =3D putfh->pf_fhlen;
--	memcpy(&cstate->current_fh.fh_handle.fh_base, putfh->pf_fhval,
-+	memcpy(&cstate->current_fh.fh_handle.fh_raw, putfh->pf_fhval,
- 	       putfh->pf_fhlen);
- 	ret =3D fh_verify(rqstp, &cstate->current_fh, 0, NFSD_MAY_BYPASS_GSS);
- #ifdef CONFIG_NFSD_V4_2_INTER_SSC
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index fa67ecd5fe63..d66b4be99063 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1010,7 +1010,7 @@ static int delegation_blocked(struct knfsd_fh *fh)
- 		}
- 		spin_unlock(&blocked_delegations_lock);
- 	}
--	hash =3D jhash(&fh->fh_base, fh->fh_size, 0);
-+	hash =3D jhash(&fh->fh_raw, fh->fh_size, 0);
- 	if (test_bit(hash&255, bd->set[0]) &&
- 	    test_bit((hash>>8)&255, bd->set[0]) &&
- 	    test_bit((hash>>16)&255, bd->set[0]))
-@@ -1029,7 +1029,7 @@ static void block_delegations(struct knfsd_fh *fh)
- 	u32 hash;
- 	struct bloom_pair *bd =3D &blocked_delegations;
-=20
--	hash =3D jhash(&fh->fh_base, fh->fh_size, 0);
-+	hash =3D jhash(&fh->fh_raw, fh->fh_size, 0);
-=20
- 	spin_lock(&blocked_delegations_lock);
- 	__set_bit(hash&255, bd->set[bd->new]);
+ 	/* fileid */
++	if (!resp->dir_have_uniquifier) {
++		struct kstat stat;
++		if (fh_getattr(&resp->fh, &stat) =3D=3D nfs_ok)
++			resp->dir_ino_uniquifier =3D
++				nfsd_ino_uniquifier(&resp->fh, &stat);
++		else
++			resp->dir_ino_uniquifier =3D 0;
++		resp->dir_have_uniquifier =3D true;
++	}
++	if (resp->dir_ino_uniquifier !=3D ino)
++		ino ^=3D resp->dir_ino_uniquifier;
+ 	if (xdr_stream_encode_u64(xdr, ino) < 0)
+ 		return false;
+ 	/* name */
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 7abeccb975b2..a54b2845473b 100644
+index a54b2845473b..6e31f6286e0b 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -3110,7 +3110,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_f=
-h *fhp,
- 		p =3D xdr_reserve_space(xdr, fhp->fh_handle.fh_size + 4);
- 		if (!p)
- 			goto out_resource;
--		p =3D xdr_encode_opaque(p, &fhp->fh_handle.fh_base,
-+		p =3D xdr_encode_opaque(p, &fhp->fh_handle.fh_raw,
+@@ -3114,10 +3114,11 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc=
+_fh *fhp,
  					fhp->fh_handle.fh_size);
  	}
  	if (bmval0 & FATTR4_WORD0_FILEID) {
-@@ -3667,7 +3667,7 @@ nfsd4_encode_getfh(struct nfsd4_compoundres *resp, __be=
-32 nfserr, struct svc_fh
- 	p =3D xdr_reserve_space(xdr, len + 4);
- 	if (!p)
- 		return nfserr_resource;
--	p =3D xdr_encode_opaque(p, &fhp->fh_handle.fh_base, len);
-+	p =3D xdr_encode_opaque(p, &fhp->fh_handle.fh_raw, len);
- 	return 0;
- }
++		u64 ino =3D nfsd_uniquify_ino(fhp, &stat);
+ 		p =3D xdr_reserve_space(xdr, 8);
+ 		if (!p)
+ 			goto out_resource;
+-		p =3D xdr_encode_hyper(p, stat.ino);
++		p =3D xdr_encode_hyper(p, ino);
+ 	}
+ 	if (bmval0 & FATTR4_WORD0_FILES_AVAIL) {
+ 		p =3D xdr_reserve_space(xdr, 8);
+@@ -3274,7 +3275,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_f=
+h *fhp,
 =20
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index c2c3d9077dc5..449b57e5e328 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -395,12 +395,12 @@ static ssize_t write_filehandle(struct file *file, char=
- *buf, size_t size)
- 	auth_domain_put(dom);
- 	if (len)
- 		return len;
--=09
-+
- 	mesg =3D buf;
- 	len =3D SIMPLE_TRANSACTION_LIMIT;
--	qword_addhex(&mesg, &len, (char*)&fh.fh_base, fh.fh_size);
-+	qword_addhex(&mesg, &len, (char*)&fh.fh_raw, fh.fh_size);
- 	mesg[-1] =3D '\n';
--	return mesg - buf;=09
-+	return mesg - buf;
- }
-=20
- /*
+ 		p =3D xdr_reserve_space(xdr, 8);
+ 		if (!p)
+-                	goto out_resource;
++			goto out_resource;
+ 		/*
+ 		 * Get parent's attributes if not ignoring crossmount
+ 		 * and this is the root of a cross-mounted filesystem.
+@@ -3284,7 +3285,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_f=
+h *fhp,
+ 			err =3D get_parent_attributes(exp, &parent_stat);
+ 			if (err)
+ 				goto out_nfserr;
+-			ino =3D parent_stat.ino;
++			ino =3D nfsd_uniquify_ino(fhp, &parent_stat);
+ 		}
+ 		p =3D xdr_encode_hyper(p, ino);
+ 	}
 diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index c475d2271f9c..7695c0f1eefe 100644
+index 7695c0f1eefe..18bb139f8bfe 100644
 --- a/fs/nfsd/nfsfh.c
 +++ b/fs/nfsd/nfsfh.c
-@@ -154,11 +154,12 @@ static inline __be32 check_pseudo_root(struct svc_rqst =
-*rqstp,
- static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
- {
- 	struct knfsd_fh	*fh =3D &fhp->fh_handle;
--	struct fid *fid =3D NULL, sfid;
-+	struct fid *fid =3D NULL;
- 	struct svc_export *exp;
- 	struct dentry *dentry;
- 	int fileid_type;
- 	int data_left =3D fh->fh_size/4;
-+	int len;
- 	__be32 error;
+@@ -9,6 +9,7 @@
+  */
 =20
- 	error =3D nfserr_stale;
-@@ -167,48 +168,35 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp=
-, struct svc_fh *fhp)
- 	if (rqstp->rq_vers =3D=3D 4 && fh->fh_size =3D=3D 0)
- 		return nfserr_nofilehandle;
+ #include <linux/exportfs.h>
++#include <linux/magic.h>
 =20
--	if (fh->fh_version =3D=3D 1) {
--		int len;
--
--		if (--data_left < 0)
--			return error;
--		if (fh->fh_auth_type !=3D 0)
--			return error;
--		len =3D key_len(fh->fh_fsid_type) / 4;
--		if (len =3D=3D 0)
--			return error;
--		if  (fh->fh_fsid_type =3D=3D FSID_MAJOR_MINOR) {
--			/* deprecated, convert to type 3 */
--			len =3D key_len(FSID_ENCODE_DEV)/4;
--			fh->fh_fsid_type =3D FSID_ENCODE_DEV;
--			/*
--			 * struct knfsd_fh uses host-endian fields, which are
--			 * sometimes used to hold net-endian values. This
--			 * confuses sparse, so we must use __force here to
--			 * keep it from complaining.
--			 */
--			fh->fh_fsid[0] =3D new_encode_dev(MKDEV(ntohl((__force __be32)fh->fh_fsid=
-[0]),
--							ntohl((__force __be32)fh->fh_fsid[1])));
--			fh->fh_fsid[1] =3D fh->fh_fsid[2];
--		}
--		data_left -=3D len;
--		if (data_left < 0)
--			return error;
--		exp =3D rqst_exp_find(rqstp, fh->fh_fsid_type, fh->fh_fsid);
--		fid =3D (struct fid *)(fh->fh_fsid + len);
--	} else {
--		__u32 tfh[2];
--		dev_t xdev;
--		ino_t xino;
--
--		if (fh->fh_size !=3D NFS_FHSIZE)
--			return error;
--		/* assume old filehandle format */
--		xdev =3D old_decode_dev(fh->ofh_xdev);
--		xino =3D u32_to_ino_t(fh->ofh_xino);
--		mk_fsid(FSID_DEV, tfh, xdev, xino, 0, NULL);
--		exp =3D rqst_exp_find(rqstp, FSID_DEV, tfh);
-+	if (fh->fh_version !=3D 1)
-+		return error;
+ #include <linux/sunrpc/svcauth_gss.h>
+ #include "nfsd.h"
+@@ -173,7 +174,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, =
+struct svc_fh *fhp)
+=20
+ 	if (--data_left < 0)
+ 		return error;
+-	if (fh->fh_auth_type !=3D 0)
++	if ((fh->fh_flags & ~NFSD_FH_FLAG_ALL) !=3D 0)
+ 		return error;
+ 	len =3D key_len(fh->fh_fsid_type) / 4;
+ 	if (len =3D=3D 0)
+@@ -532,6 +533,7 @@ fh_compose(struct svc_fh *fhp, struct svc_export *exp, st=
+ruct dentry *dentry,
+=20
+ 	struct inode * inode =3D d_inode(dentry);
+ 	dev_t ex_dev =3D exp_sb(exp)->s_dev;
++	u8 flags =3D 0;
+=20
+ 	dprintk("nfsd: fh_compose(exp %02x:%02x/%ld %pd2, ino=3D%ld)\n",
+ 		MAJOR(ex_dev), MINOR(ex_dev),
+@@ -548,6 +550,14 @@ fh_compose(struct svc_fh *fhp, struct svc_export *exp, s=
+truct dentry *dentry,
+ 	/* If we have a ref_fh, then copy the fh_no_wcc setting from it. */
+ 	fhp->fh_no_wcc =3D ref_fh ? ref_fh->fh_no_wcc : false;
+=20
++	if (ref_fh && ref_fh->fh_export =3D=3D exp) {
++		flags =3D ref_fh->fh_handle.fh_flags;
++	} else {
++		/* Set flags as needed */
++		if (exp->ex_path.mnt->mnt_sb->s_magic =3D=3D BTRFS_SUPER_MAGIC)
++			flags |=3D NFSD_FH_FLAG_INO_UNIQUIFY;
++	}
 +
-+	if (--data_left < 0)
-+		return error;
-+	if (fh->fh_auth_type !=3D 0)
-+		return error;
-+	len =3D key_len(fh->fh_fsid_type) / 4;
-+	if (len =3D=3D 0)
-+		return error;
-+	if  (fh->fh_fsid_type =3D=3D FSID_MAJOR_MINOR) {
-+		/* deprecated, convert to type 3 */
-+		len =3D key_len(FSID_ENCODE_DEV)/4;
-+		fh->fh_fsid_type =3D FSID_ENCODE_DEV;
-+		/*
-+		 * struct knfsd_fh uses host-endian fields, which are
-+		 * sometimes used to hold net-endian values. This
-+		 * confuses sparse, so we must use __force here to
-+		 * keep it from complaining.
-+		 */
-+		fh->fh_fsid[0] =3D new_encode_dev(MKDEV(ntohl((__force __be32)fh->fh_fsid[=
-0]),
-+						      ntohl((__force __be32)fh->fh_fsid[1])));
-+		fh->fh_fsid[1] =3D fh->fh_fsid[2];
- 	}
-+	data_left -=3D len;
-+	if (data_left < 0)
-+		return error;
-+	exp =3D rqst_exp_find(rqstp, fh->fh_fsid_type, fh->fh_fsid);
-+	fid =3D (struct fid *)(fh->fh_fsid + len);
+ 	if (ref_fh =3D=3D fhp)
+ 		fh_put(ref_fh);
 =20
- 	error =3D nfserr_stale;
- 	if (IS_ERR(exp)) {
-@@ -253,18 +241,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp,=
- struct svc_fh *fhp)
- 	if (rqstp->rq_vers > 2)
- 		error =3D nfserr_badhandle;
+@@ -565,7 +575,7 @@ fh_compose(struct svc_fh *fhp, struct svc_export *exp, st=
+ruct dentry *dentry,
 =20
--	if (fh->fh_version !=3D 1) {
--		sfid.i32.ino =3D fh->ofh_ino;
--		sfid.i32.gen =3D fh->ofh_generation;
--		sfid.i32.parent_ino =3D fh->ofh_dirino;
--		fid =3D &sfid;
--		data_left =3D 3;
--		if (fh->ofh_dirino =3D=3D 0)
--			fileid_type =3D FILEID_INO32_GEN;
--		else
--			fileid_type =3D FILEID_INO32_GEN_PARENT;
--	} else
--		fileid_type =3D fh->fh_fileid_type;
-+	fileid_type =3D fh->fh_fileid_type;
+ 	fhp->fh_handle.fh_size =3D
+ 		key_len(fhp->fh_handle.fh_fsid_type) + 4;
+-	fhp->fh_handle.fh_auth_type =3D 0;
++	fhp->fh_handle.fh_flags =3D flags;
 =20
- 	if (fileid_type =3D=3D FILEID_ROOT)
- 		dentry =3D dget(exp->ex_path.dentry);
-@@ -452,20 +429,6 @@ static void _fh_update(struct svc_fh *fhp, struct svc_ex=
-port *exp,
- 	}
- }
-=20
--/*
-- * for composing old style file handles
-- */
--static inline void _fh_update_old(struct dentry *dentry,
--				  struct svc_export *exp,
--				  struct knfsd_fh *fh)
--{
--	fh->ofh_ino =3D ino_t_to_u32(d_inode(dentry)->i_ino);
--	fh->ofh_generation =3D d_inode(dentry)->i_generation;
--	if (d_is_dir(dentry) ||
--	    (exp->ex_flags & NFSEXP_NOSUBTREECHECK))
--		fh->ofh_dirino =3D 0;
--}
--
- static bool is_root_export(struct svc_export *exp)
- {
- 	return exp->ex_path.dentry =3D=3D exp->ex_path.dentry->d_sb->s_root;
-@@ -600,35 +563,21 @@ fh_compose(struct svc_fh *fhp, struct svc_export *exp, =
-struct dentry *dentry,
- 	fhp->fh_dentry =3D dget(dentry); /* our internal copy */
- 	fhp->fh_export =3D exp_get(exp);
-=20
--	if (fhp->fh_handle.fh_version =3D=3D 0xca) {
--		/* old style filehandle please */
--		memset(&fhp->fh_handle.fh_base, 0, NFS_FHSIZE);
--		fhp->fh_handle.fh_size =3D NFS_FHSIZE;
--		fhp->fh_handle.ofh_dcookie =3D 0xfeebbaca;
--		fhp->fh_handle.ofh_dev =3D  old_encode_dev(ex_dev);
--		fhp->fh_handle.ofh_xdev =3D fhp->fh_handle.ofh_dev;
--		fhp->fh_handle.ofh_xino =3D
--			ino_t_to_u32(d_inode(exp->ex_path.dentry)->i_ino);
--		fhp->fh_handle.ofh_dirino =3D ino_t_to_u32(parent_ino(dentry));
--		if (inode)
--			_fh_update_old(dentry, exp, &fhp->fh_handle);
--	} else {
--		fhp->fh_handle.fh_size =3D
--			key_len(fhp->fh_handle.fh_fsid_type) + 4;
--		fhp->fh_handle.fh_auth_type =3D 0;
--
--		mk_fsid(fhp->fh_handle.fh_fsid_type,
--			fhp->fh_handle.fh_fsid,
--			ex_dev,
--			d_inode(exp->ex_path.dentry)->i_ino,
--			exp->ex_fsid, exp->ex_uuid);
--
--		if (inode)
--			_fh_update(fhp, exp, dentry);
--		if (fhp->fh_handle.fh_fileid_type =3D=3D FILEID_INVALID) {
--			fh_put(fhp);
--			return nfserr_opnotsupp;
--		}
-+	fhp->fh_handle.fh_size =3D
-+		key_len(fhp->fh_handle.fh_fsid_type) + 4;
-+	fhp->fh_handle.fh_auth_type =3D 0;
-+
-+	mk_fsid(fhp->fh_handle.fh_fsid_type,
-+		fhp->fh_handle.fh_fsid,
-+		ex_dev,
-+		d_inode(exp->ex_path.dentry)->i_ino,
-+		exp->ex_fsid, exp->ex_uuid);
-+
-+	if (inode)
-+		_fh_update(fhp, exp, dentry);
-+	if (fhp->fh_handle.fh_fileid_type =3D=3D FILEID_INVALID) {
-+		fh_put(fhp);
-+		return nfserr_opnotsupp;
- 	}
-=20
- 	return 0;
-@@ -649,23 +598,19 @@ fh_update(struct svc_fh *fhp)
- 	dentry =3D fhp->fh_dentry;
- 	if (d_really_is_negative(dentry))
- 		goto out_negative;
--	if (fhp->fh_handle.fh_version !=3D 1) {
--		_fh_update_old(dentry, fhp->fh_export, &fhp->fh_handle);
--	} else {
--		if (fhp->fh_handle.fh_fileid_type !=3D FILEID_ROOT)
--			return 0;
-+	if (fhp->fh_handle.fh_fileid_type !=3D FILEID_ROOT)
-+		return 0;
-=20
--		_fh_update(fhp, fhp->fh_export, dentry);
--		if (fhp->fh_handle.fh_fileid_type =3D=3D FILEID_INVALID)
--			return nfserr_opnotsupp;
--	}
-+	_fh_update(fhp, fhp->fh_export, dentry);
-+	if (fhp->fh_handle.fh_fileid_type =3D=3D FILEID_INVALID)
-+		return nfserr_opnotsupp;
- 	return 0;
- out_bad:
- 	printk(KERN_ERR "fh_update: fh not verified!\n");
- 	return nfserr_serverfault;
- out_negative:
- 	printk(KERN_ERR "fh_update: %pd2 still negative!\n",
--		dentry);
-+	       dentry);
- 	return nfserr_serverfault;
- }
-=20
-@@ -702,12 +647,12 @@ char * SVCFH_fmt(struct svc_fh *fhp)
- 	static char buf[80];
- 	sprintf(buf, "%d: %08x %08x %08x %08x %08x %08x",
- 		fh->fh_size,
--		fh->fh_base.fh_pad[0],
--		fh->fh_base.fh_pad[1],
--		fh->fh_base.fh_pad[2],
--		fh->fh_base.fh_pad[3],
--		fh->fh_base.fh_pad[4],
--		fh->fh_base.fh_pad[5]);
-+		fh->fh_raw[0],
-+		fh->fh_raw[1],
-+		fh->fh_raw[2],
-+		fh->fh_raw[3],
-+		fh->fh_raw[4],
-+		fh->fh_raw[5]);
- 	return buf;
- }
-=20
+ 	mk_fsid(fhp->fh_handle.fh_fsid_type,
+ 		fhp->fh_handle.fh_fsid,
 diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-index 6106697adc04..f36234c474dc 100644
+index f36234c474dc..bbc7ddd34143 100644
 --- a/fs/nfsd/nfsfh.h
 +++ b/fs/nfsd/nfsfh.h
-@@ -10,9 +10,56 @@
-=20
- #include <linux/crc32.h>
- #include <linux/sunrpc/svc.h>
--#include <uapi/linux/nfsd/nfsfh.h>
- #include <linux/iversion.h>
- #include <linux/exportfs.h>
-+#include <linux/nfs4.h>
-+
-+/*
-+ * The file handle starts with a sequence of four-byte words.
-+ * The first word contains a version number (1) and three descriptor bytes
-+ * that tell how the remaining 3 variable length fields should be handled.
-+ * These three bytes are auth_type, fsid_type and fileid_type.
-+ *
-+ * All four-byte values are in host-byte-order.
-+ *
-+ * The auth_type field is deprecated and must be set to 0.
-+ *
-+ * The fsid_type identifies how the filesystem (or export point) is
-+ *    encoded.
-+ *  Current values:
-+ *     0  - 4 byte device id (ms-2-bytes major, ls-2-bytes minor), 4byte ino=
-de number
-+ *        NOTE: we cannot use the kdev_t device id value, because kdev_t.h
-+ *              says we mustn't.  We must break it up and reassemble.
-+ *     1  - 4 byte user specified identifier
-+ *     2  - 4 byte major, 4 byte minor, 4 byte inode number - DEPRECATED
-+ *     3  - 4 byte device id, encoded for user-space, 4 byte inode number
-+ *     4  - 4 byte inode number and 4 byte uuid
-+ *     5  - 8 byte uuid
-+ *     6  - 16 byte uuid
-+ *     7  - 8 byte inode number and 16 byte uuid
-+ *
-+ * The fileid_type identified how the file within the filesystem is encoded.
-+ *   The values for this field are filesystem specific, exccept that
-+ *   filesystems must not use the values '0' or '0xff'. 'See enum fid_type'
-+ *   in include/linux/exportfs.h for currently registered values.
-+ */
-+
-+struct knfsd_fh {
-+	unsigned int	fh_size;	/*
-+					 * Points to the current size while
-+					 * building a new file handle.
-+					 */
-+	union {
-+		__u32			fh_raw[NFS4_FHSIZE/4];
-+		struct {
-+			__u8		fh_version;	/* =3D=3D 1 */
-+			__u8		fh_auth_type;	/* deprecated */
-+			__u8		fh_fsid_type;
-+			__u8		fh_fileid_type;
-+			__u32		fh_fsid[]; /* flexible-array member */
-+		};
-+	};
-+};
-=20
- static inline __u32 ino_t_to_u32(ino_t ino)
- {
-@@ -188,7 +235,7 @@ static inline void
- fh_copy_shallow(struct knfsd_fh *dst, struct knfsd_fh *src)
- {
- 	dst->fh_size =3D src->fh_size;
--	memcpy(&dst->fh_base, &src->fh_base, src->fh_size);
-+	memcpy(&dst->fh_raw, &src->fh_raw, src->fh_size);
- }
-=20
- static __inline__ struct svc_fh *
-@@ -203,7 +250,7 @@ static inline bool fh_match(struct knfsd_fh *fh1, struct =
-knfsd_fh *fh2)
- {
- 	if (fh1->fh_size !=3D fh2->fh_size)
- 		return false;
--	if (memcmp(fh1->fh_base.fh_pad, fh2->fh_base.fh_pad, fh1->fh_size) !=3D 0)
-+	if (memcmp(fh1->fh_raw, fh2->fh_raw, fh1->fh_size) !=3D 0)
- 		return false;
- 	return true;
- }
-@@ -227,7 +274,7 @@ static inline bool fh_fsid_match(struct knfsd_fh *fh1, st=
-ruct knfsd_fh *fh2)
-  */
- static inline u32 knfsd_fh_hash(const struct knfsd_fh *fh)
- {
--	return ~crc32_le(0xFFFFFFFF, (unsigned char *)&fh->fh_base, fh->fh_size);
-+	return ~crc32_le(0xFFFFFFFF, (unsigned char *)&fh->fh_raw, fh->fh_size);
- }
- #else
- static inline u32 knfsd_fh_hash(const struct knfsd_fh *fh)
-diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
-index a06c05fe3b42..082449c7d0db 100644
---- a/fs/nfsd/nfsxdr.c
-+++ b/fs/nfsd/nfsxdr.c
-@@ -64,7 +64,7 @@ svcxdr_decode_fhandle(struct xdr_stream *xdr, struct svc_fh=
- *fhp)
- 	if (!p)
- 		return false;
- 	fh_init(fhp, NFS_FHSIZE);
--	memcpy(&fhp->fh_handle.fh_base, p, NFS_FHSIZE);
-+	memcpy(&fhp->fh_handle.fh_raw, p, NFS_FHSIZE);
- 	fhp->fh_handle.fh_size =3D NFS_FHSIZE;
-=20
- 	return true;
-@@ -78,7 +78,7 @@ svcxdr_encode_fhandle(struct xdr_stream *xdr, const struct =
-svc_fh *fhp)
- 	p =3D xdr_reserve_space(xdr, NFS_FHSIZE);
- 	if (!p)
- 		return false;
--	memcpy(p, &fhp->fh_handle.fh_base, NFS_FHSIZE);
-+	memcpy(p, &fhp->fh_handle.fh_raw, NFS_FHSIZE);
-=20
- 	return true;
- }
-diff --git a/include/uapi/linux/nfsd/nfsfh.h b/include/uapi/linux/nfsd/nfsfh.h
-deleted file mode 100644
-index 427294dd56a1..000000000000
---- a/include/uapi/linux/nfsd/nfsfh.h
-+++ /dev/null
-@@ -1,116 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--/*
-- * This file describes the layout of the file handles as passed
-- * over the wire.
-- *
-- * Copyright (C) 1995, 1996, 1997 Olaf Kirch <okir@monad.swb.de>
-- */
--
--#ifndef _UAPI_LINUX_NFSD_FH_H
--#define _UAPI_LINUX_NFSD_FH_H
--
--#include <linux/types.h>
--#include <linux/nfs.h>
--#include <linux/nfs2.h>
--#include <linux/nfs3.h>
--#include <linux/nfs4.h>
--
--/*
-- * This is the old "dentry style" Linux NFSv2 file handle.
-- *
-- * The xino and xdev fields are currently used to transport the
-- * ino/dev of the exported inode.
-- */
--struct nfs_fhbase_old {
--	__u32		fb_dcookie;	/* dentry cookie - always 0xfeebbaca */
--	__u32		fb_ino;		/* our inode number */
--	__u32		fb_dirino;	/* dir inode number, 0 for directories */
--	__u32		fb_dev;		/* our device */
--	__u32		fb_xdev;
--	__u32		fb_xino;
--	__u32		fb_generation;
--};
--
--/*
-- * This is the new flexible, extensible style NFSv2/v3/v4 file handle.
-- * by Neil Brown <neilb@cse.unsw.edu.au> - March 2000
-- *
-- * The file handle starts with a sequence of four-byte words.
-- * The first word contains a version number (1) and three descriptor bytes
-- * that tell how the remaining 3 variable length fields should be handled.
+@@ -18,11 +18,17 @@
+  * The file handle starts with a sequence of four-byte words.
+  * The first word contains a version number (1) and three descriptor bytes
+  * that tell how the remaining 3 variable length fields should be handled.
 - * These three bytes are auth_type, fsid_type and fileid_type.
-- *
-- * All four-byte values are in host-byte-order.
-- *
++ * These three bytes are flags, fsid_type and fileid_type.
+  *
+  * All four-byte values are in host-byte-order.
+  *
 - * The auth_type field is deprecated and must be set to 0.
-- *
-- * The fsid_type identifies how the filesystem (or export point) is
-- *    encoded.
-- *  Current values:
-- *     0  - 4 byte device id (ms-2-bytes major, ls-2-bytes minor), 4byte ino=
-de number
-- *        NOTE: we cannot use the kdev_t device id value, because kdev_t.h
-- *              says we mustn't.  We must break it up and reassemble.
-- *     1  - 4 byte user specified identifier
-- *     2  - 4 byte major, 4 byte minor, 4 byte inode number - DEPRECATED
-- *     3  - 4 byte device id, encoded for user-space, 4 byte inode number
-- *     4  - 4 byte inode number and 4 byte uuid
-- *     5  - 8 byte uuid
-- *     6  - 16 byte uuid
-- *     7  - 8 byte inode number and 16 byte uuid
-- *
-- * The fileid_type identified how the file within the filesystem is encoded.
-- *   The values for this field are filesystem specific, exccept that
-- *   filesystems must not use the values '0' or '0xff'. 'See enum fid_type'
-- *   in include/linux/exportfs.h for currently registered values.
-- */
--struct nfs_fhbase_new {
--	union {
--		struct {
--			__u8		fb_version_aux;	/* =3D=3D 1, even =3D> nfs_fhbase_old */
--			__u8		fb_auth_type_aux;
--			__u8		fb_fsid_type_aux;
--			__u8		fb_fileid_type_aux;
--			__u32		fb_auth[1];
--			/*	__u32		fb_fsid[0]; floating */
--			/*	__u32		fb_fileid[0]; floating */
--		};
--		struct {
--			__u8		fb_version;	/* =3D=3D 1, even =3D> nfs_fhbase_old */
--			__u8		fb_auth_type;
--			__u8		fb_fsid_type;
--			__u8		fb_fileid_type;
--			__u32		fb_auth_flex[]; /* flexible-array member */
--		};
--	};
--};
--
--struct knfsd_fh {
--	unsigned int	fh_size;	/* significant for NFSv3.
--					 * Points to the current size while building
--					 * a new file handle
--					 */
--	union {
--		struct nfs_fhbase_old	fh_old;
--		__u32			fh_pad[NFS4_FHSIZE/4];
--		struct nfs_fhbase_new	fh_new;
--	} fh_base;
--};
--
--#define ofh_dcookie		fh_base.fh_old.fb_dcookie
--#define ofh_ino			fh_base.fh_old.fb_ino
--#define ofh_dirino		fh_base.fh_old.fb_dirino
--#define ofh_dev			fh_base.fh_old.fb_dev
--#define ofh_xdev		fh_base.fh_old.fb_xdev
--#define ofh_xino		fh_base.fh_old.fb_xino
--#define ofh_generation		fh_base.fh_old.fb_generation
--
--#define	fh_version		fh_base.fh_new.fb_version
--#define	fh_fsid_type		fh_base.fh_new.fb_fsid_type
--#define	fh_auth_type		fh_base.fh_new.fb_auth_type
--#define	fh_fileid_type		fh_base.fh_new.fb_fileid_type
--#define	fh_fsid			fh_base.fh_new.fb_auth_flex
--
--/* Do not use, provided for userspace compatiblity. */
--#define	fh_auth			fh_base.fh_new.fb_auth
--
--#endif /* _UAPI_LINUX_NFSD_FH_H */
++ * The flags field (previously auth_type) can be used when nfsd behaviour
++ * needs to change in a non-compatible way, usually for some specific
++ * filesystem.  Flags should only be set in filehandles for filesystems which
++ * need them.
++ * Current values:
++ *   1  -  BTRFS only.  Cause stat->ino_uniquifier to be used to improve ino=
+de
++ *         number uniqueness.
+  *
+  * The fsid_type identifies how the filesystem (or export point) is
+  *    encoded.
+@@ -53,7 +59,7 @@ struct knfsd_fh {
+ 		__u32			fh_raw[NFS4_FHSIZE/4];
+ 		struct {
+ 			__u8		fh_version;	/* =3D=3D 1 */
+-			__u8		fh_auth_type;	/* deprecated */
++			__u8		fh_flags;
+ 			__u8		fh_fsid_type;
+ 			__u8		fh_fileid_type;
+ 			__u32		fh_fsid[]; /* flexible-array member */
+@@ -131,6 +137,28 @@ enum fsid_source {
+ };
+ extern enum fsid_source fsid_source(const struct svc_fh *fhp);
+=20
++enum nfsd_fh_flags {
++	NFSD_FH_FLAG_INO_UNIQUIFY =3D 1,	/* BTRFS only */
++
++	NFSD_FH_FLAG_ALL =3D 1
++};
++
++static inline u64 nfsd_ino_uniquifier(const struct svc_fh *fhp,
++				      const struct kstat *stat)
++{
++	if (fhp->fh_handle.fh_flags & NFSD_FH_FLAG_INO_UNIQUIFY)
++		return stat->ino_uniquifier;
++	return 0;
++}
++
++static inline u64 nfsd_uniquify_ino(const struct svc_fh *fhp,
++				    const struct kstat *stat)
++{
++	u64 u =3D nfsd_ino_uniquifier(fhp, stat);
++	if (u !=3D stat->ino)
++		return stat->ino ^ u;
++	return stat->ino;
++}
+=20
+ /*
+  * This might look a little large to "inline" but in all calls except
+diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
+index 933008382bbe..d9b6c8314bbb 100644
+--- a/fs/nfsd/xdr3.h
++++ b/fs/nfsd/xdr3.h
+@@ -179,6 +179,8 @@ struct nfsd3_readdirres {
+ 	struct xdr_buf		dirlist;
+ 	struct svc_fh		scratch;
+ 	struct readdir_cd	common;
++	u64			dir_ino_uniquifier;
++	bool			dir_have_uniquifier;
+ 	unsigned int		cookie_offset;
+ 	struct svc_rqst *	rqstp;
+=20
+diff --git a/include/linux/stat.h b/include/linux/stat.h
+index fff27e603814..0f3f74d302f8 100644
+--- a/include/linux/stat.h
++++ b/include/linux/stat.h
+@@ -46,6 +46,24 @@ struct kstat {
+ 	struct timespec64 btime;			/* File creation time */
+ 	u64		blocks;
+ 	u64		mnt_id;
++	/*
++	 * BTRFS does not provide unique inode numbers within a filesystem,
++	 * depending on a synthetic 'dev' to provide uniqueness.
++	 * NFSd cannot make use of this 'dev' number so clients often see
++	 * duplicate inode numbers.
++	 * For BTRFS, 'ino' is unlikely to use the high bits until the filesystem
++	 * has created a great many inodes.
++	 * It puts another number in ino_uniquifier which:
++	 * - has most entropy in the high bits
++	 * - is different precisely when 'dev' is different
++	 * - is stable across unmount/remount
++	 * NFSd can xor this with 'ino' to get a substantially more unique
++	 * number for reporting to the client.
++	 * The ino_uniquifier for a directory can reasonably be applied
++	 * to inode numbers reported by the readdir filldir callback.
++	 * It is NOT currently exported to user-space.
++	 */
++	u64		ino_uniquifier;
+ };
+=20
+ #endif
 --=20
 2.32.0
+
 
 
