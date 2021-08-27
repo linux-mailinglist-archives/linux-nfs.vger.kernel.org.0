@@ -2,101 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29FDD3FA1B4
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Aug 2021 01:10:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09B4D3FA1C7
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Aug 2021 01:24:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232386AbhH0XLM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 Aug 2021 19:11:12 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:33124 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232252AbhH0XLL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Aug 2021 19:11:11 -0400
+        id S232437AbhH0XZH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 Aug 2021 19:25:07 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:45956 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232405AbhH0XZH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Aug 2021 19:25:07 -0400
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id E422B1FF4C;
-        Fri, 27 Aug 2021 23:10:20 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 1274A223BB;
+        Fri, 27 Aug 2021 23:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1630105820; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1630106657; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=WYbq1NneIVkLuIYGBZZdCrJ1kTQXpgMd3oOVJl3BDig=;
-        b=MmbN7fxYOCZu26ad7DTGliARr83akIVsKI0v7+5Ri5atGldJWx7NLhRENUYlIWBQvbCK+6
-        FQv3AvFf3fR+NWypVMWOit5l/XOQWEtcmIYlMrTJ96gAIV14TIv2Al3uiGk4XXtP0r3bqp
-        JoHeSIbnPeKLwNvcIFKTB6eebJ1X8wc=
+        bh=rRX5IHP4fRhATZ4OEIy3EzUas7+DeUsabR2SGE0WfXI=;
+        b=Hi0/JwWQ4vZsSCIfS2Xfd//3LvsuopagUaBqE6bz1FeD06qQs2rSGEIwMoMbxF5i9s6H6t
+        Utmw9sPYvED+Lj5NwAo90aCqiFbgoq0O4NbjhhE/8RHlVYmAVUHiuFUq63ZcQdHz2qEaDd
+        p9QhT+tc39S2Azq0z0L/7RAKIptathI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1630105820;
+        s=susede2_ed25519; t=1630106657;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=WYbq1NneIVkLuIYGBZZdCrJ1kTQXpgMd3oOVJl3BDig=;
-        b=ZxdYj19DO/3coBHKotZV75i5Tm9O7H6FQCwZ78geKqVS28ZeHmaxElrAGSifSdXA1Kk6OY
-        ptTW5wH+heLuocDQ==
+        bh=rRX5IHP4fRhATZ4OEIy3EzUas7+DeUsabR2SGE0WfXI=;
+        b=CoTDqxqkBvGF9vbaukiisnhQHO1cAEYISdguQOO/pD0z1bBdQ+5ooo2n73uh56mRKTdydZ
+        Cr6USjf9KJSB7/AQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3F16E13D7D;
-        Fri, 27 Aug 2021 23:10:17 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B05B113D7D;
+        Fri, 27 Aug 2021 23:24:15 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 6rQRO9lwKWFpJgAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 27 Aug 2021 23:10:17 +0000
+        id lfWHGR90KWHlKAAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 27 Aug 2021 23:24:15 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
 To:     "Christoph Hellwig" <hch@lst.de>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        "Christoph Hellwig" <hch@lst.de>,
-        "David Howells" <dhowells@redhat.com>,
-        torvalds@linux-foundation.org, trond.myklebust@primarydata.com,
-        linux-nfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Don't block writes to swap-files with ETXTBSY.
-In-reply-to: <20210827151644.GB19199@lst.de>
-References: <162993585927.7591.10174443410031404560@noble.neil.brown.name>,
- <20210827151644.GB19199@lst.de>
-Date:   Sat, 28 Aug 2021 09:10:15 +1000
-Message-id: <163010581548.7591.7557563272768619093@noble.neil.brown.name>
+Cc:     "J.  Bruce Fields" <bfields@fieldses.org>,
+        "Chuck Lever" <chuck.lever@oracle.com>,
+        "Christoph Hellwig" <hch@lst.de>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] NFSD: drop support for ancient file-handles
+In-reply-to: <20210827151505.GA19199@lst.de>
+References: <162995209561.7591.4202079352301963089@noble.neil.brown.name>,
+ <20210827151505.GA19199@lst.de>
+Date:   Sat, 28 Aug 2021 09:24:12 +1000
+Message-id: <163010665269.7591.11571286577204380127@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 On Sat, 28 Aug 2021, Christoph Hellwig wrote:
-> On Thu, Aug 26, 2021 at 09:57:39AM +1000, NeilBrown wrote:
-> > 
-> > Commit dc617f29dbe5 ("vfs: don't allow writes to swap files")
-> > broke swap-over-NFS as it introduced an ETXTBSY error when NFS tries to
-> > swap-out using ->direct_IO().
-> > 
-> > There is no sound justification for this error.  File permissions are
-> > sufficient to stop non-root users from writing to a swap file, and root
-> > must always be cautious not to do anything dangerous.
-> > 
-> > These checks effectively provide a mandatory write lock on swap, and
-> > mandatory locks are not supported in Linux.
-> > 
-> > So remove all the checks that return ETXTBSY when attempts are made to
-> > write to swap.
+> On Thu, Aug 26, 2021 at 02:28:15PM +1000, NeilBrown wrote:
+> > This patch also moves the nfsfh.h from the include/uapi directory into
+> > fs/nfsd.  I can find no evidence of it being used anywhere outside the
+> > kernel.  Certainly nfs-utils and wireshark do not use it.
 > 
-> Swap files are not just any files and do need a mandatory write lock
-> as they are part of the kernel VM and writing to them will mess up
-> the kernel badly.  David Howells actually has sent various patches
-> to fix swap over NFS in the last weeks.
-> 
-> 
-There are lots of different things root can do which will mess up the
-kernel badly.  The backing-store can still be changed through some other
-means.
-Do you have a particular threat or risk scenario other than "root might
-get careless"?
+> That sounds fine, but I'd split this into a separate patch.
 
-Yes, I've seen David's patches.  I posted this one because I think the
-original patch which broke swap-over-NFS was not just unfortunate, but
-wrong.  Permissions are how we protect files, not ETXTBSY.
+Thanks for your review.  Your suggestions seem appropriate.
+I'll send out revised patches in a couple of days.
 
 NeilBrown
+
+
+> 
+> > fh_base and fh_pad are occasionally used to refer to the whole
+> > filehandle.  These are replaced with "fh_raw" which is hopefully more
+> > meaningful.
+> 
+> I think that kind of cleanup should also be a separate patch.  That
+> being said as far as I can tell fh_raw is only ever used in context
+> where we can just pass a void pointer.  So just giving the struct
+> for the "new" file handle after fh_size a name and passing that
+> would be much cleaner than a union with a char array.
+> 
+> 
+> > I found
+> >  https://www.spinics.net/lists/linux-nfs/msg43280.html
+> >  "Re: [PATCH] nfsd: clean up fh_auth usage"
+> > from 2014 where moving nfsfh.h out of uapi was considered but not
+> > actioned. Christoph said he would "do some research if the
+> > uapi <linux/nfsd/*.h> headers are used anywhere at all".  I can find no
+> > report on the result of that research.  My own research turned up
+> > nothing.
+> 
+> I can't remember doing much of research, and certainly not of finding
+> anything.
+> 
+> > -	memcpy((char*)&fh.fh_handle.fh_base, f->data, f->size);
+> > +	memcpy((char*)&fh.fh_handle.fh_raw, f->data, f->size);
+> 
+> Indedpendnt on what we're going to pass here, I don't think we
+> should need cast like this one (there are a few more).
+> 
+> 
