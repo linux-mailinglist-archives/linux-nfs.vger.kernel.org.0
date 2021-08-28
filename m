@@ -2,105 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C75D13FA562
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Aug 2021 13:26:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 834E93FA604
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Aug 2021 15:24:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233886AbhH1L1Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 28 Aug 2021 07:27:24 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:14432 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233861AbhH1L1Y (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 28 Aug 2021 07:27:24 -0400
-Received: from dggeme766-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GxZ1p73FnzbdN7;
-        Sat, 28 Aug 2021 19:22:38 +0800 (CST)
-Received: from [10.174.176.245] (10.174.176.245) by
- dggeme766-chm.china.huawei.com (10.3.19.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.8; Sat, 28 Aug 2021 19:26:30 +0800
-Subject: Re: Re: [PATCH v3 0/3] auth_gss: netns refcount leaks when
- use-gss-proxy==1
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Wenbin Zeng <wenbin.zeng@gmail.com>
-CC:     <davem@davemloft.net>, <viro@zeniv.linux.org.uk>,
-        <jlayton@kernel.org>, <trond.myklebust@hammerspace.com>,
-        <anna.schumaker@netapp.com>, <wenbinzeng@tencent.com>,
-        <dsahern@gmail.com>, <nicolas.dichtel@6wind.com>,
-        <willy@infradead.org>, <edumazet@google.com>,
-        <jakub.kicinski@netronome.com>, <tyhicks@canonical.com>,
-        <chuck.lever@oracle.com>, <neilb@suse.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-nfs@vger.kernel.org>
-References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
- <1560341370-24197-1-git-send-email-wenbinzeng@tencent.com>
- <20190801195346.GA21527@fieldses.org>
-From:   "wanghai (M)" <wanghai38@huawei.com>
-Message-ID: <9cfbd851-81ce-e272-8693-d3430c381c7a@huawei.com>
-Date:   Sat, 28 Aug 2021 19:26:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S234323AbhH1NVa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 28 Aug 2021 09:21:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234287AbhH1NV3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 28 Aug 2021 09:21:29 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC2DC0613D9
+        for <linux-nfs@vger.kernel.org>; Sat, 28 Aug 2021 06:20:39 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id u9so14849358wrg.8
+        for <linux-nfs@vger.kernel.org>; Sat, 28 Aug 2021 06:20:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=UWVukDYpnouo2TmAsoiK3YFI/UCntBVDF8OdhEqH+sQ=;
+        b=RxuySrD0skRIYi1HWDh4oBzUrLDZeJjBDQU5pgL35GfFaawR83RQHJHf51Rs1KsXd5
+         pbq9Q5T9BFyp+RsOfTuPLOiS6iS4aAZ2a+1EZWuxPaIE2T7e0GsVsAjJR1ZepAhZCfEz
+         FKFi+XjiG+xzPNvPx8XDkV5WPUltNr0irhnlyoYFHSU9G2dnDSf7YbgX3n9gU8RjsbCp
+         QpNCPG+nZ9UGIStDF8W5EOGwp8MMp0Km5zVe6tvTf6qo0ceW74gHp5tWYJ7R31UfrAWk
+         bisp2/pntdAkjxZbO6AVqLvfxdL9FvO5M5DRzDTPErMDrS2HxpEAThdPP3tdiYNTPM5T
+         /Jqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=UWVukDYpnouo2TmAsoiK3YFI/UCntBVDF8OdhEqH+sQ=;
+        b=ak4eGbULhcUxtRSx3AV8ek3BzaIs/vMt/4dBM2qaw/DfHq3mcYKiqPzvSzEBT8okMa
+         4JcMFxlUFKu1i4OxzCQNxUMcF0krcpce62otQ0yDMss+oV15YJyO4OLpJnwWA5Wpn0ty
+         PWBz0MNrJAJxR/SXXhpI+aQRBvzAfvsnSi80EZTewKH8KmvpOyTcsUSvj+G41p/zOMph
+         xMpnS9CAK5C+C3aXZHpOgKtnr/fpoFH2aizk0tnMPDLpXAUBNM3Zd1o/MJoUfe8ssmE0
+         DWVqa1k8P0YRMk7d69sRJxR50hEoBpnnD9efGXpRo+mtGvwqzMLU6bMyt4CJTWQnM647
+         D/gA==
+X-Gm-Message-State: AOAM533ESHIfnNMrwrQQNB3fKQ62wg1kBIiQZ+ILxThsB5AUTe8nQDlW
+        CnHRzuMbe8aGoV820eCFfVl53Zhw7D/5gLVjndg=
+X-Google-Smtp-Source: ABdhPJwUFv/Fvg+Xxkdb6VjuTK4FQUYsVKz5h/sOPvT1ZpQBOSxvLcigCvT3+zlxokb8mT6+RgWODLxACz6AAm+wPv8=
+X-Received: by 2002:a5d:51ca:: with SMTP id n10mr15858058wrv.119.1630156837844;
+ Sat, 28 Aug 2021 06:20:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190801195346.GA21527@fieldses.org>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.245]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggeme766-chm.china.huawei.com (10.3.19.112)
-X-CFilter-Loop: Reflected
+Reply-To: aliuhuadams@gmail.com
+Sender: averaedwardemail@gmail.com
+Received: by 2002:a5d:4706:0:0:0:0:0 with HTTP; Sat, 28 Aug 2021 06:20:37
+ -0700 (PDT)
+From:   Aliuhu Adams <aliuhuadamss@gmail.com>
+Date:   Sat, 28 Aug 2021 13:20:37 +0000
+X-Google-Sender-Auth: ec4xR_sv6bZ97hgpwgONO8ccoSA
+Message-ID: <CAKhEKCf_Mo+-EzDvfZ2Qcr=ay8xY5YhXOk4id8afYQDgS0wGTQ@mail.gmail.com>
+Subject: From Aliuhu Adams
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+-- 
+From Aliuhu Adams,
 
-ÔÚ 2019/8/2 3:53, J. Bruce Fields Ð´µÀ:
-> I lost track, what happened to these patches?
->
-> --b.
->
-> On Wed, Jun 12, 2019 at 08:09:27PM +0800, Wenbin Zeng wrote:
->> This patch series fixes an auth_gss bug that results in netns refcount
->> leaks when use-gss-proxy is set to 1.
->>
->> The problem was found in privileged docker containers with gssproxy service
->> enabled and /proc/net/rpc/use-gss-proxy set to 1, the corresponding
->> struct net->count ends up at 2 after container gets killed, the consequence
->> is that the struct net cannot be freed.
->>
->> It turns out that write_gssp() called gssp_rpc_create() to create a rpc
->> client, this increases net->count by 2; rpcsec_gss_exit_net() is supposed
->> to decrease net->count but it never gets called because its call-path is:
->>          net->count==0 -> cleanup_net -> ops_exit_list -> rpcsec_gss_exit_net
->> Before rpcsec_gss_exit_net() gets called, net->count cannot reach 0, this
->> is a deadlock situation.
->>
->> To fix the problem, we must break the deadlock, rpcsec_gss_exit_net()
->> should move out of the put() path and find another chance to get called,
->> I think nsfs_evict() is a good place to go, when netns inode gets evicted
->> we call rpcsec_gss_exit_net() to free the rpc client, this requires a new
->> callback i.e. evict to be added in struct proc_ns_operations, and add
->> netns_evict() as one of netns_operations as well.
->>
->> v1->v2:
->>   * in nsfs_evict(), move ->evict() in front of ->put()
->> v2->v3:
->>   * rpcsec_gss_evict_net() directly call gss_svc_shutdown_net() regardless
->>     if gssp_clnt is null, this is exactly same to what rpcsec_gss_exit_net()
->>     previously did
->>
->> Wenbin Zeng (3):
->>    nsfs: add evict callback into struct proc_ns_operations
->>    netns: add netns_evict into netns_operations
->>    auth_gss: fix deadlock that blocks rpcsec_gss_exit_net when
->>      use-gss-proxy==1
->>
->>   fs/nsfs.c                      |  2 ++
->>   include/linux/proc_ns.h        |  1 +
->>   include/net/net_namespace.h    |  1 +
->>   net/core/net_namespace.c       | 12 ++++++++++++
->>   net/sunrpc/auth_gss/auth_gss.c |  4 ++--
->>   5 files changed, 18 insertions(+), 2 deletions(-)
->>
->> -- 
->> 1.8.3.1
-These patchsets don't seem to merge into the mainline, are there any 
-other patches that fix this bug?
+My name is Aliuhu Adams, from Burkina Faso
+
+Please, I am contacting you for urgent assistance to help me move my
+inheritance to your country and help me to invest in your country.
+
+The amount is 14 million dollars and I want this money to be moved to your
+country urgently with me because of the fear of the killer of my parents.
+
+I shall give you more details when I hear from you.
+
+Thank you,
+
+Aliuhu Adams
