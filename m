@@ -2,106 +2,286 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A2853FA31F
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Aug 2021 04:23:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 031883FA357
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Aug 2021 05:23:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232997AbhH1CWu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 Aug 2021 22:22:50 -0400
-Received: from mta-102a.oxsus-vadesecure.net ([51.81.61.66]:34781 "EHLO
-        mta-102a.oxsus-vadesecure.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232555AbhH1CWu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Aug 2021 22:22:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; bh=bWrqTCbgUjFFLdDsfkRwCDh174NAcnsQ87QSWT
- YIdsc=; c=relaxed/relaxed; d=earthlink.net; h=from:reply-to:subject:
- date:to:cc:resent-date:resent-from:resent-to:resent-cc:in-reply-to:
- references:list-id:list-help:list-unsubscribe:list-subscribe:list-post:
- list-owner:list-archive; q=dns/txt; s=dk12062016; t=1630117320;
- x=1630722120; b=QmrTqC+vi5yPswtAs2qib6Z768gWRyf0d6dEj/9Jyg3n/Mv4AbYHMqf
- tC5L9XGL9vP1l1N+o6PV6vT9S1RCYSEBjOxCDBDj9PB73XPsDY+i9q8meJEO2EEDeA3C2I9
- Ssnl7HbdOem1/DBawuCkHji3gifPU9+Gep1JTZueWCsNSDkqeo/3lM73MMhDtpWHcs/VMAN
- B19OXiHq+25OprPP3bQ/9MkwNbLhygZmy8eZZWC/4Eh5CjOiOrVpK5KZ1qsra0m8KUNEGfL
- z6EV0oLj6cY/ZY+VEHItzk6LxTTEHKbUCwTpvDP7t2obwAUOhMmBdnDcig3r3Bz+c5ofTo7
- T1Q==
-Received: from FRANKSTHINKPAD ([76.105.143.216])
- by smtp.oxsus-vadesecure.net ESMTP oxsus1nmtao02p with ngmta
- id b7b0e6dd-169f5710af155910; Sat, 28 Aug 2021 02:21:59 +0000
-From:   "Frank Filz" <ffilzlnx@mindspring.com>
-To:     "'NeilBrown'" <neilb@suse.de>
-Cc:     "'J. Bruce Fields'" <bfields@fieldses.org>,
-        "'Chuck Lever'" <chuck.lever@oracle.com>,
-        <linux-nfs@vger.kernel.org>, "'Josef Bacik'" <josef@toxicpanda.com>
-References: <162995209561.7591.4202079352301963089@noble.neil.brown.name>, <162995778427.7591.11743795294299207756@noble.neil.brown.name>, <20210826201916.GB10730@fieldses.org>, <163001583884.7591.13328510041463261313@noble.neil.brown.name>, <002901d79b53$41ddba40$c5992ec0$@mindspring.com>, <163010502766.7591.10398654528737145909@noble.neil.brown.name>, <005801d79b9d$b8437b80$28ca7280$@mindspring.com> <163010850148.7591.14454473128413118273@noble.neil.brown.name>
-In-Reply-To: <163010850148.7591.14454473128413118273@noble.neil.brown.name>
-Subject: RE: [PATCH v2] BTRFS/NFSD: provide more unique inode number for btrfs export
-Date:   Fri, 27 Aug 2021 19:21:59 -0700
-Message-ID: <005d01d79bb3$7b914c10$72b3e430$@mindspring.com>
+        id S233168AbhH1DXl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 Aug 2021 23:23:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233101AbhH1DXl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Aug 2021 23:23:41 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C4BC0613D9
+        for <linux-nfs@vger.kernel.org>; Fri, 27 Aug 2021 20:22:51 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id k24so7634121pgh.8
+        for <linux-nfs@vger.kernel.org>; Fri, 27 Aug 2021 20:22:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F0OXvn5V6GaSHXYZzdaWLuFOEEOZx1kZ19Du/mw2jjc=;
+        b=L9q3UU5Q/j7ym+cnFSBu58BAuQZwy6lOsBm8qNDVGWKsJZki1rUeZEaX9dBK1p4OIO
+         ZLFxOJghvSsQllWT7hqhTF/cnViTXYecSEXm2g4O/amfRnNvwhPgtL3Pjup0nTP2HsK1
+         oH+FURY+NGMWEXoZxjaZJc2iUQL8Zdh7FcGvD4nKB6GuoTVtgHv4XKYJgjVq61FFOQrN
+         8d9sPjlgV19inYCTEE1sA9CW8sWlYN38gRTAK3zWA6MXqBgmQqOJm1QPH57i4HMPphEW
+         MiDDJJYHOIbngM3hWGSUt3B/ph91Eh7JShSUA7r/6OFzXBTTM9giglbsAZ7P9r4kDB3e
+         zxbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F0OXvn5V6GaSHXYZzdaWLuFOEEOZx1kZ19Du/mw2jjc=;
+        b=oCuuXIgDpN1LpM9B8JmcLZ0M05QzRXZ4pxSFL7EM50uTFsLK0yBPJHjCQ2F7tf3HHA
+         ecE8xdNhyWwHuFCRForPWoM6R5b8FNIdmg6ojFEb9RKok6n/fFiRlfQFXXxdcHNmK7SD
+         Tw//jOGZgLUEy7fhCIfuvUQjsLcdv2I9ksJkLq/9xceKfAJllUMFi/IaB9TsvyYCmYVA
+         r02YEVv6SqDXGaDQ3eJTN0HAKCZfG/vsU3ssyGa3sn4J1IsQY6tY/pWnybF1hRDE2BM1
+         dtrkDqzLBdduvjWW09aiSeVUpC52EqmjQtystxDxn8kbu59ds8vhxYNk43fEKRUz4Xs4
+         mhxg==
+X-Gm-Message-State: AOAM530/vwniB495TQvSfSOI0A8jYLSAEvYDHNVImnFuzoX/nPJByheP
+        HVKaZ8hBD28u2LwHcJtcAOHU1xjmI4G8O2kC0Ys=
+X-Google-Smtp-Source: ABdhPJy0mu+fj0dggYyDcUJGu7Urv3G+fx4GeJJbik/Kox/3WB7i674Tg5BzSBTecrIPCp38HGxVMVQAR2ZixA0QEI0=
+X-Received: by 2002:a65:4486:: with SMTP id l6mr10497667pgq.145.1630120971075;
+ Fri, 27 Aug 2021 20:22:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 15.0
-Content-Language: en-us
-Thread-Index: AQIrHUOuRItKwhPpv5iuHWFXVceYzwFdY2wGAcm0L1ICXkcdJQIF8dZtApre6XMCCRVTjQEBoISGqnej5NA=
+References: <CAOv1SKCmdtchm5Z2NU80o49tkrHpAkPFaHKj4-vLDN5bZNCz-Q@mail.gmail.com>
+ <162846730406.22632.14734595494457390936@noble.neil.brown.name>
+ <CAOv1SKBZ7sGBnvG9-M+De+s=CfU=H_GBs4hJah1E4ks+NSMyPw@mail.gmail.com>
+ <CAOv1SKCUM5cGuXWAc7dsXtbmPMATqd245juC+S9gVXHWiZsvmQ@mail.gmail.com>
+ <162855893202.12431.3423894387218130632@noble.neil.brown.name>
+ <CAOv1SKAaSbfw53LWCCrvGCHESgdtCf5h275Zkzi9_uHkqnCrdg@mail.gmail.com>
+ <162882238416.1695.4958036322575947783@noble.neil.brown.name>
+ <CAOv1SKB_dsam7P9pzzh_SKCtA8uE9cyFdJ=qquEfhLT42-szPA@mail.gmail.com>
+ <CAOv1SKDDOj5UeUwztrMSNJnLgSoEgD8OU55hqtLHffHvaCQzzA@mail.gmail.com>
+ <162907681945.1695.10796003189432247877@noble.neil.brown.name>
+ <87777C39-BDDA-4E1E-83FA-5B46918A66D3@oracle.com> <CAOv1SKA5ByO7PYQwvd6iBcPieWxEp=BfUZuigJ=7Hm4HAmTuMA@mail.gmail.com>
+ <162915491276.9892.7049267765583701172@noble.neil.brown.name>
+ <162941948235.9892.6790956894845282568@noble.neil.brown.name>
+ <CAOv1SKAyr0Cixc8eQf8-Fdnf=9Db_xZGsweq9K2E5AkALFqavQ@mail.gmail.com>
+ <CAOv1SKDDUFpgexZ_xYCe6c2-UCBK0+vicoG+LAtG2Zhispd_jg@mail.gmail.com>
+ <162960371884.9892.13803244995043191094@noble.neil.brown.name>
+ <CAOv1SKBePD6N-R0uETgcSPA-LZZ4895ZJDKTY7mYvhfu184OQQ@mail.gmail.com>
+ <162966962721.9892.5962616727949224286@noble.neil.brown.name>
+ <CAOv1SKB6xqyduf5L5hcXOe-xMN-UJOfFeE5eXVga3TviKuH0PA@mail.gmail.com>
+ <163001427749.7591.7281634750945934559@noble.neil.brown.name>
+ <CAOv1SKC+3LXhM+L9MwU2D03bpeof55-g+i=r3SWEjVWcPVCi8Q@mail.gmail.com>
+ <163004202961.7591.12633163545286005205@noble.neil.brown.name>
+ <CAOv1SKDTcg5WDp5zf3ZGL0enJ7K693W-9TMYKcrgweyzp6Qjhg@mail.gmail.com>
+ <163004848514.7591.2757618782251492498@noble.neil.brown.name>
+ <6CC9C852-CEE3-4657-86AD-9D5759E2BE1C@oracle.com> <CAOv1SKAiPB62sQcnDCKC5vYbbmakfbe80KRu3JEVZVO7Trk8cw@mail.gmail.com>
+ <CAOv1SKATk1iP=J9r2x0CQzNuwq2VoRvN8Mkba3DsKq6W_tfrDQ@mail.gmail.com> <416268C9-BEAC-483C-9392-8139340BC849@oracle.com>
+In-Reply-To: <416268C9-BEAC-483C-9392-8139340BC849@oracle.com>
+From:   Mike Javorski <mike.javorski@gmail.com>
+Date:   Fri, 27 Aug 2021 20:22:40 -0700
+Message-ID: <CAOv1SKCjvgSfUoFtufZ5-dB-quG=djnn-UHO286S410aVxrV0Q@mail.gmail.com>
+Subject: Re: NFS server regression in kernel 5.13 (tested w/ 5.13.9)
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Neil Brown <neilb@suse.de>, Mel Gorman <mgorman@suse.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> On Sat, 28 Aug 2021, Frank Filz wrote:
->=20
-> > > On Sat, 28 Aug 2021, Frank Filz wrote:
-> > > >
-> > > > Changing the fsid for sub-volumes is Ganesha's solution (before
-> > > > adding that, we couldn't even export the sub-volumes at all).
-> > >
-> > > What does Ganesha use for the mounted-on-fileid? There doesn't =
-seem
-> > > to be an "obvious" answer so I wonder what was chosen.
+I had some time this evening (and the kernel finally compiled), and
+wanted to get this tested.
+
+The TL;DR:  Both patches are needed
+
+Below are the test results from my replication of Neil's test. It is
+readily apparent that both the 5.13.13 kernel AND the 5.13.13 kernel
+with the 82011c80b3ec fix exhibit the randomness in read times that
+were observed. The 5.13.13 kernel with both the 82011c80b3ec and
+f6e70aab9dfe fixes brings the performance back in line with the
+5.12.15 kernel which I tested as a baseline.
+
+Please forgive the inconsistency in sample counts. This was running as
+a while loop, and I just let it go long enough that the behavior was
+consistent. Only change to the VM between tests was the different
+kernel + a reboot. The testing PC had a consistent workload during the
+entire set of tests.
+
+Test 0: 5.13.10 (base kernel in VM image, just for kicks)
+==================================================
+ Samples 30
+ Min 6.839
+ Max 19.998
+ Median 9.638
+ 75-P 10.898
+ 95-P 12.939
+ 99-P 18.005
+
+Test 1: 5.12.15 (known good)
+==================================================
+ Samples 152
+ Min 1.997
+ Max 2.333
+ Median 2.171
+ 75-P 2.230
+ 95-P 2.286
+ 99-P 2.312
+
+Test 2: 5.13.13 (known bad)
+==================================================
+ Samples 42
+ Min 3.587
+ Max 15.803
+ Median 6.039
+ 75-P 6.452
+ 95-P 10.293
+ 99-P 15.540
+
+Test 3: 5.13.13 + 82011c80b3ec fix
+==================================================
+ Samples 44
+ Min 4.309
+ Max 37.040
+ Median 6.615
+ 75-P 10.224
+ 95-P 19.516
+ 99-P 36.650
+
+Test 4: 5.13.13 + 82011c80b3ec fix + f6e70aab9dfe fix
+==================================================
+ Samples 131
+ Min 2.013
+ Max 2.397
+ Median 2.169
+ 75-P 2.211
+ 95-P 2.283
+ 99-P 2.348
+
+I am going to run the kernel w/ both fixes over the weekend, but
+things look good at this point.
+
+- mike
+
+On Fri, Aug 27, 2021 at 4:49 PM Chuck Lever III <chuck.lever@oracle.com> wrote:
+>
+>
+> > On Aug 27, 2021, at 6:00 PM, Mike Javorski <mike.javorski@gmail.com> wrote:
 > >
-> > We only make mounted_on_fileid different from fileid on our export
-> > boundaries, and even then, it's not a terribly correct thing for
-> > FSAL_VFS (our module for interfacing with kernel filesystems) since
-> > user space to my knowledge has no way to get any information on an
-> > inode that serves as a mount point.
->=20
-> It is possible to see the mounted-on inode number by doing a readdir() =
-of the
-> parent directory and looking at d_ino.  It is a bit round-about.
-
-Ahh, I'll have to keep that in mind, I'm not totally sure, but I think =
-AIX mostly used/got the mounted_on_fileid during a READDIR which if that =
-translates into a readdir to the underlying filesystem (via getdents in =
-our case) then we have the d_ino to fill in mounted_on_fileid. I think =
-it's less likely a situation with a LOOKUP. I think AIX used it when it =
-got NFS4ERR_WRONGSEC when doing a READDIR, it would then go back and do =
-a READDIR just asking for mounted_on_fileid (which as a property of the =
-owning directory, we decided was OK to give for an inode that was in a =
-new export with different security flavor requirements). I think AIX =
-used the mounted_on_fileid to instantiate some kind of junction inode in =
-the directory.
-
+> > OK, an update. Several hours of spaced out testing sessions and the
+> > first patch seems to have resolved the issue. There may be a very tiny
+> > bit of lag that still occurs when opening/processing new files, but so
+> > far on this kernel I have not had any multi-second freezes. I am still
+> > waiting on the kernel with Neil's patch to compile (compiling on this
+> > underpowered server so it's taking several hours), but I think the
+> > testing there will just be to see if I can show it works still, and
+> > then to try and test in a memory constrained VM. To see if I can
+> > recreate Neil's experiment. Likely will have to do this over the
+> > weekend given the kernel compile delay + fiddling with a VM.
+>
+> Thanks for your testing!
+>
+>
+> > Chuck: I don't mean to overstep bounds, but is it possible to get that
+> > patch pulled into 5.13 stable? That may help things for several people
+> > while 5.14 goes through it's shakedown in archlinux prior to release.
+>
+> The patch had a Fixes: tag, so it should get automatically backported
+> to every kernel that has the broken commit. If you don't see it in
+> a subsequent 5.13 stable kernel, you are free to ask the stable
+> maintainers to consider it.
+>
+>
+> > - mike
 > >
-> > What clients actually do anything with mounted_on_fileid, and what
-> > sorts of things do they do with it? I know the AIX client was
-> > interested in it (from having worked on security negotiation back in
-> > 2006), but I have never been able to test Ganesha with an AIX =
-client.
-> > For normal Linux client operations, what Ganesha does seems to work
-> > OK.
->=20
-> On the Linux client, if you stat() a directory that is a mountpoint on =
-the server,
-> you will see a directory with the inode number being the =
-mounted-on-fileid.
-> That directory is an automount-point, and when you access anything in =
-it, the
-> 'real' directory gets mounted and the mounted-on-fileid disappears.
-> So if you reported a mounted-on-fileid the same as the fileid, which =
-would be
-> 256 on btrfs, du and find can get confused.  To be safe, the =
-mounted-of-fileid
-> needs to be different to all ancestors.
->=20
-> NeilBrown
-
-Frank
-
+> > On Fri, Aug 27, 2021 at 10:07 AM Mike Javorski <mike.javorski@gmail.com> wrote:
+> >>
+> >> Chuck:
+> >> I just booted a 5.13.13 kernel with your suggested patch. No freezes
+> >> on the first test, but that sometimes happens so I will let the server
+> >> settle some and try it again later in the day (which also would align
+> >> with Neil's comment on memory fragmentation being a contributor).
+> >>
+> >> Neil:
+> >> I have started a compile with the above kernel + your patch to test
+> >> next unless you or Chuck determine that it isn't needed, or that I
+> >> should test both patches discreetly. As the above is already merged to
+> >> 5.14 it seemed logical to just add your patch on top.
+> >>
+> >> I will also try to set up a vm to test your md5sum scenario with the
+> >> various kernels since it's a much faster thing to test.
+> >>
+> >> - mike
+> >>
+> >> On Fri, Aug 27, 2021 at 7:13 AM Chuck Lever III <chuck.lever@oracle.com> wrote:
+> >>>
+> >>>
+> >>>> On Aug 27, 2021, at 3:14 AM, NeilBrown <neilb@suse.de> wrote:
+> >>>>
+> >>>> Subject: [PATCH] SUNRPC: don't pause on incomplete allocation
+> >>>>
+> >>>> alloc_pages_bulk_array() attempts to allocate at least one page based on
+> >>>> the provided pages, and then opportunistically allocates more if that
+> >>>> can be done without dropping the spinlock.
+> >>>>
+> >>>> So if it returns fewer than requested, that could just mean that it
+> >>>> needed to drop the lock.  In that case, try again immediately.
+> >>>>
+> >>>> Only pause for a time if no progress could be made.
+> >>>
+> >>> The case I was worried about was "no pages available on the
+> >>> pcplist", in which case, alloc_pages_bulk_array() resorts
+> >>> to calling __alloc_pages() and returns only one new page.
+> >>>
+> >>> "No progess" would mean even __alloc_pages() failed.
+> >>>
+> >>> So this patch would behave essentially like the
+> >>> pre-alloc_pages_bulk_array() code: call alloc_page() for
+> >>> each empty struct_page in the array without pausing. That
+> >>> seems correct to me.
+> >>>
+> >>>
+> >>> I would add
+> >>>
+> >>> Fixes: f6e70aab9dfe ("SUNRPC: refresh rq_pages using a bulk page allocator")
+> >>>
+> >>>
+> >>>> Signed-off-by: NeilBrown <neilb@suse.de>
+> >>>> ---
+> >>>> net/sunrpc/svc_xprt.c | 7 +++++--
+> >>>> 1 file changed, 5 insertions(+), 2 deletions(-)
+> >>>>
+> >>>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> >>>> index d66a8e44a1ae..99268dd95519 100644
+> >>>> --- a/net/sunrpc/svc_xprt.c
+> >>>> +++ b/net/sunrpc/svc_xprt.c
+> >>>> @@ -662,7 +662,7 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
+> >>>> {
+> >>>>      struct svc_serv *serv = rqstp->rq_server;
+> >>>>      struct xdr_buf *arg = &rqstp->rq_arg;
+> >>>> -     unsigned long pages, filled;
+> >>>> +     unsigned long pages, filled, prev;
+> >>>>
+> >>>>      pages = (serv->sv_max_mesg + 2 * PAGE_SIZE) >> PAGE_SHIFT;
+> >>>>      if (pages > RPCSVC_MAXPAGES) {
+> >>>> @@ -672,11 +672,14 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
+> >>>>              pages = RPCSVC_MAXPAGES;
+> >>>>      }
+> >>>>
+> >>>> -     for (;;) {
+> >>>> +     for (prev = 0;; prev = filled) {
+> >>>>              filled = alloc_pages_bulk_array(GFP_KERNEL, pages,
+> >>>>                                              rqstp->rq_pages);
+> >>>>              if (filled == pages)
+> >>>>                      break;
+> >>>> +             if (filled > prev)
+> >>>> +                     /* Made progress, don't sleep yet */
+> >>>> +                     continue;
+> >>>>
+> >>>>              set_current_state(TASK_INTERRUPTIBLE);
+> >>>>              if (signalled() || kthread_should_stop()) {
+> >>>
+> >>> --
+> >>> Chuck Lever
+> >>>
+> >>>
+> >>>
+>
+> --
+> Chuck Lever
+>
+>
+>
