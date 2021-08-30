@@ -2,144 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D1623FB983
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Aug 2021 17:59:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70AE73FBA6A
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Aug 2021 18:53:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237526AbhH3P6G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Aug 2021 11:58:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41330 "EHLO
+        id S237774AbhH3QyB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Aug 2021 12:54:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237758AbhH3P6A (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Aug 2021 11:58:00 -0400
-Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3A92C0617AE
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Aug 2021 08:57:05 -0700 (PDT)
-Received: by mail-qv1-xf34.google.com with SMTP id e18so8586015qvo.1
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Aug 2021 08:57:05 -0700 (PDT)
+        with ESMTP id S237319AbhH3Qx7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Aug 2021 12:53:59 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 746F8C061575
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Aug 2021 09:53:05 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id i13so16810982ilm.4
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Aug 2021 09:53:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SROUaiAMehrmiT3ELGDnLtiEyOT7RUgBLqWqJFw66F0=;
-        b=P0N0s3UzPGci6qyOUjHT/NxZ5oKXk5IOYqJgPl/3aPSKP3QPxVLfJknh26b5lzQffy
-         MRselXfM1Rw0Sbjmr28ou7FU6YUb9im1SiV9+Lj089MhzjJV84H3f2K5LRn/CS9ycfLg
-         ZYtH6LoC3VZvBJKUMYieHLqIvu6hgUwURpNPCKWjbDbAwUL9bBLP6xNpK4o4REQE/dQU
-         5LuKT12tafZhNEdeujci7bND4b+rTX7enT5aqb3jKIj16Y455QXCvXBjPiC4g8cfaMap
-         14gv/ofW/0/Z+2aGnIej+/C6o+SiWQy+ujhFqRcKtsS+fEhJuhQljQ5O7A6YqmyZEPI5
-         uivA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4zHRSRelsuk6nzy8XdO4J0dCV8iUpty/XRmCQFF0mvg=;
+        b=LSTXWuhyfc/1P+KsYYRb+Fju6QY5g3ug+i62CsqqGWXYyfZRrdka1oFAMRBakGdOfd
+         vgktmOUUPgAzMAN3bYnX027XCRloxFHWDHHw+yHCQ9tTjllK8SmT366H1hltMn9LDylB
+         pP+91u/XnaZJQtG1s5ktY50W4VIiSJupz0PtXpchT8SGCEU3CY+xF7ZfIAQmNpIu/1gO
+         pH9fKDW+oFgioJvYL6471Yg8qceigg0mPlUSkfgB1RfBBSpnwgJG4R8D1yPwmrl9lpmH
+         o9gTQkglynBB/Lm5YhQ1gbs2ulFmiFvHSKtl/CH3DB1cfs21qEv8FLt8t4t0vPTs/FMj
+         jrHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=SROUaiAMehrmiT3ELGDnLtiEyOT7RUgBLqWqJFw66F0=;
-        b=HPsc8p5Q93iLgSVXxNQTRXVwHjOuoGa0zOv3HPMYohvQgKBNP5OU5FvHLavrNR2Esq
-         QsM+ECJsPiM0w7Ts6ywu23NH47QdO/BUmWlxVUp+iMF+0u9RbIT8wdgHhOoAdSy5h0Kv
-         TvODoqxkpolYZwY/F3H4bbe7jxl13WvrE4zyyktlLASXR4f7Bxnt0Zvsr4bwy4rJiy5m
-         PrDbIc7RmpP4G0DYHpU+psGwK1sBFNPZ8mKXDfL3i2rIinPw8O1HYlKQkzz8pcLvwbDt
-         CKLaD8TjNp3pDrhWeQH9BFAaMqn9jmnY1w9mZL+IpNqvS4D70NevKQlC5Jh/DKrqb05q
-         6WzQ==
-X-Gm-Message-State: AOAM533zy7kLMILt2Qws0ixCCzlUaqYVgvVB9ATX0AOslwBqlPn7GYT3
-        xlgG88j15UOX8/n4bJtHXdE=
-X-Google-Smtp-Source: ABdhPJzJ4iweZFguGRDhWRf2q1JvfRHxIEH8nSzmq+2WHr52nAcqOELjAVWIO6IWVqbUFDA8NZuf7A==
-X-Received: by 2002:a0c:e790:: with SMTP id x16mr23587015qvn.6.1630339024736;
-        Mon, 30 Aug 2021 08:57:04 -0700 (PDT)
-Received: from localhost.localdomain ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id 12sm8585217qtt.16.2021.08.30.08.57.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Aug 2021 08:57:04 -0700 (PDT)
-Sender: Anna Schumaker <schumakeranna@gmail.com>
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     steved@redhat.com, linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v3 9/9] nfssysfs: Add installation to the Makefile
-Date:   Mon, 30 Aug 2021 11:56:53 -0400
-Message-Id: <20210830155653.1386161-10-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20210830155653.1386161-1-Anna.Schumaker@Netapp.com>
-References: <20210830155653.1386161-1-Anna.Schumaker@Netapp.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4zHRSRelsuk6nzy8XdO4J0dCV8iUpty/XRmCQFF0mvg=;
+        b=NEr2JeVXLR2kNblJ4paG9EAkFnPenx6SVG9KaB68tXugvK1TutNPxJQqZ2H97Fl/1e
+         EqaOtOHMph81TTl+SUhufxJzXrpI5NUm2/dWSPCzLQRg8ib9aYiTtRGnZ/g7LuVrUBXV
+         fxc7z+YSqtyC1vkYNuNEXHehLp6svB4OHltO61ISyg90paOz9Cc46OJFYr8a0BsYveQf
+         /edOJgAvqwRMxbvJs+SGfJQi4vjggxj5snG6iMMRSj/kThjEI8Q/6L4nGVzL7K54JVhr
+         22aT7SOjB3izbclsG03ObWgizMdYTYLe06pOeRq2JvatwE+Fe82n4YX2Ydt3o0cRsb5U
+         6TQw==
+X-Gm-Message-State: AOAM531D5txhbIIDu0Ns3sIV7NAljHOwZQ6P62yF6zDWVLqIugZFMpDH
+        XH26hX92hAokkgHBAY82GuA=
+X-Google-Smtp-Source: ABdhPJysfIreP+rpGbzt1ZKbRX5aXwF8f3HX252L9Nurvk5Df9EX3XKK6XnZSeuDVKaK5HD3lwc1Sg==
+X-Received: by 2002:a92:da0c:: with SMTP id z12mr16665775ilm.205.1630342384779;
+        Mon, 30 Aug 2021 09:53:04 -0700 (PDT)
+Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:852f:17ae:ef64:bc7])
+        by smtp.gmail.com with ESMTPSA id j13sm8579841ile.85.2021.08.30.09.53.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Aug 2021 09:53:04 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        chuck.level@oracle.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [RFC 0/2] revisit RMDA XDR padding management
+Date:   Mon, 30 Aug 2021 12:53:00 -0400
+Message-Id: <20210830165302.60225-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-And create a shell script that launches the python program from the
-$(libdir)
+We have previously revisited how XDR padding management was done
+for the RDMA read chunks.
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- configure.ac               |  1 +
- tools/Makefile.am          |  2 +-
- tools/nfssysfs/Makefile.am | 20 ++++++++++++++++++++
- tools/nfssysfs/nfssysfs    |  5 +++++
- 4 files changed, 27 insertions(+), 1 deletion(-)
- create mode 100644 tools/nfssysfs/Makefile.am
- create mode 100644 tools/nfssysfs/nfssysfs
+This patch series attempts to do the same for the RDMA read chunks
+and altogether remove the options of doing an implicit roundup.
 
-diff --git a/configure.ac b/configure.ac
-index bc2d0f02979c..57ad341948a3 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -731,6 +731,7 @@ AC_CONFIG_FILES([
- 	tools/rpcgen/Makefile
- 	tools/mountstats/Makefile
- 	tools/nfs-iostat/Makefile
-+	tools/nfssysfs/Makefile
- 	tools/nfsdclnts/Makefile
- 	tools/nfsconf/Makefile
- 	tools/nfsdclddb/Makefile
-diff --git a/tools/Makefile.am b/tools/Makefile.am
-index 9b4b0803db39..12c68b57b8ae 100644
---- a/tools/Makefile.am
-+++ b/tools/Makefile.am
-@@ -12,6 +12,6 @@ if CONFIG_NFSDCLD
- OPTDIRS += nfsdclddb
- endif
- 
--SUBDIRS = locktest rpcdebug nlmtest mountstats nfs-iostat nfsdclnts $(OPTDIRS)
-+SUBDIRS = locktest rpcdebug nlmtest mountstats nfs-iostat nfssysfs nfsdclnts $(OPTDIRS)
- 
- MAINTAINERCLEANFILES = Makefile.in
-diff --git a/tools/nfssysfs/Makefile.am b/tools/nfssysfs/Makefile.am
-new file mode 100644
-index 000000000000..983b128f5c98
---- /dev/null
-+++ b/tools/nfssysfs/Makefile.am
-@@ -0,0 +1,20 @@
-+## Process this file with automake to produce Makefile.in
-+PYTHON_FILES =  nfssysfs.py client.py switch.py sysfs.py xprt.py
-+tooldir = $(DESTDIR)$(libdir)/nfssysfs
-+
-+man8_MANS = nfssysfs.man
-+
-+all-local: $(PYTHON_FILES)
-+
-+install-data-hook:
-+	mkdir -p $(tooldir)
-+	for f in $(PYTHON_FILES) ; do \
-+		$(INSTALL) -m 644 $$f $(tooldir)/$$f ; \
-+	done
-+	chmod +x $(tooldir)/nfssysfs.py
-+	$(INSTALL) -m 755 nfssysfs $(DESTDIR)$(sbindir)/nfssysfs
-+	sed -i "s|LIBDIR=.|LIBDIR=$(tooldir)|" $(DESTDIR)$(sbindir)/nfssysfs
-+
-+
-+
-+MAINTAINERCLEANFILES=Makefile.in
-diff --git a/tools/nfssysfs/nfssysfs b/tools/nfssysfs/nfssysfs
-new file mode 100644
-index 000000000000..82dd2da6f539
---- /dev/null
-+++ b/tools/nfssysfs/nfssysfs
-@@ -0,0 +1,5 @@
-+#!/bin/bash
-+LIBDIR=.
-+PYTHON3=/usr/bin/python
-+
-+exec $PYTHON3 $LIBDIR/nfssysfs.py $*
+According to the RFC 8166 client "SHOULD NOT" include additional
+space for XDR roundup padding. Furthermore, server MUST NOT write
+XDR padding into the a write chunk. Given those two statement and
+a patch "NFS: Always provide aligned buffers to the RPC read layers",
+there is no reason for the client to look at the tail and assume
+there is any padding data for which it needs to allocate space for.
+
+The only operation that this patch series effects is an NFS read.
+All non-read ops that might use a write chunk are setup to use
+reply chunk if reply is larger than inline threshold, not a write
+chunk.
+
+
+
+*** SUBJECT HERE ***
+
+*** BLURB HERE ***
+
+Olga Kornievskaia (2):
+  xprtrdma: xdr pad optimization revisted again
+  xprtrdma: remove re_implicit_roundup xprt_rdma_pad_optimize
+
+ net/sunrpc/xprtrdma/rpc_rdma.c  | 15 ---------------
+ net/sunrpc/xprtrdma/transport.c |  8 --------
+ net/sunrpc/xprtrdma/verbs.c     |  2 --
+ net/sunrpc/xprtrdma/xprt_rdma.h |  6 ------
+ 4 files changed, 31 deletions(-)
+
 -- 
-2.33.0
+2.27.0
 
