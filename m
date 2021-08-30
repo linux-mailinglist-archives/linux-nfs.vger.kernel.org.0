@@ -2,59 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70AE73FBA6A
+	by mail.lfdr.de (Postfix) with ESMTP id 277683FBA69
 	for <lists+linux-nfs@lfdr.de>; Mon, 30 Aug 2021 18:53:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237774AbhH3QyB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S237319AbhH3QyB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Mon, 30 Aug 2021 12:54:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54656 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237319AbhH3Qx7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Aug 2021 12:53:59 -0400
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 746F8C061575
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Aug 2021 09:53:05 -0700 (PDT)
-Received: by mail-il1-x12e.google.com with SMTP id i13so16810982ilm.4
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Aug 2021 09:53:05 -0700 (PDT)
+        with ESMTP id S237714AbhH3QyA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Aug 2021 12:54:00 -0400
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56B80C06175F
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Aug 2021 09:53:06 -0700 (PDT)
+Received: by mail-il1-x12b.google.com with SMTP id x5so16819326ill.3
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Aug 2021 09:53:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4zHRSRelsuk6nzy8XdO4J0dCV8iUpty/XRmCQFF0mvg=;
-        b=LSTXWuhyfc/1P+KsYYRb+Fju6QY5g3ug+i62CsqqGWXYyfZRrdka1oFAMRBakGdOfd
-         vgktmOUUPgAzMAN3bYnX027XCRloxFHWDHHw+yHCQ9tTjllK8SmT366H1hltMn9LDylB
-         pP+91u/XnaZJQtG1s5ktY50W4VIiSJupz0PtXpchT8SGCEU3CY+xF7ZfIAQmNpIu/1gO
-         pH9fKDW+oFgioJvYL6471Yg8qceigg0mPlUSkfgB1RfBBSpnwgJG4R8D1yPwmrl9lpmH
-         o9gTQkglynBB/Lm5YhQ1gbs2ulFmiFvHSKtl/CH3DB1cfs21qEv8FLt8t4t0vPTs/FMj
-         jrHw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ewb94CFZBoEcv6BEq/49r+UCZ4fce92HK1wsFrtTC3s=;
+        b=EU0LZ8jkh9tjyQEAzrvUK+DU7pOUiVmkJCA2PDlFW6rx00dgA5jTYdGaRvyZOREvry
+         xNCedB/QvRMiGY/msgDSDcqXhOm0W+lEb0C0CcvSjbveFMrZxKPsoeoZ4rcrvaG7l9Jm
+         93ZFQ3Rs2xUH+SiE3UTUv5sbCmx2+7LZA7DH2045vokJoy2tVcGCJmOdf3fGM9FQOjDQ
+         nmCtNU0EI7Q4lYJdWZF9gMOHZEzrqVWJ+by8LAiWAid+gEWr+hV5s+ElvtQsBMUs7r7W
+         JTIcJ3wSttTdlNMUYSq2smC/nBNhcBSFFLZ0uAZBnPjO6CWPMxUioq1g09Av9cEbZE8o
+         FrJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4zHRSRelsuk6nzy8XdO4J0dCV8iUpty/XRmCQFF0mvg=;
-        b=NEr2JeVXLR2kNblJ4paG9EAkFnPenx6SVG9KaB68tXugvK1TutNPxJQqZ2H97Fl/1e
-         EqaOtOHMph81TTl+SUhufxJzXrpI5NUm2/dWSPCzLQRg8ib9aYiTtRGnZ/g7LuVrUBXV
-         fxc7z+YSqtyC1vkYNuNEXHehLp6svB4OHltO61ISyg90paOz9Cc46OJFYr8a0BsYveQf
-         /edOJgAvqwRMxbvJs+SGfJQi4vjggxj5snG6iMMRSj/kThjEI8Q/6L4nGVzL7K54JVhr
-         22aT7SOjB3izbclsG03ObWgizMdYTYLe06pOeRq2JvatwE+Fe82n4YX2Ydt3o0cRsb5U
-         6TQw==
-X-Gm-Message-State: AOAM531D5txhbIIDu0Ns3sIV7NAljHOwZQ6P62yF6zDWVLqIugZFMpDH
-        XH26hX92hAokkgHBAY82GuA=
-X-Google-Smtp-Source: ABdhPJysfIreP+rpGbzt1ZKbRX5aXwF8f3HX252L9Nurvk5Df9EX3XKK6XnZSeuDVKaK5HD3lwc1Sg==
-X-Received: by 2002:a92:da0c:: with SMTP id z12mr16665775ilm.205.1630342384779;
-        Mon, 30 Aug 2021 09:53:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ewb94CFZBoEcv6BEq/49r+UCZ4fce92HK1wsFrtTC3s=;
+        b=X/oOBFkvdY8+alovSG7GkFRCDQfeKHF8aM5Y/ZAB2PjDRhvVWzDHdGmav/B6HmTEOg
+         rgDPB0ulySO1rWQLDom6JkoKlFkEUzhnTg5ZvJ8/JgAanJUpCJHMmWPGdGRaFpIpjBx2
+         ghUhxWT4+/SgmUijoG13uEsbafdMLSM2mEQNW09CV1h4P1hFgkEp+9TNR+K/KVB3R8tF
+         srV0dL+WU4FP8jD7Ec/hsA53nmR3Xq06xktrENvt9C7YDgd6CjnvLCEIdJB3b/t6ZDrb
+         /U20tJwv3Nkd69MrR4qjTcZdmj4xXshJUaY650cSb8P8ZIE5c5kNlzcq0jmBLuIMPguo
+         sZhA==
+X-Gm-Message-State: AOAM533qcJXjAvl+whTgapfyvtCHOnbjEV0+7E5kgb9JYYCPocY2h5ha
+        xYKdLzDnsgm0DW5B5NU647I=
+X-Google-Smtp-Source: ABdhPJzDfw4y4c5A193QArrtzUPwhW/yDnDazXof9q5Lv8Dv+/AWiGi/xDX37XjgRpKQFTnJXqlC3g==
+X-Received: by 2002:a05:6e02:174c:: with SMTP id y12mr17548315ill.35.1630342385671;
+        Mon, 30 Aug 2021 09:53:05 -0700 (PDT)
 Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:852f:17ae:ef64:bc7])
-        by smtp.gmail.com with ESMTPSA id j13sm8579841ile.85.2021.08.30.09.53.03
+        by smtp.gmail.com with ESMTPSA id j13sm8579841ile.85.2021.08.30.09.53.04
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Aug 2021 09:53:04 -0700 (PDT)
+        Mon, 30 Aug 2021 09:53:05 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
         chuck.level@oracle.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [RFC 0/2] revisit RMDA XDR padding management
-Date:   Mon, 30 Aug 2021 12:53:00 -0400
-Message-Id: <20210830165302.60225-1-olga.kornievskaia@gmail.com>
+Subject: [RFC 1/2] xprtrdma: xdr pad optimization revisted again
+Date:   Mon, 30 Aug 2021 12:53:01 -0400
+Message-Id: <20210830165302.60225-2-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.30.1 (Apple Git-130)
+In-Reply-To: <20210830165302.60225-1-olga.kornievskaia@gmail.com>
+References: <20210830165302.60225-1-olga.kornievskaia@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -63,40 +65,47 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-We have previously revisited how XDR padding management was done
-for the RDMA read chunks.
+Given the patch "Always provide aligned buffers to the RPC read layers",
+RPC over RDMA doesn't need to look at the tail page and add that space
+to the write chunk.
 
-This patch series attempts to do the same for the RDMA read chunks
-and altogether remove the options of doing an implicit roundup.
+For the RFC 8166 compliant server, it must not write an XDR padding
+into the write chunk (even if space was provided). Historically
+(before RFC 8166) Solaris RDMA server has been requiring the client
+to provide space for the XDR padding and thus this client code has
+existed.
 
-According to the RFC 8166 client "SHOULD NOT" include additional
-space for XDR roundup padding. Furthermore, server MUST NOT write
-XDR padding into the a write chunk. Given those two statement and
-a patch "NFS: Always provide aligned buffers to the RPC read layers",
-there is no reason for the client to look at the tail and assume
-there is any padding data for which it needs to allocate space for.
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ net/sunrpc/xprtrdma/rpc_rdma.c | 15 ---------------
+ 1 file changed, 15 deletions(-)
 
-The only operation that this patch series effects is an NFS read.
-All non-read ops that might use a write chunk are setup to use
-reply chunk if reply is larger than inline threshold, not a write
-chunk.
-
-
-
-*** SUBJECT HERE ***
-
-*** BLURB HERE ***
-
-Olga Kornievskaia (2):
-  xprtrdma: xdr pad optimization revisted again
-  xprtrdma: remove re_implicit_roundup xprt_rdma_pad_optimize
-
- net/sunrpc/xprtrdma/rpc_rdma.c  | 15 ---------------
- net/sunrpc/xprtrdma/transport.c |  8 --------
- net/sunrpc/xprtrdma/verbs.c     |  2 --
- net/sunrpc/xprtrdma/xprt_rdma.h |  6 ------
- 4 files changed, 31 deletions(-)
-
+diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
+index c335c1361564..2c4146bcf2a8 100644
+--- a/net/sunrpc/xprtrdma/rpc_rdma.c
++++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+@@ -255,21 +255,6 @@ rpcrdma_convert_iovs(struct rpcrdma_xprt *r_xprt, struct xdr_buf *xdrbuf,
+ 		page_base = 0;
+ 	}
+ 
+-	if (type == rpcrdma_readch)
+-		goto out;
+-
+-	/* When encoding a Write chunk, some servers need to see an
+-	 * extra segment for non-XDR-aligned Write chunks. The upper
+-	 * layer provides space in the tail iovec that may be used
+-	 * for this purpose.
+-	 */
+-	if (type == rpcrdma_writech && r_xprt->rx_ep->re_implicit_roundup)
+-		goto out;
+-
+-	if (xdrbuf->tail[0].iov_len)
+-		rpcrdma_convert_kvec(&xdrbuf->tail[0], seg, &n);
+-
+-out:
+ 	if (unlikely(n > RPCRDMA_MAX_SEGS))
+ 		return -EIO;
+ 	return n;
 -- 
 2.27.0
 
