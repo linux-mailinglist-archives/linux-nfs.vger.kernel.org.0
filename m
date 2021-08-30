@@ -2,59 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5D613FB97B
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Aug 2021 17:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD3893FB97E
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Aug 2021 17:59:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237711AbhH3P6B (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S237799AbhH3P6B (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Mon, 30 Aug 2021 11:58:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41288 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237646AbhH3P5w (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Aug 2021 11:57:52 -0400
-Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B6F0C061760
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Aug 2021 08:56:58 -0700 (PDT)
-Received: by mail-qv1-xf2f.google.com with SMTP id gf5so8544647qvb.9
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Aug 2021 08:56:58 -0700 (PDT)
+        with ESMTP id S237732AbhH3P5y (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Aug 2021 11:57:54 -0400
+Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CCEBC061764
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Aug 2021 08:56:59 -0700 (PDT)
+Received: by mail-qv1-xf35.google.com with SMTP id a5so8627489qvq.0
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Aug 2021 08:56:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lys7DtM6lVqjsDSpjgsx9MbdW3F1P43uIMCRhpmes+I=;
-        b=nMmmBa+0UfwTu635oDPevSXe3DGQcaJncAN3ORa1vU/nJ+DwXA71Ed0pokZ1jhhmuB
-         TRMUkAEW8qIxVT1pKPYTh0qhDc1R7nfrv2F3yURGdxrU0mWYWoj0RWywGkcm6nd8nJT7
-         Aar2xLi7gf1yLUizpddNeb9xXXtbXrjOlI5T78LyUpRamjtLmrL2LWgKcmjdCYXVHEEc
-         tRG8kMLALcVJ5IzVt7JsSFWccxahQZ+IynoysU2kWOp8omq8kvY20RB6cX0+ohC3uHHa
-         YDA9SWkO04igdPNUDGgXfmtam9rMr7zpY/nOEbwGjCwTrPjnizLkUXKM7DJQKTmL5v3c
-         WcgQ==
+        bh=W/8NtlacI5WS71LaySwODmC9q+ANEoOEYf3Bcg7kaCo=;
+        b=thy3TORRQJ3CXvMotWkAMxUzAbY59LsVoYVopjI1S7EDeh9hrcQAnR4N5xQ0HdptOc
+         PnrjK4AtWkWFaT2zuS7mBwl1lyn6YR+TU4ijuStJhN8Z5YhSOePehOhDUO0byjLxkPtn
+         kSqCvtXXADw4XwMz1EPJDrEK8qioXpj+D2BKn1Iom0Md/ZrR0C2sUAzQKSPzNWjfKIIc
+         AyRvF1wFnrnhcaOT+WsFV8RLaqwRlHXgqkm0ZXaFAfrM6Hklt6x6R0GChsCVBE7GATVu
+         s8R4IvRTs5f6PWwzYmUO7XC4WAorjfPLHu8yITm+FuEinqidxZ3dlWFAuLksQzcoJnV4
+         5gEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=lys7DtM6lVqjsDSpjgsx9MbdW3F1P43uIMCRhpmes+I=;
-        b=mLJyz4jD+8z2uH5dRIsxGPzlGXtfcRRyCdgRnkLz35EF2ZoxLJ4/qas7SXJBeLgdbE
-         oHD5/mKlnHntXYY/5At7nZT0mfQu3mzy5ZFBVy8IDDK10UwLJ3kgVf13krtws8zfaCGb
-         fAIKo766V2UAtANm5skEq2/Nhp2XbsD8QUKSoILu0m+nxJiEGPEUzBgQo7POz2vx6/ag
-         Fs534lF/wmgpdmF6UACKwXa9X67t0jtm+IT9hMEQIiE8cSzfMazzNr1vyIPlgdG/UkUN
-         MrT8V/h02biAwWB3BefjJi7OutvjTLxPb3w4MFLbrEroe0zMMJrzZUVrWkuiAlQ/FhQg
-         LjNg==
-X-Gm-Message-State: AOAM532Ri9z2nRAEk+Lw1nk7ubgB7p/ydmyM/Cf7bednrBM9KRsM2Mz8
-        5WJJ1ubeOfnFlfej7pWi0G4=
-X-Google-Smtp-Source: ABdhPJy5exyR9YnUmu2PUQMBHFXIfeyb/C1DX3S7BgrEjDt2dIzBAiJIbr6nYqerKudjfvMBO8sflQ==
-X-Received: by 2002:ad4:4982:: with SMTP id t2mr7484161qvx.46.1630339017586;
-        Mon, 30 Aug 2021 08:56:57 -0700 (PDT)
+        bh=W/8NtlacI5WS71LaySwODmC9q+ANEoOEYf3Bcg7kaCo=;
+        b=f9o5AtUUgD3ty0fVBhPPcXsxLRqZc83gVarsFGvmHWE0JtebQ7zGyIqVHF3GR+nHW2
+         ZXae4oSeuMvQaTgt6ESU6ykk0kOR66uGC51IM5TQigG0DzhmA/K82bIoOzjcjfJJRPR2
+         lX0/+/Yjc7a/fZF366RrRZ+LnPKhbKFmo0JEvuBmEDZC64ohhYsJQ0zKwAhEtQ80O/R7
+         VW74lyIIGew4UKhbH3DrBve0b37xq8oUBGvz6IaRPx14EbfHaFIvs9qap6+ppCqad1La
+         uRSljkbmW9fZCzdtUYVFlDrd34/fYk391gwrjYjRJgUJWpkHd8AwNMTr7MmKoOB/yxJC
+         iqRQ==
+X-Gm-Message-State: AOAM533pcTem7U+tREUA8JaBbKm78UWTh9yfhpesDsSrBGYR0hoRtyw2
+        S1bKJ5zX6Dyy5Hau5Jm+ZLc=
+X-Google-Smtp-Source: ABdhPJzBYZJuzBIzblYnnGUpp6xh1Ywi3zx6Tu/wGT6bkXjQdIpcRRDKCrGhxuUS22BdzkEdzdTKwQ==
+X-Received: by 2002:ad4:4f86:: with SMTP id em6mr23625697qvb.7.1630339018672;
+        Mon, 30 Aug 2021 08:56:58 -0700 (PDT)
 Received: from localhost.localdomain ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id 12sm8585217qtt.16.2021.08.30.08.56.56
+        by smtp.gmail.com with ESMTPSA id 12sm8585217qtt.16.2021.08.30.08.56.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Aug 2021 08:56:57 -0700 (PDT)
+        Mon, 30 Aug 2021 08:56:58 -0700 (PDT)
 Sender: Anna Schumaker <schumakeranna@gmail.com>
 From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     steved@redhat.com, linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v3 2/9] nfssysfs.py: Add a command for printing xprt switch information
-Date:   Mon, 30 Aug 2021 11:56:46 -0400
-Message-Id: <20210830155653.1386161-3-Anna.Schumaker@Netapp.com>
+Subject: [PATCH v3 3/9] nfssysfs.py: Add a command for printing individual xprts
+Date:   Mon, 30 Aug 2021 11:56:47 -0400
+Message-Id: <20210830155653.1386161-4-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20210830155653.1386161-1-Anna.Schumaker@Netapp.com>
 References: <20210830155653.1386161-1-Anna.Schumaker@Netapp.com>
@@ -66,112 +66,85 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-This combines the information found in xprt_switch_info with a subset of
-the information found in each xprt subdirectory
+This shows more detailed information than what is presented with xprt
+switches. I take the chance to add a main-export indicator to the
+small_str() used when printing out xprt-switches.
 
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- tools/nfssysfs/nfssysfs.py |  6 ++++++
- tools/nfssysfs/switch.py   | 35 +++++++++++++++++++++++++++++++++++
- tools/nfssysfs/sysfs.py    | 10 ++++++++++
- tools/nfssysfs/xprt.py     | 12 ++++++++++++
- 4 files changed, 63 insertions(+)
- create mode 100644 tools/nfssysfs/switch.py
- create mode 100644 tools/nfssysfs/xprt.py
+ tools/nfssysfs/nfssysfs.py |  2 ++
+ tools/nfssysfs/xprt.py     | 38 +++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 39 insertions(+), 1 deletion(-)
 
 diff --git a/tools/nfssysfs/nfssysfs.py b/tools/nfssysfs/nfssysfs.py
-index 8ff59ea9e81b..90efcbed7ac8 100755
+index 90efcbed7ac8..dfad6ac08fa0 100755
 --- a/tools/nfssysfs/nfssysfs.py
 +++ b/tools/nfssysfs/nfssysfs.py
-@@ -9,5 +9,11 @@ def show_small_help(args):
-     print("sunrpc dir:", sysfs.SUNRPC)
- parser.set_defaults(func=show_small_help)
+@@ -11,8 +11,10 @@ parser.set_defaults(func=show_small_help)
  
-+
-+import switch
-+subparser = parser.add_subparsers(title="commands")
-+switch.add_command(subparser)
-+
-+
- args = parser.parse_args()
- args.func(args)
-diff --git a/tools/nfssysfs/switch.py b/tools/nfssysfs/switch.py
-new file mode 100644
-index 000000000000..afb6963a0a1f
---- /dev/null
-+++ b/tools/nfssysfs/switch.py
-@@ -0,0 +1,35 @@
-+import sysfs
+ 
+ import switch
 +import xprt
+ subparser = parser.add_subparsers(title="commands")
+ switch.add_command(subparser)
++xprt.add_command(subparser)
+ 
+ 
+ args = parser.parse_args()
+diff --git a/tools/nfssysfs/xprt.py b/tools/nfssysfs/xprt.py
+index d37537771c1d..fbdd9bfc9375 100644
+--- a/tools/nfssysfs/xprt.py
++++ b/tools/nfssysfs/xprt.py
+@@ -1,12 +1,48 @@
++import sysfs
 +
-+class XprtSwitch:
-+    def __init__(self, path):
-+        self.path = path
-+        self.id = int(str(path).rsplit("-", 1)[1])
+ class Xprt:
+     def __init__(self, path):
+         self.path = path
+         self.id = int(str(path).rsplit("-", 2)[1])
+         self.type = str(path).rsplit("-", 2)[2]
+         self.dstaddr = open(path / "dstaddr", 'r').readline().strip()
++        self.srcaddr = open(path / "srcaddr", 'r').readline().strip()
 +
-+        self.xprts = [ xprt.Xprt(p) for p in self.path.iterdir() if p.is_dir() ]
-+        self.xprts.sort()
-+
-+        self.__dict__.update(sysfs.read_info_file(path / "xprt_switch_info"))
-+
-+    def __lt__(self, rhs):
-+        return self.path < rhs.path
-+
++        with open(path / "xprt_state") as f:
++            self.state = ','.join(f.readline().split()[1:])
++        self.__dict__.update(sysfs.read_info_file(path / "xprt_info"))
+ 
+     def __lt__(self, rhs):
+         return self.id < rhs.id
+ 
 +    def __str__(self):
-+        line = "switch %s: num_xprts %s, num_active %s, queue_len %s" % \
-+                (self.id, self.num_xprts, self.num_active, self.queue_len)
-+        for x in self.xprts:
-+            line += "\n	%s" % x.small_str()
++        state = self.state
++        if self.main_xprt:
++            state = "MAIN," + self.state
++
++        line = "xprt %s: %s, %s, port %s, state <%s>" % \
++                (self.id, self.type, self.dstaddr, self.dst_port, state)
++        line += "\n	Source: %s, port %s, Requests: %s" % \
++                (self.srcaddr, self.src_port, self.num_reqs)
++        line += "\n	Congestion: cur %s, win %s, Slots: min %s, max %s" % \
++                (self.cur_cong, self.cong_win, self.min_num_slots, self.max_num_slots)
++        line += "\n	Queues: binding %s, sending %s, pending %s, backlog %s, tasks %s" % \
++                (self.binding_q_len, self.sending_q_len, self.pending_q_len, self.backlog_q_len, self.tasks_queuelen)
 +        return line
 +
+     def small_str(self):
+-        return "xprt %s: %s, %s" % (self.id, self.type, self.dstaddr)
++        return "xprt %s: %s, %s%s" % (self.id, self.type, self.dstaddr,
++                                     f" [main]" if self.main_xprt else "" )
 +
-+def list_xprt_switches(args):
-+    switches = [ XprtSwitch(f) for f in (sysfs.SUNRPC / "xprt-switches").iterdir() ]
-+    switches.sort()
-+    for xs in switches:
-+        if args.id == None or xs.id == args.id[0]:
-+            print(xs)
++
++def list_xprts(args):
++    xprts = [ Xprt(f) for f in (sysfs.SUNRPC / "xprt-switches").glob("**/xprt-*") ]
++    xprts.sort()
++    for xprt in xprts:
++        if args.id == None or xprt.id == args.id[0]:
++            print(xprt)
 +
 +def add_command(subparser):
-+    parser = subparser.add_parser("xprt-switch", help="Commands for xprt switches")
-+    parser.add_argument("--id", metavar="ID", nargs=1, type=int, help="Id of a specific xprt-switch to show")
-+    parser.set_defaults(func=list_xprt_switches)
-diff --git a/tools/nfssysfs/sysfs.py b/tools/nfssysfs/sysfs.py
-index c9d477063585..79f844af34a6 100644
---- a/tools/nfssysfs/sysfs.py
-+++ b/tools/nfssysfs/sysfs.py
-@@ -17,3 +17,13 @@ SUNRPC = pathlib.Path(MOUNT) / "kernel" / "sunrpc"
- if not SUNRPC.is_dir():
-     print("ERROR: sysfs does not have sunrpc directory")
-     sys.exit(1)
-+
-+
-+def read_info_file(path):
-+    res = dict()
-+    with open(path) as info:
-+        for line in info:
-+            if "=" in line:
-+                (key, val) = line.strip().split("=")
-+                res[key] = int(val)
-+    return res
-diff --git a/tools/nfssysfs/xprt.py b/tools/nfssysfs/xprt.py
-new file mode 100644
-index 000000000000..d37537771c1d
---- /dev/null
-+++ b/tools/nfssysfs/xprt.py
-@@ -0,0 +1,12 @@
-+class Xprt:
-+    def __init__(self, path):
-+        self.path = path
-+        self.id = int(str(path).rsplit("-", 2)[1])
-+        self.type = str(path).rsplit("-", 2)[2]
-+        self.dstaddr = open(path / "dstaddr", 'r').readline().strip()
-+
-+    def __lt__(self, rhs):
-+        return self.id < rhs.id
-+
-+    def small_str(self):
-+        return "xprt %s: %s, %s" % (self.id, self.type, self.dstaddr)
++    parser = subparser.add_parser("xprt", help="Commands for individual xprts")
++    parser.add_argument("--id", metavar="ID", nargs=1, type=int, help="Id of a specific xprt to show")
++    parser.set_defaults(func=list_xprts)
 -- 
 2.33.0
 
