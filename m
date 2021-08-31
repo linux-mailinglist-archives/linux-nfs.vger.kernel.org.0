@@ -2,245 +2,356 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C49953FCF15
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Aug 2021 23:23:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DE363FCF17
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Aug 2021 23:24:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230125AbhHaVY0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 31 Aug 2021 17:24:26 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:27200 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239889AbhHaVYZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Aug 2021 17:24:25 -0400
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 17VIiL3X015210;
-        Tue, 31 Aug 2021 21:23:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=vne6HZGEcTbszJggfuXC8bS1nq0CvcJIJgaTPNlzWGw=;
- b=IBrT77/NflhriUAmqPS4pGRpk/tFBPHn/0///Ir1sTZ+3KMjXwVpJA23bTR8+ssR9N8H
- SFoUu9UEPR7IYgvuFrMyhWA8oSryheFAE4k7vJla8+8mdilrNGhaKQA8S2HiY6sV4VID
- hQNAGNnsOreeuAIguHkGwEbLAASyUzSRTaB72bWyztZGO5rqi0qL+oU+R6MX/nb108e3
- 5UxDVo6043A2t3bQ/EmFlWDwx2aae+UzQp5ASatpxpcPybejkr2PuGObAmcDcrlAhEJt
- yfEqVJFaEncG3D5MTFs1WiDVV5oJW9SexO9LQbt+I8YRxUr27uScNQ+f/o1zVHJD3L6O yQ== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=vne6HZGEcTbszJggfuXC8bS1nq0CvcJIJgaTPNlzWGw=;
- b=m/7GF120sKW8kyJcEFjrVKb3ayfVJnFD1YjkacupgAhr+HNCXau/Fn+cB+nDK59zYyjJ
- sPwKA22I6yWbPCAP5r11OT5pk5zhzEy5Epvtg2dOb9zFC19IS5UYYQM1KNU82J2OteWy
- oFrIyeBMx7TWMQTMrB+SkQ4mLWsp6UcWtOKtyf5k1iNqasAitrXW4FSX92CoOi7mqIif
- V9xLeVcd49B78vjftSfmnzmYq2vY0vcnB5joL6bABnwI2rCt1UOhisnV65KYW8kCzHKt
- Ppd1zZS+X0eX/P3eDShNkdQ5xwDpK4cakcFm6folDW2YX8Ndx77PDdZfDMiiqNJ0rglO qA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3aseedjgt9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 Aug 2021 21:23:28 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 17VL9qKS107310;
-        Tue, 31 Aug 2021 21:23:27 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2103.outbound.protection.outlook.com [104.47.58.103])
-        by userp3020.oracle.com with ESMTP id 3aqxwuadca-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 Aug 2021 21:23:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K/VlgYVZycQ8t+TIx87ao3T35wFwptl223FEdaOjnIcX/0kpnXMIJdr/eLjXhpuErc2YigpLtn4GqP+ne+gJNZCo7E0jLiC84FVRm0+DohxhKJ0dcSRR/fZntddLT6Glia6xnn+M+ZW7cWnT171gYBF6Q0ttg6SOQKIs66nwWygY2rJZEQbDjvF905SvZbHLD8ZB0Q+SsjYPmc8GwobQMda58IFwz88gSF6tvj/MWpggbRrUHHvdYrcB2LiZZG9iyDyqQBqjtqnVGh62dJvDJrMCeNI6HM8VuPuuwIy77tmA7vl0z44WeoXOLqnWd0r+hHVbPJXJPQ7+T8/rBIWzsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vne6HZGEcTbszJggfuXC8bS1nq0CvcJIJgaTPNlzWGw=;
- b=a5KP5LmgMJl1bgB0Ca23NDZVwaCMW6GO1ygnd9L+hTWk61IDPPSWRgtyoODWr+Niy9tBzdLnf6WcG+qQtxpVW2tLciA0BI5nk/cJ+sEqDRIBgCCBC0cIjE1jswLdw2AK4+ElWcKWUgWCNMos1Q+OKp5ml7uqOYkb4n8sDDS73IYWJ91Yz1PsPvVUFnx9MMSEqpm8dwFWN0/64pgeyOYcX+z75Njs3cbCid4Yu1Ujb3oEje9ak8miu4/owUbThW/3BXTsi+xjhEeHSB6ZIBfnFWDyeGtAvqsJkWTmoiN7wQg3OEBq5uZld8vFF1iQCUmD1WBDZr++KFQyAjcnmTk1OQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vne6HZGEcTbszJggfuXC8bS1nq0CvcJIJgaTPNlzWGw=;
- b=dCVO/+HNcVuoTL2VHruppVfl6w/iIbohcFi47evNVFjZScMtBsnmP/00cMIykWTQVtwNzWFg9x1qChmteQz8/ia+9zpCt6qbCf0vQID4HW24JPBYATTQIIyC2qua6eKMBVxRWAAhiTvXBEcIgtBvfZD7+Dably/II0bNHsXCuoE=
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by SJ0PR10MB4637.namprd10.prod.outlook.com (2603:10b6:a03:2d6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.23; Tue, 31 Aug
- 2021 21:23:25 +0000
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::f4fe:5b4:6bd9:4c5b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::f4fe:5b4:6bd9:4c5b%7]) with mapi id 15.20.4478.017; Tue, 31 Aug 2021
- 21:23:25 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Bruce Fields <bfields@fieldses.org>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        id S238488AbhHaVZn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 31 Aug 2021 17:25:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232565AbhHaVZm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Aug 2021 17:25:42 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D493C061575;
+        Tue, 31 Aug 2021 14:24:47 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id E6561912C; Tue, 31 Aug 2021 17:24:45 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org E6561912C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1630445085;
+        bh=Mzi3RUWw/ZXyF2uaRvpGiQJrJc0BTOPAim7neTBovxM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i0mRRvzHE7FPl1L746Tib95UhyIhBmrk2MYqRS04+DtqruXZ4epIvrMFIhmfvZao2
+         H2pK62+5bgZjk0i8d6d856gNOUoFxDHcrKVs7CuqwhFbcDPZk2DeEb6dJTYlQp6KTt
+         yCBWL4a9NEIFTpwfeEVmGU4O5AQfDRGSAyveS7Hg=
+Date:   Tue, 31 Aug 2021 17:24:45 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: Re: [PATCH RFC 0/6] NFSD: Pull Read chunks in XDR decoders
-Thread-Topic: [PATCH RFC 0/6] NFSD: Pull Read chunks in XDR decoders
-Thread-Index: AQHXnpsmcuWuedcxvkuGPTniugh266uOFCwAgAALe4A=
-Date:   Tue, 31 Aug 2021 21:23:25 +0000
-Message-ID: <A56E33CA-C87A-41E7-BBF6-8623795D4607@oracle.com>
+Subject: Re: [PATCH RFC 6/6] svcrdma: Pull Read chunks in
+ ->xpo_argument_payload
+Message-ID: <20210831212445.GC7585@fieldses.org>
 References: <163043485613.1415.4979286233971984855.stgit@klimt.1015granger.net>
- <20210831204220.GB7585@fieldses.org>
-In-Reply-To: <20210831204220.GB7585@fieldses.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: fieldses.org; dkim=none (message not signed)
- header.d=none;fieldses.org; dmarc=none action=none header.from=oracle.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9de33395-2c30-4e08-9eaa-08d96cc591c2
-x-ms-traffictypediagnostic: SJ0PR10MB4637:
-x-microsoft-antispam-prvs: <SJ0PR10MB46379BFE5D7D4611CF9A3E3A93CC9@SJ0PR10MB4637.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: I9IVgWfuz59Y7aftrLmC/ddFdvlLQH5/sWnJgLQwpDwjVmE1dORvUmD/X6lBOoSlNUOZ7Mh6xDJ+iLZBYHKBj1kvuk07DuPzofijWYNkH9ScxfC9yX56JLjAAfIPPQXxb9NpVjU8+0lHZfyDT8E3M09hdzq5iolm7sorDIyAU8/qzJiyBeo9YbFmtjIsZLxWSVBNTMYs9HxyVCASweJ0uVKWq8HeJuV7d1r9ZaOfEd3Yp1q1GJYJvrIvKCzF892IIdAmyLlRo7bOwBNU5hD9extyP72xdWXLkMZaiCY0MqDJRzf5tQ2iF4R1a/6I+yvmS4XxEqHD1SmHfC44SWYxFurQaUSPeRB3ohi+nEPhcBYy+Sx025BOMEl+vLCYGGFy8Fdf/6ySoCJP4t6QfbCeou7fNn+mXDNwjXSwYFIBdvT8zKduUjO8uzcN6ZL48dv8AvB4ICwUkl5K4Zp0557jiF1CrcuG/D9Up9wZpC75lm4SOjW4cyYBEm04ZcdNKnpZpxd5f00+xL570fa+/bsWzVt2B3G7r4vJy+RpheDfWCc2cN3O3dn34EA8bgkuZrykAW/VdDfmhxgvaGFLqOsacNvmfIbEF760CnCZkQKFbVSWQAaGOG3LK5MD5wZl3JdlWH2CcIVI6P0mpsyZJYKSsWFjBWZe5LxwpV+xA+PjH0D+3KVQ1jHNjax9SMpM5i7zxwbPLGQUzSM1NqrPQU2jhwIiBCpghhxh68kn65kFIoo=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(376002)(136003)(366004)(346002)(39860400002)(53546011)(66446008)(186003)(8936002)(64756008)(8676002)(2616005)(38100700002)(66476007)(83380400001)(66946007)(5660300002)(33656002)(26005)(66556008)(6486002)(4326008)(54906003)(478600001)(36756003)(6512007)(2906002)(6916009)(38070700005)(86362001)(76116006)(91956017)(316002)(122000001)(71200400001)(6506007)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?8347pOYcFNXA7EqnuFZA9sd8FJlFispgk9pKeXXgImGXP9JH5zicEsGV3H+W?=
- =?us-ascii?Q?W+pLjEJ1uUEs7B2mmsltPTrlTjEGrhrKHGgkSJRviHRxd3rJ4LSDSvAymrB+?=
- =?us-ascii?Q?JXCVjGUO9Tsnyuy2F8Io8ubMH1dRJ3LV7MoXG/S75FCNu1MuJzEK0vEKGVy5?=
- =?us-ascii?Q?T9II9BaWMrRbboTyPPeuNtpBc5vcfE9Kh8/jWTXQli5ZGdh6teBFl6pFwS3x?=
- =?us-ascii?Q?m3WOjcIi8GPBuF62JqGL42aqw/Ge2mZjrj565TnmaU+vSZHcpb7jOp5kHsQg?=
- =?us-ascii?Q?Hede3Y/iDxMgbdcMvYATqUVkQ/eiOLE9ybngf5f2D9mu5HdE0DWgAkr8zjFg?=
- =?us-ascii?Q?oitgPGZiXQwov653OB2pGzOjKo16AdkXi3AHrqnKik+a/EpJxPrVEkl3TzPk?=
- =?us-ascii?Q?l1VHPB/7GtpKmoPU4PEdYpGY5JNJ2pGlj4Qsnv0TV9UrRJqMo3hPcz8E8s/m?=
- =?us-ascii?Q?Pt3oaavtku6Z6gSmd1i7L0i71XJ0FfCy9GbuBnktgcCKt/rTpwXnVHQ6v6zs?=
- =?us-ascii?Q?+hqrEJ7Ozs36qASYA0d36KniMeWvDW5w/RkR+QU5zXsKa6QYd2Yz/wdCeFfi?=
- =?us-ascii?Q?XvH3agWWZjYAhtrszeFzwlXx7QA1RUhWCti4Ihb7qU9tI7Md2xTFK8idpGwD?=
- =?us-ascii?Q?s7ZTSbEx+1fhOIQAW6MTif+KDrOV2sJLOydhyFRpHT4R4aSLUknLZJ8IE3/B?=
- =?us-ascii?Q?XyhNcfQBwCRTRzPCH72ZCsw4AjPdIpLC36M85CTwepNKLtnt1I0UcJLmV4GC?=
- =?us-ascii?Q?ELFTN9NZxXNdU44S1FkKE9v6kuNRhbkplmVKgdud5pHREgNf5kK3GNZISJU6?=
- =?us-ascii?Q?yIyx9caAPVhjctxzTTQK0CPPSBAJB9uOkdpg7MdNSBSBFToJFkbBebzMqARY?=
- =?us-ascii?Q?lmymhY4CP0OGFgRG37VMDGYHbFZkbXAOSsdQjwSvd392jxwjW2tZWoI78lzq?=
- =?us-ascii?Q?+iVzuch+uo5mB6ghMIVWdWWgJTFZ/OgxwPj0vQWd88UsHA1CAZPjodLBB+9t?=
- =?us-ascii?Q?8HVdeehSJUDPFnhGPXYWsKv1EJT0N8DXOGE+Bk+baNOsqMzeV53gW91yqMUW?=
- =?us-ascii?Q?OQPsK33DnJgxae1X58jKeamm/oq52H/X1Nu6ON5aGr/PLasn4wpP3tlGVSSI?=
- =?us-ascii?Q?W9RRUu38T0rNsnpiGEks4n1x0UWAZfn+mkI6eCBXY/r4Ej6YzgL10/+Sui8y?=
- =?us-ascii?Q?PO1gETv/NWa4ne2L5/noWuTHg5mSuem85PoSAperZj5UGE6bTyVSy+x7GSPG?=
- =?us-ascii?Q?3Nrp7Yxhqg4S86q9KqWSV17uAAZuH9TPgWRKuODn8pKfhVa7OL/gSUdn4ZOy?=
- =?us-ascii?Q?HkFio74TmhGQ9WbbIpmbg/PZ?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5F3D01E85A79104D8456351E5AB7C8B9@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+ <163043674641.1415.15896010002221696600.stgit@klimt.1015granger.net>
+ <20210831204044.GA7585@fieldses.org>
+ <6D264615-3EC1-4EF8-A11B-77E192EE2383@oracle.com>
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9de33395-2c30-4e08-9eaa-08d96cc591c2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2021 21:23:25.7970
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4ObRYcDW0v2XhrgVisZZQzob/R0AIgzCO6OnldwJbzgdaFOj/wQNxRVxi50DXG/VGH+nwy9u7jI+XwDhqx/i1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4637
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10093 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 suspectscore=0 spamscore=0 adultscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2107140000
- definitions=main-2108310116
-X-Proofpoint-ORIG-GUID: iCltGm2QgpaaSuHhaK8uLzpoOjnl5Uuw
-X-Proofpoint-GUID: iCltGm2QgpaaSuHhaK8uLzpoOjnl5Uuw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6D264615-3EC1-4EF8-A11B-77E192EE2383@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Tue, Aug 31, 2021 at 09:19:23PM +0000, Chuck Lever III wrote:
+> 
+> > On Aug 31, 2021, at 4:40 PM, J. Bruce Fields <bfields@fieldses.org> wrote:
+> > 
+> > How does this deal with compounds with multiple writes?
+> 
+> Explained in the cover letter.
 
+Whoops, I see now, thanks.--b.
 
-> On Aug 31, 2021, at 4:42 PM, J. Bruce Fields <bfields@fieldses.org> wrote=
-:
->=20
-> On Tue, Aug 31, 2021 at 03:05:09PM -0400, Chuck Lever wrote:
->> Hi Bruce-
->>=20
->> Here is part of what we discussed recently about trying to align
->> pages in NFS WRITE requests so that splice can be used. This
->> series updates server-side RPC and svcrdma to ensure that an
->> aligned xdr_buf::pages array is presented to NFSD, which is then
->> converted into an aligned rq_vec for the VFS layer.
->=20
-> Seems sensible to me.
->=20
-> Do you have a git tree?
-
-I don't yet, but can set up a topic branch somewhere where we're
-a little further along.
-
-
-> It didn't apply cleanly to 5.14 when I tried,
-> but I didn't stop to figure out why.
-
-It might apply to 5.15-pre now that nfsd-5.15 has been merged.
-
-
->> The next step would be to look at how to make the best use of the
->> aligned rq_vec.
->=20
-> Have you done any performance comparison just with this?
-
-Not yet. I just got it behaving correctly with the usual tests.
-Baby steps, sir.
-
-
-> Doesn't seem like it should make a significant difference, but it might
-> be interesting to check anyway.
-
-I expect it to add a small amount of latency to NFS WRITEs, since
-RDMA Reads are done just a little later than before.
-
-
-> --b.
->=20
->> My naive thought is that where there is a PAGE_SIZE
->> entry in rq_vec and there is no page in the file's page cache at
->> that offset, the transport-provided page can be flipped into place.
->> Might work for replacing whole pages as well, but baby steps first.
->>=20
->> This series has been exercised a bit with both TCP and RDMA, but no
->> guarantees that it is completely bug-free. NFSv4 compounds with
->> multiple WRITE payloads on RDMA are treated like TCP: the RPC
->> message is contained in an unstructured stream of unaligned pages.
->>=20
->> Comments encouraged.
->>=20
->> ---
->>=20
->> Chuck Lever (6):
->>      SUNRPC: Capture value of xdr_buf::page_base
->>      SUNRPC: xdr_stream_subsegment() must handle non-zero page_bases
->>      NFSD: Have legacy NFSD WRITE decoders use xdr_stream_subsegment()
->>      SUNRPC: svc_fill_write_vector() must handle non-zero page_bases
->>      NFSD: Add a transport hook for pulling argument payloads
->>      svcrdma: Pull Read chunks in ->xpo_argument_payload
->>=20
->>=20
->> fs/nfsd/nfs3proc.c                       |   3 +-
->> fs/nfsd/nfs3xdr.c                        |  16 +--
->> fs/nfsd/nfs4proc.c                       |   3 +-
->> fs/nfsd/nfs4xdr.c                        |   6 +
->> fs/nfsd/nfsproc.c                        |   3 +-
->> fs/nfsd/nfsxdr.c                         |  13 +--
->> fs/nfsd/xdr.h                            |   2 +-
->> fs/nfsd/xdr3.h                           |   2 +-
->> include/linux/sunrpc/svc.h               |   6 +-
->> include/linux/sunrpc/svc_rdma.h          |   8 ++
->> include/linux/sunrpc/svc_xprt.h          |   3 +
->> include/trace/events/rpcrdma.h           |  26 +++++
->> include/trace/events/sunrpc.h            |  20 +++-
->> net/sunrpc/svc.c                         |  38 +++++--
->> net/sunrpc/svcsock.c                     |   8 ++
->> net/sunrpc/xdr.c                         |  32 +++---
->> net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  |  37 +++++-
->> net/sunrpc/xprtrdma/svc_rdma_rw.c        | 139 ++++++++++++++++++++---
->> net/sunrpc/xprtrdma/svc_rdma_transport.c |   1 +
->> 19 files changed, 292 insertions(+), 74 deletions(-)
->>=20
->> --
->> Chuck Lever
-
---
-Chuck Lever
-
-
-
+> 
+> 
+> > We don't need to handle those efficiently, but we do need to handle
+> > them.
+> > 
+> > --b.
+> > 
+> > On Tue, Aug 31, 2021 at 03:05:46PM -0400, Chuck Lever wrote:
+> >> This enables the XDR decoder to figure out how the payload sink
+> >> buffer needs to be aligned before setting up the RDMA Reads.
+> >> Then re-alignment of large RDMA Read payloads can be avoided.
+> >> 
+> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> >> ---
+> >> include/linux/sunrpc/svc_rdma.h         |    6 +
+> >> include/trace/events/rpcrdma.h          |   26 ++++++
+> >> net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   17 +++-
+> >> net/sunrpc/xprtrdma/svc_rdma_rw.c       |  139 ++++++++++++++++++++++++++++---
+> >> 4 files changed, 169 insertions(+), 19 deletions(-)
+> >> 
+> >> diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
+> >> index f660244cc8ba..8d80a759a909 100644
+> >> --- a/include/linux/sunrpc/svc_rdma.h
+> >> +++ b/include/linux/sunrpc/svc_rdma.h
+> >> @@ -192,6 +192,12 @@ extern int svc_rdma_send_reply_chunk(struct svcxprt_rdma *rdma,
+> >> extern int svc_rdma_process_read_list(struct svcxprt_rdma *rdma,
+> >> 				      struct svc_rqst *rqstp,
+> >> 				      struct svc_rdma_recv_ctxt *head);
+> >> +extern void svc_rdma_prepare_read_chunk(struct svc_rqst *rqstp,
+> >> +					struct svc_rdma_recv_ctxt *head);
+> >> +extern int svc_rdma_pull_read_chunk(struct svcxprt_rdma *rdma,
+> >> +				    struct svc_rqst *rqstp,
+> >> +				    struct svc_rdma_recv_ctxt *ctxt,
+> >> +				    unsigned int offset, unsigned int length);
+> >> 
+> >> /* svc_rdma_sendto.c */
+> >> extern void svc_rdma_send_ctxts_destroy(struct svcxprt_rdma *rdma);
+> >> diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+> >> index 5954ce036173..30440cca321a 100644
+> >> --- a/include/trace/events/rpcrdma.h
+> >> +++ b/include/trace/events/rpcrdma.h
+> >> @@ -2136,6 +2136,32 @@ TRACE_EVENT(svcrdma_sq_post_err,
+> >> 	)
+> >> );
+> >> 
+> >> +TRACE_EVENT(svcrdma_arg_payload,
+> >> +	TP_PROTO(
+> >> +		const struct svc_rqst *rqstp,
+> >> +		unsigned int offset,
+> >> +		unsigned int length
+> >> +	),
+> >> +
+> >> +	TP_ARGS(rqstp, offset, length),
+> >> +
+> >> +	TP_STRUCT__entry(
+> >> +		__field(u32, xid)
+> >> +		__field(u32, offset)
+> >> +		__field(u32, length)
+> >> +	),
+> >> +
+> >> +	TP_fast_assign(
+> >> +		__entry->xid = __be32_to_cpu(rqstp->rq_xid);
+> >> +		__entry->offset = offset_in_page(offset);
+> >> +		__entry->length = length;
+> >> +	),
+> >> +
+> >> +	TP_printk("xid=0x%08x offset=%u length=%u",
+> >> +		__entry->xid, __entry->offset, __entry->length
+> >> +	)
+> >> +);
+> >> +
+> >> #endif /* _TRACE_RPCRDMA_H */
+> >> 
+> >> #include <trace/define_trace.h>
+> >> diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+> >> index 08a620b370ae..cd9c0fb1a470 100644
+> >> --- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+> >> +++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+> >> @@ -838,12 +838,13 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
+> >> 
+> >> 	svc_rdma_get_inv_rkey(rdma_xprt, ctxt);
+> >> 
+> >> -	if (!pcl_is_empty(&ctxt->rc_read_pcl) ||
+> >> -	    !pcl_is_empty(&ctxt->rc_call_pcl)) {
+> >> +	if (!pcl_is_empty(&ctxt->rc_call_pcl) ||
+> >> +	    ctxt->rc_read_pcl.cl_count > 1) {
+> >> 		ret = svc_rdma_process_read_list(rdma_xprt, rqstp, ctxt);
+> >> 		if (ret < 0)
+> >> 			goto out_readfail;
+> >> -	}
+> >> +	} else if (ctxt->rc_read_pcl.cl_count == 1)
+> >> +		svc_rdma_prepare_read_chunk(rqstp, ctxt);
+> >> 
+> >> 	rqstp->rq_xprt_ctxt = ctxt;
+> >> 	rqstp->rq_prot = IPPROTO_MAX;
+> >> @@ -887,5 +888,13 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
+> >> int svc_rdma_argument_payload(struct svc_rqst *rqstp, unsigned int offset,
+> >> 			      unsigned int length)
+> >> {
+> >> -	return 0;
+> >> +	struct svc_rdma_recv_ctxt *ctxt = rqstp->rq_xprt_ctxt;
+> >> +	struct svc_xprt *xprt = rqstp->rq_xprt;
+> >> +	struct svcxprt_rdma *rdma =
+> >> +		container_of(xprt, struct svcxprt_rdma, sc_xprt);
+> >> +
+> >> +	if (!pcl_is_empty(&ctxt->rc_call_pcl) ||
+> >> +	    ctxt->rc_read_pcl.cl_count != 1)
+> >> +		return 0;
+> >> +	return svc_rdma_pull_read_chunk(rdma, rqstp, ctxt, offset, length);
+> >> }
+> >> diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> >> index 29b7d477891c..5f03dfd2fa03 100644
+> >> --- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> >> +++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> >> @@ -707,19 +707,24 @@ static int svc_rdma_build_read_segment(struct svc_rdma_read_info *info,
+> >> 
+> >> 	len = segment->rs_length;
+> >> 	sge_no = PAGE_ALIGN(info->ri_pageoff + len) >> PAGE_SHIFT;
+> >> +
+> >> +	trace_printk("pageoff=%u len=%u sges=%u\n",
+> >> +		info->ri_pageoff, len, sge_no);
+> >> +
+> >> 	ctxt = svc_rdma_get_rw_ctxt(cc->cc_rdma, sge_no);
+> >> 	if (!ctxt)
+> >> 		return -ENOMEM;
+> >> 	ctxt->rw_nents = sge_no;
+> >> +	head->rc_page_count += sge_no;
+> >> 
+> >> 	sg = ctxt->rw_sg_table.sgl;
+> >> 	for (sge_no = 0; sge_no < ctxt->rw_nents; sge_no++) {
+> >> 		seg_len = min_t(unsigned int, len,
+> >> 				PAGE_SIZE - info->ri_pageoff);
+> >> 
+> >> -		if (!info->ri_pageoff)
+> >> -			head->rc_page_count++;
+> >> -
+> >> +		trace_printk("  page=%p seg_len=%u offset=%u\n",
+> >> +			rqstp->rq_pages[info->ri_pageno], seg_len,
+> >> +			info->ri_pageoff);
+> >> 		sg_set_page(sg, rqstp->rq_pages[info->ri_pageno],
+> >> 			    seg_len, info->ri_pageoff);
+> >> 		sg = sg_next(sg);
+> >> @@ -804,15 +809,14 @@ static int svc_rdma_copy_inline_range(struct svc_rdma_read_info *info,
+> >> 	unsigned int page_no, numpages;
+> >> 
+> >> 	numpages = PAGE_ALIGN(info->ri_pageoff + remaining) >> PAGE_SHIFT;
+> >> +	head->rc_page_count += numpages;
+> >> +
+> >> 	for (page_no = 0; page_no < numpages; page_no++) {
+> >> 		unsigned int page_len;
+> >> 
+> >> 		page_len = min_t(unsigned int, remaining,
+> >> 				 PAGE_SIZE - info->ri_pageoff);
+> >> 
+> >> -		if (!info->ri_pageoff)
+> >> -			head->rc_page_count++;
+> >> -
+> >> 		dst = page_address(rqstp->rq_pages[info->ri_pageno]);
+> >> 		memcpy(dst + info->ri_pageno, src + offset, page_len);
+> >> 
+> >> @@ -1092,15 +1096,8 @@ static noinline int svc_rdma_read_special(struct svc_rdma_read_info *info)
+> >>  * @rqstp: set of pages to use as Read sink buffers
+> >>  * @head: pages under I/O collect here
+> >>  *
+> >> - * The RPC/RDMA protocol assumes that the upper layer's XDR decoders
+> >> - * pull each Read chunk as they decode an incoming RPC message.
+> >> - *
+> >> - * On Linux, however, the server needs to have a fully-constructed RPC
+> >> - * message in rqstp->rq_arg when there is a positive return code from
+> >> - * ->xpo_recvfrom. So the Read list is safety-checked immediately when
+> >> - * it is received, then here the whole Read list is pulled all at once.
+> >> - * The ingress RPC message is fully reconstructed once all associated
+> >> - * RDMA Reads have completed.
+> >> + * Handle complex Read chunk cases fully before svc_rdma_recvfrom()
+> >> + * returns.
+> >>  *
+> >>  * Return values:
+> >>  *   %1: all needed RDMA Reads were posted successfully,
+> >> @@ -1159,3 +1156,115 @@ int svc_rdma_process_read_list(struct svcxprt_rdma *rdma,
+> >> 	svc_rdma_read_info_free(info);
+> >> 	return ret;
+> >> }
+> >> +
+> >> +/**
+> >> + * svc_rdma_prepare_read_chunk - Prepare rq_arg for Read chunk
+> >> + * @rqstp: set of pages to use as Read sink buffers
+> >> + * @head: pages under I/O collect here
+> >> + *
+> >> + * The Read chunk will be pulled when the upper layer's XDR
+> >> + * decoder calls svc_decode_argument_payload(). In the meantime,
+> >> + * fake up rq_arg.page_len and .len to reflect the size of the
+> >> + * yet-to-be-pulled payload.
+> >> + */
+> >> +void svc_rdma_prepare_read_chunk(struct svc_rqst *rqstp,
+> >> +				 struct svc_rdma_recv_ctxt *head)
+> >> +{
+> >> +	struct svc_rdma_chunk *chunk = pcl_first_chunk(&head->rc_read_pcl);
+> >> +	unsigned int length = xdr_align_size(chunk->ch_length);
+> >> +	struct xdr_buf *buf = &rqstp->rq_arg;
+> >> +
+> >> +	buf->tail[0].iov_base = buf->head[0].iov_base + chunk->ch_position;
+> >> +	buf->tail[0].iov_len = buf->head[0].iov_len - chunk->ch_position;
+> >> +	buf->head[0].iov_len = chunk->ch_position;
+> >> +
+> >> +	buf->page_len = length;
+> >> +	buf->len += length;
+> >> +	buf->buflen += length;
+> >> +
+> >> +	/*
+> >> +	 * rq_respages starts after the last arg page. Note that we
+> >> +	 * don't know the offset yet, so add an extra page as slack.
+> >> +	 */
+> >> +	length += PAGE_SIZE * 2 - 1;
+> >> +	rqstp->rq_respages = &rqstp->rq_pages[length >> PAGE_SHIFT];
+> >> +	rqstp->rq_next_page = rqstp->rq_respages + 1;
+> >> +}
+> >> +
+> >> +/**
+> >> + * svc_rdma_pull_read_chunk - Pull one Read chunk from the client
+> >> + * @rdma: controlling RDMA transport
+> >> + * @rqstp: set of pages to use as Read sink buffers
+> >> + * @head: pages under I/O collect here
+> >> + * @offset: offset of payload in file's page cache
+> >> + * @length: size of payload, in bytes
+> >> + *
+> >> + * Once the upper layer's XDR decoder has decoded the length of
+> >> + * the payload and it's offset, we can be clever about setting up
+> >> + * the RDMA Read sink buffer so that the VFS does not have to
+> >> + * re-align the payload once it is received.
+> >> + *
+> >> + * Caveat: To keep things simple, this is an optimization that is
+> >> + *	   used only when there is a single Read chunk in the Read
+> >> + *	   list.
+> >> + *
+> >> + * Return values:
+> >> + *   %0: all needed RDMA Reads were posted successfully,
+> >> + *   %-EINVAL: client provided the wrong chunk size,
+> >> + *   %-ENOMEM: rdma_rw context pool was exhausted,
+> >> + *   %-ENOTCONN: posting failed (connection is lost),
+> >> + *   %-EIO: rdma_rw initialization failed (DMA mapping, etc).
+> >> + */
+> >> +int svc_rdma_pull_read_chunk(struct svcxprt_rdma *rdma, struct svc_rqst *rqstp,
+> >> +			     struct svc_rdma_recv_ctxt *head,
+> >> +			     unsigned int offset, unsigned int length)
+> >> +{
+> >> +	struct svc_rdma_read_info *info;
+> >> +	struct svc_rdma_chunk_ctxt *cc;
+> >> +	struct svc_rdma_chunk *chunk;
+> >> +	int ret;
+> >> +
+> >> +	trace_svcrdma_arg_payload(rqstp, offset, length);
+> >> +
+> >> +	/* Sanity: the Requester must have provided enough
+> >> +	 * bytes to fill the XDR opaque.
+> >> +	 */
+> >> +	chunk = pcl_first_chunk(&head->rc_read_pcl);
+> >> +	if (length > chunk->ch_length)
+> >> +		return -EINVAL;
+> >> +
+> >> +	info = svc_rdma_read_info_alloc(rdma);
+> >> +	if (!info)
+> >> +		return -ENOMEM;
+> >> +	cc = &info->ri_cc;
+> >> +	info->ri_rqst = rqstp;
+> >> +	info->ri_readctxt = head;
+> >> +	info->ri_pageno = 0;
+> >> +	info->ri_pageoff = offset_in_page(offset);
+> >> +	info->ri_totalbytes = 0;
+> >> +
+> >> +	ret = svc_rdma_build_read_chunk(info, chunk);
+> >> +	if (ret < 0)
+> >> +		goto out_err;
+> >> +	rqstp->rq_arg.pages = &info->ri_rqst->rq_pages[0];
+> >> +	rqstp->rq_arg.page_base = offset_in_page(offset);
+> >> +	rqstp->rq_arg.buflen += offset_in_page(offset);
+> >> +
+> >> +	trace_svcrdma_post_read_chunk(&cc->cc_cid, cc->cc_sqecount);
+> >> +	init_completion(&cc->cc_done);
+> >> +	ret = svc_rdma_post_chunk_ctxt(cc);
+> >> +	if (ret < 0)
+> >> +		goto out_err;
+> >> +
+> >> +	ret = 0;
+> >> +	wait_for_completion(&cc->cc_done);
+> >> +	if (cc->cc_status != IB_WC_SUCCESS)
+> >> +		ret = -EIO;
+> >> +
+> >> +	/* Ensure svc_rdma_recv_ctxt_put() does not try to release pages */
+> >> +	head->rc_page_count = 0;
+> >> +
+> >> +out_err:
+> >> +	svc_rdma_read_info_free(info);
+> >> +	return ret;
+> >> +}
+> >> 
+> 
+> --
+> Chuck Lever
+> 
+> 
