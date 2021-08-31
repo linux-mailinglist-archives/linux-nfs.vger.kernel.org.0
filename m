@@ -2,122 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 281803FC20A
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Aug 2021 07:06:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A022C3FC73C
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Aug 2021 14:29:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233905AbhHaFAF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 31 Aug 2021 01:00:05 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:43422 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229681AbhHaFAF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Aug 2021 01:00:05 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 0CE8E20106;
-        Tue, 31 Aug 2021 04:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1630385950; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+        id S229794AbhHaM12 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 31 Aug 2021 08:27:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:56097 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229625AbhHaM11 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Aug 2021 08:27:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1630412792;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=3YiktSWIJng9g/Dkiu/bU4dtkQgaEE8phjWhC9bkFps=;
-        b=qklGnEwlQmktk69iqwIBFOMwneATF0bjMzzTerV3PPLQwGuzLpj7wMFRD65obHp8DGYRn1
-        qa0sMR6IYzZxuQA+QnqADhcjKWG2RtEvRczUKFu+bGoLNAQIeGM79RMsXc2U8E1RI3ceLu
-        40UwLr72kRBbo/EwH5eWz/3Km7Oelac=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1630385950;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3YiktSWIJng9g/Dkiu/bU4dtkQgaEE8phjWhC9bkFps=;
-        b=D0Fdrm1Rk5MuICpn8t2PDjVFSAgiGsne7uj93QxIkVTuy7EkGgGzTXPCaZ4F/caUGDz3IN
-        t6QhH2RrcNT1C/Aw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        bh=tK3C44gbpJOAF7Lq8U9wVbpEND9tIhFpgRCKgTH9408=;
+        b=hynzU/9NriSW3kPzpemtNYFRxuO6Ji6r8tN06hyiNsKT1+9c6npnQfxeiiOzr3RkWqp4+c
+        9S18pFKmRh9WW4CuybAuR2SnR9WjP4tS1oAvzhomBQGfeFDzJnnhFMhzU5VIAww7omZ9M+
+        Oa7Pxf8kxre/QERfXiQTqdbJeEFO/7o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-392-XsOHGkMEPB6tqRvr1Sfv9A-1; Tue, 31 Aug 2021 08:26:30 -0400
+X-MC-Unique: XsOHGkMEPB6tqRvr1Sfv9A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6AA0513A4A;
-        Tue, 31 Aug 2021 04:59:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id BCEqChy3LWEWAwAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 31 Aug 2021 04:59:08 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0238287D54D;
+        Tue, 31 Aug 2021 12:26:30 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7EA4B60CA0;
+        Tue, 31 Aug 2021 12:26:29 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     schumaker.anna@gmail.com
+Cc:     steved@redhat.com, linux-nfs@vger.kernel.org,
+        Anna.Schumaker@Netapp.com
+Subject: Re: [PATCH v3 0/9] Add a tool for using the new sysfs files
+Date:   Tue, 31 Aug 2021 08:26:28 -0400
+Message-ID: <B3E32B3D-1363-4AC6-900E-96D0E11973D0@redhat.com>
+In-Reply-To: <20210830155653.1386161-1-Anna.Schumaker@Netapp.com>
+References: <20210830155653.1386161-1-Anna.Schumaker@Netapp.com>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Christoph Hellwig" <hch@infradead.org>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        "Chuck Lever" <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        "Josef Bacik" <josef@toxicpanda.com>
-Subject: Re: [PATCH v2] BTRFS/NFSD: provide more unique inode number for btrfs export
-In-reply-to: <YSnhHl0HDOgg07U5@infradead.org>
-References: <162995209561.7591.4202079352301963089@noble.neil.brown.name>,
- <162995778427.7591.11743795294299207756@noble.neil.brown.name>,
- <YSkQ31UTVDtBavOO@infradead.org>,
- <163010550851.7591.9342822614202739406@noble.neil.brown.name>,
- <YSnhHl0HDOgg07U5@infradead.org>
-Date:   Tue, 31 Aug 2021 14:59:05 +1000
-Message-id: <163038594541.7591.11109978693705593957@noble.neil.brown.name>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 28 Aug 2021, Christoph Hellwig wrote:
-> On Sat, Aug 28, 2021 at 09:05:08AM +1000, NeilBrown wrote:
-> > There doesn't seem to be any other option - and this is still an
-> > improvement over the current behaviour.
-> >=20
-> > Collisions should still be quite a few years away, and there is hope
-> > that the btrfs developers will take action before then to provide some
-> > certainty.   Not much hope, but some.
->=20
-> I think that is a very dangerous assumption.  Given how every inode
-> allocation tends to be somewhat predictable I'm also really worried
-> that this actually opens up an attach vector.  Last but not least
+On 30 Aug 2021, at 11:56, schumaker.anna@gmail.com wrote:
 
-It doesn't 'open up' anything because it is already possible to cause inode
-number collisions for NFS mounts of BTRFS.  So this patch is a net
-improvement.
+> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+>
+> okay, or would it be better to name it "nfs" with "sysfs" as a
+> subcommand? Going with just "nfs" as the command name would allow us to
+> add other non-sysfs tools as subcommands in the future (such as `nfs stat`
+> to call `nfsstat`, or for new commands that would otherwise be prefixed
+> with "nfs")
+>
+> Thoughts?
 
-I agree that it isn't perfect, but it is the best I have managed to find
-and it does solve real problems.  Can you suggest any way to make it
-better?
+I'm in favor of having a top-level nfs command tree for tools and
+administrators, and even dropping the intermediate "sysfs" bit for these
+subcommands.  I'd like to use `nfs xprt` and `nfs rpc-client`..etc.  I think
+that the intermediate 'sysfs' is unnecessary.
 
-> I also very much disagree with any of the impact to common code.
-> Most importantly the kstat structure, which exist to support the stat
-> family of system calls and not as a side channel for NFS file handles
-> (nevermind that it is hidden in a nfs patch and didn't even Cc the
-> fsdevel list), but also all the impact to the generic nfsd code for
-> this very broken concept.  If you want to support such a scheme in
-> btrfs as the lesser of evils (which I disagree with), please make
-> sure it stays self-contained in the btrfs specific file handle
-> encoding and decoding.
+If I can ever get around to completing it, I have some work for displaying
+mount to xprt relationships and forcibly unmounting for unavailable servers
+where I would like to use `nfs shutdown` or some variation.
 
-Making the change purely in btrfs is simply not possible.  There is no
-way for btrfs to provide nfsd with a different inode number.  To move
-the bulk of the change into btrfs code we would need - at the very least
-- some way for nfsd to provide the filehandle when requesting stat
-information.  We would also need to provide a reference filehandle when
-requesting a dentry->filehandle conversion.  Cluttering the
-export_operations like that just for btrfs doesn't seem like the right
-balance.  I agree that cluttering kstat is not ideal, but it was a case
-of choosing the minimum change for the maximum effect.
+Ben
 
-fsdevel *was* cc:ed on the early discussion of this patch
-
-https://lwn.net/ml/linux-fsdevel/162969155423.9892.18322100025025288277@noble=
-.neil.brown.name/
-
-I felt we were at a point where I really needed to focus in on the nfsd
-side of the discussion, with the nfsd developers.
-
-As you are probably aware I have already been through several approaches
-to solve this problem.  I'm not against exploring other avenues, but
-only if they are genuinely likely to provide measurably better results.=20
-I'd be very happy to hear your suggestions.
-
-NeilBrown
