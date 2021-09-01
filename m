@@ -2,182 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5731B3FCF3A
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Aug 2021 23:38:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 875C43FD45C
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Sep 2021 09:21:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241378AbhHaVjl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 31 Aug 2021 17:39:41 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:33288 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241367AbhHaVjk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Aug 2021 17:39:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630445925;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=jF9rwEM7cmKziqpDUf57DgLJOh4uDfmAVb6WTLHCRQc=;
-        b=ii945TxNSMLPUT/tzKaTVTuV4h5KyaGuwcTbN24EP1ItLpkAbbGpsWRUwD9WO7lgm7kv19
-        e3c6R/YT9KeUIJmZTa5Au2idzV6wtIIdSkD0GpL1N5kEftHBszQHfMC3qu8USI78YhQUY0
-        TT9wodvv7oYQrLEdgzS3ElG09B16GQY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-584-etE7GrocP62B622SZDpz4g-1; Tue, 31 Aug 2021 17:38:43 -0400
-X-MC-Unique: etE7GrocP62B622SZDpz4g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1928D8CC784;
-        Tue, 31 Aug 2021 21:38:42 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6CB1D60843;
-        Tue, 31 Aug 2021 21:38:35 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        David Wysochanski <dwysocha@redhat.com>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] fscache: Fixes and rewrite preparation
+        id S242567AbhIAHWU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Sep 2021 03:22:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242500AbhIAHWT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Sep 2021 03:22:19 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B8F0C061575;
+        Wed,  1 Sep 2021 00:21:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=lc17SoGeHMPTwzG9UqBo7b/uRedgJVdZcuMDmdo1GPY=; b=pjipg5YvXPbY+yZUIhU9oHqA44
+        4MalxhjZ2SS+OKHxo2aveAICM9LTOcm4142w4c30rtCKyKG+A7owPY/VeQBvquBl/TfQ8ea9emyGn
+        7uwz/H8lJGKIP12pKgmO9th+8so2ZmcwPUUHev1N3walCATnee9iWznlRJfidW0+eva/Wbqy3SYyl
+        RBVBoWhZyji+RNzdnM4ZTlFciO7qBZXxSxEhUr1GeSLvIXWj9GD2NGFSTVuy+Ssdp8nibATafXiqC
+        EWBDphWlCKmAVQbDVx52kyq9DCmTYOMwqC5bgi3kJ2KBB11KrxT1zajcCZlIrwa1aMbQfRsf7PLDC
+        zHOfWBdw==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mLKXW-001z9l-Ul; Wed, 01 Sep 2021 07:20:18 +0000
+Date:   Wed, 1 Sep 2021 08:20:06 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2] BTRFS/NFSD: provide more unique inode number for
+ btrfs export
+Message-ID: <YS8ppl6SYsCC0cql@infradead.org>
+References: <162995209561.7591.4202079352301963089@noble.neil.brown.name>
+ <162995778427.7591.11743795294299207756@noble.neil.brown.name>
+ <YSkQ31UTVDtBavOO@infradead.org>
+ <163010550851.7591.9342822614202739406@noble.neil.brown.name>
+ <YSnhHl0HDOgg07U5@infradead.org>
+ <163038594541.7591.11109978693705593957@noble.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3282507.1630445914.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 31 Aug 2021 22:38:34 +0100
-Message-ID: <3282508.1630445914@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <163038594541.7591.11109978693705593957@noble.neil.brown.name>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus,
+On Tue, Aug 31, 2021 at 02:59:05PM +1000, NeilBrown wrote:
+> Making the change purely in btrfs is simply not possible.  There is no
+> way for btrfs to provide nfsd with a different inode number.  To move
+> the bulk of the change into btrfs code we would need - at the very least
+> - some way for nfsd to provide the filehandle when requesting stat
+> information.  We would also need to provide a reference filehandle when
+> requesting a dentry->filehandle conversion.  Cluttering the
+> export_operations like that just for btrfs doesn't seem like the right
+> balance.  I agree that cluttering kstat is not ideal, but it was a case
+> of choosing the minimum change for the maximum effect.
 
-Can you pull these changes please?  They perform some preparatory work for=
- the
-fscache rewrite that's being worked on and fix some bugs.  These include:
+So you're papering over a btrfs bug by piling up cludges in the nsdd
+code that has not business even knowing about this btrfs bug, while
+leaving other users of inodes numbers and file handles broken?
 
- (1) Always select netfs stats when enabling fscache stats since they're
-     displayed through the same procfile.
+If you only care about file handles:  this is what the export operations
+are for.  If you care about inode numbers:  well, it is up to btrfs
+to generate uniqueue inode numbers.  It currently doesn't do that, and
+no amount of papering over that in nfsd is going to fix the issue.
 
- (2) Add a cookie debug ID that can be used in tracepoints instead of a
-     pointer and cache it in the netfs_cache_resources struct rather than
-     in the netfs_read_request struct to make it more available.
-
- (3) Use file_inode() in cachefiles rather than dereferencing file->f_inod=
-e
-     directly.
-
- (4) Provide a procfile to display fscache cookies.
-
- (5) Remove the fscache and cachefiles histogram procfiles.
-
- (6) Remove the fscache object list procfile.
-
- (7) Avoid using %p in fscache and cachefiles as the value is hashed and
-     not comparable to the register dump in an oops trace.
-
- (8) Fix the cookie hash function to actually achieve useful dispersion.
-
- (9) Fix fscache_cookie_put() so that it doesn't dereference the cookie
-     pointer in the tracepoint after the refcount has been decremented
-     (we're only allowed to do that if we decremented it to zero).
-
-(10) Use refcount_t rather than atomic_t for the fscache_cookie refcount.
-
-Some of these patches have been posted before as part of a larger patchset
-that effected almost the whole rewrite[1].
-
-Changes
-=3D=3D=3D=3D=3D=3D=3D
-ver #2:
- - Fix a NULL pointer ref in a tracepoint (that patch reposted here [2]).
-
-David
-
-Link: https://lore.kernel.org/r/162431188431.2908479.14031376932042135080.=
-stgit@warthog.procyon.org.uk/ # v1
-Link: https://lore.kernel.org/r/160588455242.3465195.3214733858273019178.s=
-tgit@warthog.procyon.org.uk/ [1]
-Link: https://lore.kernel.org/r/2512396.1630067489@warthog.procyon.org.uk/=
- [2]
-
----
-The following changes since commit e73f0f0ee7541171d89f2e2491130c7771ba58d=
-3:
-
-  Linux 5.14-rc1 (2021-07-11 15:07:40 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
-/fscache-next-20210829
-
-for you to fetch changes up to 20ec197bfa13c5b799fc9527790ea7b5374fc8f2:
-
-  fscache: Use refcount_t for the cookie refcount instead of atomic_t (202=
-1-08-27 13:34:03 +0100)
-
-----------------------------------------------------------------
-fscache changes and fixes
-
-----------------------------------------------------------------
-David Howells (12):
-      fscache: Select netfs stats if fscache stats are enabled
-      netfs: Move cookie debug ID to struct netfs_cache_resources
-      cachefiles: Use file_inode() rather than accessing ->f_inode
-      fscache: Add a cookie debug ID and use that in traces
-      fscache: Procfile to display cookies
-      fscache, cachefiles: Remove the histogram stuff
-      fscache: Remove the object list procfile
-      fscache: Change %p in format strings to something else
-      cachefiles: Change %p in format strings to something else
-      fscache: Fix cookie key hashing
-      fscache: Fix fscache_cookie_put() to not deref after dec
-      fscache: Use refcount_t for the cookie refcount instead of atomic_t
-
- fs/cachefiles/Kconfig             |  19 --
- fs/cachefiles/Makefile            |   2 -
- fs/cachefiles/bind.c              |   2 -
- fs/cachefiles/interface.c         |   6 +-
- fs/cachefiles/internal.h          |  25 ---
- fs/cachefiles/io.c                |   6 +-
- fs/cachefiles/key.c               |   2 +-
- fs/cachefiles/main.c              |   7 -
- fs/cachefiles/namei.c             |  61 ++----
- fs/cachefiles/proc.c              | 114 -----------
- fs/cachefiles/xattr.c             |   4 +-
- fs/fscache/Kconfig                |  25 +--
- fs/fscache/Makefile               |   2 -
- fs/fscache/cache.c                |  11 +-
- fs/fscache/cookie.c               | 201 +++++++++++++-----
- fs/fscache/fsdef.c                |   3 +-
- fs/fscache/histogram.c            |  87 --------
- fs/fscache/internal.h             |  57 ++----
- fs/fscache/main.c                 |  39 ++++
- fs/fscache/netfs.c                |   2 +-
- fs/fscache/object-list.c          | 414 ---------------------------------=
------
- fs/fscache/object.c               |   8 -
- fs/fscache/operation.c            |   3 -
- fs/fscache/page.c                 |   6 -
- fs/fscache/proc.c                 |  20 +-
- include/linux/fscache-cache.h     |   4 -
- include/linux/fscache.h           |   4 +-
- include/linux/netfs.h             |   2 +-
- include/trace/events/cachefiles.h |  68 +++----
- include/trace/events/fscache.h    | 160 +++++++--------
- include/trace/events/netfs.h      |   2 +-
- 31 files changed, 368 insertions(+), 998 deletions(-)
- delete mode 100644 fs/cachefiles/proc.c
- delete mode 100644 fs/fscache/histogram.c
- delete mode 100644 fs/fscache/object-list.c
-
+If XORing a little more entropy into the inode number is a good enough
+band aid (and I strongly disagree with that), do it inside btrfs for
+every place they report the inode number.  There is nothing NFS-specific
+about that.
