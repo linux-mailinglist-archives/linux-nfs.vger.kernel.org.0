@@ -2,99 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2DC53FDE84
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Sep 2021 17:22:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D67C3FE1F7
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Sep 2021 20:11:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242530AbhIAPXu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Sep 2021 11:23:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41718 "EHLO
+        id S1346857AbhIASM1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Sep 2021 14:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233979AbhIAPXt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Sep 2021 11:23:49 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 136BBC061575;
-        Wed,  1 Sep 2021 08:22:53 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id DE22E35BB; Wed,  1 Sep 2021 11:22:51 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org DE22E35BB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1630509771;
-        bh=o/wgkqf+HNM4jw0xc68wZiht+EdeCND2pgRsIXP1Y5g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kdjRKPBogUMbLDVhrxt9qYx1CNpuiwFjoul4G11wtXpJ3/k5PsPURbp8/GF0vvtCk
-         +XUY8Wn7uAwoJpE4dPS92EO2wcTMvX+IlsG3YQB6FLkOsQSJYxP+iOr6urSBizRbls
-         zcQM7mGMlNdvVFkFMRZ2RsPzxNjiM9misvamhyDQ=
-Date:   Wed, 1 Sep 2021 11:22:51 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2] BTRFS/NFSD: provide more unique inode number for
- btrfs export
-Message-ID: <20210901152251.GA6533@fieldses.org>
-References: <162995209561.7591.4202079352301963089@noble.neil.brown.name>
- <162995778427.7591.11743795294299207756@noble.neil.brown.name>
- <YSkQ31UTVDtBavOO@infradead.org>
- <163010550851.7591.9342822614202739406@noble.neil.brown.name>
- <YSnhHl0HDOgg07U5@infradead.org>
- <163038594541.7591.11109978693705593957@noble.neil.brown.name>
- <YS8ppl6SYsCC0cql@infradead.org>
+        with ESMTP id S1346837AbhIASMX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Sep 2021 14:12:23 -0400
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 610C2C061198
+        for <linux-nfs@vger.kernel.org>; Wed,  1 Sep 2021 11:11:23 -0700 (PDT)
+Received: by mail-qv1-xf2e.google.com with SMTP id ew6so316860qvb.5
+        for <linux-nfs@vger.kernel.org>; Wed, 01 Sep 2021 11:11:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
+        b=LD3mpzy1s09M3e/Eheelu/QMtbN6lrYJQ+S1BsYhmG4zP9OQuKOeD1zHV2lZaK7Hdt
+         vXoBMumPRACuZhnwd8TYAFIvdImPe0Zn4DA41GnzHGsnpDZPE0wUFWVFNzgpxF6bh6D8
+         CVxTiiIN7w8BVpPirFLytZKK2cFqqV6q9qR8cw4XmdYYgGZs+MdnDeP+neEr/SbnLI2h
+         mwT6gqJ8+HvNCQei5Zu6b3U+/YcUOepEDfVn6t0IkNG5YzxTV8mH8IqZ4zEsqBchdgxI
+         E/zGH3KCiuS7UdfEMBVKPbpzhhPyh4quLRALvE4iCHtswqSZDgWUuzksodIw8OWwGR1Z
+         0RlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
+        b=aGaWi4TlLU73gSq3jz5x3qDMfFeW0UWHW17fIzxbgRkO2ui4348ZBv5TPA+e381mav
+         eYJxIFR9VbhC782Vux9Cqg+XjPXHC6k69vR8AyIaie+yOO6vBn6IVyeedCjxZoqxkscm
+         GPjys7wql7xPzo5NUHa5Hzm6xntBtgibKZdyUTuIgU8sPcH7NLOCI7Uz/sbv/jf4bMwJ
+         ejOr9To3vBX5yqyWC4Ec3eZEvkmhg8jAGokWa/fGc/W8vFCF9hdMCGNF6fofdaI7ftrx
+         rkxoyyQrP+nFlXReYttaPrNCdxFI2gCN3yh4PC6RPuOM1YIN5WaXcLZXIy/58DXHwzjT
+         kSnQ==
+X-Gm-Message-State: AOAM531nFj8wIOpStb9UwKoNFeob5G8yqZDuEPurz63ZkoZdQsuN3yUv
+        99DpgJMEfYlBcnVPD81sVLTT8aub5TdvmyMzMQ/qNgvHrHtlGw==
+X-Google-Smtp-Source: ABdhPJwbbBYGjUEQSS3Bb7EfYk34O3AVuG22pVIF78fkATQG8c+PQmeHgcc35+YrriS74Wl5STB8JbzOasp+8kCVBlk=
+X-Received: by 2002:a67:8c5:: with SMTP id 188mr1017695vsi.4.1630519870726;
+ Wed, 01 Sep 2021 11:11:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YS8ppl6SYsCC0cql@infradead.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Received: by 2002:ab0:740d:0:0:0:0:0 with HTTP; Wed, 1 Sep 2021 11:11:10 -0700 (PDT)
+From:   CorisBank International <corisbankintlbf@gmail.com>
+Date:   Wed, 1 Sep 2021 11:11:10 -0700
+Message-ID: <CA+25hwzjLgVdtDXYWeuqFBTvAbpc4oxK0dW54s7tjGNyU_m0ow@mail.gmail.com>
+Subject: CORISBANK INTERNATIONAL OFFICIAL NOTIFICATION
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Sep 01, 2021 at 08:20:06AM +0100, Christoph Hellwig wrote:
-> On Tue, Aug 31, 2021 at 02:59:05PM +1000, NeilBrown wrote:
-> > Making the change purely in btrfs is simply not possible.  There is no
-> > way for btrfs to provide nfsd with a different inode number.  To move
-> > the bulk of the change into btrfs code we would need - at the very least
-> > - some way for nfsd to provide the filehandle when requesting stat
-> > information.  We would also need to provide a reference filehandle when
-> > requesting a dentry->filehandle conversion.  Cluttering the
-> > export_operations like that just for btrfs doesn't seem like the right
-> > balance.  I agree that cluttering kstat is not ideal, but it was a case
-> > of choosing the minimum change for the maximum effect.
-> 
-> So you're papering over a btrfs bug by piling up cludges in the nsdd
-> code that has not business even knowing about this btrfs bug, while
-> leaving other users of inodes numbers and file handles broken?
-> 
-> If you only care about file handles:  this is what the export operations
-> are for.  If you care about inode numbers:  well, it is up to btrfs
-> to generate uniqueue inode numbers.  It currently doesn't do that, and
-> no amount of papering over that in nfsd is going to fix the issue.
-> 
-> If XORing a little more entropy
+Att: Client
 
-It's stronger than "a little more entropy".  We know enough about how
-the numbers being XOR'd grow to know that collisions are only going to
-happen in some extreme use cases.  (If I understand correctly.)
 
-> into the inode number is a good enough band aid (and I strongly
-> disagree with that), do it inside btrfs for every place they report
-> the inode number.  There is nothing NFS-specific about that.
+CORISBANK INTERNATIONAL URGENT NOTIFICATION
 
-Neil tried something like that:
+Notification / Notification/ Notification
 
-	https://lore.kernel.org/linux-nfs/162761259105.21659.4838403432058511846@noble.neil.brown.name/
+Note, We are writing to inform you officially that Finally the Central
+Bank Financial Authority have approved to transfer your $8.2Million
+which was signed by late Mrs Rose Banneth the COVID.19 victim to
+transfer to you, Late Mrs Rose Banneth the France Lady contacted us to
+transfer her fund in our bank to you for Orphanage work before she
+died by the COVID.19
+and as it is now, you will receive your fund through our corresponding
+bank in Dubai [Emirate Investment Bank ] for security reason. Please
+you should reconfirm your details to receive the $8.2Million.
 
-	"The patch below, which is just a proof-of-concept, changes
-	btrfs to report a uniform st_dev, and different (64bit) st_ino
-	in different subvols."
+Name, Country, Address, occupations, Age, Telephone number, account
+Details so that we can immediately forward to the World Bank to
+transfer the fund.
+You are advised to comply on timely manner to permit this esteem bank
+transfer your fund as scheduled.
 
-(Though actually you're proposing keeping separate st_dev?)
+We look forward to serving you better
+Your Financial Comfort Is A Priority
+Thank you for choosing Corisbank International.
 
-I looked back through a couple threads to try to understand why we
-couldn't do that (on new filesystems, with a mkfs option to choose new
-or old behavior) and still don't understand.  But the threads are long.
+Sincerely,
 
-There are objections to a new mount option (which seem obviously wrong;
-this should be a persistent feature of the on-disk filesystem).
+----
 
---b.
+Mr Diakarya Ouattara
+Managing Director
+Bank Coris
+Burkina Faso
++226 556 163 37
+financial_bf_info@accountant.com
