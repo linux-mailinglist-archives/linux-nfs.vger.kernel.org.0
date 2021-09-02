@@ -2,86 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71FC53FE858
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Sep 2021 06:19:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69FAC3FE9CE
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Sep 2021 09:12:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231298AbhIBEUR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 Sep 2021 00:20:17 -0400
-Received: from out20-39.mail.aliyun.com ([115.124.20.39]:59990 "EHLO
-        out20-39.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229814AbhIBEUM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Sep 2021 00:20:12 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04758037|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0527919-0.000311258-0.946897;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047198;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=6;RT=6;SR=0;TI=SMTPD_---.LEMlkBh_1630556352;
-Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.LEMlkBh_1630556352)
-          by smtp.aliyun-inc.com(10.147.40.7);
-          Thu, 02 Sep 2021 12:19:12 +0800
-Date:   Thu, 02 Sep 2021 12:19:15 +0800
-From:   Wang Yugui <wangyugui@e16-tech.com>
-To:     Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] Don't block writes to swap-files with ETXTBSY.
-Cc:     NeilBrown <neilb@suse.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        trond.myklebust@primarydata.com, linux-nfs@vger.kernel.org
-In-Reply-To: <20210827151644.GB19199@lst.de>
-References: <162993585927.7591.10174443410031404560@noble.neil.brown.name> <20210827151644.GB19199@lst.de>
-Message-Id: <20210902121914.BFAC.409509F4@e16-tech.com>
+        id S242504AbhIBHNt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Sep 2021 03:13:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242126AbhIBHNs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Sep 2021 03:13:48 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3332C061575;
+        Thu,  2 Sep 2021 00:12:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=yxQ+B6Ukg3zVw5HXezCpBfzdJ1y5rPw/KWlf+grn+dg=; b=VHn7btuBVz0pJrn8OzQp/B1KIV
+        xpWh4PZNldgBonL4GfApypUMafAalZYJ/u1O8p3bRl9Re9LTEKZDUSXNtUMhc78s2yjy+vzXaBCd1
+        O+J96YyqMmXO6Hbn+bLCnVRz4bmjUM9TJCpIQfz1/zNc87V6uUsdcqe8AgbDIXHBRnxLFH5Rv4cIG
+        WNvLEDFXtcYecPVuYBGWkK9kOcr5M8R/RHwQeNsyZqXHGXidlkrHg7UhBY7oAaZVzXf9ZPb/rRhQR
+        pubn7JB+D2UWxzv/kFhrKSJi0xu+e9nlsJWS7vfwKDzgcJ0s8VRVhL/0vwhZvZ/zigfLCBusF4Kly
+        OyJuhwdg==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mLgso-003CwG-LW; Thu, 02 Sep 2021 07:11:48 +0000
+Date:   Thu, 2 Sep 2021 08:11:34 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, NeilBrown <neilb@suse.de>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2] BTRFS/NFSD: provide more unique inode number for
+ btrfs export
+Message-ID: <YTB5JsW/KLcp10Ef@infradead.org>
+References: <162995209561.7591.4202079352301963089@noble.neil.brown.name>
+ <162995778427.7591.11743795294299207756@noble.neil.brown.name>
+ <YSkQ31UTVDtBavOO@infradead.org>
+ <163010550851.7591.9342822614202739406@noble.neil.brown.name>
+ <YSnhHl0HDOgg07U5@infradead.org>
+ <163038594541.7591.11109978693705593957@noble.neil.brown.name>
+ <YS8ppl6SYsCC0cql@infradead.org>
+ <20210901152251.GA6533@fieldses.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.75.04 [en]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210901152251.GA6533@fieldses.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+On Wed, Sep 01, 2021 at 11:22:51AM -0400, J. Bruce Fields wrote:
+> It's stronger than "a little more entropy".  We know enough about how
+> the numbers being XOR'd grow to know that collisions are only going to
+> happen in some extreme use cases.  (If I understand correctly.)
 
-# drop  torvalds@linux-foundation.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Do we know that a malicious attacker can't reproduce the collisions?
+Because that is the case to worry about.
 
-A Question about ETXTBSY of nfs.
-# I tried google/bing, but yet no good info is found.
-
-test case:
-/ssd is a  nfs directory
-kernel: 5.10.61, 5.4.106 and more
-
-1, on Node1:
-[root@T630 ~]# echo -e '#!/bin/bash\necho hello' >/ssd/a.sh
-[root@T630 ~]# chmod a+x /ssd/a.sh
-
-2, on Node2:
-[root@T640 ~]# /ssd/a.sh
--bash: /ssd/a.sh: /bin/bash: bad interpreter: Text file busy
-[root@T640 ~]# bash /ssd/a.sh
-hello
-[root@T640 ~]# /ssd/a.sh
--bash: /ssd/a.sh: /bin/bash: bad interpreter: Text file busy
-
-Is there any way(flush, sync)  to avoid this ETXTBSY error(Text file busy)?
-
-Best Regards
-Wang Yugui (wangyugui@e16-tech.com)
-2021/09/02
-
-> On Thu, Aug 26, 2021 at 09:57:39AM +1000, NeilBrown wrote:
-> > 
-> > Commit dc617f29dbe5 ("vfs: don't allow writes to swap files")
-> > broke swap-over-NFS as it introduced an ETXTBSY error when NFS tries to
-> > swap-out using ->direct_IO().
-> > 
-> > There is no sound justification for this error.  File permissions are
-> > sufficient to stop non-root users from writing to a swap file, and root
-> > must always be cautious not to do anything dangerous.
-> > 
-> > These checks effectively provide a mandatory write lock on swap, and
-> > mandatory locks are not supported in Linux.
-> > 
-> > So remove all the checks that return ETXTBSY when attempts are made to
-> > write to swap.
+> > into the inode number is a good enough band aid (and I strongly
+> > disagree with that), do it inside btrfs for every place they report
+> > the inode number.  There is nothing NFS-specific about that.
 > 
-> Swap files are not just any files and do need a mandatory write lock
-> as they are part of the kernel VM and writing to them will mess up
-> the kernel badly.  David Howells actually has sent various patches
-> to fix swap over NFS in the last weeks.
+> Neil tried something like that:
+> 
+> 	https://lore.kernel.org/linux-nfs/162761259105.21659.4838403432058511846@noble.neil.brown.name/
+> 
+> 	"The patch below, which is just a proof-of-concept, changes
+> 	btrfs to report a uniform st_dev, and different (64bit) st_ino
+> 	in different subvols."
+> 
+> (Though actually you're proposing keeping separate st_dev?)
 
+No, I'm not suggestion to keep a separate st_dev in that case.  So the
+above scheme looks like the most reasonable (or least unreasonable) of
+the approaches I've seen so far.  I have to admit I've only noticed it
+now given how deep it was hidden in a thread that I only followed bit
+while on vacation.
 
+> I looked back through a couple threads to try to understand why we
+> couldn't do that (on new filesystems, with a mkfs option to choose new
+> or old behavior) and still don't understand.  But the threads are long.
+> 
+> There are objections to a new mount option (which seem obviously wrong;
+> this should be a persistent feature of the on-disk filesystem).
+
+Yes.  Anything like this needs to be persisted.  But a mount option
+might still be a reasonable way to set that persistent flag.
