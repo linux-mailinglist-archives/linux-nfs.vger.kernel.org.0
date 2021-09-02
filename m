@@ -2,81 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 949273FEF46
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Sep 2021 16:19:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 914E13FF277
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Sep 2021 19:37:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345455AbhIBOUj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 Sep 2021 10:20:39 -0400
-Received: from mta-202a.oxsus-vadesecure.net ([51.81.232.240]:52685 "EHLO
-        mta-202a.oxsus-vadesecure.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1345437AbhIBOUe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Sep 2021 10:20:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; bh=0znQ0bZJnEmWup+geyVO0VNC/rch+QaShXhPsF
- RITrw=; c=relaxed/relaxed; d=earthlink.net; h=from:reply-to:subject:
- date:to:cc:resent-date:resent-from:resent-to:resent-cc:in-reply-to:
- references:list-id:list-help:list-unsubscribe:list-subscribe:list-post:
- list-owner:list-archive; q=dns/txt; s=dk12062016; t=1630592181;
- x=1631196981; b=WLdI8UGRB+XHZiDg/kGw2Et3f6J7ygDCeJ663aqkdy13p64uflmUWCw
- huUsS+YFW4sp6aMFUFUrKP055Xaqka04eYyMGOuU9TEcfVakjy/LexdyyJp6LMe+KDroYrb
- fe7QNED1q85rhb6HNX2x15szteFqkiT0JQc1F+mQqfbgKkwMVa/qGkY9LORBGdQjHFpwykt
- DOnWNBeB+9AYUKWtRgod3UaWE2CF8HcoUVXj5YLmmB9OxotZchqHK491Vka7q6/G+pRRZFf
- EB5QqH97EzYE4crrExRl+QcnvMCqgr/3K8DG5XBILN32YkfraT++2klt2EBCH7s4e6z8RGA
- muw==
-Received: from FRANKSTHINKPAD ([76.105.143.216])
- by smtp.oxsus-vadesecure.net ESMTP oxsus2nmtao02p with ngmta
- id 7b29f58e-16a106f312cff353; Thu, 02 Sep 2021 14:16:21 +0000
-From:   "Frank Filz" <ffilzlnx@mindspring.com>
-To:     "'Miklos Szeredi'" <miklos@szeredi.hu>,
-        "'Christoph Hellwig'" <hch@infradead.org>
-Cc:     "'NeilBrown'" <neilb@suse.de>,
-        "'J. Bruce Fields'" <bfields@fieldses.org>,
-        "'Chuck Lever'" <chuck.lever@oracle.com>,
-        "'Linux NFS list'" <linux-nfs@vger.kernel.org>,
-        "'Josef Bacik'" <josef@toxicpanda.com>,
-        <linux-fsdevel@vger.kernel.org>
-References: <162995209561.7591.4202079352301963089@noble.neil.brown.name> <162995778427.7591.11743795294299207756@noble.neil.brown.name> <YSkQ31UTVDtBavOO@infradead.org> <163010550851.7591.9342822614202739406@noble.neil.brown.name> <YSnhHl0HDOgg07U5@infradead.org> <163038594541.7591.11109978693705593957@noble.neil.brown.name> <YS8ppl6SYsCC0cql@infradead.org> <163055561473.24419.12486186372497472066@noble.neil.brown.name> <YTB6NacU9bIOz2vf@infradead.org> <CAJfpegu7rwoFXdtLusyRhrtFgMPxRShesxnBT2Q6iiC_iSGsfg@mail.gmail.com>
-In-Reply-To: <CAJfpegu7rwoFXdtLusyRhrtFgMPxRShesxnBT2Q6iiC_iSGsfg@mail.gmail.com>
-Subject: RE: [PATCH v2] BTRFS/NFSD: provide more unique inode number for btrfs export
-Date:   Thu, 2 Sep 2021 07:16:21 -0700
-Message-ID: <024601d7a005$1b3863c0$51a92b40$@mindspring.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 15.0
-Content-Language: en-us
-Thread-Index: AQIrHUOuRItKwhPpv5iuHWFXVceYzwFdY2wGAe8fACcBhmh95QIesfONAO3IHPoCbGx/fAGLnZteAStbb/8CEbYDYapxJ5Xg
+        id S1346779AbhIBRiZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Sep 2021 13:38:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1346740AbhIBRiS (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 2 Sep 2021 13:38:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 5EA3561100;
+        Thu,  2 Sep 2021 17:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630604239;
+        bh=lOIInIIOXQJqRUQVg1Ez+aC9lKjwRaOyr1jAQeMM5WQ=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=YsYA+cSNC/ZERZVf2i2FRMl0akHHGlc+fft71j7/32qayPivKtRsTpxeaJGrVxJBr
+         muSjRmQJbUlaCMyAVsQkcAmzt7JYpymqO0D46g6lJ0LLvew4GxGEzBumPYJIhZgtM0
+         LbpG8D+sNoJJ0UwH1NXobviAJoH/ybSwgBNpMg6XS0XQZMgt5p+vsq4/NcsjAcgRSG
+         PQoyw0vr3b7RK7hOI4OxHTiW7RsztKsVPj17WTtedrefNjoXJzF7rPBTpdjdMZXooa
+         6kSUlin8En5bEu807xyQHQu9mBLussq4b/Ibh/xLexZ25lkNt/JHZYRubX86+tmYFJ
+         IKoIaTGqUyCwQ==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 552BE60982;
+        Thu,  2 Sep 2021 17:37:19 +0000 (UTC)
+Subject: Re: [GIT PULL] fscache: Fixes and rewrite preparation
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <3282508.1630445914@warthog.procyon.org.uk>
+References: <3282508.1630445914@warthog.procyon.org.uk>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <3282508.1630445914@warthog.procyon.org.uk>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/fscache-next-20210829
+X-PR-Tracked-Commit-Id: 20ec197bfa13c5b799fc9527790ea7b5374fc8f2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 89594c746b00d3755e0792a2407f0b557a30ef37
+Message-Id: <163060423934.29568.15954193420309840599.pr-tracker-bot@kernel.org>
+Date:   Thu, 02 Sep 2021 17:37:19 +0000
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org, dhowells@redhat.com,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> On Thu, 2 Sept 2021 at 09:18, Christoph Hellwig <hch@infradead.org> =
-wrote:
->=20
-> > >  Your attitude seems to be that this is a btrfs problem and must =
-be
-> > > fixed in btrfs.
-> >
-> > Yes.
->=20
-> st_ino space issues affect overlayfs as well.   The two problems are
-> not the same, but do share some characteristics.  And this limitation =
-will likely
-> come up again in the future.
->=20
-> I suspect the long term solution would involve introducing new =
-userspace API
-> (variable length inode numbers) and deprecating st_ino.
-> E.g. make stat return an error if the inode number doesn't fit into =
-st_ino and add
-> a statx extension to return the full number.  But this would be a long =
-process...
+The pull request you sent on Tue, 31 Aug 2021 22:38:34 +0100:
 
-But then what do we do where fileid in NFS is only 64 bits?
+> git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/fscache-next-20210829
 
-The solution of giving each subvol a separate fsid is the only real =
-solution to enlarging the NFS fileid space, however that has downsides =
-on the client side.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/89594c746b00d3755e0792a2407f0b557a30ef37
 
-Frank
+Thank you!
 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
