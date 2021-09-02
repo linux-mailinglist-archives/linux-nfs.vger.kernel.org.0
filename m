@@ -2,108 +2,338 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B493F3FE61C
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Sep 2021 02:34:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 270613FE711
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Sep 2021 03:14:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233654AbhIAXbm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Sep 2021 19:31:42 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:50968 "EHLO
+        id S232882AbhIBBPu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Sep 2021 21:15:50 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:34126 "EHLO
         smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230061AbhIAXbm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Sep 2021 19:31:42 -0400
+        with ESMTP id S229958AbhIBBPu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Sep 2021 21:15:50 -0400
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 22ABB1FF46;
-        Wed,  1 Sep 2021 23:30:44 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id E7CB420305;
+        Thu,  2 Sep 2021 01:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1630539044; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1630545291; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=D1zCUw/WwOnRTS+qsSk3F8pp29G5w0IrcvyeqCJc1+g=;
-        b=FvGjD0i0yybs6AnZEitcDrIhrrU9L58KJcQva+LuWnIRakbNm1Pxuw28ctqvum5VzOMWRI
-        AWTdJrU60KWLxOiiU0tddamLG+9JiJg/o3pSIy/ncmjLBR1IJrPoFLkgfxEnDD2REKtX+1
-        CD0wkhwmP48Rqs2LxQvbYR3hQHG2vP0=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QHncrXZZqa0JJ5bMhn7zdiXgAm5u2hppfabGQYAe1QQ=;
+        b=0RIVN7zqRsda9VjAJkCDCeJt5At3V8wOa6ljCo15SV3THa+bmma2Zs5GJsZ891cmHKRWbv
+        EIhyYVWrge5WdkUuWdX6n6BgwAGxtKNQn+RaDkaMLvSDCeYD3KJJxubPXth9ytn0Cthl65
+        G/6Ypn/stlgzeKvPeUM99pF1mm9N73Y=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1630539044;
+        s=susede2_ed25519; t=1630545291;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=D1zCUw/WwOnRTS+qsSk3F8pp29G5w0IrcvyeqCJc1+g=;
-        b=zWJxhDQYtaQ3yNcjf+7P9gIqTE9tdEI2uRSvf1Rqa5sTP1cq6cMjK4C4LdW/+74HD7f2N8
-        voFmOM0UpdMqb6Cw==
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QHncrXZZqa0JJ5bMhn7zdiXgAm5u2hppfabGQYAe1QQ=;
+        b=pY76a/vvVWSjuwcwq8UsxmzjtK3WQrE+87tP0hI2wAzeCrGspt0PSCu7UcWshdMM+CXO1G
+        T3MksO2ucUFmqQAg==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7629C13B2A;
-        Wed,  1 Sep 2021 23:30:41 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9492A13AE9;
+        Thu,  2 Sep 2021 01:14:50 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id AYYBDSENMGGDNAAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 01 Sep 2021 23:30:41 +0000
+        id U0SlFIolMGELVAAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 02 Sep 2021 01:14:50 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
-To:     "J.  Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     Linux NFS list <linux-nfs@vger.kernel.org>,
-        "Steinar H. Gunderson" <steinar+kernel@gunderson.no>
-Subject: [PATCH] SUNRPC: improve error response to over-size gss credential
-Date:   Thu, 02 Sep 2021 09:30:37 +1000
-Message-id: <163053903731.24419.4079441567942239288@noble.neil.brown.name>
+To:     "Chuck Lever III" <chuck.lever@oracle.com>
+Cc:     "Bruce Fields" <bfields@fieldses.org>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        "Christoph Hellwig" <hch@lst.de>
+Subject: [PATCH 1/3 v3] NFSD: move filehandle format declarations out of "uapi".
+In-reply-to: <F517668C-DD79-4358-96AE-1566B956025A@oracle.com>
+References: <20210827151505.GA19199@lst.de>,
+ <163038488360.7591.7865010833762169362@noble.neil.brown.name>,
+ <20210901074407.GB18673@lst.de>,
+ <F517668C-DD79-4358-96AE-1566B956025A@oracle.com>
+Date:   Thu, 02 Sep 2021 11:14:47 +1000
+Message-id: <163054528774.24419.6639477440713170169@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
-When the NFS server receives a large gss (kerberos) credential and tries
-to pass it up to rpc.svcgssd (which is deprecated), it triggers an
-infinite loop in cache_read().
+A small part of the declaration concerning filehandle format are
+currently in the "uapi" include directory:
+   include/uapi/linux/nfsd/nfsfh.h
 
-cache_request() always returns -EAGAIN, and this causes a "goto again".
+There is a lot more to the filehandle format, including "enum fid_type"
+and "enum nfsd_fsid" which are not exported via "uapi".
 
-This patch:
- - changes the error to -E2BIG to avoid the infinite loop, and
- - generates a WARN_ONCE when rsi_request first sees an over-sized
-   credential.  The warning suggests switching to gssproxy.
+This small part of the filehandle definition is of minimal use outside
+of the kernel, and I can find no evidence that an other code is using
+it. Certainly nfs-utils and wireshark (The most likely candidates) do not
+use these declarations.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D196583
+So move it out of "uapi" by copying the content from
+  include/uapi/linux/nfsd/nfsfh.h
+into
+  fs/nfsd/nfsfh.h
+
+A few unnecessary "#include" directives are not copied, and neither is
+the #define of fh_auth, which is annotated as being for userspace only.
+
+The copyright claims in the uapi file are identical to those in the nfsd
+file, so there is no need to copy those.
+
+The "__u32" style integer types are only needed in "uapi".  In
+kernel-only code we can use the more familiar "u32" style.
+
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- net/sunrpc/auth_gss/svcauth_gss.c | 2 ++
- net/sunrpc/cache.c                | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ fs/nfsd/nfsfh.h                 |  98 ++++++++++++++++++++++++++-
+ include/uapi/linux/nfsd/nfsfh.h | 116 --------------------------------
+ 2 files changed, 97 insertions(+), 117 deletions(-)
+ delete mode 100644 include/uapi/linux/nfsd/nfsfh.h
 
-diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_=
-gss.c
-index a81be45f40d9..e738c0182f09 100644
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -194,6 +194,8 @@ static void rsi_request(struct cache_detail *cd,
- 	qword_addhex(bpp, blen, rsii->in_handle.data, rsii->in_handle.len);
- 	qword_addhex(bpp, blen, rsii->in_token.data, rsii->in_token.len);
- 	(*bpp)[-1] =3D '\n';
-+	WARN_ONCE(*blen < 0,
-+		  "RPCSEC/GSS credential too large - please use gssproxy\n");
- }
+diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+index 6106697adc04..988e4dfdfbd9 100644
+--- a/fs/nfsd/nfsfh.h
++++ b/fs/nfsd/nfsfh.h
+@@ -10,9 +10,105 @@
 =20
- static int rsi_parse(struct cache_detail *cd,
-diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index 1a2c1c44bb00..59641803472c 100644
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -803,7 +803,7 @@ static int cache_request(struct cache_detail *detail,
+ #include <linux/crc32.h>
+ #include <linux/sunrpc/svc.h>
+-#include <uapi/linux/nfsd/nfsfh.h>
+ #include <linux/iversion.h>
+ #include <linux/exportfs.h>
++#include <linux/nfs4.h>
++
++
++/*
++ * This is the old "dentry style" Linux NFSv2 file handle.
++ *
++ * The xino and xdev fields are currently used to transport the
++ * ino/dev of the exported inode.
++ */
++struct nfs_fhbase_old {
++	u32		fb_dcookie;	/* dentry cookie - always 0xfeebbaca */
++	u32		fb_ino;		/* our inode number */
++	u32		fb_dirino;	/* dir inode number, 0 for directories */
++	u32		fb_dev;		/* our device */
++	u32		fb_xdev;
++	u32		fb_xino;
++	u32		fb_generation;
++};
++
++/*
++ * This is the new flexible, extensible style NFSv2/v3/v4 file handle.
++ * by Neil Brown <neilb@cse.unsw.edu.au> - March 2000
++ *
++ * The file handle starts with a sequence of four-byte words.
++ * The first word contains a version number (1) and three descriptor bytes
++ * that tell how the remaining 3 variable length fields should be handled.
++ * These three bytes are auth_type, fsid_type and fileid_type.
++ *
++ * All four-byte values are in host-byte-order.
++ *
++ * The auth_type field is deprecated and must be set to 0.
++ *
++ * The fsid_type identifies how the filesystem (or export point) is
++ *    encoded.
++ *  Current values:
++ *     0  - 4 byte device id (ms-2-bytes major, ls-2-bytes minor), 4byte ino=
+de number
++ *        NOTE: we cannot use the kdev_t device id value, because kdev_t.h
++ *              says we mustn't.  We must break it up and reassemble.
++ *     1  - 4 byte user specified identifier
++ *     2  - 4 byte major, 4 byte minor, 4 byte inode number - DEPRECATED
++ *     3  - 4 byte device id, encoded for user-space, 4 byte inode number
++ *     4  - 4 byte inode number and 4 byte uuid
++ *     5  - 8 byte uuid
++ *     6  - 16 byte uuid
++ *     7  - 8 byte inode number and 16 byte uuid
++ *
++ * The fileid_type identified how the file within the filesystem is encoded.
++ *   The values for this field are filesystem specific, exccept that
++ *   filesystems must not use the values '0' or '0xff'. 'See enum fid_type'
++ *   in include/linux/exportfs.h for currently registered values.
++ */
++struct nfs_fhbase_new {
++	union {
++		struct {
++			u8		fb_version_aux;	/* =3D=3D 1, even =3D> nfs_fhbase_old */
++			u8		fb_auth_type_aux;
++			u8		fb_fsid_type_aux;
++			u8		fb_fileid_type_aux;
++			u32		fb_auth[1];
++		/*	u32		fb_fsid[0]; floating */
++		/*	u32		fb_fileid[0]; floating */
++		};
++		struct {
++			u8		fb_version;	/* =3D=3D 1, even =3D> nfs_fhbase_old */
++			u8		fb_auth_type;
++			u8		fb_fsid_type;
++			u8		fb_fileid_type;
++			u32		fb_auth_flex[]; /* flexible-array member */
++		};
++	};
++};
++
++struct knfsd_fh {
++	unsigned int	fh_size;	/* significant for NFSv3.
++					 * Points to the current size while building
++					 * a new file handle
++					 */
++	union {
++		struct nfs_fhbase_old	fh_old;
++		u32			fh_pad[NFS4_FHSIZE/4];
++		struct nfs_fhbase_new	fh_new;
++	} fh_base;
++};
++
++#define ofh_dcookie		fh_base.fh_old.fb_dcookie
++#define ofh_ino			fh_base.fh_old.fb_ino
++#define ofh_dirino		fh_base.fh_old.fb_dirino
++#define ofh_dev			fh_base.fh_old.fb_dev
++#define ofh_xdev		fh_base.fh_old.fb_xdev
++#define ofh_xino		fh_base.fh_old.fb_xino
++#define ofh_generation		fh_base.fh_old.fb_generation
++
++#define	fh_version		fh_base.fh_new.fb_version
++#define	fh_fsid_type		fh_base.fh_new.fb_fsid_type
++#define	fh_auth_type		fh_base.fh_new.fb_auth_type
++#define	fh_fileid_type		fh_base.fh_new.fb_fileid_type
++#define	fh_fsid			fh_base.fh_new.fb_auth_flex
 =20
- 	detail->cache_request(detail, crq->item, &bp, &len);
- 	if (len < 0)
--		return -EAGAIN;
-+		return -E2BIG;
- 	return PAGE_SIZE - len;
- }
-=20
+ static inline __u32 ino_t_to_u32(ino_t ino)
+ {
+diff --git a/include/uapi/linux/nfsd/nfsfh.h b/include/uapi/linux/nfsd/nfsfh.h
+deleted file mode 100644
+index 427294dd56a1..000000000000
+--- a/include/uapi/linux/nfsd/nfsfh.h
++++ /dev/null
+@@ -1,116 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+-/*
+- * This file describes the layout of the file handles as passed
+- * over the wire.
+- *
+- * Copyright (C) 1995, 1996, 1997 Olaf Kirch <okir@monad.swb.de>
+- */
+-
+-#ifndef _UAPI_LINUX_NFSD_FH_H
+-#define _UAPI_LINUX_NFSD_FH_H
+-
+-#include <linux/types.h>
+-#include <linux/nfs.h>
+-#include <linux/nfs2.h>
+-#include <linux/nfs3.h>
+-#include <linux/nfs4.h>
+-
+-/*
+- * This is the old "dentry style" Linux NFSv2 file handle.
+- *
+- * The xino and xdev fields are currently used to transport the
+- * ino/dev of the exported inode.
+- */
+-struct nfs_fhbase_old {
+-	__u32		fb_dcookie;	/* dentry cookie - always 0xfeebbaca */
+-	__u32		fb_ino;		/* our inode number */
+-	__u32		fb_dirino;	/* dir inode number, 0 for directories */
+-	__u32		fb_dev;		/* our device */
+-	__u32		fb_xdev;
+-	__u32		fb_xino;
+-	__u32		fb_generation;
+-};
+-
+-/*
+- * This is the new flexible, extensible style NFSv2/v3/v4 file handle.
+- * by Neil Brown <neilb@cse.unsw.edu.au> - March 2000
+- *
+- * The file handle starts with a sequence of four-byte words.
+- * The first word contains a version number (1) and three descriptor bytes
+- * that tell how the remaining 3 variable length fields should be handled.
+- * These three bytes are auth_type, fsid_type and fileid_type.
+- *
+- * All four-byte values are in host-byte-order.
+- *
+- * The auth_type field is deprecated and must be set to 0.
+- *
+- * The fsid_type identifies how the filesystem (or export point) is
+- *    encoded.
+- *  Current values:
+- *     0  - 4 byte device id (ms-2-bytes major, ls-2-bytes minor), 4byte ino=
+de number
+- *        NOTE: we cannot use the kdev_t device id value, because kdev_t.h
+- *              says we mustn't.  We must break it up and reassemble.
+- *     1  - 4 byte user specified identifier
+- *     2  - 4 byte major, 4 byte minor, 4 byte inode number - DEPRECATED
+- *     3  - 4 byte device id, encoded for user-space, 4 byte inode number
+- *     4  - 4 byte inode number and 4 byte uuid
+- *     5  - 8 byte uuid
+- *     6  - 16 byte uuid
+- *     7  - 8 byte inode number and 16 byte uuid
+- *
+- * The fileid_type identified how the file within the filesystem is encoded.
+- *   The values for this field are filesystem specific, exccept that
+- *   filesystems must not use the values '0' or '0xff'. 'See enum fid_type'
+- *   in include/linux/exportfs.h for currently registered values.
+- */
+-struct nfs_fhbase_new {
+-	union {
+-		struct {
+-			__u8		fb_version_aux;	/* =3D=3D 1, even =3D> nfs_fhbase_old */
+-			__u8		fb_auth_type_aux;
+-			__u8		fb_fsid_type_aux;
+-			__u8		fb_fileid_type_aux;
+-			__u32		fb_auth[1];
+-			/*	__u32		fb_fsid[0]; floating */
+-			/*	__u32		fb_fileid[0]; floating */
+-		};
+-		struct {
+-			__u8		fb_version;	/* =3D=3D 1, even =3D> nfs_fhbase_old */
+-			__u8		fb_auth_type;
+-			__u8		fb_fsid_type;
+-			__u8		fb_fileid_type;
+-			__u32		fb_auth_flex[]; /* flexible-array member */
+-		};
+-	};
+-};
+-
+-struct knfsd_fh {
+-	unsigned int	fh_size;	/* significant for NFSv3.
+-					 * Points to the current size while building
+-					 * a new file handle
+-					 */
+-	union {
+-		struct nfs_fhbase_old	fh_old;
+-		__u32			fh_pad[NFS4_FHSIZE/4];
+-		struct nfs_fhbase_new	fh_new;
+-	} fh_base;
+-};
+-
+-#define ofh_dcookie		fh_base.fh_old.fb_dcookie
+-#define ofh_ino			fh_base.fh_old.fb_ino
+-#define ofh_dirino		fh_base.fh_old.fb_dirino
+-#define ofh_dev			fh_base.fh_old.fb_dev
+-#define ofh_xdev		fh_base.fh_old.fb_xdev
+-#define ofh_xino		fh_base.fh_old.fb_xino
+-#define ofh_generation		fh_base.fh_old.fb_generation
+-
+-#define	fh_version		fh_base.fh_new.fb_version
+-#define	fh_fsid_type		fh_base.fh_new.fb_fsid_type
+-#define	fh_auth_type		fh_base.fh_new.fb_auth_type
+-#define	fh_fileid_type		fh_base.fh_new.fb_fileid_type
+-#define	fh_fsid			fh_base.fh_new.fb_auth_flex
+-
+-/* Do not use, provided for userspace compatiblity. */
+-#define	fh_auth			fh_base.fh_new.fb_auth
+-
+-#endif /* _UAPI_LINUX_NFSD_FH_H */
 --=20
 2.32.0
 
