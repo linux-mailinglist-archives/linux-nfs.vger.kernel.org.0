@@ -2,211 +2,235 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3135440043F
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Sep 2021 19:43:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DC9F40095D
+	for <lists+linux-nfs@lfdr.de>; Sat,  4 Sep 2021 04:49:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349669AbhICRoe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 3 Sep 2021 13:44:34 -0400
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:8154 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349607AbhICRod (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 Sep 2021 13:44:33 -0400
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 183GdbIM010076;
-        Fri, 3 Sep 2021 17:43:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=fR1ncha/AK8HGnfJJM8PlZXOd23cA9szsU+vdNmyK9s=;
- b=WxWGKj6oyHr0O5noePKwN7bvRGps4mm/hP/2xYrtzBUXsoSbP+yu5OblzIcKBVb56Mnu
- 0GLdDQeQH9XrPoMnUUMyUOFjTGbX79+GmooEn8NYG1nl+Q6a6Io1KsRu84wyC7WD0HL6
- QrTudn4fAp786EifUSlF/02+9HXz4Sr6DuzFUJNc+tmZWeQJOnokYc+VG6jNS92Vef8o
- Yb44Cy8Tf2fqI84eV2fPkHxFFiXKd/lZ3iyoL8kCE2MGbkywXdxsCHBTIEDXigyu9N2o
- 4KJzDniA+zJepefIOCLNVakW9OkU3B6pm3W/MgNBkqoultX3FJD/4KQvePSHrUecJcL3 aQ== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=fR1ncha/AK8HGnfJJM8PlZXOd23cA9szsU+vdNmyK9s=;
- b=yzA4gz6yqO58ycqXquhQvQk7XIsuP8B0S2af2Q+XV4hublgoU14TmQ3CbpgYGXVLrXpr
- oMKoPqmmePU+19EsQe/5L76/OJs9x2JrdPeRsgciZ+R8gtmfCSQDT3d46MTPP9lrTSLR
- kxnHjSM0YAlMCIPJfo79B1+9ol9Q0Z5NkB63ixm4gmXNPfYcTjDM3pgktrSZ0cBYGTQy
- yVFuTP6+/VpsiQxk7FS8WJwq1NMmCYwjOp7PPcNyqe2cXCdpblvRDdzF9Z7RynnRM7P2
- j7rTJi+llzLFJpI+iWnoaA4/DjQJ0GT4Ax8Khlt678zCIvqJ2R9xDTR1oHakyO2RscPA hQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3aug2psjtd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Sep 2021 17:43:20 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 183HZuiV017919;
-        Fri, 3 Sep 2021 17:43:19 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2177.outbound.protection.outlook.com [104.47.59.177])
-        by aserp3020.oracle.com with ESMTP id 3aufp3m5tn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Sep 2021 17:43:19 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CXDeItl/thYctEzP2r4grJwtcIMSCR950vp7Zi1ZWPxcqDS21L4hGwvtj6luKXzUC8/m3pVYFiqKlnt2U7Xgek+r4HW6PpkOOE3RZHuZloE5kt0QuP2/QUNQoschBpIuz0SN7nKP6PT9xT9BQJr6223St+2j4RvVneDnU2QfvuGkZpHm5EoNcv6cXCNmVx10av39WVCnJv/3NA8rACEVtwSEC+c7PWxGmRPgJH1VWy6Xhu3i05Zlh++gRSFID8erNrbtlYNc3HTVjwckSI1RktNk4BxvGYi066XraPjI7JaCTWJnUVu3AXAeoFVE6o9DezQnWLwICPLj0qLBsCpjpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=fR1ncha/AK8HGnfJJM8PlZXOd23cA9szsU+vdNmyK9s=;
- b=fAWhEbUWquz5RIQuRC1j7rI1BjRa+G4MpcldNMrPYZENVDsRbS0QU4iAF5D6x0fXjbYWIFQMm3H1MLkOP9wGu0T5M7oOjZnlHxkw4JaENiAB6AJEaaUb6A5yWutmINUjYXsYkxeJIBKWuoLREQ5GRoFS+WW8Tfnw28LD7fvZLtGUZqp6InwI+uXgULPgilMQNtkRdgEflDNHt4FfgbpKyL/TMAUJ+W0Wfd3QCYM3FJuUX1IoNYNYvkVWD1Pzm6svn1MbjkhwcgEU/rAtngqlP81lVw85P8suofrAFGPJH1xyG4+uZlz6zyD3F8MVii3vKRv1QLRiWlqlUEH+dccesg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fR1ncha/AK8HGnfJJM8PlZXOd23cA9szsU+vdNmyK9s=;
- b=Iw1DacYF+dnjV1iukE8ww5WV5tOQm56v8Qj/cZQNhtsHsriVC8lcHQcK0zFgaTPgMyEFvQpkd2rXUAMBv67S3wBwVPkT6JrIkRrQ4lfpmaOTMjg6ILtXmczj6YshN/V/a4pSh0thRXKS6ClrY4BuLRzADqOWJ7lMrvPZcNXh+9w=
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by BY5PR10MB4258.namprd10.prod.outlook.com (2603:10b6:a03:208::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19; Fri, 3 Sep
- 2021 17:43:17 +0000
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::f4fe:5b4:6bd9:4c5b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::f4fe:5b4:6bd9:4c5b%7]) with mapi id 15.20.4478.022; Fri, 3 Sep 2021
- 17:43:17 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Neil Brown <neilb@suse.de>
-CC:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "Steinar H. Gunderson" <steinar+kernel@gunderson.no>
-Subject: Re: [PATCH] SUNRPC: improve error response to over-size gss
- credential
-Thread-Topic: [PATCH] SUNRPC: improve error response to over-size gss
- credential
-Thread-Index: AQHXn4llB4UL3nuggEqDYctWgZidQauSl0YA
-Date:   Fri, 3 Sep 2021 17:43:17 +0000
-Message-ID: <09190612-156D-4ADD-ADFF-19FBA6F2F2FC@oracle.com>
-References: <163053903731.24419.4079441567942239288@noble.neil.brown.name>
-In-Reply-To: <163053903731.24419.4079441567942239288@noble.neil.brown.name>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: suse.de; dkim=none (message not signed)
- header.d=none;suse.de; dmarc=none action=none header.from=oracle.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 57850931-6461-488e-9a7d-08d96f025037
-x-ms-traffictypediagnostic: BY5PR10MB4258:
-x-microsoft-antispam-prvs: <BY5PR10MB4258F1FEBDE80182CDBE95EF93CF9@BY5PR10MB4258.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +dSthcB4BQjrfJPBffRlaZ8KH15OoyYZEJ0C0z740pHPP6xEIrSipCoNUMF7yujy/DHdphJ/UMYe64p/sNhGk92yQO6bAry5W/Tv1YNxXOSzKFHIXliP7bXjRxL/bJW7RtHoG4Venzi2QPstnapA+TiO8Tf2qYPRyUPkFZZT/YYMthdigHqT8shwOAQM5kd4i0OkmnWyH2gec7buI1rty3pIin1GveafQagFqP8MZSGwTZzIG1hcB8jDjZIDHljHtu6x+TQcnoMXI1EwihF8S6/p9VnPxBT006prre5S7BJ9RjEgSypH6WWYAKjQnXzJgtrKHLpQo+yzodmutMQ2TpcyjMhLN9is1f4esOlKUrDUrV8buxOiNmZX7riW3OVP5ZnUI+HI7+h4SOAw3CWakr4+jyXbbHqTukTFYScSKBnzJ32OQaU97x+wAuX33Mvh2zt7UswC5kHSPTFXK6UWwcDpSI1EzzSEZ+uxZxnSTKsl6pExjU6CmnFgd8kqMMBxdQpm0ARNU6D0Q18lRZJ5bTms7IoLFrzSMy0TCICuoELwBHiDAZuL+Cse1nZWb1BEPK/Iu78I72NSl9O21m5OWjYMoJ++UuGBmT0FX8XsAwzZYdNXofqN1d8VRh8cfykIbRzncFDCBDOUOkS6VvWGDssYwCK2NweyR18PiK81K+Ka8mqSvbnU9mn81kPmhMA9dmZXaK4LKJ/prrZvrDTkFWyKbCF7HTgIYbtoetP3lI9Ub/qCxiaOu7/p9f+nO9g0qE07bu/Rtzpgh9BJbnorZ5uejPZB/8qHoM2qjpuHyH1fcR3drXt3NeZFj2ofrZ6s
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(376002)(346002)(136003)(366004)(39860400002)(26005)(2616005)(86362001)(316002)(66556008)(64756008)(966005)(66946007)(478600001)(66476007)(66446008)(76116006)(2906002)(6512007)(38070700005)(91956017)(38100700002)(8676002)(33656002)(6916009)(71200400001)(8936002)(122000001)(186003)(36756003)(83380400001)(54906003)(6486002)(5660300002)(6506007)(53546011)(4326008)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?IsjOVAzsRwlMDsljwbsQxSE/YBFzE5aBE6mMybtAZ6rAzSPrqLi6zHw7fbwb?=
- =?us-ascii?Q?3f2GaTzZVtMX4lFawAP+ByhkgV8modLpWXax2Z1qxUmHKccwNczHHzduHsvw?=
- =?us-ascii?Q?Xp8ZOSQ+bbu3quioO1/d3T1SWZgdSuDroiGA5UjFm1FTXK/I9gX5UcAmboQN?=
- =?us-ascii?Q?3Z5JmkyEiVUmdHsybJWurPEJiYOrs9O9FrFiMGIZSBRQzKph3U60LxcbDsfB?=
- =?us-ascii?Q?6otixizZKaBbTYP2qAXQ29aHYVsku0SLx72RTnJZA/B1F1uJu3jiI6sAKwaZ?=
- =?us-ascii?Q?TWhKGwuRg59s/YEZhjYP8vlBCzTGdtDnb+R7SacxzI6Ykq549y2ccWQu2rRW?=
- =?us-ascii?Q?epxathIfLcfKxNQeOVvxzE8l0kejF3/7/aDen0KvmKiWWi5HJLbHyYpuCwII?=
- =?us-ascii?Q?IO1Oy2+DLEpNwUiH8JR8EEKp5ElMkCBwAGzZidkqN7wabqAP/jVzySLIa7E8?=
- =?us-ascii?Q?GG6vDca6qlF7CjfxFqaIfr4vYOJrNnUTRFQ5rN9jpC4R6W4zvOMDhq5yXz8P?=
- =?us-ascii?Q?qdKaE9hmMTApgOEcxqtLRIAF0EYPBLDdSyuw+AQJMOmkdeeoeKaggzIflfTA?=
- =?us-ascii?Q?BS/D2UesYyU6LxpqQsFnirs3/bQXkRxKf+Pc1W9XfqSf+46DyU8iFlDAJtBV?=
- =?us-ascii?Q?Oq2HTBqgYv0Ua+nwgPafdiYZIQbGHDdJ2wUYXLWVG4yX4b/xfpZ/FHUQmgxj?=
- =?us-ascii?Q?5CvaL5IJo/k8/VXnf7FyzEzMx670Y2NSlVax0QZlJxNlsu9sEBIc9HR7RdH3?=
- =?us-ascii?Q?8PW1+evlzI6RJUIqFD1qSFM9+V8U1o0EPNkWSOL/4vlzlPdxAUqm0rIzoaI4?=
- =?us-ascii?Q?GZkGX6GojUN0wjl7ERESxndwXtsh+DjBKeS3y4fvFbEODquNB6EvLPFkc02/?=
- =?us-ascii?Q?hhV+BIz0BlMMW7NOO31HXuv/Ula2RDhuCbon98SjwAFp+GxQD+XKvRBE0lQY?=
- =?us-ascii?Q?aw/KM8zCnUUC7UIEuBlRrDpz9oLvyi3sXmqmYHKqqSrpnMac9wjbdgqetVGy?=
- =?us-ascii?Q?1wZuB+sp50b1wduKKe6FiDC3JFvavNdtfVtu5YHctssYOP6k2n260picYPsV?=
- =?us-ascii?Q?y3Jg0mVpMAZ3qIGAMtG75nQJqCkYoj/JJie88chqMheJMfZVxpViKZZ52ovH?=
- =?us-ascii?Q?CmW3pZb1q5JzrSnSYt/XMZ1X9aDkjZ7clf9E+1PdqtoRHf0W8tBrig+KFzbY?=
- =?us-ascii?Q?bucKfH9MQybY7CDfuhqZrRx5nmWRoZ8cfyUZ5NfrrfRNabEqPeMQZ4sHibHG?=
- =?us-ascii?Q?rC3njyauMFrthkPrOBpe8SMtWU7N03/pK6NTZ+yskz4So1xEyWBPl3f519sF?=
- =?us-ascii?Q?5PcgiGChbqk571+jZBGrJpqT?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <933B2F6DC8A5D84EA744F9D47D67ED1A@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1350825AbhIDCuf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 3 Sep 2021 22:50:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231389AbhIDCuf (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 3 Sep 2021 22:50:35 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F338B60FE6;
+        Sat,  4 Sep 2021 02:49:33 +0000 (UTC)
+Subject: [PATCH RFC] xprtrdma: Provide a buffer to pad Write chunks of
+ unaligned length
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     kolga@netapp.com
+Cc:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
+Date:   Fri, 03 Sep 2021 22:49:33 -0400
+Message-ID: <163072372272.1404.10422729715219338943.stgit@morisot.1015granger.net>
+User-Agent: StGit/1.1-dirty
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57850931-6461-488e-9a7d-08d96f025037
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2021 17:43:17.5537
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QYK3BXcFruXiIEALGGC39Iv+3JTc7SMAV4mNPiskSF+CD3iK6vSq6kmZ9PDMR1syLTTwPtiIl19RAZGOk4yjrg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4258
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10096 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 suspectscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2108310000
- definitions=main-2109030104
-X-Proofpoint-ORIG-GUID: oAmItlkDWms4tUiaMsuVcuR_mQB5vJCf
-X-Proofpoint-GUID: oAmItlkDWms4tUiaMsuVcuR_mQB5vJCf
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+This is a buffer to be left persistently registered while a
+connection is up. Connection tear-down will automatically DMA-unmap,
+invalidate, and dereg the MR. A persistently registered buffer makes
+it no-cost to provide it, and it can never be elided into the RDMA
+segment that backs the data payload.
 
+An RPC that provisions a Write chunk with a non-aligned length
+uses this MR rather than the tail buffer of the RPC's rq_rcv_buf.
 
-> On Sep 1, 2021, at 7:30 PM, NeilBrown <neilb@suse.de> wrote:
->=20
->=20
-> When the NFS server receives a large gss (kerberos) credential and tries
-> to pass it up to rpc.svcgssd (which is deprecated), it triggers an
-> infinite loop in cache_read().
->=20
-> cache_request() always returns -EAGAIN, and this causes a "goto again".
->=20
-> This patch:
-> - changes the error to -E2BIG to avoid the infinite loop, and
-> - generates a WARN_ONCE when rsi_request first sees an over-sized
->   credential.  The warning suggests switching to gssproxy.
->=20
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D196583
-> Signed-off-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ include/trace/events/rpcrdma.h  |   13 ++++++++++---
+ net/sunrpc/xprtrdma/frwr_ops.c  |   35 +++++++++++++++++++++++++++++++++++
+ net/sunrpc/xprtrdma/rpc_rdma.c  |   36 +++++++++++++++++++++++-------------
+ net/sunrpc/xprtrdma/verbs.c     |    1 +
+ net/sunrpc/xprtrdma/xprt_rdma.h |    5 +++++
+ 5 files changed, 74 insertions(+), 16 deletions(-)
 
-Thanks, Neil, I've queued this up for nfsd-5.15-1.
-
-
-> ---
-> net/sunrpc/auth_gss/svcauth_gss.c | 2 ++
-> net/sunrpc/cache.c                | 2 +-
-> 2 files changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svca=
-uth_gss.c
-> index a81be45f40d9..e738c0182f09 100644
-> --- a/net/sunrpc/auth_gss/svcauth_gss.c
-> +++ b/net/sunrpc/auth_gss/svcauth_gss.c
-> @@ -194,6 +194,8 @@ static void rsi_request(struct cache_detail *cd,
-> 	qword_addhex(bpp, blen, rsii->in_handle.data, rsii->in_handle.len);
-> 	qword_addhex(bpp, blen, rsii->in_token.data, rsii->in_token.len);
-> 	(*bpp)[-1] =3D '\n';
-> +	WARN_ONCE(*blen < 0,
-> +		  "RPCSEC/GSS credential too large - please use gssproxy\n");
-> }
->=20
-> static int rsi_parse(struct cache_detail *cd,
-> diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-> index 1a2c1c44bb00..59641803472c 100644
-> --- a/net/sunrpc/cache.c
-> +++ b/net/sunrpc/cache.c
-> @@ -803,7 +803,7 @@ static int cache_request(struct cache_detail *detail,
->=20
-> 	detail->cache_request(detail, crq->item, &bp, &len);
-> 	if (len < 0)
-> -		return -EAGAIN;
-> +		return -E2BIG;
-> 	return PAGE_SIZE - len;
-> }
->=20
-> --=20
-> 2.32.0
->=20
-
---
-Chuck Lever
-
+diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+index bd55908c1bef..c71e106c9cd4 100644
+--- a/include/trace/events/rpcrdma.h
++++ b/include/trace/events/rpcrdma.h
+@@ -375,10 +375,16 @@ DECLARE_EVENT_CLASS(xprtrdma_mr_class,
+ 
+ 	TP_fast_assign(
+ 		const struct rpcrdma_req *req = mr->mr_req;
+-		const struct rpc_task *task = req->rl_slot.rq_task;
+ 
+-		__entry->task_id = task->tk_pid;
+-		__entry->client_id = task->tk_client->cl_clid;
++		if (req) {
++			const struct rpc_task *task = req->rl_slot.rq_task;
++
++			__entry->task_id = task->tk_pid;
++			__entry->client_id = task->tk_client->cl_clid;
++		} else {
++			__entry->task_id = 0;
++			__entry->client_id = -1;
++		}
+ 		__entry->mr_id  = mr->mr_ibmr->res.id;
+ 		__entry->nents  = mr->mr_nents;
+ 		__entry->handle = mr->mr_handle;
+@@ -639,6 +645,7 @@ TRACE_EVENT(xprtrdma_nomrs_err,
+ DEFINE_RDCH_EVENT(read);
+ DEFINE_WRCH_EVENT(write);
+ DEFINE_WRCH_EVENT(reply);
++DEFINE_WRCH_EVENT(wp);
+ 
+ TRACE_DEFINE_ENUM(rpcrdma_noch);
+ TRACE_DEFINE_ENUM(rpcrdma_noch_pullup);
+diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
+index 229fcc9a9064..6726fbbdd4a3 100644
+--- a/net/sunrpc/xprtrdma/frwr_ops.c
++++ b/net/sunrpc/xprtrdma/frwr_ops.c
+@@ -654,3 +654,38 @@ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
+ 	 */
+ 	rpcrdma_unpin_rqst(req->rl_reply);
+ }
++
++/**
++ * frwr_wp_create - Create an MR for padding Write chunks
++ * @r_xprt: transport resources to use
++ *
++ * Return 0 on success, negative errno on failure.
++ */
++int frwr_wp_create(struct rpcrdma_xprt *r_xprt)
++{
++	struct rpcrdma_ep *ep = r_xprt->rx_ep;
++	struct rpcrdma_mr_seg seg;
++	struct rpcrdma_mr *mr;
++
++	mr = rpcrdma_mr_get(r_xprt);
++	if (!mr)
++		return -EAGAIN;
++	mr->mr_req = NULL;
++	ep->re_write_pad_mr = mr;
++
++	seg.mr_len = XDR_UNIT;
++	seg.mr_page = virt_to_page(ep->re_write_pad);
++	seg.mr_offset = offset_in_page(ep->re_write_pad);
++	if (IS_ERR(frwr_map(r_xprt, &seg, 1, true, xdr_zero, mr)))
++		return -EIO;
++	trace_xprtrdma_mr_fastreg(mr);
++
++	mr->mr_cqe.done = frwr_wc_fastreg;
++	mr->mr_regwr.wr.next = NULL;
++	mr->mr_regwr.wr.wr_cqe = &mr->mr_cqe;
++	mr->mr_regwr.wr.num_sge = 0;
++	mr->mr_regwr.wr.opcode = IB_WR_REG_MR;
++	mr->mr_regwr.wr.send_flags = 0;
++
++	return ib_post_send(ep->re_id->qp, &mr->mr_regwr.wr, NULL);
++}
+diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
+index c335c1361564..66fbfdc0c79f 100644
+--- a/net/sunrpc/xprtrdma/rpc_rdma.c
++++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+@@ -255,21 +255,9 @@ rpcrdma_convert_iovs(struct rpcrdma_xprt *r_xprt, struct xdr_buf *xdrbuf,
+ 		page_base = 0;
+ 	}
+ 
+-	if (type == rpcrdma_readch)
+-		goto out;
+-
+-	/* When encoding a Write chunk, some servers need to see an
+-	 * extra segment for non-XDR-aligned Write chunks. The upper
+-	 * layer provides space in the tail iovec that may be used
+-	 * for this purpose.
+-	 */
+-	if (type == rpcrdma_writech && r_xprt->rx_ep->re_implicit_roundup)
+-		goto out;
+-
+-	if (xdrbuf->tail[0].iov_len)
++	if (pos == 0 && xdrbuf->tail[0].iov_len)
+ 		rpcrdma_convert_kvec(&xdrbuf->tail[0], seg, &n);
+ 
+-out:
+ 	if (unlikely(n > RPCRDMA_MAX_SEGS))
+ 		return -EIO;
+ 	return n;
+@@ -405,6 +393,7 @@ static int rpcrdma_encode_write_list(struct rpcrdma_xprt *r_xprt,
+ 				     enum rpcrdma_chunktype wtype)
+ {
+ 	struct xdr_stream *xdr = &req->rl_stream;
++	struct rpcrdma_ep *ep = r_xprt->rx_ep;
+ 	struct rpcrdma_mr_seg *seg;
+ 	struct rpcrdma_mr *mr;
+ 	int nsegs, nchunks;
+@@ -443,6 +432,27 @@ static int rpcrdma_encode_write_list(struct rpcrdma_xprt *r_xprt,
+ 		nsegs -= mr->mr_nents;
+ 	} while (nsegs);
+ 
++	/* The pad MR is already registered, and is not chained on
++	 * rl_registered. Thus the Reply handler does not invalidate it.
++	 *
++	 * To avoid accidental remote invalidation of this MR, it is
++	 * not used when remote invalidation is enabled. Servers that
++	 * support remote invalidation are known not to write into
++	 * Write chunk pad segments.
++	 */
++	if (ep->re_implicit_roundup &&
++	    xdr_pad_size(rqst->rq_rcv_buf.page_len)) {
++		if (encode_rdma_segment(xdr, ep->re_write_pad_mr) < 0)
++			return -EMSGSIZE;
++
++		trace_xprtrdma_chunk_wp(rqst->rq_task, ep->re_write_pad_mr,
++					nsegs);
++		r_xprt->rx_stats.write_chunk_count++;
++		r_xprt->rx_stats.total_rdma_request += mr->mr_length;
++		nchunks++;
++		nsegs -= mr->mr_nents;
++	}
++
+ 	/* Update count of segments in this Write chunk */
+ 	*segcount = cpu_to_be32(nchunks);
+ 
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 649c23518ec0..7fa55f219638 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -551,6 +551,7 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
+ 		goto out;
+ 	}
+ 	rpcrdma_mrs_create(r_xprt);
++	frwr_wp_create(r_xprt);
+ 
+ out:
+ 	trace_xprtrdma_connect(r_xprt, rc);
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index 5d231d94e944..c71e6e1b82b9 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -68,12 +68,14 @@
+ /*
+  * RDMA Endpoint -- connection endpoint details
+  */
++struct rpcrdma_mr;
+ struct rpcrdma_ep {
+ 	struct kref		re_kref;
+ 	struct rdma_cm_id 	*re_id;
+ 	struct ib_pd		*re_pd;
+ 	unsigned int		re_max_rdma_segs;
+ 	unsigned int		re_max_fr_depth;
++	struct rpcrdma_mr	*re_write_pad_mr;
+ 	bool			re_implicit_roundup;
+ 	enum ib_mr_type		re_mrtype;
+ 	struct completion	re_done;
+@@ -97,6 +99,8 @@ struct rpcrdma_ep {
+ 	unsigned int		re_inline_recv;	/* negotiated */
+ 
+ 	atomic_t		re_completion_ids;
++
++	char			re_write_pad[XDR_UNIT];
+ };
+ 
+ /* Pre-allocate extra Work Requests for handling reverse-direction
+@@ -535,6 +539,7 @@ int frwr_send(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
+ void frwr_reminv(struct rpcrdma_rep *rep, struct list_head *mrs);
+ void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
+ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
++int frwr_wp_create(struct rpcrdma_xprt *r_xprt);
+ 
+ /*
+  * RPC/RDMA protocol calls - xprtrdma/rpc_rdma.c
 
 
