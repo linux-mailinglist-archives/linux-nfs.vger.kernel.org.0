@@ -2,78 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECE9240101A
-	for <lists+linux-nfs@lfdr.de>; Sun,  5 Sep 2021 16:10:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 764DF4010C1
+	for <lists+linux-nfs@lfdr.de>; Sun,  5 Sep 2021 18:07:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232209AbhIEOLq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 5 Sep 2021 10:11:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46154 "EHLO
+        id S236545AbhIEQI0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 5 Sep 2021 12:08:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbhIEOLp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 5 Sep 2021 10:11:45 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A612C061575;
-        Sun,  5 Sep 2021 07:10:42 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id u15-20020a05600c19cf00b002f6445b8f55so2976295wmq.0;
-        Sun, 05 Sep 2021 07:10:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ESbKLeNsLnxks8j4gUKa9N22AZupbWMMz8A0h0s8pbs=;
-        b=aFa/WFKPa8FTj7sMuJX3RV1hGn05T1Ty2QYLB17FTdW70TCep3QGBjksWIOAYhs/Jm
-         GUVMlxDE0TfiYgoHn7meKhFo5Yg7pVObLM9c8tVx4LZf16vPqCbzHrvN5WbkpFgtfRA2
-         SzatcjoqNVtT8QnCSS4r9J/C7vBe5Vijb6jjrdu7AoeLNVzd0Nf44BKbOc04LM5vUu9b
-         KIfm1VQ4/7K/rIME4zQfZMbElpKBJKmgxSDG/0M9IUz4qGtxtTqBFIz0HEP+uPzFW/TH
-         xDVdq49t2Oxtqe8O56Gi0v4wnWzRrnBkYya2hiBZNP3eLaR4Wzm0ViiBZFnRnc2jez1R
-         yMew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ESbKLeNsLnxks8j4gUKa9N22AZupbWMMz8A0h0s8pbs=;
-        b=LTku1cd6x7uT2iMcxAYMC2xsmYF3Si3jH9uxD2yDeY3NLIdfCxRj7mZkr4VLyOChP/
-         6eMOUt1ngeSbGx30viQkAj18UBC02mX3CghLwHuqfYfeJ0Es5oWJqmOOo/erNaEOnge+
-         gRS3s0OxGd37gA6tHbM0gh9VFowLRY5n/fR17s0M+Y9fcT0qP+21T4s2TQbMk1/6tJbu
-         hTUdgRnzyyrfihwfb39PuQk5i+DNuRYKTo2yN2xr5Q8e0wDa82s1K1HKF/aw4aPjkqBY
-         HqwZDhb/h7jl1k1JXf3T+lRMjVVJqAzDhRxrDlum/Ov5lFw1yEKWTdrDo6iQryV6nUTl
-         eQQQ==
-X-Gm-Message-State: AOAM533tAMGGZVa3MfJzi+j3PYgK34elYWyNvJBiHNm17z0qkQOOiSZ7
-        cKLGUFo1sOhQwn++sbxcm0Q=
-X-Google-Smtp-Source: ABdhPJyGuae+vRDbUtx/y9ysoOjF8UFtVqRRuiZGTgJhrqqniTg5gQKF3hxLeGC9w5EzIHoCsMIjpw==
-X-Received: by 2002:a1c:2705:: with SMTP id n5mr7167229wmn.176.1630851040576;
-        Sun, 05 Sep 2021 07:10:40 -0700 (PDT)
-Received: from curtine-ThinkPad-P1-Gen-3.Home (bl9-74-29.dsl.telepac.pt. [85.242.74.29])
-        by smtp.gmail.com with ESMTPSA id f20sm4602376wmb.32.2021.09.05.07.10.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Sep 2021 07:10:40 -0700 (PDT)
-From:   Eric Curtin <ericcurtin17@gmail.com>
-To:     vfedorenko@novek.ru
-Cc:     aahringo@redhat.com, linux-cifs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, lsahlber@redhat.com,
-        netdev@vger.kernel.org, smfrench@gmail.com, swhiteho@redhat.com
-Subject: Re: quic in-kernel implementation?
-Date:   Sun,  5 Sep 2021 15:09:31 +0100
-Message-Id: <20210905140931.345774-1-ericcurtin17@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <9ce530f5-cfe7-b1d4-ede6-d88801a769ba@novek.ru>
-References: <9ce530f5-cfe7-b1d4-ede6-d88801a769ba@novek.ru>
+        with ESMTP id S229566AbhIEQIZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 5 Sep 2021 12:08:25 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6930EC061575;
+        Sun,  5 Sep 2021 09:07:22 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id E257F6CC9; Sun,  5 Sep 2021 12:07:19 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org E257F6CC9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1630858039;
+        bh=zhphZcWVKNbwXAEiog4EBMI4GzK2vfsJdfnbXhq4C7k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i5SY6uzR6ztVa9niwLxGeTKGeflbxRpEbFJCKDKB0qE8EeXoctSQ1QGthekab5zc4
+         jCg92MPihiNk/m9sJFlVzwm1X07vbgsPI8mXYXMNKAR+7BY3B846/kd30KuB1XmlUE
+         CNr9yADAxPI6tSDUw6sP6zQcfsbKTTRdCRV8o+DM=
+Date:   Sun, 5 Sep 2021 12:07:19 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2] BTRFS/NFSD: provide more unique inode number for
+ btrfs export
+Message-ID: <20210905160719.GA20887@fieldses.org>
+References: <162995209561.7591.4202079352301963089@noble.neil.brown.name>
+ <162995778427.7591.11743795294299207756@noble.neil.brown.name>
+ <YSkQ31UTVDtBavOO@infradead.org>
+ <163010550851.7591.9342822614202739406@noble.neil.brown.name>
+ <YSnhHl0HDOgg07U5@infradead.org>
+ <163038594541.7591.11109978693705593957@noble.neil.brown.name>
+ <YS8ppl6SYsCC0cql@infradead.org>
+ <20210901152251.GA6533@fieldses.org>
+ <163055605714.24419.381470460827658370@noble.neil.brown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <163055605714.24419.381470460827658370@noble.neil.brown.name>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Guys,
+On Thu, Sep 02, 2021 at 02:14:17PM +1000, NeilBrown wrote:
+> On Thu, 02 Sep 2021, J. Bruce Fields wrote:
+> > I looked back through a couple threads to try to understand why we
+> > couldn't do that (on new filesystems, with a mkfs option to choose new
+> > or old behavior) and still don't understand.  But the threads are long.
+> > 
+> > There are objections to a new mount option (which seem obviously wrong;
+> > this should be a persistent feature of the on-disk filesystem).
+> 
+> I hadn't thought much (if at all) about a persistent filesystem feature
+> flag.  I'll try that now.
+> 
+> There are two features of interest.  One is completely unique inode
+> numbers, the other is reporting different st_dev for different
+> subvolumes.  I think these need to be kept separate, though the second
+> would depend on the first.  They would be similar to my "inumbits" and
+> "numdevs" mount options, though with less flexibility.  I think that
+> they would need strong semantics to be acceptable - "mostly unique"
+> isn't really acceptable once we are changing the on-disk data.
 
-Great idea, something I have been hoping to see in the kernel for a
-while. How has your implementation been going @Vadim? I'd be interested
-in a non-encrypted version of QUIC also in the kernel (may not be
-supported in the spec but possible and I think worth having), would be
-useful for cases where you don't care about network ossification
-protection or data-in-transit encryption, say a trusted local network
-where you would prefer the performance and reliability advantages of
-going plaintext and you don't want to figure out how to deploy
-certififcates. Something that could be used as a straight swap for a
-TCP socket.
+I don't quite follow that.
 
+Also the "on-disk data" here is literally just one more flag bit in some
+superblock field, right?
+
+> I believe that some code *knows* that the root of any btrfs subvolumes
+> has inode number 256.  systemd seems to use this.  I have no idea what
+> else might depend on inode numbers in some way.
+
+Looking.  Ugh, yes, there's  abtrfs_might_be_subvol that takes a struct
+stat and returns:
+
+        return S_ISDIR(st->st_mode) && st->st_ino == 256;
+
+I wonder why it does that?  Are there situations where all it has is a
+file descriptor (so it can't easily compare st_dev with the parent?)
+And if you NFS-export and wanted to answer the same question on the
+client side, I wonder what you'd do.
+
+--b.
