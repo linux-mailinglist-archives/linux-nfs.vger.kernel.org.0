@@ -2,180 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4E4040144B
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Sep 2021 03:38:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A42D4014ED
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Sep 2021 03:59:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241401AbhIFBcs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 5 Sep 2021 21:32:48 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:46474 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351572AbhIFBan (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 5 Sep 2021 21:30:43 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 4C40A1FF4F;
-        Mon,  6 Sep 2021 01:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1630891778; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=na+7R1S+4icVQjnaL+FVDtQ+ahJOJz19HXFz4LslpyY=;
-        b=mnYqc+ZUMtQoGJUsDfHThbCiZQYMKTqucZy96ObniBShVsRyJKIhRXPwge66uMg++6ZgE0
-        BwhwlmtG2IuGQiaXiGaSRn8qVA7KuPYEBru7+AIZ1b3Fy7N3VveC0hQX5+pLVIpkqVn8XJ
-        GggxifezGlmA9a7neY1+gmKFvJW558k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1630891778;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=na+7R1S+4icVQjnaL+FVDtQ+ahJOJz19HXFz4LslpyY=;
-        b=Rf2mEtk1yXnUdkSYgSceILyZp+C+UQOV096d9G46j33P5IgezFQcSwy3TufskDP1SMwyxU
-        pWJkXvi5FWLXisBQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 71E23133A4;
-        Mon,  6 Sep 2021 01:29:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 2wkXDABvNWFrFwAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 06 Sep 2021 01:29:36 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     "Christoph Hellwig" <hch@infradead.org>,
-        "Chuck Lever" <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        "Josef Bacik" <josef@toxicpanda.com>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2] BTRFS/NFSD: provide more unique inode number for btrfs export
-In-reply-to: <20210905160719.GA20887@fieldses.org>
-References: <162995209561.7591.4202079352301963089@noble.neil.brown.name>,
- <162995778427.7591.11743795294299207756@noble.neil.brown.name>,
- <YSkQ31UTVDtBavOO@infradead.org>,
- <163010550851.7591.9342822614202739406@noble.neil.brown.name>,
- <YSnhHl0HDOgg07U5@infradead.org>,
- <163038594541.7591.11109978693705593957@noble.neil.brown.name>,
- <YS8ppl6SYsCC0cql@infradead.org>, <20210901152251.GA6533@fieldses.org>,
- <163055605714.24419.381470460827658370@noble.neil.brown.name>,
- <20210905160719.GA20887@fieldses.org>
-Date:   Mon, 06 Sep 2021 11:29:32 +1000
-Message-id: <163089177281.15583.1479086104083425773@noble.neil.brown.name>
+        id S238674AbhIFCAm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 5 Sep 2021 22:00:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238487AbhIFCAm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 5 Sep 2021 22:00:42 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B556CC061575;
+        Sun,  5 Sep 2021 18:59:38 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id g13-20020a17090a3c8d00b00196286963b9so3320961pjc.3;
+        Sun, 05 Sep 2021 18:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=lL/gGNTGH9DC6PNdYT9D3YTeFu4Msr6Mh1n9Bkcpt+I=;
+        b=a1nY/qBjMOjzV9rNW9tJLMV0pIcbDyaGWIb9A7UiPDxyfejOhT9zKnLXuCVJGi3dXU
+         Ck9nSSQn+nJ+VzZ/w8cADCDfwn4PwkrFk8YOmuFNw+ES62CRMCXpjHmClOwsYJJ9NOwL
+         vUId7+I4ibGxnWf6Vj/O5wm24nKs4ucZWdD/r53mCAzdbFVD1OjXaopjG0JvlU+3X+6U
+         h9+TODQB80z9PciqZigmNUegyjzjZQ1u/G/E9LHT9DthgFHUdIVj73V4f5yHuXAOot/+
+         5Nx7nOOViFpXnhMICGcUdW4vH49O4jJW4zEVzn/mqpGEmtL58uZFVNCzI0cPiaHYarz+
+         jSmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lL/gGNTGH9DC6PNdYT9D3YTeFu4Msr6Mh1n9Bkcpt+I=;
+        b=Dj5/UljJf7hQuWE8UoTkA7ZCSRXl3UBFgrSM81nuH8LeSixEg7ymSsoltIRVWkYikG
+         GmpG5ZnbG5zgX+h2LyIqez7OejIpIPiAXE4KS4xQD3yIkXT4VmKP+KKNgOuZE+aex0Pw
+         qkITg/8HcPHkuZwIhVhwrI1s7Z4kE0VHIhB0REztUMIwMkFmO3NUm0iL+j4Zh+NzOZIu
+         MICWjOg8i+xh4PZf3oR4eKRoGfdY8N/pBCSXYWA4Z43VD3XZOKGvVJ4qEgGPHlLo2V5V
+         k4++3A+2Fe+yziKzEWT4E+/oSdM/AZuWIF5MHypLubs1leirU9j0XyDr+vo0KWCbc6jq
+         m+eg==
+X-Gm-Message-State: AOAM533STjDns0X706vOlaE7ZxL7y531oFjBsACx5Bs3X09Pt73b0cLY
+        bFGuwBc70ZpOmbaE6tejAVQ=
+X-Google-Smtp-Source: ABdhPJzes0CjsVGE7pEjW1LLfpBpTPz2z91olb7uM6pHTm+WcRjAmDDVq6jdRQ9IrRzSSvM9SLrmlg==
+X-Received: by 2002:a17:90a:bf06:: with SMTP id c6mr11419229pjs.55.1630893578044;
+        Sun, 05 Sep 2021 18:59:38 -0700 (PDT)
+Received: from localhost (natp-s01-129-78-56-229.gw.usyd.edu.au. [129.78.56.229])
+        by smtp.gmail.com with ESMTPSA id w5sm6757301pgp.79.2021.09.05.18.59.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Sep 2021 18:59:37 -0700 (PDT)
+From:   Baptiste Lepers <baptiste.lepers@gmail.com>
+Cc:     Baptiste Lepers <baptiste.lepers@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Tao Peng <bergwolf@primarydata.com>,
+        Tom Haynes <loghyr@primarydata.com>,
+        Weston Andros Adamson <dros@primarydata.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pnfs/flexfiles: Fix misplaced barrier in nfs4_ff_layout_prepare_ds
+Date:   Mon,  6 Sep 2021 11:59:24 +1000
+Message-Id: <20210906015925.13705-1-baptiste.lepers@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 06 Sep 2021, J. Bruce Fields wrote:
-> On Thu, Sep 02, 2021 at 02:14:17PM +1000, NeilBrown wrote:
-> > On Thu, 02 Sep 2021, J. Bruce Fields wrote:
-> > > I looked back through a couple threads to try to understand why we
-> > > couldn't do that (on new filesystems, with a mkfs option to choose new
-> > > or old behavior) and still don't understand.  But the threads are long.
-> > > 
-> > > There are objections to a new mount option (which seem obviously wrong;
-> > > this should be a persistent feature of the on-disk filesystem).
-> > 
-> > I hadn't thought much (if at all) about a persistent filesystem feature
-> > flag.  I'll try that now.
-> > 
-> > There are two features of interest.  One is completely unique inode
-> > numbers, the other is reporting different st_dev for different
-> > subvolumes.  I think these need to be kept separate, though the second
-> > would depend on the first.  They would be similar to my "inumbits" and
-> > "numdevs" mount options, though with less flexibility.  I think that
-> > they would need strong semantics to be acceptable - "mostly unique"
-> > isn't really acceptable once we are changing the on-disk data.
-> 
-> I don't quite follow that.
+_nfs4_pnfs_v3/v4_ds_connect do
+   some work
+   smp_wmb
+   ds->ds_clp = clp;
 
-I agree it is a bit of a leap.
+And nfs4_ff_layout_prepare_ds currently does
+   smp_rmb
+   if(ds->ds_clp)
+      ...
 
-> 
-> Also the "on-disk data" here is literally just one more flag bit in some
-> superblock field, right?
+This patch places the smp_rmb after the if. This ensures that following
+reads only happen once nfs4_ff_layout_prepare_ds has checked that data
+has been properly initialized.
 
-Maybe.  I *could* be just one bit.
-But even "just one bit" is, I think, more of a support commitement than
-adding a mount option.
-Mount options are fairly obvious to the user.  super-blocks not as much.
-So "just one bit" might still be "one more question" than the supoort
-people need to ask when handling a problem report.
+Fixes: d67ae825a59d6 ("pnfs/flexfiles: Add the FlexFile Layout Driver")
+Signed-off-by: Baptiste Lepers <baptiste.lepers@gmail.com>
+---
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c | 4 ++--
+ fs/nfs/pnfs_nfs.c                         | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-When I wrote that I was thinking about how I would be comfortable with
-if I were a btrfs maintainer.  And I don't think I'd like to spend and
-on-disk change and only gain a "mostly harmless" solution.
+diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+index c9b61b818ec1..bfa7202ca7be 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
++++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+@@ -378,10 +378,10 @@ nfs4_ff_layout_prepare_ds(struct pnfs_layout_segment *lseg,
+ 		goto noconnect;
+ 
+ 	ds = mirror->mirror_ds->ds;
++	if (READ_ONCE(ds->ds_clp))
++		goto out;
+ 	/* matching smp_wmb() in _nfs4_pnfs_v3/4_ds_connect */
+ 	smp_rmb();
+-	if (ds->ds_clp)
+-		goto out;
+ 
+ 	/* FIXME: For now we assume the server sent only one version of NFS
+ 	 * to use for the DS.
+diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
+index cf19914fec81..02bd6e83961d 100644
+--- a/fs/nfs/pnfs_nfs.c
++++ b/fs/nfs/pnfs_nfs.c
+@@ -895,7 +895,7 @@ static int _nfs4_pnfs_v3_ds_connect(struct nfs_server *mds_srv,
+ 	}
+ 
+ 	smp_wmb();
+-	ds->ds_clp = clp;
++	WRITE_ONCE(ds->ds_clp, clp);
+ 	dprintk("%s [new] addr: %s\n", __func__, ds->ds_remotestr);
+ out:
+ 	return status;
+@@ -973,7 +973,7 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 	}
+ 
+ 	smp_wmb();
+-	ds->ds_clp = clp;
++	WRITE_ONCE(ds->ds_clp, clp);
+ 	dprintk("%s [new] addr: %s\n", __func__, ds->ds_remotestr);
+ out:
+ 	return status;
+-- 
+2.17.1
 
-Christoph's comment about possible vulnerabilities are probably part of
-this.  I think that over NFS, concern about a user being able to
-synthesise an inode number conflict is probably "mountain out of mole
-hill" territory.  However for local access, I cannot convince myself
-that it won't be a problem.  I can imagine (incautiously written)
-auditing scans getting confused, and while auditing over NFS doesn't
-make much sense, auditing locally does.
-
-> 
-> > I believe that some code *knows* that the root of any btrfs subvolumes
-> > has inode number 256.  systemd seems to use this.  I have no idea what
-> > else might depend on inode numbers in some way.
-> 
-> Looking.  Ugh, yes, there's  abtrfs_might_be_subvol that takes a struct
-> stat and returns:
-> 
->         return S_ISDIR(st->st_mode) && st->st_ino == 256;
-> 
-> I wonder why it does that?  Are there situations where all it has is a
-> file descriptor (so it can't easily compare st_dev with the parent?)
-> And if you NFS-export and wanted to answer the same question on the
-> client side, I wonder what you'd do.
-
-There are also a few references to BTRFS_FIRST_FREE_OBJECTID which is
-256.
-
-Uses seem to include:
- - managing quotas, which fits with my idea that subvols are like
-   project-quota trees.
- - optionally preventing "rm -r" from removing subvols
- - some switching to/from "readonly" which I cannot follow
- - some special handling of user home-directories when they are
-   subvols
-
-These are probably reasonable and do point to subvols being a little bit
-like separate filesytems.  These would break if we changed local inode
-numbers. 
-
-The project-quota management and the read-only setting are not available
-via NFS so changing the inode number seen that way is not likely to
-matter as much.  In any case, detecting "256" is only useful if you can
-also detect "is btrfs", and you cannot do that of NFS.
-
-Once upon a time ext[234] had a set of inode flags and xfs separately
-had a bunch of inode flags.  These are now unified (to a degree) in
-'struct fsattr' accessed by FS_IOC_FSGETXATTR and FS_IOC_FSSETXATTR.
-
-btrfs supports that interface, but doesn't appear to have extended it
-for subvol-specific things - preferring to create btrfs-specific ioctls
-instead.   Maybe they weren't designed to be extensible enough.
-
-Maybe what we really need is for a bunch of diverse filesystem
-developers to get together and agree on some new common interface for
-subvolume management, including coming up with some sort of definition
-of what a subvolume "is".
-
-Until that happens (and the new interfaces are implemented and widely
-used) I can only see two possible solutions to the current
-NFS-export-of-btrfs problem:
-
-1/ change nfsd to export a different inode number to the one btrfs uses
-   (or maybe a different fsid, but that is problematic in other ways)
-2/ change userspace to check filehandles and not assume two things are
-   the same if their filehandles are different.
-
-Maybe I should write a patch for fts_read() and see how much glibc folk
-will hate it.
-
-NeilBrown
