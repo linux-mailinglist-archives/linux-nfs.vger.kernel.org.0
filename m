@@ -2,184 +2,198 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27E5C402B07
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Sep 2021 16:49:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57190402B21
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Sep 2021 16:54:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230404AbhIGOuR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Sep 2021 10:50:17 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:15305 "EHLO
-        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232105AbhIGOuQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Sep 2021 10:50:16 -0400
-Received: from dggeme766-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4H3p6c74wQz8snd;
-        Tue,  7 Sep 2021 22:48:24 +0800 (CST)
-Received: from [10.174.176.245] (10.174.176.245) by
- dggeme766-chm.china.huawei.com (10.3.19.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.8; Tue, 7 Sep 2021 22:48:52 +0800
-Subject: Re: [PATCH v2 0/3] auth_gss: netns refcount leaks when
- use-gss-proxy==1
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Wenbin Zeng <wenbin.zeng@gmail.com>, <viro@zeniv.linux.org.uk>,
-        <davem@davemloft.net>, <jlayton@kernel.org>,
-        <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
-        <wenbinzeng@tencent.com>, <dsahern@gmail.com>,
-        <nicolas.dichtel@6wind.com>, <willy@infradead.org>,
-        <edumazet@google.com>, <jakub.kicinski@netronome.com>,
-        <tyhicks@canonical.com>, <chuck.lever@oracle.com>,
-        <neilb@suse.com>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-nfs@vger.kernel.org>
-References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
- <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
- <20190515010331.GA3232@fieldses.org>
- <20190612083755.GA27776@bridge.tencent.com>
- <20190612155224.GF16331@fieldses.org>
-From:   "wanghai (M)" <wanghai38@huawei.com>
-Message-ID: <2c9e3d91-f4b3-6f6a-0dc0-21cef4fab3bb@huawei.com>
-Date:   Tue, 7 Sep 2021 22:48:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S245148AbhIGOzW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Sep 2021 10:55:22 -0400
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:18172 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235774AbhIGOzV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Sep 2021 10:55:21 -0400
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 187EhcPL008782;
+        Tue, 7 Sep 2021 14:53:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=dzh03Jy441mHCyS4j2KlKsUGqZpVQB7LWt6Z1eckrKI=;
+ b=0BpFUI8vuWZP9QhqgNc/0zLzj11M8fP5GXPPshpjlk3KtB9fulrv+M6FtQBkOCjKELbc
+ R64eQ/uWjlrdlhInYHJXv4moGof2jKrxxROavoELaEMuvdzGJfvFR/YRHstTNTBarPus
+ ioGA6cQ9XxRDbmzZsj+CbZ0NO85QFy0AldyrZ7NDrnr9e5EQE+bs9U79hv/XoLe/QxTh
+ bo6f0y7Q1W2i88IA7T3GOesDzJ94I7XNbJYJA6SvXMmUQMw5S8DaSqdAKeDKj6V0rdYf
+ XOM9qC29Bidg+L3odZxqtX3haSu+/ENd4uYn+nXuP/pqV2j0AeJL9xFf6oFLLu6TwCme qg== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=dzh03Jy441mHCyS4j2KlKsUGqZpVQB7LWt6Z1eckrKI=;
+ b=Q8cqkR1hkbf1uH0YuNDvp+2nCVRwm/EEShuPXDvGbT6cuoYuVAZ5C0vQFyOiu/F7zUmz
+ mSgCLEcWTJQmtvMnMtZ4+o4b0gcXZsuFBvBpLwtDQgZN31mSe7kGX73Gsdz9Wq0y078y
+ mGCXL8RW1OEjvJV1RhDe0mMgQZCvwvXfuapoaUgcUg/DvZy+0fKafGlPq4IlZ6d6Ov5b
+ xPKTM0SRM6Q18owa+P972uAAhpI0AERiRwPgmUVLBzNllT8xGcdVnP13utlk4PGZskPK
+ wxQg/2ciyBWZtc/4pU7iW8hlR7U7qQcDQHqF0chbcLjFdDIs3qj9RGrSV5UHh47WEyX6 Uw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3awpwkt75k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Sep 2021 14:53:52 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 187EomQe053243;
+        Tue, 7 Sep 2021 14:53:50 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
+        by userp3030.oracle.com with ESMTP id 3auwwx0my0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Sep 2021 14:53:50 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V3NQSFlKLubg0gPY5bs0JL+vUz3nvHcGcOT1L8Je8QAO7/Y4mT9IEQ6fe7KNmPFcqaOEsH/xhrhL1U3DGPm6p9zul5eyW/w7ix/Xso4vsbjUBXngzpwnstCC8hrHSU28BtyrljSBO+WZncc9ebRkA40Bp59FFpau63eTjghuhBJEdq07PPfuOMWqZnwABULJ69yy415XfBmDBhekf2sYeN+kAhN9Hmt4V7Wl4X66zCoxf3ufB0Jz4w8uPu1w82/yEdPqBeADJF5lNZghFaQC2A1/orfZlRJLvrG/ZBHoD7wP6KNRLTisMz/h9HeA1y1sCIxSy2XOmrvVEEtBU2tyzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dzh03Jy441mHCyS4j2KlKsUGqZpVQB7LWt6Z1eckrKI=;
+ b=Y7rDFR+jrE4o0LO6JBxcSVdAW14CwPWwvz/8Nn46oft1BIOWYph1F/FkWv3SLdjbUCtyUQfw3G1mf9mEQOK+//1kIkWmdNE+AwBbmZvbD/XhP+D6P+4o+wCzvsyHnlMAKmKLtRVxsVXIS5MC3KoIkPxhSFpGYt4WmHgHQGbbOe2m4o3lycihMJep96Qs2VlvhglD6mVnOLkpJcuaPA1SyzmBM8FD+AUB84aPr1FWgTdSBGgIUkFMzkezOz99RVws6k+A0CP9x2imAK2ES2bftnLyR3zCo3k3JNt6y1ysNOQ++CJ+kFLhamjJyUacp/W8oMmuOYiMi+6gWVPdZzXlQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dzh03Jy441mHCyS4j2KlKsUGqZpVQB7LWt6Z1eckrKI=;
+ b=osf1apv0ibnkqGqUUDmCqZ8KCk4jvwiAKcms65ui/zljcIGAM0mhm8F6a++dfpsQxo6JcOXuoSMntql0Jb2FMwv4FI4vtt5RC8WGSOZMM8tnd1IP8cfedJH0CkAforkKvlqebnAn2nv0rRgNpffM9Ede6UFrv7pIYQ+Iaf2nbaw=
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
+ by BYAPR10MB2517.namprd10.prod.outlook.com (2603:10b6:a02:b4::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.23; Tue, 7 Sep
+ 2021 14:53:48 +0000
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::f4fe:5b4:6bd9:4c5b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::f4fe:5b4:6bd9:4c5b%6]) with mapi id 15.20.4500.014; Tue, 7 Sep 2021
+ 14:53:48 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Neil Brown <neilb@suse.de>
+CC:     Matthew Wilcox <willy@infradead.org>,
+        Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Mel Gorman <mgorman@suse.com>, Linux-MM <linux-mm@kvack.org>
+Subject: Re: [PATCH] SUNRPC: use congestion_wait() in svc_alloc_args()
+Thread-Topic: [PATCH] SUNRPC: use congestion_wait() in svc_alloc_args()
+Thread-Index: AQHXotncpaMymYUO4UWd0a8FIk5gVauXJwiAgABMkICAACIbgIAAJs+AgADuHIA=
+Date:   Tue, 7 Sep 2021 14:53:48 +0000
+Message-ID: <8ED6E493-21A6-46BC-810A-D9DA42996979@oracle.com>
+References: <163090344807.19339.10071205771966144716@noble.neil.brown.name>
+ <848A6498-CFF3-4C66-AE83-959F8221E930@oracle.com>
+ <YTZ4E0Zh6F/WSpy0@casper.infradead.org>
+ <163096695999.2518.10383290668057550257@noble.neil.brown.name>
+ <163097529362.2518.16697605173806213577@noble.neil.brown.name>
+In-Reply-To: <163097529362.2518.16697605173806213577@noble.neil.brown.name>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: suse.de; dkim=none (message not signed)
+ header.d=none;suse.de; dmarc=none action=none header.from=oracle.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 85b08986-b70b-4f76-8e76-08d9720f4c7c
+x-ms-traffictypediagnostic: BYAPR10MB2517:
+x-microsoft-antispam-prvs: <BYAPR10MB251788C1608AA51EF08D954993D39@BYAPR10MB2517.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /tBgyhA8yNtZHhEmBWlb6E4zC6I9wu+TW2f8MBRFhUfBwjPgb24Ug0s+2CT2aKhJ0K17cs/+WA5F5uKveAdHRwbt644mx8w3F3zbNTy9zaqIWHBlRZVD2e3oQSC2MyjSl0UjdLNoDRpHnAkvaGK60iLCpBKDLs1Wfu2KTt/o0b7k7b98vXXg4Jg4+WHcm3nA4tGFSRjmSqnT0eY9gDApzVrjrG5Y4FV078yZy962cmwWlb77gsrnDzrqYefZ38rSJVQnNWDs555bAVARY26PBzo5vDA7hGVgKPIyk9/V9ojcQ8kkFlpxe7toiVbkn/Rf/b4rqTSHCxETnMqGU4iMZS7TY7gdkBrp6+3r+Bz37OWr1P1/o+M8RL95kAgXpBQ3Lh3vs1wvexCsem0muZO3zD2ea1tYn8GraKfVjH2mPtta4IGPnJcWTEHPxQgOw/vh4ymEls5cYmj+FzXGodvSz+1FURmPdFAFBVP5S6IXoYLKFMex0YboJsv77h5svH2p8An0hPurBzNmoOF0XTvigHxDMOjGl6LaFw8QEgLmdIQa8t555hHS55gW3zOZ0S/H3koIMeUJt5ShUxlVPMFFkbYQ1WblmRVA7deVwKrTm3xCXucEyoz/q4t7kbmGzjVNFK5QEg9uw7pDX00NCL30BtE+ChWnzrDV9ZevuMFURedNdVs9vXbNGFiZPsQOkknPoY/KcC5SZ1cbLJF+/vBTha0CUhoecwjq13E5AIOJzJNLwQIFvusdtOD79NYOff0O
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(366004)(39860400002)(136003)(396003)(376002)(66946007)(6512007)(186003)(66476007)(26005)(66556008)(6486002)(2616005)(86362001)(53546011)(33656002)(6506007)(54906003)(66446008)(6916009)(36756003)(83380400001)(8936002)(38070700005)(2906002)(8676002)(316002)(5660300002)(38100700002)(91956017)(4326008)(71200400001)(76116006)(478600001)(64756008)(122000001)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?BBLzxQSndb5TJ2I9yIYSRSS+9Ok2amdM0TrLm9J2IW4IOjEITN+CFzYMRDc0?=
+ =?us-ascii?Q?tK+Kc5AMuiRqOcWabkzyCkq/5xyYF1REwckSDvImhY1wJwoxIPFgzzg1ds1x?=
+ =?us-ascii?Q?6VMTC9WGwEGg4fwXU/I6233tcF0WrlqDoViXf1uFREd/XX2sKlAyUr2kftFF?=
+ =?us-ascii?Q?+zNLKJU7zdc/GTOYB62yLLHiDhasK6VHVsIdlPvUIm+a5rVxCL6rpyBaUAW5?=
+ =?us-ascii?Q?dEvcK/IYOlAht/dbW339GGQavT+5uu8kM3Sw0jznlDbZ+iRyVAK0QgVWxvsC?=
+ =?us-ascii?Q?U3OgwBYvo1kx9IP3mvm2Ad39C1xZuFbJIhzpAUD69V5ARNRTbNYWZ98WMuFj?=
+ =?us-ascii?Q?XZg0bFP+Q4tkfS+kZmeaxs3HAVk059CJbQx0b7I8SKMTMz9d5cCXED0HnaCj?=
+ =?us-ascii?Q?3yJ4iRFxNcFQoUZKCDZs8MuikCss09XIpXf/30eRuzfXpgcAvXvfgg7vzt5l?=
+ =?us-ascii?Q?WwfnLb+vNk6QwTopgHO6ee3Vyzmbw0wcyYs2b7f++lstsBht+aXrkqKGA8HG?=
+ =?us-ascii?Q?nm3BA8mXx3e4c5vkyV1cKm22o3Vju3doeqD4mmAjFV4g7ldFJh1HBxxZzmHO?=
+ =?us-ascii?Q?OKPBAtK2VAobOyiX2vNoLP7TYEfmZMl00/BW0lMtOyEPRJ5PL912g6pMutgW?=
+ =?us-ascii?Q?9Tsp402l3fA3Or3ZwK39xsdZaxSBuJmKieckSi5Fzz7r8L0Kk+WARe1u4u42?=
+ =?us-ascii?Q?W2ovHNvQvP6/2R+d/5HzxG/P55LYx/XDj+pAiDjtGNX/VqpKPOnFuXJGLpBp?=
+ =?us-ascii?Q?oqeSgqiQJksBrVw9UXnJGLjipQ+38k3mZNAuwyAIfcNOM3+YL72mp4XhwgU4?=
+ =?us-ascii?Q?DYobF0AtXwqnylXKN61vOamAK5k5hsG9uPkigMNIrkw7ZFVPcUoJVJBOErnc?=
+ =?us-ascii?Q?HrLnOTedelNiRA3POgZvekQ8HnycaFS8AOuyMpGwUXlm+4TWxcwJ+80bSFF7?=
+ =?us-ascii?Q?lpffh8buJB1OL8+vrMJksYpeVNvQRfAHrnJoAAL2R79oY1/ejBBt72QrlPMg?=
+ =?us-ascii?Q?A+aX+DzfPrzHm4PJADrXe3GL1Rz/CeJdlNwGc8FtS466KtaH1pfc8Fn12CqG?=
+ =?us-ascii?Q?GlLrDeY8rrlIx+CtS7lUICS1s0Ip18/Yx4sxRKeHFs5txhhW4fSblD9ImU1x?=
+ =?us-ascii?Q?5m5aqV42Wjod092uNY9jJ2PYhl4NQ37RRmhqpzRMTit1Kaa+fmvH71wqCAi5?=
+ =?us-ascii?Q?c+zoDf444H4qiVaOsHO5tIlGWcW574/ZDlyig7eM3JRnUcAqPZs8Y4vrDgbI?=
+ =?us-ascii?Q?dUEKX7f/1x2w0tYFOB6o1aQBeNi4f6zSNz6kYxgt9AL5sSF1YRpxmdFCnBZn?=
+ =?us-ascii?Q?NbFg+2m2ubS7Voq708AiReNW?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <317DD58F770FDF438DAF2944A8BF9F16@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190612155224.GF16331@fieldses.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.245]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggeme766-chm.china.huawei.com (10.3.19.112)
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85b08986-b70b-4f76-8e76-08d9720f4c7c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2021 14:53:48.1220
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ad7yLcfCeuwijjxISlodo+aFKifCw/UwlPJmxylIAKe3qr2LVzaktTYFLWrvp5gnSuVm0KZe0uJcGI3NmXSjBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2517
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10099 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 mlxlogscore=795
+ adultscore=0 bulkscore=0 suspectscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2108310000
+ definitions=main-2109070097
+X-Proofpoint-GUID: vz4stba9vGKahjEvuK2RVYmmYXy1kHzw
+X-Proofpoint-ORIG-GUID: vz4stba9vGKahjEvuK2RVYmmYXy1kHzw
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
-在 2019/6/12 23:52, J. Bruce Fields 写道:
-> On Wed, Jun 12, 2019 at 04:37:55PM +0800, Wenbin Zeng wrote:
->> On Tue, May 14, 2019 at 09:03:31PM -0400, J. Bruce Fields wrote:
->>> Whoops, I was slow to test these.  I'm getting failuring krb5 nfs
->>> mounts, and the following the server's logs.  Dropping the three patches
->>> for now.
->> My bad, I should have found it earlier. Thank you for testing it, Bruce.
->>
->> I figured it out, the problem that you saw is due to the following code:
->> the if-condition is incorrect here because sn->gssp_clnt==NULL doesn't mean
->> inexistence of 'use-gss-proxy':
-> Thanks, but with the new patches I see the following.  I haven't tried
-> to investigate.
-This patchset adds the nsfs_evict()->netns_evict() code for breaking 
-deadlock bugs that exist, but this may cause double free because 
-nsfs_evict()->netns_evict() may be called multiple times.
 
-for example:
+> On Sep 6, 2021, at 8:41 PM, NeilBrown <neilb@suse.de> wrote:
+>=20
+> When does a single-page GFP_KERNEL allocation fail?  Ever?
+>=20
+> I know that if I add __GFP_NOFAIL then it won't fail and that is
+> preferred to looping.
+> I know that if I add __GFP_RETRY_MAILFAIL (or others) then it might
+> fail.
+> But that is the semantics for a plain GFP_KERNEL ??
+>=20
+> I recall a suggestion one that it would only fail if the process was
+> being killed by the oom killer.  That seems reasonable and would suggest
+> that retrying is really bad.  Is that true?
+>=20
+> For svc_alloc_args(), it might be better to fail and have the calling
+> server thread exit.  This would need to be combined with dynamic
+> thread-count management so that when a request arrived, a new thread
+> might be started.
 
-int main()
-{
-     int fd = open("/proc/self/ns/net", O_RDONLY);
-     close(fd);
+I don't immediately see a benefit to killing server threads
+during periods of memory exhaustion, but sometimes I lack
+imagination.
 
-     fd = open("/proc/self/ns/net", O_RDONLY);
-     close(fd);
-}
 
-Therefore, the nsfs evict cannot be used to break the deadlock.
+> So maybe we really don't want reclaim_progress_wait(), and all current
+> callers of congestion_wait() which are just waiting for allocation to
+> succeed should be either change to use __GFP_NOFAIL, or to handle
+> failure.
 
-A large number of netns leaks may cause OOM problems, currently I can't 
-find a good solution to fix it, does anyone have a good idea?
-> --b.
->
-> [ 2908.134813] ------------[ cut here ]------------
-> [ 2908.135732] name 'use-gss-proxy'
-> [ 2908.136276] WARNING: CPU: 2 PID: 15032 at fs/proc/generic.c:673 remove_proc_entry+0x124/0x190
-> [ 2908.138144] Modules linked in: nfsv4 rpcsec_gss_krb5 nfsv3 nfs_acl nfs lockd grace auth_rpcgss sunrpc
-> [ 2908.140183] CPU: 2 PID: 15032 Comm: (coredump) Not tainted 5.2.0-rc2-00441-gaef575f54640 #2257
-> [ 2908.142062] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
-> [ 2908.143756] RIP: 0010:remove_proc_entry+0x124/0x190
-> [ 2908.144519] Code: c3 48 c7 c7 60 24 8b 82 e8 29 16 a5 00 eb d5 48 c7 c7 60 24 8b 82 e8 1b 16 a5 00 4c 89 e6 48 c7 c7 ec 4c 52 82 e8 50 fd db ff <0f> 0b eb b6 48 8b 04 24 83 a8 90 00 00 00 01 e9 78 ff ff ff 4c 89
-> [ 2908.148138] RSP: 0018:ffffc900047bbdb0 EFLAGS: 00010282
-> [ 2908.148945] RAX: 0000000000000000 RBX: ffff888036060580 RCX: 0000000000000000
-> [ 2908.150139] RDX: ffff88807fd24e80 RSI: ffff88807fd165b8 RDI: 00000000ffffffff
-> [ 2908.151334] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> [ 2908.152564] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffa00adb1b
-> [ 2908.153816] R13: 00007ffc8bda5d30 R14: 0000000000000000 R15: ffff88805e2873a8
-> [ 2908.155007] FS:  00007f470bc27e40(0000) GS:ffff88807fd00000(0000) knlGS:0000000000000000
-> [ 2908.156421] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 2908.157333] CR2: 0000562b07764c58 CR3: 000000005e8ea001 CR4: 00000000001606e0
-> [ 2908.158529] Call Trace:
-> [ 2908.158796]  destroy_use_gss_proxy_proc_entry+0xb7/0x150 [auth_rpcgss]
-> [ 2908.159966]  gss_svc_shutdown_net+0x11/0x170 [auth_rpcgss]
-> [ 2908.160830]  netns_evict+0x2f/0x40
-> [ 2908.161266]  nsfs_evict+0x27/0x40
-> [ 2908.161685]  evict+0xd0/0x1a0
-> [ 2908.162035]  __dentry_kill+0xdf/0x180
-> [ 2908.162520]  dentry_kill+0x50/0x1c0
-> [ 2908.163005]  ? dput+0x1c/0x2b0
-> [ 2908.163369]  dput+0x260/0x2b0
-> [ 2908.163739]  path_put+0x12/0x20
-> [ 2908.164155]  do_faccessat+0x17c/0x240
-> [ 2908.164643]  do_syscall_64+0x50/0x1c0
-> [ 2908.165170]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [ 2908.165959] RIP: 0033:0x7f47098e2157
-> [ 2908.166445] Code: 77 01 c3 48 8b 15 69 dd 2c 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 15 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 39 dd 2c 00 f7 d8 64 89 02 b8
-> [ 2908.169994] RSP: 002b:00007ffc8bda5d28 EFLAGS: 00000246 ORIG_RAX: 0000000000000015
-> [ 2908.171315] RAX: ffffffffffffffda RBX: 0000562b0774d979 RCX: 00007f47098e2157
-> [ 2908.172563] RDX: 00007ffc8bda5d3e RSI: 0000000000000000 RDI: 00007ffc8bda5d30
-> [ 2908.173753] RBP: 00007ffc8bda5d70 R08: 0000000000000000 R09: 0000562b07d0b130
-> [ 2908.174943] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc8bda5d30
-> [ 2908.176163] R13: 0000562b07b34c80 R14: 0000562b07b35120 R15: 0000000000000000
-> [ 2908.177395] irq event stamp: 4256
-> [ 2908.177835] hardirqs last  enabled at (4255): [<ffffffff811221ee>] console_unlock+0x41e/0x590
-> [ 2908.179378] hardirqs last disabled at (4256): [<ffffffff81001b2f>] trace_hardirqs_off_thunk+0x1a/0x1c
-> [ 2908.181031] softirqs last  enabled at (4252): [<ffffffff820002be>] __do_softirq+0x2be/0x4aa
-> [ 2908.182458] softirqs last disabled at (4233): [<ffffffff810bf8e0>] irq_exit+0x80/0x90
-> [ 2908.183869] ---[ end trace d88132b63efc09d8 ]---
-> [ 2908.184620] BUG: kernel NULL pointer dereference, address: 0000000000000030
-> [ 2908.185829] #PF: supervisor read access in kernel mode
-> [ 2908.186924] #PF: error_code(0x0000) - not-present page
-> [ 2908.187887] PGD 0 P4D 0
-> [ 2908.188318] Oops: 0000 [#1] PREEMPT SMP PTI
-> [ 2908.189254] CPU: 2 PID: 15032 Comm: (coredump) Tainted: G        W         5.2.0-rc2-00441-gaef575f54640 #2257
-> [ 2908.192506] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
-> [ 2908.195137] RIP: 0010:__lock_acquire+0x3d2/0x1d90
-> [ 2908.196414] Code: db 48 8b 84 24 88 00 00 00 65 48 33 04 25 28 00 00 00 0f 85 be 10 00 00 48 8d 65 d8 44 89 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 <48> 81 3f 60 0d 01 83 41 bb 00 00 00 00 45 0f 45 d8 83 fe 01 0f 87
-> [ 2908.202720] RSP: 0018:ffffc900047bbc80 EFLAGS: 00010002
-> [ 2908.204165] RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
-> [ 2908.206125] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000030
-> [ 2908.208203] RBP: ffffc900047bbd40 R08: 0000000000000001 R09: 0000000000000000
-> [ 2908.210219] R10: 0000000000000001 R11: 0000000000000001 R12: ffff88807ad91500
-> [ 2908.211386] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000282
-> [ 2908.212532] FS:  00007f470bc27e40(0000) GS:ffff88807fd00000(0000) knlGS:0000000000000000
-> [ 2908.213647] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 2908.214400] CR2: 0000000000000030 CR3: 000000005e8ea001 CR4: 00000000001606e0
-> [ 2908.215393] Call Trace:
-> [ 2908.215589]  ? __lock_acquire+0x255/0x1d90
-> [ 2908.216071]  ? clear_gssp_clnt+0x1b/0x50 [auth_rpcgss]
-> [ 2908.216720]  ? __mutex_lock+0x99/0x920
-> [ 2908.217114]  lock_acquire+0x95/0x1b0
-> [ 2908.217484]  ? cache_purge+0x1c/0x110 [sunrpc]
-> [ 2908.218000]  _raw_spin_lock+0x2f/0x40
-> [ 2908.218370]  ? cache_purge+0x1c/0x110 [sunrpc]
-> [ 2908.218882]  cache_purge+0x1c/0x110 [sunrpc]
-> [ 2908.219346]  gss_svc_shutdown_net+0xb8/0x170 [auth_rpcgss]
-> [ 2908.220104]  netns_evict+0x2f/0x40
-> [ 2908.220439]  nsfs_evict+0x27/0x40
-> [ 2908.220786]  evict+0xd0/0x1a0
-> [ 2908.221050]  __dentry_kill+0xdf/0x180
-> [ 2908.221458]  dentry_kill+0x50/0x1c0
-> [ 2908.221842]  ? dput+0x1c/0x2b0
-> [ 2908.222126]  dput+0x260/0x2b0
-> [ 2908.222384]  path_put+0x12/0x20
-> [ 2908.222753]  do_faccessat+0x17c/0x240
-> [ 2908.223125]  do_syscall_64+0x50/0x1c0
-> [ 2908.223479]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [ 2908.224152] RIP: 0033:0x7f47098e2157
-> [ 2908.224566] Code: 77 01 c3 48 8b 15 69 dd 2c 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 15 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 39 dd 2c 00 f7 d8 64 89 02 b8
-> [ 2908.228198] RSP: 002b:00007ffc8bda5d28 EFLAGS: 00000246 ORIG_RAX: 0000000000000015
-> [ 2908.229496] RAX: ffffffffffffffda RBX: 0000562b0774d979 RCX: 00007f47098e2157
-> [ 2908.230938] RDX: 00007ffc8bda5d3e RSI: 0000000000000000 RDI: 00007ffc8bda5d30
-> [ 2908.232182] RBP: 00007ffc8bda5d70 R08: 0000000000000000 R09: 0000562b07d0b130
-> [ 2908.233481] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc8bda5d30
-> [ 2908.234750] R13: 0000562b07b34c80 R14: 0000562b07b35120 R15: 0000000000000000
-> [ 2908.236068] Modules linked in: nfsv4 rpcsec_gss_krb5 nfsv3 nfs_acl nfs lockd grace auth_rpcgss sunrpc
-> [ 2908.237861] CR2: 0000000000000030
-> [ 2908.238277] ---[ end trace d88132b63efc09d9 ]---
+I had completely forgotten about GFP_NOFAIL. That seems like the
+preferred answer, as it avoids an arbitrary time-based wait for
+a memory resource. (And maybe svc_rqst_alloc() should also get
+the NOFAIL treatment?).
+
+The question in my mind is how the new alloc_pages_bulk() will
+behave when passed NOFAIL. I would expect that NOFAIL would simply
+guarantee that at least one page is allocated on every call.
+
+
+--
+Chuck Lever
+
+
+
