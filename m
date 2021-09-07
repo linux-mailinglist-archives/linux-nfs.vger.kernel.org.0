@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AAC72402144
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Sep 2021 00:22:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C176A4021F0
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Sep 2021 04:30:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231948AbhIFWXu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Sep 2021 18:23:50 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:44346 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230384AbhIFWXu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Sep 2021 18:23:50 -0400
+        id S233598AbhIGAmp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 6 Sep 2021 20:42:45 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:38816 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232659AbhIGAmo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Sep 2021 20:42:44 -0400
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 9C8971FF41;
-        Mon,  6 Sep 2021 22:22:44 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 87CA5221A8;
+        Tue,  7 Sep 2021 00:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1630966964; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1630975298; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Ry1NtczxOVERwJbS7sSrV/MZc1iO8yevRwTZtoL/ca4=;
-        b=U7zUH81pudjBE5twAiZMEOzEKHUvizWfa9sEflCH5nw45R9nobjHWzJ+1akVvGSYMX+Qni
-        Ztm5Rz8eI8VZ74N7BUos0u/jzR/2SZEd87AoyOGh8Jd3PCILYtakVL5DDL8qqZG1OlW3w7
-        eJsW5UWFuuuMEwO5RcFJspCLs5OEUHM=
+        bh=OAW130kfzXgD7DFHMInOZ8+8a98c4xfyHi7BgBKUqgU=;
+        b=bWYy2jvSlF8VGXcaTp8MW+t9c2IyTP7QH1gv7APg+XcKF18ORbDWm6Rv7bWcbrCSs394IL
+        Bhf9FTlpsCW16bctC/OrTQKqbcEN7ara5Tgf4rXXqkwffmtf0rzuo09wrHsFh0Z12Gflrw
+        gEs29ACgpY9G3nUDI5Q4KwTe+YLE0K0=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1630966964;
+        s=susede2_ed25519; t=1630975298;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Ry1NtczxOVERwJbS7sSrV/MZc1iO8yevRwTZtoL/ca4=;
-        b=1PDv2/lWBmO8DMw8BxQlN6XjFGtZJe93uO5gyaziIkHOOjRP+gfNCuPFrbfZJu5xsoCr4n
-        A07UNGRZWnHwhyDg==
+        bh=OAW130kfzXgD7DFHMInOZ8+8a98c4xfyHi7BgBKUqgU=;
+        b=acWxfKIsn10FS691pHZ1KzL8IpyBAii4Ft8xw/pEqJcW2mV9mviIW5d9LNCVPBbXoZEJ8d
+        VYYBFyX2IYWMhiAw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C66A713B73;
-        Mon,  6 Sep 2021 22:22:42 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AC5A413C31;
+        Tue,  7 Sep 2021 00:41:36 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id nBkWIbKUNmGcVAAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 06 Sep 2021 22:22:42 +0000
+        id EfhYGkC1NmGKbwAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 07 Sep 2021 00:41:36 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
 To:     "Matthew Wilcox" <willy@infradead.org>
@@ -55,74 +55,56 @@ Cc:     "Chuck Lever III" <chuck.lever@oracle.com>,
         "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
         "Mel Gorman" <mgorman@suse.com>, "Linux-MM" <linux-mm@kvack.org>
 Subject: Re: [PATCH] SUNRPC: use congestion_wait() in svc_alloc_args()
-In-reply-to: <YTZ4E0Zh6F/WSpy0@casper.infradead.org>
+In-reply-to: <163096695999.2518.10383290668057550257@noble.neil.brown.name>
 References: <163090344807.19339.10071205771966144716@noble.neil.brown.name>,
  <848A6498-CFF3-4C66-AE83-959F8221E930@oracle.com>,
- <YTZ4E0Zh6F/WSpy0@casper.infradead.org>
-Date:   Tue, 07 Sep 2021 08:22:39 +1000
-Message-id: <163096695999.2518.10383290668057550257@noble.neil.brown.name>
+ <YTZ4E0Zh6F/WSpy0@casper.infradead.org>,
+ <163096695999.2518.10383290668057550257@noble.neil.brown.name>
+Date:   Tue, 07 Sep 2021 10:41:33 +1000
+Message-id: <163097529362.2518.16697605173806213577@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 07 Sep 2021, Matthew Wilcox wrote:
-> On Mon, Sep 06, 2021 at 03:46:34PM +0000, Chuck Lever III wrote:
-> > Hi Neil-
-> >=20
-> > > On Sep 6, 2021, at 12:44 AM, NeilBrown <neilb@suse.de> wrote:
-> > >=20
-> > >=20
-> > > Many places that need to wait before retrying a memory allocation use
-> > > congestion_wait().  xfs_buf_alloc_pages() is a good example which
-> > > follows a similar pattern to that in svc_alloc_args().
-> > >=20
-> > > It make sense to do the same thing in svc_alloc_args(); This will allow
-> > > the allocation to be retried sooner if some backing device becomes
-> > > non-congested before the timeout.
->=20
-> It's adorable that you believe this is still true.
+On Tue, 07 Sep 2021, NeilBrown wrote:
+> Even if we just provided
+> 
+>  void reclaim_progress_wait(void)
+>  {
+>         schedule_timeout_uninterruptible(HZ/20);
+>  }
+> 
+> that would be an improvement.
 
-always happy to be called "adorable" !!
+I contemplated providing a patch, but the more I thought about it, the
+less sure I was.
 
->=20
-> https://lore.kernel.org/linux-mm/20191231125908.GD6788@bombadil.infradead.o=
-rg/
->=20
->=20
-Interesting ...  a few filesystems call clear_bdi_congested(), but not
-enough to make a difference.
+When does a single-page GFP_KERNEL allocation fail?  Ever?
 
-At least my patch won't make things worse.  And when (not if !!)
-congestion_wait() gets fixed, sunrpc will immediately benefit.
+I know that if I add __GFP_NOFAIL then it won't fail and that is
+preferred to looping.
+I know that if I add __GFP_RETRY_MAILFAIL (or others) then it might
+fail.
+But that is the semantics for a plain GFP_KERNEL ??
 
-I suspect that "congestion_wait()" needs to be replaced by several
-different interfaces.
+I recall a suggestion one that it would only fail if the process was
+being killed by the oom killer.  That seems reasonable and would suggest
+that retrying is really bad.  Is that true?
 
-Some callers want to wait until memory might be available, which should
-be tracked entirely by MM, not by filesystems.
-Other caller are really only interested in their own bdi making progress
-and should be allowed to specify that bdi.
+For svc_alloc_args(), it might be better to fail and have the calling
+server thread exit.  This would need to be combined with dynamic
+thread-count management so that when a request arrived, a new thread
+might be started.
 
-And in general, it seems that that waits aren't really interested in
-congestion being eased, but in progress being made.
+So maybe we really don't want reclaim_progress_wait(), and all current
+callers of congestion_wait() which are just waiting for allocation to
+succeed should be either change to use __GFP_NOFAIL, or to handle
+failure.
+For the ext4_truncate case() that would be easier if there were a
+PF_MEMALLOC_NOFAIL flag though maybe passing down __GFP_MNOFAIL isn't
+too hard.
 
-reclaim_progress_wait()
-bdi_progress_wait()
-
-??
-
-Even if we just provided
-
- void reclaim_progress_wait(void)
- {
-        schedule_timeout_uninterruptible(HZ/20);
- }
-
-that would be an improvement.  It could be called from svc_alloc_args()
-and various other places that want to wait before retrying an
-allocation, and it would be no worse than current behaviour.
-Then if anyone had a clever idea of how to get a notification when
-progress had been made, there would be an obvious place to implement
-that idea.
+(this is why we all work-around problems in the platform rather than
+ fixing them.  Fixing them is just too hard...)
 
 NeilBrown
