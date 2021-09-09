@@ -2,39 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CBCA40575F
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Sep 2021 15:41:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 666C4405609
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Sep 2021 15:36:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352895AbhIINeA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 9 Sep 2021 09:34:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57772 "EHLO mail.kernel.org"
+        id S1346991AbhIINRX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 9 Sep 2021 09:17:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1353953AbhIIM47 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 9 Sep 2021 08:56:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 19EC863262;
-        Thu,  9 Sep 2021 11:58:31 +0000 (UTC)
+        id S1357663AbhIINDP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 9 Sep 2021 09:03:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 418C263281;
+        Thu,  9 Sep 2021 11:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631188711;
-        bh=GmoyVrNPM2svS9RzKsCbkJ43OdK07wA2jhqx3cz7WKk=;
+        s=k20201202; t=1631188790;
+        bh=OTeBBEk+/aMmAs7ageVFeEy3xXpZOhG0XdHKbdu/UtM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tG+5GRk88m8Dr9TG/NztMk0RISf3cvZr0TnXBNXN6maisQ+my832IXAUT4b8Uoi8U
-         odn5AyiFkOEp9EAEZnxJMenGwa3lDoDXZ8xP7TFt1qmZFcP5K3Gk74tfeXp2G/4s63
-         xFjvrTz9nTd5d7QIhA383FD2LACjExOAN+10SSjWdEVtXXNxtMLJV/9D2kRhkXhLeO
-         egyNpDuKDsEksQOARhNNOVtZWmEFHJemvVFRixdECZ/zskHxLIq86yrI7D0VPyrJcT
-         rCnMTuNMcY2Yv/+czjtQE/LVrqUuNNyZbFV0WqaaqxU5k09DbNOs3ZBvJ2Eg2uEYMx
-         b/u5xCsHHAdZw==
+        b=uQToCvwT6gKsqgzEwik+CHwmZQzvcb+qrLcIxxkwA0OgQnWsODLYLIsL0ZA3HXxwT
+         sdTPrTNgWPqzohMSRSCb4ecryEFUdaFthxOQkX6S5goqM6asNX99tc93FrBo7wdNxf
+         dzGwZrXIMlY63Ewhe6btN53ZEVnqFTo8RK02ZkZ93fDi83GuEOi2DrZIp1ALHQUxD0
+         ZotmefDg0t8QlUYYmwZtVuuG05XUlVZL+U5LA4tcDuHvzDfH4lLV6g4W5FuYo8ck5S
+         CiSjWtUExmiPZ9tC1iTXtcrCpat0eA7jPcMOFaWbeYQ4H2p6Ddyf6xYietABvecoeE
+         Bo+2R81ZEiKaw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "J. Bruce Fields" <bfields@redhat.com>,
         Chuck Lever <chuck.lever@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 52/74] rpc: fix gss_svc_init cleanup on failure
-Date:   Thu,  9 Sep 2021 07:57:04 -0400
-Message-Id: <20210909115726.149004-52-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 39/59] rpc: fix gss_svc_init cleanup on failure
+Date:   Thu,  9 Sep 2021 07:58:40 -0400
+Message-Id: <20210909115900.149795-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210909115726.149004-1-sashal@kernel.org>
-References: <20210909115726.149004-1-sashal@kernel.org>
+In-Reply-To: <20210909115900.149795-1-sashal@kernel.org>
+References: <20210909115900.149795-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,10 +57,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-index a85d78d2bdb7..d9d03881e4de 100644
+index 27dfd85830d8..4f41a1bc59bf 100644
 --- a/net/sunrpc/auth_gss/svcauth_gss.c
 +++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -1914,7 +1914,7 @@ gss_svc_init_net(struct net *net)
+@@ -1861,7 +1861,7 @@ gss_svc_init_net(struct net *net)
  		goto out2;
  	return 0;
  out2:
