@@ -2,36 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B2E440523F
+	by mail.lfdr.de (Postfix) with ESMTP id A44C9405240
 	for <lists+linux-nfs@lfdr.de>; Thu,  9 Sep 2021 14:47:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350411AbhIIMmb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 9 Sep 2021 08:42:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45810 "EHLO mail.kernel.org"
+        id S1353956AbhIIMmc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 9 Sep 2021 08:42:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1354115AbhIIMg5 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 9 Sep 2021 08:36:57 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 775CD61B7D;
-        Thu,  9 Sep 2021 11:54:04 +0000 (UTC)
+        id S1354702AbhIIMjR (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 9 Sep 2021 08:39:17 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 87EF96138F;
+        Thu,  9 Sep 2021 11:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631188445;
-        bh=VfSF8ywJgus035S93IX3ZGmVlbPmqAAUHaLROvHLsII=;
+        s=k20201202; t=1631188484;
+        bh=729bMn3LK5jKJMwTl+oGi26ZL1a7k/C8RTp0win86b4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QMlADQyV+l5JIC6W3FsXInhHu+K2hWSQmdxC3iN2Udrswg2TwGByEsyZkEX1aK4b1
-         8jC8jTYBscaIRkA9HQDFUEVaW2KIKaiOHD9O2BKf5PawlCBZakft9fAwTJ5Gs1jQ6F
-         Ni3Je07ftk9z0gzeVdZ0aSk3fzak0MNYarDsReqbMZ4NEh7r7TM4LVPGUOB3T2j9WS
-         8dLCd+/tkaYPBG+tuEJyhUJ0BV0IA6xuR1dSKhlnQgGhDmUBw6A/72C0WDR06m29Kl
-         bZpVBo7RdXw7Ex7hQ2TqHksNPj0erQyeh/Px22dOFzVk+8gqE7DhqBGFzeWsmnz0rn
-         oPC+5txfrrhBw==
+        b=n3fh5lninzRnwtoh/+eo/VWyvAXF7NEZu5lhkWhxGSAkEcx2XTUgo/Yim0EsfT+Iv
+         crAEbxtnbBTVF3XnNOhaKuGkMeJKyVa2TtVqPy0q9EVmj40nsdnyv7ZFEkm1HhAPAS
+         4stg2FWHarGOy6FGu0C9GWDQ8lCsld1vsHNWmtlWSxgUhIyxcuNlZVondf3Dw6gmLj
+         Zw/0avojc8M2vmY6htW/T7CthnQ2LHmfwWMcFi8ETKUg4bFi3pPyyRTw3cJJNrLLG/
+         zJL8MUewFNoYb5BiWtUG9QB2ml9EmwSgR+Gd9AvnTUbkuFKTTs6YGVytQLjG8KHZej
+         pj7bvKcSKHTNQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Daire Byrne <daire@dneg.com>,
         Chuck Lever <chuck.lever@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 129/176] lockd: lockd server-side shouldn't set fl_ops
-Date:   Thu,  9 Sep 2021 07:50:31 -0400
-Message-Id: <20210909115118.146181-129-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 159/176] nfsd: fix crash on LOCKT on reexported NFSv3
+Date:   Thu,  9 Sep 2021 07:51:01 -0400
+Message-Id: <20210909115118.146181-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210909115118.146181-1-sashal@kernel.org>
 References: <20210909115118.146181-1-sashal@kernel.org>
@@ -45,81 +44,41 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: "J. Bruce Fields" <bfields@redhat.com>
 
-[ Upstream commit 7de875b231edb807387a81cde288aa9e1015ef9e ]
+[ Upstream commit 0bcc7ca40bd823193224e9f38bafbd8325aaf566 ]
 
-Locks have two sets of op arrays, fl_lmops for the lock manager (lockd
-or nfsd), fl_ops for the filesystem.  The server-side lockd code has
-been setting its own fl_ops, which leads to confusion (and crashes) in
-the reexport case, where the filesystem expects to be the only one
-setting fl_ops.
+Unlike other filesystems, NFSv3 tries to use fl_file in the GETLK case.
 
-And there's no reason for it that I can see-the lm_get/put_owner ops do
-the same job.
-
-Reported-by: Daire Byrne <daire@dneg.com>
-Tested-by: Daire Byrne <daire@dneg.com>
 Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/lockd/svclock.c | 30 ++++++++++++------------------
- 1 file changed, 12 insertions(+), 18 deletions(-)
+ fs/nfsd/nfs4state.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-index 61d3cc2283dc..1781fc5e9091 100644
---- a/fs/lockd/svclock.c
-+++ b/fs/lockd/svclock.c
-@@ -395,28 +395,10 @@ nlmsvc_release_lockowner(struct nlm_lock *lock)
- 		nlmsvc_put_lockowner(lock->fl.fl_owner);
- }
- 
--static void nlmsvc_locks_copy_lock(struct file_lock *new, struct file_lock *fl)
--{
--	struct nlm_lockowner *nlm_lo = (struct nlm_lockowner *)fl->fl_owner;
--	new->fl_owner = nlmsvc_get_lockowner(nlm_lo);
--}
--
--static void nlmsvc_locks_release_private(struct file_lock *fl)
--{
--	nlmsvc_put_lockowner((struct nlm_lockowner *)fl->fl_owner);
--}
--
--static const struct file_lock_operations nlmsvc_lock_ops = {
--	.fl_copy_lock = nlmsvc_locks_copy_lock,
--	.fl_release_private = nlmsvc_locks_release_private,
--};
--
- void nlmsvc_locks_init_private(struct file_lock *fl, struct nlm_host *host,
- 						pid_t pid)
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 80e394a2e3fd..adacf2a66522 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6855,8 +6855,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ /*
+  * The NFSv4 spec allows a client to do a LOCKT without holding an OPEN,
+  * so we do a temporary open here just to get an open file to pass to
+- * vfs_test_lock.  (Arguably perhaps test_lock should be done with an
+- * inode operation.)
++ * vfs_test_lock.
+  */
+ static __be32 nfsd_test_lock(struct svc_rqst *rqstp, struct svc_fh *fhp, struct file_lock *lock)
  {
- 	fl->fl_owner = nlmsvc_find_lockowner(host, pid);
--	if (fl->fl_owner != NULL)
--		fl->fl_ops = &nlmsvc_lock_ops;
- }
- 
- /*
-@@ -788,9 +770,21 @@ nlmsvc_notify_blocked(struct file_lock *fl)
- 	printk(KERN_WARNING "lockd: notification for unknown block!\n");
- }
- 
-+static fl_owner_t nlmsvc_get_owner(fl_owner_t owner)
-+{
-+	return nlmsvc_get_lockowner(owner);
-+}
-+
-+static void nlmsvc_put_owner(fl_owner_t owner)
-+{
-+	nlmsvc_put_lockowner(owner);
-+}
-+
- const struct lock_manager_operations nlmsvc_lock_operations = {
- 	.lm_notify = nlmsvc_notify_blocked,
- 	.lm_grant = nlmsvc_grant_deferred,
-+	.lm_get_owner = nlmsvc_get_owner,
-+	.lm_put_owner = nlmsvc_put_owner,
- };
- 
- /*
+@@ -6871,7 +6870,9 @@ static __be32 nfsd_test_lock(struct svc_rqst *rqstp, struct svc_fh *fhp, struct
+ 							NFSD_MAY_READ));
+ 	if (err)
+ 		goto out;
++	lock->fl_file = nf->nf_file;
+ 	err = nfserrno(vfs_test_lock(nf->nf_file, lock));
++	lock->fl_file = NULL;
+ out:
+ 	fh_unlock(fhp);
+ 	nfsd_file_put(nf);
 -- 
 2.30.2
 
