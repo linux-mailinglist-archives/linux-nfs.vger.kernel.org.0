@@ -2,38 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61DFD404D53
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Sep 2021 14:02:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CF4C404FE7
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Sep 2021 14:22:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244625AbhIIMBw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 9 Sep 2021 08:01:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41684 "EHLO mail.kernel.org"
+        id S1352632AbhIIMX1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 9 Sep 2021 08:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1345658AbhIIL7v (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 9 Sep 2021 07:59:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 766B361452;
-        Thu,  9 Sep 2021 11:46:01 +0000 (UTC)
+        id S1346629AbhIIMRH (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 9 Sep 2021 08:17:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9A5EE61A7F;
+        Thu,  9 Sep 2021 11:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631187962;
-        bh=ji6FOxvP5bsC3vVdy9kIsBWYiGVsOWqbyx9E7qjHCiA=;
+        s=k20201202; t=1631188187;
+        bh=41UfQEK4ce4MZ7sHLRplv66BOBkYxe3i9+V1wNuOllM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jr9TJDKbs85z8ZJj3fPs+afAhsSAYeu4ZWfTpUwi/wzub2uscuhjN1imNikBAeoQI
-         ixgk+izmlZvcJwhR0CNbm5G62L1T6lex1FC6KtdnHE31mNcp5wUb+mkNy5sezcAKGZ
-         h4Gt3zO3pdFWAiCNikP9cftmebtGrMVP8CtSv4Etlkj/o7nzWysK2vo0QAzIdEvMCu
-         LqIQnOyILgWdyJ9dwnB0H1JtCYMZCfuQH1Zzu5v0H8/6KoNqWgJelUT5XpYkXVfFX2
-         iMzbmelM30b//iyo4oAJPmnzz7nn67w8Lq1kcgNIxbcICzEFXS5wWBDvRWXX8uxVcP
-         LrbYhiAKCchkg==
+        b=FWuXcEZSdS36SKM0TLvxeIIEl9/1l8PwtweKQoxdvGP3Cc471dOvrcNBVgLtdAZyO
+         AsvjCZ0PqaCkSex9f+QLRTVO1bIflLPjIEEpL6B4/zFKoCKQkmW2IyjGd7F/XT8y6Y
+         4MDCXhgfnA78rgLOjtRdT4NWUc89Vke4YUgRdosW5Q32iDiPHhLjlyELeSArXhP77P
+         uEzCtD7aXeYY9oVMkbUWO96H4SEFq9jH+eXdbL4qBQS7lrhEoppOCFR1TNtXtlj3rc
+         rYxl/mKq/6Q1AjMdq8E1TSyz18cgSFjzsZGjGijQv6Lc4Ztk507Pp7eF70c2coJgbQ
+         Ks1+KqI1GixBw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "J. Bruce Fields" <bfields@redhat.com>,
         Chuck Lever <chuck.lever@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.14 227/252] nfsd: fix crash on LOCKT on reexported NFSv3
-Date:   Thu,  9 Sep 2021 07:40:41 -0400
-Message-Id: <20210909114106.141462-227-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.13 148/219] rpc: fix gss_svc_init cleanup on failure
+Date:   Thu,  9 Sep 2021 07:45:24 -0400
+Message-Id: <20210909114635.143983-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210909114106.141462-1-sashal@kernel.org>
-References: <20210909114106.141462-1-sashal@kernel.org>
+In-Reply-To: <20210909114635.143983-1-sashal@kernel.org>
+References: <20210909114635.143983-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,41 +45,30 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: "J. Bruce Fields" <bfields@redhat.com>
 
-[ Upstream commit 0bcc7ca40bd823193224e9f38bafbd8325aaf566 ]
+[ Upstream commit 5a4753446253a427c0ff1e433b9c4933e5af207c ]
 
-Unlike other filesystems, NFSv3 tries to use fl_file in the GETLK case.
+The failure case here should be rare, but it's obviously wrong.
 
 Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/sunrpc/auth_gss/svcauth_gss.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index bebe86cce7c7..cde6b81aa22c 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -7040,8 +7040,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- /*
-  * The NFSv4 spec allows a client to do a LOCKT without holding an OPEN,
-  * so we do a temporary open here just to get an open file to pass to
-- * vfs_test_lock.  (Arguably perhaps test_lock should be done with an
-- * inode operation.)
-+ * vfs_test_lock.
-  */
- static __be32 nfsd_test_lock(struct svc_rqst *rqstp, struct svc_fh *fhp, struct file_lock *lock)
- {
-@@ -7056,7 +7055,9 @@ static __be32 nfsd_test_lock(struct svc_rqst *rqstp, struct svc_fh *fhp, struct
- 							NFSD_MAY_READ));
- 	if (err)
- 		goto out;
-+	lock->fl_file = nf->nf_file;
- 	err = nfserrno(vfs_test_lock(nf->nf_file, lock));
-+	lock->fl_file = NULL;
- out:
- 	fh_unlock(fhp);
- 	nfsd_file_put(nf);
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index 6dff64374bfe..e22f2d65457d 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -1980,7 +1980,7 @@ gss_svc_init_net(struct net *net)
+ 		goto out2;
+ 	return 0;
+ out2:
+-	destroy_use_gss_proxy_proc_entry(net);
++	rsi_cache_destroy_net(net);
+ out1:
+ 	rsc_cache_destroy_net(net);
+ 	return rv;
 -- 
 2.30.2
 
