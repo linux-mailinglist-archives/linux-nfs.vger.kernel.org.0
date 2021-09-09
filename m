@@ -2,95 +2,152 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA97C404520
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Sep 2021 07:43:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D719D404852
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Sep 2021 12:19:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350863AbhIIFoV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 9 Sep 2021 01:44:21 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:34396 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350838AbhIIFoT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Sep 2021 01:44:19 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 06E58201A7;
-        Thu,  9 Sep 2021 05:43:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1631166190; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=reJRJoTtGBrdy2xrV5Q3+NziIUzCA4EQboTh9IQRFao=;
-        b=gAaviq446DiFinmIuK9IyirCkK6mc/28d6FOGzFvEj5KI44bMyJvBhoa2989Aix9Nq6w4P
-        rE4WP5UiprUvkRSrpfodfquqA0Pg1g342GIwo++SRNxX5OzAkfTjmfBT7GBl+ciivNngeM
-        XyBzzoPfTdHWiaH+5USMpUKKZx15TnY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1631166190;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=reJRJoTtGBrdy2xrV5Q3+NziIUzCA4EQboTh9IQRFao=;
-        b=+HfnsZyDd7PREgnBLrif6AEfoPA5tAK8Y83g965wkDzds22SRWLE0x1H7FpceIA4s90qNJ
-        BQlRatWoW/SJRHAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BD3D913A60;
-        Thu,  9 Sep 2021 05:43:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id xuJ/HeyeOWH9cwAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 09 Sep 2021 05:43:08 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        id S233434AbhIIKUP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 9 Sep 2021 06:20:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233147AbhIIKUK (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 9 Sep 2021 06:20:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 28A396113E;
+        Thu,  9 Sep 2021 10:19:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631182741;
+        bh=NglITK0f+aXCjb3IekLE+xFF/VCVX54NzeAjXtqVE9g=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=As/7B9o1wNXWfsXMngYBb7p6P5yKI9rpSQCffYRdALwZRctsKKeArBJw/Rk0g9oqs
+         gv6luLRzLg79cZ/uG5oBUWHfbOwSCJQVL9kxxtpu3ZNt38KRc0jXiqT4kd6iWHXz94
+         4Vdd5osG2E4Tl/F60uMCPQzRYo2rMOLOp2/7wp9XJNQYIDjL4QwKZ6cljShanpQPOC
+         cqeFJu56H/0oBWm3dndVlZjfqXaQOwxaiam6KvG/qEtz17IyI3jAfhznXqas54B340
+         8G3rCaucpcneqWyTxtlzG0qFrUfi5BgTvrxfSq2jdvcmn0PaK0jbSdAjLHZGJFQRCm
+         cA44nNsRqQ4/A==
+Message-ID: <b63e52660e39cc7688921f85eadf1958ced6a869.camel@kernel.org>
+Subject: Re: [bug report] nfsd: Protect session creation and client confirm
+ using client_lock
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>,
+        Bruce Fields <bfields@fieldses.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Thu, 09 Sep 2021 06:19:00 -0400
+In-Reply-To: <23A4CB30-F551-472F-9F2F-022C40AE1D70@oracle.com>
+References: <20210907080732.GA20341@kili>
+         <deba812574c9b898f99fc08f0c3fa23e85fc36ca.camel@kernel.org>
+         <622EC724-ECBF-424D-A003-46A6B8E8C215@oracle.com>
+         <20210908212605.GF23978@fieldses.org>
+         <23A4CB30-F551-472F-9F2F-022C40AE1D70@oracle.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Steve Dickson" <steved@redhat.com>
-Cc:     "Linux NFS Mailing list" <linux-nfs@vger.kernel.org>
-Subject: [PATCH] gssd: fix crash in debug message.
-In-reply-to: <627209c3-21dd-312e-c2dc-cc810108f7d1@redhat.com>
-References: <20210610150825.396565-1-steved@redhat.com>,
- <627209c3-21dd-312e-c2dc-cc810108f7d1@redhat.com>
-Date:   Thu, 09 Sep 2021 15:43:05 +1000
-Message-id: <163116618506.12570.5744024691858636230@noble.neil.brown.name>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Wed, 2021-09-08 at 21:32 +0000, Chuck Lever III wrote:
+> 
+> > On Sep 8, 2021, at 5:26 PM, Bruce Fields <bfields@fieldses.org> wrote:
+> > 
+> > On Tue, Sep 07, 2021 at 03:00:23PM +0000, Chuck Lever III wrote:
+> > > We have IPV6_SCOPE_ID_LEN as a maximum size of the scope ID,
+> > > and it's not a big value. As long as boundary checking is made
+> > > to be sufficient, then a stack residency for the device name
+> > > should be safe.
+> > 
+> > Something like this?  (Or are you making a patch?
+> 
+> I thought Jeff was going to handle it? More below.
+> 
 
-A recent cleanup of debug messages added func and tid format specifiers
-to a debug message (when full hostname was different), but the func name
-and tid were NOT added as arguments.
+No, sorry... I was just suggesting a potential fix. I'd probably rather
+you guys fix it since you're better positioned to test this at the
+moment.
 
-Consequently there weren't enough args, random bytes of the stack were
-interpreted as a pointer, and rpc.gssd crashed (when -v was specified).
+> 
+> > I'm not even sure how to test.)
+> > are
+> > --b.
+> > 
+> > diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+> > index 6e4dbd577a39..d435bffc6199 100644
+> > --- a/net/sunrpc/addr.c
+> > +++ b/net/sunrpc/addr.c
+> > @@ -162,8 +162,10 @@ static int rpc_parse_scope_id(struct net *net, const char *buf,
+> > 			      const size_t buflen, const char *delim,
+> > 			      struct sockaddr_in6 *sin6)
+> > {
+> > -	char *p;
+> > +	char p[IPV6_SCOPE_ID_LEN + 1];
+> > 	size_t len;
+> > +	u32 scope_id = 0;
+> > +	struct net_device *dev;
+> > 
+> > 	if ((buf + buflen) == delim)
+> > 		return 1;
+> > @@ -175,29 +177,23 @@ static int rpc_parse_scope_id(struct net *net, const char *buf,
+> > 		return 0;
+> > 
+> > 	len = (buf + buflen) - delim - 1;
+> > -	p = kmemdup_nul(delim + 1, len, GFP_KERNEL);
+> > -	if (p) {
+> > -		u32 scope_id = 0;
+> > -		struct net_device *dev;
+> > -
+> > -		dev = dev_get_by_name(net, p);
+> > -		if (dev != NULL) {
+> > -			scope_id = dev->ifindex;
+> > -			dev_put(dev);
+> > -		} else {
+> > -			if (kstrtou32(p, 10, &scope_id) != 0) {
+> > -				kfree(p);
+> > -				return 0;
+> > -			}
+> > -		}
+> > -
+> > -		kfree(p);
+> > -
+> > -		sin6->sin6_scope_id = scope_id;
+> > -		return 1;
+> > +	if (len > IPV6_SCOPE_ID_LEN)
+> > +		return 0;
+> > +
+> > +	memcpy(p, delim + 1, len);
+> > +	p[len] = 0;
+> 
+> If I recall correctly, Linus prefers us to use the str*()
+> functions instead of raw memcpy() in cases like this.
+> 
 
-Fixes: b538862a5135 ("gssd: Cleaned up debug messages")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- utils/gssd/krb5_util.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I hadn't heard that. If you already know the length to be copied, then
+strcpy and the like tend to be less efficient since they continually
+have to check for null terminators as they walk the source string.
 
-diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
-index 6d059f332881..e3f270e948ac 100644
---- a/utils/gssd/krb5_util.c
-+++ b/utils/gssd/krb5_util.c
-@@ -673,8 +673,8 @@ get_full_hostname(const char *inhost, char *outhost, int =
-outhostlen)
- 	    *c =3D tolower(*c);
-=20
- 	if (get_verbosity() && strcmp(inhost, outhost))
--		printerr(1, "%s(0x%0lx): inhost '%s' different than outhost'%s'\n",=20
--			inhost, outhost);
-+		printerr(1, "%s(0x%0lx): inhost '%s' different than outhost '%s'\n",=20
-+			 __func__, tid, inhost, outhost);
-=20
- 	retval =3D 0;
- out:
---=20
-2.33.0
+> 
+> > +
+> > +	dev = dev_get_by_name(net, p);
+> > +	if (dev != NULL) {
+> > +		scope_id = dev->ifindex;
+> > +		dev_put(dev);
+> > +	} else {
+> > +		if (kstrtou32(p, 10, &scope_id) != 0)
+> > +			return 0;
+> > 	}
+> > 
+> > -	return 0;
+> > +	sin6->sin6_scope_id = scope_id;
+> > +	return 1;
+> > }
+> > 
+> > static size_t rpc_pton6(struct net *net, const char *buf, const size_t buflen,
+> 
+> --
+> Chuck Lever
+> 
+> 
+> 
+
+-- 
+Jeff Layton <jlayton@kernel.org>
 
