@@ -2,290 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71039406A67
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Sep 2021 12:54:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FB7F4078AD
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 Sep 2021 16:13:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232558AbhIJKz7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 Sep 2021 06:55:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21955 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232513AbhIJKzz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Sep 2021 06:55:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631271284;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Rp5Lxa5h9ZVQAdx0fPblnQhNdn9SeHUlbTUr8Itj62s=;
-        b=fi4M5BAYYffr7q4aF0LB0wfSks3zjvJhpRjEQ5uWq7Qx6arrvn40LY4fEnEFyKUcHKiK8M
-        EkiN/O3MZs93/gkc2koWpmsRaGxzQf7gLkbj0qsMQJwNTTCxjAYlD1Fn/H4t/+mFKwE6ES
-        ZjXFIhZhgY18+f72phLDKRQszVIzWaA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-549-MXUVxTCSMU-xK9Kf36QZDA-1; Fri, 10 Sep 2021 06:54:41 -0400
-X-MC-Unique: MXUVxTCSMU-xK9Kf36QZDA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 834931006AA0;
-        Fri, 10 Sep 2021 10:54:39 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2348B10016FE;
-        Fri, 10 Sep 2021 10:54:36 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-cc:     dhowells@redhat.com, torvalds@linux-foundation.org, hch@lst.de,
-        linux-fsdevel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC][PATCH] vfs, afs: Pass the file from fstat()/statx() to the fs for auth purposes
+        id S236041AbhIKOOY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 11 Sep 2021 10:14:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235331AbhIKOOT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 11 Sep 2021 10:14:19 -0400
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD713C061574;
+        Sat, 11 Sep 2021 07:13:06 -0700 (PDT)
+Received: by mail-io1-xd36.google.com with SMTP id q3so6093615iot.3;
+        Sat, 11 Sep 2021 07:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2KitDvTgcF8u5GUzxtRCOLjBDXdumB14NC4UdDO66+0=;
+        b=ftiR8acCLqtMEpLFJNcJWjtTWpPrgVx5obVuTzMCc15w/c3NXSp253sFcgApcZsdp+
+         PanwYjUmW/DNR+gtOjW+zIHekRzuJl+Vk+fzKsFs++1FNHqJcBVFeRRDY0zGgI/dMNaP
+         FpBp6UNIUbW/ICm6vWfxtBPwRyN3GnLpGIP90v0iZ+q0AI+5DTAlKhmk4wvroeFZvqSc
+         mCsuQA+EKBIE4ZHRvq43rVjjlyMa8WJuHVHtLq8/XpSZ3lxFbRifLWc6GTy7of9bWEFJ
+         DDKThCVkAa/EOIZc0L7MbeZDeel1bL4CoMdegmyxzJGMcWnvNQHA+bAziLAR4rXVoUEV
+         KRCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2KitDvTgcF8u5GUzxtRCOLjBDXdumB14NC4UdDO66+0=;
+        b=mbtbK+yOdXYXAfaTma4B1nYILw9+y3NaruaRIPUyujEOSw7Uqihj6Szegc00xKpAO+
+         apG4euiqh/XsOOVO5ptGKOgv5OYOwtBFwYR6YCsOzMzY8goll4V6K/lpESOS+CrcOTnj
+         6QMN09dmmNQ05Fz4qLjWXxK4cigLGlG/BHbX3srj1lLdoB7q8XC8uvQA0KlbIuIG2B8P
+         OC90UEUidNw9vUdYnmIHSqqlKrnIUXdM7SM5xQx+7/k4CethDVIOMFQeWq1LSSLlC3Ii
+         iUx3yLx6SMTtc+emUHcdsupW2kZqt2OhBZsH2Cu35Lj0kqmZmu3arNEn05L90vrmy98h
+         0VPg==
+X-Gm-Message-State: AOAM533WwHV7R1LCM8EZIkdPhFel8nsvIYeh0X+6UXi3e+zNVRwEPMoB
+        WUIGPKDAXEOXx8UiThNHfJQnb7nO4sWFRthwGCg=
+X-Google-Smtp-Source: ABdhPJzSRNNh9eOYNfuvbfpJ7B6UC0An+cy+d0vnELkwZrexWaJCOnNKAw/RE8heFK4mHTYTtvn+6kfADWA1cYFmOa0=
+X-Received: by 2002:a6b:610e:: with SMTP id v14mr2085382iob.70.1631369586148;
+ Sat, 11 Sep 2021 07:13:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <826634.1631271276.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Fri, 10 Sep 2021 11:54:36 +0100
-Message-ID: <826635.1631271276@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <162995209561.7591.4202079352301963089@noble.neil.brown.name>
+ <162995778427.7591.11743795294299207756@noble.neil.brown.name>
+ <YSkQ31UTVDtBavOO@infradead.org> <163010550851.7591.9342822614202739406@noble.neil.brown.name>
+ <YSnhHl0HDOgg07U5@infradead.org> <163038594541.7591.11109978693705593957@noble.neil.brown.name>
+ <YS8ppl6SYsCC0cql@infradead.org> <20210901152251.GA6533@fieldses.org>
+ <163055605714.24419.381470460827658370@noble.neil.brown.name>
+ <20210905160719.GA20887@fieldses.org> <163089177281.15583.1479086104083425773@noble.neil.brown.name>
+In-Reply-To: <163089177281.15583.1479086104083425773@noble.neil.brown.name>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sat, 11 Sep 2021 17:12:54 +0300
+Message-ID: <CAOQ4uxjbjkqEEXTe7V4vaUUM1gyJwe6iSAaz=PdxJyU2M14K-w@mail.gmail.com>
+Subject: Re: [PATCH v2] BTRFS/NFSD: provide more unique inode number for btrfs export
+To:     NeilBrown <neilb@suse.de>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-    =
+> Maybe what we really need is for a bunch of diverse filesystem
+> developers to get together and agree on some new common interface for
+> subvolume management, including coming up with some sort of definition
+> of what a subvolume "is".
 
-read(), write() and ftruncate() all have the file available from which the=
-y
-can extract the information needed to perform authenticated operations to =
-a
-network filesystem server for that filesystem, but fstat() and statx() do
-not.
+Neil,
 
-This could lead to the situation where a read(), say, on a file descriptor
-will work, but fstat() will fail because the calling process doesn't
-intrinsically have the right to do that.
+Seeing that LSF/MM is not expected to gather in the foreseen future, would
+you like to submit this as a topic for discussion in LPC Filesystem MC [1]?
+I know this is last minute, but we've just extended the CFP deadline
+until Sep 15 (MC is on Sep 21), so if you post a proposal, I think we will
+be able to fit this session in the final schedule.
 
-Change this by passing the file, if we have it, in struct kstat from which
-the filesystem can pick it up and use it, similar to the way ftruncate()
-passes the information in struct iattr.
+Granted, I don't know how many of the stakeholders plan to attend
+the LPC Filesystem MC, but at least Josef should be there ;)
 
-Make use of this in the afs filesystem to pass to validation in case we
-need to refetch the inode attributes from the server.
+I do have one general question about the expected behavior -
+In his comment to the LWN article [2], Josef writes:
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Alexander Viro <viro@zeniv.linux.org.uk>
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-afs@lists.infradead.org
----
- fs/afs/inode.c       |   10 ++++++++-
- fs/exportfs/expfs.c  |    2 -
- fs/stat.c            |   56 ++++++++++++++++++++++++++++++++++++++-------=
-------
- include/linux/fs.h   |    3 +-
- include/linux/stat.h |    1 =
+"The st_dev thing is unfortunate, but again is the result of a lack of
+interfaces.
+ Very early on we had problems with rsync wandering into snapshots and
+ copying loads of stuff. Find as well would get tripped up.
+ The way these tools figure out if they've wandered into another file system
+ is if the st_dev is different..."
 
- 5 files changed, 55 insertions(+), 17 deletions(-)
+If your plan goes through to export the main btrfs filesystem and
+subvolumes as a uniform st_dev namespace to the NFS client,
+what's to stop those old issues from remerging on NFS exported btrfs?
 
-diff --git a/fs/afs/inode.c b/fs/afs/inode.c
-index 8fcffea2daf5..7d732a38c739 100644
---- a/fs/afs/inode.c
-+++ b/fs/afs/inode.c
-@@ -670,6 +670,9 @@ int afs_validate(struct afs_vnode *vnode, struct key *=
-key)
- 	       vnode->fid.vid, vnode->fid.vnode, vnode->flags,
- 	       key_serial(key));
- =
+IOW, the user experience you are trying to solve is inability of 'find'
+to traverse the unified btrfs namespace, but Josef's comment indicates
+that some users were explicitly unhappy from 'find' trying to traverse
+into subvolumes to begin with.
 
-+	if (!vnode->volume)
-+		goto valid; /* Dynroot */
-+
- 	if (unlikely(test_bit(AFS_VNODE_DELETED, &vnode->flags))) {
- 		if (vnode->vfs_inode.i_nlink)
- 			clear_nlink(&vnode->vfs_inode);
-@@ -728,10 +731,15 @@ int afs_getattr(struct user_namespace *mnt_userns, c=
-onst struct path *path,
- {
- 	struct inode *inode =3D d_inode(path->dentry);
- 	struct afs_vnode *vnode =3D AFS_FS_I(inode);
--	int seq =3D 0;
-+	struct afs_file *af =3D stat->file ? stat->file->private_data : NULL;
-+	int ret, seq =3D 0;
- =
+So is there really a globally expected user experience?
+If not, then I really don't see how an nfs export option can be avoided.
 
- 	_enter("{ ino=3D%lu v=3D%u }", inode->i_ino, inode->i_generation);
- =
+Thanks,
+Amir.
 
-+	ret =3D afs_validate(vnode, af ? af->key : NULL);
-+	if (ret < 0)
-+		return ret;
-+
- 	do {
- 		read_seqbegin_or_lock(&vnode->cb_lock, &seq);
- 		generic_fillattr(&init_user_ns, inode, stat);
-diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
-index 0106eba46d5a..d3fba1aea432 100644
---- a/fs/exportfs/expfs.c
-+++ b/fs/exportfs/expfs.c
-@@ -303,7 +303,7 @@ static int get_name(const struct path *path, char *nam=
-e, struct dentry *child)
- 	 * actually call ->getattr, not just read i_ino:
- 	 */
- 	error =3D vfs_getattr_nosec(&child_path, &stat,
--				  STATX_INO, AT_STATX_SYNC_AS_STAT);
-+				  STATX_INO, AT_STATX_SYNC_AS_STAT, NULL);
- 	if (error)
- 		return error;
- 	buffer.ino =3D stat.ino;
-diff --git a/fs/stat.c b/fs/stat.c
-index 1fa38bdec1a6..c3410e809b4d 100644
---- a/fs/stat.c
-+++ b/fs/stat.c
-@@ -65,6 +65,7 @@ EXPORT_SYMBOL(generic_fillattr);
-  * @stat: structure to return attributes in
-  * @request_mask: STATX_xxx flags indicating what the caller wants
-  * @query_flags: Query mode (AT_STATX_SYNC_TYPE)
-+ * @file: File with credential info or NULL
-  *
-  * Get attributes without calling security_inode_getattr.
-  *
-@@ -73,12 +74,14 @@ EXPORT_SYMBOL(generic_fillattr);
-  * attributes to any user.  Any other code probably wants vfs_getattr.
-  */
- int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
--		      u32 request_mask, unsigned int query_flags)
-+		      u32 request_mask, unsigned int query_flags,
-+		      struct file *file)
- {
- 	struct user_namespace *mnt_userns;
- 	struct inode *inode =3D d_backing_inode(path->dentry);
- =
-
- 	memset(stat, 0, sizeof(*stat));
-+	stat->file =3D file;
- 	stat->result_mask |=3D STATX_BASIC_STATS;
- 	query_flags &=3D AT_STATX_SYNC_TYPE;
- =
-
-@@ -139,7 +142,7 @@ int vfs_getattr(const struct path *path, struct kstat =
-*stat,
- 	retval =3D security_inode_getattr(path);
- 	if (retval)
- 		return retval;
--	return vfs_getattr_nosec(path, stat, request_mask, query_flags);
-+	return vfs_getattr_nosec(path, stat, request_mask, query_flags, NULL);
- }
- EXPORT_SYMBOL(vfs_getattr);
- =
-
-@@ -161,7 +164,11 @@ int vfs_fstat(int fd, struct kstat *stat)
- 	f =3D fdget_raw(fd);
- 	if (!f.file)
- 		return -EBADF;
--	error =3D vfs_getattr(&f.file->f_path, stat, STATX_BASIC_STATS, 0);
-+
-+	error =3D security_inode_getattr(&f.file->f_path);
-+	if (!error)
-+		error =3D vfs_getattr_nosec(&f.file->f_path, stat,
-+					  STATX_BASIC_STATS, 0, f.file);
- 	fdput(f);
- 	return error;
- }
-@@ -185,7 +192,9 @@ static int vfs_statx(int dfd, const char __user *filen=
-ame, int flags,
- 	      struct kstat *stat, u32 request_mask)
- {
- 	struct path path;
-+	struct fd f;
- 	unsigned lookup_flags =3D 0;
-+	bool put_fd =3D false;
- 	int error;
- =
-
- 	if (flags & ~(AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT | AT_EMPTY_PATH |
-@@ -200,17 +209,36 @@ static int vfs_statx(int dfd, const char __user *fil=
-ename, int flags,
- 		lookup_flags |=3D LOOKUP_EMPTY;
- =
-
- retry:
--	error =3D user_path_at(dfd, filename, lookup_flags, &path);
--	if (error)
--		goto out;
--
--	error =3D vfs_getattr(&path, stat, request_mask, flags);
--	stat->mnt_id =3D real_mount(path.mnt)->mnt_id;
--	stat->result_mask |=3D STATX_MNT_ID;
--	if (path.mnt->mnt_root =3D=3D path.dentry)
--		stat->attributes |=3D STATX_ATTR_MOUNT_ROOT;
--	stat->attributes_mask |=3D STATX_ATTR_MOUNT_ROOT;
--	path_put(&path);
-+	if ((lookup_flags & LOOKUP_EMPTY) &&
-+	    dfd >=3D 0 &&
-+	    filename &&
-+	    strnlen_user(filename, 2) =3D=3D 0) {
-+		/* Should we use ESTALE retry for direct-fd? */
-+		f =3D fdget_raw(dfd);
-+		if (!f.file)
-+			return -EBADF;
-+		path =3D f.file->f_path;
-+		put_fd =3D true;
-+	} else {
-+		f.file =3D NULL;
-+		error =3D user_path_at(dfd, filename, lookup_flags, &path);
-+		if (error)
-+			goto out;
-+	}
-+
-+	error =3D security_inode_getattr(&path);
-+	if (!error) {
-+		error =3D vfs_getattr_nosec(&path, stat, request_mask, flags, f.file);
-+		stat->mnt_id =3D real_mount(path.mnt)->mnt_id;
-+		stat->result_mask |=3D STATX_MNT_ID;
-+		if (path.mnt->mnt_root =3D=3D path.dentry)
-+			stat->attributes |=3D STATX_ATTR_MOUNT_ROOT;
-+		stat->attributes_mask |=3D STATX_ATTR_MOUNT_ROOT;
-+	}
-+	if (put_fd)
-+		fdput(f);
-+	else
-+		path_put(&path);
- 	if (retry_estale(error, lookup_flags)) {
- 		lookup_flags |=3D LOOKUP_REVAL;
- 		goto retry;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index c58c2611a195..3f31f739f9a6 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3312,7 +3312,8 @@ extern int page_symlink(struct inode *inode, const c=
-har *symname, int len);
- extern const struct inode_operations page_symlink_inode_operations;
- extern void kfree_link(void *);
- void generic_fillattr(struct user_namespace *, struct inode *, struct kst=
-at *);
--extern int vfs_getattr_nosec(const struct path *, struct kstat *, u32, un=
-signed int);
-+extern int vfs_getattr_nosec(const struct path *, struct kstat *, u32, un=
-signed int,
-+			     struct file *);
- extern int vfs_getattr(const struct path *, struct kstat *, u32, unsigned=
- int);
- void __inode_add_bytes(struct inode *inode, loff_t bytes);
- void inode_add_bytes(struct inode *inode, loff_t bytes);
-diff --git a/include/linux/stat.h b/include/linux/stat.h
-index fff27e603814..b9986688cc59 100644
---- a/include/linux/stat.h
-+++ b/include/linux/stat.h
-@@ -20,6 +20,7 @@
- #include <linux/uidgid.h>
- =
-
- struct kstat {
-+	struct file	*file;		/* File if called from fstat() equivalent or NULL */
- 	u32		result_mask;	/* What fields the user got */
- 	umode_t		mode;
- 	unsigned int	nlink;
-
+[1] https://www.linuxplumbersconf.org/event/11/page/104-accepted-microconferences#cont-filesys
+[2] https://lwn.net/Articles/867509/
