@@ -2,113 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FB7F4078AD
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 Sep 2021 16:13:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 086BB407C05
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Sep 2021 08:12:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236041AbhIKOOY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 11 Sep 2021 10:14:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235331AbhIKOOT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 11 Sep 2021 10:14:19 -0400
-Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD713C061574;
-        Sat, 11 Sep 2021 07:13:06 -0700 (PDT)
-Received: by mail-io1-xd36.google.com with SMTP id q3so6093615iot.3;
-        Sat, 11 Sep 2021 07:13:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2KitDvTgcF8u5GUzxtRCOLjBDXdumB14NC4UdDO66+0=;
-        b=ftiR8acCLqtMEpLFJNcJWjtTWpPrgVx5obVuTzMCc15w/c3NXSp253sFcgApcZsdp+
-         PanwYjUmW/DNR+gtOjW+zIHekRzuJl+Vk+fzKsFs++1FNHqJcBVFeRRDY0zGgI/dMNaP
-         FpBp6UNIUbW/ICm6vWfxtBPwRyN3GnLpGIP90v0iZ+q0AI+5DTAlKhmk4wvroeFZvqSc
-         mCsuQA+EKBIE4ZHRvq43rVjjlyMa8WJuHVHtLq8/XpSZ3lxFbRifLWc6GTy7of9bWEFJ
-         DDKThCVkAa/EOIZc0L7MbeZDeel1bL4CoMdegmyxzJGMcWnvNQHA+bAziLAR4rXVoUEV
-         KRCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2KitDvTgcF8u5GUzxtRCOLjBDXdumB14NC4UdDO66+0=;
-        b=mbtbK+yOdXYXAfaTma4B1nYILw9+y3NaruaRIPUyujEOSw7Uqihj6Szegc00xKpAO+
-         apG4euiqh/XsOOVO5ptGKOgv5OYOwtBFwYR6YCsOzMzY8goll4V6K/lpESOS+CrcOTnj
-         6QMN09dmmNQ05Fz4qLjWXxK4cigLGlG/BHbX3srj1lLdoB7q8XC8uvQA0KlbIuIG2B8P
-         OC90UEUidNw9vUdYnmIHSqqlKrnIUXdM7SM5xQx+7/k4CethDVIOMFQeWq1LSSLlC3Ii
-         iUx3yLx6SMTtc+emUHcdsupW2kZqt2OhBZsH2Cu35Lj0kqmZmu3arNEn05L90vrmy98h
-         0VPg==
-X-Gm-Message-State: AOAM533WwHV7R1LCM8EZIkdPhFel8nsvIYeh0X+6UXi3e+zNVRwEPMoB
-        WUIGPKDAXEOXx8UiThNHfJQnb7nO4sWFRthwGCg=
-X-Google-Smtp-Source: ABdhPJzSRNNh9eOYNfuvbfpJ7B6UC0An+cy+d0vnELkwZrexWaJCOnNKAw/RE8heFK4mHTYTtvn+6kfADWA1cYFmOa0=
-X-Received: by 2002:a6b:610e:: with SMTP id v14mr2085382iob.70.1631369586148;
- Sat, 11 Sep 2021 07:13:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <162995209561.7591.4202079352301963089@noble.neil.brown.name>
- <162995778427.7591.11743795294299207756@noble.neil.brown.name>
- <YSkQ31UTVDtBavOO@infradead.org> <163010550851.7591.9342822614202739406@noble.neil.brown.name>
- <YSnhHl0HDOgg07U5@infradead.org> <163038594541.7591.11109978693705593957@noble.neil.brown.name>
- <YS8ppl6SYsCC0cql@infradead.org> <20210901152251.GA6533@fieldses.org>
- <163055605714.24419.381470460827658370@noble.neil.brown.name>
- <20210905160719.GA20887@fieldses.org> <163089177281.15583.1479086104083425773@noble.neil.brown.name>
-In-Reply-To: <163089177281.15583.1479086104083425773@noble.neil.brown.name>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sat, 11 Sep 2021 17:12:54 +0300
-Message-ID: <CAOQ4uxjbjkqEEXTe7V4vaUUM1gyJwe6iSAaz=PdxJyU2M14K-w@mail.gmail.com>
-Subject: Re: [PATCH v2] BTRFS/NFSD: provide more unique inode number for btrfs export
-To:     NeilBrown <neilb@suse.de>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+        id S229535AbhILGOD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 12 Sep 2021 02:14:03 -0400
+Received: from luckmann.name ([213.239.213.133]:45595 "EHLO
+        static.213-239-213-133.clients.your-server.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229512AbhILGOC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 12 Sep 2021 02:14:02 -0400
+X-Greylist: delayed 301 seconds by postgrey-1.27 at vger.kernel.org; Sun, 12 Sep 2021 02:14:02 EDT
+Received: from localhost (localhost [127.0.0.1])
+  (uid 502)
+  by static.213-239-213-133.clients.your-server.de with local
+  id 0000000000E54040.00000000613D9932.00006829; Sun, 12 Sep 2021 08:07:46 +0200
+Date:   Sun, 12 Sep 2021 08:07:46 +0200
+From:   Helge Kreutzmann <debian@helgefjell.de>
+To:     linux-nfs@vger.kernel.org
+Subject: Errors in NFS man pages
+Message-ID: <20210912060745.GA26295@Debian-50-lenny-64-minimal>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256; protocol="application/pgp-signature"; boundary="=_luckmann.name-26665-1631426866-0001-2"
+Content-Disposition: inline
+X-Public-Key-URL: http://www.helgefjell.de/data/debian_neu.asc
+X-homepage: http://www.helgefjell.de/debian
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> Maybe what we really need is for a bunch of diverse filesystem
-> developers to get together and agree on some new common interface for
-> subvolume management, including coming up with some sort of definition
-> of what a subvolume "is".
+This is a MIME-formatted message.  If you see this text it means that your
+E-mail software does not support MIME-formatted messages.
 
-Neil,
+--=_luckmann.name-26665-1631426866-0001-2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Seeing that LSF/MM is not expected to gather in the foreseen future, would
-you like to submit this as a topic for discussion in LPC Filesystem MC [1]?
-I know this is last minute, but we've just extended the CFP deadline
-until Sep 15 (MC is on Sep 21), so if you post a proposal, I think we will
-be able to fit this session in the final schedule.
+Dear NFS maintainer,
+the manpage-l10n project maintains a large number of translations of
+man pages both from a large variety of sources (including NFS) as
+well for a large variety of target languages.
 
-Granted, I don't know how many of the stakeholders plan to attend
-the LPC Filesystem MC, but at least Josef should be there ;)
+During their work translators notice different possible issues in the
+original (english) man pages. Sometimes this is a straightforward
+typo, sometimes a hard to read sentence, sometimes this is a
+convention not held up and sometimes we simply do not understand the
+original.
 
-I do have one general question about the expected behavior -
-In his comment to the LWN article [2], Josef writes:
+We use several distributions as sources and update regularly (at
+least every 2 month). This means we are fairly recent (some
+distributions like archlinux also update frequently) but might miss
+the latest upstream version once in a while, so the error might be
+already fixed. We apologize and ask you to close the issue immediately
+if this should be the case, but given the huge volume of projects and
+the very limited number of volunteers we are not able to double check
+each and every issue.
 
-"The st_dev thing is unfortunate, but again is the result of a lack of
-interfaces.
- Very early on we had problems with rsync wandering into snapshots and
- copying loads of stuff. Find as well would get tripped up.
- The way these tools figure out if they've wandered into another file system
- is if the st_dev is different..."
+Secondly we translators see the manpages in the neutral po format,
+i.e. converted and harmonized, but not the original source (be it man,
+groff, xml or other). So we cannot provide a true patch (where
+possible), but only an approximation which you need to convert into
+your source format.
 
-If your plan goes through to export the main btrfs filesystem and
-subvolumes as a uniform st_dev namespace to the NFS client,
-what's to stop those old issues from remerging on NFS exported btrfs?
+Finally the issues I'm reporting have accumulated over time and are
+not always discovered by me, so sometimes my description of the
+problem my be a bit limited - do not hesitate to ask so we can clarify
+them.
 
-IOW, the user experience you are trying to solve is inability of 'find'
-to traverse the unified btrfs namespace, but Josef's comment indicates
-that some users were explicitly unhappy from 'find' trying to traverse
-into subvolumes to begin with.
+I'm now reporting the errors for your project. I'm not repeating the
+errors reported 2020-05-16, 2021-05-29, if you would like a full
+report, please let me know. If future reports should use another
+channel, please let me know as well.
 
-So is there really a globally expected user experience?
-If not, then I really don't see how an nfs export option can be avoided.
 
-Thanks,
-Amir.
+Man page: nfs.5
+Issue: B<nfsmount.conf(5)> =E2=86=92 B<nfsmount.conf>(5)
 
-[1] https://www.linuxplumbersconf.org/event/11/page/104-accepted-microconferences#cont-filesys
-[2] https://lwn.net/Articles/867509/
+"If the mount command is configured to do so, all of the mount options "
+"described in the previous section can also be configured in the I</etc/"
+"nfsmount.conf> file. See B<nfsmount.conf(5)> for details."
+msgstr ""
+"Falls der Befehl =C2=BBmount=C2=AB entsprechend konfiguriert ist, k=C3=B6n=
+nen alle in den "
+"vorhergehenden Kapiteln beschriebenen Einh=C3=A4ngeoptionen auch in der Da=
+tei I</"
+--
+Man page: nfs.5
+Issue: Why is the word "option" in bold?
+
+"The B<sloppy> option is an alternative to specifying B<mount.nfs> -s "
+"B<option.>"
+
+--=20
+      Dr. Helge Kreutzmann                     debian@helgefjell.de
+           Dipl.-Phys.                   http://www.helgefjell.de/debian.php
+        64bit GNU powered                     gpg signed mail preferred
+           Help keep free software "libre": http://www.ffii.de/
+
+--=_luckmann.name-26665-1631426866-0001-2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEbZZfteMW0gNUynuwQbqlJmgq5nAFAmE9mSsACgkQQbqlJmgq
+5nBxpg//a7LrktR2Tuj/LWlupWsO99cjzd1C4wru7efRq4YDoPCrQRAMhwryq3QN
+6rjhzgstclKaia39hNEllpZTbov0Fy6FLOQ+AfLpA2vgfpJ3sb6MR7/pU6F0sSnS
+GwzllESDwRz8yTz/RXiCtdV4WeG8sMbJLqXYqYJxgacjhU5fBSgbgH5d8t7OYFko
+Z3DvEza3+GCclc8n8gFUJADRS9gl9x688gDpKIacVgpxDNnIpA8IgD7XEaWoVOIT
+mVNIYue99u0xOkJ51P0VuB0mKHpeneiOiMRcycu+DVkNDn9C8O9PV/+1DJ1Lqcn3
+P6cuQAnDuid3Dt7WUrZGFk2j3StyjfGXU1g0ucvfJ10oFz4Q9c/P/jzIl6G/u7S2
+qc//McDT7WcYvQR2zk5SNXurpQ8vb0b506F7ZvtrPOE1oUQCqwqtusa1SFc8CvUh
+yfD3hOeeV/w9pwXnmuOhpLsfHSzgLRHRi2IA1EFlq+SOfligH9TJmRZWzyFIT1DS
+frYU8r3HISErEVu7pDIH4BjwCGUIARh91uSiubqMtSA33savOXsybZ3Tv3ldUeXc
+QonLsDKh4anDg8dfLYn9SwU/UEh7iAJ29xxswDW0PRe6jBp+l/Vdrgc+3IAzqrO9
+/V3d+KkiitbHo93nS9txNQEWPeK5j69kfJFSt63uPWR9cxBynsI=
+=CXyw
+-----END PGP SIGNATURE-----
+
+--=_luckmann.name-26665-1631426866-0001-2--
