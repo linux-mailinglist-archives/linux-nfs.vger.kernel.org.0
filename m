@@ -2,123 +2,172 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 086BB407C05
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Sep 2021 08:12:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01F8C408269
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Sep 2021 02:43:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbhILGOD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 12 Sep 2021 02:14:03 -0400
-Received: from luckmann.name ([213.239.213.133]:45595 "EHLO
-        static.213-239-213-133.clients.your-server.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229512AbhILGOC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 12 Sep 2021 02:14:02 -0400
-X-Greylist: delayed 301 seconds by postgrey-1.27 at vger.kernel.org; Sun, 12 Sep 2021 02:14:02 EDT
-Received: from localhost (localhost [127.0.0.1])
-  (uid 502)
-  by static.213-239-213-133.clients.your-server.de with local
-  id 0000000000E54040.00000000613D9932.00006829; Sun, 12 Sep 2021 08:07:46 +0200
-Date:   Sun, 12 Sep 2021 08:07:46 +0200
-From:   Helge Kreutzmann <debian@helgefjell.de>
-To:     linux-nfs@vger.kernel.org
-Subject: Errors in NFS man pages
-Message-ID: <20210912060745.GA26295@Debian-50-lenny-64-minimal>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256; protocol="application/pgp-signature"; boundary="=_luckmann.name-26665-1631426866-0001-2"
-Content-Disposition: inline
-X-Public-Key-URL: http://www.helgefjell.de/data/debian_neu.asc
-X-homepage: http://www.helgefjell.de/debian
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S233133AbhIMApJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 12 Sep 2021 20:45:09 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:42540 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231303AbhIMApG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 12 Sep 2021 20:45:06 -0400
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 994A91FF92;
+        Mon, 13 Sep 2021 00:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1631493830; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+OhiqEI5WRN41+hz7K8GD6ziTq8KYbUtfgpW9+YKBL8=;
+        b=EU6s5UX+XAJ3Q9YJb81KwZ9AsL23Ta8RjRFJJLmfXxULyzooIPB5A13bg2gCtetDYD9jW3
+        jzH8rKoq9VcJCuyPPA6mQb2aZCj3WsAb/U99vf7kjgQcXYk7n0/aibK56Da3B2I+eFsibx
+        GOqpfkSd9O6PHXsdFAkGXnepONqxbcg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1631493830;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+OhiqEI5WRN41+hz7K8GD6ziTq8KYbUtfgpW9+YKBL8=;
+        b=wty3BBQ9b3bvKAqRC3L12Nut29ILRMJSpTzZspOR52sx11qdsEQlHRCbrpEsbkv2KovQcq
+        ZC0waAmr11DrU8Ag==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5F6A413A61;
+        Mon, 13 Sep 2021 00:43:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 9HVvB8OePmHvWQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 13 Sep 2021 00:43:47 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Amir Goldstein" <amir73il@gmail.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        "Chuck Lever" <chuck.lever@oracle.com>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        "Josef Bacik" <josef@toxicpanda.com>,
+        "linux-fsdevel" <linux-fsdevel@vger.kernel.org>,
+        "Theodore Tso" <tytso@mit.edu>, "Jan Kara" <jack@suse.cz>
+Subject: Re: [PATCH v2] BTRFS/NFSD: provide more unique inode number for btrfs export
+In-reply-to: <CAOQ4uxjbjkqEEXTe7V4vaUUM1gyJwe6iSAaz=PdxJyU2M14K-w@mail.gmail.com>
+References: <162995209561.7591.4202079352301963089@noble.neil.brown.name>,
+ <162995778427.7591.11743795294299207756@noble.neil.brown.name>,
+ <YSkQ31UTVDtBavOO@infradead.org>,
+ <163010550851.7591.9342822614202739406@noble.neil.brown.name>,
+ <YSnhHl0HDOgg07U5@infradead.org>,
+ <163038594541.7591.11109978693705593957@noble.neil.brown.name>,
+ <YS8ppl6SYsCC0cql@infradead.org>, <20210901152251.GA6533@fieldses.org>,
+ <163055605714.24419.381470460827658370@noble.neil.brown.name>,
+ <20210905160719.GA20887@fieldses.org>,
+ <163089177281.15583.1479086104083425773@noble.neil.brown.name>,
+ <CAOQ4uxjbjkqEEXTe7V4vaUUM1gyJwe6iSAaz=PdxJyU2M14K-w@mail.gmail.com>
+Date:   Mon, 13 Sep 2021 10:43:44 +1000
+Message-id: <163149382437.8417.3479990258042844514@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This is a MIME-formatted message.  If you see this text it means that your
-E-mail software does not support MIME-formatted messages.
+On Sun, 12 Sep 2021, Amir Goldstein wrote:
+> > Maybe what we really need is for a bunch of diverse filesystem
+> > developers to get together and agree on some new common interface for
+> > subvolume management, including coming up with some sort of definition
+> > of what a subvolume "is".
+>=20
+> Neil,
+>=20
+> Seeing that LSF/MM is not expected to gather in the foreseen future, would
+> you like to submit this as a topic for discussion in LPC Filesystem MC [1]?
+> I know this is last minute, but we've just extended the CFP deadline
+> until Sep 15 (MC is on Sep 21), so if you post a proposal, I think we will
+> be able to fit this session in the final schedule.
 
---=_luckmann.name-26665-1631426866-0001-2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the suggestion.  Maybe that is a good idea...  But I don't
+personally find face-to-face interactions particularly useful - though
+other people obviously do.  I need thinking time after receiving new
+ideas, so I can be sure that I understand them properly.  Face-to-face
+doesn't allow me that thinking time.
 
-Dear NFS maintainer,
-the manpage-l10n project maintains a large number of translations of
-man pages both from a large variety of sources (including NFS) as
-well for a large variety of target languages.
+So: no, I won't be proposing anything for LPC.
 
-During their work translators notice different possible issues in the
-original (english) man pages. Sometimes this is a straightforward
-typo, sometimes a hard to read sentence, sometimes this is a
-convention not held up and sometimes we simply do not understand the
-original.
+>=20
+> Granted, I don't know how many of the stakeholders plan to attend
+> the LPC Filesystem MC, but at least Josef should be there ;)
+>=20
+> I do have one general question about the expected behavior -
+> In his comment to the LWN article [2], Josef writes:
+>=20
+> "The st_dev thing is unfortunate, but again is the result of a lack of
+> interfaces.
+>  Very early on we had problems with rsync wandering into snapshots and
+>  copying loads of stuff. Find as well would get tripped up.
+>  The way these tools figure out if they've wandered into another file system
+>  is if the st_dev is different..."
+>=20
+> If your plan goes through to export the main btrfs filesystem and
+> subvolumes as a uniform st_dev namespace to the NFS client,
+> what's to stop those old issues from remerging on NFS exported btrfs?
 
-We use several distributions as sources and update regularly (at
-least every 2 month). This means we are fairly recent (some
-distributions like archlinux also update frequently) but might miss
-the latest upstream version once in a while, so the error might be
-already fixed. We apologize and ask you to close the issue immediately
-if this should be the case, but given the huge volume of projects and
-the very limited number of volunteers we are not able to double check
-each and every issue.
+That comment from Josef was interesting.... It doesn't align with
+Commit 3394e1607eaf ("Btrfs: Give each subvol and snapshot their own anonymou=
+s devid")
+when Chris Mason introduced the per-subvol device number with the
+justification that:
+    Each subvolume has its own private inode number space, and so we need
+    to fill in different device numbers for each subvolume to avoid confusing
+    applications.
 
-Secondly we translators see the manpages in the neutral po format,
-i.e. converted and harmonized, but not the original source (be it man,
-groff, xml or other). So we cannot provide a true patch (where
-possible), but only an approximation which you need to convert into
-your source format.
+But I understand that history can be messy and maybe there were several
+justifications of which Josef remembers one and Chris reported
+another.
 
-Finally the issues I'm reporting have accumulated over time and are
-not always discovered by me, so sometimes my description of the
-problem my be a bit limited - do not hesitate to ask so we can clarify
-them.
+If rsync did, in fact, wander into subvols and didn't get put off by the
+duplicate inode numbers (like 'find' does), then it would still do that
+when accessing btrfs over NFS.  This has always been the case.  Chris'
+"fix" only affected local access, it didn't change NFS access at all.
 
-I'm now reporting the errors for your project. I'm not repeating the
-errors reported 2020-05-16, 2021-05-29, if you would like a full
-report, please let me know. If future reports should use another
-channel, please let me know as well.
+>=20
+> IOW, the user experience you are trying to solve is inability of 'find'
+> to traverse the unified btrfs namespace, but Josef's comment indicates
+> that some users were explicitly unhappy from 'find' trying to traverse
+> into subvolumes to begin with.
+
+I believe that even 12 years ago, find would have complained if it saw a
+directory with the same inode as an ancestor.  Chris's fix wouldn't
+prevent find from entering in that case, because it wouldn't enter
+anyway.
+
+>=20
+> So is there really a globally expected user experience?
+
+No.  Everybody wants what they want.  There is some overlap, not no
+guarantees.  That is the unavoidable consequence of ignoring standards
+when implementing functionality.
+
+> If not, then I really don't see how an nfs export option can be avoided.
+
+And I really don't see how an nfs export option would help...  Different
+people within and organisation and using the same export might have
+different expectations.
+
+Thanks,
+NeilBrown
 
 
-Man page: nfs.5
-Issue: B<nfsmount.conf(5)> =E2=86=92 B<nfsmount.conf>(5)
-
-"If the mount command is configured to do so, all of the mount options "
-"described in the previous section can also be configured in the I</etc/"
-"nfsmount.conf> file. See B<nfsmount.conf(5)> for details."
-msgstr ""
-"Falls der Befehl =C2=BBmount=C2=AB entsprechend konfiguriert ist, k=C3=B6n=
-nen alle in den "
-"vorhergehenden Kapiteln beschriebenen Einh=C3=A4ngeoptionen auch in der Da=
-tei I</"
---
-Man page: nfs.5
-Issue: Why is the word "option" in bold?
-
-"The B<sloppy> option is an alternative to specifying B<mount.nfs> -s "
-"B<option.>"
-
---=20
-      Dr. Helge Kreutzmann                     debian@helgefjell.de
-           Dipl.-Phys.                   http://www.helgefjell.de/debian.php
-        64bit GNU powered                     gpg signed mail preferred
-           Help keep free software "libre": http://www.ffii.de/
-
---=_luckmann.name-26665-1631426866-0001-2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEbZZfteMW0gNUynuwQbqlJmgq5nAFAmE9mSsACgkQQbqlJmgq
-5nBxpg//a7LrktR2Tuj/LWlupWsO99cjzd1C4wru7efRq4YDoPCrQRAMhwryq3QN
-6rjhzgstclKaia39hNEllpZTbov0Fy6FLOQ+AfLpA2vgfpJ3sb6MR7/pU6F0sSnS
-GwzllESDwRz8yTz/RXiCtdV4WeG8sMbJLqXYqYJxgacjhU5fBSgbgH5d8t7OYFko
-Z3DvEza3+GCclc8n8gFUJADRS9gl9x688gDpKIacVgpxDNnIpA8IgD7XEaWoVOIT
-mVNIYue99u0xOkJ51P0VuB0mKHpeneiOiMRcycu+DVkNDn9C8O9PV/+1DJ1Lqcn3
-P6cuQAnDuid3Dt7WUrZGFk2j3StyjfGXU1g0ucvfJ10oFz4Q9c/P/jzIl6G/u7S2
-qc//McDT7WcYvQR2zk5SNXurpQ8vb0b506F7ZvtrPOE1oUQCqwqtusa1SFc8CvUh
-yfD3hOeeV/w9pwXnmuOhpLsfHSzgLRHRi2IA1EFlq+SOfligH9TJmRZWzyFIT1DS
-frYU8r3HISErEVu7pDIH4BjwCGUIARh91uSiubqMtSA33savOXsybZ3Tv3ldUeXc
-QonLsDKh4anDg8dfLYn9SwU/UEh7iAJ29xxswDW0PRe6jBp+l/Vdrgc+3IAzqrO9
-/V3d+KkiitbHo93nS9txNQEWPeK5j69kfJFSt63uPWR9cxBynsI=
-=CXyw
------END PGP SIGNATURE-----
-
---=_luckmann.name-26665-1631426866-0001-2--
+>=20
+> Thanks,
+> Amir.
+>=20
+> [1] https://www.linuxplumbersconf.org/event/11/page/104-accepted-microconfe=
+rences#cont-filesys
+> [2] https://lwn.net/Articles/867509/
+>=20
+>=20
