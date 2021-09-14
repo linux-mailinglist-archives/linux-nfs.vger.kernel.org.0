@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61C2440A783
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Sep 2021 09:34:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8EF840A782
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Sep 2021 09:34:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240691AbhINHfJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Sep 2021 03:35:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53896 "EHLO
+        id S241018AbhINHfH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Sep 2021 03:35:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240981AbhINHey (ORCPT
+        with ESMTP id S240963AbhINHey (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Sep 2021 03:34:54 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 091BEC0613C1
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Sep 2021 00:33:31 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id f21so5362054plb.4
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Sep 2021 00:33:31 -0700 (PDT)
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB6BC061762
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Sep 2021 00:33:37 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id g13-20020a17090a3c8d00b00196286963b9so1444548pjc.3
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Sep 2021 00:33:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pdSMr5/T83fWycgKHeCNyglH8dIFjVjgVfZi+3aGb/o=;
-        b=lcF2FdRL9SmDj6sPoOKJRFfCDRkvqUq7bcdi+w6EjU85E25KLBbP9RZIf1g1RF1VGF
-         dYD9vWNLARJj2aso1D0zfM0tnh4+8LLXP8x/ks1iAmoSo5bmlyG8s7Z4L6t/Hzh3kAb5
-         aiqgfjgCJg0JeYJHrRHvuB3Z0Z7gozQJUUV59v99TdjJn4MNtsOzrrf2X0U15bNWONQM
-         5+CLF53XPlAE3WN/08ilsg/S9SSdjV5YOvnjHcNrUELXww7m4qHx+z7E74VGqXqULLTE
-         484Bt5XKw+KSNOZ871DW0obWlvMU3XQsR/zX7L4m/X/CtmizI8nwl5rOukLwJO8Bpky4
-         qO2A==
+        bh=rI7PKACqM/Kwcdk+6AVk4DQ16MheMLZPlQjMEC5n7yk=;
+        b=EdRD6sHziaUM8ZWwxrmJqt7nsJvDxYQmRneqGGkNe4BMlgV93fTvY2OehhPz1IFX1k
+         YZkwM/14bd/X2mxRpcHaMtYegAn4Xp3oZu5WoP1rYKkupk8RUyF4chweIn+rbkx6PI0T
+         2tzbfNdxm3YDWMnbwTb3lzapiSC+RYDp1PRGKF9ZVYYwMk+tIfuidHTsOb58Nbx8ATZP
+         amG6TR448PN8cJaY2YytWw9yP5YHUl3aLII/2hVQ0/UmP9eiyVwl+G4TVNV/cpizgA8N
+         EEkC7jtYQmemaObOfbSkvNmmSWli8j1ASAjaJe4Ey7y3CNI7wdSRaBChZ8WUoNUxdEYF
+         jG4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pdSMr5/T83fWycgKHeCNyglH8dIFjVjgVfZi+3aGb/o=;
-        b=XZPJdLW1hcHC7xoGnnNvgdQ3zQPwZSBFJxDb+IVYZWdw+r9r6ueLM+WbSm2Vv/9I7u
-         s8t9YMSl7TQkDm7W0hLY62HcJCrvshImOtW3kUZ5esp48bUbjJGhfyGnrO4FsvsONhHq
-         vmwaWr7sShS2UHjyp9F0rUKGGVrzHg4Gqkl75ZRT8WxiiW6L5WSuS9NDC8JqlSSNSquD
-         MAv8ZTAyAivURyTHjCCgBJtbspHeWihmc+rW5cXrIImGxqMLP0vmoHP+sBwtaAX2RSkU
-         7Aq/74omJXf9badnLznWxrA7LukDwOKdKWksP1ywwqPUeRDXy76OSLJABDOP6r+HhofA
-         o8Bw==
-X-Gm-Message-State: AOAM530tj1mnUTwNkBzLL1M4gBpgmQiViuxvovzDOSYcqqIDpAosue4Q
-        yNzaPgSBHWPuHAZ1ZU60IWmnEw==
-X-Google-Smtp-Source: ABdhPJyd7C7ap9YT7ZyYr6oDPQ1gvF/rR4tIJydHVVLbWcwDTcRs26m4qzANk3uL3N76KhhkCvYSxA==
-X-Received: by 2002:a17:90a:1c81:: with SMTP id t1mr544287pjt.170.1631604810566;
-        Tue, 14 Sep 2021 00:33:30 -0700 (PDT)
+        bh=rI7PKACqM/Kwcdk+6AVk4DQ16MheMLZPlQjMEC5n7yk=;
+        b=07ciEtm5VRVfzjfBqy0nM0T2MvoXyQ+tiOYY0jjS8wRhF1vUgqTh+K0kzF4GZlAvSR
+         mcB7Zvwekg4HHi/33WMlX7NFbbN3MgWSLTzoxFGO6nMQ3z2RjF+qYEW3pvKJ1KlP/M5o
+         tFIII07bCoEBIM+URzGORKk6+fFk4yIeF46YY4uAdpk4vnVJCVH8y3TSSGRQSqlUAnjT
+         hdL24HsQi1xJDwBoYGG3wuq/9Vd19xrffa6/p4D2/BUTsQdW6cqkC7qJRBLj46r95IMN
+         vL4lchCi2vL8NrSvPfFknSke5Z0RMxpzbdD/rOoc38Msm1TRyRkSkQj9zCCnqPbkAySp
+         YyFQ==
+X-Gm-Message-State: AOAM530HNoMTVgh5tx6ets4h4zwtc4dEKvTcejvu82XbYejlj88fVOOD
+        FTbBbpY+junq5RLY/asDnsjNdA==
+X-Google-Smtp-Source: ABdhPJxU1w9S8RjHsj9t6dgNar9sO/uqvNbkUMk51yUE+y0Vgte07Q6BLLNmpDqU438/KSBl1gIduw==
+X-Received: by 2002:a17:90b:3890:: with SMTP id mu16mr575506pjb.78.1631604817392;
+        Tue, 14 Sep 2021 00:33:37 -0700 (PDT)
 Received: from localhost.localdomain ([139.177.225.244])
-        by smtp.gmail.com with ESMTPSA id s3sm9377839pfd.188.2021.09.14.00.33.24
+        by smtp.gmail.com with ESMTPSA id s3sm9377839pfd.188.2021.09.14.00.33.30
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Sep 2021 00:33:30 -0700 (PDT)
+        Tue, 14 Sep 2021 00:33:36 -0700 (PDT)
 From:   Muchun Song <songmuchun@bytedance.com>
 To:     willy@infradead.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
         mhocko@kernel.org, vdavydov.dev@gmail.com, shakeelb@google.com,
@@ -58,9 +58,9 @@ Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         zhengqi.arch@bytedance.com, duanxiongchun@bytedance.com,
         fam.zheng@bytedance.com, smuchun@gmail.com,
         Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v3 05/76] mm: list_lru: remove holding lru lock
-Date:   Tue, 14 Sep 2021 15:28:27 +0800
-Message-Id: <20210914072938.6440-6-songmuchun@bytedance.com>
+Subject: [PATCH v3 06/76] mm: list_lru: only add memcg-aware lrus to the global lru list
+Date:   Tue, 14 Sep 2021 15:28:28 +0800
+Message-Id: <20210914072938.6440-7-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 In-Reply-To: <20210914072938.6440-1-songmuchun@bytedance.com>
 References: <20210914072938.6440-1-songmuchun@bytedance.com>
@@ -70,39 +70,119 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Since commit e5bc3af7734f ("rcu: Consolidate PREEMPT and !PREEMPT
-synchronize_rcu()"), the critical section of spin lock can serve
-as an RCU read-side critical section which already allows readers
-that hold nlru->lock avoid taking rcu lock. So just to remove
-holding lock.
+The non-memcg-aware lru is always skiped when traversing the global lru
+list, which is not efficient. We can only add the memcg-aware lru to the
+global lru list instead to make traversing more efficient.
 
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 ---
- mm/list_lru.c | 11 -----------
- 1 file changed, 11 deletions(-)
+ mm/list_lru.c | 35 ++++++++++++++++-------------------
+ 1 file changed, 16 insertions(+), 19 deletions(-)
 
 diff --git a/mm/list_lru.c b/mm/list_lru.c
-index 4962d48d4410..6b2f3cbe5f67 100644
+index 6b2f3cbe5f67..39828632631c 100644
 --- a/mm/list_lru.c
 +++ b/mm/list_lru.c
-@@ -402,18 +402,7 @@ static int memcg_update_list_lru_node(struct list_lru_node *nlru,
- 	}
+@@ -15,18 +15,29 @@
+ #include "slab.h"
  
- 	memcpy(&new->lru, &old->lru, old_size * sizeof(void *));
+ #ifdef CONFIG_MEMCG_KMEM
+-static LIST_HEAD(list_lrus);
++static LIST_HEAD(memcg_list_lrus);
+ static DEFINE_MUTEX(list_lrus_mutex);
+ 
++static inline bool list_lru_memcg_aware(struct list_lru *lru)
++{
++	return lru->memcg_aware;
++}
++
+ static void list_lru_register(struct list_lru *lru)
+ {
++	if (!list_lru_memcg_aware(lru))
++		return;
++
+ 	mutex_lock(&list_lrus_mutex);
+-	list_add(&lru->list, &list_lrus);
++	list_add(&lru->list, &memcg_list_lrus);
+ 	mutex_unlock(&list_lrus_mutex);
+ }
+ 
+ static void list_lru_unregister(struct list_lru *lru)
+ {
++	if (!list_lru_memcg_aware(lru))
++		return;
++
+ 	mutex_lock(&list_lrus_mutex);
+ 	list_del(&lru->list);
+ 	mutex_unlock(&list_lrus_mutex);
+@@ -37,11 +48,6 @@ static int lru_shrinker_id(struct list_lru *lru)
+ 	return lru->shrinker_id;
+ }
+ 
+-static inline bool list_lru_memcg_aware(struct list_lru *lru)
+-{
+-	return lru->memcg_aware;
+-}
 -
--	/*
--	 * The locking below allows readers that hold nlru->lock avoid taking
--	 * rcu_read_lock (see list_lru_from_memcg_idx).
--	 *
--	 * Since list_lru_{add,del} may be called under an IRQ-safe lock,
--	 * we have to use IRQ-safe primitives here to avoid deadlock.
--	 */
--	spin_lock_irq(&nlru->lock);
- 	rcu_assign_pointer(nlru->memcg_lrus, new);
--	spin_unlock_irq(&nlru->lock);
+ static inline struct list_lru_one *
+ list_lru_from_memcg_idx(struct list_lru_node *nlru, int idx)
+ {
+@@ -458,9 +464,6 @@ static int memcg_update_list_lru(struct list_lru *lru,
+ {
+ 	int i;
+ 
+-	if (!list_lru_memcg_aware(lru))
+-		return 0;
 -
- 	kvfree_rcu(old, rcu);
- 	return 0;
+ 	for_each_node(i) {
+ 		if (memcg_update_list_lru_node(&lru->node[i],
+ 					       old_size, new_size))
+@@ -483,9 +486,6 @@ static void memcg_cancel_update_list_lru(struct list_lru *lru,
+ {
+ 	int i;
+ 
+-	if (!list_lru_memcg_aware(lru))
+-		return;
+-
+ 	for_each_node(i)
+ 		memcg_cancel_update_list_lru_node(&lru->node[i],
+ 						  old_size, new_size);
+@@ -498,7 +498,7 @@ int memcg_update_all_list_lrus(int new_size)
+ 	int old_size = memcg_nr_cache_ids;
+ 
+ 	mutex_lock(&list_lrus_mutex);
+-	list_for_each_entry(lru, &list_lrus, list) {
++	list_for_each_entry(lru, &memcg_list_lrus, list) {
+ 		ret = memcg_update_list_lru(lru, old_size, new_size);
+ 		if (ret)
+ 			goto fail;
+@@ -507,7 +507,7 @@ int memcg_update_all_list_lrus(int new_size)
+ 	mutex_unlock(&list_lrus_mutex);
+ 	return ret;
+ fail:
+-	list_for_each_entry_continue_reverse(lru, &list_lrus, list)
++	list_for_each_entry_continue_reverse(lru, &memcg_list_lrus, list)
+ 		memcg_cancel_update_list_lru(lru, old_size, new_size);
+ 	goto out;
+ }
+@@ -544,9 +544,6 @@ static void memcg_drain_list_lru(struct list_lru *lru,
+ {
+ 	int i;
+ 
+-	if (!list_lru_memcg_aware(lru))
+-		return;
+-
+ 	for_each_node(i)
+ 		memcg_drain_list_lru_node(lru, i, src_idx, dst_memcg);
+ }
+@@ -556,7 +553,7 @@ void memcg_drain_all_list_lrus(int src_idx, struct mem_cgroup *dst_memcg)
+ 	struct list_lru *lru;
+ 
+ 	mutex_lock(&list_lrus_mutex);
+-	list_for_each_entry(lru, &list_lrus, list)
++	list_for_each_entry(lru, &memcg_list_lrus, list)
+ 		memcg_drain_list_lru(lru, src_idx, dst_memcg);
+ 	mutex_unlock(&list_lrus_mutex);
  }
 -- 
 2.11.0
