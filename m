@@ -2,151 +2,141 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99A1E40B50B
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Sep 2021 18:38:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CEE540B52B
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Sep 2021 18:45:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229617AbhINQjJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Sep 2021 12:39:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230035AbhINQjJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Sep 2021 12:39:09 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 886AFC061574
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Sep 2021 09:37:51 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 724F828E5; Tue, 14 Sep 2021 12:37:50 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 724F828E5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1631637470;
-        bh=enCgZpYt6FX7J0pI+1xzEGtOUBSd7yOAWgJlnEngYZs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aC3kjRbUV+J9P0rxNKB4ml4JSIHGm17avsPCFT8eauNheROSAh346cUmvZSOa0niD
-         diEnhDIg8x5e2iE7UbHbYOmYe6huHtDTyzZy4IjR3XKc6g+Ri+clypeTOzLe62xsrU
-         7wnGatLFsfcWfKvQJ6/YEbbxJDJwXWSa9vXzQLRg=
-Date:   Tue, 14 Sep 2021 12:37:50 -0400
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [bug report] nfsd: Protect session creation and client confirm
- using client_lock
-Message-ID: <20210914163750.GB8134@fieldses.org>
-References: <20210907080732.GA20341@kili>
- <deba812574c9b898f99fc08f0c3fa23e85fc36ca.camel@kernel.org>
- <622EC724-ECBF-424D-A003-46A6B8E8C215@oracle.com>
- <20210908212605.GF23978@fieldses.org>
- <23A4CB30-F551-472F-9F2F-022C40AE1D70@oracle.com>
- <b63e52660e39cc7688921f85eadf1958ced6a869.camel@kernel.org>
- <57B147B6-FC8F-4E70-A3E1-D449615B8355@oracle.com>
- <c72e78075bcdc174e5786aa6678655fdae73eaaf.camel@kernel.org>
+        id S229706AbhINQq0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Sep 2021 12:46:26 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:38400 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229448AbhINQq0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Sep 2021 12:46:26 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 76C6520141;
+        Tue, 14 Sep 2021 16:45:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1631637907; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ozFdqBIwmwyJglrohMvn3NkJIfp+ikVZXcbLX7txgcw=;
+        b=c+tWXz3iFiMt2fBT2y8zj5/DP3kTS+clAtQNQjW/Q0M6SxwQAy6krw8G8j0cJ8C2E/b09i
+        awJaPyl97itLD9c6bLIbr1CN+kU50My+7nVpVgBukC5bx/DrxIAwFzjQQkm1Bg2V8RK7QV
+        BDTYLlCiPqBuvc5JJPd+Ai4Uy25bW3s=
+Received: from suse.com (unknown [10.163.32.246])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id B15CCA3B94;
+        Tue, 14 Sep 2021 16:45:06 +0000 (UTC)
+Date:   Tue, 14 Sep 2021 17:45:04 +0100
+From:   Mel Gorman <mgorman@suse.com>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] XFS: remove congestion_wait() loop from
+ xfs_buf_alloc_pages()
+Message-ID: <20210914164504.GS3828@suse.com>
+References: <163157808321.13293.486682642188075090.stgit@noble.brown>
+ <163157838440.13293.12568710689057349786.stgit@noble.brown>
+ <20210914020837.GH2361455@dread.disaster.area>
+ <163158695921.3992.9776900395549582360@noble.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <c72e78075bcdc174e5786aa6678655fdae73eaaf.camel@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <163158695921.3992.9776900395549582360@noble.neil.brown.name>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH] nfsd: don't alloc under spinlock in rpc_parse_scope_id
-
-Dan Carpenter says:
-
-  The patch d20c11d86d8f: "nfsd: Protect session creation and client
-  confirm using client_lock" from Jul 30, 2014, leads to the following
-  Smatch static checker warning:
-
-        net/sunrpc/addr.c:178 rpc_parse_scope_id()
-        warn: sleeping in atomic context
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: d20c11d86d8f ("nfsd: Protect session creation and client...")
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
-
- net/sunrpc/addr.c | 40 ++++++++++++++++++----------------------
- 1 file changed, 18 insertions(+), 22 deletions(-)
-
-On Thu, Sep 09, 2021 at 10:56:33AM -0400, Jeff Layton wrote:
-> Hmm, it sounds line in the second email he suggests using memcpy():
+On Tue, Sep 14, 2021 at 12:35:59PM +1000, NeilBrown wrote:
+> On Tue, 14 Sep 2021, Dave Chinner wrote:
+> > On Tue, Sep 14, 2021 at 10:13:04AM +1000, NeilBrown wrote:
+> > > Documentation commment in gfp.h discourages indefinite retry loops on
+> > > ENOMEM and says of __GFP_NOFAIL that it
+> > > 
+> > >     is definitely preferable to use the flag rather than opencode
+> > >     endless loop around allocator.
+> > > 
+> > > congestion_wait() is indistinguishable from
+> > > schedule_timeout_uninterruptible() in practice and it is not a good way
+> > > to wait for memory to become available.
+> > > 
+> > > So instead of waiting, allocate a single page using __GFP_NOFAIL, then
+> > > loop around and try to get any more pages that might be needed with a
+> > > bulk allocation.  This single-page allocation will wait in the most
+> > > appropriate way.
+> > > 
+> > > Signed-off-by: NeilBrown <neilb@suse.de>
+> > > ---
+> > >  fs/xfs/xfs_buf.c |    6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+> > > index 5fa6cd947dd4..1ae3768f6504 100644
+> > > --- a/fs/xfs/xfs_buf.c
+> > > +++ b/fs/xfs/xfs_buf.c
+> > > @@ -372,8 +372,8 @@ xfs_buf_alloc_pages(
+> > >  
+> > >  	/*
+> > >  	 * Bulk filling of pages can take multiple calls. Not filling the entire
+> > > -	 * array is not an allocation failure, so don't back off if we get at
+> > > -	 * least one extra page.
+> > > +	 * array is not an allocation failure, so don't fail or fall back on
+> > > +	 * __GFP_NOFAIL if we get at least one extra page.
+> > >  	 */
+> > >  	for (;;) {
+> > >  		long	last = filled;
+> > > @@ -394,7 +394,7 @@ xfs_buf_alloc_pages(
+> > >  		}
+> > >  
+> > >  		XFS_STATS_INC(bp->b_mount, xb_page_retries);
+> > > -		congestion_wait(BLK_RW_ASYNC, HZ / 50);
+> > > +		bp->b_pages[filled++] = alloc_page(gfp_mask | __GFP_NOFAIL);
+> > 
+> > This smells wrong - the whole point of using the bulk page allocator
+> > in this loop is to avoid the costly individual calls to
+> > alloc_page().
+> > 
+> > What we are implementing here fail-fast semantics for readahead and
+> > fail-never for everything else.  If the bulk allocator fails to get
+> > a page from the fast path free lists, it already falls back to
+> > __alloc_pages(gfp, 0, ...) to allocate a single page. So AFAICT
+> > there's no need to add another call to alloc_page() because we can
+> > just do this instead:
+> > 
+> > 	if (flags & XBF_READ_AHEAD)
+> > 		gfp_mask |= __GFP_NORETRY;
+> > 	else
+> > -		gfp_mask |= GFP_NOFS;
+> > +		gfp_mask |= GFP_NOFS | __GFP_NOFAIL;
+> > 
+> > Which should make the __alloc_pages() call in
+> > alloc_pages_bulk_array() do a __GFP_NOFAIL allocation and hence
+> > provide the necessary never-fail guarantee that is needed here.
 > 
-> "Your "memcpy()" example implies that the source is always a fixed-size
-> thing. In that case, maybe that's the rigth thing to do, and you
-> should just create a real function for it."
+> That is a nice simplification.
+> Mel Gorman told me
+>   https://lore.kernel.org/linux-nfs/20210907153116.GJ3828@suse.com/
+> that alloc_pages_bulk ignores GFP_NOFAIL.  I added that to the
+> documentation comment in an earlier patch.
 > 
-> Maybe I'm missing the context though.
+> I had a look at the code and cannot see how it would fail to allocate at
+> least one page.  Maybe Mel can help....
 > 
-> In any case, when you're certain about the length of the source and
-> destination buffers, there's no real benefit to avoiding memcpy in favor
-> of strcpy and the like. It's just as correct.
 
-OK, queueing this up as is for 5.16 unless someone objects.  (But, could
-really use testing, I'm not currently testing over ipv6.)--b.
+If there are already at least one page an the array and the first attempt
+at bulk allocation fails, it'll simply return. It's an odd corner case
+that may never apply but it's possible.  That said, I'm of the opinion that
+__GFP_NOFAIL should not be expanded and instead congestion_wait should be
+deleted and replaced with something triggered by reclaim making progress.
 
-diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
-index 6e4dbd577a39..d435bffc6199 100644
---- a/net/sunrpc/addr.c
-+++ b/net/sunrpc/addr.c
-@@ -162,8 +162,10 @@ static int rpc_parse_scope_id(struct net *net, const char *buf,
- 			      const size_t buflen, const char *delim,
- 			      struct sockaddr_in6 *sin6)
- {
--	char *p;
-+	char p[IPV6_SCOPE_ID_LEN + 1];
- 	size_t len;
-+	u32 scope_id = 0;
-+	struct net_device *dev;
- 
- 	if ((buf + buflen) == delim)
- 		return 1;
-@@ -175,29 +177,23 @@ static int rpc_parse_scope_id(struct net *net, const char *buf,
- 		return 0;
- 
- 	len = (buf + buflen) - delim - 1;
--	p = kmemdup_nul(delim + 1, len, GFP_KERNEL);
--	if (p) {
--		u32 scope_id = 0;
--		struct net_device *dev;
--
--		dev = dev_get_by_name(net, p);
--		if (dev != NULL) {
--			scope_id = dev->ifindex;
--			dev_put(dev);
--		} else {
--			if (kstrtou32(p, 10, &scope_id) != 0) {
--				kfree(p);
--				return 0;
--			}
--		}
--
--		kfree(p);
--
--		sin6->sin6_scope_id = scope_id;
--		return 1;
-+	if (len > IPV6_SCOPE_ID_LEN)
-+		return 0;
-+
-+	memcpy(p, delim + 1, len);
-+	p[len] = 0;
-+
-+	dev = dev_get_by_name(net, p);
-+	if (dev != NULL) {
-+		scope_id = dev->ifindex;
-+		dev_put(dev);
-+	} else {
-+		if (kstrtou32(p, 10, &scope_id) != 0)
-+			return 0;
- 	}
- 
--	return 0;
-+	sin6->sin6_scope_id = scope_id;
-+	return 1;
- }
- 
- static size_t rpc_pton6(struct net *net, const char *buf, const size_t buflen,
 -- 
-2.31.1
-
+Mel Gorman
+SUSE Labs
