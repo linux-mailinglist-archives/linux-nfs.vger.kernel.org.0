@@ -2,178 +2,162 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4D2640A887
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Sep 2021 09:47:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D06740AFB9
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Sep 2021 15:54:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231203AbhINHsq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Sep 2021 03:48:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237431AbhINHrv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Sep 2021 03:47:51 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34DDAC061A2B
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Sep 2021 00:42:02 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id c13-20020a17090a558d00b00198e6497a4fso1457469pji.4
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Sep 2021 00:42:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/CUB88/FqeRt+OVWlft0iBfJ40Vb/KWjqElOuPdMD70=;
-        b=rTJJ/eMiE+Avxnn6TesM3SKY0q/LBFL95nxNlqPiFb0QWIihuVfQq6xQqgeFTwvmAl
-         tIRfhq3xNb0KzfufoUgbX2K2vXKNf1+jNptKTW/XhwEM3xUv00+pbwZrWtFFGrEM+Eyg
-         W7KvfKxYMy3wdJNxJPfj3/jeh0fTBH86WeGHNC4dm29fahTON9a0fX+QEYFopyaEXu9A
-         EnQ6ZuzbwiYn92qbSNvH/pi5NYQoHHtIqNL6MkzmqQ59JmP7cCY7ewb2xzNilHG/+Qyw
-         g9BthK+IwaDnI9b/N2LDXadLAObW/BHqeyJ3FO677/RjuIg53p1jIEed4dPS1A6M6EiT
-         AB3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/CUB88/FqeRt+OVWlft0iBfJ40Vb/KWjqElOuPdMD70=;
-        b=2I69ksLS3ShHH5oKqqH9Dy2BYAUuK04LtcFKNprKIWWwbrYZf4vWue/ShHQU5OabBC
-         SHw0Z2skDtrLGDX3VGPNaXtJmqX/4RyWzOGmY+dshMXpKqgRjqKeK3yBlB7ECVGvUSAT
-         41rvBv3qDQ9cCpOitXTS3RY5azKTBLJIwKvwXZVrgpatxEAqIUSd7R0HNc+tfxkuAThn
-         nryj7rbNd0ly1ZqnOyDMnlxUZti7Ca9GVBS9g7+Kwg0oxyoxVXamA/rq7KmI/uiZfX5s
-         2w8UpEWeTqVWuA75DE2hVx5Bidr0mkCunKEJJP9UFglq4jO3jp7V9MtSubTiYDAvcl39
-         xjDA==
-X-Gm-Message-State: AOAM530yqX39cSG2XbuyMKoa1XYxY3EBEYCvF6RjlXwgSIOvK2RkvBL8
-        Qrew57b6NjxPyBOQSusZn/tlow==
-X-Google-Smtp-Source: ABdhPJxXQb/1pg6WwA5902/GVe6aKv1ypsajk4jUVpRYCnVpAyd3ouY5mba5097zNjHbW4FJ2ybJgA==
-X-Received: by 2002:a17:90a:4ce3:: with SMTP id k90mr540686pjh.237.1631605321784;
-        Tue, 14 Sep 2021 00:42:01 -0700 (PDT)
-Received: from localhost.localdomain ([139.177.225.244])
-        by smtp.gmail.com with ESMTPSA id s3sm9377839pfd.188.2021.09.14.00.41.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Sep 2021 00:42:01 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     willy@infradead.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com, shakeelb@google.com,
-        guro@fb.com, shy828301@gmail.com, alexs@kernel.org,
-        richard.weiyang@gmail.com, david@fromorbit.com,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        zhengqi.arch@bytedance.com, duanxiongchun@bytedance.com,
-        fam.zheng@bytedance.com, smuchun@gmail.com,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v3 76/76] mm: memcontrol: rename memcg_cache_id to memcg_kmem_id
-Date:   Tue, 14 Sep 2021 15:29:38 +0800
-Message-Id: <20210914072938.6440-77-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
-In-Reply-To: <20210914072938.6440-1-songmuchun@bytedance.com>
-References: <20210914072938.6440-1-songmuchun@bytedance.com>
+        id S233451AbhINN4O (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Sep 2021 09:56:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:32342 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233470AbhINN4F (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Sep 2021 09:56:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631627687;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=rIzfcnXtGjc7TySfbNX1AsWwNTm/MWDBD4Ry2MXdNBs=;
+        b=XmnkoZSOd7HX3mrH5FBowUbUGhjYheBvLGPRaiype9CkgP+i8gSaa8xwRHRqDvJ+yptqlj
+        Veuf3SrXNDX+nNH02o0EMMtVAJgHiDhWoIDoji1RnugZERYeKpgiIXxXx0q1g4EN4NSSO6
+        CUHx3j/z74trKYCLdNFUCCcDQSLcp+g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-114-dIBVNSzYOdueWmxj2p5K1Q-1; Tue, 14 Sep 2021 09:54:46 -0400
+X-MC-Unique: dIBVNSzYOdueWmxj2p5K1Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97C6F8145EE;
+        Tue, 14 Sep 2021 13:54:43 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C68460583;
+        Tue, 14 Sep 2021 13:54:36 +0000 (UTC)
+Subject: [RFC PATCH 0/8] fscache: Replace and remove old I/O API
+From:   David Howells <dhowells@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>
+Cc:     linux-nfs@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        linux-cachefs@redhat.com, linux-cifs@vger.kernel.org,
+        Shyam Prasad N <nspmangalore@gmail.com>, dhowells@redhat.com,
+        Jeff Layton <jlayton@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 14 Sep 2021 14:54:36 +0100
+Message-ID: <163162767601.438332.9017034724960075707.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The memcg_cache_id is introduced by commit 2633d7a02823 ("slab/slub:
-consider a memcg parameter in kmem_create_cache"). It is used to index
-in the kmem_cache->memcg_params->memcg_caches array. Since
-kmem_cache->memcg_params.memcg_caches has been removed by commit
-9855609bde03 ("mm: memcg/slab: use a single set of kmem_caches for
-all accounted allocations"). So the name does not need to reflect cache
-related. Just rename it to memcg_kmem_id. And it can reflect kmem
-related.
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Here's a set of patches that removes the old fscache I/O API by the following
+means:
+
+ (1) A simple fallback API is added that can read or write a single page
+     synchronously.  The functions for this have "deprecated" in their names
+     as they have to be removed at some point.
+
+ (2) An implementation of this is provided in cachefiles.  It creates a kiocb
+     to use DIO to the backing file rather than calling readpage on the
+     backing filesystem page and then snooping the page wait queue.
+
+ (3) NFS is switched to use the fallback API.
+
+ (4) CIFS is switched to use the fallback API also for the moment.
+
+ (5) 9P is switched to using netfslib.
+
+ (6) The old I/O API is removed from fscache and the page snooping
+     implementation is removed from cachefiles.
+
+The reasons for doing this are:
+
+ (A) Using a kiocb to do asynchronous DIO from/to the pages of the backing
+     file is now a possibility that didn't exist when cachefiles was created.
+     This is much simpler than the snooping mechanism with a proper callback
+     path and it also requires fewer copies and less memory.
+
+ (B) We have to stop using bmap() or SEEK_DATA/SEEK_HOLE to work out what
+     blocks are present in the backing file is dangerous and can lead to data
+     corruption if the backing filesystem can insert or remove blocks of zeros
+     arbitrarily in order to optimise its extent list[1].
+
+     Whilst this patchset doesn't fix that yet, it does simplify the code and
+     the fix for that can be made in a subsequent patchset.
+
+ (C) In order to fix (B), the cache will need to keep track itself of what
+     data is present.  To make this easier to manage, the intention is to
+     increase the cache block granularity to, say, 256KiB - importantly, a
+     size that will span multiple pages - which means the single-page
+     interface will have to go away.  netfslib is designed to deal with
+     that on behalf of a filesystem, though a filesystem could use raw
+     cache calls instead and manage things itself.
+
+These patches can be found also on:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-iter-3
+
+David
+
+Link: https://lore.kernel.org/r/YO17ZNOcq+9PajfQ@mit.edu [1]
 ---
- include/linux/memcontrol.h |  4 ++--
- mm/list_lru.c              | 14 +++++++-------
- 2 files changed, 9 insertions(+), 9 deletions(-)
+David Howells (8):
+      fscache: Generalise the ->begin_read_operation method
+      fscache: Implement an alternate I/O interface to replace the old API
+      nfs: Move to using the alternate (deprecated) fscache I/O API
+      9p: (untested) Convert to using the netfs helper lib to do reads and caching
+      cifs: (untested) Move to using the alternate (deprecated) fscache I/O API
+      fscache: Remove the old I/O API
+      fscache: Remove stats that are no longer used
+      fscache: Update the documentation to reflect I/O API changes
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 33f6ec4783f8..6541ec768a60 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1713,7 +1713,7 @@ static inline void memcg_kmem_uncharge_page(struct page *page, int order)
-  * A helper for accessing memcg's kmem_id, used for getting
-  * corresponding LRU lists.
-  */
--static inline int memcg_cache_id(struct mem_cgroup *memcg)
-+static inline int memcg_kmem_id(struct mem_cgroup *memcg)
- {
- 	return memcg ? memcg->kmemcg_id : -1;
- }
-@@ -1751,7 +1751,7 @@ static inline bool memcg_kmem_enabled(void)
- 	return false;
- }
- 
--static inline int memcg_cache_id(struct mem_cgroup *memcg)
-+static inline int memcg_kmem_id(struct mem_cgroup *memcg)
- {
- 	return -1;
- }
-diff --git a/mm/list_lru.c b/mm/list_lru.c
-index 371097ee2485..8fb38dee0e99 100644
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -74,7 +74,7 @@ list_lru_from_kmem(struct list_lru *lru, int nid, void *ptr,
- 	if (!memcg)
- 		goto out;
- 
--	l = list_lru_from_memcg_idx(lru, nid, memcg_cache_id(memcg));
-+	l = list_lru_from_memcg_idx(lru, nid, memcg_kmem_id(memcg));
- out:
- 	if (memcg_ptr)
- 		*memcg_ptr = memcg;
-@@ -181,7 +181,7 @@ unsigned long list_lru_count_one(struct list_lru *lru,
- 	long count = 0;
- 
- 	rcu_read_lock();
--	l = list_lru_from_memcg_idx(lru, nid, memcg_cache_id(memcg));
-+	l = list_lru_from_memcg_idx(lru, nid, memcg_kmem_id(memcg));
- 	if (l)
- 		count = READ_ONCE(l->nr_items);
- 	rcu_read_unlock();
-@@ -273,7 +273,7 @@ list_lru_walk_one(struct list_lru *lru, int nid, struct mem_cgroup *memcg,
- 	unsigned long ret;
- 
- 	spin_lock(&nlru->lock);
--	ret = __list_lru_walk_one(lru, nid, memcg_cache_id(memcg), isolate,
-+	ret = __list_lru_walk_one(lru, nid, memcg_kmem_id(memcg), isolate,
- 				  cb_arg, nr_to_walk);
- 	spin_unlock(&nlru->lock);
- 	return ret;
-@@ -289,7 +289,7 @@ list_lru_walk_one_irq(struct list_lru *lru, int nid, struct mem_cgroup *memcg,
- 	unsigned long ret;
- 
- 	spin_lock_irq(&nlru->lock);
--	ret = __list_lru_walk_one(lru, nid, memcg_cache_id(memcg), isolate,
-+	ret = __list_lru_walk_one(lru, nid, memcg_kmem_id(memcg), isolate,
- 				  cb_arg, nr_to_walk);
- 	spin_unlock_irq(&nlru->lock);
- 	return ret;
-@@ -463,7 +463,7 @@ void memcg_reparent_list_lrus(struct mem_cgroup *memcg, struct mem_cgroup *paren
- static bool memcg_list_lru_skip_alloc(struct list_lru *lru,
- 				      struct mem_cgroup *memcg)
- {
--	int idx = memcg_cache_id(memcg);
-+	int idx = memcg_kmem_id(memcg);
- 
- 	if (unlikely(idx < 0) || xa_load(&lru->xa, idx))
- 		return true;
-@@ -518,7 +518,7 @@ int list_lru_memcg_alloc(struct list_lru *lru, struct mem_cgroup *memcg, gfp_t g
- 
- 	xas_lock_irqsave(&xas, flags);
- 	while (i--) {
--		int index = memcg_cache_id(table[i].memcg);
-+		int index = memcg_kmem_id(table[i].memcg);
- 		struct list_lru_memcg *mlru = table[i].mlru;
- 
- 		xas_set(&xas, index);
-@@ -538,7 +538,7 @@ int list_lru_memcg_alloc(struct list_lru *lru, struct mem_cgroup *memcg, gfp_t g
- 				 * memcg id. More details see the comments
- 				 * in memcg_reparent_list_lrus().
- 				 */
--				index = memcg_cache_id(table[i].memcg);
-+				index = memcg_kmem_id(table[i].memcg);
- 				if (index < 0)
- 					xas_set_err(&xas, 0);
- 				else if (!xas_error(&xas) && index != xas.xa_index)
--- 
-2.11.0
+
+ .../filesystems/caching/backend-api.rst       |  138 +--
+ .../filesystems/caching/netfs-api.rst         |  386 +-----
+ fs/9p/Kconfig                                 |    1 +
+ fs/9p/cache.c                                 |  137 ---
+ fs/9p/cache.h                                 |   98 +-
+ fs/9p/v9fs.h                                  |    9 +
+ fs/9p/vfs_addr.c                              |  174 ++-
+ fs/9p/vfs_file.c                              |   21 +-
+ fs/cachefiles/Makefile                        |    1 -
+ fs/cachefiles/interface.c                     |   15 -
+ fs/cachefiles/internal.h                      |   38 -
+ fs/cachefiles/io.c                            |   28 +-
+ fs/cachefiles/main.c                          |    1 -
+ fs/cachefiles/rdwr.c                          |  972 ---------------
+ fs/cifs/file.c                                |   64 +-
+ fs/cifs/fscache.c                             |  105 +-
+ fs/cifs/fscache.h                             |   74 +-
+ fs/fscache/cache.c                            |    6 -
+ fs/fscache/cookie.c                           |   10 -
+ fs/fscache/internal.h                         |   58 +-
+ fs/fscache/io.c                               |  140 ++-
+ fs/fscache/object.c                           |    2 -
+ fs/fscache/page.c                             | 1066 -----------------
+ fs/fscache/stats.c                            |   73 +-
+ fs/nfs/file.c                                 |   14 +-
+ fs/nfs/fscache-index.c                        |   26 -
+ fs/nfs/fscache.c                              |  161 +--
+ fs/nfs/fscache.h                              |   84 +-
+ fs/nfs/read.c                                 |   25 +-
+ fs/nfs/write.c                                |    7 +-
+ include/linux/fscache-cache.h                 |  131 --
+ include/linux/fscache.h                       |  418 ++-----
+ include/linux/netfs.h                         |   17 +-
+ 33 files changed, 508 insertions(+), 3992 deletions(-)
+ delete mode 100644 fs/cachefiles/rdwr.c
+
 
