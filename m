@@ -2,187 +2,340 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD24240A66E
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Sep 2021 08:05:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23CB340A773
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Sep 2021 09:33:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239813AbhINGGn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Sep 2021 02:06:43 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:48644 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239812AbhINGGk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Sep 2021 02:06:40 -0400
-Received: from dread.disaster.area (pa49-195-238-16.pa.nsw.optusnet.com.au [49.195.238.16])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 74FF288194E;
-        Tue, 14 Sep 2021 16:05:20 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1mQ1ZH-00CH3R-CT; Tue, 14 Sep 2021 16:05:19 +1000
-Date:   Tue, 14 Sep 2021 16:05:19 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.com>, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] XFS: remove congestion_wait() loop from kmem_alloc()
-Message-ID: <20210914060519.GJ2361455@dread.disaster.area>
-References: <163157808321.13293.486682642188075090.stgit@noble.brown>
- <163157838439.13293.5032214643474179966.stgit@noble.brown>
- <20210914013117.GG2361455@dread.disaster.area>
- <163159005180.3992.2350725240228509854@noble.neil.brown.name>
+        id S240942AbhINHeX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Sep 2021 03:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240702AbhINHeM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Sep 2021 03:34:12 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5BEC061764
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Sep 2021 00:32:55 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id v1so7587118plo.10
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Sep 2021 00:32:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8yA1aDR6gkxqIg6y5DZ1Vw9kfOVK0Ylz9+qgfpXtyKk=;
+        b=KasYn3QFDwEkCtCg/46Y8ncnDXpl3N3dqcyFnJ67pj7o4A+hC/LQi7Q3Nj3A6I+fbc
+         gekDCoCguFalsV34OxuVA5eou3y+btiwifsdh1F0XETMHGSB32g8kACL3jX+MKNGTKk/
+         gyYZtckLlPeC02Rho92YjCn6AB0zeq3ObjfIDQjzyXDT529q9dq1uPAEvnCh8a2onBFc
+         ZBsCanKTy4a1HU8qVZ0dXhD44FaWtshNesT/MwWtw8nsEKG41v78McVsc1SHE6Hve+pw
+         RzRuWxf4NVsCHB7cKiGQEUC6pPSHAs6nkqEU+2ZS9yenfc4L9xqdOMx6j05wwTIcmNXD
+         xe2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8yA1aDR6gkxqIg6y5DZ1Vw9kfOVK0Ylz9+qgfpXtyKk=;
+        b=khqM3hh2D6Sg5AB3WNtpDl8A2FtI76q+n9jjFCZ+U06aDJisOQOKPGMZ/dCuDJnbrH
+         CTfRiZ04aVPsQOFWpy2BEQXHU1qmE227Mp3tRpIEO1OW8Drq4e3FfsKppldmwx91xjoa
+         kJv+PaUDchGDg9kkr1/w647BLkam6IqR9nmQ0g3bKkWrxIC22glnJZKT/B4pf4jMvMZq
+         U8Y0oQIMkI0DhMIG6gv0fwyayDEzNDkCAe8gjDIpWFmSuoJGmRlRUyNx1D9t0TwXwZOB
+         xL7tFYfbKUgxgj/iuyFp5M6nYb9pNjsJJpT/39vq7CzoINDXny6ylvMSgByFhpnWWUGQ
+         TJFw==
+X-Gm-Message-State: AOAM533w/0UOjUqvrLrJsKe97086cJhdq4fIiUlWVrbuvsPHNPPDx36A
+        dNHFRouwf1EpFgexj8lrHJrRUQ==
+X-Google-Smtp-Source: ABdhPJw+tJJCZYmvWS0V/99J2vZGc3jQl5FaH3FghUH3rg11Abk7mWmtmj7qnhkifFtFA0WsvXtnNg==
+X-Received: by 2002:a17:90a:1de:: with SMTP id 30mr555002pjd.106.1631604774687;
+        Tue, 14 Sep 2021 00:32:54 -0700 (PDT)
+Received: from localhost.localdomain ([139.177.225.244])
+        by smtp.gmail.com with ESMTPSA id s3sm9377839pfd.188.2021.09.14.00.32.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Sep 2021 00:32:54 -0700 (PDT)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     willy@infradead.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com, shakeelb@google.com,
+        guro@fb.com, shy828301@gmail.com, alexs@kernel.org,
+        richard.weiyang@gmail.com, david@fromorbit.com,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+        zhengqi.arch@bytedance.com, duanxiongchun@bytedance.com,
+        fam.zheng@bytedance.com, smuchun@gmail.com,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH v3 00/76] Optimize list lru memory consumption
+Date:   Tue, 14 Sep 2021 15:28:22 +0800
+Message-Id: <20210914072938.6440-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <163159005180.3992.2350725240228509854@noble.neil.brown.name>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
-        a=DzKKRZjfViQTE5W6EVc0VA==:117 a=DzKKRZjfViQTE5W6EVc0VA==:17
-        a=kj9zAlcOel0A:10 a=7QKq2e-ADPsA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
-        a=8gt0TS_iLB6qLJAy30IA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 01:27:31PM +1000, NeilBrown wrote:
-> On Tue, 14 Sep 2021, Dave Chinner wrote:
-> > On Tue, Sep 14, 2021 at 10:13:04AM +1000, NeilBrown wrote:
-> > > Documentation commment in gfp.h discourages indefinite retry loops on
-> > > ENOMEM and says of __GFP_NOFAIL that it
-> > > 
-> > >     is definitely preferable to use the flag rather than opencode
-> > >     endless loop around allocator.
-> > > 
-> > > So remove the loop, instead specifying __GFP_NOFAIL if KM_MAYFAIL was
-> > > not given.
-> > > 
-> > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > ---
-> > >  fs/xfs/kmem.c |   16 ++++------------
-> > >  1 file changed, 4 insertions(+), 12 deletions(-)
-> > > 
-> > > diff --git a/fs/xfs/kmem.c b/fs/xfs/kmem.c
-> > > index 6f49bf39183c..f545f3633f88 100644
-> > > --- a/fs/xfs/kmem.c
-> > > +++ b/fs/xfs/kmem.c
-> > > @@ -13,19 +13,11 @@ kmem_alloc(size_t size, xfs_km_flags_t flags)
-> > >  {
-> > >  	int	retries = 0;
-> > >  	gfp_t	lflags = kmem_flags_convert(flags);
-> > > -	void	*ptr;
-> > >  
-> > >  	trace_kmem_alloc(size, flags, _RET_IP_);
-> > >  
-> > > -	do {
-> > > -		ptr = kmalloc(size, lflags);
-> > > -		if (ptr || (flags & KM_MAYFAIL))
-> > > -			return ptr;
-> > > -		if (!(++retries % 100))
-> > > -			xfs_err(NULL,
-> > > -	"%s(%u) possible memory allocation deadlock size %u in %s (mode:0x%x)",
-> > > -				current->comm, current->pid,
-> > > -				(unsigned int)size, __func__, lflags);
-> > > -		congestion_wait(BLK_RW_ASYNC, HZ/50);
-> > > -	} while (1);
-> > > +	if (!(flags & KM_MAYFAIL))
-> > > +		lflags |= __GFP_NOFAIL;
-> > > +
-> > > +	return kmalloc(size, lflags);
-> > >  }
-> > 
-> > Which means we no longer get warnings about memory allocation
-> > failing - kmem_flags_convert() sets __GFP_NOWARN for all allocations
-> > in this loop. Hence we'll now get silent deadlocks through this code
-> > instead of getting warnings that memory allocation is failing
-> > repeatedly.
-> 
-> Yes, that is a problem.  Could we just clear __GFP_NOWARN when setting
-> __GFP_NOFAIL?
+We introduced alloc_inode_sb() in previous version 2, which sets up the
+inode reclaim context properly, to allocate filesystems specific inode.
+So we have to convert to new API for all filesystems, which is done in
+one patch. Some filesystems are easy to convert (just replace
+kmem_cache_alloc() to alloc_inode_sb()), while other filesystems need to
+do more work. In order to make it easy for maintainers of different
+filesystems to review their own maintained part, I split the patch into
+patches which are per-filesystem in this version. I am not sure if this
+is a good idea, because there is going to be more commits.
 
-Probably.
+In our server, we found a suspected memory leak problem. The kmalloc-32
+consumes more than 6GB of memory. Other kmem_caches consume less than 2GB
+memory.
 
-> Or is the 1-in-100 important? I think default warning is 1 every 10
-> seconds.
+After our in-depth analysis, the memory consumption of kmalloc-32 slab
+cache is the cause of list_lru_one allocation.
 
-1-in-100 is an arbitrary number to prevent spamming of logs unless
-there is a real likelihood of there being a memory allocation
-deadlock. We've typically only ever seen this when trying to do
-high-order allocations (e.g. 64kB for xattr buffers) and failing
-repeatedly in extreme memory pressure events. It's a canary that we
-leave in the logs so that when a user reports problems we know that
-they've been running under extended extreme low memory conditions
-and can adjust the triage process accordingly.
+  crash> p memcg_nr_cache_ids
+  memcg_nr_cache_ids = $2 = 24574
 
-So, we could remove __GFP_NOWARN, as long as the core allocator code
-has sufficient rate limiting that it won't spam the logs due to
-extended failure looping...
+memcg_nr_cache_ids is very large and memory consumption of each list_lru
+can be calculated with the following formula.
 
-> > I also wonder about changing the backoff behaviour here (it's a 20ms
-> > wait right now because there are not early wakeups) will affect the
-> > behaviour, as __GFP_NOFAIL won't wait for that extra time between
-> > allocation attempts....
-> 
-> The internal backoff is 100ms if there is much pending writeout, and
-> there are 16 internal retries.  If there is not much pending writeout, I
-> think it just loops with cond_resched().
-> So adding 20ms can only be at all interesting when the only way to
-> reclaim memory is something other than writeout.  I don't know how to
-> think about that.
+  num_numa_node * memcg_nr_cache_ids * 32 (kmalloc-32)
 
-Any cache that uses a shrinker to reclaim (e.g. dentry, inodes, fs
-metadata, etc due to recursive directory traversals) can cause
-reclaim looping and priority escalation without there being any page
-cache writeback or reclaim possible. Especially when you have
-GFP_NOFS allocation context and all your memory is in VFS level
-caches. At that point, direct reclaim cannot (and will not) make
-forwards progress, so we still have to wait for some other
-GFP_KERNEL context reclaim (e.g. kswapd) to make progress reclaiming
-memory while we wait.
+There are 4 numa nodes in our system, so each list_lru consumes ~3MB.
 
-Fundamentally, the memory reclaim backoff code doesn't play well
-with shrinkers. Patches from an old patchset which pushed lack of
-shrinker progress back up into the vmscan level backoff algorithms
-was something I was experimenting with a few years ago. e.g.
+  crash> list super_blocks | wc -l
+  952
 
-https://lore.kernel.org/linux-xfs/20191031234618.15403-16-david@fromorbit.com/
-https://lore.kernel.org/linux-xfs/20191031234618.15403-17-david@fromorbit.com/
+Every mount will register 2 list lrus, one is for inode, another is for
+dentry. There are 952 super_blocks. So the total memory is 952 * 2 * 3
+MB (~5.6GB). But now the number of memory cgroups is less than 500. So I
+guess more than 12286 memory cgroups have been created on this machine (I
+do not know why there are so many cgroups, it may be a user's bug or
+the user really want to do that). Because memcg_nr_cache_ids has not been
+reduced to a suitable value. It leads to waste a lot of memory. If we want
+to reduce memcg_nr_cache_ids, we have to *reboot* the server. This is not
+what we want.
 
-We didn't end up going this way to solve the XFS inode reclaim
-problems - I ended up solving that entirely by pinning XFS buffer
-cache memory and modifying the XFS inode shrinker - but it was this
-patchset that first exposed the fact that congestion_wait() was no
-longer functioning as intended. See the last few paragraphs of the
-(long) cover letter for v1 of that patchset here:
+In order to reduce memcg_nr_cache_ids, I had posted a patchset [1] to do
+this. But this did not fundamentally solve the problem.
 
-https://lore.kernel.org/linux-xfs/20190801021752.4986-1-david@fromorbit.com/
+We currently allocate scope for every memcg to be able to tracked on every
+superblock instantiated in the system, regardless of whether that superblock
+is even accessible to that memcg.
 
-So, yeah, I know full well that congestion_wait() is mostly just
-an unconditional timeout these days...
+These huge memcg counts come from container hosts where memcgs are confined
+to just a small subset of the total number of superblocks that instantiated
+at any given point in time.
 
-> > And, of course, how did you test this? Sometimes we see
-> > unpredicted behaviours as a result of "simple" changes like this
-> > under low memory conditions...
-> 
-> I suspect this is close to untestable.  While I accept that there might
-> be a scenario where the change might cause some macro effect, it would
-> most likely be some interplay with some other subsystem struggling with
-> memory.  Testing XFS by itself would be unlikely to find it.
+For these systems with huge container counts, list_lru does not need the
+capability of tracking every memcg on every superblock.
 
-Filesystem traversal workloads (e.g. chown -R) are the ones that
-hammer memory allocation from GFP_NOFS context which creates memory
-pressure that cannot be balanced by direct reclaim as direct reclaim
-cannot reclaim filesystem caches in this situation. This is where I
-would expect extra backoff on failing GFP_NOFS allocations to have
-some effect...
+What it comes down to is that the list_lru is only needed for a given memcg
+if that memcg is instatiating and freeing objects on a given list_lru.
 
-Cheers,
+As Dave said, "Which makes me think we should be moving more towards 'add the
+memcg to the list_lru at the first insert' model rather than 'instantiate
+all at memcg init time just in case'."
 
-Dave.
+This patchset aims to optimize the list lru memory consumption from different
+aspects.
+
+Patch 1-6 are code simplification.
+Patch 7 converts the array from per-memcg per-node to per-memcg
+Patch 8 introduces kmem_cache_alloc_lru()
+Patch 9 introduces alloc_inode_sb()
+Patch 10-66 convert all filesystems to alloc_inode_sb() respectively.
+Patch 70 let list_lru allocation dynamically.
+Patch 72 use xarray to optimize per memcg pointer array size.
+Patch 73-76 is code simplification.
+
+I had done a easy test to show the optimization. I create 10k memory cgroups
+and mount 10k filesystems in the systems. We use free command to show how many
+memory does the systems comsumes after this operation (There are 2 numa nodes
+in the system).
+
+        +-----------------------+------------------------+
+        |      condition        |   memory consumption   |
+        +-----------------------+------------------------+
+        | without this patchset |        24464 MB        |
+        +-----------------------+------------------------+
+        |     after patch 7     |        21957 MB        | <--------+
+        +-----------------------+------------------------+          |
+        |     after patch 70    |         6895 MB        |          |
+        +-----------------------+------------------------+          |
+        |     after patch 72    |         4367 MB        |          |
+        +-----------------------+------------------------+          |
+                                                                    |
+        The more the number of nodes, the more obvious the effect---+
+
+BTW, there was a recent discussion [2] on the same issue.
+
+[1] https://lore.kernel.org/linux-fsdevel/20210428094949.43579-1-songmuchun@bytedance.com/
+[2] https://lore.kernel.org/linux-fsdevel/20210405054848.GA1077931@in.ibm.com/
+
+This series not only optimizes the memory usage of list_lru but also
+simplifies the code.
+
+Changelog in v3:
+  - Fix mixing advanced and normal XArray concepts (Thanks to Matthew).
+  - Split one patch into per-filesystem patches.
+
+Changelog in v2:
+  - Update Documentation/filesystems/porting.rst suggested by Dave.
+  - Add a comment above alloc_inode_sb() suggested by Dave.
+  - Rework some patch's commit log.
+  - Add patch 18-21.
+
+  Thanks Dave.
+
+Muchun Song (76):
+  mm: list_lru: fix the return value of list_lru_count_one()
+  mm: memcontrol: remove kmemcg_id reparenting
+  mm: memcontrol: remove the kmem states
+  mm: memcontrol: move memcg_online_kmem() to mem_cgroup_css_online()
+  mm: list_lru: remove holding lru lock
+  mm: list_lru: only add memcg-aware lrus to the global lru list
+  mm: list_lru: optimize memory consumption of arrays
+  mm: introduce kmem_cache_alloc_lru
+  fs: introduce alloc_inode_sb() to allocate filesystems specific inode
+  dax: allocate inode by using alloc_inode_sb()
+  9p: allocate inode by using alloc_inode_sb()
+  adfs: allocate inode by using alloc_inode_sb()
+  affs: allocate inode by using alloc_inode_sb()
+  afs: allocate inode by using alloc_inode_sb()
+  befs: allocate inode by using alloc_inode_sb()
+  bfs: allocate inode by using alloc_inode_sb()
+  block: allocate inode by using alloc_inode_sb()
+  btrfs: allocate inode by using alloc_inode_sb()
+  ceph: allocate inode by using alloc_inode_sb()
+  cifs: allocate inode by using alloc_inode_sb()
+  coda: allocate inode by using alloc_inode_sb()
+  ecryptfs: allocate inode by using alloc_inode_sb()
+  efs: allocate inode by using alloc_inode_sb()
+  erofs: allocate inode by using alloc_inode_sb()
+  exfat: allocate inode by using alloc_inode_sb()
+  ext2: allocate inode by using alloc_inode_sb()
+  ext4: allocate inode by using alloc_inode_sb()
+  fat: allocate inode by using alloc_inode_sb()
+  freevxfs: allocate inode by using alloc_inode_sb()
+  fuse: allocate inode by using alloc_inode_sb()
+  gfs2: allocate inode by using alloc_inode_sb()
+  hfs: allocate inode by using alloc_inode_sb()
+  hfsplus: allocate inode by using alloc_inode_sb()
+  hostfs: allocate inode by using alloc_inode_sb()
+  hpfs: allocate inode by using alloc_inode_sb()
+  hugetlbfs: allocate inode by using alloc_inode_sb()
+  isofs: allocate inode by using alloc_inode_sb()
+  jffs2: allocate inode by using alloc_inode_sb()
+  jfs: allocate inode by using alloc_inode_sb()
+  minix: allocate inode by using alloc_inode_sb()
+  nfs: allocate inode by using alloc_inode_sb()
+  nilfs2: allocate inode by using alloc_inode_sb()
+  ntfs: allocate inode by using alloc_inode_sb()
+  ocfs2: allocate inode by using alloc_inode_sb()
+  openpromfs: allocate inode by using alloc_inode_sb()
+  orangefs: allocate inode by using alloc_inode_sb()
+  overlayfs: allocate inode by using alloc_inode_sb()
+  proc: allocate inode by using alloc_inode_sb()
+  qnx4: allocate inode by using alloc_inode_sb()
+  qnx6: allocate inode by using alloc_inode_sb()
+  reiserfs: allocate inode by using alloc_inode_sb()
+  romfs: allocate inode by using alloc_inode_sb()
+  squashfs: allocate inode by using alloc_inode_sb()
+  sysv: allocate inode by using alloc_inode_sb()
+  ubifs: allocate inode by using alloc_inode_sb()
+  udf: allocate inode by using alloc_inode_sb()
+  ufs: allocate inode by using alloc_inode_sb()
+  vboxsf: allocate inode by using alloc_inode_sb()
+  xfs: allocate inode by using alloc_inode_sb()
+  zonefs: allocate inode by using alloc_inode_sb()
+  ipc: allocate inode by using alloc_inode_sb()
+  shmem: allocate inode by using alloc_inode_sb()
+  net: allocate inode by using alloc_inode_sb()
+  rpc: allocate inode by using alloc_inode_sb()
+  f2fs: allocate inode by using alloc_inode_sb()
+  nfs42: use a specific kmem_cache to allocate nfs4_xattr_entry
+  mm: dcache: use kmem_cache_alloc_lru() to allocate dentry
+  xarray: use kmem_cache_alloc_lru to allocate xa_node
+  mm: workingset: use xas_set_lru() to pass shadow_nodes
+  mm: list_lru: allocate list_lru_one only when needed
+  mm: list_lru: rename memcg_drain_all_list_lrus to
+    memcg_reparent_list_lrus
+  mm: list_lru: replace linear array with xarray
+  mm: memcontrol: reuse memory cgroup ID for kmem ID
+  mm: memcontrol: fix cannot alloc the maximum memcg ID
+  mm: list_lru: rename list_lru_per_memcg to list_lru_memcg
+  mm: memcontrol: rename memcg_cache_id to memcg_kmem_id
+
+ Documentation/filesystems/porting.rst |   5 +
+ drivers/dax/super.c                   |   2 +-
+ fs/9p/vfs_inode.c                     |   2 +-
+ fs/adfs/super.c                       |   2 +-
+ fs/affs/super.c                       |   2 +-
+ fs/afs/super.c                        |   2 +-
+ fs/befs/linuxvfs.c                    |   2 +-
+ fs/bfs/inode.c                        |   2 +-
+ fs/block_dev.c                        |   2 +-
+ fs/btrfs/inode.c                      |   2 +-
+ fs/ceph/inode.c                       |   2 +-
+ fs/cifs/cifsfs.c                      |   2 +-
+ fs/coda/inode.c                       |   2 +-
+ fs/dcache.c                           |   3 +-
+ fs/ecryptfs/super.c                   |   2 +-
+ fs/efs/super.c                        |   2 +-
+ fs/erofs/super.c                      |   2 +-
+ fs/exfat/super.c                      |   2 +-
+ fs/ext2/super.c                       |   2 +-
+ fs/ext4/super.c                       |   2 +-
+ fs/f2fs/super.c                       |   8 +-
+ fs/fat/inode.c                        |   2 +-
+ fs/freevxfs/vxfs_super.c              |   2 +-
+ fs/fuse/inode.c                       |   2 +-
+ fs/gfs2/super.c                       |   2 +-
+ fs/hfs/super.c                        |   2 +-
+ fs/hfsplus/super.c                    |   2 +-
+ fs/hostfs/hostfs_kern.c               |   2 +-
+ fs/hpfs/super.c                       |   2 +-
+ fs/hugetlbfs/inode.c                  |   2 +-
+ fs/inode.c                            |   2 +-
+ fs/isofs/inode.c                      |   2 +-
+ fs/jffs2/super.c                      |   2 +-
+ fs/jfs/super.c                        |   2 +-
+ fs/minix/inode.c                      |   2 +-
+ fs/nfs/inode.c                        |   2 +-
+ fs/nfs/nfs42xattr.c                   |  95 ++++---
+ fs/nilfs2/super.c                     |   2 +-
+ fs/ntfs/inode.c                       |   2 +-
+ fs/ocfs2/dlmfs/dlmfs.c                |   2 +-
+ fs/ocfs2/super.c                      |   2 +-
+ fs/openpromfs/inode.c                 |   2 +-
+ fs/orangefs/super.c                   |   2 +-
+ fs/overlayfs/super.c                  |   2 +-
+ fs/proc/inode.c                       |   2 +-
+ fs/qnx4/inode.c                       |   2 +-
+ fs/qnx6/inode.c                       |   2 +-
+ fs/reiserfs/super.c                   |   2 +-
+ fs/romfs/super.c                      |   2 +-
+ fs/squashfs/super.c                   |   2 +-
+ fs/sysv/inode.c                       |   2 +-
+ fs/ubifs/super.c                      |   2 +-
+ fs/udf/super.c                        |   2 +-
+ fs/ufs/super.c                        |   2 +-
+ fs/vboxsf/super.c                     |   2 +-
+ fs/xfs/xfs_icache.c                   |   2 +-
+ fs/zonefs/super.c                     |   2 +-
+ include/linux/fs.h                    |  11 +
+ include/linux/list_lru.h              |  16 +-
+ include/linux/memcontrol.h            |  49 ++--
+ include/linux/slab.h                  |   3 +
+ include/linux/swap.h                  |   5 +-
+ include/linux/xarray.h                |   9 +-
+ ipc/mqueue.c                          |   2 +-
+ lib/xarray.c                          |  10 +-
+ mm/list_lru.c                         | 472 ++++++++++++++++------------------
+ mm/memcontrol.c                       | 190 ++------------
+ mm/shmem.c                            |   2 +-
+ mm/slab.c                             |  39 ++-
+ mm/slab.h                             |  17 +-
+ mm/slob.c                             |   6 +
+ mm/slub.c                             |  42 ++-
+ mm/workingset.c                       |   2 +-
+ net/socket.c                          |   2 +-
+ net/sunrpc/rpc_pipe.c                 |   2 +-
+ 75 files changed, 498 insertions(+), 598 deletions(-)
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.11.0
+
