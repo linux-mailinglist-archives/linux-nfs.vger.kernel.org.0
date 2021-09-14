@@ -2,682 +2,744 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 395EA40AFF7
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Sep 2021 15:57:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C949D40B023
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Sep 2021 16:02:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233713AbhINN6L (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Sep 2021 09:58:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:49441 "EHLO
+        id S233436AbhINODi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Sep 2021 10:03:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:22017 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233858AbhINN5y (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Sep 2021 09:57:54 -0400
+        by vger.kernel.org with ESMTP id S233289AbhINODi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Sep 2021 10:03:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631627794;
+        s=mimecast20190719; t=1631628140;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=gUMRBDTIXogdaeU8DUZKMueDQ7+rJ+ZckxQlsZalGt0=;
-        b=FjtMjMAcw7iZzaJLnOnvinzTGJkp9In68ARlDEUXDMDwPD0Oq2SOhWzk1cW9zJz+QAeFut
-        1W1iGVtFazsfU9OqLQ4otyj4U//HkvDg+h0DNDP2cqHsZZd+gfA9mO9P+qmolcOre2GBFH
-        reqiRB92nM+T94OXGZAT+qx3Kw0hDPM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-352-XeTyjhn7NuKfBBLSu8TjaA-1; Tue, 14 Sep 2021 09:56:30 -0400
-X-MC-Unique: XeTyjhn7NuKfBBLSu8TjaA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01B6A1808305;
-        Tue, 14 Sep 2021 13:56:29 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D5A261948C;
-        Tue, 14 Sep 2021 13:56:22 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 8/8] fscache: Update the documentation to reflect I/O API
- changes
-From:   David Howells <dhowells@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
+        bh=kG6O3tHSvd2M2erqyhL57P9f/UMNM2+jxsgAuPpBJJM=;
+        b=GRuZ+LYumyvkzCCT8SlAlloFzfCUQFNZR9t8KVJy6BYkmjhHMLthw+IpRJ5Th5USg99qkz
+        mSnB9PySGG23tcAJe5MFb3FCBgjOKM7CTH7Q9Q4wryQfOGSR2u7t19088H4B+r1zZHQpTa
+        wPhgCby2cpJdghjwJhX4h6cbZJ2CJ8c=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-156-vfqCMuP4PJmfz0dh0YCHGA-1; Tue, 14 Sep 2021 10:02:19 -0400
+X-MC-Unique: vfqCMuP4PJmfz0dh0YCHGA-1
+Received: by mail-qt1-f199.google.com with SMTP id x28-20020ac8701c000000b0029f4b940566so59660451qtm.19
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Sep 2021 07:02:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=kG6O3tHSvd2M2erqyhL57P9f/UMNM2+jxsgAuPpBJJM=;
+        b=vEX6SfOhB6qVG6tHefUO8Rpnj04+zIuVUPkEKK1GkYFVumH1PBab9guuXqMVcnK56x
+         UGlDRS18+cemYt/81fYZKJX3VhxnpZ2udLIGJ0IaXheJeuAkflcKEr7fqUan2gc5yDu1
+         VxjFhDh4KY6r4U2iVZV7n5KvVtoLSdKZlmuJ5gBZpPw4xa9X/m24BghNGfRfCXARGlgd
+         zWiCHKx+G+k7TODiqcRA04g1Gp2RyVBZvqm2OWveAXZ53iPa4uGKLp930j+C1Kp99zWm
+         2QT3QR0Vpfe2iI0gLryT7VtlH1L2T4Y95h20f4J/QKP5HIbulUW6YvxixiRmcUQjkxeR
+         5fQQ==
+X-Gm-Message-State: AOAM533fJHxOn/2z1CSJbFH7ye6HJVe1NXSKVh8FcIiG1lleiUb2SUez
+        Od6yY1bWEjX4tKzb/UQjevlm3TOpb/hf0Dcd2JjJ2hQ+gb918i+d45RK1tWO0v5NqimoS6uBlNF
+        36lnTrmSAqw34yjIlVFz/
+X-Received: by 2002:ac8:720f:: with SMTP id a15mr4911635qtp.84.1631628138733;
+        Tue, 14 Sep 2021 07:02:18 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyzQqxh43+cKlScjSBZ08uVksYpc+Hr9+bDHxJENRP5Waqx5Vg2MO1eU5FaWKlWOMZwmQidlA==
+X-Received: by 2002:ac8:720f:: with SMTP id a15mr4911597qtp.84.1631628138397;
+        Tue, 14 Sep 2021 07:02:18 -0700 (PDT)
+Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
+        by smtp.gmail.com with ESMTPSA id n11sm5879602qtx.45.2021.09.14.07.02.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Sep 2021 07:02:18 -0700 (PDT)
+Message-ID: <6274f0922aecd9b40dd7ff1ef007442ed996aed7.camel@redhat.com>
+Subject: Re: [PATCH 4/8] 9p: (untested) Convert to using the netfs helper
+ lib to do reads and caching
+From:   Jeff Layton <jlayton@redhat.com>
+To:     David Howells <dhowells@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>
-Cc:     linux-cachefs@redhat.com, dhowells@redhat.com,
-        Jeff Layton <jlayton@redhat.com>,
+Cc:     v9fs-developer@lists.sourceforge.net, linux-cachefs@redhat.com,
         Matthew Wilcox <willy@infradead.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 14 Sep 2021 14:56:22 +0100
-Message-ID: <163162778200.438332.1918683687532006409.stgit@warthog.procyon.org.uk>
-In-Reply-To: <163162767601.438332.9017034724960075707.stgit@warthog.procyon.org.uk>
+Date:   Tue, 14 Sep 2021 10:02:16 -0400
+In-Reply-To: <163162772646.438332.16323773205855053535.stgit@warthog.procyon.org.uk>
 References: <163162767601.438332.9017034724960075707.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+         <163162772646.438332.16323773205855053535.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Update the fscache documentation to remove the old I/O API bits and to note
-the new fallback API.
+On Tue, 2021-09-14 at 14:55 +0100, David Howells wrote:
+> Convert the 9p filesystem to use the netfs helper lib to handle readpage,
+> readahead and write_begin, converting those into a common issue_op for the
+> filesystem itself to handle.  The netfs helper lib also handles reading
+> from fscache if a cache is available, and interleaving reads from both
+> sources.
+> 
+> This change also switches from the old fscache I/O API to the new one,
+> meaning that fscache no longer keeps track of netfs pages and instead does
+> async DIO between the backing files and the 9p file pagecache.  As a part
+> of this change, the handling of PG_fscache changes.  It now just means that
+> the cache has a write I/O operation in progress on a page (PG_locked
+> is used for a read I/O op).
+> 
+> Note that this is a cut-down version of the fscache rewrite and does not
+> change any of the cookie and cache coherency handling.
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Dominique Martinet <asmadeus@codewreck.org>
+> cc: v9fs-developer@lists.sourceforge.net
+> cc: linux-cachefs@redhat.com
+> ---
+> 
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: linux-cachefs@redhat.com
----
+Does this change require any of the earlier patches in the series? If
+not, then it may be good to go ahead and merge this conversion
+separately, ahead of the rest of the series.
 
- Documentation/filesystems/caching/backend-api.rst |  138 --------
- Documentation/filesystems/caching/netfs-api.rst   |  386 ++-------------------
- 2 files changed, 47 insertions(+), 477 deletions(-)
+>  fs/9p/Kconfig    |    1 
+>  fs/9p/cache.c    |  137 -------------------------------------------
+>  fs/9p/cache.h    |   99 +------------------------------
+>  fs/9p/v9fs.h     |    9 +++
+>  fs/9p/vfs_addr.c |  174 ++++++++++++++++++++++++------------------------------
+>  fs/9p/vfs_file.c |   21 +++++--
+>  6 files changed, 108 insertions(+), 333 deletions(-)
+> 
+> diff --git a/fs/9p/Kconfig b/fs/9p/Kconfig
+> index 09fd4a185fd2..d7bc93447c85 100644
+> --- a/fs/9p/Kconfig
+> +++ b/fs/9p/Kconfig
+> @@ -2,6 +2,7 @@
+>  config 9P_FS
+>  	tristate "Plan 9 Resource Sharing Support (9P2000)"
+>  	depends on INET && NET_9P
+> +	select NETFS_SUPPORT
+>  	help
+>  	  If you say Y here, you will get experimental support for
+>  	  Plan 9 resource sharing via the 9P2000 protocol.
+> diff --git a/fs/9p/cache.c b/fs/9p/cache.c
+> index eb2151fb6049..68e5d12e690d 100644
+> --- a/fs/9p/cache.c
+> +++ b/fs/9p/cache.c
+> @@ -199,140 +199,3 @@ void v9fs_cache_inode_reset_cookie(struct inode *inode)
+>  
+>  	mutex_unlock(&v9inode->fscache_lock);
+>  }
+> -
+> -int __v9fs_fscache_release_page(struct page *page, gfp_t gfp)
+> -{
+> -	struct inode *inode = page->mapping->host;
+> -	struct v9fs_inode *v9inode = V9FS_I(inode);
+> -
+> -	BUG_ON(!v9inode->fscache);
+> -
+> -	return fscache_maybe_release_page(v9inode->fscache, page, gfp);
+> -}
+> -
+> -void __v9fs_fscache_invalidate_page(struct page *page)
+> -{
+> -	struct inode *inode = page->mapping->host;
+> -	struct v9fs_inode *v9inode = V9FS_I(inode);
+> -
+> -	BUG_ON(!v9inode->fscache);
+> -
+> -	if (PageFsCache(page)) {
+> -		fscache_wait_on_page_write(v9inode->fscache, page);
+> -		BUG_ON(!PageLocked(page));
+> -		fscache_uncache_page(v9inode->fscache, page);
+> -	}
+> -}
+> -
+> -static void v9fs_vfs_readpage_complete(struct page *page, void *data,
+> -				       int error)
+> -{
+> -	if (!error)
+> -		SetPageUptodate(page);
+> -
+> -	unlock_page(page);
+> -}
+> -
+> -/**
+> - * __v9fs_readpage_from_fscache - read a page from cache
+> - *
+> - * Returns 0 if the pages are in cache and a BIO is submitted,
+> - * 1 if the pages are not in cache and -error otherwise.
+> - */
+> -
+> -int __v9fs_readpage_from_fscache(struct inode *inode, struct page *page)
+> -{
+> -	int ret;
+> -	const struct v9fs_inode *v9inode = V9FS_I(inode);
+> -
+> -	p9_debug(P9_DEBUG_FSC, "inode %p page %p\n", inode, page);
+> -	if (!v9inode->fscache)
+> -		return -ENOBUFS;
+> -
+> -	ret = fscache_read_or_alloc_page(v9inode->fscache,
+> -					 page,
+> -					 v9fs_vfs_readpage_complete,
+> -					 NULL,
+> -					 GFP_KERNEL);
+> -	switch (ret) {
+> -	case -ENOBUFS:
+> -	case -ENODATA:
+> -		p9_debug(P9_DEBUG_FSC, "page/inode not in cache %d\n", ret);
+> -		return 1;
+> -	case 0:
+> -		p9_debug(P9_DEBUG_FSC, "BIO submitted\n");
+> -		return ret;
+> -	default:
+> -		p9_debug(P9_DEBUG_FSC, "ret %d\n", ret);
+> -		return ret;
+> -	}
+> -}
+> -
+> -/**
+> - * __v9fs_readpages_from_fscache - read multiple pages from cache
+> - *
+> - * Returns 0 if the pages are in cache and a BIO is submitted,
+> - * 1 if the pages are not in cache and -error otherwise.
+> - */
+> -
+> -int __v9fs_readpages_from_fscache(struct inode *inode,
+> -				  struct address_space *mapping,
+> -				  struct list_head *pages,
+> -				  unsigned *nr_pages)
+> -{
+> -	int ret;
+> -	const struct v9fs_inode *v9inode = V9FS_I(inode);
+> -
+> -	p9_debug(P9_DEBUG_FSC, "inode %p pages %u\n", inode, *nr_pages);
+> -	if (!v9inode->fscache)
+> -		return -ENOBUFS;
+> -
+> -	ret = fscache_read_or_alloc_pages(v9inode->fscache,
+> -					  mapping, pages, nr_pages,
+> -					  v9fs_vfs_readpage_complete,
+> -					  NULL,
+> -					  mapping_gfp_mask(mapping));
+> -	switch (ret) {
+> -	case -ENOBUFS:
+> -	case -ENODATA:
+> -		p9_debug(P9_DEBUG_FSC, "pages/inodes not in cache %d\n", ret);
+> -		return 1;
+> -	case 0:
+> -		BUG_ON(!list_empty(pages));
+> -		BUG_ON(*nr_pages != 0);
+> -		p9_debug(P9_DEBUG_FSC, "BIO submitted\n");
+> -		return ret;
+> -	default:
+> -		p9_debug(P9_DEBUG_FSC, "ret %d\n", ret);
+> -		return ret;
+> -	}
+> -}
+> -
+> -/**
+> - * __v9fs_readpage_to_fscache - write a page to the cache
+> - *
+> - */
+> -
+> -void __v9fs_readpage_to_fscache(struct inode *inode, struct page *page)
+> -{
+> -	int ret;
+> -	const struct v9fs_inode *v9inode = V9FS_I(inode);
+> -
+> -	p9_debug(P9_DEBUG_FSC, "inode %p page %p\n", inode, page);
+> -	ret = fscache_write_page(v9inode->fscache, page,
+> -				 i_size_read(&v9inode->vfs_inode), GFP_KERNEL);
+> -	p9_debug(P9_DEBUG_FSC, "ret =  %d\n", ret);
+> -	if (ret != 0)
+> -		v9fs_uncache_page(inode, page);
+> -}
+> -
+> -/*
+> - * wait for a page to complete writing to the cache
+> - */
+> -void __v9fs_fscache_wait_on_page_write(struct inode *inode, struct page *page)
+> -{
+> -	const struct v9fs_inode *v9inode = V9FS_I(inode);
+> -	p9_debug(P9_DEBUG_FSC, "inode %p page %p\n", inode, page);
+> -	if (PageFsCache(page))
+> -		fscache_wait_on_page_write(v9inode->fscache, page);
+> -}
+> diff --git a/fs/9p/cache.h b/fs/9p/cache.h
+> index c7e74776ce90..cfafa89b972c 100644
+> --- a/fs/9p/cache.h
+> +++ b/fs/9p/cache.h
+> @@ -7,10 +7,11 @@
+>  
+>  #ifndef _9P_CACHE_H
+>  #define _9P_CACHE_H
+> -#ifdef CONFIG_9P_FSCACHE
+> -#define FSCACHE_USE_OLD_IO_API
+> +
+> +#define FSCACHE_USE_NEW_IO_API
+>  #include <linux/fscache.h>
+> -#include <linux/spinlock.h>
+> +
+> +#ifdef CONFIG_9P_FSCACHE
+>  
+>  extern struct fscache_netfs v9fs_cache_netfs;
+>  extern const struct fscache_cookie_def v9fs_cache_session_index_def;
+> @@ -28,64 +29,6 @@ extern void v9fs_cache_inode_reset_cookie(struct inode *inode);
+>  extern int __v9fs_cache_register(void);
+>  extern void __v9fs_cache_unregister(void);
+>  
+> -extern int __v9fs_fscache_release_page(struct page *page, gfp_t gfp);
+> -extern void __v9fs_fscache_invalidate_page(struct page *page);
+> -extern int __v9fs_readpage_from_fscache(struct inode *inode,
+> -					struct page *page);
+> -extern int __v9fs_readpages_from_fscache(struct inode *inode,
+> -					 struct address_space *mapping,
+> -					 struct list_head *pages,
+> -					 unsigned *nr_pages);
+> -extern void __v9fs_readpage_to_fscache(struct inode *inode, struct page *page);
+> -extern void __v9fs_fscache_wait_on_page_write(struct inode *inode,
+> -					      struct page *page);
+> -
+> -static inline int v9fs_fscache_release_page(struct page *page,
+> -					    gfp_t gfp)
+> -{
+> -	return __v9fs_fscache_release_page(page, gfp);
+> -}
+> -
+> -static inline void v9fs_fscache_invalidate_page(struct page *page)
+> -{
+> -	__v9fs_fscache_invalidate_page(page);
+> -}
+> -
+> -static inline int v9fs_readpage_from_fscache(struct inode *inode,
+> -					     struct page *page)
+> -{
+> -	return __v9fs_readpage_from_fscache(inode, page);
+> -}
+> -
+> -static inline int v9fs_readpages_from_fscache(struct inode *inode,
+> -					      struct address_space *mapping,
+> -					      struct list_head *pages,
+> -					      unsigned *nr_pages)
+> -{
+> -	return __v9fs_readpages_from_fscache(inode, mapping, pages,
+> -					     nr_pages);
+> -}
+> -
+> -static inline void v9fs_readpage_to_fscache(struct inode *inode,
+> -					    struct page *page)
+> -{
+> -	if (PageFsCache(page))
+> -		__v9fs_readpage_to_fscache(inode, page);
+> -}
+> -
+> -static inline void v9fs_uncache_page(struct inode *inode, struct page *page)
+> -{
+> -	struct v9fs_inode *v9inode = V9FS_I(inode);
+> -	fscache_uncache_page(v9inode->fscache, page);
+> -	BUG_ON(PageFsCache(page));
+> -}
+> -
+> -static inline void v9fs_fscache_wait_on_page_write(struct inode *inode,
+> -						   struct page *page)
+> -{
+> -	return __v9fs_fscache_wait_on_page_write(inode, page);
+> -}
+> -
+>  #else /* CONFIG_9P_FSCACHE */
+>  
+>  static inline void v9fs_cache_inode_get_cookie(struct inode *inode)
+> @@ -100,39 +43,5 @@ static inline void v9fs_cache_inode_set_cookie(struct inode *inode, struct file
+>  {
+>  }
+>  
+> -static inline int v9fs_fscache_release_page(struct page *page,
+> -					    gfp_t gfp) {
+> -	return 1;
+> -}
+> -
+> -static inline void v9fs_fscache_invalidate_page(struct page *page) {}
+> -
+> -static inline int v9fs_readpage_from_fscache(struct inode *inode,
+> -					     struct page *page)
+> -{
+> -	return -ENOBUFS;
+> -}
+> -
+> -static inline int v9fs_readpages_from_fscache(struct inode *inode,
+> -					      struct address_space *mapping,
+> -					      struct list_head *pages,
+> -					      unsigned *nr_pages)
+> -{
+> -	return -ENOBUFS;
+> -}
+> -
+> -static inline void v9fs_readpage_to_fscache(struct inode *inode,
+> -					    struct page *page)
+> -{}
+> -
+> -static inline void v9fs_uncache_page(struct inode *inode, struct page *page)
+> -{}
+> -
+> -static inline void v9fs_fscache_wait_on_page_write(struct inode *inode,
+> -						   struct page *page)
+> -{
+> -	return;
+> -}
+> -
+>  #endif /* CONFIG_9P_FSCACHE */
+>  #endif /* _9P_CACHE_H */
+> diff --git a/fs/9p/v9fs.h b/fs/9p/v9fs.h
+> index 4ca56c5dd637..07332f135b38 100644
+> --- a/fs/9p/v9fs.h
+> +++ b/fs/9p/v9fs.h
+> @@ -123,6 +123,15 @@ static inline struct v9fs_inode *V9FS_I(const struct inode *inode)
+>  {
+>  	return container_of(inode, struct v9fs_inode, vfs_inode);
+>  }
+> + 
+> +static inline struct fscache_cookie *v9fs_inode_cookie(struct v9fs_inode *v9inode)
+> +{
+> +#ifdef CONFIG_9P_FSCACHE
+> +	return v9inode->fscache;
+> +#else
+> +	return NULL;
+> +#endif	
+> +}
+>  
+>  extern int v9fs_show_options(struct seq_file *m, struct dentry *root);
+>  
+> diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
+> index cce9ace651a2..a7e080916826 100644
+> --- a/fs/9p/vfs_addr.c
+> +++ b/fs/9p/vfs_addr.c
+> @@ -19,7 +19,7 @@
+>  #include <linux/idr.h>
+>  #include <linux/sched.h>
+>  #include <linux/uio.h>
+> -#include <linux/bvec.h>
+> +#include <linux/netfs.h>
+>  #include <net/9p/9p.h>
+>  #include <net/9p/client.h>
+>  
+> @@ -29,89 +29,82 @@
+>  #include "fid.h"
+>  
+>  /**
+> - * v9fs_fid_readpage - read an entire page in from 9P
+> - *
+> - * @fid: fid being read
+> - * @page: structure to page
+> - *
+> + * v9fs_req_issue_op - Issue a read from 9P
+> + * @subreq: The read to make
+>   */
+> -static int v9fs_fid_readpage(void *data, struct page *page)
+> +static void v9fs_req_issue_op(struct netfs_read_subrequest *subreq)
+>  {
+> -	struct p9_fid *fid = data;
+> -	struct inode *inode = page->mapping->host;
+> -	struct bio_vec bvec = {.bv_page = page, .bv_len = PAGE_SIZE};
+> +	struct netfs_read_request *rreq = subreq->rreq;
+> +	struct p9_fid *fid = rreq->netfs_priv;
+>  	struct iov_iter to;
+> +	loff_t pos = subreq->start + subreq->transferred;
+> +	size_t len = subreq->len   - subreq->transferred;
+>  	int retval, err;
+>  
+> -	p9_debug(P9_DEBUG_VFS, "\n");
+> -
+> -	BUG_ON(!PageLocked(page));
+> +	iov_iter_xarray(&to, READ, &rreq->mapping->i_pages, pos, len);
+>  
+> -	retval = v9fs_readpage_from_fscache(inode, page);
+> -	if (retval == 0)
+> -		return retval;
+> +	retval = p9_client_read(fid, pos, &to, &err);
+> +	if (retval)
+> +		subreq->error = retval;
+> +}
+>  
+> -	iov_iter_bvec(&to, READ, &bvec, 1, PAGE_SIZE);
+> +/**
+> + * v9fs_init_rreq - Initialise a read request
+> + * @rreq: The read request
+> + * @file: The file being read from
+> + */
+> +static void v9fs_init_rreq(struct netfs_read_request *rreq, struct file *file)
+> +{
+> +	rreq->netfs_priv = file->private_data;
+> +}
+>  
+> -	retval = p9_client_read(fid, page_offset(page), &to, &err);
+> -	if (err) {
+> -		v9fs_uncache_page(inode, page);
+> -		retval = err;
+> -		goto done;
+> -	}
+> +/**
+> + * v9fs_is_cache_enabled - Determine if caching is enabled for an inode
+> + * @inode: The inode to check
+> + */
+> +static bool v9fs_is_cache_enabled(struct inode *inode)
+> +{
+> +	struct fscache_cookie *cookie = v9fs_inode_cookie(V9FS_I(inode));
+>  
+> -	zero_user(page, retval, PAGE_SIZE - retval);
+> -	flush_dcache_page(page);
+> -	SetPageUptodate(page);
+> +	return fscache_cookie_enabled(cookie) && !hlist_empty(&cookie->backing_objects);
+> +}
+>  
+> -	v9fs_readpage_to_fscache(inode, page);
+> -	retval = 0;
+> +/**
+> + * v9fs_begin_cache_operation - Begin a cache operation for a read
+> + * @rreq: The read request
+> + */
+> +static int v9fs_begin_cache_operation(struct netfs_read_request *rreq)
+> +{
+> +	struct fscache_cookie *cookie = v9fs_inode_cookie(V9FS_I(rreq->inode));
+>  
+> -done:
+> -	unlock_page(page);
+> -	return retval;
+> +	return fscache_begin_read_operation(&rreq->cache_resources, cookie);
+>  }
+>  
+> +static const struct netfs_read_request_ops v9fs_req_ops = {
+> +	.init_rreq		= v9fs_init_rreq,
+> +	.is_cache_enabled	= v9fs_is_cache_enabled,
+> +	.begin_cache_operation	= v9fs_begin_cache_operation,
+> +	.issue_op		= v9fs_req_issue_op,
+> +};
+> +
+>  /**
+>   * v9fs_vfs_readpage - read an entire page in from 9P
+> - *
+>   * @filp: file being read
+>   * @page: structure to page
+>   *
+>   */
+> -
+> -static int v9fs_vfs_readpage(struct file *filp, struct page *page)
+> +static int v9fs_vfs_readpage(struct file *file, struct page *page)
+>  {
+> -	return v9fs_fid_readpage(filp->private_data, page);
+> +	return netfs_readpage(file, page, &v9fs_req_ops, NULL);
+>  }
+>  
+>  /**
+> - * v9fs_vfs_readpages - read a set of pages from 9P
+> - *
+> - * @filp: file being read
+> - * @mapping: the address space
+> - * @pages: list of pages to read
+> - * @nr_pages: count of pages to read
+> - *
+> + * v9fs_vfs_readahead - read a set of pages from 9P
+> + * @ractl: The readahead parameters
+>   */
+> -
+> -static int v9fs_vfs_readpages(struct file *filp, struct address_space *mapping,
+> -			     struct list_head *pages, unsigned nr_pages)
+> +static void v9fs_vfs_readahead(struct readahead_control *ractl)
+>  {
+> -	int ret = 0;
+> -	struct inode *inode;
+> -
+> -	inode = mapping->host;
+> -	p9_debug(P9_DEBUG_VFS, "inode: %p file: %p\n", inode, filp);
+> -
+> -	ret = v9fs_readpages_from_fscache(inode, mapping, pages, &nr_pages);
+> -	if (ret == 0)
+> -		return ret;
+> -
+> -	ret = read_cache_pages(mapping, pages, v9fs_fid_readpage,
+> -			filp->private_data);
+> -	p9_debug(P9_DEBUG_VFS, "  = %d\n", ret);
+> -	return ret;
+> +	netfs_readahead(ractl, &v9fs_req_ops, NULL);
+>  }
+>  
+>  /**
+> @@ -124,7 +117,14 @@ static int v9fs_release_page(struct page *page, gfp_t gfp)
+>  {
+>  	if (PagePrivate(page))
+>  		return 0;
+> -	return v9fs_fscache_release_page(page, gfp);
+> +#ifdef CONFIG_AFS_FSCACHE
+> +	if (PageFsCache(page)) {
+> +		if (!(gfp & __GFP_DIRECT_RECLAIM) || !(gfp & __GFP_FS))
+> +			return 0;
+> +		wait_on_page_fscache(page);
+> +	}
+> +#endif
+> +	return 1;
+>  }
+>  
+>  /**
+> @@ -137,21 +137,16 @@ static int v9fs_release_page(struct page *page, gfp_t gfp)
+>  static void v9fs_invalidate_page(struct page *page, unsigned int offset,
+>  				 unsigned int length)
+>  {
+> -	/*
+> -	 * If called with zero offset, we should release
+> -	 * the private state assocated with the page
+> -	 */
+> -	if (offset == 0 && length == PAGE_SIZE)
+> -		v9fs_fscache_invalidate_page(page);
+> +	wait_on_page_fscache(page);
+>  }
+>  
+>  static int v9fs_vfs_writepage_locked(struct page *page)
+>  {
+>  	struct inode *inode = page->mapping->host;
+>  	struct v9fs_inode *v9inode = V9FS_I(inode);
+> +	loff_t start = page_offset(page);
+>  	loff_t size = i_size_read(inode);
+>  	struct iov_iter from;
+> -	struct bio_vec bvec;
+>  	int err, len;
+>  
+>  	if (page->index == size >> PAGE_SHIFT)
+> @@ -159,17 +154,14 @@ static int v9fs_vfs_writepage_locked(struct page *page)
+>  	else
+>  		len = PAGE_SIZE;
+>  
+> -	bvec.bv_page = page;
+> -	bvec.bv_offset = 0;
+> -	bvec.bv_len = len;
+> -	iov_iter_bvec(&from, WRITE, &bvec, 1, len);
+> +	iov_iter_xarray(&from, WRITE, &page->mapping->i_pages, start, len);
+>  
+>  	/* We should have writeback_fid always set */
+>  	BUG_ON(!v9inode->writeback_fid);
+>  
+>  	set_page_writeback(page);
+>  
+> -	p9_client_write(v9inode->writeback_fid, page_offset(page), &from, &err);
+> +	p9_client_write(v9inode->writeback_fid, start, &from, &err);
+>  
+>  	end_page_writeback(page);
+>  	return err;
+> @@ -205,14 +197,13 @@ static int v9fs_vfs_writepage(struct page *page, struct writeback_control *wbc)
+>  static int v9fs_launder_page(struct page *page)
+>  {
+>  	int retval;
+> -	struct inode *inode = page->mapping->host;
+>  
+> -	v9fs_fscache_wait_on_page_write(inode, page);
+>  	if (clear_page_dirty_for_io(page)) {
+>  		retval = v9fs_vfs_writepage_locked(page);
+>  		if (retval)
+>  			return retval;
+>  	}
+> +	wait_on_page_fscache(page);
+>  	return 0;
+>  }
+>  
+> @@ -256,35 +247,24 @@ static int v9fs_write_begin(struct file *filp, struct address_space *mapping,
+>  			    loff_t pos, unsigned len, unsigned flags,
+>  			    struct page **pagep, void **fsdata)
+>  {
+> -	int retval = 0;
+> +	int retval;
+>  	struct page *page;
+> -	struct v9fs_inode *v9inode;
+> -	pgoff_t index = pos >> PAGE_SHIFT;
+> -	struct inode *inode = mapping->host;
+> -
+> +	struct v9fs_inode *v9inode = V9FS_I(mapping->host);
+>  
+>  	p9_debug(P9_DEBUG_VFS, "filp %p, mapping %p\n", filp, mapping);
+>  
+> -	v9inode = V9FS_I(inode);
+> -start:
+> -	page = grab_cache_page_write_begin(mapping, index, flags);
+> -	if (!page) {
+> -		retval = -ENOMEM;
+> -		goto out;
+> -	}
+>  	BUG_ON(!v9inode->writeback_fid);
+> -	if (PageUptodate(page))
+> -		goto out;
+>  
+> -	if (len == PAGE_SIZE)
+> -		goto out;
+> +	/* Prefetch area to be written into the cache if we're caching this
+> +	 * file.  We need to do this before we get a lock on the page in case
+> +	 * there's more than one writer competing for the same cache block.
+> +	 */
+> +	retval = netfs_write_begin(filp, mapping, pos, len, flags, &page, fsdata,
+> +				   &v9fs_req_ops, NULL);
+> +	if (retval < 0)
+> +		return retval;
+>  
+> -	retval = v9fs_fid_readpage(v9inode->writeback_fid, page);
+> -	put_page(page);
+> -	if (!retval)
+> -		goto start;
+> -out:
+> -	*pagep = page;
+> +	*pagep = find_subpage(page, pos / PAGE_SIZE);
+>  	return retval;
+>  }
+>  
+> @@ -324,7 +304,7 @@ static int v9fs_write_end(struct file *filp, struct address_space *mapping,
+>  
+>  const struct address_space_operations v9fs_addr_operations = {
+>  	.readpage = v9fs_vfs_readpage,
+> -	.readpages = v9fs_vfs_readpages,
+> +	.readahead = v9fs_vfs_readahead,
+>  	.set_page_dirty = __set_page_dirty_nobuffers,
+>  	.writepage = v9fs_vfs_writepage,
+>  	.write_begin = v9fs_write_begin,
+> diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
+> index aab5e6538660..4b617d10cf28 100644
+> --- a/fs/9p/vfs_file.c
+> +++ b/fs/9p/vfs_file.c
+> @@ -542,14 +542,27 @@ v9fs_vm_page_mkwrite(struct vm_fault *vmf)
+>  	p9_debug(P9_DEBUG_VFS, "page %p fid %lx\n",
+>  		 page, (unsigned long)filp->private_data);
+>  
+> +	v9inode = V9FS_I(inode);
+> +
+> +	/* Wait for the page to be written to the cache before we allow it to
+> +	 * be modified.  We then assume the entire page will need writing back.
+> +	 */
+> +#ifdef CONFIG_V9FS_FSCACHE
+> +	if (PageFsCache(page) &&
+> +	    wait_on_page_bit_killable(page, PG_fscache) < 0)
+> +		return VM_FAULT_RETRY;
+> +#endif
+> +
+> +	if (PageWriteback(page) &&
+> +	    wait_on_page_bit_killable(page, PG_writeback) < 0)
+> +		return VM_FAULT_RETRY;
+> +
+>  	/* Update file times before taking page lock */
+>  	file_update_time(filp);
+>  
+> -	v9inode = V9FS_I(inode);
+> -	/* make sure the cache has finished storing the page */
+> -	v9fs_fscache_wait_on_page_write(inode, page);
+>  	BUG_ON(!v9inode->writeback_fid);
+> -	lock_page(page);
+> +	if (lock_page_killable(page) < 0)
+> +		return VM_FAULT_RETRY;
+>  	if (page->mapping != inode->i_mapping)
+>  		goto out_unlock;
+>  	wait_for_stable_page(page);
+> 
+> 
 
-diff --git a/Documentation/filesystems/caching/backend-api.rst b/Documentation/filesystems/caching/backend-api.rst
-index 19fbf6b9aa36..08fdd92d502a 100644
---- a/Documentation/filesystems/caching/backend-api.rst
-+++ b/Documentation/filesystems/caching/backend-api.rst
-@@ -355,14 +355,6 @@ performed on the denizens of the cache.  These are held in a structure of type:
-      device.
- 
- 
--   * Dissociate a cache [mandatory]::
--
--	void (*dissociate_pages)(struct fscache_cache *cache)
--
--     This is called to ask a cache to perform any page dissociations as part of
--     cache withdrawal.
--
--
-    * Notification that the attributes on a netfs file changed [mandatory]::
- 
- 	int (*attr_changed)(struct fscache_object *object);
-@@ -402,123 +394,14 @@ performed on the denizens of the cache.  These are held in a structure of type:
-      size if larger than that already.
- 
- 
--   * Request page be read from cache [mandatory]::
--
--	int (*read_or_alloc_page)(struct fscache_retrieval *op,
--				  struct page *page,
--				  gfp_t gfp)
--
--     This is called to attempt to read a netfs page from the cache, or to
--     reserve a backing block if not.  FS-Cache will have done as much checking
--     as it can before calling, but most of the work belongs to the backend.
--
--     If there's no page in the cache, then -ENODATA should be returned if the
--     backend managed to reserve a backing block; -ENOBUFS or -ENOMEM if it
--     didn't.
--
--     If there is suitable data in the cache, then a read operation should be
--     queued and 0 returned.  When the read finishes, fscache_end_io() should be
--     called.
--
--     The fscache_mark_pages_cached() should be called for the page if any cache
--     metadata is retained.  This will indicate to the netfs that the page needs
--     explicit uncaching.  This operation takes a pagevec, thus allowing several
--     pages to be marked at once.
--
--     The retrieval record pointed to by op should be retained for each page
--     queued and released when I/O on the page has been formally ended.
--     fscache_get/put_retrieval() are available for this purpose.
--
--     The retrieval record may be used to get CPU time via the FS-Cache thread
--     pool.  If this is desired, the op->op.processor should be set to point to
--     the appropriate processing routine, and fscache_enqueue_retrieval() should
--     be called at an appropriate point to request CPU time.  For instance, the
--     retrieval routine could be enqueued upon the completion of a disk read.
--     The to_do field in the retrieval record is provided to aid in this.
--
--     If an I/O error occurs, fscache_io_error() should be called and -ENOBUFS
--     returned if possible or fscache_end_io() called with a suitable error
--     code.
--
--     fscache_put_retrieval() should be called after a page or pages are dealt
--     with.  This will complete the operation when all pages are dealt with.
--
--
--   * Request pages be read from cache [mandatory]::
--
--	int (*read_or_alloc_pages)(struct fscache_retrieval *op,
--				   struct list_head *pages,
--				   unsigned *nr_pages,
--				   gfp_t gfp)
--
--     This is like the read_or_alloc_page() method, except it is handed a list
--     of pages instead of one page.  Any pages on which a read operation is
--     started must be added to the page cache for the specified mapping and also
--     to the LRU.  Such pages must also be removed from the pages list and
--     ``*nr_pages`` decremented per page.
--
--     If there was an error such as -ENOMEM, then that should be returned; else
--     if one or more pages couldn't be read or allocated, then -ENOBUFS should
--     be returned; else if one or more pages couldn't be read, then -ENODATA
--     should be returned.  If all the pages are dispatched then 0 should be
--     returned.
--
--
--   * Request page be allocated in the cache [mandatory]::
-+   * Begin an operation [mandatory]::
- 
--	int (*allocate_page)(struct fscache_retrieval *op,
--			     struct page *page,
--			     gfp_t gfp)
-+	int (*begin_operation)(struct netfs_cache_resources *cres,
-+			       struct fscache_operation *op);
- 
--     This is like the read_or_alloc_page() method, except that it shouldn't
--     read from the cache, even if there's data there that could be retrieved.
--     It should, however, set up any internal metadata required such that
--     the write_page() method can write to the cache.
--
--     If there's no backing block available, then -ENOBUFS should be returned
--     (or -ENOMEM if there were other problems).  If a block is successfully
--     allocated, then the netfs page should be marked and 0 returned.
--
--
--   * Request pages be allocated in the cache [mandatory]::
--
--	int (*allocate_pages)(struct fscache_retrieval *op,
--			      struct list_head *pages,
--			      unsigned *nr_pages,
--			      gfp_t gfp)
--
--     This is an multiple page version of the allocate_page() method.  pages and
--     nr_pages should be treated as for the read_or_alloc_pages() method.
--
--
--   * Request page be written to cache [mandatory]::
--
--	int (*write_page)(struct fscache_storage *op,
--			  struct page *page);
--
--     This is called to write from a page on which there was a previously
--     successful read_or_alloc_page() call or similar.  FS-Cache filters out
--     pages that don't have mappings.
--
--     This method is called asynchronously from the FS-Cache thread pool.  It is
--     not required to actually store anything, provided -ENODATA is then
--     returned to the next read of this page.
--
--     If an error occurred, then a negative error code should be returned,
--     otherwise zero should be returned.  FS-Cache will take appropriate action
--     in response to an error, such as withdrawing this object.
--
--     If this method returns success then FS-Cache will inform the netfs
--     appropriately.
--
--
--   * Discard retained per-page metadata [mandatory]::
--
--	void (*uncache_page)(struct fscache_object *object, struct page *page)
--
--     This is called when a netfs page is being evicted from the pagecache.  The
--     cache backend should tear down any internal representation or tracking it
--     maintains for this page.
-+     This is called to start an operation on behalf of the network filesystem
-+     or the netfs helper library.  The cache resources attached to *cres
-+     should be filled in by the cache so that the operation can be performed.
- 
- 
- FS-Cache Utilities
-@@ -578,15 +461,6 @@ FS-Cache provides some utilities that a cache backend may make use of:
-      rejected by fscache_read_alloc_page() and co with -ENOBUFS.
- 
- 
--   * Mark pages as being cached::
--
--	void fscache_mark_pages_cached(struct fscache_retrieval *op,
--				       struct pagevec *pagevec);
--
--     This marks a set of pages as being cached.  After this has been called,
--     the netfs must call fscache_uncache_page() to unmark the pages.
--
--
-    * Perform coherency check on an object::
- 
- 	enum fscache_checkaux fscache_check_aux(struct fscache_object *object,
-diff --git a/Documentation/filesystems/caching/netfs-api.rst b/Documentation/filesystems/caching/netfs-api.rst
-index d9f14b8610ba..407871d78f72 100644
---- a/Documentation/filesystems/caching/netfs-api.rst
-+++ b/Documentation/filesystems/caching/netfs-api.rst
-@@ -32,15 +32,13 @@ This API is declared in <linux/fscache.h>.
- 	 (7) Data file registration
- 	 (8) Miscellaneous object registration
-  	 (9) Setting the data file size
--	(10) Page alloc/read/write
--	(11) Page uncaching
--	(12) Index and data file consistency
--	(13) Cookie enablement
--	(14) Miscellaneous cookie operations
--	(15) Cookie unregistration
--	(16) Index invalidation
--	(17) Data file invalidation
--	(18) FS-Cache specific page flags.
-+	(10) Page read/write
-+	(11) Index and data file consistency
-+	(12) Cookie enablement
-+	(13) Miscellaneous cookie operations
-+	(14) Cookie unregistration
-+	(15) Index invalidation
-+	(16) Data file invalidation
- 
- 
- Network Filesystem Definition
-@@ -132,14 +130,6 @@ To define an object, a structure of the following type should be filled out::
- 						   const void *data,
- 						   uint16_t datalen,
- 						   loff_t object_size);
--
--		void (*get_context)(void *cookie_netfs_data, void *context);
--
--		void (*put_context)(void *cookie_netfs_data, void *context);
--
--		void (*mark_pages_cached)(void *cookie_netfs_data,
--					  struct address_space *mapping,
--					  struct pagevec *cached_pvec);
- 	};
- 
- This has the following fields:
-@@ -200,42 +190,6 @@ This has the following fields:
-      This function can also be used to extract data from the auxiliary data in
-      the cache and copy it into the netfs's structures.
- 
-- (5) A pair of functions to manage contexts for the completion callback
--     [optional].
--
--     The cache read/write functions are passed a context which is then passed
--     to the I/O completion callback function.  To ensure this context remains
--     valid until after the I/O completion is called, two functions may be
--     provided: one to get an extra reference on the context, and one to drop a
--     reference to it.
--
--     If the context is not used or is a type of object that won't go out of
--     scope, then these functions are not required.  These functions are not
--     required for indices as indices may not contain data.  These functions may
--     be called in interrupt context and so may not sleep.
--
-- (6) A function to mark a page as retaining cache metadata [optional].
--
--     This is called by the cache to indicate that it is retaining in-memory
--     information for this page and that the netfs should uncache the page when
--     it has finished.  This does not indicate whether there's data on the disk
--     or not.  Note that several pages at once may be presented for marking.
--
--     The PG_fscache bit is set on the pages before this function would be
--     called, so the function need not be provided if this is sufficient.
--
--     This function is not required for indices as they're not permitted data.
--
-- (7) A function to unmark all the pages retaining cache metadata [mandatory].
--
--     This is called by FS-Cache to indicate that a backing store is being
--     unbound from a cookie and that all the marks on the pages should be
--     cleared to prevent confusion.  Note that the cache will have torn down all
--     its tracking information so that the pages don't need to be explicitly
--     uncached.
--
--     This function is not required for indices as they're not permitted data.
--
- 
- Network Filesystem (Un)registration
- ===================================
-@@ -412,277 +366,55 @@ some point in the future, and as such, it may happen after the function returns
- to the caller.  The attribute adjustment excludes read and write operations.
- 
- 
--Page alloc/read/write
-+Page Read/Write
- =====================
- 
--And the sixth step is to store and retrieve pages in the cache.  There are
--three functions that are used to do this.
--
--Note:
--
-- (1) A page should not be re-read or re-allocated without uncaching it first.
--
-- (2) A read or allocated page must be uncached when the netfs page is released
--     from the pagecache.
--
-- (3) A page should only be written to the cache if previous read or allocated.
--
--This permits the cache to maintain its page tracking in proper order.
--
--
--PAGE READ
-----------
--
--Firstly, the netfs should ask FS-Cache to examine the caches and read the
--contents cached for a particular page of a particular file if present, or else
--allocate space to store the contents if not::
--
--	typedef
--	void (*fscache_rw_complete_t)(struct page *page,
--				      void *context,
--				      int error);
--
--	int fscache_read_or_alloc_page(struct fscache_cookie *cookie,
--				       struct page *page,
--				       fscache_rw_complete_t end_io_func,
--				       void *context,
--				       gfp_t gfp);
--
--The cookie argument must specify a cookie for an object that isn't an index,
--the page specified will have the data loaded into it (and is also used to
--specify the page number), and the gfp argument is used to control how any
--memory allocations made are satisfied.
--
--If the cookie indicates the inode is not cached:
--
-- (1) The function will return -ENOBUFS.
--
--Else if there's a copy of the page resident in the cache:
--
-- (1) The mark_pages_cached() cookie operation will be called on that page.
--
-- (2) The function will submit a request to read the data from the cache's
--     backing device directly into the page specified.
--
-- (3) The function will return 0.
--
-- (4) When the read is complete, end_io_func() will be invoked with:
--
--       * The netfs data supplied when the cookie was created.
--
--       * The page descriptor.
--
--       * The context argument passed to the above function.  This will be
--         maintained with the get_context/put_context functions mentioned above.
--
--       * An argument that's 0 on success or negative for an error code.
--
--     If an error occurs, it should be assumed that the page contains no usable
--     data.  fscache_readpages_cancel() may need to be called.
--
--     end_io_func() will be called in process context if the read is results in
--     an error, but it might be called in interrupt context if the read is
--     successful.
--
--Otherwise, if there's not a copy available in cache, but the cache may be able
--to store the page:
--
-- (1) The mark_pages_cached() cookie operation will be called on that page.
--
-- (2) A block may be reserved in the cache and attached to the object at the
--     appropriate place.
--
-- (3) The function will return -ENODATA.
--
--This function may also return -ENOMEM or -EINTR, in which case it won't have
--read any data from the cache.
--
--
--Page Allocate
---------------
--
--Alternatively, if there's not expected to be any data in the cache for a page
--because the file has been extended, a block can simply be allocated instead::
--
--	int fscache_alloc_page(struct fscache_cookie *cookie,
--			       struct page *page,
--			       gfp_t gfp);
--
--This is similar to the fscache_read_or_alloc_page() function, except that it
--never reads from the cache.  It will return 0 if a block has been allocated,
--rather than -ENODATA as the other would.  One or the other must be performed
--before writing to the cache.
--
--The mark_pages_cached() cookie operation will be called on the page if
--successful.
--
--
--Page Write
------------
-+And the sixth step is to store and retrieve pages in the cache.  The functions
-+provided may do direct I/O calls on the backing filesystem and it is up to the
-+network filesystem to prevent clashes.  Typically, a page would be locked for
-+the duration of a read and a page would be marked with PageFsCache whilst it is
-+being written out.
- 
--Secondly, if the netfs changes the contents of the page (either due to an
--initial download or if a user performs a write), then the page should be
--written back to the cache::
-+By preference, reading would be performed through the netfs library's helper
-+functions, but there is a fallback API, though this is deprecated as it may
-+lead to data corruption, depending on the characteristics of the backing
-+filesystem.  If the fallback API is to be used, the filesystem must do::
- 
--	int fscache_write_page(struct fscache_cookie *cookie,
--			       struct page *page,
--			       loff_t object_size,
--			       gfp_t gfp);
--
--The cookie argument must specify a data file cookie, the page specified should
--contain the data to be written (and is also used to specify the page number),
--object_size is the revised size of the object and the gfp argument is used to
--control how any memory allocations made are satisfied.
--
--The page must have first been read or allocated successfully and must not have
--been uncached before writing is performed.
--
--If the cookie indicates the inode is not cached then:
--
-- (1) The function will return -ENOBUFS.
--
--Else if space can be allocated in the cache to hold this page:
--
-- (1) PG_fscache_write will be set on the page.
-+	#define FSCACHE_USE_DEPRECATED_IO_API
-+	#include <linux/fscache.h>
- 
-- (2) The function will submit a request to write the data to cache's backing
--     device directly from the page specified.
- 
-- (3) The function will return 0.
--
-- (4) When the write is complete PG_fscache_write is cleared on the page and
--     anyone waiting for that bit will be woken up.
--
--Else if there's no space available in the cache, -ENOBUFS will be returned.  It
--is also possible for the PG_fscache_write bit to be cleared when no write took
--place if unforeseen circumstances arose (such as a disk error).
--
--Writing takes place asynchronously.
--
--
--Multiple Page Read
-+Fallback Page Read
- ------------------
- 
--A facility is provided to read several pages at once, as requested by the
--readpages() address space operation::
--
--	int fscache_read_or_alloc_pages(struct fscache_cookie *cookie,
--					struct address_space *mapping,
--					struct list_head *pages,
--					int *nr_pages,
--					fscache_rw_complete_t end_io_func,
--					void *context,
--					gfp_t gfp);
--
--This works in a similar way to fscache_read_or_alloc_page(), except:
--
-- (1) Any page it can retrieve data for is removed from pages and nr_pages and
--     dispatched for reading to the disk.  Reads of adjacent pages on disk may
--     be merged for greater efficiency.
--
-- (2) The mark_pages_cached() cookie operation will be called on several pages
--     at once if they're being read or allocated.
--
-- (3) If there was an general error, then that error will be returned.
--
--     Else if some pages couldn't be allocated or read, then -ENOBUFS will be
--     returned.
--
--     Else if some pages couldn't be read but were allocated, then -ENODATA will
--     be returned.
--
--     Otherwise, if all pages had reads dispatched, then 0 will be returned, the
--     list will be empty and ``*nr_pages`` will be 0.
--
-- (4) end_io_func will be called once for each page being read as the reads
--     complete.  It will be called in process context if error != 0, but it may
--     be called in interrupt context if there is no error.
--
--Note that a return of -ENODATA, -ENOBUFS or any other error does not preclude
--some of the pages being read and some being allocated.  Those pages will have
--been marked appropriately and will need uncaching.
--
--
--Cancellation of Unread Pages
------------------------------
--
--If one or more pages are passed to fscache_read_or_alloc_pages() but not then
--read from the cache and also not read from the underlying filesystem then
--those pages will need to have any marks and reservations removed.  This can be
--done by calling::
--
--	void fscache_readpages_cancel(struct fscache_cookie *cookie,
--				      struct list_head *pages);
-+A page may be synchronously read from the backing filesystem::
- 
--prior to returning to the caller.  The cookie argument should be as passed to
--fscache_read_or_alloc_pages().  Every page in the pages list will be examined
--and any that have PG_fscache set will be uncached.
-+	int fscache_deprecated_read_page(struct fscache_cookie *cookie,
-+					 struct page *page);
- 
--
--Page Uncaching
--==============
--
--To uncache a page, this function should be called::
--
--	void fscache_uncache_page(struct fscache_cookie *cookie,
--				  struct page *page);
--
--This function permits the cache to release any in-memory representation it
--might be holding for this netfs page.  This function must be called once for
--each page on which the read or write page functions above have been called to
--make sure the cache's in-memory tracking information gets torn down.
--
--Note that pages can't be explicitly deleted from the a data file.  The whole
--data file must be retired (see the relinquish cookie function below).
--
--Furthermore, note that this does not cancel the asynchronous read or write
--operation started by the read/alloc and write functions, so the page
--invalidation functions must use::
--
--	bool fscache_check_page_write(struct fscache_cookie *cookie,
--				      struct page *page);
--
--to see if a page is being written to the cache, and::
--
--	void fscache_wait_on_page_write(struct fscache_cookie *cookie,
--					struct page *page);
--
--to wait for it to finish if it is.
--
--
--When releasepage() is being implemented, a special FS-Cache function exists to
--manage the heuristics of coping with vmscan trying to eject pages, which may
--conflict with the cache trying to write pages to the cache (which may itself
--need to allocate memory)::
--
--	bool fscache_maybe_release_page(struct fscache_cookie *cookie,
--					struct page *page,
--					gfp_t gfp);
--
--This takes the netfs cookie, and the page and gfp arguments as supplied to
--releasepage().  It will return false if the page cannot be released yet for
--some reason and if it returns true, the page has been uncached and can now be
--released.
--
--To make a page available for release, this function may wait for an outstanding
--storage request to complete, or it may attempt to cancel the storage request -
--in which case the page will not be stored in the cache this time.
-+The cookie argument must specify a cookie for an object that isn't an index and
-+the page specified will have the data loaded into it (and is also used to
-+specify the page number).  The function will return 0 if the page was
-+read, -ENODATA if there was no data and -ENOBUFS if there was no cache
-+attached.  It may also return errors such as -ENOMEM or -EINTR.  It might also
-+return some other error from the backing filesystem, but this should be treated
-+as -ENOBUS.
- 
- 
--Bulk Image Page Uncache
-------------------------
-+Fallback Page Write
-+-------------------
- 
--A convenience routine is provided to perform an uncache on all the pages
--attached to an inode.  This assumes that the pages on the inode correspond on a
--1:1 basis with the pages in the cache::
-+A page may be synchronously written to the backing filesystem::
- 
--	void fscache_uncache_all_inode_pages(struct fscache_cookie *cookie,
--					     struct inode *inode);
-+	int fscache_deprecated_read_page(struct fscache_cookie *cookie,
-+					 struct page *page);
- 
--This takes the netfs cookie that the pages were cached with and the inode that
--the pages are attached to.  This function will wait for pages to finish being
--written to the cache and for the cache to finish with the page generally.  No
--error is returned.
-+The cookie argument must specify a cookie for an object that isn't an index and
-+the page specified will have the data written from it (and is also used to
-+specify the page number).  The function will return 0 if the page was read
-+and -ENOBUFS if there was no cache attached or no space available in the cache.
-+It may also return errors such as -ENOMEM or -EINTR.  It might also return some
-+other error from the backing filesystem, but this should be treated as -ENOBUS.
- 
- 
- Index and Data File consistency
-@@ -858,39 +590,3 @@ to have reached a point at which it can start submitting ordinary operations
- once again::
- 
- 	void fscache_wait_on_invalidate(struct fscache_cookie *cookie);
--
--
--FS-cache Specific Page Flag
--===========================
--
--FS-Cache makes use of a page flag, PG_private_2, for its own purpose.  This is
--given the alternative name PG_fscache.
--
--PG_fscache is used to indicate that the page is known by the cache, and that
--the cache must be informed if the page is going to go away.  It's an indication
--to the netfs that the cache has an interest in this page, where an interest may
--be a pointer to it, resources allocated or reserved for it, or I/O in progress
--upon it.
--
--The netfs can use this information in methods such as releasepage() to
--determine whether it needs to uncache a page or update it.
--
--Furthermore, if this bit is set, releasepage() and invalidatepage() operations
--will be called on a page to get rid of it, even if PG_private is not set.  This
--allows caching to attempted on a page before read_cache_pages() to be called
--after fscache_read_or_alloc_pages() as the former will try and release pages it
--was given under certain circumstances.
--
--This bit does not overlap with such as PG_private.  This means that FS-Cache
--can be used with a filesystem that uses the block buffering code.
--
--There are a number of operations defined on this flag::
--
--	int PageFsCache(struct page *page);
--	void SetPageFsCache(struct page *page)
--	void ClearPageFsCache(struct page *page)
--	int TestSetPageFsCache(struct page *page)
--	int TestClearPageFsCache(struct page *page)
--
--These functions are bit test, bit set, bit clear, bit test and set and bit
--test and clear operations on PG_fscache.
-
+-- 
+Jeff Layton <jlayton@redhat.com>
 
