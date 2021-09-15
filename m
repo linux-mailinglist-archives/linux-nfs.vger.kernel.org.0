@@ -2,127 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 961F140CCAA
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Sep 2021 20:37:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDFE440CEE3
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Sep 2021 23:33:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229738AbhIOSjJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Sep 2021 14:39:09 -0400
-Received: from luckmann.name ([213.239.213.133]:52479 "EHLO
-        static.213-239-213-133.clients.your-server.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229466AbhIOSjJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Sep 2021 14:39:09 -0400
-Received: from localhost (localhost [127.0.0.1])
-  (uid 502)
-  by static.213-239-213-133.clients.your-server.de with local
-  id 0000000000E5E16A.0000000061423D7C.00006746; Wed, 15 Sep 2021 20:37:48 +0200
-Date:   Wed, 15 Sep 2021 20:37:48 +0200
-From:   Helge Kreutzmann <debian@helgefjell.de>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: Errors in NFS man pages
-Message-ID: <20210915183748.GA26324@Debian-50-lenny-64-minimal>
-References: <20210912060745.GA26295@Debian-50-lenny-64-minimal>
- <20210915183321.GA10712@fieldses.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256; protocol="application/pgp-signature"; boundary="=_luckmann.name-26438-1631731068-0001-2"
-Content-Disposition: inline
-In-Reply-To: <20210915183321.GA10712@fieldses.org>
-X-Public-Key-URL: http://www.helgefjell.de/data/debian_neu.asc
-X-homepage: http://www.helgefjell.de/debian
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S232208AbhIOVe0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Sep 2021 17:34:26 -0400
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:19114 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232127AbhIOVeZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Sep 2021 17:34:25 -0400
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18FJxVUi011520
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Sep 2021 21:33:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2021-07-09; bh=kfR6AokimmN9t0DVDbNd2UM+0jhecUFZ5tIHBKvasYc=;
+ b=DE/dszWBWzv8xDbMG1LSDA7BI7RoPUv0kzc+W5WT6lNabrR1rIgl/yd3i0UcRtgGlGha
+ /ZTbnCfB/c2sX1laDqQqLjY1Ry/xmp1qYOPK9Jo9UJMSM92/3jEJ/W/HFgflF5hiXyHw
+ n3PBP/yt9T8mSrlcalCzcsIcOdT1+zduh2kbInvSW/CruhhqqCJzOnMeBGxUgRjpkpvR
+ UJJZZNh9e5Pm5JN9NqH+e5lJ/sw6DbEi9Mh4inrEeqmxPe64U/peFVsbKf/k77RqS4Ro
+ I5o7icU6mIr96+xoSr2txL7EkncQdot9syW4nCPKz/LT9bsHMNZBNcfWnCv4VsxZD08K kQ== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=kfR6AokimmN9t0DVDbNd2UM+0jhecUFZ5tIHBKvasYc=;
+ b=m+/yiooYVjRdzte//VsCy+ia3OsFSng7oLWTtyy/njt+9zk0Q7PHikH95EbFwH+pJk9C
+ cjWG08l/Khq03CtLWj8tMwkJvIusakpE4Kguk5KLcGO2SslMem+6RL8MOBmpeh/m8QAS
+ TbqL6dlZnbDTxB9CdONm/MsLRKBHcwAShDx6Xo5xEwwXGSs51Jphwgo5mdTaNSz5f/6G
+ 8Xtqh4mZLHUEAv4HPkNJalTW7DWkkA48oJLTzatZVyDofWYwJdtcQ6QZPQLawssRHoCY
+ jZ4gADbctuZsbL3ObcZLClS0hz4l3hzJvmk091/OiQbvp+NjREhEa9QA97B51Tj3FKt5 dw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3b2pyge4t8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Sep 2021 21:33:05 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 18FLLfXU167221
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Sep 2021 21:33:04 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 3b167u8bp4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Sep 2021 21:33:04 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 18FLX44F008153
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Sep 2021 21:33:04 GMT
+Received: from aserp3020.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
+        by userp3020.oracle.com with ESMTP id 3b167u8bnn-1;
+        Wed, 15 Sep 2021 21:33:03 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] lockd: crashes in svcxdr_encode_owner
+Date:   Wed, 15 Sep 2021 17:33:00 -0400
+Message-Id: <20210915213300.25066-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: awGZVh0CeZXKlVpRSBnUsBk4JPuH1stb
+X-Proofpoint-ORIG-GUID: awGZVh0CeZXKlVpRSBnUsBk4JPuH1stb
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This is a MIME-formatted message.  If you see this text it means that your
-E-mail software does not support MIME-formatted messages.
+svcxdr_encode_owner needs to handle case where no lock owner
+info to pass back, obj->len == 0.
 
---=_luckmann.name-26438-1631731068-0001-2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: a6a63ca5652e ("lockd: Common NLM XDR helpers")
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ fs/lockd/svcxdr.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Hello Bruce,
-On Wed, Sep 15, 2021 at 02:33:21PM -0400, J. Bruce Fields wrote:
-> On Sun, Sep 12, 2021 at 08:07:46AM +0200, Helge Kreutzmann wrote:
-> > Dear NFS maintainer,
-> > the manpage-l10n project maintains a large number of translations of
-> > man pages both from a large variety of sources (including NFS) as
-> > well for a large variety of target languages.
-> >=20
-> > During their work translators notice different possible issues in the
-> > original (english) man pages. Sometimes this is a straightforward
-> > typo, sometimes a hard to read sentence, sometimes this is a
-> > convention not held up and sometimes we simply do not understand the
-> > original.
-> >=20
-> > We use several distributions as sources and update regularly (at
-> > least every 2 month). This means we are fairly recent (some
-> > distributions like archlinux also update frequently) but might miss
-> > the latest upstream version once in a while, so the error might be
-> > already fixed. We apologize and ask you to close the issue immediately
-> > if this should be the case, but given the huge volume of projects and
-> > the very limited number of volunteers we are not able to double check
-> > each and every issue.
-> >=20
-> > Secondly we translators see the manpages in the neutral po format,
-> > i.e. converted and harmonized, but not the original source (be it man,
-> > groff, xml or other). So we cannot provide a true patch (where
-> > possible), but only an approximation which you need to convert into
-> > your source format.
-> >=20
-> > Finally the issues I'm reporting have accumulated over time and are
-> > not always discovered by me, so sometimes my description of the
-> > problem my be a bit limited - do not hesitate to ask so we can clarify
-> > them.
-> >=20
-> > I'm now reporting the errors for your project. I'm not repeating the
-> > errors reported 2020-05-16, 2021-05-29, if you would like a full
-> > report, please let me know. If future reports should use another
-> > channel, please let me know as well.
->=20
-> This is probably fine.
->=20
-> But if it's possible to make these into patches against nfs-utils
-> (http://git.linux-nfs.org/?p=3Dsteved/nfs-utils.git;a=3Dsummary), and send
-> them to steved@redhat.com, cc'd to this list--that would probably get
-> the fastest response.
+diff --git a/fs/lockd/svcxdr.h b/fs/lockd/svcxdr.h
+index c69a0bb76c94..04fde20ea8c1 100644
+--- a/fs/lockd/svcxdr.h
++++ b/fs/lockd/svcxdr.h
+@@ -139,6 +139,8 @@ svcxdr_encode_owner(struct xdr_stream *xdr, const struct xdr_netobj *obj)
+ 
+ 	if (xdr_stream_encode_u32(xdr, obj->len) < 0)
+ 		return false;
++	if (obj->len == 0)
++		return true;
+ 	p = xdr_reserve_space(xdr, obj->len);
+ 	if (!p)
+ 		return false;
+-- 
+2.9.5
 
-Sorry, given more than > 100 upstreams and very limited man power this
-is not possible. I would be really glad if you could handle them, even
-if this takes more time (better late than never).
-
-Thanks for taking care!
-
-Greetings
-
-         Helge
-
---=20
-      Dr. Helge Kreutzmann                     debian@helgefjell.de
-           Dipl.-Phys.                   http://www.helgefjell.de/debian.php
-        64bit GNU powered                     gpg signed mail preferred
-           Help keep free software "libre": http://www.ffii.de/
-
---=_luckmann.name-26438-1631731068-0001-2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEbZZfteMW0gNUynuwQbqlJmgq5nAFAmFCPXwACgkQQbqlJmgq
-5nB4CBAAgG15hJokckJZZgyWKRB7eJuQhUT+NcVynz0W80ju7komLax8N9voXWSj
-8rG8Axc0dwfu0IOO7XJgontatsFjSd0QHU/oFpEZnK+qVfNJZZK1fmbRaFGFR4hp
-xWiK/VJfUJeiYmNsp09RtUM7wADtXPDEdW/e5b314LyQWuCVFNyKgvI5uRV+yUVF
-4WyIqkH18Zib4Rglup0zgMaMFMMWpVFcluN0JSIZO7qvzC1fVyBDxlfnasXro9zt
-oXUFxV4ubZpmevrjdY9jOibBT8nOkwDSYnwrz71EWILbNRGhEZh55UI5tBpOnc+z
-IWSGzMxqIZqt/6kTY4y40x0RUzNXNlF/rjwVuAj1HFltr6YgbnJuATBaSNbFJEYp
-4ZEcad3sm35lWLZf4fXNxlQZ3GhsWYaaz5MtcnKzMEKtno6B7w9TBQJHyR8YQyh2
-gUWPncu9yZQsymXnv01FcSQyWd0Dk2AQm9fdaVbLsRupqcAkLJWBHtIe7W0mpW/j
-eVFa069rNbYiJAFjvtwWiuhCgzWvz0bsp9LCz8H7MyfZmJeiDG6Hk9fPyNiU2mb5
-2tvOXDWr/eqBGq59Kg8bnAYfOzwPh/h5Z+qk+sk9O6CeIgaZtfgo/85neQQPUL2F
-siRPrNrmNb4VAZL0VnG2GZUcpepfZGr1U8m+W+JapBf7wXfCdNQ=
-=qplB
------END PGP SIGNATURE-----
-
---=_luckmann.name-26438-1631731068-0001-2--
