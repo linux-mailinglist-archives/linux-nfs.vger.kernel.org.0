@@ -2,97 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DA6A40CC8F
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Sep 2021 20:30:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C7D840CC9A
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Sep 2021 20:33:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229623AbhIOSbT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Sep 2021 14:31:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59620 "EHLO
+        id S229697AbhIOSen (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Sep 2021 14:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229466AbhIOSbT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Sep 2021 14:31:19 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3105C061574
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Sep 2021 11:29:59 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id j13so6947429edv.13
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Sep 2021 11:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=NWKMZ//AyFWFbpFk6FF66OtPadVuan7a1ybZS8hGNR8=;
-        b=ZaLn2FnmvFU9amDYCtgb+3UkgdagD0J+N7sv7gjiLxqUhgCcA6wWasJ3LCSKqleWlU
-         SBlfk/SyQS+dTn1lv9kwk9aJbvtSLPTrwroMj6YCAU+aEKmSGPBCB/FH2Vp+gSjWvxbx
-         Gd85N0pv78NtqV7PJ3TUPlOY88j4hTTlylzA8yteOgC6B1emXsDaT9Uvw4RbeLCC8viX
-         4tF93fkyvU92dAV1DVXKZ2rADcVrFCe8tZ4nuqS6pfM08JOEexdlQPLOEZSe/CT2Celv
-         jjF/fslC0LFrhRwKP5Eu52NKOv3KnJft7Dur47KZj+K7onsK0lcKGKRyr9ynzSHTITpn
-         Xhcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=NWKMZ//AyFWFbpFk6FF66OtPadVuan7a1ybZS8hGNR8=;
-        b=SneHyypliuNsTzw0Hx7hHl2xLjs6Zm9/zVdcIM5AI5ydkHnmtPsavoHrpPAHzqM6Np
-         zD3uccbwsY0wsHF1s61AqqitpyV2iyNIot2hmof5i+O9mVhC/gtd/Qpp6ouuCZVBd21v
-         ByxxhpoBHman6IuVlyrkhuyO8blVGSpU0DZaNSosBgSl4taHiiDR3Sv8SO6tXsYzwet/
-         h0vTuI2S6yIygegtF/euV3FRtoodWsXwArZNJHKWAlons4qle35sw/mcbJcMrg8Q5tPR
-         VWdO8AhZ8LmcNm5lY0GpXiq3m7Iv6JMd0ZRtYaOZA2fQW+QG/utz5ScOeroOpt6SkA+X
-         fqOA==
-X-Gm-Message-State: AOAM531XxZUGPB15+SDMADo+OzPJqe8wmwuedX8aM9+Uwr+/JV+1NAVG
-        Ae8QofK79K0rSojTbPk99x6dHNm6MSUX+ApwNn0=
-X-Google-Smtp-Source: ABdhPJyL/8J3FmXX1dp2FKdojnB3BGvU6kdW9sPqLvVbbWtRZA1t1HCfN4U7rnCSjPbsFx0MUIdbHt0tbrHqF3hB+xo=
-X-Received: by 2002:a50:fb8f:: with SMTP id e15mr1526233edq.162.1631730598283;
- Wed, 15 Sep 2021 11:29:58 -0700 (PDT)
+        with ESMTP id S229479AbhIOSem (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Sep 2021 14:34:42 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADAF6C061574
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Sep 2021 11:33:23 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id CD36E702A; Wed, 15 Sep 2021 14:33:21 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CD36E702A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1631730801;
+        bh=/uGH5fxOasXwnY4crRvnCe5iHw3V+OqXeXKL8byfpe0=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=Jv3shyjSUaVd7b+13EVGCHJ6LcrUPungl+V99LvJUSzkZX1Gvg3xoEFaNy5PnJZN3
+         /EGMbYxpimiL/Av87+++Ny5IYcauP3U/IUkyd+jr59rHMVEXy96IyVaaKjyzJ75Crq
+         TGgU0k+xHVgxJfx/+qiLIptAKWqlG7kteSnjCSYM=
+Date:   Wed, 15 Sep 2021 14:33:21 -0400
+To:     Helge Kreutzmann <debian@helgefjell.de>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: Errors in NFS man pages
+Message-ID: <20210915183321.GA10712@fieldses.org>
+References: <20210912060745.GA26295@Debian-50-lenny-64-minimal>
 MIME-Version: 1.0
-Received: by 2002:ab4:92c8:0:0:0:0:0 with HTTP; Wed, 15 Sep 2021 11:29:57
- -0700 (PDT)
-Reply-To: uchennailobitenone@gmail.com
-From:   uchenna <okeyyoyopa@gmail.com>
-Date:   Wed, 15 Sep 2021 11:29:57 -0700
-Message-ID: <CAHTws=Lta6A9VwzVDMS63oGhfKHPRcpQ4Oqcp=nWxxDzE_9c0w@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210912060745.GA26295@Debian-50-lenny-64-minimal>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Attention Please,
+On Sun, Sep 12, 2021 at 08:07:46AM +0200, Helge Kreutzmann wrote:
+> Dear NFS maintainer,
+> the manpage-l10n project maintains a large number of translations of
+> man pages both from a large variety of sources (including NFS) as
+> well for a large variety of target languages.
+> 
+> During their work translators notice different possible issues in the
+> original (english) man pages. Sometimes this is a straightforward
+> typo, sometimes a hard to read sentence, sometimes this is a
+> convention not held up and sometimes we simply do not understand the
+> original.
+> 
+> We use several distributions as sources and update regularly (at
+> least every 2 month). This means we are fairly recent (some
+> distributions like archlinux also update frequently) but might miss
+> the latest upstream version once in a while, so the error might be
+> already fixed. We apologize and ask you to close the issue immediately
+> if this should be the case, but given the huge volume of projects and
+> the very limited number of volunteers we are not able to double check
+> each and every issue.
+> 
+> Secondly we translators see the manpages in the neutral po format,
+> i.e. converted and harmonized, but not the original source (be it man,
+> groff, xml or other). So we cannot provide a true patch (where
+> possible), but only an approximation which you need to convert into
+> your source format.
+> 
+> Finally the issues I'm reporting have accumulated over time and are
+> not always discovered by me, so sometimes my description of the
+> problem my be a bit limited - do not hesitate to ask so we can clarify
+> them.
+> 
+> I'm now reporting the errors for your project. I'm not repeating the
+> errors reported 2020-05-16, 2021-05-29, if you would like a full
+> report, please let me know. If future reports should use another
+> channel, please let me know as well.
 
-I am Bar. uchenna ilobi ,  How are you, I hope you are fine and
-healthy? This is to inform you that i have concluded the transaction
-successfully with the help of a new partner from Venezuela and now the
-fund has been transferred to Venezuela into the bank account of the
-new partner.
+This is probably fine.
 
-Meanwhile, I have decided to compensate you with the sum of
-US$350,000.00 (thiree Hundred and Fifty Thousand United States
-Dollars) due to your past effort, though you disappointed me along the
-line. But nevertheless I am very happy for the successful ending of
-the transaction without any problem and that is the reason why i have
-decided to compensate you with the sum of US$350,000.00 so that you
-will share the joy with me.
+But if it's possible to make these into patches against nfs-utils
+(http://git.linux-nfs.org/?p=steved/nfs-utils.git;a=summary), and send
+them to steved@redhat.com, cc'd to this list--that would probably get
+the fastest response.
 
-I advise you to contact my secretary for Atm Card of US$350.000.00,
-which I kept for you. Contact him now without any delay.
+--b.
 
-Name: solomon brandy
+> 
+> 
+> Man page: nfs.5
+> Issue: B<nfsmount.conf(5)> → B<nfsmount.conf>(5)
+> 
+> "If the mount command is configured to do so, all of the mount options "
+> "described in the previous section can also be configured in the I</etc/"
+> "nfsmount.conf> file. See B<nfsmount.conf(5)> for details."
+> msgstr ""
+> "Falls der Befehl »mount« entsprechend konfiguriert ist, können alle in den "
+> "vorhergehenden Kapiteln beschriebenen Einhängeoptionen auch in der Datei I</"
+> --
+> Man page: nfs.5
+> Issue: Why is the word "option" in bold?
+> 
+> "The B<sloppy> option is an alternative to specifying B<mount.nfs> -s "
+> "B<option.>"
+> 
+> -- 
+>       Dr. Helge Kreutzmann                     debian@helgefjell.de
+>            Dipl.-Phys.                   http://www.helgefjell.de/debian.php
+>         64bit GNU powered                     gpg signed mail preferred
+>            Help keep free software "libre": http://www.ffii.de/
 
-Email:solomonbrandyfiveone@gmail.com
 
-Kindly reconfirm to him the following below information:
-
-Your full name_________________________
-Your address__________________________
-Your country___________________________
-Your age______________________________
-Your occupation________________________
-Your cell Phone number______________________
-
-Note that if you did not send him the above information complete, he
-will not release the Atm card to you because he has to be sure that it
-is you. Ask him to send you the total sum of ($350.000.00 ) Atm card,
-which I kept for you.
-
-Best regards,
-
-Mr. uchenna ilobi
