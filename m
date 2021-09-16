@@ -2,99 +2,143 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC40140D227
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Sep 2021 05:48:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73AD240D375
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Sep 2021 08:52:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234286AbhIPDt1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Sep 2021 23:49:27 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:16263 "EHLO
-        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234306AbhIPDtW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Sep 2021 23:49:22 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4H931l5wrtz8t7Y;
-        Thu, 16 Sep 2021 11:47:23 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (7.185.36.114) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Thu, 16 Sep 2021 11:48:01 +0800
-Received: from [10.174.176.83] (10.174.176.83) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Thu, 16 Sep 2021 11:48:01 +0800
-Subject: Re: Questions about nfs_sb_active
-To:     Trond Myklebust <trondmy@hammerspace.com>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Luo Meng <luomeng12@huawei.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>
-References: <ce24474a-39a6-dc3b-0580-378cdfedf0c5@huawei.com>
- <30A81685-4F45-44D3-B497-117BF7B33903@hammerspace.com>
-From:   "zhangxiaoxu (A)" <zhangxiaoxu5@huawei.com>
-Message-ID: <951cd849-d6fe-55c0-6f8d-2fbe3ab348f7@huawei.com>
-Date:   Thu, 16 Sep 2021 11:48:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        id S234638AbhIPGxr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Sep 2021 02:53:47 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:48426 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232254AbhIPGxr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Sep 2021 02:53:47 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id BD63922324;
+        Thu, 16 Sep 2021 06:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1631775144; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rgPYC/jO9gO7VeQL2HNt6VwK+j/K8XgK6Ia/iOSZmOA=;
+        b=hyumKxv6Z1+GNRpK2emC5w8B+VLGOQafgHC+qT62hFQsVpViXyiB+mwGicPS7LoAcfjwD/
+        OnsM+osaP8zGhyId8SbUcUt7jIxfG37qnmBQLJNvqD8YBhtYB1FqAqMxHRsalzcEFswLt2
+        KT6QGXECdYCpeVo67h3EGaQ5VfNThQk=
+Received: from suse.cz (unknown [10.100.201.86])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 59A0AA3B87;
+        Thu, 16 Sep 2021 06:52:24 +0000 (UTC)
+Date:   Thu, 16 Sep 2021 08:52:23 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <djwong@kernel.org>, Jan Kara <jack@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] EXT4: Remove ENOMEM/congestion_wait() loops.
+Message-ID: <YULpp4gVgZSuH65/@dhcp22.suse.cz>
+References: <163157808321.13293.486682642188075090.stgit@noble.brown>
+ <163157838437.13293.14244628630141187199.stgit@noble.brown>
+ <20210914163432.GR3828@suse.com>
+ <163165609100.3992.1570739756456048657@noble.neil.brown.name>
+ <YUHh2ddnJEDGI8YG@dhcp22.suse.cz>
+ <163174534006.3992.15394603624652359629@noble.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <30A81685-4F45-44D3-B497-117BF7B33903@hammerspace.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.83]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500023.china.huawei.com (7.185.36.114)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <163174534006.3992.15394603624652359629@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-ÔÚ 2021/9/15 21:05, Trond Myklebust Ð´µÀ:
+On Thu 16-09-21 08:35:40, Neil Brown wrote:
+> On Wed, 15 Sep 2021, Michal Hocko wrote:
+> > On Wed 15-09-21 07:48:11, Neil Brown wrote:
+> > > 
+> > > Why does __GFP_NOFAIL access the reserves? Why not require that the
+> > > relevant "Try harder" flag (__GFP_ATOMIC or __GFP_MEMALLOC) be included
+> > > with __GFP_NOFAIL if that is justified?
+> > 
+> > Does 5020e285856c ("mm, oom: give __GFP_NOFAIL allocations access to
+> > memory reserves") help?
 > 
+> Yes, that helps.  A bit.
 > 
->> On Sep 15, 2021, at 04:03, zhangxiaoxu (A) <zhangxiaoxu5@huawei.com> wrote:
->>
->> Hi Trond,
->>
->> I have some confuse about 'nfs_sb_active'.
->>
->> The following commit increase the 'sb->s_active' to prevent concurrent with umount process when handle the callback rpc message.
->>
->>   e39d8a186ed0 ("NFSv4: Fix an Oops during delegation callbacks")
->>   113aac6d567b ("NFS: nfs_delegation_find_inode_server must first reference the superblock")
->>
->> But it also delay the process in function 'generic_shutdown_super', such as 'sync_filesystem' and 'fsnotify_sb_delete'.
->>
->> For the common file system, when umount success, the data should be stable to the disk, but in nfs, it maybe delay?
->>
->> I want know :
->>   1. whether we _must_ stable the data to the server?
->>   2. how to ensure the data not lost when umount success but client crash?
->>   3. the delayed fsnotify umount event is reasonable or not?
->>   4. the 'nfs_sb_active' should be used under what scenario?
->>
->> Thanks.
+> I'm not fond of the clause "the allocation request might have come with some
+> locks held".  What if it doesn't?  Does it still have to pay the price.
 > 
-> That has nothing to do with I/O. Delegations are state.
-Since the callbacks hold the 'sb->s_active',
-the umount maybe return success without shutdown the superblock.
+> Should we not require that the caller indicate if any locks are held?
 
-In general, the superblock should be shutdown before umount success,
-but in the concurrent scenario, the superblock is shutdown after the callbacks finish.
+I do not think this would help much TBH. What if the lock in question
+doesn't impose any dependency through allocation problem?
 
-If the system is crashed in this period, we may lost 'sync_filesystem',
-then the page caches (which not flush to server since hold the write delegation when close the file)
-and metadata caches maybe lost?
+> That way callers which don't hold locks can use __GFP_NOFAIL without
+> worrying about imposing on other code.
+> 
+> Or is it so rare that __GFP_NOFAIL would be used without holding a lock
+> that it doesn't matter?
+> 
+> The other commit of interest is
+> 
+> Commit: 6c18ba7a1899 ("mm: help __GFP_NOFAIL allocations which do not trigger OOM killer")
+> 
+> I don't find the reasoning convincing.  It is a bit like "Robbing Peter
+> to pay Paul".  It takes from the reserves to allow a __GFP_NOFAIL to
+> proceed, with out any reason to think this particular allocation has any
+> more 'right' to the reserves than anything else.
 
-And the 'fsnotify_sb_delete' is also called after the callbacks finish.
-IOW, the umount already return with success, but the FS_UNMOUNT event maybe delay?
+I do agree that this is not really optimal. I do not remember exact
+details but these changes were mostly based or inspired by extreme
+memory pressure testing by Tetsuo who has managed to trigger quite some
+corner cases. Especially those where NOFS was involved were problematic.
 
-I have no idea about it is reasonable or not.
+> While I don't like the reasoning in either of these, they do make it
+> clear (to me) that the use of reserves is entirely an internal policy
+> decision.  They should *not* be seen as part of the API and callers
+> should not have to be concerned about it when deciding whether to use
+> __GFP_NOFAIL or not.
+
+Yes. NOFAIL should have high enough bar to use - essentially there is no
+other way than use it - that memory reserves shouldn't be a road block.
+If we learn that existing users can seriously deplete memory reserves
+then we might need to reconsider the existing logic. So far there are no
+indications that NOFAIL would really cause any problems in that area.
+
+> The use of these reserves is, at most, a hypothetical problem.  If it
+> ever looks like becoming a real practical problem, it needs to be fixed
+> internally to the page allocator.  Maybe an extra water-mark which isn't
+> quite as permissive as ALLOC_HIGH...
 > 
-> _________________________________
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
+> I'm inclined to drop all references to reserves from the documentation
+> for __GFP_NOFAIL.
+
+I have found your additions to the documentation useful.
+
+> I think there are enough users already that adding a
+> couple more isn't going to make problems substantially more likely.  And
+> more will be added anyway that the mm/ team won't have the opportunity
+> or bandwidth to review.
 > 
-> .
+> Meanwhile I'll see if I can understand the intricacies of alloc_page so
+> that I can contibute to making it more predictable.
 > 
+> Question: In those cases where an open-coded loop is appropriate, such
+> as when you want to handle signals or can drop locks, how bad would it
+> be to have a tight loop without any sleep?
+>
+> should_reclaim_retry() will sleep 100ms (sometimes...).  Is that enough?
+> __GFP_NOFAIL doesn't add any sleep when looping.
+
+Yeah, NOFAIL doesn't add any explicit sleep points. In general there is
+no guarantee that a sleepable allocation will sleep. We do cond_resched
+in general but sleeping is enforced only for worker contexts because WQ
+concurrency depends on an explicit sleeping. So to answer your question,
+if you really need to sleep between retries then you should do it
+manually but cond_resched can be implied.
+-- 
+Michal Hocko
+SUSE Labs
