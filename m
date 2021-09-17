@@ -2,689 +2,281 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6229D40FB4C
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Sep 2021 17:06:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F116F40FF4F
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Sep 2021 20:24:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239715AbhIQPHm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Sep 2021 11:07:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43463 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1343890AbhIQPHZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Sep 2021 11:07:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631891162;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jFtUORLcz90xgyGUEp0HVd+3ejh0Qd7ut1o5ab01R5o=;
-        b=gDqUf+UE5xi6reTzKp6m84Tp1Chb47SBQnP1NGI3pDRsqE7vll5zmUbizwi/MCTCCZ3LEt
-        BoBvKtlr54ojlFKpQYe1bAa/Q8dFp7LUVtp6hR9T9dGZ0y/IoX+KZA4FLldGqkS458e55F
-        phYh50b5wBt2rxeTCzZZQS69OmbiPRg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-225-9VEE8uu-PSGmTZNtGs55yg-1; Fri, 17 Sep 2021 11:06:01 -0400
-X-MC-Unique: 9VEE8uu-PSGmTZNtGs55yg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D8D31835AC2;
-        Fri, 17 Sep 2021 15:05:59 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E8A6C69FAD;
-        Fri, 17 Sep 2021 15:05:55 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH v2 8/8] fscache: Update the documentation to reflect I/O API
- changes
-From:   David Howells <dhowells@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>
-Cc:     linux-cachefs@redhat.com, dhowells@redhat.com,
-        Jeff Layton <jlayton@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 17 Sep 2021 16:05:55 +0100
-Message-ID: <163189115518.2509237.6454712882112339524.stgit@warthog.procyon.org.uk>
-In-Reply-To: <163189104510.2509237.10805032055807259087.stgit@warthog.procyon.org.uk>
-References: <163189104510.2509237.10805032055807259087.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        id S240735AbhIQSZy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Sep 2021 14:25:54 -0400
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:19496 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S245615AbhIQSZB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Sep 2021 14:25:01 -0400
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18HIGuFx025129;
+        Fri, 17 Sep 2021 18:23:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=MyfOk0ZIL882FTdwEmD/TnnvevYA0EOZb2HXdOZpmBM=;
+ b=CYnv48IwmKiLwersqVMqKVJyc2LXvBbqPb5XlMyDP3B57E463/SjS1LuB+Kq6JMqvP2X
+ dsIpCgzlqLOXz48icmPw+wbS7WIQa3f3FnEtVQ1oE8JkRJv8lEmRaG2s+8PJHbIMXBEg
+ l2iVDdnTaknDGlUa1r7VXWg3HHdB9xzbXb+WYQNpm0thlETEpFeNfrtDmAw7gJ2d+WTv
+ msKxNiQvOSJn/1P2nVUu+ANe4FHkkRtFlPCYZFFDxiqhhm5dke0aio/+XMGo/s+0pFoh
+ dzuATCwFIF/3aGB2pEiK9tETOHdK88PrKVD0XGeffz9RMUy4sDkgxnESELZvidLcVZiL MQ== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=MyfOk0ZIL882FTdwEmD/TnnvevYA0EOZb2HXdOZpmBM=;
+ b=LfQAV0M/89IX7gWoJAmxr0e7fCiURRZkHpPjYoBdfQcsb7fo5hiFZIrl9hfUWeRrE8IZ
+ mCQY+5yzuPBLZ+QiQPtnQbjDnNzF2ijyHEehKMScH0RamgLT7xErJGMc8lxsqY34akpx
+ Gx9MyY7A4mdpWMvtvUKbu7LS5iy/8fb4EmC4CU+BckXkUWhG/4Bzcwr6R7SzSvnxgIqA
+ nyB6gWXRcz1ZGg4B0iNBF2IhkXITYPrzt05HICwQ4zaDnQujfaEsHg3H5tS40XFCrPIK
+ /fBhdkcpioFQteH8QsJ385xAaVWrwuDUkV0RC7oDrEBeA9GbLRaQm1X8vVjLGRR1oHU4 TQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3b4u8ss8ns-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Sep 2021 18:23:36 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 18HIFkc7039676;
+        Fri, 17 Sep 2021 18:23:35 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2103.outbound.protection.outlook.com [104.47.58.103])
+        by userp3020.oracle.com with ESMTP id 3b167x54jw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Sep 2021 18:23:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IqkEK9VGY9AsQGQ0/thRLiT2FBmnAlYE5TyBGhsxOwhyUuwGvqgaWP4zwXcPbXdCtTpVihFWQEPc10rgjZlGr9W3vXM3C3GtoMmYk0NPZlryHheRgdWH17MUIT8Ktyi1kLR9t3CmDNMgLvQwliPbUx149T4XAVZn/fk6eEF6SmGfL3v4n0FyoC7j5EIAHNY8mB1FYlfDuBnH0BLUSdjKkPN2dijdCioGDkT+i0zYLSL6rbWrubI067WMsAFpoNyO71J6hZC4E7o6P5sKjXcpXmodilbFKvsA6CYTGNLNHWw6hdnh3YElx93J74fgXld6xSciG1+yvxDc9VKjOzdkhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=MyfOk0ZIL882FTdwEmD/TnnvevYA0EOZb2HXdOZpmBM=;
+ b=m0hEbqYL8s6oFI4J6m2jczteAh+Bs4frsfCnngtoCTYNTaY2iOxPHSfYHDiUfA8VJELnYtDy9f3MqpDnTcJYy+rClM4mn/7DSBTZU2CbeL/iVR7KKhEcu1IBGXUBK6n+bGWitJPU5KizhPh9bA0FeF40JMV1lKP4MyOdEJ58phipmQZhbpGh4+zPOuwo0A+Kj4rQ8KBtwmj95l/mWtKKt0Drn8JVclII7ukoi4cqucxl1HC6U59rpNiJv/g/s5msEU62n4SUI+7Q07jND7quZcFTRU6iULtCdM9W7CfrNFIL1vtvcEWecG8D/Eqq1lBCDk9ih0eYxBaVir37/9EmAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MyfOk0ZIL882FTdwEmD/TnnvevYA0EOZb2HXdOZpmBM=;
+ b=UxiZfmZFqwjlEPQluyThWFScgUQWTb/61OygbfNzHRNKgEQ+7iA8YS5WzgNUh5usfhP9YFp0uR4KyIlB/ly2FAScupQiEbhZjBROl6SblfdJO5scuMEVr399MIEhQbAye1Sw/FgDzjFp0ETQ3vliTS/c+oESR0c+o5lVD5TwNRE=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=oracle.com;
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
+ by BYAPR10MB3142.namprd10.prod.outlook.com (2603:10b6:a03:14e::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.16; Fri, 17 Sep
+ 2021 18:23:31 +0000
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::1c92:fda3:604:a90d]) by BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::1c92:fda3:604:a90d%5]) with mapi id 15.20.4523.016; Fri, 17 Sep 2021
+ 18:23:31 +0000
+Subject: Re: [PATCH v3 3/3] nfsd: back channel stuck in
+ SEQ4_STATUS_CB_PATH_DOWN
+From:   dai.ngo@oracle.com
+To:     Bruce Fields <bfields@fieldses.org>,
+        Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <20210916182212.81608-1-dai.ngo@oracle.com>
+ <20210916182212.81608-4-dai.ngo@oracle.com>
+ <8EB546E2-124E-4FB5-B72B-15E0CB66798F@oracle.com>
+ <20210916195546.GA32690@fieldses.org>
+ <836693fe-99f6-3ef0-e100-0e5743b9ec55@oracle.com>
+Message-ID: <c5b09102-c721-07c1-7219-999bd9a79394@oracle.com>
+Date:   Fri, 17 Sep 2021 11:23:28 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.14.0
+In-Reply-To: <836693fe-99f6-3ef0-e100-0e5743b9ec55@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: SA0PR11CA0117.namprd11.prod.outlook.com
+ (2603:10b6:806:d1::32) To BY5PR10MB4257.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Received: from dhcp-10-159-244-211.vpn.oracle.com (138.3.200.19) by SA0PR11CA0117.namprd11.prod.outlook.com (2603:10b6:806:d1::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.14 via Frontend Transport; Fri, 17 Sep 2021 18:23:30 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 874f9afe-6e54-4e3c-610c-08d97a08408c
+X-MS-TrafficTypeDiagnostic: BYAPR10MB3142:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR10MB3142B1F5F630A9FB438B2C0287DD9@BYAPR10MB3142.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: F2xT3sLA1tVsA0qdjB5Ajg3EOrP9x3sDG6+AS2yH+Kqa0Ik7NwYrUZAlEMiQCk+IFHQFtjPrlNAwZuagVAvlPF+Effp9KfaKHIQtkWL1dGFLPdhz6yh9hKjioN4swVeWG4HMEjmcI818UuDhATN0UUiPSS+Lu/1Ii9RsqhWesVbDuPRNIPLtpR6a2WPbbf2Wcp1BGquO4SfX1litY5uzBWO2tR3UTQusHldVACZKRxO0DdtVRH3Y7sIlizooYIiZyBbnYCSa6hSY0mwu0xeut87YoNna3RL4zDRrEnhaOqgBIaTls5GYc5xcGFsRv1c0cL+zoq8yiZvo5Qz5p7IMMWgtG1z/byOeMryvOE6y7is2Ibm+uqLe9XwCQuS6HB5EvSxzTa0O1ux9FoUMnT1NJDISM+jUCfl5pOkMh7VAPrUIkQxfgeWqhTBrvhHzaaiZe9OhKRGsNxJ77474CHqkemsHxmWuJUs+EXFtX4ulgECg5UYoniT3rGUaU5COO9eHqbnKRVaFxyx9vP/MzFxxZlwFB1wKuyaj+NT0vUVHYdkCB816JyweYxvDgkXw5Mhh87DJwSFBzyy0Zxa7v3fB9zoEjqqkUZX9gjJT+07+DKhVjrtzyhEqlhVaoXzH9c4wJCDOLhSpMX6Q1fTfwzRewaTic6r7xuh7oi6C5AVmIo+EwHwF7Ps6PklzCrfDyxR67WqgBI3VGwGK9B9NcE0JZA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(36756003)(86362001)(66946007)(7696005)(4326008)(2906002)(31686004)(26005)(956004)(6486002)(2616005)(186003)(83380400001)(5660300002)(8676002)(110136005)(31696002)(54906003)(508600001)(66476007)(9686003)(8936002)(38100700002)(316002)(53546011)(66556008)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MjlBTExpRGFVVmJsWmlVbmx5b2ZscGxxdDZBS3dlT3lQRkxjbGVOYU5sSEU2?=
+ =?utf-8?B?UmMxMzZMMTl3NnVTRzZiQW5McmxFWm52cURvdkp6MlZBK0J3NVRSNUZid3gw?=
+ =?utf-8?B?dmdJVjUrazd3RFQxSGpaU1JsZjZRc3NCTXp6VjFrUG44U3g1ZFBUbEFzWEJJ?=
+ =?utf-8?B?K05QeDFXcTZGMW1Fb29wYjhNbFVSQ1VGM0dHL1FsQzdDRUN3ajJKQ2hNdmhx?=
+ =?utf-8?B?blFTYXB2VEllY1ZtbkZkRVRBZUtXVHNPclpWZlB1TUpyYnMyNm90TFFHa0Jq?=
+ =?utf-8?B?aHhZM3puS2JoWjhEa2dhcWNUZ3BDWFpmbUhEd2VmK1hrbWlVdjNxRVVFR0da?=
+ =?utf-8?B?Q04zM1hVQXVDMTlXc1ZoWmREOExvbFRrQStKL1YxczB0aU9UaTUxQlJFSXN4?=
+ =?utf-8?B?OG9yZUFNU2ptb1hBSjZRR0lKQWZxaTMyVllhQzdaSDRTbGZ6S1RsL0U3a0xY?=
+ =?utf-8?B?NTZERHRHbXN5OExTamF2NXdZSjZUUkZWRzRUcEN2UjlCR3BMQU5HREZFRnUx?=
+ =?utf-8?B?UkttVWtOZDBxbktvMXMwNXhrcmNHQWlJdUJ4YjgzM0h1K3pXVTEwd2p6d2Fq?=
+ =?utf-8?B?R3hTTkNXSlRhbUJPZ081QVppMUw3Z2FSVDNpZC91b1M3ZjQ4b2c2KzlRdmpW?=
+ =?utf-8?B?Yk83d1pDeEplWk5YTVJla3Nnc1ZYcGdQTU8zVE9rSTBhcWFjODZkSUN6cGpw?=
+ =?utf-8?B?S3lVMnFCMVZ3M0RQWGhrVDNiRUNhMlFjQm9NKzJ0cFhIYUM5Q1JKclVtaU9H?=
+ =?utf-8?B?WUo1MFAzbUlCVHB5ZWZOWDlvaTZEcEFTVk5JYkdvVXlGcGdzcGRWSFB3V0Ja?=
+ =?utf-8?B?dmtEZ3REbGJEd3A0MmI0RGRJeEVuYUdOVm52MnVKdmVnRTlWdnRpR0h6MklX?=
+ =?utf-8?B?YnhseVo5V2RJTmVXVHhNSitJcFR1QU5ydDlvQWNYV0lJNHRXdFppN1NXeDFS?=
+ =?utf-8?B?RVFaNjhueDFBSVowT0pFL0t0cit1SE9TVmxPdVlwZW9mQmRwYUNKRDZRZU1O?=
+ =?utf-8?B?L29HRmI5VUtlTGpZWVYzSVc5Z2Y4WWxWTXl5LzJ1TXJsSmRxWVhPcHZlU1k5?=
+ =?utf-8?B?RGw5TjhMZ0lqWTlONFk5ZE8zcGlVYTFVV0kxb2JEVXR5RVQvZ2gwYk1HQkFi?=
+ =?utf-8?B?T3FCMEtyUVFNREFaeHFNYkh1b3J3NjYzaGF5T3pkY1FjU0g0R05HbnNJaHVF?=
+ =?utf-8?B?MzdmVnBsVHpZVmtpTURsWTFacFFKdmtTMjlDQ3JFVkNaWmtZa21HeG1OQ0Zo?=
+ =?utf-8?B?b2ZPSWpjbjVmZW05M2FQUGk0Zis2UWhsRVhBYU1scW45V1Byams5czYyZk9N?=
+ =?utf-8?B?Z3FWNU9rKzFzN2YzUm93RnByZS8xU0hxTER4cmxSY0RVVDdtcWE1R0V2UGVw?=
+ =?utf-8?B?enBKVWUyQWRtZHYxem1kbXczSHNSWUt2cVlFM205QS9jNUpaRkl4d2xiNlhp?=
+ =?utf-8?B?Mkg1WXJ5Z2U5bkVhYVhlTTgydDA0NFlSVStqSmFOZTdhK1BMMnNObUJhbzdy?=
+ =?utf-8?B?UW9FSGJTYmZXWHFrL05oSWFxaS94WGk1d3hFeC9YRU5vcVNvNXNmaUR1ZXNL?=
+ =?utf-8?B?Y242S0hacHdRbW5oUG1hUVI0SkNPV21SY1BTLzNVSGJmYU0zVzVOOS9Xc2I3?=
+ =?utf-8?B?K21nOWJneGVsVjdNL3ZvOFBPUHNZbnB4a3ZVeHlCWjdreEVkYTZEeVd2OE4w?=
+ =?utf-8?B?dWRWeVAxZTZRdGJDVEc4Vzdha0tNOEdjamVTWUoyY2JZeVhqWS9weGh2TDBP?=
+ =?utf-8?Q?vveC7P0dKqHDVpi1X2PJmqkKLstOGuwpBaI1XdA?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 874f9afe-6e54-4e3c-610c-08d97a08408c
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2021 18:23:31.4439
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GG8CVj+4DPHlx3NlW72k925DNQ7vMaFguNygjRZoRlmRIkjj6cDXHiRGh0M9Sn5McVM+IyqeGnM1Mblqf5nYHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3142
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10110 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2109030001
+ definitions=main-2109170110
+X-Proofpoint-ORIG-GUID: i9vV63_ItDI_PIE-IfdNcFW250gYNlzp
+X-Proofpoint-GUID: i9vV63_ItDI_PIE-IfdNcFW250gYNlzp
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Update the fscache documentation to remove the old I/O API bits and to note
-the new fallback API.
 
-Changes
-=======
-ver #2:
-  - Changed "deprecated" to "fallback" in the new function names[1].
+On 9/16/21 1:15 PM, dai.ngo@oracle.com wrote:
+>
+> On 9/16/21 12:55 PM, Bruce Fields wrote:
+>> On Thu, Sep 16, 2021 at 07:00:20PM +0000, Chuck Lever III wrote:
+>>> Bruce, Dai -
+>>>
+>>>> On Sep 16, 2021, at 2:22 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
+>>>>
+>>>> When the back channel enters SEQ4_STATUS_CB_PATH_DOWN state, the 
+>>>> client
+>>>> recovers by sending BIND_CONN_TO_SESSION but the server fails to 
+>>>> recover
+>>>> the back channel and leaves it as NFSD4_CB_DOWN.
+>>>>
+>>>> Fix by enhancing nfsd4_bind_conn_to_session to probe the back channel
+>>>> by calling nfsd4_probe_callback.
+>>>>
+>>>> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+>>> I'm wondering if this one is appropriate to pull into v5.15-rc.
+>> I think so.
+>>
+>> Dai, do you have a pynfs test for this case?
+>
+> I don't, but I can create a pynfs test for reproduce the problem.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: linux-cachefs@redhat.com
-Link: https://lore.kernel.org/r/CAHk-=wiVK+1CyEjW8u71zVPK8msea=qPpznX35gnX+s8sXnJTg@mail.gmail.com/ [1]
-Link: https://lore.kernel.org/r/163162778200.438332.1918683687532006409.stgit@warthog.procyon.org.uk/ # rfc
----
+Here are the steps to reproduce the stuck SEQ4_STATUS_CB_PATH_DOWN
+problem using 'tcpkill':
 
- Documentation/filesystems/caching/backend-api.rst |  138 --------
- Documentation/filesystems/caching/netfs-api.rst   |  385 ++-------------------
- 2 files changed, 47 insertions(+), 476 deletions(-)
+Client: 5.13.0-rc2
+Server: 5.15.0-rc1
 
-diff --git a/Documentation/filesystems/caching/backend-api.rst b/Documentation/filesystems/caching/backend-api.rst
-index 19fbf6b9aa36..08fdd92d502a 100644
---- a/Documentation/filesystems/caching/backend-api.rst
-+++ b/Documentation/filesystems/caching/backend-api.rst
-@@ -355,14 +355,6 @@ performed on the denizens of the cache.  These are held in a structure of type:
-      device.
- 
- 
--   * Dissociate a cache [mandatory]::
--
--	void (*dissociate_pages)(struct fscache_cache *cache)
--
--     This is called to ask a cache to perform any page dissociations as part of
--     cache withdrawal.
--
--
-    * Notification that the attributes on a netfs file changed [mandatory]::
- 
- 	int (*attr_changed)(struct fscache_object *object);
-@@ -402,123 +394,14 @@ performed on the denizens of the cache.  These are held in a structure of type:
-      size if larger than that already.
- 
- 
--   * Request page be read from cache [mandatory]::
--
--	int (*read_or_alloc_page)(struct fscache_retrieval *op,
--				  struct page *page,
--				  gfp_t gfp)
--
--     This is called to attempt to read a netfs page from the cache, or to
--     reserve a backing block if not.  FS-Cache will have done as much checking
--     as it can before calling, but most of the work belongs to the backend.
--
--     If there's no page in the cache, then -ENODATA should be returned if the
--     backend managed to reserve a backing block; -ENOBUFS or -ENOMEM if it
--     didn't.
--
--     If there is suitable data in the cache, then a read operation should be
--     queued and 0 returned.  When the read finishes, fscache_end_io() should be
--     called.
--
--     The fscache_mark_pages_cached() should be called for the page if any cache
--     metadata is retained.  This will indicate to the netfs that the page needs
--     explicit uncaching.  This operation takes a pagevec, thus allowing several
--     pages to be marked at once.
--
--     The retrieval record pointed to by op should be retained for each page
--     queued and released when I/O on the page has been formally ended.
--     fscache_get/put_retrieval() are available for this purpose.
--
--     The retrieval record may be used to get CPU time via the FS-Cache thread
--     pool.  If this is desired, the op->op.processor should be set to point to
--     the appropriate processing routine, and fscache_enqueue_retrieval() should
--     be called at an appropriate point to request CPU time.  For instance, the
--     retrieval routine could be enqueued upon the completion of a disk read.
--     The to_do field in the retrieval record is provided to aid in this.
--
--     If an I/O error occurs, fscache_io_error() should be called and -ENOBUFS
--     returned if possible or fscache_end_io() called with a suitable error
--     code.
--
--     fscache_put_retrieval() should be called after a page or pages are dealt
--     with.  This will complete the operation when all pages are dealt with.
--
--
--   * Request pages be read from cache [mandatory]::
--
--	int (*read_or_alloc_pages)(struct fscache_retrieval *op,
--				   struct list_head *pages,
--				   unsigned *nr_pages,
--				   gfp_t gfp)
--
--     This is like the read_or_alloc_page() method, except it is handed a list
--     of pages instead of one page.  Any pages on which a read operation is
--     started must be added to the page cache for the specified mapping and also
--     to the LRU.  Such pages must also be removed from the pages list and
--     ``*nr_pages`` decremented per page.
--
--     If there was an error such as -ENOMEM, then that should be returned; else
--     if one or more pages couldn't be read or allocated, then -ENOBUFS should
--     be returned; else if one or more pages couldn't be read, then -ENODATA
--     should be returned.  If all the pages are dispatched then 0 should be
--     returned.
--
--
--   * Request page be allocated in the cache [mandatory]::
-+   * Begin an operation [mandatory]::
- 
--	int (*allocate_page)(struct fscache_retrieval *op,
--			     struct page *page,
--			     gfp_t gfp)
-+	int (*begin_operation)(struct netfs_cache_resources *cres,
-+			       struct fscache_operation *op);
- 
--     This is like the read_or_alloc_page() method, except that it shouldn't
--     read from the cache, even if there's data there that could be retrieved.
--     It should, however, set up any internal metadata required such that
--     the write_page() method can write to the cache.
--
--     If there's no backing block available, then -ENOBUFS should be returned
--     (or -ENOMEM if there were other problems).  If a block is successfully
--     allocated, then the netfs page should be marked and 0 returned.
--
--
--   * Request pages be allocated in the cache [mandatory]::
--
--	int (*allocate_pages)(struct fscache_retrieval *op,
--			      struct list_head *pages,
--			      unsigned *nr_pages,
--			      gfp_t gfp)
--
--     This is an multiple page version of the allocate_page() method.  pages and
--     nr_pages should be treated as for the read_or_alloc_pages() method.
--
--
--   * Request page be written to cache [mandatory]::
--
--	int (*write_page)(struct fscache_storage *op,
--			  struct page *page);
--
--     This is called to write from a page on which there was a previously
--     successful read_or_alloc_page() call or similar.  FS-Cache filters out
--     pages that don't have mappings.
--
--     This method is called asynchronously from the FS-Cache thread pool.  It is
--     not required to actually store anything, provided -ENODATA is then
--     returned to the next read of this page.
--
--     If an error occurred, then a negative error code should be returned,
--     otherwise zero should be returned.  FS-Cache will take appropriate action
--     in response to an error, such as withdrawing this object.
--
--     If this method returns success then FS-Cache will inform the netfs
--     appropriately.
--
--
--   * Discard retained per-page metadata [mandatory]::
--
--	void (*uncache_page)(struct fscache_object *object, struct page *page)
--
--     This is called when a netfs page is being evicted from the pagecache.  The
--     cache backend should tear down any internal representation or tracking it
--     maintains for this page.
-+     This is called to start an operation on behalf of the network filesystem
-+     or the netfs helper library.  The cache resources attached to *cres
-+     should be filled in by the cache so that the operation can be performed.
- 
- 
- FS-Cache Utilities
-@@ -578,15 +461,6 @@ FS-Cache provides some utilities that a cache backend may make use of:
-      rejected by fscache_read_alloc_page() and co with -ENOBUFS.
- 
- 
--   * Mark pages as being cached::
--
--	void fscache_mark_pages_cached(struct fscache_retrieval *op,
--				       struct pagevec *pagevec);
--
--     This marks a set of pages as being cached.  After this has been called,
--     the netfs must call fscache_uncache_page() to unmark the pages.
--
--
-    * Perform coherency check on an object::
- 
- 	enum fscache_checkaux fscache_check_aux(struct fscache_object *object,
-diff --git a/Documentation/filesystems/caching/netfs-api.rst b/Documentation/filesystems/caching/netfs-api.rst
-index d9f14b8610ba..a469cb9dbdcd 100644
---- a/Documentation/filesystems/caching/netfs-api.rst
-+++ b/Documentation/filesystems/caching/netfs-api.rst
-@@ -32,15 +32,13 @@ This API is declared in <linux/fscache.h>.
- 	 (7) Data file registration
- 	 (8) Miscellaneous object registration
-  	 (9) Setting the data file size
--	(10) Page alloc/read/write
--	(11) Page uncaching
--	(12) Index and data file consistency
--	(13) Cookie enablement
--	(14) Miscellaneous cookie operations
--	(15) Cookie unregistration
--	(16) Index invalidation
--	(17) Data file invalidation
--	(18) FS-Cache specific page flags.
-+	(10) Page read/write
-+	(11) Index and data file consistency
-+	(12) Cookie enablement
-+	(13) Miscellaneous cookie operations
-+	(14) Cookie unregistration
-+	(15) Index invalidation
-+	(16) Data file invalidation
- 
- 
- Network Filesystem Definition
-@@ -132,14 +130,6 @@ To define an object, a structure of the following type should be filled out::
- 						   const void *data,
- 						   uint16_t datalen,
- 						   loff_t object_size);
--
--		void (*get_context)(void *cookie_netfs_data, void *context);
--
--		void (*put_context)(void *cookie_netfs_data, void *context);
--
--		void (*mark_pages_cached)(void *cookie_netfs_data,
--					  struct address_space *mapping,
--					  struct pagevec *cached_pvec);
- 	};
- 
- This has the following fields:
-@@ -200,42 +190,6 @@ This has the following fields:
-      This function can also be used to extract data from the auxiliary data in
-      the cache and copy it into the netfs's structures.
- 
-- (5) A pair of functions to manage contexts for the completion callback
--     [optional].
--
--     The cache read/write functions are passed a context which is then passed
--     to the I/O completion callback function.  To ensure this context remains
--     valid until after the I/O completion is called, two functions may be
--     provided: one to get an extra reference on the context, and one to drop a
--     reference to it.
--
--     If the context is not used or is a type of object that won't go out of
--     scope, then these functions are not required.  These functions are not
--     required for indices as indices may not contain data.  These functions may
--     be called in interrupt context and so may not sleep.
--
-- (6) A function to mark a page as retaining cache metadata [optional].
--
--     This is called by the cache to indicate that it is retaining in-memory
--     information for this page and that the netfs should uncache the page when
--     it has finished.  This does not indicate whether there's data on the disk
--     or not.  Note that several pages at once may be presented for marking.
--
--     The PG_fscache bit is set on the pages before this function would be
--     called, so the function need not be provided if this is sufficient.
--
--     This function is not required for indices as they're not permitted data.
--
-- (7) A function to unmark all the pages retaining cache metadata [mandatory].
--
--     This is called by FS-Cache to indicate that a backing store is being
--     unbound from a cookie and that all the marks on the pages should be
--     cleared to prevent confusion.  Note that the cache will have torn down all
--     its tracking information so that the pages don't need to be explicitly
--     uncached.
--
--     This function is not required for indices as they're not permitted data.
--
- 
- Network Filesystem (Un)registration
- ===================================
-@@ -412,277 +366,56 @@ some point in the future, and as such, it may happen after the function returns
- to the caller.  The attribute adjustment excludes read and write operations.
- 
- 
--Page alloc/read/write
-+Page Read/Write
- =====================
- 
--And the sixth step is to store and retrieve pages in the cache.  There are
--three functions that are used to do this.
--
--Note:
--
-- (1) A page should not be re-read or re-allocated without uncaching it first.
--
-- (2) A read or allocated page must be uncached when the netfs page is released
--     from the pagecache.
--
-- (3) A page should only be written to the cache if previous read or allocated.
--
--This permits the cache to maintain its page tracking in proper order.
--
--
--PAGE READ
-----------
--
--Firstly, the netfs should ask FS-Cache to examine the caches and read the
--contents cached for a particular page of a particular file if present, or else
--allocate space to store the contents if not::
--
--	typedef
--	void (*fscache_rw_complete_t)(struct page *page,
--				      void *context,
--				      int error);
--
--	int fscache_read_or_alloc_page(struct fscache_cookie *cookie,
--				       struct page *page,
--				       fscache_rw_complete_t end_io_func,
--				       void *context,
--				       gfp_t gfp);
--
--The cookie argument must specify a cookie for an object that isn't an index,
--the page specified will have the data loaded into it (and is also used to
--specify the page number), and the gfp argument is used to control how any
--memory allocations made are satisfied.
--
--If the cookie indicates the inode is not cached:
--
-- (1) The function will return -ENOBUFS.
--
--Else if there's a copy of the page resident in the cache:
--
-- (1) The mark_pages_cached() cookie operation will be called on that page.
--
-- (2) The function will submit a request to read the data from the cache's
--     backing device directly into the page specified.
--
-- (3) The function will return 0.
--
-- (4) When the read is complete, end_io_func() will be invoked with:
--
--       * The netfs data supplied when the cookie was created.
--
--       * The page descriptor.
--
--       * The context argument passed to the above function.  This will be
--         maintained with the get_context/put_context functions mentioned above.
--
--       * An argument that's 0 on success or negative for an error code.
--
--     If an error occurs, it should be assumed that the page contains no usable
--     data.  fscache_readpages_cancel() may need to be called.
--
--     end_io_func() will be called in process context if the read is results in
--     an error, but it might be called in interrupt context if the read is
--     successful.
--
--Otherwise, if there's not a copy available in cache, but the cache may be able
--to store the page:
--
-- (1) The mark_pages_cached() cookie operation will be called on that page.
--
-- (2) A block may be reserved in the cache and attached to the object at the
--     appropriate place.
--
-- (3) The function will return -ENODATA.
--
--This function may also return -ENOMEM or -EINTR, in which case it won't have
--read any data from the cache.
--
--
--Page Allocate
---------------
--
--Alternatively, if there's not expected to be any data in the cache for a page
--because the file has been extended, a block can simply be allocated instead::
--
--	int fscache_alloc_page(struct fscache_cookie *cookie,
--			       struct page *page,
--			       gfp_t gfp);
--
--This is similar to the fscache_read_or_alloc_page() function, except that it
--never reads from the cache.  It will return 0 if a block has been allocated,
--rather than -ENODATA as the other would.  One or the other must be performed
--before writing to the cache.
--
--The mark_pages_cached() cookie operation will be called on the page if
--successful.
--
--
--Page Write
------------
-+And the sixth step is to store and retrieve pages in the cache.  The functions
-+provided may do direct I/O calls on the backing filesystem and it is up to the
-+network filesystem to prevent clashes.  Typically, a page would be locked for
-+the duration of a read and a page would be marked with PageFsCache whilst it is
-+being written out.
- 
--Secondly, if the netfs changes the contents of the page (either due to an
--initial download or if a user performs a write), then the page should be
--written back to the cache::
-+By preference, reading would be performed through the netfs library's helper
-+functions, but there is a fallback API, though this should be considered
-+deprecated as it may lead to data corruption, depending on the characteristics
-+of the backing filesystem.  If the fallback API is to be used, the filesystem
-+must do::
- 
--	int fscache_write_page(struct fscache_cookie *cookie,
--			       struct page *page,
--			       loff_t object_size,
--			       gfp_t gfp);
--
--The cookie argument must specify a data file cookie, the page specified should
--contain the data to be written (and is also used to specify the page number),
--object_size is the revised size of the object and the gfp argument is used to
--control how any memory allocations made are satisfied.
--
--The page must have first been read or allocated successfully and must not have
--been uncached before writing is performed.
--
--If the cookie indicates the inode is not cached then:
--
-- (1) The function will return -ENOBUFS.
--
--Else if space can be allocated in the cache to hold this page:
--
-- (1) PG_fscache_write will be set on the page.
-+	#define FSCACHE_USE_FALLBACK_IO_API
-+	#include <linux/fscache.h>
- 
-- (2) The function will submit a request to write the data to cache's backing
--     device directly from the page specified.
- 
-- (3) The function will return 0.
--
-- (4) When the write is complete PG_fscache_write is cleared on the page and
--     anyone waiting for that bit will be woken up.
--
--Else if there's no space available in the cache, -ENOBUFS will be returned.  It
--is also possible for the PG_fscache_write bit to be cleared when no write took
--place if unforeseen circumstances arose (such as a disk error).
--
--Writing takes place asynchronously.
--
--
--Multiple Page Read
-+Fallback Page Read
- ------------------
- 
--A facility is provided to read several pages at once, as requested by the
--readpages() address space operation::
--
--	int fscache_read_or_alloc_pages(struct fscache_cookie *cookie,
--					struct address_space *mapping,
--					struct list_head *pages,
--					int *nr_pages,
--					fscache_rw_complete_t end_io_func,
--					void *context,
--					gfp_t gfp);
--
--This works in a similar way to fscache_read_or_alloc_page(), except:
--
-- (1) Any page it can retrieve data for is removed from pages and nr_pages and
--     dispatched for reading to the disk.  Reads of adjacent pages on disk may
--     be merged for greater efficiency.
--
-- (2) The mark_pages_cached() cookie operation will be called on several pages
--     at once if they're being read or allocated.
--
-- (3) If there was an general error, then that error will be returned.
--
--     Else if some pages couldn't be allocated or read, then -ENOBUFS will be
--     returned.
--
--     Else if some pages couldn't be read but were allocated, then -ENODATA will
--     be returned.
--
--     Otherwise, if all pages had reads dispatched, then 0 will be returned, the
--     list will be empty and ``*nr_pages`` will be 0.
--
-- (4) end_io_func will be called once for each page being read as the reads
--     complete.  It will be called in process context if error != 0, but it may
--     be called in interrupt context if there is no error.
--
--Note that a return of -ENODATA, -ENOBUFS or any other error does not preclude
--some of the pages being read and some being allocated.  Those pages will have
--been marked appropriately and will need uncaching.
--
--
--Cancellation of Unread Pages
------------------------------
--
--If one or more pages are passed to fscache_read_or_alloc_pages() but not then
--read from the cache and also not read from the underlying filesystem then
--those pages will need to have any marks and reservations removed.  This can be
--done by calling::
--
--	void fscache_readpages_cancel(struct fscache_cookie *cookie,
--				      struct list_head *pages);
-+A page may be synchronously read from the backing filesystem::
- 
--prior to returning to the caller.  The cookie argument should be as passed to
--fscache_read_or_alloc_pages().  Every page in the pages list will be examined
--and any that have PG_fscache set will be uncached.
-+	int fscache_fallback_read_page(struct fscache_cookie *cookie,
-+				       struct page *page);
- 
-+The cookie argument must specify a cookie for an object that isn't an index and
-+the page specified will have the data loaded into it (and is also used to
-+specify the page number).  The function will return 0 if the page was
-+read, -ENODATA if there was no data and -ENOBUFS if there was no cache
-+attached.  It may also return errors such as -ENOMEM or -EINTR.  It might also
-+return some other error from the backing filesystem, but this should be treated
-+as -ENOBUS.
- 
--Page Uncaching
--==============
--
--To uncache a page, this function should be called::
--
--	void fscache_uncache_page(struct fscache_cookie *cookie,
--				  struct page *page);
--
--This function permits the cache to release any in-memory representation it
--might be holding for this netfs page.  This function must be called once for
--each page on which the read or write page functions above have been called to
--make sure the cache's in-memory tracking information gets torn down.
--
--Note that pages can't be explicitly deleted from the a data file.  The whole
--data file must be retired (see the relinquish cookie function below).
--
--Furthermore, note that this does not cancel the asynchronous read or write
--operation started by the read/alloc and write functions, so the page
--invalidation functions must use::
- 
--	bool fscache_check_page_write(struct fscache_cookie *cookie,
--				      struct page *page);
-+Fallback Page Write
-+-------------------
- 
--to see if a page is being written to the cache, and::
-+A page may be synchronously written to the backing filesystem::
- 
--	void fscache_wait_on_page_write(struct fscache_cookie *cookie,
-+	int fscache_fallback_write_page(struct fscache_cookie *cookie,
- 					struct page *page);
- 
--to wait for it to finish if it is.
--
--
--When releasepage() is being implemented, a special FS-Cache function exists to
--manage the heuristics of coping with vmscan trying to eject pages, which may
--conflict with the cache trying to write pages to the cache (which may itself
--need to allocate memory)::
--
--	bool fscache_maybe_release_page(struct fscache_cookie *cookie,
--					struct page *page,
--					gfp_t gfp);
--
--This takes the netfs cookie, and the page and gfp arguments as supplied to
--releasepage().  It will return false if the page cannot be released yet for
--some reason and if it returns true, the page has been uncached and can now be
--released.
--
--To make a page available for release, this function may wait for an outstanding
--storage request to complete, or it may attempt to cancel the storage request -
--in which case the page will not be stored in the cache this time.
--
--
--Bulk Image Page Uncache
-------------------------
--
--A convenience routine is provided to perform an uncache on all the pages
--attached to an inode.  This assumes that the pages on the inode correspond on a
--1:1 basis with the pages in the cache::
--
--	void fscache_uncache_all_inode_pages(struct fscache_cookie *cookie,
--					     struct inode *inode);
--
--This takes the netfs cookie that the pages were cached with and the inode that
--the pages are attached to.  This function will wait for pages to finish being
--written to the cache and for the cache to finish with the page generally.  No
--error is returned.
-+The cookie argument must specify a cookie for an object that isn't an index and
-+the page specified will have the data written from it (and is also used to
-+specify the page number).  The function will return 0 if the page was read
-+and -ENOBUFS if there was no cache attached or no space available in the cache.
-+It may also return errors such as -ENOMEM or -EINTR.  It might also return some
-+other error from the backing filesystem, but this should be treated as -ENOBUS.
- 
- 
- Index and Data File consistency
-@@ -858,39 +591,3 @@ to have reached a point at which it can start submitting ordinary operations
- once again::
- 
- 	void fscache_wait_on_invalidate(struct fscache_cookie *cookie);
--
--
--FS-cache Specific Page Flag
--===========================
--
--FS-Cache makes use of a page flag, PG_private_2, for its own purpose.  This is
--given the alternative name PG_fscache.
--
--PG_fscache is used to indicate that the page is known by the cache, and that
--the cache must be informed if the page is going to go away.  It's an indication
--to the netfs that the cache has an interest in this page, where an interest may
--be a pointer to it, resources allocated or reserved for it, or I/O in progress
--upon it.
--
--The netfs can use this information in methods such as releasepage() to
--determine whether it needs to uncache a page or update it.
--
--Furthermore, if this bit is set, releasepage() and invalidatepage() operations
--will be called on a page to get rid of it, even if PG_private is not set.  This
--allows caching to attempted on a page before read_cache_pages() to be called
--after fscache_read_or_alloc_pages() as the former will try and release pages it
--was given under certain circumstances.
--
--This bit does not overlap with such as PG_private.  This means that FS-Cache
--can be used with a filesystem that uses the block buffering code.
--
--There are a number of operations defined on this flag::
--
--	int PageFsCache(struct page *page);
--	void SetPageFsCache(struct page *page)
--	void ClearPageFsCache(struct page *page)
--	int TestSetPageFsCache(struct page *page)
--	int TestClearPageFsCache(struct page *page)
--
--These functions are bit test, bit set, bit clear, bit test and set and bit
--test and clear operations on PG_fscache.
+1. [root@nfsvmd07 ~]# mount -o vers=4.1 nfsvme14:/root/xfs /tmp/mnt
+2. [root@nfsvmd07 ~]# tcpkill host nfsvme14 and port 2049
+3. [root@nfsvmd07 ~]# ls /tmp/mnt
+4. CTRL-C to stop tcpkill
+5. [root@nfsvmd07 ~]# ls /tmp/mnt
 
+The problem can be observed in the wire trace where the back channel
+in stuck in SEQ4_STATUS_CB_PATH_DOWN causing the client to keep sending
+BCTS.
 
+Note: this problem can only be reproduced with client running 5.13 or
+older.  Client with 5.14 or newer does not have this problem. The
+reason is in 5.13, when the client re-establishes the TCP connection
+it re-uses the previous port number which was destroyed by tcpkill
+(client sends RST to server). This causes the server to set the state
+of the back channel to SEQ4_STATUS_CB_PATH_DOWN.  In 5.14, the client
+uses a new port number when re-establish the connection this results
+in server returning NFS4ERR_CONN_NOT_BOUND_TO_SESSION in the reply of
+the stand-alone SEQUENCE which the causes the client to send BCTS once
+re-establish the back channel successfully.
+
+I can provide the pcap files of a good and bad run of the test if
+interested.
+
+I don't have pynfs test for this case.
+
+-Dai
+
+>
+> -Dai
+>
+>>
+>> --b.
+>>
+>>>> ---
+>>>> fs/nfsd/nfs4state.c | 16 +++++++++++++---
+>>>> 1 file changed, 13 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>>>> index 54e5317f00f1..63b4d0e6fc29 100644
+>>>> --- a/fs/nfsd/nfs4state.c
+>>>> +++ b/fs/nfsd/nfs4state.c
+>>>> @@ -3580,7 +3580,7 @@ static struct nfsd4_conn 
+>>>> *__nfsd4_find_conn(struct svc_xprt *xpt, struct nfsd4_s
+>>>> }
+>>>>
+>>>> static __be32 nfsd4_match_existing_connection(struct svc_rqst *rqst,
+>>>> -                struct nfsd4_session *session, u32 req)
+>>>> +        struct nfsd4_session *session, u32 req, struct nfsd4_conn 
+>>>> **conn)
+>>>> {
+>>>>     struct nfs4_client *clp = session->se_client;
+>>>>     struct svc_xprt *xpt = rqst->rq_xprt;
+>>>> @@ -3603,6 +3603,8 @@ static __be32 
+>>>> nfsd4_match_existing_connection(struct svc_rqst *rqst,
+>>>>     else
+>>>>         status = nfserr_inval;
+>>>>     spin_unlock(&clp->cl_lock);
+>>>> +    if (status == nfs_ok && conn)
+>>>> +        *conn = c;
+>>>>     return status;
+>>>> }
+>>>>
+>>>> @@ -3627,8 +3629,16 @@ __be32 nfsd4_bind_conn_to_session(struct 
+>>>> svc_rqst *rqstp,
+>>>>     status = nfserr_wrong_cred;
+>>>>     if (!nfsd4_mach_creds_match(session->se_client, rqstp))
+>>>>         goto out;
+>>>> -    status = nfsd4_match_existing_connection(rqstp, session, 
+>>>> bcts->dir);
+>>>> -    if (status == nfs_ok || status == nfserr_inval)
+>>>> +    status = nfsd4_match_existing_connection(rqstp, session,
+>>>> +            bcts->dir, &conn);
+>>>> +    if (status == nfs_ok) {
+>>>> +        if (bcts->dir == NFS4_CDFC4_FORE_OR_BOTH ||
+>>>> +                bcts->dir == NFS4_CDFC4_BACK)
+>>>> +            conn->cn_flags |= NFS4_CDFC4_BACK;
+>>>> +        nfsd4_probe_callback(session->se_client);
+>>>> +        goto out;
+>>>> +    }
+>>>> +    if (status == nfserr_inval)
+>>>>         goto out;
+>>>>     status = nfsd4_map_bcts_dir(&bcts->dir);
+>>>>     if (status)
+>>>> -- 
+>>>> 2.9.5
+>>>>
+>>> -- 
+>>> Chuck Lever
+>>>
+>>>
