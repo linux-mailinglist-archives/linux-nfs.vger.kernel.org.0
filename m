@@ -2,158 +2,234 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A3BF4104F3
-	for <lists+linux-nfs@lfdr.de>; Sat, 18 Sep 2021 10:00:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8FC3410797
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Sep 2021 18:27:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243555AbhIRIBZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 18 Sep 2021 04:01:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233741AbhIRIBZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 18 Sep 2021 04:01:25 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11EF2C061574
-        for <linux-nfs@vger.kernel.org>; Sat, 18 Sep 2021 01:00:02 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id k24so11959038pgh.8
-        for <linux-nfs@vger.kernel.org>; Sat, 18 Sep 2021 01:00:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LpJAvb2r/ypZU5FQrVW/iFzPACcNLQ13GoNWicSevGc=;
-        b=XeZo/7cHcvVIjZlH/JJ+iSEorvYofxtg1I9uKERgtWRETsP5Q+FBsqKs6WJbYo93zn
-         bucVdfSWE/C0O5QrU6kV1y5muj+qxF4W181zsCod+FAKOfMf71QyYj2Hng6gXNUWP/Vu
-         hnuRZjOpmr9UL5/InNNY+c8Hrmj0ADj75KVxJcXlwrCx+O3O51WDiXqhlt2IdPXOlSAu
-         RZ0b0mBTCufq4ij8if5CvRSuxENrWZi7RiIWLOVGEt7yHryp3PUoH3u1hXH1sjI/uR8o
-         9wX4WGtrvU7o6C2VeogjO3CWRcHYLiLBbnCMtzQorDbhmdzbzl2KS0PitSZJaYoUJcU6
-         P50w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LpJAvb2r/ypZU5FQrVW/iFzPACcNLQ13GoNWicSevGc=;
-        b=Z1jlmGB08KC3/rvyo/KprqiRslDXNdIduVG/7fylIxpCqvHQOW0EgqIeHFN0aDgpAI
-         eWRj1OGQv+lH7Vk2TZLJa3ahKh18yMixcrxHN8z9+FPeeMmrrcRFYIcreH9apLr2nvtV
-         IJiAOAZqs/e6QU5lbIQqTE2ROvgBdVPblIBZPuPDDiKkZH4TaUHwtChGpWfz6nvMV1Ua
-         1RPKePVSaiUa6QZPjDPEZhaKMe2Wr86uspJeYlkDoHzO/ric3b5N7WmTtCqtALV05AEK
-         C0iH8WjXdiMmYW7b8Cd1Mj2w5SsG8gVhTid1rLo7m2YwvVMHQFGEEVtehOJy0+JcpuVH
-         c8xA==
-X-Gm-Message-State: AOAM5313Q5HETpbDWqV5VjrbzKp+64XnNLEQNsgV1VcRGFvV4GaWmzM2
-        7u4vfWP+mmC9SCAo6w2k2CmJ6gZYvtJl7ptGNNRCMQ==
-X-Google-Smtp-Source: ABdhPJwOPM9hyj8FUgewEtKSBa/GTOzwuER7HXnT5vEXHyjNKsPkpdr6kLQRUL63c8xt41iLm9rj2v67+a5GpMiHC0c=
-X-Received: by 2002:a62:1717:0:b0:440:527f:6664 with SMTP id
- 23-20020a621717000000b00440527f6664mr13602699pfx.73.1631952001524; Sat, 18
- Sep 2021 01:00:01 -0700 (PDT)
+        id S236732AbhIRQ2Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 18 Sep 2021 12:28:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231415AbhIRQ2Y (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 18 Sep 2021 12:28:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2537E60EE0;
+        Sat, 18 Sep 2021 16:27:00 +0000 (UTC)
+Subject: [PATCH v2] xprtrdma: Provide a buffer to pad Write chunks of
+ unaligned length
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     kolga@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Sat, 18 Sep 2021 12:26:59 -0400
+Message-ID: <163198229142.4159.3151965308454175921.stgit@morisot.1015granger.net>
+User-Agent: StGit/1.1-dirty
 MIME-Version: 1.0
-References: <20210914072938.6440-1-songmuchun@bytedance.com> <20210918065624.dbaar4lss5olrfhu@kari-VirtualBox>
-In-Reply-To: <20210918065624.dbaar4lss5olrfhu@kari-VirtualBox>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Sat, 18 Sep 2021 15:59:23 +0800
-Message-ID: <CAMZfGtVT_Hp7rLtA81drA5AJ8mW=MJb1Ksox--D4bP5XPLqQDw@mail.gmail.com>
-Subject: Re: [PATCH v3 00/76] Optimize list lru memory consumption
-To:     Kari Argillander <kari.argillander@gmail.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>, Yang Shi <shy828301@gmail.com>,
-        Alex Shi <alexs@kernel.org>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Dave Chinner <david@fromorbit.com>,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-nfs@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>,
-        Xiongchun duan <duanxiongchun@bytedance.com>,
-        fam.zheng@bytedance.com, Muchun Song <smuchun@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Sep 18, 2021 at 2:56 PM Kari Argillander
-<kari.argillander@gmail.com> wrote:
->
-> On Tue, Sep 14, 2021 at 03:28:22PM +0800, Muchun Song wrote:
-> > We introduced alloc_inode_sb() in previous version 2, which sets up the
-> > inode reclaim context properly, to allocate filesystems specific inode.
-> > So we have to convert to new API for all filesystems, which is done in
-> > one patch. Some filesystems are easy to convert (just replace
-> > kmem_cache_alloc() to alloc_inode_sb()), while other filesystems need to
-> > do more work. In order to make it easy for maintainers of different
-> > filesystems to review their own maintained part, I split the patch into
-> > patches which are per-filesystem in this version. I am not sure if this
-> > is a good idea, because there is going to be more commits.
-> >
-> > In our server, we found a suspected memory leak problem. The kmalloc-32
-> > consumes more than 6GB of memory. Other kmem_caches consume less than 2GB
-> > memory.
-> >
-> > After our in-depth analysis, the memory consumption of kmalloc-32 slab
-> > cache is the cause of list_lru_one allocation.
-> >
-> >   crash> p memcg_nr_cache_ids
-> >   memcg_nr_cache_ids = $2 = 24574
-> >
-> > memcg_nr_cache_ids is very large and memory consumption of each list_lru
-> > can be calculated with the following formula.
-> >
-> >   num_numa_node * memcg_nr_cache_ids * 32 (kmalloc-32)
-> >
-> > There are 4 numa nodes in our system, so each list_lru consumes ~3MB.
-> >
-> >   crash> list super_blocks | wc -l
-> >   952
-> >
-> > Every mount will register 2 list lrus, one is for inode, another is for
-> > dentry. There are 952 super_blocks. So the total memory is 952 * 2 * 3
-> > MB (~5.6GB). But now the number of memory cgroups is less than 500. So I
-> > guess more than 12286 memory cgroups have been created on this machine (I
-> > do not know why there are so many cgroups, it may be a user's bug or
-> > the user really want to do that). Because memcg_nr_cache_ids has not been
-> > reduced to a suitable value. It leads to waste a lot of memory. If we want
-> > to reduce memcg_nr_cache_ids, we have to *reboot* the server. This is not
-> > what we want.
-> >
-> > In order to reduce memcg_nr_cache_ids, I had posted a patchset [1] to do
-> > this. But this did not fundamentally solve the problem.
-> >
-> > We currently allocate scope for every memcg to be able to tracked on every
-> > superblock instantiated in the system, regardless of whether that superblock
-> > is even accessible to that memcg.
-> >
-> > These huge memcg counts come from container hosts where memcgs are confined
-> > to just a small subset of the total number of superblocks that instantiated
-> > at any given point in time.
-> >
-> > For these systems with huge container counts, list_lru does not need the
-> > capability of tracking every memcg on every superblock.
-> >
-> > What it comes down to is that the list_lru is only needed for a given memcg
-> > if that memcg is instatiating and freeing objects on a given list_lru.
-> >
-> > As Dave said, "Which makes me think we should be moving more towards 'add the
-> > memcg to the list_lru at the first insert' model rather than 'instantiate
-> > all at memcg init time just in case'."
-> >
-> > This patchset aims to optimize the list lru memory consumption from different
-> > aspects.
-> >
-> > Patch 1-6 are code simplification.
-> > Patch 7 converts the array from per-memcg per-node to per-memcg
-> > Patch 8 introduces kmem_cache_alloc_lru()
-> > Patch 9 introduces alloc_inode_sb()
-> > Patch 10-66 convert all filesystems to alloc_inode_sb() respectively.
->
-> There is now days also ntfs3. If you do not plan to convert this please
-> CC me atleast so that I can do it when these lands.
->
->   Argillander
->
+This is a buffer to be left persistently registered while a
+connection is up. Connection tear-down will automatically DMA-unmap,
+invalidate, and dereg the MR. A persistently registered buffer has
+no-cost to provide, and it can never be elided into the RDMA segment
+that backs the data payload.
 
-Wow, a new filesystem. I didn't notice it before. I'll cover it
-in the next version and Cc you if you can do a review.
-Thanks for your reminder.
+An RPC that provisions a Write chunk with a non-aligned length now
+uses this MR rather than the tail buffer of the RPC's rq_rcv_buf.
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ include/trace/events/rpcrdma.h  |   13 ++++++++++---
+ net/sunrpc/xprtrdma/frwr_ops.c  |   35 +++++++++++++++++++++++++++++++++++
+ net/sunrpc/xprtrdma/rpc_rdma.c  |   32 +++++++++++++++++++++++---------
+ net/sunrpc/xprtrdma/verbs.c     |    1 +
+ net/sunrpc/xprtrdma/xprt_rdma.h |    5 +++++
+ 5 files changed, 74 insertions(+), 12 deletions(-)
+
+Changes since v1:
+- Reverse the sense of the new re_implicit_roundup check
+- Simplify the hunk in rpcrdma_convert_iovs()
+
+
+diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+index bd55908c1bef..c71e106c9cd4 100644
+--- a/include/trace/events/rpcrdma.h
++++ b/include/trace/events/rpcrdma.h
+@@ -375,10 +375,16 @@ DECLARE_EVENT_CLASS(xprtrdma_mr_class,
+ 
+ 	TP_fast_assign(
+ 		const struct rpcrdma_req *req = mr->mr_req;
+-		const struct rpc_task *task = req->rl_slot.rq_task;
+ 
+-		__entry->task_id = task->tk_pid;
+-		__entry->client_id = task->tk_client->cl_clid;
++		if (req) {
++			const struct rpc_task *task = req->rl_slot.rq_task;
++
++			__entry->task_id = task->tk_pid;
++			__entry->client_id = task->tk_client->cl_clid;
++		} else {
++			__entry->task_id = 0;
++			__entry->client_id = -1;
++		}
+ 		__entry->mr_id  = mr->mr_ibmr->res.id;
+ 		__entry->nents  = mr->mr_nents;
+ 		__entry->handle = mr->mr_handle;
+@@ -639,6 +645,7 @@ TRACE_EVENT(xprtrdma_nomrs_err,
+ DEFINE_RDCH_EVENT(read);
+ DEFINE_WRCH_EVENT(write);
+ DEFINE_WRCH_EVENT(reply);
++DEFINE_WRCH_EVENT(wp);
+ 
+ TRACE_DEFINE_ENUM(rpcrdma_noch);
+ TRACE_DEFINE_ENUM(rpcrdma_noch_pullup);
+diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
+index 229fcc9a9064..6726fbbdd4a3 100644
+--- a/net/sunrpc/xprtrdma/frwr_ops.c
++++ b/net/sunrpc/xprtrdma/frwr_ops.c
+@@ -654,3 +654,38 @@ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
+ 	 */
+ 	rpcrdma_unpin_rqst(req->rl_reply);
+ }
++
++/**
++ * frwr_wp_create - Create an MR for padding Write chunks
++ * @r_xprt: transport resources to use
++ *
++ * Return 0 on success, negative errno on failure.
++ */
++int frwr_wp_create(struct rpcrdma_xprt *r_xprt)
++{
++	struct rpcrdma_ep *ep = r_xprt->rx_ep;
++	struct rpcrdma_mr_seg seg;
++	struct rpcrdma_mr *mr;
++
++	mr = rpcrdma_mr_get(r_xprt);
++	if (!mr)
++		return -EAGAIN;
++	mr->mr_req = NULL;
++	ep->re_write_pad_mr = mr;
++
++	seg.mr_len = XDR_UNIT;
++	seg.mr_page = virt_to_page(ep->re_write_pad);
++	seg.mr_offset = offset_in_page(ep->re_write_pad);
++	if (IS_ERR(frwr_map(r_xprt, &seg, 1, true, xdr_zero, mr)))
++		return -EIO;
++	trace_xprtrdma_mr_fastreg(mr);
++
++	mr->mr_cqe.done = frwr_wc_fastreg;
++	mr->mr_regwr.wr.next = NULL;
++	mr->mr_regwr.wr.wr_cqe = &mr->mr_cqe;
++	mr->mr_regwr.wr.num_sge = 0;
++	mr->mr_regwr.wr.opcode = IB_WR_REG_MR;
++	mr->mr_regwr.wr.send_flags = 0;
++
++	return ib_post_send(ep->re_id->qp, &mr->mr_regwr.wr, NULL);
++}
+diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
+index c335c1361564..678586cb2328 100644
+--- a/net/sunrpc/xprtrdma/rpc_rdma.c
++++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+@@ -255,15 +255,7 @@ rpcrdma_convert_iovs(struct rpcrdma_xprt *r_xprt, struct xdr_buf *xdrbuf,
+ 		page_base = 0;
+ 	}
+ 
+-	if (type == rpcrdma_readch)
+-		goto out;
+-
+-	/* When encoding a Write chunk, some servers need to see an
+-	 * extra segment for non-XDR-aligned Write chunks. The upper
+-	 * layer provides space in the tail iovec that may be used
+-	 * for this purpose.
+-	 */
+-	if (type == rpcrdma_writech && r_xprt->rx_ep->re_implicit_roundup)
++	if (type == rpcrdma_readch || type == rpcrdma_writech)
+ 		goto out;
+ 
+ 	if (xdrbuf->tail[0].iov_len)
+@@ -405,6 +397,7 @@ static int rpcrdma_encode_write_list(struct rpcrdma_xprt *r_xprt,
+ 				     enum rpcrdma_chunktype wtype)
+ {
+ 	struct xdr_stream *xdr = &req->rl_stream;
++	struct rpcrdma_ep *ep = r_xprt->rx_ep;
+ 	struct rpcrdma_mr_seg *seg;
+ 	struct rpcrdma_mr *mr;
+ 	int nsegs, nchunks;
+@@ -443,6 +436,27 @@ static int rpcrdma_encode_write_list(struct rpcrdma_xprt *r_xprt,
+ 		nsegs -= mr->mr_nents;
+ 	} while (nsegs);
+ 
++	/* The pad MR is already registered, and is not chained on
++	 * rl_registered. Thus the Reply handler does not invalidate it.
++	 *
++	 * To avoid accidental remote invalidation of this MR, it is
++	 * not used when remote invalidation is enabled. Servers that
++	 * support remote invalidation are known not to write into
++	 * Write chunk pad segments.
++	 */
++	if (!ep->re_implicit_roundup &&
++	    xdr_pad_size(rqst->rq_rcv_buf.page_len)) {
++		if (encode_rdma_segment(xdr, ep->re_write_pad_mr) < 0)
++			return -EMSGSIZE;
++
++		trace_xprtrdma_chunk_wp(rqst->rq_task, ep->re_write_pad_mr,
++					nsegs);
++		r_xprt->rx_stats.write_chunk_count++;
++		r_xprt->rx_stats.total_rdma_request += mr->mr_length;
++		nchunks++;
++		nsegs -= mr->mr_nents;
++	}
++
+ 	/* Update count of segments in this Write chunk */
+ 	*segcount = cpu_to_be32(nchunks);
+ 
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 649c23518ec0..7fa55f219638 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -551,6 +551,7 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
+ 		goto out;
+ 	}
+ 	rpcrdma_mrs_create(r_xprt);
++	frwr_wp_create(r_xprt);
+ 
+ out:
+ 	trace_xprtrdma_connect(r_xprt, rc);
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index 5d231d94e944..c71e6e1b82b9 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -68,12 +68,14 @@
+ /*
+  * RDMA Endpoint -- connection endpoint details
+  */
++struct rpcrdma_mr;
+ struct rpcrdma_ep {
+ 	struct kref		re_kref;
+ 	struct rdma_cm_id 	*re_id;
+ 	struct ib_pd		*re_pd;
+ 	unsigned int		re_max_rdma_segs;
+ 	unsigned int		re_max_fr_depth;
++	struct rpcrdma_mr	*re_write_pad_mr;
+ 	bool			re_implicit_roundup;
+ 	enum ib_mr_type		re_mrtype;
+ 	struct completion	re_done;
+@@ -97,6 +99,8 @@ struct rpcrdma_ep {
+ 	unsigned int		re_inline_recv;	/* negotiated */
+ 
+ 	atomic_t		re_completion_ids;
++
++	char			re_write_pad[XDR_UNIT];
+ };
+ 
+ /* Pre-allocate extra Work Requests for handling reverse-direction
+@@ -535,6 +539,7 @@ int frwr_send(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
+ void frwr_reminv(struct rpcrdma_rep *rep, struct list_head *mrs);
+ void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
+ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
++int frwr_wp_create(struct rpcrdma_xprt *r_xprt);
+ 
+ /*
+  * RPC/RDMA protocol calls - xprtrdma/rpc_rdma.c
+
+
