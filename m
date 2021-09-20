@@ -2,112 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D618411535
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Sep 2021 15:03:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C94C411828
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Sep 2021 17:25:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238988AbhITNE4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Sep 2021 09:04:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238815AbhITNEx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Sep 2021 09:04:53 -0400
-Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39E5FC061574;
-        Mon, 20 Sep 2021 06:03:26 -0700 (PDT)
-Received: by nautica.notk.org (Postfix, from userid 108)
-        id B1BB1C01F; Mon, 20 Sep 2021 15:03:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1632143001; bh=o0lhty4X6j45MKMdeQ2Ew7ArWBTJlIvbH0JC70A4KkM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Y/g2DGsjZxzT5ePX+rfTYkXtVhY9eBknuuB7V/YYpZuafUobD7/cCSnOTeSVxjQ5s
-         NbIAo65DvpsbqO/Kz3UCNywFXGpXocGVR1GwzOGd3Ry9iGTPEetYlsUhvbtp2Lr407
-         9Z2yT/hqc/rFf/xzPdvJWBhIb1S7W7tOP91rVqfXV+YHtE7j3yBybpqUuNpxfbXdrL
-         4Ms3ZtRNFuwMTT5tT8WSOoMKJkQeKPfwEo5lrEy50XxMa+l6Jq0dYAYIN5c5li6Ock
-         TPrxurSntW8xMHFd3O3vVPL2WJSBTcOcYIoGggOmgq7hDOrQX7RCjyHphaiuVNnT8S
-         Dv7fn183ugkKw==
-X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on nautica.notk.org
-X-Spam-Level: 
-X-Spam-Status: No, score=0.0 required=5.0 tests=UNPARSEABLE_RELAY
-        autolearn=unavailable version=3.3.2
-Received: from odin.codewreck.org (localhost [127.0.0.1])
-        by nautica.notk.org (Postfix) with ESMTPS id 6B61DC009;
-        Mon, 20 Sep 2021 15:03:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1632143000; bh=o0lhty4X6j45MKMdeQ2Ew7ArWBTJlIvbH0JC70A4KkM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WPJjhD69bZ4L3Sj16UatugRQAQE+k0FiSJgz/31Pik1fu+m8Hj0yLWfAx46s6qcZz
-         FaTBFxWExHkkKjYURG4rYKnmHZcl0X5IBN3z/o+KOfLisYJmTVxqneBod5248tTDZr
-         j2Qux4cijpqrT6TOHyUm7iEvAGXixCsLfTQTIRve5NDSX/vKESsxSlDrkKGsKXL8X5
-         PEZi+wQWErdr85nSsUKjduLR2eanwkUxza1RqpdXXKpLRwfBVO4SCQzAE5v7LClwJq
-         uIKcio8I0T96BJoQ3DBKnN3UnylWxVMtrTA2fokrK2DIP25iB0bzZNSrj2hfBs+fZB
-         yeux5WMHa+GFQ==
-Received: from localhost (odin.codewreck.org [local])
-        by odin.codewreck.org (OpenSMTPD) with ESMTPA id 8eba130b;
-        Mon, 20 Sep 2021 13:03:11 +0000 (UTC)
-Date:   Mon, 20 Sep 2021 22:02:55 +0900
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     David Howells <dhowells@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Steve French <sfrench@samba.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] fscache, 9p, afs, cifs, nfs: Deal with some warnings
- from W=1
-Message-ID: <YUiGf9bzSX62jUrP@codewreck.org>
+        id S235143AbhITP0q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Sep 2021 11:26:46 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:44582 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232422AbhITP0q (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Sep 2021 11:26:46 -0400
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 0D15122015;
+        Mon, 20 Sep 2021 15:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1632151519; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=+t1tctzQR47NQ9v0ltgV78hzmtN6kDQ5K09vPk4yyeI=;
+        b=Kf0Wf+HaTkkVpmaSoXHu2gpMLIyQaQkvv9hoczKU1Hl9o/YKZq2cyk2VNnc9qP66udkUys
+        YAG7+QLT7tVF8xJXhlAHLt0pR3rGK+OL6xfGTb/8+v2TVOgh2Cso5Poaq0CGrLOsdPuXkX
+        BxXe90KHNxfq2vzHp63ONPl7bzw1pgE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1632151519;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=+t1tctzQR47NQ9v0ltgV78hzmtN6kDQ5K09vPk4yyeI=;
+        b=dhbOQTXbhgqrjCkuhz64OYwJR3JXTOShE/+/X7PMEkT+00F7boHXhFfdIYQUOJaRMSkxHL
+        PBjT7SYybqdnRQCg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C705913AED;
+        Mon, 20 Sep 2021 15:25:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 6rPlLd6nSGGrIgAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Mon, 20 Sep 2021 15:25:18 +0000
+From:   Petr Vorel <pvorel@suse.cz>
+To:     linux-nfs@vger.kernel.org
+Cc:     Petr Vorel <pvorel@suse.cz>, Steve Dickson <steved@redhat.com>,
+        Jianhong Yin <yin-jianhong@163.com>
+Subject: [PATCH 1/1] install-dep: Use command -v instead of which
+Date:   Mon, 20 Sep 2021 17:25:05 +0200
+Message-Id: <20210920152505.9423-1-pvorel@suse.cz>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YUiAmnMV7+fprNC1@casper.infradead.org>
- <163214005516.2945267.7000234432243167892.stgit@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-David Howells wrote on Mon, Sep 20, 2021 at 01:14:15PM +0100:
-> Deal with some warnings generated from make W=1:
-> 
->  (1) Add/remove/fix kerneldoc parameters descriptions.
-> 
->  (2) afs_sillyrename() isn't an API functions, so remove the kerneldoc
->      annotation.
-> 
->  (3) The fscache object CREATE_OBJECT work state isn't used, so remove it.
-> 
->  (4) Move __add_fid() from between v9fs_fid_add() and its comment.
-> 
->  (5) 9p's caches_show() doesn't really make sense as an API function, show
->      remove the kerneldoc annotation.  It's also not prefixed with 'v9fs_'.
+`command -v' is shell builtin required by POSIX [1] and supported on all
+common shells (bash, zsh, dash, busybox sh, mksh). `which' utility is not
+presented on some containers (e.g. Fedora, openSUSE), also going to be
+removed from future Debian versions.
 
-Happy with the 9p changes:
-Reviewed-by: Dominique Martinet <asmadeus@codewreck.org>
+Also remove stderr redirection to /dev/null as it's unnecessary when
+using 'command': POSIX says "no output shall be written" if the command
+isn't found.
 
-Having all of these in a single commit makes it difficult to deal but I
-don't expect any conflict on my end, so happy to have it go in your
-fscache tree.
+[1] https://pubs.opengroup.org/onlinepubs/9699919799/utilities/command.html
+[2] https://salsa.debian.org/debian/debianutils/-/commit/3a8dd10b4502f7bae8fc6973c13ce23fc9da7efb
 
-Matthew Wilcox wrote on Mon, Sep 20, 2021 at 01:37:46PM +0100:
-> This is an example of a weird pattern in filesystems.  Several of
-> them have kernel-doc for the implementation of various ->ops methods.
-> I don't necessarily believe we should delete the comments (although is
-> there any useful information in the above?), but I don't see the point
-> in the comment being kernel-doc.
+Signed-off-by: Petr Vorel <pvorel@suse.cz>
+---
+ install-dep | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-As far as I'm concerned this is just an "it's always been like this"
-thing for me/9p, I wouldn't mind if it were all converted to normal
-comments -- but now it's describing arguments by name having it as
-kerneldoc has helped catch comments which didn't get updated when
-function changed quite a few times in patches similar to this one so it
-would only make sense if we remove obvious argument descriptions as well
-in my opinion, and that's a bit of manual work.
-
+diff --git a/install-dep b/install-dep
+index 621618fe..4698d44a 100755
+--- a/install-dep
++++ b/install-dep
+@@ -2,20 +2,20 @@
+ #install dependencies for compiling from source code
+ 
+ #RHEL/Fedora/CentOS-Stream/Rocky
+-which dnf &>/dev/null || which yum &>/dev/null && {
++command -v dnf >/dev/null || command -v yum >/dev/null && {
+ 	yum install -y automake libtool make gcc rpcgen libtirpc-devel libevent-devel sqlite-devel device-mapper-devel \
+ 		libblkid-devel krb5-devel libuuid-devel
+ }
+ 
+ #Debian/ubuntu
+-which apt &>/dev/null && {
++command -v apt >/dev/null && {
+ 	apt install -o APT::Install-Suggests=0 -o APT::Install-Recommends=0 --ignore-missing -y \
+ 		autotools-dev automake make libtool pkg-config libtirpc-dev libevent-dev libsqlite3-dev \
+ 		libdevmapper-dev libblkid-dev libkrb5-dev libkeyutils-dev uuid-dev
+ }
+ 
+ #openSUSE Leap
+-which zypper &>/dev/null && {
++command -v zypper >/dev/null && {
+ 	zypper in --no-recommends -y automake libtool make gcc rpcgen libtirpc-devel libevent-devel sqlite-devel \
+ 		device-mapper-devel libblkid-devel krb5-devel libuuid-devel
+ }
 -- 
-Dominique
-
+2.33.0
 
