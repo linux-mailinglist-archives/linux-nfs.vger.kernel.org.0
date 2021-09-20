@@ -2,77 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5804A4122FE
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Sep 2021 20:19:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C17B04126E0
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Sep 2021 21:27:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351590AbhITST4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Sep 2021 14:19:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:20038 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1351222AbhITSRs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Sep 2021 14:17:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632161780;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=smgGeNTJKJdRB3jySjdLq/O6aIDEticWWn8WNZpB814=;
-        b=YuzYaMpkaJ4+hcmiSIGX+WLg+FrxfFxmsxQm/ktdsnP/BzzcfcBcpTS4DM7jtd3dhsYvv+
-        rAe1GcG5MJWgxqwQTaINACBqzJmBKfcmnOmA0KbogN1Gv4Z5hgvDmYC68lQWEBgVHcTS7l
-        kuoC+MOzcpDhniydyD7dcl8h7q+dKVA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-338-V_dpYbo3NfOmkZRcCVpp8Q-1; Mon, 20 Sep 2021 14:16:19 -0400
-X-MC-Unique: V_dpYbo3NfOmkZRcCVpp8Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 467EE802936;
-        Mon, 20 Sep 2021 18:16:17 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 687BB19724;
-        Mon, 20 Sep 2021 18:16:14 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAH2r5murR7TbC9BtSgWyrJVC-YG5dUba2ekZTvX75gg4ukaAZw@mail.gmail.com>
-References: <CAH2r5murR7TbC9BtSgWyrJVC-YG5dUba2ekZTvX75gg4ukaAZw@mail.gmail.com> <163214005516.2945267.7000234432243167892.stgit@warthog.procyon.org.uk>
-To:     Steve French <smfrench@gmail.com>
-Cc:     dhowells@redhat.com, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Steve French <sfrench@samba.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, CIFS <linux-cifs@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] fscache, 9p, afs, cifs, nfs: Deal with some warnings from W=1
+        id S244366AbhITT2u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Sep 2021 15:28:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1346505AbhITT0u (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 20 Sep 2021 15:26:50 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B001C61213;
+        Mon, 20 Sep 2021 19:25:22 +0000 (UTC)
+Subject: [PATCH RFC] NFSD: Optimize DRC bucket pruning
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org
+Date:   Mon, 20 Sep 2021 15:25:21 -0400
+Message-ID: <163216587593.1058.15663218635528093628.stgit@klimt.1015granger.net>
+User-Agent: StGit/1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2976711.1632161773.1@warthog.procyon.org.uk>
-Date:   Mon, 20 Sep 2021 19:16:13 +0100
-Message-ID: <2976712.1632161773@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Steve French <smfrench@gmail.com> wrote:
+DRC bucket pruning is done by nfsd_cache_lookup(), which is part of
+every NFSv2 and NFSv3 dispatch (ie, it's done while the client is
+waiting).
 
-> For the cifs ones in connect.c (and also ioctl.c), I had submitted a
-> patch in rc1 for these (haven't heard back on that) but did not submit
-> kerneldoc fixup for fs/cifs/misc.c.  They seem trivial and safe, do
-> you want to split those out and I can put them in?
+I added a trace_printk() in prune_bucket() to see just how long
+it takes to prune. Here are two ends of the spectrum:
 
-I can, though the reason I did the patch is that the warnings are always
-popping up in what I'm doing.  I can drop the patch from mine when I'm done, I
-guess.
+ prune_bucket: Scanned 1 and freed 0 in 90 ns, 62 entries remaining
+ prune_bucket: Scanned 2 and freed 1 in 716 ns, 63 entries remaining
+...
+ prune_bucket: Scanned 75 and freed 74 in 34149 ns, 1 entries remaining
 
-David
+Pruning latency is noticeable on fast transports with fast storage.
+By noticeable, I mean that the latency measured here in the worst
+case is the same order of magnitude as the round trip time for
+cached server operations.
+
+We could do something like moving expired entries to an expired list
+and then free them later instead of freeing them right in
+prune_bucket(). But simply limiting the number of entries that can
+be pruned by a lookup is simple and retains more entries in the
+cache, making the DRC somewhat more effective.
+
+Comparison with a 70/30 fio 8KB 12 thread direct I/O test:
+
+
+Before:
+
+  write: IOPS=61.6k, BW=481MiB/s (505MB/s)(14.1GiB/30001msec); 0 zone resets
+
+WRITE:
+	1848726 ops (30%)
+	avg bytes sent per op: 8340 avg bytes received per op: 136
+	backlog wait: 0.635158 	RTT: 0.128525 	total execute time: 0.827242 (milliseconds)
+
+
+After:
+
+  write: IOPS=63.0k, BW=492MiB/s (516MB/s)(14.4GiB/30001msec); 0 zone resets
+
+WRITE:
+	1891144 ops (30%)
+	avg bytes sent per op: 8340 avg bytes received per op: 136
+	backlog wait: 0.616114 	RTT: 0.126842 	total execute time: 0.805348 (milliseconds)
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfsd/nfscache.c |   17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+index 96cdf77925f3..6e0b6f3148dc 100644
+--- a/fs/nfsd/nfscache.c
++++ b/fs/nfsd/nfscache.c
+@@ -241,8 +241,8 @@ lru_put_end(struct nfsd_drc_bucket *b, struct svc_cacherep *rp)
+ 	list_move_tail(&rp->c_lru, &b->lru_head);
+ }
+ 
+-static long
+-prune_bucket(struct nfsd_drc_bucket *b, struct nfsd_net *nn)
++static long prune_bucket(struct nfsd_drc_bucket *b, struct nfsd_net *nn,
++			 unsigned int max)
+ {
+ 	struct svc_cacherep *rp, *tmp;
+ 	long freed = 0;
+@@ -258,11 +258,17 @@ prune_bucket(struct nfsd_drc_bucket *b, struct nfsd_net *nn)
+ 		    time_before(jiffies, rp->c_timestamp + RC_EXPIRE))
+ 			break;
+ 		nfsd_reply_cache_free_locked(b, rp, nn);
+-		freed++;
++		if (max && freed++ > max)
++			break;
+ 	}
+ 	return freed;
+ }
+ 
++static long nfsd_prune_bucket(struct nfsd_drc_bucket *b, struct nfsd_net *nn)
++{
++	return prune_bucket(b, nn, 3);
++}
++
+ /*
+  * Walk the LRU list and prune off entries that are older than RC_EXPIRE.
+  * Also prune the oldest ones when the total exceeds the max number of entries.
+@@ -279,7 +285,7 @@ prune_cache_entries(struct nfsd_net *nn)
+ 		if (list_empty(&b->lru_head))
+ 			continue;
+ 		spin_lock(&b->cache_lock);
+-		freed += prune_bucket(b, nn);
++		freed += prune_bucket(b, nn, 0);
+ 		spin_unlock(&b->cache_lock);
+ 	}
+ 	return freed;
+@@ -453,8 +459,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp)
+ 	atomic_inc(&nn->num_drc_entries);
+ 	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
+ 
+-	/* go ahead and prune the cache */
+-	prune_bucket(b, nn);
++	nfsd_prune_bucket(b, nn);
+ 
+ out_unlock:
+ 	spin_unlock(&b->cache_lock);
+
 
