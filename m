@@ -2,161 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80BE0413D79
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Sep 2021 00:21:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FB6041457F
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Sep 2021 11:48:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235672AbhIUWW7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 21 Sep 2021 18:22:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33386 "EHLO
+        id S234288AbhIVJtn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 Sep 2021 05:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235665AbhIUWWw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Sep 2021 18:22:52 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85635C061756
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Sep 2021 15:21:23 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 59AD96CEE; Tue, 21 Sep 2021 18:21:22 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 59AD96CEE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1632262882;
-        bh=jDGWOkND7U+j7YpEeD+9vc0mkdx50GQgg2Uw/Lrw9wM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F0diXBawWTQ9aLu7dG3AULjtAZuMW2D1YZB9+a+f3OhiT4UqVAfHncYWgIKNB9Suw
-         C0KQXqmgtSl3YKsyJnHzRSdRt5PKP+4TQ7EFJIcBlGVhat3a7OVn9tLI54x7HSTgtV
-         tysDjZ4Mj6hJ83x2ZD36OHvqR5wha/PBevWj43aM=
-Date:   Tue, 21 Sep 2021 18:21:22 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH RFC] NFSD: Optimize DRC bucket pruning
-Message-ID: <20210921222122.GE21704@fieldses.org>
-References: <163216587593.1058.15663218635528093628.stgit@klimt.1015granger.net>
+        with ESMTP id S234233AbhIVJtn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Sep 2021 05:49:43 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18B00C061574
+        for <linux-nfs@vger.kernel.org>; Wed, 22 Sep 2021 02:48:13 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id v24so7720623eda.3
+        for <linux-nfs@vger.kernel.org>; Wed, 22 Sep 2021 02:48:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qceiZJW+xNuPv6DC8Ddv9FCnq8sX7E1T/cLTUPwqWEI=;
+        b=W4DnfMgdaR/KzheXlvRl+xb/caTettvk56FczFBf1MvCyCiE0Pg9FI0B7Ghq3EzDQA
+         yNrURYUJ+3iFprxCGyDcgN5uYyAE/ntZz3mnCMTUnW6OyGrYmM3ALiVYE5Bdq16O/Im8
+         tNuSvTlwHhHRXf1wD02GWryGuA0LcQRm67CRIC1c2YHZAiusSLfaiVjxNj8HrZYXUxvP
+         FmyMs1WKIqXzr2LVqo/AlRu9K3X6eHUL9HqomKwFQWrt2S5f/44mXmrvmNxh11U6NUlE
+         wU2NfRpznZXfSmP5gICxgNOcyXljSjG0/g30K0ldmo/Z+kf6/tU/Cm2vYNRro00njGlv
+         5cxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qceiZJW+xNuPv6DC8Ddv9FCnq8sX7E1T/cLTUPwqWEI=;
+        b=3tmn/ybj/lMbEd787BQFvnN7W8oYv0b6fT8VzK9yxGdGSPSHjh4497zK42x6gxhxl1
+         oGqEmUlJwEJrRfEuenLBFtrRR7JT3TOMW8JTE3YgsY3uL4YJXU1E/C681f+Xp2MzMgMS
+         6RQYu1d9mlwBuenmK+b9FLEl7v2B4r45pwAnk+C/SVdzmonao1Fy3A8RLDypIBo7WmVK
+         Q0ZbxzlyIcfudN2z9mXRAEgufxpkovMxnFyUsIeoIrBuu55n5Uj6UEJHieVO6MbVavOf
+         RcEPb2ZSjZgx/2TF8VKLkYPUB7RZ1wSKF17QvH1qCq2gfIBB1otDycPrILz5wTTT4pAT
+         6cvQ==
+X-Gm-Message-State: AOAM532YqKwGgJLiFBrkjvX7wLW/qHFfHTB1VQD4nTasfL4GHICqATHR
+        Y34hrBjWscWC0EYaw5X18HX7RQZi7sfidIFJO1mOyQ==
+X-Google-Smtp-Source: ABdhPJwOItM4/kumpCdPGX63zXOJImLAqUljPGeP3BP972olG9mw0oXDNowo/+aHVOM7yjbevRT35w0MVBJiXc+DwiE=
+X-Received: by 2002:a17:906:3745:: with SMTP id e5mr40672498ejc.400.1632304091632;
+ Wed, 22 Sep 2021 02:48:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <163216587593.1058.15663218635528093628.stgit@klimt.1015granger.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20210921143259.GB21704@fieldses.org> <37851433-48C9-4585-9B68-834474AA6E06@oracle.com>
+ <20210921160030.GC21704@fieldses.org>
+In-Reply-To: <20210921160030.GC21704@fieldses.org>
+From:   Daire Byrne <daire@dneg.com>
+Date:   Wed, 22 Sep 2021 10:47:35 +0100
+Message-ID: <CAPt2mGOf8orCkOj9hCM_sSu2uucPiRFPEK+yep+kufv-cDvhSA@mail.gmail.com>
+Subject: Re: [PATCH] nfs: reexport documentation
+To:     Bruce Fields <bfields@fieldses.org>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Sep 20, 2021 at 03:25:21PM -0400, Chuck Lever wrote:
-> DRC bucket pruning is done by nfsd_cache_lookup(), which is part of
-> every NFSv2 and NFSv3 dispatch (ie, it's done while the client is
-> waiting).
-> 
-> I added a trace_printk() in prune_bucket() to see just how long
-> it takes to prune. Here are two ends of the spectrum:
-> 
->  prune_bucket: Scanned 1 and freed 0 in 90 ns, 62 entries remaining
->  prune_bucket: Scanned 2 and freed 1 in 716 ns, 63 entries remaining
-> ...
->  prune_bucket: Scanned 75 and freed 74 in 34149 ns, 1 entries remaining
+On Tue, 21 Sept 2021 at 17:00, Bruce Fields <bfields@fieldses.org> wrote:
+>
+> > Any recommended workarounds? Or does this simply mean that
+> > administrators need to notify client users to unmount (or
+> > at least stop their workloads) before rebooting the proxy?
+>
+> I think so.
+>
+> If you don't use any file locking or delegations I suppose you're also
+> OK.  Delegations might be useful, though.
+>
+> I'd expect reexport to be useful mainly for data that changes very
+> rarely, if that helps.
+>
+> --b.
 
-So how do we end up with so many to prune at once if we're pruning every
-time we add a new item?
+Firstly, it's great to see this documentation and the well maintained
+wiki page for something we use in production (a lot) - thanks Bruce!
 
-Oh, I guess they must all have about the same expiry time, so they all
-became eligible for pruning at the same time.
+I can only draw on our experience to say:
+* if the nfs re-export server doesn't crash, we rarely have cause to reboot it.
+* we re-export read-only software repositories to WAN/cloud instances
+(an ideal use case).
+* we also re-export read/write production storage but every client
+process is writing unique files - there are no writes to the same
+file(s) from any clients of the re-export server.
 
-> Pruning latency is noticeable on fast transports with fast storage.
-> By noticeable, I mean that the latency measured here in the worst
-> case is the same order of magnitude as the round trip time for
-> cached server operations.
-> 
-> We could do something like moving expired entries to an expired list
-> and then free them later instead of freeing them right in
-> prune_bucket(). But simply limiting the number of entries that can
-> be pruned by a lookup is simple and retains more entries in the
-> cache, making the DRC somewhat more effective.
+We don't use or need crossmnt functionality, but I know from chatting
+to others within our industry that the fsid/crossmnt limitation causes
+them the most grief and confusion. I think in the case of Netapps,
+there are similar problems with trying to re-export a namespace made
+up of different volumes?
 
-And when there's a bunch of expired entries to prune I guess it makes
-sense that stopping at pruning 3 for each one you add will still keep
-the DRC size under control.
+As noted on the wiki, the only way around that is probably to have a
+"proxy" mode (similar to what ganesha does?).
 
-Anyway, looks simple and makes sense to me; applying.
-
---b.
-
-> 
-> Comparison with a 70/30 fio 8KB 12 thread direct I/O test:
-> 
-> 
-> Before:
-> 
->   write: IOPS=61.6k, BW=481MiB/s (505MB/s)(14.1GiB/30001msec); 0 zone resets
-> 
-> WRITE:
-> 	1848726 ops (30%)
-> 	avg bytes sent per op: 8340 avg bytes received per op: 136
-> 	backlog wait: 0.635158 	RTT: 0.128525 	total execute time: 0.827242 (milliseconds)
-> 
-> 
-> After:
-> 
->   write: IOPS=63.0k, BW=492MiB/s (516MB/s)(14.4GiB/30001msec); 0 zone resets
-> 
-> WRITE:
-> 	1891144 ops (30%)
-> 	avg bytes sent per op: 8340 avg bytes received per op: 136
-> 	backlog wait: 0.616114 	RTT: 0.126842 	total execute time: 0.805348 (milliseconds)
-> 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/nfscache.c |   17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-> index 96cdf77925f3..6e0b6f3148dc 100644
-> --- a/fs/nfsd/nfscache.c
-> +++ b/fs/nfsd/nfscache.c
-> @@ -241,8 +241,8 @@ lru_put_end(struct nfsd_drc_bucket *b, struct svc_cacherep *rp)
->  	list_move_tail(&rp->c_lru, &b->lru_head);
->  }
->  
-> -static long
-> -prune_bucket(struct nfsd_drc_bucket *b, struct nfsd_net *nn)
-> +static long prune_bucket(struct nfsd_drc_bucket *b, struct nfsd_net *nn,
-> +			 unsigned int max)
->  {
->  	struct svc_cacherep *rp, *tmp;
->  	long freed = 0;
-> @@ -258,11 +258,17 @@ prune_bucket(struct nfsd_drc_bucket *b, struct nfsd_net *nn)
->  		    time_before(jiffies, rp->c_timestamp + RC_EXPIRE))
->  			break;
->  		nfsd_reply_cache_free_locked(b, rp, nn);
-> -		freed++;
-> +		if (max && freed++ > max)
-> +			break;
->  	}
->  	return freed;
->  }
->  
-> +static long nfsd_prune_bucket(struct nfsd_drc_bucket *b, struct nfsd_net *nn)
-> +{
-> +	return prune_bucket(b, nn, 3);
-> +}
-> +
->  /*
->   * Walk the LRU list and prune off entries that are older than RC_EXPIRE.
->   * Also prune the oldest ones when the total exceeds the max number of entries.
-> @@ -279,7 +285,7 @@ prune_cache_entries(struct nfsd_net *nn)
->  		if (list_empty(&b->lru_head))
->  			continue;
->  		spin_lock(&b->cache_lock);
-> -		freed += prune_bucket(b, nn);
-> +		freed += prune_bucket(b, nn, 0);
->  		spin_unlock(&b->cache_lock);
->  	}
->  	return freed;
-> @@ -453,8 +459,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp)
->  	atomic_inc(&nn->num_drc_entries);
->  	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
->  
-> -	/* go ahead and prune the cache */
-> -	prune_bucket(b, nn);
-> +	nfsd_prune_bucket(b, nn);
->  
->  out_unlock:
->  	spin_unlock(&b->cache_lock);
-> 
+Daire
